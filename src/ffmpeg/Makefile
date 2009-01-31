@@ -123,6 +123,7 @@ SRCS_C=\
       $(LAVC_DIR)/ra288.c \
       $(LAVC_DIR)/rangecoder.c \
       $(LAVC_DIR)/ratecontrol.c \
+      $(LAVC_DIR)/rdft.c \
       $(LAVC_DIR)/rpza.c \
       $(LAVC_DIR)/rtjpeg.c \
       $(LAVC_DIR)/rv10.c \
@@ -168,6 +169,7 @@ SRCS_C=\
       $(LAVC_DIR)/amr_float/interf_dec.c \
       $(LAVC_DIR)/amr_float/sp_dec.c \
     \
+      $(LAVU_DIR)/avstring.c \
       $(LAVU_DIR)/crc.c \
       $(LAVU_DIR)/lfg.c \
       $(LAVU_DIR)/lls.c \
@@ -176,7 +178,6 @@ SRCS_C=\
       $(LAVU_DIR)/mathematics.c \
       $(LAVU_DIR)/md5.c \
       $(LAVU_DIR)/mem.c \
-      $(LAVU_DIR)/string.c \
       $(LAVU_DIR)/random.c \
       $(LAVU_DIR)/rational.c \
     \

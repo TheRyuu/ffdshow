@@ -935,6 +935,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavcodec\rdft.c"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\rpza.c"
 				>
 			</File>
@@ -1724,6 +1728,10 @@
 			Name="libavutil"
 			>
 			<File
+				RelativePath=".\libavutil\avstring.c"
+				>
+			</File>
+			<File
 				RelativePath=".\libavutil\avstring.h"
 				>
 			</File>
@@ -1825,10 +1833,6 @@
 			</File>
 			<File
 				RelativePath=".\libavutil\rational.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavutil\string.c"
 				>
 			</File>
 			<File

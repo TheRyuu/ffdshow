@@ -1,8 +1,8 @@
 /*
- * Mersenne Twister Random Algorithm
+ * Mersenne Twister PRNG algorithm
  * Copyright (c) 2006 Ryan Martell
- * Based on A C-program for MT19937, with initialization improved 2002/1/26. Coded by
- * Takuji Nishimura and Makoto Matsumoto.
+ * Based on a C program for MT19937, with initialization improved 2002/1/26.
+ * Coded by Takuji Nishimura and Makoto Matsumoto.
  *
  * This file is part of FFmpeg.
  *
@@ -23,8 +23,9 @@
 
 
 /**
-see http://en.wikipedia.org/wiki/Mersenne_twister for an explanation of this algorithm.
-*/
+ * See http://en.wikipedia.org/wiki/Mersenne_twister
+ * for an explanation of this algorithm.
+ */
 #include <stdio.h>
 #include "random.h"
 
@@ -52,10 +53,18 @@ void av_random_init(AVRandomState *state, unsigned int seed)
         unsigned int prev= state->mt[index - 1];
         state->mt[index] = (1812433253UL * (prev ^ (prev>>30)) + index) & 0xffffffff;
     }
-    state->index= index; // will cause it to generate untempered numbers the first iteration
+    state->index= index; // Will cause it to generate untempered numbers in the first iteration.
 }
 
-/** generate AV_RANDOM_N words at one time (which will then be tempered later) (av_random calls this; you shouldn't) */
+#if LIBAVUTIL_VERSION_MAJOR < 50
+void av_init_random(unsigned int seed, AVRandomState *state)
+{
+    av_random_init(state, seed);
+}
+#endif
+
+/** Generates AV_RANDOM_N words at one time (which will then be tempered later).
+ * av_random calls this; you shouldn't. */
 void av_random_generate_untempered_numbers(AVRandomState *state)
 {
     int kk;
