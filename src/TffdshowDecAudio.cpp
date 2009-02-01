@@ -362,7 +362,7 @@ TsampleFormat TffdshowDecAudio::getOutsf(void)
  if (inpin->getsf(outsf)) // SPDIF
   return outsf;
  else
-  {
+  { 
    if (!audioFilters) audioFilters=new TaudioFiltersPlayer(this,this,presetSettings);
    audioFilters->getOutputFmt(outsf,presetSettings);
    return outsf;

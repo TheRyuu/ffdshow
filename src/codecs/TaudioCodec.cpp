@@ -32,7 +32,7 @@
 #include "TaudioCodecRealaac.h"
 #include "TaudioCodecAudX.h"
 
-TaudioCodec* TaudioCodec::initSource(IffdshowBase *Ideci,IdecAudioSink *Isink,CodecID codecId,const TsampleFormat &fmt,const CMediaType &mt)
+TaudioCodec* TaudioCodec::initSource(IffdshowBase *Ideci,IdecAudioSink *Isink, CodecID codecId,const TsampleFormat &fmt,const CMediaType &mt)
 {
  TaudioCodec *movie=getDecLib(codecId,Ideci,Isink);
  if (movie)

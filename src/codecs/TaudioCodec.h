@@ -5,11 +5,14 @@
 #include "ffdshow_constants.h"
 #include "TsampleFormat.h"
 
+class TaudioParser;
+
 DECLARE_INTERFACE_(IdecAudioSink,IdecSink)
 {
  STDMETHOD (deliverDecodedSample)(void *buf,size_t numsamples,const TsampleFormat &fmt,float postgain) PURE;
  STDMETHOD (setCodecId)(CodecID codecId) PURE;
  STDMETHOD (getCodecId)(CodecID *pCodecId) PURE;
+ STDMETHOD (getAudioParser)(TaudioParser **ppAudioParser) PURE;
 };
 
 class TaudioCodec :public TcodecDec

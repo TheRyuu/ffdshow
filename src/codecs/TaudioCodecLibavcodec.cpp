@@ -170,7 +170,7 @@ if (avcodec)
 HRESULT TaudioCodecLibavcodec::decode(TbyteBuffer &src0)
 {
  // Dynamic range compression for AC3/DTS formats
- if (codecId == CODEC_ID_AC3 || codecId == CODEC_ID_EAC3 || codecId == CODEC_ID_DTS)
+ if (codecId == CODEC_ID_AC3 || codecId == CODEC_ID_EAC3 || codecId == CODEC_ID_DTS || codecId == CODEC_ID_MLP)
   {
    if (deci->getParam2(IDFF_audio_decoder_DRC))
     {
@@ -226,7 +226,14 @@ HRESULT TaudioCodecLibavcodec::decode(TbyteBuffer &src0)
    {
 	   ret=libavcodec->avcodec_decode_audio2(avctx,(int16_t*)dst,&dstLength,src,size);
 	   if (ret<0 || (ret==0 && dstLength==0))
+       {
+           DPRINTF(_l("Unable to decode this frame"));
+           TaudioParser *pAudioParser=NULL;
+           this->sinkA->getAudioParser(&pAudioParser);
+           if (pAudioParser!=NULL)
+            pAudioParser->NewSegment();
           break;
+       }
 	   size-=ret;
 	   src+=ret;
    }

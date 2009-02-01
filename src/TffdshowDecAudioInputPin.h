@@ -38,6 +38,7 @@ public:
  STDMETHODIMP flushDecodedSamples(void);
  STDMETHODIMP setCodecId(CodecID codecId);
  STDMETHODIMP getCodecId(CodecID *pCodecId);
+ STDMETHODIMP getAudioParser(TaudioParser **ppAudioParser);
 
  HRESULT getMovieSource(const TaudioCodec* *moviePtr);
  virtual HRESULT getInCodecString(char_t *buf,size_t buflen);

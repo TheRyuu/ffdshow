@@ -20,7 +20,6 @@ private:
  int src_ch_layout;
  //int skipBytes;int includeBytes;bool hasMLPFrames;bool useSPDIF;
  //StreamFormat streamformat;
- TaudioParser *audioParser;
 protected:
  virtual bool init(const CMediaType &mt);
  virtual void getInputDescr1(char_t *buf,size_t buflen) const;

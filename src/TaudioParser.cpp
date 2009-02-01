@@ -180,7 +180,7 @@ CodecID TaudioParser::getCodecIdFromStream()
 	case UNDEFINED:return CODEC_ID_NONE;
 	default:break;
 	}
-	nbFormatChanges++;
+	//nbFormatChanges++;
 	codecId=globalSettings->getCodecId(wFormatTag, NULL);
 	return codecId;
 }
@@ -428,7 +428,7 @@ HRESULT TaudioParser::parseAC3(unsigned char *src, int size, TbyteBuffer *newsrc
    {
 	   if (bitdata.showBits(16) == 0x0B77) // AC3 stream
 	   {
-		   searchSync=false;
+		   //searchSync=false;
 		   unsigned char *backuppointer=bitdata.wordpointer;
 		   int backupBitsLeft=bitdata.bitsleft;
 		   int frame_size=0;
