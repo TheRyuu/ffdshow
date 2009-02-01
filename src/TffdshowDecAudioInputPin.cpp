@@ -221,44 +221,6 @@ STDMETHODIMP TffdshowDecAudioInputPin::Receive(IMediaSample* pIn)
         if (!audio) return false;
          filter->insf=audio->getInputSF();
         jitter=0;
-
-       	/* if (lavc_codec (codecId)) 
-	     {
-		     TaudioCodecLibavcodec *audioCodecLibavcodec=(TaudioCodecLibavcodec*)audio;
-		     if (audioCodecLibavcodec)
-		     {
-			     if (audioParser->channels != 0)
-				     audioCodecLibavcodec->avctx->channels=audioParser->channels;
-			    if (audioParser->bit_rate != 0)
-				    audioCodecLibavcodec->avctx->bit_rate=audioParser->bit_rate;
-			    if (audioParser->sample_rate != 0)
-				    audioCodecLibavcodec->avctx->sample_rate=audioParser->sample_rate;
-		     }
-	     }
-
-	     if (audioParser->channels != 0)
-		     filter->insf.setChannels(audioParser->channels);
-	     if (audioParser->sample_rate != 0)
-		     filter->insf.freq=audioParser->sample_rate;
-	     if (audioParser->sample_format != 0)
-		     filter->insf.sf=audioParser->sample_format;
-
-	     newSrcBuffer.reserve(newSrcBuffer.size()+32);
-	     HRESULT hr=audio->decode(newSrcBuffer);
-        
-        filter->BeginFlush();
-        EndFlush();
-        filter->EndFlush();
-        NewSegment(rtStart,rtStop,1.0);
-        filter->NewSegment(rtStart,rtStop,1.0);       
-        return hr;*/
-
-        //filter->ReconnectOutput(19200/fmt.blockAlign(), fmt.toCMediaType()
-        /*insample_rtStart = REFTIME_INVALID;
-        insample_rtStop = REFTIME_INVALID;
-        flushDecodedSamples();*/
-        /*onSeek(0);
-        filter->NewSegment(rtStart,rtStop, 1.0);*/
      }
 
 	 // Update libavcodec context with correct channels and bitrate read from parser
