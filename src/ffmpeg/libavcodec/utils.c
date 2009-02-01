@@ -481,6 +481,8 @@ void avcodec_get_frame_defaults(AVFrame *pic){
 
     pic->pts= AV_NOPTS_VALUE;
     pic->key_frame= 1;
+    pic->YCbCr_RGB_matrix_coefficients = YCbCr_RGB_coeff_Unspecified; // ffdshow custom code
+    pic->video_full_range_flag = VIDEO_FULL_RANGE_INVALID; // ffdshow custom code
 }
 
 AVFrame *avcodec_alloc_frame(void){

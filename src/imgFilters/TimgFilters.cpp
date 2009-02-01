@@ -96,7 +96,7 @@ HRESULT TimgFilters::deliverSample(TfilterQueue::iterator it,TffPict &pict)
     {
      //static int cnt=0;DEBUGS1("clearBorder",cnt++);
      int brightness = deciV->getBordersBrightness();
-     pict.clearBorder(brightness, deciV->getToutputVideoSettings()->brightness2luma(brightness));
+     pict.clearBorder(brightness, deciV->getToutputVideoSettings()->brightness2luma(brightness, pict.video_full_range_flag));
      dirtyBorder=2;
     }
    return sink->deliverProcessedSample(pict);

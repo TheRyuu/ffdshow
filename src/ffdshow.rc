@@ -1980,27 +1980,31 @@ STYLE DS_SETFONT | DS_FIXEDSYS | DS_CONTROL | DS_CENTER | WS_CHILD
 EXSTYLE WS_EX_CONTROLPARENT
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
-    GROUPBOX        "Contrast",IDC_GRP_CSP_OPT2,0,87,267,143
-    CONTROL         "ITU-R BT.601",IDC_RBT_BT601,"Button",BS_AUTORADIOBUTTON,6,11,134,10
-    CONTROL         "ITU-R BT.709",IDC_RBT_BT709,"Button",BS_AUTORADIOBUTTON,6,25,134,10
-    CONTROL         "",IDC_TBR_RGBCONV_WHITE,"msctls_trackbar32",TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,148,164,106,10
-    CONTROL         "",IDC_TBR_RGBCONV_BLACK,"msctls_trackbar32",TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,148,149,106,10
-    CONTROL         "",IDC_TBR_RGBCONV_CHROMA,"msctls_trackbar32",TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,148,194,106,10
-    LTEXT           "black cut off :",IDC_TXT_RGBCONV_BLACK,18,149,125,9
-    LTEXT           "white cut off :",IDC_TXT_RGBCONV_WHITE,18,164,125,9
-    LTEXT           "chroma cut off :",IDC_TXT_RGBCONV_CHROMA,18,194,125,9
-    CONTROL         "Interlock chroma",IDC_CHB_RGBCONV_CHROMA_LOCK,"Button",BS_AUTOCHECKBOX | BS_PUSHLIKE | WS_TABSTOP,25,177,75,13
-    GROUPBOX        "YCbCr specification",IDC_GRP_CSP_OPT1,0,0,267,41
-    CONTROL         "Standard ( Y : 16-235, chroma : 16-240 )",IDC_RBT_REC_YUV,
-                    "Button",BS_AUTORADIOBUTTON,6,100,246,10
-    CONTROL         "Full range ( Y : 0-255, chroma : 1-255 )",IDC_RBT_PC_YUV,
-                    "Button",BS_AUTORADIOBUTTON,6,115,246,10
-    CONTROL         "Custom",IDC_RBT_CUSTOM_YUV,"Button",BS_AUTORADIOBUTTON,6,131,246,10
-    GROUPBOX        "Method",IDC_GRP_CSP_OPT3,0,41,267,45
-    COMBOBOX        IDC_CBX_RGB_INTERLACE_METHOD,121,52,124,30,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
-    LTEXT           "Interlace or progressive:",IDC_TXT_CSP_OPTIONS_INTERLACE_OR_PROGRESSIVE,8,54,108,8
+    GROUPBOX        "Input levels",IDC_GRP_CSP_OPT2,0,92,267,92
+    CONTROL         "ITU-R BT.601",IDC_RBT_BT601,"Button",BS_AUTORADIOBUTTON,6,22,134,10
+    CONTROL         "ITU-R BT.709",IDC_RBT_BT709,"Button",BS_AUTORADIOBUTTON,6,35,134,10
+    CONTROL         "",IDC_TBR_RGBCONV_WHITE,"msctls_trackbar32",TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,148,170,106,10
+    CONTROL         "",IDC_TBR_RGBCONV_BLACK,"msctls_trackbar32",TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,148,156,106,10
+    LTEXT           "black level:",IDC_TXT_RGBCONV_BLACK,18,156,125,9
+    LTEXT           "white level:",IDC_TXT_RGBCONV_WHITE,18,171,125,9
+    GROUPBOX        "YCbCr specification",IDC_GRP_CSP_OPT1,0,0,267,50
+    CONTROL         "Standard  (Y: 16-235, CbCr: 16-240)",IDC_RBT_YCbCr_input_levels_16_to_235,
+                    "Button",BS_AUTORADIOBUTTON,6,116,246,10
+    CONTROL         "Full range  (Y: 0-255, chroma: 1-255)",IDC_RBT_YCbCr_input_levels_0_to_255,
+                    "Button",BS_AUTORADIOBUTTON,6,130,246,10
+    CONTROL         "Custom",IDC_RBT_CUSTOM_YUV,"Button",BS_AUTORADIOBUTTON,6,144,246,10
+    GROUPBOX        "Method",IDC_GRP_CSP_OPT3,0,50,267,42
+    COMBOBOX        IDC_CBX_RGB_INTERLACE_METHOD,121,59,124,30,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Interlace or progressive:",IDC_TXT_CSP_OPTIONS_INTERLACE_OR_PROGRESSIVE,8,61,108,8
     CONTROL         "High quality YV12 to RGB conversion",IDC_CHB_AVISYNTH_YV12_RGB,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,70,171,9
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,76,171,9
+    CONTROL         "Auto",IDC_RBT_BT_AUTO,"Button",BS_AUTORADIOBUTTON,6,10,256,10
+    CONTROL         "Auto",IDC_RBT_YCbCr_input_levels_auto,"Button",BS_AUTORADIOBUTTON,6,103,246,10
+    GROUPBOX        "Output levels",IDC_GRP_CSP_OUTPUT_LEVELS,0,186,267,44
+    CONTROL         "Computer monitor  (RGB: 0 - 255)",IDC_RBT_CSP_OUTPUT_LEVELS_PC,
+                    "Button",BS_AUTORADIOBUTTON,6,198,259,10
+    CONTROL         "TV / Projector  (RGB:  16 - 235)",IDC_RBT_CSP_OUTPUT_LEVELS_TV,
+                    "Button",BS_AUTORADIOBUTTON,6,214,257,10
 END
 
 IDD_GENERIC_LJPEG DIALOGEX 0, 0, 267, 230
@@ -2978,7 +2982,6 @@ IDD_SHOWMV              TEXT                    "helpShowMV.txt"
 IDD_DEINTERLACE         TEXT                    "helpDeinterlace.txt"
 IDD_LEVELS              TEXT                    "helpLevels.txt"
 IDD_OVERLAY             TEXT                    "helpOverlay.txt"
-
 IDD_DCT                 TEXT                    "helpDCT.txt"
 IDD_WARPSHARP           TEXT                    "helpWarpsharp.txt"
 IDD_CREDITS             TEXT                    "helpCredits.txt"

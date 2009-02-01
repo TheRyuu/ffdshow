@@ -130,8 +130,8 @@ typedef struct SwsContext{
 
 	//Colorspace stuff
 	int contrast, brightness, saturation;	// for sws_getColorspaceDetails
-	int srcColorspaceTable[6];
-	int dstColorspaceTable[6];
+	int srcColorspaceTable[7];
+	int dstColorspaceTable[7];
 	int srcRange, dstRange;
 
 #define RED_DITHER   "0*8"
@@ -191,7 +191,7 @@ typedef struct SwsContext{
 //FIXME check init (where 0)
 
 SwsFunc yuv2rgb_get_func_ptr (SwsContext *c);
-int yuv2rgb_c_init_tables (SwsContext *c, const int inv_table[4], int fullRange, int brightness, int contrast, int saturation);
+int yuv2rgb_c_init_tables (SwsContext *c, const int inv_table[7], int fullRange, int brightness, int contrast, int saturation);
 
 char *sws_format_name(int format);
 

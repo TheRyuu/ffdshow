@@ -568,6 +568,16 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
 
        TffPict pict(csp,frame->data,linesize,r,true,frametype,fieldtype,srcLen0,pIn,avctx->palctrl); //TODO: src frame size
        pict.gmcWarpingPoints=frame->num_sprite_warping_points;pict.gmcWarpingPointsReal=frame->real_sprite_warping_points;
+       if (codecId == CODEC_ID_H264)
+        {
+         pict.video_full_range_flag = frame->video_full_range_flag;
+         pict.YCbCr_RGB_matrix_coefficients = frame->YCbCr_RGB_matrix_coefficients;
+        }
+       else
+        {
+         pict.video_full_range_flag = VIDEO_FULL_RANGE_INVALID;
+         pict.YCbCr_RGB_matrix_coefficients = YCbCr_RGB_coeff_Unspecified;
+        }
 
        if (h264_on_MPEG2_system)
         {
@@ -630,7 +640,6 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
        telecineManager.new_frame(fieldtype, frame->top_field_first, frame->repeat_pict, pict.rtStart, pict.rtStop);
        telecineManager.get_fieldtype(pict);
        telecineManager.get_timestamps(pict);
-
        HRESULT hr=sinkD->deliverDecodedSample(pict);
        if (FAILED(hr) || (used_bytes && sinkD->acceptsManyFrames()!=S_OK) || avctx->codec_id==CODEC_ID_LOCO)
         return hr;

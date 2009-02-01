@@ -74,7 +74,7 @@ bool TvideoCodecUncompressed::beginDecompress(TffPictBase &pict,FOURCC infcc,con
    case CODEC_ID_Y800:csp=FF_CSP_Y800;break;
    case CODEC_ID_NV12:csp=FF_CSP_NV12|FF_CSP_FLAGS_YUV_ORDER;break;
    case CODEC_ID_NV21:csp=FF_CSP_NV12;break;
-   case CODEC_ID_YV16:csp=FF_CSP_YV16;break;
+   case CODEC_ID_YV16:csp=FF_CSP_422P|FF_CSP_FLAGS_YUV_ADJ;break;
    //case CODEC_ID_PAL1:csp=FF_CSP_PAL1;break;
    //case CODEC_ID_PAL4:csp=FF_CSP_PAL4;break;
    case CODEC_ID_PAL8:csp=FF_CSP_PAL8|FF_CSP_FLAGS_VFLIP;break;
@@ -112,6 +112,10 @@ HRESULT TvideoCodecUncompressed::decompress(const unsigned char *src,size_t srcL
   {
    data[i]=data[i-1]+(rd.dy>>cspInfo->shiftY[i-1])*stride[i-1];
    stride[i]=stride[0]>>cspInfo->shiftX[i];
+  }
+ if (csp_isYUVplanar(csp) && !(csp & FF_CSP_FLAGS_YUV_ORDER))
+  {
+   std::swap(data[1],data[2]); // TODO remove FF_CSP_FLAGS_YUV_ADJ if it is safe.
   }
  TffPict pict(csp,data,stride,rd,true,pIn,Tpalette(palette,palcolors),isInterlacedRawVideo);
  pict.frametype=FRAME_TYPE::I;

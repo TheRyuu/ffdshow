@@ -262,7 +262,7 @@ static int func_name(SwsContext *c, uint8_t* src[], stride_t srcStride[], int sr
              int srcSliceH, uint8_t* dst[], stride_t dstStride[]){\
     int y;\
 \
-    if(c->srcFormat == IMGFMT_422P || c->srcFormat == IMGFMT_YV16){\
+    if(c->srcFormat == IMGFMT_422P){\
 	srcStride[1] *= 2;\
 	srcStride[2] *= 2;\
     }\
@@ -646,7 +646,7 @@ static int div_round (int dividend, int divisor)
         return -((-dividend + (divisor>>1)) / divisor);
 }
 
-int yuv2rgb_c_init_tables (SwsContext *c, const int inv_table[4], int fullRange, int brightness, int contrast, int saturation)
+int yuv2rgb_c_init_tables (SwsContext *c, const int inv_table[7], int fullRange, int brightness, int contrast, int saturation)
 {
     const int isRgb = IMGFMT_IS_BGR(c->dstFormat);
     const int bpp = isRgb?IMGFMT_RGB_DEPTH(c->dstFormat):IMGFMT_BGR_DEPTH(c->dstFormat);
@@ -668,6 +668,7 @@ int yuv2rgb_c_init_tables (SwsContext *c, const int inv_table[4], int fullRange,
     int64_t cgv = -inv_table[3];
     int64_t cy  =  inv_table[4];
     int64_t oy  =  inv_table[5];
+    int rgb_add =  inv_table[6];
 
 //printf("%lld %lld %lld %lld %lld\n", cy, crv, cbu, cgu, cgv);
 
@@ -682,14 +683,14 @@ int yuv2rgb_c_init_tables (SwsContext *c, const int inv_table[4], int fullRange,
     for (i = 0; i < 1024; i++) {
         int j;
 
-	j= (cy*(((i - 384)<<16) - oy) + (1<<31))>>32;
+	j= ((cy*(((i - 384)<<16) - oy) + (1<<31))>>32) + rgb_add;
         j = (j < 0) ? 0 : ((j > 255) ? 255 : j);
         table_Y[i] = j;
     }
 
     switch (bpp) {
     case 32:
-	       table_start= table_32 = malloc ((197 + 2*682 + 256 + 132) * sizeof (uint32_t));
+        table_start= table_32 = malloc ((197 + 2*682 + 256 + 132) * sizeof (uint32_t));
 
         entry_size = sizeof (uint32_t);
         table_r = table_32 + 197;

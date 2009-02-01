@@ -5,6 +5,8 @@
 #include "ffImgfmt.h"
 #include "IffColorspaceConvert.h"
 #include "TrgbPrimaries.h"
+#include "libavcodec/avcodec.h"
+#include "ffdshow_converters.h"
 
 //#define AVISYNTH_BITBLT //use avisynth bitblt function to just copy frame when no colorspace conversion is needed
 #define XVID_BITBLT //use xvid's YV12 -> YV12 copy function - seems to be fastest
@@ -28,6 +30,14 @@ private:
  int incsp1,outcsp1;
  const TcspInfo *incspInfo,*outcspInfo;
  int rgbInterlaceMode;
+ TffdshowConverters<FF_CSP_420P,FF_CSP_RGB32> *ffdshow_YV12toRGB32;
+ TffdshowConverters<FF_CSP_420P,FF_CSP_RGB24> *ffdshow_YV12toRGB24;
+ TffdshowConverters<FF_CSP_NV12,FF_CSP_RGB32> *ffdshow_NV12toRGB32;
+ TffdshowConverters<FF_CSP_NV12,FF_CSP_RGB24> *ffdshow_NV12toRGB24;
+ TffdshowConverters<FF_CSP_422P,FF_CSP_RGB32> *ffdshow_YV16toRGB32;
+ TffdshowConverters<FF_CSP_422P,FF_CSP_RGB24> *ffdshow_YV16toRGB24;
+ TffdshowConverters<FF_CSP_YUY2,FF_CSP_RGB32> *ffdshow_YUY2toRGB32;
+ TffdshowConverters<FF_CSP_YUY2,FF_CSP_RGB24> *ffdshow_YUY2toRGB24;
 
  enum
   {
@@ -46,6 +56,14 @@ private:
    MODE_xvidImage_input,
    MODE_swscale,
    MODE_avisynth_bitblt,
+   MODE_ffdshow_YV12toRGB32,
+   MODE_ffdshow_YV12toRGB24,
+   MODE_ffdshow_NV12toRGB32,
+   MODE_ffdshow_NV12toRGB24,
+   MODE_ffdshow_YV16toRGB32,
+   MODE_ffdshow_YV16toRGB24,
+   MODE_ffdshow_YUY2toRGB32,
+   MODE_ffdshow_YUY2toRGB24,
    MODE_fallback
   } mode;
  static const char_t* getModeName(int mode);
@@ -70,7 +88,16 @@ public:
  Tconvert(Tlibmplayer *Ilibmplayer,bool IavisynthYV12_RGB,unsigned int Idx,unsigned int Idy,const TrgbPrimaries &IrgbPrimaries, int rgbInterlaceMode);
  ~Tconvert();
  unsigned int dx,dy,outdy;
- int convert(int incsp,const uint8_t*const src[],const stride_t srcStride[],int outcsp,uint8_t* dst[],stride_t dstStride[],const Tpalette *srcpal,bool vram_indirect=false);
+ int convert(int incsp,
+             const uint8_t*const src[],
+             const stride_t srcStride[],
+             int outcsp,
+             uint8_t* dst[],
+             stride_t dstStride[],
+             const Tpalette *srcpal,
+             int video_full_range_flag = VIDEO_FULL_RANGE_INVALID,
+             int YCbCr_RGB_matrix_coefficients = YCbCr_RGB_coeff_Unspecified,
+             bool vram_indirect=false);
  int convert(const TffPict &pict,int outcsp,uint8_t* dst[],stride_t dstStride[],bool vram_indirect=false);
 };
 

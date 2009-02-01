@@ -7160,11 +7160,11 @@ static inline int decode_vui_parameters(H264Context *h, SPS *sps){
 
     if(get_bits1(&s->gb)){      /* video_signal_type_present_flag */
         get_bits(&s->gb, 3);    /* video_format */
-        get_bits1(&s->gb);      /* video_full_range_flag */
+        sps->video_full_range_flag = get_bits1(&s->gb);
         if(get_bits1(&s->gb)){  /* colour_description_present_flag */
             get_bits(&s->gb, 8); /* colour_primaries */
             get_bits(&s->gb, 8); /* transfer_characteristics */
-            get_bits(&s->gb, 8); /* matrix_coefficients */
+            sps->matrix_coefficients = get_bits(&s->gb, 8);
         }
     }
 
@@ -7281,10 +7281,12 @@ static inline int decode_seq_parameter_set(H264Context *h){
 
     sps->profile_idc= profile_idc;
     sps->level_idc= level_idc;
+    sps->video_full_range_flag = VIDEO_FULL_RANGE_INVALID;
 
     memset(sps->scaling_matrix4, 16, sizeof(sps->scaling_matrix4));
     memset(sps->scaling_matrix8, 16, sizeof(sps->scaling_matrix8));
     sps->scaling_matrix_present = 0;
+    sps->matrix_coefficients = 2; // ffdshow custom code
 
     if(sps->profile_idc >= 100){ //high profile
         sps->chroma_format_idc= get_ue_golomb_31(&s->gb);
@@ -7939,6 +7941,9 @@ static int decode_frame(AVCodecContext *avctx,
                     cur->top_field_first = 0;
                 }
             }
+
+            cur->video_full_range_flag = h->sps.video_full_range_flag;
+            cur->YCbCr_RGB_matrix_coefficients = h->sps.matrix_coefficients;
 
         //FIXME do something with unavailable reference frames
 

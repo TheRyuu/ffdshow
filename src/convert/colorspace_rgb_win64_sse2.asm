@@ -112,6 +112,7 @@ UB_MUL: dw 129, 129, 129, 129, 129, 129, 129, 129
 VR_MUL: dw 102, 102, 102, 102, 102, 102, 102, 102
 
 BRIGHT: db 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128
+RGB_ADD: dd 0x00101010,0x00101010,0x00101010,0x00101010
 
 ;=============================================================================
 ; Helper macros used with the colorspace_sse2.inc file
@@ -132,7 +133,7 @@ BRIGHT: db 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128,
 %endmacro
 
 
-%macro BGR_TO_YV12			2
+%macro BGR_TO_YV12			3
     ; y_out
   pxor xmm4, xmm4
   pxor xmm5, xmm5
@@ -222,7 +223,7 @@ BRIGHT: db 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128,
   pxor xmm7, xmm7             ; clear xmm7
 %endmacro
 
-%macro YV12_TO_BGR			2
+%macro YV12_TO_BGR			3
 %define TEMP_Y1  xmm8
 %define TEMP_Y2  xmm9
 %define TEMP_G1  xmm10
@@ -250,7 +251,7 @@ BRIGHT: db 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128,
   paddsw xmm2, xmm3
   paddsw xmm6, xmm0
   pmullw xmm5, [VR_MUL wrt rip]       ; R_ADD -> xmm5
-  %2     xmm0, [rsi]                  ; y7y6y5y4y3y2y1y0 -> xmm0
+  %3     xmm0, [rsi]                  ; y7y6y5y4y3y2y1y0 -> xmm0
   movdqa xmm1, xmm0
   punpckhbw xmm1, xmm7                ; y7y6y5y4 -> xmm1
   punpcklbw xmm0, xmm7                ; y3y2y1y0 -> xmm0
@@ -266,7 +267,7 @@ BRIGHT: db 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128,
   psraw xmm0, SCALEBITS
   packuswb xmm0, xmm1                 ;g7g6g5g4g3g2g1g0 -> xmm0
   movdqa TEMP_G1, xmm0
-  %2     xmm0, [rsi+rax]              ; y7y6y5y4y3y2y1y0 -> xmm0
+  %3     xmm0, [rsi+rax]              ; y7y6y5y4y3y2y1y0 -> xmm0
   movdqa xmm1, xmm0
   punpckhbw xmm1, xmm7                ; y7y6y5y4 -> xmm1
   punpcklbw xmm0, xmm7                ; y3y2y1y0 -> xmm0
@@ -332,6 +333,15 @@ BRIGHT: db 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128,
   movdqa xmm5, xmm0
   punpcklbw xmm0, xmm3                ; 0r5g5b50r4g4b4 -> xmm0
   punpckhbw xmm5, xmm3                ; 0r7g7b70r6g6b6 -> xmm5
+
+%if %2 == 0     ; TV-RGB
+  movdqa xmm1, [RGB_ADD wrt rip]
+  paddusb xmm2, xmm1
+  paddusb xmm4, xmm1
+  paddusb xmm0, xmm1
+  paddusb xmm5, xmm1
+%endif
+
 %if %1 == 3     ; BGR (24-bit)
 ; TODO optimize
   movd [rdi], xmm2
@@ -385,6 +395,14 @@ BRIGHT: db 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128,
   punpcklbw xmm0, xmm3                ; 0r5g5b50r4g4b4 -> xmm0
   punpckhbw xmm5, xmm3                ; 0r7g7b70r6g6b6 -> xmm5
 
+  %if %2 == 0     ; TV-RGB
+    movdqa xmm1, [RGB_ADD wrt rip]
+    paddusb xmm2, xmm1
+    paddusb xmm4, xmm1
+    paddusb xmm0, xmm1
+    paddusb xmm5, xmm1
+  %endif
+
   movd [rdi+rdx], xmm2
   psrldq xmm2, 4
   movd [rdi+rdx + 3], xmm2
@@ -422,10 +440,10 @@ BRIGHT: db 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128,
   movd  [rdi +rdx + 44], xmm5
 
 %else       ; BGRA (32-bit)
-  %2     [rdi], xmm2
-  %2     [rdi + 16], xmm4
-  %2     [rdi + 32], xmm0
-  %2     [rdi + 48], xmm5
+  %3     [rdi], xmm2
+  %3     [rdi + 16], xmm4
+  %3     [rdi + 32], xmm0
+  %3     [rdi + 48], xmm5
   movdqa xmm0, TEMP_B2
   movdqa xmm1, TEMP_G2
   movdqa xmm2, xmm0
@@ -440,10 +458,17 @@ BRIGHT: db 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128,
   movdqa xmm5, xmm0
   punpcklbw xmm0, xmm3                ; 0r5g5b50r4g4b4 -> xmm0
   punpckhbw xmm5, xmm3                ; 0r7g7b70r6g6b6 -> xmm5
-  %2     [rdi + rdx], xmm2
-  %2     [rdi + rdx + 16], xmm4
-  %2     [rdi + rdx + 32], xmm0
-  %2     [rdi + rdx + 48], xmm5
+  %if %2 == 0     ; TV-RGB
+    movdqa xmm1, [RGB_ADD wrt rip]
+    paddusb xmm2, xmm1
+    paddusb xmm4, xmm1
+    paddusb xmm0, xmm1
+    paddusb xmm5, xmm1
+  %endif
+  %3     [rdi + rdx], xmm2
+  %3     [rdi + rdx + 16], xmm4
+  %3     [rdi + rdx + 32], xmm0
+  %3     [rdi + rdx + 48], xmm5
 %endif
 
 %undef TEMP_Y1
@@ -463,16 +488,20 @@ SECTION .text
 %include "colorspace_win64_sse2.inc"
 
 ; input
-MAKE_COLORSPACE  bgr_to_yv12_win64_sse2,0,    3,2,2,  BGR_TO_YV12,  3, -1
-MAKE_COLORSPACE  bgra_to_yv12_win64_sse2,0,   4,2,2,  BGR_TO_YV12,  4, -1
+MAKE_COLORSPACE  bgr_to_yv12_win64_sse2,0,    3,2,2,  BGR_TO_YV12,  3, -1, -1
+MAKE_COLORSPACE  bgra_to_yv12_win64_sse2,0,   4,2,2,  BGR_TO_YV12,  4, -1, -1
 
 ; output
 ; aligned version : x_ptr, y_src, x_stride, y_stride must be multiple of 16
-MAKE_COLORSPACE  yv12_to_bgr_win64_sse2a,0,   3,16,2,  YV12_TO_BGR,  3, movdqa
-MAKE_COLORSPACE  yv12_to_bgra_win64_sse2a,0,  4,16,2,  YV12_TO_BGR,  4, movdqa
+MAKE_COLORSPACE  yv12_to_TVbgr_win64_sse2a,0,   3,16,2,  YV12_TO_BGR,  3, 1, movdqa
+MAKE_COLORSPACE  yv12_to_PCbgr_win64_sse2a,0,   3,16,2,  YV12_TO_BGR,  3, 0, movdqa
+MAKE_COLORSPACE  yv12_to_TVbgra_win64_sse2a,0,  4,16,2,  YV12_TO_BGR,  4, 1, movdqa
+MAKE_COLORSPACE  yv12_to_PCbgra_win64_sse2a,0,  4,16,2,  YV12_TO_BGR,  4, 0, movdqa
 ; unaligned version for fail over
-MAKE_COLORSPACE  yv12_to_bgr_win64_sse2u,0,   3,16,2,  YV12_TO_BGR,  3, movdqu
-MAKE_COLORSPACE  yv12_to_bgra_win64_sse2u,0,  4,16,2,  YV12_TO_BGR,  4, movdqu
+MAKE_COLORSPACE  yv12_to_TVbgr_win64_sse2u,0,   3,16,2,  YV12_TO_BGR,  3, 1, movdqu
+MAKE_COLORSPACE  yv12_to_PCbgr_win64_sse2u,0,   3,16,2,  YV12_TO_BGR,  3, 0, movdqu
+MAKE_COLORSPACE  yv12_to_TVbgra_win64_sse2u,0,  4,16,2,  YV12_TO_BGR,  4, 1, movdqu
+MAKE_COLORSPACE  yv12_to_PCbgra_win64_sse2u,0,  4,16,2,  YV12_TO_BGR,  4, 0, movdqu
 
 ;
 ; Sample code

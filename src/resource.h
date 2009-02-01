@@ -1813,11 +1813,10 @@
 #define IDC_TXT_RGBCONV_BLACK           2118
 #define IDC_TXT_RGBCONV_WHITE           2119
 #define IDC_TXT_RGBCONV_CHROMA          2120
-#define IDC_CHB_RGBCONV_CHROMA_LOCK     2121
 #define IDC_GRP_CSP_OPT2                2122
 #define IDC_GRP_CSP_OPT1                2123
-#define IDC_RBT_REC_YUV                 2124
-#define IDC_RBT_PC_YUV                  2125
+#define IDC_RBT_YCbCr_input_levels_16_to_235 2124
+#define IDC_RBT_YCbCr_input_levels_0_to_255 2125
 #define IDC_RBT_CUSTOM_YUV              2126
 #define IDC_ED_MIXERMATRIX06            2127
 #define IDC_ED_MIXERMATRIX07            2128
@@ -1939,6 +1938,11 @@
 #define IDC_TBR_DECODER_DRC_LEVEL       2246
 #define IDC_LBL_DECODER_DRC_LEVEL       2247
 #define IDC_CHB_SOFT_TELECINE           2248
+#define IDC_RBT_YCbCr_input_levels_auto 2249
+#define IDC_GRP_CSP_OUTPUT_LEVELS       2250
+#define IDC_RBT_CSP_OUTPUT_LEVELS_PC    2251
+#define IDC_RBT_CSP_OUTPUT_LEVELS_TV    2252
+#define IDC_RBT_BT_AUTO                 2253
 #define ID_MNI_PRESET_NEWFROMDEFAULT    40004
 #define ID_MNI_PRESET_NEWFROMSELECTED   40005
 #define ID_MNI_PRESET_NEW_FROMFILE      40006
@@ -1955,7 +1959,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        297
 #define _APS_NEXT_COMMAND_VALUE         40015
-#define _APS_NEXT_CONTROL_VALUE         2249
+#define _APS_NEXT_CONTROL_VALUE         2254
 #define _APS_NEXT_SYMED_VALUE           107
 #endif
 #endif

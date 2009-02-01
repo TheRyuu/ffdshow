@@ -169,7 +169,7 @@ template<bool RGB24,bool DUPL> struct Tmmx_ConvertRGBtoYUY2
   }
 };
 
-template<int uyvy,int rgb32> struct Tmmx_ConvertYUY2toRGB
+template<int uyvy,int rgb32,int pcRGB> struct Tmmx_ConvertYUY2toRGB
 {
 private:
 // ======================================================================== MMX ========================================================================
@@ -198,10 +198,12 @@ private:
    static const int ofs_x0080_0080_0080_0080=16;
    static const int ofs_x00002000_00002000=48;
    static const int ofs_xFF000000_FF000000=64;
-   static const int ofs_cy=80;
-   static const int ofs_crv=96;
-   static const int ofs_cgu_cgv=112;
-   static const int ofs_cbu=128;
+   static const int ofs_xFF00FF00_FF00FF00=80;
+   static const int ofs_rgb_add=96;
+   static const int ofs_cy=112;
+   static const int ofs_crv=128;
+   static const int ofs_cgu_cgv=144;
+   static const int ofs_cbu=160;
    bool ret;
    __m64 mm0,mm1,mm2,mm3,mm4,mm5,mm6,mm7;
 
@@ -288,6 +290,13 @@ private:
    packuswb        (mm0,mm2 );// mm0 = __RRGGBB__rrggbb <- ta dah!
     packuswb       ( mm4,mm6);
 
+   if (!pcRGB)
+    {
+     movq (mm3, (const __m64*)(edx+ofs_rgb_add));
+     paddusb (mm0, mm3);
+      paddusb (mm4,mm3);
+    }
+
    if (rgb32)
     {
      por (mm0, edx+ofs_xFF000000_FF000000);    // set alpha channels "on"
@@ -335,10 +344,12 @@ private:
    static const int ofs_x0080_0080_0080_0080=16;
    static const int ofs_x00002000_00002000=48;
    static const int ofs_xFF000000_FF000000=64;
-   static const int ofs_cy=80;
-   static const int ofs_crv=96;
-   static const int ofs_cgu_cgv=112;
-   static const int ofs_cbu=128;
+   static const int ofs_xFF00FF00_FF00FF00=80;
+   static const int ofs_rgb_add=96;
+   static const int ofs_cy=112;
+   static const int ofs_crv=128;
+   static const int ofs_cgu_cgv=144;
+   static const int ofs_cbu=160;
    bool ret;
    __m128i xmm0,xmm1,xmm2,xmm3,xmm4,xmm5,xmm6,xmm7;
 
@@ -346,7 +357,7 @@ private:
     xmm2 = _mm_loadl_epi64((const __m128i*)(esi + 4));
    xmm1 = xmm0;
    pxor           (xmm7,xmm7);
-   xmm3 = _mm_set_epi32(0xff00ff00,0xff00ff00,0xff00ff00,0xff00ff00);
+   xmm3 = _mm_load_si128((const __m128i*)(edx+ofs_xFF00FF00_FF00FF00));
    GET_Y_SSE2          (xmm0,uyvy,edx);       // xmm0 = __________________Y3__Y2__Y1__Y0
     xmm4 = _mm_loadl_epi64((const __m128i*)(esi + 8));
    GET_UV_SSE2         (xmm1,uyvy,edx);       // xmm1 = __________________V2__U2__V0__U0
@@ -367,10 +378,10 @@ private:
      }
     else
      xmm6 = _mm_loadl_epi64((const __m128i*)(esi + 12));
-   GET_UV_SSE2         (xmm5,uyvy,edx);       // xmm5 = __________________V6__U6__V4__U4
+   GET_UV_SSE2         (xmm5,uyvy,edx);  // xmm5 = __________________V6__U6__V4__U4
     psubw         ( xmm4,edx+ofs_x0000_0000_0010_0010);     // (Y-16)
    paddw          (xmm2,xmm1);           // xmm2=  2*UV3,2*UV1 = UV2+UV4, UV0+UV2
-    GET_UV_SSE2        ( xmm6,uyvy,edx);      // xmm6 = __________________V8__U8__V6__U6
+    GET_UV_SSE2        ( xmm6,uyvy,edx); // xmm6 = __________________V8__U8__V6__U6
    psubw          (xmm1,edx+ofs_x0080_0080_0080_0080);      // (UV-128).
     paddw         ( xmm6,xmm5);          // xmm6=  2*UV7,2*UV5 = UV6+UV8, UV4+UV6
    punpckldq      (xmm2,xmm7);           // xmm2=  _________2V3_2U3_________2V1_2U1
@@ -388,7 +399,7 @@ private:
    paddw          (xmm1,xmm2);           // xmm1= 2*V3-256, 2*U3-256, 2*V2, 2*U2 ,2*V1-256, 2*U1-256, 2*V0, 2*U0
    paddd          (xmm0,edx+ofs_x00002000_00002000);        // +=0.5<<14
    punpckldq      (xmm5,xmm3);           // xmm5= _________2V6_2U6_________2V4_2U4
-    paddw         ( xmm5,xmm6);          // m5= _2V7_2U7_2V6_2U6_2V5_2U5_2V4_2U4
+    paddw         ( xmm5,xmm6);          // xmm5= _2V7_2U7_2V6_2U6_2V5_2U5_2V4_2U4
    xmm2 = xmm1;
     paddd         ( xmm4,edx+ofs_x00002000_00002000);       // +=0.5<<14
    xmm3 = xmm1;
@@ -433,15 +444,17 @@ private:
     xmm4 = xmm6;
    punpcklwd       (xmm0,xmm3 );// xmm0 = ____rrrrggggbbbb
     punpcklwd      ( xmm4,xmm7);
-   //if (!rgb32)
-   // {
-   //   xmm0 = _mm_slli_si128(xmm0,2);
-   //    xmm4 = _mm_slli_si128(xmm4,2);
-   // }
    punpckhwd       (xmm2,xmm3 );// xmm2 = ____RRRRGGGGBBBB
     punpckhwd      ( xmm6,xmm7);
    packuswb        (xmm0,xmm2 );// xmm0 = __RRGGBB__rrggbb <- ta dah!
     packuswb       ( xmm4,xmm6);
+
+   if (!pcRGB)
+    {
+     xmm3 = _mm_load_si128 ((const __m128i*)(edx+ofs_rgb_add));
+     xmm0 = _mm_adds_epu8 (xmm0, xmm3);
+      xmm4 = _mm_adds_epu8 (xmm4, xmm3);
+    }
 
    if (rgb32)
     {

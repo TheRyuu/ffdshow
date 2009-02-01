@@ -238,15 +238,6 @@ const TcspInfo cspInfos[]=
   {0,128,128,0}, //black
   FOURCC_NV12, FOURCC_NV12, &MEDIASUBTYPE_NV12
  },
- {
-  FF_CSP_YV16,_l("YV16"),
-  1,16, //Bpp
-  3, //numplanes
-  {0,1,1,0}, //shiftX
-  {0,0,0,0}, //shiftY
-  {0,128,128,0},  //black
-  FOURCC_YV16, FOURCC_YV16, &MEDIASUBTYPE_YV16
- },
  0
 };
 
@@ -364,7 +355,6 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
      break;
     }
    case FF_CSP_422P:
-   case FF_CSP_YV16:
     {
      static const int best[FF_CSPS_NUM]=
       {
@@ -1045,7 +1035,7 @@ int getBMPcolorspace(const BITMAPINFOHEADER *hdr,const TcspInfos &forcedCsps)
     csp=FF_CSP_422P;
     break;
    case FOURCC_YV16:
-    csp=FF_CSP_YV16;
+    csp=FF_CSP_422P|FF_CSP_FLAGS_YUV_ADJ;
     break;
    case FOURCC_411P:
    case FOURCC_Y41B:

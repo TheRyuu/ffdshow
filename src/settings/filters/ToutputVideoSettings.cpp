@@ -119,18 +119,18 @@ ToutputVideoSettings::ToutputVideoSettings(TintStrColl *Icoll,TfilterIDFFs *filt
      _l("outChangeCompatOnly"),1,
    IDFF_avisynthYV12_RGB   ,&ToutputVideoSettings::avisynthYV12_RGB   ,0,0,_l(""),1,
      _l("avisynthYV12_RGB"),0,
-   IDFF_cspOptionsIturBt                ,&ToutputVideoSettings::cspOptionsIturBt           ,0,0,_l(""),1,
-     _l("cspOptionsIturBt"),TrgbPrimaries::ITUR_BT601,
-   IDFF_cspOptionsCutoffMode            ,&ToutputVideoSettings::cspOptionsCutoffMode       ,0,0,_l(""),1,
-     _l("cspOptionsCutoffMode"),TrgbPrimaries::RecYCbCr,
+   IDFF_cspOptionsIturBt                ,&ToutputVideoSettings::cspOptionsIturBt           ,0,TrgbPrimaries::ITUR_BT_MAX - 1,_l(""),1,
+     _l("cspOptionsIturBt2"),TrgbPrimaries::ITUR_BT_AUTO,
+   IDFF_cspOptionsInputLevelsMode       ,&ToutputVideoSettings::cspOptionsInputLevelsMode  ,0,3,_l(""),1,
+     _l("cspOptionsInputLevelsMode"),TrgbPrimaries::RecYCbCr,
+   IDFF_cspOptionsOutputLevelsMode      ,&ToutputVideoSettings::cspOptionsOutputLevelsMode ,0,1,_l(""),1,
+     _l("cspOptionsOutputLevelsMode"),TrgbPrimaries::PcRGB,
    IDFF_cspOptionsBlackCutoff           ,&ToutputVideoSettings::cspOptionsBlackCutoff      ,0,32,_l(""),1,
      _l("cspOptionsBlackCutoff"),16,
    IDFF_cspOptionsWhiteCutoff           ,&ToutputVideoSettings::cspOptionsWhiteCutoff      ,215,255,_l(""),1,
      _l("cspOptionsWhiteCutoff"),235,
    IDFF_cspOptionsChromaCutoff          ,&ToutputVideoSettings::cspOptionsChromaCutoff     ,1,32,_l(""),1,
      _l("cspOptionsChromaCutoff"),16,
-   IDFF_cspOptionsInterlockChroma       ,&ToutputVideoSettings::cspOptionsInterlockChroma  ,0,0,_l(""),1,
-     _l("cspOptionsInterlockChroma"),1,
    IDFF_cspOptionsRgbInterlaceMode      ,&ToutputVideoSettings::cspOptionsRgbInterlaceMode ,0,2,_l(""),1,
      _l("cspOptionsRgbInterlaceMode"),0,
    0
@@ -218,52 +218,56 @@ void ToutputVideoSettings::getDVsize(unsigned int *dx,unsigned int *dy) const
   }
 }
 
-int ToutputVideoSettings::get_cspOptionsWhiteCutoff() const
+int ToutputVideoSettings::get_cspOptionsWhiteCutoff(int video_full_range_flag) const
 {
- if (cspOptionsCutoffMode == TrgbPrimaries::RecYCbCr)
+ if (cspOptionsInputLevelsMode == TrgbPrimaries::AutoYCbCr)
+  return video_full_range_flag == VIDEO_FULL_RANGE_PC ? 255 : 235;
+ else if (cspOptionsInputLevelsMode == TrgbPrimaries::RecYCbCr)
   return 235;
- else  if (cspOptionsCutoffMode == TrgbPrimaries::PcYCbCr)
+ else  if (cspOptionsInputLevelsMode == TrgbPrimaries::PcYCbCr)
   return 255;
 
  return cspOptionsWhiteCutoff;
 }
 
-int ToutputVideoSettings::get_cspOptionsBlackCutoff() const
+int ToutputVideoSettings::get_cspOptionsBlackCutoff(int video_full_range_flag) const
 {
- if (cspOptionsCutoffMode == TrgbPrimaries::RecYCbCr)
+ if (cspOptionsInputLevelsMode == TrgbPrimaries::AutoYCbCr)
+  return video_full_range_flag == VIDEO_FULL_RANGE_PC ? 0 : 16;
+ else if (cspOptionsInputLevelsMode == TrgbPrimaries::RecYCbCr)
   return 16;
- else  if (cspOptionsCutoffMode == TrgbPrimaries::PcYCbCr)
+ else  if (cspOptionsInputLevelsMode == TrgbPrimaries::PcYCbCr)
   return 0;
 
  return cspOptionsBlackCutoff;
 }
 
-int ToutputVideoSettings::get_cspOptionsChromaCutoff() const
+int ToutputVideoSettings::get_cspOptionsChromaCutoff(int video_full_range_flag) const
 {
- if (cspOptionsCutoffMode == TrgbPrimaries::RecYCbCr)
+ if (cspOptionsInputLevelsMode == TrgbPrimaries::AutoYCbCr)
+  return video_full_range_flag == VIDEO_FULL_RANGE_PC ? 1 : 16;
+ else if (cspOptionsInputLevelsMode == TrgbPrimaries::RecYCbCr)
   return 16;
- else  if (cspOptionsCutoffMode == TrgbPrimaries::PcYCbCr)
+ else  if (cspOptionsInputLevelsMode == TrgbPrimaries::PcYCbCr)
   return 1;
 
- return get_cspOptionsChromaCutoffStatic(cspOptionsBlackCutoff, cspOptionsWhiteCutoff, cspOptionsChromaCutoff, cspOptionsInterlockChroma);
+ return get_cspOptionsChromaCutoffStatic(cspOptionsBlackCutoff, cspOptionsWhiteCutoff, cspOptionsChromaCutoff);
 }
 
-int ToutputVideoSettings::get_cspOptionsChromaCutoffStatic(int blackCutoff, int whiteCutoff, int chromaCutoff, int lock)
+int ToutputVideoSettings::get_cspOptionsChromaCutoffStatic(int blackCutoff, int whiteCutoff, int chromaCutoff)
 {
  int result=16;
- if (lock)
-  result = int(double(255-(whiteCutoff-blackCutoff))/36.0*16.0);
- else
-  result = chromaCutoff;
+ result = int(double(255-(whiteCutoff-blackCutoff))/36.0*16.0);
+
  if (result < 1)
   result = 1;
  return result;
 }
 
-int ToutputVideoSettings::brightness2luma(int brightness) const
+int ToutputVideoSettings::brightness2luma(int brightness, int video_full_range_flag) const
 {
- int b = get_cspOptionsBlackCutoff();
- int w = get_cspOptionsWhiteCutoff();
+ int b = get_cspOptionsBlackCutoff(video_full_range_flag);
+ int w = get_cspOptionsWhiteCutoff(video_full_range_flag);
  int luma = int(0.5 + b + brightness * (w - b) / 255.0);
  return limit(luma, 0, 255);
 }

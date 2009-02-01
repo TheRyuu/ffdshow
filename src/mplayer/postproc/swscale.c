@@ -107,7 +107,7 @@ untested special converters
 //FIXME replace this with something faster
 #define isPlanarYUV(x) ((x)==IMGFMT_YV12 || (x)==IMGFMT_YVU9 \
 			|| (x)==IMGFMT_NV12 || (x)==IMGFMT_NV21 \
-			|| (x)==IMGFMT_444P || (x)==IMGFMT_422P || (x)==IMGFMT_411P || (x)==IMGFMT_YV16)
+			|| (x)==IMGFMT_444P || (x)==IMGFMT_422P || (x)==IMGFMT_411P)
 #define isYUV(x)       ((x)==IMGFMT_UYVY || (x)==IMGFMT_YUY2 || (x)==IMGFMT_YVYU || (x)==IMGFMT_VYUY || isPlanarYUV(x))
 #define isGray(x)      ((x)==IMGFMT_Y800)
 #define isRGB(x)       (((x)&IMGFMT_RGB_MASK)==IMGFMT_RGB)
@@ -116,12 +116,12 @@ untested special converters
 			|| isRGB(x) || isBGR(x) \
 			|| (x)==IMGFMT_Y800 || (x)==IMGFMT_YVU9\
 			|| (x)==IMGFMT_NV12 || (x)==IMGFMT_NV21\
-			|| (x)==IMGFMT_444P || (x)==IMGFMT_422P || (x)==IMGFMT_411P || (x)==IMGFMT_YV16)
+			|| (x)==IMGFMT_444P || (x)==IMGFMT_422P || (x)==IMGFMT_411P)
 #define isSupportedOut(x) ((x)==IMGFMT_YV12 || (x)==IMGFMT_YUY2 || (x)==IMGFMT_UYVY || (x)==IMGFMT_YVYU || (x)==IMGFMT_VYUY \
 			|| (x)==IMGFMT_444P || (x)==IMGFMT_422P || (x)==IMGFMT_411P\
 			|| isRGB(x) || isBGR(x)\
 			|| (x)==IMGFMT_NV12 || (x)==IMGFMT_NV21\
-			|| (x)==IMGFMT_Y800 || (x)==IMGFMT_YVU9 || (x)==IMGFMT_YV16)
+			|| (x)==IMGFMT_Y800 || (x)==IMGFMT_YVU9)
 #define isPacked(x)    ((x)==IMGFMT_YUY2 || (x)==IMGFMT_UYVY || (x)==IMGFMT_YVYU || (x)==IMGFMT_VYUY || isRGB(x) || isBGR(x))
 
 #define RGB2YUV_SHIFT 16
@@ -1910,7 +1910,6 @@ static void getSubSampleFactors(int *h, int *v, int format){
 		*v=0;
 		break;
 	case IMGFMT_422P:
-	case IMGFMT_YV16:
 		*h=1;
 		*v=0;
 		break;
@@ -1937,7 +1936,7 @@ static uint16_t roundToInt16(int64_t f){
  * @param fullRange if 1 then the luma range is 0..255 if 0 its 16..235
  * @return -1 if not supported
  */
-int sws_setColorspaceDetails(SwsContext *c, const int inv_table[6], int srcRange, const int table[6], int dstRange, int brightness, int contrast, int saturation){
+int sws_setColorspaceDetails(SwsContext *c, const int inv_table[7], int srcRange, const int table[7], int dstRange, int brightness, int contrast, int saturation){
 	int64_t crv =  inv_table[0];
 	int64_t cbu =  inv_table[1];
 	int64_t cgu = -inv_table[2];
@@ -1946,8 +1945,8 @@ int sws_setColorspaceDetails(SwsContext *c, const int inv_table[6], int srcRange
 	int64_t oy  =  inv_table[5];
 
 	if(isYUV(c->dstFormat) || isGray(c->dstFormat)) return -1;
-	memcpy(c->srcColorspaceTable, inv_table, sizeof(int)*6);
-	memcpy(c->dstColorspaceTable,     table, sizeof(int)*6);
+	memcpy(c->srcColorspaceTable, inv_table, sizeof(int)*7);
+	memcpy(c->dstColorspaceTable,     table, sizeof(int)*7);
 
 	c->brightness= brightness;
 	c->contrast  = contrast;
@@ -2135,7 +2134,7 @@ SwsContext *sws_getContextEx(int srcW, int srcH, int origSrcFormat, int dstW, in
 			c->swScale= NV12ToPlanarWrapper;
 		}
 		/* yuv2bgr */
-		if((srcFormat==IMGFMT_YV12 || srcFormat==IMGFMT_422P || srcFormat==IMGFMT_YV16) && (isBGR(dstFormat) || isRGB(dstFormat)))
+		if((srcFormat==IMGFMT_YV12 || srcFormat==IMGFMT_422P) && (isBGR(dstFormat) || isRGB(dstFormat)))
 		{
 			c->swScale= yuv2rgb_get_func_ptr(c);
 		}
@@ -2570,12 +2569,7 @@ int sws_scale_ordered(SwsContext *c, uint8_t* src[], stride_t srcStride[], int s
 	    // slices go from top to bottom
 	    stride_t srcStride2[3]= {srcStride[0], srcStride[1], srcStride[2]};
 	    stride_t dstStride2[3]= {dstStride[0], dstStride[1], dstStride[2]};
-	    if (c->srcFormat == IMGFMT_YV16) {
-	        uint8_t* src2[3] = {src[0],src[2],src[1]};
-	        return c->swScale(c, src2, srcStride2, srcSliceY, srcSliceH, dst, dstStride2);
-	    }
-	    else
-	        return c->swScale(c, src, srcStride2, srcSliceY, srcSliceH, dst, dstStride2);
+            return c->swScale(c, src, srcStride2, srcSliceY, srcSliceH, dst, dstStride2);
 	} else {
 	    // slices go from bottom to top => we flip the image internally
 	    uint8_t* src2[3]= {src[0] + (srcSliceH-1)*srcStride[0],
@@ -2587,12 +2581,6 @@ int sws_scale_ordered(SwsContext *c, uint8_t* src[], stride_t srcStride[], int s
 			       dst[2] + ((c->dstH>>c->chrDstVSubSample)-1)*dstStride[2]};
 	    stride_t srcStride2[3]= {-srcStride[0], -srcStride[1], -srcStride[2]};
 	    stride_t dstStride2[3]= {-dstStride[0], -dstStride[1], -dstStride[2]};
-
-	    if (c->srcFormat == IMGFMT_YV16) {
-	        uint8_t* temp = src2[2];
-	        src2[2] = src2[1];
-	        src2[1] = temp;
-	    }
 
 	    return c->swScale(c, src2, srcStride2, c->srcH-srcSliceY-srcSliceH, srcSliceH, dst2, dstStride2);
 	}

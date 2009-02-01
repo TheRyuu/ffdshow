@@ -4,6 +4,24 @@
 #include "interfaces.h"
 #include "simd_common.h"
 
+void YCbCr2RGBdata_common_inint(double &Kr,
+                                double &Kg,
+                                double &Kb,
+                                double &chr_range,
+                                double &y_mul,
+                                double &vr_mul,
+                                double &ug_mul,
+                                double &vg_mul,
+                                double &ub_mul,
+                                int &Ysub,
+                                int &RGB_add,
+                                const int cspOptionsIturBt,
+                                const int cspOptionsWhiteCutoff,
+                                const int cspOptionsBlackCutoff,
+                                const int cspOptionsChromaCutoff,
+                                const double cspOptionsRGB_WhiteLevel,
+                                const double cspOptionsRGB_BlackLevel);
+
 struct ToutputVideoSettings;
 typedef struct 
 {
@@ -17,36 +35,55 @@ typedef struct
 class TrgbPrimaries
 {
 private:
- short avisynthMmxMatrixBuf[72+8];
- int32_t swscaleTable[6];
+ short avisynthMmxMatrixBuf[88+8];
+ int32_t swscaleTable[7];
  Tmmx_ConvertRGBtoYUY2matrix mmx_ConvertRGBtoYUY2matrix;
 
  void reset(void);
  IffdshowDecVideo* deciV;
- bool wasJpeg;
+ bool wasJpeg,wasFraps;
+ struct Th264Primaries
+  {
+   double green_x,green_y,blue_x,blue_y,red_X,red_y;
+   double white_x,white_y;
+  };
 protected:
  int cspOptionsIturBt, cspOptionsBlackCutoff, cspOptionsWhiteCutoff, cspOptionsChromaCutoff;
+ double cspOptionsRGB_BlackLevel, cspOptionsRGB_WhiteLevel;
 public:
  TrgbPrimaries(IffdshowBase *deci);
  TrgbPrimaries();
- void UpdateSettings(void);
- void writeToXvidYuv2RgbMatrix(short *asmData);
- void writeToXvidRgb2YuvMatrix(short *asmData);
- const unsigned char* getAvisynthYuv2RgbMatrix(void);
+ /**
+  * UpdateSettings
+  * @return a value that has to be added to RGB
+  */
+ int UpdateSettings(int video_full_range_flag, int YCbCr_RGB_matrix_coefficients);
+ int writeToXvidYCbCr2RgbMatrix(short *asmData);
+ void writeToXvidRgb2YCbCrMatrix(short *asmData);
+ const unsigned char* getAvisynthYCbCr2RgbMatrix(int &rgb_add);
  const Tmmx_ConvertRGBtoYUY2matrix* getAvisynthRgb2YuvMatrix(void);
- const void initXvid(void);
+ const void initXvid(int rgb_add);
  const int32_t* toSwscaleTable(void);
- void setJpeg(bool isjpeg);
+ void setJpeg(bool isjpeg, int rgb_add = 0);
  enum
   {
-   ITUR_BT601,
-   ITUR_BT709
+   ITUR_BT601    = 0,
+   ITUR_BT709    = 1,
+   SMPTE240M     = 2,
+   ITUR_BT_AUTO  = 3,
+   ITUR_BT_MAX   = 4
   };
  enum
   {
-   RecYCbCr,
-   PcYCbCr,
-   CutomYCbCr
+   RecYCbCr = 0,
+   PcYCbCr = 1,
+   CutomYCbCr = 2,
+   AutoYCbCr = 3
+  };
+ enum
+  {
+   TvRGB = 0,
+   PcRGB = 1
   };
 };
 

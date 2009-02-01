@@ -116,6 +116,7 @@ UB_MUL: dw 129, 129, 129, 129, 129, 129, 129, 129
 VR_MUL: dw 102, 102, 102, 102, 102, 102, 102, 102
 
 BRIGHT: db 128, 128, 128, 128, 128, 128, 128, 128
+RGB_ADD: dd 0x00101010,0x00101010,0x00101010,0x00101010
 
 ;=============================================================================
 ; Helper macros used with the colorspace_mmx.inc file
@@ -134,7 +135,7 @@ BRIGHT: db 128, 128, 128, 128, 128, 128, 128, 128
 %endmacro
 
 
-%macro BGR_TO_YV12			2
+%macro BGR_TO_YV12			3
     ; y_out
   pxor mm4, mm4
   pxor mm5, mm5
@@ -228,7 +229,7 @@ BRIGHT: db 128, 128, 128, 128, 128, 128, 128, 128
   pxor mm7, mm7			; clear mm7
 %endmacro
 
-%macro YV12_TO_BGR			2
+%macro YV12_TO_BGR			3
 %define TEMP_Y1  esp
 %define TEMP_Y2  esp + 8
 %define TEMP_G1  esp + 16
@@ -338,6 +339,15 @@ BRIGHT: db 128, 128, 128, 128, 128, 128, 128, 128
   movq mm5, mm0
   punpcklbw mm0, mm3        ; 0r5g5b50r4g4b4 -> mm0
   punpckhbw mm5, mm3        ; 0r7g7b70r6g6b6 -> mm5
+
+%if %2 == 0     ; TV-RGB
+  movq mm1, [RGB_ADD]
+  paddusb mm2, mm1
+  paddusb mm4, mm1
+  paddusb mm0, mm1
+  paddusb mm5, mm1
+%endif
+
 %if %1 == 3     ; BGR (24-bit)
   movd [edi], mm2
   psrlq mm2, 32
@@ -371,6 +381,13 @@ BRIGHT: db 128, 128, 128, 128, 128, 128, 128, 128
   movq mm5, mm0
   punpcklbw mm0, mm3        ; 0r5g5b50r4g4b4 -> mm0
   punpckhbw mm5, mm3        ; 0r7g7b70r6g6b6 -> mm5
+  %if %2 == 0     ; TV-RGB
+    movq mm1, [RGB_ADD]
+    paddusb mm2, mm1
+    paddusb mm4, mm1
+    paddusb mm0, mm1
+    paddusb mm5, mm1
+  %endif
   movd [edi+edx], mm2
   psrlq mm2, 32
   movd [edi+edx + 3], mm2
@@ -409,6 +426,13 @@ BRIGHT: db 128, 128, 128, 128, 128, 128, 128, 128
   movq mm5, mm0
   punpcklbw mm0, mm3        ; 0r5g5b50r4g4b4 -> mm0
   punpckhbw mm5, mm3        ; 0r7g7b70r6g6b6 -> mm5
+  %if %2 == 0     ; TV-RGB
+    movq mm1, [RGB_ADD]
+    paddusb mm2, mm1
+    paddusb mm4, mm1
+    paddusb mm0, mm1
+    paddusb mm5, mm1
+  %endif
   movq [edi + edx], mm2
   movq [edi + edx + 8], mm4
   movq [edi + edx + 16], mm0
@@ -432,12 +456,14 @@ SECTION .text
 %include "colorspace_mmx.inc"
 
 ; input
-MAKE_COLORSPACE  bgr_to_yv12_mmx_asm,0,    3,2,2,  BGR_TO_YV12,  3, -1
-MAKE_COLORSPACE  bgra_to_yv12_mmx_asm,0,   4,2,2,  BGR_TO_YV12,  4, -1
+MAKE_COLORSPACE  bgr_to_yv12_mmx_asm,0,    3,2,2,  BGR_TO_YV12,  3, -1,-1
+MAKE_COLORSPACE  bgra_to_yv12_mmx_asm,0,   4,2,2,  BGR_TO_YV12,  4, -1,-1
 
 ; output
-MAKE_COLORSPACE  yv12_to_bgr_mmx_asm,48,   3,8,2,  YV12_TO_BGR,  3, -1
-MAKE_COLORSPACE  yv12_to_bgra_mmx_asm,48,  4,8,2,  YV12_TO_BGR,  4, -1
+MAKE_COLORSPACE  yv12_to_TVbgr_mmx_asm,48,   3,8,2,  YV12_TO_BGR,  3, 0,-1
+MAKE_COLORSPACE  yv12_to_PCbgr_mmx_asm,48,   3,8,2,  YV12_TO_BGR,  3, 1,-1
+MAKE_COLORSPACE  yv12_to_TVbgra_mmx_asm,48,  4,8,2,  YV12_TO_BGR,  4, 0,-1
+MAKE_COLORSPACE  yv12_to_PCbgra_mmx_asm,48,  4,8,2,  YV12_TO_BGR,  4, 1,-1
 
 
 

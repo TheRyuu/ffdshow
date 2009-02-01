@@ -46,7 +46,7 @@ public:
  void (*sws_normalizeVec)(SwsVector *a, double height);
  SwsFilter* (*sws_getDefaultFilter)(float lumaGBlur, float chromaGBlur, float lumaSarpen, float chromaSharpen, float chromaHShift, float chromaVShift, int verbose);
  void (*sws_freeFilter)(SwsFilter *filter);
- SwsContext* (*sws_getContext)(int srcW, int srcH, int srcFormat, int dstW, int dstH, int dstFormat, SwsParams *params, SwsFilter *srcFilter, SwsFilter *dstFilter,const int32_t yuv2rgbTable[6]);
+ SwsContext* (*sws_getContext)(int srcW, int srcH, int srcFormat, int dstW, int dstH, int dstFormat, SwsParams *params, SwsFilter *srcFilter, SwsFilter *dstFilter,const int32_t yuv2rgbTable[7]);
  int (*sws_scale)(struct SwsContext *context, const uint8_t* src[], const stride_t srcStride[], int srcSliceY, int srcSliceH, uint8_t* dst[], stride_t dstStride[]);
  int (*sws_scale_ordered)(SwsContext *c, const uint8_t* src[], const stride_t srcStride[], int srcSliceY,int srcSliceH, uint8_t* dst[], stride_t dstStride[]);
  void (*sws_freeContext)(struct SwsContext *swsContext);

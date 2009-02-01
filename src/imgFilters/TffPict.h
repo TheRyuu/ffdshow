@@ -93,6 +93,7 @@ private:
  static void asm_BitBlt_MMX(BYTE* dstp, stride_t dst_pitch, const BYTE* srcp, stride_t src_pitch, int row_size, int height);
  static void asm_BitBlt_C(BYTE* dstp, stride_t dst_pitch, const BYTE* srcp, stride_t src_pitch, int row_size, int height);
  void copyRect(const TffPict &src,const Trect &r,unsigned int plane);
+ void common_init(void);
  void init(void);
  void init(int Icsp,unsigned char *Idata[4],const stride_t Istride[4],const Trect &r,bool Iro,int Iframetype,int Ifieldtype,size_t IsrcSize,const Tpalette &Ipalette);
  static void calcDiff(const TcspInfo &cspInfo,const Trect &rectClip,const stride_t stride[4],stride_t diff[4]);
@@ -113,6 +114,8 @@ public:
  int frametype,fieldtype;
  bool film,repeat_first_field;
  bool discontinuity;
+ int video_full_range_flag;
+ int YCbCr_RGB_matrix_coefficients;
  REFERENCE_TIME rtStart,rtStop;
  LONGLONG mediatimeStart,mediatimeStop;
  int gmcWarpingPoints,gmcWarpingPointsReal;

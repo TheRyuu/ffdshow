@@ -21,7 +21,7 @@
 ; ebp		width
 ;
 ;------------------------------------------------------------------------------
-%macro		MAKE_COLORSPACE			8
+%macro		MAKE_COLORSPACE			9
 %define NAME		%1
 %define STACK		%2
 %define BYTES		%3
@@ -30,6 +30,7 @@
 %define FUNC		%6
 %define ARG1		%7
 %define ARG2		%8
+%define ARG3        %9
 	; --- define function global/symbol
 ALIGN 16
 cglobal NAME
@@ -130,7 +131,7 @@ NAME:
   mov ebp, [fixed_width]
 
 .x_loop
-  FUNC ARG1, ARG2           ; call FUNC
+  FUNC ARG1, ARG2, ARG3     ; call FUNC
 
   add edi, BYTES*PIXELS     ; x_ptr += BYTES*PIXELS
   add esi, PIXELS           ; y_ptr += PIXELS

@@ -41,7 +41,7 @@
 
 ; sse2 version for WIN64 (ported by h.yamagata)
 
-%macro		MAKE_COLORSPACE			8
+%macro		MAKE_COLORSPACE			9
 %define NAME		%1
 %define STACK		%2 ; must be multiple of 16.
 %define BYTES		%3
@@ -50,6 +50,7 @@
 %define FUNC		%6
 %define ARG1		%7
 %define ARG2		%8
+%define ARG3		%9
 	; --- define function global/symbol
 ALIGN 16
 cglobal NAME
@@ -177,7 +178,7 @@ NAME:
   mov r8, r9
 
 .x_loop
-  FUNC ARG1, ARG2           ; call FUNC
+  FUNC ARG1, ARG2, ARG3     ; call FUNC
 
   add rdi, BYTES*PIXELS     ; x_ptr += BYTES*PIXELS
   add rsi, PIXELS           ; y_ptr += PIXELS

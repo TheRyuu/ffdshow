@@ -91,16 +91,22 @@ TffPict::TffPict(void)
 {
  init();
 }
-void TffPict::init(void)
+void TffPict::common_init(void)
 {
- csp=FF_CSP_NULL;memset(&cspInfo,0,sizeof(cspInfo));
- memset(data,0,sizeof(data));memset(stride,0,sizeof(stride));memset(ro,0,sizeof(ro));memset(diff,0,sizeof(diff));
- frametype=FRAME_TYPE::UNKNOWN;fieldtype=FIELD_TYPE::PROGRESSIVE_FRAME;
  rtStart=rtStop=mediatimeStart=mediatimeStop=REFTIME_INVALID;
  gmcWarpingPoints=gmcWarpingPointsReal=0;
  edge=0;
  discontinuity = false;
  film = repeat_first_field = false;
+ video_full_range_flag = VIDEO_FULL_RANGE_INVALID;
+ YCbCr_RGB_matrix_coefficients = YCbCr_RGB_coeff_Unspecified;
+}
+void TffPict::init(void)
+{
+ csp=FF_CSP_NULL;memset(&cspInfo,0,sizeof(cspInfo));
+ memset(data,0,sizeof(data));memset(stride,0,sizeof(stride));memset(ro,0,sizeof(ro));memset(diff,0,sizeof(diff));
+ frametype=FRAME_TYPE::UNKNOWN;fieldtype=FIELD_TYPE::PROGRESSIVE_FRAME;
+ common_init();
 }
 void TffPict::init(int Icsp,unsigned char *Idata[4],const stride_t Istride[4],const Trect &r,bool Iro,int Iframetype,int Ifieldtype,size_t IsrcSize,const Tpalette &Ipalette)
 {
@@ -122,12 +128,8 @@ void TffPict::init(int Icsp,unsigned char *Idata[4],const stride_t Istride[4],co
   }
  palette=Ipalette;
  rectFull=rectClip=r;
- rtStart=rtStop=mediatimeStart=mediatimeStop=REFTIME_INVALID;
- gmcWarpingPoints=gmcWarpingPointsReal=0;
  srcSize=IsrcSize;
- edge=0;
- discontinuity = false;
- film = repeat_first_field = false;
+ common_init();
 }
 TffPict::TffPict(int Icsp,unsigned char *Idata[4],const stride_t Istride[4],const Trect &r,bool Iro,int Iframetype,int Ifieldtype,size_t IsrcSize,IMediaSample *pIn,const Tpalette &Ipalette)
 {
@@ -187,6 +189,7 @@ void TffPict::readLibavcodec(int Icsp,const char_t *flnm,const char_t *ext,Tbuff
      Tpalette pal(frame->data[1],256);
      init(csp_lavc2ffdshow(avctx->pix_fmt),frame->data,linesize,Trect(0,0,avctx->width,avctx->height),true,frametype,fieldtype,srclen,pal);
      Tconvert *convert=new Tconvert(deci,avctx->width,avctx->height);
+     // Currently output color space is always YCbCr.
      convertCSP(csp_bestMatch(csp,Icsp),buf,convert);
      delete convert;
     }
@@ -375,7 +378,7 @@ void TffPict::convertCSP(int Icsp,Tbuffer &buf,Tconvert *convert,int edge)
  stride_t stride0[4]={stride[0],stride[1],stride[2],stride[3]};
  Tpalette palette0=palette;
  convertCSP(Icsp,buf,edge);
- convert->convert(csp0|((fieldtype&FIELD_TYPE::MASK_INT)?FF_CSP_FLAGS_INTERLACED:0),data0,stride0,csp,data,stride,&palette0);
+ convert->convert(csp0|((fieldtype&FIELD_TYPE::MASK_INT)?FF_CSP_FLAGS_INTERLACED:0),data0,stride0,csp,data,stride,&palette0,video_full_range_flag,YCbCr_RGB_matrix_coefficients,false);
 }
 
 /**

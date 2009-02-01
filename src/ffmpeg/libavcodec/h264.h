@@ -176,6 +176,8 @@ typedef struct SPS{
     int time_offset_length;
     int cpb_removal_delay_length;      ///< cpb_removal_delay_length_minus1 + 1
     int dpb_output_delay_length;       ///< dpb_output_delay_length_minus1 + 1
+    int video_full_range_flag;         ///< for YCbCr <-> RGB conversion, ffdshow custom
+    int matrix_coefficients;           ///< for YCbCr <-> RGB conversion, ffdshow custom
 }SPS;
 
 /**

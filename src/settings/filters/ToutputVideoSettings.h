@@ -17,12 +17,12 @@ public:
  int i420,yv12,yuy2,yvyu,uyvy,nv12,rgb32,rgb24,rgb555,rgb565;
  int closest;
  int dv,dvNorm;void getDVsize(unsigned int *dx,unsigned int *dy) const;
- int get_cspOptionsBlackCutoff() const;
- int get_cspOptionsWhiteCutoff() const;
- int get_cspOptionsChromaCutoff() const;
- int brightness2luma(int brightness) const;
+ int get_cspOptionsBlackCutoff(int video_full_range_flag) const;
+ int get_cspOptionsWhiteCutoff(int video_full_range_flag) const;
+ int get_cspOptionsChromaCutoff(int video_full_range_flag) const;
+ int brightness2luma(int brightness, int video_full_range_flag) const;
  // int luma2brightness(int luma) const;
- static int get_cspOptionsChromaCutoffStatic(int blackCutoff, int whiteCutoff, int chromaCutoff, int lock);
+ static int get_cspOptionsChromaCutoffStatic(int blackCutoff, int whiteCutoff, int chromaCutoff);
  static const char_t *dvNorms[];
  static const char_t *deintMethods[];
  static const char_t *deintFieldOrder[];
@@ -41,10 +41,10 @@ public:
  int allowOutChange3, outChangeCompatOnly;
  int hwDeinterlace,hwDeintMethod, hwDeintFieldOrder;
  int avisynthYV12_RGB;
- int cspOptionsIturBt, cspOptionsCutoffMode;
+ int cspOptionsIturBt, cspOptionsInputLevelsMode;
  int cspOptionsBlackCutoff, cspOptionsWhiteCutoff, cspOptionsChromaCutoff;
- int cspOptionsInterlockChroma;
  int cspOptionsRgbInterlaceMode;
+ int cspOptionsOutputLevelsMode;
  int flip;
 
  void reg_op_outcsps(TregOp &t);

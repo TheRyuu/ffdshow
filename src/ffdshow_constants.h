@@ -921,8 +921,10 @@
 #define IDFF_cspOptionsBlackCutoff       3424
 #define IDFF_cspOptionsWhiteCutoff       3425
 #define IDFF_cspOptionsChromaCutoff      3426
-#define IDFF_cspOptionsInterlockChroma   3427
-#define IDFF_cspOptionsCutoffMode        3428
+//#define IDFF_cspOptionsInterlockChroma   3427
+#define IDFF_cspOptionsCutoffMode        3428 // deprecated, use IDFF_cspOptionsInputLevelsMode.
+#define IDFF_cspOptionsInputLevelsMode   3428
+#define IDFF_cspOptionsOutputLevelsMode  3512
 #define IDFF_cspOptionsRgbInterlaceMode  3508
 
 #define IDFF_filterOutputAudio      1314
@@ -1537,6 +1539,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//next:3512
+//next:3513
 
 #endif

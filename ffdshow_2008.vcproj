@@ -633,6 +633,10 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
 			<File
+				RelativePath="src\checkHardCodedBlackList.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\cpuid.asm"
 				>
 				<FileConfiguration
@@ -794,10 +798,6 @@
 			</File>
 			<File
 				RelativePath=".\src\inifiles.cpp"
-				>
-			</File>
-			<File
-				RelativePath="src\checkHardCodedBlackList.cpp"
 				>
 			</File>
 			<File
@@ -1110,6 +1110,10 @@
 				>
 			</File>
 			<File
+				RelativePath="src\checkHardCodedBlackList.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\comptr.h"
 				>
 			</File>
@@ -1191,10 +1195,6 @@
 			</File>
 			<File
 				RelativePath="src\inttypes.h"
-				>
-			</File>
-			<File
-				RelativePath="src\checkHardCodedBlackList.h"
 				>
 			</File>
 			<File
@@ -5287,6 +5287,17 @@
 			<File
 				RelativePath="src\imgFilters\ffImgfmt.h"
 				>
+			</File>
+			<File
+				RelativePath=".\src\convert\ffdshow_converters.h"
+				>
+				<FileConfiguration
+					Name="Release Unicode|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="src\convert\image.cpp"

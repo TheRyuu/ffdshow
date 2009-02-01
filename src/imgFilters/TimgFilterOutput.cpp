@@ -66,10 +66,20 @@ HRESULT TimgFilterOutput::process(const TffPict &pict,int dstcsp,unsigned char *
      }
   }
 
- if (!convert || convert->dx!=pict.rectFull.dx || convert->dy!=pict.rectFull.dy || old_cspOptionsRgbInterlaceMode != cfg->cspOptionsRgbInterlaceMode || old_avisynthYV12_RGB != cfg->avisynthYV12_RGB)
+ if (   !convert
+     || convert->dx!=pict.rectFull.dx
+     || convert->dy!=pict.rectFull.dy
+     || old_cspOptionsRgbInterlaceMode != cfg->cspOptionsRgbInterlaceMode
+     || old_avisynthYV12_RGB != cfg->avisynthYV12_RGB
+     || old_outputLevelsMode != cfg->cspOptionsOutputLevelsMode
+     || old_inputLevelsMode != cfg->cspOptionsInputLevelsMode
+     || old_IturBt != cfg->cspOptionsIturBt)
   {
    old_avisynthYV12_RGB = cfg->avisynthYV12_RGB;
    old_cspOptionsRgbInterlaceMode = cfg->cspOptionsRgbInterlaceMode;
+   old_outputLevelsMode = cfg->cspOptionsOutputLevelsMode;
+   old_inputLevelsMode = cfg->cspOptionsInputLevelsMode;
+   old_IturBt = cfg->cspOptionsIturBt;
    if (convert) delete convert;
    vramBenchmark.init();
    convert=new Tconvert(deci,pict.rectFull.dx,pict.rectFull.dy);

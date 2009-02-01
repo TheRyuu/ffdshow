@@ -169,6 +169,27 @@ enum AVDiscard{
     AVDISCARD_ALL    = 48, ///< discard all
 };
 
+/**
+ * H.264 VUI colour primaries (matrix_coefficients)
+ */
+typedef enum {
+    YCbCr_RGB_coeff_GBR                                = 0,
+    YCbCr_RGB_coeff_ITUR_BT_709                        = 1,
+    YCbCr_RGB_coeff_Unspecified                        = 2,
+    YCbCr_RGB_coeff_Reserved                           = 3,
+    YCbCr_RGB_coeff_US_Federal_Regulations_2003_73_682 = 4,
+    YCbCr_RGB_coeff_ITUR_BT_601_625                    = 5,
+    YCbCr_RGB_coeff_ITUR_BT_601_525                    = 6,
+    YCbCr_RGB_coeff_SMPTE240M                          = 7,
+    YCbCr_RGB_coeff_YCgCo                              = 8
+} YCbCr_RGB_MatrixCoefficientsType;
+
+typedef enum {
+    VIDEO_FULL_RANGE_TV         = 0,
+    VIDEO_FULL_RANGE_PC         = 1,
+    VIDEO_FULL_RANGE_INVALID    = 2
+} VideoFullRangeType;
+
 typedef struct RcOverride{
     int start_frame;
     int end_frame;
@@ -552,7 +573,20 @@ typedef struct AVPanScan{
     int h264_frame_num_decoded;\
     int h264_max_frame_num;\
 \
-    int mpeg2_sequence_end_flag;
+    int mpeg2_sequence_end_flag;\
+\
+    /**\
+     * video_full_range_flag\
+     * - encoding: unused\
+     * - decoding: Set by libavcodec.  -1: invalid, 0: TV (16-235) 1: PC (1-254)\
+     */\
+    VideoFullRangeType video_full_range_flag;\
+    /**\
+     * YCbCr_RGB_matrix_coefficients\
+     * - encoding: unused\
+     * - decoding: Set by libavcodec.\
+     */\
+    YCbCr_RGB_MatrixCoefficientsType YCbCr_RGB_matrix_coefficients;
 
 #define FF_QSCALE_TYPE_MPEG1 0
 #define FF_QSCALE_TYPE_MPEG2 1

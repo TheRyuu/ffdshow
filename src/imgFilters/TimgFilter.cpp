@@ -41,7 +41,7 @@ void TimgFilter::checkBorder(TffPict &pict)
  if (pict.rectFull!=pict.rectClip && parent->dirtyBorder)
   {
    int brightness = deciV->getBordersBrightness();
-   pict.clearBorder(brightness, deciV->getToutputVideoSettings()->brightness2luma(brightness));
+   pict.clearBorder(brightness, deciV->getToutputVideoSettings()->brightness2luma(brightness, pict.video_full_range_flag));
    parent->dirtyBorder=0;
   }
 }
@@ -195,7 +195,7 @@ bool TimgFilter::getNext(int csp,TffPict &pict,const Trect &clipRect,unsigned ch
  if (cspChanged || oldBrightness != brightness)
   {
    oldBrightness = brightness;
-   pict.clearBorder(brightness, deciV->getToutputVideoSettings()->brightness2luma(brightness));
+   pict.clearBorder(brightness, deciV->getToutputVideoSettings()->brightness2luma(brightness, pict.video_full_range_flag));
   }
  return cspChanged;
 }
