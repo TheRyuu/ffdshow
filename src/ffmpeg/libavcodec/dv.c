@@ -34,7 +34,7 @@
  */
 
 /**
- * @file dv.c
+ * @file libavcodec/dv.c
  * DV codec.
  */
 #define ALT_BITSTREAM_READER
@@ -507,9 +507,10 @@ static inline void dv_calculate_mb_xy(DVVideoContext *s, DVwork_chunk *work_chun
 }
 
 /* mb_x and mb_y are in units of 8 pixels */
-static int dv_decode_video_segment(AVCodecContext *avctx, DVwork_chunk *work_chunk)
+static int dv_decode_video_segment(AVCodecContext *avctx, void *arg)
 {
     DVVideoContext *s = avctx->priv_data;
+    DVwork_chunk *work_chunk = arg;
     int quant, dc, dct_mode, class1, j;
     int mb_index, mb_x, mb_y, last_index;
     int y_stride, linesize;
@@ -994,9 +995,10 @@ static inline void dv_guess_qnos(EncBlockInfo* blks, int* qnos)
     }
 }
 
-static int dv_encode_video_segment(AVCodecContext *avctx, DVwork_chunk *work_chunk)
+static int dv_encode_video_segment(AVCodecContext *avctx, void *arg)
 {
     DVVideoContext *s = avctx->priv_data;
+    DVwork_chunk *work_chunk = arg;
     int mb_index, i, j;
     int mb_x, mb_y, c_offset, linesize, y_stride;
     uint8_t*  y_ptr;
@@ -1184,7 +1186,7 @@ static inline int dv_write_pack(enum dv_pack_type pack_id, DVVideoContext *c,
     int stype = (c->sys->pix_fmt == PIX_FMT_YUV422P ? 4 : 0);
 
     uint8_t aspect = 0;
-    if ((int)(av_q2d(c->avctx->sample_aspect_ratio) * c->avctx->width / c->avctx->height * 10) == 17) /* 16:9 */
+    if ((int)(av_q2d(c->avctx->sample_aspect_ratio) * c->avctx->width / c->avctx->height * 10) >= 17) /* 16:9 */
         aspect = 0x02;
 
     buf[0] = (uint8_t)pack_id;
