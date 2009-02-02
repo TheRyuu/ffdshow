@@ -57,7 +57,8 @@ protected:
   sizeofthisAll(IsizeofthisAll),
   sizeofthis(Isizeofthis),
   Toptions(Icoll),
-  deepcopy(false)
+  deepcopy(false),
+  is(0)
   {
    if (filters)
     filters->add(idff,this,incOrder);
