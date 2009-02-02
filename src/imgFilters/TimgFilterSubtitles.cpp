@@ -62,8 +62,8 @@ TimgFilterSubtitles::TsubPrintPrefs::TsubPrintPrefs(unsigned char *Idst[4],strid
 
 TimgFilterSubtitles::TimgFilterSubtitles(IffdshowBase *Ideci,Tfilters *Iparent):
  TimgFilter(Ideci,Iparent),
- // Initialize Tfont. gdi_font_scale = 12, a little blur is applied.
- font(Ideci,12),fontCC(Ideci,12),
+ // Initialize Tfont.
+ font(Ideci,4),fontCC(Ideci,4),
  subs(Ideci),
  oldFontCfg((TfontSettingsSub*)malloc(sizeof(TfontSettingsSub))),
  oldFontCCcfg((TfontSettingsSub*)malloc(sizeof(TfontSettingsSub))),
