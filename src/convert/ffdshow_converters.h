@@ -383,8 +383,8 @@ template <int incsp, int outcsp> class TffdshowConverters
             // MSVC does not support MMX intrinsics on x64.
             // If you need very fast x64 version, store the right pixel for the next and use movntdq (check alignement and when safe, (nearly always safe)).
             // or use 8 _mm_stream_si32 (movnti)?
-            _mm_stream_si128((__m128i *)(dst),xmm0);
-            _mm_stream_si128((__m128i *)(dst + stride_dst),xmm2);
+            _mm_storeu_si128((__m128i *)(dst),xmm0);
+            _mm_storeu_si128((__m128i *)(dst + stride_dst),xmm2);
 #else
             // SSE2 doesn't have un-aligned version of movntdq. Use MMX (movntq) here. This is much faster than movdqu.
             // I tried alignment hack (by storing right pixel for next), which didn't earn speed (but not too slow, maybe good for x64).
