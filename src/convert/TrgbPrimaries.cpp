@@ -110,7 +110,7 @@ int TrgbPrimaries::UpdateSettings(int video_full_range_flag, int YCbCr_RGB_matri
        const Trect *decodedRect = deciV->getDecodedPictdimensions();
        if (decodedRect)
         {
-         if (decodedRect->dx < 1024)
+         if (decodedRect->dx <= 1024)
           cspOptionsIturBt = ITUR_BT601;
          else
           cspOptionsIturBt = ITUR_BT709;

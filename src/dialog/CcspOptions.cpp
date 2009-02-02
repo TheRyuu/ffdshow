@@ -27,7 +27,7 @@ void TcspOptionsPage::init(void)
  tbrSetRange(IDC_TBR_RGBCONV_WHITE, 215, 255, 1);
  tbrSetRange(IDC_TBR_RGBCONV_CHROMA, 1, 32, 1);
 
- addHint(IDC_RBT_BT_AUTO, _l("Use the information from the stream (H.264 only).\nIf it isn't available,\n  width >=1024: BT.709\n  width < 1024: BT.601"));
+ addHint(IDC_RBT_BT_AUTO, _l("Use the information from the stream (H.264 only).\nIf it isn't available,\n  width > 1024: BT.709\n  width <=1024: BT.601"));
  addHint(IDC_RBT_BT601, _l("DVD, NTSC, PAL and SD-TV/videos use this."));
  addHint(IDC_RBT_BT709, _l("Blu-ray and HD-TV use this."));
  addHint(IDC_CBX_RGB_INTERLACE_METHOD, _l("This setting also applies to YV12 <-> YUY2 conversion."));
