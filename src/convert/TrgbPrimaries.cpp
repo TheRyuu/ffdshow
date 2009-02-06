@@ -38,20 +38,20 @@ void YCbCr2RGBdata_common_inint(double &Kr,
                                 double &ub_mul,
                                 int &Ysub,
                                 int &RGB_add,
-                                const int cspOptionsIturBt,
+                                const ffYCbCr_RGB_MatrixCoefficientsType cspOptionsIturBt,
                                 const int cspOptionsWhiteCutoff,
                                 const int cspOptionsBlackCutoff,
                                 const int cspOptionsChromaCutoff,
                                 const double cspOptionsRGB_WhiteLevel,
                                 const double cspOptionsRGB_BlackLevel)
 {
- if (cspOptionsIturBt == TrgbPrimaries::ITUR_BT601)
+ if (cspOptionsIturBt == ffYCbCr_RGB_coeff_ITUR_BT601)
   {
    Kr = 0.299;
    Kg = 0.587;
    Kb = 0.114;
   }
- else if (cspOptionsIturBt == TrgbPrimaries::SMPTE240M)
+ else if (cspOptionsIturBt == ffYCbCr_RGB_coeff_SMPTE240M)
   {
    Kr = 0.2122;
    Kg = 0.7013;
@@ -102,7 +102,7 @@ int TrgbPrimaries::UpdateSettings(int video_full_range_flag, int YCbCr_RGB_matri
  if (deciV)
   {
    const ToutputVideoSettings *outcfg = deciV->getToutputVideoSettings(); // This pointer may change during playback.
-   cspOptionsIturBt = outcfg->cspOptionsIturBt;
+   cspOptionsIturBt = (ffYCbCr_RGB_MatrixCoefficientsType)outcfg->cspOptionsIturBt;
    if (cspOptionsIturBt == ITUR_BT_AUTO)
     {
      if (YCbCr_RGB_matrix_coefficients == YCbCr_RGB_coeff_Unspecified)
@@ -227,7 +227,7 @@ int TrgbPrimaries::writeToXvidYCbCr2RgbMatrix(short *asmData)
  double Kr, Kg, Kb, chr_range, y_mul, vr_mul, ug_mul, vg_mul, ub_mul;
  int Ysub, RGB_add;
  YCbCr2RGBdata_common_inint(Kr,Kg,Kb,chr_range,y_mul,vr_mul,ug_mul,vg_mul,ub_mul,Ysub,RGB_add,
-    cspOptionsIturBt,cspOptionsWhiteCutoff,cspOptionsBlackCutoff,cspOptionsChromaCutoff,cspOptionsRGB_WhiteLevel,cspOptionsRGB_BlackLevel);
+    (ffYCbCr_RGB_MatrixCoefficientsType)cspOptionsIturBt,cspOptionsWhiteCutoff,cspOptionsBlackCutoff,cspOptionsChromaCutoff,cspOptionsRGB_WhiteLevel,cspOptionsRGB_BlackLevel);
 
  short Y_MUL =short(y_mul  * 64 + 0.4);
  short UG_MUL=short(ug_mul * 64 + 0.5);
@@ -255,7 +255,7 @@ const void TrgbPrimaries::initXvid(int rgb_add)
  double Kr, Kg, Kb, chr_range, y_mul, vr_mul, ug_mul, vg_mul, ub_mul;
  int Ysub, RGB_add;
  YCbCr2RGBdata_common_inint(Kr,Kg,Kb,chr_range,y_mul,vr_mul,ug_mul,vg_mul,ub_mul,Ysub,RGB_add,
-    cspOptionsIturBt,cspOptionsWhiteCutoff,cspOptionsBlackCutoff,cspOptionsChromaCutoff,cspOptionsRGB_WhiteLevel,cspOptionsRGB_BlackLevel);
+    (ffYCbCr_RGB_MatrixCoefficientsType)cspOptionsIturBt,cspOptionsWhiteCutoff,cspOptionsBlackCutoff,cspOptionsChromaCutoff,cspOptionsRGB_WhiteLevel,cspOptionsRGB_BlackLevel);
  xvid_colorspace_init(y_mul,ub_mul,ug_mul,vg_mul,vr_mul,Ysub,rgb_add);
 }
 
@@ -284,7 +284,7 @@ const unsigned char* TrgbPrimaries::getAvisynthYCbCr2RgbMatrix(int &rgb_add)
  double Kr, Kg, Kb, chr_range, y_mul, vr_mul, ug_mul, vg_mul, ub_mul;
  int Ysub, RGB_add;
  YCbCr2RGBdata_common_inint(Kr,Kg,Kb,chr_range,y_mul,vr_mul,ug_mul,vg_mul,ub_mul,Ysub,RGB_add,
-    cspOptionsIturBt,cspOptionsWhiteCutoff,cspOptionsBlackCutoff,cspOptionsChromaCutoff,cspOptionsRGB_WhiteLevel,cspOptionsRGB_BlackLevel);
+    (ffYCbCr_RGB_MatrixCoefficientsType)cspOptionsIturBt,cspOptionsWhiteCutoff,cspOptionsBlackCutoff,cspOptionsChromaCutoff,cspOptionsRGB_WhiteLevel,cspOptionsRGB_BlackLevel);
  // Avisynth YUY2->RGB
  short *avisynthMmxMatrix = (short*)getAlignedPtr(avisynthMmxMatrixBuf);
 
@@ -314,7 +314,7 @@ const int32_t* TrgbPrimaries::toSwscaleTable(void)
  double Kr, Kg, Kb, chr_range, y_mul, vr_mul, ug_mul, vg_mul, ub_mul;
  int Ysub, RGB_add;
  YCbCr2RGBdata_common_inint(Kr,Kg,Kb,chr_range,y_mul,vr_mul,ug_mul,vg_mul,ub_mul,Ysub,RGB_add,
-    cspOptionsIturBt,cspOptionsWhiteCutoff,cspOptionsBlackCutoff,cspOptionsChromaCutoff,cspOptionsRGB_WhiteLevel,cspOptionsRGB_BlackLevel);
+    (ffYCbCr_RGB_MatrixCoefficientsType)cspOptionsIturBt,cspOptionsWhiteCutoff,cspOptionsBlackCutoff,cspOptionsChromaCutoff,cspOptionsRGB_WhiteLevel,cspOptionsRGB_BlackLevel);
 
  swscaleTable[0] = int32_t(vr_mul * 65536 + 0.5);
  swscaleTable[1] = int32_t(ub_mul * 65536 + 0.5);

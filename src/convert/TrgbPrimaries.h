@@ -4,6 +4,13 @@
 #include "interfaces.h"
 #include "simd_common.h"
 
+typedef enum
+{
+ ffYCbCr_RGB_coeff_ITUR_BT601    = 0,
+ ffYCbCr_RGB_coeff_ITUR_BT709    = 1,
+ ffYCbCr_RGB_coeff_SMPTE240M     = 2,
+} ffYCbCr_RGB_MatrixCoefficientsType;
+
 void YCbCr2RGBdata_common_inint(double &Kr,
                                 double &Kg,
                                 double &Kb,
@@ -15,7 +22,7 @@ void YCbCr2RGBdata_common_inint(double &Kr,
                                 double &ub_mul,
                                 int &Ysub,
                                 int &RGB_add,
-                                const int cspOptionsIturBt,
+                                const ffYCbCr_RGB_MatrixCoefficientsType cspOptionsIturBt,
                                 const int cspOptionsWhiteCutoff,
                                 const int cspOptionsBlackCutoff,
                                 const int cspOptionsChromaCutoff,
@@ -48,7 +55,8 @@ private:
    double white_x,white_y;
   };
 protected:
- int cspOptionsIturBt, cspOptionsBlackCutoff, cspOptionsWhiteCutoff, cspOptionsChromaCutoff;
+ int cspOptionsIturBt;
+ int cspOptionsBlackCutoff, cspOptionsWhiteCutoff, cspOptionsChromaCutoff;
  double cspOptionsRGB_BlackLevel, cspOptionsRGB_WhiteLevel;
 public:
  TrgbPrimaries(IffdshowBase *deci);
@@ -67,9 +75,9 @@ public:
  void setJpeg(bool isjpeg, int rgb_add = 0);
  enum
   {
-   ITUR_BT601    = 0,
-   ITUR_BT709    = 1,
-   SMPTE240M     = 2,
+   ITUR_BT601    = ffYCbCr_RGB_coeff_ITUR_BT601,
+   ITUR_BT709    = ffYCbCr_RGB_coeff_ITUR_BT709,
+   SMPTE240M     = ffYCbCr_RGB_coeff_SMPTE240M,
    ITUR_BT_AUTO  = 3,
    ITUR_BT_MAX   = 4
   };

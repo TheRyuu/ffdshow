@@ -30,14 +30,7 @@ private:
  int incsp1,outcsp1;
  const TcspInfo *incspInfo,*outcspInfo;
  int rgbInterlaceMode;
- TffdshowConverters<FF_CSP_420P,FF_CSP_RGB32> *ffdshow_YV12toRGB32;
- TffdshowConverters<FF_CSP_420P,FF_CSP_RGB24> *ffdshow_YV12toRGB24;
- TffdshowConverters<FF_CSP_NV12,FF_CSP_RGB32> *ffdshow_NV12toRGB32;
- TffdshowConverters<FF_CSP_NV12,FF_CSP_RGB24> *ffdshow_NV12toRGB24;
- TffdshowConverters<FF_CSP_422P,FF_CSP_RGB32> *ffdshow_YV16toRGB32;
- TffdshowConverters<FF_CSP_422P,FF_CSP_RGB24> *ffdshow_YV16toRGB24;
- TffdshowConverters<FF_CSP_YUY2,FF_CSP_RGB32> *ffdshow_YUY2toRGB32;
- TffdshowConverters<FF_CSP_YUY2,FF_CSP_RGB24> *ffdshow_YUY2toRGB24;
+ TffdshowConverters *ffdshow_converters;
 
  enum
   {
@@ -56,14 +49,7 @@ private:
    MODE_xvidImage_input,
    MODE_swscale,
    MODE_avisynth_bitblt,
-   MODE_ffdshow_YV12toRGB32,
-   MODE_ffdshow_YV12toRGB24,
-   MODE_ffdshow_NV12toRGB32,
-   MODE_ffdshow_NV12toRGB24,
-   MODE_ffdshow_YV16toRGB32,
-   MODE_ffdshow_YV16toRGB24,
-   MODE_ffdshow_YUY2toRGB32,
-   MODE_ffdshow_YUY2toRGB24,
+   MODE_ffdshow_converters,
    MODE_fallback
   } mode;
  static const char_t* getModeName(int mode);

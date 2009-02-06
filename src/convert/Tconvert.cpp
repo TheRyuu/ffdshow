@@ -64,14 +64,7 @@ void Tconvert::init(Tlibmplayer *Ilibmplayer,bool IavisynthYV12_RGB,unsigned int
  tmpConvert1=tmpConvert2=NULL;
  avisynthYV12_RGB=IavisynthYV12_RGB;
  rgbInterlaceMode = IrgbInterlaceMode;
- ffdshow_YV12toRGB32 = NULL;
- ffdshow_YV12toRGB24 = NULL;
- ffdshow_NV12toRGB32 = NULL;
- ffdshow_NV12toRGB24 = NULL;
- ffdshow_YV16toRGB32 = NULL;
- ffdshow_YV16toRGB24 = NULL;
- ffdshow_YUY2toRGB32 = NULL;
- ffdshow_YUY2toRGB24 = NULL;
+ ffdshow_converters = NULL;
 }
 
 Tconvert::~Tconvert()
@@ -79,14 +72,7 @@ Tconvert::~Tconvert()
  freeTmpConvert();
  if (swscale) delete swscale;
  libmplayer->Release();
- if (ffdshow_YV12toRGB32) delete ffdshow_YV12toRGB32;
- if (ffdshow_YV12toRGB24) delete ffdshow_YV12toRGB24;
- if (ffdshow_NV12toRGB32) delete ffdshow_NV12toRGB32;
- if (ffdshow_NV12toRGB24) delete ffdshow_NV12toRGB24;
- if (ffdshow_YV16toRGB32) delete ffdshow_YV16toRGB32;
- if (ffdshow_YV16toRGB24) delete ffdshow_YV16toRGB24;
- if (ffdshow_YUY2toRGB32) delete ffdshow_YUY2toRGB32;
- if (ffdshow_YUY2toRGB24) delete ffdshow_YUY2toRGB24;
+ if (ffdshow_converters) delete ffdshow_converters;
 }
 
 const char_t* Tconvert::getModeName(int mode)
@@ -103,12 +89,7 @@ const char_t* Tconvert::getModeName(int mode)
    case MODE_mmx_ConvertYUY2toRGB24:return _l("mmx_ConvertYUY2toRGB24");
    case MODE_mmx_ConvertUYVYtoRGB32:return _l("mmx_ConvertUYVYtoRGB32");
    case MODE_mmx_ConvertUYVYtoRGB24:return _l("mmx_ConvertUYVYtoRGB24");
-   case MODE_ffdshow_YV12toRGB32:
-   case MODE_ffdshow_YV12toRGB24:
-   case MODE_ffdshow_NV12toRGB32:
-   case MODE_ffdshow_NV12toRGB24:
-   case MODE_ffdshow_YV16toRGB32:
-   case MODE_ffdshow_YV16toRGB24:return _l("ffdshow converters");
+   case MODE_ffdshow_converters:return _l("ffdshow converters");
    case MODE_palette8torgb:return _l("palette8torgb");
    case MODE_CLJR:return _l("CLJR");
    case MODE_xvidImage_input:return _l("xvidImage_input");
@@ -222,20 +203,7 @@ int Tconvert::convert(int incsp0,
           break;
          default:
           if (avisynthYV12_RGB && !((outcsp|incsp) & FF_CSP_FLAGS_INTERLACED) && (Tconfig::cpu_flags&FF_CPU_SSE2) && (outcsp1==FF_CSP_RGB24 || outcsp1==FF_CSP_RGB32))
-           {
-            if (outcsp1 == FF_CSP_RGB32)
-             {
-              mode = MODE_ffdshow_YV12toRGB32;
-              if (!ffdshow_YV12toRGB32)
-               ffdshow_YV12toRGB32 = new TffdshowConverters<FF_CSP_420P,FF_CSP_RGB32>;
-             }
-            else if (outcsp1 == FF_CSP_RGB24)
-             {
-              mode = MODE_ffdshow_YV12toRGB24;
-              if (!ffdshow_YV12toRGB24)
-               ffdshow_YV12toRGB24 = new TffdshowConverters<FF_CSP_420P,FF_CSP_RGB24>;
-             }
-           }
+           mode = MODE_ffdshow_converters;
           // Xvid converter is slow for interlaced color spaces. Use AviSynth converter in this case.
           else if (((outcsp & FF_CSP_FLAGS_INTERLACED) || avisynthYV12_RGB) && (outcsp1==FF_CSP_RGB24 || outcsp1==FF_CSP_RGB32))
            {
@@ -287,21 +255,13 @@ int Tconvert::convert(int incsp0,
           break;
          case FF_CSP_RGB24:
           if (Tconfig::cpu_flags&FF_CPU_SSE2)
-           {
-            mode = MODE_ffdshow_YUY2toRGB24;
-            if (!ffdshow_YUY2toRGB24)
-             ffdshow_YUY2toRGB24 = new TffdshowConverters<FF_CSP_YUY2,FF_CSP_RGB24>;
-           }
+           mode = MODE_ffdshow_converters;
           else
            mode=MODE_mmx_ConvertYUY2toRGB24; // YUY2 -> RGB24
           break;
          case FF_CSP_RGB32:
           if (Tconfig::cpu_flags&FF_CPU_SSE2)
-           {
-            mode = MODE_ffdshow_YUY2toRGB32;
-            if (!ffdshow_YUY2toRGB32)
-             ffdshow_YUY2toRGB32 = new TffdshowConverters<FF_CSP_YUY2,FF_CSP_RGB32>;
-           }
+           mode = MODE_ffdshow_converters;
           else
            mode=MODE_mmx_ConvertYUY2toRGB32; // YUY2 -> RGB32
           break;
@@ -378,37 +338,11 @@ int Tconvert::convert(int incsp0,
        break;
       case FF_CSP_NV12:
        if (!((outcsp|incsp) & FF_CSP_FLAGS_INTERLACED) && (outcsp1 == FF_CSP_RGB32 || outcsp1 == FF_CSP_RGB24) && (Tconfig::cpu_flags&FF_CPU_SSE2) && (incsp & FF_CSP_FLAGS_YUV_ORDER))
-        {
-         if (outcsp1 == FF_CSP_RGB32)
-          {
-           mode = MODE_ffdshow_NV12toRGB32;
-           if (!ffdshow_NV12toRGB32)
-            ffdshow_NV12toRGB32 = new TffdshowConverters<FF_CSP_NV12,FF_CSP_RGB32>;
-          }
-         else if (outcsp1 == FF_CSP_RGB24)
-          {
-           mode = MODE_ffdshow_NV12toRGB24;
-           if (!ffdshow_NV12toRGB24)
-            ffdshow_NV12toRGB24 = new TffdshowConverters<FF_CSP_NV12,FF_CSP_RGB24>;
-          }
-        }
+        mode = MODE_ffdshow_converters;
        break;
       case FF_CSP_422P:
        if ((outcsp1 == FF_CSP_RGB32 || outcsp1 == FF_CSP_RGB24) && (Tconfig::cpu_flags&FF_CPU_SSE2))
-        {
-         if (outcsp1 == FF_CSP_RGB32)
-          {
-           mode = MODE_ffdshow_YV16toRGB32;
-           if (!ffdshow_YV16toRGB32)
-            ffdshow_YV16toRGB32 = new TffdshowConverters<FF_CSP_422P,FF_CSP_RGB32>;
-          }
-         else if (outcsp1 == FF_CSP_RGB24)
-          {
-           mode = MODE_ffdshow_YV16toRGB24;
-           if (!ffdshow_YV16toRGB24)
-            ffdshow_YV16toRGB24 = new TffdshowConverters<FF_CSP_422P,FF_CSP_RGB24>;
-          }
-        }
+        mode = MODE_ffdshow_converters;
        break;
       case FF_CSP_PAL8:
        switch (outcsp1)
@@ -490,60 +424,13 @@ int Tconvert::convert(int incsp0,
      return dy;
     }
    #endif
-   case MODE_ffdshow_YV12toRGB32:
+   case MODE_ffdshow_converters:
     {
+     if (!ffdshow_converters)
+      ffdshow_converters = new TffdshowConverters;
      UpdateSettings(video_full_range_flag, YCbCr_RGB_matrix_coefficients);
-     ffdshow_YV12toRGB32->init(cspOptionsIturBt,cspOptionsWhiteCutoff,cspOptionsBlackCutoff,cspOptionsChromaCutoff,cspOptionsRGB_WhiteLevel,cspOptionsRGB_BlackLevel);
-     ffdshow_YV12toRGB32->convert(src[0],src[1],src[2],dst[0],dx,dy,srcStride[0],srcStride[1],dstStride[0]);
-     return dy;
-    }
-   case MODE_ffdshow_YV12toRGB24:
-    {
-     UpdateSettings(video_full_range_flag, YCbCr_RGB_matrix_coefficients);
-     ffdshow_YV12toRGB24->init(cspOptionsIturBt,cspOptionsWhiteCutoff,cspOptionsBlackCutoff,cspOptionsChromaCutoff,cspOptionsRGB_WhiteLevel,cspOptionsRGB_BlackLevel);
-     ffdshow_YV12toRGB24->convert(src[0],src[1],src[2],dst[0],dx,dy,srcStride[0],srcStride[1],dstStride[0]);
-     return dy;
-    }
-   case MODE_ffdshow_NV12toRGB32:
-    {
-     UpdateSettings(video_full_range_flag, YCbCr_RGB_matrix_coefficients);
-     ffdshow_NV12toRGB32->init(cspOptionsIturBt,cspOptionsWhiteCutoff,cspOptionsBlackCutoff,cspOptionsChromaCutoff,cspOptionsRGB_WhiteLevel,cspOptionsRGB_BlackLevel);
-     ffdshow_NV12toRGB32->convert(src[0],src[1],src[1],dst[0],dx,dy,srcStride[0],srcStride[1],dstStride[0]);
-     return dy;
-    }
-   case MODE_ffdshow_NV12toRGB24:
-    {
-     UpdateSettings(video_full_range_flag, YCbCr_RGB_matrix_coefficients);
-     ffdshow_NV12toRGB24->init(cspOptionsIturBt,cspOptionsWhiteCutoff,cspOptionsBlackCutoff,cspOptionsChromaCutoff,cspOptionsRGB_WhiteLevel,cspOptionsRGB_BlackLevel);
-     ffdshow_NV12toRGB24->convert(src[0],src[1],src[1],dst[0],dx,dy,srcStride[0],srcStride[1],dstStride[0]);
-     return dy;
-    }
-   case MODE_ffdshow_YV16toRGB32:
-    {
-     UpdateSettings(video_full_range_flag, YCbCr_RGB_matrix_coefficients);
-     ffdshow_YV16toRGB32->init(cspOptionsIturBt,cspOptionsWhiteCutoff,cspOptionsBlackCutoff,cspOptionsChromaCutoff,cspOptionsRGB_WhiteLevel,cspOptionsRGB_BlackLevel);
-     ffdshow_YV16toRGB32->convert(src[0],src[1],src[2],dst[0],dx,dy,srcStride[0],srcStride[1],dstStride[0]);
-     return dy;
-    }
-   case MODE_ffdshow_YV16toRGB24:
-    {
-     UpdateSettings(video_full_range_flag, YCbCr_RGB_matrix_coefficients);
-     ffdshow_YV16toRGB24->init(cspOptionsIturBt,cspOptionsWhiteCutoff,cspOptionsBlackCutoff,cspOptionsChromaCutoff,cspOptionsRGB_WhiteLevel,cspOptionsRGB_BlackLevel);
-     ffdshow_YV16toRGB24->convert(src[0],src[0],src[0],dst[0],dx,dy,srcStride[0],srcStride[0],dstStride[0]);
-     return dy;
-    }
-   case MODE_ffdshow_YUY2toRGB32:
-    {
-     UpdateSettings(video_full_range_flag, YCbCr_RGB_matrix_coefficients);
-     ffdshow_YUY2toRGB32->init(cspOptionsIturBt,cspOptionsWhiteCutoff,cspOptionsBlackCutoff,cspOptionsChromaCutoff,cspOptionsRGB_WhiteLevel,cspOptionsRGB_BlackLevel);
-     ffdshow_YUY2toRGB32->convert(src[0],src[0],src[0],dst[0],dx,dy,srcStride[0],srcStride[0],dstStride[0]);
-     return dy;
-    }
-   case MODE_ffdshow_YUY2toRGB24:
-    {
-     UpdateSettings(video_full_range_flag, YCbCr_RGB_matrix_coefficients);
-     ffdshow_YUY2toRGB24->init(cspOptionsIturBt,cspOptionsWhiteCutoff,cspOptionsBlackCutoff,cspOptionsChromaCutoff,cspOptionsRGB_WhiteLevel,cspOptionsRGB_BlackLevel);
-     ffdshow_YUY2toRGB24->convert(src[0],src[0],src[0],dst[0],dx,dy,srcStride[0],srcStride[1],dstStride[0]);
+     ffdshow_converters->init(incsp1,outcsp1,(ffYCbCr_RGB_MatrixCoefficientsType)cspOptionsIturBt,cspOptionsWhiteCutoff,cspOptionsBlackCutoff,cspOptionsChromaCutoff,cspOptionsRGB_WhiteLevel,cspOptionsRGB_BlackLevel);
+     ffdshow_converters->convert(src[0],src[1],src[2],dst[0],dx,dy,srcStride[0],srcStride[1],dstStride[0]);
      return dy;
     }
    case MODE_avisynth_yv12_to_yuy2:
