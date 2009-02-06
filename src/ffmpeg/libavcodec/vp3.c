@@ -19,7 +19,7 @@
  */
 
 /**
- * @file vp3.c
+ * @file libavcodec/vp3.c
  * On2 VP3 Video Decoder
  *
  * VP3 Video Decoder by Mike Melanson (mike at multimedia.cx)
@@ -749,6 +749,8 @@ static int unpack_modes(Vp3DecodeContext *s, GetBitContext *gb)
 
         /* is it a custom coding scheme? */
         if (scheme == 0) {
+            for (i = 0; i < 8; i++)
+                custom_mode_alphabet[i] = MODE_INTER_NO_MV;
             for (i = 0; i < 8; i++)
                 custom_mode_alphabet[get_bits(gb, 3)] = i;
         }

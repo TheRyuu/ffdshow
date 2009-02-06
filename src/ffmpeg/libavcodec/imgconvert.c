@@ -20,7 +20,7 @@
  */
 
 /**
- * @file imgconvert.c
+ * @file libavcodec/imgconvert.c
  * misc image conversion routines
  */
 
@@ -690,6 +690,43 @@ void avcodec_get_chroma_sub_sample(int pix_fmt, int *h_shift, int *v_shift)
     *v_shift = pix_fmt_info[pix_fmt].y_chroma_shift;
 }
 
+int ff_set_systematic_pal(uint32_t pal[256], enum PixelFormat pix_fmt){
+    int i;
+
+    for(i=0; i<256; i++){
+        int r,g,b;
+
+        switch(pix_fmt) {
+        case PIX_FMT_RGB8:
+            r= (i>>5    )*36;
+            g= ((i>>2)&7)*36;
+            b= (i&3     )*85;
+            break;
+        case PIX_FMT_BGR8:
+            b= (i>>6    )*85;
+            g= ((i>>3)&7)*36;
+            r= (i&7     )*36;
+            break;
+        case PIX_FMT_RGB4_BYTE:
+            r= (i>>3    )*255;
+            g= ((i>>1)&3)*85;
+            b= (i&1     )*255;
+            break;
+        case PIX_FMT_BGR4_BYTE:
+            b= (i>>3    )*255;
+            g= ((i>>1)&3)*85;
+            r= (i&1     )*255;
+            break;
+        case PIX_FMT_GRAY8:
+            r=b=g= i;
+            break;
+        }
+        pal[i] =  b + (g<<8) + (r<<16);
+    }
+
+    return 0;
+}
+
 int ff_fill_linesize(AVPicture *picture, int pix_fmt, int width)
 {
     int w2;
@@ -752,13 +789,6 @@ int ff_fill_linesize(AVPicture *picture, int pix_fmt, int width)
     case PIX_FMT_UYYVYY411:
         picture->linesize[0] = width + width/2;
         break;
-    case PIX_FMT_RGB8:
-    case PIX_FMT_BGR8:
-    case PIX_FMT_RGB4_BYTE:
-    case PIX_FMT_BGR4_BYTE:
-    case PIX_FMT_GRAY8:
-        picture->linesize[0] = width;
-        break;
     case PIX_FMT_RGB4:
     case PIX_FMT_BGR4:
         picture->linesize[0] = width / 2;
@@ -768,6 +798,11 @@ int ff_fill_linesize(AVPicture *picture, int pix_fmt, int width)
         picture->linesize[0] = (width + 7) >> 3;
         break;
     case PIX_FMT_PAL8:
+    case PIX_FMT_RGB8:
+    case PIX_FMT_BGR8:
+    case PIX_FMT_RGB4_BYTE:
+    case PIX_FMT_BGR4_BYTE:
+    case PIX_FMT_GRAY8:
         picture->linesize[0] = width;
         picture->linesize[1] = 4;
         break;
@@ -835,11 +870,6 @@ int ff_fill_pointer(AVPicture *picture, uint8_t *ptr, int pix_fmt,
     case PIX_FMT_YUYV422:
     case PIX_FMT_UYVY422:
     case PIX_FMT_UYYVYY411:
-    case PIX_FMT_RGB8:
-    case PIX_FMT_BGR8:
-    case PIX_FMT_RGB4_BYTE:
-    case PIX_FMT_BGR4_BYTE:
-    case PIX_FMT_GRAY8:
     case PIX_FMT_RGB4:
     case PIX_FMT_BGR4:
     case PIX_FMT_MONOWHITE:
@@ -850,6 +880,11 @@ int ff_fill_pointer(AVPicture *picture, uint8_t *ptr, int pix_fmt,
         picture->data[3] = NULL;
         return size;
     case PIX_FMT_PAL8:
+    case PIX_FMT_RGB8:
+    case PIX_FMT_BGR8:
+    case PIX_FMT_RGB4_BYTE:
+    case PIX_FMT_BGR4_BYTE:
+    case PIX_FMT_GRAY8:
         size2 = (size + 3) & ~3;
         picture->data[0] = ptr;
         picture->data[1] = ptr + size2; /* palette is stored here as 256 32 bit words */

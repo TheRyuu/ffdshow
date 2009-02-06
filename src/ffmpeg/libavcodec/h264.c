@@ -20,7 +20,7 @@
  */
 
 /**
- * @file h264.c
+ * @file libavcodec/h264.c
  * H.264 / AVC / MPEG4 part10 codec.
  * @author Michael Niedermayer <michaelni@gmx.at>
  */
@@ -2621,9 +2621,6 @@ static void hl_decode_mb(H264Context *h){
     const int mb_type= s->current_picture.mb_type[mb_xy];
     int is_complex = CONFIG_SMALL || h->is_complex || IS_INTRA_PCM(mb_type) || s->qscale == 0;
 
-    if(CONFIG_H264_ENCODER && !s->decode)
-        return;
-
     if (is_complex)
         hl_decode_mb_complex(h);
     else hl_decode_mb_simple(h);
@@ -2938,6 +2935,8 @@ static int pred_weight_table(H264Context *h){
     chroma_def = 1<<h->chroma_log2_weight_denom;
 
     for(list=0; list<2; list++){
+        h->luma_weight_flag[list]   = 0;
+        h->chroma_weight_flag[list] = 0;
         for(i=0; i<h->ref_count[list]; i++){
             int luma_weight_flag, chroma_weight_flag;
 
@@ -2946,8 +2945,10 @@ static int pred_weight_table(H264Context *h){
                 h->luma_weight[list][i]= get_se_golomb(&s->gb);
                 h->luma_offset[list][i]= get_se_golomb(&s->gb);
                 if(   h->luma_weight[list][i] != luma_def
-                   || h->luma_offset[list][i] != 0)
+                   || h->luma_offset[list][i] != 0) {
                     h->use_weight= 1;
+                    h->luma_weight_flag[list]= 1;
+                }
             }else{
                 h->luma_weight[list][i]= luma_def;
                 h->luma_offset[list][i]= 0;
@@ -2961,8 +2962,10 @@ static int pred_weight_table(H264Context *h){
                         h->chroma_weight[list][i][j]= get_se_golomb(&s->gb);
                         h->chroma_offset[list][i][j]= get_se_golomb(&s->gb);
                         if(   h->chroma_weight[list][i][j] != chroma_def
-                        || h->chroma_offset[list][i][j] != 0)
+                           || h->chroma_offset[list][i][j] != 0) {
                             h->use_weight_chroma= 1;
+                            h->chroma_weight_flag[list]= 1;
+                        }
                     }
                 }else{
                     int j;
@@ -2981,7 +2984,7 @@ static int pred_weight_table(H264Context *h){
 
 static void implicit_weight_table(H264Context *h){
     MpegEncContext * const s = &h->s;
-    int ref0, ref1;
+    int ref0, ref1, i;
     int cur_poc = s->current_picture_ptr->poc;
 
     if(   h->ref_count[0] == 1 && h->ref_count[1] == 1
@@ -2995,6 +2998,10 @@ static void implicit_weight_table(H264Context *h){
     h->use_weight_chroma= 2;
     h->luma_log2_weight_denom= 5;
     h->chroma_log2_weight_denom= 5;
+    for (i = 0; i < 2; i++) {
+        h->luma_weight_flag[i]   = 0;
+        h->chroma_weight_flag[i] = 0;
+    }
 
     for(ref0=0; ref0 < h->ref_count[0]; ref0++){
         int poc0 = h->ref_list[0][ref0].poc;
@@ -3968,8 +3975,13 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
         pred_weight_table(h);
     else if(h->pps.weighted_bipred_idc==2 && h->slice_type_nos== FF_B_TYPE)
         implicit_weight_table(h);
-    else
+    else {
         h->use_weight = 0;
+        for (i = 0; i < 2; i++) {
+            h->luma_weight_flag[i]   = 0;
+            h->chroma_weight_flag[i] = 0;
+        }
+    }
 
     if(h->nal_ref_idc)
         decode_ref_pic_marking(h0, &s->gb);
@@ -6501,7 +6513,7 @@ static void filter_mb( H264Context *h, int mb_x, int mb_y, uint8_t *img_y, uint8
     const int mb_type = s->current_picture.mb_type[mb_xy];
     const int mvy_limit = IS_INTERLACED(mb_type) ? 2 : 4;
     int first_vertical_edge_done = 0;
-    int dir;
+    av_unused int dir;
 
     //for sufficiently low qp, filtering wouldn't do anything
     //this is a conservative estimate: could also check beta_offset and more accurate chroma_qp
@@ -6630,7 +6642,7 @@ static int decode_slice(struct AVCodecContext *avctx, void *arg){
     s->mb_skip_run= -1;
 
     h->is_complex = FRAME_MBAFF || s->picture_structure != PICT_FRAME || s->codec_id != CODEC_ID_H264 ||
-                    (CONFIG_GRAY && (s->flags&CODEC_FLAG_GRAY)) || (CONFIG_H264_ENCODER && s->encoding);
+                    (CONFIG_GRAY && (s->flags&CODEC_FLAG_GRAY));
 
     if( h->pps.cabac ) {
         int i;
@@ -7291,9 +7303,9 @@ static inline int decode_seq_parameter_set(H264Context *h){
     if(sps->profile_idc >= 100){ //high profile
         sps->chroma_format_idc= get_ue_golomb_31(&s->gb);
         if(sps->chroma_format_idc == 3)
-            get_bits1(&s->gb);  //residual_color_transform_flag
-        get_ue_golomb(&s->gb);  //bit_depth_luma_minus8
-        get_ue_golomb(&s->gb);  //bit_depth_chroma_minus8
+            sps->residual_color_transform_flag = get_bits1(&s->gb);
+        sps->bit_depth_luma   = get_ue_golomb(&s->gb) + 8;
+        sps->bit_depth_chroma = get_ue_golomb(&s->gb) + 8;
         sps->transform_bypass = get_bits1(&s->gb);
         decode_scaling_matrices(h, sps, NULL, 1, sps->scaling_matrix4, sps->scaling_matrix8);
     }else{

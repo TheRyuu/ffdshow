@@ -20,7 +20,7 @@
  */
 
 /**
- * @file h264.h
+ * @file libavcodec/h264.h
  * H.264 / AVC / MPEG4 part10 codec.
  * @author Michael Niedermayer <michaelni@gmx.at>
  */
@@ -84,10 +84,6 @@
 #define CHROMA h->sps.chroma_format_idc
 #else
 #define CHROMA 1
-#endif
-
-#ifndef CONFIG_H264_ENCODER
-#define CONFIG_H264_ENCODER 0
 #endif
 
 #define EXTENDED_SAR          255
@@ -176,6 +172,9 @@ typedef struct SPS{
     int time_offset_length;
     int cpb_removal_delay_length;      ///< cpb_removal_delay_length_minus1 + 1
     int dpb_output_delay_length;       ///< dpb_output_delay_length_minus1 + 1
+    int bit_depth_luma;                ///< bit_depth_luma_minus8 + 8
+    int bit_depth_chroma;              ///< bit_depth_chroma_minus8 + 8
+    int residual_color_transform_flag; ///< residual_colour_transform_flag
     int video_full_range_flag;         ///< for YCbCr <-> RGB conversion, ffdshow custom
     int matrix_coefficients;           ///< for YCbCr <-> RGB conversion, ffdshow custom
 }SPS;
@@ -529,6 +528,9 @@ typedef struct H264Context{
     SEI_PicStructType sei_pic_struct;
 
     int is_complex;
+
+    int luma_weight_flag[2];   ///< 7.4.3.2 luma_weight_lX_flag
+    int chroma_weight_flag[2]; ///< 7.4.3.2 chroma_weight_lX_flag
     
     /* experimental */
     int phaze;

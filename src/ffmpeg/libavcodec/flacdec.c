@@ -20,7 +20,7 @@
  */
 
 /**
- * @file flacdec.c
+ * @file libavcodec/flacdec.c
  * FLAC (Free Lossless Audio Codec) decoder
  * @author Alex Beregszaszi
  *
@@ -103,6 +103,8 @@ static av_cold int flac_decode_init(AVCodecContext *avctx)
     FLACContext *s = avctx->priv_data;
     s->avctx = avctx;
 
+    avctx->sample_fmt = SAMPLE_FMT_S16;
+
     if (avctx->extradata_size > 4) {
         /* initialize based on the demuxer-supplied streamdata header */
         if (avctx->extradata_size == FLAC_STREAMINFO_SIZE) {
@@ -115,7 +117,6 @@ static av_cold int flac_decode_init(AVCodecContext *avctx)
         }
     }
 
-    avctx->sample_fmt = SAMPLE_FMT_S16;
     return 0;
 }
 

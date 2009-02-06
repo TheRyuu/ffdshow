@@ -22,7 +22,7 @@
 #define AVUTIL_AVUTIL_H
 
 /**
- * @file avutil.h
+ * @file libavutil/avutil.h
  * external API header
  */
 
@@ -71,6 +71,10 @@
  * components stored in AVFrame.data[1] should be in the range 0..255.
  * This is important as many custom PAL8 video codecs that were designed
  * to run on the IBM VGA graphics adapter use 6-bit palette components.
+ *
+ * For all the 8bit per pixel formats, an RGB32 palette is in data[1] like
+ * for pal8. This palette is filled in automatically by the function
+ * allocating the picture.
  */
 
 /* see ffImgfmt.h */
