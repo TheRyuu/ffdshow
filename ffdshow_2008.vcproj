@@ -5289,42 +5289,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\convert\ffdshow_converters.h"
-				>
-				<FileConfiguration
-					Name="Release Unicode|Win32"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="src\convert\image.cpp"
-				>
-				<FileConfiguration
-					Name="Release Unicode|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="4"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="4"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\src\convert\image.h"
+				RelativePath="src\convert\ffdshow_converters.h"
 				>
 			</File>
 			<File
-				RelativePath="src\convert\Tconvert.cpp"
+				RelativePath="src\convert\ffdshow_converters.cpp"
 				>
 				<FileConfiguration
 					Name="Release Unicode|Win32"
@@ -5342,22 +5311,34 @@
 						AssemblerOutput="4"
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="src\convert\ffYCbCr_RGB_MatrixCoefficients.h"
+				>
+			</File>
+			<File
+				RelativePath="src\convert\ffYCbCr_RGB_MatrixCoefficients.cpp"
+				>
+			</File>
+			<File
+				RelativePath="src\convert\image.cpp"
+				>
 				<FileConfiguration
-					Name="Release|Win32"
+					Name="Release Unicode|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
 						AssemblerOutput="4"
 					/>
 				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="4"
-					/>
-				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\src\convert\image.h"
+				>
+			</File>
+			<File
+				RelativePath="src\convert\Tconvert.cpp"
+				>
 			</File>
 			<File
 				RelativePath=".\src\convert\Tconvert.h"

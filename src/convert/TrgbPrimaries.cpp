@@ -25,59 +25,6 @@
 #include "TffRect.h"
 #include "libavcodec/avcodec.h"
 #include "ffdshow_mediaguids.h"
-//#include "YCbCr2RGB_data.h"
-
-void YCbCr2RGBdata_common_inint(double &Kr,
-                                double &Kg,
-                                double &Kb,
-                                double &chr_range,
-                                double &y_mul,
-                                double &vr_mul,
-                                double &ug_mul,
-                                double &vg_mul,
-                                double &ub_mul,
-                                int &Ysub,
-                                int &RGB_add,
-                                const ffYCbCr_RGB_MatrixCoefficientsType cspOptionsIturBt,
-                                const int cspOptionsWhiteCutoff,
-                                const int cspOptionsBlackCutoff,
-                                const int cspOptionsChromaCutoff,
-                                const double cspOptionsRGB_WhiteLevel,
-                                const double cspOptionsRGB_BlackLevel)
-{
- if (cspOptionsIturBt == ffYCbCr_RGB_coeff_ITUR_BT601)
-  {
-   Kr = 0.299;
-   Kg = 0.587;
-   Kb = 0.114;
-  }
- else if (cspOptionsIturBt == ffYCbCr_RGB_coeff_SMPTE240M)
-  {
-   Kr = 0.2122;
-   Kg = 0.7013;
-   Kb = 0.0865;
-  }
- else
-  {
-   Kr = 0.2125;
-   Kg = 0.7154;
-   Kb = 0.0721;
-  }
-
- double in_y_range   = cspOptionsWhiteCutoff - cspOptionsBlackCutoff;
- chr_range = 128 - cspOptionsChromaCutoff;
-
- double cspOptionsRGBrange = cspOptionsRGB_WhiteLevel - cspOptionsRGB_BlackLevel;
- y_mul =cspOptionsRGBrange / in_y_range;
- vr_mul=(cspOptionsRGBrange / chr_range) * (1.0 - Kr);
- ug_mul=(cspOptionsRGBrange / chr_range) * (1.0 - Kb) * Kb / Kg;
- vg_mul=(cspOptionsRGBrange / chr_range) * (1.0 - Kr) * Kr / Kg;   
- ub_mul=(cspOptionsRGBrange / chr_range) * (1.0 - Kb);
- int sub = std::min((int)cspOptionsRGB_BlackLevel, cspOptionsBlackCutoff);
- Ysub = cspOptionsBlackCutoff - sub;
- RGB_add = (int)cspOptionsRGB_BlackLevel - sub;
- RGB_add += (RGB_add << 8) + (RGB_add << 16);
-}
 
 //===================================== TrgbPrimaries ====================================
 TrgbPrimaries::TrgbPrimaries():

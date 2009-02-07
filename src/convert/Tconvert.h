@@ -6,7 +6,6 @@
 #include "IffColorspaceConvert.h"
 #include "TrgbPrimaries.h"
 #include "libavcodec/avcodec.h"
-#include "ffdshow_converters.h"
 
 //#define AVISYNTH_BITBLT //use avisynth bitblt function to just copy frame when no colorspace conversion is needed
 #define XVID_BITBLT //use xvid's YV12 -> YV12 copy function - seems to be fastest
@@ -18,6 +17,7 @@ struct TcspInfo;
 struct Tpalette;
 struct TffPict;
 struct ToutputVideoSettings;
+class TffdshowConverters;
 
 class Tconvert : public TrgbPrimaries
 {

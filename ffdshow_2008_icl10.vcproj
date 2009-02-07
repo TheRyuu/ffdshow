@@ -5292,6 +5292,22 @@
 				>
 			</File>
 			<File
+				RelativePath="src\convert\ffdshow_converters.h"
+				>
+			</File>
+			<File
+				RelativePath="src\convert\ffdshow_converters.cpp"
+				>
+			</File>
+			<File
+				RelativePath="src\convert\ffYCbCr_RGB_MatrixCoefficients.h"
+				>
+			</File>
+			<File
+				RelativePath="src\convert\ffYCbCr_RGB_MatrixCoefficients.cpp"
+				>
+			</File>
+			<File
 				RelativePath="src\convert\image.cpp"
 				>
 				<FileConfiguration

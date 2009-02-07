@@ -32,6 +32,7 @@
 #include "Tlibmplayer.h"
 #include "libavcodec/bitstream.h"
 #include "ToutputVideoSettings.h"
+#include "ffdshow_converters.h"
 
 //======================================= Tconvert =======================================
 Tconvert::Tconvert(IffdshowBase *deci,unsigned int Idx,unsigned int Idy) :
