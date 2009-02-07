@@ -22,7 +22,7 @@
 #define AVCODEC_AVCODEC_H
 
 /**
- * @file avcodec.h
+ * @file libavcodec/avcodec.h
  * external API header
  */
 
@@ -38,7 +38,7 @@
 #include "libavutil/avutil.h"
 
 #define LIBAVCODEC_VERSION_MAJOR 52
-#define LIBAVCODEC_VERSION_MINOR 11
+#define LIBAVCODEC_VERSION_MINOR 14
 #define LIBAVCODEC_VERSION_MICRO  0
 
 #define LIBAVCODEC_VERSION_INT  AV_VERSION_INT(LIBAVCODEC_VERSION_MAJOR, \
@@ -2255,7 +2255,7 @@ void avcodec_init(void);
  *
  * @see avcodec_init()
  */
-void register_avcodec(AVCodec *codec);
+void avcodec_register(AVCodec *codec);
 
 /**
  * Finds a registered encoder with a matching codec ID.
@@ -2507,7 +2507,7 @@ int avcodec_close(AVCodecContext *avctx);
  * which formats you want to support, by using the individual registration
  * functions.
  *
- * @see register_avcodec
+ * @see avcodec_register
  * @see av_register_codec_parser
  * @see av_register_bitstream_filter
  */

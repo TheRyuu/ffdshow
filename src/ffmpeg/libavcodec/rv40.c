@@ -20,7 +20,7 @@
  */
 
 /**
- * @file rv40.c
+ * @file libavcodec/rv40.c
  * RV40 decoder
  */
 
@@ -655,7 +655,7 @@ AVCodec rv40_decoder = {
     /*.close = */ff_rv34_decode_frame,
     /*.capabilities = */CODEC_CAP_DR1 | CODEC_CAP_DELAY,
     /*.next = */NULL,
-    /*.flush = */NULL,
+    /*.flush = */ff_mpeg_flush,
     /*.supported_framerates = */NULL,
     /*.pix_fmts = */NULL,
     /*.long_name = */NULL_IF_CONFIG_SMALL("RealVideo 4.0"),

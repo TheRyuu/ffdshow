@@ -96,7 +96,7 @@ AVCodec *av_codec_next(AVCodec *c){
     else  return first_avcodec;
 }
 
-void register_avcodec(AVCodec *codec)
+void avcodec_register(AVCodec *codec)
 {
     AVCodec **p;
     avcodec_init();
