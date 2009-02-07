@@ -3,7 +3,7 @@
 
 #include "TfilterSettings.h"
 
-typedef std::hash_map<ffstring,ffstring> TdevicesList;
+typedef stdext::hash_map<ffstring,ffstring> TdevicesList;
 
 struct ToutputAudioSettings :TfilterSettingsAudio
 {

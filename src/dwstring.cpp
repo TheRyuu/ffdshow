@@ -1908,13 +1908,15 @@ template<> struct Fnv_hash<8>
 };
 #endif
 
-size_t std::hash< DwString<char> >::operator()(const DwString<char> &s) const
+
+template< > size_t stdext::hash_value< DwString<char> >(const DwString<char>  & s)
 {
- return Fnv_hash<>::hash(s.data(),s.size());
+ return stdext::hash_value(s.c_str());
 }
-size_t std::hash< DwString<wchar_t> >::operator()(const DwString<wchar_t> &s) const
+
+template< > size_t stdext::hash_value< DwString<wchar_t> >(const DwString<wchar_t>  & s)
 {
- return Fnv_hash<>::hash((const char*)s.data(),s.size()*sizeof(wchar_t));
+ return stdext::hash_value(s.c_str());
 }
 
 template class DwString<char>;

@@ -1,7 +1,7 @@
 #ifndef _THTMLCOLORS_H_
 #define _THTMLCOLORS_H_
 
-class ThtmlColors : std::hash_map<ffstring,COLORREF>
+class ThtmlColors : stdext::hash_map<ffstring,COLORREF>
 {
 public:
  ThtmlColors(void);

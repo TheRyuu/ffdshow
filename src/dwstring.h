@@ -782,17 +782,8 @@ struct ffstring_iless
   }
 };
 
-namespace std
-{
- template<> struct hash<DwString<char> >
-  {
-   size_t operator()(const DwString<char> &__s) const;
-  };
- template<> struct hash<DwString<wchar_t> >
-  {
-   size_t operator()(const DwString<wchar_t> &__s) const;
-  };
-}
+template<> size_t stdext::hash_value< DwString<char> >(const DwString<char>  & s);
+template<> size_t stdext::hash_value< DwString<wchar_t> >(const DwString<wchar_t>  & s);
 
 #if defined(__INTEL_COMPILER) || defined(__GNUC__) || (_MSC_VER>=1300)
 template<class T> static inline const T* T_L(const char *t1,const wchar_t *t2);

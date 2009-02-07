@@ -18,8 +18,8 @@
 #include <mmreg.h>
 // STL
 #include "../../PODtypes.h"
- #include "../../uClibc++/algorithm"
- #include "../../uClibc++/vector"
+ #include <algorithm>
+ #include <vector>
 // WMV9
 #ifdef __GNUC__
  #define AM_NOVTABLE

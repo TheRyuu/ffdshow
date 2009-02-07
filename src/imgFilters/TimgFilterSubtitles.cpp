@@ -260,7 +260,7 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
     }
    if (expand)
     {
-     expand->process(NULL,pict,&expandSettings);
+     expand->process(pict,&expandSettings);
      checkBorder(pict);
      pict.rectClip=pict.rectFull;
      pict.calcDiff();

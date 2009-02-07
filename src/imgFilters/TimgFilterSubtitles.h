@@ -26,7 +26,7 @@ private:
  bool wasDiscontinuity;
  bool expandSizeChanged,fontSizeChanged;
  TsubtitlesFile subs;
- typedef std::hash_map<int,TsubtitlesTextpin*> Tembedded;
+ typedef stdext::hash_map<int,TsubtitlesTextpin*> Tembedded;
  Tembedded embedded;
  Tfont font,fontCC;
  TfontSettingsSub *oldFontCfg,*oldFontCCcfg;

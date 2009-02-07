@@ -105,7 +105,7 @@ protected:
   };
 private:
  void insertMenuItemFilter(HMENU hm,int &ord,const TfilterIDFF *idff);
- std::hash_map<int,ffstring> graphnames;
+ stdext::hash_map<int,ffstring> graphnames;
 protected:
  TtrayIconDec(IffdshowBase *Ideci);
 

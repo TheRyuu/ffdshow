@@ -22,6 +22,7 @@ public:
  TimgFilterExpand(IffdshowBase *Ideci,Tfilters *Iparent);
  virtual bool getOutputFmt(TffPictBase &pict,const TfilterSettingsVideo *cfg0);
  virtual HRESULT process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0);
+ HRESULT process(TffPict &pict,const TfilterSettingsVideo *cfg0);
 };
 
 DECLARE_FILTER(TimgFilterSubtitleExpand,public,TimgFilterExpand)

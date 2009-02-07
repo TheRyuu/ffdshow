@@ -139,7 +139,7 @@ void TsubtitlesFile::findSubtitlesFile(const char_t *aviFlnm,const char_t *sdir,
      //exact match (only extension differs)
      for (strings::const_iterator d=dirs.begin();d!=dirs.end();d++)
       {
-       if (!d) continue;
+       if (d->empty()) continue;
        char_t subFlnm0[MAX_PATH];
        //sub_extsfind(d->c_str(),name,subFlnm0);
        strings etensions;strtok(sext,_l(";"),etensions);

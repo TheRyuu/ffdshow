@@ -128,7 +128,7 @@ class TrenderedTextSubtitleWord;
 class TcharsChache
 {
 private:
- typedef std::hash_map<int,TrenderedTextSubtitleWord*> Tchars;
+ typedef stdext::hash_map<int,TrenderedTextSubtitleWord*> Tchars;
  Tchars chars;
  HDC hdc;
  YUVcolorA yuv,outlineYUV,shadowYUV;

@@ -465,8 +465,8 @@ private:
  TbindEditInts bindsEditInt;
  TbindEditReals bindsEditReal;
  TbindRadioButtons bindsRadiobutton;
- TbindCheckboxes bindsCheckbox;typedef std::hash_map<int,const TbindCheckbox<Twindow>*> TcheckboxesMap;TcheckboxesMap bindCheckboxesMap;
- TbindTrackbars bindsHtrack,bindsVtrack;typedef std::hash_map<int,const TbindTrackbar<Twindow>*> TtrackBarsMap;TtrackBarsMap bindTrackbarsMap;
+ TbindCheckboxes bindsCheckbox;typedef stdext::hash_map<int,const TbindCheckbox<Twindow>*> TcheckboxesMap;TcheckboxesMap bindCheckboxesMap;
+ TbindTrackbars bindsHtrack,bindsVtrack;typedef stdext::hash_map<int,const TbindTrackbar<Twindow>*> TtrackBarsMap;TtrackBarsMap bindTrackbarsMap;
  bool onTrack(TbindTrackbars bindsTrack,LPARAM lParam);
  HBRUSH red;
  struct TwidgetSubclass : TwindowWidget

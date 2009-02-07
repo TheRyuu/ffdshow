@@ -210,7 +210,7 @@ struct Tval
 
 struct TregOpIDstreamRead: public TregOpFileStreamReadBase
 {
- typedef std::hash_map<int,Tval> Tvals;
+ typedef stdext::hash_map<int,Tval> Tvals;
  Tvals vals;
 public:
  TregOpIDstreamRead(const void *buf,size_t len,const void* *last=NULL);

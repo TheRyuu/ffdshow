@@ -47,7 +47,7 @@ protected:
   }
  void addItems(const TinfoItem *Iitems);
 private:
- struct Tvalues : std::hash_map<int,TinfoValueBase*>
+ struct Tvalues : stdext::hash_map<int,TinfoValueBase*>
   {
    ~Tvalues()
     {

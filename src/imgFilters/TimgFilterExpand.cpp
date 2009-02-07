@@ -116,10 +116,16 @@ void TimgFilterExpand::expand(TffPict &pict,const TfilterSettingsVideo *cfg,bool
 
 HRESULT TimgFilterExpand::process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)
 {
+ process(pict,cfg0);
+ return parent->deliverSample(++it,pict);
+}
+
+HRESULT TimgFilterExpand::process(TffPict &pict,const TfilterSettingsVideo *cfg0)
+{
  const TexpandSettings *cfg=(const TexpandSettings*)cfg0;
  if (is(pict,cfg))
   expand(pict,cfg,false);
- return it==NULL?S_OK:parent->deliverSample(++it,pict);
+ return S_OK;
 }
 
 //========================= TimgFilterSubtitleExpand ==============================

@@ -146,7 +146,7 @@ template<class Toption> struct TcollOption
  typename Toption::TonChangeBind onChange;
  const TcreateParamListBase *createParamList;
 };
-template<class Toption,class Tbase=std::hash_map<int,TcollOption<Toption> > > class TcollOptions :public Tbase
+template<class Toption,class Tbase=stdext::hash_map<int,TcollOption<Toption> > > class TcollOptions :public Tbase
 {
 private:
  template<class T> struct TonChangeCmp

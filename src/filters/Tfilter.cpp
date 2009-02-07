@@ -32,7 +32,7 @@ Tfilter::~Tfilter()
 void TfilterQueueItem::copyCfg(const Tpreset *cfgsrc)
 {
  if (owncfg.size())
-  memcpy(owncfg.begin(),cfgsrc->indexGetSettings(index),owncfg.size());
+  memcpy(&owncfg[0],cfgsrc->indexGetSettings(index),owncfg.size());
 }
 
 void TfilterQueue::copyCfg(const Tpreset *cfg)

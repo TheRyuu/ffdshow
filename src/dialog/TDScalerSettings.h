@@ -15,7 +15,7 @@ private:
  int cdy_top;
  LONG rdx,rdy,cdy;
  int sbrWidth;
- typedef std::hash_map<int,SETTING*> Tsets;
+ typedef stdext::hash_map<int,SETTING*> Tsets;
  Tsets sets;
  long *bActive;
  static BOOL CALLBACK dscalerDlgEnum(HWND hwnd,LPARAM lParam);

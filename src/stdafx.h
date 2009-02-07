@@ -44,13 +44,14 @@
 #include <wchar.h>
 // STL
 #include "PODtypes.h"
- #include "uClibc++/vector"
- #include "uClibc++/algorithm"
- #include "uClibc++/map"
- #include "uClibc++/list"
- #include "uClibc++/hash_map"
- #include "uClibc++/utility"
- #include "uClibc++/limits"
+ #include <vector>
+ #include <algorithm>
+ #include <map>
+ #include <list>
+ #include <hash_map>
+ #include <utility>
+ #include <limits>
+ #include <deque>
 #include "tuple.h"
 // baseclasses
 #include <streams.h>

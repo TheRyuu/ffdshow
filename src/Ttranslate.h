@@ -24,14 +24,14 @@ private:
    //int charset;
   };
  mutable bool initfont;
- struct Tstrs :public std::hash_map<ffstring,ffstring>
+ struct Tstrs :public stdext::hash_map<ffstring,ffstring>
   {
   public:
    void init(Tinifile &ini);
    const char_t *translate(const char_t *s) const;
    void newTranslation(const ffstring &oldstring,const ffstring &newstring,const char_t *flnm,int encoding);
   } strs;
- struct Tdialog :public std::hash_map<int,ffstring>
+ struct Tdialog :public stdext::hash_map<int,ffstring>
   {
   private:
    static BOOL CALLBACK transDialogEnum(HWND hwnd,LPARAM lParam);
@@ -44,7 +44,7 @@ private:
    const char_t* translate(int dlgId,int item,const char_t *def,Tdialog *builtin);
    void newTranslation(int dlgId,int item,const ffstring &newtrans,const char_t *flnm,int encoding);
   };
- typedef std::hash_map<int,Tdialog> Tdialogs;
+ typedef stdext::hash_map<int,Tdialog> Tdialogs;
  mutable Tdialogs dlgs,dlgsBuiltin;
  static int lastHorizontalScale;
  

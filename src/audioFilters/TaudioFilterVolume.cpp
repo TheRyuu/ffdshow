@@ -197,7 +197,7 @@ HRESULT TaudioFilterVolume::process(TfilterQueue::iterator it,TsampleFormat &fmt
      case TsampleFormat::SF_FLOAT32:volume((float*)  samples,numsamples,fmt,cfg);break;
     }
   }
- return (it!=NULL)?parent->deliverSamples(++it,fmt,samples,numsamples):S_OK;
+ return parent->deliverSamples(++it,fmt,samples,numsamples);
 }
 
 void TaudioFilterVolume::onSeek(void)
