@@ -1990,7 +1990,7 @@ BEGIN
     GROUPBOX        "YCbCr specification",IDC_GRP_CSP_OPT1,0,0,267,50
     CONTROL         "Standard  (Y: 16-235, CbCr: 16-240)",IDC_RBT_YCbCr_input_levels_16_to_235,
                     "Button",BS_AUTORADIOBUTTON,6,116,246,10
-    CONTROL         "Full range  (Y: 0-255, chroma: 1-255)",IDC_RBT_YCbCr_input_levels_0_to_255,
+    CONTROL         "Full range  (Y: 0-255, CbCr: 1-255)",IDC_RBT_YCbCr_input_levels_0_to_255,
                     "Button",BS_AUTORADIOBUTTON,6,130,246,10
     CONTROL         "Custom",IDC_RBT_CUSTOM_YUV,"Button",BS_AUTORADIOBUTTON,6,144,246,10
     GROUPBOX        "Method",IDC_GRP_CSP_OPT3,0,50,267,42
@@ -2003,7 +2003,7 @@ BEGIN
     GROUPBOX        "Output levels",IDC_GRP_CSP_OUTPUT_LEVELS,0,186,267,44
     CONTROL         "Computer monitor  (RGB: 0 - 255)",IDC_RBT_CSP_OUTPUT_LEVELS_PC,
                     "Button",BS_AUTORADIOBUTTON,6,198,259,10
-    CONTROL         "TV / Projector  (RGB:  16 - 235)",IDC_RBT_CSP_OUTPUT_LEVELS_TV,
+    CONTROL         "TV / Projector  (RGB: 16 - 235)",IDC_RBT_CSP_OUTPUT_LEVELS_TV,
                     "Button",BS_AUTORADIOBUTTON,6,214,257,10
 END
 
