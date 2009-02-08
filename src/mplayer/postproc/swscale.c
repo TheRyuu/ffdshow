@@ -2973,12 +2973,3 @@ void sws_freeContext(SwsContext *c){
 
 	av_free(c);
 }
-
-/*
- *  decCPUCount & inc CPUCount
- *  dropped functions. exist for compatibility
- */
-
-void decCPUCount(void){}
-
-void incCPUCount(void){}

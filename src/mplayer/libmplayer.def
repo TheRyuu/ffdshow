@@ -25,10 +25,9 @@ EXPORTS
   palette8tobgr16
   palette8torgb15
   palette8tobgr15
-  decCPUCount
-  incCPUCount
   sws_getContextEx
   yadif_init
   yadif_uninit
   yadif_filter
   reorder_channel_nch
+  GetCPUCount
