@@ -557,7 +557,7 @@ int attribute_align_arg avcodec_encode_audio(AVCodecContext *avctx, uint8_t *buf
         return -1;
     }
     if((avctx->codec->capabilities & CODEC_CAP_DELAY) || samples){
-        int ret = avctx->codec->encode(avctx, buf, buf_size, (void *)samples);
+        int ret = avctx->codec->encode(avctx, buf, buf_size, samples);
         avctx->frame_number++;
         return ret;
     }else
@@ -574,7 +574,7 @@ int attribute_align_arg avcodec_encode_video(AVCodecContext *avctx, uint8_t *buf
     if(avcodec_check_dimensions(avctx,avctx->width,avctx->height))
         return -1;
     if((avctx->codec->capabilities & CODEC_CAP_DELAY) || pict){
-        int ret = avctx->codec->encode(avctx, buf, buf_size, (void *)pict);
+        int ret = avctx->codec->encode(avctx, buf, buf_size, pict);
         avctx->frame_number++;
         emms_c(); //needed to avoid an emms_c() call before every return;
 
@@ -644,7 +644,7 @@ int avcodec_close(AVCodecContext *avctx)
     //    return -1;
     //}
 
-    //if (ENABLE_THREADS && avctx->thread_opaque)
+    //if (HAVE_THREADS && avctx->thread_opaque)
     //    avcodec_thread_free(avctx);
     if (avctx->codec->close)
         avctx->codec->close(avctx);
