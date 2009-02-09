@@ -53,8 +53,6 @@ Tlibmplayer::Tlibmplayer(const Tconfig *config):refcount(0)
  dll->loadFunction(palette8tobgr16,"palette8tobgr16");
  dll->loadFunction(palette8torgb15,"palette8torgb15");
  dll->loadFunction(palette8tobgr15,"palette8tobgr15");
- dll->loadFunction(decCPUCount,"decCPUCount");
- dll->loadFunction(incCPUCount,"incCPUCount");
  dll->loadFunction(yadif_init,"yadif_init");
  dll->loadFunction(yadif_uninit,"yadif_uninit");
  dll->loadFunction(yadif_filter,"yadif_filter");
