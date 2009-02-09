@@ -47,7 +47,13 @@ void TaudioCodecAvisynth::getInputDescr1(char_t *buf,size_t buflen) const
 }
 HRESULT TaudioCodecAvisynth::decode(TbyteBuffer &src)
 {
- uint64_t s1=*(uint64_t*)&*src.begin(),s2=*(uint64_t*)(&*src.begin()+8);
+ uint64_t s1=NULL;
+ uint64_t s2=NULL;
+ if (src.size())
+  {
+   s1 = *(uint64_t*)(&src[0]);
+   s2 = *(uint64_t*)(&src[0] + 8);
+  }
  int dstLength=int((s2-s1+1)*avisynth->vi->BytesPerAudioSample());
  int16_t *dst=(int16_t*)getDst(dstLength);
  (*avisynth->clip)->GetAudio(dst,s1,s2-s1+1);

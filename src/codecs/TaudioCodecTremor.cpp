@@ -268,8 +268,8 @@ HRESULT TaudioCodecTremor::decode(TbyteBuffer &src)
  ogg_buffer ob;
  ogg_packet op;
  memset(&op,0,sizeof(op));
- ob.data = &*src.begin();
  ob.size = src.size();
+ ob.data = ob.size ? &src[0] : NULL;
  ob.refcount = 255;
  ob.ptr.next = NULL;
  ogr.buffer = &ob;

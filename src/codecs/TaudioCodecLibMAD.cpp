@@ -88,7 +88,8 @@ int32_t TaudioCodecLibMAD::scale(mad_fixed_t sample)
 
 HRESULT TaudioCodecLibMAD::decode(TbyteBuffer &src)
 {
- mad_stream_buffer(&stream,&*src.begin(),(unsigned long)src.size());
+ unsigned long size = (unsigned long)src.size();
+ mad_stream_buffer(&stream,size ? &src[0] : NULL,size);
  while (1)
   {
    if (mad_frame_decode(&frame,&stream)==-1)

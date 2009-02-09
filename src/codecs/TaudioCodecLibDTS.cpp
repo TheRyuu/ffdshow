@@ -100,7 +100,7 @@ void TaudioCodecLibDTS::getInputDescr1(char_t *buf,size_t buflen) const
 
 HRESULT TaudioCodecLibDTS::decode(TbyteBuffer &src)
 {
- unsigned char *p=&*src.begin();
+ unsigned char *p = src.size() ? &src[0] : NULL;
  unsigned char *base=p;
  unsigned char *end=p+src.size();
 

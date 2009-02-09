@@ -94,7 +94,8 @@ void TaudioCodecLibFAAD::getInputDescr1(char_t *buf,size_t buflen) const
 HRESULT TaudioCodecLibFAAD::decode(TbyteBuffer &src)
 {
  NeAACDecFrameInfo frameInfo;
- float *outsamples=(float*)NeAACDecDecode(m_decHandle,&frameInfo,&*src.begin(),(unsigned long)src.size());
+ unsigned long size = (unsigned long)src.size();
+ float *outsamples=(float*)NeAACDecDecode(m_decHandle,&frameInfo,size ? &src[0] : NULL,size);
  src.clear();
  if (frameInfo.error)
   {

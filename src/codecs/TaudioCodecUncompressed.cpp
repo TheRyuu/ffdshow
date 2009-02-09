@@ -87,7 +87,8 @@ template<class sample_t> void TaudioCodecUncompressed::swapbe(sample_t *dst,size
 
 HRESULT TaudioCodecUncompressed::decode(TbyteBuffer &src)
 {
- void *samples=&*src.begin();size_t numsamples=src.size()/fmt.blockAlign();
+ size_t numsamples=src.size()/fmt.blockAlign();
+ void *samples = numsamples ? &src[0] : NULL;
  if (codecId==CODEC_ID_LPCM)
   {
    if (lpcm20)

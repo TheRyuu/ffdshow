@@ -251,8 +251,8 @@ void TaudioCodecRealaac::reorderChannels(int16_t *pcmBuf, int nSamps, int nChans
 
 HRESULT TaudioCodecRealaac::decode(TbyteBuffer &src0)
 {
- unsigned char *src=&*src0.begin();
  int srclen=(int)src0.size(),srclen0=srclen;
+ unsigned char *src = srclen ? &src0[0] : NULL;
  short *outbuf=(short*)getDst(AAC_MAX_NCHANS*AAC_MAX_NSAMPS*2*sizeof(short));
  int err=AACDecode(dec,&src,&srclen,outbuf);
  if (err)

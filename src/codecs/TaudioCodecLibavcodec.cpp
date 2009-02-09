@@ -184,7 +184,8 @@ HRESULT TaudioCodecLibavcodec::decode(TbyteBuffer &src0)
   }
 
  int size=(int)src0.size();
- unsigned char *src=&*src0.begin();
+ unsigned char *src = size ? &src0[0] : NULL;
+ 
  int maxLength=AVCODEC_MAX_AUDIO_FRAME_SIZE;
  TbyteBuffer newsrcBuffer;
 
