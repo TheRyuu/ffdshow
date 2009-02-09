@@ -472,6 +472,8 @@ Source: "{#= bindir}\ff_acm.acm";                                 DestDir: "{sys
 Source: "..\..\languages\*.*";                                    DestDir: "{app}\languages";             Components: ffdshow;                    Flags: ignoreversion
 Source: "..\..\custom matrices\*.*";                              DestDir: "{app}\custom matrices";       Components: ffdshow\vfw;                Flags: ignoreversion
 Source: "..\..\openIE.js";                                        DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion
+Source: "gnu_license.txt";                                        DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion
+Source: "Boost_Software_License_1.0.txt";                         DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion
 
 #if is64bit
 Source: "..\..\manifest64\ffdshow.ax.manifest";                   DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.03

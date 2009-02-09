@@ -24,6 +24,27 @@
 #include "ffImgfmt.h"      // Just to use some names of color spaces
 #include "ffYCbCr_RGB_MatrixCoefficients.h"
 
+#if defined(_MSC_VER) || defined(__INTEL_COMPILER)
+ #pragma warning (push)
+ #pragma warning (disable: 4244 4819)
+#endif
+
+// Make sure you have Boost 1.37.0 in your include path, if you are porting this to other project. ffdshow has it in svn.
+// http://www.boost.org/
+
+// threadpool by Philipp Henkel.
+// http://sourceforge.net/projects/threadpool/
+
+#include "threadpool/threadpool.hpp"
+
+#if defined(_MSC_VER) || defined(__INTEL_COMPILER)
+ #pragma warning (pop)
+#endif
+
+#ifndef MAX_THREADS
+ #define MAX_THREADS 32
+#endif
+
 typedef ptrdiff_t stride_t;
 
 // Features
@@ -34,6 +55,8 @@ typedef ptrdiff_t stride_t;
 //    input:  progressive YV12, progressive NV12, YV16, YUY2
 //    output: RGB32,RGB24
 //  SSE2 required
+//  Multithreaded and very fast on modern CPUs
+//  Portable (should work on UNIX)
 
 class TffdshowConverters
 {
@@ -60,13 +83,15 @@ public:
               stride_t stride_CbCr,
               stride_t stride_dst);
 
- TffdshowConverters();
+ TffdshowConverters(int thread_count);
  ~TffdshowConverters();
 
 private:
  uint8_t *m_coeffs;
  int m_incsp, m_outcsp;
+ int m_thread_count;
  bool m_rgb_limit;
+ boost::threadpool::pool threadpool;
    static const int ofs_Ysub=0;
    static const int ofs_128mul16=16;
    static const int ofs_rgb_limit_low=32;
@@ -90,7 +115,8 @@ private:
                       const unsigned char* const coeffs);
 
  // translate stack arguments to template arguments.
- template <int rgb_limit> void convert_translate_incsp(const uint8_t* srcY,
+ template <int rgb_limit> void convert_translate_incsp(
+              const uint8_t* srcY,
               const uint8_t* srcCb,
               const uint8_t* srcCr,
               uint8_t* dst,
@@ -100,7 +126,8 @@ private:
               stride_t stride_CbCr,
               stride_t stride_dst);
 
- template <int incsp, int rgb_limit> void convert_translate_outcsp(const uint8_t* srcY,
+ template <int incsp, int rgb_limit> void convert_translate_outcsp(
+              const uint8_t* srcY,
               const uint8_t* srcCb,
               const uint8_t* srcCr,
               uint8_t* dst,
@@ -110,7 +137,8 @@ private:
               stride_t stride_CbCr,
               stride_t stride_dst);
 
- template <int incsp, int outcsp, int rgb_limit> void convert_translate_align(const uint8_t* srcY,
+ template <int incsp, int outcsp, int rgb_limit> void convert_translate_align(
+              const uint8_t* srcY,
               const uint8_t* srcCb,
               const uint8_t* srcCr,
               uint8_t* dst,
@@ -120,7 +148,8 @@ private:
               stride_t stride_CbCr,
               stride_t stride_dst);
 
- template <int incsp, int outcsp, int rgb_limit, int aligned> void convert_main_loop(const uint8_t* srcY,
+ template <int incsp, int outcsp, int rgb_limit, int aligned> void convert_main(
+              const uint8_t* srcY,
               const uint8_t* srcCb,
               const uint8_t* srcCr,
               uint8_t* dst,
@@ -129,6 +158,66 @@ private:
               stride_t stride_Y,
               stride_t stride_CbCr,
               stride_t stride_dst);
+
+ template <int incsp, int outcsp, int rgb_limit, int aligned> static void convert_main_loop(
+              const uint8_t* srcY,
+              const uint8_t* srcCb,
+              const uint8_t* srcCr,
+              uint8_t* dst,
+              int dx,
+              int dy,
+              stride_t stride_Y,
+              stride_t stride_CbCr,
+              stride_t stride_dst,
+              int starty,
+              int endy,
+              const unsigned char* const coeffs);
+
+ template<int incsp, int outcsp, int rgb_limit, int aligned> struct Tfunc_obj {
+     private:
+        const uint8_t* srcY;
+        const uint8_t* srcCb;
+        const uint8_t* srcCr;
+        uint8_t* dst;
+        int dx;
+        int dy;
+        stride_t stride_Y;
+        stride_t stride_CbCr;
+        stride_t stride_dst;
+        int starty;
+        int endy;
+        const unsigned char* const coeffs;
+     public:
+        void operator()(void) {
+            convert_main_loop<incsp,outcsp,rgb_limit,aligned>(srcY,srcCb,srcCr,dst,dx,dy,stride_Y,stride_CbCr,stride_dst,starty,endy,coeffs);
+        }
+        Tfunc_obj(const uint8_t* IsrcY,
+                  const uint8_t* IsrcCb,
+                  const uint8_t* IsrcCr,
+                  uint8_t* Idst,
+                  int Idx,
+                  int Idy,
+                  stride_t Istride_Y,
+                  stride_t Istride_CbCr,
+                  stride_t Istride_dst,
+                  int Istarty,
+                  int Iendy,
+                  const unsigned char* const Icoeffs) :
+            srcY(IsrcY),
+            srcCb(IsrcCb),
+            srcCr(IsrcCr),
+            dst(Idst),
+            dx(Idx),
+            dy(Idy),
+            stride_Y(Istride_Y),
+            stride_CbCr(Istride_CbCr),
+            stride_dst(Istride_dst),
+            starty(Istarty),
+            endy(Iendy),
+            coeffs(Icoeffs)
+        {}
+ };
+
 };
 
 #endif // _FFDSHOW_CONVERTERS_H_

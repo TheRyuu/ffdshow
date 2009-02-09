@@ -57,4 +57,4 @@ http://en.wikipedia.org/wiki/Ffdshow
 
 ### 5. Copying ###
 
-All used sources (except of cpu utilization detection routine) and ffdshow itself are distributed under GPL. See copying.txt
+ffdshow tryouts is distributed under GPL. Boost C++ Libraries and threadpool are distributed under Boost Software License. Other used sources except of CPU utilization detection routine are distributed under GPL or LGPL.

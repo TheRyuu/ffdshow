@@ -428,7 +428,7 @@ int Tconvert::convert(int incsp0,
    case MODE_ffdshow_converters:
     {
      if (!ffdshow_converters)
-      ffdshow_converters = new TffdshowConverters;
+      ffdshow_converters = new TffdshowConverters(libmplayer->GetCPUCount()/* avoid multithreading on P4HT */);
      UpdateSettings(video_full_range_flag, YCbCr_RGB_matrix_coefficients);
      ffdshow_converters->init(incsp1,outcsp1,(ffYCbCr_RGB_MatrixCoefficientsType)cspOptionsIturBt,cspOptionsWhiteCutoff,cspOptionsBlackCutoff,cspOptionsChromaCutoff,cspOptionsRGB_WhiteLevel,cspOptionsRGB_BlackLevel);
      ffdshow_converters->convert(src[0],src[1],src[2],dst[0],dx,dy,srcStride[0],srcStride[1],dstStride[0]);

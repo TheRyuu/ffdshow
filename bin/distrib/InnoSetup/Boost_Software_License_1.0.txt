@@ -1,4 +1,4 @@
-ffdshow tryouts depends on Boost C++ Libraries and threadpool.
+ffdshow tryouts use Boost C++ Libraries and threadpool.
 Boost Software License applies to these parts of ffdshow tryouts.
 ============================================================================
 Boost Software License - Version 1.0 - August 17th, 2003

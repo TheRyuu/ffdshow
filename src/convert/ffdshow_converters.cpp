@@ -114,8 +114,7 @@ void TffdshowConverters::convert(const uint8_t* srcY,
 #endif
 }
 
-
-template<int incsp, int outcsp, int left_edge, int right_edge, int rgb_limit, int aligned> static __forceinline 
+template<int incsp, int outcsp, int left_edge, int right_edge, int rgb_limit, int aligned> __forceinline
   void TffdshowConverters::convert_a_unit(const unsigned char* &srcY,
                       const unsigned char* &srcCb,
                       const unsigned char* &srcCr,
@@ -160,10 +159,10 @@ template<int incsp, int outcsp, int left_edge, int right_edge, int rgb_limit, in
                 dl = *(uint8_t *)(srcCr + stride_CbCr + 2);                        // Cr11
                 xmm2 = _mm_cvtsi32_si128((uint32_t(dl) << 24) + (uint32_t(dl) << 16) + ax); // xmm2 = Cr11,Cr11,Cr10,Cr1-1
             } else {
-                xmm1 = _mm_loadl_epi64((const __m128i*)(srcCb));                   // xmm1 = Cb02,Cb01,Cb00,Cb0-1
-                xmm3 = _mm_loadl_epi64((const __m128i*)(srcCb + stride_CbCr));     // xmm3 = Cb12,Cb11,Cb10,Cb1-0
-                xmm0 = _mm_loadl_epi64((const __m128i*)(srcCr));                   // xmm0 = Cr02,Cr01,Cr00,Cr0-1
-                xmm2 = _mm_loadl_epi64((const __m128i*)(srcCr + stride_CbCr));     // xmm2 = Cr12,Cr11,Cr10,Cr1-1
+                xmm1 = _mm_cvtsi32_si128(*(const int*)(srcCb));                   // xmm1 = Cb02,Cb01,Cb00,Cb0-1
+                xmm3 = _mm_cvtsi32_si128(*(const int*)(srcCb + stride_CbCr));     // xmm3 = Cb12,Cb11,Cb10,Cb1-0
+                xmm0 = _mm_cvtsi32_si128(*(const int*)(srcCr));                   // xmm0 = Cr02,Cr01,Cr00,Cr0-1
+                xmm2 = _mm_cvtsi32_si128(*(const int*)(srcCr + stride_CbCr));     // xmm2 = Cr12,Cr11,Cr10,Cr1-1
                 srcCb += 2;
                 srcCr += 2;
             }
@@ -250,10 +249,10 @@ template<int incsp, int outcsp, int left_edge, int right_edge, int rgb_limit, in
                 dl = *(uint8_t *)(srcCr + stride_CbCr + 2);                        // Cr11
                 xmm3 = _mm_cvtsi32_si128((uint32_t(dl) << 24) + (uint32_t(dl) << 16) + ax); // xmm3 = Cr11,Cr11,Cr10,Cr1-1
             } else {
-                xmm0 = _mm_loadl_epi64((const __m128i*)(srcCb));                   // xmm0 = Cb02,Cb01,Cb00,Cb0-1
-                xmm2 = _mm_loadl_epi64((const __m128i*)(srcCb + stride_CbCr));     // xmm2 = Cb12,Cb11,Cb10,Cb1-0
-                xmm1 = _mm_loadl_epi64((const __m128i*)(srcCr));                   // xmm1 = Cr02,Cr01,Cr00,Cr0-1
-                xmm3 = _mm_loadl_epi64((const __m128i*)(srcCr + stride_CbCr));     // xmm3 = Cr12,Cr11,Cr10,Cr1-1
+                xmm0 = _mm_cvtsi32_si128(*(const int*)(srcCb));                   // xmm0 = Cb02,Cb01,Cb00,Cb0-1
+                xmm2 = _mm_cvtsi32_si128(*(const int*)(srcCb + stride_CbCr));     // xmm2 = Cb12,Cb11,Cb10,Cb1-0
+                xmm1 = _mm_cvtsi32_si128(*(const int*)(srcCr));                   // xmm1 = Cr02,Cr01,Cr00,Cr0-1
+                xmm3 = _mm_cvtsi32_si128(*(const int*)(srcCr + stride_CbCr));     // xmm3 = Cr12,Cr11,Cr10,Cr1-1
                 srcCb += 2;
                 srcCr += 2;
             }
@@ -421,16 +420,17 @@ template<int incsp, int outcsp, int left_edge, int right_edge, int rgb_limit, in
 
     if (outcsp == FF_CSP_RGB32) {
         if (aligned) {
+            // 6% faster
             _mm_stream_si128((__m128i *)(dst),xmm1);
             _mm_stream_si128((__m128i *)(dst + stride_dst),xmm2);
         } else {
             // Very rare cases. Don't optimize too much.
-            // SSE2 doesn't have un-aligned version of movntdq. Use MMX (movntq) here. This is much faster than movdqu.
 #ifdef WIN64
             // MSVC does not support MMX intrinsics on x64.
             _mm_storeu_si128((__m128i *)(dst),xmm1);
             _mm_storeu_si128((__m128i *)(dst + stride_dst),xmm2);
 #else
+            // SSE2 doesn't have un-aligned version of movntdq. Use MMX (movntq) here. This is much faster than movdqu.
             __m64 mm0,mm1,mm2,mm3;
             mm0 = _mm_movepi64_pi64(xmm1);
             xmm1 = _mm_srli_si128(xmm1,8);
@@ -491,7 +491,8 @@ template<int incsp, int outcsp, int left_edge, int right_edge, int rgb_limit, in
 }
 
 // translate stack arguments to template arguments.
-template <int rgb_limit> void TffdshowConverters::convert_translate_incsp(const uint8_t* srcY,
+template <int rgb_limit> void TffdshowConverters::convert_translate_incsp(
+              const uint8_t* srcY,
               const uint8_t* srcCb,
               const uint8_t* srcCr,
               uint8_t* dst,
@@ -517,7 +518,8 @@ template <int rgb_limit> void TffdshowConverters::convert_translate_incsp(const 
     }
 }
 
-template <int incsp, int rgb_limit> void TffdshowConverters::convert_translate_outcsp(const uint8_t* srcY,
+template <int incsp, int rgb_limit> void TffdshowConverters::convert_translate_outcsp(
+              const uint8_t* srcY,
               const uint8_t* srcCb,
               const uint8_t* srcCr,
               uint8_t* dst,
@@ -537,7 +539,8 @@ template <int incsp, int rgb_limit> void TffdshowConverters::convert_translate_o
     }
 }
 
-template <int incsp, int outcsp, int rgb_limit> void TffdshowConverters::convert_translate_align(const uint8_t* srcY,
+template <int incsp, int outcsp, int rgb_limit> void TffdshowConverters::convert_translate_align(
+              const uint8_t* srcY,
               const uint8_t* srcCb,
               const uint8_t* srcCr,
               uint8_t* dst,
@@ -548,12 +551,13 @@ template <int incsp, int outcsp, int rgb_limit> void TffdshowConverters::convert
               stride_t stride_dst)
 {
     if ((stride_dst & 0xf) || (stride_t(dst) & 0xf))
-        convert_main_loop<incsp, outcsp, rgb_limit, 0>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
+        convert_main<incsp, outcsp, rgb_limit, 0>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
     else
-        convert_main_loop<incsp, outcsp, rgb_limit, 1>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
+        convert_main<incsp, outcsp, rgb_limit, 1>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
 }
 
-template <int incsp, int outcsp, int rgb_limit, int aligned> void TffdshowConverters::convert_main_loop(const uint8_t* srcY,
+template <int incsp, int outcsp, int rgb_limit, int aligned> void TffdshowConverters::convert_main(
+              const uint8_t* srcY,
               const uint8_t* srcCb,
               const uint8_t* srcCr,
               uint8_t* dst,
@@ -563,31 +567,82 @@ template <int incsp, int outcsp, int rgb_limit, int aligned> void TffdshowConver
               stride_t stride_CbCr,
               stride_t stride_dst)
 {
+    if (m_thread_count == 1) {
+        convert_main_loop<incsp,outcsp,rgb_limit,aligned>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst, 0, dy, m_coeffs);
+    } else {
+        int is_odd;
+        int starty = 0;
+        int lines_per_thread = (dy / m_thread_count)&~1;
+
+        if (incsp == FF_CSP_420P || incsp == FF_CSP_NV12)
+            is_odd = 1;
+        else
+            is_odd = 0;
+
+        for (int i = 0 ; i < m_thread_count ; i++) {
+            int endy = (i == m_thread_count -1) ?
+                           dy :
+                           starty + lines_per_thread + is_odd;
+            threadpool.schedule(Tfunc_obj<incsp,outcsp,rgb_limit,aligned>
+                (srcY,
+                 srcCb,
+                 srcCr,
+                 dst,
+                 dx,
+                 dy,
+                 stride_Y,
+                 stride_CbCr,
+                 stride_dst,
+                 starty + (i ? is_odd : 0),
+                 endy,
+                 m_coeffs));
+            starty += lines_per_thread;
+        }
+        threadpool.wait();
+    }
+}
+
+template <int incsp, int outcsp, int rgb_limit, int aligned> void TffdshowConverters::convert_main_loop(
+              const uint8_t* srcY,
+              const uint8_t* srcCb,
+              const uint8_t* srcCr,
+              uint8_t* dst,
+              int dx,
+              int dy,
+              stride_t stride_Y,
+              stride_t stride_CbCr,
+              stride_t stride_dst,
+              int starty,
+              int endy,
+              const unsigned char* const coeffs)
+{
     int endx = dx - 4;
     const uint8_t *srcYln = srcY;
     const uint8_t *srcCbln = srcCb;
     const uint8_t *srcCrln = srcCr;
     uint8_t *dstln = dst;
-    int y,endy;
+    int y = starty;
+    int endy0 = endy;
 
     if (incsp == FF_CSP_420P || incsp == FF_CSP_NV12) {
-        // Top
-        convert_a_unit<incsp,outcsp,1,0,rgb_limit,aligned>(srcYln, srcCbln, srcCrln, dstln,
-                                0, 0, 0,
-                                m_coeffs);
-        for (int x = 4 ; x < endx ; x += 4) {
-            convert_a_unit<incsp,outcsp,0,0,rgb_limit,aligned>(srcYln, srcCbln, srcCrln, dstln,
+        if (y == 0) { // if this is the first thread,
+            // Top
+            convert_a_unit<incsp,outcsp,1,0,rgb_limit,aligned>(srcYln, srcCbln, srcCrln, dstln,
                                     0, 0, 0,
-                                    m_coeffs);
+                                    coeffs);
+            for (int x = 4 ; x < endx ; x += 4) {
+                convert_a_unit<incsp,outcsp,0,0,rgb_limit,aligned>(srcYln, srcCbln, srcCrln, dstln,
+                                        0, 0, 0,
+                                        coeffs);
+            }
+            convert_a_unit<incsp,outcsp,0,1,rgb_limit,aligned>(srcYln, srcCbln, srcCrln, dstln,
+                                    0, 0, 0,
+                                    coeffs);
+            y = 1;
         }
-        convert_a_unit<incsp,outcsp,0,1,rgb_limit,aligned>(srcYln, srcCbln, srcCrln, dstln,
-                                0, 0, 0,
-                                m_coeffs);
-        y = 1;
-        endy = dy - 1;
-    } else {
-        y = 0;
-        endy = dy;
+        if (endy == dy) {
+            endy--;
+        }
     }
 
     // Mid lines
@@ -603,38 +658,40 @@ template <int incsp, int outcsp, int rgb_limit, int aligned> void TffdshowConver
         dstln = dst + y * stride_dst;
         convert_a_unit<incsp,outcsp,1,0,rgb_limit,aligned>(srcYln, srcCbln, srcCrln, dstln,
                                 stride_Y, stride_CbCr, stride_dst,
-                                m_coeffs);
+                                coeffs);
         for (int x = 4 ; x < endx ; x += 4) {
             convert_a_unit<incsp,outcsp,0,0,rgb_limit,aligned>(srcYln, srcCbln, srcCrln, dstln,
                                     stride_Y, stride_CbCr, stride_dst,
-                                    m_coeffs);
+                                    coeffs);
         }
         convert_a_unit<incsp,outcsp,0,1,rgb_limit,aligned>(srcYln, srcCbln, srcCrln, dstln,
                                 stride_Y, stride_CbCr, stride_dst,
-                                m_coeffs);
+                                coeffs);
     }
 
     if (incsp == FF_CSP_420P || incsp == FF_CSP_NV12) {
-        // Bottom
-        srcYln = srcY + (dy - 1) * stride_Y;
-        srcCbln = srcCb + ((dy >> 1) - 1) * stride_CbCr;
-        srcCrln = srcCr + ((dy >> 1) - 1) * stride_CbCr;
-        dstln = dst + (dy - 1) * stride_dst;
-        convert_a_unit<incsp,outcsp,1,0,rgb_limit,aligned>(srcYln, srcCbln, srcCrln, dstln,
-                                0, 0, 0,
-                                m_coeffs);
-        for (int x = 4 ; x < endx ; x += 4) {
-            convert_a_unit<incsp,outcsp,0,0,rgb_limit,aligned>(srcYln, srcCbln, srcCrln, dstln,
+        if (endy0 == dy) { // if this is the last thread,
+            // Bottom
+            srcYln = srcY + (dy - 1) * stride_Y;
+            srcCbln = srcCb + ((dy >> 1) - 1) * stride_CbCr;
+            srcCrln = srcCr + ((dy >> 1) - 1) * stride_CbCr;
+            dstln = dst + (dy - 1) * stride_dst;
+            convert_a_unit<incsp,outcsp,1,0,rgb_limit,aligned>(srcYln, srcCbln, srcCrln, dstln,
                                     0, 0, 0,
-                                    m_coeffs);
+                                    coeffs);
+            for (int x = 4 ; x < endx ; x += 4) {
+                convert_a_unit<incsp,outcsp,0,0,rgb_limit,aligned>(srcYln, srcCbln, srcCrln, dstln,
+                                        0, 0, 0,
+                                        coeffs);
+            }
+            convert_a_unit<incsp,outcsp,0,1,rgb_limit,aligned>(srcYln, srcCbln, srcCrln, dstln,
+                                    0, 0, 0,
+                                    coeffs);
         }
-        convert_a_unit<incsp,outcsp,0,1,rgb_limit,aligned>(srcYln, srcCbln, srcCrln, dstln,
-                                0, 0, 0,
-                                m_coeffs);
     }
 }
 
-TffdshowConverters::TffdshowConverters()
+TffdshowConverters::TffdshowConverters(int thread_count) : m_thread_count((thread_count > 0 && thread_count <= MAX_THREADS) ? thread_count : 1),threadpool(m_thread_count)
 {
     m_coeffs = (uint8_t *)aligned_malloc(256);
 }
