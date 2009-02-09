@@ -5,7 +5,7 @@
 	Name="ffdshow"
 	ProjectGUID="{0C1CDCBB-5886-42B4-A928-F4B82DD3FD17}"
 	VCNestedProjectGUID="{30A21C7F-035D-41E2-95BE-B4FFA5F5176B}"
-	VCNestedProjectCRC32="783908849"
+	VCNestedProjectCRC32="2435781038"
 	VCNestedProjectFileName="ffdshow_2008_icl10.vcproj">
 	<Platforms>
 		<Platform 
@@ -46,7 +46,7 @@
 				AdditionalOptions=""
 				Optimization="0"
 				AdditionalIncludeDirectories="src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/mplayer;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/filters;src/xiph;src/codecs/theora/enc"
-				PreprocessorDefinitions="DEBUG;_DEBUG;WIN32;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;UCLIBCPP;HAVE_MMX;VISTA_SPDIF;ARCH_IS_32BIT;ARCH_IS_IA32"
+				PreprocessorDefinitions="DEBUG;_DEBUG;WIN32;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;HAVE_MMX;VISTA_SPDIF;ARCH_IS_32BIT;ARCH_IS_IA32"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="3"
 				SmallerTypeCheck="false"
@@ -80,7 +80,7 @@
 				Name="LinkerTool"
 				RegisterOutput="false"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="libcmtd.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib dinput.lib dxguid.lib oldnames.lib shlwapi.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
+				AdditionalDependencies="libcmtd.lib libcpmtd.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib dinput.lib dxguid.lib oldnames.lib shlwapi.lib Secur32.lib bin\lib_x86\libboost_thread-vc90-mt-s-1_37.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
 				OutputFile="bin\ffdshow.ax"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories=""
@@ -143,7 +143,7 @@
 				AdditionalOptions=""
 				Optimization="0"
 				AdditionalIncludeDirectories="src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/mplayer;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/filters;src/xiph;src/codecs/theora/enc"
-				PreprocessorDefinitions="DEBUG;_DEBUG;WIN64;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;UCLIBCPP;HAVE_MMX;VISTA_SPDIF;ARCH_IS_64BIT;ARCH_IS_GENERIC"
+				PreprocessorDefinitions="DEBUG;_DEBUG;WIN64;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;HAVE_MMX;VISTA_SPDIF;ARCH_IS_64BIT;ARCH_IS_GENERIC"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="3"
 				SmallerTypeCheck="false"
@@ -176,7 +176,7 @@
 			<Tool 
 				Name="LinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="libcmtd.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib dinput.lib dxguid.lib oldnames.lib shlwapi.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
+				AdditionalDependencies="libcmtd.lib libcpmtd.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib dinput.lib dxguid.lib oldnames.lib shlwapi.lib bin/lib_x64/libboost_thread-vc90-mt-s-1_37.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
 				OutputFile="bin\ffdshow.ax"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
@@ -244,7 +244,7 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
 				AdditionalIncludeDirectories="src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/mplayer;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/filters;src/xiph;src/codecs/theora/enc"
-				PreprocessorDefinitions="NDEBUG;WIN32;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;UCLIBCPP;HAVE_MMX;VISTA_SPDIF;ARCH_IS_32BIT;ARCH_IS_IA32"
+				PreprocessorDefinitions="NDEBUG;WIN32;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;HAVE_MMX;VISTA_SPDIF;ARCH_IS_32BIT;ARCH_IS_IA32"
 				StringPooling="true"
 				ExceptionHandling="1"
 				RuntimeLibrary="0"
@@ -279,7 +279,7 @@
 				Name="LinkerTool"
 				RegisterOutput="false"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib libcmt.lib winmm.lib comctl32.lib dinput.lib dxguid.lib oldnames.lib shlwapi.lib libircmt.lib libmmt.lib svml_dispmt.lib"
+				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib libcmt.lib libcpmt.lib winmm.lib comctl32.lib dinput.lib dxguid.lib oldnames.lib shlwapi.lib bin\lib_x86\libboost_thread-vc90-mt-s-1_37.lib libircmt.lib libmmt.lib svml_dispmt.lib"
 				OutputFile="bin\ffdshow.ax"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
@@ -350,7 +350,7 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
 				AdditionalIncludeDirectories="src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/mplayer;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/filters;src/xiph;src/codecs/theora/enc"
-				PreprocessorDefinitions="NDEBUG;WIN64;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;UCLIBCPP;HAVE_MMX;VISTA_SPDIF;ARCH_IS_64BIT;ARCH_IS_GENERIC"
+				PreprocessorDefinitions="NDEBUG;WIN64;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;HAVE_MMX;VISTA_SPDIF;ARCH_IS_64BIT;ARCH_IS_GENERIC"
 				StringPooling="true"
 				ExceptionHandling="1"
 				RuntimeLibrary="0"
@@ -386,7 +386,7 @@
 			<Tool 
 				Name="LinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib libcmt.lib winmm.lib comctl32.lib dinput.lib dxguid.lib oldnames.lib shlwapi.lib libircmt.lib libmmt.lib svml_dispmt.lib"
+				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib libcmt.lib libcpmt.lib winmm.lib comctl32.lib dinput.lib dxguid.lib oldnames.lib shlwapi.lib bin/lib_x64/libboost_thread-vc90-mt-s-1_37.lib libircmt.lib libmmt.lib svml_dispmt.lib"
 				OutputFile="bin\ffdshow.ax"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
@@ -530,6 +530,9 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat">
 			<File 
+				RelativePath="src\checkHardCodedBlackList.cpp">
+			</File>
+			<File 
 				RelativePath=".\src\cpuid.asm">
 				<FileConfiguration 
 					Name="Debug Unicode|x64">
@@ -659,9 +662,6 @@
 			</File>
 			<File 
 				RelativePath=".\src\inifiles.cpp">
-			</File>
-			<File 
-				RelativePath="src\checkHardCodedBlackList.cpp">
 			</File>
 			<File 
 				RelativePath="src\mem_align.cpp">
@@ -907,6 +907,9 @@
 				RelativePath=".\src\char_t.h">
 			</File>
 			<File 
+				RelativePath="src\checkHardCodedBlackList.h">
+			</File>
+			<File 
 				RelativePath=".\src\comptr.h">
 			</File>
 			<File 
@@ -968,9 +971,6 @@
 			</File>
 			<File 
 				RelativePath="src\inttypes.h">
-			</File>
-			<File 
-				RelativePath="src\checkHardCodedBlackList.h">
 			</File>
 			<File 
 				RelativePath="src\IVMRffdshow9.h">
@@ -4087,7 +4087,10 @@
 				RelativePath="src\imgFilters\ffImgfmt.h">
 			</File>
 			<File 
-				RelativePath="src\convert\image.cpp">
+				RelativePath="src\convert\ffdshow_converters.h">
+			</File>
+			<File 
+				RelativePath="src\convert\ffdshow_converters.cpp">
 				<FileConfiguration 
 					Name="Release Unicode|Win32">
 					<Tool 
@@ -4095,7 +4098,22 @@
 						AssemblerOutput="4"/>
 				</FileConfiguration>
 				<FileConfiguration 
-					Name="Release|Win32">
+					Name="Release Unicode|x64">
+					<Tool 
+						Name="CppCmplrTool"
+						AssemblerOutput="4"/>
+				</FileConfiguration>
+			</File>
+			<File 
+				RelativePath="src\convert\ffYCbCr_RGB_MatrixCoefficients.h">
+			</File>
+			<File 
+				RelativePath="src\convert\ffYCbCr_RGB_MatrixCoefficients.cpp">
+			</File>
+			<File 
+				RelativePath="src\convert\image.cpp">
+				<FileConfiguration 
+					Name="Release Unicode|Win32">
 					<Tool 
 						Name="CppCmplrTool"
 						AssemblerOutput="4"/>
@@ -4109,26 +4127,16 @@
 				<FileConfiguration 
 					Name="Release Unicode|Win32">
 					<Tool 
-						Name="CppCmplrTool"
-						AssemblerOutput="4"/>
+						Name="CppCmplrTool">
+						<MarkNode/>
+					</Tool>
 				</FileConfiguration>
 				<FileConfiguration 
 					Name="Release Unicode|x64">
 					<Tool 
-						Name="CppCmplrTool"
-						AssemblerOutput="4"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release|Win32">
-					<Tool 
-						Name="CppCmplrTool"
-						AssemblerOutput="4"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release|x64">
-					<Tool 
-						Name="CppCmplrTool"
-						AssemblerOutput="4"/>
+						Name="CppCmplrTool">
+						<MarkNode/>
+					</Tool>
 				</FileConfiguration>
 			</File>
 			<File 
