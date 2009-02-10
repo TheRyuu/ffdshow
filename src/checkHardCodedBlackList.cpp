@@ -21,7 +21,7 @@ bool checkHardCodedBlackList(HINSTANCE hInstance)
  // read from registry directly because it is difficult to initialize Tconfig in DllMain.(Because it loads module)
  regErr= RegOpenKeyEx(HKEY_CURRENT_USER, FFDSHOW_REG_PARENT _l("\\") FFDSHOW, 0, KEY_READ, &hKey);
  if(regErr!=ERROR_SUCCESS)
-  return true;
+  return false;
 
  TregOpRegRead tHKCU_global(HKEY_CURRENT_USER,FFDSHOW_REG_PARENT _l("\\") FFDSHOW);
  tHKCU_global._REG_OP_N(IDFF_allowDPRINTF,_l("allowDPRINTF"),allowDPRINTF,0);
