@@ -169,21 +169,18 @@ void TrgbPrimaries::writeToXvidRgb2YCbCrMatrix(short *asmData)
  asmData[25] = 0;
 }
 
-int TrgbPrimaries::writeToXvidYCbCr2RgbMatrix(short *asmData)
+void TrgbPrimaries::writeToXvidYCbCr2RgbMatrix(short *asmData)
 {
- double Kr, Kg, Kb, chr_range, y_mul, vr_mul, ug_mul, vg_mul, ub_mul;
- int Ysub, RGB_add;
- YCbCr2RGBdata_common_inint(Kr,Kg,Kb,chr_range,y_mul,vr_mul,ug_mul,vg_mul,ub_mul,Ysub,RGB_add,
-    (ffYCbCr_RGB_MatrixCoefficientsType)cspOptionsIturBt,cspOptionsWhiteCutoff,cspOptionsBlackCutoff,cspOptionsChromaCutoff,cspOptionsRGB_WhiteLevel,cspOptionsRGB_BlackLevel);
+ TYCbCr2RGB_coeffs coeffs((ffYCbCr_RGB_MatrixCoefficientsType)cspOptionsIturBt,cspOptionsWhiteCutoff,cspOptionsBlackCutoff,cspOptionsChromaCutoff,cspOptionsRGB_WhiteLevel,cspOptionsRGB_BlackLevel);
 
- short Y_MUL =short(y_mul  * 64 + 0.4);
- short UG_MUL=short(ug_mul * 64 + 0.5);
- short VG_MUL=short(vg_mul * 64 + 0.5);
- short UB_MUL=short(ub_mul * 64 + 0.5);
- short VR_MUL=short(vr_mul * 64 + 0.5);
+ short Y_MUL =short(coeffs.y_mul  * 64 + 0.4);
+ short UG_MUL=short(coeffs.ug_mul * 64 + 0.5);
+ short VG_MUL=short(coeffs.vg_mul * 64 + 0.5);
+ short UB_MUL=short(coeffs.ub_mul * 64 + 0.5);
+ short VR_MUL=short(coeffs.vr_mul * 64 + 0.5);
  for (int i=0 ; i<8 ; i++)
   {
-   asmData[i]   = (short)Ysub;          // YSUB
+   asmData[i]   = (short)coeffs.Ysub;          // YSUB
    asmData[i+8] =128;                   // U_SUB
    asmData[i+16]=128;                   // V_SUB
    asmData[i+24]=Y_MUL;
@@ -193,17 +190,13 @@ int TrgbPrimaries::writeToXvidYCbCr2RgbMatrix(short *asmData)
    asmData[i+56]=VR_MUL;
   }
  int *asmData_RGB_ADD = (int *)(&asmData[72]);
- asmData_RGB_ADD[0] = asmData_RGB_ADD[1] = asmData_RGB_ADD[2] = asmData_RGB_ADD[3] = RGB_add;
- return RGB_add;
+ asmData_RGB_ADD[0] = asmData_RGB_ADD[1] = asmData_RGB_ADD[2] = asmData_RGB_ADD[3] = coeffs.RGB_add3;
 }
 
 const void TrgbPrimaries::initXvid(int rgb_add)
 {
- double Kr, Kg, Kb, chr_range, y_mul, vr_mul, ug_mul, vg_mul, ub_mul;
- int Ysub, RGB_add;
- YCbCr2RGBdata_common_inint(Kr,Kg,Kb,chr_range,y_mul,vr_mul,ug_mul,vg_mul,ub_mul,Ysub,RGB_add,
-    (ffYCbCr_RGB_MatrixCoefficientsType)cspOptionsIturBt,cspOptionsWhiteCutoff,cspOptionsBlackCutoff,cspOptionsChromaCutoff,cspOptionsRGB_WhiteLevel,cspOptionsRGB_BlackLevel);
- xvid_colorspace_init(y_mul,ub_mul,ug_mul,vg_mul,vr_mul,Ysub,rgb_add);
+ TYCbCr2RGB_coeffs coeffs((ffYCbCr_RGB_MatrixCoefficientsType)cspOptionsIturBt,cspOptionsWhiteCutoff,cspOptionsBlackCutoff,cspOptionsChromaCutoff,cspOptionsRGB_WhiteLevel,cspOptionsRGB_BlackLevel);
+ xvid_colorspace_init(coeffs);
 }
 
 const Tmmx_ConvertRGBtoYUY2matrix* TrgbPrimaries::getAvisynthRgb2YuvMatrix(void)
@@ -228,47 +221,41 @@ const unsigned char* TrgbPrimaries::getAvisynthYCbCr2RgbMatrix(int &rgb_add)
    0xFF00FF00FF00FF00LL, 0xFF00FF00FF00FF00LL
   };
 
- double Kr, Kg, Kb, chr_range, y_mul, vr_mul, ug_mul, vg_mul, ub_mul;
- int Ysub, RGB_add;
- YCbCr2RGBdata_common_inint(Kr,Kg,Kb,chr_range,y_mul,vr_mul,ug_mul,vg_mul,ub_mul,Ysub,RGB_add,
-    (ffYCbCr_RGB_MatrixCoefficientsType)cspOptionsIturBt,cspOptionsWhiteCutoff,cspOptionsBlackCutoff,cspOptionsChromaCutoff,cspOptionsRGB_WhiteLevel,cspOptionsRGB_BlackLevel);
+ TYCbCr2RGB_coeffs coeffs((ffYCbCr_RGB_MatrixCoefficientsType)cspOptionsIturBt,cspOptionsWhiteCutoff,cspOptionsBlackCutoff,cspOptionsChromaCutoff,cspOptionsRGB_WhiteLevel,cspOptionsRGB_BlackLevel);
  // Avisynth YUY2->RGB
  short *avisynthMmxMatrix = (short*)getAlignedPtr(avisynthMmxMatrixBuf);
 
- int cy =short(y_mul * 16384 + 0.5);
- short crv=short(vr_mul * 8192 + 0.5);
- short cgu=short(-ug_mul * 8192 - 0.5);
- short cgv=short(-vg_mul * 8192 - 0.5);
- short cbu=short(ub_mul * 8192 + 0.5);
+ int cy =short(coeffs.y_mul * 16384 + 0.5);
+ short crv=short(coeffs.vr_mul * 8192 + 0.5);
+ short cgu=short(-coeffs.ug_mul * 8192 - 0.5);
+ short cgv=short(-coeffs.vg_mul * 8192 - 0.5);
+ short cbu=short(coeffs.ub_mul * 8192 + 0.5);
  memcpy(&avisynthMmxMatrix[8], avisynthMmxMatrixConstants, 80); // common part
  int *avisynthMmxMatrixInt = (int*)avisynthMmxMatrix;
  avisynthMmxMatrix[0] = avisynthMmxMatrix[1] = 
  avisynthMmxMatrix[2] = avisynthMmxMatrix[3] = // This is wrong for mmx ([2] and [3] should be 0). Fortunately, these bytes are ignored.
-  short(Ysub);
+  short(coeffs.Ysub);
  avisynthMmxMatrixInt[2] = avisynthMmxMatrixInt[3] = 0;
- avisynthMmxMatrixInt[24] = avisynthMmxMatrixInt[25] = avisynthMmxMatrixInt[26] = avisynthMmxMatrixInt[27] = RGB_add;
+ avisynthMmxMatrixInt[24] = avisynthMmxMatrixInt[25] = avisynthMmxMatrixInt[26] = avisynthMmxMatrixInt[27] = coeffs.RGB_add3;
  avisynthMmxMatrixInt[28] = avisynthMmxMatrixInt[29] = avisynthMmxMatrixInt[30] = avisynthMmxMatrixInt[31] = cy;
  avisynthMmxMatrixInt[32] = avisynthMmxMatrixInt[33] = avisynthMmxMatrixInt[34] = avisynthMmxMatrixInt[35] = crv << 16;
  avisynthMmxMatrix[72] = avisynthMmxMatrix[74] = avisynthMmxMatrix[76] = avisynthMmxMatrix[78] = cgu;
  avisynthMmxMatrix[73] = avisynthMmxMatrix[75] = avisynthMmxMatrix[77] = avisynthMmxMatrix[79] = cgv;
  avisynthMmxMatrixInt[40] = avisynthMmxMatrixInt[41] = avisynthMmxMatrixInt[42] = avisynthMmxMatrixInt[43] = cbu;
- rgb_add = RGB_add;
+ rgb_add = coeffs.RGB_add1;
  return (const unsigned char*)avisynthMmxMatrix; // none 0 value indiates that adding ofs_rgb_add to RGB is necessary.
 }
 
 const int32_t* TrgbPrimaries::toSwscaleTable(void)
 {
- double Kr, Kg, Kb, chr_range, y_mul, vr_mul, ug_mul, vg_mul, ub_mul;
- int Ysub, RGB_add;
- YCbCr2RGBdata_common_inint(Kr,Kg,Kb,chr_range,y_mul,vr_mul,ug_mul,vg_mul,ub_mul,Ysub,RGB_add,
-    (ffYCbCr_RGB_MatrixCoefficientsType)cspOptionsIturBt,cspOptionsWhiteCutoff,cspOptionsBlackCutoff,cspOptionsChromaCutoff,cspOptionsRGB_WhiteLevel,cspOptionsRGB_BlackLevel);
+ TYCbCr2RGB_coeffs coeffs((ffYCbCr_RGB_MatrixCoefficientsType)cspOptionsIturBt,cspOptionsWhiteCutoff,cspOptionsBlackCutoff,cspOptionsChromaCutoff,cspOptionsRGB_WhiteLevel,cspOptionsRGB_BlackLevel);
 
- swscaleTable[0] = int32_t(vr_mul * 65536 + 0.5);
- swscaleTable[1] = int32_t(ub_mul * 65536 + 0.5);
- swscaleTable[2] = int32_t(ug_mul * 65536 + 0.5);
- swscaleTable[3] = int32_t(vg_mul * 65536 + 0.5);
- swscaleTable[4] = int32_t(y_mul  * 65536 + 0.5);
- swscaleTable[5] = int32_t(Ysub * 65536);
- swscaleTable[6] = RGB_add & 0xff;
+ swscaleTable[0] = int32_t(coeffs.vr_mul * 65536 + 0.5);
+ swscaleTable[1] = int32_t(coeffs.ub_mul * 65536 + 0.5);
+ swscaleTable[2] = int32_t(coeffs.ug_mul * 65536 + 0.5);
+ swscaleTable[3] = int32_t(coeffs.vg_mul * 65536 + 0.5);
+ swscaleTable[4] = int32_t(coeffs.y_mul  * 65536 + 0.5);
+ swscaleTable[5] = int32_t(coeffs.Ysub * 65536);
+ swscaleTable[6] = coeffs.RGB_add1;
  return swscaleTable;
 }

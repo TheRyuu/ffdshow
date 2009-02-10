@@ -2003,18 +2003,11 @@ template<class CCIR> static void colorspace_init(
  #undef FIX_OUT
 }
 
-void xvid_colorspace_init(
-      double rgb_y_out,
-      double b_u_out,
-      double g_u_out,
-      double g_v_out,
-      double r_v_out,
-      int    y_add_out,
-      int    rgb_add)
+void xvid_colorspace_init(const TYCbCr2RGB_coeffs &coeffs)
 {
  /* Initialize internal colorspace transformation tables */
- colorspace_init< YUV_RGB_DATA<CCIR> >(rgb_y_out, b_u_out, g_u_out, g_v_out, r_v_out, y_add_out, rgb_add);
- colorspace_init< YUV_RGB_DATA<JPEG> >(rgb_y_out, b_u_out, g_u_out, g_v_out, r_v_out, y_add_out, rgb_add);
+ colorspace_init< YUV_RGB_DATA<CCIR> >(coeffs.y_mul, coeffs.ub_mul, coeffs.ug_mul, coeffs.vg_mul, coeffs.vr_mul, coeffs.Ysub, coeffs.RGB_add3);
+ colorspace_init< YUV_RGB_DATA<JPEG> >(coeffs.y_mul, coeffs.ub_mul, coeffs.ug_mul, coeffs.vg_mul, coeffs.vr_mul, coeffs.Ysub, coeffs.RGB_add3);
 
  /* All colorspace transformation functions User Format->YV12 */
  yv12_to_yv12    = yv12_to_yv12_c;

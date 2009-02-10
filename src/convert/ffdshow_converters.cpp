@@ -36,23 +36,21 @@ void TffdshowConverters::init(int incsp,   // FF_CSP_420P, FF_CSP_NV12, FF_CSP_Y
 {
     m_incsp = incsp;
     m_outcsp = outcsp;
-    double Kr, Kg, Kb, chr_range, y_mul, vr_mul, ug_mul, vg_mul, ub_mul;
-    int Ysub, RGB_add;
     if (output_RGB_white_level != 255 || output_RGB_black_level != 0)
         m_rgb_limit = true;
     else
         m_rgb_limit = false;
-    YCbCr2RGBdata_common_inint(Kr,Kg,Kb,chr_range,y_mul,vr_mul,ug_mul,vg_mul,ub_mul,Ysub,RGB_add,
-       cspOptionsIturBt,input_Y_white_level,input_Y_black_level,input_Cb_bluest_level,output_RGB_white_level,output_RGB_black_level);
+
+    TYCbCr2RGB_coeffs YCbCr2RGB_coeffs(cspOptionsIturBt,input_Y_white_level,input_Y_black_level,input_Cb_bluest_level,output_RGB_white_level,output_RGB_black_level);
     
-    short cy =short(y_mul * 16384 + 0.5);
-    short crv=short(vr_mul * 8192 + 0.5);
-    short cgu=short(-ug_mul * 8192 - 0.5);
-    short cgv=short(-vg_mul * 8192 - 0.5);
-    short cbu=short(ub_mul * 8192 + 0.5);
+    short cy =short(YCbCr2RGB_coeffs.y_mul * 16384 + 0.5);
+    short crv=short(YCbCr2RGB_coeffs.vr_mul * 8192 + 0.5);
+    short cgu=short(-YCbCr2RGB_coeffs.ug_mul * 8192 - 0.5);
+    short cgv=short(-YCbCr2RGB_coeffs.vg_mul * 8192 - 0.5);
+    short cbu=short(YCbCr2RGB_coeffs.ub_mul * 8192 + 0.5);
 
     short *Ysubs = (short *)(m_coeffs + ofs_Ysub);
-    Ysubs[0] = Ysubs[1] = Ysubs[2] = Ysubs[3] = Ysubs[4] = Ysubs[5] = Ysubs[6] = Ysubs[7] = short(Ysub);
+    Ysubs[0] = Ysubs[1] = Ysubs[2] = Ysubs[3] = Ysubs[4] = Ysubs[5] = Ysubs[6] = Ysubs[7] = short(YCbCr2RGB_coeffs.Ysub);
     short *cys = (short *)(m_coeffs + ofs_cy);
     cys[0] = cys[1] = cys[2] = cys[3] = cys[4] = cys[5] = cys[6] = cys[7] = cy;
     short *sub128mul16 = (short *)(m_coeffs + ofs_128mul16);
@@ -73,7 +71,7 @@ void TffdshowConverters::init(int incsp,   // FF_CSP_420P, FF_CSP_NV12, FF_CSP_Y
     cB_Cbs[1] = cB_Cbs[3] = cB_Cbs[5] = cB_Cbs[7] = 0;
 
     short *rgb_adds = (short *)(m_coeffs + ofs_rgb_add);
-    rgb_adds[0] = rgb_adds[1] = rgb_adds[2] = rgb_adds[3] = rgb_adds[4] = rgb_adds[5] = rgb_adds[6] = rgb_adds[7] = ((RGB_add & 0xff) << 2) + 2;
+    rgb_adds[0] = rgb_adds[1] = rgb_adds[2] = rgb_adds[3] = rgb_adds[4] = rgb_adds[5] = rgb_adds[6] = rgb_adds[7] = (YCbCr2RGB_coeffs.RGB_add1 << 2) + 2;
     uint32_t *xFF000000_FF000000s = (uint32_t *)(m_coeffs + ofs_xFF000000_FF000000);
     xFF000000_FF000000s[0] = xFF000000_FF000000s[1] = xFF000000_FF000000s[2] = xFF000000_FF000000s[3] = 0xff000000;
 

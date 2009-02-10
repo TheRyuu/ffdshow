@@ -3,7 +3,7 @@
 
 #include "interfaces.h"
 #include "simd_common.h"
-#include "ffYCbCr_RGB_MatrixCoefficients.h"
+#include "TYCbCr2RGB_coeffs.h"
 
 struct ToutputVideoSettings;
 typedef struct 
@@ -42,7 +42,7 @@ public:
   * @return a value that has to be added to RGB
   */
  int UpdateSettings(int video_full_range_flag, int YCbCr_RGB_matrix_coefficients);
- int writeToXvidYCbCr2RgbMatrix(short *asmData);
+ void writeToXvidYCbCr2RgbMatrix(short *asmData);
  void writeToXvidRgb2YCbCrMatrix(short *asmData);
  const unsigned char* getAvisynthYCbCr2RgbMatrix(int &rgb_add);
  const Tmmx_ConvertRGBtoYUY2matrix* getAvisynthRgb2YuvMatrix(void);

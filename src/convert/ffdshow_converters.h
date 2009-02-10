@@ -22,7 +22,7 @@
 #include <stddef.h>        // ptrdiff_t
 #include "inttypes.h"
 #include "ffImgfmt.h"      // Just to use some names of color spaces
-#include "ffYCbCr_RGB_MatrixCoefficients.h"
+#include "TYCbCr2RGB_coeffs.h"
 
 #if defined(_MSC_VER) || defined(__INTEL_COMPILER)
  #pragma warning (push)

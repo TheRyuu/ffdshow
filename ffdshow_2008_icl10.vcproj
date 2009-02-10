@@ -5316,11 +5316,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="src\convert\ffYCbCr_RGB_MatrixCoefficients.h"
-				>
-			</File>
-			<File
-				RelativePath="src\convert\ffYCbCr_RGB_MatrixCoefficients.cpp"
+				RelativePath="src\convert\TYCbCr2RGB_coeffs.h"
 				>
 			</File>
 			<File
