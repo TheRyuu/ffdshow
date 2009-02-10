@@ -20,7 +20,7 @@
  */
 
 /**
- * @file audioconvert.c
+ * @file libavcodec/audioconvert.c
  * audio conversion
  * @author Michael Niedermayer <michaelni@gmx.at>
  */
@@ -151,7 +151,7 @@ void avcodec_get_channel_layout_string(char *buf, int buf_size, int nb_channels,
     for (i=0; channel_layout_map[i].name; i++)
         if (nb_channels    == channel_layout_map[i].nb_channels &&
             channel_layout == channel_layout_map[i].layout) {
-            snprintf(buf, buf_size, channel_layout_map[i].name);
+            av_strlcpy(buf, channel_layout_map[i].name, buf_size);
             return;
         }
 

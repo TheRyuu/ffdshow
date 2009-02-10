@@ -7093,20 +7093,20 @@ static int decode_sei(H264Context *h){
         }while(get_bits(&s->gb, 8) == 255);
 
         switch(type){
-        case 1: // Picture timing SEI
+        case SEI_TYPE_PIC_TIMING: // Picture timing SEI
             if(decode_picture_timing(h) < 0)
                 return -1;
             break;
-        case 5:
+        case SEI_TYPE_USER_DATA_UNREGISTERED:
             if(decode_unregistered_user_data(h, size) < 0)
                 return -1;
             break;
-        /* ffdshow custom code (begin) */
-        case 6: // Recovery Point SEI
+        case SEI_TYPE_RECOVERY_POINT:
+            /* ffdshow custom code (begin) */
             h->recovery_frame_cnt = get_ue_golomb(&s->gb);
             skip_bits(&s->gb, 4);
+            /* ffdshow custom code (end) */
             break;
-        /* ffdshow custom code (end) */
         default:
             skip_bits(&s->gb, 8*size);
         }
@@ -7172,11 +7172,11 @@ static inline int decode_vui_parameters(H264Context *h, SPS *sps){
 
     if(get_bits1(&s->gb)){      /* video_signal_type_present_flag */
         get_bits(&s->gb, 3);    /* video_format */
-        sps->video_full_range_flag = get_bits1(&s->gb);
+        sps->video_full_range_flag = get_bits1(&s->gb); /* ffdshow custom code */
         if(get_bits1(&s->gb)){  /* colour_description_present_flag */
             get_bits(&s->gb, 8); /* colour_primaries */
             get_bits(&s->gb, 8); /* transfer_characteristics */
-            sps->matrix_coefficients = get_bits(&s->gb, 8);
+            sps->matrix_coefficients = get_bits(&s->gb, 8); /* ffdshow custom code */
         }
     }
 
@@ -7293,12 +7293,12 @@ static inline int decode_seq_parameter_set(H264Context *h){
 
     sps->profile_idc= profile_idc;
     sps->level_idc= level_idc;
-    sps->video_full_range_flag = VIDEO_FULL_RANGE_INVALID;
+    sps->video_full_range_flag = VIDEO_FULL_RANGE_INVALID; /* ffdshow custom code */
 
     memset(sps->scaling_matrix4, 16, sizeof(sps->scaling_matrix4));
     memset(sps->scaling_matrix8, 16, sizeof(sps->scaling_matrix8));
     sps->scaling_matrix_present = 0;
-    sps->matrix_coefficients = 2; // ffdshow custom code
+    sps->matrix_coefficients = 2; /* ffdshow custom code */
 
     if(sps->profile_idc >= 100){ //high profile
         sps->chroma_format_idc= get_ue_golomb_31(&s->gb);
@@ -7954,6 +7954,7 @@ static int decode_frame(AVCodecContext *avctx,
                 }
             }
 
+            /* ffdshow custom code */
             cur->video_full_range_flag = h->sps.video_full_range_flag;
             cur->YCbCr_RGB_matrix_coefficients = h->sps.matrix_coefficients;
 

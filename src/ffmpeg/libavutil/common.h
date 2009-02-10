@@ -19,7 +19,7 @@
  */
 
 /**
- * @file common.h
+ * @file libavutil/common.h
  * common internal and external API header
  */
 
@@ -81,6 +81,14 @@
 #endif
 #endif
 
+#ifndef av_flatten
+#if AV_GCC_VERSION_AT_LEAST(4,1)
+#    define av_flatten __attribute__((flatten))
+#else
+#    define av_flatten
+#endif
+#endif
+
 #ifndef attribute_deprecated
 #if AV_GCC_VERSION_AT_LEAST(3,1)
 #    define attribute_deprecated __attribute__((deprecated))
@@ -97,9 +105,17 @@
 #endif
 #endif
 
+#ifndef av_uninit
+#if defined(__GNUC__) && !defined(__ICC)
+#    define av_uninit(x) x=x
+#else
+#    define av_uninit(x) x
+#endif
+#endif
+
 #ifdef HAVE_AV_CONFIG_H
 
-//rounded divison & shift
+//rounded division & shift
 #define RSHIFT(a,b) ((a) > 0 ? ((a) + ((1<<(b))>>1))>>(b) : ((a) + ((1<<(b))>>1)-1)>>(b))
 /* assume b>0 */
 #define ROUNDED_DIV(a,b) (((a)>0 ? (a) + ((b)>>1) : (a) - ((b)>>1))/(b))

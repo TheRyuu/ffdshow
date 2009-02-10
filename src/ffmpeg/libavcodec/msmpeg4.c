@@ -23,7 +23,7 @@
  */
 
 /**
- * @file msmpeg4.c
+ * @file libavcodec/msmpeg4.c
  * MSMPEG4 backend for ffmpeg encoder and decoder.
  */
 
@@ -1609,7 +1609,7 @@ int ff_msmpeg4_decode_block(MpegEncContext * s, DCTELEM * block,
                               int n, int coded, const uint8_t *scan_table)
 {
     int level, i, last, run, run_diff;
-    int dc_pred_dir;
+    int av_uninit(dc_pred_dir);
     RLTable *rl;
     RL_VLC_ELEM *rl_vlc;
     int qmul, qadd;

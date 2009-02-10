@@ -2003,9 +2003,11 @@ static int read_huffman_tree(AVCodecContext *avctx, GetBitContext *gb)
         }
         s->huff_code_size++;
         s->hbits <<= 1;
-        read_huffman_tree(avctx, gb);
+        if (read_huffman_tree(avctx, gb))
+            return -1;
         s->hbits |= 1;
-        read_huffman_tree(avctx, gb);
+        if (read_huffman_tree(avctx, gb))
+            return -1;
         s->hbits >>= 1;
         s->huff_code_size--;
     }
@@ -2184,9 +2186,11 @@ static int theora_decode_tables(AVCodecContext *avctx, GetBitContext *gb)
         s->huff_code_size = 1;
         if (!get_bits1(gb)) {
             s->hbits = 0;
-            read_huffman_tree(avctx, gb);
+            if(read_huffman_tree(avctx, gb))
+                return -1;
             s->hbits = 1;
-            read_huffman_tree(avctx, gb);
+            if(read_huffman_tree(avctx, gb))
+                return -1;
         }
     }
 
@@ -2242,7 +2246,8 @@ static int theora_decode_init(AVCodecContext *avctx)
 //            theora_decode_comments(avctx, gb);
             break;
         case 0x82:
-            theora_decode_tables(avctx, &gb);
+            if (theora_decode_tables(avctx, &gb))
+                return -1;
             break;
         default:
             av_log(avctx, AV_LOG_ERROR, "Unknown Theora config packet: %d\n", ptype&~0x80);

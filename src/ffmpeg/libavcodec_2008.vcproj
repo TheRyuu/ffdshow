@@ -1123,6 +1123,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavcodec\vp6dsp.c"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\w32thread.c"
 				>
 			</File>
