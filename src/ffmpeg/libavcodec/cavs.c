@@ -20,7 +20,7 @@
  */
 
 /**
- * @file cavs.c
+ * @file libavcodec/cavs.c
  * Chinese AVS video (AVS1-P2, JiZhun profile) decoder
  * @author Stefan Gehrer <stefan.gehrer@gmx.de>
  */
@@ -567,8 +567,6 @@ void ff_cavs_init_mb(AVSContext *h) {
         h->mv[MV_FWD_D3] = ff_cavs_un_mv;
         h->mv[MV_BWD_D3] = ff_cavs_un_mv;
     }
-    /* set pointer for co-located macroblock type */
-    h->col_type = &h->col_type_base[h->mby*h->mb_width + h->mbx];
 }
 
 /**
@@ -592,6 +590,7 @@ int ff_cavs_next_mb(AVSContext *h) {
     h->top_mv[1][h->mbx*2+0] = h->mv[MV_BWD_X2];
     h->top_mv[1][h->mbx*2+1] = h->mv[MV_BWD_X3];
     /* next MB address */
+    h->mbidx++;
     h->mbx++;
     if(h->mbx == h->mb_width) { //new mb line
         h->flags = B_AVAIL|C_AVAIL;
@@ -608,8 +607,6 @@ int ff_cavs_next_mb(AVSContext *h) {
         h->cv = h->picture.data[2] + h->mby*8*h->c_stride;
         if(h->mby == h->mb_height) { //frame end
             return 0;
-        } else {
-            //check_for_slice(h);
         }
     }
     return 1;
@@ -639,7 +636,7 @@ void ff_cavs_init_pic(AVSContext *h) {
     h->c_stride = h->picture.linesize[1];
     h->luma_scan[2] = 8*h->l_stride;
     h->luma_scan[3] = 8*h->l_stride+8;
-    h->mbx = h->mby = 0;
+    h->mbx = h->mby = h->mbidx = 0;
     h->flags = 0;
 }
 

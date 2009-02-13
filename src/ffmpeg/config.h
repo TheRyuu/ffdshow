@@ -4,6 +4,7 @@
   #define HAVE_SSE 1
   #define HAVE_SSSE3 1
   #define HAVE_AMD3DNOW 1
+  #define HAVE_TEN_OPERANDS 1
   #define ARCH_X86 1
   
   #ifdef ARCH_X86_64
@@ -25,6 +26,7 @@
 	#define HAVE_FAST_64BIT 0
   #define HAVE_CMOV 0
   #define HAVE_FAST_CMOV 0
+  #define HAVE_TEN_OPERANDS 0
 #endif
 
 #define HAVE_EBP_AVAILABLE 1

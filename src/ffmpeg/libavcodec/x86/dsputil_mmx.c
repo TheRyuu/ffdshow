@@ -31,6 +31,8 @@
 #include "mmx.h"
 #include "vp3dsp_mmx.h"
 #include "vp3dsp_sse2.h"
+#include "vp6dsp_mmx.h"
+#include "vp6dsp_sse2.h"
 #include "idct_xvid.h"
 
 //#undef NDEBUG
@@ -55,7 +57,7 @@ DECLARE_ALIGNED_8 (const uint64_t, ff_pw_20 ) = 0x0014001400140014ULL;
 DECLARE_ALIGNED_16(const xmm_reg,  ff_pw_28 ) = {0x001C001C001C001CULL, 0x001C001C001C001CULL};
 DECLARE_ALIGNED_16(const xmm_reg,  ff_pw_32 ) = {0x0020002000200020ULL, 0x0020002000200020ULL};
 DECLARE_ALIGNED_8 (const uint64_t, ff_pw_42 ) = 0x002A002A002A002AULL;
-DECLARE_ALIGNED_8 (const uint64_t, ff_pw_64 ) = 0x0040004000400040ULL;
+DECLARE_ALIGNED_16(const xmm_reg,  ff_pw_64 ) = {0x0040004000400040ULL, 0x0040004000400040ULL};
 DECLARE_ALIGNED_8 (const uint64_t, ff_pw_96 ) = 0x0060006000600060ULL;
 DECLARE_ALIGNED_8 (const uint64_t, ff_pw_128) = 0x0080008000800080ULL;
 DECLARE_ALIGNED_8 (const uint64_t, ff_pw_255) = 0x00ff00ff00ff00ffULL;
@@ -548,7 +550,7 @@ static void add_bytes_l2_mmx(uint8_t *dst, uint8_t *src1, uint8_t *src2, int w){
         dst[i] = src1[i] + src2[i];
 }
 
-#if HAVE_7REGS
+#if HAVE_7REGS && HAVE_TEN_OPERANDS
 static void add_hfyu_median_prediction_cmov(uint8_t *dst, uint8_t *top, uint8_t *diff, int w, int *left, int *left_top) {
     x86_reg w2 = -w;
     x86_reg x;
@@ -2606,6 +2608,10 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
         c->h264_idct_add8      = ff_h264_idct_add8_mmx;
         c->h264_idct_add16intra= ff_h264_idct_add16intra_mmx;
 
+        if (CONFIG_VP6_DECODER) {
+            c->vp6_filter_diag4 = ff_vp6_filter_diag4_mmx;
+        }
+
         if (mm_flags & FF_MM_MMXEXT) {
             c->prefetch = prefetch_mmx2;
 
@@ -2717,7 +2723,7 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
 #if HAVE_YASM && ARCH_X86_32
             c->add_hfyu_median_prediction = ff_add_hfyu_median_prediction_mmx2;
 #endif
-#if HAVE_7REGS
+#if HAVE_7REGS && HAVE_TEN_OPERANDS
             if( mm_flags&FF_MM_3DNOW )
                 c->add_hfyu_median_prediction = add_hfyu_median_prediction_cmov;
 #endif
@@ -2814,6 +2820,10 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
             H264_QPEL_FUNCS(3, 1, sse2);
             H264_QPEL_FUNCS(3, 2, sse2);
             H264_QPEL_FUNCS(3, 3, sse2);
+
+            if (CONFIG_VP6_DECODER) {
+                c->vp6_filter_diag4 = ff_vp6_filter_diag4_sse2;
+            }
         }
 #if HAVE_SSSE3
         if(mm_flags & FF_MM_SSSE3){

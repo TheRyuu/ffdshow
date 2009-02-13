@@ -23,7 +23,7 @@
  */
 
 /**
- * @file mpegvideo_enc.c
+ * @file libavcodec/mpegvideo_enc.c
  * The simplest mpeg encoder (well, it was the simplest!).
  */
 
@@ -235,7 +235,7 @@ av_cold int MPV_encode_init(AVCodecContext *avctx)
         break;
     case CODEC_ID_LJPEG:
     case CODEC_ID_MJPEG:
-        if(avctx->pix_fmt != PIX_FMT_YUVJ420P && avctx->pix_fmt != PIX_FMT_YUVJ422P &&
+        if(avctx->pix_fmt != PIX_FMT_YUVJ420P && avctx->pix_fmt != PIX_FMT_YUVJ422P && avctx->pix_fmt != PIX_FMT_RGB32 &&
            ((avctx->pix_fmt != PIX_FMT_YUV420P && avctx->pix_fmt != PIX_FMT_YUV422P) || avctx->strict_std_compliance>FF_COMPLIANCE_INOFFICIAL)){
             av_log(avctx, AV_LOG_ERROR, "colorspace not supported in jpeg\n");
             return -1;
