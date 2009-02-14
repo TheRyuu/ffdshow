@@ -1,33 +1,31 @@
 /*
 ** FAAD2 - Freeware Advanced Audio (AAC) Decoder including SBR decoding
 ** Copyright (C) 2003-2005 M. Bakker, Nero AG, http://www.nero.com
-**
+**  
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
 ** the Free Software Foundation; either version 2 of the License, or
 ** (at your option) any later version.
-**
+** 
 ** This program is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ** GNU General Public License for more details.
-**
+** 
 ** You should have received a copy of the GNU General Public License
-** along with this program; if not, write to the Free Software
+** along with this program; if not, write to the Free Software 
 ** Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 **
 ** Any non-GPL usage of this software or parts of this software is strictly
 ** forbidden.
 **
-** Software using this code must display the following message visibly in or
-** on each copy of the software:
-** "FAAD2 AAC/HE-AAC/HE-AACv2/DRM decoder (c) Nero AG, www.nero.com"
-** in, for example, the about-box or help/startup screen.
+** The "appropriate copyright message" mentioned in section 2c of the GPLv2
+** must read: "Code from FAAD2 is copyright (c) Nero AG, www.nero.com"
 **
 ** Commercial non-GPL licensing of this software is possible.
 ** For more info contact Nero AG through Mpeg4AAClicense@nero.com.
 **
-**
+** $Id: sbr_tf_grid.c,v 1.20 2008/09/19 22:50:20 menno Exp $
 **/
 
 /* Time/Frequency grid */
@@ -67,13 +65,13 @@ uint8_t envelope_time_border_vector(sbr_info *sbr, uint8_t ch)
         switch (sbr->L_E[ch])
         {
         case 4:
-            temp = (int) (sbr->numTimeSlots / 4);
+            temp = (sbr->numTimeSlots / 4);
             t_E_temp[3] = sbr->rate * 3 * temp;
             t_E_temp[2] = sbr->rate * 2 * temp;
             t_E_temp[1] = sbr->rate * temp;
             break;
         case 2:
-            t_E_temp[1] = sbr->rate * (int) (sbr->numTimeSlots / 2);
+            t_E_temp[1] = sbr->rate * (sbr->numTimeSlots / 2);
             break;
         default:
             break;
