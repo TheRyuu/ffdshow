@@ -5024,6 +5024,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\codecs\TvideoCodec_ffmpeg-mt.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\codecs\TvideoCodec_ffmpeg-mt.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\codecs\TvideoCodecAvisynth.cpp"
 				>
 			</File>
@@ -5108,6 +5116,14 @@
 				</File>
 				<File
 					RelativePath="src\ffmpeg\Tlibavcodec.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\ffmpeg-mt\Tlibavcodec_mt.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\ffmpeg-mt\Tlibavcodec_mt.h"
 					>
 				</File>
 			</Filter>
@@ -5252,6 +5268,30 @@
 				>
 			</File>
 			<File
+				RelativePath="src\convert\ffdshow_converters.cpp"
+				>
+				<FileConfiguration
+					Name="Release Unicode|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AssemblerOutput="4"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release Unicode|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AssemblerOutput="4"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="src\convert\ffdshow_converters.h"
+				>
+			</File>
+			<File
 				RelativePath="src\imgFilters\ffImgfmt.cpp"
 				>
 				<FileConfiguration
@@ -5292,34 +5332,6 @@
 				>
 			</File>
 			<File
-				RelativePath="src\convert\ffdshow_converters.h"
-				>
-			</File>
-			<File
-				RelativePath="src\convert\ffdshow_converters.cpp"
-				>
-				<FileConfiguration
-					Name="Release Unicode|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="4"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release Unicode|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="4"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="src\convert\TYCbCr2RGB_coeffs.h"
-				>
-			</File>
-			<File
 				RelativePath="src\convert\image.cpp"
 				>
 				<FileConfiguration
@@ -5357,6 +5369,10 @@
 			</File>
 			<File
 				RelativePath="src\convert\Tswscale.h"
+				>
+			</File>
+			<File
+				RelativePath="src\convert\TYCbCr2RGB_coeffs.h"
 				>
 			</File>
 		</Filter>
