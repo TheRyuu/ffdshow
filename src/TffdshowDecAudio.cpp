@@ -214,7 +214,7 @@ CodecID TffdshowDecAudio::getCodecId(const CMediaType &mt)
   wFormatTag=WAVE_FORMAT_AC3_W;
  else if (mt.subtype==MEDIASUBTYPE_DTS)
   wFormatTag=WAVE_FORMAT_DTS_W;
- else if (mt.subtype==MEDIASUBTYPE_DVD_LPCM_AUDIO)
+ else if (mt.subtype==MEDIASUBTYPE_DVD_LPCM_AUDIO || mt.subtype == MEDIASUBTYPE_HDMV_LPCM_AUDIO)
   wFormatTag=WAVE_FORMAT_LPCM;
  else if (mt.subtype==MEDIASUBTYPE_AAC3)
   wFormatTag=WAVE_FORMAT_AAC3;
