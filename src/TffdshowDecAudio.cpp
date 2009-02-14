@@ -212,7 +212,7 @@ CodecID TffdshowDecAudio::getCodecId(const CMediaType &mt)
   wFormatTag=WAVE_FORMAT_VORBIS;
  else if (mt.subtype==MEDIASUBTYPE_DOLBY_AC3)
   wFormatTag=WAVE_FORMAT_AC3_W;
- else if (mt.subtype==MEDIASUBTYPE_DTS || mt.subtype==MEDIASUBTYPE_ARCSOFT_DTSHD)
+ else if (mt.subtype==MEDIASUBTYPE_DTS)
   wFormatTag=WAVE_FORMAT_DTS_W;
  else if (mt.subtype==MEDIASUBTYPE_DVD_LPCM_AUDIO)
   wFormatTag=WAVE_FORMAT_LPCM;
@@ -233,9 +233,9 @@ CodecID TffdshowDecAudio::getCodecId(const CMediaType &mt)
  else if (mt.subtype==MEDIASUBTYPE_DOLBY_TRUEHD || mt.subtype==MEDIASUBTYPE_NERO_MLP 
      || mt.subtype==MEDIASUBTYPE_ARCSOFT_MLP || mt.subtype==MEDIASUBTYPE_SONIC_MLP)
 	wFormatTag=WAVE_FORMAT_MLP;
- else if (mt.subtype==MEDIASUBTYPE_DOLBY_DDPLUS)
+ else if (mt.subtype==MEDIASUBTYPE_DOLBY_DDPLUS || mt.subtype==MEDIASUBTYPE_ARCSOFT_DDPLUS)
      wFormatTag=WAVE_FORMAT_EAC3;
- else if (mt.subtype==MEDIASUBTYPE_DTS_HD)
+ else if (mt.subtype==MEDIASUBTYPE_DTS_HD || mt.subtype==MEDIASUBTYPE_ARCSOFT_DTSHD)
      wFormatTag=WAVE_FORMAT_DTS_HD; // TODO : define a separate codecId for DTSHD when available
  else
   {

@@ -159,13 +159,13 @@ STDMETHODIMP TffdshowDecAudioInputPin::Receive(IMediaSample* pIn)
    jitter=int(j);
    if ((uint64_t)ff_abs(j) > 100 * (REF_SECOND_MULT / 1000) // +-100ms jitter is allowed for now
        && codecId != CODEC_ID_FLAC
-       && codecId != CODEC_ID_TTA
-	   && codecId != CODEC_ID_MLP)
+       && codecId != CODEC_ID_TTA)
     {
      DPRINTF(_l("jitter correction"));
      buf.clear();
 	 newSrcBuffer.clear();
      filter->m_rtStartDec=filter->m_rtStartProc=rtStart;
+     if (audioParser) audioParser->NewSegment();
     }
   }
 
