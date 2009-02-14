@@ -6,6 +6,7 @@
 #include "Tlibavcodec.h"
 #include "IimgFilterGrab.h"
 #include "TffPict.h"
+#include "ffmpeg/libavcodec/avcodec.h"
 
 class Tdll;
 struct Tconfig;

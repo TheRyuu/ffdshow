@@ -2,6 +2,7 @@
 #define _TVIDEOCODECLIBAVCODEC_H_
 
 #include "TvideoCodec.h"
+#include "ffmpeg/libavcodec/AVPaletteControl.h"
 #include "ffmpeg/Tlibavcodec.h"
 // Do not include avcodec.h in this file, ffmpeg and ffmpeg-mt may conflict.
 

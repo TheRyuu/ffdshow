@@ -8,6 +8,7 @@ struct AVCodecContext;
 struct AVCodec;
 struct AVFrame;
 struct AVCodecParserContext;
+struct AVPaletteControl;
 
 struct Tconfig;
 class Tdll;

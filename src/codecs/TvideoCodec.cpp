@@ -32,6 +32,7 @@
 #include "TvideoCodecSkal.h"
 #include "TvideoCodecX264.h"
 #include "dsutil.h"
+#include "ffmpeg/libavcodec/avcodec.h"
 
 //======================================= TvideoCodec =======================================
 TvideoCodec::TvideoCodec(IffdshowBase *Ideci):Tcodec(Ideci)
