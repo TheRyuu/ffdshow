@@ -55,7 +55,7 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
 static char av_datetime[]=__DATE__" "__TIME__;
 void getVersion(char **version,char **build,char **datetime,const char* *license)
 {
- if (version) *version=AV_STRINGIFY(LIBAVCODEC_VERSION)", "COMPILER COMPILER_X64;
+ if (version) *version=AV_STRINGIFY(LIBAVCODEC_VERSION)", "COMPILER COMPILER_X64 COMPILER_INFO;
  if (build) *build=AV_STRINGIFY(LIBAVCODEC_BUILD);
  if (datetime) *datetime=av_datetime;
  if (license) *license="";

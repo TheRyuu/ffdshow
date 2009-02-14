@@ -17,6 +17,14 @@
  */
 
 #include "stdafx.h"
+
+#ifndef COMPILE_AS_FFMPEG_MT
+#define COMPILE_AS_FFMPEG_MT 0
+#endif
+
+#include "ffmpeg/libavcodec/avcodec.h"
+#include "ffmpeg/Tlibavcodec.h"
+#include "ffmpeg/libavcodec/dvdata.h"
 #include "IffdshowBase.h"
 #include "IffdshowDecVideo.h"
 #include "IffdshowEnc.h"
@@ -24,7 +32,6 @@
 #include "TglobalSettings.h"
 #include "ffdshow_mediaguids.h"
 #include "TcodecSettings.h"
-#include "ffmpeg/libavcodec/dvdata.h"
 #include "rational.h"
 #include "qtpalette.h"
 #include "line.h"
@@ -79,7 +86,11 @@ TvideoCodecLibavcodec::TvideoCodecLibavcodec(IffdshowBase *Ideci,IencVideoSink *
 void TvideoCodecLibavcodec::create(void)
 {
  ownmatrices=false;
+#if COMPILE_AS_FFMPEG_MT
+ libavcodec = new Tlibavcodec_mt(config);
+#else
  deci->getLibavcodec(&libavcodec);
+#endif
  ok=libavcodec?libavcodec->ok:false;
  avctx=NULL;avcodec=NULL;frame=NULL;quantBytes=1;statsfile=NULL;threadcount=0;codecinited=false;extradata=NULL;theorart=false;
  ffbuf=NULL;ffbuflen=0;
@@ -87,6 +98,7 @@ void TvideoCodecLibavcodec::create(void)
  ccDecoder=NULL;
  autoSkipingLoopFilter= false;
  h264_on_MPEG2_system = false;
+ inPosB = 1;
  firstSeek = true;
  mpeg2_new_sequence = true;
 }
@@ -117,7 +129,8 @@ void TvideoCodecLibavcodec::end(void)
     }
    if (avctx->slice_offset) free(avctx->slice_offset);
    if (codecinited) libavcodec->avcodec_close(avctx);codecinited=false;
-   if (threadcount) libavcodec->avcodec_thread_free(avctx);
+   if (avctx->thread_type != FF_THREAD_FRAME && threadcount)
+    libavcodec->avcodec_thread_free(avctx);
    libavcodec->av_free(avctx);avctx=NULL;
    libavcodec->av_free(frame);frame=NULL;
   }
@@ -129,10 +142,21 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
 {
  oldpict.rtStop = 0;
  h264_on_MPEG2_system = false;
+
+ int thread_type = FF_THREAD_SLICE;
+ if (codecId == CODEC_ID_H264_MT) // ffmpeg-mt
+  {
+   codecId = CODEC_ID_H264;
+   thread_type = FF_THREAD_FRAME;
+  }
+
  avcodec=libavcodec->avcodec_find_decoder(codecId);
  if (!avcodec) return false;
 
  avctx=libavcodec->avcodec_alloc_context(this);
+ avctx->thread_type = thread_type;
+ if (thread_type != FF_THREAD_FRAME)
+  avctx->active_thread_type = FF_THREAD_SLICE;
 
  int numthreads=deci->getParam2(IDFF_numLAVCdecThreads);
  if (numthreads>1 && sup_threads_dec(codecId))
@@ -315,7 +339,6 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
  codecinited=true;
  wasKey=false;
  segmentTimeStart=0;
- posB=1;
  return true;
 }
 
@@ -354,6 +377,8 @@ HRESULT TvideoCodecLibavcodec::flushDec(void)
 }
 HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen0,IMediaSample *pIn)
 {
+ HRESULT hr = S_OK;
+
  bool isSyncPoint = pIn && pIn->IsSyncPoint() == S_OK;
  if (codecId==CODEC_ID_FFV1) // libavcodec can crash or loop infinitely when first frame after seeking is not keyframe
   {
@@ -398,10 +423,12 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
  if (pIn)
   pIn->GetTime(&rtStart,&rtStop);
 
- b[posB].rtStart=rtStart;
- b[posB].rtStop=rtStop;
- b[posB].srcSize=size;
- posB=1-posB; /* posB++; if(posB==2) posB=0;*/
+ b[inPosB].rtStart=rtStart;
+ b[inPosB].rtStop=rtStop;
+ b[inPosB].srcSize=size;
+ inPosB++;
+ if(inPosB >= countof(b))
+  inPosB = 0;
 
  if (codecId==CODEC_ID_H264)
   {
@@ -628,9 +655,18 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
          // Timestamps simply increase. 
          // ex: AVI files
 
-         pict.rtStart=b[posB].rtStart; 
-         pict.rtStop=b[posB].rtStop;
-         pict.srcSize=b[posB].srcSize;
+         int pos;
+         if (avctx->active_thread_type == FF_THREAD_FRAME)
+          pos = inPosB - 1 - avctx->thread_count;
+         else
+          pos = inPosB - 2;
+
+         if (pos < 0)
+          pos += countof(b);
+
+         pict.rtStart=b[pos].rtStart; 
+         pict.rtStop=b[pos].rtStop;
+         pict.srcSize=b[pos].srcSize;
         }
 
        // soft telecine detection
@@ -640,8 +676,11 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
        telecineManager.new_frame(fieldtype, frame->top_field_first, frame->repeat_pict, pict.rtStart, pict.rtStop);
        telecineManager.get_fieldtype(pict);
        telecineManager.get_timestamps(pict);
-       HRESULT hr=sinkD->deliverDecodedSample(pict);
-       if (FAILED(hr) || (used_bytes && sinkD->acceptsManyFrames()!=S_OK) || avctx->codec_id==CODEC_ID_LOCO)
+
+       hr=sinkD->deliverDecodedSample(pict);
+       if (FAILED(hr)
+           || (used_bytes && sinkD->acceptsManyFrames()!=S_OK)
+           || avctx->codec_id==CODEC_ID_LOCO)
         return hr;
       }
     }
@@ -654,6 +693,9 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
    if(!used_bytes && codecId==CODEC_ID_SVQ3)
     return S_OK;
 
+   if (avctx->active_thread_type == FF_THREAD_FRAME)
+    return hr;
+
    src+=used_bytes;
    size-=used_bytes;
   }
@@ -665,8 +707,15 @@ bool TvideoCodecLibavcodec::onSeek(REFERENCE_TIME segmentStart)
  oldpict.rtStop = 0;
  wasKey=false;
  segmentTimeStart=segmentStart;
- posB=1;
- b[0].rtStart=b[1].rtStart=b[0].rtStop=b[0].rtStop=0;b[0].srcSize=b[1].srcSize=0;
+ inPosB = 1;
+
+ for (int pos = 0 ; pos < countof(b) ; pos++)
+  {
+   b[pos].rtStart = REFTIME_INVALID;
+   b[pos].rtStop = REFTIME_INVALID;
+   b[pos].srcSize = 0;
+  }
+
  if (ccDecoder) ccDecoder->onSeek();
  codedPictureBuffer.onSeek();
  h264RandomAccess.onSeek();
@@ -698,7 +747,12 @@ const char_t* TvideoCodecLibavcodec::getName(void) const
 {
  if (avcodec)
   {
-   tsnprintf_s(codecName, countof(codecName), _TRUNCATE, _l("libavcodec %s"), (const char_t*)text<char_t>(avcodec->name));
+#if COMPILE_AS_FFMPEG_MT
+   static const char_t *libname = _l("ffmpeg-mt");
+#else
+   static const char_t *libname = _l("libavcodec");
+#endif
+   tsnprintf_s(codecName, countof(codecName), _TRUNCATE, _l("%s %s"), libname, (const char_t*)text<char_t>(avcodec->name));
    return codecName;
   }
  else return _l("libavcodec");
@@ -1435,7 +1489,6 @@ int TvideoCodecLibavcodec::TcodedPictureBuffer::send(int *got_picture_ptr)
  if (used < 0)
   return -1;
 
-
  parent->h264RandomAccess.judgeUsability(got_picture_ptr);
 
  used_bytes += used;
@@ -1445,13 +1498,19 @@ int TvideoCodecLibavcodec::TcodedPictureBuffer::send(int *got_picture_ptr)
 TvideoCodecLibavcodec::Th264RandomAccess::Th264RandomAccess(TvideoCodecLibavcodec *Iparent):
  parent(Iparent)
 {
- onSeek();
+ recovery_mode = 1;
+ recovery_frame_cnt = 0;
 }
 
 void TvideoCodecLibavcodec::Th264RandomAccess::onSeek(void)
 {
  recovery_mode = 1;
  recovery_frame_cnt = 0;
+
+ if (parent->avctx->active_thread_type == FF_THREAD_FRAME)
+  thread_delay = parent->avctx->thread_count;
+ else
+  thread_delay = 1;
 }
 
 // return 0:not found, don't send it to libavcodec, 1:send it anyway.
@@ -1480,12 +1539,15 @@ int TvideoCodecLibavcodec::Th264RandomAccess::search(uint8_t* buf, int buf_size)
     return 0;
   }
  else
-  return 1 ;
+  return 1;
 }
 
 void TvideoCodecLibavcodec::Th264RandomAccess::judgeUsability(int *got_picture_ptr)
 {
  if (parent->codecId != CODEC_ID_H264)
+  return;
+
+ if (--thread_delay > 0 || parent->frame->h264_max_frame_num == 0)
   return;
 
  if (recovery_mode ==1 || recovery_mode ==2)

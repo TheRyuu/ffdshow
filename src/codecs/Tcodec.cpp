@@ -35,23 +35,24 @@ const char_t* Tcodec::getMovieSourceName(int source)
 {
  switch (source)
   {
-   case IDFF_MOVIE_LAVC    :return _l("libavcodec");
-   case IDFF_MOVIE_THEO    :return _l("libtheora");
-   case IDFF_MOVIE_RAW     :return _l("uncompressed");
-   case IDFF_MOVIE_LIBMPEG2:return _l("libmpeg2");
-   case IDFF_MOVIE_MPLAYER :return _l("mp3lib");
-   case IDFF_MOVIE_LIBMAD  :return _l("libmad");
-   case IDFF_MOVIE_LIBFAAD :return _l("libfaad2");
-   case IDFF_MOVIE_XVID4   :return _l("Xvid");
-   case IDFF_MOVIE_AVIS    :return _l("AviSynth");
-   case IDFF_MOVIE_WMV9    :return _l("wmv9");
-   case IDFF_MOVIE_SKAL    :return _l("sklmp4");
-   case IDFF_MOVIE_X264    :return _l("x264");
-   case IDFF_MOVIE_LIBA52  :return _l("liba52");
-   case IDFF_MOVIE_LIBDTS  :return _l("libdts");
-   case IDFF_MOVIE_TREMOR  :return _l("Tremor");
-   case IDFF_MOVIE_REALAAC :return _l("realaac");
-   case IDFF_MOVIE_AUDX    :return _l("Aud-X");
+   case IDFF_MOVIE_LAVC     :return _l("libavcodec");
+   case IDFF_MOVIE_FFMPEG_MT:return _l("ffmpeg-mt");
+   case IDFF_MOVIE_THEO     :return _l("libtheora");
+   case IDFF_MOVIE_RAW      :return _l("uncompressed");
+   case IDFF_MOVIE_LIBMPEG2 :return _l("libmpeg2");
+   case IDFF_MOVIE_MPLAYER  :return _l("mp3lib");
+   case IDFF_MOVIE_LIBMAD   :return _l("libmad");
+   case IDFF_MOVIE_LIBFAAD  :return _l("libfaad2");
+   case IDFF_MOVIE_XVID4    :return _l("Xvid");
+   case IDFF_MOVIE_AVIS     :return _l("AviSynth");
+   case IDFF_MOVIE_WMV9     :return _l("wmv9");
+   case IDFF_MOVIE_SKAL     :return _l("sklmp4");
+   case IDFF_MOVIE_X264     :return _l("x264");
+   case IDFF_MOVIE_LIBA52   :return _l("liba52");
+   case IDFF_MOVIE_LIBDTS   :return _l("libdts");
+   case IDFF_MOVIE_TREMOR   :return _l("Tremor");
+   case IDFF_MOVIE_REALAAC  :return _l("realaac");
+   case IDFF_MOVIE_AUDX     :return _l("Aud-X");
    default:
    case 0:return _l("disabled");
   }

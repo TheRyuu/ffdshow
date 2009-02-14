@@ -21,6 +21,7 @@
 #include "TffdshowDecAudio.h"
 #include "ffdshow_mediaguids.h"
 #include "TglobalSettings.h"
+#include "ffmpeg/libavcodec/avcodec.h"
 #include "TaudioCodecLibavcodec.h"
 #include "ffdebug.h"
 

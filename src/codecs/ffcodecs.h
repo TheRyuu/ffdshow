@@ -208,7 +208,9 @@
  CODEC_OP(CODEC_ID_AUDX          ,1800,"Aud-X") \
  \
  CODEC_OP(CODEC_ID_X264          ,1900,"x264") \
- CODEC_OP(CODEC_ID_X264_LOSSLESS ,1901,"x264 lossless")
+ CODEC_OP(CODEC_ID_X264_LOSSLESS ,1901,"x264 lossless") \
+ \
+ CODEC_OP(CODEC_ID_H264_MT       ,2000,"h264")
 
 enum CodecID
 {

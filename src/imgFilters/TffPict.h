@@ -5,6 +5,7 @@
 #include "ffImgfmt.h"
 #include "rational.h"
 #include "interfaces.h"
+//#include "ffmpeg/libavcodec/avcodec.h"
 
 struct FRAME_TYPE
 {

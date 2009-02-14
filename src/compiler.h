@@ -49,4 +49,10 @@
   #define COMPILER_X64 ", x86"
 #endif
 
+#ifdef DEBUG
+  #define COMPILER_INFO ", d"
+#else
+  #define COMPILER_INFO ", r"
+#endif
+
 #endif

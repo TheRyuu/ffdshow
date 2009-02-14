@@ -26,7 +26,7 @@
 #include "ffdshow_mediaguids.h"
 #include "xiph/vorbis/vorbisformat.h"
 #include "ffdebug.h"
-
+#include "ffmpeg/libavcodec/avcodec.h"
 
 TaudioCodecLibavcodec::TaudioCodecLibavcodec(IffdshowBase *deci,IdecAudioSink *Isink):
  Tcodec(deci),

@@ -27,7 +27,7 @@
  */
 
 
-#include "ffcodecs.h"
+#include "../codecs/ffcodecs.h"
 #include "ffImgfmt.h"
 
 #ifdef HAVE_AV_CONFIG_H
@@ -568,6 +568,8 @@ typedef struct AVPanScan{
     int num_sprite_warping_points,real_sprite_warping_points;\
     int play_flags;\
 \
+    /* ffdshow custom stuffs (begin) */\
+\
     int h264_poc_decoded;\
     int h264_poc_outputed;\
     int h264_frame_num_decoded;\
@@ -587,6 +589,7 @@ typedef struct AVPanScan{
      * - decoding: Set by libavcodec.\
      */\
     YCbCr_RGB_MatrixCoefficientsType YCbCr_RGB_matrix_coefficients;
+    /* ffdshow custom stuffs (end) */
 
 #define FF_QSCALE_TYPE_MPEG1 0
 #define FF_QSCALE_TYPE_MPEG2 1
@@ -1209,6 +1212,7 @@ typedef struct AVCodecContext {
     unsigned dsp_mask;
 #define FF_MM_FORCE    0x80000000 /* Force usage of selected flags (OR) */
     /* lower 16 bits - CPU features */
+#ifdef HAVE_MMX /* to exclude SIMD stuff on MSVC builds */
 #define FF_MM_MMX      0x0001 ///< standard MMX
 #define FF_MM_3DNOW    0x0004 ///< AMD 3DNOW
 #define FF_MM_MMXEXT   0x0002 ///< SSE integer functions or AMD MMX ext
@@ -1217,6 +1221,7 @@ typedef struct AVCodecContext {
 #define FF_MM_3DNOWEXT 0x0020 ///< AMD 3DNowExt
 #define FF_MM_SSE3     0x0040 ///< Prescott SSE3 functions
 #define FF_MM_SSSE3    0x0080 ///< Conroe SSSE3 functions
+#endif /* HAVE_MMX */
 
     /**
      * bits per sample/pixel from the demuxer (needed for huffyuv).
@@ -2037,6 +2042,14 @@ typedef struct AVCodecContext {
     int64_t reordered_opaque2; /* ffdshow custom code */
     int64_t reordered_opaque3; /* ffdshow custom code */
 
+    /**
+     * ffdshow custom code - dummy -
+     */
+    int thread_type;
+    int active_thread_type;
+#define FF_THREAD_FRAME   1 //< Decode more than one frame at once
+#define FF_THREAD_SLICE   2 //< Decode more than one part of a single frame at once
+#define FF_THREAD_DEFAULT 3 //< Use both if possible.
     /**
      * Bits per sample/pixel of internal libavcodec pixel/sample format.
      * This field is applicable only when sample_fmt is SAMPLE_FMT_S32.

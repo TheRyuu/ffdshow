@@ -660,13 +660,13 @@ void TglobalSettingsDecVideo::load(void)
  FF_FOURCC1_OP(M263,h263 & rawmask,CODEC_ID_H263) \
  FF_FOURCC1_OP(U263,h263 & rawmask,CODEC_ID_H263) \
  FF_FOURCC1_OP(X263,h263 & rawmask,CODEC_ID_H263) \
- FF_FOURCC1_OP(H264,h264 & rawmask,CODEC_ID_H264) \
- FF_FOURCC1_OP(X264,h264 & rawmask,CODEC_ID_H264) \
- FF_FOURCC1_OP(VSSH,h264 & rawmask,CODEC_ID_H264) \
- FF_FOURCC1_OP(DAVC,h264 & rawmask,CODEC_ID_H264) \
- FF_FOURCC1_OP(PAVC,h264 & rawmask,CODEC_ID_H264) \
- FF_FOURCC1_OP(AVC1,h264 & rawmask,CODEC_ID_H264) \
- /*FF_FOURCC1_OP(SVM2,h264 & rawmask,CODEC_ID_H264)*/ \
+ FF_FOURCC_OP(H264,h264 & rawmask,c_h264) \
+ FF_FOURCC_OP(X264,h264 & rawmask,c_h264) \
+ FF_FOURCC_OP(VSSH,h264 & rawmask,c_h264) \
+ FF_FOURCC_OP(DAVC,h264 & rawmask,c_h264) \
+ FF_FOURCC_OP(PAVC,h264 & rawmask,c_h264) \
+ FF_FOURCC_OP(AVC1,h264 & rawmask,c_h264) \
+ /*FF_FOURCC_OP(SVM2,h264 & rawmask,c_h264)*/ \
  FF_FOURCC1_OP(MJPG,mjpg & rawmask,CODEC_ID_MJPEG) \
  FF_FOURCC1_OP(LJPG,mjpg & rawmask,CODEC_ID_MJPEG) \
  FF_FOURCC1_OP(MJLS,mjpg & rawmask,CODEC_ID_JPEGLS) \
@@ -812,7 +812,31 @@ const char_t** TglobalSettingsDecVideo::getFOURCClist(void) const
 {
  return fourccs;
 }
-
+const CodecID TglobalSettingsDecVideo::c_h264[IDFF_MOVIE_MAX+1]=
+{
+ CODEC_ID_NONE,
+ CODEC_ID_H264,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_H264_MT
+};
 const CodecID TglobalSettingsDecVideo::c_mpeg4[IDFF_MOVIE_MAX+1]=
 {
  CODEC_ID_NONE,

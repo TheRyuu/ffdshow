@@ -19,6 +19,7 @@
 #include "stdafx.h"
 #include "Tconfig.h"
 #include "reg.h"
+#include "ffImgfmt.h"
 #include "Tlibavcodec.h"
 #include "Tlibmplayer.h"
 #include "avisynth/Tavisynth.h"
@@ -126,6 +127,7 @@ void Tconfig::init1(HINSTANCE hi)
 
  memset(isDecoder,0,sizeof(isDecoder));
  isDecoder[IDFF_MOVIE_LAVC]=Tlibavcodec::check(this);
+ isDecoder[IDFF_MOVIE_FFMPEG_MT]=Tdll::check(_l("ffmpegmt.dll"),this);
  isDecoder[IDFF_MOVIE_LIBMPEG2]=check(TvideoCodecLibmpeg2::dllname);
  isDecoder[IDFF_MOVIE_THEO]=check(TvideoCodecTheora::dllname);
  isDecoder[IDFF_MOVIE_RAW]=1;

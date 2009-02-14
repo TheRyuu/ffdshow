@@ -22,6 +22,7 @@
 #include "TvideoCodec.h"
 #include "CquantTables.h"
 #include "Ttranslate.h"
+#include "ffmpeg/libavcodec/avcodec.h"
 
 const TdecoderOptionsPage::Tworkaround TdecoderOptionsPage::workarounds[]=
 {
@@ -42,7 +43,7 @@ void TdecoderOptionsPage::init(void)
 {
  const TvideoCodecDec *movie;deciV->getMovieSource(&movie);
  int source=movie?movie->getType():0;
- islavc=((filterMode&IDFF_FILTERMODE_PLAYER) && source==IDFF_MOVIE_LAVC) || (filterMode&(IDFF_FILTERMODE_CONFIG|IDFF_FILTERMODE_VFW));
+ islavc=((filterMode&IDFF_FILTERMODE_PLAYER) && (source==IDFF_MOVIE_LAVC || source==IDFF_MOVIE_FFMPEG_MT)) || (filterMode&(IDFF_FILTERMODE_CONFIG|IDFF_FILTERMODE_VFW));
  for (int i=0;workarounds[i].ff_bug;i++)
   enable(islavc,workarounds[i].idc_chb);
  static const int idLavc[]={IDC_LBL_IDCT,IDC_CHB_SOFT_TELECINE,IDC_CBX_IDCT,IDC_CHB_GRAY,IDC_LBL_BUGS,IDC_LBL_ERROR_CONCEALMENT,IDC_CBX_ERROR_CONCEALMENT,IDC_LBL_ERROR_RECOGNITION,IDC_CBX_ERROR_RECOGNITION,IDC_BT_QUANTMATRIX_EXPORT,IDC_ED_NUMTHREADS,IDC_CHB_H264_SKIP_ON_DELAY,IDC_ED_H264SKIP_ON_DELAY_TIME,IDC_LBL_NUMTHREADS,0};

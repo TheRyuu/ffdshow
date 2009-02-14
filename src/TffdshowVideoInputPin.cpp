@@ -449,7 +449,7 @@ again:
 	 return false;
  }
 
- if (codecId==CODEC_ID_H264)
+ if (codecId==CODEC_ID_H264 || codecId==CODEC_ID_H264_MT)
   {
    Textradata extradata(mt,16);
    if (extradata.size)
@@ -720,7 +720,7 @@ HRESULT TffdshowVideoInputPin::getInCodecString(char_t *buf,size_t buflen)
 }
 bool TffdshowVideoInputPin::waitForKeyframes(void)
 {
- return !rawDecode && codecId != CODEC_ID_H264 && !(video && mpeg12_codec(codecId) && biIn.bmiHeader.biCompression!=FOURCC_MPEG);
+ return !rawDecode && codecId != CODEC_ID_H264 && codecId != CODEC_ID_H264_MT && !(video && mpeg12_codec(codecId) && biIn.bmiHeader.biCompression!=FOURCC_MPEG);
 }
 void TffdshowVideoInputPin::setSampleSkipped(void)
 {

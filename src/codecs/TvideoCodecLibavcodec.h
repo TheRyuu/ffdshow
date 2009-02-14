@@ -2,10 +2,33 @@
 #define _TVIDEOCODECLIBAVCODEC_H_
 
 #include "TvideoCodec.h"
-#include "Tlibavcodec.h"
+#include "ffmpeg/Tlibavcodec.h"
+// Do not include avcodec.h in this file, ffmpeg and ffmpeg-mt may conflict.
+
+#define MAX_THREADS 8 // FIXME: This is defined in mpegvideo.h.
 
 struct Textradata;
 class TccDecoder;
+
+struct TlibavcodecExt
+{
+private:
+ static int get_buffer(AVCodecContext *s, AVFrame *pic);
+ int  (*default_get_buffer)(AVCodecContext *s, AVFrame *pic);
+ static void release_buffer(AVCodecContext *s, AVFrame *pic);
+ void (*default_release_buffer)(AVCodecContext *s, AVFrame *pic);
+ static int reget_buffer(AVCodecContext *s, AVFrame *pic);
+ int  (*default_reget_buffer)(AVCodecContext *s, AVFrame *pic);
+ static void handle_user_data0(AVCodecContext *c,const uint8_t *buf,int buf_len);
+public:
+ virtual ~TlibavcodecExt() {}
+ void connectTo(AVCodecContext *ctx,Tlibavcodec *libavcodec);
+ virtual void onGetBuffer(AVFrame *pic) {}
+ virtual void onRegetBuffer(AVFrame *pic) {}
+ virtual void onReleaseBuffer(AVFrame *pic) {}
+ virtual void handle_user_data(const uint8_t *buf,int buf_len) {}
+};
+
 class TvideoCodecLibavcodec :public TvideoCodecDec,public TvideoCodecEnc,public TlibavcodecExt
 {
 private:
@@ -31,8 +54,8 @@ private:
   {
    REFERENCE_TIME rtStart,rtStop;
    unsigned int srcSize;
-   } b[2];
- int posB;
+  } b[MAX_THREADS + 1];
+ int inPosB;
 
  Textradata *extradata;bool sendextradata;
  TffPict oldpict;
@@ -59,7 +82,11 @@ public:
  TvideoCodecLibavcodec(IffdshowBase *Ideci,IencVideoSink *IsinkE);
  virtual ~TvideoCodecLibavcodec();
 
+#if COMPILE_AS_FFMPEG_MT
+ virtual int getType(void) const {return IDFF_MOVIE_FFMPEG_MT;}
+#else
  virtual int getType(void) const {return IDFF_MOVIE_LAVC;}
+#endif
  virtual const char_t* getName(void) const;
  virtual int caps(void) const {return CAPS::VIS_MV|CAPS::VIS_QUANTS;}
 
@@ -103,6 +130,7 @@ public:
    int recovery_mode;  // 0:OK, 1:searching 2: found, 3:waiting for frame_num decoded, 4:waiting for POC outputed
    int recovery_frame_cnt;
    int recovery_poc;
+   int thread_delay;
 
   public:
    Th264RandomAccess(TvideoCodecLibavcodec* Iparent);

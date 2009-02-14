@@ -1,9 +1,9 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision = '2569'
+#define tryout_revision = '2677'
 #define buildyear  = '2009'
-#define buildmonth = '01'
-#define buildday   = '03'
+#define buildmonth = '02'
+#define buildday   = '13'
 
 ; Build specific options
 #define localize = True
@@ -274,9 +274,12 @@ Name: "ffdshow\plugins\dscaler";    Description: "DScaler"
 [Tasks]
 Name: "resetsettings";           Description: "{cm:tsk_resetSettings}";                                                          GroupDescription: "{cm:tsk_settings}";                        Components: ffdshow; Flags: unchecked
 Name: "video";                   Description: "{cm:tsk_videoFormatsSelect}";                                                     GroupDescription: "{cm:tsk_videoFormats}";                    Components: ffdshow; Flags: unchecked
-Name: "video\h264";              Description: "H.264 / AVC";                                               Check:      CheckTaskVideo(  'h264',  1, True);                                     Components: ffdshow
-Name: "video\h264";              Description: "H.264 / AVC";                                               Check: NOT  CheckTaskVideo(  'h264',  1, True);                                     Components: ffdshow; Flags: unchecked
-Name: "video\divx";              Description: "DivX";                                                      Check:      CheckTaskVideo2( 'dx50',     True);                                     Components: ffdshow
+Name: "video\h264";              Description: "H.264 / AVC";                                                                                                                                   Components: ffdshow; Flags: unchecked
+Name: "video\h264\libavcodec";   Description: "libavcodec";                                                Check:      CheckTaskVideo(  'h264',  1, True);                                     Components: ffdshow; Flags:           exclusive
+Name: "video\h264\libavcodec";   Description: "libavcodec";                                                Check: NOT  CheckTaskVideo(  'h264',  1, True);                                     Components: ffdshow; Flags: unchecked exclusive
+Name: "video\h264\ffmpegmt";     Description: "ffmpeg-mt";                                                 Check:      CheckTaskVideo(  'h264', 21, True);                                     Components: ffdshow; Flags:           exclusive
+Name: "video\h264\ffmpegmt";     Description: "ffmpeg-mt";                                                 Check: NOT  CheckTaskVideo(  'h264', 21, True);                                     Components: ffdshow; Flags: unchecked exclusive
+Name: "video\divx";              Description: "DivX";                                                      Check:      CheckTaskVideo2( 'dx50',     True);                                     Components: ffdshow;
 Name: "video\divx";              Description: "DivX";                                                      Check: NOT  CheckTaskVideo2( 'dx50',     True);                                     Components: ffdshow; Flags: unchecked
 Name: "video\xvid";              Description: "Xvid";                                                      Check:      CheckTaskVideo2( 'xvid',     True);                                     Components: ffdshow
 Name: "video\xvid";              Description: "Xvid";                                                      Check: NOT  CheckTaskVideo2( 'xvid',     True);                                     Components: ffdshow; Flags: unchecked
@@ -411,6 +414,7 @@ Name: "{group}\{cm:shrt_uninstall}";   Filename: "{uninstallexe}"
 Source: "ffSpkCfg.dll"; Flags: dontcopy
 
 Source: "{#= bindir}\libavcodec.dll";                             DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion
+Source: "{#= bindir}\ffmpegmt.dll";                               DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion
 Source: "{#= bindir}\libmplayer.dll";                             DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion
 Source: "{#= bindir}\ff_liba52.dll";                              DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion
 Source: "{#= bindir}\ff_libdts.dll";                              DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion
@@ -422,14 +426,17 @@ Source: "{#= bindir}\ff_samplerate.dll";                          DestDir: "{app
 #if include_libtheora
 Source: "{#= bindir}\ff_theora.dll";                              DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion
 #endif
+
 #if include_x264
 Source: "{#= bindir}\ff_x264.dll";                                DestDir: "{app}";                       Components: ffdshow\vfw;                Flags: ignoreversion
-  #if !is64bit
-Source: "Runtimes\pthreadGC2\x86\pthreadGC2.dll";                 DestDir: "{sys}";                       Components: ffdshow\vfw;                Flags: sharedfile    restartreplace uninsrestartdelete uninsnosharedfileprompt
-  #else
-Source: "Runtimes\pthreadGC2\x64\pthreadGC2-64.dll";              DestDir: "{sys}";                       Components: ffdshow\vfw;                Flags: sharedfile    restartreplace uninsrestartdelete uninsnosharedfileprompt
-  #endif
 #endif
+
+#if !is64bit
+Source: "Runtimes\pthreadGC2\x86\pthreadGC2.dll";                 DestDir: "{sys}";                       Components: ffdshow;                    Flags: sharedfile    restartreplace uninsrestartdelete uninsnosharedfileprompt
+#else
+Source: "Runtimes\pthreadGC2\x64\pthreadGC2-64.dll";              DestDir: "{sys}";                       Components: ffdshow;                    Flags: sharedfile    restartreplace uninsrestartdelete uninsnosharedfileprompt
+#endif
+
 #if include_xvidcore
 Source: "{#= bindir}\xvidcore.dll";                               DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion
 #endif

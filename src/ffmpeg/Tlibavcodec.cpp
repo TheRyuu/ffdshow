@@ -20,6 +20,8 @@
 #include "Tlibavcodec.h"
 #include "Tdll.h"
 #include "ffdebug.h"
+#include "ffmpeg/libavcodec/avcodec.h"
+#include "TvideoCodecLibavcodec.h"
 
 const char_t* Tlibavcodec::idctNames[]=
 {
@@ -67,6 +69,10 @@ const Tlibavcodec::Tdia_size Tlibavcodec::dia_sizes[]=
 //===================================== Tlibavcodec ====================================
 Tlibavcodec::Tlibavcodec(const Tconfig *config):refcount(0)
 {
+#if COMPILE_AS_FFMPEG_MT
+ dll=new Tdll(_l("ffmpegmt.dll"),config);
+ dec_only=false;
+#else
  dll=new Tdll(_l("libavcodec.dll"),config);
  if (!dll->ok)
   {
@@ -76,6 +82,8 @@ Tlibavcodec::Tlibavcodec(const Tconfig *config):refcount(0)
   }
  else
   dec_only=false;
+#endif
+
  dll->loadFunction(avcodec_init,"avcodec_init");
  dll->loadFunction(dsputil_init,"dsputil_init");
  dll->loadFunction(avcodec_register_all,"avcodec_register_all");
@@ -171,12 +179,17 @@ int Tlibavcodec::avcodec_close(AVCodecContext *avctx)
 bool Tlibavcodec::getVersion(const Tconfig *config,ffstring &vers,ffstring &license)
 {
  const char *x=text<char>("aaa");
+#if COMPILE_AS_FFMPEG_MT
+ Tdll *dl=new Tdll(_l("ffmpegmt.dll"),config);
+#else
  Tdll *dl=new Tdll(_l("libavcodec.dll"),config);
  if (!dl->ok)
   {
    delete dl;
    dl=new Tdll(_l("libavcodec_dec.dll"),config);
   }
+#endif
+
  void (*av_getVersion)(char **version,char **build,char **datetime,const char* *license);
  dl->loadFunction(av_getVersion,"getVersion");
  bool res;
@@ -199,7 +212,11 @@ bool Tlibavcodec::getVersion(const Tconfig *config,ffstring &vers,ffstring &lice
 }
 bool Tlibavcodec::check(const Tconfig *config)
 {
+#if COMPILE_AS_FFMPEG_MT
+ return Tdll::check(_l("ffmpegmt.dll"),config);
+#else
  return Tdll::check(_l("libavcodec.dll"),config) || Tdll::check(_l("libavcodec_dec.dll"),config);
+#endif
 }
 
 void Tlibavcodec::avlog(AVCodecContext *avctx,int level,const char *fmt,va_list valist)

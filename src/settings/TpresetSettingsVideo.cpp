@@ -52,6 +52,7 @@
 #include "TinputPin.h"
 #include "libavcodec/bitstream.h"
 #include "ffdshow_mediaguids.h"
+#include "ffmpeg/libavcodec/avcodec.h"
 
 //========================= TvideoAutoPresetProps =========================
 const char_t TvideoAutoPresetProps::aspectSAR=_l('S'),TvideoAutoPresetProps::aspectDAR=_l('D');

@@ -22,6 +22,7 @@
 #include "IffdshowEnc.h"
 #include "TvideoCodec.h"
 #include "TvideoCodecLibavcodec.h"
+#include "TvideoCodec_ffmpeg-mt.h"
 #include "TvideoCodecUncompressed.h"
 #include "TvideoCodecXviD4.h"
 #include "TvideoCodecLibmpeg2.h"
@@ -52,6 +53,7 @@ TvideoCodecDec* TvideoCodecDec::initDec(IffdshowBase *deci,IdecVideoSink *sink,C
  else if (codecId==CODEC_ID_LIBMPEG2  ) movie=new TvideoCodecLibmpeg2(deci,sink);
  else if (codecId==CODEC_ID_AVISYNTH  ) movie=new TvideoCodecAvisynth(deci,sink);
  else if (codecId==CODEC_ID_THEORA_LIB) movie=new TvideoCodecTheora(deci,sink);
+ else if (codecId==CODEC_ID_H264_MT) movie=new TvideoCodecLibavcodec_mt(deci,sink);
  else return NULL;
  if (!movie) return NULL;
  if (movie->ok && movie->testMediaType(fcc,mt))

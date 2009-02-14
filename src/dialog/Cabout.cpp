@@ -19,7 +19,9 @@
 #include "stdafx.h"
 #include "Cabout.h"
 #include "TffdshowPageBase.h"
+#include "ffImgfmt.h"
 #include "Tlibavcodec.h"
+#include "ffmpeg-mt/Tlibavcodec_mt.h"
 #include "Tlibmplayer.h"
 #include "avisynth/Tavisynth.h"
 #include "TvideoCodecXviD4.h"
@@ -165,6 +167,7 @@ const TversionsDlg::TversionInfo* TaboutPageDecVideo::fcsVersions(void)
  static const TversionsDlg::TversionInfo fcsDecVideo[]=
   {
    _l("libavcodec.dll"),Tlibavcodec::getVersion,
+   _l("ffmpegmt.dll"),Tlibavcodec_mt::getVersion,
    Tlibmplayer::dllname,getVersion<Tlibmplayer>,
    TvideoCodecXviD4::dllname,TvideoCodecXviD4::getVersion,
    TvideoCodecTheora::dllname,getVersion<TvideoCodecTheora>,

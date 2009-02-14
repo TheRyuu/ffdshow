@@ -1,23 +1,28 @@
 #ifndef _TLIBAVCODEC_H_
 #define _TLIBAVCODEC_H_
 
-#include "libavcodec/avcodec.h"
+#include "../codecs/ffcodecs.h"
+// Do not include avcodec.h in this file, ffmpeg and ffmpeg-mt may conflict.
+
+struct AVCodecContext;
+struct AVCodec;
+struct AVFrame;
+struct AVCodecParserContext;
 
 struct Tconfig;
 class Tdll;
 struct DSPContext;
+struct TlibavcodecExt;
 struct Tlibavcodec
 {
 private:
  Tdll *dll;
- Tlibavcodec(const Tconfig *config);
- Tlibavcodec(const Tlibavcodec &) {}
- ~Tlibavcodec();
- friend class TffdshowBase;
  int refcount;
  static int get_buffer(AVCodecContext *c, AVFrame *pic);
  CCritSec csOpenClose;
 public:
+ Tlibavcodec(const Tconfig *config);
+ ~Tlibavcodec();
  static void avlog(AVCodecContext*,int,const char*,va_list);
  static void avlogMsgBox(AVCodecContext*,int,const char*,va_list);
  void AddRef(void)
@@ -90,25 +95,6 @@ int (*avcodec_decode_audio2)(AVCodecContext *avctx, int16_t *samples,
    const char_t *descr;
   };
  static const Tdia_size dia_sizes[];
-};
-
-struct TlibavcodecExt
-{
-private:
- static int get_buffer(AVCodecContext *s, AVFrame *pic);
- int  (*default_get_buffer)(AVCodecContext *s, AVFrame *pic);
- static void release_buffer(AVCodecContext *s, AVFrame *pic);
- void (*default_release_buffer)(AVCodecContext *s, AVFrame *pic);
- static int reget_buffer(AVCodecContext *s, AVFrame *pic);
- int  (*default_reget_buffer)(AVCodecContext *s, AVFrame *pic);
- static void handle_user_data0(AVCodecContext *c,const uint8_t *buf,int buf_len);
-public:
- virtual ~TlibavcodecExt() {}
- void connectTo(AVCodecContext *ctx,Tlibavcodec *libavcodec);
- virtual void onGetBuffer(AVFrame *pic) {}
- virtual void onRegetBuffer(AVFrame *pic) {}
- virtual void onReleaseBuffer(AVFrame *pic) {}
- virtual void handle_user_data(const uint8_t *buf,int buf_len) {}
 };
 
 #endif

@@ -23,6 +23,7 @@
 #include "IffdshowBase.h"
 #include "IffdshowDecVideo.h"
 #include "TimgFilters.h"
+#include "ffmpeg/libavcodec/avcodec.h"
 
 //========================== TimgExportLibavcodec ===========================
 TimgFilterGrab::TimgExportLibavcodec::TimgExportLibavcodec(const Tconfig *config,IffdshowBase *deci,CodecID IcodecId):codecId(IcodecId)
