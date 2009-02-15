@@ -49,44 +49,23 @@ void TffdshowConverters::init(int incsp,   // FF_CSP_420P, FF_CSP_NV12, FF_CSP_Y
     short cgv=short(-YCbCr2RGB_coeffs.vg_mul * 8192 - 0.5);
     short cbu=short(YCbCr2RGB_coeffs.ub_mul * 8192 + 0.5);
 
-    short *Ysubs = (short *)(m_coeffs + ofs_Ysub);
-    Ysubs[0] = Ysubs[1] = Ysubs[2] = Ysubs[3] = Ysubs[4] = Ysubs[5] = Ysubs[6] = Ysubs[7] = short(YCbCr2RGB_coeffs.Ysub);
-    short *cys = (short *)(m_coeffs + ofs_cy);
-    cys[0] = cys[1] = cys[2] = cys[3] = cys[4] = cys[5] = cys[6] = cys[7] = cy;
-    short *sub128mul16 = (short *)(m_coeffs + ofs_128mul16);
-    sub128mul16[0] = sub128mul16[1] = sub128mul16[2] = sub128mul16[3] =
-    sub128mul16[4] = sub128mul16[5] = sub128mul16[6] = sub128mul16[7] = 128*16;
+    m_coeffs->Ysub = _mm_set1_epi16(short(YCbCr2RGB_coeffs.Ysub));
+    m_coeffs->cy = _mm_set1_epi16(cy);
+    m_coeffs->CbCr_center = _mm_set1_epi16(128*16);
 
-    // R
-    short *cR_Crs = (short *)(m_coeffs + ofs_cR_Cr);
-    cR_Crs[0] = cR_Crs[2] = cR_Crs[4] = cR_Crs[6] = 0;
-    cR_Crs[1] = cR_Crs[3] = cR_Crs[5] = cR_Crs[7] = crv;
-    // G
-    short *cG_Cbs = (short *)(m_coeffs + ofs_cG_Cb_cG_Cr);
-    cG_Cbs[0] = cG_Cbs[2] = cG_Cbs[4] = cG_Cbs[6] = cgu;
-    cG_Cbs[1] = cG_Cbs[3] = cG_Cbs[5] = cG_Cbs[7] = cgv;
-    // B
-    short *cB_Cbs = (short *)(m_coeffs + ofs_cB_Cb);
-    cB_Cbs[0] = cB_Cbs[2] = cB_Cbs[4] = cB_Cbs[6] = cbu;
-    cB_Cbs[1] = cB_Cbs[3] = cB_Cbs[5] = cB_Cbs[7] = 0;
+    m_coeffs->cR_Cr = _mm_set1_epi32(crv << 16);               // R
+    m_coeffs->cG_Cb_cG_Cr = _mm_set1_epi32((cgv << 16) + cgu); // G
+    m_coeffs->cB_Cb = _mm_set1_epi32(cbu);                     // B
 
-    short *rgb_adds = (short *)(m_coeffs + ofs_rgb_add);
-    rgb_adds[0] = rgb_adds[1] = rgb_adds[2] = rgb_adds[3] = rgb_adds[4] = rgb_adds[5] = rgb_adds[6] = rgb_adds[7] = (YCbCr2RGB_coeffs.RGB_add1 << 2) + 2;
-    uint32_t *xFF000000_FF000000s = (uint32_t *)(m_coeffs + ofs_xFF000000_FF000000);
-    xFF000000_FF000000s[0] = xFF000000_FF000000s[1] = xFF000000_FF000000s[2] = xFF000000_FF000000s[3] = 0xff000000;
+    m_coeffs->rgb_add = _mm_set1_epi16((YCbCr2RGB_coeffs.RGB_add1 << 2) + 2);
 
-    uint32_t *xFFFFFFFF = (uint32_t *)(m_coeffs + ofs_xFFFFFFFF_FFFFFFFF);
-    xFFFFFFFF[0] = xFFFFFFFF[1] = xFFFFFFFF[2] = xFFFFFFFF[3] = 0xffffffff;
-
-    uint32_t *rgb_limit_highs = (uint32_t *)(m_coeffs + ofs_rgb_limit_high);
     uint32_t rgb_white = uint32_t(output_RGB_white_level);
     rgb_white = 0xff000000 + (rgb_white << 16) + (rgb_white << 8) + rgb_white;
-    rgb_limit_highs[0] = rgb_limit_highs[1] = rgb_limit_highs[2] = rgb_limit_highs[3] = rgb_white;
+    m_coeffs->rgb_limit_high = _mm_set1_epi32(rgb_white);
 
-    uint32_t *rgb_limit_lows = (uint32_t *)(m_coeffs + ofs_rgb_limit_low);
     uint32_t rgb_black = uint32_t(output_RGB_black_level);
     rgb_black = 0xff000000 + (rgb_black << 16) + (rgb_black << 8) + rgb_black;
-    rgb_limit_lows[0] = rgb_limit_lows[1] = rgb_limit_lows[2] = rgb_limit_lows[3] = rgb_black;
+    m_coeffs->rgb_limit_low = _mm_set1_epi32(rgb_black);
 }
 
  // note YV12 and YV16 is YCrCb order. Make sure Cr and Cb is swapped.
@@ -120,7 +99,7 @@ template<int incsp, int outcsp, int left_edge, int right_edge, int rgb_limit, in
                       const stride_t stride_Y,
                       const stride_t stride_CbCr,
                       const stride_t stride_dst,
-                      const unsigned char* const coeffs)
+                      const Tcoeffs *coeffs)
 {
     // output 4x2 RGB pixels.
     __m128i xmm0,xmm1,xmm2,xmm3,xmm4,xmm5,xmm6,xmm7;
@@ -336,7 +315,7 @@ template<int incsp, int outcsp, int left_edge, int right_edge, int rgb_limit, in
     xmm3 = _mm_add_epi16(xmm3,xmm2);
     xmm3 = _mm_add_epi16(xmm3,xmm2);                                               // xmm3 = ----,----,P10+3*P11,P-11+3*P10
 
-    xmm2 = _mm_load_si128((const __m128i *)(coeffs + ofs_128mul16));
+    xmm2 = coeffs->CbCr_center;
     xmm1 = _mm_unpacklo_epi32(xmm1,xmm0);                                          // 3*P01+P02, P00+3*P01, 3*P00+P01,P-01+3*P00
     xmm3 = _mm_unpacklo_epi32(xmm3,xmm6);                                          // 3*P11+P12, P10+3*P11, 3*P10+P01,P-11+3*P10
 
@@ -362,14 +341,14 @@ template<int incsp, int outcsp, int left_edge, int right_edge, int rgb_limit, in
     }
     xmm0 = _mm_unpacklo_epi64(xmm0,xmm5);                                          // 0,Y03,0,Y02,0,Y01,0,Y00,0,Y13,0,Y12,0,Y11,0,Y10
 
-    xmm0 = _mm_subs_epu16(xmm0,*(const __m128i *)(coeffs + ofs_Ysub));             // Y-16, unsigned saturate
+    xmm0 = _mm_subs_epu16(xmm0,coeffs->Ysub);                                      // Y-16, unsigned saturate
     xmm0 = _mm_slli_epi16(xmm0,4);
-    xmm0 = _mm_mulhi_epi16(xmm0,*(const __m128i *)(coeffs + ofs_cy));              // Y*cy (10bit)
-    xmm0 = _mm_add_epi16(xmm0,*(const __m128i *)(coeffs + ofs_rgb_add));
+    xmm0 = _mm_mulhi_epi16(xmm0,coeffs->cy);                                       // Y*cy (10bit)
+    xmm0 = _mm_add_epi16(xmm0,coeffs->rgb_add);
     xmm6 = xmm1;
     xmm4 = xmm3;
-    xmm6 = _mm_madd_epi16(xmm6,*(const __m128i *)(coeffs + ofs_cR_Cr));
-    xmm4 = _mm_madd_epi16(xmm4,*(const __m128i *)(coeffs + ofs_cR_Cr));
+    xmm6 = _mm_madd_epi16(xmm6,coeffs->cR_Cr);
+    xmm4 = _mm_madd_epi16(xmm4,coeffs->cR_Cr);
     xmm6 = _mm_srai_epi32(xmm6,15);
     xmm4 = _mm_srai_epi32(xmm4,15);
     xmm6 = _mm_packs_epi32(xmm6,xmm7);
@@ -378,16 +357,16 @@ template<int incsp, int outcsp, int left_edge, int right_edge, int rgb_limit, in
     xmm6 = _mm_add_epi16(xmm6,xmm0);                                               // R (10bit)
     xmm5 = xmm1;
     xmm4 = xmm3;
-    xmm5 = _mm_madd_epi16(xmm5,*(const __m128i *)(coeffs + ofs_cG_Cb_cG_Cr));
-    xmm4 = _mm_madd_epi16(xmm4,*(const __m128i *)(coeffs + ofs_cG_Cb_cG_Cr));
+    xmm5 = _mm_madd_epi16(xmm5,coeffs->cG_Cb_cG_Cr);
+    xmm4 = _mm_madd_epi16(xmm4,coeffs->cG_Cb_cG_Cr);
     xmm5 = _mm_srai_epi32(xmm5,15);
     xmm4 = _mm_srai_epi32(xmm4,15);
     xmm5 = _mm_packs_epi32(xmm5,xmm7);
     xmm4 = _mm_packs_epi32(xmm4,xmm7);
     xmm5 = _mm_unpacklo_epi64(xmm4,xmm5);
     xmm5 = _mm_add_epi16(xmm5,xmm0);                                               // G (10bit)
-    xmm1 = _mm_madd_epi16(xmm1,*(const __m128i *)(coeffs + ofs_cB_Cb));
-    xmm3 = _mm_madd_epi16(xmm3,*(const __m128i *)(coeffs + ofs_cB_Cb));
+    xmm1 = _mm_madd_epi16(xmm1,coeffs->cB_Cb);
+    xmm3 = _mm_madd_epi16(xmm3,coeffs->cB_Cb);
     xmm1 = _mm_srai_epi32(xmm1,15);
     xmm3 = _mm_srai_epi32(xmm3,15);
     xmm1 = _mm_packs_epi32(xmm1,xmm7);
@@ -397,7 +376,7 @@ template<int incsp, int outcsp, int left_edge, int right_edge, int rgb_limit, in
     xmm6 = _mm_srai_epi16(xmm6,2);
     xmm5 = _mm_srai_epi16(xmm5,2);
     xmm1 = _mm_srai_epi16(xmm1,2);
-    xmm2 = _mm_load_si128((const __m128i *)(coeffs + ofs_xFFFFFFFF_FFFFFFFF));
+    xmm2 = _mm_cmpeq_epi8(xmm2,xmm2);                                              // 0xffffffff,0xffffffff,0xffffffff,0xffffffff
     xmm6 = _mm_packus_epi16(xmm6,xmm7);                                            // R (lower 8bytes,8bit) * 8
     xmm5 = _mm_packus_epi16(xmm5,xmm7);                                            // G (lower 8bytes,8bit) * 8
     xmm1 = _mm_packus_epi16(xmm1,xmm7);                                            // B (lower 8bytes,8bit) * 8
@@ -408,8 +387,8 @@ template<int incsp, int outcsp, int left_edge, int right_edge, int rgb_limit, in
     xmm2 = _mm_unpacklo_epi16(xmm2,xmm6);                                          // 0xff,RGB * 4 (line 1)
 
     if (rgb_limit) {
-        xmm6 = _mm_load_si128((const __m128i *)(coeffs + ofs_rgb_limit_low));
-        xmm4 = _mm_load_si128((const __m128i *)(coeffs + ofs_rgb_limit_high));
+        xmm6 = coeffs->rgb_limit_low;
+        xmm4 = coeffs->rgb_limit_high;
         xmm1 = _mm_max_epu8(xmm1,xmm6);
         xmm1 = _mm_min_epu8(xmm1,xmm4);
         xmm2 = _mm_max_epu8(xmm2,xmm6);
@@ -612,7 +591,7 @@ template <int incsp, int outcsp, int rgb_limit, int aligned> void TffdshowConver
               stride_t stride_dst,
               int starty,
               int endy,
-              const unsigned char* const coeffs)
+              const Tcoeffs *coeffs)
 {
     int endx = dx - 4;
     const uint8_t *srcYln = srcY;
@@ -691,12 +670,12 @@ template <int incsp, int outcsp, int rgb_limit, int aligned> void TffdshowConver
 
 TffdshowConverters::TffdshowConverters(int thread_count) : m_thread_count((thread_count > 0 && thread_count <= MAX_THREADS) ? thread_count : 1),threadpool(m_thread_count)
 {
-    m_coeffs = (uint8_t *)aligned_malloc(256);
+    m_coeffs = new Tcoeffs;
 }
 
 TffdshowConverters::~TffdshowConverters()
 {
-    aligned_free(m_coeffs);
+    delete m_coeffs;
 }
 
 #if defined(_MSC_VER) || defined(__INTEL_COMPILER)

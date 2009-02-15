@@ -87,22 +87,21 @@ public:
  ~TffdshowConverters();
 
 private:
- uint8_t *m_coeffs;
  int m_incsp, m_outcsp;
  int m_thread_count;
  bool m_rgb_limit;
  boost::threadpool::pool threadpool;
-   static const int ofs_Ysub=0;
-   static const int ofs_128mul16=16;
-   static const int ofs_rgb_limit_low=32;
-   static const int ofs_rgb_limit_high=48;
-   static const int ofs_xFF000000_FF000000=64;
-   static const int ofs_xFFFFFFFF_FFFFFFFF=80;
-   static const int ofs_rgb_add=96;
-   static const int ofs_cy=112;
-   static const int ofs_cR_Cr=128;
-   static const int ofs_cG_Cb_cG_Cr=144;
-   static const int ofs_cB_Cb=160;
+ struct Tcoeffs {
+    __m128i Ysub;
+    __m128i CbCr_center;
+    __m128i rgb_limit_low;
+    __m128i rgb_limit_high;
+    __m128i rgb_add;
+    __m128i cy;
+    __m128i cR_Cr;
+    __m128i cG_Cb_cG_Cr;
+    __m128i cB_Cb;
+ } *m_coeffs;
 
  template<int incsp, int outcsp, int left_edge, int right_edge, int rgb_limit, int aligned> static __forceinline 
   void convert_a_unit(const unsigned char* &srcY,
@@ -112,7 +111,7 @@ private:
                       const stride_t stride_Y,
                       const stride_t stride_CbCr,
                       const stride_t stride_dst,
-                      const unsigned char* const coeffs);
+                      const Tcoeffs *coeffs);
 
  // translate stack arguments to template arguments.
  template <int rgb_limit> void convert_translate_incsp(
@@ -171,7 +170,7 @@ private:
               stride_t stride_dst,
               int starty,
               int endy,
-              const unsigned char* const coeffs);
+              const Tcoeffs *coeffs);
 
  template<int incsp, int outcsp, int rgb_limit, int aligned> struct Tfunc_obj {
      private:
@@ -186,7 +185,7 @@ private:
         stride_t stride_dst;
         int starty;
         int endy;
-        const unsigned char* const coeffs;
+        const Tcoeffs *coeffs;
      public:
         void operator()(void) {
             convert_main_loop<incsp,outcsp,rgb_limit,aligned>(srcY,srcCb,srcCr,dst,dx,dy,stride_Y,stride_CbCr,stride_dst,starty,endy,coeffs);
@@ -202,7 +201,7 @@ private:
                   stride_t Istride_dst,
                   int Istarty,
                   int Iendy,
-                  const unsigned char* const Icoeffs) :
+                  const Tcoeffs *Icoeffs) :
             srcY(IsrcY),
             srcCb(IsrcCb),
             srcCr(IsrcCr),
@@ -217,7 +216,6 @@ private:
             coeffs(Icoeffs)
         {}
  };
-
 };
 
 #endif // _FFDSHOW_CONVERTERS_H_
