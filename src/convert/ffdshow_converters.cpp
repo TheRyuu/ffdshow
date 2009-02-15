@@ -17,6 +17,7 @@
  */
 
 #include "stdafx.h"
+#include <malloc.h>
 #include "ffdshow_converters.h"
 #include "simd_common.h" // __align16(t,v)
 
@@ -670,12 +671,12 @@ template <int incsp, int outcsp, int rgb_limit, int aligned> void TffdshowConver
 
 TffdshowConverters::TffdshowConverters(int thread_count) : m_thread_count((thread_count > 0 && thread_count <= MAX_THREADS) ? thread_count : 1),threadpool(m_thread_count)
 {
-    m_coeffs = new Tcoeffs;
+    m_coeffs = (Tcoeffs*)_aligned_malloc(sizeof(Tcoeffs),16);
 }
 
 TffdshowConverters::~TffdshowConverters()
 {
-    delete m_coeffs;
+    _aligned_free(m_coeffs);
 }
 
 #if defined(_MSC_VER) || defined(__INTEL_COMPILER)
