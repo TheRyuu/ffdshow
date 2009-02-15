@@ -172,6 +172,10 @@ STDMETHODIMP TffdshowDecAudioInputPin::Receive(IMediaSample* pIn)
  buf.append(src,srclen);
  buf.reserve(buf.size()+32);
 
+ if (srclen == 0) 
+	 // Skip parsing if there is nothing to parse
+	 return audio->decode(buf);
+
  CodecID newCodecId=codecId;
  // Before sending data to the decoder, we parse it
  switch(codecId)
@@ -254,7 +258,6 @@ STDMETHODIMP TffdshowDecAudioInputPin::Receive(IMediaSample* pIn)
 	return audio->decode(buf);
 	break;
  }
- return audio->decode(buf);
 }
 
 STDMETHODIMP TffdshowDecAudioInputPin::deliverDecodedSample(void *buf,size_t numsamples,const TsampleFormat &fmt,float postgain)
