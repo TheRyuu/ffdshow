@@ -26,17 +26,10 @@ SRCS_C+=\
 		mp3lib/dct36_k7.c
 endif
 
-ifneq ($(64BIT),yes)
+ifeq ($(64BIT),yes)
+    CFLAGS+=-DARCH_X86_64
+else
     CFLAGS+=-DARCH_X86_32
-else
-    CFLAGS+=-DHAVE_FAST_64BIT
-endif
-
-ifeq ($(FFDEBUG),yes)
-    SRCS_C+= ../ffdebug.c 
-    CFLAGS+= -DFFDEBUG=1
-else
-    CFLAGS+= -DFFDEBUG=0
 endif
 
 SLIB=../../bin/libmplayer.dll

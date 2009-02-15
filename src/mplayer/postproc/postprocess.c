@@ -85,6 +85,7 @@ try to unroll inner for(x=0 ... loop to avoid these damn if(x ... checks
 #endif
 #include "postprocess.h"
 #include "postprocess_internal.h"
+#include "cpudetect.h"
 
 #include "mangle.h" //FIXME should be supressed
 

@@ -44,7 +44,20 @@
  #define __align32(t,v) __declspec(align(32)) t v
 #endif
 
+#define AV_TOSTRING(s) #s
+#define STR(s)         AV_TOSTRING(s) //AV_STRINGIFY is too long
+
 #define MAX_FILTER_SIZE 256
+
+#ifdef ARCH_X86_64
+  #define APCK_PTR2 8
+  #define APCK_COEF 16
+  #define APCK_SIZE 24
+#else
+  #define APCK_PTR2 4
+  #define APCK_COEF 8
+  #define APCK_SIZE 16
+#endif
 
 typedef int (*SwsFunc)(struct SwsContext *context, uint8_t* src[], stride_t srcStride[], int srcSliceY,
              int srcSliceH, uint8_t* dst[], stride_t dstStride[]);
@@ -54,11 +67,11 @@ struct SwsContext;
 typedef struct SwsThreadParam{
 	struct SwsContext *c;
 	uint8_t **src;
-	int* srcStride;
+	stride_t* srcStride;
 	int srcSliceY;
 	int srcSliceH;
 	uint8_t **dst;
-	int* dstStride;
+	stride_t* dstStride;
 	int dstYstart;
 	int dstYend;
 } SwsThreadParam;

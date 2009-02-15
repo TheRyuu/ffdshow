@@ -5,11 +5,7 @@
    byte first (like Motorola and SPARC, unlike Intel and VAX).  */
 #undef WORDS_BIGENDIAN
 
-#ifndef WIN64
-#ifdef __GNUC__
-#define ARCH_X86 1
-#endif
-#endif
+#define CONFIG_GPL 1
 
 /* Define this to any prefered value from 386 up to infinity with step 100 */
 #define __CPU__ 686
@@ -26,21 +22,27 @@
 
 #define ASMALIGN(ZEROBITS) ".align 1<<" #ZEROBITS "\n\t"
 
-#ifndef WIN64
- #ifdef __GNUC__
-#define HAVE_AMD3DNOW 1
-#define HAVE_3DNOW 1
-#define HAVE_3DNOWEX 1
-#define HAVE_MMX 1
-#define HAVE_MMX2 1
-#define HAVE_SSE 1
-#define HAVE_SSE2 1
+#ifdef __GNUC__
+  /* Extension defines */
+  #define HAVE_3DNOW 1    // only define if you have 3DNOW (AMD k6-2, AMD Athlon, iDT WinChip, etc.)
+  #define HAVE_3DNOWEX 1  // only define if you have 3DNOWEX (AMD Athlon, etc.)
+  #define HAVE_MMX 1      // only define if you have MMX (newer x86 chips, not P54C/PPro)
+  #define HAVE_MMX2 1     // only define if you have MMX2 (Athlon/PIII/4/CelII)
+  #define HAVE_SSE 1      // only define if you have SSE (Intel Pentium III/4 or Celeron II)
+  #define HAVE_SSE2 1     // only define if you have SSE2 (Intel Pentium 4)
+  #define NAMED_ASM_ARGS 1 // GCC 3.1 or later
 
-#define HAVE_EBP_AVAILABLE 1
-#define HAVE_EBX_AVAILABLE 1
+  #define ARCH_X86 1
 
-#define NAMED_ASM_ARGS 1 // GCC 3.1 or later
- #endif
+  #ifdef ARCH_X86_64
+    #define HAVE_FAST_64BIT 1
+  #else
+    #define ARCH_X86_32 1
+  #endif
+
+ #define HAVE_EBP_AVAILABLE 1
+ #define HAVE_EBX_AVAILABLE 1
+
 #endif
 
 #ifndef __GNUC__
@@ -50,8 +52,8 @@
  #endif
  #pragma warning (disable:4002)
  #define attribute_used
- #include <malloc.h>
  #define always_inline __forceinline
+ #include <malloc.h>
  #define malloc(x) _aligned_malloc(x,16)
  #define memalign(a,b) _aligned_malloc(b,a)
  #define free(x) _aligned_free(x)

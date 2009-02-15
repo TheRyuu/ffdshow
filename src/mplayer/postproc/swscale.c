@@ -66,17 +66,18 @@ untested special converters
 #include <string.h>
 #include <math.h>
 #include <stdio.h>
+#include "ffdebug.h"
 #include "config.h"
 #include "mangle.h"
 #include <assert.h>
 #include "swscale.h"
 #include "swscale_internal.h"
 #include "libavutil/x86_cpu.h"
+#include "libavutil/mem.h"
 #include "bswap.h"
 #include "ffImgfmt.h"
 #include "rgb2rgb.h"
 #include "libvo/fastmemcpy.h"
-#include "ffdebug.h"
 
 #undef MOVNTQ
 #undef PAVGB
@@ -912,7 +913,8 @@ static double getSplineCoeff(double a, double b, double c, double d, double dist
 }
 
 static inline int initFilter(int16_t **outFilter, int16_t **filterPos, int *outFilterSize, int xInc,
-			      int srcW, int dstW, int filterAlign, int one, SwsMethodParams *params,int cpuflags, int debugflags,
+			      int srcW, int dstW, int filterAlign, int one, SwsMethodParams *params,
+			      int subsampling,int cpuflags, int debugflags,
 			      SwsVector *srcFilter, SwsVector *dstFilter)
 {
 	int i;
@@ -1200,7 +1202,7 @@ static inline int initFilter(int16_t **outFilter, int16_t **filterPos, int *outF
 	filterSize= (minFilterSize +(filterAlign-1)) & (~(filterAlign-1));
 	ASSERT(filterSize > 0)
 	filter= av_malloc(filterSize*dstW*sizeof(double));
-        if(filterSize >= MAX_FILTER_SIZE)
+        if (filterSize >= MAX_FILTER_SIZE*16/((subsampling & SWS_ACCURATE_RND) ? APCK_SIZE : 16) || !filter)
                 return -1;
 	*outFilterSize= filterSize;
 
@@ -1294,14 +1296,14 @@ static inline int initFilter(int16_t **outFilter, int16_t **filterPos, int *outF
 static void initMMX2HScaler(int dstW, int xInc, uint8_t *funnyCode, int16_t *filter, int32_t *filterPos, int numSplits)
 {
 	uint8_t *fragmentA;
-	long imm8OfPShufW1A;
-	long imm8OfPShufW2A;
-	long fragmentLengthA;
+	stride_t imm8OfPShufW1A;
+	stride_t imm8OfPShufW2A;
+	stride_t fragmentLengthA;
 	uint8_t *fragmentB;
-	long imm8OfPShufW1B;
-	long imm8OfPShufW2B;
-	long fragmentLengthB;
-	int fragmentPos;
+	stride_t imm8OfPShufW1B;
+	stride_t imm8OfPShufW2B;
+	stride_t fragmentLengthB;
+	stride_t fragmentPos;
 
 	int xpos, i;
 
@@ -2267,11 +2269,11 @@ SwsContext *sws_getContextEx(int srcW, int srcH, int origSrcFormat, int dstW, in
 
 		initFilter(&c->hLumFilter, &c->hLumFilterPos, &c->hLumFilterSize, c->lumXInc,
 				 srcW      ,       dstW, filterAlign, 1<<14,
-				 /*(flags&SWS_BICUBLIN) ? (flags|SWS_BICUBIC)  : flags*/&params->methodLuma,params->cpu,params->debug,
+				 /*(flags&SWS_BICUBLIN) ? (flags|SWS_BICUBIC)  : flags*/&params->methodLuma,params->subsampling,params->cpu,params->debug,
 				 srcFilter->lumH, dstFilter->lumH);
 		initFilter(&c->hChrFilter, &c->hChrFilterPos, &c->hChrFilterSize, c->chrXInc,
 				 c->chrSrcW, c->chrDstW, filterAlign, 1<<14,
-				 /*(flags&SWS_BICUBLIN) ? (flags|SWS_BILINEAR) : flags*/&params->methodChroma,params->cpu,params->debug,
+				 /*(flags&SWS_BICUBLIN) ? (flags|SWS_BILINEAR) : flags*/&params->methodChroma,params->subsampling,params->cpu,params->debug,
 				 srcFilter->chrH, dstFilter->chrH);
 
 #if defined(ARCH_X86) || defined(ARCH_X86_64)
@@ -2317,11 +2319,11 @@ SwsContext *sws_getContextEx(int srcW, int srcH, int origSrcFormat, int dstW, in
 
 		initFilter(&c->vLumFilter, &c->vLumFilterPos, &c->vLumFilterSize, c->lumYInc,
 				srcH      ,        dstH, filterAlign, (1<<12)-4,
-			/*(flags&SWS_BICUBLIN) ? (flags|SWS_BICUBIC)  : flags*/&params->methodLuma,params->cpu,params->debug,
+			/*(flags&SWS_BICUBLIN) ? (flags|SWS_BICUBIC)  : flags*/&params->methodLuma,params->subsampling,params->cpu,params->debug,
 				srcFilter->lumV, dstFilter->lumV);
 		initFilter(&c->vChrFilter, &c->vChrFilterPos, &c->vChrFilterSize, c->chrYInc,
 				c->chrSrcH, c->chrDstH, filterAlign, (1<<12)-4,
-			/*(flags&SWS_BICUBLIN) ? (flags|SWS_BILINEAR) : flags*/&params->methodChroma,params->cpu,params->debug,
+			/*(flags&SWS_BICUBLIN) ? (flags|SWS_BILINEAR) : flags*/&params->methodChroma,params->subsampling,params->cpu,params->debug,
 				srcFilter->chrV, dstFilter->chrV);
 
 #ifdef HAVE_ALTIVEC

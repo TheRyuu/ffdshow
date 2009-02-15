@@ -174,7 +174,7 @@ asm volatile(
 		"movd %%mm4, %1					\n\t"
 
 		: "=r" (numEq), "=r" (dcOk)
-		: "r" (src), "r" ((long)stride), "m" (c->pQPb)
+		: "r" (src), "r" ((stride_t)stride), "m" (c->pQPb)
 		: "%"REG_a
 		);
 
@@ -319,7 +319,7 @@ static inline void RENAME(doVertLowPass)(uint8_t *src, stride_t stride, PPContex
 		"sub %1, %0					\n\t"
 
 		:
-		: "r" (src), "r" ((long)stride), "m" (c->pQPb)
+		: "r" (src), "r" ((stride_t)stride), "m" (c->pQPb)
 		: "%"REG_a, "%"REG_c
 	);
 #else
@@ -439,7 +439,7 @@ static inline void RENAME(vertRK1Filter)(uint8_t *src, int stride, int QP)
 		"movq %%mm2, (%%"REG_c", %1)			\n\t"
 
 		:
-		: "r" (src), "r" ((long)stride)
+		: "r" (src), "r" ((stride_t)stride)
 		: "%"REG_a, "%"REG_c
 	);
 #else
@@ -564,7 +564,7 @@ static inline void RENAME(vertX1Filter)(uint8_t *src, stride_t stride, PPContext
 		"movq %%mm0, (%%"REG_c", %1, 2)			\n\t" // line 7
 
 		:
-		: "r" (src), "r" ((long)stride), "m" (co->pQPb)
+		: "r" (src), "r" ((stride_t)stride), "m" (co->pQPb)
 		: "%"REG_a, "%"REG_c
 	);
 #else
@@ -832,7 +832,7 @@ static inline void RENAME(doVertDefFilter)(uint8_t src[], stride_t stride, PPCon
 		"movq %%mm2, (%0, %1, 4)			\n\t"
 
 		:
-		: "r" (src), "r" ((long)stride), "m" (c->pQPb)
+		: "r" (src), "r" ((stride_t)stride), "m" (c->pQPb)
 		: "%"REG_a, "%"REG_c
 	);
 
@@ -1129,7 +1129,7 @@ src-=8;
 		"movq %%mm0, (%0, %1)				\n\t"
 
 		: "+r" (src)
-		: "r" ((long)stride), "m" (c->pQPb)
+		: "r" ((stride_t)stride), "m" (c->pQPb)
 		: "%"REG_a, "%"REG_c
 	);
 #else
@@ -1403,7 +1403,7 @@ DERING_CORE((%%REGd, %1, 2),(%0, %1, 8) ,%%mm0,%%mm2,%%mm4,%%mm1,%%mm3,%%mm5,%%m
 DERING_CORE((%0, %1, 8),(%%REGd, %1, 4) ,%%mm2,%%mm4,%%mm0,%%mm3,%%mm5,%%mm1,%%mm6,%%mm7)
 
 		"1:			\n\t"
-		: : "r" (src), "r" ((long)stride), "m" (c->pQPb), "m"(c->pQPb2)
+		: : "r" (src), "r" ((stride_t)stride), "m" (c->pQPb), "m"(c->pQPb2)
 		: "%"REG_a, "%"REG_d, "%"REG_c
 	);
 #else
@@ -1566,7 +1566,7 @@ static inline void RENAME(deInterlaceInterpolateLinear)(uint8_t src[], stride_t 
 		PAVGB(%%mm0, %%mm1)
 		"movq %%mm1, (%%"REG_c", %1, 2)			\n\t"
 
-		: : "r" (src), "r" ((long)stride)
+		: : "r" (src), "r" ((stride_t)stride)
 		: "%"REG_a, "%"REG_c
 	);
 #else
@@ -1636,7 +1636,7 @@ DEINT_CUBIC((%%REGa, %1), (%0, %1, 4), (%%REGd), (%%REGd, %1), (%0, %1, 8))
 DEINT_CUBIC((%0, %1, 4), (%%REGd, %1), (%%REGd, %1, 2), (%0, %1, 8), (%%REGc))
 DEINT_CUBIC((%%REGd, %1), (%0, %1, 8), (%%REGd, %1, 4), (%%REGc), (%%REGc, %1, 2))
 
-		: : "r" (src), "r" ((long)stride)
+		: : "r" (src), "r" ((stride_t)stride)
 		: "%"REG_a, "%"REG_d, "%"REG_c
 	);
 #else
@@ -1708,7 +1708,7 @@ DEINT_FF((%0, %1, 4),  (%%REGd)       , (%%REGd, %1), (%%REGd, %1, 2))
 DEINT_FF((%%REGd, %1), (%%REGd, %1, 2), (%0, %1, 8),  (%%REGd, %1, 4))
 
 		"movq %%mm0, (%2)				\n\t"
-		: : "r" (src), "r" ((long)stride), "r"(tmp)
+		: : "r" (src), "r" ((stride_t)stride), "r"(tmp)
 		: "%"REG_a, "%"REG_d
 	);
 #else
@@ -1799,7 +1799,7 @@ DEINT_L5(%%mm1, %%mm0, (%%REGd, %1, 2), (%0, %1, 8)    , (%%REGd, %1, 4))
 
 		"movq %%mm0, (%2)				\n\t"
 		"movq %%mm1, (%3)				\n\t"
-		: : "r" (src), "r" ((long)stride), "r"(tmp), "r"(tmp2)
+		: : "r" (src), "r" ((stride_t)stride), "r"(tmp), "r"(tmp2)
 		: "%"REG_a, "%"REG_d
 	);
 #else
@@ -1888,7 +1888,7 @@ static inline void RENAME(deInterlaceBlendLinear)(uint8_t src[], stride_t stride
 		"movq %%mm2, (%%"REG_d", %1, 2)			\n\t"
 		"movq %%mm1, (%2)				\n\t"
 
-		: : "r" (src), "r" ((long)stride), "r" (tmp)
+		: : "r" (src), "r" ((stride_t)stride), "r" (tmp)
 		: "%"REG_a, "%"REG_d
 	);
 #else
@@ -1992,7 +1992,7 @@ static inline void RENAME(deInterlaceMedian)(uint8_t src[], stride_t stride)
 		"movq %%mm2, (%%"REG_d", %1, 2)			\n\t"
 
 
-		: : "r" (src), "r" ((long)stride)
+		: : "r" (src), "r" ((stride_t)stride)
 		: "%"REG_a, "%"REG_d
 	);
 
@@ -2034,7 +2034,7 @@ MEDIAN((%%REGa, %1), (%%REGa, %1, 2), (%0, %1, 4))
 MEDIAN((%0, %1, 4), (%%REGd), (%%REGd, %1))
 MEDIAN((%%REGd, %1), (%%REGd, %1, 2), (%0, %1, 8))
 
-		: : "r" (src), "r" ((long)stride)
+		: : "r" (src), "r" ((stride_t)stride)
 		: "%"REG_a, "%"REG_d
 	);
 #endif // MMX
@@ -2143,7 +2143,7 @@ static inline void RENAME(transpose1)(uint8_t *dst1, uint8_t *dst2, uint8_t *src
 		"movd %%mm1, 116(%3)		\n\t"
 
 
-	:: "r" (src), "r" ((long)srcStride), "r" (dst1), "r" (dst2)
+	:: "r" (src), "r" ((stride_t)srcStride), "r" (dst1), "r" (dst2)
 	: "%"REG_a
 	);
 }
@@ -2223,7 +2223,7 @@ static inline void RENAME(transpose2)(uint8_t *dst, int dstStride, uint8_t *src)
 		"psrlq $32, %%mm1		\n\t"
 		"movd %%mm1, 4(%%"REG_d", %1, 2)	\n\t"
 
-	:: "r" (dst), "r" ((long)dstStride), "r" (src)
+	:: "r" (dst), "r" ((stride_t)dstStride), "r" (src)
 	: "%"REG_a, "%"REG_d
 	);
 }
@@ -2526,7 +2526,7 @@ L2_DIFF_CORE((%0, %%REGc), (%1, %%REGc))
 
 		"4:						\n\t"
 
-		:: "r" (src), "r" (tempBlured), "r"((long)stride), "m" (tempBluredPast)
+		:: "r" (src), "r" (tempBlured), "r"((stride_t)stride), "m" (tempBluredPast)
 		: "%"REG_a, "%"REG_d, "%"REG_c, "memory"
 		);
 //printf("%d\n", test);
@@ -2747,14 +2747,14 @@ asm volatile(
 		"movq %%mm6, %0					\n\t"
 
 		: "=m" (eq_mask), "=m" (dc_mask)
-		: "r" (src), "r" ((long)step), "m" (c->pQPb), "m"(c->ppMode.flatnessThreshold)
+		: "r" (src), "r" ((stride_t)step), "m" (c->pQPb), "m"(c->ppMode.flatnessThreshold)
 		: "%"REG_a
 		);
 
 	both_masks = dc_mask & eq_mask;
 
 	if(both_masks){
-		long offset= -8*step;
+		stride_t offset= -8*step;
 		int64_t *temp_sums= sums;
 
 		asm volatile(
@@ -2891,7 +2891,7 @@ asm volatile(
 		"mov %4, %0					\n\t" //FIXME
 
 		: "+&r"(src)
-		: "r" ((long)step), "m" (c->pQPb), "r"(sums), "g"(src)
+		: "r" ((stride_t)step), "m" (c->pQPb), "r"(sums), "g"(src)
 		);
 
 		src+= step; // src points to begin of the 8x8 Block
@@ -2928,7 +2928,7 @@ asm volatile(
 		" js 1b						\n\t"
 
 		: "+r"(offset), "+r"(temp_sums)
-		: "r" ((long)step), "r"(src - offset), "m"(both_masks)
+		: "r" ((stride_t)step), "r"(src - offset), "m"(both_masks)
 		);
 	}else
 		src+= step; // src points to begin of the 8x8 Block
@@ -3163,7 +3163,7 @@ asm volatile(
 		"movq %%mm0, (%0, %1)				\n\t"
 
 		: "+r" (temp_src)
-		: "r" ((long)step), "m" (c->pQPb), "m"(eq_mask)
+		: "r" ((stride_t)step), "m" (c->pQPb), "m"(eq_mask)
 		: "%"REG_a, "%"REG_c
 		);
 	}
@@ -3265,8 +3265,8 @@ SCALED_CPY((%%REGa, %4), (%%REGa, %4, 2), (%%REGd, %5), (%%REGd, %5, 2))
 						: "0" (packedOffsetAndScale),
 						"r"(src),
 						"r"(dst),
-						"r" ((long)srcStride),
-						"r" ((long)dstStride)
+						"r" ((stride_t)srcStride),
+						"r" ((stride_t)dstStride)
 						: "%"REG_d
 					);
 #else
@@ -3300,8 +3300,8 @@ SIMPLE_CPY((%%REGa, %2), (%%REGa, %2, 2), (%%REGd, %3), (%%REGd, %3, 2))
 
 						: : "r" (src),
 						"r" (dst),
-						"r" ((long)srcStride),
-						"r" ((long)dstStride)
+						"r" ((stride_t)srcStride),
+						"r" ((stride_t)dstStride)
 						: "%"REG_a, "%"REG_d
 					);
 #else
@@ -3325,7 +3325,7 @@ static inline void RENAME(duplicate)(uint8_t src[], stride_t stride)
 		"movq %%mm0, (%0, %1)		\n\t"
 		"movq %%mm0, (%0, %1, 2)	\n\t"
 		: "+r" (src)
-		: "r" ((long)-stride)
+		: "r" ((stride_t)-stride)
 	);
 #else
 	int i;
@@ -3354,7 +3354,7 @@ static void RENAME(postProcess)(uint8_t src[], stride_t srcStride, uint8_t dst[]
 	int black=0, white=255; // blackest black and whitest white in the picture
 	int QPCorrecture= 256*256;
 
-	int copyAhead;
+	stride_t copyAhead;
 #ifdef HAVE_MMX
 	int i;
 #endif
@@ -3490,8 +3490,8 @@ static void RENAME(postProcess)(uint8_t src[], stride_t srcStride, uint8_t dst[]
 				"add %3, %%"REG_d"		\n\t"
 				"prefetchnta 32(%%"REG_a", %0)	\n\t"
 				"prefetcht0 32(%%"REG_d", %2)	\n\t"
-			:: "r" (srcBlock), "r" ((long)srcStride), "r" (dstBlock), "r" ((long)dstStride),
-			"g" ((long)x), "g" ((long)copyAhead)
+			:: "r" (srcBlock), "r" ((stride_t)srcStride), "r" (dstBlock), "r" ((stride_t)dstStride),
+			"g" ((stride_t)x), "g" (copyAhead)
 			: "%"REG_a, "%"REG_d
 			);
 
@@ -3637,8 +3637,8 @@ static void RENAME(postProcess)(uint8_t src[], stride_t srcStride, uint8_t dst[]
 				"add %3, %%"REG_d"		\n\t"
 				"prefetchnta 32(%%"REG_a", %0)	\n\t"
 				"prefetcht0 32(%%"REG_d", %2)	\n\t"
-			:: "r" (srcBlock), "r" ((long)srcStride), "r" (dstBlock), "r" ((long)dstStride),
-			 "g" ((long)x), "g" ((long)copyAhead)
+			:: "r" (srcBlock), "r" ((stride_t)srcStride), "r" (dstBlock), "r" ((stride_t)dstStride),
+			 "g" ((stride_t)x), "g" ((long)copyAhead)
 			: "%"REG_a, "%"REG_d
 			);
 

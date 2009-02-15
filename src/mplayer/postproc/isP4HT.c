@@ -6,6 +6,9 @@
 // int IsCPUID() call to see if CPUID is supported
 int IsCPUID(void)
 {
+#ifdef WIN64
+    return 0;
+#else
     long result;
     result= 1;
 #ifdef ARCH_X86 // GCC
@@ -26,29 +29,9 @@ int IsCPUID(void)
         : "+a" (result)
         :: "%ecx","%edx"
     );
-#ifndef _WIN64
-#elif defined(_WIN32)
-    _asm{
-        push    ecx
-        pushfd
-        pop     eax
-        mov     ecx, eax
-        xor     eax, 0x200000
-        push    eax
-        popfd
-        pushfd
-        pop     eax
-        cmp     eax, ecx
-        jnz     CPUIDok
-        mov     result, 0
-CPUIDok:
-        pop     ecx
-    }
-#else  // _WINDOWS
 #endif
-    result= 0;
-#endif // _WINDOWS
     return result;
+#endif
 }
 
 int isP4HT_I(int family, int model, const char *v_name) // return true if P4HT, P4EE or P4
@@ -60,6 +43,9 @@ int isP4HT_I(int family, int model, const char *v_name) // return true if P4HT, 
 
 int isP4HT (void)
 {
+#ifdef WIN64
+    return 0;
+#else
     long dwStandard = 0;
     long dwBrandIndex = 0;
     long dwFeature = 0;
@@ -146,4 +132,5 @@ int isP4HT (void)
         return 0;
 
     return isP4HT_I(family, model, v_name);
+#endif
 }

@@ -311,7 +311,7 @@ static inline void * RENAME(fast_memcpy)(void * to, const void * from, size_t le
 			"cmp %4, %2		\n\t"
 			" jae 1b		\n\t"
 				: "+r" (from), "+r" (to), "+r" (i)
-				: "r" ((long)BLOCK_SIZE), "i" (BLOCK_SIZE/64), "i" ((long)CONFUSION_FACTOR)
+				: "r" ((stride_t)BLOCK_SIZE), "i" (BLOCK_SIZE/64), "i" ((long)CONFUSION_FACTOR)
 				: "%"REG_a, "%ebx"
 		);
 

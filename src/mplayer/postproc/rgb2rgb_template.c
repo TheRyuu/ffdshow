@@ -1457,7 +1457,7 @@ static inline void RENAME(yuvPlanartoyuy2)(const uint8_t *ysrc, const uint8_t *u
 	stride_t lumStride, stride_t chromStride, stride_t dstStride, long vertLumPerChroma)
 {
 	long y;
-	const long chromWidth= width>>1;
+	const stride_t chromWidth= width>>1;
 	for(y=0; y<height; y++)
 	{
 #ifdef HAVE_MMX
@@ -1610,7 +1610,7 @@ static inline void RENAME(yuvPlanartouyvy)(const uint8_t *ysrc, const uint8_t *u
 	stride_t lumStride, stride_t chromStride, stride_t dstStride, stride_t vertLumPerChroma)
 {
 	long y;
-	const long chromWidth= width>>1;
+	const stride_t chromWidth= width>>1;
 	for(y=0; y<height; y++)
 	{
 #ifdef HAVE_MMX
@@ -1704,7 +1704,7 @@ static inline void RENAME(yuvPlanartovyuy)(const uint8_t *ysrc, const uint8_t *u
 	stride_t lumStride, stride_t chromStride, stride_t dstStride, stride_t vertLumPerChroma)
 {
 	long y;
-	const long chromWidth= width>>1;
+	const stride_t chromWidth= width>>1;
 	for(y=0; y<height; y++)
 	{
 		int i, *idst = (int32_t *) dst;
@@ -1731,7 +1731,7 @@ static inline void RENAME(yuvPlanartoyvyu)(const uint8_t *ysrc, const uint8_t *u
 	stride_t lumStride, stride_t chromStride, stride_t dstStride, stride_t vertLumPerChroma)
 {
 	long y;
-	const long chromWidth= width>>1;
+	const stride_t chromWidth= width>>1;
 	for(y=0; y<height; y++)
 	{
 		int i, *idst = (int32_t *) dst;
@@ -1803,7 +1803,7 @@ static inline void RENAME(yuy2toyv12)(const uint8_t *src, uint8_t *ydst, uint8_t
 	stride_t lumStride, stride_t chromStride, stride_t srcStride)
 {
 	long y;
-	const long chromWidth= width>>1;
+	const stride_t chromWidth= width>>1;
 	for(y=0; y<height; y+=2)
 	{
 #ifdef HAVE_MMX
@@ -2041,7 +2041,7 @@ static inline void RENAME(uyvytoyv12)(const uint8_t *src, uint8_t *ydst, uint8_t
 	stride_t lumStride, stride_t chromStride, stride_t srcStride)
 {
 	long y;
-	const long chromWidth= width>>1;
+	const stride_t chromWidth= width>>1;
 	for(y=0; y<height; y+=2)
 	{
 #ifdef HAVE_MMX
@@ -2163,11 +2163,12 @@ asm volatile(   EMMS" \n\t"
  * chrominance data is only taken from every secound line others are ignored in the C version FIXME write HQ version
  */
 static inline void RENAME(rgb24toyv12)(const uint8_t *src, uint8_t *ydst, uint8_t *udst, uint8_t *vdst,
-	long width, long height,
+	long width0, long height,
 	stride_t lumStride, stride_t chromStride, stride_t srcStride)
 {
 	long y;
-	const long chromWidth= width>>1;
+	const stride_t chromWidth= width0>>1;
+	const stride_t width = width0;
 #ifdef HAVE_MMX
 	for(y=0; y<height-2; y+=2)
 	{
@@ -2459,9 +2460,10 @@ static inline void RENAME(rgb24toyv12)(const uint8_t *src, uint8_t *ydst, uint8_
 }
 
 void RENAME(interleaveBytes)(uint8_t *src1, uint8_t *src2, uint8_t *dest,
-			    long width, long height, stride_t src1Stride,
+			    long width0, long height, stride_t src1Stride,
 			    stride_t src2Stride, stride_t dstStride){
 	long h;
+        const stride_t width = width0;
 
 	for(h=0; h < height; h++)
 	{
@@ -2648,7 +2650,7 @@ static inline void RENAME(yvu9_to_yuy2)(const uint8_t *src1, const uint8_t *src2
 			stride_t srcStride1, stride_t srcStride2,
 			stride_t srcStride3, stride_t dstStride)
 {
-    long y,x,w,h;
+    stride_t y,x,w,h;
     w=width/2; h=height;
     for(y=0;y<h;y++){
 	const uint8_t* yp=src1+srcStride1*y;

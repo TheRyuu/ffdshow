@@ -10,8 +10,10 @@
 #include <string.h>
 #include <stddef.h>
 #include "../cpudetect.h"
+#include "config.h"
 #include "fastmemcpy.h"
 #undef memcpy
+#include "ffImgfmt.h"
 
 #define BLOCK_SIZE 4096
 #define CONFUSION_FACTOR 0

@@ -25,7 +25,7 @@
 #include <math.h>
 
 #include "config.h"
-#include "internal.h"
+#include "libavutil/internal.h"
 #include "cpudetect.h"
 
 #include "mp_msg.h"

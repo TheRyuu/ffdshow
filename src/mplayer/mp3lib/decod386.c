@@ -12,6 +12,18 @@
 
 #include "../config.h"
 
+#ifdef WIN64
+  #undef HAVE_3DNOW
+  #undef HAVE_3DNOWEX
+  #undef HAVE_MMX
+  #undef HAVE_MMX2
+  #undef HAVE_SSE
+  #undef HAVE_SSE2
+  #undef ARCH_X86
+  #undef ARCH_X86_64
+  #undef HAVE_FAST_64BIT
+#endif
+
 #if 0
  /* old WRITE_SAMPLE */
    /* is portable */

@@ -27,7 +27,7 @@
 #include <process.h>
 #include <inttypes.h>
 #include "ffImgfmt.h"
-#include "mem.h"
+#include "libavutil/mem.h"
 #include "vf_yadif.h"
 
 typedef struct ThreadAPIContext{
