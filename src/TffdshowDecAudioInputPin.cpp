@@ -172,10 +172,6 @@ STDMETHODIMP TffdshowDecAudioInputPin::Receive(IMediaSample* pIn)
  buf.append(src,srclen);
  buf.reserve(buf.size()+32);
 
- if (srclen == 0) 
-     // Skip parsing if there is nothing to parse
-     return audio->decode(buf);
-
  CodecID newCodecId=codecId;
  // Before sending data to the decoder, we parse it
  switch(codecId)
@@ -195,7 +191,7 @@ STDMETHODIMP TffdshowDecAudioInputPin::Receive(IMediaSample* pIn)
     // Do not search for DTS in PCM in next frames (otherwise DTS syncword maybe wrongly detected)
     searchdts=false;
 
-    newCodecId=audioParser->parseStream(&*buf.begin(), buf.size(), &newSrcBuffer);
+	newCodecId=audioParser->parseStream(buf.size() ? &buf[0] : NULL, buf.size(), &newSrcBuffer);
     if (newCodecId==CODEC_ID_NONE)
     {
         newSrcBuffer.clear();
@@ -257,6 +253,7 @@ STDMETHODIMP TffdshowDecAudioInputPin::Receive(IMediaSample* pIn)
     return audio->decode(buf);
     break;
  }
+ return audio->decode(buf);
 }
 
 STDMETHODIMP TffdshowDecAudioInputPin::deliverDecodedSample(void *buf,size_t numsamples,const TsampleFormat &fmt,float postgain)
