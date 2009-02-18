@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <wchar.h>
+#include "inttypes.h"
 
 #undef _l
 #ifdef UNICODE
@@ -92,6 +93,7 @@ static __forceinline wchar_t* _strtime(wchar_t *a) {return _wstrtime(a);}
 static __forceinline wchar_t* memchr(wchar_t *a,wchar_t b,size_t c) {return wmemchr(a,b,c);}
 static __forceinline const wchar_t* memchr(const wchar_t *a,wchar_t b,size_t c) {return wmemchr(a,b,c);}
 static __forceinline wchar_t* strpbrk(const wchar_t *a, const wchar_t *b) {return (wchar_t*)wcspbrk(a,b);}
+static __forceinline int64_t _strtoi64(   const wchar_t *nptr, wchar_t **endptr, int base) {return _wcstoi64(nptr,endptr,base);};
 
 template<class Tout> struct text
 // ANSI <--> UNICODE conversion.

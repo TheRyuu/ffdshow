@@ -24,6 +24,7 @@
 #include "TsubtitlesSettings.h"
 #include "Tconfig.h"
 #include "ThtmlColors.h"
+#include "ffglobals.h"
 
 //========================== TtextFixBase =========================
 strings TtextFixBase::getDicts(const Tconfig *cfg)
@@ -736,450 +737,380 @@ template<class tchar> TsubtitleFormat::Twords TsubtitleFormat::processHTML(const
  return words;
 }
 
-template<class tchar> void TsubtitleFormat::Tssa<tchar>::fontName(const tchar *start,const tchar *end)
+template<class tchar> int TsubtitleFormat::Tssa<tchar>::parse_parentheses(TparenthesesContents &contents, ffstring arg)
 {
- if (start!=end)
-  {
-   memset(props.fontname,0,sizeof(props.fontname));
-   text<char_t>(start, int(end-start), (char_t*)props.fontname, countof(props.fontname)-1);
-  }
- else
-  ff_strncpy(props.fontname, defprops.fontname, countof(props.fontname));
-}
-template<class tchar> template<int TSubtitleProps::*offset,int min,int max> void TsubtitleFormat::Tssa<tchar>::intProp(const tchar *start,const tchar *end)
-{
- tchar *buf=(tchar*)_alloca((end-start+1)*sizeof(tchar));memset(buf,0,(end-start+1)*sizeof(tchar));
- memcpy(buf,start,(end-start)*sizeof(tchar));
- tchar *bufend;
- int enc=strtol(buf,&bufend,10);
- if (buf!=bufend && *bufend=='\0' && isIn(enc,min,max))
-  props.*offset=enc;
- else
-  props.*offset=defprops.*offset;
-}
-template<class tchar> template<int TSubtitleProps::*offset,int min,int max> void TsubtitleFormat::Tssa<tchar>::intPropAn(const tchar *start,const tchar *end)
-{
- tchar *buf=(tchar*)_alloca((end-start+1)*sizeof(tchar));memset(buf,0,(end-start+1)*sizeof(tchar));
- memcpy(buf,start,(end-start)*sizeof(tchar));
- tchar *bufend;
- int enc=strtol(buf,&bufend,10);
- if (buf!=bufend && *bufend=='\0' && isIn(enc,min,max))
-  props.*offset=TSubtitleProps::alignASS2SSA(enc);
- else
-  props.*offset=defprops.*offset;
-}
-template<class tchar> template<double TSubtitleProps::*offset,int min,int max> void TsubtitleFormat::Tssa<tchar>::doubleProp(const tchar *start,const tchar *end)
-{
- tchar *buf=(tchar*)_alloca((end-start+1)*sizeof(tchar));memset(buf,0,(end-start+1)*sizeof(tchar));
- memcpy(buf,start,(end-start)*sizeof(tchar));
- tchar *bufend;
- double enc=strtod(buf,&bufend);
- if (buf!=bufend && *bufend=='\0' && isIn(enc,(double)min,(double)max))
-  props.*offset=enc;
- else
-  props.*offset=defprops.*offset;
-}
-template<class tchar> template<int TSubtitleProps::*offset1,int TSubtitleProps::*offset2,int min,int max> void TsubtitleFormat::Tssa<tchar>::pos(const tchar *start,const tchar *end)
-{
- if (intProp2<offset1,offset2,min,max>(start,end))
-  props.isPos=true;
+    // (a1,a2, ... ,an) is expected.
+    size_t first_paren = arg.find('(');
+    if (first_paren == ffstring::npos)
+        return -1;
+    size_t second_paren = arg.find(')', first_paren + 1);
+    if (second_paren == ffstring::npos)
+        return -1;
+    arg.erase(0,first_paren+1);
+    arg.erase(second_paren - first_paren - 1);
+    strings input_strings;
+    strtok(arg.c_str(),_L(","),input_strings);
+    for (typename strings::iterator s=input_strings.begin() ; s != input_strings.end() ; s++) {
+        contents.push_back(TparenthesesContent(*s));
+    }
+    return second_paren + 1;
 }
 
-template<class tchar> template<int TSubtitleProps::*offset1,int TSubtitleProps::*offset2,
-    int TSubtitleProps::*offset3,int TSubtitleProps::*offset4,unsigned int TSubtitleProps::*offset5,unsigned int TSubtitleProps::*offset6,
-    int min,int max> void TsubtitleFormat::Tssa<tchar>::move(const tchar *start,const tchar *end)
+template<class tchar> int TsubtitleFormat::Tssa<tchar>::TstoreParams::writeProps(const TparenthesesContents &contents, TSubtitleProps &props)
 {
- if (intProp2<offset1,offset2,offset3,offset4,offset5,offset6,min,max>(start,end))
- {
-  props.isMove=true;
- }
+    int count = 0;
+    iterator store_i = begin();
+    TparenthesesContents::const_iterator contents_i = contents.begin();
+    for ( ; store_i != end() ; store_i++){
+        if (store_i->offset) {
+            if ( contents_i != contents.end()
+              && contents_i->ok) {
+                if (contents_i->intval < store_i->min) {
+                    memcpy(&(props.*store_i->offset) ,&store_i->min, store_i->size);
+                } else if (contents_i->intval > store_i->max) {
+                    memcpy(&(props.*store_i->offset), &store_i->max, store_i->size);
+                } else {
+                    memcpy(&(props.*store_i->offset), &contents_i->intval, store_i->size);
+                    count++;
+                }
+            } else {
+                memcpy(&(props.*store_i->offset), &store_i->default_value, store_i->size);
+            }
+        }
+        if (contents_i != contents.end())
+            contents_i++;
+    }
+    return count;
 }
 
-template<class tchar> template<int TSubtitleProps::*offset1,int TSubtitleProps::*offset2,int min,int max> void TsubtitleFormat::Tssa<tchar>::fad(const tchar *start,const tchar *end)
+template<class tchar> void TsubtitleFormat::Tssa<tchar>::fontName(ffstring &arg)
 {
- if (intProp2<offset1,offset2,min,max>(start,end))
-  {
-   props.isFad=true;
-   props.fadeA1=0;
-   props.fadeA2=255;
-   props.fadeA3=0;
-   props.fadeT1=props.tStart;
-   props.fadeT2=props.fadeT1 + (props.tmpFadT1 * 10000);
-   props.fadeT3=props.tStop - (props.tmpFadT2 * 10000);
-   props.fadeT4=props.tStop;
-  }
+    if (arg.size()) {
+        memset(props.fontname,0,sizeof(props.fontname));
+        text<char_t>(arg.c_str(), arg.size(), (char_t*)props.fontname, countof(props.fontname));
+    } else
+        ff_strncpy(props.fontname, defprops.fontname, countof(props.fontname));
 }
 
-template<class tchar> void TsubtitleFormat::Tssa<tchar>::karaoke_kf(const tchar *start,const tchar *end)
+template<class tchar> template<int TSubtitleProps::*offset,int min,int max> void TsubtitleFormat::Tssa<tchar>::intProp(ffstring &arg)
 {
- intProp<&TSubtitleProps::tmpFadT1, 0, INT_MAX>(start, end);
- props.karaokeDuration = (REFERENCE_TIME)props.tmpFadT1 * 100000;
- props.karaokeMode = TSubtitleProps::KARAOKE_kf;
- props.karaokeNewWord = true;
-}
-template<class tchar> void TsubtitleFormat::Tssa<tchar>::karaoke_ko(const tchar *start,const tchar *end)
-{
- intProp<&TSubtitleProps::tmpFadT1, 0, INT_MAX>(start, end);
- props.karaokeDuration = (REFERENCE_TIME)props.tmpFadT1 * 100000;
- props.karaokeMode = TSubtitleProps::KARAOKE_ko;
- props.karaokeNewWord = true;
-}
-template<class tchar> void TsubtitleFormat::Tssa<tchar>::karaoke_k(const tchar *start,const tchar *end)
-{
- intProp<&TSubtitleProps::tmpFadT1, 0, INT_MAX>(start, end);
- props.karaokeDuration = (REFERENCE_TIME)props.tmpFadT1 * 100000;
- props.karaokeMode = TSubtitleProps::KARAOKE_k;
- props.karaokeNewWord = true;
+    int enc;
+    if (arg2int(arg,min,max,enc))
+        props.*offset=enc;
+    else
+        props.*offset=defprops.*offset;
 }
 
-template<class tchar> void TsubtitleFormat::Tssa<tchar>::fade(const tchar *start,const tchar *end)
+template<class tchar> template<int TSubtitleProps::*offset,int min,int max> void TsubtitleFormat::Tssa<tchar>::intPropAn(ffstring &arg)
 {
- // \fade(<a1>, <a2>, <a3>, <t1>, <t2>, <t3>, <t4>)
- tchar *buf=(tchar*)_alloca((end-start+1)*sizeof(tchar));memset(buf,0,(end-start+1)*sizeof(tchar));
- memcpy(buf,start,(end-start)*sizeof(tchar));
- const tchar *bufstart=strchr(buf,'(');
- if(!bufstart) return;
- bufstart++;
- tchar *bufend;
- int val;
-
-#define FADE2INT(v)                                        \
- val=strtol(bufstart,&bufend,10);                          \
- if (bufstart!=bufend) props.v=val;                        \
- if (*bufend=='\0') return;                                \
-                                                           \
- bufstart=strchr(bufend,',');                              \
- if(!bufstart) return;                                     \
- bufstart++;
-
- FADE2INT(fadeA1);
- FADE2INT(fadeA2);
- FADE2INT(fadeA3);
- FADE2INT(fadeT1);
- FADE2INT(fadeT2);
- FADE2INT(fadeT3);
- val=strtol(bufstart,&bufend,10);
- if (bufstart!=bufend)
-  props.fadeT4=val;
- else
-  return;
-
- if (props.fadeA1 <  0)  props.fadeA1=0;
- if (props.fadeA1 > 255) props.fadeA1=255;
- if (props.fadeA2 <  0)  props.fadeA2=0;
- if (props.fadeA2 > 255) props.fadeA2=255;
- if (props.fadeA3 <  0)  props.fadeA3=0;
- if (props.fadeA3 > 255) props.fadeA3=255;
- props.fadeA1 = 256 - props.fadeA1;
- props.fadeA2 = 256 - props.fadeA2;
- props.fadeA3 = 256 - props.fadeA3;
-
- props.fadeT1 = props.tStart + props.fadeT1 * 10000;
- props.fadeT2 = props.tStart + props.fadeT2 * 10000;
- props.fadeT3 = props.tStart + props.fadeT3 * 10000;
- props.fadeT4 = props.tStart + props.fadeT4 * 10000;
- props.isFad = true;
-#undef FADE2INT
+    int enc;
+    if (arg2int(arg,min,max,enc))
+        props.*offset=TSubtitleProps::alignASS2SSA(enc);
+    else
+        props.*offset=defprops.*offset;
 }
 
-template<class tchar> template<int TSubtitleProps::*offset1,int TSubtitleProps::*offset2,int min,int max> bool TsubtitleFormat::Tssa<tchar>::intProp2(const tchar *start,const tchar *end)
+template<class tchar> template<double TSubtitleProps::*offset,int min,int max> void TsubtitleFormat::Tssa<tchar>::doubleProp(ffstring &arg)
 {
-     // (x,y) is expected.
-     tchar *buf=(tchar*)_alloca((end-start+1)*sizeof(tchar));memset(buf,0,(end-start+1)*sizeof(tchar));
-     memcpy(buf,start,(end-start)*sizeof(tchar));
-     const tchar *bufstart=strchr(buf,'(');
-     if(!bufstart) return false;
-     bufstart++;
-     tchar *bufend;
-     int val=strtol(bufstart,&bufend,10);
-     if (bufstart!=bufend && isIn(val,min,max)) props.*offset1=val;
-     if (*bufend=='\0') return false;
-
-     bufstart=strchr(bufend,',');
-     if(!bufstart) return false;
-     bufstart++;
-     val=strtol(bufstart,&bufend,10);
-     if (bufstart!=bufend && isIn(val,min,max)) props.*offset2=val;
-     return true;
+    const tchar* buf = arg.c_str();
+    tchar *bufend;
+    double enc=strtod(buf,&bufend);
+    if (buf!=bufend && *bufend=='\0' && isIn(enc,(double)min,(double)max))
+        props.*offset=enc;
+    else
+        props.*offset=defprops.*offset;
 }
-template<class tchar> template<int TSubtitleProps::*offset1,int TSubtitleProps::*offset2,
-    int TSubtitleProps::*offset3,int TSubtitleProps::*offset4,
-    unsigned int TSubtitleProps::*offset5,unsigned int TSubtitleProps::*offset6,int min,int max> bool TsubtitleFormat::Tssa<tchar>::intProp2(const tchar *start,const tchar *end)
+
+template<class tchar> void TsubtitleFormat::Tssa<tchar>::pos(ffstring &arg)
+{
+    // (x1,y1) is expected.
+    TstoreParams store;
+    store.push_back(TstoreParam((intx_t TSubtitleProps::*)&TSubtitleProps::posx, 0,INT_MAX,defprops.posx,sizeof(props.posx)));
+    store.push_back(TstoreParam((intx_t TSubtitleProps::*)&TSubtitleProps::posy, 0,INT_MAX,defprops.posy,sizeof(props.posy)));
+
+    TparenthesesContents contents;
+    parse_parentheses(contents,arg);
+    if (store.writeProps(contents,props) == 2)
+        props.isPos=true;
+}
+
+template<class tchar> void TsubtitleFormat::Tssa<tchar>::move(ffstring &arg)
 {
      // (x1,y1,x2,y2,[t1[,t2]]) is expected.
-     tchar *buf=(tchar*)_alloca((end-start+1)*sizeof(tchar));memset(buf,0,(end-start+1)*sizeof(tchar));
-     memcpy(buf,start,(end-start)*sizeof(tchar));
-     
-     //x1
-     const tchar *bufstart=strchr(buf,'(');
-     if(!bufstart) return false;
-     bufstart++;
-     tchar *bufend;
-     int val=strtol(bufstart,&bufend,10);
-     if (bufstart!=bufend && isIn(val,min,max)) props.*offset1=val;
-     if (*bufend=='\0') return false;
+     TstoreParams store;
+     store.push_back(TstoreParam((intx_t TSubtitleProps::*)&TSubtitleProps::posx, 0,INT_MAX, defprops.posx,  sizeof(props.posx)));
+     store.push_back(TstoreParam((intx_t TSubtitleProps::*)&TSubtitleProps::posy, 0,INT_MAX, defprops.posy,  sizeof(props.posy)));
+     store.push_back(TstoreParam((intx_t TSubtitleProps::*)&TSubtitleProps::posx2,0,INT_MAX, defprops.posx2, sizeof(props.posx2)));
+     store.push_back(TstoreParam((intx_t TSubtitleProps::*)&TSubtitleProps::posy2,0,INT_MAX, defprops.posy2, sizeof(props.posy2)));
+     store.push_back(TstoreParam((intx_t TSubtitleProps::*)&TSubtitleProps::t1,   0,UINT_MAX,0,              sizeof(props.t1)));
+     store.push_back(TstoreParam((intx_t TSubtitleProps::*)&TSubtitleProps::t2,   0,UINT_MAX,0,              sizeof(props.t2)));
 
-     //y1
-     bufstart=strchr(bufend,',');
-     if(!bufstart) return false;
-     bufstart++;
-     val=strtol(bufstart,&bufend,10);
-     if (bufstart!=bufend && isIn(val,min,max)) props.*offset2=val;
-
-     //x2
-     bufstart=strchr(bufend,',');
-     if(!bufstart) return false;
-     bufstart++;
-     val=strtol(bufstart,&bufend,10);
-     if (bufstart!=bufend && isIn(val,min,max)) props.*offset3=val;
-
-     //y2
-     bufstart=strchr(bufend,',');
-     if(!bufstart) return false;
-     bufstart++;
-     val=strtol(bufstart,&bufend,10);
-     if (bufstart!=bufend && isIn(val,min,max)) props.*offset4=val;
-
-     // Next parameters are optional
-     props.*offset5=0;
-     props.*offset6=0;
-
-     //t1
-     bufstart=strchr(bufend,',');
-     if(!bufstart)
-         return true;
-
-     bufstart++;
-     val=strtol(bufstart,&bufend,10);
-     if (bufstart!=bufend && isIn(val,min,max)) props.*offset5=val;
-
-     //t2
-     bufstart=strchr(bufend,',');
-     if(!bufstart)
-         return true;
-
-     bufstart++;
-     val=strtol(bufstart,&bufend,10);
-     if (bufstart!=bufend && isIn(val,min,max)) props.*offset6=val;
-     return true;
-}
-template<class tchar> template<COLORREF TSubtitleProps::*offset> void TsubtitleFormat::Tssa<tchar>::color(const tchar *start,const tchar *end)
-{
- tchar *buf=(tchar*)_alloca((end-start+1)*sizeof(tchar));memset(buf,0,(end-start+1)*sizeof(tchar));
- memcpy(buf,start,(end-start)*sizeof(tchar));
- int radix;
- if (strnicmp(buf,_L("&h"),2)==0)
-  {
-   radix=16;
-   buf+=2;
-  }
- else
-  radix=10;
- tchar *endbuf;
- int c=strtol(buf,&endbuf,radix);
- if (*endbuf=='&')
-  {
-   props.*offset=c;
-   props.isColor=true;
-  }
- else
-  {
-   props.*offset=defprops.*offset;
-   props.isColor=defprops.isColor;
-  }
-}
-template<class tchar> template<int TSubtitleProps::*offset> void TsubtitleFormat::Tssa<tchar>::alpha(const tchar *start,const tchar *end)
-{
- tchar *buf=(tchar*)_alloca((end-start+1)*sizeof(tchar));memset(buf,0,(end-start+1)*sizeof(tchar));
- memcpy(buf,start,(end-start)*sizeof(tchar));
- int radix;
- if (strnicmp(buf,_L("&h"),2)==0)
-  {
-   radix=16;
-   buf+=2;
-  }
- else
-  radix=10;
- tchar *endbuf;
- int a=strtol(buf,&endbuf,radix);
- if (*endbuf=='&')
-  {
-   props.*offset=256-a;
-   props.isColor=true;
-  }
- else
-  {
-   props.*offset=defprops.*offset;
-   props.isColor=defprops.isColor;
-  }
-}
-template<class tchar> void TsubtitleFormat::Tssa<tchar>::alphaAll(const tchar *start,const tchar *end)
-{
- tchar *buf=(tchar*)_alloca((end-start+1)*sizeof(tchar));memset(buf,0,(end-start+1)*sizeof(tchar));
- memcpy(buf,start,(end-start)*sizeof(tchar));
- int radix;
- if (strnicmp(buf,_L("&h"),2)==0)
-  {
-   radix=16;
-   buf+=2;
-  }
- else
-  radix=10;
- tchar *endbuf;
- int a=strtol(buf,&endbuf,radix);
- if (*endbuf=='&')
-  {
-   props.colorA=256-a;
-   props.OutlineColourA=256-a;
-   props.ShadowColourA=256-a;
-   props.isColor=true;
-  }
- else
-  {
-   props.colorA=defprops.colorA;
-   props.OutlineColourA=defprops.OutlineColourA;
-   props.ShadowColourA=defprops.ShadowColourA;
-   props.isColor=defprops.isColor;
-  }
+    TparenthesesContents contents;
+    parse_parentheses(contents,arg);
+    if (store.writeProps(contents,props) >= 4)
+        props.isMove=true;
 }
 
-template<class tchar> template<bool TSubtitleProps::*offset> void TsubtitleFormat::Tssa<tchar>::boolProp(const tchar *start,const tchar *end)
+template<class tchar> void TsubtitleFormat::Tssa<tchar>::fad(ffstring &arg)
 {
- if (start!=end && start[0]=='1')
-  props.*offset=true;
- else if (start!=end && start[0]=='0')
-  props.*offset=false;
- else
-  props.*offset=defprops.*offset;
+    TstoreParams store;
+    store.push_back(TstoreParam((intx_t TSubtitleProps::*)&TSubtitleProps::fadeT3, 0,LLONG_MAX/10000,defprops.posx,sizeof(props.fadeT3)));
+    store.push_back(TstoreParam((intx_t TSubtitleProps::*)&TSubtitleProps::fadeT4, 0,LLONG_MAX/10000,defprops.posy,sizeof(props.fadeT4)));
+
+    TparenthesesContents contents;
+    parse_parentheses(contents,arg);
+    if (store.writeProps(contents,props) == 2) {
+        props.isFad=true;
+        props.fadeA1=0;
+        props.fadeA2=255;
+        props.fadeA3=0;
+        props.fadeT1=props.tStart;
+        props.fadeT2=props.fadeT1 + (props.fadeT3 * 10000);
+        props.fadeT3=props.tStop - (props.fadeT4 * 10000);
+        props.fadeT4=props.tStop;
+    }
 }
 
-template<class tchar> void TsubtitleFormat::Tssa<tchar>::reset(const tchar *start,const tchar *end)
+template<class tchar> void TsubtitleFormat::Tssa<tchar>::karaoke_kf(ffstring &arg)
 {
- props=defprops;
+    intProp<&TSubtitleProps::tmpFadT1, 0, INT_MAX>(arg);
+    props.karaokeDuration = (REFERENCE_TIME)props.tmpFadT1 * 100000;
+    props.karaokeMode = TSubtitleProps::KARAOKE_kf;
+    props.karaokeNewWord = true;
+}
+template<class tchar> void TsubtitleFormat::Tssa<tchar>::karaoke_ko(ffstring &arg)
+{
+    intProp<&TSubtitleProps::tmpFadT1, 0, INT_MAX>(arg);
+    props.karaokeDuration = (REFERENCE_TIME)props.tmpFadT1 * 100000;
+    props.karaokeMode = TSubtitleProps::KARAOKE_ko;
+    props.karaokeNewWord = true;
+}
+template<class tchar> void TsubtitleFormat::Tssa<tchar>::karaoke_k(ffstring &arg)
+{
+    intProp<&TSubtitleProps::tmpFadT1, 0, INT_MAX>(arg);
+    props.karaokeDuration = (REFERENCE_TIME)props.tmpFadT1 * 100000;
+    props.karaokeMode = TSubtitleProps::KARAOKE_k;
+    props.karaokeNewWord = true;
+}
+
+template<class tchar> void TsubtitleFormat::Tssa<tchar>::fade(ffstring &arg)
+{
+    // \fade(<a1>, <a2>, <a3>, <t1>, <t2>, <t3>, <t4>)
+    TstoreParams store;
+    store.push_back(TstoreParam((intx_t TSubtitleProps::*)&TSubtitleProps::fadeA1, 0, 255,             0,    sizeof(props.fadeA1)));
+    store.push_back(TstoreParam((intx_t TSubtitleProps::*)&TSubtitleProps::fadeA2, 0, 255,             255,  sizeof(props.fadeA2)));
+    store.push_back(TstoreParam((intx_t TSubtitleProps::*)&TSubtitleProps::fadeA3, 0, 255,             0,    sizeof(props.fadeA3)));
+    store.push_back(TstoreParam((intx_t TSubtitleProps::*)&TSubtitleProps::fadeT1, 0, LLONG_MAX/10000, 0,    sizeof(props.fadeT1)));
+    store.push_back(TstoreParam((intx_t TSubtitleProps::*)&TSubtitleProps::fadeT2, 0, LLONG_MAX/10000, 1000, sizeof(props.fadeT2)));
+    store.push_back(TstoreParam((intx_t TSubtitleProps::*)&TSubtitleProps::fadeT3, 0, INT_MAX, 2000, sizeof(props.fadeT3)));
+    store.push_back(TstoreParam((intx_t TSubtitleProps::*)&TSubtitleProps::fadeT4, 0, INT_MAX, 3000, sizeof(props.fadeT4)));
+
+    TparenthesesContents contents;
+    parse_parentheses(contents,arg);
+    store.writeProps(contents,props);
+
+    props.fadeA1 = 256 - props.fadeA1;
+    props.fadeA2 = 256 - props.fadeA2;
+    props.fadeA3 = 256 - props.fadeA3;
+
+    props.fadeT1 = props.tStart + props.fadeT1 * 10000;
+    props.fadeT2 = props.tStart + props.fadeT2 * 10000;
+    props.fadeT3 = props.tStart + props.fadeT3 * 10000;
+    props.fadeT4 = props.tStart + props.fadeT4 * 10000;
+    props.isFad = true;
+}
+
+template<class tchar> template<int TSubtitleProps::*offset1,int TSubtitleProps::*offset2,int min,int max> bool TsubtitleFormat::Tssa<tchar>::intProp2(ffstring &arg)
+{
+    // (x,y) is expected.
+    TstoreParams store;
+    store.push_back(TstoreParam((int64_t TSubtitleProps::*)offset1,min,max,defprops.*offset1,sizeof(int)));
+    store.push_back(TstoreParam((int64_t TSubtitleProps::*)offset2,min,max,defprops.*offset2,sizeof(int)));
+
+    TparenthesesContents contents;
+    parse_parentheses(contents,arg);
+    return store.writeProps(contents,props) == 2;
+}
+
+template<class tchar> bool TsubtitleFormat::Tssa<tchar>::arg2int(const ffstring &arg, int min, int max, int &enc)
+{
+    const tchar* buf = arg.c_str();
+    tchar *bufend;
+    enc=strtol(buf,&bufend,10);
+    return (buf!=bufend && *bufend=='\0' && isIn(enc,min,max));
+}
+
+template<class tchar> bool TsubtitleFormat::Tssa<tchar>::color2int(ffstring arg, int &intval)
+{
+    int radix;
+    if (arg.ConvertToLowerCase().compare(0,2,ffstring(_l("&h")))==0) {
+        radix=16;
+        arg.erase(0,2);
+    } else
+        radix=10;
+    tchar *endbuf;
+    intval=strtol(arg.c_str(),&endbuf,radix);
+    return *endbuf=='&';
+}
+
+template<class tchar> template<COLORREF TSubtitleProps::*offset> void TsubtitleFormat::Tssa<tchar>::color(ffstring &arg)
+{
+    int c;
+    if (color2int(arg,c)) {
+        props.*offset=c;
+        props.isColor=true;
+    } else {
+        props.*offset=defprops.*offset;
+        props.isColor=defprops.isColor;
+    }
+}
+template<class tchar> template<int TSubtitleProps::*offset> void TsubtitleFormat::Tssa<tchar>::alpha(ffstring &arg)
+{
+    int a;
+    if (color2int(arg,a)) {
+        props.*offset=256-a;
+        props.isColor=true;
+    } else {
+        props.*offset=defprops.*offset;
+        props.isColor=defprops.isColor;
+    }
+}
+template<class tchar> void TsubtitleFormat::Tssa<tchar>::alphaAll(ffstring &arg)
+{
+    int a;
+    if (color2int(arg,a)) {
+         props.colorA=256-a;
+         props.OutlineColourA=256-a;
+         props.ShadowColourA=256-a;
+         props.isColor=true;
+    } else {
+         props.colorA=defprops.colorA;
+         props.OutlineColourA=defprops.OutlineColourA;
+         props.ShadowColourA=defprops.ShadowColourA;
+         props.isColor=defprops.isColor;
+    }
+}
+
+template<class tchar> template<bool TSubtitleProps::*offset> void TsubtitleFormat::Tssa<tchar>::boolProp(ffstring &arg)
+{
+    if (arg.size() && arg[0]=='1')
+        props.*offset=true;
+    else if (arg.size() && arg[0]=='0')
+        props.*offset=false;
+    else
+        props.*offset=defprops.*offset;
+}
+
+template<class tchar> void TsubtitleFormat::Tssa<tchar>::reset(ffstring &arg)
+{
+    props=defprops;
+}
+
+template<class tchar> bool TsubtitleFormat::Tssa<tchar>::processTokenI(const tchar* &l2,const tchar *tok,TssaAction action,Tstr_cmp_func str_cmp_func)
+{
+    size_t toklen=strlen(tok);
+    if (str_cmp_func(l2,tok,toklen)==0) {
+        const tchar *end1=strchr(l2+2,'\\');
+        const tchar *end2=strchr(l2,'}');
+        const tchar *end=(end1 && end1<end2)?end1:end2;
+        if (end)
+         {
+          const tchar *start=l2+toklen;
+          ffstring arg(start,end - start);
+          if (action)
+           (this->*action)(arg);
+          l2=(end1 && end1<end2)?end1:end2+1;
+         }
+        return true;
+    } else
+        return false;
 }
 
 // case sensitive version
 template<class tchar> bool TsubtitleFormat::Tssa<tchar>::processTokenC(const tchar* &l2,const tchar *tok,TssaAction action)
 {
- size_t toklen=strlen(tok);
- if (strncmp(l2,tok,toklen)==0)
-  {
-   const tchar *end1=strchr(l2+2,'\\');
-   const tchar *end2=strchr(l2,'}');
-   const tchar *end=(end1 && end1<end2)?end1:end2;
-   if (end)
-    {
-     const tchar *start=l2+toklen;
-     if (action)
-      (this->*action)(start,end);
-     l2=(end1 && end1<end2)?end1:end2+1;
-    }
-   return true;
-  }
- else
-  return false;
+    return processTokenI(l2,tok,action,strncmp);
 }
 
 template<class tchar> bool TsubtitleFormat::Tssa<tchar>::processToken(const tchar* &l2,const tchar *tok,TssaAction action)
 {
- size_t toklen=strlen(tok);
- if (_strnicmp(l2,tok,toklen)==0)
-  {
-   const tchar *end1=strchr(l2+2,'\\');
-   const tchar *end2=strchr(l2,'}');
-   const tchar *end=(end1 && end1<end2)?end1:end2;
-   if (end)
-    {
-     const tchar *start=l2+toklen;
-     if (action)
-      (this->*action)(start,end);
-     l2=(end1 && end1<end2)?end1:end2+1;
-    }
-   return true;
-  }
- else
-  return false;
+    return processTokenI(l2,tok,action,_strnicmp);
 }
 
 template<class tchar> void TsubtitleFormat::Tssa<tchar>::processTokens(const tchar *l,const tchar* &l1,const tchar* &l2,const tchar *end)
 {
- const tchar *l3=l2+1;
- words.add(l,l1,l2,props,end-l2+1);
- while (l3<end)
-  {
-   if (
-       !processToken(l3,_L("\\1a"),&Tssa<tchar>::template alpha<&TSubtitleProps::colorA>) &&
-       !processToken(l3,_L("\\2a"),&Tssa<tchar>::template alpha<&TSubtitleProps::SecondaryColourA>) &&
-       !processToken(l3,_L("\\3a"),&Tssa<tchar>::template alpha<&TSubtitleProps::OutlineColourA>) &&
-       !processToken(l3,_L("\\4a"),&Tssa<tchar>::template alpha<&TSubtitleProps::ShadowColourA>) &&
-       !processToken(l3,_L("\\1c"),&Tssa<tchar>::template color<&TSubtitleProps::color>) && 
-       !processToken(l3,_L("\\2c"),&Tssa<tchar>::template color<&TSubtitleProps::SecondaryColour>) &&
-       !processToken(l3,_L("\\3c"),&Tssa<tchar>::template color<&TSubtitleProps::OutlineColour>) &&
-       !processToken(l3,_L("\\4c"),&Tssa<tchar>::template color<&TSubtitleProps::ShadowColour>) &&
-       !processToken(l3,_L("\\alpha"),&Tssa<tchar>::alphaAll) &&
-       !processToken(l3,_L("\\an"),&Tssa<tchar>::template intPropAn<&TSubtitleProps::alignment,1,9>) &&
-       !processToken(l3,_L("\\a"),&Tssa<tchar>::template intProp<&TSubtitleProps::alignment,1,11>) &&
-       !processToken(l3,_L("\\bord"),&Tssa<tchar>::template doubleProp<&TSubtitleProps::outlineWidth,0,100>) &&
-       !processToken(l3,_L("\\be"),&Tssa<tchar>::template boolProp<&TSubtitleProps::blur>) &&
-       !processToken(l3,_L("\\b"),&Tssa<tchar>::template intProp<&TSubtitleProps::bold,0,1>) &&
-       !processToken(l3,_L("\\clip"),NULL) &&
-       !processToken(l3,_L("\\c"),&Tssa<tchar>::template color<&TSubtitleProps::color>) &&
-       !processToken(l3,_L("\\fn"),&Tssa<tchar>::fontName) &&
-       !processToken(l3,_L("\\fscx"),&Tssa<tchar>::template intProp<&TSubtitleProps::scaleX,1,1000>) &&
-       !processToken(l3,_L("\\fscy"),&Tssa<tchar>::template intProp<&TSubtitleProps::scaleY,1,1000>) &&
-       !processToken(l3,_L("\\fsp"),&Tssa<tchar>::template doubleProp<&TSubtitleProps::spacing,INT_MIN+1,INT_MAX>) &&
-       !processToken(l3,_L("\\fs"),&Tssa<tchar>::template intProp<&TSubtitleProps::size,1,INT_MAX>) &&
-       !processToken(l3,_L("\\fe"),&Tssa<tchar>::template intProp<&TSubtitleProps::encoding,0,255>) &&
-       !processToken(l3,_L("\\i"),&Tssa<tchar>::template boolProp<&TSubtitleProps::italic>) &&
-       !processToken(l3,_L("\\fade"),&Tssa<tchar>::fade) &&
-       !processToken(l3,_L("\\fad"),&Tssa<tchar>::template fad<&TSubtitleProps::tmpFadT1,&TSubtitleProps::tmpFadT2,0,INT_MAX>) &&
-       !processToken(l3,_L("\\pos"),&Tssa<tchar>::template pos<&TSubtitleProps::posx,&TSubtitleProps::posy,0,4096>) &&
-       !processToken(l3,_L("\\move"),&Tssa<tchar>::template move<&TSubtitleProps::posx,&TSubtitleProps::posy, &TSubtitleProps::posx2,&TSubtitleProps::posy2,&TSubtitleProps::t1,&TSubtitleProps::t2,0,4096>) &&
-       !processToken(l3,_L("\\q"),&Tssa<tchar>::template intProp<&TSubtitleProps::wrapStyle,0,3>) &&
-       !processToken(l3,_L("\\r"),&Tssa<tchar>::reset) &&
-       !processToken(l3,_L("\\shad"),&Tssa<tchar>::template doubleProp<&TSubtitleProps::shadowDepth,0,30>) &&
-       !processToken(l3,_L("\\s"),&Tssa<tchar>::template boolProp<&TSubtitleProps::strikeout>) &&
-       !processToken(l3,_L("\\u"),&Tssa<tchar>::template boolProp<&TSubtitleProps::underline>) &&
-       !processToken(l3,_L("\\kf"),&Tssa<tchar>::karaoke_kf) &&
-       !processToken(l3,_L("\\ko"),&Tssa<tchar>::karaoke_ko) &&
-       !processTokenC(l3,_L("\\K"),&Tssa<tchar>::karaoke_kf) &&
-       !processTokenC(l3,_L("\\k"),&Tssa<tchar>::karaoke_k)
-      )
-    l3++;
-  }
+    const tchar *l3=l2+1;
+    words.add(l,l1,l2,props,end-l2+1);
+    while (l3<end) {
+        if (
+            !processToken(l3,_L("\\1a"),&Tssa<tchar>::template alpha<&TSubtitleProps::colorA>) &&
+            !processToken(l3,_L("\\2a"),&Tssa<tchar>::template alpha<&TSubtitleProps::SecondaryColourA>) &&
+            !processToken(l3,_L("\\3a"),&Tssa<tchar>::template alpha<&TSubtitleProps::OutlineColourA>) &&
+            !processToken(l3,_L("\\4a"),&Tssa<tchar>::template alpha<&TSubtitleProps::ShadowColourA>) &&
+            !processToken(l3,_L("\\1c"),&Tssa<tchar>::template color<&TSubtitleProps::color>) && 
+            !processToken(l3,_L("\\2c"),&Tssa<tchar>::template color<&TSubtitleProps::SecondaryColour>) &&
+            !processToken(l3,_L("\\3c"),&Tssa<tchar>::template color<&TSubtitleProps::OutlineColour>) &&
+            !processToken(l3,_L("\\4c"),&Tssa<tchar>::template color<&TSubtitleProps::ShadowColour>) &&
+            !processToken(l3,_L("\\alpha"),&Tssa<tchar>::alphaAll) &&
+            !processToken(l3,_L("\\an"),&Tssa<tchar>::template intPropAn<&TSubtitleProps::alignment,1,9>) &&
+            !processToken(l3,_L("\\a"),&Tssa<tchar>::template intProp<&TSubtitleProps::alignment,1,11>) &&
+            !processToken(l3,_L("\\bord"),&Tssa<tchar>::template doubleProp<&TSubtitleProps::outlineWidth,0,100>) &&
+            !processToken(l3,_L("\\be"),&Tssa<tchar>::template boolProp<&TSubtitleProps::blur>) &&
+            !processToken(l3,_L("\\b"),&Tssa<tchar>::template intProp<&TSubtitleProps::bold,0,1>) &&
+            !processToken(l3,_L("\\clip"),NULL) &&
+            !processToken(l3,_L("\\c"),&Tssa<tchar>::template color<&TSubtitleProps::color>) &&
+            !processToken(l3,_L("\\fn"),&Tssa<tchar>::fontName) &&
+            !processToken(l3,_L("\\fscx"),&Tssa<tchar>::template intProp<&TSubtitleProps::scaleX,1,1000>) &&
+            !processToken(l3,_L("\\fscy"),&Tssa<tchar>::template intProp<&TSubtitleProps::scaleY,1,1000>) &&
+            !processToken(l3,_L("\\fsp"),&Tssa<tchar>::template doubleProp<&TSubtitleProps::spacing,INT_MIN+1,INT_MAX>) &&
+            !processToken(l3,_L("\\fs"),&Tssa<tchar>::template intProp<&TSubtitleProps::size,1,INT_MAX>) &&
+            !processToken(l3,_L("\\fe"),&Tssa<tchar>::template intProp<&TSubtitleProps::encoding,0,255>) &&
+            !processToken(l3,_L("\\i"),&Tssa<tchar>::template boolProp<&TSubtitleProps::italic>) &&
+            !processToken(l3,_L("\\fade"),&Tssa<tchar>::fade) &&
+            !processToken(l3,_L("\\fad"),&Tssa<tchar>::fad) &&
+            !processToken(l3,_L("\\pos"),&Tssa<tchar>::pos) &&
+            !processToken(l3,_L("\\move"),&Tssa<tchar>::move) &&
+            !processToken(l3,_L("\\q"),&Tssa<tchar>::template intProp<&TSubtitleProps::wrapStyle,0,3>) &&
+            !processToken(l3,_L("\\r"),&Tssa<tchar>::reset) &&
+            !processToken(l3,_L("\\shad"),&Tssa<tchar>::template doubleProp<&TSubtitleProps::shadowDepth,0,30>) &&
+            !processToken(l3,_L("\\s"),&Tssa<tchar>::template boolProp<&TSubtitleProps::strikeout>) &&
+            !processToken(l3,_L("\\u"),&Tssa<tchar>::template boolProp<&TSubtitleProps::underline>) &&
+            !processToken(l3,_L("\\kf"),&Tssa<tchar>::karaoke_kf) &&
+            !processToken(l3,_L("\\ko"),&Tssa<tchar>::karaoke_ko) &&
+            !processTokenC(l3,_L("\\K"),&Tssa<tchar>::karaoke_kf) &&
+            !processTokenC(l3,_L("\\k"),&Tssa<tchar>::karaoke_k)
+        )
+        l3++;
+    }
 }
 
 template<class tchar> TsubtitleFormat::Twords TsubtitleFormat::processSSA(const TsubtitleLine<tchar> &line, int sfmt, TsubtitleTextBase<tchar> &parent)
 {
- Twords words;
- if (line.empty()) return words;
- const tchar *l=line[0];
- props=parent.defProps;
- const tchar *l1=l,*l2=l;
- Tssa<tchar> ssa(props,parent.defProps,words);
- while (*l2)
-  {
-   if (l2[0]=='{' /*&& l2[1]=='\\'*/)
-   {
-    if (const tchar *end=strchr(l2+1,'}'))
-     {
-      ssa.processTokens(l,l1 ,l2,end);
-      l2=end+1;
-      continue;
-     }
-    l2++;
-   }
-   // Process HTML tags in SSA subs when extended tags option is checked
-   else if (parent.defProps.extendedTags) // Add HTML support within SSA
-       processHTMLTags(words,l,l1,l2);
-   else
-       l2++;
-  }
- 
+    Twords words;
+    if (line.empty()) return words;
+    const tchar *l=line[0];
+    props=parent.defProps;
+    const tchar *l1=l,*l2=l;
+    Tssa<tchar> ssa(props,parent.defProps,words);
+    while (*l2) {
+        if (l2[0]=='{' /*&& l2[1]=='\\'*/) {
+            if (const tchar *end=strchr(l2+1,'}')) {
+                ssa.processTokens(l,l1 ,l2,end);
+                l2=end+1;
+                continue;
+            }
+            l2++;
+        }
+        // Process HTML tags in SSA subs when extended tags option is checked
+        else if (parent.defProps.extendedTags) // Add HTML support within SSA
+            processHTMLTags(words,l,l1,l2);
+        else
+            l2++;
+    }
 
- words.add(l,l1,l2,props,0);
- parent.defProps=props;
- return words;
+    words.add(l,l1,l2,props,0);
+    parent.defProps=props;
+    return words;
 }
 
 template<class tchar> void TsubtitleFormat::processMicroDVD(TsubtitleTextBase<tchar> &parent,typename std::vector< TsubtitleLine<tchar> >::iterator it)
