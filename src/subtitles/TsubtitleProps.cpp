@@ -359,13 +359,13 @@ int TSubtitleProps::get_maxWidth(unsigned int screenWidth, int subFormat, Iffdsh
 int TSubtitleProps::get_movedistanceV(unsigned int screenHeight) const
 {
  if (!isMove || !refResY) return 0;
- return (posy2-posy)*(int)screenHeight/(int)refResY;
+ return (int)(((float)(posy2-posy))*((float)screenHeight/refResY));
 }
 
 int TSubtitleProps::get_movedistanceH(unsigned int screenWidth) const
 {
  if (!isMove || !refResX) return 0;
- return (posx2-posx)*(int)screenWidth/(int)refResX;
+ return (int)(((float)(posx2-posx))*((float)screenWidth/refResX));
 }
 
 REFERENCE_TIME TSubtitleProps::get_moveStart() const

@@ -74,31 +74,72 @@ private:
    const TSubtitleProps &defprops;
    Twords &words;
   public:
+   typedef typename tchar_traits<tchar>::ffstring ffstring;
+   typedef typename tchar_traits<tchar>::strings strings;
+
+   union intx_t {
+       int32_t  i32;
+       uint32_t u32;
+       int64_t  i64;
+       uint64_t u64;
+   };
+
+   struct TparenthesesContent {
+       ffstring str;
+       int64_t intval;
+       bool ok; // is number?
+       TparenthesesContent(ffstring Istr) {
+           tchar *bufend;
+           str = Istr;
+           intval = _strtoi64(Istr.c_str(), &bufend, 10);
+           ok = (*bufend == 0 && bufend != Istr.c_str());
+       }
+   };
+   typedef std::vector<TparenthesesContent> TparenthesesContents;
+
+   struct TstoreParam {
+       intx_t TSubtitleProps::* offset;
+       int64_t min;
+       int64_t max;
+       int64_t default_value;
+       size_t size; // sizeof actual intx_t
+       TstoreParam(intx_t TSubtitleProps::* Ioffset, int64_t Imin, int64_t Imax, int64_t Idefault_value, size_t Isize):offset(Ioffset),min(Imin),max(Imax),default_value(Idefault_value),size(Isize) {}
+   };
+   struct TstoreParams: public std::vector<TstoreParam> {
+       // returns number of contents that have the value within the range (min...max) and have been written to. 
+       int writeProps(const TparenthesesContents &contents, TSubtitleProps &props);
+   };
+
+   int parse_parentheses(TparenthesesContents &contents, ffstring arg);
    Tssa(TSubtitleProps &Iprops,const TSubtitleProps &Idefprops,Twords &Iwords):props(Iprops),defprops(Idefprops),words(Iwords) {}
-   typedef void (Tssa::*TssaAction)(const tchar *start,const tchar *end);
-   void fontName(const tchar *start,const tchar *end);
-   //void fontSize(const tchar *start,const tchar *end);
-   template<int TSubtitleProps::*offset,int min,int max> void intProp(const tchar *start,const tchar *end);
-   template<int TSubtitleProps::*offset,int min,int max> void intPropAn(const tchar *start,const tchar *end);
-   template<double TSubtitleProps::*offset,int min,int max> void doubleProp(const tchar *start,const tchar *end);
-   template<int TSubtitleProps::*offset1,int TSubtitleProps::*offset2,int min,int max> bool intProp2(const tchar *start,const tchar *end);
-   template<int TSubtitleProps::*offset1,int TSubtitleProps::*offset2,int TSubtitleProps::*offset3,int TSubtitleProps::*offset4,
-      unsigned int TSubtitleProps::*offset5,unsigned int TSubtitleProps::*offset6,int min,int max> bool intProp2(const tchar *start,const tchar *end);
-   template<int TSubtitleProps::*offset1,int TSubtitleProps::*offset2,int min,int max> void pos(const tchar *start,const tchar *end);
-   template<int TSubtitleProps::*offset1,int TSubtitleProps::*offset2,int TSubtitleProps::*offset3,int TSubtitleProps::*offset4,
-       unsigned int TSubtitleProps::*offset5,unsigned int TSubtitleProps::*offset6,int min,int max> void move(const tchar *start,const tchar *end);
-   template<int TSubtitleProps::*offset1,int TSubtitleProps::*offset2,int min,int max> void fad(const tchar *start,const tchar *end);
-   void fade(const tchar *start,const tchar *end);
-   void karaoke_kf(const tchar *start,const tchar *end);
-   void karaoke_ko(const tchar *start,const tchar *end);
-   void karaoke_k(const tchar *start,const tchar *end);
-   template<bool TSubtitleProps::*offset> void boolProp(const tchar *start,const tchar *end);
-   template<COLORREF TSubtitleProps::*offset> void color(const tchar *start,const tchar *end);
-   template<int TSubtitleProps::*offset> void alpha(const tchar *start,const tchar *end);
-   void alphaAll(const tchar *start,const tchar *end);
-   void reset(const tchar *start,const tchar *end);
+   typedef void (Tssa::*TssaAction)(ffstring &arg);
+   typedef int (*Tstr_cmp_func)(const tchar *a, const tchar *b, size_t c);
+
+   // fuctions that parse tokens
+   void fontName(ffstring &arg);
+   //void fontSize(ffstring &arg);
+   template<int TSubtitleProps::*offset,int min,int max> void intProp(ffstring &arg);
+   template<int TSubtitleProps::*offset,int min,int max> void intPropAn(ffstring &arg);
+   template<double TSubtitleProps::*offset,int min,int max> void doubleProp(ffstring &arg);
+   template<int TSubtitleProps::*offset1,int TSubtitleProps::*offset2,int min,int max> bool intProp2(ffstring &arg);
+   void pos(ffstring &arg);
+   void move(ffstring &arg);
+   void fad(ffstring &arg);
+   void fade(ffstring &arg);
+   void karaoke_kf(ffstring &arg);
+   void karaoke_ko(ffstring &arg);
+   void karaoke_k(ffstring &arg);
+   template<bool TSubtitleProps::*offset> void boolProp(ffstring &arg);
+   bool arg2int(const ffstring &arg, int min, int max, int &enc);
+   bool color2int(ffstring arg, int &intval);
+   template<COLORREF TSubtitleProps::*offset> void color(ffstring &arg);
+   template<int TSubtitleProps::*offset> void alpha(ffstring &arg);
+   void alphaAll(ffstring &arg);
+   void reset(ffstring &arg);
+
    bool processToken(const tchar* &l2,const tchar *tok,TssaAction action);
    bool processTokenC(const tchar* &l2,const tchar *tok,TssaAction action);
+   bool processTokenI(const tchar* &l2,const tchar *tok,TssaAction action,Tstr_cmp_func str_cmp_func);
    void processTokens(const tchar *l,const tchar* &l1,const tchar* &l2,const tchar *end);
   };
  const ThtmlColors *htmlcolors;
