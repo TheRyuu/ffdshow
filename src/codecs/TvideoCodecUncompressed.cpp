@@ -114,16 +114,9 @@ HRESULT TvideoCodecUncompressed::decompress(const unsigned char *src,size_t srcL
   stride[0]=srcLen/dy;
 */
  unsigned char *data[4]={(unsigned char*)src,NULL,NULL,NULL};
- for(unsigned int i=1;i<cspInfo->numPlanes;i++)
-  {
-   data[i]=data[i-1]+(rd.dy>>cspInfo->shiftY[i-1])*stride[i-1];
-   stride[i]=stride[0]>>cspInfo->shiftX[i];
-  }
- if (csp_isYUVplanar(csp) && !(csp & FF_CSP_FLAGS_YUV_ORDER))
-  {
-   std::swap(data[1],data[2]); // TODO remove FF_CSP_FLAGS_YUV_ADJ if it is safe.
-  }
- TffPict pict(csp,data,stride,rd,true,pIn,Tpalette(palette,palcolors),isInterlacedRawVideo);
+ int csp1=csp;
+ csp_yuv_adj_to_plane(csp1,csp_getInfo(csp1),rd.dy,(unsigned char**)data,stride);
+ TffPict pict(csp1,data,stride,rd,true,pIn,Tpalette(palette,palcolors),isInterlacedRawVideo);
  pict.frametype=FRAME_TYPE::I;
  return sinkD->deliverDecodedSample(pict);
 }
