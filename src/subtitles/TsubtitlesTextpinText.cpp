@@ -62,7 +62,7 @@ void TsubtitlesTextpinText::addSubtitle(REFERENCE_TIME start,REFERENCE_TIME stop
       ;//pRTS->m_name = (WCHAR*)ptr;
      else if(tag==__GAB1_RAWTEXTSUBTITLE__)
       {
-       TstreamMem fs(ptr,end-ptr,Tstream::ENC_AUTODETECT);
+       TstreamMem fs(ptr,end-ptr,Tstream::ENC_AUTODETECT,TfontSettings::GDI_charset_to_code_page(deci->getParam2(IDFF_fontCharset)));
        sub_format=Tsubreader::sub_autodetect(fs,ffcfg);
        fs.rewind();
        if (sub_format!=Tsubreader::SUB_INVALID)
@@ -89,11 +89,11 @@ void TsubtitlesTextpinText::addSubtitle(REFERENCE_TIME start,REFERENCE_TIME stop
      parser=TsubtitleParserBase::getParser(type,fps1000/1000.0,cfg,ffcfg,subs,utf8,true);
      if (initdata.size())
       {
-       TstreamMem fs(initdata,initdata.size(),utf8 ? Tstream::ENC_UTF8 : Tstream::ENC_ASCII);
+       TstreamMem fs(initdata,initdata.size(),utf8 ? Tstream::ENC_UTF8 : Tstream::ENC_ASCII,TfontSettings::GDI_charset_to_code_page(deci->getParam2(IDFF_fontCharset)));
        parser->parse(fs, 0, start, stop);
       }
     }
-   TstreamMem fs(data,datalen,utf8 ? Tstream::ENC_UTF8 : Tsubreader::getSubEnc(type));
+   TstreamMem fs(data,datalen,utf8 ? Tstream::ENC_UTF8 : Tsubreader::getSubEnc(type),TfontSettings::GDI_charset_to_code_page(deci->getParam2(IDFF_fontCharset)));
    Tsubtitle *sub=parser->parse(fs, (type&Tsubreader::SUB_FORMATMASK)==Tsubreader::SUB_SSA ? TsubtitleParserBase::SSA_NODIALOGUE : 0, start, stop);
    if (sub)
     {

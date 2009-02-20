@@ -88,10 +88,10 @@ typedef const TCHAR *PCTSTR;
 
 typedef std::vector<HWND> THWNDs;
 struct Tstrptrs : std::vector<const char_t*> {};
-template<class tchar> struct Tstrpart : std::pair<const tchar*,size_t>
+struct Tstrpart : std::pair<const wchar_t*,size_t>
 {
- Tstrpart(const tchar *p,size_t len):std::pair<const tchar*,size_t>(p,len) {}
- Tstrpart(const tchar *p):std::pair<const tchar*,size_t>(p,strlen(p)) {}
+ Tstrpart(const wchar_t *p,size_t len):std::pair<const wchar_t*,size_t>(p,len) {}
+ Tstrpart(const wchar_t *p):std::pair<const wchar_t*,size_t>(p,strlen(p)) {}
 };
 typedef std::vector<int> ints;
 

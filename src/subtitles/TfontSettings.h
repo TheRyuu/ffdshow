@@ -33,6 +33,7 @@ public:
  static const int charsets[];
  static const char_t *getCharset(int i);
  static int getCharset(const char_t *name);
+ static int GDI_charset_to_code_page(int charset);
  bool getTip(char_t *buf,size_t len)
   {
    tsnprintf_s(buf, len, _TRUNCATE, _l("Font: %s, %s charset, %ssize:%i, %s, spacing:%i\noutline width:%i"),name,getCharset(charset),autosize?_l("auto"):_l(""),autosize?sizeA:sizeP,weights[weight/100-1].name,spacing,outlineWidth);

@@ -503,7 +503,7 @@ void TimgFilterSubtitles::addClosedCaption(const wchar_t *line)
 {
  CAutoLock l(&csCC);
  if (!cc)
-  cc=new TsubtitleTextBase<wchar_t>(Tsubreader::SUB_SUBRIP);
+  cc=new TsubtitleTextBase(Tsubreader::SUB_SUBRIP);
  cc->add(line);
  TsubtitleFormat format(NULL);
  cc->format(format);

@@ -45,59 +45,59 @@ int Tsubreader::sub_autodetect(Tstream &fd,const Tconfig *config)
  while (j < 100)
   {
    j++;
-   char line[LINE_LEN+1];
+   wchar_t line[LINE_LEN+1];
    if (!fd.fgets (line, LINE_LEN))
     {
      format=SUB_INVALID;
      break;
     }
-   int i;char p;
-   if (sscanf (line, "{%d}{%d}", &i, &i)==2)
+   int i;wchar_t p;
+   if (swscanf (line, L"{%d}{%d}", &i, &i)==2)
     {
      format=SUB_MICRODVD;
      break;
     }
-   if (sscanf (line, "{%d}{}", &i)==1)
+   if (swscanf (line, L"{%d}{}", &i)==1)
     {
      format=SUB_MICRODVD;
      break;
     }
-   if (sscanf (line, "[%d][%d]", &i, &i)==2)
+   if (swscanf (line, L"[%d][%d]", &i, &i)==2)
     {
      format=SUB_MPL2|SUB_USESTIME;
      break;
     }
-   if (sscanf (line, "%d:%d:%d.%d,%d:%d:%d.%d",     &i, &i, &i, &i, &i, &i, &i, &i)==8)
+   if (swscanf (line, L"%d:%d:%d.%d,%d:%d:%d.%d",     &i, &i, &i, &i, &i, &i, &i, &i)==8)
     {
      format=SUB_SUBRIP|SUB_USESTIME;
      break;
     }
-   if (sscanf (line, "%d:%d:%d%[,.:]%d --> %d:%d:%d%[,.:]%d", &i, &i, &i, (char *)&i, &i, &i, &i, &i, (char *)&i, &i)==10)
+   if (swscanf (line, L"%d:%d:%d%[,.:]%d --> %d:%d:%d%[,.:]%d", &i, &i, &i, (wchar_t *)&i, &i, &i, &i, &i, (wchar_t *)&i, &i)==10)
     {
      format=SUB_SUBVIEWER|SUB_USESTIME;
      break;
     }
-   if (sscanf (line, "{T %d:%d:%d:%d",&i, &i, &i, &i)==4)
+   if (swscanf (line, L"{T %d:%d:%d:%d",&i, &i, &i, &i)==4)
     {
      format=SUB_SUBVIEWER2|SUB_USESTIME;
      break;
     }
-   if (strstr (line, "<SAMI>"))
+   if (strstr (line, L"<SAMI>"))
     {
      format=SUB_SAMI|SUB_USESTIME;
      break;
     }
-   if (sscanf (line, "%d:%d:%d:",     &i, &i, &i )==3)
+   if (swscanf (line, L"%d:%d:%d:",     &i, &i, &i )==3)
     {
      format=SUB_VPLAYER|SUB_USESTIME;
      break;
     }
-   if (sscanf (line, "%d:%d:%d ",     &i, &i, &i )==3)
+   if (swscanf (line, L"%d:%d:%d ",     &i, &i, &i )==3)
     {
      format=SUB_VPLAYER|SUB_USESTIME;
      break;
     }
-   if (stristr(line,"<USFSubtitles ")!=NULL)
+   if (stristr(line, L"<USFSubtitles ")!=NULL)
     {
      if (config->check(TsubreaderUSF2::dllname))
       format=SUB_USF|SUB_USESTIME;
@@ -108,48 +108,48 @@ int Tsubreader::sub_autodetect(Tstream &fd,const Tconfig *config)
    // Please someone who knows the format of RT... FIX IT!!!
    // It may conflict with other sub formats in the future (actually it doesn't)
    //should be better now
-   if ( stristr(line,"time begin")!=NULL )
+   if ( stristr(line, L"time begin")!=NULL )
     {
      format=SUB_RT|SUB_USESTIME;
      break;
     }
 
-   if (!memcmp(line, "Dialogue: Marked", 16))
+   if (!memcmp(line, L"Dialogue: Marked", 16*2))
     {
      format=SUB_SSA|SUB_USESTIME;
      break;
     }
-   if (!memcmp(line, "Dialogue: ", 10))
+   if (!memcmp(line, L"Dialogue: ", 10*2))
     {
      format=SUB_SSA|SUB_USESTIME;
      break;
     }
-   if (!memcmp(line, "# VobSub index file", 19))
+   if (!memcmp(line, L"# VobSub index file", 19*2))
     {
      format=SUB_VOBSUB|SUB_USESTIME;
      break;
     }
-   if (sscanf (line, "%d,%d,\"%c", &i, &i, (char *) &i) == 3)
+   if (swscanf (line, L"%d,%d,\"%c", &i, &i, (wchar_t *) &i) == 3)
     {
      format=SUB_DUNNOWHAT;
      break;
     }
-   if (sscanf (line, "FORMAT=%d", &i) == 1)
+   if (swscanf (line, L"FORMAT=%d", &i) == 1)
     {
      format=SUB_MPSUB;
      break;
     }
-   if (sscanf (line, "FORMAT=TIM%c", &p)==1 && p=='E')
+   if (swscanf (line, L"FORMAT=TIM%c", &p)==1 && p=='E')
     {
      format=SUB_MPSUB|SUB_USESTIME;
      break;
     }
-   if (strstr (line, "-->>"))
+   if (strstr (line, L"-->>"))
     {
      format=SUB_AQTITLE|SUB_USESTIME;
      break;
     }
-   if (sscanf (line, "[%d:%d:%d]", &i, &i, &i)==3)
+   if (swscanf (line, L"[%d:%d:%d]", &i, &i, &i)==3)
     {
      format=SUB_SUBRIP09|SUB_USESTIME;
      break;

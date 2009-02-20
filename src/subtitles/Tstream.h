@@ -12,6 +12,7 @@ protected:
  int unicode_offset;
  virtual char* fgets0(char *buf,int len) const=0;
  virtual int getc0(void) const=0;
+ int codepage;
 public:
  enum ENCODING
   {
@@ -23,7 +24,7 @@ public:
    ENC_UNICODE=ENC_UTF8|ENC_LE16|ENC_BE16
   };
  mutable ENCODING encoding;
- Tstream(ENCODING Iencoding=ENC_ASCII):encoding(Iencoding),unicode_offset(0),crln(false),utod(false) {}
+ Tstream(ENCODING Iencoding=ENC_ASCII,int Icodepage=CP_ACP):encoding(Iencoding),unicode_offset(0),crln(false),utod(false),codepage(Icodepage) {}
  virtual ~Tstream() {}
  char* fgets(char *buf,int len) const
   {
@@ -61,11 +62,11 @@ protected:
    return ::getc(f);
   }
 public:
- TstreamFile(FILE *If):f(If),ownf(false)
+ TstreamFile(FILE *If,int codepage=CP_ACP):f(If),ownf(false),Tstream(ENC_AUTODETECT,codepage)
   {
    detectUnicode();
   }
- TstreamFile(const char_t *flnm,bool binary,bool write,ENCODING Iencoding=ENC_AUTODETECT);
+ TstreamFile(const char_t *flnm,bool binary,bool write,ENCODING Iencoding=ENC_AUTODETECT,int codepage=CP_ACP);
  virtual ~TstreamFile()
   {
    if (ownf && f)
@@ -113,7 +114,7 @@ private:
    buf+=unicode_offset;bufsize-=unicode_offset;
   }
 protected:
- TstreamMem(void):buf(NULL),bufsize(0),bufpos(0) {crln=true;}
+ TstreamMem(int codepage=CP_ACP):buf(NULL),bufsize(0),bufpos(0),Tstream(ENC_AUTODETECT,codepage) {crln=true;}
  void setMem(const unsigned char *Ibuf,size_t Ibufsize)
   {
    buf=Ibuf;
@@ -126,7 +127,7 @@ protected:
    return (buf && bufpos<bufsize)?buf[bufpos++]:EOF;
   }
 public:
- TstreamMem(const unsigned char *Ibuf,size_t Ibufsize,ENCODING Iencoding=ENC_ASCII):Tstream(Iencoding),buf(Ibuf),bufsize(Ibufsize),bufpos(0)
+ TstreamMem(const unsigned char *Ibuf,size_t Ibufsize,ENCODING Iencoding=ENC_ASCII,int codepage=CP_ACP):Tstream(Iencoding,codepage),buf(Ibuf),bufsize(Ibufsize),bufpos(0)
   {
    handleUnicode();
   }

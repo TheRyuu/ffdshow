@@ -21,7 +21,6 @@
 #include "TfontSettings.h"
 #include "IffdshowParamsEnum.h"
 #include "reg.h"
-#include <tchar.h>
 #include <string.h>
 
 int CALLBACK TfontPage::EnumFamCallBackCharsets(CONST LOGFONT *lpelf,CONST TEXTMETRIC *lpntm,DWORD FontType,LPARAM lParam)

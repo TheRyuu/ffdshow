@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2002-2006 Milan Cutka
- *               2007-2008 h.yamagata
+ *               2007-2009 h.yamagata
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,6 +32,7 @@
 #include "Tlibmplayer.h"
 #include "TwordWrap.h"
 #include <mbstring.h>
+#include "TsubreaderMplayer.h"
 #pragma warning(disable:4244)
 
 //============================ TrenderedSubtitleWordBase =============================
@@ -96,9 +97,9 @@ TrenderedTextSubtitleWord::TrenderedTextSubtitleWord(
 }
 
 // full rendering
-template<class tchar> TrenderedTextSubtitleWord::TrenderedTextSubtitleWord(
+TrenderedTextSubtitleWord::TrenderedTextSubtitleWord(
                        HDC hdc,
-                       const tchar *s0,
+                       const wchar_t *s0,
                        size_t strlens,
                        const YUVcolorA &YUV,
                        const YUVcolorA &outlineYUV,
@@ -121,15 +122,13 @@ template<class tchar> TrenderedTextSubtitleWord::TrenderedTextSubtitleWord(
  oldOutlineYUVa(256)
 {
  csp=prefs.csp & FF_CSPS_MASK;
- typedef typename tchar_traits<tchar>::ffstring ffstring;
- typedef typename tchar_traits<tchar>::strings strings;
  strings s1;
- strtok(ffstring(s0,strlens).c_str(),_L("\t"),s1);
+ strtok(ffstring(s0,strlens).c_str(),L"\t",s1);
  SIZE sz;sz.cx=sz.cy=0;ints cxs;
- for (typename strings::iterator s=s1.begin();s!=s1.end();s++)
+ for (strings::iterator s=s1.begin();s!=s1.end();s++)
   {
    SIZE sz0;
-   prefs.config->getGDI<tchar>().getTextExtentPoint32(hdc,s->c_str(),(int)s->size(),&sz0);
+   prefs.config->getGDI<wchar_t>().getTextExtentPoint32(hdc,s->c_str(),(int)s->size(),&sz0);
    sz.cx+=sz0.cx;
    if (s+1!=s1.end())
     {
@@ -171,11 +170,11 @@ template<class tchar> TrenderedTextSubtitleWord::TrenderedTextSubtitleWord(
  SetBkColor(hdc,RGB(0,0,0));
  int x=GDI_rendering_window/2;
  ints::const_iterator cx=cxs.begin();
- for (typename strings::const_iterator s=s1.begin();s!=s1.end();s++,cx++)
+ for (strings::const_iterator s=s1.begin();s!=s1.end();s++,cx++)
   {
    const char *t=(const char *)s->c_str();
    int sz=(int)s->size();
-   prefs.config->getGDI<tchar>().textOut(hdc,x,GDI_rendering_window/2,s->c_str(),sz/*(int)s->size()*/);
+   prefs.config->getGDI<wchar_t>().textOut(hdc,x,GDI_rendering_window/2,s->c_str(),sz/*(int)s->size()*/);
    x+=*cx;
   }
  if (gdi_font_scale == 4)
@@ -853,9 +852,9 @@ int TrenderedTextSubtitleWord::get_descent64() const
 
 // fast rendering
 // YV12 only. RGB32 is not supported.
-template<class tchar> TrenderedTextSubtitleWord::TrenderedTextSubtitleWord(
+TrenderedTextSubtitleWord::TrenderedTextSubtitleWord(
                        TcharsChache *charsChache,
-                       const tchar *s,size_t strlens,
+                       const wchar_t *s,size_t strlens,
                        const TrenderedSubtitleLines::TprintPrefs &Iprefs,
                        const LOGFONT &lf,
                        TSubtitleProps Iprops,
@@ -889,9 +888,6 @@ template<class tchar> TrenderedTextSubtitleWord::TrenderedTextSubtitleWord(
    for (int p=0;p<3;p++)
     dy[p]=std::max(dy[p],chars[i]->dy[p]);
    baseline=std::max(baseline,chars[i]->baseline);
-   if(sizeof(tchar)==sizeof(char))
-    if(_mbclen((const unsigned char *)&s[i])==2)
-     i++;
   }
  if (strlens>0)
   {
@@ -946,9 +942,6 @@ template<class tchar> TrenderedTextSubtitleWord::TrenderedTextSubtitleWord(
       }
     }
    x+=chars[i]->dxCharY+1;
-   if(sizeof(tchar)==sizeof(char))
-    if(_mbclen((const unsigned char *)&s[i])==2)
-     i++;
   }
  _mm_empty();
 }
@@ -1723,7 +1716,8 @@ TcharsChache::~TcharsChache()
  for (Tchars::iterator c=chars.begin();c!=chars.end();c++)
   delete c->second;
 }
-template<> const TrenderedTextSubtitleWord* TcharsChache::getChar(const wchar_t *s,
+
+const TrenderedTextSubtitleWord* TcharsChache::getChar(const wchar_t *s,
     const TrenderedSubtitleLines::TprintPrefs &prefs,
     const LOGFONT &lf,TSubtitleProps props,
     unsigned int gdi_font_scale,
@@ -1735,33 +1729,6 @@ template<> const TrenderedTextSubtitleWord* TcharsChache::getChar(const wchar_t 
  TrenderedTextSubtitleWord *ln=new TrenderedTextSubtitleWord(hdc,s,1,yuv,outlineYUV,shadowYUV,prefs,lf,xscale*100/yscale,props,gdi_font_scale,GDI_rendering_window);
  chars[key]=ln;
  return ln;
-}
-
-template<> const TrenderedTextSubtitleWord* TcharsChache::getChar(const char *s,
-    const TrenderedSubtitleLines::TprintPrefs &prefs,
-    const LOGFONT &lf,TSubtitleProps props,
-    unsigned int gdi_font_scale,
-    unsigned int GDI_rendering_window)
-{
- if(_mbclen((unsigned char *)s)==1)
-  {
-   int key=(int)*s;
-   Tchars::iterator l=chars.find(key);
-   if (l!=chars.end()) return l->second;
-   TrenderedTextSubtitleWord *ln=new TrenderedTextSubtitleWord(hdc,s,1,yuv,outlineYUV,shadowYUV,prefs,lf,xscale*100/yscale,props,gdi_font_scale,GDI_rendering_window);
-   chars[key]=ln;
-   return ln;
-  }
- else
-  {
-   const wchar_t *mbcs=(wchar_t *)s; // ANSI-MBCS
-   int key=(int)*mbcs;
-   Tchars::iterator l=chars.find(key);
-   if (l!=chars.end()) return l->second;
-   TrenderedTextSubtitleWord *ln=new TrenderedTextSubtitleWord(hdc,s,2,yuv,outlineYUV,shadowYUV,prefs,lf,xscale*100/yscale,props,gdi_font_scale,GDI_rendering_window);
-   chars[key]=ln;
-   return ln;
-  }
 }
 
 //============================== TrenderedVobsubWord ===============================
@@ -1883,10 +1850,8 @@ void Tfont::done(void)
  if (charsCache) delete charsCache;charsCache=NULL;
 }
 
-template<class tchar> TrenderedTextSubtitleWord* Tfont::newWord(const tchar *s,size_t slen,TrenderedSubtitleLines::TprintPrefs prefs,const TsubtitleWord<tchar> *w,const LOGFONT &lf,bool trimRightSpaces)
+TrenderedTextSubtitleWord* Tfont::newWord(const wchar_t *s,size_t slen,TrenderedSubtitleLines::TprintPrefs prefs,const TsubtitleWord *w,const LOGFONT &lf,bool trimRightSpaces)
 {
- typedef typename tchar_traits<tchar>::ffstring ffstring;
-
  ffstring s1(s);
  if (trimRightSpaces)
   {
@@ -1927,7 +1892,7 @@ template<class tchar> TrenderedTextSubtitleWord* Tfont::newWord(const tchar *s,s
   }
  prefs.outlineBlur=w->props.blur ? true : false;
 
- if (fontSettings->blur || (w->props.version >= TsubtitleParserSSA<tchar>::ASS && lf.lfHeight > int(37 * gdi_font_scale))) // FIXME: messy. just trying to resemble vsfilter.
+ if (fontSettings->blur || (w->props.version >= TsubtitleParserSSA::ASS && lf.lfHeight > int(37 * gdi_font_scale))) // FIXME: messy. just trying to resemble vsfilter.
   prefs.blur=true;
  else
   prefs.blur=false;
@@ -1975,16 +1940,15 @@ template<class tchar> TrenderedTextSubtitleWord* Tfont::newWord(const tchar *s,s
   }
 }
 
-template<class tchar> int Tfont::get_splitdx_for_new_line(const TsubtitleWord<tchar> &w,int splitdx,int dx, const TrenderedSubtitleLines::TprintPrefs &prefs) const
+int Tfont::get_splitdx_for_new_line(const TsubtitleWord &w,int splitdx,int dx, const TrenderedSubtitleLines::TprintPrefs &prefs) const
 {
  // This method calculates the maximum length of the line considering the left/right margin and eventually
  // basing on the position set through a position tag
  return w.props.get_maxWidth(dx, prefs.subformat, deci) * gdi_font_scale;
 }
 
-template<class tchar> void Tfont::prepareC(const TsubtitleTextBase<tchar> *sub,const TrenderedSubtitleLines::TprintPrefs &prefs,bool forceChange)
+void Tfont::prepareC(const TsubtitleTextBase *sub,const TrenderedSubtitleLines::TprintPrefs &prefs,bool forceChange)
 {
- typedef typename tchar_traits<tchar>::ffstring ffstring;
  if (oldsub!=sub || forceChange || oldCsp!=prefs.csp)
   {
    oldsub=sub;
@@ -2012,7 +1976,7 @@ template<class tchar> void Tfont::prepareC(const TsubtitleTextBase<tchar> *sub,c
    int *pwidths=NULL;
    Tbuffer width;
 
-   for (typename TsubtitleTextBase<tchar>::const_iterator l=sub->begin();l!=sub->end();l++)
+   for (TsubtitleTextBase::const_iterator l=sub->begin();l!=sub->end();l++)
     {
      int charCount=0;
      ffstring allStr;
@@ -2030,13 +1994,13 @@ template<class tchar> void Tfont::prepareC(const TsubtitleTextBase<tchar> *sub,c
        if (old)
         SelectObject(hdc,old);
       }
-     for (typename TsubtitleLine<tchar>::const_iterator w=l->begin();w!=l->end();w++)
+     for (TsubtitleLine::const_iterator w=l->begin();w!=l->end();w++)
       {
        LOGFONT lf;
        HGDIOBJ old = w->props.toGdiFont(hdc, lf, *fontSettings, dx, dy, prefs.clipdy, prefs.sar, fontManager, gdi_font_scale);
        if (!oldFont) oldFont=old;
        SetTextCharacterExtra(hdc,w->props.spacing==INT_MIN ? fontSettings->spacing : w->props.get_spacing(dy, prefs.clipdy, gdi_font_scale));
-       const tchar *p=*w;
+       const wchar_t *p=*w;
        if (*p) // drop empty words
         {
          int xscale=w->props.get_xscale(fontSettings->xscale,prefs.sar,fontSettings->aspectAuto,fontSettings->overrideScale)*100/w->props.get_yscale(fontSettings->yscale,prefs.sar,fontSettings->aspectAuto,fontSettings->overrideScale);
@@ -2049,7 +2013,7 @@ template<class tchar> void Tfont::prepareC(const TsubtitleTextBase<tchar> *sub,c
          SIZE sz;
          size_t strlenp=strlen(p);
          int *ptempwidths=(int*)tempwidth.alloc((strlenp+1)*sizeof(int)*2); // *2 to work around Layer For Unicode on Windows 9x.
-         prefs.config->getGDI<tchar>().getTextExtentExPoint(hdc,p,(int)strlenp,INT_MAX,&nfit,ptempwidths,&sz);
+         prefs.config->getGDI<wchar_t>().getTextExtentExPoint(hdc,p,(int)strlenp,INT_MAX,&nfit,ptempwidths,&sz);
          for (size_t x=0;x<strlenp;x++)
           {
            pwidths[charCount]=nextleft=(double)ptempwidths[x]*xscale/100+left;
@@ -2070,16 +2034,16 @@ template<class tchar> void Tfont::prepareC(const TsubtitleTextBase<tchar> *sub,c
          if (wordWrapMode>=2) wordWrapMode++;
         }
       }
-     TwordWrap<tchar> wordWrap(wordWrapMode,allStr.c_str(),pwidths,splitdxMax,l->props.version != -1);
+     TwordWrap wordWrap(wordWrapMode,allStr.c_str(),pwidths,splitdxMax,l->props.version != -1);
      //wordWrap.debugprint();
 
      TrenderedSubtitleLine *line=NULL;
      int cx=0,cy=0;
      unsigned int refResX=prefs.xinput, refResY=prefs.yinput;
      bool firstLine=true;
-     for (typename TsubtitleLine<tchar>::const_iterator w0=l->begin();w0!=l->end();w0++)
+     for (TsubtitleLine::const_iterator w0=l->begin();w0!=l->end();w0++)
       {
-       TsubtitleWord<tchar> w(*w0);
+       TsubtitleWord w(*w0);
        LOGFONT lf;
        HGDIOBJ old = w.props.toGdiFont(hdc, lf, *fontSettings, dx, dy, prefs.clipdy, prefs.sar, fontManager, gdi_font_scale);
        SetTextCharacterExtra(hdc,w.props.spacing==INT_MIN ? fontSettings->spacing : w.props.get_spacing(dy, prefs.clipdy, gdi_font_scale));
@@ -2103,7 +2067,7 @@ template<class tchar> void Tfont::prepareC(const TsubtitleTextBase<tchar> *sub,c
          }
         }
 
-       const tchar *p=w;
+       const wchar_t *p=w;
        if (*p) // drop empty words
         {
          #ifdef DEBUG
@@ -2115,7 +2079,7 @@ template<class tchar> void Tfont::prepareC(const TsubtitleTextBase<tchar> *sub,c
           {
            if (linesInWord>0)
             {
-             while (*p && tchar_traits<tchar>::isspace((typename tchar_traits<tchar>::uchar_t)*p))
+             while (*p && iswspace((unsigned short)*p))
               {
                cx++;
                p++;
@@ -2187,12 +2151,9 @@ template<class tchar> void Tfont::prepareC(const TsubtitleTextBase<tchar> *sub,c
   }
 }
 
-template<class tchar> void Tfont::print(const TsubtitleTextBase<tchar> *sub,bool forceChange,const TrenderedSubtitleLines::TprintPrefs &prefs,unsigned int *y)
+void Tfont::print(const TsubtitleTextBase *sub,bool forceChange,const TrenderedSubtitleLines::TprintPrefs &prefs,unsigned int *y)
 {
  if (!sub) return;
  prepareC(sub,prefs,forceChange);if (y) *y+=height;
  lines.print(prefs);
 }
-
-template void Tfont::print(const TsubtitleTextBase<char> *sub,bool forceChange,const TrenderedSubtitleLines::TprintPrefs &prefs,unsigned int *y);
-template void Tfont::print(const TsubtitleTextBase<wchar_t> *sub,bool forceChange,const TrenderedSubtitleLines::TprintPrefs &prefs,unsigned int *y);

@@ -139,7 +139,7 @@ public:
  const YUVcolorA& getOutlineYUV(void) const {return outlineYUV;}
  const YUVcolorA& getShadowYUV(void) const {return shadowYUV;}
  TcharsChache(HDC Ihdc,const YUVcolorA &Iyuv,const YUVcolorA &Ioutline,const YUVcolorA &Ishadow,int Ixscale,int Iyscale,IffdshowBase *Ideci);
- template<class tchar> const TrenderedTextSubtitleWord *getChar(tchar *s,const TrenderedSubtitleLines::TprintPrefs &prefs,const LOGFONT &lf,TSubtitleProps props,unsigned int gdi_font_scale,unsigned int GDI_rendering_window);
+ const TrenderedTextSubtitleWord *getChar(const wchar_t *s,const TrenderedSubtitleLines::TprintPrefs &prefs,const LOGFONT &lf,TSubtitleProps props,unsigned int gdi_font_scale,unsigned int GDI_rendering_window);
  ~TcharsChache();
 };
 
@@ -212,9 +212,9 @@ private:
 public:
  TSubtitleProps props;
  // full rendering
- template<class tchar> TrenderedTextSubtitleWord(
+ TrenderedTextSubtitleWord(
                         HDC hdc,
-                        const tchar *s,
+                        const wchar_t *s,
                         size_t strlens,
                         const YUVcolorA &YUV,
                         const YUVcolorA &outlineYUV,
@@ -232,9 +232,9 @@ public:
                         bool senondaryColor                       // to distinguish from default copy constructor
                         );
  // fast rendering
- template<class tchar> TrenderedTextSubtitleWord(
+ TrenderedTextSubtitleWord(
                         TcharsChache *chars,
-                        const tchar *s,size_t strlens,
+                        const wchar_t *s,size_t strlens,
                         const TrenderedSubtitleLines::TprintPrefs &prefs,
                         const LOGFONT &lf,
                         TSubtitleProps Iprops,
@@ -279,11 +279,11 @@ public:
  TSubtitleProps props;
 };
 
-template<class tchar> struct TsubtitleWord;
+struct TsubtitleWord;
 struct TfontSettings;
 struct Tsubtitle;
 struct TfontSettings;
-template<class tchar> struct TsubtitleTextBase;
+struct TsubtitleTextBase;
 class Tfont
 {
 private:
@@ -298,17 +298,17 @@ private:
  int oldCsp;
  YUVcolorA yuvcolor,outlineYUV,shadowYUV;
  short matrix[5][5];
- template<class tchar> void prepareC(const TsubtitleTextBase<tchar> *sub,const TrenderedSubtitleLines::TprintPrefs &prefs,bool forceChange);
- template<class tchar> int get_splitdx_for_new_line(const TsubtitleWord<tchar> &w,int splitdx,int dx, const TrenderedSubtitleLines::TprintPrefs &prefs) const;
+ void prepareC(const TsubtitleTextBase *sub,const TrenderedSubtitleLines::TprintPrefs &prefs,bool forceChange);
+ int get_splitdx_for_new_line(const TsubtitleWord &w,int splitdx,int dx, const TrenderedSubtitleLines::TprintPrefs &prefs) const;
  TcharsChache *charsCache;
- template<class tchar> TrenderedTextSubtitleWord* newWord(const tchar *s,size_t slen,TrenderedSubtitleLines::TprintPrefs prefs,const TsubtitleWord<tchar> *w,const LOGFONT &lf,bool trimRightSpaces=false);
+ TrenderedTextSubtitleWord* newWord(const wchar_t *s,size_t slen,TrenderedSubtitleLines::TprintPrefs prefs,const TsubtitleWord *w,const LOGFONT &lf,bool trimRightSpaces=false);
 public:
  // gdi_font_scale: 4: for OSD. rendering_window is 4x5.
  //                 8-16: for subtitles. 16:very sharp (slow), 12:soft & sharp, (moderately slow) 8:blurry (fast)
  Tfont(IffdshowBase *Ideci, unsigned int Igdi_font_scale);
  ~Tfont();
  void init(const TfontSettings *IfontSettings);
- template<class tchar> void print(const TsubtitleTextBase<tchar> *sub,bool forceChange,const TrenderedSubtitleLines::TprintPrefs &prefs,unsigned int *y=NULL);
+ void print(const TsubtitleTextBase *sub,bool forceChange,const TrenderedSubtitleLines::TprintPrefs &prefs,unsigned int *y=NULL);
  void done(void);
 };
 

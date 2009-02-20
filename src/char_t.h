@@ -106,17 +106,17 @@ private:
  Tout *buf;
  bool own;
 public:
- template<class Tin> inline text(const Tin *in);
- template<class Tin> inline text(const Tin *in,Tout *Ibuf);
- template<class Tin> inline text(const Tin *in,int inlen,Tout *Ibuf,size_t outlen);
+ template<class Tin> inline text(const Tin *in,int code_page = CP_ACP);
+ template<class Tin> inline text(const Tin *in,Tout *Ibuf,int code_page = CP_ACP);
+ template<class Tin> inline text(const Tin *in,int inlen,Tout *Ibuf,size_t outlen,int code_page = CP_ACP);
  ~text() {if (own) delete []buf;}
  operator const Tout*() const {return buf;}
 };
 
 
-template<> template<> inline text<char>::text(const char *in):buf(const_cast<char*>(in)),own(false) {}
-template<> template<> inline text<char>::text(const char *in,char *Ibuf):buf(strcpy(Ibuf,in)),own(false) {}
-template<> template<> inline text<char>::text(const char *in,int inlen,char *Ibuf,size_t outlen):own(false)
+template<> template<> inline text<char>::text(const char *in,int code_page):buf(const_cast<char*>(in)),own(false) {}
+template<> template<> inline text<char>::text(const char *in,char *Ibuf,int code_page):buf(strcpy(Ibuf,in)),own(false) {}
+template<> template<> inline text<char>::text(const char *in,int inlen,char *Ibuf,size_t outlen,int code_page):own(false)
 {
  if (inlen!=-1)
   {
@@ -138,9 +138,9 @@ template<> template<> inline text<char>::text(const char *in,int inlen,char *Ibu
 }
 
 
-template<> template<> inline text<wchar_t>::text(const wchar_t *in):buf(const_cast<wchar_t*>(in)),own(false) {}
-template<> template<> inline text<wchar_t>::text(const wchar_t *in,wchar_t *Ibuf):buf(strcpy(Ibuf,in)),own(false) {}
-template<> template<> inline text<wchar_t>::text(const wchar_t *in,int inlen,wchar_t *Ibuf,size_t outlen):own(false)
+template<> template<> inline text<wchar_t>::text(const wchar_t *in,int code_page):buf(const_cast<wchar_t*>(in)),own(false) {}
+template<> template<> inline text<wchar_t>::text(const wchar_t *in,wchar_t *Ibuf,int code_page):buf(strcpy(Ibuf,in)),own(false) {}
+template<> template<> inline text<wchar_t>::text(const wchar_t *in,int inlen,wchar_t *Ibuf,size_t outlen,int code_page):own(false)
 {
  if (inlen!=-1)
   {
@@ -162,49 +162,49 @@ template<> template<> inline text<wchar_t>::text(const wchar_t *in,int inlen,wch
 }
 
 
-template<> template<> inline text<wchar_t>::text(const char *in):own(in?true:false)
+template<> template<> inline text<wchar_t>::text(const char *in,int code_page):own(in?true:false)
 {
  if (in)
   {
    size_t l=strlen(in);
    buf=new wchar_t[l+1];
-   MultiByteToWideChar(CP_ACP,0,in,int(l+1),buf,int(l+1));
+   MultiByteToWideChar(code_page,0,in,int(l+1),buf,int(l+1));
   }
  else
   buf=NULL;
 }
-template<> template<> inline text<wchar_t>::text(const char *in,wchar_t *Ibuf):own(false),buf(Ibuf)
+template<> template<> inline text<wchar_t>::text(const char *in,wchar_t *Ibuf,int code_page):own(false),buf(Ibuf)
 {
  size_t l=strlen(in);
- MultiByteToWideChar(CP_ACP,0,in,int(l+1),buf,int(l+1));
+ MultiByteToWideChar(code_page,0,in,int(l+1),buf,int(l+1));
 }
-template<> template<> inline text<wchar_t>::text(const char *in,int inlen,wchar_t *Ibuf,size_t outlen):own(false),buf(Ibuf)
+template<> template<> inline text<wchar_t>::text(const char *in,int inlen,wchar_t *Ibuf,size_t outlen,int code_page):own(false),buf(Ibuf)
 {
-  MultiByteToWideChar(CP_ACP,0,in,int(inlen),buf,int(outlen));
+  MultiByteToWideChar(code_page,0,in,int(inlen),buf,int(outlen));
 }
 
 
-template<> template<> inline text<char>::text(const wchar_t *in):own(in?true:false)
+template<> template<> inline text<char>::text(const wchar_t *in,int code_page):own(in?true:false)
 {
  if (in)
   {
    size_t l=strlen(in);
-   int length=WideCharToMultiByte(CP_ACP,0,in,int(l+1),buf,0,NULL,NULL);
+   int length=WideCharToMultiByte(code_page,0,in,int(l+1),buf,0,NULL,NULL);
    buf=new char[length+1];
-   WideCharToMultiByte(CP_ACP,0,in,int(l+1),buf,int(length+1),NULL,NULL);
+   WideCharToMultiByte(code_page,0,in,int(l+1),buf,int(length+1),NULL,NULL);
   }
  else
   buf=NULL;
 }
-template<> template<> inline text<char>::text(const wchar_t *in,char *Ibuf):own(false),buf(Ibuf)
+template<> template<> inline text<char>::text(const wchar_t *in,char *Ibuf,int code_page):own(false),buf(Ibuf)
 {
  size_t l=strlen(in);
- int length= WideCharToMultiByte(CP_ACP,0,in,int(l+1),buf,0,NULL,NULL);
- WideCharToMultiByte(CP_ACP,0,in,int(l+1),buf,length,NULL,NULL);
+ int length= WideCharToMultiByte(code_page,0,in,int(l+1),buf,0,NULL,NULL);
+ WideCharToMultiByte(code_page,0,in,int(l+1),buf,length,NULL,NULL);
 }
-template<> template<> inline text<char>::text(const wchar_t *in,int inlen,char *Ibuf,size_t outlen):own(false),buf(Ibuf)
+template<> template<> inline text<char>::text(const wchar_t *in,int inlen,char *Ibuf,size_t outlen,int code_page):own(false),buf(Ibuf)
 {
- WideCharToMultiByte(CP_ACP,0,in,int(inlen),buf,int(outlen),NULL,NULL);
+ WideCharToMultiByte(code_page,0,in,int(inlen),buf,int(outlen),NULL,NULL);
 }
 
 #endif

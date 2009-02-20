@@ -1681,7 +1681,6 @@ template const char* strnistr(const char *haystack,size_t n,const char *needle);
 template const char *strnchr(const char *s,size_t n,int c);
 template char* strrmchar(char *s,int c);
 template void strtok(const char *s,const char *delim,std::vector<DwString<char> > &lst,bool add_empty,size_t max_parts);
-template void strtok(const char *s,const char *delim,std::vector<Tstrpart<char> > &lst,bool add_empty,size_t max_parts);
 template void strtok(const char *s,const char *delim,ints &lst,bool add_empty,size_t max_parts);
 template const void* memnstr(const void *haystachk,size_t n,const char *needle);
 
@@ -1690,7 +1689,7 @@ template const wchar_t* strnstr(const wchar_t *haystack,size_t n,const wchar_t *
 template const wchar_t* strnistr(const wchar_t *haystack,size_t n,const wchar_t *needle);
 template const wchar_t *strnchr(const wchar_t *s,size_t n,int c);
 template void strtok(const wchar_t *s,const wchar_t *delim,std::vector<DwString<wchar_t> > &lst,bool add_empty,size_t max_parts);
-template void strtok(const wchar_t *s,const wchar_t *delim,std::vector<Tstrpart<wchar_t> > &lst,bool add_empty,size_t max_parts);
+template void strtok(const wchar_t *s,const wchar_t *delim,std::vector<Tstrpart> &lst,bool add_empty,size_t max_parts);
 template void strtok(const wchar_t *s,const wchar_t *delim,ints &lst,bool add_empty,size_t max_parts);
 template wchar_t* strrmchar(wchar_t *s,int c);
 template const void* memnstr(const void *haystachk,size_t n,const wchar_t *needle);

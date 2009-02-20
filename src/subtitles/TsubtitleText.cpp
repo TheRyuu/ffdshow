@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2003-2006 Milan Cutka
+ *               2007-2009 h.yamagata
  * subtitles fixing code from SubRip by MJQ (subrip@divx.pl)
  *
  * This program is free software; you can redistribute it and/or modify
@@ -26,6 +27,8 @@
 #include "ThtmlColors.h"
 #include "ffglobals.h"
 
+#define _L1(x) L##x
+
 //========================== TtextFixBase =========================
 strings TtextFixBase::getDicts(const Tconfig *cfg)
 {
@@ -39,7 +42,7 @@ strings TtextFixBase::getDicts(const Tconfig *cfg)
 }
 
 //============================= TtextFix ==========================
-template<class tchar> TtextFix<tchar>::TtextFix(const TsubtitlesSettings *scfg,const Tconfig *ffcfg):
+TtextFix::TtextFix(const TsubtitlesSettings *scfg,const Tconfig *ffcfg):
  EndOfPrevSentence(true),
  inHearing(false)
 {
@@ -51,16 +54,16 @@ template<class tchar> TtextFix<tchar>::TtextFix(const TsubtitlesSettings *scfg,c
    TstreamFile fs(dictflnm,false,false);
    if (fs)
     {
-     tchar ln[1000];
+     wchar_t ln[1000];
      while (fs.fgets(ln,1000))
       {
-       tchar *eoln=strchr(ln,'\n');if (eoln) *eoln='\0';
+       wchar_t *eoln=strchr(ln,'\n');if (eoln) *eoln='\0';
        odict.push_back(ln);
       }
      if (odd(odict.size()))
       odict.erase(odict.end()-1);
      if (!odict.empty())
-      for (typename strings::iterator s=odict.begin();s+1!=odict.end();s++)
+      for (strings::iterator s=odict.begin();s+1!=odict.end();s++)
        if (strstr((s+1)->c_str(),s->c_str()))
         {
          s=odict.erase(s);
@@ -70,25 +73,25 @@ template<class tchar> TtextFix<tchar>::TtextFix(const TsubtitlesSettings *scfg,c
   }
 }
 
-template<class tchar> bool TtextFix<tchar>::process(ffstring &text,ffstring &fixed)
+bool TtextFix::process(ffstring &text,ffstring &fixed)
 {
  if (cfg.fix==0) return false;
  int W1;
- passtring<tchar> S1=text;
+ passtring<wchar_t> S1=text;
 
  if (cfg.fix&fixAP) //AP
   {
-   S1=stringreplace(S1,_L("`")   , _L("'") ,rfReplaceAll);
-   S1=stringreplace(S1,_L("\264"), _L("'") ,rfReplaceAll);
-   S1=stringreplace(S1,_L("''")  , _L("\""),rfReplaceAll);
-   S1=stringreplace(S1,_L("\"\""), _L("\""),rfReplaceAll);
+   S1=stringreplace(S1,_L1("`")   , _L1("'") ,rfReplaceAll);
+   S1=stringreplace(S1,_L1("\264"), _L1("'") ,rfReplaceAll);
+   S1=stringreplace(S1,_L1("''")  , _L1("\""),rfReplaceAll);
+   S1=stringreplace(S1,_L1("\"\""), _L1("\""),rfReplaceAll);
   }
 
  if (cfg.fix&fixIl) // Il
   {
    #define TrChar(n) St1[W1+(n)]
    bool TakeI=false,Takel=false;
-   passtring<tchar> St1=_L("  ")+S1+_L("  ");
+   passtring<wchar_t> St1=_L1("  ")+S1+_L1("  ");
    for (W1=1 + 2;W1<=St1.size() - 2;W1++)
     {
      //small L --> big i
@@ -99,12 +102,12 @@ template<class tchar> bool TtextFix<tchar>::process(ffstring &text,ffstring &fix
        if ((TrChar(-1)==' ' || TrChar(-1)=='#') && (TrChar(+1) == 'l') && (TrChar(+2) == 'l'))
         {
          //_lllx --> _Illx (Illinois, Illegal etc.) + _Ill-
-         if (in(TrChar(+3),_L("-abehinopstuy"))) TakeI = true;
+         if (in(TrChar(+3),_L1("-abehinopstuy"))) TakeI = true;
          //._Ill_ (=bedridden) + ._Ill. (Ill. = Illustriert, Illustration [German])
          //other than BoL cases not reflected
-         if (in(TrChar(-2),_L(".[")) && (in(TrChar(+3),_L(" .")))) TakeI = true;
+         if (in(TrChar(-2),_L1(".[")) && (in(TrChar(+3),_L1(" .")))) TakeI = true;
          //Godfather III / Godfather III.
-         if (!(in(TrChar(-2),_L(".[")) && (in(TrChar(+3),_L(" .!?,")))))
+         if (!(in(TrChar(-2),_L1(".[")) && (in(TrChar(+3),_L1(" .!?,")))))
           {
            TakeI = true;
            St1[W1 + 1] = 'I';
@@ -112,10 +115,10 @@ template<class tchar> bool TtextFix<tchar>::process(ffstring &text,ffstring &fix
           }
         }
        //_lgelit _lglu _lgnition _lgrafpapier _lguana
-       if (in(TrChar(-1),_L(" [(#")) && (TrChar(+1) == 'g') && in(TrChar(+2),_L("elnru")))
+       if (in(TrChar(-1),_L1(" [(#")) && (TrChar(+1) == 'g') && in(TrChar(+2),_L1("elnru")))
         TakeI = true;
        //ME LOVES MAKARONl! (MY TO SLYSELl. (!?) [cz; no others affected])
-       if (in(TrChar(+1),_L(".!?")) &&
+       if (in(TrChar(+1),_L1(".!?")) &&
            (TrChar(-1) == toupper(TrChar(-1))) &&
            (TrChar(-1) != '.') && //»p?En.l.« at EoL case
            (TrChar(-2) == toupper(TrChar(-2))))
@@ -129,7 +132,7 @@ template<class tchar> bool TtextFix<tchar>::process(ffstring &text,ffstring &fix
          (TrChar(-1) != '.') && //»p?En.l.« case [cz; no others affected]
          (TrChar(+1) == toupper(TrChar(+1))))
          ||
-         ((in(TrChar(-1),_L(" #"))) && (TrChar(+1) == 'n') && (TrChar(+2) != '\354')))
+         ((in(TrChar(-1),_L1(" #"))) && (TrChar(+1) == 'n') && (TrChar(+2) != '\354')))
         TakeI = true;
        //last sign at uniline OR space follows
        if ((TrChar(+1) == ' ') &&
@@ -138,22 +141,22 @@ template<class tchar> bool TtextFix<tchar>::process(ffstring &text,ffstring &fix
        //._l | -l | -_l; contain: ._ll_ (italian: Il brutto, il nero)
        if (((TrChar(-2) != '.') && (TrChar(-1) == '.')) ||
            ((TrChar(-2) == ' ') && (TrChar(-1) == '-')) ||
-           ((in(TrChar(-2),_L(".-"))) && (TrChar(-1) == ' ')) &&
+           ((in(TrChar(-2),_L1(".-"))) && (TrChar(-1) == ' ')) &&
            (TrChar(+1) != 'i')) TakeI = true;
        //_ll_ to _Il_ ...this is made only as prep for next
-       if ((in(TrChar(-1),_L(" #"))) && (TrChar(+1) == 'l') &&
-         (in(TrChar(+2),_L(" .,?!:")))) TakeI = true;
+       if ((in(TrChar(-1),_L1(" #"))) && (TrChar(+1) == 'l') &&
+         (in(TrChar(+2),_L1(" .,?!:")))) TakeI = true;
        //_Il_ to _II_ (-2 <> . or [) Godfather II & Ramses II
        if ((TrChar(-3) != '.') && (TrChar(-3) != '[') && (TrChar(-3) != '\0') &&
            (TrChar(-2) == ' ') && (TrChar(-1) == 'I') &&
-           (in(TrChar(+1),_L(" .,?!:")))) TakeI = true;
+           (in(TrChar(+1),_L1(" .,?!:")))) TakeI = true;
        //"hey C.W. load the weapons" and "hey... load the weapons"
        //      432101                        432101
        if ((TrChar(-4) == '.') && (TrChar(-2) == '.') & (TrChar(-1) == ' ') &&
-           (in(TrChar(+1),_L("aeiouy"))))
+           (in(TrChar(+1),_L1("aeiouy"))))
         TakeI = false;
        //_Ital...
-       if ((in(TrChar(-1),_L(" #"))) && (TrChar(+1) == 't') && (TrChar(+2) == 'a'))
+       if ((in(TrChar(-1),_L1(" #"))) && (TrChar(+1) == 't') && (TrChar(+2) == 'a'))
         TakeI = true;
        //only for international abnormalities
        switch (cfg.fixLang)
@@ -162,19 +165,19 @@ template<class tchar> bool TtextFix<tchar>::process(ffstring &text,ffstring &fix
           if (St1[W1] == 'l')
            {
             //so shity due the styles
-            if ((in(TrChar(-1),_L(" \"#"))) && (TrChar(+1) == 't' ) && (TrChar(+2) == '\'') && (TrChar(+3) == 's')) TakeI = true; //_lt's
-            if ((in(TrChar(-1),_L(" \"#"))) && (TrChar(+1) == '\'') && (TrChar(+2) == 'm' ) && (TrChar(+3) == ' ')) TakeI = true; //_l'm_
-            if ((in(TrChar(-1),_L(" \"#"))) && (TrChar(+1) == '\'') && (TrChar(+2) == 'd' ) && (TrChar(+3) == ' ')) TakeI = true; //_l'd_
-            if ((in(TrChar(-1),_L(" \"#"))) && (TrChar(+1) == '\'') && (TrChar(+2) == 'v' ) && (TrChar(+3) == 'e')) TakeI = true; //_l've
-            if ((in(TrChar(-1),_L(" \"#"))) && (TrChar(+1) == '\'') && (TrChar(+2) == 'l' ) && (TrChar(+3) == 'l')) TakeI = true; //_l'll
-            if ((in(TrChar(-1),_L(" \"#"))) && (in(TrChar(+1),_L("fnst"))) && (TrChar(+2) == ' ')) TakeI = true; //_lf_, _ln_, _ls_, _lt_
+            if ((in(TrChar(-1),_L1(" \"#"))) && (TrChar(+1) == 't' ) && (TrChar(+2) == '\'') && (TrChar(+3) == 's')) TakeI = true; //_lt's
+            if ((in(TrChar(-1),_L1(" \"#"))) && (TrChar(+1) == '\'') && (TrChar(+2) == 'm' ) && (TrChar(+3) == ' ')) TakeI = true; //_l'm_
+            if ((in(TrChar(-1),_L1(" \"#"))) && (TrChar(+1) == '\'') && (TrChar(+2) == 'd' ) && (TrChar(+3) == ' ')) TakeI = true; //_l'd_
+            if ((in(TrChar(-1),_L1(" \"#"))) && (TrChar(+1) == '\'') && (TrChar(+2) == 'v' ) && (TrChar(+3) == 'e')) TakeI = true; //_l've
+            if ((in(TrChar(-1),_L1(" \"#"))) && (TrChar(+1) == '\'') && (TrChar(+2) == 'l' ) && (TrChar(+3) == 'l')) TakeI = true; //_l'll
+            if ((in(TrChar(-1),_L1(" \"#"))) && (in(TrChar(+1),_L1("fnst"))) && (TrChar(+2) == ' ')) TakeI = true; //_lf_, _ln_, _ls_, _lt_
             //no English word beginning with "lc", "ld", "lh", "ln", "lr", "ls"
-            if ((in(TrChar(-1),_L(" \"#"))) && (in(TrChar(+1),_L("cdhnrs")))) TakeI = true;
+            if ((in(TrChar(-1),_L1(" \"#"))) && (in(TrChar(+1),_L1("cdhnrs")))) TakeI = true;
            }
           break;
          case 1:// StCorrectIl_Fr;
           //*unknown*: I think that for french neither "I" alone nor "l" alone can exist so we don't check this. So the only thing we can write is that before an apostrophe there must be an "l".
-          if (((in(TrChar(-1),_L(" \"#"))) && (TrChar(+1) == ' ')) || //but Brain as Frenchman: lonesome I doesn't exist
+          if (((in(TrChar(-1),_L1(" \"#"))) && (TrChar(+1) == ' ')) || //but Brain as Frenchman: lonesome I doesn't exist
               (TrChar(+1) == '\''))//*unknown*: An I followed by an apostrophe cannot exist. Must be an l.
            {
             TakeI = false;
@@ -185,18 +188,18 @@ template<class tchar> bool TtextFix<tchar>::process(ffstring &text,ffstring &fix
          case 2:// StCorrectIl_Ge;
           if (St1[W1] == 'l')
            //no German word beginning with "lc", "ld", "lh", "ln", "lr", "ls"
-           if ((in(TrChar(-1),_L(" \"#"))) && (in(TrChar(+1),_L("cdhnrs")))) TakeI = true;
+           if ((in(TrChar(-1),_L1(" \"#"))) && (in(TrChar(+1),_L1("cdhnrs")))) TakeI = true;
           break;
          case 3:// StCorrectIl_Cz;
           if (St1[W1] == 'l')
            //no Czech word beginning with "lc", "ld", "lr"
-           if ((in(TrChar(-1),_L(" \"#"))) && (in(TrChar(+1),_L("cdr")))) TakeI = true;
+           if ((in(TrChar(-1),_L1(" \"#"))) && (in(TrChar(+1),_L1("cdr")))) TakeI = true;
           break;
          case 4:// StCorrectIl_It;
           //Hint: "i" alone CAN exist (even capital: after a full stop) while l alone can't, never
           //l' processing
           if ((TrChar(+1) == '\'')) //Ita always has l before apostrophe (if ' is not used as an accent for a capital letter! [rare, and followed by whitespace])
-           if ((in(TrChar(+2),_L("aAeEiIloOuUhH\xe0\xe8\xe9\xef\xf2\xf9"))))
+           if ((in(TrChar(+2),_L1("aAeEiIloOuUhH\xe0\xe8\xe9\xef\xf2\xf9"))))
             {
              Takel = true;
              TakeI = false;
@@ -206,7 +209,7 @@ template<class tchar> bool TtextFix<tchar>::process(ffstring &text,ffstring &fix
          case 5:// StCorrectIl_Pl;
           if (St1[W1] == 'l')
            //no Czech word beginning with "lc", "ld", "lr"
-           if ((in(TrChar(-1),_L("., \"#"))) && (in(TrChar(+1),_L("bcdfhjkrstz\346\263\361\237"))))
+           if ((in(TrChar(-1),_L1("., \"#"))) && (in(TrChar(+1),_L1("bcdfhjkrstz\346\263\361\237"))))
             {
              Takel = false;
              TakeI = true;
@@ -232,14 +235,14 @@ template<class tchar> bool TtextFix<tchar>::process(ffstring &text,ffstring &fix
       {
        Takel = false;
        //_III to _Ill
-       if ((in(TrChar(-1),_L(" #"))) && (TrChar(+1) == 'I') && (TrChar(+2) == 'I'))
+       if ((in(TrChar(-1),_L1(" #"))) && (TrChar(+1) == 'I') && (TrChar(+2) == 'I'))
         {
          //_IIIx --> _Illx (Illinois, Illegal etc.) + _Ill-
-         if ((in(TrChar(+3),_L("-abehinopstuy")))
+         if ((in(TrChar(+3),_L1("-abehinopstuy")))
           ||
            //._Ill_ (=bedridden) + ._Ill. (Ill. = Illustriert, Illustration [German])
            //other than BoL cases not reflected
-           ((in(TrChar(-2),_L(".["))) && (in(TrChar(+3),_L(" .")))))
+           ((in(TrChar(-2),_L1(".["))) && (in(TrChar(+3),_L1(" .")))))
           {
            St1[W1 + 1] = 'l';
            St1[W1 + 2] = 'l';
@@ -247,45 +250,45 @@ template<class tchar> bool TtextFix<tchar>::process(ffstring &text,ffstring &fix
            //Godfather III / Godfather III. *PASS*
         }
        //All, English, German
-       if (TrChar(-1)>='a' && TrChar(-1)<='z' && in(TrChar(-1),_L("\344\366\374"))) Takel = true;
+       if (TrChar(-1)>='a' && TrChar(-1)<='z' && in(TrChar(-1),_L1("\344\366\374"))) Takel = true;
        else
         if (!((in(TrChar(+1),
           //All, English, German; 'w' - Iwao (Japan name), 'v' - Ivan
-          _L("ABCDEFGHIJKLMNOPQRSTUVWXYZ\304\326\334 bcdghklmnoprstvwz\'.,!?"))) || //',' prevents PRCl, PRCl, PRCICKY
+          _L1("ABCDEFGHIJKLMNOPQRSTUVWXYZ\304\326\334 bcdghklmnoprstvwz\'.,!?"))) || //',' prevents PRCl, PRCl, PRCICKY
           //+East Europe - Czech, Slovak, Polish
           ((cfg.font.charset== EASTEUROPE_CHARSET) &&
-          (in(TrChar(+1),_L("\301\311\314\315\323\332\331\335\310\317\322\330\212\215\216\324\305\274\243\217\257\323\245\312\214\306\321")))) ||
+          (in(TrChar(+1),_L1("\301\311\314\315\323\332\331\335\310\317\322\330\212\215\216\324\305\274\243\217\257\323\245\312\214\306\321")))) ||
           //+Scandinavian
           ((cfg.font.charset== ANSI_CHARSET) &&
-          in(TrChar(+1),_L("\xc6\xd8\xc5"))
+          in(TrChar(+1),_L1("\xc6\xd8\xc5"))
           ) ||
           //+Italian: _Ieri_
-          ((in(TrChar(-1),_L(" #"))) && (TrChar(+1) == 'e') &&
+          ((in(TrChar(-1),_L1(" #"))) && (TrChar(+1) == 'e') &&
           (TrChar(+2) == 'r') && (cfg.fixLang == 4)
           )))
          Takel = true;
        //+East Europe - Czech, Slovak, Polish
        if ((cfg.font.charset== EASTEUROPE_CHARSET) &&
-           (in(TrChar(-1),_L("\341\350\357\351\354\355\362\363\370\232\235\372\371\375\236\364\345\276\237\277\363\263\271\352\234\346\361"))))
+           (in(TrChar(-1),_L1("\341\350\357\351\354\355\362\363\370\232\235\372\371\375\236\364\345\276\237\277\363\263\271\352\234\346\361"))))
         Takel = true;
        //+Scandinavian
        if ((cfg.font.charset== ANSI_CHARSET) &&
-           (in(TrChar(-1),_L("\xe6\xf8\xe5"))))
+           (in(TrChar(-1),_L1("\xe6\xf8\xe5"))))
         Takel = true;
        //_AIways AIden BIb BIouznit CIaire ÈIov?E PIný SIožit UItra ZIost
-       if ((in(TrChar(-2),_L(" \"-c#"))) && //'c' for Mac/Mc (McCIoy)
-           (in(TrChar(-1),_L("ABCDEFGHIJKLMNOPQRSTUVWXYZ\310\212\216\217\214"))) &&
-           (in(TrChar(+1),_L("abcdefghijklmnopqrstuvwxyz\341\350\351\354\355\363\362\232\371\375"))))
+       if ((in(TrChar(-2),_L1(" \"-c#"))) && //'c' for Mac/Mc (McCIoy)
+           (in(TrChar(-1),_L1("ABCDEFGHIJKLMNOPQRSTUVWXYZ\310\212\216\217\214"))) &&
+           (in(TrChar(+1),_L1("abcdefghijklmnopqrstuvwxyz\341\350\351\354\355\363\362\232\371\375"))))
         Takel = true;
        //Ihned leave, but Ihostejný --> lhostejný [cz; no others affected]
        if ((TrChar(+1) == 'h') && (TrChar(+2) != 'n')) Takel = true;
        //_AI_ to _Al_ - name (Artificial Intelligence (AI) not awaited :-)
-       if ((in(TrChar(-2),_L(" \"#'"))) &&
+       if ((in(TrChar(-2),_L1(" \"#'"))) &&
            (TrChar(-1) == 'A') &&
-           (in(TrChar(+1),_L(" \".,!?'"))))
+           (in(TrChar(+1),_L1(" \".,!?'"))))
         Takel = true;
        //._II_ to ._Il_ (Il nero on BoL italian)
-       if ((in(TrChar(-3),_L(".[-"))) && (TrChar(-2) == ' ') &&
+       if ((in(TrChar(-3),_L1(".[-"))) && (TrChar(-2) == ' ') &&
           (TrChar(-1) == 'I') && (TrChar(+1) == ' '))
         Takel = true;
        //(repd. from l-->I procedure too)  "EI gringo" to "El g." (BoL Spain)
@@ -300,50 +303,50 @@ template<class tchar> bool TtextFix<tchar>::process(ffstring &text,ffstring &fix
        //vs Ioad Iocation Iook Iost Ioud Iove
        //Ioch Iogický/Iogo Ioket Iomcovák Iopata Iovit
        //. Io... (Italian)
-       if (!(in(TrChar(-2),_L(".!?"))) &&
-            (in(TrChar(-1),_L(" \"#"))) && (TrChar(+1) == 'o') &&
-            !(in(TrChar(+2),_L("dlnwt .,!?"))))
+       if (!(in(TrChar(-2),_L1(".!?"))) &&
+            (in(TrChar(-1),_L1(" \"#"))) && (TrChar(+1) == 'o') &&
+            !(in(TrChar(+2),_L1("dlnwt .,!?"))))
         Takel = true;
        //Iodn?Eetc. vs Iodate Ioderma Iodic Iodoethanol [cz only, won't affect others]
-       if ((in(TrChar(-1),_L(" \"#"))) && (TrChar(+1) == 'o') && (TrChar(+2) == 'd') &&
-            !(in(TrChar(+3),_L("aeio")) || TrChar(+3)=='\0'))
+       if ((in(TrChar(-1),_L1(" \"#"))) && (TrChar(+1) == 'o') && (TrChar(+2) == 'd') &&
+            !(in(TrChar(+3),_L1("aeio")) || TrChar(+3)=='\0'))
         Takel = true;
        //Iondýnský [cz only, won't affect others]
-       if ((in(TrChar(-1),_L(" \"#"))) && (TrChar(+1) == 'o') && (TrChar(+2) == 'n') &&
+       if ((in(TrChar(-1),_L1(" \"#"))) && (TrChar(+1) == 'o') && (TrChar(+2) == 'n') &&
             (TrChar(+3) == 'd'))
         Takel = true;
        //_Iong
-       if ((in(TrChar(-1),_L(" \"#"))) && (TrChar(+1) == 'o') &&
+       if ((in(TrChar(-1),_L1(" \"#"))) && (TrChar(+1) == 'o') &&
             (TrChar(+2) == 'n') && (TrChar(+3) == 'g'))
         Takel = true;
        //_Ioni_ --> _loni_  [cz only, don't affect others]
-       if ((in(TrChar(-1),_L(" \"#"))) && (TrChar(+1) == 'o') && (TrChar(+2) == 'n') &&
-            (TrChar(+3) == 'i') && (in(TrChar(+4),_L(" \".,!?:"))))
+       if ((in(TrChar(-1),_L1(" \"#"))) && (TrChar(+1) == 'o') && (TrChar(+2) == 'n') &&
+            (TrChar(+3) == 'i') && (in(TrChar(+4),_L1(" \".,!?:"))))
         Takel = true;
        //Iot_ etc. vs Iota
-       if ((in(TrChar(-1),_L(" \"#"))) && (TrChar(+1) == 'o') &&
+       if ((in(TrChar(-1),_L1(" \"#"))) && (TrChar(+1) == 'o') &&
             (TrChar(+2) == 't') && (TrChar(+3) != 'a'))
         Takel = true;
        //Iow_ etc. vs Iowa
-       if ((in(TrChar(-1),_L(" \"#"))) && (TrChar(+1) == 'o') &&
+       if ((in(TrChar(-1),_L1(" \"#"))) && (TrChar(+1) == 'o') &&
             (TrChar(+2) == 'w') && (TrChar(+3) != 'a'))
         Takel = true;
        //_AII_ etc.
-       if ((in(TrChar(-2),_L(" \"-#"))) &&
-            (in(TrChar(-1),_L("AEU"))) && (TrChar(+1) == 'I') &&
-            (in(TrChar(+2),_L(" '-abcdefghijklmnopqrstuvwxyz"))))
+       if ((in(TrChar(-2),_L1(" \"-#"))) &&
+            (in(TrChar(-1),_L1("AEU"))) && (TrChar(+1) == 'I') &&
+            (in(TrChar(+2),_L1(" '-abcdefghijklmnopqrstuvwxyz"))))
         {
          Takel = true;
          St1[W1 + 1] = 'l';
         }
        //Eng only, no others affected: _If_, _If-, Iffy, Ifle, Ifor
-       if ((in(TrChar(-1),_L(" \"#"))) && (TrChar(+1) == 'f') &&
-          (in(TrChar(+2),_L(" -flo"))))
+       if ((in(TrChar(-1),_L1(" \"#"))) && (TrChar(+1) == 'f') &&
+          (in(TrChar(+2),_L1(" -flo"))))
         Takel = false;
        //"hey C.W. Ioad the weapons" and "hey... Ioad the weapons"
        //      432101                        432101
        if ((TrChar(-4) == '.') && (TrChar(-2) == '.') && (TrChar(-1) == ' ') &&
-            (in(TrChar(+1),_L("aeiouy"))))
+            (in(TrChar(+1),_L1("aeiouy"))))
         Takel = true;
        /* TODO
        //only for international abnormalities
@@ -376,33 +379,33 @@ template<class tchar> bool TtextFix<tchar>::process(ffstring &text,ffstring &fix
 
  if (cfg.fix&fixPunctuation) //punctuation
   {
-   static const tchar *punctinations[]=
+   static const wchar_t *punctinations[]=
     {
-     _L("?."),_L("?"),
-     _L("?,"),_L("?"),
-     _L(" )"),_L(")"),
-     _L("( "),_L("("),
-     _L(" ]"),_L("]"),
-     _L("[ "),_L("["),
-     _L("!."),_L("!"),
-     _L("!,"),_L("!"),
-     _L(". . ."),_L("..."),
-     _L(". .."),_L("..."),
-     _L(".. ."),_L("..."),
-     _L("--"),_L("..."),
-     _L("...."),_L("..."),
-     _L(" :"),_L(":"),
-     _L(" ;"),_L(";"),
-     _L(" %"),_L("%"),
-     _L(" !"),_L("!"),
-     _L(" ?"),_L("?"),
-     _L(" ."),_L("."),
-     _L(" ,"),_L(","),
-     _L(".:"),_L(":"),
-     _L(":."),_L(":"),
-     _L("eVe"),_L("eve"),
-     _L("    }"),_L("  }"),
-     _L("  "),_L(" "),
+     _L1("?."),_L1("?"),
+     _L1("?,"),_L1("?"),
+     _L1(" )"),_L1(")"),
+     _L1("( "),_L1("("),
+     _L1(" ]"),_L1("]"),
+     _L1("[ "),_L1("["),
+     _L1("!."),_L1("!"),
+     _L1("!,"),_L1("!"),
+     _L1(". . ."),_L1("..."),
+     _L1(". .."),_L1("..."),
+     _L1(".. ."),_L1("..."),
+     _L1("--"),_L1("..."),
+     _L1("...."),_L1("..."),
+     _L1(" :"),_L1(":"),
+     _L1(" ;"),_L1(";"),
+     _L1(" %"),_L1("%"),
+     _L1(" !"),_L1("!"),
+     _L1(" ?"),_L1("?"),
+     _L1(" ."),_L1("."),
+     _L1(" ,"),_L1(","),
+     _L1(".:"),_L1(":"),
+     _L1(":."),_L1(":"),
+     _L1("eVe"),_L1("eve"),
+     _L1("    }"),_L1("  }"),
+     _L1("  "),_L1(" "),
      NULL,NULL
     };
    int i=1;
@@ -415,7 +418,7 @@ template<class tchar> bool TtextFix<tchar>::process(ffstring &text,ffstring &fix
     S1=stringreplace(S1,punctinations[2*i],punctinations[2*i+1],rfReplaceAll);
 
    //".." to "..."
-   W1=S1.find(_L(".."));
+   W1=S1.find(_L1(".."));
    if (W1>0)
     while (S1.size()>W1)
      {
@@ -423,47 +426,47 @@ template<class tchar> bool TtextFix<tchar>::process(ffstring &text,ffstring &fix
           (S1[W1] == '.') && (S1[W1 + 1] == '.') &&
           ((S1.size() == W1 + 1) || (S1[W1 + 2] != '.'))
          )
-       S1.insert(W1,_L("."));
+       S1.insert(W1,_L1("."));
       W1++;
      }
 
    //"..."
    do
     {
-     W1 = S1.find(_L("..."));
+     W1 = S1.find(_L1("..."));
      if (W1 > 0)
       //Example "It is ..." -> "It is..."
       if ((W1 == S1.size() - 2) && (S1[W1 - 1] == ' '))
-         S1 = S1.copy(1, S1.size() - 4) + _L("<><>");
+         S1 = S1.copy(1, S1.size() - 4) + _L1("<><>");
        else
          //Example "... it is" -> "...it is"
          if ((W1 == 1) && (S1[W1 + 3] == ' '))
-           S1 = _L("<><>") + S1.copy(5, S1.size() - 3);
+           S1 = _L1("<><>") + S1.copy(5, S1.size() - 3);
          else
           //Example "It...is" -> "It... is"
           if ((W1 > 1) && (W1 < S1.size() - 2) &&
               !(S1[W1 - 2]=='?' || S1[W1-2]=='!'))
-           S1 = S1.copy(1, W1 - 1) + _L("<><> ") + S1.copy(W1 + 3, S1.size() - (W1 + 2));
+           S1 = S1.copy(1, W1 - 1) + _L1("<><> ") + S1.copy(W1 + 3, S1.size() - (W1 + 2));
           else
            //Example "Who?... there..." -> "Who? ...there..."
            if ((W1 > 1) && (W1 < S1.size() - 2) &&
                (S1[W1 - 1] =='?' || S1[W1-1]=='!'))
-            S1 = S1.copy( 1, W1 - 1) + _L(" <><>") + S1.copy( W1 + 4, S1.size() - (W1 + 3));
+            S1 = S1.copy( 1, W1 - 1) + _L1(" <><>") + S1.copy( W1 + 4, S1.size() - (W1 + 3));
              else
-            S1 = S1.copy( 1, W1 - 1) + _L("<><>") + S1.copy(W1 + 3, S1.size() - (W1 + 2));
+            S1 = S1.copy( 1, W1 - 1) + _L1("<><>") + S1.copy(W1 + 3, S1.size() - (W1 + 2));
     } while (W1!=0);
-   S1 = stringreplace(S1, _L("?<><> "), _L("? <><>"), rfReplaceAll);
-   S1 = stringreplace(S1, _L("<><> ?"), _L("<><>?"), rfReplaceAll);
-   S1 = stringreplace(S1, _L("<><> !"), _L("<><>!"), rfReplaceAll);
-   S1 = stringreplace(S1, _L("!<><> "), _L("! <><>"), rfReplaceAll);
-   S1 = stringreplace(S1, _L("\"<><> "), _L("\"<><>"), rfReplaceAll);
-   S1 = stringreplace(S1, _L("<><> \""), _L("<><>\""), rfReplaceAll);
-   S1 = stringreplace(S1, _L("- <><> "), _L("<><>"), rfReplaceAll);
-   S1 = stringreplace(S1, _L("- <><>"), _L("<><>"), rfReplaceAll);
-   S1 = stringreplace(S1, _L("-<><> "), _L("<><>"), rfReplaceAll);
-   S1 = stringreplace(S1, _L("-<><>"), _L("<><>"), rfReplaceAll);
-   S1 = stringreplace(S1, _L(" <><> "), _L("<><> "), rfReplaceAll);
-   S1 = stringreplace(S1, _L(",<><>"), _L("<><>"), rfReplaceAll);
+   S1 = stringreplace(S1, _L1("?<><> "), _L1("? <><>"), rfReplaceAll);
+   S1 = stringreplace(S1, _L1("<><> ?"), _L1("<><>?"), rfReplaceAll);
+   S1 = stringreplace(S1, _L1("<><> !"), _L1("<><>!"), rfReplaceAll);
+   S1 = stringreplace(S1, _L1("!<><> "), _L1("! <><>"), rfReplaceAll);
+   S1 = stringreplace(S1, _L1("\"<><> "), _L1("\"<><>"), rfReplaceAll);
+   S1 = stringreplace(S1, _L1("<><> \""), _L1("<><>\""), rfReplaceAll);
+   S1 = stringreplace(S1, _L1("- <><> "), _L1("<><>"), rfReplaceAll);
+   S1 = stringreplace(S1, _L1("- <><>"), _L1("<><>"), rfReplaceAll);
+   S1 = stringreplace(S1, _L1("-<><> "), _L1("<><>"), rfReplaceAll);
+   S1 = stringreplace(S1, _L1("-<><>"), _L1("<><>"), rfReplaceAll);
+   S1 = stringreplace(S1, _L1(" <><> "), _L1("<><> "), rfReplaceAll);
+   S1 = stringreplace(S1, _L1(",<><>"), _L1("<><>"), rfReplaceAll);
 
    //|"_| -> |"| or |_"| -> |"|  -  sometimes in safe cases
    int QoutCnt = 0;
@@ -488,9 +491,9 @@ template<class tchar> bool TtextFix<tchar>::process(ffstring &text,ffstring &fix
     else
      {
       //aftercheck 1: |"_| at position 1 (if only 1x " appear as beginning)
-      if (S1.find(_L("\" ")) == 1) S1.erase(2, 1);
+      if (S1.find(_L1("\" ")) == 1) S1.erase(2, 1);
       //aftercheck 2: |_"| at last position (if only 1x " appear as end)
-      if (S1.find(_L(" \"")) == S1.size() - 1) S1.erase(S1.size() - 1, 1);
+      if (S1.find(_L1(" \"")) == S1.size() - 1) S1.erase(S1.size() - 1, 1);
      }
 
    //"-"
@@ -501,20 +504,20 @@ template<class tchar> bool TtextFix<tchar>::process(ffstring &text,ffstring &fix
       {
        //Example "-It is" -> "- It is"
        if ((W1 == 1) && (S1[W1 + 1] != ' '))
-        S1 = _L("[][] ") + S1.copy(2, S1.size() - 1);
+        S1 = _L1("[][] ") + S1.copy(2, S1.size() - 1);
        else
         //Example "Hi. -It is." -> "Hi. - It is." (works for styles: "<i>-It is")
-        if (((in(S1[W1 - 2],_L(".!?>"))) || (S1[W1 - 1] == '>')) && (S1[W1 + 1] != ' '))
-         S1 = S1.copy(1, W1 - 1) + _L("[][] ") + S1.copy(W1 + 1, S1.size() - (W1));
+        if (((in(S1[W1 - 2],_L1(".!?>"))) || (S1[W1 - 1] == '>')) && (S1[W1 + 1] != ' '))
+         S1 = S1.copy(1, W1 - 1) + _L1("[][] ") + S1.copy(W1 + 1, S1.size() - (W1));
         else
-         S1 = S1.copy(1, W1 - 1) + _L("[][]") + S1.copy(W1 + 1, S1.size() - (W1));
+         S1 = S1.copy(1, W1 - 1) + _L1("[][]") + S1.copy(W1 + 1, S1.size() - (W1));
       }
     } while (W1 != 0);
 
-   static const tchar *chars1[]={_L("."),_L(","),_L(":"),_L(";"),_L("%"),_L("$"),_L("!"),_L("?")};
+   static const wchar_t *chars1[]={_L1("."),_L1(","),_L1(":"),_L1(";"),_L1("%"),_L1("$"),_L1("!"),_L1("?")};
    //Spaces after "," "." ":" ";" "$" "%"
-   if ((S1.find(_L("www.")) == 0) && (S1.find(_L(".com ")) == 0) &&
-       (S1.find('@') == 0) && (S1.find(_L("tp://")) == 0))
+   if ((S1.find(_L1("www.")) == 0) && (S1.find(_L1(".com ")) == 0) &&
+       (S1.find('@') == 0) && (S1.find(_L1("tp://")) == 0))
     for (i=0;i<6;i++)
      {
       do
@@ -524,11 +527,11 @@ template<class tchar> bool TtextFix<tchar>::process(ffstring &text,ffstring &fix
          if ((W1 != S1.size() && !(S1[W1 + 1]==' ' || S1[W1 + 1]=='"' || S1[W1 + 1]=='\'' || S1[W1 + 1]=='?' || S1[W1 + 1]=='!' || S1[W1 + 1]==',' || S1[W1 + 1]==']' || S1[W1 + 1]=='}' || S1[W1 + 1]==')' || S1[W1 + 1]=='<'))
              && ((S1[W1 - 1] < '0') || (S1[W1 - 1] > '9')) && ((S1[W1 + 1] < '0') || (S1[W1 + 1] > '9'))
              && (S1[W1 + 2] != '.'))
-          S1 = S1.copy(1, W1 - 1) + _L("()() ") + S1.copy(W1 + 1, S1.size() - (W1));
+          S1 = S1.copy(1, W1 - 1) + _L1("()() ") + S1.copy(W1 + 1, S1.size() - (W1));
          else
-          S1 = S1.copy(1, W1 - 1) + _L("()()") + S1.copy(W1 + 1, S1.size() - W1);
+          S1 = S1.copy(1, W1 - 1) + _L1("()()") + S1.copy(W1 + 1, S1.size() - W1);
        } while (W1 != 0);
-      S1 = stringreplace(S1, _L("()()"), chars1[i], rfReplaceAll);
+      S1 = stringreplace(S1, _L1("()()"), chars1[i], rfReplaceAll);
      }
    //Spaces after "!" "?"
    for (i=6;i<=7;i++)
@@ -538,18 +541,18 @@ template<class tchar> bool TtextFix<tchar>::process(ffstring &text,ffstring &fix
        W1 = S1.find(chars1[i]);
        if (W1 > 0)
         if ((W1 != S1.size()) && (S1[W1 + 1] != ' ') && !(S1[W1 + 1]=='!' || S1[W1 + 1]=='?' || S1[W1 + 1]=='"' || S1[W1 + 1]==']' || S1[W1 + 1]=='}' || S1[W1 + 1]==')' || S1[W1 + 1]=='<')) //'<' styles)
-         S1 = S1.copy(1, W1 - 1) + _L("()() ") + S1.copy( W1 + 1, S1.size() - (W1));
+         S1 = S1.copy(1, W1 - 1) + _L1("()() ") + S1.copy( W1 + 1, S1.size() - (W1));
         else
-         S1 = S1.copy(1, W1 - 1) + _L("()()") + S1.copy(W1 + 1, S1.size() - (W1));
+         S1 = S1.copy(1, W1 - 1) + _L1("()()") + S1.copy(W1 + 1, S1.size() - (W1));
       } while (W1 != 0);
-     S1 = stringreplace(S1, _L("()()"), chars1[i], rfReplaceAll);
+     S1 = stringreplace(S1, _L1("()()"), chars1[i], rfReplaceAll);
     }
-   S1 = stringreplace(S1, _L("[][]"), _L("-"), rfReplaceAll);
-   S1 = stringreplace(S1, _L("<><>"), _L("..."), rfReplaceAll);
+   S1 = stringreplace(S1, _L1("[][]"), _L1("-"), rfReplaceAll);
+   S1 = stringreplace(S1, _L1("<><>"), _L1("..."), rfReplaceAll);
   }
 
  if (cfg.fix&fixOrtography)
-  for (typename strings::const_iterator s=odict.begin();s!=odict.end();)
+  for (strings::const_iterator s=odict.begin();s!=odict.end();)
    {
     const ffstring &oldstr=*s;s++;
     const ffstring &newstr=*s;s++;
@@ -561,35 +564,35 @@ template<class tchar> bool TtextFix<tchar>::process(ffstring &text,ffstring &fix
    if (cfg.fix&fixCapital2) S1.ConvertToLowerCase();
 
    //Change "..." to "<><>"
-   S1 = stringreplace(S1, _L("..."), _L("<><>"), rfReplaceAll);
+   S1 = stringreplace(S1, _L1("..."), _L1("<><>"), rfReplaceAll);
 
-   static const tchar *chars2[]={_L("-"),_L("."),_L("!"),_L("?"),_L(":")};
+   static const wchar_t *chars2[]={_L1("-"),_L1("."),_L1("!"),_L1("?"),_L1(":")};
 
    //Capital letters after ". " "? " "! " "- "
    for (unsigned int i=0;i<countof(chars2);i++)
     {
      do
       {
-       W1 = S1.find(chars2[i]+ffstring(_L(" ")));
+       W1 = S1.find(chars2[i]+ffstring(_L1(" ")));
        if (W1 > 1) //take Pos from 2 and higher ("- " elsewhere)
         if (W1 != S1.size())
          if (((i == 1) /*'.'*/ && (S1[W1 - 1]>='0' && S1[W1-1]<='9')) || //prevents: 28. srpna -> 28. Srpna
              ((i == 0) /*'-'*/ && !(S1[W1 - 2]=='.' || S1[W1 - 2]=='!' || S1[W1 - 2]=='?')))  //UpperCase only after .!?
-          S1 = S1.copy(1, W1 - 1) + _L("()()") + S1.copy(W1 + 1, S1.size() - W1);
+          S1 = S1.copy(1, W1 - 1) + _L1("()()") + S1.copy(W1 + 1, S1.size() - W1);
          else
           {
-           tchar up[2];
-           up[0]=(tchar)toupper(S1[W1 + 2]);up[1]='\0';
-           S1 = S1.copy(1, W1 - 1) + _L("()() ") + passtring<tchar>(up) + S1.copy(W1 + 3, S1.size() - (W1 + 2));
+           wchar_t up[2];
+           up[0]=(wchar_t)toupper(S1[W1 + 2]);up[1]='\0';
+           S1 = S1.copy(1, W1 - 1) + _L1("()() ") + passtring<wchar_t>(up) + S1.copy(W1 + 3, S1.size() - (W1 + 2));
           }
         else
-         S1 = S1.copy(1, W1 - 1) + _L("()()") + S1.copy(W1 + 1, S1.size() - W1);
+         S1 = S1.copy(1, W1 - 1) + _L1("()()") + S1.copy(W1 + 1, S1.size() - W1);
       } while (W1 > 1);
-     S1 = stringreplace(S1, _L("()()"), chars2[i], rfReplaceAll);
+     S1 = stringreplace(S1, _L1("()()"), chars2[i], rfReplaceAll);
     }
 
    //Change "<><>" back to "..."
-   S1 = stringreplace(S1, _L("<><>"), _L("..."), rfReplaceAll);
+   S1 = stringreplace(S1, _L1("<><>"), _L1("..."), rfReplaceAll);
 
    //change the 1st letter case according to previous subtitle line
    if (EndOfPrevSentence && (S1[1] != '.')) //...bla
@@ -605,14 +608,14 @@ template<class tchar> bool TtextFix<tchar>::process(ffstring &text,ffstring &fix
         //It's not expected behavior. It'll be much better to stay words in "()" intact.
         if (!(S1[J]=='[' || S1[J]=='"' || S1[J]=='\'' || S1[J]=='#' || S1[J]=='-' || S1[J]==' '))
          {
-          S1[J] = (tchar)toupper(S1[J]);
+          S1[J] = (wchar_t)toupper(S1[J]);
           break;
          }
         J++;
        }
      }
    //prepare for next line
-   passtring<tchar> Sstrip = S1; //styles
+   passtring<wchar_t> Sstrip = S1; //styles
    unsigned int J = Sstrip.size();
    if (J==0) //in case of empty string (only styles)
     EndOfPrevSentence = false;
@@ -647,8 +650,8 @@ template<class tchar> bool TtextFix<tchar>::process(ffstring &text,ffstring &fix
       if (W1>0)
        {
         S1.erase(std::max(1,I-1),std::max(W1 - std::max(1,I-1) + 1, 0));
-        if (S1 == passtring<tchar>(_L("- ")) || S1 == passtring<tchar>(_L("-")))
-         S1 = _L("");
+        if (S1 == passtring<wchar_t>(_L1("- ")) || S1 == passtring<wchar_t>(_L1("-")))
+         S1 = _L1("");
        }
       else
        {
@@ -668,10 +671,10 @@ template<class tchar> bool TtextFix<tchar>::process(ffstring &text,ffstring &fix
 }
 
 //============================ TsubtitleFormat =============================
-template<class tchar> DwString<tchar> TsubtitleFormat::getAttribute(const tchar *start,const tchar *end,const tchar *attrname)
+DwString<wchar_t> TsubtitleFormat::getAttribute(const wchar_t *start,const wchar_t *end,const wchar_t *attrname)
 {
- if (const tchar *attr=strnistr(start,end-start+1,attrname))
-  if (const tchar *eq=strnchr(attr,end-attr+1,'='))
+ if (const wchar_t *attr=strnistr(start,end-start+1,attrname))
+  if (const wchar_t *eq=strnchr(attr,end-attr+1,'='))
    {
     eq++;
     bool in=false;
@@ -679,44 +682,44 @@ template<class tchar> DwString<tchar> TsubtitleFormat::getAttribute(const tchar 
      if (eq[i]=='"')
       in=!in;
      else if (!in && (eq[i]==' ' || eq[i]=='>' || eq[i]=='\0'))
-      return stringreplace(DwString<tchar>(eq,i).Trim(),_L("\""),_L(""),rfReplaceAll);
+      return stringreplace(DwString<wchar_t>(eq,i).Trim(),_L1("\""),_L1(""),rfReplaceAll);
    }
- return DwString<tchar>();
+ return DwString<wchar_t>();
 }
 
-template<class tchar> void TsubtitleFormat::processHTMLTags(Twords &words, const tchar* &l, const tchar* &l1, const tchar* &l2)
+void TsubtitleFormat::processHTMLTags(Twords &words, const wchar_t* &l, const wchar_t* &l1, const wchar_t* &l2)
 {
-if (_strnicmp(l2,_L("<i>"),3)==0) {words.add(l,l1,l2,props,3);props.italic=true;}
-  else if (_strnicmp(l2,_L("</i>"),4)==0) {words.add(l,l1,l2,props,4);props.italic=false;}
-  else if (_strnicmp(l2,_L("<u>"),3)==0) {words.add(l,l1,l2,props,3);props.underline=true;}
-  else if (_strnicmp(l2,_L("</u>"),4)==0) {words.add(l,l1,l2,props,4);props.underline=false;}
-  else if (_strnicmp(l2,_L("<b>"),3)==0) {words.add(l,l1,l2,props,3);props.bold=true;}
-  else if (_strnicmp(l2,_L("</b>"),4)==0) {words.add(l,l1,l2,props,4);props.bold=false;}
-  else if (_strnicmp(l2,_L("<font "),6)==0)
+if (_strnicmp(l2,_L1("<i>"),3)==0) {words.add(l,l1,l2,props,3);props.italic=true;}
+  else if (_strnicmp(l2,_L1("</i>"),4)==0) {words.add(l,l1,l2,props,4);props.italic=false;}
+  else if (_strnicmp(l2,_L1("<u>"),3)==0) {words.add(l,l1,l2,props,3);props.underline=true;}
+  else if (_strnicmp(l2,_L1("</u>"),4)==0) {words.add(l,l1,l2,props,4);props.underline=false;}
+  else if (_strnicmp(l2,_L1("<b>"),3)==0) {words.add(l,l1,l2,props,3);props.bold=true;}
+  else if (_strnicmp(l2,_L1("</b>"),4)==0) {words.add(l,l1,l2,props,4);props.bold=false;}
+  else if (_strnicmp(l2,_L1("<font "),6)==0)
    {
-    const tchar *end=strchr(l2,'>');
+    const wchar_t *end=strchr(l2,'>');
     if (end)
      {
-      const tchar *start=l2+6;
-      DwString<tchar> face=getAttribute(start,end,_L("face"));
-      DwString<tchar> color=getAttribute(start,end,_L("color")).ConvertToLowerCase();
-      DwString<tchar> size=getAttribute(start,end,_L("size"));
+      const wchar_t *start=l2+6;
+      DwString<wchar_t> face=getAttribute(start,end,_L1("face"));
+      DwString<wchar_t> color=getAttribute(start,end,_L1("color")).ConvertToLowerCase();
+      DwString<wchar_t> size=getAttribute(start,end,_L1("size"));
       words.add(l,l1,l2,props,end-l2+1);
       if (!face.empty()) ff_strncpy(props.fontname, (const char_t *)text<char_t>(face.c_str()),countof(props.fontname));
-      if (!color.empty() && ((color[0]=='#' && tchar_traits<tchar>::sscanf()(color.c_str()+1,_L("%x"),&props.color)) || (htmlcolors->getColor(color,&props.color,0xffffff),true)))
+      if (!color.empty() && ((color[0]=='#' && swscanf(color.c_str()+1,_L1("%x"),&props.color)) || (htmlcolors->getColor(color,&props.color,0xffffff),true)))
        {
         std::swap(((uint8_t*)&props.color)[0],((uint8_t*)&props.color)[2]);
         props.isColor=true;
        }
       if (!size.empty())
        {
-        tchar *ll;
+        wchar_t *ll;
         int s=strtol(size.c_str(),&ll,10);
         if (*ll=='\0') props.size=s;
        }
      }
    }
-  else if (_strnicmp(l2,_L("</font>"),7)==0)
+  else if (_strnicmp(l2,_L1("</font>"),7)==0)
    {
     words.add(l,l1,l2,props,7);props.isColor=false;props.size=0;props.fontname[0]='\0';
    }
@@ -724,12 +727,12 @@ if (_strnicmp(l2,_L("<i>"),3)==0) {words.add(l,l1,l2,props,3);props.italic=true;
    l2++;
 }
 
-template<class tchar> TsubtitleFormat::Twords TsubtitleFormat::processHTML(const TsubtitleLine<tchar> &line)
+TsubtitleFormat::Twords TsubtitleFormat::processHTML(const TsubtitleLine &line)
 {
  Twords words;
  if (line.empty()) return words;
- const tchar *l=line[0];
- const tchar *l1=l,*l2=l;
+ const wchar_t *l=line[0];
+ const wchar_t *l1=l,*l2=l;
  while (*l2)
    processHTMLTags(words, l, l1, l2);
  
@@ -737,7 +740,7 @@ template<class tchar> TsubtitleFormat::Twords TsubtitleFormat::processHTML(const
  return words;
 }
 
-template<class tchar> int TsubtitleFormat::Tssa<tchar>::parse_parentheses(TparenthesesContents &contents, ffstring arg)
+int TsubtitleFormat::Tssa::parse_parentheses(TparenthesesContents &contents, ffstring arg)
 {
     // (a1,a2, ... ,an) is expected.
     size_t first_paren = arg.find('(');
@@ -749,14 +752,14 @@ template<class tchar> int TsubtitleFormat::Tssa<tchar>::parse_parentheses(Tparen
     arg.erase(0,first_paren+1);
     arg.erase(second_paren - first_paren - 1);
     strings input_strings;
-    strtok(arg.c_str(),_L(","),input_strings);
-    for (typename strings::iterator s=input_strings.begin() ; s != input_strings.end() ; s++) {
+    strtok(arg.c_str(),_L1(","),input_strings);
+    for (strings::iterator s=input_strings.begin() ; s != input_strings.end() ; s++) {
         contents.push_back(TparenthesesContent(*s));
     }
     return second_paren + 1;
 }
 
-template<class tchar> int TsubtitleFormat::Tssa<tchar>::TstoreParams::writeProps(const TparenthesesContents &contents, TSubtitleProps &props)
+int TsubtitleFormat::Tssa::TstoreParams::writeProps(const TparenthesesContents &contents, TSubtitleProps &props)
 {
     int count = 0;
     iterator store_i = begin();
@@ -783,7 +786,7 @@ template<class tchar> int TsubtitleFormat::Tssa<tchar>::TstoreParams::writeProps
     return count;
 }
 
-template<class tchar> void TsubtitleFormat::Tssa<tchar>::fontName(ffstring &arg)
+void TsubtitleFormat::Tssa::fontName(ffstring &arg)
 {
     if (arg.size()) {
         memset(props.fontname,0,sizeof(props.fontname));
@@ -792,7 +795,7 @@ template<class tchar> void TsubtitleFormat::Tssa<tchar>::fontName(ffstring &arg)
         ff_strncpy(props.fontname, defprops.fontname, countof(props.fontname));
 }
 
-template<class tchar> template<int TSubtitleProps::*offset,int min,int max> void TsubtitleFormat::Tssa<tchar>::intProp(ffstring &arg)
+template<int TSubtitleProps::*offset,int min,int max> void TsubtitleFormat::Tssa::intProp(ffstring &arg)
 {
     int enc;
     if (arg2int(arg,min,max,enc))
@@ -801,7 +804,7 @@ template<class tchar> template<int TSubtitleProps::*offset,int min,int max> void
         props.*offset=defprops.*offset;
 }
 
-template<class tchar> template<int TSubtitleProps::*offset,int min,int max> void TsubtitleFormat::Tssa<tchar>::intPropAn(ffstring &arg)
+template<int TSubtitleProps::*offset,int min,int max> void TsubtitleFormat::Tssa::intPropAn(ffstring &arg)
 {
     int enc;
     if (arg2int(arg,min,max,enc))
@@ -810,10 +813,10 @@ template<class tchar> template<int TSubtitleProps::*offset,int min,int max> void
         props.*offset=defprops.*offset;
 }
 
-template<class tchar> template<double TSubtitleProps::*offset,int min,int max> void TsubtitleFormat::Tssa<tchar>::doubleProp(ffstring &arg)
+template<double TSubtitleProps::*offset,int min,int max> void TsubtitleFormat::Tssa::doubleProp(ffstring &arg)
 {
-    const tchar* buf = arg.c_str();
-    tchar *bufend;
+    const wchar_t* buf = arg.c_str();
+    wchar_t *bufend;
     double enc=strtod(buf,&bufend);
     if (buf!=bufend && *bufend=='\0' && isIn(enc,(double)min,(double)max))
         props.*offset=enc;
@@ -821,7 +824,7 @@ template<class tchar> template<double TSubtitleProps::*offset,int min,int max> v
         props.*offset=defprops.*offset;
 }
 
-template<class tchar> void TsubtitleFormat::Tssa<tchar>::pos(ffstring &arg)
+void TsubtitleFormat::Tssa::pos(ffstring &arg)
 {
     // (x1,y1) is expected.
     TstoreParams store;
@@ -834,7 +837,7 @@ template<class tchar> void TsubtitleFormat::Tssa<tchar>::pos(ffstring &arg)
         props.isPos=true;
 }
 
-template<class tchar> void TsubtitleFormat::Tssa<tchar>::move(ffstring &arg)
+void TsubtitleFormat::Tssa::move(ffstring &arg)
 {
      // (x1,y1,x2,y2,[t1[,t2]]) is expected.
      TstoreParams store;
@@ -851,7 +854,7 @@ template<class tchar> void TsubtitleFormat::Tssa<tchar>::move(ffstring &arg)
         props.isMove=true;
 }
 
-template<class tchar> void TsubtitleFormat::Tssa<tchar>::fad(ffstring &arg)
+void TsubtitleFormat::Tssa::fad(ffstring &arg)
 {
     TstoreParams store;
     store.push_back(TstoreParam((intx_t TSubtitleProps::*)&TSubtitleProps::fadeT3, 0,LLONG_MAX/10000,defprops.posx,sizeof(props.fadeT3)));
@@ -871,21 +874,21 @@ template<class tchar> void TsubtitleFormat::Tssa<tchar>::fad(ffstring &arg)
     }
 }
 
-template<class tchar> void TsubtitleFormat::Tssa<tchar>::karaoke_kf(ffstring &arg)
+void TsubtitleFormat::Tssa::karaoke_kf(ffstring &arg)
 {
     intProp<&TSubtitleProps::tmpFadT1, 0, INT_MAX>(arg);
     props.karaokeDuration = (REFERENCE_TIME)props.tmpFadT1 * 100000;
     props.karaokeMode = TSubtitleProps::KARAOKE_kf;
     props.karaokeNewWord = true;
 }
-template<class tchar> void TsubtitleFormat::Tssa<tchar>::karaoke_ko(ffstring &arg)
+void TsubtitleFormat::Tssa::karaoke_ko(ffstring &arg)
 {
     intProp<&TSubtitleProps::tmpFadT1, 0, INT_MAX>(arg);
     props.karaokeDuration = (REFERENCE_TIME)props.tmpFadT1 * 100000;
     props.karaokeMode = TSubtitleProps::KARAOKE_ko;
     props.karaokeNewWord = true;
 }
-template<class tchar> void TsubtitleFormat::Tssa<tchar>::karaoke_k(ffstring &arg)
+void TsubtitleFormat::Tssa::karaoke_k(ffstring &arg)
 {
     intProp<&TSubtitleProps::tmpFadT1, 0, INT_MAX>(arg);
     props.karaokeDuration = (REFERENCE_TIME)props.tmpFadT1 * 100000;
@@ -893,7 +896,7 @@ template<class tchar> void TsubtitleFormat::Tssa<tchar>::karaoke_k(ffstring &arg
     props.karaokeNewWord = true;
 }
 
-template<class tchar> void TsubtitleFormat::Tssa<tchar>::fade(ffstring &arg)
+void TsubtitleFormat::Tssa::fade(ffstring &arg)
 {
     // \fade(<a1>, <a2>, <a3>, <t1>, <t2>, <t3>, <t4>)
     TstoreParams store;
@@ -920,7 +923,7 @@ template<class tchar> void TsubtitleFormat::Tssa<tchar>::fade(ffstring &arg)
     props.isFad = true;
 }
 
-template<class tchar> template<int TSubtitleProps::*offset1,int TSubtitleProps::*offset2,int min,int max> bool TsubtitleFormat::Tssa<tchar>::intProp2(ffstring &arg)
+template<int TSubtitleProps::*offset1,int TSubtitleProps::*offset2,int min,int max> bool TsubtitleFormat::Tssa::intProp2(ffstring &arg)
 {
     // (x,y) is expected.
     TstoreParams store;
@@ -932,15 +935,15 @@ template<class tchar> template<int TSubtitleProps::*offset1,int TSubtitleProps::
     return store.writeProps(contents,props) == 2;
 }
 
-template<class tchar> bool TsubtitleFormat::Tssa<tchar>::arg2int(const ffstring &arg, int min, int max, int &enc)
+bool TsubtitleFormat::Tssa::arg2int(const ffstring &arg, int min, int max, int &enc)
 {
-    const tchar* buf = arg.c_str();
-    tchar *bufend;
+    const wchar_t* buf = arg.c_str();
+    wchar_t *bufend;
     enc=strtol(buf,&bufend,10);
     return (buf!=bufend && *bufend=='\0' && isIn(enc,min,max));
 }
 
-template<class tchar> bool TsubtitleFormat::Tssa<tchar>::color2int(ffstring arg, int &intval)
+bool TsubtitleFormat::Tssa::color2int(ffstring arg, int &intval)
 {
     int radix;
     if (arg.ConvertToLowerCase().compare(0,2,ffstring(_l("&h")))==0) {
@@ -948,12 +951,12 @@ template<class tchar> bool TsubtitleFormat::Tssa<tchar>::color2int(ffstring arg,
         arg.erase(0,2);
     } else
         radix=10;
-    tchar *endbuf;
+    wchar_t *endbuf;
     intval=strtol(arg.c_str(),&endbuf,radix);
     return *endbuf=='&';
 }
 
-template<class tchar> template<COLORREF TSubtitleProps::*offset> void TsubtitleFormat::Tssa<tchar>::color(ffstring &arg)
+template<COLORREF TSubtitleProps::*offset> void TsubtitleFormat::Tssa::color(ffstring &arg)
 {
     int c;
     if (color2int(arg,c)) {
@@ -964,7 +967,7 @@ template<class tchar> template<COLORREF TSubtitleProps::*offset> void TsubtitleF
         props.isColor=defprops.isColor;
     }
 }
-template<class tchar> template<int TSubtitleProps::*offset> void TsubtitleFormat::Tssa<tchar>::alpha(ffstring &arg)
+template<int TSubtitleProps::*offset> void TsubtitleFormat::Tssa::alpha(ffstring &arg)
 {
     int a;
     if (color2int(arg,a)) {
@@ -975,7 +978,7 @@ template<class tchar> template<int TSubtitleProps::*offset> void TsubtitleFormat
         props.isColor=defprops.isColor;
     }
 }
-template<class tchar> void TsubtitleFormat::Tssa<tchar>::alphaAll(ffstring &arg)
+void TsubtitleFormat::Tssa::alphaAll(ffstring &arg)
 {
     int a;
     if (color2int(arg,a)) {
@@ -991,7 +994,7 @@ template<class tchar> void TsubtitleFormat::Tssa<tchar>::alphaAll(ffstring &arg)
     }
 }
 
-template<class tchar> template<bool TSubtitleProps::*offset> void TsubtitleFormat::Tssa<tchar>::boolProp(ffstring &arg)
+template<bool TSubtitleProps::*offset> void TsubtitleFormat::Tssa::boolProp(ffstring &arg)
 {
     if (arg.size() && arg[0]=='1')
         props.*offset=true;
@@ -1001,21 +1004,21 @@ template<class tchar> template<bool TSubtitleProps::*offset> void TsubtitleForma
         props.*offset=defprops.*offset;
 }
 
-template<class tchar> void TsubtitleFormat::Tssa<tchar>::reset(ffstring &arg)
+void TsubtitleFormat::Tssa::reset(ffstring &arg)
 {
     props=defprops;
 }
 
-template<class tchar> bool TsubtitleFormat::Tssa<tchar>::processTokenI(const tchar* &l2,const tchar *tok,TssaAction action,Tstr_cmp_func str_cmp_func)
+bool TsubtitleFormat::Tssa::processTokenI(const wchar_t* &l2,const wchar_t *tok,TssaAction action,Tstr_cmp_func str_cmp_func)
 {
     size_t toklen=strlen(tok);
     if (str_cmp_func(l2,tok,toklen)==0) {
-        const tchar *end1=strchr(l2+2,'\\');
-        const tchar *end2=strchr(l2,'}');
-        const tchar *end=(end1 && end1<end2)?end1:end2;
+        const wchar_t *end1=strchr(l2+2,'\\');
+        const wchar_t *end2=strchr(l2,'}');
+        const wchar_t *end=(end1 && end1<end2)?end1:end2;
         if (end)
          {
-          const tchar *start=l2+toklen;
+          const wchar_t *start=l2+toklen;
           ffstring arg(start,end - start);
           if (action)
            (this->*action)(arg);
@@ -1027,74 +1030,74 @@ template<class tchar> bool TsubtitleFormat::Tssa<tchar>::processTokenI(const tch
 }
 
 // case sensitive version
-template<class tchar> bool TsubtitleFormat::Tssa<tchar>::processTokenC(const tchar* &l2,const tchar *tok,TssaAction action)
+bool TsubtitleFormat::Tssa::processTokenC(const wchar_t* &l2,const wchar_t *tok,TssaAction action)
 {
     return processTokenI(l2,tok,action,strncmp);
 }
 
-template<class tchar> bool TsubtitleFormat::Tssa<tchar>::processToken(const tchar* &l2,const tchar *tok,TssaAction action)
+bool TsubtitleFormat::Tssa::processToken(const wchar_t* &l2,const wchar_t *tok,TssaAction action)
 {
     return processTokenI(l2,tok,action,_strnicmp);
 }
 
-template<class tchar> void TsubtitleFormat::Tssa<tchar>::processTokens(const tchar *l,const tchar* &l1,const tchar* &l2,const tchar *end)
+void TsubtitleFormat::Tssa::processTokens(const wchar_t *l,const wchar_t* &l1,const wchar_t* &l2,const wchar_t *end)
 {
-    const tchar *l3=l2+1;
+    const wchar_t *l3=l2+1;
     words.add(l,l1,l2,props,end-l2+1);
     while (l3<end) {
         if (
-            !processToken(l3,_L("\\1a"),&Tssa<tchar>::template alpha<&TSubtitleProps::colorA>) &&
-            !processToken(l3,_L("\\2a"),&Tssa<tchar>::template alpha<&TSubtitleProps::SecondaryColourA>) &&
-            !processToken(l3,_L("\\3a"),&Tssa<tchar>::template alpha<&TSubtitleProps::OutlineColourA>) &&
-            !processToken(l3,_L("\\4a"),&Tssa<tchar>::template alpha<&TSubtitleProps::ShadowColourA>) &&
-            !processToken(l3,_L("\\1c"),&Tssa<tchar>::template color<&TSubtitleProps::color>) && 
-            !processToken(l3,_L("\\2c"),&Tssa<tchar>::template color<&TSubtitleProps::SecondaryColour>) &&
-            !processToken(l3,_L("\\3c"),&Tssa<tchar>::template color<&TSubtitleProps::OutlineColour>) &&
-            !processToken(l3,_L("\\4c"),&Tssa<tchar>::template color<&TSubtitleProps::ShadowColour>) &&
-            !processToken(l3,_L("\\alpha"),&Tssa<tchar>::alphaAll) &&
-            !processToken(l3,_L("\\an"),&Tssa<tchar>::template intPropAn<&TSubtitleProps::alignment,1,9>) &&
-            !processToken(l3,_L("\\a"),&Tssa<tchar>::template intProp<&TSubtitleProps::alignment,1,11>) &&
-            !processToken(l3,_L("\\bord"),&Tssa<tchar>::template doubleProp<&TSubtitleProps::outlineWidth,0,100>) &&
-            !processToken(l3,_L("\\be"),&Tssa<tchar>::template boolProp<&TSubtitleProps::blur>) &&
-            !processToken(l3,_L("\\b"),&Tssa<tchar>::template intProp<&TSubtitleProps::bold,0,1>) &&
-            !processToken(l3,_L("\\clip"),NULL) &&
-            !processToken(l3,_L("\\c"),&Tssa<tchar>::template color<&TSubtitleProps::color>) &&
-            !processToken(l3,_L("\\fn"),&Tssa<tchar>::fontName) &&
-            !processToken(l3,_L("\\fscx"),&Tssa<tchar>::template intProp<&TSubtitleProps::scaleX,1,1000>) &&
-            !processToken(l3,_L("\\fscy"),&Tssa<tchar>::template intProp<&TSubtitleProps::scaleY,1,1000>) &&
-            !processToken(l3,_L("\\fsp"),&Tssa<tchar>::template doubleProp<&TSubtitleProps::spacing,INT_MIN+1,INT_MAX>) &&
-            !processToken(l3,_L("\\fs"),&Tssa<tchar>::template intProp<&TSubtitleProps::size,1,INT_MAX>) &&
-            !processToken(l3,_L("\\fe"),&Tssa<tchar>::template intProp<&TSubtitleProps::encoding,0,255>) &&
-            !processToken(l3,_L("\\i"),&Tssa<tchar>::template boolProp<&TSubtitleProps::italic>) &&
-            !processToken(l3,_L("\\fade"),&Tssa<tchar>::fade) &&
-            !processToken(l3,_L("\\fad"),&Tssa<tchar>::fad) &&
-            !processToken(l3,_L("\\pos"),&Tssa<tchar>::pos) &&
-            !processToken(l3,_L("\\move"),&Tssa<tchar>::move) &&
-            !processToken(l3,_L("\\q"),&Tssa<tchar>::template intProp<&TSubtitleProps::wrapStyle,0,3>) &&
-            !processToken(l3,_L("\\r"),&Tssa<tchar>::reset) &&
-            !processToken(l3,_L("\\shad"),&Tssa<tchar>::template doubleProp<&TSubtitleProps::shadowDepth,0,30>) &&
-            !processToken(l3,_L("\\s"),&Tssa<tchar>::template boolProp<&TSubtitleProps::strikeout>) &&
-            !processToken(l3,_L("\\u"),&Tssa<tchar>::template boolProp<&TSubtitleProps::underline>) &&
-            !processToken(l3,_L("\\kf"),&Tssa<tchar>::karaoke_kf) &&
-            !processToken(l3,_L("\\ko"),&Tssa<tchar>::karaoke_ko) &&
-            !processTokenC(l3,_L("\\K"),&Tssa<tchar>::karaoke_kf) &&
-            !processTokenC(l3,_L("\\k"),&Tssa<tchar>::karaoke_k)
+            !processToken(l3,_L1("\\1a"),&Tssa::template alpha<&TSubtitleProps::colorA>) &&
+            !processToken(l3,_L1("\\2a"),&Tssa::template alpha<&TSubtitleProps::SecondaryColourA>) &&
+            !processToken(l3,_L1("\\3a"),&Tssa::template alpha<&TSubtitleProps::OutlineColourA>) &&
+            !processToken(l3,_L1("\\4a"),&Tssa::template alpha<&TSubtitleProps::ShadowColourA>) &&
+            !processToken(l3,_L1("\\1c"),&Tssa::template color<&TSubtitleProps::color>) && 
+            !processToken(l3,_L1("\\2c"),&Tssa::template color<&TSubtitleProps::SecondaryColour>) &&
+            !processToken(l3,_L1("\\3c"),&Tssa::template color<&TSubtitleProps::OutlineColour>) &&
+            !processToken(l3,_L1("\\4c"),&Tssa::template color<&TSubtitleProps::ShadowColour>) &&
+            !processToken(l3,_L1("\\alpha"),&Tssa::alphaAll) &&
+            !processToken(l3,_L1("\\an"),&Tssa::template intPropAn<&TSubtitleProps::alignment,1,9>) &&
+            !processToken(l3,_L1("\\a"),&Tssa::template intProp<&TSubtitleProps::alignment,1,11>) &&
+            !processToken(l3,_L1("\\bord"),&Tssa::template doubleProp<&TSubtitleProps::outlineWidth,0,100>) &&
+            !processToken(l3,_L1("\\be"),&Tssa::template boolProp<&TSubtitleProps::blur>) &&
+            !processToken(l3,_L1("\\b"),&Tssa::template intProp<&TSubtitleProps::bold,0,1>) &&
+            !processToken(l3,_L1("\\clip"),NULL) &&
+            !processToken(l3,_L1("\\c"),&Tssa::template color<&TSubtitleProps::color>) &&
+            !processToken(l3,_L1("\\fn"),&Tssa::fontName) &&
+            !processToken(l3,_L1("\\fscx"),&Tssa::template intProp<&TSubtitleProps::scaleX,1,1000>) &&
+            !processToken(l3,_L1("\\fscy"),&Tssa::template intProp<&TSubtitleProps::scaleY,1,1000>) &&
+            !processToken(l3,_L1("\\fsp"),&Tssa::template doubleProp<&TSubtitleProps::spacing,INT_MIN+1,INT_MAX>) &&
+            !processToken(l3,_L1("\\fs"),&Tssa::template intProp<&TSubtitleProps::size,1,INT_MAX>) &&
+            !processToken(l3,_L1("\\fe"),&Tssa::template intProp<&TSubtitleProps::encoding,0,255>) &&
+            !processToken(l3,_L1("\\i"),&Tssa::template boolProp<&TSubtitleProps::italic>) &&
+            !processToken(l3,_L1("\\fade"),&Tssa::fade) &&
+            !processToken(l3,_L1("\\fad"),&Tssa::fad) &&
+            !processToken(l3,_L1("\\pos"),&Tssa::pos) &&
+            !processToken(l3,_L1("\\move"),&Tssa::move) &&
+            !processToken(l3,_L1("\\q"),&Tssa::template intProp<&TSubtitleProps::wrapStyle,0,3>) &&
+            !processToken(l3,_L1("\\r"),&Tssa::reset) &&
+            !processToken(l3,_L1("\\shad"),&Tssa::template doubleProp<&TSubtitleProps::shadowDepth,0,30>) &&
+            !processToken(l3,_L1("\\s"),&Tssa::template boolProp<&TSubtitleProps::strikeout>) &&
+            !processToken(l3,_L1("\\u"),&Tssa::template boolProp<&TSubtitleProps::underline>) &&
+            !processToken(l3,_L1("\\kf"),&Tssa::karaoke_kf) &&
+            !processToken(l3,_L1("\\ko"),&Tssa::karaoke_ko) &&
+            !processTokenC(l3,_L1("\\K"),&Tssa::karaoke_kf) &&
+            !processTokenC(l3,_L1("\\k"),&Tssa::karaoke_k)
         )
         l3++;
     }
 }
 
-template<class tchar> TsubtitleFormat::Twords TsubtitleFormat::processSSA(const TsubtitleLine<tchar> &line, int sfmt, TsubtitleTextBase<tchar> &parent)
+TsubtitleFormat::Twords TsubtitleFormat::processSSA(const TsubtitleLine &line, int sfmt, TsubtitleTextBase &parent)
 {
     Twords words;
     if (line.empty()) return words;
-    const tchar *l=line[0];
+    const wchar_t *l=line[0];
     props=parent.defProps;
-    const tchar *l1=l,*l2=l;
-    Tssa<tchar> ssa(props,parent.defProps,words);
+    const wchar_t *l1=l,*l2=l;
+    Tssa ssa(props,parent.defProps,words);
     while (*l2) {
         if (l2[0]=='{' /*&& l2[1]=='\\'*/) {
-            if (const tchar *end=strchr(l2+1,'}')) {
+            if (const wchar_t *end=strchr(l2+1,'}')) {
                 ssa.processTokens(l,l1 ,l2,end);
                 l2=end+1;
                 continue;
@@ -1113,44 +1116,44 @@ template<class tchar> TsubtitleFormat::Twords TsubtitleFormat::processSSA(const 
     return words;
 }
 
-template<class tchar> void TsubtitleFormat::processMicroDVD(TsubtitleTextBase<tchar> &parent,typename std::vector< TsubtitleLine<tchar> >::iterator it)
+void TsubtitleFormat::processMicroDVD(TsubtitleTextBase &parent, std::vector< TsubtitleLine >::iterator it)
 {
  if (it->empty()) return;
- const tchar *line0=(*it)[0],*line=line0;
+ const wchar_t *line0=(*it)[0],*line=line0;
  while (*line)
   if (line[0]=='}' || line[0]==' ') line++;
-  else if (_strnicmp(line,_L("{y:"),3)==0)
+  else if (_strnicmp(line,_L1("{y:"),3)==0)
    {
-    const tchar *end=strchr(line+3,'}');
+    const wchar_t *end=strchr(line+3,'}');
     if (end==NULL) break;
-    bool all=!!tchar_traits<tchar>::isupper(line[1]);
-    if (std::find_if(line+3,end,Tncasecmp<tchar,'i'>())!=end) parent.propagateProps(all?parent.begin():it,&TSubtitleProps::italic   ,true,all?parent.end():it+1);
-    if (std::find_if(line+3,end,Tncasecmp<tchar,'b'>())!=end) parent.propagateProps(all?parent.begin():it,&TSubtitleProps::bold     ,1,all?parent.end():it+1);
-    if (std::find_if(line+3,end,Tncasecmp<tchar,'u'>())!=end) parent.propagateProps(all?parent.begin():it,&TSubtitleProps::underline,true,all?parent.end():it+1);
-    if (std::find_if(line+3,end,Tncasecmp<tchar,'s'>())!=end) parent.propagateProps(all?parent.begin():it,&TSubtitleProps::strikeout,true,all?parent.end():it+1);
+    bool all=!!iswupper(line[1]);
+    if (std::find_if(line+3,end,Tncasecmp<'i'>())!=end) parent.propagateProps(all?parent.begin():it,&TSubtitleProps::italic   ,true,all?parent.end():it+1);
+    if (std::find_if(line+3,end,Tncasecmp<'b'>())!=end) parent.propagateProps(all?parent.begin():it,&TSubtitleProps::bold     ,1,all?parent.end():it+1);
+    if (std::find_if(line+3,end,Tncasecmp<'u'>())!=end) parent.propagateProps(all?parent.begin():it,&TSubtitleProps::underline,true,all?parent.end():it+1);
+    if (std::find_if(line+3,end,Tncasecmp<'s'>())!=end) parent.propagateProps(all?parent.begin():it,&TSubtitleProps::strikeout,true,all?parent.end():it+1);
     line=end+1;
    }
-  else if (_strnicmp(line,_L("{s:"),3)==0)
+  else if (_strnicmp(line,_L1("{s:"),3)==0)
    {
     int size;
-    if (tchar_traits<tchar>::sscanf()(line,_L("{s:%i}"),&size) || tchar_traits<tchar>::sscanf()(line,_L("{S:%i}"),&size))
+    if (swscanf(line,_L1("{s:%i}"),&size) || swscanf(line,_L1("{S:%i}"),&size))
      {
-      parent.propagateProps(tchar_traits<tchar>::isupper(line[1])?parent.begin():it,&TSubtitleProps::size,size,tchar_traits<tchar>::isupper(line[1])?parent.end():it+1);
-      const tchar *r=strchr(line,'}');
+      parent.propagateProps(iswupper(line[1])?parent.begin():it,&TSubtitleProps::size,size,iswupper(line[1])?parent.end():it+1);
+      const wchar_t *r=strchr(line,'}');
       if (r)
        line=r+1;
      }
    }
-  else if (_strnicmp(line,_L("{c:$"),4)==0)
+  else if (_strnicmp(line,_L1("{c:$"),4)==0)
    {
     COLORREF color;
-    if (tchar_traits<tchar>::sscanf()(line,_L("{c:$%x}"),&color) || tchar_traits<tchar>::sscanf()(line,_L("{C:$%x}"),&color))
+    if (swscanf(line,_L1("{c:$%x}"),&color) || swscanf(line,_L1("{C:$%x}"),&color))
      {
-      parent.propagateProps(tchar_traits<tchar>::isupper(line[1])?parent.begin():it,&TSubtitleProps::color,color,tchar_traits<tchar>::isupper(line[1])?parent.end():it+1);
-      const tchar *r=strchr(line,'}');
+      parent.propagateProps(iswupper(line[1])?parent.begin():it,&TSubtitleProps::color,color,iswupper(line[1])?parent.end():it+1);
+      const wchar_t *r=strchr(line,'}');
       if (r)
        {
-        parent.propagateProps(tchar_traits<tchar>::isupper(line[1])?parent.begin():it,&TSubtitleProps::isColor,true,tchar_traits<tchar>::isupper(line[1])?parent.end():it+1);
+        parent.propagateProps(iswupper(line[1])?parent.begin():it,&TSubtitleProps::isColor,true,iswupper(line[1])?parent.end():it+1);
         line=r+1;
        }
      }
@@ -1160,26 +1163,26 @@ template<class tchar> void TsubtitleFormat::processMicroDVD(TsubtitleTextBase<tc
  (*it)[0].eraseLeft(line-line0);
 }
 
-template<class tchar> void TsubtitleFormat::processMPL2(TsubtitleLine<tchar> &line)
+void TsubtitleFormat::processMPL2(TsubtitleLine &line)
 {
  if (line.empty() || !line[0]) return;
  if (line[0][0]=='/')
   {
-   for (typename TsubtitleLine<tchar>::iterator w=line.begin();w!=line.end();w++)
+   for (TsubtitleLine::iterator w=line.begin();w!=line.end();w++)
     w->props.italic=true;
    line[0].eraseLeft(1);
   }
 }
 
 //================================= TsubtitleLine ==================================
-template<class tchar> size_t TsubtitleLine<tchar>::strlen(void) const
+size_t TsubtitleLine::strlen(void) const
 {
  size_t len=0;
- for (typename Tbase::const_iterator w=this->begin();w!=this->end();w++)
+ for (Tbase::const_iterator w=this->begin();w!=this->end();w++)
   len+=::strlen(*w);
  return len;
 }
-template<class tchar> void TsubtitleLine<tchar>::applyWords(const TsubtitleFormat::Twords &words)
+void TsubtitleLine::applyWords(const TsubtitleFormat::Twords &words)
 {
  bool karaokeNewWord = false;
  for (TsubtitleFormat::Twords::const_iterator w=words.begin();w!=words.end();w++)
@@ -1202,7 +1205,7 @@ template<class tchar> void TsubtitleLine<tchar>::applyWords(const TsubtitleForma
  if (!this->empty())
   this->erase(this->begin());
 }
-template<class tchar> void TsubtitleLine<tchar>::format(TsubtitleFormat &format,int sfmt,TsubtitleTextBase<tchar> &parent)
+void TsubtitleLine::format(TsubtitleFormat &format,int sfmt, TsubtitleTextBase &parent)
 {
  // Use SSA parser for SRT subs when extended tags option is checked
  // This option will be removed (and SSA parser applied to SUBVIEWER)
@@ -1211,38 +1214,35 @@ template<class tchar> void TsubtitleLine<tchar>::format(TsubtitleFormat &format,
   applyWords(format.processSSA(*this, sfmt, parent));
  else
   applyWords(format.processHTML(*this));
-}template<class tchar> void TsubtitleLine<tchar>::fix(TtextFix<tchar> &fix)
+}void TsubtitleLine::fix(TtextFix &fix)
 {
- for (typename Tbase::iterator w=this->begin();w!=this->end();w++)
+ for (Tbase::iterator w=this->begin();w!=this->end();w++)
   w->fix(fix);
 }
 
-template size_t TsubtitleLine<char>::strlen(void) const;
-template size_t TsubtitleLine<wchar_t>::strlen(void) const;
-
 //================================= TsubtitleTextBase ==================================
-template<class tchar> void TsubtitleTextBase<tchar>::format(TsubtitleFormat &format)
+void TsubtitleTextBase::format(TsubtitleFormat &format)
 {
  int sfmt=subformat&Tsubreader::SUB_FORMATMASK;
- for (typename Tbase::iterator l=this->begin();l!=this->end();l++)
+ for (Tbase::iterator l=this->begin();l!=this->end();l++)
   l->format(format,sfmt,*this);
- for (typename Tbase::iterator l=this->begin();l!=this->end();l++)
+ for (Tbase::iterator l=this->begin();l!=this->end();l++)
   format.processMicroDVD(*this,l);
  if (sfmt==Tsubreader::SUB_MPL2)
-  for (typename Tbase::iterator l=this->begin();l!=this->end();l++)
+  for (Tbase::iterator l=this->begin();l!=this->end();l++)
    format.processMPL2(*l);
 }
 
-template<class tchar> void TsubtitleTextBase<tchar>::prepareKaraoke(void)
+void TsubtitleTextBase::prepareKaraoke(void)
 {
  int sfmt=subformat&Tsubreader::SUB_FORMATMASK;
  if (sfmt != Tsubreader::SUB_SSA)
   return;
 
- TsubtitleTextBase<tchar> temp(subformat, defProps);
+ TsubtitleTextBase temp(subformat, defProps);
  TsubtitleLine tempLine;
  int wrapStyle = 0;
- for (typename Tbase::iterator l = this->begin() ; l != this->end() ; l++)
+ for (Tbase::iterator l = this->begin() ; l != this->end() ; l++)
   {
    if (l->props.wrapStyle == 2 || l->lineBreakReason == 2)
     {
@@ -1255,7 +1255,7 @@ template<class tchar> void TsubtitleTextBase<tchar>::prepareKaraoke(void)
     }
 
    tempLine.props = l->props;
-   for (typename TsubtitleLine::iterator w = l->begin() ; w != l->end() ; w++)
+   for (TsubtitleLine::iterator w = l->begin() ; w != l->end() ; w++)
     {
      wrapStyle = w->props.wrapStyle;
      tempLine.push_back(*w);
@@ -1269,13 +1269,13 @@ template<class tchar> void TsubtitleTextBase<tchar>::prepareKaraoke(void)
 
  REFERENCE_TIME karaokeStart = REFTIME_INVALID;
  REFERENCE_TIME karaokeDuration = 0;
- for (typename Tbase::iterator l = this->begin() ; l != this->end() ; l++)
+ for (Tbase::iterator l = this->begin() ; l != this->end() ; l++)
   {
    if (karaokeStart != REFTIME_INVALID)
     karaokeStart += karaokeDuration;
 
    karaokeDuration = 0;
-   for (typename TsubtitleLine::iterator w = l->begin() ; w != l->end() ; w++)
+   for (TsubtitleLine::iterator w = l->begin() ; w != l->end() ; w++)
     {
      if (karaokeStart == REFTIME_INVALID)
       karaokeStart = w->props.karaokeStart;
@@ -1292,34 +1292,28 @@ template<class tchar> void TsubtitleTextBase<tchar>::prepareKaraoke(void)
   }
 }
 
-template<class tchar> void TsubtitleTextBase<tchar>::fix(TtextFix<tchar> &fix)
+void TsubtitleTextBase::fix(TtextFix &fix)
 {
- for (typename Tbase::iterator l=this->begin();l!=this->end();l++)
+ for (Tbase::iterator l=this->begin();l!=this->end();l++)
   l->fix(fix);
  if (stop == REFTIME_INVALID)
   {
    size_t len = 0;
-   for (typename Tbase::iterator l=this->begin();l!=this->end();l++)
+   for (Tbase::iterator l=this->begin();l!=this->end();l++)
     len += l->strlen();
    stop = start + len * 900000;
   }
 }
 
-template<class tchar> void TsubtitleTextBase<tchar>::print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceChange,TrenderedSubtitleLines::TprintPrefs &prefs) const
+void TsubtitleTextBase::print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceChange,TrenderedSubtitleLines::TprintPrefs &prefs) const
 {
  prefs.subformat=subformat;
  f.print(this,forceChange,prefs);
 }
-template<class tchar> Tsubtitle* TsubtitleTextBase<tchar>::copy(void)
+Tsubtitle* TsubtitleTextBase::copy(void)
 {
- TsubtitleTextBase<tchar> *s2=new TsubtitleTextBase<tchar>(subformat);
- for (typename Tbase::iterator l=this->begin();l!=this->end();l++)
+ TsubtitleTextBase *s2=new TsubtitleTextBase(subformat);
+ for (Tbase::iterator l=this->begin();l!=this->end();l++)
   s2->push_back(*l);
  return s2;
 }
-
-template class TtextFix<char>;
-template struct TsubtitleTextBase<char>;
-
-template class TtextFix<wchar_t>;
-template struct TsubtitleTextBase<wchar_t>;
