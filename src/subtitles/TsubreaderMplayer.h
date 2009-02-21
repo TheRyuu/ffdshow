@@ -38,8 +38,8 @@ private:
 protected:
  TsubtitleFormat textformat;
  TsubtitleParser(int Iformat,double Ifps,const TsubtitlesSettings *Icfg,const Tconfig *Iffcfg,Tsubreader *Isubreader);
- static const wchar_t* sub_readtext(const wchar_t *source, TsubtitleTextBase &sub);
- Tsubtitle* store(TsubtitleTextBase &sub);
+ static const wchar_t* sub_readtext(const wchar_t *source, TsubtitleText &sub);
+ Tsubtitle* store(TsubtitleText &sub);
  static int eol(wchar_t p);
  static void trail_space(wchar_t *s);
 public:

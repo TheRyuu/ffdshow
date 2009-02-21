@@ -1087,7 +1087,7 @@ void TsubtitleFormat::Tssa::processTokens(const wchar_t *l,const wchar_t* &l1,co
     }
 }
 
-TsubtitleFormat::Twords TsubtitleFormat::processSSA(const TsubtitleLine &line, int sfmt, TsubtitleTextBase &parent)
+TsubtitleFormat::Twords TsubtitleFormat::processSSA(const TsubtitleLine &line, int sfmt, TsubtitleText &parent)
 {
     Twords words;
     if (line.empty()) return words;
@@ -1116,7 +1116,7 @@ TsubtitleFormat::Twords TsubtitleFormat::processSSA(const TsubtitleLine &line, i
     return words;
 }
 
-void TsubtitleFormat::processMicroDVD(TsubtitleTextBase &parent, std::vector< TsubtitleLine >::iterator it)
+void TsubtitleFormat::processMicroDVD(TsubtitleText &parent, std::vector< TsubtitleLine >::iterator it)
 {
  if (it->empty()) return;
  const wchar_t *line0=(*it)[0],*line=line0;
@@ -1205,7 +1205,7 @@ void TsubtitleLine::applyWords(const TsubtitleFormat::Twords &words)
  if (!this->empty())
   this->erase(this->begin());
 }
-void TsubtitleLine::format(TsubtitleFormat &format,int sfmt, TsubtitleTextBase &parent)
+void TsubtitleLine::format(TsubtitleFormat &format,int sfmt, TsubtitleText &parent)
 {
  // Use SSA parser for SRT subs when extended tags option is checked
  // This option will be removed (and SSA parser applied to SUBVIEWER)
@@ -1220,8 +1220,8 @@ void TsubtitleLine::format(TsubtitleFormat &format,int sfmt, TsubtitleTextBase &
   w->fix(fix);
 }
 
-//================================= TsubtitleTextBase ==================================
-void TsubtitleTextBase::format(TsubtitleFormat &format)
+//================================= TsubtitleText ==================================
+void TsubtitleText::format(TsubtitleFormat &format)
 {
  int sfmt=subformat&Tsubreader::SUB_FORMATMASK;
  for (Tbase::iterator l=this->begin();l!=this->end();l++)
@@ -1233,13 +1233,13 @@ void TsubtitleTextBase::format(TsubtitleFormat &format)
    format.processMPL2(*l);
 }
 
-void TsubtitleTextBase::prepareKaraoke(void)
+void TsubtitleText::prepareKaraoke(void)
 {
  int sfmt=subformat&Tsubreader::SUB_FORMATMASK;
  if (sfmt != Tsubreader::SUB_SSA)
   return;
 
- TsubtitleTextBase temp(subformat, defProps);
+ TsubtitleText temp(subformat, defProps);
  TsubtitleLine tempLine;
  int wrapStyle = 0;
  for (Tbase::iterator l = this->begin() ; l != this->end() ; l++)
@@ -1292,7 +1292,7 @@ void TsubtitleTextBase::prepareKaraoke(void)
   }
 }
 
-void TsubtitleTextBase::fix(TtextFix &fix)
+void TsubtitleText::fix(TtextFix &fix)
 {
  for (Tbase::iterator l=this->begin();l!=this->end();l++)
   l->fix(fix);
@@ -1305,14 +1305,14 @@ void TsubtitleTextBase::fix(TtextFix &fix)
   }
 }
 
-void TsubtitleTextBase::print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceChange,TrenderedSubtitleLines::TprintPrefs &prefs) const
+void TsubtitleText::print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceChange,TrenderedSubtitleLines::TprintPrefs &prefs) const
 {
  prefs.subformat=subformat;
  f.print(this,forceChange,prefs);
 }
-Tsubtitle* TsubtitleTextBase::copy(void)
+Tsubtitle* TsubtitleText::copy(void)
 {
- TsubtitleTextBase *s2=new TsubtitleTextBase(subformat);
+ TsubtitleText *s2=new TsubtitleText(subformat);
  for (Tbase::iterator l=this->begin();l!=this->end();l++)
   s2->push_back(*l);
  return s2;

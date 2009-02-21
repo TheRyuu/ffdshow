@@ -283,7 +283,7 @@ struct TsubtitleWord;
 struct TfontSettings;
 struct Tsubtitle;
 struct TfontSettings;
-struct TsubtitleTextBase;
+struct TsubtitleText;
 class Tfont
 {
 private:
@@ -298,7 +298,7 @@ private:
  int oldCsp;
  YUVcolorA yuvcolor,outlineYUV,shadowYUV;
  short matrix[5][5];
- void prepareC(const TsubtitleTextBase *sub,const TrenderedSubtitleLines::TprintPrefs &prefs,bool forceChange);
+ void prepareC(const TsubtitleText *sub,const TrenderedSubtitleLines::TprintPrefs &prefs,bool forceChange);
  int get_splitdx_for_new_line(const TsubtitleWord &w,int splitdx,int dx, const TrenderedSubtitleLines::TprintPrefs &prefs) const;
  TcharsChache *charsCache;
  TrenderedTextSubtitleWord* newWord(const wchar_t *s,size_t slen,TrenderedSubtitleLines::TprintPrefs prefs,const TsubtitleWord *w,const LOGFONT &lf,bool trimRightSpaces=false);
@@ -308,7 +308,7 @@ public:
  Tfont(IffdshowBase *Ideci, unsigned int Igdi_font_scale);
  ~Tfont();
  void init(const TfontSettings *IfontSettings);
- void print(const TsubtitleTextBase *sub,bool forceChange,const TrenderedSubtitleLines::TprintPrefs &prefs,unsigned int *y=NULL);
+ void print(const TsubtitleText *sub,bool forceChange,const TrenderedSubtitleLines::TprintPrefs &prefs,unsigned int *y=NULL);
  void done(void);
 };
 

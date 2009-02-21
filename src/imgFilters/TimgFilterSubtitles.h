@@ -10,7 +10,7 @@
 class TsubtitlesTextpin;
 class TimgFilterSubtitleExpand;
 struct TfontSettingsSub;
-struct TsubtitleTextBase;
+struct TsubtitleText;
 DECLARE_FILTER(TimgFilterSubtitles,public,TimgFilter)
 
 public:
@@ -48,7 +48,7 @@ private:
    TsubPrintPrefs(unsigned char *Idst[4],stride_t Istride[4],unsigned int Idx[4],unsigned int Idy[4],IffdshowBase *Ideci,const TsubtitlesSettings *cfg,const TffPict &pict,int Iclipdy,const Tconfig *Iconfig,bool Idvd);
   };
 
- TsubtitleTextBase *cc;
+ TsubtitleText *cc;
  bool wasCCchange;
  bool everRGB;
  AdhocMode adhocMode; // 0: normal, 1: adhoc! process only DVD sub/menu, 2: after adhoc, second call. process none DVD sub (cc decoder, etc).

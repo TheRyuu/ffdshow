@@ -145,8 +145,8 @@ public:
  TsubtitleFormat(const ThtmlColors *Ihtmlcolors):htmlcolors(Ihtmlcolors) {}
  void processHTMLTags(Twords &words, const wchar_t* &l, const wchar_t* &l1, const wchar_t* &l2);
  Twords processHTML(const TsubtitleLine &line);
- Twords processSSA(const TsubtitleLine &line,int sfmt, TsubtitleTextBase &parent);
- void processMicroDVD(TsubtitleTextBase &parent, std::vector< TsubtitleLine >::iterator it);
+ Twords processSSA(const TsubtitleLine &line,int sfmt, TsubtitleText &parent);
+ void processMicroDVD(TsubtitleText &parent, std::vector< TsubtitleLine >::iterator it);
  void processMPL2(TsubtitleLine &line);
  void resetProps(void){props.reset();}
 };
@@ -213,19 +213,19 @@ public:
  TsubtitleLine(const wchar_t *s,size_t len,const TSubtitleProps &defProps) {push_back(TsubtitleWord(s,len,defProps));}
  TsubtitleLine(const wchar_t *s,size_t len,const TSubtitleProps &defProps,int IlineBreakReason):lineBreakReason(IlineBreakReason) {push_back(TsubtitleWord(s,len,defProps));}
  size_t strlen(void) const;
- void format(TsubtitleFormat &format,int sfmt,TsubtitleTextBase &parent);
+ void format(TsubtitleFormat &format,int sfmt,TsubtitleText &parent);
  void fix(TtextFix &fix);
 };
 
-struct TsubtitleTextBase :public Tsubtitle,public std::vector< TsubtitleLine >
+struct TsubtitleText :public Tsubtitle,public std::vector< TsubtitleLine >
 {
 private:
  typedef std::vector<TsubtitleLine> Tbase;
 public:
  int subformat;
  TSubtitleProps defProps;
- TsubtitleTextBase(int Isubformat):subformat(Isubformat) {}
- TsubtitleTextBase(int Isubformat,const TSubtitleProps &IdefProps):subformat(Isubformat),defProps(IdefProps) {}
+ TsubtitleText(int Isubformat):subformat(Isubformat) {}
+ TsubtitleText(int Isubformat,const TSubtitleProps &IdefProps):subformat(Isubformat),defProps(IdefProps) {}
  void set(const strings &strs)
   {
    this->clear();
@@ -281,15 +281,15 @@ public:
  void fix(TtextFix &fix);
  virtual void print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceChange,TrenderedSubtitleLines::TprintPrefs &prefs) const;
  virtual Tsubtitle* copy(void);
- virtual Tsubtitle* create(void) {return new TsubtitleTextBase(subformat);}
+ virtual Tsubtitle* create(void) {return new TsubtitleText(subformat);}
  virtual bool copyLine(Tsubtitle *dst,size_t linenum)
   {
-   ((TsubtitleTextBase*)dst)->push_back(this->at(linenum));
+   ((TsubtitleText*)dst)->push_back(this->at(linenum));
    return true;
   }
  virtual bool copyProps(Tsubtitle *dst)
   {
-   ((TsubtitleTextBase*)dst)->defProps=this->defProps;
+   ((TsubtitleText*)dst)->defProps=this->defProps;
    return true;
   }
 

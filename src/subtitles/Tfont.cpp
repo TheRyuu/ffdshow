@@ -1947,7 +1947,7 @@ int Tfont::get_splitdx_for_new_line(const TsubtitleWord &w,int splitdx,int dx, c
  return w.props.get_maxWidth(dx, prefs.subformat, deci) * gdi_font_scale;
 }
 
-void Tfont::prepareC(const TsubtitleTextBase *sub,const TrenderedSubtitleLines::TprintPrefs &prefs,bool forceChange)
+void Tfont::prepareC(const TsubtitleText *sub,const TrenderedSubtitleLines::TprintPrefs &prefs,bool forceChange)
 {
  if (oldsub!=sub || forceChange || oldCsp!=prefs.csp)
   {
@@ -1976,7 +1976,7 @@ void Tfont::prepareC(const TsubtitleTextBase *sub,const TrenderedSubtitleLines::
    int *pwidths=NULL;
    Tbuffer width;
 
-   for (TsubtitleTextBase::const_iterator l=sub->begin();l!=sub->end();l++)
+   for (TsubtitleText::const_iterator l=sub->begin();l!=sub->end();l++)
     {
      int charCount=0;
      ffstring allStr;
@@ -2151,7 +2151,7 @@ void Tfont::prepareC(const TsubtitleTextBase *sub,const TrenderedSubtitleLines::
   }
 }
 
-void Tfont::print(const TsubtitleTextBase *sub,bool forceChange,const TrenderedSubtitleLines::TprintPrefs &prefs,unsigned int *y)
+void Tfont::print(const TsubtitleText *sub,bool forceChange,const TrenderedSubtitleLines::TprintPrefs &prefs,unsigned int *y)
 {
  if (!sub) return;
  prepareC(sub,prefs,forceChange);if (y) *y+=height;

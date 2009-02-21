@@ -22,7 +22,7 @@ private:
   private:
    IOSDprovider *provider;
    const Tconfig *config;
-   TsubtitleTextBase sub;
+   TsubtitleText sub;
    bool firsttime;
    struct TosdValue
     {
@@ -111,7 +111,7 @@ private:
  TfontSettingsOSD *oldFont;
  unsigned int framecnt;
  Tfont fontUser;
- TsubtitleTextBase subUser;
+ TsubtitleText subUser;
  char_t oldLinesUser[2048];
  strings linesUser;
 

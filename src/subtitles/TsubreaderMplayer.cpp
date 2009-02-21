@@ -37,17 +37,17 @@ void TsubtitleParser::trail_space(wchar_t *s) {
         while (i > 0 && iswspace((unsigned short)s[i])) s[i--] = '\0';
 }
 
-Tsubtitle* TsubtitleParser::store(TsubtitleTextBase &sub)
+Tsubtitle* TsubtitleParser::store(TsubtitleText &sub)
 {
  sub.defProps.extendedTags=cfg.extendedTags;
  sub.format(textformat);
  sub.prepareKaraoke();
  sub.fix(textfix);
- subreader->push_back(new TsubtitleTextBase(sub));
+ subreader->push_back(new TsubtitleText(sub));
  return subreader->back();
 }
 
-const wchar_t* TsubtitleParser::sub_readtext(const wchar_t *source, TsubtitleTextBase &sub) {
+const wchar_t* TsubtitleParser::sub_readtext(const wchar_t *source, TsubtitleText &sub) {
     int len=0;
     const wchar_t *p=source;
 
@@ -73,7 +73,7 @@ Tsubtitle* TsubtitleParserSami::parse(Tstream &fd,int flags, REFERENCE_TIME star
     if (!s)
      if ((s = fd.fgets(line, this->LINE_LEN))==NULL) return NULL;
 
-    TsubtitleTextBase current(this->format);
+    TsubtitleText current(this->format);
     current.start = current.stop = 0;
     state = 0;
 
@@ -233,7 +233,7 @@ Tsubtitle* TsubtitleParserMicrodvd::parse(Tstream &fd,int flags, REFERENCE_TIME,
        }
     } while (skip);
 
-    TsubtitleTextBase current(this->format);
+    TsubtitleText current(this->format);
     current.start=this->frameToTime(start);
     current.stop =this->frameToTime(stop );
 
@@ -250,7 +250,7 @@ Tsubtitle* TsubtitleParserSubrip::parse(Tstream &fd,int flags, REFERENCE_TIME st
     int a1,a2,a3,a4,b1,b2,b3,b4;
     wchar_t *p=NULL, *q=NULL;
     int len;
-    TsubtitleTextBase current(this->format);
+    TsubtitleText current(this->format);
     while (1) {
         if (!fd.fgets (line, this->LINE_LEN)) return NULL;
         if (flags&this->PARSETIME)
@@ -280,7 +280,7 @@ Tsubtitle* TsubtitleParserSubviewer::parse(Tstream &fd,int flags, REFERENCE_TIME
     int a1,a2,a3,a4,b1,b2,b3,b4;
     wchar_t *p=NULL;
     int len;
-    TsubtitleTextBase current(this->format);
+    TsubtitleText current(this->format);
     TsubtitleParser::textformat.resetProps();
     while (!current.size()) {
         if (flags&this->PARSETIME)
@@ -332,7 +332,7 @@ Tsubtitle* TsubtitleParserSubviewer2::parse(Tstream &fd,int flags, REFERENCE_TIM
     int a1,a2,a3,a4;
     wchar_t *p=NULL;
     int len;
-    TsubtitleTextBase current(this->format);
+    TsubtitleText current(this->format);
     while (!current.size()) {
         if (!fd.fgets (line, this->LINE_LEN)) return NULL;
         if (line[0]!='{')
@@ -363,7 +363,7 @@ Tsubtitle* TsubtitleParserVplayer::parse(Tstream &fd,int flags, REFERENCE_TIME s
         int a1,a2,a3,a4;
         const wchar_t *p=NULL, *next;wchar_t separator1,separator2;
         int plen;
-        TsubtitleTextBase current(this->format);
+        TsubtitleText current(this->format);
         while (current.empty()) {
                 if (!fd.fgets (line, this->LINE_LEN)) return NULL;
                 int ret=swscanf(line, L"%d:%d:%d%c%d%c%n",L"%d:%d:%d%c%d%lc%n",&a1,&a2,&a3,&separator1,&a4,&separator2,&plen);
@@ -414,7 +414,7 @@ Tsubtitle* TsubtitleParserRt::parse(Tstream &fd,int flags, REFERENCE_TIME start,
     int a1,a2,a3,a4,b1,b2,b3,b4;
     const wchar_t *p=NULL,*next=NULL;
     int plen;
-    TsubtitleTextBase current(this->format);
+    TsubtitleText current(this->format);
     while (current.empty()) {
         if (!fd.fgets (line, this->LINE_LEN)) return NULL;
         //TODO: it seems that format of time is not easily determined, it may be 1:12, 1:12.0 or 0:1:12.0
@@ -888,7 +888,7 @@ Tsubtitle* TsubtitleParserSSA::parse(Tstream &fd, int flags, REFERENCE_TIME star
             swscanf(event.end.c_str()  ,L"%d:%d:%d.%d",&hour2, &min2, &sec2, &hunsec2)==4))
         {
          const TSubtitleProps *props=styles.getProps(event.style);
-         TsubtitleTextBase current(this->format,props?*props:defprops);
+         TsubtitleText current(this->format,props?*props:defprops);
          strToIntMargin(event.marginL,&current.defProps.marginL);
          strToIntMargin(event.marginR,&current.defProps.marginR);
          strToIntMargin(event.marginV,&current.defProps.marginV);
@@ -956,7 +956,7 @@ Tsubtitle* TsubtitleParserDunnowhat::parse(Tstream &fd,int flags, REFERENCE_TIME
     if (swscanf(line, L"%ld,%ld,\"%[^\"]", &start,
                 &stop, text) <3)
         return NULL;
-    TsubtitleTextBase current(this->format);
+    TsubtitleText current(this->format);
     current.start=this->frameToTime(start);
     current.stop =this->frameToTime(stop );
     current.add(text);
@@ -974,7 +974,7 @@ Tsubtitle* TsubtitleParserMPsub::parse(Tstream &fd,int flags, REFERENCE_TIME sta
         {
                 if (!fd.fgets(line, this->LINE_LEN)) return NULL;
         } while (swscanf (line, L"%f %f", &a, &b) !=2);
-        TsubtitleTextBase current(this->format);
+        TsubtitleText current(this->format);
         mpsub_position += a*(sub_uses_time ? 100.0 : 1.0);
         current.start=this->frameToTime(int(sub_uses_time?mpsub_position/100.0:mpsub_position));
         mpsub_position += b*(sub_uses_time ? 100.0 : 1.0);
@@ -1016,7 +1016,7 @@ Tsubtitle* TsubtitleParserAqt::parse(Tstream &fd,int flags, REFERENCE_TIME, REFE
         if (!(swscanf(line, L"-->> %ld", &start) <1))
                 break;
     }
-    TsubtitleTextBase current(this->format);
+    TsubtitleText current(this->format);
     current.start=this->frameToTime(start);
     if (previous != NULL)
         previous->stop = current.start-1;
@@ -1058,7 +1058,7 @@ Tsubtitle* TsubtitleParserSubrip09::parse(Tstream &fd,int flags, REFERENCE_TIME 
         if (!(swscanf(line, L"[%d:%d:%d]",&a1,&a2,&a3) < 3))
                 break;
     }
-    TsubtitleTextBase current(this->format);
+    TsubtitleText current(this->format);
     current.start = this->hmsToTime(a1,a2,a3);
     if (previous != NULL)
         previous->stop = current.start-1;
@@ -1093,7 +1093,7 @@ Tsubtitle* TsubtitleParserMPL2::parse(Tstream &fd,int flags, REFERENCE_TIME, REF
     } while (swscanf (line,
               L"[%ld][%ld]%[^\r\n]",
               &start, &end, line2) < 3);
-    TsubtitleTextBase current(this->format);
+    TsubtitleText current(this->format);
     current.start = (REFERENCE_TIME)start*1000000;
     current.stop = (REFERENCE_TIME)end*1000000;
     p=line2;
