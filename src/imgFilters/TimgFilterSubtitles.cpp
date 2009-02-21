@@ -29,7 +29,19 @@
 #include "Tsubreader.h"
 #include "TsubtitlesTextpin.h"
 
-TimgFilterSubtitles::TsubPrintPrefs::TsubPrintPrefs(unsigned char *Idst[4],stride_t Istride[4],unsigned int Idx[4],unsigned int Idy[4],IffdshowBase *Ideci,const TsubtitlesSettings *cfg,const TffPict &pict,int Iclipdy,const Tconfig *Iconfig,bool Idvd):TrenderedSubtitleLines::TprintPrefs(Ideci)
+TimgFilterSubtitles::TsubPrintPrefs::TsubPrintPrefs(
+    unsigned char *Idst[4],
+    stride_t Istride[4],
+    unsigned int Idx[4],
+    unsigned int Idy[4],
+    IffdshowBase *Ideci,
+    const TsubtitlesSettings *cfg,
+    const TffPict &pict,
+    int Iclipdy,
+    const Tconfig *Iconfig,
+    bool Idvd,
+    const TfontSettings *fontSettings)
+ :TrenderedSubtitleLines::TprintPrefs(Ideci,fontSettings)
 {
  dst=Idst;
  stride=Istride;
@@ -373,7 +385,7 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
      forceChange|=oldSizeDx!=sizeDx || oldSizeDy!=sizeDy;
      oldSizeDx=sizeDx;oldSizeDy=sizeDy;
 
-     TsubPrintPrefs printprefs(dst,stride2,dx1,dy1,deci,cfg,pict,clipdy,parent->config,!!isdvdproc);
+     TsubPrintPrefs printprefs(dst,stride2,dx1,dy1,deci,cfg,pict,clipdy,parent->config,!!isdvdproc,&cfg->font);
      printprefs.csp=pict.csp & FF_CSPS_MASK;
      printprefs.rtStart=frameStart;
      const Trect *decodedPict = deciV->getDecodedPictdimensions();
@@ -429,7 +441,7 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
     #else
      const TsubtitlesSettings &cfg2(*cfg);
     #endif
-     TsubPrintPrefs printprefs(dst,stride2,dx1,dy1,deci,&cfg2,pict,clipdy,parent->config,!!isdvdproc);
+     TsubPrintPrefs printprefs(dst,stride2,dx1,dy1,deci,&cfg2,pict,clipdy,parent->config,!!isdvdproc,&cfg->font);
      printprefs.csp=pict.csp & FF_CSPS_MASK;
      printprefs.sizeDx=pict.rectFull.dx;
      printprefs.sizeDy=pict.rectFull.dy;

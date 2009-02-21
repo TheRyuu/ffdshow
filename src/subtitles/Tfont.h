@@ -5,6 +5,7 @@
 #include "ffImgfmt.h"
 #include "TsubtitleProps.h"
 #include "rational.h"
+#include "TfontSettings.h"
 
 #define size_of_rgb32 4
 
@@ -24,7 +25,7 @@ class TrenderedSubtitleLines: public std::vector<TrenderedSubtitleLine*>
 public:
  struct TprintPrefs
   {
-   TprintPrefs(IffdshowBase *Ideci):
+   TprintPrefs(IffdshowBase *Ideci,const TfontSettings *IfontSettings):
     deci(Ideci),
     config(NULL),
     sizeDx(0),
@@ -45,6 +46,8 @@ public:
     yinput(0),
     rtStart(REFTIME_INVALID)
     {
+     if (IfontSettings)
+      fontSettings = *IfontSettings;
     }
    unsigned char **dst;
    const stride_t *stride;
@@ -73,6 +76,7 @@ public:
    int subformat;
    REFERENCE_TIME rtStart;
    unsigned int xinput,yinput;
+   TfontSettings fontSettings;
   };
  TrenderedSubtitleLines(void) {}
  TrenderedSubtitleLines(TrenderedSubtitleLine *ln) {push_back(ln);}
@@ -290,7 +294,6 @@ private:
  IffdshowBase *deci;
  unsigned int gdi_font_scale;
  TfontManager *fontManager;
- TfontSettings *fontSettings;
  HDC hdc;HGDIOBJ oldFont;
  TrenderedSubtitleLines lines;
  unsigned int height;
@@ -303,6 +306,7 @@ private:
  TcharsChache *charsCache;
  TrenderedTextSubtitleWord* newWord(const wchar_t *s,size_t slen,TrenderedSubtitleLines::TprintPrefs prefs,const TsubtitleWord *w,const LOGFONT &lf,bool trimRightSpaces=false);
 public:
+ TfontSettings *fontSettings;
  // gdi_font_scale: 4: for OSD. rendering_window is 4x5.
  //                 8-16: for subtitles. 16:very sharp (slow), 12:soft & sharp, (moderately slow) 8:blurry (fast)
  Tfont(IffdshowBase *Ideci, unsigned int Igdi_font_scale);

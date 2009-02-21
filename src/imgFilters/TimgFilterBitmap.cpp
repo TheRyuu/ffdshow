@@ -262,7 +262,7 @@ HRESULT TimgFilterBitmap::process(TfilterQueue::iterator it,TffPict &pict,const 
       else
     #endif
        w.blend=getBlend<Tmmx>(oldmode=cfg->mode);
-     TrenderedSubtitleLines::TprintPrefs prefs(deci);
+     TrenderedSubtitleLines::TprintPrefs prefs(deci,NULL);
      prefs.dst=dst;
      prefs.stride=stride2;
      prefs.shiftX=pict.cspInfo.shiftX;prefs.shiftY=pict.cspInfo.shiftY;

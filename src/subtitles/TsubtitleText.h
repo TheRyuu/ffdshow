@@ -221,6 +221,7 @@ struct TsubtitleText :public Tsubtitle,public std::vector< TsubtitleLine >
 {
 private:
  typedef std::vector<TsubtitleLine> Tbase;
+ TrenderedSubtitleLines lines;
 public:
  int subformat;
  TSubtitleProps defProps;
@@ -305,6 +306,7 @@ public:
    return c;
   }
  virtual bool isText(void) const {return true;}
+ void prepareRendering(const TrenderedSubtitleLines::TprintPrefs &prefs);
 };
 
 #endif

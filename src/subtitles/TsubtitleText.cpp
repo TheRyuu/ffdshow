@@ -1317,3 +1317,6 @@ Tsubtitle* TsubtitleText::copy(void)
   s2->push_back(*l);
  return s2;
 }
+void TsubtitleText::prepareRendering(const TrenderedSubtitleLines::TprintPrefs &prefs)
+{
+}

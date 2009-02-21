@@ -1970,7 +1970,7 @@ void Tfont::prepareC(const TsubtitleText *sub,const TrenderedSubtitleLines::Tpri
    if (!sub) return;
    if (!fontManager)
     comptrQ<IffdshowDecVideo>(deci)->getFontManager(&fontManager);
-   bool nosplit=!fontSettings->split && !(prefs.fontchangesplit && prefs.fontsplit);
+   bool nosplit=!prefs.fontSettings.split && !(prefs.fontchangesplit && prefs.fontsplit);
    int splitdx0=nosplit ? 0 : ((int)dx-prefs.textBorderLR<1 ? 1 : dx-prefs.textBorderLR) * gdi_font_scale;
 
    int *pwidths=NULL;
@@ -1987,7 +1987,7 @@ void Tfont::prepareC(const TsubtitleText *sub,const TrenderedSubtitleLines::Tpri
      if (l->empty())
       {
        LOGFONT lf;
-       HGDIOBJ old = l->props.toGdiFont(hdc, lf, *fontSettings, dx, dy, prefs.clipdy, prefs.sar, fontManager, gdi_font_scale);
+       HGDIOBJ old = l->props.toGdiFont(hdc, lf, prefs.fontSettings, dx, dy, prefs.clipdy, prefs.sar, fontManager, gdi_font_scale);
        if (!oldFont) oldFont=old;
        TrenderedSubtitleLine *line=new TrenderedSubtitleLine(l->props);
        lines.add(line,&height);
@@ -1997,13 +1997,22 @@ void Tfont::prepareC(const TsubtitleText *sub,const TrenderedSubtitleLines::Tpri
      for (TsubtitleLine::const_iterator w=l->begin();w!=l->end();w++)
       {
        LOGFONT lf;
-       HGDIOBJ old = w->props.toGdiFont(hdc, lf, *fontSettings, dx, dy, prefs.clipdy, prefs.sar, fontManager, gdi_font_scale);
+       HGDIOBJ old = w->props.toGdiFont(hdc, lf, prefs.fontSettings, dx, dy, prefs.clipdy, prefs.sar, fontManager, gdi_font_scale);
        if (!oldFont) oldFont=old;
-       SetTextCharacterExtra(hdc,w->props.spacing==INT_MIN ? fontSettings->spacing : w->props.get_spacing(dy, prefs.clipdy, gdi_font_scale));
+       SetTextCharacterExtra(hdc,w->props.spacing==INT_MIN ? prefs.fontSettings.spacing : w->props.get_spacing(dy, prefs.clipdy, gdi_font_scale));
        const wchar_t *p=*w;
        if (*p) // drop empty words
         {
-         int xscale=w->props.get_xscale(fontSettings->xscale,prefs.sar,fontSettings->aspectAuto,fontSettings->overrideScale)*100/w->props.get_yscale(fontSettings->yscale,prefs.sar,fontSettings->aspectAuto,fontSettings->overrideScale);
+         int xscale=w->props.get_xscale(
+                 prefs.fontSettings.xscale,
+                 prefs.sar,
+                 prefs.fontSettings.aspectAuto,
+                 prefs.fontSettings.overrideScale)
+             * 100
+             / w->props.get_yscale(
+                 prefs.fontSettings.yscale,prefs.sar,
+                 prefs.fontSettings.aspectAuto,
+                 prefs.fontSettings.overrideScale);
          wordWrapMode=w->props.wrapStyle;
          splitdxMax=get_splitdx_for_new_line(*w,splitdx0,dx, prefs);
          allStr+=p;
@@ -2045,8 +2054,8 @@ void Tfont::prepareC(const TsubtitleText *sub,const TrenderedSubtitleLines::Tpri
       {
        TsubtitleWord w(*w0);
        LOGFONT lf;
-       HGDIOBJ old = w.props.toGdiFont(hdc, lf, *fontSettings, dx, dy, prefs.clipdy, prefs.sar, fontManager, gdi_font_scale);
-       SetTextCharacterExtra(hdc,w.props.spacing==INT_MIN ? fontSettings->spacing : w.props.get_spacing(dy, prefs.clipdy, gdi_font_scale));
+       HGDIOBJ old = w.props.toGdiFont(hdc, lf, prefs.fontSettings, dx, dy, prefs.clipdy, prefs.sar, fontManager, gdi_font_scale);
+       SetTextCharacterExtra(hdc,w.props.spacing==INT_MIN ? prefs.fontSettings.spacing : w.props.get_spacing(dy, prefs.clipdy, gdi_font_scale));
        if (!line)
         {
          line=new TrenderedSubtitleLine(w.props);
