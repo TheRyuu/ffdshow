@@ -61,6 +61,7 @@ public:
  void processOverlap(void);
  bool IsProcessOverlapDone;
  Tsubtitle* operator[](size_t pos) const;
+ size_t count() const; // overridding size makes trouble as some calls to size() in this class expect the size of the base class.
  void onSeek(void);
 };
 

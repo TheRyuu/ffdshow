@@ -57,7 +57,7 @@ Tsubtitle* Tsubtitles::getSubtitle(const TsubtitlesSettings *cfg,REFERENCE_TIME 
  checkChange(cfg,forceChange);
  if (!subs || subs->empty()) return NULL;
 
- if ((*subs)[0]->isText() && !IsProcessOverlapDone())
+ if ((*subs).at(0)->isText() && !IsProcessOverlapDone())
   {
    processOverlap();
    init();
@@ -87,7 +87,7 @@ Tsubtitle* Tsubtitles::getSubtitle(const TsubtitlesSettings *cfg,REFERENCE_TIME 
  if (time>=(*subs)[current_sub]->start && time<=(*subs)[current_sub]->stop)
   return oldsub=(*subs)[current_sub];
  // check next sub.
- if(current_sub>=0 && current_sub+1<subs->size())
+ if(current_sub>=0 && current_sub+1<subs->count())
   {
    if (time>(*subs)[current_sub]->stop && time<(*subs)[current_sub+1]->start)
     {
@@ -102,7 +102,7 @@ Tsubtitle* Tsubtitles::getSubtitle(const TsubtitlesSettings *cfg,REFERENCE_TIME 
     return oldsub; // OK!
   }
   // use logarithmic search:
- int i=0,j=(int)subs->size()-1;
+ int i=0,j=(int)subs->count()-1;
  while (j>=i)
   {
    current_sub=(i+j+1)/2;
@@ -137,7 +137,7 @@ Tsubtitle* Tsubtitles::getSubtitle(const TsubtitlesSettings *cfg,REFERENCE_TIME 
   {
    if (time<=oldsub->stop) /*printf("JAJJ!  ")*/;
    else
-    if (current_sub+1>=subs->size())
+    if (current_sub+1>=subs->count())
      {
       // at the stop?
       nosub_range_start=oldsub->stop;

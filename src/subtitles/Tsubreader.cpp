@@ -263,6 +263,16 @@ Tsubtitle* Tsubreader::operator[](size_t pos) const
     }
 }
 
+size_t Tsubreader::count() const
+{
+    if (empty()) return 0;
+    if (at(0)->isText()) {
+        return processedSubtitleTexts.size();
+    } else {
+        return size();
+    }
+}
+
 void Tsubreader::processOverlap(void)
 {
  if (empty()) return;
