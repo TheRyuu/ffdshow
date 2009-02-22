@@ -331,7 +331,7 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
      if (e!=embedded.end() && e->second)
       sub=e->second->getSubtitle(cfg,frameStart,&forceChange);
     }
-   if (!useembedded && adhocMode != ADHOC_ADHOC_DRAW_DVD_SUB_ONLY)
+   if (!useembedded && adhocMode != ADHOC_ADHOC_DRAW_DVD_SUB_ONLY &&  cfg->is)
     sub=subs.getSubtitle(cfg,frameStart,&forceChange);
 
    if (sub && (isdvdproc || cfg->is))

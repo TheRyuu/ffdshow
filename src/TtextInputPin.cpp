@@ -49,7 +49,7 @@ TtextInputPin::~TtextInputPin()
 
 HRESULT TtextInputPin::CheckMediaType(const CMediaType *mtIn)
 {
- return (filter->getParam2(IDFF_subTextpin) || (mtIn->majortype==MEDIATYPE_DVD_ENCRYPTED_PACK && supdvddec)) &&
+ return (filter->getParam2(IDFF_subTextpin) || mtIn->majortype==MEDIATYPE_DVD_ENCRYPTED_PACK) &&
          (mtIn->majortype==MEDIATYPE_Text ||
          (mtIn->majortype==MEDIATYPE_Subtitle &&
           (mtIn->subtype==MEDIASUBTYPE_UTF8 ||
@@ -60,7 +60,7 @@ HRESULT TtextInputPin::CheckMediaType(const CMediaType *mtIn)
            (mtIn->subtype==MEDIASUBTYPE_ASS2 && supssa))
          ) ||
          (
-          ((mtIn->majortype==MEDIATYPE_DVD_ENCRYPTED_PACK && supdvddec) ||
+          (mtIn->majortype==MEDIATYPE_DVD_ENCRYPTED_PACK ||
            mtIn->majortype==MEDIATYPE_MPEG2_PACK ||
            mtIn->majortype==MEDIATYPE_MPEG2_PES ||
            mtIn->majortype==MEDIATYPE_Video ||
