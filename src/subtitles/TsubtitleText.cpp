@@ -1392,7 +1392,7 @@ int TsubtitleText::prepareRendering(const TrenderedSubtitleLines::TprintPrefs &p
                     SIZE sz;
                     size_t strlenp=strlen(p);
                     int *ptempwidths=(int*)tempwidth.alloc((strlenp+1)*sizeof(int)*2); // *2 to work around Layer For Unicode on Windows 9x.
-                    prefs.config->getGDI<wchar_t>().getTextExtentExPoint(font.hdc,p,(int)strlenp,INT_MAX,&nfit,ptempwidths,&sz);
+                    prefs.config->getGDI().getTextExtentExPoint(font.hdc,p,(int)strlenp,INT_MAX,&nfit,ptempwidths,&sz);
                     for (size_t x=0;x<strlenp;x++) {
                         pwidths[charCount]=nextleft=(double)ptempwidths[x]*xscale/100+left;
                         charCount++;
