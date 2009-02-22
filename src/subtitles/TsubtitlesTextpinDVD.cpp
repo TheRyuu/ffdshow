@@ -134,7 +134,7 @@ bool TsubtitlesTextpinDVD::ctlSubtitles(unsigned int id,const void *data,unsigne
  return refresh;
 }
 
-const Tsubtitle* TsubtitlesTextpinDVD::getSubtitle(const TsubtitlesSettings *cfg,REFERENCE_TIME time,bool *forceChange)
+Tsubtitle* TsubtitlesTextpinDVD::getSubtitle(const TsubtitlesSettings *cfg,REFERENCE_TIME time,bool *forceChange)
 {
  for (Tsubreader::iterator s0=subs->begin();s0!=subs->end();)
   if ((*s0)->stop<=time)
@@ -156,7 +156,7 @@ const Tsubtitle* TsubtitlesTextpinDVD::getSubtitle(const TsubtitlesSettings *cfg
  return subtitles.empty()?NULL:(subtitles.start=start,subtitles.stop=stop,&subtitles);
 }
 
-void TsubtitlesTextpinDVD::Tsubtitles::print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceChange,TrenderedSubtitleLines::TprintPrefs &prefs) const
+void TsubtitlesTextpinDVD::Tsubtitles::print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceChange,TrenderedSubtitleLines::TprintPrefs &prefs)
 {
  for (const_iterator s=begin();s!=end();s++)
   (*s)->print(time,wasseek,f,forceChange,prefs);

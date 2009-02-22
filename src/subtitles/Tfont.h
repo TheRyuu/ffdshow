@@ -49,6 +49,18 @@ public:
      if (IfontSettings)
       fontSettings = *IfontSettings;
     }
+   TprintPrefs()
+    {
+     memset(this,0,sizeof(*this));
+    }
+   bool operator != (const TrenderedSubtitleLines::TprintPrefs rt)
+    {
+     return !!memcmp(this, &rt, sizeof(*this));
+    }
+   bool operator == (const TrenderedSubtitleLines::TprintPrefs rt)
+    {
+     return !memcmp(this, &rt, sizeof(*this));
+    }
    unsigned char **dst;
    const stride_t *stride;
    const unsigned int *shiftX,*shiftY;
@@ -81,6 +93,11 @@ public:
  TrenderedSubtitleLines(void) {}
  TrenderedSubtitleLines(TrenderedSubtitleLine *ln) {push_back(ln);}
  void add(TrenderedSubtitleLine *ln,unsigned int *height);
+ int add(TrenderedSubtitleLine *ln); // returns height
+ void reset(void)
+  {
+   erase(begin(),end());
+  }
  void clear(void);
  using std::vector<value_type>::empty;
  void print(const TprintPrefs &prefs);
@@ -301,18 +318,18 @@ private:
  int oldCsp;
  YUVcolorA yuvcolor,outlineYUV,shadowYUV;
  short matrix[5][5];
- void prepareC(const TsubtitleText *sub,const TrenderedSubtitleLines::TprintPrefs &prefs,bool forceChange);
- int get_splitdx_for_new_line(const TsubtitleWord &w,int splitdx,int dx, const TrenderedSubtitleLines::TprintPrefs &prefs) const;
+ void prepareC(TsubtitleText *sub,const TrenderedSubtitleLines::TprintPrefs &prefs,bool forceChange);
  TcharsChache *charsCache;
  TrenderedTextSubtitleWord* newWord(const wchar_t *s,size_t slen,TrenderedSubtitleLines::TprintPrefs prefs,const TsubtitleWord *w,const LOGFONT &lf,bool trimRightSpaces=false);
 public:
+ friend struct TsubtitleText;
  TfontSettings *fontSettings;
  // gdi_font_scale: 4: for OSD. rendering_window is 4x5.
  //                 8-16: for subtitles. 16:very sharp (slow), 12:soft & sharp, (moderately slow) 8:blurry (fast)
  Tfont(IffdshowBase *Ideci, unsigned int Igdi_font_scale);
  ~Tfont();
  void init(const TfontSettings *IfontSettings);
- void print(const TsubtitleText *sub,bool forceChange,const TrenderedSubtitleLines::TprintPrefs &prefs,unsigned int *y=NULL);
+ void print(TsubtitleText *sub,bool forceChange,const TrenderedSubtitleLines::TprintPrefs &prefs,unsigned int *y=NULL);
  void done(void);
 };
 

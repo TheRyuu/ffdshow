@@ -18,7 +18,7 @@ private:
 public:
  TsubtitleVobsub(Tspudec *Ispu,Tvobsub *Ivobsub);
  virtual ~TsubtitleVobsub();
- virtual void print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceChange,TrenderedSubtitleLines::TprintPrefs &prefs) const;
+ virtual void print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceChange,TrenderedSubtitleLines::TprintPrefs &prefs);
  virtual Tsubtitle* copy(void);
  virtual Tsubtitle* create(void) {return new TsubtitleVobsub(NULL,NULL);}
 };

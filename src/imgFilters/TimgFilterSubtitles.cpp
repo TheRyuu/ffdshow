@@ -322,7 +322,7 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
   {
    REFERENCE_TIME frameStart=cfg->speed2*((pict.rtStart-parent->subtitleResetTime)-cfg->delay*(REF_SECOND_MULT/1000))/cfg->speed;
    bool forceChange=false;
-   const Tsubtitle *sub=NULL;
+   Tsubtitle *sub=NULL;
    csEmbedded.Lock();
    int shownEmbedded=deci->getParam2(IDFF_subShowEmbedded);
    bool useembedded=!embedded.empty() && shownEmbedded;

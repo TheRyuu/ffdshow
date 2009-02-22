@@ -10,7 +10,7 @@ struct Tconfig;
 class Tsubtitles :public safe_bool<Tsubtitles>
 {
 private:
- const Tsubtitle *oldsub;
+ Tsubtitle *oldsub;
  unsigned int current_sub;
  REFERENCE_TIME nosub_range_start,nosub_range_end;
 protected:
@@ -25,7 +25,7 @@ public:
  virtual ~Tsubtitles();
  virtual void done(void);
  bool boolean_test() const {return subs!=NULL;}
- virtual const Tsubtitle* getSubtitle(const TsubtitlesSettings *cfg,REFERENCE_TIME time,bool *forceChange=NULL);
+ virtual Tsubtitle* getSubtitle(const TsubtitlesSettings *cfg,REFERENCE_TIME time,bool *forceChange=NULL);
  void setModified(void) {subs->IsProcessOverlapDone=false;};
  bool IsProcessOverlapDone(void) {return subs->IsProcessOverlapDone;};
  void processOverlap(void);

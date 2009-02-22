@@ -1666,6 +1666,13 @@ void TrenderedSubtitleLines::add(TrenderedSubtitleLine *ln,unsigned int *height)
  if (height)
   *height+=ln->height();
 }
+
+int TrenderedSubtitleLines::add(TrenderedSubtitleLine *ln)
+{
+ push_back(ln);
+ return ln->height();
+}
+
 void TrenderedSubtitleLines::clear(void)
 {
  for (iterator l=begin();l!=end();l++)
@@ -1940,229 +1947,22 @@ TrenderedTextSubtitleWord* Tfont::newWord(const wchar_t *s,size_t slen,Trendered
   }
 }
 
-int Tfont::get_splitdx_for_new_line(const TsubtitleWord &w,int splitdx,int dx, const TrenderedSubtitleLines::TprintPrefs &prefs) const
+void Tfont::prepareC(TsubtitleText *sub,const TrenderedSubtitleLines::TprintPrefs &prefs,bool forceChange)
 {
- // This method calculates the maximum length of the line considering the left/right margin and eventually
- // basing on the position set through a position tag
- return w.props.get_maxWidth(dx, prefs.subformat, deci) * gdi_font_scale;
+    height=0;
+    // Remove pointers, but do not delete the objects.
+    lines.reset();
+
+    { // loop is planed here.
+        height += sub->prepareRendering(prefs,*this);
+        // Copy pointers here.
+        lines.insert(lines.end(),sub->lines.begin(),sub->lines.end());
+    }
 }
 
-void Tfont::prepareC(const TsubtitleText *sub,const TrenderedSubtitleLines::TprintPrefs &prefs,bool forceChange)
+void Tfont::print(TsubtitleText *sub,bool forceChange,const TrenderedSubtitleLines::TprintPrefs &prefs,unsigned int *y)
 {
- if (oldsub!=sub || forceChange || oldCsp!=prefs.csp)
-  {
-   oldsub=sub;
-   oldCsp=prefs.csp;
-
-   unsigned int dx,dy;
-   if (prefs.sizeDx && prefs.sizeDy)
-    {
-     dx=prefs.sizeDx;
-     dy=prefs.sizeDy;
-    }
-   else
-    {
-     dx=prefs.dx;
-     dy=prefs.dy;
-    }
-
-   lines.clear();height=0;
-   if (!sub) return;
-   if (!fontManager)
-    comptrQ<IffdshowDecVideo>(deci)->getFontManager(&fontManager);
-   bool nosplit=!prefs.fontSettings.split && !(prefs.fontchangesplit && prefs.fontsplit);
-   int splitdx0=nosplit ? 0 : ((int)dx-prefs.textBorderLR<1 ? 1 : dx-prefs.textBorderLR) * gdi_font_scale;
-
-   int *pwidths=NULL;
-   Tbuffer width;
-
-   for (TsubtitleText::const_iterator l=sub->begin();l!=sub->end();l++)
-    {
-     int charCount=0;
-     ffstring allStr;
-     Tbuffer tempwidth;
-     double left=0.0,nextleft=0.0;
-     int wordWrapMode=-1;
-     int splitdxMax=splitdx0;
-     if (l->empty())
-      {
-       LOGFONT lf;
-       HGDIOBJ old = l->props.toGdiFont(hdc, lf, prefs.fontSettings, dx, dy, prefs.clipdy, prefs.sar, fontManager, gdi_font_scale);
-       if (!oldFont) oldFont=old;
-       TrenderedSubtitleLine *line=new TrenderedSubtitleLine(l->props);
-       lines.add(line,&height);
-       if (old)
-        SelectObject(hdc,old);
-      }
-     for (TsubtitleLine::const_iterator w=l->begin();w!=l->end();w++)
-      {
-       LOGFONT lf;
-       HGDIOBJ old = w->props.toGdiFont(hdc, lf, prefs.fontSettings, dx, dy, prefs.clipdy, prefs.sar, fontManager, gdi_font_scale);
-       if (!oldFont) oldFont=old;
-       SetTextCharacterExtra(hdc,w->props.spacing==INT_MIN ? prefs.fontSettings.spacing : w->props.get_spacing(dy, prefs.clipdy, gdi_font_scale));
-       const wchar_t *p=*w;
-       if (*p) // drop empty words
-        {
-         int xscale=w->props.get_xscale(
-                 prefs.fontSettings.xscale,
-                 prefs.sar,
-                 prefs.fontSettings.aspectAuto,
-                 prefs.fontSettings.overrideScale)
-             * 100
-             / w->props.get_yscale(
-                 prefs.fontSettings.yscale,prefs.sar,
-                 prefs.fontSettings.aspectAuto,
-                 prefs.fontSettings.overrideScale);
-         wordWrapMode=w->props.wrapStyle;
-         splitdxMax=get_splitdx_for_new_line(*w,splitdx0,dx, prefs);
-         allStr+=p;
-         pwidths=(int*)width.resize((allStr.size()+1)*sizeof(int));
-         left=nextleft;
-         int nfit;
-         SIZE sz;
-         size_t strlenp=strlen(p);
-         int *ptempwidths=(int*)tempwidth.alloc((strlenp+1)*sizeof(int)*2); // *2 to work around Layer For Unicode on Windows 9x.
-         prefs.config->getGDI<wchar_t>().getTextExtentExPoint(hdc,p,(int)strlenp,INT_MAX,&nfit,ptempwidths,&sz);
-         for (size_t x=0;x<strlenp;x++)
-          {
-           pwidths[charCount]=nextleft=(double)ptempwidths[x]*xscale/100+left;
-           charCount++;
-          }
-        }
-       if (old)
-        SelectObject(hdc,old);
-      }
-     if (allStr.empty()) continue;
-     if (wordWrapMode==-1) // non SSA/ASS/ASS2
-      {
-       if (nosplit)
-        wordWrapMode=2;
-       else
-        {
-         deci->getParam(IDFF_subWordWrap,&wordWrapMode);
-         if (wordWrapMode>=2) wordWrapMode++;
-        }
-      }
-     TwordWrap wordWrap(wordWrapMode,allStr.c_str(),pwidths,splitdxMax,l->props.version != -1);
-     //wordWrap.debugprint();
-
-     TrenderedSubtitleLine *line=NULL;
-     int cx=0,cy=0;
-     unsigned int refResX=prefs.xinput, refResY=prefs.yinput;
-     bool firstLine=true;
-     for (TsubtitleLine::const_iterator w0=l->begin();w0!=l->end();w0++)
-      {
-       TsubtitleWord w(*w0);
-       LOGFONT lf;
-       HGDIOBJ old = w.props.toGdiFont(hdc, lf, prefs.fontSettings, dx, dy, prefs.clipdy, prefs.sar, fontManager, gdi_font_scale);
-       SetTextCharacterExtra(hdc,w.props.spacing==INT_MIN ? prefs.fontSettings.spacing : w.props.get_spacing(dy, prefs.clipdy, gdi_font_scale));
-       if (!line)
-        {
-         line=new TrenderedSubtitleLine(w.props);
-         // Propagate input dimensions to the line properties 
-         // (unless movie dimensions are filled in the script and parameter 
-         // IDFF_subSSAUseMovieDimensions is not checked)
-         if (line->props.refResX && line->props.refResY 
-             && firstLine && !deci->getParam2(IDFF_subSSAUseMovieDimensions))
-         {
-          refResX=line->props.refResX;
-          refResY=line->props.refResY;
-          firstLine=false;
-         }
-         else
-         {
-          line->props.refResX=refResX;
-          line->props.refResY=refResY;
-         }
-        }
-
-       const wchar_t *p=w;
-       if (*p) // drop empty words
-        {
-         #ifdef DEBUG
-         text<char_t> dbgstr(p);
-         DPRINTF(_l("%s"),dbgstr);
-         #endif
-         int linesInWord=0;
-         do
-          {
-           if (linesInWord>0)
-            {
-             while (*p && iswspace((unsigned short)*p))
-              {
-               cx++;
-               p++;
-              }
-            }
-           int strlenp=(int)strlen(p);
-           // If line goes out of screen, wraps it except if no wrap defined 
-           if (cx+strlenp-1<=wordWrap.getRightOfTheLine(cy))
-            {
-             if (*p)
-              {
-               // Propagate the input dimensions to the TsubtitleWord props
-               w.props.refResX=refResX;
-               w.props.refResY=refResY;
-
-               TrenderedTextSubtitleWord *rw=newWord(p,strlenp,prefs,&w,lf,w0+1==l->end());
-               if (rw) line->push_back(rw);
-               cx+=strlenp;
-              }
-             break;
-            }
-           else
-            {
-             int n=wordWrap.getRightOfTheLine(cy)-cx+1;
-             if (n<=0)
-              {
-               cy++;
-               linesInWord++;
-               n=wordWrap.getRightOfTheLine(cy)-cx+1;
-               if (!line->empty())
-                {
-                 lines.add(line,&height);
-                 line=new TrenderedSubtitleLine(w.props);
-                }
-               if (cy>=wordWrap.getLineCount()) break;
-              }
-             if (*p)
-              {
-               // Propagate the input dimensions to the TsubtitleWord props
-               w.props.refResX=refResX;
-               w.props.refResY=refResY;
-
-               TrenderedTextSubtitleWord *rw=newWord(p,n,prefs,&w,lf,true);
-               w.props.karaokeNewWord = false;
-               w.props.karaokeStart += w.props.karaokeDuration;
-               w.props.karaokeDuration = 0;
-               if (rw) line->push_back(rw);
-              }
-             if (!line->empty())
-              {
-               lines.add(line,&height);
-               line=new TrenderedSubtitleLine(w.props);
-              }
-             p+=wordWrap.getRightOfTheLine(cy)-cx+1;
-             cx=wordWrap.getRightOfTheLine(cy)+1;
-             cy++;
-             linesInWord++;
-            }
-          } while(cy<wordWrap.getLineCount());
-        }
-       SelectObject(hdc,old);
-      }
-     if (line)
-      if (!line->empty())
-       lines.add(line,&height);
-      else
-       delete line;
-    }
-  }
-}
-
-void Tfont::print(const TsubtitleText *sub,bool forceChange,const TrenderedSubtitleLines::TprintPrefs &prefs,unsigned int *y)
-{
- if (!sub) return;
- prepareC(sub,prefs,forceChange);if (y) *y+=height;
- lines.print(prefs);
+    if (!sub) return;
+    prepareC(sub,prefs,forceChange);if (y) *y+=height;
+    lines.print(prefs);
 }

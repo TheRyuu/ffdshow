@@ -65,7 +65,7 @@ private:
      return c==tolower(c1);
     }
   };
- static DwString<wchar_t> getAttribute(const wchar_t *start,const wchar_t *end,const wchar_t *attrname);
+ static ffstring getAttribute(const wchar_t *start,const wchar_t *end,const wchar_t *attrname);
  struct Tssa
   {
   private:
@@ -222,7 +222,9 @@ struct TsubtitleText :public Tsubtitle,public std::vector< TsubtitleLine >
 private:
  typedef std::vector<TsubtitleLine> Tbase;
  TrenderedSubtitleLines lines;
+ TrenderedSubtitleLines::TprintPrefs old_prefs;
 public:
+ friend class Tfont;
  int subformat;
  TSubtitleProps defProps;
  TsubtitleText(int Isubformat):subformat(Isubformat) {}
@@ -280,7 +282,7 @@ public:
    propagateProps(this->begin(),offset,val,this->end());
   }
  void fix(TtextFix &fix);
- virtual void print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceChange,TrenderedSubtitleLines::TprintPrefs &prefs) const;
+ virtual void print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceChange,TrenderedSubtitleLines::TprintPrefs &prefs);
  virtual Tsubtitle* copy(void);
  virtual Tsubtitle* create(void) {return new TsubtitleText(subformat);}
  virtual bool copyLine(Tsubtitle *dst,size_t linenum)
@@ -306,7 +308,18 @@ public:
    return c;
   }
  virtual bool isText(void) const {return true;}
- void prepareRendering(const TrenderedSubtitleLines::TprintPrefs &prefs);
+
+ /**
+  *  prepareRendering
+  *  @return height of lines
+  */
+ int prepareRendering(const TrenderedSubtitleLines::TprintPrefs &prefs, Tfont &font);
+ int get_splitdx_for_new_line(const TsubtitleWord &w,int splitdx,int dx, const TrenderedSubtitleLines::TprintPrefs &prefs, int gdi_font_scale, IffdshowBase *deci) const
+  {
+   // This method calculates the maximum length of the line considering the left/right margin and eventually
+   // basing on the position set through a position tag
+   return w.props.get_maxWidth(dx, prefs.subformat, deci) * gdi_font_scale;
+  }
 };
 
 #endif
