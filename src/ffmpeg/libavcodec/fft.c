@@ -22,7 +22,7 @@
  */
 
 /**
- * @file fft.c
+ * @file libavcodec/fft.c
  * FFT/IFFT transforms.
  */
 
@@ -71,7 +71,7 @@ av_cold int ff_fft_init(FFTContext *s, int nbits, int inverse)
     n = 1 << nbits;
 
     s->tmp_buf = NULL;
-    s->exptab = av_malloc((n / 2) * sizeof(FFTComplex));
+    s->exptab  = av_malloc((n / 2) * sizeof(FFTComplex));
     if (!s->exptab)
         goto fail;
     s->revtab = av_malloc(n * sizeof(uint16_t));
@@ -82,31 +82,31 @@ av_cold int ff_fft_init(FFTContext *s, int nbits, int inverse)
     s2 = inverse ? 1.0 : -1.0;
 
     s->fft_permute = ff_fft_permute_c;
-    s->fft_calc = ff_fft_calc_c;
-    s->imdct_calc = ff_imdct_calc_c;
-    s->imdct_half = ff_imdct_half_c;
-    s->exptab1 = NULL;
+    s->fft_calc    = ff_fft_calc_c;
+    s->imdct_calc  = ff_imdct_calc_c;
+    s->imdct_half  = ff_imdct_half_c;
+    s->exptab1     = NULL;
 
 #if HAVE_MMX && HAVE_YASM && ARCH_X86_32
 /* causes crashes on 64-bit Windows */	
     has_vectors = mm_support();
-    if (has_vectors & FF_MM_SSE) {
+    if (has_vectors & FF_MM_SSE && HAVE_SSE) {
         /* SSE for P3/P4/K8 */
-        s->imdct_calc = ff_imdct_calc_sse;
+        s->imdct_calc  = ff_imdct_calc_sse;
         /* crashes DTS decoder */
         //s->imdct_half = ff_imdct_half_sse;
         s->fft_permute = ff_fft_permute_sse;
-        s->fft_calc = ff_fft_calc_sse;
-    } else if (has_vectors & FF_MM_3DNOWEXT) {
+        s->fft_calc    = ff_fft_calc_sse;
+    } else if (has_vectors & FF_MM_3DNOWEXT && HAVE_AMD3DNOWEXT) {
         /* 3DNowEx for K7 */
         s->imdct_calc = ff_imdct_calc_3dn2;
         s->imdct_half = ff_imdct_half_3dn2;
-        s->fft_calc = ff_fft_calc_3dn2;
-    } else if (has_vectors & FF_MM_3DNOW) {
+        s->fft_calc   = ff_fft_calc_3dn2;
+    } else if (has_vectors & FF_MM_3DNOW && HAVE_AMD3DNOW) {
         /* 3DNow! for K6-2/3 */
         s->imdct_calc = ff_imdct_calc_3dn;
         s->imdct_half = ff_imdct_half_3dn;
-        s->fft_calc = ff_fft_calc_3dn;
+        s->fft_calc   = ff_fft_calc_3dn;
     }
 #endif
 

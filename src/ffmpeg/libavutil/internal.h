@@ -19,7 +19,7 @@
  */
 
 /**
- * @file internal.h
+ * @file libavutil/internal.h
  * common internal API header
  */
 
@@ -90,11 +90,7 @@
 #endif
 
 #ifndef INT_BIT
-#    if INT_MAX != 2147483647
-#        define INT_BIT 64
-#    else
-#        define INT_BIT 32
-#    endif
+#    define INT_BIT (CHAR_BIT * sizeof(int))
 #endif
 
 #if ( defined(__PIC__) || defined(__pic__) ) && ! defined(PIC)

@@ -157,7 +157,7 @@ typedef struct AMRContext {
     enum TXFrameType tx_frametype;
 } AMRContext;
 
-static int amr_nb_decode_init(AVCodecContext * avctx)
+static av_cold int amr_nb_decode_init(AVCodecContext * avctx)
 {
     AMRContext *s = avctx->priv_data;
 
@@ -185,7 +185,7 @@ static int amr_nb_decode_init(AVCodecContext * avctx)
     return 0;
 }
 
-static int amr_nb_decode_close(AVCodecContext * avctx)
+static av_cold int amr_nb_decode_close(AVCodecContext * avctx)
 {
     AMRContext *s = avctx->priv_data;
 
@@ -278,7 +278,7 @@ static int amr_nb_decode_frame(AVCodecContext * avctx,
 }
 
 
-#else /* Float point version*/
+#elif CONFIG_LIBAMR_NB /* Float point version*/
 
 typedef struct AMRContext {
     int frameCount;
@@ -287,7 +287,7 @@ typedef struct AMRContext {
     int enc_bitrate;
 } AMRContext;
 
-static int amr_nb_decode_init(AVCodecContext * avctx)
+static av_cold int amr_nb_decode_init(AVCodecContext * avctx)
 {
     AMRContext *s = avctx->priv_data;
 
@@ -310,7 +310,7 @@ static int amr_nb_decode_init(AVCodecContext * avctx)
     return 0;
 }
 
-static int amr_nb_decode_close(AVCodecContext * avctx)
+static av_cold int amr_nb_decode_close(AVCodecContext * avctx)
 {
     AMRContext *s = avctx->priv_data;
 

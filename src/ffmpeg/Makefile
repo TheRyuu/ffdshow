@@ -81,7 +81,6 @@ SRCS_C=\
       $(LAVC_DIR)/libamr.c \
       $(LAVC_DIR)/ljpegenc.c \
       $(LAVC_DIR)/loco.c \
-      $(LAVC_DIR)/lpc.c \
       $(LAVC_DIR)/mace.c \
       $(LAVC_DIR)/mdct.c \
       $(LAVC_DIR)/mjpeg.c \
