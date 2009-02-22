@@ -57,7 +57,7 @@ Tsubtitle* Tsubtitles::getSubtitle(const TsubtitlesSettings *cfg,REFERENCE_TIME 
  checkChange(cfg,forceChange);
  if (!subs || subs->empty()) return NULL;
 
- if (!IsProcessOverlapDone())
+ if ((*subs)[0]->isText() && !IsProcessOverlapDone())
   {
    processOverlap();
    init();

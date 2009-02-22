@@ -266,7 +266,10 @@ Tsubtitle* Tsubreader::operator[](size_t pos) const
 void Tsubreader::processOverlap(void)
 {
  if (empty()) return;
- if (!at(0)->isText()) return;
+ if (!at(0)->isText()) {
+     IsProcessOverlapDone=true;
+     return;
+ }
  processedSubtitleTexts.clear();
  static const int SUB_MAX_TEXT=INT_MAX/2;
  int sub_orig = size();
