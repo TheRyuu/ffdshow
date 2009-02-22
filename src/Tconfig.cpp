@@ -145,9 +145,6 @@ void Tconfig::init1(HINSTANCE hi)
  isDecoder[IDFF_MOVIE_REALAAC]=check(TaudioCodecRealaac::dllname);
  isDecoder[IDFF_MOVIE_AUDX]=check(TaudioCodecAudX::dllname);
 
- gdiW.getTextExtentExPoint = GetTextExtentExPointW;
- gdiW.getTextExtentPoint32 = GetTextExtentPoint32W;
- gdiW.textOut = TextOutW;
  is_WMEncEng = done_WMEncEng = false;
 }
 

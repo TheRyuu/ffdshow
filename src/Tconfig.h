@@ -50,16 +50,7 @@ public:
  int isDecoder[IDFF_MOVIE_MAX+1];
  unsigned int getShellVersion(void) const;
  ThtmlColors *getHtmlColors(void) const;
- struct Tgdi
-  {
-   BOOL (APIENTRY *getTextExtentExPoint)(IN HDC,IN const wchar_t*,IN int,IN int,OUT LPINT,OUT LPINT,OUT LPSIZE);
-   BOOL (APIENTRY *getTextExtentPoint32)(IN HDC,IN const wchar_t*,IN int,OUT LPSIZE);
-   BOOL (WINAPI *textOut)(IN HDC, IN int, IN int, IN const wchar_t*, IN int);
-  };
- const Tgdi& getGDI(void) const {return gdiW;}
  bool is_WMEncEng_loaded(void) const;
-private:
- Tgdi gdiW;
 };
 
 #endif

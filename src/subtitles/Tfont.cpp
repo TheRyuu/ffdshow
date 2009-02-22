@@ -128,7 +128,7 @@ TrenderedTextSubtitleWord::TrenderedTextSubtitleWord(
  for (strings::iterator s=s1.begin();s!=s1.end();s++)
   {
    SIZE sz0;
-   prefs.config->getGDI().getTextExtentPoint32(hdc,s->c_str(),(int)s->size(),&sz0);
+   GetTextExtentPoint32W(hdc,s->c_str(),(int)s->size(),&sz0);
    sz.cx+=sz0.cx;
    if (s+1!=s1.end())
     {
@@ -174,7 +174,7 @@ TrenderedTextSubtitleWord::TrenderedTextSubtitleWord(
   {
    const char *t=(const char *)s->c_str();
    int sz=(int)s->size();
-   prefs.config->getGDI().textOut(hdc,x,GDI_rendering_window/2,s->c_str(),sz/*(int)s->size()*/);
+   TextOutW(hdc,x,GDI_rendering_window/2,s->c_str(),sz/*(int)s->size()*/);
    x+=*cx;
   }
  if (gdi_font_scale == 4)
