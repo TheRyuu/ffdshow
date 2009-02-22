@@ -29,6 +29,10 @@ public:
  void setModified(void) {subs->IsProcessOverlapDone=false;};
  bool IsProcessOverlapDone(void) {return subs->IsProcessOverlapDone;};
  void processOverlap(void);
+ void onSeek(void)
+  {
+   if (subs) subs->onSeek();
+  }
 };
 
 #endif

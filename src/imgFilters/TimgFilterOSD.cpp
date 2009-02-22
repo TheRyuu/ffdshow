@@ -254,7 +254,7 @@ void TimgFilterOSD::TosdLine::print(IffdshowBase *deci,const TffPict &pict,unsig
        printprefs.fontsplit=1;
       }
      sub.set(text);
-     font.print(&sub,wasChange,printprefs,&y);
+     y += font.print(&sub,wasChange,printprefs);
     }
   }
 }

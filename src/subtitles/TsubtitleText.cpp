@@ -1311,20 +1311,22 @@ void TsubtitleText::fix(TtextFix &fix)
 
 void TsubtitleText::print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceChange,TrenderedSubtitleLines::TprintPrefs &prefs)
 {
- prefs.subformat=subformat;
- f.print(this,forceChange,prefs);
+    prefs.subformat=subformat;
+    f.prepareC(this,prefs,false);
 }
-Tsubtitle* TsubtitleText::copy(void)
+
+void TsubtitleTexts::print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceChange,TrenderedSubtitleLines::TprintPrefs &prefs)
 {
- TsubtitleText *s2=new TsubtitleText(subformat);
- for (Tbase::iterator l=this->begin();l!=this->end();l++)
-  s2->push_back(*l);
- return s2;
+    f.reset();
+    for (iterator i = begin() ; i != end() ; i++){
+        (*i)->print(time,wasseek,f,forceChange,prefs);
+    }
+    f.print(prefs);
 }
-int TsubtitleText::prepareRendering(const TrenderedSubtitleLines::TprintPrefs &prefs, Tfont &font)
+
+void TsubtitleText::prepareRendering(const TrenderedSubtitleLines::TprintPrefs &prefs, Tfont &font, bool forceChange)
 {
-    unsigned int height = 0;
-    if (old_prefs != prefs) {
+    if (old_prefs != prefs || forceChange) {
         old_prefs = prefs;
 
         unsigned int dx,dy;
@@ -1362,7 +1364,7 @@ int TsubtitleText::prepareRendering(const TrenderedSubtitleLines::TprintPrefs &p
                 if (!font.oldFont)
                     font.oldFont=old;
                 TrenderedSubtitleLine *line=new TrenderedSubtitleLine(l->props);
-                height += lines.add(line);
+                lines.push_back(line);
                 if (old)
                     SelectObject(font.hdc,old);
             }
@@ -1473,7 +1475,7 @@ int TsubtitleText::prepareRendering(const TrenderedSubtitleLines::TprintPrefs &p
                                 linesInWord++;
                                 n=wordWrap.getRightOfTheLine(cy)-cx+1;
                                 if (!line->empty()) {
-                                    height += lines.add(line);
+                                    lines.push_back(line);
                                     line=new TrenderedSubtitleLine(w.props);
                                 }
                                 if (cy>=wordWrap.getLineCount())
@@ -1492,7 +1494,7 @@ int TsubtitleText::prepareRendering(const TrenderedSubtitleLines::TprintPrefs &p
                                     line->push_back(rw);
                             }
                             if (!line->empty()) {
-                                height += lines.add(line);
+                                lines.push_back(line);
                                 line=new TrenderedSubtitleLine(w.props);
                             }
                             p+=wordWrap.getRightOfTheLine(cy)-cx+1;
@@ -1506,12 +1508,11 @@ int TsubtitleText::prepareRendering(const TrenderedSubtitleLines::TprintPrefs &p
             }
             if (line) {
                 if (!line->empty()) {
-                    height += lines.add(line);
+                    lines.push_back(line);
                 } else {
                     delete line;
                 }
             }
         }
     }
-    return height;
 }

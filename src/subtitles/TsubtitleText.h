@@ -229,6 +229,10 @@ public:
  TSubtitleProps defProps;
  TsubtitleText(int Isubformat):subformat(Isubformat) {}
  TsubtitleText(int Isubformat,const TSubtitleProps &IdefProps):subformat(Isubformat),defProps(IdefProps) {}
+ ~TsubtitleText()
+  {
+   dropRenderedLines();
+  }
  void set(const strings &strs)
   {
    this->clear();
@@ -283,18 +287,6 @@ public:
   }
  void fix(TtextFix &fix);
  virtual void print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceChange,TrenderedSubtitleLines::TprintPrefs &prefs);
- virtual Tsubtitle* copy(void);
- virtual Tsubtitle* create(void) {return new TsubtitleText(subformat);}
- virtual bool copyLine(Tsubtitle *dst,size_t linenum)
-  {
-   ((TsubtitleText*)dst)->push_back(this->at(linenum));
-   return true;
-  }
- virtual bool copyProps(Tsubtitle *dst)
-  {
-   ((TsubtitleText*)dst)->defProps=this->defProps;
-   return true;
-  }
 
  virtual size_t numlines(void) const
   {
@@ -313,13 +305,24 @@ public:
   *  prepareRendering
   *  @return height of lines
   */
- int prepareRendering(const TrenderedSubtitleLines::TprintPrefs &prefs, Tfont &font);
+ void prepareRendering(const TrenderedSubtitleLines::TprintPrefs &prefs, Tfont &font,bool forceChange);
  int get_splitdx_for_new_line(const TsubtitleWord &w,int splitdx,int dx, const TrenderedSubtitleLines::TprintPrefs &prefs, int gdi_font_scale, IffdshowBase *deci) const
   {
    // This method calculates the maximum length of the line considering the left/right margin and eventually
    // basing on the position set through a position tag
    return w.props.get_maxWidth(dx, prefs.subformat, deci) * gdi_font_scale;
   }
+ virtual void TsubtitleText::dropRenderedLines(void)
+  {
+   lines.clear(); // clear pointers and delete objects.
+   old_prefs.csp = 0;
+  }
+};
+
+struct TsubtitleTexts :public Tsubtitle,public std::vector< TsubtitleText* >
+{
+ virtual bool isText(void) const {return true;}
+ virtual void print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceChange,TrenderedSubtitleLines::TprintPrefs &prefs);
 };
 
 #endif

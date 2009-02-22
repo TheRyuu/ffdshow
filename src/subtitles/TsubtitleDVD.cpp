@@ -406,7 +406,7 @@ void TsubtitleDVD::createImage(const TspuPlane src[3],const CRect &rcclip,CRect 
  else
 #endif
   image=new TspuImageSimd<Tmmx>(src,rcclip,rectReal,parent->rectOrig,prefs);
- lines.add(new TrenderedSubtitleLine(image),NULL);
+ lines.push_back(new TrenderedSubtitleLine(image));
 }
 void TsubtitleDVD::linesprint(const TrenderedSubtitleLines::TprintPrefs &prefs) const
 {

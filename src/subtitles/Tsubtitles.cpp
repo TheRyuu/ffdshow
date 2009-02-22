@@ -53,8 +53,15 @@ void Tsubtitles::processOverlap(void)
 
 Tsubtitle* Tsubtitles::getSubtitle(const TsubtitlesSettings *cfg,REFERENCE_TIME time,bool *forceChange)
 {
+ // note operator [] is overridden
  checkChange(cfg,forceChange);
  if (!subs || subs->empty()) return NULL;
+
+ if (!IsProcessOverlapDone())
+  {
+   processOverlap();
+   init();
+  }
 
  if ((sub_format&Tsubreader::SUB_FORMATMASK)==Tsubreader::SUB_VOBSUB)
   {
@@ -62,12 +69,7 @@ Tsubtitle* Tsubtitles::getSubtitle(const TsubtitlesSettings *cfg,REFERENCE_TIME 
    if (subs->langid!=newlang)
     subs->setLang(newlang);
   }
-/*
- for (Tsubreader::const_iterator s=subs->begin();s!=subs->end();s++)
-  if ((*s)->start<time && time<(*s)->stop)
-   return *s;
- return NULL;
-*/
+
  if (oldsub)
   {
    if(time>=oldsub->start && time<=oldsub->stop)

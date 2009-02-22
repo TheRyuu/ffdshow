@@ -2,6 +2,7 @@
 #define _TSUBREADER_H_
 
 #include "Tsubtitle.h"
+#include "TsubtitleText.h"
 #include "Tstream.h"
 
 struct TsubtitlesSettings;
@@ -12,6 +13,7 @@ private:
  void timesort(void);
 protected:
  void processDuration(const TsubtitlesSettings *cfg);
+ std::vector<TsubtitleTexts> processedSubtitleTexts;
 public:
  enum SUB_FORMAT
   {
@@ -58,6 +60,8 @@ public:
  void adjust_subs_time(float subtime);
  void processOverlap(void);
  bool IsProcessOverlapDone;
+ Tsubtitle* operator[](size_t pos) const;
+ void onSeek(void);
 };
 
 #endif

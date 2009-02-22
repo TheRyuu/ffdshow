@@ -147,82 +147,78 @@ bool TimgFilterSubtitles::getOutputFmt(TffPictBase &pict,const TfilterSettingsVi
 
 bool TimgFilterSubtitles::initSubtitles(int id,int type,const unsigned char *extradata,unsigned int extradatalen)
 {
- csEmbedded.Lock();
- Tembedded::iterator e=embedded.find(id);
- if (e!=embedded.end())
-  {
-   delete e->second;
-   e->second=TsubtitlesTextpin::create(type,extradata,extradatalen,deci);
-  }
- else
-  {
-   e=embedded.insert(std::make_pair(id,TsubtitlesTextpin::create(type,extradata,extradatalen,deci))).first;
-  }
- csEmbedded.Unlock();
+    CAutoLock l1(&csEmbedded);
+    Tembedded::iterator e=embedded.find(id);
+    if (e!=embedded.end()) {
+        delete e->second;
+        e->second=TsubtitlesTextpin::create(type,extradata,extradatalen,deci);
+    } else {
+        e=embedded.insert(std::make_pair(id,TsubtitlesTextpin::create(type,extradata,extradatalen,deci))).first;
+    }
 
- sequenceEnded=true;
+    sequenceEnded=true;
 
- if(!e->second)
-  return false;
- return *e->second;
+    if(!e->second)
+         return false;
+    return *e->second;
 }
 void TimgFilterSubtitles::addSubtitle(int id,REFERENCE_TIME start,REFERENCE_TIME stop,const unsigned char *data,unsigned int datalen,const TsubtitlesSettings *cfg,bool utf8)
 {
- Tembedded::iterator e=embedded.find(id);
- if (e==embedded.end()) return;
- csEmbedded.Lock();
- e->second->setModified();
- e->second->addSubtitle(start,stop,data,datalen,cfg,utf8);
- csEmbedded.Unlock();
+    Tembedded::iterator e=embedded.find(id);
+    if (e==embedded.end()) return;
+    CAutoLock l1(&csEmbedded);
+    e->second->setModified();
+    e->second->addSubtitle(start,stop,data,datalen,cfg,utf8);
 }
 void TimgFilterSubtitles::resetSubtitles(int id)
 {
- Tembedded::iterator e=embedded.find(id);
- if (e==embedded.end()) return;
- csEmbedded.Lock();
- e->second->resetSubtitles();
- csEmbedded.Unlock();
- if(isdvdproc)
-  {
-   deciV->lockCSReceive();
-   parent->onSeek();
-   deciV->unlockCSReceive();
-  }
+     Tembedded::iterator e=embedded.find(id);
+     if (e==embedded.end()) return;
+     {
+         CAutoLock l1(&csEmbedded);
+         e->second->resetSubtitles();
+     }
+     if(isdvdproc) {
+         deciV->lockCSReceive();
+         parent->onSeek();
+         deciV->unlockCSReceive();
+     }
 }
 bool TimgFilterSubtitles::ctlSubtitles(int id,int type,unsigned int ctl_id,const void *ctl_data,unsigned int ctl_datalen)
 {
- Tembedded::iterator e=embedded.find(id);
- if (e==embedded.end())
-  e=embedded.insert(std::make_pair(id,TsubtitlesTextpin::create(type,NULL,0,deci))).first;
- csEmbedded.Lock();
- bool res=e->second->ctlSubtitles(ctl_id,ctl_data,ctl_datalen);
- csEmbedded.Unlock();
+    Tembedded::iterator e=embedded.find(id);
+    if (e==embedded.end())
+     e=embedded.insert(std::make_pair(id,TsubtitlesTextpin::create(type,NULL,0,deci))).first;
+    bool res;
+    {
+        CAutoLock l1(&csEmbedded);
+        res=e->second->ctlSubtitles(ctl_id,ctl_data,ctl_datalen);
+    }
 
- if (res && prevCfg  && deci->getState2() == State_Running && sequenceEnded)
-  {
-   // Send last pict with changed subtitles upstream in the filter chain only if the graph is running -
-   // doing it while it's paused will hang everything
+    if (res && prevCfg  && deci->getState2() == State_Running && sequenceEnded) {
+        // Send last pict with changed subtitles upstream in the filter chain only if the graph is running -
+        // doing it while it's paused will hang everything
 
-   deciV->lockCSReceive();
+        deciV->lockCSReceive();
 
-   // Pull image out of yadif's next picture buffer.
-   parent->pullImageFromSubtitlesFilter(prevIt);
+        // Pull image out of yadif's next picture buffer.
+        parent->pullImageFromSubtitlesFilter(prevIt);
 
-   TffPict pict=prevPict;
-   pict.fieldtype|=FIELD_TYPE::SEQ_START|FIELD_TYPE::SEQ_END;
+        TffPict pict=prevPict;
+        pict.fieldtype|=FIELD_TYPE::SEQ_START|FIELD_TYPE::SEQ_END;
 
-   again=true;
+        again=true;
 
-   if (prevAdhocMode == ADHOC_ADHOC_DRAW_DVD_SUB_ONLY)
-    adhocMode = ADHOC_ADHOC_DRAW_DVD_SUB_ONLY;
+        if (prevAdhocMode == ADHOC_ADHOC_DRAW_DVD_SUB_ONLY)
+         adhocMode = ADHOC_ADHOC_DRAW_DVD_SUB_ONLY;
 
-   process(prevIt,pict,prevCfg);
+        process(prevIt,pict,prevCfg);
 
-   again=false;
+        again=false;
 
-   deciV->unlockCSReceive();
-  }
- return res;
+        deciV->unlockCSReceive();
+    }
+    return res;
 }
 
 const char_t* TimgFilterSubtitles::findAutoSubFlnm(const TsubtitlesSettings *cfg)
@@ -323,7 +319,7 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
    REFERENCE_TIME frameStart=cfg->speed2*((pict.rtStart-parent->subtitleResetTime)-cfg->delay*(REF_SECOND_MULT/1000))/cfg->speed;
    bool forceChange=false;
    Tsubtitle *sub=NULL;
-   csEmbedded.Lock();
+   CAutoLock l1(&csEmbedded);
    int shownEmbedded=deci->getParam2(IDFF_subShowEmbedded);
    bool useembedded=!embedded.empty() && shownEmbedded;
    if (useembedded 
@@ -333,18 +329,7 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
     {
      Tembedded::iterator e=embedded.find(shownEmbedded);
      if (e!=embedded.end() && e->second)
-      {
-       if (!e->second->IsProcessOverlapDone())
-        {
-         e->second->processOverlap();
-         e->second->init();
-         forceChange=true;
-        }
-       sub=e->second->getSubtitle(cfg,frameStart,&forceChange);
-
-       if (!sub)
-        sub=e->second->getSubtitle(cfg,frameStart+1,&forceChange);
-      }
+      sub=e->second->getSubtitle(cfg,frameStart,&forceChange);
     }
    if (!useembedded && adhocMode != ADHOC_ADHOC_DRAW_DVD_SUB_ONLY)
     sub=subs.getSubtitle(cfg,frameStart,&forceChange);
@@ -413,7 +398,6 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
       }
      wasDiscontinuity=false;
     }
-   csEmbedded.Unlock();
   }
 
  if (cfg->cc && cfg->is && adhocMode != ADHOC_ADHOC_DRAW_DVD_SUB_ONLY)
@@ -500,10 +484,24 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
 }
 void TimgFilterSubtitles::onSeek(void)
 {
- wasDiscontinuity=true;
- again=false;
- CAutoLock l(&csCC);
- hideClosedCaptions();
+    wasDiscontinuity=true;
+    again=false;
+    {
+        CAutoLock l1(&csCC);
+        hideClosedCaptions();
+    }
+    {
+        CAutoLock l2(&csEmbedded);
+        int shownEmbedded=deci->getParam2(IDFF_subShowEmbedded);
+        bool useembedded=!embedded.empty() && shownEmbedded;
+        if (useembedded) {
+            Tembedded::iterator e=embedded.find(shownEmbedded);
+            if (e!=embedded.end() && e->second)
+                e->second->onSeek();
+        } else {
+            subs.onSeek();
+        }
+    }
 }
 
 const char_t* TimgFilterSubtitles::getCurrentFlnm(void) const

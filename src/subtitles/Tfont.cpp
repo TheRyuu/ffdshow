@@ -1660,19 +1660,6 @@ void TrenderedSubtitleLines::prepareKey(const_iterator i,ParagraphKey &pkey,unsi
   }
 }
 
-void TrenderedSubtitleLines::add(TrenderedSubtitleLine *ln,unsigned int *height)
-{
- push_back(ln);
- if (height)
-  *height+=ln->height();
-}
-
-int TrenderedSubtitleLines::add(TrenderedSubtitleLine *ln)
-{
- push_back(ln);
- return ln->height();
-}
-
 void TrenderedSubtitleLines::clear(void)
 {
  for (iterator l=begin();l!=end();l++)
@@ -1680,7 +1667,7 @@ void TrenderedSubtitleLines::clear(void)
    (*l)->clear();
    delete *l;
   }
- std::vector<value_type>::clear();
+ reset();
 }
 
 bool operator < (const TrenderedSubtitleLines::ParagraphKey &a, const TrenderedSubtitleLines::ParagraphKey &b)
@@ -1847,7 +1834,6 @@ void Tfont::init(const TfontSettings *IfontSettings)
 }
 void Tfont::done(void)
 {
- lines.clear();
  if (hdc)
   {
    if (oldFont) SelectObject(hdc,oldFont);oldFont=NULL;
@@ -1949,20 +1935,24 @@ TrenderedTextSubtitleWord* Tfont::newWord(const wchar_t *s,size_t slen,Trendered
 
 void Tfont::prepareC(TsubtitleText *sub,const TrenderedSubtitleLines::TprintPrefs &prefs,bool forceChange)
 {
-    height=0;
-    // Remove pointers, but do not delete the objects.
-    lines.reset();
-
-    { // loop is planed here.
-        height += sub->prepareRendering(prefs,*this);
-        // Copy pointers here.
-        lines.insert(lines.end(),sub->lines.begin(),sub->lines.end());
-    }
+    sub->prepareRendering(prefs,*this,forceChange);
+    lines.insert(lines.end(),sub->lines.begin(),sub->lines.end());
 }
 
-void Tfont::print(TsubtitleText *sub,bool forceChange,const TrenderedSubtitleLines::TprintPrefs &prefs,unsigned int *y)
+int Tfont::print(TsubtitleText *sub,bool forceChange,const TrenderedSubtitleLines::TprintPrefs &prefs)
 {
-    if (!sub) return;
-    prepareC(sub,prefs,forceChange);if (y) *y+=height;
+    if (!sub) return 0;
+    prepareC(sub,prefs,forceChange);
+    lines.print(prefs);
+    int h = 0;
+    for (TrenderedSubtitleLines::iterator i = lines.begin() ; i != lines.end() ; i++){
+        h += (*i)->height();
+    }
+    reset();
+    return h;
+}
+
+void Tfont::print(const TrenderedSubtitleLines::TprintPrefs &prefs)
+{
     lines.print(prefs);
 }

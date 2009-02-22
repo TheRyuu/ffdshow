@@ -25,42 +25,57 @@ class TrenderedSubtitleLines: public std::vector<TrenderedSubtitleLine*>
 public:
  struct TprintPrefs
   {
-   TprintPrefs(IffdshowBase *Ideci,const TfontSettings *IfontSettings):
-    deci(Ideci),
-    config(NULL),
-    sizeDx(0),
-    sizeDy(0),
-    posXpix(0),
-    fontchangesplit(false),
-    textBorderLR(0),
-    tabsize(8),
-    dvd(false),
-    blur(false),
-    outlineBlur(false),
-    clipdy(0),
-    sar(1,1),
-    opaqueBox(false),
-    subformat(-1),
-    isOSD(false),
-    xinput(0),
-    yinput(0),
-    rtStart(REFTIME_INVALID)
+   TprintPrefs(IffdshowBase *Ideci,const TfontSettings *IfontSettings)
     {
+     memset(this,0,sizeof(this));
      if (IfontSettings)
       fontSettings = *IfontSettings;
+     deci=Ideci;
+     config=NULL;
+     sizeDx=0;
+     sizeDy=0;
+     posXpix=0;
+     fontchangesplit=false;
+     textBorderLR=0;
+     tabsize=8;
+     dvd=false;
+     blur=false;
+     outlineBlur=false;
+     clipdy=0;
+     sar=Rational(1,1);
+     opaqueBox=false;
+     subformat=-1;
+     isOSD=false;
+     xinput=0;
+     yinput=0;
+     rtStart=REFTIME_INVALID;
     }
    TprintPrefs()
     {
      memset(this,0,sizeof(*this));
     }
-   bool operator != (const TrenderedSubtitleLines::TprintPrefs rt)
+   bool operator != (const TrenderedSubtitleLines::TprintPrefs &rt)
     {
-     return !!memcmp(this, &rt, sizeof(*this));
+     // compare except rtStart
+     REFERENCE_TIME rtStart0 = rtStart;
+     rtStart = rt.rtStart;
+     bool ret= !!memcmp(this, &rt, sizeof(*this));
+     rtStart = rtStart0;
+     return ret;
     }
-   bool operator == (const TrenderedSubtitleLines::TprintPrefs rt)
+   bool operator == (const TrenderedSubtitleLines::TprintPrefs &rt)
     {
-     return !memcmp(this, &rt, sizeof(*this));
+     REFERENCE_TIME rtStart0 = rtStart;
+     rtStart = rt.rtStart;
+     bool ret= !memcmp(this, &rt, sizeof(*this));
+     rtStart = rtStart0;
+     return ret;
     }
+   void operator = (const TrenderedSubtitleLines::TprintPrefs &rt)
+    {
+     memcpy(this, &rt, sizeof(*this));
+    }
+   
    unsigned char **dst;
    const stride_t *stride;
    const unsigned int *shiftX,*shiftY;
@@ -92,12 +107,18 @@ public:
   };
  TrenderedSubtitleLines(void) {}
  TrenderedSubtitleLines(TrenderedSubtitleLine *ln) {push_back(ln);}
- void add(TrenderedSubtitleLine *ln,unsigned int *height);
- int add(TrenderedSubtitleLine *ln); // returns height
+ /**
+  * reset
+  *  just clear pointers, do not delete objects.
+  */
  void reset(void)
   {
    erase(begin(),end());
   }
+ /**
+  * clear
+  *  clear pointers and delete objects.
+  */
  void clear(void);
  using std::vector<value_type>::empty;
  void print(const TprintPrefs &prefs);
@@ -329,7 +350,20 @@ public:
  Tfont(IffdshowBase *Ideci, unsigned int Igdi_font_scale);
  ~Tfont();
  void init(const TfontSettings *IfontSettings);
- void print(TsubtitleText *sub,bool forceChange,const TrenderedSubtitleLines::TprintPrefs &prefs,unsigned int *y=NULL);
+ /**
+  * print (for OSD)
+  * @return height
+  */
+ int print(TsubtitleText *sub,bool forceChange,const TrenderedSubtitleLines::TprintPrefs &prefs);
+ /**
+  * printf(for subtitles)
+  * lines must be filled before called
+  */
+ void print(const TrenderedSubtitleLines::TprintPrefs &prefs);
+ void reset(void)
+  {
+   lines.reset();
+  }
  void done(void);
 };
 
