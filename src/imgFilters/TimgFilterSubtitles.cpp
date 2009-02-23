@@ -498,8 +498,6 @@ void TimgFilterSubtitles::onSeek(void)
             Tembedded::iterator e=embedded.find(shownEmbedded);
             if (e!=embedded.end() && e->second)
                 e->second->onSeek();
-        } else {
-            subs.onSeek();
         }
     }
 }
