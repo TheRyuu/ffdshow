@@ -76,6 +76,7 @@ TvideoCodecDec::TvideoCodecDec(IffdshowBase *Ideci,IdecVideoSink *Isink):
  quantsDx(0),quantsDy(0),quants(NULL),quantType(FF_QSCALE_TYPE_MPEG1),
  inter_matrix(NULL),intra_matrix(NULL)
 {
+ isdvdproc=!!deci->getParam2(IDFF_dvdproc);
 }
 TvideoCodecDec::~TvideoCodecDec()
 {

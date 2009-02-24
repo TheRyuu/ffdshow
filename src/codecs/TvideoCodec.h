@@ -41,6 +41,7 @@ public:
 class TvideoCodecDec :virtual public TvideoCodec,virtual public TcodecDec
 {
 protected:
+ bool isdvdproc;
  comptrQ<IffdshowDecVideo> deciV;
  IdecVideoSink *sinkD;
  TvideoCodecDec(IffdshowBase *Ideci,IdecVideoSink *Isink);
