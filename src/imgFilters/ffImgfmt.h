@@ -465,7 +465,7 @@ private:
    int csp;
   public:
    TsortFc(int Icsp):csp(Icsp) {}
-   bool operator ()(const TcspInfo* csp1,const TcspInfo* csp2);
+   bool operator ()(const TcspInfo* &csp1,const TcspInfo* &csp2);
   };
 public:
  void sort(int csp);
