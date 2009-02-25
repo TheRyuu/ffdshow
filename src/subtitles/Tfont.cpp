@@ -549,11 +549,6 @@ template<int GDI_rendering_window> void TrenderedTextSubtitleWord::drawShadow(
   aligned_free(matrix);
 }
 
-size_t TrenderedTextSubtitleWord::getMemorySize() const
-{
-    return 4 * (((dx[0] +  m_outlineWidth*2) * (dy[0] +  m_outlineWidth*2) + 32) + (dx[1] * dy[1] +32));
-}
-
 void TrenderedTextSubtitleWord::updateMask(int fader, int create) const
 {
  // shadowMode 0: glowing, 1:classic with gradient, 2: classic with no gradient, >=3: no shadow
@@ -736,6 +731,11 @@ void TrenderedTextSubtitleWord::updateMask(int fader, int create) const
    Y2RGB(msk)
   }
  _mm_empty();
+}
+
+size_t TrenderedTextSubtitleWord::getMemorySize() const
+{
+    return 4 * (((dx[0] +  m_outlineWidth*2) * (dy[0] +  m_outlineWidth*2) + 32) + (dx[1] * dy[1] +32));
 }
 
 TrenderedTextSubtitleWord::~TrenderedTextSubtitleWord()
@@ -1897,7 +1897,7 @@ TrenderedTextSubtitleWord* Tfont::newWord(const wchar_t *s,size_t slen,Trendered
  YUVcolorA shadowYUV1;
  if (!w->props.isColor)
   {
-   shadowYUV1=shadowYUV;
+   shadowYUV1=prefs.shadowYUV;
    if (prefs.shadowMode<=1)
     shadowYUV1.A=256*sqrt((double)shadowYUV1.A/256.0);
   }
@@ -1932,8 +1932,8 @@ TrenderedTextSubtitleWord* Tfont::newWord(const wchar_t *s,size_t slen,Trendered
    rw=new TrenderedTextSubtitleWord(hdc,
                                 s1.c_str(),
                                 slen,
-                                w->props.isColor ? YUVcolorA(w->props.color,w->props.colorA) : yuvcolor,
-                                w->props.isColor ? YUVcolorA(w->props.OutlineColour,w->props.OutlineColourA) : outlineYUV,
+                                w->props.isColor ? YUVcolorA(w->props.color,w->props.colorA) : prefs.yuvcolor,
+                                w->props.isColor ? YUVcolorA(w->props.OutlineColour,w->props.OutlineColourA) : prefs.outlineYUV,
                                 w->props.isColor ? YUVcolorA(w->props.ShadowColour,w->props.ShadowColourA) : shadowYUV1,
                                 prefs,
                                 lf,

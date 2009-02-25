@@ -49,6 +49,9 @@ public:
      xinput=0;
      yinput=0;
      rtStart=REFTIME_INVALID;
+     yuvcolor=YUVcolorA(fontSettings.color,fontSettings.bodyAlpha);
+     outlineYUV=YUVcolorA(fontSettings.outlineColor,fontSettings.outlineAlpha);
+     shadowYUV=YUVcolorA(fontSettings.shadowColor,fontSettings.shadowAlpha);
     }
    TprintPrefs()
     {
@@ -104,6 +107,7 @@ public:
    REFERENCE_TIME rtStart;
    unsigned int xinput,yinput;
    TfontSettings fontSettings;
+   YUVcolorA yuvcolor,outlineYUV,shadowYUV;
   };
  TrenderedSubtitleLines(void) {}
  TrenderedSubtitleLines(TrenderedSubtitleLine *ln) {push_back(ln);}
@@ -168,6 +172,7 @@ bool operator < (const TrenderedSubtitleLines::ParagraphKey &a, const TrenderedS
 
 class TrenderedTextSubtitleWord;
 
+// To be removed
 class TcharsChache
 {
 private:
@@ -341,10 +346,10 @@ private:
  unsigned int height;
  const Tsubtitle *oldsub;
  int oldCsp;
- YUVcolorA yuvcolor,outlineYUV,shadowYUV;
+ YUVcolorA yuvcolor,outlineYUV,shadowYUV; // To be removed
  short matrix[5][5];
  void prepareC(TsubtitleText *sub,const TrenderedSubtitleLines::TprintPrefs &prefs,bool forceChange);
- TcharsChache *charsCache;
+ TcharsChache *charsCache; // To be removed
  TrenderedTextSubtitleWord* newWord(const wchar_t *s,size_t slen,TrenderedSubtitleLines::TprintPrefs prefs,const TsubtitleWord *w,const LOGFONT &lf,bool trimRightSpaces=false);
 public:
  friend struct TsubtitleText;
