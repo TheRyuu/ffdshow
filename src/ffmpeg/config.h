@@ -4,6 +4,7 @@
   #define HAVE_SSE 1
   #define HAVE_SSSE3 1
   #define HAVE_AMD3DNOW 1
+  #define HAVE_AMD3DNOWEXT 1
   #define HAVE_TEN_OPERANDS 1
   #define ARCH_X86 1
   
@@ -20,6 +21,7 @@
 	#define HAVE_SSE 0
 	#define HAVE_SSSE3 0
 	#define HAVE_AMD3DNOW 0
+	#define HAVE_AMD3DNOWEXT 0
 	#define ARCH_X86 0
 	#define ARCH_X86_64 0
 	#define ARCH_X86_32 0

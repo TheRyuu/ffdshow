@@ -690,9 +690,15 @@ void TffdshowDecVideo::ConnectCompatibleFilter(void)
 		return;
 	}
 
-	AM_MEDIA_TYPE connectedPinMediaTypeOut;
+	// Get the media type of the compatible filter and its ouput colorspace
+    AM_MEDIA_TYPE connectedPinMediaTypeOut;
 	outPin->ConnectionMediaType(&connectedPinMediaTypeOut);
-	//hr=outPin->Connect(inpin, &connectedPinMediaTypeOut);
+    BITMAPINFOHEADER biIn;
+    ExtractBIH(connectedPinMediaTypeOut,&biIn);
+    TcspInfos ocsps;
+    presetSettings->output->getOutputColorspaces(ocsps);
+    int inColorSpace = getBMPcolorspace(&biIn, ocsps);
+    inpin->pictIn.csp = inColorSpace;
 	hr = pGraphBuilder->Connect(outPin, inpin);
 
 	outPin->Release();

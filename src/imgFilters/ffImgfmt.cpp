@@ -976,7 +976,7 @@ bool csp_inFOURCCmask(int x,FOURCC fcc)
   }
 }
 
-bool TcspInfos::TsortFc::operator ()(const TcspInfo* csp1,const TcspInfo* csp2)
+bool TcspInfos::TsortFc::operator ()(const TcspInfo* &csp1,const TcspInfo* &csp2)
 {
  int rank1;csp_bestMatch(csp,csp1->id,&rank1);
  int rank2;csp_bestMatch(csp,csp2->id,&rank2);

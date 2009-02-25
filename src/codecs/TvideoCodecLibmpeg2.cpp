@@ -195,7 +195,14 @@ HRESULT __declspec(align(16))(TvideoCodecLibmpeg2::decompressI(const unsigned ch
           default:
           case 0:csp=FF_CSP_420P;break;
          }
-        TffPict pict(csp,data,stride,Trect(0,0,info->sequence->picture_width,info->sequence->picture_height,info->sequence->pixel_width,info->sequence->pixel_height),true,frametype,fieldtype,srcLen,NULL); //TODO: src frame size
+
+        Trect r(0,0,info->sequence->picture_width,info->sequence->picture_height);
+        if (isdvdproc)
+         r.sar=containerSar;
+        else
+         r.sar=Rational(info->sequence->pixel_width,info->sequence->pixel_height);
+
+        TffPict pict(csp,data,stride,r,true,frametype,fieldtype,srcLen,NULL); //TODO: src frame size
         pict.film = m_fFilm;
         pict.rtStart=info->display_picture->rtStart;
         if (pict.rtStart==REFTIME_INVALID) pict.rtStart=oldpict.rtStop;

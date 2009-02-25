@@ -20,7 +20,7 @@
  */
 
 /**
- * @file mpegaudiodec.c
+ * @file libavcodec/mpegaudiodec.c
  * MPEG Audio decoder.
  */
 
@@ -242,7 +242,7 @@ static inline int l3_unscale(int value, int exponent)
 
 static int dev_4_3_coefs[DEV_ORDER];
 
-static void int_pow_init(void)
+static av_cold void int_pow_init(void)
 {
     int i, a;
 
@@ -253,7 +253,7 @@ static void int_pow_init(void)
     }
 }
 
-static int decode_init(AVCodecContext * avctx)
+static av_cold int decode_init(AVCodecContext * avctx)
 {
     MPADecodeContext *s = avctx->priv_data;
     static int init=0;
@@ -774,7 +774,7 @@ static inline int round_sample(int64_t *sum)
     op2(sum2, (w2)[7 * 64], tmp);\
 }
 
-void ff_mpa_synth_init(MPA_INT *window)
+void av_cold ff_mpa_synth_init(MPA_INT *window)
 {
     int i;
 

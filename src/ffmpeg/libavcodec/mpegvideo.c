@@ -23,7 +23,7 @@
  */
 
 /**
- * @file mpegvideo.c
+ * @file libavcodec/mpegvideo.c
  * The simplest mpeg encoder (well, it was the simplest!).
  */
 
@@ -106,7 +106,7 @@ const uint8_t *ff_find_start_code(const uint8_t * restrict p, const uint8_t *end
 }
 
 /* init common dct for both encoder and decoder */
-int ff_dct_common_init(MpegEncContext *s)
+av_cold int ff_dct_common_init(MpegEncContext *s)
 {
     s->dct_unquantize_h263_intra = dct_unquantize_h263_intra_c;
     s->dct_unquantize_h263_inter = dct_unquantize_h263_inter_c;
@@ -288,7 +288,7 @@ static int init_duplicate_context(MpegEncContext *s, MpegEncContext *base){
     s->block= s->blocks[0];
 
     for(i=0;i<12;i++){
-        s->pblocks[i] = (short *)(&s->block[i]);
+        s->pblocks[i] = &s->block[i];
     }
     return 0;
 fail:
@@ -344,7 +344,7 @@ void ff_update_duplicate_context(MpegEncContext *dst, MpegEncContext *src){
     memcpy(dst, src, sizeof(MpegEncContext));
     backup_duplicate_context(dst, &bak);
     for(i=0;i<12;i++){
-        dst->pblocks[i] = (short *)(&dst->block[i]);
+        dst->pblocks[i] = &dst->block[i];
     }
 //STOP_TIMER("update_duplicate_context") //about 10k cycles / 0.01 sec for 1000frames on 1ghz with 2 threads
 }
@@ -383,11 +383,16 @@ void MPV_decode_defaults(MpegEncContext *s){
  * init common structure for both encoder and decoder.
  * this assumes that some variables like width/height are already set
  */
-int MPV_common_init(MpegEncContext *s)
+av_cold int MPV_common_init(MpegEncContext *s)
 {
     int y_size, c_size, yc_size, i, mb_array_size, mv_table_size, x, y, threads;
 
     s->mb_height = (s->height + 15) / 16;
+
+    if(s->avctx->pix_fmt == PIX_FMT_NONE){
+        av_log(s->avctx, AV_LOG_ERROR, "decoding to PIX_FMT_NONE is not supported.\n");
+        return -1;
+    }
 
     if(s->avctx->thread_count > MAX_THREADS || (s->avctx->thread_count > s->mb_height && s->mb_height)){
         av_log(s->avctx, AV_LOG_ERROR, "too many threads\n");

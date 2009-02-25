@@ -294,17 +294,17 @@ static int mpeg_decode_mb(MpegEncContext *s,
         if (s->codec_id == CODEC_ID_MPEG2VIDEO) {
             if(s->flags2 & CODEC_FLAG2_FAST){
                 for(i=0;i<6;i++) {
-                    mpeg2_fast_decode_block_intra(s, s->pblocks[i], i);
+                    mpeg2_fast_decode_block_intra(s, *s->pblocks[i], i);
                 }
             }else{
                 for(i=0;i<mb_block_count;i++) {
-                    if (mpeg2_decode_block_intra(s, s->pblocks[i], i) < 0)
+                    if (mpeg2_decode_block_intra(s, *s->pblocks[i], i) < 0)
                         return -1;
                 }
             }
         } else {
             for(i=0;i<6;i++) {
-                if (ff_mpeg1_decode_block_intra(s, s->pblocks[i], i) < 0)
+                if (ff_mpeg1_decode_block_intra(s, *s->pblocks[i], i) < 0)
                     return -1;
             }
         }
@@ -498,7 +498,7 @@ static int mpeg_decode_mb(MpegEncContext *s,
                 if(s->flags2 & CODEC_FLAG2_FAST){
                     for(i=0;i<6;i++) {
                         if(cbp & 32) {
-                            mpeg2_fast_decode_block_non_intra(s, s->pblocks[i], i);
+                            mpeg2_fast_decode_block_non_intra(s, *s->pblocks[i], i);
                         } else {
                             s->block_last_index[i] = -1;
                         }
@@ -509,7 +509,7 @@ static int mpeg_decode_mb(MpegEncContext *s,
 
                     for(i=0;i<mb_block_count;i++) {
                         if ( cbp & (1<<11) ) {
-                            if (mpeg2_decode_block_non_intra(s, s->pblocks[i], i) < 0)
+                            if (mpeg2_decode_block_non_intra(s, *s->pblocks[i], i) < 0)
                                 return -1;
                         } else {
                             s->block_last_index[i] = -1;
@@ -521,7 +521,7 @@ static int mpeg_decode_mb(MpegEncContext *s,
                 if(s->flags2 & CODEC_FLAG2_FAST){
                     for(i=0;i<6;i++) {
                         if (cbp & 32) {
-                            mpeg1_fast_decode_block_inter(s, s->pblocks[i], i);
+                            mpeg1_fast_decode_block_inter(s, *s->pblocks[i], i);
                         } else {
                             s->block_last_index[i] = -1;
                         }
@@ -530,7 +530,7 @@ static int mpeg_decode_mb(MpegEncContext *s,
                 }else{
                     for(i=0;i<6;i++) {
                         if (cbp & 32) {
-                            if (mpeg1_decode_block_inter(s, s->pblocks[i], i) < 0)
+                            if (mpeg1_decode_block_inter(s, *s->pblocks[i], i) < 0)
                                 return -1;
                         } else {
                             s->block_last_index[i] = -1;
@@ -1533,7 +1533,9 @@ static void mpeg_decode_extension(AVCodecContext *avctx,
 }
 
 static void exchange_uv(MpegEncContext *s){
-    short * tmp = s->pblocks[4];
+    DCTELEM (*tmp)[64];
+
+    tmp           = s->pblocks[4];
     s->pblocks[4] = s->pblocks[5];
     s->pblocks[5] = tmp;
 }
@@ -2313,9 +2315,9 @@ static int decode_chunks(AVCodecContext *avctx,
 
                 if(s2->first_slice){
                     s2->first_slice=0;
-                            if(mpeg_field_start(s2) < 0)
+                    if(mpeg_field_start(s2) < 0)
                         return -1;
-                    }
+                }
                 if(!s2->current_picture_ptr){
                     av_log(avctx, AV_LOG_ERROR, "current_picture not initialized\n");
                     return -1;

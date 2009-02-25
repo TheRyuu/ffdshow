@@ -39,7 +39,11 @@
 #    define inline __inline
 #endif
 
-#define AV_GCC_VERSION_AT_LEAST(x,y) (defined(__GNUC__) && (__GNUC__ > x || __GNUC__ == x && __GNUC_MINOR__ >= y))
+#ifdef __GNUC__
+#    define AV_GCC_VERSION_AT_LEAST(x,y) (__GNUC__ > x || __GNUC__ == x && __GNUC_MINOR__ >= y)
+#else
+#    define AV_GCC_VERSION_AT_LEAST(x,y) 0
+#endif
 
 #ifndef av_always_inline
 #if AV_GCC_VERSION_AT_LEAST(3,1)
