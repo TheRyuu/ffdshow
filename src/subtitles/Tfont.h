@@ -122,6 +122,7 @@ public:
  void clear(void);
  using std::vector<value_type>::empty;
  void print(const TprintPrefs &prefs);
+ size_t getMemorySize() const;
 
 private:
  void printASS(const TprintPrefs &prefs);
@@ -212,6 +213,7 @@ public:
  virtual int get_bottomOverhang() const {return 0;}
  virtual int get_leftOverhang() const {return 0;}
  virtual int get_rightOverhang() const {return 0;}
+ virtual size_t getMemorySize() const {return 0;}
 };
 
 class TrenderedVobsubWord : public TrenderedSubtitleWordBase
@@ -296,6 +298,7 @@ public:
  virtual int get_bottomOverhang() const {return bottomOverhang;}
  virtual int get_leftOverhang() const {return leftOverhang;}
  virtual int get_rightOverhang() const {return rightOverhang;}
+ virtual size_t getMemorySize() const;
 };
 
 class TrenderedSubtitleLine : protected std::vector<TrenderedSubtitleWordBase*>
@@ -319,6 +322,7 @@ public:
  void clear(void);
  void print(int startx,int starty,const TrenderedSubtitleLines::TprintPrefs &prefs,unsigned int prefsdx,unsigned int prefsdy) const;
  TSubtitleProps props;
+ size_t getMemorySize() const;
 };
 
 struct TsubtitleWord;

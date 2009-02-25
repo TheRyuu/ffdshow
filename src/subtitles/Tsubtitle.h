@@ -15,6 +15,7 @@ struct Tsubtitle
  virtual void addEmpty(void) {}
  virtual bool isText(void) const {return false;}
  virtual void dropRenderedLines(void) {}
+ virtual size_t getRenderedMemorySize() const {return 0;}
 };
 
 #endif

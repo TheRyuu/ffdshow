@@ -317,6 +317,10 @@ public:
    lines.clear(); // clear pointers and delete objects.
    old_prefs.csp = 0;
   }
+ virtual size_t getRenderedMemorySize() const
+  {
+   return lines.getMemorySize();
+  }
 };
 
 struct TsubtitleTexts :public Tsubtitle,public std::vector< TsubtitleText* >

@@ -549,6 +549,11 @@ template<int GDI_rendering_window> void TrenderedTextSubtitleWord::drawShadow(
   aligned_free(matrix);
 }
 
+size_t TrenderedTextSubtitleWord::getMemorySize() const
+{
+    return 4 * (((dx[0] +  m_outlineWidth*2) * (dy[0] +  m_outlineWidth*2) + 32) + (dx[1] * dy[1] +32));
+}
+
 void TrenderedTextSubtitleWord::updateMask(int fader, int create) const
 {
  // shadowMode 0: glowing, 1:classic with gradient, 2: classic with no gradient, >=3: no shadow
@@ -1401,6 +1406,13 @@ void TrenderedSubtitleLine::clear(void)
   delete *w;
  std::vector<value_type>::clear();
 }
+size_t TrenderedSubtitleLine::getMemorySize() const
+{
+    size_t memSize = 0;
+    for (const_iterator w=begin();w!=end();w++)
+        memSize += (*w)->getMemorySize();
+    return memSize;
+}
 
 //============================== TrenderedSubtitleLines ==============================
 void TrenderedSubtitleLines::print(const TprintPrefs &prefs)
@@ -1670,30 +1682,36 @@ void TrenderedSubtitleLines::clear(void)
  reset();
 }
 
+size_t TrenderedSubtitleLines::getMemorySize() const
+{
+    size_t memSize = 0;
+    for (const_iterator l=begin() ; l!= end() ; l++) {
+        memSize += (*l)->getMemorySize();
+    }
+    return memSize;
+}
+
 bool operator < (const TrenderedSubtitleLines::ParagraphKey &a, const TrenderedSubtitleLines::ParagraphKey &b)
- {
-#ifndef __INTEL_COMPILER
-  return (memcmp(&a,&b,sizeof(TrenderedSubtitleLines::ParagraphKey)) < 0);
-#else
-  if (a.alignment<b.alignment) return true;
-  if (a.alignment>b.alignment) return false;
-  if (a.marginTop<b.marginTop) return true;
-  if (a.marginTop>b.marginTop) return false;
-  if (a.marginBottom<b.marginBottom) return true;
-  if (a.marginBottom>b.marginBottom) return false;
-  if (a.marginL<b.marginL) return true;
-  if (a.marginL>b.marginL) return false;
-  if (a.marginR<b.marginR) return true;
-  if (a.marginR>b.marginR) return false;
-  if (a.isPos<b.isPos) return true;
-  if (a.isPos>b.isPos) return false;
-  if (a.posx<b.posx) return true;
-  if (a.posx>b.posx) return false;
-  if (a.posy<b.posy) return true;
-  //if (a.posy>b.posy) return false;
-  return false;
-#endif
- };
+{
+    if (a.alignment<b.alignment) return true;
+    if (a.alignment>b.alignment) return false;
+    if (a.marginTop<b.marginTop) return true;
+    if (a.marginTop>b.marginTop) return false;
+    if (a.marginBottom<b.marginBottom) return true;
+    if (a.marginBottom>b.marginBottom) return false;
+    if (a.marginL<b.marginL) return true;
+    if (a.marginL>b.marginL) return false;
+    if (a.marginR<b.marginR) return true;
+    if (a.marginR>b.marginR) return false;
+    if (a.isPos<b.isPos) return true;
+    if (a.isPos>b.isPos) return false;
+    if (a.posx<b.posx) return true;
+    if (a.posx>b.posx) return false;
+    if (a.posy<b.posy) return true;
+    //if (a.posy>b.posy) return false;
+    return false;
+};
+
 //================================= TcharsChache =================================
 TcharsChache::TcharsChache(HDC Ihdc,const YUVcolorA &Iyuv,const YUVcolorA &Ioutline,const YUVcolorA &Ishadow,int Ixscale,int Iyscale,IffdshowBase *Ideci):
  hdc(Ihdc),

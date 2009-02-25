@@ -443,3 +443,12 @@ void Tsubreader::processOverlap(void)
   }
  IsProcessOverlapDone=true;
 }
+
+size_t Tsubreader::getMemorySize() const
+{
+    size_t memSize = 0;
+    for (const_iterator i = begin() ; i != end() ; i++) {
+        memSize += (*i)->getRenderedMemorySize();
+    }
+    return memSize;
+}
