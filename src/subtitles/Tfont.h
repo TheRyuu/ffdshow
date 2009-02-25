@@ -170,27 +170,6 @@ private:
 
 bool operator < (const TrenderedSubtitleLines::ParagraphKey &a, const TrenderedSubtitleLines::ParagraphKey &b);
 
-class TrenderedTextSubtitleWord;
-
-// To be removed
-class TcharsChache
-{
-private:
- typedef stdext::hash_map<int,TrenderedTextSubtitleWord*> Tchars;
- Tchars chars;
- HDC hdc;
- YUVcolorA yuv,outlineYUV,shadowYUV;
- int xscale,yscale;
- IffdshowBase *deci;
-public:
- const YUVcolorA& getBodyYUV(void) const {return yuv;}
- const YUVcolorA& getOutlineYUV(void) const {return outlineYUV;}
- const YUVcolorA& getShadowYUV(void) const {return shadowYUV;}
- TcharsChache(HDC Ihdc,const YUVcolorA &Iyuv,const YUVcolorA &Ioutline,const YUVcolorA &Ishadow,int Ixscale,int Iyscale,IffdshowBase *Ideci);
- const TrenderedTextSubtitleWord *getChar(const wchar_t *s,const TrenderedSubtitleLines::TprintPrefs &prefs,const LOGFONT &lf,TSubtitleProps props,unsigned int gdi_font_scale,unsigned int GDI_rendering_window);
- ~TcharsChache();
-};
-
 class TrenderedSubtitleWordBase
 {
 private:
@@ -280,15 +259,6 @@ public:
                         const TrenderedTextSubtitleWord &parent,
                         bool senondaryColor                       // to distinguish from default copy constructor
                         );
- // fast rendering
- TrenderedTextSubtitleWord(
-                        TcharsChache *chars,
-                        const wchar_t *s,size_t strlens,
-                        const TrenderedSubtitleLines::TprintPrefs &prefs,
-                        const LOGFONT &lf,
-                        TSubtitleProps Iprops,
-                        unsigned int gdi_font_scale,
-                        unsigned int GDI_rendering_window);
  ~TrenderedTextSubtitleWord();
  virtual void print(int startx, int starty, unsigned int dx[3],int dy[3],unsigned char *dstLn[3],const stride_t stride[3],const unsigned char *bmp[3],const unsigned char *msk[3],REFERENCE_TIME rtStart=REFTIME_INVALID) const;
  unsigned int alignXsize;
@@ -346,10 +316,8 @@ private:
  unsigned int height;
  const Tsubtitle *oldsub;
  int oldCsp;
- YUVcolorA yuvcolor,outlineYUV,shadowYUV; // To be removed
  short matrix[5][5];
  void prepareC(TsubtitleText *sub,const TrenderedSubtitleLines::TprintPrefs &prefs,bool forceChange);
- TcharsChache *charsCache; // To be removed
  TrenderedTextSubtitleWord* newWord(const wchar_t *s,size_t slen,TrenderedSubtitleLines::TprintPrefs prefs,const TsubtitleWord *w,const LOGFONT &lf,bool trimRightSpaces=false);
 public:
  friend struct TsubtitleText;

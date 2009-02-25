@@ -44,7 +44,6 @@ public:
  int color,outlineColor,shadowColor;
  int bodyAlpha,outlineAlpha,shadowAlpha;
  int split;
- int fast;
  int overrideScale,aspectAuto;
  virtual void reg_op(TregOp &t);
  int outlineWidth;

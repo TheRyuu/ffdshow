@@ -631,7 +631,7 @@
 #define IDFF_OSDfontXscale         1532
 #define IDFF_OSDfontYscale         3412
 #define IDFF_OSDfontAspectAuto     3413
-#define IDFF_OSDfontFast           1535
+//#define IDFF_OSDfontFast           1535
   #define IDFF_OSDtype_inputSize          1520
   #define IDFF_OSDtype_inputAspect        1550
   #define IDFF_OSDtype_inputSizeAspect    1552

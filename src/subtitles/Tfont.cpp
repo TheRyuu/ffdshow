@@ -525,8 +525,6 @@ template<int GDI_rendering_window> void TrenderedTextSubtitleWord::drawShadow(
    dx[2]=dx[0]>>1;
    dy[2]=dy[0]>>1;
    dx[2]=(dx[2]/alignXsize+1)*alignXsize;
-
-   bmpmskstride[0]=dx[0];bmpmskstride[1]=dx[1];bmpmskstride[2]=dx[2]; // for fast rendering
   }
  else
   {
@@ -537,8 +535,6 @@ template<int GDI_rendering_window> void TrenderedTextSubtitleWord::drawShadow(
    outline[1] = (unsigned char*)aligned_malloc(dx[1]*dy[1]+16,16);
    shadow[1]  = (unsigned char*)aligned_malloc(dx[1]*dy[1]+16,16);
    msk[1]     = (unsigned char*)aligned_malloc(dx[1]*dy[1]+16,16);
-
-   bmpmskstride[0]=dx[0];bmpmskstride[1]=dx[1];
   }
  updateMask();
 
@@ -855,101 +851,6 @@ int TrenderedTextSubtitleWord::get_descent64() const
  return props.m_descent64;
 }
 
-// fast rendering
-// YV12 only. RGB32 is not supported.
-TrenderedTextSubtitleWord::TrenderedTextSubtitleWord(
-                       TcharsChache *charsChache,
-                       const wchar_t *s,size_t strlens,
-                       const TrenderedSubtitleLines::TprintPrefs &Iprefs,
-                       const LOGFONT &lf,
-                       TSubtitleProps Iprops,
-                       unsigned int gdi_font_scale,
-                       unsigned int GDI_rendering_window):
- TrenderedSubtitleWordBase(true),
- props(Iprops),
- prefs(Iprefs),
- secondaryColoredWord(NULL),
- dstOffset(0),
- oldBodyYUVa(256),
- oldOutlineYUVa(256)
-{
- csp=prefs.csp & FF_CSPS_MASK;
- m_bodyYUV=(charsChache->getBodyYUV());
- m_outlineYUV=(charsChache->getOutlineYUV());
- m_shadowYUV=(charsChache->getShadowYUV());
- const TrenderedTextSubtitleWord **chars=(const TrenderedTextSubtitleWord**)_alloca(strlens*sizeof(TrenderedSubtitleLine*));
- for (int i=0;i<3;i++)
-  dx[i]=dy[i]=0;
- baseline=0;
- for (size_t i=0;i<strlens;i++)
-  {
-   chars[i]=charsChache->getChar(&s[i],prefs,lf,props,gdi_font_scale,GDI_rendering_window);
-   dx[0]+=chars[i]->dxCharY+1;
-   if (s[i]=='\t')
-    {
-     int tabsize=prefs.tabsize*std::max(chars[0]->dyCharY,1U);
-     dx[0]=(dx[0]/tabsize+1)*tabsize;
-    }
-   for (int p=0;p<3;p++)
-    dy[p]=std::max(dy[p],chars[i]->dy[p]);
-   baseline=std::max(baseline,chars[i]->baseline);
-  }
- if (strlens>0)
-  {
-   leftOverhang=chars[0]->get_leftOverhang();
-   rightOverhang=chars[0]->get_rightOverhang();
-   topOverhang=chars[0]->get_topOverhang();
-   bottomOverhang=chars[0]->get_bottomOverhang();
-  }
- alignXsize=chars[0]->alignXsize;
- TtextSubtitlePrintY=chars[0]->TtextSubtitlePrintY;
- TtextSubtitlePrintUV=chars[0]->TtextSubtitlePrintUV;
- dxCharY=dx[0];
- dx[0]=(dx[0]/alignXsize+2)*alignXsize;dx[1]=dx[2]=(dx[0]/alignXsize/2+1)*alignXsize;
- dyCharY=chars[0]->dyCharY;
- for (int i=0 ; i<=1 ; i++)
-  {
-   bmp[i]=(unsigned char*)aligned_calloc(dx[i],dy[i],16);
-   shadow[i]=(unsigned char*)aligned_calloc(dx[i],dy[i],16);
-   outline[i]=(unsigned char*)aligned_calloc(dx[i],dy[i],16);
-   msk[i]=(unsigned char*)aligned_calloc(dx[i],dy[i],16);
-   bmpmskstride[i]=dx[i];
-  }
- unsigned int x=0;
- for (size_t i=0;i<strlens;i++)
-  {
-   if (s[i]=='\t')
-    {
-     int tabsize=prefs.tabsize*std::max(chars[0]->dyCharY,1U);
-     x=(x/tabsize+1)*tabsize;
-    }
-   for (unsigned int p=0;p<2;p++)
-    {
-     const unsigned char *charbmpptr=chars[i]->bmp[p];
-     const unsigned char *charshadowptr=chars[i]->shadow[p];
-     const unsigned char *charoutlineptr=chars[i]->outline[p];
-     const unsigned char *charmskptr=chars[i]->msk[p];
-     unsigned char *bmpptr=bmp[p]+roundRshift(x,prefs.shiftX[p]);
-     unsigned char *shadowptr=shadow[p]+roundRshift(x,prefs.shiftX[p]);
-     unsigned char *outlineptr=outline[p]+roundRshift(x,prefs.shiftX[p]);
-     unsigned char *mskptr=msk[p]+roundRshift(x,prefs.shiftX[p]);
-     for (unsigned int y=0;y<chars[i]->dy[p];y++,
-       bmpptr+=bmpmskstride[p],
-       shadowptr+=bmpmskstride[p],outlineptr+=bmpmskstride[p],mskptr+=bmpmskstride[p],
-       charbmpptr+=chars[i]->bmpmskstride[p],
-       charshadowptr+=chars[i]->bmpmskstride[p],charoutlineptr+=chars[i]->bmpmskstride[p],charmskptr+=chars[i]->bmpmskstride[p])
-      {
-       memadd(bmpptr,charbmpptr,chars[i]->dx[p]);
-       memadd(shadowptr,charshadowptr,chars[i]->dx[p]);
-       memadd(outlineptr,charoutlineptr,chars[i]->dx[p]);
-       if (p==0)
-        memadd(mskptr,charmskptr,chars[i]->dx[p]);
-      }
-    }
-   x+=chars[i]->dxCharY+1;
-  }
- _mm_empty();
-}
 void TrenderedTextSubtitleWord::print(int startx, int starty, unsigned int sdx[3], int sdy[3], unsigned char *dstLn[3], const stride_t stride[3], const unsigned char *Ibmp[3], const unsigned char *Imsk[3],REFERENCE_TIME rtStart) const
 {
  if (sdy[0]<=0 || sdy[1]<0)
@@ -1712,37 +1613,6 @@ bool operator < (const TrenderedSubtitleLines::ParagraphKey &a, const TrenderedS
     return false;
 };
 
-//================================= TcharsChache =================================
-TcharsChache::TcharsChache(HDC Ihdc,const YUVcolorA &Iyuv,const YUVcolorA &Ioutline,const YUVcolorA &Ishadow,int Ixscale,int Iyscale,IffdshowBase *Ideci):
- hdc(Ihdc),
- yuv(Iyuv),
- outlineYUV(Ioutline),
- shadowYUV(Ishadow),
- xscale(Ixscale),
- yscale(Iyscale),
- deci(Ideci)
-{
-}
-TcharsChache::~TcharsChache()
-{
- for (Tchars::iterator c=chars.begin();c!=chars.end();c++)
-  delete c->second;
-}
-
-const TrenderedTextSubtitleWord* TcharsChache::getChar(const wchar_t *s,
-    const TrenderedSubtitleLines::TprintPrefs &prefs,
-    const LOGFONT &lf,TSubtitleProps props,
-    unsigned int gdi_font_scale,
-    unsigned int GDI_rendering_window)
-{
- int key=(int)*s;
- Tchars::iterator l=chars.find(key);
- if (l!=chars.end()) return l->second;
- TrenderedTextSubtitleWord *ln=new TrenderedTextSubtitleWord(hdc,s,1,yuv,outlineYUV,shadowYUV,prefs,lf,xscale*100/yscale,props,gdi_font_scale,GDI_rendering_window);
- chars[key]=ln;
- return ln;
-}
-
 //============================== TrenderedVobsubWord ===============================
 void TrenderedVobsubWord::print(int startx, int starty /* not used */, unsigned int sdx[3],int sdy[3],unsigned char *dstLn[3],const stride_t stride[3],const unsigned char *bmp[3],const unsigned char *msk[3],REFERENCE_TIME rtStart) const
 {
@@ -1824,7 +1694,6 @@ Tfont::Tfont(IffdshowBase *Ideci, unsigned int Igdi_font_scale):
  deci(Ideci),
  oldsub(NULL),
  hdc(NULL),oldFont(NULL),
- charsCache(NULL),
  height(0),
  fontSettings((TfontSettings*)malloc(sizeof(TfontSettings))),
  gdi_font_scale(Igdi_font_scale)
@@ -1844,11 +1713,6 @@ void Tfont::init(const TfontSettings *IfontSettings)
  SetBkMode(hdc,TRANSPARENT); 
  SetTextColor(hdc,0xffffff); 
  SetMapMode(hdc,MM_TEXT);
- yuvcolor=YUVcolorA(fontSettings->color,fontSettings->bodyAlpha);
- outlineYUV=YUVcolorA(fontSettings->outlineColor,fontSettings->outlineAlpha);
- shadowYUV=YUVcolorA(fontSettings->shadowColor,fontSettings->shadowAlpha);
- if (fontSettings->fast)
-  charsCache=new TcharsChache(hdc,yuvcolor,outlineYUV,shadowYUV,fontSettings->xscale,fontSettings->yscale,deci);
 }
 void Tfont::done(void)
 {
@@ -1858,7 +1722,6 @@ void Tfont::done(void)
    DeleteDC(hdc);hdc=NULL;
   }
  oldsub=NULL;
- if (charsCache) delete charsCache;charsCache=NULL;
 }
 
 TrenderedTextSubtitleWord* Tfont::newWord(const wchar_t *s,size_t slen,TrenderedSubtitleLines::TprintPrefs prefs,const TsubtitleWord *w,const LOGFONT &lf,bool trimRightSpaces)
@@ -1915,33 +1778,21 @@ TrenderedTextSubtitleWord* Tfont::newWord(const wchar_t *s,size_t slen,Trendered
   }
 
  TrenderedTextSubtitleWord *rw;
- if (!w->props.isColor
-  && fontSettings->fast
-  && !lf.lfItalic
-  && (prefs.shadowSize==0 || prefs.shadowMode>=2)
-  && prefs.csp==FF_CSP_420P
-  && !prefs.opaqueBox)
-  {
-   // fast rendering
-   rw=new TrenderedTextSubtitleWord(charsCache,s1.c_str(),slen,prefs,lf,w->props,gdi_font_scale,gdi_rendering_window);
-  }
- else
-  {
-   // full rendering
-   double xscale=(double)w->props.get_xscale(fontSettings->xscale,prefs.sar,fontSettings->aspectAuto,fontSettings->overrideScale)*100.0/(double)w->props.get_yscale(fontSettings->yscale,prefs.sar,fontSettings->aspectAuto,fontSettings->overrideScale);
-   rw=new TrenderedTextSubtitleWord(hdc,
-                                s1.c_str(),
-                                slen,
-                                w->props.isColor ? YUVcolorA(w->props.color,w->props.colorA) : prefs.yuvcolor,
-                                w->props.isColor ? YUVcolorA(w->props.OutlineColour,w->props.OutlineColourA) : prefs.outlineYUV,
-                                w->props.isColor ? YUVcolorA(w->props.ShadowColour,w->props.ShadowColourA) : shadowYUV1,
-                                prefs,
-                                lf,
-                                xscale,
-                                w->props,
-                                gdi_font_scale,
-                                gdi_rendering_window);
-  }
+
+ double xscale=(double)w->props.get_xscale(fontSettings->xscale,prefs.sar,fontSettings->aspectAuto,fontSettings->overrideScale)*100.0/(double)w->props.get_yscale(fontSettings->yscale,prefs.sar,fontSettings->aspectAuto,fontSettings->overrideScale);
+ rw=new TrenderedTextSubtitleWord(hdc,
+                              s1.c_str(),
+                              slen,
+                              w->props.isColor ? YUVcolorA(w->props.color,w->props.colorA) : prefs.yuvcolor,
+                              w->props.isColor ? YUVcolorA(w->props.OutlineColour,w->props.OutlineColourA) : prefs.outlineYUV,
+                              w->props.isColor ? YUVcolorA(w->props.ShadowColour,w->props.ShadowColourA) : shadowYUV1,
+                              prefs,
+                              lf,
+                              xscale,
+                              w->props,
+                              gdi_font_scale,
+                              gdi_rendering_window);
+
  if (rw->dxCharY && rw->dyCharY)
   return rw;
  else

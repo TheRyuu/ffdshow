@@ -1491,7 +1491,6 @@
 #define IDC_ED_QUANT_TABLE_INTER63      1826
 #define IDC_CHB_EQ_SUPER                1826
 #define IDC_ED_QUANT_TABLE_INTER64      1827
-#define IDC_CHB_FONT_FAST               1827
 #define IDC_LBL_X264_DEBLOCK_ALPHA      1827
 #define IDC_BT_QUANT_TABLE_LOAD         1828
 #define IDC_CBX_ASPECT                  1828
