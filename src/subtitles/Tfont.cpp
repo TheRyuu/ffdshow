@@ -1723,6 +1723,8 @@ void Tfont::done(void)
  oldsub=NULL;
 }
 
+// TODO: move this to TsubtitleText.
+// TODO: Separate prefs which belongs to settings (except screen size) and props which belongs to stream. Mix them in TrenderedTextSubtitleWord
 TrenderedTextSubtitleWord* Tfont::newWord(const wchar_t *s,size_t slen,TrenderedSubtitleLines::TprintPrefs prefs,const TsubtitleWord *w,const LOGFONT &lf,bool trimRightSpaces)
 {
  ffstring s1(s);
@@ -1746,7 +1748,6 @@ TrenderedTextSubtitleWord* Tfont::newWord(const wchar_t *s,size_t slen,Trendered
     }
   }
 
- prefs.alignSSA=w->props.alignment;
  prefs.outlineWidth=w->props.outlineWidth==-1 ? fontSettings->outlineWidth : w->props.outlineWidth;
 
  unsigned int gdi_rendering_window = gdi_font_scale == 4 ? 4 : 16; // 4: OSD, 16: subtitles

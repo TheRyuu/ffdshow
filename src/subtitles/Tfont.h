@@ -85,7 +85,7 @@ public:
    unsigned int dx,dy,clipdy;
    bool isOSD;
    int xpos,ypos;
-   int align,alignSSA;
+   int align;
    int linespacing;
    unsigned int sizeDx,sizeDy;
    int posXpix;
