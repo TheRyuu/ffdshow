@@ -22,10 +22,11 @@ struct TpresetAudio :public Tpreset
 public:
  TpresetAudio(const char_t *IpresetName, const char_t *Ireg_child, int filtermode=0);
  virtual ~TpresetAudio() {}
- TpresetAudio& operator=(const TpresetAudio &src)
+ virtual Tpreset& operator=(const Tpreset &src0)
   {
-   Tpreset::operator =(src);
+   Tpreset::operator =(src0);
 
+   TpresetAudio &src = (TpresetAudio &)src0;
    preferredsfs=src.preferredsfs;
    dithering=src.dithering;noiseShaping=src.noiseShaping;
    decoderDRC = src.decoderDRC;
@@ -33,7 +34,7 @@ public:
 
    return *this;
   }
- virtual Tpreset* copy(void) {return new_copy(this);}
+ virtual Tpreset* copy(void) const {return new_copy(this);}
 
  int preferredsfs;
  int dithering,noiseShaping,decoderDRC,decoderDRCLevel;

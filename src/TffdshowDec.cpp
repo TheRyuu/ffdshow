@@ -347,6 +347,7 @@ STDMETHODIMP TffdshowDec::getPresets(Tpresets *presets2)
  return S_OK;
 }
 
+#if 1
 STDMETHODIMP TffdshowDec::setPresets(const Tpresets *presets2)
 {
     if (!presets2) return E_POINTER;
@@ -366,6 +367,27 @@ STDMETHODIMP TffdshowDec::setPresets(const Tpresets *presets2)
     }
     return S_OK;
 }
+#else
+STDMETHODIMP TffdshowDec::setPresets(const Tpresets *presets2)
+{
+    if (!presets2) return E_POINTER;
+    foreach (const Tpreset* src ,*presets2) {
+        bool copied;
+        copied = false;
+        foreach (Tpreset* dst, *presets) {
+            if(strncmp(dst->presetName, src->presetName, countof(dst->presetName)) == 0) {
+                *dst = *src;
+                copied = true;
+                break;
+            }
+        }
+        if (!copied) {
+            presets->push_back(src->copy());
+        }
+    }
+    return S_OK;
+}
+#endif
 
 STDMETHODIMP TffdshowDec::savePresets(void)
 {
