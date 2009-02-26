@@ -70,11 +70,11 @@ protected:
  Tpreset(const char_t *Ireg_child, const char_t *IpresetName, int Imin_order, int Ifiltermode);
  const char_t *reg_child;
  friend class TffdshowDec;
- Tpreset& operator =(const Tpreset &src);
+ virtual Tpreset& operator =(const Tpreset &src);
  TintStrColl *options;
  TfilterIDFFs *filters;
  int filtermode;
- template<class T> static T* new_copy(T *self)
+ template<class T> static T* new_copy(const T *self)
   {
    T *newpreset=new T(_l(""),_l(""),self->filtermode);
    *newpreset=*self;
@@ -82,7 +82,7 @@ protected:
   }
 public:
  virtual ~Tpreset();
- virtual Tpreset* copy(void)=0;
+ virtual Tpreset* copy(void) const=0;
  char_t presetName[MAX_PATH];
  void loadDefault(void);
  virtual void loadReg(void);

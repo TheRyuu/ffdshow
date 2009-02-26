@@ -22,13 +22,14 @@
 
 void TfilterIDFFs::copy(const TfilterIDFFs *orig)
 {
- const_iterator src=orig->begin();
- iterator dst=begin();
- for (;dst!=end();src++,dst++)
-  if (src->cfg->deepcopy)
-   dst->cfg->copy(src->cfg);
-  else
-   *dst->cfg=*src->cfg;
+    const_iterator src=orig->begin();
+    iterator dst=begin();
+    for (; dst != end() && src != orig->end() ; src++,dst++) {
+        if (src->cfg->deepcopy)
+            dst->cfg->copy(src->cfg);
+        else
+            *dst->cfg=*src->cfg;
+    }
 }
 
 void TfilterSettings::idffOnChange(const TfilterIDFF &idffs,Tfilters *filters,bool temporary) const

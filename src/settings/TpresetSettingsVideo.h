@@ -42,9 +42,10 @@ protected:
 public:
  TpresetVideo(const char_t *Ireg_child, const char_t *IpresetName, int filtermode);
  virtual ~TpresetVideo() {}
- TpresetVideo& operator=(const TpresetVideo &src)
+ virtual Tpreset& operator=(const Tpreset &src0)
   {
-   Tpreset::operator =(src);
+   Tpreset::operator =(src0);
+   TpresetVideo &src = (TpresetVideo &)src0;
    needOutcspsFix=src.needOutcspsFix;
    needGlobalFix=src.needGlobalFix;
 
@@ -77,7 +78,7 @@ public:
    return *this;
   }
 
- virtual Tpreset* copy(void) {return new_copy(this);}
+ virtual Tpreset* copy(void) const {return new_copy(this);}
  virtual void loadReg(void);
 
  int autoloadSize,autoloadSizeXmin,autoloadSizeXmax,autoloadSizeCond,autoloadSizeYmin,autoloadSizeYmax;
