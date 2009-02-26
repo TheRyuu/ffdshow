@@ -456,7 +456,7 @@ public:
 
 struct YUVcolor
 {
- unsigned int r,g,b;
+ uint32_t r,g,b;
  unsigned char Y;
  char U,V;
  YUVcolor(void) {Y=U=V=0;r=g=b=0;}
@@ -465,8 +465,8 @@ struct YUVcolor
 
 struct YUVcolorA
 {
- unsigned int r,g,b;
- unsigned int Y,U,V,A;
+ uint32_t r,g,b;
+ uint32_t Y,U,V,A;
  YUVcolorA(void) {Y=0;U=V=128;A=256;r=g=b=0;};
  YUVcolorA(YUVcolor yuv,unsigned int alpha=256);
  YUVcolorA(COLORREF rgb,unsigned int alpha=256);

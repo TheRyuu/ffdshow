@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  * Copyright (c) 2003-2006 Milan Cutka
  *               2007-2009 h.yamagata
  * subtitles fixing code from SubRip by MJQ (subrip@divx.pl)
@@ -30,6 +30,7 @@
 #include "IffdshowBase.h"
 #include "IffdshowDecVideo.h"
 #include "ffdebug.h"
+#include "TsubreaderMplayer.h"
 
 #define _L1(x) L##x
 
@@ -124,16 +125,16 @@ bool TtextFix::process(ffstring &text,ffstring &fixed)
        //ME LOVES MAKARONl! (MY TO SLYSELl. (!?) [cz; no others affected])
        if (in(TrChar(+1),_L1(".!?")) &&
            (TrChar(-1) == toupper(TrChar(-1))) &&
-           (TrChar(-1) != '.') && //»p?En.l.« at EoL case
+           (TrChar(-1) != '.') && //Â»pÅ™.n.l.Â« at EoL case
            (TrChar(-2) == toupper(TrChar(-2))))
         TakeI = true;
-       //UNlVERSAL, lnternet, lnspektion, lnternational;  not changed - ln?Eý [cz; no others affected]
+       //UNlVERSAL, lnternet, lnspektion, lnternational;  not changed - lnÄ›nÃ½ [cz; no others affected]
        //contain  : _l_ case [no Fr!], XlX, Xl_, _lX
        //           V.l. Lenin, l.V. Lenin (initials of names)
        //safely   : -lx OR -_lx; [lx OR [_lx; "Ix OR "_Ix
        //dangerous: .lxxx
        if (((TrChar(-1) == toupper(TrChar(-1))) &&
-         (TrChar(-1) != '.') && //»p?En.l.« case [cz; no others affected]
+         (TrChar(-1) != '.') && //Â»pÅ™.n.l.Â« case [cz; no others affected]
          (TrChar(+1) == toupper(TrChar(+1))))
          ||
          ((in(TrChar(-1),_L1(" #"))) && (TrChar(+1) == 'n') && (TrChar(+2) != '\354')))
@@ -279,12 +280,12 @@ bool TtextFix::process(ffstring &text,ffstring &fixed)
        if ((cfg.font.charset== ANSI_CHARSET) &&
            (in(TrChar(-1),_L1("\xe6\xf8\xe5"))))
         Takel = true;
-       //_AIways AIden BIb BIouznit CIaire ÈIov?E PIný SIožit UItra ZIost
+       //_AIways AIden BIb BIouznit CIaire ï¾ˆIov?E PInï£± SIoæž´t UItra ZIost
        if ((in(TrChar(-2),_L1(" \"-c#"))) && //'c' for Mac/Mc (McCIoy)
            (in(TrChar(-1),_L1("ABCDEFGHIJKLMNOPQRSTUVWXYZ\310\212\216\217\214"))) &&
            (in(TrChar(+1),_L1("abcdefghijklmnopqrstuvwxyz\341\350\351\354\355\363\362\232\371\375"))))
         Takel = true;
-       //Ihned leave, but Ihostejný --> lhostejný [cz; no others affected]
+       //Ihned leave, but IhostejnÃ½ --> lhostejnÃ½ [cz; no others affected]
        if ((TrChar(+1) == 'h') && (TrChar(+2) != 'n')) Takel = true;
        //_AI_ to _Al_ - name (Artificial Intelligence (AI) not awaited :-)
        if ((in(TrChar(-2),_L1(" \"#'"))) &&
@@ -305,7 +306,7 @@ bool TtextFix::process(ffstring &text,ffstring &fixed)
         }
        //_Iodic, Iolanthe/Iolite, Ion, Iowa, *Ioya* (but loyalty and more), Iota
        //vs Ioad Iocation Iook Iost Ioud Iove
-       //Ioch Iogický/Iogo Ioket Iomcovák Iopata Iovit
+       //Ioch IogickÃ½/Iogo Ioket IomcovÃ¡k Iopata Iovit
        //. Io... (Italian)
        if (!(in(TrChar(-2),_L1(".!?"))) &&
             (in(TrChar(-1),_L1(" \"#"))) && (TrChar(+1) == 'o') &&
@@ -315,7 +316,7 @@ bool TtextFix::process(ffstring &text,ffstring &fixed)
        if ((in(TrChar(-1),_L1(" \"#"))) && (TrChar(+1) == 'o') && (TrChar(+2) == 'd') &&
             !(in(TrChar(+3),_L1("aeio")) || TrChar(+3)=='\0'))
         Takel = true;
-       //Iondýnský [cz only, won't affect others]
+       //IondÃ½nskÃ½ [cz only, won't affect others]
        if ((in(TrChar(-1),_L1(" \"#"))) && (TrChar(+1) == 'o') && (TrChar(+2) == 'n') &&
             (TrChar(+3) == 'd'))
         Takel = true;
@@ -1394,7 +1395,8 @@ void TsubtitleText::prepareRendering(const TrenderedSubtitleLines::TprintPrefs &
                     int *ptempwidths=(int*)tempwidth.alloc((strlenp+1)*sizeof(int)*2); // *2 to work around Layer For Unicode on Windows 9x.
                     GetTextExtentExPointW(font.hdc,p,(int)strlenp,INT_MAX,&nfit,ptempwidths,&sz);
                     for (size_t x=0;x<strlenp;x++) {
-                        pwidths[charCount]=nextleft=(double)ptempwidths[x]*xscale/100+left;
+                        nextleft=(double)ptempwidths[x]*xscale/100+left;
+                        pwidths[charCount]=int(nextleft);
                         charCount++;
                     }
                 }
@@ -1461,7 +1463,7 @@ void TsubtitleText::prepareRendering(const TrenderedSubtitleLines::TprintPrefs &
                                 w.props.refResX=refResX;
                                 w.props.refResY=refResY;
 
-                                TrenderedTextSubtitleWord *rw=font.newWord(p,strlenp,prefs,&w,lf,w0+1==l->end());
+                                TrenderedTextSubtitleWord *rw = newWord(p, strlenp, prefs, &w, lf, font, w0+1==l->end());
                                 if (rw) line->push_back(rw);
                                 cx+=strlenp;
                             }
@@ -1484,7 +1486,7 @@ void TsubtitleText::prepareRendering(const TrenderedSubtitleLines::TprintPrefs &
                                 w.props.refResX=refResX;
                                 w.props.refResY=refResY;
 
-                                TrenderedTextSubtitleWord *rw=font.newWord(p,n,prefs,&w,lf,true);
+                                TrenderedTextSubtitleWord *rw = newWord(p, n, prefs, &w, lf, font, true);
                                 w.props.karaokeNewWord = false;
                                 w.props.karaokeStart += w.props.karaokeDuration;
                                 w.props.karaokeDuration = 0;
@@ -1512,5 +1514,85 @@ void TsubtitleText::prepareRendering(const TrenderedSubtitleLines::TprintPrefs &
                 }
             }
         }
+    }
+}
+
+// FIXME: This is a mixer of TprintPrefs and TSubtitleProps.
+TrenderedTextSubtitleWord* TsubtitleText::newWord(
+    const wchar_t *s,
+    size_t slen,
+    TrenderedSubtitleLines::TprintPrefs prefs,
+    const TsubtitleWord *w,
+    const LOGFONT &lf,
+    const Tfont &font,
+    bool trimRightSpaces)
+{
+    int gdi_font_scale = font.gdi_font_scale;
+    TfontSettings &fontSettings = prefs.fontSettings;
+    ffstring s1(s);
+    if (trimRightSpaces) {
+        while (s1.size() && s1.at(s1.size()-1)==' ')
+            s1.erase(s1.size()-1,1);
+    }
+
+    if (w->props.shadowDepth != -1)  {
+        // SSA/ASS/ASS2
+        if (w->props.shadowDepth == 0) {
+            prefs.shadowMode = 3;
+            prefs.shadowSize = 0;
+        } else {
+            prefs.shadowMode = 2;
+            prefs.shadowSize = -1 * w->props.shadowDepth;
+        }
+    }
+
+    prefs.outlineWidth=w->props.outlineWidth==-1 ? fontSettings.outlineWidth : w->props.outlineWidth;
+
+    unsigned int gdi_rendering_window = gdi_font_scale == 4 ? 4 : 16; // 4: OSD, 16: subtitles
+    if (prefs.shadowMode==-1) {
+        // OSD
+        prefs.shadowMode = fontSettings.shadowMode;
+        prefs.shadowSize = fontSettings.shadowSize;
+    }
+
+    YUVcolorA shadowYUV1;
+    if (!w->props.isColor) {
+        shadowYUV1=prefs.shadowYUV;
+        if (prefs.shadowMode<=1)
+            shadowYUV1.A = uint32_t(256*sqrt((double)shadowYUV1.A/256.0));
+    }
+    prefs.outlineBlur=w->props.blur ? true : false;
+
+    if (fontSettings.blur || (w->props.version >= TsubtitleParserSSA::ASS && lf.lfHeight > int(37 * gdi_font_scale))) // FIXME: messy. just trying to resemble vsfilter.
+        prefs.blur=true;
+    else
+        prefs.blur=false;
+
+    if (w->props.outlineWidth==-1 && fontSettings.opaqueBox) {
+        prefs.outlineWidth=0;
+        prefs.opaqueBox=true;
+    }
+
+    TrenderedTextSubtitleWord *rw;
+
+    double xscale=(double)w->props.get_xscale(fontSettings.xscale,prefs.sar,fontSettings.aspectAuto,fontSettings.overrideScale)*100.0/(double)w->props.get_yscale(fontSettings.yscale,prefs.sar,fontSettings.aspectAuto,fontSettings.overrideScale);
+    rw=new TrenderedTextSubtitleWord(font.hdc,
+                                 s1.c_str(),
+                                 slen,
+                                 w->props.isColor ? YUVcolorA(w->props.color,w->props.colorA) : prefs.yuvcolor,
+                                 w->props.isColor ? YUVcolorA(w->props.OutlineColour,w->props.OutlineColourA) : prefs.outlineYUV,
+                                 w->props.isColor ? YUVcolorA(w->props.ShadowColour,w->props.ShadowColourA) : shadowYUV1,
+                                 prefs,
+                                 lf,
+                                 xscale,
+                                 w->props,
+                                 gdi_font_scale,
+                                 gdi_rendering_window);
+
+    if (rw->dxCharY && rw->dyCharY) {
+        return rw;
+    } else {
+        delete rw;
+        return NULL;
     }
 }

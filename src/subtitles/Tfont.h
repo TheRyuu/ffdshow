@@ -318,7 +318,6 @@ private:
  int oldCsp;
  short matrix[5][5];
  void prepareC(TsubtitleText *sub,const TrenderedSubtitleLines::TprintPrefs &prefs,bool forceChange);
- TrenderedTextSubtitleWord* newWord(const wchar_t *s,size_t slen,TrenderedSubtitleLines::TprintPrefs prefs,const TsubtitleWord *w,const LOGFONT &lf,bool trimRightSpaces=false);
 public:
  friend struct TsubtitleText;
  TfontSettings *fontSettings;

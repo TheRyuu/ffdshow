@@ -321,6 +321,14 @@ public:
   {
    return lines.getMemorySize();
   }
+ TrenderedTextSubtitleWord* TsubtitleText::newWord(
+    const wchar_t *s,
+    size_t slen,
+    TrenderedSubtitleLines::TprintPrefs prefs,
+    const TsubtitleWord *w,
+    const LOGFONT &lf,
+    const Tfont &font,
+    bool trimRightSpaces);
 };
 
 struct TsubtitleTexts :public Tsubtitle,public std::vector< TsubtitleText* >
