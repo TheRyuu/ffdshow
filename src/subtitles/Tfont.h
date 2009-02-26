@@ -276,7 +276,7 @@ public:
  virtual size_t getMemorySize() const;
 };
 
-class TrenderedSubtitleLine : protected std::vector<TrenderedSubtitleWordBase*>
+class TrenderedSubtitleLine : public std::vector<TrenderedSubtitleWordBase*>
 {
  bool firstrun;
 public:

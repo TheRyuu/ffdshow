@@ -25,16 +25,15 @@
 
 Tsubreader::~Tsubreader()
 {
- clear();
+    clear();
 }
 void Tsubreader::clear(void)
 {
- for (iterator s=begin();s!=end();s++)
-  {
-   delete *s;
-   *s=NULL;
-  }
- std::vector<value_type>::clear();
+    foreach (Tsubtitle* &subtitle, *this) {
+        delete subtitle;
+        subtitle=NULL;
+    }
+    std::vector<value_type>::clear();
 }
 
 int Tsubreader::sub_autodetect(Tstream &fd,const Tconfig *config)
@@ -170,22 +169,27 @@ void Tsubreader::timesort(void)
 
 void Tsubreader::processDuration(const TsubtitlesSettings *cfg)
 {
- timesort();
- if (cfg->isMinDuration)
-  for (iterator s=begin();s!=end();s++)
-   {
-    REFERENCE_TIME minduration=0;
-    switch (cfg->minDurationType)
-     {
-      case 0:minduration=cfg->minDurationSubtitle;break;
-      case 1:minduration=cfg->minDurationLine*(*s)->numlines();break;
-      case 2:minduration=cfg->minDurationChar*(*s)->numchars();break;
-     }
-    minduration*=REF_SECOND_MULT/1000;
-    minduration=std::max(REFERENCE_TIME(1),minduration);
-    if ((*s)->stop-(*s)->start<minduration)
-     (*s)->stop=(*s)->start+minduration;
-   }
+    timesort();
+    if (cfg->isMinDuration) {
+        foreach (Tsubtitle* subtitle, *this) {
+          REFERENCE_TIME minduration = 0;
+          switch (cfg->minDurationType) {
+          case 0:
+              minduration = cfg->minDurationSubtitle;
+              break;
+          case 1:
+              minduration = cfg->minDurationLine * subtitle->numlines();
+              break;
+          case 2:
+              minduration  =cfg->minDurationChar * subtitle->numchars();
+              break;
+          }
+          minduration*=REF_SECOND_MULT/1000;
+          minduration=std::max(REFERENCE_TIME(1), minduration);
+          if (subtitle->stop - subtitle->start < minduration)
+           subtitle->stop = subtitle->start+minduration;
+       }
+    }
 }
 
 void Tsubreader::adjust_subs_time(float subtime)
@@ -243,9 +247,8 @@ void Tsubreader::setSubEnc(int &format,const Tstream &fs)
 
 void Tsubreader::onSeek(void)
 {
-    for(iterator i = begin() ; i != end() ; i++) {
-        (*i)->dropRenderedLines();
-    }
+    foreach (Tsubtitle *subtitle, *this)
+        subtitle->dropRenderedLines();
     processedSubtitleTexts.clear();
 }
 
@@ -447,8 +450,7 @@ void Tsubreader::processOverlap(void)
 size_t Tsubreader::getMemorySize() const
 {
     size_t memSize = 0;
-    for (const_iterator i = begin() ; i != end() ; i++) {
-        memSize += (*i)->getRenderedMemorySize();
-    }
+    foreach (const Tsubtitle* subtitle, *this)
+        memSize += subtitle->getRenderedMemorySize();
     return memSize;
 }

@@ -274,8 +274,8 @@ public:
  template<class Tval> void propagateProps(Tbase::iterator it,Tval TSubtitleProps::*offset,Tval val,Tbase::iterator itend)
   {
    for (;it!=itend;it++)
-    for (TsubtitleLine::iterator w=it->begin();w!=it->end();w++)
-     w->props.*offset=val;
+    foreach (TsubtitleWord &word, *it)
+     word.props.*offset=val;
   }
  template<class Tval> void propagateProps(Tbase::iterator it,Tval TSubtitleProps::*offset,Tval val)
   {

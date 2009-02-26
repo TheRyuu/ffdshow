@@ -76,6 +76,17 @@
  #endif
 #endif
 
+// BOOST
+#pragma warning (push)
+#pragma warning(disable: 4819)
+#include "boost/foreach.hpp"
+#pragma warning (pop)
+
+// BOOST_FOREACH is documented in
+// http://www.boost.org/doc/libs/1_38_0/doc/html/foreach.html
+#define foreach         BOOST_FOREACH
+#define reverse_foreach BOOST_REVERSE_FOREACH
+
 // ffdshow
 #include "inttypes.h"
 #include "dwstring.h"

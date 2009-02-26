@@ -40,8 +40,8 @@ strings TtextFixBase::getDicts(const Tconfig *cfg)
  _makepath_s(msk, countof(msk), NULL, cfg->pth, _l("dict\\*"), _l("dic"));
  strings dicts;
  findFiles(msk,dicts,false);
- for (strings::iterator d=dicts.begin();d!=dicts.end();d++)
-  d->erase(d->find('.'),MAX_PATH);
+ foreach (ffstring &dic, dicts)
+  dic.erase(dic.find('.'),MAX_PATH);
  return dicts;
 }
 
@@ -757,9 +757,8 @@ int TsubtitleFormat::Tssa::parse_parentheses(TparenthesesContents &contents, ffs
     arg.erase(second_paren - first_paren - 1);
     strings input_strings;
     strtok(arg.c_str(),_L1(","),input_strings);
-    for (strings::iterator s=input_strings.begin() ; s != input_strings.end() ; s++) {
-        contents.push_back(TparenthesesContent(*s));
-    }
+    foreach (ffstring &s, input_strings)
+        contents.push_back(TparenthesesContent(s));
     return second_paren + 1;
 }
 
@@ -1172,8 +1171,8 @@ void TsubtitleFormat::processMPL2(TsubtitleLine &line)
  if (line.empty() || !line[0]) return;
  if (line[0][0]=='/')
   {
-   for (TsubtitleLine::iterator w=line.begin();w!=line.end();w++)
-    w->props.italic=true;
+   foreach (TsubtitleWord &word,line)
+    word.props.italic=true;
    line[0].eraseLeft(1);
   }
 }
@@ -1220,21 +1219,21 @@ void TsubtitleLine::format(TsubtitleFormat &format,int sfmt, TsubtitleText &pare
   applyWords(format.processHTML(*this));
 }void TsubtitleLine::fix(TtextFix &fix)
 {
- for (Tbase::iterator w=this->begin();w!=this->end();w++)
-  w->fix(fix);
+ foreach (TsubtitleWord &word, *this)
+  word.fix(fix);
 }
 
 //================================= TsubtitleText ==================================
 void TsubtitleText::format(TsubtitleFormat &format)
 {
  int sfmt=subformat&Tsubreader::SUB_FORMATMASK;
- for (Tbase::iterator l=this->begin();l!=this->end();l++)
-  l->format(format,sfmt,*this);
+ foreach (TsubtitleLine &line, *this)
+  line.format(format,sfmt,*this);
  for (Tbase::iterator l=this->begin();l!=this->end();l++)
   format.processMicroDVD(*this,l);
  if (sfmt==Tsubreader::SUB_MPL2)
-  for (Tbase::iterator l=this->begin();l!=this->end();l++)
-   format.processMPL2(*l);
+  foreach (TsubtitleLine &line, *this)
+   format.processMPL2(line);
 }
 
 void TsubtitleText::prepareKaraoke(void)
@@ -1246,9 +1245,9 @@ void TsubtitleText::prepareKaraoke(void)
  TsubtitleText temp(subformat, defProps);
  TsubtitleLine tempLine;
  int wrapStyle = 0;
- for (Tbase::iterator l = this->begin() ; l != this->end() ; l++)
+ foreach (TsubtitleLine &line, *this)
   {
-   if (l->props.wrapStyle == 2 || l->lineBreakReason == 2)
+   if (line.props.wrapStyle == 2 || line.lineBreakReason == 2)
     {
      temp.push_back(tempLine);
      tempLine.clear();
@@ -1258,11 +1257,11 @@ void TsubtitleText::prepareKaraoke(void)
      tempLine.back().addTailSpace();
     }
 
-   tempLine.props = l->props;
-   for (TsubtitleLine::iterator w = l->begin() ; w != l->end() ; w++)
+   tempLine.props = line.props;
+   foreach (TsubtitleWord &word, line)
     {
-     wrapStyle = w->props.wrapStyle;
-     tempLine.push_back(*w);
+     wrapStyle = word.props.wrapStyle;
+     tempLine.push_back(word);
     }
   }
  if (!tempLine.empty())
@@ -1273,38 +1272,38 @@ void TsubtitleText::prepareKaraoke(void)
 
  REFERENCE_TIME karaokeStart = REFTIME_INVALID;
  REFERENCE_TIME karaokeDuration = 0;
- for (Tbase::iterator l = this->begin() ; l != this->end() ; l++)
+ foreach (TsubtitleLine &line, *this)
   {
    if (karaokeStart != REFTIME_INVALID)
     karaokeStart += karaokeDuration;
 
    karaokeDuration = 0;
-   for (TsubtitleLine::iterator w = l->begin() ; w != l->end() ; w++)
+   foreach (TsubtitleWord &word, line)
     {
      if (karaokeStart == REFTIME_INVALID)
-      karaokeStart = w->props.karaokeStart;
+      karaokeStart = word.props.karaokeStart;
      else
-      w->props.karaokeStart = karaokeStart;
+      word.props.karaokeStart = karaokeStart;
      
-     if (w->props.karaokeNewWord)
+     if (word.props.karaokeNewWord)
       {
        karaokeStart += karaokeDuration;
-       karaokeDuration = w->props.karaokeDuration;
+       karaokeDuration = word.props.karaokeDuration;
       }
-     w->props.karaokeDuration = karaokeDuration;
+     word.props.karaokeDuration = karaokeDuration;
     }
   }
 }
 
 void TsubtitleText::fix(TtextFix &fix)
 {
- for (Tbase::iterator l=this->begin();l!=this->end();l++)
-  l->fix(fix);
+ foreach (TsubtitleLine &line, *this)
+  line.fix(fix);
  if (stop == REFTIME_INVALID)
   {
    size_t len = 0;
-   for (Tbase::iterator l=this->begin();l!=this->end();l++)
-    len += l->strlen();
+   foreach (TsubtitleLine &line, *this)
+    len += line.strlen();
    stop = start + len * 900000;
   }
 }
@@ -1318,9 +1317,8 @@ void TsubtitleText::print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceCh
 void TsubtitleTexts::print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceChange,TrenderedSubtitleLines::TprintPrefs &prefs)
 {
     f.reset();
-    for (iterator i = begin() ; i != end() ; i++){
-        (*i)->print(time,wasseek,f,forceChange,prefs);
-    }
+    foreach (TsubtitleText *subtitleText, *this)
+        subtitleText->print(time,wasseek,f,forceChange,prefs);
     f.print(prefs);
 }
 

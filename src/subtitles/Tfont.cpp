@@ -1303,15 +1303,15 @@ void TrenderedSubtitleLine::print(int startx,int starty,const TrenderedSubtitleL
 }
 void TrenderedSubtitleLine::clear(void)
 {
- for (iterator w=begin();w!=end();w++)
-  delete *w;
+ foreach (TrenderedSubtitleWordBase *word, *this)
+  delete word;
  std::vector<value_type>::clear();
 }
 size_t TrenderedSubtitleLine::getMemorySize() const
 {
     size_t memSize = 0;
-    for (const_iterator w=begin();w!=end();w++)
-        memSize += (*w)->getMemorySize();
+    foreach (const TrenderedSubtitleWordBase *word, *this)
+        memSize += word->getMemorySize();
     return memSize;
 }
 
@@ -1575,10 +1575,10 @@ void TrenderedSubtitleLines::prepareKey(const_iterator i,ParagraphKey &pkey,unsi
 
 void TrenderedSubtitleLines::clear(void)
 {
- for (iterator l=begin();l!=end();l++)
+ foreach (TrenderedSubtitleLine *line, *this)
   {
-   (*l)->clear();
-   delete *l;
+   line->clear();
+   delete line;
   }
  reset();
 }
@@ -1586,9 +1586,8 @@ void TrenderedSubtitleLines::clear(void)
 size_t TrenderedSubtitleLines::getMemorySize() const
 {
     size_t memSize = 0;
-    for (const_iterator l=begin() ; l!= end() ; l++) {
-        memSize += (*l)->getMemorySize();
-    }
+    foreach (const TrenderedSubtitleLine *line, *this)
+        memSize += line->getMemorySize();
     return memSize;
 }
 
@@ -1814,9 +1813,8 @@ int Tfont::print(TsubtitleText *sub,bool forceChange,const TrenderedSubtitleLine
     prepareC(sub,prefs,forceChange);
     lines.print(prefs);
     int h = 0;
-    for (TrenderedSubtitleLines::iterator i = lines.begin() ; i != lines.end() ; i++){
-        h += (*i)->height();
-    }
+    foreach (TrenderedSubtitleLine *line, lines)
+        h += line->height();
     reset();
     return h;
 }
