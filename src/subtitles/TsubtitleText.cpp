@@ -20,7 +20,7 @@
 
 #include "stdafx.h"
 #include "TsubtitleText.h"
-#include "Tfont.h"
+#include "TrenderedTextSubtitleWord.h"
 #include "Tsubreader.h"
 #include "TsubtitlesSettings.h"
 #include "Tconfig.h"
@@ -312,7 +312,7 @@ bool TtextFix::process(ffstring &text,ffstring &fixed)
             (in(TrChar(-1),_L1(" \"#"))) && (TrChar(+1) == 'o') &&
             !(in(TrChar(+2),_L1("dlnwt .,!?"))))
         Takel = true;
-       //Iodn?Eetc. vs Iodate Ioderma Iodic Iodoethanol [cz only, won't affect others]
+       //Iodní etc. vs Iodate Ioderma Iodic Iodoethanol [cz only, won't affect others]
        if ((in(TrChar(-1),_L1(" \"#"))) && (TrChar(+1) == 'o') && (TrChar(+2) == 'd') &&
             !(in(TrChar(+3),_L1("aeio")) || TrChar(+3)=='\0'))
         Takel = true;

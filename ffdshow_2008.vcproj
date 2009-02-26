@@ -1521,6 +1521,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\subtitles\TrenderedTextSubtitleWord.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\subtitles\TrenderedTextSubtitleWord.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\subtitles\TspuImage.cpp"
 				>
 			</File>
