@@ -325,6 +325,12 @@ public:
     const LOGFONT &lf,
     const Tfont &font,
     bool trimRightSpaces);
+ virtual void clear()
+  {
+   lines.clear();
+   old_prefs.csp = 0;
+   erase(begin(), end());
+  }
 };
 
 struct TsubtitleTexts :public Tsubtitle,public std::vector< TsubtitleText* >
