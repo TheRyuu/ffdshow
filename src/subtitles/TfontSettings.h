@@ -50,6 +50,11 @@ public:
  int shadowSize, shadowMode; // Subtitles shadow
  int blur;
  static const char_t *shadowModes[];
+ /**
+  * gdi_font_scale: 4: for OSD. rendering_window is 4x5.
+  *                 8-16: for subtitles. 16:very sharp (slow), 12:soft & sharp, (moderately slow) 8:blurry (fast)
+  */
+ int gdi_font_scale;
 protected:
  virtual void getDefaultStr(int id,char_t *buf,size_t buflen);
 };

@@ -75,7 +75,7 @@ TimgFilterSubtitles::TsubPrintPrefs::TsubPrintPrefs(
 TimgFilterSubtitles::TimgFilterSubtitles(IffdshowBase *Ideci,Tfilters *Iparent):
  TimgFilter(Ideci,Iparent),
  // Initialize Tfont.
- font(Ideci,4),fontCC(Ideci,4),
+ font(Ideci),fontCC(Ideci),
  subs(Ideci),
  oldFontCfg((TfontSettingsSub*)malloc(sizeof(TfontSettingsSub))),
  oldFontCCcfg((TfontSettingsSub*)malloc(sizeof(TfontSettingsSub))),

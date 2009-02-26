@@ -301,10 +301,6 @@ public:
   }
  virtual bool isText(void) const {return true;}
 
- /**
-  *  prepareRendering
-  *  @return height of lines
-  */
  void prepareRendering(const TrenderedSubtitleLines::TprintPrefs &prefs, Tfont &font,bool forceChange);
  int get_splitdx_for_new_line(const TsubtitleWord &w,int splitdx,int dx, const TrenderedSubtitleLines::TprintPrefs &prefs, int gdi_font_scale, IffdshowBase *deci) const
   {

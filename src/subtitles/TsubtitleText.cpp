@@ -280,7 +280,7 @@ bool TtextFix::process(ffstring &text,ffstring &fixed)
        if ((cfg.font.charset== ANSI_CHARSET) &&
            (in(TrChar(-1),_L1("\xe6\xf8\xe5"))))
         Takel = true;
-       //_AIways AIden BIb BIouznit CIaire ﾈIov?E PIn SIo枴t UItra ZIost
+       //_AIways AIden BIb BIouznit CIaire ČIověk PIný SIožit UItra ZIost
        if ((in(TrChar(-2),_L1(" \"-c#"))) && //'c' for Mac/Mc (McCIoy)
            (in(TrChar(-1),_L1("ABCDEFGHIJKLMNOPQRSTUVWXYZ\310\212\216\217\214"))) &&
            (in(TrChar(+1),_L1("abcdefghijklmnopqrstuvwxyz\341\350\351\354\355\363\362\232\371\375"))))
@@ -1329,7 +1329,7 @@ void TsubtitleText::prepareRendering(const TrenderedSubtitleLines::TprintPrefs &
         old_prefs = prefs;
 
         unsigned int dx,dy;
-        unsigned int gdi_font_scale = font.gdi_font_scale;
+        unsigned int gdi_font_scale = prefs.fontSettings.gdi_font_scale;
         if (prefs.sizeDx && prefs.sizeDy) {
             dx=prefs.sizeDx;
             dy=prefs.sizeDy;
@@ -1527,7 +1527,7 @@ TrenderedTextSubtitleWord* TsubtitleText::newWord(
     const Tfont &font,
     bool trimRightSpaces)
 {
-    int gdi_font_scale = font.gdi_font_scale;
+    int gdi_font_scale = prefs.fontSettings.gdi_font_scale;
     TfontSettings &fontSettings = prefs.fontSettings;
     ffstring s1(s);
     if (trimRightSpaces) {

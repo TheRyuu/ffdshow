@@ -104,10 +104,10 @@ public:
    Rational sar;
    bool opaqueBox;
    int subformat;
-   REFERENCE_TIME rtStart;
    unsigned int xinput,yinput;
    TfontSettings fontSettings;
    YUVcolorA yuvcolor,outlineYUV,shadowYUV;
+   REFERENCE_TIME rtStart;
   };
  TrenderedSubtitleLines(void) {}
  TrenderedSubtitleLines(TrenderedSubtitleLine *ln) {push_back(ln);}
@@ -309,7 +309,6 @@ class Tfont
 {
 private:
  IffdshowBase *deci;
- unsigned int gdi_font_scale;
  TfontManager *fontManager;
  HDC hdc;HGDIOBJ oldFont;
  TrenderedSubtitleLines lines;
@@ -321,9 +320,7 @@ private:
 public:
  friend struct TsubtitleText;
  TfontSettings *fontSettings;
- // gdi_font_scale: 4: for OSD. rendering_window is 4x5.
- //                 8-16: for subtitles. 16:very sharp (slow), 12:soft & sharp, (moderately slow) 8:blurry (fast)
- Tfont(IffdshowBase *Ideci, unsigned int Igdi_font_scale);
+ Tfont(IffdshowBase *Ideci);
  ~Tfont();
  void init(const TfontSettings *IfontSettings);
  /**

@@ -1688,14 +1688,13 @@ void TrenderedVobsubWord::print(int startx, int starty /* not used */, unsigned 
 }
 
 //==================================== Tfont ====================================
-Tfont::Tfont(IffdshowBase *Ideci, unsigned int Igdi_font_scale):
+Tfont::Tfont(IffdshowBase *Ideci):
  fontManager(NULL),
  deci(Ideci),
  oldsub(NULL),
  hdc(NULL),oldFont(NULL),
  height(0),
- fontSettings((TfontSettings*)malloc(sizeof(TfontSettings))),
- gdi_font_scale(Igdi_font_scale)
+ fontSettings((TfontSettings*)malloc(sizeof(TfontSettings)))
 {
 }
 Tfont::~Tfont()
