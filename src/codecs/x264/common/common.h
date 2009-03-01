@@ -96,9 +96,10 @@ int64_t x264_mdate( void );
 char *x264_param2string( x264_param_t *p, int b_res );
 
 /* log */
-//void x264_log( x264_t *h, int i_level, const char *psz_fmt, ... );
+//void x264_log( x264_t *h, int i_level, const char *psz_fmt, ... ); /* ffdshow custom code */
 
 void x264_reduce_fraction( int *n, int *d );
+void x264_init_vlc_tables();
 
 static inline uint8_t x264_clip_uint8( int x )
 {
@@ -213,7 +214,7 @@ typedef struct
 #define X264_SCAN8_SIZE (6*8)
 #define X264_SCAN8_0 (4+1*8)
 
-static const int x264_scan8[16+2*4] =
+static const int x264_scan8[16+2*4+3] =
 {
     /* Luma */
     4+1*8, 5+1*8, 4+2*8, 5+2*8,
@@ -228,6 +229,12 @@ static const int x264_scan8[16+2*4] =
     /* Cr */
     1+4*8, 2+4*8,
     1+5*8, 2+5*8,
+
+    /* Luma DC */
+    4+5*8,
+
+    /* Chroma DC */
+    5+5*8, 6+5*8
 };
 /*
    0 1 2 3 4 5 6 7
@@ -236,7 +243,7 @@ static const int x264_scan8[16+2*4] =
  2   B B   L L L L
  3         L L L L
  4   R R   L L L L
- 5   R R
+ 5   R R   DyDuDv
 */
 
 typedef struct x264_ratecontrol_t   x264_ratecontrol_t;
@@ -331,6 +338,7 @@ struct x264_t
         int i_max_ref1;
         int i_delay;    /* Number of frames buffered for B reordering */
         int b_have_lowres;  /* Whether 1/2 resolution luma planes are being used */
+        int b_have_sub8x8_esa;
     } frames;
 
     /* current frame being encoded */
@@ -596,6 +604,8 @@ struct x264_t
         int     i_direct_frames[2];
 
     } stat;
+
+    void *scratch_buffer; /* for any temporary storage that doesn't want repeated malloc */
 
     /* CPU functions dependents */
     x264_predict_t      predict_16x16[4+3];

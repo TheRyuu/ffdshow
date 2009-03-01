@@ -532,7 +532,7 @@ void TcodecsPageAudio::fillCodecs(void)
 {
  if ((filterMode&IDFF_FILTERMODE_AUDIORAW)==0)
   {
-   static const int movie_mp23[]={IDFF_MOVIE_MPLAYER,IDFF_MOVIE_LIBMAD,IDFF_MOVIE_LAVC,IDFF_MOVIE_AUDX,0};
+   static const int movie_mp23[]={IDFF_MOVIE_MPLAYER,IDFF_MOVIE_LIBMAD,IDFF_MOVIE_LAVC,0};
    formats.push_back(Tformat(_l("MP3")         ,IDFF_mp3        ,movie_mp23,_l("MPEG-1 Audio Layer 3")));
    formats.push_back(Tformat(_l("MP1,MP2")     ,IDFF_mp2        ,movie_mp23,_l("MPEG-1 Audio Layer 1,2")));
    static const int movie_ac3[]={IDFF_MOVIE_LIBA52,IDFF_MOVIE_LAVC,0};

@@ -5,6 +5,7 @@
  *
  * Authors: Laurent Aimar <fenrir@via.ecp.fr>
  *          Loren Merritt <lorenm@u.washington.edu>
+ *          Jason Garrett-Glaser <darkshikari@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -1175,6 +1176,10 @@ static void x264_mb_analyse_inter_p8x8_mixed_ref( x264_t *h, x264_mb_analysis_t 
 
     a->l0.i_cost8x8 = a->l0.me8x8[0].cost + a->l0.me8x8[1].cost +
                       a->l0.me8x8[2].cost + a->l0.me8x8[3].cost;
+    /* P_8x8 ref0 has no ref cost */
+    if( !h->param.b_cabac && !(a->l0.me8x8[0].i_ref | a->l0.me8x8[1].i_ref |
+                               a->l0.me8x8[2].i_ref | a->l0.me8x8[3].i_ref) )
+        a->l0.i_cost8x8 -= REF_COST( 0, 0 ) * 4;
     h->mb.i_sub_partition[0] = h->mb.i_sub_partition[1] =
     h->mb.i_sub_partition[2] = h->mb.i_sub_partition[3] = D_L0_8x8;
 }
@@ -1182,7 +1187,7 @@ static void x264_mb_analyse_inter_p8x8_mixed_ref( x264_t *h, x264_mb_analysis_t 
 static void x264_mb_analyse_inter_p8x8( x264_t *h, x264_mb_analysis_t *a )
 {
     const int i_ref = a->l0.me16x16.i_ref;
-    const int i_ref_cost = REF_COST( 0, i_ref );
+    const int i_ref_cost = h->param.b_cabac || i_ref ? REF_COST( 0, i_ref ) : 0;
     uint8_t  **p_fref = h->mb.pic.p_fref[0][i_ref];
     uint8_t  **p_fenc = h->mb.pic.p_fenc;
     int i_mvc;
@@ -1221,11 +1226,12 @@ static void x264_mb_analyse_inter_p8x8( x264_t *h, x264_mb_analysis_t *a )
         m->cost += a->i_lambda * i_sub_mb_p_cost_table[D_L0_8x8];
     }
 
+    a->l0.i_cost8x8 = a->l0.me8x8[0].cost + a->l0.me8x8[1].cost +
+                      a->l0.me8x8[2].cost + a->l0.me8x8[3].cost;
     /* theoretically this should include 4*ref_cost,
      * but 3 seems a better approximation of cabac. */
-    a->l0.i_cost8x8 = a->l0.me8x8[0].cost + a->l0.me8x8[1].cost +
-                      a->l0.me8x8[2].cost + a->l0.me8x8[3].cost -
-                      REF_COST( 0, a->l0.me16x16.i_ref );
+    if( h->param.b_cabac )
+        a->l0.i_cost8x8 -= i_ref_cost;
     h->mb.i_sub_partition[0] = h->mb.i_sub_partition[1] =
     h->mb.i_sub_partition[2] = h->mb.i_sub_partition[3] = D_L0_8x8;
 }
@@ -2458,11 +2464,7 @@ void x264_macroblock_analyse( x264_t *h )
         {
             if( !h->mb.b_direct_auto_write )
                 x264_mb_mc( h );
-            if( h->mb.b_lossless )
-            {
-                /* chance of skip is too small to bother */
-            }
-            else if( analysis.i_mbrd )
+            if( analysis.i_mbrd )
             {
                 i_bskip_cost = ssd_mb( h );
                 /* 6 = minimum cavlc cost of a non-skipped MB */

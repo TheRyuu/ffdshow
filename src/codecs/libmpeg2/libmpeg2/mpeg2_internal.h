@@ -16,9 +16,9 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * You should have received a copy of the GNU General Public License along
+ * with mpeg2dec; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
 #ifndef LIBMPEG2_MPEG2_INTERNAL_H
@@ -50,6 +50,8 @@
 #define P_TYPE 2
 #define B_TYPE 3
 #define D_TYPE 4
+
+typedef struct mpeg2_decoder_s mpeg2_decoder_t;
 
 typedef void mpeg2_mc_fct (uint8_t *, const uint8_t *, int, int);
 
@@ -122,7 +124,6 @@ struct mpeg2_decoder_s {
 
     /* The width and height of the picture snapped to macroblock units */
     int width;
-    int height;
     int vertical_position_extension;
     int chroma_format;
 
@@ -156,13 +157,24 @@ struct mpeg2_decoder_s {
 
     int mpeg1;
 
-    /* XXX: stuff due to xine shit */
-    int8_t q_scale_type;
+    int8_t scaled[4];
 };
 
 typedef struct {
     mpeg2_fbuf_t fbuf;
 } fbuf_alloc_t;
+
+typedef struct {
+    int f_code[2][2];
+    int q_scale_type;
+    int intra_dc_precision;
+    int frame_pred_frame_dct;
+    int concealment_motion_vectors;
+    int intra_vlc_format;
+    int alternate_scan;
+    uint8_t quantizer_matrix[4][64];
+    int matrix_updates;
+} coding_t;
 
 struct mpeg2dec_s {
     mpeg2_decoder_t decoder;
@@ -204,6 +216,7 @@ struct mpeg2dec_s {
     mpeg2_picture_t new_picture;
     mpeg2_picture_t pictures[4];
     mpeg2_picture_t * picture;
+    coding_t coding;
     /*const*/ mpeg2_fbuf_t * fbuf[3];	/* 0: current fbuf, 1-2: prediction fbufs */
 
     fbuf_alloc_t fbuf_alloc[3];
@@ -225,9 +238,6 @@ struct mpeg2dec_s {
     int16_t display_offset_x, display_offset_y;
 
     int copy_matrix;
-    int8_t scaled[4]; /* XXX: MOVED */
-    //int8_t q_scale_type, scaled[4];
-    uint8_t quantizer_matrix[4][64];
     uint8_t new_quantizer_matrix[4][64];
 };
 
@@ -280,6 +290,13 @@ void mpeg2_idct_mmx_init (void);
 
 /* motion_comp.c */
 void mpeg2_mc_init (uint32_t accel);
+
+/* slice.c */
+void mpeg2_init_fbuf (mpeg2_decoder_t * decoder, mpeg2_sequence_t * sequence,
+		      mpeg2_picture_t * picture, coding_t * coding,
+		      uint8_t * current_fbuf[3],
+		      uint8_t * forward_fbuf[3], uint8_t * backward_fbuf[3]);
+void mpeg2_slice (mpeg2_decoder_t * decoder, int code, const uint8_t * buffer);
 
 typedef struct {
     mpeg2_mc_fct * put [8];

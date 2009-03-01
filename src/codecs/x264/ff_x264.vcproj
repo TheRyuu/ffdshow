@@ -416,10 +416,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\encoder\eval.c"
-				>
-			</File>
-			<File
 				RelativePath=".\encoder\macroblock.c"
 				>
 			</File>
@@ -685,7 +681,7 @@
 					</FileConfiguration>
 				</File>
 				<File
-					RelativePath=".\common\x86\cpu-32.asm"
+					RelativePath=".\common\x86\cpu-a.asm"
 					>
 					<FileConfiguration
 						Name="Debug|x64"
@@ -701,48 +697,6 @@
 						>
 						<Tool
 							Name="yasm"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath=".\common\x86\cpu-64.asm"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="yasm"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Debug|x64"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="yasm assembling $(InputPath)"
-							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DHAVE_MMX -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
-							Outputs="$(IntDir)\$(InputName).obj"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="yasm"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|x64"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="yasm assembling $(InputPath)"
-							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DHAVE_MMX -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
-							Outputs="$(IntDir)\$(InputName).obj"
 						/>
 					</FileConfiguration>
 				</File>

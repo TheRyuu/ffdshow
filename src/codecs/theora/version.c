@@ -4,6 +4,6 @@
 
 void __stdcall getVersion(char *ver,const char* *license)
 {
- strcpy(ver,VENDOR_STRING", build date "__DATE__" "__TIME__" ("COMPILER COMPILER_X64")");
+ strcpy(ver,VENDOR_STRING", build date "__DATE__" "__TIME__" ("COMPILER COMPILER_X64 COMPILER_INFO")");
  *license="Copyright (C) 2002-2006 Xiph.org Foundation";
 }

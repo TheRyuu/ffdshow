@@ -16,9 +16,9 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * You should have received a copy of the GNU General Public License along
+ * with mpeg2dec; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
 #include "config.h"
@@ -38,8 +38,8 @@
 #define W7 565  /* 2048 * sqrt (2) * cos (7 * pi / 16) */
 
 /* idct main entry point  */
-void (* mpeg2_idct_copy) (int16_t * block, uint8_t * dest, int stride);
-void (* mpeg2_idct_add) (int last, int16_t * block,
+void attribute_align_arg (* mpeg2_idct_copy) (int16_t * block, uint8_t * dest, int stride);
+void attribute_align_arg (* mpeg2_idct_add) (int last, int16_t * block,
 			 uint8_t * dest, int stride);
 
 /*

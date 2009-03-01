@@ -91,31 +91,18 @@ static const uint8_t x264_mb_type_fix[X264_MBTYPE_MAX] =
     B_DIRECT, B_L0_L0, B_L0_L1, B_L0_BI, B_L1_L0, B_L1_L1,
     B_L1_BI, B_BI_L0, B_BI_L1, B_BI_BI, B_8x8, B_SKIP
 };
-static const uint8_t x264_mb_type_list0_table[X264_MBTYPE_MAX][2] =
+static const uint8_t x264_mb_type_list_table[X264_MBTYPE_MAX][2][2] =
 {
-    {0,0}, {0,0}, {0,0}, {0,0}, /* INTRA */
-    {1,1},                  /* P_L0 */
-    {0,0},                  /* P_8x8 */
-    {1,1},                  /* P_SKIP */
-    {0,0},                  /* B_DIRECT */
-    {1,1}, {1,0}, {1,1},    /* B_L0_* */
-    {0,1}, {0,0}, {0,1},    /* B_L1_* */
-    {1,1}, {1,0}, {1,1},    /* B_BI_* */
-    {0,0},                  /* B_8x8 */
-    {0,0}                   /* B_SKIP */
-};
-static const uint8_t x264_mb_type_list1_table[X264_MBTYPE_MAX][2] =
-{
-    {0,0}, {0,0}, {0,0}, {0,0}, /* INTRA */
-    {0,0},                  /* P_L0 */
-    {0,0},                  /* P_8x8 */
-    {0,0},                  /* P_SKIP */
-    {0,0},                  /* B_DIRECT */
-    {0,0}, {0,1}, {0,1},    /* B_L0_* */
-    {1,0}, {1,1}, {1,1},    /* B_L1_* */
-    {1,0}, {1,1}, {1,1},    /* B_BI_* */
-    {0,0},                  /* B_8x8 */
-    {0,0}                   /* B_SKIP */
+    {{0,0},{0,0}}, {{0,0},{0,0}}, {{0,0},{0,0}}, {{0,0},{0,0}}, /* INTRA */
+    {{1,1},{0,0}},                                              /* P_L0 */
+    {{0,0},{0,0}},                                              /* P_8x8 */
+    {{1,1},{0,0}},                                              /* P_SKIP */
+    {{0,0},{0,0}},                                              /* B_DIRECT */
+    {{1,1},{0,0}}, {{1,0},{0,1}}, {{1,1},{0,1}},                /* B_L0_* */
+    {{0,1},{1,0}}, {{0,0},{1,1}}, {{0,1},{1,1}},                /* B_L1_* */
+    {{1,1},{1,0}}, {{1,0},{1,1}}, {{1,1},{1,1}},                /* B_BI_* */
+    {{0,0},{0,0}},                                              /* B_8x8 */
+    {{0,0},{0,0}}                                               /* B_SKIP */
 };
 
 #define IS_SUB4x4(type) ( (type ==D_L0_4x4)||(type ==D_L1_4x4)||(type ==D_BI_4x4))
@@ -351,35 +338,44 @@ static ALWAYS_INLINE uint32_t pack16to32_mask( int a, int b )
 }
 static ALWAYS_INLINE void x264_macroblock_cache_rect1( void *dst, int width, int height, uint8_t val )
 {
-    int dy;
     if( width == 4 )
     {
         uint32_t val2 = val * 0x01010101;
-        for( dy = 0; dy < height; dy++ )
-            ((uint32_t*)dst)[2*dy] = val2;
+                          ((uint32_t*)dst)[0] = val2;
+        if( height >= 2 ) ((uint32_t*)dst)[2] = val2;
+        if( height == 4 ) ((uint32_t*)dst)[4] = val2;
+        if( height == 4 ) ((uint32_t*)dst)[6] = val2;
     }
     else // 2
     {
         uint32_t val2 = val * 0x0101;
-        for( dy = 0; dy < height; dy++ )
-            ((uint16_t*)dst)[4*dy] = val2;
+                          ((uint16_t*)dst)[ 0] = val2;
+        if( height >= 2 ) ((uint16_t*)dst)[ 4] = val2;
+        if( height == 4 ) ((uint16_t*)dst)[ 8] = val2;
+        if( height == 4 ) ((uint16_t*)dst)[12] = val2;
     }
 }
 static ALWAYS_INLINE void x264_macroblock_cache_rect4( void *dst, int width, int height, uint32_t val )
 {
-    int dy, dx;
+    int dy;
     if( width == 1 || WORD_SIZE < 8 )
     {
         for( dy = 0; dy < height; dy++ )
-            for( dx = 0; dx < width; dx++ )
-                ((uint32_t*)dst)[dx+8*dy] = val;
+        {
+                             ((uint32_t*)dst)[8*dy+0] = val;
+            if( width >= 2 ) ((uint32_t*)dst)[8*dy+1] = val;
+            if( width == 4 ) ((uint32_t*)dst)[8*dy+2] = val;
+            if( width == 4 ) ((uint32_t*)dst)[8*dy+3] = val;
+        }
     }
     else
     {
         uint64_t val64 = val + ((uint64_t)val<<32);
         for( dy = 0; dy < height; dy++ )
-            for( dx = 0; dx < width/2; dx++ )
-                ((uint64_t*)dst)[dx+4*dy] = val64;
+        {
+                             ((uint64_t*)dst)[4*dy+0] = val64;
+            if( width == 4 ) ((uint64_t*)dst)[4*dy+1] = val64;
+        }
     }
 }
 #define x264_macroblock_cache_mv_ptr(a,x,y,w,h,l,mv) x264_macroblock_cache_mv(a,x,y,w,h,l,*(uint32_t*)mv)
@@ -423,18 +419,6 @@ static ALWAYS_INLINE int array_non_zero_int_c( void *v, int i_count )
             if( x[i] ) return 1;
         return 0;
     }
-}
-/* This function and its MMX version only work on arrays of size 16 */
-static ALWAYS_INLINE int array_non_zero_count( int16_t *v )
-{
-    int i;
-    int i_nz;
-
-    for( i = 0, i_nz = 0; i < 16; i++ )
-        if( v[i] )
-            i_nz++;
-
-    return i_nz;
 }
 static inline int x264_mb_predict_intra4x4_mode( x264_t *h, int idx )
 {

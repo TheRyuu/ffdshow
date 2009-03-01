@@ -16,9 +16,9 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * You should have received a copy of the GNU General Public License along
+ * with mpeg2dec; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
 #ifndef LIBMPEG2_MPEG2_H
@@ -116,7 +116,6 @@ typedef struct mpeg2_info_s {
 } mpeg2_info_t;
 
 typedef struct mpeg2dec_s mpeg2dec_t;
-typedef struct mpeg2_decoder_s mpeg2_decoder_t;
 
 typedef enum {
     STATE_BUFFER = 0,
@@ -176,9 +175,6 @@ void mpeg2_slice_region (mpeg2dec_t * mpeg2dec, int start, int end);
 
 void mpeg2_tag_picture (mpeg2dec_t * mpeg2dec, uint32_t tag, uint32_t tag2);
 
-void mpeg2_init_fbuf (mpeg2_decoder_t * decoder, uint8_t * current_fbuf[3],
-		      uint8_t * forward_fbuf[3], uint8_t * backward_fbuf[3]);
-void mpeg2_slice (mpeg2_decoder_t * decoder, int code, const uint8_t * buffer);
 int mpeg2_guess_aspect (const mpeg2_sequence_t * sequence,
 			unsigned int * pixel_width,
 			unsigned int * pixel_height);

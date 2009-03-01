@@ -31,13 +31,7 @@
 #include "compiler.h"
 //#include "ffdebug.h"
 
-#ifdef UNICODE
- #define UNICODE_BUILD "unicode"
-#else
- #define UNICODE_BUILD "ansi"
-#endif
-
-const char_t *FFDSHOW_VER=_l(__DATE__) _l(" ") _l(__TIME__) _l(" (") _l(COMPILER) _l(COMPILER_X64) _l(", ") _l(UNICODE_BUILD) _l(")");
+const char_t *FFDSHOW_VER=_l(__DATE__) _l(" ") _l(__TIME__) _l(" (") _l(COMPILER) _l(COMPILER_X64) _l(", ") _l(UNICODE_BUILD) _l(COMPILER_INFO) _l(")");
 #undef COMPILER
 #undef COMPILER_SSE
 #undef COMPILER_SSE2

@@ -181,8 +181,3 @@ typedef struct {
     #pragma message("STREAMS.H included TWICE")
     #endif
 #endif // __STREAMS__
-
-
-
-
-

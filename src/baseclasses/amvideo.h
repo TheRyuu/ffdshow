@@ -430,4 +430,3 @@ typedef struct _AM_FRAMESTEP_STEP
 }
 #endif // __cplusplus
 #endif // __AMVIDEO__
-

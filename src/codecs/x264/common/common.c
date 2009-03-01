@@ -247,7 +247,7 @@ int x264_param_parse( x264_param_t *p, const char *name, const char *value )
         if( b_error )
         {
             char *buf = strdup(value);
-            char *tok, *saveptr, *init;
+            char *tok, UNUSED *saveptr, *init;
             b_error = 0;
             p->cpu = 0;
             for( init=buf; (tok=strtok_r(init, ",", &saveptr)); init=NULL )
@@ -589,7 +589,7 @@ int x264_param_parse( x264_param_t *p, const char *name, const char *value )
 /****************************************************************************
  * x264_log:
  ****************************************************************************/
-/*
+/* ffdshow custom code
 void x264_log( x264_t *h, int i_level, const char *psz_fmt, ... )
 {
     if( i_level <= h->param.i_log_level )
@@ -600,7 +600,7 @@ void x264_log( x264_t *h, int i_level, const char *psz_fmt, ... )
         va_end( arg );
     }
 }
-*/
+*/ /* ffdshow custom code */
 static void x264_log_default( void *p_unused, int i_level, const char *psz_fmt, va_list arg )
 {
     char *psz_prefix;

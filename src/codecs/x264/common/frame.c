@@ -5,6 +5,7 @@
  *
  * Authors: Laurent Aimar <fenrir@via.ecp.fr>
  *          Loren Merritt <lorenm@u.washington.edu>
+ *          Jason Garrett-Glaser <darkshikari@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -61,10 +62,18 @@ x264_frame_t *x264_frame_new( x264_t *h )
     }
     /* all 4 luma planes allocated together, since the cacheline split code
      * requires them to be in-phase wrt cacheline alignment. */
-    CHECKED_MALLOC( frame->buffer[0], 4*luma_plane_size);
-    for( i = 0; i < 4; i++ )
-        frame->filtered[i] = frame->buffer[0] + i*luma_plane_size + frame->i_stride[0] * i_padv + PADH;
-    frame->plane[0] = frame->filtered[0];
+    if( h->param.analyse.i_subpel_refine )
+    {
+        CHECKED_MALLOC( frame->buffer[0], 4*luma_plane_size);
+        for( i = 0; i < 4; i++ )
+            frame->filtered[i] = frame->buffer[0] + i*luma_plane_size + frame->i_stride[0] * i_padv + PADH;
+        frame->plane[0] = frame->filtered[0];
+    }
+    else
+    {
+        CHECKED_MALLOC( frame->buffer[0], luma_plane_size);
+        frame->plane[0] = frame->buffer[0] + frame->i_stride[0] * i_padv + PADH;
+    }
 
     if( h->frames.b_have_lowres )
     {
@@ -90,7 +99,7 @@ x264_frame_t *x264_frame_new( x264_t *h )
     if( h->param.analyse.i_me_method >= X264_ME_ESA )
     {
         CHECKED_MALLOC( frame->buffer[3],
-                        2 * frame->i_stride[0] * (frame->i_lines[0] + 2*i_padv) * sizeof(uint16_t) );
+                        frame->i_stride[0] * (frame->i_lines[0] + 2*i_padv) * sizeof(uint16_t) << h->frames.b_have_sub8x8_esa );
         frame->integral = (uint16_t*)frame->buffer[3] + frame->i_stride[0] * i_padv + PADH;
     }
 
@@ -124,7 +133,11 @@ x264_frame_t *x264_frame_new( x264_t *h )
             CHECKED_MALLOC( frame->i_row_satds[i][j], i_lines/16 * sizeof(int) );
 
     if( h->param.rc.i_aq_mode )
+    {
         CHECKED_MALLOC( frame->f_qp_offset, h->mb.i_mb_count * sizeof(float) );
+        if( h->frames.b_have_lowres )
+            CHECKED_MALLOC( frame->i_inv_qscale_factor, h->mb.i_mb_count * sizeof(uint16_t) );
+    }
 
     x264_pthread_mutex_init( &frame->mutex, NULL );
     x264_pthread_cond_init( &frame->cv, NULL );
@@ -153,6 +166,7 @@ void x264_frame_delete( x264_frame_t *frame )
             x264_free( frame->lowres_mv_costs[j][i] );
         }
     x264_free( frame->f_qp_offset );
+    x264_free( frame->i_inv_qscale_factor );
     x264_free( frame->i_intra_cost );
     x264_free( frame->i_row_bits );
     x264_free( frame->i_row_qp );

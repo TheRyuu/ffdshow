@@ -64,7 +64,7 @@ const char_t* TvideoCodecX264::getName(void) const
  return codecName;
 }
 
-LRESULT __declspec(align(16))(TvideoCodecX264::beginCompress(int cfgcomode,int csp,const Trect &r))
+LRESULT TvideoCodecX264::beginCompress(int cfgcomode,int csp,const Trect &r)
 {
  x264_param_t param;
  x264_param_default(&param);
@@ -235,7 +235,7 @@ void TvideoCodecX264::fill_x264_pict(x264_frame_t *out,const TffPict *in)
  out->i_type=X264_TYPE_AUTO;
  out->i_qpplus1=0;
 }
-HRESULT __declspec(align(16))(TvideoCodecX264::compress(const TffPict &pict,TencFrameParams &params))
+HRESULT TvideoCodecX264::compress(const TffPict &pict,TencFrameParams &params)
 {
  int i_nal;
  x264_nal_t *nal;

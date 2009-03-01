@@ -4,9 +4,8 @@
 // Desc: DirectShow base classes - implements helper classes for building
 //       multimedia filters.
 //
-// Copyright (c) 1992-2002 Microsoft Corporation.  All rights reserved.
+// Copyright (c) 1992-2001 Microsoft Corporation.  All rights reserved.
 //------------------------------------------------------------------------------
-
 
 #include "stdafx.h"
 
@@ -18,7 +17,7 @@
 // Enlarged integer divide - 64-bits / 32-bits > 32-bits
 //
 
-#if !defined(_X86_) || defined(__GNUC__)
+#if !defined(_X86_) || defined(__GNUC__) /*ffdshow custom*/
 
 #define LLtoU64(x) (*(unsigned __int64*)(void*)(&(x)))
 
@@ -680,7 +679,7 @@ LONGLONG WINAPI llMulDiv(LONGLONG a, LONGLONG b, LONGLONG c, LONGLONG d)
     /*  This will catch c == 0 and overflow */
     if (uc <= p[1].QuadPart) {
         return bSign ? (LONGLONG)0x8000000000000000LL :
-                       (LONGLONG)0x7FFFFFFFFFFFFFFFLL;
+                       (LONGLONG)0x7FFFFFFFFFFFFFFFLL; /*ffdshow custom*/
     }
 
     DWORDLONG ullResult;
@@ -841,7 +840,7 @@ LONGLONG WINAPI Int64x32Div32(LONGLONG a, LONG b, LONG c, LONG d)
     /*  This will catch c == 0 and overflow */
     if (uc <= p1) {
         return bSign ? (LONGLONG)0x8000000000000000LL :
-                       (LONGLONG)0x7FFFFFFFFFFFFFFFLL;
+                       (LONGLONG)0x7FFFFFFFFFFFFFFFLL; /*ffdshow custom*/
     }
 
     /*  Do the division */
@@ -991,7 +990,7 @@ STDAPI AMGetWideString(LPCWSTR psz, LPWSTR *ppszReturn)
     if (*ppszReturn == NULL) {
        return E_OUTOFMEMORY;
     }
-    CopyMemory(*ppszReturn, psz, nameLen);
+    CopyMemory(*ppszReturn, psz, nameLen); /*ffdshow custom*/
     return NOERROR;
 }
 
@@ -1107,7 +1106,7 @@ HRESULT AmGetLastErrorToHResult()
     }
 }
 
-IUnknown* QzAtlComPtrAssign(IUnknown** pp, IUnknown* lp)
+IUnknown* QzAtlComPtrAssign(IUnknown** pp, IUnknown* lp) /*ffdshow custom*/
 {
     if (lp != NULL)
         lp->AddRef();

@@ -1260,7 +1260,7 @@ const CodecID TglobalSettingsDecAudio::c_mp123[IDFF_MOVIE_MAX+1]=
  CODEC_ID_NONE,
  CODEC_ID_NONE,
  CODEC_ID_NONE,
- CODEC_ID_AUDX
+ CODEC_ID_NONE
 };
 const CodecID TglobalSettingsDecAudio::c_ac3[IDFF_MOVIE_MAX+1]=
 {

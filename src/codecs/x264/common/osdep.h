@@ -34,11 +34,13 @@
 #include <inttypes.h>
 #endif
 
+/* ffdshow custom code */
 #ifdef __GNUC__
  #define x264_log(...)
 #else
  #define x264_log(x)
 #endif
+/* ffdshow custom code */
 
 #ifdef _WIN32
 #include <io.h>    // _setmode()
@@ -53,6 +55,7 @@
 #define fseek _fseeki64
 #define ftell _ftelli64
 #define isfinite _finite
+#define strtok_r strtok_s
 #define _CRT_SECURE_NO_DEPRECATE
 #define X264_VERSION "" // no configure script for msvc
 #endif
@@ -63,13 +66,14 @@
 #if defined(_MSC_VER) || defined(SYS_SunOS) || defined(SYS_MACOSX)
 #define sqrtf sqrt
 #endif
-#if defined(_WIN32) || defined(_WIN64)
+#if defined(_WIN32) || defined(_WIN64) /* ffdshow custom code */
 #define rename(src,dst) (unlink(dst), rename(src,dst)) // POSIX says that rename() removes the destination, but win32 doesn't.
 #ifndef strtok_r
 #define strtok_r(str,delim,save) strtok(str,delim)
 #endif
 #endif
 
+/* ffdshow custom code */
 #if defined(__GNUC__) && (__GNUC__ > 4 || __GNUC__ == 4 && __GNUC_MINOR__ > 1)
 #   define GCC420_OR_NEWER 1
 #else
@@ -83,6 +87,7 @@
 #    define attribute_align_arg
 #endif
 #endif
+/* ffdshow custom code */
 
 #ifdef _MSC_VER
 #define DECLARE_ALIGNED( var, n ) __declspec(align(n)) var
@@ -186,6 +191,22 @@ static ALWAYS_INLINE intptr_t endian_fix( intptr_t x )
         return endian_fix32(x>>32) + ((uint64_t)endian_fix32(x)<<32);
     else
         return endian_fix32(x);
+}
+#endif
+
+#if defined(__GNUC__) && (__GNUC__ > 3 || __GNUC__ == 3 && __GNUC_MINOR__ > 3)
+#define x264_clz(x) __builtin_clz(x)
+#else
+static int ALWAYS_INLINE x264_clz( uint32_t x )
+{
+    static uint8_t lut[16] = {4,3,2,2,1,1,1,1,0,0,0,0,0,0,0,0};
+    int y, z = ((x - 0x10000) >> 27) & 16;
+    x >>= z^16;
+    z += y = ((x - 0x100) >> 28) & 8;
+    x >>= y^8;
+    z += y = ((x - 0x10) >> 29) & 4;
+    x >>= y^4;
+    return z + lut[x];
 }
 #endif
 

@@ -5,6 +5,7 @@
  *
  * Authors: Laurent Aimar <fenrir@via.ecp.fr>
  *          Loren Merritt <lorenm@u.washington.edu>
+ *          Jason Garrett-Glaser <darkshikari@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -410,6 +411,7 @@ static int x264_validate_parameters( x264_t *h )
         h->param.analyse.b_fast_pskip = 0;
         h->param.analyse.i_noise_reduction = 0;
         h->param.analyse.f_psy_rd = 0;
+        h->param.i_bframe = 0;
         /* 8x8dct is not useful at all in CAVLC lossless */
         if( !h->param.b_cabac )
             h->param.analyse.b_transform_8x8 = 0;
@@ -441,7 +443,11 @@ static int x264_validate_parameters( x264_t *h )
     if( h->param.i_keyint_max <= 0 )
         h->param.i_keyint_max = 1;
     h->param.i_keyint_min = x264_clip3( h->param.i_keyint_min, 1, h->param.i_keyint_max/2+1 );
-
+    if( !h->param.analyse.i_subpel_refine && h->param.analyse.i_direct_mv_pred > X264_DIRECT_PRED_SPATIAL )
+    {
+        x264_log( h, X264_LOG_WARNING, "subme=0 + direct=temporal is not supported\n" );
+        h->param.analyse.i_direct_mv_pred = X264_DIRECT_PRED_SPATIAL;
+    }
     h->param.i_bframe = x264_clip3( h->param.i_bframe, 0, X264_BFRAME_MAX );
     h->param.i_bframe_bias = x264_clip3( h->param.i_bframe_bias, -90, 100 );
     h->param.b_bframe_pyramid = h->param.b_bframe_pyramid && h->param.i_bframe > 1;
@@ -474,7 +480,7 @@ static int x264_validate_parameters( x264_t *h )
     if( h->param.analyse.i_me_method == X264_ME_TESA &&
         (h->mb.b_lossless || h->param.analyse.i_subpel_refine <= 1) )
         h->param.analyse.i_me_method = X264_ME_ESA;
-    h->param.analyse.i_subpel_refine = x264_clip3( h->param.analyse.i_subpel_refine, 1, 9 );
+    h->param.analyse.i_subpel_refine = x264_clip3( h->param.analyse.i_subpel_refine, 0, 9 );
     h->param.analyse.b_mixed_references = h->param.analyse.b_mixed_references && h->param.i_frame_reference > 1;
     h->param.analyse.inter &= X264_ANALYSE_PSUB16x16|X264_ANALYSE_PSUB8x8|X264_ANALYSE_BSUB16x16|
                               X264_ANALYSE_I4x4|X264_ANALYSE_I8x8;
@@ -511,7 +517,8 @@ static int x264_validate_parameters( x264_t *h )
         h->mb.i_psy_trellis = 0;
     h->param.analyse.i_chroma_qp_offset = x264_clip3(h->param.analyse.i_chroma_qp_offset, -12, 12);
     h->param.rc.i_aq_mode = x264_clip3( h->param.rc.i_aq_mode, 0, 1 );
-    if( h->param.rc.f_aq_strength <= 0 )
+    h->param.rc.f_aq_strength = x264_clip3f( h->param.rc.f_aq_strength, 0, 3 );
+    if( h->param.rc.f_aq_strength == 0 )
         h->param.rc.i_aq_mode = 0;
     h->param.analyse.i_noise_reduction = x264_clip3( h->param.analyse.i_noise_reduction, 0, 1<<16 );
 
@@ -707,6 +714,7 @@ x264_t *x264_encoder_open   ( x264_param_t *param )
           || h->param.i_bframe_adaptive
           || h->param.b_pre_scenecut );
     h->frames.b_have_lowres |= (h->param.rc.b_stat_read && h->param.rc.i_vbv_buffer_size > 0);
+    h->frames.b_have_sub8x8_esa = !!(h->param.analyse.inter & X264_ANALYSE_PSUB8x8);
 
     h->frames.i_last_idr = - h->param.i_keyint_max;
     h->frames.i_input    = 0;
@@ -724,7 +732,8 @@ x264_t *x264_encoder_open   ( x264_param_t *param )
     x264_predict_8x8c_init( h->param.cpu, h->predict_8x8c );
     x264_predict_8x8_init( h->param.cpu, h->predict_8x8 );
     x264_predict_4x4_init( h->param.cpu, h->predict_4x4 );
-
+    if( !h->param.b_cabac );
+        x264_init_vlc_tables();
     x264_pixel_init( h->param.cpu, &h->pixf );
     x264_dct_init( h->param.cpu, &h->dctf );
     x264_zigzag_init( h->param.cpu, &h->zigzagf, h->param.b_interlaced );
@@ -743,6 +752,9 @@ x264_t *x264_encoder_open   ( x264_param_t *param )
             continue;
         if( !strcmp(x264_cpu_names[i].name, "SSE3")
             && (param->cpu & X264_CPU_SSSE3 || !(param->cpu & X264_CPU_CACHELINE_64)) )
+            continue;
+        if( !strcmp(x264_cpu_names[i].name, "SSE4.1")
+            && (param->cpu & X264_CPU_SSE42) )
             continue;
         if( (param->cpu & x264_cpu_names[i].flags) == x264_cpu_names[i].flags
             && (!i || x264_cpu_names[i].flags != x264_cpu_names[i-1].flags) )
@@ -814,10 +826,13 @@ int x264_encoder_reconfig( x264_t *h, x264_param_t *param )
     COPY( analyse.intra );
     COPY( analyse.inter );
     COPY( analyse.i_direct_mv_pred );
-    COPY( analyse.i_me_method );
-    COPY( analyse.i_me_range );
+    /* Scratch buffer prevents me_range from being increased for esa/tesa */
+    if( h->param.analyse.i_me_method < X264_ME_ESA || param->analyse.i_me_range < h->param.analyse.i_me_range )
+        COPY( analyse.i_me_range );
     COPY( analyse.i_noise_reduction );
-    COPY( analyse.i_subpel_refine );
+    /* We can't switch out of subme=0 during encoding. */
+    if( h->param.analyse.i_subpel_refine )
+        COPY( analyse.i_subpel_refine );
     COPY( analyse.i_trellis );
     COPY( analyse.b_chroma_me );
     COPY( analyse.b_dct_decimate );
@@ -826,6 +841,10 @@ int x264_encoder_reconfig( x264_t *h, x264_param_t *param )
     COPY( analyse.f_psy_rd );
     COPY( analyse.f_psy_trellis );
     // can only twiddle these if they were enabled to begin with:
+    if( h->param.analyse.i_me_method >= X264_ME_ESA || param->analyse.i_me_method < X264_ME_ESA )
+        COPY( analyse.i_me_method );
+    if( h->param.analyse.i_me_method >= X264_ME_ESA && !h->frames.b_have_sub8x8_esa )
+        h->param.analyse.inter &= ~X264_ANALYSE_PSUB8x8;
     if( h->pps->b_transform_8x8_mode )
         COPY( analyse.b_transform_8x8 );
     if( h->frames.i_max_ref1 > 1 )
@@ -997,8 +1016,11 @@ static void x264_fdec_filter_row( x264_t *h, int mb_y )
     if( b_hpel )
     {
         x264_frame_expand_border( h, h->fdec, min_y, b_end );
-        x264_frame_filter( h, h->fdec, min_y, b_end );
-        x264_frame_expand_border_filtered( h, h->fdec, min_y, b_end );
+        if( h->param.analyse.i_subpel_refine )
+        {
+            x264_frame_filter( h, h->fdec, min_y, b_end );
+            x264_frame_expand_border_filtered( h, h->fdec, min_y, b_end );
+        }
     }
 
     if( h->param.i_threads > 1 && h->fdec->b_kept_as_ref )
@@ -1030,7 +1052,7 @@ static void x264_fdec_filter_row( x264_t *h, int mb_y )
             x264_pixel_ssim_wxh( &h->pixf,
                 h->fdec->plane[0] + 2+min_y*h->fdec->i_stride[0], h->fdec->i_stride[0],
                 h->fenc->plane[0] + 2+min_y*h->fenc->i_stride[0], h->fenc->i_stride[0],
-                h->param.i_width-2, max_y-min_y );
+                h->param.i_width-2, max_y-min_y, h->scratch_buffer );
     }
 }
 
@@ -1298,6 +1320,12 @@ static int x264_slices_write( x264_t *h )
 {
     int i_frame_size;
 
+#ifdef HAVE_MMX
+    /* Misalign mask has to be set separately for each thread. */
+    if( h->param.cpu&X264_CPU_SSE_MISALIGN )
+        x264_cpu_mask_misalign_sse();
+#endif
+
 #if VISUALIZE
     if( h->param.b_visualize )
         x264_visualize_init( h );
@@ -1331,9 +1359,9 @@ static int x264_slices_write( x264_t *h )
  *       B      5   2*4
  *       B      6   2*5
  ****************************************************************************/
-int attribute_align_arg x264_encoder_encode( x264_t *h,
+int attribute_align_arg x264_encoder_encode( x264_t *h, /* ffdshow custom code */
                              x264_nal_t **pp_nal, int *pi_nal,
-                             x264_fill_picture_t pic_in_fill,void *pic_in_fill_data,
+                             x264_fill_picture_t pic_in_fill,void *pic_in_fill_data, /* ffdshow custom code */
                              x264_picture_t *pic_out )
 {
     x264_t *thread_current, *thread_prev, *thread_oldest;
@@ -1370,13 +1398,13 @@ int attribute_align_arg x264_encoder_encode( x264_t *h,
     *pp_nal = NULL;
 
     /* ------------------- Setup new frame from picture -------------------- */
-    if( pic_in_fill != NULL )
+    if( pic_in_fill != NULL ) /* ffdshow custom code */
     {
         /* 1: Copy the picture to a frame and move it to a buffer */
         x264_frame_t *fenc = x264_frame_pop_unused( h );
 
-        //x264_frame_copy_picture( h, fenc, pic_in );
-        pic_in_fill(fenc,pic_in_fill_data);
+        //x264_frame_copy_picture( h, fenc, pic_in ); /* ffdshow custom code */
+        pic_in_fill(fenc,pic_in_fill_data); /* ffdshow custom code */
 
         if( h->param.i_width != 16 * h->sps->i_mb_width ||
             h->param.i_height != 16 * h->sps->i_mb_height )
@@ -1411,7 +1439,7 @@ int attribute_align_arg x264_encoder_encode( x264_t *h,
             return 0;
         }
 
-        x264_slicetype_decide( h );
+        x264_stack_align( x264_slicetype_decide, h );
 
         /* 3: move some B-frames and 1 non-B to encode queue */
         while( IS_X264_TYPE_B( h->frames.next[bframes]->i_type ) )
@@ -1954,8 +1982,8 @@ void    x264_encoder_close  ( x264_t *h )
         for( i = 0; i < X264_PARTTYPE_MAX; i++ )
             for( j = 0; j < 2; j++ )
             {
-                int l0 = x264_mb_type_list0_table[i][j];
-                int l1 = x264_mb_type_list1_table[i][j];
+                int l0 = x264_mb_type_list_table[i][0][j];
+                int l1 = x264_mb_type_list_table[i][1][j];
                 if( l0 || l1 )
                     list_count[l1+l0*l1] += h->stat.i_mb_count[SLICE_TYPE_B][i] * 2;
             }

@@ -3,8 +3,7 @@
 //
 // Desc: DirectShow base classes - implements a non-MFC based generic list
 //       template class.
-//
-// Copyright (c) 1992-2002 Microsoft Corporation.  All rights reserved.
+// Copyright (c) 1992-2001 Microsoft Corporation.  All rights reserved.
 //------------------------------------------------------------------------------
 
 
@@ -660,7 +659,7 @@ BOOL CBaseList::AddBefore(POSITION p, CBaseList *pList)
     }
     return TRUE;
 } // AddBefore(list)
-
+ /*ffdshow custom*/
 #undef INTERNALTRAVERSELIST
 #undef INTERNALREVERSETRAVERSELIST
 

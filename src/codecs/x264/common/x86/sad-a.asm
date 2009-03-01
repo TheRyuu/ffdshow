@@ -5,6 +5,7 @@
 ;*
 ;* Authors: Loren Merritt <lorenm@u.washington.edu>
 ;*          Laurent Aimar <fenrir@via.ecp.fr>
+;*          Jason Garrett-Glaser <darkshikari@gmail.com>
 ;*          Alex Izvorski <aizvorksi@gmail.com>
 ;*
 ;* This program is free software; you can redistribute it and/or modify
@@ -102,9 +103,9 @@ SAD  4,  4
 ;=============================================================================
 
 %macro SAD_END_SSE2 0
-    movhlps xmm1, xmm0
-    paddw   xmm0, xmm1
-    movd    eax,  xmm0
+    movhlps m1, m0
+    paddw   m0, m1
+    movd   eax, m0
     RET
 %endmacro
 
@@ -113,115 +114,146 @@ SAD  4,  4
 ; int x264_pixel_sad_16x16_sse2 (uint8_t *, int, uint8_t *, int )
 ;-----------------------------------------------------------------------------
 cglobal x264_pixel_sad_16x16_%1, 4,4
-    movdqu  xmm0,   [r2]
-    movdqu  xmm1,   [r2+r3]
-    lea     r2,     [r2+2*r3]
-    movdqu  xmm2,   [r2]
-    movdqu  xmm3,   [r2+r3]
-    lea     r2,     [r2+2*r3]
-    psadbw  xmm0,   [r0]
-    psadbw  xmm1,   [r0+r1]
-    lea     r0,     [r0+2*r1]
-    movdqu  xmm4,   [r2]
-    paddw   xmm0,   xmm1
-    psadbw  xmm2,   [r0]
-    psadbw  xmm3,   [r0+r1]
-    lea     r0,     [r0+2*r1]
-    movdqu  xmm5,   [r2+r3]
-    lea     r2,     [r2+2*r3]
-    paddw   xmm2,   xmm3
-    movdqu  xmm6,   [r2]
-    movdqu  xmm7,   [r2+r3]
-    lea     r2,     [r2+2*r3]
-    paddw   xmm0,   xmm2
-    psadbw  xmm4,   [r0]
-    psadbw  xmm5,   [r0+r1]
-    lea     r0,     [r0+2*r1]
-    movdqu  xmm1,   [r2]
-    paddw   xmm4,   xmm5
-    psadbw  xmm6,   [r0]
-    psadbw  xmm7,   [r0+r1]
-    lea     r0,     [r0+2*r1]
-    movdqu  xmm2,   [r2+r3]
-    lea     r2,     [r2+2*r3]
-    paddw   xmm6,   xmm7
-    movdqu  xmm3,   [r2]
-    paddw   xmm0,   xmm4
-    movdqu  xmm4,   [r2+r3]
-    lea     r2,     [r2+2*r3]
-    paddw   xmm0,   xmm6
-    psadbw  xmm1,   [r0]
-    psadbw  xmm2,   [r0+r1]
-    lea     r0,     [r0+2*r1]
-    movdqu  xmm5,   [r2]
-    paddw   xmm1,   xmm2
-    psadbw  xmm3,   [r0]
-    psadbw  xmm4,   [r0+r1]
-    lea     r0,     [r0+2*r1]
-    movdqu  xmm6,   [r2+r3]
-    lea     r2,     [r2+2*r3]
-    paddw   xmm3,   xmm4
-    movdqu  xmm7,   [r2]
-    paddw   xmm0,   xmm1
-    movdqu  xmm1,   [r2+r3]
-    paddw   xmm0,   xmm3
-    psadbw  xmm5,   [r0]
-    psadbw  xmm6,   [r0+r1]
-    lea     r0,     [r0+2*r1]
-    paddw   xmm5,   xmm6
-    psadbw  xmm7,   [r0]
-    psadbw  xmm1,   [r0+r1]
-    paddw   xmm7,   xmm1
-    paddw   xmm0,   xmm5
-    paddw   xmm0,   xmm7
+    movdqu  m0, [r2]
+    movdqu  m1, [r2+r3]
+    lea     r2, [r2+2*r3]
+    movdqu  m2, [r2]
+    movdqu  m3, [r2+r3]
+    lea     r2, [r2+2*r3]
+    psadbw  m0, [r0]
+    psadbw  m1, [r0+r1]
+    lea     r0, [r0+2*r1]
+    movdqu  m4, [r2]
+    paddw   m0, m1
+    psadbw  m2, [r0]
+    psadbw  m3, [r0+r1]
+    lea     r0, [r0+2*r1]
+    movdqu  m5, [r2+r3]
+    lea     r2, [r2+2*r3]
+    paddw   m2, m3
+    movdqu  m6, [r2]
+    movdqu  m7, [r2+r3]
+    lea     r2, [r2+2*r3]
+    paddw   m0, m2
+    psadbw  m4, [r0]
+    psadbw  m5, [r0+r1]
+    lea     r0, [r0+2*r1]
+    movdqu  m1, [r2]
+    paddw   m4, m5
+    psadbw  m6, [r0]
+    psadbw  m7, [r0+r1]
+    lea     r0, [r0+2*r1]
+    movdqu  m2, [r2+r3]
+    lea     r2, [r2+2*r3]
+    paddw   m6, m7
+    movdqu  m3, [r2]
+    paddw   m0, m4
+    movdqu  m4, [r2+r3]
+    lea     r2, [r2+2*r3]
+    paddw   m0, m6
+    psadbw  m1, [r0]
+    psadbw  m2, [r0+r1]
+    lea     r0, [r0+2*r1]
+    movdqu  m5, [r2]
+    paddw   m1, m2
+    psadbw  m3, [r0]
+    psadbw  m4, [r0+r1]
+    lea     r0, [r0+2*r1]
+    movdqu  m6, [r2+r3]
+    lea     r2, [r2+2*r3]
+    paddw   m3, m4
+    movdqu  m7, [r2]
+    paddw   m0, m1
+    movdqu  m1, [r2+r3]
+    paddw   m0, m3
+    psadbw  m5, [r0]
+    psadbw  m6, [r0+r1]
+    lea     r0, [r0+2*r1]
+    paddw   m5, m6
+    psadbw  m7, [r0]
+    psadbw  m1, [r0+r1]
+    paddw   m7, m1
+    paddw   m0, m5
+    paddw   m0, m7
     SAD_END_SSE2
 
 ;-----------------------------------------------------------------------------
 ; int x264_pixel_sad_16x8_sse2 (uint8_t *, int, uint8_t *, int )
 ;-----------------------------------------------------------------------------
 cglobal x264_pixel_sad_16x8_%1, 4,4
-    movdqu  xmm0,   [r2]
-    movdqu  xmm2,   [r2+r3]
-    lea     r2,     [r2+2*r3]
-    movdqu  xmm3,   [r2]
-    movdqu  xmm4,   [r2+r3]
-    psadbw  xmm0,   [r0]
-    psadbw  xmm2,   [r0+r1]
-    lea     r0,     [r0+2*r1]
-    psadbw  xmm3,   [r0]
-    psadbw  xmm4,   [r0+r1]
-    lea     r0,     [r0+2*r1]
-    lea     r2,     [r2+2*r3]
-    paddw   xmm0,   xmm2
-    paddw   xmm3,   xmm4
-    paddw   xmm0,   xmm3
-    movdqu  xmm1,   [r2]
-    movdqu  xmm2,   [r2+r3]
-    lea     r2,     [r2+2*r3]
-    movdqu  xmm3,   [r2]
-    movdqu  xmm4,   [r2+r3]
-    psadbw  xmm1,   [r0]
-    psadbw  xmm2,   [r0+r1]
-    lea     r0,     [r0+2*r1]
-    psadbw  xmm3,   [r0]
-    psadbw  xmm4,   [r0+r1]
-    lea     r0,     [r0+2*r1]
-    lea     r2,     [r2+2*r3]
-    paddw   xmm1,   xmm2
-    paddw   xmm3,   xmm4
-    paddw   xmm0,   xmm1
-    paddw   xmm0,   xmm3
+    movdqu  m0, [r2]
+    movdqu  m2, [r2+r3]
+    lea     r2, [r2+2*r3]
+    movdqu  m3, [r2]
+    movdqu  m4, [r2+r3]
+    psadbw  m0, [r0]
+    psadbw  m2, [r0+r1]
+    lea     r0, [r0+2*r1]
+    psadbw  m3, [r0]
+    psadbw  m4, [r0+r1]
+    lea     r0, [r0+2*r1]
+    lea     r2, [r2+2*r3]
+    paddw   m0, m2
+    paddw   m3, m4
+    paddw   m0, m3
+    movdqu  m1, [r2]
+    movdqu  m2, [r2+r3]
+    lea     r2, [r2+2*r3]
+    movdqu  m3, [r2]
+    movdqu  m4, [r2+r3]
+    psadbw  m1, [r0]
+    psadbw  m2, [r0+r1]
+    lea     r0, [r0+2*r1]
+    psadbw  m3, [r0]
+    psadbw  m4, [r0+r1]
+    lea     r0, [r0+2*r1]
+    lea     r2, [r2+2*r3]
+    paddw   m1, m2
+    paddw   m3, m4
+    paddw   m0, m1
+    paddw   m0, m3
     SAD_END_SSE2
 %endmacro
 
+INIT_XMM
 SAD_W16 sse2
 %define movdqu lddqu
 SAD_W16 sse3
 %define movdqu movdqa
 SAD_W16 sse2_aligned
-%define movdqu movups
+%undef movdqu
 
+%macro SAD_INC_4x8P_SSE 1
+    movq    m1, [r0]
+    movq    m2, [r0+r1]
+    lea     r0, [r0+2*r1]
+    movq    m3, [r2]
+    movq    m4, [r2+r3]
+    lea     r2, [r2+2*r3]
+    movhps  m1, [r0]
+    movhps  m2, [r0+r1]
+    movhps  m3, [r2]
+    movhps  m4, [r2+r3]
+    lea     r0, [r0+2*r1]
+    psadbw  m1, m3
+    psadbw  m2, m4
+    lea     r2, [r2+2*r3]
+%if %1
+    paddw   m0, m1
+%else
+    SWAP    m0, m1
+%endif
+    paddw   m0, m2
+%endmacro
 
+;Even on Nehalem, no sizes other than 8x16 benefit from this method.
+cglobal x264_pixel_sad_8x16_sse2, 4,4
+    SAD_INC_4x8P_SSE 0
+    SAD_INC_4x8P_SSE 1
+    SAD_INC_4x8P_SSE 1
+    SAD_INC_4x8P_SSE 1
+    SAD_END_SSE2
+    RET
 
 ;-----------------------------------------------------------------------------
 ; void intra_sad_x3_16x16 ( uint8_t *fenc, uint8_t *fdec, int res[3] );
@@ -598,6 +630,93 @@ SAD_X 4,  4,  4
     lea  r3, [r3+2*r4]
 %endmacro
 
+%macro SAD_X3_START_2x8P_SSE2 0
+    movq    xmm7, [r0]
+    movq    xmm0, [r1]
+    movq    xmm1, [r2]
+    movq    xmm2, [r3]
+    movhps  xmm7, [r0+FENC_STRIDE]
+    movhps  xmm0, [r1+r4]
+    movhps  xmm1, [r2+r4]
+    movhps  xmm2, [r3+r4]
+    psadbw  xmm0, xmm7
+    psadbw  xmm1, xmm7
+    psadbw  xmm2, xmm7
+%endmacro
+
+%macro SAD_X3_2x8P_SSE2 0
+    movq    xmm7, [r0]
+    movq    xmm3, [r1]
+    movq    xmm4, [r2]
+    movq    xmm5, [r3]
+    movhps  xmm7, [r0+FENC_STRIDE]
+    movhps  xmm3, [r1+r4]
+    movhps  xmm4, [r2+r4]
+    movhps  xmm5, [r3+r4]
+    psadbw  xmm3, xmm7
+    psadbw  xmm4, xmm7
+    psadbw  xmm5, xmm7
+    paddw   xmm0, xmm3
+    paddw   xmm1, xmm4
+    paddw   xmm2, xmm5
+%endmacro
+
+%macro SAD_X4_START_2x8P_SSE2 0
+    movq    xmm7, [r0]
+    movq    xmm0, [r1]
+    movq    xmm1, [r2]
+    movq    xmm2, [r3]
+    movq    xmm3, [r4]
+    movhps  xmm7, [r0+FENC_STRIDE]
+    movhps  xmm0, [r1+r5]
+    movhps  xmm1, [r2+r5]
+    movhps  xmm2, [r3+r5]
+    movhps  xmm3, [r4+r5]
+    psadbw  xmm0, xmm7
+    psadbw  xmm1, xmm7
+    psadbw  xmm2, xmm7
+    psadbw  xmm3, xmm7
+%endmacro
+
+%macro SAD_X4_2x8P_SSE2 0
+    movq    xmm7, [r0]
+    movq    xmm4, [r1]
+    movq    xmm5, [r2]
+%ifdef ARCH_X86_64
+    movq    xmm6, [r3]
+    movq    xmm8, [r4]
+    movhps  xmm7, [r0+FENC_STRIDE]
+    movhps  xmm4, [r1+r5]
+    movhps  xmm5, [r2+r5]
+    movhps  xmm6, [r3+r5]
+    movhps  xmm8, [r4+r5]
+    psadbw  xmm4, xmm7
+    psadbw  xmm5, xmm7
+    psadbw  xmm6, xmm7
+    psadbw  xmm8, xmm7
+    paddw   xmm0, xmm4
+    paddw   xmm1, xmm5
+    paddw   xmm2, xmm6
+    paddw   xmm3, xmm8
+%else
+    movhps  xmm7, [r0+FENC_STRIDE]
+    movhps  xmm4, [r1+r5]
+    movhps  xmm5, [r2+r5]
+    psadbw  xmm4, xmm7
+    psadbw  xmm5, xmm7
+    paddw   xmm0, xmm4
+    paddw   xmm1, xmm5
+    movq    xmm6, [r3]
+    movq    xmm4, [r4]
+    movhps  xmm6, [r3+r5]
+    movhps  xmm4, [r4+r5]
+    psadbw  xmm6, xmm7
+    psadbw  xmm4, xmm7
+    paddw   xmm2, xmm6
+    paddw   xmm3, xmm4
+%endif
+%endmacro
+
 %macro SAD_X4_START_1x16P_SSE2 0
     movdqa xmm7, [r0]
     movdqu xmm0, [r1]
@@ -652,6 +771,31 @@ SAD_X 4,  4,  4
     lea  r4, [r4+2*r5]
 %endmacro
 
+%macro SAD_X3_2x8P_SSE2 1
+%if %1
+    SAD_X3_START_2x8P_SSE2
+%else
+    SAD_X3_2x8P_SSE2
+%endif
+    add  r0, 2*FENC_STRIDE
+    lea  r1, [r1+2*r4]
+    lea  r2, [r2+2*r4]
+    lea  r3, [r3+2*r4]
+%endmacro
+
+%macro SAD_X4_2x8P_SSE2 1
+%if %1
+    SAD_X4_START_2x8P_SSE2
+%else
+    SAD_X4_2x8P_SSE2
+%endif
+    add  r0, 2*FENC_STRIDE
+    lea  r1, [r1+2*r5]
+    lea  r2, [r2+2*r5]
+    lea  r3, [r3+2*r5]
+    lea  r4, [r4+2*r5]
+%endmacro
+
 %macro SAD_X3_END_SSE2 0
     movhlps xmm4, xmm0
     movhlps xmm5, xmm1
@@ -687,6 +831,80 @@ SAD_X 4,  4,  4
     RET
 %endmacro
 
+%macro SAD_X3_START_1x16P_SSE2_MISALIGN 0
+    movdqa xmm2, [r0]
+    movdqu xmm0, [r1]
+    movdqu xmm1, [r2]
+    psadbw xmm0, xmm2
+    psadbw xmm1, xmm2
+    psadbw xmm2, [r3]
+%endmacro
+
+%macro SAD_X3_1x16P_SSE2_MISALIGN 2
+    movdqa xmm3, [r0+%1]
+    movdqu xmm4, [r1+%2]
+    movdqu xmm5, [r2+%2]
+    psadbw xmm4, xmm3
+    psadbw xmm5, xmm3
+    psadbw xmm3, [r3+%2]
+    paddw  xmm0, xmm4
+    paddw  xmm1, xmm5
+    paddw  xmm2, xmm3
+%endmacro
+
+%macro SAD_X4_START_1x16P_SSE2_MISALIGN 0
+    movdqa xmm3, [r0]
+    movdqu xmm0, [r1]
+    movdqu xmm1, [r2]
+    movdqu xmm2, [r3]
+    psadbw xmm0, xmm3
+    psadbw xmm1, xmm3
+    psadbw xmm2, xmm3
+    psadbw xmm3, [r4]
+%endmacro
+
+%macro SAD_X4_1x16P_SSE2_MISALIGN 2
+    movdqa xmm7, [r0+%1]
+    movdqu xmm4, [r1+%2]
+    movdqu xmm5, [r2+%2]
+    movdqu xmm6, [r3+%2]
+    psadbw xmm4, xmm7
+    psadbw xmm5, xmm7
+    psadbw xmm6, xmm7
+    psadbw xmm7, [r4+%2]
+    paddw  xmm0, xmm4
+    paddw  xmm1, xmm5
+    paddw  xmm2, xmm6
+    paddw  xmm3, xmm7
+%endmacro
+
+%macro SAD_X3_2x16P_SSE2_MISALIGN 1
+%if %1
+    SAD_X3_START_1x16P_SSE2_MISALIGN
+%else
+    SAD_X3_1x16P_SSE2_MISALIGN 0, 0
+%endif
+    SAD_X3_1x16P_SSE2_MISALIGN FENC_STRIDE, r4
+    add  r0, 2*FENC_STRIDE
+    lea  r1, [r1+2*r4]
+    lea  r2, [r2+2*r4]
+    lea  r3, [r3+2*r4]
+%endmacro
+
+%macro SAD_X4_2x16P_SSE2_MISALIGN 1
+%if %1
+    SAD_X4_START_1x16P_SSE2_MISALIGN
+%else
+    SAD_X4_1x16P_SSE2_MISALIGN 0, 0
+%endif
+    SAD_X4_1x16P_SSE2_MISALIGN FENC_STRIDE, r5
+    add  r0, 2*FENC_STRIDE
+    lea  r1, [r1+2*r5]
+    lea  r2, [r2+2*r5]
+    lea  r3, [r3+2*r5]
+    lea  r4, [r4+2*r5]
+%endmacro
+
 ;-----------------------------------------------------------------------------
 ; void x264_pixel_sad_x3_16x16_sse2( uint8_t *fenc, uint8_t *pix0, uint8_t *pix1,
 ;                                    uint8_t *pix2, int i_stride, int scores[3] )
@@ -700,10 +918,30 @@ cglobal x264_pixel_sad_x%1_%2x%3_%4, 2+%1,2+%1
     SAD_X%1_END_SSE2
 %endmacro
 
+%macro SAD_X_SSE2_MISALIGN 4
+cglobal x264_pixel_sad_x%1_%2x%3_%4_misalign, 2+%1,2+%1
+    SAD_X%1_2x%2P_SSE2_MISALIGN 1
+%rep %3/2-1
+    SAD_X%1_2x%2P_SSE2_MISALIGN 0
+%endrep
+    SAD_X%1_END_SSE2
+%endmacro
+
 SAD_X_SSE2 3, 16, 16, sse2
 SAD_X_SSE2 3, 16,  8, sse2
+SAD_X_SSE2 3,  8, 16, sse2
+SAD_X_SSE2 3,  8,  8, sse2
+SAD_X_SSE2 3,  8,  4, sse2
 SAD_X_SSE2 4, 16, 16, sse2
 SAD_X_SSE2 4, 16,  8, sse2
+SAD_X_SSE2 4,  8, 16, sse2
+SAD_X_SSE2 4,  8,  8, sse2
+SAD_X_SSE2 4,  8,  4, sse2
+
+SAD_X_SSE2_MISALIGN 3, 16, 16, sse2
+SAD_X_SSE2_MISALIGN 3, 16,  8, sse2
+SAD_X_SSE2_MISALIGN 4, 16, 16, sse2
+SAD_X_SSE2_MISALIGN 4, 16,  8, sse2
 
 %define movdqu lddqu
 SAD_X_SSE2 3, 16, 16, sse3
@@ -720,8 +958,8 @@ SAD_X_SSE2 4, 16,  8, sse3
 
 ; Core2 (Conroe) can load unaligned data just as quickly as aligned data...
 ; unless the unaligned data spans the border between 2 cachelines, in which
-; case it's really slow. The exact numbers may differ, but all Intel cpus
-; have a large penalty for cacheline splits.
+; case it's really slow. The exact numbers may differ, but all Intel cpus prior
+; to Nehalem have a large penalty for cacheline splits.
 ; (8-byte alignment exactly half way between two cachelines is ok though.)
 ; LDDQU was supposed to fix this, but it only works on Pentium 4.
 ; So in the split case we load aligned data and explicitly perform the

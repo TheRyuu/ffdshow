@@ -23,6 +23,6 @@ void init_mplayer(int mmx,int mmx2,int _3dnow,int _3dnowExt,int sse,int sse2,int
 
 void __stdcall getVersion(char *ver,const char* *license)
 {
- strcpy(ver,"3.8, build date "__DATE__" "__TIME__" ("COMPILER COMPILER_X64")");
+ strcpy(ver,"3.8, build date "__DATE__" "__TIME__" ("COMPILER COMPILER_X64 COMPILER_INFO")");
  *license="";
 }

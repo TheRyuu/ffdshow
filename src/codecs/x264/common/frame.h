@@ -28,7 +28,7 @@
 #define PADH 32
 #define PADV 32
 
-typedef struct x264_frame_t
+typedef struct x264_frame_t /* ffdshow custom code */
 {
     /* */
     int     i_poc;
@@ -83,14 +83,15 @@ typedef struct x264_frame_t
     float   *f_qp_offset;
     int     b_intra_calculated;
     uint16_t *i_intra_cost;
+    uint16_t *i_inv_qscale_factor;
 
     /* threading */
     int     i_lines_completed; /* in pixels */
     int     i_reference_count; /* number of threads using this frame (not necessarily the number of pointers) */
-#if defined(HAVE_PTHREAD)
+#if defined(HAVE_PTHREAD) /* ffdshow custom code */
     x264_pthread_mutex_t mutex;
     x264_pthread_cond_t  cv;
-#endif
+#endif /* ffdshow custom code */
 
 } x264_frame_t;
 

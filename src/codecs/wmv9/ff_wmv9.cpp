@@ -810,6 +810,6 @@ extern "C" void __stdcall destroyWmv9(Iff_wmv9 *self)
 }
 extern "C" void __stdcall getVersion(char *ver,const char* *license)
 {
- strcpy(ver,"2.7a, build date "__DATE__" "__TIME__" ("COMPILER COMPILER_X64")");
+ strcpy(ver,"2.7a, build date "__DATE__" "__TIME__" ("COMPILER COMPILER_X64 COMPILER_INFO")");
  *license="";
 }

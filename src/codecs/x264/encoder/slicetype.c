@@ -1,7 +1,10 @@
 /*****************************************************************************
  * slicetype.c: h264 encoder library
  *****************************************************************************
- * Copyright (C) 2005-2008 Loren Merritt <lorenm@u.washington.edu>
+ * Copyright (C) 2005-2008 x264 project
+ *
+ * Authors: Loren Merritt <lorenm@u.washington.edu>
+ *          Jason Garrett-Glaser <darkshikari@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -306,10 +309,7 @@ static int x264_slicetype_frame_cost( x264_t *h, x264_mb_analysis_t *a,
                     int i_mb_cost = x264_slicetype_mb_cost( h, a, frames, p0, p1, b, dist_scale_factor, do_search );
                     int i_mb_cost_aq = i_mb_cost;
                     if( h->param.rc.i_aq_mode )
-                    {
-                        x264_emms();
-                        i_mb_cost_aq *= pow(2.0,-(frames[b]->f_qp_offset[h->mb.i_mb_x + h->mb.i_mb_y*h->mb.i_mb_stride])/6.0);
-                    }
+                        i_mb_cost_aq = (i_mb_cost_aq * frames[b]->i_inv_qscale_factor[h->mb.i_mb_x + h->mb.i_mb_y*h->mb.i_mb_stride] + 128) >> 8;
                     row_satd[ h->mb.i_mb_y ] += i_mb_cost_aq;
                     if( h->mb.i_mb_y > 0 && h->mb.i_mb_y < h->sps->i_mb_height - 1 &&
                         h->mb.i_mb_x > 0 && h->mb.i_mb_x < h->sps->i_mb_width - 1 )
@@ -329,10 +329,7 @@ static int x264_slicetype_frame_cost( x264_t *h, x264_mb_analysis_t *a,
                     int i_mb_cost = x264_slicetype_mb_cost( h, a, frames, p0, p1, b, dist_scale_factor, do_search );
                     int i_mb_cost_aq = i_mb_cost;
                     if( h->param.rc.i_aq_mode )
-                    {
-                        x264_emms();
-                        i_mb_cost_aq *= pow(2.0,-(frames[b]->f_qp_offset[h->mb.i_mb_x + h->mb.i_mb_y*h->mb.i_mb_stride])/6.0);
-                    }
+                        i_mb_cost_aq = (i_mb_cost_aq * frames[b]->i_inv_qscale_factor[h->mb.i_mb_x + h->mb.i_mb_y*h->mb.i_mb_stride] + 128) >> 8;
                     i_score += i_mb_cost;
                     i_score_aq += i_mb_cost_aq;
                 }

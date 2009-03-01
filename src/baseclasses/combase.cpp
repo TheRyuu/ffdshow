@@ -4,13 +4,11 @@
 // Desc: DirectShow base classes - implements class hierarchy for creating
 //       COM objects.
 //
-// Copyright (c) 1992-2002 Microsoft Corporation.  All rights reserved.
+// Copyright (c) 1992-2001 Microsoft Corporation.  All rights reserved.
 //------------------------------------------------------------------------------
-
 
 #include "stdafx.h"
 #pragma warning( disable : 4514 )   // Disable warnings re unused inline functions
-
 
 /* Define the static member variable */
 
@@ -153,15 +151,20 @@ STDMETHODIMP CUnknown::NonDelegatingQueryInterface(REFIID riid, void ** ppv)
 /* about concurrency, we can't afford to access the m_cRef twice since we can't  */
 /* afford to run the risk that its value having changed between accesses.        */
 
+//template<class T> inline static T ourmax( const T & a, const T & b )
+//{
+//    return a > b ? a : b;
+//}
+
 /* AddRef */
 
 STDMETHODIMP_(ULONG) CUnknown::NonDelegatingAddRef()
 {
-    LONG lRef = InterlockedIncrement((LONG*) &m_cRef );
+    LONG lRef = InterlockedIncrement((LONG*) &m_cRef ); /*ffdshow custom*/
     ASSERT(lRef > 0);
     DbgLog((LOG_MEMORY,3,TEXT("    Obj %d ref++ = %d"),
            m_dwCookie, m_cRef));
-    return std::max(ULONG(m_cRef), 1ul);
+    return std::max(ULONG(m_cRef), 1ul); /*ffdshow custom*/
 }
 
 
@@ -171,7 +174,7 @@ STDMETHODIMP_(ULONG) CUnknown::NonDelegatingRelease()
 {
     /* If the reference count drops to zero delete ourselves */
 
-    LONG lRef = InterlockedDecrement( (LONG*)&m_cRef );
+    LONG lRef = InterlockedDecrement((LONG*) &m_cRef ); /*ffdshow custom*/
     ASSERT(lRef >= 0);
 
     DbgLog((LOG_MEMORY,3,TEXT("    Object %d ref-- = %d"),
@@ -195,7 +198,7 @@ STDMETHODIMP_(ULONG) CUnknown::NonDelegatingRelease()
         delete this;
         return ULONG(0);
     } else {
-        return std::max(ULONG(m_cRef), 1ul);
+        return std::max(ULONG(m_cRef), 1ul); /*ffdshow custom*/
     }
 }
 
@@ -222,16 +225,23 @@ BOOL WINAPI IsEqualObject(IUnknown *pFirst, IUnknown *pSecond)
     /* See if the IUnknown pointers match */
 
     hr = pFirst->QueryInterface(IID_IUnknown,(void **) &pUnknown1);
-    ASSERT(SUCCEEDED(hr));
+    if (FAILED(hr)) {
+        return FALSE;
+    }
     ASSERT(pUnknown1);
 
-    hr = pSecond->QueryInterface(IID_IUnknown,(void **) &pUnknown2);
-    ASSERT(SUCCEEDED(hr));
-    ASSERT(pUnknown2);
-
-    /* Release the extra interfaces we hold */
+    /* Release the extra interface we hold */
 
     pUnknown1->Release();
+
+    hr = pSecond->QueryInterface(IID_IUnknown,(void **) &pUnknown2);
+    if (FAILED(hr)) {
+        return FALSE;
+    }
+    ASSERT(pUnknown2);
+
+    /* Release the extra interface we hold */
+
     pUnknown2->Release();
     return (pUnknown1 == pUnknown2);
 }

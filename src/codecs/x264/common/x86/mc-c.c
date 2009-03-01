@@ -64,6 +64,12 @@ extern void *x264_memcpy_aligned_mmx( void * dst, const void * src, size_t n );
 extern void *x264_memcpy_aligned_sse2( void * dst, const void * src, size_t n );
 extern void x264_memzero_aligned_mmx( void * dst, int n );
 extern void x264_memzero_aligned_sse2( void * dst, int n );
+extern void x264_integral_init4h_sse4( uint16_t *sum, uint8_t *pix, int stride );
+extern void x264_integral_init8h_sse4( uint16_t *sum, uint8_t *pix, int stride );
+extern void x264_integral_init4v_mmx( uint16_t *sum8, uint16_t *sum4, int stride );
+extern void x264_integral_init4v_sse2( uint16_t *sum8, uint16_t *sum4, int stride );
+extern void x264_integral_init8v_mmx( uint16_t *sum8, int stride );
+extern void x264_integral_init8v_sse2( uint16_t *sum8, int stride );
 #define LOWRES(cpu) \
 extern void x264_frame_init_lowres_core_##cpu( uint8_t *src0, uint8_t *dst0, uint8_t *dsth, uint8_t *dstv, uint8_t *dstc,\
                                                int src_stride, int dst_stride, int width, int height );
@@ -83,6 +89,7 @@ PIXEL_AVG_WALL(cache32_mmxext)
 PIXEL_AVG_WALL(cache64_mmxext)
 PIXEL_AVG_WALL(cache64_sse2)
 PIXEL_AVG_WALL(sse2)
+PIXEL_AVG_WALL(sse2_misalign)
 
 #define PIXEL_AVG_WTAB(instr, name1, name2, name3, name4, name5)\
 static void (* const x264_pixel_avg_wtab_##instr[6])( uint8_t *, int, uint8_t *, int, uint8_t *, int ) =\
@@ -98,13 +105,15 @@ static void (* const x264_pixel_avg_wtab_##instr[6])( uint8_t *, int, uint8_t *,
 /* w16 sse2 is faster than w12 mmx as long as the cacheline issue is resolved */
 #define x264_pixel_avg2_w12_cache64_sse2 x264_pixel_avg2_w16_cache64_sse2
 #define x264_pixel_avg2_w12_sse3         x264_pixel_avg2_w16_sse3
+#define x264_pixel_avg2_w12_sse2         x264_pixel_avg2_w16_sse2
 
 PIXEL_AVG_WTAB(mmxext, mmxext, mmxext, mmxext, mmxext, mmxext)
 #ifdef ARCH_X86
 PIXEL_AVG_WTAB(cache32_mmxext, mmxext, cache32_mmxext, cache32_mmxext, cache32_mmxext, cache32_mmxext)
-#endif
 PIXEL_AVG_WTAB(cache64_mmxext, mmxext, cache64_mmxext, cache64_mmxext, cache64_mmxext, cache64_mmxext)
-PIXEL_AVG_WTAB(sse2, mmxext, mmxext, mmxext, sse2, sse2)
+#endif
+PIXEL_AVG_WTAB(sse2, mmxext, mmxext, sse2, sse2, sse2)
+PIXEL_AVG_WTAB(sse2_misalign, mmxext, mmxext, sse2, sse2, sse2_misalign)
 PIXEL_AVG_WTAB(cache64_sse2, mmxext, cache64_mmxext, cache64_sse2, cache64_sse2, cache64_sse2)
 
 #define MC_COPY_WTAB(instr, name1, name2, name3)\
@@ -184,6 +193,7 @@ GET_REF(cache32_mmxext)
 GET_REF(cache64_mmxext)
 #endif
 GET_REF(sse2)
+GET_REF(sse2_misalign)
 GET_REF(cache64_sse2)
 
 #define HPEL(align, cpu, cpuv, cpuc, cpuh)\
@@ -192,16 +202,14 @@ void x264_hpel_filter_c_##cpuc( uint8_t *dst, int16_t *buf, int width );\
 void x264_hpel_filter_h_##cpuh( uint8_t *dst, uint8_t *src, int width );\
 void x264_sfence( void );\
 static void x264_hpel_filter_##cpu( uint8_t *dsth, uint8_t *dstv, uint8_t *dstc, uint8_t *src,\
-                             int stride, int width, int height )\
+                             int stride, int width, int height, int16_t *buf )\
 {\
-    int16_t *buf;\
     int realign = (long)src & (align-1);\
     src -= realign;\
     dstv -= realign;\
     dstc -= realign;\
     dsth -= realign;\
     width += realign;\
-    buf = x264_malloc((width+16)*sizeof(int16_t));\
     while( height-- )\
     {\
         x264_hpel_filter_v_##cpuv( dstv, src, buf+8, stride, width );\
@@ -213,18 +221,18 @@ static void x264_hpel_filter_##cpu( uint8_t *dsth, uint8_t *dstv, uint8_t *dstc,
         src  += stride;\
     }\
     x264_sfence();\
-    x264_free(buf);\
 }
 
 HPEL(8, mmxext, mmxext, mmxext, mmxext)
 HPEL(16, sse2_amd, mmxext, mmxext, sse2)
 #ifdef ARCH_X86_64
-void x264_hpel_filter_sse2( uint8_t *dsth, uint8_t *dstv, uint8_t *dstc, uint8_t *src, int stride, int width, int height );
-void x264_hpel_filter_ssse3( uint8_t *dsth, uint8_t *dstv, uint8_t *dstc, uint8_t *src, int stride, int width, int height );
+void x264_hpel_filter_sse2( uint8_t *dsth, uint8_t *dstv, uint8_t *dstc, uint8_t *src, int stride, int width, int height, int16_t *buf );
+void x264_hpel_filter_ssse3( uint8_t *dsth, uint8_t *dstv, uint8_t *dstc, uint8_t *src, int stride, int width, int height, int16_t *buf );
 #else
 HPEL(16, sse2, sse2, sse2, sse2)
 HPEL(16, ssse3, sse2, ssse3, ssse3)
 #endif
+HPEL(16, sse2_misalign, sse2, sse2_misalign, sse2)
 
 void x264_mc_init_mmx( int cpu, x264_mc_functions_t *pf )
 {
@@ -237,6 +245,8 @@ void x264_mc_init_mmx( int cpu, x264_mc_functions_t *pf )
     pf->copy[PIXEL_4x4]   = x264_mc_copy_w4_mmx;
     pf->memcpy_aligned = x264_memcpy_aligned_mmx;
     pf->memzero_aligned = x264_memzero_aligned_mmx;
+    pf->integral_init4v = x264_integral_init4v_mmx;
+    pf->integral_init8v = x264_integral_init8v_mmx;
 
     if( !(cpu&X264_CPU_MMXEXT) )
         return;
@@ -281,6 +291,8 @@ void x264_mc_init_mmx( int cpu, x264_mc_functions_t *pf )
 
     pf->memcpy_aligned = x264_memcpy_aligned_sse2;
     pf->memzero_aligned = x264_memzero_aligned_sse2;
+    pf->integral_init4v = x264_integral_init4v_sse2;
+    pf->integral_init8v = x264_integral_init8v_sse2;
     pf->hpel_filter = x264_hpel_filter_sse2_amd;
 
     if( cpu&X264_CPU_SSE2_IS_SLOW )
@@ -293,6 +305,8 @@ void x264_mc_init_mmx( int cpu, x264_mc_functions_t *pf )
     pf->avg[PIXEL_8x8]  = x264_pixel_avg_8x8_sse2;
     pf->avg[PIXEL_8x4]  = x264_pixel_avg_8x4_sse2;
     pf->hpel_filter = x264_hpel_filter_sse2;
+    if( cpu&X264_CPU_SSE_MISALIGN )
+        pf->hpel_filter = x264_hpel_filter_sse2_misalign;
     pf->frame_init_lowres_core = x264_frame_init_lowres_core_sse2;
     pf->mc_chroma = x264_mc_chroma_sse2;
 
@@ -305,6 +319,8 @@ void x264_mc_init_mmx( int cpu, x264_mc_functions_t *pf )
             pf->mc_luma = mc_luma_cache64_sse2;
             pf->get_ref = get_ref_cache64_sse2;
         }
+        if( cpu&X264_CPU_SSE_MISALIGN )
+            pf->get_ref = get_ref_sse2_misalign;
     }
 
     if( !(cpu&X264_CPU_SSSE3) )
@@ -322,4 +338,10 @@ void x264_mc_init_mmx( int cpu, x264_mc_functions_t *pf )
     pf->hpel_filter = x264_hpel_filter_ssse3;
     pf->frame_init_lowres_core = x264_frame_init_lowres_core_ssse3;
     pf->mc_chroma = x264_mc_chroma_ssse3;
+
+    if( !(cpu&X264_CPU_SSE4) )
+        return;
+
+    pf->integral_init4h = x264_integral_init4h_sse4;
+    pf->integral_init8h = x264_integral_init8h_sse4;
 }

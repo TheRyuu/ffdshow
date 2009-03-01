@@ -134,8 +134,3 @@ protected:
     // an event that can be fired after every deliver
     HANDLE m_hEventPop;
 };
-
-
-
-
-

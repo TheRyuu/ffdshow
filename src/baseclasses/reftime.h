@@ -113,4 +113,3 @@ public:
 const LONGLONG TimeZero = 0;
 
 #endif /* __REFTIME__ */
-

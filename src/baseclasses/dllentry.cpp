@@ -1,10 +1,10 @@
 //------------------------------------------------------------------------------
-// File: DllEntry.cpp
+// File: DlleEntry.cpp
 //
 // Desc: DirectShow base classes - implements classes used to support dll
 //       entry points for COM objects.
 //
-// Copyright (c) 1992-2002 Microsoft Corporation.  All rights reserved.
+// Copyright (c) 1992-2001 Microsoft Corporation.  All rights reserved.
 //------------------------------------------------------------------------------
 
 
@@ -100,11 +100,12 @@ CClassFactory::AddRef()
 STDMETHODIMP_(ULONG)
 CClassFactory::Release()
 {
-    if (--m_cRef == 0) {
+    LONG lRef = InterlockedDecrement((volatile LONG *)&m_cRef);
+    if (lRef == 0) {
         delete this;
         return 0;
     } else {
-        return m_cRef;
+        return lRef;
     }
 }
 
@@ -116,11 +117,13 @@ CClassFactory::CreateInstance(
 {
     CheckPointer(pv,E_POINTER)
     ValidateReadWritePtr(pv,sizeof(void *));
+    *pv = NULL;
 
     /* Enforce the normal OLE rules regarding interfaces and delegation */
 
     if (pUnkOuter != NULL) {
         if (IsEqualIID(riid,IID_IUnknown) == FALSE) {
+            *pv = NULL;
             return ResultFromScode(E_NOINTERFACE);
         }
     }
@@ -131,6 +134,7 @@ CClassFactory::CreateInstance(
     CUnknown *pObj = m_pTemplate->CreateInstance(pUnkOuter, &hr);
 
     if (pObj == NULL) {
+        *pv = NULL;
 	if (SUCCEEDED(hr)) {
 	    hr = E_OUTOFMEMORY;
 	}
@@ -141,6 +145,7 @@ CClassFactory::CreateInstance(
 
     if (FAILED(hr)) {
         delete pObj;
+        *pv = NULL;
         return hr;
     }
 
@@ -187,6 +192,7 @@ DllGetClassObject(
     REFIID riid,
     void **pv)
 {
+    *pv = NULL;
     if (!(riid == IID_IUnknown) && !(riid == IID_IClassFactory)) {
             return E_NOINTERFACE;
     }
@@ -254,9 +260,9 @@ DllCanUnloadNow()
 
 // --- standard WIN32 entrypoints --------------------------------------
 
-extern "C" BOOL WINAPI DllMain(HINSTANCE hInstance, ULONG ulReason, LPVOID pv);
+extern "C" BOOL WINAPI DllMain(HINSTANCE hInstance, ULONG ulReason, LPVOID pv); /*ffdshow custom*/
 
-BOOL WINAPI DllMain(HINSTANCE hInstance, ULONG ulReason, LPVOID pv)
+BOOL WINAPI DllMain(HINSTANCE hInstance, ULONG ulReason, LPVOID pv) /*ffdshow custom*/
 {
  BOOL blacklisted= false;
 #ifdef DEBUG
@@ -288,9 +294,6 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, ULONG ulReason, LPVOID pv)
 
         g_hInst = hInstance;
         DllInitClasses(TRUE);
-        #if _MSC_VER>=1400 && !defined(WIN64)
-         // _set_printf_count_output(1);
-        #endif
         break;
 
     case DLL_PROCESS_DETACH:
@@ -334,9 +337,5 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, ULONG ulReason, LPVOID pv)
 #endif
     return !blacklisted;
 }
-
-
-
-
 
 

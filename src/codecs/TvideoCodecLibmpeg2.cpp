@@ -93,7 +93,7 @@ TvideoCodecLibmpeg2::~TvideoCodecLibmpeg2()
  if (buffer) delete buffer;
 }
 
-HRESULT __declspec(align(16))(TvideoCodecLibmpeg2::decompress(const unsigned char *src,size_t srcLen,IMediaSample *pIn))
+HRESULT TvideoCodecLibmpeg2::decompress(const unsigned char *src,size_t srcLen,IMediaSample *pIn)
 {
  HRESULT hr=decompressI(src,srcLen,pIn);
  int len=mpeg2dec->buf_end - mpeg2dec->buf_start;
@@ -106,7 +106,7 @@ HRESULT __declspec(align(16))(TvideoCodecLibmpeg2::decompress(const unsigned cha
  return hr;
 }
 
-HRESULT __declspec(align(16))(TvideoCodecLibmpeg2::decompressI(const unsigned char *src,size_t srcLen,IMediaSample *pIn))
+HRESULT TvideoCodecLibmpeg2::decompressI(const unsigned char *src,size_t srcLen,IMediaSample *pIn)
 {
  //if (pIn->IsDiscontinuity() == S_OK)
  // onSeek(0);

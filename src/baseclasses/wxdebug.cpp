@@ -4,9 +4,8 @@
 // Desc: DirectShow base classes - implements ActiveX system debugging
 //       facilities.
 //
-// Copyright (c) 1992-2002 Microsoft Corporation.  All rights reserved.
+// Copyright (c) 1992-2001 Microsoft Corporation.  All rights reserved.
 //------------------------------------------------------------------------------
-
 
 #include "stdafx.h"
 
@@ -152,7 +151,7 @@ void WINAPI DbgInitKeyLevels(HKEY hKey, bool fTakeMax)
         }
         if(fTakeMax)
         {
-            m_Levels[lKeyPos] = std::max(dwKeyValue,m_Levels[lKeyPos]);
+            m_Levels[lKeyPos] = std::max(dwKeyValue,m_Levels[lKeyPos]); /*ffdshow custom*/
         }
         else
         {
@@ -409,7 +408,9 @@ INT MessageBoxOtherThread(
     {
         // can't wait on another thread because we have the loader
         // lock held in the dll entry point.
-        return MessageBox(hwnd, szTitle, szMessage, dwFlags);
+        // This can crash sometimes so just skip it
+        // return MessageBox(hwnd, szTitle, szMessage, dwFlags);
+        return IDCANCEL;
     }
     else
     {
@@ -560,7 +561,7 @@ BOOL WINAPI DbgCheckModuleLevel(DWORD Type,DWORD Level)
     {
         // re-read the registry every second. We cannot use RegNotify() to
         // notice registry changes because it's not available on win9x.
-        static DWORD g_dwLastRefresh = 0;
+        static DWORD g_dwLastRefresh = 0; /*ffdshow custom*/
         DWORD dwTime = timeGetTime();
         if(dwTime - g_dwLastRefresh > 1000) {
             g_dwLastRefresh = dwTime;
@@ -977,8 +978,4 @@ void WINAPI DbgSetWaitTimeout(DWORD dwTimeout)
 #endif /* DEBUG */
 
 /*  CDisp class - display our data types */
-
-
-
-
 

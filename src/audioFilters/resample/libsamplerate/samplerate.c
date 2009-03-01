@@ -494,6 +494,6 @@ psrc_set_converter (SRC_PRIVATE	*psrc, int converter_type)
 */
 void __stdcall getVersion(char *ver,const char* *license)
 {
- strcpy(ver,VERSION", build date "__DATE__" "__TIME__" ("COMPILER COMPILER_X64")");
+ strcpy(ver,VERSION", build date "__DATE__" "__TIME__" ("COMPILER COMPILER_X64 COMPILER_INFO")");
  *license="(C) 2002-2004 Erik de Castro Lopo";
 }

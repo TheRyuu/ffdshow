@@ -1,10 +1,10 @@
 //------------------------------------------------------------------------------
 // File: MType.cpp
 //
-// Desc: DirectShow base classes - implements a class that holds and
+// Desc: DirectShow base classes - implements a class that holds and 
 //       manages media type information.
 //
-// Copyright (c) 1992-2002 Microsoft Corporation.  All rights reserved.
+// Copyright (c) 1992-2001 Microsoft Corporation.  All rights reserved.
 //------------------------------------------------------------------------------
 
 
@@ -86,6 +86,7 @@ CMediaType::operator == (const CMediaType& rt) const
         (IsEqualGUID(formattype,rt.formattype) == TRUE) &&
         (cbFormat == rt.cbFormat) &&
         ( (cbFormat == 0) ||
+          pbFormat != NULL && rt.pbFormat != NULL &&
           (memcmp(pbFormat, rt.pbFormat, cbFormat) == 0)));
 }
 
@@ -278,7 +279,7 @@ CMediaType::ReallocFormatBuffer(ULONG length)
 
     if (cbFormat != 0) {
         ASSERT(pbFormat);
-        memcpy(pNewFormat,pbFormat,std::min(length,cbFormat));
+        memcpy(pNewFormat,pbFormat,std::min(length,cbFormat)); /*ffdshow custom*/
         CoTaskMemFree((PVOID)pbFormat);
     }
 
