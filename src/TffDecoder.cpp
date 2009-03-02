@@ -295,7 +295,7 @@ HRESULT TffdshowDecVideo::GetMediaType(int iPosition, CMediaType *mtOut)
  else
   pictOut=inpin->pictIn;
  calcNewSize(pictOut);
- if (presetSettings->output->closest && !outdv) ocsps.sort(pictOut.csp);
+ if (presetSettings->output->closest && !outdv && pictOut.csp != 0) ocsps.sort(pictOut.csp);
 
  oldRect=pictOut.rectFull;
 
