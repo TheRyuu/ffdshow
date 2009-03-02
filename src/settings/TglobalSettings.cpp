@@ -834,7 +834,6 @@ const CodecID TglobalSettingsDecVideo::c_h264[IDFF_MOVIE_MAX+1]=
  CODEC_ID_NONE,
  CODEC_ID_NONE,
  CODEC_ID_NONE,
- CODEC_ID_NONE,
  CODEC_ID_H264_MT
 };
 const CodecID TglobalSettingsDecVideo::c_mpeg4[IDFF_MOVIE_MAX+1]=
@@ -1165,6 +1164,7 @@ void TglobalSettingsDecAudio::load(void)
 #define AUDIO_FOURCCS \
  FF_WAVE_FORMAT1_OP(WMA7   ,wma1   & rawmask,CODEC_ID_WMAV1) \
  FF_WAVE_FORMAT1_OP(WMA8   ,wma2   & rawmask,CODEC_ID_WMAV2) \
+/* FF_WAVE_FORMAT1_OP(DIVXWMA,wma2   & rawmask,CODEC_ID_WMAV2)*/ \
  FF_WAVE_FORMAT_OP (MPEGLAYER3,mp3 & rawmask,c_mp123) \
  FF_WAVE_FORMAT_OP (MPEG   ,mp2    & rawmask,c_mp123) \
  FF_WAVE_FORMAT_OP (AC3_W  ,ac3    & rawmask,c_ac3) \
@@ -1247,20 +1247,7 @@ const CodecID TglobalSettingsDecAudio::c_mp123[IDFF_MOVIE_MAX+1]=
  CODEC_ID_NONE,
  CODEC_ID_NONE,
  CODEC_ID_MP3LIB,
- CODEC_ID_LIBMAD,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE
+ CODEC_ID_LIBMAD
 };
 const CodecID TglobalSettingsDecAudio::c_ac3[IDFF_MOVIE_MAX+1]=
 {

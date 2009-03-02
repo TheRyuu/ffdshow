@@ -4920,14 +4920,6 @@
 				>
 			</File>
 			<File
-				RelativePath="src\codecs\TaudioCodecAudX.cpp"
-				>
-			</File>
-			<File
-				RelativePath="src\codecs\TaudioCodecAudX.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\codecs\TaudioCodecAvisynth.cpp"
 				>
 			</File>

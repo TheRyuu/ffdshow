@@ -5,7 +5,7 @@
 	Name="ffdshow"
 	ProjectGUID="{0C1CDCBB-5886-42B4-A928-F4B82DD3FD17}"
 	VCNestedProjectGUID="{30A21C7F-035D-41E2-95BE-B4FFA5F5176B}"
-	VCNestedProjectCRC32="2435781038"
+	VCNestedProjectCRC32="1989495764"
 	VCNestedProjectFileName="ffdshow_2008_icl10.vcproj">
 	<Platforms>
 		<Platform 
@@ -3784,12 +3784,6 @@
 				RelativePath="src\codecs\TaudioCodec.h">
 			</File>
 			<File 
-				RelativePath="src\codecs\TaudioCodecAudX.cpp">
-			</File>
-			<File 
-				RelativePath="src\codecs\TaudioCodecAudX.h">
-			</File>
-			<File 
 				RelativePath=".\src\codecs\TaudioCodecAvisynth.cpp">
 			</File>
 			<File 
@@ -3862,6 +3856,12 @@
 				RelativePath="src\codecs\TvideoCodec.h">
 			</File>
 			<File 
+				RelativePath=".\src\codecs\TvideoCodec_ffmpeg-mt.cpp">
+			</File>
+			<File 
+				RelativePath=".\src\codecs\TvideoCodec_ffmpeg-mt.h">
+			</File>
+			<File 
 				RelativePath=".\src\codecs\TvideoCodecAvisynth.cpp">
 			</File>
 			<File 
@@ -3925,6 +3925,12 @@
 				</File>
 				<File 
 					RelativePath="src\ffmpeg\Tlibavcodec.h">
+				</File>
+				<File 
+					RelativePath=".\src\ffmpeg-mt\Tlibavcodec_mt.cpp">
+				</File>
+				<File 
+					RelativePath=".\src\ffmpeg-mt\Tlibavcodec_mt.h">
 				</File>
 			</Filter>
 			<Filter 
@@ -4057,6 +4063,24 @@
 				RelativePath="src\convert\convert_yv12.h">
 			</File>
 			<File 
+				RelativePath="src\convert\ffdshow_converters.cpp">
+				<FileConfiguration 
+					Name="Release Unicode|Win32">
+					<Tool 
+						Name="CppCmplrTool"
+						AssemblerOutput="4"/>
+				</FileConfiguration>
+				<FileConfiguration 
+					Name="Release Unicode|x64">
+					<Tool 
+						Name="CppCmplrTool"
+						AssemblerOutput="4"/>
+				</FileConfiguration>
+			</File>
+			<File 
+				RelativePath="src\convert\ffdshow_converters.h">
+			</File>
+			<File 
 				RelativePath="src\imgFilters\ffImgfmt.cpp">
 				<FileConfiguration 
 					Name="Debug Unicode|Win32">
@@ -4085,30 +4109,6 @@
 			</File>
 			<File 
 				RelativePath="src\imgFilters\ffImgfmt.h">
-			</File>
-			<File 
-				RelativePath="src\convert\ffdshow_converters.h">
-			</File>
-			<File 
-				RelativePath="src\convert\ffdshow_converters.cpp">
-				<FileConfiguration 
-					Name="Release Unicode|Win32">
-					<Tool 
-						Name="CppCmplrTool"
-						AssemblerOutput="4"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release Unicode|x64">
-					<Tool 
-						Name="CppCmplrTool"
-						AssemblerOutput="4"/>
-				</FileConfiguration>
-			</File>
-			<File 
-				RelativePath="src\convert\ffYCbCr_RGB_MatrixCoefficients.h">
-			</File>
-			<File 
-				RelativePath="src\convert\ffYCbCr_RGB_MatrixCoefficients.cpp">
 			</File>
 			<File 
 				RelativePath="src\convert\image.cpp">
@@ -4153,6 +4153,9 @@
 			</File>
 			<File 
 				RelativePath="src\convert\Tswscale.h">
+			</File>
+			<File 
+				RelativePath="src\convert\TYCbCr2RGB_coeffs.h">
 			</File>
 		</Filter>
 		<Filter 
