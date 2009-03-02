@@ -110,6 +110,7 @@ SRCS_C=\
       $(LAVC_DIR)/msvideo1.c \
       $(LAVC_DIR)/nellymoser.c \
       $(LAVC_DIR)/nellymoserdec.c \
+      $(LAVC_DIR)/options.c \
       $(LAVC_DIR)/parser.c \
       $(LAVC_DIR)/pcm.c \
       $(LAVC_DIR)/png.c \

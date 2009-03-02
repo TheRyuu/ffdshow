@@ -17,12 +17,17 @@
  */
 
 /**
- * @file internal.h
+ * @file libavcodec/internal.h
  * common internal api header.
  */
 
 #ifndef AVCODEC_INTERNAL_H
 #define AVCODEC_INTERNAL_H
+
+#ifdef __GNUC__
+#include <stdint.h>
+#endif
+#include "avcodec.h"
 
 /**
  * Logs a generic warning message about a missing feature.

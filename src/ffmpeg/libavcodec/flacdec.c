@@ -96,26 +96,54 @@ static int64_t get_utf8(GetBitContext *gb)
 }
 
 static void allocate_buffers(FLACContext *s);
-static int metadata_parse(FLACContext *s);
+
+int ff_flac_is_extradata_valid(AVCodecContext *avctx,
+                               enum FLACExtradataFormat *format,
+                               uint8_t **streaminfo_start)
+{
+    if (!avctx->extradata || avctx->extradata_size < FLAC_STREAMINFO_SIZE) {
+        av_log(avctx, AV_LOG_ERROR, "extradata NULL or too small.\n");
+        return 0;
+    }
+    if (AV_RL32(avctx->extradata) != MKTAG('f','L','a','C')) {
+        /* extradata contains STREAMINFO only */
+        if (avctx->extradata_size != FLAC_STREAMINFO_SIZE) {
+            av_log(avctx, AV_LOG_WARNING, "extradata contains %d bytes too many.\n",
+                   FLAC_STREAMINFO_SIZE-avctx->extradata_size);
+        }
+        *format = FLAC_EXTRADATA_FORMAT_STREAMINFO;
+        *streaminfo_start = avctx->extradata;
+    } else {
+        if (avctx->extradata_size < 8+FLAC_STREAMINFO_SIZE) {
+            av_log(avctx, AV_LOG_ERROR, "extradata too small.\n");
+            return 0;
+        }
+        *format = FLAC_EXTRADATA_FORMAT_FULL_HEADER;
+        *streaminfo_start = &avctx->extradata[8];
+    }
+    return 1;
+}
 
 static av_cold int flac_decode_init(AVCodecContext *avctx)
 {
+    enum FLACExtradataFormat format;
+    uint8_t *streaminfo;
     FLACContext *s = avctx->priv_data;
     s->avctx = avctx;
 
     avctx->sample_fmt = SAMPLE_FMT_S16;
 
-    if (avctx->extradata_size > 4) {
-        /* initialize based on the demuxer-supplied streamdata header */
-        if (avctx->extradata_size == FLAC_STREAMINFO_SIZE) {
-            ff_flac_parse_streaminfo(avctx, (FLACStreaminfo *)s,
-                                     avctx->extradata);
-            allocate_buffers(s);
-        } else {
-            init_get_bits(&s->gb, avctx->extradata, avctx->extradata_size*8);
-            metadata_parse(s);
-        }
-    }
+    /* for now, the raw FLAC header is allowed to be passed to the decoder as
+       frame data instead of extradata. */
+    if (!avctx->extradata)
+        return 0;
+
+    if (!ff_flac_is_extradata_valid(avctx, &format, &streaminfo))
+        return -1;
+
+    /* initialize based on the demuxer-supplied streamdata header */
+    ff_flac_parse_streaminfo(avctx, (FLACStreaminfo *)s, streaminfo);
+    allocate_buffers(s);
 
     return 0;
 }
@@ -178,10 +206,10 @@ void ff_flac_parse_streaminfo(AVCodecContext *avctx, struct FLACStreaminfo *s,
         avctx->sample_fmt = SAMPLE_FMT_S16;
 
     s->samples  = get_bits_long(&gb, 32) << 4;
-    s->samples |= get_bits_long(&gb, 4);
+    s->samples |= get_bits(&gb, 4);
 
-    skip_bits(&gb, 64); /* md5 sum */
-    skip_bits(&gb, 64); /* md5 sum */
+    skip_bits_long(&gb, 64); /* md5 sum */
+    skip_bits_long(&gb, 64); /* md5 sum */
 
     dump_headers(avctx, s);
 }
@@ -199,7 +227,7 @@ static int metadata_parse(FLACContext *s)
     int initial_pos= get_bits_count(&s->gb);
 
     if (show_bits_long(&s->gb, 32) == MKBETAG('f','L','a','C')) {
-        skip_bits(&s->gb, 32);
+        skip_bits_long(&s->gb, 32);
 
         do {
             metadata_last = get_bits1(&s->gb);

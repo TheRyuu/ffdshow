@@ -56,6 +56,7 @@ typedef struct PixFmtInfo {
     uint8_t color_type;      /**< color type (see FF_COLOR_xxx constants) */
     uint8_t pixel_type;      /**< pixel storage type (see FF_PIXEL_xxx constants) */
     uint8_t is_alpha : 1;    /**< true if alpha can be specified */
+    uint8_t is_hwaccel : 1;  /**< true if this is an HW accelerated format */
     uint8_t x_chroma_shift;  /**< X chroma subsampling factor is 2 ^ shift */
     uint8_t y_chroma_shift;  /**< Y chroma subsampling factor is 2 ^ shift */
     uint8_t depth;           /**< bit depth of the color components */

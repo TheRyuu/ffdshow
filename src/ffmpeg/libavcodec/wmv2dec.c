@@ -497,5 +497,5 @@ AVCodec wmv2_decoder = {
     /*.flush = */NULL,
     /*.supported_framerates = */NULL,
     /*.pix_fmts = */NULL,
-    /*.long_name = */"Windows Media Video 8",
+    /*.long_name = */NULL_IF_CONFIG_SMALL("Windows Media Video 8"),
 };

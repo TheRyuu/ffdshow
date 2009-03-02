@@ -20,7 +20,7 @@
  */
 
 /**
- * @file mlpdec.c
+ * @file libavcodec/mlpdec.c
  * MLP decoder
  */
 
@@ -1068,6 +1068,6 @@ AVCodec mlp_decoder = {
     /*.flush = */NULL,
     /*.supported_framerates = */NULL,
     /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("Meridian Lossless Packing"),
+    /*.long_name = */NULL_IF_CONFIG_SMALL("MLP (Meridian Lossless Packing)/TrueHD"),
 };
 
