@@ -35,12 +35,14 @@
 
 #include <limits.h>
 
-#define ALT_BITSTREAM_READER
 #include "libavutil/crc.h"
 #include "avcodec.h"
+#include "internal.h"
 #include "bitstream.h"
 #include "golomb.h"
 #include "flac.h"
+
+#include <malloc.h>
 
 #undef NDEBUG
 #include <assert.h>
@@ -150,8 +152,7 @@ static av_cold int flac_decode_init(AVCodecContext *avctx)
 
 static void dump_headers(AVCodecContext *avctx, FLACStreaminfo *s)
 {
-    av_log(avctx, AV_LOG_DEBUG, "  Blocksize: %d .. %d\n", s->min_blocksize,
-           s->max_blocksize);
+    av_log(avctx, AV_LOG_DEBUG, "  Max Blocksize: %d\n", s->max_blocksize);
     av_log(avctx, AV_LOG_DEBUG, "  Max Framesize: %d\n", s->max_framesize);
     av_log(avctx, AV_LOG_DEBUG, "  Samplerate: %d\n", s->samplerate);
     av_log(avctx, AV_LOG_DEBUG, "  Channels: %d\n", s->channels);
@@ -186,9 +187,13 @@ void ff_flac_parse_streaminfo(AVCodecContext *avctx, struct FLACStreaminfo *s,
     GetBitContext gb;
     init_get_bits(&gb, buffer, FLAC_STREAMINFO_SIZE*8);
 
-    /* mandatory streaminfo */
-    s->min_blocksize = get_bits(&gb, 16);
+    skip_bits(&gb, 16); /* skip min blocksize */
     s->max_blocksize = get_bits(&gb, 16);
+    if (s->max_blocksize < 16) {
+        av_log(avctx, AV_LOG_WARNING, "invalid max blocksize: %d\n",
+               s->max_blocksize);
+        s->max_blocksize = 16;
+    }
 
     skip_bits(&gb, 24); /* skip min frame size */
     s->max_framesize = get_bits_long(&gb, 24);
@@ -288,7 +293,7 @@ static int decode_residuals(FLACContext *s, int channel, int pred_order)
         if (tmp == (method_type == 0 ? 15 : 31)) {
             tmp = get_bits(&s->gb, 5);
             for (; i < samples; i++, sample++)
-                s->decoded[channel][sample] = get_sbits(&s->gb, tmp);
+                s->decoded[channel][sample] = get_sbits_long(&s->gb, tmp);
         } else {
             for (; i < samples; i++, sample++) {
                 s->decoded[channel][sample] = get_sr_golomb_flac(&s->gb, tmp, INT_MAX, 0);
@@ -308,7 +313,7 @@ static int decode_subframe_fixed(FLACContext *s, int channel, int pred_order)
 
     /* warm up samples */
     for (i = 0; i < pred_order; i++) {
-        decoded[i] = get_sbits(&s->gb, s->curr_bps);
+        decoded[i] = get_sbits_long(&s->gb, s->curr_bps);
     }
 
     if (decode_residuals(s, channel, pred_order) < 0)
@@ -363,7 +368,7 @@ static int decode_subframe_lpc(FLACContext *s, int channel, int pred_order)
 
     /* warm up samples */
     for (i = 0; i < pred_order; i++) {
-        decoded[i] = get_sbits(&s->gb, s->curr_bps);
+        decoded[i] = get_sbits_long(&s->gb, s->curr_bps);
     }
 
     coeff_prec = get_bits(&s->gb, 4) + 1;
@@ -434,6 +439,10 @@ static inline int decode_subframe(FLACContext *s, int channel)
         if (s->decorrelation == LEFT_SIDE || s->decorrelation == MID_SIDE)
             s->curr_bps++;
     }
+    if (s->curr_bps > 32) {
+        ff_log_missing_feature(s->avctx, "decorrelated bit depth > 32", 0);
+        return -1;
+    }
 
     if (get_bits1(&s->gb)) {
         av_log(s->avctx, AV_LOG_ERROR, "invalid subframe padding\n");
@@ -450,12 +459,12 @@ static inline int decode_subframe(FLACContext *s, int channel)
 
 //FIXME use av_log2 for types
     if (type == 0) {
-        tmp = get_sbits(&s->gb, s->curr_bps);
+        tmp = get_sbits_long(&s->gb, s->curr_bps);
         for (i = 0; i < s->blocksize; i++)
             s->decoded[channel][i] = tmp;
     } else if (type == 1) {
         for (i = 0; i < s->blocksize; i++)
-            s->decoded[channel][i] = get_sbits(&s->gb, s->curr_bps);
+            s->decoded[channel][i] = get_sbits_long(&s->gb, s->curr_bps);
     } else if ((type >= 8) && (type <= 12)) {
         if (decode_subframe_fixed(s, channel, type & ~0x8) < 0)
             return -1;
@@ -527,9 +536,10 @@ static int decode_frame(FLACContext *s, int alloc_data_size)
         return -1;
     }
 
-    if (blocksize_code == 0)
-        blocksize = s->min_blocksize;
-    else if (blocksize_code == 6)
+    if (blocksize_code == 0) {
+        av_log(s->avctx, AV_LOG_ERROR, "reserved blocksize code: 0\n");
+        return -1;
+    } else if (blocksize_code == 6)
         blocksize = get_bits(&s->gb, 8)+1;
     else if (blocksize_code == 7)
         blocksize = get_bits(&s->gb, 16)+1;

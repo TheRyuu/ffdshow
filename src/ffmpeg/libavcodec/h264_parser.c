@@ -123,6 +123,9 @@ static inline int parse_nal_units(AVCodecParserContext *s,
 
     h->s.avctx= avctx;
     h->sei_recovery_frame_cnt = -1;
+    h->sei_dpb_output_delay         =  0;
+    h->sei_cpb_removal_delay        = -1;
+    h->sei_buffering_period_present =  0;
 
     for(;;) {
         int src_length, dst_length, consumed;

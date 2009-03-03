@@ -25,6 +25,7 @@
  * @author Michael Niedermayer <michaelni@gmx.at>
  */
 
+#include "internal.h"
 #include "dsputil.h"
 #include "avcodec.h"
 #include "mpegvideo.h"
@@ -2107,6 +2108,18 @@ av_cold int avcodec_h264_decode_init_is_avc(AVCodecContext *avctx){
     }
 }
 
+/**
+ * Reset SEI values at the beginning of the frame.
+ *
+ * @param h H.264 context.
+ */
+static void reset_sei(H264Context *h) {
+    h->sei_recovery_frame_cnt       = -1;
+    h->sei_dpb_output_delay         =  0;
+    h->sei_cpb_removal_delay        = -1;
+    h->sei_buffering_period_present =  0;
+}
+
 static av_cold int decode_init(AVCodecContext *avctx){
     H264Context *h= avctx->priv_data;
     MpegEncContext * const s = &h->s;
@@ -2124,25 +2137,24 @@ static av_cold int decode_init(AVCodecContext *avctx){
     s->quarter_sample = 1;
     s->low_delay= 1;
 
+    /* ffdshow custom code (begin) */
     if(avctx->codec_id == CODEC_ID_SVQ3)
         avctx->pix_fmt= PIX_FMT_YUVJ420P;
     else
         avctx->pix_fmt= PIX_FMT_YUV420P;
+    /* ffdshow custom code (end) */
 
     decode_init_vlc();
 
-    /* ffdshow custom code begin */
+    /* ffdshow custom code (begin) */
     h->is_avc = avcodec_h264_decode_init_is_avc(avctx);
     h->got_avcC = 0;
-    /* ffdshow custom code end */
+    /* ffdshow custom code (end) */
 
     h->thread_context[0] = h;
     h->outputed_poc = INT_MIN;
     h->prev_poc_msb= 1<<16;
-    h->sei_recovery_frame_cnt = -1;
-    h->sei_dpb_output_delay = 0;
-    h->sei_cpb_removal_delay = -1;
-    h->sei_buffering_period_present = 0;
+    reset_sei(h);
     return 0;
 }
 
@@ -3077,10 +3089,7 @@ static void flush_dpb(AVCodecContext *avctx){
     if(h->s.current_picture_ptr)
         h->s.current_picture_ptr->reference= 0;
     h->s.first_field= 0;
-    h->sei_recovery_frame_cnt = -1;
-    h->sei_dpb_output_delay = 0;
-    h->sei_cpb_removal_delay = -1;
-    h->sei_buffering_period_present = 0;
+    reset_sei(h);
     h->has_to_drop_first_non_ref = avctx->h264_has_to_drop_first_non_ref; /* ffdshow custom code */
     ff_mpeg_flush(avctx);
 }
@@ -3201,13 +3210,13 @@ static int execute_ref_pic_marking(H264Context *h, MMCO *mmco, int mmco_count){
     MpegEncContext * const s = &h->s;
     int i, j;
     int current_ref_assigned=0;
-    Picture *pic;
+    Picture *av_uninit(pic);
 
     if((s->avctx->debug&FF_DEBUG_MMCO) && mmco_count==0)
         av_log(h->s.avctx, AV_LOG_DEBUG, "no mmco here\n");
 
     for(i=0; i<mmco_count; i++){
-        int structure, frame_num;
+        int structure, av_uninit(frame_num);
         if(s->avctx->debug&FF_DEBUG_MMCO)
             av_log(h->s.avctx, AV_LOG_DEBUG, "mmco:%d %d %d\n", h->mmco[i].opcode, h->mmco[i].short_pic_num, h->mmco[i].long_arg);
 
@@ -3695,13 +3704,13 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
         return -1;
     }
     if(!h0->pps_buffers[pps_id]) {
-        av_log(h->s.avctx, AV_LOG_ERROR, "non-existing PPS referenced\n");
+        av_log(h->s.avctx, AV_LOG_ERROR, "non-existing PPS %u referenced\n", pps_id);
         return -1;
     }
     h->pps= *h0->pps_buffers[pps_id];
 
     if(!h0->sps_buffers[h->pps.sps_id]) {
-        av_log(h->s.avctx, AV_LOG_ERROR, "non-existing SPS referenced\n");
+        av_log(h->s.avctx, AV_LOG_ERROR, "non-existing SPS %u referenced\n", h->pps.sps_id);
         return -1;
     }
     h->sps = *h0->sps_buffers[h->pps.sps_id];
@@ -4204,17 +4213,16 @@ static int decode_residual(H264Context *h, GetBitContext *gb, DCTELEM *block, in
             //first coefficient has suffix_length equal to 0 or 1
             if(prefix<14){ //FIXME try to build a large unified VLC table for all this
                 if(suffix_length)
-                    level_code= (prefix<<suffix_length) + get_bits(gb, suffix_length); //part
+                    level_code= (prefix<<1) + get_bits1(gb); //part
                 else
-                    level_code= (prefix<<suffix_length); //part
+                    level_code= prefix; //part
             }else if(prefix==14){
                 if(suffix_length)
-                    level_code= (prefix<<suffix_length) + get_bits(gb, suffix_length); //part
+                    level_code= (prefix<<1) + get_bits1(gb); //part
                 else
                     level_code= prefix + get_bits(gb, 4); //part
             }else{
-                level_code= (15<<suffix_length) + get_bits(gb, prefix-3); //part
-                if(suffix_length==0) level_code+=15; //FIXME doesn't make (much)sense
+                level_code= 30 + get_bits(gb, prefix-3); //part
                 if(prefix>=16)
                     level_code += (1<<(prefix-3))-4096;
             }
@@ -7637,6 +7645,7 @@ static int decode_nal_units(H264Context *h, const uint8_t *buf, int buf_size){
         h->current_slice = 0;
         if (!s->first_field)
             s->current_picture_ptr= NULL;
+        reset_sei(h);
     }
 
     for(;;){
@@ -7942,10 +7951,6 @@ static int decode_frame(AVCodecContext *avctx,
             ff_er_frame_end(s);
 
         MPV_frame_end(s);
-        h->sei_recovery_frame_cnt = -1;
-        h->sei_dpb_output_delay = 0;
-        h->sei_cpb_removal_delay = -1;
-        h->sei_buffering_period_present = 0;
 
         if (cur->field_poc[0]==INT_MAX || cur->field_poc[1]==INT_MAX) {
             /* Wait for second field. */

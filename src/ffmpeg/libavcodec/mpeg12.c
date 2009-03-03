@@ -26,6 +26,7 @@
  */
 
 //#define DEBUG
+#include "internal.h"
 #include "avcodec.h"
 #include "dsputil.h"
 #include "mpegvideo.h"
@@ -1540,7 +1541,7 @@ static void exchange_uv(MpegEncContext *s){
     s->pblocks[5] = tmp;
 }
 
-static int mpeg_field_start(MpegEncContext *s){
+static int mpeg_field_start(MpegEncContext *s, const uint8_t *buf, int buf_size){
     AVCodecContext *avctx= s->avctx;
     Mpeg1Context *s1 = (Mpeg1Context*)s;
 
@@ -2099,7 +2100,7 @@ static void mpeg_decode_gop(AVCodecContext *avctx,
  * Finds the end of the current frame in the bitstream.
  * @return the position of the first byte of the next frame, or -1
  */
-int ff_mpeg1_find_frame_end(ParseContext *pc, const uint8_t *buf, int buf_size, int64_t *rtStart) /* rtStart: ffdshow custom code */
+int ff_mpeg1_find_frame_end(ParseContext *pc, const uint8_t *buf, int buf_size, AVCodecParserContext *s, int64_t *rtStart) /* rtStart: ffdshow custom code */
 {
     int i;
     uint32_t state= pc->state;
@@ -2186,7 +2187,7 @@ static int mpeg_decode_frame(AVCodecContext *avctx,
     }
 
     if(s2->flags&CODEC_FLAG_TRUNCATED){
-        int next = ff_mpeg1_find_frame_end(&s2->parse_context, buf, buf_size, avctx->parserRtStart); /* avctx->parserRtStart: ffdshow custom code */
+        int next = ff_mpeg1_find_frame_end(&s2->parse_context, buf, buf_size, NULL, avctx->parserRtStart); /* avctx->parserRtStart: ffdshow custom code */
 
         if( ff_combine_frame(&s2->parse_context, next, (const uint8_t **)&buf, &buf_size) < 0 )
             return buf_size;
@@ -2315,7 +2316,7 @@ static int decode_chunks(AVCodecContext *avctx,
 
                 if(s2->first_slice){
                     s2->first_slice=0;
-                    if(mpeg_field_start(s2) < 0)
+                    if(mpeg_field_start(s2, buf, buf_size) < 0)
                         return -1;
                 }
                 if(!s2->current_picture_ptr){
