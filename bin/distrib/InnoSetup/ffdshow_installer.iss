@@ -1,9 +1,9 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision = '2734'
+#define tryout_revision = '2740'
 #define buildyear  = '2009'
 #define buildmonth = '03'
-#define buildday   = '01'
+#define buildday   = '04'
 
 ; Build specific options
 #define localize = True
@@ -277,8 +277,8 @@ Name: "video";                   Description: "{cm:tsk_videoFormatsSelect}";    
 Name: "video\h264";              Description: "H.264 / AVC";                                                                                                                                   Components: ffdshow; Flags: unchecked
 Name: "video\h264\libavcodec";   Description: "libavcodec";                                                Check:      CheckTaskVideo(  'h264',  1, True);                                     Components: ffdshow; Flags:           exclusive
 Name: "video\h264\libavcodec";   Description: "libavcodec";                                                Check: NOT  CheckTaskVideo(  'h264',  1, True);                                     Components: ffdshow; Flags: unchecked exclusive
-Name: "video\h264\ffmpegmt";     Description: "ffmpeg-mt";                                                 Check:      CheckTaskVideo(  'h264', 21, True);                                     Components: ffdshow; Flags:           exclusive
-Name: "video\h264\ffmpegmt";     Description: "ffmpeg-mt";                                                 Check: NOT  CheckTaskVideo(  'h264', 21, True);                                     Components: ffdshow; Flags: unchecked exclusive
+Name: "video\h264\ffmpegmt";     Description: "ffmpeg-mt";                                                 Check:      CheckTaskVideo(  'h264', 20, True);                                     Components: ffdshow; Flags:           exclusive
+Name: "video\h264\ffmpegmt";     Description: "ffmpeg-mt";                                                 Check: NOT  CheckTaskVideo(  'h264', 20, True);                                     Components: ffdshow; Flags: unchecked exclusive
 Name: "video\divx";              Description: "DivX";                                                      Check:      CheckTaskVideo2( 'dx50',     True);                                     Components: ffdshow;
 Name: "video\divx";              Description: "DivX";                                                      Check: NOT  CheckTaskVideo2( 'dx50',     True);                                     Components: ffdshow; Flags: unchecked
 Name: "video\xvid";              Description: "Xvid";                                                      Check:      CheckTaskVideo2( 'xvid',     True);                                     Components: ffdshow
@@ -440,7 +440,9 @@ Source: "Runtimes\pthreadGC2\x64\pthreadGC2-64.dll";              DestDir: "{sys
 #if include_xvidcore
 Source: "{#= bindir}\xvidcore.dll";                               DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion
 #endif
+#if !is64bit
 Source: "{#= bindir}\ff_kernelDeint.dll";                         DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion
+#endif
 Source: "{#= bindir}\TomsMoComp_ff.dll";                          DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion
 Source: "{#= bindir}\libmpeg2_ff.dll";                            DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion restartreplace uninsrestartdelete
 
