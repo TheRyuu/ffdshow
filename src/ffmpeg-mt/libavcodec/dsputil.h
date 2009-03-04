@@ -21,7 +21,7 @@
  */
 
 /**
- * @file dsputil.h
+ * @file libavcodec/dsputil.h
  * DSP utils.
  * note, many functions in here may use MMX which trashes the FPU state, it is
  * absolutely necessary to call emms_c() between dsp & float/double code
@@ -94,6 +94,10 @@ void ff_vp3_idct_add_c(uint8_t *dest/*align 8*/, int line_size, DCTELEM *block/*
 void ff_vp3_v_loop_filter_c(uint8_t *src, int stride, int *bounding_values);
 void ff_vp3_h_loop_filter_c(uint8_t *src, int stride, int *bounding_values);
 
+/* VP6 DSP functions */
+void ff_vp6_filter_diag4_c(uint8_t *dst, uint8_t *src, int stride,
+                           const int16_t *h_weights, const int16_t *v_weights);
+
 /* 1/2^n downscaling functions from imgconvert.c */
 void ff_img_copy_plane(uint8_t *dst, int dst_wrap, const uint8_t *src, int src_wrap, int width, int height);
 void ff_shrink22(uint8_t *dst, int dst_wrap, const uint8_t *src, int src_wrap, int width, int height);
@@ -163,10 +167,9 @@ static void a(uint8_t *block, const uint8_t *pixels, int line_size, int h){\
 // although currently h<4 is not used as functions with width <8 are neither used nor implemented
 typedef int (*me_cmp_func)(void /*MpegEncContext*/ *s, uint8_t *blk1/*align width (8 or 16)*/, uint8_t *blk2/*align 1*/, int line_size, int h)/* __attribute__ ((const))*/;
 
-#if 0 // disable snow
+
 // for snow slices
 typedef struct slice_buffer_s slice_buffer;
-#endif
 
 /**
  * Scantable.
@@ -211,29 +214,27 @@ typedef struct DSPContext {
     int (*pix_norm1)(uint8_t * pix, int line_size);
 // 16x16 8x8 4x4 2x2 16x8 8x4 4x2 8x16 4x8 2x4
 
-    me_cmp_func sad[5]; /* identical to pix_absAxA except additional void * */
-    me_cmp_func sse[5];
-    me_cmp_func hadamard8_diff[5];
-    me_cmp_func dct_sad[5];
-    me_cmp_func quant_psnr[5];
-    me_cmp_func bit[5];
-    me_cmp_func rd[5];
-    me_cmp_func vsad[5];
-    me_cmp_func vsse[5];
-    me_cmp_func nsse[5];
-#if 0 // disable snow
-    me_cmp_func w53[5];
-    me_cmp_func w97[5];
-#endif
-    me_cmp_func dct_max[5];
-    me_cmp_func dct264_sad[5];
+    me_cmp_func sad[6]; /* identical to pix_absAxA except additional void * */
+    me_cmp_func sse[6];
+    me_cmp_func hadamard8_diff[6];
+    me_cmp_func dct_sad[6];
+    me_cmp_func quant_psnr[6];
+    me_cmp_func bit[6];
+    me_cmp_func rd[6];
+    me_cmp_func vsad[6];
+    me_cmp_func vsse[6];
+    me_cmp_func nsse[6];
+    me_cmp_func w53[6];
+    me_cmp_func w97[6];
+    me_cmp_func dct_max[6];
+    me_cmp_func dct264_sad[6];
 
-    me_cmp_func me_pre_cmp[5];
-    me_cmp_func me_cmp[5];
-    me_cmp_func me_sub_cmp[5];
-    me_cmp_func mb_cmp[5];
-    me_cmp_func ildct_cmp[5]; //only width 16 used
-    me_cmp_func frame_skip_cmp[5]; //only width 8 used
+    me_cmp_func me_pre_cmp[6];
+    me_cmp_func me_cmp[6];
+    me_cmp_func me_sub_cmp[6];
+    me_cmp_func mb_cmp[6];
+    me_cmp_func ildct_cmp[6]; //only width 16 used
+    me_cmp_func frame_skip_cmp[6]; //only width 8 used
 
     int (*ssd_int8_vs_int16)(const int8_t *pix1, const int16_t *pix2,
                              int size);
@@ -344,6 +345,7 @@ typedef struct DSPContext {
      * note, this might read from src1[-1], src2[-1]
      */
     void (*sub_hfyu_median_prediction)(uint8_t *dst, uint8_t *src1, uint8_t *src2, int w, int *left, int *left_top);
+    void (*add_hfyu_median_prediction)(uint8_t *dst, uint8_t *top, uint8_t *diff, int w, int *left, int *left_top);
     /* this might write to dst[w] */
     void (*add_png_paeth_prediction)(uint8_t *dst, uint8_t *src, uint8_t *top, int w, int bpp);
     void (*bswap_buf)(uint32_t *dst, const uint32_t *src, int w);
@@ -371,6 +373,9 @@ typedef struct DSPContext {
 
     void (*vp3_v_loop_filter)(uint8_t *src, int stride, int *bounding_values);
     void (*vp3_h_loop_filter)(uint8_t *src, int stride, int *bounding_values);
+
+    void (*vp6_filter_diag4)(uint8_t *dst, uint8_t *src, int stride,
+                             const int16_t *h_weights,const int16_t *v_weights);
 
     /* assume len is a multiple of 4, and arrays are 16-byte aligned */
     void (*vorbis_inverse_coupling)(float *mag, float *ang, int blocksize);
@@ -456,12 +461,10 @@ typedef struct DSPContext {
     void (*h264_idct_add8)(uint8_t **dst/*align 16*/, const int *blockoffset, DCTELEM *block/*align 16*/, int stride, const uint8_t nnzc[6*8]);
     void (*h264_idct_add16intra)(uint8_t *dst/*align 16*/, const int *blockoffset, DCTELEM *block/*align 16*/, int stride, const uint8_t nnzc[6*8]);
 
-#if 0 // disable snow
     /* snow wavelet */
     void (*vertical_compose97i)(IDWTELEM *b0, IDWTELEM *b1, IDWTELEM *b2, IDWTELEM *b3, IDWTELEM *b4, IDWTELEM *b5, int width);
     void (*horizontal_compose97i)(IDWTELEM *b, int width);
     void (*inner_add_yblock)(const uint8_t *obmc, const int obmc_stride, uint8_t * * block, int b_w, int b_h, int src_x, int src_y, int src_stride, slice_buffer * sb, int add, uint8_t * dst8);
-#endif
 
     void (*prefetch)(void *mem, int stride, int h);
 
@@ -527,12 +530,10 @@ static inline int get_penalty_factor(int lambda, int lambda2, int type){
         return lambda>>FF_LAMBDA_SHIFT;
     case FF_CMP_DCT:
         return (3*lambda)>>(FF_LAMBDA_SHIFT+1);
-#if 0 // disable snow
     case FF_CMP_W53:
         return (4*lambda)>>(FF_LAMBDA_SHIFT);
     case FF_CMP_W97:
         return (2*lambda)>>(FF_LAMBDA_SHIFT);
-#endif
     case FF_CMP_SATD:
     case FF_CMP_DCT264:
         return (2*lambda)>>FF_LAMBDA_SHIFT;
@@ -634,6 +635,13 @@ typedef struct FFTContext {
     void (*imdct_half)(struct MDCTContext *s, FFTSample *output, const FFTSample *input);
 } FFTContext;
 
+extern FFTSample* ff_cos_tabs[13];
+
+/**
+ * Sets up a complex FFT.
+ * @param nbits           log2 of the length of the input array
+ * @param inverse         if 0 perform the forward transform, if 1 perform the inverse
+ */
 int ff_fft_init(FFTContext *s, int nbits, int inverse);
 void ff_fft_permute_c(FFTContext *s, FFTComplex *z);
 void ff_fft_permute_sse(FFTContext *s, FFTComplex *z);
@@ -643,10 +651,17 @@ void ff_fft_calc_3dn(FFTContext *s, FFTComplex *z);
 void ff_fft_calc_3dn2(FFTContext *s, FFTComplex *z);
 void ff_fft_calc_altivec(FFTContext *s, FFTComplex *z);
 
+/**
+ * Do the permutation needed BEFORE calling ff_fft_calc().
+ */
 static inline void ff_fft_permute(FFTContext *s, FFTComplex *z)
 {
     s->fft_permute(s, z);
 }
+/**
+ * Do a complex FFT with the parameters defined in ff_fft_init(). The
+ * input data must be permuted before. No 1.0/sqrt(n) normalization is done.
+ */
 static inline void ff_fft_calc(FFTContext *s, FFTComplex *z)
 {
     s->fft_calc(s, z);
@@ -706,6 +721,35 @@ void ff_imdct_calc_sse(MDCTContext *s, FFTSample *output, const FFTSample *input
 void ff_imdct_half_sse(MDCTContext *s, FFTSample *output, const FFTSample *input);
 void ff_mdct_calc(MDCTContext *s, FFTSample *out, const FFTSample *input);
 void ff_mdct_end(MDCTContext *s);
+
+/* Real Discrete Fourier Transform */
+
+enum RDFTransformType {
+    RDFT,
+    IRDFT,
+    RIDFT,
+    IRIDFT,
+};
+
+typedef struct {
+    int nbits;
+    int inverse;
+    int sign_convention;
+
+    /* pre/post rotation tables */
+    FFTSample *tcos;
+    FFTSample *tsin;
+    FFTContext fft;
+} RDFTContext;
+
+/**
+ * Sets up a real FFT.
+ * @param nbits           log2 of the length of the input array
+ * @param trans           the type of transform
+ */
+int ff_rdft_init(RDFTContext *s, int nbits, enum RDFTransformType trans);
+void ff_rdft_calc(RDFTContext *s, FFTSample *data);
+void ff_rdft_end(RDFTContext *s);
 
 #define WRAPPER8_16(name8, name16)\
 static int name16(void /*MpegEncContext*/ *s, uint8_t *dst, uint8_t *src, int stride, int h){\

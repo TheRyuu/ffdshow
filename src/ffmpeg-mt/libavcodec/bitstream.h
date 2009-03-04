@@ -19,7 +19,7 @@
  */
 
 /**
- * @file bitstream.h
+ * @file libavcodec/bitstream.h
  * bitstream api header.
  */
 
@@ -35,6 +35,7 @@
 #include "libavutil/common.h"
 #include "libavutil/intreadwrite.h"
 #include "libavutil/log.h"
+#include "mathops.h"
 
 #if defined(ALT_BITSTREAM_READER_LE) && !defined(ALT_BITSTREAM_READER)
 #   define ALT_BITSTREAM_READER
@@ -83,6 +84,7 @@ typedef struct PutBitContext {
     int bit_left;
     uint8_t *buf, *buf_ptr, *buf_end;
 #endif
+    int size_in_bits;
 } PutBitContext;
 
 static inline void init_put_bits(PutBitContext *s, uint8_t *buffer, int buffer_size)
@@ -92,6 +94,7 @@ static inline void init_put_bits(PutBitContext *s, uint8_t *buffer, int buffer_s
         buffer = NULL;
     }
 
+    s->size_in_bits= 8*buffer_size;
     s->buf = buffer;
     s->buf_end = s->buf + buffer_size;
 #ifdef ALT_BITSTREAM_WRITER
@@ -196,10 +199,7 @@ static inline void put_bits(PutBitContext *s, int n, unsigned int value)
     if (n >= bit_left) {
 #if !HAVE_FAST_UNALIGNED
         if (3 & (intptr_t) s->buf_ptr) {
-            s->buf_ptr[0] = bit_buf      ;
-            s->buf_ptr[1] = bit_buf >>  8;
-            s->buf_ptr[2] = bit_buf >> 16;
-            s->buf_ptr[3] = bit_buf >> 24;
+            AV_WL32(s->buf_ptr, bit_buf);
         } else
 #endif
         *(uint32_t *)s->buf_ptr = le2me_32(bit_buf);
@@ -217,10 +217,7 @@ static inline void put_bits(PutBitContext *s, int n, unsigned int value)
         bit_buf |= value >> (n - bit_left);
 #if !HAVE_FAST_UNALIGNED
         if (3 & (intptr_t) s->buf_ptr) {
-            *(unsigned int *)s->buf_ptr[0] = bit_buf >> 24;
-            *(unsigned int *)s->buf_ptr[1] = bit_buf >> 16;
-            *(unsigned int *)s->buf_ptr[2] = bit_buf >>  8;
-            *(unsigned int *)s->buf_ptr[3] = bit_buf      ;
+            AV_WB32(s->buf_ptr, bit_buf);
         } else
 #endif
         *(uint32_t *)s->buf_ptr = be2me_32(bit_buf);
@@ -709,15 +706,20 @@ static inline unsigned int get_bits_long(GetBitContext *s, int n){
 }
 
 /**
+ * reads 0-32 bits as a signed integer.
+ */
+static inline int get_sbits_long(GetBitContext *s, int n) {
+    return sign_extend(get_bits_long(s, n), n);
+}
+
+/**
  * shows 0-32 bits.
  */
 static inline unsigned int show_bits_long(GetBitContext *s, int n){
     if(n<=17) return show_bits(s, n);
     else{
         GetBitContext gb= *s;
-        int ret= get_bits_long(s, n);
-        *s= gb;
-        return ret;
+        return get_bits_long(&gb, n);
     }
 }
 

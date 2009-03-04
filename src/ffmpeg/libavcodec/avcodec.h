@@ -290,6 +290,14 @@ typedef struct RcOverride{
  * This can be used to prevent truncation of the last audio samples.
  */
 #define CODEC_CAP_SMALL_LAST_FRAME 0x0040
+/**
+ * Codec can export data for HW decoding (VDPAU).
+ */
+#define CODEC_CAP_HWACCEL_VDPAU    0x0080
+/**
+ * Codec supports frame-based multithreading.
+ */
+#define CODEC_CAP_FRAME_THREADS    0x0100
 
 //The following defines may change, don't expect compatibility if you use them.
 #define MB_TYPE_INTRA4x4   0x0001
@@ -568,6 +576,10 @@ typedef struct AVPanScan{
     int mb_width,mb_height,mb_stride,b8_stride;\
     int num_sprite_warping_points,real_sprite_warping_points;\
     int play_flags;\
+\
+    /* ffmpeg-mt */\
+    struct AVCodecContext *owner;\
+    void *thread_opaque;\
 \
     /* ffdshow custom stuffs (begin) */\
 \
@@ -2051,14 +2063,13 @@ typedef struct AVCodecContext {
     int64_t reordered_opaque2; /* ffdshow custom code */
     int64_t reordered_opaque3; /* ffdshow custom code */
 
-    /**
-     * ffdshow custom code - dummy -
-     */
-    int thread_type;
-    int active_thread_type;
+    int is_copy;  /* ffmpeg-mt */
+    int thread_type;  /* ffmpeg-mt */
 #define FF_THREAD_FRAME   1 //< Decode more than one frame at once
 #define FF_THREAD_SLICE   2 //< Decode more than one part of a single frame at once
 #define FF_THREAD_DEFAULT 3 //< Use both if possible.
+
+    int active_thread_type; /* ffmpeg-mt */
     /**
      * Bits per sample/pixel of internal libavcodec pixel/sample format.
      * This field is applicable only when sample_fmt is SAMPLE_FMT_S32.
@@ -2166,6 +2177,10 @@ typedef struct AVCodec {
     const int *supported_samplerates;       ///< array of supported audio samplerates, or NULL if unknown, array is terminated by 0
     const enum SampleFormat *sample_fmts;   ///< array of supported sample formats, or NULL if unknown, array is terminated by -1
     const int64_t *channel_layouts;         ///< array of support channel layouts, or NULL if unknown. array is terminated by 0
+    
+    /* ffmpeg-mt */
+    int (*init_copy)(AVCodecContext *);
+    int (*update_context)(AVCodecContext *, AVCodecContext *from);
 } AVCodec;
 
 /**

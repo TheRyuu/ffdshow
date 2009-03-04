@@ -55,7 +55,7 @@ DECLARE_ALIGNED_8 (const uint64_t, ff_pw_20 ) = 0x0014001400140014ULL;
 DECLARE_ALIGNED_16(const xmm_reg,  ff_pw_28 ) = {0x001C001C001C001CULL, 0x001C001C001C001CULL};
 DECLARE_ALIGNED_16(const xmm_reg,  ff_pw_32 ) = {0x0020002000200020ULL, 0x0020002000200020ULL};
 DECLARE_ALIGNED_8 (const uint64_t, ff_pw_42 ) = 0x002A002A002A002AULL;
-DECLARE_ALIGNED_8 (const uint64_t, ff_pw_64 ) = 0x0040004000400040ULL;
+DECLARE_ALIGNED_16(const xmm_reg,  ff_pw_64 ) = {0x0040004000400040ULL, 0x0040004000400040ULL};
 DECLARE_ALIGNED_8 (const uint64_t, ff_pw_96 ) = 0x0060006000600060ULL;
 DECLARE_ALIGNED_8 (const uint64_t, ff_pw_128) = 0x0080008000800080ULL;
 DECLARE_ALIGNED_8 (const uint64_t, ff_pw_255) = 0x00ff00ff00ff00ffULL;
@@ -1813,9 +1813,6 @@ static void ff_idct_xvid_mmx2_add(uint8_t *dest, int line_size, DCTELEM *block)
     add_pixels_clamped_mmx(block, dest, line_size);
 }
 
-/* disable audio related ASM and YASM based ASM for 64-bit builds */
-#if ARCH_X86_32
-
 static void vorbis_inverse_coupling_3dnow(float *mag, float *ang, int blocksize)
 {
     int i;
@@ -2444,7 +2441,6 @@ static void float_to_int16_interleave_3dn2(int16_t *dst, const float **src, long
     else
         float_to_int16_interleave_3dnow(dst, src, len, channels);
 }
-#endif /* ARCH_X86_32 */
 
 
 void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
