@@ -350,11 +350,13 @@ STDMETHODIMP TffdshowDec::getPresets(Tpresets *presets2)
 STDMETHODIMP TffdshowDec::setPresets(const Tpresets *presets2)
 {
     if (!presets2) return E_POINTER;
+
+    // copy every thing preset in presets2 (src).
     foreach (const Tpreset* src ,*presets2) {
         bool copied;
         copied = false;
         foreach (Tpreset* dst, *presets) {
-            if(strncmp(dst->presetName, src->presetName, countof(dst->presetName)) == 0) {
+            if (strncmp(dst->presetName, src->presetName, countof(dst->presetName)) == 0) {
                 *dst = *src;
                 copied = true;
                 break;
@@ -362,6 +364,22 @@ STDMETHODIMP TffdshowDec::setPresets(const Tpresets *presets2)
         }
         if (!copied) {
             presets->push_back(src->copy());
+        }
+    }
+
+    // remove from presets (dst) what does not exist in presets2 (src).
+    for (Tpresets::iterator dst = presets->begin() ; dst != presets->end() ; ) {
+        bool found = false;
+        foreach (const Tpreset* src, *presets2) {
+            if (strncmp((*dst)->presetName, src->presetName, countof((*dst)->presetName)) == 0) {
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            dst = presets->erase(dst);
+        } else {
+            dst++;
         }
     }
     return S_OK;
