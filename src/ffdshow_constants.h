@@ -670,8 +670,8 @@
    #define IDFF_MOVIE_LIBDTS  17
    #define IDFF_MOVIE_TREMOR  18
    #define IDFF_MOVIE_REALAAC 19
-   #define IDFF_MOVIE_FFMPEG_MT 20
-   #define IDFF_MOVIE_MAX     20 // should equal highest value of codecs above (see TglobalSettings.cpp)
+   #define IDFF_MOVIE_FFMPEG_MT 21
+   #define IDFF_MOVIE_MAX     21 // should equal highest value of codecs above (see TglobalSettings.cpp)
   #define IDFF_OSDtype_accurDeblock        30
   #define IDFF_OSDtype_outputFOURCC      1540
   #define IDFF_OSDtype_inputFPS          1541

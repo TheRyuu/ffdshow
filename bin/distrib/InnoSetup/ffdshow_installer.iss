@@ -277,8 +277,8 @@ Name: "video";                   Description: "{cm:tsk_videoFormatsSelect}";    
 Name: "video\h264";              Description: "H.264 / AVC";                                                                                                                                   Components: ffdshow; Flags: unchecked
 Name: "video\h264\libavcodec";   Description: "libavcodec";                                                Check:      CheckTaskVideo(  'h264',  1, True);                                     Components: ffdshow; Flags:           exclusive
 Name: "video\h264\libavcodec";   Description: "libavcodec";                                                Check: NOT  CheckTaskVideo(  'h264',  1, True);                                     Components: ffdshow; Flags: unchecked exclusive
-Name: "video\h264\ffmpegmt";     Description: "ffmpeg-mt";                                                 Check:      CheckTaskVideo(  'h264', 20, True);                                     Components: ffdshow; Flags:           exclusive
-Name: "video\h264\ffmpegmt";     Description: "ffmpeg-mt";                                                 Check: NOT  CheckTaskVideo(  'h264', 20, True);                                     Components: ffdshow; Flags: unchecked exclusive
+Name: "video\h264\ffmpegmt";     Description: "ffmpeg-mt";                                                 Check:      CheckTaskVideoFFMPEGMT(  'h264', False);                                Components: ffdshow; Flags:           exclusive
+Name: "video\h264\ffmpegmt";     Description: "ffmpeg-mt";                                                 Check: NOT  CheckTaskVideoFFMPEGMT(  'h264', False);                                Components: ffdshow; Flags: unchecked exclusive
 Name: "video\divx";              Description: "DivX";                                                      Check:      CheckTaskVideo2( 'dx50',     True);                                     Components: ffdshow;
 Name: "video\divx";              Description: "DivX";                                                      Check: NOT  CheckTaskVideo2( 'dx50',     True);                                     Components: ffdshow; Flags: unchecked
 Name: "video\xvid";              Description: "Xvid";                                                      Check:      CheckTaskVideo2( 'xvid',     True);                                     Components: ffdshow
@@ -677,6 +677,24 @@ begin
   else begin
     if RegQueryDwordValue(HKLM, '{#= ff_reg_base}', name, regval) then begin
       Result := (regval = value);
+    end
+    else begin
+      Result := showbydefault;
+    end
+  end
+end;
+
+function CheckTaskVideoFFMPEGMT(name: String; showbydefault: Boolean): Boolean;
+var
+  regval: Cardinal;
+begin
+  Result := False;
+  if RegQueryDwordValue(HKCU, '{#= ff_reg_base}', name, regval) then begin
+    Result := (regval = 20) OR (regval = 21);
+  end
+  else begin
+    if RegQueryDwordValue(HKLM, '{#= ff_reg_base}', name, regval) then begin
+      Result := (regval = 20) OR (regval = 21);
     end
     else begin
       Result := showbydefault;
