@@ -3007,9 +3007,6 @@ static void hl_decode_mb(H264Context *h){
     const int mb_type= s->current_picture.mb_type[mb_xy];
     int is_complex = CONFIG_SMALL || h->is_complex || IS_INTRA_PCM(mb_type) || s->qscale == 0;
 
-    if(CONFIG_H264_ENCODER && !s->decode)
-        return;
-
     if (is_complex)
         hl_decode_mb_complex(h);
     else hl_decode_mb_simple(h);
@@ -7208,6 +7205,7 @@ static int av_noinline decode_picture_timing(H264Context *h){
     if(h->sps.pic_struct_present_flag){
         unsigned int i, num_clock_ts;
         h->sei_pic_struct = get_bits(&s->gb, 4);
+        h->sei_ct_type    = 0;
 
         if (h->sei_pic_struct > SEI_PIC_STRUCT_FRAME_TRIPLING)
             return -1;
@@ -7217,7 +7215,7 @@ static int av_noinline decode_picture_timing(H264Context *h){
         for (i = 0 ; i < num_clock_ts ; i++){
             if(get_bits(&s->gb, 1)){                  /* clock_timestamp_flag */
                 unsigned int full_timestamp_flag;
-                skip_bits(&s->gb, 2);                 /* ct_type */
+                h->sei_ct_type |= 1<<get_bits(&s->gb, 2);
                 skip_bits(&s->gb, 1);                 /* nuit_field_based_flag */
                 skip_bits(&s->gb, 5);                 /* counting_type */
                 full_timestamp_flag = get_bits(&s->gb, 1);
