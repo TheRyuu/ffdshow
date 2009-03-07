@@ -679,7 +679,13 @@ void Tspudec::sws_spu_image(unsigned char *d1, unsigned char *d2, int dw, int dh
  libmplayer->sws_freeContext(ctx);
 }
 
-void Tspudec::spudec_draw_scaled(unsigned int dxs, unsigned int dys, TdrawAlpha draw_alpha,const TrenderedSubtitleLines::TprintPrefs &prefs)
+void Tspudec::spudec_draw_scaled(
+    unsigned int dxs,
+    unsigned int dys,
+    TdrawAlpha draw_alpha,
+    const TrenderedSubtitleLines::TprintPrefs &prefs,
+    unsigned char **Idst,
+    const stride_t *Istride)
 {
   scale_pixel *table_x;
   scale_pixel *table_y;
@@ -1022,7 +1028,8 @@ nothing_to_do:
           break;
         }
         draw_alpha(scaled_start_col, scaled_start_row, scaled_width, scaled_height,
-                   scaled_imageY, scaled_aimageY, scaled_strideY,scaled_imageUV, scaled_aimageUV, scaled_strideUV,prefs);
+                   scaled_imageY, scaled_aimageY, scaled_strideY,scaled_imageUV, scaled_aimageUV, scaled_strideUV,prefs,
+                   Idst,Istride);
         spu_changed = 0;
       }
     }

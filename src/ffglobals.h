@@ -729,6 +729,60 @@ struct TmultipleInstances
 };
 extern const TmultipleInstances multipleInstances[];
 
+// defferred lock
+// at the time of construction, you may not know the address of Lockable.
+// explicitly call lock to lock.
+// unlocked on destruction.
+template <typename Lockable> class deferred_lock:
+    boost::noncopyable
+{
+    Lockable *lockptr;
+public:
+    deferred_lock(): lockptr(NULL) {}
+    void lock (Lockable *l) {
+        lockptr = l;
+        l->lock();
+    }
+    ~deferred_lock() {
+        if (lockptr)
+            lockptr->unlock();
+    }
+};
+
+struct defer_priority_set_t
+{};
+
+class TthreadPriority {
+    HANDLE thread;
+    bool changed;
+    int priority_on_destruction;
+public:
+    TthreadPriority(HANDLE Ithread, int Ipriority_on_destruction, defer_priority_set_t) :
+        thread(Ithread),
+        changed(false),
+        priority_on_destruction(Ipriority_on_destruction)
+    {
+    }
+
+    TthreadPriority(HANDLE Ithread, int Ipriority_on_construction, int Ipriority_on_destruction) :
+        thread(Ithread),
+        changed(true),
+        priority_on_destruction(Ipriority_on_destruction)
+    {
+        SetThreadPriority(thread, Ipriority_on_construction);
+    }
+
+    void set_priority(int priority) {
+        SetThreadPriority(thread, priority);
+        changed = true;
+    }
+
+    ~TthreadPriority() {
+        if (changed)
+            SetThreadPriority(thread, priority_on_destruction);
+    }
+};
+
 #endif //FFDEFS_STRICT
 
 #endif

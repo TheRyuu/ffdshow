@@ -34,6 +34,7 @@ void Tsubreader::clear(void)
         subtitle=NULL;
     }
     std::vector<value_type>::clear();
+    IsProcessOverlapDone = false;
 }
 
 int Tsubreader::sub_autodetect(Tstream &fd,const Tconfig *config)
@@ -245,10 +246,15 @@ void Tsubreader::setSubEnc(int &format,const Tstream &fs)
   }
 }
 
-void Tsubreader::onSeek(void)
+void Tsubreader::dropRendered()
 {
     foreach (Tsubtitle *subtitle, *this)
         subtitle->dropRenderedLines();
+}
+
+void Tsubreader::onSeek()
+{
+    dropRendered();
     processedSubtitleTexts.clear();
 }
 

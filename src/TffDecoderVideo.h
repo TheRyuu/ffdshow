@@ -324,7 +324,8 @@ public:
 #else
  STDMETHODIMP_(int) getOSDtime(void){return -1;}
 #endif
- STDMETHOD_(const Trect*,getDecodedPictdimensions)(void);
+ STDMETHODIMP_(const Trect*) getDecodedPictdimensions(void);
+ STDMETHODIMP_(HANDLE) getGlyphThreadHandle(void);
 
 private:
 #ifdef OSDTIMETABALE
@@ -493,7 +494,8 @@ private:
    STDMETHODIMP_(int) getBordersBrightness(void){return deciV->getBordersBrightness();}
    STDMETHODIMP getChaptersList(void **ppChaptersList) { return E_NOTIMPL; };
    STDMETHODIMP get_CurrentTime(REFERENCE_TIME *time) {return deciV->get_CurrentTime(time);};
-   STDMETHOD_(const Trect*,getDecodedPictdimensions)(void) {return deciV->getDecodedPictdimensions();};
+   STDMETHODIMP_(const Trect*) getDecodedPictdimensions(void) {return deciV->getDecodedPictdimensions();};
+   STDMETHODIMP_(HANDLE) getGlyphThreadHandle(void) {return deciV->getGlyphThreadHandle();};
  } decVideo_char;
  template<class Tinterface> Tinterface* getDecVideoInterface(void);
  void ConnectCompatibleFilter(void);

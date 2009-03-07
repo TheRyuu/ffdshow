@@ -46,7 +46,7 @@ public:
                         double xscale,
                         TSubtitleProps Iprops,
                         unsigned int gdi_font_scale,
-                        unsigned int GDI_rendering_window                  // Only 4 and 6 are supported (easy to add).
+                        unsigned int GDI_rendering_window                  // Only 4 and 16 are supported (easy to add).
                         );
  // secondary (for karaoke)
  TrenderedTextSubtitleWord(

@@ -98,8 +98,27 @@ public:
  void spudec_heartbeat(unsigned int pts100);
  void spudec_assemble(const unsigned char *packet, unsigned int len, unsigned int pts100);
  //void spudec_draw(void (*draw_alpha)(int x0,int y0, int w,int h, unsigned char* src, unsigned char *srca, int stride,const void *self),const void *self);
- typedef void (*TdrawAlpha)(int x0,int y0, unsigned int w,unsigned int h, const unsigned char* srcY, const unsigned char *srcaY, int strideY,const unsigned char* srcUV, const unsigned char *srcaUV, int strideUV,const TrenderedSubtitleLines::TprintPrefs &prefs);
- void spudec_draw_scaled(unsigned int dxs, unsigned int dys, TdrawAlpha draw_alpha,const TrenderedSubtitleLines::TprintPrefs &prefs);
+ typedef void (*TdrawAlpha)(
+    int x0,
+    int y0,
+    unsigned int w,
+    unsigned int h,
+    const unsigned char* srcY,
+    const unsigned char *srcaY,
+    int strideY,
+    const unsigned char* srcUV,
+    const unsigned char *srcaUV,
+    int strideUV,
+    const TrenderedSubtitleLines::TprintPrefs &prefs,
+    unsigned char **dst,
+    const stride_t *stride);
+ void spudec_draw_scaled(
+    unsigned int dxs,
+    unsigned int dys,
+    TdrawAlpha draw_alpha,
+    const TrenderedSubtitleLines::TprintPrefs &prefs,
+    unsigned char **dst,
+    const stride_t *stride);
  void spudec_update_palette(unsigned int *palette);
  void spudec_free(void);
  void spudec_reset(void);       // called after seek

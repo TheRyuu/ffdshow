@@ -1225,107 +1225,114 @@ void TsubtitleLine::format(TsubtitleFormat &format,int sfmt, TsubtitleText &pare
 }
 
 //================================= TsubtitleText ==================================
+
+// Copy constructor. mutex cannot be copied.
+TsubtitleText::TsubtitleText(const TsubtitleText &src):
+    Tsubtitle(src)
+{
+    insert(end(),src.begin(),src.end());
+    lines = src.lines;
+    subformat = src.subformat;
+    defProps = src.defProps;
+    old_prefs = src.old_prefs;
+    rendering_ready = src.rendering_ready;
+}
+
 void TsubtitleText::format(TsubtitleFormat &format)
 {
- int sfmt=subformat&Tsubreader::SUB_FORMATMASK;
- foreach (TsubtitleLine &line, *this)
-  line.format(format,sfmt,*this);
- for (Tbase::iterator l=this->begin();l!=this->end();l++)
-  format.processMicroDVD(*this,l);
- if (sfmt==Tsubreader::SUB_MPL2)
-  foreach (TsubtitleLine &line, *this)
-   format.processMPL2(line);
+    int sfmt=subformat&Tsubreader::SUB_FORMATMASK;
+    foreach (TsubtitleLine &line, *this)
+        line.format(format,sfmt,*this);
+
+    for (Tbase::iterator l=this->begin();l!=this->end();l++)
+        format.processMicroDVD(*this,l);
+
+    if (sfmt==Tsubreader::SUB_MPL2)
+        foreach (TsubtitleLine &line, *this)
+            format.processMPL2(line);
 }
 
 void TsubtitleText::prepareKaraoke(void)
 {
- int sfmt=subformat&Tsubreader::SUB_FORMATMASK;
- if (sfmt != Tsubreader::SUB_SSA)
-  return;
+    int sfmt=subformat&Tsubreader::SUB_FORMATMASK;
+    if (sfmt != Tsubreader::SUB_SSA)
+        return;
 
- TsubtitleText temp(subformat, defProps);
- TsubtitleLine tempLine;
- int wrapStyle = 0;
- foreach (TsubtitleLine &line, *this)
-  {
-   if (line.props.wrapStyle == 2 || line.lineBreakReason == 2)
-    {
-     temp.push_back(tempLine);
-     tempLine.clear();
+    TsubtitleText temp(subformat, defProps);
+    TsubtitleLine tempLine;
+    int wrapStyle = 0;
+    foreach (TsubtitleLine &line, *this) {
+        if (line.props.wrapStyle == 2 || line.lineBreakReason == 2) {
+            temp.push_back(tempLine);
+            tempLine.clear();
+        } else if (!tempLine.empty()) {
+            tempLine.back().addTailSpace();
+        }
+
+        tempLine.props = line.props;
+        foreach (TsubtitleWord &word, line) {
+            wrapStyle = word.props.wrapStyle;
+            tempLine.push_back(word);
+        }
     }
-   else if (!tempLine.empty())
-    {
-     tempLine.back().addTailSpace();
+    if (!tempLine.empty())
+        temp.push_back(tempLine);
+
+    this->clear();
+    this->insert(this->end(), temp.begin(),temp.end());
+
+    REFERENCE_TIME karaokeStart = REFTIME_INVALID;
+    REFERENCE_TIME karaokeDuration = 0;
+    foreach (TsubtitleLine &line, *this) {
+        if (karaokeStart != REFTIME_INVALID)
+            karaokeStart += karaokeDuration;
+
+        karaokeDuration = 0;
+        foreach (TsubtitleWord &word, line) {
+          if (karaokeStart == REFTIME_INVALID)
+              karaokeStart = word.props.karaokeStart;
+          else
+              word.props.karaokeStart = karaokeStart;
+          
+          if (word.props.karaokeNewWord) {
+              karaokeStart += karaokeDuration;
+              karaokeDuration = word.props.karaokeDuration;
+          }
+          word.props.karaokeDuration = karaokeDuration;
+        }
     }
-
-   tempLine.props = line.props;
-   foreach (TsubtitleWord &word, line)
-    {
-     wrapStyle = word.props.wrapStyle;
-     tempLine.push_back(word);
-    }
-  }
- if (!tempLine.empty())
-  temp.push_back(tempLine);
-
- this->clear();
- this->insert(this->end(), temp.begin(),temp.end());
-
- REFERENCE_TIME karaokeStart = REFTIME_INVALID;
- REFERENCE_TIME karaokeDuration = 0;
- foreach (TsubtitleLine &line, *this)
-  {
-   if (karaokeStart != REFTIME_INVALID)
-    karaokeStart += karaokeDuration;
-
-   karaokeDuration = 0;
-   foreach (TsubtitleWord &word, line)
-    {
-     if (karaokeStart == REFTIME_INVALID)
-      karaokeStart = word.props.karaokeStart;
-     else
-      word.props.karaokeStart = karaokeStart;
-     
-     if (word.props.karaokeNewWord)
-      {
-       karaokeStart += karaokeDuration;
-       karaokeDuration = word.props.karaokeDuration;
-      }
-     word.props.karaokeDuration = karaokeDuration;
-    }
-  }
 }
 
 void TsubtitleText::fix(TtextFix &fix)
 {
- foreach (TsubtitleLine &line, *this)
-  line.fix(fix);
- if (stop == REFTIME_INVALID)
-  {
-   size_t len = 0;
-   foreach (TsubtitleLine &line, *this)
-    len += line.strlen();
-   stop = start + len * 900000;
-  }
+    foreach (TsubtitleLine &line, *this)
+        line.fix(fix);
+    if (stop == REFTIME_INVALID) {
+        size_t len = 0;
+        foreach (TsubtitleLine &line, *this)
+            len += line.strlen();
+        stop = start + len * 900000;
+    }
 }
 
-void TsubtitleText::print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceChange,TrenderedSubtitleLines::TprintPrefs &prefs)
+void TsubtitleText::print(
+    REFERENCE_TIME time,
+    bool wasseek,
+    Tfont &f,
+    bool forceChange,
+    TrenderedSubtitleLines::TprintPrefs &prefs,
+    unsigned char **dst,
+    const stride_t *stride)
 {
     prefs.subformat=subformat;
     f.prepareC(this,prefs,false);
 }
 
-void TsubtitleTexts::print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceChange,TrenderedSubtitleLines::TprintPrefs &prefs)
+size_t TsubtitleText::prepareGlyph(const TrenderedSubtitleLines::TprintPrefs &prefs, Tfont &font, bool forceChange)
 {
-    f.reset();
-    foreach (TsubtitleText *subtitleText, *this)
-        subtitleText->print(time,wasseek,f,forceChange,prefs);
-    f.print(prefs);
-}
-
-void TsubtitleText::prepareRendering(const TrenderedSubtitleLines::TprintPrefs &prefs, Tfont &font, bool forceChange)
-{
-    if (old_prefs != prefs || forceChange) {
+    size_t used_memory = 0;
+    if (!rendering_ready || forceChange || old_prefs != prefs) {
+        if (!prefs.isOSD) DPRINTF(_l("TsubtitleText::prepareGlyph %I64i"),start);
         old_prefs = prefs;
 
         unsigned int dx,dy;
@@ -1514,7 +1521,10 @@ void TsubtitleText::prepareRendering(const TrenderedSubtitleLines::TprintPrefs &
                 }
             }
         }
+        used_memory = getRenderedMemorySize();
     }
+    rendering_ready = true;
+    return used_memory;
 }
 
 // FIXME: This is a mixer of TprintPrefs and TSubtitleProps.
@@ -1595,4 +1605,38 @@ TrenderedTextSubtitleWord* TsubtitleText::newWord(
         delete rw;
         return NULL;
     }
+}
+
+size_t TsubtitleText::dropRenderedLines(void)
+{
+    boost::unique_lock<boost::mutex> lock(mutex_lines);
+    size_t released_memory = getRenderedMemorySize();
+    lines.clear(); // clear pointers and delete objects.
+    old_prefs.csp = 0;
+    rendering_ready = false;
+    return released_memory;
+}
+
+void TsubtitleTexts::print(
+    REFERENCE_TIME time,
+    bool wasseek,
+    Tfont &f,
+    bool forceChange,
+    TrenderedSubtitleLines::TprintPrefs &prefs,
+    unsigned char **dst,
+    const stride_t *stride)
+{
+    f.reset();
+    foreach (TsubtitleText *subtitleText, *this) {
+        boost::unique_lock<boost::mutex> lock(*subtitleText->get_lock_ptr(), boost::try_to_lock_t());
+        if (!lock.owns_lock()) {
+            // hustle glyphThread
+            TthreadPriority pr(comptrQ<IffdshowDecVideo>(prefs.deci)->getGlyphThreadHandle(),
+                THREAD_PRIORITY_ABOVE_NORMAL,
+                THREAD_PRIORITY_BELOW_NORMAL);
+            lock.lock();
+        }
+        subtitleText->print(time,wasseek,f,forceChange,prefs,dst,stride);
+    }
+    f.print(prefs,dst,stride);
 }

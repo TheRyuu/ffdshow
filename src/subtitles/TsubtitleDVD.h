@@ -54,7 +54,10 @@ protected:
  void drawPixels(CPoint pt,int len,const AM_DVD_YUV &c,const CRect &rc,CRect &rectReal,TspuPlane plane[3]) const;
  mutable TrenderedSubtitleLines lines;
  void createImage(const TspuPlane src[3],const CRect &rcclip,CRect rectReal,const TrenderedSubtitleLines::TprintPrefs &prefs) const;
- void linesprint(const TrenderedSubtitleLines::TprintPrefs &prefs) const;
+ void linesprint(
+    const TrenderedSubtitleLines::TprintPrefs &prefs,
+    unsigned char **dst,
+    const stride_t *stride) const;
 public:
  static REFERENCE_TIME pts2rt(int pts)
   {
@@ -63,7 +66,14 @@ public:
 
  TsubtitleDVD(REFERENCE_TIME start,const unsigned char *Idata,unsigned int Idatalen,TsubtitleDVDparent *Iparent);
  virtual ~TsubtitleDVD();
- virtual void print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceChange,TrenderedSubtitleLines::TprintPrefs &prefs);
+ virtual void print(
+    REFERENCE_TIME time,
+    bool wasseek,
+    Tfont &f,
+    bool forceChange,
+    TrenderedSubtitleLines::TprintPrefs &prefs,
+    unsigned char **dst,
+    const stride_t *stride);
  virtual Tsubtitle* copy(void) {return new TsubtitleDVD(*this);}
  virtual Tsubtitle* create(void) {return new TsubtitleDVD(0,NULL,0,parent);}
  virtual void append(const unsigned char *data,unsigned int datalen);
@@ -84,7 +94,14 @@ public:
   }
  virtual Tsubtitle* copy(void) {return new TsubtitleSVCD(*this);}
  virtual Tsubtitle* create(void) {return new TsubtitleSVCD(0,NULL,0,parent);}
- virtual void print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceChange,const TrenderedSubtitleLines::TprintPrefs &prefs) const;
+ virtual void print(
+    REFERENCE_TIME time,
+    bool wasseek,
+    Tfont &f,
+    bool forceChange,
+    const TrenderedSubtitleLines::TprintPrefs &prefs,
+    unsigned char **dst,
+    const stride_t *stride) const;
 };
 
 struct TsubtitleCVD :public TsubtitleDVD
@@ -100,7 +117,14 @@ public:
   }
  virtual Tsubtitle* copy(void) {return new TsubtitleCVD(*this);}
  virtual Tsubtitle* create(void) {return new TsubtitleCVD(0,NULL,0,parent);}
- virtual void print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceChange,const TrenderedSubtitleLines::TprintPrefs &prefs) const;
+ virtual void print(
+    REFERENCE_TIME time,
+    bool wasseek,
+    Tfont &f,
+    bool forceChange,
+    const TrenderedSubtitleLines::TprintPrefs &prefs,
+    unsigned char **dst,
+    const stride_t *stride) const;
 };
 
 #endif

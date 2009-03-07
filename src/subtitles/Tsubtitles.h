@@ -33,6 +33,12 @@ public:
   {
    if (subs) subs->onSeek();
   }
+ bool isText()
+  {
+   if (!subs) return false;
+   return subs->isText(sub_format);
+  }
+ friend class TimgFilterSubtitles; // let TimgFilterSubtitles take care of back ground rendering
 };
 
 #endif

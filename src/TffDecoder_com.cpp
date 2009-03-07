@@ -487,6 +487,15 @@ void TffdshowDecVideo::resetSubtitles(int id)
  if (imgFilters)
   imgFilters->resetSubtitles(id);
 }
+
+HANDLE TffdshowDecVideo::getGlyphThreadHandle()
+{
+    if (imgFilters)
+        return imgFilters->getGlyphThreadHandle();
+    else
+        return NULL;
+}
+
 bool TffdshowDecVideo::ctlSubtitles(int id,int type,unsigned int ctl_id,const void *ctl_data,unsigned int ctl_datalen)
 {
  return imgFilters?imgFilters->ctlSubtitles(id,type,ctl_id,ctl_data,ctl_datalen):false;

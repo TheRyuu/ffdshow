@@ -204,7 +204,6 @@ Tsubtitle* TsubtitleParserSami::parse(Tstream &fd,int flags, REFERENCE_TIME star
     return store(current);
 }
 
-
 Tsubtitle* TsubtitleParserMicrodvd::parse(Tstream &fd,int flags, REFERENCE_TIME, REFERENCE_TIME) {
     wchar_t line[this->LINE_LEN+1];
     wchar_t line2[this->LINE_LEN+1];

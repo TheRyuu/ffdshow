@@ -78,8 +78,10 @@
 
 // BOOST
 #pragma warning (push)
-#pragma warning(disable: 4819)
+#pragma warning(disable: 4244 4819)
 #include "boost/foreach.hpp"
+#include "boost/noncopyable.hpp"
+#include "boost/thread.hpp"
 #pragma warning (pop)
 
 // BOOST_FOREACH is documented in

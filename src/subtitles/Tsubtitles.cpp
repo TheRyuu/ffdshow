@@ -57,7 +57,7 @@ Tsubtitle* Tsubtitles::getSubtitle(const TsubtitlesSettings *cfg,REFERENCE_TIME 
  checkChange(cfg,forceChange);
  if (!subs || subs->empty()) return NULL;
 
- if ((*subs).at(0)->isText() && !IsProcessOverlapDone())
+ if (isText() && !IsProcessOverlapDone())
   {
    processOverlap();
    init();
@@ -83,6 +83,10 @@ Tsubtitle* Tsubtitles::getSubtitle(const TsubtitlesSettings *cfg,REFERENCE_TIME 
  // sub changed!
  if (time<0)
   return oldsub=NULL; // no sub here
+
+ if(!(*subs)[current_sub])
+  return oldsub=NULL;
+
  // check current sub.
  if (time>=(*subs)[current_sub]->start && time<=(*subs)[current_sub]->stop)
   return oldsub=(*subs)[current_sub];

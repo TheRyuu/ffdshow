@@ -9,7 +9,13 @@ class TsubtitlesTextpinDVD :public TsubtitlesTextpin, public TsubtitleDVDparent
 private:
  struct Tsubtitles :public Tsubtitle,public std::vector<Tsubtitle*>
   {
-   virtual void print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceChange,TrenderedSubtitleLines::TprintPrefs &prefs);
+   virtual void print(REFERENCE_TIME time,
+      bool wasseek,
+      Tfont &f,
+      bool forceChange,
+      TrenderedSubtitleLines::TprintPrefs &prefs,
+      unsigned char **dst,
+      const stride_t *stride);
    virtual Tsubtitle* copy(void);
    virtual Tsubtitle* create(void) {return new Tsubtitles;}
   } subtitles;

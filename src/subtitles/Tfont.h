@@ -6,6 +6,7 @@
 #include "TsubtitleProps.h"
 #include "rational.h"
 #include "TfontSettings.h"
+#include "ffdebug.h"
 
 #define size_of_rgb32 4
 
@@ -23,92 +24,51 @@ struct Tconfig;
 class TrenderedSubtitleLines: public std::vector<TrenderedSubtitleLine*>
 {
 public:
- struct TprintPrefs
-  {
-   TprintPrefs(IffdshowBase *Ideci,const TfontSettings *IfontSettings)
-    {
-     memset(this,0,sizeof(this));
-     if (IfontSettings)
-      fontSettings = *IfontSettings;
-     deci=Ideci;
-     config=NULL;
-     sizeDx=0;
-     sizeDy=0;
-     posXpix=0;
-     fontchangesplit=false;
-     textBorderLR=0;
-     tabsize=8;
-     dvd=false;
-     blur=false;
-     outlineBlur=false;
-     clipdy=0;
-     sar=Rational(1,1);
-     opaqueBox=false;
-     subformat=-1;
-     isOSD=false;
-     xinput=0;
-     yinput=0;
-     rtStart=REFTIME_INVALID;
-     yuvcolor=YUVcolorA(fontSettings.color,fontSettings.bodyAlpha);
-     outlineYUV=YUVcolorA(fontSettings.outlineColor,fontSettings.outlineAlpha);
-     shadowYUV=YUVcolorA(fontSettings.shadowColor,fontSettings.shadowAlpha);
-    }
-   TprintPrefs()
-    {
-     memset(this,0,sizeof(*this));
-    }
-   bool operator != (const TrenderedSubtitleLines::TprintPrefs &rt)
-    {
-     // compare except rtStart
-     REFERENCE_TIME rtStart0 = rtStart;
-     rtStart = rt.rtStart;
-     bool ret= !!memcmp(this, &rt, sizeof(*this));
-     rtStart = rtStart0;
-     return ret;
-    }
-   bool operator == (const TrenderedSubtitleLines::TprintPrefs &rt)
-    {
-     REFERENCE_TIME rtStart0 = rtStart;
-     rtStart = rt.rtStart;
-     bool ret= !memcmp(this, &rt, sizeof(*this));
-     rtStart = rtStart0;
-     return ret;
-    }
-   void operator = (const TrenderedSubtitleLines::TprintPrefs &rt)
-    {
-     memcpy(this, &rt, sizeof(*this));
-    }
-   
-   unsigned char **dst;
-   const stride_t *stride;
-   const unsigned int *shiftX,*shiftY;
-   unsigned int dx,dy,clipdy;
-   bool isOSD;
-   int xpos,ypos;
-   int align;
-   int linespacing;
-   unsigned int sizeDx,sizeDy;
-   int posXpix;
-   bool vobchangeposition;int vobscale,vobaamode,vobaagauss;
-   bool fontchangesplit,fontsplit;
-   int textBorderLR;
-   int tabsize;
-   bool dvd;
-   IffdshowBase *deci;
-   const Tconfig *config;
-   int shadowMode, shadowAlpha; // Subtitles shadow
-   double shadowSize;
-   bool blur,outlineBlur;
-   int csp,cspBpp;
-   double outlineWidth;
-   Rational sar;
-   bool opaqueBox;
-   int subformat;
-   unsigned int xinput,yinput;
-   TfontSettings fontSettings;
-   YUVcolorA yuvcolor,outlineYUV,shadowYUV;
-   REFERENCE_TIME rtStart;
-  };
+ struct TprintPrefs {
+     TprintPrefs(IffdshowBase *Ideci,const TfontSettings *IfontSettings);
+
+     TprintPrefs() {
+         memset(this,0,sizeof(*this));
+         memset(&fontSettings,0,sizeof(fontSettings));
+     }
+
+     bool operator != (const TrenderedSubtitleLines::TprintPrefs &rt) const;
+     bool operator == (const TrenderedSubtitleLines::TprintPrefs &rt) const;
+     void debug_print() const;
+
+     void operator = (const TrenderedSubtitleLines::TprintPrefs &rt) {
+         memcpy(this, &rt, sizeof(*this));
+     }
+     
+     unsigned int dx,dy,clipdy;
+     bool isOSD;
+     int xpos,ypos;
+     int align;
+     int linespacing;
+     unsigned int sizeDx,sizeDy;
+     int posXpix;
+     bool vobchangeposition;int vobscale,vobaamode,vobaagauss;
+     bool fontchangesplit,fontsplit;
+     int textBorderLR;
+     int tabsize;
+     bool dvd;
+     int shadowMode, shadowAlpha; // Subtitles shadow
+     double shadowSize;
+     bool blur,outlineBlur;
+     int csp;
+     double outlineWidth;
+     Rational sar;
+     bool opaqueBox;
+     int subformat;
+     unsigned int xinput,yinput;
+     TfontSettings fontSettings;
+     YUVcolorA yuvcolor,outlineYUV,shadowYUV;
+
+     // members that are not compared by operator == and !=
+     REFERENCE_TIME rtStart;
+     IffdshowBase *deci;
+     const Tconfig *config;
+ };
  TrenderedSubtitleLines(void) {}
  TrenderedSubtitleLines(TrenderedSubtitleLine *ln) {push_back(ln);}
  /**
@@ -125,11 +85,17 @@ public:
   */
  void clear(void);
  using std::vector<value_type>::empty;
- void print(const TprintPrefs &prefs);
+ void print(
+    const TprintPrefs &prefs,
+    unsigned char **dst,
+    const stride_t *stride);
  size_t getMemorySize() const;
 
 private:
- void printASS(const TprintPrefs &prefs);
+ void printASS(
+    const TprintPrefs &prefs,
+    unsigned char **dst,
+    const stride_t *stride);
  class ParagraphKey
   {
    public:
@@ -230,7 +196,14 @@ public:
  using std::vector<value_type>::push_back;
  using std::vector<value_type>::empty;
  void clear(void);
- void print(int startx,int starty,const TrenderedSubtitleLines::TprintPrefs &prefs,unsigned int prefsdx,unsigned int prefsdy) const;
+ void print(
+    int startx,
+    int starty,
+    const TrenderedSubtitleLines::TprintPrefs &prefs,
+    unsigned int prefsdx,
+    unsigned int prefsdy,
+    unsigned char **dst,
+    const stride_t *stride) const;
  TSubtitleProps props;
  size_t getMemorySize() const;
 };
@@ -254,20 +227,28 @@ private:
  void prepareC(TsubtitleText *sub,const TrenderedSubtitleLines::TprintPrefs &prefs,bool forceChange);
 public:
  friend struct TsubtitleText;
- TfontSettings *fontSettings;
+ //TfontSettings *fontSettings;
  Tfont(IffdshowBase *Ideci);
  ~Tfont();
- void init(const TfontSettings *IfontSettings);
+ void init();
  /**
   * print (for OSD)
   * @return height
   */
- int print(TsubtitleText *sub,bool forceChange,const TrenderedSubtitleLines::TprintPrefs &prefs);
+ int print(
+    TsubtitleText *sub,
+    bool forceChange,
+    const TrenderedSubtitleLines::TprintPrefs &prefs,
+    unsigned char **dst,
+    const stride_t *stride);
  /**
   * printf(for subtitles)
   * lines must be filled before called
   */
- void print(const TrenderedSubtitleLines::TprintPrefs &prefs);
+ void print(
+    const TrenderedSubtitleLines::TprintPrefs &prefs,
+    unsigned char **dst,
+    const stride_t *stride);
  void reset(void)
   {
    lines.reset();

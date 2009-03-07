@@ -242,8 +242,8 @@ template<int GDI_rendering_window> void TrenderedTextSubtitleWord::drawShadow(
  bottomOverhang=getBottomOverhang();
  leftOverhang=getLeftOverhang();
  rightOverhang=getRightOverhang();
- _dx      = xscale * dx[0] / (size_of_rgb32 * 100) + leftOverhang + rightOverhang;
- _dxCore  = xscale * dx[0] / (size_of_rgb32 * 100) + leftOverhang + m_outlineWidth;
+ _dx      = xscale * dx[0] / (gdi_font_scale * 100) + leftOverhang + rightOverhang;
+ _dxCore  = xscale * dx[0] / (gdi_font_scale * 100) + leftOverhang + m_outlineWidth;
  _dy      = dy[0] / gdi_font_scale + topOverhang + bottomOverhang;
  _dyCore  = dy[0] / gdi_font_scale + topOverhang + m_outlineWidth;
  dxCharY  = xscale * sz.cx / (gdi_font_scale * 100);
@@ -835,6 +835,7 @@ void TrenderedTextSubtitleWord::print(int startx, int starty, unsigned int sdx[3
  if ((props.karaokeMode == TSubtitleProps::KARAOKE_k || props.karaokeMode == TSubtitleProps::KARAOKE_ko) && rtStart < props.karaokeStart && secondaryColoredWord)
   return secondaryColoredWord->print(startx, starty, sdx, sdy, dstLn, stride, Ibmp, Imsk, rtStart);
 
+ const TcspInfo *cspInfo = csp_getInfo(prefs.csp);
  int srcOffset = startx < 0 ? -startx : 0;
  if (props.karaokeMode == TSubtitleProps::KARAOKE_kf && secondaryColoredWord)
   {
@@ -857,7 +858,7 @@ void TrenderedTextSubtitleWord::print(int startx, int starty, unsigned int sdx[3
        if ((int)sdx[0] > offset - srcOffset)
         {
          sdx2[0] = sdx[0] - offset + srcOffset;
-         sdx2[1] = sdx2[0] >> prefs.shiftX[1];
+         sdx2[1] = sdx2[0] >> cspInfo->shiftX[1];
         }
        else
         {
@@ -869,7 +870,7 @@ void TrenderedTextSubtitleWord::print(int startx, int starty, unsigned int sdx[3
      secondaryColoredWord->dstOffset = std::max(offset - srcOffset, 0);
      secondaryColoredWord->print(startx2, starty, sdx2, sdy, dstLn, stride, Ibmp, Imsk, rtStart);
      sdx[0] -= sdx2[0];
-     sdx[1] = sdx[0] >> prefs.shiftX[1];
+     sdx[1] = sdx[0] >> cspInfo->shiftX[1];
     }
   }
 

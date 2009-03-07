@@ -263,18 +263,14 @@ HRESULT TimgFilterBitmap::process(TfilterQueue::iterator it,TffPict &pict,const 
     #endif
        w.blend=getBlend<Tmmx>(oldmode=cfg->mode);
      TrenderedSubtitleLines::TprintPrefs prefs(deci,NULL);
-     prefs.dst=dst;
-     prefs.stride=stride2;
-     prefs.shiftX=pict.cspInfo.shiftX;prefs.shiftY=pict.cspInfo.shiftY;
      prefs.dx=dx2[0];prefs.dy=dy2[0];
      prefs.xpos=cfg->posx;prefs.ypos=cfg->posy;if (cfg->posmode==1) {prefs.xpos*=-1;prefs.ypos*=-1;}
      prefs.align=cfg->align;
      prefs.linespacing=100;
-     prefs.cspBpp = pict.cspInfo.Bpp;
      prefs.csp=pict.csp;
      w.pict=&pict;
      w.cfg=cfg;
-     ls.print(prefs);
+     ls.print(prefs,dst,stride2);
     }
   }
  return parent->deliverSample(++it,pict);

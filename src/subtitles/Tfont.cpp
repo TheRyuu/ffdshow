@@ -40,6 +40,117 @@ TrenderedSubtitleWordBase::~TrenderedSubtitleWordBase()
    }
 }
 
+//============================== TrenderedSubtitleLine::TprintPrefs ===============================
+TrenderedSubtitleLines::TprintPrefs::TprintPrefs(IffdshowBase *Ideci,const TfontSettings *IfontSettings) {
+     memset(this,0,sizeof(this)); // This doesn't seem to help after optimization.
+     dx = dy = 0;
+     isOSD=false;
+     xpos = ypos = 0;
+     align = 0;
+     linespacing = 0;
+     sizeDx=0;
+     sizeDy=0;
+     if (IfontSettings)
+      fontSettings = *IfontSettings;
+     deci=Ideci;
+     config=NULL;
+     posXpix=0;
+     vobchangeposition = vobscale = vobaamode = vobaagauss = 0;
+     fontchangesplit=false;
+     fontsplit = 0;
+     textBorderLR=0;
+     tabsize=8;
+     dvd=false;
+     shadowMode = shadowSize = csp = 0;
+     outlineWidth = 0;
+     blur=false;
+     outlineBlur=false;
+     clipdy=0;
+     sar=Rational(1,1);
+     opaqueBox=false;
+     subformat=-1;
+     xinput=0;
+     yinput=0;
+     rtStart=REFTIME_INVALID;
+     yuvcolor=YUVcolorA(fontSettings.color,fontSettings.bodyAlpha);
+     outlineYUV=YUVcolorA(fontSettings.outlineColor,fontSettings.outlineAlpha);
+     shadowYUV=YUVcolorA(fontSettings.shadowColor,fontSettings.shadowAlpha);
+ }
+
+bool TrenderedSubtitleLines::TprintPrefs::operator != (const TrenderedSubtitleLines::TprintPrefs &rt) const
+{
+     // compare all members except rtStart
+     if (dx == rt.dx && dy == rt.dy && clipdy == rt.clipdy
+      && isOSD == rt.isOSD
+      && xpos == rt.xpos && ypos == rt.ypos
+      && align == rt.align
+      && linespacing == rt.linespacing
+      && sizeDx == rt.sizeDx && sizeDy == rt.sizeDy
+      && posXpix == rt.posXpix
+      && vobchangeposition == rt.vobchangeposition && vobscale == rt.vobscale && vobaamode == rt.vobaamode && vobaagauss == rt.vobaagauss
+      && fontchangesplit == rt.fontchangesplit && fontsplit == rt.fontsplit
+      && textBorderLR == rt.textBorderLR
+      && tabsize == rt.tabsize
+      && dvd == rt.dvd
+      && shadowMode == rt.shadowMode && shadowAlpha == rt.shadowAlpha
+      && shadowSize == rt.shadowSize
+      && blur == rt.blur && outlineBlur == rt.outlineBlur
+      && csp == rt.csp
+      && outlineWidth == rt.outlineWidth
+      && sar == rt.sar
+      && opaqueBox == rt.opaqueBox
+      && subformat == rt.subformat
+      && xinput == rt.xinput && yinput == rt.yinput
+      && fontSettings == rt.fontSettings
+      && yuvcolor == rt.yuvcolor && outlineYUV == rt.outlineYUV && shadowYUV == rt.shadowYUV)
+        return false;
+     else
+        return true;
+ }
+
+ bool TrenderedSubtitleLines::TprintPrefs::operator == (const TrenderedSubtitleLines::TprintPrefs &rt) const
+ {
+     // compare all members except rtStart
+     if (dx == rt.dx && dy == rt.dy && clipdy == rt.clipdy
+      && isOSD == rt.isOSD
+      && xpos == rt.xpos && ypos == rt.ypos
+      && align == rt.align
+      && linespacing == rt.linespacing
+      && sizeDx == rt.sizeDx && sizeDy == rt.sizeDy
+      && posXpix == rt.posXpix
+      && vobchangeposition == rt.vobchangeposition && vobscale == rt.vobscale && vobaamode == rt.vobaamode && vobaagauss == rt.vobaagauss
+      && fontchangesplit == rt.fontchangesplit && fontsplit == rt.fontsplit
+      && textBorderLR == rt.textBorderLR
+      && tabsize == rt.tabsize
+      && dvd == rt.dvd
+      && shadowMode == rt.shadowMode && shadowAlpha == rt.shadowAlpha
+      && shadowSize == rt.shadowSize
+      && blur == rt.blur && outlineBlur == rt.outlineBlur
+      && csp == rt.csp
+      && outlineWidth == rt.outlineWidth
+      && sar == rt.sar
+      && opaqueBox == rt.opaqueBox
+      && subformat == rt.subformat
+      && xinput == rt.xinput && yinput == rt.yinput
+      && fontSettings == rt.fontSettings
+      && yuvcolor == rt.yuvcolor && outlineYUV == rt.outlineYUV && shadowYUV == rt.shadowYUV)
+        return true;
+     else
+        return false;
+ }
+
+void TrenderedSubtitleLines::TprintPrefs::debug_print() const
+{
+     DPRINTF(_l("dx %d,dy %d,clipdy %d,isOSD %d,xpos %d,ypos %d,align %d,linespacing %d,sizeDx %d,sizeDy %d,posXpix %d,")
+     _l("vobchangeposition %d,vobscale %d,vobaamode %d,vobaagauss %d,")
+     _l("fontchangesplit %d,fontsplit %d,textBorderLR %d,tabsize %d,dvd %d,shadowMode %d, shadowAlpha %d,blur %d,outlineBlur %d,")
+     _l("csp %d,opaqueBox %d,subformat %d,xinput %d,yinput %d"),
+     dx,dy,clipdy,isOSD,xpos,ypos,align,linespacing,sizeDx,sizeDy,posXpix,
+     vobchangeposition,vobscale,vobaamode,vobaagauss,
+     fontchangesplit,fontsplit,textBorderLR,tabsize,dvd,shadowMode, shadowAlpha,blur,outlineBlur,
+     csp,opaqueBox,subformat,xinput,yinput);
+}
+
 //============================== TrenderedSubtitleLine ===============================
 unsigned int TrenderedSubtitleLine::width(void) const
 {
@@ -168,9 +279,16 @@ void TrenderedSubtitleLine::prepareKaraoke(void)
     }
   }
 }
-void TrenderedSubtitleLine::print(int startx,int starty,const TrenderedSubtitleLines::TprintPrefs &prefs,unsigned int prefsdx,unsigned int prefsdy) const
+void TrenderedSubtitleLine::print(
+    int startx,int starty,
+    const TrenderedSubtitleLines::TprintPrefs &prefs,
+    unsigned int prefsdx,
+    unsigned int prefsdy,
+    unsigned char **dst,
+    const stride_t *stride) const
 {
  int baseline=baselineHeight();
+ const TcspInfo *cspInfo = csp_getInfo(prefs.csp);
  for (const_iterator w=begin();w!=end() && startx<(int)prefsdx;startx+=(*w)->dxCharY,w++)
   {
    const unsigned char *msk[3],*bmp[3];
@@ -180,7 +298,7 @@ void TrenderedSubtitleLine::print(int startx,int starty,const TrenderedSubtitleL
    int dy[3];
    for (int i=0;i<3;i++)
     {
-     x[i]=startx>>prefs.shiftX[i];
+     x[i]=startx>>cspInfo->shiftX[i];
      msk[i]=(*w)->msk[i];
      bmp[i]=(*w)->bmp[i];
      if (prefs.align!=ALIGN_FFDSHOW && x[i]<0)
@@ -188,21 +306,21 @@ void TrenderedSubtitleLine::print(int startx,int starty,const TrenderedSubtitleL
        msk[i]+=-x[i];
        bmp[i]+=-x[i];
       }
-     int sy=(starty+baseline-(*w)->get_baseline())>>prefs.shiftY[i];
-     dy[i]=std::min((int(prefsdy)>>prefs.shiftY[i])-sy,int((*w)->dy[i]));
-     dstLn[i]=prefs.dst[i] + int(sy * prefs.stride[i]);
+     int sy=(starty+baseline-(*w)->get_baseline())>>cspInfo->shiftY[i];
+     dy[i]=std::min((int(prefsdy)>>cspInfo->shiftY[i])-sy,int((*w)->dy[i]));
+     dstLn[i]=dst[i] + int(sy * stride[i]);
      if (x[i]>0)
-      dstLn[i]+=x[i]*prefs.cspBpp;
+      dstLn[i]+=x[i]*cspInfo->Bpp;
 
-     if (x[i]+(*w)->dx[i]>(prefsdx>>prefs.shiftX[i]))
-      dx[i]=(prefsdx>>prefs.shiftX[i])-x[i];
+     if (x[i]+(*w)->dx[i]>(prefsdx>>cspInfo->shiftX[i]))
+      dx[i]=(prefsdx>>cspInfo->shiftX[i])-x[i];
      else if (x[i]<0)
       dx[i]=(*w)->dx[i]+x[i];
      else
       dx[i]=(*w)->dx[i];
-     dx[i]=std::min(dx[i],prefsdx>>prefs.shiftX[i]);
+     dx[i]=std::min(dx[i],prefsdx>>cspInfo->shiftX[i]);
     }
-   (*w)->print(startx, starty,dx,dy,dstLn,prefs.stride,bmp,msk,prefs.rtStart);
+   (*w)->print(startx, starty,dx,dy,dstLn,stride,bmp,msk,prefs.rtStart);
   }
 }
 void TrenderedSubtitleLine::clear(void)
@@ -220,13 +338,16 @@ size_t TrenderedSubtitleLine::getMemorySize() const
 }
 
 //============================== TrenderedSubtitleLines ==============================
-void TrenderedSubtitleLines::print(const TprintPrefs &prefs)
+void TrenderedSubtitleLines::print(
+    const TprintPrefs &prefs,
+    unsigned char **dst,
+    const stride_t *stride)
 {
  // Use the same renderer for SSA and SRT if extended tags option is checked (both formats can hold SSA tags and HTML tags)
  if ((prefs.subformat & Tsubreader::SUB_FORMATMASK) == Tsubreader::SUB_SSA
      || ((prefs.subformat & Tsubreader::SUB_FORMATMASK) == Tsubreader::SUB_SUBVIEWER) 
      && prefs.deci->getParam2(IDFF_subExtendedTags))
-  return printASS(prefs);
+  return printASS(prefs,dst,stride);
  double y=0;
  if (empty()) return;
  unsigned int prefsdx,prefsdy;
@@ -281,11 +402,14 @@ void TrenderedSubtitleLines::print(const TprintPrefs &prefs)
     }
    if (x+cdx>=prefsdx && !prefs.isOSD) x=prefsdx-cdx-1;
    if (x<0) x=0;
-   (*i)->print(x,y,prefs,prefsdx,prefsdy); // print a line (=print words).
+   (*i)->print(x,y,prefs,prefsdx,prefsdy,dst,stride); // print a line (=print words).
   }
 }
 
-void TrenderedSubtitleLines::printASS(const TprintPrefs &prefs)
+void TrenderedSubtitleLines::printASS(
+    const TprintPrefs &prefs,
+    unsigned char **dst,
+    const stride_t *stride)
 {
  double y=0;
  if (empty()) return;
@@ -454,7 +578,7 @@ void TrenderedSubtitleLines::printASS(const TprintPrefs &prefs)
        (prefs.rtStart-(*i)->props.get_moveStart())/((*i)->props.get_moveStop()-(*i)->props.get_moveStart());
    }
 
-   (*i)->print(x,y,prefs,prefsdx,prefsdy); // print a line (=print words).
+   (*i)->print(x,y,prefs,prefsdx,prefsdy,dst,stride); // print a line (=print words).
   }
 }
 
@@ -597,19 +721,17 @@ Tfont::Tfont(IffdshowBase *Ideci):
  deci(Ideci),
  oldsub(NULL),
  hdc(NULL),oldFont(NULL),
- height(0),
- fontSettings((TfontSettings*)malloc(sizeof(TfontSettings)))
+ height(0)
 {
+ init();
 }
 Tfont::~Tfont()
 {
  done();
- free(fontSettings);
 }
-void Tfont::init(const TfontSettings *IfontSettings)
+void Tfont::init()
 {
  done();
- memcpy(fontSettings,IfontSettings,sizeof(TfontSettings));
  hdc=CreateCompatibleDC(NULL);
  if (!hdc) return;
  SetBkMode(hdc,TRANSPARENT); 
@@ -628,15 +750,20 @@ void Tfont::done(void)
 
 void Tfont::prepareC(TsubtitleText *sub,const TrenderedSubtitleLines::TprintPrefs &prefs,bool forceChange)
 {
-    sub->prepareRendering(prefs,*this,forceChange);
+    sub->prepareGlyph(prefs,*this,forceChange);
     lines.insert(lines.end(),sub->lines.begin(),sub->lines.end());
 }
 
-int Tfont::print(TsubtitleText *sub,bool forceChange,const TrenderedSubtitleLines::TprintPrefs &prefs)
+int Tfont::print(
+    TsubtitleText *sub,
+    bool forceChange,
+    const TrenderedSubtitleLines::TprintPrefs &prefs,
+    unsigned char **dst,
+    const stride_t *stride)
 {
     if (!sub) return 0;
     prepareC(sub,prefs,forceChange);
-    lines.print(prefs);
+    lines.print(prefs,dst,stride);
     int h = 0;
     foreach (TrenderedSubtitleLine *line, lines)
         h += line->height();
@@ -644,7 +771,10 @@ int Tfont::print(TsubtitleText *sub,bool forceChange,const TrenderedSubtitleLine
     return h;
 }
 
-void Tfont::print(const TrenderedSubtitleLines::TprintPrefs &prefs)
+void Tfont::print(
+    const TrenderedSubtitleLines::TprintPrefs &prefs,
+    unsigned char **dst,
+    const stride_t *stride)
 {
-    lines.print(prefs);
+    lines.print(prefs,dst,stride);
 }

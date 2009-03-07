@@ -28,10 +28,9 @@
 #include "TsubtitleText.h"
 #include "Tsubreader.h"
 #include "TsubtitlesTextpin.h"
+#include "ffdebug.h"
 
 TimgFilterSubtitles::TsubPrintPrefs::TsubPrintPrefs(
-    unsigned char *Idst[4],
-    stride_t Istride[4],
     unsigned int Idx[4],
     unsigned int Idy[4],
     IffdshowBase *Ideci,
@@ -43,111 +42,108 @@ TimgFilterSubtitles::TsubPrintPrefs::TsubPrintPrefs(
     const TfontSettings *fontSettings)
  :TrenderedSubtitleLines::TprintPrefs(Ideci,fontSettings)
 {
- dst=Idst;
- stride=Istride;
- csp=pict.csp;
- cspBpp=pict.cspInfo.Bpp;
- shiftX=pict.cspInfo.shiftX;shiftY=pict.cspInfo.shiftY;
- dx=Idx[0];
- dy=Idy[0];
- clipdy=Iclipdy;
- xpos=cfg->posX;
- ypos=cfg->posY;
- align=cfg->align;
- linespacing=cfg->linespacing;
- vobchangeposition=!!cfg->vobsubChangePosition;
- vobscale=cfg->vobsubScale;
- vobaamode=cfg->vobsubAA;
- vobaagauss=cfg->vobsubAAswgauss;
- textBorderLR=2*cfg->splitBorder;
- deci=Ideci;
- config=Iconfig;
- dvd=Idvd;
- // Copy subtitles shadow vars
- int i;
- deci->getParam(IDFF_fontShadowMode, &shadowMode);
- deci->getParam(IDFF_fontShadowSize, &i);
- shadowSize=i;
- deci->getParam(IDFF_fontShadowAlpha, &shadowAlpha);
- sar=pict.rectFull.sar;
+    csp=pict.csp;
+    dx=pict.rectFull.dx;//Idx[0];
+    dy=pict.rectFull.dy;//Idy[0];
+    clipdy=Iclipdy;
+    xpos=cfg->posX;
+    ypos=cfg->posY;
+    align=cfg->align;
+    linespacing=cfg->linespacing;
+    vobchangeposition=!!cfg->vobsubChangePosition;
+    vobscale=cfg->vobsubScale;
+    vobaamode=cfg->vobsubAA;
+    vobaagauss=cfg->vobsubAAswgauss;
+    textBorderLR=2*cfg->splitBorder;
+    deci=Ideci;
+    config=Iconfig;
+    dvd=Idvd;
+    // Copy subtitles shadow vars
+    int i;
+    deci->getParam(IDFF_fontShadowMode, &shadowMode);
+    deci->getParam(IDFF_fontShadowSize, &i);
+    shadowSize=i;
+    deci->getParam(IDFF_fontShadowAlpha, &shadowAlpha);
+    sar=pict.rectFull.sar;
 }
 
 TimgFilterSubtitles::TimgFilterSubtitles(IffdshowBase *Ideci,Tfilters *Iparent):
- TimgFilter(Ideci,Iparent),
- // Initialize Tfont.
- font(Ideci),fontCC(Ideci),
- subs(Ideci),
- oldFontCfg((TfontSettingsSub*)malloc(sizeof(TfontSettingsSub))),
- oldFontCCcfg((TfontSettingsSub*)malloc(sizeof(TfontSettingsSub))),
- cc(NULL),wasCCchange(true),everRGB(false),
- adhocMode(ADHOC_NORMAL),
- prevAdhocMode(ADHOC_NORMAL)
+    TimgFilter(Ideci,Iparent),
+    font(Ideci),fontCC(Ideci),
+    subs(Ideci),
+    oldFontCfg((TfontSettingsSub*)malloc(sizeof(TfontSettingsSub))),
+    oldFontCCcfg((TfontSettingsSub*)malloc(sizeof(TfontSettingsSub))),
+    cc(NULL),wasCCchange(true),everRGB(false),
+    adhocMode(ADHOC_NORMAL),
+    prevAdhocMode(ADHOC_NORMAL),
+    glyphThread(this,Ideci)
 {
- oldFontCfg->weight=oldFontCCcfg->weight=-1;oldstereo=oldsplitborder=-1;
- AVIfps=-1;
- expand=NULL;
- expandSizeChanged=fontSizeChanged=true;oldExpandCode=-1;
- oldSizeDx=oldSizeDy=0;
- isdvdproc=false;
- wasDiscontinuity=true;
- again=false;
- prevCfg=NULL;
- subFlnmChanged=1;
-}
-TimgFilterSubtitles::~TimgFilterSubtitles()
-{
- if (expand) delete expand;
- for (Tembedded::iterator e=embedded.begin();e!=embedded.end();e++)
-  if (e->second)
-   delete e->second;
- ::free(oldFontCfg);::free(oldFontCCcfg);
- if (cc) delete cc;
+    oldFontCfg->weight=oldFontCCcfg->weight=-1;oldstereo=oldsplitborder=-1;
+    AVIfps=-1;
+    expand=NULL;
+    expandSizeChanged=fontSizeChanged=true;oldExpandCode=-1;
+    oldSizeDx=oldSizeDy=0;
+    isdvdproc=false;
+    wasDiscontinuity=true;
+    again=false;
+    prevCfg=NULL;
+    subFlnmChanged=1;
 }
 
-void TimgFilterSubtitles::onSizeChange(void)
+TimgFilterSubtitles::~TimgFilterSubtitles()
 {
- expandSizeChanged=fontSizeChanged=true;
+    boost::unique_lock<boost::recursive_mutex> lock(csEmbedded);
+    if (expand) delete expand;
+    for (Tembedded::iterator e=embedded.begin();e!=embedded.end();e++)
+     if (e->second)
+      delete e->second;
+    ::free(oldFontCfg);::free(oldFontCCcfg);
+    if (cc) delete cc;
 }
+
+void TimgFilterSubtitles::onSizeChange()
+{
+    expandSizeChanged=fontSizeChanged=true;
+}
+
 void TimgFilterSubtitles::onSubFlnmChange(int id,int)
 {
- subFlnmChanged=id?id:-1;
+    subFlnmChanged=id?id:-1;
 }
+
 void TimgFilterSubtitles::onSubFlnmChangeStr(int id,const char_t*)
 {
- subFlnmChanged=id?id:-1;
+    subFlnmChanged=id?id:-1;
 }
 
 bool TimgFilterSubtitles::is(const TffPictBase &pict,const TfilterSettingsVideo *cfg)
 {
- isdvdproc=deci->getParam2(IDFF_dvdproc);
- return isdvdproc || super::is(pict,cfg);
+    isdvdproc=deci->getParam2(IDFF_dvdproc);
+    return isdvdproc || super::is(pict,cfg);
 }
 
 bool TimgFilterSubtitles::getOutputFmt(TffPictBase &pict,const TfilterSettingsVideo *cfg0)
 {
- if (super::getOutputFmt(pict,cfg0))
-  {
-   const TsubtitlesSettings *cfg=(const TsubtitlesSettings*)cfg0;
-   isdvdproc=deci->getParam2(IDFF_dvdproc);
-   if (cfg->isExpand && cfg->expandCode && !isdvdproc)
-    {
-     const char_t *subflnm=cfg->autoFlnm?findAutoSubFlnm(cfg):cfg->flnm;
-     if ((subflnm[0]=='\0' || !fileexists(subflnm)) && !deci->getParam2(IDFF_subTextpin)) return true;
-     if (!expand) expand=new TimgFilterSubtitleExpand(deci,parent);
-     int a1,a2;
-     cfg->getExpand(&a1,&a2);
-     Trect::calcNewSizeAspect(/*cfg->full ? pict.rectFull : */pict.rectClip,a1,a2,expandSettings.newrect);
-     expand->getOutputFmt(pict,&expandSettings);
-    }
-   return true;
-  }
- else
-  return false;
+    if (super::getOutputFmt(pict,cfg0)) {
+        const TsubtitlesSettings *cfg=(const TsubtitlesSettings*)cfg0;
+        isdvdproc=deci->getParam2(IDFF_dvdproc);
+        if (cfg->isExpand && cfg->expandCode && !isdvdproc) {
+            const char_t *subflnm=cfg->autoFlnm?findAutoSubFlnm(cfg):cfg->flnm;
+            if ((subflnm[0]=='\0' || !fileexists(subflnm)) && !deci->getParam2(IDFF_subTextpin)) return true;
+            if (!expand) expand=new TimgFilterSubtitleExpand(deci,parent);
+            int a1,a2;
+            cfg->getExpand(&a1,&a2);
+            Trect::calcNewSizeAspect(/*cfg->full ? pict.rectFull : */pict.rectClip,a1,a2,expandSettings.newrect);
+            expand->getOutputFmt(pict,&expandSettings);
+        }
+        return true;
+ } else
+    return false;
 }
 
 bool TimgFilterSubtitles::initSubtitles(int id,int type,const unsigned char *extradata,unsigned int extradatalen)
 {
-    CAutoLock lock(&csEmbedded);
+    boost::unique_lock<boost::recursive_mutex> lock(csEmbedded);
     Tembedded::iterator e=embedded.find(id);
     if (e!=embedded.end()) {
         delete e->second;
@@ -166,7 +162,7 @@ void TimgFilterSubtitles::addSubtitle(int id,REFERENCE_TIME start,REFERENCE_TIME
 {
     Tembedded::iterator e=embedded.find(id);
     if (e==embedded.end()) return;
-    CAutoLock lock(&csEmbedded);
+    boost::unique_lock<boost::recursive_mutex> lock(csEmbedded);
     e->second->setModified();
     e->second->addSubtitle(start,stop,data,datalen,cfg,utf8);
 }
@@ -175,7 +171,7 @@ void TimgFilterSubtitles::resetSubtitles(int id)
      Tembedded::iterator e=embedded.find(id);
      if (e==embedded.end()) return;
      {
-         CAutoLock lock(&csEmbedded);
+         boost::unique_lock<boost::recursive_mutex> lock(csEmbedded);
          e->second->resetSubtitles();
      }
      if(isdvdproc) {
@@ -191,7 +187,7 @@ bool TimgFilterSubtitles::ctlSubtitles(int id,int type,unsigned int ctl_id,const
      e=embedded.insert(std::make_pair(id,TsubtitlesTextpin::create(type,NULL,0,deci))).first;
     bool res;
     {
-        CAutoLock lock(&csEmbedded);
+        boost::unique_lock<boost::recursive_mutex> lock(csEmbedded);
         res=e->second->ctlSubtitles(ctl_id,ctl_data,ctl_datalen);
     }
 
@@ -223,314 +219,481 @@ bool TimgFilterSubtitles::ctlSubtitles(int id,int type,unsigned int ctl_id,const
 
 const char_t* TimgFilterSubtitles::findAutoSubFlnm(const TsubtitlesSettings *cfg)
 {
- struct TcheckSubtitle : IcheckSubtitle
-  {
-  private:
-   TsubtitlesFile subs;
-   const TsubtitlesSettings *cfg;
-   double fps;
-  public:
-   TcheckSubtitle(IffdshowBase *deci,const TsubtitlesSettings *Icfg,double Ifps):subs(deci),cfg(Icfg),fps(Ifps) {}
-   STDMETHODIMP checkSubtitle(const char_t *subFlnm)
-    {
-     return subs.init(cfg,subFlnm,fps,false,2);
-    }
-  } checkSubtitle(deci,cfg,25);
- return deciV->findAutoSubflnms(&checkSubtitle);
+    struct TcheckSubtitle : IcheckSubtitle {
+    private:
+        TsubtitlesFile subs;
+        const TsubtitlesSettings *cfg;
+        double fps;
+    public:
+        TcheckSubtitle(IffdshowBase *deci,const TsubtitlesSettings *Icfg,double Ifps):subs(deci),cfg(Icfg),fps(Ifps) {}
+        STDMETHODIMP checkSubtitle(const char_t *subFlnm) {
+            return subs.init(cfg,subFlnm,fps,false,2);
+        }
+    } checkSubtitle(deci,cfg,25);
+    return deciV->findAutoSubflnms(&checkSubtitle);
 }
 
 HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)
 {
- // Don't produce extra frames if there is going to be a new frame shortly anyway
- if (pict.fieldtype & FIELD_TYPE::SEQ_END)
-  sequenceEnded=true;
- else if (pict.fieldtype & FIELD_TYPE::SEQ_START)
-  sequenceEnded=false;
+    REFERENCE_TIME t1=0,t2=0;
+    // Don't produce extra frames if there is going to be a new frame shortly anyway
+    if (pict.fieldtype & FIELD_TYPE::SEQ_END)
+        sequenceEnded=true;
+    else if (pict.fieldtype & FIELD_TYPE::SEQ_START)
+        sequenceEnded=false;
 
- const TsubtitlesSettings *cfg=(const TsubtitlesSettings*)cfg0;
+    const TsubtitlesSettings *cfg=(const TsubtitlesSettings*)cfg0;
 
- // Leter box. Expand rectFull and assign it to rectClip. So "Process whole image" is ignored.
- int clipdy=pict.rectClip.dy; // save clipdy
- if (cfg->isExpand 
-    && cfg->expandCode 
-    && !isdvdproc 
-    && adhocMode != ADHOC_ADHOC_DRAW_DVD_SUB_ONLY)
-  {
-   Trect newExpandRect=cfg->full?pict.rectFull:pict.rectClip;
-   if (expandSizeChanged || oldExpandCode!=cfg->expandCode || oldExpandRect!=newExpandRect || pict.rectClip!=oldRectClip)
-    {
-     oldExpandCode=cfg->expandCode;oldExpandRect=newExpandRect;oldRectClip=pict.rectClip;
-     if (expand) delete expand;expand=NULL;
-     TffPict newpict;newpict.rectFull=pict.rectFull;newpict.rectClip=pict.rectClip;
-     getOutputFmt(newpict,cfg);
-     parent->dirtyBorder=1;
-     expandSizeChanged=false;
+    // Leter box. Expand rectFull and assign it to rectClip. So "Process whole image" is ignored.
+    int clipdy=pict.rectClip.dy; // save clipdy
+    if (cfg->isExpand 
+       && cfg->expandCode 
+       && !isdvdproc 
+       && adhocMode != ADHOC_ADHOC_DRAW_DVD_SUB_ONLY) {
+        Trect newExpandRect=cfg->full?pict.rectFull:pict.rectClip;
+        if (expandSizeChanged || oldExpandCode!=cfg->expandCode || oldExpandRect!=newExpandRect || pict.rectClip!=oldRectClip) {
+            oldExpandCode=cfg->expandCode;oldExpandRect=newExpandRect;oldRectClip=pict.rectClip;
+            if (expand) delete expand;expand=NULL;
+            TffPict newpict;
+            newpict.rectFull=pict.rectFull;
+            newpict.rectClip=pict.rectClip;
+            getOutputFmt(newpict,cfg);
+            parent->dirtyBorder=1;
+            expandSizeChanged=false;
+        }
+        if (expand) {
+            expand->process(pict,&expandSettings);
+            checkBorder(pict);
+            pict.rectClip=pict.rectFull;
+            pict.calcDiff();
+        }
     }
-   if (expand)
-    {
-     expand->process(pict,&expandSettings);
-     checkBorder(pict);
-     pict.rectClip=pict.rectFull;
-     pict.calcDiff();
+
+    if (AVIfps==-1) AVIfps=deciV->getAVIfps1000_2()/1000.0;
+    if (subFlnmChanged) {
+        const char_t *subflnm=cfg->autoFlnm?findAutoSubFlnm(cfg):cfg->flnm;
+        if (subFlnmChanged!=-1 || stricmp(subflnm,subs.subFlnm)!=0)
+            subs.init(cfg,subflnm,AVIfps,!!deci->getParam2(IDFF_subWatch),false);
+        subFlnmChanged=0;
     }
-  }
 
- if (AVIfps==-1) AVIfps=deciV->getAVIfps1000_2()/1000.0;
- if (subFlnmChanged)
-  {
-   const char_t *subflnm=cfg->autoFlnm?findAutoSubFlnm(cfg):cfg->flnm;
-   if (subFlnmChanged!=-1 || stricmp(subflnm,subs.subFlnm)!=0)
-    subs.init(cfg,subflnm,AVIfps,!!deci->getParam2(IDFF_subWatch),false);
-   subFlnmChanged=0;
-  }
+    if (isdvdproc && sequenceEnded && adhocMode != ADHOC_SECOND_DONT_DRAW_DVD_SUB) {
+        if (!again || !prevCfg) {
+            prevIt=it;
+            prevCfg=cfg;
+            prevPict=pict;
+            prevAdhocMode = adhocMode;
 
- if (isdvdproc && sequenceEnded && adhocMode != ADHOC_SECOND_DONT_DRAW_DVD_SUB)
-  {
-   if (!again || !prevCfg)
-    {
-     prevIt=it;
-     prevCfg=cfg;
-     prevPict=pict;
-     prevAdhocMode = adhocMode;
+            pict.setRO(true);
+            prevPict.copyFrom(pict,prevbuf);
+        } else {
+            REFERENCE_TIME difference=(prevPict.rtStop-prevPict.rtStart)/10;
 
-     pict.setRO(true);
-     prevPict.copyFrom(pict,prevbuf);
+            if (difference < 10)
+             difference=10;
+
+            prevPict.rtStart+=difference;
+            prevPict.rtStop+=difference;
+            pict=prevPict;
+
+            pict.setRO(true);
+        }
     }
-   else
+
+    char_t outputfourcc[20];
+    deciV->getOutputFourcc(outputfourcc,20);
+    bool rgb32_if_text = (strncmp(outputfourcc,_l("RGB"),3)==0 && !parent->isAnyActiveDownstreamFilter(it)) || pict.csp==FF_CSP_RGB32;
+
     {
-     REFERENCE_TIME difference=(prevPict.rtStop-prevPict.rtStart)/10;
+        boost::unique_lock<boost::recursive_mutex> lock(csEmbedded);
+        if (subs || !embedded.empty()) {
+            REFERENCE_TIME frameStart=cfg->speed2*((pict.rtStart-parent->subtitleResetTime)-cfg->delay*(REF_SECOND_MULT/1000))/cfg->speed;
+            bool forceChange=false;
+            Tsubtitle *sub=NULL;
+            TsubtitlesTextpin* pin = getTextpin();
+            Tsubtitles* subtitles = NULL;
+            bool isText = false;
+            int subformat = -1;
+            if (pin 
+               && (adhocMode == ADHOC_NORMAL 
+               || (adhocMode == ADHOC_ADHOC_DRAW_DVD_SUB_ONLY && isdvdproc) 
+               || (adhocMode == ADHOC_SECOND_DONT_DRAW_DVD_SUB && !isdvdproc))) {
+                 sub=pin->getSubtitle(cfg,frameStart,&forceChange);
+                 isText = pin->isText();
+                 subformat = pin->sub_format;
+                 subtitles = pin;
+            }
+            if (!pin && adhocMode != ADHOC_ADHOC_DRAW_DVD_SUB_ONLY &&  cfg->is) {
+                sub=subs.getSubtitle(cfg,frameStart,&forceChange);
+                isText = subs.isText();
+                subformat = subs.sub_format;
+                subtitles = &subs;
+            }
 
-     if (difference < 10)
-      difference=10;
+            int outcsp = FF_CSP_420P;
+            if (rgb32_if_text && isText)
+                outcsp = FF_CSP_RGB32;
 
-     prevPict.rtStart+=difference;
-     prevPict.rtStop+=difference;
-     pict=prevPict;
+            unsigned int sizeDx,sizeDy;
+            if (cfg->font.autosizeVideoWindow) {
+                CRect r;
+                deciV->getVideoDestRect(&r);
+                sizeDx=r.Width();sizeDy=r.Height();
+            } else {
+                sizeDx=cfg->full ? pict.rectFull.dx : pict.rectClip.dx;
+                sizeDy=cfg->full ? pict.rectFull.dy : pict.rectClip.dy;
+            }
+            forceChange|=oldSizeDx!=sizeDx || oldSizeDy!=sizeDy;
+            oldSizeDx=sizeDx;oldSizeDy=sizeDy;
 
-     pict.setRO(true);
+            TsubPrintPrefs printprefs(dx1,dy1,deci,cfg,pict,clipdy,parent->config,!!isdvdproc,&cfg->font);
+            printprefs.csp = outcsp;
+            printprefs.subformat = subformat;
+            printprefs.rtStart=frameStart;
+            const Trect *decodedPict = deciV->getDecodedPictdimensions();
+            if (decodedPict!=NULL) {
+                printprefs.xinput = decodedPict->dx;
+                printprefs.yinput = decodedPict->dy;
+            }
+
+            if (!cfg->stereoscopic || isdvdproc) {
+                printprefs.sizeDx=sizeDx;
+                printprefs.sizeDy=sizeDy;
+            } else {
+                printprefs.sizeDx=sizeDx;
+                printprefs.sizeDy=sizeDy/2;
+                printprefs.posXpix=cfg->stereoscopic?cfg->stereoscopicPar*int(sizeDx)/2000:0;
+                for (unsigned int i=0;i<pict.cspInfo.numPlanes;i++)
+                    printprefs.posXpix=-printprefs.posXpix;
+            }
+
+            if (isText) {
+                {
+                   boost::unique_lock<boost::mutex> lock(glyphThread.mutex_prefs);
+                   glyphThread.shared_prefs = printprefs;
+                   glyphThread.threadCmd = 1;
+                }
+                glyphThread.condv_prefs.notify_one();
+            }
+
+            if (printprefs != oldprefs && subtitles && subtitles->subs) {
+                subtitles->subs->dropRendered();
+                oldprefs = printprefs;
+            }
+
+            if (sub && (isdvdproc || cfg->is)) {
+                init(pict,cfg->full,cfg->half);
+
+                if (memcmp(oldFontCfg->name,cfg->font.name,sizeof(TfontSettingsSub)-sizeof(Toptions))!=0 || fontSizeChanged || oldstereo!=cfg->stereoscopic || oldsplitborder!=cfg->splitBorder) {
+                    memcpy(oldFontCfg,&cfg->font,sizeof(cfg->font));oldstereo=cfg->stereoscopic;oldsplitborder=cfg->splitBorder;
+                    font.init();
+                }
+                fontSizeChanged=false;
+
+    deciV->get_CurrentTime(&t1);
+                unsigned char *dst[4];
+                getCurNext(outcsp, pict, cfg->full, COPYMODE_DEF, dst);
+                if (outcsp == FF_CSP_RGB32)
+                    everRGB = true;
+    deciV->get_CurrentTime(&t2);
+
+                if (!cfg->stereoscopic || isdvdproc) {
+                    sub->print(frameStart,wasDiscontinuity,font,forceChange,printprefs,dst,stride2);
+                } else {
+                    sub->print(frameStart,wasDiscontinuity,font,forceChange,printprefs,dst,stride2);
+                    sub->print(frameStart,false,font,false,printprefs,dst,stride2);
+                }
+                wasDiscontinuity=false;
+            }
+        }
     }
-  }
 
- char_t outputfourcc[20];
- deciV->getOutputFourcc(outputfourcc,20);
+    if (cfg->cc && cfg->is && adhocMode != ADHOC_ADHOC_DRAW_DVD_SUB_ONLY) {
+        boost::unique_lock<boost::recursive_mutex> lock(csCC);
+        if (cc && cc->numlines()) {
+            if (!again)
+                init(pict,cfg->full,cfg->half);
+            unsigned char *dst[4];
+            int outcsp;
+            if (rgb32_if_text) {
+                outcsp = FF_CSP_RGB32;
+                everRGB = true;
+            } else {
+                outcsp = FF_CSP_420P;
+            }
+            getCurNext3(outcsp, pict, cfg->full, COPYMODE_DEF, dst);
+            const TsubtitlesSettings &cfg2(*cfg);
+            TsubPrintPrefs printprefs(dx1,dy1,deci,&cfg2,pict,clipdy,parent->config,!!isdvdproc,&cfg->font);
+            printprefs.csp=pict.csp & FF_CSPS_MASK;
+            printprefs.sizeDx=pict.rectFull.dx;
+            printprefs.sizeDy=pict.rectFull.dy;
 
- if (subs || !embedded.empty())
-  {
-   REFERENCE_TIME frameStart=cfg->speed2*((pict.rtStart-parent->subtitleResetTime)-cfg->delay*(REF_SECOND_MULT/1000))/cfg->speed;
-   bool forceChange=false;
-   Tsubtitle *sub=NULL;
-   CAutoLock lock(&csEmbedded);
-   int shownEmbedded=deci->getParam2(IDFF_subShowEmbedded);
-   bool useembedded=!embedded.empty() && shownEmbedded;
-   if (useembedded 
-      && (adhocMode == ADHOC_NORMAL 
-      || (adhocMode == ADHOC_ADHOC_DRAW_DVD_SUB_ONLY && isdvdproc) 
-      || (adhocMode == ADHOC_SECOND_DONT_DRAW_DVD_SUB && !isdvdproc)))
-    {
-     Tembedded::iterator e=embedded.find(shownEmbedded);
-     if (e!=embedded.end() && e->second)
-      sub=e->second->getSubtitle(cfg,frameStart,&forceChange);
+            const Trect *decodedPict = deciV->getDecodedPictdimensions();
+            if (decodedPict!=NULL) {
+                printprefs.xinput = decodedPict->dx;
+                printprefs.yinput = decodedPict->dy;
+            }
+
+            if (memcmp(oldFontCCcfg->name,cfg2.font.name,sizeof(TfontSettingsSub)-sizeof(Toptions))!=0 || oldsplitborder!=cfg2.splitBorder) {
+                memcpy(oldFontCCcfg,&cfg2.font,sizeof(cfg2.font));oldsplitborder=cfg2.splitBorder;
+                fontCC.init();
+            }
+
+            // Because closed captions are delivered at the same time of the video frame, like OSD, threading does not help.
+            printprefs.fontSettings.gdi_font_scale = 4;
+            fontCC.print(cc,false,printprefs,dst,stride2);
+            wasCCchange=false;
+        }
     }
-   if (!useembedded && adhocMode != ADHOC_ADHOC_DRAW_DVD_SUB_ONLY &&  cfg->is)
-    sub=subs.getSubtitle(cfg,frameStart,&forceChange);
 
-   if (sub && (isdvdproc || cfg->is))
-    {
-     init(pict,cfg->full,cfg->half);
-
-     if (memcmp(oldFontCfg->name,cfg->font.name,sizeof(TfontSettingsSub)-sizeof(Toptions))!=0 || fontSizeChanged || oldstereo!=cfg->stereoscopic || oldsplitborder!=cfg->splitBorder)
-      {
-       memcpy(oldFontCfg,&cfg->font,sizeof(cfg->font));oldstereo=cfg->stereoscopic;oldsplitborder=cfg->splitBorder;
-       font.init(oldFontCfg);
-      }
-     fontSizeChanged=false;
-
-     unsigned char *dst[4];
-     if (((strncmp(outputfourcc,_l("RGB"),3)==0 && !parent->isAnyActiveDownstreamFilter(it)) || pict.csp==FF_CSP_RGB32) && sub->isText())
-      {
-       int outcsp = (pict.fieldtype & FIELD_TYPE::MASK_INT) ? FF_CSP_RGB32 | FF_CSP_FLAGS_INTERLACED : FF_CSP_RGB32;
-
-       getCurNext(outcsp, pict, cfg->full, COPYMODE_DEF, dst);
-       everRGB = true;
-      }
-     else
-      getCurNext(FF_CSP_420P,pict,cfg->full,COPYMODE_DEF,dst);
-     unsigned int sizeDx,sizeDy;
-     if (cfg->font.autosizeVideoWindow)
-      {
-       CRect r;
-       deciV->getVideoDestRect(&r);
-       sizeDx=r.Width();sizeDy=r.Height();
-      }
-     else
-      {
-       sizeDx=cfg->full ? pict.rectFull.dx : pict.rectClip.dx;
-       sizeDy=cfg->full ? pict.rectFull.dy : pict.rectClip.dy;
-      }
-     forceChange|=oldSizeDx!=sizeDx || oldSizeDy!=sizeDy;
-     oldSizeDx=sizeDx;oldSizeDy=sizeDy;
-
-     TsubPrintPrefs printprefs(dst,stride2,dx1,dy1,deci,cfg,pict,clipdy,parent->config,!!isdvdproc,&cfg->font);
-     printprefs.csp=pict.csp & FF_CSPS_MASK;
-     printprefs.rtStart=frameStart;
-     const Trect *decodedPict = deciV->getDecodedPictdimensions();
-     if (decodedPict!=NULL)
-     {
-      printprefs.xinput = decodedPict->dx;
-      printprefs.yinput = decodedPict->dy;
-     }
-     if (!cfg->stereoscopic || isdvdproc)
-      {
-       printprefs.sizeDx=sizeDx;
-       printprefs.sizeDy=sizeDy;
-       sub->print(frameStart,wasDiscontinuity,font,forceChange,printprefs);
-      }
-     else
-      {
-       printprefs.sizeDx=sizeDx;
-       printprefs.sizeDy=sizeDy/2;
-       printprefs.posXpix=cfg->stereoscopic?cfg->stereoscopicPar*int(sizeDx)/2000:0;
-       sub->print(frameStart,wasDiscontinuity,font,forceChange,printprefs);
-       for (unsigned int i=0;i<pict.cspInfo.numPlanes;i++)
-       printprefs.dst[i]+=stride2[i]*(dy1[0]/2)>>pict.cspInfo.shiftY[i];
-       printprefs.posXpix=-printprefs.posXpix;
-       sub->print(frameStart,false,font,false,printprefs);
-      }
-     wasDiscontinuity=false;
+    if (adhocMode != ADHOC_ADHOC_DRAW_DVD_SUB_ONLY 
+       && everRGB
+       && (pict.csp & FF_CSPS_MASK) != FF_CSP_RGB32 
+       && rgb32_if_text) {
+        unsigned char *dst[4];
+        getCurNext3(FF_CSP_RGB32, pict, cfg->full, COPYMODE_DEF, dst);
     }
-  }
 
- if (cfg->cc && cfg->is && adhocMode != ADHOC_ADHOC_DRAW_DVD_SUB_ONLY)
-  {
-   CAutoLock lock(&csCC);
-   if (cc && cc->numlines())
-    {
-     if (!again)
-      init(pict,cfg->full,cfg->half);
-     unsigned char *dst[4];
-     if (((strncmp(outputfourcc,_l("RGB"),3)==0 && !parent->isAnyActiveDownstreamFilter(it)) || pict.csp==FF_CSP_RGB32))
-      {
-       int outcsp = (pict.fieldtype & FIELD_TYPE::MASK_INT) ? FF_CSP_RGB32 | FF_CSP_FLAGS_INTERLACED : FF_CSP_RGB32;
-
-       getCurNext3(outcsp, pict, cfg->full, COPYMODE_DEF, dst);
-       everRGB = true;
-      }
-     else
-      getCurNext3(FF_CSP_420P,pict,cfg->full,COPYMODE_DEF,dst);
-    #if 0
-     TsubtitlesSettings cfg(*cfg);
-     cfg.posX=50;
-     cfg.posY=100;
-     cfg.align=ALIGN_CENTER;
-    #else
-     const TsubtitlesSettings &cfg2(*cfg);
-    #endif
-     TsubPrintPrefs printprefs(dst,stride2,dx1,dy1,deci,&cfg2,pict,clipdy,parent->config,!!isdvdproc,&cfg->font);
-     printprefs.csp=pict.csp & FF_CSPS_MASK;
-     printprefs.sizeDx=pict.rectFull.dx;
-     printprefs.sizeDy=pict.rectFull.dy;
-
-     const Trect *decodedPict = deciV->getDecodedPictdimensions();
-     if (decodedPict!=NULL)
-     {
-      printprefs.xinput = decodedPict->dx;
-      printprefs.yinput = decodedPict->dy;
-     }
-
-     if (memcmp(oldFontCCcfg->name,cfg2.font.name,sizeof(TfontSettingsSub)-sizeof(Toptions))!=0 || oldsplitborder!=cfg2.splitBorder)
-      {
-       memcpy(oldFontCCcfg,&cfg2.font,sizeof(cfg2.font));oldsplitborder=cfg2.splitBorder;
-       fontCC.init(oldFontCCcfg);
-      }
-
-     printprefs.fontSettings.gdi_font_scale = 4;
-     fontCC.print(cc,false,printprefs);
-     wasCCchange=false;
+    if (adhocMode == ADHOC_ADHOC_DRAW_DVD_SUB_ONLY) {
+      adhocMode = ADHOC_SECOND_DONT_DRAW_DVD_SUB;
+      if (!again)
+          return S_OK;
+      else
+          return parent->deliverSample(it,pict);
+    } else {
+        adhocMode = ADHOC_NORMAL;
     }
-  }
 
- if (adhocMode != ADHOC_ADHOC_DRAW_DVD_SUB_ONLY 
-    && everRGB && pict.csp != FF_CSP_RGB32 
-    && strncmp(outputfourcc,_l("RGB"),3)==0 
-    && !parent->isAnyActiveDownstreamFilter(it))
-  {
-   unsigned char *dst[4];
-   int outcsp = (pict.fieldtype & FIELD_TYPE::MASK_INT) ? FF_CSP_RGB32 | FF_CSP_FLAGS_INTERLACED : FF_CSP_RGB32;
+    if (parent->getStopAtSubtitles()) {
+        // We just wanted to update prevPict.
+        parent->setStopAtSubtitles(false);
+        return S_OK;
+    }
 
-   getCurNext3(outcsp, pict, cfg->full, COPYMODE_DEF, dst);
-  }
+    DPRINTF(_l("TimgFilterSubtitles time = %d"),(t2-t1)/10000);
 
- if (adhocMode == ADHOC_ADHOC_DRAW_DVD_SUB_ONLY)
-  {
-   adhocMode = ADHOC_SECOND_DONT_DRAW_DVD_SUB;
-   if (!again)
-    return S_OK;
-   else
-    return parent->deliverSample(it,pict);
-  }
- else
-  {
-   adhocMode = ADHOC_NORMAL;
-  }
-
- if (parent->getStopAtSubtitles())
-  {
-   // We just wanted to update prevPict.
-   parent->setStopAtSubtitles(false);
-   return S_OK;
-  }
-
- return parent->deliverSample(++it,pict);
+    return parent->deliverSample(++it,pict);
 }
-void TimgFilterSubtitles::onSeek(void)
+
+TsubtitlesTextpin* TimgFilterSubtitles::getTextpin()
+{
+    // make sure csEmbedded is locked
+    int shownEmbedded=deci->getParam2(IDFF_subShowEmbedded);
+    if (embedded.size() && shownEmbedded) {
+        Tembedded::iterator e=embedded.find(shownEmbedded);
+        if (e!=embedded.end() && e->second)
+            return e->second;
+    }
+    return NULL;
+}
+
+void TimgFilterSubtitles::onSeek()
 {
     wasDiscontinuity=true;
     again=false;
     {
-        CAutoLock lock(&csCC);
+        boost::unique_lock<boost::recursive_mutex> lock(csCC);
         hideClosedCaptions();
     }
     {
-        CAutoLock lock(&csEmbedded);
-        int shownEmbedded=deci->getParam2(IDFF_subShowEmbedded);
-        bool useembedded=!embedded.empty() && shownEmbedded;
-        if (useembedded) {
-            Tembedded::iterator e=embedded.find(shownEmbedded);
-            if (e!=embedded.end() && e->second)
-                e->second->onSeek();
-        }
+        boost::unique_lock<boost::recursive_mutex> lock(csEmbedded);
+        TsubtitlesTextpin* pin = getTextpin();
+        if (pin)
+            pin->onSeek();
+        glyphThread.onSeek();
     }
 }
 
-const char_t* TimgFilterSubtitles::getCurrentFlnm(void) const
+const char_t* TimgFilterSubtitles::getCurrentFlnm() const
 {
- return subs.subFlnm;
+    return subs.subFlnm;
 }
 
 void TimgFilterSubtitles::addClosedCaption(const wchar_t *line)
 {
- CAutoLock lock(&csCC);
- if (!cc)
-  cc=new TsubtitleText(Tsubreader::SUB_SUBRIP);
- cc->add(line);
- TsubtitleFormat format(NULL);
- cc->format(format);
- wasCCchange=true;
+    boost::unique_lock<boost::recursive_mutex> lock(csCC);
+    if (!cc)
+        cc=new TsubtitleText(Tsubreader::SUB_SUBRIP);
+    cc->add(line);
+    TsubtitleFormat format(NULL);
+    cc->format(format);
+    wasCCchange=true;
 }
-void TimgFilterSubtitles::hideClosedCaptions(void)
+void TimgFilterSubtitles::hideClosedCaptions()
 {
- CAutoLock lock(&csCC);
- if (cc)
-  {
-   cc->clear();
-   wasCCchange=true;
-  }
+    boost::unique_lock<boost::recursive_mutex> lock(csCC);
+    if (cc) {
+        cc->clear();
+        wasCCchange=true;
+    }
 }
 
-bool TimgFilterSubtitles::enterAdhocMode(void)
+bool TimgFilterSubtitles::enterAdhocMode()
 {
- if (adhocMode == ADHOC_NORMAL)
-  adhocMode = ADHOC_ADHOC_DRAW_DVD_SUB_ONLY;
- return !again;
+    if (adhocMode == ADHOC_NORMAL)
+        adhocMode = ADHOC_ADHOC_DRAW_DVD_SUB_ONLY;
+    return !again;
 }
 
+HANDLE TimgFilterSubtitles::getGlyphThreadHandle()
+{
+    return glyphThread.platform_specific_thread;
+}
+
+// ========================= TimgFilterSubtitles::TglyphThread =========================
+TimgFilterSubtitles::TglyphThread::TglyphThread(TimgFilterSubtitles *Iparent, IffdshowBase *deci):
+    parent(Iparent),
+    threadCmd(1),
+    current_pos(0),
+    oldpin(NULL),
+    font(deci),
+    firstrun(true),
+    used_memory(0),
+    thread(glyphThreadFunc0,this),
+    platform_specific_thread(thread.native_handle())
+
+{
+    shared_prefs.csp = -1;
+}
+
+void TimgFilterSubtitles::TglyphThread::glyphThreadFunc()
+{
+    slow();
+    SetThreadPriorityBoost(platform_specific_thread, true);
+    TsubtitleText *next = NULL;
+    do {
+        // DPRINTF(_l("glyphThreadFunc top level loop current_pos=%d used_memory=%d"),current_pos,used_memory);
+        {
+            // do not hog mutex too long
+            TthreadPriority pr(platform_specific_thread,
+                THREAD_PRIORITY_ABOVE_NORMAL,
+                THREAD_PRIORITY_BELOW_NORMAL);
+
+            boost::unique_lock<boost::mutex> lock(mutex_prefs);
+            if (threadCmd == 0) return;
+            if (firstrun
+              || (shared_prefs == copied_prefs
+                  && (next == NULL || used_memory > max_memory_usage))) {
+                condv_prefs.wait(lock);
+                if (threadCmd == 0) return;
+            }
+
+            // compare again as shared_prefs may have chaged during condv_prefs.wait
+            if (shared_prefs != copied_prefs) {
+                // in this case, rendered subtitles are dropped by TimgFilterSubtitles::process. This is not beautiful, but better for performance.
+                DPRINTF(_l("prefs changed"));
+                current_pos = 0;
+                used_memory = 0;
+            }
+            firstrun = false;
+            copied_prefs = shared_prefs;
+        }
+
+        {
+            deferred_lock<boost::mutex> lock_next;
+            {
+                // do not hog mutex too long
+                TthreadPriority pr(platform_specific_thread,
+                    THREAD_PRIORITY_ABOVE_NORMAL,
+                    THREAD_PRIORITY_BELOW_NORMAL);
+
+                boost::unique_lock<boost::recursive_mutex> lock_emb(parent->csEmbedded);
+                next = getNext();
+                if (used_memory > max_memory_usage)
+                    clean_past();
+                if (next) {
+                    // lock next before unlocking csEmbedded.
+                    lock_next.lock(next->get_lock_ptr());
+                }
+            }
+
+            if (next && used_memory < max_memory_usage) {
+                // make sure next is locked here and unlock before leaving.
+                // csEmbedded is not locked here for performance.
+                // DPRINTF(_l("glyphThreadFunc next %I64i"),next->start);
+                used_memory += next->prepareGlyph(copied_prefs,font,false);
+                current_pos++;
+            }
+        }
+    } while(1);
+}
+
+TimgFilterSubtitles::TglyphThread::~TglyphThread()
+{
+    {
+        boost::unique_lock<boost::mutex> lock(mutex_prefs);
+        threadCmd = 0;
+    }
+    condv_prefs.notify_one();
+    thread.join();
+}
+
+Tsubreader* TimgFilterSubtitles::TglyphThread::get_subreader()
+{
+     // make sure csEmbedded is locked
+    Tsubtitles* pin = parent->getTextpin();
+    if (!pin)
+        pin = &parent->subs;
+    if (!pin) {
+        current_pos = 0;
+        return NULL;
+    }
+    if (!pin->isText()) return NULL;
+    if (pin != oldpin) {
+        current_pos = 0;
+        oldpin = pin;
+    }
+    return pin->subs;
+}
+
+TsubtitleText* TimgFilterSubtitles::TglyphThread::getNext()
+{
+    // make sure csEmbedded is locked
+    Tsubreader *subs = get_subreader();
+    if (!subs) return NULL;
+    if (current_pos >= subs->size()) return NULL;
+
+    for (Tsubreader::const_iterator i = subs->begin() + current_pos ; i != subs->end() ; i++)
+    {
+        TsubtitleText *subText = (TsubtitleText *)*i;
+        if (subText->stop < copied_prefs.rtStart){
+            current_pos++;
+            used_memory -= subText->dropRenderedLines();
+        }
+        if (!subText->is_rendering_ready()){
+            return subText;
+        }
+    }
+    return NULL;
+}
+
+void TimgFilterSubtitles::TglyphThread::clean_past()
+{
+    // make sure csEmbedded is locked
+    Tsubreader *subs = get_subreader();
+    if (!subs) return;
+
+    foreach (Tsubtitle *sub ,*subs)
+    {
+        if (sub->stop < copied_prefs.rtStart){
+            used_memory -= sub->dropRenderedLines();
+        }
+    }
+}
+
+void TimgFilterSubtitles::TglyphThread::onSeek()
+{
+    // make sure csEmbedded is locked
+    current_pos = 0;
+    used_memory = 0;
+}
+
+void TimgFilterSubtitles::TglyphThread::slow()
+{
+    SetThreadPriority(platform_specific_thread, THREAD_PRIORITY_BELOW_NORMAL);
+}
+
+void TimgFilterSubtitles::TglyphThread::hustle()
+{
+    SetThreadPriority(platform_specific_thread, THREAD_PRIORITY_ABOVE_NORMAL);
+}

@@ -142,10 +142,11 @@ TimgFilterOSD::TosdLine::TosdLine(IffdshowBase *Ideci,IffdshowDec *IdeciD,Iffdsh
  config(Iconfig),
  font(Ideci),
  sub(0,TSubtitleProps(Iitalic,false)),
- provider(Iprovider)
+ provider(Iprovider),
+ fs(*fontSettings)
 {
  duration=Iduration;
- font.init(fontSettings);
+ font.init();
  if (strncmp(format.c_str(),_l("user"),4)==0)
   {
    char_t s0[256]=_l(""),*s=s0;
@@ -212,7 +213,18 @@ const char_t* TimgFilterOSD::TosdLine::getName(unsigned int i) const
  return i>=tokens.size()?_l(""):tokens[i].getName();
 }
 
-void TimgFilterOSD::TosdLine::print(IffdshowBase *deci,const TffPict &pict,unsigned char *dst[4],stride_t stride[4],unsigned int dxY,unsigned int dyY,unsigned int x,unsigned int &y,int linespace,FILE *f,bool fileonly)
+void TimgFilterOSD::TosdLine::print(
+    IffdshowBase *deci,
+    const TffPict &pict,
+    unsigned char *dst[4],
+    stride_t stride[4],
+    unsigned int dxY,
+    unsigned int dyY,
+    unsigned int x,
+    unsigned int &y,
+    int linespace,
+    FILE *f,
+    bool fileonly)
 {
  bool wasChange=firsttime,splitline=false;
  firsttime=false;
@@ -231,11 +243,8 @@ void TimgFilterOSD::TosdLine::print(IffdshowBase *deci,const TffPict &pict,unsig
   {
    if (y<dyY)
     {
-     TrenderedSubtitleLines::TprintPrefs printprefs(deci,font.fontSettings);
+     TrenderedSubtitleLines::TprintPrefs printprefs(deci,&fs);
      printprefs.isOSD=true;
-     printprefs.dst=dst;
-     printprefs.stride=stride;
-     printprefs.shiftX=pict.cspInfo.shiftX;printprefs.shiftY=pict.cspInfo.shiftY;
      printprefs.dx=dxY;
      printprefs.dy=dyY;
      printprefs.xpos=-1*int(x);
@@ -246,7 +255,6 @@ void TimgFilterOSD::TosdLine::print(IffdshowBase *deci,const TffPict &pict,unsig
      printprefs.config=config;
      printprefs.shadowMode=-1;
      printprefs.csp=pict.csp & FF_CSPS_MASK;
-     printprefs.cspBpp=pict.cspInfo.Bpp;
      printprefs.sar=pict.rectFull.sar;
      if (splitline)
       {
@@ -254,7 +262,7 @@ void TimgFilterOSD::TosdLine::print(IffdshowBase *deci,const TffPict &pict,unsig
        printprefs.fontsplit=1;
       }
      sub.set(text);
-     y += font.print(&sub,wasChange,printprefs);
+     y += font.print(&sub,wasChange,printprefs,dst,stride);
     }
   }
 }
@@ -348,7 +356,7 @@ void TimgFilterOSD::Tosds::init(bool allowSave,IffdshowBase *deci,IffdshowDec *d
 void TimgFilterOSD::Tosds::fontInit(const TfontSettingsOSD *fontSettings)
 {
  for (iterator i=begin();i!=end();i++)
-  (*i)->font.init(fontSettings);
+  (*i)->font.init();
 }
 
 void TimgFilterOSD::Tosds::print(IffdshowBase *deci,const TffPict &pict,unsigned char *dst[4],stride_t stride2[4],unsigned int dxY,unsigned int dyY,unsigned int x,unsigned int &y,int linespace,bool fileonly)
@@ -459,7 +467,7 @@ HRESULT TimgFilterOSD::process(TfilterQueue::iterator it,TffPict &pict,const Tfi
    memcpy(oldFont,parent->fontSettingsOSD,sizeof(*oldFont));
    for (TprovOSDs::iterator po=provOSDs.begin();po!=provOSDs.end();po++)
     (*po)->fontInit(oldFont);
-   fontUser.init(oldFont);
+   fontUser.init();
   }
 
  for (TprovOSDs::iterator po=provOSDs.begin();po!=provOSDs.end();po++)
@@ -505,11 +513,8 @@ HRESULT TimgFilterOSD::process(TfilterQueue::iterator it,TffPict &pict,const Tfi
 	   TsubtitleFormat subtitleFormat = TsubtitleFormat(parent->config->getHtmlColors());
 	   subUser.format(subtitleFormat);
       }
-     TrenderedSubtitleLines::TprintPrefs printprefs(deci,fontUser.fontSettings);
+     TrenderedSubtitleLines::TprintPrefs printprefs(deci,&cfg->font);
      printprefs.isOSD=true;
-     printprefs.dst=dst;
-     printprefs.stride=stride2;
-     printprefs.shiftX=pict.cspInfo.shiftX;printprefs.shiftY=pict.cspInfo.shiftY;
      printprefs.dx=dx1[0];
      printprefs.dy=dy1[0];
      printprefs.xpos=deci->getParam2(IDFF_OSDuserPx);
@@ -520,10 +525,9 @@ HRESULT TimgFilterOSD::process(TfilterQueue::iterator it,TffPict &pict,const Tfi
      printprefs.config=parent->config;
      printprefs.shadowMode=-1;
      printprefs.csp=pict.csp & FF_CSPS_MASK;
-     printprefs.cspBpp=pict.cspInfo.Bpp;
      printprefs.sar=pict.rectFull.sar;
 
-     fontUser.print(&subUser,true,printprefs);
+     fontUser.print(&subUser,true,printprefs,dst,stride2);
     }
   }
  csProvider.Unlock();

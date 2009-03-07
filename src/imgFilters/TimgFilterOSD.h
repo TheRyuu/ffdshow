@@ -70,11 +70,23 @@ private:
     };
    typedef std::vector<TosdToken> TosdTokens;
    TosdTokens tokens;
+   TfontSettings fs;
   public:
    TosdLine(IffdshowBase *Ideci,IffdshowDec *IdeciB,IffdshowDecVideo *IdeciV,const Tconfig *Iconfig,const ffstring &Iformat,const TfontSettings *fontSettings,unsigned int Iduration,IOSDprovider *Iprovider,bool Iitalic=false);
    int duration;
    Tfont font;
-   void print(IffdshowBase *deci,const TffPict &pict,unsigned char *dst[4],stride_t stride[4],unsigned int dxY,unsigned int dyY,unsigned int x,unsigned int &y,int linespace,FILE *f,bool fileonly);
+   void print(
+    IffdshowBase *deci,
+    const TffPict &pict,
+    unsigned char *dst[4],
+    stride_t stride[4],
+    unsigned int dxY,
+    unsigned int dyY,
+    unsigned int x,
+    unsigned int &y,
+    int linespace,
+    FILE *f,
+    bool fileonly);
    const char_t *getName(unsigned int i) const;
   };
 

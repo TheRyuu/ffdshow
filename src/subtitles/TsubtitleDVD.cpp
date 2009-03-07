@@ -408,15 +408,25 @@ void TsubtitleDVD::createImage(const TspuPlane src[3],const CRect &rcclip,CRect 
   image=new TspuImageSimd<Tmmx>(src,rcclip,rectReal,parent->rectOrig,prefs);
  lines.push_back(new TrenderedSubtitleLine(image));
 }
-void TsubtitleDVD::linesprint(const TrenderedSubtitleLines::TprintPrefs &prefs) const
+void TsubtitleDVD::linesprint(
+    const TrenderedSubtitleLines::TprintPrefs &prefs,
+    unsigned char **dst,
+    const stride_t *stride) const
 {
  if (prefs.dvd || !prefs.vobchangeposition)
-  image->ownprint(prefs);
+  image->ownprint(prefs,dst,stride);
  else
-  lines.print(prefs);
+  lines.print(prefs,dst,stride);
 }
 
-void TsubtitleDVD::print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceChange,TrenderedSubtitleLines::TprintPrefs &prefs)
+void TsubtitleDVD::print(
+    REFERENCE_TIME time,
+    bool wasseek,
+    Tfont &f,
+    bool forceChange,
+    TrenderedSubtitleLines::TprintPrefs &prefs,
+    unsigned char **dst,
+    const stride_t *stride)
 {
  if (this->offset[0]==DWORD(-1))
   return;
@@ -482,7 +492,7 @@ void TsubtitleDVD::print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceCha
    DPRINTF(_l("rectReal: [%i,%i] - [%i,%i]"),rectReal.left,rectReal.top,rectReal.Width(),rectReal.Height());
    createImage(planes,rcclip,rectReal,prefs);
   }
- linesprint(prefs);
+ linesprint(prefs,dst,stride);
 }
 
 void TsubtitleDVD::append(const unsigned char *Idata,unsigned int Idatalen)
@@ -624,7 +634,14 @@ bool TsubtitleSVCD::parse(void)
 
  return true;
 }
-void TsubtitleSVCD::print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceChange,const TrenderedSubtitleLines::TprintPrefs &prefs) const
+void TsubtitleSVCD::print(
+    REFERENCE_TIME time,
+    bool wasseek,
+    Tfont &f,
+    bool forceChange,
+    const TrenderedSubtitleLines::TprintPrefs &prefs,
+    unsigned char **dst,
+    const stride_t *stride) const
 {
  if (lines.empty() || changed)
   {
@@ -666,7 +683,7 @@ void TsubtitleSVCD::print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceCh
     }
    createImage(planes,rcclip,rectReal,prefs);
   }
- linesprint(prefs);
+ linesprint(prefs,dst,stride);
 }
 
 //===================================== TsubtitleCVD ======================================
@@ -736,7 +753,14 @@ bool TsubtitleCVD::parse(void)
    }
  return true;
 }
-void TsubtitleCVD::print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceChange,const TrenderedSubtitleLines::TprintPrefs &prefs) const
+void TsubtitleCVD::print(
+    REFERENCE_TIME time,
+    bool wasseek,
+    Tfont &f,
+    bool forceChange,
+    const TrenderedSubtitleLines::TprintPrefs &prefs,
+    unsigned char **dst,
+    const stride_t *stride) const
 {
  if (lines.empty() || changed)
   {
@@ -786,5 +810,5 @@ void TsubtitleCVD::print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceCha
     }
    createImage(planes,rcclip,rectReal,prefs);
   }
- linesprint(prefs);
+ linesprint(prefs,dst,stride);
 }
