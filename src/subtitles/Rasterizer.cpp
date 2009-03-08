@@ -688,8 +688,7 @@ bool Rasterizer::Rasterize(int xsub, int ysub, const CRect &borderSize)
 
     if(!mWidth || !mHeight)
     {
-        mGlyphBmpWidth = mGlyphBmpHeight = 0;
-        return true;
+        mGlyphBmpWidth = mGlyphBmpHeight = 1;
     }
 
     xsub &= 7;
