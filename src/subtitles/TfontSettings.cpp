@@ -270,8 +270,8 @@ TfontSettingsSub::TfontSettingsSub(TintStrColl *Icoll):TfontSettings(Icoll)
      _l("fontShadowSize"), 8,
    IDFF_fontShadowMode         ,&TfontSettings::shadowMode         ,0,3,_l(""),1,
      _l("fontShadowMode"), 1, // Default shadow mode to gradient (best rendering)
-   IDFF_fontGDIscale           ,&TfontSettings::gdi_font_scale     ,16,16,_l(""),1,
-     _l("fontGDIscale"), 16,
+   IDFF_fontGDIscale           ,&TfontSettings::gdi_font_scale     ,64,64,_l(""),1,
+     _l("fontGDIscale"), 64,
    IDFF_fontBlur               ,&TfontSettings::blur               ,0,0,_l(""),1,
      _l("fontBlur"), 0,
    0

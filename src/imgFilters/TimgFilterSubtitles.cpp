@@ -349,6 +349,7 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
             printprefs.csp = outcsp;
             printprefs.subformat = subformat;
             printprefs.rtStart=frameStart;
+            printprefs.fontSettings.gdi_font_scale = 64;
             const Trect *decodedPict = deciV->getDecodedPictdimensions();
             if (decodedPict!=NULL) {
                 printprefs.xinput = decodedPict->dx;

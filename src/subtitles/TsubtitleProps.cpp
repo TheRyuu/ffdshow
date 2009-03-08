@@ -108,15 +108,15 @@ void TSubtitleProps::fix_size(LOGFONT &lf, HDC hdc, TfontManager *fontManager, u
  TEXTMETRIC tm4, tm64;
  if (GetTextMetrics(hdc,&tm4))
   {
-   lf.lfHeight *= 64/gdi_font_scale;
+   lf.lfHeight = lf.lfHeight* 64 / gdi_font_scale;
    HFONT font=fontManager->getFont(lf);
    SelectObject(hdc,font);
    GetTextMetrics(hdc,&tm64);
-   double r4=(double)(tm4.tmHeight - tm4.tmInternalLeading) * (64/gdi_font_scale) / lf.lfHeight;
+   double r4=(double)(tm4.tmHeight - tm4.tmInternalLeading) * 64.0 / gdi_font_scale / lf.lfHeight;
    double r64=(double)(tm64.tmHeight-tm64.tmInternalLeading) / lf.lfHeight;
    m_ascent64=(tm64.tmAscent + 4) >> 3;
    m_descent64=(tm64.tmDescent + 4) >> 3;
-   lf.lfHeight=LONG((double)lf.lfHeight * r64 / r4 / (64/gdi_font_scale));
+   lf.lfHeight=LONG((double)lf.lfHeight * r64 / r4 / 64.0 * gdi_font_scale);
    font=fontManager->getFont(lf);
    SelectObject(hdc,font);
   }

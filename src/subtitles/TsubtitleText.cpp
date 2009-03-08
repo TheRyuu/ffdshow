@@ -1558,7 +1558,6 @@ TrenderedTextSubtitleWord* TsubtitleText::newWord(
 
     prefs.outlineWidth=w->props.outlineWidth==-1 ? fontSettings.outlineWidth : w->props.outlineWidth;
 
-    unsigned int gdi_rendering_window = gdi_font_scale == 4 ? 4 : 16; // 4: OSD, 16: subtitles
     if (prefs.shadowMode==-1) {
         // OSD
         prefs.shadowMode = fontSettings.shadowMode;
@@ -1596,8 +1595,7 @@ TrenderedTextSubtitleWord* TsubtitleText::newWord(
                                  lf,
                                  xscale,
                                  w->props,
-                                 gdi_font_scale,
-                                 gdi_rendering_window);
+                                 gdi_font_scale);
 
     if (rw->dxCharY && rw->dyCharY) {
         return rw;

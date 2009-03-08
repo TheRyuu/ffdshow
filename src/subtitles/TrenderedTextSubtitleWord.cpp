@@ -77,8 +77,7 @@ TrenderedTextSubtitleWord::TrenderedTextSubtitleWord(
         LOGFONT lf,
         double xscale,
         TSubtitleProps Iprops,
-        unsigned int gdi_font_scale,
-        unsigned int GDI_rendering_window):
+        unsigned int gdi_font_scale):
     props(Iprops),
     m_bodyYUV(YUV),
     m_outlineYUV(outlineYUV),
@@ -152,7 +151,7 @@ TrenderedTextSubtitleWord::TrenderedTextSubtitleWord(
     }
     dxCharY  = xscale * sz.cx / (gdi_font_scale * 100);
     dyCharY  = sz.cy / gdi_font_scale;
-    getGlyph(hdc, tab_parsed_string, xscale, sz, cxs, lf, gdi_font_scale, GDI_rendering_window);
+    getGlyph(hdc, tab_parsed_string, xscale, sz, cxs, lf, gdi_font_scale);
     drawShadow();
 }
 
@@ -162,8 +161,7 @@ void TrenderedTextSubtitleWord::getGlyph(HDC hdc,
     SIZE italic_fixed_sz,
     const ints &cxs,
     const LOGFONT &lf,
-    unsigned int gdi_font_scale,
-    unsigned int GDI_rendering_window)
+    unsigned int gdi_font_scale)
 {
     OUTLINETEXTMETRIC otm;
     if (GetOutlineTextMetrics(hdc,sizeof(otm),&otm)) {
@@ -187,16 +185,16 @@ void TrenderedTextSubtitleWord::getGlyph(HDC hdc,
     leftOverhang   = getLeftOverhang();
     rightOverhang  = getRightOverhang();
 
-    gdi_dx = ((italic_fixed_sz.cx + GDI_rendering_window) / gdi_font_scale + 1) * gdi_font_scale;
-    gdi_dy = italic_fixed_sz.cy + GDI_rendering_window;
+    gdi_dx = ((italic_fixed_sz.cx + gdi_font_scale) / gdi_font_scale + 1) * gdi_font_scale;
+    gdi_dy = italic_fixed_sz.cy + gdi_font_scale;
 
     if (gdi_font_scale == 4)
          drawGlyphOSD(hdc,tab_parsed_string,cxs,xscale);  // sharp and fast, good for OSD.
     else
-         drawGlyphSubtitles<16>(hdc,tab_parsed_string,cxs,xscale,gdi_font_scale); // anti aliased, good for subtitles.
+         drawGlyphSubtitles(hdc,tab_parsed_string,cxs,xscale,gdi_font_scale); // anti aliased, good for subtitles.
 }
 
-template<int GDI_rendering_window> void TrenderedTextSubtitleWord::drawGlyphSubtitles(
+void TrenderedTextSubtitleWord::drawGlyphSubtitles(
       HDC hdc,
       const strings &tab_parsed_string,
       const ints &cxs,
@@ -290,8 +288,6 @@ void TrenderedTextSubtitleWord::drawGlyphOSD(
         cx++;
     }
 
-    // if GDI_rendering_window > gdi_font_scale, blur is applied.
-
     BITMAPINFO bmi;
     bmi.bmiHeader.biSize=sizeof(bmi.bmiHeader);
     bmi.bmiHeader.biWidth=gdi_dx;
@@ -335,11 +331,7 @@ void TrenderedTextSubtitleWord::drawGlyphOSD(
                              4 * 100 / xscale
                              , 1);
     // coeff calculation
-    // To averave gdi_rendering_window_width * GDI_rendering_window pixels, add them all and
-    // multiply (65536 / (gdi_rendering_window_width * GDI_rendering_window))
-    // and shift right 16 bits is just fine.
-    // One problem, it make the body a little thin and darker, if blur is applied (GDI_rendering_window > gdi_font_scale).
-    // To avoid this, for subtitles, if only one of the overhanging edge is not filled, consider it is fully filled.
+    // To averave gdi_rendering_window_width * 5 pixels
     unsigned int coeff;
     coeff = 65536.0 / (gdi_rendering_window_width * 5);
     int dx0_mult_4 = gdi_dx * size_of_rgb32;
