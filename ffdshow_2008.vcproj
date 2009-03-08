@@ -1451,6 +1451,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\subtitles\Rasterizer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\subtitles\Rasterizer.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\subtitles\spudec.cpp"
 				>
 			</File>

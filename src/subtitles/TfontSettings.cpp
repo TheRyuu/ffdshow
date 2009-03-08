@@ -204,7 +204,7 @@ TfontSettingsOSD::TfontSettingsOSD(TintStrColl *Icoll):TfontSettings(Icoll)
      _l("OSDfontShadowSize"), 8,
    IDFF_OSDfontShadowMode    ,&TfontSettings::shadowMode     ,0,3,_l(""),1,
      _l("OSDfontShadowMode"), 3,
-   IDFF_OSDfontGDIscale      ,&TfontSettings::gdi_font_scale ,4,16,_l(""),1,
+   IDFF_OSDfontGDIscale      ,&TfontSettings::gdi_font_scale ,4,4,_l(""),1,
      _l("OSDfontGDIscale"), 4,
    IDFF_OSDfontBlur          ,&TfontSettings::blur           ,0,0,_l(""),1,
      _l("OSDfontBlur"), 0,
@@ -270,8 +270,8 @@ TfontSettingsSub::TfontSettingsSub(TintStrColl *Icoll):TfontSettings(Icoll)
      _l("fontShadowSize"), 8,
    IDFF_fontShadowMode         ,&TfontSettings::shadowMode         ,0,3,_l(""),1,
      _l("fontShadowMode"), 1, // Default shadow mode to gradient (best rendering)
-   IDFF_fontGDIscale           ,&TfontSettings::gdi_font_scale     ,4,16,_l(""),1,
-     _l("fontGDIscale"), 12,
+   IDFF_fontGDIscale           ,&TfontSettings::gdi_font_scale     ,16,16,_l(""),1,
+     _l("fontGDIscale"), 16,
    IDFF_fontBlur               ,&TfontSettings::blur               ,0,0,_l(""),1,
      _l("fontBlur"), 0,
    0

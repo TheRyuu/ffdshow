@@ -235,7 +235,6 @@ const char_t* TimgFilterSubtitles::findAutoSubFlnm(const TsubtitlesSettings *cfg
 
 HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)
 {
-    REFERENCE_TIME t1=0,t2=0;
     // Don't produce extra frames if there is going to be a new frame shortly anyway
     if (pict.fieldtype & FIELD_TYPE::SEQ_END)
         sequenceEnded=true;
@@ -390,12 +389,10 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
                 }
                 fontSizeChanged=false;
 
-    deciV->get_CurrentTime(&t1);
                 unsigned char *dst[4];
                 getCurNext(outcsp, pict, cfg->full, COPYMODE_DEF, dst);
                 if (outcsp == FF_CSP_RGB32)
                     everRGB = true;
-    deciV->get_CurrentTime(&t2);
 
                 if (!cfg->stereoscopic || isdvdproc) {
                     sub->print(frameStart,wasDiscontinuity,font,forceChange,printprefs,dst,stride2);
@@ -469,8 +466,6 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
         parent->setStopAtSubtitles(false);
         return S_OK;
     }
-
-    DPRINTF(_l("TimgFilterSubtitles time = %d"),(t2-t1)/10000);
 
     return parent->deliverSample(++it,pict);
 }

@@ -27,497 +27,497 @@
 
 // custom copy constructor for karaoke
 TrenderedTextSubtitleWord::TrenderedTextSubtitleWord(
-                       const TrenderedTextSubtitleWord &parent,
-                       bool senondaryColor
-                       ):
- TrenderedSubtitleWordBase(true),
- prefs(parent.prefs)
+        const TrenderedTextSubtitleWord &parent,
+        bool senondaryColor):
+    prefs(parent.prefs)
 {
- *this = parent;
- secondaryColoredWord = NULL;
- bmp[0]     = (unsigned char*)aligned_malloc(dx[0] * dy[0] + 16, 16);
- bmp[1]     = (unsigned char*)aligned_malloc(dx[1] * dy[1] + 16, 16);
- outline[0] = (unsigned char*)aligned_malloc(dx[0] * dy[0] + 16, 16);
- outline[1] = (unsigned char*)aligned_malloc(dx[1] * dy[1] + 16, 16);
- shadow[0]  = (unsigned char*)aligned_malloc(dx[0] * dy[0] + 16, 16);
- shadow[1]  = (unsigned char*)aligned_malloc(dx[1] * dy[1] + 16, 16);
- msk[0]     = (unsigned char*)aligned_malloc(dx[0] * dy[0] + 16, 16);
+    *this = parent;
+    secondaryColoredWord = NULL;
+    bmp[0]     = (unsigned char*)aligned_malloc(dx[0] * dy[0] + 16, 16);
+    bmp[1]     = (unsigned char*)aligned_malloc(dx[1] * dy[1] + 16, 16);
+    outline[0] = (unsigned char*)aligned_malloc(dx[0] * dy[0] + 16, 16);
+    outline[1] = (unsigned char*)aligned_malloc(dx[1] * dy[1] + 16, 16);
+    shadow[0]  = (unsigned char*)aligned_malloc(dx[0] * dy[0] + 16, 16);
+    shadow[1]  = (unsigned char*)aligned_malloc(dx[1] * dy[1] + 16, 16);
+    msk[0]     = (unsigned char*)aligned_malloc(dx[0] * dy[0] + 16, 16);
 
- memcpy(bmp[0], parent.bmp[0], dx[0] * dy[0]);
- memcpy(bmp[1], parent.bmp[1], dx[1] * dy[1]);
- if (props.karaokeMode == TSubtitleProps::KARAOKE_ko)
-  {
-   memset(outline[0], 0, dx[0] * dy[0]);
-   memset(outline[1], 0, dx[1] * dy[1]);
-   memset(shadow[0] , 0, dx[0] * dy[0]);
-   memset(shadow[1] , 0, dx[1] * dy[1]);
-   m_outlineYUV.A = 0;
-  }
- else
-  {
-   memcpy(outline[0], parent.outline[0], dx[0] * dy[0]);
-   memcpy(outline[1], parent.outline[1], dx[1] * dy[1]);
-   memcpy(shadow[0] , parent.shadow[0] , dx[0] * dy[0]);
-   memcpy(shadow[1] , parent.shadow[1] , dx[1] * dy[1]);
-  }
+    memcpy(bmp[0], parent.bmp[0], dx[0] * dy[0]);
+    memcpy(bmp[1], parent.bmp[1], dx[1] * dy[1]);
+    if (props.karaokeMode == TSubtitleProps::KARAOKE_ko) {
+        memset(outline[0], 0, dx[0] * dy[0]);
+        memset(outline[1], 0, dx[1] * dy[1]);
+        memset(shadow[0] , 0, dx[0] * dy[0]);
+        memset(shadow[1] , 0, dx[1] * dy[1]);
+        m_outlineYUV.A = 0;
+    } else {
+        memcpy(outline[0], parent.outline[0], dx[0] * dy[0]);
+        memcpy(outline[1], parent.outline[1], dx[1] * dy[1]);
+        memcpy(shadow[0] , parent.shadow[0] , dx[0] * dy[0]);
+        memcpy(shadow[1] , parent.shadow[1] , dx[1] * dy[1]);
+    }
 
- if (parent.msk[1])
-  {
-   msk[1] = (unsigned char*)aligned_malloc(dx[1] * dy[1] + 16, 16);
-   memset(msk[1], 0, dx[1] * dy[1]);
-  }
- m_bodyYUV = YUVcolorA(props.SecondaryColour,props.SecondaryColourA);
- oldFader = 0;
- updateMask(1 << 16, 2);
+    if (parent.msk[1]) {
+        msk[1] = (unsigned char*)aligned_malloc(dx[1] * dy[1] + 16, 16);
+        memset(msk[1], 0, dx[1] * dy[1]);
+    }
+    m_bodyYUV = YUVcolorA(props.SecondaryColour,props.SecondaryColourA);
+    oldFader = 0;
+    updateMask(1 << 16, 2);
 }
 
 // full rendering
 TrenderedTextSubtitleWord::TrenderedTextSubtitleWord(
-                       HDC hdc,
-                       const wchar_t *s0,
-                       size_t strlens,
-                       const YUVcolorA &YUV,
-                       const YUVcolorA &outlineYUV,
-                       const YUVcolorA &shadowYUV,
-                       const TrenderedSubtitleLines::TprintPrefs &Iprefs,
-                       LOGFONT lf,
-                       double xscale,
-                       TSubtitleProps Iprops,
-                       unsigned int gdi_font_scale,
-                       unsigned int GDI_rendering_window):
- TrenderedSubtitleWordBase(true),
- props(Iprops),
- m_bodyYUV(YUV),
- m_outlineYUV(outlineYUV),
- m_shadowYUV(shadowYUV),
- prefs(Iprefs),
- secondaryColoredWord(NULL),
- dstOffset(0),
- oldBodyYUVa(256),
- oldOutlineYUVa(256)
+        HDC hdc,
+        const wchar_t *s0,
+        size_t strlens,
+        const YUVcolorA &YUV,
+        const YUVcolorA &outlineYUV,
+        const YUVcolorA &shadowYUV,
+        const TrenderedSubtitleLines::TprintPrefs &Iprefs,
+        LOGFONT lf,
+        double xscale,
+        TSubtitleProps Iprops,
+        unsigned int gdi_font_scale,
+        unsigned int GDI_rendering_window):
+    props(Iprops),
+    m_bodyYUV(YUV),
+    m_outlineYUV(outlineYUV),
+    m_shadowYUV(shadowYUV),
+    prefs(Iprefs),
+    secondaryColoredWord(NULL),
+    dstOffset(0),
+    oldBodyYUVa(256),
+    oldOutlineYUVa(256)
 {
- csp=prefs.csp & FF_CSPS_MASK;
- strings s1;
- strtok(ffstring(s0,strlens).c_str(),L"\t",s1);
- SIZE sz;sz.cx=sz.cy=0;ints cxs;
- for (strings::iterator s=s1.begin();s!=s1.end();s++)
-  {
-   SIZE sz0;
-   GetTextExtentPoint32W(hdc,s->c_str(),(int)s->size(),&sz0);
-   sz.cx+=sz0.cx;
-   if (s+1!=s1.end())
-    {
-     int tabsize=prefs.tabsize*sz0.cy;
-     int newpos=(sz.cx/tabsize+1)*tabsize;
-     sz0.cx+=newpos-sz.cx;
-     sz.cx=newpos;
+    if (Tconfig::cpu_flags&FF_CPU_MMXEXT) {
+        YV12_lum2chr_min=YV12_lum2chr_min_mmx2;
+        YV12_lum2chr_max=YV12_lum2chr_max_mmx2;
+    } else {
+        YV12_lum2chr_min=YV12_lum2chr_min_mmx;
+        YV12_lum2chr_max=YV12_lum2chr_max_mmx;
     }
-   cxs.push_back(sz0.cx);
-   sz.cy=std::max(sz.cy,sz0.cy);
-  }
- OUTLINETEXTMETRIC otm;
- SIZE sz1=sz;
- if (GetOutlineTextMetrics(hdc,sizeof(otm),&otm))
-  {
-   baseline=otm.otmTextMetrics.tmAscent;
-   if (otm.otmItalicAngle)
-    sz1.cx += ff_abs(LONG(sz1.cy*sin(otm.otmItalicAngle*M_PI/1800)));
-   else
-    if (otm.otmTextMetrics.tmItalic)
-     sz1.cx+=sz1.cy*0.35;
-   m_shadowSize = getShadowSize(otm.otmTextMetrics.tmHeight, gdi_font_scale);
-  }
- else
-  { // non true-type
-   baseline=sz1.cy*0.8;
-   m_shadowSize = getShadowSize(lf.lfHeight, gdi_font_scale);
-   if (lf.lfItalic)
-    sz1.cx+=sz1.cy*0.35;
-  }
- dx[0] = ((sz1.cx + GDI_rendering_window) / gdi_font_scale + 1) * gdi_font_scale;
- dy[0] = sz1.cy + GDI_rendering_window;
- unsigned char *bmp16=(unsigned char*)aligned_calloc3(dx[0] * size_of_rgb32,dy[0], 32, 16);
- HBITMAP hbmp=CreateCompatibleBitmap(hdc,dx[0],dy[0]);
- HGDIOBJ old=SelectObject(hdc,hbmp);
- RECT r={0,0,dx[0],dy[0]};
- FillRect(hdc,&r,(HBRUSH)GetStockObject(BLACK_BRUSH));
- SetTextColor(hdc,RGB(255,255,255));
- SetBkColor(hdc,RGB(0,0,0));
- int x=GDI_rendering_window/2;
- ints::const_iterator cx=cxs.begin();
- for (strings::const_iterator s=s1.begin();s!=s1.end();s++,cx++)
-  {
-   const char *t=(const char *)s->c_str();
-   int sz=(int)s->size();
-   TextOutW(hdc,x,GDI_rendering_window/2,s->c_str(),sz/*(int)s->size()*/);
-   x+=*cx;
-  }
- if (gdi_font_scale == 4)
-  drawShadow<4>(hdc,hbmp,bmp16,old,xscale,sz,gdi_font_scale);  // sharp and fast, good for OSD.
- else
-  drawShadow<16>(hdc,hbmp,bmp16,old,xscale,sz,gdi_font_scale); // anti aliased, good for subtitles.
+#ifndef WIN64
+    if (Tconfig::cpu_flags&FF_CPU_SSE2) {
+#endif
+        alignXsize=16;
+        TtextSubtitlePrintY=TtextSubtitlePrintY_sse2;
+        TtextSubtitlePrintUV=TtextSubtitlePrintUV_sse2;
+#ifndef WIN64
+    } else {
+        alignXsize=8;
+        TtextSubtitlePrintY=TtextSubtitlePrintY_mmx;
+        TtextSubtitlePrintUV=TtextSubtitlePrintUV_mmx;
+    }
+#endif
+
+    m_outlineWidth=1;
+    outlineWidth_double = prefs.outlineWidth;
+    //if (props.refResY && prefs.clipdy)
+    // outlineWidth_double = outlineWidth_double * prefs.clipdy / props.refResY;
+
+    if (!prefs.opaqueBox) {
+        if (csp==FF_CSP_420P && outlineWidth_double < 0.6 && !m_bodyYUV.isGray()) {
+            m_outlineWidth=1;
+            outlineWidth_double=0.6;
+            m_outlineYUV=0;
+        } else {
+            m_outlineWidth=int(outlineWidth_double);
+            if ((double)m_outlineWidth < outlineWidth_double)
+                m_outlineWidth++;
+        }
+    } else
+        m_outlineWidth = 0;
+
+    if (outlineWidth_double < 1.0 && outlineWidth_double > 0)
+        outlineWidth_double = 0.5 + outlineWidth_double/2.0;
+
+    csp=prefs.csp & FF_CSPS_MASK;
+    strings tab_parsed_string;
+    strtok(ffstring(s0,strlens).c_str(),L"\t",tab_parsed_string);
+    SIZE sz;
+    sz.cx=sz.cy=0;
+    ints cxs;
+    for (strings::iterator s=tab_parsed_string.begin();s!=tab_parsed_string.end();s++) {
+        SIZE sz0;
+        GetTextExtentPoint32W(hdc,s->c_str(),(int)s->size(),&sz0);
+        sz.cx+=sz0.cx;
+        if (s+1!=tab_parsed_string.end()) {
+            int tabsize=prefs.tabsize*sz0.cy;
+            int newpos=(sz.cx/tabsize+1)*tabsize;
+            sz0.cx+=newpos-sz.cx;
+            sz.cx=newpos;
+        }
+        cxs.push_back(sz0.cx);
+        sz.cy=std::max(sz.cy,sz0.cy);
+    }
+    dxCharY  = xscale * sz.cx / (gdi_font_scale * 100);
+    dyCharY  = sz.cy / gdi_font_scale;
+    getGlyph(hdc, tab_parsed_string, xscale, sz, cxs, lf, gdi_font_scale, GDI_rendering_window);
+    drawShadow();
 }
-template<int GDI_rendering_window> void TrenderedTextSubtitleWord::drawShadow(
-      HDC hdc,
-      HBITMAP hbmp,
-      unsigned char *bmp16,
-      HGDIOBJ old,
-      double xscale,
-      const SIZE &sz,
-      unsigned int gdi_font_scale
-      )
+
+void TrenderedTextSubtitleWord::getGlyph(HDC hdc,
+    const strings &tab_parsed_string,
+    double xscale,
+    SIZE italic_fixed_sz,
+    const ints &cxs,
+    const LOGFONT &lf,
+    unsigned int gdi_font_scale,
+    unsigned int GDI_rendering_window)
 {
- // if GDI_rendering_window > gdi_font_scale, blur is applied.
- // gdi_font_scale is set by the constructor of Tfont.
- m_outlineWidth=1;
- double outlineWidth_double = prefs.outlineWidth;
- //if (props.refResY && prefs.clipdy)
- // outlineWidth_double = outlineWidth_double * prefs.clipdy / props.refResY;
-
- if (!prefs.opaqueBox)
-  {
-   if (csp==FF_CSP_420P && outlineWidth_double < 0.6 && !m_bodyYUV.isGray())
-    {
-     m_outlineWidth=1;
-     outlineWidth_double=0.6;
-     m_outlineYUV=0;
+    OUTLINETEXTMETRIC otm;
+    if (GetOutlineTextMetrics(hdc,sizeof(otm),&otm)) {
+        baseline=otm.otmTextMetrics.tmAscent;
+        if (otm.otmItalicAngle)
+            italic_fixed_sz.cx += ff_abs(LONG(italic_fixed_sz.cy*sin(otm.otmItalicAngle*M_PI/1800)));
+        else
+            if (otm.otmTextMetrics.tmItalic)
+                italic_fixed_sz.cx+=italic_fixed_sz.cy*0.35;
+            m_shadowSize = getShadowSize(otm.otmTextMetrics.tmHeight, gdi_font_scale);
+    } else {
+        // non true-type
+        baseline=italic_fixed_sz.cy*0.8;
+        m_shadowSize = getShadowSize(lf.lfHeight, gdi_font_scale);
+        if (lf.lfItalic)
+            italic_fixed_sz.cx+=italic_fixed_sz.cy*0.35;
     }
-   else
-    {
-     m_outlineWidth=int(outlineWidth_double);
-     if ((double)m_outlineWidth < outlineWidth_double)
-      m_outlineWidth++;
+
+    topOverhang    = getTopOverhang();
+    bottomOverhang = getBottomOverhang();
+    leftOverhang   = getLeftOverhang();
+    rightOverhang  = getRightOverhang();
+
+    gdi_dx = ((italic_fixed_sz.cx + GDI_rendering_window) / gdi_font_scale + 1) * gdi_font_scale;
+    gdi_dy = italic_fixed_sz.cy + GDI_rendering_window;
+
+    if (gdi_font_scale == 4)
+         drawGlyphOSD(hdc,tab_parsed_string,cxs,xscale);  // sharp and fast, good for OSD.
+    else
+         drawGlyphSubtitles<16>(hdc,tab_parsed_string,cxs,xscale,gdi_font_scale); // anti aliased, good for subtitles.
+}
+
+template<int GDI_rendering_window> void TrenderedTextSubtitleWord::drawGlyphSubtitles(
+      HDC hdc,
+      const strings &tab_parsed_string,
+      const ints &cxs,
+      double xscale,
+      unsigned int gdi_font_scale)
+{
+    bool bFirstPath = true;
+    int x = 0;
+    ints::const_iterator cx=cxs.begin();
+    foreach (const ffstring &s, tab_parsed_string) {
+        PartialBeginPath(hdc, bFirstPath);
+        bFirstPath = false;
+        TextOutW(hdc,0,0,s.c_str(),(int)s.size());
+        PartialEndPath(hdc, x, 0);
+        x+=*cx;
+        cx++;
     }
-  }
- else
-  m_outlineWidth = 0;
 
- if (outlineWidth_double < 1.0 && outlineWidth_double > 0)
-  outlineWidth_double = 0.5 + outlineWidth_double/2.0;
+    Transform(CPoint(0, 0), xscale/100);
+    ScanConvert();
+    Rasterize(0, 0,
+      CRect(leftOverhang + m_outlineWidth, topOverhang + m_outlineWidth, rightOverhang + m_outlineWidth, bottomOverhang + m_outlineWidth));
 
- BITMAPINFO bmi;
- bmi.bmiHeader.biSize=sizeof(bmi.bmiHeader);
- bmi.bmiHeader.biWidth=dx[0];
- bmi.bmiHeader.biHeight=-1*dy[0];
- bmi.bmiHeader.biPlanes=1;
- bmi.bmiHeader.biBitCount=32;
- bmi.bmiHeader.biCompression=BI_RGB;
- bmi.bmiHeader.biSizeImage=dx[0]*dy[0];
- bmi.bmiHeader.biXPelsPerMeter=75;
- bmi.bmiHeader.biYPelsPerMeter=75;
- bmi.bmiHeader.biClrUsed=0;
- bmi.bmiHeader.biClrImportant=0;
- GetDIBits(hdc,hbmp,0,dy[0],bmp16,&bmi,DIB_RGB_COLORS);  // copy bitmap, get it in bmp16 (RGB32).
- SelectObject(hdc,old);
- DeleteObject(hbmp);
+    dx[0] = ((mWidth + 7)>> 3) + leftOverhang + rightOverhang;
+    dy[0] = ((mHeight + 7) >> 3) + topOverhang + bottomOverhang;
+    unsigned int al=csp==FF_CSP_420P ? alignXsize : 8;
+    dx[0]=((dx[0]+al-1)/al)*al;
+    baseline = (baseline >> 3) + m_outlineWidth;
+}
 
- if (Tconfig::cpu_flags&FF_CPU_MMXEXT)
-  {
-   YV12_lum2chr_min=YV12_lum2chr_min_mmx2;
-   YV12_lum2chr_max=YV12_lum2chr_max_mmx2;
-  }
- else
-  {
-   YV12_lum2chr_min=YV12_lum2chr_min_mmx;
-   YV12_lum2chr_max=YV12_lum2chr_max_mmx;
-  }
-#ifndef WIN64
- if (Tconfig::cpu_flags&FF_CPU_SSE2)
-  {
-#endif
-   alignXsize=16;
-   TtextSubtitlePrintY=TtextSubtitlePrintY_sse2;
-   TtextSubtitlePrintUV=TtextSubtitlePrintUV_sse2;
-#ifndef WIN64
-  }
- else
-  {
-   alignXsize=8;
-   TtextSubtitlePrintY=TtextSubtitlePrintY_mmx;
-   TtextSubtitlePrintUV=TtextSubtitlePrintUV_mmx;
-  }
-#endif
- unsigned int _dx,_dy,_dxCore,_dyCore;
- topOverhang=getTopOverhang();
- bottomOverhang=getBottomOverhang();
- leftOverhang=getLeftOverhang();
- rightOverhang=getRightOverhang();
- _dx      = xscale * dx[0] / (gdi_font_scale * 100) + leftOverhang + rightOverhang;
- _dxCore  = xscale * dx[0] / (gdi_font_scale * 100) + leftOverhang + m_outlineWidth;
- _dy      = dy[0] / gdi_font_scale + topOverhang + bottomOverhang;
- _dyCore  = dy[0] / gdi_font_scale + topOverhang + m_outlineWidth;
- dxCharY  = xscale * sz.cx / (gdi_font_scale * 100);
- dyCharY  = sz.cy / gdi_font_scale;
- baseline = baseline / gdi_font_scale + GDI_rendering_window/2;
+void TrenderedTextSubtitleWord::Transform(CPoint org, double scalex)
+{
+    double scaley = 1;
 
- unsigned int al=csp==FF_CSP_420P ? alignXsize : 8; // swscaler requires multiple of 8.
- _dx=((_dx+al-1)/al)*al;
- if (_dx < 16) _dx=16;
- if (csp==FF_CSP_420P)
-  _dy=((_dy+1)/2)*2;
- stride_t extra_dx=_dx + m_outlineWidth*2; // add margin to simplify the outline drawing process.
- stride_t extra_dy=_dy + m_outlineWidth*2;
- extra_dx=((extra_dx+7)/8)*8;     // align for swscaler
- bmp[0]=(unsigned char*)aligned_calloc3(extra_dx,extra_dy,16,16);
- msk[0]=(unsigned char*)aligned_calloc3(_dx,_dy,16,16);
- outline[0]=(unsigned char*)aligned_calloc3(_dx,_dy,16,16);
- shadow[0]=(unsigned char*)aligned_calloc3(_dx,_dy,16,16);
+    double caz = cos((3.1415/180)*0/*m_style.fontAngleZ*/);
+    double saz = sin((3.1415/180)*0/*m_style.fontAngleZ*/);
+    double cax = cos((3.1415/180)*0/*m_style.fontAngleX*/);
+    double sax = sin((3.1415/180)*0/*m_style.fontAngleX*/);
+    double cay = cos((3.1415/180)*0/*m_style.fontAngleY*/);
+    double say = sin((3.1415/180)*0/*m_style.fontAngleY*/);
 
- // Here we scale to 1/gdi_font_scale.
- // For OSD, gdi_font_scale is 4. The simplest way is to average 4 x 4.
- // But in that case, it will have only 16 gradation becasue the bitmap from GDI has only 0 or 0xffffff.
- // 4x5 for OSD, 16x16 for subtitles seems to look nice.
- unsigned int xstep = xscale == 100 ?
-                          gdi_font_scale * 65536 :
-                          gdi_font_scale * 100 * 65536 / xscale;
- unsigned int gdi_rendering_window_width = std::max<unsigned int>(
-                      xscale == 100 ?
-                          GDI_rendering_window :
-                          GDI_rendering_window * 100 / xscale
-                          , 1);
- // coeff calculation
- // To averave gdi_rendering_window_width * GDI_rendering_window pixels, add them all and
- // multiply (65536 / (gdi_rendering_window_width * GDI_rendering_window))
- // and shift right 16 bits is just fine.
- // One problem, it make the body a little thin and darker, if blur is applied (GDI_rendering_window > gdi_font_scale).
- // To avoid this, for subtitles, if only one of the overhanging edge is not filled, consider it is fully filled.
- unsigned int coeff;
- if (GDI_rendering_window == 4) // OSD
-  coeff = 65536.0 / (gdi_rendering_window_width * 5);
- else // subtitles
-  {
-   if (GDI_rendering_window > gdi_font_scale)
-    coeff = 65536.0 / ((gdi_rendering_window_width - (gdi_rendering_window_width - (gdi_font_scale * 100 / xscale))/2) * GDI_rendering_window);
-   else
-    coeff = 65536.0 / (gdi_rendering_window_width * GDI_rendering_window);
-  }
- int dx0_mult_4 = dx[0] * size_of_rgb32;
- unsigned int xstep_sse2 = xstep * 8;
- unsigned int startx = (GDI_rendering_window/2 << 16) + xstep;
- unsigned int endx = (dx[0] - GDI_rendering_window/2) << 16;
- __m128i xmm0,xmm1,xmm2,xmm3,xmm_sum,xmm_000000ff,xmm_00000000;
- if (Tconfig::cpu_flags & FF_CPU_SSE2 && GDI_rendering_window == 16)
-  {
-   xmm_000000ff = _mm_set1_epi32(0xff);
-   pxor(xmm_00000000,xmm_00000000);
-  }
- for (unsigned int y = GDI_rendering_window/2 ; y < dy[0] - (GDI_rendering_window == 4 ? 3 : GDI_rendering_window/2) ; y += gdi_font_scale)
-  {
-   unsigned char *dstBmpY = bmp[0] + (y/gdi_font_scale + topOverhang + m_outlineWidth) * extra_dx + leftOverhang + m_outlineWidth;
-   unsigned int x = startx;
-   const unsigned char *bmp16srcLineStart = bmp16 + ((y - GDI_rendering_window/2) * dx[0]) * size_of_rgb32;
-   const unsigned char *bmp16srcEnd;
-   if (GDI_rendering_window == 4)
-    bmp16srcEnd = bmp16srcLineStart + (GDI_rendering_window+1) * dx0_mult_4;
-   else
-    bmp16srcEnd = bmp16srcLineStart + GDI_rendering_window * dx0_mult_4;
-   for (; x < endx ; x += xstep, dstBmpY++)
-    {
-     unsigned int sum;
-     const unsigned char *bmp16src = bmp16srcLineStart + ((x >> 16) - GDI_rendering_window/2) * size_of_rgb32;
+    for(int i = 0; i < mPathPoints; i++) {
+        double x, y, z, xx, yy, zz;
 
-     if (xscale == 100)
-      {
-       if (Tconfig::cpu_flags & FF_CPU_SSE2 && GDI_rendering_window == 16)
-        {
-         pxor(xmm_sum, xmm_sum);
-         for (; bmp16src < bmp16srcEnd ; bmp16src += dx0_mult_4)
-          {
-           xmm0 = _mm_loadu_si128((__m128i *)bmp16src);
-           xmm1 = _mm_loadu_si128((__m128i *)(bmp16src+16));
-           pand(xmm0,xmm_000000ff);
-           xmm2 = _mm_loadu_si128((__m128i *)(bmp16src+32));
-           pand(xmm1,xmm_000000ff);
-           paddd(xmm_sum,xmm0);
-           xmm3 = _mm_loadu_si128((__m128i *)(bmp16src+48));
-           pand(xmm2,xmm_000000ff);
-           paddd(xmm_sum,xmm1);
-           pand(xmm3,xmm_000000ff);
-           paddd(xmm_sum,xmm2);
-           paddd(xmm_sum,xmm3);
-          }
+        x = scalex * (mpPathPoints[i].x /*+ m_style.fontShiftX * mpPathPoints[i].y*/) - org.x;
+        y = scaley * (mpPathPoints[i].y /*+ m_style.fontShiftY * mpPathPoints[i].x*/) - org.y;
+        z = 0;
 
-         sum = _mm_cvtsi128_si32(xmm_sum);
-         xmm_sum = _mm_srli_si128(xmm_sum, size_of_rgb32);
-         sum += _mm_cvtsi128_si32(xmm_sum);
-         xmm_sum = _mm_srli_si128(xmm_sum, size_of_rgb32);
-         sum += _mm_cvtsi128_si32(xmm_sum);
-         xmm_sum = _mm_srli_si128(xmm_sum, size_of_rgb32);
-         sum += _mm_cvtsi128_si32(xmm_sum);
+        xx = x*caz + y*saz;
+        yy = -(x*saz - y*caz);
+        zz = z;
+
+        x = xx;
+        y = yy*cax + zz*sax;
+        z = yy*sax - zz*cax;
+
+        xx = x*cay + z*say;
+        yy = y;
+        zz = x*say - z*cay;
+
+        zz = std::max<double>(zz, -19000);
+
+        x = (xx * 20000) / (zz + 20000);
+        y = (yy * 20000) / (zz + 20000);
+
+        mpPathPoints[i].x = (LONG)(x + org.x + 0.5);
+        mpPathPoints[i].y = (LONG)(y + org.y + 0.5);
+    }
+}
+
+void TrenderedTextSubtitleWord::drawGlyphOSD(
+      HDC hdc,
+      const strings &tab_parsed_string,
+      const ints &cxs,
+      double xscale)
+{
+    RECT r={0,0,gdi_dx,gdi_dy};
+    unsigned char *bmp16=(unsigned char*)aligned_calloc3(gdi_dx * size_of_rgb32,gdi_dy, 32, 16);
+    HBITMAP hbmp=CreateCompatibleBitmap(hdc,gdi_dx,gdi_dy);
+    HGDIOBJ old=SelectObject(hdc,hbmp);
+    FillRect(hdc,&r,(HBRUSH)GetStockObject(BLACK_BRUSH));
+    SetTextColor(hdc,RGB(255,255,255));
+    SetBkColor(hdc,RGB(0,0,0));
+
+    int x = 2;
+    const int gdi_font_scale = 4;
+    ints::const_iterator cx=cxs.begin();
+    foreach (const ffstring &s, tab_parsed_string) {
+        TextOutW(hdc, x, 2, s.c_str(), (int)s.size());
+        x+=*cx;
+        cx++;
+    }
+
+    // if GDI_rendering_window > gdi_font_scale, blur is applied.
+
+    BITMAPINFO bmi;
+    bmi.bmiHeader.biSize=sizeof(bmi.bmiHeader);
+    bmi.bmiHeader.biWidth=gdi_dx;
+    bmi.bmiHeader.biHeight=-1*gdi_dy;
+    bmi.bmiHeader.biPlanes=1;
+    bmi.bmiHeader.biBitCount=32;
+    bmi.bmiHeader.biCompression=BI_RGB;
+    bmi.bmiHeader.biSizeImage=gdi_dx*gdi_dy;
+    bmi.bmiHeader.biXPelsPerMeter=75;
+    bmi.bmiHeader.biYPelsPerMeter=75;
+    bmi.bmiHeader.biClrUsed=0;
+    bmi.bmiHeader.biClrImportant=0;
+    GetDIBits(hdc,hbmp,0,gdi_dy,bmp16,&bmi,DIB_RGB_COLORS);  // copy bitmap, get it in bmp16 (RGB32).
+    SelectObject(hdc,old);
+    DeleteObject(hbmp);
+
+    dx[0]    = xscale * gdi_dx / (gdi_font_scale * 100) + leftOverhang + rightOverhang;
+    dy[0]    = gdi_dy / gdi_font_scale + topOverhang + bottomOverhang;
+    baseline = baseline / gdi_font_scale + 2;
+
+    unsigned int al=csp==FF_CSP_420P ? alignXsize : 8;
+    dx[0]=((dx[0]+al-1)/al)*al;
+    if (dx[0] < 16) dx[0]=16;
+    if (csp==FF_CSP_420P)
+     dy[0]=((dy[0]+1)/2)*2;
+    mGlyphBmpWidth = dx[0] + m_outlineWidth*2; // add margin to simplify the outline drawing process.
+    mGlyphBmpHeight = dy[0] + m_outlineWidth*2;
+    mGlyphBmpWidth = ((mGlyphBmpWidth+7)/8)*8;
+    bmp[0]=(unsigned char*)aligned_calloc3(mGlyphBmpWidth,mGlyphBmpHeight,16,16);
+
+    // Here we scale to 1/gdi_font_scale.
+    // For OSD, gdi_font_scale is 4. The simplest way is to average 4 x 4.
+    // But in that case, it will have only 16 gradation becasue the bitmap from GDI has only 0 or 0xffffff.
+    // 4x5 for OSD, 16x16 for subtitles seems to look nice.
+    unsigned int xstep = xscale == 100 ?
+                             gdi_font_scale * 65536 :
+                             gdi_font_scale * 100 * 65536 / xscale;
+    unsigned int gdi_rendering_window_width = std::max<unsigned int>(
+                         xscale == 100 ?
+                             4 :
+                             4 * 100 / xscale
+                             , 1);
+    // coeff calculation
+    // To averave gdi_rendering_window_width * GDI_rendering_window pixels, add them all and
+    // multiply (65536 / (gdi_rendering_window_width * GDI_rendering_window))
+    // and shift right 16 bits is just fine.
+    // One problem, it make the body a little thin and darker, if blur is applied (GDI_rendering_window > gdi_font_scale).
+    // To avoid this, for subtitles, if only one of the overhanging edge is not filled, consider it is fully filled.
+    unsigned int coeff;
+    coeff = 65536.0 / (gdi_rendering_window_width * 5);
+    int dx0_mult_4 = gdi_dx * size_of_rgb32;
+    unsigned int xstep_sse2 = xstep * 8;
+    unsigned int startx = (2 << 16) + xstep;
+    unsigned int endx = (gdi_dx - 2) << 16;
+    for (unsigned int y = 2 ; y < gdi_dy - 3 ; y += gdi_font_scale) {
+        unsigned char *dstBmpY = bmp[0] + (y/gdi_font_scale + topOverhang + m_outlineWidth) * mGlyphBmpWidth + leftOverhang + m_outlineWidth;
+        unsigned int x = startx;
+        const unsigned char *bmp16srcLineStart = bmp16 + ((y - 2) * gdi_dx) * size_of_rgb32;
+        const unsigned char *bmp16srcEnd;
+        bmp16srcEnd = bmp16srcLineStart + 5 * dx0_mult_4;
+        for (; x < endx ; x += xstep, dstBmpY++) {
+            unsigned int sum;
+            const unsigned char *bmp16src = bmp16srcLineStart + ((x >> 16) - 2) * size_of_rgb32;
+
+            if (xscale == 100) {
+                sum = 0;
+                for (; bmp16src < bmp16srcEnd ; bmp16src += dx0_mult_4) {
+                    // a bit of optimization: Only one if block will be compiled. Loops are unrolled.
+                    sum += bmp16src[0] + bmp16src[4] + bmp16src[8] + bmp16src[12];
+                }
+
+                sum = (sum * coeff) >> 16;
+                *dstBmpY = (unsigned char)std::min<unsigned int>(sum,255);
+            } else {
+                sum = 0;
+                for (; bmp16src < bmp16srcEnd ; bmp16src += dx0_mult_4) {
+                    for (unsigned int i = 0 ; i < size_of_rgb32 * gdi_rendering_window_width ; i += size_of_rgb32)
+                        sum += bmp16src[i];
+                }
+                sum = (sum * coeff) >> 16;
+                *dstBmpY = (unsigned char)std::min<unsigned int>(sum,255);
+            }
         }
-       else
+    }
+    aligned_free(bmp16);
+}
+
+void TrenderedTextSubtitleWord::removeMargin()
+{
+    // remove the margin that we have just added.
+    unsigned char *newbmp = (unsigned char*)aligned_calloc3(dx[0],dy[0],16,16);
+    for (unsigned int y = 0 ; y < dy[0] ; y++)
+        memcpy(newbmp + dx[0] * y, bmp[0] + mGlyphBmpWidth * (y + m_outlineWidth) + m_outlineWidth, std::min<stride_t>(dx[0],mGlyphBmpWidth));
+    _aligned_free(bmp[0]);
+    bmp[0] = newbmp;
+}
+
+void TrenderedTextSubtitleWord::drawShadow()
+{
+    msk[0]=(unsigned char*)aligned_calloc3(dx[0],dy[0],16,16);
+    outline[0]=(unsigned char*)aligned_calloc3(dx[0],dy[0],16,16);
+    shadow[0]=(unsigned char*)aligned_calloc3(dx[0],dy[0],16,16);
+
+    if (prefs.blur) {
+        int startx=leftOverhang + m_outlineWidth - 1;
+        int starty=topOverhang + m_outlineWidth - 1;
+        int endy=mGlyphBmpHeight - bottomOverhang - m_outlineWidth+1;
+        int endx=mGlyphBmpWidth - rightOverhang - m_outlineWidth+1;
+        bmp[0]=blur(bmp[0], mGlyphBmpWidth, mGlyphBmpHeight, startx, starty, endx, endy, true);
+    }
+
+
+    // Prepare matrix for outline calculation
+    short *matrix=NULL;
+    unsigned int matrixSizeH = ((m_outlineWidth*2+8)/8)*8; // 2 bytes for one.
+    unsigned int matrixSizeV = m_outlineWidth*2+1;
+    if (m_outlineWidth>0) {
+        double r_cutoff=1.5;
+        if (outlineWidth_double<4.5)
+         r_cutoff=outlineWidth_double/3.0;
+        double r_mul=512.0/r_cutoff;
+        matrix=(short*)aligned_calloc(matrixSizeH*2,matrixSizeV,16);
+        for (int y = -m_outlineWidth ; y <= m_outlineWidth ; y++)
+            for (int x = -m_outlineWidth ; x <= m_outlineWidth ; x++) {
+                int pos=(y + m_outlineWidth)*matrixSizeH+x+m_outlineWidth;
+                double r=0.5+outlineWidth_double-sqrt(double(x*x+y*y));
+                if (r>r_cutoff)
+                   matrix[pos]=512;
+                else if (r>0)
+                   matrix[pos]=r*r_mul;
+            }
+    }
+
+    unsigned int max_outline_pos_x  = dx[0]- rightOverhang + m_outlineWidth;
+    unsigned int max_outline_pos_y  = dy[0] - bottomOverhang + m_outlineWidth;
+    if (prefs.opaqueBox) {
+        removeMargin();
+        memset(msk[0],255,dx[0]*dy[0]);
+    } else if (m_outlineWidth) {
+        // Prepare outline
+        if (Tconfig::cpu_flags&FF_CPU_SSE2
+#ifndef WIN64
+            && m_outlineWidth>=2
+#endif
+           )
         {
-         sum = 0;
-         for (; bmp16src < bmp16srcEnd ; bmp16src += dx0_mult_4)
-          {
-           // a bit of optimization: Only one if block will be compiled. Loops are unrolled.
-           if (GDI_rendering_window == 4)
-            sum += bmp16src[0] + bmp16src[4] + bmp16src[8] + bmp16src[12];
-           else if (GDI_rendering_window == 16)
-            sum += bmp16src[0] + bmp16src[4] + bmp16src[8] + bmp16src[12] + bmp16src[16] + bmp16src[20] + bmp16src[24] + bmp16src[28]
-                 + bmp16src[32] + bmp16src[36] + bmp16src[40] + bmp16src[44] + bmp16src[48] + bmp16src[52] + bmp16src[56] + bmp16src[60];
-           else
-            for (unsigned int i = 0 ; i < size_of_rgb32 * GDI_rendering_window ; i += size_of_rgb32) // not used
-             sum += bmp16src[i];
-          }
+            size_t matrixSizeH_sse2=matrixSizeH>>3;
+            size_t srcStrideGap=mGlyphBmpWidth-matrixSizeH;
+            for (unsigned int y = topOverhang - m_outlineWidth ; y < max_outline_pos_y ; y++)
+                for (unsigned int x = leftOverhang - m_outlineWidth ; x < max_outline_pos_x ; x++) {
+                    unsigned int sum=fontPrepareOutline_sse2(bmp[0] + mGlyphBmpWidth*y + x, srcStrideGap, matrix, matrixSizeH_sse2, matrixSizeV) >> 9;
+                    msk[0][dx[0]*y+x]=sum>255 ? 255 : sum;
+                }
+        }
+#ifndef WIN64
+        else if (Tconfig::cpu_flags&FF_CPU_MMX) {
+            size_t matrixSizeH_mmx=(matrixSizeV+3)/4;
+            size_t srcStrideGap=mGlyphBmpWidth-matrixSizeH_mmx*4;
+            size_t matrixGap=matrixSizeH_mmx & 1 ? 8 : 0;
+            for (unsigned int y = topOverhang - m_outlineWidth ; y < max_outline_pos_y ; y++) {
+                for (unsigned int x = leftOverhang - m_outlineWidth ; x < max_outline_pos_x ; x++) {
+                    unsigned int sum=fontPrepareOutline_mmx(bmp[0] + mGlyphBmpWidth * y + x, srcStrideGap, matrix, matrixSizeH_mmx, matrixSizeV, matrixGap) >> 9;
+                    msk[0][dx[0]*y+x]=sum>255 ? 255 : sum;
+                }
+            }
+        }
+#endif
+        else {
+            for (unsigned int y = topOverhang - m_outlineWidth ; y < max_outline_pos_y ; y++)
+               for (unsigned int x = leftOverhang - m_outlineWidth ; x < max_outline_pos_x ; x++) {
+                   unsigned char *srcPos=bmp[0]+mGlyphBmpWidth*y+x; // (x-outlineWidth,y-outlineWidth)
+                   unsigned int sum=0;
+                   for (unsigned int yy=0;yy<matrixSizeV;yy++,srcPos+=mGlyphBmpWidth-matrixSizeV)
+                      for (unsigned int xx=0;xx<matrixSizeV;xx++,srcPos++)
+                          sum+=(*srcPos)*matrix[matrixSizeH*yy+xx];
+                     sum>>=9;
+                     msk[0][dx[0]*y+x]=sum>255 ? 255 : sum;
+               }
         }
 
-       sum = (sum * coeff) >> 16;
-       *dstBmpY = (unsigned char)std::min<unsigned int>(sum,255);
-      }
-     else
-      {
-       sum = 0;
-       for (; bmp16src < bmp16srcEnd ; bmp16src += dx0_mult_4)
-        {
-         for (unsigned int i = 0 ; i < size_of_rgb32 * gdi_rendering_window_width ; i += size_of_rgb32) // not used
-          sum += bmp16src[i];
-        }
-       sum = (sum * coeff) >> 16;
-       *dstBmpY = (unsigned char)std::min<unsigned int>(sum,255);
-      }
-
-    }
-  }
-
- if (prefs.blur)
-  {
-   int startx=leftOverhang + m_outlineWidth - 1;
-   int starty=topOverhang + m_outlineWidth - 1;
-   int endy=extra_dy - bottomOverhang - m_outlineWidth+1;
-   int endx=extra_dx - rightOverhang - m_outlineWidth+1;
-   bmp[0]=blur(bmp[0], extra_dx, extra_dy, startx, starty, endx, endy, true);
-  }
-
- aligned_free(bmp16);
-
- dx[0]=_dx;dy[0]=_dy;
-
- // Prepare matrix for outline calculation
- short *matrix=NULL;
- unsigned int matrixSizeH = ((m_outlineWidth*2+8)/8)*8; // 2 bytes for one.
- unsigned int matrixSizeV = m_outlineWidth*2+1;
- if (m_outlineWidth>0)
-  {
-   double r_cutoff=1.5;
-   if (outlineWidth_double<4.5)
-    r_cutoff=outlineWidth_double/3.0;
-   double r_mul=512.0/r_cutoff;
-   matrix=(short*)aligned_calloc(matrixSizeH*2,matrixSizeV,16);
-   for (int y = -m_outlineWidth ; y <= m_outlineWidth ; y++)
-    for (int x = -m_outlineWidth ; x <= m_outlineWidth ; x++)
-     {
-      int pos=(y + m_outlineWidth)*matrixSizeH+x+m_outlineWidth;
-      double r=0.5+outlineWidth_double-sqrt(double(x*x+y*y));
-      if (r>r_cutoff)
-       matrix[pos]=512;
-      else if (r>0)
-       matrix[pos]=r*r_mul;
-     }
-  }
-
- if (prefs.opaqueBox)
-  memset(msk[0],255,dx[0]*dy[0]);
- else if (m_outlineWidth)
-  {
-   // Prepare outline
-   if (Tconfig::cpu_flags&FF_CPU_SSE2
-#ifndef WIN64
-       && m_outlineWidth>=2
-#endif
-      )
-    {
-     size_t matrixSizeH_sse2=matrixSizeH>>3;
-     size_t srcStrideGap=extra_dx-matrixSizeH;
-     for (unsigned int y = topOverhang - m_outlineWidth ; y < _dyCore ; y++)
-      for (unsigned int x = leftOverhang - m_outlineWidth ; x < _dxCore ; x++)
-       {
-        unsigned int sum=fontPrepareOutline_sse2(bmp[0]+extra_dx*y+x,srcStrideGap,matrix,matrixSizeH_sse2,matrixSizeV) >> 9;
-        msk[0][_dx*y+x]=sum>255 ? 255 : sum;
-       }
-    }
-#ifndef WIN64
-   else if (Tconfig::cpu_flags&FF_CPU_MMX)
-    {
-     size_t matrixSizeH_mmx=(matrixSizeV+3)/4;
-     size_t srcStrideGap=extra_dx-matrixSizeH_mmx*4;
-     size_t matrixGap=matrixSizeH_mmx & 1 ? 8 : 0;
-     for (unsigned int y = topOverhang - m_outlineWidth ; y < _dyCore ; y++)
-      for (unsigned int x = leftOverhang - m_outlineWidth ; x < _dxCore ; x++)
-       {
-        unsigned int sum=fontPrepareOutline_mmx(bmp[0]+extra_dx*y+x,srcStrideGap,matrix,matrixSizeH_mmx,matrixSizeV,matrixGap) >> 9;
-        msk[0][_dx*y+x]=sum>255 ? 255 : sum;
-       }
-    }
-#endif
-   else
-    {
-     for (unsigned int y = topOverhang - m_outlineWidth ; y < _dyCore ; y++)
-      for (unsigned int x = leftOverhang - m_outlineWidth ; x < _dxCore ; x++)
-       {
-        unsigned char *srcPos=bmp[0]+extra_dx*y+x; // (x-outlineWidth,y-outlineWidth)
-        unsigned int sum=0;
-        for (unsigned int yy=0;yy<matrixSizeV;yy++,srcPos+=extra_dx-matrixSizeV)
-         for (unsigned int xx=0;xx<matrixSizeV;xx++,srcPos++)
-          {
-           sum+=(*srcPos)*matrix[matrixSizeH*yy+xx];
-          }
-        sum>>=9;
-        msk[0][_dx*y+x]=sum>255 ? 255 : sum;
-       }
+        removeMargin();
+        if (prefs.outlineBlur || (prefs.shadowMode==0 && m_shadowSize>0)) // blur outline and msk
+            msk[0]=blur(msk[0], dx[0], dy[0], 0, 0, dx[0], dy[0], false);
+    }  else {
+        // m_outlineWidth==0
+        removeMargin();
+        memcpy(msk[0],bmp[0],dx[0]*dy[0]);
     }
 
-   // remove the margin that we have just added.
-   for (unsigned int y=0;y<_dy;y++)
-    memcpy(bmp[0]+_dx*y,bmp[0]+extra_dx*(y + m_outlineWidth) + m_outlineWidth, _dx);
+    // Draw outline.
+    unsigned int count=dx[0]*dy[0];
+    for (unsigned int c=0;c<count;c++) {
+        int b=bmp[0][c];
+        int o=msk[0][c]-b;
+        if (o>0)
+            outline[0][c]=o;//*(255-b)>>8;
+    }
+    m_shadowMode=prefs.shadowMode;
 
-   if (prefs.outlineBlur || (prefs.shadowMode==0 && m_shadowSize>0)) // blur outline and msk
-    msk[0]=blur(msk[0], _dx, _dy, 0, 0, _dx, _dy, false);
-  }
- else // m_outlineWidth==0
-  memcpy(msk[0],bmp[0],_dx*_dy);
+    if (csp==FF_CSP_420P) {
+        dx[1]=dx[0]>>1;
+        dy[1]=dy[0]>>1;
+        dx[1]=(dx[1]/alignXsize+1)*alignXsize;
+        bmp[1]     = (unsigned char*)aligned_calloc(dx[1],dy[1],16);
+        outline[1] = (unsigned char*)aligned_calloc(dx[1],dy[1],16);
+        shadow[1]  = (unsigned char*)aligned_calloc(dx[1],dy[1],16);
 
- // Draw outline.
- unsigned int count=_dx*_dy;
- for (unsigned int c=0;c<count;c++)
-  {
-   int b=bmp[0][c];
-   int o=msk[0][c]-b;
-   if (o>0)
-    outline[0][c]=o;//*(255-b)>>8;
-  }
- m_shadowMode=prefs.shadowMode;
+        dx[2]=dx[0]>>1;
+        dy[2]=dy[0]>>1;
+        dx[2]=(dx[2]/alignXsize+1)*alignXsize;
+    } else {
+        //RGB32
+        dx[1]=dx[0] * size_of_rgb32;
+        dy[1]=dy[0];
+        bmp[1]     = (unsigned char*)aligned_malloc(dx[1]*dy[1]+16,16);
+        outline[1] = (unsigned char*)aligned_malloc(dx[1]*dy[1]+16,16);
+        shadow[1]  = (unsigned char*)aligned_malloc(dx[1]*dy[1]+16,16);
+        msk[1]     = (unsigned char*)aligned_malloc(dx[1]*dy[1]+16,16);
+    }
+    updateMask();
 
- if (csp==FF_CSP_420P)
-  {
-   dx[1]=dx[0]>>1;
-   dy[1]=dy[0]>>1;
-   dx[1]=(dx[1]/alignXsize+1)*alignXsize;
-   bmp[1]     = (unsigned char*)aligned_calloc(dx[1],dy[1],16);
-   outline[1] = (unsigned char*)aligned_calloc(dx[1],dy[1],16);
-   shadow[1]  = (unsigned char*)aligned_calloc(dx[1],dy[1],16);
+    if (props.karaokeMode != TSubtitleProps::KARAOKE_NONE)
+        secondaryColoredWord = new TrenderedTextSubtitleWord(*this, true);
 
-   dx[2]=dx[0]>>1;
-   dy[2]=dy[0]>>1;
-   dx[2]=(dx[2]/alignXsize+1)*alignXsize;
-  }
- else
-  {
-   //RGB32
-   dx[1]=dx[0] * size_of_rgb32;
-   dy[1]=dy[0];
-   bmp[1]     = (unsigned char*)aligned_malloc(dx[1]*dy[1]+16,16);
-   outline[1] = (unsigned char*)aligned_malloc(dx[1]*dy[1]+16,16);
-   shadow[1]  = (unsigned char*)aligned_malloc(dx[1]*dy[1]+16,16);
-   msk[1]     = (unsigned char*)aligned_malloc(dx[1]*dy[1]+16,16);
-  }
- updateMask();
-
- if (props.karaokeMode != TSubtitleProps::KARAOKE_NONE)
-  secondaryColoredWord = new TrenderedTextSubtitleWord(*this, true);
-
- if (matrix)
-  aligned_free(matrix);
+    if (matrix)
+        aligned_free(matrix);
 }
 
 void TrenderedTextSubtitleWord::updateMask(int fader, int create) const

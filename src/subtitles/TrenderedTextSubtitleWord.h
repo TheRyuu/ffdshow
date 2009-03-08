@@ -2,8 +2,9 @@
 #define _TRENDEREDTEXTSUBTITLEWORD_H_
 
 #include "Tfont.h"
+#include "Rasterizer.h"
 
-class TrenderedTextSubtitleWord : public TrenderedSubtitleWordBase
+class TrenderedTextSubtitleWord : public Rasterizer
 {
 private:
  TrenderedTextSubtitleWord *secondaryColoredWord;
@@ -12,18 +13,37 @@ private:
  int baseline;
  int topOverhang,bottomOverhang,leftOverhang,rightOverhang;
  int m_outlineWidth,m_shadowSize,m_shadowMode;
+ double outlineWidth_double;
  int dstOffset;
  mutable int oldFader;
  mutable unsigned int oldBodyYUVa,oldOutlineYUVa;
- template<int GDI_rendering_window> void drawShadow(
-                        HDC hdc,
-                        HBITMAP hbmp,
-                        unsigned char *bmp16,
-                        HGDIOBJ old,
+ unsigned int gdi_dx,gdi_dy;
+
+ void getGlyph(         HDC hdc,
+                        const strings &s1,
                         double xscale,
-                        const SIZE &sz,
-                        unsigned int gdi_font_scale
-                        );
+                        SIZE italic_fixed_sz,
+                        const ints &cxs,
+                        const LOGFONT &lf,
+                        unsigned int gdi_font_scale,
+                        unsigned int GDI_rendering_window);
+
+void Transform(CPoint org, double scalex);
+
+template<int GDI_rendering_window>  void drawGlyphSubtitles(
+                        HDC hdc,
+                        const strings &tab_parsed_string,
+                        const ints &cxs,
+                        double xscale,
+                        unsigned int gdi_font_scale);
+
+void drawGlyphOSD(      HDC hdc,
+                        const strings &tab_parsed_string,
+                        const ints &cxs,
+                        double xscale);
+
+ void drawShadow();
+
  void updateMask(int fader = 1 << 16, int create = 1) const; // create: 0=update, 1=new, 2=update after copy (karaoke)
  unsigned char* blur(unsigned char *src,stride_t Idx,stride_t Idy,int startx,int starty,int endx, int endy, bool mild);
  unsigned int getShadowSize(LONG fontHeight, unsigned int gdi_font_scale);
@@ -31,6 +51,7 @@ private:
  unsigned int getRightOverhang(void);
  unsigned int getTopOverhang(void);
  unsigned int getLeftOverhang(void);
+ void removeMargin();
 public:
  TSubtitleProps props;
  // full rendering

@@ -16,6 +16,19 @@ struct CPoint :POINT
    x=xnum*x/xden;
    y=ynum*y/yden;
   }
+ bool operator != (const CPoint &rt) const
+  {
+   return !(x == rt.x && y == rt.y);
+  }
+ bool operator == (const CPoint &rt) const
+  {
+   return (x == rt.x && y == rt.y);
+  }
+ void operator = (const CPoint &rt)
+  {
+   x = rt.x;
+   y = rt.y;
+  }
 };
 struct CSize :SIZE
 {
