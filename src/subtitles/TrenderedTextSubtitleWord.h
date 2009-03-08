@@ -68,11 +68,12 @@ public:
                         unsigned int gdi_font_scale);
 
  // secondary (for karaoke)
+ struct secondaryColor_t {};
  TrenderedTextSubtitleWord(
                         const TrenderedTextSubtitleWord &parent,
-                        bool senondaryColor                       // to distinguish from default copy constructor
+                        struct secondaryColor_t                       // to distinguish from default copy constructor
                         );
- ~TrenderedTextSubtitleWord();
+ virtual ~TrenderedTextSubtitleWord();
  virtual void print(int startx, int starty, unsigned int dx[3],int dy[3],unsigned char *dstLn[3],const stride_t stride[3],const unsigned char *bmp[3],const unsigned char *msk[3],REFERENCE_TIME rtStart=REFTIME_INVALID) const;
  unsigned int alignXsize;
  void* (__cdecl *TtextSubtitlePrintY)  (const unsigned char* bmp,const unsigned char* outline,const unsigned char* shadow,const unsigned short *colortbl,const unsigned char* dst,const unsigned char* msk);

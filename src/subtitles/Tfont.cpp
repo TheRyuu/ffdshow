@@ -161,6 +161,7 @@ unsigned int TrenderedSubtitleLine::width(void) const
   dx+=(*w)->dxCharY;
  return dx;
 }
+
 unsigned int TrenderedSubtitleLine::height(void) const
 {
  if (empty())
@@ -173,6 +174,7 @@ unsigned int TrenderedSubtitleLine::height(void) const
   }
  return aboveBaseline+belowBaseline;
 }
+
 double TrenderedSubtitleLine::charHeight(void) const
 {
  if (empty())
@@ -185,6 +187,7 @@ double TrenderedSubtitleLine::charHeight(void) const
   }
  return (double)(aboveBaseline + belowBaseline)/8.0;
 }
+
 unsigned int TrenderedSubtitleLine::baselineHeight(void) const
 {
  if (empty())
@@ -196,6 +199,7 @@ unsigned int TrenderedSubtitleLine::baselineHeight(void) const
   }
  return aboveBaseline;
 }
+
 int TrenderedSubtitleLine::get_topOverhang(void) const
 {
  if (empty())
@@ -208,6 +212,7 @@ int TrenderedSubtitleLine::get_topOverhang(void) const
   }
  return -topOverhang;
 }
+
 int TrenderedSubtitleLine::get_bottomOverhang(void) const
 {
  if (empty())
@@ -220,6 +225,7 @@ int TrenderedSubtitleLine::get_bottomOverhang(void) const
   }
  return bottomOverhang+baseline-charHeight();
 }
+
 int TrenderedSubtitleLine::get_leftOverhang(void) const
 {
  if (empty())
@@ -233,6 +239,7 @@ int TrenderedSubtitleLine::get_leftOverhang(void) const
   }
  return -leftOverhang;
 }
+
 int TrenderedSubtitleLine::get_rightOverhang(void) const
 {
  if (empty())
@@ -246,6 +253,7 @@ int TrenderedSubtitleLine::get_rightOverhang(void) const
   }
  return rightOverhang-dx;
 }
+
 void TrenderedSubtitleLine::prepareKaraoke(void)
 {
  if (!firstrun)
@@ -279,6 +287,7 @@ void TrenderedSubtitleLine::prepareKaraoke(void)
     }
   }
 }
+
 void TrenderedSubtitleLine::print(
     int startx,int starty,
     const TrenderedSubtitleLines::TprintPrefs &prefs,
@@ -323,12 +332,14 @@ void TrenderedSubtitleLine::print(
    (*w)->print(startx, starty,dx,dy,dstLn,stride,bmp,msk,prefs.rtStart);
   }
 }
+
 void TrenderedSubtitleLine::clear(void)
 {
  foreach (TrenderedSubtitleWordBase *word, *this)
   delete word;
  std::vector<value_type>::clear();
 }
+
 size_t TrenderedSubtitleLine::getMemorySize() const
 {
     size_t memSize = 0;

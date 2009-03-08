@@ -149,7 +149,7 @@ public:
      outline[i]=NULL;shadow[i]=NULL;
     }
   }
- ~TrenderedSubtitleWordBase();
+ virtual ~TrenderedSubtitleWordBase();
  unsigned int dx[3],dy[3];
  unsigned int dxCharY,dyCharY;
  unsigned char *bmp[3],*msk[3];stride_t bmpmskstride[3];

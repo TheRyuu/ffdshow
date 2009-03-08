@@ -28,7 +28,7 @@
 // custom copy constructor for karaoke
 TrenderedTextSubtitleWord::TrenderedTextSubtitleWord(
         const TrenderedTextSubtitleWord &parent,
-        bool senondaryColor):
+        secondaryColor_t):
     prefs(parent.prefs)
 {
     *this = parent;
@@ -506,7 +506,7 @@ void TrenderedTextSubtitleWord::drawShadow()
     updateMask();
 
     if (props.karaokeMode != TSubtitleProps::KARAOKE_NONE)
-        secondaryColoredWord = new TrenderedTextSubtitleWord(*this, true);
+        secondaryColoredWord = new TrenderedTextSubtitleWord(*this, secondaryColor_t());
 
     if (matrix)
         aligned_free(matrix);
