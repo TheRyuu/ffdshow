@@ -222,7 +222,7 @@ void TrenderedTextSubtitleWord::drawGlyphSubtitles(
     dy[0] = ((mHeight + 7) >> 3) + topOverhang + bottomOverhang;
     unsigned int al=csp==FF_CSP_420P ? alignXsize : 8;
     dx[0]=((dx[0]+al-1)/al)*al;
-    baseline = (baseline >> 3) + m_outlineWidth;
+    baseline = (baseline >> 6) + m_outlineWidth;
 }
 
 void TrenderedTextSubtitleWord::Transform(CPoint org, double scalex)
