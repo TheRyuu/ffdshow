@@ -691,15 +691,14 @@ void TffdshowDecVideo::ConnectCompatibleFilter(void)
 	}
 
 	// Get the media type of the compatible filter and its ouput colorspace
+	hr = pGraphBuilder->Connect(outPin, inpin);
     AM_MEDIA_TYPE connectedPinMediaTypeOut;
 	outPin->ConnectionMediaType(&connectedPinMediaTypeOut);
-    BITMAPINFOHEADER biIn;
-    ExtractBIH(connectedPinMediaTypeOut,&biIn);
-    TcspInfos ocsps;
-    presetSettings->output->getOutputColorspaces(ocsps);
-    int inColorSpace = getBMPcolorspace(&biIn, ocsps);
-    inpin->pictIn.csp = inColorSpace;
-	hr = pGraphBuilder->Connect(outPin, inpin);
+
+    // Update the new MediaType in the decoder and in the input pin
+    CMediaType *newInputMediaTypep=new CMediaType(connectedPinMediaTypeOut);
+    GetMediaType(0,newInputMediaTypep);
+    inpin->SetMediaType(newInputMediaTypep);
 
 	outPin->Release();
 	pGraphBuilder->Release();	

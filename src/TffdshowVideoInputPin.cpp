@@ -443,10 +443,17 @@ again:
  codecId=(CodecID)getVideoCodecId(&biIn.bmiHeader,&mt.subtype,&biIn.bmiHeader.biCompression);
  if (codecId==CODEC_ID_NONE) 
  {
-	 if (pCompatibleFilter!=NULL)
-		 return true;
-
-	 return false;
+  if (pCompatibleFilter!=NULL)
+  {
+   rawDecode=true;
+   if (video)
+   {
+    delete video;
+    codec=video=NULL;
+   }
+   return true;
+  }
+  return false;
  }
 
  if (codecId==CODEC_ID_H264 || codecId==CODEC_ID_H264_MT)
