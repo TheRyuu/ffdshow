@@ -59,7 +59,7 @@ static void yadif_default_execute(YadifContext *yadctx, int (*func)(YadifThreadC
 
 static void (*filter_line)(YadifContext *yadctx, uint8_t *dst, uint8_t *prev, uint8_t *cur, uint8_t *next, int w, int refs, int parity);
 
-#if defined(HAVE_FAST_64BIT) || (defined(HAVE_MMX) && defined(NAMED_ASM_ARGS))
+#if HAVE_FAST_64BIT || (HAVE_MMX && NAMED_ASM_ARGS)
 
 #define LOAD4(mem,dst) \
             "movd      "mem", "#dst" \n\t"\
@@ -288,7 +288,7 @@ static void filter_line_mmx2(YadifContext *yadctx, uint8_t *dst, uint8_t *prev, 
 #define FILTER_LINE_FUNC_NAME filter_line_ssse3
 #include "vf_yadif_template.c"
 
-#endif /* defined(HAVE_MMX) && defined(NAMED_ASM_ARGS) */
+#endif /* HAVE_MMX && NAMED_ASM_ARGS */
 
 static void filter_line_c(YadifContext *yadctx, uint8_t *dst, uint8_t *prev, uint8_t *cur, uint8_t *next, int w, int refs, int parity){
     int x;
@@ -390,7 +390,7 @@ attribute_align_arg void yadif_filter(YadifContext *yadctx, uint8_t *dst[3], str
     YadifThreadContext *threads=_alloca(sizeof(YadifThreadContext) * thread_count);
 #endif
 
-#ifdef HAVE_FAST_64BIT
+#if HAVE_FAST_64BIT
     DECLARE_ALIGNED(16, uint8_t, regbuf[16*16]);
     __asm__ volatile(
         "movq    %[regbuf], %%rax \n\t"
@@ -450,7 +450,7 @@ attribute_align_arg void yadif_filter(YadifContext *yadctx, uint8_t *dst[3], str
     threads[thread_count - 1].y_end[2] = h[2];
 
     yadctx->execute(yadctx, yadif_threaded_filter, yadctx->thread_count);
-#ifdef HAVE_FAST_64BIT
+#if HAVE_FAST_64BIT
     __asm__ volatile(
         "movq    %[regbuf], %%rax \n\t"
         "movdqa   6*16(%%rax),%%xmm6  \n\t"
@@ -466,7 +466,7 @@ attribute_align_arg void yadif_filter(YadifContext *yadctx, uint8_t *dst[3], str
         ::[regbuf] "r"(regbuf)
     );
 #endif
-#if defined(HAVE_MMX) && defined(NAMED_ASM_ARGS)
+#if HAVE_MMX && NAMED_ASM_ARGS
     if(filter_line == filter_line_mmx2) __asm__ volatile("emms \n\t" : : : "memory");
 #endif
 }
@@ -474,7 +474,7 @@ attribute_align_arg void yadif_filter(YadifContext *yadctx, uint8_t *dst[3], str
 void yadif_init(YadifContext *yadctx){
 
     filter_line = filter_line_c;
-#if defined(HAVE_FAST_64BIT) || (defined(HAVE_MMX) && defined(NAMED_ASM_ARGS))
+#if HAVE_FAST_64BIT || (HAVE_MMX && NAMED_ASM_ARGS)
     if(gCpuCaps.hasSSSE3)
         filter_line = filter_line_ssse3;
     else if(gCpuCaps.hasSSE2)

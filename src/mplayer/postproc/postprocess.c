@@ -76,7 +76,7 @@ try to unroll inner for(x=0 ... loop to avoid these damn if(x ... checks
 #include <stdio.h>
 #include <string.h>
 //#undef HAVE_MMX2
-//#define HAVE_3DNOW
+//#define HAVE_AMD3DNOW
 //#undef HAVE_MMX
 //#undef ARCH_X86
 //#define DEBUG_BRIGHTNESS
@@ -108,7 +108,7 @@ try to unroll inner for(x=0 ... loop to avoid these damn if(x ... checks
 #define TEMP_STRIDE 8
 //#define NUM_BLOCKS_AT_ONCE 16 //not used yet
 
-#if defined(ARCH_X86) || defined(ARCH_X86_64)
+#if ARCH_X86_32 || ARCH_X86_64
 static uint64_t __attribute__((aligned(8))) attribute_used w05=		0x0005000500050005LL;
 static uint64_t __attribute__((aligned(8))) attribute_used w04=		0x0004000400040004LL;
 static uint64_t __attribute__((aligned(8))) attribute_used w20=		0x0020002000200020LL;
@@ -129,7 +129,7 @@ static const int attribute_used deringThreshold= 20;
 
 
 
-#if defined(ARCH_X86) || defined(ARCH_X86_64)
+#if ARCH_X86_32 || ARCH_X86_64
 static inline void prefetchnta(void *p)
 {
         asm volatile(   "prefetchnta (%0)\n\t"
@@ -544,7 +544,7 @@ static always_inline void do_a_deblock_C(uint8_t *src, stride_t step, stride_t s
 
 //Note: we have C, MMX, MMX2, 3DNOW version there is no 3DNOW+MMX2 one
 //Plain C versions
-#if !defined (HAVE_MMX) || defined (RUNTIME_CPUDETECT)
+#if !HAVE_MMX || defined (RUNTIME_CPUDETECT)
 #define COMPILE_C
 #endif
 
@@ -554,30 +554,30 @@ static always_inline void do_a_deblock_C(uint8_t *src, stride_t step, stride_t s
 #endif //HAVE_ALTIVEC
 #endif //ARCH_POWERPC
 
-#if defined(ARCH_X86) || defined(ARCH_X86_64)
+#if ARCH_X86_32 || ARCH_X86_64
 
-#if (defined (HAVE_MMX) && !defined (HAVE_3DNOW) && !defined (HAVE_MMX2)) || defined (RUNTIME_CPUDETECT)
+#if (HAVE_MMX && !HAVE_AMD3DNOW && !HAVE_MMX2) || defined (RUNTIME_CPUDETECT)
 #define COMPILE_MMX
 #endif
 
-#if defined (HAVE_MMX2) || defined (RUNTIME_CPUDETECT)
+#if HAVE_MMX2 || defined (RUNTIME_CPUDETECT)
 #define COMPILE_MMX2
 #endif
 
-#if (defined (HAVE_3DNOW) && !defined (HAVE_MMX2)) || defined (RUNTIME_CPUDETECT)
+#if (HAVE_AMD3DNOW && !HAVE_MMX2) || defined (RUNTIME_CPUDETECT)
 #define COMPILE_3DNOW
 #endif
 #endif //ARCH_X86
 
 #undef HAVE_MMX
 #undef HAVE_MMX2
-#undef HAVE_3DNOW
+#undef HAVE_AMD3DNOW
 #undef HAVE_ALTIVEC
 
 #ifdef COMPILE_C
 #undef HAVE_MMX
 #undef HAVE_MMX2
-#undef HAVE_3DNOW
+#undef HAVE_AMD3DNOW
 #define RENAME(a) a ## _C
 #include "postprocess_template.c"
 #endif
@@ -595,9 +595,9 @@ static always_inline void do_a_deblock_C(uint8_t *src, stride_t step, stride_t s
 //MMX versions
 #ifdef COMPILE_MMX
 #undef RENAME
-#define HAVE_MMX
+#define HAVE_MMX 1
 #undef HAVE_MMX2
-#undef HAVE_3DNOW
+#undef HAVE_AMD3DNOW
 #define RENAME(a) a ## _MMX
 #include "postprocess_template.c"
 #endif
@@ -605,9 +605,9 @@ static always_inline void do_a_deblock_C(uint8_t *src, stride_t step, stride_t s
 //MMX2 versions
 #ifdef COMPILE_MMX2
 #undef RENAME
-#define HAVE_MMX
-#define HAVE_MMX2
-#undef HAVE_3DNOW
+#define HAVE_MMX 1
+#define HAVE_MMX2 1
+#undef HAVE_AMD3DNOW
 #define RENAME(a) a ## _MMX2
 #include "postprocess_template.c"
 #endif
@@ -615,9 +615,9 @@ static always_inline void do_a_deblock_C(uint8_t *src, stride_t step, stride_t s
 //3DNOW versions
 #ifdef COMPILE_3DNOW
 #undef RENAME
-#define HAVE_MMX
+#define HAVE_MMX 1
 #undef HAVE_MMX2
-#define HAVE_3DNOW
+#define HAVE_AMD3DNOW 1
 #define RENAME(a) a ## _3DNow
 #include "postprocess_template.c"
 #endif
@@ -635,7 +635,7 @@ static inline void postProcess(uint8_t src[], stride_t srcStride, uint8_t dst[],
         // difference wouldnt be messureable here but its much better because
         // someone might exchange the cpu whithout restarting mplayer ;)
 #ifdef RUNTIME_CPUDETECT
-#if defined(ARCH_X86) || defined(ARCH_X86_64)
+#if ARCH_X86_32 || ARCH_X86_64
         // ordered per speed fasterst first
 	if(c->cpuCaps & PP_CPU_CAPS_MMX2)
 		postProcess_MMX2(src, srcStride, dst, dstStride, width, height, QPs, QPStride, isColor, c);
@@ -656,11 +656,11 @@ static inline void postProcess(uint8_t src[], stride_t srcStride, uint8_t dst[],
 		postProcess_C(src, srcStride, dst, dstStride, width, height, QPs, QPStride, isColor, c);
 #endif
 #else //RUNTIME_CPUDETECT
-#ifdef HAVE_MMX2
+#if HAVE_MMX2
 		postProcess_MMX2(src, srcStride, dst, dstStride, width, height, QPs, QPStride, isColor, c);
-#elif defined (HAVE_3DNOW)
+#elif HAVE_AMD3DNOW
 		postProcess_3DNow(src, srcStride, dst, dstStride, width, height, QPs, QPStride, isColor, c);
-#elif defined (HAVE_MMX)
+#elif HAVE_MMX
 		postProcess_MMX(src, srcStride, dst, dstStride, width, height, QPs, QPStride, isColor, c);
 #elif defined (HAVE_ALTIVEC)
 		postProcess_altivec(src, srcStride, dst, dstStride, width, height, QPs, QPStride, isColor, c);

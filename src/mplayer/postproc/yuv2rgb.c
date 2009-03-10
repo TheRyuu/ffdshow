@@ -156,7 +156,7 @@ const uint8_t  __attribute__((aligned(8))) dither_8x8_220[8][8]={
 };
 #endif
 
-#if defined(ARCH_X86) || defined(ARCH_X86_64)
+#if ARCH_X86_32 || ARCH_X86_64
 
 /* hope these constant values are cache line aligned */
 uint64_t attribute_used __attribute__((aligned(8))) mmx_00ffw = 0x00ff00ff00ff00ffULL;
@@ -186,21 +186,21 @@ uint64_t __attribute__((aligned(8))) dither8[2]={
 
 //MMX versions
 #undef RENAME
-#define HAVE_MMX
+#define HAVE_MMX 1
 #undef HAVE_MMX2
-#undef HAVE_3DNOW
+#undef HAVE_AMD3DNOW
 #define RENAME(a) a ## _MMX
 #include "yuv2rgb_template.c"
 
 //MMX2 versions
 #undef RENAME
-#define HAVE_MMX
-#define HAVE_MMX2
-#undef HAVE_3DNOW
+#define HAVE_MMX 1
+#define HAVE_MMX2 1
+#undef HAVE_AMD3DNOW
 #define RENAME(a) a ## _MMX2
 #include "yuv2rgb_template.c"
 
-#endif /* defined(ARCH_X86) || defined(ARCH_X86_64) */
+#endif /* ARCH_X86_32 || ARCH_X86_64 */
 
 const int32_t Inverse_Table_6_9[8][6] = {
  // {   crv,    cbu,   cgu,   cgv,    cy,      oy}  /* dived by 65536 to get familiar values */
@@ -581,7 +581,7 @@ EPILOG(1)
 
 SwsFunc yuv2rgb_get_func_ptr (SwsContext *c)
 {
-#if defined(ARCH_X86) || defined(ARCH_X86_64)
+#if ARCH_X86 || ARCH_X86_64
     if(c->params.cpu & SWS_CPU_CAPS_MMX2){
 	switch(c->dstFormat){
 	case IMGFMT_BGR32: return yuv420_rgb32_MMX2;

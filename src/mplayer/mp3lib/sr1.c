@@ -18,8 +18,8 @@
 #include "../config.h"
 
 #ifdef WIN64
-  #undef HAVE_3DNOW
-  #undef HAVE_3DNOWEX
+  #undef HAVE_AMD3DNOW
+  #undef HAVE_AMD3DNOWEX
   #undef HAVE_MMX
   #undef HAVE_MMX2
   #undef HAVE_SSE
@@ -32,7 +32,7 @@
 #include "mpg123.h"
 #include "huffman.h"
 #include "inttypes.h"
-#include "../bswap.h"
+#include "../libavutil/bswap.h"
 #include "../cpudetect.h"
 #include "../mp_msg.h"
 

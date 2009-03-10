@@ -20,44 +20,44 @@
 //Feel free to fine-tune the above 2, it might be possible to get some speedup with them :)
 
 //#define STATISTICS
-#if defined(ARCH_X86) || defined(ARCH_X86_64)
+#if ARCH_X86_32 || ARCH_X86_64
 #define CAN_COMPILE_X86_ASM
 #endif
 
 //Note: we have MMX, MMX2, 3DNOW version there is no 3DNOW+MMX2 one
 //Plain C versions
-//#if !defined (HAVE_MMX) || defined (RUNTIME_CPUDETECT)
+//#if !HAVE_MMX || defined (RUNTIME_CPUDETECT)
 //#define COMPILE_C
 //#endif
 
 #ifdef CAN_COMPILE_X86_ASM
 
-#if (defined (HAVE_MMX) && !defined (HAVE_3DNOW) && !defined (HAVE_MMX2)) || defined (RUNTIME_CPUDETECT)
+#if (HAVE_MMX && !HAVE_AMD3DNOW && !HAVE_MMX2) || defined (RUNTIME_CPUDETECT)
 #define COMPILE_MMX
 #endif
 
-#if (defined (HAVE_MMX2) && !defined (HAVE_SSE2)) || defined (RUNTIME_CPUDETECT)
+#if (HAVE_MMX2 && !HAVE_SSE2) || defined (RUNTIME_CPUDETECT)
 #define COMPILE_MMX2
 #endif
 
-#if (defined (HAVE_3DNOW) && !defined (HAVE_MMX2)) || defined (RUNTIME_CPUDETECT)
+#if (HAVE_AMD3DNOW && !HAVE_MMX2) || defined (RUNTIME_CPUDETECT)
 #define COMPILE_3DNOW
 #endif
 
-#if defined (HAVE_SSE2) || defined (RUNTIME_CPUDETECT)
+#if HAVE_SSE2 || defined (RUNTIME_CPUDETECT)
 #define COMPILE_SSE
 #endif
 
 #undef HAVE_MMX
 #undef HAVE_MMX2
-#undef HAVE_3DNOW
+#undef HAVE_AMD3DNOW
 #undef HAVE_SSE
 #undef HAVE_SSE2
 /*
 #ifdef COMPILE_C
 #undef HAVE_MMX
 #undef HAVE_MMX2
-#undef HAVE_3DNOW
+#undef HAVE_AMD3DNOW
 #undef ARCH_X86
 #define RENAME(a) a ## _C
 #include "aclib_template.c"
@@ -66,9 +66,9 @@
 //MMX versions
 #ifdef COMPILE_MMX
 #undef RENAME
-#define HAVE_MMX
+#define HAVE_MMX 1
 #undef HAVE_MMX2
-#undef HAVE_3DNOW
+#undef HAVE_AMD3DNOW
 #undef HAVE_SSE
 #undef HAVE_SSE2
 #define RENAME(a) a ## _MMX
@@ -78,9 +78,9 @@
 //MMX2 versions
 #ifdef COMPILE_MMX2
 #undef RENAME
-#define HAVE_MMX
-#define HAVE_MMX2
-#undef HAVE_3DNOW
+#define HAVE_MMX 1
+#define HAVE_MMX2 1
+#undef HAVE_AMD3DNOW
 #undef HAVE_SSE
 #undef HAVE_SSE2
 #define RENAME(a) a ## _MMX2
@@ -90,9 +90,9 @@
 //3DNOW versions
 #ifdef COMPILE_3DNOW
 #undef RENAME
-#define HAVE_MMX
+#define HAVE_MMX 1
 #undef HAVE_MMX2
-#define HAVE_3DNOW
+#define HAVE_AMD3DNOW 1
 #undef HAVE_SSE
 #undef HAVE_SSE2
 #define RENAME(a) a ## _3DNow
@@ -102,9 +102,9 @@
 //SSE versions (only used on SSE2 cpus)
 #ifdef COMPILE_SSE
 #undef RENAME
-#define HAVE_MMX
-#define HAVE_MMX2
-#undef HAVE_3DNOW
+#define HAVE_MMX 1
+#define HAVE_MMX2 1
+#undef HAVE_AMD3DNOW
 #define HAVE_SSE
 #define HAVE_SSE2
 #define RENAME(a) a ## _SSE
@@ -132,13 +132,13 @@ void init_fast_memcpy(void)
 #endif //CAN_COMPILE_X86_ASM
 		fast_memcpy=memcpy; // prior to mmx we use the standart memcpy
 #else
-#ifdef HAVE_SSE2
+#if HAVE_SSE2
 		fast_memcpy=fast_memcpy_SSE;
-#elif defined (HAVE_MMX2)
+#elif HAVE_MMX2
 		fast_memcpy=fast_memcpy_MMX2;
-#elif defined (HAVE_3DNOW)
+#elif HAVE_AMD3DNOW
 		fast_memcpy=fast_memcpy_3DNow;
-#elif defined (HAVE_MMX)
+#elif HAVE_MMX
 		fast_memcpy=fast_memcpy_MMX;
 #else
 		fast_memcpy=memcpy; // prior to mmx we use the standart memcpy

@@ -34,7 +34,7 @@
 
 static always_inline uint16_t bswap_16(uint16_t x)
 {
-#if defined(ARCH_X86)
+#if ARCH_X86
     __asm("rorw $8, %0"   :
           LEGACY_REGS (x) :
           "0" (x));
@@ -46,7 +46,7 @@ static always_inline uint16_t bswap_16(uint16_t x)
 
 static always_inline uint32_t bswap_32(uint32_t x)
 {
-#if defined(ARCH_X86)
+#if ARCH_X86
 #if __CPU__ != 386
     __asm("bswap   %0":
           "=r" (x)    :
@@ -70,7 +70,7 @@ static inline uint64_t bswap_64(uint64_t x)
     x= ((x<< 8)&0xFF00FF00FF00FF00ULL) | ((x>> 8)&0x00FF00FF00FF00FFULL);
     x= ((x<<16)&0xFFFF0000FFFF0000ULL) | ((x>>16)&0x0000FFFF0000FFFFULL);
     return (x>>32) | (x<<32);
-#elif defined(ARCH_X86_64)
+#elif ARCH_X86_64
   __asm("bswap  %0":
         "=r" (x)   :
         "0" (x));

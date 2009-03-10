@@ -1,11 +1,13 @@
-
 /*
- * yuv2rgb_mmx.c, Software YUV to RGB coverter with Intel MMX "technology"
+ * yuv2rgb_mmx.c, software YUV to RGB converter with Intel MMX "technology"
  *
- * Copyright (C) 2000, Silicon Integrated System Corp.
- * All Rights Reserved.
+ * Copyright (C) 2000, Silicon Integrated System Corp
  *
  * Author: Olie Lho <ollie@sis.com.tw>
+ *
+ * 15,24 bpp and dithering from Michael Niedermayer (michaelni@gmx.at)
+ * MMX/MMX2 Template stuff from Michael Niedermayer (needed for fast movntq support)
+ * context / deglobalize stuff by Michael Niedermayer
  *
  * This file is part of mpeg2dec, a free MPEG-2 video decoder
  *
@@ -20,26 +22,22 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with GNU Make; see the file COPYING. If not, write to
- * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
- *
- * 15,24 bpp and dithering from Michael Niedermayer (michaelni@gmx.at)
- * MMX/MMX2 Template stuff from Michael Niedermayer (needed for fast movntq support)
- * context / deglobalize stuff by Michael Niedermayer
+ * along with mpeg2dec; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #undef MOVNTQ
 #undef EMMS
 #undef SFENCE
 
-#ifdef HAVE_3DNOW
+#if HAVE_AMD3DNOW
 /* On K6 femms is faster of emms. On K7 femms is directly mapped on emms. */
 #define EMMS     "femms"
 #else
 #define EMMS     "emms"
 #endif
 
-#ifdef HAVE_MMX2
+#if HAVE_MMX2
 #define MOVNTQ "movntq"
 #define SFENCE "sfence"
 #else
@@ -339,7 +337,7 @@ static inline int RENAME(yuv420_rgb24)(SwsContext *c, uint8_t* src[], int srcStr
 		    "1:				\n\t"
 YUV2RGB
         /* mm0=B, %%mm2=G, %%mm1=R */
-#ifdef HAVE_MMX2
+#if HAVE_MMX2
                         "movq "MANGLE(M24A)", %%mm4     \n\t"
                         "movq "MANGLE(M24C)", %%mm7     \n\t"
                         "pshufw $0x50, %%mm0, %%mm5     \n\t" /* B3 B2 B3 B2  B1 B0 B1 B0 */

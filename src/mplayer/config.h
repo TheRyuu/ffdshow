@@ -23,27 +23,39 @@
 #define ASMALIGN(ZEROBITS) ".align 1<<" #ZEROBITS "\n\t"
 
 #ifdef __GNUC__
-  /* Extension defines */
-  #define HAVE_3DNOW 1    // only define if you have 3DNOW (AMD k6-2, AMD Athlon, iDT WinChip, etc.)
-  #define HAVE_3DNOWEX 1  // only define if you have 3DNOWEX (AMD Athlon, etc.)
-  #define HAVE_MMX 1      // only define if you have MMX (newer x86 chips, not P54C/PPro)
-  #define HAVE_MMX2 1     // only define if you have MMX2 (Athlon/PIII/4/CelII)
-  #define HAVE_SSE 1      // only define if you have SSE (Intel Pentium III/4 or Celeron II)
-  #define HAVE_SSE2 1     // only define if you have SSE2 (Intel Pentium 4)
-  #define NAMED_ASM_ARGS 1 // GCC 3.1 or later
+  #define HAVE_AMD3DNOW 1
+  #define HAVE_AMD3DNOWEX 1
+  #define HAVE_MMX 1
+  #define HAVE_MMX2 1
+  #define HAVE_SSE 1
+  #define HAVE_SSE2 1
 
   #define ARCH_X86 1
-
   #ifdef ARCH_X86_64
     #define HAVE_FAST_64BIT 1
   #else
     #define ARCH_X86_32 1
   #endif
 
- #define HAVE_EBP_AVAILABLE 1
- #define HAVE_EBX_AVAILABLE 1
-
+  #define HAVE_EBP_AVAILABLE 1
+  #define HAVE_EBX_AVAILABLE 1
+  #define NAMED_ASM_ARGS 1
+#else
+  #define HAVE_AMD3DNOW 0	 
+  #define HAVE_AMD3DNOWEX 0
+  #define HAVE_MMX 0
+  #define HAVE_MMX2 0
+  #define HAVE_SSE 0
+  #define HAVE_SSE2 0
+  #define ARCH_X86 0
+  #define ARCH_X86_32 0
+  #define ARCH_X86_64 0
+  #define HAVE_FAST_64BIT 0
+  #define HAVE_EBP_AVAILABLE 0
+  #define HAVE_EBX_AVAILABLE 0
+  #define NAMED_ASM_ARGS 0
 #endif
+
 
 #ifndef __GNUC__
  #define inline __inline

@@ -13,7 +13,7 @@
 #include "swscale.h"
 #include "../cpudetect.h"
 #include "../mangle.h"
-#include "../bswap.h"
+#include "../libavutil/bswap.h"
 #include "../libvo/fastmemcpy.h"
 
 #define FAST_BGR2YV12 // use 7 bit coeffs instead of 15bit
@@ -76,7 +76,7 @@ void (*yvu9_to_yuy2)(const uint8_t *src1, const uint8_t *src2, const uint8_t *sr
 			stride_t srcStride1, stride_t srcStride2,
 			stride_t srcStride3, stride_t dstStride);
 
-#if defined(ARCH_X86) || defined(ARCH_X86_64)
+#if ARCH_X86_32 || ARCH_X86_64
 static const uint64_t mmx_null  __attribute__((aligned(8))) = 0x0000000000000000ULL;
 static const uint64_t mmx_one   __attribute__((aligned(8))) = 0xFFFFFFFFFFFFFFFFULL;
 static const uint64_t mask32b  attribute_used __attribute__((aligned(8))) = 0x000000FF000000FFULL;
@@ -138,7 +138,7 @@ static uint64_t __attribute__((aligned(8))) dither8[2]={
         0x0602060206020602LL,
         0x0004000400040004LL,};
 #endif
-#endif /* defined(ARCH_X86) || defined(ARCH_X86_64) */
+#endif /* ARCH_X86 || ARCH_X86_64 */
 
 #define RGB2YUV_SHIFT 8
 #define BY ((int)( 0.098*(1<<RGB2YUV_SHIFT)+0.5))
@@ -155,41 +155,41 @@ static uint64_t __attribute__((aligned(8))) dither8[2]={
 //Plain C versions
 #undef HAVE_MMX
 #undef HAVE_MMX2
-#undef HAVE_3DNOW
+#undef HAVE_AMD3DNOW
 #undef HAVE_SSE2
 #define RENAME(a) a ## _C
 #include "rgb2rgb_template.c"
 
-#if defined(ARCH_X86) || defined(ARCH_X86_64)
+#if ARCH_X86_32 || ARCH_X86_64
 
 //MMX versions
 #undef RENAME
-#define HAVE_MMX
+#define HAVE_MMX 1
 #undef HAVE_MMX2
-#undef HAVE_3DNOW
+#undef HAVE_AMD3DNOW
 #undef HAVE_SSE2
 #define RENAME(a) a ## _MMX
 #include "rgb2rgb_template.c"
 
 //MMX2 versions
 #undef RENAME
-#define HAVE_MMX
-#define HAVE_MMX2
-#undef HAVE_3DNOW
+#define HAVE_MMX 1
+#define HAVE_MMX2 1
+#undef HAVE_AMD3DNOW
 #undef HAVE_SSE2
 #define RENAME(a) a ## _MMX2
 #include "rgb2rgb_template.c"
 
 //3DNOW versions
 #undef RENAME
-#define HAVE_MMX
+#define HAVE_MMX 1
 #undef HAVE_MMX2
-#define HAVE_3DNOW
+#define HAVE_AMD3DNOW 1
 #undef HAVE_SSE2
 #define RENAME(a) a ## _3DNOW
 #include "rgb2rgb_template.c"
 
-#endif //ARCH_X86 || ARCH_X86_64
+#endif //ARCH_X86_32 || ARCH_X86_64
 
 /*
  rgb15->rgb16 Original by Strepto/Astral
@@ -201,7 +201,7 @@ static uint64_t __attribute__((aligned(8))) dither8[2]={
 void sws_rgb2rgb_init(SwsParams *params){
 		yv12toyvyu= yv12toyvyu_C;
 		yv12tovyuy= yv12tovyuy_C;
-#if defined(ARCH_X86) || defined(ARCH_X86_64)
+#if ARCH_X86_32 || ARCH_X86_64
 	if(params->cpu & SWS_CPU_CAPS_MMX2){
 		rgb15to16= rgb15to16_MMX2;
 		rgb15to24= rgb15to24_MMX2;
@@ -293,7 +293,7 @@ void sws_rgb2rgb_init(SwsParams *params){
 		vu9_to_vu12= vu9_to_vu12_MMX;
 		yvu9_to_yuy2= yvu9_to_yuy2_MMX;
 	}else
-#endif /* defined(ARCH_X86) || defined(ARCH_X86_64) */
+#endif /* ARCH_X86_32 || ARCH_X86_64 */
 	{
 		rgb15to16= rgb15to16_C;
 		rgb15to24= rgb15to24_C;
