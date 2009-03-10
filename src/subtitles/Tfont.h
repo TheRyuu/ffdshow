@@ -6,6 +6,7 @@
 #include "TsubtitleProps.h"
 #include "rational.h"
 #include "TfontSettings.h"
+#include "CRect.h"
 #include "ffdebug.h"
 
 #define size_of_rgb32 4
@@ -159,11 +160,10 @@ public:
  virtual int get_ascent64() const {return dy[0]*8;}
  virtual int get_descent64() const {return 0;}
  virtual int get_baseline() const {return dy[0];}
- virtual int get_topOverhang() const {return 0;}
- virtual int get_bottomOverhang() const {return 0;}
- virtual int get_leftOverhang() const {return 0;}
- virtual int get_rightOverhang() const {return 0;}
+ virtual CRect getOverhang() const {return CRect();}
  virtual size_t getMemorySize() const {return 0;}
+ virtual int getPathOffsetX() const {return 0;}
+ virtual int getPathOffsetY() const {return 0;}
 };
 
 class TrenderedVobsubWord : public TrenderedSubtitleWordBase

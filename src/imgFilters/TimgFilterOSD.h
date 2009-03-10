@@ -70,9 +70,8 @@ private:
     };
    typedef std::vector<TosdToken> TosdTokens;
    TosdTokens tokens;
-   TfontSettings fs;
   public:
-   TosdLine(IffdshowBase *Ideci,IffdshowDec *IdeciB,IffdshowDecVideo *IdeciV,const Tconfig *Iconfig,const ffstring &Iformat,const TfontSettings *fontSettings,unsigned int Iduration,IOSDprovider *Iprovider,bool Iitalic=false);
+   TosdLine(IffdshowBase *Ideci,IffdshowDec *IdeciB,IffdshowDecVideo *IdeciV,const Tconfig *Iconfig,const ffstring &Iformat,unsigned int Iduration,IOSDprovider *Iprovider,bool Iitalic=false);
    int duration;
    Tfont font;
    void print(
@@ -86,7 +85,8 @@ private:
     unsigned int &y,
     int linespace,
     FILE *f,
-    bool fileonly);
+    bool fileonly,
+    const TfontSettings &fontSettings);
    const char_t *getName(unsigned int i) const;
   };
 
@@ -97,6 +97,7 @@ private:
    FILE *f;int oldSave;char_t oldSaveFlnm[MAX_PATH];
    ffstring startupFormat;int startupDuration;
    char_t oldFormat[256];
+   TfontSettings fontSettings;
   public:
    Tosds(IOSDprovider *Iprovider=NULL,const char_t *Iname=NULL);
    ~Tosds();

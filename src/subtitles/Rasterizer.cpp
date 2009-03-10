@@ -706,7 +706,7 @@ bool Rasterizer::Rasterize(int xsub, int ysub, const CRect &borderSize)
     mGlyphBmpWidth = ((mGlyphBmpWidth + 15) >> 4) << 4;
     mGlyphBmpHeight = ((height+7)>>3) + 1;
 
-    bmp[0] = (byte *)aligned_calloc3(mGlyphBmpWidth * mGlyphBmpHeight,16,16);
+    bmp[0] = (byte *)aligned_calloc3(mGlyphBmpWidth, mGlyphBmpHeight,16,16);
 
         xsub += borderSize.left * 8;
         ysub += borderSize.top * 8;

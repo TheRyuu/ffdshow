@@ -195,7 +195,7 @@ unsigned int TrenderedSubtitleLine::baselineHeight(void) const
  unsigned int aboveBaseline=0;
  for (const_iterator w=begin();w!=end();w++)
   {
-   aboveBaseline=std::max<unsigned int>(aboveBaseline,(*w)->get_baseline());
+   aboveBaseline=std::max<unsigned int>(aboveBaseline, (*w)->get_baseline());
   }
  return aboveBaseline;
 }
@@ -208,7 +208,7 @@ int TrenderedSubtitleLine::get_topOverhang(void) const
  int topOverhang=0;
  for (const_iterator w=begin();w!=end();w++)
   {
-   topOverhang=std::min(topOverhang,baseline-(*w)->get_baseline()-(*w)->get_topOverhang());
+   topOverhang=std::min(topOverhang, int(baseline - (*w)->get_baseline() - (*w)->getOverhang().top));
   }
  return -topOverhang;
 }
@@ -221,9 +221,9 @@ int TrenderedSubtitleLine::get_bottomOverhang(void) const
  int bottomOverhang=0;
  for (const_iterator w=begin();w!=end();w++)
   {
-   bottomOverhang=std::max(bottomOverhang,(int)(*w)->dxCharY-(int)(*w)->get_baseline()+(*w)->get_bottomOverhang());
+   bottomOverhang=std::max(bottomOverhang, int((int)(*w)->dxCharY - (*w)->get_baseline() + (*w)->getOverhang().bottom));
   }
- return bottomOverhang+baseline-charHeight();
+ return bottomOverhang+baseline - charHeight();
 }
 
 int TrenderedSubtitleLine::get_leftOverhang(void) const
@@ -234,7 +234,7 @@ int TrenderedSubtitleLine::get_leftOverhang(void) const
  int leftOverhang=0;
  for (const_iterator w=begin();w!=end();w++)
   {
-   leftOverhang=std::min(leftOverhang,dx-(*w)->get_leftOverhang());
+   leftOverhang=std::min(leftOverhang, int(dx - (*w)->getOverhang().left));
    dx+=(*w)->dxCharY;
   }
  return -leftOverhang;
@@ -249,7 +249,7 @@ int TrenderedSubtitleLine::get_rightOverhang(void) const
  for (const_iterator w=begin();w!=end();w++)
   {
    dx+=(*w)->dxCharY;
-   rightOverhang=std::max(rightOverhang,dx+(*w)->get_rightOverhang());
+   rightOverhang=std::max(rightOverhang, int(dx + (*w)->getOverhang().right));
   }
  return rightOverhang-dx;
 }
@@ -300,6 +300,8 @@ void TrenderedSubtitleLine::print(
  const TcspInfo *cspInfo = csp_getInfo(prefs.csp);
  for (const_iterator w=begin();w!=end() && startx<(int)prefsdx;startx+=(*w)->dxCharY,w++)
   {
+   TrenderedSubtitleWordBase *word = *w;
+   startx += word->getPathOffsetX();
    const unsigned char *msk[3],*bmp[3];
    unsigned char *dstLn[3];
    int x[3];
@@ -308,28 +310,28 @@ void TrenderedSubtitleLine::print(
    for (int i=0;i<3;i++)
     {
      x[i]=startx>>cspInfo->shiftX[i];
-     msk[i]=(*w)->msk[i];
-     bmp[i]=(*w)->bmp[i];
+     msk[i]=word->msk[i];
+     bmp[i]=word->bmp[i];
      if (prefs.align!=ALIGN_FFDSHOW && x[i]<0)
       {
        msk[i]+=-x[i];
        bmp[i]+=-x[i];
       }
-     int sy=(starty+baseline-(*w)->get_baseline())>>cspInfo->shiftY[i];
-     dy[i]=std::min((int(prefsdy)>>cspInfo->shiftY[i])-sy,int((*w)->dy[i]));
+     int sy=(starty + baseline - word->get_baseline() + word->getPathOffsetY()) >> cspInfo->shiftY[i];
+     dy[i]=std::min((int(prefsdy)>>cspInfo->shiftY[i])-sy,int(word->dy[i]));
      dstLn[i]=dst[i] + int(sy * stride[i]);
      if (x[i]>0)
       dstLn[i]+=x[i]*cspInfo->Bpp;
 
-     if (x[i]+(*w)->dx[i]>(prefsdx>>cspInfo->shiftX[i]))
+     if (x[i]+word->dx[i]>(prefsdx>>cspInfo->shiftX[i]))
       dx[i]=(prefsdx>>cspInfo->shiftX[i])-x[i];
      else if (x[i]<0)
-      dx[i]=(*w)->dx[i]+x[i];
+      dx[i]=word->dx[i]+x[i];
      else
-      dx[i]=(*w)->dx[i];
+      dx[i]=word->dx[i];
      dx[i]=std::min(dx[i],prefsdx>>cspInfo->shiftX[i]);
     }
-   (*w)->print(startx, starty,dx,dy,dstLn,stride,bmp,msk,prefs.rtStart);
+   word->print(startx, starty,dx,dy,dstLn,stride,bmp,msk,prefs.rtStart);
   }
 }
 

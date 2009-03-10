@@ -11,7 +11,7 @@ private:
  TrenderedSubtitleLines::TprintPrefs prefs;
  YUVcolorA m_bodyYUV,m_outlineYUV,m_shadowYUV;
  int baseline;
- int topOverhang,bottomOverhang,leftOverhang,rightOverhang;
+ CRect overhang;
  int m_outlineWidth,m_shadowSize,m_shadowMode;
  double outlineWidth_double;
  int dstOffset;
@@ -46,10 +46,7 @@ void drawGlyphOSD(      HDC hdc,
  void updateMask(int fader = 1 << 16, int create = 1) const; // create: 0=update, 1=new, 2=update after copy (karaoke)
  unsigned char* blur(unsigned char *src,stride_t Idx,stride_t Idy,int startx,int starty,int endx, int endy, bool mild);
  unsigned int getShadowSize(LONG fontHeight, unsigned int gdi_font_scale);
- unsigned int getBottomOverhang(void);
- unsigned int getRightOverhang(void);
- unsigned int getTopOverhang(void);
- unsigned int getLeftOverhang(void);
+ CRect getOverhangPrivate();
  void removeMargin();
 public:
  TSubtitleProps props;
@@ -83,10 +80,9 @@ public:
  virtual int get_ascent64() const;
  virtual int get_descent64() const;
  virtual int get_baseline() const;
- virtual int get_topOverhang() const {return topOverhang;}
- virtual int get_bottomOverhang() const {return bottomOverhang;}
- virtual int get_leftOverhang() const {return leftOverhang;}
- virtual int get_rightOverhang() const {return rightOverhang;}
+ virtual int getPathOffsetX() const {return mPathOffsetX >> 3;}
+ virtual int getPathOffsetY() const {return mPathOffsetY >> 3;}
+ virtual CRect getOverhang() const {return overhang;}
  virtual size_t getMemorySize() const;
 };
 

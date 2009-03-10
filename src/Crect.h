@@ -47,15 +47,19 @@ struct CRect :RECT
    RECT rect1=*this;
    IntersectRect(this,&rect1,&rect2);
   }
- inline void operator+=(const CPoint &pt)
+ inline void operator += (const CPoint &pt)
   {
    left+=pt.x;top+=pt.y;
    right+=pt.x;bottom+=pt.y;
   }
- inline void operator-=(const CPoint &pt)
+ inline void operator -= (const CPoint &pt)
   {
    left-=pt.x;top-=pt.y;
    right-=pt.x;bottom-=pt.y;
+  }
+ inline CRect operator + (const CRect &rt)
+  {
+   return CRect (left + rt.left, top + rt.top, right + rt.right, bottom + rt.bottom);
   }
  inline int Width(void) const {return right-left;}
  inline int Height(void) const {return bottom-top;}

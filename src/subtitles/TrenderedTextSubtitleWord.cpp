@@ -29,7 +29,8 @@
 TrenderedTextSubtitleWord::TrenderedTextSubtitleWord(
         const TrenderedTextSubtitleWord &parent,
         secondaryColor_t):
-    prefs(parent.prefs)
+    prefs(parent.prefs),
+    Rasterizer(parent)
 {
     *this = parent;
     secondaryColoredWord = NULL;
@@ -180,10 +181,7 @@ void TrenderedTextSubtitleWord::getGlyph(HDC hdc,
             italic_fixed_sz.cx+=italic_fixed_sz.cy*0.35;
     }
 
-    topOverhang    = getTopOverhang();
-    bottomOverhang = getBottomOverhang();
-    leftOverhang   = getLeftOverhang();
-    rightOverhang  = getRightOverhang();
+    overhang = getOverhangPrivate();
 
     gdi_dx = ((italic_fixed_sz.cx + gdi_font_scale) / gdi_font_scale + 1) * gdi_font_scale;
     gdi_dy = italic_fixed_sz.cy + gdi_font_scale;
@@ -215,11 +213,15 @@ void TrenderedTextSubtitleWord::drawGlyphSubtitles(
 
     Transform(CPoint(0, 0), xscale/100);
     ScanConvert();
-    Rasterize(0, 0,
-      CRect(leftOverhang + m_outlineWidth, topOverhang + m_outlineWidth, rightOverhang + m_outlineWidth, bottomOverhang + m_outlineWidth));
+    CRect border(m_outlineWidth,m_outlineWidth,m_outlineWidth,m_outlineWidth);
+    // That messy fontPrepareOutline functions require 2*outlineWidth around the characters.
+    // Shadow creation requires shadow height aound the characters.
+    Rasterize(0, 0, overhang + border);
+    // now bmp[0] is mGlyphBmpWidth * mGlyphBmpHeight
 
-    dx[0] = ((mWidth + 7)>> 3) + leftOverhang + rightOverhang;
-    dy[0] = ((mHeight + 7) >> 3) + topOverhang + bottomOverhang;
+    // after drawShadow, bmp[0] is dx[0] * dy[0]. removeMargin does this tric.
+    dx[0] = overhang.left + ((mWidth + 7) >> 3) + 1 + overhang.right;
+    dy[0] = overhang.top + ((mHeight + 7) >> 3) + 1 + overhang.bottom;
     unsigned int al=csp==FF_CSP_420P ? alignXsize : 8;
     dx[0]=((dx[0]+al-1)/al)*al;
     baseline = (baseline >> 6) + m_outlineWidth;
@@ -227,6 +229,12 @@ void TrenderedTextSubtitleWord::drawGlyphSubtitles(
 
 void TrenderedTextSubtitleWord::Transform(CPoint org, double scalex)
 {
+ /*
+  *  Copied and modified from guliverkli, RTS.cpp
+  *
+  *  Copyright (C) 2003-2006 Gabest
+  *  http://www.gabest.org
+  */
     double scaley = 1;
 
     double caz = cos((3.1415/180)*0/*m_style.fontAngleZ*/);
@@ -304,8 +312,8 @@ void TrenderedTextSubtitleWord::drawGlyphOSD(
     SelectObject(hdc,old);
     DeleteObject(hbmp);
 
-    dx[0]    = xscale * gdi_dx / (gdi_font_scale * 100) + leftOverhang + rightOverhang;
-    dy[0]    = gdi_dy / gdi_font_scale + topOverhang + bottomOverhang;
+    dx[0]    = xscale * gdi_dx / (gdi_font_scale * 100) + overhang.left + overhang.right;
+    dy[0]    = gdi_dy / gdi_font_scale + overhang.top + overhang.bottom;
     baseline = baseline / gdi_font_scale + 2;
 
     unsigned int al=csp==FF_CSP_420P ? alignXsize : 8;
@@ -339,7 +347,7 @@ void TrenderedTextSubtitleWord::drawGlyphOSD(
     unsigned int startx = (2 << 16) + xstep;
     unsigned int endx = (gdi_dx - 2) << 16;
     for (unsigned int y = 2 ; y < gdi_dy - 3 ; y += gdi_font_scale) {
-        unsigned char *dstBmpY = bmp[0] + (y/gdi_font_scale + topOverhang + m_outlineWidth) * mGlyphBmpWidth + leftOverhang + m_outlineWidth;
+        unsigned char *dstBmpY = bmp[0] + (y/gdi_font_scale + overhang.top + m_outlineWidth) * mGlyphBmpWidth + overhang.left + m_outlineWidth;
         unsigned int x = startx;
         const unsigned char *bmp16srcLineStart = bmp16 + ((y - 2) * gdi_dx) * size_of_rgb32;
         const unsigned char *bmp16srcEnd;
@@ -388,10 +396,10 @@ void TrenderedTextSubtitleWord::drawShadow()
     shadow[0]=(unsigned char*)aligned_calloc3(dx[0],dy[0],16,16);
 
     if (prefs.blur) {
-        int startx=leftOverhang + m_outlineWidth - 1;
-        int starty=topOverhang + m_outlineWidth - 1;
-        int endy=mGlyphBmpHeight - bottomOverhang - m_outlineWidth+1;
-        int endx=mGlyphBmpWidth - rightOverhang - m_outlineWidth+1;
+        int startx=overhang.left + m_outlineWidth - 1;
+        int starty=overhang.top + m_outlineWidth - 1;
+        int endy=mGlyphBmpHeight - overhang.bottom - m_outlineWidth+1;
+        int endx=mGlyphBmpWidth - overhang.right - m_outlineWidth+1;
         bmp[0]=blur(bmp[0], mGlyphBmpWidth, mGlyphBmpHeight, startx, starty, endx, endy, true);
     }
 
@@ -417,8 +425,8 @@ void TrenderedTextSubtitleWord::drawShadow()
             }
     }
 
-    unsigned int max_outline_pos_x  = dx[0]- rightOverhang + m_outlineWidth;
-    unsigned int max_outline_pos_y  = dy[0] - bottomOverhang + m_outlineWidth;
+    unsigned int max_outline_pos_x  = dx[0]- overhang.right + m_outlineWidth;
+    unsigned int max_outline_pos_y  = dy[0] - overhang.bottom + m_outlineWidth;
     if (prefs.opaqueBox) {
         removeMargin();
         memset(msk[0],255,dx[0]*dy[0]);
@@ -432,8 +440,8 @@ void TrenderedTextSubtitleWord::drawShadow()
         {
             size_t matrixSizeH_sse2=matrixSizeH>>3;
             size_t srcStrideGap=mGlyphBmpWidth-matrixSizeH;
-            for (unsigned int y = topOverhang - m_outlineWidth ; y < max_outline_pos_y ; y++)
-                for (unsigned int x = leftOverhang - m_outlineWidth ; x < max_outline_pos_x ; x++) {
+            for (unsigned int y = overhang.top - m_outlineWidth ; y < max_outline_pos_y ; y++)
+                for (unsigned int x = overhang.left - m_outlineWidth ; x < max_outline_pos_x ; x++) {
                     unsigned int sum=fontPrepareOutline_sse2(bmp[0] + mGlyphBmpWidth*y + x, srcStrideGap, matrix, matrixSizeH_sse2, matrixSizeV) >> 9;
                     msk[0][dx[0]*y+x]=sum>255 ? 255 : sum;
                 }
@@ -443,8 +451,8 @@ void TrenderedTextSubtitleWord::drawShadow()
             size_t matrixSizeH_mmx=(matrixSizeV+3)/4;
             size_t srcStrideGap=mGlyphBmpWidth-matrixSizeH_mmx*4;
             size_t matrixGap=matrixSizeH_mmx & 1 ? 8 : 0;
-            for (unsigned int y = topOverhang - m_outlineWidth ; y < max_outline_pos_y ; y++) {
-                for (unsigned int x = leftOverhang - m_outlineWidth ; x < max_outline_pos_x ; x++) {
+            for (unsigned int y = overhang.top - m_outlineWidth ; y < max_outline_pos_y ; y++) {
+                for (unsigned int x = overhang.left - m_outlineWidth ; x < max_outline_pos_x ; x++) {
                     unsigned int sum=fontPrepareOutline_mmx(bmp[0] + mGlyphBmpWidth * y + x, srcStrideGap, matrix, matrixSizeH_mmx, matrixSizeV, matrixGap) >> 9;
                     msk[0][dx[0]*y+x]=sum>255 ? 255 : sum;
                 }
@@ -452,8 +460,8 @@ void TrenderedTextSubtitleWord::drawShadow()
         }
 #endif
         else {
-            for (unsigned int y = topOverhang - m_outlineWidth ; y < max_outline_pos_y ; y++)
-               for (unsigned int x = leftOverhang - m_outlineWidth ; x < max_outline_pos_x ; x++) {
+            for (unsigned int y = overhang.top - m_outlineWidth ; y < max_outline_pos_y ; y++)
+               for (unsigned int x = overhang.left - m_outlineWidth ; x < max_outline_pos_x ; x++) {
                    unsigned char *srcPos=bmp[0]+mGlyphBmpWidth*y+x; // (x-outlineWidth,y-outlineWidth)
                    unsigned int sum=0;
                    for (unsigned int yy=0;yy<matrixSizeV;yy++,srcPos+=mGlyphBmpWidth-matrixSizeV)
@@ -786,33 +794,28 @@ unsigned char* TrenderedTextSubtitleWord::blur(unsigned char *src,stride_t Idx,s
  return dst;
 }
 
-unsigned int TrenderedTextSubtitleWord::getBottomOverhang(void)
+CRect TrenderedTextSubtitleWord::getOverhangPrivate()
 {
- return m_shadowSize + m_outlineWidth;
+    int top_left;
+
+    if (prefs.shadowMode==0)
+        top_left = m_shadowSize + m_outlineWidth;
+    else
+        top_left = m_outlineWidth;
+
+    return CRect(top_left, top_left, m_shadowSize + m_outlineWidth, m_shadowSize + m_outlineWidth);
 }
-unsigned int TrenderedTextSubtitleWord::getRightOverhang(void)
-{
- return m_shadowSize + m_outlineWidth;
-}
-unsigned int TrenderedTextSubtitleWord::getTopOverhang(void)
-{
- if (prefs.shadowMode==0)
-  return m_shadowSize + m_outlineWidth;
- else
-  return m_outlineWidth;
-}
-unsigned int TrenderedTextSubtitleWord::getLeftOverhang(void)
-{
- return getTopOverhang();
-}
+
 int TrenderedTextSubtitleWord::get_baseline() const
 {
  return baseline;
 }
+
 int TrenderedTextSubtitleWord::get_ascent64() const
 {
  return props.m_ascent64;
 }
+
 int TrenderedTextSubtitleWord::get_descent64() const
 {
  return props.m_descent64;
