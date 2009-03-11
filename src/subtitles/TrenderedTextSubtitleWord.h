@@ -8,9 +8,10 @@ class TrenderedTextSubtitleWord : public Rasterizer
 {
 private:
  TrenderedTextSubtitleWord *secondaryColoredWord;
- TrenderedSubtitleLines::TprintPrefs prefs;
+ TprintPrefs prefs;
  YUVcolorA m_bodyYUV,m_outlineYUV,m_shadowYUV;
  int baseline;
+ double m_ascent,m_descent;
  CRect overhang;
  int m_outlineWidth,m_shadowSize,m_shadowMode;
  double outlineWidth_double;
@@ -58,7 +59,7 @@ public:
                         const YUVcolorA &YUV,
                         const YUVcolorA &outlineYUV,
                         const YUVcolorA &shadowYUV,
-                        const TrenderedSubtitleLines::TprintPrefs &prefs,
+                        const TprintPrefs &prefs,
                         LOGFONT lf,
                         double xscale,
                         TSubtitleProps Iprops,
@@ -77,8 +78,8 @@ public:
  void* (__cdecl *TtextSubtitlePrintUV) (const unsigned char* bmp,const unsigned char* outline,const unsigned char* shadow,const unsigned short *colortbl,const unsigned char* dstU,const unsigned char* dstV);
  void* (__cdecl *YV12_lum2chr_min)(const unsigned char* lum0,const unsigned char* lum1,unsigned char* chr);
  void* (__cdecl *YV12_lum2chr_max)(const unsigned char* lum0,const unsigned char* lum1,unsigned char* chr);
- virtual int get_ascent64() const;
- virtual int get_descent64() const;
+ virtual double get_ascent() const;
+ virtual double get_descent() const;
  virtual int get_baseline() const;
  virtual int getPathOffsetX() const {return mPathOffsetX >> 3;}
  virtual int getPathOffsetY() const {return mPathOffsetY >> 3;}

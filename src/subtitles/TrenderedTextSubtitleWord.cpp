@@ -74,7 +74,7 @@ TrenderedTextSubtitleWord::TrenderedTextSubtitleWord(
         const YUVcolorA &YUV,
         const YUVcolorA &outlineYUV,
         const YUVcolorA &shadowYUV,
-        const TrenderedSubtitleLines::TprintPrefs &Iprefs,
+        const TprintPrefs &Iprefs,
         LOGFONT lf,
         double xscale,
         TSubtitleProps Iprops,
@@ -150,8 +150,8 @@ TrenderedTextSubtitleWord::TrenderedTextSubtitleWord(
         cxs.push_back(sz0.cx);
         sz.cy=std::max(sz.cy,sz0.cy);
     }
-    dxCharY  = xscale * sz.cx / (gdi_font_scale * 100);
-    dyCharY  = sz.cy / gdi_font_scale;
+    dxChar  = xscale * sz.cx / (gdi_font_scale * 100);
+    dyChar  = sz.cy / gdi_font_scale;
     getGlyph(hdc, tab_parsed_string, xscale, sz, cxs, lf, gdi_font_scale);
     drawShadow();
 }
@@ -167,6 +167,8 @@ void TrenderedTextSubtitleWord::getGlyph(HDC hdc,
     OUTLINETEXTMETRIC otm;
     if (GetOutlineTextMetrics(hdc,sizeof(otm),&otm)) {
         baseline=otm.otmTextMetrics.tmAscent;
+        m_ascent = otm.otmTextMetrics.tmAscent;
+        m_descent = otm.otmTextMetrics.tmDescent;
         if (otm.otmItalicAngle)
             italic_fixed_sz.cx += ff_abs(LONG(italic_fixed_sz.cy*sin(otm.otmItalicAngle*M_PI/1800)));
         else
@@ -176,6 +178,8 @@ void TrenderedTextSubtitleWord::getGlyph(HDC hdc,
     } else {
         // non true-type
         baseline=italic_fixed_sz.cy*0.8;
+        m_ascent=italic_fixed_sz.cy*0.8;
+        m_descent=italic_fixed_sz.cy*0.2;
         m_shadowSize = getShadowSize(lf.lfHeight, gdi_font_scale);
         if (lf.lfItalic)
             italic_fixed_sz.cx+=italic_fixed_sz.cy*0.35;
@@ -225,6 +229,8 @@ void TrenderedTextSubtitleWord::drawGlyphSubtitles(
     unsigned int al=csp==FF_CSP_420P ? alignXsize : 8;
     dx[0]=((dx[0]+al-1)/al)*al;
     baseline = (baseline >> 6) + m_outlineWidth;
+    m_ascent = m_ascent / gdi_font_scale;
+    m_descent = m_descent / gdi_font_scale;
 }
 
 void TrenderedTextSubtitleWord::Transform(CPoint org, double scalex)
@@ -279,6 +285,8 @@ void TrenderedTextSubtitleWord::drawGlyphOSD(
       const ints &cxs,
       double xscale)
 {
+    baseline = (baseline / 4) + m_outlineWidth;
+
     RECT r={0,0,gdi_dx,gdi_dy};
     unsigned char *bmp16=(unsigned char*)aligned_calloc3(gdi_dx * size_of_rgb32,gdi_dy, 32, 16);
     HBITMAP hbmp=CreateCompatibleBitmap(hdc,gdi_dx,gdi_dy);
@@ -811,14 +819,14 @@ int TrenderedTextSubtitleWord::get_baseline() const
  return baseline;
 }
 
-int TrenderedTextSubtitleWord::get_ascent64() const
+double TrenderedTextSubtitleWord::get_ascent() const
 {
- return props.m_ascent64;
+ return m_ascent;
 }
 
-int TrenderedTextSubtitleWord::get_descent64() const
+double TrenderedTextSubtitleWord::get_descent() const
 {
- return props.m_descent64;
+ return m_descent;
 }
 
 void TrenderedTextSubtitleWord::print(int startx, int starty, unsigned int sdx[3], int sdy[3], unsigned char *dstLn[3], const stride_t stride[3], const unsigned char *Ibmp[3], const unsigned char *Imsk[3],REFERENCE_TIME rtStart) const

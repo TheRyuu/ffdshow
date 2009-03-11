@@ -37,7 +37,7 @@ void TsubtitleUSF2::print(
     bool wasseek,
     Tfont &f,
     bool forceChange,
-    TrenderedSubtitleLines::TprintPrefs &prefs,
+    TprintPrefs &prefs,
     unsigned char **dst,
     const stride_t *stride)
 {
@@ -46,7 +46,7 @@ void TsubtitleUSF2::print(
    first=false;
    wrd.dx[0]=prefs.dx;wrd.dx[1]=wrd.dx[2]=prefs.dx/2;
    wrd.dy[0]=prefs.dy;wrd.dy[1]=wrd.dy[2]=prefs.dy/2;
-   wrd.dxCharY=wrd.dx[0]; wrd.dyCharY=wrd.dy[0];
+   wrd.dxChar=wrd.dx[0]; wrd.dyChar=wrd.dy[0];
    if (subs->dx!=prefs.dx || subs->dy!=prefs.dy)
     subs->create(prefs.dx,prefs.dy);
    wrd.bmpmskstride[0]=subs->stride[0];wrd.bmpmskstride[1]=subs->stride[1];wrd.bmpmskstride[2]=subs->stride[2];

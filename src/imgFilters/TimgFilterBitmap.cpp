@@ -250,7 +250,7 @@ HRESULT TimgFilterBitmap::process(TfilterQueue::iterator it,TffPict &pict,const 
        w.bmp[i]=bitmap->data[i];
        w.bmpmskstride[i]=bitmap->stride[i];
       }
-     w.dxCharY=w.dx[0];w.dyCharY=w.dy[0];
+     w.dxChar=w.dx[0];w.dyChar=w.dy[0];
     }
 
    if (bitmap->rectFull.dx!=0)
@@ -262,7 +262,7 @@ HRESULT TimgFilterBitmap::process(TfilterQueue::iterator it,TffPict &pict,const 
       else
     #endif
        w.blend=getBlend<Tmmx>(oldmode=cfg->mode);
-     TrenderedSubtitleLines::TprintPrefs prefs(deci,NULL);
+     TprintPrefs prefs(deci,NULL);
      prefs.dx=dx2[0];prefs.dy=dy2[0];
      prefs.xpos=cfg->posx;prefs.ypos=cfg->posy;if (cfg->posmode==1) {prefs.xpos*=-1;prefs.ypos*=-1;}
      prefs.align=cfg->align;

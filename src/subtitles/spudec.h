@@ -86,7 +86,7 @@ private:
  void spudec_decode(unsigned int pts100);
  void scale_image(int x, int y, scale_pixel* table_x, scale_pixel* table_y);
  static void scale_table(unsigned int start_src, unsigned int start_tar, unsigned int end_src, unsigned int end_tar, scale_pixel * table);
- void sws_spu_image(unsigned char *d1, unsigned char *d2, int dw, int dh, stride_t ds, unsigned char *s1, unsigned char *s2, int sw, int sh, stride_t ss,const TrenderedSubtitleLines::TprintPrefs &prefs);
+ void sws_spu_image(unsigned char *d1, unsigned char *d2, int dw, int dh, stride_t ds, unsigned char *s1, unsigned char *s2, int sw, int sh, stride_t ss,const TprintPrefs &prefs);
  static int mkalpha(int i);
  static int canon_alpha(int alpha);
  static unsigned int get_be16(const unsigned char *p);
@@ -109,14 +109,14 @@ public:
     const unsigned char* srcUV,
     const unsigned char *srcaUV,
     int strideUV,
-    const TrenderedSubtitleLines::TprintPrefs &prefs,
+    const TprintPrefs &prefs,
     unsigned char **dst,
     const stride_t *stride);
  void spudec_draw_scaled(
     unsigned int dxs,
     unsigned int dys,
     TdrawAlpha draw_alpha,
-    const TrenderedSubtitleLines::TprintPrefs &prefs,
+    const TprintPrefs &prefs,
     unsigned char **dst,
     const stride_t *stride);
  void spudec_update_palette(unsigned int *palette);

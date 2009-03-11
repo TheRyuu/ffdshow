@@ -243,7 +243,7 @@ void TimgFilterOSD::TosdLine::print(
   {
    if (y<dyY)
     {
-     TrenderedSubtitleLines::TprintPrefs printprefs(deci, &fontSettings);
+     TprintPrefs printprefs(deci, &fontSettings);
      printprefs.isOSD=true;
      printprefs.dx=dxY;
      printprefs.dy=dyY;
@@ -514,7 +514,7 @@ HRESULT TimgFilterOSD::process(TfilterQueue::iterator it,TffPict &pict,const Tfi
 	   TsubtitleFormat subtitleFormat = TsubtitleFormat(parent->config->getHtmlColors());
 	   subUser.format(subtitleFormat);
       }
-     TrenderedSubtitleLines::TprintPrefs printprefs(deci,&cfg->font);
+     TprintPrefs printprefs(deci,&cfg->font);
      printprefs.isOSD=true;
      printprefs.dx=dx1[0];
      printprefs.dy=dy1[0];

@@ -25,7 +25,7 @@
 #include "IffdshowBase.h"
 
 //=================================================== TspuImage ===================================================
-TspuImage::TspuImage(const TspuPlane src[3],const CRect &rcclip,const CRect &rectReal,const CRect &rectOrig,const TrenderedSubtitleLines::TprintPrefs &prefs):TrenderedSubtitleWordBase(false)
+TspuImage::TspuImage(const TspuPlane src[3],const CRect &rcclip,const CRect &rectReal,const CRect &rectOrig,const TprintPrefs &prefs):TrenderedSubtitleWordBase(false)
 {
  const TcspInfo *cspInfo = csp_getInfo(prefs.csp);
  if (rectReal.Width()<0) return;
@@ -50,12 +50,12 @@ TspuImage::TspuImage(const TspuPlane src[3],const CRect &rcclip,const CRect &rec
    bmp[i]=plane[i].c;msk[i]=plane[i].r;
    bmpmskstride[i]=plane[i].stride;
   }
- dxCharY=dx[0];dyCharY=dy[0];
+ dxChar=dx[0];dyChar=dy[0];
  if (scaler) delete scaler;
 }
 
 //=============================================== TspuImage::Tscaler ==============================================
-TspuImage::Tscaler* TspuImage::Tscaler::create(const TrenderedSubtitleLines::TprintPrefs &prefs,int srcdx,int srcdy,int dstdx,int dstdy)
+TspuImage::Tscaler* TspuImage::Tscaler::create(const TprintPrefs &prefs,int srcdx,int srcdy,int dstdx,int dstdy)
 {
  switch (prefs.dvd?0:prefs.vobaamode)
   {
@@ -69,7 +69,7 @@ TspuImage::Tscaler* TspuImage::Tscaler::create(const TrenderedSubtitleLines::Tpr
 }
 
 //============================================ TspuImage::TscalerPoint ============================================
-TspuImage::TscalerPoint::TscalerPoint(const TrenderedSubtitleLines::TprintPrefs &prefs,int srcdx,int srcdy,int dstdx,int dstdy):Tscaler(srcdx,srcdy,dstdx,dstdy)
+TspuImage::TscalerPoint::TscalerPoint(const TprintPrefs &prefs,int srcdx,int srcdy,int dstdx,int dstdy):Tscaler(srcdx,srcdy,dstdx,dstdy)
 {
 }
 void TspuImage::TscalerPoint::scale(const unsigned char *srci,const unsigned char *srca,stride_t srcStride,unsigned char *dsti,unsigned char *dsta,stride_t dstStride)
@@ -99,7 +99,7 @@ void TspuImage::TscalerPoint::scale(const unsigned char *srci,const unsigned cha
 }
 
 //============================================ TspuImage::TscalerApprox ===========================================
-TspuImage::TscalerApprox::TscalerApprox(const TrenderedSubtitleLines::TprintPrefs &prefs,int srcdx,int srcdy,int dstdx,int dstdy):Tscaler(srcdx,srcdy,dstdx,dstdy)
+TspuImage::TscalerApprox::TscalerApprox(const TprintPrefs &prefs,int srcdx,int srcdy,int dstdx,int dstdy):Tscaler(srcdx,srcdy,dstdx,dstdy)
 {
  scalex=0x100*dstdx/srcdx;
  scaley=0x100*dstdy/srcdy;
@@ -139,7 +139,7 @@ void TspuImage::TscalerApprox::scale(const unsigned char *srci,const unsigned ch
 }
 
 //============================================ TspuImage::TscalerFull =============================================
-TspuImage::TscalerFull::TscalerFull(const TrenderedSubtitleLines::TprintPrefs &prefs,int srcdx,int srcdy,int dstdx,int dstdy):Tscaler(srcdx,srcdy,dstdx,dstdy)
+TspuImage::TscalerFull::TscalerFull(const TprintPrefs &prefs,int srcdx,int srcdy,int dstdx,int dstdy):Tscaler(srcdx,srcdy,dstdx,dstdy)
 {
 }
 void TspuImage::TscalerFull::scale(const unsigned char *srci,const unsigned char *srca,stride_t srcStride,unsigned char *dsti,unsigned char *dsta,stride_t dstStride)
@@ -310,7 +310,7 @@ void TspuImage::TscalerFull::scale(const unsigned char *srci,const unsigned char
 }
 
 //============================================ TspuImage::TscalerBilin =============================================
-TspuImage::TscalerBilin::TscalerBilin(const TrenderedSubtitleLines::TprintPrefs &prefs,int srcdx,int srcdy,int dstdx,int dstdy):Tscaler(srcdx,srcdy,dstdx,dstdy)
+TspuImage::TscalerBilin::TscalerBilin(const TprintPrefs &prefs,int srcdx,int srcdy,int dstdx,int dstdy):Tscaler(srcdx,srcdy,dstdx,dstdy)
 {
  table_x=(scale_pixel*)calloc(dstdx,sizeof(scale_pixel));
  table_y=(scale_pixel*)calloc(dstdy,sizeof(scale_pixel));
@@ -367,7 +367,7 @@ void TspuImage::TscalerBilin::scale(const unsigned char *srci,const unsigned cha
 }
 
 //============================================== TspuImage::TscalerSw ==============================================
-TspuImage::TscalerSw::TscalerSw(const TrenderedSubtitleLines::TprintPrefs &prefs,int srcdx,int srcdy,int dstdx,int dstdy):
+TspuImage::TscalerSw::TscalerSw(const TprintPrefs &prefs,int srcdx,int srcdy,int dstdx,int dstdy):
  Tscaler(srcdx,srcdy,dstdx,dstdy),
  approx(prefs,srcdx,srcdy,dstdx,dstdy)
 {
@@ -421,7 +421,7 @@ template<class _mm> void TspuImageSimd<_mm>::print(int startx, int starty, unsig
  _mm::empty();
 }
 template<class _mm> void TspuImageSimd<_mm>::ownprint(
-    const TrenderedSubtitleLines::TprintPrefs &prefs,
+    const TprintPrefs &prefs,
     unsigned char **Idst,
     const stride_t *Istride)
 {

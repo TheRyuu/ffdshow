@@ -13,7 +13,7 @@ private:
       bool wasseek,
       Tfont &f,
       bool forceChange,
-      TrenderedSubtitleLines::TprintPrefs &prefs,
+      TprintPrefs &prefs,
       unsigned char **dst,
       const stride_t *stride);
    virtual Tsubtitle* copy(void);

@@ -22,54 +22,56 @@ enum
 class TrenderedSubtitleLine;
 class TfontManager;
 struct Tconfig;
+
+struct TprintPrefs {
+    TprintPrefs(IffdshowBase *Ideci,const TfontSettings *IfontSettings);
+
+    TprintPrefs() {
+        memset(this,0,sizeof(*this));
+        memset(&fontSettings,0,sizeof(fontSettings));
+    }
+
+    bool operator != (const TprintPrefs &rt) const;
+    bool operator == (const TprintPrefs &rt) const;
+    void debug_print() const;
+
+    void operator = (const TprintPrefs &rt) {
+        memcpy(this, &rt, sizeof(*this));
+    }
+    
+    unsigned int dx,dy,clipdy;
+    bool isOSD;
+    int xpos,ypos;
+    int align;
+    int linespacing;
+    unsigned int sizeDx,sizeDy;
+    int posXpix;
+    bool vobchangeposition;int vobscale,vobaamode,vobaagauss;
+    bool fontchangesplit,fontsplit;
+    int textBorderLR;
+    int tabsize;
+    bool dvd;
+    int shadowMode, shadowAlpha; // Subtitles shadow
+    double shadowSize;
+    bool blur,outlineBlur;
+    int csp;
+    double outlineWidth;
+    Rational sar;
+    bool opaqueBox;
+    int subformat;
+    unsigned int xinput,yinput;
+    TfontSettings fontSettings;
+    YUVcolorA yuvcolor,outlineYUV,shadowYUV;
+
+    // members that are not compared by operator == and !=
+    REFERENCE_TIME rtStart;
+    IffdshowBase *deci;
+    const Tconfig *config;
+};
+
 class TrenderedSubtitleLines: public std::vector<TrenderedSubtitleLine*>
 {
 public:
- struct TprintPrefs {
-     TprintPrefs(IffdshowBase *Ideci,const TfontSettings *IfontSettings);
-
-     TprintPrefs() {
-         memset(this,0,sizeof(*this));
-         memset(&fontSettings,0,sizeof(fontSettings));
-     }
-
-     bool operator != (const TrenderedSubtitleLines::TprintPrefs &rt) const;
-     bool operator == (const TrenderedSubtitleLines::TprintPrefs &rt) const;
-     void debug_print() const;
-
-     void operator = (const TrenderedSubtitleLines::TprintPrefs &rt) {
-         memcpy(this, &rt, sizeof(*this));
-     }
-     
-     unsigned int dx,dy,clipdy;
-     bool isOSD;
-     int xpos,ypos;
-     int align;
-     int linespacing;
-     unsigned int sizeDx,sizeDy;
-     int posXpix;
-     bool vobchangeposition;int vobscale,vobaamode,vobaagauss;
-     bool fontchangesplit,fontsplit;
-     int textBorderLR;
-     int tabsize;
-     bool dvd;
-     int shadowMode, shadowAlpha; // Subtitles shadow
-     double shadowSize;
-     bool blur,outlineBlur;
-     int csp;
-     double outlineWidth;
-     Rational sar;
-     bool opaqueBox;
-     int subformat;
-     unsigned int xinput,yinput;
-     TfontSettings fontSettings;
-     YUVcolorA yuvcolor,outlineYUV,shadowYUV;
-
-     // members that are not compared by operator == and !=
-     REFERENCE_TIME rtStart;
-     IffdshowBase *deci;
-     const Tconfig *config;
- };
  TrenderedSubtitleLines(void) {}
  TrenderedSubtitleLines(TrenderedSubtitleLine *ln) {push_back(ln);}
  /**
@@ -152,13 +154,13 @@ public:
   }
  virtual ~TrenderedSubtitleWordBase();
  unsigned int dx[3],dy[3];
- unsigned int dxCharY,dyCharY;
+ unsigned int dxChar,dyChar;
  unsigned char *bmp[3],*msk[3];stride_t bmpmskstride[3];
  unsigned char *outline[3],*shadow[3];
  virtual void print(int startx, int starty, unsigned int dx[3],int dy[3],unsigned char *dstLn[3],const stride_t stride[3],const unsigned char *bmp[3],const unsigned char *msk[3],REFERENCE_TIME rtStart=REFTIME_INVALID) const =0;
  int csp;
- virtual int get_ascent64() const {return dy[0]*8;}
- virtual int get_descent64() const {return 0;}
+ virtual double get_ascent() const {return dy[0];}
+ virtual double get_descent() const {return 0;}
  virtual int get_baseline() const {return dy[0];}
  virtual CRect getOverhang() const {return CRect();}
  virtual size_t getMemorySize() const {return 0;}
@@ -180,9 +182,11 @@ class TrenderedTextSubtitleWord;
 class TrenderedSubtitleLine : public std::vector<TrenderedSubtitleWordBase*>
 {
  bool firstrun;
+ double emptyHeight; // This is used as charHeight if empty.
 public:
  TrenderedSubtitleLine(void):firstrun(true) {props.reset();}
  TrenderedSubtitleLine(TSubtitleProps p):firstrun(true) {props=p;}
+ TrenderedSubtitleLine(TSubtitleProps p, double IemptyHeight):firstrun(true),emptyHeight(IemptyHeight) {props=p;}
  TrenderedSubtitleLine(TrenderedSubtitleWordBase *w):firstrun(true) {push_back(w);props.reset();}
  unsigned int width(void) const;
  unsigned int height(void) const;
@@ -199,7 +203,7 @@ public:
  void print(
     int startx,
     int starty,
-    const TrenderedSubtitleLines::TprintPrefs &prefs,
+    const TprintPrefs &prefs,
     unsigned int prefsdx,
     unsigned int prefsdy,
     unsigned char **dst,
@@ -224,7 +228,7 @@ private:
  const Tsubtitle *oldsub;
  int oldCsp;
  short matrix[5][5];
- void prepareC(TsubtitleText *sub,const TrenderedSubtitleLines::TprintPrefs &prefs,bool forceChange);
+ void prepareC(TsubtitleText *sub,const TprintPrefs &prefs,bool forceChange);
 public:
  friend struct TsubtitleText;
  //TfontSettings *fontSettings;
@@ -238,7 +242,7 @@ public:
  int print(
     TsubtitleText *sub,
     bool forceChange,
-    const TrenderedSubtitleLines::TprintPrefs &prefs,
+    const TprintPrefs &prefs,
     unsigned char **dst,
     const stride_t *stride);
  /**
@@ -246,7 +250,7 @@ public:
   * lines must be filled before called
   */
  void print(
-    const TrenderedSubtitleLines::TprintPrefs &prefs,
+    const TprintPrefs &prefs,
     unsigned char **dst,
     const stride_t *stride);
  void reset(void)

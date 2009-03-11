@@ -661,7 +661,7 @@ void Tspudec::scale_image(int x, int y, scale_pixel* table_x, scale_pixel* table
 }
 
 void Tspudec::sws_spu_image(unsigned char *d1, unsigned char *d2, int dw, int dh, stride_t ds,
-        unsigned char *s1, unsigned char *s2, int sw, int sh, stride_t ss,const TrenderedSubtitleLines::TprintPrefs &prefs)
+        unsigned char *s1, unsigned char *s2, int sw, int sh, stride_t ss,const TprintPrefs &prefs)
 {
  if (!filter.lumH || oldgauss != prefs.vobaagauss)
   {
@@ -683,7 +683,7 @@ void Tspudec::spudec_draw_scaled(
     unsigned int dxs,
     unsigned int dys,
     TdrawAlpha draw_alpha,
-    const TrenderedSubtitleLines::TprintPrefs &prefs,
+    const TprintPrefs &prefs,
     unsigned char **Idst,
     const stride_t *Istride)
 {

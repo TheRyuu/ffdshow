@@ -41,7 +41,7 @@ TrenderedSubtitleWordBase::~TrenderedSubtitleWordBase()
 }
 
 //============================== TrenderedSubtitleLine::TprintPrefs ===============================
-TrenderedSubtitleLines::TprintPrefs::TprintPrefs(IffdshowBase *Ideci,const TfontSettings *IfontSettings) {
+TprintPrefs::TprintPrefs(IffdshowBase *Ideci,const TfontSettings *IfontSettings) {
      memset(this,0,sizeof(this)); // This doesn't seem to help after optimization.
      dx = dy = 0;
      isOSD=false;
@@ -77,7 +77,7 @@ TrenderedSubtitleLines::TprintPrefs::TprintPrefs(IffdshowBase *Ideci,const Tfont
      shadowYUV=YUVcolorA(fontSettings.shadowColor,fontSettings.shadowAlpha);
  }
 
-bool TrenderedSubtitleLines::TprintPrefs::operator != (const TrenderedSubtitleLines::TprintPrefs &rt) const
+bool TprintPrefs::operator != (const TprintPrefs &rt) const
 {
      // compare all members except rtStart
      if (dx == rt.dx && dy == rt.dy && clipdy == rt.clipdy
@@ -108,7 +108,7 @@ bool TrenderedSubtitleLines::TprintPrefs::operator != (const TrenderedSubtitleLi
         return true;
  }
 
- bool TrenderedSubtitleLines::TprintPrefs::operator == (const TrenderedSubtitleLines::TprintPrefs &rt) const
+ bool TprintPrefs::operator == (const TprintPrefs &rt) const
  {
      // compare all members except rtStart
      if (dx == rt.dx && dy == rt.dy && clipdy == rt.clipdy
@@ -139,7 +139,7 @@ bool TrenderedSubtitleLines::TprintPrefs::operator != (const TrenderedSubtitleLi
         return false;
  }
 
-void TrenderedSubtitleLines::TprintPrefs::debug_print() const
+void TprintPrefs::debug_print() const
 {
      DPRINTF(_l("dx %d,dy %d,clipdy %d,isOSD %d,xpos %d,ypos %d,align %d,linespacing %d,sizeDx %d,sizeDy %d,posXpix %d,")
      _l("vobchangeposition %d,vobscale %d,vobaamode %d,vobaagauss %d,")
@@ -158,7 +158,7 @@ unsigned int TrenderedSubtitleLine::width(void) const
   return 0;
  unsigned int dx=0;
  for (const_iterator w=begin();w!=end();w++)
-  dx+=(*w)->dxCharY;
+  dx+=(*w)->dxChar;
  return dx;
 }
 
@@ -178,14 +178,14 @@ unsigned int TrenderedSubtitleLine::height(void) const
 double TrenderedSubtitleLine::charHeight(void) const
 {
  if (empty())
-  return (double)(props.m_ascent64 + props.m_descent64)/16.0;
- int aboveBaseline=0,belowBaseline=0;
+  return emptyHeight;
+ double aboveBaseline=0,belowBaseline=0;
  for (const_iterator w=begin();w!=end();w++)
   {
-   aboveBaseline=std::max<int>(aboveBaseline,(*w)->get_ascent64());
-   belowBaseline=std::max<int>(belowBaseline,(*w)->get_descent64());
+   aboveBaseline=std::max<double>(aboveBaseline,(*w)->get_ascent());
+   belowBaseline=std::max<double>(belowBaseline,(*w)->get_descent());
   }
- return (double)(aboveBaseline + belowBaseline)/8.0;
+ return aboveBaseline + belowBaseline;
 }
 
 unsigned int TrenderedSubtitleLine::baselineHeight(void) const
@@ -221,7 +221,7 @@ int TrenderedSubtitleLine::get_bottomOverhang(void) const
  int bottomOverhang=0;
  for (const_iterator w=begin();w!=end();w++)
   {
-   bottomOverhang=std::max(bottomOverhang, int((int)(*w)->dxCharY - (*w)->get_baseline() + (*w)->getOverhang().bottom));
+   bottomOverhang=std::max(bottomOverhang, int((int)(*w)->dxChar - (*w)->get_baseline() + (*w)->getOverhang().bottom));
   }
  return bottomOverhang+baseline - charHeight();
 }
@@ -235,7 +235,7 @@ int TrenderedSubtitleLine::get_leftOverhang(void) const
  for (const_iterator w=begin();w!=end();w++)
   {
    leftOverhang=std::min(leftOverhang, int(dx - (*w)->getOverhang().left));
-   dx+=(*w)->dxCharY;
+   dx+=(*w)->dxChar;
   }
  return -leftOverhang;
 }
@@ -248,7 +248,7 @@ int TrenderedSubtitleLine::get_rightOverhang(void) const
  int rightOverhang=0;
  for (const_iterator w=begin();w!=end();w++)
   {
-   dx+=(*w)->dxCharY;
+   dx+=(*w)->dxChar;
    rightOverhang=std::max(rightOverhang, int(dx + (*w)->getOverhang().right));
   }
  return rightOverhang-dx;
@@ -265,13 +265,13 @@ void TrenderedSubtitleLine::prepareKaraoke(void)
   {
    if (((TrenderedTextSubtitleWord *)(*w))->props.karaokeNewWord)
     {
-     sequenceWidth = (*w)->dxCharY;
+     sequenceWidth = (*w)->dxChar;
      for (iterator s = w + 1 ; s != end() ; s++)
       {
        if (((TrenderedTextSubtitleWord *)(*s))->props.karaokeNewWord)
         break;
        else
-        sequenceWidth += (*s)->dxCharY;
+        sequenceWidth += (*s)->dxChar;
       }
      if (sequenceWidth <= 0) continue;
      if (karaokeStart == REFTIME_INVALID)
@@ -280,7 +280,7 @@ void TrenderedSubtitleLine::prepareKaraoke(void)
       {
        if (((TrenderedTextSubtitleWord *)(*s))->props.karaokeNewWord && s != w)
         break;
-       ((TrenderedTextSubtitleWord *)(*s))->props.karaokeDuration *= (double)(*s)->dxCharY / sequenceWidth;
+       ((TrenderedTextSubtitleWord *)(*s))->props.karaokeDuration *= (double)(*s)->dxChar / sequenceWidth;
        ((TrenderedTextSubtitleWord *)(*s))->props.karaokeStart = karaokeStart;
        karaokeStart += ((TrenderedTextSubtitleWord *)(*s))->props.karaokeDuration;
       }
@@ -290,7 +290,7 @@ void TrenderedSubtitleLine::prepareKaraoke(void)
 
 void TrenderedSubtitleLine::print(
     int startx,int starty,
-    const TrenderedSubtitleLines::TprintPrefs &prefs,
+    const TprintPrefs &prefs,
     unsigned int prefsdx,
     unsigned int prefsdy,
     unsigned char **dst,
@@ -298,7 +298,7 @@ void TrenderedSubtitleLine::print(
 {
  int baseline=baselineHeight();
  const TcspInfo *cspInfo = csp_getInfo(prefs.csp);
- for (const_iterator w=begin();w!=end() && startx<(int)prefsdx;startx+=(*w)->dxCharY,w++)
+ for (const_iterator w=begin();w!=end() && startx<(int)prefsdx;startx+=(*w)->dxChar,w++)
   {
    TrenderedSubtitleWordBase *word = *w;
    startx += word->getPathOffsetX();
@@ -761,7 +761,7 @@ void Tfont::done(void)
  oldsub=NULL;
 }
 
-void Tfont::prepareC(TsubtitleText *sub,const TrenderedSubtitleLines::TprintPrefs &prefs,bool forceChange)
+void Tfont::prepareC(TsubtitleText *sub,const TprintPrefs &prefs,bool forceChange)
 {
     sub->prepareGlyph(prefs,*this,forceChange);
     lines.insert(lines.end(),sub->lines.begin(),sub->lines.end());
@@ -770,7 +770,7 @@ void Tfont::prepareC(TsubtitleText *sub,const TrenderedSubtitleLines::TprintPref
 int Tfont::print(
     TsubtitleText *sub,
     bool forceChange,
-    const TrenderedSubtitleLines::TprintPrefs &prefs,
+    const TprintPrefs &prefs,
     unsigned char **dst,
     const stride_t *stride)
 {
@@ -785,7 +785,7 @@ int Tfont::print(
 }
 
 void Tfont::print(
-    const TrenderedSubtitleLines::TprintPrefs &prefs,
+    const TprintPrefs &prefs,
     unsigned char **dst,
     const stride_t *stride)
 {

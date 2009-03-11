@@ -43,9 +43,9 @@ private:
  const char_t* findAutoSubFlnm(const TsubtitlesSettings *cfg);
 
  bool sequenceEnded;
- TrenderedSubtitleLines::TprintPrefs oldprefs;
+ TprintPrefs oldprefs;
 
- struct TsubPrintPrefs : TrenderedSubtitleLines::TprintPrefs
+ struct TsubPrintPrefs : TprintPrefs
   {
    TsubPrintPrefs(
     unsigned int Idx[4],
@@ -68,13 +68,13 @@ private:
      static const int max_memory_usage = 40000000; // 40MB
      TimgFilterSubtitles *parent;
      boost::thread thread;
-     TrenderedSubtitleLines::TprintPrefs copied_prefs;
+     TprintPrefs copied_prefs;
      size_t current_pos;
      Tsubtitles *oldpin;
      HANDLE platform_specific_thread;
 
      int threadCmd; // 0:end 1: continue
-     TrenderedSubtitleLines::TprintPrefs shared_prefs;
+     TprintPrefs shared_prefs;
      boost::mutex mutex_prefs;
      boost::condition_variable condv_prefs;
 
@@ -99,7 +99,8 @@ private:
 
  public:
      TglyphThread(TimgFilterSubtitles *Iparent, IffdshowBase *deci);
-     ~TglyphThread();
+     ~TglyphThread() {};
+     void done();
       friend class TimgFilterSubtitles;
  } glyphThread;
 

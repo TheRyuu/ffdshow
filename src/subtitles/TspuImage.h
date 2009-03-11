@@ -41,7 +41,7 @@ protected:
   {
   public:
    int srcdx,srcdy,dstdx,dstdy;
-   static Tscaler *create(const TrenderedSubtitleLines::TprintPrefs &prefs,int srcdx,int srcdy,int dstdx,int dstdy);
+   static Tscaler *create(const TprintPrefs &prefs,int srcdx,int srcdy,int dstdx,int dstdy);
    Tscaler(int Isrcdx,int Isrcdy,int Idstdx,int Idstdy):srcdx(Isrcdx),srcdy(Isrcdy),dstdx(Idstdx),dstdy(Idstdy) {}
    virtual ~Tscaler() {}
    virtual void scale(const unsigned char *srci,const unsigned char *srca,stride_t srcStride,unsigned char *dsti,unsigned char *dsta,stride_t dstStride)=0;
@@ -49,7 +49,7 @@ protected:
  class TscalerPoint :public Tscaler
   {
   public:
-   TscalerPoint(const TrenderedSubtitleLines::TprintPrefs &prefs,int srcdx,int srcdy,int dstdx,int dstdy);
+   TscalerPoint(const TprintPrefs &prefs,int srcdx,int srcdy,int dstdx,int dstdy);
    virtual void scale(const unsigned char *srci,const unsigned char *srca,stride_t srcStride,unsigned char *dsti,unsigned char *dsta,stride_t dstStride);
   };
  class TscalerApprox :public Tscaler
@@ -57,13 +57,13 @@ protected:
   private:
    unsigned int scalex,scaley;
   public:
-   TscalerApprox(const TrenderedSubtitleLines::TprintPrefs &prefs,int srcdx,int srcdy,int dstdx,int dstdy);
+   TscalerApprox(const TprintPrefs &prefs,int srcdx,int srcdy,int dstdx,int dstdy);
    virtual void scale(const unsigned char *srci,const unsigned char *srca,stride_t srcStride,unsigned char *dsti,unsigned char *dsta,stride_t dstStride);
   };
  class TscalerFull :public Tscaler
   {
   public:
-   TscalerFull(const TrenderedSubtitleLines::TprintPrefs &prefs,int srcdx,int srcdy,int dstdx,int dstdy);
+   TscalerFull(const TprintPrefs &prefs,int srcdx,int srcdy,int dstdx,int dstdy);
    virtual void scale(const unsigned char *srci,const unsigned char *srca,stride_t srcStride,unsigned char *dsti,unsigned char *dsta,stride_t dstStride);
   };
  class TscalerBilin :public Tscaler
@@ -81,7 +81,7 @@ protected:
      return alpha?256-alpha:0;
     }
   public:
-   TscalerBilin(const TrenderedSubtitleLines::TprintPrefs &prefs,int srcdx,int srcdy,int dstdx,int dstdy);
+   TscalerBilin(const TprintPrefs &prefs,int srcdx,int srcdy,int dstdx,int dstdy);
    virtual ~TscalerBilin();
    virtual void scale(const unsigned char *srci,const unsigned char *srca,stride_t srcStride,unsigned char *dsti,unsigned char *dsta,stride_t dstStride);
   };
@@ -93,14 +93,14 @@ protected:
    Tlibmplayer *libmplayer;
    TscalerApprox approx;
   public:
-   TscalerSw(const TrenderedSubtitleLines::TprintPrefs &prefs,int srcdx,int srcdy,int dstdx,int dstdy);
+   TscalerSw(const TprintPrefs &prefs,int srcdx,int srcdy,int dstdx,int dstdy);
    virtual ~TscalerSw();
    virtual void scale(const unsigned char *srci,const unsigned char *srca,stride_t srcStride,unsigned char *dsti,unsigned char *dsta,stride_t dstStride);
   };
 public:
- TspuImage(const TspuPlane src[3],const CRect &rcclip,const CRect &rectReal,const CRect &rectOrig,const TrenderedSubtitleLines::TprintPrefs &prefs);
+ TspuImage(const TspuPlane src[3],const CRect &rcclip,const CRect &rectReal,const CRect &rectOrig,const TprintPrefs &prefs);
  virtual void ownprint(
-    const TrenderedSubtitleLines::TprintPrefs &prefs,
+    const TprintPrefs &prefs,
     unsigned char **dst,
     const stride_t *stride)=0;
 };
@@ -108,9 +108,9 @@ public:
 template<class _mm> struct TspuImageSimd : public TspuImage
 {
 public:
- TspuImageSimd(const TspuPlane src[3],const CRect &rcclip,const CRect &rectReal,const CRect &rectOrig,const TrenderedSubtitleLines::TprintPrefs &prefs):TspuImage(src,rcclip,rectReal,rectOrig,prefs) {}
+ TspuImageSimd(const TspuPlane src[3],const CRect &rcclip,const CRect &rectReal,const CRect &rectOrig,const TprintPrefs &prefs):TspuImage(src,rcclip,rectReal,rectOrig,prefs) {}
  virtual void ownprint(
-    const TrenderedSubtitleLines::TprintPrefs &prefs,
+    const TprintPrefs &prefs,
     unsigned char **dst,
     const stride_t *stride);
  virtual void print(int startx, int starty, unsigned int dx[3],int dy[3],unsigned char *dstLn[3],const stride_t stride[3],const unsigned char *bmp[3],const unsigned char *msk[3],REFERENCE_TIME rtStart=REFTIME_INVALID) const;

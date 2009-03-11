@@ -396,7 +396,7 @@ void TsubtitleDVD::drawPixels(CPoint pt,int len,const AM_DVD_YUV &c,const CRect 
   }
 }
 
-void TsubtitleDVD::createImage(const TspuPlane src[3],const CRect &rcclip,CRect rectReal,const TrenderedSubtitleLines::TprintPrefs &prefs) const
+void TsubtitleDVD::createImage(const TspuPlane src[3],const CRect &rcclip,CRect rectReal,const TprintPrefs &prefs) const
 {
  lines.clear();
  rectReal.bottom++;rectReal.right++;
@@ -409,7 +409,7 @@ void TsubtitleDVD::createImage(const TspuPlane src[3],const CRect &rcclip,CRect 
  lines.push_back(new TrenderedSubtitleLine(image));
 }
 void TsubtitleDVD::linesprint(
-    const TrenderedSubtitleLines::TprintPrefs &prefs,
+    const TprintPrefs &prefs,
     unsigned char **dst,
     const stride_t *stride) const
 {
@@ -424,7 +424,7 @@ void TsubtitleDVD::print(
     bool wasseek,
     Tfont &f,
     bool forceChange,
-    TrenderedSubtitleLines::TprintPrefs &prefs,
+    TprintPrefs &prefs,
     unsigned char **dst,
     const stride_t *stride)
 {
@@ -639,7 +639,7 @@ void TsubtitleSVCD::print(
     bool wasseek,
     Tfont &f,
     bool forceChange,
-    const TrenderedSubtitleLines::TprintPrefs &prefs,
+    const TprintPrefs &prefs,
     unsigned char **dst,
     const stride_t *stride) const
 {
@@ -758,7 +758,7 @@ void TsubtitleCVD::print(
     bool wasseek,
     Tfont &f,
     bool forceChange,
-    const TrenderedSubtitleLines::TprintPrefs &prefs,
+    const TprintPrefs &prefs,
     unsigned char **dst,
     const stride_t *stride) const
 {

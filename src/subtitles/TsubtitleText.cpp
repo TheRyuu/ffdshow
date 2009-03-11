@@ -31,6 +31,7 @@
 #include "IffdshowDecVideo.h"
 #include "ffdebug.h"
 #include "TsubreaderMplayer.h"
+#include "TtoGdiFont.h"
 
 #define _L1(x) L##x
 
@@ -1320,7 +1321,7 @@ void TsubtitleText::print(
     bool wasseek,
     Tfont &f,
     bool forceChange,
-    TrenderedSubtitleLines::TprintPrefs &prefs,
+    TprintPrefs &prefs,
     unsigned char **dst,
     const stride_t *stride)
 {
@@ -1328,7 +1329,7 @@ void TsubtitleText::print(
     f.prepareC(this,prefs,false);
 }
 
-size_t TsubtitleText::prepareGlyph(const TrenderedSubtitleLines::TprintPrefs &prefs, Tfont &font, bool forceChange)
+size_t TsubtitleText::prepareGlyph(const TprintPrefs &prefs, Tfont &font, bool forceChange)
 {
     size_t used_memory = 0;
     if (!rendering_ready || forceChange || old_prefs != prefs) {
@@ -1366,18 +1367,14 @@ size_t TsubtitleText::prepareGlyph(const TrenderedSubtitleLines::TprintPrefs &pr
             int splitdxMax=splitdx0;
             if (l->empty()) {
                 LOGFONT lf;
-                HGDIOBJ old = l->props.toGdiFont(font.hdc, lf, prefs.fontSettings, dx, dy, prefs.clipdy, prefs.sar, fontManager, gdi_font_scale);
-                if (!font.oldFont)
-                    font.oldFont=old;
-                TrenderedSubtitleLine *line=new TrenderedSubtitleLine(l->props);
+                TtoGdiFont gf(l->props, font.hdc, lf, prefs, dx, dy, fontManager);
+                // empty lines have half height.
+                TrenderedSubtitleLine *line=new TrenderedSubtitleLine(l->props, gf.getHeight() / 2.0);
                 lines.push_back(line);
-                if (old)
-                    SelectObject(font.hdc,old);
             }
             for (TsubtitleLine::const_iterator w=l->begin();w!=l->end();w++) {
                 LOGFONT lf;
-                HGDIOBJ old = w->props.toGdiFont(font.hdc, lf, prefs.fontSettings, dx, dy, prefs.clipdy, prefs.sar, fontManager, gdi_font_scale);
-                if (!font.oldFont) font.oldFont=old;
+                TtoGdiFont gf(w->props, font.hdc, lf, prefs, dx, dy, fontManager);
                 SetTextCharacterExtra(font.hdc,w->props.spacing==INT_MIN ? prefs.fontSettings.spacing : w->props.get_spacing(dy, prefs.clipdy, gdi_font_scale));
                 const wchar_t *p=*w;
                 if (*p) { // drop empty words
@@ -1407,8 +1404,6 @@ size_t TsubtitleText::prepareGlyph(const TrenderedSubtitleLines::TprintPrefs &pr
                         charCount++;
                     }
                 }
-                if (old)
-                    SelectObject(font.hdc,old);
             }
             if (allStr.empty()) continue;
             if (wordWrapMode==-1) {
@@ -1430,7 +1425,7 @@ size_t TsubtitleText::prepareGlyph(const TrenderedSubtitleLines::TprintPrefs &pr
             for (TsubtitleLine::const_iterator w0=l->begin();w0!=l->end();w0++) {
                 TsubtitleWord w(*w0);
                 LOGFONT lf;
-                HGDIOBJ old = w.props.toGdiFont(font.hdc, lf, prefs.fontSettings, dx, dy, prefs.clipdy, prefs.sar, fontManager, gdi_font_scale);
+                TtoGdiFont gf(w.props, font.hdc, lf, prefs, dx, dy, fontManager);
                 SetTextCharacterExtra(font.hdc,w.props.spacing==INT_MIN ? prefs.fontSettings.spacing : w.props.get_spacing(dy, prefs.clipdy, gdi_font_scale));
                 if (!line) {
                     line=new TrenderedSubtitleLine(w.props);
@@ -1511,7 +1506,6 @@ size_t TsubtitleText::prepareGlyph(const TrenderedSubtitleLines::TprintPrefs &pr
                         }
                     } while(cy<wordWrap.getLineCount());
                 }
-                SelectObject(font.hdc,old);
             }
             if (line) {
                 if (!line->empty()) {
@@ -1531,7 +1525,7 @@ size_t TsubtitleText::prepareGlyph(const TrenderedSubtitleLines::TprintPrefs &pr
 TrenderedTextSubtitleWord* TsubtitleText::newWord(
     const wchar_t *s,
     size_t slen,
-    TrenderedSubtitleLines::TprintPrefs prefs,
+    TprintPrefs prefs,
     const TsubtitleWord *w,
     const LOGFONT &lf,
     const Tfont &font,
@@ -1597,7 +1591,7 @@ TrenderedTextSubtitleWord* TsubtitleText::newWord(
                                  w->props,
                                  gdi_font_scale);
 
-    if (rw->dxCharY && rw->dyCharY) {
+    if (rw->dxChar && rw->dyChar) {
         return rw;
     } else {
         delete rw;
@@ -1620,7 +1614,7 @@ void TsubtitleTexts::print(
     bool wasseek,
     Tfont &f,
     bool forceChange,
-    TrenderedSubtitleLines::TprintPrefs &prefs,
+    TprintPrefs &prefs,
     unsigned char **dst,
     const stride_t *stride)
 {

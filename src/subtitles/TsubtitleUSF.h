@@ -18,7 +18,7 @@ public:
     bool wasseek,
     Tfont &f,
     bool forceChange,
-    TrenderedSubtitleLines::TprintPrefs &prefs,
+    TprintPrefs &prefs,
     unsigned char **dst,
     const stride_t *stride);
  virtual Tsubtitle* create(void) {return new TsubtitleUSF2(subs,idx,start,stop);}

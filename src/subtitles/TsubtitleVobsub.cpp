@@ -49,7 +49,7 @@ void TsubtitleVobsub::drawalpha(
     const unsigned char* srcUV,
     const unsigned char *srcaUV,
     int strideUV,
-    const TrenderedSubtitleLines::TprintPrefs &prefs,
+    const TprintPrefs &prefs,
     unsigned char **dst,
     const stride_t *stride)
 {
@@ -61,7 +61,7 @@ void TsubtitleVobsub::drawalpha(
    wrd.dx[i]=w>>cspInfo->shiftX[i];
    wrd.dy[i]=h>>cspInfo->shiftY[i];
   }
- wrd.dxCharY=wrd.dx[0]; wrd.dyCharY=wrd.dy[0];
+ wrd.dxChar=wrd.dx[0]; wrd.dyChar=wrd.dy[0];
  wrd.bmp[0]=(unsigned char*)srcY;wrd.msk[0]=(unsigned char*)srcaY;
  wrd.bmp[1]=wrd.bmp[2]=(unsigned char*)srcUV;wrd.msk[1]=wrd.msk[2]=(unsigned char*)srcaUV;
  wrd.bmpmskstride[0]=strideY;wrd.bmpmskstride[1]=wrd.bmpmskstride[2]=strideUV;
@@ -69,7 +69,7 @@ void TsubtitleVobsub::drawalpha(
  TrenderedSubtitleLines lines(&ln);
  if (!prefs.vobchangeposition)
   {
-   TrenderedSubtitleLines::TprintPrefs prefs2=prefs;
+   TprintPrefs prefs2=prefs;
    prefs2.xpos=-x0;prefs2.ypos=-y0;
    lines.print(prefs2,dst,stride);
   }
@@ -81,7 +81,7 @@ void TsubtitleVobsub::print(
     bool wasseek,
     Tfont &f,
     bool forceChange,
-    TrenderedSubtitleLines::TprintPrefs &prefs,
+    TprintPrefs &prefs,
     unsigned char **dst,
     const stride_t *stride)
 {

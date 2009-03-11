@@ -40,7 +40,7 @@ TimgFilterSubtitles::TsubPrintPrefs::TsubPrintPrefs(
     const Tconfig *Iconfig,
     bool Idvd,
     const TfontSettings *fontSettings)
- :TrenderedSubtitleLines::TprintPrefs(Ideci,fontSettings)
+ :TprintPrefs(Ideci,fontSettings)
 {
     csp=pict.csp;
     dx=pict.rectFull.dx;//Idx[0];
@@ -99,6 +99,7 @@ TimgFilterSubtitles::~TimgFilterSubtitles()
       delete e->second;
     ::free(oldFontCfg);::free(oldFontCCcfg);
     if (cc) delete cc;
+    glyphThread.done();
 }
 
 void TimgFilterSubtitles::onSizeChange()
@@ -614,7 +615,7 @@ void TimgFilterSubtitles::TglyphThread::glyphThreadFunc()
     } while(1);
 }
 
-TimgFilterSubtitles::TglyphThread::~TglyphThread()
+void TimgFilterSubtitles::TglyphThread::done()
 {
     {
         boost::unique_lock<boost::mutex> lock(mutex_prefs);

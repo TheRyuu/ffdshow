@@ -53,9 +53,9 @@ protected:
  void drawPixel(const CPoint &pt,const AM_DVD_YUV &c,CRect &rectReal,TspuPlane plane[3]) const;
  void drawPixels(CPoint pt,int len,const AM_DVD_YUV &c,const CRect &rc,CRect &rectReal,TspuPlane plane[3]) const;
  mutable TrenderedSubtitleLines lines;
- void createImage(const TspuPlane src[3],const CRect &rcclip,CRect rectReal,const TrenderedSubtitleLines::TprintPrefs &prefs) const;
+ void createImage(const TspuPlane src[3],const CRect &rcclip,CRect rectReal,const TprintPrefs &prefs) const;
  void linesprint(
-    const TrenderedSubtitleLines::TprintPrefs &prefs,
+    const TprintPrefs &prefs,
     unsigned char **dst,
     const stride_t *stride) const;
 public:
@@ -71,7 +71,7 @@ public:
     bool wasseek,
     Tfont &f,
     bool forceChange,
-    TrenderedSubtitleLines::TprintPrefs &prefs,
+    TprintPrefs &prefs,
     unsigned char **dst,
     const stride_t *stride);
  virtual Tsubtitle* copy(void) {return new TsubtitleDVD(*this);}
@@ -99,7 +99,7 @@ public:
     bool wasseek,
     Tfont &f,
     bool forceChange,
-    const TrenderedSubtitleLines::TprintPrefs &prefs,
+    const TprintPrefs &prefs,
     unsigned char **dst,
     const stride_t *stride) const;
 };
@@ -122,7 +122,7 @@ public:
     bool wasseek,
     Tfont &f,
     bool forceChange,
-    const TrenderedSubtitleLines::TprintPrefs &prefs,
+    const TprintPrefs &prefs,
     unsigned char **dst,
     const stride_t *stride) const;
 };

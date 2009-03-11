@@ -227,7 +227,7 @@ private:
     TrenderedSubtitleLines lines;
     bool rendering_ready;
 
-    TrenderedSubtitleLines::TprintPrefs old_prefs;
+    TprintPrefs old_prefs;
     boost::mutex mutex_lines;
 public:
     friend class Tfont;
@@ -300,7 +300,7 @@ public:
        bool wasseek,
        Tfont &f,
        bool forceChange,
-       TrenderedSubtitleLines::TprintPrefs &prefs,
+       TprintPrefs &prefs,
        unsigned char **dst,
        const stride_t *stride);
 
@@ -318,9 +318,9 @@ public:
     virtual bool isText(void) const {return true;}
 
     // return used memory
-    size_t prepareGlyph(const TrenderedSubtitleLines::TprintPrefs &prefs, Tfont &font,bool forceChange);
+    size_t prepareGlyph(const TprintPrefs &prefs, Tfont &font,bool forceChange);
 
-    int get_splitdx_for_new_line(const TsubtitleWord &w,int splitdx,int dx, const TrenderedSubtitleLines::TprintPrefs &prefs, int gdi_font_scale, IffdshowBase *deci) const {
+    int get_splitdx_for_new_line(const TsubtitleWord &w,int splitdx,int dx, const TprintPrefs &prefs, int gdi_font_scale, IffdshowBase *deci) const {
         // This method calculates the maximum length of the line considering the left/right margin and eventually
         // basing on the position set through a position tag
         return w.props.get_maxWidth(dx, prefs.subformat, deci) * gdi_font_scale;
@@ -334,7 +334,7 @@ public:
     TrenderedTextSubtitleWord* TsubtitleText::newWord(
        const wchar_t *s,
        size_t slen,
-       TrenderedSubtitleLines::TprintPrefs prefs,
+       TprintPrefs prefs,
        const TsubtitleWord *w,
        const LOGFONT &lf,
        const Tfont &font,
@@ -366,7 +366,7 @@ struct TsubtitleTexts :
        bool wasseek,
        Tfont &f,
        bool forceChange,
-       TrenderedSubtitleLines::TprintPrefs &prefs,
+       TprintPrefs &prefs,
        unsigned char **dst,
        const stride_t *stride);
 };
