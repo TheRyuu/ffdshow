@@ -1194,7 +1194,7 @@ void TsubtitleLine::applyWords(const TsubtitleFormat::Twords &words)
   {
    karaokeNewWord |= w->props.karaokeNewWord;
    this->props=w->props;
-   if (w->i1==w->i2)
+   if (w->i1==w->i2 && !karaokeNewWord)
     continue;
    if (w->i1==0 && w->i2==this->front().size())
     {
@@ -1377,32 +1377,30 @@ size_t TsubtitleText::prepareGlyph(const TprintPrefs &prefs, Tfont &font, bool f
                 TtoGdiFont gf(w->props, font.hdc, lf, prefs, dx, dy, fontManager);
                 SetTextCharacterExtra(font.hdc,w->props.spacing==INT_MIN ? prefs.fontSettings.spacing : w->props.get_spacing(dy, prefs.clipdy, gdi_font_scale));
                 const wchar_t *p=*w;
-                if (*p) { // drop empty words
-                    int xscale=w->props.get_xscale(
-                            prefs.fontSettings.xscale,
-                            prefs.sar,
-                            prefs.fontSettings.aspectAuto,
-                            prefs.fontSettings.overrideScale)
-                        * 100
-                        / w->props.get_yscale(
-                            prefs.fontSettings.yscale,prefs.sar,
-                            prefs.fontSettings.aspectAuto,
-                            prefs.fontSettings.overrideScale);
-                    wordWrapMode=w->props.wrapStyle;
-                    splitdxMax=get_splitdx_for_new_line(*w, splitdx0, dx, prefs, gdi_font_scale, deci);
-                    allStr+=p;
-                    pwidths=(int*)width.resize((allStr.size()+1)*sizeof(int));
-                    left=nextleft;
-                    int nfit;
-                    SIZE sz;
-                    size_t strlenp=strlen(p);
-                    int *ptempwidths=(int*)tempwidth.alloc((strlenp+1)*sizeof(int)*2); // *2 to work around Layer For Unicode on Windows 9x.
-                    GetTextExtentExPointW(font.hdc,p,(int)strlenp,INT_MAX,&nfit,ptempwidths,&sz);
-                    for (size_t x=0;x<strlenp;x++) {
-                        nextleft=(double)ptempwidths[x]*xscale/100+left;
-                        pwidths[charCount]=int(nextleft);
-                        charCount++;
-                    }
+                int xscale=w->props.get_xscale(
+                        prefs.fontSettings.xscale,
+                        prefs.sar,
+                        prefs.fontSettings.aspectAuto,
+                        prefs.fontSettings.overrideScale)
+                    * 100
+                    / w->props.get_yscale(
+                        prefs.fontSettings.yscale,prefs.sar,
+                        prefs.fontSettings.aspectAuto,
+                        prefs.fontSettings.overrideScale);
+                wordWrapMode=w->props.wrapStyle;
+                splitdxMax=get_splitdx_for_new_line(*w, splitdx0, dx, prefs, gdi_font_scale, deci);
+                allStr+=p;
+                pwidths=(int*)width.resize((allStr.size()+1)*sizeof(int));
+                left=nextleft;
+                int nfit;
+                SIZE sz;
+                size_t strlenp=strlen(p);
+                int *ptempwidths=(int*)tempwidth.alloc((strlenp+1)*sizeof(int)*2); // *2 to work around Layer For Unicode on Windows 9x.
+                GetTextExtentExPointW(font.hdc,p,(int)strlenp,INT_MAX,&nfit,ptempwidths,&sz);
+                for (size_t x=0;x<strlenp;x++) {
+                    nextleft=(double)ptempwidths[x]*xscale/100+left;
+                    pwidths[charCount]=int(nextleft);
+                    charCount++;
                 }
             }
             if (allStr.empty()) continue;
@@ -1432,80 +1430,73 @@ size_t TsubtitleText::prepareGlyph(const TprintPrefs &prefs, Tfont &font, bool f
                     // Propagate input dimensions to the line properties 
                     // (unless movie dimensions are filled in the script and parameter 
                     // IDFF_subSSAUseMovieDimensions is not checked)
-                    if (line->props.refResX && line->props.refResY 
+                    if (line->getPropsOfThisObject().refResX && line->getPropsOfThisObject().refResY 
                         && firstLine && !deci->getParam2(IDFF_subSSAUseMovieDimensions)) {
-                        refResX=line->props.refResX;
-                        refResY=line->props.refResY;
+                        refResX=line->getPropsOfThisObject().refResX;
+                        refResY=line->getPropsOfThisObject().refResY;
                         firstLine=false;
                     } else {
-                        line->props.refResX=refResX;
-                        line->props.refResY=refResY;
+                        line->getPropsOfThisObject().refResX=refResX;
+                        line->getPropsOfThisObject().refResY=refResY;
                     }
                 }
 
                 const wchar_t *p=w;
-                if (*p) {
-                    // drop empty words
-                    #ifdef DEBUG
-                      DPRINTF(L"%s",p);
-                    #endif
-                    int linesInWord=0;
-                    do {
-                        if (linesInWord>0) {
-                            while (*p && iswspace((unsigned short)*p)) {
-                                cx++;
-                                p++;
-                            }
+                #ifdef DEBUG
+                  DPRINTF(L"%s",p);
+                #endif
+                int linesInWord=0;
+                do {
+                    if (linesInWord>0) {
+                        while (*p && iswspace((unsigned short)*p)) {
+                            cx++;
+                            p++;
                         }
-                        int strlenp=(int)strlen(p);
-                        // If line goes out of screen, wraps it except if no wrap defined 
-                        if (cx+strlenp-1<=wordWrap.getRightOfTheLine(cy)) {
-                            if (*p) {
-                                // Propagate the input dimensions to the TsubtitleWord props
-                                w.props.refResX=refResX;
-                                w.props.refResY=refResY;
+                    }
+                    int strlenp=(int)strlen(p);
+                    // If line goes out of screen, wraps it except if no wrap defined 
+                    if (cx+strlenp-1<=wordWrap.getRightOfTheLine(cy)) {
+                        // Propagate the input dimensions to the TsubtitleWord props
+                        w.props.refResX=refResX;
+                        w.props.refResY=refResY;
 
-                                TrenderedTextSubtitleWord *rw = newWord(p, strlenp, prefs, &w, lf, font, w0+1==l->end());
-                                if (rw) line->push_back(rw);
-                                cx+=strlenp;
-                            }
-                            break;
-                        } else {
-                            int n=wordWrap.getRightOfTheLine(cy)-cx+1;
-                            if (n<=0) {
-                                cy++;
-                                linesInWord++;
-                                n=wordWrap.getRightOfTheLine(cy)-cx+1;
-                                if (!line->empty()) {
-                                    lines.push_back(line);
-                                    line=new TrenderedSubtitleLine(w.props);
-                                }
-                                if (cy>=wordWrap.getLineCount())
-                                    break;
-                            }
-                            if (*p) {
-                                // Propagate the input dimensions to the TsubtitleWord props
-                                w.props.refResX=refResX;
-                                w.props.refResY=refResY;
-
-                                TrenderedTextSubtitleWord *rw = newWord(p, n, prefs, &w, lf, font, true);
-                                w.props.karaokeNewWord = false;
-                                w.props.karaokeStart += w.props.karaokeDuration;
-                                w.props.karaokeDuration = 0;
-                                if (rw)
-                                    line->push_back(rw);
-                            }
+                        TrenderedTextSubtitleWord *rw = newWord(p, strlenp, prefs, &w, lf, font, w0+1==l->end());
+                        if (rw) line->push_back(rw);
+                        cx+=strlenp;
+                        break;
+                    } else {
+                        int n=wordWrap.getRightOfTheLine(cy)-cx+1;
+                        if (n<=0) {
+                            cy++;
+                            linesInWord++;
+                            n=wordWrap.getRightOfTheLine(cy)-cx+1;
                             if (!line->empty()) {
                                 lines.push_back(line);
                                 line=new TrenderedSubtitleLine(w.props);
                             }
-                            p+=wordWrap.getRightOfTheLine(cy)-cx+1;
-                            cx=wordWrap.getRightOfTheLine(cy)+1;
-                            cy++;
-                            linesInWord++;
+                            if (cy>=wordWrap.getLineCount())
+                                break;
                         }
-                    } while(cy<wordWrap.getLineCount());
-                }
+                        // Propagate the input dimensions to the TsubtitleWord props
+                        w.props.refResX=refResX;
+                        w.props.refResY=refResY;
+
+                        TrenderedTextSubtitleWord *rw = newWord(p, n, prefs, &w, lf, font, true);
+                        w.props.karaokeNewWord = false;
+                        w.props.karaokeStart += w.props.karaokeDuration;
+                        w.props.karaokeDuration = 0;
+                        if (rw)
+                            line->push_back(rw);
+                        if (!line->empty()) {
+                            lines.push_back(line);
+                            line=new TrenderedSubtitleLine(w.props);
+                        }
+                        p+=wordWrap.getRightOfTheLine(cy)-cx+1;
+                        cx=wordWrap.getRightOfTheLine(cy)+1;
+                        cy++;
+                        linesInWord++;
+                    }
+                } while(cy<wordWrap.getLineCount());
             }
             if (line) {
                 if (!line->empty()) {
@@ -1576,27 +1567,18 @@ TrenderedTextSubtitleWord* TsubtitleText::newWord(
         prefs.opaqueBox=true;
     }
 
-    TrenderedTextSubtitleWord *rw;
-
     double xscale=(double)w->props.get_xscale(fontSettings.xscale,prefs.sar,fontSettings.aspectAuto,fontSettings.overrideScale)*100.0/(double)w->props.get_yscale(fontSettings.yscale,prefs.sar,fontSettings.aspectAuto,fontSettings.overrideScale);
-    rw=new TrenderedTextSubtitleWord(font.hdc,
-                                 s1.c_str(),
-                                 slen,
-                                 w->props.isColor ? YUVcolorA(w->props.color,w->props.colorA) : prefs.yuvcolor,
-                                 w->props.isColor ? YUVcolorA(w->props.OutlineColour,w->props.OutlineColourA) : prefs.outlineYUV,
-                                 w->props.isColor ? YUVcolorA(w->props.ShadowColour,w->props.ShadowColourA) : shadowYUV1,
-                                 prefs,
-                                 lf,
-                                 xscale,
-                                 w->props,
-                                 gdi_font_scale);
-
-    if (rw->dxChar && rw->dyChar) {
-        return rw;
-    } else {
-        delete rw;
-        return NULL;
-    }
+    return new TrenderedTextSubtitleWord(
+        font.hdc,
+        s1.c_str(),
+        slen,
+        w->props.isColor ? YUVcolorA(w->props.color,w->props.colorA) : prefs.yuvcolor,
+        w->props.isColor ? YUVcolorA(w->props.OutlineColour,w->props.OutlineColourA) : prefs.outlineYUV,
+        w->props.isColor ? YUVcolorA(w->props.ShadowColour,w->props.ShadowColourA) : shadowYUV1,
+        prefs,
+        lf,
+        xscale,
+        w->props);
 }
 
 size_t TsubtitleText::dropRenderedLines(void)

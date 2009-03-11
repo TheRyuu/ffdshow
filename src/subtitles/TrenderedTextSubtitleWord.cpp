@@ -77,8 +77,7 @@ TrenderedTextSubtitleWord::TrenderedTextSubtitleWord(
         const TprintPrefs &Iprefs,
         LOGFONT lf,
         double xscale,
-        TSubtitleProps Iprops,
-        unsigned int gdi_font_scale):
+        TSubtitleProps Iprops):
     props(Iprops),
     m_bodyYUV(YUV),
     m_outlineYUV(outlineYUV),
@@ -87,8 +86,18 @@ TrenderedTextSubtitleWord::TrenderedTextSubtitleWord(
     secondaryColoredWord(NULL),
     dstOffset(0),
     oldBodyYUVa(256),
-    oldOutlineYUVa(256)
+    oldOutlineYUVa(256),
+    overhang(0,0,0,0),
+    m_outlineWidth(0),
+    baseline(0),
+    m_ascent(0),
+    m_descent(0)
 {
+    if (!*s0)
+        return;
+
+    int gdi_font_scale = prefs.fontSettings.gdi_font_scale;
+
     if (Tconfig::cpu_flags&FF_CPU_MMXEXT) {
         YV12_lum2chr_min=YV12_lum2chr_min_mmx2;
         YV12_lum2chr_max=YV12_lum2chr_max_mmx2;
@@ -109,6 +118,8 @@ TrenderedTextSubtitleWord::TrenderedTextSubtitleWord(
         TtextSubtitlePrintUV=TtextSubtitlePrintUV_mmx;
     }
 #endif
+
+    csp = prefs.csp & FF_CSPS_MASK;
 
     m_outlineWidth=1;
     outlineWidth_double = prefs.outlineWidth;
@@ -131,7 +142,6 @@ TrenderedTextSubtitleWord::TrenderedTextSubtitleWord(
     if (outlineWidth_double < 1.0 && outlineWidth_double > 0)
         outlineWidth_double = 0.5 + outlineWidth_double/2.0;
 
-    csp=prefs.csp & FF_CSPS_MASK;
     strings tab_parsed_string;
     strtok(ffstring(s0,strlens).c_str(),L"\t",tab_parsed_string);
     SIZE sz;
@@ -152,7 +162,7 @@ TrenderedTextSubtitleWord::TrenderedTextSubtitleWord(
     }
     dxChar  = xscale * sz.cx / (gdi_font_scale * 100);
     dyChar  = sz.cy / gdi_font_scale;
-    getGlyph(hdc, tab_parsed_string, xscale, sz, cxs, lf, gdi_font_scale);
+    getGlyph(hdc, tab_parsed_string, xscale, sz, cxs, lf);
     drawShadow();
 }
 
@@ -161,9 +171,9 @@ void TrenderedTextSubtitleWord::getGlyph(HDC hdc,
     double xscale,
     SIZE italic_fixed_sz,
     const ints &cxs,
-    const LOGFONT &lf,
-    unsigned int gdi_font_scale)
+    const LOGFONT &lf)
 {
+    int gdi_font_scale = prefs.fontSettings.gdi_font_scale;
     OUTLINETEXTMETRIC otm;
     if (GetOutlineTextMetrics(hdc,sizeof(otm),&otm)) {
         baseline=otm.otmTextMetrics.tmAscent;
@@ -193,16 +203,16 @@ void TrenderedTextSubtitleWord::getGlyph(HDC hdc,
     if (gdi_font_scale == 4)
          drawGlyphOSD(hdc,tab_parsed_string,cxs,xscale);  // sharp and fast, good for OSD.
     else
-         drawGlyphSubtitles(hdc,tab_parsed_string,cxs,xscale,gdi_font_scale); // anti aliased, good for subtitles.
+         drawGlyphSubtitles(hdc,tab_parsed_string,cxs,xscale); // anti aliased, good for subtitles.
 }
 
 void TrenderedTextSubtitleWord::drawGlyphSubtitles(
       HDC hdc,
       const strings &tab_parsed_string,
       const ints &cxs,
-      double xscale,
-      unsigned int gdi_font_scale)
+      double xscale)
 {
+    int gdi_font_scale = prefs.fontSettings.gdi_font_scale;
     bool bFirstPath = true;
     int x = 0;
     ints::const_iterator cx=cxs.begin();
@@ -831,7 +841,7 @@ double TrenderedTextSubtitleWord::get_descent() const
 
 void TrenderedTextSubtitleWord::print(int startx, int starty, unsigned int sdx[3], int sdy[3], unsigned char *dstLn[3], const stride_t stride[3], const unsigned char *Ibmp[3], const unsigned char *Imsk[3],REFERENCE_TIME rtStart) const
 {
- if (sdy[0]<=0 || sdy[1]<0)
+ if (sdy[0] <= 0 || sdy[1] < 0 || dx[0] == 0 || dy[0] == 0)
   return;
 
  // karaoke: use secondaryColoredWord if not highlighted.

@@ -25,8 +25,7 @@ private:
                         double xscale,
                         SIZE italic_fixed_sz,
                         const ints &cxs,
-                        const LOGFONT &lf,
-                        unsigned int gdi_font_scale);
+                        const LOGFONT &lf);
 
 void Transform(CPoint org, double scalex);
 
@@ -34,8 +33,7 @@ void drawGlyphSubtitles(
                         HDC hdc,
                         const strings &tab_parsed_string,
                         const ints &cxs,
-                        double xscale,
-                        unsigned int gdi_font_scale);
+                        double xscale);
 
 void drawGlyphOSD(      HDC hdc,
                         const strings &tab_parsed_string,
@@ -62,8 +60,7 @@ public:
                         const TprintPrefs &prefs,
                         LOGFONT lf,
                         double xscale,
-                        TSubtitleProps Iprops,
-                        unsigned int gdi_font_scale);
+                        TSubtitleProps Iprops);
 
  // secondary (for karaoke)
  struct secondaryColor_t {};

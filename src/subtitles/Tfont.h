@@ -142,30 +142,33 @@ bool operator < (const TrenderedSubtitleLines::ParagraphKey &a, const TrenderedS
 class TrenderedSubtitleWordBase
 {
 private:
- bool own;
+    bool own;
 public:
- TrenderedSubtitleWordBase(bool Iown):own(Iown) 
-  {
-   for (int i=0;i<3;i++)
+    TrenderedSubtitleWordBase(bool Iown):
+        own(Iown),
+        dxChar(0),
+        dyChar(0) 
     {
-     bmp[i]=NULL;msk[i]=NULL;
-     outline[i]=NULL;shadow[i]=NULL;
+        for (int i=0;i<3;i++) {
+            bmp[i]=NULL;msk[i]=NULL;
+            outline[i]=NULL;shadow[i]=NULL;
+            dx[i]=0;dy[i]=0;
+        }
     }
-  }
- virtual ~TrenderedSubtitleWordBase();
- unsigned int dx[3],dy[3];
- unsigned int dxChar,dyChar;
- unsigned char *bmp[3],*msk[3];stride_t bmpmskstride[3];
- unsigned char *outline[3],*shadow[3];
- virtual void print(int startx, int starty, unsigned int dx[3],int dy[3],unsigned char *dstLn[3],const stride_t stride[3],const unsigned char *bmp[3],const unsigned char *msk[3],REFERENCE_TIME rtStart=REFTIME_INVALID) const =0;
- int csp;
- virtual double get_ascent() const {return dy[0];}
- virtual double get_descent() const {return 0;}
- virtual int get_baseline() const {return dy[0];}
- virtual CRect getOverhang() const {return CRect();}
- virtual size_t getMemorySize() const {return 0;}
- virtual int getPathOffsetX() const {return 0;}
- virtual int getPathOffsetY() const {return 0;}
+    virtual ~TrenderedSubtitleWordBase();
+    unsigned int dx[3],dy[3];
+    unsigned int dxChar,dyChar;
+    unsigned char *bmp[3],*msk[3];stride_t bmpmskstride[3];
+    unsigned char *outline[3],*shadow[3];
+    virtual void print(int startx, int starty, unsigned int dx[3],int dy[3],unsigned char *dstLn[3],const stride_t stride[3],const unsigned char *bmp[3],const unsigned char *msk[3],REFERENCE_TIME rtStart=REFTIME_INVALID) const =0;
+    int csp;
+    virtual double get_ascent() const {return dy[0];}
+    virtual double get_descent() const {return 0;}
+    virtual int get_baseline() const {return dy[0];}
+    virtual CRect getOverhang() const {return CRect();}
+    virtual size_t getMemorySize() const {return 0;}
+    virtual int getPathOffsetX() const {return 0;}
+    virtual int getPathOffsetY() const {return 0;}
 };
 
 class TrenderedVobsubWord : public TrenderedSubtitleWordBase
@@ -182,8 +185,12 @@ class TrenderedTextSubtitleWord;
 class TrenderedSubtitleLine : public std::vector<TrenderedSubtitleWordBase*>
 {
  bool firstrun;
+ TSubtitleProps props;
  double emptyHeight; // This is used as charHeight if empty.
 public:
+
+ TSubtitleProps& getPropsOfThisObject() {return props;};
+ const TSubtitleProps& getProps();
  TrenderedSubtitleLine(void):firstrun(true) {props.reset();}
  TrenderedSubtitleLine(TSubtitleProps p):firstrun(true) {props=p;}
  TrenderedSubtitleLine(TSubtitleProps p, double IemptyHeight):firstrun(true),emptyHeight(IemptyHeight) {props=p;}
@@ -208,7 +215,6 @@ public:
     unsigned int prefsdy,
     unsigned char **dst,
     const stride_t *stride) const;
- TSubtitleProps props;
  size_t getMemorySize() const;
 };
 
