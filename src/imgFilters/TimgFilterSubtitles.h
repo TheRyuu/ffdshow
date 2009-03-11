@@ -30,7 +30,6 @@ private:
  typedef stdext::hash_map<int,TsubtitlesTextpin*> Tembedded;
  Tembedded embedded;
  Tfont font,fontCC;
- TfontSettingsSub *oldFontCfg,*oldFontCCcfg;
  int oldstereo,oldsplitborder;
  double AVIfps;
  TimgFilterSubtitleExpand *expand;TexpandSettings expandSettings;Trect oldExpandRect;

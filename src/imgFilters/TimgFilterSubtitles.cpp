@@ -31,16 +31,16 @@
 #include "ffdebug.h"
 
 TimgFilterSubtitles::TsubPrintPrefs::TsubPrintPrefs(
-    unsigned int Idx[4],
-    unsigned int Idy[4],
-    IffdshowBase *Ideci,
-    const TsubtitlesSettings *cfg,
-    const TffPict &pict,
-    int Iclipdy,
-    const Tconfig *Iconfig,
-    bool Idvd,
-    const TfontSettings *fontSettings)
- :TprintPrefs(Ideci,fontSettings)
+        unsigned int Idx[4],
+        unsigned int Idy[4],
+        IffdshowBase *Ideci,
+        const TsubtitlesSettings *cfg,
+        const TffPict &pict,
+        int Iclipdy,
+        const Tconfig *Iconfig,
+        bool Idvd,
+        const TfontSettings *fontSettings):
+    TprintPrefs(Ideci,fontSettings)
 {
     csp=pict.csp;
     dx=pict.rectFull.dx;//Idx[0];
@@ -71,14 +71,12 @@ TimgFilterSubtitles::TimgFilterSubtitles(IffdshowBase *Ideci,Tfilters *Iparent):
     TimgFilter(Ideci,Iparent),
     font(Ideci),fontCC(Ideci),
     subs(Ideci),
-    oldFontCfg((TfontSettingsSub*)malloc(sizeof(TfontSettingsSub))),
-    oldFontCCcfg((TfontSettingsSub*)malloc(sizeof(TfontSettingsSub))),
     cc(NULL),wasCCchange(true),everRGB(false),
     adhocMode(ADHOC_NORMAL),
     prevAdhocMode(ADHOC_NORMAL),
     glyphThread(this,Ideci)
 {
-    oldFontCfg->weight=oldFontCCcfg->weight=-1;oldstereo=oldsplitborder=-1;
+    oldstereo=oldsplitborder=-1;
     AVIfps=-1;
     expand=NULL;
     expandSizeChanged=fontSizeChanged=true;oldExpandCode=-1;
@@ -93,12 +91,13 @@ TimgFilterSubtitles::TimgFilterSubtitles(IffdshowBase *Ideci,Tfilters *Iparent):
 TimgFilterSubtitles::~TimgFilterSubtitles()
 {
     boost::unique_lock<boost::recursive_mutex> lock(csEmbedded);
-    if (expand) delete expand;
+    if (expand)
+        delete expand;
     for (Tembedded::iterator e=embedded.begin();e!=embedded.end();e++)
-     if (e->second)
-      delete e->second;
-    ::free(oldFontCfg);::free(oldFontCCcfg);
-    if (cc) delete cc;
+        if (e->second)
+            delete e->second;
+    if (cc)
+        delete cc;
     glyphThread.done();
 }
 
@@ -159,6 +158,7 @@ bool TimgFilterSubtitles::initSubtitles(int id,int type,const unsigned char *ext
          return false;
     return *e->second;
 }
+
 void TimgFilterSubtitles::addSubtitle(int id,REFERENCE_TIME start,REFERENCE_TIME stop,const unsigned char *data,unsigned int datalen,const TsubtitlesSettings *cfg,bool utf8)
 {
     Tembedded::iterator e=embedded.find(id);
@@ -167,6 +167,7 @@ void TimgFilterSubtitles::addSubtitle(int id,REFERENCE_TIME start,REFERENCE_TIME
     e->second->setModified();
     e->second->addSubtitle(start,stop,data,datalen,cfg,utf8);
 }
+
 void TimgFilterSubtitles::resetSubtitles(int id)
 {
      Tembedded::iterator e=embedded.find(id);
@@ -181,6 +182,7 @@ void TimgFilterSubtitles::resetSubtitles(int id)
          deciV->unlockCSReceive();
      }
 }
+
 bool TimgFilterSubtitles::ctlSubtitles(int id,int type,unsigned int ctl_id,const void *ctl_data,unsigned int ctl_datalen)
 {
     Tembedded::iterator e=embedded.find(id);
@@ -385,10 +387,6 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
             if (sub && (isdvdproc || cfg->is)) {
                 init(pict,cfg->full,cfg->half);
 
-                if (memcmp(oldFontCfg->name,cfg->font.name,sizeof(TfontSettingsSub)-sizeof(Toptions))!=0 || fontSizeChanged || oldstereo!=cfg->stereoscopic || oldsplitborder!=cfg->splitBorder) {
-                    memcpy(oldFontCfg,&cfg->font,sizeof(cfg->font));oldstereo=cfg->stereoscopic;oldsplitborder=cfg->splitBorder;
-                    font.init();
-                }
                 fontSizeChanged=false;
 
                 unsigned char *dst[4];
@@ -431,11 +429,6 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
             if (decodedPict!=NULL) {
                 printprefs.xinput = decodedPict->dx;
                 printprefs.yinput = decodedPict->dy;
-            }
-
-            if (memcmp(oldFontCCcfg->name,cfg2.font.name,sizeof(TfontSettingsSub)-sizeof(Toptions))!=0 || oldsplitborder!=cfg2.splitBorder) {
-                memcpy(oldFontCCcfg,&cfg2.font,sizeof(cfg2.font));oldsplitborder=cfg2.splitBorder;
-                fontCC.init();
             }
 
             // Because closed captions are delivered at the same time of the video frame, like OSD, threading does not help.
