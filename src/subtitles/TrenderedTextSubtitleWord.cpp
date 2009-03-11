@@ -176,9 +176,9 @@ void TrenderedTextSubtitleWord::getGlyph(HDC hdc,
     int gdi_font_scale = prefs.fontSettings.gdi_font_scale;
     OUTLINETEXTMETRIC otm;
     if (GetOutlineTextMetrics(hdc,sizeof(otm),&otm)) {
-        baseline=otm.otmTextMetrics.tmAscent;
-        m_ascent = otm.otmTextMetrics.tmAscent;
-        m_descent = otm.otmTextMetrics.tmDescent;
+        baseline=otm.otmTextMetrics.tmAscent / gdi_font_scale + m_outlineWidth;
+        m_ascent = otm.otmTextMetrics.tmAscent / gdi_font_scale;
+        m_descent = otm.otmTextMetrics.tmDescent / gdi_font_scale;
         if (otm.otmItalicAngle)
             italic_fixed_sz.cx += ff_abs(LONG(italic_fixed_sz.cy*sin(otm.otmItalicAngle*M_PI/1800)));
         else
@@ -187,9 +187,9 @@ void TrenderedTextSubtitleWord::getGlyph(HDC hdc,
             m_shadowSize = getShadowSize(otm.otmTextMetrics.tmHeight, gdi_font_scale);
     } else {
         // non true-type
-        baseline=italic_fixed_sz.cy*0.8;
-        m_ascent=italic_fixed_sz.cy*0.8;
-        m_descent=italic_fixed_sz.cy*0.2;
+        baseline  = italic_fixed_sz.cy * 0.8 / gdi_font_scale + m_outlineWidth;;
+        m_ascent  = italic_fixed_sz.cy * 0.8 / gdi_font_scale;
+        m_descent = italic_fixed_sz.cy * 0.2 / gdi_font_scale;
         m_shadowSize = getShadowSize(lf.lfHeight, gdi_font_scale);
         if (lf.lfItalic)
             italic_fixed_sz.cx+=italic_fixed_sz.cy*0.35;
@@ -238,9 +238,6 @@ void TrenderedTextSubtitleWord::drawGlyphSubtitles(
     dy[0] = overhang.top + ((mHeight + 7) >> 3) + 1 + overhang.bottom;
     unsigned int al=csp==FF_CSP_420P ? alignXsize : 8;
     dx[0]=((dx[0]+al-1)/al)*al;
-    baseline = (baseline >> 6) + m_outlineWidth;
-    m_ascent = m_ascent / gdi_font_scale;
-    m_descent = m_descent / gdi_font_scale;
 }
 
 void TrenderedTextSubtitleWord::Transform(CPoint org, double scalex)
@@ -295,8 +292,6 @@ void TrenderedTextSubtitleWord::drawGlyphOSD(
       const ints &cxs,
       double xscale)
 {
-    baseline = (baseline / 4) + m_outlineWidth;
-
     RECT r={0,0,gdi_dx,gdi_dy};
     unsigned char *bmp16=(unsigned char*)aligned_calloc3(gdi_dx * size_of_rgb32,gdi_dy, 32, 16);
     HBITMAP hbmp=CreateCompatibleBitmap(hdc,gdi_dx,gdi_dy);
