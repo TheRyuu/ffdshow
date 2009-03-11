@@ -287,7 +287,7 @@ TimgFilterOSD::Tosds::~Tosds()
  freeOsds();
 }
 
-void TimgFilterOSD::Tosds::init(bool allowSave,IffdshowBase *deci,IffdshowDec *deciD,IffdshowDecVideo *deciV,const Tconfig *config,TfontSettingsOSD *oldFont,const TOSDsettings *cfg,int framecnt)
+void TimgFilterOSD::Tosds::init(bool allowSave,IffdshowBase *deci,IffdshowDec *deciD,IffdshowDecVideo *deciV,const Tconfig *config,const TfontSettingsOSD &oldFont,const TOSDsettings *cfg,int framecnt)
 {
  if (framecnt<startupDuration || provider->isOSD())
   {
@@ -353,9 +353,9 @@ void TimgFilterOSD::Tosds::init(bool allowSave,IffdshowBase *deci,IffdshowDec *d
   }
 }
 
-void TimgFilterOSD::Tosds::fontInit(const TfontSettingsOSD *IfontSettings)
+void TimgFilterOSD::Tosds::fontInit(const TfontSettingsOSD &IfontSettings)
 {
- fontSettings = *IfontSettings;
+ fontSettings = IfontSettings;
  for (iterator i=begin();i!=end();i++)
   (*i)->font.init();
 }
@@ -411,13 +411,12 @@ TimgFilterOSD::TimgFilterOSD(IffdshowBase *Ideci,Tfilters *Iparent):
  fontUser(Ideci),
  subUser(Ideci->getParam2(IDFF_OSD_userformat)),
  framecnt(0),
- oldFont((TfontSettingsOSD*)malloc(sizeof(TfontSettingsOSD))),
  trans(NULL),
  shortOSD(this),
  TOSDprovider(deci,deciD)
 {
  provOSDs.push_back(new Tosds(this));
- oldFont->weight=-1;
+ oldFont.weight=-1;
  oldLinesUser[0]='\0';
 }
 TimgFilterOSD::~TimgFilterOSD()
@@ -425,7 +424,6 @@ TimgFilterOSD::~TimgFilterOSD()
  CAutoLock l(&csProvider);
  for (TprovOSDs::iterator po=provOSDs.begin();po!=provOSDs.end();po++)
   delete *po;
- ::free(oldFont);
  if (trans) trans->release();
 }
 void TimgFilterOSD::done(void)
@@ -437,7 +435,7 @@ void TimgFilterOSD::done(void)
 
 void TimgFilterOSD::onSizeChange(void)
 {
- oldFont->weight=-1;
+ oldFont.weight=-1;
 }
 
 bool TimgFilterOSD::shortOSDmessage(const char_t *msg,unsigned int duration)
@@ -463,9 +461,9 @@ HRESULT TimgFilterOSD::process(TfilterQueue::iterator it,TffPict &pict,const Tfi
 
  init(pict,true,0);
  csProvider.Lock();
- if (memcmp(oldFont->name,parent->fontSettingsOSD->name,sizeof(TfontSettingsOSD)-sizeof(Toptions))!=0)
+ if (oldFont != *parent->fontSettingsOSD)
   {
-   memcpy(oldFont,parent->fontSettingsOSD,sizeof(*oldFont));
+   oldFont = *parent->fontSettingsOSD;
    for (TprovOSDs::iterator po=provOSDs.begin();po!=provOSDs.end();po++)
     (*po)->fontInit(oldFont);
    fontUser.init();

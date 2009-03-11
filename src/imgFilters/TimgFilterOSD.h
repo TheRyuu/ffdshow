@@ -103,8 +103,8 @@ private:
    ~Tosds();
    bool is;
    IOSDprovider *provider;
-   void init(bool allowSave,IffdshowBase *deci,IffdshowDec *deciD,IffdshowDecVideo *deciV,const Tconfig *config,TfontSettingsOSD *oldFont,const TOSDsettings *cfg,int framecnt);
-   void fontInit(const TfontSettingsOSD *fontSettings);
+   void init(bool allowSave,IffdshowBase *deci,IffdshowDec *deciD,IffdshowDecVideo *deciV,const Tconfig *config,const TfontSettingsOSD &oldFont,const TOSDsettings *cfg,int framecnt);
+   void fontInit(const TfontSettingsOSD &fontSettings);
    void print(IffdshowBase *deci,const TffPict &pict,unsigned char *dst[4],stride_t stride[4],unsigned int dxY,unsigned int dyY,unsigned int x,unsigned int &y,int linespace,bool fileonly);
    void done(void);
    void freeOsds(void);
@@ -121,7 +121,7 @@ private:
  TprovOSDs provOSDs;
  CCritSec csProvider;
 
- TfontSettingsOSD *oldFont;
+ TfontSettingsOSD oldFont;
  unsigned int framecnt;
  Tfont fontUser;
  TsubtitleText subUser;
