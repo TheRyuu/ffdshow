@@ -227,17 +227,9 @@ void TrenderedTextSubtitleWord::drawGlyphSubtitles(
 
     Transform(CPoint(0, 0), xscale/100);
     ScanConvert();
-    CRect border(m_outlineWidth,m_outlineWidth,m_outlineWidth,m_outlineWidth);
-    // That messy fontPrepareOutline functions require 2*outlineWidth around the characters.
-    // Shadow creation requires shadow height aound the characters.
-    Rasterize(0, 0, overhang + border);
-    // now bmp[0] is mGlyphBmpWidth * mGlyphBmpHeight
-
-    // after drawShadow, bmp[0] is dx[0] * dy[0]. removeMargin does this tric.
-    dx[0] = overhang.left + ((mWidth + 7) >> 3) + 1 + overhang.right;
-    dy[0] = overhang.top + ((mHeight + 7) >> 3) + 1 + overhang.bottom;
-    unsigned int al=csp==FF_CSP_420P ? alignXsize : 8;
-    dx[0]=((dx[0]+al-1)/al)*al;
+    Rasterize(0, 0, overhang);
+    dx[0] = mGlyphBmpWidth;
+    dy[0] = mGlyphBmpHeight;
 }
 
 void TrenderedTextSubtitleWord::Transform(CPoint org, double scalex)
@@ -337,7 +329,7 @@ void TrenderedTextSubtitleWord::drawGlyphOSD(
     mGlyphBmpWidth = dx[0] + m_outlineWidth*2; // add margin to simplify the outline drawing process.
     mGlyphBmpHeight = dy[0] + m_outlineWidth*2;
     mGlyphBmpWidth = ((mGlyphBmpWidth+7)/8)*8;
-    bmp[0]=(unsigned char*)aligned_calloc3(mGlyphBmpWidth,mGlyphBmpHeight,16,16);
+    bmp[0]=(unsigned char*)aligned_calloc3(dx[0],dy[0],16,16);
 
     // Here we scale to 1/gdi_font_scale.
     // For OSD, gdi_font_scale is 4. The simplest way is to average 4 x 4.
@@ -360,7 +352,7 @@ void TrenderedTextSubtitleWord::drawGlyphOSD(
     unsigned int startx = (2 << 16) + xstep;
     unsigned int endx = (gdi_dx - 2) << 16;
     for (unsigned int y = 2 ; y < gdi_dy - 3 ; y += gdi_font_scale) {
-        unsigned char *dstBmpY = bmp[0] + (y/gdi_font_scale + overhang.top + m_outlineWidth) * mGlyphBmpWidth + overhang.left + m_outlineWidth;
+        unsigned char *dstBmpY = bmp[0] + (y/gdi_font_scale + overhang.top) * dx[0] + overhang.left;
         unsigned int x = startx;
         const unsigned char *bmp16srcLineStart = bmp16 + ((y - 2) * gdi_dx) * size_of_rgb32;
         const unsigned char *bmp16srcEnd;
@@ -392,30 +384,21 @@ void TrenderedTextSubtitleWord::drawGlyphOSD(
     aligned_free(bmp16);
 }
 
-void TrenderedTextSubtitleWord::removeMargin()
-{
-    // remove the margin that we have just added.
-    unsigned char *newbmp = (unsigned char*)aligned_calloc3(dx[0],dy[0],16,16);
-    for (unsigned int y = 0 ; y < dy[0] ; y++)
-        memcpy(newbmp + dx[0] * y, bmp[0] + mGlyphBmpWidth * (y + m_outlineWidth) + m_outlineWidth, std::min<stride_t>(dx[0],mGlyphBmpWidth));
-    _aligned_free(bmp[0]);
-    bmp[0] = newbmp;
-}
-
 void TrenderedTextSubtitleWord::drawShadow()
 {
-    msk[0]=(unsigned char*)aligned_calloc3(dx[0],dy[0],16,16);
-    outline[0]=(unsigned char*)aligned_calloc3(dx[0],dy[0],16,16);
-    shadow[0]=(unsigned char*)aligned_calloc3(dx[0],dy[0],16,16);
+    msk[0]     = (unsigned char*)aligned_calloc3(dx[0],dy[0],16,16);
+    outline[0] = (unsigned char*)aligned_calloc3(dx[0],dy[0],16,16);
+    shadow[0]  = (unsigned char*)aligned_calloc3(dx[0],dy[0],16,16);
 
     if (prefs.blur) {
-        int startx=overhang.left + m_outlineWidth - 1;
-        int starty=overhang.top + m_outlineWidth - 1;
-        int endy=mGlyphBmpHeight - overhang.bottom - m_outlineWidth+1;
-        int endx=mGlyphBmpWidth - overhang.right - m_outlineWidth+1;
-        bmp[0]=blur(bmp[0], mGlyphBmpWidth, mGlyphBmpHeight, startx, starty, endx, endy, true);
+        int startx = overhang.left - 1;
+        int starty = overhang.top - 1;
+        int endx = dx[0] - overhang.right + 1;
+        int endy = dy[0] - overhang.bottom + 1;
+        bmp[0]=blur(bmp[0], dx[0], dy[0], startx, starty, endx, endy, true);
     }
 
+    TexpandedGlyph expanded(*this);
 
     // Prepare matrix for outline calculation
     short *matrix=NULL;
@@ -438,10 +421,9 @@ void TrenderedTextSubtitleWord::drawShadow()
             }
     }
 
-    unsigned int max_outline_pos_x  = dx[0]- overhang.right + m_outlineWidth;
+    unsigned int max_outline_pos_x  = dx[0] - overhang.right + m_outlineWidth;
     unsigned int max_outline_pos_y  = dy[0] - overhang.bottom + m_outlineWidth;
     if (prefs.opaqueBox) {
-        removeMargin();
         memset(msk[0],255,dx[0]*dy[0]);
     } else if (m_outlineWidth) {
         // Prepare outline
@@ -451,22 +433,22 @@ void TrenderedTextSubtitleWord::drawShadow()
 #endif
            )
         {
-            size_t matrixSizeH_sse2=matrixSizeH>>3;
-            size_t srcStrideGap=mGlyphBmpWidth-matrixSizeH;
+            size_t matrixSizeH_sse2 = matrixSizeH >> 3;
+            size_t srcStrideGap = expanded.dx - matrixSizeH;
             for (unsigned int y = overhang.top - m_outlineWidth ; y < max_outline_pos_y ; y++)
                 for (unsigned int x = overhang.left - m_outlineWidth ; x < max_outline_pos_x ; x++) {
-                    unsigned int sum=fontPrepareOutline_sse2(bmp[0] + mGlyphBmpWidth*y + x, srcStrideGap, matrix, matrixSizeH_sse2, matrixSizeV) >> 9;
+                    unsigned int sum=fontPrepareOutline_sse2((unsigned char*)expanded + expanded.dx * y + x , srcStrideGap, matrix, matrixSizeH_sse2, matrixSizeV) >> 9;
                     msk[0][dx[0]*y+x]=sum>255 ? 255 : sum;
                 }
         }
 #ifndef WIN64
         else if (Tconfig::cpu_flags&FF_CPU_MMX) {
             size_t matrixSizeH_mmx=(matrixSizeV+3)/4;
-            size_t srcStrideGap=mGlyphBmpWidth-matrixSizeH_mmx*4;
+            size_t srcStrideGap = expanded.dx - matrixSizeH_mmx * 4;
             size_t matrixGap=matrixSizeH_mmx & 1 ? 8 : 0;
             for (unsigned int y = overhang.top - m_outlineWidth ; y < max_outline_pos_y ; y++) {
                 for (unsigned int x = overhang.left - m_outlineWidth ; x < max_outline_pos_x ; x++) {
-                    unsigned int sum=fontPrepareOutline_mmx(bmp[0] + mGlyphBmpWidth * y + x, srcStrideGap, matrix, matrixSizeH_mmx, matrixSizeV, matrixGap) >> 9;
+                    unsigned int sum=fontPrepareOutline_mmx((unsigned char*)expanded + expanded.dx * y + x, srcStrideGap, matrix, matrixSizeH_mmx, matrixSizeV, matrixGap) >> 9;
                     msk[0][dx[0]*y+x]=sum>255 ? 255 : sum;
                 }
             }
@@ -475,7 +457,7 @@ void TrenderedTextSubtitleWord::drawShadow()
         else {
             for (unsigned int y = overhang.top - m_outlineWidth ; y < max_outline_pos_y ; y++)
                for (unsigned int x = overhang.left - m_outlineWidth ; x < max_outline_pos_x ; x++) {
-                   unsigned char *srcPos=bmp[0]+mGlyphBmpWidth*y+x; // (x-outlineWidth,y-outlineWidth)
+                   unsigned char *srcPos=(unsigned char*)expanded + expanded.dx * y + x;
                    unsigned int sum=0;
                    for (unsigned int yy=0;yy<matrixSizeV;yy++,srcPos+=mGlyphBmpWidth-matrixSizeV)
                       for (unsigned int xx=0;xx<matrixSizeV;xx++,srcPos++)
@@ -485,12 +467,10 @@ void TrenderedTextSubtitleWord::drawShadow()
                }
         }
 
-        removeMargin();
         if (prefs.outlineBlur || (prefs.shadowMode==0 && m_shadowSize>0)) // blur outline and msk
             msk[0]=blur(msk[0], dx[0], dy[0], 0, 0, dx[0], dy[0], false);
     }  else {
         // m_outlineWidth==0
-        removeMargin();
         memcpy(msk[0],bmp[0],dx[0]*dy[0]);
     }
 
