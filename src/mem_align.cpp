@@ -33,36 +33,37 @@ void* aligned_malloc(size_t size, size_t alignment)
 
 void* aligned_realloc(void *ptr,size_t size,size_t alignment)
 {
- if (!ptr)
-  return aligned_malloc(size,alignment);
- else
-  if (size==0)
-   {
-    aligned_free(ptr);
-    return NULL;
-   }
-  else
-   return _aligned_realloc(ptr,size,alignment?alignment:Tconfig::cache_line);
+    if (!ptr)
+        return aligned_malloc(size,alignment);
+    else
+        if (size==0) {
+            aligned_free(ptr);
+            return NULL;
+        } else
+            return _aligned_realloc(ptr,size,alignment?alignment:Tconfig::cache_line);
 }
 
 void aligned_free(void *mem_ptr)
 {
- if (mem_ptr)
-  _aligned_free(mem_ptr);
+    if (mem_ptr)
+        _aligned_free(mem_ptr);
 }
 
 void* aligned_calloc(size_t size1, size_t size2, size_t alignment)
 {
- size_t size=size1*size2;
- void *ret=aligned_malloc(size,alignment);
- if (ret) memset(ret,0,size);
- return ret;
+    size_t size=size1*size2;
+    void *ret=aligned_malloc(size,alignment);
+    if (ret) memset(ret,0,size);
+    return ret;
 }
 
-void* aligned_calloc3(size_t size1, size_t size2, size_t size3, size_t alignment)
+template <class T> T* aligned_calloc3(size_t width, size_t height, size_t pading, size_t alignment)
 {
- size_t size=size1*size2+size3;
- void *ret=aligned_malloc(size,alignment);
- if (ret) memset(ret,0,size);
- return ret;
+    size_t size = (width * height + pading) * sizeof(T);
+    T *ret = (T*)_aligned_malloc(size,alignment);
+    if (ret) memset(ret,0,size);
+    return ret;
 }
+
+template uint8_t* aligned_calloc3<uint8_t>(size_t width, size_t height, size_t pading, size_t alignment);
+template uint16_t* aligned_calloc3<uint16_t>(size_t width, size_t height, size_t pading, size_t alignment);

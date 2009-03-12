@@ -34,13 +34,13 @@ TrenderedTextSubtitleWord::TrenderedTextSubtitleWord(
 {
     *this = parent;
     secondaryColoredWord = NULL;
-    bmp[0]     = (unsigned char*)aligned_malloc(dx[0] * dy[0] + 16, 16);
-    bmp[1]     = (unsigned char*)aligned_malloc(dx[1] * dy[1] + 16, 16);
-    outline[0] = (unsigned char*)aligned_malloc(dx[0] * dy[0] + 16, 16);
-    outline[1] = (unsigned char*)aligned_malloc(dx[1] * dy[1] + 16, 16);
-    shadow[0]  = (unsigned char*)aligned_malloc(dx[0] * dy[0] + 16, 16);
-    shadow[1]  = (unsigned char*)aligned_malloc(dx[1] * dy[1] + 16, 16);
-    msk[0]     = (unsigned char*)aligned_malloc(dx[0] * dy[0] + 16, 16);
+    bmp[0]     = aligned_calloc3<uint8_t>(dx[0], dy[0], 16);
+    bmp[1]     = aligned_calloc3<uint8_t>(dx[1], dy[1], 16);
+    outline[0] = aligned_calloc3<uint8_t>(dx[0], dy[0], 16);
+    outline[1] = aligned_calloc3<uint8_t>(dx[1], dy[1], 16);
+    shadow[0]  = aligned_calloc3<uint8_t>(dx[0], dy[0], 16);
+    shadow[1]  = aligned_calloc3<uint8_t>(dx[1], dy[1], 16);
+    msk[0]     = aligned_calloc3<uint8_t>(dx[0], dy[0], 16);
 
     memcpy(bmp[0], parent.bmp[0], dx[0] * dy[0]);
     memcpy(bmp[1], parent.bmp[1], dx[1] * dy[1]);
@@ -58,7 +58,7 @@ TrenderedTextSubtitleWord::TrenderedTextSubtitleWord(
     }
 
     if (parent.msk[1]) {
-        msk[1] = (unsigned char*)aligned_malloc(dx[1] * dy[1] + 16, 16);
+        msk[1] = aligned_calloc3<uint8_t>(dx[1], dy[1], 16);
         memset(msk[1], 0, dx[1] * dy[1]);
     }
     m_bodyYUV = YUVcolorA(props.SecondaryColour,props.SecondaryColourA);
@@ -285,7 +285,7 @@ void TrenderedTextSubtitleWord::drawGlyphOSD(
       double xscale)
 {
     RECT r={0,0,gdi_dx,gdi_dy};
-    unsigned char *bmp16=(unsigned char*)aligned_calloc3(gdi_dx * size_of_rgb32,gdi_dy, 32, 16);
+    uint8_t *bmp16 = aligned_calloc3<uint8_t>(gdi_dx * size_of_rgb32,gdi_dy, 32);
     HBITMAP hbmp=CreateCompatibleBitmap(hdc,gdi_dx,gdi_dy);
     HGDIOBJ old=SelectObject(hdc,hbmp);
     FillRect(hdc,&r,(HBRUSH)GetStockObject(BLACK_BRUSH));
@@ -329,12 +329,10 @@ void TrenderedTextSubtitleWord::drawGlyphOSD(
     mGlyphBmpWidth = dx[0] + m_outlineWidth*2; // add margin to simplify the outline drawing process.
     mGlyphBmpHeight = dy[0] + m_outlineWidth*2;
     mGlyphBmpWidth = ((mGlyphBmpWidth+7)/8)*8;
-    bmp[0]=(unsigned char*)aligned_calloc3(dx[0],dy[0],16,16);
+    bmp[0]=aligned_calloc3<uint8_t>(dx[0],dy[0],16);
 
     // Here we scale to 1/gdi_font_scale.
-    // For OSD, gdi_font_scale is 4. The simplest way is to average 4 x 4.
-    // But in that case, it will have only 16 gradation becasue the bitmap from GDI has only 0 or 0xffffff.
-    // 4x5 for OSD, 16x16 for subtitles seems to look nice.
+    // average 4x5 pixels and store it in 6bit (max 64, not 63)
     unsigned int xstep = xscale == 100 ?
                              gdi_font_scale * 65536 :
                              gdi_font_scale * 100 * 65536 / xscale;
@@ -346,7 +344,10 @@ void TrenderedTextSubtitleWord::drawGlyphOSD(
     // coeff calculation
     // To averave gdi_rendering_window_width * 5 pixels
     unsigned int coeff;
-    coeff = 65536.0 / (gdi_rendering_window_width * 5);
+    if (gdi_rendering_window_width == 4)
+        coeff = 824; // 65536/ 4 / (4 * 5) plus bit to make 63.xxx->64;
+    else
+        coeff = 65536/ 4 / (gdi_rendering_window_width * 5);
     int dx0_mult_4 = gdi_dx * size_of_rgb32;
     unsigned int xstep_sse2 = xstep * 8;
     unsigned int startx = (2 << 16) + xstep;
@@ -386,9 +387,9 @@ void TrenderedTextSubtitleWord::drawGlyphOSD(
 
 void TrenderedTextSubtitleWord::drawShadow()
 {
-    msk[0]     = (unsigned char*)aligned_calloc3(dx[0],dy[0],16,16);
-    outline[0] = (unsigned char*)aligned_calloc3(dx[0],dy[0],16,16);
-    shadow[0]  = (unsigned char*)aligned_calloc3(dx[0],dy[0],16,16);
+    msk[0]     = aligned_calloc3<uint8_t>(dx[0],dy[0],16);
+    outline[0] = aligned_calloc3<uint8_t>(dx[0],dy[0],16);
+    shadow[0]  = aligned_calloc3<uint8_t>(dx[0],dy[0],16);
 
     if (prefs.blur) {
         int startx = overhang.left - 1;
@@ -424,7 +425,7 @@ void TrenderedTextSubtitleWord::drawShadow()
     unsigned int max_outline_pos_x  = dx[0] - overhang.right + m_outlineWidth;
     unsigned int max_outline_pos_y  = dy[0] - overhang.bottom + m_outlineWidth;
     if (prefs.opaqueBox) {
-        memset(msk[0],255,dx[0]*dy[0]);
+        memset(msk[0],64,dx[0]*dy[0]);
     } else if (m_outlineWidth) {
         // Prepare outline
         if (Tconfig::cpu_flags&FF_CPU_SSE2
@@ -438,7 +439,7 @@ void TrenderedTextSubtitleWord::drawShadow()
             for (unsigned int y = overhang.top - m_outlineWidth ; y < max_outline_pos_y ; y++)
                 for (unsigned int x = overhang.left - m_outlineWidth ; x < max_outline_pos_x ; x++) {
                     unsigned int sum=fontPrepareOutline_sse2((unsigned char*)expanded + expanded.dx * y + x , srcStrideGap, matrix, matrixSizeH_sse2, matrixSizeV) >> 9;
-                    msk[0][dx[0]*y+x]=sum>255 ? 255 : sum;
+                    msk[0][dx[0]*y+x]=sum>64 ? 64 : sum;
                 }
         }
 #ifndef WIN64
@@ -449,7 +450,7 @@ void TrenderedTextSubtitleWord::drawShadow()
             for (unsigned int y = overhang.top - m_outlineWidth ; y < max_outline_pos_y ; y++) {
                 for (unsigned int x = overhang.left - m_outlineWidth ; x < max_outline_pos_x ; x++) {
                     unsigned int sum=fontPrepareOutline_mmx((unsigned char*)expanded + expanded.dx * y + x, srcStrideGap, matrix, matrixSizeH_mmx, matrixSizeV, matrixGap) >> 9;
-                    msk[0][dx[0]*y+x]=sum>255 ? 255 : sum;
+                    msk[0][dx[0]*y+x]=sum>64 ? 64 : sum;
                 }
             }
         }
@@ -463,7 +464,7 @@ void TrenderedTextSubtitleWord::drawShadow()
                       for (unsigned int xx=0;xx<matrixSizeV;xx++,srcPos++)
                           sum+=(*srcPos)*matrix[matrixSizeH*yy+xx];
                      sum>>=9;
-                     msk[0][dx[0]*y+x]=sum>255 ? 255 : sum;
+                     msk[0][dx[0]*y+x]=sum>64 ? 64 : sum;
                }
         }
 
@@ -480,7 +481,7 @@ void TrenderedTextSubtitleWord::drawShadow()
         int b=bmp[0][c];
         int o=msk[0][c]-b;
         if (o>0)
-            outline[0][c]=o;//*(255-b)>>8;
+            outline[0][c]=o;
     }
     m_shadowMode=prefs.shadowMode;
 
@@ -488,9 +489,9 @@ void TrenderedTextSubtitleWord::drawShadow()
         dx[1]=dx[0]>>1;
         dy[1]=dy[0]>>1;
         dx[1]=(dx[1]/alignXsize+1)*alignXsize;
-        bmp[1]     = (unsigned char*)aligned_calloc(dx[1],dy[1],16);
-        outline[1] = (unsigned char*)aligned_calloc(dx[1],dy[1],16);
-        shadow[1]  = (unsigned char*)aligned_calloc(dx[1],dy[1],16);
+        bmp[1]     = aligned_calloc3<uint8_t>(dx[1],dy[1]);
+        outline[1] = aligned_calloc3<uint8_t>(dx[1],dy[1]);
+        shadow[1]  = aligned_calloc3<uint8_t>(dx[1],dy[1]);
 
         dx[2]=dx[0]>>1;
         dy[2]=dy[0]>>1;
@@ -499,10 +500,10 @@ void TrenderedTextSubtitleWord::drawShadow()
         //RGB32
         dx[1]=dx[0] * size_of_rgb32;
         dy[1]=dy[0];
-        bmp[1]     = (unsigned char*)aligned_malloc(dx[1]*dy[1]+16,16);
-        outline[1] = (unsigned char*)aligned_malloc(dx[1]*dy[1]+16,16);
-        shadow[1]  = (unsigned char*)aligned_malloc(dx[1]*dy[1]+16,16);
-        msk[1]     = (unsigned char*)aligned_malloc(dx[1]*dy[1]+16,16);
+        bmp[1]     = aligned_calloc3<uint8_t>(dx[1],dy[1],16);
+        outline[1] = aligned_calloc3<uint8_t>(dx[1],dy[1],16);
+        shadow[1]  = aligned_calloc3<uint8_t>(dx[1],dy[1],16);
+        msk[1]     = aligned_calloc3<uint8_t>(dx[1],dy[1],16);
     }
     updateMask();
 
@@ -743,7 +744,7 @@ unsigned char* TrenderedTextSubtitleWord::blur(unsigned char *src,stride_t Idx,s
   *  Copyright (C) 2003-2006 Gabest
   *  http://www.gabest.org
   */
- unsigned char *dst=(unsigned char*)aligned_calloc3(Idx,Idy,16,16);
+ unsigned char *dst = aligned_calloc3<uint8_t>(Idx,Idy,16);
  int sx=startx <= 0 ? 1 : startx;
  int sy=starty <= 0 ? 1 : starty;
  int ex=endx >= Idx ? Idx-1 : endx;
@@ -940,12 +941,12 @@ void TrenderedTextSubtitleWord::print(int startx, int starty, unsigned int sdx[3
            #define YV12_Y_FONTRENDERER                                              \
            int srcPos=y * dx[0] + x + srcOffset;                                    \
            int dstPos=y * stride[0] + x + dstOffset;                                \
-           int s=shadowYUVa * shadow[0][srcPos] >> 8;                               \
+           int s=shadowYUVa * shadow[0][srcPos] >> 6;                               \
            int d=((256-s) * dstLn[0][dstPos] >> 8) + (s * m_shadowYUV.Y >> 8);      \
-           int o=outlineYUVa * outline[0][srcPos] >> 8;                             \
-           int b=bodyYUVa *bmp[0][srcPos] >> 8;                                     \
+           int o=outlineYUVa * outline[0][srcPos] >> 6;                             \
+           int b=bodyYUVa * bmp[0][srcPos] >> 6;                                    \
            int m=msk[0][srcPos];                                                    \
-               d=((256-m) * d >> 8) + (o * m_outlineYUV.Y >> 8);                    \
+               d=((64-m) * d >> 6) + (o * m_outlineYUV.Y >> 8);                     \
                dstLn[0][dstPos]=d + (b * m_bodyYUV.Y >> 8);
 
            YV12_Y_FONTRENDERER
@@ -975,10 +976,10 @@ void TrenderedTextSubtitleWord::print(int startx, int starty, unsigned int sdx[3
            int srcPos=y * dx[1] + x + srcOffsetUV;                                  \
            int dstPos=y * stride[1] + x + dstOffsetUV;                              \
            /* U */                                                                  \
-           int s=shadowYUVa * shadow[1][srcPos] >> 8;                               \
+           int s=shadowYUVa * shadow[1][srcPos] >> 6;                               \
            int d=((256-s) * dstLn[1][dstPos] >> 8) + (s * m_shadowYUV.U >> 8);      \
-           int o=outlineYUVa * outline[1][srcPos] >> 8;                             \
-           int b=bodyYUVa * bmp[1][srcPos] >> 8;                                    \
+           int o=outlineYUVa * outline[1][srcPos] >> 6;                             \
+           int b=bodyYUVa * bmp[1][srcPos] >> 6;                                    \
                d=((256-o) * d >> 8) + (o * m_outlineYUV.U >> 8);                    \
                dstLn[1][dstPos]=((256-b) * d >> 8) + (b * m_bodyYUV.U >> 8);        \
            /* V */                                                                  \
@@ -1035,20 +1036,20 @@ void TrenderedTextSubtitleWord::print(int startx, int starty, unsigned int sdx[3
            int srcPos=y * dx[1] + x + srcOffsetRGB;                               \
            int dstPos=y * stride[0] + x + dstOffsetRGB;                           \
            /* B */                                                                \
-           int s=shadowYUVa * shadow[1][srcPos] >> 8;                             \
+           int s=shadowYUVa * shadow[1][srcPos] >> 6;                             \
            int d=((256-s) * dstLn[0][dstPos] >> 8) + (s * m_shadowYUV.b >> 8);    \
-           int o=outlineYUVa * outline[1][srcPos] >> 8;                           \
-           int b=bodyYUVa * bmp[1][srcPos] >> 8;                                  \
+           int o=outlineYUVa * outline[1][srcPos] >> 6;                           \
+           int b=bodyYUVa * bmp[1][srcPos] >> 6;                                  \
            int m=msk[1][srcPos];                                                  \
-               d=((256-m) * d >> 8)+(o * m_outlineYUV.b >> 8);                    \
+               d=((64-m) * d >> 6)+(o * m_outlineYUV.b >> 8);                     \
                dstLn[0][dstPos]=d + (b * m_bodyYUV.b >> 8);                       \
            /* G */                                                                \
                d=((256-s) * dstLn[0][dstPos+1] >> 8)+(s * m_shadowYUV.g >> 8);    \
-               d=((256-m) * d >> 8)+(o * m_outlineYUV.g >> 8);                    \
+               d=((64-m) * d >> 6)+(o * m_outlineYUV.g >> 8);                     \
                dstLn[0][dstPos + 1]=d + (b * m_bodyYUV.g >> 8);                   \
            /* R */                                                                \
                d=((256-s) * dstLn[0][dstPos+2] >> 8)+(s * m_shadowYUV.r >> 8);    \
-               d=((256-m) * d >> 8)+(o * m_outlineYUV.r >> 8);                    \
+               d=((64-m) * d >> 6)+(o * m_outlineYUV.r >> 8);                     \
                dstLn[0][dstPos + 2]=d + (b * m_bodyYUV.r >> 8);
 
            RGBFONTRENDERER

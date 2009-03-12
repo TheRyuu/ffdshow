@@ -706,7 +706,7 @@ bool Rasterizer::Rasterize(int xsub, int ysub, const CRect &borderSize)
     mGlyphBmpWidth = ((mGlyphBmpWidth + 15) >> 4) << 4;
     mGlyphBmpHeight = ((height+7)>>3) + 1;
 
-    bmp[0] = (byte *)aligned_calloc3(mGlyphBmpWidth, mGlyphBmpHeight,16,16);
+    bmp[0] = aligned_calloc3<uint8_t>(mGlyphBmpWidth, mGlyphBmpHeight,16);
 
         xsub += borderSize.left * 8;
         ysub += borderSize.top * 8;
@@ -746,14 +746,5 @@ bool Rasterizer::Rasterize(int xsub, int ysub, const CRect &borderSize)
         }
     }
 
-    unsigned char *dstend = bmp[0] + mGlyphBmpWidth * mGlyphBmpHeight;
-    for (byte *dst = bmp[0] ; dst < dstend ; dst++) {
-        int v = *dst;
-        if (v == 64)
-            *dst = 255;
-        else
-            *dst = v * 4;
-    }
-            
     return true;
 }

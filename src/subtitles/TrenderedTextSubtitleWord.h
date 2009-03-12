@@ -58,7 +58,7 @@ private:
         {
             dx = word.dx[0] + 2 * word.m_outlineWidth;
             dy = word.dy[0] + 2 * word.m_outlineWidth;
-            expBmp = (unsigned char*)aligned_calloc3(dx, dy, 16, 16);
+            expBmp = aligned_calloc3<uint8_t>(dx, dy, 16);
             for (unsigned int y = 0 ; y < word.dy[0] ; y++) {
                 memcpy(expBmp + dx * (y + word.m_outlineWidth)+ word.m_outlineWidth, word.bmp[0] + word.dx[0] * y, word.dx[0]);
             }
@@ -91,8 +91,7 @@ public:
     struct secondaryColor_t {};
     TrenderedTextSubtitleWord(
         const TrenderedTextSubtitleWord &parent,
-        struct secondaryColor_t                       // to distinguish from default copy constructor
-        );
+        struct secondaryColor_t);
     virtual ~TrenderedTextSubtitleWord();
     virtual void print(int startx, int starty, unsigned int dx[3],int dy[3],unsigned char *dstLn[3],const stride_t stride[3],const unsigned char *bmp[3],const unsigned char *msk[3],REFERENCE_TIME rtStart=REFTIME_INVALID) const;
     unsigned int alignXsize;
