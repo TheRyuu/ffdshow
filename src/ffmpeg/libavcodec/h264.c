@@ -7601,7 +7601,7 @@ static void execute_decode_slices(H264Context *h, int context_count){
 
     if(context_count == 1) {
         /* ffdshow custom code, interlacing is not supported in multithreading mode */
-        if(avctx->thread_count > 1 && h->pps.cabac && !s->current_picture_ptr->interlaced_frame) {
+        if(avctx->thread_count > 1 && h->pps.cabac && !(FIELD_OR_MBAFF_PICTURE)) {
             decode_slice2(avctx, &h);
         } else {
             decode_slice(avctx, &h);
