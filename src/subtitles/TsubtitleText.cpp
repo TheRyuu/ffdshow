@@ -1325,7 +1325,6 @@ void TsubtitleText::print(
     unsigned char **dst,
     const stride_t *stride)
 {
-    prefs.subformat=subformat;
     f.prepareC(this,prefs,false);
 }
 
@@ -1563,7 +1562,6 @@ TrenderedTextSubtitleWord* TsubtitleText::newWord(
         prefs.blur=false;
 
     if (w->props.outlineWidth==-1 && fontSettings.opaqueBox) {
-        prefs.outlineWidth=0;
         prefs.opaqueBox=true;
     }
 

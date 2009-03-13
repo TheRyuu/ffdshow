@@ -682,7 +682,7 @@ void Rasterizer::DeleteOutlines()
     mOutline.clear();
 }
 
-bool Rasterizer::Rasterize(int xsub, int ysub, const CRect &borderSize)
+bool Rasterizer::Rasterize(int xsub, int ysub, CRect &overhang)
 {
     _TrashOverlay();
 
@@ -694,22 +694,23 @@ bool Rasterizer::Rasterize(int xsub, int ysub, const CRect &borderSize)
     xsub &= 7;
     ysub &= 7;
 
-    int width = mWidth + xsub + (borderSize.left + borderSize.right) * 8;
-    int height = mHeight + ysub + (borderSize.top + borderSize.bottom) * 8;
+    int width = mWidth + xsub + (overhang.left + overhang.right) * 8;
+    int height = mHeight + ysub + (overhang.top + overhang.bottom) * 8;
 
     mOffsetX = mPathOffsetX - xsub;
     mOffsetY = mPathOffsetY - ysub;
 
     mWideBorder = (mWideBorder+7)&~7;
 
-    mGlyphBmpWidth = (width >> 3)+1;
-    mGlyphBmpWidth = ((mGlyphBmpWidth + 15) >> 4) << 4;
-    mGlyphBmpHeight = ((height+7)>>3) + 1;
+    int gw          = ((width + 7) >> 3)+1;
+    mGlyphBmpWidth  = ((gw + 15) >> 4) << 4;
+    overhang.right  += mGlyphBmpWidth - gw;
+    mGlyphBmpHeight = ((height + 7) >> 3) + 1;
 
     bmp[0] = aligned_calloc3<uint8_t>(mGlyphBmpWidth, mGlyphBmpHeight,16);
 
-        xsub += borderSize.left * 8;
-        ysub += borderSize.top * 8;
+        xsub += overhang.left * 8;
+        ysub += overhang.top * 8;
 
     // Are we doing a border?
 

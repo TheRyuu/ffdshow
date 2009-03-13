@@ -137,7 +137,7 @@ TrenderedTextSubtitleWord::TrenderedTextSubtitleWord(
                 m_outlineWidth++;
         }
     } else
-        m_outlineWidth = 0;
+        m_outlineWidth = int(outlineWidth_double);
 
     if (outlineWidth_double < 1.0 && outlineWidth_double > 0)
         outlineWidth_double = 0.5 + outlineWidth_double/2.0;
@@ -317,12 +317,12 @@ void TrenderedTextSubtitleWord::drawGlyphOSD(
     SelectObject(hdc,old);
     DeleteObject(hbmp);
 
-    dx[0]    = xscale * gdi_dx / (gdi_font_scale * 100) + overhang.left + overhang.right;
+    unsigned int tmpdx = xscale * gdi_dx / (gdi_font_scale * 100) + overhang.left + overhang.right;
+    dx[0]=((tmpdx + 15) / 16) * 16;
     dy[0]    = gdi_dy / gdi_font_scale + overhang.top + overhang.bottom;
     baseline = baseline / gdi_font_scale + 2;
 
-    unsigned int al=csp==FF_CSP_420P ? alignXsize : 8;
-    dx[0]=((dx[0]+al-1)/al)*al;
+    overhang.right += dx[0] - tmpdx;
     if (dx[0] < 16) dx[0]=16;
     if (csp==FF_CSP_420P)
      dy[0]=((dy[0]+1)/2)*2;
@@ -387,6 +387,29 @@ void TrenderedTextSubtitleWord::drawGlyphOSD(
 
 void TrenderedTextSubtitleWord::drawShadow()
 {
+    if (prefs.opaqueBox && (mPathOffsetX > 0 || mPathOffsetY > 0)) {
+        unsigned int offx = (mPathOffsetX > 0) ?
+                                mPathOffsetX >> 3:
+                                0;
+        unsigned int offy = (mPathOffsetY > 0) ?
+                                mPathOffsetY >> 3:
+                                0;
+        unsigned int newdx0 = dx[0] + offx;
+        unsigned int newdx = ((newdx0 + 15) / 16) * 16;
+        unsigned int newdy = dy[0] + offy;
+        uint8_t *newbmp = aligned_calloc3<uint8_t>(newdx,newdy,16);
+        for (unsigned int y = 0 ; y < dy[0] ; y++) {
+            memcpy(newbmp + (y + offy) * newdx + offx, bmp[0] + y * dx[0], dx[0]);
+        }
+        dx[0] = newdx;
+        dy[0] = newdy;
+        _aligned_free(bmp[0]);
+        bmp[0] = newbmp;
+        overhang.right += newdx - newdx0;
+        if (mPathOffsetX > 0) mPathOffsetX = 0;
+        if (mPathOffsetY > 0) mPathOffsetY = 0;
+    }
+
     msk[0]     = aligned_calloc3<uint8_t>(dx[0],dy[0],16);
     outline[0] = aligned_calloc3<uint8_t>(dx[0],dy[0],16);
     shadow[0]  = aligned_calloc3<uint8_t>(dx[0],dy[0],16);
@@ -399,35 +422,42 @@ void TrenderedTextSubtitleWord::drawShadow()
         bmp[0]=blur(bmp[0], dx[0], dy[0], startx, starty, endx, endy, true);
     }
 
-    TexpandedGlyph expanded(*this);
-
-    // Prepare matrix for outline calculation
-    short *matrix=NULL;
-    unsigned int matrixSizeH = ((m_outlineWidth*2+8)/8)*8; // 2 bytes for one.
-    unsigned int matrixSizeV = m_outlineWidth*2+1;
-    if (m_outlineWidth>0) {
-        double r_cutoff=1.5;
-        if (outlineWidth_double<4.5)
-         r_cutoff=outlineWidth_double/3.0;
-        double r_mul=512.0/r_cutoff;
-        matrix=(short*)aligned_calloc(matrixSizeH*2,matrixSizeV,16);
-        for (int y = -m_outlineWidth ; y <= m_outlineWidth ; y++)
-            for (int x = -m_outlineWidth ; x <= m_outlineWidth ; x++) {
-                int pos=(y + m_outlineWidth)*matrixSizeH+x+m_outlineWidth;
-                double r=0.5+outlineWidth_double-sqrt(double(x*x+y*y));
-                if (r>r_cutoff)
-                   matrix[pos]=512;
-                else if (r>0)
-                   matrix[pos]=r*r_mul;
-            }
-    }
-
-    unsigned int max_outline_pos_x  = dx[0] - overhang.right + m_outlineWidth;
-    unsigned int max_outline_pos_y  = dy[0] - overhang.bottom + m_outlineWidth;
     if (prefs.opaqueBox) {
-        memset(msk[0],64,dx[0]*dy[0]);
+        if (m_outlineWidth > 0) {
+            CRect opaqueBox = overhang - CRect(m_outlineWidth,m_outlineWidth,m_outlineWidth,m_outlineWidth);
+            for (unsigned int y = opaqueBox.top ; y < dy[0] - opaqueBox.bottom ; y++) {
+                memset(msk[0] + y * dx[0] + opaqueBox.left, 64, dx[0] - opaqueBox.left - opaqueBox.right);
+            }
+        } else {
+            memcpy(msk[0], bmp[0], dx[0] * dy[0]);
+        }
     } else if (m_outlineWidth) {
         // Prepare outline
+        // Prepare matrix for outline calculation
+        short *matrix=NULL;
+        unsigned int matrixSizeH = ((m_outlineWidth*2+8)/8)*8; // 2 bytes for one.
+        unsigned int matrixSizeV = m_outlineWidth*2+1;
+        if (m_outlineWidth>0) {
+            double r_cutoff=1.5;
+            if (outlineWidth_double<4.5)
+             r_cutoff=outlineWidth_double/3.0;
+            double r_mul=512.0/r_cutoff;
+            matrix=(short*)aligned_calloc(matrixSizeH*2,matrixSizeV,16);
+            for (int y = -m_outlineWidth ; y <= m_outlineWidth ; y++)
+                for (int x = -m_outlineWidth ; x <= m_outlineWidth ; x++) {
+                    int pos=(y + m_outlineWidth)*matrixSizeH+x+m_outlineWidth;
+                    double r=0.5+outlineWidth_double-sqrt(double(x*x+y*y));
+                    if (r>r_cutoff)
+                       matrix[pos]=512;
+                    else if (r>0)
+                       matrix[pos]=r*r_mul;
+                }
+        }
+
+        unsigned int max_outline_pos_x  = dx[0] - overhang.right + m_outlineWidth;
+        unsigned int max_outline_pos_y  = dy[0] - overhang.bottom + m_outlineWidth;
+
+        TexpandedGlyph expanded(*this);
         if (Tconfig::cpu_flags&FF_CPU_SSE2
 #ifndef WIN64
             && m_outlineWidth>=2
@@ -470,6 +500,8 @@ void TrenderedTextSubtitleWord::drawShadow()
 
         if (prefs.outlineBlur || (prefs.shadowMode==0 && m_shadowSize>0)) // blur outline and msk
             msk[0]=blur(msk[0], dx[0], dy[0], 0, 0, dx[0], dy[0], false);
+        if (matrix)
+            aligned_free(matrix);
     }  else {
         // m_outlineWidth==0
         memcpy(msk[0],bmp[0],dx[0]*dy[0]);
@@ -509,9 +541,6 @@ void TrenderedTextSubtitleWord::drawShadow()
 
     if (props.karaokeMode != TSubtitleProps::KARAOKE_NONE)
         secondaryColoredWord = new TrenderedTextSubtitleWord(*this, secondaryColor_t());
-
-    if (matrix)
-        aligned_free(matrix);
 }
 
 void TrenderedTextSubtitleWord::updateMask(int fader, int create) const

@@ -61,6 +61,10 @@ struct CRect :RECT
   {
    return CRect (left + rt.left, top + rt.top, right + rt.right, bottom + rt.bottom);
   }
+ inline CRect operator - (const CRect &rt)
+  {
+   return CRect (left - rt.left, top - rt.top, right - rt.right, bottom - rt.bottom);
+  }
  inline int Width(void) const {return right-left;}
  inline int Height(void) const {return bottom-top;}
  inline CPoint TopLeft(void) const {return CPoint(left,top);}
