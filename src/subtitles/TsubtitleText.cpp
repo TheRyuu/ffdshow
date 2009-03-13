@@ -1332,7 +1332,7 @@ size_t TsubtitleText::prepareGlyph(const TprintPrefs &prefs, Tfont &font, bool f
 {
     size_t used_memory = 0;
     if (!rendering_ready || forceChange || old_prefs != prefs) {
-        if (!prefs.isOSD) DPRINTF(_l("TsubtitleText::prepareGlyph %I64i"),start);
+        //if (!prefs.isOSD) DPRINTF(_l("TsubtitleText::prepareGlyph %I64i"),start);
         old_prefs = prefs;
 
         unsigned int dx,dy;

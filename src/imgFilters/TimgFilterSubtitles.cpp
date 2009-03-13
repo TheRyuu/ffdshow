@@ -571,7 +571,7 @@ void TimgFilterSubtitles::TglyphThread::glyphThreadFunc()
             // compare again as shared_prefs may have chaged during condv_prefs.wait
             if (shared_prefs != copied_prefs) {
                 // in this case, rendered subtitles are dropped by TimgFilterSubtitles::process. This is not beautiful, but better for performance.
-                DPRINTF(_l("prefs changed"));
+                // DPRINTF(_l("prefs changed"));
                 current_pos = 0;
                 used_memory = 0;
             }

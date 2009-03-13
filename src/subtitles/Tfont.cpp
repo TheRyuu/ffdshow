@@ -111,32 +111,7 @@ bool TprintPrefs::operator != (const TprintPrefs &rt) const
  bool TprintPrefs::operator == (const TprintPrefs &rt) const
  {
      // compare all members except rtStart
-     if (dx == rt.dx && dy == rt.dy && clipdy == rt.clipdy
-      && isOSD == rt.isOSD
-      && xpos == rt.xpos && ypos == rt.ypos
-      && align == rt.align
-      && linespacing == rt.linespacing
-      && sizeDx == rt.sizeDx && sizeDy == rt.sizeDy
-      && posXpix == rt.posXpix
-      && vobchangeposition == rt.vobchangeposition && vobscale == rt.vobscale && vobaamode == rt.vobaamode && vobaagauss == rt.vobaagauss
-      && fontchangesplit == rt.fontchangesplit && fontsplit == rt.fontsplit
-      && textBorderLR == rt.textBorderLR
-      && tabsize == rt.tabsize
-      && dvd == rt.dvd
-      && shadowMode == rt.shadowMode && shadowAlpha == rt.shadowAlpha
-      && shadowSize == rt.shadowSize
-      && blur == rt.blur && outlineBlur == rt.outlineBlur
-      && csp == rt.csp
-      && outlineWidth == rt.outlineWidth
-      && sar == rt.sar
-      && opaqueBox == rt.opaqueBox
-      && subformat == rt.subformat
-      && xinput == rt.xinput && yinput == rt.yinput
-      && fontSettings == rt.fontSettings
-      && yuvcolor == rt.yuvcolor && outlineYUV == rt.outlineYUV && shadowYUV == rt.shadowYUV)
-        return true;
-     else
-        return false;
+     return !(*this != rt);
  }
 
 void TprintPrefs::debug_print() const
