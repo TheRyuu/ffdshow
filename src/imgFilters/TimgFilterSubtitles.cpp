@@ -90,6 +90,7 @@ TimgFilterSubtitles::TimgFilterSubtitles(IffdshowBase *Ideci,Tfilters *Iparent):
 
 TimgFilterSubtitles::~TimgFilterSubtitles()
 {
+    glyphThread.done();
     boost::unique_lock<boost::recursive_mutex> lock(csEmbedded);
     if (expand)
         delete expand;
@@ -98,7 +99,6 @@ TimgFilterSubtitles::~TimgFilterSubtitles()
             delete e->second;
     if (cc)
         delete cc;
-    glyphThread.done();
 }
 
 void TimgFilterSubtitles::onSizeChange()
