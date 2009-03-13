@@ -135,6 +135,10 @@ private:
     ParagraphValue(): topOverhang(0), bottomOverhang(0),width(0),height(0), y(0), xmin(-1),xmax(-1),y0(0),xoffset(0),yoffset(0), firstuse(true) {};
   };
  void prepareKey(const_iterator i,ParagraphKey &pkey,unsigned int prefsdx,unsigned int prefsdy);
+ class TlayerSort {
+ public:
+     bool operator() (TrenderedSubtitleLine *lt, TrenderedSubtitleLine *rt) const;
+ };
 };
 
 bool operator < (const TrenderedSubtitleLines::ParagraphKey &a, const TrenderedSubtitleLines::ParagraphKey &b);
@@ -190,7 +194,7 @@ class TrenderedSubtitleLine : public std::vector<TrenderedSubtitleWordBase*>
 public:
 
  TSubtitleProps& getPropsOfThisObject() {return props;};
- const TSubtitleProps& getProps();
+ const TSubtitleProps& getProps() const;
  TrenderedSubtitleLine(void):firstrun(true) {props.reset();}
  TrenderedSubtitleLine(TSubtitleProps p):firstrun(true) {props=p;}
  TrenderedSubtitleLine(TSubtitleProps p, double IemptyHeight):firstrun(true),emptyHeight(IemptyHeight) {props=p;}
@@ -231,7 +235,6 @@ private:
  HDC hdc;HGDIOBJ oldFont;
  TrenderedSubtitleLines lines;
  unsigned int height;
- const Tsubtitle *oldsub;
  int oldCsp;
  short matrix[5][5];
  void prepareC(TsubtitleText *sub,const TprintPrefs &prefs,bool forceChange);

@@ -301,7 +301,7 @@ void TrenderedSubtitleLine::print(
     }
 }
 
-const TSubtitleProps& TrenderedSubtitleLine::getProps()
+const TSubtitleProps& TrenderedSubtitleLine::getProps() const
 {
     // Which props should represent this line?
     // The first word that have dxChar should to make sense.
@@ -445,6 +445,8 @@ void TrenderedSubtitleLines::printASS(
     }
   }
 
+ std::sort(begin(),end(),TlayerSort());
+
  // pass 2: print
  for (const_iterator i=begin();i!=end();i++)
   {
@@ -586,8 +588,7 @@ void TrenderedSubtitleLines::prepareKey(const_iterator i,ParagraphKey &pkey,unsi
  pkey.isPos = lineprops.isPos;
  pkey.isMove = lineprops.isMove;
 
- //pkey.layer = lineprops.layer; // TODO : uncomment when layers implemented
- pkey.layer = 0;
+ pkey.layer = lineprops.layer;
  if (pkey.isPos || pkey.isMove)
   {
    pkey.posx = lineprops.posx;
@@ -630,9 +631,16 @@ bool operator < (const TrenderedSubtitleLines::ParagraphKey &a, const TrenderedS
     if (a.posx<b.posx) return true;
     if (a.posx>b.posx) return false;
     if (a.posy<b.posy) return true;
-    //if (a.posy>b.posy) return false;
+    if (a.posy>b.posy) return false;
+    if (a.layer<b.layer) return true;
+    if (a.layer>b.layer) return false;
     return false;
 };
+
+bool TrenderedSubtitleLines::TlayerSort::operator() (TrenderedSubtitleLine *lt, TrenderedSubtitleLine *rt) const
+{
+    return lt->getProps().layer < rt->getProps().layer;
+}
 
 //============================== TrenderedVobsubWord ===============================
 void TrenderedVobsubWord::print(int startx, int starty /* not used */, unsigned int sdx[3],int sdy[3],unsigned char *dstLn[3],const stride_t stride[3],const unsigned char *bmp[3],const unsigned char *msk[3],REFERENCE_TIME rtStart) const
@@ -711,35 +719,35 @@ void TrenderedVobsubWord::print(int startx, int starty /* not used */, unsigned 
 
 //==================================== Tfont ====================================
 Tfont::Tfont(IffdshowBase *Ideci):
- fontManager(NULL),
- deci(Ideci),
- oldsub(NULL),
- hdc(NULL),oldFont(NULL),
- height(0)
+    fontManager(NULL),
+    deci(Ideci),
+    hdc(NULL),
+    oldFont(NULL),
+    height(0)
 {
- init();
+    init();
 }
 Tfont::~Tfont()
 {
- done();
+    done();
 }
 void Tfont::init()
 {
- done();
- hdc=CreateCompatibleDC(NULL);
- if (!hdc) return;
- SetBkMode(hdc,TRANSPARENT); 
- SetTextColor(hdc,0xffffff); 
- SetMapMode(hdc,MM_TEXT);
+    done();
+    hdc=CreateCompatibleDC(NULL);
+    if (!hdc) return;
+    SetBkMode(hdc,TRANSPARENT); 
+    SetTextColor(hdc,0xffffff); 
+    SetMapMode(hdc,MM_TEXT);
 }
 void Tfont::done(void)
 {
- if (hdc)
-  {
-   if (oldFont) SelectObject(hdc,oldFont);oldFont=NULL;
-   DeleteDC(hdc);hdc=NULL;
-  }
- oldsub=NULL;
+    if (hdc) {
+        if (oldFont) SelectObject(hdc,oldFont);
+        oldFont = NULL;
+        DeleteDC(hdc);
+        hdc = NULL;
+    }
 }
 
 void Tfont::prepareC(TsubtitleText *sub,const TprintPrefs &prefs,bool forceChange)
