@@ -72,73 +72,77 @@ struct TprintPrefs {
 class TrenderedSubtitleLines: public std::vector<TrenderedSubtitleLine*>
 {
 public:
- TrenderedSubtitleLines(void) {}
- TrenderedSubtitleLines(TrenderedSubtitleLine *ln) {push_back(ln);}
- /**
-  * reset
-  *  just clear pointers, do not delete objects.
-  */
- void reset(void)
-  {
-   erase(begin(),end());
-  }
- /**
-  * clear
-  *  clear pointers and delete objects.
-  */
- void clear(void);
- using std::vector<value_type>::empty;
- void print(
-    const TprintPrefs &prefs,
-    unsigned char **dst,
-    const stride_t *stride);
- size_t getMemorySize() const;
+    TrenderedSubtitleLines(void) {}
+    TrenderedSubtitleLines(TrenderedSubtitleLine *ln) {push_back(ln);}
+
+    /**
+     * reset
+     *  just clear pointers, do not delete objects.
+     */
+    void reset(void)
+     {
+      erase(begin(),end());
+     }
+
+    /**
+     * clear
+     *  clear pointers and delete objects.
+     */
+    void clear(void);
+
+    using std::vector<value_type>::empty;
+
+    void print(
+       const TprintPrefs &prefs,
+       unsigned char **dst,
+       const stride_t *stride);
+
+    size_t getMemorySize() const;
 
 private:
- void printASS(
-    const TprintPrefs &prefs,
-    unsigned char **dst,
-    const stride_t *stride);
- class ParagraphKey
-  {
-   public:
-    short alignment;
-    short marginTop,marginBottom;
-    short marginL,marginR;
-    short isPos;
-    short isMove;
-    short posx,posy;
-    short layer;
+    void printASS(
+       const TprintPrefs &prefs,
+       unsigned char **dst,
+       const stride_t *stride);
 
-    ParagraphKey(): layer(0),alignment(-1), marginTop(-1), marginBottom(-1), marginL(-1), marginR(-1), isPos(false), posx(-1),posy(-1){};
-  };
- friend bool operator < (const TrenderedSubtitleLines::ParagraphKey &a, const TrenderedSubtitleLines::ParagraphKey &b);
+    class ParagraphKey {
+    public:
+        short alignment;
+        short marginTop,marginBottom;
+        short marginL,marginR;
+        short isPos;
+        short isMove;
+        short posx,posy;
+        short layer;
 
- class ParagraphValue
-  {
-   public:
-    double topOverhang,bottomOverhang;
-    double width,height,y;
-    double xmin,xmax,y0,xoffset,yoffset;
-    bool firstuse;
+        ParagraphKey(): layer(0),alignment(-1), marginTop(-1), marginBottom(-1), marginL(-1), marginR(-1), isPos(false), posx(-1),posy(-1){};
+    };
+    friend bool operator < (const TrenderedSubtitleLines::ParagraphKey &a, const TrenderedSubtitleLines::ParagraphKey &b);
 
-    bool checkCollision(ParagraphValue pVal)
-    {
-        if (((y0+yoffset >= pVal.y0 && y0+yoffset < pVal.y0+pVal.height)
-               || (y0+yoffset<pVal.y0 &&  y0+yoffset+height>pVal.y0)) &&
-               ((xmin+xoffset >= pVal.xmin && xmin+xoffset < pVal.xmax)
-               || (xmin+xoffset<pVal.xmin && xmax+xoffset>pVal.xmin)))
-               return true;
-        return false;
-    }
+    class ParagraphValue {
+    public:
+        double topOverhang,bottomOverhang;
+        double width,height,y;
+        double xmin,xmax,y0,xoffset,yoffset;
+        bool firstuse;
 
-    ParagraphValue(): topOverhang(0), bottomOverhang(0),width(0),height(0), y(0), xmin(-1),xmax(-1),y0(0),xoffset(0),yoffset(0), firstuse(true) {};
-  };
- void prepareKey(const_iterator i,ParagraphKey &pkey,unsigned int prefsdx,unsigned int prefsdy);
- class TlayerSort {
- public:
-     bool operator() (TrenderedSubtitleLine *lt, TrenderedSubtitleLine *rt) const;
- };
+        bool checkCollision(ParagraphValue pVal)
+        {
+            if (((y0+yoffset >= pVal.y0 && y0+yoffset < pVal.y0+pVal.height)
+                   || (y0+yoffset<pVal.y0 &&  y0+yoffset+height>pVal.y0)) &&
+                   ((xmin+xoffset >= pVal.xmin && xmin+xoffset < pVal.xmax)
+                   || (xmin+xoffset<pVal.xmin && xmax+xoffset>pVal.xmin)))
+                   return true;
+            return false;
+        }
+
+        ParagraphValue(): topOverhang(0), bottomOverhang(0),width(0),height(0), y(0), xmin(-1),xmax(-1),y0(0),xoffset(0),yoffset(0), firstuse(true) {};
+    };
+    void prepareKey(const_iterator i,ParagraphKey &pkey,unsigned int prefsdx,unsigned int prefsdy);
+    class TlayerSort {
+    public:
+        bool operator() (TrenderedSubtitleLine *lt, TrenderedSubtitleLine *rt) const;
+    };
 };
 
 bool operator < (const TrenderedSubtitleLines::ParagraphKey &a, const TrenderedSubtitleLines::ParagraphKey &b);
@@ -178,48 +182,48 @@ public:
 class TrenderedVobsubWord : public TrenderedSubtitleWordBase
 {
 private:
- bool shiftChroma;
+    bool shiftChroma;
 public:
- TrenderedVobsubWord(bool IshiftChroma=true):shiftChroma(IshiftChroma),TrenderedSubtitleWordBase(false) {}
- virtual void print(int startx, int starty, unsigned int dx[3],int dy[3],unsigned char *dstLn[3],const stride_t stride[3],const unsigned char *bmp[3],const unsigned char *msk[3],REFERENCE_TIME rtStart=REFTIME_INVALID) const;
+    TrenderedVobsubWord(bool IshiftChroma=true):shiftChroma(IshiftChroma),TrenderedSubtitleWordBase(false) {}
+    virtual void print(int startx, int starty, unsigned int dx[3],int dy[3],unsigned char *dstLn[3],const stride_t stride[3],const unsigned char *bmp[3],const unsigned char *msk[3],REFERENCE_TIME rtStart=REFTIME_INVALID) const;
 };
 
 class TrenderedTextSubtitleWord;
 
 class TrenderedSubtitleLine : public std::vector<TrenderedSubtitleWordBase*>
 {
- bool firstrun;
- TSubtitleProps props;
- double emptyHeight; // This is used as charHeight if empty.
+    bool firstrun;
+    TSubtitleProps props;
+    double emptyHeight; // This is used as charHeight if empty.
 public:
 
- TSubtitleProps& getPropsOfThisObject() {return props;};
- const TSubtitleProps& getProps() const;
- TrenderedSubtitleLine(void):firstrun(true) {props.reset();}
- TrenderedSubtitleLine(TSubtitleProps p):firstrun(true) {props=p;}
- TrenderedSubtitleLine(TSubtitleProps p, double IemptyHeight):firstrun(true),emptyHeight(IemptyHeight) {props=p;}
- TrenderedSubtitleLine(TrenderedSubtitleWordBase *w):firstrun(true) {push_back(w);props.reset();}
- unsigned int width(void) const;
- unsigned int height(void) const;
- double charHeight(void) const;
- unsigned int baselineHeight(void) const;
- int get_topOverhang(void) const;
- int get_bottomOverhang(void) const;
- int get_leftOverhang(void) const;
- int get_rightOverhang(void) const;
- void prepareKaraoke(void);
- using std::vector<value_type>::push_back;
- using std::vector<value_type>::empty;
- void clear(void);
- void print(
-    int startx,
-    int starty,
-    const TprintPrefs &prefs,
-    unsigned int prefsdx,
-    unsigned int prefsdy,
-    unsigned char **dst,
-    const stride_t *stride) const;
- size_t getMemorySize() const;
+    TSubtitleProps& getPropsOfThisObject() {return props;};
+    const TSubtitleProps& getProps() const;
+    TrenderedSubtitleLine(void):firstrun(true) {props.reset();}
+    TrenderedSubtitleLine(TSubtitleProps p):firstrun(true) {props=p;}
+    TrenderedSubtitleLine(TSubtitleProps p, double IemptyHeight):firstrun(true),emptyHeight(IemptyHeight) {props=p;}
+    TrenderedSubtitleLine(TrenderedSubtitleWordBase *w):firstrun(true) {push_back(w);props.reset();}
+    unsigned int width(void) const;
+    unsigned int height(void) const;
+    double charHeight(void) const;
+    unsigned int baselineHeight(void) const;
+    int get_topOverhang(void) const;
+    int get_bottomOverhang(void) const;
+    int get_leftOverhang(void) const;
+    int get_rightOverhang(void) const;
+    void prepareKaraoke(void);
+    using std::vector<value_type>::push_back;
+    using std::vector<value_type>::empty;
+    void clear(void);
+    void print(
+       int startx,
+       int starty,
+       const TprintPrefs &prefs,
+       unsigned int prefsdx,
+       unsigned int prefsdy,
+       unsigned char **dst,
+       const stride_t *stride) const;
+    size_t getMemorySize() const;
 };
 
 struct TsubtitleWord;
@@ -230,43 +234,43 @@ struct TsubtitleText;
 class Tfont
 {
 private:
- IffdshowBase *deci;
- TfontManager *fontManager;
- HDC hdc;HGDIOBJ oldFont;
- TrenderedSubtitleLines lines;
- unsigned int height;
- int oldCsp;
- short matrix[5][5];
- void prepareC(TsubtitleText *sub,const TprintPrefs &prefs,bool forceChange);
+    IffdshowBase *deci;
+    TfontManager *fontManager;
+    HDC hdc;HGDIOBJ oldFont;
+    TrenderedSubtitleLines lines;
+    unsigned int height;
+    int oldCsp;
+    short matrix[5][5];
+    void prepareC(TsubtitleText *sub,const TprintPrefs &prefs,bool forceChange);
 public:
- friend struct TsubtitleText;
- //TfontSettings *fontSettings;
- Tfont(IffdshowBase *Ideci);
- ~Tfont();
- void init();
- /**
-  * print (for OSD)
-  * @return height
-  */
- int print(
-    TsubtitleText *sub,
-    bool forceChange,
-    const TprintPrefs &prefs,
-    unsigned char **dst,
-    const stride_t *stride);
- /**
-  * printf(for subtitles)
-  * lines must be filled before called
-  */
- void print(
-    const TprintPrefs &prefs,
-    unsigned char **dst,
-    const stride_t *stride);
- void reset(void)
-  {
-   lines.reset();
-  }
- void done(void);
+    friend struct TsubtitleText;
+    //TfontSettings *fontSettings;
+    Tfont(IffdshowBase *Ideci);
+    ~Tfont();
+    void init();
+    /**
+     * print (for OSD)
+     * @return height
+     */
+    int print(
+       TsubtitleText *sub,
+       bool forceChange,
+       const TprintPrefs &prefs,
+       unsigned char **dst,
+       const stride_t *stride);
+    /**
+     * printf(for subtitles)
+     * lines must be filled before called
+     */
+    void print(
+       const TprintPrefs &prefs,
+       unsigned char **dst,
+       const stride_t *stride);
+    void reset(void)
+    {
+        lines.reset();
+    }
+    void done(void);
 };
 
 extern "C" {
