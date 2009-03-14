@@ -107,17 +107,21 @@ private:
 
     class ParagraphKey {
     public:
-        short alignment;
-        short marginTop,marginBottom;
-        short marginL,marginR;
-        short isPos;
-        short isMove;
-        short posx,posy;
-        short layer;
+        int alignment;
+        int marginTop,marginBottom;
+        int marginL,marginR;
+        int isPos;
+        int isMove;
+        int posx,posy;
+        int layer;
+        bool hasPrintedRect;
+        CRect printedRect;
 
-        ParagraphKey(): layer(0),alignment(-1), marginTop(-1), marginBottom(-1), marginL(-1), marginR(-1), isPos(false), posx(-1),posy(-1){};
+        ParagraphKey(TrenderedSubtitleLine *line, unsigned int prefsdx, unsigned int prefsdy);
+        bool operator != (const ParagraphKey &rt) const;
+        bool operator == (const ParagraphKey &rt) const;
+        bool operator < (const ParagraphKey &rt) const;
     };
-    friend bool operator < (const TrenderedSubtitleLines::ParagraphKey &a, const TrenderedSubtitleLines::ParagraphKey &b);
 
     class ParagraphValue {
     public:
@@ -126,26 +130,13 @@ private:
         double xmin,xmax,y0,xoffset,yoffset;
         bool firstuse;
 
-        bool checkCollision(ParagraphValue pVal)
-        {
-            if (((y0+yoffset >= pVal.y0 && y0+yoffset < pVal.y0+pVal.height)
-                   || (y0+yoffset<pVal.y0 &&  y0+yoffset+height>pVal.y0)) &&
-                   ((xmin+xoffset >= pVal.xmin && xmin+xoffset < pVal.xmax)
-                   || (xmin+xoffset<pVal.xmin && xmax+xoffset>pVal.xmin)))
-                   return true;
-            return false;
-        }
-
         ParagraphValue(): topOverhang(0), bottomOverhang(0),width(0),height(0), y(0), xmin(-1),xmax(-1),y0(0),xoffset(0),yoffset(0), firstuse(true) {};
     };
-    void prepareKey(const_iterator i,ParagraphKey &pkey,unsigned int prefsdx,unsigned int prefsdy);
     class TlayerSort {
     public:
         bool operator() (TrenderedSubtitleLine *lt, TrenderedSubtitleLine *rt) const;
     };
 };
-
-bool operator < (const TrenderedSubtitleLines::ParagraphKey &a, const TrenderedSubtitleLines::ParagraphKey &b);
 
 class TrenderedSubtitleWordBase
 {
@@ -195,14 +186,40 @@ class TrenderedSubtitleLine : public std::vector<TrenderedSubtitleWordBase*>
     bool firstrun;
     TSubtitleProps props;
     double emptyHeight; // This is used as charHeight if empty.
+    bool hasPrintedRect;
+    CRect printedRect;
+    CPoint orderedPoint;
 public:
 
-    TSubtitleProps& getPropsOfThisObject() {return props;};
+    TrenderedSubtitleLine(void):firstrun(true),hasPrintedRect(false) {props.reset();}
+    TrenderedSubtitleLine(TSubtitleProps p):firstrun(true),hasPrintedRect(false) {props=p;}
+    TrenderedSubtitleLine(TSubtitleProps p, double IemptyHeight):firstrun(true),emptyHeight(IemptyHeight),hasPrintedRect(false) {props=p;}
+    TrenderedSubtitleLine(TrenderedSubtitleWordBase *w):firstrun(true),hasPrintedRect(false) {push_back(w);props.reset();}
+
+    TSubtitleProps& getPropsOfThisObject() {return props;}
     const TSubtitleProps& getProps() const;
-    TrenderedSubtitleLine(void):firstrun(true) {props.reset();}
-    TrenderedSubtitleLine(TSubtitleProps p):firstrun(true) {props=p;}
-    TrenderedSubtitleLine(TSubtitleProps p, double IemptyHeight):firstrun(true),emptyHeight(IemptyHeight) {props=p;}
-    TrenderedSubtitleLine(TrenderedSubtitleWordBase *w):firstrun(true) {push_back(w);props.reset();}
+    const CRect& getPrintedRect() const {return printedRect;}
+    const CPoint& getOrderedPoint() const {return orderedPoint;}
+    bool getHasPrintedRect() const {return hasPrintedRect;}
+    bool checkCollision(const CRect &query, CRect &ans)
+    {
+        if ( printedRect.top == 0
+          && printedRect.left == 0
+          && printedRect.bottom == 0
+          && printedRect.right == 0)
+            return false;
+        if (query.checkOverlap(printedRect)) {
+            ans = printedRect;
+            return true;
+        }
+        return false;
+    }
+    void setPrinted()
+    {
+        if (!empty())
+            hasPrintedRect = true;
+    }
+
     unsigned int width(void) const;
     unsigned int height(void) const;
     double charHeight(void) const;
@@ -222,7 +239,7 @@ public:
        unsigned int prefsdx,
        unsigned int prefsdy,
        unsigned char **dst,
-       const stride_t *stride) const;
+       const stride_t *stride);
     size_t getMemorySize() const;
 };
 

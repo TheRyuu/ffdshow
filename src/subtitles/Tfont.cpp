@@ -263,8 +263,11 @@ void TrenderedSubtitleLine::print(
     unsigned int prefsdx,
     unsigned int prefsdy,
     unsigned char **dst,
-    const stride_t *stride) const
+    const stride_t *stride)
 {
+    orderedPoint.y = printedRect.top = starty;
+    orderedPoint.x = printedRect.left = startx;
+
     int baseline=baselineHeight();
     const TcspInfo *cspInfo = csp_getInfo(prefs.csp);
     for (const_iterator w=begin();w!=end() && startx<(int)prefsdx;startx+=(*w)->dxChar,w++) {
@@ -297,6 +300,11 @@ void TrenderedSubtitleLine::print(
                 dx[i]=word->dx[i];
             dx[i]=std::min(dx[i],prefsdx>>cspInfo->shiftX[i]);
         }
+        printedRect.top = std::min<long>(printedRect.top, starty);
+        printedRect.left = std::min<long>(printedRect.left, startx);
+        printedRect.bottom = std::max<long>(printedRect.bottom, starty + dy[0]);
+        printedRect.right = std::max<long>(printedRect.right, startx + dx[0]);
+
         word->print(startx, starty,dx,dy,dstLn,stride,bmp,msk,prefs.rtStart);
     }
 }
@@ -415,20 +423,19 @@ void TrenderedSubtitleLines::printASS(
 
     // pass 1: prepare paragraphs : a paragraph is a set of lines that have the same properties
     // (same margins, alignment and position)
-    for (const_iterator i=begin();i!=end();i++) {
-        (*i)->prepareKaraoke();
-        ParagraphKey pkey;
-        prepareKey(i,pkey,prefsdx,prefsdy);
+    foreach (TrenderedSubtitleLine *line, *this) {
+        line->prepareKaraoke();
+        ParagraphKey pkey(line, prefsdx, prefsdy);
         std::map<ParagraphKey,ParagraphValue>::iterator pi=paragraphs.find(pkey);
         if (pi != paragraphs.end()) {
-            pi->second.topOverhang = std::min(pi->second.topOverhang ,double(pi->second.height-(*i)->get_topOverhang()));
-            pi->second.bottomOverhang = std::max(pi->second.bottomOverhang ,double((*i)->get_bottomOverhang()));
-            pi->second.height+=(*i)->charHeight();
+            pi->second.topOverhang = std::min(pi->second.topOverhang ,double(pi->second.height-line->get_topOverhang()));
+            pi->second.bottomOverhang = std::max(pi->second.bottomOverhang ,double(line->get_bottomOverhang()));
+            pi->second.height+=line->charHeight();
         } else {
             ParagraphValue pval;
-            pval.topOverhang = -(*i)->get_topOverhang();
-            pval.bottomOverhang = (*i)->get_bottomOverhang();
-            pval.height = (*i)->charHeight();
+            pval.topOverhang = -line->get_topOverhang();
+            pval.bottomOverhang = line->get_bottomOverhang();
+            pval.height = line->charHeight();
             paragraphs.insert(std::pair<ParagraphKey,ParagraphValue>(pkey,pval));
         }
     }
@@ -436,115 +443,148 @@ void TrenderedSubtitleLines::printASS(
     std::sort(begin(),end(),TlayerSort());
 
     // pass 2: print
-    for (const_iterator i=begin();i!=end();i++) {
-        ParagraphKey pkey;
-        prepareKey(i,pkey,prefsdx,prefsdy);
-        const TSubtitleProps &lineprops = (*i)->getProps();
-        std::map<ParagraphKey,ParagraphValue>::iterator pi=paragraphs.find(pkey);
-        if (pi != paragraphs.end()) {
-            ParagraphValue &pval=pi->second;
-            if (pval.firstuse) {
-                pval.firstuse=false;
-                switch (pkey.alignment) {
-                case 9: // SSA mid
-                case 10:
-                case 11:
-                    // With middle alignment and position/move tag we position the paragraph to the requested
-                    // position basing on the anchor point set at the middle
-                    if (pkey.isPos || pkey.isMove)
-                        pval.y=pkey.marginTop-pval.height/2.0;
-                    else // otherwise put the paragraph on the center of the screen (vertical margin is ignored)
-                        pval.y=(prefsdy - pval.height)/2.0;
-                    break;
-                case 5: // SSA top
-                case 6:
-                case 7:
-                    pval.y = pkey.marginTop + pval.topOverhang;
-                    break;
-                case 1: // SSA bottom
-                case 2:
-                case 3:
-                default:
-                    // If the text is supposed to be placed at the bottom of the screen 
-                    // or has no vertical alignment defined
-                    // then apply the vertical position setting
-                    if (pkey.marginBottom == 0 && (prefs.deci->getParam2(IDFF_subSSAOverridePlacement)
-                         || (prefs.subformat & Tsubreader::SUB_FORMATMASK) == Tsubreader::SUB_SUBVIEWER))
-                        pval.y=((double)prefs.ypos*prefsdy)/100.0-pval.height + pval.topOverhang;
-                    else
-                        pval.y=(double)prefsdy-pval.height - pkey.marginBottom + pval.topOverhang;
-                 break;
+    foreach (TrenderedSubtitleLine *line, *this) {
+        const TSubtitleProps &lineprops = line->getProps();
+        int x=0;
+        ParagraphKey pkey(line, prefsdx, prefsdy);
+        if (!line->getHasPrintedRect() || lineprops.isMove) {
+            std::map<ParagraphKey,ParagraphValue>::iterator pi=paragraphs.find(pkey);
+            if (pi != paragraphs.end()) {
+                ParagraphValue &pval=pi->second;
+                if (pval.firstuse) {
+                    pval.firstuse=false;
+                    switch (pkey.alignment) {
+                    case 9: // SSA mid
+                    case 10:
+                    case 11:
+                        // With middle alignment and position/move tag we position the paragraph to the requested
+                        // position basing on the anchor point set at the middle
+                        if (pkey.isPos || pkey.isMove)
+                            pval.y=pkey.marginTop-pval.height/2.0;
+                        else // otherwise put the paragraph on the center of the screen (vertical margin is ignored)
+                            pval.y=(prefsdy - pval.height)/2.0;
+                        break;
+                    case 5: // SSA top
+                    case 6:
+                    case 7:
+                        pval.y = pkey.marginTop + pval.topOverhang;
+                        break;
+                    case 1: // SSA bottom
+                    case 2:
+                    case 3:
+                    default:
+                        // If the text is supposed to be placed at the bottom of the screen 
+                        // or has no vertical alignment defined
+                        // then apply the vertical position setting
+                        if (pkey.marginBottom == 0 && (prefs.deci->getParam2(IDFF_subSSAOverridePlacement)
+                             || (prefs.subformat & Tsubreader::SUB_FORMATMASK) == Tsubreader::SUB_SUBVIEWER))
+                            pval.y=((double)prefs.ypos*prefsdy)/100.0-pval.height + pval.topOverhang;
+                        else
+                            pval.y=(double)prefsdy-pval.height - pkey.marginBottom + pval.topOverhang;
+                     break;
+                    }
+
+                    // If option is checked (or if subs are SUBVIEWER), correct vertical placement if text goes out of the screen
+                    if ((prefs.deci->getParam2(IDFF_subSSAMaintainInside) 
+                        || (prefs.subformat & Tsubreader::SUB_FORMATMASK) == Tsubreader::SUB_SUBVIEWER) && !lineprops.isMove) {
+                        if (pval.y+pval.height>prefsdy)
+                            pval.y=prefsdy-pval.height;
+                        if (pval.y<0)
+                            pval.y=0;
+                    }
+
+
+                    // Moving (scrolling text) : scroll from t1 to t2. Calculate vertical position
+                    if (lineprops.isMove && prefs.rtStart >= lineprops.get_moveStart()) {
+                        // Stop scrolling if beyond t2
+                        if (prefs.rtStart >= lineprops.get_moveStop())
+                            pval.y += lineprops.get_movedistanceV(prefsdy);
+                        else
+                            pval.y += lineprops.get_movedistanceV(prefsdy)*
+                                      (prefs.rtStart-lineprops.get_moveStart())/(lineprops.get_moveStop()-lineprops.get_moveStart());
+                    }
                 }
+                y=pval.y;
+                pval.y += line->charHeight();
+            }
 
-                // If option is checked (or if subs are SUBVIEWER), correct vertical placement if text goes out of the screen
-                if ((prefs.deci->getParam2(IDFF_subSSAMaintainInside) 
-                    || (prefs.subformat & Tsubreader::SUB_FORMATMASK) == Tsubreader::SUB_SUBVIEWER) && !lineprops.isMove) {
-                    if (pval.y+pval.height>prefsdy)
-                        pval.y=prefsdy-pval.height;
-                    if (pval.y<0)
-                        pval.y=0;
-                }
+            if (y>=(double)prefsdy) break;
+            unsigned int cdx=line->width();
+            // Left and right margins need to be recalculated according to the length of the line
+            int marginL=lineprops.get_marginL(prefsdx, cdx);
+            int marginR=lineprops.get_marginR(prefsdx, cdx);
+            int leftOverhang=line->get_leftOverhang();
+            
+            switch (lineprops.alignment) {
+            case 1: // left(SSA)
+            case 5:
+            case 9:
+                x=marginL - leftOverhang;
+                break;
+            case 3: // right(SSA)
+            case 7:
+            case 11:
+                x=prefsdx - cdx - marginR - leftOverhang;
+                break;
+            case 2: // center(SSA)
+            case 6:
+            case 10:
+            default:
+                // If the text is supposed to be placed at the center of the screen 
+                // or has no horizontal alignment defined
+                // then apply the horizontal position setting
+                if (marginL==0 && (prefs.deci->getParam2(IDFF_subSSAOverridePlacement)
+                     || (prefs.subformat & Tsubreader::SUB_FORMATMASK) == Tsubreader::SUB_SUBVIEWER))
+                    x = ((double)prefs.xpos * prefsdx)/100.0 - (int)(cdx+marginR)/2 - leftOverhang;
+                else if (lineprops.isPos) // If position defined, then marginL is relative to left border of the screen
+                    x = marginL-leftOverhang;
+                else // else marginL is relative to the center of the screen
+                    x = ((int)prefsdx - marginL - marginR - (int)cdx)/2 + marginL - leftOverhang;
+                break;
+            }
 
+            // If option is checked (or if subs are SUBVIEWER), correct horizontal placement if text goes out of the screen
+            if ((prefs.deci->getParam2(IDFF_subSSAMaintainInside) 
+              || (prefs.subformat & Tsubreader::SUB_FORMATMASK) == Tsubreader::SUB_SUBVIEWER) && !lineprops.isMove) {
+                if (x+cdx>prefsdx)
+                    x=prefsdx-cdx;
+                if (x < 0)
+                    x=0;
+            }
 
-                // Moving (scrolling text) : scroll from t1 to t2. Calculate vertical position
-                if (lineprops.isMove && prefs.rtStart >= lineprops.get_moveStart()) {
-                    // Stop scrolling if beyond t2
-                    if (prefs.rtStart >= lineprops.get_moveStop())
-                        pval.y += lineprops.get_movedistanceV(prefsdy);
-                    else
-                        pval.y += lineprops.get_movedistanceV(prefsdy)*
-                                  (prefs.rtStart-lineprops.get_moveStart())/(lineprops.get_moveStop()-lineprops.get_moveStart());
+            if (!lineprops.isMove) {
+                int lineHight = (int)line->charHeight();
+                CRect myrect(x, y, x + cdx, y + lineHight);
+                CRect hisrect;
+                bool again = false;
+                for (const_iterator l = begin(); l != end() || again ; l++) {
+                    if (again) {
+                        l = begin();
+                        // We can skip check if (l == end()) break; safely as this is guaranteed to be not empty.
+                        again = false;
+                    }
+                    ParagraphKey hiskey(*l, prefsdx, prefsdy);
+                    if (pkey != hiskey && (*l)->checkCollision(myrect, hisrect)) {
+                        if (lineprops.alignment <= 3) {
+                            // bottom
+                            y = hisrect.top - lineHight - 1;
+                            myrect = CRect(x, y, x + cdx, y + lineHight);
+                            if (lineHight > 0)
+                                again = true;
+                        } else {
+                            // Top, middle
+                            y = hisrect.bottom + 1;
+                            myrect = CRect(x, y, x + cdx, y + lineHight);
+                            again = true;
+                        }
+                    }
                 }
             }
-            y=pval.y;
-            pval.y += (*i)->charHeight();
+        } else {
+            x = line->getOrderedPoint().x;
+            y = line->getOrderedPoint().y;
         }
-
-        if (y>=(double)prefsdy) break;
-        int x=0;
-        unsigned int cdx=(*i)->width();
-        // Left and right margins need to be recalculated according to the length of the line
-        int marginL=lineprops.get_marginL(prefsdx, cdx);
-        int marginR=lineprops.get_marginR(prefsdx, cdx);
-        int leftOverhang=(*i)->get_leftOverhang();
-        
-        switch (lineprops.alignment) {
-        case 1: // left(SSA)
-        case 5:
-        case 9:
-            x=marginL - leftOverhang;
-            break;
-        case 3: // right(SSA)
-        case 7:
-        case 11:
-            x=prefsdx - cdx - marginR - leftOverhang;
-            break;
-        case 2: // center(SSA)
-        case 6:
-        case 10:
-        default:
-            // If the text is supposed to be placed at the center of the screen 
-            // or has no horizontal alignment defined
-            // then apply the horizontal position setting
-            if (marginL==0 && (prefs.deci->getParam2(IDFF_subSSAOverridePlacement)
-                 || (prefs.subformat & Tsubreader::SUB_FORMATMASK) == Tsubreader::SUB_SUBVIEWER))
-                x = ((double)prefs.xpos * prefsdx)/100.0 - (int)(cdx+marginR)/2 - leftOverhang;
-            else if (lineprops.isPos) // If position defined, then marginL is relative to left border of the screen
-                x = marginL-leftOverhang;
-            else // else marginL is relative to the center of the screen
-                x = ((int)prefsdx - marginL - marginR - (int)cdx)/2 + marginL - leftOverhang;
-            break;
-        }
-
-        // If option is checked (or if subs are SUBVIEWER), correct horizontal placement if text goes out of the screen
-        if ((prefs.deci->getParam2(IDFF_subSSAMaintainInside) 
-          || (prefs.subformat & Tsubreader::SUB_FORMATMASK) == Tsubreader::SUB_SUBVIEWER) && !lineprops.isMove) {
-            if (x+cdx>prefsdx)
-                x=prefsdx-cdx;
-            if (x < 0)
-                x=0;
-        }
-      
+          
         // Moving (scrolling text) : scroll from t1 to t2. Calculate horizontal position
         if (lineprops.isMove && prefs.rtStart >= lineprops.get_moveStart()) {
             // Stop scrolling if beyond t2
@@ -555,27 +595,37 @@ void TrenderedSubtitleLines::printASS(
                      (prefs.rtStart-lineprops.get_moveStart())/(lineprops.get_moveStop()-lineprops.get_moveStart());
         }
 
-       (*i)->print(x,y,prefs,prefsdx,prefsdy,dst,stride); // print a line (=print words).
+       line->print(x,y,prefs,prefsdx,prefsdy,dst,stride);
+    }
+
+    foreach (TrenderedSubtitleLine *line, *this) {
+        if (!line->getProps().isMove)
+            line->setPrinted();
     }
 }
 
-void TrenderedSubtitleLines::prepareKey(const_iterator i,ParagraphKey &pkey,unsigned int prefsdx,unsigned int prefsdy)
+TrenderedSubtitleLines::ParagraphKey::ParagraphKey(TrenderedSubtitleLine *line, unsigned int prefsdx, unsigned int prefsdy):
+    posx(INT_MIN),
+    posy(INT_MIN)
 {
-    const TSubtitleProps &lineprops = (*i)->getProps();
-    pkey.alignment = lineprops.alignment;
-    pkey.marginBottom = lineprops.get_marginBottom(prefsdy);
-    pkey.marginTop = lineprops.get_marginTop(prefsdy);
-    pkey.marginL = lineprops.get_marginL(prefsdx);
-    pkey.marginR = lineprops.get_marginR(prefsdx);
-    pkey.isPos = lineprops.isPos;
-    pkey.isMove = lineprops.isMove;
+    const TSubtitleProps &lineprops = line->getProps();
+    alignment = lineprops.alignment;
+    marginBottom = lineprops.get_marginBottom(prefsdy);
+    marginTop = lineprops.get_marginTop(prefsdy);
+    marginL = lineprops.get_marginL(prefsdx);
+    marginR = lineprops.get_marginR(prefsdx);
+    isPos = lineprops.isPos;
+    isMove = lineprops.isMove;
+    hasPrintedRect = line->getHasPrintedRect();
 
-    pkey.layer = lineprops.layer;
-    if (pkey.isPos || pkey.isMove) {
-        pkey.posx = lineprops.posx;
-        pkey.posy = lineprops.posy;
+    layer = lineprops.layer;
+    if (isPos || isMove) {
+        posx = lineprops.posx;
+        posy = lineprops.posy;
     }
-}
+    if (!isMove)
+        printedRect = line->getPrintedRect();
+};
 
 void TrenderedSubtitleLines::clear(void)
 {
@@ -594,28 +644,55 @@ size_t TrenderedSubtitleLines::getMemorySize() const
     return memSize;
 }
 
-bool operator < (const TrenderedSubtitleLines::ParagraphKey &a, const TrenderedSubtitleLines::ParagraphKey &b)
+bool TrenderedSubtitleLines::ParagraphKey::operator < (const ParagraphKey &rt) const
 {
-    if (a.alignment<b.alignment) return true;
-    if (a.alignment>b.alignment) return false;
-    if (a.marginTop<b.marginTop) return true;
-    if (a.marginTop>b.marginTop) return false;
-    if (a.marginBottom<b.marginBottom) return true;
-    if (a.marginBottom>b.marginBottom) return false;
-    if (a.marginL<b.marginL) return true;
-    if (a.marginL>b.marginL) return false;
-    if (a.marginR<b.marginR) return true;
-    if (a.marginR>b.marginR) return false;
-    if (a.isPos<b.isPos) return true;
-    if (a.isPos>b.isPos) return false;
-    if (a.posx<b.posx) return true;
-    if (a.posx>b.posx) return false;
-    if (a.posy<b.posy) return true;
-    if (a.posy>b.posy) return false;
-    if (a.layer<b.layer) return true;
-    if (a.layer>b.layer) return false;
+    if (alignment<rt.alignment) return true;
+    if (alignment>rt.alignment) return false;
+    if (marginTop<rt.marginTop) return true;
+    if (marginTop>rt.marginTop) return false;
+    if (marginBottom<rt.marginBottom) return true;
+    if (marginBottom>rt.marginBottom) return false;
+    if (marginL<rt.marginL) return true;
+    if (marginL>rt.marginL) return false;
+    if (marginR<rt.marginR) return true;
+    if (marginR>rt.marginR) return false;
+    if (isPos<rt.isPos) return true;
+    if (isPos>rt.isPos) return false;
+    if (posx<rt.posx) return true;
+    if (posx>rt.posx) return false;
+    if (posy<rt.posy) return true;
+    if (posy>rt.posy) return false;
+    if (layer<rt.layer) return true;
+    if (layer>rt.layer) return false;
+    if (hasPrintedRect<rt.hasPrintedRect) return true;
+    if (hasPrintedRect>rt.hasPrintedRect) return false;
+    if (printedRect<rt.printedRect) return true;
+    if (printedRect>rt.printedRect) return false;
     return false;
-};
+}
+
+bool TrenderedSubtitleLines::ParagraphKey::operator != (const ParagraphKey &rt) const
+{
+    // compare except printedRect
+    if (alignment == rt.alignment
+      && marginTop == rt.marginTop
+      && marginBottom == rt.marginBottom
+      && marginL == rt.marginL
+      && marginR == rt.marginR
+      && isPos == rt.isPos
+      && posx == rt.posx
+      && posy == rt.posy
+      && layer == rt.layer
+      && hasPrintedRect == rt.hasPrintedRect)
+        return false;
+    else
+        return true;
+}
+
+bool TrenderedSubtitleLines::ParagraphKey::operator == (const ParagraphKey &rt) const
+{
+    return !(*this != rt);
+}
 
 bool TrenderedSubtitleLines::TlayerSort::operator() (TrenderedSubtitleLine *lt, TrenderedSubtitleLine *rt) const
 {
