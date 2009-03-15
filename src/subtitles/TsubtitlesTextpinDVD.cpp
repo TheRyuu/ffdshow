@@ -145,7 +145,8 @@ Tsubtitle* TsubtitlesTextpinDVD::getSubtitle(const TsubtitlesSettings *cfg,REFER
   else
    s0++;
 
- subtitles.clear();REFERENCE_TIME start=_I64_MAX,stop=_I64_MIN;
+ subtitles.clear();
+ REFERENCE_TIME start=_I64_MAX,stop=_I64_MIN;
  for (Tsubreader::const_iterator s=subs->begin();s!=subs->end();s++)
   if ((*s)->start<=time && time<(*s)->stop && (spon || ((TsubtitleDVD*)*s)->psphli))
    {
@@ -153,7 +154,11 @@ Tsubtitle* TsubtitlesTextpinDVD::getSubtitle(const TsubtitlesSettings *cfg,REFER
     if ((*s)->start<start) start=(*s)->start;
     if ((*s)->stop >stop ) stop =(*s)->stop ;
    }
- return subtitles.empty()?NULL:(subtitles.start=start,subtitles.stop=stop,&subtitles);
+ if (subtitles.empty())
+  return NULL;
+ subtitles.start=start;
+ subtitles.stop=stop;
+ return &subtitles;
 }
 
 void TsubtitlesTextpinDVD::Tsubtitles::print(
