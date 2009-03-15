@@ -589,7 +589,13 @@ void TrenderedSubtitleLines::printASS(
 void TrenderedSubtitleLines::handleCollision(TrenderedSubtitleLine *line, int x, ParagraphValue &pval, unsigned int prefsdy, int alignment)
 {
     int paragraphHeight = (int)pval.height;
-    CRect myrect(x, pval.y, x + pval.width, pval.y + paragraphHeight - (paragraphHeight > 0 ? 1:0));
+    if (paragraphHeight > 0)
+        paragraphHeight--;
+    else
+        return;
+
+    // rect of this paragraph
+    CRect myrect(x, pval.y, x + pval.width, pval.y + paragraphHeight);
     CRect hisrect;
     bool again = false;
     for (const_iterator l = begin(); l != end() || again ; l++) {
@@ -600,14 +606,13 @@ void TrenderedSubtitleLines::handleCollision(TrenderedSubtitleLine *line, int x,
         }
         if ( line->getPropsOfThisObject().layer == (*l)->getPropsOfThisObject().layer
           && (*l)->checkCollision(myrect, hisrect)) {
-            if (alignment <= 3 || alignment >= 9) {
-                // bottom, middle
-                pval.y = hisrect.top - paragraphHeight - 1;
+            if (alignment <= 3) {
+                // bottom
+                pval.y = hisrect.top - paragraphHeight - 2;
                 myrect = CRect(x, pval.y, x + pval.width, pval.y + paragraphHeight);
-                if (paragraphHeight > 0)
-                    again = true;
+                again = true;
             } else {
-                // Top
+                // Top, middle
                 pval.y = hisrect.bottom + 1;
                 myrect = CRect(x, pval.y, x + pval.width, pval.y + paragraphHeight);
                 again = true;
