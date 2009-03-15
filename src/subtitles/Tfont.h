@@ -115,6 +115,7 @@ private:
         int layer;
         bool hasPrintedRect;
         CRect printedRect;
+        int lineID;
 
         ParagraphKey(TrenderedSubtitleLine *line, unsigned int prefsdx, unsigned int prefsdy);
         bool operator != (const ParagraphKey &rt) const;

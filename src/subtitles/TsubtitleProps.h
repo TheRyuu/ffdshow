@@ -31,6 +31,7 @@ struct TSubtitleProps
  double spacing;  //INT_MIN = default
  double x; // Calculated x position
  double y; // Calculated y position
+ int lineID;
  void reset(void);
  void toLOGFONT(LOGFONT &lf, const TfontSettings &fontSettings, unsigned int dx, unsigned int dy, unsigned int clipdy, const Rational& sar, unsigned int gdi_font_scale) const;
 

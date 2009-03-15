@@ -19,7 +19,8 @@ TsubtitleParser::TsubtitleParser(int Iformat,double Ifps,const TsubtitlesSetting
  ffcfg(Iffcfg),
  textfix(Icfg,Iffcfg),
  subreader(Isubreader),
- textformat(Iffcfg->getHtmlColors())
+ textformat(Iffcfg->getHtmlColors()),
+ lineID(0)
 {
  cfg = *Icfg;
 }
@@ -629,6 +630,7 @@ Tsubtitle* TsubtitleParserSSA::parse(Tstream &fd, int flags, REFERENCE_TIME star
    const char_t* lineD1=(const char_t*)lineD0;
    DPRINTF(_l("%s"),lineD1);
 #endif
+   lineID++;
    if (line[0]==';')
     continue;
    wchar_t *cr=strrchr(line,'\n');if (cr) *cr='\0';
@@ -888,6 +890,7 @@ Tsubtitle* TsubtitleParserSSA::parse(Tstream &fd, int flags, REFERENCE_TIME star
         {
          const TSubtitleProps *props=styles.getProps(event.style);
          TsubtitleText current(this->format,props?*props:defprops);
+         current.defProps.lineID = lineID;
          strToIntMargin(event.marginL,&current.defProps.marginL);
          strToIntMargin(event.marginR,&current.defProps.marginR);
          strToIntMargin(event.marginV,&current.defProps.marginV);

@@ -61,6 +61,7 @@ void TSubtitleProps::reset(void)
  extendedTags=0;
  x=0;
  y=0;
+ lineID=0;
 }
 
 void TSubtitleProps::toLOGFONT(LOGFONT &lf,const TfontSettings &fontSettings,unsigned int dx,unsigned int dy,unsigned int clipdy,const Rational& sar,unsigned int gdi_font_scale) const

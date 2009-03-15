@@ -42,6 +42,7 @@ protected:
  Tsubtitle* store(TsubtitleText &sub);
  static int eol(wchar_t p);
  static void trail_space(wchar_t *s);
+ int lineID;
 public:
  virtual ~TsubtitleParser() {}
 };

@@ -629,6 +629,7 @@ TrenderedSubtitleLines::ParagraphKey::ParagraphKey(TrenderedSubtitleLine *line, 
     isPos = lineprops.isPos;
     isMove = lineprops.isMove;
     hasPrintedRect = line->getHasPrintedRect();
+    lineID = lineprops.lineID;
 
     layer = lineprops.layer;
     if (isPos || isMove) {
@@ -678,6 +679,8 @@ bool TrenderedSubtitleLines::ParagraphKey::operator < (const ParagraphKey &rt) c
     if (layer>rt.layer) return false;
     if (hasPrintedRect<rt.hasPrintedRect) return true;
     if (hasPrintedRect>rt.hasPrintedRect) return false;
+    if (lineID<rt.lineID) return true;
+    if (lineID>rt.lineID) return false;
     if (printedRect<rt.printedRect) return true;
     if (printedRect>rt.printedRect) return false;
     return false;
@@ -695,6 +698,7 @@ bool TrenderedSubtitleLines::ParagraphKey::operator != (const ParagraphKey &rt) 
       && posx == rt.posx
       && posy == rt.posy
       && layer == rt.layer
+      && lineID == rt.lineID
       && hasPrintedRect == rt.hasPrintedRect)
         return false;
     else
