@@ -378,13 +378,12 @@ Root: HKLM; Subkey: "{#= ff_reg_base}_vfw";   ValueType: dword; ValueName: "h264
 Root: HKLM; Subkey: "{#= ff_reg_base}_vfw";   ValueType: dword; ValueName: "mp41";       ValueData:  "1"; Components: ffdshow\vfw; Flags: createvalueifdoesntexist; Tasks: video\mpeg4
 Root: HKLM; Subkey: "{#= ff_reg_base}_vfw";   ValueType: dword; ValueName: "mp42";       ValueData:  "1"; Components: ffdshow\vfw; Flags: createvalueifdoesntexist; Tasks: video\mpeg4
 Root: HKLM; Subkey: "{#= ff_reg_base}_vfw";   ValueType: dword; ValueName: "mp43";       ValueData:  "1"; Components: ffdshow\vfw; Flags: createvalueifdoesntexist; Tasks: video\mpeg4
+Root: HKLM; Subkey: "{#= ff_reg_base}_vfw";   ValueType: dword; ValueName: "div3";       ValueData:  "1"; Components: ffdshow\vfw; Flags: createvalueifdoesntexist; Tasks: video\divx
 #if include_xvidcore
-Root: HKLM; Subkey: "{#= ff_reg_base}_vfw";   ValueType: dword; ValueName: "div3";       ValueData:  "9"; Components: ffdshow\vfw; Flags: createvalueifdoesntexist; Tasks: video\divx
 Root: HKLM; Subkey: "{#= ff_reg_base}_vfw";   ValueType: dword; ValueName: "dx50";       ValueData:  "9"; Components: ffdshow\vfw; Flags: createvalueifdoesntexist; Tasks: video\divx
 Root: HKLM; Subkey: "{#= ff_reg_base}_vfw";   ValueType: dword; ValueName: "xvid";       ValueData:  "9"; Components: ffdshow\vfw; Flags: createvalueifdoesntexist; Tasks: video\xvid
 Root: HKLM; Subkey: "{#= ff_reg_base}_vfw";   ValueType: dword; ValueName: "mp4v";       ValueData:  "9"; Components: ffdshow\vfw; Flags: createvalueifdoesntexist; Tasks: video\mpeg4
 #else
-Root: HKLM; Subkey: "{#= ff_reg_base}_vfw";   ValueType: dword; ValueName: "div3";       ValueData:  "1"; Components: ffdshow\vfw; Flags: createvalueifdoesntexist; Tasks: video\divx
 Root: HKLM; Subkey: "{#= ff_reg_base}_vfw";   ValueType: dword; ValueName: "dx50";       ValueData:  "1"; Components: ffdshow\vfw; Flags: createvalueifdoesntexist; Tasks: video\divx
 Root: HKLM; Subkey: "{#= ff_reg_base}_vfw";   ValueType: dword; ValueName: "xvid";       ValueData:  "1"; Components: ffdshow\vfw; Flags: createvalueifdoesntexist; Tasks: video\xvid
 Root: HKLM; Subkey: "{#= ff_reg_base}_vfw";   ValueType: dword; ValueName: "mp4v";       ValueData:  "1"; Components: ffdshow\vfw; Flags: createvalueifdoesntexist; Tasks: video\mpeg4
