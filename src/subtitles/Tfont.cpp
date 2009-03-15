@@ -127,7 +127,7 @@ void TprintPrefs::debug_print() const
 }
 
 //============================== TrenderedSubtitleLine ===============================
-unsigned int TrenderedSubtitleLine::width(void) const
+unsigned int TrenderedSubtitleLine::width() const
 {
     if (empty())
         return 0;
@@ -137,7 +137,7 @@ unsigned int TrenderedSubtitleLine::width(void) const
     return dx;
 }
 
-unsigned int TrenderedSubtitleLine::height(void) const
+unsigned int TrenderedSubtitleLine::height() const
 {
     if (empty())
         return 0;
@@ -149,19 +149,31 @@ unsigned int TrenderedSubtitleLine::height(void) const
     return aboveBaseline+belowBaseline;
 }
 
-double TrenderedSubtitleLine::charHeight(void) const
+double TrenderedSubtitleLine::charHeight() const
 {
     if (empty())
         return emptyHeight;
     double aboveBaseline=0,belowBaseline=0;
     foreach (TrenderedSubtitleWordBase *word, *this) {
-      aboveBaseline=std::max<int>(aboveBaseline,word->get_ascent());
-      belowBaseline=std::max<int>(belowBaseline,word->get_descent());
+        aboveBaseline=std::max<int>(aboveBaseline,word->get_ascent());
+        belowBaseline=std::max<int>(belowBaseline,word->get_descent());
     }
     return aboveBaseline + belowBaseline;
 }
 
-unsigned int TrenderedSubtitleLine::baselineHeight(void) const
+double TrenderedSubtitleLine::lineHeight(double prefsdy) const
+{
+    if (empty())
+        return emptyHeight;
+    double aboveBaseline=0,belowBaseline=0;
+    foreach (TrenderedSubtitleWordBase *word, *this) {
+        aboveBaseline=std::max<int>(aboveBaseline,word->get_ascent());
+        belowBaseline=std::max<int>(belowBaseline,word->get_below_baseline());
+    }
+    return aboveBaseline + belowBaseline + props.refResY / prefsdy;
+}
+
+unsigned int TrenderedSubtitleLine::baselineHeight() const
 {
     if (empty())
         return 0;
@@ -171,7 +183,7 @@ unsigned int TrenderedSubtitleLine::baselineHeight(void) const
     return aboveBaseline;
 }
 
-int TrenderedSubtitleLine::get_topOverhang(void) const
+int TrenderedSubtitleLine::get_topOverhang() const
 {
     if (empty())
         return 0;
@@ -182,7 +194,7 @@ int TrenderedSubtitleLine::get_topOverhang(void) const
     return -topOverhang;
 }
 
-int TrenderedSubtitleLine::get_bottomOverhang(void) const
+int TrenderedSubtitleLine::get_bottomOverhang() const
 {
     if (empty())
         return 0;
@@ -190,10 +202,10 @@ int TrenderedSubtitleLine::get_bottomOverhang(void) const
     int bottomOverhang=0;
     foreach (TrenderedSubtitleWordBase *word, *this)
         bottomOverhang=std::max(bottomOverhang, int((int)word->dxChar - word->get_baseline() + word->getOverhang().bottom));
-    return bottomOverhang+baseline - charHeight();
+    return bottomOverhang+baseline - height();
 }
 
-int TrenderedSubtitleLine::get_leftOverhang(void) const
+int TrenderedSubtitleLine::get_leftOverhang() const
 {
     if (empty())
         return 0;
@@ -206,7 +218,7 @@ int TrenderedSubtitleLine::get_leftOverhang(void) const
     return -leftOverhang;
 }
 
-int TrenderedSubtitleLine::get_rightOverhang(void) const
+int TrenderedSubtitleLine::get_rightOverhang() const
 {
     if (empty())
         return 0;
@@ -219,7 +231,7 @@ int TrenderedSubtitleLine::get_rightOverhang(void) const
     return rightOverhang-dx;
 }
 
-void TrenderedSubtitleLine::prepareKaraoke(void)
+void TrenderedSubtitleLine::prepareKaraoke()
 {
     if (!firstrun)
         return;
@@ -265,12 +277,14 @@ void TrenderedSubtitleLine::print(
     unsigned char **dst,
     const stride_t *stride)
 {
-    orderedPoint.y = printedRect.top = starty;
-    orderedPoint.x = printedRect.left = startx;
+    int w = width();
+    int h = lineHeight(prefsdy);
+    printedRect = CRect(startx, starty, startx + w - (w > 0 ? 1 : 0), starty + h - (h > 0 ? 1 : 0));
+    if (!empty()) hasPrintedRect = true;
 
-    int baseline=baselineHeight();
+    int baseline = baselineHeight();
     const TcspInfo *cspInfo = csp_getInfo(prefs.csp);
-    for (const_iterator w=begin();w!=end() && startx<(int)prefsdx;startx+=(*w)->dxChar,w++) {
+    for (const_iterator w = begin() ; w != end() && startx < (int)prefsdx ; startx += (*w)->dxChar, w++) {
         TrenderedSubtitleWordBase *word = *w;
         startx += word->getPathOffsetX();
         const unsigned char *msk[3],*bmp[3];
@@ -279,33 +293,29 @@ void TrenderedSubtitleLine::print(
         unsigned int dx[3];
         int dy[3];
         for (int i=0;i<3;i++) {
-            x[i]=startx>>cspInfo->shiftX[i];
-            msk[i]=word->msk[i];
-            bmp[i]=word->bmp[i];
+            x[i] = startx>>cspInfo->shiftX[i];
+            msk[i] = word->msk[i];
+            bmp[i] = word->bmp[i];
             if (prefs.align!=ALIGN_FFDSHOW && x[i]<0) {
-                msk[i]+=-x[i];
-                bmp[i]+=-x[i];
+                msk[i] += -x[i];
+                bmp[i] += -x[i];
             }
-            int sy=(starty + baseline - word->get_baseline() + word->getPathOffsetY()) >> cspInfo->shiftY[i];
-            dy[i]=std::min((int(prefsdy)>>cspInfo->shiftY[i])-sy,int(word->dy[i]));
-            dstLn[i]=dst[i] + int(sy * stride[i]);
+            int sy = int(starty + baseline - word->get_baseline() + word->getPathOffsetY()) >> cspInfo->shiftY[i];
+            dy[i] = std::min((int(prefsdy)>>cspInfo->shiftY[i])-sy,int(word->dy[i]));
+            dstLn[i] = dst[i] + int(sy * stride[i]);
             if (x[i]>0)
-                dstLn[i]+=x[i]*cspInfo->Bpp;
+                dstLn[i] += x[i] * cspInfo->Bpp;
 
-            if (x[i]+word->dx[i]>(prefsdx>>cspInfo->shiftX[i]))
-                dx[i]=(prefsdx>>cspInfo->shiftX[i])-x[i];
-            else if (x[i]<0)
-                dx[i]=word->dx[i]+x[i];
+            if (x[i]+word->dx[i] > (prefsdx >> cspInfo->shiftX[i]))
+                dx[i] = (prefsdx >> cspInfo->shiftX[i]) - x[i];
+            else if (x[i] < 0)
+                dx[i] = word->dx[i] + x[i];
             else
-                dx[i]=word->dx[i];
-            dx[i]=std::min(dx[i],prefsdx>>cspInfo->shiftX[i]);
+                dx[i] = word->dx[i];
+            dx[i] = std::min(dx[i],prefsdx>>cspInfo->shiftX[i]);
         }
-        printedRect.top = std::min<long>(printedRect.top, starty);
-        printedRect.left = std::min<long>(printedRect.left, startx);
-        printedRect.bottom = std::max<long>(printedRect.bottom, starty + dy[0]);
-        printedRect.right = std::max<long>(printedRect.right, startx + dx[0]);
 
-        word->print(startx, starty,dx,dy,dstLn,stride,bmp,msk,prefs.rtStart);
+        word->print(startx, starty, dx, dy, dstLn, stride, bmp, msk, prefs.rtStart);
     }
 }
 
@@ -322,7 +332,7 @@ const TSubtitleProps& TrenderedSubtitleLine::getProps() const
     return props;
 }
 
-void TrenderedSubtitleLine::clear(void)
+void TrenderedSubtitleLine::clear()
 {
     foreach (TrenderedSubtitleWordBase *word, *this)
        delete word;
@@ -362,7 +372,7 @@ void TrenderedSubtitleLines::print(
     double h=0,h1=0;
     for (const_iterator i=begin();i!=end();i++) {
         double h2=h1+(*i)->height();
-        h1+=(double)prefs.linespacing*(*i)->charHeight()/100;
+        h1+=(double)prefs.linespacing*(*i)->lineHeight(prefsdy)/100;
         if (h2>h)
             h=h2;
     }
@@ -377,7 +387,7 @@ void TrenderedSubtitleLines::print(
     if (prefs.ypos>=0 && y+h >= (double)prefsdy)
         y=(double)prefsdy-h-1;
 
-    for (const_iterator i=begin();i!=end();y+=(double)prefs.linespacing*(*i)->charHeight()/100,i++) {
+    for (const_iterator i=begin();i!=end();y+=(double)prefs.linespacing*(*i)->lineHeight(prefsdy)/100,i++) {
         if (y<0) continue;
 
         if ((unsigned int)y>=prefsdy) break;
@@ -430,12 +440,12 @@ void TrenderedSubtitleLines::printASS(
         if (pi != paragraphs.end()) {
             pi->second.topOverhang = std::min(pi->second.topOverhang ,double(pi->second.height-line->get_topOverhang()));
             pi->second.bottomOverhang = std::max(pi->second.bottomOverhang ,double(line->get_bottomOverhang()));
-            pi->second.height+=line->charHeight();
+            pi->second.height += line->lineHeight(prefsdy);
         } else {
             ParagraphValue pval;
             pval.topOverhang = -line->get_topOverhang();
             pval.bottomOverhang = line->get_bottomOverhang();
-            pval.height = line->charHeight();
+            pval.height = line->lineHeight(prefsdy);
             paragraphs.insert(std::pair<ParagraphKey,ParagraphValue>(pkey,pval));
         }
     }
@@ -505,7 +515,7 @@ void TrenderedSubtitleLines::printASS(
                     }
                 }
                 y=pval.y;
-                pval.y += line->charHeight();
+                pval.y += line->lineHeight(prefsdy);
             }
 
             if (y>=(double)prefsdy) break;
@@ -552,9 +562,10 @@ void TrenderedSubtitleLines::printASS(
                     x=0;
             }
 
+            // collision handling
             if (!lineprops.isMove) {
-                int lineHight = (int)line->charHeight();
-                CRect myrect(x, y, x + cdx, y + lineHight);
+                int lineHight = (int)line->lineHeight(prefsdy);
+                CRect myrect(x, y, x + cdx, y + lineHight - (lineHight > 0 ? 1:0));
                 CRect hisrect;
                 bool again = false;
                 for (const_iterator l = begin(); l != end() || again ; l++) {
@@ -563,16 +574,15 @@ void TrenderedSubtitleLines::printASS(
                         // We can skip check if (l == end()) break; safely as this is guaranteed to be not empty.
                         again = false;
                     }
-                    ParagraphKey hiskey(*l, prefsdx, prefsdy);
-                    if (pkey != hiskey && (*l)->checkCollision(myrect, hisrect)) {
-                        if (lineprops.alignment <= 3) {
-                            // bottom
+                    if ((*l)->checkCollision(myrect, hisrect)) {
+                        if (lineprops.alignment <= 3 || lineprops.alignment >= 9) {
+                            // bottom, middle
                             y = hisrect.top - lineHight - 1;
                             myrect = CRect(x, y, x + cdx, y + lineHight);
                             if (lineHight > 0)
                                 again = true;
                         } else {
-                            // Top, middle
+                            // Top
                             y = hisrect.bottom + 1;
                             myrect = CRect(x, y, x + cdx, y + lineHight);
                             again = true;
@@ -581,8 +591,8 @@ void TrenderedSubtitleLines::printASS(
                 }
             }
         } else {
-            x = line->getOrderedPoint().x;
-            y = line->getOrderedPoint().y;
+            x = line->getPrintedRect().left;
+            y = line->getPrintedRect().top;
         }
           
         // Moving (scrolling text) : scroll from t1 to t2. Calculate horizontal position
@@ -596,11 +606,6 @@ void TrenderedSubtitleLines::printASS(
         }
 
        line->print(x,y,prefs,prefsdx,prefsdy,dst,stride);
-    }
-
-    foreach (TrenderedSubtitleLine *line, *this) {
-        if (!line->getProps().isMove)
-            line->setPrinted();
     }
 }
 
@@ -627,7 +632,7 @@ TrenderedSubtitleLines::ParagraphKey::ParagraphKey(TrenderedSubtitleLine *line, 
         printedRect = line->getPrintedRect();
 };
 
-void TrenderedSubtitleLines::clear(void)
+void TrenderedSubtitleLines::clear()
 {
     foreach (TrenderedSubtitleLine *line, *this) {
         line->clear();
@@ -791,7 +796,7 @@ void Tfont::init()
     SetTextColor(hdc,0xffffff); 
     SetMapMode(hdc,MM_TEXT);
 }
-void Tfont::done(void)
+void Tfont::done()
 {
     if (hdc) {
         if (oldFont) SelectObject(hdc,oldFont);

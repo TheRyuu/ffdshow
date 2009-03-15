@@ -10,8 +10,8 @@ private:
     TrenderedTextSubtitleWord *secondaryColoredWord;
     TprintPrefs prefs;
     YUVcolorA m_bodyYUV,m_outlineYUV,m_shadowYUV;
-    int baseline;
-    double m_ascent,m_descent;
+    double baseline;
+    double m_ascent,m_descent,m_linegap;
     CRect overhang;
     int m_outlineWidth,m_shadowSize,m_shadowMode;
     double outlineWidth_double;
@@ -101,7 +101,8 @@ public:
     void* (__cdecl *YV12_lum2chr_max)(const unsigned char* lum0,const unsigned char* lum1,unsigned char* chr);
     virtual double get_ascent() const;
     virtual double get_descent() const;
-    virtual int get_baseline() const;
+    virtual double get_below_baseline() const;
+    virtual double get_baseline() const;
     virtual int getPathOffsetX() const {return mPathOffsetX >> 3;}
     virtual int getPathOffsetY() const {return mPathOffsetY >> 3;}
     virtual CRect getOverhang() const {return overhang;}

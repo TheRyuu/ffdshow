@@ -72,14 +72,14 @@ struct TprintPrefs {
 class TrenderedSubtitleLines: public std::vector<TrenderedSubtitleLine*>
 {
 public:
-    TrenderedSubtitleLines(void) {}
+    TrenderedSubtitleLines() {}
     TrenderedSubtitleLines(TrenderedSubtitleLine *ln) {push_back(ln);}
 
     /**
      * reset
      *  just clear pointers, do not delete objects.
      */
-    void reset(void)
+    void reset()
      {
       erase(begin(),end());
      }
@@ -88,7 +88,7 @@ public:
      * clear
      *  clear pointers and delete objects.
      */
-    void clear(void);
+    void clear();
 
     using std::vector<value_type>::empty;
 
@@ -163,7 +163,8 @@ public:
     int csp;
     virtual double get_ascent() const {return dy[0];}
     virtual double get_descent() const {return 0;}
-    virtual int get_baseline() const {return dy[0];}
+    virtual double get_baseline() const {return dy[0];}
+    virtual double get_below_baseline() const {return 0;};
     virtual CRect getOverhang() const {return CRect();}
     virtual size_t getMemorySize() const {return 0;}
     virtual int getPathOffsetX() const {return 0;}
@@ -188,10 +189,9 @@ class TrenderedSubtitleLine : public std::vector<TrenderedSubtitleWordBase*>
     double emptyHeight; // This is used as charHeight if empty.
     bool hasPrintedRect;
     CRect printedRect;
-    CPoint orderedPoint;
 public:
 
-    TrenderedSubtitleLine(void):firstrun(true),hasPrintedRect(false) {props.reset();}
+    TrenderedSubtitleLine():firstrun(true),hasPrintedRect(false) {props.reset();}
     TrenderedSubtitleLine(TSubtitleProps p):firstrun(true),hasPrintedRect(false) {props=p;}
     TrenderedSubtitleLine(TSubtitleProps p, double IemptyHeight):firstrun(true),emptyHeight(IemptyHeight),hasPrintedRect(false) {props=p;}
     TrenderedSubtitleLine(TrenderedSubtitleWordBase *w):firstrun(true),hasPrintedRect(false) {push_back(w);props.reset();}
@@ -199,14 +199,12 @@ public:
     TSubtitleProps& getPropsOfThisObject() {return props;}
     const TSubtitleProps& getProps() const;
     const CRect& getPrintedRect() const {return printedRect;}
-    const CPoint& getOrderedPoint() const {return orderedPoint;}
     bool getHasPrintedRect() const {return hasPrintedRect;}
     bool checkCollision(const CRect &query, CRect &ans)
     {
-        if ( printedRect.top == 0
-          && printedRect.left == 0
-          && printedRect.bottom == 0
-          && printedRect.right == 0)
+        if (!hasPrintedRect)
+            return false;
+        if (empty())
             return false;
         if (query.checkOverlap(printedRect)) {
             ans = printedRect;
@@ -220,18 +218,19 @@ public:
             hasPrintedRect = true;
     }
 
-    unsigned int width(void) const;
-    unsigned int height(void) const;
-    double charHeight(void) const;
-    unsigned int baselineHeight(void) const;
-    int get_topOverhang(void) const;
-    int get_bottomOverhang(void) const;
-    int get_leftOverhang(void) const;
-    int get_rightOverhang(void) const;
-    void prepareKaraoke(void);
+    unsigned int width() const;
+    unsigned int height() const;
+    double charHeight() const;
+    double lineHeight(double prefsdy) const;
+    unsigned int baselineHeight() const;
+    int get_topOverhang() const;
+    int get_bottomOverhang() const;
+    int get_leftOverhang() const;
+    int get_rightOverhang() const;
+    void prepareKaraoke();
     using std::vector<value_type>::push_back;
     using std::vector<value_type>::empty;
-    void clear(void);
+    void clear();
     void print(
        int startx,
        int starty,
@@ -283,11 +282,11 @@ public:
        const TprintPrefs &prefs,
        unsigned char **dst,
        const stride_t *stride);
-    void reset(void)
+    void reset()
     {
         lines.reset();
     }
-    void done(void);
+    void done();
 };
 
 extern "C" {

@@ -91,7 +91,8 @@ TrenderedTextSubtitleWord::TrenderedTextSubtitleWord(
     m_outlineWidth(0),
     baseline(0),
     m_ascent(0),
-    m_descent(0)
+    m_descent(0),
+    m_linegap(0)
 {
     if (!*s0)
         return;
@@ -179,6 +180,7 @@ void TrenderedTextSubtitleWord::getGlyph(HDC hdc,
         baseline=otm.otmTextMetrics.tmAscent / gdi_font_scale + m_outlineWidth;
         m_ascent = otm.otmTextMetrics.tmAscent / gdi_font_scale;
         m_descent = otm.otmTextMetrics.tmDescent / gdi_font_scale;
+        m_linegap = otm.otmTextMetrics.tmExternalLeading / gdi_font_scale;
         if (otm.otmItalicAngle)
             italic_fixed_sz.cx += ff_abs(LONG(italic_fixed_sz.cy*sin(otm.otmItalicAngle*M_PI/1800)));
         else
@@ -190,6 +192,7 @@ void TrenderedTextSubtitleWord::getGlyph(HDC hdc,
         baseline  = italic_fixed_sz.cy * 0.8 / gdi_font_scale + m_outlineWidth;;
         m_ascent  = italic_fixed_sz.cy * 0.8 / gdi_font_scale;
         m_descent = italic_fixed_sz.cy * 0.2 / gdi_font_scale;
+        m_linegap = italic_fixed_sz.cy * 0.03 / gdi_font_scale;
         m_shadowSize = getShadowSize(lf.lfHeight, gdi_font_scale);
         if (lf.lfItalic)
             italic_fixed_sz.cx+=italic_fixed_sz.cy*0.35;
@@ -829,9 +832,14 @@ CRect TrenderedTextSubtitleWord::getOverhangPrivate()
     return CRect(top_left, top_left, m_shadowSize + m_outlineWidth, m_shadowSize + m_outlineWidth);
 }
 
-int TrenderedTextSubtitleWord::get_baseline() const
+double TrenderedTextSubtitleWord::get_baseline() const
 {
  return baseline;
+}
+
+double TrenderedTextSubtitleWord::get_below_baseline() const
+{
+ return m_descent + m_linegap;
 }
 
 double TrenderedTextSubtitleWord::get_ascent() const
