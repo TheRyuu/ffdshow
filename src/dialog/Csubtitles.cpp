@@ -245,8 +245,11 @@ INT_PTR TsubtitlesPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 }
 void TsubtitlesPage::onLoadfile(void)
 {
+ ffstring dir;
+ extractfilepath(cfgGetStr(IDFF_subFilename), dir);
+ 
  char_t subflnm[MAX_PATH]=_l("");
- if (dlgGetFile(false,m_hwnd,_(-IDD_SUBTITLES,_l("Load subtitles file")),TsubtitlesFile::mask,_l("txt"),subflnm,_l("."),0))
+ if (dlgGetFile(false,m_hwnd,_(-IDD_SUBTITLES,_l("Load subtitles file")),TsubtitlesFile::mask,_l("txt"),subflnm,dir.c_str(),0))
   {
    setDlgItemText(m_hwnd,IDC_CBX_SUB_FLNM,subflnm);
    parent->setChange();
