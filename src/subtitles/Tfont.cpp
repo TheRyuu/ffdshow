@@ -120,7 +120,7 @@ unsigned int TrenderedSubtitleLine::width() const
         return 0;
     unsigned int dx=0;
     foreach (TrenderedSubtitleWordBase *word, *this)
-        dx+=word->dxChar;
+        dx += word->dxChar;
     return dx;
 }
 
@@ -302,7 +302,8 @@ void TrenderedSubtitleLine::print(
             dx[i] = std::min(dx[i],prefsdx>>cspInfo->shiftX[i]);
         }
 
-        word->print(startx, starty, dx, dy, dstLn, stride, bmp, msk, prefs.rtStart);
+        if (dx[0] > 0 && dy[0] > 0 && dx[1] > 0 && dy[1] > 0)
+            word->print(startx, starty, dx, dy, dstLn, stride, bmp, msk, prefs.rtStart);
     }
 }
 
@@ -353,10 +354,10 @@ void TrenderedSubtitleLines::print(
     unsigned char **dst,
     const stride_t *stride)
 {
-    // Use the same renderer for SSA and SRT if extended tags option is checked (both formats can hold SSA tags and HTML tags)
+    bool isText = Tsubreader::isText(prefs.subformat);
+    // Stereoscopic plus collision is not supported.
     if ((prefs.subformat & Tsubreader::SUB_FORMATMASK) == Tsubreader::SUB_SSA
-        || ((prefs.subformat & Tsubreader::SUB_FORMATMASK) == Tsubreader::SUB_SUBVIEWER) 
-        && prefs.deci->getParam2(IDFF_subExtendedTags) && !prefs.stereoScopicParallax)
+        || (isText && !prefs.stereoScopicParallax && !prefs.isOSD))
         return printASS(prefs,dst,stride);
     double y=0;
     if (empty()) return;
@@ -429,8 +430,6 @@ void TrenderedSubtitleLines::printASS(
 
     std::map<ParagraphKey,ParagraphValue> paragraphs;
     
-
-
     // pass 1: prepare paragraphs : a paragraph is a set of lines that have the same properties
     // (same margins, alignment and position)
     foreach (TrenderedSubtitleLine *line, *this) {
@@ -441,11 +440,13 @@ void TrenderedSubtitleLines::printASS(
             pi->second.topOverhang = std::min(pi->second.topOverhang ,double(pi->second.height-line->get_topOverhang()));
             pi->second.bottomOverhang = std::max(pi->second.bottomOverhang ,double(line->get_bottomOverhang()));
             pi->second.height += line->lineHeight(prefsdy);
+            pi->second.width = std::max(pi->second.width, double(line->width()));
         } else {
             ParagraphValue pval;
             pval.topOverhang = -line->get_topOverhang();
             pval.bottomOverhang = line->get_bottomOverhang();
             pval.height = line->lineHeight(prefsdy);
+            pval.width = line->width();
             paragraphs.insert(std::pair<ParagraphKey,ParagraphValue>(pkey,pval));
         }
     }
@@ -462,7 +463,6 @@ void TrenderedSubtitleLines::printASS(
             if (pi != paragraphs.end()) {
                 ParagraphValue &pval=pi->second;
                 if (pval.firstuse) {
-                    pval.firstuse=false;
                     switch (pkey.alignment) {
                     case 9: // SSA mid
                     case 10:
@@ -514,82 +514,59 @@ void TrenderedSubtitleLines::printASS(
                                       (prefs.rtStart-lineprops.get_moveStart())/(lineprops.get_moveStop()-lineprops.get_moveStart());
                     }
                 }
-                y=pval.y;
+
+                unsigned int cdx=line->width();
+                // Left and right margins need to be recalculated according to the length of the line
+                int marginL=lineprops.get_marginL(prefsdx, cdx);
+                int marginR=lineprops.get_marginR(prefsdx, cdx);
+                int leftOverhang=line->get_leftOverhang();
+                
+                switch (lineprops.alignment) {
+                case 1: // left(SSA)
+                case 5:
+                case 9:
+                    x=marginL - leftOverhang;
+                    break;
+                case 3: // right(SSA)
+                case 7:
+                case 11:
+                    x=prefsdx - cdx - marginR - leftOverhang;
+                    break;
+                case 2: // center(SSA)
+                case 6:
+                case 10:
+                default:
+                    // If the text is supposed to be placed at the center of the screen 
+                    // or has no horizontal alignment defined
+                    // then apply the horizontal position setting
+                    if (marginL==0 && (prefs.deci->getParam2(IDFF_subSSAOverridePlacement)
+                         || (prefs.subformat & Tsubreader::SUB_FORMATMASK) == Tsubreader::SUB_SUBVIEWER))
+                        x = ((double)prefs.xpos * prefsdx)/100.0 - (int)(cdx+marginR)/2 - leftOverhang;
+                    else if (lineprops.isPos) // If position defined, then marginL is relative to left border of the screen
+                        x = marginL-leftOverhang;
+                    else // else marginL is relative to the center of the screen
+                        x = ((int)prefsdx - marginL - marginR - (int)cdx)/2 + marginL - leftOverhang;
+                    break;
+                }
+
+                // If option is checked (or if subs are SUBVIEWER), correct horizontal placement if text goes out of the screen
+                if ((prefs.deci->getParam2(IDFF_subSSAMaintainInside) 
+                  || (prefs.subformat & Tsubreader::SUB_FORMATMASK) == Tsubreader::SUB_SUBVIEWER) && !lineprops.isMove) {
+                    if (x+cdx > prefsdx)
+                        x = prefsdx-cdx;
+                    if (x < 0)
+                        x=0;
+                }
+
+                if (!lineprops.isMove && !lineprops.isPos && pval.firstuse) {
+                    handleCollision(line, x, pval, prefsdy, lineprops.alignment);
+                }
+
+                pval.firstuse = false;
+                y = pval.y;
                 pval.y += line->lineHeight(prefsdy);
             }
 
-            if (y>=(double)prefsdy) break;
-            unsigned int cdx=line->width();
-            // Left and right margins need to be recalculated according to the length of the line
-            int marginL=lineprops.get_marginL(prefsdx, cdx);
-            int marginR=lineprops.get_marginR(prefsdx, cdx);
-            int leftOverhang=line->get_leftOverhang();
-            
-            switch (lineprops.alignment) {
-            case 1: // left(SSA)
-            case 5:
-            case 9:
-                x=marginL - leftOverhang;
-                break;
-            case 3: // right(SSA)
-            case 7:
-            case 11:
-                x=prefsdx - cdx - marginR - leftOverhang;
-                break;
-            case 2: // center(SSA)
-            case 6:
-            case 10:
-            default:
-                // If the text is supposed to be placed at the center of the screen 
-                // or has no horizontal alignment defined
-                // then apply the horizontal position setting
-                if (marginL==0 && (prefs.deci->getParam2(IDFF_subSSAOverridePlacement)
-                     || (prefs.subformat & Tsubreader::SUB_FORMATMASK) == Tsubreader::SUB_SUBVIEWER))
-                    x = ((double)prefs.xpos * prefsdx)/100.0 - (int)(cdx+marginR)/2 - leftOverhang;
-                else if (lineprops.isPos) // If position defined, then marginL is relative to left border of the screen
-                    x = marginL-leftOverhang;
-                else // else marginL is relative to the center of the screen
-                    x = ((int)prefsdx - marginL - marginR - (int)cdx)/2 + marginL - leftOverhang;
-                break;
-            }
-
-            // If option is checked (or if subs are SUBVIEWER), correct horizontal placement if text goes out of the screen
-            if ((prefs.deci->getParam2(IDFF_subSSAMaintainInside) 
-              || (prefs.subformat & Tsubreader::SUB_FORMATMASK) == Tsubreader::SUB_SUBVIEWER) && !lineprops.isMove) {
-                if (x+cdx>prefsdx)
-                    x=prefsdx-cdx;
-                if (x < 0)
-                    x=0;
-            }
-
-            // collision handling
-            if (!lineprops.isMove) {
-                int lineHight = (int)line->lineHeight(prefsdy);
-                CRect myrect(x, y, x + cdx, y + lineHight - (lineHight > 0 ? 1:0));
-                CRect hisrect;
-                bool again = false;
-                for (const_iterator l = begin(); l != end() || again ; l++) {
-                    if (again) {
-                        l = begin();
-                        // We can skip check if (l == end()) break; safely as this is guaranteed to be not empty.
-                        again = false;
-                    }
-                    if ((*l)->checkCollision(myrect, hisrect)) {
-                        if (lineprops.alignment <= 3 || lineprops.alignment >= 9) {
-                            // bottom, middle
-                            y = hisrect.top - lineHight - 1;
-                            myrect = CRect(x, y, x + cdx, y + lineHight);
-                            if (lineHight > 0)
-                                again = true;
-                        } else {
-                            // Top
-                            y = hisrect.bottom + 1;
-                            myrect = CRect(x, y, x + cdx, y + lineHight);
-                            again = true;
-                        }
-                    }
-                }
-            }
         } else {
             x = line->getPrintedRect().left;
             y = line->getPrintedRect().top;
@@ -606,6 +583,36 @@ void TrenderedSubtitleLines::printASS(
         }
 
        line->print(x, y, prefs, prefsdx, prefsdy, dst, stride);
+    }
+}
+
+void TrenderedSubtitleLines::handleCollision(TrenderedSubtitleLine *line, int x, ParagraphValue &pval, unsigned int prefsdy, int alignment)
+{
+    int paragraphHeight = (int)pval.height;
+    CRect myrect(x, pval.y, x + pval.width, pval.y + paragraphHeight - (paragraphHeight > 0 ? 1:0));
+    CRect hisrect;
+    bool again = false;
+    for (const_iterator l = begin(); l != end() || again ; l++) {
+        if (again) {
+            l = begin();
+            // We can skip check if (l == end()) break; safely as this is guaranteed to be not empty.
+            again = false;
+        }
+        if ( line->getPropsOfThisObject().layer == (*l)->getPropsOfThisObject().layer
+          && (*l)->checkCollision(myrect, hisrect)) {
+            if (alignment <= 3 || alignment >= 9) {
+                // bottom, middle
+                pval.y = hisrect.top - paragraphHeight - 1;
+                myrect = CRect(x, pval.y, x + pval.width, pval.y + paragraphHeight);
+                if (paragraphHeight > 0)
+                    again = true;
+            } else {
+                // Top
+                pval.y = hisrect.bottom + 1;
+                myrect = CRect(x, pval.y, x + pval.width, pval.y + paragraphHeight);
+                again = true;
+            }
+        }
     }
 }
 

@@ -129,12 +129,26 @@ private:
         double xmin,xmax,y0,xoffset,yoffset;
         bool firstuse;
 
-        ParagraphValue(): topOverhang(0), bottomOverhang(0),width(0),height(0), y(0), xmin(-1),xmax(-1),y0(0),xoffset(0),yoffset(0), firstuse(true) {};
+        ParagraphValue():
+            topOverhang(0),
+            bottomOverhang(0),
+            width(0),
+            height(0),
+            y(0),
+            xmin(-1),
+            xmax(-1),
+            y0(0),
+            xoffset(0),
+            yoffset(0),
+            firstuse(true)
+            {};
     };
     class TlayerSort {
     public:
         bool operator() (TrenderedSubtitleLine *lt, TrenderedSubtitleLine *rt) const;
     };
+
+    void handleCollision(TrenderedSubtitleLine *line, int x, ParagraphValue &pval, unsigned int prefsdy, int alignment);
 };
 
 class TrenderedSubtitleWordBase

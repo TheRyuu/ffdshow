@@ -854,7 +854,7 @@ double TrenderedTextSubtitleWord::get_descent() const
 
 void TrenderedTextSubtitleWord::print(int startx, int starty, unsigned int sdx[3], int sdy[3], unsigned char *dstLn[3], const stride_t stride[3], const unsigned char *Ibmp[3], const unsigned char *Imsk[3],REFERENCE_TIME rtStart) const
 {
- if (sdy[0] <= 0 || sdy[1] < 0 || dx[0] == 0 || dy[0] == 0)
+ if (sdy[0] <= 0 || sdy[1] < 0 || dx[0] <= 0 || dy[0] <= 0)
   return;
 
  // karaoke: use secondaryColoredWord if not highlighted.
