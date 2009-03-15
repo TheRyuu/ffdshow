@@ -53,7 +53,7 @@ TprintPrefs::TprintPrefs(IffdshowBase *Ideci,const TfontSettings *IfontSettings)
       fontSettings = *IfontSettings;
      deci=Ideci;
      config=NULL;
-     posXpix=0;
+     stereoScopicParallax=0;
      vobchangeposition = false;
      vobscale = vobaamode = vobaagauss = 0;
      fontchangesplit=false;
@@ -86,7 +86,6 @@ bool TprintPrefs::operator != (const TprintPrefs &rt) const
       && align == rt.align
       && linespacing == rt.linespacing
       && sizeDx == rt.sizeDx && sizeDy == rt.sizeDy
-      && posXpix == rt.posXpix
       && vobchangeposition == rt.vobchangeposition && vobscale == rt.vobscale && vobaamode == rt.vobaamode && vobaagauss == rt.vobaagauss
       && fontchangesplit == rt.fontchangesplit && fontsplit == rt.fontsplit
       && textBorderLR == rt.textBorderLR
@@ -113,18 +112,6 @@ bool TprintPrefs::operator != (const TprintPrefs &rt) const
      // compare all members except rtStart
      return !(*this != rt);
  }
-
-void TprintPrefs::debug_print() const
-{
-     DPRINTF(_l("dx %d,dy %d,clipdy %d,isOSD %d,xpos %d,ypos %d,align %d,linespacing %d,sizeDx %d,sizeDy %d,posXpix %d,")
-     _l("vobchangeposition %d,vobscale %d,vobaamode %d,vobaagauss %d,")
-     _l("fontchangesplit %d,fontsplit %d,textBorderLR %d,tabsize %d,dvd %d,shadowMode %d, shadowAlpha %d,blur %d,outlineBlur %d,")
-     _l("csp %d,opaqueBox %d,subformat %d,xinput %d,yinput %d"),
-     dx,dy,clipdy,isOSD,xpos,ypos,align,linespacing,sizeDx,sizeDy,posXpix,
-     vobchangeposition,vobscale,vobaamode,vobaagauss,
-     fontchangesplit,fontsplit,textBorderLR,tabsize,dvd,shadowMode, shadowAlpha,blur,outlineBlur,
-     csp,opaqueBox,subformat,xinput,yinput);
-}
 
 //============================== TrenderedSubtitleLine ===============================
 unsigned int TrenderedSubtitleLine::width() const
@@ -347,6 +334,19 @@ size_t TrenderedSubtitleLine::getMemorySize() const
     return memSize;
 }
 
+bool TrenderedSubtitleLine::checkCollision(const CRect &query, CRect &ans)
+{
+    if (!hasPrintedRect)
+        return false;
+    if (empty())
+        return false;
+    if (query.checkOverlap(printedRect)) {
+        ans = printedRect;
+        return true;
+    }
+    return false;
+}
+
 //============================== TrenderedSubtitleLines ==============================
 void TrenderedSubtitleLines::print(
     const TprintPrefs &prefs,
@@ -356,7 +356,7 @@ void TrenderedSubtitleLines::print(
     // Use the same renderer for SSA and SRT if extended tags option is checked (both formats can hold SSA tags and HTML tags)
     if ((prefs.subformat & Tsubreader::SUB_FORMATMASK) == Tsubreader::SUB_SSA
         || ((prefs.subformat & Tsubreader::SUB_FORMATMASK) == Tsubreader::SUB_SUBVIEWER) 
-        && prefs.deci->getParam2(IDFF_subExtendedTags))
+        && prefs.deci->getParam2(IDFF_subExtendedTags) && !prefs.stereoScopicParallax)
         return printASS(prefs,dst,stride);
     double y=0;
     if (empty()) return;
@@ -397,7 +397,7 @@ void TrenderedSubtitleLines::print(
             x=-prefs.xpos; // OSD
         else {
             // subtitles
-            x=(prefs.xpos * prefsdx)/100 + prefs.posXpix;
+            x=(prefs.xpos * prefsdx)/100 + prefs.stereoScopicParallax;
             switch (prefs.align) {
                 case ALIGN_FFDSHOW:x=x-cdx/2;if (x<0) x=0;if (x+cdx>=prefsdx) x=prefsdx-cdx;break;
                 case ALIGN_LEFT:break;
@@ -605,7 +605,7 @@ void TrenderedSubtitleLines::printASS(
                      (prefs.rtStart-lineprops.get_moveStart())/(lineprops.get_moveStop()-lineprops.get_moveStart());
         }
 
-       line->print(x,y,prefs,prefsdx,prefsdy,dst,stride);
+       line->print(x, y, prefs, prefsdx, prefsdy, dst, stride);
     }
 }
 

@@ -127,6 +127,7 @@ void TsubtitlesPage::stereo2dlg(void)
  setCheck(IDC_CHB_SUB_STEREOSCOPIC,is);
  tbrSet(IDC_TBR_SUB_STEREOSCOPICPAR,cfgGet(IDFF_subStereoscopicPar),IDC_LBL_SUB_STEREOSCOPICPAR,NULL,10.0f);
  enable(is,idStereo);
+ enable(!is,IDC_CHB_SUBEXTENDEDTAGS,false);
 }
 void TsubtitlesPage::expand2dlg(void)
 {

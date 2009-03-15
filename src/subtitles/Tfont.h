@@ -33,7 +33,6 @@ struct TprintPrefs {
 
     bool operator != (const TprintPrefs &rt) const;
     bool operator == (const TprintPrefs &rt) const;
-    void debug_print() const;
 
     void operator = (const TprintPrefs &rt) {
         memcpy(this, &rt, sizeof(*this));
@@ -45,7 +44,7 @@ struct TprintPrefs {
     int align;
     int linespacing;
     unsigned int sizeDx,sizeDy;
-    int posXpix;
+    int stereoScopicParallax;
     bool vobchangeposition;int vobscale,vobaamode,vobaagauss;
     bool fontchangesplit,fontsplit;
     int textBorderLR;
@@ -198,25 +197,10 @@ public:
 
     TSubtitleProps& getPropsOfThisObject() {return props;}
     const TSubtitleProps& getProps() const;
+
     const CRect& getPrintedRect() const {return printedRect;}
     bool getHasPrintedRect() const {return hasPrintedRect;}
-    bool checkCollision(const CRect &query, CRect &ans)
-    {
-        if (!hasPrintedRect)
-            return false;
-        if (empty())
-            return false;
-        if (query.checkOverlap(printedRect)) {
-            ans = printedRect;
-            return true;
-        }
-        return false;
-    }
-    void setPrinted()
-    {
-        if (!empty())
-            hasPrintedRect = true;
-    }
+    bool checkCollision(const CRect &query, CRect &ans);
 
     unsigned int width() const;
     unsigned int height() const;

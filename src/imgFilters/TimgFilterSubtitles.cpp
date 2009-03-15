@@ -332,6 +332,8 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
                 subtitles = &subs;
             }
 
+            bool stereoScopic = cfg->stereoscopic && !isdvdproc && subformat != Tsubreader::SUB_SSA;
+
             int outcsp = FF_CSP_420P;
             if (rgb32_if_text && isText)
                 outcsp = FF_CSP_RGB32;
@@ -359,15 +361,13 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
                 printprefs.yinput = decodedPict->dy;
             }
 
-            if (!cfg->stereoscopic || isdvdproc) {
+            if (!stereoScopic) {
                 printprefs.sizeDx=sizeDx;
                 printprefs.sizeDy=sizeDy;
             } else {
-                printprefs.sizeDx=sizeDx;
-                printprefs.sizeDy=sizeDy/2;
-                printprefs.posXpix=cfg->stereoscopic?cfg->stereoscopicPar*int(sizeDx)/2000:0;
-                for (unsigned int i=0;i<pict.cspInfo.numPlanes;i++)
-                    printprefs.posXpix=-printprefs.posXpix;
+                printprefs.sizeDx=sizeDx/2;
+                printprefs.sizeDy=sizeDy;
+                printprefs.stereoScopicParallax = cfg->stereoscopicPar * int(sizeDx) / 2000;
             }
 
             if (isText) {
@@ -394,11 +394,22 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
                 if (outcsp == FF_CSP_RGB32)
                     everRGB = true;
 
-                if (!cfg->stereoscopic || isdvdproc) {
+                if (!stereoScopic) {
                     sub->print(frameStart,wasDiscontinuity,font,forceChange,printprefs,dst,stride2);
                 } else {
                     sub->print(frameStart,wasDiscontinuity,font,forceChange,printprefs,dst,stride2);
-                    sub->print(frameStart,false,font,false,printprefs,dst,stride2);
+                    unsigned char *dst_right[4] = {dst[0],dst[1],dst[2],dst[3]};
+                    if (printprefs.csp == FF_CSP_420P) {
+                        int half = (pict.rectClip.dx / 2) & ~1;
+                        dst_right[0] += half;
+                        dst_right[1] += half / 2;
+                        dst_right[2] += half / 2;
+                    } else {
+                        // RG32
+                        dst_right[0] += pict.rectClip.dx * 2;
+                    }
+                    printprefs.stereoScopicParallax = -printprefs.stereoScopicParallax;
+                    sub->print(frameStart,false,font,false,printprefs,dst_right,stride2);
                 }
                 wasDiscontinuity=false;
             }
