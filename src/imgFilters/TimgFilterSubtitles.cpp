@@ -564,6 +564,8 @@ TimgFilterSubtitles::TglyphThread::TglyphThread(TimgFilterSubtitles *Iparent, If
     font(deci),
     firstrun(true),
     used_memory(0),
+    mutex_prefs(), // initialize before starting a thread
+    condv_prefs(),
     thread(glyphThreadFunc0,this),
     platform_specific_thread(thread.native_handle())
 

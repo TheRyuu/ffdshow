@@ -279,6 +279,7 @@ void TrenderedSubtitleLine::print(
         int x[3];
         unsigned int dx[3];
         int dy[3];
+        int sy0 = int(starty + baseline - word->get_baseline() + word->getPathOffsetY());
         for (int i=0;i<3;i++) {
             x[i] = startx>>cspInfo->shiftX[i];
             msk[i] = word->msk[i];
@@ -287,7 +288,7 @@ void TrenderedSubtitleLine::print(
                 msk[i] += -x[i];
                 bmp[i] += -x[i];
             }
-            int sy = int(starty + baseline - word->get_baseline() + word->getPathOffsetY()) >> cspInfo->shiftY[i];
+            int sy = sy0 >> cspInfo->shiftY[i];
             dy[i] = std::min((int(prefsdy)>>cspInfo->shiftY[i])-sy,int(word->dy[i]));
             dstLn[i] = dst[i] + int(sy * stride[i]);
             if (x[i]>0)
@@ -303,7 +304,7 @@ void TrenderedSubtitleLine::print(
         }
 
         if (dx[0] > 0 && dy[0] > 0 && dx[1] > 0 && dy[1] > 0)
-            word->print(startx, starty, dx, dy, dstLn, stride, bmp, msk, prefs.rtStart);
+            word->print(startx, sy0, dx, dy, dstLn, stride, bmp, msk, prefs.rtStart);
     }
 }
 
@@ -487,11 +488,11 @@ void TrenderedSubtitleLines::printASS(
                         // or has no vertical alignment defined
                         // then apply the vertical position setting
                         if (pkey.marginBottom == 0 && (prefs.deci->getParam2(IDFF_subSSAOverridePlacement)
-                             || (prefs.subformat & Tsubreader::SUB_FORMATMASK) == Tsubreader::SUB_SUBVIEWER))
+                          || (prefs.subformat & Tsubreader::SUB_FORMATMASK) == Tsubreader::SUB_SUBVIEWER))
                             pval.y=((double)prefs.ypos*prefsdy)/100.0-pval.height + pval.topOverhang;
                         else
-                            pval.y=(double)prefsdy-pval.height - pkey.marginBottom + pval.topOverhang;
-                     break;
+                            pval.y=(double)prefsdy - pkey.marginBottom - pval.height + pval.topOverhang;
+                    break;
                     }
 
                     // If option is checked (or if subs are SUBVIEWER), correct vertical placement if text goes out of the screen
