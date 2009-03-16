@@ -50,12 +50,17 @@ endif
 
 ifeq ($(DEBUG),yes)
     CFLAGS+=-DDEBUG -D_DEBUG -g 
-    OPTFLAGS=-O2 -fomit-frame-pointer
     YASMFLAGS+=-g cv8
 else
     CFLAGS+=-DNDEBUG -UDEBUG
-    OPTFLAGS=-O3 -fomit-frame-pointer
+    OPTFLAGS=-fomit-frame-pointer
     LDFLAGS=--strip-all
+endif
+
+ifeq ($(64BIT),yes)
+    OPTFLAGS+=-O2
+else
+    OPTFLAGS+=-O3
 endif
 
 ifeq ($(64BIT),yes)
