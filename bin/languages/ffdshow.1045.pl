@@ -1,5 +1,5 @@
 Polski
-; Zgodne z ffdshow tryouts revision 2750  Mar  5 2009 13:13:10 (msvc, x86, unicode, r)
+; Zgodne z ffdshow tryouts revision 2768  Mar  10 2009 15:01:54 (msvc 2008, x86, unicode, r)
 ; Lokalizacja:
 ; Piotr Sokó³, Radzio, Virtual_ManPL
 
@@ -1210,7 +1210,7 @@ Set the delay in ms to rescan for the bars=Ustaw opóŸnienie w ms do ponownego pr
 1022=Pionowe odkszta³cenie:
 1360=Uwzglêdnij przeplot
 1953=Zaokr¹glaj precyzyjnie 
-1143=Algorytmy zmiany rozmiaru uszeregowane wed³ug jakoœci przetwarzania:\r\nSpline > Lanczos (10.00) >  Dwuszeœcienna (-1.00) > Dwuliniowa > Szybka dwuliniowa > Punktowa > Brak\r\n\r\nRozmywanie - rozmywa obraz podczas zmiany rozmiaru, dzia³a niezale¿nie od filtrów rozmywania,\r\nWyostrzanie - wyostrza obraz podczas zmiany rozmiaru, dzia³a niezale¿nie od filtrów wyostrzania,\r\n\r\nUwzglêdnij przeplot:\r\nodznaczone - klatki traktowane s¹ jak progresywne,\r\nzaznaczone - klatki traktowane s¹ jak z przeplotem,\r\nczêœciowo zaznaczone - decyduje typ klatki na wejœciu (u¿ywane przy przetwarzaniu MPEG2 video).\r\n\r\nZaokr¹glaj precyzyjnie :\r\nodznaczone - czasami widoczne s¹ poziome linie,\r\nzaznaczone - wysoka jakoœæ, wolniejszy w niektórych przypadkach.
+1143=Algorytmy zmiany rozmiaru uszeregowane wed³ug jakoœci przetwarzania:\r\nSpline > Lanczos (10.00) >  Dwuszeœcienna (-0.60) > Dwuliniowa > Szybka dwuliniowa > Punktowa > Brak\r\n\r\nRozmywanie - rozmywa obraz podczas zmiany rozmiaru, dzia³a niezale¿nie od filtrów rozmywania,\r\nWyostrzanie - wyostrza obraz podczas zmiany rozmiaru, dzia³a niezale¿nie od filtrów wyostrzania,\r\n\r\nUwzglêdnij przeplot:\r\nodznaczone - klatki traktowane s¹ jak progresywne,\r\nzaznaczone - klatki traktowane s¹ jak z przeplotem,\r\nczêœciowo zaznaczone - decyduje typ klatki na wejœciu (u¿ywane przy przetwarzaniu MPEG2 video).\r\n\r\nZaokr¹glaj precyzyjnie :\r\nodznaczone - czasami widoczne s¹ poziome linie,\r\nzaznaczone - wysoka jakoœæ, wolniejszy w niektórych przypadkach.
 
 [177]
 0=Korekcja perspektywy
