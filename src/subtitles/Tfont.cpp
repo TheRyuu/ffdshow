@@ -140,24 +140,38 @@ double TrenderedSubtitleLine::charHeight() const
 {
     if (empty())
         return emptyHeight;
-    double aboveBaseline=0,belowBaseline=0;
+    double ascent=0,descent=0;
     foreach (TrenderedSubtitleWordBase *word, *this) {
-        aboveBaseline=std::max<int>(aboveBaseline,word->get_ascent());
-        belowBaseline=std::max<int>(belowBaseline,word->get_descent());
+        ascent=std::max<double>(ascent,word->get_ascent());
+        descent=std::max<double>(descent,word->get_descent());
     }
-    return aboveBaseline + belowBaseline;
+    return ascent + descent;
 }
 
-double TrenderedSubtitleLine::lineHeight(double prefsdy) const
+double TrenderedSubtitleLine::linegap(double prefsdy) const
+{
+    double belowBaseline=0,descent=0;
+    foreach (TrenderedSubtitleWordBase *word, *this) {
+        descent = std::max<double>(belowBaseline,word->get_descent());
+        belowBaseline = std::max<double>(belowBaseline,word->get_below_baseline());
+    }
+    return belowBaseline - descent
+           // plus normalized 1 pixel
+           + props.refResY / prefsdy;
+}
+
+double TrenderedSubtitleLine::lineHeightWithGap(double prefsdy) const
 {
     if (empty())
         return emptyHeight;
     double aboveBaseline=0,belowBaseline=0;
     foreach (TrenderedSubtitleWordBase *word, *this) {
-        aboveBaseline=std::max<int>(aboveBaseline,word->get_ascent());
-        belowBaseline=std::max<int>(belowBaseline,word->get_below_baseline());
+        aboveBaseline=std::max<double>(aboveBaseline,word->get_ascent());
+        belowBaseline=std::max<double>(belowBaseline,word->get_below_baseline());
     }
-    return aboveBaseline + belowBaseline + props.refResY / prefsdy;
+    return aboveBaseline + belowBaseline
+           // plus normalized 1 pixel
+           + props.refResY / prefsdy;
 }
 
 unsigned int TrenderedSubtitleLine::baselineHeight() const
@@ -174,11 +188,13 @@ int TrenderedSubtitleLine::get_topOverhang() const
 {
     if (empty())
         return 0;
-    int baseline=baselineHeight();
-    int topOverhang=0;
-    foreach (TrenderedSubtitleWordBase *word, *this)
-        topOverhang=std::min(topOverhang, int(baseline - word->get_baseline() - word->getOverhang().top));
-    return -topOverhang;
+    int top = 0;
+    int ascent = 0;
+    foreach (TrenderedSubtitleWordBase *word, *this) {
+        ascent = std::max<int>(ascent, word->get_ascent());
+        top = std::max<int>(top, word->get_ascent() + word->getOverhang().top);
+    }
+    return top - ascent;
 }
 
 int TrenderedSubtitleLine::get_bottomOverhang() const
@@ -186,10 +202,13 @@ int TrenderedSubtitleLine::get_bottomOverhang() const
     if (empty())
         return 0;
     int baseline=baselineHeight();
-    int bottomOverhang=0;
-    foreach (TrenderedSubtitleWordBase *word, *this)
-        bottomOverhang=std::max(bottomOverhang, int((int)word->dxChar - word->get_baseline() + word->getOverhang().bottom));
-    return bottomOverhang+baseline - height();
+    int descent = 0;
+    int bottom = 0;
+    foreach (TrenderedSubtitleWordBase *word, *this) {
+        descent = std::max<int>(descent, word->get_descent());
+        bottom = std::max<int>(bottom, word->get_descent() + word->getOverhang().bottom);
+    }
+    return bottom - descent;
 }
 
 int TrenderedSubtitleLine::get_leftOverhang() const
@@ -265,7 +284,7 @@ void TrenderedSubtitleLine::print(
     const stride_t *stride)
 {
     int w = width();
-    int h = lineHeight(prefsdy);
+    int h = lineHeightWithGap(prefsdy);
     printedRect = CRect(startx, starty, startx + w - (w > 0 ? 1 : 0), starty + h - (h > 0 ? 1 : 0));
     if (!empty()) hasPrintedRect = true;
 
@@ -374,7 +393,7 @@ void TrenderedSubtitleLines::print(
     double h=0,h1=0;
     for (const_iterator i=begin();i!=end();i++) {
         double h2=h1+(*i)->height();
-        h1+=(double)prefs.linespacing*(*i)->lineHeight(prefsdy)/100;
+        h1+=(double)prefs.linespacing*(*i)->lineHeightWithGap(prefsdy)/100;
         if (h2>h)
             h=h2;
     }
@@ -389,7 +408,7 @@ void TrenderedSubtitleLines::print(
     if (prefs.ypos>=0 && y+h >= (double)prefsdy)
         y=(double)prefsdy-h-1;
 
-    for (const_iterator i=begin();i!=end();y+=(double)prefs.linespacing*(*i)->lineHeight(prefsdy)/100,i++) {
+    for (const_iterator i=begin();i!=end();y+=(double)prefs.linespacing*(*i)->lineHeightWithGap(prefsdy)/100,i++) {
         if (y<0) continue;
 
         if ((unsigned int)y>=prefsdy) break;
@@ -438,15 +457,17 @@ void TrenderedSubtitleLines::printASS(
         ParagraphKey pkey(line, prefsdx, prefsdy);
         std::map<ParagraphKey,ParagraphValue>::iterator pi=paragraphs.find(pkey);
         if (pi != paragraphs.end()) {
-            pi->second.topOverhang = std::min(pi->second.topOverhang ,double(pi->second.height-line->get_topOverhang()));
+            pi->second.topOverhang = -std::min(-pi->second.topOverhang ,double(pi->second.height + pi->second.linegap - line->get_topOverhang()));
             pi->second.bottomOverhang = std::max(pi->second.bottomOverhang ,double(line->get_bottomOverhang()));
-            pi->second.height += line->lineHeight(prefsdy);
+            pi->second.height += pi->second.linegap + line->charHeight();
             pi->second.width = std::max(pi->second.width, double(line->width()));
+            pi->second.linegap = line->linegap(prefsdy);
         } else {
             ParagraphValue pval;
-            pval.topOverhang = -line->get_topOverhang();
+            pval.topOverhang = line->get_topOverhang();
             pval.bottomOverhang = line->get_bottomOverhang();
-            pval.height = line->lineHeight(prefsdy);
+            pval.height = line->charHeight();
+            pval.linegap = line->linegap(prefsdy);
             pval.width = line->width();
             paragraphs.insert(std::pair<ParagraphKey,ParagraphValue>(pkey,pval));
         }
@@ -478,7 +499,7 @@ void TrenderedSubtitleLines::printASS(
                     case 5: // SSA top
                     case 6:
                     case 7:
-                        pval.y = pkey.marginTop + pval.topOverhang;
+                        pval.y = pkey.marginTop - pval.topOverhang;
                         break;
                     case 1: // SSA bottom
                     case 2:
@@ -489,9 +510,9 @@ void TrenderedSubtitleLines::printASS(
                         // then apply the vertical position setting
                         if (pkey.marginBottom == 0 && (prefs.deci->getParam2(IDFF_subSSAOverridePlacement)
                           || (prefs.subformat & Tsubreader::SUB_FORMATMASK) == Tsubreader::SUB_SUBVIEWER))
-                            pval.y=((double)prefs.ypos*prefsdy)/100.0-pval.height + pval.topOverhang;
+                            pval.y=((double)prefs.ypos*prefsdy)/100.0-pval.height - pval.topOverhang;
                         else
-                            pval.y=(double)prefsdy - pkey.marginBottom - pval.height + pval.topOverhang;
+                            pval.y=(double)prefsdy - 1 - pkey.marginBottom - pval.height - pval.topOverhang;
                     break;
                     }
 
@@ -565,7 +586,7 @@ void TrenderedSubtitleLines::printASS(
 
                 pval.firstuse = false;
                 y = pval.y;
-                pval.y += line->lineHeight(prefsdy);
+                pval.y += line->lineHeightWithGap(prefsdy);
             }
 
         } else {

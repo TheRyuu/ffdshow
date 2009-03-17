@@ -180,7 +180,7 @@ void TrenderedTextSubtitleWord::getGlyph(HDC hdc,
         baseline=otm.otmTextMetrics.tmAscent / gdi_font_scale + m_outlineWidth;
         m_ascent = otm.otmTextMetrics.tmAscent / gdi_font_scale;
         m_descent = otm.otmTextMetrics.tmDescent / gdi_font_scale;
-        m_linegap = otm.otmTextMetrics.tmExternalLeading / gdi_font_scale;
+        m_linegap = (lf.lfHeight - otm.otmTextMetrics.tmAscent - otm.otmTextMetrics.tmDescent) / gdi_font_scale;
         if (otm.otmItalicAngle)
             italic_fixed_sz.cx += ff_abs(LONG(italic_fixed_sz.cy*sin(otm.otmItalicAngle*M_PI/1800)));
         else
@@ -840,6 +840,11 @@ double TrenderedTextSubtitleWord::get_baseline() const
 double TrenderedTextSubtitleWord::get_below_baseline() const
 {
  return m_descent + m_linegap;
+}
+
+double TrenderedTextSubtitleWord::get_linegap() const
+{
+ return m_linegap;
 }
 
 double TrenderedTextSubtitleWord::get_ascent() const

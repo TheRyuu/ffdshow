@@ -102,6 +102,7 @@ public:
     virtual double get_ascent() const;
     virtual double get_descent() const;
     virtual double get_below_baseline() const;
+    virtual double get_linegap() const;
     virtual double get_baseline() const;
     virtual int getPathOffsetX() const {return mPathOffsetX >> 3;}
     virtual int getPathOffsetY() const {return mPathOffsetY >> 3;}

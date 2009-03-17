@@ -125,8 +125,10 @@ private:
 
     class ParagraphValue {
     public:
-        double topOverhang,bottomOverhang;
+        double topOverhang;
+        double bottomOverhang;
         double width,height,y;
+        double linegap;
         double xmin,xmax,y0,xoffset,yoffset;
         bool firstuse;
 
@@ -136,6 +138,7 @@ private:
             width(0),
             height(0),
             y(0),
+            linegap(0),
             xmin(-1),
             xmax(-1),
             y0(0),
@@ -178,7 +181,8 @@ public:
     virtual double get_ascent() const {return dy[0];}
     virtual double get_descent() const {return 0;}
     virtual double get_baseline() const {return dy[0];}
-    virtual double get_below_baseline() const {return 0;};
+    virtual double get_below_baseline() const {return 0;}
+    virtual double get_linegap() const {return 0;}
     virtual CRect getOverhang() const {return CRect();}
     virtual size_t getMemorySize() const {return 0;}
     virtual int getPathOffsetX() const {return 0;}
@@ -220,7 +224,8 @@ public:
     unsigned int width() const;
     unsigned int height() const;
     double charHeight() const;
-    double lineHeight(double prefsdy) const;
+    double linegap(double prefsdy) const;
+    double lineHeightWithGap(double prefsdy) const;
     unsigned int baselineHeight() const;
     int get_topOverhang() const;
     int get_bottomOverhang() const;
