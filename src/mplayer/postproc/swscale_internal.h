@@ -49,7 +49,7 @@
 
 #define MAX_FILTER_SIZE 256
 
-#ifdef ARCH_X86_64
+#if ARCH_X86_64
   #define APCK_PTR2 8
   #define APCK_COEF 16
   #define APCK_SIZE 24

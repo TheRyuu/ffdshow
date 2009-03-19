@@ -2542,7 +2542,7 @@ static inline void RENAME(hyscale)(uint16_t *dst, long dstWidth, uint8_t *src, i
 			PREFETCH" 32(%%"REG_c")		\n\t"
 			PREFETCH" 64(%%"REG_c")		\n\t"
 
-#ifdef ARCH_X86_64
+#if ARCH_X86_64
 
 #define FUNNY_Y_CODE \
 			"movl (%%"REG_b"), %%esi	\n\t"\
@@ -2764,7 +2764,7 @@ inline static void RENAME(hcscale)(uint16_t *dst, long dstWidth, uint8_t *src1, 
 			PREFETCH" 32(%%"REG_c")		\n\t"
 			PREFETCH" 64(%%"REG_c")		\n\t"
 
-#ifdef ARCH_X86_64
+#if ARCH_X86_64
 
 #define FUNNY_UV_CODE \
 			"movl (%%"REG_b"), %%esi	\n\t"\

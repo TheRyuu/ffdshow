@@ -94,7 +94,7 @@ struct III_sideinfo
 
 extern int synth_1to1_pent( struct mp3lib_ctx *,real *,int,short * );
 
-#ifdef ARCH_X86
+#if ARCH_X86
 //extern int synth_1to1_MMX( struct mp3lib_ctx*,real *,int,short * );
 extern int synth_1to1_MMX_s(real *, int, short *, short *, int *);
 

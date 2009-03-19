@@ -88,7 +88,7 @@ LOCAL unsigned int getbits_fast(mp3lib_ctx *ctx,int number_of_bits)
 //  if(MP3_frames>=7741) printf("getbits_fast: bits=%d  bitsleft=%d  wordptr=%x\n",number_of_bits,bitsleft,wordpointer);
   if((ctx->bitsleft-=number_of_bits)<0) return 0;
   if(!number_of_bits) return 0;
-#ifdef ARCH_X86
+#if ARCH_X86
   rval = bswap_16(*((uint16_t *)ctx->wordpointer));
 #else
   /*
@@ -131,7 +131,7 @@ LOCAL void set_pointer(mp3lib_ctx *ctx,int backstep)
 
 LOCAL int stream_head_read(mp3lib_ctx *ctx,unsigned char *hbuf,uint32_t *newhead){
   if(mp3_read(ctx,hbuf,4) != 4) return FALSE;
-#ifdef ARCH_X86
+#if ARCH_X86
   *newhead = bswap_32(*((uint32_t*)hbuf));
 #else
   /*
@@ -340,7 +340,7 @@ static int _has_mmx = 0;  // used by layer2.c, layer3.c to pre-scale coeffs
 /******************************************************************************/
 
 /* It's hidden from gcc in assembler */
-#ifdef ARCH_X86
+#if ARCH_X86
 extern void dct64_MMX(short *, short *, real *);
 extern void dct64_MMX_3dnow(short *, short *, real *);
 extern void dct64_MMX_3dnowex(short *, short *, real *);
@@ -367,7 +367,7 @@ mp3lib_ctx* MP3_Init(int mono){
 
     make_decode_tables(outscale);
 
-#ifdef ARCH_X86
+#if ARCH_X86
 
     if (gCpuCaps.hasMMX)
     {

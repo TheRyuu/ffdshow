@@ -126,7 +126,7 @@ static int synth_1to1_mono2stereo(mp3lib_ctx *ctx,real *bandPtr,unsigned char *s
   return ret;
 }
  
-#ifdef ARCH_X86
+#if ARCH_X86
 static int synth_1to1_MMX( mp3lib_ctx *ctx,real *bandPtr,int channel,short * samples)
 {
     synth_1to1_MMX_s(bandPtr, channel, samples, (short *) ctx->buffsMMX, &ctx->bo);
@@ -145,7 +145,7 @@ static int synth_1to1(mp3lib_ctx *ctx,real *bandPtr,int channel,unsigned char *o
   *pnt += 128;
 
 /* optimized for x86 */
-#ifdef ARCH_X86
+#if ARCH_X86
   if ( ctx->synth_func )
    {
 //    printf("Calling %p, bandPtr=%p channel=%d samples=%p\n",synth_func,bandPtr,channel,samples);
