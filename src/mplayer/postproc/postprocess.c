@@ -88,8 +88,6 @@ try to unroll inner for(x=0 ... loop to avoid these damn if(x ... checks
 #include "postprocess_internal.h"
 #include "cpudetect.h"
 
-#include "mangle.h" //FIXME should be supressed
-
 #ifdef HAVE_ALTIVEC_H
 #include <altivec.h>
 #endif

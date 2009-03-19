@@ -27,6 +27,9 @@
 #define AVUTIL_INTERNAL_H
 
 #include <limits.h>
+#ifdef __GNUC__
+#include <stdint.h>
+#endif
 #include <stddef.h>
 #include <assert.h>
 #include "config.h"
@@ -89,8 +92,25 @@
 #    define PIC
 #endif
 
+#ifndef offsetof
+#    define offsetof(T,F) ((unsigned int)((char *)&((T *)0)->F))
+#endif
+
 #define snprintf _snprintf
 #define vsnprintf _vsnprintf
+
+#if defined(__MINGW32__) || defined(__CYGWIN__)
+#define EXTERN_PREFIX "_"
+#endif
+
+// Use rip-relative addressing if compiling PIC code on x86-64.
+#if ARCH_X86_64 && defined(PIC)
+#    define LOCAL_MANGLE(a) #a "(%%rip)"
+#else
+#    define LOCAL_MANGLE(a) #a
+#endif
+
+#define MANGLE(a) EXTERN_PREFIX LOCAL_MANGLE(a)
 
 #define CHECKED_ALLOCZ(p, size)\
 {\

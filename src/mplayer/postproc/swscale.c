@@ -1,30 +1,30 @@
 /*
-    Copyright (C) 2001-2003 Michael Niedermayer <michaelni@gmx.at>
-
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
-*/
+ * Copyright (C) 2001-2003 Michael Niedermayer <michaelni@gmx.at>
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ *
+ * the C code (not assembly, mmx, ...) of this file can be used
+ * under the LGPL license too
+ */
 
 /*
-    Modified to support multi-thread related features
-    by Haruhiko Yamagata <h.yamagata@nifty.com> in 2006.
-
-    This modification is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-*/
+ * Modified to support multi-thread related features
+ * by Haruhiko Yamagata <h.yamagata@nifty.com> in 2006.
+ */
 
 /*
   supported Input formats: YV12, I420/IYUV, YUY2, UYVY, BGR32, BGR24, BGR16, BGR15, RGB32, RGB24, Y8/Y800, YVU9/IF09
@@ -43,7 +43,7 @@
 */
 
 /*
-tested special converters (most are tested actually but i didnt write it down ...)
+tested special converters (most are tested actually, but I did not write it down ...)
  YV12 -> BGR16
  YV12 -> YV12
  BGR15 -> BGR16
@@ -51,7 +51,7 @@ tested special converters (most are tested actually but i didnt write it down ..
  YVU9 -> YV12
 
 untested special converters
-  YV12/I420 -> BGR15/BGR24/BGR32 (its the yuv2rgb stuff, so it should be ok)
+  YV12/I420 -> BGR15/BGR24/BGR32 (it is the yuv2rgb stuff, so it should be OK)
   YV12/I420 -> YV12/I420
   YUY2/BGR15/BGR24/BGR32/RGB24/RGB32 -> same format
   BGR24 -> BGR32 & RGB24 -> RGB32
@@ -68,13 +68,11 @@ untested special converters
 #include <stdio.h>
 #include "ffdebug.h"
 #include "config.h"
-#include "mangle.h"
-#include <assert.h>
+#include "../libavutil/internal.h"
+#include "../libavutil/x86_cpu.h"
+#include "../libavutil/bswap.h"
 #include "swscale.h"
 #include "swscale_internal.h"
-#include "libavutil/x86_cpu.h"
-#include "libavutil/mem.h"
-#include "bswap.h"
 #include "ffImgfmt.h"
 #include "rgb2rgb.h"
 #include "libvo/fastmemcpy.h"
@@ -89,9 +87,9 @@ untested special converters
 //#define WORDS_BIGENDIAN
 #define DITHER1XBPP
 
-#define FAST_BGR2YV12 // use 7 bit coeffs instead of 15bit
+#define FAST_BGR2YV12 // use 7 bit coefficients instead of 15 bit
 
-#define RET 0xC3 //near return opcode for X86
+#define RET 0xC3 //near return opcode for x86
 
 #ifdef MP_DEBUG
 #define ASSERT(x) assert(x);
@@ -143,42 +141,38 @@ NOTES
 Special versions: fast Y 1:1 scaling (no interpolation in y direction)
 
 TODO
-more intelligent missalignment avoidance for the horizontal scaler
+more intelligent misalignment avoidance for the horizontal scaler
 write special vertical cubic upscale version
-Optimize C code (yv12 / minmax)
-add support for packed pixel yuv input & output
+optimize C code (YV12 / minmax)
+add support for packed pixel YUV input & output
 add support for Y8 output
-optimize bgr24 & bgr32
+optimize BGR24 & BGR32
 add BGR4 output support
 write special BGR->BGR scaler
 */
 
-#define ABS(a) ((a) > 0 ? (a) : (-(a)))
-#define FFMAX(a,b) ((a) > (b) ? (a) : (b))
-#define FFMIN(a,b) ((a) > (b) ? (b) : (a))
+#if ARCH_X86 && CONFIG_GPL
+DECLARE_ASM_CONST(8, uint64_t, bF8)=       0xF8F8F8F8F8F8F8F8LL;
+DECLARE_ASM_CONST(8, uint64_t, bFC)=       0xFCFCFCFCFCFCFCFCLL;
+DECLARE_ASM_CONST(8, uint64_t, w10)=       0x0010001000100010LL;
+DECLARE_ASM_CONST(8, uint64_t, w02)=       0x0002000200020002LL;
+DECLARE_ASM_CONST(8, uint64_t, bm00001111)=0x00000000FFFFFFFFLL;
+DECLARE_ASM_CONST(8, uint64_t, bm00000111)=0x0000000000FFFFFFLL;
+DECLARE_ASM_CONST(8, uint64_t, bm11111000)=0xFFFFFFFFFF000000LL;
+DECLARE_ASM_CONST(8, uint64_t, bm01010101)=0x00FF00FF00FF00FFLL;
 
-#if ARCH_X86_32 || ARCH_X86_64
-static uint64_t attribute_used __attribute__((aligned(8))) bF8=       0xF8F8F8F8F8F8F8F8LL;
-static uint64_t attribute_used __attribute__((aligned(8))) bFC=       0xFCFCFCFCFCFCFCFCLL;
-static uint64_t __attribute__((aligned(8))) w10=       0x0010001000100010LL;
-static uint64_t attribute_used __attribute__((aligned(8))) w02=       0x0002000200020002LL;
-static uint64_t attribute_used __attribute__((aligned(8))) bm00001111=0x00000000FFFFFFFFLL;
-static uint64_t attribute_used __attribute__((aligned(8))) bm00000111=0x0000000000FFFFFFLL;
-static uint64_t attribute_used __attribute__((aligned(8))) bm11111000=0xFFFFFFFFFF000000LL;
-static uint64_t attribute_used __attribute__((aligned(8))) bm01010101=0x00FF00FF00FF00FFLL;
+const DECLARE_ALIGNED(8, uint64_t, dither4[2]) = {
+        0x0103010301030103LL,
+        0x0200020002000200LL,};
+
+const DECLARE_ALIGNED(8, uint64_t, dither8[2]) = {
+        0x0602060206020602LL,
+        0x0004000400040004LL,};
 
 static volatile uint64_t attribute_used __attribute__((aligned(8))) b5Dither;
 static volatile uint64_t attribute_used __attribute__((aligned(8))) g5Dither;
 static volatile uint64_t attribute_used __attribute__((aligned(8))) g6Dither;
 static volatile uint64_t attribute_used __attribute__((aligned(8))) r5Dither;
-
-static uint64_t __attribute__((aligned(8))) dither4[2]={
-	0x0103010301030103LL,
-	0x0200020002000200LL,};
-
-static uint64_t __attribute__((aligned(8))) dither8[2]={
-	0x0602060206020602LL,
-	0x0004000400040004LL,};
 
 static uint64_t __attribute__((aligned(8))) b16Mask=   0x001F001F001F001FLL;
 static uint64_t attribute_used __attribute__((aligned(8))) g16Mask=   0x07E007E007E007E0LL;
@@ -203,18 +197,119 @@ static const uint64_t bgr2VCoeff  attribute_used __attribute__((aligned(8))) = 0
 static const uint64_t bgr2YOffset attribute_used __attribute__((aligned(8))) = 0x1010101010101010ULL;
 static const uint64_t bgr2UVOffset attribute_used __attribute__((aligned(8)))= 0x8080808080808080ULL;
 static const uint64_t w1111       attribute_used __attribute__((aligned(8))) = 0x0001000100010001ULL;
-#endif /* ARCH_X86_32 || ARCH_X86_64 */
+#endif /* ARCH_X86 && CONFIG_GPL */
 
 // clipping helper table for C implementations:
 static unsigned char clip_table[768];
 
 static SwsVector *sws_getConvVec(SwsVector *a, SwsVector *b);
 
-extern const uint8_t dither_2x2_4[2][8];
-extern const uint8_t dither_2x2_8[2][8];
-extern const uint8_t dither_8x8_32[8][8];
-extern const uint8_t dither_8x8_73[8][8];
-extern const uint8_t dither_8x8_220[8][8];
+static const uint8_t  __attribute__((aligned(8))) dither_2x2_4[2][8]={
+{  1,   3,   1,   3,   1,   3,   1,   3, },
+{  2,   0,   2,   0,   2,   0,   2,   0, },
+};
+
+static const uint8_t  __attribute__((aligned(8))) dither_2x2_8[2][8]={
+{  6,   2,   6,   2,   6,   2,   6,   2, },
+{  0,   4,   0,   4,   0,   4,   0,   4, },
+};
+
+const uint8_t  __attribute__((aligned(8))) dither_8x8_32[8][8]={
+{ 17,   9,  23,  15,  16,   8,  22,  14, },
+{  5,  29,   3,  27,   4,  28,   2,  26, },
+{ 21,  13,  19,  11,  20,  12,  18,  10, },
+{  0,  24,   6,  30,   1,  25,   7,  31, },
+{ 16,   8,  22,  14,  17,   9,  23,  15, },
+{  4,  28,   2,  26,   5,  29,   3,  27, },
+{ 20,  12,  18,  10,  21,  13,  19,  11, },
+{  1,  25,   7,  31,   0,  24,   6,  30, },
+};
+
+#if 0
+const uint8_t  __attribute__((aligned(8))) dither_8x8_64[8][8]={
+{  0,  48,  12,  60,   3,  51,  15,  63, },
+{ 32,  16,  44,  28,  35,  19,  47,  31, },
+{  8,  56,   4,  52,  11,  59,   7,  55, },
+{ 40,  24,  36,  20,  43,  27,  39,  23, },
+{  2,  50,  14,  62,   1,  49,  13,  61, },
+{ 34,  18,  46,  30,  33,  17,  45,  29, },
+{ 10,  58,   6,  54,   9,  57,   5,  53, },
+{ 42,  26,  38,  22,  41,  25,  37,  21, },
+};
+#endif
+
+const uint8_t  __attribute__((aligned(8))) dither_8x8_73[8][8]={
+{  0,  55,  14,  68,   3,  58,  17,  72, },
+{ 37,  18,  50,  32,  40,  22,  54,  35, },
+{  9,  64,   5,  59,  13,  67,   8,  63, },
+{ 46,  27,  41,  23,  49,  31,  44,  26, },
+{  2,  57,  16,  71,   1,  56,  15,  70, },
+{ 39,  21,  52,  34,  38,  19,  51,  33, },
+{ 11,  66,   7,  62,  10,  65,   6,  60, },
+{ 48,  30,  43,  25,  47,  29,  42,  24, },
+};
+
+#if 0
+const uint8_t  __attribute__((aligned(8))) dither_8x8_128[8][8]={
+{ 68,  36,  92,  60,  66,  34,  90,  58, },
+{ 20, 116,  12, 108,  18, 114,  10, 106, },
+{ 84,  52,  76,  44,  82,  50,  74,  42, },
+{  0,  96,  24, 120,   6, 102,  30, 126, },
+{ 64,  32,  88,  56,  70,  38,  94,  62, },
+{ 16, 112,   8, 104,  22, 118,  14, 110, },
+{ 80,  48,  72,  40,  86,  54,  78,  46, },
+{  4, 100,  28, 124,   2,  98,  26, 122, },
+};
+#endif
+
+#if 1
+const uint8_t  __attribute__((aligned(8))) dither_8x8_220[8][8]={
+{117,  62, 158, 103, 113,  58, 155, 100, },
+{ 34, 199,  21, 186,  31, 196,  17, 182, },
+{144,  89, 131,  76, 141,  86, 127,  72, },
+{  0, 165,  41, 206,  10, 175,  52, 217, },
+{110,  55, 151,  96, 120,  65, 162, 107, },
+{ 28, 193,  14, 179,  38, 203,  24, 189, },
+{138,  83, 124,  69, 148,  93, 134,  79, },
+{  7, 172,  48, 213,   3, 168,  45, 210, },
+};
+#elif 1
+// tries to correct a gamma of 1.5
+const uint8_t  __attribute__((aligned(8))) dither_8x8_220[8][8]={
+{  0, 143,  18, 200,   2, 156,  25, 215, },
+{ 78,  28, 125,  64,  89,  36, 138,  74, },
+{ 10, 180,   3, 161,  16, 195,   8, 175, },
+{109,  51,  93,  38, 121,  60, 105,  47, },
+{  1, 152,  23, 210,   0, 147,  20, 205, },
+{ 85,  33, 134,  71,  81,  30, 130,  67, },
+{ 14, 190,   6, 171,  12, 185,   5, 166, },
+{117,  57, 101,  44, 113,  54,  97,  41, },
+};
+#elif 1
+// tries to correct a gamma of 2.0
+const uint8_t  __attribute__((aligned(8))) dither_8x8_220[8][8]={
+{  0, 124,   8, 193,   0, 140,  12, 213, },
+{ 55,  14, 104,  42,  66,  19, 119,  52, },
+{  3, 168,   1, 145,   6, 187,   3, 162, },
+{ 86,  31,  70,  21,  99,  39,  82,  28, },
+{  0, 134,  11, 206,   0, 129,   9, 200, },
+{ 62,  17, 114,  48,  58,  16, 109,  45, },
+{  5, 181,   2, 157,   4, 175,   1, 151, },
+{ 95,  36,  78,  26,  90,  34,  74,  24, },
+};
+#else
+// tries to correct a gamma of 2.5
+const uint8_t  __attribute__((aligned(8))) dither_8x8_220[8][8]={
+{  0, 107,   3, 187,   0, 125,   6, 212, },
+{ 39,   7,  86,  28,  49,  11, 102,  36, },
+{  1, 158,   0, 131,   3, 180,   1, 151, },
+{ 68,  19,  52,  12,  81,  25,  64,  17, },
+{  0, 119,   5, 203,   0, 113,   4, 195, },
+{ 45,   9,  96,  33,  42,   8,  91,  30, },
+{  2, 172,   1, 144,   2, 165,   0, 137, },
+{ 77,  23,  60,  15,  72,  21,  56,  14, },
+};
+#endif
 
 #if !defined(HAVE_THREADS)
 int sws_thread_init(SwsContext *s, int thread_count)
@@ -581,8 +676,8 @@ static inline void yuv2nv12XinC(int16_t *lumFilter, int16_t **lumSrc, int lumFil
 					+ (last_new[y][i] - in3)*f/256;\
 				int new= old> 128 ? 255 : 0;\
 \
-				error_new+= ABS(last_new[y][i] - new);\
-				error_in3+= ABS(last_in3[y][i] - in3);\
+				error_new+= FFABS(last_new[y][i] - new);\
+				error_in3+= FFABS(last_in3[y][i] - in3);\
 				f= error_new - error_in3*4;\
 				if(f<0) f=0;\
 				if(f>256) f=256;\
@@ -899,17 +994,17 @@ static inline void yuv2packedXinC(SwsContext *c, int16_t *lumFilter, int16_t **l
 
 #endif //ARCH_X86_32 || ARCH_X86_64
 
-// minor note: the HAVE_xyz is messed up after that line so don't use it
+// minor note: the HAVE_xyz are messed up after this line so don't use them
 
 static double getSplineCoeff(double a, double b, double c, double d, double dist)
 {
-//	printf("%f %f %f %f %f\n", a,b,c,d,dist);
-	if(dist<=1.0) 	return ((d*dist + c)*dist + b)*dist +a;
-	else		return getSplineCoeff(	0.0,
-						 b+ 2.0*c + 3.0*d,
-						        c + 3.0*d,
-						-b- 3.0*c - 6.0*d,
-						dist-1.0);
+//    printf("%f %f %f %f %f\n", a,b,c,d,dist);
+    if (dist<=1.0)      return ((d*dist + c)*dist + b)*dist +a;
+    else                return getSplineCoeff(        0.0,
+                                             b+ 2.0*c + 3.0*d,
+                                                    c + 3.0*d,
+                                            -b- 3.0*c - 6.0*d,
+                                            dist-1.0);
 }
 
 static inline int initFilter(int16_t **outFilter, int16_t **filterPos, int *outFilterSize, int xInc,
@@ -931,7 +1026,7 @@ static inline int initFilter(int16_t **outFilter, int16_t **filterPos, int *outF
 	// Note the +1 is for the MMXscaler which reads over the end
 	*filterPos = av_malloc((dstW+1)*sizeof(int16_t));
 
-	if(ABS(xInc - 0x10000) <10) // unscaled
+	if(FFABS(xInc - 0x10000) <10) // unscaled
 	{
 		int i;
 		filterSize= 1;
@@ -981,7 +1076,7 @@ static inline int initFilter(int16_t **outFilter, int16_t **filterPos, int *outF
 				//Bilinear upscale / linear interpolate / Area averaging
 				for(j=0; j<filterSize; j++)
 				{
-					double d= ABS((xx<<16) - xDstInSrc)/(double)(1<<16);
+					double d= FFABS((xx<<16) - xDstInSrc)/(double)(1<<16);
 					double coeff= 1.0 - d;
 					if(coeff<0) coeff=0;
 					filter[i*filterSize + j]= coeff;
@@ -1025,7 +1120,7 @@ static inline int initFilter(int16_t **outFilter, int16_t **filterPos, int *outF
 			(*filterPos)[i]= xx;
 			for(j=0; j<filterSize; j++)
 			{
-				double d= ABS(xx - xDstInSrc)/filterSizeInSrc*sizeFactor;
+				double d= FFABS(xx - xDstInSrc)/filterSizeInSrc*sizeFactor;
 				double coeff;
 				if(params->method & SWS_BICUBIC)
 				{
@@ -1150,7 +1245,7 @@ static inline int initFilter(int16_t **outFilter, int16_t **filterPos, int *outF
 		for(j=0; j<filter2Size; j++)
 		{
 			int k;
-			cutOff += ABS(filter2[i*filter2Size]);
+			cutOff += FFABS(filter2[i*filter2Size]);
 
 			if(cutOff > SWS_MAX_REDUCE_CUTOFF) break;
 
@@ -1168,7 +1263,7 @@ static inline int initFilter(int16_t **outFilter, int16_t **filterPos, int *outF
 		/* count near zeros on the right */
 		for(j=filter2Size-1; j>0; j--)
 		{
-			cutOff += ABS(filter2[i*filter2Size + j]);
+			cutOff += FFABS(filter2[i*filter2Size + j]);
 
 			if(cutOff > SWS_MAX_REDUCE_CUTOFF) break;
 			min--;
@@ -1815,7 +1910,7 @@ static int simpleCopy(SwsContext *c, uint8_t* src[], stride_t srcStride[], int s
 		{
 			memcpy(dst[0] + dstStride[0] * srcSliceY, src[0], (srcSliceH - 1) * dstStride[0] + c->srcW);
 			memcpy(dst[1] + (dstStride[0] * srcSliceY >> 1), src[1], ((srcSliceH >> 1) - 1) * dstStride[0] + c->srcW);
-		}	
+		}
 		else
 		{
 			int i;
@@ -2733,124 +2828,124 @@ void sws_normalizeVec(SwsVector *a, double height){
 }
 
 static SwsVector *sws_getConvVec(SwsVector *a, SwsVector *b){
-	int length= a->length + b->length - 1;
-	double *coeff= av_malloc(length*sizeof(double));
-	int i, j;
-	SwsVector *vec= av_malloc(sizeof(SwsVector));
+    int length= a->length + b->length - 1;
+    double *coeff= av_malloc(length*sizeof(double));
+    int i, j;
+    SwsVector *vec= av_malloc(sizeof(SwsVector));
 
-	vec->coeff= coeff;
-	vec->length= length;
+    vec->coeff= coeff;
+    vec->length= length;
 
-	for(i=0; i<length; i++) coeff[i]= 0.0;
+    for (i=0; i<length; i++) coeff[i]= 0.0;
 
-	for(i=0; i<a->length; i++)
-	{
-		for(j=0; j<b->length; j++)
-		{
-			coeff[i+j]+= a->coeff[i]*b->coeff[j];
-		}
-	}
+    for (i=0; i<a->length; i++)
+    {
+        for (j=0; j<b->length; j++)
+        {
+            coeff[i+j]+= a->coeff[i]*b->coeff[j];
+        }
+    }
 
-	return vec;
+    return vec;
 }
 
 static SwsVector *sws_sumVec(SwsVector *a, SwsVector *b){
-	int length= FFMAX(a->length, b->length);
-	double *coeff= av_malloc(length*sizeof(double));
-	int i;
-	SwsVector *vec= av_malloc(sizeof(SwsVector));
+    int length= FFMAX(a->length, b->length);
+    double *coeff= av_malloc(length*sizeof(double));
+    int i;
+    SwsVector *vec= av_malloc(sizeof(SwsVector));
 
-	vec->coeff= coeff;
-	vec->length= length;
+    vec->coeff= coeff;
+    vec->length= length;
 
-	for(i=0; i<length; i++) coeff[i]= 0.0;
+    for (i=0; i<length; i++) coeff[i]= 0.0;
 
-	for(i=0; i<a->length; i++) coeff[i + (length-1)/2 - (a->length-1)/2]+= a->coeff[i];
-	for(i=0; i<b->length; i++) coeff[i + (length-1)/2 - (b->length-1)/2]+= b->coeff[i];
+    for (i=0; i<a->length; i++) coeff[i + (length-1)/2 - (a->length-1)/2]+= a->coeff[i];
+    for (i=0; i<b->length; i++) coeff[i + (length-1)/2 - (b->length-1)/2]+= b->coeff[i];
 
-	return vec;
+    return vec;
 }
 
 static SwsVector *sws_diffVec(SwsVector *a, SwsVector *b){
-	int length= FFMAX(a->length, b->length);
-	double *coeff= av_malloc(length*sizeof(double));
-	int i;
-	SwsVector *vec= av_malloc(sizeof(SwsVector));
+    int length= FFMAX(a->length, b->length);
+    double *coeff= av_malloc(length*sizeof(double));
+    int i;
+    SwsVector *vec= av_malloc(sizeof(SwsVector));
 
-	vec->coeff= coeff;
-	vec->length= length;
+    vec->coeff= coeff;
+    vec->length= length;
 
-	for(i=0; i<length; i++) coeff[i]= 0.0;
+    for (i=0; i<length; i++) coeff[i]= 0.0;
 
-	for(i=0; i<a->length; i++) coeff[i + (length-1)/2 - (a->length-1)/2]+= a->coeff[i];
-	for(i=0; i<b->length; i++) coeff[i + (length-1)/2 - (b->length-1)/2]-= b->coeff[i];
+    for (i=0; i<a->length; i++) coeff[i + (length-1)/2 - (a->length-1)/2]+= a->coeff[i];
+    for (i=0; i<b->length; i++) coeff[i + (length-1)/2 - (b->length-1)/2]-= b->coeff[i];
 
-	return vec;
+    return vec;
 }
 
 /* shift left / or right if "shift" is negative */
 static SwsVector *sws_getShiftedVec(SwsVector *a, int shift){
-	int length= a->length + ABS(shift)*2;
-	double *coeff= av_malloc(length*sizeof(double));
-	int i;
-	SwsVector *vec= av_malloc(sizeof(SwsVector));
+    int length= a->length + FFABS(shift)*2;
+    double *coeff= av_malloc(length*sizeof(double));
+    int i;
+    SwsVector *vec= av_malloc(sizeof(SwsVector));
 
-	vec->coeff= coeff;
-	vec->length= length;
+    vec->coeff= coeff;
+    vec->length= length;
 
-	for(i=0; i<length; i++) coeff[i]= 0.0;
+    for (i=0; i<length; i++) coeff[i]= 0.0;
 
-	for(i=0; i<a->length; i++)
-	{
-		coeff[i + (length-1)/2 - (a->length-1)/2 - shift]= a->coeff[i];
-	}
+    for (i=0; i<a->length; i++)
+    {
+        coeff[i + (length-1)/2 - (a->length-1)/2 - shift]= a->coeff[i];
+    }
 
-	return vec;
+    return vec;
 }
 
 void sws_shiftVec(SwsVector *a, int shift){
-	SwsVector *shifted= sws_getShiftedVec(a, shift);
-	av_free(a->coeff);
-	a->coeff= shifted->coeff;
-	a->length= shifted->length;
-	av_free(shifted);
+    SwsVector *shifted= sws_getShiftedVec(a, shift);
+    av_free(a->coeff);
+    a->coeff= shifted->coeff;
+    a->length= shifted->length;
+    av_free(shifted);
 }
 
 void sws_addVec(SwsVector *a, SwsVector *b){
-	SwsVector *sum= sws_sumVec(a, b);
-	av_free(a->coeff);
-	a->coeff= sum->coeff;
-	a->length= sum->length;
-	av_free(sum);
+    SwsVector *sum= sws_sumVec(a, b);
+    av_free(a->coeff);
+    a->coeff= sum->coeff;
+    a->length= sum->length;
+    av_free(sum);
 }
 
 void sws_subVec(SwsVector *a, SwsVector *b){
-	SwsVector *diff= sws_diffVec(a, b);
-	av_free(a->coeff);
-	a->coeff= diff->coeff;
-	a->length= diff->length;
-	av_free(diff);
+    SwsVector *diff= sws_diffVec(a, b);
+    av_free(a->coeff);
+    a->coeff= diff->coeff;
+    a->length= diff->length;
+    av_free(diff);
 }
 
 void sws_convVec(SwsVector *a, SwsVector *b){
-	SwsVector *conv= sws_getConvVec(a, b);
-	av_free(a->coeff);
-	a->coeff= conv->coeff;
-	a->length= conv->length;
-	av_free(conv);
+    SwsVector *conv= sws_getConvVec(a, b);
+    av_free(a->coeff);
+    a->coeff= conv->coeff;
+    a->length= conv->length;
+    av_free(conv);
 }
 
 SwsVector *sws_cloneVec(SwsVector *a){
-	double *coeff= av_malloc(a->length*sizeof(double));
-	int i;
-	SwsVector *vec= av_malloc(sizeof(SwsVector));
+    double *coeff= av_malloc(a->length*sizeof(double));
+    int i;
+    SwsVector *vec= av_malloc(sizeof(SwsVector));
 
-	vec->coeff= coeff;
-	vec->length= a->length;
+    vec->coeff= coeff;
+    vec->length= a->length;
 
-	for(i=0; i<a->length; i++) coeff[i]= a->coeff[i];
+    for (i=0; i<a->length; i++) coeff[i]= a->coeff[i];
 
-	return vec;
+    return vec;
 }
 
 void sws_printVec(SwsVector *a){
@@ -2877,21 +2972,20 @@ void sws_printVec(SwsVector *a){
 }
 
 void sws_freeVec(SwsVector *a){
-	if(!a) return;
-	av_free(a->coeff);
-	a->coeff=NULL;
-	a->length=0;
-	av_free(a);
+    if (!a) return;
+    av_freep(&a->coeff);
+    a->length=0;
+    av_free(a);
 }
 
 void sws_freeFilter(SwsFilter *filter){
-	if(!filter) return;
+    if (!filter) return;
 
-	if(filter->lumH) sws_freeVec(filter->lumH);
-	if(filter->lumV) sws_freeVec(filter->lumV);
-	if(filter->chrH) sws_freeVec(filter->chrH);
-	if(filter->chrV) sws_freeVec(filter->chrV);
-	av_free(filter);
+    if (filter->lumH) sws_freeVec(filter->lumH);
+    if (filter->lumV) sws_freeVec(filter->lumV);
+    if (filter->chrH) sws_freeVec(filter->chrH);
+    if (filter->chrV) sws_freeVec(filter->chrV);
+    av_free(filter);
 }
 
 

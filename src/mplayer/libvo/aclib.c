@@ -9,8 +9,9 @@
 */
 #include <string.h>
 #include <stddef.h>
-#include "../cpudetect.h"
 #include "config.h"
+#include "../libavutil/x86_cpu.h"
+#include "../cpudetect.h"
 #include "fastmemcpy.h"
 #undef memcpy
 #include "ffImgfmt.h"

@@ -1,21 +1,33 @@
 /*
+ * software RGB to RGB converter
+ * pluralize by software PAL8 to RGB converter
+ *              software YUV to YUV converter
+ *              software YUV to RGB converter
+ * Written by Nick Kurshev.
+ * palette & YUV & runtime CPU stuff by Michael (michaelni@gmx.at)
+ * lot of big-endian byte order fixes by Alex Beregszaszi
  *
- *  rgb2rgb.c, Software RGB to RGB convertor
- *  pluralize by Software PAL8 to RGB convertor
- *               Software YUV to YUV convertor
- *               Software YUV to RGB convertor
- *  Written by Nick Kurshev.
- *  palette & yuv & runtime cpu stuff by Michael (michaelni@gmx.at) (under GPL)
- *  lot of big-endian byteorder fixes by Alex Beregszaszi
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ *
+ * The C code (not assembly, MMX, ...) of this file can be used
+ * under the LGPL license.
  */
 
 #include <stddef.h>
-#include <inttypes.h> /* for __WORDSIZE */
-
-#ifndef __WORDSIZE
-// #warning You have misconfigured system and probably will lose performance!
-#define __WORDSIZE MP_WORDSIZE
-#endif
 
 #undef PREFETCH
 #undef MOVNTQ
@@ -34,18 +46,18 @@
 #if HAVE_AMD3DNOW
 #define PREFETCH  "prefetch"
 #define PREFETCHW "prefetchw"
-#define PAVGB	  "pavgusb"
+#define PAVGB     "pavgusb"
 #elif HAVE_MMX2
 #define PREFETCH "prefetchnta"
 #define PREFETCHW "prefetcht0"
-#define PAVGB	  "pavgb"
+#define PAVGB     "pavgb"
 #else
 #define PREFETCH "/nop"
 #define PREFETCHW "/nop"
 #endif
 
 #if HAVE_AMD3DNOW
-/* On K6 femms is faster of emms. On K7 femms is directly mapped on emms. */
+/* On K6 femms is faster than emms. On K7 femms is directly mapped to emms. */
 #define EMMS     "femms"
 #else
 #define EMMS     "emms"
@@ -61,355 +73,357 @@
 
 static inline void RENAME(rgb24to32)(const uint8_t *src,uint8_t *dst,stride_t src_size)
 {
-  uint8_t *dest = dst;
-  const uint8_t *s = src;
-  const uint8_t *end;
-#if HAVE_MMX
-  const uint8_t *mm_end;
-#endif
-  end = s + src_size;
-#if HAVE_MMX
-  __asm __volatile(PREFETCH"	%0"::"m"(*s):"memory");
-  mm_end = end - 27;
-  __asm __volatile("movq	%0, %%mm7"::"m"(mask32):"memory");
-  while(s < mm_end)
-  {
-    __asm __volatile(
-	PREFETCH"	32%1\n\t"
-	"movd	%1, %%mm0\n\t"
-	"punpckldq 3%1, %%mm0\n\t"
-	"movd	6%1, %%mm1\n\t"
-	"punpckldq 9%1, %%mm1\n\t"
-	"movd	12%1, %%mm2\n\t"
-	"punpckldq 15%1, %%mm2\n\t"
-	"movd	18%1, %%mm3\n\t"
-	"punpckldq 21%1, %%mm3\n\t"
-	"pand	%%mm7, %%mm0\n\t"
-	"pand	%%mm7, %%mm1\n\t"
-	"pand	%%mm7, %%mm2\n\t"
-	"pand	%%mm7, %%mm3\n\t"
-	MOVNTQ"	%%mm0, %0\n\t"
-	MOVNTQ"	%%mm1, 8%0\n\t"
-	MOVNTQ"	%%mm2, 16%0\n\t"
-	MOVNTQ"	%%mm3, 24%0"
-	:"=m"(*dest)
-	:"m"(*s)
-	:"memory");
-    dest += 32;
-    s += 24;
-  }
-  __asm __volatile(SFENCE:::"memory");
-  __asm __volatile(EMMS:::"memory");
-#endif
-  while(s < end)
-  {
-#ifdef WORDS_BIGENDIAN
-    /* RGB24 (= R,G,B) -> RGB32 (= A,B,G,R) */
-    *dest++ = 0;
-    *dest++ = s[2];
-    *dest++ = s[1];
-    *dest++ = s[0];
-    s+=3;
-#else
-    *dest++ = *s++;
-    *dest++ = *s++;
-    *dest++ = *s++;
-    *dest++ = 0;
-#endif
-  }
+    uint8_t *dest = dst;
+    const uint8_t *s = src;
+    const uint8_t *end;
+    #if HAVE_MMX
+        const uint8_t *mm_end;
+    #endif
+    end = s + src_size;
+    #if HAVE_MMX
+        __asm__ volatile(PREFETCH"    %0"::"m"(*s):"memory");
+        mm_end = end - 23;
+        __asm__ volatile("movq        %0, %%mm7"::"m"(mask32a):"memory");
+        while (s < mm_end)
+        {
+            __asm__ volatile(
+            PREFETCH"    32%1           \n\t"
+            "movd          %1, %%mm0    \n\t"
+            "punpckldq    3%1, %%mm0    \n\t"
+            "movd         6%1, %%mm1    \n\t"
+            "punpckldq    9%1, %%mm1    \n\t"
+            "movd        12%1, %%mm2    \n\t"
+            "punpckldq   15%1, %%mm2    \n\t"
+            "movd        18%1, %%mm3    \n\t"
+            "punpckldq   21%1, %%mm3    \n\t"
+            "por        %%mm7, %%mm0    \n\t"
+            "por        %%mm7, %%mm1    \n\t"
+            "por        %%mm7, %%mm2    \n\t"
+            "por        %%mm7, %%mm3    \n\t"
+            MOVNTQ"     %%mm0,   %0     \n\t"
+            MOVNTQ"     %%mm1,  8%0     \n\t"
+            MOVNTQ"     %%mm2, 16%0     \n\t"
+            MOVNTQ"     %%mm3, 24%0"
+            :"=m"(*dest)
+            :"m"(*s)
+            :"memory");
+            dest += 32;
+            s += 24;
+        }
+        __asm__ volatile(SFENCE:::"memory");
+        __asm__ volatile(EMMS:::"memory");
+    #endif
+    while (s < end)
+    {
+    #ifdef WORDS_BIGENDIAN
+        /* RGB24 (= R,G,B) -> RGB32 (= A,B,G,R) */
+        *dest++ = 255;
+        *dest++ = s[2];
+        *dest++ = s[1];
+        *dest++ = s[0];
+        s+=3;
+    #else
+        *dest++ = *s++;
+        *dest++ = *s++;
+        *dest++ = *s++;
+        *dest++ = 255;
+    #endif
+    }
 }
 
 static inline void RENAME(rgb32to24)(const uint8_t *src,uint8_t *dst,stride_t src_size)
 {
-  uint8_t *dest = dst;
-  const uint8_t *s = src;
-  const uint8_t *end;
+    uint8_t *dest = dst;
+    const uint8_t *s = src;
+    const uint8_t *end;
 #if HAVE_MMX
-  const uint8_t *mm_end;
+    const uint8_t *mm_end;
 #endif
-  end = s + src_size;
+    end = s + src_size;
 #if HAVE_MMX
-  __asm __volatile(PREFETCH"	%0"::"m"(*s):"memory");
-  mm_end = end - 31;
-  while(s < mm_end)
-  {
-    __asm __volatile(
-	PREFETCH"	32%1\n\t"
-	"movq	%1, %%mm0\n\t"
-	"movq	8%1, %%mm1\n\t"
-	"movq	16%1, %%mm4\n\t"
-	"movq	24%1, %%mm5\n\t"
-	"movq	%%mm0, %%mm2\n\t"
-	"movq	%%mm1, %%mm3\n\t"
-	"movq	%%mm4, %%mm6\n\t"
-	"movq	%%mm5, %%mm7\n\t"
-	"psrlq	$8, %%mm2\n\t"
-	"psrlq	$8, %%mm3\n\t"
-	"psrlq	$8, %%mm6\n\t"
-	"psrlq	$8, %%mm7\n\t"
-	"pand	%2, %%mm0\n\t"
-	"pand	%2, %%mm1\n\t"
-	"pand	%2, %%mm4\n\t"
-	"pand	%2, %%mm5\n\t"
-	"pand	%3, %%mm2\n\t"
-	"pand	%3, %%mm3\n\t"
-	"pand	%3, %%mm6\n\t"
-	"pand	%3, %%mm7\n\t"
-	"por	%%mm2, %%mm0\n\t"
-	"por	%%mm3, %%mm1\n\t"
-	"por	%%mm6, %%mm4\n\t"
-	"por	%%mm7, %%mm5\n\t"
+    __asm__ volatile(PREFETCH"    %0"::"m"(*s):"memory");
+    mm_end = end - 31;
+    while (s < mm_end)
+    {
+        __asm__ volatile(
+        PREFETCH"    32%1           \n\t"
+        "movq          %1, %%mm0    \n\t"
+        "movq         8%1, %%mm1    \n\t"
+        "movq        16%1, %%mm4    \n\t"
+        "movq        24%1, %%mm5    \n\t"
+        "movq       %%mm0, %%mm2    \n\t"
+        "movq       %%mm1, %%mm3    \n\t"
+        "movq       %%mm4, %%mm6    \n\t"
+        "movq       %%mm5, %%mm7    \n\t"
+        "psrlq         $8, %%mm2    \n\t"
+        "psrlq         $8, %%mm3    \n\t"
+        "psrlq         $8, %%mm6    \n\t"
+        "psrlq         $8, %%mm7    \n\t"
+        "pand          %2, %%mm0    \n\t"
+        "pand          %2, %%mm1    \n\t"
+        "pand          %2, %%mm4    \n\t"
+        "pand          %2, %%mm5    \n\t"
+        "pand          %3, %%mm2    \n\t"
+        "pand          %3, %%mm3    \n\t"
+        "pand          %3, %%mm6    \n\t"
+        "pand          %3, %%mm7    \n\t"
+        "por        %%mm2, %%mm0    \n\t"
+        "por        %%mm3, %%mm1    \n\t"
+        "por        %%mm6, %%mm4    \n\t"
+        "por        %%mm7, %%mm5    \n\t"
 
-	"movq	%%mm1, %%mm2\n\t"
-	"movq	%%mm4, %%mm3\n\t"
-	"psllq	$48, %%mm2\n\t"
-	"psllq	$32, %%mm3\n\t"
-	"pand	%4, %%mm2\n\t"
-	"pand	%5, %%mm3\n\t"
-	"por	%%mm2, %%mm0\n\t"
-	"psrlq	$16, %%mm1\n\t"
-	"psrlq	$32, %%mm4\n\t"
-	"psllq	$16, %%mm5\n\t"
-	"por	%%mm3, %%mm1\n\t"
-	"pand	%6, %%mm5\n\t"
-	"por	%%mm5, %%mm4\n\t"
+        "movq       %%mm1, %%mm2    \n\t"
+        "movq       %%mm4, %%mm3    \n\t"
+        "psllq        $48, %%mm2    \n\t"
+        "psllq        $32, %%mm3    \n\t"
+        "pand          %4, %%mm2    \n\t"
+        "pand          %5, %%mm3    \n\t"
+        "por        %%mm2, %%mm0    \n\t"
+        "psrlq        $16, %%mm1    \n\t"
+        "psrlq        $32, %%mm4    \n\t"
+        "psllq        $16, %%mm5    \n\t"
+        "por        %%mm3, %%mm1    \n\t"
+        "pand          %6, %%mm5    \n\t"
+        "por        %%mm5, %%mm4    \n\t"
 
-	MOVNTQ"	%%mm0, %0\n\t"
-	MOVNTQ"	%%mm1, 8%0\n\t"
-	MOVNTQ"	%%mm4, 16%0"
-	:"=m"(*dest)
-	:"m"(*s),"m"(mask24l),
-	 "m"(mask24h),"m"(mask24hh),"m"(mask24hhh),"m"(mask24hhhh)
-	:"memory");
-    dest += 24;
-    s += 32;
-  }
-  __asm __volatile(SFENCE:::"memory");
-  __asm __volatile(EMMS:::"memory");
+        MOVNTQ"     %%mm0,   %0     \n\t"
+        MOVNTQ"     %%mm1,  8%0     \n\t"
+        MOVNTQ"     %%mm4, 16%0"
+        :"=m"(*dest)
+        :"m"(*s),"m"(mask24l),
+         "m"(mask24h),"m"(mask24hh),"m"(mask24hhh),"m"(mask24hhhh)
+        :"memory");
+        dest += 24;
+        s += 32;
+    }
+    __asm__ volatile(SFENCE:::"memory");
+    __asm__ volatile(EMMS:::"memory");
 #endif
-  while(s < end)
-  {
+    while (s < end)
+    {
 #ifdef WORDS_BIGENDIAN
-    /* RGB32 (= A,B,G,R) -> RGB24 (= R,G,B) */
-    s++;
-    dest[2] = *s++;
-    dest[1] = *s++;
-    dest[0] = *s++;
-    dest += 3;
+        /* RGB32 (= A,B,G,R) -> RGB24 (= R,G,B) */
+        s++;
+        dest[2] = *s++;
+        dest[1] = *s++;
+        dest[0] = *s++;
+        dest += 3;
 #else
-    *dest++ = *s++;
-    *dest++ = *s++;
-    *dest++ = *s++;
-    s++;
+        *dest++ = *s++;
+        *dest++ = *s++;
+        *dest++ = *s++;
+        s++;
 #endif
-  }
+    }
 }
 
 /*
- Original by Strepto/Astral
- ported to gcc & bugfixed : A'rpi
+ original by Strepto/Astral
+ ported to gcc & bugfixed: A'rpi
  MMX2, 3DNOW optimization by Nick Kurshev
- 32bit c version, and and&add trick by Michael Niedermayer
+ 32-bit C version, and and&add trick by Michael Niedermayer
 */
 static inline void RENAME(rgb15to16)(const uint8_t *src,uint8_t *dst,stride_t src_size)
 {
-  register const uint8_t* s=src;
-  register uint8_t* d=dst;
-  register const uint8_t *end;
-  const uint8_t *mm_end;
-  end = s + src_size;
+    register const uint8_t* s=src;
+    register uint8_t* d=dst;
+    register const uint8_t *end;
+    const uint8_t *mm_end;
+    end = s + src_size;
 #if HAVE_MMX
-  __asm __volatile(PREFETCH"	%0"::"m"(*s));
-  __asm __volatile("movq	%0, %%mm4"::"m"(mask15s));
-  mm_end = end - 15;
-  while(s<mm_end)
-  {
-	__asm __volatile(
-		PREFETCH"	32%1\n\t"
-		"movq	%1, %%mm0\n\t"
-		"movq	8%1, %%mm2\n\t"
-		"movq	%%mm0, %%mm1\n\t"
-		"movq	%%mm2, %%mm3\n\t"
-		"pand	%%mm4, %%mm0\n\t"
-		"pand	%%mm4, %%mm2\n\t"
-		"paddw	%%mm1, %%mm0\n\t"
-		"paddw	%%mm3, %%mm2\n\t"
-		MOVNTQ"	%%mm0, %0\n\t"
-		MOVNTQ"	%%mm2, 8%0"
-		:"=m"(*d)
-		:"m"(*s)
-		);
-	d+=16;
-	s+=16;
-  }
-  __asm __volatile(SFENCE:::"memory");
-  __asm __volatile(EMMS:::"memory");
+    __asm__ volatile(PREFETCH"    %0"::"m"(*s));
+    __asm__ volatile("movq        %0, %%mm4"::"m"(mask15s));
+    mm_end = end - 15;
+    while (s<mm_end)
+    {
+        __asm__ volatile(
+        PREFETCH"  32%1         \n\t"
+        "movq        %1, %%mm0  \n\t"
+        "movq       8%1, %%mm2  \n\t"
+        "movq     %%mm0, %%mm1  \n\t"
+        "movq     %%mm2, %%mm3  \n\t"
+        "pand     %%mm4, %%mm0  \n\t"
+        "pand     %%mm4, %%mm2  \n\t"
+        "paddw    %%mm1, %%mm0  \n\t"
+        "paddw    %%mm3, %%mm2  \n\t"
+        MOVNTQ"   %%mm0,  %0    \n\t"
+        MOVNTQ"   %%mm2, 8%0"
+        :"=m"(*d)
+        :"m"(*s)
+        );
+        d+=16;
+        s+=16;
+    }
+    __asm__ volatile(SFENCE:::"memory");
+    __asm__ volatile(EMMS:::"memory");
 #endif
     mm_end = end - 3;
-    while(s < mm_end)
+    while (s < mm_end)
     {
-	register unsigned x= *((uint32_t *)s);
-	*((uint32_t *)d) = (x&0x7FFF7FFF) + (x&0x7FE07FE0);
-	d+=4;
-	s+=4;
+        register unsigned x= *((const uint32_t *)s);
+        *((uint32_t *)d) = (x&0x7FFF7FFF) + (x&0x7FE07FE0);
+        d+=4;
+        s+=4;
     }
-    if(s < end)
+    if (s < end)
     {
-	register unsigned short x= *((uint16_t *)s);
-	*((uint16_t *)d) = (x&0x7FFF) + (x&0x7FE0);
+        register unsigned short x= *((const uint16_t *)s);
+        *((uint16_t *)d) = (x&0x7FFF) + (x&0x7FE0);
     }
 }
 
 static inline void RENAME(rgb16to15)(const uint8_t *src,uint8_t *dst,stride_t src_size)
 {
-  register const uint8_t* s=src;
-  register uint8_t* d=dst;
-  register const uint8_t *end;
-  const uint8_t *mm_end;
-  end = s + src_size;
+    register const uint8_t* s=src;
+    register uint8_t* d=dst;
+    register const uint8_t *end;
+    const uint8_t *mm_end;
+    end = s + src_size;
 #if HAVE_MMX
-  __asm __volatile(PREFETCH"	%0"::"m"(*s));
-  __asm __volatile("movq	%0, %%mm7"::"m"(mask15rg));
-  __asm __volatile("movq	%0, %%mm6"::"m"(mask15b));
-  mm_end = end - 15;
-  while(s<mm_end)
-  {
-	__asm __volatile(
-		PREFETCH"	32%1\n\t"
-		"movq	%1, %%mm0\n\t"
-		"movq	8%1, %%mm2\n\t"
-		"movq	%%mm0, %%mm1\n\t"
-		"movq	%%mm2, %%mm3\n\t"
-		"psrlq	$1, %%mm0\n\t"
-		"psrlq	$1, %%mm2\n\t"
-		"pand	%%mm7, %%mm0\n\t"
-		"pand	%%mm7, %%mm2\n\t"
-		"pand	%%mm6, %%mm1\n\t"
-		"pand	%%mm6, %%mm3\n\t"
-		"por	%%mm1, %%mm0\n\t"
-		"por	%%mm3, %%mm2\n\t"
-		MOVNTQ"	%%mm0, %0\n\t"
-		MOVNTQ"	%%mm2, 8%0"
-		:"=m"(*d)
-		:"m"(*s)
-		);
-	d+=16;
-	s+=16;
-  }
-  __asm __volatile(SFENCE:::"memory");
-  __asm __volatile(EMMS:::"memory");
+    __asm__ volatile(PREFETCH"    %0"::"m"(*s));
+    __asm__ volatile("movq        %0, %%mm7"::"m"(mask15rg));
+    __asm__ volatile("movq        %0, %%mm6"::"m"(mask15b));
+    mm_end = end - 15;
+    while (s<mm_end)
+    {
+        __asm__ volatile(
+        PREFETCH"  32%1         \n\t"
+        "movq        %1, %%mm0  \n\t"
+        "movq       8%1, %%mm2  \n\t"
+        "movq     %%mm0, %%mm1  \n\t"
+        "movq     %%mm2, %%mm3  \n\t"
+        "psrlq       $1, %%mm0  \n\t"
+        "psrlq       $1, %%mm2  \n\t"
+        "pand     %%mm7, %%mm0  \n\t"
+        "pand     %%mm7, %%mm2  \n\t"
+        "pand     %%mm6, %%mm1  \n\t"
+        "pand     %%mm6, %%mm3  \n\t"
+        "por      %%mm1, %%mm0  \n\t"
+        "por      %%mm3, %%mm2  \n\t"
+        MOVNTQ"   %%mm0,  %0    \n\t"
+        MOVNTQ"   %%mm2, 8%0"
+        :"=m"(*d)
+        :"m"(*s)
+        );
+        d+=16;
+        s+=16;
+    }
+    __asm__ volatile(SFENCE:::"memory");
+    __asm__ volatile(EMMS:::"memory");
 #endif
     mm_end = end - 3;
-    while(s < mm_end)
+    while (s < mm_end)
     {
-	register uint32_t x= *((uint32_t *)s);
-	*((uint32_t *)d) = ((x>>1)&0x7FE07FE0) | (x&0x001F001F);
-	s+=4;
-	d+=4;
+        register uint32_t x= *((const uint32_t*)s);
+        *((uint32_t *)d) = ((x>>1)&0x7FE07FE0) | (x&0x001F001F);
+        s+=4;
+        d+=4;
     }
-    if(s < end)
+    if (s < end)
     {
-	register uint16_t x= *((uint16_t *)s);
-	*((uint16_t *)d) = ((x>>1)&0x7FE0) | (x&0x001F);
-	s+=2;
-	d+=2;
+        register uint16_t x= *((const uint16_t*)s);
+        *((uint16_t *)d) = ((x>>1)&0x7FE0) | (x&0x001F);
+        s+=2;
+        d+=2;
     }
 }
 
 static inline void RENAME(rgb32to16)(const uint8_t *src, uint8_t *dst, stride_t src_size)
 {
-	const uint8_t *s = src;
-	const uint8_t *end;
+    const uint8_t *s = src;
+    const uint8_t *end;
 #if HAVE_MMX
-	const uint8_t *mm_end;
+    const uint8_t *mm_end;
 #endif
-	uint16_t *d = (uint16_t *)dst;
-	end = s + src_size;
+    uint16_t *d = (uint16_t *)dst;
+    end = s + src_size;
 #if HAVE_MMX
-	mm_end = end - 15;
-#if 1 //is faster only if multiplies are reasonable fast (FIXME figure out on which cpus this is faster, on Athlon its slightly faster)
-	asm volatile(
-		"movq %3, %%mm5			\n\t"
-		"movq %4, %%mm6			\n\t"
-		"movq %5, %%mm7			\n\t"
-		".balign 16			\n\t"
-		"1:				\n\t"
-		PREFETCH" 32(%1)		\n\t"
-		"movd	(%1), %%mm0		\n\t"
-		"movd	4(%1), %%mm3		\n\t"
-		"punpckldq 8(%1), %%mm0		\n\t"
-		"punpckldq 12(%1), %%mm3	\n\t"
-		"movq %%mm0, %%mm1		\n\t"
-		"movq %%mm3, %%mm4		\n\t"
-		"pand %%mm6, %%mm0		\n\t"
-		"pand %%mm6, %%mm3		\n\t"
-		"pmaddwd %%mm7, %%mm0		\n\t"
-		"pmaddwd %%mm7, %%mm3		\n\t"
-		"pand %%mm5, %%mm1		\n\t"
-		"pand %%mm5, %%mm4		\n\t"
-		"por %%mm1, %%mm0		\n\t"
-		"por %%mm4, %%mm3		\n\t"
-		"psrld $5, %%mm0		\n\t"
-		"pslld $11, %%mm3		\n\t"
-		"por %%mm3, %%mm0		\n\t"
-		MOVNTQ"	%%mm0, (%0)		\n\t"
-		"add $16, %1			\n\t"
-		"add $8, %0			\n\t"
-		"cmp %2, %1			\n\t"
-		" jb 1b				\n\t"
-		: "+r" (d), "+r"(s)
-		: "r" (mm_end), "m" (mask3216g), "m" (mask3216br), "m" (mul3216)
-	);
+    mm_end = end - 15;
+#if 1 //is faster only if multiplies are reasonably fast (FIXME figure out on which CPUs this is faster, on Athlon it is slightly faster)
+    __asm__ volatile(
+    "movq           %3, %%mm5   \n\t"
+    "movq           %4, %%mm6   \n\t"
+    "movq           %5, %%mm7   \n\t"
+    "jmp 2f                     \n\t"
+    ASMALIGN(4)
+    "1:                         \n\t"
+    PREFETCH"   32(%1)          \n\t"
+    "movd         (%1), %%mm0   \n\t"
+    "movd        4(%1), %%mm3   \n\t"
+    "punpckldq   8(%1), %%mm0   \n\t"
+    "punpckldq  12(%1), %%mm3   \n\t"
+    "movq        %%mm0, %%mm1   \n\t"
+    "movq        %%mm3, %%mm4   \n\t"
+    "pand        %%mm6, %%mm0   \n\t"
+    "pand        %%mm6, %%mm3   \n\t"
+    "pmaddwd     %%mm7, %%mm0   \n\t"
+    "pmaddwd     %%mm7, %%mm3   \n\t"
+    "pand        %%mm5, %%mm1   \n\t"
+    "pand        %%mm5, %%mm4   \n\t"
+    "por         %%mm1, %%mm0   \n\t"
+    "por         %%mm4, %%mm3   \n\t"
+    "psrld          $5, %%mm0   \n\t"
+    "pslld         $11, %%mm3   \n\t"
+    "por         %%mm3, %%mm0   \n\t"
+    MOVNTQ"      %%mm0, (%0)    \n\t"
+    "add           $16,  %1     \n\t"
+    "add            $8,  %0     \n\t"
+    "2:                         \n\t"
+    "cmp            %2,  %1     \n\t"
+    " jb            1b          \n\t"
+    : "+r" (d), "+r"(s)
+    : "r" (mm_end), "m" (mask3216g), "m" (mask3216br), "m" (mul3216)
+    );
 #else
-	__asm __volatile(PREFETCH"	%0"::"m"(*src):"memory");
-	__asm __volatile(
-	    "movq	%0, %%mm7\n\t"
-	    "movq	%1, %%mm6\n\t"
-	    ::"m"(red_16mask),"m"(green_16mask));
-	while(s < mm_end)
-	{
-	    __asm __volatile(
-		PREFETCH" 32%1\n\t"
-		"movd	%1, %%mm0\n\t"
-		"movd	4%1, %%mm3\n\t"
-		"punpckldq 8%1, %%mm0\n\t"
-		"punpckldq 12%1, %%mm3\n\t"
-		"movq	%%mm0, %%mm1\n\t"
-		"movq	%%mm0, %%mm2\n\t"
-		"movq	%%mm3, %%mm4\n\t"
-		"movq	%%mm3, %%mm5\n\t"
-		"psrlq	$3, %%mm0\n\t"
-		"psrlq	$3, %%mm3\n\t"
-		"pand	%2, %%mm0\n\t"
-		"pand	%2, %%mm3\n\t"
-		"psrlq	$5, %%mm1\n\t"
-		"psrlq	$5, %%mm4\n\t"
-		"pand	%%mm6, %%mm1\n\t"
-		"pand	%%mm6, %%mm4\n\t"
-		"psrlq	$8, %%mm2\n\t"
-		"psrlq	$8, %%mm5\n\t"
-		"pand	%%mm7, %%mm2\n\t"
-		"pand	%%mm7, %%mm5\n\t"
-		"por	%%mm1, %%mm0\n\t"
-		"por	%%mm4, %%mm3\n\t"
-		"por	%%mm2, %%mm0\n\t"
-		"por	%%mm5, %%mm3\n\t"
-		"psllq	$16, %%mm3\n\t"
-		"por	%%mm3, %%mm0\n\t"
-		MOVNTQ"	%%mm0, %0\n\t"
-		:"=m"(*d):"m"(*s),"m"(blue_16mask):"memory");
-		d += 4;
-		s += 16;
-	}
+    __asm__ volatile(PREFETCH"    %0"::"m"(*src):"memory");
+    __asm__ volatile(
+        "movq    %0, %%mm7    \n\t"
+        "movq    %1, %%mm6    \n\t"
+        ::"m"(red_16mask),"m"(green_16mask));
+    while (s < mm_end)
+    {
+        __asm__ volatile(
+        PREFETCH"    32%1           \n\t"
+        "movd          %1, %%mm0    \n\t"
+        "movd         4%1, %%mm3    \n\t"
+        "punpckldq    8%1, %%mm0    \n\t"
+        "punpckldq   12%1, %%mm3    \n\t"
+        "movq       %%mm0, %%mm1    \n\t"
+        "movq       %%mm0, %%mm2    \n\t"
+        "movq       %%mm3, %%mm4    \n\t"
+        "movq       %%mm3, %%mm5    \n\t"
+        "psrlq         $3, %%mm0    \n\t"
+        "psrlq         $3, %%mm3    \n\t"
+        "pand          %2, %%mm0    \n\t"
+        "pand          %2, %%mm3    \n\t"
+        "psrlq         $5, %%mm1    \n\t"
+        "psrlq         $5, %%mm4    \n\t"
+        "pand       %%mm6, %%mm1    \n\t"
+        "pand       %%mm6, %%mm4    \n\t"
+        "psrlq         $8, %%mm2    \n\t"
+        "psrlq         $8, %%mm5    \n\t"
+        "pand       %%mm7, %%mm2    \n\t"
+        "pand       %%mm7, %%mm5    \n\t"
+        "por        %%mm1, %%mm0    \n\t"
+        "por        %%mm4, %%mm3    \n\t"
+        "por        %%mm2, %%mm0    \n\t"
+        "por        %%mm5, %%mm3    \n\t"
+        "psllq        $16, %%mm3    \n\t"
+        "por        %%mm3, %%mm0    \n\t"
+        MOVNTQ"     %%mm0, %0       \n\t"
+        :"=m"(*d):"m"(*s),"m"(blue_16mask):"memory");
+        d += 4;
+        s += 16;
+    }
 #endif
-	__asm __volatile(SFENCE:::"memory");
-	__asm __volatile(EMMS:::"memory");
+    __asm__ volatile(SFENCE:::"memory");
+    __asm__ volatile(EMMS:::"memory");
 #endif
-	while(s < end)
-	{
-		register int rgb = *(uint32_t*)s; s += 4;
-		*d++ = ((rgb&0xFF)>>3) + ((rgb&0xFC00)>>5) + ((rgb&0xF80000)>>8);
-	}
+    while (s < end)
+    {
+        register int rgb = *(const uint32_t*)s; s += 4;
+        *d++ = ((rgb&0xFF)>>3) + ((rgb&0xFC00)>>5) + ((rgb&0xF80000)>>8);
+    }
 }
 
 static inline void RENAME(rgb32tobgr16)(const uint8_t *src, uint8_t *dst, stride_t src_size)
@@ -1544,7 +1558,7 @@ static inline void RENAME(yuvPlanartoyuy2)(const uint8_t *ysrc, const uint8_t *u
 		ysrc += lumStride;
 		dst += dstStride;
 
-#elif __WORDSIZE >= 64
+#elif HAVE_FAST_64BIT
 		int i;
 		uint64_t *ldst = (uint64_t *) dst;
 		const uint8_t *yc = ysrc, *uc = usrc, *vc = vsrc;
@@ -1609,92 +1623,92 @@ static inline void RENAME(yuvPlanartouyvy)(const uint8_t *ysrc, const uint8_t *u
 	long width, long height,
 	stride_t lumStride, stride_t chromStride, stride_t dstStride, stride_t vertLumPerChroma)
 {
-	long y;
-	const stride_t chromWidth= width>>1;
-	for(y=0; y<height; y++)
-	{
+    long y;
+    const x86_reg chromWidth= width>>1;
+    for (y=0; y<height; y++)
+    {
 #if HAVE_MMX
-//FIXME handle 2 lines a once (fewer prefetch, reuse some chrom, but very likely limited by mem anyway)
-		asm volatile(
-			"xor %%"REG_a", %%"REG_a"	\n\t"
-			".balign 16			\n\t"
-			"1:				\n\t"
-			PREFETCH" 32(%1, %%"REG_a", 2)	\n\t"
-			PREFETCH" 32(%2, %%"REG_a")	\n\t"
-			PREFETCH" 32(%3, %%"REG_a")	\n\t"
-			"movq (%2, %%"REG_a"), %%mm0	\n\t" // U(0)
-			"movq %%mm0, %%mm2		\n\t" // U(0)
-			"movq (%3, %%"REG_a"), %%mm1	\n\t" // V(0)
-			"punpcklbw %%mm1, %%mm0		\n\t" // UVUV UVUV(0)
-			"punpckhbw %%mm1, %%mm2		\n\t" // UVUV UVUV(8)
+//FIXME handle 2 lines at once (fewer prefetches, reuse some chroma, but very likely memory-limited anyway)
+        __asm__ volatile(
+        "xor                %%"REG_a", %%"REG_a"    \n\t"
+        ASMALIGN(4)
+        "1:                                         \n\t"
+        PREFETCH"   32(%1, %%"REG_a", 2)            \n\t"
+        PREFETCH"   32(%2, %%"REG_a")               \n\t"
+        PREFETCH"   32(%3, %%"REG_a")               \n\t"
+        "movq         (%2, %%"REG_a"), %%mm0        \n\t" // U(0)
+        "movq                   %%mm0, %%mm2        \n\t" // U(0)
+        "movq         (%3, %%"REG_a"), %%mm1        \n\t" // V(0)
+        "punpcklbw              %%mm1, %%mm0        \n\t" // UVUV UVUV(0)
+        "punpckhbw              %%mm1, %%mm2        \n\t" // UVUV UVUV(8)
 
-			"movq (%1, %%"REG_a",2), %%mm3	\n\t" // Y(0)
-			"movq 8(%1, %%"REG_a",2), %%mm5	\n\t" // Y(8)
-			"movq %%mm0, %%mm4		\n\t" // Y(0)
-			"movq %%mm2, %%mm6		\n\t" // Y(8)
-			"punpcklbw %%mm3, %%mm0		\n\t" // YUYV YUYV(0)
-			"punpckhbw %%mm3, %%mm4		\n\t" // YUYV YUYV(4)
-			"punpcklbw %%mm5, %%mm2		\n\t" // YUYV YUYV(8)
-			"punpckhbw %%mm5, %%mm6		\n\t" // YUYV YUYV(12)
+        "movq       (%1, %%"REG_a",2), %%mm3        \n\t" // Y(0)
+        "movq      8(%1, %%"REG_a",2), %%mm5        \n\t" // Y(8)
+        "movq                   %%mm0, %%mm4        \n\t" // Y(0)
+        "movq                   %%mm2, %%mm6        \n\t" // Y(8)
+        "punpcklbw              %%mm3, %%mm0        \n\t" // YUYV YUYV(0)
+        "punpckhbw              %%mm3, %%mm4        \n\t" // YUYV YUYV(4)
+        "punpcklbw              %%mm5, %%mm2        \n\t" // YUYV YUYV(8)
+        "punpckhbw              %%mm5, %%mm6        \n\t" // YUYV YUYV(12)
 
-			MOVNTQ" %%mm0, (%0, %%"REG_a", 4)\n\t"
-			MOVNTQ" %%mm4, 8(%0, %%"REG_a", 4)\n\t"
-			MOVNTQ" %%mm2, 16(%0, %%"REG_a", 4)\n\t"
-			MOVNTQ" %%mm6, 24(%0, %%"REG_a", 4)\n\t"
+        MOVNTQ"                 %%mm0,   (%0, %%"REG_a", 4)     \n\t"
+        MOVNTQ"                 %%mm4,  8(%0, %%"REG_a", 4)     \n\t"
+        MOVNTQ"                 %%mm2, 16(%0, %%"REG_a", 4)     \n\t"
+        MOVNTQ"                 %%mm6, 24(%0, %%"REG_a", 4)     \n\t"
 
-			"add $8, %%"REG_a"		\n\t"
-			"cmp %4, %%"REG_a"		\n\t"
-			" jb 1b				\n\t"
-			::"r"(dst), "r"(ysrc), "r"(usrc), "r"(vsrc), "g" (chromWidth)
-			: "%"REG_a
-		);
+        "add                       $8, %%"REG_a"    \n\t"
+        "cmp                       %4, %%"REG_a"    \n\t"
+        " jb                       1b               \n\t"
+        ::"r"(dst), "r"(ysrc), "r"(usrc), "r"(vsrc), "g" (chromWidth)
+        : "%"REG_a
+        );
 #else
-//FIXME adapt the alpha asm code from yv12->yuy2
+//FIXME adapt the Alpha ASM code from yv12->yuy2
 
-#if __WORDSIZE >= 64
-		int i;
-		uint64_t *ldst = (uint64_t *) dst;
-		const uint8_t *yc = ysrc, *uc = usrc, *vc = vsrc;
-		for(i = 0; i < chromWidth; i += 2){
-			uint64_t k, l;
-			k = uc[0] + (yc[0] << 8) +
-			    (vc[0] << 16) + (yc[1] << 24);
-			l = uc[1] + (yc[2] << 8) +
-			    (vc[1] << 16) + (yc[3] << 24);
-			*ldst++ = k + (l << 32);
-			yc += 4;
-			uc += 2;
-			vc += 2;
-		}
+#if HAVE_FAST_64BIT
+        int i;
+        uint64_t *ldst = (uint64_t *) dst;
+        const uint8_t *yc = ysrc, *uc = usrc, *vc = vsrc;
+        for (i = 0; i < chromWidth; i += 2){
+            uint64_t k, l;
+            k = uc[0] + (yc[0] << 8) +
+                (vc[0] << 16) + (yc[1] << 24);
+            l = uc[1] + (yc[2] << 8) +
+                (vc[1] << 16) + (yc[3] << 24);
+            *ldst++ = k + (l << 32);
+            yc += 4;
+            uc += 2;
+            vc += 2;
+        }
 
 #else
-		int i, *idst = (int32_t *) dst;
-		const uint8_t *yc = ysrc, *uc = usrc, *vc = vsrc;
-		for(i = 0; i < chromWidth; i++){
+        int i, *idst = (int32_t *) dst;
+        const uint8_t *yc = ysrc, *uc = usrc, *vc = vsrc;
+        for (i = 0; i < chromWidth; i++){
 #ifdef WORDS_BIGENDIAN
-			*idst++ = (uc[0] << 24)+ (yc[0] << 16) +
-			    (vc[0] << 8) + (yc[1] << 0);
+            *idst++ = (uc[0] << 24)+ (yc[0] << 16) +
+                (vc[0] << 8) + (yc[1] << 0);
 #else
-			*idst++ = uc[0] + (yc[0] << 8) +
-			    (vc[0] << 16) + (yc[1] << 24);
+            *idst++ = uc[0] + (yc[0] << 8) +
+               (vc[0] << 16) + (yc[1] << 24);
 #endif
-			yc += 2;
-			uc++;
-			vc++;
-		}
+            yc += 2;
+            uc++;
+            vc++;
+        }
 #endif
 #endif
-		if((y&(vertLumPerChroma-1))==(vertLumPerChroma-1) )
-		{
-			usrc += chromStride;
-			vsrc += chromStride;
-		}
-		ysrc += lumStride;
-		dst += dstStride;
-	}
+        if ((y&(vertLumPerChroma-1)) == vertLumPerChroma-1)
+        {
+            usrc += chromStride;
+            vsrc += chromStride;
+        }
+        ysrc += lumStride;
+        dst += dstStride;
+    }
 #if HAVE_MMX
-asm(    EMMS" \n\t"
-        SFENCE" \n\t"
+__asm__(    EMMS"       \n\t"
+        SFENCE"     \n\t"
         :::"memory");
 #endif
 }
@@ -1754,167 +1768,164 @@ static inline void RENAME(yuvPlanartoyvyu)(const uint8_t *ysrc, const uint8_t *u
 }
 
 /**
- *
- * height should be a multiple of 2 and width should be a multiple of 16 (if this is a
- * problem for anyone then tell me, and ill fix it)
+ * Height should be a multiple of 2 and width should be a multiple of 16
+ * (If this is a problem for anyone then tell me, and I will fix it.)
  */
 static inline void RENAME(yv12touyvy)(const uint8_t *ysrc, const uint8_t *usrc, const uint8_t *vsrc, uint8_t *dst,
 	long width, long height,
 	stride_t lumStride, stride_t chromStride, stride_t dstStride)
 {
-	//FIXME interpolate chroma
-	RENAME(yuvPlanartouyvy)(ysrc, usrc, vsrc, dst, width, height, lumStride, chromStride, dstStride, 2);
+    //FIXME interpolate chroma
+    RENAME(yuvPlanartouyvy)(ysrc, usrc, vsrc, dst, width, height, lumStride, chromStride, dstStride, 2);
 }
 
 static inline void RENAME(yv12toyvyu)(const uint8_t *ysrc, const uint8_t *usrc, const uint8_t *vsrc, uint8_t *dst,
 	long width, long height,
 	stride_t lumStride, stride_t chromStride, stride_t dstStride)
 {
-	//FIXME interpolate chroma
-	RENAME(yuvPlanartoyvyu)(ysrc, usrc, vsrc, dst, width, height, lumStride, chromStride, dstStride, 2);
+    //FIXME interpolate chroma
+    RENAME(yuvPlanartoyvyu)(ysrc, usrc, vsrc, dst, width, height, lumStride, chromStride, dstStride, 2);
 }
 
 static inline void RENAME(yv12tovyuy)(const uint8_t *ysrc, const uint8_t *usrc, const uint8_t *vsrc, uint8_t *dst,
 	long width, long height,
 	stride_t lumStride, stride_t chromStride, stride_t dstStride)
 {
-	//FIXME interpolate chroma
-	RENAME(yuvPlanartovyuy)(ysrc, usrc, vsrc, dst, width, height, lumStride, chromStride, dstStride, 2);
+    //FIXME interpolate chroma
+    RENAME(yuvPlanartovyuy)(ysrc, usrc, vsrc, dst, width, height, lumStride, chromStride, dstStride, 2);
 }
 
 /**
- *
- * width should be a multiple of 16
+ * Width should be a multiple of 16.
  */
 static inline void RENAME(yuv422ptoyuy2)(const uint8_t *ysrc, const uint8_t *usrc, const uint8_t *vsrc, uint8_t *dst,
 	long width, long height,
 	stride_t lumStride, stride_t chromStride, stride_t dstStride)
 {
-	RENAME(yuvPlanartoyuy2)(ysrc, usrc, vsrc, dst, width, height, lumStride, chromStride, dstStride, 1);
+    RENAME(yuvPlanartoyuy2)(ysrc, usrc, vsrc, dst, width, height, lumStride, chromStride, dstStride, 1);
 }
 
 /**
- *
- * height should be a multiple of 2 and width should be a multiple of 16 (if this is a
- * problem for anyone then tell me, and ill fix it)
+ * Height should be a multiple of 2 and width should be a multiple of 16.
+ * (If this is a problem for anyone then tell me, and I will fix it.)
  */
 static inline void RENAME(yuy2toyv12)(const uint8_t *src, uint8_t *ydst, uint8_t *udst, uint8_t *vdst,
 	long width, long height,
 	stride_t lumStride, stride_t chromStride, stride_t srcStride)
 {
-	long y;
-	const stride_t chromWidth= width>>1;
-	for(y=0; y<height; y+=2)
-	{
+    long y;
+    const x86_reg chromWidth= width>>1;
+    for (y=0; y<height; y+=2)
+    {
 #if HAVE_MMX
-		asm volatile(
-			"xor %%"REG_a", %%"REG_a"	\n\t"
-			"pcmpeqw %%mm7, %%mm7		\n\t"
-			"psrlw $8, %%mm7		\n\t" // FF,00,FF,00...
-			".balign 16			\n\t"
-			"1:				\n\t"
-			PREFETCH" 64(%0, %%"REG_a", 4)	\n\t"
-			"movq (%0, %%"REG_a", 4), %%mm0	\n\t" // YUYV YUYV(0)
-			"movq 8(%0, %%"REG_a", 4), %%mm1\n\t" // YUYV YUYV(4)
-			"movq %%mm0, %%mm2		\n\t" // YUYV YUYV(0)
-			"movq %%mm1, %%mm3		\n\t" // YUYV YUYV(4)
-			"psrlw $8, %%mm0		\n\t" // U0V0 U0V0(0)
-			"psrlw $8, %%mm1		\n\t" // U0V0 U0V0(4)
-			"pand %%mm7, %%mm2		\n\t" // Y0Y0 Y0Y0(0)
-			"pand %%mm7, %%mm3		\n\t" // Y0Y0 Y0Y0(4)
-			"packuswb %%mm1, %%mm0		\n\t" // UVUV UVUV(0)
-			"packuswb %%mm3, %%mm2		\n\t" // YYYY YYYY(0)
+        __asm__ volatile(
+        "xor                 %%"REG_a", %%"REG_a"   \n\t"
+        "pcmpeqw                 %%mm7, %%mm7       \n\t"
+        "psrlw                      $8, %%mm7       \n\t" // FF,00,FF,00...
+        ASMALIGN(4)
+        "1:                \n\t"
+        PREFETCH" 64(%0, %%"REG_a", 4)              \n\t"
+        "movq       (%0, %%"REG_a", 4), %%mm0       \n\t" // YUYV YUYV(0)
+        "movq      8(%0, %%"REG_a", 4), %%mm1       \n\t" // YUYV YUYV(4)
+        "movq                    %%mm0, %%mm2       \n\t" // YUYV YUYV(0)
+        "movq                    %%mm1, %%mm3       \n\t" // YUYV YUYV(4)
+        "psrlw                      $8, %%mm0       \n\t" // U0V0 U0V0(0)
+        "psrlw                      $8, %%mm1       \n\t" // U0V0 U0V0(4)
+        "pand                    %%mm7, %%mm2       \n\t" // Y0Y0 Y0Y0(0)
+        "pand                    %%mm7, %%mm3       \n\t" // Y0Y0 Y0Y0(4)
+        "packuswb                %%mm1, %%mm0       \n\t" // UVUV UVUV(0)
+        "packuswb                %%mm3, %%mm2       \n\t" // YYYY YYYY(0)
 
-			MOVNTQ" %%mm2, (%1, %%"REG_a", 2)\n\t"
+        MOVNTQ"                  %%mm2, (%1, %%"REG_a", 2)  \n\t"
 
-			"movq 16(%0, %%"REG_a", 4), %%mm1\n\t" // YUYV YUYV(8)
-			"movq 24(%0, %%"REG_a", 4), %%mm2\n\t" // YUYV YUYV(12)
-			"movq %%mm1, %%mm3		\n\t" // YUYV YUYV(8)
-			"movq %%mm2, %%mm4		\n\t" // YUYV YUYV(12)
-			"psrlw $8, %%mm1		\n\t" // U0V0 U0V0(8)
-			"psrlw $8, %%mm2		\n\t" // U0V0 U0V0(12)
-			"pand %%mm7, %%mm3		\n\t" // Y0Y0 Y0Y0(8)
-			"pand %%mm7, %%mm4		\n\t" // Y0Y0 Y0Y0(12)
-			"packuswb %%mm2, %%mm1		\n\t" // UVUV UVUV(8)
-			"packuswb %%mm4, %%mm3		\n\t" // YYYY YYYY(8)
+        "movq     16(%0, %%"REG_a", 4), %%mm1       \n\t" // YUYV YUYV(8)
+        "movq     24(%0, %%"REG_a", 4), %%mm2       \n\t" // YUYV YUYV(12)
+        "movq                    %%mm1, %%mm3       \n\t" // YUYV YUYV(8)
+        "movq                    %%mm2, %%mm4       \n\t" // YUYV YUYV(12)
+        "psrlw                      $8, %%mm1       \n\t" // U0V0 U0V0(8)
+        "psrlw                      $8, %%mm2       \n\t" // U0V0 U0V0(12)
+        "pand                    %%mm7, %%mm3       \n\t" // Y0Y0 Y0Y0(8)
+        "pand                    %%mm7, %%mm4       \n\t" // Y0Y0 Y0Y0(12)
+        "packuswb                %%mm2, %%mm1       \n\t" // UVUV UVUV(8)
+        "packuswb                %%mm4, %%mm3       \n\t" // YYYY YYYY(8)
 
-			MOVNTQ" %%mm3, 8(%1, %%"REG_a", 2)\n\t"
+        MOVNTQ"                  %%mm3, 8(%1, %%"REG_a", 2) \n\t"
 
-			"movq %%mm0, %%mm2		\n\t" // UVUV UVUV(0)
-			"movq %%mm1, %%mm3		\n\t" // UVUV UVUV(8)
-			"psrlw $8, %%mm0		\n\t" // V0V0 V0V0(0)
-			"psrlw $8, %%mm1		\n\t" // V0V0 V0V0(8)
-			"pand %%mm7, %%mm2		\n\t" // U0U0 U0U0(0)
-			"pand %%mm7, %%mm3		\n\t" // U0U0 U0U0(8)
-			"packuswb %%mm1, %%mm0		\n\t" // VVVV VVVV(0)
-			"packuswb %%mm3, %%mm2		\n\t" // UUUU UUUU(0)
+        "movq                    %%mm0, %%mm2       \n\t" // UVUV UVUV(0)
+        "movq                    %%mm1, %%mm3       \n\t" // UVUV UVUV(8)
+        "psrlw                      $8, %%mm0       \n\t" // V0V0 V0V0(0)
+        "psrlw                      $8, %%mm1       \n\t" // V0V0 V0V0(8)
+        "pand                    %%mm7, %%mm2       \n\t" // U0U0 U0U0(0)
+        "pand                    %%mm7, %%mm3       \n\t" // U0U0 U0U0(8)
+        "packuswb                %%mm1, %%mm0       \n\t" // VVVV VVVV(0)
+        "packuswb                %%mm3, %%mm2       \n\t" // UUUU UUUU(0)
 
-			MOVNTQ" %%mm0, (%3, %%"REG_a")	\n\t"
-			MOVNTQ" %%mm2, (%2, %%"REG_a")	\n\t"
+        MOVNTQ"                  %%mm0, (%3, %%"REG_a")     \n\t"
+        MOVNTQ"                  %%mm2, (%2, %%"REG_a")     \n\t"
 
-			"add $8, %%"REG_a"		\n\t"
-			"cmp %4, %%"REG_a"		\n\t"
-			" jb 1b				\n\t"
-			::"r"(src), "r"(ydst), "r"(udst), "r"(vdst), "g" (chromWidth)
-			: "memory", "%"REG_a
-		);
+        "add                        $8, %%"REG_a"   \n\t"
+        "cmp                        %4, %%"REG_a"   \n\t"
+        " jb                        1b              \n\t"
+        ::"r"(src), "r"(ydst), "r"(udst), "r"(vdst), "g" (chromWidth)
+        : "memory", "%"REG_a
+        );
 
-		ydst += lumStride;
-		src  += srcStride;
+        ydst += lumStride;
+        src  += srcStride;
 
-		asm volatile(
-			"xor %%"REG_a", %%"REG_a"	\n\t"
-			".balign 16			\n\t"
-			"1:				\n\t"
-			PREFETCH" 64(%0, %%"REG_a", 4)	\n\t"
-			"movq (%0, %%"REG_a", 4), %%mm0	\n\t" // YUYV YUYV(0)
-			"movq 8(%0, %%"REG_a", 4), %%mm1\n\t" // YUYV YUYV(4)
-			"movq 16(%0, %%"REG_a", 4), %%mm2\n\t" // YUYV YUYV(8)
-			"movq 24(%0, %%"REG_a", 4), %%mm3\n\t" // YUYV YUYV(12)
-			"pand %%mm7, %%mm0		\n\t" // Y0Y0 Y0Y0(0)
-			"pand %%mm7, %%mm1		\n\t" // Y0Y0 Y0Y0(4)
-			"pand %%mm7, %%mm2		\n\t" // Y0Y0 Y0Y0(8)
-			"pand %%mm7, %%mm3		\n\t" // Y0Y0 Y0Y0(12)
-			"packuswb %%mm1, %%mm0		\n\t" // YYYY YYYY(0)
-			"packuswb %%mm3, %%mm2		\n\t" // YYYY YYYY(8)
+        __asm__ volatile(
+        "xor                 %%"REG_a", %%"REG_a"   \n\t"
+        ASMALIGN(4)
+        "1:                                         \n\t"
+        PREFETCH" 64(%0, %%"REG_a", 4)              \n\t"
+        "movq       (%0, %%"REG_a", 4), %%mm0       \n\t" // YUYV YUYV(0)
+        "movq      8(%0, %%"REG_a", 4), %%mm1       \n\t" // YUYV YUYV(4)
+        "movq     16(%0, %%"REG_a", 4), %%mm2       \n\t" // YUYV YUYV(8)
+        "movq     24(%0, %%"REG_a", 4), %%mm3       \n\t" // YUYV YUYV(12)
+        "pand                    %%mm7, %%mm0       \n\t" // Y0Y0 Y0Y0(0)
+        "pand                    %%mm7, %%mm1       \n\t" // Y0Y0 Y0Y0(4)
+        "pand                    %%mm7, %%mm2       \n\t" // Y0Y0 Y0Y0(8)
+        "pand                    %%mm7, %%mm3       \n\t" // Y0Y0 Y0Y0(12)
+        "packuswb                %%mm1, %%mm0       \n\t" // YYYY YYYY(0)
+        "packuswb                %%mm3, %%mm2       \n\t" // YYYY YYYY(8)
 
-			MOVNTQ" %%mm0, (%1, %%"REG_a", 2)\n\t"
-			MOVNTQ" %%mm2, 8(%1, %%"REG_a", 2)\n\t"
+        MOVNTQ"                  %%mm0,  (%1, %%"REG_a", 2) \n\t"
+        MOVNTQ"                  %%mm2, 8(%1, %%"REG_a", 2) \n\t"
 
-			"add $8, %%"REG_a"		\n\t"
-			"cmp %4, %%"REG_a"		\n\t"
-			" jb 1b				\n\t"
+        "add                        $8, %%"REG_a"   \n\t"
+        "cmp                        %4, %%"REG_a"   \n\t"
+        " jb                        1b              \n\t"
 
-			::"r"(src), "r"(ydst), "r"(udst), "r"(vdst), "g" (chromWidth)
-			: "memory", "%"REG_a
-		);
+        ::"r"(src), "r"(ydst), "r"(udst), "r"(vdst), "g" (chromWidth)
+        : "memory", "%"REG_a
+        );
 #else
-		long i;
-		for(i=0; i<chromWidth; i++)
-		{
-			ydst[2*i+0] 	= src[4*i+0];
-			udst[i] 	= src[4*i+1];
-			ydst[2*i+1] 	= src[4*i+2];
-			vdst[i] 	= src[4*i+3];
-		}
-		ydst += lumStride;
-		src  += srcStride;
+        long i;
+        for (i=0; i<chromWidth; i++)
+        {
+            ydst[2*i+0]     = src[4*i+0];
+            udst[i]     = src[4*i+1];
+            ydst[2*i+1]     = src[4*i+2];
+            vdst[i]     = src[4*i+3];
+        }
+        ydst += lumStride;
+        src  += srcStride;
 
-		for(i=0; i<chromWidth; i++)
-		{
-			ydst[2*i+0] 	= src[4*i+0];
-			ydst[2*i+1] 	= src[4*i+2];
-		}
+        for (i=0; i<chromWidth; i++)
+        {
+            ydst[2*i+0]     = src[4*i+0];
+            ydst[2*i+1]     = src[4*i+2];
+        }
 #endif
-		udst += chromStride;
-		vdst += chromStride;
-		ydst += lumStride;
-		src  += srcStride;
-	}
+        udst += chromStride;
+        vdst += chromStride;
+        ydst += lumStride;
+        src  += srcStride;
+    }
 #if HAVE_MMX
-asm volatile(   EMMS" \n\t"
-        	SFENCE" \n\t"
-        	:::"memory");
+__asm__ volatile(   EMMS"       \n\t"
+                SFENCE"     \n\t"
+                :::"memory");
 #endif
 }
 
@@ -1922,245 +1933,246 @@ static inline void RENAME(yvu9toyv12)(const uint8_t *ysrc, const uint8_t *usrc, 
 	uint8_t *ydst, uint8_t *udst, uint8_t *vdst,
 	long width, long height, stride_t lumStride, stride_t chromStride)
 {
-	/* Y Plane */
-	memcpy(ydst, ysrc, width*height);
+    /* Y Plane */
+    memcpy(ydst, ysrc, width*height);
 
-	/* XXX: implement upscaling for U,V */
+    /* XXX: implement upscaling for U,V */
 }
 
 static inline void RENAME(planar2x)(const uint8_t *src, uint8_t *dst, long srcWidth, long srcHeight, stride_t srcStride, stride_t dstStride)
 {
-	long x,y;
+    long x,y;
 
-	dst[0]= src[0];
+    dst[0]= src[0];
 
-	// first line
-	for(x=0; x<srcWidth-1; x++){
-		dst[2*x+1]= (3*src[x] +   src[x+1])>>2;
-		dst[2*x+2]= (  src[x] + 3*src[x+1])>>2;
-	}
-	dst[2*srcWidth-1]= src[srcWidth-1];
+    // first line
+    for (x=0; x<srcWidth-1; x++){
+        dst[2*x+1]= (3*src[x] +   src[x+1])>>2;
+        dst[2*x+2]= (  src[x] + 3*src[x+1])>>2;
+    }
+    dst[2*srcWidth-1]= src[srcWidth-1];
 
-	dst+= dstStride;
+        dst+= dstStride;
 
-	for(y=1; y<srcHeight; y++){
+    for (y=1; y<srcHeight; y++){
 #if HAVE_MMX2 || HAVE_AMD3DNOW
-		const long mmxSize= srcWidth&~15;
-		asm volatile(
-			"mov %4, %%"REG_a"		\n\t"
-			"1:				\n\t"
-			"movq (%0, %%"REG_a"), %%mm0	\n\t"
-			"movq (%1, %%"REG_a"), %%mm1	\n\t"
-			"movq 1(%0, %%"REG_a"), %%mm2	\n\t"
-			"movq 1(%1, %%"REG_a"), %%mm3	\n\t"
-			"movq -1(%0, %%"REG_a"), %%mm4	\n\t"
-			"movq -1(%1, %%"REG_a"), %%mm5	\n\t"
-			PAVGB" %%mm0, %%mm5		\n\t"
-			PAVGB" %%mm0, %%mm3		\n\t"
-			PAVGB" %%mm0, %%mm5		\n\t"
-			PAVGB" %%mm0, %%mm3		\n\t"
-			PAVGB" %%mm1, %%mm4		\n\t"
-			PAVGB" %%mm1, %%mm2		\n\t"
-			PAVGB" %%mm1, %%mm4		\n\t"
-			PAVGB" %%mm1, %%mm2		\n\t"
-			"movq %%mm5, %%mm7		\n\t"
-			"movq %%mm4, %%mm6		\n\t"
-			"punpcklbw %%mm3, %%mm5		\n\t"
-			"punpckhbw %%mm3, %%mm7		\n\t"
-			"punpcklbw %%mm2, %%mm4		\n\t"
-			"punpckhbw %%mm2, %%mm6		\n\t"
+        const x86_reg mmxSize= srcWidth&~15;
+        __asm__ volatile(
+        "mov           %4, %%"REG_a"            \n\t"
+        "1:                                     \n\t"
+        "movq         (%0, %%"REG_a"), %%mm0    \n\t"
+        "movq         (%1, %%"REG_a"), %%mm1    \n\t"
+        "movq        1(%0, %%"REG_a"), %%mm2    \n\t"
+        "movq        1(%1, %%"REG_a"), %%mm3    \n\t"
+        "movq       -1(%0, %%"REG_a"), %%mm4    \n\t"
+        "movq       -1(%1, %%"REG_a"), %%mm5    \n\t"
+        PAVGB"                  %%mm0, %%mm5    \n\t"
+        PAVGB"                  %%mm0, %%mm3    \n\t"
+        PAVGB"                  %%mm0, %%mm5    \n\t"
+        PAVGB"                  %%mm0, %%mm3    \n\t"
+        PAVGB"                  %%mm1, %%mm4    \n\t"
+        PAVGB"                  %%mm1, %%mm2    \n\t"
+        PAVGB"                  %%mm1, %%mm4    \n\t"
+        PAVGB"                  %%mm1, %%mm2    \n\t"
+        "movq                   %%mm5, %%mm7    \n\t"
+        "movq                   %%mm4, %%mm6    \n\t"
+        "punpcklbw              %%mm3, %%mm5    \n\t"
+        "punpckhbw              %%mm3, %%mm7    \n\t"
+        "punpcklbw              %%mm2, %%mm4    \n\t"
+        "punpckhbw              %%mm2, %%mm6    \n\t"
 #if 1
-			MOVNTQ" %%mm5, (%2, %%"REG_a", 2)\n\t"
-			MOVNTQ" %%mm7, 8(%2, %%"REG_a", 2)\n\t"
-			MOVNTQ" %%mm4, (%3, %%"REG_a", 2)\n\t"
-			MOVNTQ" %%mm6, 8(%3, %%"REG_a", 2)\n\t"
+        MOVNTQ"                 %%mm5,  (%2, %%"REG_a", 2)  \n\t"
+        MOVNTQ"                 %%mm7, 8(%2, %%"REG_a", 2)  \n\t"
+        MOVNTQ"                 %%mm4,  (%3, %%"REG_a", 2)  \n\t"
+        MOVNTQ"                 %%mm6, 8(%3, %%"REG_a", 2)  \n\t"
 #else
-			"movq %%mm5, (%2, %%"REG_a", 2)	\n\t"
-			"movq %%mm7, 8(%2, %%"REG_a", 2)\n\t"
-			"movq %%mm4, (%3, %%"REG_a", 2)	\n\t"
-			"movq %%mm6, 8(%3, %%"REG_a", 2)\n\t"
+        "movq                   %%mm5,  (%2, %%"REG_a", 2)  \n\t"
+        "movq                   %%mm7, 8(%2, %%"REG_a", 2)  \n\t"
+        "movq                   %%mm4,  (%3, %%"REG_a", 2)  \n\t"
+        "movq                   %%mm6, 8(%3, %%"REG_a", 2)  \n\t"
 #endif
-			"add $8, %%"REG_a"		\n\t"
-			" js 1b				\n\t"
-			:: "r" (src + mmxSize  ), "r" (src + srcStride + mmxSize  ),
-			   "r" (dst + mmxSize*2), "r" (dst + dstStride + mmxSize*2),
-			   "g" (-mmxSize)
-			: "%"REG_a
+        "add                       $8, %%"REG_a"            \n\t"
+        " js                       1b                       \n\t"
+        :: "r" (src + mmxSize  ), "r" (src + srcStride + mmxSize  ),
+           "r" (dst + mmxSize*2), "r" (dst + dstStride + mmxSize*2),
+           "g" (-mmxSize)
+        : "%"REG_a
 
-		);
+        );
 #else
-		const long mmxSize=1;
+        const x86_reg mmxSize=1;
 #endif
-		dst[0        ]= (3*src[0] +   src[srcStride])>>2;
-		dst[dstStride]= (  src[0] + 3*src[srcStride])>>2;
+        dst[0        ]= (3*src[0] +   src[srcStride])>>2;
+        dst[dstStride]= (  src[0] + 3*src[srcStride])>>2;
 
-		for(x=mmxSize-1; x<srcWidth-1; x++){
-			dst[2*x          +1]= (3*src[x+0] +   src[x+srcStride+1])>>2;
-			dst[2*x+dstStride+2]= (  src[x+0] + 3*src[x+srcStride+1])>>2;
-			dst[2*x+dstStride+1]= (  src[x+1] + 3*src[x+srcStride  ])>>2;
-			dst[2*x          +2]= (3*src[x+1] +   src[x+srcStride  ])>>2;
-		}
-		dst[srcWidth*2 -1            ]= (3*src[srcWidth-1] +   src[srcWidth-1 + srcStride])>>2;
-		dst[srcWidth*2 -1 + dstStride]= (  src[srcWidth-1] + 3*src[srcWidth-1 + srcStride])>>2;
+        for (x=mmxSize-1; x<srcWidth-1; x++){
+            dst[2*x          +1]= (3*src[x+0] +   src[x+srcStride+1])>>2;
+            dst[2*x+dstStride+2]= (  src[x+0] + 3*src[x+srcStride+1])>>2;
+            dst[2*x+dstStride+1]= (  src[x+1] + 3*src[x+srcStride  ])>>2;
+            dst[2*x          +2]= (3*src[x+1] +   src[x+srcStride  ])>>2;
+        }
+        dst[srcWidth*2 -1            ]= (3*src[srcWidth-1] +   src[srcWidth-1 + srcStride])>>2;
+        dst[srcWidth*2 -1 + dstStride]= (  src[srcWidth-1] + 3*src[srcWidth-1 + srcStride])>>2;
 
-		dst+=dstStride*2;
-		src+=srcStride;
-	}
+        dst+=dstStride*2;
+        src+=srcStride;
+    }
 
-	// last line
+    // last line
 #if 1
-	dst[0]= src[0];
+    dst[0]= src[0];
 
-	for(x=0; x<srcWidth-1; x++){
-		dst[2*x+1]= (3*src[x] +   src[x+1])>>2;
-		dst[2*x+2]= (  src[x] + 3*src[x+1])>>2;
-	}
-	dst[2*srcWidth-1]= src[srcWidth-1];
+    for (x=0; x<srcWidth-1; x++){
+        dst[2*x+1]= (3*src[x] +   src[x+1])>>2;
+        dst[2*x+2]= (  src[x] + 3*src[x+1])>>2;
+    }
+    dst[2*srcWidth-1]= src[srcWidth-1];
 #else
-	for(x=0; x<srcWidth; x++){
-		dst[2*x+0]=
-		dst[2*x+1]= src[x];
-	}
+    for (x=0; x<srcWidth; x++){
+        dst[2*x+0]=
+        dst[2*x+1]= src[x];
+    }
 #endif
 
 #if HAVE_MMX
-asm volatile(   EMMS" \n\t"
-        	SFENCE" \n\t"
-        	:::"memory");
+__asm__ volatile(   EMMS"       \n\t"
+                SFENCE"     \n\t"
+                :::"memory");
 #endif
 }
 
 /**
- *
- * height should be a multiple of 2 and width should be a multiple of 16 (if this is a
- * problem for anyone then tell me, and ill fix it)
- * chrominance data is only taken from every secound line others are ignored FIXME write HQ version
+ * Height should be a multiple of 2 and width should be a multiple of 16.
+ * (If this is a problem for anyone then tell me, and I will fix it.)
+ * Chrominance data is only taken from every second line, others are ignored.
+ * FIXME: Write HQ version.
  */
 static inline void RENAME(uyvytoyv12)(const uint8_t *src, uint8_t *ydst, uint8_t *udst, uint8_t *vdst,
 	long width, long height,
 	stride_t lumStride, stride_t chromStride, stride_t srcStride)
 {
-	long y;
-	const stride_t chromWidth= width>>1;
-	for(y=0; y<height; y+=2)
-	{
+    long y;
+    const x86_reg chromWidth= width>>1;
+    for (y=0; y<height; y+=2)
+    {
 #if HAVE_MMX
-		asm volatile(
-			"xorl %%eax, %%eax		\n\t"
-			"pcmpeqw %%mm7, %%mm7		\n\t"
-			"psrlw $8, %%mm7		\n\t" // FF,00,FF,00...
-			".balign 16			\n\t"
-			"1:				\n\t"
-			PREFETCH" 64(%0, %%eax, 4)	\n\t"
-			"movq (%0, %%eax, 4), %%mm0	\n\t" // UYVY UYVY(0)
-			"movq 8(%0, %%eax, 4), %%mm1	\n\t" // UYVY UYVY(4)
-			"movq %%mm0, %%mm2		\n\t" // UYVY UYVY(0)
-			"movq %%mm1, %%mm3		\n\t" // UYVY UYVY(4)
-			"pand %%mm7, %%mm0		\n\t" // U0V0 U0V0(0)
-			"pand %%mm7, %%mm1		\n\t" // U0V0 U0V0(4)
-			"psrlw $8, %%mm2		\n\t" // Y0Y0 Y0Y0(0)
-			"psrlw $8, %%mm3		\n\t" // Y0Y0 Y0Y0(4)
-			"packuswb %%mm1, %%mm0		\n\t" // UVUV UVUV(0)
-			"packuswb %%mm3, %%mm2		\n\t" // YYYY YYYY(0)
+        __asm__ volatile(
+        "xor                 %%"REG_a", %%"REG_a"   \n\t"
+        "pcmpeqw             %%mm7, %%mm7   \n\t"
+        "psrlw                  $8, %%mm7   \n\t" // FF,00,FF,00...
+        ASMALIGN(4)
+        "1:                                 \n\t"
+        PREFETCH" 64(%0, %%"REG_a", 4)          \n\t"
+        "movq       (%0, %%"REG_a", 4), %%mm0   \n\t" // UYVY UYVY(0)
+        "movq      8(%0, %%"REG_a", 4), %%mm1   \n\t" // UYVY UYVY(4)
+        "movq                %%mm0, %%mm2   \n\t" // UYVY UYVY(0)
+        "movq                %%mm1, %%mm3   \n\t" // UYVY UYVY(4)
+        "pand                %%mm7, %%mm0   \n\t" // U0V0 U0V0(0)
+        "pand                %%mm7, %%mm1   \n\t" // U0V0 U0V0(4)
+        "psrlw                  $8, %%mm2   \n\t" // Y0Y0 Y0Y0(0)
+        "psrlw                  $8, %%mm3   \n\t" // Y0Y0 Y0Y0(4)
+        "packuswb            %%mm1, %%mm0   \n\t" // UVUV UVUV(0)
+        "packuswb            %%mm3, %%mm2   \n\t" // YYYY YYYY(0)
 
-			MOVNTQ" %%mm2, (%1, %%eax, 2)	\n\t"
+        MOVNTQ"              %%mm2,  (%1, %%"REG_a", 2) \n\t"
 
-			"movq 16(%0, %%eax, 4), %%mm1	\n\t" // UYVY UYVY(8)
-			"movq 24(%0, %%eax, 4), %%mm2	\n\t" // UYVY UYVY(12)
-			"movq %%mm1, %%mm3		\n\t" // UYVY UYVY(8)
-			"movq %%mm2, %%mm4		\n\t" // UYVY UYVY(12)
-			"pand %%mm7, %%mm1		\n\t" // U0V0 U0V0(8)
-			"pand %%mm7, %%mm2		\n\t" // U0V0 U0V0(12)
-			"psrlw $8, %%mm3		\n\t" // Y0Y0 Y0Y0(8)
-			"psrlw $8, %%mm4		\n\t" // Y0Y0 Y0Y0(12)
-			"packuswb %%mm2, %%mm1		\n\t" // UVUV UVUV(8)
-			"packuswb %%mm4, %%mm3		\n\t" // YYYY YYYY(8)
+        "movq     16(%0, %%"REG_a", 4), %%mm1   \n\t" // UYVY UYVY(8)
+        "movq     24(%0, %%"REG_a", 4), %%mm2   \n\t" // UYVY UYVY(12)
+        "movq                %%mm1, %%mm3   \n\t" // UYVY UYVY(8)
+        "movq                %%mm2, %%mm4   \n\t" // UYVY UYVY(12)
+        "pand                %%mm7, %%mm1   \n\t" // U0V0 U0V0(8)
+        "pand                %%mm7, %%mm2   \n\t" // U0V0 U0V0(12)
+        "psrlw                  $8, %%mm3   \n\t" // Y0Y0 Y0Y0(8)
+        "psrlw                  $8, %%mm4   \n\t" // Y0Y0 Y0Y0(12)
+        "packuswb            %%mm2, %%mm1   \n\t" // UVUV UVUV(8)
+        "packuswb            %%mm4, %%mm3   \n\t" // YYYY YYYY(8)
 
-			MOVNTQ" %%mm3, 8(%1, %%eax, 2)	\n\t"
+        MOVNTQ"              %%mm3, 8(%1, %%"REG_a", 2) \n\t"
 
-			"movq %%mm0, %%mm2		\n\t" // UVUV UVUV(0)
-			"movq %%mm1, %%mm3		\n\t" // UVUV UVUV(8)
-			"psrlw $8, %%mm0		\n\t" // V0V0 V0V0(0)
-			"psrlw $8, %%mm1		\n\t" // V0V0 V0V0(8)
-			"pand %%mm7, %%mm2		\n\t" // U0U0 U0U0(0)
-			"pand %%mm7, %%mm3		\n\t" // U0U0 U0U0(8)
-			"packuswb %%mm1, %%mm0		\n\t" // VVVV VVVV(0)
-			"packuswb %%mm3, %%mm2		\n\t" // UUUU UUUU(0)
+        "movq                %%mm0, %%mm2   \n\t" // UVUV UVUV(0)
+        "movq                %%mm1, %%mm3   \n\t" // UVUV UVUV(8)
+        "psrlw                  $8, %%mm0   \n\t" // V0V0 V0V0(0)
+        "psrlw                  $8, %%mm1   \n\t" // V0V0 V0V0(8)
+        "pand                %%mm7, %%mm2   \n\t" // U0U0 U0U0(0)
+        "pand                %%mm7, %%mm3   \n\t" // U0U0 U0U0(8)
+        "packuswb            %%mm1, %%mm0   \n\t" // VVVV VVVV(0)
+        "packuswb            %%mm3, %%mm2   \n\t" // UUUU UUUU(0)
 
-			MOVNTQ" %%mm0, (%3, %%eax)	\n\t"
-			MOVNTQ" %%mm2, (%2, %%eax)	\n\t"
+        MOVNTQ"              %%mm0, (%3, %%"REG_a") \n\t"
+        MOVNTQ"              %%mm2, (%2, %%"REG_a") \n\t"
 
-			"addl $8, %%eax			\n\t"
-			"cmpl %4, %%eax			\n\t"
-			" jb 1b				\n\t"
-			::"r"(src), "r"(ydst), "r"(udst), "r"(vdst), "g" (chromWidth)
-			: "memory", "%eax"
-		);
+        "add                    $8, %%"REG_a"   \n\t"
+        "cmp                    %4, %%"REG_a"   \n\t"
+        " jb                    1b          \n\t"
+        ::"r"(src), "r"(ydst), "r"(udst), "r"(vdst), "g" (chromWidth)
+        : "memory", "%"REG_a
+        );
 
-		ydst += lumStride;
-		src  += srcStride;
+        ydst += lumStride;
+        src  += srcStride;
 
-		asm volatile(
-			"xorl %%eax, %%eax		\n\t"
-			".balign 16			\n\t"
-			"1:				\n\t"
-			PREFETCH" 64(%0, %%eax, 4)	\n\t"
-			"movq (%0, %%eax, 4), %%mm0	\n\t" // YUYV YUYV(0)
-			"movq 8(%0, %%eax, 4), %%mm1	\n\t" // YUYV YUYV(4)
-			"movq 16(%0, %%eax, 4), %%mm2	\n\t" // YUYV YUYV(8)
-			"movq 24(%0, %%eax, 4), %%mm3	\n\t" // YUYV YUYV(12)
-			"psrlw $8, %%mm0		\n\t" // Y0Y0 Y0Y0(0)
-			"psrlw $8, %%mm1		\n\t" // Y0Y0 Y0Y0(4)
-			"psrlw $8, %%mm2		\n\t" // Y0Y0 Y0Y0(8)
-			"psrlw $8, %%mm3		\n\t" // Y0Y0 Y0Y0(12)
-			"packuswb %%mm1, %%mm0		\n\t" // YYYY YYYY(0)
-			"packuswb %%mm3, %%mm2		\n\t" // YYYY YYYY(8)
+        __asm__ volatile(
+        "xor                 %%"REG_a", %%"REG_a"   \n\t"
+        ASMALIGN(4)
+        "1:                                 \n\t"
+        PREFETCH" 64(%0, %%"REG_a", 4)          \n\t"
+        "movq       (%0, %%"REG_a", 4), %%mm0   \n\t" // YUYV YUYV(0)
+        "movq      8(%0, %%"REG_a", 4), %%mm1   \n\t" // YUYV YUYV(4)
+        "movq     16(%0, %%"REG_a", 4), %%mm2   \n\t" // YUYV YUYV(8)
+        "movq     24(%0, %%"REG_a", 4), %%mm3   \n\t" // YUYV YUYV(12)
+        "psrlw                  $8, %%mm0   \n\t" // Y0Y0 Y0Y0(0)
+        "psrlw                  $8, %%mm1   \n\t" // Y0Y0 Y0Y0(4)
+        "psrlw                  $8, %%mm2   \n\t" // Y0Y0 Y0Y0(8)
+        "psrlw                  $8, %%mm3   \n\t" // Y0Y0 Y0Y0(12)
+        "packuswb            %%mm1, %%mm0   \n\t" // YYYY YYYY(0)
+        "packuswb            %%mm3, %%mm2   \n\t" // YYYY YYYY(8)
 
-			MOVNTQ" %%mm0, (%1, %%eax, 2)	\n\t"
-			MOVNTQ" %%mm2, 8(%1, %%eax, 2)	\n\t"
+        MOVNTQ"              %%mm0,  (%1, %%"REG_a", 2) \n\t"
+        MOVNTQ"              %%mm2, 8(%1, %%"REG_a", 2) \n\t"
 
-			"addl $8, %%eax			\n\t"
-			"cmpl %4, %%eax			\n\t"
-			" jb 1b				\n\t"
+        "add                    $8, %%"REG_a"   \n\t"
+        "cmp                    %4, %%"REG_a"   \n\t"
+        " jb                    1b          \n\t"
 
-			::"r"(src), "r"(ydst), "r"(udst), "r"(vdst), "g" (chromWidth)
-			: "memory", "%eax"
-		);
+        ::"r"(src), "r"(ydst), "r"(udst), "r"(vdst), "g" (chromWidth)
+        : "memory", "%"REG_a
+        );
 #else
-		long i;
-		for(i=0; i<chromWidth; i++)
-		{
-			udst[i] 	= src[4*i+0];
-			ydst[2*i+0] 	= src[4*i+1];
-			vdst[i] 	= src[4*i+2];
-			ydst[2*i+1] 	= src[4*i+3];
-		}
-		ydst += lumStride;
-		src  += srcStride;
+        long i;
+        for (i=0; i<chromWidth; i++)
+        {
+            udst[i]     = src[4*i+0];
+            ydst[2*i+0] = src[4*i+1];
+            vdst[i]     = src[4*i+2];
+            ydst[2*i+1] = src[4*i+3];
+        }
+        ydst += lumStride;
+        src  += srcStride;
 
-		for(i=0; i<chromWidth; i++)
-		{
-			ydst[2*i+0] 	= src[4*i+1];
-			ydst[2*i+1] 	= src[4*i+3];
-		}
+        for (i=0; i<chromWidth; i++)
+        {
+            ydst[2*i+0] = src[4*i+1];
+            ydst[2*i+1] = src[4*i+3];
+        }
 #endif
-		udst += chromStride;
-		vdst += chromStride;
-		ydst += lumStride;
-		src  += srcStride;
-	}
+        udst += chromStride;
+        vdst += chromStride;
+        ydst += lumStride;
+        src  += srcStride;
+    }
 #if HAVE_MMX
-asm volatile(   EMMS" \n\t"
-        	SFENCE" \n\t"
-        	:::"memory");
+__asm__ volatile(   EMMS"       \n\t"
+                SFENCE"     \n\t"
+                :::"memory");
 #endif
 }
 
 /**
- *
- * height should be a multiple of 2 and width should be a multiple of 2 (if this is a
- * problem for anyone then tell me, and ill fix it)
- * chrominance data is only taken from every secound line others are ignored in the C version FIXME write HQ version
+ * Height should be a multiple of 2 and width should be a multiple of 2.
+ * (If this is a problem for anyone then tell me, and I will fix it.)
+ * Chrominance data is only taken from every second line,
+ * others are ignored in the C version.
+ * FIXME: Write HQ version.
  */
 static inline void RENAME(rgb24toyv12)(const uint8_t *src, uint8_t *ydst, uint8_t *udst, uint8_t *vdst,
 	long width0, long height,
@@ -2471,73 +2483,73 @@ void RENAME(interleaveBytes)(uint8_t *src1, uint8_t *src2, uint8_t *dest,
 
 #if HAVE_MMX
 #if HAVE_SSE2
-		asm(
-			"xor %%"REG_a", %%"REG_a"	\n\t"
-			"1:				\n\t"
-			PREFETCH" 64(%1, %%"REG_a")	\n\t"
-			PREFETCH" 64(%2, %%"REG_a")	\n\t"
-			"movdqa (%1, %%"REG_a"), %%xmm0	\n\t"
-			"movdqa (%1, %%"REG_a"), %%xmm1	\n\t"
-			"movdqa (%2, %%"REG_a"), %%xmm2	\n\t"
-			"punpcklbw %%xmm2, %%xmm0	\n\t"
-			"punpckhbw %%xmm2, %%xmm1	\n\t"
-			"movntdq %%xmm0, (%0, %%"REG_a", 2)\n\t"
-			"movntdq %%xmm1, 16(%0, %%"REG_a", 2)\n\t"
-			"add $16, %%"REG_a"		\n\t"
-			"cmp %3, %%"REG_a"		\n\t"
-			" jb 1b				\n\t"
-			::"r"(dest), "r"(src1), "r"(src2), "r" (width-15)
-			: "memory", "%"REG_a""
-		);
+        __asm__(
+        "xor              %%"REG_a", %%"REG_a"  \n\t"
+        "1:                                     \n\t"
+        PREFETCH" 64(%1, %%"REG_a")             \n\t"
+        PREFETCH" 64(%2, %%"REG_a")             \n\t"
+        "movdqa     (%1, %%"REG_a"), %%xmm0     \n\t"
+        "movdqa     (%1, %%"REG_a"), %%xmm1     \n\t"
+        "movdqa     (%2, %%"REG_a"), %%xmm2     \n\t"
+        "punpcklbw           %%xmm2, %%xmm0     \n\t"
+        "punpckhbw           %%xmm2, %%xmm1     \n\t"
+        "movntdq             %%xmm0,   (%0, %%"REG_a", 2)   \n\t"
+        "movntdq             %%xmm1, 16(%0, %%"REG_a", 2)   \n\t"
+        "add                    $16, %%"REG_a"  \n\t"
+        "cmp                     %3, %%"REG_a"  \n\t"
+        " jb                     1b             \n\t"
+        ::"r"(dest), "r"(src1), "r"(src2), "r" ((x86_reg)width-15)
+        : "memory", "%"REG_a""
+        );
 #else
-		asm(
-			"xor %%"REG_a", %%"REG_a"	\n\t"
-			"1:				\n\t"
-			PREFETCH" 64(%1, %%"REG_a")	\n\t"
-			PREFETCH" 64(%2, %%"REG_a")	\n\t"
-			"movq (%1, %%"REG_a"), %%mm0	\n\t"
-			"movq 8(%1, %%"REG_a"), %%mm2	\n\t"
-			"movq %%mm0, %%mm1		\n\t"
-			"movq %%mm2, %%mm3		\n\t"
-			"movq (%2, %%"REG_a"), %%mm4	\n\t"
-			"movq 8(%2, %%"REG_a"), %%mm5	\n\t"
-			"punpcklbw %%mm4, %%mm0		\n\t"
-			"punpckhbw %%mm4, %%mm1		\n\t"
-			"punpcklbw %%mm5, %%mm2		\n\t"
-			"punpckhbw %%mm5, %%mm3		\n\t"
-			MOVNTQ" %%mm0, (%0, %%"REG_a", 2)\n\t"
-			MOVNTQ" %%mm1, 8(%0, %%"REG_a", 2)\n\t"
-			MOVNTQ" %%mm2, 16(%0, %%"REG_a", 2)\n\t"
-			MOVNTQ" %%mm3, 24(%0, %%"REG_a", 2)\n\t"
-			"add $16, %%"REG_a"		\n\t"
-			"cmp %3, %%"REG_a"		\n\t"
-			" jb 1b				\n\t"
-			::"r"(dest), "r"(src1), "r"(src2), "r" (width-15)
-			: "memory", "%"REG_a
-		);
+        __asm__(
+        "xor %%"REG_a", %%"REG_a"               \n\t"
+        "1:                                     \n\t"
+        PREFETCH" 64(%1, %%"REG_a")             \n\t"
+        PREFETCH" 64(%2, %%"REG_a")             \n\t"
+        "movq       (%1, %%"REG_a"), %%mm0      \n\t"
+        "movq      8(%1, %%"REG_a"), %%mm2      \n\t"
+        "movq                 %%mm0, %%mm1      \n\t"
+        "movq                 %%mm2, %%mm3      \n\t"
+        "movq       (%2, %%"REG_a"), %%mm4      \n\t"
+        "movq      8(%2, %%"REG_a"), %%mm5      \n\t"
+        "punpcklbw            %%mm4, %%mm0      \n\t"
+        "punpckhbw            %%mm4, %%mm1      \n\t"
+        "punpcklbw            %%mm5, %%mm2      \n\t"
+        "punpckhbw            %%mm5, %%mm3      \n\t"
+        MOVNTQ"               %%mm0,   (%0, %%"REG_a", 2)   \n\t"
+        MOVNTQ"               %%mm1,  8(%0, %%"REG_a", 2)   \n\t"
+        MOVNTQ"               %%mm2, 16(%0, %%"REG_a", 2)   \n\t"
+        MOVNTQ"               %%mm3, 24(%0, %%"REG_a", 2)   \n\t"
+        "add                    $16, %%"REG_a"  \n\t"
+        "cmp                     %3, %%"REG_a"  \n\t"
+        " jb                     1b             \n\t"
+        ::"r"(dest), "r"(src1), "r"(src2), "r" ((x86_reg)width-15)
+        : "memory", "%"REG_a
+        );
 #endif
-		for(w= (width&(~15)); w < width; w++)
-		{
-			dest[2*w+0] = src1[w];
-			dest[2*w+1] = src2[w];
-		}
+        for (w= (width&(~15)); w < width; w++)
+        {
+            dest[2*w+0] = src1[w];
+            dest[2*w+1] = src2[w];
+        }
 #else
-		for(w=0; w < width; w++)
-		{
-			dest[2*w+0] = src1[w];
-			dest[2*w+1] = src2[w];
-		}
+        for (w=0; w < width; w++)
+        {
+            dest[2*w+0] = src1[w];
+            dest[2*w+1] = src2[w];
+        }
 #endif
-		dest += dstStride;
+        dest += dstStride;
                 src1 += src1Stride;
                 src2 += src2Stride;
-	}
+    }
 #if HAVE_MMX
-	asm(
-		EMMS" \n\t"
-		SFENCE" \n\t"
-		::: "memory"
-		);
+    __asm__(
+        EMMS"       \n\t"
+        SFENCE"     \n\t"
+        ::: "memory"
+        );
 #endif
 }
 
@@ -2547,100 +2559,101 @@ static inline void RENAME(vu9_to_vu12)(const uint8_t *src1, const uint8_t *src2,
 			stride_t srcStride1, stride_t srcStride2,
 			stride_t dstStride1, stride_t dstStride2)
 {
-    long y,x,w,h;
+    x86_reg y;
+    long x,w,h;
     w=width/2; h=height/2;
 #if HAVE_MMX
-    asm volatile(
-	PREFETCH" %0\n\t"
-	PREFETCH" %1\n\t"
-	::"m"(*(src1+srcStride1)),"m"(*(src2+srcStride2)):"memory");
+    __asm__ volatile(
+    PREFETCH" %0    \n\t"
+    PREFETCH" %1    \n\t"
+    ::"m"(*(src1+srcStride1)),"m"(*(src2+srcStride2)):"memory");
 #endif
-    for(y=0;y<h;y++){
-	const uint8_t* s1=src1+srcStride1*(y>>1);
-	uint8_t* d=dst1+dstStride1*y;
-	x=0;
+    for (y=0;y<h;y++){
+    const uint8_t* s1=src1+srcStride1*(y>>1);
+    uint8_t* d=dst1+dstStride1*y;
+    x=0;
 #if HAVE_MMX
-	for(;x<w-31;x+=32)
-	{
-	    asm volatile(
-		PREFETCH" 32%1\n\t"
-	        "movq	%1, %%mm0\n\t"
-	        "movq	8%1, %%mm2\n\t"
-	        "movq	16%1, %%mm4\n\t"
-	        "movq	24%1, %%mm6\n\t"
-	        "movq	%%mm0, %%mm1\n\t"
-	        "movq	%%mm2, %%mm3\n\t"
-	        "movq	%%mm4, %%mm5\n\t"
-	        "movq	%%mm6, %%mm7\n\t"
-		"punpcklbw %%mm0, %%mm0\n\t"
-		"punpckhbw %%mm1, %%mm1\n\t"
-		"punpcklbw %%mm2, %%mm2\n\t"
-		"punpckhbw %%mm3, %%mm3\n\t"
-		"punpcklbw %%mm4, %%mm4\n\t"
-		"punpckhbw %%mm5, %%mm5\n\t"
-		"punpcklbw %%mm6, %%mm6\n\t"
-		"punpckhbw %%mm7, %%mm7\n\t"
-		MOVNTQ"	%%mm0, %0\n\t"
-		MOVNTQ"	%%mm1, 8%0\n\t"
-		MOVNTQ"	%%mm2, 16%0\n\t"
-		MOVNTQ"	%%mm3, 24%0\n\t"
-		MOVNTQ"	%%mm4, 32%0\n\t"
-		MOVNTQ"	%%mm5, 40%0\n\t"
-		MOVNTQ"	%%mm6, 48%0\n\t"
-		MOVNTQ"	%%mm7, 56%0"
-		:"=m"(d[2*x])
-		:"m"(s1[x])
-		:"memory");
-	}
-#endif
-	for(;x<w;x++) d[2*x]=d[2*x+1]=s1[x];
+    for (;x<w-31;x+=32)
+    {
+        __asm__ volatile(
+        PREFETCH"   32%1        \n\t"
+        "movq         %1, %%mm0 \n\t"
+        "movq        8%1, %%mm2 \n\t"
+        "movq       16%1, %%mm4 \n\t"
+        "movq       24%1, %%mm6 \n\t"
+        "movq      %%mm0, %%mm1 \n\t"
+        "movq      %%mm2, %%mm3 \n\t"
+        "movq      %%mm4, %%mm5 \n\t"
+        "movq      %%mm6, %%mm7 \n\t"
+        "punpcklbw %%mm0, %%mm0 \n\t"
+        "punpckhbw %%mm1, %%mm1 \n\t"
+        "punpcklbw %%mm2, %%mm2 \n\t"
+        "punpckhbw %%mm3, %%mm3 \n\t"
+        "punpcklbw %%mm4, %%mm4 \n\t"
+        "punpckhbw %%mm5, %%mm5 \n\t"
+        "punpcklbw %%mm6, %%mm6 \n\t"
+        "punpckhbw %%mm7, %%mm7 \n\t"
+        MOVNTQ"    %%mm0,   %0  \n\t"
+        MOVNTQ"    %%mm1,  8%0  \n\t"
+        MOVNTQ"    %%mm2, 16%0  \n\t"
+        MOVNTQ"    %%mm3, 24%0  \n\t"
+        MOVNTQ"    %%mm4, 32%0  \n\t"
+        MOVNTQ"    %%mm5, 40%0  \n\t"
+        MOVNTQ"    %%mm6, 48%0  \n\t"
+        MOVNTQ"    %%mm7, 56%0"
+        :"=m"(d[2*x])
+        :"m"(s1[x])
+        :"memory");
     }
-    for(y=0;y<h;y++){
-	const uint8_t* s2=src2+srcStride2*(y>>1);
-	uint8_t* d=dst2+dstStride2*y;
-	x=0;
-#if HAVE_MMX
-	for(;x<w-31;x+=32)
-	{
-	    asm volatile(
-		PREFETCH" 32%1\n\t"
-	        "movq	%1, %%mm0\n\t"
-	        "movq	8%1, %%mm2\n\t"
-	        "movq	16%1, %%mm4\n\t"
-	        "movq	24%1, %%mm6\n\t"
-	        "movq	%%mm0, %%mm1\n\t"
-	        "movq	%%mm2, %%mm3\n\t"
-	        "movq	%%mm4, %%mm5\n\t"
-	        "movq	%%mm6, %%mm7\n\t"
-		"punpcklbw %%mm0, %%mm0\n\t"
-		"punpckhbw %%mm1, %%mm1\n\t"
-		"punpcklbw %%mm2, %%mm2\n\t"
-		"punpckhbw %%mm3, %%mm3\n\t"
-		"punpcklbw %%mm4, %%mm4\n\t"
-		"punpckhbw %%mm5, %%mm5\n\t"
-		"punpcklbw %%mm6, %%mm6\n\t"
-		"punpckhbw %%mm7, %%mm7\n\t"
-		MOVNTQ"	%%mm0, %0\n\t"
-		MOVNTQ"	%%mm1, 8%0\n\t"
-		MOVNTQ"	%%mm2, 16%0\n\t"
-		MOVNTQ"	%%mm3, 24%0\n\t"
-		MOVNTQ"	%%mm4, 32%0\n\t"
-		MOVNTQ"	%%mm5, 40%0\n\t"
-		MOVNTQ"	%%mm6, 48%0\n\t"
-		MOVNTQ"	%%mm7, 56%0"
-		:"=m"(d[2*x])
-		:"m"(s2[x])
-		:"memory");
-	}
 #endif
-	for(;x<w;x++) d[2*x]=d[2*x+1]=s2[x];
+    for (;x<w;x++) d[2*x]=d[2*x+1]=s1[x];
+    }
+    for (y=0;y<h;y++){
+    const uint8_t* s2=src2+srcStride2*(y>>1);
+    uint8_t* d=dst2+dstStride2*y;
+    x=0;
+#if HAVE_MMX
+    for (;x<w-31;x+=32)
+    {
+        __asm__ volatile(
+        PREFETCH"   32%1        \n\t"
+        "movq         %1, %%mm0 \n\t"
+        "movq        8%1, %%mm2 \n\t"
+        "movq       16%1, %%mm4 \n\t"
+        "movq       24%1, %%mm6 \n\t"
+        "movq      %%mm0, %%mm1 \n\t"
+        "movq      %%mm2, %%mm3 \n\t"
+        "movq      %%mm4, %%mm5 \n\t"
+        "movq      %%mm6, %%mm7 \n\t"
+        "punpcklbw %%mm0, %%mm0 \n\t"
+        "punpckhbw %%mm1, %%mm1 \n\t"
+        "punpcklbw %%mm2, %%mm2 \n\t"
+        "punpckhbw %%mm3, %%mm3 \n\t"
+        "punpcklbw %%mm4, %%mm4 \n\t"
+        "punpckhbw %%mm5, %%mm5 \n\t"
+        "punpcklbw %%mm6, %%mm6 \n\t"
+        "punpckhbw %%mm7, %%mm7 \n\t"
+        MOVNTQ"    %%mm0,   %0  \n\t"
+        MOVNTQ"    %%mm1,  8%0  \n\t"
+        MOVNTQ"    %%mm2, 16%0  \n\t"
+        MOVNTQ"    %%mm3, 24%0  \n\t"
+        MOVNTQ"    %%mm4, 32%0  \n\t"
+        MOVNTQ"    %%mm5, 40%0  \n\t"
+        MOVNTQ"    %%mm6, 48%0  \n\t"
+        MOVNTQ"    %%mm7, 56%0"
+        :"=m"(d[2*x])
+        :"m"(s2[x])
+        :"memory");
+    }
+#endif
+    for (;x<w;x++) d[2*x]=d[2*x+1]=s2[x];
     }
 #if HAVE_MMX
-	asm(
-		EMMS" \n\t"
-		SFENCE" \n\t"
-		::: "memory"
-		);
+    __asm__(
+        EMMS"       \n\t"
+        SFENCE"     \n\t"
+        ::: "memory"
+        );
 #endif
 }
 
@@ -2650,87 +2663,88 @@ static inline void RENAME(yvu9_to_yuy2)(const uint8_t *src1, const uint8_t *src2
 			stride_t srcStride1, stride_t srcStride2,
 			stride_t srcStride3, stride_t dstStride)
 {
-    stride_t y,x,w,h;
+    x86_reg x;
+    long y,w,h;
     w=width/2; h=height;
-    for(y=0;y<h;y++){
-	const uint8_t* yp=src1+srcStride1*y;
-	const uint8_t* up=src2+srcStride2*(y>>2);
-	const uint8_t* vp=src3+srcStride3*(y>>2);
-	uint8_t* d=dst+dstStride*y;
-	x=0;
+    for (y=0;y<h;y++){
+    const uint8_t* yp=src1+srcStride1*y;
+    const uint8_t* up=src2+srcStride2*(y>>2);
+    const uint8_t* vp=src3+srcStride3*(y>>2);
+    uint8_t* d=dst+dstStride*y;
+    x=0;
 #if HAVE_MMX
-	for(;x<w-7;x+=8)
-	{
-	    asm volatile(
-		PREFETCH" 32(%1, %0)\n\t"
-		PREFETCH" 32(%2, %0)\n\t"
-		PREFETCH" 32(%3, %0)\n\t"
-		"movq	(%1, %0, 4), %%mm0\n\t"       /* Y0Y1Y2Y3Y4Y5Y6Y7 */
-		"movq	(%2, %0), %%mm1\n\t"       /* U0U1U2U3U4U5U6U7 */
-		"movq	(%3, %0), %%mm2\n\t"	     /* V0V1V2V3V4V5V6V7 */
-		"movq	%%mm0, %%mm3\n\t"    /* Y0Y1Y2Y3Y4Y5Y6Y7 */
-		"movq	%%mm1, %%mm4\n\t"    /* U0U1U2U3U4U5U6U7 */
-		"movq	%%mm2, %%mm5\n\t"    /* V0V1V2V3V4V5V6V7 */
-		"punpcklbw %%mm1, %%mm1\n\t" /* U0U0 U1U1 U2U2 U3U3 */
-		"punpcklbw %%mm2, %%mm2\n\t" /* V0V0 V1V1 V2V2 V3V3 */
-		"punpckhbw %%mm4, %%mm4\n\t" /* U4U4 U5U5 U6U6 U7U7 */
-		"punpckhbw %%mm5, %%mm5\n\t" /* V4V4 V5V5 V6V6 V7V7 */
+    for (;x<w-7;x+=8)
+    {
+        __asm__ volatile(
+        PREFETCH"   32(%1, %0)          \n\t"
+        PREFETCH"   32(%2, %0)          \n\t"
+        PREFETCH"   32(%3, %0)          \n\t"
+        "movq      (%1, %0, 4), %%mm0   \n\t" /* Y0Y1Y2Y3Y4Y5Y6Y7 */
+        "movq         (%2, %0), %%mm1   \n\t" /* U0U1U2U3U4U5U6U7 */
+        "movq         (%3, %0), %%mm2   \n\t" /* V0V1V2V3V4V5V6V7 */
+        "movq            %%mm0, %%mm3   \n\t" /* Y0Y1Y2Y3Y4Y5Y6Y7 */
+        "movq            %%mm1, %%mm4   \n\t" /* U0U1U2U3U4U5U6U7 */
+        "movq            %%mm2, %%mm5   \n\t" /* V0V1V2V3V4V5V6V7 */
+        "punpcklbw       %%mm1, %%mm1   \n\t" /* U0U0 U1U1 U2U2 U3U3 */
+        "punpcklbw       %%mm2, %%mm2   \n\t" /* V0V0 V1V1 V2V2 V3V3 */
+        "punpckhbw       %%mm4, %%mm4   \n\t" /* U4U4 U5U5 U6U6 U7U7 */
+        "punpckhbw       %%mm5, %%mm5   \n\t" /* V4V4 V5V5 V6V6 V7V7 */
 
-		"movq	%%mm1, %%mm6\n\t"
-		"punpcklbw %%mm2, %%mm1\n\t" /* U0V0 U0V0 U1V1 U1V1*/
-		"punpcklbw %%mm1, %%mm0\n\t" /* Y0U0 Y1V0 Y2U0 Y3V0*/
-		"punpckhbw %%mm1, %%mm3\n\t" /* Y4U1 Y5V1 Y6U1 Y7V1*/
-		MOVNTQ"	%%mm0, (%4, %0, 8)\n\t"
-		MOVNTQ"	%%mm3, 8(%4, %0, 8)\n\t"
+        "movq            %%mm1, %%mm6   \n\t"
+        "punpcklbw       %%mm2, %%mm1   \n\t" /* U0V0 U0V0 U1V1 U1V1*/
+        "punpcklbw       %%mm1, %%mm0   \n\t" /* Y0U0 Y1V0 Y2U0 Y3V0*/
+        "punpckhbw       %%mm1, %%mm3   \n\t" /* Y4U1 Y5V1 Y6U1 Y7V1*/
+        MOVNTQ"          %%mm0,  (%4, %0, 8)    \n\t"
+        MOVNTQ"          %%mm3, 8(%4, %0, 8)    \n\t"
 
-		"punpckhbw %%mm2, %%mm6\n\t" /* U2V2 U2V2 U3V3 U3V3*/
-		"movq	8(%1, %0, 4), %%mm0\n\t"
-		"movq	%%mm0, %%mm3\n\t"
-		"punpcklbw %%mm6, %%mm0\n\t" /* Y U2 Y V2 Y U2 Y V2*/
-		"punpckhbw %%mm6, %%mm3\n\t" /* Y U3 Y V3 Y U3 Y V3*/
-		MOVNTQ"	%%mm0, 16(%4, %0, 8)\n\t"
-		MOVNTQ"	%%mm3, 24(%4, %0, 8)\n\t"
+        "punpckhbw       %%mm2, %%mm6   \n\t" /* U2V2 U2V2 U3V3 U3V3*/
+        "movq     8(%1, %0, 4), %%mm0   \n\t"
+        "movq            %%mm0, %%mm3   \n\t"
+        "punpcklbw       %%mm6, %%mm0   \n\t" /* Y U2 Y V2 Y U2 Y V2*/
+        "punpckhbw       %%mm6, %%mm3   \n\t" /* Y U3 Y V3 Y U3 Y V3*/
+        MOVNTQ"          %%mm0, 16(%4, %0, 8)   \n\t"
+        MOVNTQ"          %%mm3, 24(%4, %0, 8)   \n\t"
 
-		"movq	%%mm4, %%mm6\n\t"
-		"movq	16(%1, %0, 4), %%mm0\n\t"
-		"movq	%%mm0, %%mm3\n\t"
-		"punpcklbw %%mm5, %%mm4\n\t"
-		"punpcklbw %%mm4, %%mm0\n\t" /* Y U4 Y V4 Y U4 Y V4*/
-		"punpckhbw %%mm4, %%mm3\n\t" /* Y U5 Y V5 Y U5 Y V5*/
-		MOVNTQ"	%%mm0, 32(%4, %0, 8)\n\t"
-		MOVNTQ"	%%mm3, 40(%4, %0, 8)\n\t"
+        "movq            %%mm4, %%mm6   \n\t"
+        "movq    16(%1, %0, 4), %%mm0   \n\t"
+        "movq            %%mm0, %%mm3   \n\t"
+        "punpcklbw       %%mm5, %%mm4   \n\t"
+        "punpcklbw       %%mm4, %%mm0   \n\t" /* Y U4 Y V4 Y U4 Y V4*/
+        "punpckhbw       %%mm4, %%mm3   \n\t" /* Y U5 Y V5 Y U5 Y V5*/
+        MOVNTQ"          %%mm0, 32(%4, %0, 8)   \n\t"
+        MOVNTQ"          %%mm3, 40(%4, %0, 8)   \n\t"
 
-		"punpckhbw %%mm5, %%mm6\n\t"
-		"movq	24(%1, %0, 4), %%mm0\n\t"
-		"movq	%%mm0, %%mm3\n\t"
-		"punpcklbw %%mm6, %%mm0\n\t" /* Y U6 Y V6 Y U6 Y V6*/
-		"punpckhbw %%mm6, %%mm3\n\t" /* Y U7 Y V7 Y U7 Y V7*/
-		MOVNTQ"	%%mm0, 48(%4, %0, 8)\n\t"
-		MOVNTQ"	%%mm3, 56(%4, %0, 8)\n\t"
+        "punpckhbw       %%mm5, %%mm6   \n\t"
+        "movq    24(%1, %0, 4), %%mm0   \n\t"
+        "movq            %%mm0, %%mm3   \n\t"
+        "punpcklbw       %%mm6, %%mm0   \n\t" /* Y U6 Y V6 Y U6 Y V6*/
+        "punpckhbw       %%mm6, %%mm3   \n\t" /* Y U7 Y V7 Y U7 Y V7*/
+        MOVNTQ"          %%mm0, 48(%4, %0, 8)   \n\t"
+        MOVNTQ"          %%mm3, 56(%4, %0, 8)   \n\t"
 
-		: "+r" (x)
-                : "r"(yp), "r" (up), "r"(vp), "r"(d)
-		:"memory");
-	}
+        : "+r" (x)
+        : "r"(yp), "r" (up), "r"(vp), "r"(d)
+        :"memory");
+    }
 #endif
-	for(; x<w; x++)
-	{
-	    const long x2= x<<2;
-	    d[8*x+0]=yp[x2];
-	    d[8*x+1]=up[x];
-	    d[8*x+2]=yp[x2+1];
-	    d[8*x+3]=vp[x];
-	    d[8*x+4]=yp[x2+2];
-	    d[8*x+5]=up[x];
-	    d[8*x+6]=yp[x2+3];
-	    d[8*x+7]=vp[x];
-	}
+    for (; x<w; x++)
+    {
+        const long x2 = x<<2;
+        d[8*x+0] = yp[x2];
+        d[8*x+1] = up[x];
+        d[8*x+2] = yp[x2+1];
+        d[8*x+3] = vp[x];
+        d[8*x+4] = yp[x2+2];
+        d[8*x+5] = up[x];
+        d[8*x+6] = yp[x2+3];
+        d[8*x+7] = vp[x];
+    }
     }
 #if HAVE_MMX
-	asm(
-		EMMS" \n\t"
-		SFENCE" \n\t"
-		::: "memory"
-		);
+    __asm__(
+        EMMS"       \n\t"
+        SFENCE"     \n\t"
+        ::: "memory"
+        );
 #endif
 }

@@ -9,7 +9,7 @@
 */
 #include "../config.h"
 #include "../libavutil/internal.h"
-#include "../mangle.h"
+
 #define real float /* ugly - but only way */
 
 static unsigned long long attribute_used __attribute__((aligned(8))) null_one = 0x0000ffff0000ffffULL;

@@ -1,33 +1,27 @@
 /*
- * yuv2rgb.c, Software YUV to RGB coverter
+ * software YUV to RGB converter
  *
- *  Copyright (C) 1999, Aaron Holtzman <aholtzma@ess.engr.uvic.ca>
- *  All Rights Reserved.
+ * Copyright (C) 2009 Konstantin Shishkov
  *
- *  Functions broken out from display_x11.c and several new modes
- *  added by Håkan Hjort <d95hjort@dtek.chalmers.se>
+ * MMX/MMX2 template stuff (needed for fast movntq support),
+ * 1,4,8bpp support and context / deglobalize stuff
+ * by Michael Niedermayer (michaelni@gmx.at)
  *
- *  15 & 16 bpp support by Franck Sicard <Franck.Sicard@solsoft.fr>
+ * This file is part of FFmpeg.
  *
- *  This file is part of mpeg2dec, a free MPEG-2 video decoder
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
  *
- *  mpeg2dec is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2, or (at your option)
- *  any later version.
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
  *
- *  mpeg2dec is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with GNU Make; see the file COPYING.  If not, write to
- *  the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
- *
- * MMX/MMX2 Template stuff from Michael Niedermayer (michaelni@gmx.at) (needed for fast movntq support)
- * 1,4,8bpp support by Michael Niedermayer (michaelni@gmx.at)
- * context / deglobalize stuff by Michael Niedermayer
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #include <stdio.h>
@@ -36,133 +30,25 @@
 #include <assert.h>
 
 #include "config.h"
-#include "../libavutil/internal.h"
-//#include "video_out.h"
 #include "rgb2rgb.h"
 #include "swscale.h"
 #include "swscale_internal.h"
-#include "../mangle.h"
+#include "../libavutil/x86_cpu.h"
+#include "../libavutil/internal.h"
 #include "ffImgfmt.h"
 
-#ifdef HAVE_MLIB
-#include "yuv2rgb_mlib.c"
-#endif
+#define DITHER1XBPP // only for MMX
 
-#define DITHER1XBPP // only for mmx
+extern const uint8_t dither_8x8_32[8][8];
+extern const uint8_t dither_8x8_73[8][8];
+extern const uint8_t dither_8x8_220[8][8];
 
-const uint8_t  __attribute__((aligned(8))) dither_2x2_4[2][8]={
-{  1,   3,   1,   3,   1,   3,   1,   3, },
-{  2,   0,   2,   0,   2,   0,   2,   0, },
-};
-
-const uint8_t  __attribute__((aligned(8))) dither_2x2_8[2][8]={
-{  6,   2,   6,   2,   6,   2,   6,   2, },
-{  0,   4,   0,   4,   0,   4,   0,   4, },
-};
-
-const uint8_t  __attribute__((aligned(8))) dither_8x8_32[8][8]={
-{ 17,   9,  23,  15,  16,   8,  22,  14, },
-{  5,  29,   3,  27,   4,  28,   2,  26, },
-{ 21,  13,  19,  11,  20,  12,  18,  10, },
-{  0,  24,   6,  30,   1,  25,   7,  31, },
-{ 16,   8,  22,  14,  17,   9,  23,  15, },
-{  4,  28,   2,  26,   5,  29,   3,  27, },
-{ 20,  12,  18,  10,  21,  13,  19,  11, },
-{  1,  25,   7,  31,   0,  24,   6,  30, },
-};
-
-#if 0
-const uint8_t  __attribute__((aligned(8))) dither_8x8_64[8][8]={
-{  0,  48,  12,  60,   3,  51,  15,  63, },
-{ 32,  16,  44,  28,  35,  19,  47,  31, },
-{  8,  56,   4,  52,  11,  59,   7,  55, },
-{ 40,  24,  36,  20,  43,  27,  39,  23, },
-{  2,  50,  14,  62,   1,  49,  13,  61, },
-{ 34,  18,  46,  30,  33,  17,  45,  29, },
-{ 10,  58,   6,  54,   9,  57,   5,  53, },
-{ 42,  26,  38,  22,  41,  25,  37,  21, },
-};
-#endif
-
-const uint8_t  __attribute__((aligned(8))) dither_8x8_73[8][8]={
-{  0,  55,  14,  68,   3,  58,  17,  72, },
-{ 37,  18,  50,  32,  40,  22,  54,  35, },
-{  9,  64,   5,  59,  13,  67,   8,  63, },
-{ 46,  27,  41,  23,  49,  31,  44,  26, },
-{  2,  57,  16,  71,   1,  56,  15,  70, },
-{ 39,  21,  52,  34,  38,  19,  51,  33, },
-{ 11,  66,   7,  62,  10,  65,   6,  60, },
-{ 48,  30,  43,  25,  47,  29,  42,  24, },
-};
-
-#if 0
-const uint8_t  __attribute__((aligned(8))) dither_8x8_128[8][8]={
-{ 68,  36,  92,  60,  66,  34,  90,  58, },
-{ 20, 116,  12, 108,  18, 114,  10, 106, },
-{ 84,  52,  76,  44,  82,  50,  74,  42, },
-{  0,  96,  24, 120,   6, 102,  30, 126, },
-{ 64,  32,  88,  56,  70,  38,  94,  62, },
-{ 16, 112,   8, 104,  22, 118,  14, 110, },
-{ 80,  48,  72,  40,  86,  54,  78,  46, },
-{  4, 100,  28, 124,   2,  98,  26, 122, },
-};
-#endif
-
-#if 1
-const uint8_t  __attribute__((aligned(8))) dither_8x8_220[8][8]={
-{117,  62, 158, 103, 113,  58, 155, 100, },
-{ 34, 199,  21, 186,  31, 196,  17, 182, },
-{144,  89, 131,  76, 141,  86, 127,  72, },
-{  0, 165,  41, 206,  10, 175,  52, 217, },
-{110,  55, 151,  96, 120,  65, 162, 107, },
-{ 28, 193,  14, 179,  38, 203,  24, 189, },
-{138,  83, 124,  69, 148,  93, 134,  79, },
-{  7, 172,  48, 213,   3, 168,  45, 210, },
-};
-#elif 1
-// tries to correct a gamma of 1.5
-const uint8_t  __attribute__((aligned(8))) dither_8x8_220[8][8]={
-{  0, 143,  18, 200,   2, 156,  25, 215, },
-{ 78,  28, 125,  64,  89,  36, 138,  74, },
-{ 10, 180,   3, 161,  16, 195,   8, 175, },
-{109,  51,  93,  38, 121,  60, 105,  47, },
-{  1, 152,  23, 210,   0, 147,  20, 205, },
-{ 85,  33, 134,  71,  81,  30, 130,  67, },
-{ 14, 190,   6, 171,  12, 185,   5, 166, },
-{117,  57, 101,  44, 113,  54,  97,  41, },
-};
-#elif 1
-// tries to correct a gamma of 2.0
-const uint8_t  __attribute__((aligned(8))) dither_8x8_220[8][8]={
-{  0, 124,   8, 193,   0, 140,  12, 213, },
-{ 55,  14, 104,  42,  66,  19, 119,  52, },
-{  3, 168,   1, 145,   6, 187,   3, 162, },
-{ 86,  31,  70,  21,  99,  39,  82,  28, },
-{  0, 134,  11, 206,   0, 129,   9, 200, },
-{ 62,  17, 114,  48,  58,  16, 109,  45, },
-{  5, 181,   2, 157,   4, 175,   1, 151, },
-{ 95,  36,  78,  26,  90,  34,  74,  24, },
-};
-#else
-// tries to correct a gamma of 2.5
-const uint8_t  __attribute__((aligned(8))) dither_8x8_220[8][8]={
-{  0, 107,   3, 187,   0, 125,   6, 212, },
-{ 39,   7,  86,  28,  49,  11, 102,  36, },
-{  1, 158,   0, 131,   3, 180,   1, 151, },
-{ 68,  19,  52,  12,  81,  25,  64,  17, },
-{  0, 119,   5, 203,   0, 113,   4, 195, },
-{ 45,   9,  96,  33,  42,   8,  91,  30, },
-{  2, 172,   1, 144,   2, 165,   0, 137, },
-{ 77,  23,  60,  15,  72,  21,  56,  14, },
-};
-#endif
-
-#if ARCH_X86_32 || ARCH_X86_64
+#if HAVE_MMX && CONFIG_GPL
 
 /* hope these constant values are cache line aligned */
-uint64_t attribute_used __attribute__((aligned(8))) mmx_00ffw = 0x00ff00ff00ff00ffULL;
-uint64_t attribute_used __attribute__((aligned(8))) mmx_redmask = 0xf8f8f8f8f8f8f8f8ULL;
-uint64_t attribute_used __attribute__((aligned(8))) mmx_grnmask = 0xfcfcfcfcfcfcfcfcULL;
+DECLARE_ASM_CONST(8, uint64_t, mmx_00ffw)   = 0x00ff00ff00ff00ffULL;
+DECLARE_ASM_CONST(8, uint64_t, mmx_redmask) = 0xf8f8f8f8f8f8f8f8ULL;
+DECLARE_ASM_CONST(8, uint64_t, mmx_grnmask) = 0xfcfcfcfcfcfcfcfcULL;
 
 uint64_t attribute_used __attribute__((aligned(8))) M24A=   0x00FF0000FF0000FFULL;
 uint64_t attribute_used __attribute__((aligned(8))) M24B=   0xFF0000FF0000FF00ULL;
@@ -175,13 +61,8 @@ volatile uint64_t attribute_used __attribute__((aligned(8))) g5Dither;
 volatile uint64_t attribute_used __attribute__((aligned(8))) g6Dither;
 volatile uint64_t attribute_used __attribute__((aligned(8))) r5Dither;
 
-uint64_t __attribute__((aligned(8))) dither4[2]={
-        0x0103010301030103LL,
-        0x0200020002000200LL,};
-
-uint64_t __attribute__((aligned(8))) dither8[2]={
-        0x0602060206020602LL,
-        0x0004000400040004LL,};
+extern const uint64_t dither4[2];
+extern const uint64_t dither8[2];
 
 #undef HAVE_MMX
 

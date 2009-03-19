@@ -11,7 +11,6 @@
 
 #include "../config.h"
 #include "../libavutil/internal.h"
-#include "../mangle.h"
 
 static unsigned long long int attribute_used __attribute__((aligned(8))) x_plus_minus_3dnow = 0x8000000000000000ULL;
 static float attribute_used plus_1f = 1.0;
