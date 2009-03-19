@@ -26,7 +26,12 @@
 #ifndef AVUTIL_INTERNAL_H
 #define AVUTIL_INTERNAL_H
 
-#define AV_GCC_VERSION_AT_LEAST(x,y) (defined(__GNUC__) && (__GNUC__ > x || __GNUC__ == x && __GNUC_MINOR__ >= y))
+#include <limits.h>
+#include <stddef.h>
+#include <assert.h>
+#include "config.h"
+#include "common.h"
+#include "mem.h"
 
 #ifndef attribute_align_arg
 #if (!defined(__ICC) || __ICC > 1100) && AV_GCC_VERSION_AT_LEAST(4,2)

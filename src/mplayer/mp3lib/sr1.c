@@ -16,6 +16,7 @@
 #include <math.h>
 
 #include "../config.h"
+#include "../libavutil/internal.h"
 
 #ifdef WIN64
   #undef HAVE_AMD3DNOW
@@ -351,7 +352,7 @@ void (*dct64_MMX_func)(short *, short *, real *);
 
 // Init decoder tables.  Call first, once!
 mp3lib_ctx* MP3_Init(int mono){
-    mp3lib_ctx *ctx=(mp3lib_ctx*)malloc(sizeof(*ctx));
+    mp3lib_ctx *ctx=(mp3lib_ctx*)av_malloc(sizeof(*ctx));
     memset(ctx,0,sizeof(*ctx));
     ctx->MP3_bps=2;
     ctx->fsizeold=0;ctx->ssize=0;
@@ -457,5 +458,5 @@ int MP3_DecodeFrame(mp3lib_ctx *ctx,const unsigned char *Isrc,unsigned int Isrcl
 
 void MP3_Done(mp3lib_ctx *ctx)
 {
- if (ctx) free(ctx);
+ if (ctx) av_free(ctx);
 }

@@ -8,6 +8,7 @@
  * - Partial loops unrolling and removing MOVW insn from loops
 */
 #include "../config.h"
+#include "../libavutil/internal.h"
 #include "../mangle.h"
 #define real float /* ugly - but only way */
 

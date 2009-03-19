@@ -3,6 +3,7 @@
 
 #include <stddef.h>
 #include "../config.h"
+#include "../libavutil/internal.h"
 
 #if defined(USE_FASTMEMCPY) && (HAVE_MMX || HAVE_MMX2 || HAVE_AMD3DNOW || HAVE_SSE || HAVE_SSE2)
 extern void* (*fast_memcpy)(void * to, const void * from, size_t len);

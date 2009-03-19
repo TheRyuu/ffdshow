@@ -1330,8 +1330,8 @@ static void test_copy(int channels) {
     int samples = 12*1024*1024;
     int samplesize = 2;
     int i;
-    unsigned char *bufin = malloc((samples+100)*samplesize);
-    unsigned char *bufout = malloc((samples+100)*samplesize);
+    unsigned char *bufin = av_malloc((samples+100)*samplesize);
+    unsigned char *bufout = av_malloc((samples+100)*samplesize);
     memset(bufin, 0xFF, samples*samplesize);
     for (i = 0;i < 100; ++i)
         reorder_channel_copy(bufin, AF_CHANNEL_LAYOUT_5_1_A,
@@ -1340,8 +1340,8 @@ static void test_copy(int channels) {
 //    reorder_channel(bufin, AF_CHANNEL_LAYOUT_5_1_B,
 //                         AF_CHANNEL_LAYOUT_5_1_D,
 //                         samples, samplesize);
-    free(bufin);
-    free(bufout);
+    av_free(bufin);
+    av_free(bufout);
 }
 
 int main(int argc, char *argv[]) {

@@ -80,6 +80,7 @@ try to unroll inner for(x=0 ... loop to avoid these damn if(x ... checks
 //#undef HAVE_MMX
 //#undef ARCH_X86
 //#define DEBUG_BRIGHTNESS
+#include "../libavutil/internal.h"
 #ifdef USE_FASTMEMCPY
 #include "fastmemcpy.h"
 #endif
@@ -94,7 +95,7 @@ try to unroll inner for(x=0 ... loop to avoid these damn if(x ... checks
 #endif
 
 #ifndef HAVE_MEMALIGN
-#define memalign(a,b) malloc(b)
+#define memalign(a,b) av_malloc(b)
 #endif
 
 #define MIN(a,b) ((a) > (b) ? (b) : (a))
@@ -439,7 +440,7 @@ static inline void horizX1Filter(uint8_t *src, stride_t stride, int QP)
 /**
  * accurate deblock filter
  */
-static always_inline void do_a_deblock_C(uint8_t *src, stride_t step, stride_t stride, PPContext *c){
+static av_always_inline void do_a_deblock_C(uint8_t *src, stride_t step, stride_t stride, PPContext *c){
 	int y;
 	const int QP= c->QP;
 	const int dcOffset= ((c->nonBQP*c->ppMode.baseDcDiff)>>8) + 1;
@@ -671,7 +672,7 @@ static inline void postProcess(uint8_t src[], stride_t srcStride, uint8_t dst[],
 }
 
 static void reallocAlign(void **p, int alignment, stride_t size){
-	if(*p) free(*p);
+	av_free(*p);
 	*p= memalign(alignment, size);
 	memset(*p, 0, size);
 }
@@ -740,21 +741,21 @@ void pp_free_context(void *vc){
 	PPContext *c = (PPContext*)vc;
 	int i;
 
-	for(i=0; i<3; i++) free(c->tempBlured[i]);
-	for(i=0; i<3; i++) free(c->tempBluredPast[i]);
+	for(i=0; i<3; i++) av_free(c->tempBlured[i]);
+	for(i=0; i<3; i++) av_free(c->tempBluredPast[i]);
 
-	free(c->tempBlocks);
-	free(c->yHistogram);
-	free(c->tempDst);
-	free(c->tempSrc);
-	free(c->deintTemp);
-	free(c->stdQPTable);
-	free(c->nonBQPTable);
-	free(c->forcedQPTable);
+	av_free(c->tempBlocks);
+	av_free(c->yHistogram);
+	av_free(c->tempDst);
+	av_free(c->tempSrc);
+	av_free(c->deintTemp);
+	av_free(c->stdQPTable);
+	av_free(c->nonBQPTable);
+	av_free(c->forcedQPTable);
 
 	memset(c, 0, sizeof(PPContext));
 
-	free(c);
+	av_free(c);
 }
 
 void  pp_postprocess(uint8_t * src[3], stride_t srcStride[3],

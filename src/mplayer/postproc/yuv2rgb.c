@@ -36,6 +36,7 @@
 #include <assert.h>
 
 #include "config.h"
+#include "../libavutil/internal.h"
 //#include "video_out.h"
 #include "rgb2rgb.h"
 #include "swscale.h"
@@ -840,7 +841,7 @@ int yuv2rgb_c_init_tables (SwsContext *c, const int inv_table[7], int fullRange,
 	c->table_bU[i] = table_b + entry_size * div_round (cbu * (i-128), 76309);
     }
 
-    if(c->yuvTable) free(c->yuvTable);
+    if(c->yuvTable) av_free(c->yuvTable);
     c->yuvTable= table_start;
     return 0;
 }

@@ -4,6 +4,7 @@
  * Applied to mplayer by Nick Kurshev <nickols_k@mail.ru>
 */
 #include "../config.h"
+#include "../libavutil/internal.h"
 #include "../mangle.h"
 
 long __attribute__((aligned(8))) mp3lib_decwins [544];
