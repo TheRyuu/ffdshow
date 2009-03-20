@@ -18,31 +18,25 @@ public:
    if (c) aligned_free(c);
    if (r) aligned_free(r);
   }
- void alloc(const CSize &sz,int div)
-  {
-   stride=(((sz.cx+1)/div)/16+2)*16;
-   size_t needed=stride*((sz.cy+1)/div);
-   if (needed>allocated)
-    {
-     c=(unsigned char*)aligned_realloc(c,needed);
-     r=(unsigned char*)aligned_realloc(r,needed);
-     allocated=needed;
-    }
-  }
+ void alloc(const CSize &sz, int div, int csp);
+ void setZero();
 };
 
 struct Tlibmplayer;
 struct TspuImage : TrenderedSubtitleWordBase
 {
 protected:
+ int csp;
  TspuPlane plane[3];
  CRect rect[3];
  class Tscaler
   {
+  protected:
+   int csp;
   public:
    int srcdx,srcdy,dstdx,dstdy;
    static Tscaler *create(const TprintPrefs &prefs,int srcdx,int srcdy,int dstdx,int dstdy);
-   Tscaler(int Isrcdx,int Isrcdy,int Idstdx,int Idstdy):srcdx(Isrcdx),srcdy(Isrcdy),dstdx(Idstdx),dstdy(Idstdy) {}
+   Tscaler(const TprintPrefs &prefs,int Isrcdx,int Isrcdy,int Idstdx,int Idstdy):srcdx(Isrcdx),srcdy(Isrcdy),dstdx(Idstdx),dstdy(Idstdy),csp(prefs.csp & FF_CSPS_MASK) {}
    virtual ~Tscaler() {}
    virtual void scale(const unsigned char *srci,const unsigned char *srca,stride_t srcStride,unsigned char *dsti,unsigned char *dsta,stride_t dstStride)=0;
   };

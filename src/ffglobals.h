@@ -74,8 +74,6 @@ typedef const TCHAR *PCTSTR;
 #define M_SQRT2	1.41421356237309504880
 #endif
 
-#define ODD2EVEN(x) x&1?x+1:x
-
 #define REF_SECOND_MULT 10000000LL
 #define REFTIME_INVALID _I64_MIN
 
@@ -203,6 +201,13 @@ inline float ff_abs(float x)
 inline double ff_abs(double x)
 {
  return (x<0) ? -x : x;
+}
+
+template<class T> inline T odd2even(T x)
+{
+    return x&1 ?
+        x + 1 :
+        x;
 }
 
 inline int ff_round(double x) {return int(x+(x>0.0?0.5:-0.5));}
@@ -460,28 +465,44 @@ struct YUVcolor
  unsigned char Y;
  char U,V;
  YUVcolor(void) {Y=U=V=0;r=g=b=0;}
- YUVcolor(COLORREF rgb,bool vob=false);
+ YUVcolor(COLORREF rgb);
 };
+
 
 struct YUVcolorA
 {
  uint32_t r,g,b;
  uint32_t Y,U,V,A;
- YUVcolorA(void) {Y=0;U=V=128;A=256;r=g=b=0;};
+
+ COLORREF m_rgb;   // duplicated data, just for convenience 0x00bbggrr
+ uint32_t m_aaa64; // duplicated data, just for convenience. DVD's contrast 0-15, this: 0-64. 0x00404040, at max
+ YUVcolorA();
  YUVcolorA(YUVcolor yuv,unsigned int alpha=256);
  YUVcolorA(COLORREF rgb,unsigned int alpha=256);
- bool operator !=(const YUVcolorA &c2) const
+ struct vobsubWeirdCsp_t {};
+ YUVcolorA(COLORREF rgb, vobsubWeirdCsp_t);
+ bool operator !=(const YUVcolorA &rt) const
   {
-    return !(r==c2.r && g==c2.g && b==c2.b && A==c2.A);
+    return !(r==rt.r && g==rt.g && b==rt.b && A==rt.A);
   }
- bool operator ==(const YUVcolorA &c2) const
+ bool operator ==(const YUVcolorA &rt) const
   {
-    return (r==c2.r && g==c2.g && b==c2.b && A==c2.A);
+    return (r==rt.r && g==rt.g && b==rt.b && A==rt.A);
   }
+ bool operator ==(const _AM_DVD_YUV &rt) const
+  {
+    return (Y==rt.Y && U==rt.U && V==rt.V && A==rt.Reserved);
+  }
+ bool operator !=(const _AM_DVD_YUV &rt) const
+  {
+    return !(Y==rt.Y && U==rt.U && V==rt.V && A==rt.Reserved);
+  }
+ YUVcolorA& operator =(const _AM_DVD_YUV &rt);
  bool isGray()
   {
    return (r==g && r==b);
   }
+ void setAlpha(uint32_t alpha);
 };
 
 enum

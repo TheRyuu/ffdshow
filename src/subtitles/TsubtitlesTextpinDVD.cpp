@@ -77,10 +77,14 @@ bool TsubtitlesTextpinDVD::ctlSubtitles(unsigned int id,const void *data,unsigne
    case AM_PROPERTY_DVDSUBPIC_PALETTE:
     {
      const AM_PROPERTY_SPPAL *pSPPAL=(const AM_PROPERTY_SPPAL*)data;
-     if (memcmp(sppal,pSPPAL->sppal,sizeof(sppal))!=0)
+     bool changed = false;
+     for (int i = 0 ; i < 16 ; i++) {
+         changed |= (sppal[i] != pSPPAL->sppal[i]);
+         sppal[i] = pSPPAL->sppal[i];
+     }
+     if (changed)
       for (Tsubreader::iterator s=subs->begin();s!=subs->end();s++)
        ((TsubtitleDVD*)*s)->changed=true;
-     memcpy(sppal,pSPPAL->sppal,sizeof(AM_PROPERTY_SPPAL));
      fsppal=true;
      DPRINTF(_l("new palette"));
      break;

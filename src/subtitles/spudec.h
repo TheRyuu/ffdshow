@@ -36,7 +36,7 @@ private:
 
  packet_t *queue_head;
  packet_t *queue_tail;
- AM_DVD_YUV global_palette[16];
+ YUVcolorA global_palette[16];
  unsigned int orig_frame_width, orig_frame_height;
  unsigned char* packet;
  size_t packet_reserve;       /* size of the memory pointed to by packet */
@@ -45,7 +45,7 @@ private:
  unsigned int packet_pts;     /* PTS for self packet */
  unsigned int palette[4];
  unsigned int alpha[4];
- AM_DVD_YUV cuspal[4];
+ YUVcolorA cuspal[4];
  unsigned int custom;
  unsigned int now_pts;
  unsigned int start_pts, end_pts;
@@ -93,7 +93,7 @@ private:
  static unsigned int get_be24(const unsigned char *p);
  int oldscale;
 public:
- Tspudec(IffdshowBase *Ideci,const AM_DVD_YUV *palette, const AM_DVD_YUV *cuspal, unsigned int custom, unsigned int frame_width, unsigned int frame_height);
+ Tspudec(IffdshowBase *Ideci,const YUVcolorA *palette, const YUVcolorA *cuspal, unsigned int custom, unsigned int frame_width, unsigned int frame_height);
  ~Tspudec();
  void spudec_heartbeat(unsigned int pts100);
  void spudec_assemble(const unsigned char *packet, unsigned int len, unsigned int pts100);
@@ -119,7 +119,6 @@ public:
     const TprintPrefs &prefs,
     unsigned char **dst,
     const stride_t *stride);
- void spudec_update_palette(unsigned int *palette);
  void spudec_free(void);
  void spudec_reset(void);       // called after seek
  int spudec_visible(void); // check if spu is visible

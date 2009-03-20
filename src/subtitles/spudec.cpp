@@ -1040,13 +1040,6 @@ nothing_to_do:
   }
 }
 
-void Tspudec::spudec_update_palette( unsigned int *palette)
-{
-  if (palette) {
-    memcpy(global_palette, palette, sizeof(global_palette));
-  }
-}
-
 void Tspudec::spudec_set_font_factor( double factor)
 {
   font_start_level = (int)(0xF0-(0xE0*factor));
@@ -1058,15 +1051,15 @@ Tspudec::Tspudec(unsigned int *palette, unsigned int frame_width, unsigned int f
 }
 */
 /* get palette custom color, width, height from .idx file */
-Tspudec::Tspudec(IffdshowBase *Ideci,const AM_DVD_YUV *palette, const AM_DVD_YUV *cuspal, unsigned int custom, unsigned int frame_width, unsigned int frame_height)
+Tspudec::Tspudec(IffdshowBase *Ideci,const YUVcolorA *palette, const YUVcolorA *cuspal, unsigned int custom, unsigned int frame_width, unsigned int frame_height)
 {
- memset(this,0,sizeof(*this));
- deci=Ideci;
- spu_aamode = 4;
- spu_alignment = -1;
- sub_pos=0;
- oldgauss=-1;
- deci->getPostproc(&libmplayer);
+    memset(this,0,sizeof(*this));
+    deci=Ideci;
+    spu_aamode = 4;
+    spu_alignment = -1;
+    sub_pos=0;
+    oldgauss=-1;
+    deci->getPostproc(&libmplayer);
     this->packet = NULL;
     this->image = NULL;
     this->scaled_imageY=this->scaled_imageUV = NULL;
@@ -1078,13 +1071,17 @@ Tspudec::Tspudec(IffdshowBase *Ideci,const AM_DVD_YUV *palette, const AM_DVD_YUV
     // set up palette:
     this->auto_palette = 1;
     if (palette){
-      memcpy(this->global_palette, palette, sizeof(this->global_palette));
-      this->auto_palette = 0;
+        for (int i = 0 ; i < countof(global_palette) ; i++) {
+            global_palette[i] = palette[i];
+        }
+        this->auto_palette = 0;
     }
     this->custom = custom;
     if (custom && cuspal) {
-      memcpy(this->cuspal, cuspal, sizeof(this->cuspal));
-      this->auto_palette = 0;
+        for (int i = 0 ; i < countof(this->cuspal) ; i++) {
+            this->cuspal[i] = cuspal[i];
+        }
+        this->auto_palette = 0;
     }
     // forced subtitles default: show all subtitles
     this->forced_subs_only=0;
