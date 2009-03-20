@@ -170,7 +170,7 @@ if (avcodec)
 HRESULT TaudioCodecLibavcodec::decode(TbyteBuffer &src0)
 {
  // Dynamic range compression for AC3/DTS formats
- if (codecId == CODEC_ID_AC3 || codecId == CODEC_ID_EAC3 || codecId == CODEC_ID_DTS || codecId == CODEC_ID_MLP)
+ if (codecId == CODEC_ID_AC3 || codecId == CODEC_ID_EAC3 || codecId == CODEC_ID_DTS || codecId == CODEC_ID_MLP || codecId == CODEC_ID_TRUEHD)
   {
    if (deci->getParam2(IDFF_audio_decoder_DRC))
     {
@@ -191,7 +191,7 @@ HRESULT TaudioCodecLibavcodec::decode(TbyteBuffer &src0)
 
  while (size > 0)
   {
-   if (codecId == CODEC_ID_MLP && size == 1)
+   if ((codecId == CODEC_ID_MLP || codecId == CODEC_ID_TRUEHD) && size == 1)
        break;  // workaround when skipping TrueHD in MPC?
    int dstLength=AVCODEC_MAX_AUDIO_FRAME_SIZE;
    void *dst=(void*)getDst(dstLength);
@@ -200,7 +200,7 @@ HRESULT TaudioCodecLibavcodec::decode(TbyteBuffer &src0)
    
    int ret=0,ret2=0;
    // Use parser if available and do not use it for MLP/TrueHD stream
-   if (parser && codecId != CODEC_ID_MLP)
+   if (parser && codecId != CODEC_ID_MLP && codecId != CODEC_ID_TRUEHD)
    {
 	   // Parse the input buffer src(size) and returned parsed data into dst2(dstLength2)
 	   ret=libavcodec->av_parser_parse(parser, avctx, (uint8_t**)&dst2, &dstLength2,

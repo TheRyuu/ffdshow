@@ -82,7 +82,7 @@ CodecID TaudioParser::parseStream(unsigned char *src, int size,
  DPRINTF(string);*/
 
  //DEBUG 2 : dump parsed stream to file
-	if (codecId==CODEC_ID_MLP)
+	if (codecId==CODEC_ID_MLP || codecId==CODEC_ID_TRUEHD)
 	{
 		if (!dumpfile)
 			dumpfile=fopen(_l("c:\\temp\\dump.thd"),_l("wb"));
@@ -100,7 +100,7 @@ CodecID TaudioParser::parseStream(unsigned char *src, int size,
 	parseDTS(src, size, newsrcBuffer);
 	return getCodecIdFromStream();
  }
- else if ((codecId==CODEC_ID_AC3 || codecId==CODEC_ID_EAC3 || codecId==CODEC_ID_MLP 
+ else if ((codecId==CODEC_ID_AC3 || codecId==CODEC_ID_EAC3 || codecId==CODEC_ID_MLP  || codecId==CODEC_ID_TRUEHD 
 	 || codecId == CODEC_ID_LIBA52 || codecId==CODEC_ID_SPDIF_AC3)
 	 && size >0)
  {

@@ -182,6 +182,7 @@ STDMETHODIMP TffdshowDecAudioInputPin::Receive(IMediaSample* pIn)
  case CODEC_ID_AC3:
  case CODEC_ID_EAC3:
  case CODEC_ID_MLP:
+ case CODEC_ID_TRUEHD:
  case CODEC_ID_LIBA52:
  case CODEC_ID_SPDIF_AC3:
  case CODEC_ID_PCM:

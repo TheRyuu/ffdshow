@@ -7635,7 +7635,7 @@ int ff_h264_decode_seq_parameter_set(H264Context *h){
                #if __STDC_VERSION__ >= 199901L
                ((const char*[]){"Gray","420","422","444"})[sps->chroma_format_idc],
                #else
-               ""
+               "",
                #endif
                sps->timing_info_present_flag ? sps->num_units_in_tick : 0,
                sps->timing_info_present_flag ? sps->time_scale : 0

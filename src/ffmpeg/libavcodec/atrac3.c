@@ -234,7 +234,7 @@ static int decode_bytes(const uint8_t* inbuffer, uint8_t* out, int bytes){
     const uint32_t* buf;
     uint32_t* obuf = (uint32_t*) out;
 
-    off = (int)((long)inbuffer & 3);
+    off = (intptr_t)inbuffer & 3;
     buf = (const uint32_t*) (inbuffer - off);
     c = be2me_32((0x537F6103 >> (off*8)) | (0x537F6103 << (32-(off*8))));
     bytes += 3 + off;
@@ -909,13 +909,13 @@ static int atrac3_decode_frame(AVCodecContext *avctx,
     if (q->channels == 1) {
         /* mono */
         for (i = 0; i<1024; i++)
-            samples[i] = av_clip_int16((int)(q->outSamples[i] + 0.5));
+            samples[i] = av_clip_int16(round(q->outSamples[i]));
         *data_size = 1024 * sizeof(int16_t);
     } else {
         /* stereo */
         for (i = 0; i < 1024; i++) {
-            samples[i*2] = av_clip_int16((int)(q->outSamples[i] + 0.5));
-            samples[i*2+1] = av_clip_int16((int)(q->outSamples[1024+i] + 0.5));
+            samples[i*2] = av_clip_int16(round(q->outSamples[i]));
+            samples[i*2+1] = av_clip_int16(round(q->outSamples[1024+i]));
         }
         *data_size = 2048 * sizeof(int16_t);
     }

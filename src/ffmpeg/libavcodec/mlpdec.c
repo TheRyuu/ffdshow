@@ -60,6 +60,8 @@ typedef struct SubStream {
     uint8_t     max_channel;
     //! The number of channels input into the rematrix stage.
     uint8_t     max_matrix_channel;
+    //! For each channel output by the matrix, the output channel to map it to
+    uint8_t     ch_assign[MAX_CHANNELS];
 
     //! The left shift applied to random noise in 0x31ea substreams.
     uint8_t     noise_shift;
@@ -78,6 +80,7 @@ typedef struct SubStream {
 #define PARAM_FIR           (1 << 3)
 #define PARAM_IIR           (1 << 2)
 #define PARAM_HUFFOFFSET    (1 << 1)
+#define PARAM_PRESENCE      (1 << 0)
     //@}
 
     //@{
@@ -110,9 +113,6 @@ typedef struct SubStream {
 
     //! Running XOR of all output samples.
     int32_t     lossless_check_data;
-
-    //! For each channel output by the matrix, the output channel to map it to.
-    uint8_t     ch_assign[MAX_CHANNELS]; /* ffdshow custom code */
 
 } SubStream;
 
@@ -285,6 +285,10 @@ static int read_major_sync(MLPDecodeContext *m, GetBitContext *gb)
 
     if (mh.num_substreams == 0)
         return -1;
+    if (m->avctx->codec_id == CODEC_ID_MLP && mh.num_substreams > 2) {
+        av_log(m->avctx, AV_LOG_ERROR, "MLP only supports up to 2 substreams.\n");
+        return -1;
+    }
     if (mh.num_substreams > MAX_SUBSTREAMS) {
         av_log(m->avctx, AV_LOG_ERROR,
                "Number of substreams %d is larger than the maximum supported "
@@ -380,7 +384,6 @@ static int read_restart_header(MLPDecodeContext *m, GetBitContext *gbp,
 
     skip_bits(gbp, 16);
 
-    /* ffdshow custom code (begin) */
     memset(s->ch_assign, 0, sizeof(s->ch_assign));
 
     for (ch = 0; ch <= s->max_matrix_channel; ch++) {
@@ -395,8 +398,7 @@ static int read_restart_header(MLPDecodeContext *m, GetBitContext *gbp,
         }
         s->ch_assign[ch_assign] = ch;
     }
-    /* ffdshow custom code (end) */
-    
+
     checksum = ff_mlp_restart_checksum(buf, get_bits_count(gbp) - start_count);
 
     if (checksum != get_bits(gbp, 8))
@@ -426,7 +428,7 @@ static int read_restart_header(MLPDecodeContext *m, GetBitContext *gbp,
     }
 
     if (substr == m->max_decoded_substream) {
-        m->avctx->channels = s->max_channel + 1;
+        m->avctx->channels = s->max_matrix_channel + 1;
     }
 
     return 0;
@@ -507,6 +509,7 @@ static int read_decoding_params(MLPDecodeContext *m, GetBitContext *gbp,
     SubStream *s = &m->substream[substr];
     unsigned int mat, ch;
 
+    if (s->param_presence_flags & PARAM_PRESENCE)
     if (get_bits1(gbp))
         s->param_presence_flags = get_bits(gbp, 8);
 
@@ -835,7 +838,7 @@ static int output_data_internal(MLPDecodeContext *m, unsigned int substr,
                                 uint8_t *data, unsigned int *data_size, int is32)
 {
     SubStream *s = &m->substream[substr];
-    unsigned int i, ch = 0;
+    unsigned int i, out_ch = 0;
     int32_t *data_32 = (int32_t*) data;
     int16_t *data_16 = (int16_t*) data;
 
@@ -843,19 +846,17 @@ static int output_data_internal(MLPDecodeContext *m, unsigned int substr,
         return -1;
 
     for (i = 0; i < s->blockpos; i++) {
-        for (ch = 0; ch <= s->max_channel; ch++) {
-            /* ffdshow custom code (begin) */
-            int mat_ch = s->ch_assign[ch];
+        for (out_ch = 0; out_ch <= s->max_matrix_channel; out_ch++) {
+            int mat_ch = s->ch_assign[out_ch];
             int32_t sample = m->sample_buffer[i][mat_ch]
-                                << s->output_shift[mat_ch];
+                          << s->output_shift[mat_ch];
             s->lossless_check_data ^= (sample & 0xffffff) << mat_ch;
-            /* ffdshow custom code (end) */
             if (is32) *data_32++ = sample << 8;
             else      *data_16++ = sample >> 8;
         }
     }
 
-    *data_size = i * ch * (is32 ? 4 : 2);
+    *data_size = i * out_ch * (is32 ? 4 : 2);
 
     return 0;
 }
@@ -1054,6 +1055,7 @@ error:
     return -1;
 }
 
+#if CONFIG_MLP_DECODER
 AVCodec mlp_decoder = {
     "mlp",
     CODEC_TYPE_AUDIO,
@@ -1068,6 +1070,25 @@ AVCodec mlp_decoder = {
     /*.flush = */NULL,
     /*.supported_framerates = */NULL,
     /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("MLP (Meridian Lossless Packing)/TrueHD"),
+    /*.long_name = */NULL_IF_CONFIG_SMALL("MLP (Meridian Lossless Packing)"),
 };
+#endif /* CONFIG_MLP_DECODER */
 
+#if CONFIG_TRUEHD_DECODER
+AVCodec truehd_decoder = {
+    "truehd",
+    CODEC_TYPE_AUDIO,
+    CODEC_ID_TRUEHD,
+    sizeof(MLPDecodeContext),
+    /*.init = */mlp_decode_init,
+    /*.encode = */NULL,
+    /*.close = */NULL,
+    /*.decode = */read_access_unit,
+    /*.capabilities = */0,
+    /*.next = */NULL,
+    /*.flush = */NULL,
+    /*.supported_framerates = */NULL,
+    /*.pix_fmts = */NULL,
+    /*.long_name = */NULL_IF_CONFIG_SMALL("TrueHD"),
+};
+#endif /* CONFIG_TRUEHD_DECODER */
