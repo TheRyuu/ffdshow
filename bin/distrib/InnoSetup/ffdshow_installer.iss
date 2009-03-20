@@ -6,7 +6,7 @@
 #define buildday   = '15'
 
 ; Build specific options
-#define localize = True
+#define localize                  = True
 
 #define include_x264              = True
 #define include_xvidcore          = True
@@ -16,25 +16,25 @@
 #define include_plugin_virtualdub = True
 #define include_plugin_dscaler    = True
 
-#define include_info_before = False
-#define include_gnu_license = False
-#define include_setup_icon  = False
+#define include_info_before       = False
+#define include_gnu_license       = False
+#define include_setup_icon        = False
 
 ; Compiler settings
-#define is64bit = False
+#define is64bit                   = False
 
-#define sse_required  = False
-#define sse2_required = False
+#define sse_required              = False
+#define sse2_required             = False
 
 ; Output settings
-#define filename_suffix = ''
-#define outputdir = '.'
+#define filename_suffix           = ''
+#define outputdir                 = '.'
 
 ; Location of binaries
-#define bindir = '..\..'
+#define bindir                    = '..\..'
 
 ; Other
-#define cpu_detection = True
+#define cpu_detection             = True
 
 ; Custom builder preferences
 #define PREF_CLSID      = False
@@ -47,46 +47,46 @@
 #define PREF_ALBAIN_x64 = False
 
 #if PREF_CLSID
-  #define filename_suffix = '_clsid'
-  #define bindir = '..\..\x86'
-  #define outputdir = '..\..\..\..\'
+  #define filename_suffix        = '_clsid'
+  #define bindir                 = '..\..\x86'
+  #define outputdir              = '..\..\..\..\'
 #elif PREF_CLSID_ICL
-  #define sse_required = True
-  #define filename_suffix = '_clsid_sse_icl10'
-  #define bindir = '..\..\x86'
-  #define outputdir = '..\..\..\..\'
+  #define sse_required           = True
+  #define filename_suffix        = '_clsid_sse_icl10'
+  #define bindir                 = '..\..\x86'
+  #define outputdir              = '..\..\..\..\'
 #elif PREF_CLSID_X64
-  #define is64bit = True
-  #define include_x264 = False
-  #define include_xvidcore = False
+  #define is64bit                = True
+  #define include_x264           = False
+  #define include_xvidcore       = False
   #define include_plugin_dscaler = False
-  #define filename_suffix = '_clsid_x64'
-  #define bindir = '..\..\x64'
-  #define outputdir = '..\..\..\..\'
+  #define filename_suffix        = '_clsid_x64'
+  #define bindir                 = '..\..\x64'
+  #define outputdir              = '..\..\..\..\'
 #elif PREF_YAMAGATA
-  #define include_xvidcore = False
-  #define filename_suffix = '_Q'
+  #define include_xvidcore       = False
+  #define filename_suffix        = '_Q'
 #elif PREF_XXL
-  #define localize = False
-  #define include_info_before = True
-  #define include_setup_icon = True
-  #define filename_suffix = '_xxl'
+  #define localize               = False
+  #define include_info_before    = True
+  #define include_setup_icon     = True
+  #define filename_suffix        = '_xxl'
 #elif PREF_XXL_X64
-  #define is64bit = True
-  #define include_x264 = False
+  #define is64bit                = True
+  #define include_x264           = False
   #define include_plugin_dscaler = False
-  #define include_info_before = True
-  #define include_setup_icon = True
-  #define filename_suffix = '_xxl_x64'
+  #define include_info_before    = True
+  #define include_setup_icon     = True
+  #define filename_suffix        = '_xxl_x64'
 #elif PREF_ALBAIN
-  #define sse_required = False
-  #define VS2008SP1 = True
-  #define filename_suffix = '_dbt'
+  #define sse_required           = False
+  #define VS2008SP1              = True
+  #define filename_suffix        = '_dbt'
 #elif PREF_ALBAIN_X64
-  #define is64bit = True
-  #define include_x264 = False
+  #define is64bit                = True
+  #define include_x264           = False
   #define include_plugin_dscaler = False
-  #define filename_suffix = '_dbt_x64'
+  #define filename_suffix        = '_dbt_x64'
 #endif
 
 ; Fail if no proper settings were chosen
@@ -95,55 +95,55 @@ There is no 64-bit version of DScaler.
 #endif
 
 [Setup]
-AllowCancelDuringInstall=no
-AllowNoIcons=yes
-AllowUNCPath=no
+AllowCancelDuringInstall        = no
+AllowNoIcons                    = yes
+AllowUNCPath                    = no
 #if is64bit
-AppId=ffdshow64
+AppId                           = ffdshow64
 #else
-AppId=ffdshow
+AppId                           = ffdshow
 #endif
-AppName=ffdshow
-AppVerName=ffdshow [rev {#= tryout_revision}] [{#= buildyear}-{#= buildmonth}-{#= buildday}]
-AppVersion=1.0
+AppName                         = ffdshow
+AppVerName                      = ffdshow [rev {#= tryout_revision}] [{#= buildyear}-{#= buildmonth}-{#= buildday}]
+AppVersion                      = 1.0
 #if is64bit
-ArchitecturesAllowed=x64
-ArchitecturesInstallIn64BitMode=x64
+ArchitecturesAllowed            = x64
+ArchitecturesInstallIn64BitMode = x64
 #endif
-Compression=lzma/ultra
-InternalCompressLevel=ultra
-SolidCompression=true
-DefaultDirName={code:GetDefaultInstallDir|}
+Compression                     = lzma/ultra
+InternalCompressLevel           = ultra
+SolidCompression                = True
+DefaultDirName                  = {code:GetDefaultInstallDir|}
 #if is64bit
-DefaultGroupName=ffdshow64
+DefaultGroupName                = ffdshow64
 #else
-DefaultGroupName=ffdshow
+DefaultGroupName                = ffdshow
 #endif
-DirExistsWarning=no
+DirExistsWarning                = no
 #if is64bit
-MinVersion=0,5.01
+MinVersion                      = 0,5.01
 #else
-MinVersion=0,5.0
+MinVersion                      = 0,5.0
 #endif
-OutputBaseFilename=ffdshow_rev{#= tryout_revision}_{#= buildyear}{#= buildmonth}{#= buildday}{#= filename_suffix}
-OutputDir={#= outputdir}
-PrivilegesRequired=admin
+OutputBaseFilename              = ffdshow_rev{#= tryout_revision}_{#= buildyear}{#= buildmonth}{#= buildday}{#= filename_suffix}
+OutputDir                       = {#= outputdir}
+PrivilegesRequired              = admin
 #if include_setup_icon
-SetupIconFile=..\modern-wizard_icon.ico
+SetupIconFile                   = ..\modern-wizard_icon.ico
 #endif
 #if localize
-ShowLanguageDialog=yes
+ShowLanguageDialog              = yes
 #else
-ShowLanguageDialog=no
+ShowLanguageDialog              = no
 #endif
-ShowTasksTreeLines=yes
-ShowUndisplayableLanguages=no
-UsePreviousTasks=no
-VersionInfoCompany=ffdshow
-VersionInfoCopyright=GNU
-VersionInfoVersion=1.0.0.{#= tryout_revision}
-WizardImageFile=MicrosoftModern01.bmp
-WizardSmallImageFile=SetupModernSmall26.bmp
+ShowTasksTreeLines              = yes
+ShowUndisplayableLanguages      = no
+UsePreviousTasks                = no
+VersionInfoCompany              = ffdshow
+VersionInfoCopyright            = GNU
+VersionInfoVersion              = 1.0.0.{#= tryout_revision}
+WizardImageFile                 = MicrosoftModern01.bmp
+WizardSmallImageFile            = SetupModernSmall26.bmp
 
 [Languages]
 #if !include_gnu_license & !include_info_before
