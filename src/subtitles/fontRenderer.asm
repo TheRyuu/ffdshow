@@ -127,6 +127,7 @@ endstruc
 ;                                                  /* 4     */ const unsigned char* dst,
 ;                                                  /* 5     */ const unsigned short* msk);
 ;
+; bitmaps (bmp, outline, shadow, msk): 0-64 are allowed (6bit plus 1).
 cglobal TtextSubtitlePrintY_mmx
 TtextSubtitlePrintY_mmx:
 

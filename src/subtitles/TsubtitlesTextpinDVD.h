@@ -24,7 +24,7 @@ public:
  virtual void addSubtitle(REFERENCE_TIME start,REFERENCE_TIME stop,const unsigned char *data,unsigned int datalen,const TsubtitlesSettings *cfg,bool utf8);
  virtual void resetSubtitles(void);
  virtual bool ctlSubtitles(unsigned int id,const void *data,unsigned int datalen);
- virtual Tsubtitle* getSubtitle(const TsubtitlesSettings *cfg,REFERENCE_TIME time,bool *forceChange=NULL);
+ virtual Tsubtitle* getSubtitle(const TsubtitlesSettings *cfg,REFERENCE_TIME rtStart,REFERENCE_TIME rtStop,bool *forceChange=NULL);
 };
 
 #endif
