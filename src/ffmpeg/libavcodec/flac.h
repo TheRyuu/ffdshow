@@ -35,6 +35,13 @@
 #define FLAC_MAX_BLOCKSIZE  65535
 
 enum {
+    FLAC_CHMODE_INDEPENDENT =  0,
+    FLAC_CHMODE_LEFT_SIDE   =  8,
+    FLAC_CHMODE_RIGHT_SIDE  =  9,
+    FLAC_CHMODE_MID_SIDE    = 10,
+};
+
+enum {
     FLAC_METADATA_TYPE_STREAMINFO = 0,
     FLAC_METADATA_TYPE_PADDING,
     FLAC_METADATA_TYPE_APPLICATION,
@@ -95,5 +102,13 @@ int ff_flac_is_extradata_valid(AVCodecContext *avctx,
  */
 void ff_flac_parse_block_header(const uint8_t *block_header,
                                 int *last, int *type, int *size);
+
+/**
+ * Calculate an estimate for the maximum frame size based on verbatim mode.
+ * @param blocksize block size, in samples
+ * @param ch number of channels
+ * @param bps bits-per-sample
+ */
+int ff_flac_get_max_frame_size(int blocksize, int ch, int bps);
 
 #endif /* AVCODEC_FLAC_H */

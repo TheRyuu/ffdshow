@@ -49,6 +49,8 @@ SRCS_C=\
       $(LAVC_DIR)/faanidct.c \
       $(LAVC_DIR)/fft.c \
       $(LAVC_DIR)/ffv1.c \
+      $(LAVC_DIR)/flac.c \
+      $(LAVC_DIR)/flacdata.c \
       $(LAVC_DIR)/flacdec.c \
       $(LAVC_DIR)/fraps.c \
       $(LAVC_DIR)/g726.c \
@@ -179,7 +181,7 @@ SRCS_C=\
       $(LAVU_DIR)/mathematics.c \
       $(LAVU_DIR)/md5.c \
       $(LAVU_DIR)/mem.c \
-      $(LAVU_DIR)/random.c \
+      $(LAVU_DIR)/random_seed.c \
       $(LAVU_DIR)/rational.c \
     \
       $(ZLIB_DIR)/adler32.c \
@@ -240,9 +242,6 @@ DEF=libavcodec.def
 NOINTRIN=1
 
 include ../makefile_c.inc
-
-OPTFLAGS+= -fno-math-errno
-#OPTFLAGS+= -fno-signed-zeros
 
 .all: $(SLIB)
 

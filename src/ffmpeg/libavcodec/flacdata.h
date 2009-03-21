@@ -1,8 +1,6 @@
-/**
- * @file timer.h
- * high precision timer, useful to profile code
- *
- * copyright (c) 2006 Michael Niedermayer <michaelni@gmx.at>
+/*
+ * FLAC data header
+ * Copyright (c) 2003 Alex Beregszaszi
  *
  * This file is part of FFmpeg.
  *
@@ -21,29 +19,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_TIMER_H
-#define AVUTIL_TIMER_H
+#ifndef AVCODEC_FLACDATA_H
+#define AVCODEC_FLACDATA_H
 
-#include <stdlib.h>
-#ifdef __GNUC__
-#include <stdint.h>
-#endif
-#include "config.h"
+#include "internal.h"
 
-#if defined(ARCH_X86)
-#define AV_READ_TIME read_time
-static inline uint64_t read_time(void)
-{
-    uint32_t a, d;
-    __asm__ volatile("rdtsc\n\t"
-                 : "=a" (a), "=d" (d));
-    return ((uint64_t)d << 32) + a;
-}
-#elif defined(HAVE_GETHRTIME)
-#define AV_READ_TIME gethrtime
-#endif
+extern const int ff_flac_sample_rate_table[16];
 
-#define START_TIMER
-#define STOP_TIMER(id) {}
+extern const int16_t ff_flac_blocksize_table[16];
 
-#endif /* AVUTIL_TIMER_H */
+#endif /* AVCODEC_FLACDATA_H */

@@ -30,7 +30,6 @@
 #endif
 #include "config.h"
 
-/*
 #if defined(ARCH_X86)
 #define AV_READ_TIME read_time
 static inline uint64_t read_time(void)
@@ -43,7 +42,6 @@ static inline uint64_t read_time(void)
 #elif defined(HAVE_GETHRTIME)
 #define AV_READ_TIME gethrtime
 #endif
-*/
 
 #define START_TIMER
 #define STOP_TIMER(id) {}

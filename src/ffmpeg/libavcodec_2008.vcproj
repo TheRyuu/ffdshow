@@ -603,6 +603,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavcodec\flac.c"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\flacdata.c"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\flacdec.c"
 				>
 			</File>
@@ -1288,6 +1296,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavcodec\flacdata.h"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\golomb.h"
 				>
 			</File>
@@ -1828,11 +1840,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\libavutil\random.c"
+				RelativePath=".\libavutil\random_seed.c"
 				>
 			</File>
 			<File
-				RelativePath=".\libavutil\random.h"
+				RelativePath=".\libavutil\random_seed.h"
 				>
 			</File>
 			<File
