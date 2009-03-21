@@ -80,7 +80,6 @@ Twinamp2dspDll::Twinamp2dspDll(const ffstring &flnm):refcount(1)
  // DSP stacker, Adapt-X and Vst host are not compatible with ffdshow currently. Maybe ffdshow's bug, but I can't help...
  if (   _strnicmp(_l("dsp_stacker.dll"),filename,16)==0
      || _strnicmp(_l("dsp_adaptx.dll"),filename,15)==0
-     || _strnicmp(_l("dsp_vst.dll"),filename,12)==0
     )
   return;
  dll=new Tdll(flnm.c_str(),NULL);
