@@ -11,7 +11,7 @@ int IsCPUID(void)
 #else
     long result;
     result= 1;
-#ifdef ARCH_X86 // GCC
+#if ARCH_X86 // GCC
     asm volatile(
         "pushf                  \n\t"
         "pop    %%edx           \n\t"
@@ -69,7 +69,7 @@ int isP4HT (void)
     if (!IsCPUID())
         return 0;
 
-#ifdef ARCH_X86 // GCC
+#if ARCH_X86 // GCC
     asm volatile(
         // get the vendor string
         "xor    %%eax, %%eax \n\t"

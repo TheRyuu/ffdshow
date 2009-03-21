@@ -295,7 +295,7 @@ HRESULT TffdshowDecVideo::GetMediaType(int iPosition, CMediaType *mtOut)
  else
   pictOut=inpin->pictIn;
  calcNewSize(pictOut);
- if (presetSettings->output->closest && !outdv) ocsps.sort(pictOut.csp);
+ if (presetSettings->output->closest && !outdv && pictOut.csp != 0) ocsps.sort(pictOut.csp);
 
  oldRect=pictOut.rectFull;
 
@@ -691,15 +691,41 @@ void TffdshowDecVideo::ConnectCompatibleFilter(void)
 	}
 
 	// Get the media type of the compatible filter and its ouput colorspace
+	
     AM_MEDIA_TYPE connectedPinMediaTypeOut;
-	outPin->ConnectionMediaType(&connectedPinMediaTypeOut);
-    BITMAPINFOHEADER biIn;
-    ExtractBIH(connectedPinMediaTypeOut,&biIn);
-    TcspInfos ocsps;
-    presetSettings->output->getOutputColorspaces(ocsps);
-    int inColorSpace = getBMPcolorspace(&biIn, ocsps);
-    inpin->pictIn.csp = inColorSpace;
-	hr = pGraphBuilder->Connect(outPin, inpin);
+
+	IEnumMediaTypes *ppEnum = NULL;
+	outPin->EnumMediaTypes(&ppEnum);
+	AM_MEDIA_TYPE *mediaTypes = (AM_MEDIA_TYPE*)alloca(sizeof(AM_MEDIA_TYPE));;
+	fetched=0;
+    bool compatibleMediaTypeFound = false;
+	while (1)
+	{
+     ppEnum->Next(1,&mediaTypes,&fetched);
+     if (!fetched) break;
+     if (inpin->CheckMediaType(&(CMediaType(mediaTypes[0]))) == S_OK)
+     {
+         compatibleMediaTypeFound=true;
+         break;
+     }
+    }
+    ppEnum->Release();
+
+    // Problem : no media type agreed between FFDShow and compatible filter. Rollback
+    if (!compatibleMediaTypeFound)
+    {
+     pGraph->Reconnect(inputConnectedPin);
+	 return;
+    }
+
+    connectedPinMediaTypeOut=mediaTypes[0];
+
+	hr = pGraphBuilder->ConnectDirect(outPin, inpin,&connectedPinMediaTypeOut);
+
+    // Update the new MediaType in the decoder and in the input pin
+    DPRINTF(_l("TffdshowDecVideo::ConnectCompatibleFilter. Connection done, new media type"));
+    CMediaType *newInputMediaTypep=new CMediaType(connectedPinMediaTypeOut);
+	inpin->SetMediaType(newInputMediaTypep);
 
 	outPin->Release();
 	pGraphBuilder->Release();	

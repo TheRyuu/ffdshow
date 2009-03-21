@@ -40,6 +40,7 @@
 #include "h263data.h"
 #include "mpeg4data.h"
 #include "mathops.h"
+#include "unary.h"
 
 //#undef NDEBUG
 //#include <assert.h>
@@ -3293,6 +3294,27 @@ void ff_mpeg4_clean_buffers(MpegEncContext *s)
 }
 
 /**
+ * finds the next resync_marker
+ * @param p pointer to buffer to scan
+ * @param end pointer to the end of the buffer
+ * @return pointer to the next resync_marker, or \p end if none was found
+ */
+const uint8_t *ff_h263_find_resync_marker(const uint8_t *restrict p, const uint8_t * restrict end)
+{
+    assert(p < end);
+
+    end-=2;
+    p++;
+    for(;p<end; p+=2){
+        if(!*p){
+            if     (!p[-1] && p[1]) return p - 1;
+            else if(!p[ 1] && p[2]) return p;
+        }
+    }
+    return end+2;
+}
+
+/**
  * decodes the group of blocks / video packet header.
  * @return bit position of the resync_marker, or <0 if none was found
  */
@@ -3884,12 +3906,50 @@ static void h263_decode_dquant(MpegEncContext *s){
     ff_set_qscale(s, s->qscale);
 }
 
+static int h263_skip_b_part(MpegEncContext *s, int cbp)
+{
+    DECLARE_ALIGNED(16, DCTELEM, dblock[64]);
+    int i, mbi;
+
+    /* we have to set s->mb_intra to zero to decode B-part of PB-frame correctly
+     * but real value should be restored in order to be used later (in OBMC condition)
+     */
+    mbi = s->mb_intra;
+    s->mb_intra = 0;
+    for (i = 0; i < 6; i++) {
+        if (h263_decode_block(s, dblock, i, cbp&32) < 0)
+            return -1;
+        cbp+=cbp;
+    }
+    s->mb_intra = mbi;
+    return 0;
+}
+
+static int h263_get_modb(GetBitContext *gb, int pb_frame, int *cbpb)
+{
+    int c, mv = 1;
+
+    if (pb_frame < 3) { // h.263 Annex G and i263 PB-frame
+        c = get_bits1(gb);
+        if (pb_frame == 2 && c)
+            mv = !get_bits1(gb);
+    } else { // h.263 Annex M improved PB-frame
+        mv = get_unary(gb, 0, 4) + 1;
+        c = mv & 1;
+        mv = !!(mv & 2);
+    }
+    if(c)
+        *cbpb = get_bits(gb, 6);
+    return mv;
+}
+
 int ff_h263_decode_mb(MpegEncContext *s,
                       DCTELEM block[6][64])
 {
     int cbpc, cbpy, i, cbp, pred_x, pred_y, mx, my, dquant;
     int16_t *mot_val;
     const int xy= s->mb_x + s->mb_y * s->mb_stride;
+    int cbpb = 0, pb_mv_count = 0;
 
     assert(!s->h263_pred);
 
@@ -3922,6 +3982,8 @@ int ff_h263_decode_mb(MpegEncContext *s,
         s->mb_intra = ((cbpc & 4) != 0);
         if (s->mb_intra) goto intra;
 
+        if(s->pb_frame && get_bits1(&s->gb))
+            pb_mv_count = h263_get_modb(&s->gb, s->pb_frame, &cbpb);
         cbpy = get_vlc2(&s->gb, cbpy_vlc.table, CBPY_VLC_BITS, 1);
 
         if(s->alt_inter_vlc==0 || (cbpc & 3)!=3)
@@ -3983,18 +4045,6 @@ int ff_h263_decode_mb(MpegEncContext *s,
                 mot_val[0] = mx;
                 mot_val[1] = my;
             }
-        }
-
-        /* decode each block */
-        for (i = 0; i < 6; i++) {
-            if (h263_decode_block(s, block[i], i, cbp&32) < 0)
-                return -1;
-            cbp+=cbp;
-        }
-
-        if(s->obmc){
-            if(s->pict_type == FF_P_TYPE && s->mb_x+1<s->mb_width && s->mb_num_left != 1)
-                preview_obmc(s);
         }
     } else if(s->pict_type==FF_B_TYPE) {
         int mb_type;
@@ -4084,13 +4134,6 @@ int ff_h263_decode_mb(MpegEncContext *s,
         }
 
         s->current_picture.mb_type[xy]= mb_type;
-
-        /* decode each block */
-        for (i = 0; i < 6; i++) {
-            if (h263_decode_block(s, block[i], i, cbp&32) < 0)
-                return -1;
-            cbp+=cbp;
-        }
     } else { /* I-Frame */
         do{
             cbpc = get_vlc2(&s->gb, intra_MCBPC_vlc.table, INTRA_MCBPC_VLC_BITS, 2);
@@ -4116,6 +4159,8 @@ intra:
         }else
             s->ac_pred = 0;
 
+        if(s->pb_frame && get_bits1(&s->gb))
+            pb_mv_count = h263_get_modb(&s->gb, s->pb_frame, &cbpb);
         cbpy = get_vlc2(&s->gb, cbpy_vlc.table, CBPY_VLC_BITS, 1);
         if(cbpy<0){
             av_log(s->avctx, AV_LOG_ERROR, "I cbpy damaged at %d %d\n", s->mb_x, s->mb_y);
@@ -4126,12 +4171,26 @@ intra:
             h263_decode_dquant(s);
         }
 
-        /* decode each block */
-        for (i = 0; i < 6; i++) {
-            if (h263_decode_block(s, block[i], i, cbp&32) < 0)
-                return -1;
-            cbp+=cbp;
-        }
+        pb_mv_count += !!s->pb_frame;
+    }
+
+    while(pb_mv_count--){
+        h263_decode_motion(s, 0, 1);
+        h263_decode_motion(s, 0, 1);
+    }
+
+    /* decode each block */
+    for (i = 0; i < 6; i++) {
+        if (h263_decode_block(s, block[i], i, cbp&32) < 0)
+            return -1;
+        cbp+=cbp;
+    }
+
+    if(s->pb_frame && h263_skip_b_part(s, cbpb) < 0)
+        return -1;
+    if(s->obmc && !s->mb_intra){
+        if(s->pict_type == FF_P_TYPE && s->mb_x+1<s->mb_width && s->mb_num_left != 1)
+            preview_obmc(s);
     }
 end:
 
@@ -5045,10 +5104,7 @@ int h263_decode_picture_header(MpegEncContext *s)
         s->obmc= get_bits1(&s->gb); /* Advanced prediction mode */
         s->unrestricted_mv = s->h263_long_vectors || s->obmc;
 
-        if (get_bits1(&s->gb) != 0) {
-            av_log(s->avctx, AV_LOG_ERROR, "H263 PB frame not supported\n");
-            return -1; /* not PB frame */
-        }
+        s->pb_frame = get_bits1(&s->gb);
         s->chroma_qscale= s->qscale = get_bits(&s->gb, 5);
         skip_bits1(&s->gb); /* Continuous Presence Multipoint mode: off */
 
@@ -5103,6 +5159,7 @@ int h263_decode_picture_header(MpegEncContext *s)
         switch(s->pict_type){
         case 0: s->pict_type= FF_I_TYPE;break;
         case 1: s->pict_type= FF_P_TYPE;break;
+        case 2: s->pict_type= FF_P_TYPE;s->pb_frame = 3;break;
         case 3: s->pict_type= FF_B_TYPE;break;
         case 7: s->pict_type= FF_I_TYPE;break; //ZYGO
         default:
@@ -5191,6 +5248,13 @@ int h263_decode_picture_header(MpegEncContext *s)
     s->mb_width = (s->width  + 15) / 16;
     s->mb_height = (s->height  + 15) / 16;
     s->mb_num = s->mb_width * s->mb_height;
+
+    if (s->pb_frame) {
+        skip_bits(&s->gb, 3); /* Temporal reference for B-pictures */
+        if (s->custom_pcf)
+            skip_bits(&s->gb, 2); //extended Temporal reference
+        skip_bits(&s->gb, 2); /* Quantization information for B-pictures */
+    }
 
     /* PEI */
     while (get_bits1(&s->gb) != 0) {
@@ -6189,16 +6253,44 @@ int intel_h263_decode_picture_header(MpegEncContext *s)
         return -1;      /* SAC: off */
     }
     s->obmc= get_bits1(&s->gb);
-    if (get_bits1(&s->gb) != 0) {
-        av_log(s->avctx, AV_LOG_ERROR, "PB frame mode no supported\n");
-        return -1;      /* PB frame mode */
-    }
+    s->pb_frame = get_bits1(&s->gb);
 
-    /* skip unknown header garbage */
-    skip_bits(&s->gb, 41);
+    if(format == 7){
+        format = get_bits(&s->gb, 3);
+        if(format == 0 || format == 7){
+            av_log(s->avctx, AV_LOG_ERROR, "Wrong Intel H263 format\n");
+            return -1;
+        }
+        if(get_bits(&s->gb, 2))
+            av_log(s->avctx, AV_LOG_ERROR, "Bad value for reserved field\n");
+        s->loop_filter = get_bits1(&s->gb);
+        if(get_bits1(&s->gb))
+            av_log(s->avctx, AV_LOG_ERROR, "Bad value for reserved field\n");
+        if(get_bits1(&s->gb))
+            s->pb_frame = 2;
+        if(get_bits(&s->gb, 5))
+            av_log(s->avctx, AV_LOG_ERROR, "Bad value for reserved field\n");
+        if(get_bits(&s->gb, 5) != 1)
+            av_log(s->avctx, AV_LOG_ERROR, "Invalid marker\n");
+    }
+    if(format == 6){
+        int ar = get_bits(&s->gb, 4);
+        skip_bits(&s->gb, 9); // display width
+        skip_bits1(&s->gb);
+        skip_bits(&s->gb, 9); // display height
+        if(ar == 15){
+            skip_bits(&s->gb, 8); // aspect ratio - width
+            skip_bits(&s->gb, 8); // aspect ratio - height
+        }
+    }
 
     s->chroma_qscale= s->qscale = get_bits(&s->gb, 5);
     skip_bits1(&s->gb); /* Continuous Presence Multipoint mode: off */
+
+    if(s->pb_frame){
+        skip_bits(&s->gb, 3); //temporal reference for B-frame
+        skip_bits(&s->gb, 2); //dbquant
+    }
 
     /* PEI */
     while (get_bits1(&s->gb) != 0) {

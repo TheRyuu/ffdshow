@@ -989,6 +989,6 @@ void a52_free (a52_state_t * state)
 //===========================================================================
 void __stdcall getVersion(char *ver,const char* *license)
 {
- strcpy(ver, VERSION", build date "__DATE__" "__TIME__" ("COMPILER COMPILER_X64")");
+ strcpy(ver, VERSION", build date "__DATE__" "__TIME__" ("COMPILER COMPILER_X64 COMPILER_INFO")");
  *license="(C) 2000-2003 Michel Lespinasse <walken@zoy.org>\n(C) 1999-2000 Aaron Holtzman <aholtzma@ess.engr.uvic.ca>\ndialog normalisation, rf mode (drc), some extended bitstream information\n2004-2005, Simone Karin Lehmann < simone at lisanet dot de >";
 }

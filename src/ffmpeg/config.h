@@ -1,13 +1,12 @@
-#if defined(__GNUC__)
+#ifdef __GNUC__
 	#define HAVE_INLINE_ASM 1
   #define HAVE_MMX 1
   #define HAVE_SSE 1
   #define HAVE_SSSE3 1
   #define HAVE_AMD3DNOW 1
   #define HAVE_AMD3DNOWEXT 1
-  #define HAVE_TEN_OPERANDS 1
-  #define ARCH_X86 1
   
+  #define ARCH_X86 1  
   #ifdef ARCH_X86_64
     #define HAVE_FAST_64BIT 1
     #define HAVE_CMOV 1
@@ -23,14 +22,14 @@
 	#define HAVE_AMD3DNOW 0
 	#define HAVE_AMD3DNOWEXT 0
 	#define ARCH_X86 0
-	#define ARCH_X86_64 0
 	#define ARCH_X86_32 0
+	#define ARCH_X86_64 0
 	#define HAVE_FAST_64BIT 0
   #define HAVE_CMOV 0
   #define HAVE_FAST_CMOV 0
-  #define HAVE_TEN_OPERANDS 0
 #endif
 
+#define HAVE_TEN_OPERANDS 1
 #define HAVE_EBP_AVAILABLE 1
 #define HAVE_EBX_AVAILABLE 1
 
@@ -152,6 +151,7 @@
 #define CONFIG_QDM2_DECODER 1
 #define CONFIG_RA_144_DECODER 1
 #define CONFIG_RA_288_DECODER 1
+#define CONFIG_TRUEHD_DECODER 1
 #define CONFIG_TRUESPEECH_DECODER 1
 #define CONFIG_TTA_DECODER 1
 #define CONFIG_VORBIS_DECODER 1

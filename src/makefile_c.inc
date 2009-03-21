@@ -50,12 +50,17 @@ endif
 
 ifeq ($(DEBUG),yes)
     CFLAGS+=-DDEBUG -D_DEBUG -g 
-    OPTFLAGS=-O2 -fomit-frame-pointer
     YASMFLAGS+=-g cv8
 else
     CFLAGS+=-DNDEBUG -UDEBUG
-    OPTFLAGS=-O3 -fomit-frame-pointer
+    OPTFLAGS=-fomit-frame-pointer
     LDFLAGS=--strip-all
+endif
+
+ifeq ($(64BIT),yes)
+    OPTFLAGS+=-O2
+else
+    OPTFLAGS+=-O3
 endif
 
 ifeq ($(64BIT),yes)
@@ -92,9 +97,9 @@ endif
 
 %.o: %.asm
 ifeq ($(64BIT),yes)
-	$(YASM) -f win64 -DWIN64 -DARCH_X86_64 -DPREFIX $(YASMFLAGS) -I$(<D)/ -o $@  $<
+	$(YASM) -f win64 -m amd64 -DWIN64 -DARCH_X86_64 -DPREFIX $(YASMFLAGS) -I$(<D)/ -o $@  $<
 else
-	$(YASM) -f win32 -DWIN32 -DARCH_X86_32 -DPREFIX $(YASMFLAGS) -I$(<D)/ -o $@  $<
+	$(YASM) -f win32 -m x86 -DWIN32 -DARCH_X86_32 -DPREFIX $(YASMFLAGS) -I$(<D)/ -o $@  $<
 endif
 
 %.res.o: %.rc

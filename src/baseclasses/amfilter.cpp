@@ -4,7 +4,7 @@
 // Desc: DirectShow base classes - implements class hierarchy for streams
 //       architecture.
 //
-// Copyright (c) 1992-2002 Microsoft Corporation.  All rights reserved.
+// Copyright (c) 1992-2001 Microsoft Corporation.  All rights reserved.
 //------------------------------------------------------------------------------
 
 
@@ -28,8 +28,6 @@
 //=====================================================================
 
 #include "stdafx.h"
-
-
 
 //=====================================================================
 // Helpers
@@ -497,6 +495,9 @@ CBaseFilter::Stop()
         for (int c = 0; c < cPins; c++) {
 
             CBasePin *pPin = GetPin(c);
+            if (NULL == pPin) {
+                break;
+            }
 
             // Disconnected pins are not activated - this saves pins worrying
             // about this state themselves. We ignore the return code to make
@@ -533,6 +534,9 @@ CBaseFilter::Pause()
         for (int c = 0; c < cPins; c++) {
 
             CBasePin *pPin = GetPin(c);
+            if (NULL == pPin) {
+                break;
+            }
 
             // Disconnected pins are not activated - this saves pins
             // worrying about this state themselves
@@ -582,6 +586,9 @@ CBaseFilter::Run(REFERENCE_TIME tStart)
         for (int c = 0; c < cPins; c++) {
 
             CBasePin *pPin = GetPin(c);
+            if (NULL == pPin) {
+                break;
+            }
 
             // Disconnected pins are not activated - this saves pins
             // worrying about this state themselves
@@ -660,7 +667,9 @@ CBaseFilter::FindPin(
     int iCount = GetPinCount();
     for (int i = 0; i < iCount; i++) {
         CBasePin *pPin = GetPin(i);
-        ASSERT(pPin != NULL);
+        if (NULL == pPin) {
+            break;
+        }
 
         if (0 == lstrcmpW(pPin->Name(), Id)) {
             //  Found one that matches
@@ -733,8 +742,7 @@ CBaseFilter::JoinFilterGraph(
         if (m_pName) {
             CopyMemory(m_pName, pName, nameLen*sizeof(WCHAR));
         } else {
-            // !!! error here?
-            ASSERT(FALSE);
+            return E_OUTOFMEMORY;
         }
     }
 
@@ -1021,8 +1029,7 @@ CEnumPins::Clone(IEnumPins **ppEnum)
         *ppEnum = NULL;
         hr =  VFW_E_ENUM_OUT_OF_SYNC;
     } else {
-
-        *ppEnum = new CEnumPins(m_pFilter,
+        *ppEnum = new CEnumPins(m_pFilter, 
                                 this);
         if (*ppEnum == NULL) {
             hr = E_OUTOFMEMORY;
@@ -1056,17 +1063,10 @@ CEnumPins::Next(ULONG cPins,        // place this many pins...
 
     /* Check we are still in sync with the filter */
     if (AreWeOutOfSync() == TRUE) {
-    // If we are out of sync, we should refresh the enumerator.
-    // This will reset the position and update the other members, but
-    // will not clear cache of pins we have already returned.
-    Refresh();
-    }
-
-    /* Calculate the number of available pins */
-
-    int cRealPins = std::min(m_PinCount - m_Position, (int) cPins);
-    if (cRealPins == 0) {
-        return S_FALSE;
+        // If we are out of sync, we should refresh the enumerator.
+        // This will reset the position and update the other members, but
+        // will not clear cache of pins we have already returned.
+        Refresh();
     }
 
     /* Return each pin interface NOTE GetPin returns CBasePin * not addrefed
@@ -1076,7 +1076,7 @@ CEnumPins::Next(ULONG cPins,        // place this many pins...
        (for example someone has deleted a pin) so we
        return VFW_E_ENUM_OUT_OF_SYNC                            */
 
-    while (cRealPins && (m_PinCount - m_Position)) {
+    while (cFetched < cPins && m_PinCount > m_Position) {
 
         /* Get the next pin object from the filter */
 
@@ -1101,9 +1101,6 @@ CEnumPins::Next(ULONG cPins,        // place this many pins...
             ppPins++;
 
             m_PinCache.AddTail(pPin);
-
-            cRealPins--;
-
         }
     }
 
@@ -1440,7 +1437,7 @@ CEnumMediaTypes::Reset()
 
 /* Constructor */
 
-static const LONGLONG MAX_TIME = 0x7FFFFFFFFFFFFFFFLL;   /* Maximum LONGLONG value */
+static const LONGLONG MAX_TIME = 0x7FFFFFFFFFFFFFFFLL;   /* Maximum LONGLONG value ffdshow custom*/
 
 CBasePin::CBasePin(const TCHAR *pObjectName,
            CBaseFilter *pFilter,
@@ -1825,8 +1822,9 @@ HRESULT CBasePin::TryMediaTypes(
 
         // check that this matches the partial type (if any)
 
-        if ((pmt == NULL) ||
-            pMediaType->MatchesPartial(pmt)) {
+        if (pMediaType &&
+            ((pmt == NULL) ||
+            pMediaType->MatchesPartial(pmt))) {
 
             hr = AttemptConnection(pReceivePin, pMediaType);
 
@@ -1842,7 +1840,10 @@ HRESULT CBasePin::TryMediaTypes(
             hr = VFW_E_NO_ACCEPTABLE_TYPES;
         }
 
-        DeleteMediaType(pMediaType);
+        if(pMediaType) {
+            DeleteMediaType(pMediaType);
+            pMediaType = NULL;
+        }
 
         if (S_OK == hr) {
             return hr;
@@ -1976,8 +1977,8 @@ CBasePin::BreakConnect()
 
 STDMETHODIMP
 CBasePin::ReceiveConnection(
-    IPin * pConnector,      // this is the pin who we will connect to
-    const AM_MEDIA_TYPE *pmt    // this is the media type we will exchange
+    IPin * pConnector,   // this is the pin who we will connect to
+    const AM_MEDIA_TYPE *pmt  // this is the media type we will exchange
 )
 {
     CheckPointer(pConnector,E_POINTER);
@@ -2971,6 +2972,9 @@ CBaseInputPin::ReceiveCanBlock()
     int cOutputPins = 0;
     for (int c = 0; c < cPins; c++) {
         CBasePin *pPin = m_pFilter->GetPin(c);
+        if (NULL == pPin) {
+            break;
+        }
         PIN_DIRECTION pd;
         HRESULT hr = pPin->QueryDirection(&pd);
         if (FAILED(hr)) {
@@ -3018,8 +3022,6 @@ CBaseInputPin::BeginFlush(void)
 
     // if we are already in mid-flush, this is probably a mistake
     // though not harmful - try to pick it up for now so I can think about it
-    if(m_bFlushing)
-     return S_OK;
     ASSERT(!m_bFlushing);
 
     // first thing to do is ensure that no further Receive calls succeed
@@ -3043,8 +3045,6 @@ CBaseInputPin::EndFlush(void)
     CAutoLock lck(m_pLock);
 
     // almost certainly a mistake if we are not in mid-flush
-    if(!m_bFlushing)
-     return S_OK;
     ASSERT(m_bFlushing);
 
     // before calling, sync with pushing thread and ensure
@@ -3188,6 +3188,11 @@ CMediaSample::CMediaSample(TCHAR *pName,
        CBaseAllocator BUT we do not hold a reference count on it */
 
     ASSERT(pAllocator);
+
+    if (length < 0) {
+        *phr = VFW_E_BUFFER_OVERFLOW;
+        m_cbBuffer = 0;
+    }
 }
 
 #ifdef UNICODE
@@ -3234,6 +3239,7 @@ CMediaSample::QueryInterface(REFIID riid, void **ppv)
         riid == IID_IUnknown) {
         return GetInterface((IMediaSample *) this, ppv);
     } else {
+        *ppv = NULL;
         return E_NOINTERFACE;
     }
 }
@@ -3304,6 +3310,9 @@ CMediaSample::Release()
 HRESULT
 CMediaSample::SetPointer(BYTE * ptr, LONG cBytes)
 {
+    if (cBytes < 0) {
+        return VFW_E_BUFFER_OVERFLOW;
+    }
     m_pBuffer = ptr;            // new buffer area (could be null)
     m_cbBuffer = cBytes;        // length of buffer
     m_lActual = cBytes;         // length of data in buffer (assume full)
@@ -3425,6 +3434,9 @@ CMediaSample::SetMediaTime(
         ASSERT(pTimeEnd == NULL);
         m_dwFlags &= ~Sample_MediaTimeValid;
     } else {
+        if (NULL == pTimeEnd) {
+            return E_POINTER;
+        }
         ValidateReadPtr(pTimeStart,sizeof(LONGLONG));
         ValidateReadPtr(pTimeEnd,sizeof(LONGLONG));
         ASSERT(*pTimeEnd >= *pTimeStart);
@@ -3518,7 +3530,7 @@ CMediaSample::GetActualDataLength(void)
 STDMETHODIMP
 CMediaSample::SetActualDataLength(LONG lActual)
 {
-    if (lActual > m_cbBuffer) {
+    if (lActual > m_cbBuffer || lActual < 0) {
         ASSERT(lActual <= GetSize());
         return VFW_E_BUFFER_OVERFLOW;
     }
@@ -3599,7 +3611,7 @@ STDMETHODIMP CMediaSample::GetProperties(
         CheckPointer(pbProperties, E_POINTER);
         //  Return generic stuff up to the length
         AM_SAMPLE2_PROPERTIES Props;
-        Props.cbData     = (DWORD) (std::min(cbProperties,(DWORD)sizeof(Props)));
+        Props.cbData     = (DWORD) (std::min(cbProperties,(DWORD)sizeof(Props))); /*ffdshow custom*/
         Props.dwSampleFlags = m_dwFlags & ~Sample_MediaTimeValid;
         Props.dwTypeSpecificFlags = m_dwTypeSpecificFlags;
         Props.pbBuffer   = m_pBuffer;
@@ -4826,7 +4838,14 @@ CBaseAllocator::Decommit()
 
         // Tell anyone waiting that they can go now so we can
         // reject their call
+#pragma warning(push)
+#ifndef _PREFAST_
+#pragma warning(disable:4068)
+#endif
+#pragma prefast(suppress:__WARNING_DEREF_NULL_PTR, "Suppress warning related to Free() invalidating 'this' which is no applicable to CBaseAllocator::Free()")
         NotifySample();
+
+#pragma warning(pop)
     }
 
     if (bRelease) {
@@ -5011,12 +5030,27 @@ CMemAllocator::Alloc(void)
         ReallyFree();
     }
 
+    /* Make sure we've got reasonable values */
+    if ( m_lSize < 0 || m_lPrefix < 0 || m_lCount < 0 ) {
+        return E_OUTOFMEMORY;
+    }
+
     /* Compute the aligned size */
     LONG lAlignedSize = m_lSize + m_lPrefix;
+
+    /*  Check overflow */
+    if (lAlignedSize < m_lSize) {
+        return E_OUTOFMEMORY;
+    }
+
     if (m_lAlignment > 1) {
         LONG lRemainder = lAlignedSize % m_lAlignment;
         if (lRemainder != 0) {
-            lAlignedSize += (m_lAlignment - lRemainder);
+            LONG lNewSize = lAlignedSize + m_lAlignment - lRemainder;
+            if (lNewSize < lAlignedSize) {
+                return E_OUTOFMEMORY;
+            }
+            lAlignedSize = lNewSize;
         }
     }
 
@@ -5025,8 +5059,15 @@ CMemAllocator::Alloc(void)
     */
     ASSERT(lAlignedSize % m_lAlignment == 0);
 
+    LONGLONG lToAllocate = m_lCount * (LONGLONG)lAlignedSize;
+
+    /*  Check overflow */
+    if (lToAllocate > MAXLONG) {
+        return E_OUTOFMEMORY;
+    }
+
     m_pBuffer = (PBYTE)VirtualAlloc(NULL,
-                    m_lCount * lAlignedSize,
+                    (LONG)lToAllocate,
                     MEM_COMMIT,
                     PAGE_READWRITE);
 
@@ -5203,4 +5244,3 @@ AMovieSetupRegisterFilter( const AMOVIESETUP_FILTER * const psetupdata
 
 //  Remove warnings about unreferenced inline functions
 #pragma warning(disable:4514)
-

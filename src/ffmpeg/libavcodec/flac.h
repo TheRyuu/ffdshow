@@ -20,7 +20,7 @@
  */
 
 /**
- * @file flac.h
+ * @file libavcodec/flac.h
  * FLAC (Free Lossless Audio Codec) decoder/demuxer common functions
  */
 
@@ -30,6 +30,9 @@
 #include "avcodec.h"
 
 #define FLAC_STREAMINFO_SIZE 34
+#define FLAC_MAX_CHANNELS       8
+#define FLAC_MIN_BLOCKSIZE     16
+#define FLAC_MAX_BLOCKSIZE  65535
 
 enum {
     FLAC_METADATA_TYPE_STREAMINFO = 0,
@@ -42,12 +45,16 @@ enum {
     FLAC_METADATA_TYPE_INVALID = 127
 };
 
+enum FLACExtradataFormat {
+    FLAC_EXTRADATA_FORMAT_STREAMINFO  = 0,
+    FLAC_EXTRADATA_FORMAT_FULL_HEADER = 1
+};
+
 /**
  * Data needed from the Streaminfo header for use by the raw FLAC demuxer
  * and/or the FLAC decoder.
  */
 #define FLACSTREAMINFO \
-    int min_blocksize;      /**< minimum block size, in samples          */\
     int max_blocksize;      /**< maximum block size, in samples          */\
     int max_framesize;      /**< maximum frame size, in bytes            */\
     int samplerate;         /**< sample rate                             */\
@@ -67,5 +74,26 @@ typedef struct FLACStreaminfo {
  */
 void ff_flac_parse_streaminfo(AVCodecContext *avctx, struct FLACStreaminfo *s,
                               const uint8_t *buffer);
+
+/**
+ * Validate the FLAC extradata.
+ * @param[in]  avctx codec context containing the extradata.
+ * @param[out] format extradata format.
+ * @param[out] streaminfo_start pointer to start of 34-byte STREAMINFO data.
+ * @return 1 if valid, 0 if not valid.
+ */
+int ff_flac_is_extradata_valid(AVCodecContext *avctx,
+                               enum FLACExtradataFormat *format,
+                               uint8_t **streaminfo_start);
+
+/**
+ * Parse the metadata block parameters from the header.
+ * @param[in]  block_header header data, at least 4 bytes
+ * @param[out] last indicator for last metadata block
+ * @param[out] type metadata block type
+ * @param[out] size metadata block size
+ */
+void ff_flac_parse_block_header(const uint8_t *block_header,
+                                int *last, int *type, int *size);
 
 #endif /* AVCODEC_FLAC_H */

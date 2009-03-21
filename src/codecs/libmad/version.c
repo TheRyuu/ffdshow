@@ -92,6 +92,6 @@ char const mad_build[] = ""
 #include <string.h>
 void __stdcall getVersion(char *ver,const char* *license)
 {
- strcpy(ver, MAD_VERSION", build date "__DATE__" "__TIME__" ("COMPILER COMPILER_X64")");
+ strcpy(ver, MAD_VERSION", build date "__DATE__" "__TIME__" ("COMPILER COMPILER_X64 COMPILER_INFO")");
  *license="(C) 2000-2004 Underbit Technologies, Inc.";
 }

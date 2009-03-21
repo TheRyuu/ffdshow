@@ -12,6 +12,6 @@
 
 void __stdcall getVersion(char *ver,const char* *license)
 {
- strcpy(ver, X264_BUILD", build date "__DATE__" "__TIME__" ("COMPILER COMPILER_X64")");
+ strcpy(ver, X264_BUILD", build date "__DATE__" "__TIME__" ("COMPILER COMPILER_X64 COMPILER_INFO")");
  *license="";
 }

@@ -25,6 +25,7 @@
  * H.263 decoder.
  */
 
+#include "internal.h"
 #include "avcodec.h"
 #include "dsputil.h"
 #include "mpegvideo.h"
@@ -51,7 +52,7 @@ av_cold int ff_h263_decode_init(AVCodecContext *avctx)
     s->quant_precision=5;
     s->decode_mb= ff_h263_decode_mb;
     s->low_delay= 1;
-    avctx->pix_fmt= PIX_FMT_YUV420P;
+    avctx->pix_fmt= PIX_FMT_YUV420P; /* ffdshow custom code */
     s->unrestricted_mv= 1;
 
     /* select sub codec */

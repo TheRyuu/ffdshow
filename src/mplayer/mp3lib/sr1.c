@@ -16,10 +16,11 @@
 #include <math.h>
 
 #include "../config.h"
+#include "../libavutil/internal.h"
 
 #ifdef WIN64
-  #undef HAVE_3DNOW
-  #undef HAVE_3DNOWEX
+  #undef HAVE_AMD3DNOW
+  #undef HAVE_AMD3DNOWEX
   #undef HAVE_MMX
   #undef HAVE_MMX2
   #undef HAVE_SSE
@@ -32,7 +33,7 @@
 #include "mpg123.h"
 #include "huffman.h"
 #include "inttypes.h"
-#include "../bswap.h"
+#include "../libavutil/bswap.h"
 #include "../cpudetect.h"
 #include "../mp_msg.h"
 
@@ -87,7 +88,7 @@ LOCAL unsigned int getbits_fast(mp3lib_ctx *ctx,int number_of_bits)
 //  if(MP3_frames>=7741) printf("getbits_fast: bits=%d  bitsleft=%d  wordptr=%x\n",number_of_bits,bitsleft,wordpointer);
   if((ctx->bitsleft-=number_of_bits)<0) return 0;
   if(!number_of_bits) return 0;
-#ifdef ARCH_X86
+#if ARCH_X86
   rval = bswap_16(*((uint16_t *)ctx->wordpointer));
 #else
   /*
@@ -130,7 +131,7 @@ LOCAL void set_pointer(mp3lib_ctx *ctx,int backstep)
 
 LOCAL int stream_head_read(mp3lib_ctx *ctx,unsigned char *hbuf,uint32_t *newhead){
   if(mp3_read(ctx,hbuf,4) != 4) return FALSE;
-#ifdef ARCH_X86
+#if ARCH_X86
   *newhead = bswap_32(*((uint32_t*)hbuf));
 #else
   /*
@@ -339,7 +340,7 @@ static int _has_mmx = 0;  // used by layer2.c, layer3.c to pre-scale coeffs
 /******************************************************************************/
 
 /* It's hidden from gcc in assembler */
-#ifdef ARCH_X86
+#if ARCH_X86
 extern void dct64_MMX(short *, short *, real *);
 extern void dct64_MMX_3dnow(short *, short *, real *);
 extern void dct64_MMX_3dnowex(short *, short *, real *);
@@ -351,7 +352,7 @@ void (*dct64_MMX_func)(short *, short *, real *);
 
 // Init decoder tables.  Call first, once!
 mp3lib_ctx* MP3_Init(int mono){
-    mp3lib_ctx *ctx=(mp3lib_ctx*)malloc(sizeof(*ctx));
+    mp3lib_ctx *ctx=(mp3lib_ctx*)av_malloc(sizeof(*ctx));
     memset(ctx,0,sizeof(*ctx));
     ctx->MP3_bps=2;
     ctx->fsizeold=0;ctx->ssize=0;
@@ -366,7 +367,7 @@ mp3lib_ctx* MP3_Init(int mono){
 
     make_decode_tables(outscale);
 
-#ifdef ARCH_X86
+#if ARCH_X86
 
     if (gCpuCaps.hasMMX)
     {
@@ -457,5 +458,5 @@ int MP3_DecodeFrame(mp3lib_ctx *ctx,const unsigned char *Isrc,unsigned int Isrcl
 
 void MP3_Done(mp3lib_ctx *ctx)
 {
- if (ctx) free(ctx);
+ if (ctx) av_free(ctx);
 }

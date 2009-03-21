@@ -358,6 +358,6 @@ int vorbis_synthesis_headerin(vorbis_info *vi,vorbis_comment *vc,ogg_packet *op)
 //===========================================================================
 void __stdcall getVersion(char *ver,const char* *license)
 {
- strcpy(ver, "1.2.0, build date "__DATE__" "__TIME__" ("COMPILER COMPILER_X64")");
+ strcpy(ver, "1.2.0, build date "__DATE__" "__TIME__" ("COMPILER COMPILER_X64 COMPILER_INFO")");
  *license="(C) 1994-2007 Xiph.Org FOUNDATION http://www.xiph.org/";
 }

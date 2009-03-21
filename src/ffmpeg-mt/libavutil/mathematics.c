@@ -20,9 +20,11 @@
 
 /**
  * @file mathematics.c
- * Miscellaneous math routines and tables.
+ * miscellaneous math routines and tables
  */
 
+#include <assert.h>
+#include "avutil.h"
 #include "common.h"
 #include "mathematics.h"
 

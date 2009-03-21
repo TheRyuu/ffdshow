@@ -1,25 +1,31 @@
 /*
-    Copyright (C) 2001-2003 Michael Niedermayer <michaelni@gmx.at>
-
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
-*/
-
+ * Copyright (C) 2001-2003 Michael Niedermayer <michaelni@gmx.at>
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ *
+ * The C code (not assembly, MMX, ...) of this file can be used
+ * under the LGPL license.
+ */
+ 
 /*
-    Modified to support multi-thread related features
-    by Haruhiko Yamagata <h.yamagata@nifty.com> in 2006.
-*/
+ * Modified to support multi-thread related features
+ * by Haruhiko Yamagata <h.yamagata@nifty.com> in 2006.
+ */
+
 #include "asmalign.h"
 
 #undef REAL_MOVNTQ
@@ -30,17 +36,17 @@
 #undef EMMS
 #undef SFENCE
 
-#ifdef HAVE_3DNOW
+#if HAVE_AMD3DNOW
 /* On K6 femms is faster than emms. On K7 femms is directly mapped to emms. */
 #define EMMS     "femms"
 #else
 #define EMMS     "emms"
 #endif
 
-#ifdef HAVE_3DNOW
+#if HAVE_AMD3DNOW
 #define PREFETCH  "prefetch"
 #define PREFETCHW "prefetchw"
-#elif defined ( HAVE_MMX2 )
+#elif HAVE_MMX2
 #define PREFETCH "prefetchnta"
 #define PREFETCHW "prefetcht0"
 #else
@@ -48,19 +54,19 @@
 #define PREFETCHW " # nop"
 #endif
 
-#ifdef HAVE_MMX2
+#if HAVE_MMX2
 #define SFENCE "sfence"
 #else
 #define SFENCE " # nop"
 #endif
 
-#ifdef HAVE_MMX2
+#if HAVE_MMX2
 #define PAVGB(a,b) "pavgb " #a ", " #b " \n\t"
-#elif defined (HAVE_3DNOW)
+#elif HAVE_AMD3DNOW
 #define PAVGB(a,b) "pavgusb " #a ", " #b " \n\t"
 #endif
 
-#ifdef HAVE_MMX2
+#if HAVE_MMX2
 #define REAL_MOVNTQ(a,b) "movntq " #a ", " #b " \n\t"
 #else
 #define REAL_MOVNTQ(a,b) "movq " #a ", " #b " \n\t"
@@ -848,7 +854,7 @@
 			"cmp "#dstw", "#index"		\n\t"\
 			" jb 1b				\n\t"
 
-#ifdef HAVE_MMX2
+#if HAVE_MMX2
 #undef WRITEBGR24
 #define WRITEBGR24(dst, dstw, index)  WRITEBGR24MMX2(dst, dstw, index)
 #else
@@ -880,7 +886,7 @@ static inline void RENAME(yuv2yuvX)(SwsContext *c, int16_t *lumFilter, int16_t *
 {
         const stride_t dstW = dstW0;
         const stride_t chrDstW = chrDstW0;
-#ifdef HAVE_MMX
+#if HAVE_MMX
         if(c->params.subsampling & SWS_ACCURATE_RND){
                 if(uDest){
                         YSCALEYUV2YV12X_ACCURATE(   0, CHR_MMX_FILTER_OFFSET, uDest, chrDstW)
@@ -923,7 +929,7 @@ static inline void RENAME(yuv2yuv1)(int16_t *lumSrc, int16_t *chrSrc,
 {
         const stride_t dstW = dstW0;
         const stride_t chrDstW = chrDstW0;
-#ifdef HAVE_MMX
+#if HAVE_MMX
 	if(uDest != NULL)
 	{
 		asm volatile(
@@ -989,7 +995,7 @@ static inline void RENAME(yuv2packedX)(SwsContext *c, int16_t *lumFilter, int16_
 			    uint8_t *dest, long dstW, long dstY)
 {
 	long dummy=0;
-#ifdef HAVE_MMX
+#if HAVE_MMX
     if(c->params.subsampling & SWS_ACCURATE_RND){
                 switch(c->dstFormat){
                 case IMGFMT_BGR32:
@@ -1144,7 +1150,7 @@ static inline void RENAME(yuv2packed2)(SwsContext *c, uint16_t *buf0, uint16_t *
 	{
 		switch(dstFormat)
 		{
-#ifdef HAVE_MMX
+#if HAVE_MMX
 		case IMGFMT_BGR32:
 			asm volatile(
 
@@ -1200,7 +1206,7 @@ FULL_YSCALEYUV2RGB
 			"mov %4, %%"REG_b"		\n\t"
 			"add %%"REG_a", %%"REG_b"	\n\t"
 
-#ifdef HAVE_MMX2
+#if HAVE_MMX2
 			//FIXME Alignment
 			"movntq %%mm3, (%%"REG_b", %%"REG_a", 2)\n\t"
 			"movntq %%mm1, 8(%%"REG_b", %%"REG_a", 2)\n\t"
@@ -1287,7 +1293,7 @@ FULL_YSCALEYUV2RGB
 		break;
 #endif
 		case IMGFMT_RGB32:
-#ifndef HAVE_MMX
+#if !HAVE_MMX
 		case IMGFMT_BGR32:
 #endif
 		if(dstFormat==IMGFMT_BGR32)
@@ -1355,7 +1361,7 @@ FULL_YSCALEYUV2RGB
 	else
 	{
 #endif // if 0
-#ifdef HAVE_MMX
+#if HAVE_MMX
 	switch(c->dstFormat)
 	{
 //Note 8280 == DSTW_OFFSET but the preprocessor can't handle that there :(
@@ -1464,7 +1470,7 @@ static inline void RENAME(yuv2packed1)(SwsContext *c, uint16_t *buf0, uint16_t *
 		return;
 	}
 
-#ifdef HAVE_MMX
+#if HAVE_MMX
 	if( uvalpha < 2048 ) // note this is not correct (shifts chrominance by 0.5 pixels) but its a bit faster
 	{
 		switch(dstFormat)
@@ -1656,7 +1662,7 @@ static inline void RENAME(yuv2packed1)(SwsContext *c, uint16_t *buf0, uint16_t *
 
 static inline void RENAME(yuy2ToY)(uint8_t *dst, uint8_t *src, long width)
 {
-#ifdef HAVE_MMX
+#if HAVE_MMX
 	asm volatile(
 		"movq "MANGLE(bm01010101)", %%mm2\n\t"
 		"mov %0, %%"REG_a"		\n\t"
@@ -1681,7 +1687,7 @@ static inline void RENAME(yuy2ToY)(uint8_t *dst, uint8_t *src, long width)
 
 static inline void RENAME(yuy2ToUV)(uint8_t *dstU, uint8_t *dstV, uint8_t *src1, uint8_t *src2, long width)
 {
-#if defined (HAVE_MMX2) || defined (HAVE_3DNOW)
+#if HAVE_MMX2 || HAVE_AMD3DNOW
 	asm volatile(
 		"movq "MANGLE(bm01010101)", %%mm4\n\t"
 		"mov %0, %%"REG_a"		\n\t"
@@ -1720,7 +1726,7 @@ static inline void RENAME(yuy2ToUV)(uint8_t *dstU, uint8_t *dstV, uint8_t *src1,
 //this is allmost identical to the previous, end exists only cuz yuy2ToY/UV)(dst, src+1, ...) would have 100% unaligned accesses
 static inline void RENAME(uyvyToY)(uint8_t *dst, uint8_t *src, long width)
 {
-#ifdef HAVE_MMX
+#if HAVE_MMX
 	asm volatile(
 		"mov %0, %%"REG_a"		\n\t"
 		"1:				\n\t"
@@ -1744,7 +1750,7 @@ static inline void RENAME(uyvyToY)(uint8_t *dst, uint8_t *src, long width)
 
 static inline void RENAME(uyvyToUV)(uint8_t *dstU, uint8_t *dstV, uint8_t *src1, uint8_t *src2, long width)
 {
-#if defined (HAVE_MMX2) || defined (HAVE_3DNOW)
+#if HAVE_MMX2 || HAVE_AMD3DNOW
 	asm volatile(
 		"movq "MANGLE(bm01010101)", %%mm4\n\t"
 		"mov %0, %%"REG_a"		\n\t"
@@ -1815,7 +1821,7 @@ static inline void RENAME(bgr32ToUV)(uint8_t *dstU, uint8_t *dstV, uint8_t *src1
 
 static inline void RENAME(bgr24ToY)(uint8_t *dst, uint8_t *src, long width)
 {
-#ifdef HAVE_MMX
+#if HAVE_MMX
 	asm volatile(
 		"mov %2, %%"REG_a"		\n\t"
 		"movq "MANGLE(bgr2YCoeff)", %%mm6		\n\t"
@@ -1900,7 +1906,7 @@ static inline void RENAME(bgr24ToY)(uint8_t *dst, uint8_t *src, long width)
 
 static inline void RENAME(bgr24ToUV)(uint8_t *dstU, uint8_t *dstV, uint8_t *src1, uint8_t *src2, long width)
 {
-#ifdef HAVE_MMX
+#if HAVE_MMX
 	asm volatile(
 		"mov %4, %%"REG_a"		\n\t"
 		"movq "MANGLE(w1111)", %%mm5		\n\t"
@@ -1912,7 +1918,7 @@ static inline void RENAME(bgr24ToUV)(uint8_t *dstU, uint8_t *dstV, uint8_t *src1
 		"1:				\n\t"
 		PREFETCH" 64(%0, %%"REG_b")	\n\t"
 		PREFETCH" 64(%1, %%"REG_b")	\n\t"
-#if defined (HAVE_MMX2) || defined (HAVE_3DNOW)
+#if HAVE_MMX2 || HAVE_AMD3DNOW
 		"movq (%0, %%"REG_b"), %%mm0	\n\t"
 		"movq (%1, %%"REG_b"), %%mm1	\n\t"
 		"movq 6(%0, %%"REG_b"), %%mm2	\n\t"
@@ -1973,7 +1979,7 @@ static inline void RENAME(bgr24ToUV)(uint8_t *dstU, uint8_t *dstV, uint8_t *src1
 		"packssdw %%mm1, %%mm0		\n\t" // V1 V0 U1 U0
 		"psraw $7, %%mm0		\n\t"
 
-#if defined (HAVE_MMX2) || defined (HAVE_3DNOW)
+#if HAVE_MMX2 || HAVE_AMD3DNOW
 		"movq 12(%0, %%"REG_b"), %%mm4	\n\t"
 		"movq 12(%1, %%"REG_b"), %%mm1	\n\t"
 		"movq 18(%0, %%"REG_b"), %%mm2	\n\t"
@@ -2294,7 +2300,7 @@ static inline void RENAME(hScale)(int16_t *dst, int dstW, uint8_t *src, int srcW
 				  int16_t *filter, int16_t *filterPos, long filterSize0)
 {
         const stride_t filterSize = filterSize0;
-#ifdef HAVE_MMX
+#if HAVE_MMX
 	assert(filterSize % 4 == 0 && filterSize>0);
 	if(filterSize==4) // allways true for upscaling, sometimes for down too
 	{
@@ -2515,7 +2521,7 @@ static inline void RENAME(hyscale)(uint16_t *dst, long dstWidth, uint8_t *src, i
 	src= formatConvBuffer;
     }
 
-#ifdef HAVE_MMX
+#if HAVE_MMX
 	// use the new MMX scaler if the mmx2 can't be used (its faster than the x86asm one)
     if(!(flags&SWS_FAST_BILINEAR) || (!canMMX2BeUsed))
 #else
@@ -2526,8 +2532,8 @@ static inline void RENAME(hyscale)(uint16_t *dst, long dstWidth, uint8_t *src, i
     }
     else // Fast Bilinear upscale / crap downscale
     {
-#if defined(ARCH_X86) || defined(ARCH_X86_64)
-#ifdef HAVE_MMX2
+#if ARCH_X86_32 || ARCH_X86_64
+#if HAVE_MMX2
 	int i;
 	if(canMMX2BeUsed)
 	{
@@ -2542,7 +2548,7 @@ static inline void RENAME(hyscale)(uint16_t *dst, long dstWidth, uint8_t *src, i
 			PREFETCH" 32(%%"REG_c")		\n\t"
 			PREFETCH" 64(%%"REG_c")		\n\t"
 
-#ifdef ARCH_X86_64
+#if ARCH_X86_64
 
 #define FUNNY_Y_CODE \
 			"movl (%%"REG_b"), %%esi	\n\t"\
@@ -2623,7 +2629,7 @@ FUNNY_Y_CODE
 		:: "r" (src), "m" (dst), "m" (dstWidth), "m" (xInc_shr16), "m" (xInc_mask)
 		: "%"REG_a, "%"REG_b, "%ecx", "%"REG_D, "%esi"
 		);
-#ifdef HAVE_MMX2
+#if HAVE_MMX2
 	} //if MMX2 can't be used
 #endif
 #else
@@ -2735,7 +2741,7 @@ inline static void RENAME(hcscale)(uint16_t *dst, long dstWidth, uint8_t *src1, 
     	return;
     }
 
-#ifdef HAVE_MMX
+#if HAVE_MMX
 	// use the new MMX scaler if the mmx2 can't be used (its faster than the x86asm one)
     if(!(flags&SWS_FAST_BILINEAR) || (!canMMX2BeUsed))
 #else
@@ -2748,8 +2754,8 @@ inline static void RENAME(hcscale)(uint16_t *dst, long dstWidth, uint8_t *src1, 
     }
     else // Fast Bilinear upscale / crap downscale
     {
-#if defined(ARCH_X86) || defined(ARCH_X86_64)
-#ifdef HAVE_MMX2
+#if ARCH_X86_32 || ARCH_X86_64
+#if HAVE_MMX2
 	int i;
 	if(canMMX2BeUsed)
 	{
@@ -2764,7 +2770,7 @@ inline static void RENAME(hcscale)(uint16_t *dst, long dstWidth, uint8_t *src1, 
 			PREFETCH" 32(%%"REG_c")		\n\t"
 			PREFETCH" 64(%%"REG_c")		\n\t"
 
-#ifdef ARCH_X86_64
+#if ARCH_X86_64
 
 #define FUNNY_UV_CODE \
 			"movl (%%"REG_b"), %%esi	\n\t"\
@@ -2853,7 +2859,7 @@ FUNNY_UV_CODE
 
 /* GCC 3.3 makes MPlayer crash on IA-32 machines when using "g" operand here,
    which is needed to support GCC 4.0. */
-#if defined(ARCH_X86_64) && ((__GNUC__ > 3) || ( __GNUC__ == 3 && __GNUC_MINOR__ >= 4))
+#if ARCH_X86_64 && ((__GNUC__ > 3) || ( __GNUC__ == 3 && __GNUC_MINOR__ >= 4))
 		:: "m" (src1), "m" (dst), "g" ((stride_t)dstWidth), "m" (xInc_shr16), "m" (xInc_mask),
 #else
 		:: "m" (src1), "m" (dst), "m" ((long)dstWidth), "m" (xInc_shr16), "m" (xInc_mask),
@@ -2861,7 +2867,7 @@ FUNNY_UV_CODE
 		"r" (src2)
 		: "%"REG_a, "%"REG_b, "%ecx", "%"REG_D, "%esi"
 		);
-#ifdef HAVE_MMX2
+#if HAVE_MMX2
 	} //if MMX2 can't be used
 #endif
 #else
@@ -3086,7 +3092,7 @@ i--;
 			break; //we can't output a dstY line so let's try with the next slice
 		}
 
-#ifdef HAVE_MMX
+#if HAVE_MMX
             b5Dither= dither8[dstY&1];
             g6Dither= dither4[dstY&1];
             g5Dither= dither8[dstY&1];
@@ -3096,7 +3102,7 @@ i--;
             {
                 int16_t **lumSrcPtr= lumPixBuf + lumBufIndex + firstLumSrcY - lastInLumBuf + vLumBufSize;
                 int16_t **chrSrcPtr= chrPixBuf + chrBufIndex + firstChrSrcY - lastInChrBuf + vChrBufSize;
-#ifdef HAVE_MMX
+#if HAVE_MMX
                 int i;
                 if(params.subsampling & SWS_ACCURATE_RND){
                     int s= APCK_SIZE / 8;
@@ -3220,7 +3226,7 @@ i--;
 	    }
 	}
 
-#ifdef HAVE_MMX
+#if HAVE_MMX
 	__asm __volatile(SFENCE:::"memory");
 	__asm __volatile(EMMS:::"memory");
 #endif

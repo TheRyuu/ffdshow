@@ -5,6 +5,7 @@
 ;*
 ;* Authors: Loren Merritt <lorenm@u.washington.edu>
 ;*          Jason Garrett-Glaser <darkshikari@gmail.com>
+;*          Holger Lubitz <hal@duncan.ol.sub.de>
 ;*          Mathieu Monnier <manao@melix.net>
 ;*
 ;* This program is free software; you can redistribute it and/or modify
@@ -249,6 +250,14 @@ cglobal x264_hpel_filter_c_%1, 3,3
     %define tpw_32 [pw_32 GLOBAL]
 %endif
 .loop:
+%ifidn %1,sse2_misalign
+    movu    m0, [src-4]
+    movu    m1, [src-2]
+    mova    m2, [src]
+    paddw   m0, [src+6]
+    paddw   m1, [src+4]
+    paddw   m2, [src+2]
+%else
     mova    m6, [src-16]
     mova    m2, [src]
     mova    m3, [src+16]
@@ -264,6 +273,7 @@ cglobal x264_hpel_filter_c_%1, 3,3
     paddw   m2, m3
     paddw   m1, m4
     paddw   m0, m5
+%endif
     FILT_H  m0, m1, m2
     paddw   m0, tpw_32
     psraw   m0, 6
@@ -322,6 +332,7 @@ cglobal x264_hpel_filter_h_sse2, 3,3
     jl .loop
     REP_RET
 
+%ifndef ARCH_X86_64
 ;-----------------------------------------------------------------------------
 ; void x264_hpel_filter_h_ssse3( uint8_t *dst, uint8_t *src, int width );
 ;-----------------------------------------------------------------------------
@@ -387,11 +398,14 @@ cglobal x264_hpel_filter_h_ssse3, 3,3
 
     jl .loop
     REP_RET
-
+%endif
 
 %define PALIGNR PALIGNR_MMX
-HPEL_V sse2
+%ifndef ARCH_X86_64
 HPEL_C sse2
+%endif
+HPEL_V sse2
+HPEL_C sse2_misalign
 %define PALIGNR PALIGNR_SSSE3
 HPEL_C ssse3
 
@@ -677,6 +691,104 @@ INIT_MMX
 MEMZERO mmx
 INIT_XMM
 MEMZERO sse2
+
+
+
+;-----------------------------------------------------------------------------
+; void x264_integral_init4h_sse4( uint16_t *sum, uint8_t *pix, int stride )
+;-----------------------------------------------------------------------------
+cglobal x264_integral_init4h_sse4, 3,4
+    lea     r3, [r0+r2*2]
+    add     r1, r2
+    neg     r2
+    pxor    m4, m4
+.loop:
+    movdqa  m0, [r1+r2]
+    movdqu  m1, [r1+r2+8]
+    mpsadbw m0, m4, 0
+    mpsadbw m1, m4, 0
+    paddw   m0, [r0+r2*2]
+    paddw   m1, [r0+r2*2+16]
+    movdqa  [r3+r2*2   ], m0
+    movdqa  [r3+r2*2+16], m1
+    add     r2, 16
+    jl .loop
+    REP_RET
+
+cglobal x264_integral_init8h_sse4, 3,4
+    lea     r3, [r0+r2*2]
+    add     r1, r2
+    neg     r2
+    pxor    m4, m4
+.loop:
+    movdqa  m0, [r1+r2]
+    movdqu  m1, [r1+r2+8]
+    movdqa  m2, m0
+    movdqa  m3, m1
+    mpsadbw m0, m4, 0
+    mpsadbw m1, m4, 0
+    mpsadbw m2, m4, 4
+    mpsadbw m3, m4, 4
+    paddw   m0, [r0+r2*2]
+    paddw   m1, [r0+r2*2+16]
+    paddw   m0, m2
+    paddw   m1, m3
+    movdqa  [r3+r2*2   ], m0
+    movdqa  [r3+r2*2+16], m1
+    add     r2, 16
+    jl .loop
+    REP_RET
+
+%macro INTEGRAL_INIT 1
+;-----------------------------------------------------------------------------
+; void x264_integral_init4v_mmx( uint16_t *sum8, uint16_t *sum4, int stride )
+;-----------------------------------------------------------------------------
+cglobal x264_integral_init4v_%1, 3,5
+    shl   r2, 1
+    add   r0, r2
+    add   r1, r2
+    lea   r3, [r0+r2*4]
+    lea   r4, [r0+r2*8]
+    neg   r2
+.loop:
+    movu  m0, [r0+r2+8]
+    mova  m2, [r0+r2]
+    movu  m1, [r4+r2+8]
+    paddw m0, m2
+    paddw m1, [r4+r2]
+    mova  m3, [r3+r2]
+    psubw m1, m0
+    psubw m3, m2
+    mova  [r0+r2], m1
+    mova  [r1+r2], m3
+    add   r2, mmsize
+    jl .loop
+    REP_RET
+
+;-----------------------------------------------------------------------------
+; void x264_integral_init8v_mmx( uint16_t *sum8, int stride )
+;-----------------------------------------------------------------------------
+cglobal x264_integral_init8v_%1, 3,3
+    shl   r1, 1
+    add   r0, r1
+    lea   r2, [r0+r1*8]
+    neg   r1
+.loop:
+    mova  m0, [r2+r1]
+    mova  m1, [r2+r1+mmsize]
+    psubw m0, [r0+r1]
+    psubw m1, [r0+r1+mmsize]
+    mova  [r0+r1], m0
+    mova  [r0+r1+mmsize], m1
+    add   r1, 2*mmsize
+    jl .loop
+    REP_RET
+%endmacro
+
+INIT_MMX
+INTEGRAL_INIT mmx
+INIT_XMM
+INTEGRAL_INIT sse2
 
 
 

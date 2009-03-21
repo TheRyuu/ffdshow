@@ -26,7 +26,7 @@
 
 #include <stdarg.h>
 
-#define X264_BUILD "65"
+#define X264_BUILD "65" /* ffdshow custom code */
 
 /* x264_t:
  *      opaque handler for encoder */
@@ -49,8 +49,11 @@ typedef struct x264_t x264_t;
 #define X264_CPU_SSE3           0x000200
 #define X264_CPU_SSSE3          0x000400
 #define X264_CPU_PHADD_IS_FAST  0x000800  /* pre-Penryn Core2 have a uselessly slow PHADD instruction */
-#define X264_CPU_SSE4           0x001000  /* SSE4.1 */
-#define X264_CPU_STACK_MOD4     0x002000  /* if stack is only mod4 and not mod16 */
+#define X264_CPU_STACK_MOD4     0x001000  /* if stack is only mod4 and not mod16 */
+#define X264_CPU_SSE4           0x002000  /* SSE4.1 */
+#define X264_CPU_SSE42          0x004000  /* SSE4.2 */
+#define X264_CPU_SSE_MISALIGN   0x008000  /* Phenom support for misaligned SSE instruction arguments */
+#define X264_CPU_LZCNT          0x010000  /* Phenom support for "leading zero count" instruction. */
 
 /* Analyse flags
  */
@@ -319,7 +322,7 @@ int x264_param_parse( x264_param_t *, const char *name, const char *value );
 /****************************************************************************
  * Picture structures and functions.
  ****************************************************************************/
-typedef struct x264_image_t
+typedef struct x264_image_t /* ffdshow custom code */
 {
     int     i_csp;
 
@@ -328,7 +331,7 @@ typedef struct x264_image_t
     uint8_t *plane[4];
 } x264_image_t;
 
-typedef struct x264_picture_t
+typedef struct x264_picture_t /* ffdshow custom code */
 {
     /* In: force picture type (if not auto) XXX: ignored for now
      * Out: type of the picture encoded */
@@ -342,11 +345,11 @@ typedef struct x264_picture_t
     x264_image_t img;
 
     /* */
-    int64_t i_sqe_y,i_sqe_u,i_sqe_v;
+    int64_t i_sqe_y,i_sqe_u,i_sqe_v; /* ffdshow custom code */
 } x264_picture_t;
 
-struct x264_frame_t;
-typedef void (*x264_fill_picture_t)(struct x264_frame_t *pic,void *data);
+struct x264_frame_t; /* ffdshow custom code */
+typedef void (*x264_fill_picture_t)(struct x264_frame_t *pic,void *data); /* ffdshow custom code */
 
 /* x264_picture_alloc:
  *  alloc data for a picture. You must call x264_picture_clean on it. */
@@ -383,7 +386,7 @@ enum nal_priority_e
     NAL_PRIORITY_HIGHEST    = 3,
 };
 
-typedef struct x264_nal_t
+typedef struct x264_nal_t /* ffdshow custom code */
 {
     int i_ref_idc;  /* nal_priority_e */
     int i_type;     /* nal_unit_type_e */
@@ -419,7 +422,7 @@ int     x264_encoder_reconfig( x264_t *, x264_param_t * );
 int     x264_encoder_headers( x264_t *, x264_nal_t **, int * );
 /* x264_encoder_encode:
  *      encode one picture */
-int     x264_encoder_encode ( x264_t *, x264_nal_t **, int *, x264_fill_picture_t pic_in_fill, void *pic_in_fill_data,x264_picture_t * );
+int     x264_encoder_encode ( x264_t *, x264_nal_t **, int *, x264_fill_picture_t pic_in_fill, void *pic_in_fill_data,x264_picture_t * ); /* ffdshow custom code */
 /* x264_encoder_close:
  *      close an encoder handler */
 void    x264_encoder_close  ( x264_t * );

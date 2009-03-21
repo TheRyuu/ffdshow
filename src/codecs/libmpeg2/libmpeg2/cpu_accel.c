@@ -16,9 +16,9 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * You should have received a copy of the GNU General Public License along
+ * with mpeg2dec; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
 #include "config.h"
@@ -34,10 +34,10 @@ static inline uint32_t arch_accel (uint32_t accel)
 {
     if (accel & (MPEG2_ACCEL_X86_3DNOW | MPEG2_ACCEL_X86_MMXEXT))
 	accel |= MPEG2_ACCEL_X86_MMX;
-
+	
     if (accel & (MPEG2_ACCEL_X86_SSE2 | MPEG2_ACCEL_X86_SSE3))
 	accel |= MPEG2_ACCEL_X86_MMXEXT;
-
+	
     if (accel & (MPEG2_ACCEL_X86_SSE3))
 	accel |= MPEG2_ACCEL_X86_SSE2;
 

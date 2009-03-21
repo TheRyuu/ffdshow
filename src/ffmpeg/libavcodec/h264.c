@@ -25,6 +25,7 @@
  * @author Michael Niedermayer <michaelni@gmx.at>
  */
 
+#include "internal.h"
 #include "dsputil.h"
 #include "avcodec.h"
 #include "mpegvideo.h"
@@ -2107,6 +2108,18 @@ av_cold int avcodec_h264_decode_init_is_avc(AVCodecContext *avctx){
     }
 }
 
+/**
+ * Reset SEI values at the beginning of the frame.
+ *
+ * @param h H.264 context.
+ */
+static void reset_sei(H264Context *h) {
+    h->sei_recovery_frame_cnt       = -1;
+    h->sei_dpb_output_delay         =  0;
+    h->sei_cpb_removal_delay        = -1;
+    h->sei_buffering_period_present =  0;
+}
+
 static av_cold int decode_init(AVCodecContext *avctx){
     H264Context *h= avctx->priv_data;
     MpegEncContext * const s = &h->s;
@@ -2124,25 +2137,24 @@ static av_cold int decode_init(AVCodecContext *avctx){
     s->quarter_sample = 1;
     s->low_delay= 1;
 
+    /* ffdshow custom code (begin) */
     if(avctx->codec_id == CODEC_ID_SVQ3)
         avctx->pix_fmt= PIX_FMT_YUVJ420P;
     else
         avctx->pix_fmt= PIX_FMT_YUV420P;
+    /* ffdshow custom code (end) */
 
     decode_init_vlc();
 
-    /* ffdshow custom code begin */
+    /* ffdshow custom code (begin) */
     h->is_avc = avcodec_h264_decode_init_is_avc(avctx);
     h->got_avcC = 0;
-    /* ffdshow custom code end */
+    /* ffdshow custom code (end) */
 
     h->thread_context[0] = h;
     h->outputed_poc = INT_MIN;
     h->prev_poc_msb= 1<<16;
-    h->sei_recovery_frame_cnt = -1;
-    h->sei_dpb_output_delay = 0;
-    h->sei_cpb_removal_delay = -1;
-    h->sei_buffering_period_present = 0;
+    reset_sei(h);
     return 0;
 }
 
@@ -3077,10 +3089,7 @@ static void flush_dpb(AVCodecContext *avctx){
     if(h->s.current_picture_ptr)
         h->s.current_picture_ptr->reference= 0;
     h->s.first_field= 0;
-    h->sei_recovery_frame_cnt = -1;
-    h->sei_dpb_output_delay = 0;
-    h->sei_cpb_removal_delay = -1;
-    h->sei_buffering_period_present = 0;
+    reset_sei(h);
     h->has_to_drop_first_non_ref = avctx->h264_has_to_drop_first_non_ref; /* ffdshow custom code */
     ff_mpeg_flush(avctx);
 }
@@ -3199,15 +3208,15 @@ static void print_long_term(H264Context *h) {
  */
 static int execute_ref_pic_marking(H264Context *h, MMCO *mmco, int mmco_count){
     MpegEncContext * const s = &h->s;
-    int i, j;
+    int i, av_uninit(j);
     int current_ref_assigned=0;
-    Picture *pic;
+    Picture *av_uninit(pic);
 
     if((s->avctx->debug&FF_DEBUG_MMCO) && mmco_count==0)
         av_log(h->s.avctx, AV_LOG_DEBUG, "no mmco here\n");
 
     for(i=0; i<mmco_count; i++){
-        int structure, frame_num;
+        int av_uninit(structure), av_uninit(frame_num);
         if(s->avctx->debug&FF_DEBUG_MMCO)
             av_log(h->s.avctx, AV_LOG_DEBUG, "mmco:%d %d %d\n", h->mmco[i].opcode, h->mmco[i].short_pic_num, h->mmco[i].long_arg);
 
@@ -3695,13 +3704,13 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
         return -1;
     }
     if(!h0->pps_buffers[pps_id]) {
-        av_log(h->s.avctx, AV_LOG_ERROR, "non-existing PPS referenced\n");
+        av_log(h->s.avctx, AV_LOG_ERROR, "non-existing PPS %u referenced\n", pps_id);
         return -1;
     }
     h->pps= *h0->pps_buffers[pps_id];
 
     if(!h0->sps_buffers[h->pps.sps_id]) {
-        av_log(h->s.avctx, AV_LOG_ERROR, "non-existing SPS referenced\n");
+        av_log(h->s.avctx, AV_LOG_ERROR, "non-existing SPS %u referenced\n", h->pps.sps_id);
         return -1;
     }
     h->sps = *h0->sps_buffers[h->pps.sps_id];
@@ -4204,17 +4213,16 @@ static int decode_residual(H264Context *h, GetBitContext *gb, DCTELEM *block, in
             //first coefficient has suffix_length equal to 0 or 1
             if(prefix<14){ //FIXME try to build a large unified VLC table for all this
                 if(suffix_length)
-                    level_code= (prefix<<suffix_length) + get_bits(gb, suffix_length); //part
+                    level_code= (prefix<<1) + get_bits1(gb); //part
                 else
-                    level_code= (prefix<<suffix_length); //part
+                    level_code= prefix; //part
             }else if(prefix==14){
                 if(suffix_length)
-                    level_code= (prefix<<suffix_length) + get_bits(gb, suffix_length); //part
+                    level_code= (prefix<<1) + get_bits1(gb); //part
                 else
                     level_code= prefix + get_bits(gb, 4); //part
             }else{
-                level_code= (15<<suffix_length) + get_bits(gb, prefix-3); //part
-                if(suffix_length==0) level_code+=15; //FIXME doesn't make (much)sense
+                level_code= 30 + get_bits(gb, prefix-3); //part
                 if(prefix>=16)
                     level_code += (1<<(prefix-3))-4096;
             }
@@ -6521,7 +6529,7 @@ static void filter_mb( H264Context *h, int mb_x, int mb_y, uint8_t *img_y, uint8
         int qp = s->current_picture.qscale_table[mb_xy];
         if(qp <= qp_thresh
            && (mb_x == 0 || ((qp + s->current_picture.qscale_table[mb_xy-1] + 1)>>1) <= qp_thresh)
-           && (mb_y == 0 || ((qp + s->current_picture.qscale_table[h->top_mb_xy] + 1)>>1) <= qp_thresh)){
+           && (h->top_mb_xy < 0 || ((qp + s->current_picture.qscale_table[h->top_mb_xy] + 1)>>1) <= qp_thresh)){
             return;
         }
     }
@@ -7011,6 +7019,7 @@ static int av_noinline decode_picture_timing(H264Context *h){
     if(h->sps.pic_struct_present_flag){
         unsigned int i, num_clock_ts;
         h->sei_pic_struct = get_bits(&s->gb, 4);
+        h->sei_ct_type    = 0;
 
         if (h->sei_pic_struct > SEI_PIC_STRUCT_FRAME_TRIPLING)
             return -1;
@@ -7020,7 +7029,7 @@ static int av_noinline decode_picture_timing(H264Context *h){
         for (i = 0 ; i < num_clock_ts ; i++){
             if(get_bits(&s->gb, 1)){                  /* clock_timestamp_flag */
                 unsigned int full_timestamp_flag;
-                skip_bits(&s->gb, 2);                 /* ct_type */
+                h->sei_ct_type |= 1<<get_bits(&s->gb, 2);
                 skip_bits(&s->gb, 1);                 /* nuit_field_based_flag */
                 skip_bits(&s->gb, 5);                 /* counting_type */
                 full_timestamp_flag = get_bits(&s->gb, 1);
@@ -7427,7 +7436,7 @@ int ff_h264_decode_seq_parameter_set(H264Context *h){
         decode_vui_parameters(h, sps);
 
     if(s->avctx->debug&FF_DEBUG_PICT_INFO){
-        av_log(h->s.avctx, AV_LOG_DEBUG, "sps:%u profile:%d/%d poc:%d ref:%d %dx%d %s %s crop:%d/%d/%d/%d %s %s\n",
+        av_log(h->s.avctx, AV_LOG_DEBUG, "sps:%u profile:%d/%d poc:%d ref:%d %dx%d %s %s crop:%d/%d/%d/%d %s %s %d/%d\n",
                sps_id, sps->profile_idc, sps->level_idc,
                sps->poc_type,
                sps->ref_frame_count,
@@ -7438,10 +7447,12 @@ int ff_h264_decode_seq_parameter_set(H264Context *h){
                sps->crop_top, sps->crop_bottom,
                sps->vui_parameters_present_flag ? "VUI" : "",
                #if __STDC_VERSION__ >= 199901L
-               ((const char*[]){"Gray","420","422","444"})[sps->chroma_format_idc]
+               ((const char*[]){"Gray","420","422","444"})[sps->chroma_format_idc],
                #else
-               ""
+               "",
                #endif
+               sps->timing_info_present_flag ? sps->num_units_in_tick : 0,
+               sps->timing_info_present_flag ? sps->time_scale : 0
                );
     }
 
@@ -7637,6 +7648,7 @@ static int decode_nal_units(H264Context *h, const uint8_t *buf, int buf_size){
         h->current_slice = 0;
         if (!s->first_field)
             s->current_picture_ptr= NULL;
+        reset_sei(h);
     }
 
     for(;;){
@@ -7942,10 +7954,6 @@ static int decode_frame(AVCodecContext *avctx,
             ff_er_frame_end(s);
 
         MPV_frame_end(s);
-        h->sei_recovery_frame_cnt = -1;
-        h->sei_dpb_output_delay = 0;
-        h->sei_cpb_removal_delay = -1;
-        h->sei_buffering_period_present = 0;
 
         if (cur->field_poc[0]==INT_MAX || cur->field_poc[1]==INT_MAX) {
             /* Wait for second field. */
@@ -7956,24 +7964,19 @@ static int decode_frame(AVCodecContext *avctx,
 
             /* Signal interlacing information externally. */
             /* Prioritize picture timing SEI information over used decoding process if it exists. */
+            if (h->sei_ct_type)
+                cur->interlaced_frame = (h->sei_ct_type & (1<<1)) != 0;
+            else
+                cur->interlaced_frame = FIELD_OR_MBAFF_PICTURE;
+
             if(h->sps.pic_struct_present_flag){
                 switch (h->sei_pic_struct)
                 {
-                case SEI_PIC_STRUCT_FRAME:
-                    cur->interlaced_frame = 0;
-                    break;
-                case SEI_PIC_STRUCT_TOP_FIELD:
-                case SEI_PIC_STRUCT_BOTTOM_FIELD:
-                case SEI_PIC_STRUCT_TOP_BOTTOM:
-                case SEI_PIC_STRUCT_BOTTOM_TOP:
-                    cur->interlaced_frame = 1;
-                    break;
                 case SEI_PIC_STRUCT_TOP_BOTTOM_TOP:
                 case SEI_PIC_STRUCT_BOTTOM_TOP_BOTTOM:
                     // Signal the possibility of telecined film externally (pic_struct 5,6)
                     // From these hints, let the applications decide if they apply deinterlacing.
                     cur->repeat_pict = 1;
-                    cur->interlaced_frame = FIELD_OR_MBAFF_PICTURE;
                     break;
                 case SEI_PIC_STRUCT_FRAME_DOUBLING:
                     // Force progressive here, as doubling interlaced frame is a bad idea.

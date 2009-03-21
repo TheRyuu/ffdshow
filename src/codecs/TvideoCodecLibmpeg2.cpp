@@ -93,7 +93,7 @@ TvideoCodecLibmpeg2::~TvideoCodecLibmpeg2()
  if (buffer) delete buffer;
 }
 
-HRESULT __declspec(align(16))(TvideoCodecLibmpeg2::decompress(const unsigned char *src,size_t srcLen,IMediaSample *pIn))
+HRESULT TvideoCodecLibmpeg2::decompress(const unsigned char *src,size_t srcLen,IMediaSample *pIn)
 {
  HRESULT hr=decompressI(src,srcLen,pIn);
  int len=mpeg2dec->buf_end - mpeg2dec->buf_start;
@@ -106,7 +106,7 @@ HRESULT __declspec(align(16))(TvideoCodecLibmpeg2::decompress(const unsigned cha
  return hr;
 }
 
-HRESULT __declspec(align(16))(TvideoCodecLibmpeg2::decompressI(const unsigned char *src,size_t srcLen,IMediaSample *pIn))
+HRESULT TvideoCodecLibmpeg2::decompressI(const unsigned char *src,size_t srcLen,IMediaSample *pIn)
 {
  //if (pIn->IsDiscontinuity() == S_OK)
  // onSeek(0);
@@ -197,10 +197,14 @@ HRESULT __declspec(align(16))(TvideoCodecLibmpeg2::decompressI(const unsigned ch
          }
 
         Trect r(0,0,info->sequence->picture_width,info->sequence->picture_height);
-        if (isdvdproc)
-         r.sar=containerSar;
-        else
-         r.sar=Rational(info->sequence->pixel_width,info->sequence->pixel_height);
+        r.sar=Rational(info->sequence->pixel_width,info->sequence->pixel_height);
+
+        // Correct impossible sar for DVD
+        if (isdvdproc && r.sar.num == 128 && r.sar.den == 81)
+         {
+          r.sar.num = 32;
+          r.sar.den = 27;
+         }
 
         TffPict pict(csp,data,stride,r,true,frametype,fieldtype,srcLen,NULL); //TODO: src frame size
         pict.film = m_fFilm;

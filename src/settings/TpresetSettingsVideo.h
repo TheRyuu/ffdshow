@@ -113,7 +113,7 @@ class TpresetVideoPlayer : public TpresetVideo
 {
 public:
  TpresetVideoPlayer(const char_t *Ireg_child,const char_t *IpresetName, int filtermode);
- virtual Tpreset* copy(void) {return new_copy(this);}
+ virtual Tpreset* copy(void) const {return new_copy(this);}
 };
 
 #endif

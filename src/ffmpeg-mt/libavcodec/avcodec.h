@@ -23,7 +23,7 @@
 #define AVCODEC_AVCODEC_H
 
 /**
- * @file avcodec.h
+ * @file libavcodec/avcodec.h
  * external API header
  */
 
@@ -36,10 +36,11 @@
 #include "libavutil/common.h"
 #endif
 
+#include <errno.h>
 #include "libavutil/avutil.h"
 
 #define LIBAVCODEC_VERSION_MAJOR 52
-#define LIBAVCODEC_VERSION_MINOR 11
+#define LIBAVCODEC_VERSION_MINOR 21
 #define LIBAVCODEC_VERSION_MICRO  0
 
 #define LIBAVCODEC_VERSION_INT  AV_VERSION_INT(LIBAVCODEC_VERSION_MAJOR, \
@@ -422,6 +423,7 @@ typedef struct AVPanScan{
      * is this picture used as reference\
      * The values for this are the same as the MpegEncContext.picture_structure\
      * variable, that is 1->top field, 2->bottom field, 3->frame/both fields.\
+     * Set to 4 for delayed, non-reference frames.\
      * - encoding: unused\
      * - decoding: Set by libavcodec. (before get_buffer() call)).\
      */\
@@ -572,7 +574,7 @@ typedef struct AVPanScan{
     int64_t reordered_opaque2; /* ffdshow custom code */\
     int64_t reordered_opaque3; /* ffdshow custom code */\
 \
-	 /* ffdshow custom code */ \
+    /* ffdshow custom code */\
     int mb_width,mb_height,mb_stride,b8_stride;\
     int num_sprite_warping_points,real_sprite_warping_points;\
     int play_flags;\
@@ -649,8 +651,6 @@ typedef struct AVPanScan{
 typedef struct AVFrame {
     FF_COMMON_FRAME
 } AVFrame;
-
-#define DEFAULT_FRAME_RATE_BASE 1001000
 
 /**
  * main external API structure.
@@ -769,7 +769,14 @@ typedef struct AVCodecContext {
      * If non NULL, 'draw_horiz_band' is called by the libavcodec
      * decoder to draw a horizontal band. It improves cache usage. Not
      * all codecs can do that. You must check the codec capabilities
-     * beforehand. May be called by different threads at the same time.
+     * beforehand.
+     * The function is also used by hardware acceleration APIs.
+     * It is called at least once during frame decoding to pass
+     * the data needed for hardware render.
+     * In that mode instead of pixel data, AVFrame points to
+     * a structure specific to the acceleration API. The application
+     * reads the structure and can change some fields to indicate progress
+     * or mark state.
      * - encoding: unused
      * - decoding: Set by user.
      * @param height the height of the slice
@@ -1240,7 +1247,6 @@ typedef struct AVCodecContext {
     unsigned dsp_mask;
 #define FF_MM_FORCE    0x80000000 /* Force usage of selected flags (OR) */
     /* lower 16 bits - CPU features */
-#ifdef HAVE_MMX /* to exclude SIMD stuff on MSVC builds */
 #define FF_MM_MMX      0x0001 ///< standard MMX
 #define FF_MM_3DNOW    0x0004 ///< AMD 3DNOW
 #define FF_MM_MMXEXT   0x0002 ///< SSE integer functions or AMD MMX ext
@@ -1249,7 +1255,6 @@ typedef struct AVCodecContext {
 #define FF_MM_3DNOWEXT 0x0020 ///< AMD 3DNowExt
 #define FF_MM_SSE3     0x0040 ///< Prescott SSE3 functions
 #define FF_MM_SSSE3    0x0080 ///< Conroe SSSE3 functions
-#endif /* HAVE_MMX */
 
     /**
      * bits per sample/pixel from the demuxer (needed for huffyuv).
@@ -1373,10 +1378,8 @@ typedef struct AVCodecContext {
 #define FF_CMP_VSAD   8
 #define FF_CMP_VSSE   9
 #define FF_CMP_NSSE   10
-#if 0 // disable snow
 #define FF_CMP_W53    11
 #define FF_CMP_W97    12
-#endif
 #define FF_CMP_DCTMAX 13
 #define FF_CMP_DCT264 14
 #define FF_CMP_CHROMA 256
@@ -1509,8 +1512,11 @@ typedef struct AVCodecContext {
      */
     int global_quality;
 
-#define FF_CODER_TYPE_VLC   0
-#define FF_CODER_TYPE_AC    1
+#define FF_CODER_TYPE_VLC       0
+#define FF_CODER_TYPE_AC        1
+#define FF_CODER_TYPE_RAW       2
+#define FF_CODER_TYPE_RLE       3
+#define FF_CODER_TYPE_DEFLATE   4
     /**
      * coder type
      * - encoding: Set by user.
@@ -2133,8 +2139,17 @@ typedef struct AVCodecContext {
      */
     float rc_min_vbv_overflow_use;
 
+    /**
+     * For some codecs, the time base is closer to the field rate than the frame rate.
+     * Most notably, H.264 and MPEG-2 specify time_base as half of frame duration
+     * if no telecine is used ...
+     *
+     * Set to time_base ticks per frame. Default 1, e.g., H.264/MPEG-2 set it to 2.
+     */
+    int ticks_per_frame;
+    
     /* ffdshow custom stuff (begin) */
-
+    
     /**
      * minimum and maxminum quantizer for I frames. If 0, derived from qmin, i_quant_factor, i_quant_offset
      * - encoding: set by user.
@@ -2148,7 +2163,7 @@ typedef struct AVCodecContext {
      * - decoding: unused
      */
     int qmin_b,qmax_b;
-
+    
     float postgain;
     int ac3mode,ac3lfe;
     int ac3channels[6];
@@ -2159,7 +2174,7 @@ typedef struct AVCodecContext {
     void (*handle_user_data)(struct AVCodecContext *c,const uint8_t *buf,int buf_size);
     int h264_has_to_drop_first_non_ref;    // Workaround Haali's media splitter (http://forum.doom9.org/showthread.php?p=1226434#post1226434)
 
-    enum CorePNGFrameType corepng_frame_type;
+    enum CorePNGFrameType corepng_frame_type;    
 
     /* ffdshow custom stuff (end) */
 } AVCodecContext;
@@ -2292,6 +2307,11 @@ unsigned int avcodec_pix_fmt_to_codec_tag(enum PixelFormat p);
 
 /* external high level API */
 
+/**
+ * If c is NULL, returns the first registered codec,
+ * if c is non-NULL, returns the next registered codec after c,
+ * or NULL if c is the last one.
+ */
 AVCodec *av_codec_next(AVCodec *c);
 
 /**
@@ -2551,7 +2571,7 @@ int avcodec_encode_audio(AVCodecContext *avctx, uint8_t *buf, int buf_size,
  * @param[in] buf_size the size of the output buffer in bytes
  * @param[in] pict the input picture to encode
  * @return On error a negative value is returned, on success zero or the number
- * of bytes used from the input buffer.
+ * of bytes used from the output buffer.
  */
 int avcodec_encode_video(AVCodecContext *avctx, uint8_t *buf, int buf_size,
                          const AVFrame *pict);
@@ -2613,6 +2633,18 @@ typedef struct AVCodecParserContext {
     int64_t next_frame_offset; /* offset of the next frame */
     /* video info */
     int pict_type; /* XXX: Put it back in AVCodecContext. */
+    /**
+     * This field is used for proper frame duration computation in lavf.
+     * It signals, how much longer the frame duration of the current frame
+     * is compared to normal frame duration.
+     *
+     * frame_duration = (2 + repeat_pict) / (2*fps)
+     *
+     * It is used by codecs like H.264 to display telecined material.
+     *
+     * @note This field can also be set to -1 for half-frame duration in case
+     *       of field pictures.
+     */
     int repeat_pict; /* XXX: Put it back in AVCodecContext. */
     int64_t pts;     /* pts of the current frame */
     int64_t dts;     /* dts of the current frame */
@@ -2633,6 +2665,89 @@ typedef struct AVCodecParserContext {
 
     int64_t offset;      ///< byte offset from starting packet start
     int64_t cur_frame_end[AV_PARSER_PTS_NB];
+
+    /*!
+     * Set by parser to 1 for key frames and 0 for non-key frames.
+     * It is initialized to -1, so if the parser doesn't set this flag,
+     * old-style fallback using FF_I_TYPE picture type as key frames
+     * will be used.
+     */
+    int key_frame;
+
+    /**
+     * Time difference in stream time base units from the pts of this
+     * packet to the point at which the output from the decoder has converged
+     * independent from the availability of previous frames. That is, the
+     * frames are virtually identical no matter if decoding started from
+     * the very first frame or from this keyframe.
+     * Is AV_NOPTS_VALUE if unknown.
+     * This field is not the display duration of the current frame.
+     *
+     * The purpose of this field is to allow seeking in streams that have no
+     * keyframes in the conventional sense. It corresponds to the
+     * recovery point SEI in H.264 and match_time_delta in NUT. It is also
+     * essential for some types of subtitle streams to ensure that all
+     * subtitles are correctly displayed after seeking.
+     */
+    int64_t convergence_duration;
+
+    // Timestamp generation support:
+    /**
+     * Synchronization point for start of timestamp generation.
+     *
+     * Set to >0 for sync point, 0 for no sync point and <0 for undefined
+     * (default).
+     *
+     * For example, this corresponds to presence of H.264 buffering period
+     * SEI message.
+     */
+    int dts_sync_point;
+
+    /**
+     * Offset of the current timestamp against last timestamp sync point in
+     * units of AVCodecContext.time_base.
+     *
+     * Set to INT_MIN when dts_sync_point unused. Otherwise, it must
+     * contain a valid timestamp offset.
+     *
+     * Note that the timestamp of sync point has usually a nonzero
+     * dts_ref_dts_delta, which refers to the previous sync point. Offset of
+     * the next frame after timestamp sync point will be usually 1.
+     *
+     * For example, this corresponds to H.264 cpb_removal_delay.
+     */
+    int dts_ref_dts_delta;
+
+    /**
+     * Presentation delay of current frame in units of AVCodecContext.time_base.
+     *
+     * Set to INT_MIN when dts_sync_point unused. Otherwise, it must
+     * contain valid non-negative timestamp delta (presentation time of a frame
+     * must not lie in the past).
+     *
+     * This delay represents the difference between decoding and presentation
+     * time of the frame.
+     *
+     * For example, this corresponds to H.264 dpb_output_delay.
+     */
+    int pts_dts_delta;
+
+    /**
+     * Position of the packet in file.
+     *
+     * Analogous to cur_frame_pts/dts
+     */
+    int64_t cur_frame_pos[AV_PARSER_PTS_NB];
+
+    /**
+     * Byte position of currently parsed frame in stream.
+     */
+    int64_t pos;
+
+    /**
+     * Previous frame byte position.
+     */
+    int64_t last_pos;
 } AVCodecParserContext;
 
 typedef struct AVCodecParser {
@@ -2652,11 +2767,49 @@ AVCodecParser *av_parser_next(AVCodecParser *c);
 
 void av_register_codec_parser(AVCodecParser *parser);
 AVCodecParserContext *av_parser_init(int codec_id);
+
+attribute_deprecated
 int av_parser_parse(AVCodecParserContext *s,
                     AVCodecContext *avctx,
                     uint8_t **poutbuf, int *poutbuf_size,
                     const uint8_t *buf, int buf_size,
                     int64_t pts, int64_t dts);
+
+/**
+ * Parse a packet.
+ *
+ * @param s             parser context.
+ * @param avctx         codec context.
+ * @param poutbuf       set to pointer to parsed buffer or NULL if not yet finished.
+ * @param poutbuf_size  set to size of parsed buffer or zero if not yet finished.
+ * @param buf           input buffer.
+ * @param buf_size      input length, to signal EOF, this should be 0 (so that the last frame can be output).
+ * @param pts           input presentation timestamp.
+ * @param dts           input decoding timestamp.
+ * @param pos           input byte position in stream.
+ * @return the number of bytes of the input bitstream used.
+ *
+ * Example:
+ * @code
+ *   while(in_len){
+ *       len = av_parser_parse2(myparser, AVCodecContext, &data, &size,
+ *                                        in_data, in_len,
+ *                                        pts, dts, pos);
+ *       in_data += len;
+ *       in_len  -= len;
+ *
+ *       if(size)
+ *          decode_frame(data, size);
+ *   }
+ * @endcode
+ */
+int av_parser_parse2(AVCodecParserContext *s,
+                     AVCodecContext *avctx,
+                     uint8_t **poutbuf, int *poutbuf_size,
+                     const uint8_t *buf, int buf_size,
+                     int64_t pts, int64_t dts,
+                     int64_t pos);
+
 int av_parser_change(AVCodecParserContext *s,
                      AVCodecContext *avctx,
                      uint8_t **poutbuf, int *poutbuf_size,
@@ -2731,6 +2884,7 @@ int avcodec_h264_search_recovery_point(AVCodecContext *avctx,
 #define AVERROR_NOFMT       AVERROR(EILSEQ)  /**< unknown format */
 #define AVERROR_NOTSUPP     AVERROR(ENOSYS)  /**< Operation not supported. */
 #define AVERROR_NOENT       AVERROR(ENOENT)  /**< No such file or directory. */
+#define AVERROR_EOF         AVERROR(EPIPE)   /**< End of file. */
 #define AVERROR_PATCHWELCOME    -MKTAG('P','A','W','E') /**< Not yet implemented in FFmpeg. Patches welcome. */
 
 #endif /* AVCODEC_AVCODEC_H */

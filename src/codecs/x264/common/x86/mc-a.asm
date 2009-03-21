@@ -4,8 +4,8 @@
 ;* Copyright (C) 2003-2008 x264 project
 ;*
 ;* Authors: Loren Merritt <lorenm@u.washington.edu>
-;*          Laurent Aimar <fenrir@via.ecp.fr>
 ;*          Jason Garrett-Glaser <darkshikari@gmail.com>
+;*          Laurent Aimar <fenrir@via.ecp.fr>
 ;*          Min Chen <chenm001.163.com>
 ;*
 ;* This program is free software; you can redistribute it and/or modify
@@ -41,27 +41,13 @@ SECTION .text
 ; implicit bipred only:
 ; assumes log2_denom = 5, offset = 0, weight1 + weight2 = 64
 %ifdef ARCH_X86_64
-    %define t0 r0
-    %define t1 r1
-    %define t2 r2
-    %define t3 r3
-    %define t4 r4
-    %define t5 r5
-    %define t6d r10d
-    %define t7d r11d
+    DECLARE_REG_TMP 0,1,2,3,4,5,10,11
     %macro AVG_START 0
         PROLOGUE 6,7
         .height_loop:
     %endmacro
 %else
-    %define t0 r1
-    %define t1 r2
-    %define t2 r3
-    %define t3 r4
-    %define t4 r5
-    %define t5 r6
-    %define t6d r1d
-    %define t7d r2d
+    DECLARE_REG_TMP 1,2,3,4,5,6,1,2
     %macro AVG_START 0
         PROLOGUE 0,7
         mov t0, r0m
@@ -77,7 +63,7 @@ SECTION .text
 %macro SPLATW 2
 %if mmsize==16
     pshuflw  %1, %2, 0
-    movlhps  %1, %1
+    punpcklqdq %1, %1
 %else
     pshufw   %1, %2, 0
 %endif
@@ -386,18 +372,24 @@ cglobal x264_pixel_avg2_w16_sse2, 6,7
     jg     .height_loop
     REP_RET
 
-cglobal x264_pixel_avg2_w20_sse2, 6,7
+%macro AVG2_W20 1
+cglobal x264_pixel_avg2_w20_%1, 6,7
     sub    r4, r2
     lea    r6, [r4+r3]
 .height_loop:
     movdqu xmm0, [r2]
     movdqu xmm2, [r2+r3]
-    movdqu xmm1, [r2+r4]
-    movdqu xmm3, [r2+r6]
     movd   mm4,  [r2+16]
     movd   mm5,  [r2+r3+16]
+%ifidn %1, sse2_misalign
+    pavgb  xmm0, [r2+r4]
+    pavgb  xmm2, [r2+r6]
+%else
+    movdqu xmm1, [r2+r4]
+    movdqu xmm3, [r2+r6]
     pavgb  xmm0, xmm1
     pavgb  xmm2, xmm3
+%endif
     pavgb  mm4,  [r2+r4+16]
     pavgb  mm5,  [r2+r6+16]
     movdqa [r0], xmm0
@@ -409,6 +401,10 @@ cglobal x264_pixel_avg2_w20_sse2, 6,7
     sub    r5d, 2
     jg     .height_loop
     REP_RET
+%endmacro
+
+AVG2_W20 sse2
+AVG2_W20 sse2_misalign
 
 ; Cacheline split code for processors with high latencies for loads
 ; split over cache lines.  See sad-a.asm for a more detailed explanation.
@@ -680,12 +676,11 @@ cglobal x264_prefetch_ref_mmxext, 3,3
 ; chroma MC
 ;=============================================================================
 
-    %define t0d  eax
-    %define t0   rax
+    %define t0 rax
 %ifdef ARCH_X86_64
-    %define t1d  r10d
+    %define t1 r10
 %else
-    %define t1d  r1d
+    %define t1 r1
 %endif
 
 %macro MC_CHROMA_START 0

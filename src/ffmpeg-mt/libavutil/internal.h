@@ -19,8 +19,8 @@
  */
 
 /**
- * @file internal.h
- * common internal api header.
+ * @file libavutil/internal.h
+ * common internal API header
  */
 
 #ifndef AVUTIL_INTERNAL_H
@@ -30,12 +30,15 @@
 #    define NDEBUG
 #endif
 
+#include <limits.h>
 #ifdef __GNUC__
 #include <stdint.h>
 #endif
 #include <stddef.h>
 #include <assert.h>
+#include "config.h"
 #include "common.h"
+#include "mem.h"
 #include "timer.h"
 
 #ifndef attribute_align_arg
@@ -87,18 +90,12 @@
 #endif
 
 #ifndef INT_BIT
-#    if INT_MAX != 2147483647
-#        define INT_BIT 64
-#    else
-#        define INT_BIT 32
-#    endif
+#    define INT_BIT (CHAR_BIT * sizeof(int))
 #endif
 
 #if ( defined(__PIC__) || defined(__pic__) ) && ! defined(PIC)
 #    define PIC
 #endif
-
-#include "config.h"
 
 #ifndef offsetof
 #    define offsetof(T,F) ((unsigned int)((char *)&((T *)0)->F))
@@ -213,7 +210,7 @@ if((y)<(x)){\
 }
 #endif
 
-/* avoid usage of various functions */
+/* avoid usage of dangerous/inappropriate system functions */
 #undef  malloc
 #define malloc please_use_av_malloc
 #undef  free
@@ -235,11 +232,11 @@ if((y)<(x)){\
 #undef  exit
 #define exit exit_is_forbidden
 #undef  printf
-#define printf please_use_av_log
+#define printf please_use_av_log_instead_of_printf
 #undef  fprintf
-#define fprintf please_use_av_log
+#define fprintf please_use_av_log_instead_of_fprintf
 #undef  puts
-#define puts please_use_av_log
+#define puts please_use_av_log_instead_of_puts
 #undef  perror
 #define perror please_use_av_log_instead_of_perror
 
@@ -251,6 +248,23 @@ if((y)<(x)){\
         goto fail;\
     }\
 }
+
+#if defined(__ICC) || defined(__SUNPRO_C)
+    #define DECLARE_ALIGNED(n,t,v)      t v __attribute__ ((aligned (n)))
+    #define DECLARE_ASM_CONST(n,t,v)    const t __attribute__ ((aligned (n))) v
+#elif defined(__GNUC__)
+    #define DECLARE_ALIGNED(n,t,v)      t v __attribute__ ((aligned (n)))
+    #define DECLARE_ASM_CONST(n,t,v)    static const t v attribute_used __attribute__ ((aligned (n)))
+#elif defined(_MSC_VER)
+    #define DECLARE_ALIGNED(n,t,v)      __declspec(align(n)) t v
+    #define DECLARE_ASM_CONST(n,t,v)    __declspec(align(n)) static const t v
+#elif HAVE_INLINE_ASM
+    #error The asm code needs alignment, but we do not know how to do it for this compiler.
+#else
+    #define DECLARE_ALIGNED(n,t,v)      t v
+    #define DECLARE_ASM_CONST(n,t,v)    static const t v
+#endif
+
 
 #ifndef __GNUC__
 
@@ -303,8 +317,8 @@ static av_always_inline av_const float truncf(float x)
 #endif /* __GNUC__ */
 
 /**
- * Returns NULL if CONFIG_SMALL is true otherwise the argument
- * without modifications, used to disable the definition of strings
+ * Returns NULL if CONFIG_SMALL is true, otherwise the argument
+ * without modification. Used to disable the definition of strings
  * (for example AVCodec long_names).
  */
 #if CONFIG_SMALL

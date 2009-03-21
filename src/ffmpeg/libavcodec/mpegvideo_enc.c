@@ -3778,7 +3778,7 @@ AVCodec flv_encoder = {
 #else
     /*.pix_fmts = */NULL,
 #endif
-    /*.long_name= */NULL_IF_CONFIG_SMALL("Flash Video"),
+    /*.long_name= */NULL_IF_CONFIG_SMALL("Flash Video (FLV)"),
 };
 
 AVCodec mpeg4_encoder = {

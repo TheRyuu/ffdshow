@@ -18,7 +18,6 @@
 
 #include "stdafx.h"
 #include "ffmpeg-mt/libavcodec/avcodec.h"
-#include "ffmpeg-mt/libavcodec/dvdata.h"
 
 #define COMPILE_AS_FFMPEG_MT 1
 #define TvideoCodecLibavcodec TvideoCodecLibavcodec_mt

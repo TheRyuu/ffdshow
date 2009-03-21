@@ -386,7 +386,7 @@ typedef struct H264Context{
     int mb_field_decoding_flag;
     int mb_mbaff;              ///< mb_aff_frame && mb_field_decoding_flag
 
-    uint16_t sub_mb_type[4];
+    DECLARE_ALIGNED_8(uint16_t, sub_mb_type[4]);
 
     //POC stuff
     int poc_lsb;
@@ -538,6 +538,13 @@ typedef struct H264Context{
      * pic_struct in picture timing SEI message
      */
     SEI_PicStructType sei_pic_struct;
+
+    /**
+     * Bit set of clock types for fields/frames in picture timing SEI message.
+     * For each found ct_type, appropriate bit is set (e.g., bit 1 for
+     * interlaced).
+     */
+    int sei_ct_type;
 
     /**
      * dpb_output_delay in picture timing SEI message, see H.264 C.2.2

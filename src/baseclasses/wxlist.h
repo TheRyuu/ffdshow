@@ -542,8 +542,3 @@ typedef CGenericList<CBaseObject> CBaseObjectList;
 typedef CGenericList<IUnknown> CBaseInterfaceList;
 
 #endif /* __WXLIST__ */
-
-
-
-
-

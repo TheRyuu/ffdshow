@@ -10,14 +10,11 @@ CFLAGS+= -I. -I$(LAVC_DIR) -I$(LAVU_DIR) -I../imgFilters -I$(ZLIB_DIR) \
 
 SRCS_C=\
       DllEntry.c \
-      $(LAVC_DIR)/aandcttab.c \
       $(LAVC_DIR)/allcodecs.c \
       $(LAVC_DIR)/bitstream.c \
       $(LAVC_DIR)/cabac.c \
       $(LAVC_DIR)/dsputil.c \
       $(LAVC_DIR)/error_resilience.c \
-      $(LAVC_DIR)/eval.c \
-      $(LAVC_DIR)/faandct.c \
       $(LAVC_DIR)/faanidct.c \
       $(LAVC_DIR)/golomb.c \
       $(LAVC_DIR)/h264.c \
@@ -27,6 +24,7 @@ SRCS_C=\
       $(LAVC_DIR)/imgconvert.c \
       $(LAVC_DIR)/jrevdct.c \
       $(LAVC_DIR)/mpegvideo.c \
+      $(LAVC_DIR)/options.c \
       $(LAVC_DIR)/parser.c \
       $(LAVC_DIR)/pthread.c \
       $(LAVC_DIR)/simple_idct.c \

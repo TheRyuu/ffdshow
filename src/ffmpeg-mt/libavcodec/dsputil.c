@@ -23,7 +23,7 @@
  */
 
 /**
- * @file dsputil.c
+ * @file libavcodec/dsputil.c
  * DSP utils
  */
 
@@ -3319,9 +3319,9 @@ static int zero_cmp(void *s, uint8_t *a, uint8_t *b, int stride, int h){
 void ff_set_cmp(DSPContext* c, me_cmp_func *cmp, int type){
     int i;
 
-    memset(cmp, 0, sizeof(void*)*5);
+    memset(cmp, 0, sizeof(void*)*6);
 
-    for(i=0; i<5; i++){
+    for(i=0; i<6; i++){
         switch(type&0xFF){
         case FF_CMP_SAD:
             cmp[i]= c->sad[i];
@@ -3434,6 +3434,23 @@ static void diff_bytes_c(uint8_t *dst, uint8_t *src1, uint8_t *src2, int w){
     }
     for(; i<w; i++)
         dst[i+0] = src1[i+0]-src2[i+0];
+}
+
+static void add_hfyu_median_prediction_c(uint8_t *dst, uint8_t *src1, uint8_t *diff, int w, int *left, int *left_top){
+    int i;
+    uint8_t l, lt;
+
+    l= *left;
+    lt= *left_top;
+
+    for(i=0; i<w; i++){
+        l= mid_pred(l, src1[i], (l + src1[i] - lt)&0xFF) + diff[i];
+        lt= src1[i];
+        dst[i]= l;
+    }
+
+    *left= l;
+    *left_top= lt;
 }
 
 static void sub_hfyu_median_prediction_c(uint8_t *dst, uint8_t *src1, uint8_t *src2, int w, int *left, int *left_top){
@@ -3818,20 +3835,23 @@ static int bit8x8_c(/*MpegEncContext*/ void *c, uint8_t *src1, uint8_t *src2, in
     return bits;
 }
 
-static int vsad_intra16_c(/*MpegEncContext*/ void *c, uint8_t *s, uint8_t *dummy, int stride, int h){
-    int score=0;
-    int x,y;
-
-    for(y=1; y<h; y++){
-        for(x=0; x<16; x+=4){
-            score+= FFABS(s[x  ] - s[x  +stride]) + FFABS(s[x+1] - s[x+1+stride])
-                   +FFABS(s[x+2] - s[x+2+stride]) + FFABS(s[x+3] - s[x+3+stride]);
-        }
-        s+= stride;
-    }
-
-    return score;
+#define VSAD_INTRA(size) \
+static int vsad_intra##size##_c(/*MpegEncContext*/ void *c, uint8_t *s, uint8_t *dummy, int stride, int h){ \
+    int score=0;                                                                                            \
+    int x,y;                                                                                                \
+                                                                                                            \
+    for(y=1; y<h; y++){                                                                                     \
+        for(x=0; x<size; x+=4){                                                                             \
+            score+= FFABS(s[x  ] - s[x  +stride]) + FFABS(s[x+1] - s[x+1+stride])                           \
+                   +FFABS(s[x+2] - s[x+2+stride]) + FFABS(s[x+3] - s[x+3+stride]);                          \
+        }                                                                                                   \
+        s+= stride;                                                                                         \
+    }                                                                                                       \
+                                                                                                            \
+    return score;                                                                                           \
 }
+VSAD_INTRA(8)
+VSAD_INTRA(16)
 
 static int vsad16_c(/*MpegEncContext*/ void *c, uint8_t *s1, uint8_t *s2, int stride, int h){
     int score=0;
@@ -3849,20 +3869,23 @@ static int vsad16_c(/*MpegEncContext*/ void *c, uint8_t *s1, uint8_t *s2, int st
 }
 
 #define SQ(a) ((a)*(a))
-static int vsse_intra16_c(/*MpegEncContext*/ void *c, uint8_t *s, uint8_t *dummy, int stride, int h){
-    int score=0;
-    int x,y;
-
-    for(y=1; y<h; y++){
-        for(x=0; x<16; x+=4){
-            score+= SQ(s[x  ] - s[x  +stride]) + SQ(s[x+1] - s[x+1+stride])
-                   +SQ(s[x+2] - s[x+2+stride]) + SQ(s[x+3] - s[x+3+stride]);
-        }
-        s+= stride;
-    }
-
-    return score;
+#define VSSE_INTRA(size) \
+static int vsse_intra##size##_c(/*MpegEncContext*/ void *c, uint8_t *s, uint8_t *dummy, int stride, int h){ \
+    int score=0;                                                                                            \
+    int x,y;                                                                                                \
+                                                                                                            \
+    for(y=1; y<h; y++){                                                                                     \
+        for(x=0; x<size; x+=4){                                                                               \
+            score+= SQ(s[x  ] - s[x  +stride]) + SQ(s[x+1] - s[x+1+stride])                                 \
+                   +SQ(s[x+2] - s[x+2+stride]) + SQ(s[x+3] - s[x+3+stride]);                                \
+        }                                                                                                   \
+        s+= stride;                                                                                         \
+    }                                                                                                       \
+                                                                                                            \
+    return score;                                                                                           \
 }
+VSSE_INTRA(8)
+VSSE_INTRA(16)
 
 static int vsse16_c(/*MpegEncContext*/ void *c, uint8_t *s1, uint8_t *s2, int stride, int h){
     int score=0;
@@ -4370,9 +4393,6 @@ void attribute_align_arg dsputil_init(DSPContext* c, AVCodecContext *avctx)
 #if CONFIG_WMV2_DECODER || CONFIG_VC1_DECODER || CONFIG_WMV3_DECODER
     ff_intrax8dsp_init(c,avctx);
 #endif
-#if CONFIG_H264_ENCODER
-    ff_h264dspenc_init(c,avctx);
-#endif
 #if CONFIG_RV30_DECODER
     ff_rv30dsp_init(c,avctx);
 #endif
@@ -4399,6 +4419,7 @@ void attribute_align_arg dsputil_init(DSPContext* c, AVCodecContext *avctx)
 
     SET_CMP_FUNC(hadamard8_diff)
     c->hadamard8_diff[4]= hadamard8_intra16_c;
+    c->hadamard8_diff[5]= hadamard8_intra8x8_c;
     SET_CMP_FUNC(dct_sad)
     SET_CMP_FUNC(dct_max)
 #if CONFIG_GPL
@@ -4414,8 +4435,10 @@ void attribute_align_arg dsputil_init(DSPContext* c, AVCodecContext *avctx)
     SET_CMP_FUNC(bit)
     c->vsad[0]= vsad16_c;
     c->vsad[4]= vsad_intra16_c;
+    c->vsad[5]= vsad_intra8_c;
     c->vsse[0]= vsse16_c;
     c->vsse[4]= vsse_intra16_c;
+    c->vsse[5]= vsse_intra8_c;
     c->nsse[0]= nsse16_c;
     c->nsse[1]= nsse8_c;
 #if CONFIG_SNOW_ENCODER
@@ -4430,6 +4453,7 @@ void attribute_align_arg dsputil_init(DSPContext* c, AVCodecContext *avctx)
     c->add_bytes= add_bytes_c;
     c->add_bytes_l2= add_bytes_l2_c;
     c->diff_bytes= diff_bytes_c;
+    c->add_hfyu_median_prediction= add_hfyu_median_prediction_c;
     c->sub_hfyu_median_prediction= sub_hfyu_median_prediction_c;
     c->bswap_buf= bswap_buf;
 #if CONFIG_PNG_DECODER
@@ -4454,6 +4478,9 @@ void attribute_align_arg dsputil_init(DSPContext* c, AVCodecContext *avctx)
     if (CONFIG_VP3_DECODER || CONFIG_THEORA_DECODER) {
         c->vp3_h_loop_filter= ff_vp3_h_loop_filter_c;
         c->vp3_v_loop_filter= ff_vp3_v_loop_filter_c;
+    }
+    if (CONFIG_VP6_DECODER) {
+        c->vp6_filter_diag4= ff_vp6_filter_diag4_c;
     }
 
     c->h261_loop_filter= h261_loop_filter_c;

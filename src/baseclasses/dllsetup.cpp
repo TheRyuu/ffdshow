@@ -3,17 +3,15 @@
 //
 // Desc: DirectShow base classes.
 //
-// Copyright (c) 1992-2002 Microsoft Corporation.  All rights reserved.
+// Copyright (c) 1992-2001 Microsoft Corporation.  All rights reserved.
 //------------------------------------------------------------------------------
-
 
 #include "stdafx.h"
 
 //---------------------------------------------------------------------------
 // defines
 
-static const int MAX_KEY_LEN=260;
-
+static const int MAX_KEY_LEN=260; /*ffdshow custom*/
 
 //---------------------------------------------------------------------------
 // externally defined functions/variable

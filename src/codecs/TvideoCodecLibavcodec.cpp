@@ -580,12 +580,18 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
        Trect r(0,0,avctx->width,avctx->height);
 
        if (avctx->sample_aspect_ratio.num
-         && !isdvdproc
          && !(connectedSplitter == TffdshowVideoInputPin::MPC_matroska_splitter && avctx->sample_aspect_ratio.num==1 && avctx->sample_aspect_ratio.den==1)
           )  // With MPC's internal matroska splitter, AR is not reliable.
         r.sar=avctx->sample_aspect_ratio;
        else
         r.sar=containerSar;
+
+        // Correct impossible sar for DVD
+       if (isdvdproc && r.sar.num == 128 && r.sar.den == 81)
+        {
+         avctx->sample_aspect_ratio.num = 32;
+         avctx->sample_aspect_ratio.den = 27;
+        }
 
        quants=frame->qscale_table;
        quantsStride=frame->qstride;

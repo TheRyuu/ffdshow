@@ -7,7 +7,9 @@
 #endif
 
 #if defined(__INTEL_COMPILER)
-  #if __INTEL_COMPILER  >= 1000
+  #if __INTEL_COMPILER  >= 1100
+    #define COMPILER "icl 11"
+  #elif __INTEL_COMPILER  >= 1000
     #define COMPILER "icl 10"
   #elif __INTEL_COMPILER  >= 900
     #define COMPILER "icl 9"
@@ -24,7 +26,7 @@
   #elif _MSC_VER>=1300
     #define COMPILER "msvc 2003"
   #else
-# error This version of Microsoft Visual C++ is not supported.
+#define COMPILER "unknown and not supported"
   #endif
 #elif defined(__GNUC__)
   #ifdef __SSE__
@@ -47,6 +49,12 @@
   #define COMPILER_X64 ", x64"
 #else
   #define COMPILER_X64 ", x86"
+#endif
+
+#ifdef UNICODE
+ #define UNICODE_BUILD "unicode"
+#else
+ #define UNICODE_BUILD "ansi"
 #endif
 
 #ifdef DEBUG

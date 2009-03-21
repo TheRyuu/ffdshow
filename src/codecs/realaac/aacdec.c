@@ -433,6 +433,6 @@ int AACDecode(HAACDecoder hAACDecoder, unsigned char **inbuf, int *bytesLeft, sh
 
 void __stdcall getVersion(char *ver,const char* *license)
 {
- strcpy(ver, "build date "__DATE__" "__TIME__" ("COMPILER COMPILER_X64")");
+ strcpy(ver, "build date "__DATE__" "__TIME__" ("COMPILER COMPILER_X64 COMPILER_INFO")");
  *license="Jon Recker (jrecker@real.com), Ken Cooke (kenc@real.com)\nPortions Copyright (c) 1995-2005 RealNetworks, Inc. All Rights Reserved.";
 }

@@ -20,7 +20,7 @@
  */
 
 /**
- * @file mlp_parser.c
+ * @file libavcodec/mlp_parser.c
  * MLP parser
  */
 
@@ -293,7 +293,7 @@ lost_sync:
 }
 
 AVCodecParser mlp_parser = {
-    { CODEC_ID_MLP },
+    { CODEC_ID_MLP, CODEC_ID_TRUEHD },
     sizeof(MLPParseContext),
     mlp_init,
     mlp_parse,

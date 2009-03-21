@@ -19,14 +19,22 @@
  */
 
 /**
- * @file internal.h
- * common internal api header.
+ * @file libavutil/internal.h
+ * common internal API header
  */
 
 #ifndef AVUTIL_INTERNAL_H
 #define AVUTIL_INTERNAL_H
 
-#define AV_GCC_VERSION_AT_LEAST(x,y) (defined(__GNUC__) && (__GNUC__ > x || __GNUC__ == x && __GNUC_MINOR__ >= y))
+#include <limits.h>
+#ifdef __GNUC__
+#include <stdint.h>
+#endif
+#include <stddef.h>
+#include <assert.h>
+#include "config.h"
+#include "common.h"
+#include "mem.h"
 
 #ifndef attribute_align_arg
 #if (!defined(__ICC) || __ICC > 1100) && AV_GCC_VERSION_AT_LEAST(4,2)
@@ -77,19 +85,32 @@
 #endif
 
 #ifndef INT_BIT
-#    if INT_MAX != 2147483647
-#        define INT_BIT 64
-#    else
-#        define INT_BIT 32
-#    endif
+#    define INT_BIT (CHAR_BIT * sizeof(int))
 #endif
 
 #if ( defined(__PIC__) || defined(__pic__) ) && ! defined(PIC)
 #    define PIC
 #endif
 
+#ifndef offsetof
+#    define offsetof(T,F) ((unsigned int)((char *)&((T *)0)->F))
+#endif
+
 #define snprintf _snprintf
 #define vsnprintf _vsnprintf
+
+#if defined(__MINGW32__) || defined(__CYGWIN__)
+#define EXTERN_PREFIX "_"
+#endif
+
+// Use rip-relative addressing if compiling PIC code on x86-64.
+#if ARCH_X86_64 && defined(PIC)
+#    define LOCAL_MANGLE(a) #a "(%%rip)"
+#else
+#    define LOCAL_MANGLE(a) #a
+#endif
+
+#define MANGLE(a) EXTERN_PREFIX LOCAL_MANGLE(a)
 
 #define CHECKED_ALLOCZ(p, size)\
 {\

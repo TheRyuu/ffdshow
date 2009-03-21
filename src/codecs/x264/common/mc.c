@@ -132,9 +132,8 @@ static void mc_copy( uint8_t *src, int i_src_stride, uint8_t *dst, int i_dst_str
 
 #define TAPFILTER(pix, d) ((pix)[x-2*d] + (pix)[x+3*d] - 5*((pix)[x-d] + (pix)[x+2*d]) + 20*((pix)[x] + (pix)[x+d]))
 static void hpel_filter( uint8_t *dsth, uint8_t *dstv, uint8_t *dstc, uint8_t *src,
-                         int stride, int width, int height )
+                         int stride, int width, int height, int16_t *buf )
 {
-    int16_t *buf = x264_malloc((width+5)*sizeof(int16_t));
     int x, y;
     for( y=0; y<height; y++ )
     {
@@ -153,7 +152,6 @@ static void hpel_filter( uint8_t *dsth, uint8_t *dstv, uint8_t *dstc, uint8_t *s
         dstc += stride;
         src += stride;
     }
-    x264_free(buf);
 }
 
 static const int hpel_ref0[16] = {0,1,1,1,0,1,1,1,2,3,3,3,0,1,1,1};
@@ -269,6 +267,42 @@ static void memzero_aligned( void * dst, int n )
     memset( dst, 0, n );
 }
 
+static void integral_init4h( uint16_t *sum, uint8_t *pix, int stride )
+{
+    int x, v = pix[0]+pix[1]+pix[2]+pix[3];
+    for( x=0; x<stride-4; x++ )
+    {
+        sum[x] = v + sum[x-stride];
+        v += pix[x+4] - pix[x];
+    }
+}
+
+static void integral_init8h( uint16_t *sum, uint8_t *pix, int stride )
+{
+    int x, v = pix[0]+pix[1]+pix[2]+pix[3]+pix[4]+pix[5]+pix[6]+pix[7];
+    for( x=0; x<stride-8; x++ )
+    {
+        sum[x] = v + sum[x-stride];
+        v += pix[x+8] - pix[x];
+    }
+}
+
+static void integral_init4v( uint16_t *sum8, uint16_t *sum4, int stride )
+{
+    int x;
+    for( x=0; x<stride-8; x++ )
+        sum4[x] = sum8[x+4*stride] - sum8[x];
+    for( x=0; x<stride-8; x++ )
+        sum8[x] = sum8[x+8*stride] + sum8[x+8*stride+4] - sum8[x] - sum8[x+4];
+}
+
+static void integral_init8v( uint16_t *sum8, int stride )
+{
+    int x;
+    for( x=0; x<stride-8; x++ )
+        sum8[x] = sum8[x+8*stride] - sum8[x];
+}
+
 void x264_frame_init_lowres( x264_t *h, x264_frame_t *frame )
 {
     uint8_t *src = frame->plane[0];
@@ -353,6 +387,11 @@ void x264_mc_init( int cpu, x264_mc_functions_t *pf )
     pf->memzero_aligned = memzero_aligned;
     pf->frame_init_lowres_core = frame_init_lowres_core;
 
+    pf->integral_init4h = integral_init4h;
+    pf->integral_init8h = integral_init8h;
+    pf->integral_init4v = integral_init4v;
+    pf->integral_init8v = integral_init8v;
+
 #ifdef HAVE_MMX
     x264_mc_init_mmx( cpu, pf );
 #endif
@@ -370,7 +409,7 @@ void x264_frame_filter( x264_t *h, x264_frame_t *frame, int mb_y, int b_end )
     int start = (mb_y*16 >> b_interlaced) - 8; // buffer = 4 for deblock + 3 for 6tap, rounded to 8
     int height = ((b_end ? frame->i_lines[0] : mb_y*16) >> b_interlaced) + 8;
     int offs = start*stride - 8; // buffer = 3 for 6tap, aligned to 8 for simd
-    int x, y;
+    int y;
 
     if( mb_y & b_interlaced )
         return;
@@ -382,7 +421,8 @@ void x264_frame_filter( x264_t *h, x264_frame_t *frame, int mb_y, int b_end )
             frame->filtered[2] + offs,
             frame->filtered[3] + offs,
             frame->plane[0] + offs,
-            stride, width + 16, height - start );
+            stride, width + 16, height - start,
+            h->scratch_buffer );
     }
 
     /* generate integral image:
@@ -398,23 +438,25 @@ void x264_frame_filter( x264_t *h, x264_frame_t *frame, int mb_y, int b_end )
             start = -PADV;
         }
         if( b_end )
-            height += PADV-8;
+            height += PADV-9;
         for( y = start; y < height; y++ )
         {
-            uint8_t  *ref  = frame->plane[0] + y * stride - PADH;
-            uint16_t *line = frame->integral + (y+1) * stride - PADH + 1;
-            uint16_t v = line[0] = 0;
-            for( x = 1; x < stride-1; x++ )
-                line[x] = v += ref[x] + line[x-stride] - line[x-stride-1];
-            line -= 8*stride;
-            if( y >= 9-PADV )
+            uint8_t  *pix  = frame->plane[0] + y * stride - PADH;
+            uint16_t *sum8 = frame->integral + (y+1) * stride - PADH;
+            uint16_t *sum4;
+            if( h->frames.b_have_sub8x8_esa )
             {
-                uint16_t *sum4 = line + stride * (frame->i_lines[0] + PADV*2);
-                for( x = 1; x < stride-8; x++, line++, sum4++ )
-                {
-                    sum4[0] =  line[4+4*stride] - line[4] - line[4*stride] + line[0];
-                    line[0] += line[8+8*stride] - line[8] - line[8*stride];
-                }
+                h->mc.integral_init4h( sum8, pix, stride );
+                sum8 -= 8*stride;
+                sum4 = sum8 + stride * (frame->i_lines[0] + PADV*2);
+                if( y >= 8-PADV )
+                    h->mc.integral_init4v( sum8, sum4, stride );
+            }
+            else
+            {
+                h->mc.integral_init8h( sum8, pix, stride );
+                if( y >= 8-PADV )
+                    h->mc.integral_init8v( sum8-8*stride, stride );
             }
         }
     }

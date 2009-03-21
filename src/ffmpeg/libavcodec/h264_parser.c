@@ -70,7 +70,7 @@ int ff_h264_find_frame_end(H264Context *h, const uint8_t *buf, int buf_size)
             else            state>>=1; //2->1, 1->0, 0->0
         }else if(state<=5){
             int v= buf[i] & 0x1F;
-            if(v==7 || v==8 || v==9){
+            if(v==6 || v==7 || v==8 || v==9){
                 if(pc->frame_start_found){
                     i++;
                     goto found;
@@ -123,6 +123,9 @@ static inline int parse_nal_units(AVCodecParserContext *s,
 
     h->s.avctx= avctx;
     h->sei_recovery_frame_cnt = -1;
+    h->sei_dpb_output_delay         =  0;
+    h->sei_cpb_removal_delay        = -1;
+    h->sei_buffering_period_present =  0;
 
     for(;;) {
         int src_length, dst_length, consumed;

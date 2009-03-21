@@ -17,9 +17,9 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * You should have received a copy of the GNU General Public License along
+ * with mpeg2dec; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
 #include "config.h"
@@ -1597,15 +1597,79 @@ static void motion_dummy (mpeg2_decoder_t * const decoder,
 {
 }
 
-void mpeg2_init_fbuf (mpeg2_decoder_t * decoder, uint8_t * current_fbuf[3],
+static void prescale (mpeg2_decoder_t * decoder, coding_t * coding, int idx)
+{
+    static int non_linear_scale [] = {
+	 0,  1,  2,  3,  4,  5,   6,   7,
+	 8, 10, 12, 14, 16, 18,  20,  22,
+	24, 28, 32, 36, 40, 44,  48,  52,
+	56, 64, 72, 80, 88, 96, 104, 112
+    };
+    int i, j, k;
+
+    if ((coding->matrix_updates & (1 << idx)) != 0 ||
+	decoder->scaled[idx] != coding->q_scale_type) {
+	coding->matrix_updates &= ~(1 << idx);
+	decoder->scaled[idx] = coding->q_scale_type;
+	for (i = 0; i < 32; i++) {
+	    k = coding->q_scale_type ? non_linear_scale[i] : (i << 1);
+	    for (j = 0; j < 64; j++)
+		decoder->quantizer_prescale[idx][i][mpeg2_scan_norm[j]] =
+		    k * coding->quantizer_matrix[idx][j];
+	}
+    }
+}
+
+void mpeg2_init_fbuf (mpeg2_decoder_t * decoder, mpeg2_sequence_t * sequence,
+		      mpeg2_picture_t * picture, coding_t * coding,
+		      uint8_t * current_fbuf[3],
 		      uint8_t * forward_fbuf[3], uint8_t * backward_fbuf[3])
 {
     int offset, stride, height, bottom_field;
 
+    decoder->mpeg1 = !(sequence->flags & SEQ_FLAG_MPEG2);
+    decoder->width = sequence->width;
+    height = sequence->height;
+    decoder->vertical_position_extension = (sequence->picture_height > 2800);
+
+    decoder->top_field_first =
+	((picture->flags & PIC_FLAG_TOP_FIELD_FIRST) != 0);
+    if (picture->nb_fields > 1)
+	decoder->picture_structure = FRAME_PICTURE;
+    else
+	decoder->picture_structure =
+	    decoder->top_field_first ? TOP_FIELD : BOTTOM_FIELD;
+
+    decoder->f_motion.f_code[0] = coding->f_code[0][0] - 1;
+    decoder->f_motion.f_code[1] = coding->f_code[0][1] - !(decoder->mpeg1);
+    decoder->b_motion.f_code[0] = coding->f_code[1][0] - 1;
+    decoder->b_motion.f_code[1] = coding->f_code[1][1] - !(decoder->mpeg1);
+    decoder->intra_dc_precision = 15 - coding->intra_dc_precision;
+    decoder->frame_pred_frame_dct = coding->frame_pred_frame_dct;
+    decoder->concealment_motion_vectors = coding->concealment_motion_vectors;
+    decoder->intra_vlc_format = coding->intra_vlc_format;
+    decoder->scan = coding->alternate_scan ? mpeg2_scan_alt : mpeg2_scan_norm;
+
+    if (coding->matrix_updates & 1)
+	decoder->chroma_quantizer[0] =
+	    decoder->quantizer_prescale[(coding->matrix_updates & 4) ? 2 : 0];
+    if (coding->matrix_updates & 1)
+	decoder->chroma_quantizer[1] =
+	    decoder->quantizer_prescale[(coding->matrix_updates & 8) ? 3 : 1];
+    if (decoder->coding_type != D_TYPE) {
+	prescale (decoder, coding, 0);
+	if (decoder->chroma_quantizer[0] == decoder->quantizer_prescale[2])
+	    prescale (decoder, coding, 2);
+	if (decoder->coding_type != I_TYPE) {
+	    prescale (decoder, coding, 1);
+	    if (decoder->chroma_quantizer[1] == decoder->quantizer_prescale[3])
+		prescale (decoder, coding, 3);
+	}
+    }
+
     stride = decoder->stride_frame;
     bottom_field = (decoder->picture_structure == BOTTOM_FIELD);
     offset = bottom_field ? stride : 0;
-    height = decoder->height;
 
     decoder->picture_dest[0] = current_fbuf[0] + offset;
     decoder->picture_dest[1] = current_fbuf[1] + (offset >> 1);

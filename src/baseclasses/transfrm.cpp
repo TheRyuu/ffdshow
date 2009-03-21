@@ -4,13 +4,10 @@
 // Desc: DirectShow base classes - implements class for simple transform
 //       filters such as video decompressors.
 //
-// Copyright (c) 1992-2002 Microsoft Corporation.  All rights reserved.
+// Copyright (c) 1992-2001 Microsoft Corporation.  All rights reserved.
 //------------------------------------------------------------------------------
 
-
 #include "stdafx.h"
-//#include <measure.h>
-
 
 // =================================================================
 // Implements the CTransformFilter class
@@ -356,7 +353,7 @@ CTransformFilter::Receive(IMediaSample *pSample)
     // it will have addrefed it itself.
     pOutSample->Release();
 
-    return hr;
+    return hr; /*ffdshow custom*/
 }
 
 
@@ -676,7 +673,7 @@ CTransformInputPin::SetMediaType(const CMediaType* mtIn)
 STDMETHODIMP
 CTransformInputPin::EndOfStream(void)
 {
-    CAutoLock lck1(&m_pTransformFilter->m_csReceive);
+    CAutoLock lck(&m_pTransformFilter->m_csReceive);
     HRESULT hr = CheckStreaming();
     if (S_OK == hr) {
        hr = m_pTransformFilter->EndOfStream();

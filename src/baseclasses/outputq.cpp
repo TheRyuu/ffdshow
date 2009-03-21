@@ -6,7 +6,7 @@
 //       separate thread and sometimes call Receive() directly on the input
 //       pin.
 //
-// Copyright (c) Microsoft Corporation.  All rights reserved.
+// Copyright (c) 1992-2001 Microsoft Corporation.  All rights reserved.
 //------------------------------------------------------------------------------
 
 #include "stdafx.h"
@@ -595,6 +595,10 @@ HRESULT COutputQueue::ReceiveMultiple (
     long nSamples,
     long *nSamplesProcessed)
 {
+    if (nSamples < 0) {
+        return E_INVALIDARG;
+    }
+    
     CAutoLock lck(this);
     //  Either call directly or queue up the samples
 
@@ -632,7 +636,7 @@ HRESULT COutputQueue::ReceiveMultiple (
         //  Loop processing the samples in batches
 
         LONG iLost = 0;
-        long iDone;
+        long iDone = 0;
         for (iDone = 0;
              iDone < nSamples || (m_nBatched != 0 && m_bSendAnyway);
             ) {
@@ -698,9 +702,11 @@ void COutputQueue::Reset()
     if (!IsQueued()) {
         m_hr = S_OK;
     } else {
-        CAutoLock lck(this);
-        QueueSample(RESET_PACKET);
-        NotifyThread();
+        {
+            CAutoLock lck(this);
+            QueueSample(RESET_PACKET);
+            NotifyThread();
+        }
         m_evFlushComplete.Wait();
     }
 }
@@ -792,3 +798,4 @@ void COutputQueue::SetPopEvent(HANDLE hEvent)
 {
     m_hEventPop = hEvent;
 }
+

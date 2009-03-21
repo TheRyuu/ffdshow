@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9.00"
+	Version="9,00"
 	Name="libavcodec"
 	OwnerKey="{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}"
 	ProjectGUID="{5CAF881C-9349-4EE2-9697-982C10795033}"
@@ -51,7 +51,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories=".,..,../codecs,../imgFilters,../zlib,libavcodec,libavutil"
-				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_DEBUG;_WINDOWS;HAVE_AV_CONFIG_H;CONFIG_H264_PARSER;CONFIG_VORBIS_DECODER;CONFIG_H264_DECODER;H264_MERGE_TESTING"
+				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_DEBUG;_WINDOWS;HAVE_AV_CONFIG_H"
 				ExceptionHandling="0"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="0"
@@ -443,67 +443,7 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
 			<File
-				RelativePath=".\libavcodec\8bps.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\aac_ac3_parser.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\aandcttab.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\aasc.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\ac3.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\ac3_parser.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\ac3dec.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\ac3dec_data.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\ac3enc.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\ac3tab.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\adpcm.c"
-				>
-			</File>
-			<File
 				RelativePath=".\libavcodec\allcodecs.c"
-				>
-			</File>
-			<File
-				RelativePath="libavcodec\asv1.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\atrac3.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\audioconvert.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\avs.c"
 				>
 			</File>
 			<File
@@ -515,54 +455,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\libavcodec\cavs.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\cavsdec.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\cavsdsp.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\celp_filters.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\celp_math.c"
-				>
-			</File>
-			<File
-				RelativePath="libavcodec\cinepak.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\cook.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\corepng.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\cscd.c"
-				>
-			</File>
-			<File
-				RelativePath="libavcodec\cyuv.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\dca.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\dca_parser.c"
-				>
-			</File>
-			<File
 				RelativePath=".\DllEntry.c"
 				>
 			</File>
@@ -571,23 +463,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\libavcodec\dv.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\eac3dec.c"
-				>
-			</File>
-			<File
 				RelativePath=".\libavcodec\error_resilience.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\eval.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\faandct.c"
 				>
 			</File>
 			<File
@@ -595,55 +471,7 @@
 				>
 			</File>
 			<File
-				RelativePath="libavcodec\fft.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\ffv1.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\flac.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\fraps.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\g726.c"
-				>
-			</File>
-			<File
 				RelativePath="libavcodec\golomb.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\gsm.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\h261.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\h261dec.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\h261enc.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\h263.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\h263_parser.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\h263dec.c"
 				>
 			</File>
 			<File
@@ -663,51 +491,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\libavcodec\huffman.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\huffyuv.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\imc.c"
-				>
-			</File>
-			<File
 				RelativePath="libavcodec\imgconvert.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\indeo2.c"
-				>
-			</File>
-			<File
-				RelativePath="libavcodec\indeo3.c"
-				>
-			</File>
-			<File
-				RelativePath="libavcodec\intrax8.c"
-				>
-			</File>
-			<File
-				RelativePath="libavcodec\intrax8dsp.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\jfdctfst.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\jfdctint.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\jpegls.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\jpeglsdec.c"
 				>
 			</File>
 			<File
@@ -715,175 +499,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\libavcodec\lcldec.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\libamr.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\ljpegenc.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\loco.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\lpc.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\mace.c"
-				>
-			</File>
-			<File
-				RelativePath="libavcodec\mdct.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\mjpeg.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\mjpeg_parser.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\mjpegbdec.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\mjpegdec.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\mjpegenc.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\mlp.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\mlp_parser.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\mlpdec.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\motion_est.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\motion_est_template.c"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\libavcodec\mpeg12.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\mpeg12data.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\mpeg12enc.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\mpeg4video_parser.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\mpegaudio.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\mpegaudio_parser.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\mpegaudiodata.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\mpegaudiodec.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\mpegaudiodecheader.c"
-				>
-			</File>
-			<File
 				RelativePath=".\libavcodec\mpegvideo.c"
 				>
 			</File>
 			<File
-				RelativePath=".\libavcodec\mpegvideo_enc.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\msmpeg4.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\msmpeg4data.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\msrle.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\msrledec.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\msvideo1.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\nellymoser.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\nellymoserdec.c"
+				RelativePath=".\libavcodec\options.c"
 				>
 			</File>
 			<File
@@ -891,83 +511,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\libavcodec\pcm.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\png.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\pngdec.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\pngenc.c"
-				>
-			</File>
-			<File
 				RelativePath=".\libavcodec\pthread.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\qdm2.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\qpeg.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\qtrle.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\ra144.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\ra288.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\rangecoder.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\ratecontrol.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\rpza.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\rtjpeg.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\rv10.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\rv30.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\rv30dsp.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\rv34.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\rv40.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\rv40dsp.c"
 				>
 			</File>
 			<File
@@ -975,187 +519,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\libavcodec\snow.c"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\libavcodec\sp5xdec.c"
-				>
-			</File>
-			<File
-				RelativePath="libavcodec\svq1.c"
-				>
-			</File>
-			<File
-				RelativePath="libavcodec\svq1dec.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\svq3.c"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\libavcodec\truemotion1.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\truemotion2.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\truespeech.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\tscc.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\tta.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\ulti.c"
-				>
-			</File>
-			<File
 				RelativePath=".\libavcodec\utils.c"
 				>
 			</File>
 			<File
-				RelativePath=".\libavcodec\vc1.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\vc1data.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\vc1dsp.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\vcr1.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\vorbis.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\vorbis_data.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\vorbis_dec.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\vp3.c"
-				>
-			</File>
-			<File
 				RelativePath=".\libavcodec\vp3dsp.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\vp5.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\vp56.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\vp56data.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\vp6.c"
-				>
-			</File>
-			<File
-				RelativePath="libavcodec\wma.c"
-				>
-			</File>
-			<File
-				RelativePath="libavcodec\wmadec.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\wmv2.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\wmv2dec.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\wmv2enc.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\wnv1.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\xiph.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\xl.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\zmbv.c"
 				>
 			</File>
 		</Filter>
@@ -1163,34 +531,6 @@
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl"
 			>
-			<File
-				RelativePath=".\libavcodec\aac_ac3_parser.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\aandcttab.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\ac3.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\ac3_parser.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\ac3dec_data.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\ac3tab.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\atrac3data.h"
-				>
-			</File>
 			<File
 				RelativePath=".\libavcodec\audioconvert.h"
 				>
@@ -1212,43 +552,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\libavcodec\cavsdata.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\celp_filters.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\celp_math.h"
-				>
-			</File>
-			<File
 				RelativePath=".\config.h"
 				>
 			</File>
 			<File
-				RelativePath=".\libavcodec\cookdata.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\dca.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\dcadata.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\dcahuff.h"
-				>
-			</File>
-			<File
 				RelativePath=".\libavcodec\dsputil.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\dvdata.h"
 				>
 			</File>
 			<File
@@ -1272,27 +580,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\libavcodec\flac.h"
-				>
-			</File>
-			<File
 				RelativePath=".\libavcodec\golomb.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\h261.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\h261data.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\h263_parser.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\h263data.h"
 				>
 			</File>
 			<File
@@ -1312,99 +600,11 @@
 				>
 			</File>
 			<File
-				RelativePath="libavcodec\huffman.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\imcdata.h"
-				>
-			</File>
-			<File
 				RelativePath=".\libavcodec\imgconvert.h"
 				>
 			</File>
 			<File
-				RelativePath=".\libavcodec\indeo2data.h"
-				>
-			</File>
-			<File
-				RelativePath="libavcodec\indeo3data.h"
-				>
-			</File>
-			<File
-				RelativePath="libavcodec\intrax8.h"
-				>
-			</File>
-			<File
-				RelativePath="libavcodec\intrax8huf.h"
-				>
-			</File>
-			<File
-				RelativePath="libavcodec\jpegls.h"
-				>
-			</File>
-			<File
-				RelativePath="libavcodec\jpeglsdec.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\lcl.h"
-				>
-			</File>
-			<File
 				RelativePath=".\libavcodec\mathops.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\mjpeg.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\mjpegdec.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\mjpegenc.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\mlp.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\mlp_parser.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\mpeg12.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\mpeg12data.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\mpeg12decdata.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\mpeg4data.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\mpeg4video_parser.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\mpegaudio.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\mpegaudiodata.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\mpegaudiodecheader.h"
 				>
 			</File>
 			<File
@@ -1420,39 +620,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\libavcodec\msmpeg4data.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\msrledec.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\nellymoser.h"
-				>
-			</File>
-			<File
 				RelativePath=".\libavcodec\parser.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\png.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\qdm2data.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\ra144.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\ra288.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\rangecoder.h"
 				>
 			</File>
 			<File
@@ -1468,55 +636,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\libavcodec\rtjpeg.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\rv30data.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\rv34.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\rv34data.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\rv34vlc.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\rv40data.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\rv40vlc2.h"
-				>
-			</File>
-			<File
 				RelativePath=".\libavcodec\simple_idct.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\snow.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\sp5x.h"
-				>
-			</File>
-			<File
-				RelativePath="libavcodec\svq1.h"
-				>
-			</File>
-			<File
-				RelativePath="libavcodec\svq1_cb.h"
-				>
-			</File>
-			<File
-				RelativePath="libavcodec\svq1_vlc.h"
 				>
 			</File>
 			<File
@@ -1524,71 +644,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\libavcodec\truemotion1data.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\truespeech_data.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\ulti_cb.h"
-				>
-			</File>
-			<File
 				RelativePath=".\libavcodec\unary.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\vc1.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\vc1acdata.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\vc1data.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\vorbis.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\vp3data.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\vp56.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\vp56data.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\vp5data.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\vp6data.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\wma.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\wmadata.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\wmv2.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\xiph.h"
 				>
 			</File>
 		</Filter>
@@ -1681,46 +737,6 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="amr"
-			>
-			<File
-				RelativePath=".\libavcodec\amr_float\interf_dec.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\amr_float\interf_dec.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\amr_float\interf_enc.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\amr_float\interf_rom.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\amr_float\rom_dec.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\amr_float\sp_dec.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\amr_float\sp_dec.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\amr_float\sp_enc.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\amr_float\typedef.h"
-				>
-			</File>
-		</Filter>
-		<Filter
 			Name="libavutil"
 			>
 			<File
@@ -1740,15 +756,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\libavutil\crc.c"
-				>
-			</File>
-			<File
 				RelativePath=".\libavutil\crc.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavutil\crc_data.h"
 				>
 			</File>
 			<File
@@ -1760,22 +768,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\libavutil\lfg.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavutil\lfg.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavutil\lls.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavutil\lls.h"
-				>
-			</File>
-			<File
 				RelativePath=".\libavutil\log.c"
 				>
 			</File>
@@ -1784,23 +776,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\libavutil\lzo.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavutil\lzo.h"
-				>
-			</File>
-			<File
 				RelativePath=".\libavutil\mathematics.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavutil\md5.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavutil\md5.h"
 				>
 			</File>
 			<File
@@ -1812,23 +788,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\libavutil\random.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavutil\random.h"
-				>
-			</File>
-			<File
 				RelativePath=".\libavutil\rational.c"
 				>
 			</File>
 			<File
 				RelativePath=".\libavutil\rational.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavutil\string.c"
 				>
 			</File>
 			<File
