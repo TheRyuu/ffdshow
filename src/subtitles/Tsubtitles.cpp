@@ -72,56 +72,56 @@ Tsubtitle* Tsubtitles::getSubtitle(const TsubtitlesSettings *cfg,REFERENCE_TIME 
 
  if (oldsub)
   {
-   if(time>=oldsub->start && time<=oldsub->stop)
+   if(time >= oldsub->start && time < oldsub->stop)
     return oldsub; // OK!
   }
  else
   {
-   if(time>nosub_range_start && time<nosub_range_end)
+   if(time > nosub_range_start && time < nosub_range_end)
     return oldsub; // OK!
   }
  // sub changed!
- if (time<0)
+ if (time < 0)
   return oldsub=NULL; // no sub here
 
  if(!(*subs)[current_sub])
   return oldsub=NULL;
 
  // check current sub.
- if (time>=(*subs)[current_sub]->start && time<=(*subs)[current_sub]->stop)
+ if (time >= (*subs)[current_sub]->start && time < (*subs)[current_sub]->stop)
   return oldsub=(*subs)[current_sub];
  // check next sub.
  if(current_sub>=0 && current_sub+1<subs->count())
   {
-   if (time>(*subs)[current_sub]->stop && time<(*subs)[current_sub+1]->start)
+   if (time >= (*subs)[current_sub]->stop && time < (*subs)[current_sub+1]->start)
     {
-     nosub_range_start=(*subs)[current_sub]->stop;
-     nosub_range_end  =(*subs)[current_sub+1]->start;
+     nosub_range_start = (*subs)[current_sub]->stop;
+     nosub_range_end   = (*subs)[current_sub+1]->start;
      return oldsub=NULL;
     }
    // next sub?
    ++current_sub;
    oldsub=(*subs)[current_sub];
-   if (time>=oldsub->start && time<=oldsub->stop)
+   if (time >= oldsub->start && time < oldsub->stop)
     return oldsub; // OK!
   }
   // use logarithmic search:
  int i=0,j=(int)subs->count()-1;
  while (j>=i)
   {
-   current_sub=(i+j+1)/2;
-   oldsub=(*subs)[current_sub];
-   if (time<oldsub->start)
-    j=current_sub-1;
-   else if(time>oldsub->stop)
+   current_sub = (i+j+1)/2;
+   oldsub = (*subs)[current_sub];
+   if (time < oldsub->start)
+    j = current_sub-1;
+   else if(time >= oldsub->stop)
     i=current_sub+1;
    else
     return oldsub; // found!
   }
  // check where are we...
- if (time<oldsub->start)
+ if (time < oldsub->start)
   {
-   if(current_sub<=0)
+   if(current_sub <= 0)
     {
      // before the first sub
      nosub_range_start=time-1; // tricky
@@ -129,19 +129,19 @@ Tsubtitle* Tsubtitles::getSubtitle(const TsubtitlesSettings *cfg,REFERENCE_TIME 
      return oldsub=NULL;
     }
    --current_sub;
-   if (time>(*subs)[current_sub]->stop && time<(*subs)[current_sub+1]->start)
+   if (time >= (*subs)[current_sub]->stop && time < (*subs)[current_sub+1]->start)
     {
      // no sub
-     nosub_range_start=(*subs)[current_sub]->stop;
-     nosub_range_end  =(*subs)[current_sub+1]->start;
+     nosub_range_start = (*subs)[current_sub]->stop;
+     nosub_range_end   = (*subs)[current_sub+1]->start;
      return oldsub=NULL;
     }
   }
  else
   {
-   if (time<=oldsub->stop) /*printf("JAJJ!  ")*/;
+   if (time < oldsub->stop) /*printf("JAJJ!  ")*/;
    else
-    if (current_sub+1>=subs->count())
+    if (current_sub + 1 >= subs->count())
      {
       // at the stop?
       nosub_range_start=oldsub->stop;
@@ -149,7 +149,7 @@ Tsubtitle* Tsubtitles::getSubtitle(const TsubtitlesSettings *cfg,REFERENCE_TIME 
       return oldsub=NULL;
      }
     else
-     if (time>(*subs)[current_sub]->stop && time<(*subs)[current_sub+1]->start)
+     if (time >= (*subs)[current_sub]->stop && time < (*subs)[current_sub+1]->start)
       {
        // no sub
        nosub_range_start=(*subs)[current_sub]->stop;

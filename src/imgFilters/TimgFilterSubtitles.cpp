@@ -313,7 +313,6 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
             REFERENCE_TIME frameStop  = cfg->speed2 * ((pict.rtStop  - parent->subtitleResetTime) - cfg->delay * (REF_SECOND_MULT / 1000)) / cfg->speed;
             bool forceChange=false;
             Tsubtitle *sub=NULL;
-            Tsubtitle *sub_at_rtStop=NULL;
             TsubtitlesTextpin* pin = getTextpin();
             Tsubtitles* subtitles = NULL;
             bool isText = false;
@@ -325,27 +324,15 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
                || (adhocMode == ADHOC_SECOND_DONT_DRAW_DVD_SUB && !isdvdproc))) {
                  subformat = pin->sub_format;
                  sub = pin->getSubtitle(cfg, frameStart, &forceChange);
-                 if (!Tsubreader::isDVDsub(subformat) || !sub) // TsubtitlesTextpinDVD clears TsubtitlesTextpinDVD::subtitles on each call.
-                     sub_at_rtStop = pin->getSubtitle(cfg, frameStop , &forceChange);
                  subtitles = pin;
             }
             if (!pin && adhocMode != ADHOC_ADHOC_DRAW_DVD_SUB_ONLY &&  cfg->is) {
                 sub           = subs.getSubtitle(cfg, frameStart, &forceChange);
-                sub_at_rtStop = subs.getSubtitle(cfg, frameStop , &forceChange);
                 subformat = subs.sub_format;
                 subtitles = &subs;
             }
             isText = Tsubreader::isText(subformat);
             isDVDsub = Tsubreader::isDVDsub(subformat);
-
-            if (!sub)
-                sub = sub_at_rtStop;
-            else if (sub_at_rtStop && sub != sub_at_rtStop && isText) {
-                TsubtitleTexts *sub1 = (TsubtitleTexts *)sub;
-                TsubtitleTexts *sub2 = (TsubtitleTexts *)sub_at_rtStop;
-                if (sub1->size() < sub2->size())
-                    sub = sub_at_rtStop;
-            }
 
             bool stereoScopic = cfg->stereoscopic && !isdvdproc && subformat != Tsubreader::SUB_SSA;
 
