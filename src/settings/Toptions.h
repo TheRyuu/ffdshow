@@ -170,12 +170,20 @@ public:
  bool set(int id,Tval val,const Toptions::TsendOnChange &sendOnChange)
   {
    typename Tbase::const_iterator o=this->find(id);
-   return o==this->end()?false:(o->second.option->set(o->second.coll,val,sendOnChange,o->second.onChange),true);
+   if (o==this->end())
+    return false;
+
+   o->second.option->set(o->second.coll,val,sendOnChange,o->second.onChange);
+   return true;
   }
  bool reset(int id,const Toptions::TsendOnChange &sendOnChange)
   {
    typename Tbase::const_iterator o=this->find(id);
-   return o==this->end()?false:(o->second.option->reset(o->second.coll,sendOnChange,o->second.onChange),true);
+   if (o==this->end())
+    return false;
+
+   o->second.option->reset(o->second.coll,sendOnChange,o->second.onChange);
+   return true;
   }
  bool getInfo(int id,TffdshowParamInfo *info);
  void getInfoIDs(ints &infos);
@@ -196,7 +204,10 @@ public:
  bool inv(int id,const Toptions::TsendOnChange &sendOnChange)
   {
    const_iterator o=this->find(id);
-   return o==this->end()?false:o->second.option->inv(o->second.coll,sendOnChange,o->second.onChange);
+   if (o==this->end())
+    return false;
+   else
+    return o->second.option->inv(o->second.coll,sendOnChange,o->second.onChange);
   }
 };
 class TcollStrOptions :public TcollOptions<Toptions::TstrOption>
