@@ -42,18 +42,12 @@
 #include "bytestream.h"
 #include "golomb.h"
 #include "flac.h"
+#include "flacdata.h"
 
 #include <malloc.h>
 
 #undef NDEBUG
 #include <assert.h>
-
-enum decorrelation_type {
-    INDEPENDENT,
-    LEFT_SIDE,
-    RIGHT_SIDE,
-    MID_SIDE,
-};
 
 typedef struct FLACContext {
     FLACSTREAMINFO
@@ -65,7 +59,7 @@ typedef struct FLACContext {
     int curr_bps;                           ///< bps for current subframe, adjusted for channel correlation and wasted bits
     int sample_shift;                       ///< shift required to make output samples 16-bit or 32-bit
     int is32;                               ///< flag to indicate if output should be 32-bit instead of 16-bit
-    enum decorrelation_type decorrelation;  ///< channel decorrelation type in the current frame
+    int ch_mode;                            ///< channel decorrelation type in the current frame
     int got_streaminfo;                     ///< indicates if the STREAMINFO has been read
 
     int32_t *decoded[FLAC_MAX_CHANNELS];    ///< decoded samples
@@ -75,19 +69,8 @@ typedef struct FLACContext {
     unsigned int allocated_bitstream_size;
 } FLACContext;
 
-static const int sample_rate_table[] =
-{ 0,
-  88200, 176400, 192000,
-  8000, 16000, 22050, 24000, 32000, 44100, 48000, 96000,
-  0, 0, 0, 0 };
-
 static const int sample_size_table[] =
 { 0, 8, 12, 0, 16, 20, 24, 0 };
-
-static const int blocksize_table[] = {
-     0,    192, 576<<0, 576<<1, 576<<2, 576<<3,      0,      0,
-256<<0, 256<<1, 256<<2, 256<<3, 256<<4, 256<<5, 256<<6, 256<<7
-};
 
 static int64_t get_utf8(GetBitContext *gb)
 {
@@ -166,8 +149,8 @@ static void allocate_buffers(FLACContext *s)
     assert(s->max_blocksize);
 
     if (s->max_framesize == 0 && s->max_blocksize) {
-        // FIXME header overhead
-        s->max_framesize= (s->channels * s->bps * s->max_blocksize + 7)/ 8;
+        s->max_framesize = ff_flac_get_max_frame_size(s->max_blocksize,
+                                                      s->channels, s->bps);
     }
 
     for (i = 0; i < s->channels; i++) {
@@ -451,10 +434,10 @@ static inline int decode_subframe(FLACContext *s, int channel)
 
     s->curr_bps = s->bps;
     if (channel == 0) {
-        if (s->decorrelation == RIGHT_SIDE)
+        if (s->ch_mode == FLAC_CHMODE_RIGHT_SIDE)
             s->curr_bps++;
     } else {
-        if (s->decorrelation == LEFT_SIDE || s->decorrelation == MID_SIDE)
+        if (s->ch_mode == FLAC_CHMODE_LEFT_SIDE || s->ch_mode == FLAC_CHMODE_MID_SIDE)
             s->curr_bps++;
     }
 
@@ -505,21 +488,19 @@ static inline int decode_subframe(FLACContext *s, int channel)
 
 static int decode_frame(FLACContext *s, int alloc_data_size)
 {
-    int blocksize_code, sample_rate_code, sample_size_code, assignment, i, crc8;
-    int decorrelation, bps, blocksize, samplerate;
+    int blocksize_code, sample_rate_code, sample_size_code, i, crc8;
+    int ch_mode, bps, blocksize, samplerate;
 
     blocksize_code = get_bits(&s->gb, 4);
 
     sample_rate_code = get_bits(&s->gb, 4);
 
-    assignment = get_bits(&s->gb, 4); /* channel assignment */
-    if (assignment < FLAC_MAX_CHANNELS && s->channels == assignment+1)
-        decorrelation = INDEPENDENT;
-    else if (assignment >= FLAC_MAX_CHANNELS && assignment < 11 && s->channels == 2)
-        decorrelation = LEFT_SIDE + assignment - 8;
-    else {
+    ch_mode = get_bits(&s->gb, 4); /* channel assignment */
+    if (ch_mode < FLAC_MAX_CHANNELS && s->channels == ch_mode+1) {
+        ch_mode = FLAC_CHMODE_INDEPENDENT;
+    } else if (ch_mode > FLAC_CHMODE_MID_SIDE || s->channels != 2) {
         av_log(s->avctx, AV_LOG_ERROR, "unsupported channel assignment %d (channels=%d)\n",
-               assignment, s->channels);
+               ch_mode, s->channels);
         return -1;
     }
 
@@ -562,7 +543,7 @@ static int decode_frame(FLACContext *s, int alloc_data_size)
     else if (blocksize_code == 7)
         blocksize = get_bits(&s->gb, 16)+1;
     else
-        blocksize = blocksize_table[blocksize_code];
+        blocksize = ff_flac_blocksize_table[blocksize_code];
 
     if (blocksize > s->max_blocksize) {
         av_log(s->avctx, AV_LOG_ERROR, "blocksize %d > %d\n", blocksize,
@@ -576,7 +557,7 @@ static int decode_frame(FLACContext *s, int alloc_data_size)
     if (sample_rate_code == 0)
         samplerate= s->samplerate;
     else if (sample_rate_code < 12)
-        samplerate = sample_rate_table[sample_rate_code];
+        samplerate = ff_flac_sample_rate_table[sample_rate_code];
     else if (sample_rate_code == 12)
         samplerate = get_bits(&s->gb, 8) * 1000;
     else if (sample_rate_code == 13)
@@ -600,7 +581,7 @@ static int decode_frame(FLACContext *s, int alloc_data_size)
     s->blocksize    = blocksize;
     s->samplerate   = samplerate;
     s->bps          = bps;
-    s->decorrelation= decorrelation;
+    s->ch_mode      = ch_mode;
 
 //    dump_headers(s->avctx, (FLACStreaminfo *)s);
 
@@ -715,8 +696,8 @@ static int flac_decode_frame(AVCodecContext *avctx,
             }\
             break;
 
-    switch (s->decorrelation) {
-    case INDEPENDENT:
+    switch (s->ch_mode) {
+    case FLAC_CHMODE_INDEPENDENT:
         for (j = 0; j < s->blocksize; j++) {
             for (i = 0; i < s->channels; i++) {
                 if (s->is32)
@@ -726,11 +707,11 @@ static int flac_decode_frame(AVCodecContext *avctx,
             }
         }
         break;
-    case LEFT_SIDE:
+    case FLAC_CHMODE_LEFT_SIDE:
         DECORRELATE(a,a-b)
-    case RIGHT_SIDE:
+    case FLAC_CHMODE_RIGHT_SIDE:
         DECORRELATE(a+b,b)
-    case MID_SIDE:
+    case FLAC_CHMODE_MID_SIDE:
         DECORRELATE( (a-=b>>1) + b, a)
     }
 

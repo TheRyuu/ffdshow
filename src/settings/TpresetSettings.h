@@ -66,18 +66,18 @@ public:
  static bool isValidPresetName(const char_t *presetName);
  virtual bool autoloadSizeMatch(int AVIdx,int AVIdy) const {return false;};
  virtual bool is_autoloadSize(void) const {return false;}
+ virtual Tpreset& operator =(const Tpreset &src);
 protected:
  Tpreset(const char_t *Ireg_child, const char_t *IpresetName, int Imin_order, int Ifiltermode);
  const char_t *reg_child;
  friend class TffdshowDec;
- virtual Tpreset& operator =(const Tpreset &src);
  TintStrColl *options;
  TfilterIDFFs *filters;
  int filtermode;
  template<class T> static T* new_copy(const T *self)
   {
    T *newpreset=new T(_l(""),_l(""),self->filtermode);
-   *newpreset=*self;
+   *newpreset = *(Tpreset*)self;
    return newpreset;
   }
 public:
