@@ -1717,6 +1717,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\subtitles\TtoGdiFont.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\subtitles\TwordWrap.cpp"
 				>
 			</File>

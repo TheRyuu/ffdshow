@@ -540,7 +540,7 @@ bool TimgFilterSubtitles::enterAdhocMode()
 
 HANDLE TimgFilterSubtitles::getGlyphThreadHandle()
 {
-    return glyphThread.platform_specific_thread;
+    return glyphThread.get_platform_specific_thread();
 }
 
 // ========================= TimgFilterSubtitles::TglyphThread =========================
@@ -554,6 +554,7 @@ TimgFilterSubtitles::TglyphThread::TglyphThread(TimgFilterSubtitles *Iparent, If
     used_memory(0),
     mutex_prefs(), // initialize before starting a thread
     condv_prefs(),
+    platform_specific_thread(NULL),
     thread(glyphThreadFunc0,this)
 {
     shared_prefs.csp = -1;
@@ -561,15 +562,14 @@ TimgFilterSubtitles::TglyphThread::TglyphThread(TimgFilterSubtitles *Iparent, If
 
 void TimgFilterSubtitles::TglyphThread::glyphThreadFunc()
 {
-    platform_specific_thread = thread.native_handle();
     slow();
-    SetThreadPriorityBoost(platform_specific_thread, true);
+    SetThreadPriorityBoost(get_platform_specific_thread(), true);
     TsubtitleText *next = NULL;
     do {
         // DPRINTF(_l("glyphThreadFunc top level loop current_pos=%d used_memory=%d"),current_pos,used_memory);
         {
             // do not hog mutex too long
-            TthreadPriority pr(platform_specific_thread,
+            TthreadPriority pr(get_platform_specific_thread(),
                 THREAD_PRIORITY_ABOVE_NORMAL,
                 THREAD_PRIORITY_BELOW_NORMAL);
 
@@ -597,7 +597,7 @@ void TimgFilterSubtitles::TglyphThread::glyphThreadFunc()
             deferred_lock<boost::mutex> lock_next;
             {
                 // do not hog mutex too long
-                TthreadPriority pr(platform_specific_thread,
+                TthreadPriority pr(get_platform_specific_thread(),
                     THREAD_PRIORITY_ABOVE_NORMAL,
                     THREAD_PRIORITY_BELOW_NORMAL);
 
@@ -694,10 +694,17 @@ void TimgFilterSubtitles::TglyphThread::onSeek()
 
 void TimgFilterSubtitles::TglyphThread::slow()
 {
-    SetThreadPriority(platform_specific_thread, THREAD_PRIORITY_BELOW_NORMAL);
+    SetThreadPriority(get_platform_specific_thread(), THREAD_PRIORITY_BELOW_NORMAL);
 }
 
 void TimgFilterSubtitles::TglyphThread::hustle()
 {
-    SetThreadPriority(platform_specific_thread, THREAD_PRIORITY_ABOVE_NORMAL);
+    SetThreadPriority(get_platform_specific_thread(), THREAD_PRIORITY_ABOVE_NORMAL);
+}
+
+HANDLE TimgFilterSubtitles::TglyphThread::get_platform_specific_thread()
+{
+    if (!platform_specific_thread)
+        platform_specific_thread = thread.native_handle();
+    return platform_specific_thread;
 }

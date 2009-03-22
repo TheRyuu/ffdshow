@@ -97,10 +97,11 @@ private:
      int used_memory;
 
  public:
+     HANDLE get_platform_specific_thread();
      TglyphThread(TimgFilterSubtitles *Iparent, IffdshowBase *deci);
      ~TglyphThread() {};
      void done();
-      friend class TimgFilterSubtitles;
+     friend class TimgFilterSubtitles;
  } glyphThread;
 
  public:
