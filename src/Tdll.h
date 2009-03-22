@@ -50,6 +50,14 @@ public:
    fnc=hdll?(T)GetProcAddress(hdll,name):NULL;
    ok&=(fnc!=NULL);
   }
+ template<class T> __forceinline void loadFunctionByIndex(T &fnc, uint16_t id)
+  {
+   uint32_t id32 = uint32_t(id);
+   fnc = hdll ?
+             (T) GetProcAddress(hdll, (LPCSTR)id32) : 
+             NULL;
+   ok&=(fnc!=NULL);
+  }
  static bool check(const char_t *dllName1,const Tconfig *config)
   {
    char_t name[MAX_PATH],ext[MAX_PATH];
