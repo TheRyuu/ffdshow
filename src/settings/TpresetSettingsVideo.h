@@ -40,43 +40,9 @@ protected:
  virtual void reg_op(TregOp &t);
  virtual int getDefault(int id);
 public:
+ virtual Tpreset& operator =(const Tpreset &src);
  TpresetVideo(const char_t *Ireg_child, const char_t *IpresetName, int filtermode);
  virtual ~TpresetVideo() {}
- virtual Tpreset& operator=(const Tpreset &src0)
-  {
-   Tpreset::operator =(src0);
-   TpresetVideo &src = (TpresetVideo &)src0;
-   needOutcspsFix=src.needOutcspsFix;
-   needGlobalFix=src.needGlobalFix;
-
-   autoloadSize=src.autoloadSize;
-   autoloadSizeXmin=src.autoloadSizeXmin;
-   autoloadSizeXmax=src.autoloadSizeXmax;
-   autoloadSizeCond=src.autoloadSizeCond;
-   autoloadSizeYmin=src.autoloadSizeYmin;
-   autoloadSizeYmax=src.autoloadSizeYmax;
-
-   videoDelay=src.videoDelay;isVideoDelayEnd=src.isVideoDelayEnd;videoDelayEnd=src.videoDelayEnd;
-   idct=src.idct;
-   softTelecine=src.softTelecine;
-   workaroundBugs=src.workaroundBugs;errorRecognition=src.errorRecognition;errorConcealment=src.errorConcealment;
-   lavcDecThreads=src.lavcDecThreads;
-   grayscale=src.grayscale;
-   multiThread=src.multiThread;
-   dontQueueInWMP=src.dontQueueInWMP;
-   useQueueOnlyIn=src.useQueueOnlyIn;
-   queueCount=src.queueCount;
-   queueVMR9YV12=src.queueVMR9YV12;
-   dropOnDelay=src.dropOnDelay;
-   dropDelayTime=src.dropDelayTime;
-   h264skipOnDelay=src.h264skipOnDelay;
-   h264skipDelayTime=src.h264skipDelayTime;
-   bordersBrightness=src.bordersBrightness;
-   ff_strncpy(useQueueOnlyInList, src.useQueueOnlyInList, countof(useQueueOnlyInList));
-
-   isDyInterlaced=src.isDyInterlaced;dyInterlaced=src.dyInterlaced;
-   return *this;
-  }
 
  virtual Tpreset* copy(void) const {return new_copy(this);}
  virtual void loadReg(void);
@@ -112,6 +78,11 @@ public:
 class TpresetVideoPlayer : public TpresetVideo
 {
 public:
+ virtual Tpreset& operator =(const Tpreset &src)
+  {
+   TpresetVideo::operator =(src);
+   return *this;
+  }
  TpresetVideoPlayer(const char_t *Ireg_child,const char_t *IpresetName, int filtermode);
  virtual Tpreset* copy(void) const {return new_copy(this);}
 };
