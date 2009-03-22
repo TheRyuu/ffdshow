@@ -45,6 +45,13 @@ protected:
  comptrQ<IffdshowDecVideo> deciV;
  IdecVideoSink *sinkD;
  TvideoCodecDec(IffdshowBase *Ideci,IdecVideoSink *Isink);
+
+ /*
+  * correctDVDsar
+  *  Correct impossible sar for DVD
+  *  DAR of DVD must be either 4:3 or 16:9.
+  */
+ void correctDVDsar(Trect &r);
 public:
  static TvideoCodecDec* initDec(IffdshowBase *deci,IdecVideoSink *Isink,CodecID codecId,FOURCC fcc,const CMediaType &mt);
 
