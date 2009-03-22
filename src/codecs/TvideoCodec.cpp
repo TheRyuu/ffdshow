@@ -95,13 +95,15 @@ float TvideoCodecDec::calcMeanQuant(void)
 
 void TvideoCodecDec::correctDVDsar(Trect &r)
 {
-    if (r.dx * r.sar.num * 9 == r.dy * r.sar.den * 16) {
+    if (!isdvdproc)
+        return;
+    if (r.dx * r.sar.num * 9 == r.dy * r.sar.den * 16)
         // 16:9, OK
         return;
-    } else if (r.dx * r.sar.num * 3 == r.dy * r.sar.den * 4) {
+    if (r.dx * r.sar.num * 3 == r.dy * r.sar.den * 4)
         // 4:3, OK
         return;
-    } else if (r.dx * r.sar.num * 9 > r.dy * r.sar.den * 16) {
+    if (r.dx * r.sar.num * 9 > r.dy * r.sar.den * 16) {
         // Fix to 16:9
         r.sar.num = r.dy * 16;
         r.sar.den = r.dx * 9;

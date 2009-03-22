@@ -586,9 +586,8 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
        else
         r.sar=containerSar;
 
-        // Correct impossible sar for DVD
-       if (isdvdproc)
-        correctDVDsar(r);
+       // Correct impossible sar for DVD
+       correctDVDsar(r);
 
        quants=frame->qscale_table;
        quantsStride=frame->qstride;
