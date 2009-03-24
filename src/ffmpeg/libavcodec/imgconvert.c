@@ -762,7 +762,7 @@ int ff_set_systematic_pal(uint32_t pal[256], enum PixelFormat pix_fmt){
     return 0;
 }
 
-int ff_fill_linesize(AVPicture *picture, int pix_fmt, int width)
+int ff_fill_linesize(AVPicture *picture, enum PixelFormat pix_fmt, int width)
 {
     int w2;
     const PixFmtInfo *pinfo;
@@ -850,7 +850,7 @@ int ff_fill_linesize(AVPicture *picture, int pix_fmt, int width)
     return 0;
 }
 
-int ff_fill_pointer(AVPicture *picture, uint8_t *ptr, int pix_fmt,
+int ff_fill_pointer(AVPicture *picture, uint8_t *ptr, enum PixelFormat pix_fmt,
                     int height)
 {
     int size, h2, size2;
@@ -940,19 +940,6 @@ int ff_fill_pointer(AVPicture *picture, uint8_t *ptr, int pix_fmt,
     }
 }
 
-int avpicture_fill(AVPicture *picture, uint8_t *ptr,
-                   int pix_fmt, int width, int height)
-{
-
-    if(avcodec_check_dimensions(NULL, width, height))
-        return -1;
-
-    if (ff_fill_linesize(picture, pix_fmt, width))
-        return -1;
-
-    return ff_fill_pointer(picture, ptr, pix_fmt, height);
-}
-
 void ff_img_copy_plane(uint8_t *dst, int dst_wrap,
                            const uint8_t *src, int src_wrap,
                            int width, int height)
@@ -1008,7 +995,7 @@ int ff_get_plane_bytewidth(enum PixelFormat pix_fmt, int width, int plane)
 }
 
 void av_picture_copy(AVPicture *dst, const AVPicture *src,
-              int pix_fmt, int width, int height)
+                     enum PixelFormat pix_fmt, int width, int height)
 {
     int i;
     const PixFmtInfo *pf = &pix_fmt_info[pix_fmt];

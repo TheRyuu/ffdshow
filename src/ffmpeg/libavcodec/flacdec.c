@@ -486,102 +486,142 @@ static inline int decode_subframe(FLACContext *s, int channel)
     return 0;
 }
 
-static int decode_frame(FLACContext *s, int alloc_data_size)
+/**
+ * Validate and decode a frame header.
+ * @param      avctx AVCodecContext to use as av_log() context
+ * @param      gb    GetBitContext from which to read frame header
+ * @param[out] fi    frame information
+ */
+static int decode_frame_header(AVCodecContext *avctx, GetBitContext *gb,
+                               FLACFrameInfo *fi)
 {
-    int blocksize_code, sample_rate_code, sample_size_code, i, crc8;
-    int ch_mode, bps, blocksize, samplerate;
+    int bs_code, sr_code, bps_code;
 
-    blocksize_code = get_bits(&s->gb, 4);
+    /* frame sync code */
+    skip_bits(gb, 16);
 
-    sample_rate_code = get_bits(&s->gb, 4);
+    /* block size and sample rate codes */
+    bs_code = get_bits(gb, 4);
+    sr_code = get_bits(gb, 4);
 
-    ch_mode = get_bits(&s->gb, 4); /* channel assignment */
-    if (ch_mode < FLAC_MAX_CHANNELS && s->channels == ch_mode+1) {
-        ch_mode = FLAC_CHMODE_INDEPENDENT;
-    } else if (ch_mode > FLAC_CHMODE_MID_SIDE || s->channels != 2) {
-        av_log(s->avctx, AV_LOG_ERROR, "unsupported channel assignment %d (channels=%d)\n",
-               ch_mode, s->channels);
+    /* channels and decorrelation */
+    fi->ch_mode = get_bits(gb, 4);
+    if (fi->ch_mode < FLAC_MAX_CHANNELS) {
+        fi->channels = fi->ch_mode + 1;
+        fi->ch_mode = FLAC_CHMODE_INDEPENDENT;
+    } else if (fi->ch_mode <= FLAC_CHMODE_MID_SIDE) {
+        fi->channels = 2;
+    } else {
+        av_log(avctx, AV_LOG_ERROR, "invalid channel mode: %d\n", fi->ch_mode);
         return -1;
     }
 
-    sample_size_code = get_bits(&s->gb, 3);
-    if (sample_size_code == 0)
-        bps= s->bps;
-    else if ((sample_size_code != 3) && (sample_size_code != 7))
-        bps = sample_size_table[sample_size_code];
-    else {
-        av_log(s->avctx, AV_LOG_ERROR, "invalid sample size code (%d)\n",
-               sample_size_code);
+    /* bits per sample */
+    bps_code = get_bits(gb, 3);
+    if (bps_code == 3 || bps_code == 7) {
+        av_log(avctx, AV_LOG_ERROR, "invalid sample size code (%d)\n",
+               bps_code);
         return -1;
     }
-    if (bps > 16) {
+    fi->bps = sample_size_table[bps_code];
+
+    /* reserved bit */
+    if (get_bits1(gb)) {
+        av_log(avctx, AV_LOG_ERROR, "broken stream, invalid padding\n");
+        return -1;
+    }
+
+    /* sample or frame count */
+    if (get_utf8(gb) < 0) {
+        av_log(avctx, AV_LOG_ERROR, "utf8 fscked\n");
+        return -1;
+    }
+
+    /* blocksize */
+    if (bs_code == 0) {
+        av_log(avctx, AV_LOG_ERROR, "reserved blocksize code: 0\n");
+        return -1;
+    } else if (bs_code == 6) {
+        fi->blocksize = get_bits(gb, 8) + 1;
+    } else if (bs_code == 7) {
+        fi->blocksize = get_bits(gb, 16) + 1;
+    } else {
+        fi->blocksize = ff_flac_blocksize_table[bs_code];
+    }
+
+    /* sample rate */
+    if (sr_code < 12) {
+        fi->samplerate = ff_flac_sample_rate_table[sr_code];
+    } else if (sr_code == 12) {
+        fi->samplerate = get_bits(gb, 8) * 1000;
+    } else if (sr_code == 13) {
+        fi->samplerate = get_bits(gb, 16);
+    } else if (sr_code == 14) {
+        fi->samplerate = get_bits(gb, 16) * 10;
+    } else {
+        av_log(avctx, AV_LOG_ERROR, "illegal sample rate code %d\n",
+               sr_code);
+        return -1;
+    }
+
+    /* header CRC-8 check */
+    skip_bits(gb, 8);
+    if (av_crc(av_crc_get_table(AV_CRC_8_ATM), 0, gb->buffer,
+               get_bits_count(gb)/8)) {
+        av_log(avctx, AV_LOG_ERROR, "header crc mismatch\n");
+        return -1;
+    }
+
+    return 0;
+}
+
+static int decode_frame(FLACContext *s)
+{
+    int i;
+    GetBitContext *gb = &s->gb;
+    FLACFrameInfo fi;
+
+    if (decode_frame_header(s->avctx, gb, &fi)) {
+        av_log(s->avctx, AV_LOG_ERROR, "invalid frame header\n");
+        return -1;
+    }
+
+    if (fi.channels != s->channels) {
+        av_log(s->avctx, AV_LOG_ERROR, "switching channel layout mid-stream "
+                                       "is not supported\n");
+        return -1;
+    }
+    s->ch_mode = fi.ch_mode;
+
+    if (fi.bps && fi.bps != s->bps) {
+        av_log(s->avctx, AV_LOG_ERROR, "switching bps mid-stream is not "
+                                       "supported\n");
+        return -1;
+    }
+    if (s->bps > 16) {
         s->avctx->sample_fmt = SAMPLE_FMT_S32;
-        s->sample_shift = 32 - bps;
+        s->sample_shift = 32 - s->bps;
         s->is32 = 1;
     } else {
         s->avctx->sample_fmt = SAMPLE_FMT_S16;
-        s->sample_shift = 16 - bps;
+        s->sample_shift = 16 - s->bps;
         s->is32 = 0;
     }
-    s->bps = s->avctx->bits_per_raw_sample = bps;
 
-    if (get_bits1(&s->gb)) {
-        av_log(s->avctx, AV_LOG_ERROR, "broken stream, invalid padding\n");
-        return -1;
-    }
-
-    if (get_utf8(&s->gb) < 0) {
-        av_log(s->avctx, AV_LOG_ERROR, "utf8 fscked\n");
-        return -1;
-    }
-
-    if (blocksize_code == 0) {
-        av_log(s->avctx, AV_LOG_ERROR, "reserved blocksize code: 0\n");
-        return -1;
-    } else if (blocksize_code == 6)
-        blocksize = get_bits(&s->gb, 8)+1;
-    else if (blocksize_code == 7)
-        blocksize = get_bits(&s->gb, 16)+1;
-    else
-        blocksize = ff_flac_blocksize_table[blocksize_code];
-
-    if (blocksize > s->max_blocksize) {
-        av_log(s->avctx, AV_LOG_ERROR, "blocksize %d > %d\n", blocksize,
+    if (fi.blocksize > s->max_blocksize) {
+        av_log(s->avctx, AV_LOG_ERROR, "blocksize %d > %d\n", fi.blocksize,
                s->max_blocksize);
         return -1;
     }
+    s->blocksize = fi.blocksize;
 
-    if (blocksize * s->channels * (s->is32 ? 4 : 2) > alloc_data_size)
-        return -1;
-
-    if (sample_rate_code == 0)
-        samplerate= s->samplerate;
-    else if (sample_rate_code < 12)
-        samplerate = ff_flac_sample_rate_table[sample_rate_code];
-    else if (sample_rate_code == 12)
-        samplerate = get_bits(&s->gb, 8) * 1000;
-    else if (sample_rate_code == 13)
-        samplerate = get_bits(&s->gb, 16);
-    else if (sample_rate_code == 14)
-        samplerate = get_bits(&s->gb, 16) * 10;
-    else {
-        av_log(s->avctx, AV_LOG_ERROR, "illegal sample rate code %d\n",
-               sample_rate_code);
-        return -1;
+    if (fi.samplerate == 0) {
+        fi.samplerate = s->samplerate;
+    } else if (fi.samplerate != s->samplerate) {
+        av_log(s->avctx, AV_LOG_WARNING, "sample rate changed from %d to %d\n",
+               s->samplerate, fi.samplerate);
     }
-
-    skip_bits(&s->gb, 8);
-    crc8 = av_crc(av_crc_get_table(AV_CRC_8_ATM), 0,
-                  s->gb.buffer, get_bits_count(&s->gb)/8);
-    if (crc8) {
-        av_log(s->avctx, AV_LOG_ERROR, "header crc mismatch crc=%2X\n", crc8);
-        return -1;
-    }
-
-    s->blocksize    = blocksize;
-    s->samplerate   = samplerate;
-    s->bps          = bps;
-    s->ch_mode      = ch_mode;
+    s->samplerate = s->avctx->sample_rate = fi.samplerate;
 
 //    dump_headers(s->avctx, (FLACStreaminfo *)s);
 
@@ -591,10 +631,10 @@ static int decode_frame(FLACContext *s, int alloc_data_size)
             return -1;
     }
 
-    align_get_bits(&s->gb);
+    align_get_bits(gb);
 
     /* frame footer */
-    skip_bits(&s->gb, 16); /* data crc */
+    skip_bits(gb, 16); /* data crc */
 
     return 0;
 }
@@ -608,6 +648,7 @@ static int flac_decode_frame(AVCodecContext *avctx,
     int16_t *samples_16 = data;
     int32_t *samples_32 = data;
     int alloc_data_size= *data_size;
+    int output_size;
 
     *data_size=0;
 
@@ -671,15 +712,22 @@ static int flac_decode_frame(AVCodecContext *avctx,
 
     /* decode frame */
     init_get_bits(&s->gb, buf, buf_size*8);
-    skip_bits(&s->gb, 16);
-    if (decode_frame(s, alloc_data_size) < 0) {
+    if (decode_frame(s) < 0) {
         av_log(s->avctx, AV_LOG_ERROR, "decode_frame() failed\n");
         s->bitstream_size=0;
         s->bitstream_index=0;
         return -1;
     }
-    *data_size = s->blocksize * s->channels * (s->is32 ? 4 : 2);
     bytes_read = (get_bits_count(&s->gb)+7)/8;
+
+    /* check if allocated data size is large enough for output */
+    output_size = s->blocksize * s->channels * (s->is32 ? 4 : 2);
+    if (output_size > alloc_data_size) {
+        av_log(s->avctx, AV_LOG_ERROR, "output data size is larger than "
+                                       "allocated data size\n");
+        goto end;
+    }
+    *data_size = output_size;
 
 #define DECORRELATE(left, right)\
             assert(s->channels == 2);\
