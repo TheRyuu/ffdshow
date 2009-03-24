@@ -1,9 +1,9 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision = '2778'
+#define tryout_revision = '2811'
 #define buildyear  = '2009'
 #define buildmonth = '03'
-#define buildday   = '15'
+#define buildday   = '24'
 
 ; Build specific options
 #define localize                  = True
@@ -138,7 +138,7 @@ ShowLanguageDialog              = no
 #endif
 ShowTasksTreeLines              = yes
 ShowUndisplayableLanguages      = no
-UsePreviousTasks                = no
+UsePreviousTasks                = yes
 VersionInfoCompany              = ffdshow
 VersionInfoCopyright            = GNU
 VersionInfoVersion              = 1.0.0.{#= tryout_revision}
@@ -272,124 +272,84 @@ Name: "ffdshow\plugins\dscaler";    Description: "DScaler"
 #endif
 
 [Tasks]
-Name: "resetsettings";           Description: "{cm:tsk_resetSettings}";                                                          GroupDescription: "{cm:tsk_settings}";                        Components: ffdshow; Flags: unchecked
-Name: "video";                   Description: "{cm:tsk_videoFormatsSelect}";                                                     GroupDescription: "{cm:tsk_videoFormats}";                    Components: ffdshow; Flags: unchecked
-Name: "video\h264";              Description: "H.264 / AVC";                                                                                                                                   Components: ffdshow; Flags: unchecked
-Name: "video\h264\libavcodec";   Description: "libavcodec";                                                Check:      CheckTaskVideo(  'h264',  1, True);                                     Components: ffdshow; Flags:           exclusive
-Name: "video\h264\libavcodec";   Description: "libavcodec";                                                Check: NOT  CheckTaskVideo(  'h264',  1, True);                                     Components: ffdshow; Flags: unchecked exclusive
-Name: "video\h264\ffmpegmt";     Description: "ffmpeg-mt";                                                 Check:      CheckTaskVideoFFMPEGMT(  'h264', False);                                Components: ffdshow; Flags:           exclusive
-Name: "video\h264\ffmpegmt";     Description: "ffmpeg-mt";                                                 Check: NOT  CheckTaskVideoFFMPEGMT(  'h264', False);                                Components: ffdshow; Flags: unchecked exclusive
-Name: "video\divx";              Description: "DivX";                                                      Check:      CheckTaskVideo2( 'dx50',     True);                                     Components: ffdshow;
-Name: "video\divx";              Description: "DivX";                                                      Check: NOT  CheckTaskVideo2( 'dx50',     True);                                     Components: ffdshow; Flags: unchecked
-Name: "video\xvid";              Description: "Xvid";                                                      Check:      CheckTaskVideo2( 'xvid',     True);                                     Components: ffdshow
-Name: "video\xvid";              Description: "Xvid";                                                      Check: NOT  CheckTaskVideo2( 'xvid',     True);                                     Components: ffdshow; Flags: unchecked
-Name: "video\mpeg4";             Description: "{cm:tsk_genericMpeg4}";                                     Check:      CheckTaskVideo2( 'mp4v',     True);                                     Components: ffdshow
-Name: "video\mpeg4";             Description: "{cm:tsk_genericMpeg4}";                                     Check: NOT  CheckTaskVideo2( 'mp4v',     True);                                     Components: ffdshow; Flags: unchecked
-Name: "video\flv";               Description: "FLV1, FLV4";                                                Check:      CheckTaskVideo(  'flv1',  1, True);                                     Components: ffdshow
-Name: "video\flv";               Description: "FLV1, FLV4";                                                Check: NOT  CheckTaskVideo(  'flv1',  1, True);                                     Components: ffdshow; Flags: unchecked
-Name: "video\h263";              Description: "H.263";                                                     Check:      CheckTaskVideo(  'h263',  1, True);                                     Components: ffdshow
-Name: "video\h263";              Description: "H.263";                                                     Check: NOT  CheckTaskVideo(  'h263',  1, True);                                     Components: ffdshow; Flags: unchecked
-Name: "video\mpeg1";             Description: "MPEG-1";                                                                                                                                        Components: ffdshow; Flags: unchecked
-Name: "video\mpeg1\libmpeg2";    Description: "libmpeg2";                                                  Check:      CheckTaskVideo(  'mpg1',  5, False);                                    Components: ffdshow; Flags:           exclusive
-Name: "video\mpeg1\libmpeg2";    Description: "libmpeg2";                                                  Check: NOT  CheckTaskVideo(  'mpg1',  5, False);                                    Components: ffdshow; Flags: unchecked exclusive
-Name: "video\mpeg1\libavcodec";  Description: "libavcodec";                                                Check:      CheckTaskVideo(  'mpg1',  1, False);                                    Components: ffdshow; Flags:           exclusive
-Name: "video\mpeg1\libavcodec";  Description: "libavcodec";                                                Check: NOT  CheckTaskVideo(  'mpg1',  1, False);                                    Components: ffdshow; Flags: unchecked exclusive
-Name: "video\mpeg2";             Description: "MPEG-2";                                                                                                                                        Components: ffdshow; Flags: unchecked
-Name: "video\mpeg2\libmpeg2";    Description: "libmpeg2";                                                  Check:      CheckTaskVideo(  'mpg2',  5, False);                                    Components: ffdshow; Flags:           exclusive
-Name: "video\mpeg2\libmpeg2";    Description: "libmpeg2";                                                  Check: NOT  CheckTaskVideo(  'mpg2',  5, False);                                    Components: ffdshow; Flags: unchecked exclusive
-Name: "video\mpeg2\libavcodec";  Description: "libavcodec";                                                Check:      CheckTaskVideo(  'mpg2',  1, False);                                    Components: ffdshow; Flags:           exclusive
-Name: "video\mpeg2\libavcodec";  Description: "libavcodec";                                                Check: NOT  CheckTaskVideo(  'mpg2',  1, False);                                    Components: ffdshow; Flags: unchecked exclusive
-Name: "video\huffyuv";           Description: "Huffyuv";                                                   Check:      CheckTaskVideo(  'hfyu',  1, True);                                     Components: ffdshow
-Name: "video\huffyuv";           Description: "Huffyuv";                                                   Check: NOT  CheckTaskVideo(  'hfyu',  1, True);                                     Components: ffdshow; Flags: unchecked
-Name: "video\qt";                Description: "SVQ1, SVQ3, Cinepak, RPZA, QTRLE";                          Check:      CheckTaskVideo(  'svq3',  1, True);                                     Components: ffdshow
-Name: "video\qt";                Description: "SVQ1, SVQ3, Cinepak, RPZA, QTRLE";                          Check: NOT  CheckTaskVideo(  'svq3',  1, True);                                     Components: ffdshow; Flags: unchecked
-Name: "video\vp56";              Description: "VP5, VP6";                                                  Check:      CheckTaskVideo(   'vp6',  1, True);                                     Components: ffdshow
-Name: "video\vp56";              Description: "VP5, VP6";                                                  Check: NOT  CheckTaskVideo(   'vp6',  1, True);                                     Components: ffdshow; Flags: unchecked
-Name: "video\vc1";               Description: "VC-1";                                                                                                                                          Components: ffdshow; Flags: unchecked
-Name: "video\vc1\wmv9";          Description: "wmv9";                                                      Check:      CheckTaskVideo(  'wvc1', 12, False);                                    Components: ffdshow; Flags:           exclusive
-Name: "video\vc1\wmv9";          Description: "wmv9";                                                      Check: NOT  CheckTaskVideo(  'wvc1', 12, False);                                    Components: ffdshow; Flags: unchecked exclusive
-Name: "video\vc1\libavcodec";    Description: "libavcodec";                                                Check:      CheckTaskVideo(  'wvc1',  1, False);                                    Components: ffdshow; Flags:           exclusive
-Name: "video\vc1\libavcodec";    Description: "libavcodec";                                                Check: NOT  CheckTaskVideo(  'wvc1',  1, False);                                    Components: ffdshow; Flags: unchecked exclusive
-Name: "video\wmv1";              Description: "WMV1";                                                      Check:      CheckTaskVideo2( 'wmv1',     False);                                    Components: ffdshow
-Name: "video\wmv1";              Description: "WMV1";                                                      Check: NOT  CheckTaskVideo2( 'wmv1',     False);                                    Components: ffdshow; Flags: unchecked dontinheritcheck
-Name: "video\wmv2";              Description: "WMV2";                                                      Check:      CheckTaskVideo2( 'wmv2',     False);                                    Components: ffdshow
-Name: "video\wmv2";              Description: "WMV2";                                                      Check: NOT  CheckTaskVideo2( 'wmv2',     False);                                    Components: ffdshow; Flags: unchecked dontinheritcheck
-Name: "video\wmv3";              Description: "WMV3";                                                      Check:      CheckTaskVideo2( 'wmv3',     False);                                    Components: ffdshow
-Name: "video\wmv3";              Description: "WMV3";                                                      Check: NOT  CheckTaskVideo2( 'wmv3',     False);                                    Components: ffdshow; Flags: unchecked dontinheritcheck
-Name: "video\wvp2";              Description: "WMVP, WVP2";                                                Check:      CheckTaskVideo(  'wvp2', 12, False);                                    Components: ffdshow
-Name: "video\wvp2";              Description: "WMVP, WVP2";                                                Check: NOT  CheckTaskVideo(  'wvp2', 12, False);                                    Components: ffdshow; Flags: unchecked dontinheritcheck
-Name: "video\mss2";              Description: "MSS1, MSS2";                                                Check:      CheckTaskVideo(  'mss2', 12, False);                                    Components: ffdshow
-Name: "video\mss2";              Description: "MSS1, MSS2";                                                Check: NOT  CheckTaskVideo(  'mss2', 12, False);                                    Components: ffdshow; Flags: unchecked dontinheritcheck
-Name: "video\dvsd";              Description: "DV";                                                        Check:      CheckTaskVideo(  'dvsd',  1, False);                                    Components: ffdshow
-Name: "video\dvsd";              Description: "DV";                                                        Check: NOT  CheckTaskVideo(  'dvsd',  1, False);                                    Components: ffdshow; Flags: unchecked dontinheritcheck
-Name: "video\other1";            Description: "H.261, MJPEG, Theora, VP3";                                 Check: NOT  IsUpdate;                                                               Components: ffdshow
-Name: "video\other2";            Description: "CorePNG, MS Video 1, MSRLE, Techsmith, Truemotion";         Check: NOT  IsUpdate;                                                               Components: ffdshow
-Name: "video\other3";            Description: "ASV1/2, CYUV, ZLIB, 8BPS, LOCO, MSZH, QPEG, WNV1, VCR1";    Check: NOT  IsUpdate;                                                               Components: ffdshow; Flags: unchecked
-Name: "video\other4";            Description: "CamStudio, ZMBV, Ultimotion, VIXL, AASC, IV32, FPS1, RT21"; Check: NOT  IsUpdate;                                                               Components: ffdshow; Flags: unchecked
-Name: "video\rawv";              Description: "{cm:tsk_rawVideo}";                                         Check:      CheckTaskVideo(  'rawv',  1, False);                                    Components: ffdshow; Flags:           dontinheritcheck
-Name: "video\rawv";              Description: "{cm:tsk_rawVideo}";                                         Check: NOT  CheckTaskVideo(  'rawv',  1, False);                                    Components: ffdshow; Flags: unchecked dontinheritcheck
-Name: "audio";                   Description: "{cm:tsk_audioFormatsSelect}";                                                     GroupDescription: "{cm:tsk_audioFormats}";                    Components: ffdshow; Flags: unchecked
-Name: "audio\mp3";               Description: "MP3";                                                                                                                                           Components: ffdshow; Flags: unchecked
-Name: "audio\mp3\libmad";        Description: "libmad";                                                    Check:      CheckTaskAudio(   'mp3',  7, True);                                     Components: ffdshow; Flags:           exclusive
-Name: "audio\mp3\libmad";        Description: "libmad";                                                    Check: NOT  CheckTaskAudio(   'mp3',  7, True);                                     Components: ffdshow; Flags: unchecked exclusive
-Name: "audio\mp3\libavcodec";    Description: "libavcodec";                                                Check:      CheckTaskAudio(   'mp3',  1, False);                                    Components: ffdshow; Flags: exclusive
-Name: "audio\mp3\libavcodec";    Description: "libavcodec";                                                Check: NOT  CheckTaskAudio(   'mp3',  1, False);                                    Components: ffdshow; Flags: unchecked exclusive
-Name: "audio\aac";               Description: "AAC";                                                                                                                                           Components: ffdshow; Flags: unchecked
-Name: "audio\aac\libfaad2";      Description: "libfaad2";                                                  Check:      CheckTaskAudio(   'aac',  8, True);                                     Components: ffdshow; Flags:           exclusive
-Name: "audio\aac\libfaad2";      Description: "libfaad2";                                                  Check: NOT  CheckTaskAudio(   'aac',  8, True);                                     Components: ffdshow; Flags: unchecked exclusive
-;Name: "audio\aac\libavcodec";    Description: "libavcodec";                                                Check:      CheckTaskAudio(   'aac',  1, False);                                    Components: ffdshow; Flags:           exclusive
-;Name: "audio\aac\libavcodec";    Description: "libavcodec";                                                Check: NOT  CheckTaskAudio(   'aac',  1, False);                                    Components: ffdshow; Flags: unchecked exclusive
-Name: "audio\ac3";               Description: "AC3";                                                                                                                                           Components: ffdshow; Flags: unchecked
-Name: "audio\ac3\liba52";        Description: "liba52";                                                    Check:      CheckTaskAudio(   'ac3', 15, True) OR CheckTaskAudio('ac3', 16, True);  Components: ffdshow; Flags:           exclusive
-Name: "audio\ac3\liba52";        Description: "liba52";                                                    Check: NOT (CheckTaskAudio(   'ac3', 15, True) OR CheckTaskAudio('ac3', 16, True)); Components: ffdshow; Flags: unchecked exclusive
-Name: "audio\ac3\libavcodec";    Description: "libavcodec";                                                Check:      CheckTaskAudio(   'ac3',  1, False);                                    Components: ffdshow; Flags:           exclusive
-Name: "audio\ac3\libavcodec";    Description: "libavcodec";                                                Check: NOT  CheckTaskAudio(   'ac3',  1, False);                                    Components: ffdshow; Flags: unchecked exclusive
-Name: "audio\eac3";              Description: "EAC3 (Dolby Digital Plus)";                                 Check:      CheckTaskAudio(  'eac3',  1, True);                                     Components: ffdshow
-Name: "audio\eac3";              Description: "EAC3 (Dolby Digital Plus)";                                 Check: NOT  CheckTaskAudio(  'eac3',  1, True);                                     Components: ffdshow; Flags: unchecked
-Name: "audio\mlp";               Description: "MLP/Dolby TrueHD";                                          Check:      CheckTaskAudio(   'mlp',  1, True);                                     Components: ffdshow
-Name: "audio\mlp";               Description: "MLP/Dolby TrueHD";                                          Check: NOT  CheckTaskAudio(   'mlp',  1, True);                                     Components: ffdshow; Flags: unchecked
-Name: "audio\dts";               Description: "DTS";                                                                                                                                           Components: ffdshow; Flags: unchecked
-Name: "audio\dts\libdts";        Description: "libdts";                                                    Check:      CheckTaskAudio(   'dts', 17, True) OR CheckTaskAudio('dts', 17, True);  Components: ffdshow; Flags:           exclusive
-Name: "audio\dts\libdts";        Description: "libdts";                                                    Check: NOT (CheckTaskAudio(   'dts', 17, True) OR CheckTaskAudio('dts', 17, True)); Components: ffdshow; Flags: unchecked exclusive
-Name: "audio\dts\libavcodec";    Description: "libavcodec";                                                Check:      CheckTaskAudio(   'dts',  1, False);                                    Components: ffdshow; Flags:           exclusive
-Name: "audio\dts\libavcodec";    Description: "libavcodec";                                                Check: NOT  CheckTaskAudio(   'dts',  1, False);                                    Components: ffdshow; Flags: unchecked exclusive
-Name: "audio\lpcm";              Description: "LPCM";                                                      Check:      CheckTaskAudio(  'lpcm',  4, True);                                     Components: ffdshow
-Name: "audio\lpcm";              Description: "LPCM";                                                      Check: NOT  CheckTaskAudio(  'lpcm',  4, True);                                     Components: ffdshow; Flags: unchecked
-Name: "audio\mp2";               Description: "MP1, MP2";                                                                                                                                      Components: ffdshow; Flags: unchecked
-Name: "audio\mp2\libmad";        Description: "libmad";                                                    Check:      CheckTaskAudio(   'mp2',  7, True);                                     Components: ffdshow; Flags:           exclusive
-Name: "audio\mp2\libmad";        Description: "libmad";                                                    Check: NOT  CheckTaskAudio(   'mp2',  7, True);                                     Components: ffdshow; Flags: unchecked exclusive
-Name: "audio\mp2\libavcodec";    Description: "libavcodec";                                                Check:      CheckTaskAudio(   'mp2',  1, False);                                    Components: ffdshow; Flags:           exclusive
-Name: "audio\mp2\libavcodec";    Description: "libavcodec";                                                Check: NOT  CheckTaskAudio(   'mp2',  1, False);                                    Components: ffdshow; Flags: unchecked exclusive
-Name: "audio\vorbis";            Description: "Vorbis";                                                                                                                                        Components: ffdshow; Flags: unchecked
-Name: "audio\vorbis\tremor";     Description: "tremor";                                                    Check:      CheckTaskAudio('vorbis', 18, True);                                     Components: ffdshow; Flags:           exclusive
-Name: "audio\vorbis\tremor";     Description: "tremor";                                                    Check: NOT  CheckTaskAudio('vorbis', 18, True);                                     Components: ffdshow; Flags: unchecked exclusive
-Name: "audio\vorbis\libavcodec"; Description: "libavcodec";                                                Check:      CheckTaskAudio('vorbis',  1, False);                                    Components: ffdshow; Flags:           exclusive
-Name: "audio\vorbis\libavcodec"; Description: "libavcodec";                                                Check: NOT  CheckTaskAudio('vorbis',  1, False);                                    Components: ffdshow; Flags: unchecked exclusive
-Name: "audio\flac";              Description: "FLAC";                                                      Check:      CheckTaskAudio(  'flac',  1, False);                                    Components: ffdshow
-Name: "audio\flac";              Description: "FLAC";                                                      Check: NOT  CheckTaskAudio(  'flac',  1, False);                                    Components: ffdshow; Flags: unchecked
-Name: "audio\tta";               Description: "True Audio";                                                Check:      CheckTaskAudio(   'tta',  1, True);                                     Components: ffdshow
-Name: "audio\tta";               Description: "True Audio";                                                Check: NOT  CheckTaskAudio(   'tta',  1, True);                                     Components: ffdshow; Flags: unchecked
-Name: "audio\amr";               Description: "AMR";                                                       Check:      CheckTaskAudio(   'amr',  1, True);                                     Components: ffdshow
-Name: "audio\amr";               Description: "AMR";                                                       Check: NOT  CheckTaskAudio(   'amr',  1, True);                                     Components: ffdshow; Flags: unchecked
-Name: "audio\qt";                Description: "QDM2, MACE";                                                Check:      CheckTaskAudio(  'qdm2',  1, True);                                     Components: ffdshow
-Name: "audio\qt";                Description: "QDM2, MACE";                                                Check: NOT  CheckTaskAudio(  'qdm2',  1, True);                                     Components: ffdshow; Flags: unchecked
-Name: "audio\adpcm";             Description: "ADPCM, MS GSM, Truespeech";                                 Check: NOT  IsUpdate;                                                               Components: ffdshow; Flags: unchecked
-Name: "audio\rawa";              Description: "{cm:tsk_rawAudio}";                                         Check:      CheckTaskAudio(  'rawa',  4, False);                                    Components: ffdshow; Flags:           dontinheritcheck
-Name: "audio\rawa";              Description: "{cm:tsk_rawAudio}";                                         Check: NOT  CheckTaskAudio(  'rawa',  4, False);                                    Components: ffdshow; Flags: unchecked dontinheritcheck
-Name: "filter";                  Description: "{cm:tsk_filtersSelect}";                                                          GroupDescription: "{cm:tsk_filters}";                         Components: ffdshow; Flags: unchecked
-Name: "filter\passthroughac3";   Description: "{cm:tsk_passthroughac3}";                                   Check:      GetTaskPassthroughAC3();                                                Components: ffdshow
-Name: "filter\passthroughac3";   Description: "{cm:tsk_passthroughac3}";                                   Check: NOT  GetTaskPassthroughAC3();                                                Components: ffdshow; Flags: unchecked
-Name: "filter\passthroughdts";   Description: "{cm:tsk_passthroughdts}";                                   Check:      GetTaskPassthroughDTS();                                                Components: ffdshow
-Name: "filter\passthroughdts";   Description: "{cm:tsk_passthroughdts}";                                   Check: NOT  GetTaskPassthroughDTS();                                                Components: ffdshow; Flags: unchecked
-Name: "filter\normalize";        Description: "{cm:tsk_volumeNorm}";                                       Check:      GetTaskVolNormalize();                                                  Components: ffdshow
-Name: "filter\normalize";        Description: "{cm:tsk_volumeNorm}";                                       Check: NOT  GetTaskVolNormalize();                                                  Components: ffdshow; Flags: unchecked
-Name: "filter\subtitles";        Description: "{cm:tsk_subtitles}";                                        Check:      CheckTaskVideoInpreset('issubtitles', 1, False);                        Components: ffdshow
-Name: "filter\subtitles";        Description: "{cm:tsk_subtitles}";                                        Check: NOT  CheckTaskVideoInpreset('issubtitles', 1, False);                        Components: ffdshow; Flags: unchecked
-#if !PREF_YAMAGATA
-Name: "skiph264inloop";          Description: "{cm:tsk_skipInloop}";                                       Check: NOT  IsUpdate; GroupDescription: "{cm:tsk_tweaks}";                          Components: ffdshow; Flags: unchecked
+Name: "resetsettings";           Description: "{cm:tsk_resetSettings}";           Components: ffdshow; Flags: unchecked;           Check: NOT IsUpdate; GroupDescription: "{cm:tsk_settings}";
+Name: "video";                   Description: "{cm:tsk_videoFormatsSelect}";      Components: ffdshow; Flags: unchecked;           Check: NOT IsUpdate; GroupDescription: "{cm:tsk_videoFormats}";
+Name: "video\h264";              Description: "H.264 / AVC";                      Components: ffdshow;
+Name: "video\h264\libavcodec";   Description: "libavcodec";                       Components: ffdshow; Flags:           exclusive
+Name: "video\h264\ffmpegmt";     Description: "ffmpeg-mt";                        Components: ffdshow; Flags: unchecked exclusive
+Name: "video\divx";              Description: "DivX";                             Components: ffdshow;
+Name: "video\xvid";              Description: "Xvid";                             Components: ffdshow
+Name: "video\mpeg4";             Description: "{cm:tsk_genericMpeg4}";            Components: ffdshow
+Name: "video\flv";               Description: "FLV1, FLV4";                       Components: ffdshow
+Name: "video\h263";              Description: "H.263";                            Components: ffdshow
+Name: "video\mpeg1";             Description: "MPEG-1";                           Components: ffdshow; Flags: unchecked           dontinheritcheck
+Name: "video\mpeg1\libmpeg2";    Description: "libmpeg2";                         Components: ffdshow; Flags: unchecked exclusive
+Name: "video\mpeg1\libavcodec";  Description: "libavcodec";                       Components: ffdshow; Flags: unchecked exclusive
+Name: "video\mpeg2";             Description: "MPEG-2";                           Components: ffdshow; Flags: unchecked
+Name: "video\mpeg2\libmpeg2";    Description: "libmpeg2";                         Components: ffdshow; Flags: unchecked exclusive
+Name: "video\mpeg2\libavcodec";  Description: "libavcodec";                       Components: ffdshow; Flags: unchecked exclusive
+Name: "video\huffyuv";           Description: "Huffyuv";                          Components: ffdshow
+Name: "video\qt";                Description: "SVQ1, SVQ3, Cinepak, RPZA, QTRLE"; Components: ffdshow
+Name: "video\vp56";              Description: "VP5, VP6";                         Components: ffdshow;
+Name: "video\vc1";               Description: "VC-1";                             Components: ffdshow; Flags: unchecked           dontinheritcheck
+Name: "video\vc1\wmv9";          Description: "wmv9";                             Components: ffdshow; Flags: unchecked exclusive
+Name: "video\vc1\libavcodec";    Description: "libavcodec";                       Components: ffdshow; Flags: unchecked exclusive
+Name: "video\wmv1";              Description: "WMV1";                             Components: ffdshow; Flags: unchecked           dontinheritcheck
+Name: "video\wmv2";              Description: "WMV2";                             Components: ffdshow; Flags: unchecked           dontinheritcheck
+Name: "video\wmv3";              Description: "WMV3";                             Components: ffdshow; Flags: unchecked           dontinheritcheck
+Name: "video\wvp2";              Description: "WMVP, WVP2";                       Components: ffdshow; Flags: unchecked           dontinheritcheck
+Name: "video\mss2";              Description: "MSS1, MSS2";                       Components: ffdshow; Flags: unchecked           dontinheritcheck
+Name: "video\dvsd";              Description: "DV";                               Components: ffdshow; Flags: unchecked           dontinheritcheck
+Name: "video\techsmith";         Description: "Techsmith";                        Components: ffdshow; Flags: unchecked
+Name: "video\fraps";             Description: "Fraps";                            Components: ffdshow; Flags: unchecked
+Name: "video\other1";            Description: "H.261, MJPEG, Theora, VP3";        Components: ffdshow
+Name: "video\other2";            Description: "CorePNG, MS Video 1, MSRLE, Truemotion";                 Components: ffdshow
+Name: "video\other3";            Description: "ASV1/2, CYUV, ZLIB, 8BPS, LOCO, MSZH, QPEG, WNV1, VCR1"; Components: ffdshow; Flags: unchecked
+Name: "video\other4";            Description: "CamStudio, ZMBV, Ultimotion, VIXL, AASC, IV32, RT21";    Components: ffdshow; Flags: unchecked
+Name: "video\rawv";              Description: "{cm:tsk_rawVideo}";                Components: ffdshow; Flags: unchecked           dontinheritcheck
+Name: "audio";                   Description: "{cm:tsk_audioFormatsSelect}";      Components: ffdshow; Flags: unchecked;           Check: NOT IsUpdate; GroupDescription: "{cm:tsk_audioFormats}";
+Name: "audio\mp3";               Description: "MP3";                              Components: ffdshow;
+Name: "audio\mp3\libmad";        Description: "libmad";                           Components: ffdshow; Flags:           exclusive
+Name: "audio\mp3\mp3lib";        Description: "mp3lib";                           Components: ffdshow; Flags: unchecked exclusive
+Name: "audio\mp3\libavcodec";    Description: "libavcodec";                       Components: ffdshow; Flags: unchecked exclusive
+Name: "audio\aac";               Description: "AAC";                              Components: ffdshow;
+Name: "audio\aac\libfaad2";      Description: "libfaad2";                         Components: ffdshow; Flags:           exclusive
+;Name: "audio\aac\libavcodec";    Description: "libavcodec";                      Components: ffdshow; Flags: unchecked exclusive
+Name: "audio\ac3";               Description: "AC3";                              Components: ffdshow;
+Name: "audio\ac3\liba52";        Description: "liba52";                           Components: ffdshow; Flags:           exclusive
+Name: "audio\ac3\libavcodec";    Description: "libavcodec";                       Components: ffdshow; Flags: unchecked exclusive
+Name: "audio\eac3";              Description: "EAC3 (Dolby Digital Plus)";        Components: ffdshow
+Name: "audio\mlp";               Description: "MLP/Dolby TrueHD";                 Components: ffdshow
+Name: "audio\dts";               Description: "DTS";                              Components: ffdshow;
+Name: "audio\dts\libdts";        Description: "libdts";                           Components: ffdshow; Flags:           exclusive
+Name: "audio\dts\libavcodec";    Description: "libavcodec";                       Components: ffdshow; Flags: unchecked exclusive
+Name: "audio\lpcm";              Description: "LPCM";                             Components: ffdshow
+Name: "audio\mp2";               Description: "MP1, MP2";                         Components: ffdshow; Flags: unchecked
+Name: "audio\mp2\libmad";        Description: "libmad";                           Components: ffdshow; Flags:           exclusive
+Name: "audio\mp2\libavcodec";    Description: "libavcodec";                       Components: ffdshow; Flags: unchecked exclusive
+Name: "audio\vorbis";            Description: "Vorbis";                           Components: ffdshow;
+Name: "audio\vorbis\tremor";     Description: "tremor";                           Components: ffdshow; Flags:           exclusive
+Name: "audio\vorbis\libavcodec"; Description: "libavcodec";                       Components: ffdshow; Flags: unchecked exclusive
+Name: "audio\flac";              Description: "FLAC";                             Components: ffdshow
+Name: "audio\tta";               Description: "True Audio";                       Components: ffdshow
+Name: "audio\amr";               Description: "AMR";                              Components: ffdshow
+Name: "audio\qt";                Description: "QDM2, MACE";                       Components: ffdshow
+Name: "audio\adpcm";             Description: "ADPCM, MS GSM, Truespeech";        Components: ffdshow; Flags: unchecked
+Name: "audio\rawa";              Description: "{cm:tsk_rawAudio}";                Components: ffdshow; Flags: unchecked dontinheritcheck
+Name: "filter";                  Description: "{cm:tsk_filtersSelect}";           Components: ffdshow; Flags: unchecked;           Check: NOT IsUpdate; GroupDescription: "{cm:tsk_filters}";
+Name: "filter\passthroughac3";   Description: "{cm:tsk_passthroughac3}";          Components: ffdshow; Flags: unchecked
+Name: "filter\passthroughdts";   Description: "{cm:tsk_passthroughdts}";          Components: ffdshow; Flags: unchecked
+Name: "filter\normalize";        Description: "{cm:tsk_volumeNorm}";              Components: ffdshow; Flags: unchecked
+#if is64bit
+Name: "filter\subtitles";        Description: "{cm:tsk_subtitles}";               Components: ffdshow;
+#else
+Name: "filter\subtitles";        Description: "{cm:tsk_subtitles}";               Components: ffdshow; Flags: unchecked
 #endif
-Name: "whitelist";               Description: "{cm:tsk_whitelist}";                                        Check: NOT  IsUpdate; GroupDescription: "{cm:tsk_compatibilityManager}";            Components: ffdshow; Flags: unchecked
-Name: "whitelist\prompt";        Description: "{cm:tsk_whitelistPrompt}";                                                                                                                      Components: ffdshow; Flags: unchecked
+#if !PREF_YAMAGATA
+Name: "skiph264inloop";          Description: "{cm:tsk_skipInloop}";              Components: ffdshow; Flags: unchecked;           Check: NOT IsUpdate; GroupDescription: "{cm:tsk_tweaks}";
+#endif
+Name: "whitelist";               Description: "{cm:tsk_whitelist}";               Components: ffdshow; Flags: unchecked;           Check: NOT IsUpdate; GroupDescription: "{cm:tsk_compatibilityManager}";
+Name: "whitelist\prompt";        Description: "{cm:tsk_whitelistPrompt}";         Components: ffdshow; Flags: unchecked
 
 [Icons]
 #if is64bit
@@ -593,19 +553,19 @@ Root: HKCU; Subkey: "{#= ff_reg_base}\default";                                 
 
 #if !PREF_YAMAGATA
 Root: HKCU; Subkey: "{#= ff_reg_base}";                                               ValueType: dword;  ValueName: "fastH264";             ValueData: "2";                                          Components: ffdshow; Tasks:     skiph264inloop
-Root: HKCU; Subkey: "{#= ff_reg_base}";                                               ValueType: dword;  ValueName: "fastH264";             ValueData: "0";                                          Components: ffdshow; Tasks: NOT skiph264inloop;                      Flags: createvalueifdoesntexist
+Root: HKCU; Subkey: "{#= ff_reg_base}";                                               ValueType: dword;  ValueName: "fastH264";             ValueData: "0";                                          Components: ffdshow; Tasks: NOT skiph264inloop;                      Check: NOT IsUpdate;
 #endif
 
 Root: HKCU; Subkey: "{#= ff_reg_base}";                                               ValueType: dword;  ValueName: "subTextpin";           ValueData: "1";                                          Components: ffdshow;                                                 Flags: createvalueifdoesntexist
 Root: HKCU; Subkey: "{#= ff_reg_base}";                                               ValueType: dword;  ValueName: "subTextpinSSA";        ValueData: "1";                                          Components: ffdshow;                                                 Flags: createvalueifdoesntexist
 Root: HKCU; Subkey: "{#= ff_reg_base}\default";                                       ValueType: dword;  ValueName: "subIsExpand";          ValueData: "0";                                          Components: ffdshow;                                                 Flags: createvalueifdoesntexist
 Root: HKCU; Subkey: "{#= ff_reg_base}\default";                                       ValueType: dword;  ValueName: "isSubtitles";          ValueData: "1";                                          Components: ffdshow; Tasks:     filter\subtitles
-Root: HKCU; Subkey: "{#= ff_reg_base}\default";                                       ValueType: dword;  ValueName: "isSubtitles";          ValueData: "0";                                          Components: ffdshow; Tasks: NOT filter\subtitles
+Root: HKCU; Subkey: "{#= ff_reg_base}\default";                                       ValueType: dword;  ValueName: "isSubtitles";          ValueData: "0";                                          Components: ffdshow; Tasks: NOT filter\subtitles;                    Check: NOT IsUpdate;
 
 Root: HKCU; Subkey: "{#= ff_reg_base}_audio\default";                                 ValueType: dword;  ValueName: "mixerNormalizeMatrix"; ValueData: "0";                                          Components: ffdshow;                                                 Flags: createvalueifdoesntexist
 Root: HKCU; Subkey: "{#= ff_reg_base}_audio\default";                                 ValueType: dword;  ValueName: "isvolume";             ValueData: "1";                                          Components: ffdshow; Tasks:     filter\normalize
 Root: HKCU; Subkey: "{#= ff_reg_base}_audio\default";                                 ValueType: dword;  ValueName: "volNormalize";         ValueData: "1";                                          Components: ffdshow; Tasks:     filter\normalize
-Root: HKCU; Subkey: "{#= ff_reg_base}_audio\default";                                 ValueType: dword;  ValueName: "volNormalize";         ValueData: "0";                                          Components: ffdshow; Tasks: NOT filter\normalize
+Root: HKCU; Subkey: "{#= ff_reg_base}_audio\default";                                 ValueType: dword;  ValueName: "volNormalize";         ValueData: "0";                                          Components: ffdshow; Tasks: NOT filter\normalize;                    Check: NOT IsUpdate;
 
 Root: HKCU; Subkey: "{#= ff_reg_base}_audio\default";                                 ValueType: dword;  ValueName: "ismixer";              ValueData: "{code:GetIsMixer}";                          Components: ffdshow
 Root: HKCU; Subkey: "{#= ff_reg_base}_audio\default";                                 ValueType: dword;  ValueName: "mixerOut";             ValueData: "{code:GetMixerOut}";                         Components: ffdshow
@@ -615,10 +575,10 @@ Root: HKCU; Subkey: "{#= ff_reg_base}";                                         
 Root: HKCU; Subkey: "{#= ff_reg_base}_audio";                                         ValueType: dword;  ValueName: "isBlacklist";          ValueData: "1";                                          Components: ffdshow;                                                 Flags: createvalueifdoesntexist
 
 ; Compatibility list
-Root: HKCU; Subkey: "{#= ff_reg_base}";                                               ValueType: dword;  ValueName: "isWhitelist";          ValueData: "1";                                          Components: ffdshow; Tasks:     whitelist; Check: NOT IsUpdate
-Root: HKCU; Subkey: "{#= ff_reg_base}";                                               ValueType: dword;  ValueName: "isWhitelist";          ValueData: "0";                                          Components: ffdshow; Tasks: NOT whitelist; Check: NOT IsUpdate
-Root: HKCU; Subkey: "{#= ff_reg_base}_audio";                                         ValueType: dword;  ValueName: "isWhitelist";          ValueData: "1";                                          Components: ffdshow; Tasks:     whitelist; Check: NOT IsUpdate
-Root: HKCU; Subkey: "{#= ff_reg_base}_audio";                                         ValueType: dword;  ValueName: "isWhitelist";          ValueData: "0";                                          Components: ffdshow; Tasks: NOT whitelist; Check: NOT IsUpdate
+Root: HKCU; Subkey: "{#= ff_reg_base}";                                               ValueType: dword;  ValueName: "isWhitelist";          ValueData: "1";                                          Components: ffdshow; Tasks:     whitelist;
+Root: HKCU; Subkey: "{#= ff_reg_base}";                                               ValueType: dword;  ValueName: "isWhitelist";          ValueData: "0";                                          Components: ffdshow; Tasks: NOT whitelist;                           Check: NOT IsUpdate
+Root: HKCU; Subkey: "{#= ff_reg_base}_audio";                                         ValueType: dword;  ValueName: "isWhitelist";          ValueData: "1";                                          Components: ffdshow; Tasks:     whitelist;
+Root: HKCU; Subkey: "{#= ff_reg_base}_audio";                                         ValueType: dword;  ValueName: "isWhitelist";          ValueData: "0";                                          Components: ffdshow; Tasks: NOT whitelist;                           Check: NOT IsUpdate
 
 Root: HKCU; Subkey: "{#= ff_reg_base}";                                               ValueType: dword;  ValueName: "dontaskComp";          ValueData: "0";                                          Components: ffdshow; Tasks: whitelist AND NOT whitelist\prompt
 Root: HKCU; Subkey: "{#= ff_reg_base}";                                               ValueType: dword;  ValueName: "dontaskComp";          ValueData: "1";                                          Components: ffdshow; Tasks: whitelist AND     whitelist\prompt
@@ -629,9 +589,9 @@ Root: HKCU; Subkey: "{#= ff_reg_base}_audio";                                   
 #include "reg_formats.iss"
 
 ; Audio pass-through upgrade path:
-Root: HKCU; Subkey: "{#= ff_reg_base}_audio\default";                                 ValueType: dword;  ValueName: "passthroughAC3";       ValueData: "0";                                          Components: ffdshow; Tasks: NOT filter\passthroughac3
+Root: HKCU; Subkey: "{#= ff_reg_base}_audio\default";                                 ValueType: dword;  ValueName: "passthroughAC3";       ValueData: "0";                                          Components: ffdshow; Tasks: NOT filter\passthroughac3;               Check: NOT IsUpdate;
 Root: HKCU; Subkey: "{#= ff_reg_base}_audio\default";                                 ValueType: dword;  ValueName: "passthroughAC3";       ValueData: "1";                                          Components: ffdshow; Tasks:     filter\passthroughac3
-Root: HKCU; Subkey: "{#= ff_reg_base}_audio\default";                                 ValueType: dword;  ValueName: "passthroughDTS";       ValueData: "0";                                          Components: ffdshow; Tasks: NOT filter\passthroughdts
+Root: HKCU; Subkey: "{#= ff_reg_base}_audio\default";                                 ValueType: dword;  ValueName: "passthroughDTS";       ValueData: "0";                                          Components: ffdshow; Tasks: NOT filter\passthroughdts;               Check: NOT IsUpdate;
 Root: HKCU; Subkey: "{#= ff_reg_base}_audio\default";                                 ValueType: dword;  ValueName: "passthroughDTS";       ValueData: "1";                                          Components: ffdshow; Tasks:     filter\passthroughdts
 Root: HKCU; Subkey: "{#= ff_reg_base}_audio\";                                                           ValueName: "ac3SPDIF";                                                                      Components: ffdshow;                                                 Flags: deletevalue
 
@@ -666,60 +626,6 @@ var
   is8DisableMixer: Boolean;
 
 
-function CheckTaskVideo(name: String; value: Integer; showbydefault: Boolean): Boolean;
-var
-  regval: Cardinal;
-begin
-  Result := False;
-  if RegQueryDwordValue(HKCU, '{#= ff_reg_base}', name, regval) then begin
-    Result := (regval = value);
-  end
-  else begin
-    if RegQueryDwordValue(HKLM, '{#= ff_reg_base}', name, regval) then begin
-      Result := (regval = value);
-    end
-    else begin
-      Result := showbydefault;
-    end
-  end
-end;
-
-function CheckTaskVideoFFMPEGMT(name: String; showbydefault: Boolean): Boolean;
-var
-  regval: Cardinal;
-begin
-  Result := False;
-  if RegQueryDwordValue(HKCU, '{#= ff_reg_base}', name, regval) then begin
-    Result := (regval = 20) OR (regval = 21);
-  end
-  else begin
-    if RegQueryDwordValue(HKLM, '{#= ff_reg_base}', name, regval) then begin
-      Result := (regval = 20) OR (regval = 21);
-    end
-    else begin
-      Result := showbydefault;
-    end
-  end
-end;
-
-function CheckTaskVideo2(name: String; showbydefault: Boolean): Boolean;
-var
-  regval: Cardinal;
-begin
-  Result := False;
-  if RegQueryDwordValue(HKCU, '{#= ff_reg_base}', name, regval) then begin
-    Result := (regval > 0);
-  end
-  else begin
-    if RegQueryDwordValue(HKLM, '{#= ff_reg_base}', name, regval) then begin
-      Result := (regval > 0);
-    end
-    else begin
-      Result := showbydefault;
-    end
-  end
-end;
-
 function CheckTaskAudio(name: String; value: Integer; showbydefault: Boolean): Boolean;
 var
   regval: Cardinal;
@@ -736,17 +642,6 @@ begin
       Result := showbydefault;
     end
   end
-end;
-
-function CheckTaskVideoInpreset(name: String; value: Integer; showbydefault: Boolean): Boolean;
-var
-  regval: Cardinal;
-begin
-  Result := False;
-  if RegQueryDwordValue(HKCU, '{#= ff_reg_base}\default', name, regval) then
-    Result := (regval = value)
-  else
-    Result := showbydefault;
 end;
 
 function CheckTaskAudioInpreset(name: String; value: Integer; showbydefault: Boolean): Boolean;
