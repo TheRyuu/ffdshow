@@ -69,7 +69,7 @@ protected:
     unsigned char **dst,
     const stride_t *stride) const;
 public:
- static REFERENCE_TIME pts2rt(int pts)
+ static REFERENCE_TIME pts2rt(uint32_t pts)
   {
    return 10000LL*pts/90;
   }
