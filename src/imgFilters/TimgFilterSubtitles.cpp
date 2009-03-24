@@ -194,7 +194,7 @@ bool TimgFilterSubtitles::ctlSubtitles(int id,int type,unsigned int ctl_id,const
         res=e->second->ctlSubtitles(ctl_id,ctl_data,ctl_datalen);
     }
 
-    if (res && prevCfg  && deci->getState2() == State_Running && sequenceEnded) {
+    if (res && prevCfg  && deci->getState2() == State_Running && (sequenceEnded || raw_codec(deci->getCurrentCodecId2()))) {
         // Send last pict with changed subtitles upstream in the filter chain only if the graph is running -
         // doing it while it's paused will hang everything
 
@@ -279,7 +279,7 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
         subFlnmChanged=0;
     }
 
-    if (isdvdproc && sequenceEnded && adhocMode != ADHOC_SECOND_DONT_DRAW_DVD_SUB) {
+    if (isdvdproc && (sequenceEnded || raw_codec(deci->getCurrentCodecId2())) && adhocMode != ADHOC_SECOND_DONT_DRAW_DVD_SUB) {
         if (!again || !prevCfg) {
             prevIt=it;
             prevCfg=cfg;
