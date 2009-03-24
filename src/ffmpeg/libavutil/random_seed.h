@@ -23,6 +23,8 @@
 
 #ifdef __GNUC__
 #include <stdint.h>
+#else
+#include "inttypes.h"
 #endif
 
 /**
