@@ -30,7 +30,7 @@
 #endif
 #include "config.h"
 
-#if defined(ARCH_X86)
+#if ARCH_X86
 #define AV_READ_TIME read_time
 static inline uint64_t read_time(void)
 {
