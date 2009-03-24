@@ -2176,6 +2176,13 @@ typedef struct AVCodecContext {
 
     enum CorePNGFrameType corepng_frame_type;    
 
+    /**
+     * Force 4:3 or 16:9 as DAR (MPEG-2 only)
+     * - encoding: unused.
+     * - decoding: unused in ffmpeg-mt.
+     */
+    int isDVD;
+
     /* ffdshow custom stuff (end) */
 } AVCodecContext;
 

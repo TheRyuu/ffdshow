@@ -103,7 +103,10 @@ void TvideoCodecDec::correctDVDsar(Trect &r)
     if (r.dx * r.sar.num * 3 == r.dy * r.sar.den * 4)
         // 4:3, OK
         return;
-    if (r.dx * r.sar.num * 9 > r.dy * r.sar.den * 16) {
+
+    double ar=(double)(r.dx * r.sar.num) / (double)(r.dy * r.sar.den);
+
+    if (abs(ar-(16.0/9.0)) < abs(ar-(4.0/3.0))) {
         // Fix to 16:9
         r.sar.num = r.dy * 16;
         r.sar.den = r.dx * 9;

@@ -1162,6 +1162,73 @@ static enum PixelFormat mpeg_get_pixelformat(AVCodecContext *avctx){
             return PIX_FMT_YUV444P;
 }
 
+/**
+ * ffdshow custom stuff
+ *
+ * retry aspect ratio calculation.
+ * Currently there are two ways of calculating aspect ratio of MPEG-2 video.
+ * ffdshow default is the one compliant to the spec, another is not.
+ * DVD must have either 4:3 or 16:9 as DAR.
+ * Call this to re-calculate until we get either 4:3 or 16:9.
+ */
+static void fix_DVD_aspect_ratio(AVCodecContext *avctx){
+    Mpeg1Context *s1 = avctx->priv_data;
+    MpegEncContext *s = &s1->mpeg_enc_ctx;
+    AVRational r1,r2;
+    double ar;
+
+    if (s->avctx->width * s->avctx->sample_aspect_ratio.num * 9 == s->avctx->height * s->avctx->sample_aspect_ratio.den * 16)
+        // 16:9, OK
+        return;
+    if (s->avctx->width * s->avctx->sample_aspect_ratio.num * 3 == s->avctx->height * s->avctx->sample_aspect_ratio.den * 4)
+        // 4:3, OK
+        return;
+
+    r1.num = s->width;
+    r1.den = s->height;
+    s->avctx->sample_aspect_ratio=
+        av_div_q(
+         ff_mpeg2_aspect[s->aspect_ratio_info],
+          r1//(AVRational){s->width, s->height}
+         );
+
+    av_log(NULL,AV_LOG_ERROR,"fix_DVD_aspect_ratio num %d den %d",s->avctx->sample_aspect_ratio.num,s->avctx->sample_aspect_ratio.den);
+
+    if (s->avctx->width * s->avctx->sample_aspect_ratio.num * 9 == s->avctx->height * s->avctx->sample_aspect_ratio.den * 16)
+        // 16:9, OK
+        return;
+    if (s->avctx->width * s->avctx->sample_aspect_ratio.num * 3 == s->avctx->height * s->avctx->sample_aspect_ratio.den * 4)
+        // 4:3, OK
+        return;
+
+    r2.num = s1->pan_scan.width;
+    r2.den = s1->pan_scan.height;
+    s->avctx->sample_aspect_ratio=
+        av_div_q(
+         ff_mpeg2_aspect[s->aspect_ratio_info],
+         r2//(AVRational){s1->pan_scan.width, s1->pan_scan.height}
+        );
+
+    if (s->avctx->width * s->avctx->sample_aspect_ratio.num * 9 == s->avctx->height * s->avctx->sample_aspect_ratio.den * 16)
+        // 16:9, OK
+        return;
+    if (s->avctx->width * s->avctx->sample_aspect_ratio.num * 3 == s->avctx->height * s->avctx->sample_aspect_ratio.den * 4)
+        // 4:3, OK
+        return;
+
+    ar=(double)(s->avctx->width * s->avctx->sample_aspect_ratio.num) / (double)(s->avctx->height * s->avctx->sample_aspect_ratio.den);
+
+    if (abs(ar-(16.0/9.0)) < abs(ar-(4.0/3.0))) {
+        // Fix to 16:9
+        s->avctx->sample_aspect_ratio.num = s->avctx->height * 16;
+        s->avctx->sample_aspect_ratio.den = s->avctx->width * 9;
+    } else {
+        // Fix to 4:3
+        s->avctx->sample_aspect_ratio.num = s->avctx->height * 4;
+        s->avctx->sample_aspect_ratio.den = s->avctx->width * 3;
+    }
+}
+
 /* Call this function when we know all parameters.
  * It may be called in different places for MPEG-1 and MPEG-2. */
 static int mpeg_decode_postinit(AVCodecContext *avctx){
@@ -1242,6 +1309,8 @@ static int mpeg_decode_postinit(AVCodecContext *avctx){
                 s->avctx->sample_aspect_ratio=
                     ff_mpeg2_aspect[s->aspect_ratio_info];
             }
+            if (avctx->isDVD)
+                fix_DVD_aspect_ratio(avctx);
         }//MPEG-2
 
         avctx->pix_fmt = mpeg_get_pixelformat(avctx);
