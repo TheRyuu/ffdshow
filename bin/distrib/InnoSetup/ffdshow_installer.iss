@@ -1,9 +1,9 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision = '2811'
+#define tryout_revision = '2815'
 #define buildyear  = '2009'
 #define buildmonth = '03'
-#define buildday   = '24'
+#define buildday   = '25'
 
 ; Build specific options
 #define localize                  = True
@@ -272,11 +272,13 @@ Name: "ffdshow\plugins\dscaler";    Description: "DScaler"
 #endif
 
 [Tasks]
-Name: "resetsettings";           Description: "{cm:tsk_resetSettings}";           Components: ffdshow; Flags: unchecked;           Check: NOT IsUpdate; GroupDescription: "{cm:tsk_settings}";
+Name: "resetsettings";           Description: "{cm:tsk_resetSettings}";           Components: ffdshow;                             Check: NOT IsUpdate; GroupDescription: "{cm:tsk_settings}";
 Name: "video";                   Description: "{cm:tsk_videoFormatsSelect}";      Components: ffdshow; Flags: unchecked;           Check: NOT IsUpdate; GroupDescription: "{cm:tsk_videoFormats}";
 Name: "video\h264";              Description: "H.264 / AVC";                      Components: ffdshow;
 Name: "video\h264\libavcodec";   Description: "libavcodec";                       Components: ffdshow; Flags:           exclusive
+#if !is64bit
 Name: "video\h264\ffmpegmt";     Description: "ffmpeg-mt";                        Components: ffdshow; Flags: unchecked exclusive
+#endif
 Name: "video\divx";              Description: "DivX";                             Components: ffdshow;
 Name: "video\xvid";              Description: "Xvid";                             Components: ffdshow
 Name: "video\mpeg4";             Description: "{cm:tsk_genericMpeg4}";            Components: ffdshow
@@ -374,7 +376,9 @@ Name: "{group}\{cm:shrt_uninstall}";   Filename: "{uninstallexe}"
 Source: "ffSpkCfg.dll"; Flags: dontcopy
 
 Source: "{#= bindir}\libavcodec.dll";                             DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion
+#if !is64bit
 Source: "{#= bindir}\ffmpegmt.dll";                               DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion
+#endif
 Source: "{#= bindir}\libmplayer.dll";                             DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion
 Source: "{#= bindir}\ff_liba52.dll";                              DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion
 Source: "{#= bindir}\ff_libdts.dll";                              DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion
@@ -391,10 +395,10 @@ Source: "{#= bindir}\ff_theora.dll";                              DestDir: "{app
 Source: "{#= bindir}\ff_x264.dll";                                DestDir: "{app}";                       Components: ffdshow\vfw;                Flags: ignoreversion
 #endif
 
-#if !is64bit
-Source: "Runtimes\pthreadGC2\x86\pthreadGC2.dll";                 DestDir: "{sys}";                       Components: ffdshow;                    Flags: sharedfile    restartreplace uninsrestartdelete uninsnosharedfileprompt
+#if is64bit
+;Source: "Runtimes\pthreadGC2\x64\pthreadGC2-64.dll";              DestDir: "{sys}";                       Components: ffdshow;                    Flags: sharedfile    restartreplace uninsrestartdelete uninsnosharedfileprompt
 #else
-Source: "Runtimes\pthreadGC2\x64\pthreadGC2-64.dll";              DestDir: "{sys}";                       Components: ffdshow;                    Flags: sharedfile    restartreplace uninsrestartdelete uninsnosharedfileprompt
+Source: "Runtimes\pthreadGC2\x86\pthreadGC2.dll";                 DestDir: "{sys}";                       Components: ffdshow;                    Flags: sharedfile    restartreplace uninsrestartdelete uninsnosharedfileprompt
 #endif
 
 #if include_xvidcore
