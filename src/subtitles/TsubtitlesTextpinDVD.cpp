@@ -125,7 +125,7 @@ bool TsubtitlesTextpinDVD::ctlSubtitles(unsigned int id,const void *data,unsigne
         sd->psphli.release();
        }
      if (pSPHLI->HLISS)
-      DPRINTF(_l("hli: %I64d - %I64d, (%d,%d) - (%d,%d)"),TsubtitleDVD::pts2rt(pSPHLI->StartPTM)/10000,TsubtitleDVD::pts2rt(pSPHLI->EndPTM)/10000,pSPHLI->StartX, pSPHLI->StartY, pSPHLI->StopX, pSPHLI->StopY);
+      DPRINTF(_l("hli: %I64i - %I64i, (%d,%d) - (%d,%d)"),TsubtitleDVD::pts2rt(pSPHLI->StartPTM)/10000,TsubtitleDVD::pts2rt(pSPHLI->EndPTM)/10000,pSPHLI->StartX, pSPHLI->StartY, pSPHLI->StopX, pSPHLI->StopY);
      break;
     }
    case AM_PROPERTY_DVDSUBPIC_COMPOSIT_ON:

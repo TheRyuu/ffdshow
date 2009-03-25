@@ -339,6 +339,7 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
  codecinited=true;
  wasKey=false;
  segmentTimeStart=0;
+ avctx->isDVD = isdvdproc;
  return true;
 }
 

@@ -526,7 +526,7 @@ bool TsubtitleDVD::parse(void)
  do
   {
    i=next;
-   int pts=(p[i]<<8)|p[i+1];i+=2;
+   uint32_t pts=(p[i]<<8)|p[i+1];i+=2;
    next=(p[i]<<8)|p[i+1];i+=2;
 
    if (next>packetsize || next<datasize)
