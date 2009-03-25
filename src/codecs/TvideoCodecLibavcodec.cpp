@@ -586,12 +586,8 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
        else
         r.sar=containerSar;
 
-        // Correct impossible sar for DVD
-       if (isdvdproc && r.sar.num == 128 && r.sar.den == 81)
-        {
-         avctx->sample_aspect_ratio.num = 32;
-         avctx->sample_aspect_ratio.den = 27;
-        }
+       // Correct impossible sar for DVD
+       correctDVDsar(r);
 
        quants=frame->qscale_table;
        quantsStride=frame->qstride;

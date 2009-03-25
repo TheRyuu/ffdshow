@@ -38,16 +38,30 @@ TsubtitleVobsub::~TsubtitleVobsub()
  if (dvdsub) delete dvdsub;
 }
 
-void TsubtitleVobsub::drawalpha(int x0,int y0, unsigned int w,unsigned int h, const unsigned char* srcY, const unsigned char *srcaY, int strideY,const unsigned char* srcUV, const unsigned char *srcaUV, int strideUV,const TrenderedSubtitleLines::TprintPrefs &prefs)
+void TsubtitleVobsub::drawalpha(
+    int x0,
+    int y0,
+    unsigned int w,
+    unsigned int h,
+    const unsigned char* srcY,
+    const unsigned char *srcaY,
+    int strideY,
+    const unsigned char* srcUV,
+    const unsigned char *srcaUV,
+    int strideUV,
+    const TprintPrefs &prefs,
+    unsigned char **dst,
+    const stride_t *stride)
 {
+ const TcspInfo *cspInfo = csp_getInfo(prefs.csp);
  if (x0<0 || y0<0 || w==0 || h==0) return;
  TrenderedVobsubWord wrd;
  for (int i=0;i<3;i++)
   {
-   wrd.dx[i]=w>>prefs.shiftX[i];
-   wrd.dy[i]=h>>prefs.shiftY[i];
+   wrd.dx[i]=w>>cspInfo->shiftX[i];
+   wrd.dy[i]=h>>cspInfo->shiftY[i];
   }
- wrd.dxCharY=wrd.dx[0]; wrd.dyCharY=wrd.dy[0];
+ wrd.dxChar=wrd.dx[0]; wrd.dyChar=wrd.dy[0];
  wrd.bmp[0]=(unsigned char*)srcY;wrd.msk[0]=(unsigned char*)srcaY;
  wrd.bmp[1]=wrd.bmp[2]=(unsigned char*)srcUV;wrd.msk[1]=wrd.msk[2]=(unsigned char*)srcaUV;
  wrd.bmpmskstride[0]=strideY;wrd.bmpmskstride[1]=wrd.bmpmskstride[2]=strideUV;
@@ -55,14 +69,21 @@ void TsubtitleVobsub::drawalpha(int x0,int y0, unsigned int w,unsigned int h, co
  TrenderedSubtitleLines lines(&ln);
  if (!prefs.vobchangeposition)
   {
-   TrenderedSubtitleLines::TprintPrefs prefs2=prefs;
+   TprintPrefs prefs2=prefs;
    prefs2.xpos=-x0;prefs2.ypos=-y0;
-   lines.print(prefs2);
+   lines.print(prefs2,dst,stride);
   }
  else
-  lines.print(prefs);
+  lines.print(prefs,dst,stride);
 }
-void TsubtitleVobsub::print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceChange,TrenderedSubtitleLines::TprintPrefs &prefs) const
+void TsubtitleVobsub::print(
+    REFERENCE_TIME time,
+    bool wasseek,
+    Tfont &f,
+    bool forceChange,
+    TprintPrefs &prefs,
+    unsigned char **dst,
+    const stride_t *stride)
 {
  int timer=(int)(90*time/(REF_SECOND_MULT/1000));
  if (wasseek)
@@ -109,6 +130,6 @@ void TsubtitleVobsub::print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool force
     }
   }
  if (dvdsub)
-  dvdsub->print(time,wasseek,f,forceChange,prefs);
- spu->spudec_draw_scaled(prefs.dx,prefs.dy,drawalpha,prefs);
+  dvdsub->print(time,wasseek,f,forceChange,prefs,dst,stride);
+ spu->spudec_draw_scaled(prefs.dx,prefs.dy,drawalpha,prefs,dst,stride);
 }

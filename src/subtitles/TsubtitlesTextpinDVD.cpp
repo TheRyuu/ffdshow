@@ -77,10 +77,14 @@ bool TsubtitlesTextpinDVD::ctlSubtitles(unsigned int id,const void *data,unsigne
    case AM_PROPERTY_DVDSUBPIC_PALETTE:
     {
      const AM_PROPERTY_SPPAL *pSPPAL=(const AM_PROPERTY_SPPAL*)data;
-     if (memcmp(sppal,pSPPAL->sppal,sizeof(sppal))!=0)
+     bool changed = false;
+     for (int i = 0 ; i < 16 ; i++) {
+         changed |= (sppal[i] != pSPPAL->sppal[i]);
+         sppal[i] = pSPPAL->sppal[i];
+     }
+     if (changed)
       for (Tsubreader::iterator s=subs->begin();s!=subs->end();s++)
        ((TsubtitleDVD*)*s)->changed=true;
-     memcpy(sppal,pSPPAL->sppal,sizeof(AM_PROPERTY_SPPAL));
      fsppal=true;
      DPRINTF(_l("new palette"));
      break;
@@ -134,32 +138,45 @@ bool TsubtitlesTextpinDVD::ctlSubtitles(unsigned int id,const void *data,unsigne
  return refresh;
 }
 
-const Tsubtitle* TsubtitlesTextpinDVD::getSubtitle(const TsubtitlesSettings *cfg,REFERENCE_TIME time,bool *forceChange)
+Tsubtitle* TsubtitlesTextpinDVD::getSubtitle(const TsubtitlesSettings *cfg,REFERENCE_TIME rtStart,REFERENCE_TIME rtStop,bool *forceChange)
 {
- for (Tsubreader::iterator s0=subs->begin();s0!=subs->end();)
-  if ((*s0)->stop<=time)
-   {
-    delete *s0;
-    s0=subs->erase(s0);
-   }
-  else
-   s0++;
+    for (Tsubreader::iterator s0=subs->begin() ; s0!=subs->end() ;) {
+        if ((*s0)->stop < rtStart) {
+            delete *s0;
+            s0=subs->erase(s0);
+        } else
+            s0++;
+    }
 
- subtitles.clear();REFERENCE_TIME start=_I64_MAX,stop=_I64_MIN;
- for (Tsubreader::const_iterator s=subs->begin();s!=subs->end();s++)
-  if ((*s)->start<=time && time<(*s)->stop && (spon || ((TsubtitleDVD*)*s)->psphli))
-   {
-    subtitles.push_back(*s);
-    if ((*s)->start<start) start=(*s)->start;
-    if ((*s)->stop >stop ) stop =(*s)->stop ;
-   }
- return subtitles.empty()?NULL:(subtitles.start=start,subtitles.stop=stop,&subtitles);
+    subtitles.clear();
+    REFERENCE_TIME start=_I64_MAX,stop=_I64_MIN;
+    foreach (Tsubtitle *sub, *subs) {
+        if ( rtStart <= sub->stop
+          && rtStop  >= sub->start
+          && (spon || ((TsubtitleDVD*)sub)->psphli)) {
+            subtitles.push_back(sub);
+            if (sub->start < start) start=sub->start;
+            if (sub->stop  > stop ) stop =sub->stop ;
+        }
+    }
+    if (subtitles.empty())
+        return NULL;
+    subtitles.start=start;
+    subtitles.stop=stop;
+    return &subtitles;
 }
 
-void TsubtitlesTextpinDVD::Tsubtitles::print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceChange,TrenderedSubtitleLines::TprintPrefs &prefs) const
+void TsubtitlesTextpinDVD::Tsubtitles::print(
+    REFERENCE_TIME time,
+    bool wasseek,
+    Tfont &f,
+    bool forceChange,
+    TprintPrefs &prefs,
+    unsigned char **dst,
+    const stride_t *stride)
 {
  for (const_iterator s=begin();s!=end();s++)
-  (*s)->print(time,wasseek,f,forceChange,prefs);
+  (*s)->print(time,wasseek,f,forceChange,prefs,dst,stride);
 }
 Tsubtitle* TsubtitlesTextpinDVD::Tsubtitles::copy(void)
 {

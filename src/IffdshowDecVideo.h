@@ -111,6 +111,7 @@ template<class tchar> DECLARE_INTERFACE_(IffdshowDecVideoT,IUnknown)
  STDMETHOD (getChaptersList)(void **ppChaptersList) PURE;
  STDMETHOD (get_CurrentTime)(__int64 *time) PURE;
  STDMETHOD_(const Trect*,getDecodedPictdimensions)(void) PURE;
+ STDMETHOD_(HANDLE,getGlyphThreadHandle)(void) PURE;
 };
 
 struct IffdshowDecVideoA :IffdshowDecVideoT<char> {};

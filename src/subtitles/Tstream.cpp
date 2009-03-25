@@ -51,6 +51,8 @@ void Tstream::detectUnicode(void)
     }
    seek(pos,SEEK_SET);
   }
+ if (encoding == ENC_ASCII && codepage == CP_UTF8)
+  encoding = ENC_UTF8;
 }
 
 char* Tstream::ugets(char *buf0,int len) const
@@ -177,6 +179,7 @@ char* Tstream::ugets(char *buf0,int len) const
   }
  return eof?NULL:buf0;
 }
+
 int Tstream::ugetc(void) const
 {
  return EOF;
@@ -190,15 +193,25 @@ wchar_t* Tstream::fgets(wchar_t *buf0,int len) const
   {
    case ENC_ASCII:
     {
-     char w;
-     while (read(&w,1,sizeof(w))==sizeof(w))
+     char w[3];
+     w[2]=0;
+     while (read(w,1,sizeof(char))==sizeof(char))
       {
+       int cbMultiByte;
+       cbMultiByte = 1;
+       w[1]=0;
        eof=false;
        if (buf-buf0>len) break;
-       text<wchar_t>(&w, 1, buf, 1);//nCopyAnsiToWideChar(buf,&w,1);
-       if (w=='\r') {if (crln) *buf++=w;wasr=true;continue;}
-       if (w=='\n') {if (utod &&!wasr) *buf++='\r';if (crln) *buf++=w;break;}
-       buf++;//*buf++=w;
+       if (IsDBCSLeadByteEx(codepage,w[0]))
+        {
+         if (!read(&w[1],1,sizeof(char)))
+          break;
+         cbMultiByte++;
+        }
+       MultiByteToWideChar(codepage,0,w,cbMultiByte,buf,1);
+       if (w[0]=='\r') {if (crln) *buf++=w[0];wasr=true;continue;}
+       if (w[0]=='\n') {if (utod &&!wasr) *buf++='\r';if (crln) *buf++=w[0];break;}
+       buf++;
       }
      *buf='\0';
      break;
@@ -308,7 +321,7 @@ template int Tstream::printf(const char* fmt,...);
 template int Tstream::printf(const wchar_t* fmt,...);
 
 //=================================== TstreamFile =====================================
-TstreamFile::TstreamFile(const char_t *flnm,bool binary,bool write,ENCODING Iencoding):ownf(true),Tstream(Iencoding)
+TstreamFile::TstreamFile(const char_t *flnm,bool binary,bool write,ENCODING Iencoding,int codepage):ownf(true),Tstream(Iencoding,codepage)
 {
  static const char_t *modes[]={_l("rt"),_l("rb"),_l("wt"),_l("wb")};
  f=fopen(flnm,modes[(binary || (write && encoding!=ENC_ASCII)?1:0)+(write?2:0)]);

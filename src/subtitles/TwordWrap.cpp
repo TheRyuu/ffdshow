@@ -3,9 +3,7 @@
 #include "ffdebug.h"
 #include <mbstring.h>
 
-template TwordWrap<char>::TwordWrap(int Imode, const char *Istr, int *Ipwidths, int IsplitdxMax, bool assCompatibleMode);
-template TwordWrap<wchar_t>::TwordWrap(int Imode, const wchar_t *Istr, int *Ipwidths, int IsplitdxMax, bool assCompatibleMode);
-template<class tchar> TwordWrap<tchar>::TwordWrap(int Imode, const tchar *Istr, int *Ipwidths, int IsplitdxMax, bool IassCompatibleMode):
+TwordWrap::TwordWrap(int Imode, const wchar_t *Istr, int *Ipwidths, int IsplitdxMax, bool IassCompatibleMode):
   mode(Imode),
   str(Istr),
   pwidths(Ipwidths),
@@ -51,7 +49,7 @@ template<class tchar> TwordWrap<tchar>::TwordWrap(int Imode, const tchar *Istr, 
   }
 }
 
-template<class tchar> int TwordWrap<tchar>::smart()
+int TwordWrap::smart()
 {
  int left=0;
  int strlenp=(int)str.size();
@@ -64,7 +62,7 @@ template<class tchar> int TwordWrap<tchar>::smart()
     {
      if (skippingSpace)
       {
-       if (!tchar_traits<tchar>::isspace((typename tchar_traits<tchar>::uchar_t)str.at(x)))
+       if (!iswspace((unsigned short)str.at(x)))
         {
          skippingSpace=false;
          left=x>0 ? pwidths[x-1] : 0;
@@ -73,7 +71,7 @@ template<class tchar> int TwordWrap<tchar>::smart()
       }
      else
       {
-       if (tchar_traits<tchar>::isspace((typename tchar_traits<tchar>::uchar_t)str.at(x)))
+       if (iswspace((unsigned short)str.at(x)))
         {
          rightOfTheLines.push_back(x>0 ? x-1 : 0);
          skippingSpace=true;
@@ -88,7 +86,7 @@ template<class tchar> int TwordWrap<tchar>::smart()
       {
        if (pwidths[x]-left<=splitdxMax)
         {
-         if (tchar_traits<tchar>::isspace((typename tchar_traits<tchar>::uchar_t)str.at(x)))
+         if (iswspace((unsigned short)str.at(x)))
           {
            rightOfTheLines.push_back(x>0 ? x-1 : 0);
            left=pwidths[x];
@@ -105,7 +103,7 @@ template<class tchar> int TwordWrap<tchar>::smart()
         {
          for (;x<strlenp;x++)
           {
-           if (tchar_traits<tchar>::isspace((typename tchar_traits<tchar>::uchar_t)str.at(x)))
+           if (iswspace((unsigned short)str.at(x)))
             {
              rightOfTheLines.push_back(x>0 ? x-1 : 0);
              skippingSpace=true;
@@ -134,7 +132,7 @@ template<class tchar> int TwordWrap<tchar>::smart()
  return (int)rightOfTheLines.size();
 }
 
-template<class tchar> int TwordWrap<tchar>::smartReverse()
+int TwordWrap::smartReverse()
 {
  int strlenp=(int)str.size();
  int right=pwidths[strlenp-1];
@@ -148,7 +146,7 @@ template<class tchar> int TwordWrap<tchar>::smartReverse()
     {
      if (skippingSpace)
       {
-       if (!tchar_traits<tchar>::isspace((typename tchar_traits<tchar>::uchar_t)str.at(x)))
+       if (!iswspace((unsigned short)str.at(x)))
         {
          skippingSpace=false;
          right=pwidths[x];
@@ -158,7 +156,7 @@ template<class tchar> int TwordWrap<tchar>::smartReverse()
       }
      else
       {
-       if (tchar_traits<tchar>::isspace((typename tchar_traits<tchar>::uchar_t)str.at(x)))
+       if (iswspace((unsigned short)str.at(x)))
         skippingSpace=true;
       }
     }
@@ -170,7 +168,7 @@ template<class tchar> int TwordWrap<tchar>::smartReverse()
       {
        if (right-pwidths[x]<=splitdxMax)
         {
-         if (tchar_traits<tchar>::isspace((typename tchar_traits<tchar>::uchar_t)str.at(x)))
+         if (iswspace((unsigned short)str.at(x)))
           {
            xx=x>0 ? x-1 : 0;
            rightOfTheLines.push_front(xx);
@@ -187,7 +185,7 @@ template<class tchar> int TwordWrap<tchar>::smartReverse()
         {
          for (;x>=0;x--)
           {
-           if (tchar_traits<tchar>::isspace((typename tchar_traits<tchar>::uchar_t)str.at(x)))
+           if (iswspace((unsigned short)str.at(x)))
             {
              skippingSpace=true;
              break;
@@ -216,14 +214,7 @@ template<class tchar> int TwordWrap<tchar>::smartReverse()
  return (int)rightOfTheLines.size();
 }
 
-template<> int TwordWrap<char>::nextChar(int x)
-{
- if (x+1>=(int)str.size())
-  return x;
- return x+(int)_mbclen((const unsigned char *)str.c_str()+x);
-}
-
-template<> int TwordWrap<wchar_t>::nextChar(int x)
+int TwordWrap::nextChar(int x)
 {
  if (x+1>=(int)str.size())
   return x;
@@ -231,19 +222,7 @@ template<> int TwordWrap<wchar_t>::nextChar(int x)
   return x+1;
 }
 
-template<> int TwordWrap<char>::prevChar(int x)
-{
- if (x==0)
-  return x;
- x--;
- if (x==0)
-  return x;
- if (pwidths[x]==pwidths[x-1])
-  x--;
- return x;
-}
-
-template<> int TwordWrap<wchar_t>::prevChar(int x)
+int TwordWrap::prevChar(int x)
 {
  if (x==0)
   return x;
@@ -251,43 +230,23 @@ template<> int TwordWrap<wchar_t>::prevChar(int x)
   return x-1;
 }
 
-template<> int TwordWrap<char>::leftOfDBCS(int x)
-{
- if (x==0)
-  return x;
- if (pwidths[x-1]==pwidths[x])
-  x--;
- return x;
-}
-
-template<> int TwordWrap<wchar_t>::leftOfDBCS(int x)
+int TwordWrap::leftOfDBCS(int x)
 {
  return x;
 }
 
-template<> int TwordWrap<char>::rightOfDBCS(int x)
-{
- if (x+1>=(int)str.size())
-  return x;
- if (pwidths[x]==pwidths[x+1])
-  x++;
- return x;
-}
-
-template<> int TwordWrap<wchar_t>::rightOfDBCS(int x)
+int TwordWrap::rightOfDBCS(int x)
 {
  return x;
 }
 
-template<class tchar> int TwordWrap<tchar>::pwidthsLeft(int x)
+int TwordWrap::pwidthsLeft(int x)
 {
  if (leftOfDBCS(x)==0) return 0;
  return pwidths[prevChar(x)];
 }
 
-template void TwordWrap<char>::debugprint();
-template void TwordWrap<wchar_t>::debugprint();
-template<class tchar> void TwordWrap<tchar>::debugprint()
+void TwordWrap::debugprint()
 {
  DPRINTF(_l("lineCount: %d"),rightOfTheLines.size());
  for(int l=1;l<=(int)rightOfTheLines.size();l++)
@@ -303,9 +262,7 @@ template<class tchar> void TwordWrap<tchar>::debugprint()
   }
 }
 
-template int TwordWrap<char>::getRightOfTheLine(int n);
-template int TwordWrap<wchar_t>::getRightOfTheLine(int n);
-template<class tchar> int TwordWrap<tchar>::getRightOfTheLine(int n)
+int TwordWrap::getRightOfTheLine(int n)
 {
  if (n<(int)rightOfTheLines.size())
   return rightOfTheLines[n];

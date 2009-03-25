@@ -24,37 +24,79 @@
 #include "Tconfig.h"
 #include "IffdshowBase.h"
 
-//=================================================== TspuImage ===================================================
-TspuImage::TspuImage(const TspuPlane src[3],const CRect &rcclip,const CRect &rectReal,const CRect &rectOrig,const TrenderedSubtitleLines::TprintPrefs &prefs):TrenderedSubtitleWordBase(false)
+//=================================================== TspuPlane ===================================================
+void TspuPlane::alloc(const CSize &sz, int div, int csp)
 {
- if (rectReal.Width()<0) return;
- Tscaler *scaler=NULL;
- int scale=prefs.dvd?0x100:prefs.vobscale;
- for (int i=0;i<3;i++)
-  {
-   rect[i]=CRect(roundRshift(rectReal.left,prefs.shiftX[i]),roundRshift(rectReal.top,prefs.shiftY[i]),roundRshift(rectReal.right,prefs.shiftX[i]),roundRshift(rectReal.bottom,prefs.shiftY[i]));
-   int dstdx=roundDiv(scale*(rectOrig.Width() ?roundDiv(prefs.dx*rect[i].Width() ,(unsigned int)rectOrig.Width() ):rect[i].Width() ),0x100U);
-   int dstdy=roundDiv(scale*(rectOrig.Height()?roundDiv(prefs.dy*rect[i].Height(),(unsigned int)rectOrig.Height()):rect[i].Height()),0x100U);
-   plane[i].alloc(CSize(dstdx,dstdy),1);
-   if (!scaler || scaler->srcdx!=rect[i].Width() || scaler->srcdy!=rect[i].Height())
-    {
-     if (scaler) delete scaler;
-     scaler=Tscaler::create(prefs,rect[i].Width(),rect[i].Height(),dstdx,dstdy);
+    size_t needed;
+    if ((csp & FF_CSPS_MASK) == FF_CSP_420P) {
+        stride = (((sz.cx+1)/div)/16+2)*16;
+        needed = stride*(odd2even(sz.cy + 3) / div);
+    } else {
+        // RGB32
+        stride = (sz.cx + 1) * 4;
+        needed = stride * (sz.cy + 1);
     }
-   scaler->scale(src[i].c+rect[i].top*src[i].stride+rect[i].left,src[i].r+rect[i].top*src[i].stride+rect[i].left,src[i].stride,plane[i].c,plane[i].r,plane[i].stride);
-   rect[i]+=CPoint(roundRshift(rcclip.left,prefs.shiftX[i]),roundRshift(rcclip.top,prefs.shiftY[i]));
-   rect[i].left=roundDiv(int(prefs.dx*rect[i].left),rectOrig.Width());rect[i].right=rect[i].left+dstdx;
-   rect[i].top=roundDiv(int(prefs.dy*rect[i].top),rectOrig.Height());rect[i].bottom=rect[i].top+dstdy;
-   dx[i]=rect[i].Width();dy[i]=rect[i].Height();
-   bmp[i]=plane[i].c;msk[i]=plane[i].r;
-   bmpmskstride[i]=plane[i].stride;
-  }
- dxCharY=dx[0];dyCharY=dy[0];
- if (scaler) delete scaler;
+    if (needed>allocated) {
+        c = (unsigned char*)aligned_realloc(c,needed);
+        r = (unsigned char*)aligned_realloc(r,needed);
+        allocated = needed;
+    }
+    setZero();
+}
+
+void TspuPlane::setZero()
+{
+    memset(r, 0, allocated);
+}
+//=================================================== TspuImage ===================================================
+TspuImage::TspuImage(const TspuPlane src[3],const CRect &rcclip,const CRect &rectReal,const CRect &rectOrig,const TprintPrefs &prefs):TrenderedSubtitleWordBase(false)
+{
+    csp = prefs.csp & FF_CSPS_MASK;
+    const TcspInfo *cspInfo = csp_getInfo(prefs.csp);
+    if (rectReal.Width()<0) return;
+    Tscaler *scaler=NULL;
+    int scale=prefs.dvd?0x100:prefs.vobscale;
+    for (unsigned int i = 0 ; i < cspInfo->numPlanes ; i++) {
+        rect[i]=CRect(rectReal.left >> cspInfo->shiftX[i],                                                           // left
+                      rectReal.top  >> cspInfo->shiftY[i],                                                           // top
+                      (rectReal.left >> cspInfo->shiftX[i]) + roundRshift(rectReal.Width(), cspInfo->shiftX[i]),     // right
+                      (rectReal.top  >> cspInfo->shiftY[i]) + roundRshift(rectReal.Height(), cspInfo->shiftY[i]));   // bottom
+        int dstdx = roundDiv(scale * (rectOrig.Width() ?
+                            roundDiv(prefs.dx * (rect[i].Width() + 1), (unsigned int)rectOrig.Width() ) :
+                            rect[i].Width() ),
+                        0x100U);
+        int dstdy = roundDiv(scale * (rectOrig.Height() ?
+                            roundDiv(prefs.dy * (rect[i].Height() + 1), (unsigned int)rectOrig.Height()) :
+                            rect[i].Height()),
+                        0x100U);
+        plane[i].alloc(CSize(dstdx,dstdy), 1, prefs.csp);
+        if (!scaler || scaler->srcdx != rect[i].Width() + 1 || scaler->srcdy != rect[i].Height() + 1) {
+            if (scaler)
+                delete scaler;
+            scaler = Tscaler::create(prefs, rect[i].Width() + 1, rect[i].Height() + 1, dstdx, dstdy);
+        }
+        scaler->scale(
+            src[i].c + rect[i].top * src[i].stride + rect[i].left * cspInfo->Bpp,
+            src[i].r + rect[i].top * src[i].stride + rect[i].left * cspInfo->Bpp,
+            src[i].stride,
+            plane[i].c,
+            plane[i].r,
+            plane[i].stride);
+        rect[i] += CPoint(roundRshift(rcclip.left,cspInfo->shiftX[i]),roundRshift(rcclip.top,cspInfo->shiftY[i]));
+        rect[i].left = roundDiv(int(prefs.dx*rect[i].left),rectOrig.Width());rect[i].right=rect[i].left+dstdx;
+        rect[i].top = roundDiv(int(prefs.dy*rect[i].top),rectOrig.Height());rect[i].bottom=rect[i].top+dstdy;
+        dx[i] = rect[i].Width();dy[i]=rect[i].Height();
+        bmp[i] = plane[i].c;msk[i]=plane[i].r;
+        bmpmskstride[i] = plane[i].stride;
+    }
+    dxChar = dx[0];
+    dyChar = dy[0];
+    if (scaler)
+        delete scaler;
 }
 
 //=============================================== TspuImage::Tscaler ==============================================
-TspuImage::Tscaler* TspuImage::Tscaler::create(const TrenderedSubtitleLines::TprintPrefs &prefs,int srcdx,int srcdy,int dstdx,int dstdy)
+TspuImage::Tscaler* TspuImage::Tscaler::create(const TprintPrefs &prefs,int srcdx,int srcdy,int dstdx,int dstdy)
 {
  switch (prefs.dvd?0:prefs.vobaamode)
   {
@@ -68,15 +110,16 @@ TspuImage::Tscaler* TspuImage::Tscaler::create(const TrenderedSubtitleLines::Tpr
 }
 
 //============================================ TspuImage::TscalerPoint ============================================
-TspuImage::TscalerPoint::TscalerPoint(const TrenderedSubtitleLines::TprintPrefs &prefs,int srcdx,int srcdy,int dstdx,int dstdy):Tscaler(srcdx,srcdy,dstdx,dstdy)
+TspuImage::TscalerPoint::TscalerPoint(const TprintPrefs &prefs,int srcdx,int srcdy,int dstdx,int dstdy):Tscaler(prefs,srcdx,srcdy,dstdx,dstdy)
 {
 }
 void TspuImage::TscalerPoint::scale(const unsigned char *srci,const unsigned char *srca,stride_t srcStride,unsigned char *dsti,unsigned char *dsta,stride_t dstStride)
 {
+ const TcspInfo *cspInfo = csp_getInfo(csp);
  if (srcdx==dstdx && srcdy==dstdy)
   {
-   TffPict::copy(dsti,dstStride,srci,srcStride,srcdx,srcdy);
-   TffPict::copy(dsta,dstStride,srca,srcStride,srcdx,srcdy);
+   TffPict::copy(dsti,dstStride,srci,srcStride,srcdx * cspInfo->Bpp,srcdy);
+   TffPict::copy(dsta,dstStride,srca,srcStride,srcdx * cspInfo->Bpp,srcdy);
   }
  else
   {
@@ -98,7 +141,7 @@ void TspuImage::TscalerPoint::scale(const unsigned char *srci,const unsigned cha
 }
 
 //============================================ TspuImage::TscalerApprox ===========================================
-TspuImage::TscalerApprox::TscalerApprox(const TrenderedSubtitleLines::TprintPrefs &prefs,int srcdx,int srcdy,int dstdx,int dstdy):Tscaler(srcdx,srcdy,dstdx,dstdy)
+TspuImage::TscalerApprox::TscalerApprox(const TprintPrefs &prefs,int srcdx,int srcdy,int dstdx,int dstdy):Tscaler(prefs,srcdx,srcdy,dstdx,dstdy)
 {
  scalex=0x100*dstdx/srcdx;
  scaley=0x100*dstdy/srcdy;
@@ -138,7 +181,7 @@ void TspuImage::TscalerApprox::scale(const unsigned char *srci,const unsigned ch
 }
 
 //============================================ TspuImage::TscalerFull =============================================
-TspuImage::TscalerFull::TscalerFull(const TrenderedSubtitleLines::TprintPrefs &prefs,int srcdx,int srcdy,int dstdx,int dstdy):Tscaler(srcdx,srcdy,dstdx,dstdy)
+TspuImage::TscalerFull::TscalerFull(const TprintPrefs &prefs,int srcdx,int srcdy,int dstdx,int dstdy):Tscaler(prefs,srcdx,srcdy,dstdx,dstdy)
 {
 }
 void TspuImage::TscalerFull::scale(const unsigned char *srci,const unsigned char *srca,stride_t srcStride,unsigned char *dsti,unsigned char *dsta,stride_t dstStride)
@@ -309,7 +352,7 @@ void TspuImage::TscalerFull::scale(const unsigned char *srci,const unsigned char
 }
 
 //============================================ TspuImage::TscalerBilin =============================================
-TspuImage::TscalerBilin::TscalerBilin(const TrenderedSubtitleLines::TprintPrefs &prefs,int srcdx,int srcdy,int dstdx,int dstdy):Tscaler(srcdx,srcdy,dstdx,dstdy)
+TspuImage::TscalerBilin::TscalerBilin(const TprintPrefs &prefs,int srcdx,int srcdy,int dstdx,int dstdy):Tscaler(prefs,srcdx,srcdy,dstdx,dstdy)
 {
  table_x=(scale_pixel*)calloc(dstdx,sizeof(scale_pixel));
  table_y=(scale_pixel*)calloc(dstdy,sizeof(scale_pixel));
@@ -366,8 +409,8 @@ void TspuImage::TscalerBilin::scale(const unsigned char *srci,const unsigned cha
 }
 
 //============================================== TspuImage::TscalerSw ==============================================
-TspuImage::TscalerSw::TscalerSw(const TrenderedSubtitleLines::TprintPrefs &prefs,int srcdx,int srcdy,int dstdx,int dstdy):
- Tscaler(srcdx,srcdy,dstdx,dstdy),
+TspuImage::TscalerSw::TscalerSw(const TprintPrefs &prefs,int srcdx,int srcdy,int dstdx,int dstdy):
+ Tscaler(prefs,srcdx,srcdy,dstdx,dstdy),
  approx(prefs,srcdx,srcdy,dstdx,dstdy)
 {
  prefs.deci->getPostproc(&libmplayer);
@@ -419,30 +462,86 @@ template<class _mm> void TspuImageSimd<_mm>::print(int startx, int starty, unsig
   }
  _mm::empty();
 }
-template<class _mm> void TspuImageSimd<_mm>::ownprint(const TrenderedSubtitleLines::TprintPrefs &prefs)
+template<class _mm> void TspuImageSimd<_mm>::ownprint(
+    const TprintPrefs &prefs,
+    unsigned char **Idst,
+    const stride_t *Istride)
 {
- if (!plane[0].stride || !plane[0].c || !plane[0].r) return;
- typename _mm::__m m0=_mm::setzero_si64();
- unsigned int sizeDx=prefs.sizeDx?prefs.sizeDx:prefs.dx;
- for (int i=0;i<3;i++)
-  {
-   unsigned char *dst=prefs.dst[i]+rect[i].top*prefs.stride[i]+rect[i].left;
-   const unsigned char *c=plane[i].c,*r=plane[i].r;
-   for (int y=rect[i].top;y<rect[i].bottom;y++,dst+=prefs.stride[i],c+=plane[i].stride,r+=plane[i].stride)
-    {
-     int x=0,dx=rect[i].Width();if (rect[i].left+dx>(int)sizeDx>>prefs.shiftX[i]) dx=(sizeDx>>prefs.shiftX[i])-rect[i].left;
-     for (;x<int(dx-_mm::size/2+1);x+=_mm::size/2)
-      {
-       typename _mm::__m p8=_mm::unpacklo_pi8(_mm::load2(dst+x),m0);
-       typename _mm::__m c8=_mm::unpacklo_pi8(_mm::load2(c+x),m0);
-       typename _mm::__m r8=_mm::unpacklo_pi8(_mm::load2(r+x),m0);
-       _mm::store2(dst+x,_mm::packs_pu16(_mm::sub_pi16(p8,_mm::srai_pi16(_mm::mullo_pi16(_mm::sub_pi16(p8,c8),r8),4)),m0));
-      }
-     for (;x<dx;x++)
-      dst[x]=(unsigned char)(dst[x]-((dst[x]-c[x])*r[x]>>4));
+    const TcspInfo *cspInfo = csp_getInfo(prefs.csp);
+    if (!plane[0].stride || !plane[0].c || !plane[0].r) return;
+    typename _mm::__m m0=_mm::setzero_si64();
+    if ((prefs.csp & FF_CSPS_MASK) ==FF_CSP_420P) {
+        typename _mm::__m m16=_mm::set1_pi16(16);
+        typename _mm::__m m128=_mm::set1_pi16(128);
+        unsigned int sizeDx=prefs.sizeDx?prefs.sizeDx:prefs.dx;
+        unsigned char *dst=Idst[0]+rect[0].top*Istride[0]+rect[0].left;
+        const unsigned char *c=plane[0].c,*r=plane[0].r;
+        for (int y=rect[0].top;y<rect[0].bottom;y++,dst+=Istride[0],c+=plane[0].stride,r+=plane[0].stride) {
+            int x=0,dx=rect[0].Width();if (rect[0].left+dx>(int)sizeDx>>cspInfo->shiftX[0]) dx=(sizeDx>>cspInfo->shiftX[0])-rect[0].left;
+            for (;x<int(dx-_mm::size/2+1);x+=_mm::size/2) {
+                typename _mm::__m p8=_mm::unpacklo_pi8(_mm::load2(dst+x),m0);
+                typename _mm::__m c8=_mm::unpacklo_pi8(_mm::load2(c+x),m0);
+                typename _mm::__m r8=_mm::unpacklo_pi8(_mm::load2(r+x),m0);
+                _mm::store2(dst+x,_mm::packs_pu16(_mm::sub_pi16(p8,_mm::srai_pi16(_mm::mullo_pi16(_mm::sub_pi16(p8,c8),r8),4)),m0));
+            }
+            for (;x<dx;x++)
+                dst[x]=(unsigned char)(dst[x]-((dst[x]-c[x])*r[x]>>4));
+        }
+        for (int i=1;i<3;i++) {
+            unsigned char *dst=Idst[i]+rect[i].top*Istride[i]+rect[i].left;
+            const unsigned char *c=plane[i].c,*r=plane[i].r;
+            for (int y=rect[i].top;y<rect[i].bottom;y++,dst+=Istride[i],c+=plane[i].stride,r+=plane[i].stride) {
+                int x=0,dx=rect[i].Width();
+                if (rect[i].left+dx>(int)sizeDx>>cspInfo->shiftX[i])
+                    dx=(sizeDx>>cspInfo->shiftX[i])-rect[i].left;
+                for (;x<int(dx-_mm::size/2+1);x+=_mm::size/2) {
+                    typename _mm::__m p8  = _mm::unpacklo_pi8(_mm::load2(dst+x),m0);
+                    typename _mm::__m c8  = _mm::unpacklo_pi8(_mm::load2(c+x),m0);
+                    typename _mm::__m r8  = _mm::unpacklo_pi8(_mm::load2(r+x),m0);
+                    typename _mm::__m mm1 = _mm::sub_pi16(p8,m128);
+                    typename _mm::__m mm2 = _mm::sub_pi16(c8,m128);
+                    typename _mm::__m mm3 = _mm::sub_pi16(m16,r8);
+                    mm1 = _mm::mullo_pi16(mm1, mm3);
+                    mm1 = _mm::srai_pi16(mm1,4);
+                    mm2 = _mm::mullo_pi16(mm2, r8);
+                    mm2 = _mm::srai_pi16(mm2,4);
+                    mm1 = _mm::add_pi16(mm1,mm2);
+                    mm1 = _mm::add_pi16(mm1,m128);
+                    mm1 = _mm::packs_pu16(mm1, m0);
+                    _mm::store2(dst+x,mm1);
+                }
+                for (;x<dx;x++)
+                    dst[x]=(unsigned char)(dst[x]-((dst[x]-c[x])*r[x]>>4));
+            }
+        }
+    } else {
+        // RGB32
+        unsigned int sizeDx = prefs.sizeDx ? prefs.sizeDx : prefs.dx;
+        uint8_t *dst = Idst[0] + rect[0].top * Istride[0] + rect[0].left * 4;
+        const uint8_t *c = plane[0].c;
+        const uint8_t *r = plane[0].r;
+        for (int y = rect[0].top ; y < rect[0].bottom ; y++, dst += Istride[0], c+=plane[0].stride, r+=plane[0].stride) {
+            uint32_t *dstLn = (uint32_t *)dst;
+            const uint32_t *cLn = (const uint32_t *)c;
+            const uint32_t *rLn = (const uint32_t *)r;
+            int x=0, dx=rect[0].Width();
+            if (rect[0].left+dx > (int)sizeDx)
+                dx = sizeDx - rect[0].left;
+            int endx = dx -_mm::size /8 + 1;
+            for (; x < endx ; x += _mm::size / 8) {
+                typename _mm::__m p8=_mm::unpacklo_pi8(_mm::load2(dstLn + x),m0);
+                typename _mm::__m c8=_mm::unpacklo_pi8(_mm::load2(cLn + x),m0);
+                typename _mm::__m r8=_mm::unpacklo_pi8(_mm::load2(rLn + x),m0);
+                _mm::store2(dstLn + x,_mm::packs_pu16(_mm::sub_pi16(p8,_mm::srai_pi16(_mm::mullo_pi16(_mm::sub_pi16(p8,c8),r8),6)),m0));
+            }
+            x *= 4;
+            dx *= 4;
+            for (;x<dx;x++)
+                dst[x]=(unsigned char)(dst[x]-((dst[x]-c[x])*r[x]>>4));
+        }
+
     }
-  }
- _mm::empty();
+    _mm::empty();
 }
 
 template struct TspuImageSimd<Tmmx>;

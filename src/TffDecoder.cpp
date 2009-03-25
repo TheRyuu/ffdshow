@@ -315,7 +315,7 @@ HRESULT TffdshowDecVideo::GetMediaType(int iPosition, CMediaType *mtOut)
  bih.biWidth =pictOut.rectFull.dx;
  if(c->id == FF_CSP_420P)    // YV12 and odd number lines.
   {
-   pictOut.rectFull.dy=ODD2EVEN(pictOut.rectFull.dy);
+   pictOut.rectFull.dy=odd2even(pictOut.rectFull.dy);
   }
  bih.biHeight=pictOut.rectFull.dy;
  bih.biPlanes=WORD(c->numPlanes);
@@ -1635,7 +1635,7 @@ HRESULT TffdshowDecVideo::reconnectOutput(const TffPict &newpict)
    inReconnect=true;
    int newdy=newpict.rectFull.dy;
    if (newpict.cspInfo.id==FF_CSP_420P)
-    newdy=ODD2EVEN(newdy);
+    newdy=odd2even(newdy);
    reconnectRect=newpict;
    reconnectRect.rectFull.dy=newdy;
    CMediaType &mt=m_pOutput->CurrentMediaType();

@@ -93,6 +93,29 @@ float TvideoCodecDec::calcMeanQuant(void)
  return float(sum)/num;
 }
 
+void TvideoCodecDec::correctDVDsar(Trect &r)
+{
+    if (!isdvdproc)
+        return;
+    if (r.dx * r.sar.num * 9 == r.dy * r.sar.den * 16)
+        // 16:9, OK
+        return;
+    if (r.dx * r.sar.num * 3 == r.dy * r.sar.den * 4)
+        // 4:3, OK
+        return;
+    if (r.dx * r.sar.num * 9 > r.dy * r.sar.den * 16) {
+        // Fix to 16:9
+        r.sar.num = r.dy * 16;
+        r.sar.den = r.dx * 9;
+        r.sar.reduce(255);
+    } else {
+        // Fix to 4:3
+        r.sar.num = r.dy * 4;
+        r.sar.den = r.dx * 3;
+        r.sar.reduce(255);
+    }
+}
+
 //===================================== TvideoCodecEnc ======================================
 TvideoCodecEnc::TvideoCodecEnc(IffdshowBase *Ideci,IencVideoSink *Isink):
  Tcodec(Ideci),TvideoCodec(deci),

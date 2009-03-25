@@ -6,6 +6,7 @@
 struct TfontSettings;
 struct Rational;
 class TfontManager;
+struct TprintPrefs;
 
 struct TSubtitleProps
 {
@@ -30,10 +31,9 @@ struct TSubtitleProps
  double spacing;  //INT_MIN = default
  double x; // Calculated x position
  double y; // Calculated y position
+ int lineID;
  void reset(void);
- HGDIOBJ toGdiFont(HDC hdc, LOGFONT &lf, const TfontSettings &fontSettings, unsigned int dx, unsigned int dy, unsigned int clipdy, const Rational& sar, TfontManager *fontManager,unsigned int gdi_font_scale) const;
  void toLOGFONT(LOGFONT &lf, const TfontSettings &fontSettings, unsigned int dx, unsigned int dy, unsigned int clipdy, const Rational& sar, unsigned int gdi_font_scale) const;
- void fix_size(LOGFONT &lf, HDC hdc, TfontManager *fontManager, unsigned int gdi_font_scale) const;
 
  // Alignment. This sets how text is "justified" within the Left/Right onscreen margins,
  // and also the vertical placing. Values may be 1=Left, 2=Centered, 3=Right.
@@ -59,7 +59,6 @@ struct TSubtitleProps
  REFERENCE_TIME get_moveStart(void) const;
  REFERENCE_TIME get_moveStop(void) const;
  static int alignASS2SSA(int align);
- mutable int m_ascent64,m_descent64; // multiple 64 to lfHeight. Get TextMetrics and plus 4 to tmAscent or tmDescent and divid by 8 for vsfilter compatibility.
  int tmpFadT1,tmpFadT2;
  int isFad;
  int fadeA1,fadeA2,fadeA3;

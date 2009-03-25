@@ -143,12 +143,6 @@ void Tconfig::init1(HINSTANCE hi)
  isDecoder[IDFF_MOVIE_TREMOR]=check(TaudioCodecTremor::dllname);
  isDecoder[IDFF_MOVIE_REALAAC]=check(TaudioCodecRealaac::dllname);
 
- gdiA.getTextExtentExPoint=GetTextExtentExPointA;
- gdiA.getTextExtentPoint32=GetTextExtentPoint32A;
- gdiA.textOut=TextOutA;
- gdiW.getTextExtentExPoint = GetTextExtentExPointW;
- gdiW.getTextExtentPoint32 = GetTextExtentPoint32W;
- gdiW.textOut = TextOutW;
  is_WMEncEng = done_WMEncEng = false;
 }
 

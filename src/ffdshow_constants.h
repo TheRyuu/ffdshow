@@ -474,7 +474,7 @@
 #define IDFF_subSearchHeuristic      856
 #define IDFF_subWatch                826
 #define IDFF_subStereoscopic         833
-#define IDFF_subStereoscopicPar      834 // stereoscopic paralax <-10%,10%> of picture width
+#define IDFF_subStereoscopicPar      834 // stereoscopic parallax <-10%,10%> of picture width
 #define IDFF_subDefLang              836
 #define IDFF_subDefLang2             852
 #define IDFF_subVobsub               835
@@ -631,7 +631,7 @@
 #define IDFF_OSDfontXscale         1532
 #define IDFF_OSDfontYscale         3412
 #define IDFF_OSDfontAspectAuto     3413
-#define IDFF_OSDfontFast           1535
+//#define IDFF_OSDfontFast           1535
   #define IDFF_OSDtype_inputSize          1520
   #define IDFF_OSDtype_inputAspect        1550
   #define IDFF_OSDtype_inputSizeAspect    1552
@@ -1539,6 +1539,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//next:3513
+//next:3515
 
 #endif

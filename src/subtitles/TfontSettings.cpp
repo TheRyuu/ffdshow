@@ -46,9 +46,10 @@ const char_t* TfontSettings::shadowModes[]=
  NULL
 };
 
+#define ffdshowUTF8 253
 const int TfontSettings::charsets[]=
 {
- ANSI_CHARSET,DEFAULT_CHARSET,SYMBOL_CHARSET,SHIFTJIS_CHARSET,HANGUL_CHARSET,GB2312_CHARSET,CHINESEBIG5_CHARSET,OEM_CHARSET,JOHAB_CHARSET,HEBREW_CHARSET,ARABIC_CHARSET,GREEK_CHARSET,TURKISH_CHARSET,VIETNAMESE_CHARSET,THAI_CHARSET,EASTEUROPE_CHARSET,RUSSIAN_CHARSET,MAC_CHARSET,BALTIC_CHARSET,-1
+ ANSI_CHARSET,DEFAULT_CHARSET,SYMBOL_CHARSET,SHIFTJIS_CHARSET,HANGUL_CHARSET,GB2312_CHARSET,CHINESEBIG5_CHARSET,OEM_CHARSET,JOHAB_CHARSET,HEBREW_CHARSET,ARABIC_CHARSET,GREEK_CHARSET,TURKISH_CHARSET,VIETNAMESE_CHARSET,THAI_CHARSET,EASTEUROPE_CHARSET,RUSSIAN_CHARSET,MAC_CHARSET,BALTIC_CHARSET,ffdshowUTF8,-1
 };
 const char_t* TfontSettings::getCharset(int i)
 {
@@ -73,6 +74,7 @@ const char_t* TfontSettings::getCharset(int i)
    case RUSSIAN_CHARSET    :return _l("Cyrillic");
    case MAC_CHARSET        :return _l("Mac");
    case BALTIC_CHARSET     :return _l("Baltic");
+   case ffdshowUTF8        :return _l("UTF-8");
    default                 :return _l("unknown");
   }
 }
@@ -96,7 +98,35 @@ int TfontSettings::getCharset(const char_t *name)
  else if (stricmp(name,_l("Russian"))==0 || stricmp(name,_l("Cyrillic"))==0) return RUSSIAN_CHARSET;
  else if (stricmp(name,_l("Mac"))==0) return MAC_CHARSET;
  else if (stricmp(name,_l("Baltic"))==0) return BALTIC_CHARSET;
+ else if (stricmp(name,_l("UTF-8"))==0) return ffdshowUTF8;
  else return ANSI_CHARSET;
+}
+
+int TfontSettings::GDI_charset_to_code_page(int charset)
+{
+ switch (charset)
+  {
+   case DEFAULT_CHARSET:      return CP_ACP;
+   case SYMBOL_CHARSET:       return CP_SYMBOL;
+   case SHIFTJIS_CHARSET:     return 932;
+   case HANGUL_CHARSET:       return 949;
+   case GB2312_CHARSET:       return 936;
+   case CHINESEBIG5_CHARSET:  return 950;
+   case OEM_CHARSET:          return CP_OEMCP;
+   case JOHAB_CHARSET:        return 1361;
+   case EASTEUROPE_CHARSET:   return 1250;
+   case RUSSIAN_CHARSET:      return 1251;
+   case GREEK_CHARSET:        return 1253;
+   case TURKISH_CHARSET:      return 1254;
+   case HEBREW_CHARSET:       return 1255;
+   case ARABIC_CHARSET:       return 1256;
+   case VIETNAMESE_CHARSET:   return 1258;
+   case THAI_CHARSET:         return 874;
+   case MAC_CHARSET:          return CP_MACCP;
+   case BALTIC_CHARSET:       return 1257;
+   case ffdshowUTF8:          return CP_UTF8;
+   default:                   return CP_ACP;
+  }
 }
 
 void TfontSettings::reg_op(TregOp &t)
@@ -164,8 +194,6 @@ TfontSettingsOSD::TfontSettingsOSD(TintStrColl *Icoll):TfontSettings(Icoll)
      _l("OSDfontYscale"), 100,
    IDFF_OSDfontAspectAuto    ,&TfontSettings::aspectAuto     ,0,0,_l(""),0,
      _l("OSDfontAspectAuto"), 1,
-   IDFF_OSDfontFast          ,&TfontSettings::fast           ,0,0,_l(""),0,
-     _l("OSDfontFast"), 0,
    IDFF_OSDfontBodyAlpha     ,&TfontSettings::bodyAlpha      ,0,256,_l(""),1,
      _l("OSDfontBodyAlpha"), 256,
    IDFF_OSDfontOutlineAlpha  ,&TfontSettings::outlineAlpha   ,0,256,_l(""),1,
@@ -181,6 +209,7 @@ TfontSettingsOSD::TfontSettingsOSD(TintStrColl *Icoll):TfontSettings(Icoll)
    0
   };
  addOptions(iopts);
+ gdi_font_scale = 4;
  static const TstrOption sopts[]=
   {
    IDFF_OSDfontName,(TstrVal)&TfontSettings::name,LF_FACESIZE,0,_l(""),0,
@@ -230,15 +259,13 @@ TfontSettingsSub::TfontSettingsSub(TintStrColl *Icoll):TfontSettings(Icoll)
      _l("fontOverrideScale"), 0,
    IDFF_fontAspectAuto         ,&TfontSettings::aspectAuto         ,0,0,_l(""),1,
      _l("fontAspectAuto"), 1,
-   IDFF_fontFast               ,&TfontSettings::fast               ,0,0,_l(""),1,
-     _l("fontFast"), 0,
    IDFF_fontBodyAlpha          ,&TfontSettings::bodyAlpha          ,0,256,_l(""),1,
      _l("fontBodyAlpha"), 256,
    IDFF_fontOutlineAlpha       ,&TfontSettings::outlineAlpha       ,0,256,_l(""),1,
      _l("fontOutlineAlpha"), 256,
    IDFF_fontShadowAlpha        ,&TfontSettings::shadowAlpha        ,0,256,_l(""),1,
      _l("fontShadowAlpha"), 128,
-   IDFF_fontShadowSize          ,&TfontSettings::shadowSize        ,0,50,_l(""),1,
+   IDFF_fontShadowSize         ,&TfontSettings::shadowSize        ,0,50,_l(""),1,
      _l("fontShadowSize"), 8,
    IDFF_fontShadowMode         ,&TfontSettings::shadowMode         ,0,3,_l(""),1,
      _l("fontShadowMode"), 1, // Default shadow mode to gradient (best rendering)
@@ -247,6 +274,7 @@ TfontSettingsSub::TfontSettingsSub(TintStrColl *Icoll):TfontSettings(Icoll)
    0
   };
  addOptions(iopts);
+ gdi_font_scale = 64;
  static const Toptions::TstrOption sopts[]=
   {
    IDFF_fontName               ,(TstrVal)&TfontSettings::name      ,LF_FACESIZE,0,_l(""),1,

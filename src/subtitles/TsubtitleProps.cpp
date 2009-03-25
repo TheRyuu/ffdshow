@@ -52,8 +52,6 @@ void TSubtitleProps::reset(void)
  ShadowColourA=128;
  blur=0;
  version=-1;
- m_ascent64=-1;
- m_descent64=-1;
  tStart=tStop=fadeT1=fadeT2=fadeT3=fadeT4=REFTIME_INVALID;
  isFad=0;
  karaokeMode = KARAOKE_NONE;
@@ -63,15 +61,7 @@ void TSubtitleProps::reset(void)
  extendedTags=0;
  x=0;
  y=0;
-}
-
-HGDIOBJ TSubtitleProps::toGdiFont(HDC hdc, LOGFONT &lf,const TfontSettings &fontSettings,unsigned int dx,unsigned int dy,unsigned int clipdy,const Rational& sar, TfontManager *fontManager,unsigned int gdi_font_scale) const
-{
- toLOGFONT(lf,fontSettings,dx,dy,clipdy,sar,gdi_font_scale);
- HFONT font=fontManager->getFont(lf);
- HGDIOBJ old=SelectObject(hdc,font);
- fix_size(lf,hdc,fontManager,gdi_font_scale);
- return old;
+ lineID=0;
 }
 
 void TSubtitleProps::toLOGFONT(LOGFONT &lf,const TfontSettings &fontSettings,unsigned int dx,unsigned int dy,unsigned int clipdy,const Rational& sar,unsigned int gdi_font_scale) const
@@ -98,33 +88,6 @@ void TSubtitleProps::toLOGFONT(LOGFONT &lf,const TfontSettings &fontSettings,uns
  lf.lfQuality=ANTIALIASED_QUALITY;
  lf.lfPitchAndFamily=DEFAULT_PITCH|FF_DONTCARE;
  ff_strncpy(lf.lfFaceName,fontname[0]?fontname:fontSettings.name,LF_FACESIZE);
-}
-
-void TSubtitleProps::fix_size(LOGFONT &lf, HDC hdc, TfontManager *fontManager, unsigned int gdi_font_scale) const
-{
- // for ASS compatibility.
- // vsfilter multiple 64 to lfHeight when it rasterizes the font.
- // ffdshow multiple 4 or 16 (gdi_font_scale). This is not compatible, so here we want to correct.
- TEXTMETRIC tm4, tm64;
- if (GetTextMetrics(hdc,&tm4))
-  {
-   lf.lfHeight *= 64/gdi_font_scale;
-   HFONT font=fontManager->getFont(lf);
-   SelectObject(hdc,font);
-   GetTextMetrics(hdc,&tm64);
-   double r4=(double)(tm4.tmHeight - tm4.tmInternalLeading) * (64/gdi_font_scale) / lf.lfHeight;
-   double r64=(double)(tm64.tmHeight-tm64.tmInternalLeading) / lf.lfHeight;
-   m_ascent64=(tm64.tmAscent + 4) >> 3;
-   m_descent64=(tm64.tmDescent + 4) >> 3;
-   lf.lfHeight=LONG((double)lf.lfHeight * r64 / r4 / (64/gdi_font_scale));
-   font=fontManager->getFont(lf);
-   SelectObject(hdc,font);
-  }
- else
-  {
-   m_ascent64=int(lf.lfHeight*2*0.8);
-   m_descent64=int(lf.lfHeight*2-m_ascent64);
-  }
 }
 
 int TSubtitleProps::get_spacing(unsigned int dy, unsigned int clipdy, unsigned int gdi_font_scale) const

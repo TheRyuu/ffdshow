@@ -1451,6 +1451,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\subtitles\Rasterizer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\subtitles\Rasterizer.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\subtitles\spudec.cpp"
 				>
 			</File>
@@ -1518,6 +1526,14 @@
 			</File>
 			<File
 				RelativePath=".\src\subtitles\ThtmlColors.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\subtitles\TrenderedTextSubtitleWord.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\subtitles\TrenderedTextSubtitleWord.h"
 				>
 			</File>
 			<File
@@ -1698,6 +1714,10 @@
 			</File>
 			<File
 				RelativePath=".\src\subtitles\TsubtitleVobsub.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\subtitles\TtoGdiFont.h"
 				>
 			</File>
 			<File

@@ -22,7 +22,7 @@ private:
   private:
    IOSDprovider *provider;
    const Tconfig *config;
-   TsubtitleTextBase<char_t> sub;
+   TsubtitleText sub;
    bool firsttime;
    struct TosdValue
     {
@@ -71,10 +71,22 @@ private:
    typedef std::vector<TosdToken> TosdTokens;
    TosdTokens tokens;
   public:
-   TosdLine(IffdshowBase *Ideci,IffdshowDec *IdeciB,IffdshowDecVideo *IdeciV,const Tconfig *Iconfig,const ffstring &Iformat,const TfontSettings *fontSettings,unsigned int Iduration,IOSDprovider *Iprovider,bool Iitalic=false);
+   TosdLine(IffdshowBase *Ideci,IffdshowDec *IdeciB,IffdshowDecVideo *IdeciV,const Tconfig *Iconfig,const ffstring &Iformat,unsigned int Iduration,IOSDprovider *Iprovider,bool Iitalic=false);
    int duration;
    Tfont font;
-   void print(IffdshowBase *deci,const TffPict &pict,unsigned char *dst[4],stride_t stride[4],unsigned int dxY,unsigned int dyY,unsigned int x,unsigned int &y,int linespace,FILE *f,bool fileonly);
+   void print(
+    IffdshowBase *deci,
+    const TffPict &pict,
+    unsigned char *dst[4],
+    stride_t stride[4],
+    unsigned int dxY,
+    unsigned int dyY,
+    unsigned int x,
+    unsigned int &y,
+    int linespace,
+    FILE *f,
+    bool fileonly,
+    const TfontSettings &fontSettings);
    const char_t *getName(unsigned int i) const;
   };
 
@@ -85,13 +97,14 @@ private:
    FILE *f;int oldSave;char_t oldSaveFlnm[MAX_PATH];
    ffstring startupFormat;int startupDuration;
    char_t oldFormat[256];
+   TfontSettings fontSettings;
   public:
    Tosds(IOSDprovider *Iprovider=NULL,const char_t *Iname=NULL);
    ~Tosds();
    bool is;
    IOSDprovider *provider;
-   void init(bool allowSave,IffdshowBase *deci,IffdshowDec *deciD,IffdshowDecVideo *deciV,const Tconfig *config,TfontSettingsOSD *oldFont,const TOSDsettings *cfg,int framecnt);
-   void fontInit(const TfontSettingsOSD *fontSettings);
+   void init(bool allowSave,IffdshowBase *deci,IffdshowDec *deciD,IffdshowDecVideo *deciV,const Tconfig *config,const TfontSettingsOSD &oldFont,const TOSDsettings *cfg,int framecnt);
+   void fontInit(const TfontSettingsOSD &fontSettings);
    void print(IffdshowBase *deci,const TffPict &pict,unsigned char *dst[4],stride_t stride[4],unsigned int dxY,unsigned int dyY,unsigned int x,unsigned int &y,int linespace,bool fileonly);
    void done(void);
    void freeOsds(void);
@@ -108,10 +121,10 @@ private:
  TprovOSDs provOSDs;
  CCritSec csProvider;
 
- TfontSettingsOSD *oldFont;
+ TfontSettingsOSD oldFont;
  unsigned int framecnt;
  Tfont fontUser;
- TsubtitleTextBase<char_t> subUser;
+ TsubtitleText subUser;
  char_t oldLinesUser[2048];
  strings linesUser;
 

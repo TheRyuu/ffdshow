@@ -1235,56 +1235,99 @@ const Taspect sampleAspects[]=
 };
 
 //======================== YUVcolor ==========================
-YUVcolor::YUVcolor(COLORREF rgb,bool vob)
+YUVcolor::YUVcolor(COLORREF rgb)
 {
- r=GetRValue(rgb),g=GetGValue(rgb),b=GetBValue(rgb);
- if (!vob)
-  {
-   Y=(uint8_t)((((uint16_t) ((0.299)   * (1L << 8) + 0.5)) * r +
-                ((uint16_t) ((0.587)   * (1L << 8) + 0.5)) * g +
-                ((uint16_t) ((0.114)   * (1L << 8) + 0.5)) * b) >> 8);
-   U=(int8_t)((-((int16_t)  ((0.16874) * (1L << 8) + 0.5)) * r -
-                ((int16_t)  ((0.33126) * (1L << 8) + 0.5)) * g +
-                ((int16_t)  ((0.50000) * (1L << 8) + 0.5)) * b) >> 9);// + 128;
-   V=(int8_t)(( ((int16_t)  ((0.50000) * (1L << 8) + 0.5)) * r -
-                ((int16_t)  ((0.41869) * (1L << 8) + 0.5)) * g -
-                ((int16_t)  ((0.08131) * (1L << 8) + 0.5)) * b) >> 9);// + 128;
-  }
- else
-  {
-   Y=(uint8_t)((((uint16_t) (( 0.1494 ) * (1L << 8) + 0.5)) * r +
-                ((uint16_t) (( 0.6061 ) * (1L << 8) + 0.5)) * g +
-                ((uint16_t) (( 0.2445 ) * (1L << 8) + 0.5)) * b) >> 8);
-   U=(int8_t) ((((int16_t)  (( 0.6066 ) * (1L << 8) + 0.5)) * r -
-                ((int16_t)  (( 0.4322 ) * (1L << 8) + 0.5)) * g -
-                ((int16_t)  (( 0.1744 ) * (1L << 8) + 0.5)) * b) >> 8) + 128;
-   V=(int8_t) ((((int16_t)  ((-0.08435) * (1L << 8) + 0.5)) * r -
-                ((int16_t)  (( 0.3422 ) * (1L << 8) + 0.5)) * g +
-                ((int16_t)  (( 0.4266 ) * (1L << 8) + 0.5)) * b) >> 8) + 128;
-  }
+    r=GetRValue(rgb),g=GetGValue(rgb),b=GetBValue(rgb);
+    Y=(uint8_t)((((uint16_t) ((0.299)   * (1L << 8) + 0.5)) * r +
+                 ((uint16_t) ((0.587)   * (1L << 8) + 0.5)) * g +
+                 ((uint16_t) ((0.114)   * (1L << 8) + 0.5)) * b) >> 8);
+    U=(int8_t)((-((int16_t)  ((0.16874) * (1L << 8) + 0.5)) * r -
+                 ((int16_t)  ((0.33126) * (1L << 8) + 0.5)) * g +
+                 ((int16_t)  ((0.50000) * (1L << 8) + 0.5)) * b) >> 9);// + 128;
+    V=(int8_t)(( ((int16_t)  ((0.50000) * (1L << 8) + 0.5)) * r -
+                 ((int16_t)  ((0.41869) * (1L << 8) + 0.5)) * g -
+                 ((int16_t)  ((0.08131) * (1L << 8) + 0.5)) * b) >> 9);// + 128;
+}
+
+//======================== YUVcolorA ==========================
+YUVcolorA::YUVcolorA()
+{
+    Y=0;
+    U=V=128;
+    A=256;
+    r=g=b=0;
+    m_rgb=0;
+    m_aaa64=0x00404040;
+}
+
+YUVcolorA::YUVcolorA(COLORREF rgb, vobsubWeirdCsp_t)
+{
+    A = 15;
+    r = GetRValue(rgb);
+    g = GetGValue(rgb);
+    b = GetBValue(rgb);
+    // vobsub's weird color space
+    // http://lists.mplayerhq.hu/pipermail/mplayer-dev-eng/2007-December/055408.html
+    double y = limit<double>((0.1494   * double(r) + 0.6061 * double(g) + 0.2445 * b) * 219.0 / 255.0 + 16, 0, 255);
+    double u = limit<double>((0.6066   * double(r) - 0.4322 * double(g) - 0.1744 * b) + 128, 0, 255);
+    double v = limit<double>((-0.08435 * double(r) - 0.3422 * double(g) + 0.4266 * b) + 128, 0, 255);
+    Y = (uint8_t) (y + 0.5);
+    U = (uint8_t)  (u + 0.5);
+    V = (uint8_t)  (v + 0.5);
+    r = limit<int>(1.164 * (y - 16)                     + 1.596 * (v - 128), 0, 255);
+    g = limit<int>(1.164 * (y - 16) - 0.391 * (u - 128) - 0.813 * (v -128), 0, 255);
+    b = limit<int>(1.164 * (y - 16) + 2.018 * (u - 128), 0, 255);
+    m_aaa64 = (64 << 16) | (64 << 8) | 64;
+    m_rgb = rgb;
 }
 
 YUVcolorA::YUVcolorA(YUVcolor yuv,unsigned int alpha)
 {
- A=alpha;
- Y=(unsigned int)(0.257*yuv.r+0.504*yuv.g+0.098*yuv.b+16.0);
- U=(unsigned int)(-0.148*yuv.r-0.291*yuv.g+0.439*yuv.b+128.0);
- V=(unsigned int)(0.439*yuv.r-0.368*yuv.g-0.071*yuv.b+128.0);
- r=yuv.r;
- g=yuv.g;
- b=yuv.b;
+    A=alpha;
+    Y=(unsigned int)(0.257*yuv.r+0.504*yuv.g+0.098*yuv.b+16.0);
+    U=(unsigned int)(-0.148*yuv.r-0.291*yuv.g+0.439*yuv.b+128.0);
+    V=(unsigned int)(0.439*yuv.r-0.368*yuv.g-0.071*yuv.b+128.0);
+    r=yuv.r;
+    g=yuv.g;
+    b=yuv.b;
+    m_rgb = (b << 16) | (g << 8) | r;
+    setAlpha(A);
 }
 
 YUVcolorA::YUVcolorA(COLORREF rgb,unsigned int alpha)
 {
- r=GetRValue(rgb);
- g=GetGValue(rgb);
- b=GetBValue(rgb);
- Y=(unsigned int)(0.257*r+0.504*g+0.098*b+16.0);
- U=(unsigned int)(-0.148*r-0.291*g+0.439*b+128.0);
- V=(unsigned int)(0.439*r-0.368*g-0.071*b+128.0);
- A=alpha;
+    r=GetRValue(rgb);
+    g=GetGValue(rgb);
+    b=GetBValue(rgb);
+    m_rgb = rgb;
+    Y=(unsigned int)(0.257*r+0.504*g+0.098*b+16.0);
+    U=(unsigned int)(-0.148*r-0.291*g+0.439*b+128.0);
+    V=(unsigned int)(0.439*r-0.368*g-0.071*b+128.0);
+    A=alpha;
+    setAlpha(A);
 }
+
+void YUVcolorA::setAlpha(uint32_t alpha)
+{
+     A = alpha;
+     int a64= int(A * 4.32);
+     m_aaa64 = (a64 << 16) | (a64 << 8) | a64;
+}
+
+YUVcolorA& YUVcolorA::operator =(const _AM_DVD_YUV &rt)
+{
+    Y = rt.Y;
+    U = rt.U;
+    V = rt.V;
+    A = rt.Reserved;
+    r = limit<int>(1.164 * (double(Y) - 16)                             + 1.596 * (double(V) - 128) + 0.5, 0, 255);
+    g = limit<int>(1.164 * (double(Y) - 16) - 0.391 * (double(U) - 128) - 0.813 * (double(V) - 128) + 0.5, 0, 255);
+    b = limit<int>(1.164 * (double(Y) - 16) + 2.018 * (double(U) - 128) + 0.5, 0, 255);
+    m_rgb = (b << 16) | (g << 8) | r;
+    setAlpha(A);
+    return *this;
+}
+
 // Copyright (C) 1995,1998,1999 DJ Delorie
 static bool isslash(char_t c) {return c=='\\' || c=='/';}
 static const char_t *find_slash(const char_t *s)
@@ -1675,7 +1718,6 @@ template const char* strnistr(const char *haystack,size_t n,const char *needle);
 template const char *strnchr(const char *s,size_t n,int c);
 template char* strrmchar(char *s,int c);
 template void strtok(const char *s,const char *delim,std::vector<DwString<char> > &lst,bool add_empty,size_t max_parts);
-template void strtok(const char *s,const char *delim,std::vector<Tstrpart<char> > &lst,bool add_empty,size_t max_parts);
 template void strtok(const char *s,const char *delim,ints &lst,bool add_empty,size_t max_parts);
 template const void* memnstr(const void *haystachk,size_t n,const char *needle);
 
@@ -1684,7 +1726,7 @@ template const wchar_t* strnstr(const wchar_t *haystack,size_t n,const wchar_t *
 template const wchar_t* strnistr(const wchar_t *haystack,size_t n,const wchar_t *needle);
 template const wchar_t *strnchr(const wchar_t *s,size_t n,int c);
 template void strtok(const wchar_t *s,const wchar_t *delim,std::vector<DwString<wchar_t> > &lst,bool add_empty,size_t max_parts);
-template void strtok(const wchar_t *s,const wchar_t *delim,std::vector<Tstrpart<wchar_t> > &lst,bool add_empty,size_t max_parts);
+template void strtok(const wchar_t *s,const wchar_t *delim,std::vector<Tstrpart> &lst,bool add_empty,size_t max_parts);
 template void strtok(const wchar_t *s,const wchar_t *delim,ints &lst,bool add_empty,size_t max_parts);
 template wchar_t* strrmchar(wchar_t *s,int c);
 template const void* memnstr(const void *haystachk,size_t n,const wchar_t *needle);

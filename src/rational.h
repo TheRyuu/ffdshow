@@ -59,6 +59,10 @@ struct Rational :safe_bool<Rational>
    else
     return false;
   }
+ bool operator==(const Rational &b) const
+  {
+   return !(*this != b);
+  }
  bool boolean_test() const
   {
    return num || den;

@@ -2,6 +2,7 @@
 #define _TSUBREADER_H_
 
 #include "Tsubtitle.h"
+#include "TsubtitleText.h"
 #include "Tstream.h"
 
 struct TsubtitlesSettings;
@@ -12,10 +13,19 @@ private:
  void timesort(void);
 protected:
  void processDuration(const TsubtitlesSettings *cfg);
+ std::vector<TsubtitleTexts> processedSubtitleTexts;
 public:
+ void push_back(Tsubtitle* const &sub)
+  {
+   IsProcessOverlapDone = false;
+   std::vector<Tsubtitle*>::push_back(sub);
+  }
+
  enum SUB_FORMAT
   {
    SUB_INVALID   = 0,
+
+   // text
    SUB_MICRODVD  = 1,
    SUB_SUBRIP    = 2,
    SUB_SUBVIEWER = 3,
@@ -28,12 +38,19 @@ public:
    SUB_AQTITLE   =10,
    SUB_SUBVIEWER2=11,
    SUB_SUBRIP09  =12,
+
+   // unknown
    SUB_USF       =13,
+
+   // bitmap
    SUB_VOBSUB    =14,
    SUB_DVD       =15,
    SUB_CVD       =16,
    SUB_SVCD      =17,
+
+   // text
    SUB_MPL2      =18,
+
    SUB_USESTIME  =1024,
    SUB_FORMATMASK=SUB_USESTIME-1,
    SUB_ENC_UTF8  =2048,
@@ -45,6 +62,13 @@ public:
   {
    format&=SUB_FORMATMASK;
    return format==SUB_DVD || format==SUB_CVD || format==SUB_SVCD;
+  }
+ static bool isText(int format)
+  {
+   format &= SUB_FORMATMASK;
+   if (format >= SUB_MICRODVD && format <= SUB_SUBRIP09) return true;
+   if (format == SUB_MPL2) return true;
+   return false;
   }
  static Tstream::ENCODING getSubEnc(int format);
  static void setSubEnc(int &format,const Tstream &fs);
@@ -58,6 +82,11 @@ public:
  void adjust_subs_time(float subtime);
  void processOverlap(void);
  bool IsProcessOverlapDone;
+ Tsubtitle* operator[](size_t pos) const;
+ size_t count() const; // overridding size makes trouble as some calls to size() in this class expect the size of the base class.
+ void onSeek();
+ void dropRendered();
+ size_t getMemorySize() const;
 };
 
 #endif

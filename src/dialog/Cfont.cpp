@@ -21,7 +21,6 @@
 #include "TfontSettings.h"
 #include "IffdshowParamsEnum.h"
 #include "reg.h"
-#include <tchar.h>
 #include <string.h>
 
 int CALLBACK TfontPage::EnumFamCallBackCharsets(CONST LOGFONT *lpelf,CONST TEXTMETRIC *lpntm,DWORD FontType,LPARAM lParam)
@@ -72,7 +71,6 @@ void TfontPage::init(void)
  addHint(IDC_CBX_FONT_WEIGHT,_l("Weight - most fonts supports only small subset of listed weights."));
  addHint(IDC_TBR_FONT_SPACING,_l("Spacing - distance between characters."));
  addHint(IDC_CHB_FONT_ASPECT_AUTO,_l("Works when the video has non-square pixel aspect ratio."));
- addHint(IDC_CHB_FONT_FAST, _l("It is fast, but spaces between characters are not precise."));
 }
 
 void TfontPage::selectCharset(int ii)
@@ -133,12 +131,10 @@ void TfontPage::font2dlg(void)
  setCheck(IDC_CHB_FONT_BLUR,cfgGet(idff_fontblur));
  setCheck(IDC_CHB_FONT_ASPECT_AUTO,cfgGet(idff_fontaspectauto));
  selectCharset(cfgGet(idff_fontcharset));
- setCheck(IDC_CHB_FONT_FAST,cfgGet(idff_fontfast));
  int opaquebox=cfgGet(idff_fontopaquebox);
  setCheck(IDC_FONT_OPAQUE_BOX,opaquebox);
  int shadowsize=cfgGet(idff_fontshadowsize);
  int shadowmode=cfgGet(idff_fontshadowmode);
- enable((shadowmode>=2 || shadowsize==0) && opaquebox==0,IDC_CHB_FONT_FAST);
  repaint(GetDlgItem(m_hwnd,IDC_IMG_FONT_COLOR));
  repaint(GetDlgItem(m_hwnd,IDC_IMG_FONT_COLOR_OUTLINE));
  repaint(GetDlgItem(m_hwnd,IDC_IMG_FONT_COLOR_SHADOW));
@@ -398,7 +394,6 @@ void TfontPage::shadow2dlg(void)
  cbxSetCurSel(IDC_CBX_FONT_SUBSHADOW_MODE,shadowmode);
  static const int idShadows[]={IDC_TBR_FONT_SUBSHADOW_ALPHA,IDC_TBR_FONT_SUBSHADOW_SIZE,0};
  enable(shadowmode!=3,idShadows);
- enable(shadowmode>=2,IDC_CHB_FONT_FAST);
  int outlinewidth=cfgGet(idff_fontoutlinewidth);
  char_t s[256];
  tbrSet(IDC_TBR_FONT_OUTLINE_WIDTH,outlinewidth,IDC_TXT_FONT_OUTLINE);
@@ -457,7 +452,6 @@ TfontPageSubtitles::TfontPageSubtitles(TffdshowPageDec *Iparent,const TfilterIDF
  idff_fontblur=IDFF_fontBlur;
  static const TbindCheckbox<TfontPageSubtitles> chb[]=
   {
-   IDC_CHB_FONT_FAST,idff_fontfast,NULL,
    IDC_FONT_OPAQUE_BOX,idff_fontopaquebox,&TfontPageSubtitles::font2dlg,
    IDC_CHB_FONT_BLUR,idff_fontblur,&TfontPageSubtitles::font2dlg,
    IDC_CHB_FONT_ASPECT_AUTO,idff_fontaspectauto,&TfontPageSubtitles::font2dlg,
@@ -504,7 +498,6 @@ TfontPageOSD::TfontPageOSD(TffdshowPageDec *Iparent):TfontPage(Iparent)
  idff_fontxscale=IDFF_OSDfontXscale;
  idff_fontyscale=IDFF_OSDfontYscale;
  idff_fontaspectauto=IDFF_OSDfontAspectAuto;
- idff_fontfast=IDFF_OSDfontFast;
  idff_fontoutlinecolor=IDFF_OSDfontOutlineColor;
  idff_fontshadowcolor=IDFF_OSDfontShadowColor;
  idff_fontbodyalpha=IDFF_OSDfontBodyAlpha;
@@ -516,7 +509,6 @@ TfontPageOSD::TfontPageOSD(TffdshowPageDec *Iparent):TfontPage(Iparent)
  idff_fontblur=IDFF_OSDfontBlur;
  static const TbindCheckbox<TfontPageOSD> chb[]=
   {
-   IDC_CHB_FONT_FAST,idff_fontfast,NULL,
    IDC_FONT_OPAQUE_BOX,idff_fontopaquebox,&TfontPageOSD::font2dlg,
    IDC_CHB_FONT_BLUR,idff_fontblur,&TfontPageOSD::font2dlg,
    IDC_CHB_FONT_ASPECT_AUTO,idff_fontaspectauto,&TfontPageOSD::font2dlg,

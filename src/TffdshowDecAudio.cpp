@@ -775,7 +775,7 @@ STDMETHODIMP TffdshowDecAudio::deliverSampleSPDIF(void *buf,size_t size,int bit_
   {
    unsigned int size2;
    length=0;
-   while (length < (ODD2EVEN(size)) + sizeof(WORD) * 8)
+   while (length < odd2even(size) + sizeof(WORD) * 8)
     length += 0x800; // 2048 = AC3 
    // bit_rate is not always correct. This is a bug of some where else. Because I can't fix it now, work around for it...
    if (bit_rate <= 1 && inpin->insample_rtStart != REFTIME_INVALID && inpin->insample_rtStop != REFTIME_INVALID)

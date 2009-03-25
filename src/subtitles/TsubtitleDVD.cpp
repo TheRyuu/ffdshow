@@ -29,22 +29,24 @@
 //=================================== TsubtitleDVDparent ==================================
 TsubtitleDVDparent::TsubtitleDVDparent(void)
 {
- psphli=NULL;
- fsppal=false;spon=true;
- sppal[0].Y=0x00;sppal[0].U=sppal[0].V=0x80;
- sppal[1].Y=0xe0;sppal[1].U=sppal[1].V=0x80;
- sppal[2].Y=0x80;sppal[2].U=sppal[2].V=0x80;
- sppal[3].Y=0x20;sppal[3].U=sppal[3].V=0x80;
- delay=0;forced_subs=false;
- custom_colors=false;tridx=0;
+    psphli=NULL;
+    fsppal=false;spon=true;
+    sppal[0].Y=0x00;sppal[0].U=sppal[0].V=0x80;
+    sppal[1].Y=0xe0;sppal[1].U=sppal[1].V=0x80;
+    sppal[2].Y=0x80;sppal[2].U=sppal[2].V=0x80;
+    sppal[3].Y=0x20;sppal[3].U=sppal[3].V=0x80;
+    delay=0;forced_subs=false;
+    custom_colors=false;tridx=0;
 }
 
-TspuPlane* TsubtitleDVDparent::allocPlanes(const CRect &r)
+TspuPlane* TsubtitleDVDparent::allocPlanes(const CRect &r, int csp)
 {
- planes[0].alloc(r.Size(),1);
- planes[1].alloc(r.Size(),1);
- planes[2].alloc(r.Size(),2);
- return planes;
+    planes[0].alloc(r.Size(),1,csp);
+    if ((csp & FF_CSPS_MASK) == FF_CSP_420P) {
+        planes[1].alloc(r.Size(),2,csp);
+        planes[2].alloc(r.Size(),2,csp);
+    }
+    return planes;
 }
 
 const char* TsubtitleDVDparent::parseTimestamp(const char* &line,int &ms)
@@ -177,10 +179,7 @@ TsubtitleDVDparent::PARSE_RES TsubtitleDVDparent::idx_parse_palette(const char *
    r = tmp >> 16 & 0xff;
    g = tmp >> 8 & 0xff;
    b = tmp & 0xff;
-   YUVcolor yuv(RGB(r,g,b),true);
-   sppal[n].Y=yuv.Y;
-   sppal[n].U=yuv.U;
-   sppal[n].V=yuv.V;
+   sppal[n]= YUVcolorA(RGB(r,g,b), YUVcolorA::vobsubWeirdCsp_t());
    n++;
    if (n == 16)
     break;
@@ -237,10 +236,7 @@ TsubtitleDVDparent::PARSE_RES TsubtitleDVDparent::idx_parse_cuspal(const char *l
    int r = tmp >> 16 & 0xff;
    int g = tmp >> 8 & 0xff;
    int b = tmp & 0xff;
-   YUVcolor yuv(RGB(r,g,b));
-   cuspal[n].Y=yuv.Y;
-   cuspal[n].U=yuv.U;
-   cuspal[n].V=yuv.V;
+   cuspal[n] = YUVcolorA(RGB(r,g,b));
    n++;
    if (n==4)
     break;
@@ -334,7 +330,7 @@ BYTE TsubtitleDVD::getHalfNibble(const BYTE *p,DWORD *offset,int &nField,int &n)
  return ret;
 }
 
-void TsubtitleDVD::drawPixel(const CPoint &pt,const AM_DVD_YUV &c,CRect &rectReal,TspuPlane plane[3]) const
+void TsubtitleDVD::drawPixel(const CPoint &pt,const YUVcolorA &color,CRect &rectReal,TspuPlane plane[3]) const
 {
 /*
  if (c.Reserved==0) return;
@@ -348,33 +344,39 @@ void TsubtitleDVD::drawPixel(const CPoint &pt,const AM_DVD_YUV &c,CRect &rectRea
  p=&prefs.dst[2][(pt.y/2)*prefs.stride[2]+(pt.x+1)/2];
  *p-=(*p-c.U)*c.Reserved>>4;
 */
- int ptx=pt.x,pty=pt.y;
- if (c.Reserved!=0)
-  {
-   if (ptx<rectReal.left) rectReal.left=ptx;
-   if (ptx>rectReal.right) rectReal.right=ptx;
-  }
- plane[0].c[pty*plane[0].stride+ptx]=c.Y;
- plane[0].r[pty*plane[0].stride+ptx]=c.Reserved;
+    int ptx=pt.x,pty=pt.y;
+    if (color.A != 0) {
+        if (ptx<rectReal.left) rectReal.left=ptx;
+        if (ptx>rectReal.right) rectReal.right=ptx;
+    }
+    if (csp == FF_CSP_420P) {
+        plane[0].c[pty*plane[0].stride+ptx]=color.Y;
+        plane[0].r[pty*plane[0].stride+ptx]=color.A;
 
- if (pty&1) return;
+        if (pty&1) return;
 
- ptx=(ptx+1)/2;pty/=2;
- plane[1].c[pty*plane[1].stride+ptx]=c.V;
- plane[1].r[pty*plane[1].stride+ptx]=c.Reserved;
+        ptx /= 2;pty /= 2;
+        plane[1].c[pty*plane[1].stride+ptx]=color.V;
+        plane[1].r[pty*plane[1].stride+ptx]=color.A;
 
- plane[2].c[pty*plane[2].stride+ptx]=c.U;
- plane[2].r[pty*plane[2].stride+ptx]=c.Reserved;
+        plane[2].c[pty*plane[2].stride+ptx]=color.U;
+        plane[2].r[pty*plane[2].stride+ptx]=color.A;
+    } else {
+        uint32_t *c = (uint32_t *)&plane[0].c[pty * plane[0].stride];
+        uint32_t *r = (uint32_t *)&plane[0].r[pty * plane[0].stride];
+        c[ptx] = color.m_rgb;
+        r[ptx] = color.m_aaa64;
+    }
 }
 
-void TsubtitleDVD::drawPixels(CPoint pt,int len,const AM_DVD_YUV &c,const CRect &rc,CRect &rectReal,TspuPlane plane[3]) const
+void TsubtitleDVD::drawPixels(CPoint pt,int len,const YUVcolorA &c,const CRect &rc,CRect &rectReal,TspuPlane plane[3]) const
 {
  if (pt.y < rc.top || pt.y >= rc.bottom) return;
  if (pt.x < rc.left) {len -= rc.left - pt.x; pt.x = rc.left;}
  if (pt.x + len > rc.right) len = rc.right - pt.x;
  if (len <= 0 || pt.x >= rc.right) return;
 
- if (c.Reserved==0)
+ if (c.A==0)
   {
    if (IsRectEmpty(&rc))
     return;
@@ -384,40 +386,54 @@ void TsubtitleDVD::drawPixels(CPoint pt,int len,const AM_DVD_YUV &c,const CRect 
   }
 
  int y=pt.y-rc.top;
- if (c.Reserved!=0)
+ if (c.A!=0)
   {
    if (y<rectReal.top) rectReal.top=y;
    if (y>rectReal.bottom) rectReal.bottom=y;
   }
  while (len-->0)
   {
-   drawPixel(CPoint(pt.x-rc.left,y),c,rectReal,plane);
+   drawPixel(CPoint(pt.x - rc.left, y),c,rectReal,plane);
    pt.x++;
   }
 }
 
-void TsubtitleDVD::createImage(const TspuPlane src[3],const CRect &rcclip,CRect rectReal,const TrenderedSubtitleLines::TprintPrefs &prefs) const
+void TsubtitleDVD::createImage(const TspuPlane src[3],const CRect &rcclip,CRect rectReal,const TprintPrefs &prefs) const
 {
- lines.clear();
- rectReal.bottom++;rectReal.right++;
+    lines.clear();
+    rectReal.bottom++;
+    rectReal.right++;
 #ifdef __SSE2__
- if (Tconfig::cpu_flags&FF_CPU_SSE2)
-  image=new TspuImageSimd<Tsse2>(src,rcclip,rectReal,parent->rectOrig,prefs);
- else
+    if (Tconfig::cpu_flags&FF_CPU_SSE2)
+        image=new TspuImageSimd<Tsse2>(src,rcclip,rectReal,parent->rectOrig,prefs);
+    else
 #endif
-  image=new TspuImageSimd<Tmmx>(src,rcclip,rectReal,parent->rectOrig,prefs);
- lines.add(new TrenderedSubtitleLine(image),NULL);
-}
-void TsubtitleDVD::linesprint(const TrenderedSubtitleLines::TprintPrefs &prefs) const
-{
- if (prefs.dvd || !prefs.vobchangeposition)
-  image->ownprint(prefs);
- else
-  lines.print(prefs);
+        image=new TspuImageSimd<Tmmx>(src,rcclip,rectReal,parent->rectOrig,prefs);
+    lines.push_back(new TrenderedSubtitleLine(image));
 }
 
-void TsubtitleDVD::print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceChange,TrenderedSubtitleLines::TprintPrefs &prefs) const
+void TsubtitleDVD::linesprint(
+    const TprintPrefs &prefs,
+    unsigned char **dst,
+    const stride_t *stride) const
 {
+ if (prefs.dvd || !prefs.vobchangeposition)
+  image->ownprint(prefs,dst,stride);
+ else
+  lines.print(prefs,dst,stride);
+}
+
+void TsubtitleDVD::print(
+    REFERENCE_TIME time,
+    bool wasseek,
+    Tfont &f,
+    bool forceChange,
+    TprintPrefs &prefs,
+    unsigned char **dst,
+    const stride_t *stride)
+{
+ csp = prefs.csp & FF_CSPS_MASK;
+
  if (this->offset[0]==DWORD(-1))
   return;
 
@@ -433,7 +449,7 @@ void TsubtitleDVD::print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceCha
    CRect rc(pt, CPoint(sphli.StopX, sphli.StopY));
 
    if (parent->rectOrig.dx==0)
-    parent->rectOrig=CRect(0,0,prefs.dx,prefs.dy);
+    parent->rectOrig = Trect(0,0,prefs.dx,prefs.dy);
    CRect rcclip=parent->rectOrig;
    rcclip&=rc;
 
@@ -443,14 +459,14 @@ void TsubtitleDVD::print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceCha
      sphli=*psphli;
     }
 
-   TspuPlane *planes=parent->allocPlanes(rcclip);
+   TspuPlane *planes=parent->allocPlanes(rcclip, prefs.csp);
    DPRINTF(_l("rect: [%i,%i] - [%i,%i]"),rcclip.left,rcclip.top,rcclip.Width(),rcclip.Height());
 
-   AM_DVD_YUV pal[4];
-   pal[0]=parent->sppal[parent->fsppal?sphli.ColCon.backcol :0];pal[0].Reserved=sphli.ColCon.backcon;
-   pal[1]=parent->sppal[parent->fsppal?sphli.ColCon.patcol  :1];pal[1].Reserved=sphli.ColCon.patcon;
-   pal[2]=parent->sppal[parent->fsppal?sphli.ColCon.emph1col:2];pal[2].Reserved=sphli.ColCon.emph1con;
-   pal[3]=parent->sppal[parent->fsppal?sphli.ColCon.emph2col:3];pal[3].Reserved=sphli.ColCon.emph2con;
+   YUVcolorA pal[4];
+   pal[0]=parent->sppal[parent->fsppal?sphli.ColCon.backcol :0];pal[0].setAlpha(sphli.ColCon.backcon);
+   pal[1]=parent->sppal[parent->fsppal?sphli.ColCon.patcol  :1];pal[1].setAlpha(sphli.ColCon.patcon);
+   pal[2]=parent->sppal[parent->fsppal?sphli.ColCon.emph1col:2];pal[2].setAlpha(sphli.ColCon.emph1con);
+   pal[3]=parent->sppal[parent->fsppal?sphli.ColCon.emph2col:3];pal[3].setAlpha(sphli.ColCon.emph2con);
 
    int nField=0;
    int fAligned=1;
@@ -479,10 +495,14 @@ void TsubtitleDVD::print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceCha
      pt.y++;
      nField=1-nField;
     }
+   if (csp == FF_CSP_420P) {
+       rectReal.left &= ~1;
+       rectReal.top &= ~1;
+   }
    DPRINTF(_l("rectReal: [%i,%i] - [%i,%i]"),rectReal.left,rectReal.top,rectReal.Width(),rectReal.Height());
    createImage(planes,rcclip,rectReal,prefs);
   }
- linesprint(prefs);
+ linesprint(prefs,dst,stride);
 }
 
 void TsubtitleDVD::append(const unsigned char *Idata,unsigned int Idatalen)
@@ -611,7 +631,7 @@ bool TsubtitleSVCD::parse(void)
    sppal[i].Y=*p++;
    sppal[i].U=*p++;
    sppal[i].V=*p++;
-   sppal[i].Reserved=UCHAR(*p++>>4);
+   sppal[i].setAlpha(UCHAR(*p++>>4));
   }
 
  if (*p++&0xc0)
@@ -624,8 +644,16 @@ bool TsubtitleSVCD::parse(void)
 
  return true;
 }
-void TsubtitleSVCD::print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceChange,const TrenderedSubtitleLines::TprintPrefs &prefs) const
+void TsubtitleSVCD::print(
+    REFERENCE_TIME time,
+    bool wasseek,
+    Tfont &f,
+    bool forceChange,
+    const TprintPrefs &prefs,
+    unsigned char **dst,
+    const stride_t *stride)
 {
+ csp = prefs.csp & FF_CSPS_MASK;
  if (lines.empty() || changed)
   {
    changed=false;
@@ -650,7 +678,7 @@ void TsubtitleSVCD::print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceCh
    DWORD end[2]={offset[1],(p[2]<<8)|p[3]};
 
    CRect rectReal(INT_MAX/2,INT_MAX/2,INT_MIN/2,INT_MIN/2);
-   TspuPlane *planes=parent->allocPlanes(rcclip);
+   TspuPlane *planes=parent->allocPlanes(rcclip, prefs.csp);
    while ((nField==0 && offset[0]<end[0]) || (nField==1 && offset[1]<end[1]))
     {
      BYTE code=getHalfNibble(p,offset,nField,n);
@@ -666,7 +694,7 @@ void TsubtitleSVCD::print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceCh
     }
    createImage(planes,rcclip,rectReal,prefs);
   }
- linesprint(prefs);
+ linesprint(prefs,dst,stride);
 }
 
 //===================================== TsubtitleCVD ======================================
@@ -714,16 +742,16 @@ bool TsubtitleCVD::parse(void)
      sppal[1][p[0]-0x2c].V=p[3];
      break;
     case 0x37:
-     sppal[0][3].Reserved=UCHAR(p[2]>>4);
-     sppal[0][2].Reserved=UCHAR(p[2]&0xf);
-     sppal[0][1].Reserved=UCHAR(p[3]>>4);
-     sppal[0][0].Reserved=UCHAR(p[3]&0xf);
+     sppal[0][3].setAlpha(UCHAR(p[2]>>4));
+     sppal[0][2].setAlpha(UCHAR(p[2]&0xf));
+     sppal[0][1].setAlpha(UCHAR(p[3]>>4));
+     sppal[0][0].setAlpha(UCHAR(p[3]&0xf));
      break;
     case 0x3f:
-     sppal[1][3].Reserved=UCHAR(p[2]>>4);
-     sppal[1][2].Reserved=UCHAR(p[2]&0xf);
-     sppal[1][1].Reserved=UCHAR(p[3]>>4);
-     sppal[1][0].Reserved=UCHAR(p[3]&0xf);
+     sppal[1][3].setAlpha(UCHAR(p[2]>>4));
+     sppal[1][2].setAlpha(UCHAR(p[2]&0xf));
+     sppal[1][1].setAlpha(UCHAR(p[3]>>4));
+     sppal[1][0].setAlpha(UCHAR(p[3]&0xf));
      break;
     case 0x47:
      offset[0] = (p[2]<<8)|p[3];
@@ -736,8 +764,16 @@ bool TsubtitleCVD::parse(void)
    }
  return true;
 }
-void TsubtitleCVD::print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceChange,const TrenderedSubtitleLines::TprintPrefs &prefs) const
+void TsubtitleCVD::print(
+    REFERENCE_TIME time,
+    bool wasseek,
+    Tfont &f,
+    bool forceChange,
+    const TprintPrefs &prefs,
+    unsigned char **dst,
+    const stride_t *stride)
 {
+ csp = prefs.csp & FF_CSPS_MASK;
  if (lines.empty() || changed)
   {
    changed=false;
@@ -762,7 +798,7 @@ void TsubtitleCVD::print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceCha
    DWORD end[2]={offset[1],(p[2]<<8)|p[3]};
 
    CRect rectReal(INT_MAX/2,INT_MAX/2,INT_MIN/2,INT_MIN/2);
-   TspuPlane *planes=parent->allocPlanes(rcclip);
+   TspuPlane *planes=parent->allocPlanes(rcclip, prefs.csp);
    while ((nField==0 && offset[0]<end[0]) || (nField==1 && offset[1]<end[1]))
     {
      BYTE code;
@@ -786,5 +822,5 @@ void TsubtitleCVD::print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceCha
     }
    createImage(planes,rcclip,rectReal,prefs);
   }
- linesprint(prefs);
+ linesprint(prefs,dst,stride);
 }

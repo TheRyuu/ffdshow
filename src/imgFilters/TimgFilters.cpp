@@ -193,6 +193,12 @@ void TimgFilters::resetSubtitles(int id)
 {
  subtitles->resetSubtitles(id);
 }
+
+HANDLE TimgFilters::getGlyphThreadHandle()
+{
+    return subtitles->getGlyphThreadHandle();
+}
+
 bool TimgFilters::ctlSubtitles(int id,int type,unsigned int ctl_id,const void *ctl_data,unsigned int ctl_datalen)
 {
  return subtitles->ctlSubtitles(id,type,ctl_id,ctl_data,ctl_datalen);

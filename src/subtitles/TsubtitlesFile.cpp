@@ -238,7 +238,7 @@ bool TsubtitlesFile::init(const TsubtitlesSettings *cfg,const char_t *IsubFlnm,d
   }
  if (subFlnm[0]=='\0') return false;
  FILE *f=fopen(subFlnm,_l("rb"));if (!f) return false;
- TstreamFile fs(f);
+ TstreamFile fs(f,TfontSettings::GDI_charset_to_code_page(deci->getParam2(IDFF_fontCharset)));
  sub_format=Tsubreader::sub_autodetect(fs,ffcfg);
  if (sub_format!=Tsubreader::SUB_INVALID && checkOnly!=2)
   {

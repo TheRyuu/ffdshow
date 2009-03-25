@@ -74,8 +74,6 @@ typedef const TCHAR *PCTSTR;
 #define M_SQRT2	1.41421356237309504880
 #endif
 
-#define ODD2EVEN(x) x&1?x+1:x
-
 #define REF_SECOND_MULT 10000000LL
 #define REFTIME_INVALID _I64_MIN
 
@@ -88,10 +86,10 @@ typedef const TCHAR *PCTSTR;
 
 typedef std::vector<HWND> THWNDs;
 struct Tstrptrs : std::vector<const char_t*> {};
-template<class tchar> struct Tstrpart : std::pair<const tchar*,size_t>
+struct Tstrpart : std::pair<const wchar_t*,size_t>
 {
- Tstrpart(const tchar *p,size_t len):std::pair<const tchar*,size_t>(p,len) {}
- Tstrpart(const tchar *p):std::pair<const tchar*,size_t>(p,strlen(p)) {}
+ Tstrpart(const wchar_t *p,size_t len):std::pair<const wchar_t*,size_t>(p,len) {}
+ Tstrpart(const wchar_t *p):std::pair<const wchar_t*,size_t>(p,strlen(p)) {}
 };
 typedef std::vector<int> ints;
 
@@ -203,6 +201,13 @@ inline float ff_abs(float x)
 inline double ff_abs(double x)
 {
  return (x<0) ? -x : x;
+}
+
+template<class T> inline T odd2even(T x)
+{
+    return x&1 ?
+        x + 1 :
+        x;
 }
 
 inline int ff_round(double x) {return int(x+(x>0.0?0.5:-0.5));}
@@ -456,32 +461,48 @@ public:
 
 struct YUVcolor
 {
- unsigned int r,g,b;
+ uint32_t r,g,b;
  unsigned char Y;
  char U,V;
  YUVcolor(void) {Y=U=V=0;r=g=b=0;}
- YUVcolor(COLORREF rgb,bool vob=false);
+ YUVcolor(COLORREF rgb);
 };
+
 
 struct YUVcolorA
 {
- unsigned int r,g,b;
- unsigned int Y,U,V,A;
- YUVcolorA(void) {Y=0;U=V=128;A=256;r=g=b=0;};
+ uint32_t r,g,b;
+ uint32_t Y,U,V,A;
+
+ COLORREF m_rgb;   // duplicated data, just for convenience 0x00bbggrr
+ uint32_t m_aaa64; // duplicated data, just for convenience. DVD's contrast 0-15, this: 0-64. 0x00404040, at max
+ YUVcolorA();
  YUVcolorA(YUVcolor yuv,unsigned int alpha=256);
  YUVcolorA(COLORREF rgb,unsigned int alpha=256);
- bool operator !=(const YUVcolorA &c2) const
+ struct vobsubWeirdCsp_t {};
+ YUVcolorA(COLORREF rgb, vobsubWeirdCsp_t);
+ bool operator !=(const YUVcolorA &rt) const
   {
-    return !(r==c2.r && g==c2.g && b==c2.b && A==c2.A);
+    return !(r==rt.r && g==rt.g && b==rt.b && A==rt.A);
   }
- bool operator ==(const YUVcolorA &c2) const
+ bool operator ==(const YUVcolorA &rt) const
   {
-    return (r==c2.r && g==c2.g && b==c2.b && A==c2.A);
+    return (r==rt.r && g==rt.g && b==rt.b && A==rt.A);
   }
+ bool operator ==(const _AM_DVD_YUV &rt) const
+  {
+    return (Y==rt.Y && U==rt.U && V==rt.V && A==rt.Reserved);
+  }
+ bool operator !=(const _AM_DVD_YUV &rt) const
+  {
+    return !(Y==rt.Y && U==rt.U && V==rt.V && A==rt.Reserved);
+  }
+ YUVcolorA& operator =(const _AM_DVD_YUV &rt);
  bool isGray()
   {
    return (r==g && r==b);
   }
+ void setAlpha(uint32_t alpha);
 };
 
 enum
@@ -728,6 +749,60 @@ struct TmultipleInstances
  const char_t *name;
 };
 extern const TmultipleInstances multipleInstances[];
+
+// defferred lock
+// at the time of construction, you may not know the address of Lockable.
+// explicitly call lock to lock.
+// unlocked on destruction.
+template <typename Lockable> class deferred_lock:
+    boost::noncopyable
+{
+    Lockable *lockptr;
+public:
+    deferred_lock(): lockptr(NULL) {}
+    void lock (Lockable *l) {
+        lockptr = l;
+        l->lock();
+    }
+    ~deferred_lock() {
+        if (lockptr)
+            lockptr->unlock();
+    }
+};
+
+struct defer_priority_set_t
+{};
+
+class TthreadPriority {
+    HANDLE thread;
+    bool changed;
+    int priority_on_destruction;
+public:
+    TthreadPriority(HANDLE Ithread, int Ipriority_on_destruction, defer_priority_set_t) :
+        thread(Ithread),
+        changed(false),
+        priority_on_destruction(Ipriority_on_destruction)
+    {
+    }
+
+    TthreadPriority(HANDLE Ithread, int Ipriority_on_construction, int Ipriority_on_destruction) :
+        thread(Ithread),
+        changed(true),
+        priority_on_destruction(Ipriority_on_destruction)
+    {
+        SetThreadPriority(thread, Ipriority_on_construction);
+    }
+
+    void set_priority(int priority) {
+        SetThreadPriority(thread, priority);
+        changed = true;
+    }
+
+    ~TthreadPriority() {
+        if (changed)
+            SetThreadPriority(thread, priority_on_destruction);
+    }
+};
 
 #endif //FFDEFS_STRICT
 

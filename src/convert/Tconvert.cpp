@@ -153,7 +153,7 @@ int Tconvert::convert(int incsp0,
  unsigned char *dst[]={dst0[0],dst0[1],dst0[2],dst0[3]};
  stride_t dstStride[]={dstStride0[0],dstStride0[1],dstStride0[2],dstStride0[3]};
  if(outcspInfo->id==FF_CSP_420P)
-  csp_yuv_adj_to_plane(outcsp,outcspInfo,ODD2EVEN(outdy),(unsigned char**)dst,dstStride);
+  csp_yuv_adj_to_plane(outcsp,outcspInfo,odd2even(outdy),(unsigned char**)dst,dstStride);
  else
   csp_yuv_adj_to_plane(outcsp,outcspInfo,dy,(unsigned char**)dst,dstStride);
  csp_yuv_order(outcsp,(unsigned char**)dst,dstStride);

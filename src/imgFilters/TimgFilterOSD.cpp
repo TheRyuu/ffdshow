@@ -137,15 +137,15 @@ const char_t* TimgFilterOSD::TosdLine::TosdToken::getName(void) const
 }
 
 //================================== TimgFilterOSD::TosdLine =================================
-TimgFilterOSD::TosdLine::TosdLine(IffdshowBase *Ideci,IffdshowDec *IdeciD,IffdshowDecVideo *IdeciV,const Tconfig *Iconfig,const ffstring &format,const TfontSettings *fontSettings,unsigned int Iduration,IOSDprovider *Iprovider,bool Iitalic):
+TimgFilterOSD::TosdLine::TosdLine(IffdshowBase *Ideci,IffdshowDec *IdeciD,IffdshowDecVideo *IdeciV,const Tconfig *Iconfig,const ffstring &format,unsigned int Iduration,IOSDprovider *Iprovider,bool Iitalic):
 // deci(Ideci),
  config(Iconfig),
- font(Ideci,4),
+ font(Ideci),
  sub(0,TSubtitleProps(Iitalic,false)),
  provider(Iprovider)
 {
  duration=Iduration;
- font.init(fontSettings);
+ font.init();
  if (strncmp(format.c_str(),_l("user"),4)==0)
   {
    char_t s0[256]=_l(""),*s=s0;
@@ -212,7 +212,19 @@ const char_t* TimgFilterOSD::TosdLine::getName(unsigned int i) const
  return i>=tokens.size()?_l(""):tokens[i].getName();
 }
 
-void TimgFilterOSD::TosdLine::print(IffdshowBase *deci,const TffPict &pict,unsigned char *dst[4],stride_t stride[4],unsigned int dxY,unsigned int dyY,unsigned int x,unsigned int &y,int linespace,FILE *f,bool fileonly)
+void TimgFilterOSD::TosdLine::print(
+    IffdshowBase *deci,
+    const TffPict &pict,
+    unsigned char *dst[4],
+    stride_t stride[4],
+    unsigned int dxY,
+    unsigned int dyY,
+    unsigned int x,
+    unsigned int &y,
+    int linespace,
+    FILE *f,
+    bool fileonly,
+    const TfontSettings &fontSettings)
 {
  bool wasChange=firsttime,splitline=false;
  firsttime=false;
@@ -231,11 +243,8 @@ void TimgFilterOSD::TosdLine::print(IffdshowBase *deci,const TffPict &pict,unsig
   {
    if (y<dyY)
     {
-     TrenderedSubtitleLines::TprintPrefs printprefs(deci);
+     TprintPrefs printprefs(deci, &fontSettings);
      printprefs.isOSD=true;
-     printprefs.dst=dst;
-     printprefs.stride=stride;
-     printprefs.shiftX=pict.cspInfo.shiftX;printprefs.shiftY=pict.cspInfo.shiftY;
      printprefs.dx=dxY;
      printprefs.dy=dyY;
      printprefs.xpos=-1*int(x);
@@ -246,7 +255,6 @@ void TimgFilterOSD::TosdLine::print(IffdshowBase *deci,const TffPict &pict,unsig
      printprefs.config=config;
      printprefs.shadowMode=-1;
      printprefs.csp=pict.csp & FF_CSPS_MASK;
-     printprefs.cspBpp=pict.cspInfo.Bpp;
      printprefs.sar=pict.rectFull.sar;
      if (splitline)
       {
@@ -254,7 +262,7 @@ void TimgFilterOSD::TosdLine::print(IffdshowBase *deci,const TffPict &pict,unsig
        printprefs.fontsplit=1;
       }
      sub.set(text);
-     font.print(&sub,wasChange,printprefs,&y);
+     y += font.print(&sub,wasChange,printprefs,dst,stride);
     }
   }
 }
@@ -279,7 +287,7 @@ TimgFilterOSD::Tosds::~Tosds()
  freeOsds();
 }
 
-void TimgFilterOSD::Tosds::init(bool allowSave,IffdshowBase *deci,IffdshowDec *deciD,IffdshowDecVideo *deciV,const Tconfig *config,TfontSettingsOSD *oldFont,const TOSDsettings *cfg,int framecnt)
+void TimgFilterOSD::Tosds::init(bool allowSave,IffdshowBase *deci,IffdshowDec *deciD,IffdshowDecVideo *deciV,const Tconfig *config,const TfontSettingsOSD &oldFont,const TOSDsettings *cfg,int framecnt)
 {
  if (framecnt<startupDuration || provider->isOSD())
   {
@@ -303,13 +311,13 @@ void TimgFilterOSD::Tosds::init(bool allowSave,IffdshowBase *deci,IffdshowDec *d
      ff_strncpy(oldFormat, format, countof(oldFormat));
      freeOsds();
      if (name)
-      push_back(new TosdLine(deci,deciD,deciV,config,ffstring(_l("user"))+ffstring(name),oldFont,0,provider,true));
+      push_back(new TosdLine(deci,deciD,deciV,config,ffstring(_l("user"))+ffstring(name),0,provider,true));
      if (strncmp(format,_l("user"),4)==0)
       {
        strings lines;
        strtok(format,_l("\\n"),lines);
        for (size_t i=0;i<lines.size();i++)
-        push_back(new TosdLine(deci,deciD,deciV,config,ffstring(i==0?_l(""):_l("user"))+lines[i],oldFont,0,provider));
+        push_back(new TosdLine(deci,deciD,deciV,config,ffstring(i==0?_l(""):_l("user"))+lines[i],0,provider));
        initSave=0;
       }
      else
@@ -318,7 +326,7 @@ void TimgFilterOSD::Tosds::init(bool allowSave,IffdshowBase *deci,IffdshowDec *d
        for (size_t i=0;i<types.size();i++)
         {
          char_t pomS[10];
-         push_back(new TosdLine(deci,deciD,deciV,config,ffstring(_l("%"))+ffstring(_itoa(types[i],pomS,10)),oldFont,0,provider));
+         push_back(new TosdLine(deci,deciD,deciV,config,ffstring(_l("%"))+ffstring(_itoa(types[i],pomS,10)),0,provider));
         }
        initSave=cfgIsSave && cfgSaveFlnm[0]!='\0'?1:0;
       }
@@ -345,17 +353,18 @@ void TimgFilterOSD::Tosds::init(bool allowSave,IffdshowBase *deci,IffdshowDec *d
   }
 }
 
-void TimgFilterOSD::Tosds::fontInit(const TfontSettingsOSD *fontSettings)
+void TimgFilterOSD::Tosds::fontInit(const TfontSettingsOSD &IfontSettings)
 {
+ fontSettings = IfontSettings;
  for (iterator i=begin();i!=end();i++)
-  (*i)->font.init(fontSettings);
+  (*i)->font.init();
 }
 
 void TimgFilterOSD::Tosds::print(IffdshowBase *deci,const TffPict &pict,unsigned char *dst[4],stride_t stride2[4],unsigned int dxY,unsigned int dyY,unsigned int x,unsigned int &y,int linespace,bool fileonly)
 {
  for (iterator o=begin();o!=end() && y<dyY;)
   {
-   (*o)->print(deci,pict,dst,stride2,dxY,dyY,x,y,linespace,f,fileonly);
+   (*o)->print(deci,pict,dst,stride2,dxY,dyY,x,y,linespace,f,fileonly,fontSettings);
    if (f && o!=end()-1)
     fprintf(f,";");
 
@@ -399,16 +408,15 @@ bool TimgFilterOSD::TprovOSDs::empty(void) const
 TimgFilterOSD::TimgFilterOSD(IffdshowBase *Ideci,Tfilters *Iparent):
  TimgFilter(Ideci,Iparent),
  parent((TimgFiltersPlayer*)Iparent),
- fontUser(Ideci,4),
+ fontUser(Ideci),
  subUser(Ideci->getParam2(IDFF_OSD_userformat)),
  framecnt(0),
- oldFont((TfontSettingsOSD*)malloc(sizeof(TfontSettingsOSD))),
  trans(NULL),
  shortOSD(this),
  TOSDprovider(deci,deciD)
 {
  provOSDs.push_back(new Tosds(this));
- oldFont->weight=-1;
+ oldFont.weight=-1;
  oldLinesUser[0]='\0';
 }
 TimgFilterOSD::~TimgFilterOSD()
@@ -416,7 +424,6 @@ TimgFilterOSD::~TimgFilterOSD()
  CAutoLock l(&csProvider);
  for (TprovOSDs::iterator po=provOSDs.begin();po!=provOSDs.end();po++)
   delete *po;
- ::free(oldFont);
  if (trans) trans->release();
 }
 void TimgFilterOSD::done(void)
@@ -428,7 +435,7 @@ void TimgFilterOSD::done(void)
 
 void TimgFilterOSD::onSizeChange(void)
 {
- oldFont->weight=-1;
+ oldFont.weight=-1;
 }
 
 bool TimgFilterOSD::shortOSDmessage(const char_t *msg,unsigned int duration)
@@ -454,12 +461,12 @@ HRESULT TimgFilterOSD::process(TfilterQueue::iterator it,TffPict &pict,const Tfi
 
  init(pict,true,0);
  csProvider.Lock();
- if (memcmp(oldFont->name,parent->fontSettingsOSD->name,sizeof(TfontSettingsOSD)-sizeof(Toptions))!=0)
+ if (oldFont != *parent->fontSettingsOSD)
   {
-   memcpy(oldFont,parent->fontSettingsOSD,sizeof(*oldFont));
+   oldFont = *parent->fontSettingsOSD;
    for (TprovOSDs::iterator po=provOSDs.begin();po!=provOSDs.end();po++)
     (*po)->fontInit(oldFont);
-   fontUser.init(oldFont);
+   fontUser.init();
   }
 
  for (TprovOSDs::iterator po=provOSDs.begin();po!=provOSDs.end();po++)
@@ -470,7 +477,7 @@ HRESULT TimgFilterOSD::process(TfilterQueue::iterator it,TffPict &pict,const Tfi
   {
    cs.Lock();
    for (std::vector<TshortOsdTemp>::const_iterator o=shortOSDtemp.begin();o!=shortOSDtemp.end();o++)
-    shortOSD.push_back(new TosdLine(deci,deciD,deciV,parent->config,_l("shortosd")+o->first,oldFont,o->second,NULL));
+    shortOSD.push_back(new TosdLine(deci,deciD,deciV,parent->config,_l("shortosd")+o->first,o->second,NULL));
    shortOSDtemp.clear();
    cs.Unlock();
   }
@@ -505,11 +512,8 @@ HRESULT TimgFilterOSD::process(TfilterQueue::iterator it,TffPict &pict,const Tfi
 	   TsubtitleFormat subtitleFormat = TsubtitleFormat(parent->config->getHtmlColors());
 	   subUser.format(subtitleFormat);
       }
-     TrenderedSubtitleLines::TprintPrefs printprefs(deci);
+     TprintPrefs printprefs(deci,&cfg->font);
      printprefs.isOSD=true;
-     printprefs.dst=dst;
-     printprefs.stride=stride2;
-     printprefs.shiftX=pict.cspInfo.shiftX;printprefs.shiftY=pict.cspInfo.shiftY;
      printprefs.dx=dx1[0];
      printprefs.dy=dy1[0];
      printprefs.xpos=deci->getParam2(IDFF_OSDuserPx);
@@ -520,10 +524,9 @@ HRESULT TimgFilterOSD::process(TfilterQueue::iterator it,TffPict &pict,const Tfi
      printprefs.config=parent->config;
      printprefs.shadowMode=-1;
      printprefs.csp=pict.csp & FF_CSPS_MASK;
-     printprefs.cspBpp=pict.cspInfo.Bpp;
      printprefs.sar=pict.rectFull.sar;
 
-     fontUser.print(&subUser,true,printprefs);
+     fontUser.print(&subUser,true,printprefs,dst,stride2);
     }
   }
  csProvider.Unlock();

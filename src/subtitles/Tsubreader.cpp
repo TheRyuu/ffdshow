@@ -25,16 +25,16 @@
 
 Tsubreader::~Tsubreader()
 {
- clear();
+    clear();
 }
 void Tsubreader::clear(void)
 {
- for (iterator s=begin();s!=end();s++)
-  {
-   delete *s;
-   *s=NULL;
-  }
- std::vector<value_type>::clear();
+    foreach (Tsubtitle* &subtitle, *this) {
+        delete subtitle;
+        subtitle=NULL;
+    }
+    std::vector<value_type>::clear();
+    IsProcessOverlapDone = false;
 }
 
 int Tsubreader::sub_autodetect(Tstream &fd,const Tconfig *config)
@@ -45,59 +45,59 @@ int Tsubreader::sub_autodetect(Tstream &fd,const Tconfig *config)
  while (j < 100)
   {
    j++;
-   char line[LINE_LEN+1];
+   wchar_t line[LINE_LEN+1];
    if (!fd.fgets (line, LINE_LEN))
     {
      format=SUB_INVALID;
      break;
     }
-   int i;char p;
-   if (sscanf (line, "{%d}{%d}", &i, &i)==2)
+   int i;wchar_t p;
+   if (swscanf (line, L"{%d}{%d}", &i, &i)==2)
     {
      format=SUB_MICRODVD;
      break;
     }
-   if (sscanf (line, "{%d}{}", &i)==1)
+   if (swscanf (line, L"{%d}{}", &i)==1)
     {
      format=SUB_MICRODVD;
      break;
     }
-   if (sscanf (line, "[%d][%d]", &i, &i)==2)
+   if (swscanf (line, L"[%d][%d]", &i, &i)==2)
     {
      format=SUB_MPL2|SUB_USESTIME;
      break;
     }
-   if (sscanf (line, "%d:%d:%d.%d,%d:%d:%d.%d",     &i, &i, &i, &i, &i, &i, &i, &i)==8)
+   if (swscanf (line, L"%d:%d:%d.%d,%d:%d:%d.%d",     &i, &i, &i, &i, &i, &i, &i, &i)==8)
     {
      format=SUB_SUBRIP|SUB_USESTIME;
      break;
     }
-   if (sscanf (line, "%d:%d:%d%[,.:]%d --> %d:%d:%d%[,.:]%d", &i, &i, &i, (char *)&i, &i, &i, &i, &i, (char *)&i, &i)==10)
+   if (swscanf (line, L"%d:%d:%d%[,.:]%d --> %d:%d:%d%[,.:]%d", &i, &i, &i, (wchar_t *)&i, &i, &i, &i, &i, (wchar_t *)&i, &i)==10)
     {
      format=SUB_SUBVIEWER|SUB_USESTIME;
      break;
     }
-   if (sscanf (line, "{T %d:%d:%d:%d",&i, &i, &i, &i)==4)
+   if (swscanf (line, L"{T %d:%d:%d:%d",&i, &i, &i, &i)==4)
     {
      format=SUB_SUBVIEWER2|SUB_USESTIME;
      break;
     }
-   if (strstr (line, "<SAMI>"))
+   if (strstr (line, L"<SAMI>"))
     {
      format=SUB_SAMI|SUB_USESTIME;
      break;
     }
-   if (sscanf (line, "%d:%d:%d:",     &i, &i, &i )==3)
+   if (swscanf (line, L"%d:%d:%d:",     &i, &i, &i )==3)
     {
      format=SUB_VPLAYER|SUB_USESTIME;
      break;
     }
-   if (sscanf (line, "%d:%d:%d ",     &i, &i, &i )==3)
+   if (swscanf (line, L"%d:%d:%d ",     &i, &i, &i )==3)
     {
      format=SUB_VPLAYER|SUB_USESTIME;
      break;
     }
-   if (stristr(line,"<USFSubtitles ")!=NULL)
+   if (stristr(line, L"<USFSubtitles ")!=NULL)
     {
      if (config->check(TsubreaderUSF2::dllname))
       format=SUB_USF|SUB_USESTIME;
@@ -108,48 +108,48 @@ int Tsubreader::sub_autodetect(Tstream &fd,const Tconfig *config)
    // Please someone who knows the format of RT... FIX IT!!!
    // It may conflict with other sub formats in the future (actually it doesn't)
    //should be better now
-   if ( stristr(line,"time begin")!=NULL )
+   if ( stristr(line, L"time begin")!=NULL )
     {
      format=SUB_RT|SUB_USESTIME;
      break;
     }
 
-   if (!memcmp(line, "Dialogue: Marked", 16))
+   if (!memcmp(line, L"Dialogue: Marked", 16*2))
     {
      format=SUB_SSA|SUB_USESTIME;
      break;
     }
-   if (!memcmp(line, "Dialogue: ", 10))
+   if (!memcmp(line, L"Dialogue: ", 10*2))
     {
      format=SUB_SSA|SUB_USESTIME;
      break;
     }
-   if (!memcmp(line, "# VobSub index file", 19))
+   if (!memcmp(line, L"# VobSub index file", 19*2))
     {
      format=SUB_VOBSUB|SUB_USESTIME;
      break;
     }
-   if (sscanf (line, "%d,%d,\"%c", &i, &i, (char *) &i) == 3)
+   if (swscanf (line, L"%d,%d,\"%c", &i, &i, (wchar_t *) &i) == 3)
     {
      format=SUB_DUNNOWHAT;
      break;
     }
-   if (sscanf (line, "FORMAT=%d", &i) == 1)
+   if (swscanf (line, L"FORMAT=%d", &i) == 1)
     {
      format=SUB_MPSUB;
      break;
     }
-   if (sscanf (line, "FORMAT=TIM%c", &p)==1 && p=='E')
+   if (swscanf (line, L"FORMAT=TIM%c", &p)==1 && p=='E')
     {
      format=SUB_MPSUB|SUB_USESTIME;
      break;
     }
-   if (strstr (line, "-->>"))
+   if (strstr (line, L"-->>"))
     {
      format=SUB_AQTITLE|SUB_USESTIME;
      break;
     }
-   if (sscanf (line, "[%d:%d:%d]", &i, &i, &i)==3)
+   if (swscanf (line, L"[%d:%d:%d]", &i, &i, &i)==3)
     {
      format=SUB_SUBRIP09|SUB_USESTIME;
      break;
@@ -170,22 +170,27 @@ void Tsubreader::timesort(void)
 
 void Tsubreader::processDuration(const TsubtitlesSettings *cfg)
 {
- timesort();
- if (cfg->isMinDuration)
-  for (iterator s=begin();s!=end();s++)
-   {
-    REFERENCE_TIME minduration=0;
-    switch (cfg->minDurationType)
-     {
-      case 0:minduration=cfg->minDurationSubtitle;break;
-      case 1:minduration=cfg->minDurationLine*(*s)->numlines();break;
-      case 2:minduration=cfg->minDurationChar*(*s)->numchars();break;
-     }
-    minduration*=REF_SECOND_MULT/1000;
-    minduration=std::max(REFERENCE_TIME(1),minduration);
-    if ((*s)->stop-(*s)->start<minduration)
-     (*s)->stop=(*s)->start+minduration;
-   }
+    timesort();
+    if (cfg->isMinDuration) {
+        foreach (Tsubtitle* subtitle, *this) {
+          REFERENCE_TIME minduration = 0;
+          switch (cfg->minDurationType) {
+          case 0:
+              minduration = cfg->minDurationSubtitle;
+              break;
+          case 1:
+              minduration = cfg->minDurationLine * subtitle->numlines();
+              break;
+          case 2:
+              minduration  =cfg->minDurationChar * subtitle->numchars();
+              break;
+          }
+          minduration*=REF_SECOND_MULT/1000;
+          minduration=std::max(REFERENCE_TIME(1), minduration);
+          if (subtitle->stop - subtitle->start < minduration)
+           subtitle->stop = subtitle->start+minduration;
+       }
+    }
 }
 
 void Tsubreader::adjust_subs_time(float subtime)
@@ -239,4 +244,219 @@ void Tsubreader::setSubEnc(int &format,const Tstream &fs)
    case Tstream::ENC_LE16:format|=SUB_ENC_UNILE;break;
    case Tstream::ENC_UTF8:format|=SUB_ENC_UTF8 ;break;
   }
+}
+
+void Tsubreader::dropRendered()
+{
+    foreach (Tsubtitle *subtitle, *this)
+        subtitle->dropRenderedLines();
+}
+
+void Tsubreader::onSeek()
+{
+    dropRendered();
+    processedSubtitleTexts.clear();
+}
+
+Tsubtitle* Tsubreader::operator[](size_t pos) const
+{
+    if (empty()) return NULL;
+    if (at(0)->isText()) {
+        if (processedSubtitleTexts.size() <= pos)
+            return NULL;
+        return (Tsubtitle *)&processedSubtitleTexts[pos];
+    } else {
+        if (size() <= pos)
+            return NULL;
+        return at(pos);
+    }
+}
+
+size_t Tsubreader::count() const
+{
+    if (empty()) return 0;
+    if (at(0)->isText()) {
+        return processedSubtitleTexts.size();
+    } else {
+        return size();
+    }
+}
+
+void Tsubreader::processOverlap(void)
+{
+ if (empty()) return;
+ if (!at(0)->isText()) {
+     IsProcessOverlapDone=true;
+     return;
+ }
+ processedSubtitleTexts.clear();
+ static const int SUB_MAX_TEXT=INT_MAX/2;
+ int sub_orig = size();
+ int n_first = size();
+ int sub_num =0;
+ std::vector<Tsubtitle*> newsubs;
+ for (int sub_first = 0; sub_first < n_first; ++sub_first)
+  {
+   REFERENCE_TIME global_start = at(sub_first)->start,global_end = at(sub_first)->stop, local_start, local_end;
+   int lines_to_add = at(sub_first)->numlines(), sub_to_add = 0;
+   int **placeholder = NULL, higher_line = 0, counter, start_block_sub = sub_num;
+   char real_block = 1;
+
+   // here we find the number of subtitles inside the 'block'
+   // and its span interval. this works well only with sorted
+   // subtitles
+   while ((sub_first + sub_to_add + 1 < n_first) && (at(sub_first + sub_to_add + 1)->start < global_end))
+    {
+     ++sub_to_add;
+     lines_to_add += at(sub_first + sub_to_add)->numlines();
+     if (at(sub_first + sub_to_add)->start < global_start)
+      global_start = at(sub_first + sub_to_add)->start;
+     if (at(sub_first + sub_to_add)->stop > global_end)
+      global_end = at(sub_first + sub_to_add)->stop;
+    }
+
+   // we need a structure to keep trace of the screen lines
+   // used by the subs, a 'placeholder'
+   counter = 2 * sub_to_add + 1;  // the maximum number of subs derived from a block of sub_to_add+1 subs
+   placeholder = (int **) malloc(sizeof(int *) * counter);
+   for (int i = 0; i < counter; ++i)
+    {
+     placeholder[i] = (int *) malloc(sizeof(int) * lines_to_add);
+     for (int j = 0; j < lines_to_add; ++j)
+      placeholder[i][j] = -1;
+    }
+
+   counter = 0;
+   local_end = global_start - 1;
+   do
+    {
+     // here we find the beginning and the end of a new subtitle in the block
+     local_start = local_end + 1;
+     local_end   = global_end;
+     for (int j = 0; j <= sub_to_add; ++j)
+      {
+       if ((at(sub_first + j)->start - 1 > local_start) && (at(sub_first + j)->start - 1 < local_end))
+        local_end = at(sub_first + j)->start - 1;
+       else if ((at(sub_first + j)->stop > local_start) && (at(sub_first + j)->stop < local_end))
+        local_end = at(sub_first + j)->stop;
+      }
+
+     // here we allocate the screen lines to subs we must
+     // display in current local_start-local_end interval.
+     // if the subs were yet presents in the previous interval
+     // they keep the same lines, otherwise they get unused lines
+     for (int j = 0; j <= sub_to_add; ++j)
+      {
+       if ((at(sub_first + j)->start <= local_end) && (at(sub_first + j)->stop > local_start))
+        {
+         unsigned long sub_lines=at(sub_first + j)->numlines(), fragment_length = lines_to_add + 1,tmp=0;
+         char boolean = 0;
+         int fragment_position = -1;
+
+         // if this is not the first new sub of the block
+         // we find if this sub was present in the previous
+         // new sub
+         if (counter)
+          for (int i = 0; i < lines_to_add; ++i)
+           if (placeholder[counter - 1][i] == sub_first + j)
+            {
+             placeholder[counter][i] = sub_first + j;
+             boolean = 1;
+            }
+         if (boolean)
+          continue;
+         // we are looking for the shortest among all groups of
+         // sequential blank lines whose length is greater than or
+         // equal to sub_lines. we store in fragment_position the
+         // position of the shortest group, in fragment_length its
+         // length, and in tmp the length of the group currently
+         // examined
+         int i;
+         for (i = 0; i < lines_to_add; ++i)
+          {
+           if (placeholder[counter][i] == -1)
+            {
+             ++tmp; // placeholder[counter][i] is part of the current group of blank lines
+            }
+           else
+            {
+             if (tmp == sub_lines)
+              {
+               // current group's size fits exactly the one we
+               // need, so we stop looking
+               fragment_position = i - tmp;
+               tmp = 0;
+               break;
+              }
+             if ((tmp) && (tmp > sub_lines) && (tmp < fragment_length))
+              {
+               // current group is the best we found till here,
+               // but is still bigger than the one we are looking
+               // for, so we keep on looking
+               fragment_length = tmp;
+               fragment_position = i - tmp;
+               tmp = 0;
+              }
+             else
+              {
+               tmp = 0; // current group doesn't fit at all, so we forget it
+              }
+            }
+          }
+         if (tmp)
+          {
+           if ((tmp >= sub_lines) && (tmp < fragment_length))  // last screen line is blank, a group ends with it
+            fragment_position = i - tmp;
+          }
+         if (fragment_position == -1)
+          {
+           // it was not possible to find free screen line(s) for a subtitle,
+           // usually this means a bug in the code; however we do not overlap
+           //mp_msg(MSGT_SUBREADER, MSGL_WARN, "SUB: we could not find a suitable position for an overlapping subtitle\n");
+           higher_line = SUB_MAX_TEXT + 1;
+           break;
+          }
+         else
+          for (tmp = 0; tmp < sub_lines; ++tmp)
+           placeholder[counter][fragment_position + tmp] = sub_first + j;
+        }
+      }
+     for (int j = higher_line + 1; j < lines_to_add; ++j)
+      {
+       if (placeholder[counter][j] != -1)
+        higher_line = j;
+       else
+        break;
+      }
+
+     // we read the placeholder structure and create the new subs.
+     TsubtitleTexts texts;
+     texts.start = local_start;
+     texts.stop = local_end;
+     for (int i = 0, j = 0; j < lines_to_add ; ++j) {
+         if (placeholder[counter][j] != -1) {
+             texts.push_back((TsubtitleText *)at(placeholder[counter][j]));
+             j += at(placeholder[counter][j])->numlines() - 1;
+         }
+     }
+     processedSubtitleTexts.push_back(texts);
+
+     ++sub_num;
+     ++counter;
+    } while (local_end < global_end);
+   counter = 2 * sub_to_add + 1;
+   for (int i = 0; i < counter; ++i)
+    free(placeholder[i]);
+   free(placeholder);
+   sub_first += sub_to_add;
+  }
+ IsProcessOverlapDone=true;
+}
+
+size_t Tsubreader::getMemorySize() const
+{
+    size_t memSize = 0;
+    foreach (const Tsubtitle* subtitle, *this)
+        memSize += subtitle->getRenderedMemorySize();
+    return memSize;
 }

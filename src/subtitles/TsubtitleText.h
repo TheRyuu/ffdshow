@@ -7,6 +7,7 @@
 
 struct TsubtitlesSettings;
 struct Tconfig;
+struct TsubtitleText;
 class TtextFixBase
 {
 public:
@@ -23,21 +24,20 @@ public:
    fixHearingImpaired=128
   };
 };
-template<class tchar> class TtextFix : public TtextFixBase
+
+class TtextFix : public TtextFixBase
 {
 private:
- typedef typename tchar_traits<tchar>::ffstring ffstring;
- typedef typename tchar_traits<tchar>::strings strings;
  TsubtitlesSettings cfg;
  bool EndOfPrevSentence,inHearing;
  strings odict;
- static inline bool in(tchar x,const tchar *s) {return strchr(s,x)!=NULL;}
+ static inline bool in(wchar_t x,const wchar_t *s) {return strchr(s,x)!=NULL;}
 public:
  TtextFix(const TsubtitlesSettings *Icfg,const Tconfig *ffcfg);
  bool process(ffstring &text,ffstring &fixed);
 };
 
-template<class tchar> struct TsubtitleLine;
+struct TsubtitleLine;
 class ThtmlColors;
 class TsubtitleFormat
 {
@@ -49,7 +49,7 @@ public:
   };
  struct Twords : std::vector<Tword>
   {
-   template<class tchar> void add(const tchar *l,const tchar* &l1,const tchar* &l2, TSubtitleProps &props,size_t step)
+   void add(const wchar_t *l,const wchar_t* &l1,const wchar_t* &l2, TSubtitleProps &props,size_t step)
     {
      Tword word;word.i1=l1-l;word.i2=l2-l;word.props=props;
      push_back(word);
@@ -59,23 +59,21 @@ public:
   };
 private:
  TSubtitleProps props;
- template<class tchar,int c> struct Tncasecmp
+ template<int c> struct Tncasecmp
   {
-   bool operator ()(tchar c1)
+   bool operator ()(wchar_t c1)
     {
      return c==tolower(c1);
     }
   };
- template<class tchar> static DwString<tchar> getAttribute(const tchar *start,const tchar *end,const tchar *attrname);
- template<class tchar> struct Tssa
+ static ffstring getAttribute(const wchar_t *start,const wchar_t *end,const wchar_t *attrname);
+ struct Tssa
   {
   private:
    TSubtitleProps &props;
    const TSubtitleProps &defprops;
    Twords &words;
   public:
-   typedef typename tchar_traits<tchar>::ffstring ffstring;
-   typedef typename tchar_traits<tchar>::strings strings;
 
    union intx_t {
        int32_t  i32;
@@ -89,7 +87,7 @@ private:
        int64_t intval;
        bool ok; // is number?
        TparenthesesContent(ffstring Istr) {
-           tchar *bufend;
+           wchar_t *bufend;
            str = Istr;
            intval = _strtoi64(Istr.c_str(), &bufend, 10);
            ok = (*bufend == 0 && bufend != Istr.c_str());
@@ -113,7 +111,10 @@ private:
    int parse_parentheses(TparenthesesContents &contents, ffstring arg);
    Tssa(TSubtitleProps &Iprops,const TSubtitleProps &Idefprops,Twords &Iwords):props(Iprops),defprops(Idefprops),words(Iwords) {}
    typedef void (Tssa::*TssaAction)(ffstring &arg);
-   typedef int (*Tstr_cmp_func)(const tchar *a, const tchar *b, size_t c);
+   typedef int (*Tstr_cmp_func)(const wchar_t *a, const wchar_t *b, size_t c);
+
+   bool arg2int(const ffstring &arg, int min, int max, int &enc);
+   bool color2int(ffstring arg, int &intval);
 
    // fuctions that parse tokens
    void fontName(ffstring &arg);
@@ -130,34 +131,30 @@ private:
    void karaoke_ko(ffstring &arg);
    void karaoke_k(ffstring &arg);
    template<bool TSubtitleProps::*offset> void boolProp(ffstring &arg);
-   bool arg2int(const ffstring &arg, int min, int max, int &enc);
-   bool color2int(ffstring arg, int &intval);
    template<COLORREF TSubtitleProps::*offset> void color(ffstring &arg);
    template<int TSubtitleProps::*offset> void alpha(ffstring &arg);
    void alphaAll(ffstring &arg);
    void reset(ffstring &arg);
 
-   bool processToken(const tchar* &l2,const tchar *tok,TssaAction action);
-   bool processTokenC(const tchar* &l2,const tchar *tok,TssaAction action);
-   bool processTokenI(const tchar* &l2,const tchar *tok,TssaAction action,Tstr_cmp_func str_cmp_func);
-   void processTokens(const tchar *l,const tchar* &l1,const tchar* &l2,const tchar *end);
+   bool processToken(const wchar_t* &l2,const wchar_t *tok,TssaAction action);
+   bool processTokenC(const wchar_t* &l2,const wchar_t *tok,TssaAction action);
+   bool processTokenI(const wchar_t* &l2,const wchar_t *tok,TssaAction action,Tstr_cmp_func str_cmp_func);
+   void processTokens(const wchar_t *l,const wchar_t* &l1,const wchar_t* &l2,const wchar_t *end);
   };
  const ThtmlColors *htmlcolors;
 public:
  TsubtitleFormat(const ThtmlColors *Ihtmlcolors):htmlcolors(Ihtmlcolors) {}
- template<class tchar> void processHTMLTags(Twords &words, const tchar* &l, const tchar* &l1, const tchar* &l2);
- template<class tchar> Twords processHTML(const TsubtitleLine<tchar> &line);
- template<class tchar> Twords processSSA(const TsubtitleLine<tchar> &line,int sfmt, TsubtitleTextBase<tchar> &parent);
- template<class tchar> void processMicroDVD(TsubtitleTextBase<tchar> &parent,typename std::vector< TsubtitleLine<tchar> >::iterator it);
- template<class tchar> void processMPL2(TsubtitleLine<tchar> &line);
+ void processHTMLTags(Twords &words, const wchar_t* &l, const wchar_t* &l1, const wchar_t* &l2);
+ Twords processHTML(const TsubtitleLine &line);
+ Twords processSSA(const TsubtitleLine &line,int sfmt, TsubtitleText &parent);
+ void processMicroDVD(TsubtitleText &parent, std::vector< TsubtitleLine >::iterator it);
+ void processMPL2(TsubtitleLine &line);
  void resetProps(void){props.reset();}
 };
 
-template<class tchar> struct TsubtitleWord
+struct TsubtitleWord
 {
 private:
- typedef typename tchar_traits<tchar>::ffstring ffstring;
- typedef typename tchar_traits<tchar>::strings strings;
  ffstring text,fixed;
  bool useFixed;
  const ffstring& getText(void) const {return useFixed?fixed:text;}
@@ -168,21 +165,21 @@ public:
  TsubtitleWord(const ffstring &Itext):text(Itext),useFixed(false) {}
  TsubtitleWord(const ffstring &Itext,const TSubtitleProps &defProps):text(Itext),useFixed(false),props(defProps) {}
 
- TsubtitleWord(const tchar *Itext):text(Itext),useFixed(false) {}
- TsubtitleWord(const tchar *Itext,const TSubtitleProps &defProps):text(Itext),useFixed(false),props(defProps) {}
+ TsubtitleWord(const wchar_t *Itext):text(Itext),useFixed(false) {}
+ TsubtitleWord(const wchar_t *Itext,const TSubtitleProps &defProps):text(Itext),useFixed(false),props(defProps) {}
 
- TsubtitleWord(const tchar *s,size_t len):text(s,len),useFixed(false) {}
- TsubtitleWord(const tchar *s,size_t len,const TSubtitleProps &defProps):text(s,len),useFixed(false),props(defProps) {}
+ TsubtitleWord(const wchar_t *s,size_t len):text(s,len),useFixed(false) {}
+ TsubtitleWord(const wchar_t *s,size_t len,const TSubtitleProps &defProps):text(s,len),useFixed(false),props(defProps) {}
 
  void set(const ffstring &s)
   {
    getText()=s;
   }
- operator const tchar *(void) const
+ operator const wchar_t *(void) const
   {
    return getText().c_str();
   }
- void fix(TtextFix<tchar> &fix)
+ void fix(TtextFix &fix)
   {
    useFixed=fix.process(text,fixed);
   }
@@ -193,17 +190,15 @@ public:
   }
  void addTailSpace(void)
   {
-   text += _L(" ");
+   text += L" ";
   }
 };
 
-template<class tchar> struct TsubtitleLine : std::vector< TsubtitleWord<tchar> >
+struct TsubtitleLine :
+    std::vector< TsubtitleWord >
 {
 private:
- typedef TsubtitleWord<tchar> TsubtitleWord;
  typedef std::vector<TsubtitleWord> Tbase;
- typedef typename tchar_traits<tchar>::ffstring ffstring;
- typedef typename tchar_traits<tchar>::strings strings;
  void applyWords(const TsubtitleFormat::Twords &words);
 public:
  TSubtitleProps props;
@@ -212,109 +207,168 @@ public:
  TsubtitleLine(const ffstring &Itext) {push_back(Itext);}
  TsubtitleLine(const ffstring &Itext,const TSubtitleProps &defProps) {push_back(TsubtitleWord(Itext,defProps));}
 
- TsubtitleLine(const tchar *Itext) {push_back(Itext);}
- TsubtitleLine(const tchar *Itext,const TSubtitleProps &defProps) {push_back(TsubtitleWord(Itext,defProps));}
- TsubtitleLine(const tchar *Itext,const TSubtitleProps &defProps,int IlineBreakReason):lineBreakReason(IlineBreakReason) {push_back(TsubtitleWord(Itext,defProps));}
+ TsubtitleLine(const wchar_t *Itext) {push_back(Itext);}
+ TsubtitleLine(const wchar_t *Itext,const TSubtitleProps &defProps) {push_back(TsubtitleWord(Itext,defProps));}
+ TsubtitleLine(const wchar_t *Itext,const TSubtitleProps &defProps,int IlineBreakReason):lineBreakReason(IlineBreakReason) {push_back(TsubtitleWord(Itext,defProps));}
 
- TsubtitleLine(const tchar *s,size_t len) {push_back(TsubtitleWord(s,len));}
- TsubtitleLine(const tchar *s,size_t len,const TSubtitleProps &defProps) {push_back(TsubtitleWord(s,len,defProps));}
- TsubtitleLine(const tchar *s,size_t len,const TSubtitleProps &defProps,int IlineBreakReason):lineBreakReason(IlineBreakReason) {push_back(TsubtitleWord(s,len,defProps));}
+ TsubtitleLine(const wchar_t *s,size_t len) {push_back(TsubtitleWord(s,len));}
+ TsubtitleLine(const wchar_t *s,size_t len,const TSubtitleProps &defProps) {push_back(TsubtitleWord(s,len,defProps));}
+ TsubtitleLine(const wchar_t *s,size_t len,const TSubtitleProps &defProps,int IlineBreakReason):lineBreakReason(IlineBreakReason) {push_back(TsubtitleWord(s,len,defProps));}
  size_t strlen(void) const;
- void format(TsubtitleFormat &format,int sfmt,TsubtitleTextBase<tchar> &parent);
- void fix(TtextFix<tchar> &fix);
+ void format(TsubtitleFormat &format,int sfmt,TsubtitleText &parent);
+ void fix(TtextFix &fix);
 };
-#include "TsubreaderMplayer.h"
-template<class tchar> struct TsubtitleTextBase :public Tsubtitle,public std::vector< TsubtitleLine<tchar> >
+
+struct TsubtitleText :public Tsubtitle,public std::vector< TsubtitleLine >
 {
 private:
- typedef TsubtitleLine<tchar> TsubtitleLine;
- typedef std::vector<TsubtitleLine> Tbase;
- typedef typename tchar_traits<tchar>::ffstring ffstring;
- typedef typename tchar_traits<tchar>::strings strings;
-public:
- int subformat;
- TSubtitleProps defProps;
- TsubtitleTextBase(int Isubformat):subformat(Isubformat) {}
- TsubtitleTextBase(int Isubformat,const TSubtitleProps &IdefProps):subformat(Isubformat),defProps(IdefProps) {}
- void set(const strings &strs)
-  {
-   this->clear();
-   for (typename strings::const_iterator s=strs.begin();s!=strs.end();s++)
-    this->push_back(TsubtitleLine(*s,defProps));
-  }
- void set(const ffstring &str)
-  {
-   if (this->size()==1)
-    this->at(0)=str;
-   else
-    {
-     this->clear();
-     this->push_back(TsubtitleLine(str,defProps));
-    }
-  }
- void add(const tchar *s)
-  {
-   this->push_back(TsubtitleLine(s,defProps));
-  }
- void add(const tchar *s,size_t len)
-  {
-   this->push_back(TsubtitleLine(s,len,defProps));
-  }
- void addSSA(const tchar *s, int lineBreakReason)
-  {
-   this->push_back(TsubtitleLine(s, defProps, lineBreakReason));
-  }
- void addSSA(const tchar *s, size_t len, int lineBreakReason)
-  {
-   this->push_back(TsubtitleLine(s, len, defProps, lineBreakReason));
-  }
- virtual void addEmpty(void)
-  {
-   this->push_back(TsubtitleLine(_L(" "),defProps));
-  }
- void format(TsubtitleFormat &format);
- void prepareKaraoke(void);
- template<class Tval> void propagateProps(typename Tbase::iterator it,Tval TSubtitleProps::*offset,Tval val,typename Tbase::iterator itend)
-  {
-   for (;it!=itend;it++)
-    for (typename TsubtitleLine::iterator w=it->begin();w!=it->end();w++)
-     w->props.*offset=val;
-  }
- template<class Tval> void propagateProps(typename Tbase::iterator it,Tval TSubtitleProps::*offset,Tval val)
-  {
-   propagateProps(it,offset,val,this->end());
-  }
- template<class Tval> void propagateProps(Tval TSubtitleProps::*offset,Tval val)
-  {
-   propagateProps(this->begin(),offset,val,this->end());
-  }
- void fix(TtextFix<tchar> &fix);
- virtual void print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceChange,TrenderedSubtitleLines::TprintPrefs &prefs) const;
- virtual Tsubtitle* copy(void);
- virtual Tsubtitle* create(void) {return new TsubtitleTextBase<tchar>(subformat);}
- virtual bool copyLine(Tsubtitle *dst,size_t linenum)
-  {
-   ((TsubtitleTextBase<tchar>*)dst)->push_back(this->at(linenum));
-   return true;
-  }
- virtual bool copyProps(Tsubtitle *dst)
-  {
-   ((TsubtitleTextBase<tchar>*)dst)->defProps=this->defProps;
-   return true;
-  }
+    typedef std::vector<TsubtitleLine> Tbase;
 
- virtual size_t numlines(void) const
-  {
-   return this->size();
-  }
- virtual size_t numchars(void) const
-  {
-   size_t c=0;
-   for (typename Tbase::const_iterator l=this->begin();l!=this->end();l++)
-    c+=l->strlen();
-   return c;
-  }
- virtual bool isText(void) const {return true;}
+    TrenderedSubtitleLines lines;
+    bool rendering_ready;
+
+    TprintPrefs old_prefs;
+    boost::mutex mutex_lines;
+public:
+    friend class Tfont;
+    int subformat;
+    TSubtitleProps defProps;
+    TsubtitleText(const TsubtitleText &src);
+    TsubtitleText(int Isubformat):subformat(Isubformat),rendering_ready(false) {}
+    TsubtitleText(int Isubformat,const TSubtitleProps &IdefProps):subformat(Isubformat),defProps(IdefProps),rendering_ready(false) {}
+    virtual ~TsubtitleText() {
+        dropRenderedLines();
+    }
+
+    void set(const strings &strs) {
+        this->clear();
+        for (strings::const_iterator s=strs.begin();s!=strs.end();s++)
+            this->push_back(TsubtitleLine(*s,defProps));
+    }
+
+    void set(const ffstring &str) {
+        if (this->size()==1)
+            this->at(0)=str;
+        else {
+            this->clear();
+            this->push_back(TsubtitleLine(str,defProps));
+        }
+    }
+
+    void add(const wchar_t *s) {
+        this->push_back(TsubtitleLine(s,defProps));
+    }
+
+    void add(const wchar_t *s,size_t len) {
+        this->push_back(TsubtitleLine(s,len,defProps));
+    }
+
+    void addSSA(const wchar_t *s, int lineBreakReason) {
+        this->push_back(TsubtitleLine(s, defProps, lineBreakReason));
+    }
+
+    void addSSA(const wchar_t *s, size_t len, int lineBreakReason) {
+        this->push_back(TsubtitleLine(s, len, defProps, lineBreakReason));
+    }
+
+    virtual void addEmpty(void) {
+        this->push_back(TsubtitleLine(L" ",defProps));
+    }
+
+    void format(TsubtitleFormat &format);
+
+    void prepareKaraoke(void);
+
+    template<class Tval> void propagateProps(Tbase::iterator it,Tval TSubtitleProps::*offset,Tval val,Tbase::iterator itend) {
+        for (;it!=itend;it++)
+            foreach (TsubtitleWord &word, *it)
+                word.props.*offset=val;
+    }
+
+    template<class Tval> void propagateProps(Tbase::iterator it,Tval TSubtitleProps::*offset,Tval val) {
+        propagateProps(it,offset,val,this->end());
+    }
+
+    template<class Tval> void propagateProps(Tval TSubtitleProps::*offset,Tval val) {
+        propagateProps(this->begin(),offset,val,this->end());
+    }
+
+    void fix(TtextFix &fix);
+
+    virtual void print(
+       REFERENCE_TIME time,
+       bool wasseek,
+       Tfont &f,
+       bool forceChange,
+       TprintPrefs &prefs,
+       unsigned char **dst,
+       const stride_t *stride);
+
+    virtual size_t numlines(void) const {
+        return this->size();
+    }
+
+    virtual size_t numchars(void) const {
+        size_t c=0;
+        for (Tbase::const_iterator l=this->begin();l!=this->end();l++)
+         c+=l->strlen();
+        return c;
+    }
+
+    virtual bool isText(void) const {return true;}
+
+    // return used memory
+    size_t prepareGlyph(const TprintPrefs &prefs, Tfont &font,bool forceChange);
+
+    int get_splitdx_for_new_line(const TsubtitleWord &w,int splitdx,int dx, const TprintPrefs &prefs, int gdi_font_scale, IffdshowBase *deci) const {
+        // This method calculates the maximum length of the line considering the left/right margin and eventually
+        // basing on the position set through a position tag
+        return w.props.get_maxWidth(dx, prefs.subformat, deci) * gdi_font_scale;
+    }
+
+    // return size of released memory
+    virtual size_t getRenderedMemorySize() const {
+        return lines.getMemorySize();
+    }
+
+    TrenderedTextSubtitleWord* TsubtitleText::newWord(
+       const wchar_t *s,
+       size_t slen,
+       TprintPrefs prefs,
+       const TsubtitleWord *w,
+       const LOGFONT &lf,
+       const Tfont &font,
+       bool trimRightSpaces);
+
+    size_t dropRenderedLines(void);
+
+    virtual void clear() {
+        dropRenderedLines();
+        erase(begin(), end());
+    }
+
+    bool is_rendering_ready() {
+        return rendering_ready;
+    }
+
+    boost::mutex* get_lock_ptr() {
+        return &mutex_lines;
+    }
+};
+
+struct TsubtitleTexts :
+    public Tsubtitle,
+    public std::vector< TsubtitleText* >
+{
+    virtual bool isText(void) const {return true;}
+    virtual void print(
+       REFERENCE_TIME time,
+       bool wasseek,
+       Tfont &f,
+       bool forceChange,
+       TprintPrefs &prefs,
+       unsigned char **dst,
+       const stride_t *stride);
 };
 
 #endif

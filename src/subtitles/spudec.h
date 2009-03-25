@@ -36,7 +36,7 @@ private:
 
  packet_t *queue_head;
  packet_t *queue_tail;
- AM_DVD_YUV global_palette[16];
+ YUVcolorA global_palette[16];
  unsigned int orig_frame_width, orig_frame_height;
  unsigned char* packet;
  size_t packet_reserve;       /* size of the memory pointed to by packet */
@@ -45,7 +45,7 @@ private:
  unsigned int packet_pts;     /* PTS for self packet */
  unsigned int palette[4];
  unsigned int alpha[4];
- AM_DVD_YUV cuspal[4];
+ YUVcolorA cuspal[4];
  unsigned int custom;
  unsigned int now_pts;
  unsigned int start_pts, end_pts;
@@ -86,21 +86,39 @@ private:
  void spudec_decode(unsigned int pts100);
  void scale_image(int x, int y, scale_pixel* table_x, scale_pixel* table_y);
  static void scale_table(unsigned int start_src, unsigned int start_tar, unsigned int end_src, unsigned int end_tar, scale_pixel * table);
- void sws_spu_image(unsigned char *d1, unsigned char *d2, int dw, int dh, stride_t ds, unsigned char *s1, unsigned char *s2, int sw, int sh, stride_t ss,const TrenderedSubtitleLines::TprintPrefs &prefs);
+ void sws_spu_image(unsigned char *d1, unsigned char *d2, int dw, int dh, stride_t ds, unsigned char *s1, unsigned char *s2, int sw, int sh, stride_t ss,const TprintPrefs &prefs);
  static int mkalpha(int i);
  static int canon_alpha(int alpha);
  static unsigned int get_be16(const unsigned char *p);
  static unsigned int get_be24(const unsigned char *p);
  int oldscale;
 public:
- Tspudec(IffdshowBase *Ideci,const AM_DVD_YUV *palette, const AM_DVD_YUV *cuspal, unsigned int custom, unsigned int frame_width, unsigned int frame_height);
+ Tspudec(IffdshowBase *Ideci,const YUVcolorA *palette, const YUVcolorA *cuspal, unsigned int custom, unsigned int frame_width, unsigned int frame_height);
  ~Tspudec();
  void spudec_heartbeat(unsigned int pts100);
  void spudec_assemble(const unsigned char *packet, unsigned int len, unsigned int pts100);
  //void spudec_draw(void (*draw_alpha)(int x0,int y0, int w,int h, unsigned char* src, unsigned char *srca, int stride,const void *self),const void *self);
- typedef void (*TdrawAlpha)(int x0,int y0, unsigned int w,unsigned int h, const unsigned char* srcY, const unsigned char *srcaY, int strideY,const unsigned char* srcUV, const unsigned char *srcaUV, int strideUV,const TrenderedSubtitleLines::TprintPrefs &prefs);
- void spudec_draw_scaled(unsigned int dxs, unsigned int dys, TdrawAlpha draw_alpha,const TrenderedSubtitleLines::TprintPrefs &prefs);
- void spudec_update_palette(unsigned int *palette);
+ typedef void (*TdrawAlpha)(
+    int x0,
+    int y0,
+    unsigned int w,
+    unsigned int h,
+    const unsigned char* srcY,
+    const unsigned char *srcaY,
+    int strideY,
+    const unsigned char* srcUV,
+    const unsigned char *srcaUV,
+    int strideUV,
+    const TprintPrefs &prefs,
+    unsigned char **dst,
+    const stride_t *stride);
+ void spudec_draw_scaled(
+    unsigned int dxs,
+    unsigned int dys,
+    TdrawAlpha draw_alpha,
+    const TprintPrefs &prefs,
+    unsigned char **dst,
+    const stride_t *stride);
  void spudec_free(void);
  void spudec_reset(void);       // called after seek
  int spudec_visible(void); // check if spu is visible

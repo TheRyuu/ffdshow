@@ -628,23 +628,38 @@ int Tvobsub::vobsub_set_from_lang(const char * lang)
 }
 */
 int Tvobsub::vobsub_get_packet(unsigned int pts,void** data, int* timestamp) {
-  unsigned int pts100 = (unsigned int)pts;//(90000 * pts);
-  if (spu_streams && 0 <= vobsub_id && (unsigned) vobsub_id < spu_streams_size) {
-    packet_queue_t *queue = spu_streams + vobsub_id;
-    while (queue->current_index < queue->packets_size) {
-      packet_t *pkt = queue->packets + queue->current_index;
-      if (pkt->pts100 != UINT_MAX)
-      if (pkt->pts100 <= pts100) {
-        ++queue->current_index;
-        *data = pkt->data;
-        *timestamp = pkt->pts100;
-        return pkt->size;
-      } else break;
-      else
-          ++queue->current_index;
+    unsigned int pts100 = (unsigned int)pts;//(90000 * pts);
+    if (spu_streams && 0 <= vobsub_id && (unsigned) vobsub_id < spu_streams_size) {
+      packet_queue_t *queue = spu_streams + vobsub_id;
+
+      if (!queue->id) {
+          // try to find a non empty stream. This may be bogus in embedded subtitles.
+          for (unsigned int i = 0 ; i < spu_streams_size ; i++) {
+              queue = spu_streams + i;
+              if (queue->id)
+                  break;
+          }
+          if (!queue->id)
+              return -1;
+      }
+
+      while (queue->current_index < queue->packets_size) {
+          packet_t *pkt = queue->packets + queue->current_index;
+          if (pkt->pts100 != UINT_MAX) {
+              if (pkt->pts100 <= pts100) {
+                  ++queue->current_index;
+                  *data = pkt->data;
+                  *timestamp = pkt->pts100;
+                  return pkt->size;
+              } else {
+                  break;
+              }
+          } else {
+              ++queue->current_index;
+          }
+      }
     }
-  }
-  return -1;
+    return -1;
 }
 
 int Tvobsub::vobsub_get_next_packet( void** data, int* timestamp)
@@ -664,16 +679,20 @@ int Tvobsub::vobsub_get_next_packet( void** data, int* timestamp)
 
 void Tvobsub::vobsub_seek(int pts)
 {
-  packet_queue_t * queue;
-  unsigned int seek_pts100 = (int)pts;// * 90000;
+    packet_queue_t * queue;
+    unsigned int seek_pts100 = (int)pts;// * 90000;
 
-  if (spu_streams && 0 <= vobsub_id && (unsigned) vobsub_id < spu_streams_size) {
-    /* do not seek if we don't know the id */
-    if (vobsub_get_id(vobsub_id) == NULL)
-            return;
+    if (spu_streams && 0 <= vobsub_id && (unsigned) vobsub_id < spu_streams_size) {
+      /* do not seek if we don't know the id */
+
+    for (unsigned int i = 0 ; i < spu_streams_size ; i++) {
+        queue = spu_streams + i;
+        queue->current_index = 0;
+    }
+
     queue = spu_streams + vobsub_id;
     queue->current_index = 0;
-    while ((queue->packets + queue->current_index)->pts100 < seek_pts100)
+    while (queue->packets && (queue->packets + queue->current_index)->pts100 < seek_pts100)
       ++queue->current_index;
     if (queue->current_index > 0)
       --queue->current_index;

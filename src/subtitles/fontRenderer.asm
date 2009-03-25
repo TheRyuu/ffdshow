@@ -60,17 +60,20 @@ msk256   dd 0x01000100,0x01000100,0x01000100,0x01000100 ; 'DQ and DT do not acce
 msk00ff  dd 0x00ff00ff,0x00ff00ff,0x00ff00ff,0x00ff00ff
 mskffff  dd 0xffffffff,0xffffffff,0xffffffff,0xffffffff
 msk8080  dd 0x80808080,0x80808080,0x80808080,0x80808080
+msk64    dd 0x00400040,0x00400040,0x00400040,0x00400040
 
 %ifidn __OUTPUT_FORMAT__,win64
   %define mask256 msk256 wrt rip
   %define mask00ff msk00ff wrt rip
   %define maskffff mskffff wrt rip
   %define mask8080 msk8080 wrt rip
+  %define mask64   msk64 wrt rip
 %else
-  %define mask256 msk256
+  %define mask256  msk256
   %define mask00ff msk00ff
   %define maskffff mskffff
   %define mask8080 msk8080
+  %define mask64   msk64
 %endif
 
 ;=============================================================================
@@ -124,6 +127,7 @@ endstruc
 ;                                                  /* 4     */ const unsigned char* dst,
 ;                                                  /* 5     */ const unsigned short* msk);
 ;
+; bitmaps (bmp, outline, shadow, msk): 0-64 are allowed (6bit plus 1).
 cglobal TtextSubtitlePrintY_mmx
 TtextSubtitlePrintY_mmx:
 
@@ -147,9 +151,9 @@ TtextSubtitlePrintY_mmx:
   punpckhbw _mm1, _mm3
   punpcklbw _mm2, _mm3
   pmullw    _mm1, _mm0
-  psrlw     _mm1, 8
+  psrlw     _mm1, 6
   pmullw    _mm2, _mm0
-  psrlw     _mm2, 8            ; _mm1:_mm2 = s = m_shadowYUV.A * shadow[0][srcPos] >> 8;
+  psrlw     _mm2, 6            ; _mm1:_mm2 = s = m_shadowYUV.A * shadow[0][srcPos] >> 6;
 
   _movdqa   _mm4, [mask256]
   _movdqa   _mm5, _mm4
@@ -179,15 +183,15 @@ TtextSubtitlePrintY_mmx:
   _movdqa   _mm5, _mm4
   punpckhbw _mm4, _mm3
   punpcklbw _mm5, _mm3
-  _movdqa   _mm6, [mask256]
+  _movdqa   _mm6, [mask64]
   _movdqa   _mm7, _mm6
   psubw     _mm6, _mm4
-  psubw     _mm7, _mm5         ; _mm6:_mm7 = (256-m)
+  psubw     _mm7, _mm5         ; _mm6:_mm7 = (64-m)
 
   pmullw    _mm6, _mm1
-  psrlw     _mm6, 8
+  psrlw     _mm6, 6
   pmullw    _mm7, _mm2
-  psrlw     _mm7, 8            ; _mm6:_mm7 = ((256-m) * d >> 8)
+  psrlw     _mm7, 6            ; _mm6:_mm7 = ((64-m) * d >> 6)
 
   _movdqa   _mm0, [reg_si + colortbl.outline_A]
   _movdqu   _mm4, [reg_dx]
@@ -195,9 +199,9 @@ TtextSubtitlePrintY_mmx:
   punpckhbw _mm4, _mm3
   punpcklbw _mm5, _mm3
   pmullw    _mm4, _mm0
-  psrlw     _mm4, 8
+  psrlw     _mm4, 6
   pmullw    _mm5, _mm0
-  psrlw     _mm5, 8            ; _mm4:_mm5 = o= m_outlineYUV.A * outline[0][srcPos] >> 8;
+  psrlw     _mm5, 6            ; _mm4:_mm5 = o= m_outlineYUV.A * outline[0][srcPos] >> 6;
 
   _movdqa   _mm0, [reg_si + colortbl.outline_Y]
   pmullw    _mm4, _mm0
@@ -219,9 +223,9 @@ TtextSubtitlePrintY_mmx:
   punpckhbw _mm1, _mm3
   punpcklbw _mm2, _mm3
   pmullw    _mm1, _mm0
-  psrlw     _mm1, 8
+  psrlw     _mm1, 6
   pmullw    _mm2, _mm0
-  psrlw     _mm2, 8            ; _mm1:_mm2 = b = m_bodyYUV.A * bmp[0][srcPos] >> 8;
+  psrlw     _mm2, 6            ; _mm1:_mm2 = b = m_bodyYUV.A * bmp[0][srcPos] >> 6;
 
   _movdqa   _mm0, [reg_si + colortbl.body_Y]
   pmullw    _mm1, _mm0
@@ -285,14 +289,14 @@ TtextSubtitlePrintUV_mmx:
   punpckhbw _mm1, _mm3
   punpcklbw _mm2, _mm3
   pmullw    _mm1, _mm0
-  psrlw     _mm1, 8
+  psrlw     _mm1, 6
 %ifdef HAVE_LOCAL_SSE2_x64
   movdqa    xmm12, xmm1
 %else
   _movdqa   [reg_sp + temp_bos.s1], _mm1
 %endif
   pmullw    _mm2, _mm0
-  psrlw     _mm2, 8                         ; _mm1:_mm2 = s =  = m_shadowYUV.A *shadow [1][srcPos1]>>8;
+  psrlw     _mm2, 6                         ; _mm1:_mm2 = s =  = m_shadowYUV.A *shadow [1][srcPos1]>>6;
 %ifdef HAVE_LOCAL_SSE2_x64
   movdqa    xmm13, xmm2
 %else
@@ -328,14 +332,14 @@ TtextSubtitlePrintUV_mmx:
   punpckhbw _mm4, _mm3
   punpcklbw _mm5, _mm3
   pmullw    _mm4, _mm0
-  psrlw     _mm4, 8
+  psrlw     _mm4, 6
 %ifdef HAVE_LOCAL_SSE2_x64
   movdqa    xmm8, xmm4
 %else
   _movdqa   [reg_sp + temp_bos.o1], _mm4
 %endif
   pmullw    _mm5, _mm0
-  psrlw     _mm5, 8                         ; _mm4:_mm5 = o = m_outlineYUV.A * mask1[srcPos]>>8;
+  psrlw     _mm5, 6                         ; _mm4:_mm5 = o = m_outlineYUV.A * mask1[srcPos]>>6;
 %ifdef HAVE_LOCAL_SSE2_x64
   movdqa    xmm9, xmm5
 %else
@@ -371,14 +375,14 @@ TtextSubtitlePrintUV_mmx:
   punpckhbw _mm1, _mm3
   punpcklbw _mm2, _mm3
   pmullw    _mm1, _mm0
-  psrlw     _mm1, 8
+  psrlw     _mm1, 6
 %ifdef HAVE_LOCAL_SSE2_x64
   movdqa    xmm10, xmm1
 %else
   _movdqa   [reg_sp + temp_bos.b1], _mm1
 %endif
   pmullw    _mm2, _mm0
-  psrlw     _mm2, 8                         ; _mm1:_mm2 = b = m_bodyYUV.A * body[1][srcPos]>>8;
+  psrlw     _mm2, 6                         ; _mm1:_mm2 = b = m_bodyYUV.A * body[1][srcPos]>>6;
 %ifdef HAVE_LOCAL_SSE2_x64
   movdqa    xmm11, xmm2
 %else

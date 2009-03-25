@@ -224,10 +224,22 @@ bool TimgFilter::getCurNext(int csp,TffPict &pict,int full,int copy,unsigned cha
  if (((csp&FF_CSPS_MASK)&(pict.csp&FF_CSPS_MASK))==0)
   {
    bool flip1 = !!((pict.csp ^ csp) & FF_CSP_FLAGS_VFLIP);
-   int cspOptionsRgbInterlaceMode = deci->getParam2(IDFF_cspOptionsRgbInterlaceMode);
-   if (!convert2 || cspOptionsRgbInterlaceMode != old_cspOptionsRgbInterlaceMode)
+   const ToutputVideoSettings *outcfg = deciV->getToutputVideoSettings();
+
+   if (!convert2
+     || convert2->dx != pict.rectFull.dx
+     || convert2->dy != pict.rectFull.dy
+     || old_cspOptionsRgbInterlaceMode != outcfg->cspOptionsRgbInterlaceMode
+     || old_avisynthYV12_RGB != outcfg->avisynthYV12_RGB
+     || old_outputLevelsMode != outcfg->cspOptionsOutputLevelsMode
+     || old_inputLevelsMode != outcfg->cspOptionsInputLevelsMode
+     || old_IturBt != outcfg->cspOptionsIturBt)
     {
-     old_cspOptionsRgbInterlaceMode = cspOptionsRgbInterlaceMode;
+     old_avisynthYV12_RGB = outcfg->avisynthYV12_RGB;
+     old_cspOptionsRgbInterlaceMode = outcfg->cspOptionsRgbInterlaceMode;
+     old_outputLevelsMode = outcfg->cspOptionsOutputLevelsMode;
+     old_inputLevelsMode = outcfg->cspOptionsInputLevelsMode;
+     old_IturBt = outcfg->cspOptionsIturBt;
      if (convert2)
       delete convert2;
      convert2=new Tconvert(deci,pict.rectFull.dx,pict.rectFull.dy);

@@ -42,7 +42,7 @@ lContrast
 Relative difference between higher and lower intensity luminance values in IRE units times 100. The valid range is from 0 through 20,000. The default value is 10,000 (100 IRE). Higher values of contrast cause darker luminance values to tend toward black and lighter luminance values to tend toward white. Lower values of contrast cause all luminance values to move toward the middle of the scale.
 
 lHue
-Phase relationship of the chrominance components. Hue is specified in degrees, and the valid range is from –180 through 180, with a default of 0.
+Phase relationship of the chrominance components. Hue is specified in degrees, and the valid range is from -180 through 180, with a default of 0.
 
 lSaturation
 Color intensity, in IRE units times 100. The valid range is from 0 through 20,000. The default value is 10,000, which translates to 100 IRE.

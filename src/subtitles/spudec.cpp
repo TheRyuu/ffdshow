@@ -661,7 +661,7 @@ void Tspudec::scale_image(int x, int y, scale_pixel* table_x, scale_pixel* table
 }
 
 void Tspudec::sws_spu_image(unsigned char *d1, unsigned char *d2, int dw, int dh, stride_t ds,
-        unsigned char *s1, unsigned char *s2, int sw, int sh, stride_t ss,const TrenderedSubtitleLines::TprintPrefs &prefs)
+        unsigned char *s1, unsigned char *s2, int sw, int sh, stride_t ss,const TprintPrefs &prefs)
 {
  if (!filter.lumH || oldgauss != prefs.vobaagauss)
   {
@@ -679,7 +679,13 @@ void Tspudec::sws_spu_image(unsigned char *d1, unsigned char *d2, int dw, int dh
  libmplayer->sws_freeContext(ctx);
 }
 
-void Tspudec::spudec_draw_scaled(unsigned int dxs, unsigned int dys, TdrawAlpha draw_alpha,const TrenderedSubtitleLines::TprintPrefs &prefs)
+void Tspudec::spudec_draw_scaled(
+    unsigned int dxs,
+    unsigned int dys,
+    TdrawAlpha draw_alpha,
+    const TprintPrefs &prefs,
+    unsigned char **Idst,
+    const stride_t *Istride)
 {
   scale_pixel *table_x;
   scale_pixel *table_y;
@@ -1022,7 +1028,8 @@ nothing_to_do:
           break;
         }
         draw_alpha(scaled_start_col, scaled_start_row, scaled_width, scaled_height,
-                   scaled_imageY, scaled_aimageY, scaled_strideY,scaled_imageUV, scaled_aimageUV, scaled_strideUV,prefs);
+                   scaled_imageY, scaled_aimageY, scaled_strideY,scaled_imageUV, scaled_aimageUV, scaled_strideUV,prefs,
+                   Idst,Istride);
         spu_changed = 0;
       }
     }
@@ -1030,13 +1037,6 @@ nothing_to_do:
   else
   {
     DPRINTF(_l("SPU not displayed: start_pts=%d  end_pts=%d  now_pts=%d"),start_pts, end_pts, now_pts);
-  }
-}
-
-void Tspudec::spudec_update_palette( unsigned int *palette)
-{
-  if (palette) {
-    memcpy(global_palette, palette, sizeof(global_palette));
   }
 }
 
@@ -1051,15 +1051,15 @@ Tspudec::Tspudec(unsigned int *palette, unsigned int frame_width, unsigned int f
 }
 */
 /* get palette custom color, width, height from .idx file */
-Tspudec::Tspudec(IffdshowBase *Ideci,const AM_DVD_YUV *palette, const AM_DVD_YUV *cuspal, unsigned int custom, unsigned int frame_width, unsigned int frame_height)
+Tspudec::Tspudec(IffdshowBase *Ideci,const YUVcolorA *palette, const YUVcolorA *cuspal, unsigned int custom, unsigned int frame_width, unsigned int frame_height)
 {
- memset(this,0,sizeof(*this));
- deci=Ideci;
- spu_aamode = 4;
- spu_alignment = -1;
- sub_pos=0;
- oldgauss=-1;
- deci->getPostproc(&libmplayer);
+    memset(this,0,sizeof(*this));
+    deci=Ideci;
+    spu_aamode = 4;
+    spu_alignment = -1;
+    sub_pos=0;
+    oldgauss=-1;
+    deci->getPostproc(&libmplayer);
     this->packet = NULL;
     this->image = NULL;
     this->scaled_imageY=this->scaled_imageUV = NULL;
@@ -1071,13 +1071,17 @@ Tspudec::Tspudec(IffdshowBase *Ideci,const AM_DVD_YUV *palette, const AM_DVD_YUV
     // set up palette:
     this->auto_palette = 1;
     if (palette){
-      memcpy(this->global_palette, palette, sizeof(this->global_palette));
-      this->auto_palette = 0;
+        for (int i = 0 ; i < countof(global_palette) ; i++) {
+            global_palette[i] = palette[i];
+        }
+        this->auto_palette = 0;
     }
     this->custom = custom;
     if (custom && cuspal) {
-      memcpy(this->cuspal, cuspal, sizeof(this->cuspal));
-      this->auto_palette = 0;
+        for (int i = 0 ; i < countof(this->cuspal) ; i++) {
+            this->cuspal[i] = cuspal[i];
+        }
+        this->auto_palette = 0;
     }
     // forced subtitles default: show all subtitles
     this->forced_subs_only=0;

@@ -138,7 +138,9 @@ STDMETHODIMP TtextInputPin::ReceiveConnection(IPin* pConnector, const AM_MEDIA_T
  utf8=false;
  const CLSID &ref=GetCLSID(pConnector);
  ismatroska=false;
- if (ref==CLSID_HaaliMediaSplitter || ref==CLSID_MPC_MatroskaSplitter || ref==CLSID_GabestMatroskaSplitter)
+ if ( searchPrevNextFilter(PINDIR_INPUT,pConnector,CLSID_HaaliMediaSplitter)
+   || searchPrevNextFilter(PINDIR_INPUT,pConnector,CLSID_MPC_MatroskaSplitter)
+   || searchPrevNextFilter(PINDIR_INPUT,pConnector,CLSID_GabestMatroskaSplitter))
   ismatroska=true;
 #if 0
  PIN_INFO pininfo;

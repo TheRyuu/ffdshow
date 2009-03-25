@@ -32,14 +32,21 @@ TsubtitleUSF2::TsubtitleUSF2(TsubreaderUSF2 *Isubs,int Iidx,REFERENCE_TIME Istar
  start=Istart;
  stop=Istop;
 }
-void TsubtitleUSF2::print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceChange,TrenderedSubtitleLines::TprintPrefs &prefs) const
+void TsubtitleUSF2::print(
+    REFERENCE_TIME time,
+    bool wasseek,
+    Tfont &f,
+    bool forceChange,
+    TprintPrefs &prefs,
+    unsigned char **dst,
+    const stride_t *stride)
 {
  if (first || subs->dx!=prefs.dx || subs->dy!=prefs.dy)
   {
    first=false;
    wrd.dx[0]=prefs.dx;wrd.dx[1]=wrd.dx[2]=prefs.dx/2;
    wrd.dy[0]=prefs.dy;wrd.dy[1]=wrd.dy[2]=prefs.dy/2;
-   wrd.dxCharY=wrd.dx[0]; wrd.dyCharY=wrd.dy[0];
+   wrd.dxChar=wrd.dx[0]; wrd.dyChar=wrd.dy[0];
    if (subs->dx!=prefs.dx || subs->dy!=prefs.dy)
     subs->create(prefs.dx,prefs.dy);
    wrd.bmpmskstride[0]=subs->stride[0];wrd.bmpmskstride[1]=subs->stride[1];wrd.bmpmskstride[2]=subs->stride[2];
@@ -71,5 +78,5 @@ void TsubtitleUSF2::print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceCh
   }
  int dy1[3];
  dy1[0]=wrd.dy[0];dy1[1]=wrd.dy[1];dy1[2]=wrd.dy[2];
- wrd.print(0,0/*dummy*/,wrd.dx,dy1,prefs.dst,prefs.stride,(const unsigned char**)wrd.bmp,(const unsigned char**)wrd.msk);
+ wrd.print(0,0/*dummy*/,wrd.dx,dy1,dst,stride,(const unsigned char**)wrd.bmp,(const unsigned char**)wrd.msk);
 }
