@@ -361,6 +361,9 @@ bool TrenderedSubtitleLine::checkCollision(const CRect &query, CRect &ans)
         return false;
     if (empty())
         return false;
+    const TSubtitleProps &lineprops = getProps();
+    if (lineprops.isPos || lineprops.isMove || lineprops.isOrg)
+        return false;
     if (query.checkOverlap(printedRect)) {
         ans = printedRect;
         return true;
@@ -595,7 +598,7 @@ void TrenderedSubtitleLines::printASS(
                         x=0;
                 }
 
-                if (!lineprops.isMove && !lineprops.isPos && pval.firstuse) {
+                if (!lineprops.isMove && !lineprops.isPos && !lineprops.isOrg && pval.firstuse) {
                     handleCollision(line, x, pval, prefsdy, lineprops.alignment);
                 }
 

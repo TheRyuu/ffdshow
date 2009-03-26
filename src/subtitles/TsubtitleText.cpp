@@ -764,26 +764,29 @@ int TsubtitleFormat::Tssa::parse_parentheses(TparenthesesContents &contents, ffs
     return second_paren + 1;
 }
 
-int TsubtitleFormat::Tssa::TstoreParams::writeProps(const TparenthesesContents &contents, TSubtitleProps &props)
+int TsubtitleFormat::Tssa::TstoreParams::writeProps(const TparenthesesContents &contents, TSubtitleProps *props)
 {
     int count = 0;
     iterator store_i = begin();
     TparenthesesContents::const_iterator contents_i = contents.begin();
     for ( ; store_i != end() ; store_i++){
         if (store_i->offset) {
+            int64_t val;
             if ( contents_i != contents.end()
               && contents_i->ok) {
                 if (contents_i->intval < store_i->min) {
-                    memcpy(&(props.*store_i->offset) ,&store_i->min, store_i->size);
+                    val = store_i->min;
                 } else if (contents_i->intval > store_i->max) {
-                    memcpy(&(props.*store_i->offset), &store_i->max, store_i->size);
+                    val = store_i->max;
                 } else {
-                    memcpy(&(props.*store_i->offset), &contents_i->intval, store_i->size);
+                    val = contents_i->intval;
                     count++;
                 }
             } else {
-                memcpy(&(props.*store_i->offset), &store_i->default_value, store_i->size);
+                val = store_i->default_value;
             }
+            void *dst = (uint8_t *)props + store_i->offset;
+            memcpy(dst, &val, store_i->size);
         }
         if (contents_i != contents.end())
             contents_i++;
@@ -833,41 +836,54 @@ void TsubtitleFormat::Tssa::pos(ffstring &arg)
 {
     // (x1,y1) is expected.
     TstoreParams store;
-    store.push_back(TstoreParam((intx_t TSubtitleProps::*)&TSubtitleProps::posx, 0,INT_MAX,defprops.posx,sizeof(props.posx)));
-    store.push_back(TstoreParam((intx_t TSubtitleProps::*)&TSubtitleProps::posy, 0,INT_MAX,defprops.posy,sizeof(props.posy)));
+    store.push_back(TstoreParam(offsetof(TSubtitleProps, posx), 0,INT_MAX,defprops.posx,sizeof(props.posx)));
+    store.push_back(TstoreParam(offsetof(TSubtitleProps, posy), 0,INT_MAX,defprops.posy,sizeof(props.posy)));
 
     TparenthesesContents contents;
     parse_parentheses(contents,arg);
-    if (store.writeProps(contents,props) == 2)
+    if (store.writeProps(contents, &props) == 2)
         props.isPos=true;
+}
+
+void TsubtitleFormat::Tssa::org(ffstring &arg)
+{
+    // (x1,y1) is expected.
+    TstoreParams store;
+    store.push_back(TstoreParam(offsetof(TSubtitleProps, org.x), 0,INT_MAX,defprops.org.x,sizeof(props.org.x)));
+    store.push_back(TstoreParam(offsetof(TSubtitleProps, org.y), 0,INT_MAX,defprops.org.x,sizeof(props.org.y)));
+
+    TparenthesesContents contents;
+    parse_parentheses(contents,arg);
+    if (store.writeProps(contents, &props) == 2)
+        props.isOrg=true;
 }
 
 void TsubtitleFormat::Tssa::move(ffstring &arg)
 {
      // (x1,y1,x2,y2,[t1[,t2]]) is expected.
      TstoreParams store;
-     store.push_back(TstoreParam((intx_t TSubtitleProps::*)&TSubtitleProps::posx, 0,INT_MAX, defprops.posx,  sizeof(props.posx)));
-     store.push_back(TstoreParam((intx_t TSubtitleProps::*)&TSubtitleProps::posy, 0,INT_MAX, defprops.posy,  sizeof(props.posy)));
-     store.push_back(TstoreParam((intx_t TSubtitleProps::*)&TSubtitleProps::posx2,0,INT_MAX, defprops.posx2, sizeof(props.posx2)));
-     store.push_back(TstoreParam((intx_t TSubtitleProps::*)&TSubtitleProps::posy2,0,INT_MAX, defprops.posy2, sizeof(props.posy2)));
-     store.push_back(TstoreParam((intx_t TSubtitleProps::*)&TSubtitleProps::t1,   0,UINT_MAX,0,              sizeof(props.t1)));
-     store.push_back(TstoreParam((intx_t TSubtitleProps::*)&TSubtitleProps::t2,   0,UINT_MAX,0,              sizeof(props.t2)));
+     store.push_back(TstoreParam(offsetof(TSubtitleProps, posx), 0,INT_MAX, defprops.posx,  sizeof(props.posx)));
+     store.push_back(TstoreParam(offsetof(TSubtitleProps, posy), 0,INT_MAX, defprops.posy,  sizeof(props.posy)));
+     store.push_back(TstoreParam(offsetof(TSubtitleProps, posx2),0,INT_MAX, defprops.posx2, sizeof(props.posx2)));
+     store.push_back(TstoreParam(offsetof(TSubtitleProps, posy2),0,INT_MAX, defprops.posy2, sizeof(props.posy2)));
+     store.push_back(TstoreParam(offsetof(TSubtitleProps, t1),   0,UINT_MAX,0,              sizeof(props.t1)));
+     store.push_back(TstoreParam(offsetof(TSubtitleProps, t2),   0,UINT_MAX,0,              sizeof(props.t2)));
 
     TparenthesesContents contents;
     parse_parentheses(contents,arg);
-    if (store.writeProps(contents,props) >= 4)
+    if (store.writeProps(contents, &props) >= 4)
         props.isMove=true;
 }
 
 void TsubtitleFormat::Tssa::fad(ffstring &arg)
 {
     TstoreParams store;
-    store.push_back(TstoreParam((intx_t TSubtitleProps::*)&TSubtitleProps::fadeT3, 0,LLONG_MAX/10000,defprops.fadeT3,sizeof(props.fadeT3)));
-    store.push_back(TstoreParam((intx_t TSubtitleProps::*)&TSubtitleProps::fadeT4, 0,LLONG_MAX/10000,defprops.fadeT4,sizeof(props.fadeT4)));
+    store.push_back(TstoreParam(offsetof(TSubtitleProps, fadeT3), 0,LLONG_MAX/10000,defprops.fadeT3,sizeof(props.fadeT3)));
+    store.push_back(TstoreParam(offsetof(TSubtitleProps, fadeT4), 0,LLONG_MAX/10000,defprops.fadeT4,sizeof(props.fadeT4)));
 
     TparenthesesContents contents;
     parse_parentheses(contents,arg);
-    if (store.writeProps(contents,props) == 2) {
+    if (store.writeProps(contents, &props) == 2) {
         props.isFad=true;
         props.fadeA1=0;
         props.fadeA2=255;
@@ -905,17 +921,17 @@ void TsubtitleFormat::Tssa::fade(ffstring &arg)
 {
     // \fade(<a1>, <a2>, <a3>, <t1>, <t2>, <t3>, <t4>)
     TstoreParams store;
-    store.push_back(TstoreParam((intx_t TSubtitleProps::*)&TSubtitleProps::fadeA1, 0, 255,             0,    sizeof(props.fadeA1)));
-    store.push_back(TstoreParam((intx_t TSubtitleProps::*)&TSubtitleProps::fadeA2, 0, 255,             255,  sizeof(props.fadeA2)));
-    store.push_back(TstoreParam((intx_t TSubtitleProps::*)&TSubtitleProps::fadeA3, 0, 255,             0,    sizeof(props.fadeA3)));
-    store.push_back(TstoreParam((intx_t TSubtitleProps::*)&TSubtitleProps::fadeT1, 0, LLONG_MAX/10000, 0,    sizeof(props.fadeT1)));
-    store.push_back(TstoreParam((intx_t TSubtitleProps::*)&TSubtitleProps::fadeT2, 0, LLONG_MAX/10000, 1000, sizeof(props.fadeT2)));
-    store.push_back(TstoreParam((intx_t TSubtitleProps::*)&TSubtitleProps::fadeT3, 0, INT_MAX, 2000, sizeof(props.fadeT3)));
-    store.push_back(TstoreParam((intx_t TSubtitleProps::*)&TSubtitleProps::fadeT4, 0, INT_MAX, 3000, sizeof(props.fadeT4)));
+    store.push_back(TstoreParam(offsetof(TSubtitleProps, fadeA1), 0, 255,             0,    sizeof(props.fadeA1)));
+    store.push_back(TstoreParam(offsetof(TSubtitleProps, fadeA2), 0, 255,             255,  sizeof(props.fadeA2)));
+    store.push_back(TstoreParam(offsetof(TSubtitleProps, fadeA3), 0, 255,             0,    sizeof(props.fadeA3)));
+    store.push_back(TstoreParam(offsetof(TSubtitleProps, fadeT1), 0, LLONG_MAX/10000, 0,    sizeof(props.fadeT1)));
+    store.push_back(TstoreParam(offsetof(TSubtitleProps, fadeT2), 0, LLONG_MAX/10000, 1000, sizeof(props.fadeT2)));
+    store.push_back(TstoreParam(offsetof(TSubtitleProps, fadeT3), 0, INT_MAX, 2000, sizeof(props.fadeT3)));
+    store.push_back(TstoreParam(offsetof(TSubtitleProps, fadeT4), 0, INT_MAX, 3000, sizeof(props.fadeT4)));
 
     TparenthesesContents contents;
     parse_parentheses(contents,arg);
-    store.writeProps(contents,props);
+    store.writeProps(contents, &props);
 
     props.fadeA1 = 256 - props.fadeA1;
     props.fadeA2 = 256 - props.fadeA2;
@@ -972,6 +988,7 @@ template<COLORREF TSubtitleProps::*offset> void TsubtitleFormat::Tssa::color(ffs
         props.isColor=defprops.isColor;
     }
 }
+
 template<int TSubtitleProps::*offset> void TsubtitleFormat::Tssa::alpha(ffstring &arg)
 {
     int a;
@@ -1078,6 +1095,7 @@ void TsubtitleFormat::Tssa::processTokens(const wchar_t *l,const wchar_t* &l1,co
             !processToken(l3,_L1("\\fad"),&Tssa::fad) &&
             !processToken(l3,_L1("\\pos"),&Tssa::pos) &&
             !processToken(l3,_L1("\\move"),&Tssa::move) &&
+            !processToken(l3,_L1("\\org"),&Tssa::org) &&
             !processToken(l3,_L1("\\q"),&Tssa::template intProp<&TSubtitleProps::wrapStyle,0,3>) &&
             !processToken(l3,_L1("\\r"),&Tssa::reset) &&
             !processToken(l3,_L1("\\shad"),&Tssa::template doubleProp<&TSubtitleProps::shadowDepth,0,30>) &&

@@ -36,6 +36,7 @@ void TSubtitleProps::reset(void)
  isColor=false;
  isPos=false;
  isMove=false;
+ isOrg=false;
  size=0;
  fontname[0]='\0';
  encoding=-1;

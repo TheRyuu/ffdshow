@@ -2,6 +2,7 @@
 #define _TSUBTITLEPROPS_H_
 
 #include "interfaces.h"
+#include "Crect.h"
 
 struct TfontSettings;
 struct Rational;
@@ -17,9 +18,11 @@ struct TSubtitleProps
  bool italic,underline,strikeout,blur;
  bool isColor;COLORREF color,SecondaryColour, TertiaryColour, OutlineColour, ShadowColour;
  int colorA,SecondaryColourA, TertiaryColourA, OutlineColourA, ShadowColourA;
- bool isPos;int posx,posy;
  unsigned int refResX,refResY;
- bool isMove;int posx2,posy2;
+ bool isPos,isMove,isOrg;
+ int posx,posy;
+ int posx2,posy2;
+ CPoint org;
  unsigned int t1,t2;
  int wrapStyle; // -1 = default
  int size;

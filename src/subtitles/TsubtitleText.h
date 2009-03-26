@@ -75,13 +75,6 @@ private:
    Twords &words;
   public:
 
-   union intx_t {
-       int32_t  i32;
-       uint32_t u32;
-       int64_t  i64;
-       uint64_t u64;
-   };
-
    struct TparenthesesContent {
        ffstring str;
        int64_t intval;
@@ -96,16 +89,16 @@ private:
    typedef std::vector<TparenthesesContent> TparenthesesContents;
 
    struct TstoreParam {
-       intx_t TSubtitleProps::* offset;
+       size_t offset;
        int64_t min;
        int64_t max;
        int64_t default_value;
        size_t size; // sizeof actual intx_t
-       TstoreParam(intx_t TSubtitleProps::* Ioffset, int64_t Imin, int64_t Imax, int64_t Idefault_value, size_t Isize):offset(Ioffset),min(Imin),max(Imax),default_value(Idefault_value),size(Isize) {}
+       TstoreParam(size_t Ioffset, int64_t Imin, int64_t Imax, int64_t Idefault_value, size_t Isize):offset(Ioffset),min(Imin),max(Imax),default_value(Idefault_value),size(Isize) {}
    };
    struct TstoreParams: public std::vector<TstoreParam> {
        // returns number of contents that have the value within the range (min...max) and have been written to. 
-       int writeProps(const TparenthesesContents &contents, TSubtitleProps &props);
+       int writeProps(const TparenthesesContents &contents, TSubtitleProps *props);
    };
 
    int parse_parentheses(TparenthesesContents &contents, ffstring arg);
@@ -125,6 +118,7 @@ private:
    template<int TSubtitleProps::*offset1,int TSubtitleProps::*offset2,int min,int max> bool intProp2(ffstring &arg);
    void pos(ffstring &arg);
    void move(ffstring &arg);
+   void org(ffstring &arg);
    void fad(ffstring &arg);
    void fade(ffstring &arg);
    void karaoke_kf(ffstring &arg);
