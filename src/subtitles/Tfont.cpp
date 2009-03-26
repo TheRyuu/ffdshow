@@ -420,8 +420,8 @@ void TrenderedSubtitleLines::print(
             // subtitles
             x=(prefs.xpos * prefsdx)/100 + prefs.stereoScopicParallax;
             switch (prefs.align) {
-                case ALIGN_FFDSHOW:x=x-cdx/2;if (x<0) x=0;if (x+cdx>=prefsdx) x=prefsdx-cdx;break;
                 case ALIGN_LEFT:break;
+                case ALIGN_FFDSHOW:
                 case ALIGN_CENTER:x=x-cdx/2;break;
                 case ALIGN_RIGHT:x=x-cdx;break;
             }
@@ -509,7 +509,7 @@ void TrenderedSubtitleLines::printASS(
                         // or has no vertical alignment defined
                         // then apply the vertical position setting
                         if (pkey.marginBottom == 0 && (prefs.deci->getParam2(IDFF_subSSAOverridePlacement)
-                          || (prefs.subformat & Tsubreader::SUB_FORMATMASK) == Tsubreader::SUB_SUBVIEWER))
+                          || (prefs.subformat & Tsubreader::SUB_FORMATMASK) != Tsubreader::SUB_SSA))
                             pval.y=((double)prefs.ypos*prefsdy)/100.0-pval.height - pval.topOverhang;
                         else
                             pval.y=(double)prefsdy - 1 - pkey.marginBottom - pval.height - pval.topOverhang;
@@ -518,7 +518,7 @@ void TrenderedSubtitleLines::printASS(
 
                     // If option is checked (or if subs are SUBVIEWER), correct vertical placement if text goes out of the screen
                     if ((prefs.deci->getParam2(IDFF_subSSAMaintainInside) 
-                        || (prefs.subformat & Tsubreader::SUB_FORMATMASK) == Tsubreader::SUB_SUBVIEWER) && !lineprops.isMove) {
+                        || (prefs.subformat & Tsubreader::SUB_FORMATMASK) != Tsubreader::SUB_SSA) && !lineprops.isMove) {
                         if (pval.y+pval.height>prefsdy)
                             pval.y=prefsdy-pval.height;
                         if (pval.y<0)
@@ -557,23 +557,38 @@ void TrenderedSubtitleLines::printASS(
                 case 2: // center(SSA)
                 case 6:
                 case 10:
-                default:
                     // If the text is supposed to be placed at the center of the screen 
                     // or has no horizontal alignment defined
                     // then apply the horizontal position setting
-                    if (marginL==0 && (prefs.deci->getParam2(IDFF_subSSAOverridePlacement)
-                         || (prefs.subformat & Tsubreader::SUB_FORMATMASK) == Tsubreader::SUB_SUBVIEWER))
+                    if (marginL==0 && prefs.deci->getParam2(IDFF_subSSAOverridePlacement))
                         x = ((double)prefs.xpos * prefsdx)/100.0 - (int)(cdx+marginR)/2 - leftOverhang;
                     else if (lineprops.isPos) // If position defined, then marginL is relative to left border of the screen
                         x = marginL-leftOverhang;
                     else // else marginL is relative to the center of the screen
                         x = ((int)prefsdx - marginL - marginR - (int)cdx)/2 + marginL - leftOverhang;
                     break;
+                default: // non SSA/ASS
+                    x=(prefs.xpos * prefsdx)/100;
+                    switch (prefs.align) {
+                        case ALIGN_LEFT:
+                            break;
+                        case ALIGN_FFDSHOW:
+                            x = x - cdx / 2;
+                            if (x < 0) x = 0;
+                            if (x + cdx >= prefsdx) x = prefsdx - cdx;
+                            break;
+                        case ALIGN_CENTER:
+                            x = x - cdx / 2;
+                            break;
+                        case ALIGN_RIGHT:
+                            x = x - cdx;
+                            break;
+                    }
                 }
 
-                // If option is checked (or if subs are SUBVIEWER), correct horizontal placement if text goes out of the screen
-                if ((prefs.deci->getParam2(IDFF_subSSAMaintainInside) 
-                  || (prefs.subformat & Tsubreader::SUB_FORMATMASK) == Tsubreader::SUB_SUBVIEWER) && !lineprops.isMove) {
+                // If option is checked, correct horizontal placement if text goes out of the screen
+                if ( prefs.deci->getParam2(IDFF_subSSAMaintainInside) 
+                  && !lineprops.isMove) {
                     if (x+cdx > prefsdx)
                         x = prefsdx-cdx;
                     if (x < 0)
