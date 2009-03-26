@@ -862,8 +862,8 @@ void TsubtitleFormat::Tssa::move(ffstring &arg)
 void TsubtitleFormat::Tssa::fad(ffstring &arg)
 {
     TstoreParams store;
-    store.push_back(TstoreParam((intx_t TSubtitleProps::*)&TSubtitleProps::fadeT3, 0,LLONG_MAX/10000,defprops.posx,sizeof(props.fadeT3)));
-    store.push_back(TstoreParam((intx_t TSubtitleProps::*)&TSubtitleProps::fadeT4, 0,LLONG_MAX/10000,defprops.posy,sizeof(props.fadeT4)));
+    store.push_back(TstoreParam((intx_t TSubtitleProps::*)&TSubtitleProps::fadeT3, 0,LLONG_MAX/10000,defprops.fadeT3,sizeof(props.fadeT3)));
+    store.push_back(TstoreParam((intx_t TSubtitleProps::*)&TSubtitleProps::fadeT4, 0,LLONG_MAX/10000,defprops.fadeT4,sizeof(props.fadeT4)));
 
     TparenthesesContents contents;
     parse_parentheses(contents,arg);

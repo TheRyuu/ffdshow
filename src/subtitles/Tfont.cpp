@@ -562,7 +562,7 @@ void TrenderedSubtitleLines::printASS(
                     // then apply the horizontal position setting
                     if (marginL==0 && prefs.deci->getParam2(IDFF_subSSAOverridePlacement))
                         x = ((double)prefs.xpos * prefsdx)/100.0 - (int)(cdx+marginR)/2 - leftOverhang;
-                    else if (lineprops.isPos) // If position defined, then marginL is relative to left border of the screen
+                    else if (lineprops.isPos || lineprops.isMove) // If position defined, then marginL is relative to left border of the screen
                         x = marginL-leftOverhang;
                     else // else marginL is relative to the center of the screen
                         x = ((int)prefsdx - marginL - marginR - (int)cdx)/2 + marginL - leftOverhang;
