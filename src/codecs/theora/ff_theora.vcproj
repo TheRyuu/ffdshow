@@ -50,7 +50,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions=""
 				Optimization="0"
-				AdditionalIncludeDirectories=".;..;../.."
+				AdditionalIncludeDirectories=".;..;../..;dec;enc"
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_DEBUG;_WINDOWS"
 				BasicRuntimeChecks="0"
 				RuntimeLibrary="3"
@@ -150,7 +150,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions=""
 				Optimization="0"
-				AdditionalIncludeDirectories=".;..;../.."
+				AdditionalIncludeDirectories=".;..;../..;dec;enc"
 				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_DEBUG;_WINDOWS"
 				BasicRuntimeChecks="0"
 				RuntimeLibrary="3"
@@ -253,7 +253,7 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
-				AdditionalIncludeDirectories=".;..;../.."
+				AdditionalIncludeDirectories=".;..;../..;dec;enc"
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;NDEBUG;_WINDOWS"
 				StringPooling="true"
 				ExceptionHandling="0"
@@ -360,7 +360,7 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
-				AdditionalIncludeDirectories=".;..;../.."
+				AdditionalIncludeDirectories=".;..;../..;dec;enc"
 				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;NDEBUG;_WINDOWS"
 				StringPooling="true"
 				ExceptionHandling="0"
@@ -435,51 +435,11 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
 			<File
-				RelativePath=".\blockmap.c"
-				>
-			</File>
-			<File
 				RelativePath=".\comment.c"
 				>
 			</File>
 			<File
 				RelativePath=".\cpu.c"
-				>
-			</File>
-			<File
-				RelativePath=".\dct.c"
-				>
-			</File>
-			<File
-				RelativePath=".\dct_decode.c"
-				>
-			</File>
-			<File
-				RelativePath=".\dct_encode.c"
-				>
-			</File>
-			<File
-				RelativePath=".\decode.c"
-				>
-			</File>
-			<File
-				RelativePath=".\dsp.c"
-				>
-			</File>
-			<File
-				RelativePath=".\encode.c"
-				>
-			</File>
-			<File
-				RelativePath=".\encoder_toplevel.c"
-				>
-			</File>
-			<File
-				RelativePath=".\frarray.c"
-				>
-			</File>
-			<File
-				RelativePath=".\frinit.c"
 				>
 			</File>
 			<File
@@ -491,35 +451,75 @@
 				>
 			</File>
 			<File
-				RelativePath=".\mcomp.c"
-				>
-			</File>
-			<File
 				RelativePath=".\misc_common.c"
 				>
 			</File>
 			<File
-				RelativePath=".\pb.c"
-				>
-			</File>
-			<File
-				RelativePath=".\pp.c"
-				>
-			</File>
-			<File
-				RelativePath=".\quant.c"
-				>
-			</File>
-			<File
-				RelativePath=".\reconstruct.c"
-				>
-			</File>
-			<File
-				RelativePath=".\scan.c"
-				>
-			</File>
-			<File
 				RelativePath=".\toplevel.c"
+				>
+			</File>
+			<File
+				RelativePath=".\dec\decode.c"
+				>
+			</File>
+			<File
+				RelativePath=".\dec\quant.c"
+				>
+			</File>
+			<File
+				RelativePath=".\enc\blockmap.c"
+				>
+			</File>
+			<File
+				RelativePath=".\enc\dct.c"
+				>
+			</File>
+			<File
+				RelativePath=".\enc\dct_decode.c"
+				>
+			</File>
+			<File
+				RelativePath=".\enc\dct_encode.c"
+				>
+			</File>
+			<File
+				RelativePath=".\enc\dsp.c"
+				>
+			</File>
+			<File
+				RelativePath=".\enc\encode.c"
+				>
+			</File>
+			<File
+				RelativePath=".\enc\encoder_toplevel.c"
+				>
+			</File>
+			<File
+				RelativePath=".\enc\frarray.c"
+				>
+			</File>
+			<File
+				RelativePath=".\enc\frinit.c"
+				>
+			</File>
+			<File
+				RelativePath=".\enc\mcomp.c"
+				>
+			</File>
+			<File
+				RelativePath=".\enc\pb.c"
+				>
+			</File>
+			<File
+				RelativePath=".\enc\pp.c"
+				>
+			</File>
+			<File
+				RelativePath=".\enc\reconstruct.c"
+				>
+			</File>
+			<File
+				RelativePath=".\enc\scan.c"
 				>
 			</File>
 		</Filter>
@@ -528,23 +528,7 @@
 			Filter="h;hpp;hxx;hm;inl"
 			>
 			<File
-				RelativePath=".\block_inline.h"
-				>
-			</File>
-			<File
 				RelativePath=".\cpu.h"
-				>
-			</File>
-			<File
-				RelativePath=".\dsp.h"
-				>
-			</File>
-			<File
-				RelativePath=".\encoder_internal.h"
-				>
-			</File>
-			<File
-				RelativePath=".\encoder_lookup.h"
 				>
 			</File>
 			<File
@@ -552,23 +536,39 @@
 				>
 			</File>
 			<File
-				RelativePath=".\hufftables.h"
-				>
-			</File>
-			<File
-				RelativePath=".\pp.h"
-				>
-			</File>
-			<File
-				RelativePath=".\quant_lookup.h"
-				>
-			</File>
-			<File
 				RelativePath=".\toplevel.h"
 				>
 			</File>
 			<File
-				RelativePath=".\toplevel_lookup.h"
+				RelativePath=".\enc\block_inline.h"
+				>
+			</File>
+			<File
+				RelativePath=".\enc\dsp.h"
+				>
+			</File>
+			<File
+				RelativePath=".\enc\codec_internal.h"
+				>
+			</File>
+			<File
+				RelativePath=".\enc\encoder_lookup.h"
+				>
+			</File>
+			<File
+				RelativePath=".\enc\hufftables.h"
+				>
+			</File>
+			<File
+				RelativePath=".\enc\pp.h"
+				>
+			</File>
+			<File
+				RelativePath=".\enc\quant_lookup.h"
+				>
+			</File>
+			<File
+				RelativePath=".\enc\toplevel_lookup.h"
 				>
 			</File>
 		</Filter>
