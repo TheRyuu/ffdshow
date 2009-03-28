@@ -136,7 +136,30 @@ void TfontSettings::reg_op(TregOp &t)
 
 TfontSettings::TfontSettings(TintStrColl *Icoll):Toptions(Icoll)
 {
- memset(name,0,sizeof(name));
+   getDefaultStr(IDFF_fontName, name, countof(name));
+   charset = DEFAULT_CHARSET;
+   sizeP = 17;
+   weight = FW_NORMAL;
+   color = RGB(110,220,0);
+   outlineColor = RGB(0,0,0);
+   shadowColor = RGB(0,0,0);
+   outlineWidth = 1;
+   opaqueBox = 0;
+   spacing = 0;
+   xscale = 100;
+   yscale = 100;
+   aspectAuto = 1;
+   bodyAlpha = 256;
+   outlineAlpha = 256;
+   shadowAlpha = 128;
+   shadowSize = 8;
+   shadowMode = 3;
+   blur = 0;
+   autosize=0;
+   sizeA=50;
+   split=0;
+   autosizeVideoWindow=0;
+   gdi_font_scale = 4;
 }
 
 void TfontSettings::getDefaultStr(int id,char_t *buf,size_t buflen)
@@ -146,14 +169,9 @@ void TfontSettings::getDefaultStr(int id,char_t *buf,size_t buflen)
    LCID lcid = GetUserDefaultLCID();
    if (lcid == 1041 /* Japanese */)
     { // Arial does not have Japanese characters.
-#ifdef UNICODE
-     // I just want to avoid typing kanji directly for encoding reason. GCC does not compile UNICODE source file.
+     // I just want to avoid typing kanji directly for encoding reason.
      wchar_t msgothic[]={0xff2d, 0xff33, 0x0020, 0xff30, 0x30b4, 0x30b7, 0x30c3, 0x30af, 0x0000}; // MS P Gothic
      strcpy(buf,msgothic);
-#else
-     unsigned char msgothic[]={0x82, 0x6c, 0x82, 0x72, 0x20, 0x82, 0x6f, 0x83, 0x53, 0x83, 0x56, 0x83, 0x62, 0x83, 0x4e, 0x00}; // MS P Gothic
-     strcpy(buf,(const char*)msgothic);
-#endif
     }
    else
     strcpy(buf,_l("Arial"));
