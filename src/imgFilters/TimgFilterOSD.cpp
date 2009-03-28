@@ -479,6 +479,7 @@ HRESULT TimgFilterOSD::process(TfilterQueue::iterator it,TffPict &pict,const Tfi
    for (std::vector<TshortOsdTemp>::const_iterator o=shortOSDtemp.begin();o!=shortOSDtemp.end();o++)
     shortOSD.push_back(new TosdLine(deci,deciD,deciV,parent->config,_l("shortosd")+o->first,o->second,NULL));
    shortOSDtemp.clear();
+   shortOSD.fontInit(oldFont);
    cs.Unlock();
   }
 
