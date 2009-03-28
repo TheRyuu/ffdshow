@@ -27,7 +27,6 @@
 
 #include "stdafx.h"
 #include "cc_decoder.h"
-#include "ffdebug.h"
 #include "IffdshowDecVideo.h"
 
 wchar_t TccDecoder::chartbl[128];

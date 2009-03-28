@@ -23,7 +23,6 @@
 #include "IffdshowDecVideo.h"
 #include "ffdshow_constants.h"
 #include "reg.h"
-#include "ffdebug.h"
 #include "Tconfig.h"
 
 //============================ TdirectInput ============================

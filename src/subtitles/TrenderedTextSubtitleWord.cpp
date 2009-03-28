@@ -22,7 +22,6 @@
 #include "TrenderedTextSubtitleWord.h"
 #include "TfontSettings.h"
 #include "simd.h"
-#include "ffdebug.h"
 #pragma warning(disable:4244)
 
 // custom copy constructor for karaoke

@@ -23,7 +23,6 @@
 #include "IffdshowEnc.h"
 #include "TcodecSettings.h"
 #include "simd.h"
-#include "ffdebug.h"
 #include "dsutil.h"
 #include "theora/cpu.h"
 #include "ffdshow_mediaguids.h"

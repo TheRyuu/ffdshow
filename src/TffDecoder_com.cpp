@@ -24,7 +24,6 @@
 #include "TvideoCodec.h"
 #include "TkeyboardDirect.h"
 #include "Ttranslate.h"
-#include "ffdebug.h"
 #include "Tlibmplayer.h"
 #include "TimgFilters.h"
 #include "TfontManager.h"

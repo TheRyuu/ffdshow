@@ -24,7 +24,6 @@
 #include "libmpeg2/include/attributes.h"
 #include "libmpeg2/libmpeg2/mpeg2_internal.h"
 #include "libavcodec/avcodec.h"
-#include "ffdebug.h"
 #include "dsutil.h"
 #include "cc_decoder.h"
 

@@ -27,7 +27,6 @@
 #include "ffdshow_mediaguids.h"
 #include "xiph/vorbis/vorbisformat.h"
 #include "xiph/ogm/ogmstreams.h"
-#include "ffdebug.h"
 #include "dsutil.h"
 
 const char_t* TaudioCodecTremor::dllname=_l("ff_tremor.dll");

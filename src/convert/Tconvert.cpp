@@ -27,7 +27,6 @@
 #include "convert_yuy2.h"
 #include "Tswscale.h"
 #include "image.h"
-#include "ffdebug.h"
 #include "TffPict.h"
 #include "Tlibmplayer.h"
 #include "libavcodec/bitstream.h"

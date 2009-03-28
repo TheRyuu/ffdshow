@@ -21,7 +21,6 @@
 
 #include "stdafx.h"
 #include "TffdshowDecAudio.h"
-#include "ffdebug.h"
 #include "ffdshow_mediaguids.h"
 #include "TaudioCodec.h"
 #include "TdialogSettings.h"

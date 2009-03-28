@@ -21,7 +21,6 @@
 #include "IffdshowBase.h"
 #include "IffdshowDecVideo.h"
 #include "Tconvert.h"
-#include "ffdebug.h"
 
 bool debugPrint=false;
 int maxBufferAhead=0;

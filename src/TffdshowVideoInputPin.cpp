@@ -18,7 +18,6 @@
 
 #include "stdafx.h"
 #include "TffdshowVideoInputPin.h"
-#include "ffdebug.h"
 #include "dsutil.h"
 #include "TvideoCodec.h"
 #include "theora/theora.h"

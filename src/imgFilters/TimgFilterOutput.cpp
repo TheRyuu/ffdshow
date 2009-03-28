@@ -24,7 +24,6 @@
 #include "IffdshowBase.h"
 #include "Tlibavcodec.h"
 #include "IffdshowDecVideo.h"
-#include "ffdebug.h"
 
 TimgFilterOutput::TimgFilterOutput(IffdshowBase *Ideci,Tfilters *Iparent):TimgFilter(Ideci,Iparent),
  convert(NULL),

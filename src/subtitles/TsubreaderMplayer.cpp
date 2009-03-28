@@ -11,7 +11,6 @@
 #include "TsubtitlesSettings.h"
 #include "Tstream.h"
 #include "Tconfig.h"
-#include "ffdebug.h"
 
 //========================================= TsubtitleParser =========================================
 TsubtitleParser::TsubtitleParser(int Iformat,double Ifps,const TsubtitlesSettings *Icfg,const Tconfig *Iffcfg,Tsubreader *Isubreader):

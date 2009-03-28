@@ -19,7 +19,6 @@
 #include "stdafx.h"
 #include "TinputPin.h"
 #include "Tcodec.h"
-#include "ffdebug.h"
 #include "dsutil.h"
 
 TinputPin::TinputPin(const char_t* objectName,CTransformFilter *filter,HRESULT* phr,LPWSTR pinname):

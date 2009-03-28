@@ -23,7 +23,6 @@
 #include "TglobalSettings.h"
 #include "ffmpeg/libavcodec/avcodec.h"
 #include "TaudioCodecLibavcodec.h"
-#include "ffdebug.h"
 
 TffdshowDecAudioInputPin::TffdshowDecAudioInputPin(const char_t* pObjectName, TffdshowDecAudio* pFilter, HRESULT* phr, LPWSTR pName, int Inumber)
  :TinputPin(pObjectName,pFilter,phr,pName),

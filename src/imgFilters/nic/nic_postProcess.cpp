@@ -21,7 +21,6 @@
 #endif
 
 #ifdef SELFCHECK
-#include "ffdebug.h"
 #define PP_SELF_CHECK
 #define SELF_CHECK
 #define SIGN(a)    ( (a)<0 ? -1 : 1 )

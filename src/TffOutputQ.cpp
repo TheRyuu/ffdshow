@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include <streams.h>
-#include "ffdebug.h"
 #include "TffOutputQ.h"
 #include "TffdshowDecVideoOutputPin.h"
 

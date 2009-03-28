@@ -18,7 +18,6 @@
 
 #include "stdafx.h"
 #include "TtextInputPin.h"
-#include "ffdebug.h"
 #include "TffDecoderVideo.h"
 #include "ffdshow_constants.h"
 #include "ffdshow_mediaguids.h"

@@ -20,7 +20,6 @@
 #include "TimgFilterCrop.h"
 #include "IffdshowBase.h"
 #include "IffdshowDecVideo.h"
-#include "ffdebug.h"
 
 int TimgFilterCrop::autoCropTop = 0,
     TimgFilterCrop::autoCropBottom = 0,

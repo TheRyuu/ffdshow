@@ -24,7 +24,6 @@
 #include "IffdshowBase.h"
 #include "simd.h"
 #include "TsubreaderMplayer.h"
-#include "ffdebug.h"
 #pragma warning(disable:4244)
 
 //============================ TrenderedSubtitleWordBase =============================

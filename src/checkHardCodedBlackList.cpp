@@ -4,7 +4,6 @@
 #include "TglobalSettings.h"
 #include "checkHardCodedBlackList.h"
 #include "TcompatibilityManager.h"
-#include "ffdebug.h"
 
 // Explorer.exe loads ffdshow.ax and never releases.
 // That causes annoying error on re-install that one have to log off.

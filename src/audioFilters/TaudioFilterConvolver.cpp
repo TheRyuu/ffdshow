@@ -20,7 +20,6 @@
 #include "stdafx.h"
 #include "TaudioFilterConvolver.h"
 #include "fftsg.h"
-#include "ffdebug.h"
 #include "resample/resample2.h"
 
 TaudioFilterConvolver::TaudioFilterConvolver(IffdshowBase *Ideci,Tfilters *Iparent):TaudioFilter(Ideci,Iparent)

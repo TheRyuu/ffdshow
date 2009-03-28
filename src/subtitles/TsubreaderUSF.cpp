@@ -22,7 +22,6 @@
 #include "Tdll.h"
 #include "Tconvert.h"
 #include "IffdshowBase.h"
-#include "ffdebug.h"
 
 const char_t* TsubreaderUSF2::dllname=_l("C:\\Program Files\\cvsnt\\utils\\pixifier\\release\\pixiDLL.dll");
 

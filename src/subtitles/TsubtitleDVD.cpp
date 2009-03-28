@@ -20,7 +20,6 @@
 #include "stdafx.h"
 #include "TsubtitleDVD.h"
 #include "TsubtitlesTextpinDVD.h"
-#include "ffdebug.h"
 #include "TspuImage.h"
 #include "Tstream.h"
 #include "Tconfig.h"

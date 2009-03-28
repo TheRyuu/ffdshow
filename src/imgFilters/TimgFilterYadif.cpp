@@ -25,7 +25,6 @@
 #include "yadif/vf_yadif.h"
 #include "IffdshowBase.h"
 #include "Tconfig.h"
-#include "ffdebug.h"
 
 static inline void * memcpy_pic(unsigned char * dst, const unsigned char * src, int bytesPerLine, int height, stride_t dstStride, stride_t srcStride)
 {

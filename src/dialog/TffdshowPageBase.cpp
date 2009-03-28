@@ -22,7 +22,6 @@
 #include "IffdshowBase.h"
 #include "TconfPageBase.h"
 #include "Ttranslate.h"
-#include "ffdebug.h"
 #include "Tconfig.h"
 
 //===================================== ThtiPage ===================================

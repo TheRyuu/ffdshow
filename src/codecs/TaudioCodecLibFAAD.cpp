@@ -21,7 +21,6 @@
 #include "stdafx.h"
 #include "TaudioCodecLibFAAD.h"
 #include "Tdll.h"
-#include "ffdebug.h"
 #include "IffdshowBase.h"
 #include "IffdshowDec.h"
 #include "IffdshowDecAudio.h"

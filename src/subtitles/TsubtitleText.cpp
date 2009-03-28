@@ -29,7 +29,6 @@
 #include "TwordWrap.h"
 #include "IffdshowBase.h"
 #include "IffdshowDecVideo.h"
-#include "ffdebug.h"
 #include "TsubreaderMplayer.h"
 #include "TtoGdiFont.h"
 

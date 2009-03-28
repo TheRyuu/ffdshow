@@ -39,7 +39,6 @@
 #include "dsutil.h"
 #include "cc_decoder.h"
 #include "TffdshowVideoInputPin.h"
-#include "ffdebug.h"
 
 TvideoCodecLibavcodec::TvideoCodecLibavcodec(IffdshowBase *Ideci,IdecVideoSink *IsinkD):
  Tcodec(Ideci),TcodecDec(Ideci,IsinkD),

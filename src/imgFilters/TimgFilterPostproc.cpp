@@ -26,7 +26,6 @@
 #include "Tconfig.h"
 #include "nic/nic_postProcess.h"
 #include "libavcodec/avcodec.h"
-#include "ffdebug.h"
 
 //============================== TimgFilterPostprocBase =============================
 const unsigned int TimgFilterPostprocBase::quantsDx=128*2;

@@ -21,7 +21,6 @@
 
 #include "stdafx.h"
 #include "inifiles.h"
-#include "ffdebug.h"
 #include "Tstream.h"
 
 Tinifile::Tinifile(const char_t *Iflnm,int Iencoding):CurProfile(NULL)

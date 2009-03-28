@@ -37,7 +37,6 @@
 #include "TsampleFormat.h"
 #include "IffdshowDecAudio.h"
 #include "Teval.h"
-#include "ffdebug.h"
 
 //========================= TaudioAutoPresetProps =========================
 TaudioAutoPresetProps::TaudioAutoPresetProps(IffdshowBase *Ideci):

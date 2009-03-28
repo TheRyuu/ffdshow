@@ -1,7 +1,6 @@
 #ifndef _TTIMER_H_
 #define _TTIMER_H_
 
-#include "ffdebug.h"
 
 class Ttimer
 {

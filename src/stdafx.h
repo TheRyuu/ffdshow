@@ -95,6 +95,7 @@
 #include "array_allocator.h"
 #include "ffglobals.h"
 #include "comptr.h"
+#include "ffdebug.h"
 
 #if defined(UNICODE) && defined(__GNUC__)
  #undef TEXT

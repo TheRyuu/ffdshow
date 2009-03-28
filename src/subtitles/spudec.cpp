@@ -22,7 +22,6 @@
 #include "IffdshowBase.h"
 #include "ffdshow_constants.h"
 #include "Tconfig.h"
-#include "ffdebug.h"
 
 /* Valid values for spu_aamode:
    0: none (fastest, most ugly)

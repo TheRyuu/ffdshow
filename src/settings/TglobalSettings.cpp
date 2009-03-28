@@ -26,7 +26,6 @@
 #include "TsampleFormat.h"
 #include "ffImgfmt.h"
 #include "TpresetSettings.h"
-#include "ffdebug.h"
 #include "Tstream.h"
 #include "IffdshowDec.h"
 #include "TcompatibilityManager.h"

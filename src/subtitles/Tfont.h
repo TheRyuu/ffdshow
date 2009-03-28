@@ -7,7 +7,6 @@
 #include "rational.h"
 #include "TfontSettings.h"
 #include "CRect.h"
-#include "ffdebug.h"
 
 #define size_of_rgb32 4
 

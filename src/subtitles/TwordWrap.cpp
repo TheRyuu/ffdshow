@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "TwordWrap.h"
-#include "ffdebug.h"
 #include <mbstring.h>
 
 TwordWrap::TwordWrap(int Imode, const wchar_t *Istr, int *Ipwidths, int IsplitdxMax, bool IassCompatibleMode):

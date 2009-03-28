@@ -21,7 +21,6 @@
 #include "stdafx.h"
 #include "TimgFilterLevels.h"
 #include "IffdshowBase.h"
-#include "ffdebug.h"
 
 TimgFilterLevels::TimgFilterLevels(IffdshowBase *Ideci,Tfilters *Iparent):TimgFilter(Ideci,Iparent)
 {

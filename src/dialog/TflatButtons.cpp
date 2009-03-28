@@ -18,7 +18,6 @@
 
 #include "stdafx.h"
 #include "TflatButtons.h"
-#include "ffdebug.h"
 
 VOID CALLBACK TflatButton::trackMouseTimerProc(HWND hwnd,UINT uMsg,UINT idEvent,DWORD dwTime)
 {

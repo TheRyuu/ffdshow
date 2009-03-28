@@ -28,7 +28,6 @@
 #include "TsubtitleText.h"
 #include "Tsubreader.h"
 #include "TsubtitlesTextpin.h"
-#include "ffdebug.h"
 
 TimgFilterSubtitles::TsubPrintPrefs::TsubPrintPrefs(
         unsigned int Idx[4],

@@ -29,7 +29,6 @@
 #include "TffDecoderVideo.h"
 #include "dsutil.h"
 #include "strmif.h"
-#include "ffdebug.h"
 
 Tremote::Tremote(TintStrColl *Icoll,IffdshowBase *Ideci):deci(Ideci),Toptions(Icoll)
 {

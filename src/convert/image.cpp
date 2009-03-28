@@ -33,7 +33,6 @@
 #include "ffImgfmt.h"
 #include "Tconfig.h"
 #include "simd.h"
-#include "ffdebug.h"
 #include "TrgbPrimaries.h"
 
 typedef void (packedFunc)(uint8_t * x_ptr,

@@ -31,7 +31,6 @@
 #include "ToutputVideoSettings.h"
 #include "TresizeAspectSettings.h"
 #include "TdialogSettings.h"
-#include "ffdebug.h"
 #include "ffdshow_mediaguids.h"
 #include "ffcodecs.h"
 

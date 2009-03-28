@@ -29,8 +29,7 @@
 #include "reg.h"
 #include "Tstream.h"
 #include "compiler.h"
-//#include "ffdebug.h"
-
+//
 const char_t *FFDSHOW_VER=_l(__DATE__) _l(" ") _l(__TIME__) _l(" (") _l(COMPILER) _l(COMPILER_X64) _l(", ") _l(UNICODE_BUILD) _l(COMPILER_INFO) _l(")");
 #undef COMPILER
 #undef COMPILER_SSE

@@ -19,7 +19,6 @@
 #include "stdafx.h"
 #include "Tlibavcodec.h"
 #include "Tdll.h"
-#include "ffdebug.h"
 #include "ffmpeg/libavcodec/avcodec.h"
 #include "TvideoCodecLibavcodec.h"
 

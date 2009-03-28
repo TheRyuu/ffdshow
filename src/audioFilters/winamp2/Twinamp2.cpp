@@ -21,7 +21,6 @@
 #include "Tdll.h"
 #include "DSP.H"
 #include "Twinamp2settings.h"
-#include "ffdebug.h"
 
 //============================== Twinamp2 ====================================
 Twinamp2::Twinamp2(const char_t *Iwinampdir)

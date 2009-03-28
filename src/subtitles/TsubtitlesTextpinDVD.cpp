@@ -21,7 +21,6 @@
 #include "TsubtitlesTextpinDVD.h"
 #include "Tsubreader.h"
 #include "TsubtitleDVD.h"
-#include "ffdebug.h"
 
 TsubtitlesTextpinDVD::TsubtitlesTextpinDVD(int Itype,IffdshowBase *Ideci):TsubtitlesTextpin(Itype,Ideci)
 {

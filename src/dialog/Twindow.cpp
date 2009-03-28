@@ -23,7 +23,6 @@
 #include "IffdshowBase.h"
 #include "ffdshow_constants.h"
 #include "Crect.h"
-#include "ffdebug.h"
 #include "IffdshowParamsEnum.h"
 #include "TdialogSettings.h"
 #include "reg.h"

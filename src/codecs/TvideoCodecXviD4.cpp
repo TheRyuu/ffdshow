@@ -24,7 +24,6 @@
 #include "TcodecSettings.h"
 #include "IffdshowBase.h"
 #include "dsutil.h"
-#include "ffdebug.h"
 
 const TmeXviDpreset meXviDpresets[]=
 {

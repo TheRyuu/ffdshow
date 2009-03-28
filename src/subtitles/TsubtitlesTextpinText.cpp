@@ -19,7 +19,6 @@
 #include "stdafx.h"
 #include "TsubtitlesTextpinText.h"
 #include "TsubreaderMplayer.h"
-#include "ffdebug.h"
 #include "IffdshowBase.h"
 #include "Tstream.h"
 #include "IffdshowDecVideo.h"

@@ -31,7 +31,6 @@
 #include "Ttranslate.h"
 #include "Tlibmplayer.h"
 #include "Tlibavcodec.h"
-#include "ffdebug.h"
 #include "dsutil.h"
 #include "IffdshowParamsEnum.h"
 #include "TpageSite.h"

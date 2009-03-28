@@ -18,7 +18,6 @@
 
 #include "stdafx.h"
 #include "Tsubreader.h"
-#include "ffdebug.h"
 #include "TsubtitlesSettings.h"
 #include "Tconfig.h"
 #include "TsubreaderUSF.h"

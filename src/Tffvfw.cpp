@@ -29,7 +29,6 @@
 #include "TglobalSettings.h"
 #include "dsutil.h"
 #include "autoptr.h"
-#include "ffdebug.h"
 #include "TffDecoderVideo.h"
 
 class TimgFiltersVFW :public TimgFilters

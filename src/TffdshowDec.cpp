@@ -24,7 +24,6 @@
 #include "TpresetSettings.h"
 #include "Ttranslate.h"
 #include "TkeyboardDirect.h"
-#include "ffdebug.h"
 #include "ffdshowRemoteAPIimpl.h"
 #include "Tfilters.h"
 

@@ -5,7 +5,6 @@
  * to ffdshow imported from mplayer
  */
 #include "stdafx.h"
-#include "ffdebug.h"
 #include "Tstream.h"
 #include "vobsub.h"
 #include "spudec.h"

@@ -19,7 +19,6 @@
 #include "stdafx.h"
 #include "TaudioCodecRealaac.h"
 #include "Tdll.h"
-#include "ffdebug.h"
 #include "IffdshowDecAudio.h"
 #include "dsutil.h"
 #include "libavcodec/bitstream.h"

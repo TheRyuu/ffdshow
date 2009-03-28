@@ -1,7 +1,6 @@
 #ifndef _TLIBITDATA_H_
 #define _TLIBITDATA_H_
 
-#include "ffdebug.h"
 
 #define swab32(x)\
 	((((uint8_t*)&x)[0] << 24) | (((uint8_t*)&x)[1] << 16) |  \

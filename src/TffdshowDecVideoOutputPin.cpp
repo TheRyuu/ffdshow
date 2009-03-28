@@ -16,7 +16,6 @@
  */
 
 #include "stdafx.h"
-#include "ffdebug.h"
 #include "TffdshowDecVideoOutputPin.h"
 #include "TpresetSettingsVideo.h"
 #include "Tlibmplayer.h"

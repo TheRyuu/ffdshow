@@ -5,7 +5,6 @@
 #include "IffdshowDecAudio.h"
 #include "dsutil.h"
 #include "ffdshow_mediaguids.h"
-#include "ffdebug.h"
 #include "Tpresets.h"
 
 TaudioParser::TaudioParser(IffdshowBase *Ideci,IdecAudioSink *Isink):

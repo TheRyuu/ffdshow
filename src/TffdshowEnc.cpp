@@ -21,7 +21,6 @@
 #include "Tconfig.h"
 #include "TffdshowVideoInputPin.h"
 #include "ffcodecs.h"
-#include "ffdebug.h"
 #include "TglobalSettings.h"
 #include "lzo/minilzo.h"
 #include "TffProc.h"
