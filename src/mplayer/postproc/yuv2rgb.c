@@ -572,7 +572,7 @@ int yuv2rgb_c_init_tables (SwsContext *c, const int inv_table[7], int fullRange,
 
     switch (bpp) {
     case 32:
-        table_start= table_32 = malloc ((197 + 2*682 + 256 + 132) * sizeof (uint32_t));
+        table_start= table_32 = av_malloc ((197 + 2*682 + 256 + 132) * sizeof (uint32_t));
 
         entry_size = sizeof (uint32_t);
         table_r = table_32 + 197;
@@ -588,7 +588,7 @@ int yuv2rgb_c_init_tables (SwsContext *c, const int inv_table[7], int fullRange,
         break;
 
     case 24:
-       	table_start= table_8 = malloc ((256 + 2*232) * sizeof (uint8_t));
+       	table_start= table_8 = av_malloc ((256 + 2*232) * sizeof (uint8_t));
 
         entry_size = sizeof (uint8_t);
         table_r = table_g = table_b = table_8 + 232;
@@ -599,7 +599,7 @@ int yuv2rgb_c_init_tables (SwsContext *c, const int inv_table[7], int fullRange,
 
     case 15:
     case 16:
-	       table_start= table_16 = malloc ((197 + 2*682 + 256 + 132) * sizeof (uint16_t));
+	       table_start= table_16 = av_malloc ((197 + 2*682 + 256 + 132) * sizeof (uint16_t));
 
         entry_size = sizeof (uint16_t);
         table_r = table_16 + 197;
@@ -630,7 +630,7 @@ int yuv2rgb_c_init_tables (SwsContext *c, const int inv_table[7], int fullRange,
         break;
 
     case 8:
-	table_start= table_332 = malloc ((197 + 2*682 + 256 + 132) * sizeof (uint8_t));
+	table_start= table_332 = av_malloc ((197 + 2*682 + 256 + 132) * sizeof (uint8_t));
 
 	entry_size = sizeof (uint8_t);
 	table_r = table_332 + 197;
@@ -664,7 +664,7 @@ int yuv2rgb_c_init_tables (SwsContext *c, const int inv_table[7], int fullRange,
 	break;
     case 4:
     case 4|128:
-	table_start= table_121 = malloc ((197 + 2*682 + 256 + 132) * sizeof (uint8_t));
+	table_start= table_121 = av_malloc ((197 + 2*682 + 256 + 132) * sizeof (uint8_t));
 
 	entry_size = sizeof (uint8_t);
 	table_r = table_121 + 197;
@@ -695,7 +695,7 @@ int yuv2rgb_c_init_tables (SwsContext *c, const int inv_table[7], int fullRange,
 	break;
 
     case 1:
-	table_start= table_1 = malloc (256*2 * sizeof (uint8_t));
+	table_start= table_1 = av_malloc (256*2 * sizeof (uint8_t));
 
 	entry_size = sizeof (uint8_t);
 	table_g = table_1;

@@ -126,8 +126,6 @@ SwsVector *sws_cloneVec(SwsVector *a);
 
 void sws_printVec(SwsVector *a);
 void sws_freeVec(SwsVector *a);
-void *av_mallocz(unsigned int size);
-void av_freep(void *arg);
 
 SwsFilter *sws_getDefaultFilter(float lumaGBlur, float chromaGBlur,
 				float lumaSarpen, float chromaSharpen,
