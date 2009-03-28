@@ -834,19 +834,22 @@ Tfont::Tfont(IffdshowBase *Ideci):
 {
     init();
 }
+
 Tfont::~Tfont()
 {
     done();
 }
+
 void Tfont::init()
 {
     done();
     hdc=CreateCompatibleDC(NULL);
     if (!hdc) return;
     SetBkMode(hdc,TRANSPARENT); 
-    SetTextColor(hdc,0xffffff); 
+    SetTextColor(hdc,0xffffff);
     SetMapMode(hdc,MM_TEXT);
 }
+
 void Tfont::done()
 {
     if (hdc) {

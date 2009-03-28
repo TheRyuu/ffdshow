@@ -287,7 +287,7 @@ TimgFilterOSD::Tosds::~Tosds()
  freeOsds();
 }
 
-void TimgFilterOSD::Tosds::init(bool allowSave,IffdshowBase *deci,IffdshowDec *deciD,IffdshowDecVideo *deciV,const Tconfig *config,const TfontSettingsOSD &oldFont,const TOSDsettings *cfg,int framecnt)
+void TimgFilterOSD::Tosds::init(bool allowSave,IffdshowBase *deci,IffdshowDec *deciD,IffdshowDecVideo *deciV,const Tconfig *config,const TOSDsettings *cfg,int framecnt)
 {
  if (framecnt<startupDuration || provider->isOSD())
   {
@@ -353,14 +353,18 @@ void TimgFilterOSD::Tosds::init(bool allowSave,IffdshowBase *deci,IffdshowDec *d
   }
 }
 
-void TimgFilterOSD::Tosds::fontInit(const TfontSettingsOSD &IfontSettings)
-{
- fontSettings = IfontSettings;
- for (iterator i=begin();i!=end();i++)
-  (*i)->font.init();
-}
-
-void TimgFilterOSD::Tosds::print(IffdshowBase *deci,const TffPict &pict,unsigned char *dst[4],stride_t stride2[4],unsigned int dxY,unsigned int dyY,unsigned int x,unsigned int &y,int linespace,bool fileonly)
+void TimgFilterOSD::Tosds::print(
+    IffdshowBase *deci,
+    const TffPict &pict,
+    unsigned char *dst[4],
+    stride_t stride2[4],
+    unsigned int dxY,
+    unsigned int dyY,
+    unsigned int x,
+    unsigned int &y,
+    int linespace,
+    bool fileonly,
+    const TfontSettings &fontSettings)
 {
  for (iterator o=begin();o!=end() && y<dyY;)
   {
@@ -416,9 +420,9 @@ TimgFilterOSD::TimgFilterOSD(IffdshowBase *Ideci,Tfilters *Iparent):
  TOSDprovider(deci,deciD)
 {
  provOSDs.push_back(new Tosds(this));
- oldFont.weight=-1;
  oldLinesUser[0]='\0';
 }
+
 TimgFilterOSD::~TimgFilterOSD()
 {
  CAutoLock l(&csProvider);
@@ -426,16 +430,12 @@ TimgFilterOSD::~TimgFilterOSD()
   delete *po;
  if (trans) trans->release();
 }
+
 void TimgFilterOSD::done(void)
 {
  CAutoLock l(&csProvider);
  for (TprovOSDs::iterator po=provOSDs.begin();po!=provOSDs.end();po++)
   (*po)->done();
-}
-
-void TimgFilterOSD::onSizeChange(void)
-{
- oldFont.weight=-1;
 }
 
 bool TimgFilterOSD::shortOSDmessage(const char_t *msg,unsigned int duration)
@@ -461,16 +461,9 @@ HRESULT TimgFilterOSD::process(TfilterQueue::iterator it,TffPict &pict,const Tfi
 
  init(pict,true,0);
  csProvider.Lock();
- if (oldFont != *parent->fontSettingsOSD)
-  {
-   oldFont = *parent->fontSettingsOSD;
-   for (TprovOSDs::iterator po=provOSDs.begin();po!=provOSDs.end();po++)
-    (*po)->fontInit(oldFont);
-   fontUser.init();
-  }
 
  for (TprovOSDs::iterator po=provOSDs.begin();po!=provOSDs.end();po++)
-  (*po)->init(true,deci,deciD,deciV,parent->config,oldFont,cfg,framecnt);
+  (*po)->init(true,deci,deciD,deciV,parent->config,cfg,framecnt);
  framecnt++;
 
  if (!shortOSDtemp.empty())
@@ -479,7 +472,6 @@ HRESULT TimgFilterOSD::process(TfilterQueue::iterator it,TffPict &pict,const Tfi
    for (std::vector<TshortOsdTemp>::const_iterator o=shortOSDtemp.begin();o!=shortOSDtemp.end();o++)
     shortOSD.push_back(new TosdLine(deci,deciD,deciV,parent->config,_l("shortosd")+o->first,o->second,NULL));
    shortOSDtemp.clear();
-   shortOSD.fontInit(oldFont);
    cs.Unlock();
   }
 
@@ -500,8 +492,8 @@ HRESULT TimgFilterOSD::process(TfilterQueue::iterator it,TffPict &pict,const Tfi
 
    for (TprovOSDs::iterator po=provOSDs.begin();po!=provOSDs.end();po++)
     if ((*po)->is)
-     (*po)->print(deci,pict,dst,stride2,dx1[0],dy1[0],x,y,cfg->linespace,!!cfg->saveOnly);
-   shortOSD.print(deci,pict,dst,stride2,dx1[0],dy1[0],x,y,cfg->linespace,false);
+     (*po)->print(deci,pict,dst,stride2,dx1[0],dy1[0],x,y,cfg->linespace,!!cfg->saveOnly,*parent->fontSettingsOSD);
+   shortOSD.print(deci,pict,dst,stride2,dx1[0],dy1[0],x,y,cfg->linespace,false,*parent->fontSettingsOSD);
 
    if (cfg->user[0]!='\0')
     {
