@@ -56,30 +56,8 @@ public:
   *                 8-16: for subtitles. 16:very sharp (slow), 12:soft & sharp, (moderately slow) 8:blurry (fast)
   */
  int gdi_font_scale;
- bool operator == (const TfontSettings &rt) const
-  {
-   if (strncmp(name,rt.name,countof(name)) == 0
-     && charset == rt.charset
-     && autosize == rt.autosize && autosizeVideoWindow == rt.autosizeVideoWindow
-     && sizeP == rt.sizeP && sizeA == rt.sizeA
-     && xscale == rt.xscale && yscale == rt.yscale
-     && spacing == rt.spacing && weight == rt.weight
-     && opaqueBox == rt.opaqueBox
-     && color == rt.color && outlineColor == rt.outlineColor && shadowColor == rt.shadowColor
-     && bodyAlpha == rt.bodyAlpha && outlineAlpha == rt.outlineAlpha && shadowAlpha == rt.shadowAlpha
-     && split == rt.split
-     && overrideScale == rt.overrideScale && aspectAuto == rt.aspectAuto
-     && outlineWidth == rt.outlineWidth
-     && shadowSize == rt.shadowSize &&  shadowMode == rt.shadowMode
-     && blur == rt.blur
-     && gdi_font_scale == rt.gdi_font_scale)
-       return true;
-   return false;
-  }
- bool operator != (const TfontSettings &rt) const
-  {
-   return !(*this == rt);
-  }
+ bool operator == (const TfontSettings &rt) const;
+ bool operator != (const TfontSettings &rt) const;
 protected:
  virtual void getDefaultStr(int id,char_t *buf,size_t buflen);
 };

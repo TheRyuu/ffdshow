@@ -136,31 +136,58 @@ void TfontSettings::reg_op(TregOp &t)
 
 TfontSettings::TfontSettings(TintStrColl *Icoll):Toptions(Icoll)
 {
-   getDefaultStr(IDFF_fontName, name, countof(name));
-   charset = DEFAULT_CHARSET;
-   sizeP = 17;
-   weight = FW_NORMAL;
-   color = RGB(110,220,0);
-   outlineColor = RGB(0,0,0);
-   shadowColor = RGB(0,0,0);
-   outlineWidth = 1;
-   opaqueBox = 0;
-   spacing = 0;
-   xscale = 100;
-   yscale = 100;
-   aspectAuto = 1;
-   bodyAlpha = 256;
-   outlineAlpha = 256;
-   shadowAlpha = 128;
-   shadowSize = 8;
-   shadowMode = 3;
-   blur = 0;
-   autosize=0;
-   sizeA=50;
-   split=0;
-   autosizeVideoWindow=0;
-   gdi_font_scale = 4;
+    getDefaultStr(IDFF_fontName, name, countof(name));
+    charset = DEFAULT_CHARSET;
+    sizeP = 17;
+    weight = FW_NORMAL;
+    color = RGB(110,220,0);
+    outlineColor = RGB(0,0,0);
+    shadowColor = RGB(0,0,0);
+    outlineWidth = 1;
+    opaqueBox = 0;
+    spacing = 0;
+    xscale = 100;
+    yscale = 100;
+    aspectAuto = 1;
+    bodyAlpha = 256;
+    outlineAlpha = 256;
+    shadowAlpha = 128;
+    shadowSize = 8;
+    shadowMode = 3;
+    blur = 0;
+    autosize=0;
+    sizeA=50;
+    split=0;
+    autosizeVideoWindow=0;
+    gdi_font_scale = 4;
 }
+
+bool TfontSettings::operator == (const TfontSettings &rt) const
+{
+    if (strncmp(name,rt.name,countof(name)) == 0
+      && charset == rt.charset
+      && autosize == rt.autosize && autosizeVideoWindow == rt.autosizeVideoWindow
+      && sizeP == rt.sizeP && sizeA == rt.sizeA
+      && xscale == rt.xscale && yscale == rt.yscale
+      && spacing == rt.spacing && weight == rt.weight
+      && opaqueBox == rt.opaqueBox
+      && color == rt.color && outlineColor == rt.outlineColor && shadowColor == rt.shadowColor
+      && bodyAlpha == rt.bodyAlpha && outlineAlpha == rt.outlineAlpha && shadowAlpha == rt.shadowAlpha
+      && split == rt.split
+      && overrideScale == rt.overrideScale && aspectAuto == rt.aspectAuto
+      && outlineWidth == rt.outlineWidth
+      && shadowSize == rt.shadowSize &&  shadowMode == rt.shadowMode
+      && blur == rt.blur
+      && gdi_font_scale == rt.gdi_font_scale)
+        return true;
+    return false;
+}
+
+bool TfontSettings::operator != (const TfontSettings &rt) const
+{
+    return !(*this == rt);
+}
+
 
 void TfontSettings::getDefaultStr(int id,char_t *buf,size_t buflen)
 {
