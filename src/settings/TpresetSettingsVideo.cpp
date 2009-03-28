@@ -451,37 +451,43 @@ bool TpresetVideo::autoloadSizeMatch(int AVIdx,int AVIdy) const
 
 Tpreset& TpresetVideo::operator =(const Tpreset &src0)
 {
-    Tpreset::operator =(src0);
-    TpresetVideo &src = (TpresetVideo &)src0;
-    needOutcspsFix=src.needOutcspsFix;
-    needGlobalFix=src.needGlobalFix;
+    try {
+        const TpresetVideo &src = dynamic_cast<const TpresetVideo &>(src0);
+        Tpreset::operator =(src0);
+        needOutcspsFix=src.needOutcspsFix;
+        needGlobalFix=src.needGlobalFix;
 
-    autoloadSize=src.autoloadSize;
-    autoloadSizeXmin=src.autoloadSizeXmin;
-    autoloadSizeXmax=src.autoloadSizeXmax;
-    autoloadSizeCond=src.autoloadSizeCond;
-    autoloadSizeYmin=src.autoloadSizeYmin;
-    autoloadSizeYmax=src.autoloadSizeYmax;
+        autoloadSize=src.autoloadSize;
+        autoloadSizeXmin=src.autoloadSizeXmin;
+        autoloadSizeXmax=src.autoloadSizeXmax;
+        autoloadSizeCond=src.autoloadSizeCond;
+        autoloadSizeYmin=src.autoloadSizeYmin;
+        autoloadSizeYmax=src.autoloadSizeYmax;
 
-    videoDelay=src.videoDelay;isVideoDelayEnd=src.isVideoDelayEnd;videoDelayEnd=src.videoDelayEnd;
-    idct=src.idct;
-    softTelecine=src.softTelecine;
-    workaroundBugs=src.workaroundBugs;errorRecognition=src.errorRecognition;errorConcealment=src.errorConcealment;
-    lavcDecThreads=src.lavcDecThreads;
-    grayscale=src.grayscale;
-    multiThread=src.multiThread;
-    dontQueueInWMP=src.dontQueueInWMP;
-    useQueueOnlyIn=src.useQueueOnlyIn;
-    queueCount=src.queueCount;
-    queueVMR9YV12=src.queueVMR9YV12;
-    dropOnDelay=src.dropOnDelay;
-    dropDelayTime=src.dropDelayTime;
-    h264skipOnDelay=src.h264skipOnDelay;
-    h264skipDelayTime=src.h264skipDelayTime;
-    bordersBrightness=src.bordersBrightness;
-    ff_strncpy(useQueueOnlyInList, src.useQueueOnlyInList, countof(useQueueOnlyInList));
+        videoDelay=src.videoDelay;isVideoDelayEnd=src.isVideoDelayEnd;videoDelayEnd=src.videoDelayEnd;
+        idct=src.idct;
+        softTelecine=src.softTelecine;
+        workaroundBugs=src.workaroundBugs;errorRecognition=src.errorRecognition;errorConcealment=src.errorConcealment;
+        lavcDecThreads=src.lavcDecThreads;
+        grayscale=src.grayscale;
+        multiThread=src.multiThread;
+        dontQueueInWMP=src.dontQueueInWMP;
+        useQueueOnlyIn=src.useQueueOnlyIn;
+        queueCount=src.queueCount;
+        queueVMR9YV12=src.queueVMR9YV12;
+        dropOnDelay=src.dropOnDelay;
+        dropDelayTime=src.dropDelayTime;
+        h264skipOnDelay=src.h264skipOnDelay;
+        h264skipDelayTime=src.h264skipDelayTime;
+        bordersBrightness=src.bordersBrightness;
+        ff_strncpy(useQueueOnlyInList, src.useQueueOnlyInList, countof(useQueueOnlyInList));
 
-    isDyInterlaced=src.isDyInterlaced;dyInterlaced=src.dyInterlaced;
+        isDyInterlaced=src.isDyInterlaced;dyInterlaced=src.dyInterlaced;
+    } catch (const std::bad_cast&) {
+        DPRINTF(_l("In TpresetVideo::operator =, dynamic_cast failed. This must be a bug."));
+        ASSERT(0);
+    };
+
     return *this;
 }
 

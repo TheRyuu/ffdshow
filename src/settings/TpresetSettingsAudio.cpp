@@ -37,6 +37,7 @@
 #include "TsampleFormat.h"
 #include "IffdshowDecAudio.h"
 #include "Teval.h"
+#include "ffdebug.h"
 
 //========================= TaudioAutoPresetProps =========================
 TaudioAutoPresetProps::TaudioAutoPresetProps(IffdshowBase *Ideci):
@@ -135,4 +136,22 @@ TpresetAudio::TpresetAudio(const char_t *IpresetName,const char_t *Ireg_child,in
  new TmixerSettings(options,filters);
  output=new ToutputAudioSettings(options,filters);
  output->order=filters->maxOrder()+1;
+}
+
+Tpreset& TpresetAudio::operator=(const Tpreset &src0)
+{
+    try {
+        const TpresetAudio &src = dynamic_cast<const TpresetAudio &>(src0);
+        Tpreset::operator =(src0);
+
+        preferredsfs=src.preferredsfs;
+        dithering=src.dithering;noiseShaping=src.noiseShaping;
+        decoderDRC = src.decoderDRC;
+        decoderDRCLevel = src.decoderDRCLevel;
+    } catch (const std::bad_cast&) {
+        DPRINTF(_l("In TpresetAudio::operator =, dynamic_cast failed. This must be a bug."));
+        ASSERT(0);
+    };
+
+    return *this;
 }
