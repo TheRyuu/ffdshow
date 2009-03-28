@@ -21,7 +21,7 @@ private:
  bool wasVC1;
 protected:
  virtual bool init(const CMediaType &mt);
- virtual void done(void);
+ virtual void done();
  int getVideoCodecId(const BITMAPINFOHEADER *hdr,const GUID *subtype,FOURCC *AVIfourcc);
 
 public:
@@ -32,7 +32,7 @@ public:
  HRESULT CheckMediaType(const CMediaType* mtIn);
  STDMETHODIMP Receive(IMediaSample* pSample);
  STDMETHODIMP NewSegment(REFERENCE_TIME tStart, REFERENCE_TIME tStop, double dRate);
- STDMETHODIMP BeginFlush(void);
+ STDMETHODIMP BeginFlush();
 
  STDMETHODIMP GetAllocator(IMemAllocator** ppAllocator);
  STDMETHODIMP NotifyAllocator(IMemAllocator *pAllocator,BOOL bReadOnly);
@@ -47,22 +47,22 @@ public:
  HRESULT getFrameTime(unsigned int framenum,unsigned int *sec);
  HRESULT getFrameTimeMS(unsigned int framenum,unsigned int *msec);
  HRESULT calcMeanQuant(float *quant);
- HRESULT quantsAvailable(void);
+ HRESULT quantsAvailable();
  HRESULT getQuantMatrices(uint8_t intra8[64],uint8_t inter8[64]);
  virtual HRESULT getInCodecString(char_t *buf,size_t buflen);
  HRESULT getAverageTimePerFrame(int64_t *avg);
  const char_t *findAutoSubflnm(IcheckSubtitle *checkSubtitle,const char_t *searchDir,const char_t *serchExt,bool heuristic);
 
  HRESULT decompress(IMediaSample *pSample,long *srcLen);
- STDMETHODIMP EndOfStream(void);
+ STDMETHODIMP EndOfStream();
 
  TffdshowDecVideoAllocator allocator;
  BITMAPINFO biIn;TffPictBase pictIn;
  REFERENCE_TIME avgTimePerFrame;
  int sourceFlags;
- bool waitForKeyframes(void);
- void setSampleSkipped(void);
- const char* get_current_idct(void){return video->get_current_idct();}
+ bool waitForKeyframes();
+ void setSampleSkipped();
+ const char* get_current_idct(){return video->get_current_idct();}
  bool isInterlacedRawVideo;
  IBaseFilter *pCompatibleFilter;
  enum
@@ -97,6 +97,7 @@ public:
  STDMETHODIMP GetAspectRatioMode(THIS_ OUT AM_ASPECT_RATIO_MODE* pamAspectRatioMode);
  STDMETHODIMP SetStreamTransparent(THIS_ IN BOOL bStreamTransparent);
  STDMETHODIMP GetStreamTransparent(THIS_ OUT BOOL *pbStreamTransparent);
+ STDMETHODIMP EndOfStream();
 };
 
 #endif

@@ -522,7 +522,7 @@ again:
  return true;
 }
 
-void TffdshowVideoInputPin::done(void)
+void TffdshowVideoInputPin::done()
 {
  if (video) delete video;codec=video=NULL;
  memset(&biIn,0,sizeof(biIn));
@@ -570,7 +570,7 @@ STDMETHODIMP TffdshowVideoInputPin::NewSegment(REFERENCE_TIME tStart, REFERENCE_
 #define IID_IffdshowDecVideo IID_IffdshowDecVideoA
 #endif
 
-STDMETHODIMP TffdshowVideoInputPin::BeginFlush(void)
+STDMETHODIMP TffdshowVideoInputPin::BeginFlush()
 {
  if (fv && fv->deci)
   {
@@ -616,7 +616,7 @@ HRESULT TffdshowVideoInputPin::decompress(IMediaSample *pSample,long *srcLen)
  return video->decompress(bitstream,*srcLen,pSample);
 }
 
-STDMETHODIMP TffdshowVideoInputPin::EndOfStream(void)
+STDMETHODIMP TffdshowVideoInputPin::EndOfStream()
 {
  video->onEndOfStream();
  return TinputPin::EndOfStream();
@@ -663,7 +663,7 @@ HRESULT TffdshowVideoInputPin::getMovieSource(const TvideoCodecDec* *moviePtr)
  *moviePtr=video;
  return S_OK;
 }
-FOURCC TffdshowVideoInputPin::getMovieFOURCC(void)
+FOURCC TffdshowVideoInputPin::getMovieFOURCC()
 {
  return codecId!=CODEC_ID_NONE?biIn.bmiHeader.biCompression:0;
 }
@@ -689,7 +689,7 @@ HRESULT TffdshowVideoInputPin::calcMeanQuant(float *quant)
  *quant=video->calcMeanQuant();
  return S_OK;
 }
-HRESULT TffdshowVideoInputPin::quantsAvailable(void)
+HRESULT TffdshowVideoInputPin::quantsAvailable()
 {
  if (!video) return E_FAIL;
  return video->quants?S_OK:S_FALSE;
@@ -725,11 +725,11 @@ HRESULT TffdshowVideoInputPin::getInCodecString(char_t *buf,size_t buflen)
   buf[0]='\0';
  return S_OK;
 }
-bool TffdshowVideoInputPin::waitForKeyframes(void)
+bool TffdshowVideoInputPin::waitForKeyframes()
 {
  return !rawDecode && codecId != CODEC_ID_H264 && codecId != CODEC_ID_H264_MT && !(video && mpeg12_codec(codecId) && biIn.bmiHeader.biCompression!=FOURCC_MPEG);
 }
-void TffdshowVideoInputPin::setSampleSkipped(void)
+void TffdshowVideoInputPin::setSampleSkipped()
 {
  if (video)
   video->onDiscontinuity();
@@ -754,11 +754,11 @@ int TffdshowVideoInputPin::getVideoCodecId(const BITMAPINFOHEADER *hdr,const GUI
  // Microsoft's wtv files are recognized as "MPEG in AVI" in ffdshow.
  // ffdshow tried to decode it and fails.
  // Here, ffdshow rejects connection to PBDA DTFilter if the four CC is 'MPEG'.
- FOURCC fourcc;
+ FOURCC fourcc = 0;
  int id = fv->getVideoCodecId(hdr, subtype, &fourcc);
  if (connectedSplitter == PBDA_DTFilter && fourcc == FOURCC_MPEG)
   return CODEC_ID_NONE;
- if (AVIfourcc)
+ if (AVIfourcc && fourcc)
   *AVIfourcc = fourcc;
  return id;
 }
@@ -834,4 +834,9 @@ STDMETHODIMP TffdshowVideoEncInputPin::GetStreamTransparent(THIS_ OUT BOOL *pbSt
 {
  DPRINTF(_l(" GetStreamTransparent"));
  return S_OK;
+}
+
+STDMETHODIMP TffdshowVideoEncInputPin::EndOfStream()
+{
+ return TinputPin::EndOfStream();
 }

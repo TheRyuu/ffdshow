@@ -278,11 +278,11 @@ HRESULT TffdshowEnc::GetMediaType(int iPosition, CMediaType *mtOut)
   {
    case 0:
     {
-     size_t elen=getFormat(&inpin->biIn.bmiHeader,NULL)-sizeof(BITMAPINFOHEADER);
-     VIDEOINFOHEADER *vih=(VIDEOINFOHEADER*)mtOut->ReallocFormatBuffer(ULONG(sizeof(VIDEOINFOHEADER)+elen));
+     getFormat(&inpin->biIn.bmiHeader,NULL);
+     VIDEOINFOHEADER *vih=(VIDEOINFOHEADER*)mtOut->ReallocFormatBuffer(ULONG(sizeof(VIDEOINFOHEADER)+extraDataSize));
      if (!vih) return E_OUTOFMEMORY;
 
-     ZeroMemory(vih,sizeof(VIDEOINFOHEADER)+elen);
+     ZeroMemory(vih,sizeof(VIDEOINFOHEADER)+extraDataSize);
      getFormat(&inpin->biIn.bmiHeader,(BITMAPINFO*)&vih->bmiHeader);
      vih->rcSource.left=0;vih->rcSource.top=0;vih->rcSource.right=vih->bmiHeader.biWidth;vih->rcSource.bottom=vih->bmiHeader.biHeight;
      vih->rcTarget=vih->rcSource;
@@ -430,6 +430,7 @@ STDMETHODIMP_(LRESULT) TffdshowEnc::query(const BITMAPINFOHEADER *inhdr,BITMAPIN
 
 STDMETHODIMP_(LRESULT) TffdshowEnc::getFormat(const BITMAPINFOHEADER *inhdr,BITMAPINFO *lpbiOutput)
 {
+ extraDataSize = 0;
  initCo();
  if (getBMPcolorspace(inhdr,coSettings->incsps)==FF_CSP_NULL)
   return ICERR_BADFORMAT;
@@ -442,10 +443,10 @@ STDMETHODIMP_(LRESULT) TffdshowEnc::getFormat(const BITMAPINFOHEADER *inhdr,BITM
    if (enccsps.empty()) enc->getCompressColorspaces(enccsps,outDx,outDy);
    enccsp=enccsps[0];
    enc->beginCompress(coSettings->mode,enccsp,Trect(0,0,outDx,outDy));
-   const void *edata0;size_t elen;
-   enc->getExtradata(&edata0,&elen);
-   if (elen)
-    extradata.set(edata0,elen,0,true);
+   const void *edata0;
+   enc->getExtradata(&edata0,&extraDataSize);
+   if (extraDataSize)
+    extradata.set(edata0,extraDataSize,0,true);
    enc->end();
   }
 

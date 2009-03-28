@@ -100,6 +100,7 @@ protected:
  TvideoCodecEnc *findEncLib(void);
  Textradata extradata;
  Tmuxer *mux;
+ size_t extraDataSize;
 
  struct TffProcVideoEnc : TffProcVideo
   {
