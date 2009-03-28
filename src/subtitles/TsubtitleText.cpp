@@ -836,8 +836,8 @@ void TsubtitleFormat::Tssa::pos(ffstring &arg)
 {
     // (x1,y1) is expected.
     TstoreParams store;
-    store.push_back(TstoreParam(offsetof(TSubtitleProps, posx), 0,INT_MAX,defprops.posx,sizeof(props.posx)));
-    store.push_back(TstoreParam(offsetof(TSubtitleProps, posy), 0,INT_MAX,defprops.posy,sizeof(props.posy)));
+    store.push_back(TstoreParam(offsetof(TSubtitleProps, pos.x), 0,INT_MAX,defprops.pos.x,sizeof(props.pos.x)));
+    store.push_back(TstoreParam(offsetof(TSubtitleProps, pos.y), 0,INT_MAX,defprops.pos.y,sizeof(props.pos.y)));
 
     TparenthesesContents contents;
     parse_parentheses(contents,arg);
@@ -862,10 +862,10 @@ void TsubtitleFormat::Tssa::move(ffstring &arg)
 {
      // (x1,y1,x2,y2,[t1[,t2]]) is expected.
      TstoreParams store;
-     store.push_back(TstoreParam(offsetof(TSubtitleProps, posx), 0,INT_MAX, defprops.posx,  sizeof(props.posx)));
-     store.push_back(TstoreParam(offsetof(TSubtitleProps, posy), 0,INT_MAX, defprops.posy,  sizeof(props.posy)));
-     store.push_back(TstoreParam(offsetof(TSubtitleProps, posx2),0,INT_MAX, defprops.posx2, sizeof(props.posx2)));
-     store.push_back(TstoreParam(offsetof(TSubtitleProps, posy2),0,INT_MAX, defprops.posy2, sizeof(props.posy2)));
+     store.push_back(TstoreParam(offsetof(TSubtitleProps, pos.x), 0,INT_MAX, defprops.pos.x,  sizeof(props.pos.x)));
+     store.push_back(TstoreParam(offsetof(TSubtitleProps, pos.y), 0,INT_MAX, defprops.pos.y,  sizeof(props.pos.y)));
+     store.push_back(TstoreParam(offsetof(TSubtitleProps, pos2.x),0,INT_MAX, defprops.pos2.x, sizeof(props.pos2.x)));
+     store.push_back(TstoreParam(offsetof(TSubtitleProps, pos2.y),0,INT_MAX, defprops.pos2.y, sizeof(props.pos2.y)));
      store.push_back(TstoreParam(offsetof(TSubtitleProps, t1),   0,UINT_MAX,0,              sizeof(props.t1)));
      store.push_back(TstoreParam(offsetof(TSubtitleProps, t2),   0,UINT_MAX,0,              sizeof(props.t2)));
 

@@ -20,8 +20,7 @@ struct TSubtitleProps
  int colorA,SecondaryColourA, TertiaryColourA, OutlineColourA, ShadowColourA;
  unsigned int refResX,refResY;
  bool isPos,isMove,isOrg;
- int posx,posy;
- int posx2,posy2;
+ CPoint pos,pos2; // move from pos to pos2
  CPoint org;
  unsigned int t1,t2;
  int wrapStyle; // -1 = default

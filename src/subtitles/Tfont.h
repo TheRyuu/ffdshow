@@ -111,7 +111,7 @@ private:
         int marginL,marginR;
         int isPos;
         int isMove;
-        int posx,posy;
+        CPoint pos;
         int layer;
         bool hasPrintedRect;
         CRect printedRect;

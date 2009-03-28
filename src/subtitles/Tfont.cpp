@@ -661,10 +661,9 @@ void TrenderedSubtitleLines::handleCollision(TrenderedSubtitleLine *line, int x,
     }
 }
 
-TrenderedSubtitleLines::ParagraphKey::ParagraphKey(TrenderedSubtitleLine *line, unsigned int prefsdx, unsigned int prefsdy):
-    posx(INT_MIN),
-    posy(INT_MIN)
+TrenderedSubtitleLines::ParagraphKey::ParagraphKey(TrenderedSubtitleLine *line, unsigned int prefsdx, unsigned int prefsdy)
 {
+    pos = CPoint(LONG_MIN, LONG_MIN);
     const TSubtitleProps &lineprops = line->getProps();
     alignment = lineprops.alignment;
     marginBottom = lineprops.get_marginBottom(prefsdy);
@@ -678,8 +677,7 @@ TrenderedSubtitleLines::ParagraphKey::ParagraphKey(TrenderedSubtitleLine *line, 
 
     layer = lineprops.layer;
     if (isPos || isMove) {
-        posx = lineprops.posx;
-        posy = lineprops.posy;
+        pos = lineprops.pos;
     }
     if (!isMove)
         printedRect = line->getPrintedRect();
@@ -716,10 +714,8 @@ bool TrenderedSubtitleLines::ParagraphKey::operator < (const ParagraphKey &rt) c
     if (marginR>rt.marginR) return false;
     if (isPos<rt.isPos) return true;
     if (isPos>rt.isPos) return false;
-    if (posx<rt.posx) return true;
-    if (posx>rt.posx) return false;
-    if (posy<rt.posy) return true;
-    if (posy>rt.posy) return false;
+    if (pos<rt.pos) return true;
+    if (pos>rt.pos) return false;
     if (layer<rt.layer) return true;
     if (layer>rt.layer) return false;
     if (hasPrintedRect<rt.hasPrintedRect) return true;
@@ -740,8 +736,7 @@ bool TrenderedSubtitleLines::ParagraphKey::operator != (const ParagraphKey &rt) 
       && marginL == rt.marginL
       && marginR == rt.marginR
       && isPos == rt.isPos
-      && posx == rt.posx
-      && posy == rt.posy
+      && pos == rt.pos
       && layer == rt.layer
       && lineID == rt.lineID
       && hasPrintedRect == rt.hasPrintedRect)

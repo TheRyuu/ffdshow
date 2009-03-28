@@ -28,6 +28,22 @@ struct CPoint :POINT
         return (x == rt.x && y == rt.y);
     }
 
+    bool operator < (const CPoint &rt) const
+    {
+        if (y < rt.y) return true;
+        if (y > rt.y) return false;
+        if (x < rt.x) return true;
+        return false;
+    }
+
+    bool operator > (const CPoint &rt) const
+    {
+        if (y > rt.y) return true;
+        if (y < rt.y) return false;
+        if (x > rt.x) return true;
+        return false;
+    }
+
     void operator = (const CPoint &rt)
     {
         x = rt.x;

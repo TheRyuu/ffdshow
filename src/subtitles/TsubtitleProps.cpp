@@ -119,17 +119,17 @@ int TSubtitleProps::get_marginR(unsigned int screenWidth,unsigned int lineWidth)
      case 3: // right(SSA)
      case 7:
      case 11:
-         result=resX-posx; // Right alignment : posx anchors to the right of paragraph
+         result=resX-pos.x; // Right alignment : pos.x anchors to the right of paragraph
       break;
      case 2: // center(SSA)
      case 6:
      case 10:
      default: 
-         // Center alignment : posx anchors to the center of paragraph
+         // Center alignment : pos.x anchors to the center of paragraph
          if (lineWidth == 0)
           result=0;
          else
-          result=resX-posx-(lineWidth)/2;
+          result=resX-pos.x-(lineWidth)/2;
       break;
     }
   }
@@ -155,7 +155,7 @@ int TSubtitleProps::get_marginL(unsigned int screenWidth, unsigned int lineWidth
      case 1: // left(SSA)
      case 5:
      case 9:
-        result=posx; // Left alignment : posx anchors to the left part of paragraph
+        result=pos.x; // Left alignment : pos.x anchors to the left part of paragraph
         break;
      case 3: // right(SSA)
      case 7:
@@ -166,8 +166,8 @@ int TSubtitleProps::get_marginL(unsigned int screenWidth, unsigned int lineWidth
      case 6:
      case 10:
      default:
-        // Center alignment : posx anchors to the center of the paragraph
-        result=posx-(lineWidth)/2;
+        // Center alignment : pos.x anchors to the center of the paragraph
+        result=pos.x-(lineWidth)/2;
       break;
     }
   }
@@ -192,12 +192,12 @@ int TSubtitleProps::get_marginTop(unsigned int screenHeight) const
      case 5: // SSA top
      case 6:
      case 7:
-      result=posy;
+      result=pos.y;
       break;
      case 9: // SSA mid
      case 10:
      case 11:
-      result=posy;
+      result=pos.y;
       break;
      case 1: // SSA bottom
      case 2:
@@ -239,7 +239,7 @@ int TSubtitleProps::get_marginBottom(unsigned int screenHeight) const
      case 2:
      case 3:
      default:
-        result=resY-posy;
+        result=resY-pos.y;
         break;
     }
   }
@@ -276,35 +276,35 @@ int TSubtitleProps::get_maxWidth(unsigned int screenWidth, int subFormat, Iffdsh
      case 5:
      case 9:
       // If option to maintain text inside is set then calculate max width according to the position
-      if (posx<0) 
+      if (pos.x<0) 
        break;
       else
-       result=resX-posx-mR;
+       result=resX-pos.x-mR;
       break;
      case 3: // right(SSA) : right alignment, right margin is ignored
      case 7:
      case 11:
       // If option to maintain text inside is set then calculate max width according to the position
-      if (posx<0) 
+      if (pos.x<0) 
        break;
       else
-       result=posx-mL;
+       result=pos.x-mL;
       break;
      case 2: // center(SSA)
      case 6:
      case 10:
      default:
       // If option to maintain text inside is set then calculate max width according to the position
-      // Center alignment : posx anchors to the center of the paragraph
-      if (posx > 0 && posx < resX)
+      // Center alignment : pos.x anchors to the center of the paragraph
+      if (pos.x > 0 && pos.x < resX)
        {
         // We try to calculate the maximum margin around the anchor point (at center)
-        if (mL > posx) mL = posx; // MarginL should not exceed posX
-        if (mR > resX-posx) mR = resX-posx; // MarginR should not exceed posX
-        int margin = std::min(posx-mL, resX-mR-posx);
+        if (mL > pos.x) mL = pos.x; // MarginL should not exceed posX
+        if (mR > resX-pos.x) mR = resX-pos.x; // MarginR should not exceed posX
+        int margin = std::min(pos.x-mL, resX-mR-pos.x);
         // Calculated margin should not goes out of the screen
-        if (posx-margin < 0) margin = posx;
-        if (posx+margin > resX) margin = resX-posx;
+        if (pos.x-margin < 0) margin = pos.x;
+        if (pos.x+margin > resX) margin = resX-pos.x;
         result = margin*2;
        }
       break;
@@ -323,13 +323,13 @@ int TSubtitleProps::get_maxWidth(unsigned int screenWidth, int subFormat, Iffdsh
 int TSubtitleProps::get_movedistanceV(unsigned int screenHeight) const
 {
  if (!isMove || !refResY) return 0;
- return (int)(((float)(posy2-posy))*((float)screenHeight/refResY));
+ return (int)(((float)(pos2.y-pos.y))*((float)screenHeight/refResY));
 }
 
 int TSubtitleProps::get_movedistanceH(unsigned int screenWidth) const
 {
  if (!isMove || !refResX) return 0;
- return (int)(((float)(posx2-posx))*((float)screenWidth/refResX));
+ return (int)(((float)(pos2.x-pos.x))*((float)screenWidth/refResX));
 }
 
 REFERENCE_TIME TSubtitleProps::get_moveStart() const
