@@ -332,10 +332,13 @@ const TSubtitleProps& TrenderedSubtitleLine::getProps() const
     // Which props should represent this line?
     // The first word that have dxChar should to make sense.
     // If there is none, return this->props.
-    // Caller must be sure it is dealing with text subtitles.
     foreach (TrenderedSubtitleWordBase *word0, *this) {
-        TrenderedTextSubtitleWord *word = (TrenderedTextSubtitleWord *)word0;
-        if (word->dxChar) return word->props;
+        try {
+            TrenderedTextSubtitleWord *word = dynamic_cast<TrenderedTextSubtitleWord *>(word0);
+            if (word && word->dxChar) return word->props;
+        } catch (const std::bad_cast&) {
+            continue;
+        }
     }
     return props;
 }
@@ -456,7 +459,8 @@ void TrenderedSubtitleLines::printASS(
     // pass 1: prepare paragraphs : a paragraph is a set of lines that have the same properties
     // (same margins, alignment and position)
     foreach (TrenderedSubtitleLine *line, *this) {
-        line->prepareKaraoke();
+        if (prefs.subformat ==  Tsubreader::SUB_SSA)
+            line->prepareKaraoke();
         ParagraphKey pkey(line, prefsdx, prefsdy);
         std::map<ParagraphKey,ParagraphValue>::iterator pi=paragraphs.find(pkey);
         if (pi != paragraphs.end()) {
@@ -845,7 +849,7 @@ void Tfont::init()
     done();
     hdc=CreateCompatibleDC(NULL);
     if (!hdc) return;
-    SetBkMode(hdc,TRANSPARENT); 
+    SetBkMode(hdc,TRANSPARENT);
     SetTextColor(hdc,0xffffff);
     SetMapMode(hdc,MM_TEXT);
 }
