@@ -1952,7 +1952,7 @@ BEGIN
     CONTROL         "RGB24",IDC_CHB_OUT_RGB24,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,126,40,65,9
     CONTROL         "RGB16",IDC_CHB_OUT_RGB16,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,77,52,42,9
     CONTROL         "RGB15",IDC_CHB_OUT_RGB15,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,126,52,78,9
-    CONTROL         "High quality YV12 to RGB conversion",IDC_CHB_AVISYNTH_YV12_RGB,
+    CONTROL         "High quality YV12 to RGB conversion",IDC_CHB_HIGH_QUALITY_RGB,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,77,65,171,9
     CONTROL         "Select closest matching colorspace",IDC_CHB_OUT_CLOSESTMATCH,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,79,166,9
@@ -1995,7 +1995,7 @@ BEGIN
     GROUPBOX        "Method",IDC_GRP_CSP_OPT3,0,50,267,42
     COMBOBOX        IDC_CBX_RGB_INTERLACE_METHOD,121,59,124,30,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
     LTEXT           "Interlace or progressive:",IDC_TXT_CSP_OPTIONS_INTERLACE_OR_PROGRESSIVE,8,61,108,8
-    CONTROL         "High quality YV12 to RGB conversion",IDC_CHB_AVISYNTH_YV12_RGB,
+    CONTROL         "High quality YV12 to RGB conversion",IDC_CHB_HIGH_QUALITY_RGB,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,76,171,9
     CONTROL         "Auto",IDC_RBT_BT_AUTO,"Button",BS_AUTORADIOBUTTON,6,10,256,10
     CONTROL         "Auto",IDC_RBT_YCbCr_input_levels_auto,"Button",BS_AUTORADIOBUTTON,6,103,246,10

@@ -19,6 +19,7 @@
 #include "stdafx.h"
 #include "Tconvert.h"
 #include "ToutputVideoSettings.h"
+#include "Tconfig.h"
 
 const TfilterIDFF ToutputVideoSettings::idffs=
 {
@@ -117,8 +118,8 @@ ToutputVideoSettings::ToutputVideoSettings(TintStrColl *Icoll,TfilterIDFFs *filt
      _l("allowOutChange"),2,
    IDFF_outChangeCompatOnly,&ToutputVideoSettings::outChangeCompatOnly,0,0,_l(""),1,
      _l("outChangeCompatOnly"),1,
-   IDFF_avisynthYV12_RGB   ,&ToutputVideoSettings::avisynthYV12_RGB   ,0,0,_l(""),1,
-     _l("avisynthYV12_RGB"),0,
+   IDFF_highQualityRGB     ,&ToutputVideoSettings::highQualityRGB   ,0,0,_l(""),1,
+     _l("highQualityRGB"),TintOption::DEF_DYN,
    IDFF_cspOptionsIturBt                ,&ToutputVideoSettings::cspOptionsIturBt           ,0,TrgbPrimaries::ITUR_BT_MAX - 1,_l(""),1,
      _l("cspOptionsIturBt2"),TrgbPrimaries::ITUR_BT_AUTO,
    IDFF_cspOptionsInputLevelsMode       ,&ToutputVideoSettings::cspOptionsInputLevelsMode  ,0,3,_l(""),1,
@@ -148,12 +149,22 @@ ToutputVideoSettings::ToutputVideoSettings(TintStrColl *Icoll,TfilterIDFFs *filt
 
 int ToutputVideoSettings::getDefault(int id)
 {
- switch (id) // for upgrade. IDFF_setDeintInOutSample is now independent from IDFF_setSARinOutSample.
-  {
-   case IDFF_setSARinOutSample:return hwOverlayOld;
-   case IDFF_setDeintInOutSample:return hwOverlayOld?hwDeinterlaceOld:0;
-   default:return TfilterSettingsVideo::getDefault(id);
-  }
+    switch (id) // for upgrade. IDFF_setDeintInOutSample is now independent from IDFF_setSARinOutSample.
+    {
+    case IDFF_setSARinOutSample:
+        return hwOverlayOld;
+    case IDFF_setDeintInOutSample:
+        return hwOverlayOld?hwDeinterlaceOld:0;
+    case IDFF_highQualityRGB:
+        if (Tconfig::getCPUcount() >= 2 && Tconfig::cpu_flags&FF_CPU_SSSE3)
+            // enable high quality RGB conversion on Core2 Duo or higher by default.
+            // SSSE3 is not required in ffdshow converter.
+            return 1;
+        else
+            return 0;
+    default:
+        return TfilterSettingsVideo::getDefault(id);
+    }
 }
 
 void ToutputVideoSettings::reg_op_outcsps(TregOp &t)
@@ -175,7 +186,7 @@ void ToutputVideoSettings::reg_op_outcsps(TregOp &t)
 
 const int* ToutputVideoSettings::getResets(unsigned int pageId)
 {
- static const int idResets[]={IDFF_flip,IDFF_outI420,IDFF_outYV12,IDFF_outYUY2,IDFF_outYVYU,IDFF_outUYVY,IDFF_outNV12,IDFF_outRGB32,IDFF_outRGB24,IDFF_outRGB555,IDFF_outDV,IDFF_outRGB565,IDFF_outClosest,IDFF_hwOverlay,IDFF_hwDeinterlace,IDFF_avisynthYV12_RGB,/*IDFF_PC_YUV,*/IDFF_allowOutChange,IDFF_outChangeCompatOnly,0};
+ static const int idResets[]={IDFF_flip,IDFF_outI420,IDFF_outYV12,IDFF_outYUY2,IDFF_outYVYU,IDFF_outUYVY,IDFF_outNV12,IDFF_outRGB32,IDFF_outRGB24,IDFF_outRGB555,IDFF_outDV,IDFF_outRGB565,IDFF_outClosest,IDFF_hwOverlay,IDFF_hwDeinterlace,IDFF_highQualityRGB,/*IDFF_PC_YUV,*/IDFF_allowOutChange,IDFF_outChangeCompatOnly,0};
  return idResets;
 }
 

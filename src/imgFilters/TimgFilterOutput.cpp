@@ -69,12 +69,12 @@ HRESULT TimgFilterOutput::process(const TffPict &pict,int dstcsp,unsigned char *
      || convert->dx!=pict.rectFull.dx
      || convert->dy!=pict.rectFull.dy
      || old_cspOptionsRgbInterlaceMode != cfg->cspOptionsRgbInterlaceMode
-     || old_avisynthYV12_RGB != cfg->avisynthYV12_RGB
+     || old_highQualityRGB != cfg->highQualityRGB
      || old_outputLevelsMode != cfg->cspOptionsOutputLevelsMode
      || old_inputLevelsMode != cfg->cspOptionsInputLevelsMode
      || old_IturBt != cfg->cspOptionsIturBt)
   {
-   old_avisynthYV12_RGB = cfg->avisynthYV12_RGB;
+   old_highQualityRGB = cfg->highQualityRGB;
    old_cspOptionsRgbInterlaceMode = cfg->cspOptionsRgbInterlaceMode;
    old_outputLevelsMode = cfg->cspOptionsOutputLevelsMode;
    old_inputLevelsMode = cfg->cspOptionsInputLevelsMode;

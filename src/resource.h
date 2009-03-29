@@ -264,7 +264,7 @@
 #define IDC_CHB_OUT_RGB32               1051
 #define IDC_LBL_SHAKE                   1051
 #define IDC_LBL_LINES                   1052
-#define IDC_CHB_AVISYNTH_YV12_RGB       1052
+#define IDC_CHB_HIGH_QUALITY_RGB        1052
 #define IDC_TBR_NOISESTRENGTH_CHROMA    1053
 #define IDC_LBL_SCRATCHES               1054
 #define IDC_RBT_SHARPEN_XSHARPEN        1063

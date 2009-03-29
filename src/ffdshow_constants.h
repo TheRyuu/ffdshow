@@ -916,7 +916,8 @@
 #define IDFF_hwDeinterlace       1353 // deprecated.
 #define IDFF_hwDeintMethod       1361
 #define IDFF_hwDeintFieldOrder   3500
-#define IDFF_avisynthYV12_RGB    1355
+#define IDFF_avisynthYV12_RGB    1355 // deprecated. Use IDFF_highQualityRGB instead.
+#define IDFF_highQualityRGB      1355
 #define IDFF_cspOptionsIturBt            1362 // 0: 601, 1:709
 #define IDFF_cspOptionsBlackCutoff       3424
 #define IDFF_cspOptionsWhiteCutoff       3425

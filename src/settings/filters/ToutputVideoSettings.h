@@ -40,7 +40,7 @@ public:
  int hwOverlayOld,hwDeinterlaceOld;
  int allowOutChange3, outChangeCompatOnly;
  int hwDeinterlace,hwDeintMethod, hwDeintFieldOrder;
- int avisynthYV12_RGB;
+ int highQualityRGB;
  int cspOptionsIturBt, cspOptionsInputLevelsMode;
  int cspOptionsBlackCutoff, cspOptionsWhiteCutoff, cspOptionsChromaCutoff;
  int cspOptionsRgbInterlaceMode;

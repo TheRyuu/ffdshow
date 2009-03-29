@@ -230,12 +230,12 @@ bool TimgFilter::getCurNext(int csp,TffPict &pict,int full,int copy,unsigned cha
      || convert2->dx != pict.rectFull.dx
      || convert2->dy != pict.rectFull.dy
      || old_cspOptionsRgbInterlaceMode != outcfg->cspOptionsRgbInterlaceMode
-     || old_avisynthYV12_RGB != outcfg->avisynthYV12_RGB
+     || old_highQualityRGB != outcfg->highQualityRGB
      || old_outputLevelsMode != outcfg->cspOptionsOutputLevelsMode
      || old_inputLevelsMode != outcfg->cspOptionsInputLevelsMode
      || old_IturBt != outcfg->cspOptionsIturBt)
     {
-     old_avisynthYV12_RGB = outcfg->avisynthYV12_RGB;
+     old_highQualityRGB = outcfg->highQualityRGB;
      old_cspOptionsRgbInterlaceMode = outcfg->cspOptionsRgbInterlaceMode;
      old_outputLevelsMode = outcfg->cspOptionsOutputLevelsMode;
      old_inputLevelsMode = outcfg->cspOptionsInputLevelsMode;

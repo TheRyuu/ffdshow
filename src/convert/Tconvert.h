@@ -23,7 +23,7 @@ class Tconvert : public TrgbPrimaries
 {
 private:
  void init(Tlibmplayer *Ilibmplayer,bool IavisynthYV12_RGB,unsigned int Idx,unsigned int Idy, int rgbInterlaceMode);
- bool avisynthYV12_RGB;
+ bool highQualityRGB;
  Tlibmplayer *libmplayer;
  Tswscale *swscale;bool initsws;
  int oldincsp,oldoutcsp;

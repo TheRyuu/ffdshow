@@ -95,7 +95,7 @@ void ToutcspsPage::csp2dlg(void)
  setCheck(IDC_CHB_OUT_RGB15,cfgGet(IDFF_outRGB555));
  setCheck(IDC_CHB_OUT_RGB16,cfgGet(IDFF_outRGB565));
  setCheck(IDC_CHB_OUT_CLOSESTMATCH,cfgGet(IDFF_outClosest));
- setCheck(IDC_CHB_AVISYNTH_YV12_RGB,cfgGet(IDFF_avisynthYV12_RGB));
+ setCheck(IDC_CHB_HIGH_QUALITY_RGB,cfgGet(IDFF_highQualityRGB));
 
 }
 void ToutcspsPage::overlay2dlg(void)
@@ -239,7 +239,7 @@ ToutcspsPage::ToutcspsPage(TffdshowPageDec *Iparent):TconfPageDecVideo(Iparent)
    IDC_CHB_FLIP,IDFF_flip,NULL,
    IDC_CHB_OUTCHANGECOMPATONLY,IDFF_outChangeCompatOnly,NULL,
    IDC_CHB_HWDEINTERLACE,IDFF_setDeintInOutSample,&ToutcspsPage::csp2dlg,
-   IDC_CHB_AVISYNTH_YV12_RGB,IDFF_avisynthYV12_RGB,NULL,
+   IDC_CHB_HIGH_QUALITY_RGB,IDFF_highQualityRGB,NULL,
    IDC_CHB_OUT_CLOSESTMATCH,IDFF_outClosest,NULL,
    0,NULL,NULL
   };

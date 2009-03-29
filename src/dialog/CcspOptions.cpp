@@ -73,7 +73,7 @@ void TcspOptionsPage::cfg2dlg(void)
  enable(mode == TrgbPrimaries::CutomYCbCr, customs);
 
  cbxSetCurSel(IDC_CBX_RGB_INTERLACE_METHOD,cfgGet(IDFF_cspOptionsRgbInterlaceMode));
- setCheck(IDC_CHB_AVISYNTH_YV12_RGB,cfgGet(IDFF_avisynthYV12_RGB));
+ setCheck(IDC_CHB_HIGH_QUALITY_RGB,cfgGet(IDFF_highQualityRGB));
 }
 
 void TcspOptionsPage::getTip(char_t *tipS,size_t len)
@@ -134,7 +134,7 @@ TcspOptionsPage::TcspOptionsPage(TffdshowPageDec *Iparent):TconfPageDecVideo(Ipa
  bindHtracks(htbr);
  static const TbindCheckbox<TcspOptionsPage> chb[]=
   {
-   IDC_CHB_AVISYNTH_YV12_RGB,IDFF_avisynthYV12_RGB,NULL,
+   IDC_CHB_HIGH_QUALITY_RGB,IDFF_highQualityRGB,NULL,
    0,NULL,NULL
   };
  bindCheckboxes(chb);
