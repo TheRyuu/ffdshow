@@ -325,7 +325,9 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
                  sub = pin->getSubtitle(cfg, frameStart, frameStop, &forceChange);
                  subtitles = pin;
             }
-            if (!pin && adhocMode != ADHOC_ADHOC_DRAW_DVD_SUB_ONLY &&  cfg->is) {
+            if ((!pin || (isdvdproc && !sub))
+              && adhocMode != ADHOC_ADHOC_DRAW_DVD_SUB_ONLY
+              &&  cfg->is) {
                 sub           = subs.getSubtitle(cfg, frameStart, frameStop, &forceChange);
                 subformat = subs.sub_format;
                 subtitles = &subs;
