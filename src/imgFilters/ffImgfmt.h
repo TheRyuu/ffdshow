@@ -544,12 +544,16 @@ extern int csp_bestMatch(int inCSP,int wantedCSPS,int *rank=NULL);
 
 static __inline void csp_yuv_adj_to_plane(int &csp,const TcspInfo *cspInfo,unsigned int dy,unsigned char *data[4],stride_t stride[4])
 {
- if (csp_isYUVplanar(csp) && (csp&FF_CSP_FLAGS_YUV_ADJ))
-  {
-   csp&=~FF_CSP_FLAGS_YUV_ADJ;
-   data[2]=data[0]+stride[0]*(dy>>cspInfo->shiftY[0]);stride[1]=stride[0]>>cspInfo->shiftX[1];
-   data[1]=data[2]+stride[1]*(dy>>cspInfo->shiftY[1]);stride[2]=stride[0]>>cspInfo->shiftX[2];
-  }
+    if (csp_isYUVplanar(csp) && (csp & FF_CSP_FLAGS_YUV_ADJ)) {
+        csp&=~FF_CSP_FLAGS_YUV_ADJ;
+        data[2]=data[0]+stride[0]*(dy>>cspInfo->shiftY[0]);stride[1]=stride[0]>>cspInfo->shiftX[1];
+        data[1]=data[2]+stride[1]*(dy>>cspInfo->shiftY[1]);stride[2]=stride[0]>>cspInfo->shiftX[2];
+    } else if ((csp & FF_CSP_NV12) && (csp & FF_CSP_FLAGS_YUV_ADJ)) {
+        csp&=~FF_CSP_FLAGS_YUV_ADJ;
+        data[1] = data[0] + stride[0] *dy;
+        stride[1] = stride[0];
+    }
+ 
 }
 static __inline void csp_yuv_order(int &csp,unsigned char *data[4],stride_t stride[4])
 {
