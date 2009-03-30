@@ -22,9 +22,9 @@
  * License along with FFmpeg; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
-#include <pthread.h>
 
 #include "avcodec.h"
+#include <pthread.h>
 #include "thread.h"
 
 #define MAX_DELAYED_RELEASED_BUFFERS 32

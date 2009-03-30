@@ -11,6 +11,7 @@
     #define HAVE_FAST_64BIT 1
     #define HAVE_CMOV 1
     #define HAVE_FAST_CMOV 1
+    #define HAVE_STRUCT_TIMESPEC
   #else
     #define ARCH_X86_32 1
   #endif
