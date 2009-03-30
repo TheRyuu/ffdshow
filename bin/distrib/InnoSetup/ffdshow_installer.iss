@@ -397,7 +397,7 @@ Source: "{#= bindir}\ff_x264.dll";                   DestDir: "{app}";          
 #endif
 
 #if is64bit
-;Source: "Runtimes\pthreadGC2\x64\pthreadGC2-64.dll"; DestDir: "{sys}";                       Components: ffdshow;                    Flags: sharedfile    restartreplace uninsrestartdelete uninsnosharedfileprompt
+;Source: "Runtimes\pthreadGC2\x64\pthreadGC2.dll"; DestDir: "{sys}";                       Components: ffdshow;                    Flags: sharedfile    restartreplace uninsrestartdelete uninsnosharedfileprompt
 #else
 Source: "Runtimes\pthreadGC2\x86\pthreadGC2.dll";    DestDir: "{sys}";                       Components: ffdshow;                    Flags: sharedfile    restartreplace uninsrestartdelete uninsnosharedfileprompt
 #endif
