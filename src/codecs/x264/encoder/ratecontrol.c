@@ -441,22 +441,17 @@ int x264_ratecontrol_new( x264_t *h )
             if( strstr( opts, "qp=0" ) && h->param.rc.i_rc_method == X264_RC_ABR )
                 x264_log( h, X264_LOG_WARNING, "1st pass was lossless, bitrate prediction will be inaccurate\n" );
 
+            if( !strstr( opts, "direct=3" ) && h->param.analyse.i_direct_mv_pred == X264_DIRECT_PRED_AUTO )
+            {
+                x264_log( h, X264_LOG_WARNING, "direct=auto not used on the first pass\n" );
+                h->mb.b_direct_auto_write = 1;
+            }
+
             if( ( p = strstr( opts, "b_adapt=" ) ) && sscanf( p, "b_adapt=%d", &i ) && i >= X264_B_ADAPT_NONE && i <= X264_B_ADAPT_TRELLIS )
                 h->param.i_bframe_adaptive = i;
             else if( h->param.i_bframe )
             {
                 x264_log( h, X264_LOG_ERROR, "b_adapt method specified in stats file not valid\n" );
-                return -1;
-            }
-
-            if( ( p = strstr( opts, "scenecut=" ) ) && sscanf( p, "scenecut=%d", &i ) && i >= -1 && i <= 100 )
-            {
-                h->param.i_scenecut_threshold = i;
-                h->param.b_pre_scenecut = !!strstr( p, "(pre)" );
-            }
-            else
-            {
-                x264_log( h, X264_LOG_ERROR, "scenecut method specified in stats file not valid\n" );
                 return -1;
             }
         }
@@ -1041,8 +1036,7 @@ int x264_ratecontrol_slice_type( x264_t *h, int frame_num )
                 h->thread[i]->param.rc.i_rc_method = X264_RC_CQP;
                 h->thread[i]->param.rc.b_stat_read = 0;
                 h->thread[i]->param.i_bframe_adaptive = 0;
-                h->thread[i]->param.b_pre_scenecut = 0;
-                h->thread[i]->param.i_scenecut_threshold = -1;
+                h->thread[i]->param.i_scenecut_threshold = 0;
                 if( h->thread[i]->param.i_bframe > 1 )
                     h->thread[i]->param.i_bframe = 1;
             }
@@ -1141,6 +1135,10 @@ void x264_ratecontrol_end( x264_t *h, int bits )
             {
                 update_predictor( rc->pred_b_from_p, qp2qscale(rc->qpa_rc),
                                   h->fref1[h->i_ref1-1]->i_satd, rc->bframe_bits / rc->bframes );
+                /* In some cases, such as completely blank scenes, pred_b_from_p can go nuts */
+                /* Hackily cap the predictor coeff in case this happens. */
+                /* FIXME FIXME FIXME */
+                rc->pred_b_from_p->coeff = X264_MIN( rc->pred_b_from_p->coeff, 10. );
                 rc->bframe_bits = 0;
             }
         }

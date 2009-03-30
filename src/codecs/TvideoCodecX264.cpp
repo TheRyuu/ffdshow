@@ -103,7 +103,6 @@ LRESULT TvideoCodecX264::beginCompress(int cfgcomode,int csp,const Trect &r)
    if (coCfg->max_b_frames>1)
    param.analyse.b_weighted_bipred=1;
    param.analyse.i_direct_mv_pred=coCfg->x264_i_direct_mv_pred;
-   param.analyse.i_direct_8x8_inference=-1;
    param.i_bframe_adaptive=coCfg->b_dynamic;
    param.b_bframe_pyramid=coCfg->x264_b_bframe_pyramid;
   }

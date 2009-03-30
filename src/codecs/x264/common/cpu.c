@@ -33,6 +33,11 @@
 #include <sys/types.h>
 #include <sys/sysctl.h>
 #endif
+#ifdef SYS_OPENBSD
+#include <sys/param.h>
+#include <sys/sysctl.h>
+#include <machine/cpu.h>
+#endif
 
 #include "common.h"
 #include "cpu.h"
@@ -48,7 +53,7 @@ const x264_cpu_name_t x264_cpu_names[] = {
     {"SSE2Fast",X264_CPU_MMX|X264_CPU_MMXEXT|X264_CPU_SSE|X264_CPU_SSE2|X264_CPU_SSE2_IS_FAST},
     {"SSE3",    X264_CPU_MMX|X264_CPU_MMXEXT|X264_CPU_SSE|X264_CPU_SSE2|X264_CPU_SSE3},
     {"SSSE3",   X264_CPU_MMX|X264_CPU_MMXEXT|X264_CPU_SSE|X264_CPU_SSE2|X264_CPU_SSE3|X264_CPU_SSSE3},
-    {"PHADD",   X264_CPU_MMX|X264_CPU_MMXEXT|X264_CPU_SSE|X264_CPU_SSE2|X264_CPU_SSE3|X264_CPU_SSSE3|X264_CPU_PHADD_IS_FAST},
+    {"FastShuffle",   X264_CPU_MMX|X264_CPU_MMXEXT|X264_CPU_SSE|X264_CPU_SSE2|X264_CPU_SHUFFLE_IS_FAST},
     {"SSE4.1",  X264_CPU_MMX|X264_CPU_MMXEXT|X264_CPU_SSE|X264_CPU_SSE2|X264_CPU_SSE3|X264_CPU_SSSE3|X264_CPU_SSE4},
     {"SSE4.2",  X264_CPU_MMX|X264_CPU_MMXEXT|X264_CPU_SSE|X264_CPU_SSE2|X264_CPU_SSE3|X264_CPU_SSSE3|X264_CPU_SSE4|X264_CPU_SSE42},
     {"Cache32", X264_CPU_CACHELINE_32},
@@ -102,7 +107,7 @@ uint32_t x264_cpu_detect( void )
     if( cpu & X264_CPU_SSSE3 )
         cpu |= X264_CPU_SSE2_IS_FAST;
     if( cpu & X264_CPU_SSE4 )
-        cpu |= X264_CPU_PHADD_IS_FAST;
+        cpu |= X264_CPU_SHUFFLE_IS_FAST;
 
     x264_cpu_cpuid( 0x80000000, &eax, &ebx, &ecx, &edx );
     max_extended_cap = eax;
@@ -119,6 +124,7 @@ uint32_t x264_cpu_detect( void )
                 cpu |= X264_CPU_SSE2_IS_FAST;
                 cpu |= X264_CPU_SSE_MISALIGN;
                 cpu |= X264_CPU_LZCNT;
+                cpu |= X264_CPU_SHUFFLE_IS_FAST;
                 x264_cpu_mask_misalign_sse();
             }
             else
@@ -194,13 +200,17 @@ uint32_t x264_cpu_detect( void )
 
 #elif defined( ARCH_PPC )
 
-#ifdef SYS_MACOSX
+#if defined(SYS_MACOSX) || defined(SYS_OPENBSD)
 #include <sys/sysctl.h>
 uint32_t x264_cpu_detect( void )
 {
     /* Thank you VLC */
     uint32_t cpu = 0;
+#ifdef SYS_OPENBSD
+    int      selectors[2] = { CTL_MACHDEP, CPU_ALTIVEC };
+#else
     int      selectors[2] = { CTL_HW, HW_VECTORUNIT };
+#endif
     int      has_altivec = 0;
     size_t   length = sizeof( has_altivec );
     int      error = sysctl( selectors, 2, &has_altivec, &length, NULL, 0 );
@@ -294,10 +304,15 @@ int x264_cpu_num_processors( void )
     get_system_info( &info );
     return info.cpu_count;
 
-#elif defined(SYS_MACOSX) || defined(SYS_FREEBSD)
+#elif defined(SYS_MACOSX) || defined(SYS_FREEBSD) || defined(SYS_OPENBSD)
     int numberOfCPUs;
     size_t length = sizeof( numberOfCPUs );
+#ifdef SYS_OPENBSD
+    int mib[2] = { CTL_HW, HW_NCPU };
+    if( sysctl(mib, 2, &numberOfCPUs, &length, NULL, 0) )
+#else
     if( sysctlbyname("hw.ncpu", &numberOfCPUs, &length, NULL, 0) )
+#endif
     {
         numberOfCPUs = 1;
     }

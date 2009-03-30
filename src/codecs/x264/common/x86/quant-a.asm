@@ -29,6 +29,7 @@ SECTION_RODATA
 pb_1:     times 16 db 1
 pw_1:     times 8 dw 1
 pd_1:     times 4 dd 1
+pb_01:    times 8 db 0, 1
 
 %macro DQM4 3
     dw %1, %2, %1, %2, %2, %3, %2, %3
@@ -70,7 +71,7 @@ decimate_mask_table4:
 
 SECTION .text
 
-%macro QUANT_DC_START 0
+%macro QUANT_DC_START_MMX 0
     movd       m6, r1m     ; mf
     movd       m7, r2m     ; bias
 %ifidn m0, mm0
@@ -82,6 +83,14 @@ SECTION .text
     punpcklqdq m6, m6
     punpcklqdq m7, m7
 %endif
+%endmacro
+
+%macro QUANT_DC_START_SSSE3 0
+    movdqa     m5, [pb_01 GLOBAL]
+    movd       m6, r1m     ; mf
+    movd       m7, r2m     ; bias
+    pshufb     m6, m5
+    pshufb     m7, m5
 %endmacro
 
 %macro PABSW_MMX 2
@@ -105,7 +114,7 @@ SECTION .text
     psignw     %1, %2
 %endmacro
 
-%macro QUANT_ONE 3
+%macro QUANT_ONE 4
 ;;; %1      (m64)       dct[y][x]
 ;;; %2      (m64/mmx)   mf[y][x] or mf[0][0] (as uint16_t)
 ;;; %3      (m64/mmx)   bias[y][x] or bias[0][0] (as uint16_t)
@@ -115,38 +124,102 @@ SECTION .text
     pmulhuw    m0, %2   ; divide
     PSIGNW     m0, m1   ; restore sign
     mova       %1, m0   ; store
+%if %4
+    por        m5, m0
+%else
+    SWAP       m5, m0
+%endif
+%endmacro
+
+%macro QUANT_TWO 7
+    mova       m1, %1
+    mova       m3, %2
+    PABSW      m0, m1
+    PABSW      m2, m3
+    paddusw    m0, %5
+    paddusw    m2, %6
+    pmulhuw    m0, %3
+    pmulhuw    m2, %4
+    PSIGNW     m0, m1
+    PSIGNW     m2, m3
+    mova       %1, m0
+    mova       %2, m2
+%if %7
+    por        m5, m0
+    por        m5, m2
+%else
+    SWAP       m5, m0
+    por        m5, m2
+%endif
+%endmacro
+
+%macro QUANT_END_MMX 0
+    xor      eax, eax
+%ifndef ARCH_X86_64
+%if mmsize==8
+    packsswb  m5, m5
+    movd     ecx, m5
+    test     ecx, ecx
+%else
+    pxor      m4, m4
+    pcmpeqb   m5, m4
+    pmovmskb ecx, m5
+    cmp      ecx, (1<<mmsize)-1
+%endif
+%else
+%if mmsize==16
+    packsswb  m5, m5
+%endif
+    movq     rcx, m5
+    test     rcx, rcx
+%endif
+    setne     al
+%endmacro
+
+%macro QUANT_END_SSE4 0
+    xor      eax, eax
+    ptest     m5, m5
+    setne     al
 %endmacro
 
 ;-----------------------------------------------------------------------------
 ; void x264_quant_4x4_dc_mmxext( int16_t dct[16], int mf, int bias )
 ;-----------------------------------------------------------------------------
-%macro QUANT_DC 2
-cglobal %1, 1,1
+%macro QUANT_DC 2-3 0
+cglobal %1, 1,1,%3
     QUANT_DC_START
+%if %2==1
+    QUANT_ONE [r0], m6, m7, 0
+%else
 %assign x 0
-%rep %2
-    QUANT_ONE [r0+x], m6, m7
-%assign x x+mmsize
+%rep %2/2
+    QUANT_TWO [r0+x], [r0+x+mmsize], m6, m6, m7, m7, x
+%assign x x+mmsize*2
 %endrep
+%endif
+    QUANT_END
     RET
 %endmacro
 
 ;-----------------------------------------------------------------------------
-; void x264_quant_4x4_mmx( int16_t dct[16], uint16_t mf[16], uint16_t bias[16] )
+; int x264_quant_4x4_mmx( int16_t dct[16], uint16_t mf[16], uint16_t bias[16] )
 ;-----------------------------------------------------------------------------
 %macro QUANT_AC 2
 cglobal %1, 3,3
 %assign x 0
-%rep %2
-    QUANT_ONE [r0+x], [r1+x], [r2+x]
-%assign x x+mmsize
+%rep %2/2
+    QUANT_TWO [r0+x], [r0+x+mmsize], [r1+x], [r1+x+mmsize], [r2+x], [r2+x+mmsize], x
+%assign x x+mmsize*2
 %endrep
+    QUANT_END
     RET
 %endmacro
 
 INIT_MMX
+%define QUANT_END QUANT_END_MMX
 %define PABSW PABSW_MMX
 %define PSIGNW PSIGNW_MMX
+%define QUANT_DC_START QUANT_DC_START_MMX
 QUANT_DC x264_quant_2x2_dc_mmxext, 1
 %ifndef ARCH_X86_64 ; not needed because sse2 is faster
 QUANT_DC x264_quant_4x4_dc_mmxext, 4
@@ -155,18 +228,25 @@ QUANT_AC x264_quant_8x8_mmx, 16
 %endif
 
 INIT_XMM
-QUANT_DC x264_quant_4x4_dc_sse2, 2
+QUANT_DC x264_quant_4x4_dc_sse2, 2, 8
 QUANT_AC x264_quant_4x4_sse2, 2
 QUANT_AC x264_quant_8x8_sse2, 8
 
 %define PABSW PABSW_SSSE3
 %define PSIGNW PSIGNW_SSSE3
-QUANT_DC x264_quant_4x4_dc_ssse3, 2
+QUANT_DC x264_quant_4x4_dc_ssse3, 2, 8
 QUANT_AC x264_quant_4x4_ssse3, 2
 QUANT_AC x264_quant_8x8_ssse3, 8
 
 INIT_MMX
 QUANT_DC x264_quant_2x2_dc_ssse3, 1
+%define QUANT_END QUANT_END_SSE4
+;Not faster on Conroe, so only used in SSE4 versions
+%define QUANT_DC_START QUANT_DC_START_SSSE3
+INIT_XMM
+QUANT_DC x264_quant_4x4_dc_sse4, 2, 8
+QUANT_AC x264_quant_4x4_sse4, 2
+QUANT_AC x264_quant_8x8_sse4, 8
 
 
 
@@ -177,32 +257,32 @@ QUANT_DC x264_quant_2x2_dc_ssse3, 1
 %macro DEQUANT16_L 3
 ;;; %1      dct[y][x]
 ;;; %2,%3   dequant_mf[i_mf][y][x]
-;;; m5      i_qbits
+;;; m2      i_qbits
 
     mova     m0, %2
     packssdw m0, %3
     pmullw   m0, %1
-    psllw    m0, m5
+    psllw    m0, m2
     mova     %1, m0
 %endmacro
 
 %macro DEQUANT32_R 3
 ;;; %1      dct[y][x]
 ;;; %2,%3   dequant_mf[i_mf][y][x]
-;;; m5      -i_qbits
-;;; m6      f
-;;; m7      0
+;;; m2      -i_qbits
+;;; m3      f
+;;; m4      0
 
     mova      m0, %1
     mova      m1, m0
-    punpcklwd m0, m7
-    punpckhwd m1, m7
+    punpcklwd m0, m4
+    punpckhwd m1, m4
     pmaddwd   m0, %2
     pmaddwd   m1, %3
-    paddd     m0, m6
-    paddd     m1, m6
-    psrad     m0, m5
-    psrad     m1, m5
+    paddd     m0, m3
+    paddd     m1, m3
+    psrad     m0, m2
+    psrad     m1, m2
     packssdw  m0, m1
     mova      %1, m0
 %endmacro
@@ -215,15 +295,15 @@ QUANT_DC x264_quant_2x2_dc_ssse3, 1
     %1 [r0+t0     ], [r1+t0*2      ], [r1+t0*2+ 8*%3]
     sub t0d, 16*%3
     jge %%loop
-    rep ret
+    REP_RET
 %else
     %1 [r0+8*%3], [r1+16*%3], [r1+24*%3]
     %1 [r0     ], [r1      ], [r1+ 8*%3]
-    ret
+    RET
 %endif
 %endmacro
 
-%macro DEQUANT16_FLAT 2-8
+%macro DEQUANT16_FLAT 2-5
     mova   m0, %1
 %assign i %0-2
 %rep %0-1
@@ -233,14 +313,16 @@ QUANT_DC x264_quant_2x2_dc_ssse3, 1
 %else
     pmullw m0, [r0+%2]
 %endif
-    psllw  m %+ i, m7
+    psllw  m %+ i, m4
     mova   [r0+%2], m %+ i
     %assign i i-1
     %rotate 1
 %endrep
 %endmacro
 
-%ifdef ARCH_X86_64
+%ifdef WIN64
+    DECLARE_REG_TMP 6,3,2
+%elifdef ARCH_X86_64
     DECLARE_REG_TMP 4,3,2
 %else
     DECLARE_REG_TMP 2,0,1
@@ -257,8 +339,8 @@ QUANT_DC x264_quant_2x2_dc_ssse3, 1
 %ifdef ARCH_X86_64
     add  r1, t2     ; dequant_mf[i_mf]
 %else
-    add  r1, r1m    ; dequant_mf[i_mf]
-    mov  r0, r0m    ; dct
+    add  r1, r1mp   ; dequant_mf[i_mf]
+    mov  r0, r0mp   ; dct
 %endif
     sub  t0d, %2
     jl   .rshift32  ; negative qbits => rightshift
@@ -269,26 +351,27 @@ QUANT_DC x264_quant_2x2_dc_ssse3, 1
 ;-----------------------------------------------------------------------------
 %macro DEQUANT 4
 cglobal x264_dequant_%2x%2_%1, 0,3
+.skip_prologue:
     DEQUANT_START %3+2, %3
 
 .lshift:
-    movd m5, t0d
+    movd m2, t0d
     DEQUANT_LOOP DEQUANT16_L, %2*%2/4, %4
 
 .rshift32:
     neg   t0d
-    movd  m5, t0d
-    mova  m6, [pd_1 GLOBAL]
-    pxor  m7, m7
-    pslld m6, m5
-    psrld m6, 1
+    movd  m2, t0d
+    mova  m3, [pd_1 GLOBAL]
+    pxor  m4, m4
+    pslld m3, m2
+    psrld m3, 1
     DEQUANT_LOOP DEQUANT32_R, %2*%2/4, %4
 
 cglobal x264_dequant_%2x%2_flat16_%1, 0,3
     movifnidn t2d, r2m
 %if %2 == 8
     cmp  t2d, 12
-    jl x264_dequant_%2x%2_%1
+    jl x264_dequant_%2x%2_%1.skip_prologue
     sub  t2d, 12
 %endif
     imul t0d, t2d, 0x2b
@@ -303,8 +386,8 @@ cglobal x264_dequant_%2x%2_flat16_%1, 0,3
 %else
     lea  r1, [dequant%2_scale + t2 GLOBAL]
 %endif
-    movifnidn r0d, r0m
-    movd m7, t0d
+    movifnidn r0, r0mp
+    movd m4, t0d
 %if %2 == 4
 %ifidn %1, mmx
     DEQUANT16_FLAT [r1], 0, 16
@@ -322,7 +405,7 @@ cglobal x264_dequant_%2x%2_flat16_%1, 0,3
     DEQUANT16_FLAT [r1+16], 16, 48, 80, 112
     DEQUANT16_FLAT [r1+32], 32, 96
 %endif
-    ret
+    RET
 %endmacro ; DEQUANT
 
 %ifndef ARCH_X86_64
@@ -339,21 +422,21 @@ cglobal x264_dequant_4x4dc_%1, 0,3
     DEQUANT_START 6, 6
 
 .lshift:
-    movd   m6, [r1]
-    movd   m5, t0d
-    pslld  m6, m5
+    movd   m3, [r1]
+    movd   m2, t0d
+    pslld  m3, m2
 %if mmsize==16
-    pshuflw  m6, m6, 0
-    punpcklqdq m6, m6
+    pshuflw  m3, m3, 0
+    punpcklqdq m3, m3
 %else
-    pshufw   m6, m6, 0
+    pshufw   m3, m3, 0
 %endif
 %assign x 0
 %rep 16/mmsize
     mova     m0, [r0+mmsize*0+x]
     mova     m1, [r0+mmsize*1+x]
-    pmullw   m0, m6
-    pmullw   m1, m6
+    pmullw   m0, m3
+    pmullw   m1, m3
     mova     [r0+mmsize*0+x], m0
     mova     [r0+mmsize*1+x], m1
 %assign x x+mmsize*2
@@ -362,28 +445,28 @@ cglobal x264_dequant_4x4dc_%1, 0,3
 
 .rshift32:
     neg   t0d
-    movd  m5, t0d
-    mova  m6, [pw_1 GLOBAL]
-    mova  m7, m6
-    pslld m6, m5
-    psrld m6, 1
-    movd  m4, [r1]
+    movd  m3, t0d
+    mova  m4, [pw_1 GLOBAL]
+    mova  m5, m4
+    pslld m4, m3
+    psrld m4, 1
+    movd  m2, [r1]
 %if mmsize==8
-    punpcklwd m4, m4
+    punpcklwd m2, m2
 %else
-    pshuflw m4, m4, 0
+    pshuflw m2, m2, 0
 %endif
-    punpcklwd m4, m6
+    punpcklwd m2, m4
 %assign x 0
 %rep 32/mmsize
     mova      m0, [r0+x]
     mova      m1, m0
-    punpcklwd m0, m7
-    punpckhwd m1, m7
-    pmaddwd   m0, m4
-    pmaddwd   m1, m4
-    psrad     m0, m5
-    psrad     m1, m5
+    punpcklwd m0, m5
+    punpckhwd m1, m5
+    pmaddwd   m0, m2
+    pmaddwd   m1, m2
+    psrad     m0, m3
+    psrad     m1, m3
     packssdw  m0, m1
     mova      [r0+x], m0
 %assign x x+mmsize
@@ -399,10 +482,10 @@ DEQUANT_DC sse2
 ;-----------------------------------------------------------------------------
 ; void x264_denoise_dct_mmx( int16_t *dct, uint32_t *sum, uint16_t *offset, int size )
 ;-----------------------------------------------------------------------------
-%macro DENOISE_DCT 1
-cglobal x264_denoise_dct_%1, 4,5
+%macro DENOISE_DCT 1-2 0
+cglobal x264_denoise_dct_%1, 4,5,%2
     movzx     r4d, word [r0] ; backup DC coefficient
-    pxor      m7, m7
+    pxor      m6, m6
 .loop:
     sub       r3, mmsize
     mova      m2, [r0+r3*2+0*mmsize]
@@ -419,10 +502,10 @@ cglobal x264_denoise_dct_%1, 4,5
     mova      [r0+r3*2+1*mmsize], m1
     mova      m2, m4
     mova      m3, m5
-    punpcklwd m4, m7
-    punpckhwd m2, m7
-    punpcklwd m5, m7
-    punpckhwd m3, m7
+    punpcklwd m4, m6
+    punpckhwd m2, m6
+    punpcklwd m5, m6
+    punpckhwd m3, m6
     paddd     m4, [r1+r3*4+0*mmsize]
     paddd     m2, [r1+r3*4+1*mmsize]
     paddd     m5, [r1+r3*4+2*mmsize]
@@ -443,10 +526,10 @@ INIT_MMX
 DENOISE_DCT mmx
 %endif
 INIT_XMM
-DENOISE_DCT sse2
+DENOISE_DCT sse2, 7
 %define PABSW PABSW_SSSE3
 %define PSIGNW PSIGNW_SSSE3
-DENOISE_DCT ssse3
+DENOISE_DCT ssse3, 7
 
 
 
@@ -562,18 +645,18 @@ cglobal x264_decimate_score64_%1, 1,4
 %else
     %define table x264_decimate_table8
 %endif
-    mova  m7, [pb_1 GLOBAL]
-    DECIMATE_MASK r1d, eax, r0, m7, %1, null
+    mova  m5, [pb_1 GLOBAL]
+    DECIMATE_MASK r1d, eax, r0, m5, %1, null
     test  eax, eax
     jne  .ret9
-    DECIMATE_MASK r2d, eax, r0+32, m7, %1, null
+    DECIMATE_MASK r2d, eax, r0+32, m5, %1, null
     shl   r2d, 16
     or    r1d, r2d
-    DECIMATE_MASK r2d, r3d, r0+64, m7, %1, null
+    DECIMATE_MASK r2d, r3d, r0+64, m5, %1, null
     shl   r2, 32
     or    eax, r3d
     or    r1, r2
-    DECIMATE_MASK r2d, r3d, r0+96, m7, %1, null
+    DECIMATE_MASK r2d, r3d, r0+96, m5, %1, null
     shl   r2, 48
     or    r1, r2
     xor   r1, -1
@@ -703,7 +786,7 @@ cglobal x264_coeff_last4_%1, 1,1
     RET
 %else
 cglobal x264_coeff_last4_%1, 0,3
-    mov   edx, r0m
+    mov   edx, r0mp
     mov   eax, [edx+4]
     xor   ecx, ecx
     test  eax, eax
@@ -740,17 +823,17 @@ cglobal x264_coeff_last16_%1, 1,3
 %ifndef ARCH_X86_64
 cglobal x264_coeff_last64_%1, 1, 5-mmsize/16
     pxor m2, m2
-    LAST_MASK r1d, r0, r4d
-    LAST_MASK r2d, r0+32, r4d
-    shl r2d, 16
-    or  r1d, r2d
     LAST_MASK r2d, r0+64, r4d
     LAST_MASK r3d, r0+96, r4d
     shl r3d, 16
     or  r2d, r3d
-    not r1d
     xor r2d, -1
     jne .secondhalf
+    LAST_MASK r1d, r0, r4d
+    LAST_MASK r3d, r0+32, r4d
+    shl r3d, 16
+    or  r1d, r3d
+    not r1d
     LAST eax, r1d, 0x1f
     RET
 .secondhalf:
@@ -809,7 +892,9 @@ COEFF_LAST sse2_lzcnt
 %endmacro
 
 ; t6 = eax for return, t3 = ecx for shift, t[01] = r[01] for x86_64 args
-%ifdef ARCH_X86_64
+%ifdef WIN64
+    DECLARE_REG_TMP 3,1,2,0,4,5,6
+%elifdef ARCH_X86_64
     DECLARE_REG_TMP 0,1,2,3,4,5,6
 %else
     DECLARE_REG_TMP 6,3,2,1,4,5,0
@@ -817,8 +902,8 @@ COEFF_LAST sse2_lzcnt
 
 %macro COEFF_LEVELRUN 2
 cglobal x264_coeff_level_run%2_%1,0,7
-    movifnidn t0d, r0m
-    movifnidn t1d, r1m
+    movifnidn t0, r0mp
+    movifnidn t1, r1mp
     pxor    m2, m2
     LAST_MASK t5d, t0-(%2&1)*2, t4d
     not    t5d
@@ -826,7 +911,7 @@ cglobal x264_coeff_level_run%2_%1,0,7
     mov    t4d, %2-1
     LZCOUNT t3d, t5d, 0x1f
     xor    t6d, t6d
-    shl    t5d, 1
+    add    t5d, t5d
     sub    t4d, t3d
     shl    t5d, t3b
     mov   [t1], t4d
@@ -840,7 +925,7 @@ cglobal x264_coeff_level_run%2_%1,0,7
     inc    t6d
     sub    t4d, t3d
     jge .loop
-    RET
+    REP_RET
 %endmacro
 
 INIT_MMX

@@ -404,19 +404,19 @@ static ALWAYS_INLINE void x264_macroblock_cache_intra8x8_pred( x264_t *h, int x,
 #define array_non_zero_int array_non_zero_int_c
 static ALWAYS_INLINE int array_non_zero_int_c( void *v, int i_count )
 {
-    uint64_t *x = v;
+    union {uint16_t s[4]; uint64_t l;} *x = v;
     if(i_count == 8)
-        return !!x[0];
+        return !!x[0].l;
     else if(i_count == 16)
-        return !!(x[0]|x[1]);
+        return !!(x[0].l|x[1].l);
     else if(i_count == 32)
-        return !!(x[0]|x[1]|x[2]|x[3]);
+        return !!(x[0].l|x[1].l|x[2].l|x[3].l);
     else
     {
         int i;
         i_count /= sizeof(uint64_t);
         for( i = 0; i < i_count; i++ )
-            if( x[i] ) return 1;
+            if( x[i].l ) return 1;
         return 0;
     }
 }
@@ -455,36 +455,14 @@ static inline int x264_mb_transform_8x8_allowed( x264_t *h )
     // large partitions are allowed
     // direct and 8x8 are conditional
     static const uint8_t partition_tab[X264_MBTYPE_MAX] = {
-        0,0,0,0,1,2,0,2,1,1,1,1,1,1,1,1,1,2,0,
+        0,0,0,0,1,2,0,1,1,1,1,1,1,1,1,1,1,1,0,
     };
-    int p, i;
 
     if( !h->pps->b_transform_8x8_mode )
         return 0;
-    p = partition_tab[h->mb.i_type];
-    if( p < 2 )
-        return p;
-    else if( h->mb.i_type == B_DIRECT )
-        return h->sps->b_direct8x8_inference;
-    else if( h->mb.i_type == P_8x8 )
-    {
-        if( !(h->param.analyse.inter & X264_ANALYSE_PSUB8x8) )
-            return 1;
-        for( i=0; i<4; i++ )
-            if( h->mb.i_sub_partition[i] != D_L0_8x8 )
-                return 0;
-        return 1;
-    }
-    else // B_8x8
-    {
-        // x264 currently doesn't use sub-8x8 B partitions, so don't check for them
-        if( h->sps->b_direct8x8_inference )
-            return 1;
-        for( i=0; i<4; i++ )
-            if( h->mb.i_sub_partition[i] == D_DIRECT_8x8 )
-                return 0;
-        return 1;
-    }
+    if( h->mb.i_type != P_8x8 )
+        return partition_tab[h->mb.i_type];
+    return *(uint32_t*)h->mb.i_sub_partition == D_L0_8x8*0x01010101;
 }
 
 #endif

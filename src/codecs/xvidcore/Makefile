@@ -3,7 +3,7 @@ CFLAGS+= -I. -I../..
 ifneq ($(64BIT),yes)
 	CFLAGS+=-DARCH_IS_IA32 -DARCH_IS_32BIT
 else
-	CFLAGS+=-DARCH_IS_GENERIC -DARCH_IS_64BIT
+	CFLAGS+=-DARCH_IS_X86_64 -DARCH_IS_64BIT
 endif
 
 SRCS_C=decoder.c \
@@ -49,9 +49,7 @@ SRCS_C=decoder.c \
 		utils/mem_transfer.c \
 		utils/timer.c
 
-ifneq ($(64BIT),yes)
-SRCS_YASM=bitstream/x86_asm/cbp_3dne.asm \
-		bitstream/x86_asm/cbp_mmx.asm \
+SRCS_YASM=bitstream/x86_asm/cbp_mmx.asm \
 		bitstream/x86_asm/cbp_sse2.asm \
 		dct/x86_asm/fdct_mmx_ffmpeg.asm \
 		dct/x86_asm/fdct_mmx_skal.asm \
@@ -87,7 +85,6 @@ SRCS_YASM=bitstream/x86_asm/cbp_3dne.asm \
 		utils/x86_asm/interlacing_mmx.asm \
 		utils/x86_asm/cpuid.asm \
 		plugins/x86_asm/plugin_ssim-a.asm
-endif
 
 SLIB=../../../bin/xvidcore.dll
 DEF=xvid.def
@@ -97,10 +94,10 @@ include ../../makefile_c.inc
 .all: $(SLIB)
 
 clean:
-	rm -f *.o bitstream/*.o bitstream/x86_asm/*.o dct/*.o dct/x86_asm/*.o dct/x86_64_asm*.o \
-		image/*.o image/x86_asm/*.o image/x86_64_asm/*.o motion/*.o motion/x86_asm/*.o motion/x86_64_asm/*.o \
-		plugins/*.o plugins/x86_asm/*.o prediction/*.o quant/*.o quant/x86_asm/*.o quant/x86_64_asm/*.o \
-		utils/*.o utils/x86_asm/*.o utils/x86_64_asm/*.o \
+	rm -f *.o bitstream/*.o bitstream/x86_asm/*.o dct/*.o dct/x86_asm/*.o \
+		image/*.o image/x86_asm/*.o motion/*.o motion/x86_asm/*.o \
+		plugins/*.o plugins/x86_asm/*.o prediction/*.o quant/*.o quant/x86_asm/*.o \
+		utils/*.o utils/x86_asm/*.o \
 		*~ $(SLIB) *.d bitstream/*.d dct/*.d image/*.d motion/*.d plugins/*.d prediction/*.d quant/*.d utils/*.d
 
 #

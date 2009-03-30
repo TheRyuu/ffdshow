@@ -348,6 +348,39 @@ static void add16x16_idct8( uint8_t *dst, int16_t dct[4][8][8] )
     add8x8_idct8( &dst[8*FDEC_STRIDE+8], dct[3] );
 }
 
+static void inline add4x4_idct_dc( uint8_t *p_dst, int16_t dc )
+{
+    int i;
+    dc = (dc + 32) >> 6;
+    for( i = 0; i < 4; i++, p_dst += FDEC_STRIDE )
+    {
+        p_dst[0] = x264_clip_uint8( p_dst[0] + dc );
+        p_dst[1] = x264_clip_uint8( p_dst[1] + dc );
+        p_dst[2] = x264_clip_uint8( p_dst[2] + dc );
+        p_dst[3] = x264_clip_uint8( p_dst[3] + dc );
+    }
+}
+
+static void add8x8_idct_dc( uint8_t *p_dst, int16_t dct[2][2] )
+{
+    add4x4_idct_dc( &p_dst[0],               dct[0][0] );
+    add4x4_idct_dc( &p_dst[4],               dct[0][1] );
+    add4x4_idct_dc( &p_dst[4*FDEC_STRIDE+0], dct[1][0] );
+    add4x4_idct_dc( &p_dst[4*FDEC_STRIDE+4], dct[1][1] );
+}
+
+static void add16x16_idct_dc( uint8_t *p_dst, int16_t dct[4][4] )
+{
+    int i;
+    for( i = 0; i < 4; i++, p_dst += 4*FDEC_STRIDE )
+    {
+        add4x4_idct_dc( &p_dst[ 0], dct[i][0] );
+        add4x4_idct_dc( &p_dst[ 4], dct[i][1] );
+        add4x4_idct_dc( &p_dst[ 8], dct[i][2] );
+        add4x4_idct_dc( &p_dst[12], dct[i][3] );
+    }
+}
+
 
 /****************************************************************************
  * x264_dct_init:
@@ -359,9 +392,11 @@ void x264_dct_init( int cpu, x264_dct_function_t *dctf )
 
     dctf->sub8x8_dct    = sub8x8_dct;
     dctf->add8x8_idct   = add8x8_idct;
+    dctf->add8x8_idct_dc = add8x8_idct_dc;
 
     dctf->sub16x16_dct  = sub16x16_dct;
     dctf->add16x16_idct = add16x16_idct;
+    dctf->add16x16_idct_dc = add16x16_idct_dc;
 
     dctf->sub8x8_dct8   = sub8x8_dct8;
     dctf->add8x8_idct8  = add8x8_idct8;
@@ -377,6 +412,8 @@ void x264_dct_init( int cpu, x264_dct_function_t *dctf )
     {
         dctf->sub4x4_dct    = x264_sub4x4_dct_mmx;
         dctf->add4x4_idct   = x264_add4x4_idct_mmx;
+        dctf->add8x8_idct_dc = x264_add8x8_idct_dc_mmx;
+        dctf->add16x16_idct_dc = x264_add16x16_idct_dc_mmx;
         dctf->dct4x4dc      = x264_dct4x4dc_mmx;
         dctf->idct4x4dc     = x264_idct4x4dc_mmx;
 
@@ -404,6 +441,18 @@ void x264_dct_init( int cpu, x264_dct_function_t *dctf )
         dctf->sub16x16_dct  = x264_sub16x16_dct_sse2;
         dctf->add8x8_idct   = x264_add8x8_idct_sse2;
         dctf->add16x16_idct = x264_add16x16_idct_sse2;
+        dctf->add16x16_idct_dc = x264_add16x16_idct_dc_sse2;
+    }
+
+    if( cpu&X264_CPU_SSSE3 )
+    {
+        dctf->sub4x4_dct    = x264_sub4x4_dct_ssse3;
+        dctf->sub8x8_dct    = x264_sub8x8_dct_ssse3;
+        dctf->sub16x16_dct  = x264_sub16x16_dct_ssse3;
+        dctf->sub8x8_dct8   = x264_sub8x8_dct8_ssse3;
+        dctf->sub16x16_dct8 = x264_sub16x16_dct8_ssse3;
+        dctf->add8x8_idct_dc = x264_add8x8_idct_dc_ssse3;
+        dctf->add16x16_idct_dc = x264_add16x16_idct_dc_ssse3;
     }
 #endif //HAVE_MMX
 
@@ -564,12 +613,19 @@ static void zigzag_sub_8x8_field( int16_t level[64], const uint8_t *p_src, uint8
 #undef ZIG
 #undef COPY4x4
 
-static void zigzag_interleave_8x8_cavlc( int16_t *dst, int16_t *src )
+static void zigzag_interleave_8x8_cavlc( int16_t *dst, int16_t *src, uint8_t *nnz )
 {
     int i,j;
     for( i=0; i<4; i++ )
+    {
+        int nz = 0;
         for( j=0; j<16; j++ )
+        {
+            nz |= src[i+j*4];
             dst[i*16+j] = src[i+j*4];
+        }
+        nnz[(i&1) + (i>>1)*8] = !!nz;
+    }
 }
 
 void x264_zigzag_init( int cpu, x264_zigzag_function_t *pf, int b_interlaced )
@@ -607,9 +663,9 @@ void x264_zigzag_init( int cpu, x264_zigzag_function_t *pf, int b_interlaced )
         {
             pf->sub_4x4  = x264_zigzag_sub_4x4_frame_ssse3;
             pf->scan_8x8 = x264_zigzag_scan_8x8_frame_ssse3;
+            if( cpu&X264_CPU_SHUFFLE_IS_FAST )
+                pf->scan_4x4 = x264_zigzag_scan_4x4_frame_ssse3;
         }
-        if( cpu&X264_CPU_PHADD_IS_FAST )
-            pf->scan_4x4 = x264_zigzag_scan_4x4_frame_ssse3;
 #endif
 
 #ifdef ARCH_PPC
@@ -622,5 +678,7 @@ void x264_zigzag_init( int cpu, x264_zigzag_function_t *pf, int b_interlaced )
 #ifdef HAVE_MMX
     if( cpu&X264_CPU_MMX )
         pf->interleave_8x8_cavlc = x264_zigzag_interleave_8x8_cavlc_mmx;
+    if( cpu&X264_CPU_SHUFFLE_IS_FAST )
+        pf->interleave_8x8_cavlc = x264_zigzag_interleave_8x8_cavlc_sse2;
 #endif
 }

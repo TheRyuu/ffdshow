@@ -19,7 +19,7 @@
  *  along with this program ; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
  *
- * $Id: gmc.c,v 1.7 2006/11/07 19:59:03 Skal Exp $
+ * $Id: gmc.c,v 1.10 2008/11/30 16:36:44 Isibaar Exp $
  *
  ****************************************************************************/
 
@@ -48,7 +48,7 @@ static uint32_t __inline
 log2bin(uint32_t value)
 {
 /* Changed by Chenm001 */
-#if !defined(_MSC_VER) || defined(WIN64)
+#if !defined(_MSC_VER) || defined(ARCH_IS_X86_64)
   int n = 0;
 
   while (value) {
@@ -385,7 +385,7 @@ void get_average_mv_1pt_C(const NEW_GMC_DATA * const Dsp, VECTOR * const mv,
 	mv->y = RSHIFT(Dsp->Vo<<qpel, 3);
 }
 
-#if defined(ARCH_IS_IA32)
+#if defined(ARCH_IS_IA32) || defined(ARCH_IS_X86_64)
 /* *************************************************************
  * MMX core function
  */
@@ -399,6 +399,9 @@ extern void xvid_GMC_Core_Lin_8_mmx(uint8_t *Dst, const uint16_t * Offsets,
 
 extern void xvid_GMC_Core_Lin_8_sse2(uint8_t *Dst, const uint16_t * Offsets, 
                                      const uint8_t * const Src0, const int BpS, const int Rounder);
+
+extern void xvid_GMC_Core_Lin_8_sse41(uint8_t *Dst, const uint16_t * Offsets, 
+                                      const uint8_t * const Src0, const int BpS, const int Rounder);
 
 /* *************************************************************/
 
@@ -587,14 +590,18 @@ void init_GMC(const unsigned int cpu_flags)
       Predict_16x16_func = Predict_16x16_C;
       Predict_8x8_func   = Predict_8x8_C;
 
-#if defined(ARCH_IS_IA32)
+#if defined(ARCH_IS_IA32) || defined(ARCH_IS_X86_64)
       if ((cpu_flags & XVID_CPU_MMX)   || (cpu_flags & XVID_CPU_MMXEXT)   ||
           (cpu_flags & XVID_CPU_3DNOW) || (cpu_flags & XVID_CPU_3DNOWEXT) ||
-          (cpu_flags & XVID_CPU_SSE)   || (cpu_flags & XVID_CPU_SSE2))
+          (cpu_flags & XVID_CPU_SSE)   || (cpu_flags & XVID_CPU_SSE2) ||
+          (cpu_flags & XVID_CPU_SSE3)  || (cpu_flags & XVID_CPU_SSE41))
 	{
 	   Predict_16x16_func = Predict_16x16_mmx;
 	   Predict_8x8_func   = Predict_8x8_mmx;
-	   if (cpu_flags & XVID_CPU_SSE2)
+
+           if (cpu_flags & XVID_CPU_SSE41)
+	     GMC_Core_Lin_8 = xvid_GMC_Core_Lin_8_sse41;
+	   else if (cpu_flags & XVID_CPU_SSE2)
 	     GMC_Core_Lin_8 = xvid_GMC_Core_Lin_8_sse2;
 	   else
              GMC_Core_Lin_8 = xvid_GMC_Core_Lin_8_mmx;

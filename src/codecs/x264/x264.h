@@ -26,7 +26,7 @@
 
 #include <stdarg.h>
 
-#define X264_BUILD "65" /* ffdshow custom code */
+#define X264_BUILD "67" /* ffdshow custom code */
 
 /* x264_t:
  *      opaque handler for encoder */
@@ -48,7 +48,7 @@ typedef struct x264_t x264_t;
 #define X264_CPU_SSE2_IS_FAST   0x000100  /* a few functions are only faster on Core2 and Phenom */
 #define X264_CPU_SSE3           0x000200
 #define X264_CPU_SSSE3          0x000400
-#define X264_CPU_PHADD_IS_FAST  0x000800  /* pre-Penryn Core2 have a uselessly slow PHADD instruction */
+#define X264_CPU_SHUFFLE_IS_FAST 0x000800 /* Penryn, Nehalem, and Phenom have fast shuffle units */
 #define X264_CPU_STACK_MOD4     0x001000  /* if stack is only mod4 and not mod16 */
 #define X264_CPU_SSE4           0x002000  /* SSE4.1 */
 #define X264_CPU_SSE42          0x004000  /* SSE4.2 */
@@ -179,7 +179,6 @@ typedef struct x264_param_t
     int         i_keyint_max;       /* Force an IDR keyframe at this interval */
     int         i_keyint_min;       /* Scenecuts closer together than this are coded as I, not IDR. */
     int         i_scenecut_threshold; /* how aggressively to insert extra I frames */
-    int         b_pre_scenecut;     /* compute scenecut on lowres frames */
     int         i_bframe;   /* how many b-frame between 2 references pictures */
     int         i_bframe_adaptive;
     int         i_bframe_bias;
@@ -219,7 +218,6 @@ typedef struct x264_param_t
         int          b_transform_8x8;
         int          b_weighted_bipred; /* implicit weighting for B-frames */
         int          i_direct_mv_pred; /* spatial vs temporal mv prediction */
-        int          i_direct_8x8_inference; /* forbid 4x4 direct partitions. -1 = auto, based on level */
         int          i_chroma_qp_offset;
 
         int          i_me_method; /* motion estimation algorithm to use (X264_ME_*) */
@@ -333,7 +331,11 @@ typedef struct x264_image_t /* ffdshow custom code */
 
 typedef struct x264_picture_t /* ffdshow custom code */
 {
-    /* In: force picture type (if not auto) XXX: ignored for now
+    /* In: force picture type (if not auto)
+     *     If x264 encoding parameters are violated in the forcing of picture types,
+     *     x264 will correct the input picture type and log a warning.
+     *     The quality of frametype decisions may suffer if a great deal of fine-grained
+     *     mixing of auto and forced frametypes is done.
      * Out: type of the picture encoded */
     int     i_type;
     /* In: force quantizer for > 0 */
