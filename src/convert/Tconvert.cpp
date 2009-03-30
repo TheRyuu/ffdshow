@@ -202,7 +202,7 @@ int Tconvert::convert(int incsp0,
             avisynth_yv12_to_yuy2=TconvertYV12<Tmmx>::yv12_to_yuy2;
           break;
          default:
-          if (highQualityRGB && !((outcsp|incsp) & FF_CSP_FLAGS_INTERLACED) && (Tconfig::cpu_flags&FF_CPU_SSE2) && (outcsp1==FF_CSP_RGB24 || outcsp1==FF_CSP_RGB32))
+          if (highQualityRGB && !((outcsp|incsp) & FF_CSP_FLAGS_INTERLACED) && outcsp_sup_ffdshow_converter(outcsp1))
            mode = MODE_ffdshow_converters;
           // Xvid converter is slow for interlaced color spaces. Use AviSynth converter in this case.
           else if (((outcsp & FF_CSP_FLAGS_INTERLACED) || highQualityRGB) && (outcsp1==FF_CSP_RGB24 || outcsp1==FF_CSP_RGB32))
@@ -228,41 +228,33 @@ int Tconvert::convert(int incsp0,
         }
        break;
       case FF_CSP_YUY2:
+       if (outcsp_sup_ffdshow_converter(outcsp1)) {
+           mode = MODE_ffdshow_converters;
+           break;
+       }
        switch (outcsp1)
         {
          case FF_CSP_420P: // YUY2 -> YV12
           mode=MODE_avisynth_yuy2_to_yv12;
           if (incsp&FF_CSP_FLAGS_INTERLACED)
-         #ifdef __SSE2__
            if (Tconfig::cpu_flags&FF_CPU_SSE2)
             avisynth_yuy2_to_yv12=TconvertYV12<Tsse2>::yuy2_i_to_yv12;
-           else
-         #endif
-           if (Tconfig::cpu_flags&FF_CPU_MMXEXT)
+           else if(Tconfig::cpu_flags&FF_CPU_MMXEXT)
             avisynth_yuy2_to_yv12=TconvertYV12<Tmmxext>::yuy2_i_to_yv12;
            else
             avisynth_yuy2_to_yv12=TconvertYV12<Tmmx>::yuy2_i_to_yv12;
           else
-         #ifdef __SSE2__
            if (Tconfig::cpu_flags&FF_CPU_SSE2)
             avisynth_yuy2_to_yv12=TconvertYV12<Tsse2>::yuy2_to_yv12;
-           else
-         #endif
-           if (Tconfig::cpu_flags&FF_CPU_MMXEXT)
+           else if (Tconfig::cpu_flags&FF_CPU_MMXEXT)
             avisynth_yuy2_to_yv12=TconvertYV12<Tmmxext>::yuy2_to_yv12;
            else
             avisynth_yuy2_to_yv12=TconvertYV12<Tmmx>::yuy2_to_yv12;
           break;
          case FF_CSP_RGB24:
-          if (Tconfig::cpu_flags&FF_CPU_SSE2)
-           mode = MODE_ffdshow_converters;
-          else
            mode=MODE_mmx_ConvertYUY2toRGB24; // YUY2 -> RGB24
           break;
          case FF_CSP_RGB32:
-          if (Tconfig::cpu_flags&FF_CPU_SSE2)
-           mode = MODE_ffdshow_converters;
-          else
            mode=MODE_mmx_ConvertYUY2toRGB32; // YUY2 -> RGB32
           break;
         }
@@ -337,11 +329,11 @@ int Tconvert::convert(int incsp0,
         }
        break;
       case FF_CSP_NV12:
-       if (!((outcsp|incsp) & FF_CSP_FLAGS_INTERLACED) && (outcsp1 == FF_CSP_RGB32 || outcsp1 == FF_CSP_RGB24) && (Tconfig::cpu_flags&FF_CPU_SSE2) && (incsp & FF_CSP_FLAGS_YUV_ORDER))
+       if (!((outcsp|incsp) & FF_CSP_FLAGS_INTERLACED) && outcsp_sup_ffdshow_converter(outcsp1) && (incsp & FF_CSP_FLAGS_YUV_ORDER))
         mode = MODE_ffdshow_converters;
        break;
       case FF_CSP_422P:
-       if ((outcsp1 == FF_CSP_RGB32 || outcsp1 == FF_CSP_RGB24) && (Tconfig::cpu_flags&FF_CPU_SSE2))
+       if (outcsp_sup_ffdshow_converter(outcsp1))
         mode = MODE_ffdshow_converters;
        break;
       case FF_CSP_PAL8:

@@ -53,7 +53,7 @@ typedef ptrdiff_t stride_t;
 //  10bit or more calculations
 //  Supported color spaces
 //    input:  progressive YV12, progressive NV12, YV16, YUY2
-//    output: RGB32,RGB24
+//    output: RGB32,RGB24,BGR32,BGR24
 //  SSE2 required
 //  Multithreaded and very fast on modern CPUs
 //  Portable (should work on UNIX)
@@ -62,7 +62,7 @@ class TffdshowConverters
 {
 public:
  void init(int incsp,                      // FF_CSP_420P, FF_CSP_NV12, FF_CSP_YUY2 or FF_CSP_420P (progressive only)
-           int outcsp,                     // FF_CSP_RGB32 or FF_CSP_RGB24
+           int outcsp,                     // FF_CSP_RGB32, FF_CSP_RGB24, FF_CSP_BGR32 or FF_CSP_BGR24
            ffYCbCr_RGB_MatrixCoefficientsType cspOptionsIturBt,  // ffYCbCr_RGB_coeff_ITUR_BT601, ffYCbCr_RGB_coeff_ITUR_BT709 or ffYCbCr_RGB_coeff_SMPTE240M
            int input_Y_white_level,        // input Y level (TV:235, PC:255)
            int input_Y_black_level,        // input Y level (TV:16, PC:0)

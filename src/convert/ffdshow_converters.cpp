@@ -381,9 +381,20 @@ template<int incsp, int outcsp, int left_edge, int right_edge, int rgb_limit, in
     xmm6 = _mm_packus_epi16(xmm6,xmm7);                                            // R (lower 8bytes,8bit) * 8
     xmm5 = _mm_packus_epi16(xmm5,xmm7);                                            // G (lower 8bytes,8bit) * 8
     xmm1 = _mm_packus_epi16(xmm1,xmm7);                                            // B (lower 8bytes,8bit) * 8
-    xmm6 = _mm_unpacklo_epi8(xmm6,xmm2);                                           // 0xff,R
-    xmm1 = _mm_unpacklo_epi8(xmm1,xmm5);                                           // G,B
-    xmm2 = xmm1;
+    if (outcsp == FF_CSP_RGB32 || outcsp == FF_CSP_RGB24) {
+        // RGB
+        xmm6 = _mm_unpacklo_epi8(xmm6,xmm2);                                       // 0xff,R
+        xmm1 = _mm_unpacklo_epi8(xmm1,xmm5);                                       // G,B
+        xmm2 = xmm1;
+    } else {
+        // BGR
+        xmm6 = _mm_unpacklo_epi8(xmm6,xmm5);                                       // G,R
+        xmm1 = _mm_unpacklo_epi8(xmm1,xmm2);                                       // 0xff,B
+        xmm2 = xmm6;
+        xmm6 = xmm1;
+        xmm1 = xmm2;
+    }
+
     xmm1 = _mm_unpackhi_epi16(xmm1,xmm6);                                          // 0xff,RGB * 4 (line 0)
     xmm2 = _mm_unpacklo_epi16(xmm2,xmm6);                                          // 0xff,RGB * 4 (line 1)
 
@@ -396,7 +407,7 @@ template<int incsp, int outcsp, int left_edge, int right_edge, int rgb_limit, in
         xmm2 = _mm_min_epu8(xmm2,xmm4);
     }
 
-    if (outcsp == FF_CSP_RGB32) {
+    if (outcsp == FF_CSP_RGB32 || outcsp == FF_CSP_BGR32) {
         if (aligned) {
             // 6% faster
             _mm_stream_si128((__m128i *)(dst),xmm1);
@@ -424,7 +435,7 @@ template<int incsp, int outcsp, int left_edge, int right_edge, int rgb_limit, in
 #endif
         }
         dst += 16;
-    } else { // RGB24
+    } else { // RGB24,BGR24
         uint32_t eax;
         __align16(uint8_t, rgbbuf[32]);
         *(int *)(rgbbuf) = _mm_cvtsi128_si32 (xmm1);
@@ -513,6 +524,12 @@ template <int incsp, int rgb_limit> void TffdshowConverters::convert_translate_o
         return;
     case FF_CSP_RGB24:
         convert_translate_align<incsp, FF_CSP_RGB24, rgb_limit>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
+        return;
+    case FF_CSP_BGR32:
+        convert_translate_align<incsp, FF_CSP_BGR32, rgb_limit>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
+        return;
+    case FF_CSP_BGR24:
+        convert_translate_align<incsp, FF_CSP_BGR24, rgb_limit>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
         return;
     }
 }
