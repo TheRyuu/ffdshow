@@ -30,12 +30,13 @@
 #include "ffdebug.h"
 #include <algorithm>
 #include <map>
+#include "TcomInit.h"
 
 #ifndef ICVERSION
 #define ICVERSION       0x0104
 #endif
 
-std::map<DWORD,HRESULT> CoInitializedThreads;
+TcomInit comInit;
 
 extern "C" __declspec(dllexport) LRESULT WINAPI DriverProc(DWORD dwDriverId,HDRVR hDriver,UINT uMsg,LPARAM lParam1,LPARAM lParam2)
 {
@@ -46,11 +47,7 @@ extern "C" __declspec(dllexport) LRESULT WINAPI DriverProc(DWORD dwDriverId,HDRV
    case DRV_LOAD:
     {
      InitCommonControls();
-     DWORD currentthread= GetCurrentThreadId();
-     std::map<DWORD,HRESULT>::iterator i= CoInitializedThreads.find(currentthread);
-     if(i==CoInitializedThreads.end()
-        || FAILED(CoInitializedThreads[currentthread]))
-      CoInitializedThreads[currentthread]= CoInitialize(NULL);
+     comInit.init();
      return DRV_OK;
     }
     /*
@@ -64,17 +61,12 @@ extern "C" __declspec(dllexport) LRESULT WINAPI DriverProc(DWORD dwDriverId,HDRV
      */
    case DRV_FREE:
     {
-     DWORD currentthread= GetCurrentThreadId();
-     std::map<DWORD,HRESULT>::iterator i= CoInitializedThreads.find(currentthread);
-     if(i==CoInitializedThreads.end()
-        || FAILED(CoInitializedThreads[currentthread]))
-      return DRV_OK;
-     CoUninitialize();
-     CoInitializedThreads.erase(currentthread);
+     comInit.uninit();
      return DRV_OK;
     }
    case DRV_OPEN:
     {
+     comInit.init();
      ICOPEN *icopen=(ICOPEN*)lParam2;
      if (icopen!=NULL && icopen->fccType!=ICTYPE_VIDEO) return DRVCNF_CANCEL;
      if (FAILED(CoCreateInstance(CLSID_FFVFW,NULL,CLSCTX_INPROC_SERVER,IID_Iffvfw,(void**)&ffvfw))) return DRVCNF_CANCEL;
