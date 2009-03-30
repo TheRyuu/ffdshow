@@ -455,9 +455,9 @@ void TcodecsPageVideo::fillCodecs(void)
    formats.push_back(Tformat(_l("Other MJPEG")   ,IDFF_avrn,IDFF_MOVIE_LAVC,_l("AVRN, MJPA, SP5X, AMVV")));
    formats.push_back(Tformat(_l("SVQ1")          ,IDFF_svq1,IDFF_MOVIE_LAVC,_l("Sorenson Video (SVQ1)")));
    formats.push_back(Tformat(_l("SVQ3")          ,IDFF_svq3,IDFF_MOVIE_LAVC,_l("Sorenson Video (SVQ3)")));
-   formats.push_back(Tformat(_l("8BPS")          ,IDFF_8bps,IDFF_MOVIE_LAVC,_l("Quicktime Planar RGB Video (8BPS)")));
-   formats.push_back(Tformat(_l("QTRLE")         ,IDFF_qtrle,IDFF_MOVIE_LAVC,_l("Quicktime Animation Video (QTRLE)")));
-   formats.push_back(Tformat(_l("QRPZA")         ,IDFF_qtrpza,IDFF_MOVIE_LAVC,_l("Quicktime Video Video (QRPZA)")));
+   formats.push_back(Tformat(_l("8BPS")          ,IDFF_8bps,IDFF_MOVIE_LAVC,_l("Quicktime Planar RGB (8BPS)")));
+   formats.push_back(Tformat(_l("QTRLE")         ,IDFF_qtrle,IDFF_MOVIE_LAVC,_l("Quicktime Animation (QTRLE)")));
+   formats.push_back(Tformat(_l("QTRPZA")        ,IDFF_qtrpza,IDFF_MOVIE_LAVC,_l("Quicktime Video (QTRPZA)")));
    formats.push_back(Tformat(_l("FFV1")          ,IDFF_ffv1,IDFF_MOVIE_LAVC,_l("FFV1 codec for libavcodec (FFV1)")));
    formats.push_back(Tformat(_l("DV")            ,IDFF_dvsd,IDFF_MOVIE_LAVC,_l("dvsd, DVSD, dv25, DV25, dv50, DV50")));
    formats.push_back(Tformat(_l("Other DV")      ,IDFF_cdvc,IDFF_MOVIE_LAVC,_l("CDVC, CDV5, DVIS, PDVC")));

@@ -62,7 +62,7 @@ void TcspOptionsPage::cfg2dlg(void)
  char_t customRange[256];
  int fixedChromaCutoff = ToutputVideoSettings::get_cspOptionsChromaCutoffStatic(blackCutoff, whiteCutoff, chromaCutoff);
  ffstring str(tr->translate(m_hwnd, dialogId, IDC_RBT_CUSTOM_YUV, NULL));
- strncpyf(customRange, countof(customRange), _l(" (Y : %d-%d, CbCr: %d-%d)"), blackCutoff, whiteCutoff, fixedChromaCutoff, 256 - fixedChromaCutoff);
+ strncpyf(customRange, countof(customRange), _l(" (Y: %d-%d, CbCr: %d-%d)"), blackCutoff, whiteCutoff, fixedChromaCutoff, 256 - fixedChromaCutoff);
  str+=customRange;
  setText(IDC_RBT_CUSTOM_YUV,str.c_str());
 

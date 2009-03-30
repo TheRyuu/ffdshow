@@ -1391,7 +1391,7 @@ int Txvid_2pass::codec_2pass_update(const TencFrameParams *frame)
 		}
 		else if (frame->frametype==FRAME_TYPE::SKIP) {
 			nns1.dd_v |= NNSTATS_SKIPFRAME;
-			frame_type=_l("skiped");
+			frame_type=_l("skipped");
 		}
 		else if (frame->frametype==FRAME_TYPE::PAD) {
 			nns1.dd_v |= NNSTATS_PADFRAME;
