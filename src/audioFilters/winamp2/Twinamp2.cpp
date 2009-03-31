@@ -238,7 +238,8 @@ unsigned int __stdcall Twinamp2dsp::threadProc(void *self0)
    self->h=(HWND)-1;
    DestroyWindow(h);
   }
- self->mod->Quit(self->mod);
+ if (self->mod->Quit)
+  self->mod->Quit(self->mod);
  UnregisterClass(FFDSHOW_WINAMP_CLASS,hi);
  _endthreadex(0);
  return 0;
