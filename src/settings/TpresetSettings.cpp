@@ -75,9 +75,11 @@ void TautoPresetProps::getVolume(void)
  char_t dsk[MAX_PATH];
  _splitpath_s(flnm,dsk,MAX_PATH,NULL,0,NULL,0,NULL,0);
  DWORD serial,maximumComponentLength,volumeFlags;
- wasVolume=GetVolumeInformation(dsk,volumeName,256,&serial,&maximumComponentLength,&volumeFlags,NULL,0);
+ ffstring disk(dsk);
+ disk += _l("\\");
+ wasVolume=GetVolumeInformation(disk.c_str(),volumeName,256,&serial,&maximumComponentLength,&volumeFlags,NULL,0);
  if (wasVolume)
-  tsnprintf_s(volumeSerial, countof(volumeSerial), _TRUNCATE, _l("%X-%X"),(int)LOWORD(volumeSerial),(int)HIWORD(volumeSerial));
+  tsnprintf_s(volumeSerial, countof(volumeSerial), _TRUNCATE, _l("%X-%X"),(int)HIWORD(serial),(int)LOWORD(serial));
 }
 void TautoPresetProps::getSourceFlnm(void)
 {
