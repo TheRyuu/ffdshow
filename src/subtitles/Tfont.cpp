@@ -607,7 +607,10 @@ void TrenderedSubtitleLines::printASS(
 
                 pval.firstuse = false;
                 y = pval.y;
-                pval.y += line->lineHeightWithGap(prefsdy);
+                if ((prefs.subformat & Tsubreader::SUB_FORMATMASK) == Tsubreader::SUB_SSA)
+                    pval.y += line->lineHeightWithGap(prefsdy);
+                else
+                    pval.y += double(prefs.linespacing) * line->lineHeightWithGap(prefsdy) / 100.0;
             }
 
         } else {
