@@ -665,8 +665,6 @@ TsubtitlesSettings::TsubtitlesSettings(TintStrColl *Icoll,TfilterIDFFs *filters,
      _l("subVobsubScale"), 0x100,
    IDFF_subLinespacing         ,&TsubtitlesSettings::linespacing             ,0,200,_l(""),1,
      _l("subLinespacing"), 100,
-   IDFF_subTimeOverlap         ,&TsubtitlesSettings::timeoverlap             ,0,0,_l(""),1,
-     _l("subTimeOverlap"), 1,
    IDFF_subIsMinDuration       ,&TsubtitlesSettings::isMinDuration           ,0,0,_l(""),1,
      _l("subIsMinDuration"), 0,
    IDFF_subMinDurationType     ,&TsubtitlesSettings::minDurationType         ,0,2,_l(""),1,
@@ -753,7 +751,6 @@ void TsubtitlesSettings::createFilters(size_t filtersorder,Tfilters *filters,Tfi
    if (!queue.temporary)
     {
      setOnChange(IDFF_subAutoFlnm,sub,&TimgFilterSubtitles::onSubFlnmChange);
-     setOnChange(IDFF_subTimeOverlap,sub,&TimgFilterSubtitles::onSubFlnmChange);
      setOnChange(IDFF_subIsMinDuration,sub,&TimgFilterSubtitles::onSubFlnmChange);
      setOnChange(IDFF_subMinDurationType,sub,&TimgFilterSubtitles::onSubFlnmChange);
      setOnChange(IDFF_subMinDurationSub,sub,&TimgFilterSubtitles::onSubFlnmChange);

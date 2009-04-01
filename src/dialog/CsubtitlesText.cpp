@@ -34,7 +34,6 @@ void TsubtitlesTextPage::init(void)
 
 void TsubtitlesTextPage::cfg2dlg(void)
 {
- setCheck(IDC_CHB_SUB_OVERLAP,cfgGet(IDFF_subTimeOverlap));
  split2dlg();
  linespacing2dlg();
  min2dlg();
@@ -173,7 +172,6 @@ TsubtitlesTextPage::TsubtitlesTextPage(TffdshowPageDec *Iparent,const TfilterIDF
  static const TbindCheckbox<TsubtitlesTextPage> chb[]=
   {
    IDC_CHB_SUB_SPLIT,IDFF_fontSplitting,&TsubtitlesTextPage::split2dlg,
-   IDC_CHB_SUB_OVERLAP,IDFF_subTimeOverlap,NULL,
    IDC_CHB_SUB_MINDURATION,IDFF_subIsMinDuration,&TsubtitlesTextPage::min2dlg,
    0,NULL,NULL
   };

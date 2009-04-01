@@ -483,7 +483,7 @@
 #define IDFF_subVobsubChangePosition 849
 #define IDFF_subVobsubScale          850
 #define IDFF_subLinespacing          838
-#define IDFF_subTimeOverlap          839
+//#define IDFF_subTimeOverlap          839
 #define IDFF_subIsMinDuration        840
 #define IDFF_subMinDurationType      841 //0 - subtitle, 1 - line, 2 - character
 #define IDFF_subMinDurationSub       842

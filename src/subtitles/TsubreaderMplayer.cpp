@@ -1139,7 +1139,7 @@ TsubreaderMplayer::TsubreaderMplayer(Tstream &fd,int sub_format,double fps,const
 
  processDuration(cfg);
 
- if (cfg->timeoverlap && !empty())
+ if (!empty())
   {
    for (iterator s=begin();s!=end()-1;s++)
     { // without these braces, processOverlap() is executed multiple times... (MSVC8)

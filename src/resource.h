@@ -929,7 +929,6 @@
 #define IDC_CHB_ELIM_CHROM              1572
 #define IDC_UD_LOGOAWAY_Y               1572
 #define IDC_LBL_NUMTHREADS              1572
-#define IDC_CHB_SUB_OVERLAP             1572
 #define IDC_LBL_ELIM_CHROM              1573
 #define IDC_UD_LOGOAWAY_DY              1573
 #define IDC_GRP_SF_OUT                  1573

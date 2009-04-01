@@ -39,7 +39,6 @@ public:
  int vobsubAA;static const char_t *vobsubAAs[];int vobsubAAswgauss;
  int vobsubChangePosition,vobsubScale;
  int linespacing;
- int timeoverlap;
  int isMinDuration,minDurationType,minDurationSubtitle,minDurationLine,minDurationChar;
  static const char_t *durations[];
  int fix,fixLang;char_t fixDict[60];
