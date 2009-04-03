@@ -657,26 +657,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\src\cpuid64.asm"
-				>
-				<FileConfiguration
-					Name="Debug Unicode|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="yasm"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release Unicode|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="yasm"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath=".\src\dsutil.cpp"
 				>
 			</File>

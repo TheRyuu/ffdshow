@@ -421,7 +421,22 @@ STDMETHODIMP TffdshowBase::cpuSupports3DNOWEXT(void)
 {
  return (Tconfig::cpu_flags&FF_CPU_3DNOWEXT)?1:0;
 }
-
+STDMETHODIMP TffdshowBase::cpuSupportsSSE41(void)
+{
+ return (Tconfig::cpu_flags&FF_CPU_SSE41)?1:0;
+}
+STDMETHODIMP TffdshowBase::cpuSupportsSSE42(void)
+{
+ return (Tconfig::cpu_flags&FF_CPU_SSE42)?1:0;
+}
+STDMETHODIMP TffdshowBase::cpuSupportsSSE4A(void)
+{
+ return (Tconfig::cpu_flags&FF_CPU_SSE4A)?1:0;
+}
+STDMETHODIMP TffdshowBase::cpuSupportsSSE5(void)
+{
+ return (Tconfig::cpu_flags&FF_CPU_SSE5)?1:0;
+}
 STDMETHODIMP TffdshowBase::getPostproc(Tlibmplayer* *postprocPtr)
 {
  if (!postprocPtr) return E_POINTER;

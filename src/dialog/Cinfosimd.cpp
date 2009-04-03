@@ -38,6 +38,10 @@ void TinfoPageDec::init(void)
  setCheck(IDC_CHB_SSSE3   ,Tconfig::cpu_flags&FF_CPU_SSSE3   );
  setCheck(IDC_CHB_3DNOW   ,Tconfig::cpu_flags&FF_CPU_3DNOW   );
  setCheck(IDC_CHB_3DNOWEXT,Tconfig::cpu_flags&FF_CPU_3DNOWEXT);
+ setCheck(IDC_CHB_SSE41   ,Tconfig::cpu_flags&FF_CPU_SSE41   );
+ setCheck(IDC_CHB_SSE42   ,Tconfig::cpu_flags&FF_CPU_SSE42   );
+ setCheck(IDC_CHB_SSE4A   ,Tconfig::cpu_flags&FF_CPU_SSE4A   );
+ setCheck(IDC_CHB_SSE5    ,Tconfig::cpu_flags&FF_CPU_SSE5    );
  
  hlv=GetDlgItem(m_hwnd,IDC_LV_INFO); 
  CRect r=getChildRect(IDC_LV_INFO);
@@ -76,6 +80,10 @@ void TinfoPageDec::cfg2dlg(void)
  setCheck(IDC_CHB_ALLOW_SSSE3   ,allow&FF_CPU_SSSE3   );
  setCheck(IDC_CHB_ALLOW_3DNOW   ,allow&FF_CPU_3DNOW   );
  setCheck(IDC_CHB_ALLOW_3DNOWEXT,allow&FF_CPU_3DNOWEXT);
+ setCheck(IDC_CHB_ALLOW_SSE41   ,allow&FF_CPU_SSE41   );
+ setCheck(IDC_CHB_ALLOW_SSE42   ,allow&FF_CPU_SSE42   );
+ setCheck(IDC_CHB_ALLOW_SSE4A   ,allow&FF_CPU_SSE4A   );
+ setCheck(IDC_CHB_ALLOW_SSE5    ,allow&FF_CPU_SSE5    );
 }
 
 INT_PTR TinfoPageDec::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -93,6 +101,10 @@ INT_PTR TinfoPageDec::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
       case IDC_CHB_ALLOW_SSSE3:
       case IDC_CHB_ALLOW_3DNOW:
       case IDC_CHB_ALLOW_3DNOWEXT:
+      case IDC_CHB_ALLOW_SSE41:
+      case IDC_CHB_ALLOW_SSE42:
+      case IDC_CHB_ALLOW_SSE4A:
+      case IDC_CHB_ALLOW_SSE5:
        {
         int allow=0;
         if (getCheck(IDC_CHB_ALLOW_MMX     )) allow|=FF_CPU_MMX;
@@ -103,6 +115,10 @@ INT_PTR TinfoPageDec::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
         if (getCheck(IDC_CHB_ALLOW_SSSE3   )) allow|=FF_CPU_SSSE3;
         if (getCheck(IDC_CHB_ALLOW_3DNOW   )) allow|=FF_CPU_3DNOW;
         if (getCheck(IDC_CHB_ALLOW_3DNOWEXT)) allow|=FF_CPU_3DNOWEXT;
+		if (getCheck(IDC_CHB_ALLOW_SSE41   )) allow|=FF_CPU_SSE41;
+		if (getCheck(IDC_CHB_ALLOW_SSE42   )) allow|=FF_CPU_SSE42;
+		if (getCheck(IDC_CHB_ALLOW_SSE4A   )) allow|=FF_CPU_SSE4A;
+		if (getCheck(IDC_CHB_ALLOW_SSE5    )) allow|=FF_CPU_SSE5;
         cfgSet(IDFF_allowedCpuFlags,allow);
         return TRUE;
        }

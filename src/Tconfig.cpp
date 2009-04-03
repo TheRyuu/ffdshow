@@ -67,6 +67,14 @@ extern "C"
  extern void sse2_os_trigger(void);
  extern void sse3_os_trigger(void);
  extern void ssse3_os_trigger(void);
+ extern void sse41_os_trigger(void);
+ extern void sse42_os_trigger(void);
+ extern void sse4a_os_trigger(void);
+ extern void sse5_os_trigger(void);
+#if defined(WIN64)
+ extern void prime_xmm(void *);
+ extern void get_xmm(void *);
+#endif
 }
 
 Tconfig::Tconfig(TintStrColl *Icoll):Toptions(Icoll),htmlcolors(NULL)
@@ -215,6 +223,14 @@ void Tconfig::initCPU(int allowed_cpu_flags)
     available_cpu_flags&=~FF_CPU_SSE3;
    if ((available_cpu_flags&FF_CPU_SSSE3) && sigill_check(ssse3_os_trigger))
     available_cpu_flags&=~FF_CPU_SSSE3;
+   if ((available_cpu_flags&FF_CPU_SSE41) && sigill_check(sse41_os_trigger))
+    available_cpu_flags&=~FF_CPU_SSE41;
+   if ((available_cpu_flags&FF_CPU_SSE42) && sigill_check(sse42_os_trigger))
+    available_cpu_flags&=~FF_CPU_SSE42;
+   if ((available_cpu_flags&FF_CPU_SSE4A) && sigill_check(sse4a_os_trigger))
+    available_cpu_flags&=~FF_CPU_SSE4A;
+   if ((available_cpu_flags&FF_CPU_SSE5) && sigill_check(sse5_os_trigger))
+    available_cpu_flags&=~FF_CPU_SSE5;
    #ifdef __INTEL_COMPILER
    available_cpu_flags|=FF_CPU_MMX|FF_CPU_MMXEXT;
    #endif

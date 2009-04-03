@@ -1699,6 +1699,14 @@
 #define IDC_RBT_RESIZE_MODE_SIZE_H      1987
 #define IDC_CHB_SAR_INTERNALLY          1988
 #define IDC_CHB_WINAMP_MULTICHANNEL     1989
+#define IDC_CHB_SSE41                   1990
+#define IDC_CHB_SSE42                   1991
+#define IDC_CHB_SSE4A                   1992
+#define IDC_CHB_SSE5                    1993
+#define IDC_CHB_ALLOW_SSE41             1994
+#define IDC_CHB_ALLOW_SSE42             1995
+#define IDC_CHB_ALLOW_SSE4A             1996
+#define IDC_CHB_ALLOW_SSE5              1997
 #define IDC_CHB_MMX                     2000
 #define IDC_CHB_MMXEXT                  2001
 #define IDC_CHB_SSE                     2002

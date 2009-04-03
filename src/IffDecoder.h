@@ -70,6 +70,10 @@ DECLARE_INTERFACE_(IffDecoder, IUnknown)
  STDMETHOD (compat_cpuSupportsSSSE3)(void) PURE;
  STDMETHOD (compat_cpuSupports3DNOW)(void) PURE;
  STDMETHOD (compat_cpuSupports3DNOWEXT)(void) PURE;
+ STDMETHOD (compat_cpuSupportsSSE41)(void) PURE;
+ STDMETHOD (compat_cpuSupportsSSE42)(void) PURE;
+ STDMETHOD (compat_cpuSupportsSSE4A)(void) PURE;
+ STDMETHOD (compat_cpuSupportsSSE5)(void) PURE;
  STDMETHOD (compat_getAVIfps1000_2)(void) PURE;
  STDMETHOD (compat_getParamStr)(unsigned int paramID,char *buf,unsigned int buflen) PURE;
  STDMETHOD (compat_putParamStr)(unsigned int paramID,const char *buf) PURE;

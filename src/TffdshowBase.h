@@ -60,6 +60,10 @@ public:
  STDMETHODIMP cpuSupportsSSSE3(void);
  STDMETHODIMP cpuSupports3DNOW(void);
  STDMETHODIMP cpuSupports3DNOWEXT(void);
+ STDMETHODIMP cpuSupportsSSE41(void);
+ STDMETHODIMP cpuSupportsSSE42(void);
+ STDMETHODIMP cpuSupportsSSE4A(void);
+ STDMETHODIMP cpuSupportsSSE5(void);
  STDMETHODIMP dbgInit(void);
  STDMETHODIMP dbgError(const char_t *fmt,...);
  STDMETHODIMP dbgWrite(const char_t *fmt,...);
@@ -189,6 +193,10 @@ protected:
    STDMETHODIMP cpuSupportsSSSE3(void) {return deci->cpuSupportsSSSE3();}
    STDMETHODIMP cpuSupports3DNOW(void) {return deci->cpuSupports3DNOW();}
    STDMETHODIMP cpuSupports3DNOWEXT(void) {return deci->cpuSupports3DNOWEXT();}
+   STDMETHODIMP cpuSupportsSSE41(void) {return deci->cpuSupportsSSE41();}
+   STDMETHODIMP cpuSupportsSSE42(void) {return deci->cpuSupportsSSE42();}
+   STDMETHODIMP cpuSupportsSSE4A(void) {return deci->cpuSupportsSSE4A();}
+   STDMETHODIMP cpuSupportsSSE5(void) {return deci->cpuSupportsSSE5();}
    STDMETHODIMP dbgInit(void) {return deci->dbgInit();}
    STDMETHODIMP dbgError(const tchar *fmt,...)
     {

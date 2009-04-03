@@ -208,8 +208,12 @@ public:
  STDMETHODIMP compat_cpuSupportsSSE2(void) {return cpuSupportsSSE2();}
  STDMETHODIMP compat_cpuSupportsSSE3(void) {return cpuSupportsSSE3();}
  STDMETHODIMP compat_cpuSupportsSSSE3(void) {return cpuSupportsSSSE3();}
- STDMETHODIMP compat_cpuSupports3DNOW(void)    {return cpuSupports3DNOW();}
+ STDMETHODIMP compat_cpuSupports3DNOW(void) {return cpuSupports3DNOW();}
  STDMETHODIMP compat_cpuSupports3DNOWEXT(void) {return cpuSupports3DNOWEXT();}
+ STDMETHODIMP compat_cpuSupportsSSE41(void) {return cpuSupportsSSE41();}
+ STDMETHODIMP compat_cpuSupportsSSE42(void) {return cpuSupportsSSE42();}
+ STDMETHODIMP compat_cpuSupportsSSE4A(void) {return cpuSupportsSSE4A();}
+ STDMETHODIMP compat_cpuSupportsSSE5(void) {return cpuSupportsSSE5();}
  STDMETHODIMP compat_getAVIfps1000_2(void) {return getAVIfps1000_2();}
  STDMETHODIMP compat_getParamStr(unsigned int paramID,char *buf,unsigned int buflen) {return getBaseInterface<IffdshowBaseA>()->getParamStr(paramID,buf,buflen);}
  STDMETHODIMP compat_putParamStr(unsigned int paramID,const char *buf) {return putParamStr(paramID,text<char_t>(buf));}
