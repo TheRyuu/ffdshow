@@ -28,9 +28,9 @@
 
 #ifdef __GNUC__
 #include <stdint.h>
+#endif
 #include <stdlib.h>
 #include <assert.h>
-#endif
 #include "libavutil/bswap.h"
 #include "libavutil/common.h"
 #include "libavutil/intreadwrite.h"
@@ -335,6 +335,7 @@ static inline void skip_put_bytes(PutBitContext *s, int n){
 /**
  * Skips the given number of bits.
  * Must only be used if the actual values in the bitstream do not matter.
+ * If \p n is 0 the behavior is undefined.
  */
 static inline void skip_put_bits(PutBitContext *s, int n){
 #ifdef ALT_BITSTREAM_WRITER

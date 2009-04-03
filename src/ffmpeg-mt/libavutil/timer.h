@@ -1,5 +1,5 @@
 /**
- * @file timer.h
+ * @file libavutil/timer.h
  * high precision timer, useful to profile code
  *
  * copyright (c) 2006 Michael Niedermayer <michaelni@gmx.at>
@@ -31,16 +31,11 @@
 #include "config.h"
 
 #if ARCH_X86
-#define AV_READ_TIME read_time
-static inline uint64_t read_time(void)
-{
-    uint32_t a, d;
-    __asm__ volatile("rdtsc\n\t"
-                 : "=a" (a), "=d" (d));
-    return ((uint64_t)d << 32) + a;
-}
-#elif defined(HAVE_GETHRTIME)
-#define AV_READ_TIME gethrtime
+#   include "x86/timer.h"
+#endif
+
+#if !defined(AV_READ_TIME) && HAVE_GETHRTIME
+#   define AV_READ_TIME gethrtime
 #endif
 
 #define START_TIMER

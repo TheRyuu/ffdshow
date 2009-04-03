@@ -435,6 +435,7 @@ static int read_filter_params(MLPDecodeContext *m, GetBitContext *gbp,
                               unsigned int channel, unsigned int filter)
 {
     FilterParams *fp = &m->channel_params[channel].filter_params[filter];
+    const int max_order = filter ? MAX_IIR_ORDER : MAX_FIR_ORDER;
     const char fchar = filter ? 'I' : 'F';
     int i, order;
 
@@ -442,10 +443,10 @@ static int read_filter_params(MLPDecodeContext *m, GetBitContext *gbp,
     assert(filter < 2);
 
     order = get_bits(gbp, 4);
-    if (order > MAX_FILTER_ORDER) {
+    if (order > max_order) {
         av_log(m->avctx, AV_LOG_ERROR,
                "%cIR filter order %d is greater than maximum %d.\n",
-               fchar, order, MAX_FILTER_ORDER);
+               fchar, order, max_order);
         return -1;
     }
     fp->order = order;
@@ -562,6 +563,11 @@ static int read_channel_params(MLPDecodeContext *m, unsigned int substr,
             if (read_filter_params(m, gbp, ch, IIR) < 0)
                 return -1;
 
+    if (fir->order + iir->order > 8) {
+        av_log(m->avctx, AV_LOG_ERROR, "Total filter orders too high.\n");
+        return -1;
+    }
+
     if (fir->order && iir->order &&
         fir->shift != iir->shift) {
         av_log(m->avctx, AV_LOG_ERROR,
@@ -583,9 +589,12 @@ static int read_channel_params(MLPDecodeContext *m, unsigned int substr,
     cp->codebook  = get_bits(gbp, 2);
     cp->huff_lsbs = get_bits(gbp, 5);
 
-    cp->sign_huff_offset = calculate_sign_huff(m, substr, ch);
+    if (cp->huff_lsbs > 24) {
+        av_log(m->avctx, AV_LOG_ERROR, "Invalid huff_lsbs.\n");
+        return -1;
+    }
 
-    /* TODO: validate */
+    cp->sign_huff_offset = calculate_sign_huff(m, substr, ch);
 
     return 0;
 }
@@ -653,18 +662,17 @@ static void filter_channel(MLPDecodeContext *m, unsigned int substr,
                            unsigned int channel)
 {
     SubStream *s = &m->substream[substr];
-    int32_t filter_state_buffer[NUM_FILTERS][MAX_BLOCKSIZE + MAX_FILTER_ORDER];
-    FilterParams *fp[NUM_FILTERS] = { &m->channel_params[channel].filter_params[FIR],
-                                      &m->channel_params[channel].filter_params[IIR], };
-    unsigned int filter_shift = fp[FIR]->shift;
+    int32_t firbuf[MAX_BLOCKSIZE + MAX_FIR_ORDER];
+    int32_t iirbuf[MAX_BLOCKSIZE + MAX_IIR_ORDER];
+    FilterParams *fir = &m->channel_params[channel].filter_params[FIR];
+    FilterParams *iir = &m->channel_params[channel].filter_params[IIR];
+    unsigned int filter_shift = fir->shift;
     int32_t mask = MSB_MASK(s->quant_step_size[channel]);
     int index = MAX_BLOCKSIZE;
-    int j, i;
+    int i;
 
-    for (j = 0; j < NUM_FILTERS; j++) {
-        memcpy(&filter_state_buffer[j][MAX_BLOCKSIZE], &fp[j]->state[0],
-               MAX_FILTER_ORDER * sizeof(int32_t));
-    }
+    memcpy(&firbuf[index], fir->state, MAX_FIR_ORDER * sizeof(int32_t));
+    memcpy(&iirbuf[index], iir->state, MAX_IIR_ORDER * sizeof(int32_t));
 
     for (i = 0; i < s->blocksize; i++) {
         int32_t residual = m->sample_buffer[i + s->blockpos][channel];
@@ -674,26 +682,24 @@ static void filter_channel(MLPDecodeContext *m, unsigned int substr,
 
         /* TODO: Move this code to DSPContext? */
 
-        for (j = 0; j < NUM_FILTERS; j++)
-            for (order = 0; order < fp[j]->order; order++)
-                accum += (int64_t)filter_state_buffer[j][index + order] *
-                                  fp[j]->coeff[order];
+        for (order = 0; order < fir->order; order++)
+            accum += (int64_t) firbuf[index + order] * fir->coeff[order];
+        for (order = 0; order < iir->order; order++)
+            accum += (int64_t) iirbuf[index + order] * iir->coeff[order];
 
         accum  = accum >> filter_shift;
         result = (accum + residual) & mask;
 
         --index;
 
-        filter_state_buffer[FIR][index] = result;
-        filter_state_buffer[IIR][index] = result - accum;
+        firbuf[index] = result;
+        iirbuf[index] = result - accum;
 
         m->sample_buffer[i + s->blockpos][channel] = result;
     }
 
-    for (j = 0; j < NUM_FILTERS; j++) {
-        memcpy(&fp[j]->state[0], &filter_state_buffer[j][index],
-               MAX_FILTER_ORDER * sizeof(int32_t));
-    }
+    memcpy(fir->state, &firbuf[index], MAX_FIR_ORDER * sizeof(int32_t));
+    memcpy(iir->state, &iirbuf[index], MAX_IIR_ORDER * sizeof(int32_t));
 }
 
 /** Read a block of PCM residual data (or actual if no filtering active). */
@@ -995,9 +1001,6 @@ static int read_access_unit(AVCodecContext *avctx, void* data, int *data_size,
                 }
 
                 if (!s->restart_seen) {
-                    av_log(m->avctx, AV_LOG_ERROR,
-                           "No restart header present in substream %d.\n",
-                           substr);
                     goto next_substr;
                 }
 
@@ -1006,54 +1009,57 @@ static int read_access_unit(AVCodecContext *avctx, void* data, int *data_size,
             }
 
             if (!s->restart_seen) {
-                av_log(m->avctx, AV_LOG_ERROR,
-                       "No restart header present in substream %d.\n",
-                       substr);
                 goto next_substr;
             }
 
             if (read_block_data(m, &gb, substr) < 0)
                 return -1;
 
-        } while ((get_bits_count(&gb) < substream_data_len[substr] * 8)
-                 && get_bits1(&gb) == 0);
+            if (get_bits_count(&gb) >= substream_data_len[substr] * 8)
+                goto substream_length_mismatch;
+
+        } while (!get_bits1(&gb));
 
         skip_bits(&gb, (-get_bits_count(&gb)) & 15);
-        if (substream_data_len[substr] * 8 - get_bits_count(&gb) >= 32 &&
-            (show_bits_long(&gb, 32) == END_OF_STREAM ||
-             show_bits_long(&gb, 20) == 0xd234e)) {
-            skip_bits(&gb, 18);
+        if (substream_data_len[substr] * 8 - get_bits_count(&gb) >= 32) {
+            int shorten_by;
+
+            if (get_bits(&gb, 16) != 0xD234)
+                return -1;
+
+            shorten_by = get_bits(&gb, 16);
+            if      (m->avctx->codec_id == CODEC_ID_TRUEHD && shorten_by  & 0x2000)
+                s->blockpos -= FFMIN(shorten_by & 0x1FFF, s->blockpos);
+            else if (m->avctx->codec_id == CODEC_ID_MLP    && shorten_by != 0xD234)
+                return -1;
+
             if (substr == m->max_decoded_substream)
                 av_log(m->avctx, AV_LOG_INFO, "End of stream indicated.\n");
-
-            if (get_bits1(&gb)) {
-                int shorten_by = get_bits(&gb, 13);
-                shorten_by = FFMIN(shorten_by, s->blockpos);
-                s->blockpos -= shorten_by;
-            } else
-                skip_bits(&gb, 13);
         }
-        if (substream_data_len[substr] * 8 - get_bits_count(&gb) >= 16 &&
-            substream_parity_present[substr]) {
+        if (substream_parity_present[substr]) {
             uint8_t parity, checksum;
 
-            parity = ff_mlp_calculate_parity(buf, substream_data_len[substr] - 2);
-            if ((parity ^ get_bits(&gb, 8)) != 0xa9)
-                av_log(m->avctx, AV_LOG_ERROR,
-                       "Substream %d parity check failed.\n", substr);
+            if (substream_data_len[substr] * 8 - get_bits_count(&gb) != 16)
+                goto substream_length_mismatch;
 
-            checksum = ff_mlp_checksum8(buf, substream_data_len[substr] - 2);
-            if (checksum != get_bits(&gb, 8))
-                av_log(m->avctx, AV_LOG_ERROR, "Substream %d checksum failed.\n",
-                       substr);
+            parity   = ff_mlp_calculate_parity(buf, substream_data_len[substr] - 2);
+            checksum = ff_mlp_checksum8       (buf, substream_data_len[substr] - 2);
+
+            if ((get_bits(&gb, 8) ^ parity) != 0xa9    )
+                av_log(m->avctx, AV_LOG_ERROR, "Substream %d parity check failed.\n", substr);
+            if ( get_bits(&gb, 8)           != checksum)
+                av_log(m->avctx, AV_LOG_ERROR, "Substream %d checksum failed.\n"    , substr);
         }
         if (substream_data_len[substr] * 8 != get_bits_count(&gb)) {
-            av_log(m->avctx, AV_LOG_ERROR, "substream %d length mismatch\n",
-                   substr);
-            return -1;
+            goto substream_length_mismatch;
         }
 
 next_substr:
+        if (!s->restart_seen) {
+            av_log(m->avctx, AV_LOG_ERROR,
+                   "No restart header present in substream %d.\n", substr);
+        }
+
         buf += substream_data_len[substr];
     }
 
@@ -1063,6 +1069,10 @@ next_substr:
         return -1;
 
     return length;
+
+substream_length_mismatch:
+    av_log(m->avctx, AV_LOG_ERROR, "substream %d length mismatch\n", substr);
+    return -1;
 
 error:
     m->params_valid = 0;
