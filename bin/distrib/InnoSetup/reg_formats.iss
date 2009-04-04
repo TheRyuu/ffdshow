@@ -17,9 +17,7 @@ Root: HKCU; Subkey: "{#= ff_reg_base}";       ValueType: dword; ValueName: "fvfw
 Root: HKCU; Subkey: "{#= ff_reg_base}";       ValueType: dword; ValueName: "h261";       ValueData:  "1"; Components: ffdshow;     Tasks: video\other1
 Root: HKCU; Subkey: "{#= ff_reg_base}";       ValueType: dword; ValueName: "h263";       ValueData:  "1"; Components: ffdshow;     Tasks: video\h263
 Root: HKCU; Subkey: "{#= ff_reg_base}";       ValueType: dword; ValueName: "h264";       ValueData:  "1"; Components: ffdshow;     Tasks: video\h264\libavcodec
-#if !is64bit
 Root: HKCU; Subkey: "{#= ff_reg_base}";       ValueType: dword; ValueName: "h264";       ValueData: "21"; Components: ffdshow;     Tasks: video\h264\ffmpegmt
-#endif
 Root: HKCU; Subkey: "{#= ff_reg_base}";       ValueType: dword; ValueName: "hfyu";       ValueData:  "1"; Components: ffdshow;     Tasks: video\huffyuv
 Root: HKCU; Subkey: "{#= ff_reg_base}";       ValueType: dword; ValueName: "iv32";       ValueData:  "1"; Components: ffdshow;     Tasks: video\other4
 Root: HKCU; Subkey: "{#= ff_reg_base}";       ValueType: dword; ValueName: "loco";       ValueData:  "1"; Components: ffdshow;     Tasks: video\other3
@@ -85,9 +83,7 @@ Root: HKLM; Subkey: "{#= ff_reg_base}";       ValueType: dword; ValueName: "fvfw
 Root: HKLM; Subkey: "{#= ff_reg_base}";       ValueType: dword; ValueName: "h261";       ValueData:  "1"; Components: ffdshow;     Tasks: video\other1
 Root: HKLM; Subkey: "{#= ff_reg_base}";       ValueType: dword; ValueName: "h263";       ValueData:  "1"; Components: ffdshow;     Tasks: video\h263
 Root: HKLM; Subkey: "{#= ff_reg_base}";       ValueType: dword; ValueName: "h264";       ValueData:  "1"; Components: ffdshow;     Tasks: video\h264\libavcodec
-#if !is64bit
 Root: HKLM; Subkey: "{#= ff_reg_base}";       ValueType: dword; ValueName: "h264";       ValueData: "21"; Components: ffdshow;     Tasks: video\h264\ffmpegmt
-#endif
 Root: HKLM; Subkey: "{#= ff_reg_base}";       ValueType: dword; ValueName: "hfyu";       ValueData:  "1"; Components: ffdshow;     Tasks: video\huffyuv
 Root: HKLM; Subkey: "{#= ff_reg_base}";       ValueType: dword; ValueName: "iv32";       ValueData:  "1"; Components: ffdshow;     Tasks: video\other4
 Root: HKLM; Subkey: "{#= ff_reg_base}";       ValueType: dword; ValueName: "loco";       ValueData:  "1"; Components: ffdshow;     Tasks: video\other3
@@ -209,9 +205,7 @@ Root: HKLM; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "vorb
 Root: HKLM; Subkey: "{#= ff_reg_base}_vfw";   ValueType: dword; ValueName: "ffv1";       ValueData:  "1"; Components: ffdshow\vfw
 Root: HKLM; Subkey: "{#= ff_reg_base}_vfw";   ValueType: dword; ValueName: "fvfw";       ValueData:  "1"; Components: ffdshow\vfw
 Root: HKLM; Subkey: "{#= ff_reg_base}_vfw";   ValueType: dword; ValueName: "h264";       ValueData:  "1"; Components: ffdshow\vfw; Tasks: video\h264\libavcodec;     Flags: createvalueifdoesntexist
-#if !is64bit
 Root: HKLM; Subkey: "{#= ff_reg_base}_vfw";   ValueType: dword; ValueName: "h264";       ValueData: "21"; Components: ffdshow\vfw; Tasks: video\h264\ffmpegmt;       Flags: createvalueifdoesntexist
-#endif
 Root: HKLM; Subkey: "{#= ff_reg_base}_vfw";   ValueType: dword; ValueName: "mp41";       ValueData:  "1"; Components: ffdshow\vfw; Tasks: video\mpeg4;               Flags: createvalueifdoesntexist
 Root: HKLM; Subkey: "{#= ff_reg_base}_vfw";   ValueType: dword; ValueName: "mp42";       ValueData:  "1"; Components: ffdshow\vfw; Tasks: video\mpeg4;               Flags: createvalueifdoesntexist
 Root: HKLM; Subkey: "{#= ff_reg_base}_vfw";   ValueType: dword; ValueName: "mp43";       ValueData:  "1"; Components: ffdshow\vfw; Tasks: video\mpeg4;               Flags: createvalueifdoesntexist

@@ -1,5 +1,6 @@
 #ifdef __GNUC__
-	#define HAVE_INLINE_ASM 1
+  #define PTW32_STATIC_LIB 1
+  #define HAVE_INLINE_ASM 1
   #define HAVE_MMX 1
   #define HAVE_SSE 1
   #define HAVE_SSSE3 1
@@ -11,7 +12,7 @@
     #define HAVE_FAST_64BIT 1
     #define HAVE_CMOV 1
     #define HAVE_FAST_CMOV 1
-    #define HAVE_STRUCT_TIMESPEC
+    #define HAVE_STRUCT_TIMESPEC 1
   #else
     #define ARCH_X86_32 1
   #endif
