@@ -868,6 +868,8 @@ void TimgFilterAvisynth::Tavisynth::process(TimgFilterAvisynth *self,TfilterQueu
      // Request frame from AviSynth script
      PVideoFrame frame=(*input->clip)->GetFrame(requestedFrame);
 
+     isYV12=((self->outcsp&FF_CSPS_MASK) == FF_CSP_420P);
+
      // Evaluate request statistics
      if (input->numAccessedFrames > 0 && !sequenceStart && !passFirstThrough)
       {
