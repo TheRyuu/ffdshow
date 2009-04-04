@@ -641,7 +641,6 @@
 				>
 				<FileConfiguration
 					Name="Debug Unicode|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="yasm"
@@ -649,7 +648,6 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release Unicode|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="yasm"
