@@ -26,6 +26,117 @@ bool debugPrint=false;
 int maxBufferAhead=0;
 int maxBufferBack=0;
 
+//========================== TimgFilterAvisynth::TframeBuffer ===============================
+void TimgFilterAvisynth::TframeBuffer::CreateFrame(TimgFilterAvisynth::Tinput *input)
+{
+ ReleaseFrame();
+
+ AVS_VideoInfo vi;
+ input->InitVideoInfo(vi);
+
+ this->input=input;
+ frame=input->env->avs_new_video_frame_a(*input->env,&vi,16);
+
+ switch (input->csp&FF_CSPS_MASK)
+  {
+   case FF_CSP_420P:
+    TffPict::copy(avs_get_write_ptr_p(frame,PLANAR_Y),avs_get_pitch_p(frame,PLANAR_Y),input->src[0],input->stride1[0],input->dx  ,input->dy);
+    TffPict::copy(avs_get_write_ptr_p(frame,PLANAR_U),avs_get_pitch_p(frame,PLANAR_U),input->src[1],input->stride1[1],input->dx/2,input->dy/2);
+    TffPict::copy(avs_get_write_ptr_p(frame,PLANAR_V),avs_get_pitch_p(frame,PLANAR_V),input->src[2],input->stride1[2],input->dx/2,input->dy/2);
+    break;
+
+   case FF_CSP_YUY2:
+    TffPict::copy(avs_get_write_ptr(frame),avs_get_pitch(frame),input->src[0],input->stride1[0],input->dx*bytesPerPixel,input->dy);
+    break;
+
+   case FF_CSP_RGB24:
+   case FF_CSP_RGB32:
+    TffPict::copy(avs_get_write_ptr(frame),avs_get_pitch(frame),input->src[0]+input->stride1[0]*(input->dy-1),-input->stride1[0],input->dx*bytesPerPixel,input->dy);
+    break;
+  }
+}
+
+void TimgFilterAvisynth::TframeBuffer::CreateField(TimgFilterAvisynth::Tinput *input, bool topField)
+{
+ ReleaseFrame();
+
+ AVS_VideoInfo vi;
+ input->InitVideoInfo(vi);
+ vi.height/=2;
+
+ this->input=input;
+ frame=input->env->avs_new_video_frame_a(*input->env,&vi,16);
+
+ switch (input->csp&FF_CSPS_MASK)
+  {
+   case FF_CSP_420P:
+    TffPict::copy(avs_get_write_ptr_p(frame,PLANAR_Y),avs_get_pitch_p(frame,PLANAR_Y),input->src[0]+(topField ? 0 : input->stride1[0]),input->stride1[0]*2,input->dx  ,input->dy/2);
+    TffPict::copy(avs_get_write_ptr_p(frame,PLANAR_U),avs_get_pitch_p(frame,PLANAR_U),input->src[1]+(topField ? 0 : input->stride1[1]),input->stride1[1]*2,input->dx/2,input->dy/4);
+    TffPict::copy(avs_get_write_ptr_p(frame,PLANAR_V),avs_get_pitch_p(frame,PLANAR_V),input->src[2]+(topField ? 0 : input->stride1[2]),input->stride1[2]*2,input->dx/2,input->dy/4);
+    break;
+
+   case FF_CSP_YUY2:
+    TffPict::copy(avs_get_write_ptr(frame),avs_get_pitch(frame),input->src[0]+(topField ? 0 : input->stride1[0]),input->stride1[0]*2,input->dx*bytesPerPixel,input->dy/2);
+    break;
+
+   case FF_CSP_RGB24:
+   case FF_CSP_RGB32:
+    TffPict::copy(avs_get_write_ptr(frame),avs_get_pitch(frame),input->src[0]+input->stride1[0]*(input->dy-(topField ? 1 : 2)),-input->stride1[0]*2,input->dx*bytesPerPixel,input->dy/2);
+    break;
+  }
+}
+
+void TimgFilterAvisynth::TframeBuffer::CombineFrame(TimgFilterAvisynth::Tinput *input, bool inTopField, bool outTopField, AVS_VideoFrame *otherField)
+{
+ ReleaseFrame();
+
+ AVS_VideoInfo vi;
+ input->InitVideoInfo(vi);
+
+ this->input=input;
+ frame=input->env->avs_new_video_frame_a(*input->env,&vi,16);
+
+ switch (input->csp&FF_CSPS_MASK)
+  {
+   case FF_CSP_420P:
+    TffPict::copy(avs_get_write_ptr_p(frame,PLANAR_Y)+(outTopField ? 0 : avs_get_pitch_p(frame,PLANAR_Y)),avs_get_pitch_p(frame,PLANAR_Y)*2,input->src[0]+(inTopField ? 0 : input->stride1[0]),input->stride1[0]*2,input->dx  ,input->dy/2);
+    TffPict::copy(avs_get_write_ptr_p(frame,PLANAR_U)+(outTopField ? 0 : avs_get_pitch_p(frame,PLANAR_U)),avs_get_pitch_p(frame,PLANAR_U)*2,input->src[1]+(inTopField ? 0 : input->stride1[1]),input->stride1[1]*2,input->dx/2,input->dy/4);
+    TffPict::copy(avs_get_write_ptr_p(frame,PLANAR_V)+(outTopField ? 0 : avs_get_pitch_p(frame,PLANAR_V)),avs_get_pitch_p(frame,PLANAR_V)*2,input->src[2]+(inTopField ? 0 : input->stride1[2]),input->stride1[2]*2,input->dx/2,input->dy/4);
+
+    TffPict::copy(avs_get_write_ptr_p(frame,PLANAR_Y)+(outTopField ? avs_get_pitch_p(frame,PLANAR_Y) : 0),avs_get_pitch_p(frame,PLANAR_Y)*2,avs_get_read_ptr_p(otherField,PLANAR_Y),avs_get_pitch_p(otherField,PLANAR_Y),input->dx  ,input->dy/2);
+    TffPict::copy(avs_get_write_ptr_p(frame,PLANAR_U)+(outTopField ? avs_get_pitch_p(frame,PLANAR_U) : 0),avs_get_pitch_p(frame,PLANAR_U)*2,avs_get_read_ptr_p(otherField,PLANAR_U),avs_get_pitch_p(otherField,PLANAR_U),input->dx/2,input->dy/4);
+    TffPict::copy(avs_get_write_ptr_p(frame,PLANAR_V)+(outTopField ? avs_get_pitch_p(frame,PLANAR_V) : 0),avs_get_pitch_p(frame,PLANAR_V)*2,avs_get_read_ptr_p(otherField,PLANAR_V),avs_get_pitch_p(otherField,PLANAR_V),input->dx/2,input->dy/4);
+
+    break;
+
+   case FF_CSP_YUY2:
+    TffPict::copy(avs_get_write_ptr(frame)+(outTopField ? 0 : avs_get_pitch(frame)),avs_get_pitch(frame)*2,input->src[0]+(inTopField ? 0 : input->stride1[0]),input->stride1[0]*2,input->dx*bytesPerPixel,input->dy/2);
+    TffPict::copy(avs_get_write_ptr(frame)+(outTopField ? avs_get_pitch(frame) : 0),avs_get_pitch(frame)*2,avs_get_read_ptr(otherField),avs_get_pitch(otherField),input->dx*bytesPerPixel,input->dy/2);
+
+    break;
+
+   case FF_CSP_RGB24:
+   case FF_CSP_RGB32:
+    TffPict::copy(avs_get_write_ptr(frame)+(outTopField ? 0 : avs_get_pitch(frame)),avs_get_pitch(frame)*2,input->src[0]+input->stride1[0]*(input->dy-(inTopField ? 1 : 2)),-input->stride1[0]*2,input->dx*bytesPerPixel,input->dy/2);
+    TffPict::copy(avs_get_write_ptr(frame)+(outTopField ? avs_get_pitch(frame) : 0),avs_get_pitch(frame)*2,avs_get_read_ptr(otherField),avs_get_pitch(otherField),input->dx*bytesPerPixel,input->dy/2);
+    break;
+  }
+}
+
+void TimgFilterAvisynth::TframeBuffer::ReleaseFrame()
+{
+ if (frame && input)
+  input->env->avs_release_video_frame(frame);
+
+ input=NULL;
+ frame=NULL;
+}
+
+TimgFilterAvisynth::TframeBuffer::~TframeBuffer()
+{
+ ReleaseFrame();
+}
+
 //========================== TimgFilterAvisynth::Tffdshow_source ===============================
 AVS_Value AVSC_CC TimgFilterAvisynth::Tffdshow_source::Create(AVS_ScriptEnvironment *env, AVS_Value args, void *user_data)
 {
@@ -57,18 +168,7 @@ TimgFilterAvisynth::Tffdshow_source::Tffdshow_source(Tinput *Iinput,VideoInfo &I
  input(Iinput),
  vi(Ivi)
 {
- memset(&vi,0,sizeof(VideoInfo));
- vi.width=input->dx;
- vi.height=input->dy;
- vi.fps_numerator=input->fpsnum;
- vi.fps_denominator=input->fpsden;
- vi.num_frames=NUM_FRAMES;
- // RGB values: avisynth refers to the write order, FF_CSP_ enum refers to the "memory byte order",
- // which under x86 is reversed, see the comment above the FF_CSP_ enum definition.
- if      (input->csp & FF_CSP_420P)  vi.pixel_type=AVS_CS_YV12;
- else if (input->csp & FF_CSP_YUY2)  vi.pixel_type=AVS_CS_YUY2;
- else if (input->csp & FF_CSP_RGB32) vi.pixel_type=AVS_CS_BGR32;
- else if (input->csp & FF_CSP_RGB24) vi.pixel_type=AVS_CS_BGR24;
+ input->InitVideoInfo(*&vi);
 }
 
 int TimgFilterAvisynth::findBuffer(TframeBuffer* buffers, int numBuffers, int n)
@@ -108,7 +208,6 @@ AVS_VideoFrame* AVSC_CC TimgFilterAvisynth::Tffdshow_source::get_frame(AVS_Filte
 {
  Tffdshow_source *filter=(Tffdshow_source*)fi->user_data;
  Tinput* input=filter->input;
- PVideoFrame frame(input->env,input->env->avs_new_video_frame_a(*input->env,&filter->vi,16));
 
  // Calculate request statistics for currently produced frame
 
@@ -134,57 +233,41 @@ AVS_VideoFrame* AVSC_CC TimgFilterAvisynth::Tffdshow_source::get_frame(AVS_Filte
    if (debugPrint)
     DPRINTF(_l("TimgFilterAvisynth: Looked up frame %i, using frame %i"),n,buffer.frameNo);
 
-   switch (filter->input->csp&FF_CSPS_MASK)
-    {
-     case FF_CSP_420P:
-      TffPict::copy(frame->GetWritePtr(PLANAR_Y),frame->GetPitch(PLANAR_Y),buffer.data[0],buffer.pitch[0],buffer.width[0],buffer.height[0]);
-      TffPict::copy(frame->GetWritePtr(PLANAR_U),frame->GetPitch(PLANAR_U),buffer.data[1],buffer.pitch[1],buffer.width[1],buffer.height[1]);
-      TffPict::copy(frame->GetWritePtr(PLANAR_V),frame->GetPitch(PLANAR_V),buffer.data[2],buffer.pitch[2],buffer.width[2],buffer.height[2]);
-      break;
-
-     case FF_CSP_YUY2:
-      TffPict::copy(frame->GetWritePtr(),frame->GetPitch(),buffer.data[0],buffer.pitch[0],buffer.width[0]*buffer.bytesPerPixel,buffer.height[0]);
-      break;
-
-     case FF_CSP_RGB24:
-     case FF_CSP_RGB32:
-      TffPict::copy(frame->GetWritePtr(),frame->GetPitch(),buffer.data[0]+buffer.pitch[0]*(buffer.height[0]-1),-buffer.pitch[0],buffer.width[0]*buffer.bytesPerPixel,buffer.height[0]);
-      break;
-    }
+   if (buffer.frame)
+    return input->env->avs_copy_video_frame(buffer.frame);
   }
- else
+
+ int count;
+ unsigned long* dest;
+ PVideoFrame frame(input->env,input->env->avs_new_video_frame_a(*input->env,&filter->vi,16));
+
+ if (debugPrint)
+  DPRINTF(_l("TimgFilterAvisynth: Looked up frame %i, but no frames were buffered"),n);
+
+ switch (filter->input->csp&FF_CSPS_MASK)
   {
-   int count;
-   unsigned long* dest;
+   case FF_CSP_420P:
+    memset(frame->GetWritePtr(PLANAR_Y),0,frame->GetPitch(PLANAR_Y)*frame->GetHeight(PLANAR_Y));
+    memset(frame->GetWritePtr(PLANAR_U),128,frame->GetPitch(PLANAR_U)*frame->GetHeight(PLANAR_U));
+    memset(frame->GetWritePtr(PLANAR_V),128,frame->GetPitch(PLANAR_V)*frame->GetHeight(PLANAR_V));
 
-   if (debugPrint)
-    DPRINTF(_l("TimgFilterAvisynth: Looked up frame %i, but no frames were buffered"),n);
+    break;
 
-   switch (filter->input->csp&FF_CSPS_MASK)
-    {
-     case FF_CSP_420P:
-      memset(frame->GetWritePtr(PLANAR_Y),0,frame->GetPitch(PLANAR_Y)*frame->GetHeight(PLANAR_Y));
-      memset(frame->GetWritePtr(PLANAR_U),128,frame->GetPitch(PLANAR_U)*frame->GetHeight(PLANAR_U));
-      memset(frame->GetWritePtr(PLANAR_V),128,frame->GetPitch(PLANAR_V)*frame->GetHeight(PLANAR_V));
+   case FF_CSP_YUY2:
+    for (dest=(unsigned long*)frame->GetWritePtr(),
+         count=frame->GetPitch()*frame->GetHeight();
+         count > 0;
+         dest++,
+         count-=sizeof(unsigned long))
+     *dest=0x80008000;
 
-      break;
+    break;
 
-     case FF_CSP_YUY2:
-      for (dest=(unsigned long*)frame->GetWritePtr(),
-           count=frame->GetPitch()*frame->GetHeight();
-           count > 0;
-           dest++,
-           count-=sizeof(unsigned long))
-       *dest=0x80008000;
+   case FF_CSP_RGB24:
+   case FF_CSP_RGB32:
+    memset(frame->GetWritePtr(),0,frame->GetPitch()*frame->GetHeight());
 
-      break;
-
-     case FF_CSP_RGB24:
-     case FF_CSP_RGB32:
-      memset(frame->GetWritePtr(),0,frame->GetPitch()*frame->GetHeight());
-
-      break;
-    }
+    break;
   }
 
  return frame;
@@ -386,8 +469,7 @@ void TimgFilterAvisynth::Tavisynth::skipAhead(bool passFirstThrough, bool clearL
 
 void TimgFilterAvisynth::Tavisynth::done(void)
 {
- if (bufferData) delete bufferData; bufferData=0;
- if (buffers) delete buffers; buffers=0;
+ if (buffers) delete[] buffers; buffers=0;
 }
 
 void TimgFilterAvisynth::Tavisynth::init(const TavisynthSettings &oldcfg, Tinput* input,int *outcsp, TffPictBase& pict)
@@ -490,11 +572,10 @@ void TimgFilterAvisynth::Tavisynth::process(TimgFilterAvisynth *self,TfilterQueu
 
  if (deleteBuffers)
   {
-   if (debugPrint && (buffers || bufferData))
+   if (debugPrint && buffers)
     DPRINTF(_l("TimgFilterAvisynth: Freeing buffers"));
 
-   if (buffers) delete buffers; buffers=0;
-   if (bufferData) delete bufferData; bufferData=0;
+   if (buffers) delete[] buffers; buffers=NULL;
 
    deleteBuffers=false;
    resetBuffers=true;
@@ -515,60 +596,6 @@ void TimgFilterAvisynth::Tavisynth::process(TimgFilterAvisynth *self,TfilterQueu
    if (!buffers)
     input->buffers=buffers=new TframeBuffer[numBuffers+(applyPulldown != 0 ? 1 : 0)];
 
-   int pitch[4];
-   int width[4];
-   int height[4];
-   int size[4];
-
-   if (numBuffers > 1)
-    {
-     // Storage for buffers is only needed when there's more than one buffer
-     // NB: pitch, width, height and size aren't initialized in that case,
-     // but their values will be taken from the actual frame anyway later on
-
-     int bufferSize;
-
-     if (isYV12)
-      {
-       pitch[0]=input->stride1[0];
-       pitch[1]=input->stride1[1];
-       pitch[2]=input->stride1[2];
-       pitch[3]=0;
-
-       width[0]=input->dx;
-       width[1]=width[2]=input->dx/2;
-       width[3]=0;
-
-       height[0]=input->dy;
-       height[1]=height[2]=input->dy/2;
-       height[3]=0;
-
-       bufferSize =(size[0]=abs(pitch[0]*height[0]));
-       bufferSize+=(size[1]=abs(pitch[1]*height[1]));
-       bufferSize+=(size[2]=abs(pitch[2]*height[2]));
-       size[3]=0;
-      }
-     else
-      {
-       pitch[0]=input->stride1[0];
-       pitch[1]=pitch[2]=pitch[3]=0;
-
-       width[0]=input->dx;
-       width[1]=width[2]=width[3]=0;
-
-       height[0]=input->dy;
-       height[1]=height[2]=height[3]=0;
-
-       bufferSize=(size[0]=abs(pitch[0])*height[0]);
-       size[1]=size[2]=size[3]=0;
-      }
-
-     if (!bufferData)
-      bufferData=new unsigned char[bufferSize*(numBuffers+(applyPulldown == 1 ? 1 : 0)+1)];
-    }
-
-   unsigned char* newBuffer=bufferData;
-
    for (int bufNo=0; bufNo < numBuffers+(applyPulldown > 0 ? 1 : 0); bufNo++)
     {
      buffers[bufNo].frameNo=-1;
@@ -576,22 +603,7 @@ void TimgFilterAvisynth::Tavisynth::process(TimgFilterAvisynth *self,TfilterQueu
      buffers[bufNo].start=0;
      buffers[bufNo].stop=0;
      buffers[bufNo].fieldType=0;
-
-     if (bufNo < numBuffers ||
-         applyPulldown == 1)
-      for (int planeNo=0; planeNo < 4; planeNo++)
-       {
-        buffers[bufNo].width[planeNo]=width[planeNo];
-        buffers[bufNo].height[planeNo]=height[planeNo];
-        buffers[bufNo].pitch[planeNo]=pitch[planeNo];
-
-        if (pitch[planeNo] < 0)
-         buffers[bufNo].data[planeNo]=newBuffer-pitch[planeNo]*(height[planeNo]-1);
-        else
-         buffers[bufNo].data[planeNo]=newBuffer;
-
-        newBuffer+=size[planeNo];
-       }
+     buffers[bufNo].ReleaseFrame();
     }
 
    resetBuffers=false;
@@ -601,65 +613,9 @@ void TimgFilterAvisynth::Tavisynth::process(TimgFilterAvisynth *self,TfilterQueu
 
  curBuffer.frameNo=curInFrameNo;
 
- if (numBuffers == 1)
+ if (applyPulldown != 1 || !(pict.fieldtype & FIELD_TYPE::MASK_INT))
   {
-   // "Buffer" current frame without copying data
-
-   if (isYV12)
-    {
-     curBuffer.data[0]=(unsigned char*)input->src[0];
-     curBuffer.data[1]=(unsigned char*)input->src[1];
-     curBuffer.data[2]=(unsigned char*)input->src[2];
-     curBuffer.data[3]=0;
-
-     curBuffer.pitch[0]=input->stride1[0];
-     curBuffer.pitch[1]=input->stride1[1];
-     curBuffer.pitch[2]=input->stride1[2];
-     curBuffer.pitch[3]=0;
-
-     curBuffer.width[0]=input->dx;
-     curBuffer.width[1]=curBuffer.width[2]=input->dx/2;
-     curBuffer.width[3]=0;
-
-     curBuffer.height[0]=input->dy;
-     curBuffer.height[1]=curBuffer.height[2]=input->dy/2;
-     curBuffer.height[3]=0;
-    }
-   else
-    {
-     curBuffer.data[0]=(unsigned char*)input->src[0];
-     curBuffer.data[1]=curBuffer.data[2]=curBuffer.data[3]=0;
-
-     curBuffer.pitch[0]=input->stride1[0];
-     curBuffer.pitch[1]=curBuffer.pitch[2]=curBuffer.pitch[3]=0;
-
-     curBuffer.width[0]=input->dx;
-     curBuffer.width[1]=curBuffer.width[2]=curBuffer.width[3]=0;
-
-     curBuffer.height[0]=input->dy;
-     curBuffer.height[1]=curBuffer.height[2]=curBuffer.height[3]=0;
-    }
-
-   curBuffer.start=pict.rtStart;
-   curBuffer.stop=pict.rtStop;
-   curBuffer.fieldType=pict.fieldtype;
-
-   if (debugPrint)
-    DPRINTF(_l("TimgFilterAvisynth: Passing through frame %i, %10.6f - %10.6f = %10.6f"),curInFrameNo,curBuffer.start/10000.0,curBuffer.stop/10000.0,(curBuffer.stop-curBuffer.start)/10000.0);
-  }
- else if (applyPulldown != 1 || !(pict.fieldtype & FIELD_TYPE::MASK_INT))
-  {
-   // Buffer frames as-is and pass the fieldtype through
-
-   if (isYV12)
-    {
-     TffPict::copy(curBuffer.data[0],curBuffer.pitch[0],input->src[0],input->stride1[0],input->dx  ,input->dy);
-     TffPict::copy(curBuffer.data[1],curBuffer.pitch[1],input->src[1],input->stride1[1],input->dx/2,input->dy/2);
-     TffPict::copy(curBuffer.data[2],curBuffer.pitch[2],input->src[2],input->stride1[2],input->dx/2,input->dy/2);
-    }
-   else
-    TffPict::copy(curBuffer.data[0],curBuffer.pitch[0],input->src[0],input->stride1[0],input->dx*input->cspBpp,input->dy);
-
+   curBuffer.CreateFrame(input);
    curBuffer.start=pict.rtStart;
    curBuffer.stop=pict.rtStop;
    curBuffer.fieldType=pict.fieldtype;
@@ -722,15 +678,7 @@ void TimgFilterAvisynth::Tavisynth::process(TimgFilterAvisynth *self,TfilterQueu
     {
      // Just copy the first frame, whatever it is
 
-     if (isYV12)
-      {
-       TffPict::copy(curBuffer.data[0],curBuffer.pitch[0],input->src[0],input->stride1[0],input->dx  ,input->dy);
-       TffPict::copy(curBuffer.data[1],curBuffer.pitch[1],input->src[1],input->stride1[1],input->dx/2,input->dy/2);
-       TffPict::copy(curBuffer.data[2],curBuffer.pitch[2],input->src[2],input->stride1[2],input->dx/2,input->dy/2);
-      }
-     else
-      TffPict::copy(curBuffer.data[0],curBuffer.pitch[0],input->src[0],input->stride1[0],input->dx*input->cspBpp,input->dy);
-
+     curBuffer.CreateFrame(input);
      curBuffer.start=pict.rtStart;
      curBuffer.stop=pict.rtStop;
 
@@ -745,14 +693,7 @@ void TimgFilterAvisynth::Tavisynth::process(TimgFilterAvisynth *self,TfilterQueu
       {
        // T -> x
 
-       if (isYV12)
-        {
-         TffPict::copy(curBuffer.data[0],curBuffer.pitch[0],input->src[0],input->stride1[0],input->dx  ,input->dy);
-         TffPict::copy(curBuffer.data[1],curBuffer.pitch[1],input->src[1],input->stride1[1],input->dx/2,input->dy/2);
-         TffPict::copy(curBuffer.data[2],curBuffer.pitch[2],input->src[2],input->stride1[2],input->dx/2,input->dy/2);
-        }
-       else
-        TffPict::copy(curBuffer.data[0],curBuffer.pitch[0],input->src[0],input->stride1[0],input->dx*input->cspBpp,input->dy);
+       curBuffer.CreateFrame(input);
 
        char_t* fields;
 
@@ -784,22 +725,7 @@ void TimgFilterAvisynth::Tavisynth::process(TimgFilterAvisynth *self,TfilterQueu
 
        // B -> x
 
-       if (isYV12)
-        {
-         TffPict::copy(curBuffer.data[0],curBuffer.pitch[0]*2,pulldownBuffer.data[0],pulldownBuffer.pitch[0]*2,input->dx  ,input->dy/2);
-         TffPict::copy(curBuffer.data[1],curBuffer.pitch[1]*2,pulldownBuffer.data[1],pulldownBuffer.pitch[1]*2,input->dx/2,input->dy/4);
-         TffPict::copy(curBuffer.data[2],curBuffer.pitch[2]*2,pulldownBuffer.data[2],pulldownBuffer.pitch[2]*2,input->dx/2,input->dy/4);
-
-         TffPict::copy(curBuffer.data[0]+curBuffer.pitch[0],curBuffer.pitch[0]*2,input->src[0]+input->stride1[0],input->stride1[0]*2,input->dx  ,input->dy/2);
-         TffPict::copy(curBuffer.data[1]+curBuffer.pitch[1],curBuffer.pitch[1]*2,input->src[1]+input->stride1[1],input->stride1[1]*2,input->dx/2,input->dy/4);
-         TffPict::copy(curBuffer.data[2]+curBuffer.pitch[2],curBuffer.pitch[2]*2,input->src[2]+input->stride1[2],input->stride1[2]*2,input->dx/2,input->dy/4);
-        }
-       else
-        {
-         TffPict::copy(curBuffer.data[0],curBuffer.pitch[0]*2,pulldownBuffer.data[0],pulldownBuffer.pitch[0]*2,input->dx*input->cspBpp,input->dy/2);
-
-         TffPict::copy(curBuffer.data[0]+curBuffer.pitch[0],curBuffer.pitch[0]*2,input->src[0]+input->stride1[0],input->stride1[0]*2,input->dx*input->cspBpp,input->dy/2);
-        }
+       curBuffer.CombineFrame(input,false,false,pulldownBuffer.frame);
 
        if (!curTFF)
         {
@@ -825,17 +751,8 @@ void TimgFilterAvisynth::Tavisynth::process(TimgFilterAvisynth *self,TfilterQueu
 
          TframeBuffer& curBuffer2=buffers[curBufferNo];
 
+         curBuffer2.CreateFrame(input);
          curBuffer2.frameNo=curInFrameNo;
-
-         if (isYV12)
-          {
-           TffPict::copy(curBuffer2.data[0],curBuffer2.pitch[0],input->src[0],input->stride1[0],input->dx  ,input->dy);
-           TffPict::copy(curBuffer2.data[1],curBuffer2.pitch[1],input->src[1],input->stride1[1],input->dx/2,input->dy/2);
-           TffPict::copy(curBuffer2.data[2],curBuffer2.pitch[2],input->src[2],input->stride1[2],input->dx/2,input->dy/2);
-          }
-         else
-          TffPict::copy(curBuffer2.data[0],curBuffer2.pitch[0],input->src[0],input->stride1[0],input->dx*input->cspBpp,input->dy);
-
          curBuffer2.start=pulldownBuffer.start+shortDuration/2+shortDuration;
          curBuffer2.stop=pulldownBuffer.stop+shortDuration;
          curBuffer2.fieldType=FIELD_TYPE::INT_TFF;
@@ -849,15 +766,7 @@ void TimgFilterAvisynth::Tavisynth::process(TimgFilterAvisynth *self,TfilterQueu
    // Frames that had pulldown applied are always TFF
    curBuffer.fieldType=FIELD_TYPE::INT_TFF;
 
-   if (isYV12)
-    {
-     TffPict::copy(pulldownBuffer.data[0],pulldownBuffer.pitch[0],input->src[0],input->stride1[0],input->dx  ,input->dy);
-     TffPict::copy(pulldownBuffer.data[1],pulldownBuffer.pitch[1],input->src[1],input->stride1[1],input->dx/2,input->dy/2);
-     TffPict::copy(pulldownBuffer.data[2],pulldownBuffer.pitch[2],input->src[2],input->stride1[2],input->dx/2,input->dy/2);
-    }
-   else
-    TffPict::copy(pulldownBuffer.data[0],pulldownBuffer.pitch[0],input->src[0],input->stride1[0],input->dx*input->cspBpp,input->dy);
-
+   pulldownBuffer.CreateField(input,true);
    pulldownBuffer.start=pict.rtStart;
    pulldownBuffer.stop=pict.rtStop;
    pulldownBuffer.fieldType=pict.fieldtype;

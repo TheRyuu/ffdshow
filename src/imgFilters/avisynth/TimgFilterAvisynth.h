@@ -13,6 +13,8 @@ private:
  TavisynthSettings oldcfg;
 
 public:
+ struct Tinput;
+
  struct TframeBuffer
   {
    int frameNo;
@@ -20,10 +22,21 @@ public:
    REFERENCE_TIME start;
    REFERENCE_TIME stop;
    int fieldType;
-   unsigned char* data[4];
-   stride_t pitch[4];
-   int width[4];
-   int height[4];
+   Tinput* input;
+   AVS_VideoFrame* frame;
+
+   TframeBuffer() :
+    input(0),
+    frame(0)
+   {}
+
+   void CreateFrame(Tinput* input);
+   void CreateField(Tinput* input, bool topField);
+   void CombineFrame(Tinput* input, bool inTopField, bool outTopField, AVS_VideoFrame* otherField);
+
+   //void CopyFrame(TframeBuffer& frame);
+   void ReleaseFrame();
+   ~TframeBuffer();
   };
 
  struct Tinput : Tavisynth_c
@@ -50,7 +63,23 @@ public:
    Rational outputDar;
    Rational outputSar;
 
-   Tinput() : env(0),clip(0), buffers(0) {}
+   void InitVideoInfo(AVS_VideoInfo& vi)
+   {
+    memset(&vi,0,sizeof(VideoInfo));
+    vi.width=dx;
+    vi.height=dy;
+    vi.fps_numerator=fpsnum;
+    vi.fps_denominator=fpsden;
+    vi.num_frames=NUM_FRAMES;
+    // RGB values: avisynth refers to the write order, FF_CSP_ enum refers to the "memory byte order",
+    // which under x86 is reversed, see the comment above the FF_CSP_ enum definition.
+    if      (csp & FF_CSP_420P)  vi.pixel_type=AVS_CS_YV12;
+    else if (csp & FF_CSP_YUY2)  vi.pixel_type=AVS_CS_YUY2;
+    else if (csp & FF_CSP_RGB32) vi.pixel_type=AVS_CS_BGR32;
+    else if (csp & FF_CSP_RGB24) vi.pixel_type=AVS_CS_BGR24;
+   }
+
+   Tinput() : env(NULL),clip(NULL), buffers(NULL) {}
 
    ~Tinput()
     {
@@ -96,7 +125,6 @@ private:
    Tavisynth(): 
     restart(true),
     passFirstThrough(true),
-    bufferData(NULL),
     buffers(NULL),
     frameScaleDen(1),
     frameScaleNum(1)
@@ -152,7 +180,6 @@ private:
    bool resetBuffers;
    bool ignoreAheadValue;
 
-   unsigned char* bufferData;
    TframeBuffer* buffers;
   } *avisynth;
 
