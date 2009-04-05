@@ -1795,46 +1795,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\ImgFilters\Skal\skl_dct_sse.asm"
-				>
-				<FileConfiguration
-					Name="Debug Unicode|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="yasm"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release Unicode|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="yasm"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\src\ImgFilters\Skal\skl_fdct_mmx.asm"
-				>
-				<FileConfiguration
-					Name="Debug Unicode|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="yasm"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release Unicode|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="yasm"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath="src\imgFilters\T3x3blur.cpp"
 				>
 			</File>
@@ -3207,6 +3167,26 @@
 				</File>
 				<File
 					RelativePath="src\imgFilters\awarpsharp\aws_api.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="skal"
+				>
+				<File
+					RelativePath=".\src\imgFilters\Skal\fdct_mmx_skal.asm"
+					>
+				</File>
+				<File
+					RelativePath=".\src\imgFilters\Skal\fdct_sse2_skal.asm"
+					>
+				</File>
+				<File
+					RelativePath=".\src\imgFilters\Skal\idct_mmx.asm"
+					>
+				</File>
+				<File
+					RelativePath=".\src\imgFilters\Skal\idct_sse2_dmitry.asm"
 					>
 				</File>
 			</Filter>

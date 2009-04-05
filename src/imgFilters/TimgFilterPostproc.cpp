@@ -839,7 +839,6 @@ inline void TimgFilterPostprocSpp::get_pixels(DCTELEM *block, const uint8_t *pix
   }
 }
 
-#ifndef WIN64
 void TimgFilterPostprocSpp::filter(uint8_t *dst, const uint8_t *src0, int dst_stride, int src_stride, unsigned int width, unsigned int height, const int8_t *qp_store, int qp_stride, bool is_luma)
 {
  const int count=1<<currentq;
@@ -892,7 +891,6 @@ void TimgFilterPostprocSpp::filter(uint8_t *dst, const uint8_t *src0, int dst_st
     store_slice(dst+(y-8)*dst_stride,temp+8+y*stride,dst_stride,stride,width,std::min(8U,height+8-y),6-currentq);
   }
 }
-#endif
 
 bool TimgFilterPostprocSpp::is(const TffPictBase &pict,const TfilterSettingsVideo *cfg0)
 {
