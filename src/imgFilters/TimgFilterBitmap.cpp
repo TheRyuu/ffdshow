@@ -256,11 +256,9 @@ HRESULT TimgFilterBitmap::process(TfilterQueue::iterator it,TffPict &pict,const 
    if (bitmap->rectFull.dx!=0)
     {
      if (oldmode!=cfg->mode)
-    #ifdef __SSE2__
       if (Tconfig::cpu_flags&FF_CPU_SSE2)
        w.blend=getBlend<Tsse2>(oldmode=cfg->mode);
       else
-    #endif
        w.blend=getBlend<Tmmx>(oldmode=cfg->mode);
      TprintPrefs prefs(deci,NULL);
      prefs.dx=dx2[0];prefs.dy=dy2[0];

@@ -160,11 +160,9 @@ HRESULT TimgFilterMplayerSharp::process(TfilterQueue::iterator it,TffPict &pict,
 TimgFilterUnsharp::TimgFilterUnsharp(IffdshowBase *Ideci,Tfilters *Iparent):TimgFilter(Ideci,Iparent)
 {
  Ysum=NULL;
-#ifdef __SSE2__
  if (Tconfig::cpu_flags&FF_CPU_SSE2)
   unsharpFc=&TimgFilterUnsharp::unsharp<Tsse2>;
  else
-#endif
   unsharpFc=&TimgFilterUnsharp::unsharp<Tmmx>;
 }
 void TimgFilterUnsharp::done(void)
@@ -248,11 +246,9 @@ HRESULT TimgFilterUnsharp::process(TfilterQueue::iterator it,TffPict &pict,const
 TimgFilterXsharp::TimgFilterXsharp(IffdshowBase *Ideci,Tfilters *Iparent):TimgFilter(Ideci,Iparent)
 {
  Ymin=Ymax=NULL;
-#ifdef __SSE2__
  if (Tconfig::cpu_flags&FF_CPU_SSE2)
   xsharpenFc=&TimgFilterXsharp::xsharpen<Tsse2>;
  else
-#endif
  if (Tconfig::cpu_flags&FF_CPU_MMXEXT)
   xsharpenFc=&TimgFilterXsharp::xsharpen<Tmmxext>;
  else

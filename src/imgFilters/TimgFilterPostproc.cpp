@@ -561,7 +561,7 @@ template<> __align16(const uint8_t,TimgFilterPostprocSpp::TstoreSlice<Tmmx>::dit
  { 10,  58,   6,  54,   9,  57,   5,  53, },
  { 42,  26,  38,  22,  41,  25,  37,  21, },
 };
-#ifdef __SSE2__
+
 template<> __align16(const uint8_t,TimgFilterPostprocSpp::TstoreSlice<Tsse2>::dither[8][16])=
 {
  {  0,  48,  12,  60,   3,  51,  15,  63,   0,  48,  12,  60,   3,  51,  15,  63 },
@@ -573,7 +573,6 @@ template<> __align16(const uint8_t,TimgFilterPostprocSpp::TstoreSlice<Tsse2>::di
  { 10,  58,   6,  54,   9,  57,   5,  53,  10,  58,   6,  54,   9,  57,   5,  53 },
  { 42,  26,  38,  22,  41,  25,  37,  21,  42,  26,  38,  22,  41,  25,  37,  21 },
 };
-#endif
 
 void TimgFilterPostprocSpp::store_slice_c(uint8_t *dst, const int16_t *src, int dst_stride, int src_stride, unsigned int width, unsigned int height, int log2_scale)
 {
@@ -931,11 +930,9 @@ HRESULT TimgFilterPostprocSpp::process(TfilterQueue::iterator it,TffPict &pict,c
          case 0:requantize=hardthresh_mmx;break;
          case 1:requantize=softthresh_mmx;break;
         }
-      #ifdef __SSE2__
        if (Tconfig::cpu_flags&FF_CPU_SSE2)
         store_slice=TstoreSlice<Tsse2>::store_slice;
        else
-      #endif
        if (Tconfig::cpu_flags&FF_CPU_MMX)
         store_slice=TstoreSlice<Tmmx>::store_slice;
        else

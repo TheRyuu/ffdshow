@@ -64,10 +64,8 @@ TimgFilterFramerateDoubler::TimgFilterFramerateDoubler(IffdshowBase *Ideci,Tfilt
    interpolateMotion=Tinterpolate<Tmmx>::interpolateMotion;
    pictInterpolate=Tinterpolate<Tmmx>::pictInterpolate;
   }
-#ifdef __SSE2__
  if (Tconfig::cpu_flags&FF_CPU_SSE2)
   pictInterpolate=Tinterpolate<Tsse2>::pictInterpolate;
-#endif
 }
 void TimgFilterFramerateDoubler::done(void)
 {

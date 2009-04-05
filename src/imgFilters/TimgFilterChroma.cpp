@@ -25,11 +25,9 @@
 
 TimgFilterChroma::TimgFilterChroma(IffdshowBase *Ideci,Tfilters *Iparent):TimgFilter(Ideci,Iparent)
 {
-#ifdef __SSE2__
  if (Tconfig::cpu_flags&FF_CPU_SSE2)
   chromaFc=&TimgFilterChroma::chroma<Tsse2>;
  else
-#endif
   chromaFc=&TimgFilterChroma::chroma<Tmmx>;
  for (int i=-180,ii=0;i<=180;ii++,i++)
   {

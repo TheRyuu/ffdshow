@@ -181,21 +181,17 @@ int Tconvert::convert(int incsp0,
          case FF_CSP_YUY2: //YV12 -> YUY2
           mode=MODE_avisynth_yv12_to_yuy2;
           if (incsp & FF_CSP_FLAGS_INTERLACED)
-         #ifdef __SSE2__
            if (Tconfig::cpu_flags&FF_CPU_SSE2)
             avisynth_yv12_to_yuy2=TconvertYV12<Tsse2>::yv12_i_to_yuy2;
            else
-         #endif
            if (Tconfig::cpu_flags&FF_CPU_MMXEXT)
             avisynth_yv12_to_yuy2=TconvertYV12<Tmmxext>::yv12_i_to_yuy2;
            else
             avisynth_yv12_to_yuy2=TconvertYV12<Tmmx>::yv12_i_to_yuy2;
           else
-         #ifdef __SSE2__
            if (Tconfig::cpu_flags&FF_CPU_SSE2)
             avisynth_yv12_to_yuy2=TconvertYV12<Tsse2>::yv12_to_yuy2;
            else
-         #endif
            if (Tconfig::cpu_flags&FF_CPU_MMXEXT)
             avisynth_yv12_to_yuy2=TconvertYV12<Tmmxext>::yv12_to_yuy2;
            else

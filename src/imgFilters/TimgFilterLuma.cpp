@@ -42,11 +42,9 @@ static void calcGamma(int &oldGamma,int newGamma,unsigned int tab[256],unsigned 
 TimgFilterLuma::TimgFilterLuma(IffdshowBase *Ideci,Tfilters *Iparent):TimgFilter(Ideci,Iparent)
 {
  oldGamma=-1;
-#ifdef __SSE2__
  if (Tconfig::cpu_flags&FF_CPU_SSE2)
   processLumaFc=&TimgFilterLuma::processLuma<Tsse2>;
  else
-#endif
   processLumaFc=&TimgFilterLuma::processLuma<Tmmx>;
 }
 void TimgFilterLuma::processGamma(const unsigned char *srcY,unsigned char *dstY,const TpictPropSettings *cfg)

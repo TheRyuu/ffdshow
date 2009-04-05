@@ -35,11 +35,9 @@ TimgFilterWarpsharp::TimgFilterWarpsharp(IffdshowBase *Ideci,Tfilters *Iparent):
  blur=NULL;
  swsblur=NULL;
  libmplayer=NULL;
-#ifdef __SSE2__
  if (Tconfig::cpu_flags&FF_CPU_SSE2)
   warpsharpbumpFc=warpsharpbump<Tsse2>;
  else
-#endif
   warpsharpbumpFc=warpsharpbump<Tmmx>;
 }
 TimgFilterWarpsharp::~TimgFilterWarpsharp()

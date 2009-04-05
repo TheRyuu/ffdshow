@@ -110,19 +110,13 @@ template<class _mm> static void convert_32_16_simd(const int32_t *inbuf,int16_t 
 }
 template<> int16_t* convert<int32_t,int16_t>(const int32_t *inbuf,int16_t * const outbuf,size_t count)
 {
-#ifdef __SSE2__
  bool sse2=Tconfig::cpu_flags&FF_CPU_SSE2 && (intptr_t(inbuf)&15)==0 &&(intptr_t(outbuf)&15)==0;
-#else
- bool sse2=false;
-#endif
  size_t c_miss=sse2?count&7:(Tconfig::cpu_flags&FF_CPU_MMX?count&3:count);
  size_t c_loop=count-c_miss;
  if (c_loop)
-  #ifdef __SSE2__
   if (sse2)
    convert_32_16_simd<Tsse2>(inbuf,outbuf,(unsigned int)c_loop);
   else
-  #endif
    convert_32_16_simd<Tmmx>(inbuf,outbuf,(unsigned int)c_loop);
  for (size_t i=0;i<c_miss;i++)
   outbuf[i+c_loop]=int16_t(inbuf[i+c_loop]>>16);
@@ -159,7 +153,6 @@ static void convert_float_16_sse(const float *inbuf,int16_t *samples,unsigned in
   }
  _mm_empty();
 }
-#ifdef __SSE2__
 static void convert_float_16_sse2(const float *inbuf,int16_t *samples,unsigned int c_loop)
 {
  const __m128 multiplier_float_16=_mm_set_ps1(32768.0);
@@ -185,9 +178,6 @@ static void convert_float_16_sse2(const float *inbuf,int16_t *samples,unsigned i
    movdqa   (edi+edx-16+16, xmm2);          // store h g | f e | d c | b a
   }
 }
-#else
- #define convert_float_16_sse2 NULL
-#endif
 
 //---------------------------- float -> int32 ----------------------------
 #ifndef WIN64
@@ -221,7 +211,7 @@ static void convert_float_32_sse(const float *inbuf,int32_t *samples,unsigned in
   }
  _mm_empty();
 }
-#ifdef __SSE2__
+
 static void convert_float_32_sse2(const float *inbuf,int32_t *samples,unsigned int c_loop)
 {
  const __m128 multiplier_float_32=_mm_set_ps1(2147483647.0f);
@@ -259,9 +249,6 @@ static void convert_float_32_sse2(const float *inbuf,int32_t *samples,unsigned i
    movdqa   (edi+edx-16+32, xmm3);          // store hh | gg | ff | ee
   }
 }
-#else
- #define convert_float_32_sse2 NULL
-#endif
 
 template<class Tout> struct TconvertFromFloat
 {
@@ -339,7 +326,7 @@ static void convert_16_float_sse(const int16_t*inbuf,float *samples,unsigned int
   }
  _mm_empty();
 }
-#ifdef __SSE2__
+
 static void convert_16_float_sse2(const int16_t*inbuf,float *samples,unsigned int c_loop)
 {
  int eax=0;
@@ -365,9 +352,6 @@ static void convert_16_float_sse2(const int16_t*inbuf,float *samples,unsigned in
    movaps    (edi+(eax+16)*2-16, xmm3);      //  store xh | xg | xf | xe
   }
 }
-#else
- #define convert_16_float_sse2 NULL
-#endif
 
 //---------------------------- int32 -> float ----------------------------
 #ifndef WIN64
@@ -397,7 +381,7 @@ static void convert_32_float_sse(const int32_t*inbuf,float *samples,unsigned int
   }
  _mm_empty();
 }
-#ifdef __SSE2__
+
 static void convert_32_float_sse2(const int32_t*inbuf,float *samples,unsigned int c_loop)
 {
  int eax=0;                 //  count
@@ -419,9 +403,6 @@ static void convert_32_float_sse2(const int32_t*inbuf,float *samples,unsigned in
    movaps   (edi+eax+32-16, xmm3);     //  store xh | xg | xf | xe
   }
 }
-#else
- #define convert_32_float_sse2 NULL
-#endif
 
 template<class Tin> struct TconvertToFloat
 {

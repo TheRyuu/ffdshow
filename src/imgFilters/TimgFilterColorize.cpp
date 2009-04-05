@@ -24,11 +24,9 @@
 
 TimgFilterColorize::TimgFilterColorize(IffdshowBase *Ideci,Tfilters *Iparent):TimgFilter(Ideci,Iparent)
 {
-#ifdef __SSE2__
  if (Tconfig::cpu_flags&FF_CPU_SSE2)
   colorizeFc=&TimgFilterColorize::colorize<Tsse2>;
  else
-#endif
   colorizeFc=&TimgFilterColorize::colorize<Tmmx>;
 }
 

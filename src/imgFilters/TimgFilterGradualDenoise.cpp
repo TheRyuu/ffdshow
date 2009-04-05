@@ -95,11 +95,9 @@ template<class _mm> void TimgFilterGradualDenoise::denoise(int gradualStrength,u
 TimgFilterGradualDenoise::TimgFilterGradualDenoise(IffdshowBase *Ideci,Tfilters *Iparent):TimgFilter(Ideci,Iparent)
 {
  prevImg=NULL;
-#ifdef __SSE2__
  if (Tconfig::cpu_flags&FF_CPU_SSE2)
   denoiseFc=&TimgFilterGradualDenoise::denoise<Tsse2>;
  else
-#endif
  if (Tconfig::cpu_flags&FF_CPU_MMXEXT)
   denoiseFc=&TimgFilterGradualDenoise::denoise<Tmmxext>;
  else

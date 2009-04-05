@@ -545,6 +545,5 @@ template<class _mm> void TspuImageSimd<_mm>::ownprint(
 }
 
 template struct TspuImageSimd<Tmmx>;
-#ifdef __SSE2__
  template struct TspuImageSimd<Tsse2>;
-#endif
+

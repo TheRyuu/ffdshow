@@ -30,11 +30,9 @@ TimgFilterBlur::TimgFilterBlur(IffdshowBase *Ideci,Tfilters *Iparent):TimgFilter
 {
  bluredPict=NULL;
  blur=NULL;
-#ifdef __SSE2__
  if (Tconfig::cpu_flags&FF_CPU_SSE2)
   mergeFc=&TimgFilterBlur::merge<Tsse2>;
  else
-#endif
   mergeFc=&TimgFilterBlur::merge<Tmmx>;
 }
 

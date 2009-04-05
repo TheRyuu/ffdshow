@@ -41,13 +41,11 @@ TimgFilterNoiseMplayer::Tprocess::Tprocess(void)
   }
  if (Tconfig::cpu_flags&FF_CPU_MMXEXT)
   lineNoise=lineNoise_simd<Tmmxext>;
-#ifdef __SSE2__
  if (Tconfig::cpu_flags&FF_CPU_SSE2)
   {
    lineNoise=lineNoise_simd<Tsse2>;
    lineNoiseAvg=lineNoiseAvg_simd<Tsse2>;
   }
-#endif
 }
 
 void TimgFilterNoiseMplayer::Tprocess::done(void)
@@ -306,7 +304,6 @@ template<> void TimgFilterNoise::Tnoise<Tmmx>::reset(void)
  noisenext64=Tmmx::set1_pi64(time(NULL));
 }
 
-#ifdef __SSE2__
 __m128i TimgFilterNoise::noiseConst128,TimgFilterNoise::noisenext128;
 template<> __m128i& TimgFilterNoise::Tnoise<Tsse2>::noiseConst() {return noiseConst128;}
 template<> __m128i& TimgFilterNoise::Tnoise<Tsse2>::noisenext() {return noisenext128;}
@@ -319,7 +316,6 @@ template<> void TimgFilterNoise::Tnoise<Tsse2>::reset(void)
  __align16(int64_t,t[])={0,time(NULL)};
  noisenext128=*(__m128i*)t;
 }
-#endif
 
 const int TimgFilterNoise::patt[4]={-2,0,2,0};
 
@@ -327,7 +323,6 @@ TimgFilterNoise::TimgFilterNoise(IffdshowBase *Ideci,Tfilters *Iparent):TimgFilt
 {
  noiseMask[0]=noiseMask[1]=noiseMask[2]=NULL;
  oldnoise.strength=-1;oldcsp=FF_CSP_NULL;
-#ifdef __SSE2__
  if (Tconfig::cpu_flags&FF_CPU_SSE2)
   {
    Tnoise<Tsse2>::init();
@@ -335,7 +330,6 @@ TimgFilterNoise::TimgFilterNoise(IffdshowBase *Ideci,Tfilters *Iparent):TimgFilt
    processChromaFc=&TimgFilterNoise::processChroma<Tsse2>;
   }
  else
-#endif
   {
    processLumaFc=&TimgFilterNoise::processLuma<Tmmx>;
    processChromaFc=&TimgFilterNoise::processChroma<Tmmx>;
@@ -362,10 +356,8 @@ void TimgFilterNoise::onSizeChange(void)
  done();
  noiseCount[0]=noiseCount[1]=noiseCount[2]=-1;
  noiseAvihStrength=0;oldPattern=-1;
-#ifdef __SSE2__
  if (Tconfig::cpu_flags&FF_CPU_SSE2)
   Tnoise<Tsse2>::reset();
-#endif
  Tnoise<Tmmx>::reset();
  _mm_empty();
 }

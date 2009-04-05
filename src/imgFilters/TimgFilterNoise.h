@@ -16,9 +16,7 @@ private:
  void genAVIHnoise(int plane,int strength);
  TnoiseSettings oldnoise;
  static __m64 noiseConst64,noisenext64;
- #ifdef __SSE2__
   static __m128i noiseConst128,noisenext128;
- #endif
  template<class _mm> struct Tnoise
   {
    static typename _mm::__m &noiseConst(),&noisenext();

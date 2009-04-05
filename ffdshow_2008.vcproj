@@ -639,20 +639,6 @@
 			<File
 				RelativePath=".\src\cpuid.asm"
 				>
-				<FileConfiguration
-					Name="Debug Unicode|x64"
-					>
-					<Tool
-						Name="yasm"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release Unicode|x64"
-					>
-					<Tool
-						Name="yasm"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\src\dsutil.cpp"
@@ -1197,6 +1183,14 @@
 			</File>
 			<File
 				RelativePath=".\src\simd.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\simd_common.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\simd_instructions.h"
 				>
 			</File>
 			<File

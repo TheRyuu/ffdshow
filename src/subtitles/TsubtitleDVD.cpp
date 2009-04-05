@@ -402,11 +402,9 @@ void TsubtitleDVD::createImage(const TspuPlane src[3],const CRect &rcclip,CRect 
     lines.clear();
     rectReal.bottom++;
     rectReal.right++;
-#ifdef __SSE2__
     if (Tconfig::cpu_flags&FF_CPU_SSE2)
         image=new TspuImageSimd<Tsse2>(src,rcclip,rectReal,parent->rectOrig,prefs);
     else
-#endif
         image=new TspuImageSimd<Tmmx>(src,rcclip,rectReal,parent->rectOrig,prefs);
     lines.push_back(new TrenderedSubtitleLine(image));
 }
