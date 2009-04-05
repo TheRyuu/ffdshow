@@ -662,9 +662,12 @@ void x264_pixel_init( int cpu, x264_pixel_function_t *pixf )
         }
 #endif
         pixf->intra_satd_x3_16x16 = x264_intra_satd_x3_16x16_mmxext;
-        pixf->intra_sad_x3_16x16 = x264_intra_sad_x3_16x16_mmxext;
+        pixf->intra_sad_x3_16x16  = x264_intra_sad_x3_16x16_mmxext;
         pixf->intra_satd_x3_8x8c  = x264_intra_satd_x3_8x8c_mmxext;
+        pixf->intra_sad_x3_8x8c   = x264_intra_sad_x3_8x8c_mmxext;
+        pixf->intra_sad_x3_8x8    = x264_intra_sad_x3_8x8_mmxext;
         pixf->intra_satd_x3_4x4   = x264_intra_satd_x3_4x4_mmxext;
+        pixf->intra_sad_x3_4x4    = x264_intra_sad_x3_4x4_mmxext;
     }
 
     if( cpu&X264_CPU_SSE2 )
@@ -753,6 +756,7 @@ void x264_pixel_init( int cpu, x264_pixel_function_t *pixf )
         pixf->intra_satd_x3_16x16 = x264_intra_satd_x3_16x16_ssse3;
         pixf->intra_sad_x3_16x16  = x264_intra_sad_x3_16x16_ssse3;
         pixf->intra_satd_x3_8x8c  = x264_intra_satd_x3_8x8c_ssse3;
+        pixf->intra_sad_x3_8x8c   = x264_intra_sad_x3_8x8c_ssse3;
         pixf->intra_satd_x3_4x4   = x264_intra_satd_x3_4x4_ssse3;
 #ifdef ARCH_X86_64
         pixf->intra_sa8d_x3_8x8 = x264_intra_sa8d_x3_8x8_ssse3;

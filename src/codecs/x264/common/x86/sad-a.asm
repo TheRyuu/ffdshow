@@ -28,6 +28,9 @@
 
 SECTION_RODATA
 pb_3: times 16 db 3
+pw_8: times 4 dw 8
+pb_shuf8x8c0: db 0,0,0,0,2,2,2,2
+pb_shuf8x8c1: db 4,4,4,4,6,6,6,6
 sw_64: dd 64
 
 SECTION .text
@@ -256,6 +259,239 @@ cglobal x264_pixel_sad_8x16_sse2, 4,4
     RET
 
 ;-----------------------------------------------------------------------------
+; void intra_sad_x3_4x4 ( uint8_t *fenc, uint8_t *fdec, int res[3] );
+;-----------------------------------------------------------------------------
+
+cglobal x264_intra_sad_x3_4x4_mmxext, 3,3
+    pxor      mm7, mm7
+    movd      mm0, [r1-FDEC_STRIDE]
+    movd      mm1, [r0+FENC_STRIDE*0]
+    movd      mm2, [r0+FENC_STRIDE*2]
+    punpckldq mm0, mm0
+    punpckldq mm1, [r0+FENC_STRIDE*1]
+    punpckldq mm2, [r0+FENC_STRIDE*3]
+    movq      mm6, mm0
+    movq      mm3, mm1
+    psadbw    mm3, mm0
+    psadbw    mm0, mm2
+    paddw     mm0, mm3
+    movd     [r2], mm0 ;V prediction cost
+    movd      mm3, [r1+FDEC_STRIDE*0-4]
+    movd      mm0, [r1+FDEC_STRIDE*1-4]
+    movd      mm4, [r1+FDEC_STRIDE*2-4]
+    movd      mm5, [r1+FDEC_STRIDE*3-4]
+    punpcklbw mm3, mm0
+    punpcklbw mm4, mm5
+    movq      mm5, mm3
+    punpckhwd mm5, mm4
+    punpckhdq mm5, mm6
+    psadbw    mm5, mm7
+    punpckhbw mm3, mm3
+    punpckhbw mm4, mm4
+    punpckhwd mm3, mm3
+    punpckhwd mm4, mm4
+    psraw     mm5, 2
+    pavgw     mm5, mm7
+    punpcklbw mm5, mm5
+    pshufw    mm5, mm5, 0x0 ;DC prediction
+    movq      mm6, mm5
+    psadbw    mm5, mm1
+    psadbw    mm6, mm2
+    psadbw    mm1, mm3
+    psadbw    mm2, mm4
+    paddw     mm5, mm6
+    paddw     mm1, mm2
+    movd   [r2+8], mm5 ;DC prediction cost
+    movd   [r2+4], mm1 ;H prediction cost
+    RET
+
+;-----------------------------------------------------------------------------
+; void intra_sad_x3_8x8 ( uint8_t *fenc, uint8_t edge[33], int res[3]);
+;-----------------------------------------------------------------------------
+
+;m0 = DC
+;m6 = V
+;m7 = H
+;m1 = DC score
+;m2 = V score
+;m3 = H score
+;m5 = pixel row
+;m4 = temp
+
+%macro INTRA_SAD_HVDC_ITER 2
+    movq      m5, [r0+FENC_STRIDE*%1]
+    movq      m4, m5
+    psadbw    m4, m0
+%if %1
+    paddw     m1, m4
+%else
+    SWAP      m1, m4
+%endif
+    movq      m4, m5
+    psadbw    m4, m6
+%if %1
+    paddw     m2, m4
+%else
+    SWAP      m2, m4
+%endif
+    pshufw    m4, m7, %2
+    psadbw    m5, m4
+%if %1
+    paddw     m3, m5
+%else
+    SWAP      m3, m5
+%endif
+%endmacro
+
+INIT_MMX
+cglobal x264_intra_sad_x3_8x8_mmxext, 3,3
+    movq      m7, [r1+7]
+    pxor      m0, m0
+    movq      m6, [r1+16]  ;V prediction
+    pxor      m1, m1
+    psadbw    m0, m7
+    psadbw    m1, m6
+    paddw     m0, m1
+    paddw     m0, [pw_8 GLOBAL]
+    psrlw     m0, 4
+    punpcklbw m0, m0
+    pshufw    m0, m0, 0x0 ;DC prediction
+    punpckhbw m7, m7
+    INTRA_SAD_HVDC_ITER 0, 0xff
+    INTRA_SAD_HVDC_ITER 1, 0xaa
+    INTRA_SAD_HVDC_ITER 2, 0x55
+    INTRA_SAD_HVDC_ITER 3, 0x00
+    movq      m7, [r1+7]
+    punpcklbw m7, m7
+    INTRA_SAD_HVDC_ITER 4, 0xff
+    INTRA_SAD_HVDC_ITER 5, 0xaa
+    INTRA_SAD_HVDC_ITER 6, 0x55
+    INTRA_SAD_HVDC_ITER 7, 0x00
+    movd  [r2+0], m2
+    movd  [r2+4], m3
+    movd  [r2+8], m1
+    RET
+
+;-----------------------------------------------------------------------------
+; void intra_sad_x3_8x8c ( uint8_t *fenc, uint8_t *fdec, int res[3] );
+;-----------------------------------------------------------------------------
+
+%macro INTRA_SAD_HV_ITER 2
+%ifidn %2, ssse3
+    movd        m1, [r1 + FDEC_STRIDE*(%1-4) - 4]
+    movd        m3, [r1 + FDEC_STRIDE*(%1-3) - 4]
+    pshufb      m1, m7
+    pshufb      m3, m7
+%else
+    movq        m1, [r1 + FDEC_STRIDE*(%1-4) - 8]
+    movq        m3, [r1 + FDEC_STRIDE*(%1-3) - 8]
+    punpckhbw   m1, m1
+    punpckhbw   m3, m3
+    pshufw      m1, m1, 0xff
+    pshufw      m3, m3, 0xff
+%endif
+    movq        m4, [r0 + FENC_STRIDE*(%1+0)]
+    movq        m5, [r0 + FENC_STRIDE*(%1+1)]
+    psadbw      m1, m4
+    psadbw      m3, m5
+    psadbw      m4, m6
+    psadbw      m5, m6
+    paddw       m1, m3
+    paddw       m4, m5
+%if %1
+    paddw       m0, m1
+    paddw       m2, m4
+%else
+    SWAP 0,1
+    SWAP 2,4
+%endif
+%endmacro
+
+%macro INTRA_SAD_8x8C 1
+cglobal x264_intra_sad_x3_8x8c_%1, 3,3
+    movq        m6, [r1 - FDEC_STRIDE]
+    add         r1, FDEC_STRIDE*4
+%ifidn %1,ssse3
+    movq        m7, [pb_3 GLOBAL]
+%endif
+    INTRA_SAD_HV_ITER 0, %1
+    INTRA_SAD_HV_ITER 2, %1
+    INTRA_SAD_HV_ITER 4, %1
+    INTRA_SAD_HV_ITER 6, %1
+    movd    [r2+4], m0
+    movd    [r2+8], m2
+    pxor        m7, m7
+    movq        m2, [r1 + FDEC_STRIDE*-4 - 8]
+    movq        m4, [r1 + FDEC_STRIDE*-2 - 8]
+    movq        m3, [r1 + FDEC_STRIDE* 0 - 8]
+    movq        m5, [r1 + FDEC_STRIDE* 2 - 8]
+    punpckhbw   m2, [r1 + FDEC_STRIDE*-3 - 8]
+    punpckhbw   m4, [r1 + FDEC_STRIDE*-1 - 8]
+    punpckhbw   m3, [r1 + FDEC_STRIDE* 1 - 8]
+    punpckhbw   m5, [r1 + FDEC_STRIDE* 3 - 8]
+    punpckhbw   m2, m4
+    punpckhbw   m3, m5
+    psrlq       m2, 32
+    psrlq       m3, 32
+    psadbw      m2, m7 ; s2
+    psadbw      m3, m7 ; s3
+    movq        m1, m6
+    SWAP        0, 6
+    punpckldq   m0, m7
+    punpckhdq   m1, m7
+    psadbw      m0, m7 ; s0
+    psadbw      m1, m7 ; s1
+    punpcklwd   m0, m1
+    punpcklwd   m2, m3
+    punpckldq   m0, m2 ;s0 s1 s2 s3
+    pshufw      m3, m0, 11110110b ;s2,s1,s3,s3
+    pshufw      m0, m0, 01110100b ;s0,s1,s3,s1
+    paddw       m0, m3
+    psrlw       m0, 2
+    pavgw       m0, m7 ; s0+s2, s1, s3, s1+s3
+%ifidn %1, ssse3
+    movq        m1, m0
+    pshufb      m0, [pb_shuf8x8c0 GLOBAL]
+    pshufb      m1, [pb_shuf8x8c1 GLOBAL]
+%else
+    packuswb    m0, m0
+    punpcklbw   m0, m0
+    movq        m1, m0
+    punpcklbw   m0, m0 ; 4x dc0 4x dc1
+    punpckhbw   m1, m1 ; 4x dc2 4x dc3
+%endif
+    movq        m2, [r0+FENC_STRIDE*0]
+    movq        m3, [r0+FENC_STRIDE*1]
+    movq        m4, [r0+FENC_STRIDE*2]
+    movq        m5, [r0+FENC_STRIDE*3]
+    movq        m6, [r0+FENC_STRIDE*4]
+    movq        m7, [r0+FENC_STRIDE*5]
+    psadbw      m2, m0
+    psadbw      m3, m0
+    psadbw      m4, m0
+    psadbw      m5, m0
+    movq        m0, [r0+FENC_STRIDE*6]
+    psadbw      m6, m1
+    psadbw      m7, m1
+    psadbw      m0, m1
+    psadbw      m1, [r0+FENC_STRIDE*7]
+    paddw       m2, m3
+    paddw       m4, m5
+    paddw       m6, m7
+    paddw       m0, m1
+    paddw       m2, m4
+    paddw       m6, m0
+    paddw       m2, m6
+    movd      [r2], m2
+    RET
+%endmacro
+
+INIT_MMX
+INTRA_SAD_8x8C mmxext
+INTRA_SAD_8x8C ssse3
+
+
+;-----------------------------------------------------------------------------
 ; void intra_sad_x3_16x16 ( uint8_t *fenc, uint8_t *fdec, int res[3] );
 ;-----------------------------------------------------------------------------
 
@@ -272,11 +508,11 @@ cglobal x264_intra_sad_x3_16x16_%1,3,5,%2
 %ifidn %1, ssse3
     mova  m1, [pb_3 GLOBAL]
 %endif
-%assign n 0
+%assign x 0
 %rep 16
-    movzx   r4d, byte [r1-1+FDEC_STRIDE*n]
+    movzx   r4d, byte [r1-1+FDEC_STRIDE*x]
     add     r3d, r4d
-%assign n n+1
+%assign x x+1
 %endrep
     add     r3d, 16
     shr     r3d, 5

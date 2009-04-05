@@ -539,6 +539,7 @@ static void x264_mb_analyse_intra_chroma( x264_t *h, x264_mb_analysis_t *a )
 
     int i_max;
     int predict_mode[4];
+    int b_merged_satd = !!h->pixf.intra_mbcmp_x3_8x8c && !h->mb.b_lossless;
 
     uint8_t *p_dstc[2], *p_srcc[2];
 
@@ -553,11 +554,11 @@ static void x264_mb_analyse_intra_chroma( x264_t *h, x264_mb_analysis_t *a )
 
     predict_8x8chroma_mode_available( h->mb.i_neighbour, predict_mode, &i_max );
     a->i_satd_i8x8chroma = COST_MAX;
-    if( i_max == 4 && h->pixf.intra_satd_x3_8x8c && h->pixf.mbcmp[0] == h->pixf.satd[0] )
+    if( i_max == 4 && b_merged_satd )
     {
         int satdu[4], satdv[4];
-        h->pixf.intra_satd_x3_8x8c( p_srcc[0], p_dstc[0], satdu );
-        h->pixf.intra_satd_x3_8x8c( p_srcc[1], p_dstc[1], satdv );
+        h->pixf.intra_mbcmp_x3_8x8c( p_srcc[0], p_dstc[0], satdu );
+        h->pixf.intra_mbcmp_x3_8x8c( p_srcc[1], p_dstc[1], satdv );
         h->predict_8x8c[I_PRED_CHROMA_P]( p_dstc[0] );
         h->predict_8x8c[I_PRED_CHROMA_P]( p_dstc[1] );
         satdu[I_PRED_CHROMA_P] =
@@ -667,7 +668,7 @@ static void x264_mb_analyse_intra( x264_t *h, x264_mb_analysis_t *a, int i_satd_
         int i_satd_thresh = a->i_mbrd ? COST_MAX : X264_MIN( i_satd_inter, a->i_satd_i16x16 );
         int i_cost = 0;
         h->mb.i_cbp_luma = 0;
-        b_merged_satd = h->pixf.intra_sa8d_x3_8x8 && h->pixf.mbcmp[0] == h->pixf.satd[0];
+        b_merged_satd = h->pixf.intra_mbcmp_x3_8x8 && !h->mb.b_lossless;
 
         // FIXME some bias like in i4x4?
         if( h->sh.i_type == SLICE_TYPE_B )
@@ -688,7 +689,7 @@ static void x264_mb_analyse_intra( x264_t *h, x264_mb_analysis_t *a, int i_satd_
             if( b_merged_satd && i_max == 9 )
             {
                 int satd[9];
-                h->pixf.intra_sa8d_x3_8x8( p_src_by, edge, satd );
+                h->pixf.intra_mbcmp_x3_8x8( p_src_by, edge, satd );
                 satd[i_pred_mode] -= 3 * a->i_lambda;
                 for( i=2; i>=0; i-- )
                 {
@@ -759,7 +760,7 @@ static void x264_mb_analyse_intra( x264_t *h, x264_mb_analysis_t *a, int i_satd_
         int i_cost;
         int i_satd_thresh = X264_MIN3( i_satd_inter, a->i_satd_i16x16, a->i_satd_i8x8 );
         h->mb.i_cbp_luma = 0;
-        b_merged_satd = h->pixf.intra_satd_x3_4x4 && h->pixf.mbcmp[0] == h->pixf.satd[0];
+        b_merged_satd = h->pixf.intra_mbcmp_x3_4x4 && !h->mb.b_lossless;
         if( a->i_mbrd )
             i_satd_thresh = i_satd_thresh * (10-a->b_fast_intra)/8;
 
