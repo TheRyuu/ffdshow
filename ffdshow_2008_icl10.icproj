@@ -5,7 +5,7 @@
 	Name="ffdshow"
 	ProjectGUID="{0C1CDCBB-5886-42B4-A928-F4B82DD3FD17}"
 	VCNestedProjectGUID="{30A21C7F-035D-41E2-95BE-B4FFA5F5176B}"
-	VCNestedProjectCRC32="514564950"
+	VCNestedProjectCRC32="1439075668"
 	VCNestedProjectFileName="ffdshow_2008_icl10.vcproj">
 	<Platforms>
 		<Platform 
@@ -54,7 +54,7 @@
 				BufferSecurityCheck="true"
 				EnableFunctionLevelLinking="true"
 				ForceConformanceInForLoopScope="true"
-				RuntimeTypeInfo="false"
+				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="StdAfx.h"
 				PrecompiledHeaderFile="$(IntDir)/$(TargetName).pch"
@@ -151,7 +151,7 @@
 				BufferSecurityCheck="true"
 				EnableFunctionLevelLinking="true"
 				ForceConformanceInForLoopScope="true"
-				RuntimeTypeInfo="false"
+				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="StdAfx.h"
 				PrecompiledHeaderFile="$(IntDir)/$(TargetName).pch"
@@ -251,7 +251,7 @@
 				BufferSecurityCheck="false"
 				EnableFunctionLevelLinking="false"
 				EnableEnhancedInstructionSet="1"
-				RuntimeTypeInfo="false"
+				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="StdAfx.h"
 				PrecompiledHeaderFile="$(IntDir)/$(TargetName).pch"
@@ -356,7 +356,7 @@
 				RuntimeLibrary="0"
 				BufferSecurityCheck="false"
 				EnableFunctionLevelLinking="false"
-				RuntimeTypeInfo="false"
+				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="StdAfx.h"
 				PrecompiledHeaderFile="$(IntDir)/$(TargetName).pch"
@@ -537,37 +537,12 @@
 				<FileConfiguration 
 					Name="Debug Unicode|x64">
 					<Tool 
-						Name="GeneralTool"
-						ExcludedFromBuild="true"/>
-					<Tool 
-						Name="yasm"/>
+						Name="GeneralTool"/>
 				</FileConfiguration>
 				<FileConfiguration 
 					Name="Release Unicode|x64">
 					<Tool 
-						Name="GeneralTool"
-						ExcludedFromBuild="true"/>
-					<Tool 
-						Name="yasm"/>
-				</FileConfiguration>
-			</File>
-			<File 
-				RelativePath=".\src\cpuid64.asm">
-				<FileConfiguration 
-					Name="Debug Unicode|Win32">
-					<Tool 
-						Name="GeneralTool"
-						ExcludedFromBuild="true"/>
-					<Tool 
-						Name="yasm"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release Unicode|Win32">
-					<Tool 
-						Name="GeneralTool"
-						ExcludedFromBuild="true"/>
-					<Tool 
-						Name="yasm"/>
+						Name="GeneralTool"/>
 				</FileConfiguration>
 			</File>
 			<File 
@@ -991,6 +966,12 @@
 				RelativePath=".\src\simd.h">
 			</File>
 			<File 
+				RelativePath=".\src\simd_common.h">
+			</File>
+			<File 
+				RelativePath=".\src\simd_instructions.h">
+			</File>
+			<File 
 				RelativePath="src\stdafx.h">
 			</File>
 			<File 
@@ -1163,6 +1144,12 @@
 				RelativePath=".\src\subtitles\fontRenderer.asm">
 			</File>
 			<File 
+				RelativePath=".\src\subtitles\Rasterizer.cpp">
+			</File>
+			<File 
+				RelativePath=".\src\subtitles\Rasterizer.h">
+			</File>
+			<File 
 				RelativePath=".\src\subtitles\spudec.cpp">
 			</File>
 			<File 
@@ -1214,6 +1201,12 @@
 			</File>
 			<File 
 				RelativePath=".\src\subtitles\ThtmlColors.h">
+			</File>
+			<File 
+				RelativePath=".\src\subtitles\TrenderedTextSubtitleWord.cpp">
+			</File>
+			<File 
+				RelativePath=".\src\subtitles\TrenderedTextSubtitleWord.h">
 			</File>
 			<File 
 				RelativePath=".\src\subtitles\TspuImage.cpp">
@@ -1351,6 +1344,9 @@
 				RelativePath=".\src\subtitles\TsubtitleVobsub.h">
 			</File>
 			<File 
+				RelativePath=".\src\subtitles\TtoGdiFont.h">
+			</File>
+			<File 
 				RelativePath=".\src\subtitles\TwordWrap.cpp">
 			</File>
 			<File 
@@ -1425,44 +1421,6 @@
 			</File>
 			<File 
 				RelativePath="src\imgFilters\SimpleResize.h">
-			</File>
-			<File 
-				RelativePath=".\src\ImgFilters\Skal\skl_dct_sse.asm">
-				<FileConfiguration 
-					Name="Debug Unicode|x64">
-					<Tool 
-						Name="GeneralTool"
-						ExcludedFromBuild="true"/>
-					<Tool 
-						Name="yasm"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release Unicode|x64">
-					<Tool 
-						Name="GeneralTool"
-						ExcludedFromBuild="true"/>
-					<Tool 
-						Name="yasm"/>
-				</FileConfiguration>
-			</File>
-			<File 
-				RelativePath=".\src\ImgFilters\Skal\skl_fdct_mmx.asm">
-				<FileConfiguration 
-					Name="Debug Unicode|x64">
-					<Tool 
-						Name="GeneralTool"
-						ExcludedFromBuild="true"/>
-					<Tool 
-						Name="yasm"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release Unicode|x64">
-					<Tool 
-						Name="GeneralTool"
-						ExcludedFromBuild="true"/>
-					<Tool 
-						Name="yasm"/>
-				</FileConfiguration>
 			</File>
 			<File 
 				RelativePath="src\imgFilters\T3x3blur.cpp">
@@ -2501,6 +2459,21 @@
 				</File>
 				<File 
 					RelativePath="src\imgFilters\awarpsharp\aws_api.h">
+				</File>
+			</Filter>
+			<Filter 
+				Name="skal">
+				<File 
+					RelativePath=".\src\imgFilters\Skal\fdct_mmx_skal.asm">
+				</File>
+				<File 
+					RelativePath=".\src\imgFilters\Skal\fdct_sse2_skal.asm">
+				</File>
+				<File 
+					RelativePath=".\src\imgFilters\Skal\idct_mmx.asm">
+				</File>
+				<File 
+					RelativePath=".\src\imgFilters\Skal\idct_sse2_dmitry.asm">
 				</File>
 			</Filter>
 		</Filter>
@@ -3857,9 +3830,6 @@
 			</File>
 			<File 
 				RelativePath=".\src\codecs\TvideoCodec_ffmpeg-mt.cpp">
-			</File>
-			<File 
-				RelativePath=".\src\codecs\TvideoCodec_ffmpeg-mt.h">
 			</File>
 			<File 
 				RelativePath=".\src\codecs\TvideoCodecAvisynth.cpp">
