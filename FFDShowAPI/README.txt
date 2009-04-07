@@ -1,0 +1,1 @@
+Please consult the wiki on http://ffdshow-tryout.sourceforge.net/wiki/ for detailed information
