@@ -1328,7 +1328,7 @@ void dsputilenc_init_mmx(DSPContext* c, AVCodecContext *avctx)
         if(dct_algo==FF_DCT_AUTO || dct_algo==FF_DCT_MMX){
             if(mm_flags & FF_MM_SSE2){
                 c->fdct = ff_fdct_sse2;
-            }else if(mm_flags & FF_MM_MMXEXT){
+            }else if(mm_flags & FF_MM_MMX2){
                 c->fdct = ff_fdct_mmx2;
             }else{
                 c->fdct = ff_fdct_mmx;
@@ -1361,7 +1361,7 @@ void dsputilenc_init_mmx(DSPContext* c, AVCodecContext *avctx)
         }
         c->add_8x8basis= add_8x8basis_mmx;
 
-        if (mm_flags & FF_MM_MMXEXT) {
+        if (mm_flags & FF_MM_MMX2) {
             c->sum_abs_dctelem= sum_abs_dctelem_mmx2;
             c->hadamard8_diff[0]= hadamard8_diff16_mmx2;
             c->hadamard8_diff[1]= hadamard8_diff_mmx2;

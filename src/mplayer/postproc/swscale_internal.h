@@ -1,28 +1,30 @@
 /*
-    Copyright (C) 2001-2003 Michael Niedermayer <michaelni@gmx.at>
-
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
-*/
+ * Copyright (C) 2001-2003 Michael Niedermayer <michaelni@gmx.at>
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
 /*
-    Modified to support multi-thread related features
-    by Haruhiko Yamagata <h.yamagata@nifty.com> in 2006.
-*/
+ * Modified to support multi-thread related features
+ * by Haruhiko Yamagata <h.yamagata@nifty.com> in 2006.
+ */
 
-#ifndef SWSCALE_INTERNAL_H
-#define SWSCALE_INTERNAL_H
+#ifndef SWSCALE_SWSCALE_INTERNAL_H
+#define SWSCALE_SWSCALE_INTERNAL_H
 
 #include "../mplayer/mp_msg.h"
 
@@ -50,13 +52,13 @@
 #define MAX_FILTER_SIZE 256
 
 #if ARCH_X86_64
-  #define APCK_PTR2 8
-  #define APCK_COEF 16
-  #define APCK_SIZE 24
+#   define APCK_PTR2 8
+#   define APCK_COEF 16
+#   define APCK_SIZE 24
 #else
-  #define APCK_PTR2 4
-  #define APCK_COEF 8
-  #define APCK_SIZE 16
+#   define APCK_PTR2 4
+#   define APCK_COEF 8
+#   define APCK_SIZE 16
 #endif
 
 typedef int (*SwsFunc)(struct SwsContext *context, uint8_t* src[], stride_t srcStride[], int srcSliceY,
@@ -76,7 +78,7 @@ typedef struct SwsThreadParam{
 	int dstYend;
 } SwsThreadParam;
 
-/* this struct should be aligned on at least 32-byte boundary */
+/* This struct should be aligned on at least a 32-byte boundary. */
 typedef struct SwsContext{
 	/**
 	 *
@@ -147,24 +149,24 @@ typedef struct SwsContext{
 	int dstColorspaceTable[7];
 	int srcRange, dstRange;
 
-#define RED_DITHER   "0*8"
-#define GREEN_DITHER "1*8"
-#define BLUE_DITHER  "2*8"
-#define Y_COEFF      "3*8"
-#define VR_COEFF     "4*8"
-#define UB_COEFF     "5*8"
-#define VG_COEFF     "6*8"
-#define UG_COEFF     "7*8"
-#define Y_OFFSET     "8*8"
-#define U_OFFSET     "9*8"
-#define V_OFFSET     "10*8"
+#define RED_DITHER            "0*8"
+#define GREEN_DITHER          "1*8"
+#define BLUE_DITHER           "2*8"
+#define Y_COEFF               "3*8"
+#define VR_COEFF              "4*8"
+#define UB_COEFF              "5*8"
+#define VG_COEFF              "6*8"
+#define UG_COEFF              "7*8"
+#define Y_OFFSET              "8*8"
+#define U_OFFSET              "9*8"
+#define V_OFFSET              "10*8"
 #define LUM_MMX_FILTER_OFFSET "11*8"
 #define CHR_MMX_FILTER_OFFSET "11*8+4*4*256"
-#define DSTW_OFFSET  "11*8+4*4*256*2" //do not change, its hardcoded in the asm
-#define ESP_OFFSET  "11*8+4*4*256*2+8"
-#define VROUNDER_OFFSET "11*8+4*4*256*2+16"
-#define U_TEMP       "11*8+4*4*256*2+24"
-#define V_TEMP       "11*8+4*4*256*2+32"
+#define DSTW_OFFSET           "11*8+4*4*256*2" //do not change, it is hardcoded in the ASM
+#define ESP_OFFSET            "11*8+4*4*256*2+8"
+#define VROUNDER_OFFSET       "11*8+4*4*256*2+16"
+#define U_TEMP                "11*8+4*4*256*2+24"
+#define V_TEMP                "11*8+4*4*256*2+32"
 
 	uint64_t redDither   __attribute__((aligned(8)));
 	uint64_t greenDither __attribute__((aligned(8)));
@@ -186,19 +188,6 @@ typedef struct SwsContext{
 	uint64_t u_temp       __attribute__((aligned(8)));
 	uint64_t v_temp       __attribute__((aligned(8)));
 
-#ifdef HAVE_ALTIVEC
-
-  vector signed short   CY;
-  vector signed short   CRV;
-  vector signed short   CBU;
-  vector signed short   CGU;
-  vector signed short   CGV;
-  vector signed short   OY;
-  vector unsigned short CSHIFT;
-  vector signed short *vYCoeffsBank, *vCCoeffsBank;
-
-#endif
-
 } SwsContext;
 
 //FIXME check init (where 0)
@@ -208,4 +197,4 @@ int yuv2rgb_c_init_tables (SwsContext *c, const int inv_table[7], int fullRange,
 
 char *sws_format_name(int format);
 
-#endif
+#endif /* SWSCALE_SWSCALE_INTERNAL_H */
