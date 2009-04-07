@@ -4,6 +4,9 @@ using System.Text;
 
 namespace FFDShowAPI
 {
+    /// <summary>
+    /// Parameters identifiers retrieved from ffdshow_constants.h
+    /// </summary>
     public class FFDShowConstants
     {
         /// <summary>
@@ -12,10 +15,8 @@ namespace FFDShowAPI
         private FFDShowConstants()
         {
         }
-        public const string FFDSHOW_NAME_L = "ffdshow MPEG-4 Video Decoder";
-        public const string FFDSHOWRAW_NAME_L = "ffdshow raw video filter";
-        public const string FFDSHOWVFW_NAME_L = "ffdshow VFW decoder helper";
         
+#pragma warning disable 1591
         /// <summary>
         /// Parameter Id of FFDShow to set/get
         /// </summary>
@@ -1365,8 +1366,7 @@ namespace FFDShowAPI
             IDFF_dlgPerfectDlgX = 3210,
             IDFF_dlgPerfectDlgY = 3211,
             IDFF_dlgEncGraph = 3219,
-            IDFF_dlgEncAbout = 3220,
-
+            IDFF_dlgEncAbout = 3220
             //max:3369
         }
     }

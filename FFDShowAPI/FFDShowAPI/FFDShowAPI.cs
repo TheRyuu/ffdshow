@@ -12,12 +12,23 @@ using System.Runtime.Remoting.Messaging;
 
 namespace FFDShowAPI
 {
+    /// <summary>
+    /// FFDShowAPI library class. Use this class to get/set FFDShow live settings
+    /// </summary>
     public class FFDShowAPI : IDisposable
     {
 
         #region Constants
+        /// <summary>
+        /// Identifier of Window messages structure that can carry string for interprocess communication
+        /// </summary>
         public const int WM_COPYDATA = 0x004A;
-        //Basic flags
+        
+        /// <summary>
+        /// List of commands understood by FFDShow remote API
+        /// These are commands that concern integers transmission (get or set) or 
+        /// single commands such as "Pause video"
+        /// </summary>
         private enum FFD_WPRM : int
         {
             SET_PARAM_NAME = 0,
@@ -48,7 +59,11 @@ namespace FFDShowAPI
             SET_FFRW_NO_OSD = 27
         }
         
-
+        /// <summary>
+        /// List of commands understood by FFDShow remote API.
+        /// These are commands that require strings transmissions
+        /// </summary>
+        #pragma warning disable 1591
         public enum FFD_MSG
         {
             GET_PARAMSTR = 19,
@@ -60,6 +75,7 @@ namespace FFDShowAPI
             GET_AUDIOSTREAMSLIST = 300,
             GET_SUBTITLESTREAMSLIST = 301
         }
+        #pragma warning restore 1591
 
         //Copy data flags
         private const int FFDSM_SET_ACTIVE_PRESET_STR = 10;
@@ -72,9 +88,21 @@ namespace FFDShowAPI
         /// </summary>
         public enum PlayState : int
         {
+            /// <summary>
+            /// Stop state
+            /// </summary>
             StopState = 0,
+            /// <summary>
+            /// Pause state
+            /// </summary>
             PauseState = 1,
+            /// <summary>
+            /// Play state
+            /// </summary>
             PlayState = 2,
+            /// <summary>
+            /// Fast forwarding or rewinding state
+            /// </summary>
             FastForwardRewind = 3
         };
 
@@ -83,14 +111,33 @@ namespace FFDShowAPI
         /// </summary>
         public enum ROTRegistration : int
         {
+            /// <summary>
+            /// Register the DirectShow graph in the running object table (graph can be read and modified after that)
+            /// Don't forget to unregister it.
+            /// </summary>
             RegisterToRot = 1,
+            /// <summary>
+            /// Unregister the DirectShow graph from the running object table
+            /// </summary>
             UnregisterToRot = 0
         };
 
+        /// <summary>
+        /// File name mode
+        /// </summary>
         public enum FileNameMode : int
         {
+            /// <summary>
+            /// Full path (including drive and directories)
+            /// </summary>
             FullPath,
+            /// <summary>
+            /// File name with extension but without the directory path
+            /// </summary>
             FileName,
+            /// <summary>
+            /// File name without extension and without the directory path
+            /// </summary>
             FileNameWithoutExtension
         }
 
@@ -99,9 +146,19 @@ namespace FFDShowAPI
         #endregion Constants
 
         #region Structures
+
+        /// <summary>
+        /// FFDShow instance structure
+        /// </summary>
         public struct FFDShowInstance
         {
+            /// <summary>
+            /// Unique identifier for this FFDShow instance
+            /// </summary>
             public int handle;
+            /// <summary>
+            /// File name of the media being played by this instance (may be null)
+            /// </summary>
             public string fileName;
         }
         #endregion Structures
@@ -111,6 +168,9 @@ namespace FFDShowAPI
         private static string AppAudioRegKey = @"SOFTWARE\GNU\ffdshow_audio";
         
         private uint FFDShowAPIRemoteId = 32786;
+        /// <summary>
+        /// Unique identifier of the running instance of FFDShow
+        /// </summary>
         protected int ffDShowInstanceHandle = 0;
         private int requestTimeout = 2000;
         private FFDShowReceiver receiver = null;
@@ -126,6 +186,11 @@ namespace FFDShowAPI
         #endregion Variables
 
         #region WIN32 Class
+
+#pragma warning disable 1591
+        /// <summary>
+        /// Win32 COM methods and constants
+        /// </summary>
         public class Win32
         {
             // The CopyData Constant for SendMessage
@@ -133,15 +198,6 @@ namespace FFDShowAPI
             public const Int32 WM_KEYDOWN = 0x0100;
             public const Int32 WM_APPCOMMAND = 0x0319;
             public const Int32 WM_INPUT = 0x00FF;
-
-
-            // One of dozens of versions of the COPYDATASTRUCT
-            /*public struct COPYDATASTRUCT
-            {
-                public Int32 dwData;
-                public Int32 cbData;
-                public IntPtr lpData;
-            }*/
 
             [StructLayout(LayoutKind.Sequential)]
             public struct COPYDATASTRUCT
@@ -157,19 +213,6 @@ namespace FFDShowAPI
 
             [DllImport("User32.Dll")]
             public static extern IntPtr SendMessage(IntPtr hwnd, Int32 msg, Int32 hwndFrom, IntPtr cds);
-
-            /*[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
-            public static extern bool
-                SendMessageTimeout(
-                IntPtr hWnd,
-                int Msg,
-                int wParam,
-                string lParam,
-                int fuFlags,
-                int uTimeout,
-                int lpdwResult
-                );*/
 
             [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
             public static extern IntPtr SendMessageTimeout(
@@ -234,11 +277,8 @@ namespace FFDShowAPI
             public static extern void GetClassName(int h, StringBuilder s, int nMaxCount);
             [DllImport("User32.Dll")]
             public static extern int IsWindow(int hwnd);
-
-            /* Not used anymore [DllImport("MediaMFC.dll", EntryPoint = "SendMessageWithData")]
-            public static extern void SendMessageWithData(int hWnd, int hSender,
-                int MsgId, IntPtr data);*/
         }
+#pragma warning restore 1591
         #endregion WIN32 Class
 
         #region Base Properties
@@ -269,7 +309,7 @@ namespace FFDShowAPI
         }
         /// <summary>
         /// Gets or sets the FFDShow registry key. Used sometimes when ffdshow is not active (for presets)
-        /// </summary
+        /// </summary>
         public string FFDShowRegKey
         {
             get
@@ -282,6 +322,10 @@ namespace FFDShowAPI
             }
         }
 
+        /// <summary>
+        /// Gets or sets the registry key of FFDShow audio
+        /// Used to get or set the default audio preset
+        /// </summary>
         public string FFDShowAudioRegKey
         {
             get
@@ -328,6 +372,10 @@ namespace FFDShowAPI
             }
         }
 
+        /// <summary>
+        /// Gets or sets the OSD display when doing FastForward/Rewind
+        /// This is a static parameter that will be applied to all the running FFDShow instances
+        /// </summary>
         public static bool FFRWNoOSD
         {
             get
@@ -690,15 +738,30 @@ namespace FFDShowAPI
         /// </summary>
         public struct Stream
         {
+            /// <summary>
+            /// Name of the stream
+            /// </summary>
             public string name;
+            /// <summary>
+            /// Language name of the stream
+            /// </summary>
             public string languageName;
+            /// <summary>
+            /// True if the stream is active
+            /// </summary>
+            public bool enabled;
+            /// <summary>
+            /// Constructor of a stream structure
+            /// </summary>
+            /// <param name="name">Name of the stream</param>
+            /// <param name="languageName">Language name of the stream</param>
+            /// <param name="enabled">True if the stream is active</param>
             public Stream(string name, string languageName, bool enabled)
             {
                 this.name = name;
                 this.languageName = languageName;
                 this.enabled = enabled;
             }
-            public bool enabled;
         }
 
         /// <summary>
@@ -1109,6 +1172,9 @@ namespace FFDShowAPI
         #region Picture Properties
         private bool pictureEnabled = false;
 
+        /// <summary>
+        /// Gets or sets the picture gamma
+        /// </summary>
         public int PictureGama
         {
             get
@@ -1126,6 +1192,9 @@ namespace FFDShowAPI
             }
         }
 
+        /// <summary>
+        /// Gets or sets the picture hue
+        /// </summary>
         public int PictureHue
         {
             get
@@ -1142,6 +1211,10 @@ namespace FFDShowAPI
                 setIntParam(FFDShowConstants.FFDShowDataId.IDFF_hue, value);
             }
         }
+        
+        /// <summary>
+        /// Gets or sets the picture saturation
+        /// </summary>
         public int PictureSaturation
         {
             get
@@ -1158,6 +1231,10 @@ namespace FFDShowAPI
                 setIntParam(FFDShowConstants.FFDShowDataId.IDFF_saturation, value);
             }
         }
+        
+        /// <summary>
+        /// Gets or sets the picture contrast
+        /// </summary>
         public int PictureContrast
         {
             get
@@ -1174,6 +1251,10 @@ namespace FFDShowAPI
                 setIntParam(FFDShowConstants.FFDShowDataId.IDFF_lumGain, value);
             }
         }
+        
+        /// <summary>
+        /// Gets or sets the picture brightness
+        /// </summary>
         public int PictureBrightness
         {
             get
@@ -1189,6 +1270,9 @@ namespace FFDShowAPI
 
         #region PostProcessing Properties
 
+        /// <summary>
+        /// Gets or sets the postprocessing intensity (deblocking strength)
+        /// </summary>
         public int PostProcessingIntensity
         {
             get
@@ -1215,7 +1299,7 @@ namespace FFDShowAPI
         /// <summary>
         /// Constructor with setting of the FFDShow window handle
         /// <param name="FFDShowAPIRemote">Remote API Identifier</param>
-        /// </summary
+        /// </summary>
         public FFDShowAPI(uint FFDShowAPIRemote)
         {
             this.FFDShowAPIRemote = FFDShowAPIRemote;
@@ -1239,7 +1323,7 @@ namespace FFDShowAPI
         /// Constructor where the given file name is searched for between all running FFDShow instances
         /// </summary>
         /// <param name="fileName">Media file name to look FFDShow instance for</param>
-        /// <param name="mode">Filename mode (full path,...)</param>
+        /// <param name="fileNameMode">Filename mode (full path,...)</param>
         /// <param name="FFDShowAPIRemote">Remote API Identifier</param>
         public FFDShowAPI(string fileName, FileNameMode fileNameMode, uint FFDShowAPIRemote)
         {
@@ -1262,7 +1346,7 @@ namespace FFDShowAPI
         /// <summary>
         /// Constructor where the given FFDShow instance handle is searched for between all running FFDShow instances
         /// </summary>
-        /// <param name="FFDShowInstance">Handle of FFDShow window to look for</param>
+        /// <param name="FFDShowInstanceHandle">Handle of FFDShow window to look for</param>
         /// <param name="FFDShowAPIRemote">Remote API Identifier</param>
         public FFDShowAPI(int FFDShowInstanceHandle, uint FFDShowAPIRemote)
         {
@@ -1271,11 +1355,17 @@ namespace FFDShowAPI
             initOSD();
         }
 
+        /// <summary>
+        /// FFDShowAPI desctructor
+        /// </summary>
         ~FFDShowAPI()
         {
             Dispose();
         }
 
+        /// <summary>
+        /// Cleaning
+        /// </summary>
         public void Dispose()
         {
             System.GC.SuppressFinalize(this);
@@ -1444,20 +1534,34 @@ namespace FFDShowAPI
         #endregion Loading
 
         #region Commands
+        /// <summary>
+        /// Stop video
+        /// </summary>
         public void stopVideo()
         {
             PostMessage(FFD_WPRM.PAUSE_VIDEO, 0);
         }
 
+        /// <summary>
+        /// Start video
+        /// </summary>
         public void startVideo()
         {
             PostMessage(FFD_WPRM.RESUME_VIDEO, 0);
         }
+
+        /// <summary>
+        /// Pause video
+        /// </summary>
         public void pauseVideo()
         {
             PostMessage(FFD_WPRM.PAUSE_VIDEO, 0);
         }
 
+        /// <summary>
+        /// Fast forward
+        /// </summary>
+        /// <param name="seconds">Step in seconds</param>
         public void FastForward(int seconds)
         {
             if (ffrwNoOSD)
@@ -1469,6 +1573,10 @@ namespace FFDShowAPI
                 res = SendMessage(FFD_WPRM.FASTREWIND, -seconds);
         }
 
+        /// <summary>
+        /// Rewind
+        /// </summary>
+        /// <param name="seconds">Step in seconds</param>
         public void FastRewind(int seconds)
         {
             if (ffrwNoOSD)
@@ -1476,27 +1584,47 @@ namespace FFDShowAPI
             SendMessage(FFD_WPRM.FASTREWIND, seconds);
         }
 
+        /// <summary>
+        /// Stop FastForward or Rewind if active
+        /// </summary>
         public void StopFastForward()
         {
             SendMessage(FFD_WPRM.FASTFORWARD, 0);
         }
 
+        /// <summary>
+        /// Retrieves the step of FastForward/Rewind (negative if rewind)
+        /// </summary>
+        /// <returns>Step in seconds</returns>
         public int getFastForwardSpeed()
         {
             return SendMessage(FFD_WPRM.GETFASTFORWARDSPEED, 0);
         }
 
+
+        /// <summary>
+        /// Capture still image of the video being played.
+        /// This method used the current capture parameters.
+        /// The captureJPGPicture method should be called first
+        /// </summary>
+        /// <returns>1 if successfull</returns>
         public int captureImage()
         {
             return SendMessage(FFD_WPRM.CAPTUREIMAGE, 0);
         }
 
-
+        /// <summary>
+        /// Sets the position in the timeline of the media being played
+        /// </summary>
+        /// <param name="time">Time to set in seconds</param>
         public void setCurrentTime(int time)
         {
             int result = SendMessage(FFD_WPRM.SET_CURTIME, time);
         }
 
+        /// <summary>
+        /// Enable or disable OSD (On Screen Display)
+        /// </summary>
         public void toggleOSD()
         {
 
@@ -1509,21 +1637,38 @@ namespace FFDShowAPI
             result = PostMessage(FFD_WPRM.SET_PARAM_VALUE_INT, value);
         }
 
+
+        /// <summary>
+        /// Retrieve play state
+        /// </summary>
+        /// <returns>Play state</returns>
         public PlayState getState()
         {
             return (PlayState)SendMessage(FFD_WPRM.GET_STATE, 0);
         }
 
+        /// <summary>
+        /// Retrieve duration of the media being played
+        /// </summary>
+        /// <returns>Duration in seconds</returns>
         public int getDuration()
         {
             return SendMessage(FFD_WPRM.GET_DURATION, 0);
         }
 
+        /// <summary>
+        /// Retrieve the current position in the timeline of the media being played
+        /// </summary>
+        /// <returns>Current position in seconds</returns>
         public int getCurrentTime()
         {
             return SendMessage(FFD_WPRM.GET_CUR_TIME, 0);
         }
 
+        /// <summary>
+        /// Retrieve the frame rate
+        /// </summary>
+        /// <returns>Retrieve the frame rate (float with decimals eventually)</returns>
         public float getFrameRate()
         {
             int fps1000 = SendMessage(FFD_WPRM.GET_FRAMERATE, 0);
@@ -1531,13 +1676,20 @@ namespace FFDShowAPI
         }
 
 
+        /// <summary>
+        /// Retrieve the file name being played
+        /// </summary>
+        /// <returns>File name</returns>
         public string getFileName()
         {
             return getCustomParam(FFD_MSG.GET_SOURCEFILE, 0);//FFDSM_GET_FILENAME);
         }
 
 
-        // Returns 0 if no embedded
+        /// <summary>
+        /// Retrieve the number of embedded subtitles
+        /// </summary>
+        /// <returns>Returns 0 if no embedded</returns>
         public int getEmbeddedSubtitles()
         {
             return getIntParam(FFDShowConstants.FFDShowDataId.IDFF_subShowEmbedded);
@@ -1546,7 +1698,7 @@ namespace FFDShowAPI
 
         /// <summary>
         /// Request a (un)registration to FFDShow into the Running Object Table.
-        /// It lets retrieve the graph
+        /// It lets retrieve the DirectShow graph
         /// </summary>
         /// <param name="registration">Registration command</param>
         /// <returns>Result of the registration</returns>
@@ -1555,6 +1707,11 @@ namespace FFDShowAPI
             return SendMessage(FFD_WPRM.SET_ADDTOROT, (int) registration);
         }
 
+        /// <summary>
+        /// Display a short OSD (On Screen Display) message
+        /// This message will be displayed a few seconds and will disappear automatically
+        /// </summary>
+        /// <param name="message">Message to be displayed</param>
         public void displayShortOSDMessage(string message)
         {
             if (updateOSD)
@@ -1573,6 +1730,12 @@ namespace FFDShowAPI
             Win32.SendMessage(new IntPtr(ffDShowInstanceHandle), Win32.WM_COPYDATA, 0, ref cd);
         }
 
+        /// <summary>
+        /// Display an OSD (On Screen Display) message
+        /// This message will be displayed according to font and position settings inside FFDShow OSD section
+        /// This message remains displayed until the same method is called with an empty string ""
+        /// </summary>
+        /// <param name="message">Message to be displayed. Empty string to erase it</param>
         public void displayOSDMessage(string message)
         {
             if (updateOSD)
@@ -1703,44 +1866,33 @@ namespace FFDShowAPI
         #endregion
 
         #region Base commands
+        /// <summary>
+        /// Retrieve a parameter from FFDShow. The requested parameter must match to an integer type
+        /// </summary>
+        /// <param name="param">Parameter to retrieve</param>
+        /// <returns>Value of the parameter</returns>
         public int getIntParam(FFDShowConstants.FFDShowDataId param)
         {
             return SendMessage(FFD_WPRM.GET_PARAM_VALUE_INT, (int)param);
         }
 
+        /// <summary>
+        /// Set the value of a parameter to FFDShow. The requested parameter must match to an integer type
+        /// </summary>
+        /// <param name="param">Parameter to set</param>
+        /// <param name="value">Value to set</param>
         public void setIntParam(FFDShowConstants.FFDShowDataId param, int value)
         {
             SendMessage(FFD_WPRM.SET_PARAM_NAME, (int) param);
             SendMessage(FFD_WPRM.SET_PARAM_VALUE_INT, value);
         }
 
-        /*
-        private delegate int sendInDifferentThreaded(int param, Thread parentThread, out int returnCode);
-
-        public int getParamThreaded(int param, Thread parentThread, out int returnCode)
-        {
-            if (receiver == null)
-                receiver = new FFDShowReceiver(Thread.CurrentThread);
-            receiver.ReceivedString = null;
-            receiver.ReceivedType = 0;
-            //receiver.ParentThread = Thread.CurrentThread;
-            //resetEvent.Reset();
-            
-            returnCode = 0;
-            Win32.COPYDATASTRUCT cd = new Win32.COPYDATASTRUCT();
-            cd.dwData = (int) param;
-            IntPtr data = Marshal.AllocHGlobal(256);
-            cd.lpData = data;
-            cd.cbData = Win32.GlobalSize(cd.lpData);
-            returnCode = Win32.SendMessage(new IntPtr(ffDShowInstanceHandle), Win32.WM_COPYDATA, receiver.Handle.ToInt32(), ref cd);
-            if (returnCode != 0)
-            {
-                resetEvent.WaitOne();
-                return TRUE;
-            }
-            return FALSE;
-        }*/
-
+        /// <summary>
+        /// Retrieve a parameter from FFDShow. The requested parameter must match to a string type
+        /// </summary>
+        /// <param name="type">Type of parameter to retrieve.</param>
+        /// <param name="param">Empty if type is different from FFD_MSG.GETPARAMSTR, otherwise the identifier of the string parameter to retrieve</param>
+        /// <returns></returns>
         public string getCustomParam(FFD_MSG type, FFDShowConstants.FFDShowDataId param)
         {
             if (receiver == null)
@@ -1748,15 +1900,8 @@ namespace FFDShowAPI
             receiver.ReceivedString = null;
             receiver.ReceivedType = 0;
             IntPtr ret = new IntPtr(0);
-/*#if x64
-            ret = Win32.SendMessage(ffDShowInstanceHandle, (uint)type, receiver.Handle.ToInt32(), (int)param);
-#else*/
             Win32.SendMessageTimeout(new IntPtr(ffDShowInstanceHandle), (int)type, receiver.Handle, new IntPtr((int)param),
                 Win32.SendMessageTimeoutFlags.SMTO_ABORTIFHUNG, requestTimeout, out ret);
-//#endif
-            
-            
-
 
             if (ret.ToInt32() != TRUE)
                 return null;
@@ -1774,54 +1919,18 @@ namespace FFDShowAPI
                 catch (ThreadInterruptedException) { /*Debug.WriteLine("Interrupt " + param + "/" + type); Debug.Flush();*/ };
             }
 
-            #region Dumped code
-            //IntPtr WindowHandle = new IntPtr(this.FFDShowAPIRemote);
-            /*Win32.COPYDATASTRUCT cd = new Win32.COPYDATASTRUCT();
-            cd.dwData = (int) param;
-            IntPtr data = Marshal.AllocHGlobal(256);
-            cd.lpData = data;
-            cd.cbData = Win32.GlobalSize(cd.lpData);*/
-            //Win32.PostMessage(new IntPtr(ffDShowInstanceHandle), Win32.WM_COPYDATA, receiver.Handle.ToInt32(), ref cd);        
-            /*if (receiver == null)
-                receiver = new FFDShowReceiver(resetEvent);
-            receiver.ReceivedString = null;
-            receiver.ReceivedType = 0;
-            receiver.ParentThread = Thread.CurrentThread;
-            resetEvent.Reset();
-            int timeout = (param == FFDSM_GET_PRESETLIST || param == FFDSM_GET_SUBTITLEFILES) ? 2 * requestTimeout : requestTimeout;
-            
-            Win32.COPYDATASTRUCT cd = new Win32.COPYDATASTRUCT();
-            cd.dwData = (int)param;
-            IntPtr data = Marshal.AllocHGlobal(256);
-            cd.lpData = data;
-            cd.cbData = Win32.GlobalSize(cd.lpData);
-            int ret = Win32.SendMessage(new IntPtr(ffDShowInstanceHandle), Win32.WM_COPYDATA, receiver.Handle.ToInt32(), ref cd);
-            resetEvent.WaitOne(timeout, false);*/
-
-            /* Send message threaded does not work (why ???)
-            int timeout = (param == FFDSM_GET_PRESETLIST || param == FFDSM_GET_SUBTITLEFILES) ? 2 * requestTimeout : requestTimeout;
-            sendInDifferentThreaded sendInDifferentThread = new sendInDifferentThreaded(getParamThreaded);
-            int ret = 0;
-            IAsyncResult res = sendInDifferentThread.BeginInvoke(param, Thread.CurrentThread, out ret, null, null);
-            
-            if (res.IsCompleted|| res.AsyncWaitHandle.WaitOne(timeout, false))
-            {
-                sendInDifferentThread.EndInvoke(out ret, (AsyncResult)res);
-            }*/
-
-            /*if (receiver.ReceivedString != null)
-                Debug.WriteLine("Read " + param + "/" + type + " : got "+receiver.ReceivedType+" "+ receiver.ReceivedString);
-            else
-                Debug.WriteLine("Read " + param + "/" + type + " : got "+receiver.ReceivedType+ " NULL");
-            Debug.Flush();*/
-            #endregion
-
             // Check that the received string corresponds to the paramId we requested
             if ((param != 0 && receiver.ReceivedType == (int) param) || receiver.ReceivedType == (int)type)
                 return receiver.ReceivedString;
             else return null;
         }
 
+        /// <summary>
+        /// Retrieve a string parameter from FFDShow.
+        /// Same behaviour as getCustomParam(FFD_MSG.GETPARAMSTR, param)
+        /// </summary>
+        /// <param name="param">Parameter to retrieve</param>
+        /// <returns>String value of the parameter</returns>
         public string getStringParam(FFDShowConstants.FFDShowDataId param)
         {
             #region Dumped code
@@ -1852,6 +1961,12 @@ namespace FFDShowAPI
             return getCustomParam(FFD_MSG.GET_PARAMSTR, param);
         }
 
+        /// <summary>
+        /// Set a string parameter to FFDShow
+        /// </summary>
+        /// <param name="param">Identifier of the parameter</param>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public int setStringParam(FFDShowConstants.FFDShowDataId param, string value)
         {
             int result = SendMessage(FFD_WPRM.SET_PARAM_NAME, (int) param);
