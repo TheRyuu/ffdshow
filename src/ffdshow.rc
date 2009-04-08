@@ -2967,6 +2967,7 @@ IDI_MODERN_ICON_E       ICON                    "FFe.ico"
 IDI_MODERN_4BIT_ICON_V  ICON                    "FFv4bit.ico"
 IDI_MODERN_4BIT_ICON_A  ICON                    "FFa4bit.ico"
 IDI_MODERN_4BIT_ICON_E  ICON                    "FFe4bit.ico"
+IDI_MODERN_ICON_D       ICON                    "FFd.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //

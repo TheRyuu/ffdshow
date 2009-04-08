@@ -161,6 +161,7 @@
 #define IDD_QUEUEMSG_8                  294
 #define IDD_COMPATIBILITY_MANAGER       295
 #define IDD_DEINTERLACE_YADIF           296
+#define IDI_MODERN_ICON_D               297
 #define IDC_TBR_ASPECT_USER             1002
 #define IDC_TBR_PPQUAL                  1002
 #define IDC_TBR_LUMGAIN                 1003
@@ -1963,7 +1964,7 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
-#define _APS_NEXT_RESOURCE_VALUE        297
+#define _APS_NEXT_RESOURCE_VALUE        298
 #define _APS_NEXT_COMMAND_VALUE         40015
 #define _APS_NEXT_CONTROL_VALUE         2254
 #define _APS_NEXT_SYMED_VALUE           107

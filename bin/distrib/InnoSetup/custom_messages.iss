@@ -126,7 +126,7 @@ en.shrt_videoConfig=Video decoder configuration
 en.shrt_audioConfig=Audio decoder configuration
 en.shrt_vfwConfig=VFW configuration
 en.shrt_uninstall=Uninstall ffdshow
-
+en.shrt_homepage=Homepage
 
 #if localize
 ; Japanese
@@ -200,6 +200,7 @@ jp.shrt_videoConfig=ƒrƒfƒIƒfƒR[ƒ_[‚Ìİ’è
 jp.shrt_audioConfig=ƒI[ƒfƒBƒIƒfƒR[ƒ_[‚Ìİ’è
 jp.shrt_vfwConfig=VFW‚Ìİ’è
 jp.shrt_uninstall=ffdshow‚ÌƒAƒ“ƒCƒ“ƒXƒg[ƒ‹
+jp.shrt_homepage=ƒz[ƒ€ƒy[ƒW
 
 
 ; German
@@ -273,6 +274,7 @@ de.shrt_videoConfig=Videodekoder-Konfiguration
 de.shrt_audioConfig=Audiodekoder-Konfiguration
 de.shrt_vfwConfig=VFW-Konfiguration
 de.shrt_uninstall=ffdshow deinstallieren
+;de.shrt_homepage=Homepage
 
 
 ; French
@@ -346,6 +348,7 @@ fr.shrt_videoConfig=Configuration décodeur vidéo
 fr.shrt_audioConfig=Configuration décodeur audio
 fr.shrt_vfwConfig=Configuration VFW
 fr.shrt_uninstall=Désinstaller ffdshow
+;fr.shrt_homepage=Homepage
 
 
 ; Russian
@@ -419,6 +422,7 @@ ru.shrt_videoConfig=Êîíôèãóğàöèÿ âèäåîäåêîäåğà
 ru.shrt_audioConfig=Êîíôèãóğàöèÿ àóäèîäåêîäåğà
 ru.shrt_vfwConfig=Êîíôèãóğàöèÿ VFW èíòåğôåéñà
 ru.shrt_uninstall=Äåèíñòàëëÿöèÿ ffdshow
+;ru.shrt_homepage=Homepage
 
 
 ; Polish
@@ -492,6 +496,7 @@ pl.shrt_videoConfig=Konfiguracja dekodera video ffdshow
 pl.shrt_audioConfig=Konfiguracja dekodera audio ffdshow
 pl.shrt_vfwConfig=Konfiguracja kodera video ffdshow
 pl.shrt_uninstall=Odinstaluj ffdshow
+;pl.shrt_homepage=Homepage
 
 
 ; Czech
@@ -565,6 +570,7 @@ cz.shrt_videoConfig=Nastavení video dekodéru
 cz.shrt_audioConfig=Nastavení audio dekodéru
 cz.shrt_vfwConfig=Nastavení VFW
 cz.shrt_uninstall=Odinstalovat ffdshow
+;cz.shrt_homepage=Homepage
 
 
 ; Chinese (Simplified)
@@ -639,6 +645,7 @@ sc.shrt_videoConfig=ffdshow ÊÓÆµ½âÂëÆ÷ÉèÖÃ
 sc.shrt_audioConfig=ffdshow ÒôÆµ½âÂëÆ÷ÉèÖÃ
 sc.shrt_vfwConfig=ffdshow VFW ÉèÖÃ
 sc.shrt_uninstall=Ğ¶ÔØ ffdshow
+;sc.shrt_homepage=Homepage
 
 
 ; Add other languages here
