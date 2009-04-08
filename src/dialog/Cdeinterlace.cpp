@@ -168,6 +168,7 @@ bool TdeinterlacePage::reset(bool testonly)
 
 TdeinterlacePage::TdeinterlacePage(TffdshowPageDec *Iparent,const TfilterIDFF *idff):TconfPageDecVideo(Iparent,idff)
 {
+ helpURL = _l("http://ffdshow-tryout.sourceforge.net/wiki/video:decoder_options");
  resInter=IDC_CHB_DEINTERLACE;
  static const TbindCheckbox<TdeinterlacePage> chb[]=
   {

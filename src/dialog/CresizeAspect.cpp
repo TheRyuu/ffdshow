@@ -441,7 +441,7 @@ void TresizeAspectPage::applySettings(void)
 TresizeAspectPage::TresizeAspectPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff):TconfPageDecVideo(Iparent,idff,1)
 {
  resInter=IDC_CHB_RESIZE;
- helpURL=_l("http://ffdshow-tryout.wiki.sourceforge.net/Resize+%26+aspect");
+ helpURL=_l("http://ffdshow-tryout.sourceforge.net/wiki/video:resize_aspect");
  static const TbindTrackbar<TresizeAspectPage> htbr[]=
   {
    IDC_TBR_ASPECT_USER,IDFF_aspectRatio,&TresizeAspectPage::userAspect2dlg,

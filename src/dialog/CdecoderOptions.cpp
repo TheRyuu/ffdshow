@@ -155,6 +155,7 @@ TdecoderOptionsPage::TdecoderOptionsPage(TffdshowPageDec *Iparent):TconfPageDecV
 {
  dialogId=IDD_DECODEROPTIONS;
  inPreset=1;
+ helpURL = _l("http://ffdshow-tryout.sourceforge.net/wiki/video:decoder_options");
  static const TbindCheckbox<TdecoderOptionsPage> chb[]=
   {
    IDC_CHB_GRAY,IDFF_grayscale,NULL,

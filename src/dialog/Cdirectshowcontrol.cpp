@@ -197,6 +197,7 @@ void TdirectshowControlPageDec::onChbIsCompMgr(void)
 
 TdirectshowControlPageDec::TdirectshowControlPageDec(TffdshowPageDec *Iparent):TconfPageDec(Iparent,NULL,0)
 {
+ helpURL = _l("http://ffdshow-tryout.sourceforge.net/wiki/video:directshow_control");
  dialogId=IDD_DIRECTSHOWCONTROL;
  meritset=false;
  static const TbindCheckbox<TdirectshowControlPageDec> chb[]=

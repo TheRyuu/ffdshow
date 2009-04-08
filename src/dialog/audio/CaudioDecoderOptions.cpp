@@ -68,6 +68,7 @@ void TaudioDecoderOptionsPage::translate(void)
 
 TaudioDecoderOptionsPage::TaudioDecoderOptionsPage(TffdshowPageDec *Iparent):TconfPageDecAudio(Iparent)
 {
+ helpURL = _l("http://ffdshow-tryout.sourceforge.net/wiki/audio:decoder_options");
  dialogId=IDD_AUDIODECODEROPTIONS;
  inPreset=1;
  static const TbindCheckbox<TaudioDecoderOptionsPage> chb[]=

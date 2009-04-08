@@ -307,7 +307,7 @@ void TsubtitlesPage::translate(void)
 TsubtitlesPage::TsubtitlesPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff):TconfPageDecVideo(Iparent,idff,1)
 {
  resInter=IDC_CHB_SUBTITLES;
- helpURL=_l("subtitles.html");
+ helpURL=_l("http://ffdshow-tryout.sourceforge.net/wiki/video:subtitles");
  static const TbindCheckbox<TsubtitlesPage> chb[]=
   {
    IDC_CHB_SUB_WATCH,IDFF_subWatch,NULL,

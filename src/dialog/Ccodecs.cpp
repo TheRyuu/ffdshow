@@ -398,7 +398,7 @@ void TcodecsPage::translate(void)
 //================================= TcodecsPageVideo ===================================
 TcodecsPageVideo::TcodecsPageVideo(TffdshowPageDec *Iparent):TcodecsPage(Iparent)
 {
-// helpURL="in_out.html";
+ helpURL=_l("http://ffdshow-tryout.sourceforge.net/wiki/video:codecs");
 }
 void TcodecsPageVideo::init(void)
 {
@@ -523,6 +523,7 @@ void TcodecsPageVideo::fillCodecs(void)
 //================================= TcodecsPageAudio ===================================
 TcodecsPageAudio::TcodecsPageAudio(TffdshowPageDec *Iparent):TcodecsPage(Iparent)
 {
+ helpURL = _l("http://ffdshow-tryout.sourceforge.net/wiki/audio:codecs");
 }
 void TcodecsPageAudio::init(void)
 {

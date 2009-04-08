@@ -367,6 +367,7 @@ void TpresetsPage::translate(void)
 
 TpresetsPage::TpresetsPage(TffdshowPageDec *Iparent,const char_t *Ipresetfilter,const char_t *Ipresetext):TconfPageDec(Iparent,NULL,0),presetfilter(Ipresetfilter),presetext(Ipresetext)
 {
+ helpURL = _l("http://ffdshow-tryout.sourceforge.net/wiki/video:profiles_preset_settings");
  dialogId=IDD_PRESETS;
  static const TbindCheckbox<TpresetsPage> chb[]=
   {

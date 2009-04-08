@@ -169,6 +169,7 @@ int TsharpenPage::getTbrIdff(int id,const TbindTrackbars bind)
 
 TsharpenPage::TsharpenPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff):TconfPageDecVideo(Iparent,idff)
 {
+ helpURL = _l("http://ffdshow-tryout.sourceforge.net/wiki/video:sharpen");
  resInter=IDC_CHB_SHARPEN;
  static const TbindCheckbox<TsharpenPage> chb[]=
   {

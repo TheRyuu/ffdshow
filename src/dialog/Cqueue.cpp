@@ -102,7 +102,7 @@ void TqueuePage::getTip(char_t *tipS,size_t len)
 TqueuePage::TqueuePage(TffdshowPageDec *Iparent):TconfPageDecVideo(Iparent)
 {
  dialogId=IDD_QUEUE;
- helpURL=_l("http://ffdshow-tryout.wiki.sourceforge.net/Queue+%26+misc");
+ helpURL=_l("http://ffdshow-tryout.sourceforge.net/wiki/video:queue_misc");
  inPreset=1;
  idffOrder=maxOrder+2;
  static const TbindCheckbox<TqueuePage> chb[]=
