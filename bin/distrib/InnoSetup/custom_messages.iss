@@ -128,6 +128,7 @@ en.shrt_vfwConfig=VFW configuration
 en.shrt_uninstall=Uninstall ffdshow
 en.shrt_homepage=Homepage
 
+
 #if localize
 ; Japanese
 jp.langid=1041
@@ -274,7 +275,7 @@ de.shrt_videoConfig=Videodekoder-Konfiguration
 de.shrt_audioConfig=Audiodekoder-Konfiguration
 de.shrt_vfwConfig=VFW-Konfiguration
 de.shrt_uninstall=ffdshow deinstallieren
-;de.shrt_homepage=Homepage
+de.shrt_homepage=Webseite
 
 
 ; French
@@ -663,5 +664,3 @@ sk.langid=1051
 sn.langid=1060
 sp.langid=3082
 #endif
-
- 	  	 
