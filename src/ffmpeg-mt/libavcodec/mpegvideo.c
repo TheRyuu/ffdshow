@@ -467,7 +467,15 @@ av_cold int MPV_common_init(MpegEncContext *s)
 {
     int y_size, c_size, yc_size, i, mb_array_size, mv_table_size, x, y, threads;
 
+    if(s->codec_id == CODEC_ID_MPEG2VIDEO && !s->progressive_sequence)
+        s->mb_height = (s->height + 31) / 32 * 2;
+    else
     s->mb_height = (s->height + 15) / 16;
+
+    if(s->avctx->pix_fmt == PIX_FMT_NONE){
+        av_log(s->avctx, AV_LOG_ERROR, "decoding to PIX_FMT_NONE is not supported.\n");
+        return -1;
+    }
 
     if(USE_AVCODEC_EXECUTE(s->avctx) &&
       (s->avctx->thread_count > MAX_THREADS || (s->avctx->thread_count > s->mb_height && s->mb_height))){
