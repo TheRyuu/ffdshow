@@ -87,6 +87,12 @@ typedef struct PutBitContext {
     int size_in_bits;
 } PutBitContext;
 
+/**
+ * Initializes the PutBitContext \p s.
+ *
+ * @param buffer the buffer where to put bits
+ * @param buffer_size the size in bytes of \p buffer
+ */
 static inline void init_put_bits(PutBitContext *s, uint8_t *buffer, int buffer_size)
 {
     if(buffer_size < 0) {
@@ -108,7 +114,9 @@ static inline void init_put_bits(PutBitContext *s, uint8_t *buffer, int buffer_s
 #endif
 }
 
-/* return the number of bits output */
+/**
+ * Returns the number of bits output.
+ */
 static inline int put_bits_count(PutBitContext *s)
 {
 #ifdef ALT_BITSTREAM_WRITER
@@ -118,7 +126,9 @@ static inline int put_bits_count(PutBitContext *s)
 #endif
 }
 
-/* pad the end of the output stream with zeros */
+/**
+ * Pads the end of the output stream with zeros.
+ */
 static inline void flush_put_bits(PutBitContext *s)
 {
 #ifdef ALT_BITSTREAM_WRITER
@@ -143,6 +153,9 @@ static inline void flush_put_bits(PutBitContext *s)
 #endif
 }
 
+/**
+ * Pads the bitstream with zeros up to the next byte boundary.
+ */
 void align_put_bits(PutBitContext *s);
 void ff_put_string(PutBitContext * pbc, const char *s, int put_zero);
 void ff_copy_bits(PutBitContext *pb, const uint8_t *src, int length);

@@ -1925,7 +1925,7 @@ static void free_tables(H264Context *h){
     av_freep(&h->mb2b_xy);
     av_freep(&h->mb2b8_xy);
 
-    for(i = 0; i < h->s.avctx->thread_count; i++) {
+    for(i = 0; i < MAX_THREADS; i++) {
         hx = h->thread_context[i];
         if(!hx) continue;
         av_freep(&hx->top_borders[1]);
@@ -8235,10 +8235,9 @@ int avcodec_h264_search_recovery_point(AVCodecContext *avctx,
     return found;
 }
 
-static av_cold int decode_end(AVCodecContext *avctx)
+
+av_cold void ff_h264_free_context(H264Context *h)
 {
-    H264Context *h = avctx->priv_data;
-    MpegEncContext *s = &h->s;
     int i;
 
     av_freep(&h->rbsp_buffer[0]);
@@ -8250,6 +8249,14 @@ static av_cold int decode_end(AVCodecContext *avctx)
 
     for(i = 0; i < MAX_PPS_COUNT; i++)
         av_freep(h->pps_buffers + i);
+}
+
+static av_cold int decode_end(AVCodecContext *avctx)
+{
+    H264Context *h = avctx->priv_data;
+    MpegEncContext *s = &h->s;
+
+    ff_h264_free_context(h);
 
     MPV_common_end(s);
 

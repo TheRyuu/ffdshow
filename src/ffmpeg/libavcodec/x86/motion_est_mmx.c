@@ -458,7 +458,7 @@ void dsputil_init_pix_mmx(DSPContext* c, AVCodecContext *avctx)
         }
     }
 #if AV_GCC_VERSION_AT_LEAST(4,2)
-    if ((mm_flags & FF_MM_SSE2) && !(mm_flags & FF_MM_3DNOW)) {
+    if ((mm_flags & FF_MM_SSE2) && !(mm_flags & FF_MM_3DNOW) && avctx->codec_id != CODEC_ID_SNOW) {
         c->sad[0]= sad16_sse2;
     }
 #endif
