@@ -378,7 +378,10 @@ void TffPict::convertCSP(int Icsp,Tbuffer &buf,Tconvert *convert,int edge)
  stride_t stride0[4]={stride[0],stride[1],stride[2],stride[3]};
  Tpalette palette0=palette;
  convertCSP(Icsp,buf,edge);
- convert->convert(csp0|((fieldtype&FIELD_TYPE::MASK_INT)?FF_CSP_FLAGS_INTERLACED:0),data0,stride0,csp,data,stride,&palette0,video_full_range_flag,YCbCr_RGB_matrix_coefficients,false);
+ int csp2=csp0;
+ if (!(fieldtype & FIELD_TYPE::PROGRESSIVE_FRAME) && (fieldtype & FIELD_TYPE::MASK_INT))
+     csp2 |= FF_CSP_FLAGS_INTERLACED;
+ convert->convert(csp2, data0, stride0, csp, data, stride, &palette0, video_full_range_flag, YCbCr_RGB_matrix_coefficients, false);
 }
 
 /**
