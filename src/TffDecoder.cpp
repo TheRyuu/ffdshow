@@ -90,7 +90,6 @@ TffdshowDecVideo::TffdshowDecVideo(CLSID Iclsid,const char_t *className,const CL
  m_IsOldVideoRenderer(false),
  m_IsOldVMR9RenderlessAndRGB(false),
  hReconnectEvent(NULL),
- m_aboutToFlash(false),
  OSD_time_on_ffdshowStart(0),
  OSD_time_on_ffdshowBeforeGetBuffer(0),
  OSD_time_on_ffdshowAfterGetBuffer(0),
@@ -259,7 +258,8 @@ HRESULT TffdshowDecVideo::CheckInputType(const CMediaType *mtIn)
 HRESULT TffdshowDecVideo::GetMediaType(int iPosition, CMediaType *mtOut)
 {
  DPRINTF(_l("TffdshowDecVideo::GetMediaType"));
- CAutoLock lck(&m_csReceive);
+ boost::unique_lock<boost::recursive_mutex> lock(inpin->mutex_ffdshow_filter);
+
  if (m_pInput->IsConnected()==FALSE) return E_UNEXPECTED;
 
  if (!presetSettings) initPreset();
@@ -788,16 +788,7 @@ void TffdshowDecVideo::DisconnectFromCompatibleFilter(void)
 	compatibleFilterConnected=false;
 }
 
-
 HRESULT TffdshowDecVideo::Receive(IMediaSample *pSample)
-{
- m_aboutToFlash= false;
- HRESULT hr= ReceiveI(pSample);
- m_aboutToFlash= false;
- return hr;
-}
-
-HRESULT TffdshowDecVideo::ReceiveI(IMediaSample *pSample)
 {
  // If the next filter downstream is the video renderer, then it may
  // be able to operate in DirectDraw mode which saves copying the data
@@ -1399,7 +1390,7 @@ STDMETHODIMP TffdshowDecVideo::deliverProcessedSample(TffPict &pict)
 
 HRESULT TffdshowDecVideo::onGraphRemove(void)
 {
- CAutoLock lck(&m_csReceive);
+ boost::unique_lock<boost::recursive_mutex> lock(inpin->mutex_ffdshow_filter);
  if (videoWindow) {videoWindow=NULL;wasVideoWindow=false;}
  if (basicVideo) {basicVideo=NULL;wasBasicVideo=false;}
  if (imgFilters) delete imgFilters;imgFilters=NULL;

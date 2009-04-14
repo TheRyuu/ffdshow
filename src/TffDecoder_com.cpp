@@ -253,7 +253,7 @@ TimgFilters* TffdshowDecVideo::createImgFilters(void)
 
 STDMETHODIMP TffdshowDecVideo::calcNewSize(unsigned int inDx,unsigned int inDy ,unsigned int *outDx,unsigned int *outDy)
 {
- CAutoLock lck(&m_csReceive);
+ boost::unique_lock<boost::recursive_mutex> lock(inpin->mutex_ffdshow_filter);
  if (!presetSettings) return E_UNEXPECTED;
  if (!outDx || !outDy) return E_POINTER;
  if (!imgFilters) imgFilters=createImgFilters();

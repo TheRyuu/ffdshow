@@ -518,12 +518,10 @@ protected:
  TimgFilters *imgFilters;
  TpresetVideo *presetSettings;
  TglobalSettingsDecVideo *globalSettings;
- bool m_aboutToFlash;
  int m_IsQueueListedApp;        // -1: first run, 0: false, 1: true
  IPin *inputConnectedPin;
  Trect decodedPict;
 private:
- HRESULT ReceiveI(IMediaSample *pSample);
  static const int VERSION=38;
  static const int COMPAT_VERSION=28;
  TffdshowVideoInputPin *inpin;

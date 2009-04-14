@@ -405,7 +405,6 @@ HRESULT TffdshowDecAudio::getMediaType(CMediaType *mtOut)
 
 HRESULT TffdshowDecAudio::GetMediaType(int iPosition, CMediaType *mtOut)
 {
- CAutoLock lck(&m_csReceive);
  if (!inpin->IsConnected()) return E_UNEXPECTED;
  if (iPosition<0) return E_INVALIDARG;
 
@@ -682,7 +681,6 @@ HRESULT TffdshowDecAudio::Receive(IMediaSample* pIn)
 HRESULT TffdshowDecAudio::onGraphRemove(void)
 {
  //if (inpin->audio) delete inpin->audio;inpin->audio=NULL;
- CAutoLock lck(&m_csReceive);
  if (audioFilters) delete audioFilters;audioFilters=NULL;
  currentOutsf.reset();
  return TffdshowDec::onGraphRemove();

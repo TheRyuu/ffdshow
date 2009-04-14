@@ -17,6 +17,7 @@
 
 #include "stdafx.h"
 #include "TffdshowDecVideoOutputPin.h"
+#include "TffdshowVideoInputPin.h"
 #include "TpresetSettingsVideo.h"
 #include "Tlibmplayer.h"
 
@@ -56,8 +57,8 @@ HRESULT TffdshowDecVideoOutputPin::Deliver(IMediaSample * pSample)
 {
  if(m_pInputPin == NULL)
   return VFW_E_NOT_CONNECTED;
- if(!isFirstFrame && fdv->m_aboutToFlash == true)
-  return S_FALSE;
+ if(!isFirstFrame && fdv->inpin->m_rateAndFlush.m_flushing)
+  return S_OK;
 
  isFirstFrame= false;
  if(fdv->isQueue==1)
@@ -108,7 +109,6 @@ HRESULT TffdshowDecVideoOutputPin::DeliverBeginFlush(void)
   {
    return VFW_E_NOT_CONNECTED;
   }
- fdv->m_aboutToFlash= true;
  if(fdv->isQueue==1)
   {
    queue->BeginFlush();
