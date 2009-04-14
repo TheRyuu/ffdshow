@@ -52,6 +52,7 @@ protected:
   *  DAR of DVD must be either 4:3 or 16:9.
   */
  void correctDVDsar(Trect &r);
+
 public:
  static TvideoCodecDec* initDec(IffdshowBase *deci,IdecVideoSink *Isink,CodecID codecId,FOURCC fcc,const CMediaType &mt);
 

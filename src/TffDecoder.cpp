@@ -259,6 +259,7 @@ HRESULT TffdshowDecVideo::CheckInputType(const CMediaType *mtIn)
 HRESULT TffdshowDecVideo::GetMediaType(int iPosition, CMediaType *mtOut)
 {
  DPRINTF(_l("TffdshowDecVideo::GetMediaType"));
+ CAutoLock lck(&m_csReceive);
  if (m_pInput->IsConnected()==FALSE) return E_UNEXPECTED;
 
  if (!presetSettings) initPreset();
@@ -1198,216 +1199,207 @@ STDMETHODIMP TffdshowDecVideo::deliverDecodedSample(TffPict &pict)
 
 STDMETHODIMP TffdshowDecVideo::deliverProcessedSample(TffPict &pict)
 {
- if (pict.csp==FF_CSP_NULL)
-  return S_OK;
+    if (pict.csp==FF_CSP_NULL)
+        return S_OK;
 
- REFERENCE_TIME rtStart=pict.rtStart-segmentStart;
- REFERENCE_TIME rtStop=rtStart+1;
+    REFERENCE_TIME rtStart=pict.rtStart-segmentStart;
+    REFERENCE_TIME rtStop=rtStart+1;
 
- int codecId = inpin->getInCodecId2();
- if (mpeg12_codec(codecId) && inpin->biIn.bmiHeader.biCompression!=FOURCC_MPEG && rtStart < 0)
-  return S_OK; // work around compatibility issue with splitter?
+    int codecId = inpin->getInCodecId2();
+    if (mpeg12_codec(codecId) && inpin->biIn.bmiHeader.biCompression!=FOURCC_MPEG && rtStart < 0)
+        return S_OK; // work around compatibility issue with splitter?
 
- sendOnFrameMsg();
+    sendOnFrameMsg();
 
- if (presetSettings->output->hwOverlayAspect)
-  pict.setDar(Rational(presetSettings->output->hwOverlayAspect>>8,256));
- if (!outdv && allowOutChange)
-  {
-   HRESULT hr=reconnectOutput(pict);
-   if (FAILED(hr))
-    return S_FALSE;//hr;
-  }
+    inpin->mutex_ffdshow_filter.unlock();
 
- segmentFrameCnt++;
- frameCnt++;
+    if (presetSettings->output->hwOverlayAspect)
+        pict.setDar(Rational(presetSettings->output->hwOverlayAspect>>8,256));
+    if (!outdv && allowOutChange) {
+        HRESULT hr=reconnectOutput(pict);
+        if (FAILED(hr))
+            return S_FALSE;//hr;
+    }
 
- comptr<IMediaSample> pOut=NULL;
- HRESULT hr=initializeOutputSample(&pOut);
- if (FAILED(hr))
-  return hr;
+    segmentFrameCnt++;
+    frameCnt++;
 
-if (!outdv && hwDeinterlace)
-  if (comptrQ<IMediaSample2> pOut2=pOut)
-   {
-    AM_SAMPLE2_PROPERTIES outProp2;
-    if (SUCCEEDED(pOut2->GetProperties(FIELD_OFFSET(AM_SAMPLE2_PROPERTIES,tStart),(PBYTE)&outProp2)))
-     {
-      // Set interlace information (every sample)
-      outProp2.dwTypeSpecificFlags=AM_VIDEO_FLAG_INTERLEAVED_FRAME;
+    comptr<IMediaSample> pOut=NULL;
+    HRESULT hr=initializeOutputSample(&pOut);
+    if (FAILED(hr))
+        return hr;
 
-      // Force weave
-      if (presetSettings->output->hwDeintMethod == 1)
-       {
-        outProp2.dwTypeSpecificFlags|=AM_VIDEO_FLAG_WEAVE;
-       }
-      // Force bob
-      else if (presetSettings->output->hwDeintMethod == 2)
-       {
-        // force TFF
-        if (presetSettings->output->hwDeintFieldOrder == 1)
-         {
-          outProp2.dwTypeSpecificFlags|=AM_VIDEO_FLAG_FIELD1FIRST;
-         }
-        // auto field order
-        else if (presetSettings->output->hwDeintFieldOrder == 0)
-         {
-          if (pict.fieldtype&FIELD_TYPE::INT_TFF 
-             && !(pict.fieldtype & FIELD_TYPE::PROGRESSIVE_FRAME
-             && !pict.film) // avoid sending rapidly alternating TFF and BFF if telecine is detected.
-             )
-           {
-            outProp2.dwTypeSpecificFlags|=AM_VIDEO_FLAG_FIELD1FIRST;
-           }
-         }
-       }
-      // Auto
-      else
-       {
-        if (pict.film)
-         {
-          if (presetSettings->softTelecine)
-           outProp2.dwTypeSpecificFlags|=AM_VIDEO_FLAG_WEAVE;
-          else
-           {
-            if (pict.repeat_first_field)
-             outProp2.dwTypeSpecificFlags |= AM_VIDEO_FLAG_REPEAT_FIELD;
-            if (pict.fieldtype&FIELD_TYPE::INT_TFF)
-             outProp2.dwTypeSpecificFlags|=AM_VIDEO_FLAG_FIELD1FIRST;
-           }
-         }
-        else if (pict.fieldtype & FIELD_TYPE::PROGRESSIVE_FRAME)
-         {
-          outProp2.dwTypeSpecificFlags|=AM_VIDEO_FLAG_WEAVE;
-         }
-        else
-         {
-          // force TFF
-          if (presetSettings->output->hwDeintFieldOrder == 1)
-           {
-            outProp2.dwTypeSpecificFlags|=AM_VIDEO_FLAG_FIELD1FIRST;
-           }
-          // auto field order
-          else if (presetSettings->output->hwDeintFieldOrder == 0)
-           {
-            if (pict.fieldtype&FIELD_TYPE::INT_TFF)
-             {
-              outProp2.dwTypeSpecificFlags|=AM_VIDEO_FLAG_FIELD1FIRST;
-             }
-           }
-         }
-       }
-      pOut2->SetProperties(FIELD_OFFSET(AM_SAMPLE2_PROPERTIES,dwStreamId),(PBYTE)&outProp2);
+    {
+        boost::unique_lock<boost::recursive_mutex> lock(inpin->mutex_ffdshow_filter);
+        if (!outdv && hwDeinterlace) {
+            if (comptrQ<IMediaSample2> pOut2=pOut) {
+                AM_SAMPLE2_PROPERTIES outProp2;
+                if (SUCCEEDED(pOut2->GetProperties(FIELD_OFFSET(AM_SAMPLE2_PROPERTIES,tStart),(PBYTE)&outProp2))) {
+                    // Set interlace information (every sample)
+                    outProp2.dwTypeSpecificFlags=AM_VIDEO_FLAG_INTERLEAVED_FRAME;
+
+                    // Force weave
+                    if (presetSettings->output->hwDeintMethod == 1) {
+                        outProp2.dwTypeSpecificFlags|=AM_VIDEO_FLAG_WEAVE;
+                    }
+                    // Force bob
+                    else if (presetSettings->output->hwDeintMethod == 2) {
+                      // force TFF
+                      if (presetSettings->output->hwDeintFieldOrder == 1) {
+                          outProp2.dwTypeSpecificFlags|=AM_VIDEO_FLAG_FIELD1FIRST;
+                      }
+                      // auto field order
+                      else if (presetSettings->output->hwDeintFieldOrder == 0) {
+                          if (pict.fieldtype&FIELD_TYPE::INT_TFF 
+                             && !(pict.fieldtype & FIELD_TYPE::PROGRESSIVE_FRAME
+                             && !pict.film) // avoid sending rapidly alternating TFF and BFF if telecine is detected.
+                             ) {
+                              outProp2.dwTypeSpecificFlags|=AM_VIDEO_FLAG_FIELD1FIRST;
+                          }
+                      }
+                    }
+                    // Auto
+                    else {
+                        if (pict.film) {
+                            if (presetSettings->softTelecine)
+                                outProp2.dwTypeSpecificFlags|=AM_VIDEO_FLAG_WEAVE;
+                            else {
+                                if (pict.repeat_first_field)
+                                    outProp2.dwTypeSpecificFlags |= AM_VIDEO_FLAG_REPEAT_FIELD;
+                                if (pict.fieldtype&FIELD_TYPE::INT_TFF)
+                                    outProp2.dwTypeSpecificFlags|=AM_VIDEO_FLAG_FIELD1FIRST;
+                            }
+                        } else if (pict.fieldtype & FIELD_TYPE::PROGRESSIVE_FRAME) {
+                             outProp2.dwTypeSpecificFlags|=AM_VIDEO_FLAG_WEAVE;
+                        } else {
+                            // force TFF
+                            if (presetSettings->output->hwDeintFieldOrder == 1) {
+                                outProp2.dwTypeSpecificFlags|=AM_VIDEO_FLAG_FIELD1FIRST;
+                            }
+                            // auto field order
+                            else if (presetSettings->output->hwDeintFieldOrder == 0) {
+                                if (pict.fieldtype&FIELD_TYPE::INT_TFF)
+                                    outProp2.dwTypeSpecificFlags|=AM_VIDEO_FLAG_FIELD1FIRST;
+                            }
+                      }
+                    }
+                    pOut2->SetProperties(FIELD_OFFSET(AM_SAMPLE2_PROPERTIES,dwStreamId),(PBYTE)&outProp2);
+                }
+            }
+        }
+
+        m_bSampleSkipped=FALSE;
+        // The renderer may ask us to on-the-fly to start transforming to a
+        // different format.  If we don't obey it, we'll draw garbage
+        AM_MEDIA_TYPE *pmtOut;
+        pOut->GetMediaType(&pmtOut);
+        if (pmtOut!=NULL && pmtOut->pbFormat!=NULL) {
+            // spew some debug output
+            ASSERT(!IsEqualGUID(pmtOut->majortype, GUID_NULL));
+            // now switch to using the new format.  I am assuming that the
+            // derived filter will do the right thing when its media type is
+            // switched and streaming is restarted.
+            StopStreaming();
+            m_pOutput->CurrentMediaType() = *pmtOut;
+            DeleteMediaType(pmtOut);
+            hr = StartStreaming();
+            if (SUCCEEDED(hr)) {
+                // a new format, means a new empty buffer, so wait for a keyframe
+                // before passing anything on to the renderer.
+                // !!! a keyframe may never come, so give up after 30 frames
+                DPRINTF(_l("Output format change /*means we must wait for a keyframe*/"));
+                //waitForKeyframe = 30;
+            } else {
+                // if this fails, playback will stop, so signal an error
+                //  Must release the sample before calling AbortPlayback
+                //  because we might be holding the win16 lock or
+                //  ddraw lock
+                abortPlayback(hr);
+                return hr;
+            }
+        }
+
+        AM_MEDIA_TYPE *mtOut=NULL;
+        pOut->GetMediaType(&mtOut);
+        if (mtOut!=NULL) {
+            hr=setOutputMediaType(*mtOut);
+            DeleteMediaType(mtOut);
+            if (hr!=S_OK)
+                return hr;
+        }
+
+        if (inpin->m_rateAndFlush.m_flushing || inpin->m_rateAndFlush.m_endflush)
+            // Do not return before doing setOutputMediaType.
+            return S_OK;
+
+
+        if (m_NeedToAttachFormat) {
+            // code imported from DScaler. Copyright (c) 2004 John Adcock
+            m_NeedToAttachFormat = false;
+            AM_MEDIA_TYPE omt = m_pOutput->CurrentMediaType();
+            if (omt.formattype==FORMAT_VideoInfo2) {
+                VIDEOINFOHEADER2* vih = (VIDEOINFOHEADER2*)omt.pbFormat;
+                BITMAPINFOHEADER *bmi=&vih->bmiHeader;
+                setVIH2aspect(vih, pict.rectFull, 0);
+                SetRect(&vih->rcTarget, 0, 0, 0, 0);
+                SetRect(&vih->rcSource, 0, 0, pict.rectFull.dx, pict.rectFull.dy);
+                bmi->biXPelsPerMeter = pict.rectFull.dx * vih->dwPictAspectRatioX;
+                bmi->biYPelsPerMeter = pict.rectFull.dy * vih->dwPictAspectRatioY;
+                pOut->SetMediaType(&omt);
+                comptrQ<IMediaEventSink> pMES=graph;
+                NotifyEvent(EC_VIDEO_SIZE_CHANGED, MAKELPARAM(pict.rectFull.dx, pict.rectFull.dy), 0);
+            }
+        }
+
+        int sync=(pict.frametype&FRAME_TYPE::typemask)==FRAME_TYPE::I?TRUE:FALSE;
+        pOut->SetSyncPoint(sync);
+        if (outOverlayMixer)
+            pOut->SetDiscontinuity(TRUE);
+
+        if (rtStart!=REFTIME_INVALID) {
+            rtStop=pict.rtStop-segmentStart;
+            //DPRINTF(_l("pOut->SetTime rtStart %s rtStop %s"),Trt2str(rtStart).c_str(),Trt2str(rtStop).c_str());
+            pOut->SetTime(&rtStart,&rtStop);
+        }
+
+        pOut->SetDiscontinuity(pict.discontinuity);
+
+        if (pict.mediatimeStart!=REFTIME_INVALID)
+            pOut->SetMediaTime(&pict.mediatimeStart,&pict.mediatimeStop);
+
+        unsigned char *dst;
+        if (pOut->GetPointer(&dst)!=S_OK)
+            return S_FALSE;
+        LONG dstSize=pOut->GetSize();
+        HRESULT cr=imgFilters->convertOutputSample(pict,m_frame.dstColorspace,&dst,&m_frame.dstStride,dstSize,presetSettings->output);
+        pOut->SetActualDataLength(cr==S_FALSE?dstSize:m_frame.dstSize);
+        update_time_on_ffdshow3(rtStart, rtStop);
+    }
+
+    hr= m_pOutput->Deliver(pOut);
+
+    inpin->mutex_ffdshow_filter.lock();
+
+    update_time_on_ffdshow4();
+
+    if (m_NeedToPauseRun && graph) {
+        // Work around Windows Media Center
+        DPRINTF(_l("Work around Windows Media Center. After reconnecting Pause and Run."));
+        m_NeedToPauseRun = false;
+        IMediaFilter *imediafilter;
+        graph->QueryInterface(IID_IMediaFilter, (void**)(&imediafilter));
+        if (imediafilter) {
+            imediafilter->Pause(); // Why would this be required? Microsoft should fix their application.
+            imediafilter->Run(0);
+            imediafilter->Release();
+        }
      }
-   }
-
- m_bSampleSkipped=FALSE;
- // The renderer may ask us to on-the-fly to start transforming to a
- // different format.  If we don't obey it, we'll draw garbage
- AM_MEDIA_TYPE *pmtOut;
- pOut->GetMediaType(&pmtOut);
- if (pmtOut!=NULL && pmtOut->pbFormat!=NULL)
-  {
-   // spew some debug output
-   ASSERT(!IsEqualGUID(pmtOut->majortype, GUID_NULL));
-   // now switch to using the new format.  I am assuming that the
-   // derived filter will do the right thing when its media type is
-   // switched and streaming is restarted.
-   StopStreaming();
-   m_pOutput->CurrentMediaType() = *pmtOut;
-   DeleteMediaType(pmtOut);
-   hr = StartStreaming();
-   if (SUCCEEDED(hr))
-    {
-     // a new format, means a new empty buffer, so wait for a keyframe
-     // before passing anything on to the renderer.
-     // !!! a keyframe may never come, so give up after 30 frames
-     DPRINTF(_l("Output format change /*means we must wait for a keyframe*/"));
-     //waitForKeyframe = 30;
-    }
-   else // if this fails, playback will stop, so signal an error
-    {
-     //  Must release the sample before calling AbortPlayback
-     //  because we might be holding the win16 lock or
-     //  ddraw lock
-     abortPlayback(hr);
-     return hr;
-    }
-  }
-
- AM_MEDIA_TYPE *mtOut=NULL;
- pOut->GetMediaType(&mtOut);
- if (mtOut!=NULL)
-  {
-   hr=setOutputMediaType(*mtOut);
-   DeleteMediaType(mtOut);
-   if (hr!=S_OK)
     return hr;
-  }
-
- if (m_NeedToAttachFormat) // code imported from DScaler. Copyright (c) 2004 John Adcock
-  {
-   m_NeedToAttachFormat = false;
-   AM_MEDIA_TYPE omt = m_pOutput->CurrentMediaType();
-   if (omt.formattype==FORMAT_VideoInfo2)
-    {
-     VIDEOINFOHEADER2* vih = (VIDEOINFOHEADER2*)omt.pbFormat;
-     BITMAPINFOHEADER *bmi=&vih->bmiHeader;
-     setVIH2aspect(vih, pict.rectFull, 0);
-     SetRect(&vih->rcTarget, 0, 0, 0, 0);
-     SetRect(&vih->rcSource, 0, 0, pict.rectFull.dx, pict.rectFull.dy);
-     bmi->biXPelsPerMeter = pict.rectFull.dx * vih->dwPictAspectRatioX;
-     bmi->biYPelsPerMeter = pict.rectFull.dy * vih->dwPictAspectRatioY;
-     pOut->SetMediaType(&omt);
-     comptrQ<IMediaEventSink> pMES=graph;
-     NotifyEvent(EC_VIDEO_SIZE_CHANGED, MAKELPARAM(pict.rectFull.dx, pict.rectFull.dy), 0);
-    }
-  }
-
- int sync=(pict.frametype&FRAME_TYPE::typemask)==FRAME_TYPE::I?TRUE:FALSE;
- pOut->SetSyncPoint(sync);
- if (outOverlayMixer)
-  pOut->SetDiscontinuity(TRUE);
-
- if (rtStart!=REFTIME_INVALID)
-  {
-   rtStop=pict.rtStop-segmentStart;
-   pOut->SetTime(&rtStart,&rtStop);
-  }
- if (pict.mediatimeStart!=REFTIME_INVALID)
-  pOut->SetMediaTime(&pict.mediatimeStart,&pict.mediatimeStop);
-
- unsigned char *dst;
- if (pOut->GetPointer(&dst)!=S_OK)
-  return S_FALSE;
- LONG dstSize=pOut->GetSize();
- HRESULT cr=imgFilters->convertOutputSample(pict,m_frame.dstColorspace,&dst,&m_frame.dstStride,dstSize,presetSettings->output);
- pOut->SetActualDataLength(cr==S_FALSE?dstSize:m_frame.dstSize);
- update_time_on_ffdshow3(rtStart, rtStop);
-
- hr= m_pOutput->Deliver(pOut);
-
- update_time_on_ffdshow4();
-
- if (m_NeedToPauseRun && graph) // Work around Windows Media Center
-  {
-   DPRINTF(_l("Work around Windows Media Center. After reconnecting Pause and Run."));
-   m_NeedToPauseRun = false;
-   IMediaFilter *imediafilter;
-   graph->QueryInterface(IID_IMediaFilter, (void**)(&imediafilter));
-   if (imediafilter)
-    {
-     imediafilter->Pause(); // Why would this be required? Microsoft should fix their application.
-     imediafilter->Run(0);
-     imediafilter->Release();
-    }
-  }
-
- return hr;
 }
 
 HRESULT TffdshowDecVideo::onGraphRemove(void)
 {
+ CAutoLock lck(&m_csReceive);
  if (videoWindow) {videoWindow=NULL;wasVideoWindow=false;}
  if (basicVideo) {basicVideo=NULL;wasBasicVideo=false;}
  if (imgFilters) delete imgFilters;imgFilters=NULL;

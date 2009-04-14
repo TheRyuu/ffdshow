@@ -59,8 +59,7 @@ int TccDecoder::good_parity(uint16_t data)
   };
  static const Tparity parity;
  int ret = parity.table[data & 0xff] && parity.table[(data & 0xff00) >> 8];
- if (!ret)
-  DPRINTFA("Bad parity in EIA-608 data (%x)\n", data);
+ //if (!ret) DPRINTFA("Bad parity in EIA-608 data (%x)\n", data);
  return ret;
 }
 
@@ -518,7 +517,7 @@ void TccDecoder::cc_swap_buffers(void)
   /* hide caption in displayed memory */
   cc_hide_displayed();
 
-  DPRINTFA("cc_decoder: cc_swap_buffers: swapping caption memory\n");
+  //DPRINTFA("cc_decoder: cc_swap_buffers: swapping caption memory\n");
   std::swap( this->on_buf, this->off_buf);
 
   /* show new displayed memory */
@@ -699,7 +698,7 @@ void TccDecoder::decode(const uint8_t *buffer,size_t buf_len)
     curbytes++;
 
     if (buf_len - curbytes < 2) {
-      DPRINTFA("Not enough data for 2-byte CC encoding\n");
+      //DPRINTFA("Not enough data for 2-byte CC encoding\n");
       break;
     }
 
@@ -738,7 +737,7 @@ void TccDecoder::decode(const uint8_t *buffer,size_t buf_len)
       break;
 
     default:
-      DPRINTFA("Unknown CC encoding: %x\n", cc_code);
+      //DPRINTFA("Unknown CC encoding: %x\n", cc_code);
       skip = 2;
       break;
     }
@@ -754,7 +753,7 @@ int TccDecoder::cc_onscreen_displayable(void)
 
 void TccDecoder::cc_show_displayed(void)
 {
- DPRINTFA("cc_decoder: cc_show_displayed\n");
+ //DPRINTFA("cc_decoder: cc_show_displayed\n");
 
  if (cc_onscreen_displayable()) {
     //int64_t vpts = cc_renderer_calc_vpts(this->cc_state->renderer, this->pts, this->f_offset);

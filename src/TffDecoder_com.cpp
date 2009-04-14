@@ -253,6 +253,7 @@ TimgFilters* TffdshowDecVideo::createImgFilters(void)
 
 STDMETHODIMP TffdshowDecVideo::calcNewSize(unsigned int inDx,unsigned int inDy ,unsigned int *outDx,unsigned int *outDy)
 {
+ CAutoLock lck(&m_csReceive);
  if (!presetSettings) return E_UNEXPECTED;
  if (!outDx || !outDy) return E_POINTER;
  if (!imgFilters) imgFilters=createImgFilters();
@@ -493,6 +494,12 @@ HANDLE TffdshowDecVideo::getGlyphThreadHandle()
         return imgFilters->getGlyphThreadHandle();
     else
         return NULL;
+}
+
+void* TffdshowDecVideo::getRateInfo()
+{
+ if (!inpin) return NULL;
+ return inpin->getRateInfo();
 }
 
 bool TffdshowDecVideo::ctlSubtitles(int id,int type,unsigned int ctl_id,const void *ctl_data,unsigned int ctl_datalen)

@@ -1,6 +1,6 @@
 /*
- *	Copyright (C) 2003-2004 Gabest
- *	http://www.gabest.org
+ *    Copyright (C) 2003-2004 Gabest
+ *    http://www.gabest.org
  *
  *  This Program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,27 +24,31 @@
 
 class CDeCSSInputPin : public CTransformInputPin, public IKsPropertySet
 {
-	int m_varient;
-	BYTE m_Challenge[10], m_KeyCheck[5], m_Key[10];
-	BYTE m_DiscKey[6], m_TitleKey[6];
+    int m_varient;
+    BYTE m_Challenge[10], m_KeyCheck[5], m_Key[10];
+    BYTE m_DiscKey[6], m_TitleKey[6];
 
 protected:
-	// return S_FALSE here if you don't want the base class
-	// to call CTransformFilter::Receive with this sample
-	virtual HRESULT Transform(IMediaSample* pSample) {return S_OK;}
+    // return S_FALSE here if you don't want the base class
+    // to call CTransformFilter::Receive with this sample
+    virtual HRESULT Transform(IMediaSample* pSample) {return S_OK;}
+
+    virtual HRESULT SetPropSetRate(DWORD Id, LPVOID pInstanceData, DWORD cbInstanceData, LPVOID pPropertyData, DWORD cbPropData) {return E_NOTIMPL;}
+    virtual HRESULT GetPropSetRate(DWORD Id, LPVOID pInstanceData, DWORD InstanceLength, LPVOID pPropertyData, DWORD cbPropData, DWORD *pcbReturned) {return E_NOTIMPL;}
+    virtual HRESULT SupportPropSetRate(DWORD dwPropID, DWORD *pTypeSupport) {return E_NOTIMPL;}
 
 public:
     CDeCSSInputPin(const char_t* pObjectName, CTransformFilter* pFilter, HRESULT* phr, const wchar_t *pName);
 
-	DECLARE_IUNKNOWN
+    DECLARE_IUNKNOWN
     STDMETHODIMP NonDelegatingQueryInterface(REFIID riid, void** ppv);
 
-	void StripPacket(BYTE*& p, long& len);
+    void StripPacket(BYTE*& p, long& len);
 
-	// IMemInputPin
+    // IMemInputPin
     STDMETHODIMP Receive(IMediaSample* pSample);
 
-	// IKsPropertySet
+    // IKsPropertySet
     STDMETHODIMP Set(REFGUID PropSet, ULONG Id, LPVOID InstanceData, ULONG InstanceLength, LPVOID PropertyData, ULONG DataLength);
     STDMETHODIMP Get(REFGUID PropSet, ULONG Id, LPVOID InstanceData, ULONG InstanceLength, LPVOID PropertyData, ULONG DataLength, ULONG* pBytesReturned);
     STDMETHODIMP QuerySupported(REFGUID PropSet, ULONG Id, ULONG* pTypeSupport);

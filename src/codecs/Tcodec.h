@@ -24,7 +24,8 @@ public:
  virtual void getEncoderInfo(char_t *buf,size_t buflen) const {ff_strncpy(buf,_l("unknown"),buflen);buf[buflen-1]='\0';}
  static const char_t* getMovieSourceName(int source);
 
- virtual HRESULT flush(void) {return S_OK;}
+ virtual HRESULT flush() {return S_OK;}
+ virtual HRESULT BeginFlush() {return S_OK;}
  virtual bool onSeek(REFERENCE_TIME segmentStart) {return false;}
 };
 

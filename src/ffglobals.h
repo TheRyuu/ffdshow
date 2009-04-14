@@ -804,6 +804,33 @@ public:
     }
 };
 
+struct Trt2str:
+    public ffstring
+{
+    Trt2str(REFERENCE_TIME rt0)
+    {
+        uint64_t rt = ff_abs(rt0);
+        int below_ms = rt % 10000;
+        rt -= below_ms;
+        rt /= 10000;
+        int ms = rt % 1000;
+        rt -= ms;
+        rt /= 1000;
+        int s = rt % 60;
+        rt -= s;
+        rt /= 60;
+        int m = rt % 60;
+        rt -= m;
+        rt /= 60;
+        wchar_t buf[32];
+        _snwprintf_s(buf,countof(buf),_TRUNCATE,L"%02d:%02d:%02d %03d %04d",int(rt),m,s,ms,below_ms);
+        if (rt0 < 0)
+            ffstring::operator = (L"-");
+        else
+            ffstring::operator = (L"");
+        ffstring::operator += (buf);
+    }
+};
 #endif //FFDEFS_STRICT
 
 #endif

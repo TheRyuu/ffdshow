@@ -139,218 +139,212 @@ void TvideoCodecLibavcodec::end(void)
 //----------------------------- decompression -----------------------------
 bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const CMediaType &mt,int sourceFlags)
 {
- oldpict.rtStop = 0;
- h264_on_MPEG2_system = false;
+    oldpict.rtStop = 0;
+    h264_on_MPEG2_system = false;
 
- int thread_type = FF_THREAD_SLICE;
- if (codecId == CODEC_ID_H264_MT) // ffmpeg-mt
-  {
-   codecId = CODEC_ID_H264;
-   thread_type = FF_THREAD_FRAME;
-  }
-
- avcodec=libavcodec->avcodec_find_decoder(codecId);
- if (!avcodec) return false;
-
- avctx=libavcodec->avcodec_alloc_context(this);
- avctx->thread_type = thread_type;
- if (thread_type != FF_THREAD_FRAME)
-  avctx->active_thread_type = FF_THREAD_SLICE;
-
- int numthreads=deci->getParam2(IDFF_numLAVCdecThreads);
- if (numthreads>1 && sup_threads_dec(codecId))
-  libavcodec->avcodec_thread_init(avctx,threadcount=numthreads);
- else
-  threadcount=0;
-
- frame=libavcodec->avcodec_alloc_frame();
- avctx->width =pict.rectFull.dx;
- avctx->height=pict.rectFull.dy;
- intra_matrix=avctx->intra_matrix=(uint16_t*)calloc(sizeof(uint16_t),64);
- inter_matrix=avctx->inter_matrix=(uint16_t*)calloc(sizeof(uint16_t),64);
- ownmatrices=true;
-
- grayscale=deci->getParam2(IDFF_grayscale);
- if (grayscale && codecId!=CODEC_ID_THEORA) avctx->flags|=CODEC_FLAG_GRAY;
-
- avctx->codec_tag=fcc;
- avctx->workaround_bugs=deci->getParam2(IDFF_workaroundBugs);
- avctx->error_concealment=deci->getParam2(IDFF_errorConcealment);
- avctx->error_recognition=deci->getParam2(IDFF_errorRecognition);
- if (sourceFlags&SOURCE_TRUNCATED || mpeg12_codec(codecId) || codecId==CODEC_ID_MJPEG)
-  avctx->flags|=CODEC_FLAG_TRUNCATED;
- if (mpeg12_codec(codecId) && deci->getParam2(IDFF_fastMpeg2))
-  avctx->flags2=CODEC_FLAG2_FAST;
- if (codecId==CODEC_ID_H264)
-  if (int skip=deci->getParam2(IDFF_fastH264))
-   avctx->skip_loop_filter=skip&2?AVDISCARD_ALL:AVDISCARD_NONREF;
- initialSkipLoopFilter= avctx->skip_loop_filter;
-
- avctx->debug_mv=1;//(deci->getParam2(IDFF_isVis) & deci->getParam2(IDFF_visMV));
-
- avctx->idct_algo=limit(deci->getParam2(IDFF_idct),0,6);
- if (extradata) delete extradata;
- extradata=new Textradata(mt,FF_INPUT_BUFFER_PADDING_SIZE);
- if (extradata->size>0 && (codecId!=CODEC_ID_H264 || fcc==FOURCC_AVC1))
-  {
-   avctx->extradata_size=(int)extradata->size;
-   avctx->extradata=extradata->data;
-   sendextradata=mpeg1_codec(codecId);
-   if (fcc==FOURCC_AVC1 && mt.formattype==FORMAT_MPEG2Video)
-    {
-     const MPEG2VIDEOINFO *mpeg2info=(const MPEG2VIDEOINFO*)mt.pbFormat;
-     avctx->nal_length_size=mpeg2info->dwFlags;
+    int thread_type = FF_THREAD_SLICE;
+    if (codecId == CODEC_ID_H264_MT) {
+        // ffmpeg-mt
+        codecId = CODEC_ID_H264;
+        thread_type = FF_THREAD_FRAME;
     }
-   else if (fcc==FOURCC_THEO)
-    {
-     if (mt.formattype==FORMAT_RLTheora)
-      {
-       theorart=true;
-       const uint8_t *src=(const uint8_t*)avctx->extradata;
-       size_t dstsize=extradata->size;
-       uint8_t *dst=(uint8_t*)malloc(dstsize),*dst0=dst;
-       dst[1]=src[0+0*sizeof(DWORD)];
-       dst[0]=src[1+0*sizeof(DWORD)];
-       DWORD len0=*(DWORD*)&src[0*sizeof(DWORD)];
-       memcpy(dst+2,src+16,len0);
-       dst+=2+len0;
 
-       dst[1]=src[0+1*sizeof(DWORD)];
-       dst[0]=src[1+1*sizeof(DWORD)];
-       DWORD len1=*(DWORD*)&src[1*sizeof(DWORD)];
-       memcpy(dst+2,src+16+len0,len1);
-       dst+=2+len1;
+    avcodec=libavcodec->avcodec_find_decoder(codecId);
+    if (!avcodec)
+        return false;
 
-       dst[1]=src[0+2*sizeof(DWORD)];
-       dst[0]=src[1+2*sizeof(DWORD)];
-       DWORD len2=*(DWORD*)&src[2*sizeof(DWORD)];
-       memcpy(dst+2,src+16+len0+len1,len2);
+    avctx=libavcodec->avcodec_alloc_context(this);
+    avctx->thread_type = thread_type;
+    if (thread_type != FF_THREAD_FRAME)
+        avctx->active_thread_type = FF_THREAD_SLICE;
 
-       extradata->clear();
-       extradata->set(dst0,dstsize,0,true);
-       free(dst0);
-       avctx->extradata=extradata->data;
-       avctx->extradata_size=(int)extradata->size;
-      }
-     if (extradata->size>2 && extradata->data[2]==0)
-      {
-       const uint8_t *src=(const uint8_t*)avctx->extradata;
-       size_t dstsize=extradata->size;
-       uint8_t *dst=(uint8_t*)malloc(dstsize);
-       long len=*(long*)src;
-       dst[1]=((uint8_t*)&len)[0];
-       dst[0]=((uint8_t*)&len)[1];
-       memcpy(dst+2,src+4,len);
-       *((int16_t*)(dst+2+len))=int16_t(extradata->size-4-len);
-       memcpy(dst+2+len+2,src+4+len,extradata->size-4-len);
-       extradata->clear();
-       extradata->set(dst,dstsize,0,true);
-       free(dst);
-       avctx->extradata=extradata->data;
-       avctx->extradata_size=(int)extradata->size;
-      }
+    int numthreads=deci->getParam2(IDFF_numLAVCdecThreads);
+    if (numthreads>1 && sup_threads_dec(codecId))
+        libavcodec->avcodec_thread_init(avctx,threadcount=numthreads);
+    else
+        threadcount=0;
+
+    frame=libavcodec->avcodec_alloc_frame();
+    avctx->width =pict.rectFull.dx;
+    avctx->height=pict.rectFull.dy;
+    intra_matrix=avctx->intra_matrix=(uint16_t*)calloc(sizeof(uint16_t),64);
+    inter_matrix=avctx->inter_matrix=(uint16_t*)calloc(sizeof(uint16_t),64);
+    ownmatrices=true;
+
+    grayscale=deci->getParam2(IDFF_grayscale);
+    if (grayscale && codecId!=CODEC_ID_THEORA) avctx->flags|=CODEC_FLAG_GRAY;
+
+    avctx->codec_tag=fcc;
+    avctx->workaround_bugs=deci->getParam2(IDFF_workaroundBugs);
+    avctx->error_concealment=deci->getParam2(IDFF_errorConcealment);
+    avctx->error_recognition=deci->getParam2(IDFF_errorRecognition);
+    if (sourceFlags&SOURCE_TRUNCATED || mpeg12_codec(codecId) || codecId==CODEC_ID_MJPEG)
+        avctx->flags|=CODEC_FLAG_TRUNCATED;
+    if (mpeg12_codec(codecId) && deci->getParam2(IDFF_fastMpeg2))
+        avctx->flags2=CODEC_FLAG2_FAST;
+    if (codecId==CODEC_ID_H264)
+        if (int skip=deci->getParam2(IDFF_fastH264))
+            avctx->skip_loop_filter=skip&2?AVDISCARD_ALL:AVDISCARD_NONREF;
+    initialSkipLoopFilter= avctx->skip_loop_filter;
+
+    avctx->debug_mv=1;//(deci->getParam2(IDFF_isVis) & deci->getParam2(IDFF_visMV));
+
+    avctx->idct_algo=limit(deci->getParam2(IDFF_idct),0,6);
+    if (extradata) delete extradata;
+    extradata=new Textradata(mt,FF_INPUT_BUFFER_PADDING_SIZE);
+    if (extradata->size>0 && (codecId!=CODEC_ID_H264 || fcc==FOURCC_AVC1)) {
+        avctx->extradata_size=(int)extradata->size;
+        avctx->extradata=extradata->data;
+        sendextradata=mpeg1_codec(codecId);
+        if (fcc==FOURCC_AVC1 && mt.formattype==FORMAT_MPEG2Video) {
+            const MPEG2VIDEOINFO *mpeg2info=(const MPEG2VIDEOINFO*)mt.pbFormat;
+            avctx->nal_length_size=mpeg2info->dwFlags;
+        } else if (fcc==FOURCC_THEO) {
+            if (mt.formattype==FORMAT_RLTheora) {
+                theorart=true;
+                const uint8_t *src=(const uint8_t*)avctx->extradata;
+                size_t dstsize=extradata->size;
+                uint8_t *dst=(uint8_t*)malloc(dstsize),*dst0=dst;
+                dst[1]=src[0+0*sizeof(DWORD)];
+                dst[0]=src[1+0*sizeof(DWORD)];
+                DWORD len0=*(DWORD*)&src[0*sizeof(DWORD)];
+                memcpy(dst+2,src+16,len0);
+                dst+=2+len0;
+
+                dst[1]=src[0+1*sizeof(DWORD)];
+                dst[0]=src[1+1*sizeof(DWORD)];
+                DWORD len1=*(DWORD*)&src[1*sizeof(DWORD)];
+                memcpy(dst+2,src+16+len0,len1);
+                dst+=2+len1;
+
+                dst[1]=src[0+2*sizeof(DWORD)];
+                dst[0]=src[1+2*sizeof(DWORD)];
+                DWORD len2=*(DWORD*)&src[2*sizeof(DWORD)];
+                memcpy(dst+2,src+16+len0+len1,len2);
+
+                extradata->clear();
+                extradata->set(dst0,dstsize,0,true);
+                free(dst0);
+                avctx->extradata=extradata->data;
+                avctx->extradata_size=(int)extradata->size;
+            }
+            if (extradata->size>2 && extradata->data[2]==0) {
+                const uint8_t *src=(const uint8_t*)avctx->extradata;
+                size_t dstsize=extradata->size;
+                uint8_t *dst=(uint8_t*)malloc(dstsize);
+                long len=*(long*)src;
+                dst[1]=((uint8_t*)&len)[0];
+                dst[0]=((uint8_t*)&len)[1];
+                memcpy(dst+2,src+4,len);
+                *((int16_t*)(dst+2+len))=int16_t(extradata->size-4-len);
+                memcpy(dst+2+len+2,src+4+len,extradata->size-4-len);
+                extradata->clear();
+                extradata->set(dst,dstsize,0,true);
+                free(dst);
+                avctx->extradata=extradata->data;
+                avctx->extradata_size=(int)extradata->size;
+            }
+        }
     }
-  }
- else
-  sendextradata=false;
+    else
+        sendextradata=false;
 
- if (fcc==FOURCC_RLE4 || fcc==FOURCC_RLE8 || fcc==FOURCC_CSCD || sup_palette(codecId))
-  {
-   BITMAPINFOHEADER bih;ExtractBIH(mt,&bih);
-   avctx->bits_per_coded_sample=bih.biBitCount;
-   if (avctx->bits_per_coded_sample<=8 || codecId==CODEC_ID_PNG)
-    {
-     avctx->palctrl=&pal;
-     pal.palette_changed=1;
-     const void *palette;int palettesize;
-     if (!extradata->data)
-      switch (avctx->bits_per_coded_sample)
-       {
-        case 2:
-         palette=qt_default_palette_4;
-         palettesize=4*4;
-         break;
-        case 4:
-         palette=qt_default_palette_16;
-         palettesize=16*4;
-         break;
-        default:
-        case 8:
-         palette=qt_default_palette_256;
-         palettesize=256*4;
-         break;
-       }
-     else
-      {
-       palette=extradata->data;
-       palettesize=AVPALETTE_SIZE;
-      }
-     memcpy(pal.palette,palette,std::min(palettesize,AVPALETTE_SIZE));
+    if (fcc==FOURCC_RLE4 || fcc==FOURCC_RLE8 || fcc==FOURCC_CSCD || sup_palette(codecId)) {
+        BITMAPINFOHEADER bih;ExtractBIH(mt,&bih);
+        avctx->bits_per_coded_sample=bih.biBitCount;
+        if (avctx->bits_per_coded_sample<=8 || codecId==CODEC_ID_PNG) {
+            avctx->palctrl=&pal;
+            pal.palette_changed=1;
+            const void *palette;int palettesize;
+            if (!extradata->data)
+                switch (avctx->bits_per_coded_sample) {
+                    case 2:
+                        palette=qt_default_palette_4;
+                        palettesize=4*4;
+                        break;
+                    case 4:
+                        palette=qt_default_palette_16;
+                        palettesize=16*4;
+                        break;
+                    default:
+                    case 8:
+                        palette=qt_default_palette_256;
+                        palettesize=256*4;
+                        break;
+                }
+            else {
+                palette=extradata->data;
+                palettesize=AVPALETTE_SIZE;
+            }
+            memcpy(pal.palette,palette,std::min(palettesize,AVPALETTE_SIZE));
+        }
+    } else if (extradata->data && (codecId==CODEC_ID_RV10 || codecId==CODEC_ID_RV20)) {
+        #pragma pack(push, 1)
+        struct rvinfo {
+   /*     DWORD dwSize, fcc1, fcc2;
+          WORD w, h, bpp;
+          DWORD unk1, fps, type1, type2;*/
+          DWORD type1, type2;
+          BYTE w2, h2, w3, h3;
+        } __attribute__((packed));
+        #pragma pack(pop)
+
+        const uint8_t *src=(const uint8_t*)avctx->extradata;
+        size_t dstsize=extradata->size - 26;
+        uint8_t *dst=(uint8_t*)malloc(dstsize);
+        memcpy(dst,src+26,dstsize);
+        extradata->clear();
+        extradata->set(dst,dstsize,0,true);
+        free(dst);
+        avctx->extradata=extradata->data;
+        avctx->extradata_size=(int)extradata->size;
+
+        rvinfo *info=(rvinfo*)extradata->data;
+        avctx->sub_id=info->type2;bswap(avctx->sub_id);
     }
-  }
- else if (extradata->data && (codecId==CODEC_ID_RV10 || codecId==CODEC_ID_RV20))
-  {
-   #pragma pack(push, 1)
-   struct rvinfo
-    {
-/*     DWORD dwSize, fcc1, fcc2;
-     WORD w, h, bpp;
-     DWORD unk1, fps, type1, type2;*/
-     DWORD type1, type2;
-     BYTE w2, h2, w3, h3;
-    } __attribute__((packed));
-   #pragma pack(pop)
+     
+    if (libavcodec->avcodec_open(avctx,avcodec)<0) {
+        return false;
+    }
 
-   const uint8_t *src=(const uint8_t*)avctx->extradata;
-   size_t dstsize=extradata->size - 26;
-   uint8_t *dst=(uint8_t*)malloc(dstsize);
-   memcpy(dst,src+26,dstsize);
-   extradata->clear();
-   extradata->set(dst,dstsize,0,true);
-   free(dst);
-   avctx->extradata=extradata->data;
-   avctx->extradata_size=(int)extradata->size;
+    if (codecId == CODEC_ID_H264) {
+        if  ((!libavcodec->avcodec_h264_decode_init_is_avc(avctx) && isMPEG2system())
+             || (connectedSplitter == TffdshowVideoInputPin::DVBSourceFilter ))
+            h264_on_MPEG2_system = true;
+    }
 
-   rvinfo *info=(rvinfo*)extradata->data;
-   avctx->sub_id=info->type2;bswap(avctx->sub_id);
-  }
-  
- if (libavcodec->avcodec_open(avctx,avcodec)<0) {
- 	return false;
- }
- if (codecId == CODEC_ID_H264)
-  {
-   if  ((!libavcodec->avcodec_h264_decode_init_is_avc(avctx) && isMPEG2system())
-        || (connectedSplitter == TffdshowVideoInputPin::DVBSourceFilter ))
-    h264_on_MPEG2_system = true;
-  }
+    if (h264_on_MPEG2_system)
+        codedPictureBuffer.init();
 
- if (h264_on_MPEG2_system)
-  codedPictureBuffer.init();
+    pict.csp=avctx->pix_fmt!=PIX_FMT_NONE?csp_lavc2ffdshow(avctx->pix_fmt):FF_CSP_420P;
+    if (avctx->sample_aspect_ratio.num && avctx->sample_aspect_ratio.den) {
+        pict.setSar(avctx->sample_aspect_ratio);
+    }
+    containerSar=pict.rectFull.sar;
+    dont_use_rtStop_from_upper_stream = (sourceFlags&SOURCE_NEROAVC || avctx->codec_tag==FOURCC_MPG1 || avctx->codec_tag==FOURCC_MPG2) && avctx->codec_tag!=FOURCC_THEO;
+    avgTimePerFrame=-1;
+    codecinited=true;
+    wasKey=false;
+    segmentTimeStart=0;
+    avctx->isDVD = isdvdproc;
+    return true;
+}
 
- pict.csp=avctx->pix_fmt!=PIX_FMT_NONE?csp_lavc2ffdshow(avctx->pix_fmt):FF_CSP_420P;
- if (avctx->sample_aspect_ratio.num && avctx->sample_aspect_ratio.den) {
-  pict.setSar(avctx->sample_aspect_ratio);
- }
- containerSar=pict.rectFull.sar;
- dont_use_rtStop_from_upper_stream = (sourceFlags&SOURCE_NEROAVC || avctx->codec_tag==FOURCC_MPG1 || avctx->codec_tag==FOURCC_MPG2) && avctx->codec_tag!=FOURCC_THEO;
- avgTimePerFrame=-1;
- codecinited=true;
- wasKey=false;
- segmentTimeStart=0;
- avctx->isDVD = isdvdproc;
- return true;
+HRESULT TvideoCodecLibavcodec::BeginFlush()
+{
+    onSeek(0);
+    return S_OK;
 }
 
 // return true for TS, PS files.
 bool TvideoCodecLibavcodec::isMPEG2system(void)
 {   
- const char_t *sourceFullFlnm;
- ffstring sourceExt;
- sourceFullFlnm = deci->getSourceName();
- extractfileext(sourceFullFlnm,sourceExt);
- sourceExt.ConvertToLowerCase();
- return (sourceExt == _l("ts") || sourceExt == _l("m2ts") || sourceExt == _l("m2t") || sourceExt == _l("mts") || sourceExt == _l("mpg")  || sourceExt == _l("mpeg"));
+    const char_t *sourceFullFlnm;
+    ffstring sourceExt;
+    sourceFullFlnm = deci->getSourceName();
+    extractfileext(sourceFullFlnm,sourceExt);
+    sourceExt.ConvertToLowerCase();
+    return (sourceExt == _l("ts") || sourceExt == _l("m2ts") || sourceExt == _l("m2t") || sourceExt == _l("mts") || sourceExt == _l("mpg")  || sourceExt == _l("mpeg"));
 }
 
 void TvideoCodecLibavcodec::onGetBuffer(AVFrame *pic)
@@ -359,436 +353,451 @@ void TvideoCodecLibavcodec::onGetBuffer(AVFrame *pic)
 
 void TvideoCodecLibavcodec::handle_user_data(const uint8_t *buf,int buf_len)
 {
- if(buf_len > 4 && *(DWORD*)buf == 0xf8014343)
-  {
-   if (!ccDecoder) ccDecoder=new TccDecoder(deciV);
-   ccDecoder->decode(buf+2,buf_len-2);
-  }
+    TffdshowVideoInputPin::TrateAndFlush *rateInfo = (TffdshowVideoInputPin::TrateAndFlush*)deciV->getRateInfo();
+    if(rateInfo->rate.Rate == 10000
+      && buf_len > 4
+      && *(DWORD*)buf == 0xf8014343) {
+        if (!ccDecoder) ccDecoder=new TccDecoder(deciV);
+        ccDecoder->decode(buf+2,buf_len-2);
+    }
 }
 
 HRESULT TvideoCodecLibavcodec::flushDec(void)
 {
- HRESULT hr;
- do
-  {
-   hr = decompress(NULL, 0, NULL);
-  } while(got_picture && hr == S_OK);
- return hr;
+    HRESULT hr;
+    do {
+        hr = decompress(NULL, 0, NULL);
+    } while(got_picture && hr == S_OK);
+    return hr;
 }
 HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen0,IMediaSample *pIn)
 {
- HRESULT hr = S_OK;
+    HRESULT hr = S_OK;
+    TffdshowVideoInputPin::TrateAndFlush *rateInfo = (TffdshowVideoInputPin::TrateAndFlush*)deciV->getRateInfo();
 
- bool isSyncPoint = pIn && pIn->IsSyncPoint() == S_OK;
- if (codecId==CODEC_ID_FFV1) // libavcodec can crash or loop infinitely when first frame after seeking is not keyframe
-  {
-   if (!wasKey)
-    if (isSyncPoint)
-     wasKey=true;
-    else
-     return S_OK;
-  }
-
- unsigned int skip=0;
-
- if (src && (codecId==CODEC_ID_RV10 || codecId==CODEC_ID_RV20) && avctx->sub_id)
-  {
-   avctx->slice_count=src[0]+1;
-   if (!avctx->slice_offset) avctx->slice_offset=(int*)malloc(sizeof(int)*1000);
-   for (int i=0;i<avctx->slice_count;i++)
-    avctx->slice_offset[i]=((DWORD*)(src+1))[2*i+1];
-   skip=1+2*sizeof(DWORD)*avctx->slice_count;
-  }
- else if (codecId==CODEC_ID_COREPNG)
-  avctx->corepng_frame_type=pIn && pIn->IsSyncPoint()==S_OK?SAMPLE_I:SAMPLE_P;
- else if (src && theorart)
-  {
-   struct _TheoraPacket
-    {
-     long  bytes;
-     long  b_o_s;
-     long  e_o_s;
-     int64_t  granulepos;
-     int64_t  packetno;
-    };
-   _TheoraPacket *packet=(_TheoraPacket*)src;
-   if (packet->bytes==0 || src[sizeof(_TheoraPacket)]&0x80)
-    return S_OK;
-   skip+=sizeof(_TheoraPacket);
-   avctx->granulepos=packet->granulepos;
-  }
-
- src+=skip;int size=int(srcLen0-skip);
-
- if (pIn)
-  pIn->GetTime(&rtStart,&rtStop);
-
- b[inPosB].rtStart=rtStart;
- b[inPosB].rtStop=rtStop;
- b[inPosB].srcSize=size;
- inPosB++;
- if(inPosB >= countof(b))
-  inPosB = 0;
-
- if (codecId==CODEC_ID_H264)
-  {
-   if(autoSkipingLoopFilter)
-    {
-     if(deciV->getLate()<=0)
-      {
-       avctx->skip_loop_filter= initialSkipLoopFilter;
-       //avctx->skip_frame = AVDISCARD_NONE;
-       autoSkipingLoopFilter= false;
-      }
+    bool isSyncPoint = pIn && pIn->IsSyncPoint() == S_OK;
+    if (codecId==CODEC_ID_FFV1) {
+        // libavcodec can crash or loop infinitely when first frame after seeking is not keyframe
+        if (!wasKey)
+            if (isSyncPoint)
+                wasKey=true;
+            else
+                return S_OK;
     }
-   else
-    {
-     if(deciV->shouldSkipH264loopFilter())
-      {
-       avctx->skip_loop_filter=AVDISCARD_ALL;
-       //avctx->skip_frame = AVDISCARD_NONREF;
-       autoSkipingLoopFilter= true;
-      }
+
+    if (pIn && pIn->IsDiscontinuity() == S_OK) {
+        rateInfo->isDiscontinuity = true;
     }
-  }
 
- if (src && h264_on_MPEG2_system)
-  size = codedPictureBuffer.append(src, size);
+    unsigned int skip=0;
 
- while (!src || size>0)
-  {
-   int used_bytes;
-
-   avctx->parserRtStart=&rtStart; // needed for mpeg1/2
-   avctx->reordered_opaque = rtStart;
-   avctx->reordered_opaque2 = rtStop;
-   avctx->reordered_opaque3 = size;
-
-   if (sendextradata)
-    {
-     used_bytes=libavcodec->avcodec_decode_video(avctx,frame,&got_picture,extradata->data,(int)extradata->size);
-     sendextradata=false;
-     if (used_bytes>0) used_bytes=0;
+    if (src && (codecId==CODEC_ID_RV10 || codecId==CODEC_ID_RV20) && avctx->sub_id) {
+        avctx->slice_count=src[0]+1;
+        if (!avctx->slice_offset) avctx->slice_offset=(int*)malloc(sizeof(int)*1000);
+        for (int i=0;i<avctx->slice_count;i++)
+            avctx->slice_offset[i]=((DWORD*)(src+1))[2*i+1];
+        skip=1+2*sizeof(DWORD)*avctx->slice_count;
     }
-   else
-    {
-     unsigned int neededsize=size+FF_INPUT_BUFFER_PADDING_SIZE;
-
-     if (ffbuflen<neededsize)
-      ffbuf=(unsigned char*)realloc(ffbuf,ffbuflen=neededsize);
-
-     if (src)
-      {
-       if (codecId == CODEC_ID_H264)
-        {
-         if (h264_on_MPEG2_system)
-          used_bytes = codedPictureBuffer.send(&got_picture);
-         else
-          {
-           memcpy(ffbuf,src,size);memset(ffbuf+size,0,FF_INPUT_BUFFER_PADDING_SIZE);
-           if (h264RandomAccess.search(ffbuf, size))
-            {
-             memcpy(ffbuf,src,size);memset(ffbuf+size,0,FF_INPUT_BUFFER_PADDING_SIZE);
-             used_bytes=libavcodec->avcodec_decode_video(avctx,frame,&got_picture,ffbuf,size);
-             if (used_bytes < 0)
-              return S_OK;
-             h264RandomAccess.judgeUsability(&got_picture);
-            }
-           else
+    else if (codecId==CODEC_ID_COREPNG)
+        avctx->corepng_frame_type=pIn && pIn->IsSyncPoint()==S_OK?SAMPLE_I:SAMPLE_P;
+    else if (src && theorart) {
+        struct _TheoraPacket
+         {
+          long  bytes;
+          long  b_o_s;
+          long  e_o_s;
+          int64_t  granulepos;
+          int64_t  packetno;
+         };
+        _TheoraPacket *packet=(_TheoraPacket*)src;
+        if (packet->bytes==0 || src[sizeof(_TheoraPacket)]&0x80)
             return S_OK;
-          }
-        }
-       else
-        {
-         memcpy(ffbuf,src,size);memset(ffbuf+size,0,FF_INPUT_BUFFER_PADDING_SIZE);
-         used_bytes=libavcodec->avcodec_decode_video(avctx,frame,&got_picture,ffbuf,size);
-        }
-      }
-     else
-      used_bytes=libavcodec->avcodec_decode_video(avctx,frame,&got_picture,NULL,0);
+        skip+=sizeof(_TheoraPacket);
+        avctx->granulepos=packet->granulepos;
     }
 
-   if (used_bytes<0)
+    src+=skip;int size=int(srcLen0-skip);
+
+    if (pIn)
+        pIn->GetTime(&rtStart,&rtStop);
+
+    b[inPosB].rtStart=rtStart;
+    b[inPosB].rtStop=rtStop;
+    b[inPosB].srcSize=size;
+    inPosB++;
+    if(inPosB >= countof(b))
+        inPosB = 0;
+
+    if (codecId==CODEC_ID_H264) {
+        if(autoSkipingLoopFilter) {
+            if(deciV->getLate()<=0) {
+                avctx->skip_loop_filter= initialSkipLoopFilter;
+                //avctx->skip_frame = AVDISCARD_NONE;
+                autoSkipingLoopFilter= false;
+            }
+        } else {
+            if(deciV->shouldSkipH264loopFilter()) {
+                avctx->skip_loop_filter=AVDISCARD_ALL;
+                //avctx->skip_frame = AVDISCARD_NONREF;
+                autoSkipingLoopFilter= true;
+            }
+        }
+    }
+
+    if (src && h264_on_MPEG2_system)
+        size = codedPictureBuffer.append(src, size);
+
+    while (!src || size>0) {
+        int used_bytes;
+
+        avctx->parserRtStart=&rtStart; // needed for mpeg1/2
+        avctx->reordered_opaque = rtStart;
+        avctx->reordered_opaque2 = rtStop;
+        avctx->reordered_opaque3 = size;
+
+        if (sendextradata) {
+            used_bytes=libavcodec->avcodec_decode_video(avctx,frame,&got_picture,extradata->data,(int)extradata->size);
+            sendextradata=false;
+            if (used_bytes>0) used_bytes=0;
+        } else {
+            unsigned int neededsize=size+FF_INPUT_BUFFER_PADDING_SIZE;
+
+            if (ffbuflen<neededsize)
+                ffbuf=(unsigned char*)realloc(ffbuf,ffbuflen=neededsize);
+
+            if (src) {
+              if (codecId == CODEC_ID_H264) {
+                  if (h264_on_MPEG2_system)
+                      used_bytes = codedPictureBuffer.send(&got_picture);
+                  else {
+                      memcpy(ffbuf,src,size);memset(ffbuf+size,0,FF_INPUT_BUFFER_PADDING_SIZE);
+                      if (h264RandomAccess.search(ffbuf, size)) {
+                          memcpy(ffbuf,src,size);memset(ffbuf+size,0,FF_INPUT_BUFFER_PADDING_SIZE);
+                          used_bytes=libavcodec->avcodec_decode_video(avctx,frame,&got_picture,ffbuf,size);
+                          if (used_bytes < 0)
+                              return S_OK;
+                          h264RandomAccess.judgeUsability(&got_picture);
+                      } else
+                          return S_OK;
+                  }
+              } else {
+                  memcpy(ffbuf,src,size);memset(ffbuf+size,0,FF_INPUT_BUFFER_PADDING_SIZE);
+                  used_bytes=libavcodec->avcodec_decode_video(avctx,frame,&got_picture,ffbuf,size);
+              }
+            } else
+                used_bytes=libavcodec->avcodec_decode_video(avctx,frame,&got_picture,NULL,0);
+        }
+
+        if (used_bytes<0)
+            return S_OK;
+
+        if (got_picture && frame->data[0]) {
+            int frametype;
+            if (avctx->codec_id==CODEC_ID_H261) {
+              frametype=FRAME_TYPE::I;
+            } else {
+                switch (frame->pict_type) {
+                    case FF_P_TYPE:
+                        frametype = FRAME_TYPE::P;
+                        break;
+                    case FF_B_TYPE:
+                        frametype = FRAME_TYPE::B;
+                        break;
+                    case FF_I_TYPE:
+                        frametype = FRAME_TYPE::I;
+                        break;
+                    case FF_S_TYPE:
+                        frametype = FRAME_TYPE::GMC;
+                        break;
+                    case FF_SI_TYPE:
+                        frametype = FRAME_TYPE::SI;
+                        break;
+                    case FF_SP_TYPE:
+                        frametype = FRAME_TYPE::SP;
+                        break;
+                    case 0:
+                        frametype=pIn && pIn->IsSyncPoint()==S_OK ?
+                            FRAME_TYPE::I :
+                            FRAME_TYPE::P;
+                        break;
+                    default:
+                        frametype = FRAME_TYPE::UNKNOWN;
+                        break;
+                }
+            }
+
+            if (pIn && pIn->IsPreroll()==S_OK) {
+                sinkD->deliverPreroll(frametype);
+            } else {
+                int fieldtype = frame->interlaced_frame ?
+                                    (frame->top_field_first ?
+                                        FIELD_TYPE::INT_TFF :
+                                        FIELD_TYPE::INT_BFF):
+                                    FIELD_TYPE::PROGRESSIVE_FRAME;
+
+                if (codecId == CODEC_ID_MPEG2VIDEO) {
+                    if (mpeg2_new_sequence)
+                        fieldtype |= FIELD_TYPE::SEQ_START;
+
+                    if (frame->mpeg2_sequence_end_flag) {
+                        fieldtype |= FIELD_TYPE::SEQ_END;
+                        mpeg2_new_sequence = true;
+                        frame->mpeg2_sequence_end_flag = 0;
+                    } else
+                        mpeg2_new_sequence = false;
+                }
+
+                if (frame->play_flags&CODEC_FLAG_QPEL)
+                    frametype|=FRAME_TYPE::QPEL;
+
+                int csp=csp_lavc2ffdshow(avctx->pix_fmt);
+
+                if (grayscale) {
+                    // workaround for green picture when decoding mpeg with CODEC_FLAG_GRAY, the problem is probably somewhere else
+                    const TcspInfo* cspinfo=csp_getInfo(csp);
+                    for (unsigned int i=1;i<cspinfo->numPlanes;i++) {
+                        if (frame->data[i][0]!=cspinfo->black[i]
+                            || (codecId!=CODEC_ID_MPEG4 && codecId!=CODEC_ID_MPEG2VIDEO && codecId!=CODEC_ID_MPEG1VIDEO && codecId!=CODEC_ID_VC1 && codecId!=CODEC_ID_WMV3 && codecId!=CODEC_ID_SVQ3 && codecId!=CODEC_ID_HUFFYUV)
+                           )
+                            memset(frame->data[i],cspinfo->black[i],frame->linesize[i]*avctx->height>>cspinfo->shiftY[i]);
+                    }
+                }
+
+                Trect r(0,0,avctx->width,avctx->height);
+
+                if (avctx->sample_aspect_ratio.num
+                  && !(connectedSplitter == TffdshowVideoInputPin::MPC_matroska_splitter && avctx->sample_aspect_ratio.num==1 && avctx->sample_aspect_ratio.den==1)
+                   )  // With MPC's internal matroska splitter, AR is not reliable.
+                    r.sar=avctx->sample_aspect_ratio;
+                else
+                    r.sar=containerSar;
+
+                // Correct impossible sar for DVD
+                correctDVDsar(r);
+
+                quants=frame->qscale_table;
+                quantsStride=frame->qstride;
+                quantType=frame->qscale_type;
+                quantsDx=(r.dx+15)>>4;quantsDy=(r.dy+15)>>4;
+
+                const stride_t linesize[4]={frame->linesize[0],frame->linesize[1],frame->linesize[2],frame->linesize[3]};
+
+                TffPict pict(csp,frame->data,linesize,r,true,frametype,fieldtype,srcLen0,pIn,avctx->palctrl); //TODO: src frame size
+                pict.gmcWarpingPoints=frame->num_sprite_warping_points;pict.gmcWarpingPointsReal=frame->real_sprite_warping_points;
+                if (codecId == CODEC_ID_H264) {
+                    pict.video_full_range_flag = frame->video_full_range_flag;
+                    pict.YCbCr_RGB_matrix_coefficients = frame->YCbCr_RGB_matrix_coefficients;
+                } else {
+                    pict.video_full_range_flag = VIDEO_FULL_RANGE_INVALID;
+                    pict.YCbCr_RGB_matrix_coefficients = YCbCr_RGB_coeff_Unspecified;
+                }
+
+                if (h264_on_MPEG2_system) {
+                    pict.rtStart = frame->reordered_opaque;
+                    pict.rtStop = frame->reordered_opaque2;
+                    pict.srcSize = (size_t)frame->reordered_opaque3;
+                } else if (isdvdproc) {
+                    if(frametype == FRAME_TYPE::I)
+                        pict.rtStart = frame->reordered_opaque;
+                    else
+                        pict.rtStart = oldpict.rtStop;
+
+                    // cope with a change in rate
+                    if (rateInfo->rate.Rate != rateInfo->ratechange.Rate
+                      && rateInfo->flushed
+                      && frametype == FRAME_TYPE::I) {
+                        // Buggy DVD navigator does not work as it is documented.
+                        // DPRINTF(_l("rateInfo->ratechange.StartTime = %s rateInfo->rate.StartTime = %s rateInfo->rate.Rate %d"), Trt2str(rateInfo->ratechange.StartTime).c_str(),Trt2str(rateInfo->rate.StartTime).c_str(),rateInfo->rate.Rate);
+
+                        rateInfo->rate.StartTime = pict.rtStart;
+                        rateInfo->rate.Rate = rateInfo->ratechange.Rate;
+                        rateInfo->isDiscontinuity = true;
+                        // DPRINTF(_l("Got Rate StartTime = %s Rate = %d\n"), Trt2str(rateInfo->rate.StartTime).c_str(), rateInfo->rate.Rate);
+                    }
+
+                    if (rateInfo->isDiscontinuity && frametype == FRAME_TYPE::I) {
+                        // if we're at a Discontinuity use the times we're being sent in
+                        // DPRINTF((ffstring(L"rateInfo->isDiscontinuity found. pict.rtStart ") + Trt2str(pict.rtStart) + L" rateInfo->rate.StartTime " + Trt2str(rateInfo->rate.StartTime)).c_str());
+                        pict.rtStart = rateInfo->rate.StartTime + (pict.rtStart - rateInfo->rate.StartTime) * abs(rateInfo->rate.Rate) / 10000;
+
+                        // DPRINTF(_l("rateInfo->isDiscontinuity found. updating rtStart %s oldpict.rtStop %s"),Trt2str(pict.rtStart).c_str(), Trt2str(oldpict.rtStop).c_str());
+                        pict.discontinuity = true;
+                        rateInfo->isDiscontinuity = false;
+                    } else
+                        pict.rtStart = oldpict.rtStop;
+
+                    REFERENCE_TIME duration = REF_SECOND_MULT * avctx->time_base.num / avctx->time_base.den;
+
+                    if (rateInfo->rate.Rate < (10000 / TffdshowVideoInputPin::MAX_SPEED)) {
+                        pict.rtStop = pict.rtStart + duration;
+                        pict.fieldtype |= FIELD_TYPE::SEQ_START | FIELD_TYPE::SEQ_END;
+                    } else
+                        pict.rtStop = pict.rtStart +
+                                          (duration * (frame->repeat_pict ? 2 : 3) * abs(rateInfo->rate.Rate) / (2 * 10000));
+                    oldpict=pict;
+                    if (rateInfo->isDiscontinuity)
+                        telecineManager.onSeek();
+                } else if (dont_use_rtStop_from_upper_stream) {
+                    pict.rtStart = frame->reordered_opaque;
+                    pict.srcSize = (size_t)frame->reordered_opaque3; // FIXME this is not correct for MPEG-1/2 that use SOURCE_TRUNCATED. (Just for OSD, not that important bug)
+
+                    if (pict.rtStart==REFTIME_INVALID)
+                        pict.rtStart=oldpict.rtStop;
+
+                    if (avgTimePerFrame==-1)
+                        deciV->getAverageTimePerFrame(&avgTimePerFrame);
+
+                    if (avgTimePerFrame) {
+                        pict.rtStop=pict.rtStart+avgTimePerFrame+frame->repeat_pict*avgTimePerFrame/2;
+                    } else if (avctx->time_base.num && avctx->time_base.den) {
+                        REFERENCE_TIME duration = REF_SECOND_MULT * avctx->time_base.num / avctx->time_base.den;
+                        pict.rtStop = pict.rtStart + duration;
+                        if (frame->repeat_pict)
+                            pict.rtStop += (duration >> 1) * frame->repeat_pict;
+                    } else {
+                        pict.rtStop=pict.rtStart+1;
+                    }
+
+                    if (avctx->codec_tag==FOURCC_MPG1 || avctx->codec_tag==FOURCC_MPG2)
+                     pict.mediatimeStart=pict.mediatimeStop=REFTIME_INVALID;
+
+                    oldpict=pict;
+                } else if (theorart) {
+                    pict.rtStart = frame->reordered_opaque - segmentTimeStart;
+                    pict.rtStop  = pict.rtStart + 1;
+                } else if (avctx->has_b_frames) {
+                    // do not reorder timestamps in this case.
+                    // Timestamps simply increase. 
+                    // ex: AVI files
+
+                    int pos;
+                    if (avctx->active_thread_type == FF_THREAD_FRAME)
+                        pos = inPosB - 1 - avctx->thread_count;
+                    else
+                        pos = inPosB - 2;
+
+                    if (pos < 0)
+                        pos += countof(b);
+
+                    pict.rtStart=b[pos].rtStart; 
+                    pict.rtStop=b[pos].rtStop;
+                    pict.srcSize=b[pos].srcSize;
+                }
+
+                // soft telecine detection
+                // if "Detect soft telecine and average frame durations" is enabled,
+                // flames are flagged as progressive, frame durations are averaged.
+                // pict.film is valid even if the setting is disabled.
+                telecineManager.new_frame(fieldtype, frame->top_field_first, frame->repeat_pict, pict.rtStart, pict.rtStop);
+                telecineManager.get_fieldtype(pict);
+                telecineManager.get_timestamps(pict);
+
+                hr=sinkD->deliverDecodedSample(pict);
+                if (FAILED(hr)
+                    || (used_bytes && sinkD->acceptsManyFrames()!=S_OK)
+                    || avctx->codec_id==CODEC_ID_LOCO)
+                    return hr;
+                if (rateInfo->m_flushing || rateInfo->m_endflush)
+                    return S_OK;
+             }
+        } else {
+            if (!src)
+                break;
+        }
+
+        if(!used_bytes && codecId==CODEC_ID_SVQ3)
+            return S_OK;
+
+        if (avctx->active_thread_type == FF_THREAD_FRAME)
+            return hr;
+
+        src+=used_bytes;
+        size-=used_bytes;
+    }
     return S_OK;
-
-   if (got_picture && frame->data[0])
-    {
-     int frametype;
-     if (avctx->codec_id==CODEC_ID_H261)
-      {
-       frametype=FRAME_TYPE::I;
-      }
-     else
-      {
-       switch (frame->pict_type)
-        {
-         case FF_P_TYPE:frametype=FRAME_TYPE::P;break;
-         case FF_B_TYPE:frametype=FRAME_TYPE::B;break;
-         case FF_I_TYPE:frametype=FRAME_TYPE::I;break;
-         case FF_S_TYPE:frametype=FRAME_TYPE::GMC;break;
-         case FF_SI_TYPE:frametype=FRAME_TYPE::SI;break;
-         case FF_SP_TYPE:frametype=FRAME_TYPE::SP;break;
-         case 0:frametype=pIn && pIn->IsSyncPoint()==S_OK?FRAME_TYPE::I:FRAME_TYPE::P;break;
-         default:frametype=FRAME_TYPE::UNKNOWN;break;
-        }
-       }
-
-     if (pIn && pIn->IsPreroll()==S_OK)
-      {
-       sinkD->deliverPreroll(frametype);
-      }
-     else
-      {
-       int fieldtype = frame->interlaced_frame ?
-                           (frame->top_field_first ?
-                               FIELD_TYPE::INT_TFF :
-                               FIELD_TYPE::INT_BFF):
-                           FIELD_TYPE::PROGRESSIVE_FRAME;
-
-       if (codecId == CODEC_ID_MPEG2VIDEO)
-        {
-         if (mpeg2_new_sequence)
-          fieldtype |= FIELD_TYPE::SEQ_START;
-
-         if (frame->mpeg2_sequence_end_flag)
-          {
-           fieldtype |= FIELD_TYPE::SEQ_END;
-           mpeg2_new_sequence = true;
-           frame->mpeg2_sequence_end_flag = 0;
-          }
-         else
-          mpeg2_new_sequence = false;
-        }
-
-       if (frame->play_flags&CODEC_FLAG_QPEL)
-        frametype|=FRAME_TYPE::QPEL;
-
-       int csp=csp_lavc2ffdshow(avctx->pix_fmt);
-
-       if (grayscale) // workaround for green picture when decoding mpeg with CODEC_FLAG_GRAY, the problem is probably somewhere else
-        {
-         const TcspInfo* cspinfo=csp_getInfo(csp);
-         for (unsigned int i=1;i<cspinfo->numPlanes;i++)
-          {
-           if (frame->data[i][0]!=cspinfo->black[i]
-               || (codecId!=CODEC_ID_MPEG4 && codecId!=CODEC_ID_MPEG2VIDEO && codecId!=CODEC_ID_MPEG1VIDEO && codecId!=CODEC_ID_VC1 && codecId!=CODEC_ID_WMV3 && codecId!=CODEC_ID_SVQ3 && codecId!=CODEC_ID_HUFFYUV)
-              )
-            memset(frame->data[i],cspinfo->black[i],frame->linesize[i]*avctx->height>>cspinfo->shiftY[i]);
-          }
-        }
-
-       Trect r(0,0,avctx->width,avctx->height);
-
-       if (avctx->sample_aspect_ratio.num
-         && !(connectedSplitter == TffdshowVideoInputPin::MPC_matroska_splitter && avctx->sample_aspect_ratio.num==1 && avctx->sample_aspect_ratio.den==1)
-          )  // With MPC's internal matroska splitter, AR is not reliable.
-        r.sar=avctx->sample_aspect_ratio;
-       else
-        r.sar=containerSar;
-
-       // Correct impossible sar for DVD
-       correctDVDsar(r);
-
-       quants=frame->qscale_table;
-       quantsStride=frame->qstride;
-       quantType=frame->qscale_type;
-       quantsDx=(r.dx+15)>>4;quantsDy=(r.dy+15)>>4;
-
-       const stride_t linesize[4]={frame->linesize[0],frame->linesize[1],frame->linesize[2],frame->linesize[3]};
-
-       TffPict pict(csp,frame->data,linesize,r,true,frametype,fieldtype,srcLen0,pIn,avctx->palctrl); //TODO: src frame size
-       pict.gmcWarpingPoints=frame->num_sprite_warping_points;pict.gmcWarpingPointsReal=frame->real_sprite_warping_points;
-       if (codecId == CODEC_ID_H264)
-        {
-         pict.video_full_range_flag = frame->video_full_range_flag;
-         pict.YCbCr_RGB_matrix_coefficients = frame->YCbCr_RGB_matrix_coefficients;
-        }
-       else
-        {
-         pict.video_full_range_flag = VIDEO_FULL_RANGE_INVALID;
-         pict.YCbCr_RGB_matrix_coefficients = YCbCr_RGB_coeff_Unspecified;
-        }
-
-       if (h264_on_MPEG2_system)
-        {
-         pict.rtStart = frame->reordered_opaque;
-         pict.rtStop = frame->reordered_opaque2;
-         pict.srcSize = (size_t)frame->reordered_opaque3;
-        }
-       else if (dont_use_rtStop_from_upper_stream)
-        {
-         pict.rtStart = frame->reordered_opaque;
-         pict.srcSize = (size_t)frame->reordered_opaque3; // FIXME this is not correct for MPEG-1/2 that use SOURCE_TRUNCATED. (Just for OSD, not that important bug)
-
-         if (pict.rtStart==REFTIME_INVALID)
-          pict.rtStart=oldpict.rtStop;
-
-         if (avgTimePerFrame==-1)
-          deciV->getAverageTimePerFrame(&avgTimePerFrame);
-
-         if (avgTimePerFrame)
-          {
-           pict.rtStop=pict.rtStart+avgTimePerFrame+frame->repeat_pict*avgTimePerFrame/2;
-          }
-         else if (avctx->time_base.num && avctx->time_base.den)
-          {
-           REFERENCE_TIME duration = REF_SECOND_MULT * avctx->time_base.num / avctx->time_base.den;
-           pict.rtStop = pict.rtStart + duration;
-           if (frame->repeat_pict)
-            pict.rtStop += (duration >> 1) * frame->repeat_pict;
-          }
-         else
-          {
-           pict.rtStop=pict.rtStart+1;
-          }
-
-         if (avctx->codec_tag==FOURCC_MPG1 || avctx->codec_tag==FOURCC_MPG2)
-          pict.mediatimeStart=pict.mediatimeStop=REFTIME_INVALID;
-
-         oldpict=pict;
-        }
-       else if (theorart)
-        {
-         pict.rtStart = frame->reordered_opaque - segmentTimeStart;
-         pict.rtStop  = pict.rtStart + 1;
-        }
-       else if (avctx->has_b_frames)
-        {
-         // do not reorder timestamps in this case.
-         // Timestamps simply increase. 
-         // ex: AVI files
-
-         int pos;
-         if (avctx->active_thread_type == FF_THREAD_FRAME)
-          pos = inPosB - 1 - avctx->thread_count;
-         else
-          pos = inPosB - 2;
-
-         if (pos < 0)
-          pos += countof(b);
-
-         pict.rtStart=b[pos].rtStart; 
-         pict.rtStop=b[pos].rtStop;
-         pict.srcSize=b[pos].srcSize;
-        }
-
-       // soft telecine detection
-       // if "Detect soft telecine and average frame durations" is enabled,
-       // flames are flagged as progressive, frame durations are averaged.
-       // pict.film is valid even if the setting is disabled.
-       telecineManager.new_frame(fieldtype, frame->top_field_first, frame->repeat_pict, pict.rtStart, pict.rtStop);
-       telecineManager.get_fieldtype(pict);
-       telecineManager.get_timestamps(pict);
-
-       hr=sinkD->deliverDecodedSample(pict);
-       if (FAILED(hr)
-           || (used_bytes && sinkD->acceptsManyFrames()!=S_OK)
-           || avctx->codec_id==CODEC_ID_LOCO)
-        return hr;
-      }
-    }
-   else
-    {
-     if (!src)
-      break;
-    }
-
-   if(!used_bytes && codecId==CODEC_ID_SVQ3)
-    return S_OK;
-
-   if (avctx->active_thread_type == FF_THREAD_FRAME)
-    return hr;
-
-   src+=used_bytes;
-   size-=used_bytes;
-  }
- return S_OK;
 }
 
 bool TvideoCodecLibavcodec::onSeek(REFERENCE_TIME segmentStart)
 {
- oldpict.rtStop = 0;
- wasKey=false;
- segmentTimeStart=segmentStart;
- inPosB = 1;
+    oldpict.rtStop = 0;
+    wasKey=false;
+    segmentTimeStart=segmentStart;
+    inPosB = 1;
 
- for (int pos = 0 ; pos < countof(b) ; pos++)
-  {
-   b[pos].rtStart = REFTIME_INVALID;
-   b[pos].rtStop = REFTIME_INVALID;
-   b[pos].srcSize = 0;
-  }
+    for (int pos = 0 ; pos < countof(b) ; pos++) {
+        b[pos].rtStart = REFTIME_INVALID;
+        b[pos].rtStop = REFTIME_INVALID;
+        b[pos].srcSize = 0;
+    }
 
- if (ccDecoder) ccDecoder->onSeek();
- codedPictureBuffer.onSeek();
- h264RandomAccess.onSeek();
- telecineManager.onSeek();
- mpeg2_new_sequence = true;
+    if (ccDecoder) ccDecoder->onSeek();
+    codedPictureBuffer.onSeek();
+    h264RandomAccess.onSeek();
+    telecineManager.onSeek();
+    mpeg2_new_sequence = true;
 
- if (avctx)
-  {
-   if (!firstSeek && connectedSplitter == TffdshowVideoInputPin::Haali_Media_splitter)
-    avctx->h264_has_to_drop_first_non_ref = 1;
-   else
-    firstSeek = false;
+    if (avctx) {
+        if (!firstSeek && connectedSplitter == TffdshowVideoInputPin::Haali_Media_splitter)
+            avctx->h264_has_to_drop_first_non_ref = 1;
+        else
+            firstSeek = false;
 
-   libavcodec->avcodec_flush_buffers(avctx);
-   return true;
-  }
- return false;
+        libavcodec->avcodec_flush_buffers(avctx);
+        return true;
+    }
+    return false;
 }
 bool TvideoCodecLibavcodec::onDiscontinuity(void)
 {
- wasKey=false;
- if (ccDecoder) ccDecoder->onSeek();
- codedPictureBuffer.onSeek();
- h264RandomAccess.onSeek();
- return avctx?(libavcodec->avcodec_flush_buffers(avctx),true):false;
+    wasKey=false;
+    if (ccDecoder) ccDecoder->onSeek();
+    codedPictureBuffer.onSeek();
+    h264RandomAccess.onSeek();
+    return avctx?(libavcodec->avcodec_flush_buffers(avctx),true):false;
 }
 
 const char_t* TvideoCodecLibavcodec::getName(void) const
 {
- if (avcodec)
-  {
+    if (avcodec) {
 #if COMPILE_AS_FFMPEG_MT
-   static const char_t *libname = _l("ffmpeg-mt");
+        static const char_t *libname = _l("ffmpeg-mt");
 #else
-   static const char_t *libname = _l("libavcodec");
+       static const char_t *libname = _l("libavcodec");
 #endif
-   tsnprintf_s(codecName, countof(codecName), _TRUNCATE, _l("%s %s"), libname, (const char_t*)text<char_t>(avcodec->name));
-   return codecName;
-  }
- else return _l("libavcodec");
+       tsnprintf_s(codecName, countof(codecName), _TRUNCATE, _l("%s %s"), libname, (const char_t*)text<char_t>(avcodec->name));
+       return codecName;
+    } else
+        return _l("libavcodec");
 }
+
 void TvideoCodecLibavcodec::getEncoderInfo(char_t *buf,size_t buflen) const
 {
- int xvid_build,divx_version,divx_build,lavc_build;
- if (avctx && (mpeg12_codec(codecId) || mpeg4_codec(codecId) || x264_codec(codecId) || codecId==CODEC_ID_FLV1))
-  {
-   libavcodec->avcodec_get_encoder_info(avctx,&xvid_build,&divx_version,&divx_build,&lavc_build);
-   if (xvid_build)
-    tsnprintf_s(buf, buflen, _TRUNCATE, _l("XviD build %i"), xvid_build);
-   else if (lavc_build)
-    tsnprintf_s(buf, buflen, _TRUNCATE, _l("libavcodec build %i"), lavc_build);
-   else if (divx_version || divx_build)
-    tsnprintf_s(buf, buflen, _TRUNCATE, _l("DivX version %i.%02i, build %i"), divx_version/100, divx_version%100, divx_build);
-   else
-    ff_strncpy(buf,_l("unknown"),buflen);
-  }
- else
-  ff_strncpy(buf,_l("unknown"),buflen);
- buf[buflen-1]='\0';
+    int xvid_build,divx_version,divx_build,lavc_build;
+    if (avctx && (mpeg12_codec(codecId) || mpeg4_codec(codecId) || x264_codec(codecId) || codecId==CODEC_ID_FLV1)) {
+        libavcodec->avcodec_get_encoder_info(avctx,&xvid_build,&divx_version,&divx_build,&lavc_build);
+        if (xvid_build)
+            tsnprintf_s(buf, buflen, _TRUNCATE, _l("XviD build %i"), xvid_build);
+        else if (lavc_build)
+            tsnprintf_s(buf, buflen, _TRUNCATE, _l("libavcodec build %i"), lavc_build);
+        else if (divx_version || divx_build)
+            tsnprintf_s(buf, buflen, _TRUNCATE, _l("DivX version %i.%02i, build %i"), divx_version/100, divx_version%100, divx_build);
+        else
+            ff_strncpy(buf,_l("unknown"),buflen);
+    }
+    else
+        ff_strncpy(buf,_l("unknown"),buflen);
+    buf[buflen-1]='\0';
 }
 
 void TvideoCodecLibavcodec::line(unsigned char *dst,unsigned int _x0,unsigned int _y0,unsigned int _x1,unsigned int _y1,stride_t strideY)
 {
- drawline< TaddColor<100> >(_x0,_y0,_x1,_y1,100,dst,strideY);
+    drawline< TaddColor<100> >(_x0,_y0,_x1,_y1,100,dst,strideY);
 }
 
 void TvideoCodecLibavcodec::draw_arrow(uint8_t *buf, int sx, int sy, int ex, int ey, stride_t stride,int mulx,int muly,int dstdx,int dstdy)
 {
- sx=limit(mulx*sx>>12,0,dstdx-1);sy=limit(muly*sy>>12,0,dstdy-1);
- ex=limit(mulx*ex>>12,0,dstdx-1);ey=limit(muly*ey>>12,0,dstdy-1);
+    sx=limit(mulx*sx>>12,0,dstdx-1);sy=limit(muly*sy>>12,0,dstdy-1);
+    ex=limit(mulx*ex>>12,0,dstdx-1);ey=limit(muly*ey>>12,0,dstdy-1);
     int dx,dy;
 
     dx= ex - sx;

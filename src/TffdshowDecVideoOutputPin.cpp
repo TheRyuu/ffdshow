@@ -103,7 +103,7 @@ void TffdshowDecVideoOutputPin::resetPopEvent(void)
 
 HRESULT TffdshowDecVideoOutputPin::DeliverBeginFlush(void)
 {
- DPRINTF(_l("TffdshowDecVideoOutputPin::DeliverBeginFlush"));
+ // DPRINTF(_l("TffdshowDecVideoOutputPin::DeliverBeginFlush"));
  if (m_Connected == NULL)
   {
    return VFW_E_NOT_CONNECTED;
@@ -122,7 +122,7 @@ HRESULT TffdshowDecVideoOutputPin::DeliverBeginFlush(void)
 
 HRESULT TffdshowDecVideoOutputPin::DeliverEndFlush(void)
 {
- DPRINTF(_l("TffdshowDecVideoOutputPin::DeliverEndFlush"));
+ // DPRINTF(_l("TffdshowDecVideoOutputPin::DeliverEndFlush"));
  if (m_Connected == NULL)
   {
    return VFW_E_NOT_CONNECTED;

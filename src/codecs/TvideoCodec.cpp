@@ -70,27 +70,32 @@ TvideoCodecDec* TvideoCodecDec::initDec(IffdshowBase *deci,IdecVideoSink *sink,C
 }
 
 TvideoCodecDec::TvideoCodecDec(IffdshowBase *Ideci,IdecVideoSink *Isink):
- Tcodec(Ideci),TcodecDec(Ideci,Isink),TvideoCodec(Ideci),
- sinkD(Isink),
- deciV(Ideci),
- quantsDx(0),quantsDy(0),quants(NULL),quantType(FF_QSCALE_TYPE_MPEG1),
- inter_matrix(NULL),intra_matrix(NULL)
+    Tcodec(Ideci),TcodecDec(Ideci,Isink),TvideoCodec(Ideci),
+    sinkD(Isink),
+    deciV(Ideci),
+    quantsDx(0),
+    quantsDy(0),
+    quants(NULL),
+    quantType(FF_QSCALE_TYPE_MPEG1),
+    inter_matrix(NULL),
+    intra_matrix(NULL)
 {
- isdvdproc=!!deci->getParam2(IDFF_dvdproc);
+    isdvdproc=!!deci->getParam2(IDFF_dvdproc);
 }
+
 TvideoCodecDec::~TvideoCodecDec()
 {
 }
 
 float TvideoCodecDec::calcMeanQuant(void)
 {
- if (!quants || !quantsDx || !quantsDy) return 0;
- unsigned int sum=0,num=quantsDx*quantsDy;
- unsigned char *quants1=(unsigned char*)quants;
- for (unsigned int y=0;y<quantsDy;y++)
-  for (unsigned int x=0;x<quantsDx;x++)
-   sum+=quants1[(y*quantsStride+x)*quantBytes];
- return float(sum)/num;
+    if (!quants || !quantsDx || !quantsDy) return 0;
+    unsigned int sum=0,num=quantsDx*quantsDy;
+    unsigned char *quants1=(unsigned char*)quants;
+    for (unsigned int y=0;y<quantsDy;y++)
+        for (unsigned int x=0;x<quantsDx;x++)
+            sum+=quants1[(y*quantsStride+x)*quantBytes];
+    return float(sum)/num;
 }
 
 void TvideoCodecDec::correctDVDsar(Trect &r)
