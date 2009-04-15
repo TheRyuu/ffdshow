@@ -288,13 +288,11 @@ STDMETHODIMP TffdshowPageBase::SetObjects(ULONG cObjects,LPUNKNOWN *ppUnk)
 
 HRESULT TffdshowPageBase::OnConnect(IUnknown *pUnk)
 {
- DPRINTF(_l("On connect 1"));
  if (!(deci=pUnk)) return E_NOINTERFACE;
  ASSERT(deci);
  deci->initDialog();
  deci->loadDialogSettings();
  setDeci(deci);
- DPRINTF(_l("On connect 2"));
  return S_OK;
 }
 HRESULT TffdshowPageBase::OnDisconnect(void)
