@@ -126,7 +126,7 @@ bool TccDecoder::cc_row_t::ccrow_render(cc_renderer_t *renderer, int rownum)
 
       /* compute text size of segment */
       for (int i = seg_begin; i < seg_end; i++)
-	buf[i - seg_begin] = this->cells[i].c;
+        buf[i - seg_begin] = this->cells[i].c;
       buf[seg_end - seg_begin] = '\0';
 
       const cc_attribute_t *attr = &this->cells[attr_pos].attributes;
@@ -169,7 +169,7 @@ void TccDecoder::cc_buffer_t::ccbuf_add_char(wchar_t c)
 #endif
 
   if (pos >= CC_COLUMNS) {
-    //printf("cc_decoder: ccbuf_add_char: row buffer overflow\n");
+    // DPRINTF(L"cc_decoder: ccbuf_add_char: row buffer overflow\n");
     return;
   }
 
@@ -189,9 +189,14 @@ void TccDecoder::cc_buffer_t::ccbuf_add_char(wchar_t c)
 #endif
   }
 
-  rowbuf->cells[pos].c = c;
-  rowbuf->cells[pos].midrow_attr = rowbuf->attr_chg;
-  rowbuf->pos++;
+  if (pos > 0 && rowbuf->cells[pos-1].c == 0x27 && c == 0x2019) {
+      rowbuf->cells[pos].c = c;
+      rowbuf->cells[pos].midrow_attr = rowbuf->attr_chg;
+  } else {
+      rowbuf->cells[pos].c = c;
+      rowbuf->cells[pos].midrow_attr = rowbuf->attr_chg;
+      rowbuf->pos++;
+  }
 
   if (rowbuf->num_chars < rowbuf->pos)
     rowbuf->num_chars = rowbuf->pos;
@@ -224,7 +229,8 @@ void TccDecoder::cc_buffer_t::ccbuf_apply_attribute(cc_attribute_t *attr)
   int pos = rowbuf->pos;
 
   rowbuf->attr_chg = 1;
-  rowbuf->cells[pos].attributes = *attr;
+  if (pos < CC_COLUMNS)
+    rowbuf->cells[pos].attributes = *attr;
   /* A midrow attribute always counts as a space */
   ccbuf_add_char(chartbl[(unsigned int) ' ']);
 }
@@ -517,7 +523,7 @@ void TccDecoder::cc_swap_buffers(void)
   /* hide caption in displayed memory */
   cc_hide_displayed();
 
-  //DPRINTFA("cc_decoder: cc_swap_buffers: swapping caption memory\n");
+  // DPRINTFA("cc_decoder: cc_swap_buffers: swapping caption memory\n");
   std::swap( this->on_buf, this->off_buf);
 
   /* show new displayed memory */
@@ -535,7 +541,7 @@ void TccDecoder::cc_decode_misc_control_code(int channel,uint8_t c1, uint8_t c2)
     break;
 
   case 0x21:             /* backspace */
-    //DPRINTFA("cc_decoder: backspace\n");
+    // DPRINTFA("cc_decoder: backspace\n");
     break;
 
   case 0x24:             /* DER */
@@ -627,11 +633,13 @@ void TccDecoder::cc_decode_EIA608(uint16_t data)
 	  if (c2 >= 0x20 && c2 < 0x40) {  /* special char: 0x20 <= c2 <= 0x3f  */
 	    cc_decode_extended_special_char(channel, c1, c2);
 	  }
+	  break;
 
         case 0x13:             /* more extended special character */
 	  if (c2 >= 0x20 && c2 < 0x40) {  /* special char: 0x20 <= c2 <= 0x3f  */
 	    cc_decode_more_extended_special_char(channel, c1, c2);
 	  }
+	  break;
 
         case 0x14:             /* possibly miscellaneous control code */
 	  cc_decode_misc_control_code(channel, c1, c2);
@@ -698,7 +706,7 @@ void TccDecoder::decode(const uint8_t *buffer,size_t buf_len)
     curbytes++;
 
     if (buf_len - curbytes < 2) {
-      //DPRINTFA("Not enough data for 2-byte CC encoding\n");
+      // DPRINTFA("Not enough data for 2-byte CC encoding\n");
       break;
     }
 
@@ -737,7 +745,7 @@ void TccDecoder::decode(const uint8_t *buffer,size_t buf_len)
       break;
 
     default:
-      //DPRINTFA("Unknown CC encoding: %x\n", cc_code);
+      // DPRINTFA("Unknown CC encoding: %x\n", cc_code);
       skip = 2;
       break;
     }
