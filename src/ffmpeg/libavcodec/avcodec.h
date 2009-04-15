@@ -39,7 +39,7 @@
 #include "libavutil/avutil.h"
 
 #define LIBAVCODEC_VERSION_MAJOR 52
-#define LIBAVCODEC_VERSION_MINOR 24
+#define LIBAVCODEC_VERSION_MINOR 25
 #define LIBAVCODEC_VERSION_MICRO  0
 
 #define LIBAVCODEC_VERSION_INT  AV_VERSION_INT(LIBAVCODEC_VERSION_MAJOR, \
@@ -118,9 +118,10 @@ enum SampleFormat {
 #define CH_LAYOUT_QUAD              (CH_LAYOUT_STEREO|CH_BACK_LEFT|CH_BACK_RIGHT)
 #define CH_LAYOUT_5POINT0           (CH_LAYOUT_SURROUND|CH_SIDE_LEFT|CH_SIDE_RIGHT)
 #define CH_LAYOUT_5POINT1           (CH_LAYOUT_5POINT0|CH_LOW_FREQUENCY)
+#define CH_LAYOUT_5POINT0_BACK      (CH_LAYOUT_SURROUND|CH_BACK_LEFT|CH_BACK_RIGHT)
+#define CH_LAYOUT_5POINT1_BACK      (CH_LAYOUT_5POINT0_BACK|CH_LOW_FREQUENCY)
 #define CH_LAYOUT_7POINT1           (CH_LAYOUT_5POINT1|CH_BACK_LEFT|CH_BACK_RIGHT)
-#define CH_LAYOUT_7POINT1_WIDE      (CH_LAYOUT_SURROUND|CH_LOW_FREQUENCY|\
-                                          CH_BACK_LEFT|CH_BACK_RIGHT|\
+#define CH_LAYOUT_7POINT1_WIDE      (CH_LAYOUT_5POINT1_BACK|\
                                           CH_FRONT_LEFT_OF_CENTER|CH_FRONT_RIGHT_OF_CENTER)
 #define CH_LAYOUT_STEREO_DOWNMIX    (CH_STEREO_LEFT|CH_STEREO_RIGHT)
 
@@ -2453,6 +2454,9 @@ int avcodec_parse_frame(AVCodecContext *avctx, uint8_t **pdata,
  * stored in output buffer \p buf.
  *
  * @note The output buffer should be at least \c FF_MIN_BUFFER_SIZE bytes large.
+ * However, for PCM audio the user will know how much space is needed
+ * because it depends on the value passed in \p buf_size as described
+ * below. In that case a lower value can be used.
  *
  * @param avctx the codec context
  * @param[out] buf the output buffer
@@ -2737,6 +2741,20 @@ void av_parser_close(AVCodecParserContext *s);
  * @see av_realloc
  */
 void *av_fast_realloc(void *ptr, unsigned int *size, unsigned int min_size);
+
+/**
+ * Allocates a buffer, reusing the given one if large enough.
+ *
+ * Contrary to av_fast_realloc the current buffer contents might not be
+ * preserved and on error the old buffer is freed, thus no special
+ * handling to avoid memleaks is necessary.
+ *
+ * @param ptr pointer to pointer to already allocated buffer, overwritten with pointer to new buffer
+ * @param size size of the buffer *ptr points to
+ * @param min_size minimum size of *ptr buffer after returning, *ptr will be NULL and
+ *                 *size 0 if an error occurred.
+ */
+void av_fast_malloc(void *ptr, unsigned int *size, unsigned int min_size);
 
 /* for static data only */
 

@@ -992,6 +992,8 @@ static inline void pred_direct_motion(H264Context * const h, int *mb_type){
     unsigned int sub_mb_type;
     int i8, i4;
 
+    assert(h->ref_list[1][0].reference&3);
+
 #define MB_TYPE_16x16_OR_INTRA (MB_TYPE_16x16|MB_TYPE_INTRA4x4|MB_TYPE_INTRA16x16|MB_TYPE_INTRA_PCM)
 
     if(IS_INTERLACED(h->ref_list[1][0].mb_type[mb_xy])){ // AFL/AFR/FR/FL -> AFL/FL
@@ -1410,7 +1412,7 @@ const uint8_t *ff_h264_decode_nal(H264Context *h, const uint8_t *src, int *dst_l
     }
 
     bufidx = h->nal_unit_type == NAL_DPC ? 1 : 0; // use second escape buffer for inter data
-    h->rbsp_buffer[bufidx]= av_fast_realloc(h->rbsp_buffer[bufidx], &h->rbsp_buffer_size[bufidx], length+FF_INPUT_BUFFER_PADDING_SIZE);
+    av_fast_malloc(&h->rbsp_buffer[bufidx], &h->rbsp_buffer_size[bufidx], length+FF_INPUT_BUFFER_PADDING_SIZE);
     dst= h->rbsp_buffer[bufidx];
 
     if (dst == NULL){
@@ -2886,7 +2888,10 @@ static int decode_ref_pic_list_reordering(H264Context *h){
         for(index= 0; index < h->ref_count[list]; index++){
             if(!h->ref_list[list][index].data[0]){
                 av_log(h->s.avctx, AV_LOG_ERROR, "Missing reference picture\n");
-                h->ref_list[list][index]= s->current_picture; //FIXME this is not a sensible solution
+                if(h->default_ref_list[list][0].data[0])
+                    h->ref_list[list][index]= h->default_ref_list[list][0];
+                else
+                    return -1;
             }
         }
     }
@@ -3551,6 +3556,42 @@ static void init_scan_tables(H264Context *h){
     }
 }
 
+static void field_end(H264Context *h){
+    MpegEncContext * const s = &h->s;
+    AVCodecContext * const avctx= s->avctx;
+    s->mb_y= 0;
+
+    s->current_picture_ptr->qscale_type= FF_QSCALE_TYPE_H264;
+    s->current_picture_ptr->pict_type= s->pict_type;
+
+    if(!s->dropable) {
+        execute_ref_pic_marking(h, h->mmco, h->mmco_index);
+        h->prev_poc_msb= h->poc_msb;
+        h->prev_poc_lsb= h->poc_lsb;
+    }
+    h->prev_frame_num_offset= h->frame_num_offset;
+    h->prev_frame_num= h->frame_num;
+
+    /*
+     * FIXME: Error handling code does not seem to support interlaced
+     * when slices span multiple rows
+     * The ff_er_add_slice calls don't work right for bottom
+     * fields; they cause massive erroneous error concealing
+     * Error marking covers both fields (top and bottom).
+     * This causes a mismatched s->error_count
+     * and a bad error table. Further, the error count goes to
+     * INT_MAX when called for bottom field, because mb_y is
+     * past end by one (callers fault) and resync_mb_y != 0
+     * causes problems for the first MB line, too.
+     */
+    if (!FIELD_PICTURE)
+        ff_er_frame_end(s);
+
+    MPV_frame_end(s);
+
+    h->current_slice=0;
+}
+
 /**
  * Replicates H264 "master" context to thread contexts.
  */
@@ -3666,7 +3707,11 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
 
     first_mb_in_slice= get_ue_golomb(&s->gb);
 
-    if((s->flags2 & CODEC_FLAG2_CHUNKS) && first_mb_in_slice == 0){
+    if(first_mb_in_slice == 0){ //FIXME better field boundary detection
+        if(h0->current_slice && FIELD_PICTURE){
+            field_end(h);
+        }
+
         h0->current_slice = 0;
         if (!s0->first_field)
             s->current_picture_ptr= NULL;
@@ -7925,35 +7970,7 @@ static int decode_frame(AVCodecContext *avctx,
         Picture *cur = s->current_picture_ptr;
         int i, pics, cross_idr, out_of_order, out_idx;
 
-        s->mb_y= 0;
-
-        s->current_picture_ptr->qscale_type= FF_QSCALE_TYPE_H264;
-        s->current_picture_ptr->pict_type= s->pict_type;
-
-        if(!s->dropable) {
-            execute_ref_pic_marking(h, h->mmco, h->mmco_index);
-            h->prev_poc_msb= h->poc_msb;
-            h->prev_poc_lsb= h->poc_lsb;
-        }
-        h->prev_frame_num_offset= h->frame_num_offset;
-        h->prev_frame_num= h->frame_num;
-
-        /*
-         * FIXME: Error handling code does not seem to support interlaced
-         * when slices span multiple rows
-         * The ff_er_add_slice calls don't work right for bottom
-         * fields; they cause massive erroneous error concealing
-         * Error marking covers both fields (top and bottom).
-         * This causes a mismatched s->error_count
-         * and a bad error table. Further, the error count goes to
-         * INT_MAX when called for bottom field, because mb_y is
-         * past end by one (callers fault) and resync_mb_y != 0
-         * causes problems for the first MB line, too.
-         */
-        if (!FIELD_PICTURE)
-            ff_er_frame_end(s);
-
-        MPV_frame_end(s);
+        field_end(h);
 
         if (cur->field_poc[0]==INT_MAX || cur->field_poc[1]==INT_MAX) {
             /* Wait for second field. */

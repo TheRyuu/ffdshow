@@ -1813,6 +1813,9 @@ void ff_vc1dsp_init_mmx(DSPContext* dsp, AVCodecContext *avctx);
 void ff_put_vc1_mspel_mc00_mmx(uint8_t *dst, const uint8_t *src, int stride, int rnd) {
     put_pixels8_mmx(dst, src, stride, 8);
 }
+void ff_avg_vc1_mspel_mc00_mmx2(uint8_t *dst, const uint8_t *src, int stride, int rnd) {
+    avg_pixels8_mmx2(dst, src, stride, 8);
+}
 
 /* external functions, from idct_mmx.c */
 void ff_mmx_idct(DCTELEM *block);
@@ -2611,7 +2614,7 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
         }
         c->put_h264_chroma_pixels_tab[0]= put_h264_chroma_mc8_mmx_rnd;
         c->put_h264_chroma_pixels_tab[1]= put_h264_chroma_mc4_mmx;
-        c->put_no_rnd_h264_chroma_pixels_tab[0]= put_h264_chroma_mc8_mmx_nornd;
+        c->put_no_rnd_vc1_chroma_pixels_tab[0]= put_vc1_chroma_mc8_mmx_nornd;
 
         c->put_rv40_chroma_pixels_tab[0]= put_rv40_chroma_mc8_mmx;
         c->put_rv40_chroma_pixels_tab[1]= put_rv40_chroma_mc4_mmx;
@@ -2707,6 +2710,8 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
 
             c->avg_rv40_chroma_pixels_tab[0]= avg_rv40_chroma_mc8_mmx2;
             c->avg_rv40_chroma_pixels_tab[1]= avg_rv40_chroma_mc4_mmx2;
+
+            c->avg_no_rnd_vc1_chroma_pixels_tab[0]= avg_vc1_chroma_mc8_mmx2_nornd;
 
             c->avg_h264_chroma_pixels_tab[0]= avg_h264_chroma_mc8_mmx2_rnd;
             c->avg_h264_chroma_pixels_tab[1]= avg_h264_chroma_mc4_mmx2;
@@ -2857,7 +2862,8 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
             H264_QPEL_FUNCS(3, 1, ssse3);
             H264_QPEL_FUNCS(3, 2, ssse3);
             H264_QPEL_FUNCS(3, 3, ssse3);
-            c->put_no_rnd_h264_chroma_pixels_tab[0]= put_h264_chroma_mc8_ssse3_nornd;
+            c->put_no_rnd_vc1_chroma_pixels_tab[0]= put_vc1_chroma_mc8_ssse3_nornd;
+            c->avg_no_rnd_vc1_chroma_pixels_tab[0]= avg_vc1_chroma_mc8_ssse3_nornd;
             c->put_h264_chroma_pixels_tab[0]= put_h264_chroma_mc8_ssse3_rnd;
             c->avg_h264_chroma_pixels_tab[0]= avg_h264_chroma_mc8_ssse3_rnd;
             c->put_h264_chroma_pixels_tab[1]= put_h264_chroma_mc4_ssse3;

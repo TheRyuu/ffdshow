@@ -29,7 +29,7 @@
 #include "image.h"
 #include "TffPict.h"
 #include "Tlibmplayer.h"
-#include "libavcodec/bitstream.h"
+#include "libavcodec/get_bits.h"
 #include "ToutputVideoSettings.h"
 #include "ffdshow_converters.h"
 

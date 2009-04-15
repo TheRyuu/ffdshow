@@ -101,7 +101,7 @@ void TglobalSettingsBase::load(void)
  TregOpRegRead tDScaler(HKEY_LOCAL_MACHINE,FFDSHOW_REG_PARENT _l("\\") FFDSHOW);
  tDScaler._REG_OP_S(IDFF_dscalerPath,_l("dscalerPth"),dscalerPth,MAX_PATH,_l(""));
  TregOpRegRead tCPU(HKEY_CURRENT_USER,FFDSHOW_REG_PARENT _l("\\") FFDSHOW);
- tCPU._REG_OP_N(IDFF_allowedCpuFlags,_l("allowedCPUflags"),allowedCPUflags,255);
+ tCPU._REG_OP_N(IDFF_allowedCpuFlags,_l("allowedCPUflags"),allowedCPUflags,7935);
  firstBlacklist=firstWhitelist=true;
 
  // Load Icon type : shared by video, audio and vfw.
@@ -124,7 +124,7 @@ void TglobalSettingsBase::save(void)
  TregOpRegWrite tDScaler(HKEY_LOCAL_MACHINE,FFDSHOW_REG_PARENT _l("\\") FFDSHOW);
  tDScaler._REG_OP_S(IDFF_dscalerPath,_l("dscalerPth"),dscalerPth,MAX_PATH,_l(""));
  TregOpRegWrite tCPU(HKEY_CURRENT_USER,FFDSHOW_REG_PARENT _l("\\") FFDSHOW);
- tCPU._REG_OP_N(IDFF_allowedCpuFlags,_l("allowedCPUflags"),allowedCPUflags,255);
+ tCPU._REG_OP_N(IDFF_allowedCpuFlags,_l("allowedCPUflags"),allowedCPUflags,7935);
 
  // Save Icon type : shared by video, audio and vfw.
  if (trayIconChanged)

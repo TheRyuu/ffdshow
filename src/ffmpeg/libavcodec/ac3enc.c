@@ -27,7 +27,8 @@
 //#define DEBUG_BITALLOC
 #include "libavutil/crc.h"
 #include "avcodec.h"
-#include "bitstream.h"
+#include "get_bits.h" // for ff_reverse
+#include "put_bits.h"
 #include "ac3.h"
 
 typedef struct AC3EncodeContext {
@@ -115,8 +116,6 @@ static av_cold void fft_init(int ln)
   qre = (bx - ax) >> 1;\
   qim = (by - ay) >> 1;\
 }
-
-#define MUL16(a,b) ((a) * (b))
 
 #define CMUL(pre, pim, are, aim, bre, bim) \
 {\
@@ -1111,10 +1110,10 @@ static int output_frame_end(AC3EncodeContext *s)
     flush_put_bits(&s->pb);
     /* add zero bytes to reach the frame size */
     frame = s->pb.buf;
-    n = 2 * s->frame_size - (pbBufPtr(&s->pb) - frame) - 2;
+    n = 2 * s->frame_size - (put_bits_ptr(&s->pb) - frame) - 2;
     //assert(n >= 0);
     if(n>0)
-      memset(pbBufPtr(&s->pb), 0, n);
+      memset(put_bits_ptr(&s->pb), 0, n);
 
     /* Now we must compute both crcs : this is not so easy for crc1
        because it is at the beginning of the data... */

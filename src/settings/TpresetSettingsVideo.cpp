@@ -50,7 +50,7 @@
 #include "Teval.h"
 #include "Tconfig.h"
 #include "TinputPin.h"
-#include "libavcodec/bitstream.h"
+#include "libavcodec/get_bits.h"
 #include "ffdshow_mediaguids.h"
 #include "ffmpeg/libavcodec/avcodec.h"
 

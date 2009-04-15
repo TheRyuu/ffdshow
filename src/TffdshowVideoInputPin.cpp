@@ -25,7 +25,7 @@
 #include "Tconvert.h"
 #include "TffdshowVideo.h"
 #include "TsubtitlesFile.h"
-#include "libavcodec/bitstream.h"
+#include "libavcodec/get_bits.h"
 #include "ffdshow_mediaguids.h"
 
 //================================== TffdshowVideoInputPin =================================

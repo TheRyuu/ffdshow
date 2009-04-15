@@ -312,8 +312,6 @@ typedef struct DSPContext {
      * h264 Chroma MC
      */
     h264_chroma_mc_func put_h264_chroma_pixels_tab[3];
-    /* This is really one func used in VC-1 decoding */
-    h264_chroma_mc_func put_no_rnd_h264_chroma_pixels_tab[3];
     h264_chroma_mc_func avg_h264_chroma_pixels_tab[3];
 
     qpel_mc_func put_h264_qpel_pixels_tab[4][16];
@@ -325,30 +323,7 @@ typedef struct DSPContext {
     h264_weight_func weight_h264_pixels_tab[10];
     h264_biweight_func biweight_h264_pixels_tab[10];
 
-    /* AVS specific */
-    qpel_mc_func put_cavs_qpel_pixels_tab[2][16];
-    qpel_mc_func avg_cavs_qpel_pixels_tab[2][16];
-    void (*cavs_filter_lv)(uint8_t *pix, int stride, int alpha, int beta, int tc, int bs1, int bs2);
-    void (*cavs_filter_lh)(uint8_t *pix, int stride, int alpha, int beta, int tc, int bs1, int bs2);
-    void (*cavs_filter_cv)(uint8_t *pix, int stride, int alpha, int beta, int tc, int bs1, int bs2);
-    void (*cavs_filter_ch)(uint8_t *pix, int stride, int alpha, int beta, int tc, int bs1, int bs2);
-    void (*cavs_idct8_add)(uint8_t *dst, DCTELEM *block, int stride);
-
     me_cmp_func pix_abs[2][4];
-
-    /* huffyuv specific */
-    void (*add_bytes)(uint8_t *dst/*align 16*/, uint8_t *src/*align 16*/, int w);
-    void (*add_bytes_l2)(uint8_t *dst/*align 16*/, uint8_t *src1/*align 16*/, uint8_t *src2/*align 16*/, int w);
-    void (*diff_bytes)(uint8_t *dst/*align 16*/, uint8_t *src1/*align 16*/, uint8_t *src2/*align 1*/,int w);
-    /**
-     * subtract huffyuv's variant of median prediction
-     * note, this might read from src1[-1], src2[-1]
-     */
-    void (*sub_hfyu_median_prediction)(uint8_t *dst, uint8_t *src1, uint8_t *src2, int w, int *left, int *left_top);
-    void (*add_hfyu_median_prediction)(uint8_t *dst, uint8_t *top, uint8_t *diff, int w, int *left, int *left_top);
-    /* this might write to dst[w] */
-    void (*add_png_paeth_prediction)(uint8_t *dst, uint8_t *src, uint8_t *top, int w, int bpp);
-    void (*bswap_buf)(uint32_t *dst, const uint32_t *src, int w);
 
     void (*h264_v_loop_filter_luma)(uint8_t *pix/*align 16*/, int stride, int alpha, int beta, int8_t *tc0);
     void (*h264_h_loop_filter_luma)(uint8_t *pix/*align 4 */, int stride, int alpha, int beta, int8_t *tc0);
@@ -362,38 +337,6 @@ typedef struct DSPContext {
     // h264_loop_filter_strength: simd only. the C version is inlined in h264.c
     void (*h264_loop_filter_strength)(int16_t bS[2][4][4], uint8_t nnz[40], int8_t ref[2][40], int16_t mv[2][40][2],
                                       int bidir, int edges, int step, int mask_mv0, int mask_mv1, int field);
-
-    void (*h263_v_loop_filter)(uint8_t *src, int stride, int qscale);
-    void (*h263_h_loop_filter)(uint8_t *src, int stride, int qscale);
-
-    void (*h261_loop_filter)(uint8_t *src, int stride);
-
-    void (*x8_v_loop_filter)(uint8_t *src, int stride, int qscale);
-    void (*x8_h_loop_filter)(uint8_t *src, int stride, int qscale);
-
-    void (*vp3_v_loop_filter)(uint8_t *src, int stride, int *bounding_values);
-    void (*vp3_h_loop_filter)(uint8_t *src, int stride, int *bounding_values);
-
-    void (*vp6_filter_diag4)(uint8_t *dst, uint8_t *src, int stride,
-                             const int16_t *h_weights,const int16_t *v_weights);
-
-    /* assume len is a multiple of 4, and arrays are 16-byte aligned */
-    void (*vorbis_inverse_coupling)(float *mag, float *ang, int blocksize);
-    void (*ac3_downmix)(float (*samples)[256], float (*matrix)[2], int out_ch, int in_ch, int len);
-    /* assume len is a multiple of 8, and arrays are 16-byte aligned */
-    void (*vector_fmul)(float *dst, const float *src, int len);
-    void (*vector_fmul_reverse)(float *dst, const float *src0, const float *src1, int len);
-    /* assume len is a multiple of 8, and src arrays are 16-byte aligned */
-    void (*vector_fmul_add_add)(float *dst, const float *src0, const float *src1, const float *src2, int src3, int len, int step);
-    /* assume len is a multiple of 4, and arrays are 16-byte aligned */
-    void (*vector_fmul_window)(float *dst, const float *src0, const float *src1, const float *win, float add_bias, int len);
-    /* assume len is a multiple of 8, and arrays are 16-byte aligned */
-    void (*int32_to_float_fmul_scalar)(float *dst, const int *src, float mul, int len);
-
-    /* C version: convert floats from the range [384.0,386.0] to ints in [-32768,32767]
-     * simd versions: convert floats from [-32768.0,32767.0] without rescaling and arrays are 16byte aligned */
-    void (*float_to_int16)(int16_t *dst, const float *src, long len);
-    void (*float_to_int16_interleave)(int16_t *dst, const float **src, long len, int channels);
 
     /* (I)DCT */
     void (*fdct)(DCTELEM *block/* align 16*/);
@@ -461,41 +404,9 @@ typedef struct DSPContext {
     void (*h264_idct_add8)(uint8_t **dst/*align 16*/, const int *blockoffset, DCTELEM *block/*align 16*/, int stride, const uint8_t nnzc[6*8]);
     void (*h264_idct_add16intra)(uint8_t *dst/*align 16*/, const int *blockoffset, DCTELEM *block/*align 16*/, int stride, const uint8_t nnzc[6*8]);
 
-    /* snow wavelet */
-    void (*vertical_compose97i)(IDWTELEM *b0, IDWTELEM *b1, IDWTELEM *b2, IDWTELEM *b3, IDWTELEM *b4, IDWTELEM *b5, int width);
-    void (*horizontal_compose97i)(IDWTELEM *b, int width);
-    void (*inner_add_yblock)(const uint8_t *obmc, const int obmc_stride, uint8_t * * block, int b_w, int b_h, int src_x, int src_y, int src_stride, slice_buffer * sb, int add, uint8_t * dst8);
-
     void (*prefetch)(void *mem, int stride, int h);
 
     void (*shrink[4])(uint8_t *dst, int dst_wrap, const uint8_t *src, int src_wrap, int width, int height);
-
-    /* vc1 functions */
-    void (*vc1_inv_trans_8x8)(DCTELEM *b);
-    void (*vc1_inv_trans_8x4)(uint8_t *dest, int line_size, DCTELEM *block);
-    void (*vc1_inv_trans_4x8)(uint8_t *dest, int line_size, DCTELEM *block);
-    void (*vc1_inv_trans_4x4)(uint8_t *dest, int line_size, DCTELEM *block);
-    void (*vc1_v_overlap)(uint8_t* src, int stride);
-    void (*vc1_h_overlap)(uint8_t* src, int stride);
-    /* put 8x8 block with bicubic interpolation and quarterpel precision
-     * last argument is actually round value instead of height
-     */
-    op_pixels_func put_vc1_mspel_pixels_tab[16];
-
-    /* intrax8 functions */
-    void (*x8_spatial_compensation[12])(uint8_t *src , uint8_t *dst, int linesize);
-    void (*x8_setup_spatial_compensation)(uint8_t *src, uint8_t *dst, int linesize,
-           int * range, int * sum,  int edges);
-
-    /* rv30 functions */
-    qpel_mc_func put_rv30_tpel_pixels_tab[4][16];
-    qpel_mc_func avg_rv30_tpel_pixels_tab[4][16];
-
-    /* rv40 functions */
-    qpel_mc_func put_rv40_qpel_pixels_tab[4][16];
-    qpel_mc_func avg_rv40_qpel_pixels_tab[4][16];
-    h264_chroma_mc_func put_rv40_chroma_pixels_tab[3];
-    h264_chroma_mc_func avg_rv40_chroma_pixels_tab[3];
 } DSPContext;
 
 void dsputil_static_init(void);
@@ -605,151 +516,6 @@ void dsputil_init_pix_mmx(DSPContext* c, AVCodecContext *avctx);
 #   define STRIDE_ALIGN 8
 #endif
 
-/* PSNR */
-void get_psnr(uint8_t *orig_image[3], uint8_t *coded_image[3],
-              int orig_linesize[3], int coded_linesize,
-              AVCodecContext *avctx);
-
-/* FFT computation */
-
-/* NOTE: soon integer code will be added, so you must use the
-   FFTSample type */
-typedef float FFTSample;
-
-struct MDCTContext;
-
-typedef struct FFTComplex {
-    FFTSample re, im;
-} FFTComplex;
-
-typedef struct FFTContext {
-    int nbits;
-    int inverse;
-    uint16_t *revtab;
-    FFTComplex *exptab;
-    FFTComplex *exptab1; /* only used by SSE code */
-    FFTComplex *tmp_buf;
-    void (*fft_permute)(struct FFTContext *s, FFTComplex *z);
-    void (*fft_calc)(struct FFTContext *s, FFTComplex *z);
-    void (*imdct_calc)(struct MDCTContext *s, FFTSample *output, const FFTSample *input);
-    void (*imdct_half)(struct MDCTContext *s, FFTSample *output, const FFTSample *input);
-} FFTContext;
-
-extern FFTSample* ff_cos_tabs[13];
-
-/**
- * Sets up a complex FFT.
- * @param nbits           log2 of the length of the input array
- * @param inverse         if 0 perform the forward transform, if 1 perform the inverse
- */
-int ff_fft_init(FFTContext *s, int nbits, int inverse);
-void ff_fft_permute_c(FFTContext *s, FFTComplex *z);
-void ff_fft_permute_sse(FFTContext *s, FFTComplex *z);
-void ff_fft_calc_c(FFTContext *s, FFTComplex *z);
-void ff_fft_calc_sse(FFTContext *s, FFTComplex *z);
-void ff_fft_calc_3dn(FFTContext *s, FFTComplex *z);
-void ff_fft_calc_3dn2(FFTContext *s, FFTComplex *z);
-void ff_fft_calc_altivec(FFTContext *s, FFTComplex *z);
-
-/**
- * Do the permutation needed BEFORE calling ff_fft_calc().
- */
-static inline void ff_fft_permute(FFTContext *s, FFTComplex *z)
-{
-    s->fft_permute(s, z);
-}
-/**
- * Do a complex FFT with the parameters defined in ff_fft_init(). The
- * input data must be permuted before. No 1.0/sqrt(n) normalization is done.
- */
-static inline void ff_fft_calc(FFTContext *s, FFTComplex *z)
-{
-    s->fft_calc(s, z);
-}
-void ff_fft_end(FFTContext *s);
-
-/* MDCT computation */
-
-typedef struct MDCTContext {
-    int n;  /* size of MDCT (i.e. number of input data * 2) */
-    int nbits; /* n = 2^nbits */
-    /* pre/post rotation tables */
-    FFTSample *tcos;
-    FFTSample *tsin;
-    FFTContext fft;
-} MDCTContext;
-
-static inline void ff_imdct_calc(MDCTContext *s, FFTSample *output, const FFTSample *input)
-{
-    s->fft.imdct_calc(s, output, input);
-}
-static inline void ff_imdct_half(MDCTContext *s, FFTSample *output, const FFTSample *input)
-{
-    s->fft.imdct_half(s, output, input);
-}
-
-/**
- * Generate a Kaiser-Bessel Derived Window.
- * @param   window  pointer to half window
- * @param   alpha   determines window shape
- * @param   n       size of half window
- */
-void ff_kbd_window_init(float *window, float alpha, int n);
-
-/**
- * Generate a sine window.
- * @param   window  pointer to half window
- * @param   n       size of half window
- */
-void ff_sine_window_init(float *window, int n);
-extern float ff_sine_128 [ 128];
-extern float ff_sine_256 [ 256];
-extern float ff_sine_512 [ 512];
-extern float ff_sine_1024[1024];
-extern float ff_sine_2048[2048];
-extern float ff_sine_4096[4096];
-extern float *ff_sine_windows[6];
-
-int ff_mdct_init(MDCTContext *s, int nbits, int inverse);
-void ff_imdct_calc_c(MDCTContext *s, FFTSample *output, const FFTSample *input);
-void ff_imdct_half_c(MDCTContext *s, FFTSample *output, const FFTSample *input);
-void ff_imdct_calc_3dn(MDCTContext *s, FFTSample *output, const FFTSample *input);
-void ff_imdct_half_3dn(MDCTContext *s, FFTSample *output, const FFTSample *input);
-void ff_imdct_calc_3dn2(MDCTContext *s, FFTSample *output, const FFTSample *input);
-void ff_imdct_half_3dn2(MDCTContext *s, FFTSample *output, const FFTSample *input);
-void ff_imdct_calc_sse(MDCTContext *s, FFTSample *output, const FFTSample *input);
-void ff_imdct_half_sse(MDCTContext *s, FFTSample *output, const FFTSample *input);
-void ff_mdct_calc(MDCTContext *s, FFTSample *out, const FFTSample *input);
-void ff_mdct_end(MDCTContext *s);
-
-/* Real Discrete Fourier Transform */
-
-enum RDFTransformType {
-    RDFT,
-    IRDFT,
-    RIDFT,
-    IRIDFT,
-};
-
-typedef struct {
-    int nbits;
-    int inverse;
-    int sign_convention;
-
-    /* pre/post rotation tables */
-    FFTSample *tcos;
-    FFTSample *tsin;
-    FFTContext fft;
-} RDFTContext;
-
-/**
- * Sets up a real FFT.
- * @param nbits           log2 of the length of the input array
- * @param trans           the type of transform
- */
-int ff_rdft_init(RDFTContext *s, int nbits, enum RDFTransformType trans);
-void ff_rdft_calc(RDFTContext *s, FFTSample *data);
-void ff_rdft_end(RDFTContext *s);
 
 #define WRAPPER8_16(name8, name16)\
 static int name16(void /*MpegEncContext*/ *s, uint8_t *dst, uint8_t *src, int stride, int h){\

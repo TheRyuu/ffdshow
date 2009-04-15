@@ -19,7 +19,7 @@
 
 #include "stdafx.h"
 #include "mp3header.h"
-#include "libavcodec/bitstream.h"
+#include "libavcodec/get_bits.h"
 
 const unsigned long mp3header::bitrate_table[5][15] =
 {

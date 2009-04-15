@@ -21,7 +21,7 @@
 #include "Tdll.h"
 #include "IffdshowDecAudio.h"
 #include "dsutil.h"
-#include "libavcodec/bitstream.h"
+#include "libavcodec/get_bits.h"
 
 const char_t* TaudioCodecRealaac::dllname=_l("ff_realaac.dll");
 
