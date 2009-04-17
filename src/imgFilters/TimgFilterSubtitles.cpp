@@ -198,6 +198,7 @@ bool TimgFilterSubtitles::ctlSubtitles(int id,int type,unsigned int ctl_id,const
         // doing it while it's paused will hang everything
 
         deciV->lockCSReceive();
+        deciV->lock_ffdshow_filter();
 
         // Pull image out of yadif's next picture buffer.
         parent->pullImageFromSubtitlesFilter(prevIt);
@@ -214,6 +215,7 @@ bool TimgFilterSubtitles::ctlSubtitles(int id,int type,unsigned int ctl_id,const
 
         again=false;
 
+        deciV->unlock_ffdshow_filter();
         deciV->unlockCSReceive();
     }
     return res;

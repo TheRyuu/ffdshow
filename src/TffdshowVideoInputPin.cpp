@@ -562,10 +562,6 @@ STDMETHODIMP TffdshowVideoInputPin::EndFlush()
 
 STDMETHODIMP TffdshowVideoInputPin::Receive(IMediaSample* pSample)
 {
-    boost::unique_lock<boost::recursive_mutex> lock(mutex_ffdshow_filter);
-    if (m_rateAndFlush.m_flushing)
-        return S_OK;
-    m_rateAndFlush.m_endflush = false;
     AM_MEDIA_TYPE *pmt=NULL;
     if (SUCCEEDED(pSample->GetMediaType(&pmt)) && pmt) {
         CMediaType mt(*pmt);

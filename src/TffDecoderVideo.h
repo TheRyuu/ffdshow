@@ -331,6 +331,8 @@ public:
  STDMETHODIMP_(const Trect*) getDecodedPictdimensions(void);
  STDMETHODIMP_(HANDLE) getGlyphThreadHandle(void);
  STDMETHODIMP_(void*) getRateInfo(void);
+ STDMETHODIMP lock_ffdshow_filter(void);
+ STDMETHODIMP unlock_ffdshow_filter(void);
 
 private:
 #ifdef OSDTIMETABALE
@@ -502,6 +504,8 @@ private:
    STDMETHODIMP_(const Trect*) getDecodedPictdimensions(void) {return deciV->getDecodedPictdimensions();}
    STDMETHODIMP_(HANDLE) getGlyphThreadHandle(void) {return deciV->getGlyphThreadHandle();}
    STDMETHODIMP_(void*) getRateInfo(void) {return deciV->getRateInfo();}
+   STDMETHODIMP lock_ffdshow_filter(void) {return deciV->lock_ffdshow_filter();}
+   STDMETHODIMP unlock_ffdshow_filter(void) {return deciV->lock_ffdshow_filter();}
  } decVideo_char;
  template<class Tinterface> Tinterface* getDecVideoInterface(void);
  void ConnectCompatibleFilter(void);

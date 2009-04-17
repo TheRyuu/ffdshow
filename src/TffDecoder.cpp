@@ -790,6 +790,10 @@ void TffdshowDecVideo::DisconnectFromCompatibleFilter(void)
 
 HRESULT TffdshowDecVideo::Receive(IMediaSample *pSample)
 {
+ boost::unique_lock<boost::recursive_mutex> lock(inpin->mutex_ffdshow_filter);
+ if (inpin->m_rateAndFlush.m_flushing)
+  return S_OK;
+ inpin->m_rateAndFlush.m_endflush = false;
  // If the next filter downstream is the video renderer, then it may
  // be able to operate in DirectDraw mode which saves copying the data
  // and gives higher performance.  In that case the buffer which we

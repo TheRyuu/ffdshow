@@ -113,6 +113,8 @@ template<class tchar> DECLARE_INTERFACE_(IffdshowDecVideoT,IUnknown)
  STDMETHOD_(const Trect*,getDecodedPictdimensions)(void) PURE;
  STDMETHOD_(HANDLE,getGlyphThreadHandle)(void) PURE;
  STDMETHOD_(void*,getRateInfo)(void) PURE;
+ STDMETHOD (lock_ffdshow_filter)(void) PURE;
+ STDMETHOD (unlock_ffdshow_filter)(void) PURE;
 };
 
 struct IffdshowDecVideoA :IffdshowDecVideoT<char> {};

@@ -502,6 +502,20 @@ void* TffdshowDecVideo::getRateInfo()
  return inpin->getRateInfo();
 }
 
+HRESULT TffdshowDecVideo::lock_ffdshow_filter()
+{
+ if (!inpin) return E_UNEXPECTED;
+ inpin->mutex_ffdshow_filter.lock();
+ return S_OK;
+}
+
+HRESULT TffdshowDecVideo::unlock_ffdshow_filter()
+{
+ if (!inpin) return E_UNEXPECTED;
+ inpin->mutex_ffdshow_filter.unlock();
+ return S_OK;
+}
+
 bool TffdshowDecVideo::ctlSubtitles(int id,int type,unsigned int ctl_id,const void *ctl_data,unsigned int ctl_datalen)
 {
  return imgFilters?imgFilters->ctlSubtitles(id,type,ctl_id,ctl_data,ctl_datalen):false;
