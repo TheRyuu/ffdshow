@@ -993,6 +993,8 @@ static inline void pred_direct_motion(H264Context * const h, int *mb_type){
     unsigned int sub_mb_type;
     int i8, i4;
 
+    assert(h->ref_list[1][0].reference&3);
+
 #define MB_TYPE_16x16_OR_INTRA (MB_TYPE_16x16|MB_TYPE_INTRA4x4|MB_TYPE_INTRA16x16|MB_TYPE_INTRA_PCM)
 
     if(IS_INTERLACED(h->ref_list[1][0].mb_type[mb_xy])){ // AFL/AFR/FR/FL -> AFL/FL
@@ -1411,7 +1413,7 @@ const uint8_t *ff_h264_decode_nal(H264Context *h, const uint8_t *src, int *dst_l
     }
 
     bufidx = h->nal_unit_type == NAL_DPC ? 1 : 0; // use second escape buffer for inter data
-    h->rbsp_buffer[bufidx]= av_fast_realloc(h->rbsp_buffer[bufidx], &h->rbsp_buffer_size[bufidx], length+FF_INPUT_BUFFER_PADDING_SIZE);
+    av_fast_malloc(&h->rbsp_buffer[bufidx], &h->rbsp_buffer_size[bufidx], length+FF_INPUT_BUFFER_PADDING_SIZE);
     dst= h->rbsp_buffer[bufidx];
 
     if (dst == NULL){
@@ -3267,7 +3269,10 @@ static int decode_ref_pic_list_reordering(H264Context *h){
         for(index= 0; index < h->ref_count[list]; index++){
             if(!h->ref_list[list][index].data[0]){
                 av_log(h->s.avctx, AV_LOG_ERROR, "Missing reference picture\n");
-                h->ref_list[list][index]= s->current_picture; //FIXME this is not a sensible solution
+                if(h->default_ref_list[list][0].data[0])
+                    h->ref_list[list][index]= h->default_ref_list[list][0];
+                else
+                    return -1;
             }
         }
     }
@@ -7817,6 +7822,7 @@ static int decode_nal_units(H264Context *h, const uint8_t *buf, int buf_size){
     int buf_index=0;
     H264Context *hx; ///< thread context
     int context_count = 0;
+    int next_avc= h->is_avc ? 0 : buf_size;
 
     h->max_contexts = USE_AVCODEC_EXECUTE(s->avctx) ? avctx->thread_count : 1;
 #if 0
@@ -7840,7 +7846,7 @@ static int decode_nal_units(H264Context *h, const uint8_t *buf, int buf_size){
         int i, nalsize = 0;
         int err;
 
-        if(h->is_avc) {
+        if(buf_index >= next_avc) {
             if(buf_index >= buf_size) break;
             nalsize = 0;
             for(i = 0; i < h->nal_length_size; i++)
@@ -7854,6 +7860,7 @@ static int decode_nal_units(H264Context *h, const uint8_t *buf, int buf_size){
                     break;
                 }
             }
+            next_avc= buf_index + nalsize;
         } else {
             // start code prefix search
             for(; buf_index + 3 < buf_size; buf_index++){
@@ -7869,7 +7876,7 @@ static int decode_nal_units(H264Context *h, const uint8_t *buf, int buf_size){
 
         hx = h->thread_context[context_count];
 
-        ptr= ff_h264_decode_nal(hx, buf + buf_index, &dst_length, &consumed, h->is_avc ? nalsize : buf_size - buf_index);
+        ptr= ff_h264_decode_nal(hx, buf + buf_index, &dst_length, &consumed, next_avc - buf_index);
         if (ptr==NULL || dst_length < 0){
             return -1;
         }
@@ -7881,13 +7888,12 @@ static int decode_nal_units(H264Context *h, const uint8_t *buf, int buf_size){
             av_log(h->s.avctx, AV_LOG_DEBUG, "NAL %d at %d/%d length %d\n", hx->nal_unit_type, buf_index, buf_size, dst_length);
         }
 
-        if (h->is_avc && (nalsize != consumed)){
+        if (h->is_avc && (nalsize != consumed) && nalsize){
             int i, debug_level = AV_LOG_DEBUG;
             for (i = consumed; i < nalsize; i++)
                 if (buf[buf_index+i])
                     debug_level = AV_LOG_ERROR;
             av_log(h->s.avctx, debug_level, "AVC: Consumed only %d bytes instead of %d\n", consumed, nalsize);
-            consumed= nalsize;
         }
 
         buf_index += consumed;
