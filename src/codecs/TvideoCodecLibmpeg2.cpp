@@ -100,11 +100,10 @@ TvideoCodecLibmpeg2::~TvideoCodecLibmpeg2()
 
 HRESULT TvideoCodecLibmpeg2::decompress(const unsigned char *src,size_t srcLen,IMediaSample *pIn)
 {
-    TffdshowVideoInputPin::TrateAndFlush *rateInfo = (TffdshowVideoInputPin::TrateAndFlush*)deciV->getRateInfo();
     HRESULT hr=decompressI(src,srcLen,pIn);
 
-    // decompressI temporarily unlocks mutex_ffdshow_filter in TffdshowDecVideo::deliverProcessedSample. Check if the context is valid here.
-    if (rateInfo->m_flushing || rateInfo->m_endflush)
+    // decompressI temporarily unlocks m_csCodecs_and_imgFilters in TffdshowDecVideo::deliverProcessedSample. Check if the context is valid here.
+    if (hr = S_FALSE)
         return hr;
     int len=mpeg2dec->buf_end - mpeg2dec->buf_start;
     if (len>0) {
@@ -288,11 +287,8 @@ HRESULT TvideoCodecLibmpeg2::decompressI(const unsigned char *src,size_t srcLen,
                 if (!wait4Iframe) {
                     TffPict pict(oldpict);
                     HRESULT hr = sinkD->deliverDecodedSample(pict);
-                    if (FAILED(hr))
+                    if (hr != S_OK)
                         return hr;
-                    // TffdshowDecVideo::deliverProcessedSample temporarily unlocks mutex_ffdshow_filter. Check if the context is valid here.
-                    if (rateInfo->m_flushing || rateInfo->m_endflush)
-                        return S_OK;
                 }
                 // else DPRINTF(_l("libmpeg2: waiting for keyframe"));
             }

@@ -27,7 +27,15 @@ protected:
     virtual HRESULT GetPropSetRate(DWORD Id, LPVOID pInstanceData, DWORD InstanceLength, LPVOID pPropertyData, DWORD cbPropData, DWORD *pcbReturned);
     virtual HRESULT SupportPropSetRate(DWORD dwPropID, DWORD *pTypeSupport);
 public:
-    boost::recursive_mutex mutex_ffdshow_filter;
+    /*
+     * m_csCodecs_and_imgFilters
+     * protect codecs and image filters
+     * This mutex must be locked inside m_csReceive.
+     * If you want to lock both, lock m_csReceive FIRST.
+     * This is unlocked in deliverProcessedSample to avoid dead lock.
+     * 
+     */
+    CCritSec m_csCodecs_and_imgFilters;
     struct TrateAndFlush {
         bool correctTS;
         bool m_flushing,m_endflush;

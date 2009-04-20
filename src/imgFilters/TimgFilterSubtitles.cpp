@@ -197,8 +197,11 @@ bool TimgFilterSubtitles::ctlSubtitles(int id,int type,unsigned int ctl_id,const
         // Send last pict with changed subtitles upstream in the filter chain only if the graph is running -
         // doing it while it's paused will hang everything
 
-        deciV->lockCSReceive();
-        deciV->lock_ffdshow_filter();
+        CCritSec *csReceive = (CCritSec*)(deciV->get_csReceive_ptr());
+        CCritSec *m_csCodecs_and_imgFilters = (CCritSec*)(deciV->get_csCodecs_and_imgFilters_ptr());
+        ASSERT(csReceive && m_csCodecs_and_imgFilters);
+        CAutoLock lock1(csReceive);
+        CAutoLock lock2(m_csCodecs_and_imgFilters);
 
         // Pull image out of yadif's next picture buffer.
         parent->pullImageFromSubtitlesFilter(prevIt);
@@ -214,9 +217,6 @@ bool TimgFilterSubtitles::ctlSubtitles(int id,int type,unsigned int ctl_id,const
         process(prevIt,pict,prevCfg);
 
         again=false;
-
-        deciV->unlock_ffdshow_filter();
-        deciV->unlockCSReceive();
     }
     return res;
 }

@@ -750,6 +750,30 @@ struct TmultipleInstances
 };
 extern const TmultipleInstances multipleInstances[];
 
+// unlocks a critical section, and locks it automatically
+// when the lock goes out of scope
+class CAutoUnlock {
+
+    // make copy constructor and assignment operator inaccessible
+
+    CAutoUnlock(const CAutoUnlock &refAutoLock);
+    CAutoUnlock &operator=(const CAutoUnlock &refAutoLock);
+
+protected:
+    CCritSec * m_pLock;
+
+public:
+    CAutoUnlock(CCritSec * plock)
+    {
+        m_pLock = plock;
+        m_pLock->Unlock();
+    };
+
+    ~CAutoUnlock() {
+        m_pLock->Lock();
+    };
+};
+
 // defferred lock
 // at the time of construction, you may not know the address of Lockable.
 // explicitly call lock to lock.

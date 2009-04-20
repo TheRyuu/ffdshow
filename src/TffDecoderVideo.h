@@ -331,8 +331,10 @@ public:
  STDMETHODIMP_(const Trect*) getDecodedPictdimensions(void);
  STDMETHODIMP_(HANDLE) getGlyphThreadHandle(void);
  STDMETHODIMP_(void*) getRateInfo(void);
- STDMETHODIMP lock_ffdshow_filter(void);
- STDMETHODIMP unlock_ffdshow_filter(void);
+ STDMETHODIMP lock_csCodecs_and_imgFilters(void);
+ STDMETHODIMP unlock_csCodecs_and_imgFilters(void);
+ STDMETHODIMP_(void*) get_csReceive_ptr(void);
+ STDMETHODIMP_(void*) get_csCodecs_and_imgFilters_ptr(void);
 
 private:
 #ifdef OSDTIMETABALE
@@ -504,8 +506,10 @@ private:
    STDMETHODIMP_(const Trect*) getDecodedPictdimensions(void) {return deciV->getDecodedPictdimensions();}
    STDMETHODIMP_(HANDLE) getGlyphThreadHandle(void) {return deciV->getGlyphThreadHandle();}
    STDMETHODIMP_(void*) getRateInfo(void) {return deciV->getRateInfo();}
-   STDMETHODIMP lock_ffdshow_filter(void) {return deciV->lock_ffdshow_filter();}
-   STDMETHODIMP unlock_ffdshow_filter(void) {return deciV->lock_ffdshow_filter();}
+   STDMETHODIMP lock_csCodecs_and_imgFilters(void) {return deciV->lock_csCodecs_and_imgFilters();}
+   STDMETHODIMP unlock_csCodecs_and_imgFilters(void) {return deciV->lock_csCodecs_and_imgFilters();}
+   STDMETHODIMP_(void*) get_csReceive_ptr(void) {return deciV->get_csReceive_ptr();}
+   STDMETHODIMP_(void*) get_csCodecs_and_imgFilters_ptr(void) {return deciV->get_csCodecs_and_imgFilters_ptr();}
  } decVideo_char;
  template<class Tinterface> Tinterface* getDecVideoInterface(void);
  void ConnectCompatibleFilter(void);

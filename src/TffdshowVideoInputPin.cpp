@@ -527,23 +527,24 @@ STDMETHODIMP TffdshowVideoInputPin::NewSegment(REFERENCE_TIME tStart, REFERENCE_
 
 STDMETHODIMP TffdshowVideoInputPin::BeginFlush()
 {
-    DPRINTF(_l("TffdshowVideoInputPin::BeginFlush"));
-    boost::unique_lock<boost::recursive_mutex> lock(mutex_ffdshow_filter);
+    /*
+     * Microsoft says m_csReceive can be locked after delivering BeginFlush call to downstream.
+     * http://msdn.microsoft.com/en-us/library/dd375795(VS.85).aspx
+     * m_csCodecs_and_imgFilters is an alternative method, which is easier for me to understand.
+     */
+    CAutoLock lock(&m_csCodecs_and_imgFilters);
     if (fv && fv->deci) {
         {
             m_rateAndFlush.m_flushing = true;
             if (video)
                 video->BeginFlush();
         }
-        IffdshowDecVideo* dec=0;
+        comptrQ<IffdshowDecVideo> deciV=fv->deci;
         TimgFilters* filters;
 
-        if (fv->deci->QueryInterface(IID_IffdshowDecVideo,(void**)&dec) == S_OK) {
-            if (dec && dec->getImgFilters_((void**)&filters) == S_OK && filters)
-                filters->onFlush();
+        if (deciV && deciV->getImgFilters_((void**)&filters) == S_OK && filters)
+            filters->onFlush();
 
-            dec->Release();
-        }
         m_rateAndFlush.flushed = true;
         m_rateAndFlush.isDiscontinuity = true;
     }
@@ -553,7 +554,7 @@ STDMETHODIMP TffdshowVideoInputPin::BeginFlush()
 
 STDMETHODIMP TffdshowVideoInputPin::EndFlush()
 {
-    boost::unique_lock<boost::recursive_mutex> lock(mutex_ffdshow_filter);
+    CAutoLock lock(&m_csCodecs_and_imgFilters);
     m_rateAndFlush.m_flushing = false;
     m_rateAndFlush.m_endflush = true;
 
@@ -587,12 +588,17 @@ HRESULT TffdshowVideoInputPin::decompress(IMediaSample *pSample,long *srcLen)
 
 STDMETHODIMP TffdshowVideoInputPin::EndOfStream()
 {
-    boost::unique_lock<boost::recursive_mutex> lock(mutex_ffdshow_filter);
-    if (m_rateAndFlush.m_flushing)
-        return S_OK;
-    m_rateAndFlush.m_endflush = false;
-    video->onEndOfStream();
-    return TinputPin::EndOfStream();
+    comptrQ<IffdshowDecVideo> deciV=fv->deci;
+    if (deciV) {
+        CAutoLock lock1((CCritSec*)deciV->get_csReceive_ptr());
+        CAutoLock lock2(&m_csCodecs_and_imgFilters);
+        if (m_rateAndFlush.m_flushing)
+            return S_OK;
+        m_rateAndFlush.m_endflush = false;
+        video->onEndOfStream();
+        return TinputPin::EndOfStream();
+    } else
+        return E_UNEXPECTED;
 }
 
 HRESULT TffdshowVideoInputPin::getAVIfps(unsigned int *fps1000)
@@ -751,7 +757,7 @@ HRESULT TffdshowVideoInputPin::SetPropSetRate(DWORD Id, LPVOID pInstanceData, DW
     {
     case AM_RATE_SimpleRateChange:
         {
-            boost::unique_lock<boost::recursive_mutex> lock(mutex_ffdshow_filter);
+            CAutoLock lock(&m_csCodecs_and_imgFilters);
             AM_SimpleRateChange* p = (AM_SimpleRateChange*)pPropertyData;
             if(!m_rateAndFlush.correctTS) return E_PROP_ID_UNSUPPORTED;
             m_rateAndFlush.ratechange.Rate = p->Rate;

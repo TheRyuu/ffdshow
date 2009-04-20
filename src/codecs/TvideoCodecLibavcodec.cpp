@@ -693,12 +693,10 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
                 telecineManager.get_timestamps(pict);
 
                 hr=sinkD->deliverDecodedSample(pict);
-                if (FAILED(hr)
+                if (hr != S_OK
                     || (used_bytes && sinkD->acceptsManyFrames()!=S_OK)
                     || avctx->codec_id==CODEC_ID_LOCO)
                     return hr;
-                if (rateInfo->m_flushing || rateInfo->m_endflush)
-                    return S_OK;
              }
         } else {
             if (!src)
