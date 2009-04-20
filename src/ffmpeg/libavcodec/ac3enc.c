@@ -30,12 +30,14 @@
 #include "get_bits.h" // for ff_reverse
 #include "put_bits.h"
 #include "ac3.h"
+#include "audioconvert.h"
 
 typedef struct AC3EncodeContext {
     PutBitContext pb;
     int nb_channels;
     int nb_all_channels;
     int lfe_channel;
+    const uint8_t *channel_map;
     int bit_rate;
     unsigned int sample_rate;
     unsigned int bitstream_id;
@@ -605,6 +607,50 @@ static int compute_bit_allocation(AC3EncodeContext *s,
         }
     }
 #endif
+    return 0;
+}
+
+static av_cold int set_channel_info(AC3EncodeContext *s, int channels,
+                                    int64_t *channel_layout)
+{
+    int ch_layout;
+
+    if (channels < 1 || channels > AC3_MAX_CHANNELS)
+        return -1;
+    if ((uint64_t)*channel_layout > 0x7FF)
+        return -1;
+    ch_layout = *channel_layout;
+    if (!ch_layout)
+        ch_layout = avcodec_guess_channel_layout(channels, CODEC_ID_AC3, NULL);
+    if (avcodec_channel_layout_num_channels(ch_layout) != channels)
+        return -1;
+
+    s->lfe = !!(ch_layout & CH_LOW_FREQUENCY);
+    s->nb_all_channels = channels;
+    s->nb_channels = channels - s->lfe;
+    s->lfe_channel = s->lfe ? s->nb_channels : -1;
+    if (s->lfe)
+        ch_layout -= CH_LOW_FREQUENCY;
+
+    switch (ch_layout) {
+    case CH_LAYOUT_MONO:           s->channel_mode = AC3_CHMODE_MONO;   break;
+    case CH_LAYOUT_STEREO:         s->channel_mode = AC3_CHMODE_STEREO; break;
+    case CH_LAYOUT_SURROUND:       s->channel_mode = AC3_CHMODE_3F;     break;
+    case CH_LAYOUT_2_1:            s->channel_mode = AC3_CHMODE_2F1R;   break;
+    case CH_LAYOUT_4POINT0:        s->channel_mode = AC3_CHMODE_3F1R;   break;
+    case CH_LAYOUT_QUAD:
+    case CH_LAYOUT_2_2:            s->channel_mode = AC3_CHMODE_2F2R;   break;
+    case CH_LAYOUT_5POINT0:
+    case CH_LAYOUT_5POINT0_BACK:   s->channel_mode = AC3_CHMODE_3F2R;   break;
+    default:
+        return -1;
+    }
+
+    s->channel_map = ff_ac3_enc_channel_map[s->channel_mode][s->lfe];
+    *channel_layout = ch_layout;
+    if (s->lfe)
+        *channel_layout |= CH_LOW_FREQUENCY;
+
     return 0;
 }
 
