@@ -29,8 +29,8 @@ fr.WinVersionTooLowError=Cette version de [name] nйcessite Windows 2000 ou plus 
 ; Russian
 ru.WelcomeLabel2=Программа установит [name] на Ваш компьютер.%n%nРекомендуется закрыть все прочие приложения перед тем, как продолжить.
 ru.FileAbortRetryIgnore=Закройте все приложения, использующие [name], и нажмите "Повтор". Если ситуация повторится, нажмите "Отказ", перезагрузите Ваш компьютер и попробуйте ещё раз.
-ru.FinishedRestartLabel=Для завершения установки [name] требуется перезагрузить компьютер. Произвести перезагрузку сейчас?%n%nПодсказка: избежать перезагрузки компьютера в следующий раз может помочь включение "Информация"-"Don't use ffdshow in:"-"explorer.exe" в конфигурации видеодекодера.
-;ru.WinVersionTooLowError=This build of [name] requires Windows 2000 or newer. Revision 2352 of [name] is the last one that works on Windows 98/ME.
+ru.FinishedRestartLabel=Для завершения установки [name] требуется перезагрузить компьютер. Произвести перезагрузку сейчас?%n%nПодсказка: избежать перезагрузки компьютера в следующий раз может помочь включение "Отладка"-"Не использовать в"-"explorer.exe" в конфигурации видеодекодера.
+ru.WinVersionTooLowError=Для этого билда [name] необходимо использование Windows 2000 или новее. Билд 2352 [name] является последним для использования в ОС Windows 98/ME.
 
 ; Polish
 pl.WelcomeLabel2=Instalator zainstaluje [name] na twoim komputerze.%n%nZaleca siк zamkniкcie wszystkich innych aplikacji przed kontynuowaniem procesu instalacji.
@@ -354,37 +354,37 @@ fr.shrt_uninstall=Dйsinstaller ffdshow
 
 ; Russian
 ru.langid=1049
-;ru.msg_uninstallFirst=You must first uninstall your old version of ffdshow.
-;ru.simd_msg_sse=This build of ffdshow requires a CPU with SSE extension support. Your CPU does not have those capabilities.
-;ru.simd_msg_sse2=This build of ffdshow requires a CPU with SSE2 extension support. Your CPU does not have those capabilities.
-;ru.unsupported_cpu=This build of ffdshow requires a CPU of type i686 or newer. Your CPU is not supported. Revision 1940 of ffdshow is the last one that works on old CPUs.
+ru.msg_uninstallFirst=Сперва вы должны удалить старую версию ffdshow.
+ru.simd_msg_sse=Этот билд ffdshow требует ЦПУ с поддержкой SSE инструкций. Ваш ЦПУ их не поддерживает.
+ru.simd_msg_sse2=Этот билд ffdshow требует ЦПУ с поддержкой SSE2 инструкций. Ваш ЦПУ их не поддерживает.
+ru.unsupported_cpu=Этот билд ffdshow требует ЦПУ с архитектурой i686 или новее. Ваш ЦПУ не поддерживается. Билд 1940 ffdshow является последним для использования со старыми ЦПУ.
 
 ru.comp_ffdshowds=ffdshow DirectShow-фильтр
 ru.comp_vfwInterface=VFW интерфейс
 ru.comp_makeAvis=Обслуживание скриптов AviSynth
 ru.comp_appPlugins=Плагины приложений:
-;ru.comp_msg_selectOneComp=You must select at least one component.
+ru.comp_msg_selectOneComp=Вы должны отметить хотя бы один компонент.
 
-;ru.tsk_settings=Settings
+ru.tsk_settings=Настройки
 ru.tsk_resetSettings=Сбросить все настройки ffdshow
-;ru.tsk_videoFormats=Video formats
+ru.tsk_videoFormats=Видеоформаты
 ru.tsk_videoFormatsSelect=Декодировать следующие видеоформаты с ffdshow:
 ru.tsk_genericMpeg4=Generic MPEG-4
 ru.tsk_rawVideo=Raw Video
-;ru.tsk_audioFormats=Audio formats
+ru.tsk_audioFormats=Аудиоформаты
 ru.tsk_audioFormatsSelect=Декодировать следующие аудиоформаты с ffdshow:
 ru.tsk_rawAudio=Raw Audio
-;ru.tsk_filters=Filter settings
+ru.tsk_filters=Настройки фильтров
 ru.tsk_filtersSelect=Включить следующие фильтры по умолчанию:
-;ru.tsk_passthroughac3=Enable AC3 pass-through (S/PDIF, HDMI)
-;ru.tsk_passthroughdts=Enable DTS pass-through (S/PDIF, HDMI)
+ru.tsk_passthroughac3=Разрешить AC3 пропуск (через S/PDIF, HDMI)
+ru.tsk_passthroughdts=Разрешить DTS пропуск (через S/PDIF, HDMI)
 ru.tsk_volumeNorm=Нормализация звука
 ru.tsk_subtitles=Субтитры
 ru.tsk_tweaks=Оптимизации
 ru.tsk_skipInloop=Отключить собственный деблокинг H.264
-;ru.tsk_compatibilityManager=Compatibility Manager
-;ru.tsk_whitelist=Restrict ffdshow to be used only by whitelisted applications
-;ru.tsk_whitelistPrompt=Display Compatibility Manager window when an unknown application tries to load ffdshow
+ru.tsk_compatibilityManager=Менеджер совместимости
+ru.tsk_whitelist=Разрешить использвоание ffdshow только приложениями из белого списка
+ru.tsk_whitelistPrompt=Отображать окно Менеджера совместимости, когда неизвестное приложение пытается запустить ffdshow
 
 ru.spk_Label1=Настройка аудиосистемы
 ru.spk_Label2=Выберите конфигурацию динамиков, совпадающую с Вашей. Вы можете изменить её после установки, используя настройки "Микшер".
@@ -392,24 +392,24 @@ ru.spk_Label3=Аудиосистема:
 ru.spk_mono=моно
 ru.spk_stereo=стерео
 ru.spk_quadro=квадро
-;ru.spk_rear_1ch=rear 1ch
+ru.spk_rear_1ch=1тыловой канал
 ru.spk_front_2ch=2 передних канала
-;ru.spk_side_2ch=side 2ch
-;ru.spk_rear_2ch=rear 2ch
+ru.spk_side_2ch=2 боковых канала
+ru.spk_rear_2ch=2 тыловых канала
 ru.spk_front_3ch=3 передних канала
 ru.spk_5ch=5 каналов
-;ru.spk_7ch=front 3ch + side 2ch + rear 2ch
+ru.spk_7ch=3 передних канала + 2 боковых канала + 2 тыловых канала
 ru.spk_headPhone=наушники
 ru.spk_surround=объёмный
 ru.spk_subwoofer=сабвуфер
 ru.spk_dolby1=Dolby Surround/ProLogic
 ru.spk_dolby2=Dolby ProLogic II
-ru.spk_hrtf=Head-related transfer function (HRTF)
+ru.spk_hrtf=Переходная функция "для головы" (HRTF)
 ru.spk_sameAsInput=совпадает со входом
 ru.spk_disableMixer=отключить Микшер
 ru.spk_voiceControl=контроль средних
 ru.spk_expandStereo=расширенное стерео
-;ru.spk_unknownSpk=Unknown speaker configuration
+ru.spk_unknownSpk=Неизвестная конфигурация динамиков
 
 ru.plg_Label1=Выбор папки плагина для %1
 ru.plg_Label2=В какую папку должен быть установлен плагин для %1?
@@ -423,7 +423,7 @@ ru.shrt_videoConfig=Конфигурация видеодекодера
 ru.shrt_audioConfig=Конфигурация аудиодекодера
 ru.shrt_vfwConfig=Конфигурация VFW интерфейса
 ru.shrt_uninstall=Деинсталляция ffdshow
-;ru.shrt_homepage=Homepage
+ru.shrt_homepage=Веб-страница ffdshow
 
 
 ; Polish
@@ -660,6 +660,7 @@ hu.langid=1038
 it.langid=1040
 no.langid=1044
 pr.langid=2070
+ru.langid=1049
 sk.langid=1051
 sn.langid=1060
 sp.langid=3082

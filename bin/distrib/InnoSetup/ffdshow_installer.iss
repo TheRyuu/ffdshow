@@ -1,10 +1,10 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision           = '2868'
+#define tryout_revision           = '2886'
 
 #define buildyear                 = '2009'
 #define buildmonth                =   '04'
-#define buildday                  =   '08'
+#define buildday                  =   '20'
 
 ; Build specific options
 #define localize                  = True
@@ -386,12 +386,8 @@ Source: "{#= bindir}\ff_samplerate.dll";             DestDir: "{app}";          
 Source: "{#= bindir}\ff_theora.dll";                 DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion
 #endif
 
-#if include_x264
-Source: "{#= bindir}\ff_x264.dll";                   DestDir: "{app}";                       Components: ffdshow\vfw;                Flags: ignoreversion
-#endif
-
-#if is64bit
-#else
+#if include_x264 & !is64bit
+Source: "{#= bindir}\ff_x264.dll";                   DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion
 Source: "Runtimes\pthreadGC2\x86\pthreadGC2.dll";    DestDir: "{sys}";                       Components: ffdshow;                    Flags: ignoreversion sharedfile     restartreplace uninsrestartdelete uninsnosharedfileprompt
 #endif
 
