@@ -660,7 +660,6 @@ hu.langid=1038
 it.langid=1040
 no.langid=1044
 pr.langid=2070
-ru.langid=1049
 sk.langid=1051
 sn.langid=1060
 sp.langid=3082
