@@ -290,13 +290,8 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
             pict.setRO(true);
             prevPict.copyFrom(pict,prevbuf);
         } else {
-            REFERENCE_TIME difference=(prevPict.rtStop-prevPict.rtStart)/10;
-
-            if (difference < 10)
-             difference=10;
-
-            prevPict.rtStart+=difference;
-            prevPict.rtStop+=difference;
+            prevPict.rtStart = prevPict.rtStop;
+            prevPict.rtStop  += 100000; // 10ms
             pict=prevPict;
 
             pict.setRO(true);

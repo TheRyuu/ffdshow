@@ -36,7 +36,11 @@ private:
  int oldExpandCode;
  unsigned int oldSizeDx,oldSizeDy;
  boost::recursive_mutex csEmbedded,csCC;
- TfilterQueue::iterator prevIt;TffPict prevPict;const TfilterSettingsVideo *prevCfg;bool again;Tbuffer prevbuf;
+ TfilterQueue::iterator prevIt;
+ TffPict prevPict;
+ const TfilterSettingsVideo *prevCfg;
+ bool again;
+ Tbuffer prevbuf;
  AdhocMode prevAdhocMode;
  int subFlnmChanged;
  const char_t* findAutoSubFlnm(const TsubtitlesSettings *cfg);
