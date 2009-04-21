@@ -1,10 +1,10 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision           = '2886'
+#define tryout_revision           = '2892'
 
 #define buildyear                 = '2009'
 #define buildmonth                =   '04'
-#define buildday                  =   '20'
+#define buildday                  =   '21'
 
 ; Build specific options
 #define localize                  = True
@@ -96,36 +96,28 @@ There is no 64-bit version of DScaler.
 #endif
 
 [Setup]
-AllowCancelDuringInstall        = no
-AllowNoIcons                    = yes
-AllowUNCPath                    = no
-#if is64bit
-AppId                           = ffdshow64
-#else
-AppId                           = ffdshow
-#endif
-AppName                         = ffdshow
-AppVerName                      = ffdshow [rev {#= tryout_revision}] [{#= buildyear}-{#= buildmonth}-{#= buildday}]
-AppVersion                      = 1.0
 #if is64bit
 ArchitecturesAllowed            = x64
 ArchitecturesInstallIn64BitMode = x64
+AppId                           = ffdshow64
+DefaultGroupName                = ffdshow64
+MinVersion                      = 0,5.01
+#else
+AppId                           = ffdshow
+DefaultGroupName                = ffdshow
+MinVersion                      = 0,5.0
 #endif
+AllowCancelDuringInstall        = no
+AllowNoIcons                    = yes
+AllowUNCPath                    = no
+AppName                         = ffdshow
+AppVerName                      = ffdshow [rev {#= tryout_revision}] [{#= buildyear}-{#= buildmonth}-{#= buildday}]
+AppVersion                      = 1.0
 Compression                     = lzma/ultra
 InternalCompressLevel           = ultra
 SolidCompression                = True
 DefaultDirName                  = {code:GetDefaultInstallDir|}
-#if is64bit
-DefaultGroupName                = ffdshow64
-#else
-DefaultGroupName                = ffdshow
-#endif
 DirExistsWarning                = no
-#if is64bit
-MinVersion                      = 0,5.01
-#else
-MinVersion                      = 0,5.0
-#endif
 OutputBaseFilename              = ffdshow_rev{#= tryout_revision}_{#= buildyear}{#= buildmonth}{#= buildday}{#= filename_suffix}
 OutputDir                       = {#= outputdir}
 PrivilegesRequired              = admin
@@ -145,6 +137,7 @@ VersionInfoCopyright            = GNU
 VersionInfoVersion              = 1.0.0.{#= tryout_revision}
 WizardImageFile                 = MicrosoftModern01.bmp
 WizardSmallImageFile            = SetupModernSmall26.bmp
+
 
 [Languages]
 #if !include_gnu_license & !include_info_before
@@ -256,20 +249,20 @@ Name: "ffdshow\makeavis";           Description: "{cm:comp_makeAvis}";         F
 #endif
 #if include_plugin_avisynth | include_plugin_virtualdub | include_plugin_dscaler
 Name: "ffdshow\plugins";            Description: "{cm:comp_appPlugins}";       Flags: dontinheritcheck
-#endif
-#if include_plugin_avisynth
+  #if include_plugin_avisynth
 Name: "ffdshow\plugins\avisynth";   Description: "AviSynth"
-#endif
-#if include_plugin_virtualdub
+  #endif
+  #if include_plugin_virtualdub
 Name: "ffdshow\plugins\virtualdub"; Description: "VirtualDub"
-#endif
-#if include_plugin_dscaler
+  #endif
+  #if include_plugin_dscaler
 Name: "ffdshow\plugins\dscaler";    Description: "DScaler"
+  #endif
 #endif
 
 ; CPU detection code
 #if cpu_detection
-#include "innosetup_cpu_detection.iss"
+  #include "innosetup_cpu_detection.iss"
 #endif
 
 [Tasks]
@@ -354,14 +347,14 @@ Name: "whitelist\prompt";        Description: "{cm:tsk_whitelistPrompt}";       
 
 [Icons]
 #if is64bit
-Name: "{group}\{cm:shrt_audioConfig}"; Filename: "{sys}\rundll32.exe";      Parameters: "ffdshow.ax,configureAudio"; WorkingDir: "{app}";      IconFilename: "{app}\ffdshow.ax"; IconIndex: 4; Components: ffdshow
-Name: "{group}\{cm:shrt_videoConfig}"; Filename: "{sys}\rundll32.exe";      Parameters: "ffdshow.ax,configure";      WorkingDir: "{app}";      IconFilename: "{app}\ffdshow.ax"; IconIndex: 3; Components: ffdshow
-Name: "{group}\{cm:shrt_vfwConfig}";   Filename: "{sys}\rundll32.exe";      Parameters: "ff_vfw.dll,configureVFW";   WorkingDir: "{sys}";      IconFilename: "{app}\ffdshow.ax"; IconIndex: 5; Components: ffdshow\vfw
+  #define ff_sys = '{sys}'
 #else
-Name: "{group}\{cm:shrt_audioConfig}"; Filename: "{syswow64}\rundll32.exe"; Parameters: "ffdshow.ax,configureAudio"; WorkingDir: "{app}";      IconFilename: "{app}\ffdshow.ax"; IconIndex: 4; Components: ffdshow;
-Name: "{group}\{cm:shrt_videoConfig}"; Filename: "{syswow64}\rundll32.exe"; Parameters: "ffdshow.ax,configure";      WorkingDir: "{app}";      IconFilename: "{app}\ffdshow.ax"; IconIndex: 3; Components: ffdshow;
-Name: "{group}\{cm:shrt_vfwConfig}";   Filename: "{syswow64}\rundll32.exe"; Parameters: "ff_vfw.dll,configureVFW";   WorkingDir: "{syswow64}"; IconFilename: "{app}\ffdshow.ax"; IconIndex: 5; Components: ffdshow\vfw;
+  #define ff_sys = '{syswow64}'
 #endif
+
+Name: "{group}\{cm:shrt_audioConfig}"; Filename: "{#= ff_sys}\rundll32.exe";      Parameters: "ffdshow.ax,configureAudio"; WorkingDir: "{app}";       IconFilename: "{app}\ffdshow.ax"; IconIndex: 4; Components: ffdshow
+Name: "{group}\{cm:shrt_videoConfig}"; Filename: "{#= ff_sys}\rundll32.exe";      Parameters: "ffdshow.ax,configure";      WorkingDir: "{app}";       IconFilename: "{app}\ffdshow.ax"; IconIndex: 3; Components: ffdshow
+Name: "{group}\{cm:shrt_vfwConfig}";   Filename: "{#= ff_sys}\rundll32.exe";      Parameters: "ff_vfw.dll,configureVFW";   WorkingDir: "{#= ff_sys}"; IconFilename: "{app}\ffdshow.ax"; IconIndex: 5; Components: ffdshow\vfw
 #if include_makeavis
 Name: "{group}\makeAVIS";              Filename: "{app}\makeAVIS.exe"; Components: ffdshow\makeavis
 #endif
@@ -388,7 +381,7 @@ Source: "{#= bindir}\ff_theora.dll";                 DestDir: "{app}";          
 
 #if include_x264 & !is64bit
 Source: "{#= bindir}\ff_x264.dll";                   DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion
-Source: "Runtimes\pthreadGC2\x86\pthreadGC2.dll";    DestDir: "{sys}";                       Components: ffdshow;                    Flags: ignoreversion sharedfile     restartreplace uninsrestartdelete uninsnosharedfileprompt
+Source: "Runtimes\pthreadGC2\x86\pthreadGC2.dll";    DestDir: "{sys}";                       Components: ffdshow;                    Flags: ignoreversion restartreplace uninsrestartdelete                      sharedfile uninsnosharedfileprompt
 #endif
 
 #if include_xvidcore
@@ -400,17 +393,11 @@ Source: "{#= bindir}\ff_kernelDeint.dll";            DestDir: "{app}";          
 Source: "{#= bindir}\TomsMoComp_ff.dll";             DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion
 Source: "{#= bindir}\libmpeg2_ff.dll";               DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion restartreplace uninsrestartdelete
 
-; Single build:
-#if !PREF_CLSID_ICL
+#if PREF_CLSID_ICL
+Source: "{#= bindir}\ffdshow_icl.ax";                DestDir: "{app}";DestName: "ffdshow.ax";Components: ffdshow;                    Flags: ignoreversion restartreplace uninsrestartdelete regserver noregerror
+#else
 Source: "{#= bindir}\ffdshow.ax";                    DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion restartreplace uninsrestartdelete regserver noregerror
 #endif
-#if PREF_CLSID_ICL
-Source: "{#= bindir}\ffdshow_icl.ax";                DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion restartreplace uninsrestartdelete regserver noregerror; DestName: "ffdshow.ax"; MinVersion: 0,4
-#endif
-; Multi build example (requires cpu detection to be enabled):
-;Source: "{#= bindir}\ffdshow_generic.ax";            DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion restartreplace uninsrestartdelete regserver;            DestName: "ffdshow.ax"; Check: Is_MMX_Supported AND NOT Is_SSE_Supported
-;Source: "{#= bindir}\ffdshow_sse.ax";                DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion restartreplace uninsrestartdelete regserver;            DestName: "ffdshow.ax"; Check: Is_SSE_Supported AND NOT Is_SSE2_Supported
-;Source: "{#= bindir}\ffdshow_sse2.ax";               DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion restartreplace uninsrestartdelete regserver;            DestName: "ffdshow.ax"; Check: Is_SSE2_Supported
 
 Source: "{#= bindir}\ff_wmv9.dll";                   DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion
 
@@ -439,38 +426,38 @@ Source: "gnu_license.txt";                           DestDir: "{app}";          
 Source: "Boost_Software_License_1.0.txt";            DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion
 
 #if is64bit
-Source: "..\..\manifest64\ffdshow.ax.manifest";      DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.03
-Source: "..\..\manifest64\ff_vfw.dll.manifest";      DestDir: "{sys}";                       Components: ffdshow\vfw;                Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.03
-  #if include_makeavis
-Source: "..\..\manifest64\makeAVIS.exe.manifest";    DestDir: "{app}";                       Components: ffdshow\makeavis;           Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.03
-  #endif
+  #define ff_manifest = '..\..\manifest64'
 #else
-Source: "..\..\manifest32\ffdshow.ax.manifest";      DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.03
-Source: "..\..\manifest32\ff_vfw.dll.manifest";      DestDir: "{sys}";                       Components: ffdshow\vfw;                Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.03
-  #if include_makeavis
-Source: "..\..\manifest32\makeAVIS.exe.manifest";    DestDir: "{app}";                       Components: ffdshow\makeavis;           Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.03
-  #endif
+  #define ff_manifest = '..\..\manifest32'
+#endif
+
+Source: "{#= ff_manifest}\ffdshow.ax.manifest";      DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.03
+Source: "{#= ff_manifest}\ff_vfw.dll.manifest";      DestDir: "{sys}";                       Components: ffdshow\vfw;                Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.03
+#if include_makeavis
+Source: "{#= ff_manifest}\makeAVIS.exe.manifest";    DestDir: "{app}";                       Components: ffdshow\makeavis;           Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.03
 #endif
 
 [InstallDelete]
 ; Private assemblies
 Type: files; Name: "{app}\msvcr80.dll";                       Components: ffdshow
 Type: files; Name: "{app}\microsoft.vc80.crt.manifest";       Components: ffdshow
-Type: files; Name: "{app}\languages\ffdshow.1041.jp";         Components: ffdshow
-#if localize
 ; Localized shortcuts
+#if localize
 Type: files; Name: "{group}\Video decoder configuration.lnk"; Components: ffdshow
 Type: files; Name: "{group}\Audio decoder configuration.lnk"; Components: ffdshow
 Type: files; Name: "{group}\Uninstall ffdshow.lnk";           Components: ffdshow
 Type: files; Name: "{group}\Homepage.url";                    Components: ffdshow
 Type: files; Name: "{group}\VFW configuration.lnk";           Components: ffdshow\vfw
 #endif
+; Files not included in this build
 #if !include_x264
 Type: files; Name: "{app}\ff_x264.dll";                       Components: ffdshow
 #endif
 #if !include_xvidcore
 Type: files; Name: "{app}\xvidcore.dll";                      Components: ffdshow
 #endif
+; Outdated files
+Type: files; Name: "{app}\languages\ffdshow.1041.jp";         Components: ffdshow
 
 [Registry]
 #if is64bit
