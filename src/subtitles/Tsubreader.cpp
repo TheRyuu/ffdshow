@@ -86,12 +86,7 @@ int Tsubreader::sub_autodetect(Tstream &fd,const Tconfig *config)
      format=SUB_SAMI|SUB_USESTIME;
      break;
     }
-   if (swscanf (line, L"%d:%d:%d:",     &i, &i, &i )==3)
-    {
-     format=SUB_VPLAYER|SUB_USESTIME;
-     break;
-    }
-   if (swscanf (line, L"%d:%d:%d ",     &i, &i, &i )==3)
+   if (swscanf (line, L"%d:%d:%d:",     &i, &i, &i )==3) //also true for "%d:%d:%d ". swscanf ignore last char.
     {
      format=SUB_VPLAYER|SUB_USESTIME;
      break;

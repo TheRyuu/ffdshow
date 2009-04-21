@@ -4,6 +4,12 @@
  * Written by laaz
  * Some code cleanup & realloc() by A'rpi/ESP-team
  * dunnowhat sub format by szabi
+ *
+ * Orginal code is from mplayer project, file subreader.c
+ * convert from c to c++ by Milan Cutka. If you add another 
+ * subtitle format plese add it also to subreader.c (mplayer project).
+ *
+ * 21.04.2009 fix vplayer format, crash before. Kamil Dziobek
  */
 
 #include "stdafx.h"
@@ -360,45 +366,36 @@ Tsubtitle* TsubtitleParserSubviewer2::parse(Tstream &fd,int flags, REFERENCE_TIM
 Tsubtitle* TsubtitleParserVplayer::parse(Tstream &fd,int flags, REFERENCE_TIME start, REFERENCE_TIME stop) {
         wchar_t line[this->LINE_LEN+1];
         int a1,a2,a3,a4;
-        const wchar_t *p=NULL, *next;wchar_t separator1,separator2;
+        const wchar_t *p=NULL, *next;wchar_t separator1;//,separator2;
         int plen;
         TsubtitleText current(this->format);
         while (current.empty()) {
                 if (!fd.fgets (line, this->LINE_LEN)) return NULL;
-                int ret=swscanf(line, L"%d:%d:%d%c%d%c%n",L"%d:%d:%d%c%d%lc%n",&a1,&a2,&a3,&separator1,&a4,&separator2,&plen);
-                if (ret!=6)
-                 {
+                int ret;
+
+				//KD. Comments this, a never see vplayer sub with decimal fraction of second. Is this standard?
+				//Also this incorrect display: 
+				//00:00:01:7weeks ago
+				//sub to display is "7weeks ago" not "eeks ago". 7 is text not decisecund
+
+				//ret=swscanf(line, L"%d:%d:%d%c%d%c%n",&a1,&a2,&a3,&separator1,&a4,&separator2,&plen);
+                //if (ret!=6)
+                // {
                   a4=0;
-                  ret=swscanf(line, L"%d:%d:%d%c%n",L"%d:%d:%d%lc%n",&a1,&a2,&a3,&separator1,&plen);
+                  ret=swscanf(line, L"%d:%d:%d%c%n",&a1,&a2,&a3,&separator1,&plen);
                   if (ret!=4)
                    continue;
-                 }
+                // }
 
                 if ((current.start = this->hmsToTime(a1,a2,a3,a4*10))==NULL)
                         continue;
-                /* removed by wodzu
-                p=line;
-                // finds the body of the subtitle
-                for (i=0; i<3; i++){
-                   p=strchr(p,':');
-                   if (p==NULL) break;
-                   ++p;
-                }
-                if (p==NULL) {
-                    printf("SUB: Skipping incorrect subtitle line!\n");
-                    continue;
-                }
-                */
-                // by wodzu: hey! this time we know what length it has! what is
-                // that magic for? it can't deal with space instead of third
-                // colon! look, what simple it can be:
+              
+				//by wodzu fast finds the body of the subtitle
                 p = &line[ plen ];
 
                 if (*p!='|') {
-                        //
-                        next = p;
-                        while ((next =sub_readtext (next, current))!=NULL)
-                         ;
+					next = p;
+					while ((next =sub_readtext (next, current))!=NULL);
                 }
         }
 
