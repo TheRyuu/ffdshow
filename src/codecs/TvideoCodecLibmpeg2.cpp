@@ -100,10 +100,11 @@ TvideoCodecLibmpeg2::~TvideoCodecLibmpeg2()
 
 HRESULT TvideoCodecLibmpeg2::decompress(const unsigned char *src,size_t srcLen,IMediaSample *pIn)
 {
+    TffdshowVideoInputPin::TrateAndFlush *rateInfo = (TffdshowVideoInputPin::TrateAndFlush*)deciV->getRateInfo();
     HRESULT hr=decompressI(src,srcLen,pIn);
 
     // decompressI temporarily unlocks m_csCodecs_and_imgFilters in TffdshowDecVideo::deliverProcessedSample. Check if the context is valid here.
-    if (hr = S_FALSE)
+    if (rateInfo->m_flushing || rateInfo->m_endflush)
         return hr;
     int len=mpeg2dec->buf_end - mpeg2dec->buf_start;
     if (len>0) {
