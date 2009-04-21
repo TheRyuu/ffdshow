@@ -1,6 +1,6 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision           = '2892'
+#define tryout_revision           = '2893'
 
 #define buildyear                 = '2009'
 #define buildmonth                =   '04'
@@ -275,7 +275,8 @@ Name: "video\divx";              Description: "DivX";                           
 Name: "video\xvid";              Description: "Xvid";                             Components: ffdshow
 Name: "video\mpeg4";             Description: "{cm:tsk_genericMpeg4}";            Components: ffdshow
 Name: "video\flv";               Description: "FLV1, FLV4";                       Components: ffdshow
-Name: "video\h263";              Description: "H.263";                            Components: ffdshow
+Name: "video\vp6";               Description: "VP6";                              Components: ffdshow
+Name: "video\h263";              Description: "H.263(+)";                         Components: ffdshow
 Name: "video\mpeg1";             Description: "MPEG-1";                           Components: ffdshow; Flags: unchecked dontinheritcheck
 Name: "video\mpeg1\libmpeg2";    Description: "libmpeg2";                         Components: ffdshow; Flags: unchecked exclusive
 Name: "video\mpeg1\libavcodec";  Description: "libavcodec";                       Components: ffdshow; Flags: unchecked exclusive
@@ -283,8 +284,7 @@ Name: "video\mpeg2";             Description: "MPEG-2";                         
 Name: "video\mpeg2\libmpeg2";    Description: "libmpeg2";                         Components: ffdshow; Flags: unchecked exclusive
 Name: "video\mpeg2\libavcodec";  Description: "libavcodec";                       Components: ffdshow; Flags: unchecked exclusive
 Name: "video\huffyuv";           Description: "Huffyuv";                          Components: ffdshow
-Name: "video\qt";                Description: "SVQ1, SVQ3, Cinepak, RPZA, QTRLE"; Components: ffdshow
-Name: "video\vp56";              Description: "VP5, VP6";                         Components: ffdshow
+Name: "video\qt";                Description: "SVQ1, SVQ3, RPZA, QT RLE";         Components: ffdshow
 Name: "video\vc1";               Description: "VC-1";                             Components: ffdshow; Flags: unchecked dontinheritcheck
 Name: "video\vc1\wmv9";          Description: "wmv9";                             Components: ffdshow; Flags: unchecked exclusive
 Name: "video\vc1\libavcodec";    Description: "libavcodec";                       Components: ffdshow; Flags: unchecked exclusive
@@ -296,10 +296,17 @@ Name: "video\mss2";              Description: "MSS1, MSS2";                     
 Name: "video\dvsd";              Description: "DV";                               Components: ffdshow; Flags: unchecked dontinheritcheck
 Name: "video\techsmith";         Description: "Techsmith";                        Components: ffdshow; Flags: unchecked
 Name: "video\fraps";             Description: "Fraps";                            Components: ffdshow; Flags: unchecked
-Name: "video\other1";            Description: "H.261, MJPEG, Theora, VP3";        Components: ffdshow
-Name: "video\other2";            Description: "CorePNG, MS Video 1, MSRLE, Truemotion";                 Components: ffdshow
-Name: "video\other3";            Description: "ASV1/2, CYUV, ZLIB, 8BPS, LOCO, MSZH, QPEG, WNV1, VCR1"; Components: ffdshow; Flags: unchecked
-Name: "video\other4";            Description: "CamStudio, ZMBV, Ultimotion, VIXL, AASC, IV32, RT21";    Components: ffdshow; Flags: unchecked
+Name: "video\msvidc";            Description: "MS Video 1";                       Components: ffdshow; Flags: unchecked
+Name: "video\msrle";             Description: "MS RLE";                           Components: ffdshow; Flags: unchecked
+Name: "video\cinepak";           Description: "Cinepak";                          Components: ffdshow; Flags: unchecked
+Name: "video\mjpeg";             Description: "MJPEG";                            Components: ffdshow
+Name: "video\truemotion";        Description: "TrueMotion";                       Components: ffdshow
+Name: "video\camstudio";         Description: "Camstudio";                        Components: ffdshow
+Name: "video\indeo";             Description: "Indeo 2/3";                        Components: ffdshow
+Name: "video\other1";            Description: "Theora, VP3, VP5";                 Components: ffdshow
+Name: "video\other2";            Description: "CorePNG, H.261, MSZH, ZLIB";       Components: ffdshow
+Name: "video\other3";            Description: "8BPS, ASV1/2, CYUV, LOCO, QPEG, VCR1, WNV1"; Components: ffdshow; Flags: unchecked
+Name: "video\other4";            Description: "AASC, Ultimotion, VIXL, ZMBV";     Components: ffdshow; Flags: unchecked
 Name: "video\rawv";              Description: "{cm:tsk_rawVideo}";                Components: ffdshow; Flags: unchecked dontinheritcheck
 Name: "audio";                   Description: "{cm:tsk_audioFormatsSelect}";      Components: ffdshow; Flags: unchecked;                  Check: NOT IsUpdate; GroupDescription: "{cm:tsk_audioFormats}"
 Name: "audio\mp3";               Description: "MP3";                              Components: ffdshow
@@ -312,8 +319,8 @@ Name: "audio\aac\libfaad2";      Description: "libfaad2";                       
 Name: "audio\ac3";               Description: "AC3";                              Components: ffdshow
 Name: "audio\ac3\liba52";        Description: "liba52";                           Components: ffdshow; Flags:           exclusive
 Name: "audio\ac3\libavcodec";    Description: "libavcodec";                       Components: ffdshow; Flags: unchecked exclusive
-Name: "audio\eac3";              Description: "EAC3 (Dolby Digital Plus)";        Components: ffdshow
-Name: "audio\mlp";               Description: "MLP/Dolby TrueHD";                 Components: ffdshow
+Name: "audio\eac3";              Description: "E-AC3 (Dolby Digital Plus)";       Components: ffdshow
+Name: "audio\mlp";               Description: "MLP, Dolby TrueHD";                Components: ffdshow
 Name: "audio\dts";               Description: "DTS";                              Components: ffdshow
 Name: "audio\dts\libdts";        Description: "libdts";                           Components: ffdshow; Flags:           exclusive
 Name: "audio\dts\libavcodec";    Description: "libavcodec";                       Components: ffdshow; Flags: unchecked exclusive
@@ -328,7 +335,11 @@ Name: "audio\flac";              Description: "FLAC";                           
 Name: "audio\tta";               Description: "True Audio";                       Components: ffdshow
 Name: "audio\amr";               Description: "AMR";                              Components: ffdshow
 Name: "audio\qt";                Description: "QDM2, MACE";                       Components: ffdshow
-Name: "audio\adpcm";             Description: "ADPCM, MS GSM, Truespeech";        Components: ffdshow; Flags: unchecked
+Name: "audio\msadpcm";           Description: "MS ADPCM";                         Components: ffdshow; Flags: unchecked
+Name: "audio\imaadpcm";          Description: "IMA ADPCM";                        Components: ffdshow; Flags: unchecked
+Name: "audio\msgsm";             Description: "MS GSM";                           Components: ffdshow; Flags: unchecked
+Name: "audio\law";               Description: "Alaw, u-Law";                      Components: ffdshow; Flags: unchecked
+Name: "audio\truespeech";        Description: "Truespeech";                       Components: ffdshow; Flags: unchecked
 Name: "audio\rawa";              Description: "{cm:tsk_rawAudio}";                Components: ffdshow; Flags: unchecked dontinheritcheck
 Name: "filter";                  Description: "{cm:tsk_filtersSelect}";           Components: ffdshow; Flags: unchecked;                  Check: NOT IsUpdate; GroupDescription: "{cm:tsk_filters}"
 Name: "filter\passthroughac3";   Description: "{cm:tsk_passthroughac3}";          Components: ffdshow; Flags: unchecked
