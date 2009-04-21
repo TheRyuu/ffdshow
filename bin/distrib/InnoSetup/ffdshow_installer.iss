@@ -80,8 +80,6 @@
   #define include_setup_icon     = True
   #define filename_suffix        = '_xxl_x64'
 #elif PREF_ALBAIN
-  #define sse_required           = False
-  #define VS2008SP1              = True
   #define filename_suffix        = '_dbt'
 #elif PREF_ALBAIN_X64
   #define is64bit                = True
@@ -137,7 +135,6 @@ VersionInfoCopyright            = GNU
 VersionInfoVersion              = 1.0.0.{#= tryout_revision}
 WizardImageFile                 = MicrosoftModern01.bmp
 WizardSmallImageFile            = SetupModernSmall26.bmp
-
 
 [Languages]
 #if !include_gnu_license & !include_info_before
@@ -363,78 +360,78 @@ Name: "whitelist\prompt";        Description: "{cm:tsk_whitelistPrompt}";       
   #define ff_sys = '{syswow64}'
 #endif
 
-Name: "{group}\{cm:shrt_audioConfig}"; Filename: "{#= ff_sys}\rundll32.exe";      Parameters: "ffdshow.ax,configureAudio"; WorkingDir: "{app}";       IconFilename: "{app}\ffdshow.ax"; IconIndex: 4; Components: ffdshow
-Name: "{group}\{cm:shrt_videoConfig}"; Filename: "{#= ff_sys}\rundll32.exe";      Parameters: "ffdshow.ax,configure";      WorkingDir: "{app}";       IconFilename: "{app}\ffdshow.ax"; IconIndex: 3; Components: ffdshow
-Name: "{group}\{cm:shrt_vfwConfig}";   Filename: "{#= ff_sys}\rundll32.exe";      Parameters: "ff_vfw.dll,configureVFW";   WorkingDir: "{#= ff_sys}"; IconFilename: "{app}\ffdshow.ax"; IconIndex: 5; Components: ffdshow\vfw
+Name: "{group}\{cm:shrt_audioConfig}"; Filename: "{#= ff_sys}\rundll32.exe"; Parameters: "ffdshow.ax,configureAudio"; WorkingDir: "{app}";       IconFilename: "{app}\ffdshow.ax"; IconIndex: 4; Components: ffdshow
+Name: "{group}\{cm:shrt_videoConfig}"; Filename: "{#= ff_sys}\rundll32.exe"; Parameters: "ffdshow.ax,configure";      WorkingDir: "{app}";       IconFilename: "{app}\ffdshow.ax"; IconIndex: 3; Components: ffdshow
+Name: "{group}\{cm:shrt_vfwConfig}";   Filename: "{#= ff_sys}\rundll32.exe"; Parameters: "ff_vfw.dll,configureVFW";   WorkingDir: "{#= ff_sys}"; IconFilename: "{app}\ffdshow.ax"; IconIndex: 5; Components: ffdshow\vfw
 #if include_makeavis
 Name: "{group}\makeAVIS";              Filename: "{app}\makeAVIS.exe"; Components: ffdshow\makeavis
 #endif
 Name: "{group}\{cm:shrt_uninstall}";   Filename: "{uninstallexe}"
-Name: "{group}\{cm:shrt_homepage}";    Filename: "http://ffdshow-tryout.sourceforge.net/"; IconFilename: "{app}\ffdshow.ax"; IconIndex: 9; Components: ffdshow;
+Name: "{group}\{cm:shrt_homepage}";    Filename: "http://ffdshow-tryout.sourceforge.net/";                                                       IconFilename: "{app}\ffdshow.ax"; IconIndex: 9; Components: ffdshow;
 
 [Files]
 ; For speaker config
 Source: "ffSpkCfg.dll"; Flags: dontcopy
 
-Source: "{#= bindir}\libavcodec.dll";                DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion
-Source: "{#= bindir}\ffmpegmt.dll";                  DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion
-Source: "{#= bindir}\libmplayer.dll";                DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion
-Source: "{#= bindir}\ff_liba52.dll";                 DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion
-Source: "{#= bindir}\ff_libdts.dll";                 DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion
-Source: "{#= bindir}\ff_libfaad2.dll";               DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion
-Source: "{#= bindir}\ff_libmad.dll";                 DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion
-Source: "{#= bindir}\ff_tremor.dll";                 DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion
-Source: "{#= bindir}\ff_unrar.dll";                  DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion
-Source: "{#= bindir}\ff_samplerate.dll";             DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion
+Source: "{#= bindir}\libavcodec.dll";             DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
+Source: "{#= bindir}\ffmpegmt.dll";               DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
+Source: "{#= bindir}\libmplayer.dll";             DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
+Source: "{#= bindir}\ff_liba52.dll";              DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
+Source: "{#= bindir}\ff_libdts.dll";              DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
+Source: "{#= bindir}\ff_libfaad2.dll";            DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
+Source: "{#= bindir}\ff_libmad.dll";              DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
+Source: "{#= bindir}\ff_tremor.dll";              DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
+Source: "{#= bindir}\ff_unrar.dll";               DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
+Source: "{#= bindir}\ff_samplerate.dll";          DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
 #if include_libtheora
-Source: "{#= bindir}\ff_theora.dll";                 DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion
+Source: "{#= bindir}\ff_theora.dll";              DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
 #endif
 
 #if include_x264 & !is64bit
-Source: "{#= bindir}\ff_x264.dll";                   DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion
-Source: "Runtimes\pthreadGC2\x86\pthreadGC2.dll";    DestDir: "{sys}";                       Components: ffdshow;                    Flags: ignoreversion restartreplace uninsrestartdelete                      sharedfile uninsnosharedfileprompt
+Source: "{#= bindir}\ff_x264.dll";                DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
+Source: "Runtimes\pthreadGC2\x86\pthreadGC2.dll"; DestDir: "{sys}";                         Components: ffdshow;                    Flags: ignoreversion restartreplace uninsrestartdelete                      sharedfile uninsnosharedfileprompt
 #endif
 
 #if include_xvidcore
-Source: "{#= bindir}\xvidcore.dll";                  DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion
+Source: "{#= bindir}\xvidcore.dll";               DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
 #endif
 #if !is64bit
-Source: "{#= bindir}\ff_kernelDeint.dll";            DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion
+Source: "{#= bindir}\ff_kernelDeint.dll";         DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
 #endif
-Source: "{#= bindir}\TomsMoComp_ff.dll";             DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion
-Source: "{#= bindir}\libmpeg2_ff.dll";               DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion restartreplace uninsrestartdelete
+Source: "{#= bindir}\TomsMoComp_ff.dll";          DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
+Source: "{#= bindir}\libmpeg2_ff.dll";            DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion restartreplace uninsrestartdelete
 
 #if PREF_CLSID_ICL
-Source: "{#= bindir}\ffdshow_icl.ax";                DestDir: "{app}";DestName: "ffdshow.ax";Components: ffdshow;                    Flags: ignoreversion restartreplace uninsrestartdelete regserver noregerror
+Source: "{#= bindir}\ffdshow_icl.ax";             DestDir: "{app}"; DestName: "ffdshow.ax"; Components: ffdshow;                    Flags: ignoreversion restartreplace uninsrestartdelete regserver noregerror
 #else
-Source: "{#= bindir}\ffdshow.ax";                    DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion restartreplace uninsrestartdelete regserver noregerror
+Source: "{#= bindir}\ffdshow.ax";                 DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion restartreplace uninsrestartdelete regserver noregerror
 #endif
 
-Source: "{#= bindir}\ff_wmv9.dll";                   DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion
+Source: "{#= bindir}\ff_wmv9.dll";                DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
 
-Source: "{#= bindir}\ff_vfw.dll";                    DestDir: "{sys}";                       Components: ffdshow\vfw;                Flags: ignoreversion restartreplace uninsrestartdelete
+Source: "{#= bindir}\ff_vfw.dll";                 DestDir: "{sys}";                         Components: ffdshow\vfw;                Flags: ignoreversion restartreplace uninsrestartdelete
 
 #if include_plugin_avisynth
-Source: "..\..\ffavisynth.avsi";                     DestDir: "{code:GetAviSynthPluginDir}"; Components: ffdshow\plugins\avisynth;   Flags: ignoreversion restartreplace uninsrestartdelete
-Source: "{#= bindir}\ffavisynth.dll";                DestDir: "{code:GetAviSynthPluginDir}"; Components: ffdshow\plugins\avisynth;   Flags: ignoreversion restartreplace uninsrestartdelete
+Source: "..\..\ffavisynth.avsi";                  DestDir: "{code:GetAviSynthPluginDir}";   Components: ffdshow\plugins\avisynth;   Flags: ignoreversion restartreplace uninsrestartdelete
+Source: "{#= bindir}\ffavisynth.dll";             DestDir: "{code:GetAviSynthPluginDir}";   Components: ffdshow\plugins\avisynth;   Flags: ignoreversion restartreplace uninsrestartdelete
 #endif
 #if include_plugin_virtualdub
-Source: "{#= bindir}\ffvdub.vdf";                    DestDir: "{code:GetVdubPluginDir}";     Components: ffdshow\plugins\virtualdub; Flags: ignoreversion restartreplace uninsrestartdelete
+Source: "{#= bindir}\ffvdub.vdf";                 DestDir: "{code:GetVdubPluginDir}";       Components: ffdshow\plugins\virtualdub; Flags: ignoreversion restartreplace uninsrestartdelete
 #endif
 #if include_plugin_dscaler
-Source: "{#= bindir}\FLT_ffdshow.dll";               DestDir: "{code:GetDScalerDir|}";       Components: ffdshow\plugins\dscaler;    Flags: ignoreversion restartreplace uninsrestartdelete
+Source: "{#= bindir}\FLT_ffdshow.dll";            DestDir: "{code:GetDScalerDir|}";         Components: ffdshow\plugins\dscaler;    Flags: ignoreversion restartreplace uninsrestartdelete
 #endif
 
 #if include_makeavis
-Source: "{#= bindir}\makeAVIS.exe";                  DestDir: "{app}";                       Components: ffdshow\makeavis;           Flags: ignoreversion restartreplace uninsrestartdelete
-Source: "{#= bindir}\ff_acm.acm";                    DestDir: "{sys}";                       Components: ffdshow\makeavis;           Flags: ignoreversion restartreplace uninsrestartdelete
+Source: "{#= bindir}\makeAVIS.exe";               DestDir: "{app}";                         Components: ffdshow\makeavis;           Flags: ignoreversion restartreplace uninsrestartdelete
+Source: "{#= bindir}\ff_acm.acm";                 DestDir: "{sys}";                         Components: ffdshow\makeavis;           Flags: ignoreversion restartreplace uninsrestartdelete
 #endif
 
-Source: "..\..\languages\*.*";                       DestDir: "{app}\languages";             Components: ffdshow;                    Flags: ignoreversion
-Source: "..\..\custom matrices\*.*";                 DestDir: "{app}\custom matrices";       Components: ffdshow\vfw;                Flags: ignoreversion
-Source: "..\..\openIE.js";                           DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion
-Source: "gnu_license.txt";                           DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion
-Source: "Boost_Software_License_1.0.txt";            DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion
+Source: "..\..\languages\*.*";                    DestDir: "{app}\languages";               Components: ffdshow;                    Flags: ignoreversion
+Source: "..\..\custom matrices\*.*";              DestDir: "{app}\custom matrices";         Components: ffdshow\vfw;                Flags: ignoreversion
+Source: "..\..\openIE.js";                        DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
+Source: "gnu_license.txt";                        DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
+Source: "Boost_Software_License_1.0.txt";         DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
 
 #if is64bit
   #define ff_manifest = '..\..\manifest64'
@@ -442,10 +439,10 @@ Source: "Boost_Software_License_1.0.txt";            DestDir: "{app}";          
   #define ff_manifest = '..\..\manifest32'
 #endif
 
-Source: "{#= ff_manifest}\ffdshow.ax.manifest";      DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.03
-Source: "{#= ff_manifest}\ff_vfw.dll.manifest";      DestDir: "{sys}";                       Components: ffdshow\vfw;                Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.03
+Source: "{#= ff_manifest}\ffdshow.ax.manifest";   DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.03
+Source: "{#= ff_manifest}\ff_vfw.dll.manifest";   DestDir: "{sys}";                         Components: ffdshow\vfw;                Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.03
 #if include_makeavis
-Source: "{#= ff_manifest}\makeAVIS.exe.manifest";    DestDir: "{app}";                       Components: ffdshow\makeavis;           Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.03
+Source: "{#= ff_manifest}\makeAVIS.exe.manifest"; DestDir: "{app}";                         Components: ffdshow\makeavis;           Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.03
 #endif
 
 [InstallDelete]
