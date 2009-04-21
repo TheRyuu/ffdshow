@@ -633,7 +633,7 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
                         pict.fieldtype |= FIELD_TYPE::SEQ_START | FIELD_TYPE::SEQ_END;
                     } else
                         pict.rtStop = pict.rtStart +
-                                          (duration * (frame->repeat_pict ? 2 : 3) * abs(rateInfo->rate.Rate) / (2 * 10000));
+                                          (duration * (frame->repeat_pict ? 3 : 2) * abs(rateInfo->rate.Rate) / (2 * 10000));
                     oldpict=pict;
                     if (rateInfo->isDiscontinuity)
                         telecineManager.onSeek();
