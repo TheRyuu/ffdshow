@@ -1,3 +1,6 @@
+#ifndef SIMD_INSTRUCTIONS_H
+#define SIMD_INSTRUCTIONS_H
+
 MMX_INSTRUCTION(paddb,_mm_add_pi8)
 MMX_INSTRUCTION(paddsb,_mm_adds_pi8)
 MMX_INSTRUCTION(paddusb,_mm_adds_pu8)
@@ -52,6 +55,8 @@ MMX_INSTRUCTION(pavgb,_mm_avg_pu8)
 
 MMX_INSTRUCTION(psadbw,_mm_sad_pu8)
 
+#ifdef __SSE2__
+
 SSE2I_INSTRUCTION(pand,_mm_and_si128)
 SSE2I_INSTRUCTION(por,_mm_or_si128)
 SSE2I_INSTRUCTION(pxor,_mm_xor_si128)
@@ -81,3 +86,7 @@ SSE2I_INSTRUCTION(pcmpeqb,_mm_cmpeq_epi8)
 SSE2I_INSTRUCTION(pcmpeqw,_mm_cmpeq_epi16)
 SSE2I_INSTRUCTION(pcmpgtb,_mm_cmpgt_epi8)
 SSE2I_INSTRUCTION(pcmpgtw,_mm_cmpgt_epi16)
+
+#endif
+
+#endif /* SIMD_INSTRUCTIONS_H */
