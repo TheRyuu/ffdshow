@@ -1,6 +1,3 @@
-#ifndef SIMD_INSTRUCTIONS_H
-#define SIMD_INSTRUCTIONS_H
-
 MMX_INSTRUCTION(paddb,_mm_add_pi8)
 MMX_INSTRUCTION(paddsb,_mm_adds_pi8)
 MMX_INSTRUCTION(paddusb,_mm_adds_pu8)
@@ -88,5 +85,3 @@ SSE2I_INSTRUCTION(pcmpgtb,_mm_cmpgt_epi8)
 SSE2I_INSTRUCTION(pcmpgtw,_mm_cmpgt_epi16)
 
 #endif
-
-#endif /* SIMD_INSTRUCTIONS_H */
