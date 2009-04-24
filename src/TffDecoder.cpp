@@ -1326,11 +1326,6 @@ STDMETHODIMP TffdshowDecVideo::deliverProcessedSample(TffPict &pict)
             return hr;
     }
 
-    if (inpin->m_rateAndFlush.m_flushing || inpin->m_rateAndFlush.m_endflush)
-        // Do not return before doing setOutputMediaType.
-        return S_FALSE;
-
-
     if (m_NeedToAttachFormat) {
         // code imported from DScaler. Copyright (c) 2004 John Adcock
         m_NeedToAttachFormat = false;
@@ -1360,8 +1355,6 @@ STDMETHODIMP TffdshowDecVideo::deliverProcessedSample(TffPict &pict)
         pOut->SetTime(&rtStart,&rtStop);
     }
 
-    pOut->SetDiscontinuity(pict.discontinuity);
-
     if (pict.mediatimeStart!=REFTIME_INVALID)
         pOut->SetMediaTime(&pict.mediatimeStart,&pict.mediatimeStop);
 
@@ -1369,8 +1362,11 @@ STDMETHODIMP TffdshowDecVideo::deliverProcessedSample(TffPict &pict)
     if (pOut->GetPointer(&dst)!=S_OK)
         return S_FALSE;
     LONG dstSize=pOut->GetSize();
-    HRESULT cr=imgFilters->convertOutputSample(pict,m_frame.dstColorspace,&dst,&m_frame.dstStride,dstSize,presetSettings->output);
-    pOut->SetActualDataLength(cr==S_FALSE?dstSize:m_frame.dstSize);
+
+    HRESULT cr = S_OK;
+    if (!(inpin->m_rateAndFlush.m_flushing || inpin->m_rateAndFlush.m_endflush))
+        cr=imgFilters->convertOutputSample(pict,m_frame.dstColorspace,&dst,&m_frame.dstStride,dstSize,presetSettings->output);
+    pOut->SetActualDataLength(cr==S_FALSE ? dstSize : m_frame.dstSize);
     update_time_on_ffdshow3(rtStart, rtStop);
 
     {
