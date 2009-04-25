@@ -630,7 +630,7 @@ template<class Tret,class TcreateFunc1,class TcreateFunc2> Tret Twindow::createD
   for (int i=0;i<bindsCheckbox[i].idc;i++)
    bindCheckboxesMap.insert(std::make_pair(bindsCheckbox[i].idc,bindsCheckbox+i));
  HINSTANCE hi=this->hi?this->hi:g_hInst;//HACK!!
- if (!tr || !tr->isCustomFont())
+ if (!tr)
   {
    char_t lang[MAX_PATH],pth[MAX_PATH];
    getpth(pth);
