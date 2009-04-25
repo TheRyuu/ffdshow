@@ -84,7 +84,7 @@ void TconvolverPage::adjust2dlg(void)
 {
  int x=cfgGet(IDFF_convolverLevelAdjustDB);
  tbrSet(IDC_TBR_CONVOLVER_LEVELADJUSTDB,x);
- setText(IDC_LBL_CONVOLVER_LEVELADJUSTDB,_l("%s %-.1f dB"),_(IDC_LBL_CONVOLVER_LEVELADJUSTDB),x/10.0f);
+ setText(IDC_LBL_CONVOLVER_LEVELADJUSTDB,_l("%s %-.1f %s"),_(IDC_LBL_CONVOLVER_LEVELADJUSTDB),x/10.0f,_(-IDD_CONVOLVER,_l("dB")));
  int aut=cfgGet(IDFF_convolverLevelAdjustAuto);
  setCheck(IDC_CHB_CONVOLVER_LEVELADJUST_AUTO,aut);
  static const int idAdjust[]={IDC_LBL_CONVOLVER_LEVELADJUSTDB,IDC_TBR_CONVOLVER_LEVELADJUSTDB,0};
