@@ -59,7 +59,7 @@ private:
    void ccbuf_set_cursor(int row, int column, int underline, int italics, int color);
    void ccbuf_apply_attribute(cc_attribute_t *attr);
    void ccbuf_tab(int tabsize);
-   int cc_buf_has_displayable(void);
+   int cc_buf_has_displayable();
    void ccbuf_render(cc_renderer_t *renderer);
   };
 

@@ -65,36 +65,40 @@ int TccDecoder::good_parity(uint16_t data)
 
 TccDecoder::cc_buffer_t* TccDecoder::active_ccbuffer(void)
 {
- cc_memory_t *mem=*this->active;
+ cc_memory_t *mem=*active;
  return &mem->channel[mem->channel_no];
 }
 
 void TccDecoder::cc_row_t::ccrow_fill_transp(void)
 {
- for (int i = this->num_chars; i < this->pos; i++)
+ pos = limit<int>(pos, 0, CC_COLUMNS);
+ for (int i = num_chars; i < pos; i++)
   {
-   this->cells[i].c = TRANSP_SPACE;
-   this->cells[i].midrow_attr = 0;
+   cells[i].c = TRANSP_SPACE;
+   cells[i].midrow_attr = 0;
   }
 }
 
 int TccDecoder::cc_row_t::ccrow_find_next_text_part(int pos)
 {
- while (pos < this->num_chars && this->cells[pos].c == TRANSP_SPACE)
+ num_chars = limit<int>(num_chars, 0, CC_COLUMNS);
+ while (pos < num_chars && cells[pos].c == TRANSP_SPACE)
    pos++;
  return pos;
 }
 
 int TccDecoder::cc_row_t::ccrow_find_end_of_text_part(int pos)
 {
-  while (pos < this->num_chars && this->cells[pos].c != TRANSP_SPACE)
+  num_chars = limit<int>(num_chars, 0, CC_COLUMNS);
+  while (pos < num_chars && cells[pos].c != TRANSP_SPACE)
     pos++;
   return pos;
 }
 
 int TccDecoder::cc_row_t::ccrow_find_current_attr(int pos)
 {
-  while (pos > 0 && !this->cells[pos].midrow_attr)
+  pos = limit<int>(pos, 0, CC_COLUMNS);
+  while (pos > 0 && !cells[pos].midrow_attr)
     pos--;
   return pos;
 }
@@ -102,7 +106,8 @@ int TccDecoder::cc_row_t::ccrow_find_current_attr(int pos)
 int TccDecoder::cc_row_t::ccrow_find_next_attr_change(int pos, int lastpos)
 {
   pos++;
-  while (pos < lastpos && !this->cells[pos].midrow_attr)
+  lastpos = limit<int>(lastpos, 0, CC_COLUMNS);
+  while (pos < lastpos && !cells[pos].midrow_attr)
     pos++;
   return pos;
 }
@@ -111,8 +116,9 @@ bool TccDecoder::cc_row_t::ccrow_render(cc_renderer_t *renderer, int rownum)
 {
  bool was=false;
  int pos = ccrow_find_next_text_part(0);
- while (pos < this->num_chars) {
+ while (pos < num_chars) {
     int endpos = ccrow_find_end_of_text_part(pos);
+    endpos = limit<int>(endpos, 0, CC_COLUMNS);
     int seg_begin = pos;
 
     //int seg_pos[CC_COLUMNS + 1];seg_pos[0] = seg_begin;
@@ -123,13 +129,16 @@ bool TccDecoder::cc_row_t::ccrow_render(cc_renderer_t *renderer, int rownum)
     while (seg_begin < endpos) {
       int attr_pos = ccrow_find_current_attr(seg_begin);
       int seg_end = ccrow_find_next_attr_change(seg_begin, endpos);
+      seg_begin = limit<int>(seg_begin, 0, CC_COLUMNS);
+      seg_end   = limit<int>(seg_end,   0, CC_COLUMNS);
+      attr_pos  = limit<int>(attr_pos,  0, CC_COLUMNS);
 
       /* compute text size of segment */
       for (int i = seg_begin; i < seg_end; i++)
-        buf[i - seg_begin] = this->cells[i].c;
+        buf[i - seg_begin] = cells[i].c;
       buf[seg_end - seg_begin] = '\0';
 
-      const cc_attribute_t *attr = &this->cells[attr_pos].attributes;
+      const cc_attribute_t *attr = &cells[attr_pos].attributes;
       wchar_t sub[CC_COLUMNS*2]=L"";
       if (attr->italic) strncat_s(sub, countof(sub), L"<i>", _TRUNCATE);
       if (attr->underline) strncat_s(sub, countof(sub), L"<u>", _TRUNCATE);
@@ -160,12 +169,13 @@ bool TccDecoder::cc_row_t::ccrow_render(cc_renderer_t *renderer, int rownum)
 
 void TccDecoder::cc_buffer_t::ccbuf_add_char(wchar_t c)
 {
-  cc_row_t *rowbuf = &this->rows[this->rowpos];
+  rowpos = limit<int>(rowpos, 0, CC_ROWS);
+  cc_row_t *rowbuf = &rows[rowpos];
   int pos = rowbuf->pos;
   int left_displayable = (pos > 0) && (pos <= rowbuf->num_chars);
 
 #if LOG_DEBUG > 2
-  printf("cc_decoder: ccbuf_add_char: %c @ %d/%d\n", c, this->rowpos, pos);
+  printf("cc_decoder: ccbuf_add_char: %c @ %d/%d\n", c, rowpos, pos);
 #endif
 
   if (pos >= CC_COLUMNS) {
@@ -207,7 +217,8 @@ void TccDecoder::cc_buffer_t::ccbuf_add_char(wchar_t c)
 
 void TccDecoder::cc_buffer_t::ccbuf_set_cursor(int row, int column, int underline, int italics, int color)
 {
- cc_row_t *rowbuf = &this->rows[row];
+ row = limit(row, 0, CC_ROWS);
+ cc_row_t *rowbuf = &rows[row];
  cc_attribute_t attr;
 
  attr.italic = (uint8_t)italics;
@@ -218,14 +229,15 @@ void TccDecoder::cc_buffer_t::ccbuf_set_cursor(int row, int column, int underlin
  rowbuf->pac_attr = attr;
  rowbuf->pac_attr_chg = 1;
 
- this->rowpos = row;
+ rowpos = row;
  rowbuf->pos = column;
  rowbuf->attr_chg = 0;
 }
 
 void TccDecoder::cc_buffer_t::ccbuf_apply_attribute(cc_attribute_t *attr)
 {
-  cc_row_t *rowbuf = &this->rows[this->rowpos];
+  rowpos = limit<int>(rowpos, 0, CC_ROWS);
+  cc_row_t *rowbuf = &rows[rowpos];
   int pos = rowbuf->pos;
 
   rowbuf->attr_chg = 1;
@@ -237,7 +249,8 @@ void TccDecoder::cc_buffer_t::ccbuf_apply_attribute(cc_attribute_t *attr)
 
 void TccDecoder::cc_buffer_t::ccbuf_tab(int tabsize)
 {
-  cc_row_t *rowbuf = &this->rows[this->rowpos];
+  rowpos = limit<int>(rowpos, 0, CC_ROWS);
+  cc_row_t *rowbuf = &rows[rowpos];
   rowbuf->pos += tabsize;
   if (rowbuf->pos > CC_COLUMNS) {
     rowbuf->pos = CC_COLUMNS;
@@ -246,10 +259,10 @@ void TccDecoder::cc_buffer_t::ccbuf_tab(int tabsize)
   /* tabs have no effect on pending PAC attribute changes */
 }
 
-int TccDecoder::cc_buffer_t::cc_buf_has_displayable(void)
+int TccDecoder::cc_buffer_t::cc_buf_has_displayable()
 {
   for (int i = 0; i < CC_ROWS; i++) {
-    if (this->rows[i].num_chars > 0)
+    if (rows[i].num_chars > 0)
       return 1;
   }
   return 0;
@@ -259,8 +272,8 @@ void TccDecoder::cc_buffer_t::ccbuf_render(cc_renderer_t *renderer)
 {
  bool wasrow=false;
   for (int row = 0; row < CC_ROWS; ++row) {
-    if (this->rows[row].num_chars > 0)
-      wasrow|=this->rows[row].ccrow_render(renderer, row);
+    if (rows[row].num_chars > 0)
+      wasrow|=rows[row].ccrow_render(renderer, row);
     else
       if (wasrow)
        renderer->deciV->addClosedCaption(L"");
@@ -275,7 +288,7 @@ void TccDecoder::cc_memory_t::ccmem_clear(void)
 
 void TccDecoder::cc_set_channel(int channel)
 {
- (*this->active)->channel_no = channel;
+ (*active)->channel_no = channel;
 }
 
 void TccDecoder::cc_renderer_t::cc_renderer_show_caption(cc_buffer_t *buf, int64_t vpts)
@@ -284,28 +297,28 @@ void TccDecoder::cc_renderer_t::cc_renderer_show_caption(cc_buffer_t *buf, int64
   printf("spucc: cc_renderer: show\n");
 #endif
 
-  if (this->displayed) {
+  if (displayed) {
     cc_renderer_hide_caption(vpts);
   //printf("spucc: cc_renderer: show: OOPS - caption was already displayed!\n");
   }
 
-  //this->osd_renderer->clear(this->cap_display);
+  //osd_renderer->clear(cap_display);
   buf->ccbuf_render(this);
-  //this->osd_renderer->set_position(this->cap_display, this->x, this->y);
-  //vpts = std::max(vpts, this->last_hide_vpts);
-  //this->osd_renderer->show(this->cap_display, vpts);
+  //osd_renderer->set_position(cap_display, x, y);
+  //vpts = std::max(vpts, last_hide_vpts);
+  //osd_renderer->show(cap_display, vpts);
 
-  this->displayed = 1;
-  //this->display_vpts = vpts;
+  displayed = 1;
+  //display_vpts = vpts;
 }
 
 void TccDecoder::cc_renderer_t::cc_renderer_hide_caption(int64_t vpts)
 {
-  if (this->displayed) {
-    //this->osd_renderer->hide(this->cap_display, vpts);
+  if (displayed) {
+    //osd_renderer->hide(cap_display, vpts);
     deciV->hideClosedCaptions();
-    this->displayed = 0;
-    //this->last_hide_vpts = vpts;
+    displayed = 0;
+    //last_hide_vpts = vpts;
   }
 }
 
@@ -347,6 +360,8 @@ void TccDecoder::cc_decode_PAC(int channel,  uint8_t c1, uint8_t c2)
 
 void TccDecoder::cc_decode_standard_char(uint8_t c1, uint8_t c2)
 {
+ c1 = std::min<uint8_t>(c1, countof(chartbl));
+ c2 = std::min<uint8_t>(c2, countof(chartbl));
  cc_buffer_t *buf = active_ccbuffer();
 
  /* c1 always is a valid character */
@@ -438,6 +453,7 @@ void TccDecoder::cc_decode_extended_special_char(int channel,  uint8_t c1, uint8
     0x00bb, // >>
    };
 
+  c2 = limit<uint8_t>(c2, 0x20, 0x3f);
   cc_set_channel(channel);
   cc_buffer_t *buf = active_ccbuffer();
   buf->ccbuf_add_char(specialchar[c2 - 0x20]);
@@ -487,6 +503,7 @@ void TccDecoder::cc_decode_more_extended_special_char(int channel,  uint8_t c1, 
     0x2518, // _|
   };
 
+  c2 = limit<uint8_t>(c2, 0x20, 0x3f);
   cc_set_channel(channel);
   cc_buffer_t *buf = active_ccbuffer();
   buf->ccbuf_add_char(specialchar[c2 - 0x20]);
@@ -524,7 +541,7 @@ void TccDecoder::cc_swap_buffers(void)
   cc_hide_displayed();
 
   // DPRINTFA("cc_decoder: cc_swap_buffers: swapping caption memory\n");
-  std::swap( this->on_buf, this->off_buf);
+  std::swap( on_buf, off_buf);
 
   /* show new displayed memory */
   cc_show_displayed();
@@ -570,14 +587,14 @@ void TccDecoder::cc_decode_misc_control_code(int channel,uint8_t c1, uint8_t c2)
 
   case 0x2c:             /* EDM - erase displayed memory */
     cc_hide_displayed();
-    this->on_buf->ccmem_clear();
+    on_buf->ccmem_clear();
     break;
 
   case 0x2d:             /* carriage return */
     break;
 
   case 0x2e:             /* ENM - erase non-displayed memory */
-    this->off_buf->ccmem_clear();
+    off_buf->ccmem_clear();
     break;
 
   case 0x2f:             /* EOC - swap displayed and non displayed memory */
@@ -608,7 +625,7 @@ void TccDecoder::cc_decode_EIA608(uint16_t data)
 
     /* control sequences are often repeated. In this case, we should */
     /* evaluate it only once. */
-    if (data != this->lastcode) {
+    if (data != lastcode) {
 
       if (c2 & 0x40) {         /* preamble address code: 0x40 <= c2 <= 0x7f */
         cc_decode_PAC(channel, c1, c2);
@@ -655,7 +672,7 @@ void TccDecoder::cc_decode_EIA608(uint16_t data)
       }
     }
   }
- this->lastcode = data;
+ lastcode = data;
 }
 
 void TccDecoder::decode(const uint8_t *buffer,size_t buf_len)
@@ -696,8 +713,7 @@ void TccDecoder::decode(const uint8_t *buffer,size_t buf_len)
   uint8_t cc_code;
   int odd_offset = 1;
 
-  this->f_offset = 0;
-  this->pts = pts;
+  f_offset = 0;
 
   while (curbytes < buf_len) {
     int skip = 2;
@@ -724,7 +740,7 @@ void TccDecoder::decode(const uint8_t *buffer,size_t buf_len)
       /* expect EIA-608 CC1/CC2 encoding */
       if (good_parity(data1 | (data2 << 8))) {
 	cc_decode_EIA608(data1 | (data2 << 8));
-	this->f_offset++;
+	f_offset++;
       }
       else
        return;
@@ -756,7 +772,7 @@ void TccDecoder::decode(const uint8_t *buffer,size_t buf_len)
 
 int TccDecoder::cc_onscreen_displayable(void)
 {
- return this->on_buf->channel[this->on_buf->channel_no].cc_buf_has_displayable();
+ return on_buf->channel[on_buf->channel_no].cc_buf_has_displayable();
 }
 
 void TccDecoder::cc_show_displayed(void)
@@ -764,11 +780,11 @@ void TccDecoder::cc_show_displayed(void)
  //DPRINTFA("cc_decoder: cc_show_displayed\n");
 
  if (cc_onscreen_displayable()) {
-    //int64_t vpts = cc_renderer_calc_vpts(this->cc_state->renderer, this->pts, this->f_offset);
-    //DPRINTFA("cc_decoder: cc_show_displayed: showing caption %u at vpts %u\n", this->capid, vpts);
+    //int64_t vpts = cc_renderer_calc_vpts(cc_state->renderer, pts, f_offset);
+    //DPRINTFA("cc_decoder: cc_show_displayed: showing caption %u at vpts %u\n", capid, vpts);
     int64_t vpts=0;
-    this->capid++;
-    this->cc_state.renderer->cc_renderer_show_caption(&this->on_buf->channel[this->on_buf->channel_no], vpts);
+    capid++;
+    cc_state.renderer->cc_renderer_show_caption(&on_buf->channel[on_buf->channel_no], vpts);
   }
 }
 void TccDecoder::cc_hide_displayed(void)
@@ -784,9 +800,9 @@ void TccDecoder::onSeek(void)
  f_offset = 0;
  buffer[0].ccmem_clear();
  buffer[1].ccmem_clear();
- this->on_buf = &this->buffer[0];
- this->off_buf = &this->buffer[1];
- this->active = &this->off_buf;
+ on_buf = &buffer[0];
+ off_buf = &buffer[1];
+ active = &off_buf;
 }
 
 TccDecoder::TccDecoder(IffdshowDecVideo *deciV):
@@ -818,7 +834,7 @@ TccDecoder::TccDecoder(IffdshowDecVideo *deciV):
   };
  static const TcharTabInit charTabInit;
 
- this->on_buf = &this->buffer[0];
- this->off_buf = &this->buffer[1];
- this->active = &this->off_buf;
+ on_buf = &buffer[0];
+ off_buf = &buffer[1];
+ active = &off_buf;
 }
