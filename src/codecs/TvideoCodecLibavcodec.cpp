@@ -615,7 +615,7 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
                         // DPRINTF(_l("Got Rate StartTime = %s Rate = %d\n"), Trt2str(rateInfo->rate.StartTime).c_str(), rateInfo->rate.Rate);
                     }
 
-                    if (rateInfo->isDiscontinuity && frametype == FRAME_TYPE::I) {
+                    if ((rateInfo->isDiscontinuity || rateInfo->correctTS) && frametype == FRAME_TYPE::I) {
                         // if we're at a Discontinuity use the times we're being sent in
                         // DPRINTF((ffstring(L"rateInfo->isDiscontinuity found. pict.rtStart ") + Trt2str(pict.rtStart) + L" rateInfo->rate.StartTime " + Trt2str(rateInfo->rate.StartTime)).c_str());
                         pict.rtStart = rateInfo->rate.StartTime + (pict.rtStart - rateInfo->rate.StartTime) * abs(rateInfo->rate.Rate) / 10000;
