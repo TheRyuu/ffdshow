@@ -1264,7 +1264,7 @@ void TsubtitleText::format(TsubtitleFormat &format)
     for (Tbase::iterator l=this->begin();l!=this->end();l++)
         format.processMicroDVD(*this,l);
 
-    if (sfmt==Tsubreader::SUB_MPL2)
+    if ((sfmt==Tsubreader::SUB_MPL2)||(sfmt==Tsubreader::SUB_VPLAYER))
         foreach (TsubtitleLine &line, *this)
             format.processMPL2(line);
 }
