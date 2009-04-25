@@ -58,7 +58,7 @@ HRESULT TffdshowDecVideoOutputPin::Deliver(IMediaSample * pSample)
  if(m_pInputPin == NULL)
   return VFW_E_NOT_CONNECTED;
  if(!isFirstFrame && fdv->inpin->m_rateAndFlush.m_flushing)
-  return S_OK;
+  return S_FALSE;
 
  isFirstFrame= false;
  if(fdv->isQueue==1)
