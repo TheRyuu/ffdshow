@@ -565,6 +565,7 @@ STDMETHODIMP TffdshowVideoInputPin::Receive(IMediaSample* pSample)
 {
     AM_MEDIA_TYPE *pmt=NULL;
     if (SUCCEEDED(pSample->GetMediaType(&pmt)) && pmt) {
+        CAutoLock lock2(&m_csCodecs_and_imgFilters);
         CMediaType mt(*pmt);
         SetMediaType(&mt);
         allocator.mtChanged=false;
