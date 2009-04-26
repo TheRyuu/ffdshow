@@ -44,7 +44,7 @@ TglobalSettingsBase::TglobalSettingsBase(const Tconfig *Iconfig,int Imode,const 
    IDFF_trayIconChanged  ,&TglobalSettingsBase::trayIconChanged  ,0,0,_l(""),0,
      NULL,0,
    IDFF_trayIconExt      ,&TglobalSettingsBase::trayIconExt      ,0,0,_l(""),0,
-     _l("trayIconExt"),0,
+     _l("trayIconExt"),1,
    IDFF_outputdebug      ,&TglobalSettingsBase::outputdebug      ,0,0,_l(""),0,
      _l("outputdebug"),1,
    IDFF_outputdebugfile  ,&TglobalSettingsBase::outputdebugfile  ,0,0,_l(""),0,
