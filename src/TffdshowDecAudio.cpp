@@ -231,7 +231,7 @@ CodecID TffdshowDecAudio::getCodecId(const CMediaType &mt)
 	wFormatTag=WAVE_FORMAT_NELLYMOSER;
  else if (mt.subtype==MEDIASUBTYPE_DOLBY_TRUEHD || mt.subtype==MEDIASUBTYPE_NERO_MLP 
      || mt.subtype==MEDIASUBTYPE_ARCSOFT_MLP || mt.subtype==MEDIASUBTYPE_SONIC_MLP)
-	wFormatTag=WAVE_FORMAT_MLP;
+     wFormatTag=WAVE_FORMAT_TRUEHD;
  else if (mt.subtype==MEDIASUBTYPE_DOLBY_DDPLUS || mt.subtype==MEDIASUBTYPE_ARCSOFT_DDPLUS)
      wFormatTag=WAVE_FORMAT_EAC3;
  else if (mt.subtype==MEDIASUBTYPE_DTS_HD || mt.subtype==MEDIASUBTYPE_ARCSOFT_DTSHD)

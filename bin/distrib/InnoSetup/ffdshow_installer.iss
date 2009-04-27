@@ -1,10 +1,10 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision           = '2893'
+#define tryout_revision           = '2894'
 
 #define buildyear                 = '2009'
 #define buildmonth                =   '04'
-#define buildday                  =   '21'
+#define buildday                  =   '27'
 
 ; Build specific options
 #define localize                  = True
@@ -80,6 +80,7 @@
   #define include_setup_icon     = True
   #define filename_suffix        = '_xxl_x64'
 #elif PREF_ALBAIN
+  #define sse_required           = True
   #define filename_suffix        = '_dbt'
 #elif PREF_ALBAIN_X64
   #define is64bit                = True
@@ -317,7 +318,8 @@ Name: "audio\ac3";               Description: "AC3";                            
 Name: "audio\ac3\liba52";        Description: "liba52";                           Components: ffdshow; Flags:           exclusive
 Name: "audio\ac3\libavcodec";    Description: "libavcodec";                       Components: ffdshow; Flags: unchecked exclusive
 Name: "audio\eac3";              Description: "E-AC3 (Dolby Digital Plus)";       Components: ffdshow
-Name: "audio\mlp";               Description: "MLP, Dolby TrueHD";                Components: ffdshow
+Name: "audio\truehd";            Description: "Dolby TrueHD";                     Components: ffdshow
+Name: "audio\mlp";               Description: "MLP";                              Components: ffdshow
 Name: "audio\dts";               Description: "DTS";                              Components: ffdshow
 Name: "audio\dts\libdts";        Description: "libdts";                           Components: ffdshow; Flags:           exclusive
 Name: "audio\dts\libavcodec";    Description: "libavcodec";                       Components: ffdshow; Flags: unchecked exclusive

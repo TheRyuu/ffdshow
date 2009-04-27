@@ -1016,6 +1016,7 @@ TglobalSettingsDecAudio::TglobalSettingsDecAudio(const Tconfig *Iconfig,int Imod
    IDFF_mp3                    ,&TglobalSettingsDecAudio::mp3                    ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_mp2                    ,&TglobalSettingsDecAudio::mp2                    ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_ac3                    ,&TglobalSettingsDecAudio::ac3                    ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+   IDFF_truehd                 ,&TglobalSettingsDecAudio::truehd                 ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_mlp                    ,&TglobalSettingsDecAudio::mlp                    ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_eac3                   ,&TglobalSettingsDecAudio::eac3                   ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_dts                    ,&TglobalSettingsDecAudio::dts                    ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
@@ -1095,6 +1096,7 @@ void TglobalSettingsDecAudio::reg_op_codec(TregOp &t,TregOp *t2)
  _reg_op_codec(IDFF_mp2       ,t,t2,_l("mp2")       ,mp2       ,0);
  _reg_op_codec(IDFF_mp3       ,t,t2,_l("mp3")       ,mp3       ,0);
  _reg_op_codec(IDFF_ac3       ,t,t2,_l("ac3")       ,ac3       ,0);
+ _reg_op_codec(IDFF_truehd    ,t,t2,_l("truehd")    ,truehd    ,0);
  _reg_op_codec(IDFF_mlp       ,t,t2,_l("mlp")       ,mlp       ,0);
  _reg_op_codec(IDFF_eac3      ,t,t2,_l("eac3")      ,eac3      ,0);
  _reg_op_codec(IDFF_dts       ,t,t2,_l("dts")       ,dts       ,0);
@@ -1222,7 +1224,8 @@ void TglobalSettingsDecAudio::load(void)
  FF_WAVE_FORMAT1_OP(PCM32  ,rawa==IDFF_MOVIE_RAW || rawa==(TsampleFormat::SF_ALLINT<<8) || rawa==(TsampleFormat::SF_PCM32<<8),CODEC_ID_PCM) \
  FF_WAVE_FORMAT1_OP(FLOAT32,rawa==IDFF_MOVIE_RAW || rawa==(TsampleFormat::SF_FLOAT32<<8) || rawa==(TsampleFormat::SF_ALLFLOAT<<8),CODEC_ID_PCM) \
  FF_WAVE_FORMAT1_OP(FLOAT64,rawa==IDFF_MOVIE_RAW || rawa==(TsampleFormat::SF_FLOAT64<<8) || rawa==(TsampleFormat::SF_ALLFLOAT<<8),CODEC_ID_PCM) \
- FF_WAVE_FORMAT1_OP (MLP   ,mlp    & rawmask,CODEC_ID_MLP)
+ FF_WAVE_FORMAT1_OP(MLP   ,mlp    & rawmask,CODEC_ID_MLP) \
+ FF_WAVE_FORMAT1_OP(TRUEHD,truehd & rawmask,CODEC_ID_TRUEHD)
 
 const char_t *TglobalSettingsDecAudio::wave_formats[]=
 {

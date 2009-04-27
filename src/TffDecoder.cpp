@@ -634,6 +634,7 @@ HRESULT TffdshowDecVideo::DecideBufferSizeOld(IMemAllocator *pAlloc, ALLOCATOR_P
 
 void TffdshowDecVideo::ConnectCompatibleFilter(void)
 {
+    DPRINTF(_l("TffdshowDecVideo::ConnectCompatibleFilter. Connect FFDShow"));
 	if (compatibleFilterConnected || inpin->pCompatibleFilter == NULL) return;
 	HRESULT hr;
 	if (inputConnectedPin == NULL) // Reuse of inputConnectedPin is possible

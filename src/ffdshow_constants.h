@@ -888,6 +888,7 @@
 #define IDFF_avisV              1043
 #define IDFF_avisA              1048
 #define IDFF_mlp                1097
+#define IDFF_truehd             3515
 #define IDFF_rv40               1332
 #define IDFF_rv30               1333
 #define IDFF_cook               1334
@@ -1540,6 +1541,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//next:3515
+//next:3516
 
 #endif

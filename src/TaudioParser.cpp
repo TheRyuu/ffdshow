@@ -113,7 +113,7 @@ CodecID TaudioParser::getCodecIdFromStream()
 {
     CodecID codecIDAC3 = globalSettings->getCodecId(WAVE_FORMAT_AC3_W,NULL);
     useAC3CoreOnly = (codecIDAC3 != CODEC_ID_NONE)
-        && (globalSettings->getCodecId(WAVE_FORMAT_MLP,NULL)==CODEC_ID_NONE);
+        && (globalSettings->getCodecId(WAVE_FORMAT_TRUEHD,NULL)==CODEC_ID_NONE);
 
 	useAC3Passthrough = (codecIDAC3 != CODEC_ID_NONE) && (deci->getParam2(IDFF_aoutpassthroughAC3) == 1);
 
@@ -139,7 +139,9 @@ CodecID TaudioParser::getCodecIdFromStream()
 		// TODO : if EAC3 decoder disabled, find a compatible EAC3 decoder and pull FFDShow Audio out of the graph
 		// Problem : no EAC3 mediaguid exist
 		break;
-	case MLP:case TRUEHD:wFormatTag=WAVE_FORMAT_MLP;
+	case MLP:wFormatTag=WAVE_FORMAT_MLP;
+        break;
+    case TRUEHD:wFormatTag=WAVE_FORMAT_TRUEHD;
 		// TODO : if MLP decoder disabled, find a compatible MLP decoder and pull FFDShow Audio out of the graph
 		// Problem : no MLP mediaguid exist
 		break;
@@ -162,7 +164,7 @@ CodecID TaudioParser::getCodecIdFromStream()
 		}
 		else
 		{
-			wFormatTag=WAVE_FORMAT_MLP;
+			wFormatTag=WAVE_FORMAT_TRUEHD;
 		}
 		break;
 	case DTS:

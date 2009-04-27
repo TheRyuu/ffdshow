@@ -539,7 +539,8 @@ void TcodecsPageAudio::fillCodecs(void)
    static const int movie_ac3[]={IDFF_MOVIE_LIBA52,IDFF_MOVIE_LAVC,0};
    formats.push_back(Tformat(_l("AC3")         ,IDFF_ac3        ,movie_ac3,_l("ATSC A-52 (AC3) decoder")));
    formats.push_back(Tformat(_l("E-AC3")       ,IDFF_eac3       ,IDFF_MOVIE_LAVC,_l("Extended AC3 decoder (Dolby Digital Plus). Works only if AC3 decoding is enabled!")));
-   formats.push_back(Tformat(_l("MLP")         ,IDFF_mlp        ,IDFF_MOVIE_LAVC,_l("Dolby TrueHD/MLP decoder. Works only if AC3 decoding is enabled!")));
+   formats.push_back(Tformat(_l("True HD")      ,IDFF_truehd     ,IDFF_MOVIE_LAVC,_l("Dolby TrueHD decoder. Works only if AC3 decoding is enabled!")));
+   formats.push_back(Tformat(_l("MLP")         ,IDFF_mlp        ,IDFF_MOVIE_LAVC,_l("MLP decoder. Works only if AC3 decoding is enabled!")));
    static const int movie_dts[]={IDFF_MOVIE_LIBDTS,IDFF_MOVIE_LAVC,0};
    static const Tformat::Toption options_dts[]={{0,_l("Check for DTS in WAV"),IDFF_dtsinwav,1},{NULL,0}};
    formats.push_back(Tformat(_l("DTS")         ,IDFF_dts        ,movie_dts,_l("DTS Coherent Acoustics stream decoder"),options_dts));
