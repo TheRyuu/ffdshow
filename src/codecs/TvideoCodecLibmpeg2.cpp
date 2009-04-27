@@ -266,7 +266,7 @@ HRESULT TvideoCodecLibmpeg2::decompressI(const unsigned char *src,size_t srcLen,
                         pict.rtStart = rateInfo->rate.StartTime + (pict.rtStart - rateInfo->rate.StartTime) * abs(rateInfo->rate.Rate) / 10000;
 
                         // DPRINTF(_l("rateInfo->isDiscontinuity found. updating rtStart %s oldpict.rtStop %s"),Trt2str(pict.rtStart).c_str(), Trt2str(oldpict.rtStop).c_str());
-                        pict.discontinuity = true;
+                        pict.discontinuity = rateInfo->isDiscontinuity;
                         rateInfo->isDiscontinuity = false;
                     } else
                         pict.rtStart = oldpict.rtStop;
