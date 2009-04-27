@@ -416,6 +416,8 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
 
     if (cfg->cc && cfg->is && adhocMode != ADHOC_ADHOC_DRAW_DVD_SUB_ONLY) {
         boost::unique_lock<boost::recursive_mutex> lock(csCC);
+        while(cc && cc->numlines() && cc->back().empty())
+            cc->pop_back();
         if (cc && cc->numlines()) {
             if (!again)
                 init(pict,cfg->full,cfg->half);
@@ -433,6 +435,7 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
             printprefs.csp=pict.csp & FF_CSPS_MASK;
             printprefs.sizeDx=pict.rectFull.dx;
             printprefs.sizeDy=pict.rectFull.dy;
+            printprefs.subformat = Tsubreader::SUB_SUBRIP;
 
             const Trect *decodedPict = deciV->getDecodedPictdimensions();
             if (decodedPict!=NULL) {
@@ -518,6 +521,7 @@ void TimgFilterSubtitles::addClosedCaption(const wchar_t *line)
     cc->format(format);
     wasCCchange=true;
 }
+
 void TimgFilterSubtitles::hideClosedCaptions()
 {
     boost::unique_lock<boost::recursive_mutex> lock(csCC);
