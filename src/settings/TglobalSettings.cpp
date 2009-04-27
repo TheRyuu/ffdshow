@@ -1180,11 +1180,11 @@ void TglobalSettingsDecAudio::load(void)
  FF_WAVE_FORMAT_OP (AAC5   ,aac    & rawmask,c_aac) \
  FF_WAVE_FORMAT1_OP(AMR    ,amr    & rawmask,CODEC_ID_AMR_NB) \
  FF_WAVE_FORMAT1_OP(SAMR   ,amr    & rawmask,CODEC_ID_AMR_NB) \
- FF_WAVE_FORMAT1_OP(IMA_DK3,iadpcm & rawmask,CODEC_ID_ADPCM_IMA_DK3) \
+ FF_WAVE_FORMAT1_OP(IMA_DK3,otherAdpcm & rawmask,CODEC_ID_ADPCM_IMA_DK3) \
  FF_WAVE_FORMAT1_OP(IMA_WAV,iadpcm & rawmask,CODEC_ID_ADPCM_IMA_WAV) \
- FF_WAVE_FORMAT1_OP(IMA_DK4,iadpcm & rawmask,CODEC_ID_ADPCM_IMA_DK4) \
+ FF_WAVE_FORMAT1_OP(IMA_DK4,otherAdpcm & rawmask,CODEC_ID_ADPCM_IMA_DK4) \
  FF_WAVE_FORMAT1_OP(IMA4   ,iadpcm & rawmask,CODEC_ID_ADPCM_IMA_QT) \
- FF_WAVE_FORMAT1_OP(IMA_AMV,iadpcm & rawmask,CODEC_ID_ADPCM_IMA_AMV) \
+ FF_WAVE_FORMAT1_OP(IMA_AMV,otherAdpcm & rawmask,CODEC_ID_ADPCM_IMA_AMV) \
  FF_WAVE_FORMAT1_OP(ADPCM  ,msadpcm& rawmask,CODEC_ID_ADPCM_MS) \
  FF_WAVE_FORMAT1_OP(CREATIVE_ADPCM,otherAdpcm& rawmask,CODEC_ID_ADPCM_CT) \
  FF_WAVE_FORMAT1_OP(YAMAHA_ADPCM  ,otherAdpcm& rawmask,CODEC_ID_ADPCM_YAMAHA) \
