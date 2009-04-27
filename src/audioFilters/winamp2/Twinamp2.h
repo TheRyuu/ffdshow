@@ -35,6 +35,8 @@ private:
  static unsigned int __stdcall threadProc(void *self0);
  volatile HWND h;
  static LRESULT CALLBACK wndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM lprm);
+ boost::mutex mut;
+ boost::condition_variable cond;
 public:
  Twinamp2dsp(Twinamp2dspDll *Idll,winampDSPModule *Imod);
  ~Twinamp2dsp();

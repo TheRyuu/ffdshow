@@ -151,10 +151,12 @@ int Twinamp2dsp::init(void)
 {
  if (!inited++ && mod->Init)
   {
+   boost::unique_lock<boost::mutex> lock(mut);
    addref();
    unsigned threadID;
    hThread=(HANDLE)_beginthreadex(NULL,65536,threadProc,this,NULL,&threadID);
-   while (!h) Sleep(20);
+   while (!h)
+    cond.wait(lock);
    return (h!=(HWND)-1)?1:(h=NULL,0);
   }
  else
@@ -221,7 +223,11 @@ unsigned int __stdcall Twinamp2dsp::threadProc(void *self0)
  self->mod->hwndParent=h;
  if (self->mod->Init(self->mod)==0)
   {
-   self->h=h;
+   {
+    boost::unique_lock<boost::mutex> lock(self->mut);
+    self->h = h;
+   }
+   self->cond.notify_one();
    if (self->h)
     {
      SetWindowLongPtr(self->h,GWLP_USERDATA,LONG_PTR(self));
