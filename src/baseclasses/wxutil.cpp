@@ -139,7 +139,7 @@ CAMThread::~CAMThread() {
 
 // when the thread starts, it calls this function. We unwrap the 'this'
 //pointer and call ThreadProc.
-DWORD WINAPI
+unsigned int WINAPI
 CAMThread::InitialThreadProc(LPVOID pv)
 {
     HRESULT hrCoInit = CAMThread::CoInitializeHelper();
@@ -161,21 +161,19 @@ CAMThread::InitialThreadProc(LPVOID pv)
 BOOL
 CAMThread::Create()
 {
-    DWORD threadid;
-
     CAutoLock lock(&m_AccessLock);
 
     if (ThreadExists()) {
 	return FALSE;
     }
 
-    m_hThread = CreateThread(
-		    NULL,
-		    0,
-		    CAMThread::InitialThreadProc,
-		    this,
-		    0,
-		    &threadid);
+	m_hThread = (HANDLE)_beginthreadex( NULL,							/* Security */
+										0,								/* Stack Size */
+										CAMThread::InitialThreadProc,	/* Thread process */
+										(LPVOID)this,					/* Arguments */
+										0,								/* 0 = Start Immediately */
+										NULL							/* Thread Address */
+										);
 
     if (!m_hThread) {
 	return FALSE;
@@ -316,8 +314,14 @@ CMsgThread::CreateThread(
         return FALSE;
     }
 
-    m_hThread = ::CreateThread(NULL, 0, DefaultThreadProc,
-			       (LPVOID)this, 0, &m_ThreadId);
+	m_hThread = (HANDLE)_beginthreadex( NULL,							/* Security */
+										0,								/* Stack Size */
+										DefaultThreadProc,				/* Thread process */
+										(LPVOID)&this,					/* Arguments */
+										0,								/* 0 = Start Immediately */
+										NULL							/* Thread Address */
+										);
+
     return m_hThread != NULL;
 }
 

@@ -11,7 +11,7 @@
 
 #include "stdafx.h"
 #include <streams.h>
-
+#include <process.h>
 
 //
 //  COutputQueue Constructor :
@@ -118,15 +118,15 @@ COutputQueue::COutputQueue(
             return;
         }
 
+		m_hThread = (HANDLE)_beginthreadex( NULL,				/* Security */
+											0,					/* Stack Size */
+											InitialThreadProc,  /* Thread process */
+											(LPVOID)this,		/* Arguments */
+											0,					/* 0 = Start Immediately */
+											NULL				/* Thread Address */
+											);
 
-        DWORD dwThreadId;
-        m_hThread = CreateThread(NULL,
-                                 0,
-                                 InitialThreadProc,
-                                 (LPVOID)this,
-                                 0,
-                                 &dwThreadId);
-        if (m_hThread == NULL) {
+		if (m_hThread == NULL) {
             DWORD dwError = GetLastError();
             *phr = AmHresultFromWin32(dwError);
             return;
@@ -178,7 +178,7 @@ COutputQueue::~COutputQueue()
 //
 //  Call the real thread proc as a member function
 //
-DWORD WINAPI COutputQueue::InitialThreadProc(LPVOID pv)
+unsigned int WINAPI COutputQueue::InitialThreadProc(LPVOID pv)
 {
     HRESULT hrCoInit = CAMThread::CoInitializeHelper();
 

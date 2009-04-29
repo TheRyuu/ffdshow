@@ -415,15 +415,16 @@ INT MessageBoxOtherThread(
     else
     {
         MsgBoxMsg msg = {hwnd, szTitle, szMessage, dwFlags, 0};
-        DWORD dwid;
-        HANDLE hThread = CreateThread(
-            0,                      // security
-            0,                      // stack size
-            MsgBoxThread,
-            (void *)&msg,           // arg
-            0,                      // flags
-            &dwid);
-        if(hThread)
+
+		HANDLE hThread = (HANDLE)_beginthreadex( NULL,				/* Security */
+												0,					/* Stack Size */
+												MsgBoxThread,		/* Thread process */
+												(LPVOID)&msg,		/* Arguments */
+												0,					/* 0 = Start Immediately */
+												NULL				/* Thread Address */
+												);
+
+		if(hThread)
         {
             WaitForSingleObject(hThread, INFINITE);
             CloseHandle(hThread);
