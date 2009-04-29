@@ -1319,6 +1319,7 @@ static int ac3_decode_frame(AVCodecContext * avctx, void *data, int *data_size,
     AC3DecodeContext *s = avctx->priv_data;
     int16_t *out_samples = (int16_t *)data;
     int blk, ch, err;
+    const uint8_t *channel_map;
 
     /* initialize the GetBitContext with the start of valid AC-3 Frame */
     if (s->input_buffer) {
@@ -1392,8 +1393,10 @@ static int ac3_decode_frame(AVCodecContext * avctx, void *data, int *data_size,
                 avctx->request_channels < s->channels) {
             s->out_channels = avctx->request_channels;
             s->output_mode  = avctx->request_channels == 1 ? AC3_CHMODE_MONO : AC3_CHMODE_STEREO;
+            s->channel_layout = ff_ac3_channel_layout_tab[s->output_mode];
         }
         avctx->channels = s->out_channels;
+        avctx->channel_layout = s->channel_layout;
 
         /* set downmixing coefficients if needed */
         if(s->channels != s->out_channels && !((s->output_mode & AC3_OUTPUT_LFEON) &&
@@ -1407,6 +1410,7 @@ static int ac3_decode_frame(AVCodecContext * avctx, void *data, int *data_size,
     }
 
     /* decode the audio blocks */
+    channel_map = ff_ac3_dec_channel_map[s->output_mode & ~AC3_OUTPUT_LFEON][s->lfe_on];
     for (blk = 0; blk < s->num_blocks; blk++) {
     #if __STDC_VERSION__ >= 199901L
         const float *output[s->out_channels];
@@ -1418,7 +1422,7 @@ static int ac3_decode_frame(AVCodecContext * avctx, void *data, int *data_size,
             err = 1;
         }
         for (ch = 0; ch < s->out_channels; ch++)
-            output[ch] = s->output[ch];
+            output[ch] = s->output[channel_map[ch]];
         s->dsp.float_to_int16_interleave(out_samples, output, 256, s->out_channels);
         out_samples += 256 * s->out_channels;
     }
