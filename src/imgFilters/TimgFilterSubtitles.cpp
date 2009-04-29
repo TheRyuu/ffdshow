@@ -545,6 +545,7 @@ HANDLE TimgFilterSubtitles::getGlyphThreadHandle()
 
 // ========================= TimgFilterSubtitles::TglyphThread =========================
 TimgFilterSubtitles::TglyphThread::TglyphThread(TimgFilterSubtitles *Iparent, IffdshowBase *deci):
+    terminated(false),
     parent(Iparent),
     threadCmd(1),
     current_pos(0),
@@ -554,15 +555,19 @@ TimgFilterSubtitles::TglyphThread::TglyphThread(TimgFilterSubtitles *Iparent, If
     used_memory(0),
     mutex_prefs(), // initialize before starting a thread
     condv_prefs(),
-    platform_specific_thread(NULL),
-    thread(glyphThreadFunc0,this)
+    platform_specific_thread(NULL)
 {
+    boost::unique_lock<boost::mutex> lock(mutex_prefs);
     shared_prefs.csp = -1;
+    thread = new boost::thread(glyphThreadFunc0,this);
 }
 
 void TimgFilterSubtitles::TglyphThread::glyphThreadFunc()
 {
-    slow();
+    {
+        boost::unique_lock<boost::mutex> lock(mutex_prefs);
+        slow();
+    }
     SetThreadPriorityBoost(get_platform_specific_thread(), true);
     TsubtitleText *next = NULL;
     do {
@@ -629,7 +634,12 @@ void TimgFilterSubtitles::TglyphThread::done()
         threadCmd = 0;
     }
     condv_prefs.notify_one();
-    thread.join();
+    {
+        boost::unique_lock<boost::mutex> lock(mutex_terminate);
+        while (!terminated)
+            condv_terminate.wait(lock);
+    }
+    thread->join();
 }
 
 Tsubreader* TimgFilterSubtitles::TglyphThread::get_subreader()
@@ -704,7 +714,7 @@ void TimgFilterSubtitles::TglyphThread::hustle()
 
 HANDLE TimgFilterSubtitles::TglyphThread::get_platform_specific_thread()
 {
-    if (!platform_specific_thread)
-        platform_specific_thread = thread.native_handle();
+    if (!platform_specific_thread && thread)
+        platform_specific_thread = thread->native_handle();
     return platform_specific_thread;
 }

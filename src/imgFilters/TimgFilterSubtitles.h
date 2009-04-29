@@ -70,7 +70,7 @@ private:
  class TglyphThread {
      static const int max_memory_usage = 40000000; // 40MB
      TimgFilterSubtitles *parent;
-     boost::thread thread;
+     boost::thread *thread;
      TprintPrefs copied_prefs;
      size_t current_pos;
      Tsubtitles *oldpin;
@@ -84,6 +84,9 @@ private:
      void glyphThreadFunc();
      static void glyphThreadFunc0(TimgFilterSubtitles::TglyphThread *self) {
          self->glyphThreadFunc();
+         boost::unique_lock<boost::mutex> lock(self->mutex_terminate);
+         self->terminated = true;
+         self->condv_terminate.notify_one();
      }
 
      // get reference to Tsubreader object
@@ -99,11 +102,14 @@ private:
      Tfont font;
      bool firstrun;
      int used_memory;
+     bool terminated;
+     boost::mutex mutex_terminate;
+     boost::condition_variable condv_terminate;
 
  public:
      HANDLE get_platform_specific_thread();
      TglyphThread(TimgFilterSubtitles *Iparent, IffdshowBase *deci);
-     ~TglyphThread() {};
+     ~TglyphThread() {delete thread;};
      void done();
      friend class TimgFilterSubtitles;
  } glyphThread;
