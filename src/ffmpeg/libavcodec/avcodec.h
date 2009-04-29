@@ -2451,10 +2451,6 @@ int avcodec_parse_frame(AVCodecContext *avctx, uint8_t **pdata,
 
 /**
  * Encodes an audio frame from \p samples into \p buf.
- * The avcodec_encode_audio() function encodes an audio frame from the input
- * buffer \p samples. To encode it, it makes use of the audio codec which was
- * coupled with \p avctx using avcodec_open(). The resulting encoded frame is
- * stored in output buffer \p buf.
  *
  * @note The output buffer should be at least \c FF_MIN_BUFFER_SIZE bytes large.
  * However, for PCM audio the user will know how much space is needed
@@ -2477,10 +2473,7 @@ int avcodec_encode_audio(AVCodecContext *avctx, uint8_t *buf, int buf_size,
 
 /**
  * Encodes a video frame from \p pict into \p buf.
- * The avcodec_encode_video() function encodes a video frame from the input
- * \p pict. To encode it, it makes use of the video codec which was coupled with
- * \p avctx using avcodec_open(). The resulting encoded bytes representing the
- * frame are stored in the output buffer \p buf. The input picture should be
+ * The input picture should be
  * stored using a specific format, namely \c avctx.pix_fmt.
  *
  * @param avctx the codec context

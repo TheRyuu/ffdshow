@@ -95,7 +95,7 @@ typedef struct SubStream {
     //! Whether the LSBs of the matrix output are encoded in the bitstream.
     uint8_t     lsb_bypass[MAX_MATRICES];
     //! Matrix coefficients, stored as 2.14 fixed point.
-    int32_t     matrix_coeff[MAX_MATRICES][MAX_CHANNELS+2];
+    int32_t     matrix_coeff[MAX_MATRICES][MAX_CHANNELS];
     //! Left shift to apply to noise values in 0x31eb substreams.
     uint8_t     matrix_noise_shift[MAX_MATRICES];
     //@}
@@ -145,7 +145,7 @@ typedef struct MLPDecodeContext {
 
     int8_t      noise_buffer[MAX_BLOCKSIZE_POW2];
     int8_t      bypassed_lsbs[MAX_BLOCKSIZE][MAX_CHANNELS];
-    int32_t     sample_buffer[MAX_BLOCKSIZE][MAX_CHANNELS+2];
+    int32_t     sample_buffer[MAX_BLOCKSIZE][MAX_CHANNELS];
 } MLPDecodeContext;
 
 static VLC huff_vlc[3];
@@ -337,21 +337,38 @@ static int read_restart_header(MLPDecodeContext *m, GetBitContext *gbp,
     uint8_t checksum;
     uint8_t lossless_check;
     int start_count = get_bits_count(gbp);
+    const int max_matrix_channel = m->avctx->codec_id == CODEC_ID_MLP
+                                 ? MAX_MATRIX_CHANNEL_MLP
+                                 : MAX_MATRIX_CHANNEL_TRUEHD;
 
     sync_word = get_bits(gbp, 13);
+    s->noise_type = get_bits1(gbp);
 
-    if (sync_word != 0x31ea >> 1) {
+    if ((m->avctx->codec_id == CODEC_ID_MLP && s->noise_type) ||
+        sync_word != 0x31ea >> 1) {
         av_log(m->avctx, AV_LOG_ERROR,
                "restart header sync incorrect (got 0x%04x)\n", sync_word);
         return -1;
     }
-    s->noise_type = get_bits1(gbp);
 
     skip_bits(gbp, 16); /* Output timestamp */
 
     s->min_channel        = get_bits(gbp, 4);
     s->max_channel        = get_bits(gbp, 4);
     s->max_matrix_channel = get_bits(gbp, 4);
+
+    if (s->max_matrix_channel > max_matrix_channel) {
+        av_log(m->avctx, AV_LOG_ERROR,
+               "Max matrix channel cannot be greater than %d.\n",
+               max_matrix_channel);
+        return -1;
+    }
+
+    if (s->max_channel != s->max_matrix_channel) {
+        av_log(m->avctx, AV_LOG_ERROR,
+               "Max channel must be equal max matrix channel.\n");
+        return -1;
+    }
 
     if (s->min_channel > s->max_channel) {
         av_log(m->avctx, AV_LOG_ERROR,
@@ -512,6 +529,9 @@ static int read_matrix_params(MLPDecodeContext *m, unsigned int substr, GetBitCo
 {
     SubStream *s = &m->substream[substr];
     unsigned int mat, ch;
+    const int max_primitive_matrices = m->avctx->codec_id == CODEC_ID_MLP
+                                     ? MAX_MATRICES_MLP
+                                     : MAX_MATRICES_TRUEHD;
 
     if (m->matrix_changed++ > 1) {
         av_log(m->avctx, AV_LOG_ERROR, "Matrices may change only once per access unit.\n");
@@ -519,6 +539,13 @@ static int read_matrix_params(MLPDecodeContext *m, unsigned int substr, GetBitCo
     }
 
     s->num_primitive_matrices = get_bits(gbp, 4);
+
+    if (s->num_primitive_matrices > max_primitive_matrices) {
+        av_log(m->avctx, AV_LOG_ERROR,
+               "Number of primitive matrices cannot be greater than %d.\n",
+               max_primitive_matrices);
+        return -1;
+    }
 
     for (mat = 0; mat < s->num_primitive_matrices; mat++) {
         int frac_bits, max_chan;
@@ -625,8 +652,8 @@ static int read_decoding_params(MLPDecodeContext *m, GetBitContext *gbp,
     unsigned int ch;
 
     if (s->param_presence_flags & PARAM_PRESENCE)
-    if (get_bits1(gbp))
-        s->param_presence_flags = get_bits(gbp, 8);
+        if (get_bits1(gbp))
+            s->param_presence_flags = get_bits(gbp, 8);
 
     if (s->param_presence_flags & PARAM_BLOCKSIZE)
         if (get_bits1(gbp)) {
@@ -675,17 +702,18 @@ static void filter_channel(MLPDecodeContext *m, unsigned int substr,
                            unsigned int channel)
 {
     SubStream *s = &m->substream[substr];
-    int32_t firbuf[MAX_BLOCKSIZE + MAX_FIR_ORDER];
-    int32_t iirbuf[MAX_BLOCKSIZE + MAX_IIR_ORDER];
+    int32_t fir_state_buffer[MAX_BLOCKSIZE + MAX_FIR_ORDER];
+    int32_t iir_state_buffer[MAX_BLOCKSIZE + MAX_IIR_ORDER];
+    int32_t *firbuf = fir_state_buffer + MAX_BLOCKSIZE;
+    int32_t *iirbuf = iir_state_buffer + MAX_BLOCKSIZE;
     FilterParams *fir = &m->channel_params[channel].filter_params[FIR];
     FilterParams *iir = &m->channel_params[channel].filter_params[IIR];
     unsigned int filter_shift = fir->shift;
     int32_t mask = MSB_MASK(s->quant_step_size[channel]);
-    int index = MAX_BLOCKSIZE;
     int i;
 
-    memcpy(&firbuf[index], fir->state, MAX_FIR_ORDER * sizeof(int32_t));
-    memcpy(&iirbuf[index], iir->state, MAX_IIR_ORDER * sizeof(int32_t));
+    memcpy(firbuf, fir->state, MAX_FIR_ORDER * sizeof(int32_t));
+    memcpy(iirbuf, iir->state, MAX_IIR_ORDER * sizeof(int32_t));
 
     for (i = 0; i < s->blocksize; i++) {
         int32_t residual = m->sample_buffer[i + s->blockpos][channel];
@@ -696,23 +724,21 @@ static void filter_channel(MLPDecodeContext *m, unsigned int substr,
         /* TODO: Move this code to DSPContext? */
 
         for (order = 0; order < fir->order; order++)
-            accum += (int64_t) firbuf[index + order] * fir->coeff[order];
+            accum += (int64_t) firbuf[order] * fir->coeff[order];
         for (order = 0; order < iir->order; order++)
-            accum += (int64_t) iirbuf[index + order] * iir->coeff[order];
+            accum += (int64_t) iirbuf[order] * iir->coeff[order];
 
         accum  = accum >> filter_shift;
         result = (accum + residual) & mask;
 
-        --index;
-
-        firbuf[index] = result;
-        iirbuf[index] = result - accum;
+        *--firbuf = result;
+        *--iirbuf = result - accum;
 
         m->sample_buffer[i + s->blockpos][channel] = result;
     }
 
-    memcpy(fir->state, &firbuf[index], MAX_FIR_ORDER * sizeof(int32_t));
-    memcpy(iir->state, &iirbuf[index], MAX_IIR_ORDER * sizeof(int32_t));
+    memcpy(fir->state, firbuf, MAX_FIR_ORDER * sizeof(int32_t));
+    memcpy(iir->state, iirbuf, MAX_IIR_ORDER * sizeof(int32_t));
 }
 
 /** Read a block of PCM residual data (or actual if no filtering active). */
