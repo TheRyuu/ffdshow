@@ -5,7 +5,7 @@
 	Name="ffdshow"
 	ProjectGUID="{0C1CDCBB-5886-42B4-A928-F4B82DD3FD17}"
 	VCNestedProjectGUID="{30A21C7F-035D-41E2-95BE-B4FFA5F5176B}"
-	VCNestedProjectCRC32="1439075668"
+	VCNestedProjectCRC32="2622525407"
 	VCNestedProjectFileName="ffdshow_2008_icl10.vcproj">
 	<Platforms>
 		<Platform 
@@ -80,7 +80,7 @@
 				Name="LinkerTool"
 				RegisterOutput="false"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="libcmtd.lib libcpmtd.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib dinput.lib dxguid.lib oldnames.lib shlwapi.lib Secur32.lib bin\lib_x86\libboost_thread-vc90-mt-s-1_37.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
+				AdditionalDependencies="libcmtd.lib libcpmtd.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib dinput.lib dxguid.lib oldnames.lib shlwapi.lib Secur32.lib bin\lib_x86\libboost_thread-vc90-mt-sgd-1_39_52655.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
 				OutputFile="bin\ffdshow.ax"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories=""
@@ -176,7 +176,7 @@
 			<Tool 
 				Name="LinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="libcmtd.lib libcpmtd.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib dinput.lib dxguid.lib oldnames.lib shlwapi.lib bin/lib_x64/libboost_thread-vc90-mt-s-1_37.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
+				AdditionalDependencies="libcmtd.lib libcpmtd.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib dinput.lib dxguid.lib oldnames.lib shlwapi.lib bin/lib_x64/libboost_thread-vc90-mt-sgd-1_39_52655.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
 				OutputFile="bin\ffdshow.ax"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
@@ -279,7 +279,7 @@
 				Name="LinkerTool"
 				RegisterOutput="false"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib libcmt.lib libcpmt.lib winmm.lib comctl32.lib dinput.lib dxguid.lib oldnames.lib shlwapi.lib bin\lib_x86\libboost_thread-vc90-mt-s-1_37.lib libircmt.lib libmmt.lib svml_dispmt.lib"
+				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib libcmt.lib libcpmt.lib winmm.lib comctl32.lib dinput.lib dxguid.lib oldnames.lib shlwapi.lib bin\lib_x86\libboost_thread-vc90-mt-s-1_39_52655.lib libircmt.lib libmmt.lib svml_dispmt.lib"
 				OutputFile="bin\ffdshow.ax"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
@@ -386,7 +386,7 @@
 			<Tool 
 				Name="LinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib libcmt.lib libcpmt.lib winmm.lib comctl32.lib dinput.lib dxguid.lib oldnames.lib shlwapi.lib bin/lib_x64/libboost_thread-vc90-mt-s-1_37.lib libircmt.lib libmmt.lib svml_dispmt.lib"
+				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib libcmt.lib libcpmt.lib winmm.lib comctl32.lib dinput.lib dxguid.lib oldnames.lib shlwapi.lib bin/lib_x64/libboost_thread-vc90-mt-s-1_39_52655.lib libircmt.lib libmmt.lib svml_dispmt.lib"
 				OutputFile="bin\ffdshow.ax"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
@@ -1378,18 +1378,12 @@
 				<FileConfiguration 
 					Name="Debug Unicode|x64">
 					<Tool 
-						Name="GeneralTool"
-						ExcludedFromBuild="true"/>
-					<Tool 
-						Name="yasm"/>
+						Name="GeneralTool"/>
 				</FileConfiguration>
 				<FileConfiguration 
 					Name="Release Unicode|x64">
 					<Tool 
-						Name="GeneralTool"
-						ExcludedFromBuild="true"/>
-					<Tool 
-						Name="yasm"/>
+						Name="GeneralTool"/>
 				</FileConfiguration>
 			</File>
 			<File 
