@@ -110,19 +110,6 @@ check_cpu_features:
   
   xor ebp, ebp
 
-; CPUID command ?
-  FF_PUSHFD 
-  pop _EAX
-  mov ecx, eax
-  xor eax, 0x200000
-  push _EAX
-  FF_POPFD 
-  FF_PUSHFD 
-  pop _EAX
-  cmp eax, ecx
-
-  jz near .cpu_quit		; no CPUID command -> exit
-
 ; get vendor string, used later
   xor eax, eax
   cpuid
@@ -160,12 +147,6 @@ check_cpu_features:
 ; SSE42 support?
   CHECK_FEATURE CPUID_SSE42, FF_CPU_SSE42, ebp, ecx
 
-; SSE4A support?
-  CHECK_FEATURE CPUID_SSE4A, FF_CPU_SSE4A, ebp, ecx
-
-; SSE5 support?
-  CHECK_FEATURE CPUID_SSE5, FF_CPU_SSE5, ebp, ecx
-
 ; extended functions?
   mov eax, 0x80000000
   cpuid
@@ -192,6 +173,12 @@ check_cpu_features:
 ; extended MMX ?
   CHECK_FEATURE EXT_CPUID_AMD_MMXEXT, FF_CPU_MMXEXT, ebp, edx
 
+; SSE4A support?
+  CHECK_FEATURE CPUID_SSE4A, FF_CPU_SSE4A, ebp, ecx
+
+; SSE5 support?
+  CHECK_FEATURE CPUID_SSE5, FF_CPU_SSE5, ebp, ecx
+
 .cpu_quit:
 
   mov eax, ebp
@@ -203,65 +190,6 @@ check_cpu_features:
   pop _ESI
   pop _EBX
 
-  ret
-ENDFUNC
-
-; sse/sse2/sse3/ssse3/sse41/sse42/sse4a/sse5 operating support detection routines
-; these will trigger an invalid instruction signal if not supported.
-ALIGN SECTION_ALIGN
-cglobal sse_os_trigger
-sse_os_trigger:
-  xorps xmm0, xmm0
-  ret
-ENDFUNC
-
-
-ALIGN SECTION_ALIGN
-cglobal sse2_os_trigger
-sse2_os_trigger:
-  xorpd xmm0, xmm0
-  ret
-ENDFUNC
-
-ALIGN SECTION_ALIGN
-cglobal sse3_os_trigger
-sse3_os_trigger:
-  haddps xmm0, xmm0
-  ret
-ENDFUNC
-
-ALIGN SECTION_ALIGN
-cglobal ssse3_os_trigger
-ssse3_os_trigger:
-  pabsw xmm0, xmm0
-  ret
-ENDFUNC
-
-ALIGN SECTION_ALIGN
-cglobal sse41_os_trigger
-sse41_os_trigger:
-  packusdw xmm0, xmm0
-  ret
-ENDFUNC
-
-ALIGN SECTION_ALIGN
-cglobal sse42_os_trigger
-sse42_os_trigger:
-  pcmpgtq xmm0, xmm0
-  ret
-ENDFUNC
-
-ALIGN SECTION_ALIGN
-cglobal sse4a_os_trigger
-sse4a_os_trigger:
-  insertq xmm0, xmm0
-  ret
-ENDFUNC
-
-ALIGN SECTION_ALIGN
-cglobal sse5_os_trigger
-sse5_os_trigger:
-  fmaddps xmm0, xmm0, xmm0, xmm0
   ret
 ENDFUNC
 

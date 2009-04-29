@@ -63,14 +63,7 @@ extern "C"
 {
  // cpu_flag detection helper functions
  extern int check_cpu_features(void);
- extern void sse_os_trigger(void);
- extern void sse2_os_trigger(void);
- extern void sse3_os_trigger(void);
- extern void ssse3_os_trigger(void);
- extern void sse41_os_trigger(void);
- extern void sse42_os_trigger(void);
- extern void sse4a_os_trigger(void);
- extern void sse5_os_trigger(void);
+
 #if defined(WIN64)
  extern void prime_xmm(void *);
  extern void get_xmm(void *);
@@ -172,81 +165,26 @@ void Tconfig::save(void)
   }
 }
 
- #ifdef __GNUC__
-  #include <signal.h>
-  #include <setjmp.h>
-  static jmp_buf mark;
-  static void sigill_handler(int signal)
-   {
-    longjmp(mark, 1);
-   }
-  static int sigill_check(void (*func)())
-   {
-    void (*old_handler)(int);
-    int jmpret;
-    old_handler=signal(SIGILL,sigill_handler);
-    if (old_handler==SIG_ERR)
-     return -1;
-
-    jmpret=setjmp(mark);
-    if (jmpret==0)
-     func();
-    signal(SIGILL,old_handler);
-    return jmpret;
-   }
- #else
-  static int sigill_check(void (*func)())
-   {
-    __try
-     {
-      func();
-     }
-    __except(EXCEPTION_EXECUTE_HANDLER)
-     {
-      if (_exception_code()==STATUS_ILLEGAL_INSTRUCTION)
-       return 1;
-     }
-    return 0;
-   }
- #endif
-
 void Tconfig::initCPU(int allowed_cpu_flags)
 {
- if (available_cpu_flags==0)
-  {
-   available_cpu_flags=check_cpu_features();
-   if ((available_cpu_flags&FF_CPU_SSE) && sigill_check(sse_os_trigger))
-    available_cpu_flags&=~FF_CPU_SSE;
-   if ((available_cpu_flags&FF_CPU_SSE2) && sigill_check(sse2_os_trigger))
-    available_cpu_flags&=~FF_CPU_SSE2;
-   if ((available_cpu_flags&FF_CPU_SSE3) && sigill_check(sse3_os_trigger))
-    available_cpu_flags&=~FF_CPU_SSE3;
-   if ((available_cpu_flags&FF_CPU_SSSE3) && sigill_check(ssse3_os_trigger))
-    available_cpu_flags&=~FF_CPU_SSSE3;
-   if ((available_cpu_flags&FF_CPU_SSE41) && sigill_check(sse41_os_trigger))
-    available_cpu_flags&=~FF_CPU_SSE41;
-   if ((available_cpu_flags&FF_CPU_SSE42) && sigill_check(sse42_os_trigger))
-    available_cpu_flags&=~FF_CPU_SSE42;
-   if ((available_cpu_flags&FF_CPU_SSE4A) && sigill_check(sse4a_os_trigger))
-    available_cpu_flags&=~FF_CPU_SSE4A;
-   if ((available_cpu_flags&FF_CPU_SSE5) && sigill_check(sse5_os_trigger))
-    available_cpu_flags&=~FF_CPU_SSE5;
-   #ifdef __INTEL_COMPILER
-   available_cpu_flags|=FF_CPU_MMX|FF_CPU_MMXEXT;
-   #endif
-   cpu_flags=available_cpu_flags&allowed_cpu_flags;
-   sws_cpu_flags=Tlibmplayer::swsCpuCaps();
-   lavc_cpu_flags=Tlibavcodec::lavcCpuFlags();
-   //GetCpuCaps(&gCpuCaps);
-   cache_line=64;//gCpuCaps.cl_size;
-   #ifndef WIN64
-   if      (cpu_flags&FF_CPU_MMXEXT) fastmemcpy=memcpy_xmm;
-   else if (cpu_flags&FF_CPU_MMX)    fastmemcpy=memcpy_mmx;
-   else                              fastmemcpy=memcpy_x86;
-   #else
-   fastmemcpy=memcpy;
-   #endif
-  }
+    if (available_cpu_flags == 0) {
+        available_cpu_flags = check_cpu_features();
+#ifdef __INTEL_COMPILER
+        available_cpu_flags |= FF_CPU_MMX|FF_CPU_MMXEXT;
+#endif
+        cpu_flags = available_cpu_flags & allowed_cpu_flags;
+        sws_cpu_flags = Tlibmplayer::swsCpuCaps();
+        lavc_cpu_flags = Tlibavcodec::lavcCpuFlags();
+        //GetCpuCaps(&gCpuCaps);
+        cache_line = 64;//gCpuCaps.cl_size;
+#ifndef WIN64
+        if      (cpu_flags & FF_CPU_MMXEXT) fastmemcpy = memcpy_xmm;
+        else if (cpu_flags & FF_CPU_MMX)    fastmemcpy = memcpy_mmx;
+        else                                fastmemcpy = memcpy_x86;
+#else
+        fastmemcpy = memcpy;
+#endif
+    }
 }
 
 DWORD Tconfig::getCPUcount(void)
