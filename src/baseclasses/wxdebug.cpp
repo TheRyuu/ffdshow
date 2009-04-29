@@ -384,7 +384,7 @@ struct MsgBoxMsg
 // create a thread to call MessageBox(). calling MessageBox() on
 // random threads at bad times can confuse the host (eg IE).
 //
-DWORD WINAPI MsgBoxThread(
+unsigned int WINAPI MsgBoxThread(
   LPVOID lpParameter   // thread data
   )
 {
