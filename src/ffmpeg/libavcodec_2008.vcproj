@@ -783,6 +783,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavcodec\mlpdsp.c"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\motion_est.c"
 				>
 			</File>

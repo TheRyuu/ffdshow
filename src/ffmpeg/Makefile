@@ -93,6 +93,7 @@ SRCS_C=\
       $(LAVC_DIR)/mlp.c \
       $(LAVC_DIR)/mlp_parser.c \
       $(LAVC_DIR)/mlpdec.c \
+      $(LAVC_DIR)/mlpdsp.c \
       $(LAVC_DIR)/motion_est.c \
       $(LAVC_DIR)/mpeg12.c \
       $(LAVC_DIR)/mpeg12data.c \
