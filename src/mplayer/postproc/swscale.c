@@ -134,7 +134,7 @@ untested special converters
 #define RV ((int)( 0.439*(1<<RGB2YUV_SHIFT)+0.5))
 #define RU ((int)(-0.148*(1<<RGB2YUV_SHIFT)+0.5))
 
-extern const int32_t Inverse_Table_6_9[8][6];
+extern const int32_t Inverse_Table_6_9[8][7];
 
 /*
 NOTES
