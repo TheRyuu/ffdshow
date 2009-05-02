@@ -116,6 +116,7 @@ void TvideoCodecXviD4::create(void)
    if (Tconfig::cpu_flags&FF_CPU_SSE     ) init.cpu_flags|=XVID_CPU_SSE;
    if (Tconfig::cpu_flags&FF_CPU_SSE2    ) init.cpu_flags|=XVID_CPU_SSE2;
    if (Tconfig::cpu_flags&FF_CPU_SSE3    ) init.cpu_flags|=XVID_CPU_SSE3;
+   if (Tconfig::cpu_flags&FF_CPU_SSE41   ) init.cpu_flags|=XVID_CPU_SSE41;
    if (Tconfig::cpu_flags&FF_CPU_3DNOW   ) init.cpu_flags|=XVID_CPU_3DNOW;
    if (Tconfig::cpu_flags&FF_CPU_3DNOWEXT) init.cpu_flags|=XVID_CPU_3DNOWEXT;
    if (xvid_global(NULL,XVID_GBL_INIT,&init,NULL)==0)
