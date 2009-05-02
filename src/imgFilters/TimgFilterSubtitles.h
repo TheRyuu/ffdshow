@@ -37,6 +37,7 @@ private:
  unsigned int oldSizeDx,oldSizeDy;
  boost::recursive_mutex csEmbedded,csCC;
  TfilterQueue::iterator prevIt;
+ REFERENCE_TIME prevTime;
  TffPict prevPict;
  const TfilterSettingsVideo *prevCfg;
  bool again;

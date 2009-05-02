@@ -73,7 +73,8 @@ TimgFilterSubtitles::TimgFilterSubtitles(IffdshowBase *Ideci,Tfilters *Iparent):
     cc(NULL),wasCCchange(true),everRGB(false),
     adhocMode(ADHOC_NORMAL),
     prevAdhocMode(ADHOC_NORMAL),
-    glyphThread(this,Ideci)
+    glyphThread(this,Ideci),
+    prevTime(0)
 {
     oldstereo=oldsplitborder=-1;
     AVIfps=-1;
@@ -192,8 +193,13 @@ bool TimgFilterSubtitles::ctlSubtitles(int id,int type,unsigned int ctl_id,const
         boost::unique_lock<boost::recursive_mutex> lock(csEmbedded);
         res=e->second->ctlSubtitles(ctl_id,ctl_data,ctl_datalen);
     }
+    REFERENCE_TIME currentTime;
+    HRESULT hr = deciV->get_CurrentTime(&currentTime);
 
-    if (res && prevCfg  && deci->getState2() == State_Running && (sequenceEnded || raw_codec(deci->getCurrentCodecId2()))) {
+    if (res
+      && prevCfg
+      && deci->getState2() == State_Running
+      && (sequenceEnded || (hr != S_OK && raw_codec(deci->getCurrentCodecId2())) || currentTime - prevTime > 600000/*60ms*/)) {
         // Send last pict with changed subtitles upstream in the filter chain only if the graph is running -
         // doing it while it's paused will hang everything
 
@@ -280,11 +286,12 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
         subFlnmChanged=0;
     }
 
+    deciV->get_CurrentTime(&prevTime);
+    prevIt=it;
+    prevPict=pict;
+    prevCfg=cfg;
     if (isdvdproc && (sequenceEnded || raw_codec(deci->getCurrentCodecId2())) && adhocMode != ADHOC_SECOND_DONT_DRAW_DVD_SUB) {
         if (!again || !prevCfg) {
-            prevIt=it;
-            prevCfg=cfg;
-            prevPict=pict;
             prevAdhocMode = adhocMode;
 
             pict.setRO(true);
