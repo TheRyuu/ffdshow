@@ -287,19 +287,24 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
     }
 
     deciV->get_CurrentTime(&prevTime);
-    prevIt=it;
-    prevPict=pict;
-    prevCfg=cfg;
-    if (isdvdproc && (sequenceEnded || raw_codec(deci->getCurrentCodecId2())) && adhocMode != ADHOC_SECOND_DONT_DRAW_DVD_SUB) {
-        if (!again || !prevCfg) {
-            prevAdhocMode = adhocMode;
+    if (isdvdproc) {
+        if (!again) {
+            prevCfg=cfg;
+            if (adhocMode != ADHOC_SECOND_DONT_DRAW_DVD_SUB) {
+                prevIt = it;
+                prevPict = pict;
+                prevAdhocMode = adhocMode;
+            }
+        }
+        if ((sequenceEnded || raw_codec(deci->getCurrentCodecId2())) && adhocMode != ADHOC_SECOND_DONT_DRAW_DVD_SUB) {
+            if (!again || !prevCfg) {
+                pict.setRO(true);
+                prevPict.copyFrom(pict,prevbuf);
+            } else {
+                pict=prevPict;
 
-            pict.setRO(true);
-            prevPict.copyFrom(pict,prevbuf);
-        } else {
-            pict=prevPict;
-
-            pict.setRO(true);
+                pict.setRO(true);
+            }
         }
     }
 
