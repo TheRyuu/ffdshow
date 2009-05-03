@@ -2103,6 +2103,12 @@ void TffdshowDecVideo::update_time_on_ffdshow4(void)
    m_pClock->GetTime(&OSD_time_on_ffdshowStart);
 }
 
+HRESULT TffdshowDecVideo::EndFlush(void)
+{
+    m_bSampleSkipped = false;
+    return TffdshowDec::EndFlush();
+}
+
 #ifdef OSDTIMETABALE
 /* Usage
  *
