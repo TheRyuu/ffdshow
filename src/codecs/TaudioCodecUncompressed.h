@@ -7,6 +7,7 @@ class TaudioCodecUncompressed :public TaudioCodec
 {
 private:
  bool bit8,lpcm20,lpcm24,be,float64;
+ bool highDef;
  template<class sample_t> static void swapbe(sample_t *dst,size_t size);
 protected:
  virtual bool init(const CMediaType &mt);
