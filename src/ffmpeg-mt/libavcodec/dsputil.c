@@ -3813,6 +3813,8 @@ int ff_check_alignment(void){
     return 0;
 }
 
+void prefetch_c(void *mem, int stride, int h){}
+
 void attribute_align_arg dsputil_init(DSPContext* c, AVCodecContext *avctx)
 {
     int i;
@@ -4074,6 +4076,7 @@ void attribute_align_arg dsputil_init(DSPContext* c, AVCodecContext *avctx)
 
     c->try_8x8basis= try_8x8basis_c;
     c->add_8x8basis= add_8x8basis_c;
+    c->prefetch = prefetch_c;
 
     memset(c->put_2tap_qpel_pixels_tab, 0, sizeof(c->put_2tap_qpel_pixels_tab));
     memset(c->avg_2tap_qpel_pixels_tab, 0, sizeof(c->avg_2tap_qpel_pixels_tab));
