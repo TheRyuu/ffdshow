@@ -2364,7 +2364,7 @@ static int decode_update_context(AVCodecContext *dst, AVCodecContext *src){
 
     //Dequantization matrices
     //FIXME these are big - can they be only copied when PPS changes?
-    copy_fields(h, h1, dequant4_buffer, dequant4_coeff);
+    copy_fields(h, h1, dequant4_buffer, dequant_coeff_pps);
 
     //POC timing
     copy_fields(h, h1, poc_lsb, use_weight);
