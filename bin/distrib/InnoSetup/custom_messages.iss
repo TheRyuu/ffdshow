@@ -42,7 +42,7 @@ pl.FinishedRestartLabel=By zakoñczyæ instalacjê [name], instalator musi zrestart
 cz.WelcomeLabel2=Tento instalátor nainstaluje na váš poèítaè [name].%n%nPøedtím ne spustíte instalaci je doporuèeno ukonèit všechny ostatní aplikace.
 cz.FileAbortRetryIgnore=Ukonèete aplikaci pouívající [name] a kliknìte na Opakovat. Pokud problém pøetrvává, ukonèete instalaci tlaèítkem Pøerušit, restartujte poèítaè a znovu spuste instalci.
 cz.FinishedRestartLabel=Aby mohla bıt instalace [name] dokonèena, musí instalátor restartovat poèítaè. Chcete poèítaè restartovat nyní?%n%nTip: Potøebì restartování se pro pøíštì mùete vyhnout pokud v nastavení video dekodéru nastavíte "DirectShow"-"ffdshow nepouívat v:"-"explorer.exe".
-;cz.WinVersionTooLowError=This build of [name] requires Windows 2000 or newer. Revision 2352 of [name] is the last one that works on Windows 98/ME.
+cz.WinVersionTooLowError=Tato verze [name] vyaduje Windows 2000 nebo novìjší. Revize 2352 [name] je poslední, která funguje ve Windows 98/ME.
 
 ; Chinese (Simplified)
 sc.WelcomeLabel2=¼´½«°²×° [name] µ½ÄúµÄµçÄÔÖĞ¡£%n%n½¨ÒéÄúÔÚ¼ÌĞø°²×°Ç°¹Ø±ÕËùÓĞÆäËûÓ¦ÓÃ³ÌĞò¡£
@@ -502,10 +502,10 @@ pl.shrt_uninstall=Odinstaluj ffdshow
 
 ; Czech
 cz.langid=1029
-;cz.msg_uninstallFirst=You must first uninstall your old version of ffdshow.
+cz.msg_uninstallFirst=Nejdøíve musíte odinstalovat starou verzi ffdshow.
 cz.simd_msg_sse=Toto sestavení ffdshow vyaduje procesor s podporou rozšíøení SSE. Váš procesor tato rozšíøení nepodporuje.
 cz.simd_msg_sse2=Toto sestavení ffdshow vyaduje procesor s podporou rozšíøení SSE2. Váš procesor tato rozšíøení nepodporuje.
-;cz.unsupported_cpu=This build of ffdshow requires a CPU of type i686 or newer. Your CPU is not supported. Revision 1940 of ffdshow is the last one that works on old CPUs.
+cz.unsupported_cpu=Toto sestavení ffdshow vyaduje procesor i686 nebo novìjší. Váš procesor není podporován. ffdshow revize 1940 je poslední verze funkèní na starıch procesorech.
 
 cz.comp_ffdshowds=ffdshow DirectShow filtr
 cz.comp_vfwInterface=VFW rozhraní
@@ -513,26 +513,26 @@ cz.comp_makeAvis=Podpora pro AviSynth
 cz.comp_appPlugins=Pluginy:
 cz.comp_msg_selectOneComp=Musíte zvolit minimálnì jeden komponent.
 
-;cz.tsk_settings=Settings
+cz.tsk_settings=Nastavení
 cz.tsk_resetSettings=Vıchozí nastavení ffdshow
-;cz.tsk_videoFormats=Video formats
+cz.tsk_videoFormats=Video formáty
 cz.tsk_videoFormatsSelect=Dekódovat pomocí ffdshow následující video formáty:
 cz.tsk_genericMpeg4=Obecnı MPEG-4
 cz.tsk_rawVideo=Raw video
-;cz.tsk_audioFormats=Audio formats
+cz.tsk_audioFormats=Audio formáty
 cz.tsk_audioFormatsSelect=Dekódovat pomocí ffdshow následující audio formáty:
 cz.tsk_rawAudio=Raw audio
-;cz.tsk_filters=Filter settings
+cz.tsk_filters=Nastavení filtrù
 cz.tsk_filtersSelect=Ve vıchozím nastavení povolit následující filtry:
-;cz.tsk_passthroughac3=Enable AC3 pass-through (S/PDIF, HDMI)
-;cz.tsk_passthroughdts=Enable DTS pass-through (S/PDIF, HDMI)
+cz.tsk_passthroughac3=Povolit AC3 pass-through (S/PDIF, HDMI)
+cz.tsk_passthroughdts=Povolit DTS pass-through (S/PDIF, HDMI)
 cz.tsk_volumeNorm=Normalizace
 cz.tsk_subtitles=Titulky
 cz.tsk_tweaks=Ladìní
 cz.tsk_skipInloop=Vdy vynechat H.264 inloop deblocking
-;cz.tsk_compatibilityManager=Compatibility Manager
-;cz.tsk_whitelist=Restrict ffdshow to be used only by whitelisted applications
-;cz.tsk_whitelistPrompt=Display Compatibility Manager window when an unknown application tries to load ffdshow
+cz.tsk_compatibilityManager=Nastavení kompatibility
+cz.tsk_whitelist=Pouívat ffdshow jen v programech uvedenıch v seznamu kompatibilních programù
+cz.tsk_whitelistPrompt=Zobrazit dialog Správce kompatibility, pokud se ffdshow pokusí naèíst neznámá aplikace.
 
 cz.spk_Label1=Nastavení reproduktorù
 cz.spk_Label2=Zvolte nastavení které nejvíce odpovídá konfiguraci vašeho poèítaèe. Pozdìji lze zmìnit na stránce nastavení "Mixer".
@@ -571,7 +571,7 @@ cz.shrt_videoConfig=Nastavení video dekodéru
 cz.shrt_audioConfig=Nastavení audio dekodéru
 cz.shrt_vfwConfig=Nastavení VFW
 cz.shrt_uninstall=Odinstalovat ffdshow
-;cz.shrt_homepage=Homepage
+cz.shrt_homepage=Domovská stránka
 
 
 ; Chinese (Simplified)
