@@ -2377,7 +2377,7 @@ static int vc1_decode_i_block(VC1Context *v, DCTELEM block[64], int n, int coded
     GetBitContext *gb = &v->s.gb;
     MpegEncContext *s = &v->s;
     int dc_pred_dir = 0; /* Direction of the DC prediction used */
-    int run_diff, i;
+    int i;
     int16_t *dc_val;
     int16_t *ac_val, *ac_val2;
     int dcdiff;
@@ -2423,7 +2423,6 @@ static int vc1_decode_i_block(VC1Context *v, DCTELEM block[64], int n, int coded
         block[0] = dcdiff * s->c_dc_scale;
     }
     /* Skip ? */
-    run_diff = 0;
     if (!coded) {
         goto not_coded;
     }
@@ -2544,7 +2543,7 @@ static int vc1_decode_i_block_adv(VC1Context *v, DCTELEM block[64], int n, int c
     GetBitContext *gb = &v->s.gb;
     MpegEncContext *s = &v->s;
     int dc_pred_dir = 0; /* Direction of the DC prediction used */
-    int run_diff, i;
+    int i;
     int16_t *dc_val;
     int16_t *ac_val, *ac_val2;
     int dcdiff;
@@ -2594,8 +2593,6 @@ static int vc1_decode_i_block_adv(VC1Context *v, DCTELEM block[64], int n, int c
     } else {
         block[0] = dcdiff * s->c_dc_scale;
     }
-    /* Skip ? */
-    run_diff = 0;
 
     //AC Decoding
     i = 1;
@@ -2741,7 +2738,7 @@ static int vc1_decode_intra_block(VC1Context *v, DCTELEM block[64], int n, int c
     GetBitContext *gb = &v->s.gb;
     MpegEncContext *s = &v->s;
     int dc_pred_dir = 0; /* Direction of the DC prediction used */
-    int run_diff, i;
+    int i;
     int16_t *dc_val;
     int16_t *ac_val, *ac_val2;
     int dcdiff;
@@ -2799,8 +2796,6 @@ static int vc1_decode_intra_block(VC1Context *v, DCTELEM block[64], int n, int c
     } else {
         block[0] = dcdiff * s->c_dc_scale;
     }
-    /* Skip ? */
-    run_diff = 0;
 
     //AC Decoding
     i = 1;
