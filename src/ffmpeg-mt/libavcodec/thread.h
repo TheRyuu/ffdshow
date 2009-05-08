@@ -39,8 +39,11 @@ void ff_frame_thread_flush(AVCodecContext *avctx);
 /**
  * Submit a new frame for multithreaded decoding. Parameters
  * are the same as avcodec_decode_video(). The result will be
- * what the codec output X frames ago, where X is the number
+ * what the codec output (X-1) frames ago, where X is the number
  * of threads.
+ * NULL AVFrames returned from the codec will be dropped if
+ * the client is flushing frames at EOF, and the next available
+ * frame will be returned.
  */
 int ff_decode_frame_threaded(AVCodecContext *avctx,
                         void *data, int *data_size,

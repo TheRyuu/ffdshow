@@ -2325,6 +2325,7 @@ static int decode_update_context(AVCodecContext *dst, AVCodecContext *src){
     H264Context *h= dst->priv_data, *h1= src->priv_data;
     MpegEncContext * const s = &h->s, * const s1 = &h1->s;
     int inited = s->context_initialized, err;
+    int i;
 
     if(!s1->context_initialized) return 0;
 
@@ -2333,7 +2334,6 @@ static int decode_update_context(AVCodecContext *dst, AVCodecContext *src){
 
     //FIXME handle width/height changing
     if(!inited){
-        int i;
         memcpy(&h->s + 1, &h1->s + 1, sizeof(H264Context) - sizeof(MpegEncContext)); //copy all fields after MpegEnc
         memset(h->sps_buffers, 0, sizeof(h->sps_buffers));
         memset(h->pps_buffers, 0, sizeof(h->pps_buffers));
@@ -2364,7 +2364,15 @@ static int decode_update_context(AVCodecContext *dst, AVCodecContext *src){
 
     //Dequantization matrices
     //FIXME these are big - can they be only copied when PPS changes?
-    copy_fields(h, h1, dequant4_buffer, dequant_coeff_pps);
+    copy_fields(h, h1, dequant4_buffer, dequant4_coeff);
+
+    for(i=0; i<6; i++)
+        h->dequant4_coeff[i] = h->dequant4_buffer[0] + (h1->dequant4_coeff[i] - h1->dequant4_buffer[0]);
+
+    for(i=0; i<2; i++)
+        h->dequant8_coeff[i] = h->dequant8_buffer[0] + (h1->dequant8_coeff[i] - h1->dequant8_buffer[0]);
+
+    h->dequant_coeff_pps = h1->dequant_coeff_pps;
 
     //POC timing
     copy_fields(h, h1, poc_lsb, use_weight);
