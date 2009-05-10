@@ -211,10 +211,6 @@ public:
  STDMETHODIMP compat_cpuSupportsSSSE3(void) {return cpuSupportsSSSE3();}
  STDMETHODIMP compat_cpuSupports3DNOW(void) {return cpuSupports3DNOW();}
  STDMETHODIMP compat_cpuSupports3DNOWEXT(void) {return cpuSupports3DNOWEXT();}
- STDMETHODIMP compat_cpuSupportsSSE41(void) {return cpuSupportsSSE41();}
- STDMETHODIMP compat_cpuSupportsSSE42(void) {return cpuSupportsSSE42();}
- STDMETHODIMP compat_cpuSupportsSSE4A(void) {return cpuSupportsSSE4A();}
- STDMETHODIMP compat_cpuSupportsSSE5(void) {return cpuSupportsSSE5();}
  STDMETHODIMP compat_getAVIfps1000_2(void) {return getAVIfps1000_2();}
  STDMETHODIMP compat_getParamStr(unsigned int paramID,char *buf,unsigned int buflen) {return getBaseInterface<IffdshowBaseA>()->getParamStr(paramID,buf,buflen);}
  STDMETHODIMP compat_putParamStr(unsigned int paramID,const char *buf) {return putParamStr(paramID,text<char_t>(buf));}
@@ -287,6 +283,10 @@ public:
  STDMETHODIMP compat_getSubtitleTimes(int64_t *start,int64_t *stop) {return getSubtitleTimes(start,stop);}
  STDMETHODIMP compat_resetSubtitleTimes(void) {return resetSubtitleTimes();}
  STDMETHODIMP compat_setFrameTimes(int64_t start,int64_t stop) {return setFrameTimes(start,stop);}
+ STDMETHODIMP compat_cpuSupportsSSE41(void) {return cpuSupportsSSE41();}
+ STDMETHODIMP compat_cpuSupportsSSE42(void) {return cpuSupportsSSE42();}
+ STDMETHODIMP compat_cpuSupportsSSE4A(void) {return cpuSupportsSSE4A();}
+ STDMETHODIMP compat_cpuSupportsSSE5(void) {return cpuSupportsSSE5();}
 
  // IdecVideoSink
  STDMETHODIMP deliverDecodedSample(TffPict &pict);

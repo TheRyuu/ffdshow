@@ -55,10 +55,6 @@ template<class tchar> DECLARE_INTERFACE_(IffdshowBaseT,IUnknown)
  STDMETHOD (cpuSupportsSSSE3)(void) PURE;
  STDMETHOD (cpuSupports3DNOW)(void) PURE;
  STDMETHOD (cpuSupports3DNOWEXT)(void) PURE;
- STDMETHOD (cpuSupportsSSE41)(void) PURE;
- STDMETHOD (cpuSupportsSSE42)(void) PURE;
- STDMETHOD (cpuSupportsSSE4A)(void) PURE;
- STDMETHOD (cpuSupportsSSE5)(void) PURE;
  STDMETHOD (dbgInit)(void) PURE;
  STDMETHOD (dbgError)(const tchar *fmt,...) PURE;
  STDMETHOD (dbgWrite)(const tchar *fmt,...) PURE;
@@ -108,6 +104,10 @@ template<class tchar> DECLARE_INTERFACE_(IffdshowBaseT,IUnknown)
  STDMETHOD_(int,getInfoShortcutItem)(const tchar *s,int *toklen) PURE;
  STDMETHOD_(DWORD,CPUcount)(void) PURE;
  STDMETHOD_(int,get_trayIconType)(void) PURE;
+ STDMETHOD (cpuSupportsSSE41)(void) PURE;
+ STDMETHOD (cpuSupportsSSE42)(void) PURE;
+ STDMETHOD (cpuSupportsSSE4A)(void) PURE;
+ STDMETHOD (cpuSupportsSSE5)(void) PURE;
 };
 
 struct IffdshowBaseA :IffdshowBaseT<char> {};
