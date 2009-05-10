@@ -2135,7 +2135,7 @@ static void mpeg_decode_gop(AVCodecContext *avctx,
  * Finds the end of the current frame in the bitstream.
  * @return the position of the first byte of the next frame, or -1
  */
-int ff_mpeg1_find_frame_end(ParseContext *pc, const uint8_t *buf, int buf_size, AVCodecParserContext *s, int64_t *rtStart) /* rtStart: ffdshow custom code */
+int ff_mpeg1_find_frame_end(ParseContext *pc, const uint8_t *buf, int buf_size, AVCodecParserContext *s, int64_t *rtStart, AVCodecContext *avctx) /* rtStart,avctx: ffdshow custom code */
 {
     int i;
     uint32_t state= pc->state;
@@ -2176,7 +2176,10 @@ int ff_mpeg1_find_frame_end(ParseContext *pc, const uint8_t *buf, int buf_size, 
                 /* ffdshow custom code (i-3 instead of i+1) */
                 /* DVDs won't send the next frame start on still images */
                 /* SEQ_END_CODE will have to stay at the beginning of the next frame */
-                return i-3;
+                if (avctx->isDVD)
+                    return i-3;
+                else
+                    return i+1;
             }
             if(pc->frame_start_found==2 && state == SEQ_START_CODE)
                 pc->frame_start_found= 0;
@@ -2225,7 +2228,7 @@ static int mpeg_decode_frame(AVCodecContext *avctx,
     }
 
     if(s2->flags&CODEC_FLAG_TRUNCATED){
-        int next = ff_mpeg1_find_frame_end(&s2->parse_context, buf, buf_size, NULL, avctx->parserRtStart); /* avctx->parserRtStart: ffdshow custom code */
+        int next = ff_mpeg1_find_frame_end(&s2->parse_context, buf, buf_size, NULL, avctx->parserRtStart, avctx); /* avctx->parserRtStart: ffdshow custom code */
 
         if( ff_combine_frame(&s2->parse_context, next, (const uint8_t **)&buf, &buf_size) < 0 )
             return buf_size;
