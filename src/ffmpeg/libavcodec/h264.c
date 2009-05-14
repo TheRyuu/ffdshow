@@ -7277,7 +7277,7 @@ static inline int decode_vui_parameters(H264Context *h, SPS *sps){
     }
 
     if(get_bits1(&s->gb)){      /* chroma_location_info_present_flag */
-        get_ue_golomb(&s->gb);  /* chroma_sample_location_type_top_field */
+        s->avctx->chroma_sample_location = get_ue_golomb(&s->gb)+1;  /* chroma_sample_location_type_top_field */
         get_ue_golomb(&s->gb);  /* chroma_sample_location_type_bottom_field */
     }
 

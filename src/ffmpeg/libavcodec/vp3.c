@@ -1593,6 +1593,7 @@ static av_cold int vp3_decode_init(AVCodecContext *avctx)
     s->width = (avctx->width + 15) & 0xFFFFFFF0;
     s->height = (avctx->height + 15) & 0xFFFFFFF0;
     avctx->pix_fmt = PIX_FMT_YUV420P;
+    avctx->chroma_sample_location = AVCHROMA_LOC_CENTER;
     //if(avctx->idct_algo==FF_IDCT_AUTO)
         avctx->idct_algo=FF_IDCT_VP3;
     dsputil_init(&s->dsp, avctx);
@@ -2232,7 +2233,7 @@ static av_cold int theora_decode_init(AVCodecContext *avctx)
      }
 
     // FIXME: Check for this as well.
-    skip_bits(&gb, 6*8); /* "theora" */
+    skip_bits_long(&gb, 6*8); /* "theora" */
 
     switch(ptype)
     {

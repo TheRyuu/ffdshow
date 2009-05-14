@@ -40,7 +40,7 @@
 #include "libavutil/avutil.h"
 
 #define LIBAVCODEC_VERSION_MAJOR 52
-#define LIBAVCODEC_VERSION_MINOR 28
+#define LIBAVCODEC_VERSION_MINOR 29
 #define LIBAVCODEC_VERSION_MICRO  0
 
 #define LIBAVCODEC_VERSION_INT  AV_VERSION_INT(LIBAVCODEC_VERSION_MAJOR, \
@@ -210,6 +210,22 @@ enum AVColorRange{
     AVCOL_RANGE_MPEG       =1, ///< the normal 219*2^(n-8) "MPEG" YUV ranges
     AVCOL_RANGE_JPEG       =2, ///< the normal     2^n-1   "JPEG" YUV ranges
     AVCOL_RANGE_NB           , ///< Not part of ABI
+};
+
+/**
+ *  X   X      3 4 X      X are luma samples,
+ *             1 2        1-6 are possible chroma positions
+ *  X   X      5 6 X      0 is undefined/unknown position
+ */
+enum AVChromaLocation{
+    AVCHROMA_LOC_UNSPECIFIED=0,
+    AVCHROMA_LOC_LEFT       =1, ///< mpeg2/4, h264 default
+    AVCHROMA_LOC_CENTER     =2, ///< mpeg1, jpeg, h263
+    AVCHROMA_LOC_TOPLEFT    =3, ///< DV
+    AVCHROMA_LOC_TOP        =4,
+    AVCHROMA_LOC_BOTTOMLEFT =5,
+    AVCHROMA_LOC_BOTTOM     =6,
+    AVCHROMA_LOC_NB           , ///< Not part of ABI
 };
 
 /**
@@ -2219,6 +2235,13 @@ typedef struct AVCodecContext {
      * - decoding: Set by libavcodec
      */
     enum AVColorRange color_range;
+
+    /**
+     * This defines the location of chroma samples.
+     * - encoding: Set by user
+     * - decoding: Set by libavcodec
+     */
+     enum AVChromaLocation chroma_sample_location;
 
     /* ffdshow custom stuff (begin) */
     
