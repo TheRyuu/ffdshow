@@ -1538,7 +1538,7 @@ static inline int get_chroma_qp(H264Context *h, int t, int qscale){
 
 static inline int mc_dir_part_y(H264Context *h, Picture *pic, int n, int height,
                                  int y_offset, int list){
-    int my= h->mv_cache[list][ scan8[n] ][1] + 4*y_offset;
+    int my= h->mv_cache[list][ scan8[n] ][1] + 8*y_offset;
     int filter_height= 6;
     int extra_height= h->emu_edge_height;
     const int full_my= my>>2;
@@ -1549,7 +1549,7 @@ static inline int mc_dir_part_y(H264Context *h, Picture *pic, int n, int height,
         my = abs(my) + extra_height*4;
     }
 
-    return (my + height * 4 + filter_height * 4 + 1) >> 2;
+    return ((my << (h->mb_linesize > h->s.linesize)) + height * 4 + filter_height * 4 + 1) >> 2;
 }
 
 static inline void mc_part_y(H264Context *h, int refs[2][48], int n, int height,
@@ -1557,7 +1557,7 @@ static inline void mc_part_y(H264Context *h, int refs[2][48], int n, int height,
     MpegEncContext * const s = &h->s;
     int my;
 
-    y_offset += 16*(s->mb_y >> FIELD_PICTURE);
+    y_offset += 8*(s->mb_y >> MB_FIELD);
 
     if(list0){
         int ref_n = h->ref_cache[0][ scan8[n] ], my;
