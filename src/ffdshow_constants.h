@@ -919,6 +919,7 @@
 #define IDFF_hwDeintFieldOrder   3500
 #define IDFF_avisynthYV12_RGB    1355 // deprecated. Use IDFF_highQualityRGB instead.
 #define IDFF_highQualityRGB      1355
+#define IDFF_RGB_dithering       3516
 #define IDFF_cspOptionsIturBt            1362 // 0: 601, 1:709
 #define IDFF_cspOptionsBlackCutoff       3424
 #define IDFF_cspOptionsWhiteCutoff       3425
@@ -1541,6 +1542,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//next:3516
+//next:3517
 
 #endif

@@ -231,11 +231,13 @@ bool TimgFilter::getCurNext(int csp,TffPict &pict,int full,int copy,unsigned cha
      || convert2->dy != pict.rectFull.dy
      || old_cspOptionsRgbInterlaceMode != outcfg->cspOptionsRgbInterlaceMode
      || old_highQualityRGB != outcfg->highQualityRGB
+     || old_dithering != outcfg->dithering
      || old_outputLevelsMode != outcfg->cspOptionsOutputLevelsMode
      || old_inputLevelsMode != outcfg->cspOptionsInputLevelsMode
      || old_IturBt != outcfg->cspOptionsIturBt)
     {
      old_highQualityRGB = outcfg->highQualityRGB;
+     old_dithering = outcfg->dithering;
      old_cspOptionsRgbInterlaceMode = outcfg->cspOptionsRgbInterlaceMode;
      old_outputLevelsMode = outcfg->cspOptionsOutputLevelsMode;
      old_inputLevelsMode = outcfg->cspOptionsInputLevelsMode;

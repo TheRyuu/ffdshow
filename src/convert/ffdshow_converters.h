@@ -15,8 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef _FFDSHOW_CONVERTERS_H_
-#define _FFDSHOW_CONVERTERS_H_
+#ifndef FFDSHOW_CONVERTERS_H_
+#define FFDSHOW_CONVERTERS_H_
 
 #include <emmintrin.h>
 #include <stddef.h>        // ptrdiff_t
@@ -50,7 +50,7 @@ typedef ptrdiff_t stride_t;
 // Features
 //  High quality chroma upscaling: 75:25 averaging vertically and horizontally
 //  Support for color primary parameters, such as ITU-R BT.601/709, input and output levels
-//  10bit or more calculations
+//  calculations in 11bit or higher
 //  Supported color spaces
 //    input:  progressive YV12, progressive NV12, YV16, YUY2
 //    output: RGB32,RGB24,BGR32,BGR24
@@ -68,7 +68,8 @@ public:
            int input_Y_black_level,        // input Y level (TV:16, PC:0)
            int input_Cb_bluest_level,      // input chroma level (TV:16, PC:1)
            double output_RGB_white_level,  // output RGB level (TV:235, PC:255)
-           double output_RGB_black_level); // output RGB level (TV:16, PC:0)
+           double output_RGB_black_level,  // output RGB level (TV:16, PC:0)
+           bool dithering);                // dithering (On:1, Off:0)
 
  // note YV12 and YV16 is YCrCb order. Make sure Cr and Cb is swapped.
  // NV12: srcCr not used.
@@ -90,7 +91,12 @@ private:
  int m_incsp, m_outcsp;
  int m_thread_count;
  bool m_rgb_limit;
+ bool m_dithering;
+ int m_old_width;
+ static const int dither_lineoffset = 16;
+ uint16_t *dither;
  boost::threadpool::pool threadpool;
+ void init_dither(int width);
  struct Tcoeffs {
     __m128i Ysub;
     __m128i CbCr_center;
@@ -103,7 +109,7 @@ private:
     __m128i cB_Cb;
  } *m_coeffs;
 
- template<int incsp, int outcsp, int left_edge, int right_edge, int rgb_limit, int aligned> static __forceinline 
+ template<int incsp, int outcsp, int left_edge, int right_edge, int rgb_limit, int aligned, bool dithering> static __forceinline 
   void convert_a_unit(const unsigned char* &srcY,
                       const unsigned char* &srcCb,
                       const unsigned char* &srcCr,
@@ -111,7 +117,8 @@ private:
                       const stride_t stride_Y,
                       const stride_t stride_CbCr,
                       const stride_t stride_dst,
-                      const Tcoeffs *coeffs);
+                      const Tcoeffs *coeffs,
+                      const uint16_t* dither_ptr);
 
  // translate stack arguments to template arguments.
  template <int rgb_limit> void convert_translate_incsp(
@@ -147,7 +154,7 @@ private:
               stride_t stride_CbCr,
               stride_t stride_dst);
 
- template <int incsp, int outcsp, int rgb_limit, int aligned> void convert_main(
+template <int incsp, int outcsp, int rgb_limit, int aligned> void convert_translate_dithering(
               const uint8_t* srcY,
               const uint8_t* srcCb,
               const uint8_t* srcCr,
@@ -158,7 +165,18 @@ private:
               stride_t stride_CbCr,
               stride_t stride_dst);
 
- template <int incsp, int outcsp, int rgb_limit, int aligned> static void convert_main_loop(
+ template <int incsp, int outcsp, int rgb_limit, int aligned, bool dithering> void convert_main(
+              const uint8_t* srcY,
+              const uint8_t* srcCb,
+              const uint8_t* srcCr,
+              uint8_t* dst,
+              int dx,
+              int dy,
+              stride_t stride_Y,
+              stride_t stride_CbCr,
+              stride_t stride_dst);
+
+ template <int incsp, int outcsp, int rgb_limit, int aligned, bool dithering> void convert_main_loop(
               const uint8_t* srcY,
               const uint8_t* srcCb,
               const uint8_t* srcCr,
@@ -169,10 +187,9 @@ private:
               stride_t stride_CbCr,
               stride_t stride_dst,
               int starty,
-              int endy,
-              const Tcoeffs *coeffs);
+              int endy);
 
- template<int incsp, int outcsp, int rgb_limit, int aligned> struct Tfunc_obj {
+ template<int incsp, int outcsp, int rgb_limit, int aligned, bool dithering> struct Tfunc_obj {
      private:
         const uint8_t* srcY;
         const uint8_t* srcCb;
@@ -186,9 +203,10 @@ private:
         int starty;
         int endy;
         const Tcoeffs *coeffs;
+        TffdshowConverters *self;
      public:
         void operator()(void) {
-            convert_main_loop<incsp,outcsp,rgb_limit,aligned>(srcY,srcCb,srcCr,dst,dx,dy,stride_Y,stride_CbCr,stride_dst,starty,endy,coeffs);
+            self->convert_main_loop<incsp,outcsp,rgb_limit,aligned,dithering>(srcY,srcCb,srcCr,dst,dx,dy,stride_Y,stride_CbCr,stride_dst,starty,endy);
         }
         Tfunc_obj(const uint8_t* IsrcY,
                   const uint8_t* IsrcCb,
@@ -201,7 +219,7 @@ private:
                   stride_t Istride_dst,
                   int Istarty,
                   int Iendy,
-                  const Tcoeffs *Icoeffs) :
+                  TffdshowConverters *Iself) :
             srcY(IsrcY),
             srcCb(IsrcCb),
             srcCr(IsrcCr),
@@ -213,9 +231,9 @@ private:
             stride_dst(Istride_dst),
             starty(Istarty),
             endy(Iendy),
-            coeffs(Icoeffs)
+            self(Iself)
         {}
  };
 };
 
-#endif // _FFDSHOW_CONVERTERS_H_
+#endif // FFDSHOW_CONVERTERS_H_

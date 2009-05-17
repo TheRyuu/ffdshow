@@ -28,8 +28,8 @@ class TffdshowConverters;
 class Tconvert : public TrgbPrimaries
 {
 private:
- void init(Tlibmplayer *Ilibmplayer,bool IavisynthYV12_RGB,unsigned int Idx,unsigned int Idy, int rgbInterlaceMode);
- bool highQualityRGB;
+ void init(Tlibmplayer *Ilibmplayer,bool IavisynthYV12_RGB,unsigned int Idx,unsigned int Idy, int rgbInterlaceMode,bool dithering);
+ bool m_highQualityRGB,m_dithering;
  Tlibmplayer *libmplayer;
  Tswscale *swscale;bool initsws;
  int oldincsp,oldoutcsp;
@@ -77,7 +77,7 @@ private:
 public:
  bool m_wasChange;
  Tconvert(IffdshowBase *deci,unsigned int Idx,unsigned int Idy);
- Tconvert(Tlibmplayer *Ilibmplayer,bool IavisynthYV12_RGB,unsigned int Idx,unsigned int Idy,const TrgbPrimaries &IrgbPrimaries, int rgbInterlaceMode);
+ Tconvert(Tlibmplayer *Ilibmplayer,bool highQualityRGB,unsigned int Idx,unsigned int Idy,const TrgbPrimaries &IrgbPrimaries, int rgbInterlaceMode, bool dithering);
  ~Tconvert();
  unsigned int dx,dy,outdy;
  int convert(int incsp,

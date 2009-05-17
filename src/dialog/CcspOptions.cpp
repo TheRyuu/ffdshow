@@ -74,6 +74,7 @@ void TcspOptionsPage::cfg2dlg(void)
 
  cbxSetCurSel(IDC_CBX_RGB_INTERLACE_METHOD,cfgGet(IDFF_cspOptionsRgbInterlaceMode));
  setCheck(IDC_CHB_HIGH_QUALITY_RGB,cfgGet(IDFF_highQualityRGB));
+ setCheck(IDC_CHB_RGB_DITHER,cfgGet(IDFF_RGB_dithering));
 }
 
 void TcspOptionsPage::getTip(char_t *tipS,size_t len)
@@ -100,6 +101,8 @@ bool TcspOptionsPage::reset(bool testonly)
    deci->resetParam(IDFF_cspOptionsWhiteCutoff);
    deci->resetParam(IDFF_cspOptionsChromaCutoff);
    deci->resetParam(IDFF_cspOptionsRgbInterlaceMode);
+   deci->resetParam(IDFF_RGB_dithering);
+   deci->resetParam(IDFF_highQualityRGB);
   }
  return true;
 }
@@ -135,6 +138,7 @@ TcspOptionsPage::TcspOptionsPage(TffdshowPageDec *Iparent):TconfPageDecVideo(Ipa
  static const TbindCheckbox<TcspOptionsPage> chb[]=
   {
    IDC_CHB_HIGH_QUALITY_RGB,IDFF_highQualityRGB,NULL,
+   IDC_CHB_RGB_DITHER,IDFF_RGB_dithering,NULL,
    0,NULL,NULL
   };
  bindCheckboxes(chb);
