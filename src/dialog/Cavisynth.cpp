@@ -141,6 +141,7 @@ void TavisynthPage::onLoad(void)
      script[len]='\0';
      setDlgItemText(m_hwnd,IDC_ED_AVISYNTH,text<char_t>(script));
     }
+   parent->setChange();
   }
 }
 
