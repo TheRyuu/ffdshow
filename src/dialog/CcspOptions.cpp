@@ -20,6 +20,7 @@
 #include "Ttranslate.h"
 #include "TrgbPrimaries.h"
 #include "ToutputVideoSettings.h"
+#include "Tconfig.h"
 
 void TcspOptionsPage::init(void)
 {
@@ -75,6 +76,7 @@ void TcspOptionsPage::cfg2dlg(void)
  cbxSetCurSel(IDC_CBX_RGB_INTERLACE_METHOD,cfgGet(IDFF_cspOptionsRgbInterlaceMode));
  setCheck(IDC_CHB_HIGH_QUALITY_RGB,cfgGet(IDFF_highQualityRGB));
  setCheck(IDC_CHB_RGB_DITHER,cfgGet(IDFF_RGB_dithering));
+ enable(Tconfig::cpu_flags & FF_CPU_SSE2, IDC_CHB_RGB_DITHER);
 }
 
 void TcspOptionsPage::getTip(char_t *tipS,size_t len)
