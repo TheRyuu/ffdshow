@@ -59,7 +59,7 @@ void TffdshowConverters::init(int incsp,   // FF_CSP_420P, FF_CSP_NV12, FF_CSP_Y
     m_coeffs->cG_Cb_cG_Cr = _mm_set1_epi32((cgv << 16) + cgu); // G
     m_coeffs->cB_Cb = _mm_set1_epi32(cbu);                     // B
 
-    m_coeffs->rgb_add = _mm_set1_epi16((YCbCr2RGB_coeffs.RGB_add1 << 2) + 2);
+    m_coeffs->rgb_add = _mm_set1_epi16((YCbCr2RGB_coeffs.RGB_add1 << 4) + (dithering ? 0 : 8));
 
     uint32_t rgb_white = uint32_t(output_RGB_white_level);
     rgb_white = 0xff000000 + (rgb_white << 16) + (rgb_white << 8) + rgb_white;
