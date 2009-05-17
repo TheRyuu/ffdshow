@@ -833,7 +833,7 @@ static void update_noise_reduction(MpegEncContext *s){
 int MPV_frame_start(MpegEncContext *s, AVCodecContext *avctx)
 {
     int i;
-    AVFrame *pic;
+    Picture *pic;
     s->mb_skipped = 0;
 
     assert(s->last_picture_ptr==NULL || s->out_format != FMT_H264 || s->codec_id == CODEC_ID_SVQ3);
@@ -865,10 +865,10 @@ alloc:
         }
 
         if(s->current_picture_ptr && s->current_picture_ptr->data[0]==NULL)
-            pic= (AVFrame*)s->current_picture_ptr; //we already have a unused image (maybe it was set before reading the header)
+            pic= s->current_picture_ptr; //we already have a unused image (maybe it was set before reading the header)
         else{
             i= ff_find_unused_picture(s, 0);
-            pic= (AVFrame*)&s->picture[i];
+            pic= &s->picture[i];
         }
 
         pic->reference= 0;
@@ -881,10 +881,10 @@ alloc:
 
         pic->coded_picture_number= s->coded_picture_number++;
 
-        if( alloc_picture(s, (Picture*)pic, 0) < 0)
+        if(alloc_picture(s, pic, 0) < 0)
             return -1;
 
-        s->current_picture_ptr= (Picture*)pic;
+        s->current_picture_ptr= pic;
         s->current_picture_ptr->top_field_first= s->top_field_first; //FIXME use only the vars from current_pic
         s->current_picture_ptr->interlaced_frame= !s->progressive_frame && !s->progressive_sequence;
     }
@@ -1738,6 +1738,7 @@ void ff_mpeg_flush(AVCodecContext *avctx){
     s->current_picture_ptr = s->last_picture_ptr = s->next_picture_ptr = NULL;
 
     s->mb_x= s->mb_y= 0;
+    s->closed_gop= 0;
 
     s->parse_context.state= -1;
     s->parse_context.frame_start_found= 0;
