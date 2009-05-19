@@ -669,7 +669,7 @@ template <int incsp, int outcsp, int rgb_limit, int aligned, bool dithering> voi
             }
             convert_a_unit<incsp,outcsp,0,1,rgb_limit,aligned,dithering>(srcYln, srcCbln, srcCrln, dstln,
                                     0, 0, 0,
-                                    coeffs, get_dither_ptr<dithering>(dither, dither_pos, endx, coeffs));
+                                    coeffs, get_dither_ptr<dithering>(dither, dither_pos, (endx+7) & ~7, coeffs));
             y = 1;
         }
         if (endy == dy) {
@@ -700,7 +700,7 @@ template <int incsp, int outcsp, int rgb_limit, int aligned, bool dithering> voi
         }
         convert_a_unit<incsp,outcsp,0,1,rgb_limit,aligned,dithering>(srcYln, srcCbln, srcCrln, dstln,
                                 stride_Y, stride_CbCr, stride_dst,
-                                coeffs, get_dither_ptr<dithering>(dither, dither_pos, endx, coeffs));
+                                coeffs, get_dither_ptr<dithering>(dither, dither_pos, (endx+7) & ~7, coeffs));
         if (dithering) {
             dither_pos += dither_lineoffset;
             if (dither_pos >= dx*2)
@@ -725,7 +725,7 @@ template <int incsp, int outcsp, int rgb_limit, int aligned, bool dithering> voi
             }
             convert_a_unit<incsp,outcsp,0,1,rgb_limit,aligned,dithering>(srcYln, srcCbln, srcCrln, dstln,
                                     0, 0, 0,
-                                    coeffs, get_dither_ptr<dithering>(dither, dither_pos, endx, coeffs));
+                                    coeffs, get_dither_ptr<dithering>(dither, dither_pos, (endx+7) & ~7, coeffs));
         }
     }
 }
@@ -733,7 +733,7 @@ template <int incsp, int outcsp, int rgb_limit, int aligned, bool dithering> voi
 void TffdshowConverters::init_dither(int width)
 {
     if (!m_dithering) return;
-    width = width * 4 + 48;
+    width = width * 4 + 64;
     if (width < m_old_width) return;
     m_old_width = width;
     if (dither) _aligned_free(dither);
