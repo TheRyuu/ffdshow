@@ -377,36 +377,16 @@ template<int incsp, int outcsp, int left_edge, int right_edge, int rgb_limit, in
     xmm3 = _mm_packs_epi32(xmm3,xmm7);
     xmm1 = _mm_unpacklo_epi64(xmm3,xmm1);
     xmm1 = _mm_add_epi16(xmm1,xmm0);                                               // B (12bit)
+
     if (dithering) {
-        xmm0 = xmm6;
-        xmm0 = _mm_slli_epi16(xmm0,12);
-        xmm0 = _mm_srli_epi16(xmm0,12);
-        xmm0 = _mm_cmpgt_epi16(xmm0,*(const __m128i *)(dither_ptr));
-        xmm0 = _mm_srli_epi16(xmm0,15);
-
-        xmm2 = xmm5;
-        xmm2 = _mm_slli_epi16(xmm2,12);
-        xmm2 = _mm_srli_epi16(xmm2,12);
-        xmm2 = _mm_cmpgt_epi16(xmm2,*(const __m128i *)(dither_ptr + 16));
-        xmm2 = _mm_srli_epi16(xmm2,15);
-
-        xmm3 = xmm1;
-        xmm3 = _mm_slli_epi16(xmm3,12);
-        xmm3 = _mm_srli_epi16(xmm3,12);
-        xmm3 = _mm_cmpgt_epi16(xmm3,*(const __m128i *)(dither_ptr + 32));
-        xmm3 = _mm_srli_epi16(xmm3,15);
-
-        xmm6 = _mm_srai_epi16(xmm6,4);
-        xmm5 = _mm_srai_epi16(xmm5,4);
-        xmm1 = _mm_srai_epi16(xmm1,4);
-        xmm6 = _mm_add_epi16(xmm6,xmm0);
-        xmm5 = _mm_add_epi16(xmm5,xmm2);
-        xmm1 = _mm_add_epi16(xmm1,xmm3);
-    } else {
-        xmm6 = _mm_srai_epi16(xmm6,4);
-        xmm5 = _mm_srai_epi16(xmm5,4);
-        xmm1 = _mm_srai_epi16(xmm1,4);
+        xmm6 = _mm_add_epi16(xmm6,*(const __m128i *)(dither_ptr));
+        xmm5 = _mm_add_epi16(xmm5,*(const __m128i *)(dither_ptr + 16));
+        xmm1 = _mm_add_epi16(xmm1,*(const __m128i *)(dither_ptr + 32));
     }
+    xmm6 = _mm_srai_epi16(xmm6,4);
+    xmm5 = _mm_srai_epi16(xmm5,4);
+    xmm1 = _mm_srai_epi16(xmm1,4);
+
     xmm2 = _mm_cmpeq_epi8(xmm2,xmm2);                                              // 0xffffffff,0xffffffff,0xffffffff,0xffffffff
     xmm6 = _mm_packus_epi16(xmm6,xmm7);                                            // R (lower 8bytes,8bit) * 8
     xmm5 = _mm_packus_epi16(xmm5,xmm7);                                            // G (lower 8bytes,8bit) * 8
