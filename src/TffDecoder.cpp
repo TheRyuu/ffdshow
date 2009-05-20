@@ -112,7 +112,8 @@ TffdshowDecVideo::TffdshowDecVideo(CLSID Iclsid,const char_t *className,const CL
  m_NeedToPauseRun(false),
  searchInterfaceInGraph(NULL),
  count_decoded_frames_for_framerate_calculation(0),
- decodedPict()
+ decodedPict(),
+ late(0)
 {
  DPRINTF(_l("TffdshowDecVideo::Constructor"));
 #ifdef OSDTIMETABALE
@@ -847,7 +848,7 @@ HRESULT TffdshowDecVideo::Receive(IMediaSample *pSample)
    late-=ff_abs(rtStart-lastrtStart);
    lastrtStart=rtStart;
    insample_rtStart = rtStart;
-    insample_rtStop = rtStop;
+   insample_rtStop = rtStop;
   }
  else
   {
