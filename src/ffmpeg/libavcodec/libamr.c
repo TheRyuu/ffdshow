@@ -57,13 +57,28 @@
 
 #include "avcodec.h"
 
+static void amr_decode_fix_avctx(AVCodecContext *avctx)
+{
+    //const int is_amr_wb = 1 + (avctx->codec_id == CODEC_ID_AMR_WB);
+    const int is_amr_wb = 1;
+
+    if (!avctx->sample_rate)
+        avctx->sample_rate = 8000 * is_amr_wb;
+
+    if (!avctx->channels)
+        avctx->channels = 1;
+
+    avctx->frame_size = 160 * is_amr_wb;
+    avctx->sample_fmt = SAMPLE_FMT_S16;
+}
+
+#if CONFIG_LIBAMR_NB
+
 #include "amr_float/interf_dec.h"
 #include "amr_float/interf_enc.h"
 
 static const char nb_bitrate_unsupported[] =
     "bitrate not supported: use one of 4.75k, 5.15k, 5.9k, 6.7k, 7.4k, 7.95k, 10.2k or 12.2k\n";
-static const char wb_bitrate_unsupported[] =
-    "bitrate not supported: use one of 6.6k, 8.85k, 12.65k, 14.25k, 15.85k, 18.25k, 19.85k, 23.05k, or 23.85k\n";
 
 /* Common code for fixed and float version*/
 typedef struct AMR_bitrates {
@@ -91,23 +106,6 @@ static int getBitrateMode(int bitrate)
     /* no bitrate matching, return an error */
     return -1;
 }
-
-static void amr_decode_fix_avctx(AVCodecContext *avctx)
-{
-    //const int is_amr_wb = 1 + (avctx->codec_id == CODEC_ID_AMR_WB);
-    const int is_amr_wb = 1;
-
-    if (!avctx->sample_rate)
-        avctx->sample_rate = 8000 * is_amr_wb;
-
-    if (!avctx->channels)
-        avctx->channels = 1;
-
-    avctx->frame_size = 160 * is_amr_wb;
-    avctx->sample_fmt = SAMPLE_FMT_S16;
-}
-
-#if CONFIG_LIBAMR_NB
 
 typedef struct AMRContext {
     int   frameCount;
