@@ -981,6 +981,22 @@ static inline void direct_ref_list_init(H264Context * const h){
     }
 }
 
+static void await_reference_mb_row(H264Context * const h, Picture *ref, int mb_y)
+{
+    int ref_field = ref->reference - 1;
+    int ref_field_picture = ref->field_picture;
+    int ref_height = 16*h->s.mb_height >> ref_field_picture;
+
+    if(!USE_FRAME_THREADING(h->s.avctx))
+        return;
+
+    //FIXME it can be safe to access mb stuff
+    //even if pixels aren't deblocked yet
+
+    ff_await_field_progress((AVFrame*)ref, FFMIN(16*mb_y >> ref_field_picture, ref_height-1),
+                            ref_field_picture && ref_field);
+}
+
 static inline void pred_direct_motion(H264Context * const h, int *mb_type){
     MpegEncContext * const s = &h->s;
     int b8_stride = h->b8_stride;
@@ -994,6 +1010,8 @@ static inline void pred_direct_motion(H264Context * const h, int *mb_type){
     int i8, i4;
 
     assert(h->ref_list[1][0].reference&3);
+
+    await_reference_mb_row(h, &h->ref_list[1][0], s->mb_y+1);
 
 #define MB_TYPE_16x16_OR_INTRA (MB_TYPE_16x16|MB_TYPE_INTRA4x4|MB_TYPE_INTRA16x16|MB_TYPE_INTRA_PCM)
 
@@ -1048,6 +1066,8 @@ single_col:
         }
     }
 
+    await_reference_mb_row(h, &h->ref_list[1][0], mb_y);
+
     l1mv0  = &h->ref_list[1][0].motion_val[0][h->mb2b_xy [mb_xy]];
     l1mv1  = &h->ref_list[1][0].motion_val[1][h->mb2b_xy [mb_xy]];
     l1ref0 = &h->ref_list[1][0].ref_index [0][h->mb2b8_xy[mb_xy]];
@@ -1059,16 +1079,6 @@ single_col:
             l1mv0  +=  2*b4_stride;
             l1mv1  +=  2*b4_stride;
         }
-    }
-
-    if(USE_FRAME_THREADING(s->avctx)){
-        Picture *ref_pic = &h->ref_list[1][0];
-        int ref_field = ref_pic->reference - 1;
-        int ref_field_picture = ref_pic->field_picture;
-        int pic_height = 16*s->mb_height >> ref_field_picture;
-
-        ff_await_field_progress((AVFrame*)ref_pic, FFMIN(16*mb_y >> ref_field_picture, pic_height-1),
-                                ref_field_picture && ref_field);
     }
 
     if(h->direct_spatial_mv_pred){
