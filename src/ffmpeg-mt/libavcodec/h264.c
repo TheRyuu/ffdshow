@@ -1561,7 +1561,7 @@ static inline int get_chroma_qp(H264Context *h, int t, int qscale){
 
 static inline int mc_dir_part_y(H264Context *h, Picture *pic, int n, int height,
                                  int y_offset, int list){
-    int my= h->mv_cache[list][ scan8[n] ][1] + 8*y_offset;
+    int my= h->mv_cache[list][ scan8[n] ][1] + 4*y_offset;
     int filter_height= 6;
     int extra_height= h->emu_edge_height;
     const int full_my= my>>2;
@@ -1580,7 +1580,7 @@ static inline void mc_part_y(H264Context *h, int refs[2][48], int n, int height,
     MpegEncContext * const s = &h->s;
     int my;
 
-    y_offset += 8*(s->mb_y >> MB_FIELD);
+    y_offset += 16*(s->mb_y >> FIELD_PICTURE);
 
     if(list0){
         int ref_n = h->ref_cache[0][ scan8[n] ], my;
@@ -1711,6 +1711,16 @@ static inline void mc_dir_part(H264Context *h, Picture *pic, int n, int square, 
     const int full_my= my>>2;
     const int pic_width  = 16*s->mb_width;
     const int pic_height = 16*s->mb_height >> MB_FIELD;
+
+#if 0
+    int requested_line = (src_y - pic->data[0])/s->linesize;
+    int progress=ff_check_field_progress((AVFrame*)pic, requested_line, s->picture_structure==PICT_BOTTOM_FIELD);
+
+    if (progress) {
+        av_log(s->avctx,AV_LOG_DEBUG,"race condition found h->poc_lsb %d h->mb_xy %d requested_line %d progress %d",
+            h->poc_lsb,h->mb_xy,requested_line,progress);
+    }
+#endif
 
     if(mx&7) extra_width -= 3;
     if(my&7) extra_height -= 3;

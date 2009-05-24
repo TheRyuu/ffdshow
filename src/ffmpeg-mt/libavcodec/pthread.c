@@ -534,6 +534,16 @@ void ff_await_field_progress(AVFrame *f, int n, int field)
     pthread_mutex_unlock(&p->progress_mutex);
 }
 
+// for debugging only
+int ff_check_field_progress(AVFrame *f, int n, int field)
+{
+    PerThreadContext *p = f->owner->thread_opaque;
+    int *progress = f->thread_opaque;
+
+    if (progress[field] >= n) return 0;
+    return progress[field];
+}
+
 void ff_report_frame_progress(AVFrame *f, int n)
 {
     ff_report_field_progress(f, n, 0);

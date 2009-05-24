@@ -91,6 +91,12 @@ void ff_report_field_progress(AVFrame *f, int progress, int field);
 void ff_await_field_progress(AVFrame *f, int progress, int field);
 
 /**
+ * For debugging only.
+ * @return 0 if OK. If not OK, return progress.
+ */
+int ff_check_field_progress(AVFrame *f, int n, int field);
+
+/**
  * Allocate a frame with avctx->get_buffer() and set
  * values needed for multithreading. Codecs must call
  * this instead of using get_buffer() directly if
