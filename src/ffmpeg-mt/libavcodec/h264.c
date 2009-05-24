@@ -985,7 +985,7 @@ static inline void pred_direct_motion(H264Context * const h, int *mb_type){
     MpegEncContext * const s = &h->s;
     int b8_stride = h->b8_stride;
     int b4_stride = h->b_stride;
-    int mb_xy = h->mb_xy;
+    int mb_xy = h->mb_xy, mb_y = s->mb_y;
     int mb_type_col[2];
     const int16_t (*l1mv0)[2], (*l1mv1)[2];
     const int8_t *l1ref0, *l1ref1;
@@ -1002,16 +1002,19 @@ static inline void pred_direct_motion(H264Context * const h, int *mb_type){
             int cur_poc = s->current_picture_ptr->poc;
             int *col_poc = h->ref_list[1]->field_poc;
             int col_parity = FFABS(col_poc[0] - cur_poc) >= FFABS(col_poc[1] - cur_poc);
-            mb_xy= s->mb_x + ((s->mb_y&~1) + col_parity)*s->mb_stride;
+            mb_y = (s->mb_y&~1) + col_parity;
+            mb_xy= s->mb_x + mb_y*s->mb_stride;
             b8_stride = 0;
         }else if(!(s->picture_structure & h->ref_list[1][0].reference) && !h->ref_list[1][0].mbaff){// FL -> FL & differ parity
             int fieldoff= 2*(h->ref_list[1][0].reference)-3;
+            mb_y += fieldoff;
             mb_xy += s->mb_stride*fieldoff;
         }
         goto single_col;
     }else{                                               // AFL/AFR/FR/FL -> AFR/FR
         if(IS_INTERLACED(*mb_type)){                     // AFL       /FL -> AFR/FR
-            mb_xy= s->mb_x + (s->mb_y&~1)*s->mb_stride;
+            mb_y = s->mb_y&~1;
+            mb_xy= s->mb_x + mb_y*s->mb_stride;
             mb_type_col[0] = h->ref_list[1][0].mb_type[mb_xy];
             mb_type_col[1] = h->ref_list[1][0].mb_type[mb_xy + s->mb_stride];
             b8_stride *= 3;
@@ -1056,6 +1059,16 @@ single_col:
             l1mv0  +=  2*b4_stride;
             l1mv1  +=  2*b4_stride;
         }
+    }
+
+    if(USE_FRAME_THREADING(s->avctx)){
+        Picture *ref_pic = &h->ref_list[1][0];
+        int ref_field = ref_pic->reference - 1;
+        int ref_field_picture = ref_pic->field_picture;
+        int pic_height = 16*s->mb_height >> ref_field_picture;
+
+        ff_await_field_progress((AVFrame*)ref_pic, FFMIN(16*mb_y >> ref_field_picture, pic_height-1),
+                                ref_field_picture && ref_field);
     }
 
     if(h->direct_spatial_mv_pred){
@@ -2477,8 +2490,6 @@ static void decode_postinit(H264Context *h){
     s->current_picture_ptr->qscale_type= FF_QSCALE_TYPE_H264;
     s->current_picture_ptr->pict_type= s->pict_type;
 
-    // Don't do anything if it's the first field or we've already been called.
-    // FIXME the first field should call ff_report_frame_setup_done() even if it skips the rest
     if (h->next_output_pic) return;
 
     if (cur->field_poc[0]==INT_MAX || cur->field_poc[1]==INT_MAX) {
@@ -4071,8 +4082,10 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
 
     if (s->context_initialized
         && (   s->width != s->avctx->width || s->height != s->avctx->height)) {
-        if(h != h0)
+        if(h != h0) {
+            ff_log_missing_feature(s->avctx, "Width/height changing with threads is", 0);
             return -1;   // width / height changed during parallelized decoding
+        }
         free_tables(h);
         flush_dpb(s->avctx);
         MPV_common_end(s);

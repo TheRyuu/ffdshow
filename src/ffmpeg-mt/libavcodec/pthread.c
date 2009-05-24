@@ -240,9 +240,9 @@ static int thread_init(AVCodecContext *avctx, int thread_count)
  */
 static attribute_align_arg void *frame_worker_thread(void *arg)
 {
-    PerThreadContext * volatile p = arg;
+    PerThreadContext * p = arg;
     AVCodecContext *avctx = p->avctx;
-    FrameThreadContext * volatile fctx = p->parent;
+    FrameThreadContext * fctx = p->parent;
     AVCodec *codec = avctx->codec;
 
     while (1) {
@@ -413,7 +413,7 @@ static void handle_delayed_releases(PerThreadContext *p)
 }
 
 /// Submit a frame to the next decoding thread
-static int submit_frame(PerThreadContext * volatile p, const uint8_t *buf, int buf_size)
+static int submit_frame(PerThreadContext * p, const uint8_t *buf, int buf_size)
 {
     FrameThreadContext *fctx = p->parent;
     PerThreadContext *prev_thread = fctx->prev_thread;
@@ -455,7 +455,7 @@ int ff_decode_frame_threaded(AVCodecContext *avctx,
                              const uint8_t *buf, int buf_size)
 {
     FrameThreadContext *fctx;
-    PerThreadContext * volatile p;
+    PerThreadContext * p;
     int thread_count = avctx->thread_count, err = 0;
     int returning_thread;
 
@@ -520,7 +520,7 @@ void ff_report_field_progress(AVFrame *f, int n, int field)
 void ff_await_field_progress(AVFrame *f, int n, int field)
 {
     PerThreadContext *p = f->owner->thread_opaque;
-    int * volatile progress = f->thread_opaque;
+    int *progress = f->thread_opaque;
 
     if (progress[field] >= n) return;
 
@@ -730,7 +730,7 @@ void avcodec_thread_free(AVCodecContext *avctx)
 AVCodecContext* get_thread0_avctx(AVCodecContext *avctx)
 {
     FrameThreadContext *fctx;
-    PerThreadContext * volatile p;
+    PerThreadContext *p;
 
     if (USE_FRAME_THREADING(avctx) && avctx->thread_opaque){
         fctx = avctx->thread_opaque;
