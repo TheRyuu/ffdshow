@@ -101,6 +101,7 @@ typedef struct FrameThreadContext {
 
     int die;                       ///< Set to cause threads to exit.
 } FrameThreadContext;
+static int update_context_from_copy(AVCodecContext *dst, AVCodecContext *src, int for_user);
 
 static void* attribute_align_arg worker(void *v)
 {
@@ -324,6 +325,8 @@ static int frame_thread_init(AVCodecContext *avctx)
         pthread_create(&p->thread, NULL, frame_worker_thread, p);
     }
 
+    update_context_from_copy(avctx, src, 1);
+
     return 0;
 
 error:
@@ -373,6 +376,11 @@ static int update_context_from_copy(AVCodecContext *dst, AVCodecContext *src, in
     COPY(profile);
     COPY(level);
     COPY(bits_per_raw_sample);
+    COPY(ticks_per_frame);
+    COPY(color_primaries);
+    COPY(color_trc);
+    COPY(colorspace);
+    COPY(color_range);
 
     if (!for_user) {
         if (dst->codec->update_context)
@@ -454,14 +462,10 @@ int ff_decode_frame_threaded(AVCodecContext *avctx,
                              void *data, int *data_size,
                              const uint8_t *buf, int buf_size)
 {
-    FrameThreadContext *fctx;
+    FrameThreadContext *fctx = avctx->thread_opaque;
     PerThreadContext * p;
     int thread_count = avctx->thread_count, err = 0;
-    int returning_thread;
-
-    if (!avctx->thread_opaque) frame_thread_init(avctx);
-    fctx = avctx->thread_opaque;
-    returning_thread = fctx->next_finished;
+    int returning_thread = fctx->next_finished;
 
     p = &fctx->threads[fctx->next_decoding];
     update_context_from_user(p->avctx, avctx);
@@ -710,9 +714,10 @@ int avcodec_thread_init(AVCodecContext *avctx, int thread_count)
     if (avctx->codec) {
         validate_thread_parameters(avctx);
 
-        // frame_thread_init must be called after codec init
         if (USE_AVCODEC_EXECUTE(avctx))
             return thread_init(avctx, thread_count);
+        else if (USE_FRAME_THREADING(avctx))
+            return frame_thread_init(avctx);
     }
 
     return 0;

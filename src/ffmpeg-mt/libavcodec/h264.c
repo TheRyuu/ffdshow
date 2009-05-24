@@ -4082,7 +4082,7 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
 
     if (s->context_initialized
         && (   s->width != s->avctx->width || s->height != s->avctx->height)) {
-        if(h != h0) {
+        if(h != h0 || USE_FRAME_THREADING(s->avctx)) {
             ff_log_missing_feature(s->avctx, "Width/height changing with threads is", 0);
             return -1;   // width / height changed during parallelized decoding
         }

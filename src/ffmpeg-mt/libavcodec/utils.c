@@ -235,6 +235,11 @@ int avcodec_default_get_buffer(AVCodecContext *s, AVFrame *pic){
     (*picture_number)++;
 
     if(buf->base[0] && (buf->width != w || buf->height != h || buf->pix_fmt != s->pix_fmt)){
+        if(USE_FRAME_THREADING(s)) {
+            ff_log_missing_feature(s, "Width/height changing with frame threads is", 0);
+            return -1;
+        }
+
         for(i=0; i<4; i++){
             av_freep(&buf->base[i]);
             buf->data[i]= NULL;
