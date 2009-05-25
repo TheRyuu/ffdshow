@@ -20,7 +20,7 @@
 #include "Twinamp2.h"
 #include "Tdll.h"
 #include "DSP.H"
-#include "Twinamp2settings.h"s
+#include "Twinamp2settings.h"
 
 //============================== Twinamp2 ====================================
 Twinamp2::Twinamp2(const char_t *Iwinampdir)
