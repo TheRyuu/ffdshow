@@ -1712,15 +1712,18 @@ static inline void mc_dir_part(H264Context *h, Picture *pic, int n, int square, 
     const int pic_width  = 16*s->mb_width;
     const int pic_height = 16*s->mb_height >> MB_FIELD;
 
-#if 0
-    int requested_line = (src_y - pic->data[0])/s->linesize;
-    int progress=ff_check_field_progress((AVFrame*)pic, requested_line, s->picture_structure==PICT_BOTTOM_FIELD);
+    if (0) {
+        int requested_line = ((src_y - pic->data[0])/s->linesize) >> pic->field_picture;
+        int ref_field = pic->reference - 1;
+        int ref_field_picture = pic->field_picture;
+        int progress;
+        int error=ff_check_field_progress((AVFrame*)pic, requested_line, ref_field_picture && ref_field, &progress);
 
-    if (progress) {
-        av_log(s->avctx,AV_LOG_DEBUG,"race condition found h->poc_lsb %d h->mb_xy %d requested_line %d progress %d",
-            h->poc_lsb,h->mb_xy,requested_line,progress);
+        if (error) {
+            av_log(s->avctx,AV_LOG_DEBUG,"race condition suspected: h->poc_lsb %d h->mb_xy %d requested_line %d progress %d",
+                h->poc_lsb,h->mb_xy,requested_line,progress);
+        }
     }
-#endif
 
     if(mx&7) extra_width -= 3;
     if(my&7) extra_height -= 3;

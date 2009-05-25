@@ -92,9 +92,11 @@ void ff_await_field_progress(AVFrame *f, int progress, int field);
 
 /**
  * For debugging only.
- * @return 0 if OK. If not OK, return progress.
+ * Similar to ff_await_field_progress but returns error code without waiting.
+ * @param[out] progress_ptr Current progress so far
+ * @return 0: OK, 1:race condition found or bug of debugging code
  */
-int ff_check_field_progress(AVFrame *f, int n, int field);
+int ff_check_field_progress(AVFrame *f, int n, int field, int *progress_ptr);
 
 /**
  * Allocate a frame with avctx->get_buffer() and set

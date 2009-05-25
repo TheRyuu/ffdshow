@@ -535,13 +535,16 @@ void ff_await_field_progress(AVFrame *f, int n, int field)
 }
 
 // for debugging only
-int ff_check_field_progress(AVFrame *f, int n, int field)
+int ff_check_field_progress(AVFrame *f, int n, int field, int *progress_ptr)
 {
     PerThreadContext *p = f->owner->thread_opaque;
     int *progress = f->thread_opaque;
 
-    if (progress[field] >= n) return 0;
-    return progress[field];
+    *progress_ptr = progress[field];
+    if (progress[field] >= n)
+        return 0;
+    else
+        return 1;
 }
 
 void ff_report_frame_progress(AVFrame *f, int n)
