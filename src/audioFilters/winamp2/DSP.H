@@ -5,6 +5,8 @@
 extern "C" {
 #endif
 
+#include "TsampleFormat.h"
+
 // DSP plugin interface
 
 // notes:
@@ -25,7 +27,7 @@ typedef struct winampDSPModule {
   // modify waveform samples: returns number of samples to actually write
   // (typically numsamples, but no more than twice numsamples, and no less than half numsamples)
   // numsamples should always be at least 128. should, but I'm not sure
-  int (*ModifySamples)(struct winampDSPModule *this_mod, short int *samples, int numsamples, int bps, int nch, int srate);
+  int (*ModifySamples)(struct winampDSPModule *this_mod, int16_t *samples, int numsamples, int bps, int nch, int srate);
 
   void (*Quit)(struct winampDSPModule *this_mod);    // called when unloading
 

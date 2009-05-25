@@ -20,7 +20,7 @@
 #include "Twinamp2.h"
 #include "Tdll.h"
 #include "DSP.H"
-#include "Twinamp2settings.h"
+#include "Twinamp2settings.h"s
 
 //============================== Twinamp2 ====================================
 Twinamp2::Twinamp2(const char_t *Iwinampdir)
@@ -32,6 +32,7 @@ Twinamp2::Twinamp2(const char_t *Iwinampdir)
  findFiles(mask,files);
  for (strings::const_iterator flnm=files.begin();flnm!=files.end();flnm++)
   {
+      DPRINTF(_l("Loading Winamp DSP plugin %s"), flnm->c_str());
    Twinamp2dspDll *dsp=new Twinamp2dspDll(*flnm);
    if (!dsp->filters.empty())
     dsps.push_back(dsp);
@@ -79,6 +80,7 @@ Twinamp2dspDll::Twinamp2dspDll(const ffstring &flnm):refcount(1)
     // DSP stacker, Adapt-X and Vst host are not compatible with ffdshow currently. Maybe ffdshow's bug, but I can't help...
     if (   _strnicmp(_l("dsp_stacker.dll"),filename,16)==0
         || _strnicmp(_l("dsp_adaptx.dll"),filename,15)==0
+        || _strnicmp(_l("dsp_sps.dll"),filename,11)==0
        )
         return;
     dll=new Tdll(flnm.c_str(),NULL);

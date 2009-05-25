@@ -1,5 +1,6 @@
 #ifndef _TWINAMP2_H_
 #define _TWINAMP2_H_
+#include "TsampleFormat.h"
 
 struct winampDSPModule;
 class Twinamp2dsp;
