@@ -1011,7 +1011,7 @@ static inline void pred_direct_motion(H264Context * const h, int *mb_type){
 
     assert(h->ref_list[1][0].reference&3);
 
-    await_reference_mb_row(h, &h->ref_list[1][0], s->mb_y+1);
+    await_reference_mb_row(h, &h->ref_list[1][0], s->mb_y + !!IS_INTERLACED(*mb_type));
 
 #define MB_TYPE_16x16_OR_INTRA (MB_TYPE_16x16|MB_TYPE_INTRA4x4|MB_TYPE_INTRA16x16|MB_TYPE_INTRA_PCM)
 
@@ -1561,18 +1561,12 @@ static inline int get_chroma_qp(H264Context *h, int t, int qscale){
 
 static inline int mc_dir_part_y(H264Context *h, Picture *pic, int n, int height,
                                  int y_offset, int list){
-    int my= h->mv_cache[list][ scan8[n] ][1] + 4*y_offset;
-    int filter_height= 6;
-    int extra_height= h->emu_edge_height;
-    const int full_my= my>>2;
+    int raw_my= h->mv_cache[list][ scan8[n] ][1];
+    int filter_height= (raw_my&3) ? 2 : 0;
+    int full_my= (raw_my>>2) + y_offset;
+    int top = full_my - filter_height, bottom = full_my + height + filter_height;
 
-    if(!pic->data[0]) return -1;
-
-    if(full_my < (extra_height + filter_height)){
-        my = abs(my) + extra_height*4;
-    }
-
-    return ((my << (h->mb_linesize > h->s.linesize)) + height * 4 + filter_height * 4 + 1) >> 2;
+    return FFMAX(abs(top), bottom);
 }
 
 static inline void mc_part_y(H264Context *h, int refs[2][48], int n, int height,
@@ -1580,7 +1574,7 @@ static inline void mc_part_y(H264Context *h, int refs[2][48], int n, int height,
     MpegEncContext * const s = &h->s;
     int my;
 
-    y_offset += 16*(s->mb_y >> FIELD_PICTURE);
+    y_offset += 16*(s->mb_y >> MB_FIELD);
 
     if(list0){
         int ref_n = h->ref_cache[0][ scan8[n] ], my;
@@ -1670,7 +1664,7 @@ static void avail_motion(H264Context *h){
         }
     }
 
-    for(list=1; list>=0; list--){
+    for(list=h->list_count-1; list>=0; list--){
         for(ref=0; ref<48; ref++){
             int row = refs[list][ref];
             if(row >= 0){
@@ -1678,6 +1672,8 @@ static void avail_motion(H264Context *h){
                 int ref_field = ref_pic->reference - 1;
                 int ref_field_picture = ref_pic->field_picture;
                 int pic_height = 16*s->mb_height >> ref_field_picture;
+
+                row <<= MB_MBAFF;
 
                 if(!FIELD_PICTURE && ref_field_picture){ // frame referencing two fields
                     ff_await_field_progress((AVFrame*)ref_pic, FFMIN((row >> 1) - !(row&1), pic_height-1), 1);

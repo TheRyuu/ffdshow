@@ -247,10 +247,12 @@ static attribute_align_arg void *frame_worker_thread(void *arg)
     AVCodec *codec = avctx->codec;
 
     while (1) {
-        pthread_mutex_lock(&p->mutex);
-        while (p->state == STATE_INPUT_READY && !fctx->die)
-            pthread_cond_wait(&p->input_cond, &p->mutex);
-        pthread_mutex_unlock(&p->mutex);
+        if (p->state == STATE_INPUT_READY && !fctx->die) {
+            pthread_mutex_lock(&p->mutex);
+            while (p->state == STATE_INPUT_READY && !fctx->die)
+                pthread_cond_wait(&p->input_cond, &p->mutex);
+            pthread_mutex_unlock(&p->mutex);
+        }
 
         if (fctx->die) break;
 
@@ -432,10 +434,12 @@ static int submit_frame(PerThreadContext * p, const uint8_t *buf, int buf_size)
 
     pthread_mutex_lock(&p->mutex);
     if (prev_thread) {
+        if (prev_thread->state == STATE_SETTING_UP) {
         pthread_mutex_lock(&prev_thread->progress_mutex);
         while (prev_thread->state == STATE_SETTING_UP)
             pthread_cond_wait(&prev_thread->progress_cond, &prev_thread->progress_mutex);
         pthread_mutex_unlock(&prev_thread->progress_mutex);
+        }
 
         err = update_context_from_copy(p->avctx, prev_thread->avctx, 0);
         if (err) return err;
@@ -486,10 +490,12 @@ int ff_decode_frame_threaded(AVCodecContext *avctx,
     do {
         p = &fctx->threads[returning_thread++];
 
-        pthread_mutex_lock(&p->progress_mutex);
-        while (p->state != STATE_INPUT_READY)
-            pthread_cond_wait(&p->output_cond, &p->progress_mutex);
-        pthread_mutex_unlock(&p->progress_mutex);
+        if (p->state != STATE_INPUT_READY) {
+            pthread_mutex_lock(&p->progress_mutex);
+            while (p->state != STATE_INPUT_READY)
+                pthread_cond_wait(&p->output_cond, &p->progress_mutex);
+            pthread_mutex_unlock(&p->progress_mutex);
+        }
 
         *(AVFrame*)data = p->picture;
         *data_size = p->got_picture;
@@ -576,10 +582,12 @@ static void park_frame_worker_threads(FrameThreadContext *fctx, int thread_count
     for (i = 0; i < thread_count; i++) {
         PerThreadContext *p = &fctx->threads[i];
 
-        pthread_mutex_lock(&p->progress_mutex);
-        while (p->state != STATE_INPUT_READY)
-            pthread_cond_wait(&p->output_cond, &p->progress_mutex);
-        pthread_mutex_unlock(&p->progress_mutex);
+        if (p->state != STATE_INPUT_READY) {
+            pthread_mutex_lock(&p->progress_mutex);
+            while (p->state != STATE_INPUT_READY)
+                pthread_cond_wait(&p->output_cond, &p->progress_mutex);
+            pthread_mutex_unlock(&p->progress_mutex);
+        }
     }
 }
 
