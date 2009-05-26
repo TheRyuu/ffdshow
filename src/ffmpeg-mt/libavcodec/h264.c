@@ -2315,6 +2315,8 @@ static av_cold int decode_init(AVCodecContext *avctx){
         avctx->pix_fmt= PIX_FMT_YUV420P;
     /* ffdshow custom code (end) */
 
+    avctx->chroma_sample_location = AVCHROMA_LOC_LEFT;
+
     decode_init_vlc();
 
     /* ffdshow custom code (begin) */
