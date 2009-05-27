@@ -35,7 +35,7 @@ extern const int16_t (* const ff_eac3_mantissa_vq[8])[6];
 extern const uint8_t ff_eac3_frm_expstr[32][6];
 extern const uint8_t ff_eac3_default_cpl_band_struct[18];
 extern const uint8_t ff_eac3_default_spx_band_struct[17];
-extern const int32_t ff_eac3_spx_atten_tab[32][3];
+extern const float   ff_eac3_spx_atten_tab[32][3];
 
 extern const uint8_t ff_ac3_rematrix_band_tab[5];
 
