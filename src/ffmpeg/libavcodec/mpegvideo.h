@@ -706,6 +706,12 @@ void ff_convert_matrix(DSPContext *dsp, int (*qmat)[64], uint16_t (*qmat16)[2][6
 void ff_init_block_index(MpegEncContext *s);
 void ff_copy_picture(Picture *dst, Picture *src);
 
+/**
+ * allocates a Picture
+ * The pixels are allocated/set by calling get_buffer() if shared=0
+ */
+int ff_alloc_picture(MpegEncContext *s, Picture *pic, int shared);
+
 static inline void ff_update_block_index(MpegEncContext *s){
     const int block_size= 8>>s->avctx->lowres;
 

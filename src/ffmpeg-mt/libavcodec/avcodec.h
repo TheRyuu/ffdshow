@@ -41,7 +41,7 @@
 
 #define LIBAVCODEC_VERSION_MAJOR 52
 #define LIBAVCODEC_VERSION_MINOR 29
-#define LIBAVCODEC_VERSION_MICRO  0
+#define LIBAVCODEC_VERSION_MICRO  1
 
 #define LIBAVCODEC_VERSION_INT  AV_VERSION_INT(LIBAVCODEC_VERSION_MAJOR, \
                                                LIBAVCODEC_VERSION_MINOR, \
@@ -862,7 +862,9 @@ typedef struct AVCodecContext {
      */
     int frame_size;
     int frame_number;   ///< Number of audio or video frames returned so far
+#if LIBAVCODEC_VERSION_MAJOR < 53
     int real_pict_num;  ///< Returns the real picture number of previous encoded frame.
+#endif
 
     /**
      * Number of frames the decoded output will be delayed relative to

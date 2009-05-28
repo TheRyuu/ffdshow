@@ -714,6 +714,12 @@ void ff_convert_matrix(DSPContext *dsp, int (*qmat)[64], uint16_t (*qmat16)[2][6
 void ff_init_block_index(MpegEncContext *s);
 void ff_copy_picture(Picture *dst, Picture *src);
 
+/**
+ * allocates a Picture
+ * The pixels are allocated/set by calling get_buffer() if shared=0
+ */
+int ff_alloc_picture(MpegEncContext *s, Picture *pic, int shared);
+
 static inline void ff_update_block_index(MpegEncContext *s){
     const int block_size= 8>>s->avctx->lowres;
 
@@ -772,7 +778,7 @@ void mpeg1_encode_mb(MpegEncContext *s,
 void ff_mpeg1_encode_init(MpegEncContext *s);
 void ff_mpeg1_encode_slice_header(MpegEncContext *s);
 void ff_mpeg1_clean_buffers(MpegEncContext *s);
-int ff_mpeg1_find_frame_end(ParseContext *pc, const uint8_t *buf, int buf_size, AVCodecParserContext *s, int64_t *rtStart); /* rtStart: ffdshow custom code */
+int ff_mpeg1_find_frame_end(ParseContext *pc, const uint8_t *buf, int buf_size, AVCodecParserContext *s, int64_t *rtStart, AVCodecContext *avctx); /* rtStart, avctx: ffdshow custom code */
 
 extern const uint8_t ff_mpeg4_y_dc_scale_table[32];
 extern const uint8_t ff_mpeg4_c_dc_scale_table[32];
