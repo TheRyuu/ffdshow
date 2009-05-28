@@ -1421,15 +1421,15 @@ TvideoCodecLibavcodec::TcodedPictureBuffer::TcodedPictureBuffer(TvideoCodecLibav
 
 void TvideoCodecLibavcodec::TcodedPictureBuffer::init(void)
 {
- onSeek();
- priorBuf.alloc(512 * 1024);
- outBuf.alloc(512 * 1024);
+    onSeek();
+    priorBuf.alloc(512 * 1024);
+    outBuf.alloc(512 * 1024);
 }
 
 void TvideoCodecLibavcodec::TcodedPictureBuffer::onSeek(void)
 {
- used_bytes = outSampleSize = priorSize = 0;
- prior_rtStart = prior_rtStop = REFTIME_INVALID;
+    used_bytes = outSampleSize = priorSize = 0;
+    prior_rtStart = prior_rtStop = REFTIME_INVALID;
 }
 
 /*
@@ -1440,248 +1440,227 @@ void TvideoCodecLibavcodec::TcodedPictureBuffer::onSeek(void)
  */
 int TvideoCodecLibavcodec::TcodedPictureBuffer::append(const uint8_t *buf, int buf_size)
 {
- used_bytes = outSampleSize = 0;
- int startCodePos = 0;
- for (; startCodePos < buf_size - 3 ; startCodePos++)
-  {
-   if (buf[startCodePos] == 0 && buf[startCodePos+1] == 0 && buf[startCodePos+2] == 1 && (buf[startCodePos+3] & 0x1f) == 0x09) // search NAL start code (00 00 01) + AU delimiter
-    {
-     // send to libavcodec (priorBuf + current sample(just before the start code))
-     uint8_t *dstOut = (uint8_t *)outBuf.resize2(priorSize + startCodePos + FF_INPUT_BUFFER_PADDING_SIZE);
-     memcpy(dstOut, priorBuf, priorSize);
-     memcpy(dstOut + priorSize, buf, startCodePos);
-     outSampleSize = priorSize + startCodePos;
+     used_bytes = outSampleSize = 0;
+     int startCodePos = 0;
+     for (; startCodePos < buf_size - 3 ; startCodePos++) {
+         // search NAL start code (00 00 01) + AU delimiter
+         if (buf[startCodePos] == 0 && buf[startCodePos+1] == 0 && buf[startCodePos+2] == 1 && (buf[startCodePos+3] & 0x1f) == 0x09) {
+             // send to libavcodec (priorBuf + current sample(just before the start code))
+             uint8_t *dstOut = (uint8_t *)outBuf.resize2(priorSize + startCodePos + FF_INPUT_BUFFER_PADDING_SIZE);
+             memcpy(dstOut, priorBuf, priorSize);
+             memcpy(dstOut + priorSize, buf, startCodePos);
+             outSampleSize = priorSize + startCodePos;
 
-     // copy the left of sample to priorBuf
-     uint8_t *dstPrior = (uint8_t *)priorBuf.resize2(buf_size - startCodePos);
-     const uint8_t *src = buf + startCodePos;
-     priorSize = buf_size - startCodePos;
-     memcpy(dstPrior, src, priorSize);
-     if (priorSize > 3 && prior_rtStart != REFTIME_INVALID)
-      {
-       out_rtStart = prior_rtStart;
-       out_rtStop  = prior_rtStop;
-      }
-     else
-      {
-       out_rtStart = parent->rtStart;
-       out_rtStop  = parent->rtStop;
-      }
+             // copy the left of sample to priorBuf
+             uint8_t *dstPrior = (uint8_t *)priorBuf.resize2(buf_size - startCodePos);
+             const uint8_t *src = buf + startCodePos;
+             priorSize = buf_size - startCodePos;
+             memcpy(dstPrior, src, priorSize);
+             if (priorSize > 3 && prior_rtStart != REFTIME_INVALID) {
+                 out_rtStart = prior_rtStart;
+                 out_rtStop  = prior_rtStop;
+             } else {
+                 out_rtStart = parent->rtStart;
+                 out_rtStop  = parent->rtStop;
+             }
+             prior_rtStart = parent->rtStart;
+             prior_rtStop  = parent->rtStop;
+             return outSampleSize;
+         }
+     }
+
+     // start code not found
+     uint8_t *dstPrior = (uint8_t *)priorBuf.resize2(buf_size + priorSize);
+     memcpy(dstPrior + priorSize, buf, buf_size);
+     priorSize += buf_size;
      prior_rtStart = parent->rtStart;
-     prior_rtStop  = parent->rtStop;
-     return outSampleSize;
-    }
-  }
-
- // start code not found
- uint8_t *dstPrior = (uint8_t *)priorBuf.resize2(buf_size + priorSize);
- memcpy(dstPrior + priorSize, buf, buf_size);
- priorSize += buf_size;
- prior_rtStart = parent->rtStart;
- prior_rtStop = parent->rtStop;
- return 0;
+     prior_rtStop = parent->rtStop;
+     return 0;
 }
 
 int TvideoCodecLibavcodec::TcodedPictureBuffer::send(int *got_picture_ptr)
 {
- if (outSampleSize < 4)
-  return -1;
+     if (outSampleSize < 4)
+         return -1;
 
- int out_size = outSampleSize - used_bytes;
- if (parent->h264RandomAccess.search((uint8_t *)outBuf + used_bytes, out_size) == 0)
-  return -1;
+     int out_size = outSampleSize - used_bytes;
+     if (parent->h264RandomAccess.search((uint8_t *)outBuf + used_bytes, out_size) == 0)
+         return -1;
 
- parent->avctx->reordered_opaque = out_rtStart;
- parent->avctx->reordered_opaque2 = out_rtStop;
- parent->avctx->reordered_opaque3 = out_size;
- int used = parent->libavcodec->avcodec_decode_video(parent->avctx, parent->frame, got_picture_ptr, (uint8_t *)outBuf + used_bytes, out_size);
+     parent->avctx->reordered_opaque = out_rtStart;
+     parent->avctx->reordered_opaque2 = out_rtStop;
+     parent->avctx->reordered_opaque3 = out_size;
+     int used = parent->libavcodec->avcodec_decode_video(parent->avctx, parent->frame, got_picture_ptr, (uint8_t *)outBuf + used_bytes, out_size);
 
- if (used < 0)
-  return -1;
+     if (used < 0)
+         return -1;
 
- parent->h264RandomAccess.judgeUsability(got_picture_ptr);
+     parent->h264RandomAccess.judgeUsability(got_picture_ptr);
 
- used_bytes += used;
- return used;
+     used_bytes += used;
+     return used;
 }
 
 TvideoCodecLibavcodec::Th264RandomAccess::Th264RandomAccess(TvideoCodecLibavcodec *Iparent):
  parent(Iparent)
 {
- recovery_mode = 1;
- recovery_frame_cnt = 0;
+    recovery_mode = 1;
+    recovery_frame_cnt = 0;
 }
 
 void TvideoCodecLibavcodec::Th264RandomAccess::onSeek(void)
 {
- recovery_mode = 1;
- recovery_frame_cnt = 0;
+    recovery_mode = 1;
+    recovery_frame_cnt = 0;
 
- if (parent->avctx->active_thread_type == FF_THREAD_FRAME)
-  thread_delay = parent->avctx->thread_count;
- else
-  thread_delay = 1;
+    if (parent->avctx->active_thread_type == FF_THREAD_FRAME)
+        thread_delay = parent->avctx->thread_count;
+    else
+        thread_delay = 1;
 }
 
 // return 0:not found, don't send it to libavcodec, 1:send it anyway.
 int TvideoCodecLibavcodec::Th264RandomAccess::search(uint8_t* buf, int buf_size)
 {
- if (parent->codecId == CODEC_ID_H264 && recovery_mode == 1)
-  {
-   int is_recovery_point = parent->libavcodec->avcodec_h264_search_recovery_point(parent->avctx, buf, buf_size, &recovery_frame_cnt);
-   if (is_recovery_point == 3) // IDR
-    {
-     recovery_mode = 0;
+ if (parent->codecId == CODEC_ID_H264 && recovery_mode == 1) {
+     int is_recovery_point = parent->libavcodec->avcodec_h264_search_recovery_point(parent->avctx, buf, buf_size, &recovery_frame_cnt);
+     if (is_recovery_point == 3) {
+         // IDR
+         recovery_mode = 0;
+         return 1;
+     } else if (is_recovery_point == 2) {
+         // GDR, recovery_frame_cnt is valid.
+         recovery_mode = 2;
+         return 1;
+     } else if (is_recovery_point == 1) {
+         // I frames are not ideal for recovery, but if we ignore them, better frames may not come forever. recovery_frame_cnt is not valid.
+         recovery_mode = 2;
+         recovery_frame_cnt = 0;
+         return 1;
+     } else
+         return 0;
+ } else
      return 1;
-    }
-   else if (is_recovery_point == 2) // GDR, recovery_frame_cnt is valid.
-    {
-     recovery_mode = 2;
-     return 1;
-    }
-   else if (is_recovery_point == 1) // I frames are not ideal for recovery, but if we ignore them, better frames may not come forever. recovery_frame_cnt is not valid.
-    {
-     recovery_mode = 2;
-     recovery_frame_cnt = 0;
-     return 1;
-    }
-   else
-    return 0;
-  }
- else
-  return 1;
 }
 
 void TvideoCodecLibavcodec::Th264RandomAccess::judgeUsability(int *got_picture_ptr)
 {
- if (parent->codecId != CODEC_ID_H264)
-  return;
+    if (parent->codecId != CODEC_ID_H264)
+        return;
 
- if (--thread_delay > 0 || parent->frame->h264_max_frame_num == 0)
-  return;
+    AVFrame *frame = parent->frame;
 
- if (recovery_mode ==1 || recovery_mode ==2)
-  {
-   recovery_frame_cnt = (recovery_frame_cnt + parent->frame->h264_frame_num_decoded) % parent->frame->h264_max_frame_num;
-   recovery_mode = 3;
-  }
+    if (--thread_delay > 0 || frame->h264_max_frame_num == 0)
+        return;
 
- if (recovery_mode == 3)
-  {
-   if (recovery_frame_cnt <= parent->frame->h264_frame_num_decoded)
-    {
-     recovery_poc = parent->frame->h264_poc_decoded;
-     recovery_mode = 4;
+    if (recovery_mode ==1 || recovery_mode ==2) {
+        recovery_frame_cnt = (recovery_frame_cnt + frame->h264_frame_num_decoded) % frame->h264_max_frame_num;
+        recovery_mode = 3;
     }
-  }
 
- if (recovery_mode == 4)
-  {
-   if (parent->frame->h264_poc_outputed >= recovery_poc)
-    {
-     recovery_mode = 0;
+    if (recovery_mode == 3) {
+        if (recovery_frame_cnt <= frame->h264_frame_num_decoded) {
+            recovery_poc = frame->h264_poc_decoded;
+            recovery_mode = 4;
+        }
     }
-  }
 
- if (recovery_mode != 0)
-  *got_picture_ptr = 0;
+    if (recovery_mode == 4) {
+        if (frame->h264_poc_outputed >= recovery_poc) {
+            recovery_mode = 0;
+        }
+    }
+
+    if (recovery_mode != 0)
+        *got_picture_ptr = 0;
 }
 
 TvideoCodecLibavcodec::TtelecineManager::TtelecineManager(TvideoCodecLibavcodec* Iparent):
  parent(Iparent)
 {
- onSeek();
+    onSeek();
 }
 
 void TvideoCodecLibavcodec::TtelecineManager::onSeek(void)
 {
- segment_count = pos_in_group = -1;
- group_rtStart = average_duration = REFTIME_INVALID;
- film = false;
+    segment_count = pos_in_group = -1;
+    group_rtStart = average_duration = REFTIME_INVALID;
+    film = false;
 }
 
 void TvideoCodecLibavcodec::TtelecineManager::new_frame(int fieldtype, int top_field_first, int repeat_pict, const REFERENCE_TIME &rtStart, const REFERENCE_TIME &rtStop)
 {
- segment_count++;
- int pos = segment_count & 3;
- if (parent->codecId == CODEC_ID_H264)
-  {
-   group[pos].fieldtype = fieldtype;
-  }
- else // tested with MPEG-2
-  {
-   if (repeat_pict == 1)
-    group[pos].fieldtype = FIELD_TYPE::PROGRESSIVE_FRAME;
-   else
-    group[pos].fieldtype = top_field_first ? FIELD_TYPE::INT_TFF : FIELD_TYPE::INT_BFF;
-  }
+    segment_count++;
+    int pos = segment_count & 3;
+    if (parent->codecId == CODEC_ID_H264) {
+      group[pos].fieldtype = fieldtype;
+    } else {
+        // tested with MPEG-2
+        if (repeat_pict == 1)
+            group[pos].fieldtype = FIELD_TYPE::PROGRESSIVE_FRAME;
+        else
+            group[pos].fieldtype = top_field_first ? FIELD_TYPE::INT_TFF : FIELD_TYPE::INT_BFF;
+    }
 
- group[pos].repeat_pict = repeat_pict;
- film = false;
+    group[pos].repeat_pict = repeat_pict;
+    film = false;
 
- if (segment_count >= 4)
-  {
-   int i = 0;
-   for (; i < 4 ; i++)
-    {
-     if (group[i].fieldtype == FIELD_TYPE::INT_TFF)
-      {
-       if (   group[(i + 1) & 3].fieldtype == FIELD_TYPE::PROGRESSIVE_FRAME
-           && group[(i + 2) & 3].fieldtype == FIELD_TYPE::INT_BFF
-           && group[(i + 3) & 3].fieldtype == FIELD_TYPE::PROGRESSIVE_FRAME
-           && group[ i      & 3].repeat_pict == 0
-           && group[(i + 1) & 3].repeat_pict == 1
-           && group[(i + 2) & 3].repeat_pict == 0
-           && group[(i + 3) & 3].repeat_pict == 1)
-        {
-         film = true;
-         if (rtStart != REFTIME_INVALID && group[pos].rtStart != REFTIME_INVALID)
-          average_duration = (rtStart - group[pos].rtStart) >> 2;
-         break;
-        }
+    if (segment_count >= 4) {
+      int i = 0;
+      for (; i < 4 ; i++) {
+          if (group[i].fieldtype == FIELD_TYPE::INT_TFF) {
+              if (   group[(i + 1) & 3].fieldtype == FIELD_TYPE::PROGRESSIVE_FRAME
+                  && group[(i + 2) & 3].fieldtype == FIELD_TYPE::INT_BFF
+                  && group[(i + 3) & 3].fieldtype == FIELD_TYPE::PROGRESSIVE_FRAME
+                  && group[ i      & 3].repeat_pict == 0
+                  && group[(i + 1) & 3].repeat_pict == 1
+                  && group[(i + 2) & 3].repeat_pict == 0
+                  && group[(i + 3) & 3].repeat_pict == 1) {
+                  film = true;
+                  if (rtStart != REFTIME_INVALID && group[pos].rtStart != REFTIME_INVALID)
+                      average_duration = (rtStart - group[pos].rtStart) >> 2;
+                  break;
+              }
+          }
       }
     }
-  }
- group[pos].rtStart = rtStart;
+    group[pos].rtStart = rtStart;
 
- if (film)
-  pos_in_group++;
- else
-  pos_in_group = -1;
+    if (film)
+        pos_in_group++;
+    else
+        pos_in_group = -1;
 
- if (film && (pos_in_group == 0 || pos_in_group >= 4) && rtStart != REFTIME_INVALID)
-  {
-   pos_in_group = 0;
-   group_rtStart = rtStart;
-  }
- cfg_softTelecine = parent->deci->getParam2(IDFF_softTelecine);
+    if (film && (pos_in_group == 0 || pos_in_group >= 4) && rtStart != REFTIME_INVALID) {
+        pos_in_group = 0;
+        group_rtStart = rtStart;
+    }
+    cfg_softTelecine = parent->deci->getParam2(IDFF_softTelecine);
 }
 
 void TvideoCodecLibavcodec::TtelecineManager::get_fieldtype(TffPict &pict)
 {
- if (!film)
-  return;
+    if (!film)
+        return;
 
- pict.film = true;
- if (cfg_softTelecine)
-  pict.fieldtype = FIELD_TYPE::PROGRESSIVE_FRAME;
- else
-  {
-   pict.repeat_first_field = group[segment_count & 3].repeat_pict;
-   if (pict.repeat_first_field)
-    {
-     pict.fieldtype = group[(segment_count-1) & 3].fieldtype;
+    pict.film = true;
+    if (cfg_softTelecine)
+        pict.fieldtype = FIELD_TYPE::PROGRESSIVE_FRAME;
+    else {
+        pict.repeat_first_field = group[segment_count & 3].repeat_pict;
+        if (pict.repeat_first_field) {
+            pict.fieldtype = group[(segment_count-1) & 3].fieldtype;
+        }
+        else
+            pict.fieldtype = group[segment_count & 3].fieldtype;
     }
-   else
-    pict.fieldtype = group[segment_count & 3].fieldtype;
-  }
 }
 
 void TvideoCodecLibavcodec::TtelecineManager::get_timestamps(TffPict &pict)
 {
- if (!film || !cfg_softTelecine || average_duration == REFTIME_INVALID || group_rtStart == REFTIME_INVALID)
-  return;
+    if (!film || !cfg_softTelecine || average_duration == REFTIME_INVALID || group_rtStart == REFTIME_INVALID)
+        return;
 
- pict.rtStart = group_rtStart + average_duration * pos_in_group;
- pict.rtStop = group_rtStart + average_duration * (pos_in_group + 1) - 1;
+     pict.rtStart = group_rtStart + average_duration * pos_in_group;
+     pict.rtStop = group_rtStart + average_duration * (pos_in_group + 1) - 1;
 }
