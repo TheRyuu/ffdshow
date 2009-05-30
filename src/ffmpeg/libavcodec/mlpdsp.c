@@ -60,6 +60,8 @@ void ff_mlp_init_x86(DSPContext* c, AVCodecContext *avctx);
 void ff_mlp_init(DSPContext* c, AVCodecContext *avctx)
 {
     c->mlp_filter_channel = ff_mlp_filter_channel;
+#if HAVE_MMX
     if (ARCH_X86)
         ff_mlp_init_x86(c, avctx);
+#endif
 }
