@@ -61,6 +61,8 @@ const uint8_t ff_reverse[256]={
 };
 
 //static int volatile entangled_thread_counter=0; /* ffdshow custom comment out */
+int (*ff_lockmgr_cb)(void **mutex, enum AVLockOp op);
+static void *codec_mutex;
 
 void *av_fast_realloc(void *ptr, unsigned int *size, unsigned int min_size)
 {
@@ -443,6 +445,12 @@ int attribute_align_arg avcodec_open(AVCodecContext *avctx, AVCodec *codec)
 {
     int ret= -1;
 
+    /* If there is a user-supplied mutex locking routine, call it. */
+    if (ff_lockmgr_cb) {
+        if ((*ff_lockmgr_cb)(&codec_mutex, AV_LOCK_OBTAIN))
+            return -1;
+    }
+
     /* ffdshow custom comment out */
     //entangled_thread_counter++;
     //if(entangled_thread_counter != 1){
@@ -498,6 +506,11 @@ int attribute_align_arg avcodec_open(AVCodecContext *avctx, AVCodec *codec)
     ret=0;
 end:
     //entangled_thread_counter--; /* ffdshow custom comment out */
+
+    /* Release any user-supplied mutex. */
+    if (ff_lockmgr_cb) {
+        (*ff_lockmgr_cb)(&codec_mutex, AV_LOCK_RELEASE);
+    }
     return ret;
 }
 
@@ -591,6 +604,12 @@ int attribute_align_arg avcodec_decode_audio2(AVCodecContext *avctx, int16_t *sa
 
 int avcodec_close(AVCodecContext *avctx)
 {
+    /* If there is a user-supplied mutex locking routine, call it. */
+    if (ff_lockmgr_cb) {
+        if ((*ff_lockmgr_cb)(&codec_mutex, AV_LOCK_OBTAIN))
+            return -1;
+    }
+
     /* ffdshow custom comment out */
     //entangled_thread_counter++;
     //if(entangled_thread_counter != 1){
@@ -607,7 +626,12 @@ int avcodec_close(AVCodecContext *avctx)
     av_freep(&avctx->priv_data);
     avctx->codec = NULL;
     avctx->active_thread_type = 0;
-    //entangled_thread_counter--;    /* ffdshow custom comment out */
+    //entangled_thread_counter--; /* ffdshow custom comment out */
+
+    /* Release any user-supplied mutex. */
+    if (ff_lockmgr_cb) {
+        (*ff_lockmgr_cb)(&codec_mutex, AV_LOCK_RELEASE);
+    }
     return 0;
 }
 
