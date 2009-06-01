@@ -74,9 +74,10 @@ void TcspOptionsPage::cfg2dlg(void)
  enable(mode == TrgbPrimaries::CutomYCbCr, customs);
 
  cbxSetCurSel(IDC_CBX_RGB_INTERLACE_METHOD,cfgGet(IDFF_cspOptionsRgbInterlaceMode));
- setCheck(IDC_CHB_HIGH_QUALITY_RGB,cfgGet(IDFF_highQualityRGB));
+ int highQualityRGB = cfgGet(IDFF_highQualityRGB);
+ setCheck(IDC_CHB_HIGH_QUALITY_RGB,highQualityRGB);
  setCheck(IDC_CHB_RGB_DITHER,cfgGet(IDFF_RGB_dithering));
- enable(Tconfig::cpu_flags & FF_CPU_SSE2, IDC_CHB_RGB_DITHER);
+ enable(highQualityRGB && (Tconfig::cpu_flags & FF_CPU_SSE2), IDC_CHB_RGB_DITHER,false);
 }
 
 void TcspOptionsPage::getTip(char_t *tipS,size_t len)
@@ -139,7 +140,7 @@ TcspOptionsPage::TcspOptionsPage(TffdshowPageDec *Iparent):TconfPageDecVideo(Ipa
  bindHtracks(htbr);
  static const TbindCheckbox<TcspOptionsPage> chb[]=
   {
-   IDC_CHB_HIGH_QUALITY_RGB,IDFF_highQualityRGB,NULL,
+   IDC_CHB_HIGH_QUALITY_RGB,IDFF_highQualityRGB,&TcspOptionsPage::cfg2dlg,
    IDC_CHB_RGB_DITHER,IDFF_RGB_dithering,NULL,
    0,NULL,NULL
   };
