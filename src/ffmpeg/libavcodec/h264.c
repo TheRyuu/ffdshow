@@ -7078,7 +7078,7 @@ static int av_noinline decode_picture_timing(H264Context *h){
         for (i = 0 ; i < num_clock_ts ; i++){
             if(get_bits(&s->gb, 1)){                  /* clock_timestamp_flag */
                 unsigned int full_timestamp_flag;
-                h->sei_ct_type |= 1<<(get_bits(&s->gb, 2)+1);
+                h->sei_ct_type |= 1<<get_bits(&s->gb, 2);
                 skip_bits(&s->gb, 1);                 /* nuit_field_based_flag */
                 skip_bits(&s->gb, 5);                 /* counting_type */
                 full_timestamp_flag = get_bits(&s->gb, 1);
@@ -7990,14 +7990,14 @@ static int decode_frame(AVCodecContext *avctx,
             if(h->sps.pic_struct_present_flag){
                 switch (h->sei_pic_struct)
                 {
-                case SEI_PIC_STRUCT_FRAME: 	 
-                    cur->interlaced_frame = 0; 	 
-                    break; 	 
-                case SEI_PIC_STRUCT_TOP_FIELD: 	 
-                case SEI_PIC_STRUCT_BOTTOM_FIELD: 	 
-                case SEI_PIC_STRUCT_TOP_BOTTOM: 	 
-                case SEI_PIC_STRUCT_BOTTOM_TOP: 	 
-                    cur->interlaced_frame = 1; 	 
+                case SEI_PIC_STRUCT_FRAME:
+                    cur->interlaced_frame = 0;
+                    break;
+                case SEI_PIC_STRUCT_TOP_FIELD:
+                case SEI_PIC_STRUCT_BOTTOM_FIELD:
+                case SEI_PIC_STRUCT_TOP_BOTTOM:
+                case SEI_PIC_STRUCT_BOTTOM_TOP:
+                    cur->interlaced_frame = 1;
                     break;
                 case SEI_PIC_STRUCT_TOP_BOTTOM_TOP:
                 case SEI_PIC_STRUCT_BOTTOM_TOP_BOTTOM:
@@ -8015,13 +8015,13 @@ static int decode_frame(AVCodecContext *avctx,
                     cur->repeat_pict = 4;
                     break;
                 }
+
+                if (h->sei_ct_type && h->sei_pic_struct <= SEI_PIC_STRUCT_BOTTOM_TOP)
+                    cur->interlaced_frame = (h->sei_ct_type & (1<<1)) != 0;
             }else{
                 /* Derive interlacing flag from used decoding process. */
                 cur->interlaced_frame = FIELD_OR_MBAFF_PICTURE;
             }
-
-            if (h->sei_ct_type)
-                cur->interlaced_frame = (h->sei_ct_type & (1<<2)) != 0;
 
             if (cur->field_poc[0] != cur->field_poc[1]){
                 /* Derive top_field_first from field pocs. */
