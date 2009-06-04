@@ -7103,6 +7103,9 @@ static int av_noinline decode_picture_timing(H264Context *h){
                     skip_bits(&s->gb, h->sps.time_offset_length); /* time_offset */
             }
         }
+
+        if(s->avctx->debug & FF_DEBUG_PICT_INFO)
+            av_log(s->avctx, AV_LOG_DEBUG, "ct_type:%X pic_struct:%d\n", h->sei_ct_type, h->sei_pic_struct);
     }
     return 0;
 }

@@ -73,7 +73,7 @@ typedef struct LclDecContext {
 
 
 /**
- * \param srcptr compressed source buffer, must be padded with at least 4 extra bytes
+ * \param srcptr compressed source buffer, must be padded with at least 5 extra bytes
  * \param destptr must be padded sufficiently for av_memcpy_backptr
  */
 static unsigned int mszh_decomp(const unsigned char * srcptr, int srclen, unsigned char * destptr, unsigned int destsize)
@@ -81,30 +81,36 @@ static unsigned int mszh_decomp(const unsigned char * srcptr, int srclen, unsign
     unsigned char *destptr_bak = destptr;
     unsigned char *destptr_end = destptr + destsize;
     const unsigned char *srcptr_end = srcptr + srclen;
-    unsigned char mask = 0;
-    unsigned char maskbit = 0;
-    unsigned int ofs, cnt;
+    unsigned mask = *srcptr++;
+    unsigned maskbit = 0x80;
 
     while (srcptr < srcptr_end && destptr < destptr_end) {
-        if (maskbit == 0) {
-            mask = *srcptr++;
-            maskbit = 0x80;
-            continue;
-        }
         if (!(mask & maskbit)) {
             memcpy(destptr, srcptr, 4);
             destptr += 4;
             srcptr += 4;
         } else {
-            ofs = bytestream_get_le16(&srcptr);
-            cnt = (ofs >> 11) + 1;
+            unsigned ofs = bytestream_get_le16(&srcptr);
+            unsigned cnt = (ofs >> 11) + 1;
             ofs &= 0x7ff;
+            ofs = FFMIN(ofs, destptr - destptr_bak);
             cnt *= 4;
             cnt = FFMIN(cnt, destptr_end - destptr);
             av_memcpy_backptr(destptr, ofs, cnt);
             destptr += cnt;
         }
         maskbit >>= 1;
+        if (!maskbit) {
+            mask = *srcptr++;
+            while (!mask) {
+                if (destptr_end - destptr < 32 || srcptr_end - srcptr < 32) break;
+                memcpy(destptr, srcptr, 32);
+                destptr += 32;
+                srcptr += 32;
+                mask = *srcptr++;
+            }
+            maskbit = 0x80;
+        }
     }
 
     return destptr - destptr_bak;
@@ -118,6 +124,7 @@ static unsigned int mszh_decomp(const unsigned char * srcptr, int srclen, unsign
  * \param offset offset in decomp_buf
  * \param expected expected decompressed length
  */
+#if CONFIG_ZLIB_DECODER
 static int zlib_decomp(AVCodecContext *avctx, const uint8_t *src, int src_len, int offset, int expected)
 {
     LclDecContext *c = avctx->priv_data;
@@ -142,6 +149,7 @@ static int zlib_decomp(AVCodecContext *avctx, const uint8_t *src, int src_len, i
     }
     return c->zstream.total_out;
 }
+#endif
 
 
 /*
@@ -443,13 +451,6 @@ static av_cold int decode_init(AVCodecContext *avctx)
     unsigned int max_basesize = FFALIGN(avctx->width, 4) * FFALIGN(avctx->height, 4) + AV_LZO_OUTPUT_PADDING;
     unsigned int max_decomp_size;
 
-    c->pic.data[0] = NULL;
-
-#if CONFIG_ZLIB_DECODER
-    // Needed if zlib unused or init aborted before inflateInit
-    memset(&c->zstream, 0, sizeof(z_stream));
-#endif
-
     if (avctx->extradata_size < 8) {
         av_log(avctx, AV_LOG_ERROR, "Extradata size too small.\n");
         return 1;
@@ -580,6 +581,7 @@ static av_cold int decode_init(AVCodecContext *avctx)
         zret = inflateInit(&c->zstream);
         if (zret != Z_OK) {
             av_log(avctx, AV_LOG_ERROR, "Inflate init error: %d\n", zret);
+            av_freep(&c->decomp_buf);
             return 1;
         }
     }
@@ -597,10 +599,12 @@ static av_cold int decode_end(AVCodecContext *avctx)
 {
     LclDecContext * const c = avctx->priv_data;
 
+    av_freep(&c->decomp_buf);
     if (c->pic.data[0])
         avctx->release_buffer(avctx, &c->pic);
 #if CONFIG_ZLIB_DECODER
-    inflateEnd(&c->zstream);
+    if (avctx->codec_id == CODEC_ID_ZLIB)
+        inflateEnd(&c->zstream);
 #endif
 
     return 0;
