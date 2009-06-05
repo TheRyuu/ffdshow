@@ -662,7 +662,7 @@ AVCodec zmbv_decoder = {
     NULL,
     decode_end,
     decode_frame,
-    /*.capabilities = */0,
+    /*.capabilities = */CODEC_CAP_DR1,
     /*.next = */NULL,
     /*.flush = */NULL,
     /*.supported_framerates = */NULL,

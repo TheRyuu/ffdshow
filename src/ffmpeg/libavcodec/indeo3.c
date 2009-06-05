@@ -1131,7 +1131,7 @@ AVCodec indeo3_decoder = {
     NULL,
     indeo3_decode_end,
     indeo3_decode_frame,
-    /*.capabilities = */0,
+    /*.capabilities = */CODEC_CAP_DR1,
     /*.next = */NULL,
     /*.flush = */NULL,
     /*.supported_framerates = */NULL,
