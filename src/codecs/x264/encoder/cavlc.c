@@ -141,8 +141,7 @@ static int block_residual_write_cavlc( x264_t *h, bs_t *s, int i_ctxBlockCat, in
     bs_write_vlc( s, x264_coeff_token[nC][i_total*4+i_trailing-4] );
 
     i_suffix_length = i_total > 10 && i_trailing < 3;
-    if( i_trailing > 0 || RDO_SKIP_BS )
-        bs_write( s, i_trailing, i_sign );
+    bs_write( s, i_trailing, i_sign );
 
     if( i_trailing < i_total )
     {
@@ -182,8 +181,8 @@ static int block_residual_write_cavlc( x264_t *h, bs_t *s, int i_ctxBlockCat, in
 
     for( i = 0; i < i_total-1 && i_total_zero > 0; i++ )
     {
-        int i_zl = X264_MIN( i_total_zero - 1, 6 );
-        bs_write_vlc( s, x264_run_before[i_zl][runlevel.run[i]] );
+        int i_zl = X264_MIN( i_total_zero, 7 );
+        bs_write_vlc( s, x264_run_before[i_zl-1][runlevel.run[i]] );
         i_total_zero -= runlevel.run[i];
     }
 
@@ -292,29 +291,14 @@ static inline void x264_macroblock_luma_write_cavlc( x264_t *h, bs_t *s, int i8s
 void x264_macroblock_write_cavlc( x264_t *h, bs_t *s )
 {
     const int i_mb_type = h->mb.i_type;
-    int i_mb_i_offset;
+    static const int i_offsets[3] = {5,23,0};
+    int i_mb_i_offset = i_offsets[h->sh.i_type];
     int i;
 
 #if !RDO_SKIP_BS
     const int i_mb_pos_start = bs_pos( s );
     int       i_mb_pos_tex;
 #endif
-
-    switch( h->sh.i_type )
-    {
-        case SLICE_TYPE_I:
-            i_mb_i_offset = 0;
-            break;
-        case SLICE_TYPE_P:
-            i_mb_i_offset = 5;
-            break;
-        case SLICE_TYPE_B:
-            i_mb_i_offset = 23;
-            break;
-        default:
-            x264_log(h, X264_LOG_ERROR, "internal error or slice unsupported\n" );
-            return;
-    }
 
     if( h->sh.b_mbaff
         && (!(h->mb.i_mb_y & 1) || IS_SKIP(h->mb.type[h->mb.i_mb_xy - h->mb.i_mb_stride])) )
@@ -560,13 +544,8 @@ void x264_macroblock_write_cavlc( x264_t *h, bs_t *s )
             }
         }
     }
-    else if( i_mb_type == B_DIRECT )
+    else //if( i_mb_type == B_DIRECT )
         bs_write1( s, 1 );
-    else
-    {
-        x264_log(h, X264_LOG_ERROR, "invalid/unhandled mb_type\n" );
-        return;
-    }
 
 #if !RDO_SKIP_BS
     i_mb_pos_tex = bs_pos( s );
@@ -626,58 +605,50 @@ void x264_macroblock_write_cavlc( x264_t *h, bs_t *s )
  *****************************************************************************/
 static int x264_partition_size_cavlc( x264_t *h, int i8, int i_pixel )
 {
-    bs_t s;
     const int i_mb_type = h->mb.i_type;
     int b_8x16 = h->mb.i_partition == D_8x16;
     int j;
-
-    s.i_bits_encoded = 0;
+    h->out.bs.i_bits_encoded = 0;
 
     if( i_mb_type == P_8x8 )
-        cavlc_mb8x8_mvd( h, &s, 0, i8 );
+        cavlc_mb8x8_mvd( h, &h->out.bs, 0, i8 );
     else if( i_mb_type == P_L0 )
-        cavlc_mb_mvd( h, &s, 0, 4*i8, 4>>b_8x16 );
+        cavlc_mb_mvd( h, &h->out.bs, 0, 4*i8, 4>>b_8x16 );
     else if( i_mb_type > B_DIRECT && i_mb_type < B_8x8 )
     {
-        if( x264_mb_type_list_table[ i_mb_type ][0][!!i8] ) cavlc_mb_mvd( h, &s, 0, 4*i8, 4>>b_8x16 );
-        if( x264_mb_type_list_table[ i_mb_type ][1][!!i8] ) cavlc_mb_mvd( h, &s, 1, 4*i8, 4>>b_8x16 );
+        if( x264_mb_type_list_table[ i_mb_type ][0][!!i8] ) cavlc_mb_mvd( h, &h->out.bs, 0, 4*i8, 4>>b_8x16 );
+        if( x264_mb_type_list_table[ i_mb_type ][1][!!i8] ) cavlc_mb_mvd( h, &h->out.bs, 1, 4*i8, 4>>b_8x16 );
     }
-    else if( i_mb_type == B_8x8 )
+    else //if( i_mb_type == B_8x8 )
     {
-        cavlc_mb8x8_mvd( h, &s, 0, i8 );
-        cavlc_mb8x8_mvd( h, &s, 1, i8 );
-    }
-    else
-    {
-        x264_log(h, X264_LOG_ERROR, "invalid/unhandled mb_type\n" );
-        return 0;
+        cavlc_mb8x8_mvd( h, &h->out.bs, 0, i8 );
+        cavlc_mb8x8_mvd( h, &h->out.bs, 1, i8 );
     }
 
     for( j = (i_pixel < PIXEL_8x8); j >= 0; j-- )
     {
-        x264_macroblock_luma_write_cavlc( h, &s, i8, i8 );
-        block_residual_write_cavlc( h, &s, DCT_CHROMA_AC, 16+i8, h->dct.luma4x4[16+i8]+1 );
-        block_residual_write_cavlc( h, &s, DCT_CHROMA_AC, 20+i8, h->dct.luma4x4[20+i8]+1 );
+        x264_macroblock_luma_write_cavlc( h, &h->out.bs, i8, i8 );
+        block_residual_write_cavlc( h, &h->out.bs, DCT_CHROMA_AC, 16+i8, h->dct.luma4x4[16+i8]+1 );
+        block_residual_write_cavlc( h, &h->out.bs, DCT_CHROMA_AC, 20+i8, h->dct.luma4x4[20+i8]+1 );
         i8 += x264_pixel_size[i_pixel].h >> 3;
     }
 
-    return s.i_bits_encoded;
+    return h->out.bs.i_bits_encoded;
 }
 
 static int x264_subpartition_size_cavlc( x264_t *h, int i4, int i_pixel )
 {
-    bs_t s;
     int b_8x4 = i_pixel == PIXEL_8x4;
-    s.i_bits_encoded = 0;
-    cavlc_mb_mvd( h, &s, 0, i4, 1+b_8x4 );
-    block_residual_write_cavlc( h, &s, DCT_LUMA_4x4, i4, h->dct.luma4x4[i4] );
+    h->out.bs.i_bits_encoded = 0;
+    cavlc_mb_mvd( h, &h->out.bs, 0, i4, 1+b_8x4 );
+    block_residual_write_cavlc( h, &h->out.bs, DCT_LUMA_4x4, i4, h->dct.luma4x4[i4] );
     if( i_pixel != PIXEL_4x4 )
     {
         i4 += 2-b_8x4;
-        block_residual_write_cavlc( h, &s, DCT_LUMA_4x4, i4, h->dct.luma4x4[i4] );
+        block_residual_write_cavlc( h, &h->out.bs, DCT_LUMA_4x4, i4, h->dct.luma4x4[i4] );
     }
 
-    return s.i_bits_encoded;
+    return h->out.bs.i_bits_encoded;
 }
 
 static int cavlc_intra4x4_pred_size( x264_t *h, int i4, int i_mode )
