@@ -158,6 +158,7 @@ int mpeg2_header_sequence (mpeg2dec_t * mpeg2dec)
 
     sequence->flags = (SEQ_FLAG_PROGRESSIVE_SEQUENCE |
 		       SEQ_VIDEO_FORMAT_UNSPECIFIED);
+    sequence->display_extension_present_flag = 0;
 
     sequence->pixel_width = buffer[3] >> 4;	/* aspect ratio */
     sequence->frame_period = frame_period[buffer[3] & 15];
@@ -250,6 +251,7 @@ static int sequence_display_ext (mpeg2dec_t * mpeg2dec)
 {
     uint8_t * buffer = mpeg2dec->chunk_start;
     mpeg2_sequence_t * sequence = &(mpeg2dec->new_sequence);
+    sequence->display_extension_present_flag = 1; // ffdshow custom code
 
     sequence->flags = ((sequence->flags & ~SEQ_MASK_VIDEO_FORMAT) |
 		       ((buffer[0]<<4) & SEQ_MASK_VIDEO_FORMAT));
@@ -310,9 +312,16 @@ static inline void finalize_sequence (mpeg2_sequence_t * sequence)
 	    width *= sequence->picture_height;
 	    height *= sequence->picture_width;
 	}
-	else {
+	else if (sequence->display_extension_present_flag) {
+	    sequence->pixel_width2 = width * sequence->picture_height;
+	    sequence->pixel_height2 = height * sequence->picture_width;
 	    width *= sequence->display_height;
 	    height *= sequence->display_width;
+	} else {
+	    width *= sequence->display_height;
+	    height *= sequence->display_width;
+	    sequence->pixel_width2 = width;
+	    sequence->pixel_height2 = height;
 	}
 
     } else {
@@ -341,6 +350,7 @@ static inline void finalize_sequence (mpeg2_sequence_t * sequence)
     sequence->pixel_width = width;
     sequence->pixel_height = height;
     simplify (&sequence->pixel_width, &sequence->pixel_height);
+    simplify (&sequence->pixel_width2, &sequence->pixel_height2);
 }
 
 int mpeg2_guess_aspect (const mpeg2_sequence_t * sequence,

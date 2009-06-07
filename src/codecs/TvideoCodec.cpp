@@ -98,30 +98,47 @@ float TvideoCodecDec::calcMeanQuant(void)
     return float(sum)/num;
 }
 
-void TvideoCodecDec::correctDVDsar(Trect &r)
+Rational TvideoCodecDec::guessMPEG2sar(const Trect &r, const Rational &sar2, const Rational &containerSar)
 {
-    if (!isdvdproc)
-        return;
-    if (r.dx * r.sar.num * 9 == r.dy * r.sar.den * 16)
-        // 16:9, OK
-        return;
-    if (r.dx * r.sar.num * 3 == r.dy * r.sar.den * 4)
-        // 4:3, OK
-        return;
-
-    double ar=(double)(r.dx * r.sar.num) / (double)(r.dy * r.sar.den);
-
-    if (abs(ar-(16.0/9.0)) < abs(ar-(4.0/3.0))) {
-        // Fix to 16:9
-        r.sar.num = r.dy * 16;
-        r.sar.den = r.dx * 9;
-        r.sar.reduce(255);
-    } else {
-        // Fix to 4:3
-        r.sar.num = r.dy * 4;
-        r.sar.den = r.dx * 3;
-        r.sar.reduce(255);
+    const Rational &sar1 = r.sar;
+    if (codecId != CODEC_ID_MPEG2VIDEO && codecId != CODEC_ID_LIBMPEG2)
+        return sar1;
+    if (isdvdproc) {
+        // for DVD, use containerSar
+        return containerSar;
     }
+    if (r.dx * sar1.num * 9 == r.dy * sar1.den * 16)
+        // 16:9, sar1 OK
+        return sar1;
+    if (r.dx * sar1.num * 3 == r.dy * sar1.den * 4)
+        // 4:3, sar1 OK
+        return sar1;
+    if (sar1.num * containerSar.den == sar1.den * containerSar.num)
+        // containerSar, OK
+        return containerSar;
+    if (r.dx * sar2.num * 9 == r.dy * sar2.den * 16) {
+        // 16:9, use sar2
+        return sar2;
+    }
+    if (r.dx * sar2.num * 3 == r.dy * sar2.den * 4) {
+        // 4:3, use sar2
+        return sar2;
+    }
+    if (sar1.num * containerSar.den == sar1.den * containerSar.num) {
+        // containerSar == sar2
+        return containerSar;
+    }
+    if (r.dx * containerSar.num * 9 == r.dy * containerSar.den * 16) {
+        // 16:9, use containerSar
+        return containerSar;
+    }
+    if (r.dx * containerSar.num * 3 == r.dy * containerSar.den * 4) {
+        // 4:3, use containerSar
+        return containerSar;
+    }
+
+    // shouldn't reach here, but don't interfere too much in this case.
+    return sar1;
 }
 
 //===================================== TvideoCodecEnc ======================================

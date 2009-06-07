@@ -1330,6 +1330,14 @@ typedef struct AVCodecContext {
      */
     AVRational sample_aspect_ratio;
 
+    /* ffdshow custom code
+     * Regarding MPEG-2, currently there are two ways of encoding SAR.
+     * Of course one is wrong. However, considerable number of videos are encoded in a wrong way.
+     * We set the spec compliant value in sample_aspect_ratio and
+     * wrong spec-value in sample_aspect_ratio2.
+     */
+    AVRational sample_aspect_ratio2;
+
     /**
      * the picture in the bitstream
      * - encoding: Set by libavcodec.

@@ -57,6 +57,15 @@ typedef struct mpeg2_sequence_s {
     uint8_t colour_primaries;
     uint8_t transfer_characteristics;
     uint8_t matrix_coefficients;
+    // ffdshow custom code begin
+    /* Regarding MPEG-2, currently there are two ways of encoding SAR.
+     * Of course one is wrong. However, considerable number of videos are encoded in a wrong way.
+     * We set the spec compliant value in pixel_width/pixel_height and
+     * wrong spec-value in pixel_width2/pixel_height2.
+     */
+    uint32_t display_extension_present_flag;
+    unsigned int pixel_width2, pixel_height2;
+    // ffdshow custom code end
 } mpeg2_sequence_t;
 
 #define GOP_FLAG_DROP_FRAME 1

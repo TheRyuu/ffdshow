@@ -46,12 +46,26 @@ protected:
  IdecVideoSink *sinkD;
  TvideoCodecDec(IffdshowBase *Ideci,IdecVideoSink *Isink);
 
- /*
-  * correctDVDsar
-  *  Correct impossible sar for DVD
-  *  DAR of DVD must be either 4:3 or 16:9.
+ /* guessMPEG2sar
+  * Regarding MPEG-2, currently there are two ways of encoding SAR.
+  * Of course one is wrong. However, considerable number of videos are encoded in a wrong way.
+  * Here we try to guess which is crrect.
+  *
+  * Input:
+  *  r: rect and SAR decoded using the spec
+  *  sar2: SAR decoded using the wrong spec
+  *  containerSar: container sar
+  *
+  * Algorithm
+  *  DVD 
+  *   containerSAR seems to give the best result.
+  *  non DVD:
+  *   1. r.sar is tested for 4:3, 16:9, containerSar. If it matches with any of them, it's OK.
+  *   2. sar2 is tested for 4:3, 16:9, containerSar. If it matches with any of them, sar2 will be used.
+  *   3. containerSar is tested for 4:3, 16:9. If it matches with either of the two, containerSar will be used.
+  *   4. Still no match? r.sar is used.
   */
- void correctDVDsar(Trect &r);
+ Rational guessMPEG2sar(const Trect &r, const Rational &sar2, const Rational &containerSar);
 
 public:
  static TvideoCodecDec* initDec(IffdshowBase *deci,IdecVideoSink *Isink,CodecID codecId,FOURCC fcc,const CMediaType &mt);

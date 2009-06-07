@@ -573,7 +573,10 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
                     r.sar=containerSar;
 
                 // Correct impossible sar for DVD
-                correctDVDsar(r);
+#if !COMPILE_AS_FFMPEG_MT
+                if (codecId == CODEC_ID_MPEG2VIDEO)
+                    r.sar = guessMPEG2sar(r, avctx->sample_aspect_ratio2, containerSar);
+#endif
 
                 quants=frame->qscale_table;
                 quantsStride=frame->qstride;
@@ -585,6 +588,7 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
                 TffPict pict(csp,frame->data,linesize,r,true,frametype,fieldtype,srcLen0,pIn,avctx->palctrl); //TODO: src frame size
                 pict.gmcWarpingPoints=frame->num_sprite_warping_points;pict.gmcWarpingPointsReal=frame->real_sprite_warping_points;
                 if (codecId == CODEC_ID_H264) {
+                    //pict.h264_poc = frame->h264_poc_outputed;
                     pict.video_full_range_flag = frame->video_full_range_flag;
                     pict.YCbCr_RGB_matrix_coefficients = frame->YCbCr_RGB_matrix_coefficients;
                 } else {

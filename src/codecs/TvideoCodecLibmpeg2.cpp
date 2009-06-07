@@ -237,7 +237,8 @@ HRESULT TvideoCodecLibmpeg2::decompressI(const unsigned char *src,size_t srcLen,
                     r.sar = Rational(info->sequence->pixel_width,info->sequence->pixel_height);
 
                     // Correct impossible sar for DVD
-                    correctDVDsar(r);
+                    if (info->sequence->flags & SEQ_FLAG_MPEG2)
+                        r.sar = guessMPEG2sar(r, Rational(info->sequence->pixel_width2,info->sequence->pixel_height2), containerSar);
 
                     TffPict pict(csp,data,stride,r,true,frametype,fieldtype,srcLen,NULL); //TODO: src frame size
                     pict.film = m_fFilm;
