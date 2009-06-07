@@ -301,6 +301,18 @@ Tpreset::Tpreset(const char_t *Ireg_child, const char_t *IpresetName, int Imin_o
      _l("autoLoadLogic"),0,
    IDFF_autoLoadedFromFile         ,&Tpreset::autoLoadedFromFile     ,0,0,_l(""),0,
      NULL,0,
+   IDFF_presetAutoloadScreenSize   ,&Tpreset::autoloadScreenSize     ,0,0,_l(""),0,
+     _l("autoloadScreenSize"),0,
+   IDFF_presetAutoloadScreenSizeXmin,&Tpreset::autoloadScreenSizeXmin ,16,16384,_l(""),0,
+     _l("autoloadScreenSizeXmin"),16,
+   IDFF_presetAutoloadScreenSizeXmax,&Tpreset::autoloadScreenSizeXmax ,16,16384,_l(""),0,
+     _l("autoloadScreenSizeXmax"),4096,
+   IDFF_presetAutoloadScreenSizeCond,&Tpreset::autoloadScreenSizeCond ,0,1,_l(""),0,
+     _l("autoloadScreenSizeCond"),1,
+   IDFF_presetAutoloadScreenSizeYmin,&Tpreset::autoloadScreenSizeYmin ,16,16384,_l(""),0,
+     _l("autoloadScreenSizeYmin"),16,
+   IDFF_presetAutoloadScreenSizeYmax,&Tpreset::autoloadScreenSizeYmax ,16,16384,_l(""),0,
+     _l("autoloadScreenSizeYmax"),4096,
    0
   };
  addOptions(iopts);
@@ -322,6 +334,13 @@ Tpreset& Tpreset::operator =(const Tpreset &src)
  autoloadExtsNeedFix=src.autoloadExtsNeedFix;
  autoPresetItems=src.autoPresetItems;
  autoLoadLogic=src.autoLoadLogic;
+
+ autoloadScreenSize=src.autoloadScreenSize;
+ autoloadScreenSizeXmin=src.autoloadScreenSizeXmin;
+ autoloadScreenSizeXmax=src.autoloadScreenSizeXmax;
+ autoloadScreenSizeCond=src.autoloadScreenSizeCond;
+ autoloadScreenSizeYmin=src.autoloadScreenSizeYmin;
+ autoloadScreenSizeYmax=src.autoloadScreenSizeYmax;
 
  filters->copy(src.filters);
  return *this;
@@ -455,6 +474,13 @@ bool Tpreset::isAutoPreset(TautoPresetProps &props) const
      else
       return false;
     }
+   if (is_autoloadScreenSize())
+   {
+     if(autoloadScreenSizeMatch())
+      match=true;
+     else
+      return false;
+   }
 
    for (TautoPresetItems::const_iterator a=autoPresetItems.begin();a!=autoPresetItems.end();a++)
     if (a->getIs())
@@ -472,6 +498,9 @@ bool Tpreset::isAutoPreset(TautoPresetProps &props) const
    // On one of the conditoins match (OR)
    if (is_autoloadSize() && autoloadSizeMatch(dx,dy))
     return true;
+   if (is_autoloadScreenSize() && autoloadScreenSizeMatch())
+    return true;
+
    for (TautoPresetItems::const_iterator a=autoPresetItems.begin();a!=autoPresetItems.end();a++)
     if (a->match(props))
      return true;
@@ -574,3 +603,16 @@ void Tpreset::createPages(TffdshowPageDec *pages) const
  for (Torders::const_iterator o=orders.begin();o!=orders.end();o++)
   o->get<CFG>()->createPages(pages);
 }
+
+bool Tpreset::autoloadScreenSizeMatch(void) const
+{
+ int dx=GetSystemMetrics(SM_CXSCREEN);
+ int dy=GetSystemMetrics(SM_CYSCREEN);
+ bool Xok=false,Yok=false;
+ if (autoloadScreenSizeXmin <= dx && autoloadScreenSizeXmax >= dx)
+  Xok=true;
+ if (autoloadScreenSizeYmin <= dy && autoloadScreenSizeYmax >= dy)
+  Yok=true;
+ return (autoloadScreenSizeCond==0)?(Xok && Yok):(Xok || Yok);
+}
+

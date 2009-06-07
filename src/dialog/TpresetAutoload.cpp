@@ -175,6 +175,23 @@ TpresetAutoloadDlgBase::TpresetAutoloadDlgBase(IffdshowBase *Ideci,HWND Iparent,
    0,0,0,NULL
   };
  bindRadioButtons(rbt);
+
+ static const TbindEditInt<TpresetAutoloadDlgBase> edInt[]=
+  {
+   IDC_ED_PRESETAUTOLOAD_SIZE_SCREEN_XMIN,1,16384,IDFF_presetAutoloadScreenSizeXmin,NULL,
+   IDC_ED_PRESETAUTOLOAD_SIZE_SCREEN_XMAX,1,16384,IDFF_presetAutoloadScreenSizeXmax,NULL,
+   IDC_ED_PRESETAUTOLOAD_SIZE_SCREEN_YMIN,1,16384,IDFF_presetAutoloadScreenSizeYmin,NULL,
+   IDC_ED_PRESETAUTOLOAD_SIZE_SCREEN_YMAX,1,16384,IDFF_presetAutoloadScreenSizeYmax,NULL,
+   0
+  };
+ bindEditInts(edInt);
+
+ static const TbindCheckbox<TpresetAutoloadDlgBase> chb[]=
+  {
+   IDC_CHB_PRESETAUTOLOAD_SCREEN_SIZE,IDFF_presetAutoloadScreenSize,NULL,
+   0,NULL,NULL
+  };
+ bindCheckboxes(chb);
 }
 void TpresetAutoloadDlgBase::init(void)
 {
@@ -194,7 +211,23 @@ void TpresetAutoloadDlgBase::init(void)
  itemsw->showItems();
  setCheck(IDC_RBT_PRESETAUTOLOAD_OR  ,deci->getParam2(IDFF_presetAutoloadLogic) == 0);
  setCheck(IDC_RBT_PRESETAUTOLOAD_AND ,deci->getParam2(IDFF_presetAutoloadLogic) != 0);
+
+ static const int idScreenSize[]={IDC_CHB_PRESETAUTOLOAD_SCREEN_SIZE,IDC_ED_PRESETAUTOLOAD_SIZE_SCREEN_XMIN,IDC_ED_PRESETAUTOLOAD_SIZE_SCREEN_XMAX,IDC_BT_PRESETAUTOLOAD_SIZE_SCREEN_COMP,IDC_ED_PRESETAUTOLOAD_SIZE_SCREEN_YMIN,IDC_ED_PRESETAUTOLOAD_SIZE_SCREEN_YMAX,IDC_LBL_PRESETAUTOLOAD_SCREEN_WIDTH,IDC_LBL_PRESETAUTOLOAD_SCREEN_HEIGHT,0};
+ enable(1,idScreenSize);
+ setCheck(IDC_CHB_PRESETAUTOLOAD_SCREEN_SIZE    ,deci->getParam2(IDFF_presetAutoloadScreenSize));
+ SetDlgItemInt(m_hwnd,IDC_ED_PRESETAUTOLOAD_SIZE_SCREEN_XMIN,deci->getParam2(IDFF_presetAutoloadScreenSizeXmin),FALSE);
+ SetDlgItemInt(m_hwnd,IDC_ED_PRESETAUTOLOAD_SIZE_SCREEN_XMAX,deci->getParam2(IDFF_presetAutoloadScreenSizeXmax),FALSE);
+ cond2dlg();
+ SetDlgItemInt(m_hwnd,IDC_ED_PRESETAUTOLOAD_SIZE_SCREEN_YMIN,deci->getParam2(IDFF_presetAutoloadScreenSizeYmin),FALSE);
+ SetDlgItemInt(m_hwnd,IDC_ED_PRESETAUTOLOAD_SIZE_SCREEN_YMAX,deci->getParam2(IDFF_presetAutoloadScreenSizeYmax),FALSE);
 }
+
+
+void TpresetAutoloadDlgBase::cond2dlg(void)
+{
+ setDlgItemText(m_hwnd,IDC_BT_PRESETAUTOLOAD_SIZE_SCREEN_COMP,_(IDC_BT_PRESETAUTOLOAD_SIZE_SCREEN_COMP,cfgGet(IDFF_presetAutoloadScreenSizeCond)==1?_l("or"):_l("and")));
+}
+
 bool TpresetAutoloadDlgBase::show(void)
 {
  return !!dialogBox(dialogId,parent);
@@ -215,6 +248,10 @@ INT_PTR TpresetAutoloadDlgBase::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
    case WM_COMMAND:
     switch (LOWORD(wParam))
      {
+      case IDC_BT_PRESETAUTOLOAD_SIZE_SCREEN_COMP:
+       cfgSet(IDFF_presetAutoloadScreenSizeCond,1-cfgGet(IDFF_presetAutoloadScreenSizeCond));  
+       cond2dlg();
+       return TRUE;
       case IDCLOSE:
       case IDCANCEL:
        {
@@ -227,8 +264,18 @@ INT_PTR TpresetAutoloadDlgBase::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
         EndDialog(m_hwnd,wasChange);
         return TRUE;
        }
-     }
-    break;
+      case WM_DRAWITEM:
+       switch (wParam)
+       {
+         case IDC_BT_PRESETAUTOLOAD_SIZE_SCREEN_COMP:
+         {
+          DRAWITEMSTRUCT *dis=(LPDRAWITEMSTRUCT)lParam;
+           ((TflatButton*)Twidget::getDlgItem(dis->hwndItem))->paint(dis);
+           return TRUE;
+          }
+        }
+       }
+       break;
 /*
    case WM_NCACTIVATE:
     if (wParam==FALSE)
@@ -256,6 +303,10 @@ TpresetAutoloadDlgVideo::TpresetAutoloadDlgVideo(IffdshowBase *Ideci,HWND parent
    IDC_ED_PRESETAUTOLOAD_SIZE_XMAX,1,16384,IDFF_presetAutoloadSizeXmax,NULL,
    IDC_ED_PRESETAUTOLOAD_SIZE_YMIN,1,16384,IDFF_presetAutoloadSizeYmin,NULL,
    IDC_ED_PRESETAUTOLOAD_SIZE_YMAX,1,16384,IDFF_presetAutoloadSizeYmax,NULL,
+   IDC_ED_PRESETAUTOLOAD_SIZE_SCREEN_XMIN,1,16384,IDFF_presetAutoloadScreenSizeXmin,NULL,
+   IDC_ED_PRESETAUTOLOAD_SIZE_SCREEN_XMAX,1,16384,IDFF_presetAutoloadScreenSizeXmax,NULL,
+   IDC_ED_PRESETAUTOLOAD_SIZE_SCREEN_YMIN,1,16384,IDFF_presetAutoloadScreenSizeYmin,NULL,
+   IDC_ED_PRESETAUTOLOAD_SIZE_SCREEN_YMAX,1,16384,IDFF_presetAutoloadScreenSizeYmax,NULL,
    0
   };
  bindEditInts(edInt);
@@ -278,6 +329,8 @@ Twidget* TpresetAutoloadDlgVideo::createDlgItem(int id,HWND h)
 {
  if (id==IDC_BT_PRESETAUTOLOAD_SIZE_COMP)
   return new TflatButton(h,this);
+ else if (id==IDC_BT_PRESETAUTOLOAD_SIZE_SCREEN_COMP)
+  return new TflatButton(h,this);
  else
   return TpresetAutoloadDlgBase::createDlgItem(id,h);
 }
@@ -289,7 +342,7 @@ INT_PTR TpresetAutoloadDlgVideo::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam
     switch (LOWORD(wParam))
      {
       case IDC_BT_PRESETAUTOLOAD_SIZE_COMP:
-       cfgSet(IDFF_presetAutoloadSizeCond,1-cfgGet(IDFF_presetAutoloadSizeCond));
+       cfgSet(IDFF_presetAutoloadSizeCond,1-cfgGet(IDFF_presetAutoloadSizeCond));     
        cond2dlg();
        return TRUE;
      }
@@ -298,6 +351,7 @@ INT_PTR TpresetAutoloadDlgVideo::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam
     switch (wParam)
      {
       case IDC_BT_PRESETAUTOLOAD_SIZE_COMP:
+      case IDC_BT_PRESETAUTOLOAD_SIZE_SCREEN_COMP:
        {
         DRAWITEMSTRUCT *dis=(LPDRAWITEMSTRUCT)lParam;
         ((TflatButton*)Twidget::getDlgItem(dis->hwndItem))->paint(dis);

@@ -66,6 +66,8 @@ public:
  static bool isValidPresetName(const char_t *presetName);
  virtual bool autoloadSizeMatch(int AVIdx,int AVIdy) const {return false;};
  virtual bool is_autoloadSize(void) const {return false;}
+ bool is_autoloadScreenSize(void) const {return !!autoloadScreenSize;}
+ bool autoloadScreenSizeMatch(void) const;
  virtual Tpreset& operator =(const Tpreset &src);
 protected:
  Tpreset(const char_t *Ireg_child, const char_t *IpresetName, int Imin_order, int Ifiltermode);
@@ -105,7 +107,7 @@ public:
  void addAutoPresetItems(const TautoPresetItemDef *IautoPresetItems);
  int autoLoadedFromFile;
  int autoLoadLogic;
-
+ int autoloadScreenSize,autoloadScreenSizeXmin,autoloadScreenSizeXmax,autoloadScreenSizeCond,autoloadScreenSizeYmin,autoloadScreenSizeYmax;
  int autoloadExtsNeedFix;
  virtual bool isAutoPreset(TautoPresetProps &props) const;
 

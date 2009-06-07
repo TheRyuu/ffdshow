@@ -136,6 +136,14 @@
 #define IDFF_presetAutoloadSizeYmin      1906
 #define IDFF_presetAutoloadSizeYmax      1907
 #define IDFF_presetAutoloadLogic         3485
+
+#define IDFF_presetAutoloadScreenSize          3517 //should preset be autoloaded depending on movie dimensions
+#define IDFF_presetAutoloadScreenSizeXmin      3518
+#define IDFF_presetAutoloadScreenSizeXmax      3519
+#define IDFF_presetAutoloadScreenSizeCond      3520 //0 - and, 1 - or
+#define IDFF_presetAutoloadScreenSizeYmin      3521
+#define IDFF_presetAutoloadScreenSizeYmax      3522
+
 /*
 #define IDFF_presetAutoloadFlnm          1901 //should preset be autoloaded depending on filename
 #define IDFF_presetAutoloadExt           1908 //should preset be autoloaded depending on file ext
@@ -1542,6 +1550,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//next:3517
+//next:3523
 
 #endif

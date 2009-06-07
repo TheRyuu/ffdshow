@@ -10,6 +10,7 @@ private:
  HWND parent;
  int x,y;
  bool closing;
+ void cond2dlg(void);
  struct Titem
   {
    Titem(void):wasChange(false) {}
