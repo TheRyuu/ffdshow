@@ -121,6 +121,9 @@ public:
  LONGLONG mediatimeStart,mediatimeStop;
  int gmcWarpingPoints,gmcWarpingPointsReal;
  size_t srcSize;
+#ifdef OSD_H264POC
+ int h264_poc;
+#endif
 
  unsigned char *data[4];
  bool ro[4];void setRO(bool Iro);

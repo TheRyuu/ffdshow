@@ -102,4 +102,7 @@
  #define TEXT(q) L##q
 #endif
 
+//#define OSDTIMETABALE // OSD debug item "Time table" to reserch multithread time table. if you don't need this item comment out.
+//#define OSD_H264POC
+
 #endif

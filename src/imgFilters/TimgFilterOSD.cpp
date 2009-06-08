@@ -108,6 +108,17 @@ const char_t* TimgFilterOSD::TosdLine::TosdValue::getVal(bool &wasChange,bool &s
      oldDuration=duration;
      break;
     }
+#ifdef OSD_H264POC
+   case IDFF_OSDtype_h264_poc:
+    {
+     if (pict.h264_poc > INT_MIN)
+      tsprintf(s,_l("%d"),pict.h264_poc);
+     else
+      strcpy(s,_l("unkown"));
+     wasChange=true;
+     break;
+    }
+#endif
    default:
     {
      const char_t *val;int wasChangeI,splitlineI;

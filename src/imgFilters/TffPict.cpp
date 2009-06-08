@@ -95,6 +95,9 @@ void TffPict::common_init(void)
 {
  rtStart=rtStop=mediatimeStart=mediatimeStop=REFTIME_INVALID;
  gmcWarpingPoints=gmcWarpingPointsReal=0;
+#ifdef OSD_H264POC
+ h264_poc = INT_MIN;
+#endif
  edge=0;
  discontinuity = false;
  film = repeat_first_field = false;

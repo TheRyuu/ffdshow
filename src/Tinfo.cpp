@@ -507,6 +507,9 @@ TinfoDecVideoPict::TinfoDecVideoPict(IffdshowBase *Ideci):TinfoDecVideo(Ideci)
    IDFF_OSDtype_frameMD5,_l("MD5 sum"),_l("md5"),
    IDFF_OSDtype_frameTimestamps,_l("Frame timestamps"),_l("fpts"),
    IDFF_OSDtype_frameDuration,_l("Frame duration"),_l("fdur"),
+#ifdef OSD_H264POC
+   IDFF_OSDtype_h264_poc,_l("H.264 poc"),_l("poc"),
+#endif
    0
   };
  addItems(items);

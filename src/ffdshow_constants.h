@@ -693,6 +693,7 @@
   #define IDFF_OSDtype_frameMD5          1548
   #define IDFF_OSDtype_frameTimestamps   1553
   #define IDFF_OSDtype_frameDuration     1554
+  #define IDFF_OSDtype_h264_poc          3523
   #define IDFF_OSDtype_exeflnm           1556
   #define IDFF_OSDtype_activePresetName  3483
   #define IDFF_OSDtype_sourceFlnmWOpath  1557
@@ -1550,6 +1551,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//next:3523
+//next:3524
 
 #endif

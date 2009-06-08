@@ -5,10 +5,6 @@
 #include "Ttranslate.h"
 #include "IffdshowBase.h"
 
-#ifndef OSDTIMETABALE
-//#define OSDTIMETABALE // OSD debug item "Time table" to reserch multithread time table. if you don't need this item comment out.
-#endif
-
 class TinfoBase
 {
 protected:
