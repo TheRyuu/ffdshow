@@ -3092,6 +3092,7 @@ static void flush_dpb(AVCodecContext *avctx){
     h->outputed_poc= INT_MIN;
     h->prev_interlaced_frame = 1;
     idr(h);
+    h->prev_poc_msb = 1<<30; // to avoid negative POC unless we get a real IDR.
     if(h->s.current_picture_ptr)
         h->s.current_picture_ptr->reference= 0;
     h->s.first_field= 0;
