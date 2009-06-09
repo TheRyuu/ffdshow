@@ -761,7 +761,7 @@ STDMETHODIMP TffdshowDecAudio::deliverProcessedSample(const void *buf,size_t num
  return m_pOutput->Deliver(pOut);
 }
 
-STDMETHODIMP TffdshowDecAudio::deliverSampleSPDIF(void *buf,size_t size,int bit_rate,unsigned int sample_rate,BYTE type,int incRtDec)
+STDMETHODIMP TffdshowDecAudio::deliverSampleSPDIF2(void *buf,size_t size,int bit_rate,unsigned int sample_rate,BYTE type,int incRtDec,int frame_length)
 {
  HRESULT hr=S_OK;;
  currentOutsf.sf=TsampleFormat::SF_AC3;
@@ -802,7 +802,12 @@ STDMETHODIMP TffdshowDecAudio::deliverSampleSPDIF(void *buf,size_t size,int bit_
   }
  else
   {
-   rtDur = REF_SECOND_MULT*size*8/bit_rate;
+   if (frame_length) {
+       size_t blocks = (size + frame_length - 1)/frame_length;
+       rtDur = REF_SECOND_MULT*blocks*frame_length*8/bit_rate;
+   } else {
+       rtDur = REF_SECOND_MULT*size*8/bit_rate;
+   }
   }
  REFERENCE_TIME rtStart=m_rtStartProc,rtStop=m_rtStartProc+rtDur;
  //DPRINTF(_l("pin:%I64i startDec:%I64i"),rtStart,m_rtStartDec);
