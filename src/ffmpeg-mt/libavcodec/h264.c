@@ -2420,6 +2420,9 @@ static int decode_update_context(AVCodecContext *dst, AVCodecContext *src){
 
     h->last_slice_type = h1->last_slice_type;
 
+    //interlaced flag
+    h->prev_interlaced_frame = h1->prev_interlaced_frame;
+
     //ffdshow custom stuff
     h->has_to_drop_first_non_ref = h1->has_to_drop_first_non_ref;
 
@@ -2518,6 +2521,7 @@ static void decode_postinit(H264Context *h){
         return;
     }
 
+    cur->interlaced_frame = 0;
     cur->repeat_pict = 0;
 
     /* Signal interlacing information externally. */
@@ -2525,36 +2529,42 @@ static void decode_postinit(H264Context *h){
     if(h->sps.pic_struct_present_flag){
         switch (h->sei_pic_struct)
         {
-            case SEI_PIC_STRUCT_FRAME:
-                cur->interlaced_frame = 0;
-                break;
-            case SEI_PIC_STRUCT_TOP_FIELD:
-            case SEI_PIC_STRUCT_BOTTOM_FIELD:
-            case SEI_PIC_STRUCT_TOP_BOTTOM:
-            case SEI_PIC_STRUCT_BOTTOM_TOP:
+        case SEI_PIC_STRUCT_FRAME:
+            break;
+        case SEI_PIC_STRUCT_TOP_FIELD:
+        case SEI_PIC_STRUCT_BOTTOM_FIELD:
+            cur->interlaced_frame = 1;
+            break;
+        case SEI_PIC_STRUCT_TOP_BOTTOM:
+        case SEI_PIC_STRUCT_BOTTOM_TOP:
+            if (FIELD_OR_MBAFF_PICTURE)
                 cur->interlaced_frame = 1;
-                break;
-            case SEI_PIC_STRUCT_TOP_BOTTOM_TOP:
-            case SEI_PIC_STRUCT_BOTTOM_TOP_BOTTOM:
-                // Signal the possibility of telecined film externally (pic_struct 5,6)
-                // From these hints, let the applications decide if they apply deinterlacing.
-                cur->repeat_pict = 1;
-                cur->interlaced_frame = FIELD_OR_MBAFF_PICTURE;
-                break;
-            case SEI_PIC_STRUCT_FRAME_DOUBLING:
-                // Force progressive here, as doubling interlaced frame is a bad idea.
-                cur->interlaced_frame = 0;
-                cur->repeat_pict = 2;
-                break;
-            case SEI_PIC_STRUCT_FRAME_TRIPLING:
-                cur->interlaced_frame = 0;
-                cur->repeat_pict = 4;
-                break;
+            else
+                // try to flag soft telecine progressive
+                cur->interlaced_frame = h->prev_interlaced_frame;
+            break;
+        case SEI_PIC_STRUCT_TOP_BOTTOM_TOP:
+        case SEI_PIC_STRUCT_BOTTOM_TOP_BOTTOM:
+            // Signal the possibility of telecined film externally (pic_struct 5,6)
+            // From these hints, let the applications decide if they apply deinterlacing.
+            cur->repeat_pict = 1;
+            break;
+        case SEI_PIC_STRUCT_FRAME_DOUBLING:
+            // Force progressive here, as doubling interlaced frame is a bad idea.
+            cur->repeat_pict = 2;
+            break;
+        case SEI_PIC_STRUCT_FRAME_TRIPLING:
+            cur->repeat_pict = 4;
+            break;
         }
+
+        if ((h->sei_ct_type & 3) && h->sei_pic_struct <= SEI_PIC_STRUCT_BOTTOM_TOP)
+            cur->interlaced_frame = (h->sei_ct_type & (1<<1)) != 0;
     }else{
         /* Derive interlacing flag from used decoding process. */
         cur->interlaced_frame = FIELD_OR_MBAFF_PICTURE;
     }
+    h->prev_interlaced_frame = cur->interlaced_frame;
 
     if (cur->field_poc[0] != cur->field_poc[1]){
         /* Derive top_field_first from field pocs. */
@@ -3511,7 +3521,9 @@ static void flush_dpb(AVCodecContext *avctx){
         h->delayed_pic[i]= NULL;
     }
     h->outputed_poc= INT_MIN;
+    h->prev_interlaced_frame = 1;
     idr(h);
+    h->prev_poc_msb = 1<<30; // to avoid negative POC unless we get a real IDR.
     if(h->s.current_picture_ptr)
         h->s.current_picture_ptr->reference= 0;
     h->s.first_field= 0;
@@ -4117,6 +4129,7 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
         if (MPV_common_init(s) < 0)
             return -1;
         s->first_field = 0;
+        h->prev_interlaced_frame = 1;
 
         init_scan_tables(h);
         alloc_tables(h);
