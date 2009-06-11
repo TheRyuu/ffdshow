@@ -106,18 +106,19 @@ Trect TimgFilterCrop::calcCrop(const Trect &pictRect,TcropSettings *cfg, TffPict
 		   {
 			   lastFrameMS=msec;
 			   init(*ppict,cfg->full,cfg->half);
-			   getCur(FF_CSPS_MASK_YUV_PLANAR,*ppict,cfg->full,&src,NULL,NULL,NULL);
+			   getCur(FF_CSPS_MASK_YUV_PLANAR,*ppict,COPYMODE_FULL,&src,NULL,NULL,NULL);
 			   if (cfg->mode==3 || cfg->mode ==5)
 			   {
 				   calcAutoCropVertical(cfg, src, 0, 1, &(TimgFilterCrop::autoCropTop), &autoCropTopStatus); // Calculate autocrop from top to bottom
-				   calcAutoCropVertical(cfg, src, dy1[0], -1, &(TimgFilterCrop::autoCropBottom), &autoCropBottomStatus); // Calculate autocrop from bottom to top
+				   calcAutoCropVertical(cfg, src, dy1[0]-1, -1, &(TimgFilterCrop::autoCropBottom), &autoCropBottomStatus); // Calculate autocrop from bottom to top
 			   }
 			   if (cfg->mode==4 || cfg->mode ==5)
 			   {
 				   calcAutoCropHorizontal(cfg, src, 0, 1, &(TimgFilterCrop::autoCropLeft), &autoCropLeftStatus); // Calculate autocrop from left to right
-				   calcAutoCropHorizontal(cfg, src, dx1[0], -1, &(TimgFilterCrop::autoCropRight), &autoCropRightStatus); // Calculate autocrop from right to left
+				   calcAutoCropHorizontal(cfg, src, dx1[0]-1, -1, &(TimgFilterCrop::autoCropRight), &autoCropRightStatus); // Calculate autocrop from right to left
 			   }
-			   //DPRINTF(_l("Ms : %i, Top %i, Bottom %i"),msec, TimgFilterCrop::autoCropTop, TimgFilterCrop::autoCropBottom);
+			   DPRINTF(_l("Ms : %i, Top %i, Bottom %i, Left %i, Right %i"),msec, TimgFilterCrop::autoCropTop, TimgFilterCrop::autoCropBottom,
+                   TimgFilterCrop::autoCropLeft, TimgFilterCrop::autoCropRight);
 		   }		   
 	   }
 	   rcdx=pictRect.dx-(TimgFilterCrop::autoCropLeft+TimgFilterCrop::autoCropRight);
@@ -139,109 +140,107 @@ Trect TimgFilterCrop::calcCrop(const Trect &pictRect,TcropSettings *cfg, TffPict
 
 void TimgFilterCrop::calcAutoCropVertical(TcropSettings *cfg, const unsigned char *src, unsigned int y0, int stepy, int *autoCrop, int *autoCropStatus)
 {
-	char firstLine=0;
-	unsigned int src0=0;
+	bool first=true;
+	int32_t avg0=0;
+    int32_t stdev0=0;
 	unsigned int x,y;
 	int step=4; // Analyze every 4 pixels to gain speed
-	int nbPixelsAnalyzed=(dx1[0]/step)-1; // Number of pixels analyzed per line
-	for (y=y0;(y-y0)*stepy<dy1[0]*0.5;y+=stepy) // Top <-> bottom, scan limited to 50% of the screen
+	for (y=y0;(y-y0)*stepy<dy1[0]*0.5;y+=stepy) // Top <-> bottom, scan limited to 40% of the screen
 	{
-		int deltaLine=0; // Difference of levels for the line
-		int deltaLevel=0; // Difference of levels related to the first blank line found
-		for (x=step;x<dx1[0];x+=step) 
-		{
-			unsigned int pos=x+dx1[0]*y;
-			deltaLine+=abs((int)src[pos]-(int)src[pos-step]);
-			if (!firstLine) // First blankline has not been found yet so no comparison level yet
-			{
-				src0+=src[pos];
-				continue;
-			}
-			deltaLevel+=abs((int)src[pos]-(int)src0);
-		}
-		if (!firstLine) // Search for the first blankline and retrieve its average level
-		{
-			if (deltaLine/nbPixelsAnalyzed > cfg->cropTolerance) // Not a blank line
-			{
-				src0=0;
-				continue;
-			}
-			src0 /= nbPixelsAnalyzed; // Comparison level found (average level of the blank line)
-			firstLine=1;
-			continue;
-		}
-		
-		if (deltaLine/nbPixelsAnalyzed > cfg->cropTolerance) // Not a blank line
-			break;
-		
-		if (deltaLevel/nbPixelsAnalyzed > cfg->cropTolerance) // Blank line but different from the others
-			break;
+     unsigned int nbPixelsAnalyzed=0; // Number of pixels analyzed per line (column actually)
+     float s2=0, s=0; // Sum of levels^2, sum of levels
+     for (x=0;x<stride1[0];x+=step) 
+	 {
+       unsigned int pos=x+stride1[0]*y;
+       s2 += src[pos]*src[pos];
+       s += src[pos];
+       nbPixelsAnalyzed++;
+     }
+
+      float avg = s/nbPixelsAnalyzed; // average of the line
+      float stdev = sqrt(s2/nbPixelsAnalyzed-avg*avg); // standard deviation of the line
+
+      if (first) // First line = reference line
+      {
+       avg0=avg;
+       stdev0=stdev;
+       if (stdev > cfg->cropTolerance) // Too much variation of luminance for first line
+       {
+        if ((float)(y-y0)*stepy > (float)dy1[0]*0.15) // Look for a better reference line if we are below 15%
+         break;
+       }
+       first=false;
+       continue;
+      }
+
+      if ((float)abs(avg0-avg)*100/avg > (float) cfg->cropTolerance) // Luminance too different from reference line
+       break;
+
+      if (stdev > cfg->cropTolerance) // Too much variation of luminance for this line
+        break;
 	}
 	// If crop result is more than 40% of the screen, give up (means that it is a blank frame)
-	if ((float)(y-y0)*stepy/(float)dy1[0] < 0.4)
+	if ((float)abs((float)y-y0)/(float)dy1[0] < 0.4)
 	{
 		if (*autoCropStatus == 0) // Autocrop not done yet
 		{
-			*autoCrop=(y-y0)*stepy;
-			*autoCropStatus = 1; // Now crop can only done in reduction not in growth
+			*autoCrop=abs((float)y-y0);
+			//*autoCropStatus = 1; // Now crop can only done in reduction not in growth
 		}
-		else if ((int)(y-y0)*stepy < *autoCrop)
-			*autoCrop=(y-y0)*stepy;
+		else if ((int)abs((float)y-y0) < *autoCrop)
+			*autoCrop=abs((float)y-y0);
 	}
 }
 
 void TimgFilterCrop::calcAutoCropHorizontal(TcropSettings *cfg, const unsigned char *src, unsigned int x0, int stepx, int *autoCrop, int *autoCropStatus)
 {
-	char firstLine=0;
-	unsigned int src0=0;
+	bool first=true;
+	int32_t avg0=0;
+    int32_t stdev0=0;
 	unsigned int x,y;
-	int step=4; // Analyze every 4 pixels to gain speed
-	int nbPixelsAnalyzed=(dy1[0]/step)-1; // Number of pixels analyzed per line
+	int step=1; // Analyze every 4 pixels to gain speed
 	for (x=x0;(x-x0)*stepx<dx1[0]*0.5;x+=stepx) // Left <-> right, scan limited to 50% of the screen
 	{
-		int deltaLine=0; // Difference of levels for the line
-		int deltaLevel=0; // Difference of levels related to the first blank line found
-		unsigned int pos0=x;
-		for (y=step;y<dy1[0];y+=step)
+        unsigned int nbPixelsAnalyzed=0; // Number of pixels analyzed per line (column actually)
+		float s2=0, s=0; // Sum of levels^2, sum of levels
+		for (y=0;y<dy1[0];y+=step)
 		{
-			unsigned int pos=x+dx1[0]*y;
-			deltaLine+=abs((int)src[pos]-(int)src[pos0]);
-			pos0=pos;
-			if (!firstLine) // First blankline has not been found yet so no comparison level yet
-			{
-				src0+=src[pos];
-				continue;
-			}
-			deltaLevel+=abs((int)src[pos]-(int)src0);
+         unsigned int pos=x+stride1[0]*y;
+         s2 += src[pos]*src[pos];
+         s += src[pos];
+         nbPixelsAnalyzed++;
 		}
-		if (!firstLine) // Search for the first blankline and retrieve its average level
-		{
-			if (deltaLine/nbPixelsAnalyzed > cfg->cropTolerance) // Not a blank line
-			{
-				src0=0;
-				continue;
-			}
-			src0 /= nbPixelsAnalyzed; // Comparison level found (average level of the blank line)
-			firstLine=1;
-			continue;
-		}
-		
-		if (deltaLine/nbPixelsAnalyzed > cfg->cropTolerance) // Not a blank line
-			break;
-		
-		if (deltaLevel/nbPixelsAnalyzed > cfg->cropTolerance) // Blank line but different from the others
-			break;
+		float avg = s/nbPixelsAnalyzed; // average of the line
+        float stdev = sqrt(s2/nbPixelsAnalyzed-avg*avg); // standard deviation of the line
+
+        if (first) // First line = reference line
+        {
+         avg0=avg;
+         stdev0=stdev;
+         first=false;
+         if (stdev > cfg->cropTolerance) // Too much variation of luminance for first line
+         {
+          if ((float)(x-x0)*stepx<(float)dx1[0]*0.15) // Look for a better reference line if we are below 15%
+           break;
+         }
+         continue;
+        }
+        if ((float)abs(avg0-avg)*100/avg > (float) cfg->cropTolerance) // Luminance too different from reference line
+         break;
+
+        if (stdev > cfg->cropTolerance) // Too much variation of luminance for this line
+         break;
 	}
-	// If crop result is more than 40% of the screen, give up (means that it is a blank frame)
-	if ((float)(x-x0)*stepx/(float)dx1[0] < 0.4)
+	// If crop result is more than 40% of the screen, give up (means that it is a blank frame)cd 
+	if ((float)abs((float)x-x0)/(float)dx1[0] < 0.4)
 	{
 		if (*autoCropStatus == 0) // Autocrop not done yet
 		{
-			*autoCrop=(x-x0)*stepx;
-			*autoCropStatus = 1; // Now crop can only done in reduction not in growth
+			*autoCrop=abs((float)x-x0);
+			//*autoCropStatus = 1; // Now crop can only done in reduction not in growth
 		}
-		else if ((int)(x-x0)*stepx < *autoCrop)
-			*autoCrop=(x-x0)*stepx;
+		else if ((int)abs((float)x-x0) < *autoCrop)
+			*autoCrop=abs((float)x-x0);
 	}
 }
 
@@ -285,8 +284,9 @@ HRESULT TimgFilterCrop::process(TfilterQueue::iterator it,TffPict &pict,const Tf
    }
    rectCrop=calcCrop(pict.rectClip,cfg, &pict);
    }
- csp_yuv_adj_to_plane(pict.csp,&pict.cspInfo,pict.rectFull.dy,pict.data,pict.stride);
- pict.rectClip=Trect(rectCrop,pict.rectClip.sar);pict.calcDiff();
+
+  csp_yuv_adj_to_plane(pict.csp,&pict.cspInfo,pict.rectFull.dy,pict.data,pict.stride);
+  pict.rectClip=Trect(rectCrop,pict.rectClip.sar);pict.calcDiff();  
  return parent->deliverSample(++it,pict);
 }
 
