@@ -296,6 +296,15 @@ HRESULT TffdshowDecVideo::GetMediaType(int iPosition, CMediaType *mtOut)
  else
   pictOut=inpin->pictIn;
  calcNewSize(pictOut);
+
+ // Support mediatype with unknown dimension. This is necessary to support MEDIASUBTYPE_H264.
+ // http://msdn.microsoft.com/en-us/library/dd757808(VS.85).aspx
+ // The downstream filter has to support reconnecting after this.
+ if (pictOut.rectFull.dx == 0)
+  pictOut.rectFull.dx = 320;
+ if (pictOut.rectFull.dy == 0)
+  pictOut.rectFull.dy = 160;
+
  if (presetSettings->output->closest && !outdv && pictOut.csp != 0) ocsps.sort(pictOut.csp);
 
  oldRect=pictOut.rectFull;
