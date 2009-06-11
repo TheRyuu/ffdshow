@@ -40,7 +40,7 @@
 
 #define LIBAVCODEC_VERSION_MAJOR 52
 #define LIBAVCODEC_VERSION_MINOR 30
-#define LIBAVCODEC_VERSION_MICRO  1
+#define LIBAVCODEC_VERSION_MICRO  2
 
 #define LIBAVCODEC_VERSION_INT  AV_VERSION_INT(LIBAVCODEC_VERSION_MAJOR, \
                                                LIBAVCODEC_VERSION_MINOR, \
@@ -1062,6 +1062,9 @@ typedef struct AVCodecContext {
      * If pic.reference is set then the frame will be read later by libavcodec.
      * avcodec_align_dimensions() should be used to find the required width and
      * height, as they normally need to be rounded up to the next multiple of 16.
+     * if CODEC_CAP_DR1 is not set then get_buffer() must call
+     * avcodec_default_get_buffer() instead of providing buffers allocated by
+     * some other means.
      * - encoding: unused
      * - decoding: Set by libavcodec., user can override.
      */
@@ -1679,6 +1682,9 @@ typedef struct AVCodecContext {
      * libavcodec will pass previous buffer in pic, function should return
      * same buffer or new buffer with old frame "painted" into it.
      * If pic.data[0] == NULL must behave like get_buffer().
+     * if CODEC_CAP_DR1 is not set then reget_buffer() must call
+     * avcodec_default_reget_buffer() instead of providing buffers allocated by
+     * some other means.
      * - encoding: unused
      * - decoding: Set by libavcodec., user can override
      */
@@ -2293,8 +2299,8 @@ typedef struct AVCodec {
     const AVRational *supported_framerates; ///< array of supported framerates, or NULL if any, array is terminated by {0,0}
     const enum PixelFormat *pix_fmts;       ///< array of supported pixel formats, or NULL if unknown, array is terminated by -1
     /**
-     * Descriptive name for the codec, meant to be more human readable than \p name.
-     * You \e should use the NULL_IF_CONFIG_SMALL() macro to define it.
+     * Descriptive name for the codec, meant to be more human readable than name.
+     * You should use the NULL_IF_CONFIG_SMALL() macro to define it.
      */
     const char *long_name;
     const int *supported_samplerates;       ///< array of supported audio samplerates, or NULL if unknown, array is terminated by 0
@@ -2335,13 +2341,13 @@ unsigned avcodec_version(void);
 /**
  * Initializes libavcodec.
  *
- * @warning This function \e must be called before any other libavcodec
+ * @warning This function must be called before any other libavcodec
  * function.
  */
 void avcodec_init(void);
 
 /**
- * Register the codec \p codec and initialize libavcodec.
+ * Register the codec codec and initialize libavcodec.
  *
  * @see avcodec_init()
  */
@@ -2466,25 +2472,25 @@ void avcodec_get_encoder_info(AVCodecContext *avctx,int *xvid_build,int *divx_ve
 int avcodec_open(AVCodecContext *avctx, AVCodec *codec);
 
 /**
- * Decodes an audio frame from \p buf into \p samples.
+ * Decodes an audio frame from buf into samples.
  * The avcodec_decode_audio2() function decodes an audio frame from the input
- * buffer \p buf of size \p buf_size. To decode it, it makes use of the
- * audio codec which was coupled with \p avctx using avcodec_open(). The
- * resulting decoded frame is stored in output buffer \p samples.  If no frame
- * could be decompressed, \p frame_size_ptr is zero. Otherwise, it is the
- * decompressed frame size in \e bytes.
+ * buffer buf of size buf_size. To decode it, it makes use of the
+ * audio codec which was coupled with avctx using avcodec_open(). The
+ * resulting decoded frame is stored in output buffer samples. If no frame
+ * could be decompressed, frame_size_ptr is zero. Otherwise, it is the
+ * decompressed frame size in bytes.
  *
- * @warning You \e must set \p frame_size_ptr to the allocated size of the
+ * @warning You must set frame_size_ptr to the allocated size of the
  * output buffer before calling avcodec_decode_audio2().
  *
- * @warning The input buffer must be \c FF_INPUT_BUFFER_PADDING_SIZE larger than
+ * @warning The input buffer must be FF_INPUT_BUFFER_PADDING_SIZE larger than
  * the actual read bytes because some optimized bitstream readers read 32 or 64
  * bits at once and could read over the end.
  *
- * @warning The end of the input buffer \p buf should be set to 0 to ensure that
+ * @warning The end of the input buffer buf should be set to 0 to ensure that
  * no overreading happens for damaged MPEG streams.
  *
- * @note You might have to align the input buffer \p buf and output buffer \p
+ * @note You might have to align the input buffer buf and output buffer
  * samples. The alignment requirements depend on the CPU: On some CPUs it isn't
  * necessary at all, on others it won't work at all if not aligned and on others
  * it will work but it will have an impact on performance. In practice, the
@@ -2506,20 +2512,20 @@ int avcodec_decode_audio2(AVCodecContext *avctx, int16_t *samples,
                          const uint8_t *buf, int buf_size);
 
 /**
- * Decodes a video frame from \p buf into \p picture.
+ * Decodes a video frame from buf into picture.
  * The avcodec_decode_video() function decodes a video frame from the input
- * buffer \p buf of size \p buf_size. To decode it, it makes use of the
- * video codec which was coupled with \p avctx using avcodec_open(). The
- * resulting decoded frame is stored in \p picture.
+ * buffer buf of size buf_size. To decode it, it makes use of the
+ * video codec which was coupled with avctx using avcodec_open(). The
+ * resulting decoded frame is stored in picture.
  *
- * @warning The input buffer must be \c FF_INPUT_BUFFER_PADDING_SIZE larger than
+ * @warning The input buffer must be FF_INPUT_BUFFER_PADDING_SIZE larger than
  * the actual read bytes because some optimized bitstream readers read 32 or 64
  * bits at once and could read over the end.
  *
- * @warning The end of the input buffer \p buf should be set to 0 to ensure that
+ * @warning The end of the input buffer buf should be set to 0 to ensure that
  * no overreading happens for damaged MPEG streams.
  *
- * @note You might have to align the input buffer \p buf and output buffer \p
+ * @note You might have to align the input buffer buf and output buffer
  * samples. The alignment requirements depend on the CPU: on some CPUs it isn't
  * necessary at all, on others it won't work at all if not aligned and on others
  * it will work but it will have an impact on performance. In practice, the
@@ -2549,11 +2555,11 @@ int avcodec_parse_frame(AVCodecContext *avctx, uint8_t **pdata,
                         uint8_t *buf, int buf_size);
 
 /**
- * Encodes an audio frame from \p samples into \p buf.
+ * Encodes an audio frame from samples into buf.
  *
- * @note The output buffer should be at least \c FF_MIN_BUFFER_SIZE bytes large.
+ * @note The output buffer should be at least FF_MIN_BUFFER_SIZE bytes large.
  * However, for PCM audio the user will know how much space is needed
- * because it depends on the value passed in \p buf_size as described
+ * because it depends on the value passed in buf_size as described
  * below. In that case a lower value can be used.
  *
  * @param avctx the codec context
@@ -2561,9 +2567,9 @@ int avcodec_parse_frame(AVCodecContext *avctx, uint8_t **pdata,
  * @param[in] buf_size the output buffer size
  * @param[in] samples the input buffer containing the samples
  * The number of samples read from this buffer is frame_size*channels,
- * both of which are defined in \p avctx.
- * For PCM audio the number of samples read from \p samples is equal to
- * \p buf_size * input_sample_size / output_sample_size.
+ * both of which are defined in avctx.
+ * For PCM audio the number of samples read from samples is equal to
+ * buf_size * input_sample_size / output_sample_size.
  * @return On error a negative value is returned, on success zero or the number
  * of bytes used to encode the data read from the input buffer.
  */
@@ -2571,9 +2577,9 @@ int avcodec_encode_audio(AVCodecContext *avctx, uint8_t *buf, int buf_size,
                          const short *samples);
 
 /**
- * Encodes a video frame from \p pict into \p buf.
+ * Encodes a video frame from pict into buf.
  * The input picture should be
- * stored using a specific format, namely \c avctx.pix_fmt.
+ * stored using a specific format, namely avctx.pix_fmt.
  *
  * @param avctx the codec context
  * @param[out] buf the output buffer for the bitstream of encoded frame
@@ -2609,7 +2615,7 @@ void avcodec_default_free_buffers(AVCodecContext *s);
 /* misc useful functions */
 
 /**
- * Returns a single letter to describe the given picture type \p pict_type.
+ * Returns a single letter to describe the given picture type pict_type.
  *
  * @param[in] pict_type the picture type
  * @return A single character representing the picture type.
@@ -2925,7 +2931,7 @@ enum AVLockOp {
 
 /**
  * Register a user provided lock manager supporting the operations
- * specified by AVLockOp. \p mutex points to a (void *) where the
+ * specified by AVLockOp. mutex points to a (void *) where the
  * lockmgr should store/get a pointer to a user allocated mutex. It's
  * NULL upon AV_LOCK_CREATE and != NULL for all other ops.
  *
