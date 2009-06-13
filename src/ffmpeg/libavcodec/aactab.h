@@ -21,7 +21,7 @@
  */
 
 /**
- * @file aactab.h
+ * @file libavcodec/aactab.h
  * AAC data declarations
  * @author Oded Shimon  ( ods15 ods15 dyndns org )
  * @author Maxim Gavrilov ( maxim.gavrilov gmail com )
@@ -64,6 +64,12 @@ extern const uint8_t  * const ff_aac_spectral_bits [11];
 extern const uint16_t  ff_aac_spectral_sizes[11];
 
 extern const float *ff_aac_codebook_vectors[];
+
+extern const uint16_t *ff_swb_offset_1024[13];
+extern const uint16_t *ff_swb_offset_128 [13];
+
+extern const uint8_t ff_tns_max_bands_1024[13];
+extern const uint8_t ff_tns_max_bands_128 [13];
 
 #if CONFIG_HARDCODED_TABLES
 extern const float ff_aac_pow2sf_tab[428];
