@@ -128,8 +128,8 @@ TsampleFormat TmixerMatrix::calc_matrix(const TsampleFormat &infmt,const TmixerS
           }
          else if (in_nfront == 3)
           {
-           matrix[CH_C][CH_L] = clev;
-           matrix[CH_C][CH_R] = clev;
+           matrix[CH_C][CH_L] = clev * LEVEL_3DB;
+           matrix[CH_C][CH_R] = clev * LEVEL_3DB;
           }
         }
        if (in_nrear == 1)
@@ -274,8 +274,8 @@ TsampleFormat TmixerMatrix::calc_matrix(const TsampleFormat &infmt,const TmixerS
     {
      if (out_nfront > 1)
       {
-       matrix[CH_LFE][CH_L]  = lfelev;
-       matrix[CH_LFE][CH_R]  = lfelev;
+       matrix[CH_LFE][CH_L]  = lfelev * LEVEL_3DB;
+       matrix[CH_LFE][CH_R]  = lfelev * LEVEL_3DB;
       }
      else
       matrix[CH_LFE][CH_C]  = lfelev;
