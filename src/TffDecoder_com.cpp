@@ -137,6 +137,8 @@ STDMETHODIMP TffdshowDecVideo::NonDelegatingQueryInterface(REFIID riid,void **pp
   return GetInterface<IffdshowDecVideoW>(getDecVideoInterface<IffdshowDecVideoW>(),ppv);
  else if (riid==IID_IffDecoder)
   return GetInterface<IffDecoder>(this,ppv);
+ else if (riid==IID_IffDecoder2)
+  return GetInterface<IffDecoder>(this,ppv);
 /*
  else if (riid==IID_IAMExtendedSeeking)
   return GetInterface((IAMExtendedSeeking*)this,ppv);*/

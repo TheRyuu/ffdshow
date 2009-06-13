@@ -7,6 +7,8 @@ extern "C" {
 
 // {00F99063-70D5-4bcc-9D88-3801F3E3881B}
 DEFINE_GUID(IID_IffDecoder , 0x00f99063, 0x70d5, 0x4bcc, 0x9d, 0x88, 0x38, 0x01, 0xf3, 0xe3, 0x88, 0x1b);
+// {5DD3A966-7365-46d0-B79F-D4973BD88E8D}
+DEFINE_GUID(IID_IffDecoder2, 0x5dd3a966, 0x7365, 0x46d0, 0xb7, 0x9f, 0xd4, 0x97, 0x3b, 0xd8, 0x8e, 0x8d);
 
 struct Tpreset;
 struct TglobalSettingsDecVideo;
@@ -66,8 +68,6 @@ DECLARE_INTERFACE_(IffDecoder, IUnknown)
  STDMETHOD (compat_cpuSupportsMMXEXT)(void) PURE;
  STDMETHOD (compat_cpuSupportsSSE)(void) PURE;
  STDMETHOD (compat_cpuSupportsSSE2)(void) PURE;
- STDMETHOD (compat_cpuSupportsSSE3)(void) PURE;
- STDMETHOD (compat_cpuSupportsSSSE3)(void) PURE;
  STDMETHOD (compat_cpuSupports3DNOW)(void) PURE;
  STDMETHOD (compat_cpuSupports3DNOWEXT)(void) PURE;
  STDMETHOD (compat_getAVIfps1000_2)(void) PURE;
@@ -132,6 +132,11 @@ DECLARE_INTERFACE_(IffDecoder, IUnknown)
  STDMETHOD (compat_cpuSupportsSSE42)(void) PURE;
  STDMETHOD (compat_cpuSupportsSSE4A)(void) PURE;
  STDMETHOD (compat_cpuSupportsSSE5)(void) PURE;
+ STDMETHOD (compat_cpuSupportsSSE3)(void) PURE;
+ STDMETHOD (compat_cpuSupportsSSSE3)(void) PURE;
+ STDMETHOD (compat_getIffDecoder2Version)(void) PURE;
+ STDMETHOD (compat_getParamStrW)(unsigned int paramID,wchar_t *buf,unsigned int buflen) PURE;
+ STDMETHOD (compat_putParamStrW)(unsigned int paramID,const wchar_t *buf) PURE;
 };
 
 #ifdef __cplusplus

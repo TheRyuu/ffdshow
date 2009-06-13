@@ -287,6 +287,9 @@ public:
  STDMETHODIMP compat_cpuSupportsSSE42(void) {return cpuSupportsSSE42();}
  STDMETHODIMP compat_cpuSupportsSSE4A(void) {return cpuSupportsSSE4A();}
  STDMETHODIMP compat_cpuSupportsSSE5(void) {return cpuSupportsSSE5();}
+ STDMETHODIMP compat_getIffDecoder2Version(void) {return 1;}
+ STDMETHODIMP compat_getParamStrW(unsigned int paramID,wchar_t *buf,unsigned int buflen) {return getBaseInterface<IffdshowBaseW>()->getParamStr(paramID,buf,buflen);}
+ STDMETHODIMP compat_putParamStrW(unsigned int paramID,const wchar_t *buf) {return putParamStr(paramID,buf);}
 
  // IdecVideoSink
  STDMETHODIMP deliverDecodedSample(TffPict &pict);
