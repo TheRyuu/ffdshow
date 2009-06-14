@@ -489,32 +489,32 @@ type
     function initPresets:HRESULT;stdcall;
     function calcMeanQuant(quant:psingle):HRESULT;stdcall;
     function initKeys:HRESULT;stdcall;
-    function savePresetMem(buf:ppointer,len:integer):HRESULT;stdcall; //if len=0, then buf should point to int variable which will be filled with required buffer length
-    function loadPresetMem(buf:ppointer,len:integer):HRESULT;stdcall;
+    function savePresetMem(buf:ppointer;len:integer):HRESULT;stdcall; //if len=0, then buf should point to int variable which will be filled with required buffer length
+    function loadPresetMem(buf:ppointer;len:integer):HRESULT;stdcall;
     function getGlobalSettings(globalSettingsPtr:ppointer):HRESULT;stdcall;
     function createTempPreset(presetName:ppointer):HRESULT;stdcall;
     function getParamStr2(paramID:integer):HRESULT;stdcall; //returns const pointer to string, NULL if fail
     function findAutoSubflnm2:HRESULT;stdcall;
     function getCurrentFrameTime(sec:ppointer):HRESULT;stdcall;
-    function getFrameTime(framenum:integer,sec:ppointer):HRESULT;stdcall;
+    function getFrameTime(framenum:integer; sec:ppointer):HRESULT;stdcall;
     function getCurTime2:HRESULT;stdcall;
     function getPostproc(postprocPtr:ppointer):HRESULT;stdcall;
     function stop:HRESULT;stdcall;
     function run:HRESULT;stdcall;
     function getState2:HRESULT;stdcall;
     function resetFilter(filterID:integer):HRESULT;stdcall;
-    function resetFilterEx(filterID:integer,filterPageId:integer):HRESULT;stdcall;
-    function getFilterTip(filterID:integer,buf:ppointer,buflen:integer):HRESULT;stdcall;
-    function getFilterTipEx(filterID:integer,filterPageId:integer,buf:ppointer,buflen:integer):HRESULT;stdcall;
+    function resetFilterEx(filterID:integer; filterPageId:integer):HRESULT;stdcall;
+    function getFilterTip(filterID:integer; buf:ppointer; buflen:integer):HRESULT;stdcall;
+    function getFilterTipEx(filterID:integer; filterPageId:integer;buf:ppointer;buflen:integer):HRESULT;stdcall;
     function filterHasReset(filterID:integer):HRESULT;stdcall;
-    function filterHasResetEx(filterID:integer,filterPageId:integer):HRESULT;stdcall;
-    function shortOSDmessage(msg:ppointer,duration:integer):HRESULT;stdcall; //duration is in frames
+    function filterHasResetEx(filterID:integer;filterPageId:integer):HRESULT;stdcall;
+    function shortOSDmessage(msg:ppointer; duration:integer):HRESULT;stdcall; //duration is in frames
     function setImgFilters(imgFiltersPtr:ppointer):HRESULT;stdcall;
     function registerSelectedMediaTypes:HRESULT;stdcall;
-    function getFrameTimes(start:ppointer,stop:ppointer):HRESULT;stdcall;
-    function getSubtitleTimes(start:ppointer,stop:ppointer):HRESULT;stdcall;
+    function getFrameTimes(start:ppointer; stop:ppointer):HRESULT;stdcall;
+    function getSubtitleTimes(start:ppointer; stop:ppointer):HRESULT;stdcall;
     function resetSubtitleTimes:HRESULT;stdcall;
-    function setFrameTimes(start:Int64,stop:Int64):HRESULT;stdcall;
+    function setFrameTimes(start:Int64; stop:Int64):HRESULT;stdcall;
     function cpuSupportsSSE41:HRESULT;stdcall;
     function cpuSupportsSSE42:HRESULT;stdcall;
     function cpuSupportsSSE4A:HRESULT;stdcall;
@@ -522,8 +522,8 @@ type
     function cpuSupportsSSE3:HRESULT;stdcall;
     function cpuSupportsSSSE3:HRESULT;stdcall;
     function getIffDecoder2Version:HRESULT;stdcall;
-    function getParamStrW(paramID:integer,buf:ppointer,buflen:integer):HRESULT;stdcall;
-    function putParamStrW(paramID:integer,buf:ppointer):HRESULT;stdcall;
+    function getParamStrW(paramID:integer; buf:ppointer; buflen:integer):HRESULT;stdcall;
+    function putParamStrW(paramID:integer; buf:ppointer):HRESULT;stdcall;
   end;
 
 implementation
