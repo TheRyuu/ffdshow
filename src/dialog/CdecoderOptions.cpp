@@ -46,7 +46,7 @@ void TdecoderOptionsPage::init(void)
  islavc=((filterMode&IDFF_FILTERMODE_PLAYER) && (source==IDFF_MOVIE_LAVC || source==IDFF_MOVIE_FFMPEG_MT)) || (filterMode&(IDFF_FILTERMODE_CONFIG|IDFF_FILTERMODE_VFW));
  for (int i=0;workarounds[i].ff_bug;i++)
   enable(islavc,workarounds[i].idc_chb);
- static const int idLavc[]={IDC_LBL_IDCT,IDC_CHB_SOFT_TELECINE,IDC_CBX_IDCT,IDC_CHB_GRAY,IDC_LBL_BUGS,IDC_LBL_ERROR_CONCEALMENT,IDC_CBX_ERROR_CONCEALMENT,IDC_LBL_ERROR_RECOGNITION,IDC_CBX_ERROR_RECOGNITION,IDC_BT_QUANTMATRIX_EXPORT,IDC_ED_NUMTHREADS,IDC_CHB_H264_SKIP_ON_DELAY,IDC_ED_H264SKIP_ON_DELAY_TIME,IDC_LBL_NUMTHREADS,0};
+ static const int idLavc[]={IDC_LBL_IDCT,IDC_CBX_IDCT,IDC_CHB_GRAY,IDC_LBL_BUGS,IDC_LBL_ERROR_CONCEALMENT,IDC_CBX_ERROR_CONCEALMENT,IDC_LBL_ERROR_RECOGNITION,IDC_CBX_ERROR_RECOGNITION,IDC_BT_QUANTMATRIX_EXPORT,IDC_ED_NUMTHREADS,IDC_CHB_H264_SKIP_ON_DELAY,IDC_ED_H264SKIP_ON_DELAY_TIME,IDC_LBL_NUMTHREADS,0};
  enable(islavc,idLavc);
  addHint(IDC_ED_NUMTHREADS,_l("H.264 and MPEG-1/2 decoder only"));
  addHint(IDC_CHB_SOFT_TELECINE,_l("Checked: If soft telecine is detected, frames are flagged as progressive.\n\nYou may want to unckeck if you have interlaced TV."));
@@ -54,9 +54,9 @@ void TdecoderOptionsPage::init(void)
 
 void TdecoderOptionsPage::cfg2dlg(void)
 {
+ setCheck(IDC_CHB_SOFT_TELECINE, cfgGet(IDFF_softTelecine));
  if (islavc)
   {
-   setCheck(IDC_CHB_SOFT_TELECINE, cfgGet(IDFF_softTelecine));
    setCheck(IDC_CHB_GRAY,cfgGet(IDFF_grayscale));
    cbxSetCurSel(IDC_CBX_IDCT,cfgGet(IDFF_idct));
 

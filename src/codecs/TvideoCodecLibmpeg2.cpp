@@ -285,9 +285,23 @@ HRESULT TvideoCodecLibmpeg2::decompressI(const unsigned char *src,size_t srcLen,
                         pict.fieldtype |= FIELD_TYPE::SEQ_START | FIELD_TYPE::SEQ_END;
 
                     oldpict=pict;
+                    if (rateInfo->isDiscontinuity)
+                        telecineManager.onSeek();
+
+                    // soft telecine detection
+                    // if "Detect soft telecine and average frame durations" is enabled,
+                    // flames are flagged as progressive, frame durations are averaged.
+                    // pict.film is valid even if the setting is disabled.
+                    telecineManager.new_frame(
+                        !!(info->display_picture->flags & PIC_FLAG_TOP_FIELD_FIRST),
+                        !!(info->display_picture->flags & PIC_FLAG_REPEAT_FIRST_FIELD),
+                        pict.rtStart,
+                        pict.rtStop);
                 }
                 if (!wait4Iframe) {
                     TffPict pict(oldpict);
+                    telecineManager.get_fieldtype(pict);
+                    telecineManager.get_timestamps(pict);
                     HRESULT hr = sinkD->deliverDecodedSample(pict);
                     if (hr != S_OK)
                         return hr;
@@ -309,6 +323,7 @@ bool TvideoCodecLibmpeg2::onSeek(REFERENCE_TIME segmentStart)
     oldpict.rtStop=0;
     if (ccDecoder)
         ccDecoder->onSeek();
+    telecineManager.onSeek();
     return true;
 }
 
@@ -324,6 +339,7 @@ HRESULT TvideoCodecLibmpeg2::BeginFlush()
  *
  *      copied and modified from Mpeg2DecFilter.cpp
  */
+ // FIXME simplify, this function has been moved to TtelecineManager
 int TvideoCodecLibmpeg2::SetDeinterlaceMethod(void)
 {
     int di_method = FIELD_TYPE::PROGRESSIVE_FRAME; // weave

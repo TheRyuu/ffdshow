@@ -1963,6 +1963,7 @@
 #define IDC_GRP_DYNAMIC_RANGE           2255
 #define IDC_LBL_COMPRESSION_LEVEL       2256
 #define IDC_CHB_RGB_DITHER              2257
+#define IDC_GRP_SOFT_TELECINE           2258
 #define ID_MNI_PRESET_NEWFROMDEFAULT    40004
 #define ID_MNI_PRESET_NEWFROMSELECTED   40005
 #define ID_MNI_PRESET_NEW_FROMFILE      40006
@@ -1979,7 +1980,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        298
 #define _APS_NEXT_COMMAND_VALUE         40015
-#define _APS_NEXT_CONTROL_VALUE         2258
+#define _APS_NEXT_CONTROL_VALUE         2259
 #define _APS_NEXT_SYMED_VALUE           107
 #endif
 #endif

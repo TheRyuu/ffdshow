@@ -67,6 +67,28 @@ protected:
   */
  Rational guessMPEG2sar(const Trect &r, const Rational &sar2, const Rational &containerSar);
 
+ class TtelecineManager
+  {
+  private:
+   TvideoCodecDec* parent;
+   int segment_count;
+   int pos_in_group;
+   struct {
+    int fieldtype;
+    int repeat_pict;
+    REFERENCE_TIME rtStart;
+   } group[4]; // 4 frames make up a group of soft telecine.
+   REFERENCE_TIME average_duration,group_rtStart;
+   bool film;
+   int cfg_softTelecine;
+  public:
+   TtelecineManager(TvideoCodecDec* Iparent);
+   void get_timestamps(TffPict &pict);
+   void get_fieldtype(TffPict &pict);
+   void new_frame(int top_field_first, int repeat_pict, const REFERENCE_TIME &rtStart, const REFERENCE_TIME &rtStop);
+   void onSeek(void);
+  } telecineManager;
+
 public:
  static TvideoCodecDec* initDec(IffdshowBase *deci,IdecVideoSink *Isink,CodecID codecId,FOURCC fcc,const CMediaType &mt);
 
