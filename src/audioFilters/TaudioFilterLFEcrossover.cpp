@@ -45,7 +45,7 @@ HRESULT TaudioFilterLFEcrossover::process(TfilterQueue::iterator it,TsampleForma
   {
    oldfmt=fmt;oldfreq=cfg->freq;
    done();
-   li=ri=-1;
+   li=ri=ci=-1;
    for (unsigned int i=0;i<fmt.nchannels;i++)
     {
      if (fmt.speakers[i]&SPEAKER_FRONT_LEFT)
@@ -53,7 +53,7 @@ HRESULT TaudioFilterLFEcrossover::process(TfilterQueue::iterator it,TsampleForma
      else if (fmt.speakers[i]&SPEAKER_FRONT_RIGHT)
       ri=i;
      else if (fmt.speakers[i]&SPEAKER_FRONT_CENTER)
-      li=ri=i;
+      ci=i;
     }
    TfirFilter::_ftype_t f=cfg->freq/TfirFilter::_ftype_t(fmt.freq/2);
    lenLFE=256;
@@ -71,6 +71,7 @@ HRESULT TaudioFilterLFEcrossover::process(TfilterQueue::iterator it,TsampleForma
    lfe_pos=0;memset(LFE_buf,0,sizeof(LFE_buf));
    lfe_posL=0;memset(LFE_bufL,0,sizeof(LFE_bufL));
    lfe_posR=0;memset(LFE_bufR,0,sizeof(LFE_bufR));
+   lfe_posC=0;memset(LFE_bufC,0,sizeof(LFE_bufC));
   }
 
  float *in=(float*)init(cfg,fmt,samples0,numsamples);outfmt.sf=fmt.sf;
@@ -83,7 +84,15 @@ HRESULT TaudioFilterLFEcrossover::process(TfilterQueue::iterator it,TsampleForma
      for (unsigned int ch=0;ch<fmt.nchannels;ch++)
       if (ch==(unsigned int)lfei)
        {
-        LFE_buf[lfe_pos]=(in[li]+in[ri])/2;
+        if (ci != -1 && li != -1 && ri != -1)
+         LFE_buf[lfe_pos]=(in[li]+in[ri]+in[ci])* 0.5773502691896258; // sqrt(1/3)
+        else if (li != -1 && ri != -1)
+         LFE_buf[lfe_pos]=(in[li]+in[ri])       * 0.7071067811865476; // sqrt(1/2)
+        else if (ci != -1)
+         LFE_buf[lfe_pos]=in[ci];
+        else
+         break;
+
         out[ch]=gain*TfirFilter::firfilter(LFE_buf,lfe_pos,lenLFE,lenLFE,filter_coefs_lfe);
         lfe_pos++;if (lfe_pos==lenLFE) lfe_pos=0;
        }
@@ -101,6 +110,12 @@ HRESULT TaudioFilterLFEcrossover::process(TfilterQueue::iterator it,TsampleForma
           out[ch]=TfirFilter::firfilter(LFE_bufR,lfe_posR,lenLFElr,lenLFElr,filter_coefs_lfeLR);
           lfe_posR++;if (lfe_posR==lenLFElr) lfe_posR=0;
          }
+        else if (ci==map[ch])
+         {
+          LFE_bufC[lfe_posC]=in[ci];
+          out[ch]=TfirFilter::firfilter(LFE_bufC,lfe_posC,lenLFElr,lenLFElr,filter_coefs_lfeLR);
+          lfe_posC++;if (lfe_posC==lenLFElr) lfe_posC=0;
+         }
         else
          out[ch]=in[map[ch]];
        else
@@ -113,18 +128,34 @@ HRESULT TaudioFilterLFEcrossover::process(TfilterQueue::iterator it,TsampleForma
    float *out=(float*)(samples0=in);
    for (size_t i=0;i<numsamples;i++)
     {
-     LFE_buf[lfe_pos]=(in[li]+in[ri])/2;
-     out[lfei]=gain*TfirFilter::firfilter(LFE_buf,lfe_pos,lenLFE,lenLFE,filter_coefs_lfe);
+     if (ci != -1 && li != -1 && ri != -1)
+      LFE_buf[lfe_pos]=(in[li]+in[ri]+in[ci])* 0.5773502691896258; // sqrt(1/3)
+     else if (li != -1 && ri != -1)
+      LFE_buf[lfe_pos]=(in[li]+in[ri])       * 0.7071067811865476; // sqrt(1/2)
+     else if (ci != -1)
+      LFE_buf[lfe_pos]=in[ci];
+     else
+      break;
+     out[lfei]=out[lfei]+gain*TfirFilter::firfilter(LFE_buf,lfe_pos,lenLFE,lenLFE,filter_coefs_lfe);
      if (cfg->cutLR)
       {
-       LFE_bufL[lfe_posL]=in[li];
-       out[li]=TfirFilter::firfilter(LFE_bufL,lfe_posL,lenLFElr,lenLFElr,filter_coefs_lfeLR);
-       lfe_posL++;if (lfe_posL==lenLFElr) lfe_posL=0;
-       if (li!=ri)
+       if (li != -1)
+        {
+         LFE_bufL[lfe_posL]=in[li];
+         out[li]=TfirFilter::firfilter(LFE_bufL,lfe_posL,lenLFElr,lenLFElr,filter_coefs_lfeLR);
+         lfe_posL++;if (lfe_posL==lenLFElr) lfe_posL=0;
+        }
+       if (ri != -1)
         {
          LFE_bufR[lfe_posR]=in[ri];
          out[ri]=TfirFilter::firfilter(LFE_bufR,lfe_posR,lenLFElr,lenLFElr,filter_coefs_lfeLR);
          lfe_posR++;if (lfe_posR==lenLFElr) lfe_posR=0;
+        }
+       if (ci != -1)
+        {
+         LFE_bufC[lfe_posC]=in[ci];
+         out[ci]=TfirFilter::firfilter(LFE_bufC,lfe_posC,lenLFElr,lenLFElr,filter_coefs_lfeLR);
+         lfe_posC++;if (lfe_posC==lenLFElr) lfe_posC=0;
         }
       }
      lfe_pos++;if (lfe_pos==lenLFE) lfe_pos=0;
@@ -140,4 +171,5 @@ void TaudioFilterLFEcrossover::onSeek(void)
  lfe_pos=0;memset(LFE_buf,0,sizeof(LFE_buf));
  lfe_posL=0;memset(LFE_bufL,0,sizeof(LFE_bufL));
  lfe_posR=0;memset(LFE_bufR,0,sizeof(LFE_bufR));
+ lfe_posC=0;memset(LFE_bufC,0,sizeof(LFE_bufC));
 }
