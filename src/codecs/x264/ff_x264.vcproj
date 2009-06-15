@@ -78,7 +78,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="kernel32.lib msvcrtd.lib oldnames.lib $(NOINHERIT)"
+				AdditionalDependencies="kernel32.lib libcmtd.lib oldnames.lib $(NOINHERIT)"
 				OutputFile="../../../bin/ff_x264.dll"
 				GenerateManifest="true"
 				IgnoreAllDefaultLibraries="true"
@@ -169,7 +169,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="kernel32.lib msvcrtd.lib oldnames.lib $(NOINHERIT)"
+				AdditionalDependencies="kernel32.lib libcmtd.lib oldnames.lib $(NOINHERIT)"
 				OutputFile="../../../bin/ff_x264.dll"
 				GenerateManifest="true"
 				IgnoreAllDefaultLibraries="true"
@@ -263,7 +263,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="kernel32.lib msvcrt.lib oldnames.lib $(NOINHERIT)"
+				AdditionalDependencies="kernel32.lib libcmt.lib oldnames.lib $(NOINHERIT)"
 				OutputFile="../../../bin/ff_x264.dll"
 				LinkIncremental="1"
 				GenerateManifest="true"
@@ -359,7 +359,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="kernel32.lib msvcrt.lib oldnames.lib $(NOINHERIT)"
+				AdditionalDependencies="kernel32.lib libcmt.lib oldnames.lib $(NOINHERIT)"
 				OutputFile="../../../bin/ff_x264.dll"
 				LinkIncremental="1"
 				GenerateManifest="true"

@@ -69,7 +69,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="kernel32.lib msvcrtd.lib oldnames.lib ws2_32.lib $(NOINHERIT)"
+				AdditionalDependencies="kernel32.lib libcmtd.lib oldnames.lib ws2_32.lib $(NOINHERIT)"
 				OutputFile="../../../bin/xvidcore.dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories=""
@@ -154,7 +154,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="kernel32.lib msvcrtd.lib oldnames.lib ws2_32.lib $(NOINHERIT)"
+				AdditionalDependencies="kernel32.lib libcmtd.lib oldnames.lib ws2_32.lib $(NOINHERIT)"
 				OutputFile="../../../bin/xvidcore.dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories=""
@@ -243,7 +243,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="kernel32.lib msvcrt.lib oldnames.lib ws2_32.lib $(NOINHERIT)"
+				AdditionalDependencies="kernel32.lib libcmt.lib oldnames.lib ws2_32.lib $(NOINHERIT)"
 				OutputFile="../../../bin/xvidcore.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories=""
@@ -334,7 +334,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="kernel32.lib msvcrt.lib oldnames.lib ws2_32.lib $(NOINHERIT)"
+				AdditionalDependencies="kernel32.lib libcmt.lib oldnames.lib ws2_32.lib $(NOINHERIT)"
 				OutputFile="../../../bin/xvidcore.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories=""
