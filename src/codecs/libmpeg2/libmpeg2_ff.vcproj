@@ -27,6 +27,7 @@
 			OutputDirectory="$(ConfigurationName)$(PlatformName)"
 			IntermediateDirectory="$(ConfigurationName)$(PlatformName)"
 			ConfigurationType="2"
+			UseOfMFC="1"
 			CharacterSet="0"
 			>
 			<Tool
@@ -36,7 +37,7 @@
 				Name="VCCustomBuildTool"
 			/>
 			<Tool
-				Name="Yasm"
+				Name="yasm"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -56,7 +57,7 @@
 				ExceptionHandling="0"
 				BasicRuntimeChecks="3"
 				SmallerTypeCheck="false"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				BufferSecurityCheck="true"
 				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="0"
@@ -85,6 +86,7 @@
 				GenerateManifest="true"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="libmpeg2_ff.def"
+				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(IntDir)/libmpeg2_ff.pdb"
 				SubSystem="2"
@@ -121,6 +123,7 @@
 			OutputDirectory="$(ConfigurationName)$(PlatformName)"
 			IntermediateDirectory="$(ConfigurationName)$(PlatformName)"
 			ConfigurationType="2"
+			UseOfMFC="1"
 			CharacterSet="0"
 			>
 			<Tool
@@ -130,7 +133,7 @@
 				Name="VCCustomBuildTool"
 			/>
 			<Tool
-				Name="Yasm"
+				Name="yasm"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -151,7 +154,7 @@
 				ExceptionHandling="0"
 				BasicRuntimeChecks="3"
 				SmallerTypeCheck="false"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				BufferSecurityCheck="true"
 				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="0"
@@ -179,6 +182,7 @@
 				GenerateManifest="true"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="libmpeg2_ff.def"
+				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(IntDir)/libmpeg2_ff.pdb"
 				SubSystem="2"
@@ -213,6 +217,7 @@
 			OutputDirectory="$(ConfigurationName)$(PlatformName)"
 			IntermediateDirectory="$(ConfigurationName)$(PlatformName)"
 			ConfigurationType="2"
+			UseOfMFC="1"
 			CharacterSet="0"
 			ManagedExtensions="0"
 			WholeProgramOptimization="1"
@@ -224,7 +229,7 @@
 				Name="VCCustomBuildTool"
 			/>
 			<Tool
-				Name="Yasm"
+				Name="yasm"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -277,6 +282,7 @@
 				GenerateManifest="true"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="libmpeg2_ff.def"
+				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="false"
 				ProgramDatabaseFile="$(IntDir)/libmpeg2_ff.pdb"
 				SubSystem="2"
@@ -315,6 +321,7 @@
 			OutputDirectory="$(ConfigurationName)$(PlatformName)"
 			IntermediateDirectory="$(ConfigurationName)$(PlatformName)"
 			ConfigurationType="2"
+			UseOfMFC="1"
 			CharacterSet="0"
 			ManagedExtensions="0"
 			WholeProgramOptimization="1"
@@ -326,7 +333,7 @@
 				Name="VCCustomBuildTool"
 			/>
 			<Tool
-				Name="Yasm"
+				Name="yasm"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -349,7 +356,7 @@
 				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;NDEBUG;_WINDOWS"
 				StringPooling="true"
 				ExceptionHandling="0"
-				RuntimeLibrary="2"
+				RuntimeLibrary="0"
 				BufferSecurityCheck="false"
 				EnableFunctionLevelLinking="false"
 				RuntimeTypeInfo="false"
@@ -379,6 +386,7 @@
 				GenerateManifest="true"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="libmpeg2_ff.def"
+				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="false"
 				ProgramDatabaseFile="$(IntDir)/libmpeg2_ff.pdb"
 				SubSystem="2"

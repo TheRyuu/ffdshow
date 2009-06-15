@@ -23,7 +23,7 @@
 			OutputDirectory="$(ConfigurationName)$(PlatformName)"
 			IntermediateDirectory="$(ConfigurationName)$(PlatformName)"
 			ConfigurationType="2"
-			UseOfMFC="0"
+			UseOfMFC="1"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			>
 			<Tool
@@ -53,7 +53,7 @@
 				AdditionalIncludeDirectories=".;..;../..;dec;enc"
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_DEBUG;_WINDOWS"
 				BasicRuntimeChecks="0"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				ForceConformanceInForLoopScope="true"
 				RuntimeTypeInfo="false"
 				PrecompiledHeaderFile=""
@@ -88,6 +88,7 @@
 				GenerateManifest="true"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="ff_theora.def"
+				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(IntDir)/ff_theora.pdb"
 				SubSystem="2"
@@ -123,7 +124,7 @@
 			OutputDirectory="$(ConfigurationName)$(PlatformName)"
 			IntermediateDirectory="$(ConfigurationName)$(PlatformName)"
 			ConfigurationType="2"
-			UseOfMFC="0"
+			UseOfMFC="1"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			>
 			<Tool
@@ -153,7 +154,7 @@
 				AdditionalIncludeDirectories=".;..;../..;dec;enc"
 				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_DEBUG;_WINDOWS"
 				BasicRuntimeChecks="0"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				ForceConformanceInForLoopScope="true"
 				RuntimeTypeInfo="false"
 				PrecompiledHeaderFile=""
@@ -186,6 +187,7 @@
 				GenerateManifest="true"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="ff_theora.def"
+				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(IntDir)/ff_theora.pdb"
 				SubSystem="2"
@@ -220,7 +222,7 @@
 			OutputDirectory="$(ConfigurationName)$(PlatformName)"
 			IntermediateDirectory="$(ConfigurationName)$(PlatformName)"
 			ConfigurationType="2"
-			UseOfMFC="0"
+			UseOfMFC="1"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			ManagedExtensions="0"
 			WholeProgramOptimization="1"
@@ -257,7 +259,7 @@
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;NDEBUG;_WINDOWS"
 				StringPooling="true"
 				ExceptionHandling="0"
-				RuntimeLibrary="2"
+				RuntimeLibrary="0"
 				BufferSecurityCheck="false"
 				EnableFunctionLevelLinking="false"
 				RuntimeTypeInfo="false"
@@ -293,6 +295,7 @@
 				GenerateManifest="true"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="ff_theora.def"
+				DelayLoadDLLs="$(NOINHERIT)"
 				ProgramDatabaseFile="$(IntDir)/ff_theora.pdb"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
@@ -327,7 +330,7 @@
 			OutputDirectory="$(ConfigurationName)$(PlatformName)"
 			IntermediateDirectory="$(ConfigurationName)$(PlatformName)"
 			ConfigurationType="2"
-			UseOfMFC="0"
+			UseOfMFC="1"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			ManagedExtensions="0"
 			WholeProgramOptimization="1"
@@ -364,7 +367,7 @@
 				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;NDEBUG;_WINDOWS"
 				StringPooling="true"
 				ExceptionHandling="0"
-				RuntimeLibrary="2"
+				RuntimeLibrary="0"
 				BufferSecurityCheck="false"
 				EnableFunctionLevelLinking="false"
 				RuntimeTypeInfo="false"
@@ -398,6 +401,7 @@
 				GenerateManifest="true"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="ff_theora.def"
+				DelayLoadDLLs="$(NOINHERIT)"
 				ProgramDatabaseFile="$(IntDir)/ff_theora.pdb"
 				SubSystem="2"
 				ImportLibrary="$(IntDir)/ff_theora.lib"
@@ -435,39 +439,15 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
 			<File
+				RelativePath=".\enc\blockmap.c"
+				>
+			</File>
+			<File
 				RelativePath=".\comment.c"
 				>
 			</File>
 			<File
 				RelativePath=".\cpu.c"
-				>
-			</File>
-			<File
-				RelativePath=".\huffman.c"
-				>
-			</File>
-			<File
-				RelativePath=".\idct.c"
-				>
-			</File>
-			<File
-				RelativePath=".\misc_common.c"
-				>
-			</File>
-			<File
-				RelativePath=".\toplevel.c"
-				>
-			</File>
-			<File
-				RelativePath=".\dec\decode.c"
-				>
-			</File>
-			<File
-				RelativePath=".\dec\quant.c"
-				>
-			</File>
-			<File
-				RelativePath=".\enc\blockmap.c"
 				>
 			</File>
 			<File
@@ -480,6 +460,10 @@
 			</File>
 			<File
 				RelativePath=".\enc\dct_encode.c"
+				>
+			</File>
+			<File
+				RelativePath=".\dec\decode.c"
 				>
 			</File>
 			<File
@@ -503,7 +487,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\huffman.c"
+				>
+			</File>
+			<File
+				RelativePath=".\idct.c"
+				>
+			</File>
+			<File
 				RelativePath=".\enc\mcomp.c"
+				>
+			</File>
+			<File
+				RelativePath=".\misc_common.c"
 				>
 			</File>
 			<File
@@ -515,11 +511,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\dec\quant.c"
+				>
+			</File>
+			<File
 				RelativePath=".\enc\reconstruct.c"
 				>
 			</File>
 			<File
 				RelativePath=".\enc\scan.c"
+				>
+			</File>
+			<File
+				RelativePath=".\toplevel.c"
 				>
 			</File>
 		</Filter>
@@ -528,23 +532,7 @@
 			Filter="h;hpp;hxx;hm;inl"
 			>
 			<File
-				RelativePath=".\cpu.h"
-				>
-			</File>
-			<File
-				RelativePath=".\huffman.h"
-				>
-			</File>
-			<File
-				RelativePath=".\toplevel.h"
-				>
-			</File>
-			<File
 				RelativePath=".\enc\block_inline.h"
-				>
-			</File>
-			<File
-				RelativePath=".\enc\dsp.h"
 				>
 			</File>
 			<File
@@ -552,7 +540,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\cpu.h"
+				>
+			</File>
+			<File
+				RelativePath=".\enc\dsp.h"
+				>
+			</File>
+			<File
 				RelativePath=".\enc\encoder_lookup.h"
+				>
+			</File>
+			<File
+				RelativePath=".\huffman.h"
 				>
 			</File>
 			<File
@@ -565,6 +565,10 @@
 			</File>
 			<File
 				RelativePath=".\enc\quant_lookup.h"
+				>
+			</File>
+			<File
+				RelativePath=".\toplevel.h"
 				>
 			</File>
 			<File

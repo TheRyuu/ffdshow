@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9.00"
+	Version="9,00"
 	Name="TomsMoComp_ff"
 	ProjectGUID="{864F0D43-412C-44DF-98AD-E8C24B230D5C}"
 	RootNamespace="TomsMoComp_ff"
@@ -89,6 +89,7 @@
 				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile=".\TomsMoComp_ff.def"
+				DelayLoadDLLs="$(NOINHERIT)"
 				ProgramDatabaseFile="$(IntDir)/TomsMoComp_ff.pdb"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
@@ -189,6 +190,7 @@
 				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile=".\TomsMoComp_ff.def"
+				DelayLoadDLLs="$(NOINHERIT)"
 				ProgramDatabaseFile="$(IntDir)/TomsMoComp_ff.pdb"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
@@ -225,7 +227,7 @@
 			OutputDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			ConfigurationType="2"
-			UseOfMFC="0"
+			UseOfMFC="1"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			>
 			<Tool
@@ -287,6 +289,7 @@
 				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile=".\TomsMoComp_ff.def"
+				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(IntDir)/TomsMoComp_ff.pdb"
 				OptimizeReferences="0"
@@ -323,7 +326,7 @@
 			OutputDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			ConfigurationType="2"
-			UseOfMFC="0"
+			UseOfMFC="1"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			>
 			<Tool
@@ -385,6 +388,7 @@
 				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile=".\TomsMoComp_ff.def"
+				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(IntDir)/TomsMoComp_ff.pdb"
 				OptimizeReferences="0"

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9.00"
+	Version="9,00"
 	Name="ff_kernelDeint"
 	ProjectGUID="{C60F760B-5AFF-4C37-9EF7-A275665DBF21}"
 	RootNamespace="ff_kernelDeint"
@@ -24,6 +24,7 @@
 			OutputDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			ConfigurationType="2"
+			UseOfMFC="1"
 			CharacterSet="0"
 			>
 			<Tool
@@ -73,6 +74,7 @@
 				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="ff_kernelDeint.def"
+				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(IntDir)/ff_kernelDeint.pdb"
 				SubSystem="2"
@@ -109,6 +111,7 @@
 			OutputDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			ConfigurationType="2"
+			UseOfMFC="1"
 			CharacterSet="0"
 			>
 			<Tool
@@ -158,6 +161,7 @@
 				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="ff_kernelDeint.def"
+				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(IntDir)/ff_kernelDeint.pdb"
 				SubSystem="2"
@@ -247,6 +251,7 @@
 				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="ff_kernelDeint.def"
+				DelayLoadDLLs="$(NOINHERIT)"
 				ProgramDatabaseFile="$(IntDir)/ff_kernelDeint.pdb"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -337,6 +342,7 @@
 				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="ff_kernelDeint.def"
+				DelayLoadDLLs="$(NOINHERIT)"
 				ProgramDatabaseFile="$(IntDir)/ff_kernelDeint.pdb"
 				SubSystem="2"
 				OptimizeReferences="2"
