@@ -70,7 +70,6 @@ private:
  bool autoSkipingLoopFilter;
  enum AVDiscard initialSkipLoopFilter;
  bool h264_on_MPEG2_system; // H.264 on MPEG2 trasport/program stream must have AU delimiter and start code.
- bool isMPEG2system(void);
  int got_picture;
  bool firstSeek; // firstSeek means start of palyback.
  bool mpeg2_new_sequence;

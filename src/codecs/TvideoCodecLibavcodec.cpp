@@ -305,14 +305,22 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
         return false;
     }
 
-    if (codecId == CODEC_ID_H264) {
-        if  ((!libavcodec->avcodec_h264_decode_init_is_avc(avctx) && isMPEG2system())
-             || (connectedSplitter == TffdshowVideoInputPin::DVBSourceFilter ))
+    if (codecId == CODEC_ID_H264
+      && !(mt.subtype == MEDIASUBTYPE_AVC1 || mt.subtype == MEDIASUBTYPE_avc1)) {
+        ffstring sourceExt;
+        extractfileext(deci->getSourceName(),sourceExt);
+        sourceExt.ConvertToLowerCase();
+        // avi and ogm files do not have access unit delimiter
+        // Neuview Source is an AVI splitter that does not implement IFileSourceFilter.
+        // What about ogg, ogv and ogx?
+        if ( sourceExt != L"avi"
+          && sourceExt != L"ogm"
+          && !(sourceExt == L"" && connectedSplitter == TffdshowVideoInputPin::NeuviewSource)) {
             h264_on_MPEG2_system = true;
+            codedPictureBuffer.init();
+        }
     }
 
-    if (h264_on_MPEG2_system)
-        codedPictureBuffer.init();
 
     pict.csp=avctx->pix_fmt!=PIX_FMT_NONE?csp_lavc2ffdshow(avctx->pix_fmt):FF_CSP_420P;
     if (avctx->sample_aspect_ratio.num && avctx->sample_aspect_ratio.den) {
@@ -332,17 +340,6 @@ HRESULT TvideoCodecLibavcodec::BeginFlush()
 {
     onSeek(0);
     return S_OK;
-}
-
-// return true for TS, PS files.
-bool TvideoCodecLibavcodec::isMPEG2system(void)
-{   
-    const char_t *sourceFullFlnm;
-    ffstring sourceExt;
-    sourceFullFlnm = deci->getSourceName();
-    extractfileext(sourceFullFlnm,sourceExt);
-    sourceExt.ConvertToLowerCase();
-    return (sourceExt == _l("ts") || sourceExt == _l("m2ts") || sourceExt == _l("m2t") || sourceExt == _l("mts") || sourceExt == _l("mpg")  || sourceExt == _l("mpeg"));
 }
 
 void TvideoCodecLibavcodec::onGetBuffer(AVFrame *pic)
@@ -600,7 +597,7 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
                     pict.rtStart = frame->reordered_opaque;
                     pict.rtStop = frame->reordered_opaque2;
                     pict.srcSize = (size_t)frame->reordered_opaque3;
-                } else if (isdvdproc) {
+                } else if (isdvdproc/*mpeg12_codec(codecId)*/) {
                     if(frametype == FRAME_TYPE::I)
                         pict.rtStart = frame->reordered_opaque;
                     else

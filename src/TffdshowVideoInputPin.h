@@ -105,6 +105,7 @@ public:
       MPC_mpegSplitters,
       DVBSourceFilter,
       PBDA_DTFilter,
+      NeuviewSource,
       Unknown_Splitter
      };
 };

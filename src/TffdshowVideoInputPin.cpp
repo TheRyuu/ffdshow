@@ -258,6 +258,8 @@ STDMETHODIMP TffdshowVideoInputPin::ReceiveConnection(IPin* pConnector, const AM
      connectedSplitter = DVBSourceFilter;
     else if (ref == CLSID_PBDA_DTFilter)
      connectedSplitter = PBDA_DTFilter;
+    else if (ref == CLSID_NeuviewSource)
+     connectedSplitter = NeuviewSource;
     
 #if 0
     PIN_INFO pininfo;
