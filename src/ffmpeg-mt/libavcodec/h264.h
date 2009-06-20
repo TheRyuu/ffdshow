@@ -252,7 +252,7 @@ typedef struct H264Context{
       * Used to parse AVC variant of h264
       */
     int is_avc; ///< this flag is != 0 if codec is avc1
-    int got_avcC; ///< flag used to parse avcC data only once
+    int got_extradata; ///< flag used to parse extradata only once
     int nal_length_size; ///< Number of bytes used for nal length (1, 2 or 4)
 
     int chroma_qp[2]; //QPc

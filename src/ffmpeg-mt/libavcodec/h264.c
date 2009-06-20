@@ -1025,7 +1025,7 @@ static inline void pred_direct_motion(H264Context * const h, int *mb_type){
             b8_stride = 0;
         }else if(!(s->picture_structure & h->ref_list[1][0].reference) && !h->ref_list[1][0].mbaff){// FL -> FL & differ parity
             int fieldoff= 2*(h->ref_list[1][0].reference)-3;
-            mb_y += fieldoff;
+            mb_y  += fieldoff;
             mb_xy += s->mb_stride*fieldoff;
         }
         goto single_col;
@@ -1708,19 +1708,6 @@ static inline void mc_dir_part(H264Context *h, Picture *pic, int n, int square, 
     const int pic_width  = 16*s->mb_width;
     const int pic_height = 16*s->mb_height >> MB_FIELD;
 
-    if (0) {
-        int requested_line = ((src_y - pic->data[0])/s->linesize) >> pic->field_picture;
-        int ref_field = pic->reference - 1;
-        int ref_field_picture = pic->field_picture;
-        int progress;
-        int error=ff_check_field_progress((AVFrame*)pic, requested_line, ref_field_picture && ref_field, &progress);
-
-        if (error) {
-            av_log(s->avctx,AV_LOG_DEBUG,"race condition suspected: h->poc_lsb %d h->mb_xy %d requested_line %d progress %d",
-                h->poc_lsb,h->mb_xy,requested_line,progress);
-        }
-    }
-
     if(mx&7) extra_width -= 3;
     if(my&7) extra_height -= 3;
 
@@ -2102,7 +2089,9 @@ static void free_tables(H264Context *h){
         av_freep(&hx->top_borders[1]);
         av_freep(&hx->top_borders[0]);
         av_freep(&hx->s.obmc_scratchpad);
-        if (h != hx) av_freep(&hx); // ffdshow custom code (I should submit a patch to FFmpeg)
+        av_freep(&hx->rbsp_buffer[1]);
+        av_freep(&hx->rbsp_buffer[0]);
+        if (i) av_freep(&h->thread_context[i]);
     }
 }
 
@@ -2321,7 +2310,7 @@ static av_cold int decode_init(AVCodecContext *avctx){
 
     /* ffdshow custom code (begin) */
     h->is_avc = avcodec_h264_decode_init_is_avc(avctx);
-    h->got_avcC = 0;
+    h->got_extradata = 0;
     /* ffdshow custom code (end) */
 
     h->thread_context[0] = h;
@@ -2388,7 +2377,7 @@ static int decode_update_context(AVCodecContext *dst, AVCodecContext *src){
 
     //extradata/NAL handling
     h->is_avc          = h1->is_avc;
-    h->got_avcC        = h1->got_avcC;
+    h->got_extradata   = h1->got_extradata;
 
     //SPS/PPS
     copy_parameter_set((void**)h->sps_buffers, (void**)h1->sps_buffers, MAX_SPS_COUNT, sizeof(SPS));
@@ -3023,7 +3012,7 @@ static av_always_inline void hl_decode_mb_internal(H264Context *h, int simple){
             }
         }
     }
-    if((s->avctx->thread_count < 2) && (h->cbp || IS_INTRA(mb_type))) /* ffdshow custom code */
+    if(h->cbp || IS_INTRA(mb_type))
         s->dsp.clear_blocks(h->mb);
 
     if(h->deblocking_filter) {
@@ -3989,6 +3978,46 @@ static void init_scan_tables(H264Context *h){
     }
 }
 
+static void field_end(H264Context *h){
+    MpegEncContext * const s = &h->s;
+    AVCodecContext * const avctx= s->avctx;
+    s->mb_y= 0;
+
+    if (!s->dropable)
+        ff_report_field_progress((AVFrame*)s->current_picture_ptr, (16*s->mb_height >> FIELD_PICTURE) - 1,
+                                 s->picture_structure==PICT_BOTTOM_FIELD);
+
+    if(!USE_FRAME_THREADING(avctx)){
+        if(!s->dropable) {
+            execute_ref_pic_marking(h, h->mmco, h->mmco_index);
+            h->prev_poc_msb= h->poc_msb;
+            h->prev_poc_lsb= h->poc_lsb;
+        }
+        h->prev_frame_num_offset= h->frame_num_offset;
+        h->prev_frame_num= h->frame_num;
+        if(h->next_output_pic) h->outputed_poc = h->next_output_pic->poc;
+    }
+
+    /*
+     * FIXME: Error handling code does not seem to support interlaced
+     * when slices span multiple rows
+     * The ff_er_add_slice calls don't work right for bottom
+     * fields; they cause massive erroneous error concealing
+     * Error marking covers both fields (top and bottom).
+     * This causes a mismatched s->error_count
+     * and a bad error table. Further, the error count goes to
+     * INT_MAX when called for bottom field, because mb_y is
+     * past end by one (callers fault) and resync_mb_y != 0
+     * causes problems for the first MB line, too.
+     */
+    if (!FIELD_PICTURE)
+        ff_er_frame_end(s);
+
+    MPV_frame_end(s);
+
+    h->current_slice=0;
+}
+
 /**
  * Replicates H264 "master" context to thread contexts.
  */
@@ -4047,7 +4076,11 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
 
     first_mb_in_slice= get_ue_golomb(&s->gb);
 
-    if((s->flags2 & CODEC_FLAG2_CHUNKS) && first_mb_in_slice == 0){
+    if(first_mb_in_slice == 0){ //FIXME better field boundary detection
+        if(h0->current_slice && FIELD_PICTURE){
+            field_end(h);
+        }
+
         h0->current_slice = 0;
         if (!s0->first_field)
             s->current_picture_ptr= NULL;
@@ -4223,7 +4256,8 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
         while(h->frame_num !=  h->prev_frame_num &&
               h->frame_num != (h->prev_frame_num+1)%(1<<h->sps.log2_max_frame_num)){
             av_log(NULL, AV_LOG_DEBUG, "Frame num gap %d %d\n", h->frame_num, h->prev_frame_num);
-            frame_start(h);
+            if (frame_start(h) < 0)
+                return -1;
             h->prev_frame_num++;
             h->prev_frame_num %= 1<<h->sps.log2_max_frame_num;
             s->current_picture_ptr->frame_num= h->prev_frame_num;
@@ -4494,9 +4528,6 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
     h->emu_edge_height= (FRAME_MBAFF || FIELD_PICTURE) ? 0 : h->emu_edge_width;
 
     s->avctx->refs= h->sps.ref_frame_count;
-
-    if(!(s->flags2 & CODEC_FLAG2_CHUNKS) && h->slice_num==1)
-        decode_postinit(h);
 
     if(s->avctx->debug&FF_DEBUG_PICT_INFO){
         av_log(h->s.avctx, AV_LOG_DEBUG, "slice:%d %s mb:%d %c%s%s pps:%u frame:%d poc:%d/%d ref:%d/%d qp:%d loop:%d:%d:%d weight:%d%s %s\n",
@@ -4787,11 +4818,6 @@ static int decode_mb_cavlc(H264Context *h){
     int dct8x8_allowed= h->pps.transform_8x8_mode;
 
     mb_xy = h->mb_xy = s->mb_x + s->mb_y*s->mb_stride;
-
-    /* ffdshow custom code */
-    if(s->avctx->thread_count > 1) {
-        s->dsp.clear_blocks(h->mb);
-    }
 
     tprintf(s->avctx, "pic:%d mb:%d/%d\n", h->frame_num, s->mb_x, s->mb_y);
     cbp = 0; /* avoid warning. FIXME: find a solution without slowing
@@ -5871,11 +5897,6 @@ static int decode_mb_cabac(H264Context *h) {
     int dct8x8_allowed= h->pps.transform_8x8_mode;
 
     mb_xy = h->mb_xy = s->mb_x + s->mb_y*s->mb_stride;
-
-    /* ffdshow custom code */
-    if(s->avctx->thread_count > 1) {
-        s->dsp.clear_blocks(h->mb);
-    }
 
     tprintf(s->avctx, "pic:%d mb:%d/%d\n", h->frame_num, s->mb_x, s->mb_y);
     if( h->slice_type_nos != FF_I_TYPE ) {
@@ -7304,6 +7325,9 @@ static int av_noinline decode_picture_timing(H264Context *h){
                     skip_bits(&s->gb, h->sps.time_offset_length); /* time_offset */
             }
         }
+
+        if(s->avctx->debug & FF_DEBUG_PICT_INFO)
+            av_log(s->avctx, AV_LOG_DEBUG, "ct_type:%X pic_struct:%d\n", h->sei_ct_type, h->sei_pic_struct);
     }
     return 0;
 }
@@ -7980,6 +8004,12 @@ static int decode_nal_units(H264Context *h, const uint8_t *buf, int buf_size){
             if((err = decode_slice_header(hx, h)))
                break;
 
+            if (h->current_slice == 1) {
+                if(!(s->flags2 & CODEC_FLAG2_CHUNKS)) {
+                    decode_postinit(h);
+                }
+            }
+
             s->current_picture_ptr->key_frame |=
                     (hx->nal_unit_type == NAL_IDR_SLICE) ||
                     (h->sei_recovery_frame_cnt >= 0);
@@ -8120,7 +8150,7 @@ static int decode_frame(AVCodecContext *avctx,
     }
 
     /* ffdshow custom code (begin) */
-    if(h->is_avc && !h->got_avcC) {
+    if(h->is_avc && !h->got_extradata) {
         int i, cnt, nalsize;
         unsigned char *p = avctx->extradata, *pend=p+avctx->extradata_size;
 
@@ -8130,30 +8160,30 @@ static int decode_frame(AVCodecContext *avctx,
         for (i = 0; i < cnt; i++) {
             nalsize = AV_RB16(p) + 2;
             if(decode_nal_units(h, p, nalsize)  != nalsize) {
-                av_log(avctx, AV_LOG_ERROR, "Decoding sps %d from avcC failed\n", i);
+                av_log(avctx, AV_LOG_ERROR, "Decoding sps %d from extradata failed\n", i);
                 return -1;
             }
             p += nalsize;
         }
-        // Decode pps from avcC
+        // Decode pps from extradata
         for (i = 0; p<pend-2; i++) {
             nalsize = AV_RB16(p) + 2;
             if(decode_nal_units(h, p, nalsize)  != nalsize) {
-                av_log(avctx, AV_LOG_ERROR, "Decoding pps %d from avcC failed\n", i);
+                av_log(avctx, AV_LOG_ERROR, "Decoding pps %d from extradata failed\n", i);
                 return -1;
             }
             p += nalsize;
         }
         // Now store right nal length size, that will be use to parse all other nals
         h->nal_length_size = avctx->nal_length_size?avctx->nal_length_size:4;//((*(((char*)(avctx->extradata))+4))&0x03)+1;
-        // Do not reparse avcC
-        h->got_avcC = 1;
+        // Do not reparse extradata
+        h->got_extradata = 1;
     }
 
-    if(!h->got_avcC && !h->is_avc && s->avctx->extradata_size){
+    if(!h->got_extradata && !h->is_avc && s->avctx->extradata_size){
         if(decode_nal_units(h, s->avctx->extradata, s->avctx->extradata_size) < 0)
             return -1;
-        h->got_avcC = 1;
+        h->got_extradata = 1;
         s->picture_number++;
     }
     /* ffdshow custom code (end) */
@@ -8172,37 +8202,7 @@ static int decode_frame(AVCodecContext *avctx,
 
         if(s->flags2 & CODEC_FLAG2_CHUNKS) decode_postinit(h);
 
-        s->mb_y= 0;
-        ff_report_field_progress((AVFrame*)s->current_picture_ptr, (16*s->mb_height >> FIELD_PICTURE) - 1,
-                                 s->picture_structure==PICT_BOTTOM_FIELD);
-
-        if(!USE_FRAME_THREADING(avctx)){
-            if(!s->dropable) {
-                execute_ref_pic_marking(h, h->mmco, h->mmco_index);
-                h->prev_poc_msb= h->poc_msb;
-                h->prev_poc_lsb= h->poc_lsb;
-            }
-            h->prev_frame_num_offset= h->frame_num_offset;
-            h->prev_frame_num= h->frame_num;
-            if(h->next_output_pic) h->outputed_poc = h->next_output_pic->poc;
-        }
-
-        /*
-         * FIXME: Error handling code does not seem to support interlaced
-         * when slices span multiple rows
-         * The ff_er_add_slice calls don't work right for bottom
-         * fields; they cause massive erroneous error concealing
-         * Error marking covers both fields (top and bottom).
-         * This causes a mismatched s->error_count
-         * and a bad error table. Further, the error count goes to
-         * INT_MAX when called for bottom field, because mb_y is
-         * past end by one (callers fault) and resync_mb_y != 0
-         * causes problems for the first MB line, too.
-         */
-        if (!FIELD_PICTURE)
-            ff_er_frame_end(s);
-
-        MPV_frame_end(s);
+        field_end(h);
 
         if (!h->next_output_pic) {
             /* Wait for second field. */
@@ -8390,8 +8390,6 @@ av_cold void ff_h264_free_context(H264Context *h)
 {
     int i;
 
-    av_freep(&h->rbsp_buffer[0]);
-    av_freep(&h->rbsp_buffer[1]);
     free_tables(h); //FIXME cleanup init stuff perhaps
 
     for(i = 0; i < MAX_SPS_COUNT; i++)
