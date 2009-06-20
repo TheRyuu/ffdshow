@@ -21,29 +21,37 @@
 #include "IffdshowBase.h"
 #include "IffdshowDecVideo.h"
 
-int TimgFilterCrop::autoCropTop = 0,
-    TimgFilterCrop::autoCropBottom = 0,
-    TimgFilterCrop::autoCropLeft = 0,
-    TimgFilterCrop::autoCropRight = 0;
+
+struct TautoCrop
+{
+ long autoCropTop, autoCropBottom, autoCropLeft, autoCropRight;
+ long highWaterTop, highWaterBottom, highWaterLeft, highWaterRight;
+ void clear()
+ {
+  autoCropTop=0;autoCropBottom=0;autoCropLeft=0;autoCropRight=0;
+  highWaterTop=0;highWaterBottom=0;highWaterLeft=0;highWaterRight=0;
+ }
+ TautoCrop() {clear();};
+ TautoCrop(const TautoCrop &Ia)
+ {
+	 autoCropTop=Ia.autoCropTop;autoCropBottom=Ia.autoCropBottom;autoCropLeft=Ia.autoCropLeft;autoCropRight=Ia.autoCropRight;
+  highWaterTop=Ia.highWaterTop;highWaterBottom=Ia.highWaterBottom;highWaterLeft=Ia.highWaterLeft;highWaterRight=Ia.highWaterRight;
+ }
+};
+
+TautoCrop TimgFilterCrop::autoCrop=TautoCrop();
 
 TimgFilterCrop::TimgFilterCrop(IffdshowBase *Ideci,Tfilters *Iparent):TimgFilter(Ideci,Iparent)
 {
  oldSettings.magnificationX=-1;
- autoCropTopStatus = 0;
- autoCropBottomStatus = 0;
- autoCropLeftStatus = 0;
- autoCropRightStatus = 0;
- lastFrameMS=0;
-
- TimgFilterCrop::autoCropBottom=0;
- TimgFilterCrop::autoCropTop=0;
- TimgFilterCrop::autoCropLeft=0;
- TimgFilterCrop::autoCropRight=0;
+ lastFrameMS=0;nextFrameMS=0;
+ autoCrop=TautoCrop();
+ autoCropAnalysisDuration=0;
 }
 
 Trect TimgFilterCrop::calcCrop(const Trect &pictRect,const TcropSettings *cfg)
 {
-	int rcx,rcy,rcdx,rcdy;
+ int rcx,rcy,rcdx,rcdy;
  char init=0;
  unsigned char src0=0;
  switch (cfg->mode)
@@ -68,10 +76,10 @@ Trect TimgFilterCrop::calcCrop(const Trect &pictRect,const TcropSettings *cfg)
    case 3:
    case 4:
    case 5:
-	   rcdx=pictRect.dx-(TimgFilterCrop::autoCropLeft+TimgFilterCrop::autoCropRight);
-	   rcdy=pictRect.dy-(TimgFilterCrop::autoCropTop+TimgFilterCrop::autoCropBottom);
-	   rcx=TimgFilterCrop::autoCropLeft;
-	   rcy=TimgFilterCrop::autoCropTop;
+	   rcdx=pictRect.dx-(autoCrop.autoCropLeft+autoCrop.autoCropRight);
+	   rcdy=pictRect.dy-(autoCrop.autoCropTop+autoCrop.autoCropBottom);
+	   rcx=autoCrop.autoCropLeft;
+	   rcy=autoCrop.autoCropTop;
 	   if (rcdx<64) rcdx=64;
 	   if (rcdy<16) rcdy=16;
    default:
@@ -100,34 +108,50 @@ Trect TimgFilterCrop::calcCrop(const Trect &pictRect,TcropSettings *cfg, TffPict
 	   {
 		   unsigned int msec=0;
 		   deciV->getCurrentFrameTimeMS(&msec);
-		   if ((cfg->cropStopScan == 0 || msec <= (unsigned int)cfg->cropStopScan) &&
-			   ((lastFrameMS >= msec && lastFrameMS-msec >= (unsigned int)cfg->cropRefreshDelay)
-			   || (lastFrameMS < msec && msec-lastFrameMS >= (unsigned int)cfg->cropRefreshDelay)))
+		   if ((cfg->cropStopScan == 0 || autoCropAnalysisDuration <= (long)cfg->cropStopScan) &&
+			   (abs(lastFrameMS-(long)msec) >= (long)cfg->cropRefreshDelay || (nextFrameMS != 0 && nextFrameMS < (long)msec)))
 		   {
-			   lastFrameMS=msec;
-			   init(*ppict,cfg->full,cfg->half);
-			   getCur(FF_CSPS_MASK_YUV_PLANAR,*ppict,COPYMODE_FULL,&src,NULL,NULL,NULL);
-			   if (cfg->mode==3 || cfg->mode ==5)
-			   {
-				   calcAutoCropVertical(cfg, src, 0, 1, &(TimgFilterCrop::autoCropTop), &autoCropTopStatus); // Calculate autocrop from top to bottom
-				   calcAutoCropVertical(cfg, src, dy1[0]-1, -1, &(TimgFilterCrop::autoCropBottom), &autoCropBottomStatus); // Calculate autocrop from bottom to top
-			   }
-			   if (cfg->mode==4 || cfg->mode ==5)
-			   {
-				   calcAutoCropHorizontal(cfg, src, 0, 1, &(TimgFilterCrop::autoCropLeft), &autoCropLeftStatus); // Calculate autocrop from left to right
-				   calcAutoCropHorizontal(cfg, src, dx1[0]-1, -1, &(TimgFilterCrop::autoCropRight), &autoCropRightStatus); // Calculate autocrop from right to left
-			   }
-			   DPRINTF(_l("Ms : %i, Top %i, Bottom %i, Left %i, Right %i"),msec, TimgFilterCrop::autoCropTop, TimgFilterCrop::autoCropBottom,
-                   TimgFilterCrop::autoCropLeft, TimgFilterCrop::autoCropRight);
-		   }		   
-	   }
-	   rcdx=pictRect.dx-(TimgFilterCrop::autoCropLeft+TimgFilterCrop::autoCropRight);
-	   rcdy=pictRect.dy-(TimgFilterCrop::autoCropTop+TimgFilterCrop::autoCropBottom);
-	   rcx=TimgFilterCrop::autoCropLeft;
-	   rcy=TimgFilterCrop::autoCropTop;
-	   if (rcdx<64) rcdx=64;
-	   if (rcdy<16) rcdy=16;
-	   break;
+      // Analysis duration not increased if we are updating frame by frame
+      if (nextFrameMS ==0 && cfg->cropStopScan != 0)
+       autoCropAnalysisDuration += cfg->cropRefreshDelay;
+      lastFrameMS=msec; nextFrameMS=0;
+      init(*ppict,cfg->full,cfg->half);
+      getCur(FF_CSPS_MASK_YUV_PLANAR,*ppict,COPYMODE_FULL,&src,NULL,NULL,NULL);
+      TautoCrop newAutoCrop=TautoCrop();;
+      if (cfg->mode==3 || cfg->mode ==5)
+      {
+       calcAutoCropVertical(cfg, src, 0, 1, &(newAutoCrop.autoCropTop)); // Calculate autocrop from top to bottom
+       calcAutoCropVertical(cfg, src, dy1[0]-1, -1, &(newAutoCrop.autoCropBottom)); // Calculate autocrop from bottom to top
+      }
+      if (cfg->mode==4 || cfg->mode ==5)
+      {
+       calcAutoCropHorizontal(cfg, src, 0, 1, &(newAutoCrop.autoCropLeft)); // Calculate autocrop from left to right
+       calcAutoCropHorizontal(cfg, src, dx1[0]-1, -1, &(newAutoCrop.autoCropRight)); // Calculate autocrop from right to left
+      }
+
+      DPRINTF(_l("\nCalc, time : %i, Top %i, Bottom %i, Left %i, Right %i"),msec,newAutoCrop.autoCropTop,newAutoCrop.autoCropBottom,
+       newAutoCrop.autoCropLeft, newAutoCrop.autoCropRight);
+
+      // If autocrop values change, change them gradually
+      if (computeAutoCropChange(autoCrop.autoCropLeft, &(autoCrop.highWaterLeft), pictRect.dx, &(newAutoCrop.autoCropLeft)) |
+       computeAutoCropChange(autoCrop.autoCropRight, &(autoCrop.highWaterRight), pictRect.dx, &(newAutoCrop.autoCropRight)) |
+       computeAutoCropChange(autoCrop.autoCropTop, &(autoCrop.highWaterTop), pictRect.dy, &(newAutoCrop.autoCropTop)) |
+       computeAutoCropChange(autoCrop.autoCropBottom, &(autoCrop.highWaterBottom), pictRect.dy, &(newAutoCrop.autoCropBottom)))
+       nextFrameMS=msec+50; // gradual application of autocrop
+
+      // Copy back values to static variables (the crop filter has both static & dynamic parts)
+      autoCrop=TautoCrop(newAutoCrop);
+      DPRINTF(_l("Autocrop, time : %i, Top %i, Bottom %i, Left %i, Right %i"),msec,autoCrop.autoCropTop,autoCrop.autoCropBottom,
+       autoCrop.autoCropLeft, autoCrop.autoCropRight);
+     }
+    }
+    rcdx=pictRect.dx-(autoCrop.autoCropLeft+autoCrop.autoCropRight);
+    rcdy=pictRect.dy-(autoCrop.autoCropTop+autoCrop.autoCropBottom);
+    rcx=autoCrop.autoCropLeft;
+    rcy=autoCrop.autoCropTop;
+    if (rcdx<64) rcdx=64;
+    if (rcdy<16) rcdy=16;
+    break;
    default:
     return pictRect;
   }
@@ -138,7 +162,36 @@ Trect TimgFilterCrop::calcCrop(const Trect &pictRect,TcropSettings *cfg, TffPict
  return Trect(rcx,rcy,rcdx,rcdy);
 }
 
-void TimgFilterCrop::calcAutoCropVertical(TcropSettings *cfg, const unsigned char *src, unsigned int y0, int stepy, int *autoCrop, int *autoCropStatus)
+bool TimgFilterCrop::computeAutoCropChange(long oldValue, long *highWaterp, long max, long *newValuep)
+{
+ //if (oldValue == 0) return false; // First change : immediate application
+ // If autocrop values change after they were initialized, change them again but gradually
+ if (oldValue == *newValuep) return false;
+ if (oldValue > *newValuep) // Decreasing border
+ {
+  *newValuep=oldValue-1;
+  // Set highwater if a border has been found beyond 15 percent of the screen size
+  if (oldValue > max/15)
+   *highWaterp=*newValuep;
+ }
+ else if (*highWaterp==0 || oldValue<*highWaterp) // Increasing border
+ {
+  // Set highwater if a border has been found beyond 15 percent of the screen size
+  if (*newValuep > max/15)
+   *highWaterp=*newValuep;
+
+  *newValuep=oldValue+1;
+ }
+ else // Trying to increase a border beyond highwater
+ {
+  *newValuep=oldValue;
+  return false;
+ }
+ 
+ return true;
+}
+
+void TimgFilterCrop::calcAutoCropVertical(TcropSettings *cfg, const unsigned char *src, unsigned int y0, int stepy, long *autoCrop)
 {
 	bool first=true;
 	int32_t avg0=0;
@@ -149,7 +202,7 @@ void TimgFilterCrop::calcAutoCropVertical(TcropSettings *cfg, const unsigned cha
 	{
      unsigned int nbPixelsAnalyzed=0; // Number of pixels analyzed per line (column actually)
      float s2=0, s=0; // Sum of levels^2, sum of levels
-     for (x=0;x<stride1[0];x+=step) 
+     for (x=0;x<(unsigned int)stride1[0];x+=step) 
 	 {
        unsigned int pos=x+stride1[0]*y;
        s2 += src[pos]*src[pos];
@@ -173,7 +226,7 @@ void TimgFilterCrop::calcAutoCropVertical(TcropSettings *cfg, const unsigned cha
        continue;
       }
 
-      if ((float)abs(avg0-avg)*100/avg > (float) cfg->cropTolerance) // Luminance too different from reference line
+      if ((float)abs(avg0-avg)*100/avg > (float) cfg->cropTolerance*0.8) // Luminance too different from reference line
        break;
 
       if (stdev > cfg->cropTolerance) // Too much variation of luminance for this line
@@ -181,24 +234,16 @@ void TimgFilterCrop::calcAutoCropVertical(TcropSettings *cfg, const unsigned cha
 	}
 	// If crop result is more than 40% of the screen, give up (means that it is a blank frame)
 	if ((float)abs((float)y-y0)/(float)dy1[0] < 0.4)
-	{
-		if (*autoCropStatus == 0) // Autocrop not done yet
-		{
-			*autoCrop=abs((float)y-y0);
-			//*autoCropStatus = 1; // Now crop can only done in reduction not in growth
-		}
-		else if ((int)abs((float)y-y0) < *autoCrop)
-			*autoCrop=abs((float)y-y0);
-	}
+	  *autoCrop=abs((float)y-y0);
 }
 
-void TimgFilterCrop::calcAutoCropHorizontal(TcropSettings *cfg, const unsigned char *src, unsigned int x0, int stepx, int *autoCrop, int *autoCropStatus)
+void TimgFilterCrop::calcAutoCropHorizontal(TcropSettings *cfg, const unsigned char *src, unsigned int x0, int stepx, long *autoCrop)
 {
 	bool first=true;
 	int32_t avg0=0;
     int32_t stdev0=0;
 	unsigned int x,y;
-	int step=1; // Analyze every 4 pixels to gain speed
+	int step=4; // Analyze every 4 pixels to gain speed
 	for (x=x0;(x-x0)*stepx<dx1[0]*0.5;x+=stepx) // Left <-> right, scan limited to 50% of the screen
 	{
         unsigned int nbPixelsAnalyzed=0; // Number of pixels analyzed per line (column actually)
@@ -225,7 +270,7 @@ void TimgFilterCrop::calcAutoCropHorizontal(TcropSettings *cfg, const unsigned c
          }
          continue;
         }
-        if ((float)abs(avg0-avg)*100/avg > (float) cfg->cropTolerance) // Luminance too different from reference line
+        if ((float)abs(avg0-avg)*100/avg > (float) cfg->cropTolerance*0.8) // Luminance too different from reference line
          break;
 
         if (stdev > cfg->cropTolerance) // Too much variation of luminance for this line
@@ -233,15 +278,7 @@ void TimgFilterCrop::calcAutoCropHorizontal(TcropSettings *cfg, const unsigned c
 	}
 	// If crop result is more than 40% of the screen, give up (means that it is a blank frame)cd 
 	if ((float)abs((float)x-x0)/(float)dx1[0] < 0.4)
-	{
-		if (*autoCropStatus == 0) // Autocrop not done yet
-		{
-			*autoCrop=abs((float)x-x0);
-			//*autoCropStatus = 1; // Now crop can only done in reduction not in growth
-		}
-		else if ((int)abs((float)x-x0) < *autoCrop)
-			*autoCrop=abs((float)x-x0);
-	}
+     *autoCrop=abs((float)x-x0);
 }
 
 void TimgFilterCrop::onSizeChange(void)
@@ -266,27 +303,20 @@ HRESULT TimgFilterCrop::process(TfilterQueue::iterator it,TffPict &pict,const Tf
  TcropSettings *cfg=(TcropSettings*)cfg0;
  //init(pict,0,0);
  if (!cfg->equal(oldSettings) || pict.rectClip!=oldRect 
-	 || (cfg->mode>=3 || cfg->mode<=5))
+  || (cfg->mode>=3 && cfg->mode<=5))
+ {
+  oldRect=pict.rectClip;
+  if (cfg->mode != oldSettings.mode) // If config has changed, reinitialize autoCrop settings
   {
-   oldSettings=*cfg;
-   oldRect=pict.rectClip;
-   if (cfg->mode != oldSettings.mode) // If config has changed, reinitialize autoCrop settings
-   {
-		autoCropTopStatus = 0;
-		autoCropBottomStatus = 0;
-		autoCropLeftStatus = 0;
-		autoCropRightStatus = 0;
-		lastFrameMS=0;
-		TimgFilterCrop::autoCropBottom=0;
-		TimgFilterCrop::autoCropTop=0;
-		TimgFilterCrop::autoCropLeft=0;
-		TimgFilterCrop::autoCropRight=0;
-   }
-   rectCrop=calcCrop(pict.rectClip,cfg, &pict);
-   }
+   lastFrameMS=0;nextFrameMS=0;autoCropAnalysisDuration;
+   autoCrop.clear();
+  }
+  rectCrop=calcCrop(pict.rectClip,cfg, &pict);
+ }
+ oldSettings=*cfg;
 
-  csp_yuv_adj_to_plane(pict.csp,&pict.cspInfo,pict.rectFull.dy,pict.data,pict.stride);
-  pict.rectClip=Trect(rectCrop,pict.rectClip.sar);pict.calcDiff();  
+ csp_yuv_adj_to_plane(pict.csp,&pict.cspInfo,pict.rectFull.dy,pict.data,pict.stride);
+ pict.rectClip=Trect(rectCrop,pict.rectClip.sar);pict.calcDiff();  
  return parent->deliverSample(++it,pict);
 }
 

@@ -14,7 +14,6 @@ public:
  int mode;
  int magnificationX,magnificationY,magnificationLocked;
  int cropTop,cropBottom,cropLeft,cropRight;
- //int autoCropTop, autoCropBottom, autoCropLeft, autoCropRight;
  int panscanZoom,panscanX,panscanY;
  int cropTolerance;
  int cropRefreshDelay, cropStopScan;

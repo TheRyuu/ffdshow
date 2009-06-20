@@ -5,24 +5,26 @@
 #include "TcropSettings.h"
 #include "TimgFilterExpand.h"
 
+struct TautoCrop;
 DECLARE_FILTER(TimgFilterCrop,public,TimgFilter)
 private:
  Trect rectCrop,oldRect;
  TcropSettings oldSettings;
- unsigned int lastFrameMS;
- int autoCropTopStatus, autoCropBottomStatus, autoCropLeftStatus, autoCropRightStatus;
+ long lastFrameMS,nextFrameMS;
+ long autoCropAnalysisDuration;
 protected:
  virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const {return FF_CSPS_MASK&~(FF_CSP_NV12|FF_CSP_CLJR);}
  virtual void onSizeChange(void);
- static int autoCropTop, autoCropBottom, autoCropLeft, autoCropRight; // Can only be static because calcProp is static
+ virtual bool computeAutoCropChange(long oldValue, long *highWaterp, long max, long *newValuep);
+ static TautoCrop autoCrop; // Can only be static because calcProp is static
 public:
  TimgFilterCrop(IffdshowBase *Ideci,Tfilters *Iparent);
  virtual bool getOutputFmt(TffPictBase &pict,const TfilterSettingsVideo *cfg0);
  virtual HRESULT process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0);
  static Trect calcCrop(const Trect &pictRect,const TcropSettings *cfg);
  virtual Trect calcCrop(const Trect &pictRect,TcropSettings *cfg, TffPict *ppict);
- virtual void calcAutoCropVertical(TcropSettings *cfg, const unsigned char *src, unsigned int y0, int stepy, int *autoCrop, int *autoCropStatus);
- virtual void calcAutoCropHorizontal(TcropSettings *cfg, const unsigned char *src, unsigned int x0, int stepx, int *autoCrop, int *autoCropStatus);
+ virtual void calcAutoCropVertical(TcropSettings *cfg, const unsigned char *src, unsigned int y0, int stepy, long *autoCrop);
+ virtual void calcAutoCropHorizontal(TcropSettings *cfg, const unsigned char *src, unsigned int x0, int stepx, long *autoCrop);
 };
 
 DECLARE_FILTER(TimgFilterCropExpand,public,TimgFilterExpand)

@@ -70,7 +70,7 @@ TcropSettings::TcropSettings(TintStrColl *Icoll,TfilterIDFFs *filters):TfilterSe
    IDFF_panscanY           ,&TcropSettings::panscanY           ,-100,100,_l(""),1,
      _l("panscanY"),0,
    IDFF_cropTolerance      ,&TcropSettings::cropTolerance      ,0,2048,_l(""),1,
-     _l("cropTolerance"),40,
+     _l("cropTolerance"),30,
    IDFF_cropRefreshDelay   ,&TcropSettings::cropRefreshDelay   ,0,3600000,_l(""),1,
      _l("cropRefreshDelay"),5000,
    IDFF_cropStopScan       ,&TcropSettings::cropStopScan       ,0,3600000,_l(""),1,
