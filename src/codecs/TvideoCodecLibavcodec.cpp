@@ -193,7 +193,7 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
     if (extradata->size>0 && (codecId!=CODEC_ID_H264 || fcc==FOURCC_AVC1)) {
         avctx->extradata_size=(int)extradata->size;
         avctx->extradata=extradata->data;
-        sendextradata=mpeg1_codec(codecId);
+        sendextradata=mpeg12_codec(codecId);
         if (fcc==FOURCC_AVC1 && mt.formattype==FORMAT_MPEG2Video) {
             const MPEG2VIDEOINFO *mpeg2info=(const MPEG2VIDEOINFO*)mt.pbFormat;
             avctx->nal_length_size=mpeg2info->dwFlags;
@@ -450,10 +450,14 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
         avctx->reordered_opaque2 = rtStop;
         avctx->reordered_opaque3 = size;
 
-        if (sendextradata) {
+        if (sendextradata && extradata->data && extradata->size > 0) {
             used_bytes=libavcodec->avcodec_decode_video(avctx,frame,&got_picture,extradata->data,(int)extradata->size);
             sendextradata=false;
             if (used_bytes>0) used_bytes=0;
+            if (mpeg12_codec(codecId)) {
+                avctx->extradata = NULL;
+                avctx->extradata_size = 0;
+            }
         } else {
             unsigned int neededsize=size+FF_INPUT_BUFFER_PADDING_SIZE;
 
@@ -597,7 +601,7 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
                     pict.rtStart = frame->reordered_opaque;
                     pict.rtStop = frame->reordered_opaque2;
                     pict.srcSize = (size_t)frame->reordered_opaque3;
-                } else if (isdvdproc/*mpeg12_codec(codecId)*/) {
+                } else if (mpeg12_codec(codecId)) {
                     if(frametype == FRAME_TYPE::I)
                         pict.rtStart = frame->reordered_opaque;
                     else
