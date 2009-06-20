@@ -1933,7 +1933,9 @@ static void free_tables(H264Context *h){
         av_freep(&hx->top_borders[1]);
         av_freep(&hx->top_borders[0]);
         av_freep(&hx->s.obmc_scratchpad);
-        if (h != hx) av_freep(&hx); // ffdshow custom code (I should submit a patch to FFmpeg)
+        av_freep(&hx->rbsp_buffer[1]);
+        av_freep(&hx->rbsp_buffer[0]);
+        if (i) av_freep(&h->thread_context[i]);
     }
 }
 
