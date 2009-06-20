@@ -1226,6 +1226,7 @@ static int mpeg_decode_postinit(AVCodecContext *avctx){
                     1.0/ff_mpeg1_aspect[s->aspect_ratio_info], 255);
 
         }else{//MPEG-2
+#if 0 // ffdshow custom code (move this block to mpeg_decode_sequence_extension)
         //MPEG-2 fps
             av_reduce(
                 &s->avctx->time_base.den,
@@ -1233,6 +1234,7 @@ static int mpeg_decode_postinit(AVCodecContext *avctx){
                 ff_frame_rate_tab[s->frame_rate_index].num * s1->frame_rate_ext.num,
                 ff_frame_rate_tab[s->frame_rate_index].den * s1->frame_rate_ext.den,
                 1<<30);
+#endif
         //MPEG-2 aspect
             if(s->aspect_ratio_info > 1){
                 //we ignore the spec here as reality does not match the spec, see for example
@@ -1365,6 +1367,15 @@ static void mpeg_decode_sequence_extension(Mpeg1Context *s1)
 
     s1->frame_rate_ext.num = get_bits(&s->gb, 2)+1;
     s1->frame_rate_ext.den = get_bits(&s->gb, 5)+1;
+    // ffdshow custom code begin (moved from mpeg_decode_postinit)
+    // MPEG-2 fps
+    av_reduce(
+        &s->avctx->time_base.den,
+        &s->avctx->time_base.num,
+        ff_frame_rate_tab[s->frame_rate_index].num * s1->frame_rate_ext.num,
+        ff_frame_rate_tab[s->frame_rate_index].den * s1->frame_rate_ext.den,
+        1<<30);
+    // ffdshow custom code end
 
     dprintf(s->avctx, "sequence extension\n");
     s->codec_id= s->avctx->codec_id= CODEC_ID_MPEG2VIDEO;
