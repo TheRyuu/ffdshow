@@ -21,7 +21,7 @@
  */
 
 /**
- * @file eval.h
+ * @file libavcodec/eval.h
  * eval header.
  */
 
@@ -73,5 +73,11 @@ AVEvalExpr * ff_parse(const char *s, const char * const *const_name,
  */
 double ff_parse_eval(AVEvalExpr * e, const double *const_value, void *opaque);
 void ff_eval_free(AVEvalExpr * e);
+
+/** strtod() function extended with 'k', 'M', 'G', 'ki', 'Mi', 'Gi' and 'B'
+ * postfixes.  This allows using f.e. kB, MiB, G and B as a postfix. This
+ * function assumes that the unit of numbers is bits not bytes.
+ */
+double av_strtod(const char *numstr, char **tail);
 
 #endif /* AVCODEC_EVAL_H */

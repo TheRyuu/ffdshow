@@ -22,7 +22,7 @@
  */
 
 /**
- * @file eval.c
+ * @file libavcodec/eval.c
  * simple arithmetic expression evaluator.
  *
  * see http://joe.hotchkiss.com/programming/eval/eval.html
@@ -94,16 +94,12 @@ static const int8_t si_prefixes['z' - 'E' + 1]={
 static const int8_t si_prefixes['z' - 'E' + 1];
 #endif
 
-/** strtod() function extended with 'k', 'M', 'G', 'ki', 'Mi', 'Gi' and 'B'
- * postfixes.  This allows using f.e. kB, MiB, G and B as a postfix. This
- * function assumes that the unit of numbers is bits not bytes.
- */
-static double av_strtod(const char *name, char **tail) {
+double av_strtod(const char *numstr, char **tail) {
     double d;
     char *next;
-    d = strtod(name, &next);
+    d = strtod(numstr, &next);
     /* if parsing succeeded, check for and interpret postfixes */
-    if (next!=name) {
+    if (next!=numstr) {
 
         if(*next >= 'E' && *next <= 'z'){
             int e= si_prefixes[*next - 'E'];

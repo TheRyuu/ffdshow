@@ -2147,6 +2147,7 @@ static av_cold int decode_init(AVCodecContext *avctx){
     else
         avctx->pix_fmt= PIX_FMT_YUV420P;
     /* ffdshow custom code (end) */
+    avctx->chroma_sample_location = AVCHROMA_LOC_LEFT;
 
     decode_init_vlc();
 
@@ -8283,8 +8284,6 @@ av_cold void ff_h264_free_context(H264Context *h)
 {
     int i;
 
-    av_freep(&h->rbsp_buffer[0]);
-    av_freep(&h->rbsp_buffer[1]);
     free_tables(h); //FIXME cleanup init stuff perhaps
 
     for(i = 0; i < MAX_SPS_COUNT; i++)
