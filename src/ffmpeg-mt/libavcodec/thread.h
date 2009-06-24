@@ -85,7 +85,7 @@ void ff_await_frame_progress(AVFrame *f, int progress);
 void ff_report_field_progress(AVFrame *f, int progress, int field);
 
 /**
- * Equivaent of ff_await_frame_progress() for pictures whose fields
+ * Equivalent of ff_await_frame_progress() for pictures whose fields
  * are stored in seperate frames.
  */
 void ff_await_field_progress(AVFrame *f, int progress, int field);
