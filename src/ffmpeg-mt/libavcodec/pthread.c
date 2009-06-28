@@ -369,6 +369,9 @@ static int submit_frame(PerThreadContext * p, const uint8_t *buf, int buf_size)
     if (!buf_size && !(codec->capabilities & CODEC_CAP_DELAY)) return 0;
 
     pthread_mutex_lock(&p->mutex);
+
+    handle_delayed_releases(p);
+
     if (prev_thread) {
         if (prev_thread->state == STATE_SETTING_UP) {
             pthread_mutex_lock(&prev_thread->progress_mutex);
@@ -386,8 +389,6 @@ static int submit_frame(PerThreadContext * p, const uint8_t *buf, int buf_size)
     memcpy(p->buf, buf, buf_size);
     memset(p->buf + buf_size, 0, FF_INPUT_BUFFER_PADDING_SIZE);
     p->buf_size = buf_size;
-
-    handle_delayed_releases(p);
 
     p->state = STATE_SETTING_UP;
     pthread_cond_signal(&p->input_cond);
@@ -470,6 +471,9 @@ void ff_report_field_progress(AVFrame *f, int n, int field)
 
     if (progress[field] >= n) return;
 
+    if (f->owner->debug&FF_DEBUG_THREADS)
+        av_log(f->owner, AV_LOG_DEBUG, "%p finished %d field %d\n", progress, n, field);
+
     pthread_mutex_lock(&p->progress_mutex);
     progress[field] = n;
     pthread_cond_broadcast(&p->progress_cond);
@@ -482,6 +486,9 @@ void ff_await_field_progress(AVFrame *f, int n, int field)
     int *progress = f->thread_opaque;
 
     if (progress[field] >= n) return;
+
+    if (f->owner->debug&FF_DEBUG_THREADS)
+        av_log(f->owner, AV_LOG_DEBUG, "thread awaiting %d field %d from %p\n", n, field, progress);
 
     pthread_mutex_lock(&p->progress_mutex);
     while (progress[field] < n)

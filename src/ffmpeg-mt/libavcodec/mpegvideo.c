@@ -1812,7 +1812,11 @@ void ff_draw_horiz_band(MpegEncContext *s, int y, int h){
         y <<= 1;
     }
 
-    if (s->unrestricted_mv && !s->intra_only && !(s->flags&CODEC_FLAG_EMU_EDGE)) {
+    if (1
+       && s->unrestricted_mv
+       && s->current_picture.reference
+       && !s->intra_only
+       && !(s->flags&CODEC_FLAG_EMU_EDGE)) {
         int sides = 0, edge_h;
         if (y==0) sides |= EDGE_TOP;
         if (y + h >= s->v_edge_pos) sides |= EDGE_BOTTOM;
