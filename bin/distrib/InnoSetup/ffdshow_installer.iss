@@ -1,10 +1,10 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision           = '2894'
+#define tryout_revision           = '2920'
 
 #define buildyear                 = '2009'
-#define buildmonth                =   '04'
-#define buildday                  =   '27'
+#define buildmonth                =   '06'
+#define buildday                  =   '28'
 
 ; Build specific options
 #define localize                  = True
@@ -53,7 +53,7 @@
   #define outputdir              = '..\..\..\..\'
 #elif PREF_CLSID_ICL
   #define sse_required           = True
-  #define filename_suffix        = '_clsid_sse_icl10'
+  #define filename_suffix        = '_clsid_icl10'
   #define bindir                 = '..\..\x86'
   #define outputdir              = '..\..\..\..\'
 #elif PREF_CLSID_X64
