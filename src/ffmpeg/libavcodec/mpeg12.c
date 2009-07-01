@@ -1870,7 +1870,7 @@ static int slice_decode_thread(AVCodecContext *c, void *arg){
 
 /**
  * Handles slice ends.
- * @return 1 if it seems to be the last slice
+ * @return sizeof(AVFrame) if a frame is output, 0 otherwise
  */
 static int slice_end(AVCodecContext *avctx, AVFrame *pict)
 {
@@ -1893,6 +1893,7 @@ static int slice_end(AVCodecContext *avctx, AVFrame *pict)
         if (s->pict_type == FF_B_TYPE || s->low_delay) {
             *pict= *(AVFrame*)s->current_picture_ptr;
             ff_print_debug_info(s, pict);
+            return sizeof(*pict);
         } else {
             s->picture_number++;
             /* latency of 1 frame for I- and P-frames */
@@ -1900,13 +1901,11 @@ static int slice_end(AVCodecContext *avctx, AVFrame *pict)
             if (s->last_picture_ptr != NULL) {
                 *pict= *(AVFrame*)s->last_picture_ptr;
                  ff_print_debug_info(s, pict);
+                 return sizeof(*pict);
             }
         }
-
-        return 1;
-    } else {
-        return 0;
     }
+    return 0;
 }
 
 static int mpeg1_decode_sequence(AVCodecContext *avctx,
@@ -2250,10 +2249,8 @@ static int decode_chunks(AVCodecContext *avctx,
                     for(i=0; i<s->slice_count; i++)
                         s2->error_count += s2->thread_context[i]->error_count;
                 }
-                if (slice_end(avctx, picture)) {
-                    if(s2->last_picture_ptr || s2->low_delay) //FIXME merge with the stuff in mpeg_decode_slice
-                        *data_size = sizeof(AVPicture);
-                }
+
+                *data_size = slice_end(avctx, picture);
             }
             s2->pict_type= 0;
             return FFMAX(0, buf_ptr - buf - s2->parse_context.last_index);
