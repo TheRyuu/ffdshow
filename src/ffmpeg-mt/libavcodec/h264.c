@@ -2295,6 +2295,7 @@ static av_cold int decode_init(AVCodecContext *avctx){
     // set defaults
 //    s->decode_mb= ff_h263_decode_mb;
     s->quarter_sample = 1;
+    if(!avctx->has_b_frames)
     s->low_delay= 1;
 
     /* ffdshow custom code (begin) */
@@ -2443,6 +2444,7 @@ static int frame_start(H264Context *h){
      * See decode_nal_units().
      */
     s->current_picture_ptr->key_frame= 0;
+    s->current_picture_ptr->mmco_reset= 0;
 
     assert(s->linesize && s->uvlinesize);
 
@@ -2602,12 +2604,12 @@ static void decode_postinit(H264Context *h){
 
     out = h->delayed_pic[0];
     out_idx = 0;
-    for(i=1; h->delayed_pic[i] && (h->delayed_pic[i]->poc && !h->delayed_pic[i]->key_frame); i++)
+    for(i=1; h->delayed_pic[i] && !h->delayed_pic[i]->key_frame && !h->delayed_pic[i]->mmco_reset; i++)
         if(h->delayed_pic[i]->poc < out->poc){
             out = h->delayed_pic[i];
             out_idx = i;
         }
-    cross_idr = !h->delayed_pic[0]->poc || !!h->delayed_pic[i] || h->delayed_pic[0]->key_frame;
+    cross_idr = !!h->delayed_pic[i] || h->delayed_pic[0]->key_frame || h->delayed_pic[0]->mmco_reset;
 
     out_of_order = !cross_idr && out->poc < h->outputed_poc;
 
@@ -3512,7 +3514,6 @@ static void flush_dpb(AVCodecContext *avctx){
     h->outputed_poc= INT_MIN;
     h->prev_interlaced_frame = 1;
     idr(h);
-    h->prev_poc_msb = 1<<30; // to avoid negative POC unless we get a real IDR.
     if(h->s.current_picture_ptr)
         h->s.current_picture_ptr->reference= 0;
     h->s.first_field= 0;
@@ -3725,6 +3726,7 @@ static int execute_ref_pic_marking(H264Context *h, MMCO *mmco, int mmco_count){
             h->poc_msb=
             h->frame_num=
             s->current_picture_ptr->frame_num= 0;
+            s->current_picture_ptr->mmco_reset=1;
             break;
         default: assert(0);
         }
@@ -7934,7 +7936,7 @@ static int decode_nal_units(H264Context *h, const uint8_t *buf, int buf_size){
             nalsize = 0;
             for(i = 0; i < h->nal_length_size; i++)
                 nalsize = (nalsize << 8) | buf[buf_index++];
-            if(nalsize <= 1 || (nalsize+buf_index > buf_size)){
+            if(nalsize <= 1 || nalsize > buf_size - buf_index){
                 if(nalsize == 1){
                     buf_index++;
                     continue;
@@ -8004,15 +8006,16 @@ static int decode_nal_units(H264Context *h, const uint8_t *buf, int buf_size){
             if((err = decode_slice_header(hx, h)))
                break;
 
+            s->current_picture_ptr->key_frame |=
+                    (hx->nal_unit_type == NAL_IDR_SLICE) ||
+                    (h->sei_recovery_frame_cnt >= 0);
+
             if (h->current_slice == 1) {
                 if(!(s->flags2 & CODEC_FLAG2_CHUNKS)) {
                     decode_postinit(h);
                 }
             }
 
-            s->current_picture_ptr->key_frame |=
-                    (hx->nal_unit_type == NAL_IDR_SLICE) ||
-                    (h->sei_recovery_frame_cnt >= 0);
             if(hx->redundant_pic_count==0 && hx->s.hurry_up < 5
                && (avctx->skip_frame < AVDISCARD_NONREF || hx->nal_ref_idc)
                && (avctx->skip_frame < AVDISCARD_BIDIR  || hx->slice_type_nos!=FF_B_TYPE)
@@ -8132,7 +8135,7 @@ static int decode_frame(AVCodecContext *avctx,
 //FIXME factorize this with the output code
         out = h->delayed_pic[0];
         out_idx = 0;
-        for(i=1; h->delayed_pic[i] && (h->delayed_pic[i]->poc && !h->delayed_pic[i]->key_frame); i++)
+        for(i=1; h->delayed_pic[i] && !h->delayed_pic[i]->key_frame && !h->delayed_pic[i]->mmco_reset; i++)
             if(h->delayed_pic[i]->poc < out->poc){
                 out = h->delayed_pic[i];
                 out_idx = i;
@@ -8157,26 +8160,27 @@ static int decode_frame(AVCodecContext *avctx,
         h->nal_length_size = 2;
         cnt = 1;
 
+        // Decode sps from avcC
         for (i = 0; i < cnt; i++) {
             nalsize = AV_RB16(p) + 2;
             if(decode_nal_units(h, p, nalsize)  != nalsize) {
-                av_log(avctx, AV_LOG_ERROR, "Decoding sps %d from extradata failed\n", i);
+                av_log(avctx, AV_LOG_ERROR, "Decoding sps %d from avcC failed\n", i);
                 return -1;
             }
             p += nalsize;
         }
-        // Decode pps from extradata
+        // Decode pps from avcC
         for (i = 0; p<pend-2; i++) {
             nalsize = AV_RB16(p) + 2;
             if(decode_nal_units(h, p, nalsize)  != nalsize) {
-                av_log(avctx, AV_LOG_ERROR, "Decoding pps %d from extradata failed\n", i);
+                av_log(avctx, AV_LOG_ERROR, "Decoding pps %d from avcC failed\n", i);
                 return -1;
             }
             p += nalsize;
         }
         // Now store right nal length size, that will be use to parse all other nals
         h->nal_length_size = avctx->nal_length_size?avctx->nal_length_size:4;//((*(((char*)(avctx->extradata))+4))&0x03)+1;
-        // Do not reparse extradata
+        // Do not reparse avcC
         h->got_extradata = 1;
     }
 

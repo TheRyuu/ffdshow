@@ -2139,6 +2139,7 @@ static av_cold int decode_init(AVCodecContext *avctx){
     // set defaults
 //    s->decode_mb= ff_h263_decode_mb;
     s->quarter_sample = 1;
+    if(!avctx->has_b_frames)
     s->low_delay= 1;
 
     /* ffdshow custom code (begin) */
@@ -7724,7 +7725,7 @@ static int decode_nal_units(H264Context *h, const uint8_t *buf, int buf_size){
             nalsize = 0;
             for(i = 0; i < h->nal_length_size; i++)
                 nalsize = (nalsize << 8) | buf[buf_index++];
-            if(nalsize <= 1 || (nalsize+buf_index > buf_size)){
+            if(nalsize <= 1 || nalsize > buf_size - buf_index){
                 if(nalsize == 1){
                     buf_index++;
                     continue;
@@ -7809,9 +7810,12 @@ static int decode_nal_units(H264Context *h, const uint8_t *buf, int buf_size){
             init_get_bits(&hx->s.gb, ptr, bit_length);
             hx->intra_gb_ptr=
             hx->inter_gb_ptr= NULL;
+
+            if ((err = decode_slice_header(hx, h)) < 0)
+                break;
+
             hx->s.data_partitioning = 1;
 
-            err = decode_slice_header(hx, h);
             break;
         case NAL_DPB:
             init_get_bits(&hx->intra_gb, ptr, bit_length);
