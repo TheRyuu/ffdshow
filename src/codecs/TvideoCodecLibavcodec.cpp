@@ -315,6 +315,7 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
         // What about ogg, ogv and ogx?
         if ( sourceExt != L"avi"
           && sourceExt != L"ogm"
+          && sourceExt != L"mkv" // old MKVtoolnix use MEDIASUBTYPE_H264 and does not add access unit delimiter.
           && !(sourceExt == L"" && connectedSplitter == TffdshowVideoInputPin::NeuviewSource)) {
             h264_on_MPEG2_system = true;
             codedPictureBuffer.init();
