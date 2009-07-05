@@ -129,20 +129,17 @@ Trect TimgFilterCrop::calcCrop(const Trect &pictRect,TcropSettings *cfg, TffPict
        calcAutoCropHorizontal(cfg, src, dx1[0]-1, -1, &(newAutoCrop.autoCropRight)); // Calculate autocrop from right to left
       }
 
-      DPRINTF(_l("\nCalc, time : %i, Top %i, Bottom %i, Left %i, Right %i"),msec,newAutoCrop.autoCropTop,newAutoCrop.autoCropBottom,
-       newAutoCrop.autoCropLeft, newAutoCrop.autoCropRight);
-
-      // If autocrop values change, change them gradually
+      // If autocrop values change, set a new analysis sooner
       if (computeAutoCropChange(autoCrop.autoCropLeft, &(autoCrop.highWaterLeft), pictRect.dx, &(newAutoCrop.autoCropLeft)) |
        computeAutoCropChange(autoCrop.autoCropRight, &(autoCrop.highWaterRight), pictRect.dx, &(newAutoCrop.autoCropRight)) |
        computeAutoCropChange(autoCrop.autoCropTop, &(autoCrop.highWaterTop), pictRect.dy, &(newAutoCrop.autoCropTop)) |
        computeAutoCropChange(autoCrop.autoCropBottom, &(autoCrop.highWaterBottom), pictRect.dy, &(newAutoCrop.autoCropBottom)))
-       nextFrameMS=msec+50; // gradual application of autocrop
+       nextFrameMS=msec+50;
 
       // Copy back values to static variables (the crop filter has both static & dynamic parts)
       autoCrop=TautoCrop(newAutoCrop);
-      DPRINTF(_l("Autocrop, time : %i, Top %i, Bottom %i, Left %i, Right %i"),msec,autoCrop.autoCropTop,autoCrop.autoCropBottom,
-       autoCrop.autoCropLeft, autoCrop.autoCropRight);
+      /*DPRINTF(_l("Autocrop, time : %i, Top %i, Bottom %i, Left %i, Right %i"),msec,autoCrop.autoCropTop,autoCrop.autoCropBottom,
+       autoCrop.autoCropLeft, autoCrop.autoCropRight);*/
      }
     }
     rcdx=pictRect.dx-(autoCrop.autoCropLeft+autoCrop.autoCropRight);
@@ -164,8 +161,7 @@ Trect TimgFilterCrop::calcCrop(const Trect &pictRect,TcropSettings *cfg, TffPict
 
 bool TimgFilterCrop::computeAutoCropChange(long oldValue, long *highWaterp, long max, long *newValuep)
 {
- //if (oldValue == 0) return false; // First change : immediate application
- // If autocrop values change after they were initialized, change them again but gradually
+ // This method returns true if the value has been recalculated
  if (oldValue == *newValuep) return false;
  if (oldValue > *newValuep) // Decreasing border
  {
@@ -179,8 +175,6 @@ bool TimgFilterCrop::computeAutoCropChange(long oldValue, long *highWaterp, long
   // Set highwater if a border has been found beyond 15 percent of the screen size
   if (*newValuep > max/15)
    *highWaterp=*newValuep;
-
-  *newValuep=oldValue+1;
  }
  else // Trying to increase a border beyond highwater
  {
@@ -197,40 +191,40 @@ void TimgFilterCrop::calcAutoCropVertical(TcropSettings *cfg, const unsigned cha
 	int32_t avg0=0;
     int32_t stdev0=0;
 	unsigned int x,y;
-	int step=4; // Analyze every 4 pixels to gain speed
+ char_t debug[4096] = _l("");
+ int step= (dy1[0] < 640) ? 1 : 4; // Analyze every 4 pixels to gain speed
 	for (y=y0;(y-y0)*stepy<dy1[0]*0.5;y+=stepy) // Top <-> bottom, scan limited to 40% of the screen
 	{
-     unsigned int nbPixelsAnalyzed=0; // Number of pixels analyzed per line (column actually)
-     float s2=0, s=0; // Sum of levels^2, sum of levels
-     for (x=0;x<(unsigned int)stride1[0];x+=step) 
+  unsigned int nbPixelsAnalyzed=0; // Number of pixels analyzed per line (column actually)
+  float s2=0, s=0; // Sum of levels^2, sum of levels
+  for (x=0;x<(unsigned int)dx1[0];x+=step) 
 	 {
-       unsigned int pos=x+stride1[0]*y;
-       s2 += src[pos]*src[pos];
-       s += src[pos];
-       nbPixelsAnalyzed++;
-     }
+    unsigned int pos=x+stride1[0]*y;
+    s2 += src[pos]*src[pos];
+    s += src[pos];
+    nbPixelsAnalyzed++;
+  }
 
-      float avg = s/nbPixelsAnalyzed; // average of the line
-      float stdev = sqrt(s2/nbPixelsAnalyzed-avg*avg); // standard deviation of the line
+  float avg = s/nbPixelsAnalyzed; // average of the line
+  float stdev = sqrt(s2/nbPixelsAnalyzed-avg*avg); // standard deviation of the line
 
-      if (first) // First line = reference line
-      {
-       avg0=avg;
-       stdev0=stdev;
-       if (stdev > cfg->cropTolerance) // Too much variation of luminance for first line
-       {
-        if ((float)(y-y0)*stepy > (float)dy1[0]*0.15) // Look for a better reference line if we are below 15%
-         break;
-       }
-       first=false;
-       continue;
-      }
+  if (first) // First line = reference line
+  {
+   avg0=avg;
+   stdev0=stdev;
+   if (stdev > cfg->cropTolerance) // Too much variation of luminance for first line
+   {
+    if ((float)(y-y0)*stepy > (float)dy1[0]*0.15) // Look for a better reference line if we are below 15%
+     break;
+   }
+   first=false;
+   continue;
+  }
+  if ((float)abs(avg0-avg)*100/avg > (float) cfg->cropTolerance*0.8) // Luminance too different from reference line
+   break;
 
-      if ((float)abs(avg0-avg)*100/avg > (float) cfg->cropTolerance*0.8) // Luminance too different from reference line
-       break;
-
-      if (stdev > cfg->cropTolerance) // Too much variation of luminance for this line
-        break;
+  if (stdev > cfg->cropTolerance) // Too much variation of luminance for this line
+    break;
 	}
 	// If crop result is more than 40% of the screen, give up (means that it is a blank frame)
 	if ((float)abs((float)y-y0)/(float)dy1[0] < 0.4)
@@ -246,39 +240,39 @@ void TimgFilterCrop::calcAutoCropHorizontal(TcropSettings *cfg, const unsigned c
 	int step=4; // Analyze every 4 pixels to gain speed
 	for (x=x0;(x-x0)*stepx<dx1[0]*0.5;x+=stepx) // Left <-> right, scan limited to 50% of the screen
 	{
-        unsigned int nbPixelsAnalyzed=0; // Number of pixels analyzed per line (column actually)
+  unsigned int nbPixelsAnalyzed=0; // Number of pixels analyzed per line (column actually)
 		float s2=0, s=0; // Sum of levels^2, sum of levels
 		for (y=0;y<dy1[0];y+=step)
 		{
-         unsigned int pos=x+stride1[0]*y;
-         s2 += src[pos]*src[pos];
-         s += src[pos];
-         nbPixelsAnalyzed++;
+   unsigned int pos=x+stride1[0]*y;
+   s2 += src[pos]*src[pos];
+   s += src[pos];
+   nbPixelsAnalyzed++;
 		}
 		float avg = s/nbPixelsAnalyzed; // average of the line
-        float stdev = sqrt(s2/nbPixelsAnalyzed-avg*avg); // standard deviation of the line
+  float stdev = sqrt(s2/nbPixelsAnalyzed-avg*avg); // standard deviation of the line
 
-        if (first) // First line = reference line
-        {
-         avg0=avg;
-         stdev0=stdev;
-         first=false;
-         if (stdev > cfg->cropTolerance) // Too much variation of luminance for first line
-         {
-          if ((float)(x-x0)*stepx<(float)dx1[0]*0.15) // Look for a better reference line if we are below 15%
-           break;
-         }
-         continue;
-        }
-        if ((float)abs(avg0-avg)*100/avg > (float) cfg->cropTolerance*0.8) // Luminance too different from reference line
-         break;
+  if (first) // First line = reference line
+  {
+   avg0=avg;
+   stdev0=stdev;
+   first=false;
+   if (stdev > cfg->cropTolerance) // Too much variation of luminance for first line
+   {
+    if ((float)(x-x0)*stepx<(float)dx1[0]*0.15) // Look for a better reference line if we are below 15%
+     break;
+   }
+   continue;
+  }
+  if ((float)abs(avg0-avg)*100/avg > (float) cfg->cropTolerance*0.8) // Luminance too different from reference line
+   break;
 
-        if (stdev > cfg->cropTolerance) // Too much variation of luminance for this line
-         break;
+  if (stdev > cfg->cropTolerance) // Too much variation of luminance for this line
+   break;
 	}
 	// If crop result is more than 40% of the screen, give up (means that it is a blank frame)cd 
 	if ((float)abs((float)x-x0)/(float)dx1[0] < 0.4)
-     *autoCrop=abs((float)x-x0);
+  *autoCrop=abs((float)x-x0);
 }
 
 void TimgFilterCrop::onSizeChange(void)
@@ -312,11 +306,21 @@ HRESULT TimgFilterCrop::process(TfilterQueue::iterator it,TffPict &pict,const Tf
    autoCrop.clear();
   }
   rectCrop=calcCrop(pict.rectClip,cfg, &pict);
+  oldSettings=*cfg;
+  onSizeChange();
  }
- oldSettings=*cfg;
 
  csp_yuv_adj_to_plane(pict.csp,&pict.cspInfo,pict.rectFull.dy,pict.data,pict.stride);
- pict.rectClip=Trect(rectCrop,pict.rectClip.sar);pict.calcDiff();  
+ // Apply to full clip for autocrop
+ if (cfg->mode>=3 && cfg->mode<=5)
+ {
+  pict.rectClip=Trect(rectCrop,pict.rectClip.sar);
+  pict.rectFull=Trect(rectCrop,pict.rectFull.sar);
+ }
+ else
+  pict.rectClip=Trect(rectCrop,pict.rectClip.sar);
+
+ pict.calcDiff();
  return parent->deliverSample(++it,pict);
 }
 
