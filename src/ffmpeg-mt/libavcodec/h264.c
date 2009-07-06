@@ -7709,7 +7709,8 @@ int ff_h264_decode_seq_parameter_set(H264Context *h){
 
     sps->vui_parameters_present_flag= get_bits1(&s->gb);
     if( sps->vui_parameters_present_flag )
-        decode_vui_parameters(h, sps);
+        if (decode_vui_parameters(h, sps) < 0)
+            goto fail;
 
     if(s->avctx->debug&FF_DEBUG_PICT_INFO){
         av_log(h->s.avctx, AV_LOG_DEBUG, "sps:%u profile:%d/%d poc:%d ref:%d %dx%d %s %s crop:%d/%d/%d/%d %s %s %d/%d\n",
@@ -8028,9 +8029,12 @@ static int decode_nal_units(H264Context *h, const uint8_t *buf, int buf_size){
             init_get_bits(&hx->s.gb, ptr, bit_length);
             hx->intra_gb_ptr=
             hx->inter_gb_ptr= NULL;
+
+            if ((err = decode_slice_header(hx, h)) < 0)
+                break;
+
             hx->s.data_partitioning = 1;
 
-            err = decode_slice_header(hx, h);
             break;
         case NAL_DPB:
             init_get_bits(&hx->intra_gb, ptr, bit_length);
