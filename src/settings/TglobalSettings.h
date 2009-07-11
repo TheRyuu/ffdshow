@@ -34,7 +34,7 @@
 #define BLACKLIST_EXE_FILENAME \
 	_l("age3.exe;AvatarMP.exe;BeachSoccer.exe;Bully.exe;cm2008.exe;cmr4.exe;cmr5.exe;conflictdeniedops.exe;conquer.exe;crazy_taxi_pc.exe;dark_horizon.exe;DaybreakDX.exe;dmc3se.exe;em3.exe;em4.exe;fable.exe;FalconAF.exe;fallout3.exe;ff7.exe;fordorr.exe;fr2.exe;fr3.exe;game.bin;game.exe;Grandia2.exe;gta-vc.exe;gta3.exe;gta_sa.exe;")\
 	_l("gta-underground.exe;gta t‹rk.exe;guildII.exe;hl.exe;hl2.exe;juiced.exe;juiced2_hin.exe;Main.exe;MassEffectLauncher.exe;maxpayne.exe;mixcraft.exe;mixcraft3.exe;mixcraft4.exe;mixcra~1.exe;morrowind.exe;nations.exe;oblivion.exe;patriots.exe;pes2008.exe;pes2009.exe;pes4.exe;pes5.exe;pes6.exe;powerdvd8.exe;powerdvd9.exe;premiere.exe;questviewer.exe;residentevil3.exe;")\
-	_l("rf.exe;rf_online.bin;RomeGame.exe;rometw.exe;sacred.exe;sega rally.exe;sh3.exe;sh4.exe;sims.exe;tw2008.exe;twoworlds.exe;vmcExtenderSetup.exe;wa.exe;war3.exe;worms 4 mayhem.exe;worms3d.exe;")
+	_l("rf.exe;rf_online.bin;RomeGame.exe;rometw.exe;sacred.exe;sega rally.exe;sh3.exe;sh4.exe;sims.exe;StreetFighterIV.exe;tw2008.exe;twoworlds.exe;vmcExtenderSetup.exe;wa.exe;war3.exe;worms 4 mayhem.exe;worms3d.exe;")
 
 struct TregOp;
 struct Tconfig;
