@@ -35,8 +35,8 @@ ru.WinVersionTooLowError=Äëÿ ýòîãî áèëäà ffdshow íåîáõîäèìî èñïîëüçîâàíèå Window
 ; Polish
 pl.WelcomeLabel2=Instalator zainstaluje ffdshow na twoim komputerze.%n%nZaleca siê zamkniêcie wszystkich innych aplikacji przed kontynuowaniem procesu instalacji.
 pl.FileAbortRetryIgnore=Zamknij aplikacjê u¿ywaj¹c¹ ffdshow i wciœnij Ponów. Jeœli problem nie ustêpuje, wciœnij Przerwij, zrestartuj komputer i ponownie uruchom instalacjê.
-pl.FinishedRestartLabel=By zakoñczyæ instalacjê ffdshow, instalator musi zrestartowaæ twój komputer. Czy chcia³byœ zrestartowaæ go teraz?%n%nPodpowiedŸ: By unikn¹æ restartowania komputera nastêpnym razem, zaznacz w zak³adce "Informacje" - "Nie u¿ywaj ffdshow w:" - "explorer.exe" w konfiguracji dekodera wideo.
-;pl.WinVersionTooLowError=This build of ffdshow requires Windows 2000 or newer. Revision 2352 of ffdshow is the last one that works on Windows 98/ME.
+pl.FinishedRestartLabel=By zakoñczyæ instalacjê ffdshow, instalator musi zrestartowaæ twój komputer. Czy chcia³byœ zrestartowaæ go teraz?%n%nPodpowiedŸ: By unikn¹æ restartowania komputera nastêpnym razem, zaznacz w zak³adce "Informacje" - "Nie u¿ywaj ffdshow w:" - "explorer.exe" w konfiguracji dekodera obrazu.
+pl.WinVersionTooLowError=Ta kompilacja ffdshow wymaga Windows 2000 lub nowszego. Wersja 2352 jest ostatni¹ dzia³aj¹c¹ na Windows 98/ME.
 
 ;Czech
 cz.WelcomeLabel2=Tento instalátor nainstaluje na váš poèítaè ffdshow.%n%nPøedtím než spustíte instalaci je doporuèeno ukonèit všechny ostatní aplikace.
@@ -431,27 +431,27 @@ pl.langid=1045
 pl.msg_uninstallFirst=Najpierw musisz odinstalowaæ star¹ wersjê ffdshow.
 pl.simd_msg_sse=Ta kompilacja ffdshow wymaga procesora z obs³ug¹ zestawu instrukcji SSE. Twój procesor ich nie obs³uguje.
 pl.simd_msg_sse2=Ta kompilacja ffdshow wymaga procesora z obs³ug¹ zestawu instrukcji SSE2. Twój procesor ich nie obs³uguje.
-pl.unsupported_cpu=Ta kompilacja ffdshow wymaga procesora o architekturze i686 lub nowszej. Twój procesor nie jest obs³ugiwany. Wersja ffdsow 1940 jest ostatni¹, która dzia³a ze starymi procesorami.
+pl.unsupported_cpu=Ta kompilacja ffdshow wymaga procesora o architekturze i686 lub nowszej. Twój procesor nie jest obs³ugiwany. Wersja 1940 jest ostatni¹, która dzia³a ze starymi procesorami.
 
 pl.comp_ffdshowds=Filtr ffdshow (DirectShow)
-pl.comp_vfwInterface=Koder video ffdshow (vfw)
+pl.comp_vfwInterface=Koder obrazu ffdshow (VFW)
 pl.comp_makeAvis=Obs³uga skryptów AviSynth
 pl.comp_appPlugins=Komponenty innych aplikacji
 pl.comp_msg_selectOneComp=Musisz wybraæ co najmniej jeden sk³adnik.
 
 pl.tsk_settings=Ustawienia
 pl.tsk_resetSettings=Zresetuj wszystkie ustawienia ffdshow
-pl.tsk_videoFormats=Formaty video
-pl.tsk_videoFormatsSelect=Dekoduj nastêpuj¹ce formaty video u¿ywaj¹c ffdshow:
-pl.tsk_genericMpeg4=Zwyk³e MPEG-4
-pl.tsk_rawVideo=Nieskompresowane video
-pl.tsk_audioFormats=Formaty audio
-pl.tsk_audioFormatsSelect=Dekoduj nastêpuj¹ce formaty audio u¿ywaj¹c ffdshow:
-pl.tsk_rawAudio=Nieskompresowane audio
+pl.tsk_videoFormats=Formaty obrazu
+pl.tsk_videoFormatsSelect=Dekoduj nastêpuj¹ce formaty obrazu u¿ywaj¹c ffdshow:
+pl.tsk_genericMpeg4=MPEG-4
+pl.tsk_rawVideo=Nieskompresowany obraz
+pl.tsk_audioFormats=Formaty dŸwiêku
+pl.tsk_audioFormatsSelect=Dekoduj nastêpuj¹ce formaty dŸwiêku u¿ywaj¹c ffdshow:
+pl.tsk_rawAudio=Nieskompresowany dŸwiêk
 pl.tsk_filters=Ustawienia filtrów
 pl.tsk_filtersSelect=W³¹cz nastêpuj¹ce filtry jako domyœlne:
-;pl.tsk_passthroughac3=Enable AC3 pass-through (S/PDIF, HDMI)
-;pl.tsk_passthroughdts=Enable DTS pass-through (S/PDIF, HDMI)
+pl.tsk_passthroughac3=Przekazywanie AC3 (przez S/PDIF, HDMI)
+pl.tsk_passthroughdts=Przekazywanie DTS (przez S/PDIF, HDMI)
 pl.tsk_volumeNorm=G³oœnoœæ
 pl.tsk_subtitles=Napisy
 pl.tsk_tweaks=Ustawienia dodatkowe
@@ -461,7 +461,7 @@ pl.tsk_whitelist=Ogranicz u¿ycie ffdshow tylko do wskazanych aplikacji
 pl.tsk_whitelistPrompt=Wyœwietlaj dialog, kiedy nieznana aplikacja próbuje uruchomiæ ffdshow
 
 pl.spk_Label1=Ustawienia g³oœników
-pl.spk_Label2=Wybierz rodzaj g³oœników, który najbardziej odpowiada twojej konfiguracji. Ustawienia te mo¿esz zmieniæ w zak³adce "Mikser" w konfiguracji dekodera audio.
+pl.spk_Label2=Wybierz rodzaj g³oœników, który najbardziej odpowiada twojej konfiguracji. Ustawienia te mo¿esz zmieniæ w zak³adce "Mikser" w konfiguracji dekodera dŸwiêku.
 pl.spk_Label3=Rodzaj g³oœników:
 pl.spk_mono=monofoniczne
 pl.spk_stereo=stereofoniczne
@@ -478,26 +478,26 @@ pl.spk_surround=surround (przestrzenne)
 pl.spk_subwoofer=g³oœnik niskotonowy
 pl.spk_dolby1=zgodne z Dolby Surround/ProLogic
 pl.spk_dolby2=zgodne z Dolby ProLogic II
-pl.spk_hrtf=funkcja przenoszenia zwi¹zana z g³ow¹ (HRTF)
-pl.spk_sameAsInput=Takie same jak na wejœciu audio
-pl.spk_disableMixer=Wy³¹cz Mikser
+pl.spk_hrtf=zgodne z HRTF
+pl.spk_sameAsInput=Takie same jak na wejœciu dŸwiêku
+pl.spk_disableMixer=Wy³¹cz mikser
 pl.spk_voiceControl=Kontrola g³osu (g³oœnoœæ)
-pl.spk_expandStereo=Uwydatnij sygna³ stereo (przestrzennie)
+pl.spk_expandStereo=RozprowadŸ sygna³ stereo (przestrzennie)
 pl.spk_unknownSpk=Nieznana konfiguracja g³oœników
 
 pl.plg_Label1=Wybierz katalog komponentu %1
 pl.plg_Label2=Gdzie powinien zostaæ zainstalowany komponent %1?
 pl.plg_Label3=Wybierz folder, w którym instalator powinien zainstalowaæ komponent %1 i wciœnij Dalej.
 
-pl.run_videoConfig=Uruchom konfiguracjê dekodera video ffdshow
-pl.run_audioConfig=Uruchom konfiguracjê dekodera audio ffdshow
-pl.run_vfwConfig=Uruchom konfiguracjê kodera video ffdshow
+pl.run_videoConfig=Uruchom konfiguracjê dekodera obrazu ffdshow
+pl.run_audioConfig=Uruchom konfiguracjê dekodera dŸwiêku ffdshow
+pl.run_vfwConfig=Uruchom konfiguracjê kodera obrazu ffdshow
 
-pl.shrt_videoConfig=Konfiguracja dekodera video ffdshow
-pl.shrt_audioConfig=Konfiguracja dekodera audio ffdshow
-pl.shrt_vfwConfig=Konfiguracja kodera video ffdshow
+pl.shrt_videoConfig=Konfiguracja dekodera obrazu ffdshow
+pl.shrt_audioConfig=Konfiguracja dekodera dŸwiêku ffdshow
+pl.shrt_vfwConfig=Konfiguracja kodera obrazu ffdshow
 pl.shrt_uninstall=Odinstaluj ffdshow
-;pl.shrt_homepage=Homepage
+pl.shrt_homepage=Strona domowa
 
 
 ; Czech
