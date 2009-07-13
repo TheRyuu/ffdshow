@@ -75,6 +75,7 @@ public:
     HRESULT getAVIdimensions(unsigned int *x,unsigned int *y);
     HRESULT getInputSAR(unsigned int *a1,unsigned int *a2);
     HRESULT getInputDAR(unsigned int *a1,unsigned int *a2);
+	HRESULT getInputRcSource(RECT *r);
     FOURCC getMovieFOURCC(void);
     HRESULT getMovieSource(const TvideoCodecDec* *moviePtr);
     HRESULT getFrameTime(unsigned int framenum,unsigned int *sec);
@@ -91,6 +92,7 @@ public:
 
     TffdshowDecVideoAllocator allocator;
     BITMAPINFO biIn;TffPictBase pictIn;
+	RECT rcSourceIn;
     REFERENCE_TIME avgTimePerFrame;
     int sourceFlags;
     bool waitForKeyframes();
