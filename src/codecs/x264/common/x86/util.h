@@ -74,38 +74,34 @@ static inline int x264_predictor_difference_mmxext( int16_t (*mvc)[2], intptr_t 
     sum += output[0] + output[1] + output[2] + output[3];
     return sum;
 }
-#undef array_non_zero_int
-#define array_non_zero_int array_non_zero_int_mmx
-static ALWAYS_INLINE int array_non_zero_int_mmx( void *v, int i_count )
+#define x264_cabac_amvd_sum x264_cabac_amvd_sum_mmxext
+static ALWAYS_INLINE uint32_t x264_cabac_amvd_sum_mmxext(int16_t *mvdleft, int16_t *mvdtop)
 {
-    if(i_count == 128)
-    {
-        int nonzero = 0;
-        asm(
-            "movq     (%1),    %%mm0 \n"
-            "por      8(%1),   %%mm0 \n"
-            "por      16(%1),  %%mm0 \n"
-            "por      24(%1),  %%mm0 \n"
-            "por      32(%1),  %%mm0 \n"
-            "por      40(%1),  %%mm0 \n"
-            "por      48(%1),  %%mm0 \n"
-            "por      56(%1),  %%mm0 \n"
-            "por      64(%1),  %%mm0 \n"
-            "por      72(%1),  %%mm0 \n"
-            "por      80(%1),  %%mm0 \n"
-            "por      88(%1),  %%mm0 \n"
-            "por      96(%1),  %%mm0 \n"
-            "por      104(%1), %%mm0 \n"
-            "por      112(%1), %%mm0 \n"
-            "por      120(%1), %%mm0 \n"
-            "packsswb %%mm0,   %%mm0 \n"
-            "movd     %%mm0,   %0    \n"
-            :"=r"(nonzero)
-            :"r"(v), "m"(*(struct {int16_t x[64];} *)v)
-        );
-        return !!nonzero;
-    }
-    else return array_non_zero_int_c( v, i_count );
+    static const uint64_t pw_2    = 0x0002000200020002ULL;
+    static const uint64_t pw_28   = 0x001C001C001C001CULL;
+    static const uint64_t pw_2184 = 0x0888088808880888ULL;
+    /* MIN(((x+28)*2184)>>16,2) = (x>2) + (x>32) */
+    /* 2184 = fix16(1/30) */
+    uint32_t amvd;
+    asm(
+        "movd      %1, %%mm0 \n"
+        "movd      %2, %%mm1 \n"
+        "pxor   %%mm2, %%mm2 \n"
+        "pxor   %%mm3, %%mm3 \n"
+        "psubw  %%mm0, %%mm2 \n"
+        "psubw  %%mm1, %%mm3 \n"
+        "pmaxsw %%mm2, %%mm0 \n"
+        "pmaxsw %%mm3, %%mm1 \n"
+        "paddw     %3, %%mm0 \n"
+        "paddw  %%mm1, %%mm0 \n"
+        "pmulhuw   %4, %%mm0 \n"
+        "pminsw    %5, %%mm0 \n"
+        "movd   %%mm0, %0    \n"
+        :"=r"(amvd)
+        :"m"(*(uint32_t*)mvdleft),"m"(*(uint32_t*)mvdtop),
+         "m"(pw_28),"m"(pw_2184),"m"(pw_2)
+    );
+    return amvd;
 }
 #endif
 

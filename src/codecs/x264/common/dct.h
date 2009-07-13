@@ -95,6 +95,7 @@ typedef struct
     void (*add4x4_idct)  ( uint8_t *p_dst, int16_t dct[4][4] );
 
     void (*sub8x8_dct)   ( int16_t dct[4][4][4], uint8_t *pix1, uint8_t *pix2 );
+    void (*sub8x8_dct_dc)( int16_t dct[2][2], uint8_t *pix1, uint8_t *pix2 );
     void (*add8x8_idct)  ( uint8_t *p_dst, int16_t dct[4][4][4] );
     void (*add8x8_idct_dc) ( uint8_t *p_dst, int16_t dct[2][2] );
 
@@ -117,8 +118,9 @@ typedef struct
 {
     void (*scan_8x8)( int16_t level[64], int16_t dct[8][8] );
     void (*scan_4x4)( int16_t level[16], int16_t dct[4][4] );
-    void (*sub_8x8)( int16_t level[64], const uint8_t *p_src, uint8_t *p_dst );
-    void (*sub_4x4)( int16_t level[16], const uint8_t *p_src, uint8_t *p_dst );
+    int  (*sub_8x8)  ( int16_t level[64], const uint8_t *p_src, uint8_t *p_dst );
+    int  (*sub_4x4)  ( int16_t level[16], const uint8_t *p_src, uint8_t *p_dst );
+    int  (*sub_4x4ac)( int16_t level[16], const uint8_t *p_src, uint8_t *p_dst, int16_t *dc );
     void (*interleave_8x8_cavlc)( int16_t *dst, int16_t *src, uint8_t *nnz );
 
 } x264_zigzag_function_t;

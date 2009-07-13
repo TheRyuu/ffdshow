@@ -74,14 +74,14 @@
 #endif
 
 /* ffdshow custom code */
-#if defined(__GNUC__) && (__GNUC__ > 4 || __GNUC__ == 4 && __GNUC_MINOR__ > 1)
-#   define GCC420_OR_NEWER 1
+#ifdef __GNUC__
+#    define AV_GCC_VERSION_AT_LEAST(x,y) (__GNUC__ > x || __GNUC__ == x && __GNUC_MINOR__ >= y)
 #else
-#   define GCC420_OR_NEWER 0
+#    define AV_GCC_VERSION_AT_LEAST(x,y) 0
 #endif
 
 #ifndef attribute_align_arg
-#if GCC420_OR_NEWER
+#if (!defined(__ICC) || __ICC > 1110) && AV_GCC_VERSION_AT_LEAST(4,2)
 #    define attribute_align_arg __attribute__((force_align_arg_pointer))
 #else
 #    define attribute_align_arg
@@ -102,10 +102,12 @@
 #define UNUSED __attribute__((unused))
 #define ALWAYS_INLINE __attribute__((always_inline)) inline
 #define NOINLINE __attribute__((noinline))
+#define x264_constant_p(x) __builtin_constant_p(x)
 #else
 #define UNUSED
 #define ALWAYS_INLINE inline
 #define NOINLINE
+#define x264_constant_p(x) 0
 #endif
 
 /* threads */
