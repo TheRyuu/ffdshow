@@ -411,7 +411,7 @@ bool Tpreset::saveFile(const char_t *flnm)
 
 void Tpreset::normalizePresetName(char_t *dst, const char_t *src, size_t bufsize)
 {
- int i = 0;
+ unsigned int i = 0;
  char_t c;
  do
  {
