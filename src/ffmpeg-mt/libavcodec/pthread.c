@@ -192,10 +192,11 @@ int avcodec_thread_execute(AVCodecContext *avctx, action_func* func, void *arg, 
     return 0;
 }
 
-static int thread_init(AVCodecContext *avctx, int thread_count)
+static int thread_init(AVCodecContext *avctx)
 {
     int i;
     ThreadContext *c;
+    int thread_count = avctx->thread_count;
 
     c = av_mallocz(sizeof(ThreadContext));
     if (!c)
@@ -208,7 +209,6 @@ static int thread_init(AVCodecContext *avctx, int thread_count)
     }
 
     avctx->thread_opaque = c;
-    avctx->thread_count = thread_count;
     c->current_job = 0;
     c->job_count = 0;
     c->job_size = 0;
@@ -731,18 +731,18 @@ static void validate_thread_parameters(AVCodecContext *avctx)
 
 int avcodec_thread_init(AVCodecContext *avctx, int thread_count)
 {
-    avctx->thread_count = thread_count;
-
     if (avctx->thread_opaque) {
         av_log(avctx, AV_LOG_ERROR, "avcodec_thread_init called after avcodec_open, this does nothing in ffmpeg-mt\n");
         return -1;
     }
 
+    avctx->thread_count = thread_count;
+
     if (avctx->codec) {
         validate_thread_parameters(avctx);
 
         if (USE_AVCODEC_EXECUTE(avctx))
-            return thread_init(avctx, thread_count);
+            return thread_init(avctx);
         else if (USE_FRAME_THREADING(avctx))
             return frame_thread_init(avctx);
     }

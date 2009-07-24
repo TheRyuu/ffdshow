@@ -24,14 +24,13 @@
  */
 
 /**
- * @file cyuv.c
+ * @file libavcodec/cyuv.c
  * Creative YUV (CYUV) Video Decoder.
  */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 
 #include "avcodec.h"
 #include "dsputil.h"

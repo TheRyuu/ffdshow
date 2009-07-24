@@ -20,7 +20,7 @@
  */
 
 /**
- * @file cinepak.c
+ * @file libavcodec/cinepak.c
  * Cinepak video decoder
  * by Ewald Snel <ewald@rambo.its.tudelft.nl>
  * For more information on the Cinepak algorithm, visit:
@@ -32,7 +32,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 
 #include "libavutil/intreadwrite.h"
 #include "avcodec.h"

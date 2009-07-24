@@ -20,14 +20,13 @@
  */
 
 /**
- * @file ulti.c
+ * @file libavcodec/ulti.c
  * IBM Ultimotion Video Decoder.
  */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 
 #include "avcodec.h"
 #include "bytestream.h"

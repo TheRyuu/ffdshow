@@ -20,7 +20,7 @@
  */
 
 /**
- * @file rpza.c
+ * @file libavcodec/rpza.c
  * QT RPZA Video Decoder by Roberto Togni
  * For more information about the RPZA format, visit:
  *   http://www.pcisys.net/~melanson/codecs/
@@ -37,7 +37,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 
 #include "libavutil/intreadwrite.h"
 #include "avcodec.h"

@@ -35,6 +35,12 @@
 
 #define HAVE_FAST_UNALIGNED 1
 
+#ifdef __GNUC__
+  #define HAVE_ATTRIBUTE_PACKED 1
+#else
+  #define HAVE_ATTRIBUTE_PACKED 0
+#endif
+
 #ifndef __GNUC__
   #define EMULATE_FAST_INT
 #endif

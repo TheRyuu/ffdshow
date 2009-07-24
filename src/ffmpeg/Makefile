@@ -43,6 +43,7 @@ SRCS_C=\
       $(LAVC_DIR)/dsputil.c \
       $(LAVC_DIR)/dv.c \
       $(LAVC_DIR)/eac3dec.c \
+      $(LAVC_DIR)/eac3dec_data.c \
       $(LAVC_DIR)/error_resilience.c \
       $(LAVC_DIR)/eval.c \
       $(LAVC_DIR)/faandct.c \

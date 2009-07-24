@@ -20,7 +20,7 @@
  */
 
 /**
- * @file truemotion1.c
+ * @file libavcodec/truemotion1.c
  * Duck TrueMotion v1 Video Decoder by
  * Alex Beregszaszi and
  * Mike Melanson (melanson@pcisys.net)
@@ -32,7 +32,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 
 #include "avcodec.h"
 #include "dsputil.h"
