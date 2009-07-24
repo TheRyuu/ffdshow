@@ -345,7 +345,15 @@ HRESULT TffdshowDecVideo::GetMediaType(int iPosition, CMediaType *mtOut)
    if (!vih) return E_OUTOFMEMORY;
    ZeroMemory(vih,sizeof(VIDEOINFOHEADER));
 
-   inpin->getInputRcSource(&vih->rcSource);
+   const CLSID &ref=GetCLSID(m_pOutput->GetConnected());
+   if(ref==CLSID_OverlayMixer) {
+     vih->rcSource.left=0;
+     vih->rcSource.right=bih.biWidth;
+     vih->rcSource.top=0;
+     vih->rcSource.bottom=bih.biHeight;			
+   } else { 	
+     inpin->getInputRcSource(&vih->rcSource);
+   }
    vih->rcTarget=vih->rcSource;
    vih->AvgTimePerFrame=inpin->avgTimePerFrame;
    vih->bmiHeader=bih;
@@ -364,7 +372,15 @@ HRESULT TffdshowDecVideo::GetMediaType(int iPosition, CMediaType *mtOut)
 
    //DPRINTF(_l("AR getMediaType: %i:%i"),vih2->dwPictAspectRatioX,vih2->dwPictAspectRatioY);
 
-   inpin->getInputRcSource(&vih2->rcSource);
+   const CLSID &ref=GetCLSID(m_pOutput->GetConnected());
+   if(ref==CLSID_OverlayMixer) {
+     vih2->rcSource.left=0;
+     vih2->rcSource.right=bih.biWidth;
+     vih2->rcSource.top=0;
+     vih2->rcSource.bottom=bih.biHeight;			
+   } else { 	
+     inpin->getInputRcSource(&vih2->rcSource);
+   }
    vih2->rcTarget=vih2->rcSource;
    vih2->AvgTimePerFrame=inpin->avgTimePerFrame;
    vih2->bmiHeader=bih;
