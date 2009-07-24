@@ -299,7 +299,7 @@ void TaudioCodecLibavcodec::updateChannelMapping()
 	  src_ch_layout = AF_CHANNEL_LAYOUT_LAVC_LIBA52_DEFAULT;
 	else if (!stricmp(codec, _l("vorbis")))
 	  src_ch_layout = AF_CHANNEL_LAYOUT_VORBIS_DEFAULT;
-	else if (!stricmp(codec, _l("mlp")))
+	else if (!stricmp(codec, _l("mlp")) || !stricmp(codec, _l("truehd")))
       src_ch_layout = AF_CHANNEL_LAYOUT_MLP_DEFAULT;
 	else
 	  src_ch_layout = AF_CHANNEL_LAYOUT_FFDSHOW_DEFAULT;
