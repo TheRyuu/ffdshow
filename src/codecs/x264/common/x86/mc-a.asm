@@ -25,8 +25,9 @@
 
 %include "x86inc.asm"
 
-SECTION_RODATA
+SECTION_RODATA 32
 
+ch_shuffle: db 0,1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8,9,9,10,10,11,11,12,12,13,13,14,14,15,0,0
 pw_4:  times 8 dw  4
 pw_8:  times 8 dw  8
 pw_32: times 8 dw 32
@@ -510,6 +511,66 @@ AVG_CACHELINE_CHECK 12, 64, mmxext
 AVG_CACHELINE_CHECK 16, 64, sse2
 AVG_CACHELINE_CHECK 20, 64, sse2
 
+; computed jump assumes this loop is exactly 48 bytes
+%macro AVG16_CACHELINE_LOOP_SSSE3 2 ; alignment
+ALIGN 16
+avg_w16_align%1_%2_ssse3:
+%if %2&15==0
+    movdqa  xmm1, [r2+16]
+    palignr xmm1, [r2], %1
+    pavgb   xmm1, [r2+r4]
+%else
+    movdqa  xmm1, [r2+16]
+    movdqa  xmm2, [r2+r4+16]
+    palignr xmm1, [r2], %1
+    palignr xmm2, [r2+r4], %2
+    pavgb   xmm1, xmm2
+%endif
+    movdqa  [r0], xmm1
+    add    r2, r3
+    add    r0, r1
+    dec    r5d
+    jg     avg_w16_align%1_%2_ssse3
+    rep ret
+%endmacro
+
+%assign j 1
+%assign k 2
+%rep 15
+AVG16_CACHELINE_LOOP_SSSE3 j, j
+AVG16_CACHELINE_LOOP_SSSE3 j, k
+%assign j j+1
+%assign k k+1
+%endrep
+
+cglobal x264_pixel_avg2_w16_cache64_ssse3
+    mov    eax, r2m
+    and    eax, 0x3f
+    cmp    eax, 0x30
+    jle x264_pixel_avg2_w16_sse2
+    PROLOGUE 6,7
+    lea    r6, [r4+r2]
+    and    r4, ~0xf
+    and    r6, 0x1f
+    and    r2, ~0xf
+    lea    r6, [r6*3]    ;(offset + align*2)*3
+    sub    r4, r2
+    shl    r6, 4         ;jump = (offset + align*2)*48
+%define avg_w16_addr avg_w16_align1_1_ssse3-(avg_w16_align2_2_ssse3-avg_w16_align1_1_ssse3)
+%ifdef PIC
+    lea   r11, [avg_w16_addr GLOBAL]
+    add    r6, r11
+%else
+    lea    r6, [avg_w16_addr + r6 GLOBAL]
+%endif
+%ifdef UNIX64
+    jmp    r6
+%else
+    call   r6
+    RET
+%endif
+
+
 ;=============================================================================
 ; pixel copy
 ;=============================================================================
@@ -869,8 +930,9 @@ MC_CHROMA mmxext
 INIT_XMM
 MC_CHROMA sse2, 8
 
+%macro MC_CHROMA_SSSE3 2
 INIT_MMX
-cglobal x264_mc_chroma_ssse3, 0,6,8
+cglobal x264_mc_chroma_ssse3%1, 0,6,%2
     MC_CHROMA_START
     and       r4d, 7
     and       r5d, 7
@@ -887,7 +949,7 @@ cglobal x264_mc_chroma_ssse3, 0,6,8
     mova       m5, [pw_32 GLOBAL]
     movd       m6, r5d
     movd       m7, r4d
-    movifnidn r0,  r0mp
+    movifnidn  r0, r0mp
     movifnidn r1d, r1m
     movifnidn r4d, r7m
     SPLATW     m6, m6
@@ -925,23 +987,28 @@ cglobal x264_mc_chroma_ssse3, 0,6,8
 
 INIT_XMM
 .width8:
-    mova       m5, [pw_32 GLOBAL]
     movd       m6, r5d
     movd       m7, r4d
-    movifnidn r0,  r0mp
+    movifnidn  r0, r0mp
     movifnidn r1d, r1m
     movifnidn r4d, r7m
     SPLATW     m6, m6
     SPLATW     m7, m7
+%ifidn %1, _cache64
+    mov        r5, r2
+    and        r5, 0x3f
+    cmp        r5, 0x38
+    jge .split
+%endif
+    mova       m5, [pw_32 GLOBAL]
     movh       m0, [r2]
     movh       m1, [r2+1]
     punpcklbw  m0, m1
-    add r2, r3
 .loop8:
-    movh       m1, [r2]
-    movh       m2, [r2+1]
-    movh       m3, [r2+r3]
-    movh       m4, [r2+r3+1]
+    movh       m1, [r2+1*r3]
+    movh       m2, [r2+1*r3+1]
+    movh       m3, [r2+2*r3]
+    movh       m4, [r2+2*r3+1]
     punpcklbw  m1, m2
     punpcklbw  m3, m4
     lea        r2, [r2+2*r3]
@@ -965,6 +1032,53 @@ INIT_XMM
     lea        r0, [r0+2*r1]
     jg .loop8
     REP_RET
-
+%ifidn %1, _cache64
+.split:
+    and        r2, ~7
+    and        r5, 7
+%ifdef PIC
+    lea       r11, [ch_shuffle GLOBAL]
+    movu       m5, [r11 + r5*2]
+%else
+    movu       m5, [ch_shuffle + r5*2 GLOBAL]
+%endif
+    movu       m0, [r2]
+    pshufb     m0, m5
+%ifdef ARCH_X86_64
+    mova       m8, [pw_32 GLOBAL]
+    %define round m8
+%else
+    %define round [pw_32 GLOBAL]
+%endif
+.splitloop8:
+    movu       m1, [r2+r3]
+    pshufb     m1, m5
+    movu       m3, [r2+2*r3]
+    pshufb     m3, m5
+    lea        r2, [r2+2*r3]
+    mova       m2, m1
+    mova       m4, m3
+    pmaddubsw  m0, m7
+    pmaddubsw  m1, m6
+    pmaddubsw  m2, m7
+    pmaddubsw  m3, m6
+    paddw      m0, round
+    paddw      m2, round
+    paddw      m1, m0
+    paddw      m3, m2
+    mova       m0, m4
+    psrlw      m1, 6
+    psrlw      m3, 6
+    packuswb   m1, m3
+    movh     [r0], m1
+    movhps [r0+r1], m1
+    sub       r4d, 2
+    lea        r0, [r0+2*r1]
+    jg .splitloop8
+    REP_RET
+%endif
 ; mc_chroma 1d ssse3 is negligibly faster, and definitely not worth the extra code size
+%endmacro
 
+MC_CHROMA_SSSE3 , 8
+MC_CHROMA_SSSE3 _cache64, 9

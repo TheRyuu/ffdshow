@@ -59,6 +59,9 @@ extern void x264_mc_chroma_sse2( uint8_t *src, int i_src_stride,
 extern void x264_mc_chroma_ssse3( uint8_t *src, int i_src_stride,
                                   uint8_t *dst, int i_dst_stride,
                                   int dx, int dy, int i_width, int i_height );
+extern void x264_mc_chroma_ssse3_cache64( uint8_t *src, int i_src_stride,
+                                  uint8_t *dst, int i_dst_stride,
+                                  int dx, int dy, int i_width, int i_height );
 extern void x264_plane_copy_mmxext( uint8_t *, int, uint8_t *, int, int w, int h);
 extern void *x264_memcpy_aligned_mmx( void * dst, const void * src, size_t n );
 extern void *x264_memcpy_aligned_sse2( void * dst, const void * src, size_t n );
@@ -91,6 +94,7 @@ PIXEL_AVG_WALL(cache64_mmxext)
 PIXEL_AVG_WALL(cache64_sse2)
 PIXEL_AVG_WALL(sse2)
 PIXEL_AVG_WALL(sse2_misalign)
+PIXEL_AVG_WALL(cache64_ssse3)
 
 #define PIXEL_AVG_WTAB(instr, name1, name2, name3, name4, name5)\
 static void (* const x264_pixel_avg_wtab_##instr[6])( uint8_t *, int, uint8_t *, int, uint8_t *, int ) =\
@@ -116,6 +120,7 @@ PIXEL_AVG_WTAB(cache64_mmxext, mmxext, cache64_mmxext, cache64_mmxext, cache64_m
 PIXEL_AVG_WTAB(sse2, mmxext, mmxext, sse2, sse2, sse2)
 PIXEL_AVG_WTAB(sse2_misalign, mmxext, mmxext, sse2, sse2, sse2_misalign)
 PIXEL_AVG_WTAB(cache64_sse2, mmxext, cache64_mmxext, cache64_sse2, cache64_sse2, cache64_sse2)
+PIXEL_AVG_WTAB(cache64_ssse3, mmxext, cache64_mmxext, cache64_sse2, cache64_ssse3, cache64_sse2)
 
 #define MC_COPY_WTAB(instr, name1, name2, name3)\
 static void (* const x264_mc_copy_wtab_##instr[5])( uint8_t *, int, uint8_t *, int, int ) =\
@@ -163,6 +168,7 @@ MC_LUMA(cache64_mmxext,cache64_mmxext,mmx)
 #endif
 MC_LUMA(sse2,sse2,sse2)
 MC_LUMA(cache64_sse2,cache64_sse2,sse2)
+MC_LUMA(cache64_ssse3,cache64_ssse3,sse2)
 
 #define GET_REF(name)\
 static uint8_t *get_ref_##name( uint8_t *dst,   int *i_dst_stride,\
@@ -196,6 +202,7 @@ GET_REF(cache64_mmxext)
 GET_REF(sse2)
 GET_REF(sse2_misalign)
 GET_REF(cache64_sse2)
+GET_REF(cache64_ssse3)
 
 #define HPEL(align, cpu, cpuv, cpuc, cpuh)\
 void x264_hpel_filter_v_##cpuv( uint8_t *dst, uint8_t *src, int16_t *buf, int stride, int width);\
@@ -340,6 +347,12 @@ void x264_mc_init_mmx( int cpu, x264_mc_functions_t *pf )
     pf->hpel_filter = x264_hpel_filter_ssse3;
     pf->frame_init_lowres_core = x264_frame_init_lowres_core_ssse3;
     pf->mc_chroma = x264_mc_chroma_ssse3;
+    if( cpu&X264_CPU_CACHELINE_64 )
+    {
+        pf->mc_chroma = x264_mc_chroma_ssse3_cache64;
+        pf->mc_luma = mc_luma_cache64_ssse3;
+        pf->get_ref = get_ref_cache64_ssse3;
+    }
 
     if( cpu&X264_CPU_SHUFFLE_IS_FAST )
         pf->integral_init4v = x264_integral_init4v_ssse3;
