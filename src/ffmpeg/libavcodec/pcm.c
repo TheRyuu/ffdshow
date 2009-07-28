@@ -20,11 +20,13 @@
  */
 
 /**
- * @file pcm.c
+ * @file libavcodec/pcm.c
  * PCM codecs
  */
 
 #include "avcodec.h"
+
+#define MAX_CHANNELS 64
 
 /* from g711.c by SUN microsystems (unrestricted use) */
 
@@ -94,6 +96,7 @@ static av_cold int pcm_decode_init(AVCodecContext * avctx)
         break;
     }
 
+    /* ffdshow custom code */
     avctx->sample_fmt = SAMPLE_FMT_S16;
     return 0;
 }
@@ -109,14 +112,22 @@ static int pcm_decode_frame(AVCodecContext *avctx,
 
     samples = data;
     src = buf;
-    
+
+    if(avctx->channels <= 0 || avctx->channels > MAX_CHANNELS){
+        av_log(avctx, AV_LOG_ERROR, "PCM channels out of bounds\n");
+        return -1;
+    }
+
     sample_size = av_get_bits_per_sample(avctx->codec_id)/8;
 
     n = avctx->channels * sample_size;
 
     if(n && buf_size % n){
-        av_log(avctx, AV_LOG_ERROR, "invalid PCM packet\n");
-        return -1;
+        if (buf_size < n) {
+            av_log(avctx, AV_LOG_ERROR, "invalid PCM packet\n");
+            return -1;
+        }else
+            buf_size -= buf_size % n;
     }
 
     buf_size= FFMIN(buf_size, *data_size/2);
@@ -138,6 +149,7 @@ static int pcm_decode_frame(AVCodecContext *avctx,
     return src - buf;
 }
 
+#if CONFIG_DECODERS
 #if __STDC_VERSION__ >= 199901L
 #define PCM_DECODER(id,sample_fmt_,name,long_name_)         \
 AVCodec name ## _decoder = {                    \
@@ -176,9 +188,10 @@ AVCodec name ## _decoder = {                    \
     /*.long_name = */NULL_IF_CONFIG_SMALL(long_name_), \
     /*.sample_fmts = */NULL, \
 }
+#endif /* __STDC_VERSION__ >= 199901L */
+#else
+#define PCM_DECODER(id,sample_fmt_,name,long_name_)
 #endif
 
 PCM_DECODER(CODEC_ID_PCM_ALAW,  SAMPLE_FMT_S16, pcm_alaw,  "A-law PCM" );
 PCM_DECODER(CODEC_ID_PCM_MULAW, SAMPLE_FMT_S16, pcm_mulaw, "mu-law PCM");
-
-#undef PCM_CODEC

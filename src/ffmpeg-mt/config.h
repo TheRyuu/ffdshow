@@ -35,6 +35,8 @@
 #define HAVE_EBP_AVAILABLE 1
 #define HAVE_EBX_AVAILABLE 1
 
+#define HAVE_BIGENDIAN 0
+
 #define HAVE_FAST_UNALIGNED 1
 
 #ifdef __GNUC__
