@@ -225,7 +225,7 @@ static int reorder_copy_8ch(void *dest, const void *src,
     {
         int8_t *dest_8 = dest;
         const int8_t *src_8 = src;
-        for (i = 0; i < samples; i += 18) {
+        for (i = 0; i < samples; i += 24) {
             dest_8[i]    = src_8[i+s0*3];
             dest_8[i+1]  = src_8[i+s0*3+1];
             dest_8[i+2]  = src_8[i+s0*3+2];
@@ -244,10 +244,10 @@ static int reorder_copy_8ch(void *dest, const void *src,
             dest_8[i+15] = src_8[i+s5*3];
             dest_8[i+16] = src_8[i+s5*3+1];
             dest_8[i+17] = src_8[i+s5*3+2];
-			dest_8[i+18] = src_8[i+s6*3];
+			         dest_8[i+18] = src_8[i+s6*3];
             dest_8[i+19] = src_8[i+s6*3+1];
             dest_8[i+20] = src_8[i+s6*3+2];
-			dest_8[i+21] = src_8[i+s7*3];
+			         dest_8[i+21] = src_8[i+s7*3];
             dest_8[i+22] = src_8[i+s7*3+1];
             dest_8[i+23] = src_8[i+s7*3+2];
         }
@@ -381,10 +381,11 @@ void reorder_channel_copy(void *src,
     case AF_CHANNEL_LAYOUT_5_1_E << 16 | AF_CHANNEL_LAYOUT_5_1_B:
         reorder_copy_6ch(dest, src, samples, samplesize, 1, 3, 4, 5, 2, 0);
         break;
-	case AF_CHANNEL_LAYOUT_7_1_B << 16 | AF_CHANNEL_LAYOUT_7_1_A:
-		reorder_copy_8ch(dest, src, samples, samplesize, 1, 2, 3, 4, 7, 8, 5, 6);
-	case AF_CHANNEL_LAYOUT_7_1_A << 16 | AF_CHANNEL_LAYOUT_7_1_B:
-		reorder_copy_8ch(dest, src, samples, samplesize, 1, 2, 3, 4, 7, 8, 5, 6);
+	   case AF_CHANNEL_LAYOUT_7_1_B << 16 | AF_CHANNEL_LAYOUT_7_1_A:
+		      reorder_copy_8ch(dest, src, samples, samplesize, 0, 1, 2, 3, 6, 7, 4, 5);
+        break;
+	   case AF_CHANNEL_LAYOUT_7_1_A << 16 | AF_CHANNEL_LAYOUT_7_1_B:
+		      reorder_copy_8ch(dest, src, samples, samplesize, 0, 1, 2, 3, 6, 7, 4, 5);
         break;
     default:
         mp_msg(MSGT_GLOBAL, MSGL_WARN, "[reorder_channel_copy] unsupport "
@@ -1113,6 +1114,7 @@ void reorder_channel(void *src,
                      int samples,
                      int samplesize)
 {
+    int16_t *src_16 = NULL;
     if (dest_layout==src_layout)
         return;
     if (!AF_IS_SAME_CH_NUM(dest_layout,src_layout)) {
@@ -1216,15 +1218,12 @@ void reorder_channel(void *src,
         break;
     case AF_CHANNEL_LAYOUT_5_1_E << 16 | AF_CHANNEL_LAYOUT_5_1_B:
         reorder_self_2_4(src, samples, samplesize, 2, 4, 0, 1, 3, 5);
-		break;
-	case AF_CHANNEL_LAYOUT_7_1_B << 16 | AF_CHANNEL_LAYOUT_7_1_A:
-		// Channel 5 <-> channel 7, channel 6 <-> channel 8
-		reorder_self_4_step_2(src, samples, samplesize, 8, 4, 5, 6, 7);
-		break;
-	case AF_CHANNEL_LAYOUT_7_1_A << 16 | AF_CHANNEL_LAYOUT_7_1_B:
-		// Channel 5 <-> channel 7, channel 6 <-> channel 8
-		reorder_self_4_step_2(src, samples, samplesize, 8, 4, 5, 6, 7);
-        break;
+		      break;
+	   case AF_CHANNEL_LAYOUT_7_1_B << 16 | AF_CHANNEL_LAYOUT_7_1_A:
+    case AF_CHANNEL_LAYOUT_7_1_A << 16 | AF_CHANNEL_LAYOUT_7_1_B:
+		      // Channel 4 <-> channel 6, channel 5 <-> channel 7
+		      reorder_self_4_step_2(src, samples, samplesize, 8, 4, 5, 6, 7);
+		      break;
     default:
         mp_msg(MSGT_GLOBAL, MSGL_WARN,
                "[reorder_channel] unsupported from %x to %x, %d * %d\n",

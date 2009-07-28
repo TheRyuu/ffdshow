@@ -51,6 +51,8 @@ public:
  int (*sws_scale_ordered)(SwsContext *c, const uint8_t* src[], const stride_t srcStride[], int srcSliceY,int srcSliceH, uint8_t* dst[], stride_t dstStride[]);
  void (*sws_freeContext)(struct SwsContext *swsContext);
  void (*reorder_channel_nch) (void *buf, int src_layout,int dest_layout,int chnum,int samples,int samplesize);
+ void (*reorder_channel_copy_nch)(void *src,int src_layout,void *dest,int dest_layout,int chnum,int samples,int samplesize);
+
  int (*GetCPUCount)(void);
 
  mp3lib_ctx* (*MP3_Init)(int mono);

@@ -264,7 +264,7 @@ HRESULT TaudioCodecLibavcodec::decode(TbyteBuffer &src0)
 	 	 libmplayer->reorder_channel_nch(dst, 
 			 src_ch_layout,AF_CHANNEL_LAYOUT_FFDSHOW_DEFAULT,
 			 fmt.nchannels,
-			 dstLength / 2, 2);
+			 dstLength *8 / fmt.blockAlign(), fmt.blockAlign()/8);
 	 }
   }
 
