@@ -50,7 +50,6 @@ extern "C"
  Tconfig::Tfastmemcpy memcpy_x86;
  Tconfig::Tfastmemcpy memcpy_mmx;
  Tconfig::Tfastmemcpy memcpy_xmm;
- Tconfig::Tfastmemcpy memcpy_sse;
 }
 #endif
 

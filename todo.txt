@@ -1,51 +1,45 @@
 Known issues & bugs:
 
-List of known issues in revision 2003:
+Known bugs in revision 3046:
 
    1. H.263+ encoding hangs (in infinite loop?) at some settings. Details. There are similar problems with the MPEG-2 encoder.
-   2. FLV4 decoding crashes for this sample file.
-   3. B-frame decoding delay in VFW when using libavcodec for Xvid/DivX. Details.
-   4. In some cases VobSub subtitle files (.idx/.sub) are loaded, but no subs are displayed. VobSub support is still incomplete.
-   5. Compatibility issue with Vista Receiver Service (ehRecvr.exe). Details.
-   6. Some issues with logoaway in combination with image mask filter. Details.
+   2. Compatibility issue with Vista Receiver Service (ehRecvr.exe). Details.
+   3. Some issues with logoaway in combination with image mask filter. Details.
+   4. Anamorphic MPEG-1 video displays with incorrect aspect ratio when using libavcodec as decoder.
+   5. ttxt subtitles are always rendered in italic with small size and with times (new) roman font
+   6. CPU usage on OSD may show incorrect values.
+   7. Changes in the number of audio channels in an AAC stream causes silence.
+   8. libavcodec vorbis is broken in 64-bit builds.
+   9. More issues can be found on the bugtracker
 
+
+Limitations:
+
+   1. B-frame decoding delay in VFW when using libavcodec for Xvid/DivX.
+   2. In some cases VobSub subtitle files (.idx/.sub) are loaded, but no subs are displayed. VobSub support is still incomplete.
+
+
+ToDo:
 
 Short term ToDo list:
 
-   1. Update libswscale and mp3lib.
-   2. Fix compilation of libmplayer to 64bit target using GCC.
-   3. Fix compilation of kerneldeint to 64bit target using GCC.
-   4. Don't display a .sub file in "subtitle sources" list when a .idx with same name also exists.
+   1. Fix bugs
+   2. Improve multi-threaded decoding (ffmpeg-mt).
 
 
 Mid term ToDo list:
 
-   1. Fix vobsub in matroska.
-   2. ASS: Implement \move.
-   3. Improve translation dialog.
-   4. Improve audio preset loading rules.
+   1. Add support for Cook audio.
+   2. Add support for ALAC audio.
+   3. Support ADTS header for AAC audio streams.
+   4. Fill Wiki with content: FAQ, Tips & Tricks, and most importantly documentation for the many options of ffdshow.
 
 
 Long term ToDo list:
 
-   1. Set up an online wiki with a FAQ, Tips&Tricks, and most importantly documentation for the many options of ffdshow.
-   2. SSA/ASS: implement collisions and everything.
-
-
---------------------------------------------------------------------------------------
-
-TODO  (is this still up-to-date???)
-
-- support for video with dimensions not multiples of 16 [DONE BY ADDING BLACK BORDERS]
-- priorities
-- documentation
-- pan and scan
-- correct chroma smoother
-- allow changing of input frame size during playback [WIP]
-- show all subtitles in current directory [IN TRAY ICON MENU]
-- something between uniform and non-uniform noise
-- option to set bug workaround options depending on FOURCC [IN LIBAVCODEC]
-- fix acm
-- stream mixer
-- expand filter
-- avisynth + ICL
+   1. Update libswscale
+   2. Update libtheora
+   3. Update mp3lib
+   4. Improve subtitle support (vobsub, ASS/SSA).
+   5. Improve translation functionality.
+   6. Improve presets functionality.

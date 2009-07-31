@@ -49,7 +49,6 @@ SECTION .text
 cglobal memcpy_x86
 cglobal memcpy_mmx
 cglobal memcpy_xmm
-cglobal memcpy_sse
 
 ;-----------------------------------------------------------------------------
 ; SMALL_MEMCPY_X86(void *dst, cont void *src, int size)
@@ -106,108 +105,6 @@ memcpy_x86:
   pop esi
   ret
 .big_memcpy
-  BIG_MEMCPY_X86
-  mov eax, [esp+8+12]
-  pop edi
-  pop esi
-  ret
-
-;-----------------------------------------------------------------------------
-; void *memcpy_sse(void *dst, cont void *src, int size);
-;-----------------------------------------------------------------------------
-
-%define SSE_MMREG_SIZE 16
-%define SSE_MIN_LEN 0x40        ; 64-byte blocks
-
-ALIGN 16
-memcpy_sse:
-  push esi
-  push edi
-
-  mov edi, [esp+8+4]
-  mov esi, [esp+8+8]
-  mov ecx, [esp+8+12]
-
-  ; Prefetch some data, this is even good for the 386 code: movs(b|w|d)
-  prefetchnta [esi]
-  prefetchnta [esi+64]
-  prefetchnta [esi+128]
-  prefetchnta [esi+192]
-  prefetchnta [esi+256]
-
-  ; Is the block > MIN_SIZE in order to benefit from SSE block copying ?
-  cmp ecx, SSE_MIN_LEN
-  jl near .trailing_bytes       ; Not enough bytes, then just copy them the 386 way
-
-  ; We must align the destination address to a SSE_MMREG_SIZE boundary
-  ; to allow max throughput
-  mov edx, edi
-  and edx, SSE_MMREG_SIZE-1     ; see if it's an aligned address
-  je .destination_aligned
-
-  mov eax, ecx                  ; copy the number of bytes to copy
-  sub edx, SSE_MMREG_SIZE       ; compute -number of unaligned bytes
-  neg edx                       ; edx now holds the number of bytes to copy to the unaligned dest
-  sub eax, edx                  ; computes the remaining number of aligned bytes to copy during the sse2 memcpy
-  mov ecx, edx                  ; we will only copy the unaligned bytes for now
-  SMALL_MEMCPY_X86
-  mov ecx, eax                  ; put to ecx the number of bytes we have still to copy
-
-.destination_aligned
-  mov eax, ecx
-  shr eax, 6                    ; eax will be the loop counter == number of 64bytes blocks
-  and ecx, (64-1)               ; ecx will just keep trace of trailing bytes to copy
-  test esi, (16-1)
-  je .aligned_loop
-
-ALIGN 8
-.unaligned_loop                 ; SSE block copying (src address is not 16 byte aligned)
-  prefetchnta [esi+320]
-  movups xmm0, [esi+ 0]
-  movups xmm1, [esi+16]
-  movntps [edi+ 0], xmm0
-  movntps [edi+ 16], xmm1
-  movups xmm2, [esi+32]
-  movups xmm3, [esi+48]
-  movntps [edi+ 32], xmm2
-  movntps [edi+ 48], xmm3
-  add esi, 64
-  add edi, 64
-  dec eax
-  jne .unaligned_loop
-  sfence                        ; back to temporal data
-  jmp .trailing_bytes
-
-ALIGN 8
-.aligned_loop                   ; SSE block copying (src address is 16 byte aligned)
-  prefetchnta [esi+320]
-  movaps xmm0, [esi+ 0]
-  movaps xmm1, [esi+16]
-  movntps [edi+ 0], xmm0
-  movntps [edi+ 16], xmm1
-  movaps xmm2, [esi+32]
-  movaps xmm3, [esi+48]
-  movntps [edi+ 32], xmm2
-  movntps [edi+ 48], xmm3
-  add esi, 64
-  add edi, 64
-  dec eax
-  jne .aligned_loop
-  sfence                        ; back to temporal data
-
-  ; Copy the last bytes left after the sse block copying
-  ; ecx must hold the number of remaining bytes to copy
-  ; esi must hold the source address
-  ; edi must hold the destination address
-.trailing_bytes
-  cmp ecx, 3
-  jg .quite_a_few_trailing_bytes
-  SMALL_MEMCPY_X86
-  mov eax, [esp+8+12]
-  pop edi
-  pop esi
-  ret
-.quite_a_few_trailing_bytes
   BIG_MEMCPY_X86
   mov eax, [esp+8+12]
   pop edi
