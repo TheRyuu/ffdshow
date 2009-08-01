@@ -1,10 +1,10 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision           = '3045'
+#define tryout_revision           = '3051'
 
 #define buildyear                 = '2009'
-#define buildmonth                =   '07'
-#define buildday                  =   '31'
+#define buildmonth                =   '08'
+#define buildday                  =   '01'
 
 ; Build specific options
 #define localize                  = True
@@ -37,26 +37,28 @@
 ; Other
 #define cpu_detection             = True
 
-; Custom builder preferences
-#define PREF_CLSID      = False
-#define PREF_CLSID_ICL  = False
-#define PREF_CLSID_X64  = False
-#define PREF_YAMAGATA   = False
-#define PREF_XXL        = False
-#define PREF_XXL_X64    = False
-#define PREF_ALBAIN     = False
-#define PREF_ALBAIN_x64 = False
+; Custom builder preferences (uncomment one to enable, or define it through a command line parameter)
+;#define PREF_CLSID
+;#define PREF_CLSID_ICL
+;#define PREF_CLSID_X64
+;#define PREF_YAMAGATA
+;#define PREF_XXL
+;#define PREF_XXL_X64
+;#define PREF_ALBAIN
+;#define PREF_ALBAIN_x64
 
-#if PREF_CLSID
+#ifdef PREF_CLSID
   #define filename_suffix        = '_clsid'
   #define bindir                 = '..\..\x86'
   #define outputdir              = '..\..\..\..\'
-#elif PREF_CLSID_ICL
+#endif
+#ifdef PREF_CLSID_ICL
   #define sse_required           = True
   #define filename_suffix        = '_clsid_icl10'
   #define bindir                 = '..\..\x86'
   #define outputdir              = '..\..\..\..\'
-#elif PREF_CLSID_X64
+#endif
+#ifdef PREF_CLSID_X64
   #define is64bit                = True
   #define include_x264           = False
   #define include_xvidcore       = False
@@ -64,25 +66,30 @@
   #define filename_suffix        = '_clsid_x64'
   #define bindir                 = '..\..\x64'
   #define outputdir              = '..\..\..\..\'
-#elif PREF_YAMAGATA
+#endif
+#ifdef PREF_YAMAGATA
   #define include_xvidcore       = False
   #define filename_suffix        = '_Q'
-#elif PREF_XXL
+#endif
+#ifdef PREF_XXL
   #define localize               = False
   #define include_info_before    = True
   #define include_setup_icon     = True
   #define filename_suffix        = '_xxl'
-#elif PREF_XXL_X64
+#endif
+#ifdef PREF_XXL_X64
   #define is64bit                = True
   #define include_x264           = False
   #define include_plugin_dscaler = False
   #define include_info_before    = True
   #define include_setup_icon     = True
   #define filename_suffix        = '_xxl_x64'
-#elif PREF_ALBAIN
+#endif
+#ifdef PREF_ALBAIN
   #define sse_required           = True
   #define filename_suffix        = '_dbt'
-#elif PREF_ALBAIN_X64
+#endif
+#ifdef PREF_ALBAIN_X64
   #define is64bit                = True
   #define include_x264           = False
   #define include_plugin_dscaler = False
@@ -349,7 +356,7 @@ Name: "filter\subtitles";        Description: "{cm:tsk_subtitles}";             
 #else
 Name: "filter\subtitles";        Description: "{cm:tsk_subtitles}";               Components: ffdshow; Flags: unchecked
 #endif
-#if !PREF_YAMAGATA
+#ifndef PREF_YAMAGATA
 Name: "skiph264inloop";          Description: "{cm:tsk_skipInloop}";              Components: ffdshow; Flags: unchecked;                  Check: NOT IsUpdate; GroupDescription: "{cm:tsk_tweaks}"
 #endif
 Name: "whitelist";               Description: "{cm:tsk_whitelist}";               Components: ffdshow; Flags: unchecked;                  Check: NOT IsUpdate; GroupDescription: "{cm:tsk_compatibilityManager}"
@@ -403,7 +410,7 @@ Source: "{#= bindir}\ff_kernelDeint.dll";         DestDir: "{app}";             
 Source: "{#= bindir}\TomsMoComp_ff.dll";          DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
 Source: "{#= bindir}\libmpeg2_ff.dll";            DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion restartreplace uninsrestartdelete
 
-#if PREF_CLSID_ICL
+#ifdef PREF_CLSID_ICL
 Source: "{#= bindir}\ffdshow_icl.ax";             DestDir: "{app}"; DestName: "ffdshow.ax"; Components: ffdshow;                    Flags: ignoreversion restartreplace uninsrestartdelete regserver noregerror
 #else
 Source: "{#= bindir}\ffdshow.ax";                 DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion restartreplace uninsrestartdelete regserver noregerror
@@ -543,7 +550,7 @@ Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Control\MediaResources\acm\msacm.a
 Root: HKCU; Subkey: "{#= ff_reg_base}\default";       ValueType: dword;  ValueName: "postprocH264mode";     ValueData: "0";                  Components: ffdshow;     Flags: createvalueifdoesntexist
 Root: HKCU; Subkey: "{#= ff_reg_base}\default";       ValueType: dword;  ValueName: "resizeMethod";         ValueData: "9";                  Components: ffdshow;     Flags: createvalueifdoesntexist
 
-#if !PREF_YAMAGATA
+#ifndef PREF_YAMAGATA
 Root: HKCU; Subkey: "{#= ff_reg_base}";               ValueType: dword;  ValueName: "fastH264";             ValueData: "2";                  Components: ffdshow; Tasks:     skiph264inloop
 Root: HKCU; Subkey: "{#= ff_reg_base}";               ValueType: dword;  ValueName: "fastH264";             ValueData: "0";                  Components: ffdshow; Tasks: NOT skiph264inloop;        Check: NOT IsUpdate
 #endif
