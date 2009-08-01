@@ -555,8 +555,12 @@ static int reorder_self_3(void *src, unsigned int samples,
         if (chnum==6) {
             REORDER_SELF_SWAP_3(src_32,tmp,samples,6,s0,s1,s2);
         }
-        else {
+        else if (chnum==5) {
             REORDER_SELF_SWAP_3(src_32,tmp,samples,5,s0,s1,s2);
+        }
+        else
+        {
+            REORDER_SELF_SWAP_3(src_32,tmp,samples,chnum,s0,s1,s2);
         }
         break;
     }
@@ -1224,6 +1228,10 @@ void reorder_channel(void *src,
 		      // Channel 4 <-> channel 6, channel 5 <-> channel 7
 		      reorder_self_4_step_2(src, samples, samplesize, 8, 4, 5, 6, 7);
 		      break;
+    case AF_CHANNEL_LAYOUT_7_1_A << 16 | AF_CHANNEL_LAYOUT_7_1_C:
+    case AF_CHANNEL_LAYOUT_7_1_C << 16 | AF_CHANNEL_LAYOUT_7_1_A:
+        reorder_self_3(src, samples, samplesize, 8, 7, 6, 3);
+        break;
     default:
         mp_msg(MSGT_GLOBAL, MSGL_WARN,
                "[reorder_channel] unsupported from %x to %x, %d * %d\n",
@@ -1241,8 +1249,9 @@ static int channel_layout_mapping_5ch[AF_CHANNEL_LAYOUT_SOURCE_NUM] = {
     AF_CHANNEL_LAYOUT_LAVC_DCA_5CH_DEFAULT,
     AF_CHANNEL_LAYOUT_VORBIS_5CH_DEFAULT,
     AF_CHANNEL_LAYOUT_FLAC_5CH_DEFAULT,
-	AF_CHANNEL_LAYOUT_LAVC_MLP_5CH_DEFAULT,
-	AF_CHANNEL_LAYOUT_FFDSHOW_5CH_DEFAULT
+	   AF_CHANNEL_LAYOUT_LAVC_MLP_5CH_DEFAULT,
+    AF_CHANNEL_LAYOUT_5_0_A,
+	   AF_CHANNEL_LAYOUT_FFDSHOW_5CH_DEFAULT
 };
 
 static int channel_layout_mapping_6ch[AF_CHANNEL_LAYOUT_SOURCE_NUM] = {
@@ -1254,21 +1263,37 @@ static int channel_layout_mapping_6ch[AF_CHANNEL_LAYOUT_SOURCE_NUM] = {
     AF_CHANNEL_LAYOUT_LAVC_DCA_6CH_DEFAULT,
     AF_CHANNEL_LAYOUT_VORBIS_6CH_DEFAULT,
     AF_CHANNEL_LAYOUT_FLAC_6CH_DEFAULT,
-	AF_CHANNEL_LAYOUT_LAVC_MLP_6CH_DEFAULT,
+	   AF_CHANNEL_LAYOUT_LAVC_MLP_6CH_DEFAULT,
+    AF_CHANNEL_LAYOUT_5_1_A,
     AF_CHANNEL_LAYOUT_FFDSHOW_6CH_DEFAULT
+};
+
+static int channel_layout_mapping_7ch[AF_CHANNEL_LAYOUT_SOURCE_NUM] = {
+    AF_CHANNEL_LAYOUT_6_1_A,
+    AF_CHANNEL_LAYOUT_6_1_A,
+    AF_CHANNEL_LAYOUT_6_1_A,
+    AF_CHANNEL_LAYOUT_LAVC_EAC3_7CH_DEFAULT,
+    AF_CHANNEL_LAYOUT_6_1_A,
+    AF_CHANNEL_LAYOUT_6_1_A,
+    AF_CHANNEL_LAYOUT_6_1_A,
+    AF_CHANNEL_LAYOUT_6_1_A,
+	   AF_CHANNEL_LAYOUT_LAVC_MLP_7CH_DEFAULT,
+    AF_CHANNEL_LAYOUT_6_1_A,
+	   AF_CHANNEL_LAYOUT_FFDSHOW_7CH_DEFAULT
 };
 
 static int channel_layout_mapping_8ch[AF_CHANNEL_LAYOUT_SOURCE_NUM] = {
     AF_CHANNEL_LAYOUT_7_1_A,
     AF_CHANNEL_LAYOUT_7_1_A,
     AF_CHANNEL_LAYOUT_7_1_A,
+    AF_CHANNEL_LAYOUT_LAVC_EAC3_8CH_DEFAULT,
     AF_CHANNEL_LAYOUT_7_1_A,
     AF_CHANNEL_LAYOUT_7_1_A,
     AF_CHANNEL_LAYOUT_7_1_A,
     AF_CHANNEL_LAYOUT_7_1_A,
-    AF_CHANNEL_LAYOUT_7_1_A,
-	AF_CHANNEL_LAYOUT_LAVC_MLP_8CH_DEFAULT,
-	AF_CHANNEL_LAYOUT_FFDSHOW_8CH_DEFAULT
+	   AF_CHANNEL_LAYOUT_LAVC_MLP_8CH_DEFAULT,
+    AF_CHANNEL_LAYOUT_LPCM_8CH_DEFAULT,
+	   AF_CHANNEL_LAYOUT_FFDSHOW_8CH_DEFAULT
 };
 
 void reorder_channel_copy_nch(void *src,
@@ -1314,10 +1339,14 @@ void reorder_channel_nch(void *buf,
         reorder_channel(buf, channel_layout_mapping_5ch[src_layout],
                         channel_layout_mapping_5ch[dest_layout],
                         samples, samplesize);
-	else if (chnum==8)
-		reorder_channel(buf, channel_layout_mapping_8ch[src_layout],
-                        channel_layout_mapping_8ch[dest_layout],
-                        samples, samplesize);
+	   else if (chnum==8)
+		   reorder_channel(buf, channel_layout_mapping_8ch[src_layout],
+                           channel_layout_mapping_8ch[dest_layout],
+                           samples, samplesize);
+    else if (chnum==7)
+     reorder_channel(buf, channel_layout_mapping_7ch[src_layout],
+                           channel_layout_mapping_7ch[dest_layout],
+                           samples, samplesize);
 	else return;
 }
 
