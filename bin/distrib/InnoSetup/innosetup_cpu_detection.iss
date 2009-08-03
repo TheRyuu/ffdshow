@@ -96,21 +96,21 @@ begin
   else begin
     if (CPUInfo.bSSE_Supported  = 1) then begin
       cpu_sse  := true;
-    end
+    end;
     if (CPUInfo.bSSE2_Supported = 1) then begin
       cpu_sse2 := true;
-    end
+    end;
 
     cpu_cores := CPUInfo.htInfo.nPhysicalProcs;
     if cpu_cores > 8  then begin
       cpu_cores := 8;
-    end
+    end;
     if cpu_cores < 1 then begin
       cpu_cores := 1;
-    end
+    end;
 
     cpu_family := CPUInfo.coreInfo.dwCPUFamily;
-  end
+  end;
 
   cpu_checked := true;
 end;
@@ -119,7 +119,7 @@ function Is_SSE_Supported(): Boolean;
 begin
 	if NOT cpu_checked then begin
 		CPUCheck();
-	end
+	end;
   Result := cpu_sse;
 end;
 
@@ -127,7 +127,7 @@ function Is_SSE2_Supported(): Boolean;
 begin
 	if NOT cpu_checked then begin
 		CPUCheck();
-	end
+	end;
   Result := cpu_sse2;
 end;
 
@@ -135,7 +135,7 @@ function GetNumberOfCores(): Integer;
 begin
 	if NOT cpu_checked then begin
 		CPUCheck();
-	end
+	end;
   Result := cpu_cores;
 end;
 
@@ -143,6 +143,6 @@ function HasSupportedCPU(): Boolean;
 begin
 	if NOT cpu_checked then begin
 		CPUCheck();
-	end
+	end;
   Result := (cpu_family >= 6);
 end;
