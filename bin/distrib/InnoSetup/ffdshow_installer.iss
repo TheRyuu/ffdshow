@@ -1,10 +1,10 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision           = '3051'
+#define tryout_revision           = '3052'
 
 #define buildyear                 = '2009'
 #define buildmonth                =   '08'
-#define buildday                  =   '01'
+#define buildday                  =   '03'
 
 ; Build specific options
 #define localize                  = True
@@ -676,7 +676,7 @@ begin
   if CheckTaskAudio('ac3', 16, False) then
     begin
       Result := True;
-    end
+    end;
   if RegGetSubkeyNames(HKCU, '{#= ff_reg_base}_audio\', presetList) then
     begin
       for index := 0 to GetArrayLength(presetList)-1 do
@@ -693,7 +693,7 @@ begin
                 end
             end
         end
-    end
+    end;
   if RegQueryDwordValue(HKCU, '{#= ff_reg_base}_audio\default', 'outsfs', regval) then
   begin
     // the second condition equals (regval & 16 > 0)
@@ -718,7 +718,7 @@ begin
   if CheckTaskAudio('dts', 16, False) then
     begin
       Result := True;
-    end
+    end;
   if RegGetSubkeyNames(HKCU, '{#= ff_reg_base}_audio\', presetList) then
     begin
       for index := 0 to GetArrayLength(presetList)-1 do
@@ -735,7 +735,7 @@ begin
                 end
             end
         end
-    end
+    end;
   if RegQueryDwordValue(HKCU, '{#= ff_reg_base}_audio\default', 'outsfs', regval) then
   begin
     // the second condition equals (regval & 16 > 0)
@@ -755,11 +755,11 @@ begin
   if CheckTaskAudio('ac3DRC', 1, False) then
     begin
       Result := True;
-    end
+    end;
   if CheckTaskAudio('dtsDRC', 1, False) then
     begin
       Result := True;
-    end
+    end;
 if (Result) then
   begin
     if RegGetSubkeyNames(HKCU, '{#= ff_reg_base}_audio\', presetList) then
@@ -772,7 +772,7 @@ if (Result) then
               end
           end
       end
-  end
+  end;
   if CheckTaskAudioInpreset('decoderDRC', 1, False) then
     begin
       Result := True;
@@ -791,7 +791,7 @@ begin
         avisynthplugindir := ExpandConstant('{app}');
       end
     end
-  end
+  end;
 
   Result := avisynthplugindir;
 end;
@@ -819,7 +819,7 @@ begin
         end
       end
     end
-  end
+  end;
   Result := dscalerdir;
 end;
 #endif
@@ -869,24 +869,24 @@ begin
   if Result AND NOT HasSupportedCPU() then begin
     Result := False;
     MsgBox(CustomMessage('unsupported_cpu'), mbError, MB_OK);
-  end
+  end;
     #if sse2_required
   if Result AND NOT Is_SSE2_Supported() then begin
     Result := False;
     MsgBox(CustomMessage('simd_msg_sse2'), mbError, MB_OK);
-  end
+  end;
     #elif sse_required
   if Result AND NOT Is_SSE_Supported() then begin
     Result := False;
     MsgBox(CustomMessage('simd_msg_sse'), mbError, MB_OK);
-  end
+  end;
     #endif
   #endif
 
   #if !is64bit
   if Result then begin
     RemoveBuildUsingNSIS;
-  end
+  end;
   #endif
 
   if Result then begin
@@ -1061,16 +1061,16 @@ begin
           SpeakerPage.Add(           CustomMessage('spk_unknownSpk'));
         SpeakerPage.Values[8] := True;
         isMajorType := False;
-      end
+      end;
       if isMajorType then begin
        SpeakerPage.Add(CustomMessage('spk_disableMixer'));
        is8DisableMixer := True;
-      end
+      end;
     end else begin
       SpeakerPage.Add(CustomMessage('spk_disableMixer'));
       is8DisableMixer := True;
       SpeakerPage.Values[8] := True;
-    end
+    end;
   end else begin
     reg_ismixer := 1;
     reg_mixerOut := 1;
@@ -1100,7 +1100,7 @@ begin
       SpeakerPage.Values[7] := True;
     if is8DisableMixer then
      SpeakerPage.Add(CustomMessage('spk_disableMixer'));
-  end
+  end;
 
 #if include_plugin_virtualdub
   // VirtualDub plugin install directory setting
