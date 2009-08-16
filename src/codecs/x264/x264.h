@@ -26,7 +26,7 @@
 
 #include <stdarg.h>
 
-#define X264_BUILD "68" /* ffdshow custom code */
+#define X264_BUILD "71"
 
 /* x264_t:
  *      opaque handler for encoder */
@@ -233,6 +233,7 @@ typedef struct x264_param_t
         int          i_noise_reduction; /* adaptive pseudo-deadzone */
         float        f_psy_rd; /* Psy RD strength */
         float        f_psy_trellis; /* Psy trellis strength */
+        int          b_psy; /* Toggle all psy optimizations */
 
         /* the deadzone size that will be used in luma quantization */
         int          i_luma_deadzone[2]; /* {inter, intra} */
@@ -262,6 +263,8 @@ typedef struct x264_param_t
 
         int         i_aq_mode;      /* psy adaptive QP. (X264_AQ_*) */
         float       f_aq_strength;
+        int         b_mb_tree;      /* Macroblock-tree ratecontrol. */
+        int         i_lookahead;
 
         /* 2pass */
         int         b_stat_write;   /* Enable stat writing in psz_stat_out */
@@ -354,8 +357,9 @@ struct x264_frame_t; /* ffdshow custom code */
 typedef void (*x264_fill_picture_t)(struct x264_frame_t *pic,void *data); /* ffdshow custom code */
 
 /* x264_picture_alloc:
- *  alloc data for a picture. You must call x264_picture_clean on it. */
-void x264_picture_alloc( x264_picture_t *pic, int i_csp, int i_width, int i_height );
+ *  alloc data for a picture. You must call x264_picture_clean on it.
+ *  returns 0 on success, or -1 on malloc failure. */
+int x264_picture_alloc( x264_picture_t *pic, int i_csp, int i_width, int i_height );
 
 /* x264_picture_clean:
  *  free associated resource for a x264_picture_t allocated with
@@ -428,5 +432,9 @@ int     x264_encoder_encode ( x264_t *, x264_nal_t **, int *, x264_fill_picture_
 /* x264_encoder_close:
  *      close an encoder handler */
 void    x264_encoder_close  ( x264_t * );
+/* x264_encoder_delayed_frames:
+ *      return the number of currently delayed (buffered) frames
+ *      this should be used at the end of the stream, to know when you have all the encoded frames. */
+int     x264_encoder_delayed_frames( x264_t * );
 
 #endif

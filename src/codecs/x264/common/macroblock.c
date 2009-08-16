@@ -702,7 +702,8 @@ int x264_macroblock_cache_init( x264_t *h )
     for( i=0; i<=h->param.b_interlaced; i++ )
         for( j=0; j<3; j++ )
         {
-            CHECKED_MALLOC( h->mb.intra_border_backup[i][j], h->fdec->i_stride[j] );
+            /* shouldn't really be initialized, just silences a valgrind false-positive in predict_8x8_filter_mmx */
+            CHECKED_MALLOCZERO( h->mb.intra_border_backup[i][j], h->fdec->i_stride[j] );
             h->mb.intra_border_backup[i][j] += 8;
         }
 
@@ -743,7 +744,8 @@ int x264_macroblock_cache_init( x264_t *h )
     int me_range = X264_MIN(h->param.analyse.i_me_range, h->param.analyse.i_mv_range);
     int buf_tesa = (h->param.analyse.i_me_method >= X264_ME_ESA) *
         ((me_range*2+18) * sizeof(int16_t) + (me_range+4) * (me_range+1) * 4 * sizeof(mvsad_t));
-    CHECKED_MALLOC( h->scratch_buffer, X264_MAX3( buf_hpel, buf_ssim, buf_tesa ) );
+    int buf_mbtree = h->param.rc.b_mb_tree * ((h->sps->i_mb_width+3)&~3) * sizeof(int);
+    CHECKED_MALLOC( h->scratch_buffer, X264_MAX4( buf_hpel, buf_ssim, buf_tesa, buf_mbtree ) );
 
     return 0;
 fail: return -1;
