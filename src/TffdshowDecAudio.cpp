@@ -217,7 +217,7 @@ CodecID TffdshowDecAudio::getCodecId(const CMediaType &mt)
   wFormatTag=WAVE_FORMAT_LPCM;
  else if (mt.subtype==MEDIASUBTYPE_AAC3)
   wFormatTag=WAVE_FORMAT_AAC3;
- else if (mt.subtype==MEDIASUBTYPE_AAC5)
+ else if (mt.subtype==MEDIASUBTYPE_AAC5 || mt.subtype==KSDATAFORMAT_SUBTYPE_IEC61937_AAC)
   wFormatTag=WAVE_FORMAT_AAC5;
  else if (mt.subtype==MEDIASUBTYPE_MPEG2_AUDIO)
   wFormatTag=WAVE_FORMAT_MPEG;
@@ -230,11 +230,14 @@ CodecID TffdshowDecAudio::getCodecId(const CMediaType &mt)
  else if (mt.subtype==MEDIASUBTYPE_NELLYMOSER)
 	wFormatTag=WAVE_FORMAT_NELLYMOSER;
  else if (mt.subtype==MEDIASUBTYPE_DOLBY_TRUEHD || mt.subtype==MEDIASUBTYPE_NERO_MLP 
-     || mt.subtype==MEDIASUBTYPE_ARCSOFT_MLP || mt.subtype==MEDIASUBTYPE_SONIC_MLP)
+     || mt.subtype==MEDIASUBTYPE_ARCSOFT_MLP || mt.subtype==MEDIASUBTYPE_SONIC_MLP
+     || mt.subtype==KSDATAFORMAT_SUBTYPE_IEC61937_DOLBY_MLP)
      wFormatTag=WAVE_FORMAT_TRUEHD;
- else if (mt.subtype==MEDIASUBTYPE_DOLBY_DDPLUS || mt.subtype==MEDIASUBTYPE_ARCSOFT_DDPLUS)
+ else if (mt.subtype==MEDIASUBTYPE_DOLBY_DDPLUS || mt.subtype==MEDIASUBTYPE_ARCSOFT_DDPLUS ||
+  mt.subtype==KSDATAFORMAT_SUBTYPE_IEC61937_DOLBY_DIGITAL_PLUS)
      wFormatTag=WAVE_FORMAT_EAC3;
- else if (mt.subtype==MEDIASUBTYPE_DTS_HD || mt.subtype==MEDIASUBTYPE_ARCSOFT_DTSHD)
+ else if (mt.subtype==MEDIASUBTYPE_DTS_HD || mt.subtype==MEDIASUBTYPE_ARCSOFT_DTSHD ||
+  mt.subtype==KSDATAFORMAT_SUBTYPE_IEC61937_DTS_HD)
      wFormatTag=WAVE_FORMAT_DTS_HD; // TODO : define a separate codecId for DTSHD when available
  else
   {
@@ -358,7 +361,7 @@ HRESULT TffdshowDecAudio::CheckConnect(PIN_DIRECTION dir,IPin *pPin)
 TsampleFormat TffdshowDecAudio::getOutsf(void)
 {
  TsampleFormat outsf;
- if (inpin->getsf(outsf)) // SPDIF
+ if (inpin->getsf(outsf)) // SPDIF/HDMI
   return outsf;
  else
   { 
@@ -1161,5 +1164,11 @@ int TffdshowDecAudio::get_trayIconType(void)
 
 STDMETHODIMP_(TinputPin*) TffdshowDecAudio::getInputPin(void)
 {
- return GetCurrentPin();;
+ return GetCurrentPin();
 }
+
+STDMETHODIMP_(CTransformOutputPin*) TffdshowDecAudio::getOutputPin(void)
+{
+ return m_pOutput;
+}
+

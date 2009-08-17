@@ -80,6 +80,7 @@ public:
  STDMETHODIMP_(TffdshowDecAudioInputPin *) GetCurrentPin(void);
  STDMETHODIMP_(TinputPin*)getInputPin(void);
  STDMETHODIMP deliverSampleSPDIF2(void *buf,size_t bufsize,int bit_rate,unsigned int sample_rate,BYTE type,int incRtDec,int frame_length);
+ STDMETHODIMP_(CTransformOutputPin*)getOutputPin(void);
 
  static const AMOVIESETUP_MEDIATYPE inputMediaTypes[],outputMediaTypes[];
  static const AMOVIESETUP_PIN pins[];
@@ -151,6 +152,7 @@ private:
    STDMETHODIMP_(int) getJitter(void) {return deciA->getJitter();}
    STDMETHODIMP_(TinputPin*) getInputPin(void){ return((TinputPin*)deciA->GetCurrentPin());};
    STDMETHODIMP deliverSampleSPDIF2(void *buf,size_t bufsize,int bit_rate,unsigned int sample_rate,BYTE type,int incRtDec,int frame_length) {return deciA->deliverSampleSPDIF2(buf,bufsize,bit_rate,sample_rate,type,incRtDec,frame_length);}
+   STDMETHODIMP_(CTransformOutputPin*) getOutputPin(void) { return deciA->getOutputPin();};
   } decAudio_char;
  template<class Tinterface> Tinterface* getDecAudioInterface(void);
 protected:

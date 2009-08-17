@@ -71,8 +71,8 @@ STDMETHODIMP TffProcAudio::begin(const WAVEFORMATEX *wfIn,WAVEFORMATEX *wfOut)
  initAudioFilters();
  TsampleFormat sf(*wfIn);
  audioFilters->getOutputFmt(sf,presetSettings);
- WAVEFORMATEXTENSIBLE wfext=sf.toWAVEFORMATEXTENSIBLE();
- *wfOut=wfext.Format;
+ WAVEFORMATEXTENSIBLE_IEC61937 wfext=sf.toWAVEFORMATEXTENSIBLE_IEC61937(true);
+ *wfOut=wfext.FormatExt.Format;
  return S_OK;
 }
 STDMETHODIMP TffProcAudio::end(void)
@@ -95,7 +95,8 @@ STDMETHODIMP TffProcAudio::processEx(const WAVEFORMATEXTENSIBLE *wfIn,size_t inn
  HRESULT hr=audioFilters->process(*wfIn,*samples0,innumsamples,presetSettings,1);
  if (hr==S_OK)
   {
-   *wfOut=sfOut.toWAVEFORMATEXTENSIBLE();
+   WAVEFORMATEXTENSIBLE_IEC61937 wfex_iec61937 = sfOut.toWAVEFORMATEXTENSIBLE_IEC61937(true);
+   *wfOut=wfex_iec61937.FormatExt;
    *outnumsamples=this->outnumsamples;
    *samples0=(void*)outsamples;
   }

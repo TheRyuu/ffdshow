@@ -65,6 +65,12 @@ ToutputAudioSettings::ToutputAudioSettings(TintStrColl *Icoll,TfilterIDFFs *filt
      _l("connectToOnlySpdif"),1,
    IDFF_aoutAC3EncodeMode      ,&ToutputAudioSettings::outAC3EncodeMode      ,0,0,_l(""),1,
      _l("outAC3EncodeMode"),0,
+   IDFF_aoutpassthroughTRUEHD  ,&ToutputAudioSettings::passthroughTRUEHD     ,0,1,_l(""),1,
+     _l("passthroughTRUEHD"),0,
+   IDFF_aoutpassthroughDTSHD   ,&ToutputAudioSettings::passthroughDTSHD      ,0,1,_l(""),1,
+     _l("passthroughDTSHD"),0,
+   IDFF_aoutpassthroughEAC3   ,&ToutputAudioSettings::passthroughEAC3      ,0,1,_l(""),1,
+     _l("passthroughEAC3"),0,
    0
   };
  addOptions(iopts);

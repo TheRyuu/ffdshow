@@ -26,7 +26,7 @@ public:
  TaudioCodec *audio;
  void block(bool is);
  int number;
- bool getsf(TsampleFormat &sf); //true if S/PDIF
+
  bool is_spdif_codec(void) const {return  audio && spdif_codec(audio->codecId);}
 
  STDMETHODIMP Receive(IMediaSample* pSample);
@@ -39,6 +39,8 @@ public:
  STDMETHODIMP setCodecId(CodecID codecId);
  STDMETHODIMP getCodecId(CodecID *pCodecId);
  STDMETHODIMP getAudioParser(TaudioParser **ppAudioParser);
+ STDMETHODIMP deliverProcessedSample(const void *buf,size_t numsamples,const TsampleFormat &fmt);
+ STDMETHODIMP_(bool)getsf(TsampleFormat &sf); //true if S/PDIF or bitstream HDMI
 
  HRESULT getMovieSource(const TaudioCodec* *moviePtr);
  virtual HRESULT getInCodecString(char_t *buf,size_t buflen);

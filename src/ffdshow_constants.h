@@ -950,6 +950,9 @@
 #define IDFF_aoutAC3EncodeMode      3379
 #define IDFF_aoutpassthroughAC3     3501
 #define IDFF_aoutpassthroughDTS     3502
+#define IDFF_aoutpassthroughTRUEHD  3524
+#define IDFF_aoutpassthroughDTSHD   3525
+#define IDFF_aoutpassthroughEAC3    3526
 
 #define IDFF_dithering          1311
 #define IDFF_noiseShaping       1312
@@ -1551,6 +1554,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//next:3524
+//next:3527
 
 #endif

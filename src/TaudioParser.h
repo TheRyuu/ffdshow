@@ -112,6 +112,9 @@ private:
  bool useAC3CoreOnly;
  bool useAC3Passthrough;
  bool useDTSPassthrough;
+ bool useTrueHDPassthrough;
+ bool useDTSHDPassthrough;
+ bool useEAC3Passthrough;
  StreamFormat streamformat;
  TglobalSettingsDecAudio *globalSettings;
  int nbFormatChanges;
@@ -136,6 +139,7 @@ public:
  virtual CodecID getCodecIdFromStream(void);
  virtual void NewSegment(void);
  virtual void init(void);
-};
+ virtual bool checkOutputFormat(CodecID codecId);
+ };
 
 #endif

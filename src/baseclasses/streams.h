@@ -84,6 +84,19 @@ typedef struct {
 #define  WAVE_FORMAT_EXTENSIBLE                 0xFFFE
 #endif // !defined(WAVE_FORMAT_EXTENSIBLE)
 
+// New structure for bitstreaming HD compressed streams (from Windows 7)
+#ifndef _WAVEFORMATEXTENSIBLE_IEC61937_
+#define _WAVEFORMATEXTENSIBLE_IEC61937_
+typedef struct {
+    WAVEFORMATEXTENSIBLE  FormatExt;    // Format of encoded data as it is
+                                        // intended to be streamed over the link
+    DWORD   dwEncodedSamplesPerSec;     // Sampling rate of the post-decode audio.
+    DWORD   dwEncodedChannelCount;      // Channel count of the post-decode audio.
+    DWORD   dwAverageBytesPerSec;       // Byte rate of the content, can be 0.
+} WAVEFORMATEXTENSIBLE_IEC61937, *PWAVEFORMATEXTENSIBLE_IEC61937;
+#endif // !_WAVEFORMATEXTENSIBLE_IEC61937_
+
+
 #ifndef GetWindowLongPtr
   #define GetWindowLongPtrA   GetWindowLongA
   #define GetWindowLongPtrW   GetWindowLongW

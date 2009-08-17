@@ -22,6 +22,9 @@
 #include "xiph/vorbis/vorbisformat.h"
 #include "dsutil.h"
 
+
+float TsampleFormat::os_version=0;
+
 const int TsampleFormat::standardChannelMasks[]=
 {
  SPEAKER_FRONT_CENTER,
@@ -101,6 +104,13 @@ void TsampleFormat::init(const WAVEFORMATEXTENSIBLE &wfexten,const GUID *subtype
  if (wfexten.SubFormat==MEDIASUBTYPE_IEEE_FLOAT)
   sf=SF_FLOAT32;
 }
+void TsampleFormat::init(const WAVEFORMATEXTENSIBLE_IEC61937 &wfexten_iec61937,const GUID *subtype)
+{
+ init(wfexten_iec61937.FormatExt,subtype);
+ /*wfexten_iec61937.dwAverageBytesPerSec=0;
+ wfexten_iec61937.dwEncodedSamplesPerSec=0;
+ wfexten_iec61937.dwEncodedChannelCount=(wfexten_iec61937.FormatExt.Format.nChannels;*/
+}
 TsampleFormat::TsampleFormat(const VORBISFORMAT &vf):pcm_be(false)
 {
  init(vf);
@@ -150,7 +160,7 @@ TsampleFormat::TsampleFormat(const AM_MEDIA_TYPE &mt):pcm_be(false)
  else if (mt.formattype==FORMAT_VorbisFormatIll)
   init(*(const VORBISFORMATILL*)mt.pbFormat);
  else if (mt.formattype==FORMAT_WaveFormatEx)
-  init(*(const WAVEFORMATEX*)mt.pbFormat,true,&mt.subtype);
+  init(*(const WAVEFORMATEXTENSIBLE_IEC61937*)mt.pbFormat,&mt.subtype);
  else
   {
    nchannels=NULL;
@@ -263,6 +273,8 @@ WAVEFORMATEXTENSIBLE TsampleFormat::toWAVEFORMATEXTENSIBLE(bool alwayextensible)
   wfe->wFormatTag=(WORD)WAVE_FORMAT_IEEE_FLOAT;
  else if (sf==SF_LPCM16)
   wfe->wFormatTag=(WORD)WAVE_FORMAT_UNKNOWN;
+ else if (sf==SF_TRUEHD || sf==SF_DTSHD || sf==SF_EAC3)
+  wfe->wFormatTag=(WORD)WAVE_FORMAT_EXTENSIBLE;
  else
   wfe->wFormatTag=(WORD)WAVE_FORMAT_PCM;
  wfe->nChannels=WORD(nchannels);
@@ -292,6 +304,56 @@ WAVEFORMATEXTENSIBLE TsampleFormat::toWAVEFORMATEXTENSIBLE(bool alwayextensible)
  return wfex;
 }
 
+// New Windows 7 structure
+WAVEFORMATEXTENSIBLE_IEC61937 TsampleFormat::toWAVEFORMATEXTENSIBLE_IEC61937(bool alwayextensible) const
+{
+ WAVEFORMATEXTENSIBLE_IEC61937 wfex_iec61937;
+ memset(&wfex_iec61937,0,sizeof(wfex_iec61937));
+ wfex_iec61937.FormatExt=toWAVEFORMATEXTENSIBLE(alwayextensible);
+ wfex_iec61937.dwEncodedSamplesPerSec=freq;
+ wfex_iec61937.dwEncodedChannelCount=nchannels;
+ wfex_iec61937.dwAverageBytesPerSec=0;
+
+ switch (sf)
+ {
+  case SF_TRUEHD:
+   wfex_iec61937.FormatExt.SubFormat = KSDATAFORMAT_SUBTYPE_IEC61937_DOLBY_MLP;
+   wfex_iec61937.FormatExt.Format.wFormatTag = WAVE_FORMAT_EXTENSIBLE;
+   wfex_iec61937.FormatExt.Format.wBitsPerSample = 16;
+   wfex_iec61937.FormatExt.Format.cbSize = 34;
+   break;
+  case SF_DTSHD:
+   wfex_iec61937.FormatExt.SubFormat = KSDATAFORMAT_SUBTYPE_IEC61937_DTS_HD;
+   wfex_iec61937.FormatExt.Format.wFormatTag = WAVE_FORMAT_EXTENSIBLE;
+   wfex_iec61937.FormatExt.Format.wBitsPerSample = 16;
+   wfex_iec61937.FormatExt.Format.cbSize = 34;
+   break;
+  case SF_EAC3:
+   wfex_iec61937.FormatExt.SubFormat = KSDATAFORMAT_SUBTYPE_IEC61937_DOLBY_DIGITAL_PLUS;
+   wfex_iec61937.FormatExt.Format.wFormatTag = WAVE_FORMAT_EXTENSIBLE;
+   wfex_iec61937.FormatExt.Format.wBitsPerSample = 16;
+   wfex_iec61937.FormatExt.Format.cbSize = 34;
+   break;
+ }
+ return wfex_iec61937;
+}
+
+float TsampleFormat::getOSVersion(void)
+{
+ if (os_version==0)
+ {
+   OSVERSIONINFO osvi;
+   BOOL bIsWindowsXPorLater;
+
+   ZeroMemory(&osvi, sizeof(OSVERSIONINFO));
+   osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
+
+   GetVersionEx(&osvi);
+   os_version=(float)osvi.dwMajorVersion+(float)osvi.dwMajorVersion/10;
+ }
+ return os_version;
+}
+
 CMediaType TsampleFormat::toCMediaType(bool alwaysextensible) const
 {
  CMediaType mt;
@@ -303,11 +365,20 @@ CMediaType TsampleFormat::toCMediaType(bool alwaysextensible) const
   mt.subtype=MEDIASUBTYPE_IEEE_FLOAT;
  else if (sf==SF_LPCM16)
   mt.subtype=MEDIASUBTYPE_DVD_LPCM_AUDIO;
+ else if (sf==SF_TRUEHD)
+  mt.subtype=MEDIASUBTYPE_DOLBY_TRUEHD;
+ else if (sf==SF_DTSHD)
+  mt.subtype=MEDIASUBTYPE_DTS_HD;
+ else if (sf==SF_EAC3)
+  mt.subtype=MEDIASUBTYPE_DOLBY_DDPLUS;
  else
   mt.subtype=MEDIASUBTYPE_PCM;
+
  mt.formattype=FORMAT_WaveFormatEx;
- WAVEFORMATEXTENSIBLE wfex=toWAVEFORMATEXTENSIBLE(alwaysextensible);
- mt.SetFormat((BYTE*)&wfex,sizeof(wfex.Format)+wfex.Format.cbSize);
+ WAVEFORMATEXTENSIBLE_IEC61937 wfex_iec61937=toWAVEFORMATEXTENSIBLE_IEC61937(alwaysextensible);
+ // cbSize = 54
+ mt.SetFormat((BYTE*)&wfex_iec61937,
+    sizeof(wfex_iec61937.FormatExt.Format)+sizeof(wfex_iec61937.FormatExt)+wfex_iec61937.FormatExt.Format.cbSize); 
  return mt;
 }
 
@@ -356,3 +427,18 @@ void TsampleFormat::getSpeakersDescr(char_t *buf,size_t buflen,bool shrt) const
  size_t len=strlen(buf);
  if (len && buf[len-1]==',') buf[len-1]='\0';
 }
+
+// Static method that returns the output sample format according to the input stream to passthrough
+int TsampleFormat::getSampleFormat(CodecID codecId)
+{
+ switch(codecId)
+ {
+  case CODEC_ID_BISTREAM_TRUEHD: return TsampleFormat::SF_TRUEHD;
+  case CODEC_ID_BISTREAM_DTSHD: return TsampleFormat::SF_DTSHD;
+  case CODEC_ID_SPDIF_EAC3: return TsampleFormat::SF_EAC3;
+  case CODEC_ID_SPDIF_AC3:
+  case CODEC_ID_SPDIF_DTS:return TsampleFormat::SF_AC3;
+  default:return TsampleFormat::SF_PCM16;
+ }
+}
+

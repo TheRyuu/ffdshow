@@ -13,6 +13,7 @@ DECLARE_INTERFACE_(IdecAudioSink,IdecSink)
  STDMETHOD (setCodecId)(CodecID codecId) PURE;
  STDMETHOD (getCodecId)(CodecID *pCodecId) PURE;
  STDMETHOD (getAudioParser)(TaudioParser **ppAudioParser) PURE;
+ STDMETHOD_(bool,getsf)(TsampleFormat &sf); // return true if SPDIF/bitstream HDMI
 };
 
 class TaudioCodec :public TcodecDec

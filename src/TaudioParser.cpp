@@ -106,16 +106,63 @@ CodecID TaudioParser::parseStream(unsigned char *src, int size,
  return codecId;
 }
 
+// This method is called for bitstream formats to check if the output renderer is compatible
+bool TaudioParser::checkOutputFormat(CodecID codecId)
+{
+ TsampleFormat fmt=TsampleFormat(TsampleFormat::SF_PCM16,
+        sample_rate,channels);
+ fmt.sf=TsampleFormat::getSampleFormat(codecId);
+
+ if (spdif_codec(codecId))
+ {
+  fmt=TsampleFormat::createMediaTypeSPDIF(sample_rate);
+ }
+
+ CMediaType mt=fmt.toCMediaType();
+
+ IPin *outConnectedPin=NULL;
+ CTransformOutputPin *m_pOutput=deciA->getOutputPin();
+ if (m_pOutput == NULL) return true;
+ m_pOutput->ConnectedTo(&outConnectedPin);
+ if (outConnectedPin!=NULL)
+ {
+  HRESULT hr=outConnectedPin->QueryAccept(&mt);
+  outConnectedPin->Release();
+  if (hr!=S_OK)
+  {
+   DPRINTF(_l("TaudioParser::checkOutputFormat : the output sample format (compressed stream to bitstream) %s is not accepted by the renderer for codec %s"),TsampleFormat::descriptionPCM(fmt.sf), getCodecName(codecId));
+   return false;
+  }
+  DPRINTF(_l("TaudioParser::checkOutputFormat : the output sample format (compressed stream to bitstream) %s is accepted by the renderer for codec %s"),TsampleFormat::descriptionPCM(fmt.sf), getCodecName(codecId));
+  return true;
+ }
+ return false;
+}
+
 CodecID TaudioParser::getCodecIdFromStream()
 {
-    CodecID codecIDAC3 = globalSettings->getCodecId(WAVE_FORMAT_AC3_W,NULL);
-    useAC3CoreOnly = (codecIDAC3 != CODEC_ID_NONE)
-        && (globalSettings->getCodecId(WAVE_FORMAT_TRUEHD,NULL)==CODEC_ID_NONE);
+ // Apply Dobly True-HD passthrough if decoding if checkbox is selected
+ useTrueHDPassthrough = deci->getParam2(IDFF_aoutpassthroughTRUEHD) == 1;
+ // Apply DTS-HD passthrough if checkbox is selected
+ useDTSHDPassthrough = (deci->getParam2(IDFF_aoutpassthroughDTSHD) == 1);
+ // Apply EAC3 passthrough if checkbox is selected
+ useEAC3Passthrough = (deci->getParam2(IDFF_aoutpassthroughEAC3) == 1);
+
+
+ // Use AC3 core from TrueHD only if : an AC3 decoder is enabled & TrueHD decoder is disabled &
+ //  TrueHD passthrough is disabled
+ CodecID codecIDAC3 = globalSettings->getCodecId(WAVE_FORMAT_AC3_W,NULL);
+ useAC3CoreOnly = (codecIDAC3 != CODEC_ID_NONE)
+   && (globalSettings->getCodecId(WAVE_FORMAT_TRUEHD,NULL)==CODEC_ID_NONE)
+   &&  !useTrueHDPassthrough;
 
 	useAC3Passthrough = (codecIDAC3 != CODEC_ID_NONE) && (deci->getParam2(IDFF_aoutpassthroughAC3) == 1);
-
+ 
 	CodecID codecIDDTS = globalSettings->getCodecId(WAVE_FORMAT_DTS_W,NULL);
 	useDTSPassthrough = (codecIDDTS != CODEC_ID_NONE) && (deci->getParam2(IDFF_aoutpassthroughDTS) == 1);
+
+ 
+
 	// Don't allow more than 1 format change
 	if (nbFormatChanges==2)
 		return codecId;
@@ -125,31 +172,75 @@ CodecID TaudioParser::getCodecIdFromStream()
 	switch (streamformat)
 	{
 	case REGULAR_AC3:
-		wFormatTag=WAVE_FORMAT_AC3_W;
 		if (useAC3Passthrough)
 		{
-			codecId=CODEC_ID_SPDIF_AC3;nbFormatChanges++;
-			return codecId;
+   if (codecId!=CODEC_ID_SPDIF_AC3) nbFormatChanges++;
+			codecId=CODEC_ID_SPDIF_AC3;
+   if (checkOutputFormat(codecId))
+      return codecId;
+   else
+    deci->putParam(IDFF_aoutpassthroughAC3,0);
 		}
+  wFormatTag=WAVE_FORMAT_AC3_W;
 		break;
-	case EAC3:wFormatTag=WAVE_FORMAT_EAC3;
+	case EAC3:
+  if (useEAC3Passthrough)
+  {
+     if (codecId!=CODEC_ID_SPDIF_EAC3) nbFormatChanges++;
+     codecId=CODEC_ID_SPDIF_EAC3;
+     if (checkOutputFormat(codecId))
+      return codecId;
+  }
+  wFormatTag=WAVE_FORMAT_EAC3;
 		// TODO : if EAC3 decoder disabled, find a compatible EAC3 decoder and pull FFDShow Audio out of the graph
 		// Problem : no EAC3 mediaguid exist
 		break;
-	case MLP:wFormatTag=WAVE_FORMAT_MLP;
-        break;
-    case TRUEHD:wFormatTag=WAVE_FORMAT_TRUEHD;
+	case MLP:
+  if (useTrueHDPassthrough)
+  {
+     if (codecId!=CODEC_ID_BISTREAM_TRUEHD) nbFormatChanges++;
+				 codecId=CODEC_ID_BISTREAM_TRUEHD;
+     if (checkOutputFormat(codecId))
+      return codecId;
+  }
+  wFormatTag=WAVE_FORMAT_MLP;
+  break;
+ case TRUEHD:
+  if (useTrueHDPassthrough)
+  {
+			if (codecId!=CODEC_ID_BISTREAM_TRUEHD) nbFormatChanges++;	 
+   codecId=CODEC_ID_BISTREAM_TRUEHD;
+     if (checkOutputFormat(codecId))
+      return codecId;
+  }
+  wFormatTag=WAVE_FORMAT_TRUEHD;
 		// TODO : if MLP decoder disabled, find a compatible MLP decoder and pull FFDShow Audio out of the graph
 		// Problem : no MLP mediaguid exist
 		break;
 	case AC3_TRUEHD:
-		// If AC3 codec is set to SPDIF and MLP decoder disabled,
+  if (useTrueHDPassthrough)
+  {
+				 if (codecId!=CODEC_ID_BISTREAM_TRUEHD) nbFormatChanges++; 
+     codecId=CODEC_ID_BISTREAM_TRUEHD;
+     // Check if output is compatible
+     if (checkOutputFormat(codecId))
+      return codecId;
+  }
+		// If AC3 codec is set to SPDIF and MLP decoder disabled and TRUEHD passthrough is disabled,
 		// then send AC3 frams in passthrough and throw away TrueHD frames
 		if (useAC3CoreOnly)
 		{
 			if (useAC3Passthrough)
 			{
-				codecId=CODEC_ID_SPDIF_AC3;nbFormatChanges++;
+    if (codecId!=CODEC_ID_SPDIF_AC3)
+    {
+     if (codecId!=CODEC_ID_SPDIF_AC3) nbFormatChanges++;
+				 codecId=CODEC_ID_SPDIF_AC3;
+     if (checkOutputFormat(codecId))
+      return codecId;
+     else
+      deci->putParam(IDFF_aoutpassthroughAC3,0);
+    }
 				return codecId;
 			}
 			else //MLP decoder is disabled and AC3 pass-through is disabled
@@ -164,14 +255,27 @@ CodecID TaudioParser::getCodecIdFromStream()
 			wFormatTag=WAVE_FORMAT_TRUEHD;
 		}
 		break;
-	case DTS:
 	case DTS_HD:
+  if (useDTSHDPassthrough)
+  {
+   if (codecId!=CODEC_ID_BISTREAM_DTSHD) nbFormatChanges++;
+   codecId=CODEC_ID_BISTREAM_DTSHD;
+   if (checkOutputFormat(codecId))
+    return codecId;
+   else
+    deci->putParam(IDFF_aoutpassthroughDTS,0);
+  }
+ case DTS:
 		// If DTS Pass-through is enabled, then send DTS frames (or DTS core frames for DTS-HD stream)
-        // in passthrough (DTS-HD frames are thrown away for DTS-HD stream)
+  // in passthrough (DTS-HD frames are thrown away for DTS-HD stream)
 		if (useDTSPassthrough)
 		{
-			codecId=CODEC_ID_SPDIF_DTS;nbFormatChanges++;
-			return codecId;
+   if (codecId!=CODEC_ID_SPDIF_DTS) nbFormatChanges++;
+   codecId=CODEC_ID_SPDIF_DTS;
+   if (checkOutputFormat(codecId))
+    return codecId;
+   else
+    deci->putParam(IDFF_aoutpassthroughDTS,0);
 		}
 		wFormatTag=WAVE_FORMAT_DTS_W;
 		break;

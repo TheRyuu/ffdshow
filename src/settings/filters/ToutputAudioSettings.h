@@ -16,6 +16,9 @@ public:
  ToutputAudioSettings(TintStrColl *Icoll=NULL,TfilterIDFFs *filters=NULL);
  int passthroughAC3;
  int passthroughDTS;
+ int passthroughTRUEHD;
+ int passthroughDTSHD;
+ int passthroughEAC3;
  int outsfs;
  int outAC3bitrate;
  int connectTo,connectToOnlySpdif;

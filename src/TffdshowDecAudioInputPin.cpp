@@ -185,6 +185,8 @@ STDMETHODIMP TffdshowDecAudioInputPin::Receive(IMediaSample* pIn)
  case CODEC_ID_LIBA52:
  case CODEC_ID_SPDIF_AC3:
  case CODEC_ID_PCM:
+ case CODEC_ID_BISTREAM_TRUEHD:
+ case CODEC_ID_BISTREAM_DTSHD:
     // Search for DTS in Wav only if option is checked
     if (codecId==CODEC_ID_PCM && !searchdts) break;
 	
@@ -215,11 +217,41 @@ STDMETHODIMP TffdshowDecAudioInputPin::Receive(IMediaSample* pIn)
             filter->insf.sf=audioParser->sample_format;
 
         ((WAVEFORMATEX*)mt.Format())->wFormatTag=(WORD)audioParser->wFormatTag;
+        
+        // Check the output connection if the sample format has changed
+        if ((is_spdif_codec() || bitstream_codec(codecId)) && filter->m_pOutput != NULL)
+        {
+         filter->insf.sf=TsampleFormat::getSampleFormat(codecId);
+
+         CMediaType outmt;
+         if (is_spdif_codec())
+          outmt=TsampleFormat::createMediaTypeSPDIF(audio->getInputSF().freq);
+         else
+          outmt=filter->insf.toCMediaType();
+
+         filter->m_pOutput->SetMediaType(&outmt);
+         IPin *outConnectedPin=NULL;
+         filter->m_pOutput->ConnectedTo(&outConnectedPin);
+         if (outConnectedPin!=NULL)
+         {
+          filter->m_pOutput->Disconnect();
+          // This should not fail as the connection has been verified by the parser before
+          // switching to the new sample format
+          hr=outConnectedPin->ReceiveConnection(filter->m_pOutput,&mt);
+          
+          // The audio renderer does not accept this bitstream format
+          if (hr!=S_OK)
+          {
+           DPRINTF(_l("TffdshowDecAudioInputPin::Receive : the output sample format (compressed stream to bitstream) %d is not accepted by the renderer"),filter->insf.sf);
+          }
+          outConnectedPin->Release();
+         }
+        }
 
         if (audio) {delete audio;codec=audio=NULL;}
             codec=audio=TaudioCodec::initSource(filter,this,codecId,filter->insf,mt);
         if (!audio) return false;
-            filter->insf=audio->getInputSF();
+         filter->insf=audio->getInputSF();
         jitter=0;
     }
 
@@ -260,6 +292,12 @@ STDMETHODIMP TffdshowDecAudioInputPin::deliverDecodedSample(void *buf,size_t num
 {
     if (numsamples==0) return S_OK;
     return filter->deliverDecodedSample(this,buf,numsamples,fmt,prevpostgain=postgain);
+}
+
+STDMETHODIMP TffdshowDecAudioInputPin::deliverProcessedSample(const void *buf,size_t numsamples,const TsampleFormat &fmt)
+{
+    if (numsamples==0) return S_OK;
+    return filter->deliverProcessedSample(buf,numsamples,fmt);
 }
 
 STDMETHODIMP TffdshowDecAudioInputPin::flushDecodedSamples(void)
@@ -305,7 +343,7 @@ int TffdshowDecAudioInputPin::getInputBitrate(void) const
     return audio?audio->getLastbps():-1;
 }
 
-bool TffdshowDecAudioInputPin::getsf(TsampleFormat &outsf)
+STDMETHODIMP_(bool) TffdshowDecAudioInputPin::getsf(TsampleFormat &outsf)
 {
     if (!audio) {
         outsf=CurrentMediaType();
@@ -313,11 +351,14 @@ bool TffdshowDecAudioInputPin::getsf(TsampleFormat &outsf)
         if (spdif_codec(audio->codecId)) {
             outsf=TsampleFormat::createMediaTypeSPDIF(audio->getInputSF().freq);
             return true;
+        } else if (bitstream_codec(audio->codecId)) {
+            outsf=audio->getInputSF();
+            outsf.sf=TsampleFormat::getSampleFormat(codecId);
+            return true;
         } else {
             outsf=audio->getInputSF();
         }
     }
-
     return false;
 }
 int TffdshowDecAudioInputPin::getJitter(void) const

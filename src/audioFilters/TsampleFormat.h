@@ -1,6 +1,8 @@
 #ifndef _TSAMPLEFORMAT_H_
 #define _TSAMPLEFORMAT_H_
 
+#include "ffcodecs.h"
+
 struct VORBISFORMAT;
 struct VORBISFORMAT2;
 struct VORBISFORMATILL;
@@ -9,6 +11,7 @@ struct TsampleFormat
 protected:
  void init(const WAVEFORMATEX &wfex,bool wfextcheck,const GUID *subtype);
  void init(const WAVEFORMATEXTENSIBLE &wfexten,const GUID *subtype);
+ void init(const WAVEFORMATEXTENSIBLE_IEC61937 &wfexten_iec61937,const GUID *subtype);
  void init(const VORBISFORMAT &vf);
  void init(const VORBISFORMAT2 &vf2);
  void init(const VORBISFORMATILL &vfIll);
@@ -24,6 +27,7 @@ public:
   }
  TsampleFormat(const WAVEFORMATEX &wfex,bool wfextcheck=true,const GUID *subtype=NULL);
  TsampleFormat(const WAVEFORMATEXTENSIBLE &wfexten,const GUID *subtype=NULL);
+ TsampleFormat(const WAVEFORMATEXTENSIBLE_IEC61937 &wfexten_iec61937,const GUID *subtype=NULL);
  TsampleFormat(const VORBISFORMAT &vf);
  TsampleFormat(const VORBISFORMAT2 &vf2);
  TsampleFormat(const VORBISFORMATILL &vfIll);
@@ -43,6 +47,10 @@ public:
  CMediaType toCMediaType(bool alwaysextensible=true) const;
  static CMediaType createMediaTypeSPDIF(unsigned int frequency);
  WAVEFORMATEXTENSIBLE toWAVEFORMATEXTENSIBLE(bool alwaysextensible=true) const;
+ // Windows 7 structure for HD audio
+ WAVEFORMATEXTENSIBLE_IEC61937 toWAVEFORMATEXTENSIBLE_IEC61937(bool alwayextensible) const;
+ static float getOSVersion(void);
+ static int getSampleFormat(CodecID codecId);
 
  enum
   {
@@ -62,7 +70,11 @@ public:
    SF_LPCM20  =128,
    SF_FLOAT64 =65536,
 
-   SF_ALLFLOAT=SF_FLOAT32|SF_FLOAT64
+   SF_TRUEHD  = 256,
+   SF_DTSHD   = 512,
+   SF_EAC3    = 1024,
+
+   SF_ALLFLOAT=SF_FLOAT32|SF_FLOAT64,
   };
 
  enum
@@ -81,6 +93,7 @@ public:
  int speakers[8];
  int dolby;
  bool pcm_be;
+ static float os_version;
 
  void setChannels(int Inchannels,int IchannelMask=0)
   {
@@ -199,6 +212,9 @@ public:
      case SF_AC3:return _l("ac3");
      case SF_LPCM16:return _l("16-bit LPCM");
      case SF_LPCM20:return _l("20-bit LPCM");
+     case SF_TRUEHD:return _l("Bitstream Dolby True HD");
+     case SF_DTSHD:return _l("Bitstream DTS HD");
+     case SF_EAC3:return _l("Bitstream Dolby Digital Plus");
      default:return _l("unknown");
     }
   }
