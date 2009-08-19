@@ -618,7 +618,7 @@ void x264_log( x264_t *h, int i_level, const char *psz_fmt, ... )
         va_end( arg );
     }
 }
-*/ /* ffdshow custom code */
+*/
 static void x264_log_default( void *p_unused, int i_level, const char *psz_fmt, va_list arg )
 {
     char *psz_prefix;
@@ -661,6 +661,7 @@ int x264_picture_alloc( x264_picture_t *pic, int i_csp, int i_width, int i_heigh
     pic->img.i_stride[0] = i_width;
     pic->img.i_stride[1] = i_width / 2;
     pic->img.i_stride[2] = i_width / 2;
+    pic->param = NULL;
     return 0;
 }
 
@@ -866,7 +867,7 @@ char *x264_param2string( x264_param_t *p, int b_res )
     s += sprintf( s, " keyint=%d keyint_min=%d scenecut=%d",
                   p->i_keyint_max, p->i_keyint_min, p->i_scenecut_threshold );
 
-    if( p->rc.b_mb_tree )
+    if( p->rc.b_mb_tree || p->rc.i_vbv_buffer_size )
         s += sprintf( s, " rc_lookahead=%d", p->rc.i_lookahead );
 
     s += sprintf( s, " rc=%s mbtree=%d", p->rc.i_rc_method == X264_RC_ABR ?

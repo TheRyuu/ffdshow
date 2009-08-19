@@ -35,6 +35,8 @@ typedef struct x264_frame_t /* ffdshow custom code */
     int     i_type;
     int     i_qpplus1;
     int64_t i_pts;
+    x264_param_t *param;
+
     int     i_frame;    /* Presentation frame number */
     int     i_frame_num; /* Coded frame number */
     int     b_kept_as_ref;
@@ -83,10 +85,15 @@ typedef struct x264_frame_t /* ffdshow custom code */
     int     *i_row_bits;
     int     *i_row_qp;
     float   *f_qp_offset;
+    float   *f_qp_offset_aq;
     int     b_intra_calculated;
     uint16_t *i_intra_cost;
     uint16_t *i_propagate_cost;
     uint16_t *i_inv_qscale_factor;
+
+    /* vbv */
+    uint8_t i_planned_type[X264_LOOKAHEAD_MAX+1];
+    int i_planned_satd[X264_LOOKAHEAD_MAX+1];
 
     /* threading */
     int     i_lines_completed; /* in pixels */

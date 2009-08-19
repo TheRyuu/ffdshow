@@ -417,7 +417,10 @@ static int x264_validate_parameters( x264_t *h )
     h->param.rc.f_rf_constant = x264_clip3f( h->param.rc.f_rf_constant, 0, 51 );
     h->param.rc.i_qp_constant = x264_clip3( h->param.rc.i_qp_constant, 0, 51 );
     if( h->param.rc.i_rc_method == X264_RC_CRF )
+    {
         h->param.rc.i_qp_constant = h->param.rc.f_rf_constant;
+        h->param.rc.i_bitrate = 0;
+    }
     if( (h->param.rc.i_rc_method == X264_RC_CQP || h->param.rc.i_rc_method == X264_RC_CRF)
         && h->param.rc.i_qp_constant == 0 )
     {
@@ -484,7 +487,13 @@ static int x264_validate_parameters( x264_t *h )
         h->param.analyse.b_weighted_bipred = 0;
     }
     h->param.rc.i_lookahead = x264_clip3( h->param.rc.i_lookahead, 0, X264_LOOKAHEAD_MAX );
-    h->param.rc.i_lookahead = X264_MIN( h->param.rc.i_lookahead, h->param.i_keyint_max );
+    {
+        int maxrate = X264_MAX( h->param.rc.i_vbv_max_bitrate, h->param.rc.i_bitrate );
+        float bufsize = maxrate ? (float)h->param.rc.i_vbv_buffer_size / maxrate : 0;
+        float fps = h->param.i_fps_num > 0 && h->param.i_fps_den > 0 ? (float) h->param.i_fps_num / h->param.i_fps_den : 25.0;
+        h->param.rc.i_lookahead = X264_MIN( h->param.rc.i_lookahead, X264_MAX( h->param.i_keyint_max, bufsize*fps ) );
+    }
+
     if( h->param.rc.b_stat_read )
         h->param.rc.i_lookahead = 0;
     else if( !h->param.rc.i_lookahead )
@@ -671,6 +680,40 @@ static void mbcmp_init( x264_t *h )
     memcpy( h->pixf.fpelcmp_x4, satd ? h->pixf.satd_x4 : h->pixf.sad_x4, sizeof(h->pixf.fpelcmp_x4) );
 }
 
+static void x264_set_aspect_ratio( x264_t *h, x264_param_t *param, int initial )
+{
+    /* VUI */
+    if( param->vui.i_sar_width > 0 && param->vui.i_sar_height > 0 )
+    {
+        int i_w = param->vui.i_sar_width;
+        int i_h = param->vui.i_sar_height;
+        int old_w = h->param.vui.i_sar_width;
+        int old_h = h->param.vui.i_sar_height;
+
+        x264_reduce_fraction( &i_w, &i_h );
+
+        while( i_w > 65535 || i_h > 65535 )
+        {
+            i_w /= 2;
+            i_h /= 2;
+        }
+
+        if( i_w != old_w || i_h != old_h || initial )
+        {
+            h->param.vui.i_sar_width = 0;
+            h->param.vui.i_sar_height = 0;
+            if( i_w == 0 || i_h == 0 )
+                x264_log( h, X264_LOG_WARNING, "cannot create valid sample aspect ratio\n" );
+            else
+            {
+                x264_log( h, initial?X264_LOG_INFO:X264_LOG_DEBUG, "using SAR=%d/%d\n", i_w, i_h );
+                h->param.vui.i_sar_width = i_w;
+                h->param.vui.i_sar_height = i_h;
+            }
+        }
+    }
+}
+
 /****************************************************************************
  * x264_encoder_open:
  ****************************************************************************/
@@ -685,6 +728,9 @@ x264_t *x264_encoder_open   ( x264_param_t *param )
     /* Create a copy of param */
     memcpy( &h->param, param, sizeof(x264_param_t) );
 
+    if( param->param_free )
+        param->param_free( param );
+
     if( x264_validate_parameters( h ) < 0 )
         goto fail;
 
@@ -697,33 +743,7 @@ x264_t *x264_encoder_open   ( x264_param_t *param )
     if( h->param.rc.psz_stat_in )
         h->param.rc.psz_stat_in = strdup( h->param.rc.psz_stat_in );
 
-    /* VUI */
-    if( h->param.vui.i_sar_width > 0 && h->param.vui.i_sar_height > 0 )
-    {
-        int i_w = param->vui.i_sar_width;
-        int i_h = param->vui.i_sar_height;
-
-        x264_reduce_fraction( &i_w, &i_h );
-
-        while( i_w > 65535 || i_h > 65535 )
-        {
-            i_w /= 2;
-            i_h /= 2;
-        }
-
-        h->param.vui.i_sar_width = 0;
-        h->param.vui.i_sar_height = 0;
-        if( i_w == 0 || i_h == 0 )
-        {
-            x264_log( h, X264_LOG_WARNING, "cannot create valid sample aspect ratio\n" );
-        }
-        else
-        {
-            x264_log( h, X264_LOG_INFO, "using SAR=%d/%d\n", i_w, i_h );
-            h->param.vui.i_sar_width = i_w;
-            h->param.vui.i_sar_height = i_h;
-        }
-    }
+    x264_set_aspect_ratio( h, param, 1 );
 
     x264_reduce_fraction( &h->param.i_fps_num, &h->param.i_fps_den );
 
@@ -750,7 +770,7 @@ x264_t *x264_encoder_open   ( x264_param_t *param )
         h->frames.i_delay = X264_MAX(h->param.i_bframe,3)*4;
     else
         h->frames.i_delay = h->param.i_bframe;
-    if( h->param.rc.b_mb_tree )
+    if( h->param.rc.b_mb_tree || h->param.rc.i_vbv_buffer_size )
         h->frames.i_delay = X264_MAX( h->frames.i_delay, h->param.rc.i_lookahead );
     h->frames.i_delay += h->param.i_threads - 1;
     h->frames.i_delay = X264_MIN( h->frames.i_delay, X264_LOOKAHEAD_MAX );
@@ -873,6 +893,8 @@ fail:
  ****************************************************************************/
 int x264_encoder_reconfig( x264_t *h, x264_param_t *param )
 {
+    h = h->thread[h->i_thread_phase%h->param.i_threads];
+    x264_set_aspect_ratio( h, param, 0 );
 #define COPY(var) h->param.var = param->var
     COPY( i_frame_reference ); // but never uses more refs than initially specified
     COPY( i_bframe_bias );
@@ -1382,6 +1404,7 @@ static void x264_thread_sync_context( x264_t *dst, x264_t *src )
 
     // copy everything except the per-thread pointers and the constants.
     memcpy( &dst->i_frame, &src->i_frame, offsetof(x264_t, mb.type) - offsetof(x264_t, i_frame) );
+    dst->param = src->param;
     dst->stat = src->stat;
 }
 
@@ -1552,6 +1575,13 @@ int attribute_align_arg x264_encoder_encode( x264_t *h, /* ffdshow custom code *
         /* waiting for filling bframe buffer */
         pic_out->i_type = X264_TYPE_AUTO;
         return 0;
+    }
+
+    if( h->fenc->param )
+    {
+        x264_encoder_reconfig( h, h->fenc->param );
+        if( h->fenc->param->param_free )
+            h->fenc->param->param_free( h->fenc->param );
     }
 
     if( h->fenc->i_type == X264_TYPE_IDR )

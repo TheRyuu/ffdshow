@@ -23,6 +23,7 @@
 #include "TcodecSettings.h"
 #include "x264/x264.h"
 #define X264_BFRAME_MAX 16
+#define X264_LOOKAHEAD_MAX 1
 #include "x264/common/frame.h"
 #include "libavcodec/avcodec.h"
 #include "IffdshowBase.h"
