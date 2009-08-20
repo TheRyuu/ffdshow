@@ -78,7 +78,6 @@ int ff_wmv2_encode_picture_header(MpegEncContext * s, int picture_number)
 
     s->dc_table_index = 1;
     s->mv_table_index = 1; /* only if P frame */
-//    s->use_skip_mb_code = 1; /* only if P frame */
     s->per_mb_rl_table = 0;
     s->mspel= 0;
     w->per_mb_abt=0;
@@ -190,10 +189,6 @@ void ff_wmv2_encode_mb(MpegEncContext * s,
             }
             coded_cbp |= val << (5 - i);
         }
-#if 0
-        if (coded_cbp)
-            printf("cbp=%x %x\n", cbp, coded_cbp);
-#endif
 
         if (s->pict_type == FF_I_TYPE) {
             put_bits(&s->pb,

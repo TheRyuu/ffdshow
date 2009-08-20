@@ -1714,8 +1714,7 @@ static av_always_inline void encode_mb_internal(MpegEncContext *s, int motion_x,
     case CODEC_ID_FLV1:
     case CODEC_ID_RV10:
     case CODEC_ID_RV20:
-        if (CONFIG_H263_ENCODER || CONFIG_H263P_ENCODER ||
-            CONFIG_FLV_ENCODER  || CONFIG_RV10_ENCODER  || CONFIG_RV20_ENCODER)
+        if (CONFIG_H263_ENCODER)
             h263_encode_mb(s, s->block, motion_x, motion_y);
         break;
     case CODEC_ID_MJPEG:
@@ -2029,7 +2028,7 @@ static int attribute_align_arg encode_thread(AVCodecContext *c, void *arg){
     case CODEC_ID_H263:
     case CODEC_ID_H263P:
     case CODEC_ID_FLV1:
-        if (CONFIG_H263_ENCODER || CONFIG_H263P_ENCODER || CONFIG_FLV_ENCODER)
+        if (CONFIG_H263_ENCODER)
             s->gob_index = ff_h263_get_gob_height(s);
         break;
     case CODEC_ID_MPEG4:
@@ -2147,7 +2146,7 @@ static int attribute_align_arg encode_thread(AVCodecContext *c, void *arg){
                     break;
                     case CODEC_ID_H263:
                     case CODEC_ID_H263P:
-                        if (CONFIG_H263_ENCODER || CONFIG_H263P_ENCODER)
+                        if (CONFIG_H263_ENCODER)
                             h263_encode_gob_header(s, mb_y);
                     break;
                     }
@@ -2690,7 +2689,7 @@ static int estimate_qp(MpegEncContext *s, int dry_run){
         case CODEC_ID_H263:
         case CODEC_ID_H263P:
         case CODEC_ID_FLV1:
-            if (CONFIG_H263_ENCODER||CONFIG_H263P_ENCODER||CONFIG_FLV_ENCODER)
+            if (CONFIG_H263_ENCODER)
                 ff_clean_h263_qscales(s);
             break;
         }

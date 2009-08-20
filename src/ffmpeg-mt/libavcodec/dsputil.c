@@ -35,15 +35,6 @@
 #include "mathops.h"
 #include "h263.h"
 
-/* vorbis.c */
-void vorbis_inverse_coupling(float *mag, float *ang, int blocksize);
-
-/* ac3dec.c */
-void ff_ac3_downmix_c(float (*samples)[256], float (*matrix)[2], int out_ch, int in_ch, int len);
-
-/* pngdec.c */
-void ff_add_png_paeth_prediction(uint8_t *dst, uint8_t *src, uint8_t *top, int w, int bpp);
-
 uint8_t ff_cropTbl[256 + 2 * MAX_NEG_CROP] = {0, };
 uint32_t ff_squareTbl[512] = {0, };
 
@@ -3426,13 +3417,11 @@ static int rd8x8_c(/*MpegEncContext*/ void *c, uint8_t *src1, uint8_t *src2, int
     MpegEncContext * const s= (MpegEncContext *)c;
     const uint8_t *scantable= s->intra_scantable.permutated;
     DECLARE_ALIGNED_8 (uint64_t, aligned_temp[sizeof(DCTELEM)*64/8]);
-    #if __STDC_VERSION__ >= 199901L
-    DECLARE_ALIGNED_8 (uint64_t,aligned_bak[stride]);
-    #else
-    uint64_t *aligned_bak=_alloca(sizeof(uint64_t)*stride);
-    #endif
+    DECLARE_ALIGNED_8 (uint64_t, aligned_src1[8]);
+    DECLARE_ALIGNED_8 (uint64_t, aligned_src2[8]);
     DCTELEM * const temp= (DCTELEM*)aligned_temp;
-    uint8_t * const bak= (uint8_t*)aligned_bak;
+    uint8_t * const lsrc1 = (uint8_t*)aligned_src1;
+    uint8_t * const lsrc2 = (uint8_t*)aligned_src2;
     int i, last, run, bits, level, distortion, start_i;
     const int esc_length= s->ac_esc_length;
     uint8_t * length;
@@ -3440,12 +3429,10 @@ static int rd8x8_c(/*MpegEncContext*/ void *c, uint8_t *src1, uint8_t *src2, int
 
     assert(h==8);
 
-    for(i=0; i<8; i++){
-        ((uint32_t*)(bak + i*stride))[0]= ((uint32_t*)(src2 + i*stride))[0];
-        ((uint32_t*)(bak + i*stride))[1]= ((uint32_t*)(src2 + i*stride))[1];
-    }
+    copy_block8(lsrc1, src1, 8, stride, 8);
+    copy_block8(lsrc2, src2, 8, stride, 8);
 
-    s->dsp.diff_pixels(temp, src1, src2, stride);
+    s->dsp.diff_pixels(temp, lsrc1, lsrc2, 8);
 
     s->block_last_index[0/*FIXME*/]= last= s->fast_dct_quantize(s, temp, 0/*FIXME*/, s->qscale, &i);
 
@@ -3498,9 +3485,9 @@ static int rd8x8_c(/*MpegEncContext*/ void *c, uint8_t *src1, uint8_t *src2, int
             s->dct_unquantize_inter(s, temp, 0, s->qscale);
     }
 
-    s->dsp.idct_add(bak, stride, temp);
+    s->dsp.idct_add(lsrc2, 8, temp);
 
-    distortion= s->dsp.sse[1](NULL, bak, src1, stride, 8);
+    distortion= s->dsp.sse[1](NULL, lsrc2, lsrc1, 8, 8);
 
     return distortion + ((bits*s->qscale*s->qscale*109 + 64)>>7);
 }
@@ -3862,7 +3849,7 @@ void attribute_align_arg dsputil_init(DSPContext* c, AVCodecContext *avctx)
             c->idct_add= ff_jref_idct_add;
             c->idct    = j_rev_dct;
             c->idct_permutation_type= FF_LIBMPEG2_IDCT_PERM;
-        }else if((CONFIG_VP3_DECODER || CONFIG_VP5_DECODER || CONFIG_VP6_DECODER || CONFIG_THEORA_DECODER ) &&
+        }else if((CONFIG_VP3_DECODER || CONFIG_VP5_DECODER || CONFIG_VP6_DECODER ) &&
                 avctx->idct_algo==FF_IDCT_VP3){
             c->idct_put= ff_vp3_idct_put_c;
             c->idct_add= ff_vp3_idct_add_c;

@@ -44,8 +44,6 @@
 #include "flac.h"
 #include "flacdata.h"
 
-#include <malloc.h>
-
 #undef NDEBUG
 #include <assert.h>
 
@@ -360,11 +358,7 @@ static int decode_subframe_lpc(FLACContext *s, int channel, int pred_order)
 {
     int i, j;
     int coeff_prec, qlevel;
-    #if __STDC_VERSION__ >= 199901L
-    int coeffs[pred_order];   
-    #else
-    int *coeffs=(int*)_alloca(sizeof(int)*pred_order);
-    #endif
+    int coeffs[32];
     int32_t *decoded = s->decoded[channel];
 
     /* warm up samples */
