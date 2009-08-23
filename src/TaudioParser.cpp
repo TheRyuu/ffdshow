@@ -198,8 +198,8 @@ CodecID TaudioParser::getCodecIdFromStream()
 	case MLP:
   if (useTrueHDPassthrough)
   {
-     if (codecId!=CODEC_ID_BISTREAM_TRUEHD) nbFormatChanges++;
-				 codecId=CODEC_ID_BISTREAM_TRUEHD;
+     if (codecId!=CODEC_ID_BITSTREAM_TRUEHD) nbFormatChanges++;
+				 codecId=CODEC_ID_BITSTREAM_TRUEHD;
      if (checkOutputFormat(codecId))
       return codecId;
   }
@@ -208,8 +208,8 @@ CodecID TaudioParser::getCodecIdFromStream()
  case TRUEHD:
   if (useTrueHDPassthrough)
   {
-			if (codecId!=CODEC_ID_BISTREAM_TRUEHD) nbFormatChanges++;	 
-   codecId=CODEC_ID_BISTREAM_TRUEHD;
+			if (codecId!=CODEC_ID_BITSTREAM_TRUEHD) nbFormatChanges++;	 
+   codecId=CODEC_ID_BITSTREAM_TRUEHD;
      if (checkOutputFormat(codecId))
       return codecId;
   }
@@ -220,8 +220,8 @@ CodecID TaudioParser::getCodecIdFromStream()
 	case AC3_TRUEHD:
   if (useTrueHDPassthrough)
   {
-				 if (codecId!=CODEC_ID_BISTREAM_TRUEHD) nbFormatChanges++; 
-     codecId=CODEC_ID_BISTREAM_TRUEHD;
+				 if (codecId!=CODEC_ID_BITSTREAM_TRUEHD) nbFormatChanges++; 
+     codecId=CODEC_ID_BITSTREAM_TRUEHD;
      // Check if output is compatible
      if (checkOutputFormat(codecId))
       return codecId;
@@ -258,8 +258,8 @@ CodecID TaudioParser::getCodecIdFromStream()
 	case DTS_HD:
   if (useDTSHDPassthrough)
   {
-   if (codecId!=CODEC_ID_BISTREAM_DTSHD) nbFormatChanges++;
-   codecId=CODEC_ID_BISTREAM_DTSHD;
+   if (codecId!=CODEC_ID_BITSTREAM_DTSHD) nbFormatChanges++;
+   codecId=CODEC_ID_BITSTREAM_DTSHD;
    if (checkOutputFormat(codecId))
     return codecId;
    else

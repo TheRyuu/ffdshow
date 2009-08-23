@@ -35,6 +35,7 @@
 #include "dsutil.h"
 #include "resource.h"
 #include "Tinfo.h"
+#include "ffcodecs.h"
 
 #ifdef VISTA_SPDIF
 #include <InitGuid.h>
@@ -502,6 +503,7 @@ HRESULT TffdshowDecAudio::StartStreaming(void)
 
 		if (outsf.nchannels>5) // Multichannel stream
 		{
+   DPRINTF(_l("TffdshowDecAudio::StartStreaming changing of audio renderer (%s) for multichannel support"),presetSettings->output->multichannelDeviceId);
 			/* Navigate through the graph until the direct sound device 
 			(the direct sound device may not be directly connected to ffdshow audio) */
 			IEnumFilters *filtersEnum = NULL;
@@ -547,6 +549,7 @@ HRESULT TffdshowDecAudio::StartStreaming(void)
 					if (connectedPin == NULL)
 					{
 						filterGraph->Release();
+      audioDeviceChanged=true;
 						break;
 					}
 
@@ -585,8 +588,10 @@ HRESULT TffdshowDecAudio::StartStreaming(void)
 						graph->Reconnect(filterPin); // Reconnect automatically if replacement failed
 						filterGraph->Run(0);
 						filterPin->Release();
+      audioDeviceChanged=true;
 						break;
 					}
+     DPRINTF(_l("TffdshowDecAudio::StartStreaming new device added"));
 					filterPin->Release();
 
 					// Connect the input pin of the multichannel device to the disconnected output pin
@@ -600,17 +605,31 @@ HRESULT TffdshowDecAudio::StartStreaming(void)
 						filterPin->QueryDirection(&pinDirection);
 						if (pinDirection == PINDIR_INPUT)
 						{
+       // Check that the chosen renderer accepts multichannel stream
+       TsampleFormat insf;
+       inpin->getsf(insf);
+       CMediaType mt=insf.toCMediaType();
+       hr=filterPin->QueryAccept(&mt);
+       if (FAILED(hr))
+       {
+        DPRINTF(_l("TffdshowDecAudio::StartStreaming the new device won't accept this multichannel stream. Aborting replacement"));
+        audioDeviceChanged=true;
+        break;
+       }
+
 							hr = filterGraph->Release();
 							PIN_INFO pinInfo;
 							hr = connectedPin->QueryPinInfo(&pinInfo);
 							hr = pinInfo.pFilter->Stop();
 							hr = connectedPin->Disconnect();
-							hr = filterPin->Connect(connectedPin, &connectedPinMediaType);
+       hr = filterPin->Connect(connectedPin, &mt);
 							hr = pinInfo.pFilter->Run(0);
 							hr = audioRenderer->Run(0);
 							if (FAILED(hr))
 							{
 								graph->Reconnect(filterPin); // Reconnect automatically if replacement failed
+        DPRINTF(_l("TffdshowDecAudio::StartStreaming Audio renderer replacement failed"));
+        audioDeviceChanged=true;
 								filterGraph->Run(0);
 							}
 							if (pinInfo.pFilter != NULL)
@@ -631,6 +650,7 @@ HRESULT TffdshowDecAudio::StartStreaming(void)
 			}
 			filtersEnum->Release();
 		}
+  DPRINTF(_l("TffdshowDecAudio::StartStreaming Audio renderer replaced successfully"));
 		audioDeviceChanged=true;
 	}
 #endif
@@ -724,6 +744,8 @@ STDMETHODIMP TffdshowDecAudio::deliverProcessedSample(const void *buf,size_t num
 
  CMediaType mt=currentOutsf.toCMediaType(alwaysextensible);
  WAVEFORMATEX *wfe=(WAVEFORMATEX*)mt.Format();
+ if (inpin->is_spdif_codec())
+  wfe->wFormatTag=WAVE_FORMAT_DOLBY_AC3_SPDIF;
 
  HRESULT hr=S_OK;
  if (!fileout && FAILED(hr=ReconnectOutput(numsamples,mt)))

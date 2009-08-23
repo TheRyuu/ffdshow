@@ -185,8 +185,8 @@ STDMETHODIMP TffdshowDecAudioInputPin::Receive(IMediaSample* pIn)
  case CODEC_ID_LIBA52:
  case CODEC_ID_SPDIF_AC3:
  case CODEC_ID_PCM:
- case CODEC_ID_BISTREAM_TRUEHD:
- case CODEC_ID_BISTREAM_DTSHD:
+ case CODEC_ID_BITSTREAM_TRUEHD:
+ case CODEC_ID_BITSTREAM_DTSHD:
     // Search for DTS in Wav only if option is checked
     if (codecId==CODEC_ID_PCM && !searchdts) break;
 	
@@ -234,16 +234,13 @@ STDMETHODIMP TffdshowDecAudioInputPin::Receive(IMediaSample* pIn)
          filter->m_pOutput->ConnectedTo(&outConnectedPin);
          if (outConnectedPin!=NULL)
          {
-          filter->m_pOutput->Disconnect();
-          // This should not fail as the connection has been verified by the parser before
-          // switching to the new sample format
-          hr=outConnectedPin->ReceiveConnection(filter->m_pOutput,&mt);
+          hr=outConnectedPin->QueryAccept(&outmt);
           
           // The audio renderer does not accept this bitstream format
           if (hr!=S_OK)
-          {
-           DPRINTF(_l("TffdshowDecAudioInputPin::Receive : the output sample format (compressed stream to bitstream) %d is not accepted by the renderer"),filter->insf.sf);
-          }
+           DPRINTF(_l("TffdshowDecAudioInputPin::Receive : the output sample format %s is not accepted by the renderer"),TsampleFormat::descriptionPCM(filter->insf.sf));
+          else
+           DPRINTF(_l("TffdshowDecAudioInputPin::Receive : the output sample format %s is accepted by the renderer"),TsampleFormat::descriptionPCM(filter->insf.sf));
           outConnectedPin->Release();
          }
         }

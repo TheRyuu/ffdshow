@@ -160,7 +160,9 @@ TsampleFormat::TsampleFormat(const AM_MEDIA_TYPE &mt):pcm_be(false)
  else if (mt.formattype==FORMAT_VorbisFormatIll)
   init(*(const VORBISFORMATILL*)mt.pbFormat);
  else if (mt.formattype==FORMAT_WaveFormatEx)
-  init(*(const WAVEFORMATEXTENSIBLE_IEC61937*)mt.pbFormat,&mt.subtype);
+  /* commented by albain : the new structure does not work properly. Under investigation
+  init(*(const WAVEFORMATEXTENSIBLE_IEC61937*)mt.pbFormat,&mt.subtype);*/
+  init(*(const WAVEFORMATEX*)mt.pbFormat,true,&mt.subtype);
  else
   {
    nchannels=NULL;
@@ -433,9 +435,9 @@ int TsampleFormat::getSampleFormat(CodecID codecId)
 {
  switch(codecId)
  {
-  case CODEC_ID_BISTREAM_TRUEHD: return TsampleFormat::SF_TRUEHD;
-  case CODEC_ID_BISTREAM_DTSHD: return TsampleFormat::SF_DTSHD;
-  case CODEC_ID_SPDIF_EAC3: return TsampleFormat::SF_EAC3;
+  case CODEC_ID_BITSTREAM_TRUEHD: return TsampleFormat::SF_TRUEHD;
+  case CODEC_ID_BITSTREAM_DTSHD: return TsampleFormat::SF_DTSHD;
+  case CODEC_ID_SPDIF_EAC3: //return TsampleFormat::SF_EAC3; Try AC3
   case CODEC_ID_SPDIF_AC3:
   case CODEC_ID_SPDIF_DTS:return TsampleFormat::SF_AC3;
   default:return TsampleFormat::SF_PCM16;
