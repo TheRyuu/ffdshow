@@ -63,9 +63,6 @@
 #if (defined(SYS_OPENBSD) && !defined(isfinite)) || defined(SYS_SunOS)
 #define isfinite finite
 #endif
-#if defined(_MSC_VER) || defined(SYS_SunOS) || defined(SYS_MACOSX)
-#define sqrtf sqrt
-#endif
 #if defined(_WIN32) || defined(_WIN64) /* ffdshow custom code */
 #define rename(src,dst) (unlink(dst), rename(src,dst)) // POSIX says that rename() removes the destination, but win32 doesn't.
 #ifndef strtok_r
@@ -190,6 +187,13 @@ static ALWAYS_INLINE intptr_t endian_fix( intptr_t x )
     asm("bswap %0":"+r"(x));
     return x;
 }
+#elif defined(__GNUC__) && defined(HAVE_ARMV6)
+static ALWAYS_INLINE intptr_t endian_fix( intptr_t x )
+{
+    asm("rev %0, %0":"+r"(x));
+    return x;
+}
+#define endian_fix32 endian_fix
 #else
 static ALWAYS_INLINE uint32_t endian_fix32( uint32_t x )
 {
