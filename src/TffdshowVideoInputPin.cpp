@@ -301,33 +301,28 @@ STDMETHODIMP TffdshowVideoInputPin::ReceiveConnection(IPin* pConnector, const AM
 
 bool TffdshowVideoInputPin::init(const CMediaType &mt)
 {
-	rcSourceIn.top = 0; rcSourceIn.left = 0; rcSourceIn.right = 0; rcSourceIn.bottom = 0;
     bool dont_use_rtStop_from_upper_stream = false, truncated = false;
     isInterlacedRawVideo=false;
     if (mt.formattype==FORMAT_VideoInfo) {
         VIDEOINFOHEADER *vih=(VIDEOINFOHEADER*)mt.pbFormat;
         biIn.bmiHeader=vih->bmiHeader;
-		rcSourceIn = vih->rcSource;
         pictIn.setSize(vih->bmiHeader.biWidth,abs(vih->bmiHeader.biHeight));
         fixMPEGinAVI(biIn.bmiHeader.biCompression);
     } else if (mt.formattype==FORMAT_VideoInfo2) {
         VIDEOINFOHEADER2 *vih2=(VIDEOINFOHEADER2*)mt.pbFormat;
         isInterlacedRawVideo=vih2->dwInterlaceFlags & AMINTERLACE_IsInterlaced;
         biIn.bmiHeader=vih2->bmiHeader;
-		rcSourceIn = vih2->rcSource;
         pictIn.setSize(vih2->bmiHeader.biWidth,abs(vih2->bmiHeader.biHeight));
         pictIn.setDar(Rational(vih2->dwPictAspectRatioX,vih2->dwPictAspectRatioY));
         DPRINTF(_l("TffdshowVideoInputPin::initVideo: darX:%i, darY:%i"),vih2->dwPictAspectRatioX,vih2->dwPictAspectRatioY);
         fixMPEGinAVI(biIn.bmiHeader.biCompression);
     } else if (mt.formattype==FORMAT_MPEGVideo) {
         MPEG1VIDEOINFO *mpeg1info=(MPEG1VIDEOINFO*)mt.pbFormat;
-		rcSourceIn = mpeg1info->hdr.rcSource;
         biIn.bmiHeader=mpeg1info->hdr.bmiHeader;biIn.bmiHeader.biCompression=FOURCC_MPG1;
         pictIn.setSize(std::max(mpeg1info->hdr.rcSource.right,mpeg1info->hdr.bmiHeader.biWidth),std::max(mpeg1info->hdr.rcSource.bottom,mpeg1info->hdr.bmiHeader.biHeight));
     } else if (mt.formattype==FORMAT_MPEG2Video) {
         MPEG2VIDEOINFO *mpeg2info=(MPEG2VIDEOINFO*)mt.pbFormat;
         biIn.bmiHeader=mpeg2info->hdr.bmiHeader;
-		rcSourceIn = mpeg2info->hdr.rcSource;
         pictIn.setSize(std::max(mpeg2info->hdr.rcSource.right,mpeg2info->hdr.bmiHeader.biWidth),std::max(mpeg2info->hdr.rcSource.bottom,mpeg2info->hdr.bmiHeader.biHeight));
         pictIn.setDar(Rational(mpeg2info->hdr.dwPictAspectRatioX,mpeg2info->hdr.dwPictAspectRatioY));
         if (biIn.bmiHeader.biCompression==0 || biIn.bmiHeader.biCompression == 0x0038002d) {
@@ -347,7 +342,6 @@ bool TffdshowVideoInputPin::init(const CMediaType &mt)
         memset(&biIn,0,sizeof(biIn));
         sTheoraFormatBlock *oggFormat=(sTheoraFormatBlock*)mt.pbFormat;
         biIn.bmiHeader.biCompression=FOURCC_THEO;
-		rcSourceIn.right = oggFormat->frameWidth; rcSourceIn.bottom = oggFormat->frameHeight;
         pictIn.setSize(biIn.bmiHeader.biWidth=oggFormat->width,biIn.bmiHeader.biHeight=oggFormat->height);
         pictIn.setDar(Rational(oggFormat->aspectNumerator,oggFormat->aspectDenominator));
         biIn.bmiHeader.biBitCount=12;
@@ -378,8 +372,8 @@ bool TffdshowVideoInputPin::init(const CMediaType &mt)
          biIn.bmiHeader.biHeight = get_bits(&gb, 16) << 4;
          pictIn.setSize(biIn.bmiHeader.biWidth,biIn.bmiHeader.biHeight);
 
-         rcSourceIn.right = get_bits(&gb, 24); /* frame width */
-         rcSourceIn.bottom = get_bits(&gb, 24); /* frame height */
+         skip_bits(&gb, 24); /* frame width */
+         skip_bits(&gb, 24); /* frame height */
 
          skip_bits(&gb, 8); /* offset x */
          skip_bits(&gb, 8); /* offset y */
@@ -639,13 +633,6 @@ HRESULT TffdshowVideoInputPin::getInputSAR(unsigned int *a1,unsigned int *a2)
     if (!a1 || !a2) return E_POINTER;
     *a1=pictIn.rectFull.sar.num;*a2=pictIn.rectFull.sar.den;
     return *a1 && *a2?S_OK:S_FALSE;
-}
-
-HRESULT TffdshowVideoInputPin::getInputRcSource(RECT *r)
-{
-    if (!r) return E_POINTER;
-    *r=rcSourceIn;
-    return S_OK;
 }
 
 HRESULT TffdshowVideoInputPin::getInputDAR(unsigned int *a1,unsigned int *a2)
