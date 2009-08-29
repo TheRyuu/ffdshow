@@ -655,7 +655,7 @@ public:
     //. This member function is available only in the debug version of
     //. the library.
 
-	static void CALLBACK GlobalInitialization( BOOL bLoading, const CLSID *rclsid);
+    static void CALLBACK GlobalInitialization( BOOL bLoading, const CLSID *rclsid);
 };
 
 template<class tchar> DwString<tchar> operator + (const DwString<tchar>& aStr1, const DwString<tchar>& aStr2);

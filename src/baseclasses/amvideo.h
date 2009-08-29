@@ -269,11 +269,11 @@ typedef struct tagVIDEOINFOHEADER {
 
 // make sure the pbmi is initialized before using these macros
 #define TRUECOLOR(pbmi)  ((TRUECOLORINFO *)(((LPBYTE)&((pbmi)->bmiHeader)) \
-					+ (pbmi)->bmiHeader.biSize))
-#define COLORS(pbmi)	((RGBQUAD *)(((LPBYTE)&((pbmi)->bmiHeader)) 	\
-					+ (pbmi)->bmiHeader.biSize))
-#define BITMASKS(pbmi)	((DWORD *)(((LPBYTE)&((pbmi)->bmiHeader)) 	\
-					+ (pbmi)->bmiHeader.biSize))
+                    + (pbmi)->bmiHeader.biSize))
+#define COLORS(pbmi)    ((RGBQUAD *)(((LPBYTE)&((pbmi)->bmiHeader))     \
+                    + (pbmi)->bmiHeader.biSize))
+#define BITMASKS(pbmi)    ((DWORD *)(((LPBYTE)&((pbmi)->bmiHeader))     \
+                    + (pbmi)->bmiHeader.biSize))
 
 // All the image based filters use this to communicate their media types. It's
 // centred principally around the BITMAPINFO. This structure always contains a
@@ -351,11 +351,11 @@ typedef struct tagVIDEOINFO {
 #if 0
 // !!! This is the right way to do it, but may break existing code
 #define RESET_MASKS(pbmi) (ZeroMemory((PVOID)(((LPBYTE)(pbmi)->bmiHeader) + \
-			(pbmi)->bmiHeader.biSize,SIZE_MASKS)))
-#define RESET_HEADER(pbmi) (ZeroMemory((PVOID)(pbmi), SIZE_PREHEADER +	    \
-			sizeof(BITMAPINFOHEADER)))
+            (pbmi)->bmiHeader.biSize,SIZE_MASKS)))
+#define RESET_HEADER(pbmi) (ZeroMemory((PVOID)(pbmi), SIZE_PREHEADER +        \
+            sizeof(BITMAPINFOHEADER)))
 #define RESET_PALETTE(pbmi) (ZeroMemory((PVOID)(((LPBYTE)(pbmi)->bmiHeader) + \
-			(pbmi)->bmiHeader.biSize,SIZE_PALETTE))
+            (pbmi)->bmiHeader.biSize,SIZE_PALETTE))
 #endif
 
 // Other (hopefully) useful bits and bobs
@@ -410,8 +410,8 @@ typedef struct tagAnalogVideoInfo {
 //
 typedef enum {
         //  Step
-	AM_PROPERTY_FRAMESTEP_STEP   = 0x01,
-	AM_PROPERTY_FRAMESTEP_CANCEL = 0x02,
+    AM_PROPERTY_FRAMESTEP_STEP   = 0x01,
+    AM_PROPERTY_FRAMESTEP_CANCEL = 0x02,
 
         //  S_OK for these 2 means we can - S_FALSE if we can't
         AM_PROPERTY_FRAMESTEP_CANSTEP = 0x03,

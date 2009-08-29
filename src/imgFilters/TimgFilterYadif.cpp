@@ -214,7 +214,7 @@ int TimgFilterYadif::config(TffPict &pict)
             }
         }
 
-	return 1;
+    return 1;
 }
 
 void TimgFilterYadif::done(void)

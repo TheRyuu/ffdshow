@@ -857,10 +857,10 @@ HRESULT TffdshowVideoInputPin::SupportPropSetRate(DWORD dwPropID, DWORD *pTypeSu
     case AM_RATE_CorrectTS:
         *pTypeSupport = KSPROPERTY_SUPPORT_SET;
         break;
-	case AM_RATE_UseRateVersion:
+    case AM_RATE_UseRateVersion:
         *pTypeSupport = KSPROPERTY_SUPPORT_SET;
         break;
-	case AM_RATE_QueryLastRateSegPTS:
+    case AM_RATE_QueryLastRateSegPTS:
         *pTypeSupport = KSPROPERTY_SUPPORT_GET;
         break;
     }

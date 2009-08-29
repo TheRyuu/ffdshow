@@ -67,11 +67,11 @@ typedef _ssize_t ssize_t;
 #endif
 
 #ifndef INT_MIN
-#define INT_MIN	INT32_MIN
+#define INT_MIN INT32_MIN
 #endif
 
 #ifndef INT_MAX
-#define INT_MAX	INT32_MAX
+#define INT_MAX INT32_MAX
 #endif
 
 #ifndef INT16_MIN
@@ -318,6 +318,6 @@ typedef _ssize_t ssize_t;
 #define SCNuFAST8 "hhu"
 #endif /* __STDC_VERSION__ >= 199901 */
 
-#endif	/* !defined(__cplusplus) || defined(__STDC_FORMAT_MACROS) */
+#endif  /* !defined(__cplusplus) || defined(__STDC_FORMAT_MACROS) */
 
 #endif

@@ -68,7 +68,7 @@ private:
  static void deNoise(const unsigned char *Frame,  // mpi->planes[x]
                      unsigned char *FrameDest,    // dmpi->planes[x]
                      unsigned int *LineAnt,       // vf->priv->Line (width bytes)
-		     unsigned short **FrameAntPtr, int *FrameAntStride,
+                     unsigned short **FrameAntPtr, int *FrameAntStride,
                      int W, int H, stride_t sStride, stride_t dStride,
                      int *Horizontal, int *Vertical, int *Temporal);
 protected:

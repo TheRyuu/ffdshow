@@ -80,8 +80,8 @@ protected:
     {
      struct Ta
       {
- 	::IScriptEnvironment * env;
-	const char * error;
+    ::IScriptEnvironment * env;
+    const char * error;
       };
      delete ((Ta*)env)->env;
     }

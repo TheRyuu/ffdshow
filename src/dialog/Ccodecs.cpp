@@ -266,16 +266,16 @@ void TcodecsPage::dlg2options(int id)
    int optionId = 0;
    switch(id)
    {
-	   case IDC_CHB_CODEC_OPT1:
-		optionId=0;break;
-	   case IDC_CHB_CODEC_OPT2:
-		optionId=1;break;
-	   case IDC_CHB_CODEC_OPT3:
-		optionId=2;break;
-	   case IDC_CHB_CODEC_OPT4:
-		optionId=3;break;
+       case IDC_CHB_CODEC_OPT1:
+        optionId=0;break;
+       case IDC_CHB_CODEC_OPT2:
+        optionId=1;break;
+       case IDC_CHB_CODEC_OPT3:
+        optionId=2;break;
+       case IDC_CHB_CODEC_OPT4:
+        optionId=3;break;
    }
-	  const Tformat::Toption &o=formats[ii].options[optionId];
+      const Tformat::Toption &o=formats[ii].options[optionId];
    int idff=o.id;
    int val=cfgGet(idff);
    if (getCheck(id))

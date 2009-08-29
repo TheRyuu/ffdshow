@@ -131,7 +131,7 @@ void TlevelsSettings::calcMap(unsigned int map[256],int *divisor,int inMin,int i
       p=p*(outMax-outMin)+outMin;
       map[x]=limit(int(p),limitMin,limitMax);
      }
-	break;*/
+    break;*/
   }
  if(mode!=5 && posterize!=255)
   {

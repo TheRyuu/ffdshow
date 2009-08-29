@@ -71,8 +71,8 @@ typedef enum
     ITEMFROMLIST,
     // select value using slider
     SLIDER,
-	// character string
-	CHARSTRING,
+    // character string
+    CHARSTRING,
 } SETTING_TYPE;
 
 /** Function called when setting Value changes

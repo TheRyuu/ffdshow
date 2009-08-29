@@ -71,7 +71,7 @@ typedef const TCHAR *PCTSTR;
 #endif
 
 #ifndef M_SQRT2
-#define M_SQRT2	1.41421356237309504880
+#define M_SQRT2 1.41421356237309504880
 #endif
 
 #define REF_SECOND_MULT 10000000LL

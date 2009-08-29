@@ -225,11 +225,11 @@ CodecID TffdshowDecAudio::getCodecId(const CMediaType &mt)
  else if (mt.subtype==MEDIASUBTYPE_SAMR)
   wFormatTag=WAVE_FORMAT_SAMR;
  else if (mt.subtype==MEDIASUBTYPE_IMA_AMV)
-	wFormatTag=WAVE_FORMAT_IMA_AMV;
+  wFormatTag=WAVE_FORMAT_IMA_AMV;
  else if (mt.subtype==MEDIASUBTYPE_ADPCM_SWF)
-	wFormatTag=WAVE_FORMAT_ADPCM_SWF;
+  wFormatTag=WAVE_FORMAT_ADPCM_SWF;
  else if (mt.subtype==MEDIASUBTYPE_NELLYMOSER)
-	wFormatTag=WAVE_FORMAT_NELLYMOSER;
+  wFormatTag=WAVE_FORMAT_NELLYMOSER;
  else if (mt.subtype==MEDIASUBTYPE_DOLBY_TRUEHD || mt.subtype==MEDIASUBTYPE_NERO_MLP 
      || mt.subtype==MEDIASUBTYPE_ARCSOFT_MLP || mt.subtype==MEDIASUBTYPE_SONIC_MLP
      || mt.subtype==KSDATAFORMAT_SUBTYPE_IEC61937_DOLBY_MLP)
@@ -292,13 +292,13 @@ CodecID TffdshowDecAudio::getCodecId(const CMediaType &mt)
  // Codec Id returned is CODEC_ID_MP3 when input format is MP1,MP2 and libavcodec is selected (because same config table mp123[])
  if (wFormatTag==WAVE_FORMAT_MPEG && codecId==CODEC_ID_MP3)
  {
-	 MPEG1WAVEFORMAT *m1wf=(MPEG1WAVEFORMAT*)mt.pbFormat;
+     MPEG1WAVEFORMAT *m1wf=(MPEG1WAVEFORMAT*)mt.pbFormat;
      switch (m1wf->fwHeadLayer)
       {
        case ACM_MPEG_LAYER1:
        case ACM_MPEG_LAYER2:codecId=CODEC_ID_MP2;
-		   break;
-	 }
+           break;
+     }
  }
  if (codecId==CODEC_ID_MP3LIB && _strnicmp(_l("vix.exe"),getExeflnm(),8)==0)
   return CODEC_ID_NONE;
@@ -395,13 +395,13 @@ HRESULT TffdshowDecAudio::getMediaType(CMediaType *mtOut)
   Workaround : output format = analog <=> analog directsound device => Connection accepted, but the device have to be replaced (done in StartStreaming method)
   */
  if (!audioDeviceChanged
-	 && presetSettings != NULL && presetSettings->output != NULL
-	 && strcmp(presetSettings->output->multichannelDeviceId, L"")
-	 && ((WAVEFORMATEX*)mtOut->pbFormat)->wFormatTag==WAVE_FORMAT_DOLBY_AC3_SPDIF)
+     && presetSettings != NULL && presetSettings->output != NULL
+     && strcmp(presetSettings->output->multichannelDeviceId, L"")
+     && ((WAVEFORMATEX*)mtOut->pbFormat)->wFormatTag==WAVE_FORMAT_DOLBY_AC3_SPDIF)
  {
-	 TsampleFormat outsf=getOutsf();
-	 if (outsf.nchannels>5)
-		*mtOut=outsf.toCMediaType(alwaysextensible);
+     TsampleFormat outsf=getOutsf();
+     if (outsf.nchannels>5)
+        *mtOut=outsf.toCMediaType(alwaysextensible);
  }
 #endif
  return S_OK;
@@ -497,114 +497,114 @@ HRESULT TffdshowDecAudio::StartStreaming(void)
  DPRINTF(_l("TffdshowDecAudio::StartStreaming"));
 #ifdef VISTA_SPDIF
  // If a device is configured for multichannel streams then change it (if the transformed stream is multichannel)
-	if (!audioDeviceChanged && strcmp(presetSettings->output->multichannelDeviceId, L""))
-	{
-		TsampleFormat outsf=getOutsf();
+    if (!audioDeviceChanged && strcmp(presetSettings->output->multichannelDeviceId, L""))
+    {
+        TsampleFormat outsf=getOutsf();
 
-		if (outsf.nchannels>5) // Multichannel stream
-		{
+        if (outsf.nchannels>5) // Multichannel stream
+        {
    DPRINTF(_l("TffdshowDecAudio::StartStreaming changing of audio renderer (%s) for multichannel support"),presetSettings->output->multichannelDeviceId);
-			/* Navigate through the graph until the direct sound device 
-			(the direct sound device may not be directly connected to ffdshow audio) */
-			IEnumFilters *filtersEnum = NULL;
-			graph->EnumFilters(&filtersEnum);
-			IBaseFilter *filterGraph;
-			HRESULT hr;
-			while (1)
-			{
-				unsigned long fetched;
-				filtersEnum->Next(1, &filterGraph, &fetched);
-				if (fetched < 1) break;
-				CLSID filterCLSID;
-				filterGraph->GetClassID(&filterCLSID);
-				if (IsEqualCLSID(filterCLSID,CLSID_DSoundRender)) // Direct sound device found
-				{
-					// Find its input pin to disconnect it
-					IPin *connectedPin = NULL;
-					AM_MEDIA_TYPE connectedPinMediaType;
-					IEnumPins *enumPins = NULL;
-					filterGraph->EnumPins(&enumPins);
-					IPin *filterPin;
-					while (1)
-					{
-						enumPins->Next(1, &filterPin, &fetched);
-						if (fetched < 1) break;
-						
-						PIN_DIRECTION pinDirection;
-						filterPin->QueryDirection(&pinDirection);
-						if (pinDirection == PINDIR_INPUT)
-						{
-							hr = filterPin->ConnectedTo(&connectedPin); //Retrieve pin connected to input pin
-							if (FAILED(hr))
-								break;
-							filterPin->ConnectionMediaType(&connectedPinMediaType);
-							filterGraph->Stop();
-							hr = filterPin->Disconnect();
-							break;
-						}
-						filterPin->Release();
-					}
-					enumPins->Release();
+            /* Navigate through the graph until the direct sound device 
+            (the direct sound device may not be directly connected to ffdshow audio) */
+            IEnumFilters *filtersEnum = NULL;
+            graph->EnumFilters(&filtersEnum);
+            IBaseFilter *filterGraph;
+            HRESULT hr;
+            while (1)
+            {
+                unsigned long fetched;
+                filtersEnum->Next(1, &filterGraph, &fetched);
+                if (fetched < 1) break;
+                CLSID filterCLSID;
+                filterGraph->GetClassID(&filterCLSID);
+                if (IsEqualCLSID(filterCLSID,CLSID_DSoundRender)) // Direct sound device found
+                {
+                    // Find its input pin to disconnect it
+                    IPin *connectedPin = NULL;
+                    AM_MEDIA_TYPE connectedPinMediaType;
+                    IEnumPins *enumPins = NULL;
+                    filterGraph->EnumPins(&enumPins);
+                    IPin *filterPin;
+                    while (1)
+                    {
+                        enumPins->Next(1, &filterPin, &fetched);
+                        if (fetched < 1) break;
+                        
+                        PIN_DIRECTION pinDirection;
+                        filterPin->QueryDirection(&pinDirection);
+                        if (pinDirection == PINDIR_INPUT)
+                        {
+                            hr = filterPin->ConnectedTo(&connectedPin); //Retrieve pin connected to input pin
+                            if (FAILED(hr))
+                                break;
+                            filterPin->ConnectionMediaType(&connectedPinMediaType);
+                            filterGraph->Stop();
+                            hr = filterPin->Disconnect();
+                            break;
+                        }
+                        filterPin->Release();
+                    }
+                    enumPins->Release();
 
-					if (connectedPin == NULL)
-					{
-						filterGraph->Release();
+                    if (connectedPin == NULL)
+                    {
+                        filterGraph->Release();
       audioDeviceChanged=true;
-						break;
-					}
+                        break;
+                    }
 
-					// Add the multichannel device to the graph
-					// Enumerate audio devices
-					IMMDeviceEnumerator *deviceEnumerator = NULL;
-					hr = CoCreateInstance(
-					  __uuidof(MMDeviceEnumerator), 
-					  NULL, 
-					  CLSCTX_INPROC_SERVER,
-					  __uuidof(IMMDeviceEnumerator), (LPVOID *)&deviceEnumerator);
+                    // Add the multichannel device to the graph
+                    // Enumerate audio devices
+                    IMMDeviceEnumerator *deviceEnumerator = NULL;
+                    hr = CoCreateInstance(
+                      __uuidof(MMDeviceEnumerator), 
+                      NULL, 
+                      CLSCTX_INPROC_SERVER,
+                      __uuidof(IMMDeviceEnumerator), (LPVOID *)&deviceEnumerator);
 
-					IMMDevice *newDevice = NULL;
-					deviceEnumerator->GetDevice(presetSettings->output->multichannelDeviceId, &newDevice);
-					DIRECTX_AUDIO_ACTIVATION_PARAMS  daap;
-					daap.cbDirectXAudioActivationParams = sizeof(daap);
-					static const GUID toto = {0xb13ff52e, 0xa5cf, 0x4fca, 0x9f, 0xc3, 0x42, 0x26, 0x5b, 0x0b, 0x14, 0xfb};
+                    IMMDevice *newDevice = NULL;
+                    deviceEnumerator->GetDevice(presetSettings->output->multichannelDeviceId, &newDevice);
+                    DIRECTX_AUDIO_ACTIVATION_PARAMS  daap;
+                    daap.cbDirectXAudioActivationParams = sizeof(daap);
+                    static const GUID toto = {0xb13ff52e, 0xa5cf, 0x4fca, 0x9f, 0xc3, 0x42, 0x26, 0x5b, 0x0b, 0x14, 0xfb};
 
-					daap.guidAudioSession = toto;
-					daap.dwAudioStreamFlags = 0x00010000;//AUDCLNT_STREAMFLAGS_CROSSPROCESS;
-					PROPVARIANT  var;
-					PropVariantInit(&var);
+                    daap.guidAudioSession = toto;
+                    daap.dwAudioStreamFlags = 0x00010000;//AUDCLNT_STREAMFLAGS_CROSSPROCESS;
+                    PROPVARIANT  var;
+                    PropVariantInit(&var);
 
-					var.vt = VT_BLOB;
-					var.blob.cbSize = sizeof(daap);
-					var.blob.pBlobData = (BYTE*)&daap;
-					IBaseFilter *audioRenderer = NULL;
+                    var.vt = VT_BLOB;
+                    var.blob.cbSize = sizeof(daap);
+                    var.blob.pBlobData = (BYTE*)&daap;
+                    IBaseFilter *audioRenderer = NULL;
 
-					hr = newDevice->Activate(__uuidof(IBaseFilter),
-										   CLSCTX_ALL, &var,
-										   (void**)&audioRenderer);
+                    hr = newDevice->Activate(__uuidof(IBaseFilter),
+                                           CLSCTX_ALL, &var,
+                                           (void**)&audioRenderer);
 
-					hr = graph->AddFilter(audioRenderer, L"New direct sound device");
-					if (FAILED(hr))
-					{
-						graph->Reconnect(filterPin); // Reconnect automatically if replacement failed
-						filterGraph->Run(0);
-						filterPin->Release();
+                    hr = graph->AddFilter(audioRenderer, L"New direct sound device");
+                    if (FAILED(hr))
+                    {
+                        graph->Reconnect(filterPin); // Reconnect automatically if replacement failed
+                        filterGraph->Run(0);
+                        filterPin->Release();
       audioDeviceChanged=true;
-						break;
-					}
+                        break;
+                    }
      DPRINTF(_l("TffdshowDecAudio::StartStreaming new device added"));
-					filterPin->Release();
+                    filterPin->Release();
 
-					// Connect the input pin of the multichannel device to the disconnected output pin
-					audioRenderer->EnumPins(&enumPins);
-					while (1)
-					{
-						enumPins->Next(1, &filterPin, &fetched);
-						if (fetched < 1) break;
-						
-						PIN_DIRECTION pinDirection;
-						filterPin->QueryDirection(&pinDirection);
-						if (pinDirection == PINDIR_INPUT)
-						{
+                    // Connect the input pin of the multichannel device to the disconnected output pin
+                    audioRenderer->EnumPins(&enumPins);
+                    while (1)
+                    {
+                        enumPins->Next(1, &filterPin, &fetched);
+                        if (fetched < 1) break;
+                        
+                        PIN_DIRECTION pinDirection;
+                        filterPin->QueryDirection(&pinDirection);
+                        if (pinDirection == PINDIR_INPUT)
+                        {
        // Check that the chosen renderer accepts multichannel stream
        TsampleFormat insf;
        inpin->getsf(insf);
@@ -617,42 +617,42 @@ HRESULT TffdshowDecAudio::StartStreaming(void)
         break;
        }
 
-							hr = filterGraph->Release();
-							PIN_INFO pinInfo;
-							hr = connectedPin->QueryPinInfo(&pinInfo);
-							hr = pinInfo.pFilter->Stop();
-							hr = connectedPin->Disconnect();
+                            hr = filterGraph->Release();
+                            PIN_INFO pinInfo;
+                            hr = connectedPin->QueryPinInfo(&pinInfo);
+                            hr = pinInfo.pFilter->Stop();
+                            hr = connectedPin->Disconnect();
        hr = filterPin->Connect(connectedPin, &mt);
-							hr = pinInfo.pFilter->Run(0);
-							hr = audioRenderer->Run(0);
-							if (FAILED(hr))
-							{
-								graph->Reconnect(filterPin); // Reconnect automatically if replacement failed
+                            hr = pinInfo.pFilter->Run(0);
+                            hr = audioRenderer->Run(0);
+                            if (FAILED(hr))
+                            {
+                                graph->Reconnect(filterPin); // Reconnect automatically if replacement failed
         DPRINTF(_l("TffdshowDecAudio::StartStreaming Audio renderer replacement failed"));
         audioDeviceChanged=true;
-								filterGraph->Run(0);
-							}
-							if (pinInfo.pFilter != NULL)
-							{
-								pinInfo.pFilter->Release();
-							}
-							filterPin->Release();
-							break;
-						}
-						filterPin->Release();
-					}
-					enumPins->Release();
-					if (connectedPin != NULL)
-						connectedPin->Release();
-					break;
-				}
-				filterGraph->Release();
-			}
-			filtersEnum->Release();
-		}
+                                filterGraph->Run(0);
+                            }
+                            if (pinInfo.pFilter != NULL)
+                            {
+                                pinInfo.pFilter->Release();
+                            }
+                            filterPin->Release();
+                            break;
+                        }
+                        filterPin->Release();
+                    }
+                    enumPins->Release();
+                    if (connectedPin != NULL)
+                        connectedPin->Release();
+                    break;
+                }
+                filterGraph->Release();
+            }
+            filtersEnum->Release();
+        }
   DPRINTF(_l("TffdshowDecAudio::StartStreaming Audio renderer replaced successfully"));
-		audioDeviceChanged=true;
-	}
+        audioDeviceChanged=true;
+    }
 #endif
  firsttransform=true;
  ft1=ft2=0;
@@ -1050,13 +1050,13 @@ STDMETHODIMP_(unsigned int) TffdshowDecAudio::getCurrentStream2(void)
 }
 STDMETHODIMP TffdshowDecAudio::Enable(long lIndex, DWORD dwFlags)
 {
-	unsigned int i = (unsigned int)lIndex;
-	return setCurrentStream(i);
+    unsigned int i = (unsigned int)lIndex;
+    return setCurrentStream(i);
 }
 STDMETHODIMP TffdshowDecAudio::Count(DWORD *pcStreams)
 {
-	if (pcStreams) *pcStreams = (DWORD) inpins.getNumConnectedInpins();
-	return S_OK;
+    if (pcStreams) *pcStreams = (DWORD) inpins.getNumConnectedInpins();
+    return S_OK;
 }
 STDMETHODIMP TffdshowDecAudio::Info(long lIndex, AM_MEDIA_TYPE** ppmt, DWORD* pdwFlags, LCID* plcid, DWORD* pdwGroup, WCHAR** ppszName, IUnknown** ppObject, IUnknown** ppUnk)
 {
@@ -1064,23 +1064,23 @@ STDMETHODIMP TffdshowDecAudio::Info(long lIndex, AM_MEDIA_TYPE** ppmt, DWORD* pd
  if (ppmt) *ppmt=getInputMediaType(lIndex);
  if (pdwFlags)
  {
-	if (getCurrentStream2() == (unsigned int) lIndex)
-		*pdwFlags=AMSTREAMSELECTINFO_ENABLED|AMSTREAMSELECTINFO_EXCLUSIVE;
-	else
-		*pdwFlags=0;
+    if (getCurrentStream2() == (unsigned int) lIndex)
+        *pdwFlags=AMSTREAMSELECTINFO_ENABLED|AMSTREAMSELECTINFO_EXCLUSIVE;
+    else
+        *pdwFlags=0;
  }
  if (plcid) *plcid=0;
  if (pdwGroup) *pdwGroup=1; //Audio
  if (ppszName)
   {
-	 char_t descr[250];
+     char_t descr[250];
      if (getStreamDescr((unsigned int) lIndex,descr,250)==S_OK)
       {
-		ffstring name=descr;
-		size_t wlen=(name.size()+1)*sizeof(WCHAR);
-		*ppszName=(WCHAR*)CoTaskMemAlloc(wlen);memset(*ppszName,0,wlen);
-		nCopyAnsiToWideChar(*ppszName,name.c_str());
-	 }
+        ffstring name=descr;
+        size_t wlen=(name.size()+1)*sizeof(WCHAR);
+        *ppszName=(WCHAR*)CoTaskMemAlloc(wlen);memset(*ppszName,0,wlen);
+        nCopyAnsiToWideChar(*ppszName,name.c_str());
+     }
   }
  if (ppObject) *ppObject=NULL;
  if (ppUnk) *ppUnk=NULL;
@@ -1119,7 +1119,7 @@ STDMETHODIMP TffdshowDecAudio::setCurrentStream2(TffdshowDecAudioInputPin *newip
 
 STDMETHODIMP_(TffdshowDecAudioInputPin *) TffdshowDecAudio::GetCurrentPin(void)
 {
-	return inpin;
+    return inpin;
 }
 
 

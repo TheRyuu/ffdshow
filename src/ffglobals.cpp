@@ -1141,7 +1141,7 @@ static int decode_vol_header(MPEG4context *s, GetBitContext *gb)
  }
  //printf("vo type:%d\n",s->vo_type);
  s->aspect_ratio_info= get_bits(gb, 4);
-	if(s->aspect_ratio_info == FF_ASPECT_EXTENDED){
+    if(s->aspect_ratio_info == FF_ASPECT_EXTENDED){
    s->aspected_width = get_bits(gb, 8); // par_width
    s->aspected_height = get_bits(gb, 8); // par_height
  }else{

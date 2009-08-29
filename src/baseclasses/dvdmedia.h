@@ -412,8 +412,8 @@ UCHAR patcon:
 
     typedef enum {
       AM_RATE_SimpleRateChange = 1,       // rw, use AM_SimpleRateChange
-      AM_RATE_ExactRateChange  = 2,	  // rw, use AM_ExactRateChange
-      AM_RATE_MaxFullDataRate  = 3,	  // r,  use AM_MaxFullDataRate
+      AM_RATE_ExactRateChange  = 2,       // rw, use AM_ExactRateChange
+      AM_RATE_MaxFullDataRate  = 3,       // r,  use AM_MaxFullDataRate
       AM_RATE_Step             = 4,       // w,  use AM_Step
       AM_RATE_UseRateVersion   = 5,       //  w, use WORD
       AM_RATE_QueryFullFrameRate =6,      //  r, use AM_QueryRate
@@ -431,7 +431,7 @@ UCHAR patcon:
 
     typedef enum {
       AM_RATE_ChangeRate       = 1,    // w,  use AM_DVD_ChangeRate
-      AM_RATE_FullDataRateMax  = 2,	 // r,  use AM_MaxFullDataRate
+      AM_RATE_FullDataRateMax  = 2,    // r,  use AM_MaxFullDataRate
       AM_RATE_ReverseDecode    = 3,    // r,  use LONG
       AM_RATE_DecoderPosition  = 4,    // r,  use AM_DVD_DecoderPosition
       AM_RATE_DecoderVersion   = 5     // r,  use LONG
@@ -442,8 +442,8 @@ UCHAR patcon:
         // this is the simplest mechanism to set a time stamp rate change on
         // a filter (simplest for the person setting the rate change, harder
         // for the filter doing the rate change).
-        REFERENCE_TIME	StartTime;  //stream time at which to start this rate
-        LONG		Rate;       //new rate * 10000 (decimal)
+        REFERENCE_TIME    StartTime;  //stream time at which to start this rate
+        LONG        Rate;       //new rate * 10000 (decimal)
       }
     AM_SimpleRateChange;
 
@@ -466,9 +466,9 @@ UCHAR patcon:
     // New rate change property set, structs. enums etc.
     typedef struct
       {
-        REFERENCE_TIME	StartInTime;   // stream time (input) at which to start decoding at this rate
-        REFERENCE_TIME	StartOutTime;  // reference time (output) at which to start showing at this rate
-        LONG		    Rate;          // new rate * 10000 (decimal)
+        REFERENCE_TIME    StartInTime;   // stream time (input) at which to start decoding at this rate
+        REFERENCE_TIME    StartOutTime;  // reference time (output) at which to start showing at this rate
+        LONG            Rate;          // new rate * 10000 (decimal)
       }
     AM_DVD_ChangeRate ;
 

@@ -161,7 +161,7 @@ DwStringRep::DwStringRep(FILE* aFile, size_t aSize)
     assert(aFile != 0);
     static int pagesize = -1;
     if (pagesize < 0)
-	pagesize = getpagesize();
+    pagesize = getpagesize();
     int tell = ftell(aFile);
     mPageMod = tell % pagesize;
     mSize = aSize;
@@ -170,9 +170,9 @@ DwStringRep::DwStringRep(FILE* aFile, size_t aSize)
     mBuffer = (char *)mmap(0, aSize + mPageMod, PROT_READ, MAP_SHARED, fileno(aFile), tell - mPageMod) + mPageMod;
     ++mPageMod;
     if (mBuffer == MAP_FAILED) {
-	mBuffer = 0;
-	mSize = 0;
-	mPageMod = 0;
+    mBuffer = 0;
+    mSize = 0;
+    mPageMod = 0;
     }
 }
 */
@@ -190,10 +190,10 @@ template<class tchar> DwStringRep<tchar>::~DwStringRep()
 #endif //  defined (DW_DEBUG_VERSION) || defined (DW_DEVELOPMENT_VERSION)
 /*
     if (mPageMod) {
-	--mPageMod;
-	munmap(mBuffer - mPageMod, mSize + mPageMod);
+    --mPageMod;
+    munmap(mBuffer - mPageMod, mSize + mPageMod);
     } else */{
-	DwString<tchar>::mem_free(mBuffer);
+    DwString<tchar>::mem_free(mBuffer);
     }
     //DEV_STMT(mBuffer = 0)
 }
@@ -252,11 +252,11 @@ template<class tchar> const size_t DwString<tchar>::npos = (size_t) -1;
 
 template<class tchar> void CALLBACK DwString<tchar>::GlobalInitialization( BOOL bLoading, const CLSID *)
 {
-	if ( !bLoading && sEmptyRep && (sEmptyRep->mRefCount == 1) )
-	{
-		delete sEmptyRep;
-		sEmptyRep = NULL;
-	}
+    if ( !bLoading && sEmptyRep && (sEmptyRep->mRefCount == 1) )
+    {
+        delete sEmptyRep;
+        sEmptyRep = NULL;
+    }
 }
 
 

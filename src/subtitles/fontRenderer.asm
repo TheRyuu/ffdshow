@@ -41,12 +41,12 @@
 %endif
 
 %macro cglobal 1
-	%ifdef PREFIX
-		global _%1
-		%define %1 _%1
-	%else
-		global %1
-	%endif
+    %ifdef PREFIX
+        global _%1
+        %define %1 _%1
+    %else
+        global %1
+    %endif
 %endmacro
 
 ;=============================================================================
@@ -851,7 +851,6 @@ restoreXmmRegs:
 
 %endif ; win64
 
- 	  	 
 ;
 ; void __cdecl fontRGB32toBW_mmx( /* 0 rcx */ size_t count,
 ;                                 /* 1 rdx */ unsigned char *ptr);

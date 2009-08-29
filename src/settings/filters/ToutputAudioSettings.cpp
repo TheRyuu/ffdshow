@@ -107,13 +107,13 @@ TdevicesList ToutputAudioSettings::getDevices(void)
   IMMDeviceEnumerator *deviceEnumerator = NULL;
   // Enumerate audio devices
   HRESULT hr = CoCreateInstance(
-	  __uuidof(MMDeviceEnumerator), 
-	  NULL, 
-	  CLSCTX_INPROC_SERVER,
-	  __uuidof(IMMDeviceEnumerator), (LPVOID *)&deviceEnumerator);
+      __uuidof(MMDeviceEnumerator), 
+      NULL, 
+      CLSCTX_INPROC_SERVER,
+      __uuidof(IMMDeviceEnumerator), (LPVOID *)&deviceEnumerator);
   if (FAILED(hr))
   {
-	  return devicesList;
+      return devicesList;
   }
 
   // Getting default render device
@@ -121,14 +121,14 @@ TdevicesList ToutputAudioSettings::getDevices(void)
   hr = deviceEnumerator->GetDefaultAudioEndpoint(eRender, eMultimedia, &defaultRenderer);
   if (FAILED(hr))
   {
-	  return devicesList;
+      return devicesList;
   }
   WCHAR *default_deviceIdp = NULL;
   WCHAR default_deviceId[255] = L"";
   hr = defaultRenderer->GetId(&default_deviceIdp);
   if (FAILED(hr))
   {
-	  return devicesList;
+      return devicesList;
   }
   ff_strncpy(default_deviceId, default_deviceIdp, 254);
   CoTaskMemFree(default_deviceIdp);
@@ -139,7 +139,7 @@ TdevicesList ToutputAudioSettings::getDevices(void)
   hr = deviceEnumerator->EnumAudioEndpoints(eRender, DEVICE_STATE_ACTIVE, &deviceEndPoints);
   if (FAILED(hr))
   {
-	  return devicesList;
+      return devicesList;
   }
   deviceEnumerator->Release();
   deviceEnumerator = NULL;
@@ -149,59 +149,59 @@ TdevicesList ToutputAudioSettings::getDevices(void)
 
   for (unsigned int i=0; i<deviceCount; i++)
   {
-	  IMMDevice *device;
-	  deviceEndPoints->Item(i, &device);
-	  DWORD state=0;
-	  device->GetState(&state);
-	  if (state != DEVICE_STATE_ACTIVE)
-	  {
-		  device->Release();
-		  continue;
-	  }
-	  WCHAR *deviceIdp = NULL;
-	  WCHAR deviceId[255] = L"";
-	  hr = device->GetId(&deviceIdp);
-	  ff_strncpy(deviceId, deviceIdp, 254);
+      IMMDevice *device;
+      deviceEndPoints->Item(i, &device);
+      DWORD state=0;
+      device->GetState(&state);
+      if (state != DEVICE_STATE_ACTIVE)
+      {
+          device->Release();
+          continue;
+      }
+      WCHAR *deviceIdp = NULL;
+      WCHAR deviceId[255] = L"";
+      hr = device->GetId(&deviceIdp);
+      ff_strncpy(deviceId, deviceIdp, 254);
 
-	  // Retrieve properties
-	  IPropertyStore* deviceProperties;
-	  device->OpenPropertyStore(STGM_READ, &deviceProperties);
-	  PROPVARIANT value;
-	  PropVariantInit(&value);
-	  hr = deviceProperties->GetValue(PKEY_Device_FriendlyName, &value);
-	  WCHAR deviceName[255] = L"";
-	  if (!strcmp(deviceId, default_deviceId))
-	  {
-		  if (value.pwszVal != NULL)
-		  {
-			ff_strncpy(deviceName, value.pwszVal, 240);
-			strncat_s(deviceName, countof(deviceName), L" (default)", _TRUNCATE);
-		  }
-		  else
-			wsprintfW(deviceName, L"Device %d (default)", i);
-	  }
-	  else
-	  {
-		  if (value.pwszVal != NULL)
-			ff_strncpy(deviceName, value.pwszVal, 254);
-		  else
-			wsprintfW(deviceName, L"Device %d", i);
-	  }
-	// Get the DirectSound or DirectSoundCapture device GUID
+      // Retrieve properties
+      IPropertyStore* deviceProperties;
+      device->OpenPropertyStore(STGM_READ, &deviceProperties);
+      PROPVARIANT value;
+      PropVariantInit(&value);
+      hr = deviceProperties->GetValue(PKEY_Device_FriendlyName, &value);
+      WCHAR deviceName[255] = L"";
+      if (!strcmp(deviceId, default_deviceId))
+      {
+          if (value.pwszVal != NULL)
+          {
+            ff_strncpy(deviceName, value.pwszVal, 240);
+            strncat_s(deviceName, countof(deviceName), L" (default)", _TRUNCATE);
+          }
+          else
+            wsprintfW(deviceName, L"Device %d (default)", i);
+      }
+      else
+      {
+          if (value.pwszVal != NULL)
+            ff_strncpy(deviceName, value.pwszVal, 254);
+          else
+            wsprintfW(deviceName, L"Device %d", i);
+      }
+    // Get the DirectSound or DirectSoundCapture device GUID
     // (in WCHAR string format) for the endpoint device.
-	PROPVARIANT var;
-	PropVariantInit(&var);
+    PROPVARIANT var;
+    PropVariantInit(&var);
 
-	// Redefinition of property key PKEY_AudioEndpoint_GUID (won't compile if it is used directly)
-	const PROPERTYKEY key = {0x1da5d803, 0xd492, 0x4edd, 0x8c, 0x23, 0xe0, 0xc0, 0xff, 0xee, 0x7f, 0x0e, 4};
-	hr = deviceProperties->GetValue(key, &var);
+    // Redefinition of property key PKEY_AudioEndpoint_GUID (won't compile if it is used directly)
+    const PROPERTYKEY key = {0x1da5d803, 0xd492, 0x4edd, 0x8c, 0x23, 0xe0, 0xc0, 0xff, 0xee, 0x7f, 0x0e, 4};
+    hr = deviceProperties->GetValue(key, &var);
 
-	devicesList[deviceName] = deviceId;//var.pwszVal;
+    devicesList[deviceName] = deviceId;//var.pwszVal;
 
-	PropVariantClear(&value);
-	PropVariantClear(&var);
-	CoTaskMemFree(deviceIdp);
-	device->Release();
+    PropVariantClear(&value);
+    PropVariantClear(&var);
+    CoTaskMemFree(deviceIdp);
+    device->Release();
   }
 #endif
   return devicesList;

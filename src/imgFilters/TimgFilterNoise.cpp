@@ -174,7 +174,7 @@ template<class _mm> void TimgFilterNoiseMplayer::Tprocess::lineNoise_simd(uint8_
  packsswb(mm7,mm7);
  for (int x=-mmx_len;x<0;x+=_mm::size)
   {
-   //".balign 16			\n\t"
+   //".balign 16            \n\t"
    typename _mm::__m mm0,mm1;
    movq   (mm0,src+mmx_len+x);
    movdqu (mm1,noise+mmx_len+x); //SSE3

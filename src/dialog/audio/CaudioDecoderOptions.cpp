@@ -44,7 +44,7 @@ INT_PTR TaudioDecoderOptionsPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lPara
      {
       case IDC_TBR_DECODER_DRC_LEVEL:
        cfgSet(IDFF_audio_decoder_DRC_Level, tbrGet(IDC_TBR_DECODER_DRC_LEVEL));
-	   drc2dlg();
+       drc2dlg();
        return TRUE;
      }
  }

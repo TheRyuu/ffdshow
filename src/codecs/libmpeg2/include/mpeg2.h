@@ -25,7 +25,7 @@
 #define LIBMPEG2_MPEG2_H
 
 #define MPEG2_VERSION(a,b,c) (((a)<<16)|((b)<<8)|(c))
-#define MPEG2_RELEASE MPEG2_VERSION (0, 5, 1)	/* 0.5.1 */
+#define MPEG2_RELEASE MPEG2_VERSION (0, 5, 1)    /* 0.5.1 */
 
 #define SEQ_FLAG_MPEG2 1
 #define SEQ_FLAG_CONSTRAINED_PARAMETERS 2
@@ -101,7 +101,7 @@ typedef struct mpeg2_picture_s {
     uint32_t tag, tag2;
     uint32_t flags;
     struct {
-	int x, y;
+    int x, y;
     } display_offset[3];
 } mpeg2_picture_t;
 
@@ -145,7 +145,7 @@ typedef struct mpeg2_convert_init_s {
     unsigned int id_size;
     unsigned int buf_size[3];
     void (* start) (void * id, const mpeg2_fbuf_t * fbuf,
-		    const mpeg2_picture_t * picture, const mpeg2_gop_t * gop);
+            const mpeg2_picture_t * picture, const mpeg2_gop_t * gop);
     void (* copy) (void * id, uint8_t * const * src, unsigned int v_offset);
 } mpeg2_convert_init_t;
 typedef enum {
@@ -154,9 +154,9 @@ typedef enum {
     MPEG2_CONVERT_START = 2
 } mpeg2_convert_stage_t;
 typedef int mpeg2_convert_t (int stage, void * id,
-			     const mpeg2_sequence_t * sequence, int stride,
-			     uint32_t accel, void * arg,
-			     mpeg2_convert_init_t * result);
+                 const mpeg2_sequence_t * sequence, int stride,
+                 uint32_t accel, void * arg,
+                 mpeg2_convert_init_t * result);
 int mpeg2_convert (mpeg2dec_t * mpeg2dec, mpeg2_convert_t convert, void * arg);
 int mpeg2_stride (mpeg2dec_t * mpeg2dec, int stride);
 void mpeg2_set_buf (mpeg2dec_t * mpeg2dec, uint8_t * buf[3], void * id);
@@ -185,8 +185,8 @@ void mpeg2_slice_region (mpeg2dec_t * mpeg2dec, int start, int end);
 void mpeg2_tag_picture (mpeg2dec_t * mpeg2dec, uint32_t tag, uint32_t tag2);
 
 int mpeg2_guess_aspect (const mpeg2_sequence_t * sequence,
-			unsigned int * pixel_width,
-			unsigned int * pixel_height);
+            unsigned int * pixel_width,
+            unsigned int * pixel_height);
 
 typedef enum {
     MPEG2_ALLOC_MPEG2DEC = 0,
@@ -199,6 +199,6 @@ typedef enum {
 void * mpeg2_malloc (unsigned size, mpeg2_alloc_t reason);
 void mpeg2_free (void * buf);
 void mpeg2_malloc_hooks (void * malloc (unsigned, mpeg2_alloc_t),
-			 int free (void *));
+             int free (void *));
 void mpeg2_set_rtStart(mpeg2dec_t *mpeg2dec,int64_t rtStart);
 #endif /* LIBMPEG2_MPEG2_H */

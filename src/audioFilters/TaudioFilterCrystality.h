@@ -26,9 +26,9 @@ private:
 
    struct Interpolation
     {
-     int acount;// counter
-     int lval;	// value
-     int sal;	// sum
+     int acount; // counter
+     int lval; // value
+     int sal; // sum
      int al;
      int a1l;
     } bandext_energy,bandext_amplitude;

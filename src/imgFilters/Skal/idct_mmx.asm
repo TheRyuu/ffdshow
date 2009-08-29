@@ -146,49 +146,49 @@ rounder_5:
 ;-----------------------------------------------------------------------------
 ;
 ; static const short w[32] = {
-;	FIX(cos_4_16),  FIX(cos_2_16),  FIX(cos_4_16),  FIX(cos_6_16),
-;	FIX(cos_4_16),  FIX(cos_6_16), -FIX(cos_4_16), -FIX(cos_2_16),
-;	FIX(cos_4_16), -FIX(cos_6_16), -FIX(cos_4_16),  FIX(cos_2_16),
-;	FIX(cos_4_16), -FIX(cos_2_16),  FIX(cos_4_16), -FIX(cos_6_16),
-;	FIX(cos_1_16),  FIX(cos_3_16),  FIX(cos_5_16),  FIX(cos_7_16),
-;	FIX(cos_3_16), -FIX(cos_7_16), -FIX(cos_1_16), -FIX(cos_5_16),
-;	FIX(cos_5_16), -FIX(cos_1_16),  FIX(cos_7_16),  FIX(cos_3_16),
-;	FIX(cos_7_16), -FIX(cos_5_16),  FIX(cos_3_16), -FIX(cos_1_16) };
+;    FIX(cos_4_16),  FIX(cos_2_16),  FIX(cos_4_16),  FIX(cos_6_16),
+;    FIX(cos_4_16),  FIX(cos_6_16), -FIX(cos_4_16), -FIX(cos_2_16),
+;    FIX(cos_4_16), -FIX(cos_6_16), -FIX(cos_4_16),  FIX(cos_2_16),
+;    FIX(cos_4_16), -FIX(cos_2_16),  FIX(cos_4_16), -FIX(cos_6_16),
+;    FIX(cos_1_16),  FIX(cos_3_16),  FIX(cos_5_16),  FIX(cos_7_16),
+;    FIX(cos_3_16), -FIX(cos_7_16), -FIX(cos_1_16), -FIX(cos_5_16),
+;    FIX(cos_5_16), -FIX(cos_1_16),  FIX(cos_7_16),  FIX(cos_3_16),
+;    FIX(cos_7_16), -FIX(cos_5_16),  FIX(cos_3_16), -FIX(cos_1_16) };
 ;
 ; #define DCT_8_INV_ROW(x, y)
 ; {
-; 	int a0, a1, a2, a3, b0, b1, b2, b3;
+;     int a0, a1, a2, a3, b0, b1, b2, b3;
 ;
-; 	a0 =x[0]*w[0]+x[2]*w[1]+x[4]*w[2]+x[6]*w[3];
-; 	a1 =x[0]*w[4]+x[2]*w[5]+x[4]*w[6]+x[6]*w[7];
-; 	a2 = x[0] * w[ 8] + x[2] * w[ 9] + x[4] * w[10] + x[6] * w[11];
-; 	a3 = x[0] * w[12] + x[2] * w[13] + x[4] * w[14] + x[6] * w[15];
-; 	b0 = x[1] * w[16] + x[3] * w[17] + x[5] * w[18] + x[7] * w[19];
-; 	b1 = x[1] * w[20] + x[3] * w[21] + x[5] * w[22] + x[7] * w[23];
-; 	b2 = x[1] * w[24] + x[3] * w[25] + x[5] * w[26] + x[7] * w[27];
-; 	b3 = x[1] * w[28] + x[3] * w[29] + x[5] * w[30] + x[7] * w[31];
+;     a0 =x[0]*w[0]+x[2]*w[1]+x[4]*w[2]+x[6]*w[3];
+;     a1 =x[0]*w[4]+x[2]*w[5]+x[4]*w[6]+x[6]*w[7];
+;     a2 = x[0] * w[ 8] + x[2] * w[ 9] + x[4] * w[10] + x[6] * w[11];
+;     a3 = x[0] * w[12] + x[2] * w[13] + x[4] * w[14] + x[6] * w[15];
+;     b0 = x[1] * w[16] + x[3] * w[17] + x[5] * w[18] + x[7] * w[19];
+;     b1 = x[1] * w[20] + x[3] * w[21] + x[5] * w[22] + x[7] * w[23];
+;     b2 = x[1] * w[24] + x[3] * w[25] + x[5] * w[26] + x[7] * w[27];
+;     b3 = x[1] * w[28] + x[3] * w[29] + x[5] * w[30] + x[7] * w[31];
 ;
-; 	y[0] = SHIFT_ROUND ( a0 + b0 );
-; 	y[1] = SHIFT_ROUND ( a1 + b1 );
-; 	y[2] = SHIFT_ROUND ( a2 + b2 );
-; 	y[3] = SHIFT_ROUND ( a3 + b3 );
-; 	y[4] = SHIFT_ROUND ( a3 - b3 );
-; 	y[5] = SHIFT_ROUND ( a2 - b2 );
-; 	y[6] = SHIFT_ROUND ( a1 - b1 );
-; 	y[7] = SHIFT_ROUND ( a0 - b0 );
+;     y[0] = SHIFT_ROUND ( a0 + b0 );
+;     y[1] = SHIFT_ROUND ( a1 + b1 );
+;     y[2] = SHIFT_ROUND ( a2 + b2 );
+;     y[3] = SHIFT_ROUND ( a3 + b3 );
+;     y[4] = SHIFT_ROUND ( a3 - b3 );
+;     y[5] = SHIFT_ROUND ( a2 - b2 );
+;     y[6] = SHIFT_ROUND ( a1 - b1 );
+;     y[7] = SHIFT_ROUND ( a0 - b0 );
 ; }
 ;
 ;-----------------------------------------------------------------------------
 ;
 ; In this implementation the outputs of the iDCT-1D are multiplied
-; 	for rows 0,4 - by cos_4_16,
-; 	for rows 1,7 - by cos_1_16,
-; 	for rows 2,6 - by cos_2_16,
-; 	for rows 3,5 - by cos_3_16
+;     for rows 0,4 - by cos_4_16,
+;     for rows 1,7 - by cos_1_16,
+;     for rows 2,6 - by cos_2_16,
+;     for rows 3,5 - by cos_3_16
 ; and are shifted to the left for better accuracy
 ;
 ; For the constants used,
-; 	FIX(float_const) = (short) (float_const * (1<<15) + 0.5)
+;     FIX(float_const) = (short) (float_const * (1<<15) + 0.5)
 ;
 ;-----------------------------------------------------------------------------
 
@@ -566,7 +566,7 @@ ALIGN SECTION_ALIGN
 idct_mmx:
     mov TMP0, prm1
 
-	;; Process each row
+    ;; Process each row
     DCT_8_INV_ROW_MMX TMP0+0*16, TMP0+0*16, tab_i_04_mmx, rounder_0
     DCT_8_INV_ROW_MMX TMP0+1*16, TMP0+1*16, tab_i_17_mmx, rounder_1
     DCT_8_INV_ROW_MMX TMP0+2*16, TMP0+2*16, tab_i_26_mmx, rounder_2
@@ -576,7 +576,7 @@ idct_mmx:
     DCT_8_INV_ROW_MMX TMP0+6*16, TMP0+6*16, tab_i_26_mmx, rounder_6
     DCT_8_INV_ROW_MMX TMP0+7*16, TMP0+7*16, tab_i_17_mmx, rounder_7
 
-	;; Process the columns (4 at a time)
+    ;; Process the columns (4 at a time)
     DCT_8_INV_COL TMP0+0, TMP0+0
     DCT_8_INV_COL TMP0+8, TMP0+8
 
@@ -591,7 +591,7 @@ ALIGN SECTION_ALIGN
 idct_xmm:
     mov TMP0, prm1
 
-	;; Process each row
+    ;; Process each row
     DCT_8_INV_ROW_XMM TMP0+0*16, TMP0+0*16, tab_i_04_xmm, rounder_0
     DCT_8_INV_ROW_XMM TMP0+1*16, TMP0+1*16, tab_i_17_xmm, rounder_1
     DCT_8_INV_ROW_XMM TMP0+2*16, TMP0+2*16, tab_i_26_xmm, rounder_2
@@ -601,7 +601,7 @@ idct_xmm:
     DCT_8_INV_ROW_XMM TMP0+6*16, TMP0+6*16, tab_i_26_xmm, rounder_6
     DCT_8_INV_ROW_XMM TMP0+7*16, TMP0+7*16, tab_i_17_xmm, rounder_7
 
-	;; Process the columns (4 at a time)
+    ;; Process the columns (4 at a time)
     DCT_8_INV_COL TMP0+0, TMP0+0
     DCT_8_INV_COL TMP0+8, TMP0+8
 

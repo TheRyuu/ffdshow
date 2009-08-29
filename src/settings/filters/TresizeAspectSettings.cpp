@@ -478,10 +478,10 @@ void TresizeAspectSettings::calcNewRects(Trect *rectFull, Trect *rectClip, bool 
        else
         rectFull->dy=dx*inRect.dy/inRect.dx;
        break;
-	  case 5: // Stick size to screen resolution
-		rectFull->dx=GetSystemMetrics(SM_CXSCREEN);
-		rectFull->dy=GetSystemMetrics(SM_CYSCREEN);
-	   break;
+      case 5: // Stick size to screen resolution
+        rectFull->dx=GetSystemMetrics(SM_CXSCREEN);
+        rectFull->dy=GetSystemMetrics(SM_CYSCREEN);
+       break;
       case 0: // Specify horizontal and vertical size
       default:
        rectFull->dx=dx;

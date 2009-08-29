@@ -115,10 +115,10 @@ INT_PTR TinfoPageDec::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
         if (getCheck(IDC_CHB_ALLOW_SSSE3   )) allow|=FF_CPU_SSSE3;
         if (getCheck(IDC_CHB_ALLOW_3DNOW   )) allow|=FF_CPU_3DNOW;
         if (getCheck(IDC_CHB_ALLOW_3DNOWEXT)) allow|=FF_CPU_3DNOWEXT;
-		if (getCheck(IDC_CHB_ALLOW_SSE41   )) allow|=FF_CPU_SSE41;
-		if (getCheck(IDC_CHB_ALLOW_SSE42   )) allow|=FF_CPU_SSE42;
-		if (getCheck(IDC_CHB_ALLOW_SSE4A   )) allow|=FF_CPU_SSE4A;
-		if (getCheck(IDC_CHB_ALLOW_SSE5    )) allow|=FF_CPU_SSE5;
+        if (getCheck(IDC_CHB_ALLOW_SSE41   )) allow|=FF_CPU_SSE41;
+        if (getCheck(IDC_CHB_ALLOW_SSE42   )) allow|=FF_CPU_SSE42;
+        if (getCheck(IDC_CHB_ALLOW_SSE4A   )) allow|=FF_CPU_SSE4A;
+        if (getCheck(IDC_CHB_ALLOW_SSE5    )) allow|=FF_CPU_SSE5;
         cfgSet(IDFF_allowedCpuFlags,allow);
         return TRUE;
        }

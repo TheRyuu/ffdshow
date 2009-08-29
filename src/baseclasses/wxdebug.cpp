@@ -60,7 +60,7 @@ DWORD m_dwObjectCount;                      // Active object count
 BOOL m_bInit = FALSE;                       // Have we been initialised
 HANDLE m_hOutput = INVALID_HANDLE_VALUE;    // Optional output written here
 DWORD dwWaitTimeout = INFINITE;             // Default timeout value
-DWORD dwTimeOffset;			    // Time of first DbgLog call
+DWORD dwTimeOffset;                // Time of first DbgLog call
 bool g_fUseKASSERT = false;                 // don't create messagebox
 bool g_fDbgInDllEntryPoint = false;
 bool g_fAutoRefreshLevels = false;
@@ -416,15 +416,15 @@ INT MessageBoxOtherThread(
     {
         MsgBoxMsg msg = {hwnd, szTitle, szMessage, dwFlags, 0};
 
-		HANDLE hThread = (HANDLE)_beginthreadex( NULL,				/* Security */
-												0,					/* Stack Size */
-												MsgBoxThread,		/* Thread process */
-												(LPVOID)&msg,		/* Arguments */
-												0,					/* 0 = Start Immediately */
-												NULL				/* Thread Address */
-												);
+        HANDLE hThread = (HANDLE)_beginthreadex( NULL,              /* Security */
+                                                0,                  /* Stack Size */
+                                                MsgBoxThread,       /* Thread process */
+                                                (LPVOID)&msg,       /* Arguments */
+                                                0,                  /* 0 = Start Immediately */
+                                                NULL                /* Thread Address */
+                                                );
 
-		if(hThread)
+        if(hThread)
         {
             WaitForSingleObject(hThread, INFINITE);
             CloseHandle(hThread);
@@ -580,9 +580,9 @@ BOOL WINAPI DbgCheckModuleLevel(DWORD Type,DWORD Level)
     // If no valid bits are set return FALSE
     if ((Type & ((1<<iMAXLEVELS)-1))) {
 
-	// speed up unconditional output.
-	if (0==Level)
-	    return(TRUE);
+    // speed up unconditional output.
+    if (0==Level)
+        return(TRUE);
 
         for (LONG lKeyPos = 0;lKeyPos < iMAXLEVELS;lKeyPos++) {
             if (Type & Mask) {

@@ -244,12 +244,12 @@ DEFINE_GUID_FOURCC(YV16)
 #define WAVE_FORMAT_G726    0x45
 #define WAVE_FORMAT_FLAC    0xf1ac
 #define WAVE_FORMAT_TTA     0x77a1
-#define WAVE_FORMAT_VORBIS1  ((WORD)'O'+((WORD)'g'<<8))	// 0x674f("Og") ... Original stream compatible
-#define WAVE_FORMAT_VORBIS2  ((WORD)'P'+((WORD)'g'<<8))	// 0x6750("Pg") ... Have independent header
-#define WAVE_FORMAT_VORBIS3  ((WORD)'Q'+((WORD)'g'<<8))	// 0x6751("Qg") ... Have no codebook header
-#define WAVE_FORMAT_VORBIS1P ((WORD)'o'+((WORD)'g'<<8))	// 0x676f("og") ... Original stream compatible
-#define WAVE_FORMAT_VORBIS2P ((WORD)'p'+((WORD)'g'<<8))	// 0x6770("pg") ... Have independent header
-#define WAVE_FORMAT_VORBIS3P ((WORD)'q'+((WORD)'g'<<8))	// 0x6771("qg") ... Have no codebook header
+#define WAVE_FORMAT_VORBIS1  ((WORD)'O'+((WORD)'g'<<8)) // 0x674f("Og") ... Original stream compatible
+#define WAVE_FORMAT_VORBIS2  ((WORD)'P'+((WORD)'g'<<8)) // 0x6750("Pg") ... Have independent header
+#define WAVE_FORMAT_VORBIS3  ((WORD)'Q'+((WORD)'g'<<8)) // 0x6751("Qg") ... Have no codebook header
+#define WAVE_FORMAT_VORBIS1P ((WORD)'o'+((WORD)'g'<<8)) // 0x676f("og") ... Original stream compatible
+#define WAVE_FORMAT_VORBIS2P ((WORD)'p'+((WORD)'g'<<8)) // 0x6770("pg") ... Have independent header
+#define WAVE_FORMAT_VORBIS3P ((WORD)'q'+((WORD)'g'<<8)) // 0x6771("qg") ... Have no codebook header
 #define WAVE_FORMAT_FFVORBIS (('V'<<8)+'o')
 #define WAVE_FORMAT_QT_ULAW 0x6c75
 #define WAVE_FORMAT_alaw    mmioFOURCC('a','l','a','w')
@@ -280,19 +280,19 @@ DEFINE_GUID_FOURCC(YV16)
 #define WAVE_FORMAT_28_8    0x385F3832
 #define WAVE_FORMAT_IMC     0x401
 #define WAVE_FORMAT_ATRAC3  0x270
-#define WAVE_FORMAT_NELLYMOSER	mmioFOURCC('N','E','L','L')
+#define WAVE_FORMAT_NELLYMOSER  mmioFOURCC('N','E','L','L')
 #define WAVE_FORMAT_PCM8    0x9a120008
 #define WAVE_FORMAT_PCM16   0x9a120016
 #define WAVE_FORMAT_PCM24   0x9a120024
 #define WAVE_FORMAT_PCM32   0x9a120032
 #define WAVE_FORMAT_FLOAT32 0x9a120132
 #define WAVE_FORMAT_FLOAT64 0x9a120164
-#define WAVE_FORMAT_IMA_AMV mmioFOURCC('A','M','V','A')
+#define WAVE_FORMAT_IMA_AMV   mmioFOURCC('A','M','V','A')
 #define WAVE_FORMAT_ADPCM_SWF mmioFOURCC('A','S','W','F')
-#define WAVE_FORMAT_EAC3		mmioFOURCC('E','A','C','3')
-#define WAVE_FORMAT_MLP    mmioFOURCC('M','L','P', ' ')
-#define WAVE_FORMAT_DTS_HD mmioFOURCC('D','T','S', 'H')
-#define WAVE_FORMAT_TRUEHD  mmioFOURCC('T','R','U','E')
+#define WAVE_FORMAT_EAC3      mmioFOURCC('E','A','C','3')
+#define WAVE_FORMAT_MLP       mmioFOURCC('M','L','P', ' ')
+#define WAVE_FORMAT_DTS_HD    mmioFOURCC('D','T','S', 'H')
+#define WAVE_FORMAT_TRUEHD    mmioFOURCC('T','R','U','E')
 
 DEFINE_GUID_WAVE(WMA7)
 DEFINE_GUID_WAVE(WMA8)

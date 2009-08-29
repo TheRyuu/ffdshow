@@ -105,36 +105,36 @@ loop_x:
 
         movq                  (mm1, esi);
         movq                  (mm2, mm1);
-        psllw		      (      mm1, 8);
-        psrlw		      (     mm1, 8);
-        psrlw		      (      mm2, 8);
-        paddw		      (      mm2, mm1);
-        movq		      (      mm1, edx);
-        movq		      (      mm3, mm1);
-        psllw		      (      mm1, 8);
-        psrlw		      (      mm1, 8);
-        psrlw		      (      mm3, 8);
-        paddw		      (      mm3, mm1);
-        paddw		      (      mm2, mm3);
-        movq		      (      mm1, mm2);
-        punpcklwd	      (   mm1, mm0);
-        punpckhwd	      (   mm2, mm0);
-        paddd		      (      mm1, mm7);
-        movq		      (      mm6, mm1);
-        psllq		      (      mm6, 32);
-        paddd		      (      mm1, mm6);
-        movq		      (      mm6, mm1);
-        psrlq		      (      mm6, 32);
-        paddd		      (      mm2, mm6);
-        movq		      (      mm6, mm2);
-        psllq		      (      mm6, 32);
-        paddd		      (      mm2, mm6);
-        movq		      (      mm7, mm2);
-        psrlq		      (      mm7, 32);
-        paddd	              ( mm1, eax);
-        paddd	              ( mm2, eax + 8);
-        movq	              ( edi, mm1);
-        movq	              ( edi + 8, mm2);
+        psllw             (      mm1, 8);
+        psrlw             (     mm1, 8);
+        psrlw             (      mm2, 8);
+        paddw             (      mm2, mm1);
+        movq              (      mm1, edx);
+        movq              (      mm3, mm1);
+        psllw             (      mm1, 8);
+        psrlw             (      mm1, 8);
+        psrlw             (      mm3, 8);
+        paddw             (      mm3, mm1);
+        paddw             (      mm2, mm3);
+        movq              (      mm1, mm2);
+        punpcklwd         (   mm1, mm0);
+        punpckhwd         (   mm2, mm0);
+        paddd             (      mm1, mm7);
+        movq              (      mm6, mm1);
+        psllq             (      mm6, 32);
+        paddd             (      mm1, mm6);
+        movq              (      mm6, mm1);
+        psrlq             (      mm6, 32);
+        paddd             (      mm2, mm6);
+        movq              (      mm6, mm2);
+        psllq             (      mm6, 32);
+        paddd             (      mm2, mm6);
+        movq              (      mm7, mm2);
+        psrlq             (      mm7, 32);
+        paddd                 ( mm1, eax);
+        paddd                 ( mm2, eax + 8);
+        movq                  ( edi, mm1);
+        movq                  ( edi + 8, mm2);
 
         eax+= 16;
         edi+= 16;
@@ -142,11 +142,11 @@ loop_x:
         edx+= 8;
         ecx--;
         if (ecx!=0)
-         goto loop_x;//	jnz                  .loop_x
+         goto loop_x;//    jnz                  .loop_x
 
         ebp--;
         if (ebp!=0)
-         goto loop_y;//	jnz                  .loop_y
+         goto loop_y;//    jnz                  .loop_y
 
 }
 
@@ -191,43 +191,43 @@ loop_y:
 
 loop_x:
 
-   pxor	        (       mm1, mm1);
-   paddd	(               mm1, esi + edx * 2);
-   psubd	(               mm1, esi + edx * 2 + 64);
-   psubd	(               mm1, ebx + edx * 2);
-   paddd	(               mm1, ebx + edx * 2 + 64);
-   psrld	(               mm1, 3);
-   movq	        (       mm2, mm1);
-   psllq	(               mm2, 16);
-   por		(            mm1, mm2);
-   movd		(            mm2, edi + edx);
-   punpcklbw	(         mm2, mm0);
-   psllw	(	            mm2, 7);
-   movq		(            mm4, mm1);
-   movq		(            mm3, mm2);
-   psubusw	(	         mm4, mm2);
-   psubusw	(	         mm3, mm1);
-   por		(	         mm3, mm4);
-   pmulhw	(	         mm3, mm6);
-   pminsw	(	         mm3, mm5);
-   movq		(            mm4, mm5);
-   psubw	(	            mm4, mm3);
-   pmullw	(	         mm4, mm4);
-   psllw	(	            mm4, 1);
-   psubw	(	            mm1, mm2);
-   pmulhw	(	         mm1, mm4);
-   psrlw	(	            mm2, 1);
-   paddw	(	            mm1, mm2);
-   psllw	(	            mm1, 1);
-   paddw	(	            mm1, mm7);
-   movq		(           mm2, mm1);
-   psraw	(	            mm2, 7);
-   movq		(            mm4, mm2);
-   packuswb	(            mm4, mm0);
-   movd		(            edi + edx, mm4);
-   psllw	(	            mm2, 7);
-   psubw	(	            mm1, mm2);
-   movq		(            mm7, mm1);
+   pxor         (       mm1, mm1);
+   paddd    (               mm1, esi + edx * 2);
+   psubd    (               mm1, esi + edx * 2 + 64);
+   psubd    (               mm1, ebx + edx * 2);
+   paddd    (               mm1, ebx + edx * 2 + 64);
+   psrld    (               mm1, 3);
+   movq         (       mm2, mm1);
+   psllq    (               mm2, 16);
+   por      (            mm1, mm2);
+   movd     (            mm2, edi + edx);
+   punpcklbw    (         mm2, mm0);
+   psllw    (               mm2, 7);
+   movq     (            mm4, mm1);
+   movq     (            mm3, mm2);
+   psubusw  (            mm4, mm2);
+   psubusw  (            mm3, mm1);
+   por      (            mm3, mm4);
+   pmulhw   (            mm3, mm6);
+   pminsw   (            mm3, mm5);
+   movq     (            mm4, mm5);
+   psubw    (               mm4, mm3);
+   pmullw   (            mm4, mm4);
+   psllw    (               mm4, 1);
+   psubw    (               mm1, mm2);
+   pmulhw   (            mm1, mm4);
+   psrlw    (               mm2, 1);
+   paddw    (               mm1, mm2);
+   psllw    (               mm1, 1);
+   paddw    (               mm1, mm7);
+   movq     (           mm2, mm1);
+   psraw    (               mm2, 7);
+   movq     (            mm4, mm2);
+   packuswb (            mm4, mm0);
+   movd     (            edi + edx, mm4);
+   psllw    (               mm2, 7);
+   psubw    (               mm1, mm2);
+   movq     (            mm7, mm1);
 
    edx+= 4;
    ecx--;

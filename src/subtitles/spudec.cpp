@@ -584,8 +584,8 @@ void Tspudec::spudec_calc_bbox( unsigned int dxs, unsigned int dys, unsigned int
       break;
     case 1:
       if (sub_pos < 50) {
-	 y1 = dys*sub_pos/100 - height * scaley / 0x200;
-	 if (y1 < 0) bbox[2] = 0; else bbox[2] = y1;
+     y1 = dys*sub_pos/100 - height * scaley / 0x200;
+     if (y1 < 0) bbox[2] = 0; else bbox[2] = y1;
         bbox[3] = bbox[2] + height;
       } else {
         bbox[3] = dys*sub_pos/100 + height * scaley / 0x200;
@@ -1011,19 +1011,19 @@ nothing_to_do:
             scaled_start_row = dys - scaled_height;
           break;
         case 1:
-	   y1 = dys*sub_pos/100 - scaled_height/2;
+       y1 = dys*sub_pos/100 - scaled_height/2;
           if (sub_pos < 50) {
-	    if (y1 < 0) scaled_start_row = 0; else scaled_start_row = y1;
+        if (y1 < 0) scaled_start_row = 0; else scaled_start_row = y1;
           } else {
-	    if (y1 + scaled_height > dys)
-	      scaled_start_row = dys - scaled_height;
-	    else
-	      scaled_start_row = y1;
+        if (y1 + scaled_height > dys)
+          scaled_start_row = dys - scaled_height;
+        else
+          scaled_start_row = y1;
           }
           break;
         case 2:
           y1 = dys*sub_pos/100 - scaled_height;
-	  if (y1 < 0) scaled_start_row = 0; else scaled_start_row = 0;
+      if (y1 < 0) scaled_start_row = 0; else scaled_start_row = 0;
           break;
         }
         draw_alpha(scaled_start_col, scaled_start_row, scaled_width, scaled_height,

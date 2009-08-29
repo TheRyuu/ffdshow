@@ -753,11 +753,11 @@ const float TaudioFilterHeadphone2::M4_77DB=0.5773502692f;
 const float TaudioFilterHeadphone2::M3_01DB=0.7071067812f;
 const float TaudioFilterHeadphone2::M1_76DB=0.8164965809f;
 
-const float TaudioFilterHeadphone2::IRTHRESH=0.001f;	/* Impulse response pruning thresh. */
-const float TaudioFilterHeadphone2::BASSGAIN=(float)M_SQRT2;	/* Bass compensation gain */
-const float TaudioFilterHeadphone2::BASSCROSS=0.35f;	/* Bass cross talk */
+const float TaudioFilterHeadphone2::IRTHRESH=0.001f;    /* Impulse response pruning thresh. */
+const float TaudioFilterHeadphone2::BASSGAIN=(float)M_SQRT2;    /* Bass compensation gain */
+const float TaudioFilterHeadphone2::BASSCROSS=0.35f;    /* Bass cross talk */
 
-const float TaudioFilterHeadphone2::STEXPAND2=0.07f;	/* Stereo expansion / 2 */
+const float TaudioFilterHeadphone2::STEXPAND2=0.07f;    /* Stereo expansion / 2 */
 
 TaudioFilterHeadphone2::TaudioFilterHeadphone2(IffdshowBase *Ideci,Tfilters *Iparent):TaudioFilter(Ideci,Iparent)
 {
@@ -791,8 +791,8 @@ int TaudioFilterHeadphone2::pulse_detect(const float *sx)
     int i;
 
     for(i = 0; i < nmax; i++)
-	if(fabs(sx[i]) > thresh)
-	    return i;
+    if(fabs(sx[i]) > thresh)
+        return i;
     return 0;
 }
 
@@ -911,7 +911,7 @@ HRESULT TaudioFilterHeadphone2::process(TfilterQueue::iterator it,TsampleFormat 
       front channels (like reflection from a room wall) - a kind of
       psycho-acoustically "cheating" to focus the center front
       channel, which is normally hard to be perceived as front */
-   static const float CFECHOAMPL=M17_0DB;	/* Center front echo amplitude */
+   static const float CFECHOAMPL=M17_0DB;    /* Center front echo amplitude */
    s->lf[k] += CFECHOAMPL * s->cf[(k + CFECHODELAY) % s->dlbuflen];
    s->rf[k] += CFECHOAMPL * s->cf[(k + CFECHODELAY) % s->dlbuflen];
 
@@ -932,26 +932,26 @@ HRESULT TaudioFilterHeadphone2::process(TfilterQueue::iterator it,TsampleFormat 
       conv(dblen, hlen, &s->lr[0], s->or_ir, k + s->or_o) +
       common);
 
-	/* Bass compensation for the lower frequency cut of the HRTF.  A
-	   cross talk of the left and right channel is introduced to
-	   match the directional characteristics of higher frequencies.
-	   The bass will not have any real 3D perception, but that is
-	   OK (note at 180 Hz, the wavelength is about 2 m, and any
-	   spatial perception is impossible). */
-	float left_b  = conv(dblen, blen, &s->ba_l[0], s->ba_ir, k);
-	float right_b = conv(dblen, blen, &s->ba_r[0], s->ba_ir, k);
-	left  += (1 - BASSCROSS) * left_b  + BASSCROSS * right_b;
-	right += (1 - BASSCROSS) * right_b + BASSCROSS * left_b;
-	/* Also mix the LFE channel (if available) */
-	if(indexes[5]!=-1) {
+    /* Bass compensation for the lower frequency cut of the HRTF.  A
+       cross talk of the left and right channel is introduced to
+       match the directional characteristics of higher frequencies.
+       The bass will not have any real 3D perception, but that is
+       OK (note at 180 Hz, the wavelength is about 2 m, and any
+       spatial perception is impossible). */
+    float left_b  = conv(dblen, blen, &s->ba_l[0], s->ba_ir, k);
+    float right_b = conv(dblen, blen, &s->ba_r[0], s->ba_ir, k);
+    left  += (1 - BASSCROSS) * left_b  + BASSCROSS * right_b;
+    right += (1 - BASSCROSS) * right_b + BASSCROSS * left_b;
+    /* Also mix the LFE channel (if available) */
+    if(indexes[5]!=-1) {
      left  += in[5] * M3_01DB;
      right += in[5] * M3_01DB;
-	}
+    }
 
-	/* Amplitude renormalization. */
-	static const float AMPLNORM=M6_99DB;	/* Overall amplitude renormalization */
+    /* Amplitude renormalization. */
+    static const float AMPLNORM=M6_99DB;    /* Overall amplitude renormalization */
     left  *= AMPLNORM;
-	right *= AMPLNORM;
+    right *= AMPLNORM;
 
     /* "Cheating": linear stereo expansion to amplify the 3D
        perception.  Note: Too much will destroy the acoustic space
@@ -959,11 +959,11 @@ HRESULT TaudioFilterHeadphone2::process(TfilterQueue::iterator it,TsampleFormat 
     float diff = STEXPAND2 * (left - right);
     out[0] = left  + diff;
     out[1] = right - diff;
-	/* Next sample... */
-	inbuf += oldfmt.nchannels;
-	out += fmt.nchannels;
-	s->cyc_pos--;
-	if(s->cyc_pos < 0)
+    /* Next sample... */
+    inbuf += oldfmt.nchannels;
+    out += fmt.nchannels;
+    s->cyc_pos--;
+    if(s->cyc_pos < 0)
      s->cyc_pos += dblen;
   }
  return parent->deliverSamples(++it,fmt,samples,numsamples);

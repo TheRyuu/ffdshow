@@ -373,12 +373,12 @@ Tsubtitle* TsubtitleParserVplayer::parse(Tstream &fd,int flags, REFERENCE_TIME s
                 if (!fd.fgets (line, this->LINE_LEN)) return NULL;
                 int ret;
 
-				//KD. Comments this, a never see vplayer sub with decimal fraction of second. Is this standard?
-				//Also this incorrect display: 
-				//00:00:01:7weeks ago
-				//sub to display is "7weeks ago" not "eeks ago". 7 is text not decisecund
+                //KD. Comments this, a never see vplayer sub with decimal fraction of second. Is this standard?
+                //Also this incorrect display: 
+                //00:00:01:7weeks ago
+                //sub to display is "7weeks ago" not "eeks ago". 7 is text not decisecund
 
-				//ret=swscanf(line, L"%d:%d:%d%c%d%c%n",&a1,&a2,&a3,&separator1,&a4,&separator2,&plen);
+                //ret=swscanf(line, L"%d:%d:%d%c%d%c%n",&a1,&a2,&a3,&separator1,&a4,&separator2,&plen);
                 //if (ret!=6)
                 // {
                   a4=0;
@@ -390,12 +390,12 @@ Tsubtitle* TsubtitleParserVplayer::parse(Tstream &fd,int flags, REFERENCE_TIME s
                 if ((current.start = this->hmsToTime(a1,a2,a3,a4*10))==NULL)
                         continue;
               
-				//by wodzu fast finds the body of the subtitle
+                //by wodzu fast finds the body of the subtitle
                 p = &line[ plen ];
 
                 if (*p!='|') {
-					next = p;
-					while ((next =sub_readtext (next, current))!=NULL);
+                    next = p;
+                    while ((next =sub_readtext (next, current))!=NULL);
                 }
         }
 

@@ -63,17 +63,17 @@ int EditDistance::CalEditDistance(const char_t *s,const char_t *t, int limit)
     while ( *s && (tolower(*s)==tolower(*t)) )
     {
         s++;
-		t++;
+        t++;
     }
 
-	while (tolower(s[n]))
-	{
-		n++;
-	}
-	while (tolower(t[m]))
-	{
-		m++;
-	}
+    while (tolower(s[n]))
+    {
+        n++;
+    }
+    while (tolower(t[m]))
+    {
+        m++;
+    }
 
     // Remove rightmost matching portion of strings by decrement n and m.
     while ( n && m && (tolower(*(s+n-1))==tolower(*(t+m-1))) )

@@ -118,7 +118,7 @@ HRESULT TaudioCodecLiba52::decode(TbyteBuffer &src)
        if (codecId==CODEC_ID_SPDIF_AC3)
         {
          bpssum+=(lastbps=bit_rate/1000);numframes++;
-		 HRESULT hr=deciA->deliverSampleSPDIF(p,size,bit_rate,sample_rate,0x0001,true);
+         HRESULT hr=deciA->deliverSampleSPDIF(p,size,bit_rate,sample_rate,0x0001,true);
          if (hr!=S_OK)
           return hr;
         }
@@ -131,14 +131,14 @@ HRESULT TaudioCodecLiba52::decode(TbyteBuffer &src)
            bpssum+=(lastbps=bit_rate/1000);numframes++;
            // Dynamic range compression
            if (deci->getParam2(IDFF_audio_decoder_DRC))
-		   {
+           {
             liba52::sample_t drcLevel = ((liba52::sample_t)deci->getParam2(IDFF_audio_decoder_DRC_Level) / 100);
-			a52_dynrngsetlevel(state, drcLevel);
-		   }
+            a52_dynrngsetlevel(state, drcLevel);
+           }
            else
-		   {
-			a52_dynrngsetlevel(state, 0.0);
-		   }
+           {
+            a52_dynrngsetlevel(state, 0.0);
+           }
            int scmapidx=std::min(flags&A52_CHANNEL_MASK,int(countof(scmaps)/2));
            const Tscmap &scmap=scmaps[scmapidx+((flags&A52_LFE)?(countof(scmaps)/2):0)];
            float *dst0,*dst;dst0=dst=(float*)getDst(6*256*scmap.nchannels*sizeof(float));

@@ -48,30 +48,30 @@ bool TimgFilterPostprocBase::pp_codec(int CodecID)
 {
   if(raw_codec(CodecID))
     return true;
-	switch (CodecID) {
-		case CODEC_ID_MPEG1VIDEO:
-		case CODEC_ID_MPEG2VIDEO:
-		case CODEC_ID_LIBMPEG2:
-		case CODEC_ID_MPEG4:
-		case CODEC_ID_MSMPEG4V1:
-		case CODEC_ID_MSMPEG4V2:
-		case CODEC_ID_MSMPEG4V3:
-		case CODEC_ID_H263:
-		case CODEC_ID_SVQ1:
-		case CODEC_ID_FLV1:
-		case CODEC_ID_INDEO2:
-		case CODEC_ID_INDEO3:
-		case CODEC_ID_XVID4:
-		case CODEC_ID_MJPEG:
-		case CODEC_ID_MJPEGB:
-		case CODEC_ID_MSVIDEO1:
-		case CODEC_ID_CINEPAK:
-		case CODEC_ID_VP5:
-		case CODEC_ID_VP6:
-		case CODEC_ID_VP6F:
-			return true;
-		default: return false;
-	}
+    switch (CodecID) {
+        case CODEC_ID_MPEG1VIDEO:
+        case CODEC_ID_MPEG2VIDEO:
+        case CODEC_ID_LIBMPEG2:
+        case CODEC_ID_MPEG4:
+        case CODEC_ID_MSMPEG4V1:
+        case CODEC_ID_MSMPEG4V2:
+        case CODEC_ID_MSMPEG4V3:
+        case CODEC_ID_H263:
+        case CODEC_ID_SVQ1:
+        case CODEC_ID_FLV1:
+        case CODEC_ID_INDEO2:
+        case CODEC_ID_INDEO3:
+        case CODEC_ID_XVID4:
+        case CODEC_ID_MJPEG:
+        case CODEC_ID_MJPEGB:
+        case CODEC_ID_MSVIDEO1:
+        case CODEC_ID_CINEPAK:
+        case CODEC_ID_VP5:
+        case CODEC_ID_VP6:
+        case CODEC_ID_VP6F:
+            return true;
+        default: return false;
+    }
 }
 
 int TimgFilterPostprocBase::prepare(const TpostprocSettings *cfg,int maxquant,int frametype)
@@ -322,13 +322,13 @@ void TimgFilterPostprocSpp::ff_fdct_mmx2(int16_t *block)
    29692,  -12299,   26722,  -31521,
   };
  static __align8(const int16_t,fdct_tg_all_16[]) = {
-    13036, 13036, 13036, 13036,		// tg * (2<<16) + 0.5
-    27146, 27146, 27146, 27146,		// tg * (2<<16) + 0.5
-    -21746, -21746, -21746, -21746,	// tg * (2<<16) + 0.5
+    13036, 13036, 13036, 13036,        // tg * (2<<16) + 0.5
+    27146, 27146, 27146, 27146,        // tg * (2<<16) + 0.5
+    -21746, -21746, -21746, -21746,    // tg * (2<<16) + 0.5
  };
  static const __int64 fdct_one_corr = 0x0001000100010001LL;
  static  __align8(const int16_t,ocos_4_16[4]) = {
-    23170, 23170, 23170, 23170,	//cos * (2<<15) + 0.5
+    23170, 23170, 23170, 23170,    //cos * (2<<15) + 0.5
  };
  static __align8(const int32_t,fdct_r_row[2])={RND_FRW_ROW, RND_FRW_ROW };
 
@@ -1001,9 +1001,9 @@ HRESULT TimgFilterPostprocNic::process(TfilterQueue::iterator it,TffPict &pict,c
 
 //============================ TimgFilterPostprocFspp ===============================
 void TimgFilterPostprocFspp::filter(uint8_t *dst, const uint8_t *src0,
-		            stride_t dst_stride, stride_t src_stride,
-		            int width, int height0,
-		            int8_t *qp_store, int qp_stride, int is_luma)
+                    stride_t dst_stride, stride_t src_stride,
+                    int width, int height0,
+                    int8_t *qp_store, int qp_stride, int is_luma)
 {
     int x, x0, y, es, qy, t;
     const int stride= is_luma ? temp_stride : (width+16);//((width+16+15)&(~15))
@@ -1221,9 +1221,9 @@ void TimgFilterPostprocFspp::mul_thrmat_s(int q)
     const uint64_t *adr=&threshold_mtx_noq[0];
         uint8_t *REG_D=(uint8_t*)adr;
         uint8_t *REG_S=(uint8_t*)adr;
-	__m64 mm0,mm7,mm1,mm2,mm3,mm4,mm5,mm6;
-	csimd::movd (q, mm7);
-	REG_D+= 8*8*2;
+    __m64 mm0,mm7,mm1,mm2,mm3,mm4,mm5,mm6;
+    csimd::movd (q, mm7);
+    REG_D+= 8*8*2;
         csimd::movq (0*8+REG_S, mm0);
         csimd::punpcklwd( mm7, mm7);
         csimd::movq (1*8+REG_S, mm1);

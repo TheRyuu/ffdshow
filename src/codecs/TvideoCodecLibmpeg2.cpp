@@ -334,8 +334,8 @@ HRESULT TvideoCodecLibmpeg2::BeginFlush()
 }
 
 /* 
- *	Copyright (C) 2003-2006 Gabest
- *	http://www.gabest.org
+ *    Copyright (C) 2003-2006 Gabest
+ *    http://www.gabest.org
  *
  *      copied and modified from Mpeg2DecFilter.cpp
  */

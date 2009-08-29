@@ -128,11 +128,11 @@ protected:
  virtual HRESULT parseAC3(unsigned char *src, int size, TbyteBuffer *newsrcBuffer);
  //virtual void printbitssimple(uint32_t n); //DEBUG function 
 public:
-	int channels;
-	uint32_t sample_rate;
-	uint32_t bit_rate;
-	DWORD wFormatTag;
-	int sample_format;
+  int channels;
+  uint32_t sample_rate;
+  uint32_t bit_rate;
+  DWORD wFormatTag;
+  int sample_format;
  TaudioParser(IffdshowBase *Ideci,IdecAudioSink *Isink);
  virtual ~TaudioParser();
  virtual CodecID parseStream(unsigned char *src, int size, TbyteBuffer *newsrcBuffer);

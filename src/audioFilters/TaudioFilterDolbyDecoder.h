@@ -21,14 +21,14 @@ private:
 
  static float passive_lock(float x);
  void matrix_decode(const float *in, const int k, const int il,
-		    const int ir, bool decode_rear,
-		    const int dlbuflen,
-		    float l_fwr, float r_fwr,
-		    float lpr_fwr, float lmr_fwr,
-		    float *adapt_l_gain, float *adapt_r_gain,
-		    float *adapt_lpr_gain, float *adapt_lmr_gain,
-		    float *lf, float *rf, float *lr,
-		    float *rr, float *cf);
+                    const int ir, bool decode_rear,
+                    const int dlbuflen,
+                    float l_fwr, float r_fwr,
+                    float lpr_fwr, float lmr_fwr,
+                    float *adapt_l_gain, float *adapt_r_gain,
+                    float *adapt_lpr_gain, float *adapt_lmr_gain,
+                    float *lf, float *rf, float *lr,
+                    float *rr, float *cf);
 protected:
  virtual bool is(const TsampleFormat &fmt,const TfilterSettingsAudio *cfg);
  virtual int getSupportedFormats(const TfilterSettingsAudio *cfg,bool *honourPreferred,const TsampleFormat &sf) const {return TsampleFormat::SF_FLOAT32;}

@@ -30,11 +30,11 @@ TsubtitlesSSAConfig::TsubtitlesSSAConfig(IffdshowBase *Ideci,HWND Iparent,int x,
  this->x=x;this->y=y;
  static const TbindCheckbox<TsubtitlesSSAConfig> chb[]=
  {
-	 IDC_CHB_SUB_SSA_OVERRIDE_POSITION,IDFF_subSSAOverridePlacement,NULL,
-	 IDC_CHB_SUB_SSA_KEEP_TEXT_INSIDE,IDFF_subSSAMaintainInside,NULL,
-	 IDC_CHB_SUB_SSA_USE_INPUT_DIMENSIONS,IDFF_subSSAUseMovieDimensions,NULL,
-	 IDC_CHB_SUB_SSA_OVERRIDE_SCALING,IDFF_fontOverrideScale,NULL,
-	 0,NULL,NULL
+     IDC_CHB_SUB_SSA_OVERRIDE_POSITION,IDFF_subSSAOverridePlacement,NULL,
+     IDC_CHB_SUB_SSA_KEEP_TEXT_INSIDE,IDFF_subSSAMaintainInside,NULL,
+     IDC_CHB_SUB_SSA_USE_INPUT_DIMENSIONS,IDFF_subSSAUseMovieDimensions,NULL,
+     IDC_CHB_SUB_SSA_OVERRIDE_SCALING,IDFF_fontOverrideScale,NULL,
+     0,NULL,NULL
  };
  bindCheckboxes(chb);
 }

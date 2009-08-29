@@ -40,7 +40,7 @@
 %define SHIFT_FRW_COL   BITS_FRW_ACC
 %define SHIFT_FRW_ROW   BITS_FRW_ACC + 17
 %define RND_FRW_ROW     262144 * (BITS_FRW_ACC - 1) ; 1 << (SHIFT_FRW_ROW-1)
-	
+
 ;=============================================================================
 ; Local Data (Read Only)
 ;=============================================================================
@@ -192,12 +192,12 @@ cglobal idct_sse2_dmitry
 ;-----------------------------------------------------------------------------
 
 %macro DCT_8_INV_COL_4_SSE2 2
-  movdqa xmm0, [%1+16*0]          	;x0 (all columns)
-  movdqa xmm2, [%1+16*4]          	;x4
+  movdqa xmm0, [%1+16*0]              ;x0 (all columns)
+  movdqa xmm2, [%1+16*4]              ;x4
   movdqa xmm1, xmm0
 
-  movdqa xmm4, [%1+16*2]          	;x2
-  movdqa xmm5, [%1+16*6]          	;x6
+  movdqa xmm4, [%1+16*2]              ;x2
+  movdqa xmm5, [%1+16*6]              ;x6
   movdqa xmm6, [tg_2_16]
   movdqa xmm7, xmm6
 
@@ -216,18 +216,18 @@ cglobal idct_sse2_dmitry
   psubsw xmm2, xmm6                  ;a2=v04-v26
   psubsw xmm3, xmm7                  ;a3=u04-u26
 
-  movdqa [%2+16*0], xmm0          	;store a3-a0 to 
-  movdqa [%2+16*6], xmm1          	;free registers
+  movdqa [%2+16*0], xmm0              ;store a3-a0 to 
+  movdqa [%2+16*6], xmm1              ;free registers
   movdqa [%2+16*2], xmm2
   movdqa [%2+16*4], xmm3
 
-  movdqa xmm0, [%1+16*1]          	;x1
-  movdqa xmm1, [%1+16*7]          	;x7
+  movdqa xmm0, [%1+16*1]              ;x1
+  movdqa xmm1, [%1+16*7]              ;x7
   movdqa xmm2, [tg_1_16]
   movdqa xmm3, xmm2
 
-  movdqa xmm4, [%1+16*3]          	;x3
-  movdqa xmm5, [%1+16*5]          	;x5
+  movdqa xmm4, [%1+16*3]              ;x3
+  movdqa xmm5, [%1+16*5]              ;x5
   movdqa xmm6, [tg_3_16]
   movdqa xmm7, xmm6
 
@@ -260,42 +260,42 @@ cglobal idct_sse2_dmitry
   paddsw xmm5, xmm5
   paddsw xmm4, xmm4
 
-  movdqa xmm6, [%2+16*0]          	;a0
+  movdqa xmm6, [%2+16*0]              ;a0
   movdqa xmm7, xmm6
-  movdqa xmm2, [%2+16*4]          	;a3
+  movdqa xmm2, [%2+16*4]              ;a3
   movdqa xmm3, xmm2
 
   paddsw xmm6, xmm0
   psubsw xmm7, xmm0
-  psraw xmm6, SHIFT_INV_COL      	;y0=a0+b0
-  psraw xmm7, SHIFT_INV_COL      	;y7=a0-b0
+  psraw xmm6, SHIFT_INV_COL          ;y0=a0+b0
+  psraw xmm7, SHIFT_INV_COL          ;y7=a0-b0
   movdqa [%2+16*0], xmm6
   movdqa [%2+16*7], xmm7
 
   paddsw xmm2, xmm1
   psubsw xmm3, xmm1
-  psraw xmm2, SHIFT_INV_COL      	;y3=a3+b3
-  psraw xmm3, SHIFT_INV_COL      	;y4=a3-b3
+  psraw xmm2, SHIFT_INV_COL          ;y3=a3+b3
+  psraw xmm3, SHIFT_INV_COL          ;y4=a3-b3
   movdqa [%2+16*3], xmm2
   movdqa [%2+16*4], xmm3
 
-  movdqa xmm0, [%2+16*6]          	;a1
+  movdqa xmm0, [%2+16*6]              ;a1
   movdqa xmm1, xmm0
-  movdqa xmm6, [%2+16*2]          	;a2
+  movdqa xmm6, [%2+16*2]              ;a2
   movdqa xmm7, xmm6
 
   
   paddsw xmm0, xmm4
   psubsw xmm1, xmm4
-  psraw xmm0, SHIFT_INV_COL      	;y1=a1+b1
-  psraw xmm1, SHIFT_INV_COL      	;y6=a1-b1
+  psraw xmm0, SHIFT_INV_COL          ;y1=a1+b1
+  psraw xmm1, SHIFT_INV_COL          ;y6=a1-b1
   movdqa [%2+16*1], xmm0
   movdqa [%2+16*6], xmm1
 
   paddsw xmm6, xmm5
   psubsw xmm7, xmm5
-  psraw xmm6, SHIFT_INV_COL      	;y2=a2+b2
-  psraw xmm7, SHIFT_INV_COL      	;y5=a2-b2
+  psraw xmm6, SHIFT_INV_COL          ;y2=a2+b2
+  psraw xmm7, SHIFT_INV_COL          ;y5=a2-b2
   movdqa [%2+16*2], xmm6
   movdqa [%2+16*5], xmm7
 %endmacro

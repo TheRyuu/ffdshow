@@ -241,9 +241,9 @@
 #define IDFF_levelsOutMax       1608
 #define IDFF_levelsOnlyLuma     1609
 #define IDFF_levelsFullY        1610
-#define IDFF_levelsYmaxDelta	1637
-#define IDFF_levelsYthreshold 	1638
-#define IDFF_levelsYtemporal 	1639
+#define IDFF_levelsYmaxDelta    1637
+#define IDFF_levelsYthreshold   1638
+#define IDFF_levelsYtemporal    1639
 #define IDFF_levelsPosterize    1614
 #define IDFF_levelsInAuto       1615
 #define IDFF_levelsNumPoints    1616

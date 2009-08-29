@@ -99,13 +99,13 @@ DATA
 
 ALIGN SECTION_ALIGN
 tan1:
-	dw  0x32ec,0x32ec,0x32ec,0x32ec    ; tan( pi/16)
+    dw  0x32ec,0x32ec,0x32ec,0x32ec    ; tan( pi/16)
 tan2:
-	dw  0x6a0a,0x6a0a,0x6a0a,0x6a0a    ; tan(2pi/16)  (=sqrt(2)-1)
+    dw  0x6a0a,0x6a0a,0x6a0a,0x6a0a    ; tan(2pi/16)  (=sqrt(2)-1)
 tan3:
-	dw  0xab0e,0xab0e,0xab0e,0xab0e    ; tan(3pi/16)-1
+    dw  0xab0e,0xab0e,0xab0e,0xab0e    ; tan(3pi/16)-1
 sqrt2:
-	dw  0x5a82,0x5a82,0x5a82,0x5a82    ; 0.5/sqrt(2)
+    dw  0x5a82,0x5a82,0x5a82,0x5a82    ; 0.5/sqrt(2)
 
 ALIGN SECTION_ALIGN
 fdct_table:
@@ -329,9 +329,9 @@ MMX_One:
 
 %macro fMTX_MULT_XMM 5
   movq mm0, [%2 + 0]  ; mm0 = [0123]
-		; the 'pshufw' below is the only SSE instruction.
-		; For MMX-only version, it should be emulated with
-		; some 'punpck' soup...
+        ; the 'pshufw' below is the only SSE instruction.
+        ; For MMX-only version, it should be emulated with
+        ; some 'punpck' soup...
   pshufw mm1, [%2 + 8], 00011011b ; mm1 = [7654]
   movq mm7, mm0
 
@@ -384,7 +384,7 @@ MMX_One:
 ;-----------------------------------------------------------------------------
 
 %macro fMTX_MULT_MMX 5
-	; MMX-only version (no 'pshufw'. ~10% overall slower than SSE)
+    ; MMX-only version (no 'pshufw'. ~10% overall slower than SSE)
   movd mm1, [%2 + 8 + 4]     ; [67..]
   movq mm0, [%2 + 0]         ; mm0 = [0123]
   movq mm7, mm0
@@ -458,7 +458,7 @@ cglobal %1
 %assign i 0
 %rep 8
   %2 TMP0+i*16, TMP0+i*16, fdct_table+i*64, fdct_rounding_1+i*8, fdct_rounding_2+i*8
-	%assign i i+1
+    %assign i i+1
 %endrep
 %else
   mov _EAX, 8

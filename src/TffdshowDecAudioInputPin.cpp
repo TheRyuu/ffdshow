@@ -38,8 +38,8 @@ TffdshowDecAudioInputPin::TffdshowDecAudioInputPin(const char_t* pObjectName, Tf
 }
 TffdshowDecAudioInputPin::~TffdshowDecAudioInputPin()
 {
-	if (audioParser) delete(audioParser);
-	audioParser=NULL;
+    if (audioParser) delete(audioParser);
+    audioParser=NULL;
 }
 
 bool TffdshowDecAudioInputPin::init(const CMediaType &mt)
@@ -72,8 +72,8 @@ void TffdshowDecAudioInputPin::done(void)
   }
  if (audioParser)
  {
-	 delete audioParser;
-	 audioParser=NULL;
+     delete audioParser;
+     audioParser=NULL;
  }
  codecId=CODEC_ID_NONE;
 }
@@ -162,7 +162,7 @@ STDMETHODIMP TffdshowDecAudioInputPin::Receive(IMediaSample* pIn)
     {
      DPRINTF(_l("jitter correction"));
      buf.clear();
-	 newSrcBuffer.clear();
+     newSrcBuffer.clear();
      filter->m_rtStartDec=filter->m_rtStartProc=rtStart;
      if (audioParser) audioParser->NewSegment();
     }
@@ -189,11 +189,11 @@ STDMETHODIMP TffdshowDecAudioInputPin::Receive(IMediaSample* pIn)
  case CODEC_ID_BITSTREAM_DTSHD:
     // Search for DTS in Wav only if option is checked
     if (codecId==CODEC_ID_PCM && !searchdts) break;
-	
+    
     // Do not search for DTS in PCM in next frames (otherwise DTS syncword maybe wrongly detected)
     searchdts=false;
 
-	newCodecId=audioParser->parseStream(buf.size() ? &buf[0] : NULL, buf.size(), &newSrcBuffer);
+    newCodecId=audioParser->parseStream(buf.size() ? &buf[0] : NULL, buf.size(), &newSrcBuffer);
     if (newCodecId==CODEC_ID_NONE)
     {
         newSrcBuffer.clear();

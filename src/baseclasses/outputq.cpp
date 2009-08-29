@@ -118,15 +118,15 @@ COutputQueue::COutputQueue(
             return;
         }
 
-		m_hThread = (HANDLE)_beginthreadex( NULL,				/* Security */
-											0,					/* Stack Size */
-											InitialThreadProc,  /* Thread process */
-											(LPVOID)this,		/* Arguments */
-											0,					/* 0 = Start Immediately */
-											NULL				/* Thread Address */
-											);
+        m_hThread = (HANDLE)_beginthreadex( NULL,               /* Security */
+                                            0,                  /* Stack Size */
+                                            InitialThreadProc,  /* Thread process */
+                                            (LPVOID)this,       /* Arguments */
+                                            0,                  /* 0 = Start Immediately */
+                                            NULL                /* Thread Address */
+                                            );
 
-		if (m_hThread == NULL) {
+        if (m_hThread == NULL) {
             DWORD dwError = GetLastError();
             *phr = AmHresultFromWin32(dwError);
             return;
@@ -228,11 +228,11 @@ DWORD COutputQueue::ThreadProc()
                 //  Get a sample off the list
 
                 pSample = m_List->RemoveHead();
-		// inform derived class we took something off the queue
-		if (m_hEventPop) {
+        // inform derived class we took something off the queue
+        if (m_hEventPop) {
                     //DbgLog((LOG_TRACE,3,TEXT("Queue: Delivered  SET EVENT")));
-		    SetEvent(m_hEventPop);
-		}
+            SetEvent(m_hEventPop);
+        }
 
                 if (pSample != NULL &&
                     !IsSpecialSample(pSample)) {
@@ -272,11 +272,11 @@ DWORD COutputQueue::ThreadProc()
                             // now we need the parameters - we are
                             // guaranteed that the next packet contains them
                             ppacket = (NewSegmentPacket *) m_List->RemoveHead();
-			    // we took something off the queue
-			    if (m_hEventPop) {
-                    	        //DbgLog((LOG_TRACE,3,TEXT("Queue: Delivered  SET EVENT")));
-		    	        SetEvent(m_hEventPop);
-			    }
+                // we took something off the queue
+                if (m_hEventPop) {
+                                //DbgLog((LOG_TRACE,3,TEXT("Queue: Delivered  SET EVENT")));
+                        SetEvent(m_hEventPop);
+                }
 
                             ASSERT(ppacket);
                         }
@@ -718,11 +718,11 @@ void COutputQueue::FreeSamples()
     if (IsQueued()) {
         while (TRUE) {
             IMediaSample *pSample = m_List->RemoveHead();
-	    // inform derived class we took something off the queue
-	    if (m_hEventPop) {
+        // inform derived class we took something off the queue
+        if (m_hEventPop) {
                 //DbgLog((LOG_TRACE,3,TEXT("Queue: Delivered  SET EVENT")));
-	        SetEvent(m_hEventPop);
-	    }
+            SetEvent(m_hEventPop);
+        }
 
             if (pSample == NULL) {
                 break;
@@ -734,11 +734,11 @@ void COutputQueue::FreeSamples()
                     //  Free NEW_SEGMENT packet
                     NewSegmentPacket *ppacket =
                         (NewSegmentPacket *) m_List->RemoveHead();
-		    // inform derived class we took something off the queue
-		    if (m_hEventPop) {
+            // inform derived class we took something off the queue
+            if (m_hEventPop) {
                         //DbgLog((LOG_TRACE,3,TEXT("Queue: Delivered  SET EVENT")));
-		        SetEvent(m_hEventPop);
-		    }
+                SetEvent(m_hEventPop);
+            }
 
                     ASSERT(ppacket != NULL);
                     delete ppacket;

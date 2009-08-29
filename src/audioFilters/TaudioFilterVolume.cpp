@@ -64,43 +64,43 @@ template<class sample_t> void TaudioFilterVolume::volume(sample_t* const samples
     {
      size_t len=numsamples*fmt.nchannels;
 
-	 float max=0.0f;
+     float max=0.0f;
      for (size_t i=0;i<len;i++)
      {
       float tmp=float(samples[i]);
       //max = max(max, tmp)
       max = max > tmp ? max : tmp;
      }
-	 //upper = min(mul, cfg->normalizeMax/100.0f)
+     //upper = min(mul, cfg->normalizeMax/100.0f)
      float upper = mul > (cfg->normalizeMax/100.0f) ? (cfg->normalizeMax/100.0f) : mul;
 
-	 // Evaluate an adequate 'mul' coefficient based on previous state, current samples level, etc
-	 if (mul > TsampleFormatInfo<sample_t>::max()/max || mul > cfg->normalizeMax/100.0f)
+     // Evaluate an adequate 'mul' coefficient based on previous state, current samples level, etc
+     if (mul > TsampleFormatInfo<sample_t>::max()/max || mul > cfg->normalizeMax/100.0f)
       {
        mul=limit((float)(TsampleFormatInfo<sample_t>::max()/max),MUL_MIN, upper);
       }
-	 else
-	 {
+     else
+     {
       if (cfg->normalizeRegainVolume)
        {
-		// here we make sure that the current sound level (max * mul) will not rise above 'RegainThreshold'.
+        // here we make sure that the current sound level (max * mul) will not rise above 'RegainThreshold'.
         if (max < (TsampleFormatInfo<sample_t>::max() / mul) * RegainThreshold)
          {
-		  // note that in one second, in average, the sum of ((float)numsamples / fmt.freq) will be 1.
-	      float step = MUL_STEP * ((float)numsamples / fmt.freq);
-	      if (mul + step <= cfg->normalizeMax/100.0f)
-		   {
-		    mul += step;
-		   }
-		  else // mul + step > cfg->normalizeMax/100.0f
-		  {
-		   // make sure that the last increment will be performed, even if it's smaller than 'step'
-		   // otherwise, current amplification could be displayed as 399% instead of 400%, for example.
+          // note that in one second, in average, the sum of ((float)numsamples / fmt.freq) will be 1.
+          float step = MUL_STEP * ((float)numsamples / fmt.freq);
+          if (mul + step <= cfg->normalizeMax/100.0f)
+           {
+            mul += step;
+           }
+          else // mul + step > cfg->normalizeMax/100.0f
+          {
+           // make sure that the last increment will be performed, even if it's smaller than 'step'
+           // otherwise, current amplification could be displayed as 399% instead of 400%, for example.
            mul = cfg->normalizeMax/100.0f;
-		  }
+          }
          }
-	   }
-	 }
+       }
+     }
 
      // Scale & clamp the samples
      typedef void (*TprocessMul)(sample_t * const samples,size_t numsamples,const int *volumes,float mul);

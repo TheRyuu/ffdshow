@@ -645,73 +645,73 @@ HRESULT TffdshowDecVideo::DecideBufferSizeOld(IMemAllocator *pAlloc, ALLOCATOR_P
 void TffdshowDecVideo::ConnectCompatibleFilter(void)
 {
     DPRINTF(_l("TffdshowDecVideo::ConnectCompatibleFilter. Connect FFDShow"));
-	if (compatibleFilterConnected || inpin->pCompatibleFilter == NULL) return;
-	HRESULT hr;
-	if (inputConnectedPin == NULL) // Reuse of inputConnectedPin is possible
-	{
-		hr=inpin->ConnectedTo(&inputConnectedPin);
-		if(FAILED(hr))
-			return;
-	}
-	IFilterGraph *pGraph=NULL;
-	getGraph(&pGraph);
-	IGraphBuilder *pGraphBuilder = NULL;
-	hr = pGraph->QueryInterface(IID_IGraphBuilder, (void **)&pGraphBuilder);
-	if (hr!=S_OK)
-		return;
-	
-	AM_MEDIA_TYPE connectedPinMediaType;
-	inpin->ConnectionMediaType(&connectedPinMediaType);
+    if (compatibleFilterConnected || inpin->pCompatibleFilter == NULL) return;
+    HRESULT hr;
+    if (inputConnectedPin == NULL) // Reuse of inputConnectedPin is possible
+    {
+        hr=inpin->ConnectedTo(&inputConnectedPin);
+        if(FAILED(hr))
+            return;
+    }
+    IFilterGraph *pGraph=NULL;
+    getGraph(&pGraph);
+    IGraphBuilder *pGraphBuilder = NULL;
+    hr = pGraph->QueryInterface(IID_IGraphBuilder, (void **)&pGraphBuilder);
+    if (hr!=S_OK)
+        return;
+    
+    AM_MEDIA_TYPE connectedPinMediaType;
+    inpin->ConnectionMediaType(&connectedPinMediaType);
 
-	hr = inputConnectedPin->Disconnect();
-	hr = inpin->Disconnect();
+    hr = inputConnectedPin->Disconnect();
+    hr = inpin->Disconnect();
 
-	// Browse pins compatible codec
-	IEnumPins *enumPins = NULL;
-	inpin->pCompatibleFilter->EnumPins(&enumPins);
-	IPin *outPin=NULL, *filterPin;
-	bool inPinConnected=false, outPinFound=false;
-	unsigned long fetched;
-	while (1)
-	{
-		enumPins->Next(1, &filterPin, &fetched);
-		if (fetched < 1) break;
-		
-		PIN_DIRECTION pinDirection;
-		filterPin->QueryDirection(&pinDirection);
-		if (pinDirection == PINDIR_INPUT && !inPinConnected)
-		{
-			// Input filter -> FFDShow ==> Input filter -> Compatible filter
-			hr = inputConnectedPin->Connect(filterPin, &connectedPinMediaType);
-			inPinConnected=true;
-		}
-		else if (pinDirection == PINDIR_OUTPUT && outPin==NULL)
-		{
-			outPin=filterPin;
-			continue;
-		}
-		filterPin->Release();
-	}
-	enumPins->Release();
+    // Browse pins compatible codec
+    IEnumPins *enumPins = NULL;
+    inpin->pCompatibleFilter->EnumPins(&enumPins);
+    IPin *outPin=NULL, *filterPin;
+    bool inPinConnected=false, outPinFound=false;
+    unsigned long fetched;
+    while (1)
+    {
+        enumPins->Next(1, &filterPin, &fetched);
+        if (fetched < 1) break;
+        
+        PIN_DIRECTION pinDirection;
+        filterPin->QueryDirection(&pinDirection);
+        if (pinDirection == PINDIR_INPUT && !inPinConnected)
+        {
+            // Input filter -> FFDShow ==> Input filter -> Compatible filter
+            hr = inputConnectedPin->Connect(filterPin, &connectedPinMediaType);
+            inPinConnected=true;
+        }
+        else if (pinDirection == PINDIR_OUTPUT && outPin==NULL)
+        {
+            outPin=filterPin;
+            continue;
+        }
+        filterPin->Release();
+    }
+    enumPins->Release();
 
-	// Input filter -> Compatible filter ==> Input filter -> Compatible filter -> FFDShow
-	if (outPin==NULL) // Oops... problem, should not happen
-	{
-		pGraph->Reconnect(inputConnectedPin);
-		return;
-	}
+    // Input filter -> Compatible filter ==> Input filter -> Compatible filter -> FFDShow
+    if (outPin==NULL) // Oops... problem, should not happen
+    {
+        pGraph->Reconnect(inputConnectedPin);
+        return;
+    }
 
-	// Get the media type of the compatible filter and its ouput colorspace
-	
+    // Get the media type of the compatible filter and its ouput colorspace
+    
     AM_MEDIA_TYPE connectedPinMediaTypeOut;
 
-	IEnumMediaTypes *ppEnum = NULL;
-	outPin->EnumMediaTypes(&ppEnum);
-	AM_MEDIA_TYPE *mediaTypes = (AM_MEDIA_TYPE*)alloca(sizeof(AM_MEDIA_TYPE));;
-	fetched=0;
+    IEnumMediaTypes *ppEnum = NULL;
+    outPin->EnumMediaTypes(&ppEnum);
+    AM_MEDIA_TYPE *mediaTypes = (AM_MEDIA_TYPE*)alloca(sizeof(AM_MEDIA_TYPE));;
+    fetched=0;
     bool compatibleMediaTypeFound = false;
-	while (1)
-	{
+    while (1)
+    {
      ppEnum->Next(1,&mediaTypes,&fetched);
      if (!fetched) break;
      if (inpin->CheckMediaType(&(CMediaType(mediaTypes[0]))) == S_OK)
@@ -726,77 +726,77 @@ void TffdshowDecVideo::ConnectCompatibleFilter(void)
     if (!compatibleMediaTypeFound)
     {
      pGraph->Reconnect(inputConnectedPin);
-	 return;
+     return;
     }
 
     connectedPinMediaTypeOut=mediaTypes[0];
 
-	hr = pGraphBuilder->ConnectDirect(outPin, inpin,&connectedPinMediaTypeOut);
+    hr = pGraphBuilder->ConnectDirect(outPin, inpin,&connectedPinMediaTypeOut);
 
     // Update the new MediaType in the decoder and in the input pin
     DPRINTF(_l("TffdshowDecVideo::ConnectCompatibleFilter. Connection done, new media type"));
     CMediaType *newInputMediaTypep=new CMediaType(connectedPinMediaTypeOut);
-	inpin->SetMediaType(newInputMediaTypep);
+    inpin->SetMediaType(newInputMediaTypep);
 
-	outPin->Release();
-	pGraphBuilder->Release();	
+    outPin->Release();
+    pGraphBuilder->Release();
 
-	compatibleFilterConnected=true;
+    compatibleFilterConnected=true;
 }
 
 void TffdshowDecVideo::DisconnectFromCompatibleFilter(void)
 {
-	if (!compatibleFilterConnected) return;
+    if (!compatibleFilterConnected) return;
 
-	HRESULT hr;
-	IPin *connectedPin = NULL;
-	hr=inpin->ConnectedTo(&connectedPin);
-	if(FAILED(hr))
-		return;
+    HRESULT hr;
+    IPin *connectedPin = NULL;
+    hr=inpin->ConnectedTo(&connectedPin);
+    if(FAILED(hr))
+        return;
 
-	IFilterGraph *pGraph=NULL;
-	getGraph(&pGraph);
-	IGraphBuilder *pGraphBuilder = NULL;
-	hr = pGraph->QueryInterface(IID_IGraphBuilder, (void **)&pGraphBuilder);
-	if (hr!=S_OK)
-	{
-		connectedPin->Release();
-		return;
-	}
+    IFilterGraph *pGraph=NULL;
+    getGraph(&pGraph);
+    IGraphBuilder *pGraphBuilder = NULL;
+    hr = pGraph->QueryInterface(IID_IGraphBuilder, (void **)&pGraphBuilder);
+    if (hr!=S_OK)
+    {
+        connectedPin->Release();
+        return;
+    }
 
-	hr = connectedPin->Disconnect();
-	hr = inpin->Disconnect();
+    hr = connectedPin->Disconnect();
+    hr = inpin->Disconnect();
 
-	// Browse pins compatible codec
-	IEnumPins *enumPins = NULL;
-	inpin->pCompatibleFilter->EnumPins(&enumPins);
-	IPin *outPin=NULL, *filterPin;
-	bool inPinDisConnected=false, outPinFound=false;
-	unsigned long fetched;
-	while (1)
-	{
-		enumPins->Next(1, &filterPin, &fetched);
-		if (fetched < 1) break;
-		
-		PIN_DIRECTION pinDirection;
-		filterPin->QueryDirection(&pinDirection);
-		if (pinDirection == PINDIR_INPUT && !inPinDisConnected)
-		{
-			IPin *pPin=NULL;
-			filterPin->ConnectedTo(&pPin);
-			if (pPin!=NULL)
-				pPin->Disconnect();
-			pPin->Release();
-			filterPin->Disconnect();
-			inPinDisConnected=true;
-		}
-		filterPin->Release();
-	}
-	enumPins->Release();
-	connectedPin->Release();
-	pGraphBuilder->Release();	
+    // Browse pins compatible codec
+    IEnumPins *enumPins = NULL;
+    inpin->pCompatibleFilter->EnumPins(&enumPins);
+    IPin *outPin=NULL, *filterPin;
+    bool inPinDisConnected=false, outPinFound=false;
+    unsigned long fetched;
+    while (1)
+    {
+        enumPins->Next(1, &filterPin, &fetched);
+        if (fetched < 1) break;
+        
+        PIN_DIRECTION pinDirection;
+        filterPin->QueryDirection(&pinDirection);
+        if (pinDirection == PINDIR_INPUT && !inPinDisConnected)
+        {
+            IPin *pPin=NULL;
+            filterPin->ConnectedTo(&pPin);
+            if (pPin!=NULL)
+                pPin->Disconnect();
+            pPin->Release();
+            filterPin->Disconnect();
+            inPinDisConnected=true;
+        }
+        filterPin->Release();
+    }
+    enumPins->Release();
+    connectedPin->Release();
+    pGraphBuilder->Release();
 
-	compatibleFilterConnected=false;
+    compatibleFilterConnected=false;
 }
 
 HRESULT TffdshowDecVideo::Receive(IMediaSample *pSample)
@@ -1413,8 +1413,8 @@ HRESULT TffdshowDecVideo::onGraphRemove(void)
  if (imgFilters) delete imgFilters;imgFilters=NULL;
  if (inputConnectedPin != NULL)
  {
-	 inputConnectedPin->Release();
-	 inputConnectedPin = NULL;
+     inputConnectedPin->Release();
+     inputConnectedPin = NULL;
  }
  return TffdshowDec::onGraphRemove();
 }
@@ -1928,144 +1928,144 @@ int TffdshowDecVideo::get_trayIconType(void)
 
 void TffdshowDecVideo::getChapters(void)
 {
-	comptr<IEnumFilters> eff;
-	if (graph->EnumFilters(&eff)==S_OK)
-	{
-		eff->Reset();
-		for (comptr<IBaseFilter> bff;eff->Next(1,&bff,NULL)==S_OK;bff=NULL)
-		{
-			char_t name[MAX_PATH],filtername[MAX_PATH];
-			getFilterName(bff,name,filtername,countof(filtername));
-			if (!strcmp(_l("ffdshow Video Decoder"), filtername)
-				|| !strcmp(_l("ffdshow raw video filter"), filtername)
-				|| !strcmp(_l("ffdshow VFW decoder helper"), filtername)
-				|| !strcmp(_l("ffdshow subtitles filter"), filtername)
-				|| !strcmp(_l("ffdshow Audio Decoder"), filtername))
-				continue;
-			IAMExtendedSeeking *pAMExtendedSeeking = NULL;
-			bff->QueryInterface(IID_IAMExtendedSeeking, (void**) &pAMExtendedSeeking);
-			if (pAMExtendedSeeking == NULL)
-				continue;
-			long markerCount = 0;
-			pAMExtendedSeeking->get_MarkerCount(&markerCount);
-			if (markerCount == 0)
-			{
-				pAMExtendedSeeking->Release();
-				continue;
-			}
-			chaptersList.clear();
-			
-			// Retrieve the list of chapters and add them to the chaptersList
-			for (int i=1; i<= markerCount; i++)
-			{
-				double markerTime = 0;
-				BSTR markerName = NULL;
-				pAMExtendedSeeking->GetMarkerTime(i, &markerTime);
-				pAMExtendedSeeking->GetMarkerName(i, &markerName);
-				if (markerName != NULL)
-				{
-					//char_t fMarkerName[MAX_PATH];
-					//ff_strncpy(fMarkerName, markerName, strlen(fMarkerName));
- 					
-					//strcpy(fMarkerName, markerName);
-					long markerTimeL = (long)markerTime;
-					//chaptersList[markerTimeL]=fMarkerName;
-					std::pair<long, ffstring> pair = std::make_pair<long, ffstring>(markerTimeL, markerName);
-					chaptersList.push_back(pair);
-					SysFreeString(markerName);
-				}
-				else
-				{
-					int hh, mm, ss;
-					char_t time_str[30];
-					hh = (int)(markerTime/3600);
-					mm = (int)((markerTime - hh*3600)/60);
-					ss = (int)(markerTime - hh*3600 - mm*60);
-					tsprintf(time_str,_l("%02i:%02i:%02"), hh, mm, ss);
-					long markerTimeL = (long)markerTime;
-					std::pair<long, ffstring> pair = std::make_pair<long, ffstring>(markerTimeL, time_str);
-					chaptersList.push_back(pair);
-					//chaptersList[markerTimeL] = time_str;
-				}			
-				markerName = NULL;
-			}
-			pAMExtendedSeeking->Release();
-			break;
-		}
-	}
+    comptr<IEnumFilters> eff;
+    if (graph->EnumFilters(&eff)==S_OK)
+    {
+        eff->Reset();
+        for (comptr<IBaseFilter> bff;eff->Next(1,&bff,NULL)==S_OK;bff=NULL)
+        {
+            char_t name[MAX_PATH],filtername[MAX_PATH];
+            getFilterName(bff,name,filtername,countof(filtername));
+            if (!strcmp(_l("ffdshow Video Decoder"), filtername)
+                || !strcmp(_l("ffdshow raw video filter"), filtername)
+                || !strcmp(_l("ffdshow VFW decoder helper"), filtername)
+                || !strcmp(_l("ffdshow subtitles filter"), filtername)
+                || !strcmp(_l("ffdshow Audio Decoder"), filtername))
+                continue;
+            IAMExtendedSeeking *pAMExtendedSeeking = NULL;
+            bff->QueryInterface(IID_IAMExtendedSeeking, (void**) &pAMExtendedSeeking);
+            if (pAMExtendedSeeking == NULL)
+                continue;
+            long markerCount = 0;
+            pAMExtendedSeeking->get_MarkerCount(&markerCount);
+            if (markerCount == 0)
+            {
+                pAMExtendedSeeking->Release();
+                continue;
+            }
+            chaptersList.clear();
+            
+            // Retrieve the list of chapters and add them to the chaptersList
+            for (int i=1; i<= markerCount; i++)
+            {
+                double markerTime = 0;
+                BSTR markerName = NULL;
+                pAMExtendedSeeking->GetMarkerTime(i, &markerTime);
+                pAMExtendedSeeking->GetMarkerName(i, &markerName);
+                if (markerName != NULL)
+                {
+                    //char_t fMarkerName[MAX_PATH];
+                    //ff_strncpy(fMarkerName, markerName, strlen(fMarkerName));
+
+                    //strcpy(fMarkerName, markerName);
+                    long markerTimeL = (long)markerTime;
+                    //chaptersList[markerTimeL]=fMarkerName;
+                    std::pair<long, ffstring> pair = std::make_pair<long, ffstring>(markerTimeL, markerName);
+                    chaptersList.push_back(pair);
+                    SysFreeString(markerName);
+                }
+                else
+                {
+                    int hh, mm, ss;
+                    char_t time_str[30];
+                    hh = (int)(markerTime/3600);
+                    mm = (int)((markerTime - hh*3600)/60);
+                    ss = (int)(markerTime - hh*3600 - mm*60);
+                    tsprintf(time_str,_l("%02i:%02i:%02"), hh, mm, ss);
+                    long markerTimeL = (long)markerTime;
+                    std::pair<long, ffstring> pair = std::make_pair<long, ffstring>(markerTimeL, time_str);
+                    chaptersList.push_back(pair);
+                    //chaptersList[markerTimeL] = time_str;
+                }
+                markerName = NULL;
+            }
+            pAMExtendedSeeking->Release();
+            break;
+        }
+    }
 }
 
 STDMETHODIMP TffdshowDecVideo::get_MarkerCount(long * pMarkerCount)
 {
-	if (chaptersList.size() <= 1)
-		getChapters();
-	*pMarkerCount = (long)chaptersList.size();
-	return S_OK;
+    if (chaptersList.size() <= 1)
+        getChapters();
+    *pMarkerCount = (long)chaptersList.size();
+    return S_OK;
 }
 STDMETHODIMP TffdshowDecVideo::get_CurrentMarker(long * pCurrentMarker)
 {
-	if (chaptersList.size() <= 1)
-		getChapters();
-	DWORD currentTime = GetTickCount();
-	unsigned int i = 0;
-	for (i=0; i<chaptersList.size(); i++)
-	{
-		if ((double)currentTime < chaptersList[i].first) break;
-	}
-	*pCurrentMarker = i;
-	return S_OK;
+    if (chaptersList.size() <= 1)
+        getChapters();
+    DWORD currentTime = GetTickCount();
+    unsigned int i = 0;
+    for (i=0; i<chaptersList.size(); i++)
+    {
+        if ((double)currentTime < chaptersList[i].first) break;
+    }
+    *pCurrentMarker = i;
+    return S_OK;
 }
 
 // Markers start at position 1
 STDMETHODIMP TffdshowDecVideo::GetMarkerTime(long MarkerNum, double * pMarkerTime)
 {
-	if (chaptersList.size() <= 1)
-		getChapters();
-	long l = 1;
-	if (MarkerNum > (long)chaptersList.size())
-		return S_FALSE;
+    if (chaptersList.size() <= 1)
+        getChapters();
+    long l = 1;
+    if (MarkerNum > (long)chaptersList.size())
+        return S_FALSE;
 
-	for (long l=0; (unsigned long)l<chaptersList.size(); l++)
-	{
-		if (l+1 == MarkerNum)
-		{
-			*pMarkerTime=(double)chaptersList[l].first;
-			break;
-		}
-	}
-	return S_OK;
+    for (long l=0; (unsigned long)l<chaptersList.size(); l++)
+    {
+        if (l+1 == MarkerNum)
+        {
+            *pMarkerTime=(double)chaptersList[l].first;
+            break;
+        }
+    }
+    return S_OK;
 }
 
 // Markers start at position 1
 STDMETHODIMP TffdshowDecVideo::GetMarkerName(long MarkerNum, BSTR * pbstrMarkerName)
 {
-	if (chaptersList.size() <= 1)
-		getChapters();
-	if (MarkerNum > (long)chaptersList.size())
-		return S_FALSE;
+    if (chaptersList.size() <= 1)
+        getChapters();
+    if (MarkerNum > (long)chaptersList.size())
+        return S_FALSE;
 
-	for (unsigned int i = 0;i<chaptersList.size();i++)
-	{
-		if (i+1 == (unsigned int)MarkerNum)
-		{
-			const char_t* markerName = chaptersList[i].second.c_str();
-			//wcrtomb(
-			size_t wlen = (chaptersList[i].second.size()+1)*sizeof(WCHAR);
-			*pbstrMarkerName=(WCHAR*)CoTaskMemAlloc(wlen);memset(*pbstrMarkerName,0,wlen);
-			nCopyAnsiToWideChar(*pbstrMarkerName,markerName);
-			break;
-		}
-		i++;
-	}
-	return S_OK;
+    for (unsigned int i = 0;i<chaptersList.size();i++)
+    {
+        if (i+1 == (unsigned int)MarkerNum)
+        {
+            const char_t* markerName = chaptersList[i].second.c_str();
+            //wcrtomb(
+            size_t wlen = (chaptersList[i].second.size()+1)*sizeof(WCHAR);
+            *pbstrMarkerName=(WCHAR*)CoTaskMemAlloc(wlen);memset(*pbstrMarkerName,0,wlen);
+            nCopyAnsiToWideChar(*pbstrMarkerName,markerName);
+            break;
+        }
+        i++;
+    }
+    return S_OK;
 }
 
 STDMETHODIMP TffdshowDecVideo::getChaptersList(void **ppChaptersList)
 {
-	if (chaptersList.size() <= 1)
-		getChapters();
-	*ppChaptersList = (void**) &chaptersList;
-	return S_OK;
+    if (chaptersList.size() <= 1)
+        getChapters();
+    *ppChaptersList = (void**) &chaptersList;
+    return S_OK;
 }
 
 void TffdshowDecVideo::update_time_on_ffdshow1(void)

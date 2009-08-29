@@ -71,31 +71,31 @@ static planarFuncPtr yv12_to_yv12;
 
 /* yv12 to yv12 copy function */
 static void yv12_to_yv12_c(uint8_t * y_dst, uint8_t * u_dst, uint8_t * v_dst,
-				stride_t y_dst_stride, stride_t uv_dst_stride,
-				const uint8_t * y_src, const uint8_t * u_src, const uint8_t * v_src,
-				stride_t y_src_stride, stride_t uv_src_stride,
-				int width, int height)
+                stride_t y_dst_stride, stride_t uv_dst_stride,
+                const uint8_t * y_src, const uint8_t * u_src, const uint8_t * v_src,
+                stride_t y_src_stride, stride_t uv_src_stride,
+                int width, int height)
 {
-	int width2 = width / 2;
-	int height2 = height / 2;
-	int y;
+    int width2 = width / 2;
+    int height2 = height / 2;
+    int y;
 
     for (y = height; y; y--)    {
-		memcpy(y_dst, y_src, width);
-		y_src += y_src_stride;
-		y_dst += y_dst_stride;
+        memcpy(y_dst, y_src, width);
+        y_src += y_src_stride;
+        y_dst += y_dst_stride;
     }
 
-	for (y = height2; y; y--) {
-		memcpy(u_dst, u_src, width2);
-		u_src += uv_src_stride;
-		u_dst += uv_dst_stride;
+    for (y = height2; y; y--) {
+        memcpy(u_dst, u_src, width2);
+        u_src += uv_src_stride;
+        u_dst += uv_dst_stride;
     }
 
-	for (y = height2; y; y--) {
-		memcpy(v_dst, v_src, width2);
-		v_src += uv_src_stride;
-		v_dst += uv_dst_stride;
+    for (y = height2; y; y--) {
+        memcpy(v_dst, v_src, width2);
+        v_src += uv_src_stride;
+        v_dst += uv_dst_stride;
     }
 }
 
@@ -779,10 +779,10 @@ static void uyvyi_to_yv12_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,ui
 
 //============================================ MMX =============================================
 template<class Tsimd> static void yv12_to_yv12_simd(uint8_t * y_dst, uint8_t * u_dst, uint8_t * v_dst,
- 				      stride_t y_dst_stride, stride_t uv_dst_stride,
- 				      const uint8_t * y_src, const uint8_t * u_src, const uint8_t * v_src,
- 				      stride_t y_src_stride, stride_t uv_src_stride,
- 				      int width, int height)
+                       stride_t y_dst_stride, stride_t uv_dst_stride,
+                       const uint8_t * y_src, const uint8_t * u_src, const uint8_t * v_src,
+                       stride_t y_src_stride, stride_t uv_src_stride,
+                       int width, int height)
 {
  struct TplaneCopy
   {
@@ -869,12 +869,12 @@ loop1_start:
          goto loop64_start;
     }
   };
- int  width2	=width>>1;
- int  height2	=height>>1;
- stride_t  y_src_dif	=y_src_stride-width;;
- stride_t  y_dst_dif	=y_dst_stride-width;
- stride_t uv_src_dif	=uv_src_stride-width2;
- stride_t uv_dst_dif	=uv_dst_stride-width2;
+ int  width2    =width>>1;
+ int  height2    =height>>1;
+ stride_t  y_src_dif    =y_src_stride-width;;
+ stride_t  y_dst_dif    =y_dst_stride-width;
+ stride_t uv_src_dif    =uv_src_stride-width2;
+ stride_t uv_dst_dif    =uv_dst_stride-width2;
 
  TplaneCopy::PLANE_COPY     ( y_dst, y_dst_dif,  y_src, y_src_dif,  width,  height);
  TplaneCopy::PLANE_COPY     ( u_dst, uv_dst_dif, u_src, uv_src_dif, width2, height2);

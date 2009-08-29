@@ -80,9 +80,9 @@
 #define COPY_AVAILABLESUBTITLE_FIRST 11 // lpData points to buffer where first file name will be stored  - if no subtitle file is available, lpData will contain empty string
 #define COPY_AVAILABLESUBTITLE_NEXT  12 // lpData points to buffer where next file name will be stored  - if no subtitle file is available, lpData will contain empty string
 #define COPY_GETPARAMSTR       13 // lpData points to buffer where param value will be stored
-#define COPY_GET_PRESETLIST		14 //Get the list of presets (array of strings)
-#define COPY_GET_SOURCEFILE		15 //Get the filename currently played
-#define COPY_CURRENT_SUBTITLES	16 //Get the subtitle filename currently read
+#define COPY_GET_PRESETLIST    14 //Get the list of presets (array of strings)
+#define COPY_GET_SOURCEFILE    15 //Get the filename currently played
+#define COPY_CURRENT_SUBTITLES 16 //Get the subtitle filename currently read
 #define COPY_GET_SUBTITLEFILESLIST 17 //Get the list of available subtitle files
 #define COPY_SET_SHORTOSD_MSG 18 //Display a short OSD message
 #define COPY_SET_OSD_MSG 19 //Display a short OSD message

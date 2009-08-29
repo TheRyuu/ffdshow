@@ -180,7 +180,7 @@ unsigned int mp3header::calc_frame_len(void)
     N = ((12 * bitrate / samplerate) + pad_slot) * 4;
   else {
     unsigned int slots_per_frame= (layer == MAD_LAYER_III &&
-		                  (flags & MAD_FLAG_LSF_EXT)) ? 72 : 144;
+                          (flags & MAD_FLAG_LSF_EXT)) ? 72 : 144;
 
     N = (slots_per_frame * bitrate / samplerate) + pad_slot;
   }

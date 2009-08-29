@@ -17,9 +17,9 @@ extern "C" {
 // (look at the vis plugin for configuration code)
 
 typedef struct winampDSPModule {
-  char *description;		// description
-  HWND hwndParent;			// parent window (filled in by calling app)
-  HINSTANCE hDllInstance;	// instance handle to this DLL (filled in by calling app)
+  char *description;        // description
+  HWND hwndParent;          // parent window (filled in by calling app)
+  HINSTANCE hDllInstance;   // instance handle to this DLL (filled in by calling app)
 
   void (*Config)(struct winampDSPModule *this_mod);  // configuration dialog (if needed)
   int (*Init)(struct winampDSPModule *this_mod);     // 0 on success, creates window, etc (if needed)
@@ -37,7 +37,7 @@ typedef struct winampDSPModule {
 typedef struct winampDSPHeader {
   int version;       // DSP_HDRVER
   char *description; // description of library
-  winampDSPModule* (*getModule)(int);	// module retrieval function
+  winampDSPModule* (*getModule)(int);    // module retrieval function
 } winampDSPHeader;
 
 // exported symbols

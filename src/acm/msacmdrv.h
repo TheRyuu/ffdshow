@@ -137,7 +137,7 @@ typedef struct {
     DWORD   dwError;        // result from DRV_OPEN request
     LPWSTR  pszSectionName; // see DRVCONFIGINFO.lpszDCISectionName
     LPWSTR  pszAliasName;   // see DRVCONFIGINFO.lpszDCIAliasName
-    DWORD	dnDevNode;  // devnode id for pnp drivers.
+    DWORD   dnDevNode;  // devnode id for pnp drivers.
 } ACMDRVOPENDESCW;
 
 #endif

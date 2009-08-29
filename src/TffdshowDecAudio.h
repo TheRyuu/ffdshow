@@ -132,9 +132,9 @@ private:
    STDMETHODIMP_(unsigned int) getCurrentStream2(void) {return deciA->getCurrentStream2();}
    STDMETHODIMP setCurrentStream(unsigned int i) {return deciA->setCurrentStream(i);}
    STDMETHODIMP_(TffdshowDecAudioInputPin *) GetCurrentPin(void)
-	 {
-		 return deciA->GetCurrentPin();
-	 }
+     {
+         return deciA->GetCurrentPin();
+     }
    STDMETHODIMP setAudioFilters(TaudioFilters *audioFiltersPtr)
     {
      return E_NOTIMPL;

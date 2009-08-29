@@ -82,13 +82,13 @@ void oggpack_write(oggpack_buffer *b,unsigned long value,int bits){
     if(bits>=16){
       b->ptr[2]=(unsigned char)(value>>(16-b->endbit));
       if(bits>=24){
-	b->ptr[3]=(unsigned char)(value>>(24-b->endbit));
-	if(bits>=32){
-	  if(b->endbit)
-	    b->ptr[4]=(unsigned char)(value>>(32-b->endbit));
-	  else
-	    b->ptr[4]=0;
-	}
+    b->ptr[3]=(unsigned char)(value>>(24-b->endbit));
+    if(bits>=32){
+      if(b->endbit)
+        b->ptr[4]=(unsigned char)(value>>(32-b->endbit));
+      else
+        b->ptr[4]=0;
+    }
       }
     }
   }
@@ -116,13 +116,13 @@ void oggpackB_write(oggpack_buffer *b,unsigned long value,int bits){
     if(bits>=16){
       b->ptr[2]=(unsigned char)(value>>(8+b->endbit));
       if(bits>=24){
-	b->ptr[3]=(unsigned char)(value>>(b->endbit));
-	if(bits>=32){
-	  if(b->endbit)
-	    b->ptr[4]=(unsigned char)(value<<(8-b->endbit));
-	  else
-	    b->ptr[4]=0;
-	}
+    b->ptr[3]=(unsigned char)(value>>(b->endbit));
+    if(bits>=32){
+      if(b->endbit)
+        b->ptr[4]=(unsigned char)(value<<(8-b->endbit));
+      else
+        b->ptr[4]=0;
+    }
       }
     }
   }
@@ -145,12 +145,12 @@ void oggpackB_writealign(oggpack_buffer *b){
 }
 
 static void oggpack_writecopy_helper(oggpack_buffer *b,
-				     void *source,
-				     long bits,
-				     void (*w)(oggpack_buffer *,
-					       unsigned long,
-					       int),
-				     int msb){
+                     void *source,
+                     long bits,
+                     void (*w)(oggpack_buffer *,
+                           unsigned long,
+                           int),
+                     int msb){
   unsigned char *ptr=(unsigned char *)source;
 
   long bytes=bits/8;
@@ -238,9 +238,9 @@ long oggpack_look(oggpack_buffer *b,int bits){
     if(bits>16){
       ret|=b->ptr[2]<<(16-b->endbit);  
       if(bits>24){
-	ret|=b->ptr[3]<<(24-b->endbit);  
-	if(bits>32 && b->endbit)
-	  ret|=b->ptr[4]<<(32-b->endbit);
+    ret|=b->ptr[3]<<(24-b->endbit);  
+    if(bits>32 && b->endbit)
+      ret|=b->ptr[4]<<(32-b->endbit);
       }
     }
   }
@@ -265,9 +265,9 @@ long oggpackB_look(oggpack_buffer *b,int bits){
     if(bits>16){
       ret|=b->ptr[2]<<(8+b->endbit);  
       if(bits>24){
-	ret|=b->ptr[3]<<(b->endbit);  
-	if(bits>32 && b->endbit)
-	  ret|=b->ptr[4]>>(8-b->endbit);
+    ret|=b->ptr[3]<<(b->endbit);  
+    if(bits>32 && b->endbit)
+      ret|=b->ptr[4]>>(8-b->endbit);
       }
     }
   }
@@ -326,10 +326,10 @@ long oggpack_read(oggpack_buffer *b,int bits){
     if(bits>16){
       ret|=b->ptr[2]<<(16-b->endbit);  
       if(bits>24){
-	ret|=b->ptr[3]<<(24-b->endbit);  
-	if(bits>32 && b->endbit){
-	  ret|=b->ptr[4]<<(32-b->endbit);
-	}
+    ret|=b->ptr[3]<<(24-b->endbit);  
+    if(bits>32 && b->endbit){
+      ret|=b->ptr[4]<<(32-b->endbit);
+    }
       }
     }
   }
@@ -365,9 +365,9 @@ long oggpackB_read(oggpack_buffer *b,int bits){
     if(bits>16){
       ret|=b->ptr[2]<<(8+b->endbit);  
       if(bits>24){
-	ret|=b->ptr[3]<<(b->endbit);  
-	if(bits>32 && b->endbit)
-	  ret|=b->ptr[4]>>(8-b->endbit);
+    ret|=b->ptr[3]<<(b->endbit);  
+    if(bits>32 && b->endbit)
+      ret|=b->ptr[4]>>(8-b->endbit);
       }
     }
   }

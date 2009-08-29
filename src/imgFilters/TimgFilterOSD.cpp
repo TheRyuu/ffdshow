@@ -468,7 +468,7 @@ HRESULT TimgFilterOSD::process(TfilterQueue::iterator it,TffPict &pict,const Tfi
 {
  const TOSDsettingsVideo *cfg=(const TOSDsettingsVideo*)cfg0;tempcfg=cfg;
  if (subUser.subformat != cfg->userFormat)
-	 subUser.subformat = cfg->userFormat;
+     subUser.subformat = cfg->userFormat;
 
  init(pict,true,0);
  csProvider.Lock();
@@ -513,8 +513,8 @@ HRESULT TimgFilterOSD::process(TfilterQueue::iterator it,TffPict &pict,const Tfi
        ff_strncpy(oldLinesUser, cfg->user, countof(oldLinesUser));
        strtok(cfg->user,_l("\n"),linesUser);
        subUser.set(linesUser);
-	   TsubtitleFormat subtitleFormat = TsubtitleFormat(parent->config->getHtmlColors());
-	   subUser.format(subtitleFormat);
+       TsubtitleFormat subtitleFormat = TsubtitleFormat(parent->config->getHtmlColors());
+       subUser.format(subtitleFormat);
       }
      TprintPrefs printprefs(deci,&cfg->font);
      printprefs.isOSD=true;

@@ -30,14 +30,14 @@ BITS 32
 
 %define ROW_SHIFT 11
 %define COL_SHIFT 20
-%define C0 23170	;cos(i*M_PI/16)*sqrt(2)*(1<<14) + 0.5 = 23170.475006
-%define C1 22725	;cos(i*M_PI/16)*sqrt(2)*(1<<14) + 0.5 = 22725.260826
-%define C2 21407	;cos(i*M_PI/16)*sqrt(2)*(1<<14) + 0.5 = 21406.727617
-%define C3 19266	;cos(i*M_PI/16)*sqrt(2)*(1<<14) + 0.5 = 19265.545870
-%define C4 16383	;cos(i*M_PI/16)*sqrt(2)*(1<<14) - 0.5 = 16384.000000
-%define C5 12873	;cos(i*M_PI/16)*sqrt(2)*(1<<14) + 0.5 = 12872.826198
-%define C6 8867		;cos(i*M_PI/16)*sqrt(2)*(1<<14) + 0.5 = 8866.956905
-%define C7 4520		;cos(i*M_PI/16)*sqrt(2)*(1<<14) + 0.5 = 4520.335430
+%define C0 23170    ;cos(i*M_PI/16)*sqrt(2)*(1<<14) + 0.5 = 23170.475006
+%define C1 22725    ;cos(i*M_PI/16)*sqrt(2)*(1<<14) + 0.5 = 22725.260826
+%define C2 21407    ;cos(i*M_PI/16)*sqrt(2)*(1<<14) + 0.5 = 21406.727617
+%define C3 19266    ;cos(i*M_PI/16)*sqrt(2)*(1<<14) + 0.5 = 19265.545870
+%define C4 16383    ;cos(i*M_PI/16)*sqrt(2)*(1<<14) - 0.5 = 16384.000000
+%define C5 12873    ;cos(i*M_PI/16)*sqrt(2)*(1<<14) + 0.5 = 12872.826198
+%define C6 8867     ;cos(i*M_PI/16)*sqrt(2)*(1<<14) + 0.5 = 8866.956905
+%define C7 4520     ;cos(i*M_PI/16)*sqrt(2)*(1<<14) + 0.5 = 4520.335430
 
 ;===========================================================================
 ; Data (Read Only)
@@ -55,34 +55,34 @@ SECTION .rodata align=16
 
 ALIGN 16
 wm1010:
-	dw 0, 0xffff, 0, 0xffff
+    dw 0, 0xffff, 0, 0xffff
 
 ALIGN 16
 d40000:
-	dd 0x40000, 0
+    dd 0x40000, 0
 
 ALIGN 16
 coeffs:
-  dw 1<<(ROW_SHIFT-1), 0, 1<<(ROW_SHIFT-1), 0,		; 0
-  dw 1<<(ROW_SHIFT-1), 1, 1<<(ROW_SHIFT-1), 0,		; 8
+  dw 1<<(ROW_SHIFT-1), 0, 1<<(ROW_SHIFT-1), 0,        ; 0
+  dw 1<<(ROW_SHIFT-1), 1, 1<<(ROW_SHIFT-1), 0,        ; 8
 
-  dw C4,  C4,  C4,  C4		; 16
-  dw C4, -C4,  C4, -C4		; 24
+  dw C4,  C4,  C4,  C4        ; 16
+  dw C4, -C4,  C4, -C4        ; 24
 
-  dw C2,  C6,  C2,  C6		; 32
-  dw C6, -C2,  C6, -C2		; 40
+  dw C2,  C6,  C2,  C6        ; 32
+  dw C6, -C2,  C6, -C2        ; 40
 
-  dw C1,  C3,  C1,  C3		; 48
-  dw C5,  C7,  C5,  C7		; 56
+  dw C1,  C3,  C1,  C3        ; 48
+  dw C5,  C7,  C5,  C7        ; 56
 
-  dw C3, -C7,  C3, -C7		; 64
-  dw -C1, -C5, -C1, -C5		; 72
+  dw C3, -C7,  C3, -C7        ; 64
+  dw -C1, -C5, -C1, -C5       ; 72
 
-  dw C5, -C1,  C5, -C1		; 80
-  dw C7,  C3,  C7,  C3		; 88
+  dw C5, -C1,  C5, -C1        ; 80
+  dw C7,  C3,  C7,  C3        ; 88
 
-  dw C7, -C5,  C7, -C5		; 96
-  dw C3, -C1,  C3, -C1		; 104
+  dw C7, -C5,  C7, -C5        ; 96
+  dw C3, -C1,  C3, -C1        ; 104
 
 
 ;===========================================================================
@@ -93,15 +93,15 @@ coeffs:
 ; DC_COND_IDCT
 ;---------------------------------------------------------------------------
 
-%macro	DC_COND_IDCT	8
-%define	src0		%1
-%define	src4		%2
-%define	src1		%3
-%define	src5		%4
-%define	dst			%5
-%define	rounder_op	%6
-%define	rounder_arg	%7
-%define	shift		%8
+%macro  DC_COND_IDCT    8
+%define src0        %1
+%define src4        %2
+%define src1        %3
+%define src5        %4
+%define dst         %5
+%define rounder_op  %6
+%define rounder_arg %7
+%define shift       %8
   movq mm0,[src0]               ; R4    R0  r4  r0
   movq mm1,[src4]               ; R6    R2  r6  r2
   movq mm2,[src1]               ; R3    R1  r3  r1
@@ -202,7 +202,7 @@ coeffs:
 ; Z_COND_IDCT
 ;---------------------------------------------------------------------------
 
-%macro	Z_COND_IDCT	9
+%macro  Z_COND_IDCT 9
 %define src0        %1
 %define src4        %2
 %define src1        %3
@@ -286,23 +286,23 @@ coeffs:
   psrad mm4,shift
   packssdw mm4,mm0              ; A2-B2 a2-b2   A3-B3   a3-b3
   movq [dst + 16],mm4
-%undef	src0
-%undef	src4
-%undef	src1
-%undef	src5
-%undef	dst
-%undef	rounder_op
-%undef	rounder_arg
-%undef	shift
-%undef	bt
+%undef    src0
+%undef    src4
+%undef    src1
+%undef    src5
+%undef    dst
+%undef    rounder_op
+%undef    rounder_arg
+%undef    shift
+%undef    bt
 %endmacro
 
 ;---------------------------------------------------------------------------
 ; IDCT0
 ;---------------------------------------------------------------------------
 
-%macro	IDCT0		8
-%define	src0		%1
+%macro  IDCT0        8
+%define src0        %1
 %define src4        %2
 %define src1        %3
 %define src5        %4
@@ -384,29 +384,29 @@ coeffs:
   movd [ dst + 48 ],mm6
   movd [ dst + 64 ],mm4
   movd [ dst + 80 ],mm5
-%undef	src0
-%undef	src4
-%undef	src1
-%undef	src5
-%undef	dst
-%undef	rounder_op
-%undef	rounder_arg
-%undef	shift
+%undef    src0
+%undef    src4
+%undef    src1
+%undef    src5
+%undef    dst
+%undef    rounder_op
+%undef    rounder_arg
+%undef    shift
 %endmacro
 
 ;---------------------------------------------------------------------------
 ; IDCT4
 ;---------------------------------------------------------------------------
 
-%macro	IDCT4		8
-%define	src0		%1
-%define	src4		%2
-%define	src1		%3
-%define	src5		%4
-%define	dst			%5
-%define	rounder_op	%6
-%define	rounder_arg	%7
-%define	shift		%8
+%macro  IDCT4        8
+%define src0        %1
+%define src4        %2
+%define src1        %3
+%define src5        %4
+%define dst         %5
+%define rounder_op  %6
+%define rounder_arg %7
+%define shift       %8
   movq mm0,[src0]               ; R4    R0  r4  r0
   movq mm1,[src4]               ; R6    R2  r6  r2
   movq mm3,[src5]               ; R7    R5  r7  r5
@@ -469,29 +469,29 @@ coeffs:
   movd [dst + 48],mm6
   movd [dst + 64],mm1
   movd [dst + 80],mm5
-%undef	src0
-%undef	src4
-%undef	src1
-%undef	src5
-%undef	dst
-%undef	rounder_op
-%undef	rounder_arg
-%undef	shift
+%undef    src0
+%undef    src4
+%undef    src1
+%undef    src5
+%undef    dst
+%undef    rounder_op
+%undef    rounder_arg
+%undef    shift
 %endmacro
 
 ;---------------------------------------------------------------------------
 ; IDCT6
 ;---------------------------------------------------------------------------
 
-%macro	IDCT6		8
-%define	src0		%1
-%define	src4		%2
-%define	src1		%3
-%define	src5		%4
-%define	dst			%5
-%define	rounder_op	%6
-%define	rounder_arg	%7
-%define	shift		%8
+%macro  IDCT6        8
+%define src0        %1
+%define src4        %2
+%define src1        %3
+%define src5        %4
+%define dst         %5
+%define rounder_op  %6
+%define rounder_arg %7
+%define shift       %8
   movq mm0,[src0]               ; R4    R0  r4  r0
   movq mm3,[src5]               ; R7    R5  r7  r5
   movq mm4,[coeffs+16]          ; C4    C4  C4  C4
@@ -552,21 +552,21 @@ coeffs:
 %undef  dst
 %undef  rounder_op
 %undef  rounder_arg
-%undef	shift
+%undef    shift
 %endmacro
 
 ;---------------------------------------------------------------------------
 ; IDCT2
 ;---------------------------------------------------------------------------
 
-%macro	IDCT2		8
-%define	src0		%1
-%define	src4		%2
-%define	src1		%3
-%define	src5		%4
-%define	dst			%5
-%define	rounder_op	%6
-%define	rounder_arg	%7
+%macro  IDCT2        8
+%define src0        %1
+%define src4        %2
+%define src1        %3
+%define src5        %4
+%define dst         %5
+%define rounder_op  %6
+%define rounder_arg %7
 %define shift       %8
   movq mm0,[src0]               ; R4    R0  r4  r0
   movq mm2,[src1]               ; R3    R1  r3  r1
@@ -710,28 +710,28 @@ coeffs:
   movd [dst + 64],mm4
   movd [dst + 80],mm5
 %undef  src0
-%undef	src4
-%undef	src1
-%undef	src5
-%undef	dst
-%undef	rounder_op
-%undef	rounder_arg
-%undef	shift
+%undef    src4
+%undef    src1
+%undef    src5
+%undef    dst
+%undef    rounder_op
+%undef    rounder_arg
+%undef    shift
 %endmacro
 
 ;---------------------------------------------------------------------------
 ; IDCT5
 ;---------------------------------------------------------------------------
 
-%macro	IDCT5		8
-%define	src0		%1
-%define	src4		%2
-%define	src1		%3
-%define	src5		%4
-%define	dst			%5
-%define	rounder_op	%6
-%define	rounder_arg	%7
-%define	shift		%8
+%macro  IDCT5        8
+%define src0        %1
+%define src4        %2
+%define src1        %3
+%define src5        %4
+%define dst         %5
+%define rounder_op  %6
+%define rounder_arg %7
+%define shift       %8
   movq mm0,[src0]               ; R4    R0  r4  r0
   movq mm1,[src4]               ; R6    R2  r6  r2
   movq mm4,[coeffs+16]          ; C4    C4  C4  C4
@@ -793,19 +793,19 @@ coeffs:
 %undef  src5
 %undef  dst
 %undef  rounder_op
-%undef	rounder_arg
-%undef	shift
+%undef  rounder_arg
+%undef  shift
 %endmacro
 
 ;---------------------------------------------------------------------------
 ; IDCT1
 ;---------------------------------------------------------------------------
 
-%macro	IDCT1		8
-%define	src0		%1
-%define	src4		%2
-%define	src1		%3
-%define	src5		%4
+%macro  IDCT1        8
+%define src0        %1
+%define src4        %2
+%define src1        %3
+%define src5        %4
 %define dst         %5
 %define rounder_op  %6
 %define rounder_arg %7
@@ -886,15 +886,15 @@ coeffs:
 ; IDCT7
 ;---------------------------------------------------------------------------
 
-%macro	IDCT7		8
-%define	src0		%1
-%define	src4		%2
-%define	src1		%3
-%define	src5		%4
-%define	dst			%5
-%define	rounder_op	%6
-%define	rounder_arg	%7
-%define	shift		%8
+%macro  IDCT7        8
+%define src0        %1
+%define src4        %2
+%define src1        %3
+%define src5        %4
+%define dst         %5
+%define rounder_op  %6
+%define rounder_arg %7
+%define shift       %8
   movq mm0,[src0]               ; R4    R0  r4  r0
   movq mm4,[coeffs+16]          ; C4    C4  C4  C4
   pmaddwd mm4,mm0               ; C4R4+C4R0 C4r4+C4r0
@@ -924,14 +924,14 @@ coeffs:
   movq [dst + 48],mm4
   movq [dst + 64],mm4
   movq [dst + 80],mm0
-%undef	src0
-%undef	src4
-%undef	src1
-%undef	src5
-%undef	dst
-%undef	rounder_op
-%undef	rounder_arg
-%undef	shift
+%undef    src0
+%undef    src4
+%undef    src1
+%undef    src5
+%undef    dst
+%undef    rounder_op
+%undef    rounder_arg
+%undef    shift
 %endmacro
 
 ;---------------------------------------------------------------------------
@@ -939,18 +939,18 @@ coeffs:
 ;---------------------------------------------------------------------------
 
 %macro XLODA 2
-  mov bx, [srcP+2*%2]  	; get src contents
-  mov ax, [srcP+2*%1]  	; get dest contents
+  mov bx, [srcP+2*%2]      ; get src contents
+  mov ax, [srcP+2*%1]      ; get dest contents
   mov [srcP+2*%1], bx     ; store new dest val
 %endmacro
 
 %macro XCHGA 2
-  mov ax, [srcP+2*%1]  	; get dest contents
+  mov ax, [srcP+2*%1]     ; get dest contents
   mov [srcP+2*%1], bx     ; store new dest val
 %endmacro
 
 %macro XCHGB 2
-  mov bx, [srcP+2*%1]	    ; get dest contents
+  mov bx, [srcP+2*%1]     ; get dest contents
   mov [srcP+2*%1], ax     ; store new dest val
 %endmacro
 
@@ -967,10 +967,10 @@ coeffs:
 ;---------------------------------------------------------------------------
 
 %macro PERMUTEP 1
-%define	srcP		%1
+%define    srcP        %1
   push ebx
 
-;	XCHGA  0x00, 0x00      ; nothing to do
+;    XCHGA  0x00, 0x00      ; nothing to do
 
   XLODA 0x08, 0x01
   XCHGB 0x10, 0x08
@@ -1032,9 +1032,9 @@ coeffs:
   XCHGA 0x27, 0x36
   XSTRB 0x0F, 0x27
 
-;	XCHGA  0x1B, 0x1B
+;    XCHGA  0x1B, 0x1B
 
-;	XCHGA  0x1F, 0x1F
+;    XCHGA  0x1F, 0x1F
 
   XLODA 0x35, 0x2E
   XSTRB 0x2E, 0x35
@@ -1044,11 +1044,11 @@ coeffs:
   XCHGA 0x37, 0x3E
   XSTRB 0x2F, 0x37
 
-;	XCHGA  0x3B, 0x3B
+;    XCHGA  0x3B, 0x3B
 
-;	XCHGA  0x3F, 0x3F
+;    XCHGA  0x3F, 0x3F
   pop ebx
-%undef	srcP
+%undef    srcP
 %endmacro
 
 ;=============================================================================
@@ -1110,10 +1110,10 @@ ALIGN 16
 
 ALIGN 16
 .three:
-  IDCT3 		esp,	esp+64,	esp+32,	esp+96,	edx,	nop,	0,			20
-  IDCT3 		esp+8,	esp+72,	esp+40,	esp+104,edx+4,	nop,	0,			20
-  IDCT3 		esp+16,	esp+80,	esp+48,	esp+112,edx+8,	nop,	0,			20
-  IDCT3 		esp+24,	esp+88,	esp+56,	esp+120,edx+12,	nop,	0,			20
+  IDCT3         esp,       esp+64,    esp+32,    esp+96,    edx,    nop,    0,            20
+  IDCT3         esp+8,     esp+72,    esp+40,    esp+104, edx+4,    nop,    0,            20
+  IDCT3         esp+16,    esp+80,    esp+48,    esp+112, edx+8,    nop,    0,            20
+  IDCT3         esp+24,    esp+88,    esp+56,    esp+120,edx+12,    nop,    0,            20
   jmp .ret
 
 ALIGN 16

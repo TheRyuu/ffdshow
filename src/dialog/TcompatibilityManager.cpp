@@ -99,17 +99,17 @@ void TcompatibilityManager::cfg2dlg(void)
  
  /* only enable reporting if filename is not already on the list */ 
  if(mode==2) {
- 	ffstring blacklist_lowercase(BLACKLIST_EXE_FILENAME);
- 	blacklist_lowercase.ConvertToLowerCase();
- 	ffstring filename_lowercase = filename.ConvertToLowerCase();
- 	show_report_checkbox = blacklist_lowercase.find(filename_lowercase) == ffstring::npos;
+    ffstring blacklist_lowercase(BLACKLIST_EXE_FILENAME);
+    blacklist_lowercase.ConvertToLowerCase();
+    ffstring filename_lowercase = filename.ConvertToLowerCase();
+    show_report_checkbox = blacklist_lowercase.find(filename_lowercase) == ffstring::npos;
  } else {
- 	if(mode==4) {
- 	  ffstring whitelist_lowercase(WHITELIST_EXE_FILENAME);
- 	  whitelist_lowercase.ConvertToLowerCase();
- 	  ffstring filename_lowercase = filename.ConvertToLowerCase();
- 		show_report_checkbox = whitelist_lowercase.find(filename_lowercase) == ffstring::npos;
- 	}
+    if(mode==4) {
+      ffstring whitelist_lowercase(WHITELIST_EXE_FILENAME);
+      whitelist_lowercase.ConvertToLowerCase();
+      ffstring filename_lowercase = filename.ConvertToLowerCase();
+        show_report_checkbox = whitelist_lowercase.find(filename_lowercase) == ffstring::npos;
+    }
  }
  enable(show_report_checkbox,IDC_CHB_COMP_SEND);
  Twindow::show(show_report_checkbox,IDC_CHB_COMP_SEND);

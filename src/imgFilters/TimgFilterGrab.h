@@ -59,10 +59,10 @@ private:
   {
    virtual int setQual(int qual)
     {
-    	/* FFmpeg uses lossless PNG compression, we therefore won't use the
-    	 * quality parameter. Instead we use a fixed compression level that
-    	 * has a good balance between output file size and compression performance.
-    	 */
+        /* FFmpeg uses lossless PNG compression, we therefore won't use the
+         * quality parameter. Instead we use a fixed compression level that
+         * has a good balance between output file size and compression performance.
+         */
      return 3;
     }
   public:

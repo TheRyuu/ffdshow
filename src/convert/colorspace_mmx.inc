@@ -3,42 +3,42 @@
 ; MAKE_COLORSPACE(NAME,STACK, BYTES,PIXELS,ROWS, FUNC, ARG1)
 ;
 ; This macro provides a assembler width/height scroll loop
-; NAME		function name
-; STACK		additional stack bytes required by FUNC
-; BYTES		bytes-per-pixel for the given colorspace
-; PIXELS	pixels (columns) operated on per FUNC call
-; VPIXELS	vpixels (rows) operated on per FUNC call
-; FUNC		conversion macro name; we expect to find FUNC_INIT and FUNC macros
-; ARG1		argument passed to FUNC
+; NAME        function name
+; STACK       additional stack bytes required by FUNC
+; BYTES       bytes-per-pixel for the given colorspace
+; PIXELS      pixels (columns) operated on per FUNC call
+; VPIXELS     vpixels (rows) operated on per FUNC call
+; FUNC        conversion macro name; we expect to find FUNC_INIT and FUNC macros
+; ARG1        argument passed to FUNC
 ; 
 ; throughout the FUNC the registers mean:
-; eax		y_stride
-; ebx		u_ptr
-; ecx		v_ptr
-; edx		x_stride
-; esi		y_ptr
-; edi		x_ptr
-; ebp		width
+; eax        y_stride
+; ebx        u_ptr
+; ecx        v_ptr
+; edx        x_stride
+; esi        y_ptr
+; edi        x_ptr
+; ebp        width
 ;
 ;------------------------------------------------------------------------------
-%macro		MAKE_COLORSPACE			9
-%define NAME		%1
-%define STACK		%2
-%define BYTES		%3
-%define PIXELS		%4
-%define VPIXELS		%5
-%define FUNC		%6
-%define ARG1		%7
-%define ARG2		%8
+%macro        MAKE_COLORSPACE            9
+%define NAME        %1
+%define STACK       %2
+%define BYTES       %3
+%define PIXELS      %4
+%define VPIXELS     %5
+%define FUNC        %6
+%define ARG1        %7
+%define ARG2        %8
 %define ARG3        %9
-	; --- define function global/symbol
+    ; --- define function global/symbol
 ALIGN 16
 cglobal NAME
 NAME:
-	; --- init stack ---
+    ; --- init stack ---
 
-%define pushsize	16
-%define localsize	20 + STACK
+%define pushsize    16
+%define localsize   20 + STACK
 
 %define vflip           esp + localsize + pushsize + 40
 %define height          esp + localsize + pushsize + 36

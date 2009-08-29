@@ -45,811 +45,811 @@
 #ifndef __ICreateDevEnum_FWD_DEFINED__
 #define __ICreateDevEnum_FWD_DEFINED__
 typedef interface ICreateDevEnum ICreateDevEnum;
-#endif 	/* __ICreateDevEnum_FWD_DEFINED__ */
+#endif     /* __ICreateDevEnum_FWD_DEFINED__ */
 
 
 #ifndef __IPin_FWD_DEFINED__
 #define __IPin_FWD_DEFINED__
 typedef interface IPin IPin;
-#endif 	/* __IPin_FWD_DEFINED__ */
+#endif     /* __IPin_FWD_DEFINED__ */
 
 
 #ifndef __IEnumPins_FWD_DEFINED__
 #define __IEnumPins_FWD_DEFINED__
 typedef interface IEnumPins IEnumPins;
-#endif 	/* __IEnumPins_FWD_DEFINED__ */
+#endif     /* __IEnumPins_FWD_DEFINED__ */
 
 
 #ifndef __IEnumMediaTypes_FWD_DEFINED__
 #define __IEnumMediaTypes_FWD_DEFINED__
 typedef interface IEnumMediaTypes IEnumMediaTypes;
-#endif 	/* __IEnumMediaTypes_FWD_DEFINED__ */
+#endif     /* __IEnumMediaTypes_FWD_DEFINED__ */
 
 
 #ifndef __IFilterGraph_FWD_DEFINED__
 #define __IFilterGraph_FWD_DEFINED__
 typedef interface IFilterGraph IFilterGraph;
-#endif 	/* __IFilterGraph_FWD_DEFINED__ */
+#endif     /* __IFilterGraph_FWD_DEFINED__ */
 
 
 #ifndef __IEnumFilters_FWD_DEFINED__
 #define __IEnumFilters_FWD_DEFINED__
 typedef interface IEnumFilters IEnumFilters;
-#endif 	/* __IEnumFilters_FWD_DEFINED__ */
+#endif     /* __IEnumFilters_FWD_DEFINED__ */
 
 
 #ifndef __IMediaFilter_FWD_DEFINED__
 #define __IMediaFilter_FWD_DEFINED__
 typedef interface IMediaFilter IMediaFilter;
-#endif 	/* __IMediaFilter_FWD_DEFINED__ */
+#endif     /* __IMediaFilter_FWD_DEFINED__ */
 
 
 #ifndef __IBaseFilter_FWD_DEFINED__
 #define __IBaseFilter_FWD_DEFINED__
 typedef interface IBaseFilter IBaseFilter;
-#endif 	/* __IBaseFilter_FWD_DEFINED__ */
+#endif     /* __IBaseFilter_FWD_DEFINED__ */
 
 
 #ifndef __IReferenceClock_FWD_DEFINED__
 #define __IReferenceClock_FWD_DEFINED__
 typedef interface IReferenceClock IReferenceClock;
-#endif 	/* __IReferenceClock_FWD_DEFINED__ */
+#endif     /* __IReferenceClock_FWD_DEFINED__ */
 
 
 #ifndef __IReferenceClock2_FWD_DEFINED__
 #define __IReferenceClock2_FWD_DEFINED__
 typedef interface IReferenceClock2 IReferenceClock2;
-#endif 	/* __IReferenceClock2_FWD_DEFINED__ */
+#endif     /* __IReferenceClock2_FWD_DEFINED__ */
 
 
 #ifndef __IMediaSample_FWD_DEFINED__
 #define __IMediaSample_FWD_DEFINED__
 typedef interface IMediaSample IMediaSample;
-#endif 	/* __IMediaSample_FWD_DEFINED__ */
+#endif     /* __IMediaSample_FWD_DEFINED__ */
 
 
 #ifndef __IMediaSample2_FWD_DEFINED__
 #define __IMediaSample2_FWD_DEFINED__
 typedef interface IMediaSample2 IMediaSample2;
-#endif 	/* __IMediaSample2_FWD_DEFINED__ */
+#endif     /* __IMediaSample2_FWD_DEFINED__ */
 
 
 #ifndef __IMemAllocator_FWD_DEFINED__
 #define __IMemAllocator_FWD_DEFINED__
 typedef interface IMemAllocator IMemAllocator;
-#endif 	/* __IMemAllocator_FWD_DEFINED__ */
+#endif     /* __IMemAllocator_FWD_DEFINED__ */
 
 
 #ifndef __IMemAllocatorCallbackTemp_FWD_DEFINED__
 #define __IMemAllocatorCallbackTemp_FWD_DEFINED__
 typedef interface IMemAllocatorCallbackTemp IMemAllocatorCallbackTemp;
-#endif 	/* __IMemAllocatorCallbackTemp_FWD_DEFINED__ */
+#endif     /* __IMemAllocatorCallbackTemp_FWD_DEFINED__ */
 
 
 #ifndef __IMemAllocatorNotifyCallbackTemp_FWD_DEFINED__
 #define __IMemAllocatorNotifyCallbackTemp_FWD_DEFINED__
 typedef interface IMemAllocatorNotifyCallbackTemp IMemAllocatorNotifyCallbackTemp;
-#endif 	/* __IMemAllocatorNotifyCallbackTemp_FWD_DEFINED__ */
+#endif     /* __IMemAllocatorNotifyCallbackTemp_FWD_DEFINED__ */
 
 
 #ifndef __IMemInputPin_FWD_DEFINED__
 #define __IMemInputPin_FWD_DEFINED__
 typedef interface IMemInputPin IMemInputPin;
-#endif 	/* __IMemInputPin_FWD_DEFINED__ */
+#endif     /* __IMemInputPin_FWD_DEFINED__ */
 
 
 #ifndef __IAMovieSetup_FWD_DEFINED__
 #define __IAMovieSetup_FWD_DEFINED__
 typedef interface IAMovieSetup IAMovieSetup;
-#endif 	/* __IAMovieSetup_FWD_DEFINED__ */
+#endif     /* __IAMovieSetup_FWD_DEFINED__ */
 
 
 #ifndef __IMediaSeeking_FWD_DEFINED__
 #define __IMediaSeeking_FWD_DEFINED__
 typedef interface IMediaSeeking IMediaSeeking;
-#endif 	/* __IMediaSeeking_FWD_DEFINED__ */
+#endif     /* __IMediaSeeking_FWD_DEFINED__ */
 
 
 #ifndef __IEnumRegFilters_FWD_DEFINED__
 #define __IEnumRegFilters_FWD_DEFINED__
 typedef interface IEnumRegFilters IEnumRegFilters;
-#endif 	/* __IEnumRegFilters_FWD_DEFINED__ */
+#endif     /* __IEnumRegFilters_FWD_DEFINED__ */
 
 
 #ifndef __IFilterMapper_FWD_DEFINED__
 #define __IFilterMapper_FWD_DEFINED__
 typedef interface IFilterMapper IFilterMapper;
-#endif 	/* __IFilterMapper_FWD_DEFINED__ */
+#endif     /* __IFilterMapper_FWD_DEFINED__ */
 
 
 #ifndef __IFilterMapper2_FWD_DEFINED__
 #define __IFilterMapper2_FWD_DEFINED__
 typedef interface IFilterMapper2 IFilterMapper2;
-#endif 	/* __IFilterMapper2_FWD_DEFINED__ */
+#endif     /* __IFilterMapper2_FWD_DEFINED__ */
 
 
 #ifndef __IFilterMapper3_FWD_DEFINED__
 #define __IFilterMapper3_FWD_DEFINED__
 typedef interface IFilterMapper3 IFilterMapper3;
-#endif 	/* __IFilterMapper3_FWD_DEFINED__ */
+#endif     /* __IFilterMapper3_FWD_DEFINED__ */
 
 
 #ifndef __IQualityControl_FWD_DEFINED__
 #define __IQualityControl_FWD_DEFINED__
 typedef interface IQualityControl IQualityControl;
-#endif 	/* __IQualityControl_FWD_DEFINED__ */
+#endif     /* __IQualityControl_FWD_DEFINED__ */
 
 
 #ifndef __IOverlayNotify_FWD_DEFINED__
 #define __IOverlayNotify_FWD_DEFINED__
 typedef interface IOverlayNotify IOverlayNotify;
-#endif 	/* __IOverlayNotify_FWD_DEFINED__ */
+#endif     /* __IOverlayNotify_FWD_DEFINED__ */
 
 
 #ifndef __IOverlayNotify2_FWD_DEFINED__
 #define __IOverlayNotify2_FWD_DEFINED__
 typedef interface IOverlayNotify2 IOverlayNotify2;
-#endif 	/* __IOverlayNotify2_FWD_DEFINED__ */
+#endif     /* __IOverlayNotify2_FWD_DEFINED__ */
 
 
 #ifndef __IOverlay_FWD_DEFINED__
 #define __IOverlay_FWD_DEFINED__
 typedef interface IOverlay IOverlay;
-#endif 	/* __IOverlay_FWD_DEFINED__ */
+#endif     /* __IOverlay_FWD_DEFINED__ */
 
 
 #ifndef __IMediaEventSink_FWD_DEFINED__
 #define __IMediaEventSink_FWD_DEFINED__
 typedef interface IMediaEventSink IMediaEventSink;
-#endif 	/* __IMediaEventSink_FWD_DEFINED__ */
+#endif     /* __IMediaEventSink_FWD_DEFINED__ */
 
 
 #ifndef __IFileSourceFilter_FWD_DEFINED__
 #define __IFileSourceFilter_FWD_DEFINED__
 typedef interface IFileSourceFilter IFileSourceFilter;
-#endif 	/* __IFileSourceFilter_FWD_DEFINED__ */
+#endif     /* __IFileSourceFilter_FWD_DEFINED__ */
 
 
 #ifndef __IFileSinkFilter_FWD_DEFINED__
 #define __IFileSinkFilter_FWD_DEFINED__
 typedef interface IFileSinkFilter IFileSinkFilter;
-#endif 	/* __IFileSinkFilter_FWD_DEFINED__ */
+#endif     /* __IFileSinkFilter_FWD_DEFINED__ */
 
 
 #ifndef __IFileSinkFilter2_FWD_DEFINED__
 #define __IFileSinkFilter2_FWD_DEFINED__
 typedef interface IFileSinkFilter2 IFileSinkFilter2;
-#endif 	/* __IFileSinkFilter2_FWD_DEFINED__ */
+#endif     /* __IFileSinkFilter2_FWD_DEFINED__ */
 
 
 #ifndef __IGraphBuilder_FWD_DEFINED__
 #define __IGraphBuilder_FWD_DEFINED__
 typedef interface IGraphBuilder IGraphBuilder;
-#endif 	/* __IGraphBuilder_FWD_DEFINED__ */
+#endif     /* __IGraphBuilder_FWD_DEFINED__ */
 
 
 #ifndef __ICaptureGraphBuilder_FWD_DEFINED__
 #define __ICaptureGraphBuilder_FWD_DEFINED__
 typedef interface ICaptureGraphBuilder ICaptureGraphBuilder;
-#endif 	/* __ICaptureGraphBuilder_FWD_DEFINED__ */
+#endif     /* __ICaptureGraphBuilder_FWD_DEFINED__ */
 
 
 #ifndef __IAMCopyCaptureFileProgress_FWD_DEFINED__
 #define __IAMCopyCaptureFileProgress_FWD_DEFINED__
 typedef interface IAMCopyCaptureFileProgress IAMCopyCaptureFileProgress;
-#endif 	/* __IAMCopyCaptureFileProgress_FWD_DEFINED__ */
+#endif     /* __IAMCopyCaptureFileProgress_FWD_DEFINED__ */
 
 
 #ifndef __ICaptureGraphBuilder2_FWD_DEFINED__
 #define __ICaptureGraphBuilder2_FWD_DEFINED__
 typedef interface ICaptureGraphBuilder2 ICaptureGraphBuilder2;
-#endif 	/* __ICaptureGraphBuilder2_FWD_DEFINED__ */
+#endif     /* __ICaptureGraphBuilder2_FWD_DEFINED__ */
 
 
 #ifndef __IFilterGraph2_FWD_DEFINED__
 #define __IFilterGraph2_FWD_DEFINED__
 typedef interface IFilterGraph2 IFilterGraph2;
-#endif 	/* __IFilterGraph2_FWD_DEFINED__ */
+#endif     /* __IFilterGraph2_FWD_DEFINED__ */
 
 
 #ifndef __IStreamBuilder_FWD_DEFINED__
 #define __IStreamBuilder_FWD_DEFINED__
 typedef interface IStreamBuilder IStreamBuilder;
-#endif 	/* __IStreamBuilder_FWD_DEFINED__ */
+#endif     /* __IStreamBuilder_FWD_DEFINED__ */
 
 
 #ifndef __IAsyncReader_FWD_DEFINED__
 #define __IAsyncReader_FWD_DEFINED__
 typedef interface IAsyncReader IAsyncReader;
-#endif 	/* __IAsyncReader_FWD_DEFINED__ */
+#endif     /* __IAsyncReader_FWD_DEFINED__ */
 
 
 #ifndef __IGraphVersion_FWD_DEFINED__
 #define __IGraphVersion_FWD_DEFINED__
 typedef interface IGraphVersion IGraphVersion;
-#endif 	/* __IGraphVersion_FWD_DEFINED__ */
+#endif     /* __IGraphVersion_FWD_DEFINED__ */
 
 
 #ifndef __IResourceConsumer_FWD_DEFINED__
 #define __IResourceConsumer_FWD_DEFINED__
 typedef interface IResourceConsumer IResourceConsumer;
-#endif 	/* __IResourceConsumer_FWD_DEFINED__ */
+#endif     /* __IResourceConsumer_FWD_DEFINED__ */
 
 
 #ifndef __IResourceManager_FWD_DEFINED__
 #define __IResourceManager_FWD_DEFINED__
 typedef interface IResourceManager IResourceManager;
-#endif 	/* __IResourceManager_FWD_DEFINED__ */
+#endif     /* __IResourceManager_FWD_DEFINED__ */
 
 
 #ifndef __IDistributorNotify_FWD_DEFINED__
 #define __IDistributorNotify_FWD_DEFINED__
 typedef interface IDistributorNotify IDistributorNotify;
-#endif 	/* __IDistributorNotify_FWD_DEFINED__ */
+#endif     /* __IDistributorNotify_FWD_DEFINED__ */
 
 
 #ifndef __IAMStreamControl_FWD_DEFINED__
 #define __IAMStreamControl_FWD_DEFINED__
 typedef interface IAMStreamControl IAMStreamControl;
-#endif 	/* __IAMStreamControl_FWD_DEFINED__ */
+#endif     /* __IAMStreamControl_FWD_DEFINED__ */
 
 
 #ifndef __ISeekingPassThru_FWD_DEFINED__
 #define __ISeekingPassThru_FWD_DEFINED__
 typedef interface ISeekingPassThru ISeekingPassThru;
-#endif 	/* __ISeekingPassThru_FWD_DEFINED__ */
+#endif     /* __ISeekingPassThru_FWD_DEFINED__ */
 
 
 #ifndef __IAMStreamConfig_FWD_DEFINED__
 #define __IAMStreamConfig_FWD_DEFINED__
 typedef interface IAMStreamConfig IAMStreamConfig;
-#endif 	/* __IAMStreamConfig_FWD_DEFINED__ */
+#endif     /* __IAMStreamConfig_FWD_DEFINED__ */
 
 
 #ifndef __IConfigInterleaving_FWD_DEFINED__
 #define __IConfigInterleaving_FWD_DEFINED__
 typedef interface IConfigInterleaving IConfigInterleaving;
-#endif 	/* __IConfigInterleaving_FWD_DEFINED__ */
+#endif     /* __IConfigInterleaving_FWD_DEFINED__ */
 
 
 #ifndef __IConfigAviMux_FWD_DEFINED__
 #define __IConfigAviMux_FWD_DEFINED__
 typedef interface IConfigAviMux IConfigAviMux;
-#endif 	/* __IConfigAviMux_FWD_DEFINED__ */
+#endif     /* __IConfigAviMux_FWD_DEFINED__ */
 
 
 #ifndef __IAMVideoCompression_FWD_DEFINED__
 #define __IAMVideoCompression_FWD_DEFINED__
 typedef interface IAMVideoCompression IAMVideoCompression;
-#endif 	/* __IAMVideoCompression_FWD_DEFINED__ */
+#endif     /* __IAMVideoCompression_FWD_DEFINED__ */
 
 
 #ifndef __IAMVfwCaptureDialogs_FWD_DEFINED__
 #define __IAMVfwCaptureDialogs_FWD_DEFINED__
 typedef interface IAMVfwCaptureDialogs IAMVfwCaptureDialogs;
-#endif 	/* __IAMVfwCaptureDialogs_FWD_DEFINED__ */
+#endif     /* __IAMVfwCaptureDialogs_FWD_DEFINED__ */
 
 
 #ifndef __IAMVfwCompressDialogs_FWD_DEFINED__
 #define __IAMVfwCompressDialogs_FWD_DEFINED__
 typedef interface IAMVfwCompressDialogs IAMVfwCompressDialogs;
-#endif 	/* __IAMVfwCompressDialogs_FWD_DEFINED__ */
+#endif     /* __IAMVfwCompressDialogs_FWD_DEFINED__ */
 
 
 #ifndef __IAMDroppedFrames_FWD_DEFINED__
 #define __IAMDroppedFrames_FWD_DEFINED__
 typedef interface IAMDroppedFrames IAMDroppedFrames;
-#endif 	/* __IAMDroppedFrames_FWD_DEFINED__ */
+#endif     /* __IAMDroppedFrames_FWD_DEFINED__ */
 
 
 #ifndef __IAMAudioInputMixer_FWD_DEFINED__
 #define __IAMAudioInputMixer_FWD_DEFINED__
 typedef interface IAMAudioInputMixer IAMAudioInputMixer;
-#endif 	/* __IAMAudioInputMixer_FWD_DEFINED__ */
+#endif     /* __IAMAudioInputMixer_FWD_DEFINED__ */
 
 
 #ifndef __IAMBufferNegotiation_FWD_DEFINED__
 #define __IAMBufferNegotiation_FWD_DEFINED__
 typedef interface IAMBufferNegotiation IAMBufferNegotiation;
-#endif 	/* __IAMBufferNegotiation_FWD_DEFINED__ */
+#endif     /* __IAMBufferNegotiation_FWD_DEFINED__ */
 
 
 #ifndef __IAMAnalogVideoDecoder_FWD_DEFINED__
 #define __IAMAnalogVideoDecoder_FWD_DEFINED__
 typedef interface IAMAnalogVideoDecoder IAMAnalogVideoDecoder;
-#endif 	/* __IAMAnalogVideoDecoder_FWD_DEFINED__ */
+#endif     /* __IAMAnalogVideoDecoder_FWD_DEFINED__ */
 
 
 #ifndef __IAMVideoProcAmp_FWD_DEFINED__
 #define __IAMVideoProcAmp_FWD_DEFINED__
 typedef interface IAMVideoProcAmp IAMVideoProcAmp;
-#endif 	/* __IAMVideoProcAmp_FWD_DEFINED__ */
+#endif     /* __IAMVideoProcAmp_FWD_DEFINED__ */
 
 
 #ifndef __IAMCameraControl_FWD_DEFINED__
 #define __IAMCameraControl_FWD_DEFINED__
 typedef interface IAMCameraControl IAMCameraControl;
-#endif 	/* __IAMCameraControl_FWD_DEFINED__ */
+#endif     /* __IAMCameraControl_FWD_DEFINED__ */
 
 
 #ifndef __IAMVideoControl_FWD_DEFINED__
 #define __IAMVideoControl_FWD_DEFINED__
 typedef interface IAMVideoControl IAMVideoControl;
-#endif 	/* __IAMVideoControl_FWD_DEFINED__ */
+#endif     /* __IAMVideoControl_FWD_DEFINED__ */
 
 
 #ifndef __IAMCrossbar_FWD_DEFINED__
 #define __IAMCrossbar_FWD_DEFINED__
 typedef interface IAMCrossbar IAMCrossbar;
-#endif 	/* __IAMCrossbar_FWD_DEFINED__ */
+#endif     /* __IAMCrossbar_FWD_DEFINED__ */
 
 
 #ifndef __IAMTuner_FWD_DEFINED__
 #define __IAMTuner_FWD_DEFINED__
 typedef interface IAMTuner IAMTuner;
-#endif 	/* __IAMTuner_FWD_DEFINED__ */
+#endif     /* __IAMTuner_FWD_DEFINED__ */
 
 
 #ifndef __IAMTunerNotification_FWD_DEFINED__
 #define __IAMTunerNotification_FWD_DEFINED__
 typedef interface IAMTunerNotification IAMTunerNotification;
-#endif 	/* __IAMTunerNotification_FWD_DEFINED__ */
+#endif     /* __IAMTunerNotification_FWD_DEFINED__ */
 
 
 #ifndef __IAMTVTuner_FWD_DEFINED__
 #define __IAMTVTuner_FWD_DEFINED__
 typedef interface IAMTVTuner IAMTVTuner;
-#endif 	/* __IAMTVTuner_FWD_DEFINED__ */
+#endif     /* __IAMTVTuner_FWD_DEFINED__ */
 
 
 #ifndef __IBPCSatelliteTuner_FWD_DEFINED__
 #define __IBPCSatelliteTuner_FWD_DEFINED__
 typedef interface IBPCSatelliteTuner IBPCSatelliteTuner;
-#endif 	/* __IBPCSatelliteTuner_FWD_DEFINED__ */
+#endif     /* __IBPCSatelliteTuner_FWD_DEFINED__ */
 
 
 #ifndef __IAMTVAudio_FWD_DEFINED__
 #define __IAMTVAudio_FWD_DEFINED__
 typedef interface IAMTVAudio IAMTVAudio;
-#endif 	/* __IAMTVAudio_FWD_DEFINED__ */
+#endif     /* __IAMTVAudio_FWD_DEFINED__ */
 
 
 #ifndef __IAMTVAudioNotification_FWD_DEFINED__
 #define __IAMTVAudioNotification_FWD_DEFINED__
 typedef interface IAMTVAudioNotification IAMTVAudioNotification;
-#endif 	/* __IAMTVAudioNotification_FWD_DEFINED__ */
+#endif     /* __IAMTVAudioNotification_FWD_DEFINED__ */
 
 
 #ifndef __IAMAnalogVideoEncoder_FWD_DEFINED__
 #define __IAMAnalogVideoEncoder_FWD_DEFINED__
 typedef interface IAMAnalogVideoEncoder IAMAnalogVideoEncoder;
-#endif 	/* __IAMAnalogVideoEncoder_FWD_DEFINED__ */
+#endif     /* __IAMAnalogVideoEncoder_FWD_DEFINED__ */
 
 
 #ifndef __IKsPropertySet_FWD_DEFINED__
 #define __IKsPropertySet_FWD_DEFINED__
 typedef interface IKsPropertySet IKsPropertySet;
-#endif 	/* __IKsPropertySet_FWD_DEFINED__ */
+#endif     /* __IKsPropertySet_FWD_DEFINED__ */
 
 
 #ifndef __IMediaPropertyBag_FWD_DEFINED__
 #define __IMediaPropertyBag_FWD_DEFINED__
 typedef interface IMediaPropertyBag IMediaPropertyBag;
-#endif 	/* __IMediaPropertyBag_FWD_DEFINED__ */
+#endif     /* __IMediaPropertyBag_FWD_DEFINED__ */
 
 
 #ifndef __IPersistMediaPropertyBag_FWD_DEFINED__
 #define __IPersistMediaPropertyBag_FWD_DEFINED__
 typedef interface IPersistMediaPropertyBag IPersistMediaPropertyBag;
-#endif 	/* __IPersistMediaPropertyBag_FWD_DEFINED__ */
+#endif     /* __IPersistMediaPropertyBag_FWD_DEFINED__ */
 
 
 #ifndef __IAMPhysicalPinInfo_FWD_DEFINED__
 #define __IAMPhysicalPinInfo_FWD_DEFINED__
 typedef interface IAMPhysicalPinInfo IAMPhysicalPinInfo;
-#endif 	/* __IAMPhysicalPinInfo_FWD_DEFINED__ */
+#endif     /* __IAMPhysicalPinInfo_FWD_DEFINED__ */
 
 
 #ifndef __IAMExtDevice_FWD_DEFINED__
 #define __IAMExtDevice_FWD_DEFINED__
 typedef interface IAMExtDevice IAMExtDevice;
-#endif 	/* __IAMExtDevice_FWD_DEFINED__ */
+#endif     /* __IAMExtDevice_FWD_DEFINED__ */
 
 
 #ifndef __IAMExtTransport_FWD_DEFINED__
 #define __IAMExtTransport_FWD_DEFINED__
 typedef interface IAMExtTransport IAMExtTransport;
-#endif 	/* __IAMExtTransport_FWD_DEFINED__ */
+#endif     /* __IAMExtTransport_FWD_DEFINED__ */
 
 
 #ifndef __IAMTimecodeReader_FWD_DEFINED__
 #define __IAMTimecodeReader_FWD_DEFINED__
 typedef interface IAMTimecodeReader IAMTimecodeReader;
-#endif 	/* __IAMTimecodeReader_FWD_DEFINED__ */
+#endif     /* __IAMTimecodeReader_FWD_DEFINED__ */
 
 
 #ifndef __IAMTimecodeGenerator_FWD_DEFINED__
 #define __IAMTimecodeGenerator_FWD_DEFINED__
 typedef interface IAMTimecodeGenerator IAMTimecodeGenerator;
-#endif 	/* __IAMTimecodeGenerator_FWD_DEFINED__ */
+#endif     /* __IAMTimecodeGenerator_FWD_DEFINED__ */
 
 
 #ifndef __IAMTimecodeDisplay_FWD_DEFINED__
 #define __IAMTimecodeDisplay_FWD_DEFINED__
 typedef interface IAMTimecodeDisplay IAMTimecodeDisplay;
-#endif 	/* __IAMTimecodeDisplay_FWD_DEFINED__ */
+#endif     /* __IAMTimecodeDisplay_FWD_DEFINED__ */
 
 
 #ifndef __IAMDevMemoryAllocator_FWD_DEFINED__
 #define __IAMDevMemoryAllocator_FWD_DEFINED__
 typedef interface IAMDevMemoryAllocator IAMDevMemoryAllocator;
-#endif 	/* __IAMDevMemoryAllocator_FWD_DEFINED__ */
+#endif     /* __IAMDevMemoryAllocator_FWD_DEFINED__ */
 
 
 #ifndef __IAMDevMemoryControl_FWD_DEFINED__
 #define __IAMDevMemoryControl_FWD_DEFINED__
 typedef interface IAMDevMemoryControl IAMDevMemoryControl;
-#endif 	/* __IAMDevMemoryControl_FWD_DEFINED__ */
+#endif     /* __IAMDevMemoryControl_FWD_DEFINED__ */
 
 
 #ifndef __IAMStreamSelect_FWD_DEFINED__
 #define __IAMStreamSelect_FWD_DEFINED__
 typedef interface IAMStreamSelect IAMStreamSelect;
-#endif 	/* __IAMStreamSelect_FWD_DEFINED__ */
+#endif     /* __IAMStreamSelect_FWD_DEFINED__ */
 
 
 #ifndef __IAMResourceControl_FWD_DEFINED__
 #define __IAMResourceControl_FWD_DEFINED__
 typedef interface IAMResourceControl IAMResourceControl;
-#endif 	/* __IAMResourceControl_FWD_DEFINED__ */
+#endif     /* __IAMResourceControl_FWD_DEFINED__ */
 
 
 #ifndef __IAMClockAdjust_FWD_DEFINED__
 #define __IAMClockAdjust_FWD_DEFINED__
 typedef interface IAMClockAdjust IAMClockAdjust;
-#endif 	/* __IAMClockAdjust_FWD_DEFINED__ */
+#endif     /* __IAMClockAdjust_FWD_DEFINED__ */
 
 
 #ifndef __IAMFilterMiscFlags_FWD_DEFINED__
 #define __IAMFilterMiscFlags_FWD_DEFINED__
 typedef interface IAMFilterMiscFlags IAMFilterMiscFlags;
-#endif 	/* __IAMFilterMiscFlags_FWD_DEFINED__ */
+#endif     /* __IAMFilterMiscFlags_FWD_DEFINED__ */
 
 
 #ifndef __IDrawVideoImage_FWD_DEFINED__
 #define __IDrawVideoImage_FWD_DEFINED__
 typedef interface IDrawVideoImage IDrawVideoImage;
-#endif 	/* __IDrawVideoImage_FWD_DEFINED__ */
+#endif     /* __IDrawVideoImage_FWD_DEFINED__ */
 
 
 #ifndef __IDecimateVideoImage_FWD_DEFINED__
 #define __IDecimateVideoImage_FWD_DEFINED__
 typedef interface IDecimateVideoImage IDecimateVideoImage;
-#endif 	/* __IDecimateVideoImage_FWD_DEFINED__ */
+#endif     /* __IDecimateVideoImage_FWD_DEFINED__ */
 
 
 #ifndef __IAMVideoDecimationProperties_FWD_DEFINED__
 #define __IAMVideoDecimationProperties_FWD_DEFINED__
 typedef interface IAMVideoDecimationProperties IAMVideoDecimationProperties;
-#endif 	/* __IAMVideoDecimationProperties_FWD_DEFINED__ */
+#endif     /* __IAMVideoDecimationProperties_FWD_DEFINED__ */
 
 
 #ifndef __IVideoFrameStep_FWD_DEFINED__
 #define __IVideoFrameStep_FWD_DEFINED__
 typedef interface IVideoFrameStep IVideoFrameStep;
-#endif 	/* __IVideoFrameStep_FWD_DEFINED__ */
+#endif     /* __IVideoFrameStep_FWD_DEFINED__ */
 
 
 #ifndef __IAMLatency_FWD_DEFINED__
 #define __IAMLatency_FWD_DEFINED__
 typedef interface IAMLatency IAMLatency;
-#endif 	/* __IAMLatency_FWD_DEFINED__ */
+#endif     /* __IAMLatency_FWD_DEFINED__ */
 
 
 #ifndef __IAMPushSource_FWD_DEFINED__
 #define __IAMPushSource_FWD_DEFINED__
 typedef interface IAMPushSource IAMPushSource;
-#endif 	/* __IAMPushSource_FWD_DEFINED__ */
+#endif     /* __IAMPushSource_FWD_DEFINED__ */
 
 
 #ifndef __IAMDeviceRemoval_FWD_DEFINED__
 #define __IAMDeviceRemoval_FWD_DEFINED__
 typedef interface IAMDeviceRemoval IAMDeviceRemoval;
-#endif 	/* __IAMDeviceRemoval_FWD_DEFINED__ */
+#endif     /* __IAMDeviceRemoval_FWD_DEFINED__ */
 
 
 #ifndef __IDVEnc_FWD_DEFINED__
 #define __IDVEnc_FWD_DEFINED__
 typedef interface IDVEnc IDVEnc;
-#endif 	/* __IDVEnc_FWD_DEFINED__ */
+#endif     /* __IDVEnc_FWD_DEFINED__ */
 
 
 #ifndef __IIPDVDec_FWD_DEFINED__
 #define __IIPDVDec_FWD_DEFINED__
 typedef interface IIPDVDec IIPDVDec;
-#endif 	/* __IIPDVDec_FWD_DEFINED__ */
+#endif     /* __IIPDVDec_FWD_DEFINED__ */
 
 
 #ifndef __IDVRGB219_FWD_DEFINED__
 #define __IDVRGB219_FWD_DEFINED__
 typedef interface IDVRGB219 IDVRGB219;
-#endif 	/* __IDVRGB219_FWD_DEFINED__ */
+#endif     /* __IDVRGB219_FWD_DEFINED__ */
 
 
 #ifndef __IDVSplitter_FWD_DEFINED__
 #define __IDVSplitter_FWD_DEFINED__
 typedef interface IDVSplitter IDVSplitter;
-#endif 	/* __IDVSplitter_FWD_DEFINED__ */
+#endif     /* __IDVSplitter_FWD_DEFINED__ */
 
 
 #ifndef __IAMAudioRendererStats_FWD_DEFINED__
 #define __IAMAudioRendererStats_FWD_DEFINED__
 typedef interface IAMAudioRendererStats IAMAudioRendererStats;
-#endif 	/* __IAMAudioRendererStats_FWD_DEFINED__ */
+#endif     /* __IAMAudioRendererStats_FWD_DEFINED__ */
 
 
 #ifndef __IAMGraphStreams_FWD_DEFINED__
 #define __IAMGraphStreams_FWD_DEFINED__
 typedef interface IAMGraphStreams IAMGraphStreams;
-#endif 	/* __IAMGraphStreams_FWD_DEFINED__ */
+#endif     /* __IAMGraphStreams_FWD_DEFINED__ */
 
 
 #ifndef __IAMOverlayFX_FWD_DEFINED__
 #define __IAMOverlayFX_FWD_DEFINED__
 typedef interface IAMOverlayFX IAMOverlayFX;
-#endif 	/* __IAMOverlayFX_FWD_DEFINED__ */
+#endif     /* __IAMOverlayFX_FWD_DEFINED__ */
 
 
 #ifndef __IAMOpenProgress_FWD_DEFINED__
 #define __IAMOpenProgress_FWD_DEFINED__
 typedef interface IAMOpenProgress IAMOpenProgress;
-#endif 	/* __IAMOpenProgress_FWD_DEFINED__ */
+#endif     /* __IAMOpenProgress_FWD_DEFINED__ */
 
 
 #ifndef __IMpeg2Demultiplexer_FWD_DEFINED__
 #define __IMpeg2Demultiplexer_FWD_DEFINED__
 typedef interface IMpeg2Demultiplexer IMpeg2Demultiplexer;
-#endif 	/* __IMpeg2Demultiplexer_FWD_DEFINED__ */
+#endif     /* __IMpeg2Demultiplexer_FWD_DEFINED__ */
 
 
 #ifndef __IEnumStreamIdMap_FWD_DEFINED__
 #define __IEnumStreamIdMap_FWD_DEFINED__
 typedef interface IEnumStreamIdMap IEnumStreamIdMap;
-#endif 	/* __IEnumStreamIdMap_FWD_DEFINED__ */
+#endif     /* __IEnumStreamIdMap_FWD_DEFINED__ */
 
 
 #ifndef __IMPEG2StreamIdMap_FWD_DEFINED__
 #define __IMPEG2StreamIdMap_FWD_DEFINED__
 typedef interface IMPEG2StreamIdMap IMPEG2StreamIdMap;
-#endif 	/* __IMPEG2StreamIdMap_FWD_DEFINED__ */
+#endif     /* __IMPEG2StreamIdMap_FWD_DEFINED__ */
 
 
 #ifndef __IRegisterServiceProvider_FWD_DEFINED__
 #define __IRegisterServiceProvider_FWD_DEFINED__
 typedef interface IRegisterServiceProvider IRegisterServiceProvider;
-#endif 	/* __IRegisterServiceProvider_FWD_DEFINED__ */
+#endif     /* __IRegisterServiceProvider_FWD_DEFINED__ */
 
 
 #ifndef __IAMClockSlave_FWD_DEFINED__
 #define __IAMClockSlave_FWD_DEFINED__
 typedef interface IAMClockSlave IAMClockSlave;
-#endif 	/* __IAMClockSlave_FWD_DEFINED__ */
+#endif     /* __IAMClockSlave_FWD_DEFINED__ */
 
 
 #ifndef __IAMGraphBuilderCallback_FWD_DEFINED__
 #define __IAMGraphBuilderCallback_FWD_DEFINED__
 typedef interface IAMGraphBuilderCallback IAMGraphBuilderCallback;
-#endif 	/* __IAMGraphBuilderCallback_FWD_DEFINED__ */
+#endif     /* __IAMGraphBuilderCallback_FWD_DEFINED__ */
 
 
 #ifndef __ICodecAPI_FWD_DEFINED__
 #define __ICodecAPI_FWD_DEFINED__
 typedef interface ICodecAPI ICodecAPI;
-#endif 	/* __ICodecAPI_FWD_DEFINED__ */
+#endif     /* __ICodecAPI_FWD_DEFINED__ */
 
 
 #ifndef __IGetCapabilitiesKey_FWD_DEFINED__
 #define __IGetCapabilitiesKey_FWD_DEFINED__
 typedef interface IGetCapabilitiesKey IGetCapabilitiesKey;
-#endif 	/* __IGetCapabilitiesKey_FWD_DEFINED__ */
+#endif     /* __IGetCapabilitiesKey_FWD_DEFINED__ */
 
 
 #ifndef __IEncoderAPI_FWD_DEFINED__
 #define __IEncoderAPI_FWD_DEFINED__
 typedef interface IEncoderAPI IEncoderAPI;
-#endif 	/* __IEncoderAPI_FWD_DEFINED__ */
+#endif     /* __IEncoderAPI_FWD_DEFINED__ */
 
 
 #ifndef __IVideoEncoder_FWD_DEFINED__
 #define __IVideoEncoder_FWD_DEFINED__
 typedef interface IVideoEncoder IVideoEncoder;
-#endif 	/* __IVideoEncoder_FWD_DEFINED__ */
+#endif     /* __IVideoEncoder_FWD_DEFINED__ */
 
 
 #ifndef __IAMDecoderCaps_FWD_DEFINED__
 #define __IAMDecoderCaps_FWD_DEFINED__
 typedef interface IAMDecoderCaps IAMDecoderCaps;
-#endif 	/* __IAMDecoderCaps_FWD_DEFINED__ */
+#endif     /* __IAMDecoderCaps_FWD_DEFINED__ */
 
 
 #ifndef __IDvdControl_FWD_DEFINED__
 #define __IDvdControl_FWD_DEFINED__
 typedef interface IDvdControl IDvdControl;
-#endif 	/* __IDvdControl_FWD_DEFINED__ */
+#endif     /* __IDvdControl_FWD_DEFINED__ */
 
 
 #ifndef __IDvdInfo_FWD_DEFINED__
 #define __IDvdInfo_FWD_DEFINED__
 typedef interface IDvdInfo IDvdInfo;
-#endif 	/* __IDvdInfo_FWD_DEFINED__ */
+#endif     /* __IDvdInfo_FWD_DEFINED__ */
 
 
 #ifndef __IDvdCmd_FWD_DEFINED__
 #define __IDvdCmd_FWD_DEFINED__
 typedef interface IDvdCmd IDvdCmd;
-#endif 	/* __IDvdCmd_FWD_DEFINED__ */
+#endif     /* __IDvdCmd_FWD_DEFINED__ */
 
 
 #ifndef __IDvdState_FWD_DEFINED__
 #define __IDvdState_FWD_DEFINED__
 typedef interface IDvdState IDvdState;
-#endif 	/* __IDvdState_FWD_DEFINED__ */
+#endif     /* __IDvdState_FWD_DEFINED__ */
 
 
 #ifndef __IDvdControl2_FWD_DEFINED__
 #define __IDvdControl2_FWD_DEFINED__
 typedef interface IDvdControl2 IDvdControl2;
-#endif 	/* __IDvdControl2_FWD_DEFINED__ */
+#endif     /* __IDvdControl2_FWD_DEFINED__ */
 
 
 #ifndef __IDvdInfo2_FWD_DEFINED__
 #define __IDvdInfo2_FWD_DEFINED__
 typedef interface IDvdInfo2 IDvdInfo2;
-#endif 	/* __IDvdInfo2_FWD_DEFINED__ */
+#endif     /* __IDvdInfo2_FWD_DEFINED__ */
 
 
 #ifndef __IDvdGraphBuilder_FWD_DEFINED__
 #define __IDvdGraphBuilder_FWD_DEFINED__
 typedef interface IDvdGraphBuilder IDvdGraphBuilder;
-#endif 	/* __IDvdGraphBuilder_FWD_DEFINED__ */
+#endif     /* __IDvdGraphBuilder_FWD_DEFINED__ */
 
 
 #ifndef __IDDrawExclModeVideo_FWD_DEFINED__
 #define __IDDrawExclModeVideo_FWD_DEFINED__
 typedef interface IDDrawExclModeVideo IDDrawExclModeVideo;
-#endif 	/* __IDDrawExclModeVideo_FWD_DEFINED__ */
+#endif     /* __IDDrawExclModeVideo_FWD_DEFINED__ */
 
 
 #ifndef __IDDrawExclModeVideoCallback_FWD_DEFINED__
 #define __IDDrawExclModeVideoCallback_FWD_DEFINED__
 typedef interface IDDrawExclModeVideoCallback IDDrawExclModeVideoCallback;
-#endif 	/* __IDDrawExclModeVideoCallback_FWD_DEFINED__ */
+#endif     /* __IDDrawExclModeVideoCallback_FWD_DEFINED__ */
 
 
 #ifndef __IPinConnection_FWD_DEFINED__
 #define __IPinConnection_FWD_DEFINED__
 typedef interface IPinConnection IPinConnection;
-#endif 	/* __IPinConnection_FWD_DEFINED__ */
+#endif     /* __IPinConnection_FWD_DEFINED__ */
 
 
 #ifndef __IPinFlowControl_FWD_DEFINED__
 #define __IPinFlowControl_FWD_DEFINED__
 typedef interface IPinFlowControl IPinFlowControl;
-#endif 	/* __IPinFlowControl_FWD_DEFINED__ */
+#endif     /* __IPinFlowControl_FWD_DEFINED__ */
 
 
 #ifndef __IGraphConfig_FWD_DEFINED__
 #define __IGraphConfig_FWD_DEFINED__
 typedef interface IGraphConfig IGraphConfig;
-#endif 	/* __IGraphConfig_FWD_DEFINED__ */
+#endif     /* __IGraphConfig_FWD_DEFINED__ */
 
 
 #ifndef __IGraphConfigCallback_FWD_DEFINED__
 #define __IGraphConfigCallback_FWD_DEFINED__
 typedef interface IGraphConfigCallback IGraphConfigCallback;
-#endif 	/* __IGraphConfigCallback_FWD_DEFINED__ */
+#endif     /* __IGraphConfigCallback_FWD_DEFINED__ */
 
 
 #ifndef __IFilterChain_FWD_DEFINED__
 #define __IFilterChain_FWD_DEFINED__
 typedef interface IFilterChain IFilterChain;
-#endif 	/* __IFilterChain_FWD_DEFINED__ */
+#endif     /* __IFilterChain_FWD_DEFINED__ */
 
 
 #ifndef __IVMRImagePresenter_FWD_DEFINED__
 #define __IVMRImagePresenter_FWD_DEFINED__
 typedef interface IVMRImagePresenter IVMRImagePresenter;
-#endif 	/* __IVMRImagePresenter_FWD_DEFINED__ */
+#endif     /* __IVMRImagePresenter_FWD_DEFINED__ */
 
 
 #ifndef __IVMRSurfaceAllocator_FWD_DEFINED__
 #define __IVMRSurfaceAllocator_FWD_DEFINED__
 typedef interface IVMRSurfaceAllocator IVMRSurfaceAllocator;
-#endif 	/* __IVMRSurfaceAllocator_FWD_DEFINED__ */
+#endif     /* __IVMRSurfaceAllocator_FWD_DEFINED__ */
 
 
 #ifndef __IVMRSurfaceAllocatorNotify_FWD_DEFINED__
 #define __IVMRSurfaceAllocatorNotify_FWD_DEFINED__
 typedef interface IVMRSurfaceAllocatorNotify IVMRSurfaceAllocatorNotify;
-#endif 	/* __IVMRSurfaceAllocatorNotify_FWD_DEFINED__ */
+#endif     /* __IVMRSurfaceAllocatorNotify_FWD_DEFINED__ */
 
 
 #ifndef __IVMRWindowlessControl_FWD_DEFINED__
 #define __IVMRWindowlessControl_FWD_DEFINED__
 typedef interface IVMRWindowlessControl IVMRWindowlessControl;
-#endif 	/* __IVMRWindowlessControl_FWD_DEFINED__ */
+#endif     /* __IVMRWindowlessControl_FWD_DEFINED__ */
 
 
 #ifndef __IVMRMixerControl_FWD_DEFINED__
 #define __IVMRMixerControl_FWD_DEFINED__
 typedef interface IVMRMixerControl IVMRMixerControl;
-#endif 	/* __IVMRMixerControl_FWD_DEFINED__ */
+#endif     /* __IVMRMixerControl_FWD_DEFINED__ */
 
 
 #ifndef __IVMRMonitorConfig_FWD_DEFINED__
 #define __IVMRMonitorConfig_FWD_DEFINED__
 typedef interface IVMRMonitorConfig IVMRMonitorConfig;
-#endif 	/* __IVMRMonitorConfig_FWD_DEFINED__ */
+#endif     /* __IVMRMonitorConfig_FWD_DEFINED__ */
 
 
 #ifndef __IVMRFilterConfig_FWD_DEFINED__
 #define __IVMRFilterConfig_FWD_DEFINED__
 typedef interface IVMRFilterConfig IVMRFilterConfig;
-#endif 	/* __IVMRFilterConfig_FWD_DEFINED__ */
+#endif     /* __IVMRFilterConfig_FWD_DEFINED__ */
 
 
 #ifndef __IVMRAspectRatioControl_FWD_DEFINED__
 #define __IVMRAspectRatioControl_FWD_DEFINED__
 typedef interface IVMRAspectRatioControl IVMRAspectRatioControl;
-#endif 	/* __IVMRAspectRatioControl_FWD_DEFINED__ */
+#endif     /* __IVMRAspectRatioControl_FWD_DEFINED__ */
 
 
 #ifndef __IVMRDeinterlaceControl_FWD_DEFINED__
 #define __IVMRDeinterlaceControl_FWD_DEFINED__
 typedef interface IVMRDeinterlaceControl IVMRDeinterlaceControl;
-#endif 	/* __IVMRDeinterlaceControl_FWD_DEFINED__ */
+#endif     /* __IVMRDeinterlaceControl_FWD_DEFINED__ */
 
 
 #ifndef __IVMRMixerBitmap_FWD_DEFINED__
 #define __IVMRMixerBitmap_FWD_DEFINED__
 typedef interface IVMRMixerBitmap IVMRMixerBitmap;
-#endif 	/* __IVMRMixerBitmap_FWD_DEFINED__ */
+#endif     /* __IVMRMixerBitmap_FWD_DEFINED__ */
 
 
 #ifndef __IVMRImageCompositor_FWD_DEFINED__
 #define __IVMRImageCompositor_FWD_DEFINED__
 typedef interface IVMRImageCompositor IVMRImageCompositor;
-#endif 	/* __IVMRImageCompositor_FWD_DEFINED__ */
+#endif     /* __IVMRImageCompositor_FWD_DEFINED__ */
 
 
 #ifndef __IVMRVideoStreamControl_FWD_DEFINED__
 #define __IVMRVideoStreamControl_FWD_DEFINED__
 typedef interface IVMRVideoStreamControl IVMRVideoStreamControl;
-#endif 	/* __IVMRVideoStreamControl_FWD_DEFINED__ */
+#endif     /* __IVMRVideoStreamControl_FWD_DEFINED__ */
 
 
 #ifndef __IVMRSurface_FWD_DEFINED__
 #define __IVMRSurface_FWD_DEFINED__
 typedef interface IVMRSurface IVMRSurface;
-#endif 	/* __IVMRSurface_FWD_DEFINED__ */
+#endif     /* __IVMRSurface_FWD_DEFINED__ */
 
 
 #ifndef __IVMRImagePresenterConfig_FWD_DEFINED__
 #define __IVMRImagePresenterConfig_FWD_DEFINED__
 typedef interface IVMRImagePresenterConfig IVMRImagePresenterConfig;
-#endif 	/* __IVMRImagePresenterConfig_FWD_DEFINED__ */
+#endif     /* __IVMRImagePresenterConfig_FWD_DEFINED__ */
 
 
 #ifndef __IVMRImagePresenterExclModeConfig_FWD_DEFINED__
 #define __IVMRImagePresenterExclModeConfig_FWD_DEFINED__
 typedef interface IVMRImagePresenterExclModeConfig IVMRImagePresenterExclModeConfig;
-#endif 	/* __IVMRImagePresenterExclModeConfig_FWD_DEFINED__ */
+#endif     /* __IVMRImagePresenterExclModeConfig_FWD_DEFINED__ */
 
 
 #ifndef __IVPManager_FWD_DEFINED__
 #define __IVPManager_FWD_DEFINED__
 typedef interface IVPManager IVPManager;
-#endif 	/* __IVPManager_FWD_DEFINED__ */
+#endif     /* __IVPManager_FWD_DEFINED__ */
 
 
 /* header files for imported files */
@@ -912,7 +912,7 @@ EXTERN_C const IID IID_ICreateDevEnum;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct ICreateDevEnumVtbl
     {
@@ -948,23 +948,23 @@ EXTERN_C const IID IID_ICreateDevEnum;
 #ifdef COBJMACROS
 
 
-#define ICreateDevEnum_QueryInterface(This,riid,ppvObject)	\
+#define ICreateDevEnum_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define ICreateDevEnum_AddRef(This)	\
+#define ICreateDevEnum_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define ICreateDevEnum_Release(This)	\
+#define ICreateDevEnum_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define ICreateDevEnum_CreateClassEnumerator(This,clsidDeviceClass,ppEnumMoniker,dwFlags)	\
+#define ICreateDevEnum_CreateClassEnumerator(This,clsidDeviceClass,ppEnumMoniker,dwFlags)    \
     (This)->lpVtbl -> CreateClassEnumerator(This,clsidDeviceClass,ppEnumMoniker,dwFlags)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -983,7 +983,7 @@ void __RPC_STUB ICreateDevEnum_CreateClassEnumerator_Stub(
 
 
 
-#endif 	/* __ICreateDevEnum_INTERFACE_DEFINED__ */
+#endif     /* __ICreateDevEnum_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0113 */
@@ -1001,13 +1001,13 @@ typedef struct _AMMediaType
     IUnknown *pUnk;
     ULONG cbFormat;
     /* [size_is] */ BYTE *pbFormat;
-    } 	AM_MEDIA_TYPE;
+    }     AM_MEDIA_TYPE;
 
 typedef
 enum _PinDirection
-    {	PINDIR_INPUT	= 0,
-	PINDIR_OUTPUT	= PINDIR_INPUT + 1
-    } 	PIN_DIRECTION;
+    {    PINDIR_INPUT    = 0,
+    PINDIR_OUTPUT    = PINDIR_INPUT + 1
+    }     PIN_DIRECTION;
 
 #define MAX_PIN_NAME     128
 #define MAX_FILTER_NAME  128
@@ -1025,7 +1025,7 @@ typedef struct _AllocatorProperties
     long cbBuffer;
     long cbAlign;
     long cbPrefix;
-    } 	ALLOCATOR_PROPERTIES;
+    }     ALLOCATOR_PROPERTIES;
 
 
 
@@ -1057,7 +1057,7 @@ typedef struct _PinInfo
     IBaseFilter *pFilter;
     PIN_DIRECTION dir;
     WCHAR achName[ 128 ];
-    } 	PIN_INFO;
+    }     PIN_INFO;
 
 
 EXTERN_C const IID IID_IPin;
@@ -1116,7 +1116,7 @@ EXTERN_C const IID IID_IPin;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IPinVtbl
     {
@@ -1207,65 +1207,65 @@ EXTERN_C const IID IID_IPin;
 #ifdef COBJMACROS
 
 
-#define IPin_QueryInterface(This,riid,ppvObject)	\
+#define IPin_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IPin_AddRef(This)	\
+#define IPin_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IPin_Release(This)	\
+#define IPin_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IPin_Connect(This,pReceivePin,pmt)	\
+#define IPin_Connect(This,pReceivePin,pmt)    \
     (This)->lpVtbl -> Connect(This,pReceivePin,pmt)
 
-#define IPin_ReceiveConnection(This,pConnector,pmt)	\
+#define IPin_ReceiveConnection(This,pConnector,pmt)    \
     (This)->lpVtbl -> ReceiveConnection(This,pConnector,pmt)
 
-#define IPin_Disconnect(This)	\
+#define IPin_Disconnect(This)    \
     (This)->lpVtbl -> Disconnect(This)
 
-#define IPin_ConnectedTo(This,pPin)	\
+#define IPin_ConnectedTo(This,pPin)    \
     (This)->lpVtbl -> ConnectedTo(This,pPin)
 
-#define IPin_ConnectionMediaType(This,pmt)	\
+#define IPin_ConnectionMediaType(This,pmt)    \
     (This)->lpVtbl -> ConnectionMediaType(This,pmt)
 
-#define IPin_QueryPinInfo(This,pInfo)	\
+#define IPin_QueryPinInfo(This,pInfo)    \
     (This)->lpVtbl -> QueryPinInfo(This,pInfo)
 
-#define IPin_QueryDirection(This,pPinDir)	\
+#define IPin_QueryDirection(This,pPinDir)    \
     (This)->lpVtbl -> QueryDirection(This,pPinDir)
 
-#define IPin_QueryId(This,Id)	\
+#define IPin_QueryId(This,Id)    \
     (This)->lpVtbl -> QueryId(This,Id)
 
-#define IPin_QueryAccept(This,pmt)	\
+#define IPin_QueryAccept(This,pmt)    \
     (This)->lpVtbl -> QueryAccept(This,pmt)
 
-#define IPin_EnumMediaTypes(This,ppEnum)	\
+#define IPin_EnumMediaTypes(This,ppEnum)    \
     (This)->lpVtbl -> EnumMediaTypes(This,ppEnum)
 
-#define IPin_QueryInternalConnections(This,apPin,nPin)	\
+#define IPin_QueryInternalConnections(This,apPin,nPin)    \
     (This)->lpVtbl -> QueryInternalConnections(This,apPin,nPin)
 
-#define IPin_EndOfStream(This)	\
+#define IPin_EndOfStream(This)    \
     (This)->lpVtbl -> EndOfStream(This)
 
-#define IPin_BeginFlush(This)	\
+#define IPin_BeginFlush(This)    \
     (This)->lpVtbl -> BeginFlush(This)
 
-#define IPin_EndFlush(This)	\
+#define IPin_EndFlush(This)    \
     (This)->lpVtbl -> EndFlush(This)
 
-#define IPin_NewSegment(This,tStart,tStop,dRate)	\
+#define IPin_NewSegment(This,tStart,tStop,dRate)    \
     (This)->lpVtbl -> NewSegment(This,tStart,tStop,dRate)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -1451,7 +1451,7 @@ void __RPC_STUB IPin_NewSegment_Stub(
 
 
 
-#endif 	/* __IPin_INTERFACE_DEFINED__ */
+#endif     /* __IPin_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0114 */
@@ -1494,7 +1494,7 @@ EXTERN_C const IID IID_IEnumPins;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IEnumPinsVtbl
     {
@@ -1541,32 +1541,32 @@ EXTERN_C const IID IID_IEnumPins;
 #ifdef COBJMACROS
 
 
-#define IEnumPins_QueryInterface(This,riid,ppvObject)	\
+#define IEnumPins_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IEnumPins_AddRef(This)	\
+#define IEnumPins_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IEnumPins_Release(This)	\
+#define IEnumPins_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IEnumPins_Next(This,cPins,ppPins,pcFetched)	\
+#define IEnumPins_Next(This,cPins,ppPins,pcFetched)    \
     (This)->lpVtbl -> Next(This,cPins,ppPins,pcFetched)
 
-#define IEnumPins_Skip(This,cPins)	\
+#define IEnumPins_Skip(This,cPins)    \
     (This)->lpVtbl -> Skip(This,cPins)
 
-#define IEnumPins_Reset(This)	\
+#define IEnumPins_Reset(This)    \
     (This)->lpVtbl -> Reset(This)
 
-#define IEnumPins_Clone(This,ppEnum)	\
+#define IEnumPins_Clone(This,ppEnum)    \
     (This)->lpVtbl -> Clone(This,ppEnum)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -1620,7 +1620,7 @@ void __RPC_STUB IEnumPins_Clone_Stub(
 
 
 
-#endif 	/* __IEnumPins_INTERFACE_DEFINED__ */
+#endif     /* __IEnumPins_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0115 */
@@ -1663,7 +1663,7 @@ EXTERN_C const IID IID_IEnumMediaTypes;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IEnumMediaTypesVtbl
     {
@@ -1710,32 +1710,32 @@ EXTERN_C const IID IID_IEnumMediaTypes;
 #ifdef COBJMACROS
 
 
-#define IEnumMediaTypes_QueryInterface(This,riid,ppvObject)	\
+#define IEnumMediaTypes_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IEnumMediaTypes_AddRef(This)	\
+#define IEnumMediaTypes_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IEnumMediaTypes_Release(This)	\
+#define IEnumMediaTypes_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IEnumMediaTypes_Next(This,cMediaTypes,ppMediaTypes,pcFetched)	\
+#define IEnumMediaTypes_Next(This,cMediaTypes,ppMediaTypes,pcFetched)    \
     (This)->lpVtbl -> Next(This,cMediaTypes,ppMediaTypes,pcFetched)
 
-#define IEnumMediaTypes_Skip(This,cMediaTypes)	\
+#define IEnumMediaTypes_Skip(This,cMediaTypes)    \
     (This)->lpVtbl -> Skip(This,cMediaTypes)
 
-#define IEnumMediaTypes_Reset(This)	\
+#define IEnumMediaTypes_Reset(This)    \
     (This)->lpVtbl -> Reset(This)
 
-#define IEnumMediaTypes_Clone(This,ppEnum)	\
+#define IEnumMediaTypes_Clone(This,ppEnum)    \
     (This)->lpVtbl -> Clone(This,ppEnum)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -1789,7 +1789,7 @@ void __RPC_STUB IEnumMediaTypes_Clone_Stub(
 
 
 
-#endif 	/* __IEnumMediaTypes_INTERFACE_DEFINED__ */
+#endif     /* __IEnumMediaTypes_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0116 */
@@ -1846,7 +1846,7 @@ EXTERN_C const IID IID_IFilterGraph;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IFilterGraphVtbl
     {
@@ -1911,44 +1911,44 @@ EXTERN_C const IID IID_IFilterGraph;
 #ifdef COBJMACROS
 
 
-#define IFilterGraph_QueryInterface(This,riid,ppvObject)	\
+#define IFilterGraph_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IFilterGraph_AddRef(This)	\
+#define IFilterGraph_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IFilterGraph_Release(This)	\
+#define IFilterGraph_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IFilterGraph_AddFilter(This,pFilter,pName)	\
+#define IFilterGraph_AddFilter(This,pFilter,pName)    \
     (This)->lpVtbl -> AddFilter(This,pFilter,pName)
 
-#define IFilterGraph_RemoveFilter(This,pFilter)	\
+#define IFilterGraph_RemoveFilter(This,pFilter)    \
     (This)->lpVtbl -> RemoveFilter(This,pFilter)
 
-#define IFilterGraph_EnumFilters(This,ppEnum)	\
+#define IFilterGraph_EnumFilters(This,ppEnum)    \
     (This)->lpVtbl -> EnumFilters(This,ppEnum)
 
-#define IFilterGraph_FindFilterByName(This,pName,ppFilter)	\
+#define IFilterGraph_FindFilterByName(This,pName,ppFilter)    \
     (This)->lpVtbl -> FindFilterByName(This,pName,ppFilter)
 
-#define IFilterGraph_ConnectDirect(This,ppinOut,ppinIn,pmt)	\
+#define IFilterGraph_ConnectDirect(This,ppinOut,ppinIn,pmt)    \
     (This)->lpVtbl -> ConnectDirect(This,ppinOut,ppinIn,pmt)
 
-#define IFilterGraph_Reconnect(This,ppin)	\
+#define IFilterGraph_Reconnect(This,ppin)    \
     (This)->lpVtbl -> Reconnect(This,ppin)
 
-#define IFilterGraph_Disconnect(This,ppin)	\
+#define IFilterGraph_Disconnect(This,ppin)    \
     (This)->lpVtbl -> Disconnect(This,ppin)
 
-#define IFilterGraph_SetDefaultSyncSource(This)	\
+#define IFilterGraph_SetDefaultSyncSource(This)    \
     (This)->lpVtbl -> SetDefaultSyncSource(This)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -2052,7 +2052,7 @@ void __RPC_STUB IFilterGraph_SetDefaultSyncSource_Stub(
 
 
 
-#endif 	/* __IFilterGraph_INTERFACE_DEFINED__ */
+#endif     /* __IFilterGraph_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0117 */
@@ -2095,7 +2095,7 @@ EXTERN_C const IID IID_IEnumFilters;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IEnumFiltersVtbl
     {
@@ -2142,32 +2142,32 @@ EXTERN_C const IID IID_IEnumFilters;
 #ifdef COBJMACROS
 
 
-#define IEnumFilters_QueryInterface(This,riid,ppvObject)	\
+#define IEnumFilters_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IEnumFilters_AddRef(This)	\
+#define IEnumFilters_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IEnumFilters_Release(This)	\
+#define IEnumFilters_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IEnumFilters_Next(This,cFilters,ppFilter,pcFetched)	\
+#define IEnumFilters_Next(This,cFilters,ppFilter,pcFetched)    \
     (This)->lpVtbl -> Next(This,cFilters,ppFilter,pcFetched)
 
-#define IEnumFilters_Skip(This,cFilters)	\
+#define IEnumFilters_Skip(This,cFilters)    \
     (This)->lpVtbl -> Skip(This,cFilters)
 
-#define IEnumFilters_Reset(This)	\
+#define IEnumFilters_Reset(This)    \
     (This)->lpVtbl -> Reset(This)
 
-#define IEnumFilters_Clone(This,ppEnum)	\
+#define IEnumFilters_Clone(This,ppEnum)    \
     (This)->lpVtbl -> Clone(This,ppEnum)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -2221,7 +2221,7 @@ void __RPC_STUB IEnumFilters_Clone_Stub(
 
 
 
-#endif 	/* __IEnumFilters_INTERFACE_DEFINED__ */
+#endif     /* __IEnumFilters_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0118 */
@@ -2242,10 +2242,10 @@ extern RPC_IF_HANDLE __MIDL_itf_strmif_0118_v0_0_s_ifspec;
 
 typedef
 enum _FilterState
-    {	State_Stopped	= 0,
-	State_Paused	= State_Stopped + 1,
-	State_Running	= State_Paused + 1
-    } 	FILTER_STATE;
+    {    State_Stopped    = 0,
+    State_Paused    = State_Stopped + 1,
+    State_Running    = State_Paused + 1
+    }     FILTER_STATE;
 
 
 EXTERN_C const IID IID_IMediaFilter;
@@ -2275,7 +2275,7 @@ EXTERN_C const IID IID_IMediaFilter;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IMediaFilterVtbl
     {
@@ -2332,42 +2332,42 @@ EXTERN_C const IID IID_IMediaFilter;
 #ifdef COBJMACROS
 
 
-#define IMediaFilter_QueryInterface(This,riid,ppvObject)	\
+#define IMediaFilter_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IMediaFilter_AddRef(This)	\
+#define IMediaFilter_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IMediaFilter_Release(This)	\
+#define IMediaFilter_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IMediaFilter_GetClassID(This,pClassID)	\
+#define IMediaFilter_GetClassID(This,pClassID)    \
     (This)->lpVtbl -> GetClassID(This,pClassID)
 
 
-#define IMediaFilter_Stop(This)	\
+#define IMediaFilter_Stop(This)    \
     (This)->lpVtbl -> Stop(This)
 
-#define IMediaFilter_Pause(This)	\
+#define IMediaFilter_Pause(This)    \
     (This)->lpVtbl -> Pause(This)
 
-#define IMediaFilter_Run(This,tStart)	\
+#define IMediaFilter_Run(This,tStart)    \
     (This)->lpVtbl -> Run(This,tStart)
 
-#define IMediaFilter_GetState(This,dwMilliSecsTimeout,State)	\
+#define IMediaFilter_GetState(This,dwMilliSecsTimeout,State)    \
     (This)->lpVtbl -> GetState(This,dwMilliSecsTimeout,State)
 
-#define IMediaFilter_SetSyncSource(This,pClock)	\
+#define IMediaFilter_SetSyncSource(This,pClock)    \
     (This)->lpVtbl -> SetSyncSource(This,pClock)
 
-#define IMediaFilter_GetSyncSource(This,pClock)	\
+#define IMediaFilter_GetSyncSource(This,pClock)    \
     (This)->lpVtbl -> GetSyncSource(This,pClock)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -2443,7 +2443,7 @@ void __RPC_STUB IMediaFilter_GetSyncSource_Stub(
 
 
 
-#endif 	/* __IMediaFilter_INTERFACE_DEFINED__ */
+#endif     /* __IMediaFilter_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0119 */
@@ -2466,7 +2466,7 @@ typedef struct _FilterInfo
     {
     WCHAR achName[ 128 ];
     IFilterGraph *pGraph;
-    } 	FILTER_INFO;
+    }     FILTER_INFO;
 
 
 EXTERN_C const IID IID_IBaseFilter;
@@ -2496,7 +2496,7 @@ EXTERN_C const IID IID_IBaseFilter;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IBaseFilterVtbl
     {
@@ -2575,58 +2575,58 @@ EXTERN_C const IID IID_IBaseFilter;
 #ifdef COBJMACROS
 
 
-#define IBaseFilter_QueryInterface(This,riid,ppvObject)	\
+#define IBaseFilter_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IBaseFilter_AddRef(This)	\
+#define IBaseFilter_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IBaseFilter_Release(This)	\
+#define IBaseFilter_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IBaseFilter_GetClassID(This,pClassID)	\
+#define IBaseFilter_GetClassID(This,pClassID)    \
     (This)->lpVtbl -> GetClassID(This,pClassID)
 
 
-#define IBaseFilter_Stop(This)	\
+#define IBaseFilter_Stop(This)    \
     (This)->lpVtbl -> Stop(This)
 
-#define IBaseFilter_Pause(This)	\
+#define IBaseFilter_Pause(This)    \
     (This)->lpVtbl -> Pause(This)
 
-#define IBaseFilter_Run(This,tStart)	\
+#define IBaseFilter_Run(This,tStart)    \
     (This)->lpVtbl -> Run(This,tStart)
 
-#define IBaseFilter_GetState(This,dwMilliSecsTimeout,State)	\
+#define IBaseFilter_GetState(This,dwMilliSecsTimeout,State)    \
     (This)->lpVtbl -> GetState(This,dwMilliSecsTimeout,State)
 
-#define IBaseFilter_SetSyncSource(This,pClock)	\
+#define IBaseFilter_SetSyncSource(This,pClock)    \
     (This)->lpVtbl -> SetSyncSource(This,pClock)
 
-#define IBaseFilter_GetSyncSource(This,pClock)	\
+#define IBaseFilter_GetSyncSource(This,pClock)    \
     (This)->lpVtbl -> GetSyncSource(This,pClock)
 
 
-#define IBaseFilter_EnumPins(This,ppEnum)	\
+#define IBaseFilter_EnumPins(This,ppEnum)    \
     (This)->lpVtbl -> EnumPins(This,ppEnum)
 
-#define IBaseFilter_FindPin(This,Id,ppPin)	\
+#define IBaseFilter_FindPin(This,Id,ppPin)    \
     (This)->lpVtbl -> FindPin(This,Id,ppPin)
 
-#define IBaseFilter_QueryFilterInfo(This,pInfo)	\
+#define IBaseFilter_QueryFilterInfo(This,pInfo)    \
     (This)->lpVtbl -> QueryFilterInfo(This,pInfo)
 
-#define IBaseFilter_JoinFilterGraph(This,pGraph,pName)	\
+#define IBaseFilter_JoinFilterGraph(This,pGraph,pName)    \
     (This)->lpVtbl -> JoinFilterGraph(This,pGraph,pName)
 
-#define IBaseFilter_QueryVendorInfo(This,pVendorInfo)	\
+#define IBaseFilter_QueryVendorInfo(This,pVendorInfo)    \
     (This)->lpVtbl -> QueryVendorInfo(This,pVendorInfo)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -2693,7 +2693,7 @@ void __RPC_STUB IBaseFilter_QueryVendorInfo_Stub(
 
 
 
-#endif 	/* __IBaseFilter_INTERFACE_DEFINED__ */
+#endif     /* __IBaseFilter_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0120 */
@@ -2741,7 +2741,7 @@ EXTERN_C const IID IID_IReferenceClock;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IReferenceClockVtbl
     {
@@ -2793,32 +2793,32 @@ EXTERN_C const IID IID_IReferenceClock;
 #ifdef COBJMACROS
 
 
-#define IReferenceClock_QueryInterface(This,riid,ppvObject)	\
+#define IReferenceClock_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IReferenceClock_AddRef(This)	\
+#define IReferenceClock_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IReferenceClock_Release(This)	\
+#define IReferenceClock_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IReferenceClock_GetTime(This,pTime)	\
+#define IReferenceClock_GetTime(This,pTime)    \
     (This)->lpVtbl -> GetTime(This,pTime)
 
-#define IReferenceClock_AdviseTime(This,baseTime,streamTime,hEvent,pdwAdviseCookie)	\
+#define IReferenceClock_AdviseTime(This,baseTime,streamTime,hEvent,pdwAdviseCookie)    \
     (This)->lpVtbl -> AdviseTime(This,baseTime,streamTime,hEvent,pdwAdviseCookie)
 
-#define IReferenceClock_AdvisePeriodic(This,startTime,periodTime,hSemaphore,pdwAdviseCookie)	\
+#define IReferenceClock_AdvisePeriodic(This,startTime,periodTime,hSemaphore,pdwAdviseCookie)    \
     (This)->lpVtbl -> AdvisePeriodic(This,startTime,periodTime,hSemaphore,pdwAdviseCookie)
 
-#define IReferenceClock_Unadvise(This,dwAdviseCookie)	\
+#define IReferenceClock_Unadvise(This,dwAdviseCookie)    \
     (This)->lpVtbl -> Unadvise(This,dwAdviseCookie)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -2877,7 +2877,7 @@ void __RPC_STUB IReferenceClock_Unadvise_Stub(
 
 
 
-#endif 	/* __IReferenceClock_INTERFACE_DEFINED__ */
+#endif     /* __IReferenceClock_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0121 */
@@ -2907,7 +2907,7 @@ EXTERN_C const IID IID_IReferenceClock2;
     public:
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IReferenceClock2Vtbl
     {
@@ -2959,38 +2959,38 @@ EXTERN_C const IID IID_IReferenceClock2;
 #ifdef COBJMACROS
 
 
-#define IReferenceClock2_QueryInterface(This,riid,ppvObject)	\
+#define IReferenceClock2_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IReferenceClock2_AddRef(This)	\
+#define IReferenceClock2_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IReferenceClock2_Release(This)	\
+#define IReferenceClock2_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IReferenceClock2_GetTime(This,pTime)	\
+#define IReferenceClock2_GetTime(This,pTime)    \
     (This)->lpVtbl -> GetTime(This,pTime)
 
-#define IReferenceClock2_AdviseTime(This,baseTime,streamTime,hEvent,pdwAdviseCookie)	\
+#define IReferenceClock2_AdviseTime(This,baseTime,streamTime,hEvent,pdwAdviseCookie)    \
     (This)->lpVtbl -> AdviseTime(This,baseTime,streamTime,hEvent,pdwAdviseCookie)
 
-#define IReferenceClock2_AdvisePeriodic(This,startTime,periodTime,hSemaphore,pdwAdviseCookie)	\
+#define IReferenceClock2_AdvisePeriodic(This,startTime,periodTime,hSemaphore,pdwAdviseCookie)    \
     (This)->lpVtbl -> AdvisePeriodic(This,startTime,periodTime,hSemaphore,pdwAdviseCookie)
 
-#define IReferenceClock2_Unadvise(This,dwAdviseCookie)	\
+#define IReferenceClock2_Unadvise(This,dwAdviseCookie)    \
     (This)->lpVtbl -> Unadvise(This,dwAdviseCookie)
 
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
 
-#endif 	/* __IReferenceClock2_INTERFACE_DEFINED__ */
+#endif     /* __IReferenceClock2_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0122 */
@@ -3067,7 +3067,7 @@ EXTERN_C const IID IID_IMediaSample;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IMediaSampleVtbl
     {
@@ -3160,68 +3160,68 @@ EXTERN_C const IID IID_IMediaSample;
 #ifdef COBJMACROS
 
 
-#define IMediaSample_QueryInterface(This,riid,ppvObject)	\
+#define IMediaSample_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IMediaSample_AddRef(This)	\
+#define IMediaSample_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IMediaSample_Release(This)	\
+#define IMediaSample_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IMediaSample_GetPointer(This,ppBuffer)	\
+#define IMediaSample_GetPointer(This,ppBuffer)    \
     (This)->lpVtbl -> GetPointer(This,ppBuffer)
 
-#define IMediaSample_GetSize(This)	\
+#define IMediaSample_GetSize(This)    \
     (This)->lpVtbl -> GetSize(This)
 
-#define IMediaSample_GetTime(This,pTimeStart,pTimeEnd)	\
+#define IMediaSample_GetTime(This,pTimeStart,pTimeEnd)    \
     (This)->lpVtbl -> GetTime(This,pTimeStart,pTimeEnd)
 
-#define IMediaSample_SetTime(This,pTimeStart,pTimeEnd)	\
+#define IMediaSample_SetTime(This,pTimeStart,pTimeEnd)    \
     (This)->lpVtbl -> SetTime(This,pTimeStart,pTimeEnd)
 
-#define IMediaSample_IsSyncPoint(This)	\
+#define IMediaSample_IsSyncPoint(This)    \
     (This)->lpVtbl -> IsSyncPoint(This)
 
-#define IMediaSample_SetSyncPoint(This,bIsSyncPoint)	\
+#define IMediaSample_SetSyncPoint(This,bIsSyncPoint)    \
     (This)->lpVtbl -> SetSyncPoint(This,bIsSyncPoint)
 
-#define IMediaSample_IsPreroll(This)	\
+#define IMediaSample_IsPreroll(This)    \
     (This)->lpVtbl -> IsPreroll(This)
 
-#define IMediaSample_SetPreroll(This,bIsPreroll)	\
+#define IMediaSample_SetPreroll(This,bIsPreroll)    \
     (This)->lpVtbl -> SetPreroll(This,bIsPreroll)
 
-#define IMediaSample_GetActualDataLength(This)	\
+#define IMediaSample_GetActualDataLength(This)    \
     (This)->lpVtbl -> GetActualDataLength(This)
 
-#define IMediaSample_SetActualDataLength(This,__MIDL_0010)	\
+#define IMediaSample_SetActualDataLength(This,__MIDL_0010)    \
     (This)->lpVtbl -> SetActualDataLength(This,__MIDL_0010)
 
-#define IMediaSample_GetMediaType(This,ppMediaType)	\
+#define IMediaSample_GetMediaType(This,ppMediaType)    \
     (This)->lpVtbl -> GetMediaType(This,ppMediaType)
 
-#define IMediaSample_SetMediaType(This,pMediaType)	\
+#define IMediaSample_SetMediaType(This,pMediaType)    \
     (This)->lpVtbl -> SetMediaType(This,pMediaType)
 
-#define IMediaSample_IsDiscontinuity(This)	\
+#define IMediaSample_IsDiscontinuity(This)    \
     (This)->lpVtbl -> IsDiscontinuity(This)
 
-#define IMediaSample_SetDiscontinuity(This,bDiscontinuity)	\
+#define IMediaSample_SetDiscontinuity(This,bDiscontinuity)    \
     (This)->lpVtbl -> SetDiscontinuity(This,bDiscontinuity)
 
-#define IMediaSample_GetMediaTime(This,pTimeStart,pTimeEnd)	\
+#define IMediaSample_GetMediaTime(This,pTimeStart,pTimeEnd)    \
     (This)->lpVtbl -> GetMediaTime(This,pTimeStart,pTimeEnd)
 
-#define IMediaSample_SetMediaTime(This,pTimeStart,pTimeEnd)	\
+#define IMediaSample_SetMediaTime(This,pTimeStart,pTimeEnd)    \
     (This)->lpVtbl -> SetMediaTime(This,pTimeStart,pTimeEnd)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -3417,7 +3417,7 @@ void __RPC_STUB IMediaSample_SetMediaTime_Stub(
 
 
 
-#endif 	/* __IMediaSample_INTERFACE_DEFINED__ */
+#endif     /* __IMediaSample_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0123 */
@@ -3427,17 +3427,17 @@ typedef IMediaSample *PMEDIASAMPLE;
 
 
 enum tagAM_SAMPLE_PROPERTY_FLAGS
-    {	AM_SAMPLE_SPLICEPOINT	= 0x1,
-	AM_SAMPLE_PREROLL	= 0x2,
-	AM_SAMPLE_DATADISCONTINUITY	= 0x4,
-	AM_SAMPLE_TYPECHANGED	= 0x8,
-	AM_SAMPLE_TIMEVALID	= 0x10,
-	AM_SAMPLE_TIMEDISCONTINUITY	= 0x40,
-	AM_SAMPLE_FLUSH_ON_PAUSE	= 0x80,
-	AM_SAMPLE_STOPVALID	= 0x100,
-	AM_SAMPLE_ENDOFSTREAM	= 0x200,
-	AM_STREAM_MEDIA	= 0,
-	AM_STREAM_CONTROL	= 1
+    {    AM_SAMPLE_SPLICEPOINT    = 0x1,
+    AM_SAMPLE_PREROLL    = 0x2,
+    AM_SAMPLE_DATADISCONTINUITY    = 0x4,
+    AM_SAMPLE_TYPECHANGED    = 0x8,
+    AM_SAMPLE_TIMEVALID    = 0x10,
+    AM_SAMPLE_TIMEDISCONTINUITY    = 0x40,
+    AM_SAMPLE_FLUSH_ON_PAUSE    = 0x80,
+    AM_SAMPLE_STOPVALID    = 0x100,
+    AM_SAMPLE_ENDOFSTREAM    = 0x200,
+    AM_STREAM_MEDIA    = 0,
+    AM_STREAM_CONTROL    = 1
     } ;
 typedef struct tagAM_SAMPLE2_PROPERTIES
     {
@@ -3451,7 +3451,7 @@ typedef struct tagAM_SAMPLE2_PROPERTIES
     AM_MEDIA_TYPE *pMediaType;
     BYTE *pbBuffer;
     LONG cbBuffer;
-    } 	AM_SAMPLE2_PROPERTIES;
+    }     AM_SAMPLE2_PROPERTIES;
 
 
 
@@ -3483,7 +3483,7 @@ EXTERN_C const IID IID_IMediaSample2;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IMediaSample2Vtbl
     {
@@ -3586,75 +3586,75 @@ EXTERN_C const IID IID_IMediaSample2;
 #ifdef COBJMACROS
 
 
-#define IMediaSample2_QueryInterface(This,riid,ppvObject)	\
+#define IMediaSample2_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IMediaSample2_AddRef(This)	\
+#define IMediaSample2_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IMediaSample2_Release(This)	\
+#define IMediaSample2_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IMediaSample2_GetPointer(This,ppBuffer)	\
+#define IMediaSample2_GetPointer(This,ppBuffer)    \
     (This)->lpVtbl -> GetPointer(This,ppBuffer)
 
-#define IMediaSample2_GetSize(This)	\
+#define IMediaSample2_GetSize(This)    \
     (This)->lpVtbl -> GetSize(This)
 
-#define IMediaSample2_GetTime(This,pTimeStart,pTimeEnd)	\
+#define IMediaSample2_GetTime(This,pTimeStart,pTimeEnd)    \
     (This)->lpVtbl -> GetTime(This,pTimeStart,pTimeEnd)
 
-#define IMediaSample2_SetTime(This,pTimeStart,pTimeEnd)	\
+#define IMediaSample2_SetTime(This,pTimeStart,pTimeEnd)    \
     (This)->lpVtbl -> SetTime(This,pTimeStart,pTimeEnd)
 
-#define IMediaSample2_IsSyncPoint(This)	\
+#define IMediaSample2_IsSyncPoint(This)    \
     (This)->lpVtbl -> IsSyncPoint(This)
 
-#define IMediaSample2_SetSyncPoint(This,bIsSyncPoint)	\
+#define IMediaSample2_SetSyncPoint(This,bIsSyncPoint)    \
     (This)->lpVtbl -> SetSyncPoint(This,bIsSyncPoint)
 
-#define IMediaSample2_IsPreroll(This)	\
+#define IMediaSample2_IsPreroll(This)    \
     (This)->lpVtbl -> IsPreroll(This)
 
-#define IMediaSample2_SetPreroll(This,bIsPreroll)	\
+#define IMediaSample2_SetPreroll(This,bIsPreroll)    \
     (This)->lpVtbl -> SetPreroll(This,bIsPreroll)
 
-#define IMediaSample2_GetActualDataLength(This)	\
+#define IMediaSample2_GetActualDataLength(This)    \
     (This)->lpVtbl -> GetActualDataLength(This)
 
-#define IMediaSample2_SetActualDataLength(This,__MIDL_0010)	\
+#define IMediaSample2_SetActualDataLength(This,__MIDL_0010)    \
     (This)->lpVtbl -> SetActualDataLength(This,__MIDL_0010)
 
-#define IMediaSample2_GetMediaType(This,ppMediaType)	\
+#define IMediaSample2_GetMediaType(This,ppMediaType)    \
     (This)->lpVtbl -> GetMediaType(This,ppMediaType)
 
-#define IMediaSample2_SetMediaType(This,pMediaType)	\
+#define IMediaSample2_SetMediaType(This,pMediaType)    \
     (This)->lpVtbl -> SetMediaType(This,pMediaType)
 
-#define IMediaSample2_IsDiscontinuity(This)	\
+#define IMediaSample2_IsDiscontinuity(This)    \
     (This)->lpVtbl -> IsDiscontinuity(This)
 
-#define IMediaSample2_SetDiscontinuity(This,bDiscontinuity)	\
+#define IMediaSample2_SetDiscontinuity(This,bDiscontinuity)    \
     (This)->lpVtbl -> SetDiscontinuity(This,bDiscontinuity)
 
-#define IMediaSample2_GetMediaTime(This,pTimeStart,pTimeEnd)	\
+#define IMediaSample2_GetMediaTime(This,pTimeStart,pTimeEnd)    \
     (This)->lpVtbl -> GetMediaTime(This,pTimeStart,pTimeEnd)
 
-#define IMediaSample2_SetMediaTime(This,pTimeStart,pTimeEnd)	\
+#define IMediaSample2_SetMediaTime(This,pTimeStart,pTimeEnd)    \
     (This)->lpVtbl -> SetMediaTime(This,pTimeStart,pTimeEnd)
 
 
-#define IMediaSample2_GetProperties(This,cbProperties,pbProperties)	\
+#define IMediaSample2_GetProperties(This,cbProperties,pbProperties)    \
     (This)->lpVtbl -> GetProperties(This,cbProperties,pbProperties)
 
-#define IMediaSample2_SetProperties(This,cbProperties,pbProperties)	\
+#define IMediaSample2_SetProperties(This,cbProperties,pbProperties)    \
     (This)->lpVtbl -> SetProperties(This,cbProperties,pbProperties)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -3685,7 +3685,7 @@ void __RPC_STUB IMediaSample2_SetProperties_Stub(
 
 
 
-#endif 	/* __IMediaSample2_INTERFACE_DEFINED__ */
+#endif     /* __IMediaSample2_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0124 */
@@ -3739,7 +3739,7 @@ EXTERN_C const IID IID_IMemAllocator;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IMemAllocatorVtbl
     {
@@ -3795,38 +3795,38 @@ EXTERN_C const IID IID_IMemAllocator;
 #ifdef COBJMACROS
 
 
-#define IMemAllocator_QueryInterface(This,riid,ppvObject)	\
+#define IMemAllocator_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IMemAllocator_AddRef(This)	\
+#define IMemAllocator_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IMemAllocator_Release(This)	\
+#define IMemAllocator_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IMemAllocator_SetProperties(This,pRequest,pActual)	\
+#define IMemAllocator_SetProperties(This,pRequest,pActual)    \
     (This)->lpVtbl -> SetProperties(This,pRequest,pActual)
 
-#define IMemAllocator_GetProperties(This,pProps)	\
+#define IMemAllocator_GetProperties(This,pProps)    \
     (This)->lpVtbl -> GetProperties(This,pProps)
 
-#define IMemAllocator_Commit(This)	\
+#define IMemAllocator_Commit(This)    \
     (This)->lpVtbl -> Commit(This)
 
-#define IMemAllocator_Decommit(This)	\
+#define IMemAllocator_Decommit(This)    \
     (This)->lpVtbl -> Decommit(This)
 
-#define IMemAllocator_GetBuffer(This,ppBuffer,pStartTime,pEndTime,dwFlags)	\
+#define IMemAllocator_GetBuffer(This,ppBuffer,pStartTime,pEndTime,dwFlags)    \
     (This)->lpVtbl -> GetBuffer(This,ppBuffer,pStartTime,pEndTime,dwFlags)
 
-#define IMemAllocator_ReleaseBuffer(This,pBuffer)	\
+#define IMemAllocator_ReleaseBuffer(This,pBuffer)    \
     (This)->lpVtbl -> ReleaseBuffer(This,pBuffer)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -3905,7 +3905,7 @@ void __RPC_STUB IMemAllocator_ReleaseBuffer_Stub(
 
 
 
-#endif 	/* __IMemAllocator_INTERFACE_DEFINED__ */
+#endif     /* __IMemAllocator_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0125 */
@@ -3941,7 +3941,7 @@ EXTERN_C const IID IID_IMemAllocatorCallbackTemp;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IMemAllocatorCallbackTempVtbl
     {
@@ -4005,45 +4005,45 @@ EXTERN_C const IID IID_IMemAllocatorCallbackTemp;
 #ifdef COBJMACROS
 
 
-#define IMemAllocatorCallbackTemp_QueryInterface(This,riid,ppvObject)	\
+#define IMemAllocatorCallbackTemp_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IMemAllocatorCallbackTemp_AddRef(This)	\
+#define IMemAllocatorCallbackTemp_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IMemAllocatorCallbackTemp_Release(This)	\
+#define IMemAllocatorCallbackTemp_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IMemAllocatorCallbackTemp_SetProperties(This,pRequest,pActual)	\
+#define IMemAllocatorCallbackTemp_SetProperties(This,pRequest,pActual)    \
     (This)->lpVtbl -> SetProperties(This,pRequest,pActual)
 
-#define IMemAllocatorCallbackTemp_GetProperties(This,pProps)	\
+#define IMemAllocatorCallbackTemp_GetProperties(This,pProps)    \
     (This)->lpVtbl -> GetProperties(This,pProps)
 
-#define IMemAllocatorCallbackTemp_Commit(This)	\
+#define IMemAllocatorCallbackTemp_Commit(This)    \
     (This)->lpVtbl -> Commit(This)
 
-#define IMemAllocatorCallbackTemp_Decommit(This)	\
+#define IMemAllocatorCallbackTemp_Decommit(This)    \
     (This)->lpVtbl -> Decommit(This)
 
-#define IMemAllocatorCallbackTemp_GetBuffer(This,ppBuffer,pStartTime,pEndTime,dwFlags)	\
+#define IMemAllocatorCallbackTemp_GetBuffer(This,ppBuffer,pStartTime,pEndTime,dwFlags)    \
     (This)->lpVtbl -> GetBuffer(This,ppBuffer,pStartTime,pEndTime,dwFlags)
 
-#define IMemAllocatorCallbackTemp_ReleaseBuffer(This,pBuffer)	\
+#define IMemAllocatorCallbackTemp_ReleaseBuffer(This,pBuffer)    \
     (This)->lpVtbl -> ReleaseBuffer(This,pBuffer)
 
 
-#define IMemAllocatorCallbackTemp_SetNotify(This,pNotify)	\
+#define IMemAllocatorCallbackTemp_SetNotify(This,pNotify)    \
     (This)->lpVtbl -> SetNotify(This,pNotify)
 
-#define IMemAllocatorCallbackTemp_GetFreeCount(This,plBuffersFree)	\
+#define IMemAllocatorCallbackTemp_GetFreeCount(This,plBuffersFree)    \
     (This)->lpVtbl -> GetFreeCount(This,plBuffersFree)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -4072,7 +4072,7 @@ void __RPC_STUB IMemAllocatorCallbackTemp_GetFreeCount_Stub(
 
 
 
-#endif 	/* __IMemAllocatorCallbackTemp_INTERFACE_DEFINED__ */
+#endif     /* __IMemAllocatorCallbackTemp_INTERFACE_DEFINED__ */
 
 
 #ifndef __IMemAllocatorNotifyCallbackTemp_INTERFACE_DEFINED__
@@ -4094,7 +4094,7 @@ EXTERN_C const IID IID_IMemAllocatorNotifyCallbackTemp;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IMemAllocatorNotifyCallbackTempVtbl
     {
@@ -4127,23 +4127,23 @@ EXTERN_C const IID IID_IMemAllocatorNotifyCallbackTemp;
 #ifdef COBJMACROS
 
 
-#define IMemAllocatorNotifyCallbackTemp_QueryInterface(This,riid,ppvObject)	\
+#define IMemAllocatorNotifyCallbackTemp_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IMemAllocatorNotifyCallbackTemp_AddRef(This)	\
+#define IMemAllocatorNotifyCallbackTemp_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IMemAllocatorNotifyCallbackTemp_Release(This)	\
+#define IMemAllocatorNotifyCallbackTemp_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IMemAllocatorNotifyCallbackTemp_NotifyRelease(This)	\
+#define IMemAllocatorNotifyCallbackTemp_NotifyRelease(This)    \
     (This)->lpVtbl -> NotifyRelease(This)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -4159,7 +4159,7 @@ void __RPC_STUB IMemAllocatorNotifyCallbackTemp_NotifyRelease_Stub(
 
 
 
-#endif 	/* __IMemAllocatorNotifyCallbackTemp_INTERFACE_DEFINED__ */
+#endif     /* __IMemAllocatorNotifyCallbackTemp_INTERFACE_DEFINED__ */
 
 
 #ifndef __IMemInputPin_INTERFACE_DEFINED__
@@ -4199,7 +4199,7 @@ EXTERN_C const IID IID_IMemInputPin;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IMemInputPinVtbl
     {
@@ -4255,38 +4255,38 @@ EXTERN_C const IID IID_IMemInputPin;
 #ifdef COBJMACROS
 
 
-#define IMemInputPin_QueryInterface(This,riid,ppvObject)	\
+#define IMemInputPin_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IMemInputPin_AddRef(This)	\
+#define IMemInputPin_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IMemInputPin_Release(This)	\
+#define IMemInputPin_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IMemInputPin_GetAllocator(This,ppAllocator)	\
+#define IMemInputPin_GetAllocator(This,ppAllocator)    \
     (This)->lpVtbl -> GetAllocator(This,ppAllocator)
 
-#define IMemInputPin_NotifyAllocator(This,pAllocator,bReadOnly)	\
+#define IMemInputPin_NotifyAllocator(This,pAllocator,bReadOnly)    \
     (This)->lpVtbl -> NotifyAllocator(This,pAllocator,bReadOnly)
 
-#define IMemInputPin_GetAllocatorRequirements(This,pProps)	\
+#define IMemInputPin_GetAllocatorRequirements(This,pProps)    \
     (This)->lpVtbl -> GetAllocatorRequirements(This,pProps)
 
-#define IMemInputPin_Receive(This,pSample)	\
+#define IMemInputPin_Receive(This,pSample)    \
     (This)->lpVtbl -> Receive(This,pSample)
 
-#define IMemInputPin_ReceiveMultiple(This,pSamples,nSamples,nSamplesProcessed)	\
+#define IMemInputPin_ReceiveMultiple(This,pSamples,nSamples,nSamplesProcessed)    \
     (This)->lpVtbl -> ReceiveMultiple(This,pSamples,nSamples,nSamplesProcessed)
 
-#define IMemInputPin_ReceiveCanBlock(This)	\
+#define IMemInputPin_ReceiveCanBlock(This)    \
     (This)->lpVtbl -> ReceiveCanBlock(This)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -4365,7 +4365,7 @@ void __RPC_STUB IMemInputPin_ReceiveCanBlock_Stub(
 
 
 
-#endif 	/* __IMemInputPin_INTERFACE_DEFINED__ */
+#endif     /* __IMemInputPin_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0128 */
@@ -4399,7 +4399,7 @@ EXTERN_C const IID IID_IAMovieSetup;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IAMovieSetupVtbl
     {
@@ -4435,26 +4435,26 @@ EXTERN_C const IID IID_IAMovieSetup;
 #ifdef COBJMACROS
 
 
-#define IAMovieSetup_QueryInterface(This,riid,ppvObject)	\
+#define IAMovieSetup_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IAMovieSetup_AddRef(This)	\
+#define IAMovieSetup_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IAMovieSetup_Release(This)	\
+#define IAMovieSetup_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IAMovieSetup_Register(This)	\
+#define IAMovieSetup_Register(This)    \
     (This)->lpVtbl -> Register(This)
 
-#define IAMovieSetup_Unregister(This)	\
+#define IAMovieSetup_Unregister(This)    \
     (This)->lpVtbl -> Unregister(This)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -4481,7 +4481,7 @@ void __RPC_STUB IAMovieSetup_Unregister_Stub(
 
 
 
-#endif 	/* __IAMovieSetup_INTERFACE_DEFINED__ */
+#endif     /* __IAMovieSetup_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0129 */
@@ -4491,29 +4491,29 @@ typedef IAMovieSetup *PAMOVIESETUP;
 
 typedef
 enum AM_SEEKING_SeekingFlags
-    {	AM_SEEKING_NoPositioning	= 0,
-	AM_SEEKING_AbsolutePositioning	= 0x1,
-	AM_SEEKING_RelativePositioning	= 0x2,
-	AM_SEEKING_IncrementalPositioning	= 0x3,
-	AM_SEEKING_PositioningBitsMask	= 0x3,
-	AM_SEEKING_SeekToKeyFrame	= 0x4,
-	AM_SEEKING_ReturnTime	= 0x8,
-	AM_SEEKING_Segment	= 0x10,
-	AM_SEEKING_NoFlush	= 0x20
-    } 	AM_SEEKING_SEEKING_FLAGS;
+    {    AM_SEEKING_NoPositioning    = 0,
+    AM_SEEKING_AbsolutePositioning    = 0x1,
+    AM_SEEKING_RelativePositioning    = 0x2,
+    AM_SEEKING_IncrementalPositioning    = 0x3,
+    AM_SEEKING_PositioningBitsMask    = 0x3,
+    AM_SEEKING_SeekToKeyFrame    = 0x4,
+    AM_SEEKING_ReturnTime    = 0x8,
+    AM_SEEKING_Segment    = 0x10,
+    AM_SEEKING_NoFlush    = 0x20
+    }     AM_SEEKING_SEEKING_FLAGS;
 
 typedef
 enum AM_SEEKING_SeekingCapabilities
-    {	AM_SEEKING_CanSeekAbsolute	= 0x1,
-	AM_SEEKING_CanSeekForwards	= 0x2,
-	AM_SEEKING_CanSeekBackwards	= 0x4,
-	AM_SEEKING_CanGetCurrentPos	= 0x8,
-	AM_SEEKING_CanGetStopPos	= 0x10,
-	AM_SEEKING_CanGetDuration	= 0x20,
-	AM_SEEKING_CanPlayBackwards	= 0x40,
-	AM_SEEKING_CanDoSegments	= 0x80,
-	AM_SEEKING_Source	= 0x100
-    } 	AM_SEEKING_SEEKING_CAPABILITIES;
+    {    AM_SEEKING_CanSeekAbsolute    = 0x1,
+    AM_SEEKING_CanSeekForwards    = 0x2,
+    AM_SEEKING_CanSeekBackwards    = 0x4,
+    AM_SEEKING_CanGetCurrentPos    = 0x8,
+    AM_SEEKING_CanGetStopPos    = 0x10,
+    AM_SEEKING_CanGetDuration    = 0x20,
+    AM_SEEKING_CanPlayBackwards    = 0x40,
+    AM_SEEKING_CanDoSegments    = 0x80,
+    AM_SEEKING_Source    = 0x100
+    }     AM_SEEKING_SEEKING_CAPABILITIES;
 
 
 
@@ -4596,7 +4596,7 @@ EXTERN_C const IID IID_IMediaSeeking;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IMediaSeekingVtbl
     {
@@ -4702,71 +4702,71 @@ EXTERN_C const IID IID_IMediaSeeking;
 #ifdef COBJMACROS
 
 
-#define IMediaSeeking_QueryInterface(This,riid,ppvObject)	\
+#define IMediaSeeking_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IMediaSeeking_AddRef(This)	\
+#define IMediaSeeking_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IMediaSeeking_Release(This)	\
+#define IMediaSeeking_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IMediaSeeking_GetCapabilities(This,pCapabilities)	\
+#define IMediaSeeking_GetCapabilities(This,pCapabilities)    \
     (This)->lpVtbl -> GetCapabilities(This,pCapabilities)
 
-#define IMediaSeeking_CheckCapabilities(This,pCapabilities)	\
+#define IMediaSeeking_CheckCapabilities(This,pCapabilities)    \
     (This)->lpVtbl -> CheckCapabilities(This,pCapabilities)
 
-#define IMediaSeeking_IsFormatSupported(This,pFormat)	\
+#define IMediaSeeking_IsFormatSupported(This,pFormat)    \
     (This)->lpVtbl -> IsFormatSupported(This,pFormat)
 
-#define IMediaSeeking_QueryPreferredFormat(This,pFormat)	\
+#define IMediaSeeking_QueryPreferredFormat(This,pFormat)    \
     (This)->lpVtbl -> QueryPreferredFormat(This,pFormat)
 
-#define IMediaSeeking_GetTimeFormat(This,pFormat)	\
+#define IMediaSeeking_GetTimeFormat(This,pFormat)    \
     (This)->lpVtbl -> GetTimeFormat(This,pFormat)
 
-#define IMediaSeeking_IsUsingTimeFormat(This,pFormat)	\
+#define IMediaSeeking_IsUsingTimeFormat(This,pFormat)    \
     (This)->lpVtbl -> IsUsingTimeFormat(This,pFormat)
 
-#define IMediaSeeking_SetTimeFormat(This,pFormat)	\
+#define IMediaSeeking_SetTimeFormat(This,pFormat)    \
     (This)->lpVtbl -> SetTimeFormat(This,pFormat)
 
-#define IMediaSeeking_GetDuration(This,pDuration)	\
+#define IMediaSeeking_GetDuration(This,pDuration)    \
     (This)->lpVtbl -> GetDuration(This,pDuration)
 
-#define IMediaSeeking_GetStopPosition(This,pStop)	\
+#define IMediaSeeking_GetStopPosition(This,pStop)    \
     (This)->lpVtbl -> GetStopPosition(This,pStop)
 
-#define IMediaSeeking_GetCurrentPosition(This,pCurrent)	\
+#define IMediaSeeking_GetCurrentPosition(This,pCurrent)    \
     (This)->lpVtbl -> GetCurrentPosition(This,pCurrent)
 
-#define IMediaSeeking_ConvertTimeFormat(This,pTarget,pTargetFormat,Source,pSourceFormat)	\
+#define IMediaSeeking_ConvertTimeFormat(This,pTarget,pTargetFormat,Source,pSourceFormat)    \
     (This)->lpVtbl -> ConvertTimeFormat(This,pTarget,pTargetFormat,Source,pSourceFormat)
 
-#define IMediaSeeking_SetPositions(This,pCurrent,dwCurrentFlags,pStop,dwStopFlags)	\
+#define IMediaSeeking_SetPositions(This,pCurrent,dwCurrentFlags,pStop,dwStopFlags)    \
     (This)->lpVtbl -> SetPositions(This,pCurrent,dwCurrentFlags,pStop,dwStopFlags)
 
-#define IMediaSeeking_GetPositions(This,pCurrent,pStop)	\
+#define IMediaSeeking_GetPositions(This,pCurrent,pStop)    \
     (This)->lpVtbl -> GetPositions(This,pCurrent,pStop)
 
-#define IMediaSeeking_GetAvailable(This,pEarliest,pLatest)	\
+#define IMediaSeeking_GetAvailable(This,pEarliest,pLatest)    \
     (This)->lpVtbl -> GetAvailable(This,pEarliest,pLatest)
 
-#define IMediaSeeking_SetRate(This,dRate)	\
+#define IMediaSeeking_SetRate(This,dRate)    \
     (This)->lpVtbl -> SetRate(This,dRate)
 
-#define IMediaSeeking_GetRate(This,pdRate)	\
+#define IMediaSeeking_GetRate(This,pdRate)    \
     (This)->lpVtbl -> GetRate(This,pdRate)
 
-#define IMediaSeeking_GetPreroll(This,pllPreroll)	\
+#define IMediaSeeking_GetPreroll(This,pllPreroll)    \
     (This)->lpVtbl -> GetPreroll(This,pllPreroll)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -4983,7 +4983,7 @@ void __RPC_STUB IMediaSeeking_GetPreroll_Stub(
 
 
 
-#endif 	/* __IMediaSeeking_INTERFACE_DEFINED__ */
+#endif     /* __IMediaSeeking_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0130 */
@@ -5055,7 +5055,7 @@ typedef /* [public][public] */ struct __MIDL___MIDL_itf_strmif_0130_0001
     {
     CLSID Clsid;
     LPWSTR Name;
-    } 	REGFILTER;
+    }     REGFILTER;
 
 
 
@@ -5092,7 +5092,7 @@ EXTERN_C const IID IID_IEnumRegFilters;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IEnumRegFiltersVtbl
     {
@@ -5139,32 +5139,32 @@ EXTERN_C const IID IID_IEnumRegFilters;
 #ifdef COBJMACROS
 
 
-#define IEnumRegFilters_QueryInterface(This,riid,ppvObject)	\
+#define IEnumRegFilters_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IEnumRegFilters_AddRef(This)	\
+#define IEnumRegFilters_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IEnumRegFilters_Release(This)	\
+#define IEnumRegFilters_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IEnumRegFilters_Next(This,cFilters,apRegFilter,pcFetched)	\
+#define IEnumRegFilters_Next(This,cFilters,apRegFilter,pcFetched)    \
     (This)->lpVtbl -> Next(This,cFilters,apRegFilter,pcFetched)
 
-#define IEnumRegFilters_Skip(This,cFilters)	\
+#define IEnumRegFilters_Skip(This,cFilters)    \
     (This)->lpVtbl -> Skip(This,cFilters)
 
-#define IEnumRegFilters_Reset(This)	\
+#define IEnumRegFilters_Reset(This)    \
     (This)->lpVtbl -> Reset(This)
 
-#define IEnumRegFilters_Clone(This,ppEnum)	\
+#define IEnumRegFilters_Clone(This,ppEnum)    \
     (This)->lpVtbl -> Clone(This,ppEnum)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -5218,7 +5218,7 @@ void __RPC_STUB IEnumRegFilters_Clone_Stub(
 
 
 
-#endif 	/* __IEnumRegFilters_INTERFACE_DEFINED__ */
+#endif     /* __IEnumRegFilters_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0132 */
@@ -5239,12 +5239,12 @@ extern RPC_IF_HANDLE __MIDL_itf_strmif_0132_v0_0_s_ifspec;
 
 
 enum __MIDL_IFilterMapper_0001
-    {	MERIT_PREFERRED	= 0x800000,
-	MERIT_NORMAL	= 0x600000,
-	MERIT_UNLIKELY	= 0x400000,
-	MERIT_DO_NOT_USE	= 0x200000,
-	MERIT_SW_COMPRESSOR	= 0x100000,
-	MERIT_HW_COMPRESSOR	= 0x100050
+    {    MERIT_PREFERRED    = 0x800000,
+    MERIT_NORMAL    = 0x600000,
+    MERIT_UNLIKELY    = 0x400000,
+    MERIT_DO_NOT_USE    = 0x200000,
+    MERIT_SW_COMPRESSOR    = 0x100000,
+    MERIT_HW_COMPRESSOR    = 0x100050
     } ;
 
 EXTERN_C const IID IID_IFilterMapper;
@@ -5304,7 +5304,7 @@ EXTERN_C const IID IID_IFilterMapper;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IFilterMapperVtbl
     {
@@ -5389,44 +5389,44 @@ EXTERN_C const IID IID_IFilterMapper;
 #ifdef COBJMACROS
 
 
-#define IFilterMapper_QueryInterface(This,riid,ppvObject)	\
+#define IFilterMapper_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IFilterMapper_AddRef(This)	\
+#define IFilterMapper_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IFilterMapper_Release(This)	\
+#define IFilterMapper_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IFilterMapper_RegisterFilter(This,clsid,Name,dwMerit)	\
+#define IFilterMapper_RegisterFilter(This,clsid,Name,dwMerit)    \
     (This)->lpVtbl -> RegisterFilter(This,clsid,Name,dwMerit)
 
-#define IFilterMapper_RegisterFilterInstance(This,clsid,Name,MRId)	\
+#define IFilterMapper_RegisterFilterInstance(This,clsid,Name,MRId)    \
     (This)->lpVtbl -> RegisterFilterInstance(This,clsid,Name,MRId)
 
-#define IFilterMapper_RegisterPin(This,Filter,Name,bRendered,bOutput,bZero,bMany,ConnectsToFilter,ConnectsToPin)	\
+#define IFilterMapper_RegisterPin(This,Filter,Name,bRendered,bOutput,bZero,bMany,ConnectsToFilter,ConnectsToPin)    \
     (This)->lpVtbl -> RegisterPin(This,Filter,Name,bRendered,bOutput,bZero,bMany,ConnectsToFilter,ConnectsToPin)
 
-#define IFilterMapper_RegisterPinType(This,clsFilter,strName,clsMajorType,clsSubType)	\
+#define IFilterMapper_RegisterPinType(This,clsFilter,strName,clsMajorType,clsSubType)    \
     (This)->lpVtbl -> RegisterPinType(This,clsFilter,strName,clsMajorType,clsSubType)
 
-#define IFilterMapper_UnregisterFilter(This,Filter)	\
+#define IFilterMapper_UnregisterFilter(This,Filter)    \
     (This)->lpVtbl -> UnregisterFilter(This,Filter)
 
-#define IFilterMapper_UnregisterFilterInstance(This,MRId)	\
+#define IFilterMapper_UnregisterFilterInstance(This,MRId)    \
     (This)->lpVtbl -> UnregisterFilterInstance(This,MRId)
 
-#define IFilterMapper_UnregisterPin(This,Filter,Name)	\
+#define IFilterMapper_UnregisterPin(This,Filter,Name)    \
     (This)->lpVtbl -> UnregisterPin(This,Filter,Name)
 
-#define IFilterMapper_EnumMatchingFilters(This,ppEnum,dwMerit,bInputNeeded,clsInMaj,clsInSub,bRender,bOututNeeded,clsOutMaj,clsOutSub)	\
+#define IFilterMapper_EnumMatchingFilters(This,ppEnum,dwMerit,bInputNeeded,clsInMaj,clsInSub,bRender,bOututNeeded,clsOutMaj,clsOutSub)    \
     (This)->lpVtbl -> EnumMatchingFilters(This,ppEnum,dwMerit,bInputNeeded,clsInMaj,clsInSub,bRender,bOututNeeded,clsOutMaj,clsOutSub)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -5550,7 +5550,7 @@ void __RPC_STUB IFilterMapper_EnumMatchingFilters_Stub(
 
 
 
-#endif 	/* __IFilterMapper_INTERFACE_DEFINED__ */
+#endif     /* __IFilterMapper_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0134 */
@@ -5560,7 +5560,7 @@ typedef /* [public][public][public][public][public][public][public] */ struct __
     {
     const CLSID *clsMajorType;
     const CLSID *clsMinorType;
-    } 	REGPINTYPES;
+    }     REGPINTYPES;
 
 typedef /* [public][public][public] */ struct __MIDL___MIDL_itf_strmif_0134_0002
     {
@@ -5573,21 +5573,21 @@ typedef /* [public][public][public] */ struct __MIDL___MIDL_itf_strmif_0134_0002
     const WCHAR *strConnectsToPin;
     UINT nMediaTypes;
     const REGPINTYPES *lpMediaType;
-    } 	REGFILTERPINS;
+    }     REGFILTERPINS;
 
 typedef /* [public][public][public][public][public][public] */ struct __MIDL___MIDL_itf_strmif_0134_0003
     {
     CLSID clsMedium;
     DWORD dw1;
     DWORD dw2;
-    } 	REGPINMEDIUM;
+    }     REGPINMEDIUM;
 
 
 enum __MIDL___MIDL_itf_strmif_0134_0004
-    {	REG_PINFLAG_B_ZERO	= 0x1,
-	REG_PINFLAG_B_RENDERER	= 0x2,
-	REG_PINFLAG_B_MANY	= 0x4,
-	REG_PINFLAG_B_OUTPUT	= 0x8
+    {    REG_PINFLAG_B_ZERO    = 0x1,
+    REG_PINFLAG_B_RENDERER    = 0x2,
+    REG_PINFLAG_B_MANY    = 0x4,
+    REG_PINFLAG_B_OUTPUT    = 0x8
     } ;
 typedef /* [public][public][public] */ struct __MIDL___MIDL_itf_strmif_0134_0005
     {
@@ -5598,7 +5598,7 @@ typedef /* [public][public][public] */ struct __MIDL___MIDL_itf_strmif_0134_0005
     UINT nMediums;
     /* [size_is] */ const REGPINMEDIUM *lpMedium;
     const CLSID *clsPinCategory;
-    } 	REGFILTERPINS2;
+    }     REGFILTERPINS2;
 
 typedef /* [public][public] */ struct __MIDL___MIDL_itf_strmif_0134_0006
     {
@@ -5610,15 +5610,15 @@ typedef /* [public][public] */ struct __MIDL___MIDL_itf_strmif_0134_0006
             {
             ULONG cPins;
             /* [size_is] */ const REGFILTERPINS *rgPins;
-            } 	;
+            }     ;
         /* [case()] */ struct
             {
             ULONG cPins2;
             /* [size_is] */ const REGFILTERPINS2 *rgPins2;
-            } 	;
+            }     ;
         /* [default] */  /* Empty union arm */
-        } 	;
-    } 	REGFILTER2;
+        }     ;
+    }     REGFILTER2;
 
 
 
@@ -5677,7 +5677,7 @@ EXTERN_C const IID IID_IFilterMapper2;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IFilterMapper2Vtbl
     {
@@ -5746,32 +5746,32 @@ EXTERN_C const IID IID_IFilterMapper2;
 #ifdef COBJMACROS
 
 
-#define IFilterMapper2_QueryInterface(This,riid,ppvObject)	\
+#define IFilterMapper2_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IFilterMapper2_AddRef(This)	\
+#define IFilterMapper2_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IFilterMapper2_Release(This)	\
+#define IFilterMapper2_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IFilterMapper2_CreateCategory(This,clsidCategory,dwCategoryMerit,Description)	\
+#define IFilterMapper2_CreateCategory(This,clsidCategory,dwCategoryMerit,Description)    \
     (This)->lpVtbl -> CreateCategory(This,clsidCategory,dwCategoryMerit,Description)
 
-#define IFilterMapper2_UnregisterFilter(This,pclsidCategory,szInstance,Filter)	\
+#define IFilterMapper2_UnregisterFilter(This,pclsidCategory,szInstance,Filter)    \
     (This)->lpVtbl -> UnregisterFilter(This,pclsidCategory,szInstance,Filter)
 
-#define IFilterMapper2_RegisterFilter(This,clsidFilter,Name,ppMoniker,pclsidCategory,szInstance,prf2)	\
+#define IFilterMapper2_RegisterFilter(This,clsidFilter,Name,ppMoniker,pclsidCategory,szInstance,prf2)    \
     (This)->lpVtbl -> RegisterFilter(This,clsidFilter,Name,ppMoniker,pclsidCategory,szInstance,prf2)
 
-#define IFilterMapper2_EnumMatchingFilters(This,ppEnum,dwFlags,bExactMatch,dwMerit,bInputNeeded,cInputTypes,pInputTypes,pMedIn,pPinCategoryIn,bRender,bOutputNeeded,cOutputTypes,pOutputTypes,pMedOut,pPinCategoryOut)	\
+#define IFilterMapper2_EnumMatchingFilters(This,ppEnum,dwFlags,bExactMatch,dwMerit,bInputNeeded,cInputTypes,pInputTypes,pMedIn,pPinCategoryIn,bRender,bOutputNeeded,cOutputTypes,pOutputTypes,pMedOut,pPinCategoryOut)    \
     (This)->lpVtbl -> EnumMatchingFilters(This,ppEnum,dwFlags,bExactMatch,dwMerit,bInputNeeded,cInputTypes,pInputTypes,pMedIn,pPinCategoryIn,bRender,bOutputNeeded,cOutputTypes,pOutputTypes,pMedOut,pPinCategoryOut)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -5847,7 +5847,7 @@ void __RPC_STUB IFilterMapper2_EnumMatchingFilters_Stub(
 
 
 
-#endif 	/* __IFilterMapper2_INTERFACE_DEFINED__ */
+#endif     /* __IFilterMapper2_INTERFACE_DEFINED__ */
 
 
 #ifndef __IFilterMapper3_INTERFACE_DEFINED__
@@ -5870,7 +5870,7 @@ EXTERN_C const IID IID_IFilterMapper3;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IFilterMapper3Vtbl
     {
@@ -5943,36 +5943,36 @@ EXTERN_C const IID IID_IFilterMapper3;
 #ifdef COBJMACROS
 
 
-#define IFilterMapper3_QueryInterface(This,riid,ppvObject)	\
+#define IFilterMapper3_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IFilterMapper3_AddRef(This)	\
+#define IFilterMapper3_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IFilterMapper3_Release(This)	\
+#define IFilterMapper3_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IFilterMapper3_CreateCategory(This,clsidCategory,dwCategoryMerit,Description)	\
+#define IFilterMapper3_CreateCategory(This,clsidCategory,dwCategoryMerit,Description)    \
     (This)->lpVtbl -> CreateCategory(This,clsidCategory,dwCategoryMerit,Description)
 
-#define IFilterMapper3_UnregisterFilter(This,pclsidCategory,szInstance,Filter)	\
+#define IFilterMapper3_UnregisterFilter(This,pclsidCategory,szInstance,Filter)    \
     (This)->lpVtbl -> UnregisterFilter(This,pclsidCategory,szInstance,Filter)
 
-#define IFilterMapper3_RegisterFilter(This,clsidFilter,Name,ppMoniker,pclsidCategory,szInstance,prf2)	\
+#define IFilterMapper3_RegisterFilter(This,clsidFilter,Name,ppMoniker,pclsidCategory,szInstance,prf2)    \
     (This)->lpVtbl -> RegisterFilter(This,clsidFilter,Name,ppMoniker,pclsidCategory,szInstance,prf2)
 
-#define IFilterMapper3_EnumMatchingFilters(This,ppEnum,dwFlags,bExactMatch,dwMerit,bInputNeeded,cInputTypes,pInputTypes,pMedIn,pPinCategoryIn,bRender,bOutputNeeded,cOutputTypes,pOutputTypes,pMedOut,pPinCategoryOut)	\
+#define IFilterMapper3_EnumMatchingFilters(This,ppEnum,dwFlags,bExactMatch,dwMerit,bInputNeeded,cInputTypes,pInputTypes,pMedIn,pPinCategoryIn,bRender,bOutputNeeded,cOutputTypes,pOutputTypes,pMedOut,pPinCategoryOut)    \
     (This)->lpVtbl -> EnumMatchingFilters(This,ppEnum,dwFlags,bExactMatch,dwMerit,bInputNeeded,cInputTypes,pInputTypes,pMedIn,pPinCategoryIn,bRender,bOutputNeeded,cOutputTypes,pOutputTypes,pMedOut,pPinCategoryOut)
 
 
-#define IFilterMapper3_GetICreateDevEnum(This,ppEnum)	\
+#define IFilterMapper3_GetICreateDevEnum(This,ppEnum)    \
     (This)->lpVtbl -> GetICreateDevEnum(This,ppEnum)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -5989,7 +5989,7 @@ void __RPC_STUB IFilterMapper3_GetICreateDevEnum_Stub(
 
 
 
-#endif 	/* __IFilterMapper3_INTERFACE_DEFINED__ */
+#endif     /* __IFilterMapper3_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0137 */
@@ -5997,9 +5997,9 @@ void __RPC_STUB IFilterMapper3_GetICreateDevEnum_Stub(
 
 typedef
 enum tagQualityMessageType
-    {	Famine	= 0,
-	Flood	= Famine + 1
-    } 	QualityMessageType;
+    {    Famine    = 0,
+    Flood    = Famine + 1
+    }     QualityMessageType;
 
 typedef struct tagQuality
     {
@@ -6007,7 +6007,7 @@ typedef struct tagQuality
     long Proportion;
     REFERENCE_TIME Late;
     REFERENCE_TIME TimeStamp;
-    } 	Quality;
+    }     Quality;
 
 typedef IQualityControl *PQUALITYCONTROL;
 
@@ -6040,7 +6040,7 @@ EXTERN_C const IID IID_IQualityControl;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IQualityControlVtbl
     {
@@ -6079,26 +6079,26 @@ EXTERN_C const IID IID_IQualityControl;
 #ifdef COBJMACROS
 
 
-#define IQualityControl_QueryInterface(This,riid,ppvObject)	\
+#define IQualityControl_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IQualityControl_AddRef(This)	\
+#define IQualityControl_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IQualityControl_Release(This)	\
+#define IQualityControl_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IQualityControl_Notify(This,pSelf,q)	\
+#define IQualityControl_Notify(This,pSelf,q)    \
     (This)->lpVtbl -> Notify(This,pSelf,q)
 
-#define IQualityControl_SetSink(This,piqc)	\
+#define IQualityControl_SetSink(This,piqc)    \
     (This)->lpVtbl -> SetSink(This,piqc)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -6128,7 +6128,7 @@ void __RPC_STUB IQualityControl_SetSink_Stub(
 
 
 
-#endif 	/* __IQualityControl_INTERFACE_DEFINED__ */
+#endif     /* __IQualityControl_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0138 */
@@ -6136,9 +6136,9 @@ void __RPC_STUB IQualityControl_SetSink_Stub(
 
 
 enum __MIDL___MIDL_itf_strmif_0138_0001
-    {	CK_NOCOLORKEY	= 0,
-	CK_INDEX	= 0x1,
-	CK_RGB	= 0x2
+    {    CK_NOCOLORKEY    = 0,
+    CK_INDEX    = 0x1,
+    CK_RGB    = 0x2
     } ;
 typedef struct tagCOLORKEY
     {
@@ -6146,20 +6146,20 @@ typedef struct tagCOLORKEY
     DWORD PaletteIndex;
     COLORREF LowColorValue;
     COLORREF HighColorValue;
-    } 	COLORKEY;
+    }     COLORKEY;
 
 
 enum __MIDL___MIDL_itf_strmif_0138_0002
-    {	ADVISE_NONE	= 0,
-	ADVISE_CLIPPING	= 0x1,
-	ADVISE_PALETTE	= 0x2,
-	ADVISE_COLORKEY	= 0x4,
-	ADVISE_POSITION	= 0x8,
-	ADVISE_DISPLAY_CHANGE	= 0x10
+    {    ADVISE_NONE    = 0,
+    ADVISE_CLIPPING    = 0x1,
+    ADVISE_PALETTE    = 0x2,
+    ADVISE_COLORKEY    = 0x4,
+    ADVISE_POSITION    = 0x8,
+    ADVISE_DISPLAY_CHANGE    = 0x10
     } ;
-#define	ADVISE_ALL	( ADVISE_CLIPPING | ADVISE_PALETTE | ADVISE_COLORKEY | ADVISE_POSITION )
+#define    ADVISE_ALL    ( ADVISE_CLIPPING | ADVISE_PALETTE | ADVISE_COLORKEY | ADVISE_POSITION )
 
-#define	ADVISE_ALL2	( ADVISE_ALL | ADVISE_DISPLAY_CHANGE )
+#define    ADVISE_ALL2    ( ADVISE_ALL | ADVISE_DISPLAY_CHANGE )
 
 #ifndef _WINGDI_
 typedef struct _RGNDATAHEADER
@@ -6169,13 +6169,13 @@ typedef struct _RGNDATAHEADER
     DWORD nCount;
     DWORD nRgnSize;
     RECT rcBound;
-    } 	RGNDATAHEADER;
+    }     RGNDATAHEADER;
 
 typedef struct _RGNDATA
     {
     RGNDATAHEADER rdh;
     char Buffer[ 1 ];
-    } 	RGNDATA;
+    }     RGNDATA;
 
 #endif
 
@@ -6216,7 +6216,7 @@ EXTERN_C const IID IID_IOverlayNotify;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IOverlayNotifyVtbl
     {
@@ -6266,32 +6266,32 @@ EXTERN_C const IID IID_IOverlayNotify;
 #ifdef COBJMACROS
 
 
-#define IOverlayNotify_QueryInterface(This,riid,ppvObject)	\
+#define IOverlayNotify_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IOverlayNotify_AddRef(This)	\
+#define IOverlayNotify_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IOverlayNotify_Release(This)	\
+#define IOverlayNotify_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IOverlayNotify_OnPaletteChange(This,dwColors,pPalette)	\
+#define IOverlayNotify_OnPaletteChange(This,dwColors,pPalette)    \
     (This)->lpVtbl -> OnPaletteChange(This,dwColors,pPalette)
 
-#define IOverlayNotify_OnClipChange(This,pSourceRect,pDestinationRect,pRgnData)	\
+#define IOverlayNotify_OnClipChange(This,pSourceRect,pDestinationRect,pRgnData)    \
     (This)->lpVtbl -> OnClipChange(This,pSourceRect,pDestinationRect,pRgnData)
 
-#define IOverlayNotify_OnColorKeyChange(This,pColorKey)	\
+#define IOverlayNotify_OnColorKeyChange(This,pColorKey)    \
     (This)->lpVtbl -> OnColorKeyChange(This,pColorKey)
 
-#define IOverlayNotify_OnPositionChange(This,pSourceRect,pDestinationRect)	\
+#define IOverlayNotify_OnPositionChange(This,pSourceRect,pDestinationRect)    \
     (This)->lpVtbl -> OnPositionChange(This,pSourceRect,pDestinationRect)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -6348,7 +6348,7 @@ void __RPC_STUB IOverlayNotify_OnPositionChange_Stub(
 
 
 
-#endif 	/* __IOverlayNotify_INTERFACE_DEFINED__ */
+#endif     /* __IOverlayNotify_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0139 */
@@ -6389,7 +6389,7 @@ EXTERN_C const IID IID_IOverlayNotify2;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IOverlayNotify2Vtbl
     {
@@ -6443,36 +6443,36 @@ EXTERN_C const IID IID_IOverlayNotify2;
 #ifdef COBJMACROS
 
 
-#define IOverlayNotify2_QueryInterface(This,riid,ppvObject)	\
+#define IOverlayNotify2_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IOverlayNotify2_AddRef(This)	\
+#define IOverlayNotify2_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IOverlayNotify2_Release(This)	\
+#define IOverlayNotify2_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IOverlayNotify2_OnPaletteChange(This,dwColors,pPalette)	\
+#define IOverlayNotify2_OnPaletteChange(This,dwColors,pPalette)    \
     (This)->lpVtbl -> OnPaletteChange(This,dwColors,pPalette)
 
-#define IOverlayNotify2_OnClipChange(This,pSourceRect,pDestinationRect,pRgnData)	\
+#define IOverlayNotify2_OnClipChange(This,pSourceRect,pDestinationRect,pRgnData)    \
     (This)->lpVtbl -> OnClipChange(This,pSourceRect,pDestinationRect,pRgnData)
 
-#define IOverlayNotify2_OnColorKeyChange(This,pColorKey)	\
+#define IOverlayNotify2_OnColorKeyChange(This,pColorKey)    \
     (This)->lpVtbl -> OnColorKeyChange(This,pColorKey)
 
-#define IOverlayNotify2_OnPositionChange(This,pSourceRect,pDestinationRect)	\
+#define IOverlayNotify2_OnPositionChange(This,pSourceRect,pDestinationRect)    \
     (This)->lpVtbl -> OnPositionChange(This,pSourceRect,pDestinationRect)
 
 
-#define IOverlayNotify2_OnDisplayChange(This,hMonitor)	\
+#define IOverlayNotify2_OnDisplayChange(This,hMonitor)    \
     (This)->lpVtbl -> OnDisplayChange(This,hMonitor)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -6489,7 +6489,7 @@ void __RPC_STUB IOverlayNotify2_OnDisplayChange_Stub(
 
 
 
-#endif 	/* __IOverlayNotify2_INTERFACE_DEFINED__ */
+#endif     /* __IOverlayNotify2_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0140 */
@@ -6554,7 +6554,7 @@ EXTERN_C const IID IID_IOverlay;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IOverlayVtbl
     {
@@ -6629,50 +6629,50 @@ EXTERN_C const IID IID_IOverlay;
 #ifdef COBJMACROS
 
 
-#define IOverlay_QueryInterface(This,riid,ppvObject)	\
+#define IOverlay_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IOverlay_AddRef(This)	\
+#define IOverlay_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IOverlay_Release(This)	\
+#define IOverlay_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IOverlay_GetPalette(This,pdwColors,ppPalette)	\
+#define IOverlay_GetPalette(This,pdwColors,ppPalette)    \
     (This)->lpVtbl -> GetPalette(This,pdwColors,ppPalette)
 
-#define IOverlay_SetPalette(This,dwColors,pPalette)	\
+#define IOverlay_SetPalette(This,dwColors,pPalette)    \
     (This)->lpVtbl -> SetPalette(This,dwColors,pPalette)
 
-#define IOverlay_GetDefaultColorKey(This,pColorKey)	\
+#define IOverlay_GetDefaultColorKey(This,pColorKey)    \
     (This)->lpVtbl -> GetDefaultColorKey(This,pColorKey)
 
-#define IOverlay_GetColorKey(This,pColorKey)	\
+#define IOverlay_GetColorKey(This,pColorKey)    \
     (This)->lpVtbl -> GetColorKey(This,pColorKey)
 
-#define IOverlay_SetColorKey(This,pColorKey)	\
+#define IOverlay_SetColorKey(This,pColorKey)    \
     (This)->lpVtbl -> SetColorKey(This,pColorKey)
 
-#define IOverlay_GetWindowHandle(This,pHwnd)	\
+#define IOverlay_GetWindowHandle(This,pHwnd)    \
     (This)->lpVtbl -> GetWindowHandle(This,pHwnd)
 
-#define IOverlay_GetClipList(This,pSourceRect,pDestinationRect,ppRgnData)	\
+#define IOverlay_GetClipList(This,pSourceRect,pDestinationRect,ppRgnData)    \
     (This)->lpVtbl -> GetClipList(This,pSourceRect,pDestinationRect,ppRgnData)
 
-#define IOverlay_GetVideoPosition(This,pSourceRect,pDestinationRect)	\
+#define IOverlay_GetVideoPosition(This,pSourceRect,pDestinationRect)    \
     (This)->lpVtbl -> GetVideoPosition(This,pSourceRect,pDestinationRect)
 
-#define IOverlay_Advise(This,pOverlayNotify,dwInterests)	\
+#define IOverlay_Advise(This,pOverlayNotify,dwInterests)    \
     (This)->lpVtbl -> Advise(This,pOverlayNotify,dwInterests)
 
-#define IOverlay_Unadvise(This)	\
+#define IOverlay_Unadvise(This)    \
     (This)->lpVtbl -> Unadvise(This)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -6802,7 +6802,7 @@ void __RPC_STUB IOverlay_Unadvise_Stub(
 
 
 
-#endif 	/* __IOverlay_INTERFACE_DEFINED__ */
+#endif     /* __IOverlay_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0141 */
@@ -6837,7 +6837,7 @@ EXTERN_C const IID IID_IMediaEventSink;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IMediaEventSinkVtbl
     {
@@ -6873,23 +6873,23 @@ EXTERN_C const IID IID_IMediaEventSink;
 #ifdef COBJMACROS
 
 
-#define IMediaEventSink_QueryInterface(This,riid,ppvObject)	\
+#define IMediaEventSink_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IMediaEventSink_AddRef(This)	\
+#define IMediaEventSink_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IMediaEventSink_Release(This)	\
+#define IMediaEventSink_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IMediaEventSink_Notify(This,EventCode,EventParam1,EventParam2)	\
+#define IMediaEventSink_Notify(This,EventCode,EventParam1,EventParam2)    \
     (This)->lpVtbl -> Notify(This,EventCode,EventParam1,EventParam2)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -6908,7 +6908,7 @@ void __RPC_STUB IMediaEventSink_Notify_Stub(
 
 
 
-#endif 	/* __IMediaEventSink_INTERFACE_DEFINED__ */
+#endif     /* __IMediaEventSink_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0142 */
@@ -6946,7 +6946,7 @@ EXTERN_C const IID IID_IFileSourceFilter;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IFileSourceFilterVtbl
     {
@@ -6986,26 +6986,26 @@ EXTERN_C const IID IID_IFileSourceFilter;
 #ifdef COBJMACROS
 
 
-#define IFileSourceFilter_QueryInterface(This,riid,ppvObject)	\
+#define IFileSourceFilter_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IFileSourceFilter_AddRef(This)	\
+#define IFileSourceFilter_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IFileSourceFilter_Release(This)	\
+#define IFileSourceFilter_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IFileSourceFilter_Load(This,pszFileName,pmt)	\
+#define IFileSourceFilter_Load(This,pszFileName,pmt)    \
     (This)->lpVtbl -> Load(This,pszFileName,pmt)
 
-#define IFileSourceFilter_GetCurFile(This,ppszFileName,pmt)	\
+#define IFileSourceFilter_GetCurFile(This,ppszFileName,pmt)    \
     (This)->lpVtbl -> GetCurFile(This,ppszFileName,pmt)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -7036,7 +7036,7 @@ void __RPC_STUB IFileSourceFilter_GetCurFile_Stub(
 
 
 
-#endif 	/* __IFileSourceFilter_INTERFACE_DEFINED__ */
+#endif     /* __IFileSourceFilter_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0143 */
@@ -7074,7 +7074,7 @@ EXTERN_C const IID IID_IFileSinkFilter;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IFileSinkFilterVtbl
     {
@@ -7114,26 +7114,26 @@ EXTERN_C const IID IID_IFileSinkFilter;
 #ifdef COBJMACROS
 
 
-#define IFileSinkFilter_QueryInterface(This,riid,ppvObject)	\
+#define IFileSinkFilter_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IFileSinkFilter_AddRef(This)	\
+#define IFileSinkFilter_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IFileSinkFilter_Release(This)	\
+#define IFileSinkFilter_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IFileSinkFilter_SetFileName(This,pszFileName,pmt)	\
+#define IFileSinkFilter_SetFileName(This,pszFileName,pmt)    \
     (This)->lpVtbl -> SetFileName(This,pszFileName,pmt)
 
-#define IFileSinkFilter_GetCurFile(This,ppszFileName,pmt)	\
+#define IFileSinkFilter_GetCurFile(This,ppszFileName,pmt)    \
     (This)->lpVtbl -> GetCurFile(This,ppszFileName,pmt)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -7164,7 +7164,7 @@ void __RPC_STUB IFileSinkFilter_GetCurFile_Stub(
 
 
 
-#endif 	/* __IFileSinkFilter_INTERFACE_DEFINED__ */
+#endif     /* __IFileSinkFilter_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0144 */
@@ -7200,7 +7200,7 @@ EXTERN_C const IID IID_IFileSinkFilter2;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IFileSinkFilter2Vtbl
     {
@@ -7248,33 +7248,33 @@ EXTERN_C const IID IID_IFileSinkFilter2;
 #ifdef COBJMACROS
 
 
-#define IFileSinkFilter2_QueryInterface(This,riid,ppvObject)	\
+#define IFileSinkFilter2_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IFileSinkFilter2_AddRef(This)	\
+#define IFileSinkFilter2_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IFileSinkFilter2_Release(This)	\
+#define IFileSinkFilter2_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IFileSinkFilter2_SetFileName(This,pszFileName,pmt)	\
+#define IFileSinkFilter2_SetFileName(This,pszFileName,pmt)    \
     (This)->lpVtbl -> SetFileName(This,pszFileName,pmt)
 
-#define IFileSinkFilter2_GetCurFile(This,ppszFileName,pmt)	\
+#define IFileSinkFilter2_GetCurFile(This,ppszFileName,pmt)    \
     (This)->lpVtbl -> GetCurFile(This,ppszFileName,pmt)
 
 
-#define IFileSinkFilter2_SetMode(This,dwFlags)	\
+#define IFileSinkFilter2_SetMode(This,dwFlags)    \
     (This)->lpVtbl -> SetMode(This,dwFlags)
 
-#define IFileSinkFilter2_GetMode(This,pdwFlags)	\
+#define IFileSinkFilter2_GetMode(This,pdwFlags)    \
     (This)->lpVtbl -> GetMode(This,pdwFlags)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -7303,7 +7303,7 @@ void __RPC_STUB IFileSinkFilter2_GetMode_Stub(
 
 
 
-#endif 	/* __IFileSinkFilter2_INTERFACE_DEFINED__ */
+#endif     /* __IFileSinkFilter2_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0145 */
@@ -7313,8 +7313,8 @@ typedef IFileSinkFilter2 *PFILESINKFILTER2;
 
 typedef /* [public] */
 enum __MIDL___MIDL_itf_strmif_0145_0001
-    {	AM_FILE_OVERWRITE	= 0x1
-    } 	AM_FILESINK_FLAGS;
+    {    AM_FILE_OVERWRITE    = 0x1
+    }     AM_FILESINK_FLAGS;
 
 
 
@@ -7361,7 +7361,7 @@ EXTERN_C const IID IID_IGraphBuilder;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IGraphBuilderVtbl
     {
@@ -7456,66 +7456,66 @@ EXTERN_C const IID IID_IGraphBuilder;
 #ifdef COBJMACROS
 
 
-#define IGraphBuilder_QueryInterface(This,riid,ppvObject)	\
+#define IGraphBuilder_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IGraphBuilder_AddRef(This)	\
+#define IGraphBuilder_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IGraphBuilder_Release(This)	\
+#define IGraphBuilder_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IGraphBuilder_AddFilter(This,pFilter,pName)	\
+#define IGraphBuilder_AddFilter(This,pFilter,pName)    \
     (This)->lpVtbl -> AddFilter(This,pFilter,pName)
 
-#define IGraphBuilder_RemoveFilter(This,pFilter)	\
+#define IGraphBuilder_RemoveFilter(This,pFilter)    \
     (This)->lpVtbl -> RemoveFilter(This,pFilter)
 
-#define IGraphBuilder_EnumFilters(This,ppEnum)	\
+#define IGraphBuilder_EnumFilters(This,ppEnum)    \
     (This)->lpVtbl -> EnumFilters(This,ppEnum)
 
-#define IGraphBuilder_FindFilterByName(This,pName,ppFilter)	\
+#define IGraphBuilder_FindFilterByName(This,pName,ppFilter)    \
     (This)->lpVtbl -> FindFilterByName(This,pName,ppFilter)
 
-#define IGraphBuilder_ConnectDirect(This,ppinOut,ppinIn,pmt)	\
+#define IGraphBuilder_ConnectDirect(This,ppinOut,ppinIn,pmt)    \
     (This)->lpVtbl -> ConnectDirect(This,ppinOut,ppinIn,pmt)
 
-#define IGraphBuilder_Reconnect(This,ppin)	\
+#define IGraphBuilder_Reconnect(This,ppin)    \
     (This)->lpVtbl -> Reconnect(This,ppin)
 
-#define IGraphBuilder_Disconnect(This,ppin)	\
+#define IGraphBuilder_Disconnect(This,ppin)    \
     (This)->lpVtbl -> Disconnect(This,ppin)
 
-#define IGraphBuilder_SetDefaultSyncSource(This)	\
+#define IGraphBuilder_SetDefaultSyncSource(This)    \
     (This)->lpVtbl -> SetDefaultSyncSource(This)
 
 
-#define IGraphBuilder_Connect(This,ppinOut,ppinIn)	\
+#define IGraphBuilder_Connect(This,ppinOut,ppinIn)    \
     (This)->lpVtbl -> Connect(This,ppinOut,ppinIn)
 
-#define IGraphBuilder_Render(This,ppinOut)	\
+#define IGraphBuilder_Render(This,ppinOut)    \
     (This)->lpVtbl -> Render(This,ppinOut)
 
-#define IGraphBuilder_RenderFile(This,lpcwstrFile,lpcwstrPlayList)	\
+#define IGraphBuilder_RenderFile(This,lpcwstrFile,lpcwstrPlayList)    \
     (This)->lpVtbl -> RenderFile(This,lpcwstrFile,lpcwstrPlayList)
 
-#define IGraphBuilder_AddSourceFilter(This,lpcwstrFileName,lpcwstrFilterName,ppFilter)	\
+#define IGraphBuilder_AddSourceFilter(This,lpcwstrFileName,lpcwstrFilterName,ppFilter)    \
     (This)->lpVtbl -> AddSourceFilter(This,lpcwstrFileName,lpcwstrFilterName,ppFilter)
 
-#define IGraphBuilder_SetLogFile(This,hFile)	\
+#define IGraphBuilder_SetLogFile(This,hFile)    \
     (This)->lpVtbl -> SetLogFile(This,hFile)
 
-#define IGraphBuilder_Abort(This)	\
+#define IGraphBuilder_Abort(This)    \
     (This)->lpVtbl -> Abort(This)
 
-#define IGraphBuilder_ShouldOperationContinue(This)	\
+#define IGraphBuilder_ShouldOperationContinue(This)    \
     (This)->lpVtbl -> ShouldOperationContinue(This)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -7606,7 +7606,7 @@ void __RPC_STUB IGraphBuilder_ShouldOperationContinue_Stub(
 
 
 
-#endif 	/* __IGraphBuilder_INTERFACE_DEFINED__ */
+#endif     /* __IGraphBuilder_INTERFACE_DEFINED__ */
 
 
 #ifndef __ICaptureGraphBuilder_INTERFACE_DEFINED__
@@ -7668,7 +7668,7 @@ EXTERN_C const IID IID_ICaptureGraphBuilder;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct ICaptureGraphBuilderVtbl
     {
@@ -7748,44 +7748,44 @@ EXTERN_C const IID IID_ICaptureGraphBuilder;
 #ifdef COBJMACROS
 
 
-#define ICaptureGraphBuilder_QueryInterface(This,riid,ppvObject)	\
+#define ICaptureGraphBuilder_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define ICaptureGraphBuilder_AddRef(This)	\
+#define ICaptureGraphBuilder_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define ICaptureGraphBuilder_Release(This)	\
+#define ICaptureGraphBuilder_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define ICaptureGraphBuilder_SetFiltergraph(This,pfg)	\
+#define ICaptureGraphBuilder_SetFiltergraph(This,pfg)    \
     (This)->lpVtbl -> SetFiltergraph(This,pfg)
 
-#define ICaptureGraphBuilder_GetFiltergraph(This,ppfg)	\
+#define ICaptureGraphBuilder_GetFiltergraph(This,ppfg)    \
     (This)->lpVtbl -> GetFiltergraph(This,ppfg)
 
-#define ICaptureGraphBuilder_SetOutputFileName(This,pType,lpstrFile,ppf,ppSink)	\
+#define ICaptureGraphBuilder_SetOutputFileName(This,pType,lpstrFile,ppf,ppSink)    \
     (This)->lpVtbl -> SetOutputFileName(This,pType,lpstrFile,ppf,ppSink)
 
-#define ICaptureGraphBuilder_FindInterface(This,pCategory,pf,riid,ppint)	\
+#define ICaptureGraphBuilder_FindInterface(This,pCategory,pf,riid,ppint)    \
     (This)->lpVtbl -> FindInterface(This,pCategory,pf,riid,ppint)
 
-#define ICaptureGraphBuilder_RenderStream(This,pCategory,pSource,pfCompressor,pfRenderer)	\
+#define ICaptureGraphBuilder_RenderStream(This,pCategory,pSource,pfCompressor,pfRenderer)    \
     (This)->lpVtbl -> RenderStream(This,pCategory,pSource,pfCompressor,pfRenderer)
 
-#define ICaptureGraphBuilder_ControlStream(This,pCategory,pFilter,pstart,pstop,wStartCookie,wStopCookie)	\
+#define ICaptureGraphBuilder_ControlStream(This,pCategory,pFilter,pstart,pstop,wStartCookie,wStopCookie)    \
     (This)->lpVtbl -> ControlStream(This,pCategory,pFilter,pstart,pstop,wStartCookie,wStopCookie)
 
-#define ICaptureGraphBuilder_AllocCapFile(This,lpstr,dwlSize)	\
+#define ICaptureGraphBuilder_AllocCapFile(This,lpstr,dwlSize)    \
     (This)->lpVtbl -> AllocCapFile(This,lpstr,dwlSize)
 
-#define ICaptureGraphBuilder_CopyCaptureFile(This,lpwstrOld,lpwstrNew,fAllowEscAbort,pCallback)	\
+#define ICaptureGraphBuilder_CopyCaptureFile(This,lpwstrOld,lpwstrNew,fAllowEscAbort,pCallback)    \
     (This)->lpVtbl -> CopyCaptureFile(This,lpwstrOld,lpwstrNew,fAllowEscAbort,pCallback)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -7904,7 +7904,7 @@ void __RPC_STUB ICaptureGraphBuilder_CopyCaptureFile_Stub(
 
 
 
-#endif 	/* __ICaptureGraphBuilder_INTERFACE_DEFINED__ */
+#endif     /* __ICaptureGraphBuilder_INTERFACE_DEFINED__ */
 
 
 #ifndef __IAMCopyCaptureFileProgress_INTERFACE_DEFINED__
@@ -7927,7 +7927,7 @@ EXTERN_C const IID IID_IAMCopyCaptureFileProgress;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IAMCopyCaptureFileProgressVtbl
     {
@@ -7961,23 +7961,23 @@ EXTERN_C const IID IID_IAMCopyCaptureFileProgress;
 #ifdef COBJMACROS
 
 
-#define IAMCopyCaptureFileProgress_QueryInterface(This,riid,ppvObject)	\
+#define IAMCopyCaptureFileProgress_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IAMCopyCaptureFileProgress_AddRef(This)	\
+#define IAMCopyCaptureFileProgress_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IAMCopyCaptureFileProgress_Release(This)	\
+#define IAMCopyCaptureFileProgress_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IAMCopyCaptureFileProgress_Progress(This,iProgress)	\
+#define IAMCopyCaptureFileProgress_Progress(This,iProgress)    \
     (This)->lpVtbl -> Progress(This,iProgress)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -7994,7 +7994,7 @@ void __RPC_STUB IAMCopyCaptureFileProgress_Progress_Stub(
 
 
 
-#endif 	/* __IAMCopyCaptureFileProgress_INTERFACE_DEFINED__ */
+#endif     /* __IAMCopyCaptureFileProgress_INTERFACE_DEFINED__ */
 
 
 #ifndef __ICaptureGraphBuilder2_INTERFACE_DEFINED__
@@ -8068,7 +8068,7 @@ EXTERN_C const IID IID_ICaptureGraphBuilder2;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct ICaptureGraphBuilder2Vtbl
     {
@@ -8161,47 +8161,47 @@ EXTERN_C const IID IID_ICaptureGraphBuilder2;
 #ifdef COBJMACROS
 
 
-#define ICaptureGraphBuilder2_QueryInterface(This,riid,ppvObject)	\
+#define ICaptureGraphBuilder2_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define ICaptureGraphBuilder2_AddRef(This)	\
+#define ICaptureGraphBuilder2_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define ICaptureGraphBuilder2_Release(This)	\
+#define ICaptureGraphBuilder2_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define ICaptureGraphBuilder2_SetFiltergraph(This,pfg)	\
+#define ICaptureGraphBuilder2_SetFiltergraph(This,pfg)    \
     (This)->lpVtbl -> SetFiltergraph(This,pfg)
 
-#define ICaptureGraphBuilder2_GetFiltergraph(This,ppfg)	\
+#define ICaptureGraphBuilder2_GetFiltergraph(This,ppfg)    \
     (This)->lpVtbl -> GetFiltergraph(This,ppfg)
 
-#define ICaptureGraphBuilder2_SetOutputFileName(This,pType,lpstrFile,ppf,ppSink)	\
+#define ICaptureGraphBuilder2_SetOutputFileName(This,pType,lpstrFile,ppf,ppSink)    \
     (This)->lpVtbl -> SetOutputFileName(This,pType,lpstrFile,ppf,ppSink)
 
-#define ICaptureGraphBuilder2_FindInterface(This,pCategory,pType,pf,riid,ppint)	\
+#define ICaptureGraphBuilder2_FindInterface(This,pCategory,pType,pf,riid,ppint)    \
     (This)->lpVtbl -> FindInterface(This,pCategory,pType,pf,riid,ppint)
 
-#define ICaptureGraphBuilder2_RenderStream(This,pCategory,pType,pSource,pfCompressor,pfRenderer)	\
+#define ICaptureGraphBuilder2_RenderStream(This,pCategory,pType,pSource,pfCompressor,pfRenderer)    \
     (This)->lpVtbl -> RenderStream(This,pCategory,pType,pSource,pfCompressor,pfRenderer)
 
-#define ICaptureGraphBuilder2_ControlStream(This,pCategory,pType,pFilter,pstart,pstop,wStartCookie,wStopCookie)	\
+#define ICaptureGraphBuilder2_ControlStream(This,pCategory,pType,pFilter,pstart,pstop,wStartCookie,wStopCookie)    \
     (This)->lpVtbl -> ControlStream(This,pCategory,pType,pFilter,pstart,pstop,wStartCookie,wStopCookie)
 
-#define ICaptureGraphBuilder2_AllocCapFile(This,lpstr,dwlSize)	\
+#define ICaptureGraphBuilder2_AllocCapFile(This,lpstr,dwlSize)    \
     (This)->lpVtbl -> AllocCapFile(This,lpstr,dwlSize)
 
-#define ICaptureGraphBuilder2_CopyCaptureFile(This,lpwstrOld,lpwstrNew,fAllowEscAbort,pCallback)	\
+#define ICaptureGraphBuilder2_CopyCaptureFile(This,lpwstrOld,lpwstrNew,fAllowEscAbort,pCallback)    \
     (This)->lpVtbl -> CopyCaptureFile(This,lpwstrOld,lpwstrNew,fAllowEscAbort,pCallback)
 
-#define ICaptureGraphBuilder2_FindPin(This,pSource,pindir,pCategory,pType,fUnconnected,num,ppPin)	\
+#define ICaptureGraphBuilder2_FindPin(This,pSource,pindir,pCategory,pType,fUnconnected,num,ppPin)    \
     (This)->lpVtbl -> FindPin(This,pSource,pindir,pCategory,pType,fUnconnected,num,ppPin)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -8341,7 +8341,7 @@ void __RPC_STUB ICaptureGraphBuilder2_FindPin_Stub(
 
 
 
-#endif 	/* __ICaptureGraphBuilder2_INTERFACE_DEFINED__ */
+#endif     /* __ICaptureGraphBuilder2_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0149 */
@@ -8349,7 +8349,7 @@ void __RPC_STUB ICaptureGraphBuilder2_FindPin_Stub(
 
 
 enum _AM_RENSDEREXFLAGS
-    {	AM_RENDEREX_RENDERTOEXISTINGRENDERERS	= 0x1
+    {    AM_RENDEREX_RENDERTOEXISTINGRENDERERS    = 0x1
     } ;
 
 
@@ -8388,7 +8388,7 @@ EXTERN_C const IID IID_IFilterGraph2;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IFilterGraph2Vtbl
     {
@@ -8501,76 +8501,76 @@ EXTERN_C const IID IID_IFilterGraph2;
 #ifdef COBJMACROS
 
 
-#define IFilterGraph2_QueryInterface(This,riid,ppvObject)	\
+#define IFilterGraph2_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IFilterGraph2_AddRef(This)	\
+#define IFilterGraph2_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IFilterGraph2_Release(This)	\
+#define IFilterGraph2_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IFilterGraph2_AddFilter(This,pFilter,pName)	\
+#define IFilterGraph2_AddFilter(This,pFilter,pName)    \
     (This)->lpVtbl -> AddFilter(This,pFilter,pName)
 
-#define IFilterGraph2_RemoveFilter(This,pFilter)	\
+#define IFilterGraph2_RemoveFilter(This,pFilter)    \
     (This)->lpVtbl -> RemoveFilter(This,pFilter)
 
-#define IFilterGraph2_EnumFilters(This,ppEnum)	\
+#define IFilterGraph2_EnumFilters(This,ppEnum)    \
     (This)->lpVtbl -> EnumFilters(This,ppEnum)
 
-#define IFilterGraph2_FindFilterByName(This,pName,ppFilter)	\
+#define IFilterGraph2_FindFilterByName(This,pName,ppFilter)    \
     (This)->lpVtbl -> FindFilterByName(This,pName,ppFilter)
 
-#define IFilterGraph2_ConnectDirect(This,ppinOut,ppinIn,pmt)	\
+#define IFilterGraph2_ConnectDirect(This,ppinOut,ppinIn,pmt)    \
     (This)->lpVtbl -> ConnectDirect(This,ppinOut,ppinIn,pmt)
 
-#define IFilterGraph2_Reconnect(This,ppin)	\
+#define IFilterGraph2_Reconnect(This,ppin)    \
     (This)->lpVtbl -> Reconnect(This,ppin)
 
-#define IFilterGraph2_Disconnect(This,ppin)	\
+#define IFilterGraph2_Disconnect(This,ppin)    \
     (This)->lpVtbl -> Disconnect(This,ppin)
 
-#define IFilterGraph2_SetDefaultSyncSource(This)	\
+#define IFilterGraph2_SetDefaultSyncSource(This)    \
     (This)->lpVtbl -> SetDefaultSyncSource(This)
 
 
-#define IFilterGraph2_Connect(This,ppinOut,ppinIn)	\
+#define IFilterGraph2_Connect(This,ppinOut,ppinIn)    \
     (This)->lpVtbl -> Connect(This,ppinOut,ppinIn)
 
-#define IFilterGraph2_Render(This,ppinOut)	\
+#define IFilterGraph2_Render(This,ppinOut)    \
     (This)->lpVtbl -> Render(This,ppinOut)
 
-#define IFilterGraph2_RenderFile(This,lpcwstrFile,lpcwstrPlayList)	\
+#define IFilterGraph2_RenderFile(This,lpcwstrFile,lpcwstrPlayList)    \
     (This)->lpVtbl -> RenderFile(This,lpcwstrFile,lpcwstrPlayList)
 
-#define IFilterGraph2_AddSourceFilter(This,lpcwstrFileName,lpcwstrFilterName,ppFilter)	\
+#define IFilterGraph2_AddSourceFilter(This,lpcwstrFileName,lpcwstrFilterName,ppFilter)    \
     (This)->lpVtbl -> AddSourceFilter(This,lpcwstrFileName,lpcwstrFilterName,ppFilter)
 
-#define IFilterGraph2_SetLogFile(This,hFile)	\
+#define IFilterGraph2_SetLogFile(This,hFile)    \
     (This)->lpVtbl -> SetLogFile(This,hFile)
 
-#define IFilterGraph2_Abort(This)	\
+#define IFilterGraph2_Abort(This)    \
     (This)->lpVtbl -> Abort(This)
 
-#define IFilterGraph2_ShouldOperationContinue(This)	\
+#define IFilterGraph2_ShouldOperationContinue(This)    \
     (This)->lpVtbl -> ShouldOperationContinue(This)
 
 
-#define IFilterGraph2_AddSourceFilterForMoniker(This,pMoniker,pCtx,lpcwstrFilterName,ppFilter)	\
+#define IFilterGraph2_AddSourceFilterForMoniker(This,pMoniker,pCtx,lpcwstrFilterName,ppFilter)    \
     (This)->lpVtbl -> AddSourceFilterForMoniker(This,pMoniker,pCtx,lpcwstrFilterName,ppFilter)
 
-#define IFilterGraph2_ReconnectEx(This,ppin,pmt)	\
+#define IFilterGraph2_ReconnectEx(This,ppin,pmt)    \
     (This)->lpVtbl -> ReconnectEx(This,ppin,pmt)
 
-#define IFilterGraph2_RenderEx(This,pPinOut,dwFlags,pvContext)	\
+#define IFilterGraph2_RenderEx(This,pPinOut,dwFlags,pvContext)    \
     (This)->lpVtbl -> RenderEx(This,pPinOut,dwFlags,pvContext)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -8617,7 +8617,7 @@ void __RPC_STUB IFilterGraph2_RenderEx_Stub(
 
 
 
-#endif 	/* __IFilterGraph2_INTERFACE_DEFINED__ */
+#endif     /* __IFilterGraph2_INTERFACE_DEFINED__ */
 
 
 #ifndef __IStreamBuilder_INTERFACE_DEFINED__
@@ -8645,7 +8645,7 @@ EXTERN_C const IID IID_IStreamBuilder;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IStreamBuilderVtbl
     {
@@ -8685,26 +8685,26 @@ EXTERN_C const IID IID_IStreamBuilder;
 #ifdef COBJMACROS
 
 
-#define IStreamBuilder_QueryInterface(This,riid,ppvObject)	\
+#define IStreamBuilder_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IStreamBuilder_AddRef(This)	\
+#define IStreamBuilder_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IStreamBuilder_Release(This)	\
+#define IStreamBuilder_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IStreamBuilder_Render(This,ppinOut,pGraph)	\
+#define IStreamBuilder_Render(This,ppinOut,pGraph)    \
     (This)->lpVtbl -> Render(This,ppinOut,pGraph)
 
-#define IStreamBuilder_Backout(This,ppinOut,pGraph)	\
+#define IStreamBuilder_Backout(This,ppinOut,pGraph)    \
     (This)->lpVtbl -> Backout(This,ppinOut,pGraph)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -8735,7 +8735,7 @@ void __RPC_STUB IStreamBuilder_Backout_Stub(
 
 
 
-#endif 	/* __IStreamBuilder_INTERFACE_DEFINED__ */
+#endif     /* __IStreamBuilder_INTERFACE_DEFINED__ */
 
 
 #ifndef __IAsyncReader_INTERFACE_DEFINED__
@@ -8785,7 +8785,7 @@ EXTERN_C const IID IID_IAsyncReader;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IAsyncReaderVtbl
     {
@@ -8853,44 +8853,44 @@ EXTERN_C const IID IID_IAsyncReader;
 #ifdef COBJMACROS
 
 
-#define IAsyncReader_QueryInterface(This,riid,ppvObject)	\
+#define IAsyncReader_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IAsyncReader_AddRef(This)	\
+#define IAsyncReader_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IAsyncReader_Release(This)	\
+#define IAsyncReader_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IAsyncReader_RequestAllocator(This,pPreferred,pProps,ppActual)	\
+#define IAsyncReader_RequestAllocator(This,pPreferred,pProps,ppActual)    \
     (This)->lpVtbl -> RequestAllocator(This,pPreferred,pProps,ppActual)
 
-#define IAsyncReader_Request(This,pSample,dwUser)	\
+#define IAsyncReader_Request(This,pSample,dwUser)    \
     (This)->lpVtbl -> Request(This,pSample,dwUser)
 
-#define IAsyncReader_WaitForNext(This,dwTimeout,ppSample,pdwUser)	\
+#define IAsyncReader_WaitForNext(This,dwTimeout,ppSample,pdwUser)    \
     (This)->lpVtbl -> WaitForNext(This,dwTimeout,ppSample,pdwUser)
 
-#define IAsyncReader_SyncReadAligned(This,pSample)	\
+#define IAsyncReader_SyncReadAligned(This,pSample)    \
     (This)->lpVtbl -> SyncReadAligned(This,pSample)
 
-#define IAsyncReader_SyncRead(This,llPosition,lLength,pBuffer)	\
+#define IAsyncReader_SyncRead(This,llPosition,lLength,pBuffer)    \
     (This)->lpVtbl -> SyncRead(This,llPosition,lLength,pBuffer)
 
-#define IAsyncReader_Length(This,pTotal,pAvailable)	\
+#define IAsyncReader_Length(This,pTotal,pAvailable)    \
     (This)->lpVtbl -> Length(This,pTotal,pAvailable)
 
-#define IAsyncReader_BeginFlush(This)	\
+#define IAsyncReader_BeginFlush(This)    \
     (This)->lpVtbl -> BeginFlush(This)
 
-#define IAsyncReader_EndFlush(This)	\
+#define IAsyncReader_EndFlush(This)    \
     (This)->lpVtbl -> EndFlush(This)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -8997,7 +8997,7 @@ void __RPC_STUB IAsyncReader_EndFlush_Stub(
 
 
 
-#endif 	/* __IAsyncReader_INTERFACE_DEFINED__ */
+#endif     /* __IAsyncReader_INTERFACE_DEFINED__ */
 
 
 #ifndef __IGraphVersion_INTERFACE_DEFINED__
@@ -9020,7 +9020,7 @@ EXTERN_C const IID IID_IGraphVersion;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IGraphVersionVtbl
     {
@@ -9054,23 +9054,23 @@ EXTERN_C const IID IID_IGraphVersion;
 #ifdef COBJMACROS
 
 
-#define IGraphVersion_QueryInterface(This,riid,ppvObject)	\
+#define IGraphVersion_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IGraphVersion_AddRef(This)	\
+#define IGraphVersion_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IGraphVersion_Release(This)	\
+#define IGraphVersion_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IGraphVersion_QueryVersion(This,pVersion)	\
+#define IGraphVersion_QueryVersion(This,pVersion)    \
     (This)->lpVtbl -> QueryVersion(This,pVersion)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -9087,7 +9087,7 @@ void __RPC_STUB IGraphVersion_QueryVersion_Stub(
 
 
 
-#endif 	/* __IGraphVersion_INTERFACE_DEFINED__ */
+#endif     /* __IGraphVersion_INTERFACE_DEFINED__ */
 
 
 #ifndef __IResourceConsumer_INTERFACE_DEFINED__
@@ -9113,7 +9113,7 @@ EXTERN_C const IID IID_IResourceConsumer;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IResourceConsumerVtbl
     {
@@ -9151,26 +9151,26 @@ EXTERN_C const IID IID_IResourceConsumer;
 #ifdef COBJMACROS
 
 
-#define IResourceConsumer_QueryInterface(This,riid,ppvObject)	\
+#define IResourceConsumer_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IResourceConsumer_AddRef(This)	\
+#define IResourceConsumer_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IResourceConsumer_Release(This)	\
+#define IResourceConsumer_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IResourceConsumer_AcquireResource(This,idResource)	\
+#define IResourceConsumer_AcquireResource(This,idResource)    \
     (This)->lpVtbl -> AcquireResource(This,idResource)
 
-#define IResourceConsumer_ReleaseResource(This,idResource)	\
+#define IResourceConsumer_ReleaseResource(This,idResource)    \
     (This)->lpVtbl -> ReleaseResource(This,idResource)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -9199,7 +9199,7 @@ void __RPC_STUB IResourceConsumer_ReleaseResource_Stub(
 
 
 
-#endif 	/* __IResourceConsumer_INTERFACE_DEFINED__ */
+#endif     /* __IResourceConsumer_INTERFACE_DEFINED__ */
 
 
 #ifndef __IResourceManager_INTERFACE_DEFINED__
@@ -9255,7 +9255,7 @@ EXTERN_C const IID IID_IResourceManager;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IResourceManagerVtbl
     {
@@ -9329,44 +9329,44 @@ EXTERN_C const IID IID_IResourceManager;
 #ifdef COBJMACROS
 
 
-#define IResourceManager_QueryInterface(This,riid,ppvObject)	\
+#define IResourceManager_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IResourceManager_AddRef(This)	\
+#define IResourceManager_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IResourceManager_Release(This)	\
+#define IResourceManager_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IResourceManager_Register(This,pName,cResource,plToken)	\
+#define IResourceManager_Register(This,pName,cResource,plToken)    \
     (This)->lpVtbl -> Register(This,pName,cResource,plToken)
 
-#define IResourceManager_RegisterGroup(This,pName,cResource,palTokens,plToken)	\
+#define IResourceManager_RegisterGroup(This,pName,cResource,palTokens,plToken)    \
     (This)->lpVtbl -> RegisterGroup(This,pName,cResource,palTokens,plToken)
 
-#define IResourceManager_RequestResource(This,idResource,pFocusObject,pConsumer)	\
+#define IResourceManager_RequestResource(This,idResource,pFocusObject,pConsumer)    \
     (This)->lpVtbl -> RequestResource(This,idResource,pFocusObject,pConsumer)
 
-#define IResourceManager_NotifyAcquire(This,idResource,pConsumer,hr)	\
+#define IResourceManager_NotifyAcquire(This,idResource,pConsumer,hr)    \
     (This)->lpVtbl -> NotifyAcquire(This,idResource,pConsumer,hr)
 
-#define IResourceManager_NotifyRelease(This,idResource,pConsumer,bStillWant)	\
+#define IResourceManager_NotifyRelease(This,idResource,pConsumer,bStillWant)    \
     (This)->lpVtbl -> NotifyRelease(This,idResource,pConsumer,bStillWant)
 
-#define IResourceManager_CancelRequest(This,idResource,pConsumer)	\
+#define IResourceManager_CancelRequest(This,idResource,pConsumer)    \
     (This)->lpVtbl -> CancelRequest(This,idResource,pConsumer)
 
-#define IResourceManager_SetFocus(This,pFocusObject)	\
+#define IResourceManager_SetFocus(This,pFocusObject)    \
     (This)->lpVtbl -> SetFocus(This,pFocusObject)
 
-#define IResourceManager_ReleaseFocus(This,pFocusObject)	\
+#define IResourceManager_ReleaseFocus(This,pFocusObject)    \
     (This)->lpVtbl -> ReleaseFocus(This,pFocusObject)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -9479,7 +9479,7 @@ void __RPC_STUB IResourceManager_ReleaseFocus_Stub(
 
 
 
-#endif 	/* __IResourceManager_INTERFACE_DEFINED__ */
+#endif     /* __IResourceManager_INTERFACE_DEFINED__ */
 
 
 #ifndef __IDistributorNotify_INTERFACE_DEFINED__
@@ -9511,7 +9511,7 @@ EXTERN_C const IID IID_IDistributorNotify;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IDistributorNotifyVtbl
     {
@@ -9558,35 +9558,35 @@ EXTERN_C const IID IID_IDistributorNotify;
 #ifdef COBJMACROS
 
 
-#define IDistributorNotify_QueryInterface(This,riid,ppvObject)	\
+#define IDistributorNotify_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IDistributorNotify_AddRef(This)	\
+#define IDistributorNotify_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IDistributorNotify_Release(This)	\
+#define IDistributorNotify_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IDistributorNotify_Stop(This)	\
+#define IDistributorNotify_Stop(This)    \
     (This)->lpVtbl -> Stop(This)
 
-#define IDistributorNotify_Pause(This)	\
+#define IDistributorNotify_Pause(This)    \
     (This)->lpVtbl -> Pause(This)
 
-#define IDistributorNotify_Run(This,tStart)	\
+#define IDistributorNotify_Run(This,tStart)    \
     (This)->lpVtbl -> Run(This,tStart)
 
-#define IDistributorNotify_SetSyncSource(This,pClock)	\
+#define IDistributorNotify_SetSyncSource(This,pClock)    \
     (This)->lpVtbl -> SetSyncSource(This,pClock)
 
-#define IDistributorNotify_NotifyGraphChange(This)	\
+#define IDistributorNotify_NotifyGraphChange(This)    \
     (This)->lpVtbl -> NotifyGraphChange(This)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -9648,7 +9648,7 @@ void __RPC_STUB IDistributorNotify_NotifyGraphChange_Stub(
 
 
 
-#endif 	/* __IDistributorNotify_INTERFACE_DEFINED__ */
+#endif     /* __IDistributorNotify_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0156 */
@@ -9656,11 +9656,11 @@ void __RPC_STUB IDistributorNotify_NotifyGraphChange_Stub(
 
 typedef /* [public] */
 enum __MIDL___MIDL_itf_strmif_0156_0001
-    {	AM_STREAM_INFO_START_DEFINED	= 0x1,
-	AM_STREAM_INFO_STOP_DEFINED	= 0x2,
-	AM_STREAM_INFO_DISCARDING	= 0x4,
-	AM_STREAM_INFO_STOP_SEND_EXTRA	= 0x10
-    } 	AM_STREAM_INFO_FLAGS;
+    {    AM_STREAM_INFO_START_DEFINED    = 0x1,
+    AM_STREAM_INFO_STOP_DEFINED    = 0x2,
+    AM_STREAM_INFO_DISCARDING    = 0x4,
+    AM_STREAM_INFO_STOP_SEND_EXTRA    = 0x10
+    }     AM_STREAM_INFO_FLAGS;
 
 typedef /* [public][public] */ struct __MIDL___MIDL_itf_strmif_0156_0002
     {
@@ -9669,7 +9669,7 @@ typedef /* [public][public] */ struct __MIDL___MIDL_itf_strmif_0156_0002
     DWORD dwStartCookie;
     DWORD dwStopCookie;
     DWORD dwFlags;
-    } 	AM_STREAM_INFO;
+    }     AM_STREAM_INFO;
 
 
 
@@ -9705,7 +9705,7 @@ EXTERN_C const IID IID_IAMStreamControl;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IAMStreamControlVtbl
     {
@@ -9750,29 +9750,29 @@ EXTERN_C const IID IID_IAMStreamControl;
 #ifdef COBJMACROS
 
 
-#define IAMStreamControl_QueryInterface(This,riid,ppvObject)	\
+#define IAMStreamControl_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IAMStreamControl_AddRef(This)	\
+#define IAMStreamControl_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IAMStreamControl_Release(This)	\
+#define IAMStreamControl_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IAMStreamControl_StartAt(This,ptStart,dwCookie)	\
+#define IAMStreamControl_StartAt(This,ptStart,dwCookie)    \
     (This)->lpVtbl -> StartAt(This,ptStart,dwCookie)
 
-#define IAMStreamControl_StopAt(This,ptStop,bSendExtra,dwCookie)	\
+#define IAMStreamControl_StopAt(This,ptStop,bSendExtra,dwCookie)    \
     (This)->lpVtbl -> StopAt(This,ptStop,bSendExtra,dwCookie)
 
-#define IAMStreamControl_GetInfo(This,pInfo)	\
+#define IAMStreamControl_GetInfo(This,pInfo)    \
     (This)->lpVtbl -> GetInfo(This,pInfo)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -9816,7 +9816,7 @@ void __RPC_STUB IAMStreamControl_GetInfo_Stub(
 
 
 
-#endif 	/* __IAMStreamControl_INTERFACE_DEFINED__ */
+#endif     /* __IAMStreamControl_INTERFACE_DEFINED__ */
 
 
 #ifndef __ISeekingPassThru_INTERFACE_DEFINED__
@@ -9840,7 +9840,7 @@ EXTERN_C const IID IID_ISeekingPassThru;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct ISeekingPassThruVtbl
     {
@@ -9875,23 +9875,23 @@ EXTERN_C const IID IID_ISeekingPassThru;
 #ifdef COBJMACROS
 
 
-#define ISeekingPassThru_QueryInterface(This,riid,ppvObject)	\
+#define ISeekingPassThru_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define ISeekingPassThru_AddRef(This)	\
+#define ISeekingPassThru_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define ISeekingPassThru_Release(This)	\
+#define ISeekingPassThru_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define ISeekingPassThru_Init(This,bSupportRendering,pPin)	\
+#define ISeekingPassThru_Init(This,bSupportRendering,pPin)    \
     (This)->lpVtbl -> Init(This,bSupportRendering,pPin)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -9909,7 +9909,7 @@ void __RPC_STUB ISeekingPassThru_Init_Stub(
 
 
 
-#endif 	/* __ISeekingPassThru_INTERFACE_DEFINED__ */
+#endif     /* __ISeekingPassThru_INTERFACE_DEFINED__ */
 
 
 #ifndef __IAMStreamConfig_INTERFACE_DEFINED__
@@ -9941,7 +9941,7 @@ typedef struct _VIDEO_STREAM_CONFIG_CAPS
     LONGLONG MaxFrameInterval;
     LONG MinBitsPerSecond;
     LONG MaxBitsPerSecond;
-    } 	VIDEO_STREAM_CONFIG_CAPS;
+    }     VIDEO_STREAM_CONFIG_CAPS;
 
 typedef struct _AUDIO_STREAM_CONFIG_CAPS
     {
@@ -9955,7 +9955,7 @@ typedef struct _AUDIO_STREAM_CONFIG_CAPS
     ULONG MinimumSampleFrequency;
     ULONG MaximumSampleFrequency;
     ULONG SampleFrequencyGranularity;
-    } 	AUDIO_STREAM_CONFIG_CAPS;
+    }     AUDIO_STREAM_CONFIG_CAPS;
 
 
 EXTERN_C const IID IID_IAMStreamConfig;
@@ -9983,7 +9983,7 @@ EXTERN_C const IID IID_IAMStreamConfig;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IAMStreamConfigVtbl
     {
@@ -10032,32 +10032,32 @@ EXTERN_C const IID IID_IAMStreamConfig;
 #ifdef COBJMACROS
 
 
-#define IAMStreamConfig_QueryInterface(This,riid,ppvObject)	\
+#define IAMStreamConfig_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IAMStreamConfig_AddRef(This)	\
+#define IAMStreamConfig_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IAMStreamConfig_Release(This)	\
+#define IAMStreamConfig_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IAMStreamConfig_SetFormat(This,pmt)	\
+#define IAMStreamConfig_SetFormat(This,pmt)    \
     (This)->lpVtbl -> SetFormat(This,pmt)
 
-#define IAMStreamConfig_GetFormat(This,ppmt)	\
+#define IAMStreamConfig_GetFormat(This,ppmt)    \
     (This)->lpVtbl -> GetFormat(This,ppmt)
 
-#define IAMStreamConfig_GetNumberOfCapabilities(This,piCount,piSize)	\
+#define IAMStreamConfig_GetNumberOfCapabilities(This,piCount,piSize)    \
     (This)->lpVtbl -> GetNumberOfCapabilities(This,piCount,piSize)
 
-#define IAMStreamConfig_GetStreamCaps(This,iIndex,ppmt,pSCC)	\
+#define IAMStreamConfig_GetStreamCaps(This,iIndex,ppmt,pSCC)    \
     (This)->lpVtbl -> GetStreamCaps(This,iIndex,ppmt,pSCC)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -10113,7 +10113,7 @@ void __RPC_STUB IAMStreamConfig_GetStreamCaps_Stub(
 
 
 
-#endif 	/* __IAMStreamConfig_INTERFACE_DEFINED__ */
+#endif     /* __IAMStreamConfig_INTERFACE_DEFINED__ */
 
 
 #ifndef __IConfigInterleaving_INTERFACE_DEFINED__
@@ -10124,11 +10124,11 @@ void __RPC_STUB IAMStreamConfig_GetStreamCaps_Stub(
 
 typedef /* [public][public][public] */
 enum __MIDL_IConfigInterleaving_0001
-    {	INTERLEAVE_NONE	= 0,
-	INTERLEAVE_CAPTURE	= INTERLEAVE_NONE + 1,
-	INTERLEAVE_FULL	= INTERLEAVE_CAPTURE + 1,
-	INTERLEAVE_NONE_BUFFERED	= INTERLEAVE_FULL + 1
-    } 	InterleavingMode;
+    {    INTERLEAVE_NONE    = 0,
+    INTERLEAVE_CAPTURE    = INTERLEAVE_NONE + 1,
+    INTERLEAVE_FULL    = INTERLEAVE_CAPTURE + 1,
+    INTERLEAVE_NONE_BUFFERED    = INTERLEAVE_FULL + 1
+    }     InterleavingMode;
 
 
 EXTERN_C const IID IID_IConfigInterleaving;
@@ -10155,7 +10155,7 @@ EXTERN_C const IID IID_IConfigInterleaving;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IConfigInterleavingVtbl
     {
@@ -10203,32 +10203,32 @@ EXTERN_C const IID IID_IConfigInterleaving;
 #ifdef COBJMACROS
 
 
-#define IConfigInterleaving_QueryInterface(This,riid,ppvObject)	\
+#define IConfigInterleaving_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IConfigInterleaving_AddRef(This)	\
+#define IConfigInterleaving_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IConfigInterleaving_Release(This)	\
+#define IConfigInterleaving_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IConfigInterleaving_put_Mode(This,mode)	\
+#define IConfigInterleaving_put_Mode(This,mode)    \
     (This)->lpVtbl -> put_Mode(This,mode)
 
-#define IConfigInterleaving_get_Mode(This,pMode)	\
+#define IConfigInterleaving_get_Mode(This,pMode)    \
     (This)->lpVtbl -> get_Mode(This,pMode)
 
-#define IConfigInterleaving_put_Interleaving(This,prtInterleave,prtPreroll)	\
+#define IConfigInterleaving_put_Interleaving(This,prtInterleave,prtPreroll)    \
     (This)->lpVtbl -> put_Interleaving(This,prtInterleave,prtPreroll)
 
-#define IConfigInterleaving_get_Interleaving(This,prtInterleave,prtPreroll)	\
+#define IConfigInterleaving_get_Interleaving(This,prtInterleave,prtPreroll)    \
     (This)->lpVtbl -> get_Interleaving(This,prtInterleave,prtPreroll)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -10283,7 +10283,7 @@ void __RPC_STUB IConfigInterleaving_get_Interleaving_Stub(
 
 
 
-#endif 	/* __IConfigInterleaving_INTERFACE_DEFINED__ */
+#endif     /* __IConfigInterleaving_INTERFACE_DEFINED__ */
 
 
 #ifndef __IConfigAviMux_INTERFACE_DEFINED__
@@ -10315,7 +10315,7 @@ EXTERN_C const IID IID_IConfigAviMux;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IConfigAviMuxVtbl
     {
@@ -10361,32 +10361,32 @@ EXTERN_C const IID IID_IConfigAviMux;
 #ifdef COBJMACROS
 
 
-#define IConfigAviMux_QueryInterface(This,riid,ppvObject)	\
+#define IConfigAviMux_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IConfigAviMux_AddRef(This)	\
+#define IConfigAviMux_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IConfigAviMux_Release(This)	\
+#define IConfigAviMux_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IConfigAviMux_SetMasterStream(This,iStream)	\
+#define IConfigAviMux_SetMasterStream(This,iStream)    \
     (This)->lpVtbl -> SetMasterStream(This,iStream)
 
-#define IConfigAviMux_GetMasterStream(This,pStream)	\
+#define IConfigAviMux_GetMasterStream(This,pStream)    \
     (This)->lpVtbl -> GetMasterStream(This,pStream)
 
-#define IConfigAviMux_SetOutputCompatibilityIndex(This,fOldIndex)	\
+#define IConfigAviMux_SetOutputCompatibilityIndex(This,fOldIndex)    \
     (This)->lpVtbl -> SetOutputCompatibilityIndex(This,fOldIndex)
 
-#define IConfigAviMux_GetOutputCompatibilityIndex(This,pfOldIndex)	\
+#define IConfigAviMux_GetOutputCompatibilityIndex(This,pfOldIndex)    \
     (This)->lpVtbl -> GetOutputCompatibilityIndex(This,pfOldIndex)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -10439,7 +10439,7 @@ void __RPC_STUB IConfigAviMux_GetOutputCompatibilityIndex_Stub(
 
 
 
-#endif 	/* __IConfigAviMux_INTERFACE_DEFINED__ */
+#endif     /* __IConfigAviMux_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0163 */
@@ -10447,12 +10447,12 @@ void __RPC_STUB IConfigAviMux_GetOutputCompatibilityIndex_Stub(
 
 typedef /* [public] */
 enum __MIDL___MIDL_itf_strmif_0163_0001
-    {	CompressionCaps_CanQuality	= 0x1,
-	CompressionCaps_CanCrunch	= 0x2,
-	CompressionCaps_CanKeyFrame	= 0x4,
-	CompressionCaps_CanBFrame	= 0x8,
-	CompressionCaps_CanWindow	= 0x10
-    } 	CompressionCaps;
+    {    CompressionCaps_CanQuality    = 0x1,
+    CompressionCaps_CanCrunch    = 0x2,
+    CompressionCaps_CanKeyFrame    = 0x4,
+    CompressionCaps_CanBFrame    = 0x8,
+    CompressionCaps_CanWindow    = 0x10
+    }     CompressionCaps;
 
 
 
@@ -10517,7 +10517,7 @@ EXTERN_C const IID IID_IAMVideoCompression;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IAMVideoCompressionVtbl
     {
@@ -10599,53 +10599,53 @@ EXTERN_C const IID IID_IAMVideoCompression;
 #ifdef COBJMACROS
 
 
-#define IAMVideoCompression_QueryInterface(This,riid,ppvObject)	\
+#define IAMVideoCompression_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IAMVideoCompression_AddRef(This)	\
+#define IAMVideoCompression_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IAMVideoCompression_Release(This)	\
+#define IAMVideoCompression_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IAMVideoCompression_put_KeyFrameRate(This,KeyFrameRate)	\
+#define IAMVideoCompression_put_KeyFrameRate(This,KeyFrameRate)    \
     (This)->lpVtbl -> put_KeyFrameRate(This,KeyFrameRate)
 
-#define IAMVideoCompression_get_KeyFrameRate(This,pKeyFrameRate)	\
+#define IAMVideoCompression_get_KeyFrameRate(This,pKeyFrameRate)    \
     (This)->lpVtbl -> get_KeyFrameRate(This,pKeyFrameRate)
 
-#define IAMVideoCompression_put_PFramesPerKeyFrame(This,PFramesPerKeyFrame)	\
+#define IAMVideoCompression_put_PFramesPerKeyFrame(This,PFramesPerKeyFrame)    \
     (This)->lpVtbl -> put_PFramesPerKeyFrame(This,PFramesPerKeyFrame)
 
-#define IAMVideoCompression_get_PFramesPerKeyFrame(This,pPFramesPerKeyFrame)	\
+#define IAMVideoCompression_get_PFramesPerKeyFrame(This,pPFramesPerKeyFrame)    \
     (This)->lpVtbl -> get_PFramesPerKeyFrame(This,pPFramesPerKeyFrame)
 
-#define IAMVideoCompression_put_Quality(This,Quality)	\
+#define IAMVideoCompression_put_Quality(This,Quality)    \
     (This)->lpVtbl -> put_Quality(This,Quality)
 
-#define IAMVideoCompression_get_Quality(This,pQuality)	\
+#define IAMVideoCompression_get_Quality(This,pQuality)    \
     (This)->lpVtbl -> get_Quality(This,pQuality)
 
-#define IAMVideoCompression_put_WindowSize(This,WindowSize)	\
+#define IAMVideoCompression_put_WindowSize(This,WindowSize)    \
     (This)->lpVtbl -> put_WindowSize(This,WindowSize)
 
-#define IAMVideoCompression_get_WindowSize(This,pWindowSize)	\
+#define IAMVideoCompression_get_WindowSize(This,pWindowSize)    \
     (This)->lpVtbl -> get_WindowSize(This,pWindowSize)
 
-#define IAMVideoCompression_GetInfo(This,pszVersion,pcbVersion,pszDescription,pcbDescription,pDefaultKeyFrameRate,pDefaultPFramesPerKey,pDefaultQuality,pCapabilities)	\
+#define IAMVideoCompression_GetInfo(This,pszVersion,pcbVersion,pszDescription,pcbDescription,pDefaultKeyFrameRate,pDefaultPFramesPerKey,pDefaultQuality,pCapabilities)    \
     (This)->lpVtbl -> GetInfo(This,pszVersion,pcbVersion,pszDescription,pcbDescription,pDefaultKeyFrameRate,pDefaultPFramesPerKey,pDefaultQuality,pCapabilities)
 
-#define IAMVideoCompression_OverrideKeyFrame(This,FrameNumber)	\
+#define IAMVideoCompression_OverrideKeyFrame(This,FrameNumber)    \
     (This)->lpVtbl -> OverrideKeyFrame(This,FrameNumber)
 
-#define IAMVideoCompression_OverrideFrameSize(This,FrameNumber,Size)	\
+#define IAMVideoCompression_OverrideFrameSize(This,FrameNumber,Size)    \
     (This)->lpVtbl -> OverrideFrameSize(This,FrameNumber,Size)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -10790,7 +10790,7 @@ void __RPC_STUB IAMVideoCompression_OverrideFrameSize_Stub(
 
 
 
-#endif 	/* __IAMVideoCompression_INTERFACE_DEFINED__ */
+#endif     /* __IAMVideoCompression_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0164 */
@@ -10798,18 +10798,18 @@ void __RPC_STUB IAMVideoCompression_OverrideFrameSize_Stub(
 
 typedef /* [public] */
 enum __MIDL___MIDL_itf_strmif_0164_0001
-    {	VfwCaptureDialog_Source	= 0x1,
-	VfwCaptureDialog_Format	= 0x2,
-	VfwCaptureDialog_Display	= 0x4
-    } 	VfwCaptureDialogs;
+    {    VfwCaptureDialog_Source    = 0x1,
+    VfwCaptureDialog_Format    = 0x2,
+    VfwCaptureDialog_Display    = 0x4
+    }     VfwCaptureDialogs;
 
 typedef /* [public] */
 enum __MIDL___MIDL_itf_strmif_0164_0002
-    {	VfwCompressDialog_Config	= 0x1,
-	VfwCompressDialog_About	= 0x2,
-	VfwCompressDialog_QueryConfig	= 0x4,
-	VfwCompressDialog_QueryAbout	= 0x8
-    } 	VfwCompressDialogs;
+    {    VfwCompressDialog_Config    = 0x1,
+    VfwCompressDialog_About    = 0x2,
+    VfwCompressDialog_QueryConfig    = 0x4,
+    VfwCompressDialog_QueryAbout    = 0x8
+    }     VfwCompressDialogs;
 
 
 
@@ -10846,7 +10846,7 @@ EXTERN_C const IID IID_IAMVfwCaptureDialogs;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IAMVfwCaptureDialogsVtbl
     {
@@ -10892,29 +10892,29 @@ EXTERN_C const IID IID_IAMVfwCaptureDialogs;
 #ifdef COBJMACROS
 
 
-#define IAMVfwCaptureDialogs_QueryInterface(This,riid,ppvObject)	\
+#define IAMVfwCaptureDialogs_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IAMVfwCaptureDialogs_AddRef(This)	\
+#define IAMVfwCaptureDialogs_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IAMVfwCaptureDialogs_Release(This)	\
+#define IAMVfwCaptureDialogs_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IAMVfwCaptureDialogs_HasDialog(This,iDialog)	\
+#define IAMVfwCaptureDialogs_HasDialog(This,iDialog)    \
     (This)->lpVtbl -> HasDialog(This,iDialog)
 
-#define IAMVfwCaptureDialogs_ShowDialog(This,iDialog,hwnd)	\
+#define IAMVfwCaptureDialogs_ShowDialog(This,iDialog,hwnd)    \
     (This)->lpVtbl -> ShowDialog(This,iDialog,hwnd)
 
-#define IAMVfwCaptureDialogs_SendDriverMessage(This,iDialog,uMsg,dw1,dw2)	\
+#define IAMVfwCaptureDialogs_SendDriverMessage(This,iDialog,uMsg,dw1,dw2)    \
     (This)->lpVtbl -> SendDriverMessage(This,iDialog,uMsg,dw1,dw2)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -10959,7 +10959,7 @@ void __RPC_STUB IAMVfwCaptureDialogs_SendDriverMessage_Stub(
 
 
 
-#endif 	/* __IAMVfwCaptureDialogs_INTERFACE_DEFINED__ */
+#endif     /* __IAMVfwCaptureDialogs_INTERFACE_DEFINED__ */
 
 
 #ifndef __IAMVfwCompressDialogs_INTERFACE_DEFINED__
@@ -10996,7 +10996,7 @@ EXTERN_C const IID IID_IAMVfwCompressDialogs;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IAMVfwCompressDialogsVtbl
     {
@@ -11047,32 +11047,32 @@ EXTERN_C const IID IID_IAMVfwCompressDialogs;
 #ifdef COBJMACROS
 
 
-#define IAMVfwCompressDialogs_QueryInterface(This,riid,ppvObject)	\
+#define IAMVfwCompressDialogs_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IAMVfwCompressDialogs_AddRef(This)	\
+#define IAMVfwCompressDialogs_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IAMVfwCompressDialogs_Release(This)	\
+#define IAMVfwCompressDialogs_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IAMVfwCompressDialogs_ShowDialog(This,iDialog,hwnd)	\
+#define IAMVfwCompressDialogs_ShowDialog(This,iDialog,hwnd)    \
     (This)->lpVtbl -> ShowDialog(This,iDialog,hwnd)
 
-#define IAMVfwCompressDialogs_GetState(This,pState,pcbState)	\
+#define IAMVfwCompressDialogs_GetState(This,pState,pcbState)    \
     (This)->lpVtbl -> GetState(This,pState,pcbState)
 
-#define IAMVfwCompressDialogs_SetState(This,pState,cbState)	\
+#define IAMVfwCompressDialogs_SetState(This,pState,cbState)    \
     (This)->lpVtbl -> SetState(This,pState,cbState)
 
-#define IAMVfwCompressDialogs_SendDriverMessage(This,uMsg,dw1,dw2)	\
+#define IAMVfwCompressDialogs_SendDriverMessage(This,uMsg,dw1,dw2)    \
     (This)->lpVtbl -> SendDriverMessage(This,uMsg,dw1,dw2)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -11130,7 +11130,7 @@ void __RPC_STUB IAMVfwCompressDialogs_SendDriverMessage_Stub(
 
 
 
-#endif 	/* __IAMVfwCompressDialogs_INTERFACE_DEFINED__ */
+#endif     /* __IAMVfwCompressDialogs_INTERFACE_DEFINED__ */
 
 
 #ifndef __IAMDroppedFrames_INTERFACE_DEFINED__
@@ -11164,7 +11164,7 @@ EXTERN_C const IID IID_IAMDroppedFrames;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IAMDroppedFramesVtbl
     {
@@ -11212,32 +11212,32 @@ EXTERN_C const IID IID_IAMDroppedFrames;
 #ifdef COBJMACROS
 
 
-#define IAMDroppedFrames_QueryInterface(This,riid,ppvObject)	\
+#define IAMDroppedFrames_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IAMDroppedFrames_AddRef(This)	\
+#define IAMDroppedFrames_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IAMDroppedFrames_Release(This)	\
+#define IAMDroppedFrames_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IAMDroppedFrames_GetNumDropped(This,plDropped)	\
+#define IAMDroppedFrames_GetNumDropped(This,plDropped)    \
     (This)->lpVtbl -> GetNumDropped(This,plDropped)
 
-#define IAMDroppedFrames_GetNumNotDropped(This,plNotDropped)	\
+#define IAMDroppedFrames_GetNumNotDropped(This,plNotDropped)    \
     (This)->lpVtbl -> GetNumNotDropped(This,plNotDropped)
 
-#define IAMDroppedFrames_GetDroppedInfo(This,lSize,plArray,plNumCopied)	\
+#define IAMDroppedFrames_GetDroppedInfo(This,lSize,plArray,plNumCopied)    \
     (This)->lpVtbl -> GetDroppedInfo(This,lSize,plArray,plNumCopied)
 
-#define IAMDroppedFrames_GetAverageFrameSize(This,plAverageSize)	\
+#define IAMDroppedFrames_GetAverageFrameSize(This,plAverageSize)    \
     (This)->lpVtbl -> GetAverageFrameSize(This,plAverageSize)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -11292,7 +11292,7 @@ void __RPC_STUB IAMDroppedFrames_GetAverageFrameSize_Stub(
 
 
 
-#endif 	/* __IAMDroppedFrames_INTERFACE_DEFINED__ */
+#endif     /* __IAMDroppedFrames_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0167 */
@@ -11369,7 +11369,7 @@ EXTERN_C const IID IID_IAMAudioInputMixer;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IAMAudioInputMixerVtbl
     {
@@ -11463,68 +11463,68 @@ EXTERN_C const IID IID_IAMAudioInputMixer;
 #ifdef COBJMACROS
 
 
-#define IAMAudioInputMixer_QueryInterface(This,riid,ppvObject)	\
+#define IAMAudioInputMixer_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IAMAudioInputMixer_AddRef(This)	\
+#define IAMAudioInputMixer_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IAMAudioInputMixer_Release(This)	\
+#define IAMAudioInputMixer_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IAMAudioInputMixer_put_Enable(This,fEnable)	\
+#define IAMAudioInputMixer_put_Enable(This,fEnable)    \
     (This)->lpVtbl -> put_Enable(This,fEnable)
 
-#define IAMAudioInputMixer_get_Enable(This,pfEnable)	\
+#define IAMAudioInputMixer_get_Enable(This,pfEnable)    \
     (This)->lpVtbl -> get_Enable(This,pfEnable)
 
-#define IAMAudioInputMixer_put_Mono(This,fMono)	\
+#define IAMAudioInputMixer_put_Mono(This,fMono)    \
     (This)->lpVtbl -> put_Mono(This,fMono)
 
-#define IAMAudioInputMixer_get_Mono(This,pfMono)	\
+#define IAMAudioInputMixer_get_Mono(This,pfMono)    \
     (This)->lpVtbl -> get_Mono(This,pfMono)
 
-#define IAMAudioInputMixer_put_MixLevel(This,Level)	\
+#define IAMAudioInputMixer_put_MixLevel(This,Level)    \
     (This)->lpVtbl -> put_MixLevel(This,Level)
 
-#define IAMAudioInputMixer_get_MixLevel(This,pLevel)	\
+#define IAMAudioInputMixer_get_MixLevel(This,pLevel)    \
     (This)->lpVtbl -> get_MixLevel(This,pLevel)
 
-#define IAMAudioInputMixer_put_Pan(This,Pan)	\
+#define IAMAudioInputMixer_put_Pan(This,Pan)    \
     (This)->lpVtbl -> put_Pan(This,Pan)
 
-#define IAMAudioInputMixer_get_Pan(This,pPan)	\
+#define IAMAudioInputMixer_get_Pan(This,pPan)    \
     (This)->lpVtbl -> get_Pan(This,pPan)
 
-#define IAMAudioInputMixer_put_Loudness(This,fLoudness)	\
+#define IAMAudioInputMixer_put_Loudness(This,fLoudness)    \
     (This)->lpVtbl -> put_Loudness(This,fLoudness)
 
-#define IAMAudioInputMixer_get_Loudness(This,pfLoudness)	\
+#define IAMAudioInputMixer_get_Loudness(This,pfLoudness)    \
     (This)->lpVtbl -> get_Loudness(This,pfLoudness)
 
-#define IAMAudioInputMixer_put_Treble(This,Treble)	\
+#define IAMAudioInputMixer_put_Treble(This,Treble)    \
     (This)->lpVtbl -> put_Treble(This,Treble)
 
-#define IAMAudioInputMixer_get_Treble(This,pTreble)	\
+#define IAMAudioInputMixer_get_Treble(This,pTreble)    \
     (This)->lpVtbl -> get_Treble(This,pTreble)
 
-#define IAMAudioInputMixer_get_TrebleRange(This,pRange)	\
+#define IAMAudioInputMixer_get_TrebleRange(This,pRange)    \
     (This)->lpVtbl -> get_TrebleRange(This,pRange)
 
-#define IAMAudioInputMixer_put_Bass(This,Bass)	\
+#define IAMAudioInputMixer_put_Bass(This,Bass)    \
     (This)->lpVtbl -> put_Bass(This,Bass)
 
-#define IAMAudioInputMixer_get_Bass(This,pBass)	\
+#define IAMAudioInputMixer_get_Bass(This,pBass)    \
     (This)->lpVtbl -> get_Bass(This,pBass)
 
-#define IAMAudioInputMixer_get_BassRange(This,pRange)	\
+#define IAMAudioInputMixer_get_BassRange(This,pRange)    \
     (This)->lpVtbl -> get_BassRange(This,pRange)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -11721,7 +11721,7 @@ void __RPC_STUB IAMAudioInputMixer_get_BassRange_Stub(
 
 
 
-#endif 	/* __IAMAudioInputMixer_INTERFACE_DEFINED__ */
+#endif     /* __IAMAudioInputMixer_INTERFACE_DEFINED__ */
 
 
 #ifndef __IAMBufferNegotiation_INTERFACE_DEFINED__
@@ -11747,7 +11747,7 @@ EXTERN_C const IID IID_IAMBufferNegotiation;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IAMBufferNegotiationVtbl
     {
@@ -11785,26 +11785,26 @@ EXTERN_C const IID IID_IAMBufferNegotiation;
 #ifdef COBJMACROS
 
 
-#define IAMBufferNegotiation_QueryInterface(This,riid,ppvObject)	\
+#define IAMBufferNegotiation_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IAMBufferNegotiation_AddRef(This)	\
+#define IAMBufferNegotiation_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IAMBufferNegotiation_Release(This)	\
+#define IAMBufferNegotiation_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IAMBufferNegotiation_SuggestAllocatorProperties(This,pprop)	\
+#define IAMBufferNegotiation_SuggestAllocatorProperties(This,pprop)    \
     (This)->lpVtbl -> SuggestAllocatorProperties(This,pprop)
 
-#define IAMBufferNegotiation_GetAllocatorProperties(This,pprop)	\
+#define IAMBufferNegotiation_GetAllocatorProperties(This,pprop)    \
     (This)->lpVtbl -> GetAllocatorProperties(This,pprop)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -11833,7 +11833,7 @@ void __RPC_STUB IAMBufferNegotiation_GetAllocatorProperties_Stub(
 
 
 
-#endif 	/* __IAMBufferNegotiation_INTERFACE_DEFINED__ */
+#endif     /* __IAMBufferNegotiation_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0169 */
@@ -11841,72 +11841,72 @@ void __RPC_STUB IAMBufferNegotiation_GetAllocatorProperties_Stub(
 
 typedef
 enum tagAnalogVideoStandard
-    {	AnalogVideo_None	= 0,
-	AnalogVideo_NTSC_M	= 0x1,
-	AnalogVideo_NTSC_M_J	= 0x2,
-	AnalogVideo_NTSC_433	= 0x4,
-	AnalogVideo_PAL_B	= 0x10,
-	AnalogVideo_PAL_D	= 0x20,
-	AnalogVideo_PAL_G	= 0x40,
-	AnalogVideo_PAL_H	= 0x80,
-	AnalogVideo_PAL_I	= 0x100,
-	AnalogVideo_PAL_M	= 0x200,
-	AnalogVideo_PAL_N	= 0x400,
-	AnalogVideo_PAL_60	= 0x800,
-	AnalogVideo_SECAM_B	= 0x1000,
-	AnalogVideo_SECAM_D	= 0x2000,
-	AnalogVideo_SECAM_G	= 0x4000,
-	AnalogVideo_SECAM_H	= 0x8000,
-	AnalogVideo_SECAM_K	= 0x10000,
-	AnalogVideo_SECAM_K1	= 0x20000,
-	AnalogVideo_SECAM_L	= 0x40000,
-	AnalogVideo_SECAM_L1	= 0x80000,
-	AnalogVideo_PAL_N_COMBO	= 0x100000
-    } 	AnalogVideoStandard;
+    {    AnalogVideo_None    = 0,
+    AnalogVideo_NTSC_M    = 0x1,
+    AnalogVideo_NTSC_M_J    = 0x2,
+    AnalogVideo_NTSC_433    = 0x4,
+    AnalogVideo_PAL_B    = 0x10,
+    AnalogVideo_PAL_D    = 0x20,
+    AnalogVideo_PAL_G    = 0x40,
+    AnalogVideo_PAL_H    = 0x80,
+    AnalogVideo_PAL_I    = 0x100,
+    AnalogVideo_PAL_M    = 0x200,
+    AnalogVideo_PAL_N    = 0x400,
+    AnalogVideo_PAL_60    = 0x800,
+    AnalogVideo_SECAM_B    = 0x1000,
+    AnalogVideo_SECAM_D    = 0x2000,
+    AnalogVideo_SECAM_G    = 0x4000,
+    AnalogVideo_SECAM_H    = 0x8000,
+    AnalogVideo_SECAM_K    = 0x10000,
+    AnalogVideo_SECAM_K1    = 0x20000,
+    AnalogVideo_SECAM_L    = 0x40000,
+    AnalogVideo_SECAM_L1    = 0x80000,
+    AnalogVideo_PAL_N_COMBO    = 0x100000
+    }     AnalogVideoStandard;
 
 #define AnalogVideo_NTSC_Mask  0x00000007
 #define AnalogVideo_PAL_Mask   0x00100FF0
 #define AnalogVideo_SECAM_Mask 0x000FF000
 typedef
 enum tagTunerInputType
-    {	TunerInputCable	= 0,
-	TunerInputAntenna	= TunerInputCable + 1
-    } 	TunerInputType;
+    {    TunerInputCable    = 0,
+    TunerInputAntenna    = TunerInputCable + 1
+    }     TunerInputType;
 
 typedef /* [public] */
 enum __MIDL___MIDL_itf_strmif_0169_0001
-    {	VideoCopyProtectionMacrovisionBasic	= 0,
-	VideoCopyProtectionMacrovisionCBI	= VideoCopyProtectionMacrovisionBasic + 1
-    } 	VideoCopyProtectionType;
+    {    VideoCopyProtectionMacrovisionBasic    = 0,
+    VideoCopyProtectionMacrovisionCBI    = VideoCopyProtectionMacrovisionBasic + 1
+    }     VideoCopyProtectionType;
 
 typedef
 enum tagPhysicalConnectorType
-    {	PhysConn_Video_Tuner	= 1,
-	PhysConn_Video_Composite	= PhysConn_Video_Tuner + 1,
-	PhysConn_Video_SVideo	= PhysConn_Video_Composite + 1,
-	PhysConn_Video_RGB	= PhysConn_Video_SVideo + 1,
-	PhysConn_Video_YRYBY	= PhysConn_Video_RGB + 1,
-	PhysConn_Video_SerialDigital	= PhysConn_Video_YRYBY + 1,
-	PhysConn_Video_ParallelDigital	= PhysConn_Video_SerialDigital + 1,
-	PhysConn_Video_SCSI	= PhysConn_Video_ParallelDigital + 1,
-	PhysConn_Video_AUX	= PhysConn_Video_SCSI + 1,
-	PhysConn_Video_1394	= PhysConn_Video_AUX + 1,
-	PhysConn_Video_USB	= PhysConn_Video_1394 + 1,
-	PhysConn_Video_VideoDecoder	= PhysConn_Video_USB + 1,
-	PhysConn_Video_VideoEncoder	= PhysConn_Video_VideoDecoder + 1,
-	PhysConn_Video_SCART	= PhysConn_Video_VideoEncoder + 1,
-	PhysConn_Video_Black	= PhysConn_Video_SCART + 1,
-	PhysConn_Audio_Tuner	= 0x1000,
-	PhysConn_Audio_Line	= PhysConn_Audio_Tuner + 1,
-	PhysConn_Audio_Mic	= PhysConn_Audio_Line + 1,
-	PhysConn_Audio_AESDigital	= PhysConn_Audio_Mic + 1,
-	PhysConn_Audio_SPDIFDigital	= PhysConn_Audio_AESDigital + 1,
-	PhysConn_Audio_SCSI	= PhysConn_Audio_SPDIFDigital + 1,
-	PhysConn_Audio_AUX	= PhysConn_Audio_SCSI + 1,
-	PhysConn_Audio_1394	= PhysConn_Audio_AUX + 1,
-	PhysConn_Audio_USB	= PhysConn_Audio_1394 + 1,
-	PhysConn_Audio_AudioDecoder	= PhysConn_Audio_USB + 1
-    } 	PhysicalConnectorType;
+    {    PhysConn_Video_Tuner    = 1,
+    PhysConn_Video_Composite    = PhysConn_Video_Tuner + 1,
+    PhysConn_Video_SVideo    = PhysConn_Video_Composite + 1,
+    PhysConn_Video_RGB    = PhysConn_Video_SVideo + 1,
+    PhysConn_Video_YRYBY    = PhysConn_Video_RGB + 1,
+    PhysConn_Video_SerialDigital    = PhysConn_Video_YRYBY + 1,
+    PhysConn_Video_ParallelDigital    = PhysConn_Video_SerialDigital + 1,
+    PhysConn_Video_SCSI    = PhysConn_Video_ParallelDigital + 1,
+    PhysConn_Video_AUX    = PhysConn_Video_SCSI + 1,
+    PhysConn_Video_1394    = PhysConn_Video_AUX + 1,
+    PhysConn_Video_USB    = PhysConn_Video_1394 + 1,
+    PhysConn_Video_VideoDecoder    = PhysConn_Video_USB + 1,
+    PhysConn_Video_VideoEncoder    = PhysConn_Video_VideoDecoder + 1,
+    PhysConn_Video_SCART    = PhysConn_Video_VideoEncoder + 1,
+    PhysConn_Video_Black    = PhysConn_Video_SCART + 1,
+    PhysConn_Audio_Tuner    = 0x1000,
+    PhysConn_Audio_Line    = PhysConn_Audio_Tuner + 1,
+    PhysConn_Audio_Mic    = PhysConn_Audio_Line + 1,
+    PhysConn_Audio_AESDigital    = PhysConn_Audio_Mic + 1,
+    PhysConn_Audio_SPDIFDigital    = PhysConn_Audio_AESDigital + 1,
+    PhysConn_Audio_SCSI    = PhysConn_Audio_SPDIFDigital + 1,
+    PhysConn_Audio_AUX    = PhysConn_Audio_SCSI + 1,
+    PhysConn_Audio_1394    = PhysConn_Audio_AUX + 1,
+    PhysConn_Audio_USB    = PhysConn_Audio_1394 + 1,
+    PhysConn_Audio_AudioDecoder    = PhysConn_Audio_USB + 1
+    }     PhysicalConnectorType;
 
 
 
@@ -11957,7 +11957,7 @@ EXTERN_C const IID IID_IAMAnalogVideoDecoder;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IAMAnalogVideoDecoderVtbl
     {
@@ -12023,47 +12023,47 @@ EXTERN_C const IID IID_IAMAnalogVideoDecoder;
 #ifdef COBJMACROS
 
 
-#define IAMAnalogVideoDecoder_QueryInterface(This,riid,ppvObject)	\
+#define IAMAnalogVideoDecoder_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IAMAnalogVideoDecoder_AddRef(This)	\
+#define IAMAnalogVideoDecoder_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IAMAnalogVideoDecoder_Release(This)	\
+#define IAMAnalogVideoDecoder_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IAMAnalogVideoDecoder_get_AvailableTVFormats(This,lAnalogVideoStandard)	\
+#define IAMAnalogVideoDecoder_get_AvailableTVFormats(This,lAnalogVideoStandard)    \
     (This)->lpVtbl -> get_AvailableTVFormats(This,lAnalogVideoStandard)
 
-#define IAMAnalogVideoDecoder_put_TVFormat(This,lAnalogVideoStandard)	\
+#define IAMAnalogVideoDecoder_put_TVFormat(This,lAnalogVideoStandard)    \
     (This)->lpVtbl -> put_TVFormat(This,lAnalogVideoStandard)
 
-#define IAMAnalogVideoDecoder_get_TVFormat(This,plAnalogVideoStandard)	\
+#define IAMAnalogVideoDecoder_get_TVFormat(This,plAnalogVideoStandard)    \
     (This)->lpVtbl -> get_TVFormat(This,plAnalogVideoStandard)
 
-#define IAMAnalogVideoDecoder_get_HorizontalLocked(This,plLocked)	\
+#define IAMAnalogVideoDecoder_get_HorizontalLocked(This,plLocked)    \
     (This)->lpVtbl -> get_HorizontalLocked(This,plLocked)
 
-#define IAMAnalogVideoDecoder_put_VCRHorizontalLocking(This,lVCRHorizontalLocking)	\
+#define IAMAnalogVideoDecoder_put_VCRHorizontalLocking(This,lVCRHorizontalLocking)    \
     (This)->lpVtbl -> put_VCRHorizontalLocking(This,lVCRHorizontalLocking)
 
-#define IAMAnalogVideoDecoder_get_VCRHorizontalLocking(This,plVCRHorizontalLocking)	\
+#define IAMAnalogVideoDecoder_get_VCRHorizontalLocking(This,plVCRHorizontalLocking)    \
     (This)->lpVtbl -> get_VCRHorizontalLocking(This,plVCRHorizontalLocking)
 
-#define IAMAnalogVideoDecoder_get_NumberOfLines(This,plNumberOfLines)	\
+#define IAMAnalogVideoDecoder_get_NumberOfLines(This,plNumberOfLines)    \
     (This)->lpVtbl -> get_NumberOfLines(This,plNumberOfLines)
 
-#define IAMAnalogVideoDecoder_put_OutputEnable(This,lOutputEnable)	\
+#define IAMAnalogVideoDecoder_put_OutputEnable(This,lOutputEnable)    \
     (This)->lpVtbl -> put_OutputEnable(This,lOutputEnable)
 
-#define IAMAnalogVideoDecoder_get_OutputEnable(This,plOutputEnable)	\
+#define IAMAnalogVideoDecoder_get_OutputEnable(This,plOutputEnable)    \
     (This)->lpVtbl -> get_OutputEnable(This,plOutputEnable)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -12176,7 +12176,7 @@ void __RPC_STUB IAMAnalogVideoDecoder_get_OutputEnable_Stub(
 
 
 
-#endif 	/* __IAMAnalogVideoDecoder_INTERFACE_DEFINED__ */
+#endif     /* __IAMAnalogVideoDecoder_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0170 */
@@ -12184,23 +12184,23 @@ void __RPC_STUB IAMAnalogVideoDecoder_get_OutputEnable_Stub(
 
 typedef
 enum tagVideoProcAmpProperty
-    {	VideoProcAmp_Brightness	= 0,
-	VideoProcAmp_Contrast	= VideoProcAmp_Brightness + 1,
-	VideoProcAmp_Hue	= VideoProcAmp_Contrast + 1,
-	VideoProcAmp_Saturation	= VideoProcAmp_Hue + 1,
-	VideoProcAmp_Sharpness	= VideoProcAmp_Saturation + 1,
-	VideoProcAmp_Gamma	= VideoProcAmp_Sharpness + 1,
-	VideoProcAmp_ColorEnable	= VideoProcAmp_Gamma + 1,
-	VideoProcAmp_WhiteBalance	= VideoProcAmp_ColorEnable + 1,
-	VideoProcAmp_BacklightCompensation	= VideoProcAmp_WhiteBalance + 1,
-	VideoProcAmp_Gain	= VideoProcAmp_BacklightCompensation + 1
-    } 	VideoProcAmpProperty;
+    {    VideoProcAmp_Brightness    = 0,
+    VideoProcAmp_Contrast    = VideoProcAmp_Brightness + 1,
+    VideoProcAmp_Hue    = VideoProcAmp_Contrast + 1,
+    VideoProcAmp_Saturation    = VideoProcAmp_Hue + 1,
+    VideoProcAmp_Sharpness    = VideoProcAmp_Saturation + 1,
+    VideoProcAmp_Gamma    = VideoProcAmp_Sharpness + 1,
+    VideoProcAmp_ColorEnable    = VideoProcAmp_Gamma + 1,
+    VideoProcAmp_WhiteBalance    = VideoProcAmp_ColorEnable + 1,
+    VideoProcAmp_BacklightCompensation    = VideoProcAmp_WhiteBalance + 1,
+    VideoProcAmp_Gain    = VideoProcAmp_BacklightCompensation + 1
+    }     VideoProcAmpProperty;
 
 typedef
 enum tagVideoProcAmpFlags
-    {	VideoProcAmp_Flags_Auto	= 0x1,
-	VideoProcAmp_Flags_Manual	= 0x2
-    } 	VideoProcAmpFlags;
+    {    VideoProcAmp_Flags_Auto    = 0x1,
+    VideoProcAmp_Flags_Manual    = 0x2
+    }     VideoProcAmpFlags;
 
 
 
@@ -12242,7 +12242,7 @@ EXTERN_C const IID IID_IAMVideoProcAmp;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IAMVideoProcAmpVtbl
     {
@@ -12293,29 +12293,29 @@ EXTERN_C const IID IID_IAMVideoProcAmp;
 #ifdef COBJMACROS
 
 
-#define IAMVideoProcAmp_QueryInterface(This,riid,ppvObject)	\
+#define IAMVideoProcAmp_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IAMVideoProcAmp_AddRef(This)	\
+#define IAMVideoProcAmp_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IAMVideoProcAmp_Release(This)	\
+#define IAMVideoProcAmp_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IAMVideoProcAmp_GetRange(This,Property,pMin,pMax,pSteppingDelta,pDefault,pCapsFlags)	\
+#define IAMVideoProcAmp_GetRange(This,Property,pMin,pMax,pSteppingDelta,pDefault,pCapsFlags)    \
     (This)->lpVtbl -> GetRange(This,Property,pMin,pMax,pSteppingDelta,pDefault,pCapsFlags)
 
-#define IAMVideoProcAmp_Set(This,Property,lValue,Flags)	\
+#define IAMVideoProcAmp_Set(This,Property,lValue,Flags)    \
     (This)->lpVtbl -> Set(This,Property,lValue,Flags)
 
-#define IAMVideoProcAmp_Get(This,Property,lValue,Flags)	\
+#define IAMVideoProcAmp_Get(This,Property,lValue,Flags)    \
     (This)->lpVtbl -> Get(This,Property,lValue,Flags)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -12365,7 +12365,7 @@ void __RPC_STUB IAMVideoProcAmp_Get_Stub(
 
 
 
-#endif 	/* __IAMVideoProcAmp_INTERFACE_DEFINED__ */
+#endif     /* __IAMVideoProcAmp_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0171 */
@@ -12373,20 +12373,20 @@ void __RPC_STUB IAMVideoProcAmp_Get_Stub(
 
 typedef
 enum tagCameraControlProperty
-    {	CameraControl_Pan	= 0,
-	CameraControl_Tilt	= CameraControl_Pan + 1,
-	CameraControl_Roll	= CameraControl_Tilt + 1,
-	CameraControl_Zoom	= CameraControl_Roll + 1,
-	CameraControl_Exposure	= CameraControl_Zoom + 1,
-	CameraControl_Iris	= CameraControl_Exposure + 1,
-	CameraControl_Focus	= CameraControl_Iris + 1
-    } 	CameraControlProperty;
+    {    CameraControl_Pan    = 0,
+    CameraControl_Tilt    = CameraControl_Pan + 1,
+    CameraControl_Roll    = CameraControl_Tilt + 1,
+    CameraControl_Zoom    = CameraControl_Roll + 1,
+    CameraControl_Exposure    = CameraControl_Zoom + 1,
+    CameraControl_Iris    = CameraControl_Exposure + 1,
+    CameraControl_Focus    = CameraControl_Iris + 1
+    }     CameraControlProperty;
 
 typedef
 enum tagCameraControlFlags
-    {	CameraControl_Flags_Auto	= 0x1,
-	CameraControl_Flags_Manual	= 0x2
-    } 	CameraControlFlags;
+    {    CameraControl_Flags_Auto    = 0x1,
+    CameraControl_Flags_Manual    = 0x2
+    }     CameraControlFlags;
 
 
 
@@ -12428,7 +12428,7 @@ EXTERN_C const IID IID_IAMCameraControl;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IAMCameraControlVtbl
     {
@@ -12479,29 +12479,29 @@ EXTERN_C const IID IID_IAMCameraControl;
 #ifdef COBJMACROS
 
 
-#define IAMCameraControl_QueryInterface(This,riid,ppvObject)	\
+#define IAMCameraControl_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IAMCameraControl_AddRef(This)	\
+#define IAMCameraControl_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IAMCameraControl_Release(This)	\
+#define IAMCameraControl_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IAMCameraControl_GetRange(This,Property,pMin,pMax,pSteppingDelta,pDefault,pCapsFlags)	\
+#define IAMCameraControl_GetRange(This,Property,pMin,pMax,pSteppingDelta,pDefault,pCapsFlags)    \
     (This)->lpVtbl -> GetRange(This,Property,pMin,pMax,pSteppingDelta,pDefault,pCapsFlags)
 
-#define IAMCameraControl_Set(This,Property,lValue,Flags)	\
+#define IAMCameraControl_Set(This,Property,lValue,Flags)    \
     (This)->lpVtbl -> Set(This,Property,lValue,Flags)
 
-#define IAMCameraControl_Get(This,Property,lValue,Flags)	\
+#define IAMCameraControl_Get(This,Property,lValue,Flags)    \
     (This)->lpVtbl -> Get(This,Property,lValue,Flags)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -12551,7 +12551,7 @@ void __RPC_STUB IAMCameraControl_Get_Stub(
 
 
 
-#endif 	/* __IAMCameraControl_INTERFACE_DEFINED__ */
+#endif     /* __IAMCameraControl_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0172 */
@@ -12559,11 +12559,11 @@ void __RPC_STUB IAMCameraControl_Get_Stub(
 
 typedef
 enum tagVideoControlFlags
-    {	VideoControlFlag_FlipHorizontal	= 0x1,
-	VideoControlFlag_FlipVertical	= 0x2,
-	VideoControlFlag_ExternalTriggerEnable	= 0x4,
-	VideoControlFlag_Trigger	= 0x8
-    } 	VideoControlFlags;
+    {    VideoControlFlag_FlipHorizontal    = 0x1,
+    VideoControlFlag_FlipVertical    = 0x2,
+    VideoControlFlag_ExternalTriggerEnable    = 0x4,
+    VideoControlFlag_Trigger    = 0x8
+    }     VideoControlFlags;
 
 
 
@@ -12616,7 +12616,7 @@ EXTERN_C const IID IID_IAMVideoControl;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IAMVideoControlVtbl
     {
@@ -12681,38 +12681,38 @@ EXTERN_C const IID IID_IAMVideoControl;
 #ifdef COBJMACROS
 
 
-#define IAMVideoControl_QueryInterface(This,riid,ppvObject)	\
+#define IAMVideoControl_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IAMVideoControl_AddRef(This)	\
+#define IAMVideoControl_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IAMVideoControl_Release(This)	\
+#define IAMVideoControl_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IAMVideoControl_GetCaps(This,pPin,pCapsFlags)	\
+#define IAMVideoControl_GetCaps(This,pPin,pCapsFlags)    \
     (This)->lpVtbl -> GetCaps(This,pPin,pCapsFlags)
 
-#define IAMVideoControl_SetMode(This,pPin,Mode)	\
+#define IAMVideoControl_SetMode(This,pPin,Mode)    \
     (This)->lpVtbl -> SetMode(This,pPin,Mode)
 
-#define IAMVideoControl_GetMode(This,pPin,Mode)	\
+#define IAMVideoControl_GetMode(This,pPin,Mode)    \
     (This)->lpVtbl -> GetMode(This,pPin,Mode)
 
-#define IAMVideoControl_GetCurrentActualFrameRate(This,pPin,ActualFrameRate)	\
+#define IAMVideoControl_GetCurrentActualFrameRate(This,pPin,ActualFrameRate)    \
     (This)->lpVtbl -> GetCurrentActualFrameRate(This,pPin,ActualFrameRate)
 
-#define IAMVideoControl_GetMaxAvailableFrameRate(This,pPin,iIndex,Dimensions,MaxAvailableFrameRate)	\
+#define IAMVideoControl_GetMaxAvailableFrameRate(This,pPin,iIndex,Dimensions,MaxAvailableFrameRate)    \
     (This)->lpVtbl -> GetMaxAvailableFrameRate(This,pPin,iIndex,Dimensions,MaxAvailableFrameRate)
 
-#define IAMVideoControl_GetFrameRateList(This,pPin,iIndex,Dimensions,ListSize,FrameRates)	\
+#define IAMVideoControl_GetFrameRateList(This,pPin,iIndex,Dimensions,ListSize,FrameRates)    \
     (This)->lpVtbl -> GetFrameRateList(This,pPin,iIndex,Dimensions,ListSize,FrameRates)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -12800,7 +12800,7 @@ void __RPC_STUB IAMVideoControl_GetFrameRateList_Stub(
 
 
 
-#endif 	/* __IAMVideoControl_INTERFACE_DEFINED__ */
+#endif     /* __IAMVideoControl_INTERFACE_DEFINED__ */
 
 
 #ifndef __IAMCrossbar_INTERFACE_DEFINED__
@@ -12842,7 +12842,7 @@ EXTERN_C const IID IID_IAMCrossbar;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IAMCrossbarVtbl
     {
@@ -12899,35 +12899,35 @@ EXTERN_C const IID IID_IAMCrossbar;
 #ifdef COBJMACROS
 
 
-#define IAMCrossbar_QueryInterface(This,riid,ppvObject)	\
+#define IAMCrossbar_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IAMCrossbar_AddRef(This)	\
+#define IAMCrossbar_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IAMCrossbar_Release(This)	\
+#define IAMCrossbar_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IAMCrossbar_get_PinCounts(This,OutputPinCount,InputPinCount)	\
+#define IAMCrossbar_get_PinCounts(This,OutputPinCount,InputPinCount)    \
     (This)->lpVtbl -> get_PinCounts(This,OutputPinCount,InputPinCount)
 
-#define IAMCrossbar_CanRoute(This,OutputPinIndex,InputPinIndex)	\
+#define IAMCrossbar_CanRoute(This,OutputPinIndex,InputPinIndex)    \
     (This)->lpVtbl -> CanRoute(This,OutputPinIndex,InputPinIndex)
 
-#define IAMCrossbar_Route(This,OutputPinIndex,InputPinIndex)	\
+#define IAMCrossbar_Route(This,OutputPinIndex,InputPinIndex)    \
     (This)->lpVtbl -> Route(This,OutputPinIndex,InputPinIndex)
 
-#define IAMCrossbar_get_IsRoutedTo(This,OutputPinIndex,InputPinIndex)	\
+#define IAMCrossbar_get_IsRoutedTo(This,OutputPinIndex,InputPinIndex)    \
     (This)->lpVtbl -> get_IsRoutedTo(This,OutputPinIndex,InputPinIndex)
 
-#define IAMCrossbar_get_CrossbarPinInfo(This,IsInputPin,PinIndex,PinIndexRelated,PhysicalType)	\
+#define IAMCrossbar_get_CrossbarPinInfo(This,IsInputPin,PinIndex,PinIndexRelated,PhysicalType)    \
     (This)->lpVtbl -> get_CrossbarPinInfo(This,IsInputPin,PinIndex,PinIndexRelated,PhysicalType)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -12999,7 +12999,7 @@ void __RPC_STUB IAMCrossbar_get_CrossbarPinInfo_Stub(
 
 
 
-#endif 	/* __IAMCrossbar_INTERFACE_DEFINED__ */
+#endif     /* __IAMCrossbar_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0174 */
@@ -13007,30 +13007,30 @@ void __RPC_STUB IAMCrossbar_get_CrossbarPinInfo_Stub(
 
 typedef
 enum tagAMTunerSubChannel
-    {	AMTUNER_SUBCHAN_NO_TUNE	= -2,
-	AMTUNER_SUBCHAN_DEFAULT	= -1
-    } 	AMTunerSubChannel;
+    {    AMTUNER_SUBCHAN_NO_TUNE    = -2,
+    AMTUNER_SUBCHAN_DEFAULT    = -1
+    }     AMTunerSubChannel;
 
 typedef
 enum tagAMTunerSignalStrength
-    {	AMTUNER_HASNOSIGNALSTRENGTH	= -1,
-	AMTUNER_NOSIGNAL	= 0,
-	AMTUNER_SIGNALPRESENT	= 1
-    } 	AMTunerSignalStrength;
+    {    AMTUNER_HASNOSIGNALSTRENGTH    = -1,
+    AMTUNER_NOSIGNAL    = 0,
+    AMTUNER_SIGNALPRESENT    = 1
+    }     AMTunerSignalStrength;
 
 typedef
 enum tagAMTunerModeType
-    {	AMTUNER_MODE_DEFAULT	= 0,
-	AMTUNER_MODE_TV	= 0x1,
-	AMTUNER_MODE_FM_RADIO	= 0x2,
-	AMTUNER_MODE_AM_RADIO	= 0x4,
-	AMTUNER_MODE_DSS	= 0x8
-    } 	AMTunerModeType;
+    {    AMTUNER_MODE_DEFAULT    = 0,
+    AMTUNER_MODE_TV    = 0x1,
+    AMTUNER_MODE_FM_RADIO    = 0x2,
+    AMTUNER_MODE_AM_RADIO    = 0x4,
+    AMTUNER_MODE_DSS    = 0x8
+    }     AMTunerModeType;
 
 typedef
 enum tagAMTunerEventType
-    {	AMTUNER_EVENT_CHANGED	= 0x1
-    } 	AMTunerEventType;
+    {    AMTUNER_EVENT_CHANGED    = 0x1
+    }     AMTunerEventType;
 
 
 
@@ -13105,7 +13105,7 @@ EXTERN_C const IID IID_IAMTuner;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IAMTunerVtbl
     {
@@ -13200,65 +13200,65 @@ EXTERN_C const IID IID_IAMTuner;
 #ifdef COBJMACROS
 
 
-#define IAMTuner_QueryInterface(This,riid,ppvObject)	\
+#define IAMTuner_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IAMTuner_AddRef(This)	\
+#define IAMTuner_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IAMTuner_Release(This)	\
+#define IAMTuner_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IAMTuner_put_Channel(This,lChannel,lVideoSubChannel,lAudioSubChannel)	\
+#define IAMTuner_put_Channel(This,lChannel,lVideoSubChannel,lAudioSubChannel)    \
     (This)->lpVtbl -> put_Channel(This,lChannel,lVideoSubChannel,lAudioSubChannel)
 
-#define IAMTuner_get_Channel(This,plChannel,plVideoSubChannel,plAudioSubChannel)	\
+#define IAMTuner_get_Channel(This,plChannel,plVideoSubChannel,plAudioSubChannel)    \
     (This)->lpVtbl -> get_Channel(This,plChannel,plVideoSubChannel,plAudioSubChannel)
 
-#define IAMTuner_ChannelMinMax(This,lChannelMin,lChannelMax)	\
+#define IAMTuner_ChannelMinMax(This,lChannelMin,lChannelMax)    \
     (This)->lpVtbl -> ChannelMinMax(This,lChannelMin,lChannelMax)
 
-#define IAMTuner_put_CountryCode(This,lCountryCode)	\
+#define IAMTuner_put_CountryCode(This,lCountryCode)    \
     (This)->lpVtbl -> put_CountryCode(This,lCountryCode)
 
-#define IAMTuner_get_CountryCode(This,plCountryCode)	\
+#define IAMTuner_get_CountryCode(This,plCountryCode)    \
     (This)->lpVtbl -> get_CountryCode(This,plCountryCode)
 
-#define IAMTuner_put_TuningSpace(This,lTuningSpace)	\
+#define IAMTuner_put_TuningSpace(This,lTuningSpace)    \
     (This)->lpVtbl -> put_TuningSpace(This,lTuningSpace)
 
-#define IAMTuner_get_TuningSpace(This,plTuningSpace)	\
+#define IAMTuner_get_TuningSpace(This,plTuningSpace)    \
     (This)->lpVtbl -> get_TuningSpace(This,plTuningSpace)
 
-#define IAMTuner_Logon(This,hCurrentUser)	\
+#define IAMTuner_Logon(This,hCurrentUser)    \
     (This)->lpVtbl -> Logon(This,hCurrentUser)
 
-#define IAMTuner_Logout(This)	\
+#define IAMTuner_Logout(This)    \
     (This)->lpVtbl -> Logout(This)
 
-#define IAMTuner_SignalPresent(This,plSignalStrength)	\
+#define IAMTuner_SignalPresent(This,plSignalStrength)    \
     (This)->lpVtbl -> SignalPresent(This,plSignalStrength)
 
-#define IAMTuner_put_Mode(This,lMode)	\
+#define IAMTuner_put_Mode(This,lMode)    \
     (This)->lpVtbl -> put_Mode(This,lMode)
 
-#define IAMTuner_get_Mode(This,plMode)	\
+#define IAMTuner_get_Mode(This,plMode)    \
     (This)->lpVtbl -> get_Mode(This,plMode)
 
-#define IAMTuner_GetAvailableModes(This,plModes)	\
+#define IAMTuner_GetAvailableModes(This,plModes)    \
     (This)->lpVtbl -> GetAvailableModes(This,plModes)
 
-#define IAMTuner_RegisterNotificationCallBack(This,pNotify,lEvents)	\
+#define IAMTuner_RegisterNotificationCallBack(This,pNotify,lEvents)    \
     (This)->lpVtbl -> RegisterNotificationCallBack(This,pNotify,lEvents)
 
-#define IAMTuner_UnRegisterNotificationCallBack(This,pNotify)	\
+#define IAMTuner_UnRegisterNotificationCallBack(This,pNotify)    \
     (This)->lpVtbl -> UnRegisterNotificationCallBack(This,pNotify)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -13448,7 +13448,7 @@ void __RPC_STUB IAMTuner_UnRegisterNotificationCallBack_Stub(
 
 
 
-#endif 	/* __IAMTuner_INTERFACE_DEFINED__ */
+#endif     /* __IAMTuner_INTERFACE_DEFINED__ */
 
 
 #ifndef __IAMTunerNotification_INTERFACE_DEFINED__
@@ -13471,7 +13471,7 @@ EXTERN_C const IID IID_IAMTunerNotification;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IAMTunerNotificationVtbl
     {
@@ -13505,23 +13505,23 @@ EXTERN_C const IID IID_IAMTunerNotification;
 #ifdef COBJMACROS
 
 
-#define IAMTunerNotification_QueryInterface(This,riid,ppvObject)	\
+#define IAMTunerNotification_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IAMTunerNotification_AddRef(This)	\
+#define IAMTunerNotification_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IAMTunerNotification_Release(This)	\
+#define IAMTunerNotification_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IAMTunerNotification_OnEvent(This,Event)	\
+#define IAMTunerNotification_OnEvent(This,Event)    \
     (This)->lpVtbl -> OnEvent(This,Event)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -13538,7 +13538,7 @@ void __RPC_STUB IAMTunerNotification_OnEvent_Stub(
 
 
 
-#endif 	/* __IAMTunerNotification_INTERFACE_DEFINED__ */
+#endif     /* __IAMTunerNotification_INTERFACE_DEFINED__ */
 
 
 #ifndef __IAMTVTuner_INTERFACE_DEFINED__
@@ -13593,7 +13593,7 @@ EXTERN_C const IID IID_IAMTVTuner;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IAMTVTunerVtbl
     {
@@ -13734,99 +13734,99 @@ EXTERN_C const IID IID_IAMTVTuner;
 #ifdef COBJMACROS
 
 
-#define IAMTVTuner_QueryInterface(This,riid,ppvObject)	\
+#define IAMTVTuner_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IAMTVTuner_AddRef(This)	\
+#define IAMTVTuner_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IAMTVTuner_Release(This)	\
+#define IAMTVTuner_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IAMTVTuner_put_Channel(This,lChannel,lVideoSubChannel,lAudioSubChannel)	\
+#define IAMTVTuner_put_Channel(This,lChannel,lVideoSubChannel,lAudioSubChannel)    \
     (This)->lpVtbl -> put_Channel(This,lChannel,lVideoSubChannel,lAudioSubChannel)
 
-#define IAMTVTuner_get_Channel(This,plChannel,plVideoSubChannel,plAudioSubChannel)	\
+#define IAMTVTuner_get_Channel(This,plChannel,plVideoSubChannel,plAudioSubChannel)    \
     (This)->lpVtbl -> get_Channel(This,plChannel,plVideoSubChannel,plAudioSubChannel)
 
-#define IAMTVTuner_ChannelMinMax(This,lChannelMin,lChannelMax)	\
+#define IAMTVTuner_ChannelMinMax(This,lChannelMin,lChannelMax)    \
     (This)->lpVtbl -> ChannelMinMax(This,lChannelMin,lChannelMax)
 
-#define IAMTVTuner_put_CountryCode(This,lCountryCode)	\
+#define IAMTVTuner_put_CountryCode(This,lCountryCode)    \
     (This)->lpVtbl -> put_CountryCode(This,lCountryCode)
 
-#define IAMTVTuner_get_CountryCode(This,plCountryCode)	\
+#define IAMTVTuner_get_CountryCode(This,plCountryCode)    \
     (This)->lpVtbl -> get_CountryCode(This,plCountryCode)
 
-#define IAMTVTuner_put_TuningSpace(This,lTuningSpace)	\
+#define IAMTVTuner_put_TuningSpace(This,lTuningSpace)    \
     (This)->lpVtbl -> put_TuningSpace(This,lTuningSpace)
 
-#define IAMTVTuner_get_TuningSpace(This,plTuningSpace)	\
+#define IAMTVTuner_get_TuningSpace(This,plTuningSpace)    \
     (This)->lpVtbl -> get_TuningSpace(This,plTuningSpace)
 
-#define IAMTVTuner_Logon(This,hCurrentUser)	\
+#define IAMTVTuner_Logon(This,hCurrentUser)    \
     (This)->lpVtbl -> Logon(This,hCurrentUser)
 
-#define IAMTVTuner_Logout(This)	\
+#define IAMTVTuner_Logout(This)    \
     (This)->lpVtbl -> Logout(This)
 
-#define IAMTVTuner_SignalPresent(This,plSignalStrength)	\
+#define IAMTVTuner_SignalPresent(This,plSignalStrength)    \
     (This)->lpVtbl -> SignalPresent(This,plSignalStrength)
 
-#define IAMTVTuner_put_Mode(This,lMode)	\
+#define IAMTVTuner_put_Mode(This,lMode)    \
     (This)->lpVtbl -> put_Mode(This,lMode)
 
-#define IAMTVTuner_get_Mode(This,plMode)	\
+#define IAMTVTuner_get_Mode(This,plMode)    \
     (This)->lpVtbl -> get_Mode(This,plMode)
 
-#define IAMTVTuner_GetAvailableModes(This,plModes)	\
+#define IAMTVTuner_GetAvailableModes(This,plModes)    \
     (This)->lpVtbl -> GetAvailableModes(This,plModes)
 
-#define IAMTVTuner_RegisterNotificationCallBack(This,pNotify,lEvents)	\
+#define IAMTVTuner_RegisterNotificationCallBack(This,pNotify,lEvents)    \
     (This)->lpVtbl -> RegisterNotificationCallBack(This,pNotify,lEvents)
 
-#define IAMTVTuner_UnRegisterNotificationCallBack(This,pNotify)	\
+#define IAMTVTuner_UnRegisterNotificationCallBack(This,pNotify)    \
     (This)->lpVtbl -> UnRegisterNotificationCallBack(This,pNotify)
 
 
-#define IAMTVTuner_get_AvailableTVFormats(This,lAnalogVideoStandard)	\
+#define IAMTVTuner_get_AvailableTVFormats(This,lAnalogVideoStandard)    \
     (This)->lpVtbl -> get_AvailableTVFormats(This,lAnalogVideoStandard)
 
-#define IAMTVTuner_get_TVFormat(This,plAnalogVideoStandard)	\
+#define IAMTVTuner_get_TVFormat(This,plAnalogVideoStandard)    \
     (This)->lpVtbl -> get_TVFormat(This,plAnalogVideoStandard)
 
-#define IAMTVTuner_AutoTune(This,lChannel,plFoundSignal)	\
+#define IAMTVTuner_AutoTune(This,lChannel,plFoundSignal)    \
     (This)->lpVtbl -> AutoTune(This,lChannel,plFoundSignal)
 
-#define IAMTVTuner_StoreAutoTune(This)	\
+#define IAMTVTuner_StoreAutoTune(This)    \
     (This)->lpVtbl -> StoreAutoTune(This)
 
-#define IAMTVTuner_get_NumInputConnections(This,plNumInputConnections)	\
+#define IAMTVTuner_get_NumInputConnections(This,plNumInputConnections)    \
     (This)->lpVtbl -> get_NumInputConnections(This,plNumInputConnections)
 
-#define IAMTVTuner_put_InputType(This,lIndex,InputType)	\
+#define IAMTVTuner_put_InputType(This,lIndex,InputType)    \
     (This)->lpVtbl -> put_InputType(This,lIndex,InputType)
 
-#define IAMTVTuner_get_InputType(This,lIndex,pInputType)	\
+#define IAMTVTuner_get_InputType(This,lIndex,pInputType)    \
     (This)->lpVtbl -> get_InputType(This,lIndex,pInputType)
 
-#define IAMTVTuner_put_ConnectInput(This,lIndex)	\
+#define IAMTVTuner_put_ConnectInput(This,lIndex)    \
     (This)->lpVtbl -> put_ConnectInput(This,lIndex)
 
-#define IAMTVTuner_get_ConnectInput(This,plIndex)	\
+#define IAMTVTuner_get_ConnectInput(This,plIndex)    \
     (This)->lpVtbl -> get_ConnectInput(This,plIndex)
 
-#define IAMTVTuner_get_VideoFrequency(This,lFreq)	\
+#define IAMTVTuner_get_VideoFrequency(This,lFreq)    \
     (This)->lpVtbl -> get_VideoFrequency(This,lFreq)
 
-#define IAMTVTuner_get_AudioFrequency(This,lFreq)	\
+#define IAMTVTuner_get_AudioFrequency(This,lFreq)    \
     (This)->lpVtbl -> get_AudioFrequency(This,lFreq)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -13965,7 +13965,7 @@ void __RPC_STUB IAMTVTuner_get_AudioFrequency_Stub(
 
 
 
-#endif 	/* __IAMTVTuner_INTERFACE_DEFINED__ */
+#endif     /* __IAMTVTuner_INTERFACE_DEFINED__ */
 
 
 #ifndef __IBPCSatelliteTuner_INTERFACE_DEFINED__
@@ -13995,7 +13995,7 @@ EXTERN_C const IID IID_IBPCSatelliteTuner;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IBPCSatelliteTunerVtbl
     {
@@ -14103,75 +14103,75 @@ EXTERN_C const IID IID_IBPCSatelliteTuner;
 #ifdef COBJMACROS
 
 
-#define IBPCSatelliteTuner_QueryInterface(This,riid,ppvObject)	\
+#define IBPCSatelliteTuner_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IBPCSatelliteTuner_AddRef(This)	\
+#define IBPCSatelliteTuner_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IBPCSatelliteTuner_Release(This)	\
+#define IBPCSatelliteTuner_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IBPCSatelliteTuner_put_Channel(This,lChannel,lVideoSubChannel,lAudioSubChannel)	\
+#define IBPCSatelliteTuner_put_Channel(This,lChannel,lVideoSubChannel,lAudioSubChannel)    \
     (This)->lpVtbl -> put_Channel(This,lChannel,lVideoSubChannel,lAudioSubChannel)
 
-#define IBPCSatelliteTuner_get_Channel(This,plChannel,plVideoSubChannel,plAudioSubChannel)	\
+#define IBPCSatelliteTuner_get_Channel(This,plChannel,plVideoSubChannel,plAudioSubChannel)    \
     (This)->lpVtbl -> get_Channel(This,plChannel,plVideoSubChannel,plAudioSubChannel)
 
-#define IBPCSatelliteTuner_ChannelMinMax(This,lChannelMin,lChannelMax)	\
+#define IBPCSatelliteTuner_ChannelMinMax(This,lChannelMin,lChannelMax)    \
     (This)->lpVtbl -> ChannelMinMax(This,lChannelMin,lChannelMax)
 
-#define IBPCSatelliteTuner_put_CountryCode(This,lCountryCode)	\
+#define IBPCSatelliteTuner_put_CountryCode(This,lCountryCode)    \
     (This)->lpVtbl -> put_CountryCode(This,lCountryCode)
 
-#define IBPCSatelliteTuner_get_CountryCode(This,plCountryCode)	\
+#define IBPCSatelliteTuner_get_CountryCode(This,plCountryCode)    \
     (This)->lpVtbl -> get_CountryCode(This,plCountryCode)
 
-#define IBPCSatelliteTuner_put_TuningSpace(This,lTuningSpace)	\
+#define IBPCSatelliteTuner_put_TuningSpace(This,lTuningSpace)    \
     (This)->lpVtbl -> put_TuningSpace(This,lTuningSpace)
 
-#define IBPCSatelliteTuner_get_TuningSpace(This,plTuningSpace)	\
+#define IBPCSatelliteTuner_get_TuningSpace(This,plTuningSpace)    \
     (This)->lpVtbl -> get_TuningSpace(This,plTuningSpace)
 
-#define IBPCSatelliteTuner_Logon(This,hCurrentUser)	\
+#define IBPCSatelliteTuner_Logon(This,hCurrentUser)    \
     (This)->lpVtbl -> Logon(This,hCurrentUser)
 
-#define IBPCSatelliteTuner_Logout(This)	\
+#define IBPCSatelliteTuner_Logout(This)    \
     (This)->lpVtbl -> Logout(This)
 
-#define IBPCSatelliteTuner_SignalPresent(This,plSignalStrength)	\
+#define IBPCSatelliteTuner_SignalPresent(This,plSignalStrength)    \
     (This)->lpVtbl -> SignalPresent(This,plSignalStrength)
 
-#define IBPCSatelliteTuner_put_Mode(This,lMode)	\
+#define IBPCSatelliteTuner_put_Mode(This,lMode)    \
     (This)->lpVtbl -> put_Mode(This,lMode)
 
-#define IBPCSatelliteTuner_get_Mode(This,plMode)	\
+#define IBPCSatelliteTuner_get_Mode(This,plMode)    \
     (This)->lpVtbl -> get_Mode(This,plMode)
 
-#define IBPCSatelliteTuner_GetAvailableModes(This,plModes)	\
+#define IBPCSatelliteTuner_GetAvailableModes(This,plModes)    \
     (This)->lpVtbl -> GetAvailableModes(This,plModes)
 
-#define IBPCSatelliteTuner_RegisterNotificationCallBack(This,pNotify,lEvents)	\
+#define IBPCSatelliteTuner_RegisterNotificationCallBack(This,pNotify,lEvents)    \
     (This)->lpVtbl -> RegisterNotificationCallBack(This,pNotify,lEvents)
 
-#define IBPCSatelliteTuner_UnRegisterNotificationCallBack(This,pNotify)	\
+#define IBPCSatelliteTuner_UnRegisterNotificationCallBack(This,pNotify)    \
     (This)->lpVtbl -> UnRegisterNotificationCallBack(This,pNotify)
 
 
-#define IBPCSatelliteTuner_get_DefaultSubChannelTypes(This,plDefaultVideoType,plDefaultAudioType)	\
+#define IBPCSatelliteTuner_get_DefaultSubChannelTypes(This,plDefaultVideoType,plDefaultAudioType)    \
     (This)->lpVtbl -> get_DefaultSubChannelTypes(This,plDefaultVideoType,plDefaultAudioType)
 
-#define IBPCSatelliteTuner_put_DefaultSubChannelTypes(This,lDefaultVideoType,lDefaultAudioType)	\
+#define IBPCSatelliteTuner_put_DefaultSubChannelTypes(This,lDefaultVideoType,lDefaultAudioType)    \
     (This)->lpVtbl -> put_DefaultSubChannelTypes(This,lDefaultVideoType,lDefaultAudioType)
 
-#define IBPCSatelliteTuner_IsTapingPermitted(This)	\
+#define IBPCSatelliteTuner_IsTapingPermitted(This)    \
     (This)->lpVtbl -> IsTapingPermitted(This)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -14213,7 +14213,7 @@ void __RPC_STUB IBPCSatelliteTuner_IsTapingPermitted_Stub(
 
 
 
-#endif 	/* __IBPCSatelliteTuner_INTERFACE_DEFINED__ */
+#endif     /* __IBPCSatelliteTuner_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0178 */
@@ -14221,17 +14221,17 @@ void __RPC_STUB IBPCSatelliteTuner_IsTapingPermitted_Stub(
 
 typedef
 enum tagTVAudioMode
-    {	AMTVAUDIO_MODE_MONO	= 0x1,
-	AMTVAUDIO_MODE_STEREO	= 0x2,
-	AMTVAUDIO_MODE_LANG_A	= 0x10,
-	AMTVAUDIO_MODE_LANG_B	= 0x20,
-	AMTVAUDIO_MODE_LANG_C	= 0x40
-    } 	TVAudioMode;
+    {    AMTVAUDIO_MODE_MONO    = 0x1,
+    AMTVAUDIO_MODE_STEREO    = 0x2,
+    AMTVAUDIO_MODE_LANG_A    = 0x10,
+    AMTVAUDIO_MODE_LANG_B    = 0x20,
+    AMTVAUDIO_MODE_LANG_C    = 0x40
+    }     TVAudioMode;
 
 typedef
 enum tagAMTVAudioEventType
-    {	AMTVAUDIO_EVENT_CHANGED	= 0x1
-    } 	AMTVAudioEventType;
+    {    AMTVAUDIO_EVENT_CHANGED    = 0x1
+    }     AMTVAudioEventType;
 
 
 
@@ -14275,7 +14275,7 @@ EXTERN_C const IID IID_IAMTVAudio;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IAMTVAudioVtbl
     {
@@ -14330,38 +14330,38 @@ EXTERN_C const IID IID_IAMTVAudio;
 #ifdef COBJMACROS
 
 
-#define IAMTVAudio_QueryInterface(This,riid,ppvObject)	\
+#define IAMTVAudio_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IAMTVAudio_AddRef(This)	\
+#define IAMTVAudio_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IAMTVAudio_Release(This)	\
+#define IAMTVAudio_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IAMTVAudio_GetHardwareSupportedTVAudioModes(This,plModes)	\
+#define IAMTVAudio_GetHardwareSupportedTVAudioModes(This,plModes)    \
     (This)->lpVtbl -> GetHardwareSupportedTVAudioModes(This,plModes)
 
-#define IAMTVAudio_GetAvailableTVAudioModes(This,plModes)	\
+#define IAMTVAudio_GetAvailableTVAudioModes(This,plModes)    \
     (This)->lpVtbl -> GetAvailableTVAudioModes(This,plModes)
 
-#define IAMTVAudio_get_TVAudioMode(This,plMode)	\
+#define IAMTVAudio_get_TVAudioMode(This,plMode)    \
     (This)->lpVtbl -> get_TVAudioMode(This,plMode)
 
-#define IAMTVAudio_put_TVAudioMode(This,lMode)	\
+#define IAMTVAudio_put_TVAudioMode(This,lMode)    \
     (This)->lpVtbl -> put_TVAudioMode(This,lMode)
 
-#define IAMTVAudio_RegisterNotificationCallBack(This,pNotify,lEvents)	\
+#define IAMTVAudio_RegisterNotificationCallBack(This,pNotify,lEvents)    \
     (This)->lpVtbl -> RegisterNotificationCallBack(This,pNotify,lEvents)
 
-#define IAMTVAudio_UnRegisterNotificationCallBack(This,pNotify)	\
+#define IAMTVAudio_UnRegisterNotificationCallBack(This,pNotify)    \
     (This)->lpVtbl -> UnRegisterNotificationCallBack(This,pNotify)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -14439,7 +14439,7 @@ void __RPC_STUB IAMTVAudio_UnRegisterNotificationCallBack_Stub(
 
 
 
-#endif 	/* __IAMTVAudio_INTERFACE_DEFINED__ */
+#endif     /* __IAMTVAudio_INTERFACE_DEFINED__ */
 
 
 #ifndef __IAMTVAudioNotification_INTERFACE_DEFINED__
@@ -14462,7 +14462,7 @@ EXTERN_C const IID IID_IAMTVAudioNotification;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IAMTVAudioNotificationVtbl
     {
@@ -14496,23 +14496,23 @@ EXTERN_C const IID IID_IAMTVAudioNotification;
 #ifdef COBJMACROS
 
 
-#define IAMTVAudioNotification_QueryInterface(This,riid,ppvObject)	\
+#define IAMTVAudioNotification_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IAMTVAudioNotification_AddRef(This)	\
+#define IAMTVAudioNotification_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IAMTVAudioNotification_Release(This)	\
+#define IAMTVAudioNotification_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IAMTVAudioNotification_OnEvent(This,Event)	\
+#define IAMTVAudioNotification_OnEvent(This,Event)    \
     (This)->lpVtbl -> OnEvent(This,Event)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -14529,7 +14529,7 @@ void __RPC_STUB IAMTVAudioNotification_OnEvent_Stub(
 
 
 
-#endif 	/* __IAMTVAudioNotification_INTERFACE_DEFINED__ */
+#endif     /* __IAMTVAudioNotification_INTERFACE_DEFINED__ */
 
 
 #ifndef __IAMAnalogVideoEncoder_INTERFACE_DEFINED__
@@ -14570,7 +14570,7 @@ EXTERN_C const IID IID_IAMAnalogVideoEncoder;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IAMAnalogVideoEncoderVtbl
     {
@@ -14628,41 +14628,41 @@ EXTERN_C const IID IID_IAMAnalogVideoEncoder;
 #ifdef COBJMACROS
 
 
-#define IAMAnalogVideoEncoder_QueryInterface(This,riid,ppvObject)	\
+#define IAMAnalogVideoEncoder_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IAMAnalogVideoEncoder_AddRef(This)	\
+#define IAMAnalogVideoEncoder_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IAMAnalogVideoEncoder_Release(This)	\
+#define IAMAnalogVideoEncoder_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IAMAnalogVideoEncoder_get_AvailableTVFormats(This,lAnalogVideoStandard)	\
+#define IAMAnalogVideoEncoder_get_AvailableTVFormats(This,lAnalogVideoStandard)    \
     (This)->lpVtbl -> get_AvailableTVFormats(This,lAnalogVideoStandard)
 
-#define IAMAnalogVideoEncoder_put_TVFormat(This,lAnalogVideoStandard)	\
+#define IAMAnalogVideoEncoder_put_TVFormat(This,lAnalogVideoStandard)    \
     (This)->lpVtbl -> put_TVFormat(This,lAnalogVideoStandard)
 
-#define IAMAnalogVideoEncoder_get_TVFormat(This,plAnalogVideoStandard)	\
+#define IAMAnalogVideoEncoder_get_TVFormat(This,plAnalogVideoStandard)    \
     (This)->lpVtbl -> get_TVFormat(This,plAnalogVideoStandard)
 
-#define IAMAnalogVideoEncoder_put_CopyProtection(This,lVideoCopyProtection)	\
+#define IAMAnalogVideoEncoder_put_CopyProtection(This,lVideoCopyProtection)    \
     (This)->lpVtbl -> put_CopyProtection(This,lVideoCopyProtection)
 
-#define IAMAnalogVideoEncoder_get_CopyProtection(This,lVideoCopyProtection)	\
+#define IAMAnalogVideoEncoder_get_CopyProtection(This,lVideoCopyProtection)    \
     (This)->lpVtbl -> get_CopyProtection(This,lVideoCopyProtection)
 
-#define IAMAnalogVideoEncoder_put_CCEnable(This,lCCEnable)	\
+#define IAMAnalogVideoEncoder_put_CCEnable(This,lCCEnable)    \
     (This)->lpVtbl -> put_CCEnable(This,lCCEnable)
 
-#define IAMAnalogVideoEncoder_get_CCEnable(This,lCCEnable)	\
+#define IAMAnalogVideoEncoder_get_CCEnable(This,lCCEnable)    \
     (This)->lpVtbl -> get_CCEnable(This,lCCEnable)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -14751,7 +14751,7 @@ void __RPC_STUB IAMAnalogVideoEncoder_get_CCEnable_Stub(
 
 
 
-#endif 	/* __IAMAnalogVideoEncoder_INTERFACE_DEFINED__ */
+#endif     /* __IAMAnalogVideoEncoder_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0181 */
@@ -14759,9 +14759,9 @@ void __RPC_STUB IAMAnalogVideoEncoder_get_CCEnable_Stub(
 
 typedef /* [public] */
 enum __MIDL___MIDL_itf_strmif_0181_0001
-    {	AMPROPERTY_PIN_CATEGORY	= 0,
-	AMPROPERTY_PIN_MEDIUM	= AMPROPERTY_PIN_CATEGORY + 1
-    } 	AMPROPERTY_PIN;
+    {    AMPROPERTY_PIN_CATEGORY    = 0,
+    AMPROPERTY_PIN_MEDIUM    = AMPROPERTY_PIN_CATEGORY + 1
+    }     AMPROPERTY_PIN;
 
 #ifndef _IKsPropertySet_
 #define _IKsPropertySet_
@@ -14811,7 +14811,7 @@ EXTERN_C const IID IID_IKsPropertySet;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IKsPropertySetVtbl
     {
@@ -14866,29 +14866,29 @@ EXTERN_C const IID IID_IKsPropertySet;
 #ifdef COBJMACROS
 
 
-#define IKsPropertySet_QueryInterface(This,riid,ppvObject)	\
+#define IKsPropertySet_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IKsPropertySet_AddRef(This)	\
+#define IKsPropertySet_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IKsPropertySet_Release(This)	\
+#define IKsPropertySet_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IKsPropertySet_Set(This,guidPropSet,dwPropID,pInstanceData,cbInstanceData,pPropData,cbPropData)	\
+#define IKsPropertySet_Set(This,guidPropSet,dwPropID,pInstanceData,cbInstanceData,pPropData,cbPropData)    \
     (This)->lpVtbl -> Set(This,guidPropSet,dwPropID,pInstanceData,cbInstanceData,pPropData,cbPropData)
 
-#define IKsPropertySet_Get(This,guidPropSet,dwPropID,pInstanceData,cbInstanceData,pPropData,cbPropData,pcbReturned)	\
+#define IKsPropertySet_Get(This,guidPropSet,dwPropID,pInstanceData,cbInstanceData,pPropData,cbPropData,pcbReturned)    \
     (This)->lpVtbl -> Get(This,guidPropSet,dwPropID,pInstanceData,cbInstanceData,pPropData,cbPropData,pcbReturned)
 
-#define IKsPropertySet_QuerySupported(This,guidPropSet,dwPropID,pTypeSupport)	\
+#define IKsPropertySet_QuerySupported(This,guidPropSet,dwPropID,pTypeSupport)    \
     (This)->lpVtbl -> QuerySupported(This,guidPropSet,dwPropID,pTypeSupport)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -14942,7 +14942,7 @@ void __RPC_STUB IKsPropertySet_QuerySupported_Stub(
 
 
 
-#endif 	/* __IKsPropertySet_INTERFACE_DEFINED__ */
+#endif     /* __IKsPropertySet_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0182 */
@@ -14978,7 +14978,7 @@ EXTERN_C const IID IID_IMediaPropertyBag;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IMediaPropertyBagVtbl
     {
@@ -15025,30 +15025,30 @@ EXTERN_C const IID IID_IMediaPropertyBag;
 #ifdef COBJMACROS
 
 
-#define IMediaPropertyBag_QueryInterface(This,riid,ppvObject)	\
+#define IMediaPropertyBag_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IMediaPropertyBag_AddRef(This)	\
+#define IMediaPropertyBag_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IMediaPropertyBag_Release(This)	\
+#define IMediaPropertyBag_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IMediaPropertyBag_Read(This,pszPropName,pVar,pErrorLog)	\
+#define IMediaPropertyBag_Read(This,pszPropName,pVar,pErrorLog)    \
     (This)->lpVtbl -> Read(This,pszPropName,pVar,pErrorLog)
 
-#define IMediaPropertyBag_Write(This,pszPropName,pVar)	\
+#define IMediaPropertyBag_Write(This,pszPropName,pVar)    \
     (This)->lpVtbl -> Write(This,pszPropName,pVar)
 
 
-#define IMediaPropertyBag_EnumProperty(This,iProperty,pvarPropertyName,pvarPropertyValue)	\
+#define IMediaPropertyBag_EnumProperty(This,iProperty,pvarPropertyName,pvarPropertyValue)    \
     (This)->lpVtbl -> EnumProperty(This,iProperty,pvarPropertyName,pvarPropertyValue)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -15067,7 +15067,7 @@ void __RPC_STUB IMediaPropertyBag_EnumProperty_Stub(
 
 
 
-#endif 	/* __IMediaPropertyBag_INTERFACE_DEFINED__ */
+#endif     /* __IMediaPropertyBag_INTERFACE_DEFINED__ */
 
 
 #ifndef __IPersistMediaPropertyBag_INTERFACE_DEFINED__
@@ -15100,7 +15100,7 @@ EXTERN_C const IID IID_IPersistMediaPropertyBag;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IPersistMediaPropertyBagVtbl
     {
@@ -15148,33 +15148,33 @@ EXTERN_C const IID IID_IPersistMediaPropertyBag;
 #ifdef COBJMACROS
 
 
-#define IPersistMediaPropertyBag_QueryInterface(This,riid,ppvObject)	\
+#define IPersistMediaPropertyBag_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IPersistMediaPropertyBag_AddRef(This)	\
+#define IPersistMediaPropertyBag_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IPersistMediaPropertyBag_Release(This)	\
+#define IPersistMediaPropertyBag_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IPersistMediaPropertyBag_GetClassID(This,pClassID)	\
+#define IPersistMediaPropertyBag_GetClassID(This,pClassID)    \
     (This)->lpVtbl -> GetClassID(This,pClassID)
 
 
-#define IPersistMediaPropertyBag_InitNew(This)	\
+#define IPersistMediaPropertyBag_InitNew(This)    \
     (This)->lpVtbl -> InitNew(This)
 
-#define IPersistMediaPropertyBag_Load(This,pPropBag,pErrorLog)	\
+#define IPersistMediaPropertyBag_Load(This,pPropBag,pErrorLog)    \
     (This)->lpVtbl -> Load(This,pPropBag,pErrorLog)
 
-#define IPersistMediaPropertyBag_Save(This,pPropBag,fClearDirty,fSaveAllProperties)	\
+#define IPersistMediaPropertyBag_Save(This,pPropBag,fClearDirty,fSaveAllProperties)    \
     (This)->lpVtbl -> Save(This,pPropBag,fClearDirty,fSaveAllProperties)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -15217,7 +15217,7 @@ void __RPC_STUB IPersistMediaPropertyBag_Save_Stub(
 
 
 
-#endif 	/* __IPersistMediaPropertyBag_INTERFACE_DEFINED__ */
+#endif     /* __IPersistMediaPropertyBag_INTERFACE_DEFINED__ */
 
 
 #ifndef __IAMPhysicalPinInfo_INTERFACE_DEFINED__
@@ -15241,7 +15241,7 @@ EXTERN_C const IID IID_IAMPhysicalPinInfo;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IAMPhysicalPinInfoVtbl
     {
@@ -15276,23 +15276,23 @@ EXTERN_C const IID IID_IAMPhysicalPinInfo;
 #ifdef COBJMACROS
 
 
-#define IAMPhysicalPinInfo_QueryInterface(This,riid,ppvObject)	\
+#define IAMPhysicalPinInfo_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IAMPhysicalPinInfo_AddRef(This)	\
+#define IAMPhysicalPinInfo_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IAMPhysicalPinInfo_Release(This)	\
+#define IAMPhysicalPinInfo_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IAMPhysicalPinInfo_GetPhysicalType(This,pType,ppszType)	\
+#define IAMPhysicalPinInfo_GetPhysicalType(This,pType,ppszType)    \
     (This)->lpVtbl -> GetPhysicalType(This,pType,ppszType)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -15310,7 +15310,7 @@ void __RPC_STUB IAMPhysicalPinInfo_GetPhysicalType_Stub(
 
 
 
-#endif 	/* __IAMPhysicalPinInfo_INTERFACE_DEFINED__ */
+#endif     /* __IAMPhysicalPinInfo_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0329 */
@@ -15368,7 +15368,7 @@ EXTERN_C const IID IID_IAMExtDevice;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IAMExtDeviceVtbl
     {
@@ -15434,44 +15434,44 @@ EXTERN_C const IID IID_IAMExtDevice;
 #ifdef COBJMACROS
 
 
-#define IAMExtDevice_QueryInterface(This,riid,ppvObject)	\
+#define IAMExtDevice_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IAMExtDevice_AddRef(This)	\
+#define IAMExtDevice_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IAMExtDevice_Release(This)	\
+#define IAMExtDevice_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IAMExtDevice_GetCapability(This,Capability,pValue,pdblValue)	\
+#define IAMExtDevice_GetCapability(This,Capability,pValue,pdblValue)    \
     (This)->lpVtbl -> GetCapability(This,Capability,pValue,pdblValue)
 
-#define IAMExtDevice_get_ExternalDeviceID(This,ppszData)	\
+#define IAMExtDevice_get_ExternalDeviceID(This,ppszData)    \
     (This)->lpVtbl -> get_ExternalDeviceID(This,ppszData)
 
-#define IAMExtDevice_get_ExternalDeviceVersion(This,ppszData)	\
+#define IAMExtDevice_get_ExternalDeviceVersion(This,ppszData)    \
     (This)->lpVtbl -> get_ExternalDeviceVersion(This,ppszData)
 
-#define IAMExtDevice_put_DevicePower(This,PowerMode)	\
+#define IAMExtDevice_put_DevicePower(This,PowerMode)    \
     (This)->lpVtbl -> put_DevicePower(This,PowerMode)
 
-#define IAMExtDevice_get_DevicePower(This,pPowerMode)	\
+#define IAMExtDevice_get_DevicePower(This,pPowerMode)    \
     (This)->lpVtbl -> get_DevicePower(This,pPowerMode)
 
-#define IAMExtDevice_Calibrate(This,hEvent,Mode,pStatus)	\
+#define IAMExtDevice_Calibrate(This,hEvent,Mode,pStatus)    \
     (This)->lpVtbl -> Calibrate(This,hEvent,Mode,pStatus)
 
-#define IAMExtDevice_put_DevicePort(This,DevicePort)	\
+#define IAMExtDevice_put_DevicePort(This,DevicePort)    \
     (This)->lpVtbl -> put_DevicePort(This,DevicePort)
 
-#define IAMExtDevice_get_DevicePort(This,pDevicePort)	\
+#define IAMExtDevice_get_DevicePort(This,pDevicePort)    \
     (This)->lpVtbl -> get_DevicePort(This,pDevicePort)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -15576,7 +15576,7 @@ void __RPC_STUB IAMExtDevice_get_DevicePort_Stub(
 
 
 
-#endif 	/* __IAMExtDevice_INTERFACE_DEFINED__ */
+#endif     /* __IAMExtDevice_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0330 */
@@ -15713,7 +15713,7 @@ EXTERN_C const IID IID_IAMExtTransport;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IAMExtTransportVtbl
     {
@@ -15878,104 +15878,104 @@ EXTERN_C const IID IID_IAMExtTransport;
 #ifdef COBJMACROS
 
 
-#define IAMExtTransport_QueryInterface(This,riid,ppvObject)	\
+#define IAMExtTransport_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IAMExtTransport_AddRef(This)	\
+#define IAMExtTransport_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IAMExtTransport_Release(This)	\
+#define IAMExtTransport_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IAMExtTransport_GetCapability(This,Capability,pValue,pdblValue)	\
+#define IAMExtTransport_GetCapability(This,Capability,pValue,pdblValue)    \
     (This)->lpVtbl -> GetCapability(This,Capability,pValue,pdblValue)
 
-#define IAMExtTransport_put_MediaState(This,State)	\
+#define IAMExtTransport_put_MediaState(This,State)    \
     (This)->lpVtbl -> put_MediaState(This,State)
 
-#define IAMExtTransport_get_MediaState(This,pState)	\
+#define IAMExtTransport_get_MediaState(This,pState)    \
     (This)->lpVtbl -> get_MediaState(This,pState)
 
-#define IAMExtTransport_put_LocalControl(This,State)	\
+#define IAMExtTransport_put_LocalControl(This,State)    \
     (This)->lpVtbl -> put_LocalControl(This,State)
 
-#define IAMExtTransport_get_LocalControl(This,pState)	\
+#define IAMExtTransport_get_LocalControl(This,pState)    \
     (This)->lpVtbl -> get_LocalControl(This,pState)
 
-#define IAMExtTransport_GetStatus(This,StatusItem,pValue)	\
+#define IAMExtTransport_GetStatus(This,StatusItem,pValue)    \
     (This)->lpVtbl -> GetStatus(This,StatusItem,pValue)
 
-#define IAMExtTransport_GetTransportBasicParameters(This,Param,pValue,ppszData)	\
+#define IAMExtTransport_GetTransportBasicParameters(This,Param,pValue,ppszData)    \
     (This)->lpVtbl -> GetTransportBasicParameters(This,Param,pValue,ppszData)
 
-#define IAMExtTransport_SetTransportBasicParameters(This,Param,Value,pszData)	\
+#define IAMExtTransport_SetTransportBasicParameters(This,Param,Value,pszData)    \
     (This)->lpVtbl -> SetTransportBasicParameters(This,Param,Value,pszData)
 
-#define IAMExtTransport_GetTransportVideoParameters(This,Param,pValue)	\
+#define IAMExtTransport_GetTransportVideoParameters(This,Param,pValue)    \
     (This)->lpVtbl -> GetTransportVideoParameters(This,Param,pValue)
 
-#define IAMExtTransport_SetTransportVideoParameters(This,Param,Value)	\
+#define IAMExtTransport_SetTransportVideoParameters(This,Param,Value)    \
     (This)->lpVtbl -> SetTransportVideoParameters(This,Param,Value)
 
-#define IAMExtTransport_GetTransportAudioParameters(This,Param,pValue)	\
+#define IAMExtTransport_GetTransportAudioParameters(This,Param,pValue)    \
     (This)->lpVtbl -> GetTransportAudioParameters(This,Param,pValue)
 
-#define IAMExtTransport_SetTransportAudioParameters(This,Param,Value)	\
+#define IAMExtTransport_SetTransportAudioParameters(This,Param,Value)    \
     (This)->lpVtbl -> SetTransportAudioParameters(This,Param,Value)
 
-#define IAMExtTransport_put_Mode(This,Mode)	\
+#define IAMExtTransport_put_Mode(This,Mode)    \
     (This)->lpVtbl -> put_Mode(This,Mode)
 
-#define IAMExtTransport_get_Mode(This,pMode)	\
+#define IAMExtTransport_get_Mode(This,pMode)    \
     (This)->lpVtbl -> get_Mode(This,pMode)
 
-#define IAMExtTransport_put_Rate(This,dblRate)	\
+#define IAMExtTransport_put_Rate(This,dblRate)    \
     (This)->lpVtbl -> put_Rate(This,dblRate)
 
-#define IAMExtTransport_get_Rate(This,pdblRate)	\
+#define IAMExtTransport_get_Rate(This,pdblRate)    \
     (This)->lpVtbl -> get_Rate(This,pdblRate)
 
-#define IAMExtTransport_GetChase(This,pEnabled,pOffset,phEvent)	\
+#define IAMExtTransport_GetChase(This,pEnabled,pOffset,phEvent)    \
     (This)->lpVtbl -> GetChase(This,pEnabled,pOffset,phEvent)
 
-#define IAMExtTransport_SetChase(This,Enable,Offset,hEvent)	\
+#define IAMExtTransport_SetChase(This,Enable,Offset,hEvent)    \
     (This)->lpVtbl -> SetChase(This,Enable,Offset,hEvent)
 
-#define IAMExtTransport_GetBump(This,pSpeed,pDuration)	\
+#define IAMExtTransport_GetBump(This,pSpeed,pDuration)    \
     (This)->lpVtbl -> GetBump(This,pSpeed,pDuration)
 
-#define IAMExtTransport_SetBump(This,Speed,Duration)	\
+#define IAMExtTransport_SetBump(This,Speed,Duration)    \
     (This)->lpVtbl -> SetBump(This,Speed,Duration)
 
-#define IAMExtTransport_get_AntiClogControl(This,pEnabled)	\
+#define IAMExtTransport_get_AntiClogControl(This,pEnabled)    \
     (This)->lpVtbl -> get_AntiClogControl(This,pEnabled)
 
-#define IAMExtTransport_put_AntiClogControl(This,Enable)	\
+#define IAMExtTransport_put_AntiClogControl(This,Enable)    \
     (This)->lpVtbl -> put_AntiClogControl(This,Enable)
 
-#define IAMExtTransport_GetEditPropertySet(This,EditID,pState)	\
+#define IAMExtTransport_GetEditPropertySet(This,EditID,pState)    \
     (This)->lpVtbl -> GetEditPropertySet(This,EditID,pState)
 
-#define IAMExtTransport_SetEditPropertySet(This,pEditID,State)	\
+#define IAMExtTransport_SetEditPropertySet(This,pEditID,State)    \
     (This)->lpVtbl -> SetEditPropertySet(This,pEditID,State)
 
-#define IAMExtTransport_GetEditProperty(This,EditID,Param,pValue)	\
+#define IAMExtTransport_GetEditProperty(This,EditID,Param,pValue)    \
     (This)->lpVtbl -> GetEditProperty(This,EditID,Param,pValue)
 
-#define IAMExtTransport_SetEditProperty(This,EditID,Param,Value)	\
+#define IAMExtTransport_SetEditProperty(This,EditID,Param,Value)    \
     (This)->lpVtbl -> SetEditProperty(This,EditID,Param,Value)
 
-#define IAMExtTransport_get_EditStart(This,pValue)	\
+#define IAMExtTransport_get_EditStart(This,pValue)    \
     (This)->lpVtbl -> get_EditStart(This,pValue)
 
-#define IAMExtTransport_put_EditStart(This,Value)	\
+#define IAMExtTransport_put_EditStart(This,Value)    \
     (This)->lpVtbl -> put_EditStart(This,Value)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -16339,7 +16339,7 @@ void __RPC_STUB IAMExtTransport_put_EditStart_Stub(
 
 
 
-#endif 	/* __IAMExtTransport_INTERFACE_DEFINED__ */
+#endif     /* __IAMExtTransport_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0331 */
@@ -16354,17 +16354,17 @@ typedef struct tagTIMECODE
     WORD wFrameRate;
     WORD wFrameFract;
     DWORD dwFrames;
-    } 	TIMECODE;
+    }     TIMECODE;
 
 #else /* 0 */
 #ifndef TIMECODE_DEFINED
 #define TIMECODE_DEFINED
 typedef union _timecode {
    struct {
-	 WORD   wFrameRate;
-	 WORD   wFrameFract;
-	 DWORD  dwFrames;
-	 };
+     WORD   wFrameRate;
+     WORD   wFrameFract;
+     DWORD  dwFrames;
+     };
    DWORDLONG  qw;
    } TIMECODE;
 
@@ -16378,7 +16378,7 @@ typedef struct tagTIMECODE_SAMPLE
     TIMECODE timecode;
     DWORD dwUser;
     DWORD dwFlags;
-    } 	TIMECODE_SAMPLE;
+    }     TIMECODE_SAMPLE;
 
 typedef TIMECODE_SAMPLE *PTIMECODE_SAMPLE;
 
@@ -16421,7 +16421,7 @@ EXTERN_C const IID IID_IAMTimecodeReader;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IAMTimecodeReaderVtbl
     {
@@ -16473,35 +16473,35 @@ EXTERN_C const IID IID_IAMTimecodeReader;
 #ifdef COBJMACROS
 
 
-#define IAMTimecodeReader_QueryInterface(This,riid,ppvObject)	\
+#define IAMTimecodeReader_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IAMTimecodeReader_AddRef(This)	\
+#define IAMTimecodeReader_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IAMTimecodeReader_Release(This)	\
+#define IAMTimecodeReader_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IAMTimecodeReader_GetTCRMode(This,Param,pValue)	\
+#define IAMTimecodeReader_GetTCRMode(This,Param,pValue)    \
     (This)->lpVtbl -> GetTCRMode(This,Param,pValue)
 
-#define IAMTimecodeReader_SetTCRMode(This,Param,Value)	\
+#define IAMTimecodeReader_SetTCRMode(This,Param,Value)    \
     (This)->lpVtbl -> SetTCRMode(This,Param,Value)
 
-#define IAMTimecodeReader_put_VITCLine(This,Line)	\
+#define IAMTimecodeReader_put_VITCLine(This,Line)    \
     (This)->lpVtbl -> put_VITCLine(This,Line)
 
-#define IAMTimecodeReader_get_VITCLine(This,pLine)	\
+#define IAMTimecodeReader_get_VITCLine(This,pLine)    \
     (This)->lpVtbl -> get_VITCLine(This,pLine)
 
-#define IAMTimecodeReader_GetTimecode(This,pTimecodeSample)	\
+#define IAMTimecodeReader_GetTimecode(This,pTimecodeSample)    \
     (This)->lpVtbl -> GetTimecode(This,pTimecodeSample)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -16568,7 +16568,7 @@ void __RPC_STUB IAMTimecodeReader_GetTimecode_Stub(
 
 
 
-#endif 	/* __IAMTimecodeReader_INTERFACE_DEFINED__ */
+#endif     /* __IAMTimecodeReader_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0332 */
@@ -16618,7 +16618,7 @@ EXTERN_C const IID IID_IAMTimecodeGenerator;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IAMTimecodeGeneratorVtbl
     {
@@ -16674,38 +16674,38 @@ EXTERN_C const IID IID_IAMTimecodeGenerator;
 #ifdef COBJMACROS
 
 
-#define IAMTimecodeGenerator_QueryInterface(This,riid,ppvObject)	\
+#define IAMTimecodeGenerator_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IAMTimecodeGenerator_AddRef(This)	\
+#define IAMTimecodeGenerator_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IAMTimecodeGenerator_Release(This)	\
+#define IAMTimecodeGenerator_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IAMTimecodeGenerator_GetTCGMode(This,Param,pValue)	\
+#define IAMTimecodeGenerator_GetTCGMode(This,Param,pValue)    \
     (This)->lpVtbl -> GetTCGMode(This,Param,pValue)
 
-#define IAMTimecodeGenerator_SetTCGMode(This,Param,Value)	\
+#define IAMTimecodeGenerator_SetTCGMode(This,Param,Value)    \
     (This)->lpVtbl -> SetTCGMode(This,Param,Value)
 
-#define IAMTimecodeGenerator_put_VITCLine(This,Line)	\
+#define IAMTimecodeGenerator_put_VITCLine(This,Line)    \
     (This)->lpVtbl -> put_VITCLine(This,Line)
 
-#define IAMTimecodeGenerator_get_VITCLine(This,pLine)	\
+#define IAMTimecodeGenerator_get_VITCLine(This,pLine)    \
     (This)->lpVtbl -> get_VITCLine(This,pLine)
 
-#define IAMTimecodeGenerator_SetTimecode(This,pTimecodeSample)	\
+#define IAMTimecodeGenerator_SetTimecode(This,pTimecodeSample)    \
     (This)->lpVtbl -> SetTimecode(This,pTimecodeSample)
 
-#define IAMTimecodeGenerator_GetTimecode(This,pTimecodeSample)	\
+#define IAMTimecodeGenerator_GetTimecode(This,pTimecodeSample)    \
     (This)->lpVtbl -> GetTimecode(This,pTimecodeSample)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -16784,7 +16784,7 @@ void __RPC_STUB IAMTimecodeGenerator_GetTimecode_Stub(
 
 
 
-#endif 	/* __IAMTimecodeGenerator_INTERFACE_DEFINED__ */
+#endif     /* __IAMTimecodeGenerator_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0333 */
@@ -16828,7 +16828,7 @@ EXTERN_C const IID IID_IAMTimecodeDisplay;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IAMTimecodeDisplayVtbl
     {
@@ -16876,32 +16876,32 @@ EXTERN_C const IID IID_IAMTimecodeDisplay;
 #ifdef COBJMACROS
 
 
-#define IAMTimecodeDisplay_QueryInterface(This,riid,ppvObject)	\
+#define IAMTimecodeDisplay_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IAMTimecodeDisplay_AddRef(This)	\
+#define IAMTimecodeDisplay_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IAMTimecodeDisplay_Release(This)	\
+#define IAMTimecodeDisplay_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IAMTimecodeDisplay_GetTCDisplayEnable(This,pState)	\
+#define IAMTimecodeDisplay_GetTCDisplayEnable(This,pState)    \
     (This)->lpVtbl -> GetTCDisplayEnable(This,pState)
 
-#define IAMTimecodeDisplay_SetTCDisplayEnable(This,State)	\
+#define IAMTimecodeDisplay_SetTCDisplayEnable(This,State)    \
     (This)->lpVtbl -> SetTCDisplayEnable(This,State)
 
-#define IAMTimecodeDisplay_GetTCDisplay(This,Param,pValue)	\
+#define IAMTimecodeDisplay_GetTCDisplay(This,Param,pValue)    \
     (This)->lpVtbl -> GetTCDisplay(This,Param,pValue)
 
-#define IAMTimecodeDisplay_SetTCDisplay(This,Param,Value)	\
+#define IAMTimecodeDisplay_SetTCDisplay(This,Param,Value)    \
     (This)->lpVtbl -> SetTCDisplay(This,Param,Value)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -16956,7 +16956,7 @@ void __RPC_STUB IAMTimecodeDisplay_SetTCDisplay_Stub(
 
 
 
-#endif 	/* __IAMTimecodeDisplay_INTERFACE_DEFINED__ */
+#endif     /* __IAMTimecodeDisplay_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0334 */
@@ -17006,7 +17006,7 @@ EXTERN_C const IID IID_IAMDevMemoryAllocator;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IAMDevMemoryAllocatorVtbl
     {
@@ -17061,35 +17061,35 @@ EXTERN_C const IID IID_IAMDevMemoryAllocator;
 #ifdef COBJMACROS
 
 
-#define IAMDevMemoryAllocator_QueryInterface(This,riid,ppvObject)	\
+#define IAMDevMemoryAllocator_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IAMDevMemoryAllocator_AddRef(This)	\
+#define IAMDevMemoryAllocator_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IAMDevMemoryAllocator_Release(This)	\
+#define IAMDevMemoryAllocator_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IAMDevMemoryAllocator_GetInfo(This,pdwcbTotalFree,pdwcbLargestFree,pdwcbTotalMemory,pdwcbMinimumChunk)	\
+#define IAMDevMemoryAllocator_GetInfo(This,pdwcbTotalFree,pdwcbLargestFree,pdwcbTotalMemory,pdwcbMinimumChunk)    \
     (This)->lpVtbl -> GetInfo(This,pdwcbTotalFree,pdwcbLargestFree,pdwcbTotalMemory,pdwcbMinimumChunk)
 
-#define IAMDevMemoryAllocator_CheckMemory(This,pBuffer)	\
+#define IAMDevMemoryAllocator_CheckMemory(This,pBuffer)    \
     (This)->lpVtbl -> CheckMemory(This,pBuffer)
 
-#define IAMDevMemoryAllocator_Alloc(This,ppBuffer,pdwcbBuffer)	\
+#define IAMDevMemoryAllocator_Alloc(This,ppBuffer,pdwcbBuffer)    \
     (This)->lpVtbl -> Alloc(This,ppBuffer,pdwcbBuffer)
 
-#define IAMDevMemoryAllocator_Free(This,pBuffer)	\
+#define IAMDevMemoryAllocator_Free(This,pBuffer)    \
     (This)->lpVtbl -> Free(This,pBuffer)
 
-#define IAMDevMemoryAllocator_GetDevMemoryObject(This,ppUnkInnner,pUnkOuter)	\
+#define IAMDevMemoryAllocator_GetDevMemoryObject(This,ppUnkInnner,pUnkOuter)    \
     (This)->lpVtbl -> GetDevMemoryObject(This,ppUnkInnner,pUnkOuter)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -17159,7 +17159,7 @@ void __RPC_STUB IAMDevMemoryAllocator_GetDevMemoryObject_Stub(
 
 
 
-#endif 	/* __IAMDevMemoryAllocator_INTERFACE_DEFINED__ */
+#endif     /* __IAMDevMemoryAllocator_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0335 */
@@ -17196,7 +17196,7 @@ EXTERN_C const IID IID_IAMDevMemoryControl;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IAMDevMemoryControlVtbl
     {
@@ -17236,29 +17236,29 @@ EXTERN_C const IID IID_IAMDevMemoryControl;
 #ifdef COBJMACROS
 
 
-#define IAMDevMemoryControl_QueryInterface(This,riid,ppvObject)	\
+#define IAMDevMemoryControl_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IAMDevMemoryControl_AddRef(This)	\
+#define IAMDevMemoryControl_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IAMDevMemoryControl_Release(This)	\
+#define IAMDevMemoryControl_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IAMDevMemoryControl_QueryWriteSync(This)	\
+#define IAMDevMemoryControl_QueryWriteSync(This)    \
     (This)->lpVtbl -> QueryWriteSync(This)
 
-#define IAMDevMemoryControl_WriteSync(This)	\
+#define IAMDevMemoryControl_WriteSync(This)    \
     (This)->lpVtbl -> WriteSync(This)
 
-#define IAMDevMemoryControl_GetDevId(This,pdwDevId)	\
+#define IAMDevMemoryControl_GetDevId(This,pdwDevId)    \
     (This)->lpVtbl -> GetDevId(This,pdwDevId)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -17297,7 +17297,7 @@ void __RPC_STUB IAMDevMemoryControl_GetDevId_Stub(
 
 
 
-#endif 	/* __IAMDevMemoryControl_INTERFACE_DEFINED__ */
+#endif     /* __IAMDevMemoryControl_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0336 */
@@ -17307,13 +17307,13 @@ typedef IAMDevMemoryControl *PAMDEVMEMORYCONTROL;
 
 
 enum _AMSTREAMSELECTINFOFLAGS
-    {	AMSTREAMSELECTINFO_ENABLED	= 0x1,
-	AMSTREAMSELECTINFO_EXCLUSIVE	= 0x2
+    {    AMSTREAMSELECTINFO_ENABLED    = 0x1,
+    AMSTREAMSELECTINFO_EXCLUSIVE    = 0x2
     } ;
 
 enum _AMSTREAMSELECTENABLEFLAGS
-    {	AMSTREAMSELECTENABLE_ENABLE	= 0x1,
-	AMSTREAMSELECTENABLE_ENABLEALL	= 0x2
+    {    AMSTREAMSELECTENABLE_ENABLE    = 0x1,
+    AMSTREAMSELECTENABLE_ENABLEALL    = 0x2
     } ;
 
 
@@ -17354,7 +17354,7 @@ EXTERN_C const IID IID_IAMStreamSelect;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IAMStreamSelectVtbl
     {
@@ -17404,29 +17404,29 @@ EXTERN_C const IID IID_IAMStreamSelect;
 #ifdef COBJMACROS
 
 
-#define IAMStreamSelect_QueryInterface(This,riid,ppvObject)	\
+#define IAMStreamSelect_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IAMStreamSelect_AddRef(This)	\
+#define IAMStreamSelect_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IAMStreamSelect_Release(This)	\
+#define IAMStreamSelect_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IAMStreamSelect_Count(This,pcStreams)	\
+#define IAMStreamSelect_Count(This,pcStreams)    \
     (This)->lpVtbl -> Count(This,pcStreams)
 
-#define IAMStreamSelect_Info(This,lIndex,ppmt,pdwFlags,plcid,pdwGroup,ppszName,ppObject,ppUnk)	\
+#define IAMStreamSelect_Info(This,lIndex,ppmt,pdwFlags,plcid,pdwGroup,ppszName,ppObject,ppUnk)    \
     (This)->lpVtbl -> Info(This,lIndex,ppmt,pdwFlags,plcid,pdwGroup,ppszName,ppObject,ppUnk)
 
-#define IAMStreamSelect_Enable(This,lIndex,dwFlags)	\
+#define IAMStreamSelect_Enable(This,lIndex,dwFlags)    \
     (This)->lpVtbl -> Enable(This,lIndex,dwFlags)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -17475,7 +17475,7 @@ void __RPC_STUB IAMStreamSelect_Enable_Stub(
 
 
 
-#endif 	/* __IAMStreamSelect_INTERFACE_DEFINED__ */
+#endif     /* __IAMStreamSelect_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0337 */
@@ -17485,8 +17485,8 @@ typedef IAMStreamSelect *PAMSTREAMSELECT;
 
 
 enum _AMRESCTL_RESERVEFLAGS
-    {	AMRESCTL_RESERVEFLAGS_RESERVE	= 0,
-	AMRESCTL_RESERVEFLAGS_UNRESERVE	= 0x1
+    {    AMRESCTL_RESERVEFLAGS_RESERVE    = 0,
+    AMRESCTL_RESERVEFLAGS_UNRESERVE    = 0x1
     } ;
 
 
@@ -17514,7 +17514,7 @@ EXTERN_C const IID IID_IAMResourceControl;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IAMResourceControlVtbl
     {
@@ -17549,23 +17549,23 @@ EXTERN_C const IID IID_IAMResourceControl;
 #ifdef COBJMACROS
 
 
-#define IAMResourceControl_QueryInterface(This,riid,ppvObject)	\
+#define IAMResourceControl_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IAMResourceControl_AddRef(This)	\
+#define IAMResourceControl_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IAMResourceControl_Release(This)	\
+#define IAMResourceControl_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IAMResourceControl_Reserve(This,dwFlags,pvReserved)	\
+#define IAMResourceControl_Reserve(This,dwFlags,pvReserved)    \
     (This)->lpVtbl -> Reserve(This,dwFlags,pvReserved)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -17583,7 +17583,7 @@ void __RPC_STUB IAMResourceControl_Reserve_Stub(
 
 
 
-#endif 	/* __IAMResourceControl_INTERFACE_DEFINED__ */
+#endif     /* __IAMResourceControl_INTERFACE_DEFINED__ */
 
 
 #ifndef __IAMClockAdjust_INTERFACE_DEFINED__
@@ -17606,7 +17606,7 @@ EXTERN_C const IID IID_IAMClockAdjust;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IAMClockAdjustVtbl
     {
@@ -17640,23 +17640,23 @@ EXTERN_C const IID IID_IAMClockAdjust;
 #ifdef COBJMACROS
 
 
-#define IAMClockAdjust_QueryInterface(This,riid,ppvObject)	\
+#define IAMClockAdjust_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IAMClockAdjust_AddRef(This)	\
+#define IAMClockAdjust_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IAMClockAdjust_Release(This)	\
+#define IAMClockAdjust_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IAMClockAdjust_SetClockDelta(This,rtDelta)	\
+#define IAMClockAdjust_SetClockDelta(This,rtDelta)    \
     (This)->lpVtbl -> SetClockDelta(This,rtDelta)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -17673,7 +17673,7 @@ void __RPC_STUB IAMClockAdjust_SetClockDelta_Stub(
 
 
 
-#endif 	/* __IAMClockAdjust_INTERFACE_DEFINED__ */
+#endif     /* __IAMClockAdjust_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0339 */
@@ -17681,8 +17681,8 @@ void __RPC_STUB IAMClockAdjust_SetClockDelta_Stub(
 
 
 enum _AM_FILTER_MISC_FLAGS
-    {	AM_FILTER_MISC_FLAGS_IS_RENDERER	= 0x1,
-	AM_FILTER_MISC_FLAGS_IS_SOURCE	= 0x2
+    {    AM_FILTER_MISC_FLAGS_IS_RENDERER    = 0x1,
+    AM_FILTER_MISC_FLAGS_IS_SOURCE    = 0x2
     } ;
 
 
@@ -17708,7 +17708,7 @@ EXTERN_C const IID IID_IAMFilterMiscFlags;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IAMFilterMiscFlagsVtbl
     {
@@ -17741,23 +17741,23 @@ EXTERN_C const IID IID_IAMFilterMiscFlags;
 #ifdef COBJMACROS
 
 
-#define IAMFilterMiscFlags_QueryInterface(This,riid,ppvObject)	\
+#define IAMFilterMiscFlags_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IAMFilterMiscFlags_AddRef(This)	\
+#define IAMFilterMiscFlags_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IAMFilterMiscFlags_Release(This)	\
+#define IAMFilterMiscFlags_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IAMFilterMiscFlags_GetMiscFlags(This)	\
+#define IAMFilterMiscFlags_GetMiscFlags(This)    \
     (This)->lpVtbl -> GetMiscFlags(This)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -17773,7 +17773,7 @@ void __RPC_STUB IAMFilterMiscFlags_GetMiscFlags_Stub(
 
 
 
-#endif 	/* __IAMFilterMiscFlags_INTERFACE_DEFINED__ */
+#endif     /* __IAMFilterMiscFlags_INTERFACE_DEFINED__ */
 
 
 #ifndef __IDrawVideoImage_INTERFACE_DEFINED__
@@ -17802,7 +17802,7 @@ EXTERN_C const IID IID_IDrawVideoImage;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IDrawVideoImageVtbl
     {
@@ -17844,29 +17844,29 @@ EXTERN_C const IID IID_IDrawVideoImage;
 #ifdef COBJMACROS
 
 
-#define IDrawVideoImage_QueryInterface(This,riid,ppvObject)	\
+#define IDrawVideoImage_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IDrawVideoImage_AddRef(This)	\
+#define IDrawVideoImage_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IDrawVideoImage_Release(This)	\
+#define IDrawVideoImage_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IDrawVideoImage_DrawVideoImageBegin(This)	\
+#define IDrawVideoImage_DrawVideoImageBegin(This)    \
     (This)->lpVtbl -> DrawVideoImageBegin(This)
 
-#define IDrawVideoImage_DrawVideoImageEnd(This)	\
+#define IDrawVideoImage_DrawVideoImageEnd(This)    \
     (This)->lpVtbl -> DrawVideoImageEnd(This)
 
-#define IDrawVideoImage_DrawVideoImageDraw(This,hdc,lprcSrc,lprcDst)	\
+#define IDrawVideoImage_DrawVideoImageDraw(This,hdc,lprcSrc,lprcDst)    \
     (This)->lpVtbl -> DrawVideoImageDraw(This,hdc,lprcSrc,lprcDst)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -17907,7 +17907,7 @@ void __RPC_STUB IDrawVideoImage_DrawVideoImageDraw_Stub(
 
 
 
-#endif 	/* __IDrawVideoImage_INTERFACE_DEFINED__ */
+#endif     /* __IDrawVideoImage_INTERFACE_DEFINED__ */
 
 
 #ifndef __IDecimateVideoImage_INTERFACE_DEFINED__
@@ -17933,7 +17933,7 @@ EXTERN_C const IID IID_IDecimateVideoImage;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IDecimateVideoImageVtbl
     {
@@ -17971,26 +17971,26 @@ EXTERN_C const IID IID_IDecimateVideoImage;
 #ifdef COBJMACROS
 
 
-#define IDecimateVideoImage_QueryInterface(This,riid,ppvObject)	\
+#define IDecimateVideoImage_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IDecimateVideoImage_AddRef(This)	\
+#define IDecimateVideoImage_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IDecimateVideoImage_Release(This)	\
+#define IDecimateVideoImage_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IDecimateVideoImage_SetDecimationImageSize(This,lWidth,lHeight)	\
+#define IDecimateVideoImage_SetDecimationImageSize(This,lWidth,lHeight)    \
     (This)->lpVtbl -> SetDecimationImageSize(This,lWidth,lHeight)
 
-#define IDecimateVideoImage_ResetDecimationImageSize(This)	\
+#define IDecimateVideoImage_ResetDecimationImageSize(This)    \
     (This)->lpVtbl -> ResetDecimationImageSize(This)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -18019,7 +18019,7 @@ void __RPC_STUB IDecimateVideoImage_ResetDecimationImageSize_Stub(
 
 
 
-#endif 	/* __IDecimateVideoImage_INTERFACE_DEFINED__ */
+#endif     /* __IDecimateVideoImage_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0342 */
@@ -18027,12 +18027,12 @@ void __RPC_STUB IDecimateVideoImage_ResetDecimationImageSize_Stub(
 
 typedef
 enum _DECIMATION_USAGE
-    {	DECIMATION_LEGACY	= 0,
-	DECIMATION_USE_DECODER_ONLY	= DECIMATION_LEGACY + 1,
-	DECIMATION_USE_VIDEOPORT_ONLY	= DECIMATION_USE_DECODER_ONLY + 1,
-	DECIMATION_USE_OVERLAY_ONLY	= DECIMATION_USE_VIDEOPORT_ONLY + 1,
-	DECIMATION_DEFAULT	= DECIMATION_USE_OVERLAY_ONLY + 1
-    } 	DECIMATION_USAGE;
+    {    DECIMATION_LEGACY    = 0,
+    DECIMATION_USE_DECODER_ONLY    = DECIMATION_LEGACY + 1,
+    DECIMATION_USE_VIDEOPORT_ONLY    = DECIMATION_USE_DECODER_ONLY + 1,
+    DECIMATION_USE_OVERLAY_ONLY    = DECIMATION_USE_VIDEOPORT_ONLY + 1,
+    DECIMATION_DEFAULT    = DECIMATION_USE_OVERLAY_ONLY + 1
+    }     DECIMATION_USAGE;
 
 
 
@@ -18062,7 +18062,7 @@ EXTERN_C const IID IID_IAMVideoDecimationProperties;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IAMVideoDecimationPropertiesVtbl
     {
@@ -18100,26 +18100,26 @@ EXTERN_C const IID IID_IAMVideoDecimationProperties;
 #ifdef COBJMACROS
 
 
-#define IAMVideoDecimationProperties_QueryInterface(This,riid,ppvObject)	\
+#define IAMVideoDecimationProperties_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IAMVideoDecimationProperties_AddRef(This)	\
+#define IAMVideoDecimationProperties_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IAMVideoDecimationProperties_Release(This)	\
+#define IAMVideoDecimationProperties_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IAMVideoDecimationProperties_QueryDecimationUsage(This,lpUsage)	\
+#define IAMVideoDecimationProperties_QueryDecimationUsage(This,lpUsage)    \
     (This)->lpVtbl -> QueryDecimationUsage(This,lpUsage)
 
-#define IAMVideoDecimationProperties_SetDecimationUsage(This,Usage)	\
+#define IAMVideoDecimationProperties_SetDecimationUsage(This,Usage)    \
     (This)->lpVtbl -> SetDecimationUsage(This,Usage)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -18148,7 +18148,7 @@ void __RPC_STUB IAMVideoDecimationProperties_SetDecimationUsage_Stub(
 
 
 
-#endif 	/* __IAMVideoDecimationProperties_INTERFACE_DEFINED__ */
+#endif     /* __IAMVideoDecimationProperties_INTERFACE_DEFINED__ */
 
 
 #ifndef __IVideoFrameStep_INTERFACE_DEFINED__
@@ -18178,7 +18178,7 @@ EXTERN_C const IID IID_IVideoFrameStep;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IVideoFrameStepVtbl
     {
@@ -18221,29 +18221,29 @@ EXTERN_C const IID IID_IVideoFrameStep;
 #ifdef COBJMACROS
 
 
-#define IVideoFrameStep_QueryInterface(This,riid,ppvObject)	\
+#define IVideoFrameStep_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IVideoFrameStep_AddRef(This)	\
+#define IVideoFrameStep_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IVideoFrameStep_Release(This)	\
+#define IVideoFrameStep_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IVideoFrameStep_Step(This,dwFrames,pStepObject)	\
+#define IVideoFrameStep_Step(This,dwFrames,pStepObject)    \
     (This)->lpVtbl -> Step(This,dwFrames,pStepObject)
 
-#define IVideoFrameStep_CanStep(This,bMultiple,pStepObject)	\
+#define IVideoFrameStep_CanStep(This,bMultiple,pStepObject)    \
     (This)->lpVtbl -> CanStep(This,bMultiple,pStepObject)
 
-#define IVideoFrameStep_CancelStep(This)	\
+#define IVideoFrameStep_CancelStep(This)    \
     (This)->lpVtbl -> CancelStep(This)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -18285,7 +18285,7 @@ void __RPC_STUB IVideoFrameStep_CancelStep_Stub(
 
 
 
-#endif 	/* __IVideoFrameStep_INTERFACE_DEFINED__ */
+#endif     /* __IVideoFrameStep_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0344 */
@@ -18293,10 +18293,10 @@ void __RPC_STUB IVideoFrameStep_CancelStep_Stub(
 
 
 enum _AM_PUSHSOURCE_FLAGS
-    {	AM_PUSHSOURCECAPS_INTERNAL_RM	= 0x1,
-	AM_PUSHSOURCECAPS_NOT_LIVE	= 0x2,
-	AM_PUSHSOURCECAPS_PRIVATE_CLOCK	= 0x4,
-	AM_PUSHSOURCEREQS_USE_STREAM_CLOCK	= 0x10000
+    {    AM_PUSHSOURCECAPS_INTERNAL_RM    = 0x1,
+    AM_PUSHSOURCECAPS_NOT_LIVE    = 0x2,
+    AM_PUSHSOURCECAPS_PRIVATE_CLOCK    = 0x4,
+    AM_PUSHSOURCEREQS_USE_STREAM_CLOCK    = 0x10000
     } ;
 
 
@@ -18323,7 +18323,7 @@ EXTERN_C const IID IID_IAMLatency;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IAMLatencyVtbl
     {
@@ -18357,23 +18357,23 @@ EXTERN_C const IID IID_IAMLatency;
 #ifdef COBJMACROS
 
 
-#define IAMLatency_QueryInterface(This,riid,ppvObject)	\
+#define IAMLatency_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IAMLatency_AddRef(This)	\
+#define IAMLatency_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IAMLatency_Release(This)	\
+#define IAMLatency_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IAMLatency_GetLatency(This,prtLatency)	\
+#define IAMLatency_GetLatency(This,prtLatency)    \
     (This)->lpVtbl -> GetLatency(This,prtLatency)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -18390,7 +18390,7 @@ void __RPC_STUB IAMLatency_GetLatency_Stub(
 
 
 
-#endif 	/* __IAMLatency_INTERFACE_DEFINED__ */
+#endif     /* __IAMLatency_INTERFACE_DEFINED__ */
 
 
 #ifndef __IAMPushSource_INTERFACE_DEFINED__
@@ -18428,7 +18428,7 @@ EXTERN_C const IID IID_IAMPushSource;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IAMPushSourceVtbl
     {
@@ -18486,42 +18486,42 @@ EXTERN_C const IID IID_IAMPushSource;
 #ifdef COBJMACROS
 
 
-#define IAMPushSource_QueryInterface(This,riid,ppvObject)	\
+#define IAMPushSource_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IAMPushSource_AddRef(This)	\
+#define IAMPushSource_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IAMPushSource_Release(This)	\
+#define IAMPushSource_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IAMPushSource_GetLatency(This,prtLatency)	\
+#define IAMPushSource_GetLatency(This,prtLatency)    \
     (This)->lpVtbl -> GetLatency(This,prtLatency)
 
 
-#define IAMPushSource_GetPushSourceFlags(This,pFlags)	\
+#define IAMPushSource_GetPushSourceFlags(This,pFlags)    \
     (This)->lpVtbl -> GetPushSourceFlags(This,pFlags)
 
-#define IAMPushSource_SetPushSourceFlags(This,Flags)	\
+#define IAMPushSource_SetPushSourceFlags(This,Flags)    \
     (This)->lpVtbl -> SetPushSourceFlags(This,Flags)
 
-#define IAMPushSource_SetStreamOffset(This,rtOffset)	\
+#define IAMPushSource_SetStreamOffset(This,rtOffset)    \
     (This)->lpVtbl -> SetStreamOffset(This,rtOffset)
 
-#define IAMPushSource_GetStreamOffset(This,prtOffset)	\
+#define IAMPushSource_GetStreamOffset(This,prtOffset)    \
     (This)->lpVtbl -> GetStreamOffset(This,prtOffset)
 
-#define IAMPushSource_GetMaxStreamOffset(This,prtMaxOffset)	\
+#define IAMPushSource_GetMaxStreamOffset(This,prtMaxOffset)    \
     (This)->lpVtbl -> GetMaxStreamOffset(This,prtMaxOffset)
 
-#define IAMPushSource_SetMaxStreamOffset(This,rtMaxOffset)	\
+#define IAMPushSource_SetMaxStreamOffset(This,rtMaxOffset)    \
     (This)->lpVtbl -> SetMaxStreamOffset(This,rtMaxOffset)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -18598,7 +18598,7 @@ void __RPC_STUB IAMPushSource_SetMaxStreamOffset_Stub(
 
 
 
-#endif 	/* __IAMPushSource_INTERFACE_DEFINED__ */
+#endif     /* __IAMPushSource_INTERFACE_DEFINED__ */
 
 
 #ifndef __IAMDeviceRemoval_INTERFACE_DEFINED__
@@ -18626,7 +18626,7 @@ EXTERN_C const IID IID_IAMDeviceRemoval;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IAMDeviceRemovalVtbl
     {
@@ -18667,29 +18667,29 @@ EXTERN_C const IID IID_IAMDeviceRemoval;
 #ifdef COBJMACROS
 
 
-#define IAMDeviceRemoval_QueryInterface(This,riid,ppvObject)	\
+#define IAMDeviceRemoval_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IAMDeviceRemoval_AddRef(This)	\
+#define IAMDeviceRemoval_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IAMDeviceRemoval_Release(This)	\
+#define IAMDeviceRemoval_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IAMDeviceRemoval_DeviceInfo(This,pclsidInterfaceClass,pwszSymbolicLink)	\
+#define IAMDeviceRemoval_DeviceInfo(This,pclsidInterfaceClass,pwszSymbolicLink)    \
     (This)->lpVtbl -> DeviceInfo(This,pclsidInterfaceClass,pwszSymbolicLink)
 
-#define IAMDeviceRemoval_Reassociate(This)	\
+#define IAMDeviceRemoval_Reassociate(This)    \
     (This)->lpVtbl -> Reassociate(This)
 
-#define IAMDeviceRemoval_Disassociate(This)	\
+#define IAMDeviceRemoval_Disassociate(This)    \
     (This)->lpVtbl -> Disassociate(This)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -18729,7 +18729,7 @@ void __RPC_STUB IAMDeviceRemoval_Disassociate_Stub(
 
 
 
-#endif 	/* __IAMDeviceRemoval_INTERFACE_DEFINED__ */
+#endif     /* __IAMDeviceRemoval_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0346 */
@@ -18744,27 +18744,27 @@ typedef /* [public][public][public] */ struct __MIDL___MIDL_itf_strmif_0346_0001
     DWORD dwDVVAuxSrc;
     DWORD dwDVVAuxCtl;
     DWORD dwDVReserved[ 2 ];
-    } 	DVINFO;
+    }     DVINFO;
 
 typedef struct __MIDL___MIDL_itf_strmif_0346_0001 *PDVINFO;
 
 
 enum _DVENCODERRESOLUTION
-    {	DVENCODERRESOLUTION_720x480	= 2012,
-	DVENCODERRESOLUTION_360x240	= 2013,
-	DVENCODERRESOLUTION_180x120	= 2014,
-	DVENCODERRESOLUTION_88x60	= 2015
+    {    DVENCODERRESOLUTION_720x480    = 2012,
+    DVENCODERRESOLUTION_360x240    = 2013,
+    DVENCODERRESOLUTION_180x120    = 2014,
+    DVENCODERRESOLUTION_88x60    = 2015
     } ;
 
 enum _DVENCODERVIDEOFORMAT
-    {	DVENCODERVIDEOFORMAT_NTSC	= 2000,
-	DVENCODERVIDEOFORMAT_PAL	= 2001
+    {    DVENCODERVIDEOFORMAT_NTSC    = 2000,
+    DVENCODERVIDEOFORMAT_PAL    = 2001
     } ;
 
 enum _DVENCODERFORMAT
-    {	DVENCODERFORMAT_DVSD	= 2007,
-	DVENCODERFORMAT_DVHD	= 2008,
-	DVENCODERFORMAT_DVSL	= 2009
+    {    DVENCODERFORMAT_DVSD    = 2007,
+    DVENCODERFORMAT_DVHD    = 2008,
+    DVENCODERFORMAT_DVSL    = 2009
     } ;
 
 
@@ -18802,7 +18802,7 @@ EXTERN_C const IID IID_IDVEnc;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IDVEncVtbl
     {
@@ -18848,26 +18848,26 @@ EXTERN_C const IID IID_IDVEnc;
 #ifdef COBJMACROS
 
 
-#define IDVEnc_QueryInterface(This,riid,ppvObject)	\
+#define IDVEnc_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IDVEnc_AddRef(This)	\
+#define IDVEnc_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IDVEnc_Release(This)	\
+#define IDVEnc_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IDVEnc_get_IFormatResolution(This,VideoFormat,DVFormat,Resolution,fDVInfo,sDVInfo)	\
+#define IDVEnc_get_IFormatResolution(This,VideoFormat,DVFormat,Resolution,fDVInfo,sDVInfo)    \
     (This)->lpVtbl -> get_IFormatResolution(This,VideoFormat,DVFormat,Resolution,fDVInfo,sDVInfo)
 
-#define IDVEnc_put_IFormatResolution(This,VideoFormat,DVFormat,Resolution,fDVInfo,sDVInfo)	\
+#define IDVEnc_put_IFormatResolution(This,VideoFormat,DVFormat,Resolution,fDVInfo,sDVInfo)    \
     (This)->lpVtbl -> put_IFormatResolution(This,VideoFormat,DVFormat,Resolution,fDVInfo,sDVInfo)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -18904,7 +18904,7 @@ void __RPC_STUB IDVEnc_put_IFormatResolution_Stub(
 
 
 
-#endif 	/* __IDVEnc_INTERFACE_DEFINED__ */
+#endif     /* __IDVEnc_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0347 */
@@ -18912,17 +18912,17 @@ void __RPC_STUB IDVEnc_put_IFormatResolution_Stub(
 
 
 enum _DVDECODERRESOLUTION
-    {	DVDECODERRESOLUTION_720x480	= 1000,
-	DVDECODERRESOLUTION_360x240	= 1001,
-	DVDECODERRESOLUTION_180x120	= 1002,
-	DVDECODERRESOLUTION_88x60	= 1003
+    {    DVDECODERRESOLUTION_720x480    = 1000,
+    DVDECODERRESOLUTION_360x240    = 1001,
+    DVDECODERRESOLUTION_180x120    = 1002,
+    DVDECODERRESOLUTION_88x60    = 1003
     } ;
 
 enum _DVRESOLUTION
-    {	DVRESOLUTION_FULL	= 1000,
-	DVRESOLUTION_HALF	= 1001,
-	DVRESOLUTION_QUARTER	= 1002,
-	DVRESOLUTION_DC	= 1003
+    {    DVRESOLUTION_FULL    = 1000,
+    DVRESOLUTION_HALF    = 1001,
+    DVRESOLUTION_QUARTER    = 1002,
+    DVRESOLUTION_DC    = 1003
     } ;
 
 
@@ -18952,7 +18952,7 @@ EXTERN_C const IID IID_IIPDVDec;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IIPDVDecVtbl
     {
@@ -18990,26 +18990,26 @@ EXTERN_C const IID IID_IIPDVDec;
 #ifdef COBJMACROS
 
 
-#define IIPDVDec_QueryInterface(This,riid,ppvObject)	\
+#define IIPDVDec_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IIPDVDec_AddRef(This)	\
+#define IIPDVDec_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IIPDVDec_Release(This)	\
+#define IIPDVDec_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IIPDVDec_get_IPDisplay(This,displayPix)	\
+#define IIPDVDec_get_IPDisplay(This,displayPix)    \
     (This)->lpVtbl -> get_IPDisplay(This,displayPix)
 
-#define IIPDVDec_put_IPDisplay(This,displayPix)	\
+#define IIPDVDec_put_IPDisplay(This,displayPix)    \
     (This)->lpVtbl -> put_IPDisplay(This,displayPix)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -19038,7 +19038,7 @@ void __RPC_STUB IIPDVDec_put_IPDisplay_Stub(
 
 
 
-#endif 	/* __IIPDVDec_INTERFACE_DEFINED__ */
+#endif     /* __IIPDVDec_INTERFACE_DEFINED__ */
 
 
 #ifndef __IDVRGB219_INTERFACE_DEFINED__
@@ -19061,7 +19061,7 @@ EXTERN_C const IID IID_IDVRGB219;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IDVRGB219Vtbl
     {
@@ -19095,23 +19095,23 @@ EXTERN_C const IID IID_IDVRGB219;
 #ifdef COBJMACROS
 
 
-#define IDVRGB219_QueryInterface(This,riid,ppvObject)	\
+#define IDVRGB219_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IDVRGB219_AddRef(This)	\
+#define IDVRGB219_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IDVRGB219_Release(This)	\
+#define IDVRGB219_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IDVRGB219_SetRGB219(This,bState)	\
+#define IDVRGB219_SetRGB219(This,bState)    \
     (This)->lpVtbl -> SetRGB219(This,bState)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -19128,7 +19128,7 @@ void __RPC_STUB IDVRGB219_SetRGB219_Stub(
 
 
 
-#endif 	/* __IDVRGB219_INTERFACE_DEFINED__ */
+#endif     /* __IDVRGB219_INTERFACE_DEFINED__ */
 
 
 #ifndef __IDVSplitter_INTERFACE_DEFINED__
@@ -19151,7 +19151,7 @@ EXTERN_C const IID IID_IDVSplitter;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IDVSplitterVtbl
     {
@@ -19185,23 +19185,23 @@ EXTERN_C const IID IID_IDVSplitter;
 #ifdef COBJMACROS
 
 
-#define IDVSplitter_QueryInterface(This,riid,ppvObject)	\
+#define IDVSplitter_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IDVSplitter_AddRef(This)	\
+#define IDVSplitter_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IDVSplitter_Release(This)	\
+#define IDVSplitter_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IDVSplitter_DiscardAlternateVideoFrames(This,nDiscard)	\
+#define IDVSplitter_DiscardAlternateVideoFrames(This,nDiscard)    \
     (This)->lpVtbl -> DiscardAlternateVideoFrames(This,nDiscard)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -19218,7 +19218,7 @@ void __RPC_STUB IDVSplitter_DiscardAlternateVideoFrames_Stub(
 
 
 
-#endif 	/* __IDVSplitter_INTERFACE_DEFINED__ */
+#endif     /* __IDVSplitter_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0350 */
@@ -19226,18 +19226,18 @@ void __RPC_STUB IDVSplitter_DiscardAlternateVideoFrames_Stub(
 
 
 enum _AM_AUDIO_RENDERER_STAT_PARAM
-    {	AM_AUDREND_STAT_PARAM_BREAK_COUNT	= 1,
-	AM_AUDREND_STAT_PARAM_SLAVE_MODE	= AM_AUDREND_STAT_PARAM_BREAK_COUNT + 1,
-	AM_AUDREND_STAT_PARAM_SILENCE_DUR	= AM_AUDREND_STAT_PARAM_SLAVE_MODE + 1,
-	AM_AUDREND_STAT_PARAM_LAST_BUFFER_DUR	= AM_AUDREND_STAT_PARAM_SILENCE_DUR + 1,
-	AM_AUDREND_STAT_PARAM_DISCONTINUITIES	= AM_AUDREND_STAT_PARAM_LAST_BUFFER_DUR + 1,
-	AM_AUDREND_STAT_PARAM_SLAVE_RATE	= AM_AUDREND_STAT_PARAM_DISCONTINUITIES + 1,
-	AM_AUDREND_STAT_PARAM_SLAVE_DROPWRITE_DUR	= AM_AUDREND_STAT_PARAM_SLAVE_RATE + 1,
-	AM_AUDREND_STAT_PARAM_SLAVE_HIGHLOWERROR	= AM_AUDREND_STAT_PARAM_SLAVE_DROPWRITE_DUR + 1,
-	AM_AUDREND_STAT_PARAM_SLAVE_LASTHIGHLOWERROR	= AM_AUDREND_STAT_PARAM_SLAVE_HIGHLOWERROR + 1,
-	AM_AUDREND_STAT_PARAM_SLAVE_ACCUMERROR	= AM_AUDREND_STAT_PARAM_SLAVE_LASTHIGHLOWERROR + 1,
-	AM_AUDREND_STAT_PARAM_BUFFERFULLNESS	= AM_AUDREND_STAT_PARAM_SLAVE_ACCUMERROR + 1,
-	AM_AUDREND_STAT_PARAM_JITTER	= AM_AUDREND_STAT_PARAM_BUFFERFULLNESS + 1
+    {    AM_AUDREND_STAT_PARAM_BREAK_COUNT    = 1,
+    AM_AUDREND_STAT_PARAM_SLAVE_MODE    = AM_AUDREND_STAT_PARAM_BREAK_COUNT + 1,
+    AM_AUDREND_STAT_PARAM_SILENCE_DUR    = AM_AUDREND_STAT_PARAM_SLAVE_MODE + 1,
+    AM_AUDREND_STAT_PARAM_LAST_BUFFER_DUR    = AM_AUDREND_STAT_PARAM_SILENCE_DUR + 1,
+    AM_AUDREND_STAT_PARAM_DISCONTINUITIES    = AM_AUDREND_STAT_PARAM_LAST_BUFFER_DUR + 1,
+    AM_AUDREND_STAT_PARAM_SLAVE_RATE    = AM_AUDREND_STAT_PARAM_DISCONTINUITIES + 1,
+    AM_AUDREND_STAT_PARAM_SLAVE_DROPWRITE_DUR    = AM_AUDREND_STAT_PARAM_SLAVE_RATE + 1,
+    AM_AUDREND_STAT_PARAM_SLAVE_HIGHLOWERROR    = AM_AUDREND_STAT_PARAM_SLAVE_DROPWRITE_DUR + 1,
+    AM_AUDREND_STAT_PARAM_SLAVE_LASTHIGHLOWERROR    = AM_AUDREND_STAT_PARAM_SLAVE_HIGHLOWERROR + 1,
+    AM_AUDREND_STAT_PARAM_SLAVE_ACCUMERROR    = AM_AUDREND_STAT_PARAM_SLAVE_LASTHIGHLOWERROR + 1,
+    AM_AUDREND_STAT_PARAM_BUFFERFULLNESS    = AM_AUDREND_STAT_PARAM_SLAVE_ACCUMERROR + 1,
+    AM_AUDREND_STAT_PARAM_JITTER    = AM_AUDREND_STAT_PARAM_BUFFERFULLNESS + 1
     } ;
 
 
@@ -19266,7 +19266,7 @@ EXTERN_C const IID IID_IAMAudioRendererStats;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IAMAudioRendererStatsVtbl
     {
@@ -19302,23 +19302,23 @@ EXTERN_C const IID IID_IAMAudioRendererStats;
 #ifdef COBJMACROS
 
 
-#define IAMAudioRendererStats_QueryInterface(This,riid,ppvObject)	\
+#define IAMAudioRendererStats_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IAMAudioRendererStats_AddRef(This)	\
+#define IAMAudioRendererStats_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IAMAudioRendererStats_Release(This)	\
+#define IAMAudioRendererStats_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IAMAudioRendererStats_GetStatParam(This,dwParam,pdwParam1,pdwParam2)	\
+#define IAMAudioRendererStats_GetStatParam(This,dwParam,pdwParam1,pdwParam2)    \
     (This)->lpVtbl -> GetStatParam(This,dwParam,pdwParam1,pdwParam2)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -19337,7 +19337,7 @@ void __RPC_STUB IAMAudioRendererStats_GetStatParam_Stub(
 
 
 
-#endif 	/* __IAMAudioRendererStats_INTERFACE_DEFINED__ */
+#endif     /* __IAMAudioRendererStats_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0352 */
@@ -19345,9 +19345,9 @@ void __RPC_STUB IAMAudioRendererStats_GetStatParam_Stub(
 
 
 enum _AM_INTF_SEARCH_FLAGS
-    {	AM_INTF_SEARCH_INPUT_PIN	= 0x1,
-	AM_INTF_SEARCH_OUTPUT_PIN	= 0x2,
-	AM_INTF_SEARCH_FILTER	= 0x4
+    {    AM_INTF_SEARCH_INPUT_PIN    = 0x1,
+    AM_INTF_SEARCH_OUTPUT_PIN    = 0x2,
+    AM_INTF_SEARCH_FILTER    = 0x4
     } ;
 
 
@@ -19383,7 +19383,7 @@ EXTERN_C const IID IID_IAMGraphStreams;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IAMGraphStreamsVtbl
     {
@@ -19428,29 +19428,29 @@ EXTERN_C const IID IID_IAMGraphStreams;
 #ifdef COBJMACROS
 
 
-#define IAMGraphStreams_QueryInterface(This,riid,ppvObject)	\
+#define IAMGraphStreams_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IAMGraphStreams_AddRef(This)	\
+#define IAMGraphStreams_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IAMGraphStreams_Release(This)	\
+#define IAMGraphStreams_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IAMGraphStreams_FindUpstreamInterface(This,pPin,riid,ppvInterface,dwFlags)	\
+#define IAMGraphStreams_FindUpstreamInterface(This,pPin,riid,ppvInterface,dwFlags)    \
     (This)->lpVtbl -> FindUpstreamInterface(This,pPin,riid,ppvInterface,dwFlags)
 
-#define IAMGraphStreams_SyncUsingStreamOffset(This,bUseStreamOffset)	\
+#define IAMGraphStreams_SyncUsingStreamOffset(This,bUseStreamOffset)    \
     (This)->lpVtbl -> SyncUsingStreamOffset(This,bUseStreamOffset)
 
-#define IAMGraphStreams_SetMaxGraphLatency(This,rtMaxGraphLatency)	\
+#define IAMGraphStreams_SetMaxGraphLatency(This,rtMaxGraphLatency)    \
     (This)->lpVtbl -> SetMaxGraphLatency(This,rtMaxGraphLatency)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -19494,7 +19494,7 @@ void __RPC_STUB IAMGraphStreams_SetMaxGraphLatency_Stub(
 
 
 
-#endif 	/* __IAMGraphStreams_INTERFACE_DEFINED__ */
+#endif     /* __IAMGraphStreams_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0353 */
@@ -19502,10 +19502,10 @@ void __RPC_STUB IAMGraphStreams_SetMaxGraphLatency_Stub(
 
 
 enum AMOVERLAYFX
-    {	AMOVERFX_NOFX	= 0,
-	AMOVERFX_MIRRORLEFTRIGHT	= 0x2,
-	AMOVERFX_MIRRORUPDOWN	= 0x4,
-	AMOVERFX_DEINTERLACE	= 0x8
+    {    AMOVERFX_NOFX    = 0,
+    AMOVERFX_MIRRORLEFTRIGHT    = 0x2,
+    AMOVERFX_MIRRORUPDOWN    = 0x4,
+    AMOVERFX_DEINTERLACE    = 0x8
     } ;
 
 
@@ -19538,7 +19538,7 @@ EXTERN_C const IID IID_IAMOverlayFX;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IAMOverlayFXVtbl
     {
@@ -19580,29 +19580,29 @@ EXTERN_C const IID IID_IAMOverlayFX;
 #ifdef COBJMACROS
 
 
-#define IAMOverlayFX_QueryInterface(This,riid,ppvObject)	\
+#define IAMOverlayFX_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IAMOverlayFX_AddRef(This)	\
+#define IAMOverlayFX_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IAMOverlayFX_Release(This)	\
+#define IAMOverlayFX_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IAMOverlayFX_QueryOverlayFXCaps(This,lpdwOverlayFXCaps)	\
+#define IAMOverlayFX_QueryOverlayFXCaps(This,lpdwOverlayFXCaps)    \
     (This)->lpVtbl -> QueryOverlayFXCaps(This,lpdwOverlayFXCaps)
 
-#define IAMOverlayFX_SetOverlayFX(This,dwOverlayFX)	\
+#define IAMOverlayFX_SetOverlayFX(This,dwOverlayFX)    \
     (This)->lpVtbl -> SetOverlayFX(This,dwOverlayFX)
 
-#define IAMOverlayFX_GetOverlayFX(This,lpdwOverlayFX)	\
+#define IAMOverlayFX_GetOverlayFX(This,lpdwOverlayFX)    \
     (This)->lpVtbl -> GetOverlayFX(This,lpdwOverlayFX)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -19643,7 +19643,7 @@ void __RPC_STUB IAMOverlayFX_GetOverlayFX_Stub(
 
 
 
-#endif 	/* __IAMOverlayFX_INTERFACE_DEFINED__ */
+#endif     /* __IAMOverlayFX_INTERFACE_DEFINED__ */
 
 
 #ifndef __IAMOpenProgress_INTERFACE_DEFINED__
@@ -19669,7 +19669,7 @@ EXTERN_C const IID IID_IAMOpenProgress;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IAMOpenProgressVtbl
     {
@@ -19707,26 +19707,26 @@ EXTERN_C const IID IID_IAMOpenProgress;
 #ifdef COBJMACROS
 
 
-#define IAMOpenProgress_QueryInterface(This,riid,ppvObject)	\
+#define IAMOpenProgress_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IAMOpenProgress_AddRef(This)	\
+#define IAMOpenProgress_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IAMOpenProgress_Release(This)	\
+#define IAMOpenProgress_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IAMOpenProgress_QueryProgress(This,pllTotal,pllCurrent)	\
+#define IAMOpenProgress_QueryProgress(This,pllTotal,pllCurrent)    \
     (This)->lpVtbl -> QueryProgress(This,pllTotal,pllCurrent)
 
-#define IAMOpenProgress_AbortOperation(This)	\
+#define IAMOpenProgress_AbortOperation(This)    \
     (This)->lpVtbl -> AbortOperation(This)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -19755,7 +19755,7 @@ void __RPC_STUB IAMOpenProgress_AbortOperation_Stub(
 
 
 
-#endif 	/* __IAMOpenProgress_INTERFACE_DEFINED__ */
+#endif     /* __IAMOpenProgress_INTERFACE_DEFINED__ */
 
 
 #ifndef __IMpeg2Demultiplexer_INTERFACE_DEFINED__
@@ -19787,7 +19787,7 @@ EXTERN_C const IID IID_IMpeg2Demultiplexer;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IMpeg2DemultiplexerVtbl
     {
@@ -19832,29 +19832,29 @@ EXTERN_C const IID IID_IMpeg2Demultiplexer;
 #ifdef COBJMACROS
 
 
-#define IMpeg2Demultiplexer_QueryInterface(This,riid,ppvObject)	\
+#define IMpeg2Demultiplexer_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IMpeg2Demultiplexer_AddRef(This)	\
+#define IMpeg2Demultiplexer_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IMpeg2Demultiplexer_Release(This)	\
+#define IMpeg2Demultiplexer_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IMpeg2Demultiplexer_CreateOutputPin(This,pMediaType,pszPinName,ppIPin)	\
+#define IMpeg2Demultiplexer_CreateOutputPin(This,pMediaType,pszPinName,ppIPin)    \
     (This)->lpVtbl -> CreateOutputPin(This,pMediaType,pszPinName,ppIPin)
 
-#define IMpeg2Demultiplexer_SetOutputPinMediaType(This,pszPinName,pMediaType)	\
+#define IMpeg2Demultiplexer_SetOutputPinMediaType(This,pszPinName,pMediaType)    \
     (This)->lpVtbl -> SetOutputPinMediaType(This,pszPinName,pMediaType)
 
-#define IMpeg2Demultiplexer_DeleteOutputPin(This,pszPinName)	\
+#define IMpeg2Demultiplexer_DeleteOutputPin(This,pszPinName)    \
     (This)->lpVtbl -> DeleteOutputPin(This,pszPinName)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -19898,7 +19898,7 @@ void __RPC_STUB IMpeg2Demultiplexer_DeleteOutputPin_Stub(
 
 
 
-#endif 	/* __IMpeg2Demultiplexer_INTERFACE_DEFINED__ */
+#endif     /* __IMpeg2Demultiplexer_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0356 */
@@ -19917,7 +19917,7 @@ typedef /* [public][public] */ struct __MIDL___MIDL_itf_strmif_0356_0001
     DWORD dwMediaSampleContent;
     ULONG ulSubstreamFilterValue;
     int iDataOffset;
-    } 	STREAM_ID_MAP;
+    }     STREAM_ID_MAP;
 
 
 
@@ -19954,7 +19954,7 @@ EXTERN_C const IID IID_IEnumStreamIdMap;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IEnumStreamIdMapVtbl
     {
@@ -20001,32 +20001,32 @@ EXTERN_C const IID IID_IEnumStreamIdMap;
 #ifdef COBJMACROS
 
 
-#define IEnumStreamIdMap_QueryInterface(This,riid,ppvObject)	\
+#define IEnumStreamIdMap_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IEnumStreamIdMap_AddRef(This)	\
+#define IEnumStreamIdMap_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IEnumStreamIdMap_Release(This)	\
+#define IEnumStreamIdMap_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IEnumStreamIdMap_Next(This,cRequest,pStreamIdMap,pcReceived)	\
+#define IEnumStreamIdMap_Next(This,cRequest,pStreamIdMap,pcReceived)    \
     (This)->lpVtbl -> Next(This,cRequest,pStreamIdMap,pcReceived)
 
-#define IEnumStreamIdMap_Skip(This,cRecords)	\
+#define IEnumStreamIdMap_Skip(This,cRecords)    \
     (This)->lpVtbl -> Skip(This,cRecords)
 
-#define IEnumStreamIdMap_Reset(This)	\
+#define IEnumStreamIdMap_Reset(This)    \
     (This)->lpVtbl -> Reset(This)
 
-#define IEnumStreamIdMap_Clone(This,ppIEnumStreamIdMap)	\
+#define IEnumStreamIdMap_Clone(This,ppIEnumStreamIdMap)    \
     (This)->lpVtbl -> Clone(This,ppIEnumStreamIdMap)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -20080,7 +20080,7 @@ void __RPC_STUB IEnumStreamIdMap_Clone_Stub(
 
 
 
-#endif 	/* __IEnumStreamIdMap_INTERFACE_DEFINED__ */
+#endif     /* __IEnumStreamIdMap_INTERFACE_DEFINED__ */
 
 
 #ifndef __IMPEG2StreamIdMap_INTERFACE_DEFINED__
@@ -20113,7 +20113,7 @@ EXTERN_C const IID IID_IMPEG2StreamIdMap;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IMPEG2StreamIdMapVtbl
     {
@@ -20159,29 +20159,29 @@ EXTERN_C const IID IID_IMPEG2StreamIdMap;
 #ifdef COBJMACROS
 
 
-#define IMPEG2StreamIdMap_QueryInterface(This,riid,ppvObject)	\
+#define IMPEG2StreamIdMap_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IMPEG2StreamIdMap_AddRef(This)	\
+#define IMPEG2StreamIdMap_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IMPEG2StreamIdMap_Release(This)	\
+#define IMPEG2StreamIdMap_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IMPEG2StreamIdMap_MapStreamId(This,ulStreamId,MediaSampleContent,ulSubstreamFilterValue,iDataOffset)	\
+#define IMPEG2StreamIdMap_MapStreamId(This,ulStreamId,MediaSampleContent,ulSubstreamFilterValue,iDataOffset)    \
     (This)->lpVtbl -> MapStreamId(This,ulStreamId,MediaSampleContent,ulSubstreamFilterValue,iDataOffset)
 
-#define IMPEG2StreamIdMap_UnmapStreamId(This,culStreamId,pulStreamId)	\
+#define IMPEG2StreamIdMap_UnmapStreamId(This,culStreamId,pulStreamId)    \
     (This)->lpVtbl -> UnmapStreamId(This,culStreamId,pulStreamId)
 
-#define IMPEG2StreamIdMap_EnumStreamIdMap(This,ppIEnumStreamIdMap)	\
+#define IMPEG2StreamIdMap_EnumStreamIdMap(This,ppIEnumStreamIdMap)    \
     (This)->lpVtbl -> EnumStreamIdMap(This,ppIEnumStreamIdMap)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -20226,7 +20226,7 @@ void __RPC_STUB IMPEG2StreamIdMap_EnumStreamIdMap_Stub(
 
 
 
-#endif 	/* __IMPEG2StreamIdMap_INTERFACE_DEFINED__ */
+#endif     /* __IMPEG2StreamIdMap_INTERFACE_DEFINED__ */
 
 
 #ifndef __IRegisterServiceProvider_INTERFACE_DEFINED__
@@ -20250,7 +20250,7 @@ EXTERN_C const IID IID_IRegisterServiceProvider;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IRegisterServiceProviderVtbl
     {
@@ -20285,23 +20285,23 @@ EXTERN_C const IID IID_IRegisterServiceProvider;
 #ifdef COBJMACROS
 
 
-#define IRegisterServiceProvider_QueryInterface(This,riid,ppvObject)	\
+#define IRegisterServiceProvider_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IRegisterServiceProvider_AddRef(This)	\
+#define IRegisterServiceProvider_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IRegisterServiceProvider_Release(This)	\
+#define IRegisterServiceProvider_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IRegisterServiceProvider_RegisterService(This,guidService,pUnkObject)	\
+#define IRegisterServiceProvider_RegisterService(This,guidService,pUnkObject)    \
     (This)->lpVtbl -> RegisterService(This,guidService,pUnkObject)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -20319,7 +20319,7 @@ void __RPC_STUB IRegisterServiceProvider_RegisterService_Stub(
 
 
 
-#endif 	/* __IRegisterServiceProvider_INTERFACE_DEFINED__ */
+#endif     /* __IRegisterServiceProvider_INTERFACE_DEFINED__ */
 
 
 #ifndef __IAMClockSlave_INTERFACE_DEFINED__
@@ -20345,7 +20345,7 @@ EXTERN_C const IID IID_IAMClockSlave;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IAMClockSlaveVtbl
     {
@@ -20383,26 +20383,26 @@ EXTERN_C const IID IID_IAMClockSlave;
 #ifdef COBJMACROS
 
 
-#define IAMClockSlave_QueryInterface(This,riid,ppvObject)	\
+#define IAMClockSlave_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IAMClockSlave_AddRef(This)	\
+#define IAMClockSlave_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IAMClockSlave_Release(This)	\
+#define IAMClockSlave_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IAMClockSlave_SetErrorTolerance(This,dwTolerance)	\
+#define IAMClockSlave_SetErrorTolerance(This,dwTolerance)    \
     (This)->lpVtbl -> SetErrorTolerance(This,dwTolerance)
 
-#define IAMClockSlave_GetErrorTolerance(This,pdwTolerance)	\
+#define IAMClockSlave_GetErrorTolerance(This,pdwTolerance)    \
     (This)->lpVtbl -> GetErrorTolerance(This,pdwTolerance)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -20431,7 +20431,7 @@ void __RPC_STUB IAMClockSlave_GetErrorTolerance_Stub(
 
 
 
-#endif 	/* __IAMClockSlave_INTERFACE_DEFINED__ */
+#endif     /* __IAMClockSlave_INTERFACE_DEFINED__ */
 
 
 #ifndef __IAMGraphBuilderCallback_INTERFACE_DEFINED__
@@ -20457,7 +20457,7 @@ EXTERN_C const IID IID_IAMGraphBuilderCallback;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IAMGraphBuilderCallbackVtbl
     {
@@ -20495,26 +20495,26 @@ EXTERN_C const IID IID_IAMGraphBuilderCallback;
 #ifdef COBJMACROS
 
 
-#define IAMGraphBuilderCallback_QueryInterface(This,riid,ppvObject)	\
+#define IAMGraphBuilderCallback_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IAMGraphBuilderCallback_AddRef(This)	\
+#define IAMGraphBuilderCallback_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IAMGraphBuilderCallback_Release(This)	\
+#define IAMGraphBuilderCallback_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IAMGraphBuilderCallback_SelectedFilter(This,pMon)	\
+#define IAMGraphBuilderCallback_SelectedFilter(This,pMon)    \
     (This)->lpVtbl -> SelectedFilter(This,pMon)
 
-#define IAMGraphBuilderCallback_CreatedFilter(This,pFil)	\
+#define IAMGraphBuilderCallback_CreatedFilter(This,pFil)    \
     (This)->lpVtbl -> CreatedFilter(This,pFil)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -20543,7 +20543,7 @@ void __RPC_STUB IAMGraphBuilderCallback_CreatedFilter_Stub(
 
 
 
-#endif 	/* __IAMGraphBuilderCallback_INTERFACE_DEFINED__ */
+#endif     /* __IAMGraphBuilderCallback_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0361 */
@@ -20654,7 +20654,7 @@ EXTERN_C const IID IID_ICodecAPI;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct ICodecAPIVtbl
     {
@@ -20758,65 +20758,65 @@ EXTERN_C const IID IID_ICodecAPI;
 #ifdef COBJMACROS
 
 
-#define ICodecAPI_QueryInterface(This,riid,ppvObject)	\
+#define ICodecAPI_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define ICodecAPI_AddRef(This)	\
+#define ICodecAPI_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define ICodecAPI_Release(This)	\
+#define ICodecAPI_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define ICodecAPI_IsSupported(This,Api)	\
+#define ICodecAPI_IsSupported(This,Api)    \
     (This)->lpVtbl -> IsSupported(This,Api)
 
-#define ICodecAPI_IsModifiable(This,Api)	\
+#define ICodecAPI_IsModifiable(This,Api)    \
     (This)->lpVtbl -> IsModifiable(This,Api)
 
-#define ICodecAPI_GetParameterRange(This,Api,ValueMin,ValueMax,SteppingDelta)	\
+#define ICodecAPI_GetParameterRange(This,Api,ValueMin,ValueMax,SteppingDelta)    \
     (This)->lpVtbl -> GetParameterRange(This,Api,ValueMin,ValueMax,SteppingDelta)
 
-#define ICodecAPI_GetParameterValues(This,Api,Values,ValuesCount)	\
+#define ICodecAPI_GetParameterValues(This,Api,Values,ValuesCount)    \
     (This)->lpVtbl -> GetParameterValues(This,Api,Values,ValuesCount)
 
-#define ICodecAPI_GetDefaultValue(This,Api,Value)	\
+#define ICodecAPI_GetDefaultValue(This,Api,Value)    \
     (This)->lpVtbl -> GetDefaultValue(This,Api,Value)
 
-#define ICodecAPI_GetValue(This,Api,Value)	\
+#define ICodecAPI_GetValue(This,Api,Value)    \
     (This)->lpVtbl -> GetValue(This,Api,Value)
 
-#define ICodecAPI_SetValue(This,Api,Value)	\
+#define ICodecAPI_SetValue(This,Api,Value)    \
     (This)->lpVtbl -> SetValue(This,Api,Value)
 
-#define ICodecAPI_RegisterForEvent(This,Api,userData)	\
+#define ICodecAPI_RegisterForEvent(This,Api,userData)    \
     (This)->lpVtbl -> RegisterForEvent(This,Api,userData)
 
-#define ICodecAPI_UnregisterForEvent(This,Api)	\
+#define ICodecAPI_UnregisterForEvent(This,Api)    \
     (This)->lpVtbl -> UnregisterForEvent(This,Api)
 
-#define ICodecAPI_SetAllDefaults(This)	\
+#define ICodecAPI_SetAllDefaults(This)    \
     (This)->lpVtbl -> SetAllDefaults(This)
 
-#define ICodecAPI_SetValueWithNotify(This,Api,Value,ChangedParam,ChangedParamCount)	\
+#define ICodecAPI_SetValueWithNotify(This,Api,Value,ChangedParam,ChangedParamCount)    \
     (This)->lpVtbl -> SetValueWithNotify(This,Api,Value,ChangedParam,ChangedParamCount)
 
-#define ICodecAPI_SetAllDefaultsWithNotify(This,ChangedParam,ChangedParamCount)	\
+#define ICodecAPI_SetAllDefaultsWithNotify(This,ChangedParam,ChangedParamCount)    \
     (This)->lpVtbl -> SetAllDefaultsWithNotify(This,ChangedParam,ChangedParamCount)
 
-#define ICodecAPI_GetAllSettings(This,__MIDL_0016)	\
+#define ICodecAPI_GetAllSettings(This,__MIDL_0016)    \
     (This)->lpVtbl -> GetAllSettings(This,__MIDL_0016)
 
-#define ICodecAPI_SetAllSettings(This,__MIDL_0017)	\
+#define ICodecAPI_SetAllSettings(This,__MIDL_0017)    \
     (This)->lpVtbl -> SetAllSettings(This,__MIDL_0017)
 
-#define ICodecAPI_SetAllSettingsWithNotify(This,__MIDL_0018,ChangedParam,ChangedParamCount)	\
+#define ICodecAPI_SetAllSettingsWithNotify(This,__MIDL_0018,ChangedParam,ChangedParamCount)    \
     (This)->lpVtbl -> SetAllSettingsWithNotify(This,__MIDL_0018,ChangedParam,ChangedParamCount)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -21015,7 +21015,7 @@ void __RPC_STUB ICodecAPI_SetAllSettingsWithNotify_Stub(
 
 
 
-#endif 	/* __ICodecAPI_INTERFACE_DEFINED__ */
+#endif     /* __ICodecAPI_INTERFACE_DEFINED__ */
 
 
 #ifndef __IGetCapabilitiesKey_INTERFACE_DEFINED__
@@ -21038,7 +21038,7 @@ EXTERN_C const IID IID_IGetCapabilitiesKey;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IGetCapabilitiesKeyVtbl
     {
@@ -21072,23 +21072,23 @@ EXTERN_C const IID IID_IGetCapabilitiesKey;
 #ifdef COBJMACROS
 
 
-#define IGetCapabilitiesKey_QueryInterface(This,riid,ppvObject)	\
+#define IGetCapabilitiesKey_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IGetCapabilitiesKey_AddRef(This)	\
+#define IGetCapabilitiesKey_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IGetCapabilitiesKey_Release(This)	\
+#define IGetCapabilitiesKey_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IGetCapabilitiesKey_GetCapabilitiesKey(This,pHKey)	\
+#define IGetCapabilitiesKey_GetCapabilitiesKey(This,pHKey)    \
     (This)->lpVtbl -> GetCapabilitiesKey(This,pHKey)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -21105,7 +21105,7 @@ void __RPC_STUB IGetCapabilitiesKey_GetCapabilitiesKey_Stub(
 
 
 
-#endif 	/* __IGetCapabilitiesKey_INTERFACE_DEFINED__ */
+#endif     /* __IGetCapabilitiesKey_INTERFACE_DEFINED__ */
 
 
 #ifndef __IEncoderAPI_INTERFACE_DEFINED__
@@ -21154,7 +21154,7 @@ EXTERN_C const IID IID_IEncoderAPI;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IEncoderAPIVtbl
     {
@@ -21220,41 +21220,41 @@ EXTERN_C const IID IID_IEncoderAPI;
 #ifdef COBJMACROS
 
 
-#define IEncoderAPI_QueryInterface(This,riid,ppvObject)	\
+#define IEncoderAPI_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IEncoderAPI_AddRef(This)	\
+#define IEncoderAPI_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IEncoderAPI_Release(This)	\
+#define IEncoderAPI_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IEncoderAPI_IsSupported(This,Api)	\
+#define IEncoderAPI_IsSupported(This,Api)    \
     (This)->lpVtbl -> IsSupported(This,Api)
 
-#define IEncoderAPI_IsAvailable(This,Api)	\
+#define IEncoderAPI_IsAvailable(This,Api)    \
     (This)->lpVtbl -> IsAvailable(This,Api)
 
-#define IEncoderAPI_GetParameterRange(This,Api,ValueMin,ValueMax,SteppingDelta)	\
+#define IEncoderAPI_GetParameterRange(This,Api,ValueMin,ValueMax,SteppingDelta)    \
     (This)->lpVtbl -> GetParameterRange(This,Api,ValueMin,ValueMax,SteppingDelta)
 
-#define IEncoderAPI_GetParameterValues(This,Api,Values,ValuesCount)	\
+#define IEncoderAPI_GetParameterValues(This,Api,Values,ValuesCount)    \
     (This)->lpVtbl -> GetParameterValues(This,Api,Values,ValuesCount)
 
-#define IEncoderAPI_GetDefaultValue(This,Api,Value)	\
+#define IEncoderAPI_GetDefaultValue(This,Api,Value)    \
     (This)->lpVtbl -> GetDefaultValue(This,Api,Value)
 
-#define IEncoderAPI_GetValue(This,Api,Value)	\
+#define IEncoderAPI_GetValue(This,Api,Value)    \
     (This)->lpVtbl -> GetValue(This,Api,Value)
 
-#define IEncoderAPI_SetValue(This,Api,Value)	\
+#define IEncoderAPI_SetValue(This,Api,Value)    \
     (This)->lpVtbl -> SetValue(This,Api,Value)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -21351,7 +21351,7 @@ void __RPC_STUB IEncoderAPI_SetValue_Stub(
 
 
 
-#endif 	/* __IEncoderAPI_INTERFACE_DEFINED__ */
+#endif     /* __IEncoderAPI_INTERFACE_DEFINED__ */
 
 
 #ifndef __IVideoEncoder_INTERFACE_DEFINED__
@@ -21371,7 +21371,7 @@ EXTERN_C const IID IID_IVideoEncoder;
     public:
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IVideoEncoderVtbl
     {
@@ -21437,47 +21437,47 @@ EXTERN_C const IID IID_IVideoEncoder;
 #ifdef COBJMACROS
 
 
-#define IVideoEncoder_QueryInterface(This,riid,ppvObject)	\
+#define IVideoEncoder_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IVideoEncoder_AddRef(This)	\
+#define IVideoEncoder_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IVideoEncoder_Release(This)	\
+#define IVideoEncoder_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IVideoEncoder_IsSupported(This,Api)	\
+#define IVideoEncoder_IsSupported(This,Api)    \
     (This)->lpVtbl -> IsSupported(This,Api)
 
-#define IVideoEncoder_IsAvailable(This,Api)	\
+#define IVideoEncoder_IsAvailable(This,Api)    \
     (This)->lpVtbl -> IsAvailable(This,Api)
 
-#define IVideoEncoder_GetParameterRange(This,Api,ValueMin,ValueMax,SteppingDelta)	\
+#define IVideoEncoder_GetParameterRange(This,Api,ValueMin,ValueMax,SteppingDelta)    \
     (This)->lpVtbl -> GetParameterRange(This,Api,ValueMin,ValueMax,SteppingDelta)
 
-#define IVideoEncoder_GetParameterValues(This,Api,Values,ValuesCount)	\
+#define IVideoEncoder_GetParameterValues(This,Api,Values,ValuesCount)    \
     (This)->lpVtbl -> GetParameterValues(This,Api,Values,ValuesCount)
 
-#define IVideoEncoder_GetDefaultValue(This,Api,Value)	\
+#define IVideoEncoder_GetDefaultValue(This,Api,Value)    \
     (This)->lpVtbl -> GetDefaultValue(This,Api,Value)
 
-#define IVideoEncoder_GetValue(This,Api,Value)	\
+#define IVideoEncoder_GetValue(This,Api,Value)    \
     (This)->lpVtbl -> GetValue(This,Api,Value)
 
-#define IVideoEncoder_SetValue(This,Api,Value)	\
+#define IVideoEncoder_SetValue(This,Api,Value)    \
     (This)->lpVtbl -> SetValue(This,Api,Value)
 
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
 
-#endif 	/* __IVideoEncoder_INTERFACE_DEFINED__ */
+#endif     /* __IVideoEncoder_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0365 */
@@ -21487,10 +21487,10 @@ EXTERN_C const IID IID_IVideoEncoder;
 #define __ENCODER_API_DEFINES__
 typedef /* [public] */
 enum __MIDL___MIDL_itf_strmif_0365_0001
-    {	ConstantBitRate	= 0,
-	VariableBitRateAverage	= ConstantBitRate + 1,
-	VariableBitRatePeak	= VariableBitRateAverage + 1
-    } 	VIDEOENCODER_BITRATE_MODE;
+    {    ConstantBitRate    = 0,
+    VariableBitRateAverage    = ConstantBitRate + 1,
+    VariableBitRatePeak    = VariableBitRateAverage + 1
+    }     VIDEOENCODER_BITRATE_MODE;
 
 #endif // __ENCODER_API_DEFINES__
 #define AM_GETDECODERCAP_QUERY_VMR_SUPPORT   0x00000001
@@ -21530,7 +21530,7 @@ EXTERN_C const IID IID_IAMDecoderCaps;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IAMDecoderCapsVtbl
     {
@@ -21565,23 +21565,23 @@ EXTERN_C const IID IID_IAMDecoderCaps;
 #ifdef COBJMACROS
 
 
-#define IAMDecoderCaps_QueryInterface(This,riid,ppvObject)	\
+#define IAMDecoderCaps_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IAMDecoderCaps_AddRef(This)	\
+#define IAMDecoderCaps_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IAMDecoderCaps_Release(This)	\
+#define IAMDecoderCaps_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IAMDecoderCaps_GetDecoderCaps(This,dwCapIndex,lpdwCap)	\
+#define IAMDecoderCaps_GetDecoderCaps(This,dwCapIndex,lpdwCap)    \
     (This)->lpVtbl -> GetDecoderCaps(This,dwCapIndex,lpdwCap)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -21599,7 +21599,7 @@ void __RPC_STUB IAMDecoderCaps_GetDecoderCaps_Stub(
 
 
 
-#endif 	/* __IAMDecoderCaps_INTERFACE_DEFINED__ */
+#endif     /* __IAMDecoderCaps_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0366 */
@@ -21617,36 +21617,36 @@ void __RPC_STUB IAMDecoderCaps_GetDecoderCaps_Stub(
 
 typedef
 enum tagDVD_DOMAIN
-    {	DVD_DOMAIN_FirstPlay	= 1,
-	DVD_DOMAIN_VideoManagerMenu	= DVD_DOMAIN_FirstPlay + 1,
-	DVD_DOMAIN_VideoTitleSetMenu	= DVD_DOMAIN_VideoManagerMenu + 1,
-	DVD_DOMAIN_Title	= DVD_DOMAIN_VideoTitleSetMenu + 1,
-	DVD_DOMAIN_Stop	= DVD_DOMAIN_Title + 1
-    } 	DVD_DOMAIN;
+    {    DVD_DOMAIN_FirstPlay    = 1,
+    DVD_DOMAIN_VideoManagerMenu    = DVD_DOMAIN_FirstPlay + 1,
+    DVD_DOMAIN_VideoTitleSetMenu    = DVD_DOMAIN_VideoManagerMenu + 1,
+    DVD_DOMAIN_Title    = DVD_DOMAIN_VideoTitleSetMenu + 1,
+    DVD_DOMAIN_Stop    = DVD_DOMAIN_Title + 1
+    }     DVD_DOMAIN;
 
 typedef
 enum tagDVD_MENU_ID
-    {	DVD_MENU_Title	= 2,
-	DVD_MENU_Root	= 3,
-	DVD_MENU_Subpicture	= 4,
-	DVD_MENU_Audio	= 5,
-	DVD_MENU_Angle	= 6,
-	DVD_MENU_Chapter	= 7
-    } 	DVD_MENU_ID;
+    {    DVD_MENU_Title    = 2,
+    DVD_MENU_Root    = 3,
+    DVD_MENU_Subpicture    = 4,
+    DVD_MENU_Audio    = 5,
+    DVD_MENU_Angle    = 6,
+    DVD_MENU_Chapter    = 7
+    }     DVD_MENU_ID;
 
 typedef
 enum tagDVD_DISC_SIDE
-    {	DVD_SIDE_A	= 1,
-	DVD_SIDE_B	= 2
-    } 	DVD_DISC_SIDE;
+    {    DVD_SIDE_A    = 1,
+    DVD_SIDE_B    = 2
+    }     DVD_DISC_SIDE;
 
 typedef
 enum tagDVD_PREFERRED_DISPLAY_MODE
-    {	DISPLAY_CONTENT_DEFAULT	= 0,
-	DISPLAY_16x9	= 1,
-	DISPLAY_4x3_PANSCAN_PREFERRED	= 2,
-	DISPLAY_4x3_LETTERBOX_PREFERRED	= 3
-    } 	DVD_PREFERRED_DISPLAY_MODE;
+    {    DISPLAY_CONTENT_DEFAULT    = 0,
+    DISPLAY_16x9    = 1,
+    DISPLAY_4x3_PANSCAN_PREFERRED    = 2,
+    DISPLAY_4x3_LETTERBOX_PREFERRED    = 3
+    }     DVD_PREFERRED_DISPLAY_MODE;
 
 typedef WORD DVD_REGISTER;
 
@@ -21658,7 +21658,7 @@ typedef struct tagDVD_ATR
     {
     ULONG ulCAT;
     BYTE pbATRI[ 768 ];
-    } 	DVD_ATR;
+    }     DVD_ATR;
 
 typedef BYTE DVD_VideoATR[ 2 ];
 
@@ -21668,9 +21668,9 @@ typedef BYTE DVD_SubpictureATR[ 6 ];
 
 typedef
 enum tagDVD_FRAMERATE
-    {	DVD_FPS_25	= 1,
-	DVD_FPS_30NonDrop	= 3
-    } 	DVD_FRAMERATE;
+    {    DVD_FPS_25    = 1,
+    DVD_FPS_30NonDrop    = 3
+    }     DVD_FRAMERATE;
 
 typedef struct tagDVD_TIMECODE
 {
@@ -21690,11 +21690,11 @@ typedef struct tagDVD_TIMECODE
 } DVD_TIMECODE;
 typedef
 enum tagDVD_TIMECODE_FLAGS
-    {	DVD_TC_FLAG_25fps	= 0x1,
-	DVD_TC_FLAG_30fps	= 0x2,
-	DVD_TC_FLAG_DropFrame	= 0x4,
-	DVD_TC_FLAG_Interpolated	= 0x8
-    } 	DVD_TIMECODE_FLAGS;
+    {    DVD_TC_FLAG_25fps    = 0x1,
+    DVD_TC_FLAG_30fps    = 0x2,
+    DVD_TC_FLAG_DropFrame    = 0x4,
+    DVD_TC_FLAG_Interpolated    = 0x8
+    }     DVD_TIMECODE_FLAGS;
 
 typedef struct tagDVD_HMSF_TIMECODE
     {
@@ -21702,7 +21702,7 @@ typedef struct tagDVD_HMSF_TIMECODE
     BYTE bMinutes;
     BYTE bSeconds;
     BYTE bFrames;
-    } 	DVD_HMSF_TIMECODE;
+    }     DVD_HMSF_TIMECODE;
 
 typedef struct tagDVD_PLAYBACK_LOCATION2
     {
@@ -21710,146 +21710,146 @@ typedef struct tagDVD_PLAYBACK_LOCATION2
     ULONG ChapterNum;
     DVD_HMSF_TIMECODE TimeCode;
     ULONG TimeCodeFlags;
-    } 	DVD_PLAYBACK_LOCATION2;
+    }     DVD_PLAYBACK_LOCATION2;
 
 typedef struct tagDVD_PLAYBACK_LOCATION
     {
     ULONG TitleNum;
     ULONG ChapterNum;
     ULONG TimeCode;
-    } 	DVD_PLAYBACK_LOCATION;
+    }     DVD_PLAYBACK_LOCATION;
 
 typedef DWORD VALID_UOP_SOMTHING_OR_OTHER;
 
 typedef /* [public] */
 enum __MIDL___MIDL_itf_strmif_0366_0001
-    {	UOP_FLAG_Play_Title_Or_AtTime	= 0x1,
-	UOP_FLAG_Play_Chapter	= 0x2,
-	UOP_FLAG_Play_Title	= 0x4,
-	UOP_FLAG_Stop	= 0x8,
-	UOP_FLAG_ReturnFromSubMenu	= 0x10,
-	UOP_FLAG_Play_Chapter_Or_AtTime	= 0x20,
-	UOP_FLAG_PlayPrev_Or_Replay_Chapter	= 0x40,
-	UOP_FLAG_PlayNext_Chapter	= 0x80,
-	UOP_FLAG_Play_Forwards	= 0x100,
-	UOP_FLAG_Play_Backwards	= 0x200,
-	UOP_FLAG_ShowMenu_Title	= 0x400,
-	UOP_FLAG_ShowMenu_Root	= 0x800,
-	UOP_FLAG_ShowMenu_SubPic	= 0x1000,
-	UOP_FLAG_ShowMenu_Audio	= 0x2000,
-	UOP_FLAG_ShowMenu_Angle	= 0x4000,
-	UOP_FLAG_ShowMenu_Chapter	= 0x8000,
-	UOP_FLAG_Resume	= 0x10000,
-	UOP_FLAG_Select_Or_Activate_Button	= 0x20000,
-	UOP_FLAG_Still_Off	= 0x40000,
-	UOP_FLAG_Pause_On	= 0x80000,
-	UOP_FLAG_Select_Audio_Stream	= 0x100000,
-	UOP_FLAG_Select_SubPic_Stream	= 0x200000,
-	UOP_FLAG_Select_Angle	= 0x400000,
-	UOP_FLAG_Select_Karaoke_Audio_Presentation_Mode	= 0x800000,
-	UOP_FLAG_Select_Video_Mode_Preference	= 0x1000000
-    } 	VALID_UOP_FLAG;
+    {    UOP_FLAG_Play_Title_Or_AtTime    = 0x1,
+    UOP_FLAG_Play_Chapter    = 0x2,
+    UOP_FLAG_Play_Title    = 0x4,
+    UOP_FLAG_Stop    = 0x8,
+    UOP_FLAG_ReturnFromSubMenu    = 0x10,
+    UOP_FLAG_Play_Chapter_Or_AtTime    = 0x20,
+    UOP_FLAG_PlayPrev_Or_Replay_Chapter    = 0x40,
+    UOP_FLAG_PlayNext_Chapter    = 0x80,
+    UOP_FLAG_Play_Forwards    = 0x100,
+    UOP_FLAG_Play_Backwards    = 0x200,
+    UOP_FLAG_ShowMenu_Title    = 0x400,
+    UOP_FLAG_ShowMenu_Root    = 0x800,
+    UOP_FLAG_ShowMenu_SubPic    = 0x1000,
+    UOP_FLAG_ShowMenu_Audio    = 0x2000,
+    UOP_FLAG_ShowMenu_Angle    = 0x4000,
+    UOP_FLAG_ShowMenu_Chapter    = 0x8000,
+    UOP_FLAG_Resume    = 0x10000,
+    UOP_FLAG_Select_Or_Activate_Button    = 0x20000,
+    UOP_FLAG_Still_Off    = 0x40000,
+    UOP_FLAG_Pause_On    = 0x80000,
+    UOP_FLAG_Select_Audio_Stream    = 0x100000,
+    UOP_FLAG_Select_SubPic_Stream    = 0x200000,
+    UOP_FLAG_Select_Angle    = 0x400000,
+    UOP_FLAG_Select_Karaoke_Audio_Presentation_Mode    = 0x800000,
+    UOP_FLAG_Select_Video_Mode_Preference    = 0x1000000
+    }     VALID_UOP_FLAG;
 
 typedef /* [public] */
 enum __MIDL___MIDL_itf_strmif_0366_0002
-    {	DVD_CMD_FLAG_None	= 0,
-	DVD_CMD_FLAG_Flush	= 0x1,
-	DVD_CMD_FLAG_SendEvents	= 0x2,
-	DVD_CMD_FLAG_Block	= 0x4,
-	DVD_CMD_FLAG_StartWhenRendered	= 0x8,
-	DVD_CMD_FLAG_EndAfterRendered	= 0x10
-    } 	DVD_CMD_FLAGS;
+    {    DVD_CMD_FLAG_None    = 0,
+    DVD_CMD_FLAG_Flush    = 0x1,
+    DVD_CMD_FLAG_SendEvents    = 0x2,
+    DVD_CMD_FLAG_Block    = 0x4,
+    DVD_CMD_FLAG_StartWhenRendered    = 0x8,
+    DVD_CMD_FLAG_EndAfterRendered    = 0x10
+    }     DVD_CMD_FLAGS;
 
 typedef /* [public][public] */
 enum __MIDL___MIDL_itf_strmif_0366_0003
-    {	DVD_ResetOnStop	= 1,
-	DVD_NotifyParentalLevelChange	= 2,
-	DVD_HMSF_TimeCodeEvents	= 3,
-	DVD_AudioDuringFFwdRew	= 4
-    } 	DVD_OPTION_FLAG;
+    {    DVD_ResetOnStop    = 1,
+    DVD_NotifyParentalLevelChange    = 2,
+    DVD_HMSF_TimeCodeEvents    = 3,
+    DVD_AudioDuringFFwdRew    = 4
+    }     DVD_OPTION_FLAG;
 
 typedef /* [public][public] */
 enum __MIDL___MIDL_itf_strmif_0366_0004
-    {	DVD_Relative_Upper	= 1,
-	DVD_Relative_Lower	= 2,
-	DVD_Relative_Left	= 3,
-	DVD_Relative_Right	= 4
-    } 	DVD_RELATIVE_BUTTON;
+    {    DVD_Relative_Upper    = 1,
+    DVD_Relative_Lower    = 2,
+    DVD_Relative_Left    = 3,
+    DVD_Relative_Right    = 4
+    }     DVD_RELATIVE_BUTTON;
 
 typedef
 enum tagDVD_PARENTAL_LEVEL
-    {	DVD_PARENTAL_LEVEL_8	= 0x8000,
-	DVD_PARENTAL_LEVEL_7	= 0x4000,
-	DVD_PARENTAL_LEVEL_6	= 0x2000,
-	DVD_PARENTAL_LEVEL_5	= 0x1000,
-	DVD_PARENTAL_LEVEL_4	= 0x800,
-	DVD_PARENTAL_LEVEL_3	= 0x400,
-	DVD_PARENTAL_LEVEL_2	= 0x200,
-	DVD_PARENTAL_LEVEL_1	= 0x100
-    } 	DVD_PARENTAL_LEVEL;
+    {    DVD_PARENTAL_LEVEL_8    = 0x8000,
+    DVD_PARENTAL_LEVEL_7    = 0x4000,
+    DVD_PARENTAL_LEVEL_6    = 0x2000,
+    DVD_PARENTAL_LEVEL_5    = 0x1000,
+    DVD_PARENTAL_LEVEL_4    = 0x800,
+    DVD_PARENTAL_LEVEL_3    = 0x400,
+    DVD_PARENTAL_LEVEL_2    = 0x200,
+    DVD_PARENTAL_LEVEL_1    = 0x100
+    }     DVD_PARENTAL_LEVEL;
 
 typedef
 enum tagDVD_AUDIO_LANG_EXT
-    {	DVD_AUD_EXT_NotSpecified	= 0,
-	DVD_AUD_EXT_Captions	= 1,
-	DVD_AUD_EXT_VisuallyImpaired	= 2,
-	DVD_AUD_EXT_DirectorComments1	= 3,
-	DVD_AUD_EXT_DirectorComments2	= 4
-    } 	DVD_AUDIO_LANG_EXT;
+    {    DVD_AUD_EXT_NotSpecified    = 0,
+    DVD_AUD_EXT_Captions    = 1,
+    DVD_AUD_EXT_VisuallyImpaired    = 2,
+    DVD_AUD_EXT_DirectorComments1    = 3,
+    DVD_AUD_EXT_DirectorComments2    = 4
+    }     DVD_AUDIO_LANG_EXT;
 
 typedef
 enum tagDVD_SUBPICTURE_LANG_EXT
-    {	DVD_SP_EXT_NotSpecified	= 0,
-	DVD_SP_EXT_Caption_Normal	= 1,
-	DVD_SP_EXT_Caption_Big	= 2,
-	DVD_SP_EXT_Caption_Children	= 3,
-	DVD_SP_EXT_CC_Normal	= 5,
-	DVD_SP_EXT_CC_Big	= 6,
-	DVD_SP_EXT_CC_Children	= 7,
-	DVD_SP_EXT_Forced	= 9,
-	DVD_SP_EXT_DirectorComments_Normal	= 13,
-	DVD_SP_EXT_DirectorComments_Big	= 14,
-	DVD_SP_EXT_DirectorComments_Children	= 15
-    } 	DVD_SUBPICTURE_LANG_EXT;
+    {    DVD_SP_EXT_NotSpecified    = 0,
+    DVD_SP_EXT_Caption_Normal    = 1,
+    DVD_SP_EXT_Caption_Big    = 2,
+    DVD_SP_EXT_Caption_Children    = 3,
+    DVD_SP_EXT_CC_Normal    = 5,
+    DVD_SP_EXT_CC_Big    = 6,
+    DVD_SP_EXT_CC_Children    = 7,
+    DVD_SP_EXT_Forced    = 9,
+    DVD_SP_EXT_DirectorComments_Normal    = 13,
+    DVD_SP_EXT_DirectorComments_Big    = 14,
+    DVD_SP_EXT_DirectorComments_Children    = 15
+    }     DVD_SUBPICTURE_LANG_EXT;
 
 typedef
 enum tagDVD_AUDIO_APPMODE
-    {	DVD_AudioMode_None	= 0,
-	DVD_AudioMode_Karaoke	= 1,
-	DVD_AudioMode_Surround	= 2,
-	DVD_AudioMode_Other	= 3
-    } 	DVD_AUDIO_APPMODE;
+    {    DVD_AudioMode_None    = 0,
+    DVD_AudioMode_Karaoke    = 1,
+    DVD_AudioMode_Surround    = 2,
+    DVD_AudioMode_Other    = 3
+    }     DVD_AUDIO_APPMODE;
 
 typedef
 enum tagDVD_AUDIO_FORMAT
-    {	DVD_AudioFormat_AC3	= 0,
-	DVD_AudioFormat_MPEG1	= 1,
-	DVD_AudioFormat_MPEG1_DRC	= 2,
-	DVD_AudioFormat_MPEG2	= 3,
-	DVD_AudioFormat_MPEG2_DRC	= 4,
-	DVD_AudioFormat_LPCM	= 5,
-	DVD_AudioFormat_DTS	= 6,
-	DVD_AudioFormat_SDDS	= 7,
-	DVD_AudioFormat_Other	= 8
-    } 	DVD_AUDIO_FORMAT;
+    {    DVD_AudioFormat_AC3    = 0,
+    DVD_AudioFormat_MPEG1    = 1,
+    DVD_AudioFormat_MPEG1_DRC    = 2,
+    DVD_AudioFormat_MPEG2    = 3,
+    DVD_AudioFormat_MPEG2_DRC    = 4,
+    DVD_AudioFormat_LPCM    = 5,
+    DVD_AudioFormat_DTS    = 6,
+    DVD_AudioFormat_SDDS    = 7,
+    DVD_AudioFormat_Other    = 8
+    }     DVD_AUDIO_FORMAT;
 
 typedef
 enum tagDVD_KARAOKE_DOWNMIX
-    {	DVD_Mix_0to0	= 0x1,
-	DVD_Mix_1to0	= 0x2,
-	DVD_Mix_2to0	= 0x4,
-	DVD_Mix_3to0	= 0x8,
-	DVD_Mix_4to0	= 0x10,
-	DVD_Mix_Lto0	= 0x20,
-	DVD_Mix_Rto0	= 0x40,
-	DVD_Mix_0to1	= 0x100,
-	DVD_Mix_1to1	= 0x200,
-	DVD_Mix_2to1	= 0x400,
-	DVD_Mix_3to1	= 0x800,
-	DVD_Mix_4to1	= 0x1000,
-	DVD_Mix_Lto1	= 0x2000,
-	DVD_Mix_Rto1	= 0x4000
-    } 	DVD_KARAOKE_DOWNMIX;
+    {    DVD_Mix_0to0    = 0x1,
+    DVD_Mix_1to0    = 0x2,
+    DVD_Mix_2to0    = 0x4,
+    DVD_Mix_3to0    = 0x8,
+    DVD_Mix_4to0    = 0x10,
+    DVD_Mix_Lto0    = 0x20,
+    DVD_Mix_Rto0    = 0x40,
+    DVD_Mix_0to1    = 0x100,
+    DVD_Mix_1to1    = 0x200,
+    DVD_Mix_2to1    = 0x400,
+    DVD_Mix_3to1    = 0x800,
+    DVD_Mix_4to1    = 0x1000,
+    DVD_Mix_Lto1    = 0x2000,
+    DVD_Mix_Rto1    = 0x4000
+    }     DVD_KARAOKE_DOWNMIX;
 
 typedef struct tagDVD_AudioAttributes
     {
@@ -21863,7 +21863,7 @@ typedef struct tagDVD_AudioAttributes
     BYTE bQuantization;
     BYTE bNumberOfChannels;
     DWORD dwReserved[ 2 ];
-    } 	DVD_AudioAttributes;
+    }     DVD_AudioAttributes;
 
 typedef struct tagDVD_MUA_MixingInfo
     {
@@ -21872,43 +21872,43 @@ typedef struct tagDVD_MUA_MixingInfo
     BOOL fMix0InPhase;
     BOOL fMix1InPhase;
     DWORD dwSpeakerPosition;
-    } 	DVD_MUA_MixingInfo;
+    }     DVD_MUA_MixingInfo;
 
 typedef struct tagDVD_MUA_Coeff
     {
     double log2_alpha;
     double log2_beta;
-    } 	DVD_MUA_Coeff;
+    }     DVD_MUA_Coeff;
 
 typedef struct tagDVD_MultichannelAudioAttributes
     {
     DVD_MUA_MixingInfo Info[ 8 ];
     DVD_MUA_Coeff Coeff[ 8 ];
-    } 	DVD_MultichannelAudioAttributes;
+    }     DVD_MultichannelAudioAttributes;
 
 typedef
 enum tagDVD_KARAOKE_CONTENTS
-    {	DVD_Karaoke_GuideVocal1	= 0x1,
-	DVD_Karaoke_GuideVocal2	= 0x2,
-	DVD_Karaoke_GuideMelody1	= 0x4,
-	DVD_Karaoke_GuideMelody2	= 0x8,
-	DVD_Karaoke_GuideMelodyA	= 0x10,
-	DVD_Karaoke_GuideMelodyB	= 0x20,
-	DVD_Karaoke_SoundEffectA	= 0x40,
-	DVD_Karaoke_SoundEffectB	= 0x80
-    } 	DVD_KARAOKE_CONTENTS;
+    {    DVD_Karaoke_GuideVocal1    = 0x1,
+    DVD_Karaoke_GuideVocal2    = 0x2,
+    DVD_Karaoke_GuideMelody1    = 0x4,
+    DVD_Karaoke_GuideMelody2    = 0x8,
+    DVD_Karaoke_GuideMelodyA    = 0x10,
+    DVD_Karaoke_GuideMelodyB    = 0x20,
+    DVD_Karaoke_SoundEffectA    = 0x40,
+    DVD_Karaoke_SoundEffectB    = 0x80
+    }     DVD_KARAOKE_CONTENTS;
 
 typedef
 enum tagDVD_KARAOKE_ASSIGNMENT
-    {	DVD_Assignment_reserved0	= 0,
-	DVD_Assignment_reserved1	= 1,
-	DVD_Assignment_LR	= 2,
-	DVD_Assignment_LRM	= 3,
-	DVD_Assignment_LR1	= 4,
-	DVD_Assignment_LRM1	= 5,
-	DVD_Assignment_LR12	= 6,
-	DVD_Assignment_LRM12	= 7
-    } 	DVD_KARAOKE_ASSIGNMENT;
+    {    DVD_Assignment_reserved0    = 0,
+    DVD_Assignment_reserved1    = 1,
+    DVD_Assignment_LR    = 2,
+    DVD_Assignment_LRM    = 3,
+    DVD_Assignment_LR1    = 4,
+    DVD_Assignment_LRM1    = 5,
+    DVD_Assignment_LR12    = 6,
+    DVD_Assignment_LRM12    = 7
+    }     DVD_KARAOKE_ASSIGNMENT;
 
 typedef struct tagDVD_KaraokeAttributes
     {
@@ -21917,14 +21917,14 @@ typedef struct tagDVD_KaraokeAttributes
     BOOL fDuet;
     DVD_KARAOKE_ASSIGNMENT ChannelAssignment;
     WORD wChannelContents[ 8 ];
-    } 	DVD_KaraokeAttributes;
+    }     DVD_KaraokeAttributes;
 
 typedef
 enum tagDVD_VIDEO_COMPRESSION
-    {	DVD_VideoCompression_Other	= 0,
-	DVD_VideoCompression_MPEG1	= 1,
-	DVD_VideoCompression_MPEG2	= 2
-    } 	DVD_VIDEO_COMPRESSION;
+    {    DVD_VideoCompression_Other    = 0,
+    DVD_VideoCompression_MPEG1    = 1,
+    DVD_VideoCompression_MPEG2    = 2
+    }     DVD_VIDEO_COMPRESSION;
 
 typedef struct tagDVD_VideoAttributes
     {
@@ -21941,21 +21941,21 @@ typedef struct tagDVD_VideoAttributes
     ULONG ulSourceResolutionY;
     BOOL fIsSourceLetterboxed;
     BOOL fIsFilmMode;
-    } 	DVD_VideoAttributes;
+    }     DVD_VideoAttributes;
 
 typedef
 enum tagDVD_SUBPICTURE_TYPE
-    {	DVD_SPType_NotSpecified	= 0,
-	DVD_SPType_Language	= 1,
-	DVD_SPType_Other	= 2
-    } 	DVD_SUBPICTURE_TYPE;
+    {    DVD_SPType_NotSpecified    = 0,
+    DVD_SPType_Language    = 1,
+    DVD_SPType_Other    = 2
+    }     DVD_SUBPICTURE_TYPE;
 
 typedef
 enum tagDVD_SUBPICTURE_CODING
-    {	DVD_SPCoding_RunLength	= 0,
-	DVD_SPCoding_Extended	= 1,
-	DVD_SPCoding_Other	= 2
-    } 	DVD_SUBPICTURE_CODING;
+    {    DVD_SPCoding_RunLength    = 0,
+    DVD_SPCoding_Extended    = 1,
+    DVD_SPCoding_Other    = 2
+    }     DVD_SUBPICTURE_CODING;
 
 typedef struct tagDVD_SubpictureAttributes
     {
@@ -21963,14 +21963,14 @@ typedef struct tagDVD_SubpictureAttributes
     DVD_SUBPICTURE_CODING CodingMode;
     LCID Language;
     DVD_SUBPICTURE_LANG_EXT LanguageExtension;
-    } 	DVD_SubpictureAttributes;
+    }     DVD_SubpictureAttributes;
 
 typedef
 enum tagDVD_TITLE_APPMODE
-    {	DVD_AppMode_Not_Specified	= 0,
-	DVD_AppMode_Karaoke	= 1,
-	DVD_AppMode_Other	= 3
-    } 	DVD_TITLE_APPMODE;
+    {    DVD_AppMode_Not_Specified    = 0,
+    DVD_AppMode_Karaoke    = 1,
+    DVD_AppMode_Other    = 3
+    }     DVD_TITLE_APPMODE;
 
 typedef struct tagDVD_TitleMainAttributes
     {
@@ -21981,7 +21981,7 @@ typedef struct tagDVD_TitleMainAttributes
     DVD_MultichannelAudioAttributes MultichannelAudioAttributes[ 8 ];
     ULONG ulNumberOfSubpictureStreams;
     DVD_SubpictureAttributes SubpictureAttributes[ 32 ];
-    } 	DVD_TitleAttributes;
+    }     DVD_TitleAttributes;
 
 typedef struct tagDVD_MenuAttributes
     {
@@ -21991,7 +21991,7 @@ typedef struct tagDVD_MenuAttributes
     DVD_AudioAttributes AudioAttributes;
     BOOL fSubpicturePresent;
     DVD_SubpictureAttributes SubpictureAttributes;
-    } 	DVD_MenuAttributes;
+    }     DVD_MenuAttributes;
 
 
 
@@ -22111,7 +22111,7 @@ EXTERN_C const IID IID_IDvdControl;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IDvdControlVtbl
     {
@@ -22272,125 +22272,125 @@ EXTERN_C const IID IID_IDvdControl;
 #ifdef COBJMACROS
 
 
-#define IDvdControl_QueryInterface(This,riid,ppvObject)	\
+#define IDvdControl_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IDvdControl_AddRef(This)	\
+#define IDvdControl_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IDvdControl_Release(This)	\
+#define IDvdControl_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IDvdControl_TitlePlay(This,ulTitle)	\
+#define IDvdControl_TitlePlay(This,ulTitle)    \
     (This)->lpVtbl -> TitlePlay(This,ulTitle)
 
-#define IDvdControl_ChapterPlay(This,ulTitle,ulChapter)	\
+#define IDvdControl_ChapterPlay(This,ulTitle,ulChapter)    \
     (This)->lpVtbl -> ChapterPlay(This,ulTitle,ulChapter)
 
-#define IDvdControl_TimePlay(This,ulTitle,bcdTime)	\
+#define IDvdControl_TimePlay(This,ulTitle,bcdTime)    \
     (This)->lpVtbl -> TimePlay(This,ulTitle,bcdTime)
 
-#define IDvdControl_StopForResume(This)	\
+#define IDvdControl_StopForResume(This)    \
     (This)->lpVtbl -> StopForResume(This)
 
-#define IDvdControl_GoUp(This)	\
+#define IDvdControl_GoUp(This)    \
     (This)->lpVtbl -> GoUp(This)
 
-#define IDvdControl_TimeSearch(This,bcdTime)	\
+#define IDvdControl_TimeSearch(This,bcdTime)    \
     (This)->lpVtbl -> TimeSearch(This,bcdTime)
 
-#define IDvdControl_ChapterSearch(This,ulChapter)	\
+#define IDvdControl_ChapterSearch(This,ulChapter)    \
     (This)->lpVtbl -> ChapterSearch(This,ulChapter)
 
-#define IDvdControl_PrevPGSearch(This)	\
+#define IDvdControl_PrevPGSearch(This)    \
     (This)->lpVtbl -> PrevPGSearch(This)
 
-#define IDvdControl_TopPGSearch(This)	\
+#define IDvdControl_TopPGSearch(This)    \
     (This)->lpVtbl -> TopPGSearch(This)
 
-#define IDvdControl_NextPGSearch(This)	\
+#define IDvdControl_NextPGSearch(This)    \
     (This)->lpVtbl -> NextPGSearch(This)
 
-#define IDvdControl_ForwardScan(This,dwSpeed)	\
+#define IDvdControl_ForwardScan(This,dwSpeed)    \
     (This)->lpVtbl -> ForwardScan(This,dwSpeed)
 
-#define IDvdControl_BackwardScan(This,dwSpeed)	\
+#define IDvdControl_BackwardScan(This,dwSpeed)    \
     (This)->lpVtbl -> BackwardScan(This,dwSpeed)
 
-#define IDvdControl_MenuCall(This,MenuID)	\
+#define IDvdControl_MenuCall(This,MenuID)    \
     (This)->lpVtbl -> MenuCall(This,MenuID)
 
-#define IDvdControl_Resume(This)	\
+#define IDvdControl_Resume(This)    \
     (This)->lpVtbl -> Resume(This)
 
-#define IDvdControl_UpperButtonSelect(This)	\
+#define IDvdControl_UpperButtonSelect(This)    \
     (This)->lpVtbl -> UpperButtonSelect(This)
 
-#define IDvdControl_LowerButtonSelect(This)	\
+#define IDvdControl_LowerButtonSelect(This)    \
     (This)->lpVtbl -> LowerButtonSelect(This)
 
-#define IDvdControl_LeftButtonSelect(This)	\
+#define IDvdControl_LeftButtonSelect(This)    \
     (This)->lpVtbl -> LeftButtonSelect(This)
 
-#define IDvdControl_RightButtonSelect(This)	\
+#define IDvdControl_RightButtonSelect(This)    \
     (This)->lpVtbl -> RightButtonSelect(This)
 
-#define IDvdControl_ButtonActivate(This)	\
+#define IDvdControl_ButtonActivate(This)    \
     (This)->lpVtbl -> ButtonActivate(This)
 
-#define IDvdControl_ButtonSelectAndActivate(This,ulButton)	\
+#define IDvdControl_ButtonSelectAndActivate(This,ulButton)    \
     (This)->lpVtbl -> ButtonSelectAndActivate(This,ulButton)
 
-#define IDvdControl_StillOff(This)	\
+#define IDvdControl_StillOff(This)    \
     (This)->lpVtbl -> StillOff(This)
 
-#define IDvdControl_PauseOn(This)	\
+#define IDvdControl_PauseOn(This)    \
     (This)->lpVtbl -> PauseOn(This)
 
-#define IDvdControl_PauseOff(This)	\
+#define IDvdControl_PauseOff(This)    \
     (This)->lpVtbl -> PauseOff(This)
 
-#define IDvdControl_MenuLanguageSelect(This,Language)	\
+#define IDvdControl_MenuLanguageSelect(This,Language)    \
     (This)->lpVtbl -> MenuLanguageSelect(This,Language)
 
-#define IDvdControl_AudioStreamChange(This,ulAudio)	\
+#define IDvdControl_AudioStreamChange(This,ulAudio)    \
     (This)->lpVtbl -> AudioStreamChange(This,ulAudio)
 
-#define IDvdControl_SubpictureStreamChange(This,ulSubPicture,bDisplay)	\
+#define IDvdControl_SubpictureStreamChange(This,ulSubPicture,bDisplay)    \
     (This)->lpVtbl -> SubpictureStreamChange(This,ulSubPicture,bDisplay)
 
-#define IDvdControl_AngleChange(This,ulAngle)	\
+#define IDvdControl_AngleChange(This,ulAngle)    \
     (This)->lpVtbl -> AngleChange(This,ulAngle)
 
-#define IDvdControl_ParentalLevelSelect(This,ulParentalLevel)	\
+#define IDvdControl_ParentalLevelSelect(This,ulParentalLevel)    \
     (This)->lpVtbl -> ParentalLevelSelect(This,ulParentalLevel)
 
-#define IDvdControl_ParentalCountrySelect(This,wCountry)	\
+#define IDvdControl_ParentalCountrySelect(This,wCountry)    \
     (This)->lpVtbl -> ParentalCountrySelect(This,wCountry)
 
-#define IDvdControl_KaraokeAudioPresentationModeChange(This,ulMode)	\
+#define IDvdControl_KaraokeAudioPresentationModeChange(This,ulMode)    \
     (This)->lpVtbl -> KaraokeAudioPresentationModeChange(This,ulMode)
 
-#define IDvdControl_VideoModePreferrence(This,ulPreferredDisplayMode)	\
+#define IDvdControl_VideoModePreferrence(This,ulPreferredDisplayMode)    \
     (This)->lpVtbl -> VideoModePreferrence(This,ulPreferredDisplayMode)
 
-#define IDvdControl_SetRoot(This,pszPath)	\
+#define IDvdControl_SetRoot(This,pszPath)    \
     (This)->lpVtbl -> SetRoot(This,pszPath)
 
-#define IDvdControl_MouseActivate(This,point)	\
+#define IDvdControl_MouseActivate(This,point)    \
     (This)->lpVtbl -> MouseActivate(This,point)
 
-#define IDvdControl_MouseSelect(This,point)	\
+#define IDvdControl_MouseSelect(This,point)    \
     (This)->lpVtbl -> MouseSelect(This,point)
 
-#define IDvdControl_ChapterPlayAutoStop(This,ulTitle,ulChapter,ulChaptersToPlay)	\
+#define IDvdControl_ChapterPlayAutoStop(This,ulTitle,ulChapter,ulChaptersToPlay)    \
     (This)->lpVtbl -> ChapterPlayAutoStop(This,ulTitle,ulChapter,ulChaptersToPlay)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -22806,7 +22806,7 @@ void __RPC_STUB IDvdControl_ChapterPlayAutoStop_Stub(
 
 
 
-#endif 	/* __IDvdControl_INTERFACE_DEFINED__ */
+#endif     /* __IDvdControl_INTERFACE_DEFINED__ */
 
 
 #ifndef __IDvdInfo_INTERFACE_DEFINED__
@@ -22913,7 +22913,7 @@ EXTERN_C const IID IID_IDvdInfo;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IDvdInfoVtbl
     {
@@ -23053,89 +23053,89 @@ EXTERN_C const IID IID_IDvdInfo;
 #ifdef COBJMACROS
 
 
-#define IDvdInfo_QueryInterface(This,riid,ppvObject)	\
+#define IDvdInfo_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IDvdInfo_AddRef(This)	\
+#define IDvdInfo_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IDvdInfo_Release(This)	\
+#define IDvdInfo_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IDvdInfo_GetCurrentDomain(This,pDomain)	\
+#define IDvdInfo_GetCurrentDomain(This,pDomain)    \
     (This)->lpVtbl -> GetCurrentDomain(This,pDomain)
 
-#define IDvdInfo_GetCurrentLocation(This,pLocation)	\
+#define IDvdInfo_GetCurrentLocation(This,pLocation)    \
     (This)->lpVtbl -> GetCurrentLocation(This,pLocation)
 
-#define IDvdInfo_GetTotalTitleTime(This,pulTotalTime)	\
+#define IDvdInfo_GetTotalTitleTime(This,pulTotalTime)    \
     (This)->lpVtbl -> GetTotalTitleTime(This,pulTotalTime)
 
-#define IDvdInfo_GetCurrentButton(This,pulButtonsAvailable,pulCurrentButton)	\
+#define IDvdInfo_GetCurrentButton(This,pulButtonsAvailable,pulCurrentButton)    \
     (This)->lpVtbl -> GetCurrentButton(This,pulButtonsAvailable,pulCurrentButton)
 
-#define IDvdInfo_GetCurrentAngle(This,pulAnglesAvailable,pulCurrentAngle)	\
+#define IDvdInfo_GetCurrentAngle(This,pulAnglesAvailable,pulCurrentAngle)    \
     (This)->lpVtbl -> GetCurrentAngle(This,pulAnglesAvailable,pulCurrentAngle)
 
-#define IDvdInfo_GetCurrentAudio(This,pulStreamsAvailable,pulCurrentStream)	\
+#define IDvdInfo_GetCurrentAudio(This,pulStreamsAvailable,pulCurrentStream)    \
     (This)->lpVtbl -> GetCurrentAudio(This,pulStreamsAvailable,pulCurrentStream)
 
-#define IDvdInfo_GetCurrentSubpicture(This,pulStreamsAvailable,pulCurrentStream,pIsDisabled)	\
+#define IDvdInfo_GetCurrentSubpicture(This,pulStreamsAvailable,pulCurrentStream,pIsDisabled)    \
     (This)->lpVtbl -> GetCurrentSubpicture(This,pulStreamsAvailable,pulCurrentStream,pIsDisabled)
 
-#define IDvdInfo_GetCurrentUOPS(This,pUOP)	\
+#define IDvdInfo_GetCurrentUOPS(This,pUOP)    \
     (This)->lpVtbl -> GetCurrentUOPS(This,pUOP)
 
-#define IDvdInfo_GetAllSPRMs(This,pRegisterArray)	\
+#define IDvdInfo_GetAllSPRMs(This,pRegisterArray)    \
     (This)->lpVtbl -> GetAllSPRMs(This,pRegisterArray)
 
-#define IDvdInfo_GetAllGPRMs(This,pRegisterArray)	\
+#define IDvdInfo_GetAllGPRMs(This,pRegisterArray)    \
     (This)->lpVtbl -> GetAllGPRMs(This,pRegisterArray)
 
-#define IDvdInfo_GetAudioLanguage(This,ulStream,pLanguage)	\
+#define IDvdInfo_GetAudioLanguage(This,ulStream,pLanguage)    \
     (This)->lpVtbl -> GetAudioLanguage(This,ulStream,pLanguage)
 
-#define IDvdInfo_GetSubpictureLanguage(This,ulStream,pLanguage)	\
+#define IDvdInfo_GetSubpictureLanguage(This,ulStream,pLanguage)    \
     (This)->lpVtbl -> GetSubpictureLanguage(This,ulStream,pLanguage)
 
-#define IDvdInfo_GetTitleAttributes(This,ulTitle,pATR)	\
+#define IDvdInfo_GetTitleAttributes(This,ulTitle,pATR)    \
     (This)->lpVtbl -> GetTitleAttributes(This,ulTitle,pATR)
 
-#define IDvdInfo_GetVMGAttributes(This,pATR)	\
+#define IDvdInfo_GetVMGAttributes(This,pATR)    \
     (This)->lpVtbl -> GetVMGAttributes(This,pATR)
 
-#define IDvdInfo_GetCurrentVideoAttributes(This,pATR)	\
+#define IDvdInfo_GetCurrentVideoAttributes(This,pATR)    \
     (This)->lpVtbl -> GetCurrentVideoAttributes(This,pATR)
 
-#define IDvdInfo_GetCurrentAudioAttributes(This,pATR)	\
+#define IDvdInfo_GetCurrentAudioAttributes(This,pATR)    \
     (This)->lpVtbl -> GetCurrentAudioAttributes(This,pATR)
 
-#define IDvdInfo_GetCurrentSubpictureAttributes(This,pATR)	\
+#define IDvdInfo_GetCurrentSubpictureAttributes(This,pATR)    \
     (This)->lpVtbl -> GetCurrentSubpictureAttributes(This,pATR)
 
-#define IDvdInfo_GetCurrentVolumeInfo(This,pulNumOfVol,pulThisVolNum,pSide,pulNumOfTitles)	\
+#define IDvdInfo_GetCurrentVolumeInfo(This,pulNumOfVol,pulThisVolNum,pSide,pulNumOfTitles)    \
     (This)->lpVtbl -> GetCurrentVolumeInfo(This,pulNumOfVol,pulThisVolNum,pSide,pulNumOfTitles)
 
-#define IDvdInfo_GetDVDTextInfo(This,pTextManager,ulBufSize,pulActualSize)	\
+#define IDvdInfo_GetDVDTextInfo(This,pTextManager,ulBufSize,pulActualSize)    \
     (This)->lpVtbl -> GetDVDTextInfo(This,pTextManager,ulBufSize,pulActualSize)
 
-#define IDvdInfo_GetPlayerParentalLevel(This,pulParentalLevel,pulCountryCode)	\
+#define IDvdInfo_GetPlayerParentalLevel(This,pulParentalLevel,pulCountryCode)    \
     (This)->lpVtbl -> GetPlayerParentalLevel(This,pulParentalLevel,pulCountryCode)
 
-#define IDvdInfo_GetNumberOfChapters(This,ulTitle,pulNumberOfChapters)	\
+#define IDvdInfo_GetNumberOfChapters(This,ulTitle,pulNumberOfChapters)    \
     (This)->lpVtbl -> GetNumberOfChapters(This,ulTitle,pulNumberOfChapters)
 
-#define IDvdInfo_GetTitleParentalLevels(This,ulTitle,pulParentalLevels)	\
+#define IDvdInfo_GetTitleParentalLevels(This,ulTitle,pulParentalLevels)    \
     (This)->lpVtbl -> GetTitleParentalLevels(This,ulTitle,pulParentalLevels)
 
-#define IDvdInfo_GetRoot(This,pRoot,ulBufSize,pulActualSize)	\
+#define IDvdInfo_GetRoot(This,pRoot,ulBufSize,pulActualSize)    \
     (This)->lpVtbl -> GetRoot(This,pRoot,ulBufSize,pulActualSize)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -23434,7 +23434,7 @@ void __RPC_STUB IDvdInfo_GetRoot_Stub(
 
 
 
-#endif 	/* __IDvdInfo_INTERFACE_DEFINED__ */
+#endif     /* __IDvdInfo_INTERFACE_DEFINED__ */
 
 
 #ifndef __IDvdCmd_INTERFACE_DEFINED__
@@ -23458,7 +23458,7 @@ EXTERN_C const IID IID_IDvdCmd;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IDvdCmdVtbl
     {
@@ -23494,26 +23494,26 @@ EXTERN_C const IID IID_IDvdCmd;
 #ifdef COBJMACROS
 
 
-#define IDvdCmd_QueryInterface(This,riid,ppvObject)	\
+#define IDvdCmd_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IDvdCmd_AddRef(This)	\
+#define IDvdCmd_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IDvdCmd_Release(This)	\
+#define IDvdCmd_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IDvdCmd_WaitForStart(This)	\
+#define IDvdCmd_WaitForStart(This)    \
     (This)->lpVtbl -> WaitForStart(This)
 
-#define IDvdCmd_WaitForEnd(This)	\
+#define IDvdCmd_WaitForEnd(This)    \
     (This)->lpVtbl -> WaitForEnd(This)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -23540,7 +23540,7 @@ void __RPC_STUB IDvdCmd_WaitForEnd_Stub(
 
 
 
-#endif 	/* __IDvdCmd_INTERFACE_DEFINED__ */
+#endif     /* __IDvdCmd_INTERFACE_DEFINED__ */
 
 
 #ifndef __IDvdState_INTERFACE_DEFINED__
@@ -23566,7 +23566,7 @@ EXTERN_C const IID IID_IDvdState;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IDvdStateVtbl
     {
@@ -23604,26 +23604,26 @@ EXTERN_C const IID IID_IDvdState;
 #ifdef COBJMACROS
 
 
-#define IDvdState_QueryInterface(This,riid,ppvObject)	\
+#define IDvdState_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IDvdState_AddRef(This)	\
+#define IDvdState_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IDvdState_Release(This)	\
+#define IDvdState_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IDvdState_GetDiscID(This,pullUniqueID)	\
+#define IDvdState_GetDiscID(This,pullUniqueID)    \
     (This)->lpVtbl -> GetDiscID(This,pullUniqueID)
 
-#define IDvdState_GetParentalLevel(This,pulParentalLevel)	\
+#define IDvdState_GetParentalLevel(This,pulParentalLevel)    \
     (This)->lpVtbl -> GetParentalLevel(This,pulParentalLevel)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -23652,7 +23652,7 @@ void __RPC_STUB IDvdState_GetParentalLevel_Stub(
 
 
 
-#endif 	/* __IDvdState_INTERFACE_DEFINED__ */
+#endif     /* __IDvdState_INTERFACE_DEFINED__ */
 
 
 #ifndef __IDvdControl2_INTERFACE_DEFINED__
@@ -23836,7 +23836,7 @@ EXTERN_C const IID IID_IDvdControl2;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IDvdControl2Vtbl
     {
@@ -24070,140 +24070,140 @@ EXTERN_C const IID IID_IDvdControl2;
 #ifdef COBJMACROS
 
 
-#define IDvdControl2_QueryInterface(This,riid,ppvObject)	\
+#define IDvdControl2_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IDvdControl2_AddRef(This)	\
+#define IDvdControl2_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IDvdControl2_Release(This)	\
+#define IDvdControl2_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IDvdControl2_PlayTitle(This,ulTitle,dwFlags,ppCmd)	\
+#define IDvdControl2_PlayTitle(This,ulTitle,dwFlags,ppCmd)    \
     (This)->lpVtbl -> PlayTitle(This,ulTitle,dwFlags,ppCmd)
 
-#define IDvdControl2_PlayChapterInTitle(This,ulTitle,ulChapter,dwFlags,ppCmd)	\
+#define IDvdControl2_PlayChapterInTitle(This,ulTitle,ulChapter,dwFlags,ppCmd)    \
     (This)->lpVtbl -> PlayChapterInTitle(This,ulTitle,ulChapter,dwFlags,ppCmd)
 
-#define IDvdControl2_PlayAtTimeInTitle(This,ulTitle,pStartTime,dwFlags,ppCmd)	\
+#define IDvdControl2_PlayAtTimeInTitle(This,ulTitle,pStartTime,dwFlags,ppCmd)    \
     (This)->lpVtbl -> PlayAtTimeInTitle(This,ulTitle,pStartTime,dwFlags,ppCmd)
 
-#define IDvdControl2_Stop(This)	\
+#define IDvdControl2_Stop(This)    \
     (This)->lpVtbl -> Stop(This)
 
-#define IDvdControl2_ReturnFromSubmenu(This,dwFlags,ppCmd)	\
+#define IDvdControl2_ReturnFromSubmenu(This,dwFlags,ppCmd)    \
     (This)->lpVtbl -> ReturnFromSubmenu(This,dwFlags,ppCmd)
 
-#define IDvdControl2_PlayAtTime(This,pTime,dwFlags,ppCmd)	\
+#define IDvdControl2_PlayAtTime(This,pTime,dwFlags,ppCmd)    \
     (This)->lpVtbl -> PlayAtTime(This,pTime,dwFlags,ppCmd)
 
-#define IDvdControl2_PlayChapter(This,ulChapter,dwFlags,ppCmd)	\
+#define IDvdControl2_PlayChapter(This,ulChapter,dwFlags,ppCmd)    \
     (This)->lpVtbl -> PlayChapter(This,ulChapter,dwFlags,ppCmd)
 
-#define IDvdControl2_PlayPrevChapter(This,dwFlags,ppCmd)	\
+#define IDvdControl2_PlayPrevChapter(This,dwFlags,ppCmd)    \
     (This)->lpVtbl -> PlayPrevChapter(This,dwFlags,ppCmd)
 
-#define IDvdControl2_ReplayChapter(This,dwFlags,ppCmd)	\
+#define IDvdControl2_ReplayChapter(This,dwFlags,ppCmd)    \
     (This)->lpVtbl -> ReplayChapter(This,dwFlags,ppCmd)
 
-#define IDvdControl2_PlayNextChapter(This,dwFlags,ppCmd)	\
+#define IDvdControl2_PlayNextChapter(This,dwFlags,ppCmd)    \
     (This)->lpVtbl -> PlayNextChapter(This,dwFlags,ppCmd)
 
-#define IDvdControl2_PlayForwards(This,dSpeed,dwFlags,ppCmd)	\
+#define IDvdControl2_PlayForwards(This,dSpeed,dwFlags,ppCmd)    \
     (This)->lpVtbl -> PlayForwards(This,dSpeed,dwFlags,ppCmd)
 
-#define IDvdControl2_PlayBackwards(This,dSpeed,dwFlags,ppCmd)	\
+#define IDvdControl2_PlayBackwards(This,dSpeed,dwFlags,ppCmd)    \
     (This)->lpVtbl -> PlayBackwards(This,dSpeed,dwFlags,ppCmd)
 
-#define IDvdControl2_ShowMenu(This,MenuID,dwFlags,ppCmd)	\
+#define IDvdControl2_ShowMenu(This,MenuID,dwFlags,ppCmd)    \
     (This)->lpVtbl -> ShowMenu(This,MenuID,dwFlags,ppCmd)
 
-#define IDvdControl2_Resume(This,dwFlags,ppCmd)	\
+#define IDvdControl2_Resume(This,dwFlags,ppCmd)    \
     (This)->lpVtbl -> Resume(This,dwFlags,ppCmd)
 
-#define IDvdControl2_SelectRelativeButton(This,buttonDir)	\
+#define IDvdControl2_SelectRelativeButton(This,buttonDir)    \
     (This)->lpVtbl -> SelectRelativeButton(This,buttonDir)
 
-#define IDvdControl2_ActivateButton(This)	\
+#define IDvdControl2_ActivateButton(This)    \
     (This)->lpVtbl -> ActivateButton(This)
 
-#define IDvdControl2_SelectButton(This,ulButton)	\
+#define IDvdControl2_SelectButton(This,ulButton)    \
     (This)->lpVtbl -> SelectButton(This,ulButton)
 
-#define IDvdControl2_SelectAndActivateButton(This,ulButton)	\
+#define IDvdControl2_SelectAndActivateButton(This,ulButton)    \
     (This)->lpVtbl -> SelectAndActivateButton(This,ulButton)
 
-#define IDvdControl2_StillOff(This)	\
+#define IDvdControl2_StillOff(This)    \
     (This)->lpVtbl -> StillOff(This)
 
-#define IDvdControl2_Pause(This,bState)	\
+#define IDvdControl2_Pause(This,bState)    \
     (This)->lpVtbl -> Pause(This,bState)
 
-#define IDvdControl2_SelectAudioStream(This,ulAudio,dwFlags,ppCmd)	\
+#define IDvdControl2_SelectAudioStream(This,ulAudio,dwFlags,ppCmd)    \
     (This)->lpVtbl -> SelectAudioStream(This,ulAudio,dwFlags,ppCmd)
 
-#define IDvdControl2_SelectSubpictureStream(This,ulSubPicture,dwFlags,ppCmd)	\
+#define IDvdControl2_SelectSubpictureStream(This,ulSubPicture,dwFlags,ppCmd)    \
     (This)->lpVtbl -> SelectSubpictureStream(This,ulSubPicture,dwFlags,ppCmd)
 
-#define IDvdControl2_SetSubpictureState(This,bState,dwFlags,ppCmd)	\
+#define IDvdControl2_SetSubpictureState(This,bState,dwFlags,ppCmd)    \
     (This)->lpVtbl -> SetSubpictureState(This,bState,dwFlags,ppCmd)
 
-#define IDvdControl2_SelectAngle(This,ulAngle,dwFlags,ppCmd)	\
+#define IDvdControl2_SelectAngle(This,ulAngle,dwFlags,ppCmd)    \
     (This)->lpVtbl -> SelectAngle(This,ulAngle,dwFlags,ppCmd)
 
-#define IDvdControl2_SelectParentalLevel(This,ulParentalLevel)	\
+#define IDvdControl2_SelectParentalLevel(This,ulParentalLevel)    \
     (This)->lpVtbl -> SelectParentalLevel(This,ulParentalLevel)
 
-#define IDvdControl2_SelectParentalCountry(This,bCountry)	\
+#define IDvdControl2_SelectParentalCountry(This,bCountry)    \
     (This)->lpVtbl -> SelectParentalCountry(This,bCountry)
 
-#define IDvdControl2_SelectKaraokeAudioPresentationMode(This,ulMode)	\
+#define IDvdControl2_SelectKaraokeAudioPresentationMode(This,ulMode)    \
     (This)->lpVtbl -> SelectKaraokeAudioPresentationMode(This,ulMode)
 
-#define IDvdControl2_SelectVideoModePreference(This,ulPreferredDisplayMode)	\
+#define IDvdControl2_SelectVideoModePreference(This,ulPreferredDisplayMode)    \
     (This)->lpVtbl -> SelectVideoModePreference(This,ulPreferredDisplayMode)
 
-#define IDvdControl2_SetDVDDirectory(This,pszwPath)	\
+#define IDvdControl2_SetDVDDirectory(This,pszwPath)    \
     (This)->lpVtbl -> SetDVDDirectory(This,pszwPath)
 
-#define IDvdControl2_ActivateAtPosition(This,point)	\
+#define IDvdControl2_ActivateAtPosition(This,point)    \
     (This)->lpVtbl -> ActivateAtPosition(This,point)
 
-#define IDvdControl2_SelectAtPosition(This,point)	\
+#define IDvdControl2_SelectAtPosition(This,point)    \
     (This)->lpVtbl -> SelectAtPosition(This,point)
 
-#define IDvdControl2_PlayChaptersAutoStop(This,ulTitle,ulChapter,ulChaptersToPlay,dwFlags,ppCmd)	\
+#define IDvdControl2_PlayChaptersAutoStop(This,ulTitle,ulChapter,ulChaptersToPlay,dwFlags,ppCmd)    \
     (This)->lpVtbl -> PlayChaptersAutoStop(This,ulTitle,ulChapter,ulChaptersToPlay,dwFlags,ppCmd)
 
-#define IDvdControl2_AcceptParentalLevelChange(This,bAccept)	\
+#define IDvdControl2_AcceptParentalLevelChange(This,bAccept)    \
     (This)->lpVtbl -> AcceptParentalLevelChange(This,bAccept)
 
-#define IDvdControl2_SetOption(This,flag,fState)	\
+#define IDvdControl2_SetOption(This,flag,fState)    \
     (This)->lpVtbl -> SetOption(This,flag,fState)
 
-#define IDvdControl2_SetState(This,pState,dwFlags,ppCmd)	\
+#define IDvdControl2_SetState(This,pState,dwFlags,ppCmd)    \
     (This)->lpVtbl -> SetState(This,pState,dwFlags,ppCmd)
 
-#define IDvdControl2_PlayPeriodInTitleAutoStop(This,ulTitle,pStartTime,pEndTime,dwFlags,ppCmd)	\
+#define IDvdControl2_PlayPeriodInTitleAutoStop(This,ulTitle,pStartTime,pEndTime,dwFlags,ppCmd)    \
     (This)->lpVtbl -> PlayPeriodInTitleAutoStop(This,ulTitle,pStartTime,pEndTime,dwFlags,ppCmd)
 
-#define IDvdControl2_SetGPRM(This,ulIndex,wValue,dwFlags,ppCmd)	\
+#define IDvdControl2_SetGPRM(This,ulIndex,wValue,dwFlags,ppCmd)    \
     (This)->lpVtbl -> SetGPRM(This,ulIndex,wValue,dwFlags,ppCmd)
 
-#define IDvdControl2_SelectDefaultMenuLanguage(This,Language)	\
+#define IDvdControl2_SelectDefaultMenuLanguage(This,Language)    \
     (This)->lpVtbl -> SelectDefaultMenuLanguage(This,Language)
 
-#define IDvdControl2_SelectDefaultAudioLanguage(This,Language,audioExtension)	\
+#define IDvdControl2_SelectDefaultAudioLanguage(This,Language,audioExtension)    \
     (This)->lpVtbl -> SelectDefaultAudioLanguage(This,Language,audioExtension)
 
-#define IDvdControl2_SelectDefaultSubpictureLanguage(This,Language,subpictureExtension)	\
+#define IDvdControl2_SelectDefaultSubpictureLanguage(This,Language,subpictureExtension)    \
     (This)->lpVtbl -> SelectDefaultSubpictureLanguage(This,Language,subpictureExtension)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -24732,7 +24732,7 @@ void __RPC_STUB IDvdControl2_SelectDefaultSubpictureLanguage_Stub(
 
 
 
-#endif 	/* __IDvdControl2_INTERFACE_DEFINED__ */
+#endif     /* __IDvdControl2_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0377 */
@@ -24740,52 +24740,52 @@ void __RPC_STUB IDvdControl2_SelectDefaultSubpictureLanguage_Stub(
 
 
 enum DVD_TextStringType
-    {	DVD_Struct_Volume	= 0x1,
-	DVD_Struct_Title	= 0x2,
-	DVD_Struct_ParentalID	= 0x3,
-	DVD_Struct_PartOfTitle	= 0x4,
-	DVD_Struct_Cell	= 0x5,
-	DVD_Stream_Audio	= 0x10,
-	DVD_Stream_Subpicture	= 0x11,
-	DVD_Stream_Angle	= 0x12,
-	DVD_Channel_Audio	= 0x20,
-	DVD_General_Name	= 0x30,
-	DVD_General_Comments	= 0x31,
-	DVD_Title_Series	= 0x38,
-	DVD_Title_Movie	= 0x39,
-	DVD_Title_Video	= 0x3a,
-	DVD_Title_Album	= 0x3b,
-	DVD_Title_Song	= 0x3c,
-	DVD_Title_Other	= 0x3f,
-	DVD_Title_Sub_Series	= 0x40,
-	DVD_Title_Sub_Movie	= 0x41,
-	DVD_Title_Sub_Video	= 0x42,
-	DVD_Title_Sub_Album	= 0x43,
-	DVD_Title_Sub_Song	= 0x44,
-	DVD_Title_Sub_Other	= 0x47,
-	DVD_Title_Orig_Series	= 0x48,
-	DVD_Title_Orig_Movie	= 0x49,
-	DVD_Title_Orig_Video	= 0x4a,
-	DVD_Title_Orig_Album	= 0x4b,
-	DVD_Title_Orig_Song	= 0x4c,
-	DVD_Title_Orig_Other	= 0x4f,
-	DVD_Other_Scene	= 0x50,
-	DVD_Other_Cut	= 0x51,
-	DVD_Other_Take	= 0x52
+    {    DVD_Struct_Volume    = 0x1,
+    DVD_Struct_Title    = 0x2,
+    DVD_Struct_ParentalID    = 0x3,
+    DVD_Struct_PartOfTitle    = 0x4,
+    DVD_Struct_Cell    = 0x5,
+    DVD_Stream_Audio    = 0x10,
+    DVD_Stream_Subpicture    = 0x11,
+    DVD_Stream_Angle    = 0x12,
+    DVD_Channel_Audio    = 0x20,
+    DVD_General_Name    = 0x30,
+    DVD_General_Comments    = 0x31,
+    DVD_Title_Series    = 0x38,
+    DVD_Title_Movie    = 0x39,
+    DVD_Title_Video    = 0x3a,
+    DVD_Title_Album    = 0x3b,
+    DVD_Title_Song    = 0x3c,
+    DVD_Title_Other    = 0x3f,
+    DVD_Title_Sub_Series    = 0x40,
+    DVD_Title_Sub_Movie    = 0x41,
+    DVD_Title_Sub_Video    = 0x42,
+    DVD_Title_Sub_Album    = 0x43,
+    DVD_Title_Sub_Song    = 0x44,
+    DVD_Title_Sub_Other    = 0x47,
+    DVD_Title_Orig_Series    = 0x48,
+    DVD_Title_Orig_Movie    = 0x49,
+    DVD_Title_Orig_Video    = 0x4a,
+    DVD_Title_Orig_Album    = 0x4b,
+    DVD_Title_Orig_Song    = 0x4c,
+    DVD_Title_Orig_Other    = 0x4f,
+    DVD_Other_Scene    = 0x50,
+    DVD_Other_Cut    = 0x51,
+    DVD_Other_Take    = 0x52
     } ;
 
 enum DVD_TextCharSet
-    {	DVD_CharSet_Unicode	= 0,
-	DVD_CharSet_ISO646	= 1,
-	DVD_CharSet_JIS_Roman_Kanji	= 2,
-	DVD_CharSet_ISO8859_1	= 3,
-	DVD_CharSet_ShiftJIS_Kanji_Roman_Katakana	= 4
+    {    DVD_CharSet_Unicode    = 0,
+    DVD_CharSet_ISO646    = 1,
+    DVD_CharSet_JIS_Roman_Kanji    = 2,
+    DVD_CharSet_ISO8859_1    = 3,
+    DVD_CharSet_ShiftJIS_Kanji_Roman_Katakana    = 4
     } ;
-#define DVD_TITLE_MENU				0x000
+#define DVD_TITLE_MENU                0x000
 #define DVD_STREAM_DATA_CURRENT     0x800
 #define DVD_STREAM_DATA_VMGM        0x400
 #define DVD_STREAM_DATA_VTSM        0x401
-#define DVD_DEFAULT_AUDIO_STREAM	0x0f
+#define DVD_DEFAULT_AUDIO_STREAM    0x0f
 typedef struct tagDVD_DECODER_CAPS
     {
     DWORD dwSize;
@@ -24800,13 +24800,13 @@ typedef struct tagDVD_DECODER_CAPS
     DWORD dwRes2;
     DWORD dwRes3;
     DWORD dwRes4;
-    } 	DVD_DECODER_CAPS;
+    }     DVD_DECODER_CAPS;
 
-#define DVD_AUDIO_CAPS_AC3		0x00000001
-#define DVD_AUDIO_CAPS_MPEG2	0x00000002
-#define DVD_AUDIO_CAPS_LPCM		0x00000004
-#define DVD_AUDIO_CAPS_DTS		0x00000008
-#define DVD_AUDIO_CAPS_SDDS		0x00000010
+#define DVD_AUDIO_CAPS_AC3        0x00000001
+#define DVD_AUDIO_CAPS_MPEG2    0x00000002
+#define DVD_AUDIO_CAPS_LPCM        0x00000004
+#define DVD_AUDIO_CAPS_DTS        0x00000008
+#define DVD_AUDIO_CAPS_SDDS        0x00000010
 
 
 extern RPC_IF_HANDLE __MIDL_itf_strmif_0377_v0_0_c_ifspec;
@@ -24990,7 +24990,7 @@ EXTERN_C const IID IID_IDvdInfo2;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IDvdInfo2Vtbl
     {
@@ -25220,137 +25220,137 @@ EXTERN_C const IID IID_IDvdInfo2;
 #ifdef COBJMACROS
 
 
-#define IDvdInfo2_QueryInterface(This,riid,ppvObject)	\
+#define IDvdInfo2_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IDvdInfo2_AddRef(This)	\
+#define IDvdInfo2_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IDvdInfo2_Release(This)	\
+#define IDvdInfo2_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IDvdInfo2_GetCurrentDomain(This,pDomain)	\
+#define IDvdInfo2_GetCurrentDomain(This,pDomain)    \
     (This)->lpVtbl -> GetCurrentDomain(This,pDomain)
 
-#define IDvdInfo2_GetCurrentLocation(This,pLocation)	\
+#define IDvdInfo2_GetCurrentLocation(This,pLocation)    \
     (This)->lpVtbl -> GetCurrentLocation(This,pLocation)
 
-#define IDvdInfo2_GetTotalTitleTime(This,pTotalTime,ulTimeCodeFlags)	\
+#define IDvdInfo2_GetTotalTitleTime(This,pTotalTime,ulTimeCodeFlags)    \
     (This)->lpVtbl -> GetTotalTitleTime(This,pTotalTime,ulTimeCodeFlags)
 
-#define IDvdInfo2_GetCurrentButton(This,pulButtonsAvailable,pulCurrentButton)	\
+#define IDvdInfo2_GetCurrentButton(This,pulButtonsAvailable,pulCurrentButton)    \
     (This)->lpVtbl -> GetCurrentButton(This,pulButtonsAvailable,pulCurrentButton)
 
-#define IDvdInfo2_GetCurrentAngle(This,pulAnglesAvailable,pulCurrentAngle)	\
+#define IDvdInfo2_GetCurrentAngle(This,pulAnglesAvailable,pulCurrentAngle)    \
     (This)->lpVtbl -> GetCurrentAngle(This,pulAnglesAvailable,pulCurrentAngle)
 
-#define IDvdInfo2_GetCurrentAudio(This,pulStreamsAvailable,pulCurrentStream)	\
+#define IDvdInfo2_GetCurrentAudio(This,pulStreamsAvailable,pulCurrentStream)    \
     (This)->lpVtbl -> GetCurrentAudio(This,pulStreamsAvailable,pulCurrentStream)
 
-#define IDvdInfo2_GetCurrentSubpicture(This,pulStreamsAvailable,pulCurrentStream,pbIsDisabled)	\
+#define IDvdInfo2_GetCurrentSubpicture(This,pulStreamsAvailable,pulCurrentStream,pbIsDisabled)    \
     (This)->lpVtbl -> GetCurrentSubpicture(This,pulStreamsAvailable,pulCurrentStream,pbIsDisabled)
 
-#define IDvdInfo2_GetCurrentUOPS(This,pulUOPs)	\
+#define IDvdInfo2_GetCurrentUOPS(This,pulUOPs)    \
     (This)->lpVtbl -> GetCurrentUOPS(This,pulUOPs)
 
-#define IDvdInfo2_GetAllSPRMs(This,pRegisterArray)	\
+#define IDvdInfo2_GetAllSPRMs(This,pRegisterArray)    \
     (This)->lpVtbl -> GetAllSPRMs(This,pRegisterArray)
 
-#define IDvdInfo2_GetAllGPRMs(This,pRegisterArray)	\
+#define IDvdInfo2_GetAllGPRMs(This,pRegisterArray)    \
     (This)->lpVtbl -> GetAllGPRMs(This,pRegisterArray)
 
-#define IDvdInfo2_GetAudioLanguage(This,ulStream,pLanguage)	\
+#define IDvdInfo2_GetAudioLanguage(This,ulStream,pLanguage)    \
     (This)->lpVtbl -> GetAudioLanguage(This,ulStream,pLanguage)
 
-#define IDvdInfo2_GetSubpictureLanguage(This,ulStream,pLanguage)	\
+#define IDvdInfo2_GetSubpictureLanguage(This,ulStream,pLanguage)    \
     (This)->lpVtbl -> GetSubpictureLanguage(This,ulStream,pLanguage)
 
-#define IDvdInfo2_GetTitleAttributes(This,ulTitle,pMenu,pTitle)	\
+#define IDvdInfo2_GetTitleAttributes(This,ulTitle,pMenu,pTitle)    \
     (This)->lpVtbl -> GetTitleAttributes(This,ulTitle,pMenu,pTitle)
 
-#define IDvdInfo2_GetVMGAttributes(This,pATR)	\
+#define IDvdInfo2_GetVMGAttributes(This,pATR)    \
     (This)->lpVtbl -> GetVMGAttributes(This,pATR)
 
-#define IDvdInfo2_GetCurrentVideoAttributes(This,pATR)	\
+#define IDvdInfo2_GetCurrentVideoAttributes(This,pATR)    \
     (This)->lpVtbl -> GetCurrentVideoAttributes(This,pATR)
 
-#define IDvdInfo2_GetAudioAttributes(This,ulStream,pATR)	\
+#define IDvdInfo2_GetAudioAttributes(This,ulStream,pATR)    \
     (This)->lpVtbl -> GetAudioAttributes(This,ulStream,pATR)
 
-#define IDvdInfo2_GetKaraokeAttributes(This,ulStream,pAttributes)	\
+#define IDvdInfo2_GetKaraokeAttributes(This,ulStream,pAttributes)    \
     (This)->lpVtbl -> GetKaraokeAttributes(This,ulStream,pAttributes)
 
-#define IDvdInfo2_GetSubpictureAttributes(This,ulStream,pATR)	\
+#define IDvdInfo2_GetSubpictureAttributes(This,ulStream,pATR)    \
     (This)->lpVtbl -> GetSubpictureAttributes(This,ulStream,pATR)
 
-#define IDvdInfo2_GetDVDVolumeInfo(This,pulNumOfVolumes,pulVolume,pSide,pulNumOfTitles)	\
+#define IDvdInfo2_GetDVDVolumeInfo(This,pulNumOfVolumes,pulVolume,pSide,pulNumOfTitles)    \
     (This)->lpVtbl -> GetDVDVolumeInfo(This,pulNumOfVolumes,pulVolume,pSide,pulNumOfTitles)
 
-#define IDvdInfo2_GetDVDTextNumberOfLanguages(This,pulNumOfLangs)	\
+#define IDvdInfo2_GetDVDTextNumberOfLanguages(This,pulNumOfLangs)    \
     (This)->lpVtbl -> GetDVDTextNumberOfLanguages(This,pulNumOfLangs)
 
-#define IDvdInfo2_GetDVDTextLanguageInfo(This,ulLangIndex,pulNumOfStrings,pLangCode,pbCharacterSet)	\
+#define IDvdInfo2_GetDVDTextLanguageInfo(This,ulLangIndex,pulNumOfStrings,pLangCode,pbCharacterSet)    \
     (This)->lpVtbl -> GetDVDTextLanguageInfo(This,ulLangIndex,pulNumOfStrings,pLangCode,pbCharacterSet)
 
-#define IDvdInfo2_GetDVDTextStringAsNative(This,ulLangIndex,ulStringIndex,pbBuffer,ulMaxBufferSize,pulActualSize,pType)	\
+#define IDvdInfo2_GetDVDTextStringAsNative(This,ulLangIndex,ulStringIndex,pbBuffer,ulMaxBufferSize,pulActualSize,pType)    \
     (This)->lpVtbl -> GetDVDTextStringAsNative(This,ulLangIndex,ulStringIndex,pbBuffer,ulMaxBufferSize,pulActualSize,pType)
 
-#define IDvdInfo2_GetDVDTextStringAsUnicode(This,ulLangIndex,ulStringIndex,pchwBuffer,ulMaxBufferSize,pulActualSize,pType)	\
+#define IDvdInfo2_GetDVDTextStringAsUnicode(This,ulLangIndex,ulStringIndex,pchwBuffer,ulMaxBufferSize,pulActualSize,pType)    \
     (This)->lpVtbl -> GetDVDTextStringAsUnicode(This,ulLangIndex,ulStringIndex,pchwBuffer,ulMaxBufferSize,pulActualSize,pType)
 
-#define IDvdInfo2_GetPlayerParentalLevel(This,pulParentalLevel,pbCountryCode)	\
+#define IDvdInfo2_GetPlayerParentalLevel(This,pulParentalLevel,pbCountryCode)    \
     (This)->lpVtbl -> GetPlayerParentalLevel(This,pulParentalLevel,pbCountryCode)
 
-#define IDvdInfo2_GetNumberOfChapters(This,ulTitle,pulNumOfChapters)	\
+#define IDvdInfo2_GetNumberOfChapters(This,ulTitle,pulNumOfChapters)    \
     (This)->lpVtbl -> GetNumberOfChapters(This,ulTitle,pulNumOfChapters)
 
-#define IDvdInfo2_GetTitleParentalLevels(This,ulTitle,pulParentalLevels)	\
+#define IDvdInfo2_GetTitleParentalLevels(This,ulTitle,pulParentalLevels)    \
     (This)->lpVtbl -> GetTitleParentalLevels(This,ulTitle,pulParentalLevels)
 
-#define IDvdInfo2_GetDVDDirectory(This,pszwPath,ulMaxSize,pulActualSize)	\
+#define IDvdInfo2_GetDVDDirectory(This,pszwPath,ulMaxSize,pulActualSize)    \
     (This)->lpVtbl -> GetDVDDirectory(This,pszwPath,ulMaxSize,pulActualSize)
 
-#define IDvdInfo2_IsAudioStreamEnabled(This,ulStreamNum,pbEnabled)	\
+#define IDvdInfo2_IsAudioStreamEnabled(This,ulStreamNum,pbEnabled)    \
     (This)->lpVtbl -> IsAudioStreamEnabled(This,ulStreamNum,pbEnabled)
 
-#define IDvdInfo2_GetDiscID(This,pszwPath,pullDiscID)	\
+#define IDvdInfo2_GetDiscID(This,pszwPath,pullDiscID)    \
     (This)->lpVtbl -> GetDiscID(This,pszwPath,pullDiscID)
 
-#define IDvdInfo2_GetState(This,pStateData)	\
+#define IDvdInfo2_GetState(This,pStateData)    \
     (This)->lpVtbl -> GetState(This,pStateData)
 
-#define IDvdInfo2_GetMenuLanguages(This,pLanguages,ulMaxLanguages,pulActualLanguages)	\
+#define IDvdInfo2_GetMenuLanguages(This,pLanguages,ulMaxLanguages,pulActualLanguages)    \
     (This)->lpVtbl -> GetMenuLanguages(This,pLanguages,ulMaxLanguages,pulActualLanguages)
 
-#define IDvdInfo2_GetButtonAtPosition(This,point,pulButtonIndex)	\
+#define IDvdInfo2_GetButtonAtPosition(This,point,pulButtonIndex)    \
     (This)->lpVtbl -> GetButtonAtPosition(This,point,pulButtonIndex)
 
-#define IDvdInfo2_GetCmdFromEvent(This,lParam1,pCmdObj)	\
+#define IDvdInfo2_GetCmdFromEvent(This,lParam1,pCmdObj)    \
     (This)->lpVtbl -> GetCmdFromEvent(This,lParam1,pCmdObj)
 
-#define IDvdInfo2_GetDefaultMenuLanguage(This,pLanguage)	\
+#define IDvdInfo2_GetDefaultMenuLanguage(This,pLanguage)    \
     (This)->lpVtbl -> GetDefaultMenuLanguage(This,pLanguage)
 
-#define IDvdInfo2_GetDefaultAudioLanguage(This,pLanguage,pAudioExtension)	\
+#define IDvdInfo2_GetDefaultAudioLanguage(This,pLanguage,pAudioExtension)    \
     (This)->lpVtbl -> GetDefaultAudioLanguage(This,pLanguage,pAudioExtension)
 
-#define IDvdInfo2_GetDefaultSubpictureLanguage(This,pLanguage,pSubpictureExtension)	\
+#define IDvdInfo2_GetDefaultSubpictureLanguage(This,pLanguage,pSubpictureExtension)    \
     (This)->lpVtbl -> GetDefaultSubpictureLanguage(This,pLanguage,pSubpictureExtension)
 
-#define IDvdInfo2_GetDecoderCaps(This,pCaps)	\
+#define IDvdInfo2_GetDecoderCaps(This,pCaps)    \
     (This)->lpVtbl -> GetDecoderCaps(This,pCaps)
 
-#define IDvdInfo2_GetButtonRect(This,ulButton,pRect)	\
+#define IDvdInfo2_GetButtonRect(This,ulButton,pRect)    \
     (This)->lpVtbl -> GetButtonRect(This,ulButton,pRect)
 
-#define IDvdInfo2_IsSubpictureStreamEnabled(This,ulStreamNum,pbEnabled)	\
+#define IDvdInfo2_IsSubpictureStreamEnabled(This,ulStreamNum,pbEnabled)    \
     (This)->lpVtbl -> IsSubpictureStreamEnabled(This,ulStreamNum,pbEnabled)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -25867,7 +25867,7 @@ void __RPC_STUB IDvdInfo2_IsSubpictureStreamEnabled_Stub(
 
 
 
-#endif 	/* __IDvdInfo2_INTERFACE_DEFINED__ */
+#endif     /* __IDvdInfo2_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0379 */
@@ -25875,20 +25875,20 @@ void __RPC_STUB IDvdInfo2_IsSubpictureStreamEnabled_Stub(
 
 typedef
 enum _AM_DVD_GRAPH_FLAGS
-    {	AM_DVD_HWDEC_PREFER	= 0x1,
-	AM_DVD_HWDEC_ONLY	= 0x2,
-	AM_DVD_SWDEC_PREFER	= 0x4,
-	AM_DVD_SWDEC_ONLY	= 0x8,
-	AM_DVD_NOVPE	= 0x100,
-	AM_DVD_VMR9_ONLY	= 0x800
-    } 	AM_DVD_GRAPH_FLAGS;
+    {    AM_DVD_HWDEC_PREFER    = 0x1,
+    AM_DVD_HWDEC_ONLY    = 0x2,
+    AM_DVD_SWDEC_PREFER    = 0x4,
+    AM_DVD_SWDEC_ONLY    = 0x8,
+    AM_DVD_NOVPE    = 0x100,
+    AM_DVD_VMR9_ONLY    = 0x800
+    }     AM_DVD_GRAPH_FLAGS;
 
 typedef
 enum _AM_DVD_STREAM_FLAGS
-    {	AM_DVD_STREAM_VIDEO	= 0x1,
-	AM_DVD_STREAM_AUDIO	= 0x2,
-	AM_DVD_STREAM_SUBPIC	= 0x4
-    } 	AM_DVD_STREAM_FLAGS;
+    {    AM_DVD_STREAM_VIDEO    = 0x1,
+    AM_DVD_STREAM_AUDIO    = 0x2,
+    AM_DVD_STREAM_SUBPIC    = 0x4
+    }     AM_DVD_STREAM_FLAGS;
 
 typedef /* [public][public] */ struct __MIDL___MIDL_itf_strmif_0379_0001
     {
@@ -25900,7 +25900,7 @@ typedef /* [public][public] */ struct __MIDL___MIDL_itf_strmif_0379_0001
     int iNumStreams;
     int iNumStreamsFailed;
     DWORD dwFailedStreamsFlag;
-    } 	AM_DVD_RENDERSTATUS;
+    }     AM_DVD_RENDERSTATUS;
 
 
 
@@ -25936,7 +25936,7 @@ EXTERN_C const IID IID_IDvdGraphBuilder;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IDvdGraphBuilderVtbl
     {
@@ -25981,29 +25981,29 @@ EXTERN_C const IID IID_IDvdGraphBuilder;
 #ifdef COBJMACROS
 
 
-#define IDvdGraphBuilder_QueryInterface(This,riid,ppvObject)	\
+#define IDvdGraphBuilder_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IDvdGraphBuilder_AddRef(This)	\
+#define IDvdGraphBuilder_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IDvdGraphBuilder_Release(This)	\
+#define IDvdGraphBuilder_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IDvdGraphBuilder_GetFiltergraph(This,ppGB)	\
+#define IDvdGraphBuilder_GetFiltergraph(This,ppGB)    \
     (This)->lpVtbl -> GetFiltergraph(This,ppGB)
 
-#define IDvdGraphBuilder_GetDvdInterface(This,riid,ppvIF)	\
+#define IDvdGraphBuilder_GetDvdInterface(This,riid,ppvIF)    \
     (This)->lpVtbl -> GetDvdInterface(This,riid,ppvIF)
 
-#define IDvdGraphBuilder_RenderDvdVideoVolume(This,lpcwszPathName,dwFlags,pStatus)	\
+#define IDvdGraphBuilder_RenderDvdVideoVolume(This,lpcwszPathName,dwFlags,pStatus)    \
     (This)->lpVtbl -> RenderDvdVideoVolume(This,lpcwszPathName,dwFlags,pStatus)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -26047,7 +26047,7 @@ void __RPC_STUB IDvdGraphBuilder_RenderDvdVideoVolume_Stub(
 
 
 
-#endif 	/* __IDvdGraphBuilder_INTERFACE_DEFINED__ */
+#endif     /* __IDvdGraphBuilder_INTERFACE_DEFINED__ */
 
 
 #ifndef __IDDrawExclModeVideo_INTERFACE_DEFINED__
@@ -26095,7 +26095,7 @@ EXTERN_C const IID IID_IDDrawExclModeVideo;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IDDrawExclModeVideoVtbl
     {
@@ -26160,41 +26160,41 @@ EXTERN_C const IID IID_IDDrawExclModeVideo;
 #ifdef COBJMACROS
 
 
-#define IDDrawExclModeVideo_QueryInterface(This,riid,ppvObject)	\
+#define IDDrawExclModeVideo_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IDDrawExclModeVideo_AddRef(This)	\
+#define IDDrawExclModeVideo_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IDDrawExclModeVideo_Release(This)	\
+#define IDDrawExclModeVideo_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IDDrawExclModeVideo_SetDDrawObject(This,pDDrawObject)	\
+#define IDDrawExclModeVideo_SetDDrawObject(This,pDDrawObject)    \
     (This)->lpVtbl -> SetDDrawObject(This,pDDrawObject)
 
-#define IDDrawExclModeVideo_GetDDrawObject(This,ppDDrawObject,pbUsingExternal)	\
+#define IDDrawExclModeVideo_GetDDrawObject(This,ppDDrawObject,pbUsingExternal)    \
     (This)->lpVtbl -> GetDDrawObject(This,ppDDrawObject,pbUsingExternal)
 
-#define IDDrawExclModeVideo_SetDDrawSurface(This,pDDrawSurface)	\
+#define IDDrawExclModeVideo_SetDDrawSurface(This,pDDrawSurface)    \
     (This)->lpVtbl -> SetDDrawSurface(This,pDDrawSurface)
 
-#define IDDrawExclModeVideo_GetDDrawSurface(This,ppDDrawSurface,pbUsingExternal)	\
+#define IDDrawExclModeVideo_GetDDrawSurface(This,ppDDrawSurface,pbUsingExternal)    \
     (This)->lpVtbl -> GetDDrawSurface(This,ppDDrawSurface,pbUsingExternal)
 
-#define IDDrawExclModeVideo_SetDrawParameters(This,prcSource,prcTarget)	\
+#define IDDrawExclModeVideo_SetDrawParameters(This,prcSource,prcTarget)    \
     (This)->lpVtbl -> SetDrawParameters(This,prcSource,prcTarget)
 
-#define IDDrawExclModeVideo_GetNativeVideoProps(This,pdwVideoWidth,pdwVideoHeight,pdwPictAspectRatioX,pdwPictAspectRatioY)	\
+#define IDDrawExclModeVideo_GetNativeVideoProps(This,pdwVideoWidth,pdwVideoHeight,pdwPictAspectRatioX,pdwPictAspectRatioY)    \
     (This)->lpVtbl -> GetNativeVideoProps(This,pdwVideoWidth,pdwVideoHeight,pdwPictAspectRatioX,pdwPictAspectRatioY)
 
-#define IDDrawExclModeVideo_SetCallbackInterface(This,pCallback,dwFlags)	\
+#define IDDrawExclModeVideo_SetCallbackInterface(This,pCallback,dwFlags)    \
     (This)->lpVtbl -> SetCallbackInterface(This,pCallback,dwFlags)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -26290,7 +26290,7 @@ void __RPC_STUB IDDrawExclModeVideo_SetCallbackInterface_Stub(
 
 
 
-#endif 	/* __IDDrawExclModeVideo_INTERFACE_DEFINED__ */
+#endif     /* __IDDrawExclModeVideo_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0381 */
@@ -26298,9 +26298,9 @@ void __RPC_STUB IDDrawExclModeVideo_SetCallbackInterface_Stub(
 
 
 enum _AM_OVERLAY_NOTIFY_FLAGS
-    {	AM_OVERLAY_NOTIFY_VISIBLE_CHANGE	= 0x1,
-	AM_OVERLAY_NOTIFY_SOURCE_CHANGE	= 0x2,
-	AM_OVERLAY_NOTIFY_DEST_CHANGE	= 0x4
+    {    AM_OVERLAY_NOTIFY_VISIBLE_CHANGE    = 0x1,
+    AM_OVERLAY_NOTIFY_SOURCE_CHANGE    = 0x2,
+    AM_OVERLAY_NOTIFY_DEST_CHANGE    = 0x4
     } ;
 
 
@@ -26344,7 +26344,7 @@ EXTERN_C const IID IID_IDDrawExclModeVideoCallback;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IDDrawExclModeVideoCallbackVtbl
     {
@@ -26397,29 +26397,29 @@ EXTERN_C const IID IID_IDDrawExclModeVideoCallback;
 #ifdef COBJMACROS
 
 
-#define IDDrawExclModeVideoCallback_QueryInterface(This,riid,ppvObject)	\
+#define IDDrawExclModeVideoCallback_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IDDrawExclModeVideoCallback_AddRef(This)	\
+#define IDDrawExclModeVideoCallback_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IDDrawExclModeVideoCallback_Release(This)	\
+#define IDDrawExclModeVideoCallback_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IDDrawExclModeVideoCallback_OnUpdateOverlay(This,bBefore,dwFlags,bOldVisible,prcOldSrc,prcOldDest,bNewVisible,prcNewSrc,prcNewDest)	\
+#define IDDrawExclModeVideoCallback_OnUpdateOverlay(This,bBefore,dwFlags,bOldVisible,prcOldSrc,prcOldDest,bNewVisible,prcNewSrc,prcNewDest)    \
     (This)->lpVtbl -> OnUpdateOverlay(This,bBefore,dwFlags,bOldVisible,prcOldSrc,prcOldDest,bNewVisible,prcNewSrc,prcNewDest)
 
-#define IDDrawExclModeVideoCallback_OnUpdateColorKey(This,pKey,dwColor)	\
+#define IDDrawExclModeVideoCallback_OnUpdateColorKey(This,pKey,dwColor)    \
     (This)->lpVtbl -> OnUpdateColorKey(This,pKey,dwColor)
 
-#define IDDrawExclModeVideoCallback_OnUpdateSize(This,dwWidth,dwHeight,dwARWidth,dwARHeight)	\
+#define IDDrawExclModeVideoCallback_OnUpdateSize(This,dwWidth,dwHeight,dwARWidth,dwARHeight)    \
     (This)->lpVtbl -> OnUpdateSize(This,dwWidth,dwHeight,dwARWidth,dwARHeight)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -26471,7 +26471,7 @@ void __RPC_STUB IDDrawExclModeVideoCallback_OnUpdateSize_Stub(
 
 
 
-#endif 	/* __IDDrawExclModeVideoCallback_INTERFACE_DEFINED__ */
+#endif     /* __IDDrawExclModeVideoCallback_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0382 */
@@ -26513,7 +26513,7 @@ EXTERN_C const IID IID_IPinConnection;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IPinConnectionVtbl
     {
@@ -26557,32 +26557,32 @@ EXTERN_C const IID IID_IPinConnection;
 #ifdef COBJMACROS
 
 
-#define IPinConnection_QueryInterface(This,riid,ppvObject)	\
+#define IPinConnection_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IPinConnection_AddRef(This)	\
+#define IPinConnection_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IPinConnection_Release(This)	\
+#define IPinConnection_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IPinConnection_DynamicQueryAccept(This,pmt)	\
+#define IPinConnection_DynamicQueryAccept(This,pmt)    \
     (This)->lpVtbl -> DynamicQueryAccept(This,pmt)
 
-#define IPinConnection_NotifyEndOfStream(This,hNotifyEvent)	\
+#define IPinConnection_NotifyEndOfStream(This,hNotifyEvent)    \
     (This)->lpVtbl -> NotifyEndOfStream(This,hNotifyEvent)
 
-#define IPinConnection_IsEndPin(This)	\
+#define IPinConnection_IsEndPin(This)    \
     (This)->lpVtbl -> IsEndPin(This)
 
-#define IPinConnection_DynamicDisconnect(This)	\
+#define IPinConnection_DynamicDisconnect(This)    \
     (This)->lpVtbl -> DynamicDisconnect(This)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -26633,7 +26633,7 @@ void __RPC_STUB IPinConnection_DynamicDisconnect_Stub(
 
 
 
-#endif 	/* __IPinConnection_INTERFACE_DEFINED__ */
+#endif     /* __IPinConnection_INTERFACE_DEFINED__ */
 
 
 #ifndef __IPinFlowControl_INTERFACE_DEFINED__
@@ -26657,7 +26657,7 @@ EXTERN_C const IID IID_IPinFlowControl;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IPinFlowControlVtbl
     {
@@ -26692,23 +26692,23 @@ EXTERN_C const IID IID_IPinFlowControl;
 #ifdef COBJMACROS
 
 
-#define IPinFlowControl_QueryInterface(This,riid,ppvObject)	\
+#define IPinFlowControl_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IPinFlowControl_AddRef(This)	\
+#define IPinFlowControl_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IPinFlowControl_Release(This)	\
+#define IPinFlowControl_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IPinFlowControl_Block(This,dwBlockFlags,hEvent)	\
+#define IPinFlowControl_Block(This,dwBlockFlags,hEvent)    \
     (This)->lpVtbl -> Block(This,dwBlockFlags,hEvent)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -26726,7 +26726,7 @@ void __RPC_STUB IPinFlowControl_Block_Stub(
 
 
 
-#endif 	/* __IPinFlowControl_INTERFACE_DEFINED__ */
+#endif     /* __IPinFlowControl_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0384 */
@@ -26734,23 +26734,23 @@ void __RPC_STUB IPinFlowControl_Block_Stub(
 
 
 enum _AM_PIN_FLOW_CONTROL_BLOCK_FLAGS
-    {	AM_PIN_FLOW_CONTROL_BLOCK	= 0x1
+    {    AM_PIN_FLOW_CONTROL_BLOCK    = 0x1
     } ;
 typedef
 enum _AM_GRAPH_CONFIG_RECONNECT_FLAGS
-    {	AM_GRAPH_CONFIG_RECONNECT_DIRECTCONNECT	= 0x1,
-	AM_GRAPH_CONFIG_RECONNECT_CACHE_REMOVED_FILTERS	= 0x2,
-	AM_GRAPH_CONFIG_RECONNECT_USE_ONLY_CACHED_FILTERS	= 0x4
-    } 	AM_GRAPH_CONFIG_RECONNECT_FLAGS;
+    {    AM_GRAPH_CONFIG_RECONNECT_DIRECTCONNECT    = 0x1,
+    AM_GRAPH_CONFIG_RECONNECT_CACHE_REMOVED_FILTERS    = 0x2,
+    AM_GRAPH_CONFIG_RECONNECT_USE_ONLY_CACHED_FILTERS    = 0x4
+    }     AM_GRAPH_CONFIG_RECONNECT_FLAGS;
 
 
 enum _REM_FILTER_FLAGS
-    {	REMFILTERF_LEAVECONNECTED	= 0x1
+    {    REMFILTERF_LEAVECONNECTED    = 0x1
     } ;
 typedef
 enum _AM_FILTER_FLAGS
-    {	AM_FILTER_FLAGS_REMOVABLE	= 0x1
-    } 	AM_FILTER_FLAGS;
+    {    AM_FILTER_FLAGS_REMOVABLE    = 0x1
+    }     AM_FILTER_FLAGS;
 
 
 
@@ -26817,7 +26817,7 @@ EXTERN_C const IID IID_IGraphConfig;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IGraphConfigVtbl
     {
@@ -26900,50 +26900,50 @@ EXTERN_C const IID IID_IGraphConfig;
 #ifdef COBJMACROS
 
 
-#define IGraphConfig_QueryInterface(This,riid,ppvObject)	\
+#define IGraphConfig_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IGraphConfig_AddRef(This)	\
+#define IGraphConfig_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IGraphConfig_Release(This)	\
+#define IGraphConfig_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IGraphConfig_Reconnect(This,pOutputPin,pInputPin,pmtFirstConnection,pUsingFilter,hAbortEvent,dwFlags)	\
+#define IGraphConfig_Reconnect(This,pOutputPin,pInputPin,pmtFirstConnection,pUsingFilter,hAbortEvent,dwFlags)    \
     (This)->lpVtbl -> Reconnect(This,pOutputPin,pInputPin,pmtFirstConnection,pUsingFilter,hAbortEvent,dwFlags)
 
-#define IGraphConfig_Reconfigure(This,pCallback,pvContext,dwFlags,hAbortEvent)	\
+#define IGraphConfig_Reconfigure(This,pCallback,pvContext,dwFlags,hAbortEvent)    \
     (This)->lpVtbl -> Reconfigure(This,pCallback,pvContext,dwFlags,hAbortEvent)
 
-#define IGraphConfig_AddFilterToCache(This,pFilter)	\
+#define IGraphConfig_AddFilterToCache(This,pFilter)    \
     (This)->lpVtbl -> AddFilterToCache(This,pFilter)
 
-#define IGraphConfig_EnumCacheFilter(This,pEnum)	\
+#define IGraphConfig_EnumCacheFilter(This,pEnum)    \
     (This)->lpVtbl -> EnumCacheFilter(This,pEnum)
 
-#define IGraphConfig_RemoveFilterFromCache(This,pFilter)	\
+#define IGraphConfig_RemoveFilterFromCache(This,pFilter)    \
     (This)->lpVtbl -> RemoveFilterFromCache(This,pFilter)
 
-#define IGraphConfig_GetStartTime(This,prtStart)	\
+#define IGraphConfig_GetStartTime(This,prtStart)    \
     (This)->lpVtbl -> GetStartTime(This,prtStart)
 
-#define IGraphConfig_PushThroughData(This,pOutputPin,pConnection,hEventAbort)	\
+#define IGraphConfig_PushThroughData(This,pOutputPin,pConnection,hEventAbort)    \
     (This)->lpVtbl -> PushThroughData(This,pOutputPin,pConnection,hEventAbort)
 
-#define IGraphConfig_SetFilterFlags(This,pFilter,dwFlags)	\
+#define IGraphConfig_SetFilterFlags(This,pFilter,dwFlags)    \
     (This)->lpVtbl -> SetFilterFlags(This,pFilter,dwFlags)
 
-#define IGraphConfig_GetFilterFlags(This,pFilter,pdwFlags)	\
+#define IGraphConfig_GetFilterFlags(This,pFilter,pdwFlags)    \
     (This)->lpVtbl -> GetFilterFlags(This,pFilter,pdwFlags)
 
-#define IGraphConfig_RemoveFilterEx(This,pFilter,Flags)	\
+#define IGraphConfig_RemoveFilterEx(This,pFilter,Flags)    \
     (This)->lpVtbl -> RemoveFilterEx(This,pFilter,Flags)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -27081,7 +27081,7 @@ void __RPC_STUB IGraphConfig_RemoveFilterEx_Stub(
 
 
 
-#endif 	/* __IGraphConfig_INTERFACE_DEFINED__ */
+#endif     /* __IGraphConfig_INTERFACE_DEFINED__ */
 
 
 #ifndef __IGraphConfigCallback_INTERFACE_DEFINED__
@@ -27105,7 +27105,7 @@ EXTERN_C const IID IID_IGraphConfigCallback;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IGraphConfigCallbackVtbl
     {
@@ -27140,23 +27140,23 @@ EXTERN_C const IID IID_IGraphConfigCallback;
 #ifdef COBJMACROS
 
 
-#define IGraphConfigCallback_QueryInterface(This,riid,ppvObject)	\
+#define IGraphConfigCallback_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IGraphConfigCallback_AddRef(This)	\
+#define IGraphConfigCallback_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IGraphConfigCallback_Release(This)	\
+#define IGraphConfigCallback_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IGraphConfigCallback_Reconfigure(This,pvContext,dwFlags)	\
+#define IGraphConfigCallback_Reconfigure(This,pvContext,dwFlags)    \
     (This)->lpVtbl -> Reconfigure(This,pvContext,dwFlags)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -27174,7 +27174,7 @@ void __RPC_STUB IGraphConfigCallback_Reconfigure_Stub(
 
 
 
-#endif 	/* __IGraphConfigCallback_INTERFACE_DEFINED__ */
+#endif     /* __IGraphConfigCallback_INTERFACE_DEFINED__ */
 
 
 #ifndef __IFilterChain_INTERFACE_DEFINED__
@@ -27210,7 +27210,7 @@ EXTERN_C const IID IID_IFilterChain;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IFilterChainVtbl
     {
@@ -27260,32 +27260,32 @@ EXTERN_C const IID IID_IFilterChain;
 #ifdef COBJMACROS
 
 
-#define IFilterChain_QueryInterface(This,riid,ppvObject)	\
+#define IFilterChain_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IFilterChain_AddRef(This)	\
+#define IFilterChain_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IFilterChain_Release(This)	\
+#define IFilterChain_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IFilterChain_StartChain(This,pStartFilter,pEndFilter)	\
+#define IFilterChain_StartChain(This,pStartFilter,pEndFilter)    \
     (This)->lpVtbl -> StartChain(This,pStartFilter,pEndFilter)
 
-#define IFilterChain_PauseChain(This,pStartFilter,pEndFilter)	\
+#define IFilterChain_PauseChain(This,pStartFilter,pEndFilter)    \
     (This)->lpVtbl -> PauseChain(This,pStartFilter,pEndFilter)
 
-#define IFilterChain_StopChain(This,pStartFilter,pEndFilter)	\
+#define IFilterChain_StopChain(This,pStartFilter,pEndFilter)    \
     (This)->lpVtbl -> StopChain(This,pStartFilter,pEndFilter)
 
-#define IFilterChain_RemoveChain(This,pStartFilter,pEndFilter)	\
+#define IFilterChain_RemoveChain(This,pStartFilter,pEndFilter)    \
     (This)->lpVtbl -> RemoveChain(This,pStartFilter,pEndFilter)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -27342,7 +27342,7 @@ void __RPC_STUB IFilterChain_RemoveChain_Stub(
 
 
 
-#endif 	/* __IFilterChain_INTERFACE_DEFINED__ */
+#endif     /* __IFilterChain_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0387 */
@@ -27361,7 +27361,7 @@ typedef /* [public][public][public][public][public][public] */ struct __MIDL___M
     {
     DWORD dw1;
     DWORD dw2;
-    } 	DDCOLORKEY;
+    }     DDCOLORKEY;
 
 typedef DDCOLORKEY *LPDDCOLORKEY;
 
@@ -27383,11 +27383,11 @@ typedef DDCOLORKEY *LPDDCOLORKEY;
 
 typedef /* [public] */
 enum __MIDL___MIDL_itf_strmif_0387_0002
-    {	VMRSample_SyncPoint	= 0x1,
-	VMRSample_Preroll	= 0x2,
-	VMRSample_Discontinuity	= 0x4,
-	VMRSample_TimeValid	= 0x8
-    } 	VMRPresentationFlags;
+    {    VMRSample_SyncPoint    = 0x1,
+    VMRSample_Preroll    = 0x2,
+    VMRSample_Discontinuity    = 0x4,
+    VMRSample_TimeValid    = 0x8
+    }     VMRPresentationFlags;
 
 typedef struct tagVMRPRESENTATIONINFO
     {
@@ -27400,7 +27400,7 @@ typedef struct tagVMRPRESENTATIONINFO
     RECT rcDst;
     DWORD dwTypeSpecificFlags;
     DWORD dwInterlaceFlags;
-    } 	VMRPRESENTATIONINFO;
+    }     VMRPRESENTATIONINFO;
 
 
 
@@ -27434,7 +27434,7 @@ EXTERN_C const IID IID_IVMRImagePresenter;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IVMRImagePresenterVtbl
     {
@@ -27477,29 +27477,29 @@ EXTERN_C const IID IID_IVMRImagePresenter;
 #ifdef COBJMACROS
 
 
-#define IVMRImagePresenter_QueryInterface(This,riid,ppvObject)	\
+#define IVMRImagePresenter_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IVMRImagePresenter_AddRef(This)	\
+#define IVMRImagePresenter_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IVMRImagePresenter_Release(This)	\
+#define IVMRImagePresenter_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IVMRImagePresenter_StartPresenting(This,dwUserID)	\
+#define IVMRImagePresenter_StartPresenting(This,dwUserID)    \
     (This)->lpVtbl -> StartPresenting(This,dwUserID)
 
-#define IVMRImagePresenter_StopPresenting(This,dwUserID)	\
+#define IVMRImagePresenter_StopPresenting(This,dwUserID)    \
     (This)->lpVtbl -> StopPresenting(This,dwUserID)
 
-#define IVMRImagePresenter_PresentImage(This,dwUserID,lpPresInfo)	\
+#define IVMRImagePresenter_PresentImage(This,dwUserID,lpPresInfo)    \
     (This)->lpVtbl -> PresentImage(This,dwUserID,lpPresInfo)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -27541,7 +27541,7 @@ void __RPC_STUB IVMRImagePresenter_PresentImage_Stub(
 
 
 
-#endif 	/* __IVMRImagePresenter_INTERFACE_DEFINED__ */
+#endif     /* __IVMRImagePresenter_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0388 */
@@ -27549,13 +27549,13 @@ void __RPC_STUB IVMRImagePresenter_PresentImage_Stub(
 
 typedef /* [public] */
 enum __MIDL___MIDL_itf_strmif_0388_0001
-    {	AMAP_PIXELFORMAT_VALID	= 0x1,
-	AMAP_3D_TARGET	= 0x2,
-	AMAP_ALLOW_SYSMEM	= 0x4,
-	AMAP_FORCE_SYSMEM	= 0x8,
-	AMAP_DIRECTED_FLIP	= 0x10,
-	AMAP_DXVA_TARGET	= 0x20
-    } 	VMRSurfaceAllocationFlags;
+    {    AMAP_PIXELFORMAT_VALID    = 0x1,
+    AMAP_3D_TARGET    = 0x2,
+    AMAP_ALLOW_SYSMEM    = 0x4,
+    AMAP_FORCE_SYSMEM    = 0x8,
+    AMAP_DIRECTED_FLIP    = 0x10,
+    AMAP_DXVA_TARGET    = 0x20
+    }     VMRSurfaceAllocationFlags;
 
 typedef struct tagVMRALLOCATIONINFO
     {
@@ -27567,7 +27567,7 @@ typedef struct tagVMRALLOCATIONINFO
     DWORD dwMaxBuffers;
     DWORD dwInterlaceFlags;
     SIZE szNativeSize;
-    } 	VMRALLOCATIONINFO;
+    }     VMRALLOCATIONINFO;
 
 
 
@@ -27608,7 +27608,7 @@ EXTERN_C const IID IID_IVMRSurfaceAllocator;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IVMRSurfaceAllocatorVtbl
     {
@@ -27659,32 +27659,32 @@ EXTERN_C const IID IID_IVMRSurfaceAllocator;
 #ifdef COBJMACROS
 
 
-#define IVMRSurfaceAllocator_QueryInterface(This,riid,ppvObject)	\
+#define IVMRSurfaceAllocator_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IVMRSurfaceAllocator_AddRef(This)	\
+#define IVMRSurfaceAllocator_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IVMRSurfaceAllocator_Release(This)	\
+#define IVMRSurfaceAllocator_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IVMRSurfaceAllocator_AllocateSurface(This,dwUserID,lpAllocInfo,lpdwActualBuffers,lplpSurface)	\
+#define IVMRSurfaceAllocator_AllocateSurface(This,dwUserID,lpAllocInfo,lpdwActualBuffers,lplpSurface)    \
     (This)->lpVtbl -> AllocateSurface(This,dwUserID,lpAllocInfo,lpdwActualBuffers,lplpSurface)
 
-#define IVMRSurfaceAllocator_FreeSurface(This,dwID)	\
+#define IVMRSurfaceAllocator_FreeSurface(This,dwID)    \
     (This)->lpVtbl -> FreeSurface(This,dwID)
 
-#define IVMRSurfaceAllocator_PrepareSurface(This,dwUserID,lpSurface,dwSurfaceFlags)	\
+#define IVMRSurfaceAllocator_PrepareSurface(This,dwUserID,lpSurface,dwSurfaceFlags)    \
     (This)->lpVtbl -> PrepareSurface(This,dwUserID,lpSurface,dwSurfaceFlags)
 
-#define IVMRSurfaceAllocator_AdviseNotify(This,lpIVMRSurfAllocNotify)	\
+#define IVMRSurfaceAllocator_AdviseNotify(This,lpIVMRSurfAllocNotify)    \
     (This)->lpVtbl -> AdviseNotify(This,lpIVMRSurfAllocNotify)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -27742,7 +27742,7 @@ void __RPC_STUB IVMRSurfaceAllocator_AdviseNotify_Stub(
 
 
 
-#endif 	/* __IVMRSurfaceAllocator_INTERFACE_DEFINED__ */
+#endif     /* __IVMRSurfaceAllocator_INTERFACE_DEFINED__ */
 
 
 #ifndef __IVMRSurfaceAllocatorNotify_INTERFACE_DEFINED__
@@ -27784,7 +27784,7 @@ EXTERN_C const IID IID_IVMRSurfaceAllocatorNotify;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IVMRSurfaceAllocatorNotifyVtbl
     {
@@ -27842,38 +27842,38 @@ EXTERN_C const IID IID_IVMRSurfaceAllocatorNotify;
 #ifdef COBJMACROS
 
 
-#define IVMRSurfaceAllocatorNotify_QueryInterface(This,riid,ppvObject)	\
+#define IVMRSurfaceAllocatorNotify_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IVMRSurfaceAllocatorNotify_AddRef(This)	\
+#define IVMRSurfaceAllocatorNotify_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IVMRSurfaceAllocatorNotify_Release(This)	\
+#define IVMRSurfaceAllocatorNotify_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IVMRSurfaceAllocatorNotify_AdviseSurfaceAllocator(This,dwUserID,lpIVRMSurfaceAllocator)	\
+#define IVMRSurfaceAllocatorNotify_AdviseSurfaceAllocator(This,dwUserID,lpIVRMSurfaceAllocator)    \
     (This)->lpVtbl -> AdviseSurfaceAllocator(This,dwUserID,lpIVRMSurfaceAllocator)
 
-#define IVMRSurfaceAllocatorNotify_SetDDrawDevice(This,lpDDrawDevice,hMonitor)	\
+#define IVMRSurfaceAllocatorNotify_SetDDrawDevice(This,lpDDrawDevice,hMonitor)    \
     (This)->lpVtbl -> SetDDrawDevice(This,lpDDrawDevice,hMonitor)
 
-#define IVMRSurfaceAllocatorNotify_ChangeDDrawDevice(This,lpDDrawDevice,hMonitor)	\
+#define IVMRSurfaceAllocatorNotify_ChangeDDrawDevice(This,lpDDrawDevice,hMonitor)    \
     (This)->lpVtbl -> ChangeDDrawDevice(This,lpDDrawDevice,hMonitor)
 
-#define IVMRSurfaceAllocatorNotify_RestoreDDrawSurfaces(This)	\
+#define IVMRSurfaceAllocatorNotify_RestoreDDrawSurfaces(This)    \
     (This)->lpVtbl -> RestoreDDrawSurfaces(This)
 
-#define IVMRSurfaceAllocatorNotify_NotifyEvent(This,EventCode,Param1,Param2)	\
+#define IVMRSurfaceAllocatorNotify_NotifyEvent(This,EventCode,Param1,Param2)    \
     (This)->lpVtbl -> NotifyEvent(This,EventCode,Param1,Param2)
 
-#define IVMRSurfaceAllocatorNotify_SetBorderColor(This,clrBorder)	\
+#define IVMRSurfaceAllocatorNotify_SetBorderColor(This,clrBorder)    \
     (This)->lpVtbl -> SetBorderColor(This,clrBorder)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -27954,7 +27954,7 @@ void __RPC_STUB IVMRSurfaceAllocatorNotify_SetBorderColor_Stub(
 
 
 
-#endif 	/* __IVMRSurfaceAllocatorNotify_INTERFACE_DEFINED__ */
+#endif     /* __IVMRSurfaceAllocatorNotify_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0390 */
@@ -27962,9 +27962,9 @@ void __RPC_STUB IVMRSurfaceAllocatorNotify_SetBorderColor_Stub(
 
 typedef /* [public] */
 enum __MIDL___MIDL_itf_strmif_0390_0001
-    {	VMR_ARMODE_NONE	= 0,
-	VMR_ARMODE_LETTER_BOX	= VMR_ARMODE_NONE + 1
-    } 	VMR_ASPECT_RATIO_MODE;
+    {    VMR_ARMODE_NONE    = 0,
+    VMR_ARMODE_LETTER_BOX    = VMR_ARMODE_NONE + 1
+    }     VMR_ASPECT_RATIO_MODE;
 
 
 
@@ -28040,7 +28040,7 @@ EXTERN_C const IID IID_IVMRWindowlessControl;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IVMRWindowlessControlVtbl
     {
@@ -28137,65 +28137,65 @@ EXTERN_C const IID IID_IVMRWindowlessControl;
 #ifdef COBJMACROS
 
 
-#define IVMRWindowlessControl_QueryInterface(This,riid,ppvObject)	\
+#define IVMRWindowlessControl_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IVMRWindowlessControl_AddRef(This)	\
+#define IVMRWindowlessControl_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IVMRWindowlessControl_Release(This)	\
+#define IVMRWindowlessControl_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IVMRWindowlessControl_GetNativeVideoSize(This,lpWidth,lpHeight,lpARWidth,lpARHeight)	\
+#define IVMRWindowlessControl_GetNativeVideoSize(This,lpWidth,lpHeight,lpARWidth,lpARHeight)    \
     (This)->lpVtbl -> GetNativeVideoSize(This,lpWidth,lpHeight,lpARWidth,lpARHeight)
 
-#define IVMRWindowlessControl_GetMinIdealVideoSize(This,lpWidth,lpHeight)	\
+#define IVMRWindowlessControl_GetMinIdealVideoSize(This,lpWidth,lpHeight)    \
     (This)->lpVtbl -> GetMinIdealVideoSize(This,lpWidth,lpHeight)
 
-#define IVMRWindowlessControl_GetMaxIdealVideoSize(This,lpWidth,lpHeight)	\
+#define IVMRWindowlessControl_GetMaxIdealVideoSize(This,lpWidth,lpHeight)    \
     (This)->lpVtbl -> GetMaxIdealVideoSize(This,lpWidth,lpHeight)
 
-#define IVMRWindowlessControl_SetVideoPosition(This,lpSRCRect,lpDSTRect)	\
+#define IVMRWindowlessControl_SetVideoPosition(This,lpSRCRect,lpDSTRect)    \
     (This)->lpVtbl -> SetVideoPosition(This,lpSRCRect,lpDSTRect)
 
-#define IVMRWindowlessControl_GetVideoPosition(This,lpSRCRect,lpDSTRect)	\
+#define IVMRWindowlessControl_GetVideoPosition(This,lpSRCRect,lpDSTRect)    \
     (This)->lpVtbl -> GetVideoPosition(This,lpSRCRect,lpDSTRect)
 
-#define IVMRWindowlessControl_GetAspectRatioMode(This,lpAspectRatioMode)	\
+#define IVMRWindowlessControl_GetAspectRatioMode(This,lpAspectRatioMode)    \
     (This)->lpVtbl -> GetAspectRatioMode(This,lpAspectRatioMode)
 
-#define IVMRWindowlessControl_SetAspectRatioMode(This,AspectRatioMode)	\
+#define IVMRWindowlessControl_SetAspectRatioMode(This,AspectRatioMode)    \
     (This)->lpVtbl -> SetAspectRatioMode(This,AspectRatioMode)
 
-#define IVMRWindowlessControl_SetVideoClippingWindow(This,hwnd)	\
+#define IVMRWindowlessControl_SetVideoClippingWindow(This,hwnd)    \
     (This)->lpVtbl -> SetVideoClippingWindow(This,hwnd)
 
-#define IVMRWindowlessControl_RepaintVideo(This,hwnd,hdc)	\
+#define IVMRWindowlessControl_RepaintVideo(This,hwnd,hdc)    \
     (This)->lpVtbl -> RepaintVideo(This,hwnd,hdc)
 
-#define IVMRWindowlessControl_DisplayModeChanged(This)	\
+#define IVMRWindowlessControl_DisplayModeChanged(This)    \
     (This)->lpVtbl -> DisplayModeChanged(This)
 
-#define IVMRWindowlessControl_GetCurrentImage(This,lpDib)	\
+#define IVMRWindowlessControl_GetCurrentImage(This,lpDib)    \
     (This)->lpVtbl -> GetCurrentImage(This,lpDib)
 
-#define IVMRWindowlessControl_SetBorderColor(This,Clr)	\
+#define IVMRWindowlessControl_SetBorderColor(This,Clr)    \
     (This)->lpVtbl -> SetBorderColor(This,Clr)
 
-#define IVMRWindowlessControl_GetBorderColor(This,lpClr)	\
+#define IVMRWindowlessControl_GetBorderColor(This,lpClr)    \
     (This)->lpVtbl -> GetBorderColor(This,lpClr)
 
-#define IVMRWindowlessControl_SetColorKey(This,Clr)	\
+#define IVMRWindowlessControl_SetColorKey(This,Clr)    \
     (This)->lpVtbl -> SetColorKey(This,Clr)
 
-#define IVMRWindowlessControl_GetColorKey(This,lpClr)	\
+#define IVMRWindowlessControl_GetColorKey(This,lpClr)    \
     (This)->lpVtbl -> GetColorKey(This,lpClr)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -28387,7 +28387,7 @@ void __RPC_STUB IVMRWindowlessControl_GetColorKey_Stub(
 
 
 
-#endif 	/* __IVMRWindowlessControl_INTERFACE_DEFINED__ */
+#endif     /* __IVMRWindowlessControl_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0391 */
@@ -28395,19 +28395,19 @@ void __RPC_STUB IVMRWindowlessControl_GetColorKey_Stub(
 
 typedef /* [public] */
 enum __MIDL___MIDL_itf_strmif_0391_0001
-    {	MixerPref_NoDecimation	= 0x1,
-	MixerPref_DecimateOutput	= 0x2,
-	MixerPref_DecimateMask	= 0xf,
-	MixerPref_BiLinearFiltering	= 0x10,
-	MixerPref_PointFiltering	= 0x20,
-	MixerPref_FilteringMask	= 0xf0,
-	MixerPref_RenderTargetRGB	= 0x100,
-	MixerPref_RenderTargetYUV420	= 0x200,
-	MixerPref_RenderTargetYUV422	= 0x400,
-	MixerPref_RenderTargetYUV444	= 0x800,
-	MixerPref_RenderTargetReserved	= 0xf000,
-	MixerPref_RenderTargetMask	= 0xff00
-    } 	VMRMixerPrefs;
+    {    MixerPref_NoDecimation    = 0x1,
+    MixerPref_DecimateOutput    = 0x2,
+    MixerPref_DecimateMask    = 0xf,
+    MixerPref_BiLinearFiltering    = 0x10,
+    MixerPref_PointFiltering    = 0x20,
+    MixerPref_FilteringMask    = 0xf0,
+    MixerPref_RenderTargetRGB    = 0x100,
+    MixerPref_RenderTargetYUV420    = 0x200,
+    MixerPref_RenderTargetYUV422    = 0x400,
+    MixerPref_RenderTargetYUV444    = 0x800,
+    MixerPref_RenderTargetReserved    = 0xf000,
+    MixerPref_RenderTargetMask    = 0xff00
+    }     VMRMixerPrefs;
 
 typedef struct _NORMALIZEDRECT
     {
@@ -28415,7 +28415,7 @@ typedef struct _NORMALIZEDRECT
     float top;
     float right;
     float bottom;
-    } 	NORMALIZEDRECT;
+    }     NORMALIZEDRECT;
 
 typedef struct _NORMALIZEDRECT *PNORMALIZEDRECT;
 
@@ -28477,7 +28477,7 @@ EXTERN_C const IID IID_IVMRMixerControl;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IVMRMixerControlVtbl
     {
@@ -28553,50 +28553,50 @@ EXTERN_C const IID IID_IVMRMixerControl;
 #ifdef COBJMACROS
 
 
-#define IVMRMixerControl_QueryInterface(This,riid,ppvObject)	\
+#define IVMRMixerControl_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IVMRMixerControl_AddRef(This)	\
+#define IVMRMixerControl_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IVMRMixerControl_Release(This)	\
+#define IVMRMixerControl_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IVMRMixerControl_SetAlpha(This,dwStreamID,Alpha)	\
+#define IVMRMixerControl_SetAlpha(This,dwStreamID,Alpha)    \
     (This)->lpVtbl -> SetAlpha(This,dwStreamID,Alpha)
 
-#define IVMRMixerControl_GetAlpha(This,dwStreamID,pAlpha)	\
+#define IVMRMixerControl_GetAlpha(This,dwStreamID,pAlpha)    \
     (This)->lpVtbl -> GetAlpha(This,dwStreamID,pAlpha)
 
-#define IVMRMixerControl_SetZOrder(This,dwStreamID,dwZ)	\
+#define IVMRMixerControl_SetZOrder(This,dwStreamID,dwZ)    \
     (This)->lpVtbl -> SetZOrder(This,dwStreamID,dwZ)
 
-#define IVMRMixerControl_GetZOrder(This,dwStreamID,pZ)	\
+#define IVMRMixerControl_GetZOrder(This,dwStreamID,pZ)    \
     (This)->lpVtbl -> GetZOrder(This,dwStreamID,pZ)
 
-#define IVMRMixerControl_SetOutputRect(This,dwStreamID,pRect)	\
+#define IVMRMixerControl_SetOutputRect(This,dwStreamID,pRect)    \
     (This)->lpVtbl -> SetOutputRect(This,dwStreamID,pRect)
 
-#define IVMRMixerControl_GetOutputRect(This,dwStreamID,pRect)	\
+#define IVMRMixerControl_GetOutputRect(This,dwStreamID,pRect)    \
     (This)->lpVtbl -> GetOutputRect(This,dwStreamID,pRect)
 
-#define IVMRMixerControl_SetBackgroundClr(This,ClrBkg)	\
+#define IVMRMixerControl_SetBackgroundClr(This,ClrBkg)    \
     (This)->lpVtbl -> SetBackgroundClr(This,ClrBkg)
 
-#define IVMRMixerControl_GetBackgroundClr(This,lpClrBkg)	\
+#define IVMRMixerControl_GetBackgroundClr(This,lpClrBkg)    \
     (This)->lpVtbl -> GetBackgroundClr(This,lpClrBkg)
 
-#define IVMRMixerControl_SetMixingPrefs(This,dwMixerPrefs)	\
+#define IVMRMixerControl_SetMixingPrefs(This,dwMixerPrefs)    \
     (This)->lpVtbl -> SetMixingPrefs(This,dwMixerPrefs)
 
-#define IVMRMixerControl_GetMixingPrefs(This,pdwMixerPrefs)	\
+#define IVMRMixerControl_GetMixingPrefs(This,pdwMixerPrefs)    \
     (This)->lpVtbl -> GetMixingPrefs(This,pdwMixerPrefs)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -28727,7 +28727,7 @@ void __RPC_STUB IVMRMixerControl_GetMixingPrefs_Stub(
 
 
 
-#endif 	/* __IVMRMixerControl_INTERFACE_DEFINED__ */
+#endif     /* __IVMRMixerControl_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0392 */
@@ -28737,7 +28737,7 @@ typedef struct tagVMRGUID
     {
     ::GUID *pGUID;
     ::GUID GUID;
-    } 	VMRGUID;
+    }     VMRGUID;
 
 typedef struct tagVMRMONITORINFO
     {
@@ -28752,7 +28752,7 @@ typedef struct tagVMRMONITORINFO
     DWORD dwDeviceId;
     DWORD dwSubSysId;
     DWORD dwRevision;
-    } 	VMRMONITORINFO;
+    }     VMRMONITORINFO;
 
 
 
@@ -28793,7 +28793,7 @@ EXTERN_C const IID IID_IVMRMonitorConfig;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IVMRMonitorConfigVtbl
     {
@@ -28845,35 +28845,35 @@ EXTERN_C const IID IID_IVMRMonitorConfig;
 #ifdef COBJMACROS
 
 
-#define IVMRMonitorConfig_QueryInterface(This,riid,ppvObject)	\
+#define IVMRMonitorConfig_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IVMRMonitorConfig_AddRef(This)	\
+#define IVMRMonitorConfig_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IVMRMonitorConfig_Release(This)	\
+#define IVMRMonitorConfig_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IVMRMonitorConfig_SetMonitor(This,pGUID)	\
+#define IVMRMonitorConfig_SetMonitor(This,pGUID)    \
     (This)->lpVtbl -> SetMonitor(This,pGUID)
 
-#define IVMRMonitorConfig_GetMonitor(This,pGUID)	\
+#define IVMRMonitorConfig_GetMonitor(This,pGUID)    \
     (This)->lpVtbl -> GetMonitor(This,pGUID)
 
-#define IVMRMonitorConfig_SetDefaultMonitor(This,pGUID)	\
+#define IVMRMonitorConfig_SetDefaultMonitor(This,pGUID)    \
     (This)->lpVtbl -> SetDefaultMonitor(This,pGUID)
 
-#define IVMRMonitorConfig_GetDefaultMonitor(This,pGUID)	\
+#define IVMRMonitorConfig_GetDefaultMonitor(This,pGUID)    \
     (This)->lpVtbl -> GetDefaultMonitor(This,pGUID)
 
-#define IVMRMonitorConfig_GetAvailableMonitors(This,pInfo,dwMaxInfoArraySize,pdwNumDevices)	\
+#define IVMRMonitorConfig_GetAvailableMonitors(This,pInfo,dwMaxInfoArraySize,pdwNumDevices)    \
     (This)->lpVtbl -> GetAvailableMonitors(This,pInfo,dwMaxInfoArraySize,pdwNumDevices)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -28940,7 +28940,7 @@ void __RPC_STUB IVMRMonitorConfig_GetAvailableMonitors_Stub(
 
 
 
-#endif 	/* __IVMRMonitorConfig_INTERFACE_DEFINED__ */
+#endif     /* __IVMRMonitorConfig_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0393 */
@@ -28948,28 +28948,28 @@ void __RPC_STUB IVMRMonitorConfig_GetAvailableMonitors_Stub(
 
 typedef /* [public] */
 enum __MIDL___MIDL_itf_strmif_0393_0001
-    {	RenderPrefs_RestrictToInitialMonitor	= 0,
-	RenderPrefs_ForceOffscreen	= 0x1,
-	RenderPrefs_ForceOverlays	= 0x2,
-	RenderPrefs_AllowOverlays	= 0,
-	RenderPrefs_AllowOffscreen	= 0,
-	RenderPrefs_DoNotRenderColorKeyAndBorder	= 0x8,
-	RenderPrefs_Reserved	= 0x10,
-	RenderPrefs_PreferAGPMemWhenMixing	= 0x20,
-	RenderPrefs_Mask	= 0x3f
-    } 	VMRRenderPrefs;
+    {    RenderPrefs_RestrictToInitialMonitor    = 0,
+    RenderPrefs_ForceOffscreen    = 0x1,
+    RenderPrefs_ForceOverlays    = 0x2,
+    RenderPrefs_AllowOverlays    = 0,
+    RenderPrefs_AllowOffscreen    = 0,
+    RenderPrefs_DoNotRenderColorKeyAndBorder    = 0x8,
+    RenderPrefs_Reserved    = 0x10,
+    RenderPrefs_PreferAGPMemWhenMixing    = 0x20,
+    RenderPrefs_Mask    = 0x3f
+    }     VMRRenderPrefs;
 
 typedef /* [public] */
 enum __MIDL___MIDL_itf_strmif_0393_0002
-    {	VMRMode_Windowed	= 0x1,
-	VMRMode_Windowless	= 0x2,
-	VMRMode_Renderless	= 0x4,
-	VMRMode_Mask	= 0x7
-    } 	VMRMode;
+    {    VMRMode_Windowed    = 0x1,
+    VMRMode_Windowless    = 0x2,
+    VMRMode_Renderless    = 0x4,
+    VMRMode_Mask    = 0x7
+    }     VMRMode;
 
 
 enum __MIDL___MIDL_itf_strmif_0393_0003
-    {	MAX_NUMBER_OF_STREAMS	= 16
+    {    MAX_NUMBER_OF_STREAMS    = 16
     } ;
 
 
@@ -29014,7 +29014,7 @@ EXTERN_C const IID IID_IVMRFilterConfig;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IVMRFilterConfigVtbl
     {
@@ -29072,41 +29072,41 @@ EXTERN_C const IID IID_IVMRFilterConfig;
 #ifdef COBJMACROS
 
 
-#define IVMRFilterConfig_QueryInterface(This,riid,ppvObject)	\
+#define IVMRFilterConfig_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IVMRFilterConfig_AddRef(This)	\
+#define IVMRFilterConfig_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IVMRFilterConfig_Release(This)	\
+#define IVMRFilterConfig_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IVMRFilterConfig_SetImageCompositor(This,lpVMRImgCompositor)	\
+#define IVMRFilterConfig_SetImageCompositor(This,lpVMRImgCompositor)    \
     (This)->lpVtbl -> SetImageCompositor(This,lpVMRImgCompositor)
 
-#define IVMRFilterConfig_SetNumberOfStreams(This,dwMaxStreams)	\
+#define IVMRFilterConfig_SetNumberOfStreams(This,dwMaxStreams)    \
     (This)->lpVtbl -> SetNumberOfStreams(This,dwMaxStreams)
 
-#define IVMRFilterConfig_GetNumberOfStreams(This,pdwMaxStreams)	\
+#define IVMRFilterConfig_GetNumberOfStreams(This,pdwMaxStreams)    \
     (This)->lpVtbl -> GetNumberOfStreams(This,pdwMaxStreams)
 
-#define IVMRFilterConfig_SetRenderingPrefs(This,dwRenderFlags)	\
+#define IVMRFilterConfig_SetRenderingPrefs(This,dwRenderFlags)    \
     (This)->lpVtbl -> SetRenderingPrefs(This,dwRenderFlags)
 
-#define IVMRFilterConfig_GetRenderingPrefs(This,pdwRenderFlags)	\
+#define IVMRFilterConfig_GetRenderingPrefs(This,pdwRenderFlags)    \
     (This)->lpVtbl -> GetRenderingPrefs(This,pdwRenderFlags)
 
-#define IVMRFilterConfig_SetRenderingMode(This,Mode)	\
+#define IVMRFilterConfig_SetRenderingMode(This,Mode)    \
     (This)->lpVtbl -> SetRenderingMode(This,Mode)
 
-#define IVMRFilterConfig_GetRenderingMode(This,pMode)	\
+#define IVMRFilterConfig_GetRenderingMode(This,pMode)    \
     (This)->lpVtbl -> GetRenderingMode(This,pMode)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -29195,7 +29195,7 @@ void __RPC_STUB IVMRFilterConfig_GetRenderingMode_Stub(
 
 
 
-#endif 	/* __IVMRFilterConfig_INTERFACE_DEFINED__ */
+#endif     /* __IVMRFilterConfig_INTERFACE_DEFINED__ */
 
 
 #ifndef __IVMRAspectRatioControl_INTERFACE_DEFINED__
@@ -29221,7 +29221,7 @@ EXTERN_C const IID IID_IVMRAspectRatioControl;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IVMRAspectRatioControlVtbl
     {
@@ -29259,26 +29259,26 @@ EXTERN_C const IID IID_IVMRAspectRatioControl;
 #ifdef COBJMACROS
 
 
-#define IVMRAspectRatioControl_QueryInterface(This,riid,ppvObject)	\
+#define IVMRAspectRatioControl_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IVMRAspectRatioControl_AddRef(This)	\
+#define IVMRAspectRatioControl_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IVMRAspectRatioControl_Release(This)	\
+#define IVMRAspectRatioControl_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IVMRAspectRatioControl_GetAspectRatioMode(This,lpdwARMode)	\
+#define IVMRAspectRatioControl_GetAspectRatioMode(This,lpdwARMode)    \
     (This)->lpVtbl -> GetAspectRatioMode(This,lpdwARMode)
 
-#define IVMRAspectRatioControl_SetAspectRatioMode(This,dwARMode)	\
+#define IVMRAspectRatioControl_SetAspectRatioMode(This,dwARMode)    \
     (This)->lpVtbl -> SetAspectRatioMode(This,dwARMode)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -29307,7 +29307,7 @@ void __RPC_STUB IVMRAspectRatioControl_SetAspectRatioMode_Stub(
 
 
 
-#endif 	/* __IVMRAspectRatioControl_INTERFACE_DEFINED__ */
+#endif     /* __IVMRAspectRatioControl_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0395 */
@@ -29315,29 +29315,29 @@ void __RPC_STUB IVMRAspectRatioControl_SetAspectRatioMode_Stub(
 
 typedef /* [public] */
 enum __MIDL___MIDL_itf_strmif_0395_0001
-    {	DeinterlacePref_NextBest	= 0x1,
-	DeinterlacePref_BOB	= 0x2,
-	DeinterlacePref_Weave	= 0x4,
-	DeinterlacePref_Mask	= 0x7
-    } 	VMRDeinterlacePrefs;
+    {    DeinterlacePref_NextBest    = 0x1,
+    DeinterlacePref_BOB    = 0x2,
+    DeinterlacePref_Weave    = 0x4,
+    DeinterlacePref_Mask    = 0x7
+    }     VMRDeinterlacePrefs;
 
 typedef /* [public][public][public] */
 enum __MIDL___MIDL_itf_strmif_0395_0002
-    {	DeinterlaceTech_Unknown	= 0,
-	DeinterlaceTech_BOBLineReplicate	= 0x1,
-	DeinterlaceTech_BOBVerticalStretch	= 0x2,
-	DeinterlaceTech_MedianFiltering	= 0x4,
-	DeinterlaceTech_EdgeFiltering	= 0x10,
-	DeinterlaceTech_FieldAdaptive	= 0x20,
-	DeinterlaceTech_PixelAdaptive	= 0x40,
-	DeinterlaceTech_MotionVectorSteered	= 0x80
-    } 	VMRDeinterlaceTech;
+    {    DeinterlaceTech_Unknown    = 0,
+    DeinterlaceTech_BOBLineReplicate    = 0x1,
+    DeinterlaceTech_BOBVerticalStretch    = 0x2,
+    DeinterlaceTech_MedianFiltering    = 0x4,
+    DeinterlaceTech_EdgeFiltering    = 0x10,
+    DeinterlaceTech_FieldAdaptive    = 0x20,
+    DeinterlaceTech_PixelAdaptive    = 0x40,
+    DeinterlaceTech_MotionVectorSteered    = 0x80
+    }     VMRDeinterlaceTech;
 
 typedef struct _VMRFrequency
     {
     DWORD dwNumerator;
     DWORD dwDenominator;
-    } 	VMRFrequency;
+    }     VMRFrequency;
 
 typedef struct _VMRVideoDesc
     {
@@ -29348,7 +29348,7 @@ typedef struct _VMRVideoDesc
     DWORD dwFourCC;
     VMRFrequency InputSampleFreq;
     VMRFrequency OutputFrameFreq;
-    } 	VMRVideoDesc;
+    }     VMRVideoDesc;
 
 typedef struct _VMRDeinterlaceCaps
     {
@@ -29357,7 +29357,7 @@ typedef struct _VMRDeinterlaceCaps
     DWORD dwNumForwardRefSamples;
     DWORD dwNumBackwardRefSamples;
     VMRDeinterlaceTech DeinterlaceTechnology;
-    } 	VMRDeinterlaceCaps;
+    }     VMRDeinterlaceCaps;
 
 
 
@@ -29409,7 +29409,7 @@ EXTERN_C const IID IID_IVMRDeinterlaceControl;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IVMRDeinterlaceControlVtbl
     {
@@ -29474,41 +29474,41 @@ EXTERN_C const IID IID_IVMRDeinterlaceControl;
 #ifdef COBJMACROS
 
 
-#define IVMRDeinterlaceControl_QueryInterface(This,riid,ppvObject)	\
+#define IVMRDeinterlaceControl_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IVMRDeinterlaceControl_AddRef(This)	\
+#define IVMRDeinterlaceControl_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IVMRDeinterlaceControl_Release(This)	\
+#define IVMRDeinterlaceControl_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IVMRDeinterlaceControl_GetNumberOfDeinterlaceModes(This,lpVideoDescription,lpdwNumDeinterlaceModes,lpDeinterlaceModes)	\
+#define IVMRDeinterlaceControl_GetNumberOfDeinterlaceModes(This,lpVideoDescription,lpdwNumDeinterlaceModes,lpDeinterlaceModes)    \
     (This)->lpVtbl -> GetNumberOfDeinterlaceModes(This,lpVideoDescription,lpdwNumDeinterlaceModes,lpDeinterlaceModes)
 
-#define IVMRDeinterlaceControl_GetDeinterlaceModeCaps(This,lpDeinterlaceMode,lpVideoDescription,lpDeinterlaceCaps)	\
+#define IVMRDeinterlaceControl_GetDeinterlaceModeCaps(This,lpDeinterlaceMode,lpVideoDescription,lpDeinterlaceCaps)    \
     (This)->lpVtbl -> GetDeinterlaceModeCaps(This,lpDeinterlaceMode,lpVideoDescription,lpDeinterlaceCaps)
 
-#define IVMRDeinterlaceControl_GetDeinterlaceMode(This,dwStreamID,lpDeinterlaceMode)	\
+#define IVMRDeinterlaceControl_GetDeinterlaceMode(This,dwStreamID,lpDeinterlaceMode)    \
     (This)->lpVtbl -> GetDeinterlaceMode(This,dwStreamID,lpDeinterlaceMode)
 
-#define IVMRDeinterlaceControl_SetDeinterlaceMode(This,dwStreamID,lpDeinterlaceMode)	\
+#define IVMRDeinterlaceControl_SetDeinterlaceMode(This,dwStreamID,lpDeinterlaceMode)    \
     (This)->lpVtbl -> SetDeinterlaceMode(This,dwStreamID,lpDeinterlaceMode)
 
-#define IVMRDeinterlaceControl_GetDeinterlacePrefs(This,lpdwDeinterlacePrefs)	\
+#define IVMRDeinterlaceControl_GetDeinterlacePrefs(This,lpdwDeinterlacePrefs)    \
     (This)->lpVtbl -> GetDeinterlacePrefs(This,lpdwDeinterlacePrefs)
 
-#define IVMRDeinterlaceControl_SetDeinterlacePrefs(This,dwDeinterlacePrefs)	\
+#define IVMRDeinterlaceControl_SetDeinterlacePrefs(This,dwDeinterlacePrefs)    \
     (This)->lpVtbl -> SetDeinterlacePrefs(This,dwDeinterlacePrefs)
 
-#define IVMRDeinterlaceControl_GetActualDeinterlaceMode(This,dwStreamID,lpDeinterlaceMode)	\
+#define IVMRDeinterlaceControl_GetActualDeinterlaceMode(This,dwStreamID,lpDeinterlaceMode)    \
     (This)->lpVtbl -> GetActualDeinterlaceMode(This,dwStreamID,lpDeinterlaceMode)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -29604,7 +29604,7 @@ void __RPC_STUB IVMRDeinterlaceControl_GetActualDeinterlaceMode_Stub(
 
 
 
-#endif 	/* __IVMRDeinterlaceControl_INTERFACE_DEFINED__ */
+#endif     /* __IVMRDeinterlaceControl_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0396 */
@@ -29619,7 +29619,7 @@ typedef struct _VMRALPHABITMAP
     NORMALIZEDRECT rDest;
     FLOAT fAlpha;
     COLORREF clrSrcKey;
-    } 	VMRALPHABITMAP;
+    }     VMRALPHABITMAP;
 
 typedef struct _VMRALPHABITMAP *PVMRALPHABITMAP;
 
@@ -29659,7 +29659,7 @@ EXTERN_C const IID IID_IVMRMixerBitmap;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IVMRMixerBitmapVtbl
     {
@@ -29701,29 +29701,29 @@ EXTERN_C const IID IID_IVMRMixerBitmap;
 #ifdef COBJMACROS
 
 
-#define IVMRMixerBitmap_QueryInterface(This,riid,ppvObject)	\
+#define IVMRMixerBitmap_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IVMRMixerBitmap_AddRef(This)	\
+#define IVMRMixerBitmap_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IVMRMixerBitmap_Release(This)	\
+#define IVMRMixerBitmap_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IVMRMixerBitmap_SetAlphaBitmap(This,pBmpParms)	\
+#define IVMRMixerBitmap_SetAlphaBitmap(This,pBmpParms)    \
     (This)->lpVtbl -> SetAlphaBitmap(This,pBmpParms)
 
-#define IVMRMixerBitmap_UpdateAlphaBitmapParameters(This,pBmpParms)	\
+#define IVMRMixerBitmap_UpdateAlphaBitmapParameters(This,pBmpParms)    \
     (This)->lpVtbl -> UpdateAlphaBitmapParameters(This,pBmpParms)
 
-#define IVMRMixerBitmap_GetAlphaBitmapParameters(This,pBmpParms)	\
+#define IVMRMixerBitmap_GetAlphaBitmapParameters(This,pBmpParms)    \
     (This)->lpVtbl -> GetAlphaBitmapParameters(This,pBmpParms)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -29764,7 +29764,7 @@ void __RPC_STUB IVMRMixerBitmap_GetAlphaBitmapParameters_Stub(
 
 
 
-#endif 	/* __IVMRMixerBitmap_INTERFACE_DEFINED__ */
+#endif     /* __IVMRMixerBitmap_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0397 */
@@ -29779,7 +29779,7 @@ typedef struct _VMRVIDEOSTREAMINFO
     FLOAT fAlpha;
     DDCOLORKEY ddClrKey;
     NORMALIZEDRECT rNormal;
-    } 	VMRVIDEOSTREAMINFO;
+    }     VMRVIDEOSTREAMINFO;
 
 
 
@@ -29826,7 +29826,7 @@ EXTERN_C const IID IID_IVMRImageCompositor;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IVMRImageCompositorVtbl
     {
@@ -29883,32 +29883,32 @@ EXTERN_C const IID IID_IVMRImageCompositor;
 #ifdef COBJMACROS
 
 
-#define IVMRImageCompositor_QueryInterface(This,riid,ppvObject)	\
+#define IVMRImageCompositor_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IVMRImageCompositor_AddRef(This)	\
+#define IVMRImageCompositor_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IVMRImageCompositor_Release(This)	\
+#define IVMRImageCompositor_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IVMRImageCompositor_InitCompositionTarget(This,pD3DDevice,pddsRenderTarget)	\
+#define IVMRImageCompositor_InitCompositionTarget(This,pD3DDevice,pddsRenderTarget)    \
     (This)->lpVtbl -> InitCompositionTarget(This,pD3DDevice,pddsRenderTarget)
 
-#define IVMRImageCompositor_TermCompositionTarget(This,pD3DDevice,pddsRenderTarget)	\
+#define IVMRImageCompositor_TermCompositionTarget(This,pD3DDevice,pddsRenderTarget)    \
     (This)->lpVtbl -> TermCompositionTarget(This,pD3DDevice,pddsRenderTarget)
 
-#define IVMRImageCompositor_SetStreamMediaType(This,dwStrmID,pmt,fTexture)	\
+#define IVMRImageCompositor_SetStreamMediaType(This,dwStrmID,pmt,fTexture)    \
     (This)->lpVtbl -> SetStreamMediaType(This,dwStrmID,pmt,fTexture)
 
-#define IVMRImageCompositor_CompositeImage(This,pD3DDevice,pddsRenderTarget,pmtRenderTarget,rtStart,rtEnd,dwClrBkGnd,pVideoStreamInfo,cStreams)	\
+#define IVMRImageCompositor_CompositeImage(This,pD3DDevice,pddsRenderTarget,pmtRenderTarget,rtStart,rtEnd,dwClrBkGnd,pVideoStreamInfo,cStreams)    \
     (This)->lpVtbl -> CompositeImage(This,pD3DDevice,pddsRenderTarget,pmtRenderTarget,rtStart,rtEnd,dwClrBkGnd,pVideoStreamInfo,cStreams)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -29972,7 +29972,7 @@ void __RPC_STUB IVMRImageCompositor_CompositeImage_Stub(
 
 
 
-#endif 	/* __IVMRImageCompositor_INTERFACE_DEFINED__ */
+#endif     /* __IVMRImageCompositor_INTERFACE_DEFINED__ */
 
 
 #ifndef __IVMRVideoStreamControl_INTERFACE_DEFINED__
@@ -30004,7 +30004,7 @@ EXTERN_C const IID IID_IVMRVideoStreamControl;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IVMRVideoStreamControlVtbl
     {
@@ -30050,32 +30050,32 @@ EXTERN_C const IID IID_IVMRVideoStreamControl;
 #ifdef COBJMACROS
 
 
-#define IVMRVideoStreamControl_QueryInterface(This,riid,ppvObject)	\
+#define IVMRVideoStreamControl_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IVMRVideoStreamControl_AddRef(This)	\
+#define IVMRVideoStreamControl_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IVMRVideoStreamControl_Release(This)	\
+#define IVMRVideoStreamControl_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IVMRVideoStreamControl_SetColorKey(This,lpClrKey)	\
+#define IVMRVideoStreamControl_SetColorKey(This,lpClrKey)    \
     (This)->lpVtbl -> SetColorKey(This,lpClrKey)
 
-#define IVMRVideoStreamControl_GetColorKey(This,lpClrKey)	\
+#define IVMRVideoStreamControl_GetColorKey(This,lpClrKey)    \
     (This)->lpVtbl -> GetColorKey(This,lpClrKey)
 
-#define IVMRVideoStreamControl_SetStreamActiveState(This,fActive)	\
+#define IVMRVideoStreamControl_SetStreamActiveState(This,fActive)    \
     (This)->lpVtbl -> SetStreamActiveState(This,fActive)
 
-#define IVMRVideoStreamControl_GetStreamActiveState(This,lpfActive)	\
+#define IVMRVideoStreamControl_GetStreamActiveState(This,lpfActive)    \
     (This)->lpVtbl -> GetStreamActiveState(This,lpfActive)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -30128,7 +30128,7 @@ void __RPC_STUB IVMRVideoStreamControl_GetStreamActiveState_Stub(
 
 
 
-#endif 	/* __IVMRVideoStreamControl_INTERFACE_DEFINED__ */
+#endif     /* __IVMRVideoStreamControl_INTERFACE_DEFINED__ */
 
 
 #ifndef __IVMRSurface_INTERFACE_DEFINED__
@@ -30158,7 +30158,7 @@ EXTERN_C const IID IID_IVMRSurface;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IVMRSurfaceVtbl
     {
@@ -30202,32 +30202,32 @@ EXTERN_C const IID IID_IVMRSurface;
 #ifdef COBJMACROS
 
 
-#define IVMRSurface_QueryInterface(This,riid,ppvObject)	\
+#define IVMRSurface_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IVMRSurface_AddRef(This)	\
+#define IVMRSurface_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IVMRSurface_Release(This)	\
+#define IVMRSurface_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IVMRSurface_IsSurfaceLocked(This)	\
+#define IVMRSurface_IsSurfaceLocked(This)    \
     (This)->lpVtbl -> IsSurfaceLocked(This)
 
-#define IVMRSurface_LockSurface(This,lpSurface)	\
+#define IVMRSurface_LockSurface(This,lpSurface)    \
     (This)->lpVtbl -> LockSurface(This,lpSurface)
 
-#define IVMRSurface_UnlockSurface(This)	\
+#define IVMRSurface_UnlockSurface(This)    \
     (This)->lpVtbl -> UnlockSurface(This)
 
-#define IVMRSurface_GetSurface(This,lplpSurface)	\
+#define IVMRSurface_GetSurface(This,lplpSurface)    \
     (This)->lpVtbl -> GetSurface(This,lplpSurface)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -30278,7 +30278,7 @@ void __RPC_STUB IVMRSurface_GetSurface_Stub(
 
 
 
-#endif 	/* __IVMRSurface_INTERFACE_DEFINED__ */
+#endif     /* __IVMRSurface_INTERFACE_DEFINED__ */
 
 
 #ifndef __IVMRImagePresenterConfig_INTERFACE_DEFINED__
@@ -30304,7 +30304,7 @@ EXTERN_C const IID IID_IVMRImagePresenterConfig;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IVMRImagePresenterConfigVtbl
     {
@@ -30342,26 +30342,26 @@ EXTERN_C const IID IID_IVMRImagePresenterConfig;
 #ifdef COBJMACROS
 
 
-#define IVMRImagePresenterConfig_QueryInterface(This,riid,ppvObject)	\
+#define IVMRImagePresenterConfig_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IVMRImagePresenterConfig_AddRef(This)	\
+#define IVMRImagePresenterConfig_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IVMRImagePresenterConfig_Release(This)	\
+#define IVMRImagePresenterConfig_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IVMRImagePresenterConfig_SetRenderingPrefs(This,dwRenderFlags)	\
+#define IVMRImagePresenterConfig_SetRenderingPrefs(This,dwRenderFlags)    \
     (This)->lpVtbl -> SetRenderingPrefs(This,dwRenderFlags)
 
-#define IVMRImagePresenterConfig_GetRenderingPrefs(This,dwRenderFlags)	\
+#define IVMRImagePresenterConfig_GetRenderingPrefs(This,dwRenderFlags)    \
     (This)->lpVtbl -> GetRenderingPrefs(This,dwRenderFlags)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -30390,7 +30390,7 @@ void __RPC_STUB IVMRImagePresenterConfig_GetRenderingPrefs_Stub(
 
 
 
-#endif 	/* __IVMRImagePresenterConfig_INTERFACE_DEFINED__ */
+#endif     /* __IVMRImagePresenterConfig_INTERFACE_DEFINED__ */
 
 
 #ifndef __IVMRImagePresenterExclModeConfig_INTERFACE_DEFINED__
@@ -30418,7 +30418,7 @@ EXTERN_C const IID IID_IVMRImagePresenterExclModeConfig;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IVMRImagePresenterExclModeConfigVtbl
     {
@@ -30466,33 +30466,33 @@ EXTERN_C const IID IID_IVMRImagePresenterExclModeConfig;
 #ifdef COBJMACROS
 
 
-#define IVMRImagePresenterExclModeConfig_QueryInterface(This,riid,ppvObject)	\
+#define IVMRImagePresenterExclModeConfig_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IVMRImagePresenterExclModeConfig_AddRef(This)	\
+#define IVMRImagePresenterExclModeConfig_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IVMRImagePresenterExclModeConfig_Release(This)	\
+#define IVMRImagePresenterExclModeConfig_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IVMRImagePresenterExclModeConfig_SetRenderingPrefs(This,dwRenderFlags)	\
+#define IVMRImagePresenterExclModeConfig_SetRenderingPrefs(This,dwRenderFlags)    \
     (This)->lpVtbl -> SetRenderingPrefs(This,dwRenderFlags)
 
-#define IVMRImagePresenterExclModeConfig_GetRenderingPrefs(This,dwRenderFlags)	\
+#define IVMRImagePresenterExclModeConfig_GetRenderingPrefs(This,dwRenderFlags)    \
     (This)->lpVtbl -> GetRenderingPrefs(This,dwRenderFlags)
 
 
-#define IVMRImagePresenterExclModeConfig_SetXlcModeDDObjAndPrimarySurface(This,lpDDObj,lpPrimarySurf)	\
+#define IVMRImagePresenterExclModeConfig_SetXlcModeDDObjAndPrimarySurface(This,lpDDObj,lpPrimarySurf)    \
     (This)->lpVtbl -> SetXlcModeDDObjAndPrimarySurface(This,lpDDObj,lpPrimarySurf)
 
-#define IVMRImagePresenterExclModeConfig_GetXlcModeDDObjAndPrimarySurface(This,lpDDObj,lpPrimarySurf)	\
+#define IVMRImagePresenterExclModeConfig_GetXlcModeDDObjAndPrimarySurface(This,lpDDObj,lpPrimarySurf)    \
     (This)->lpVtbl -> GetXlcModeDDObjAndPrimarySurface(This,lpDDObj,lpPrimarySurf)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -30523,7 +30523,7 @@ void __RPC_STUB IVMRImagePresenterExclModeConfig_GetXlcModeDDObjAndPrimarySurfac
 
 
 
-#endif 	/* __IVMRImagePresenterExclModeConfig_INTERFACE_DEFINED__ */
+#endif     /* __IVMRImagePresenterExclModeConfig_INTERFACE_DEFINED__ */
 
 
 #ifndef __IVPManager_INTERFACE_DEFINED__
@@ -30549,7 +30549,7 @@ EXTERN_C const IID IID_IVPManager;
 
     };
 
-#else 	/* C style interface */
+#else     /* C style interface */
 
     typedef struct IVPManagerVtbl
     {
@@ -30587,26 +30587,26 @@ EXTERN_C const IID IID_IVPManager;
 #ifdef COBJMACROS
 
 
-#define IVPManager_QueryInterface(This,riid,ppvObject)	\
+#define IVPManager_QueryInterface(This,riid,ppvObject)    \
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IVPManager_AddRef(This)	\
+#define IVPManager_AddRef(This)    \
     (This)->lpVtbl -> AddRef(This)
 
-#define IVPManager_Release(This)	\
+#define IVPManager_Release(This)    \
     (This)->lpVtbl -> Release(This)
 
 
-#define IVPManager_SetVideoPortIndex(This,dwVideoPortIndex)	\
+#define IVPManager_SetVideoPortIndex(This,dwVideoPortIndex)    \
     (This)->lpVtbl -> SetVideoPortIndex(This,dwVideoPortIndex)
 
-#define IVPManager_GetVideoPortIndex(This,pdwVideoPortIndex)	\
+#define IVPManager_GetVideoPortIndex(This,pdwVideoPortIndex)    \
     (This)->lpVtbl -> GetVideoPortIndex(This,pdwVideoPortIndex)
 
 #endif /* COBJMACROS */
 
 
-#endif 	/* C style interface */
+#endif     /* C style interface */
 
 
 
@@ -30635,7 +30635,7 @@ void __RPC_STUB IVPManager_GetVideoPortIndex_Stub(
 
 
 
-#endif 	/* __IVPManager_INTERFACE_DEFINED__ */
+#endif     /* __IVPManager_INTERFACE_DEFINED__ */
 
 
 /* interface __MIDL_itf_strmif_0403 */

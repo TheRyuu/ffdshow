@@ -352,7 +352,7 @@ void TccDecoder::cc_decode_PAC(int channel,  uint8_t c1, uint8_t c2)
 
 #ifdef LOG_DEBUG
   printf("cc_decoder: cc_decode_PAC: row %d, col %d, ul %d, it %d, clr %d\n",
-	 row, column, underline, italics, color);
+     row, column, underline, italics, color);
 #endif
 
   buf->ccbuf_set_cursor(row, column, underline, italics, color);
@@ -380,8 +380,8 @@ void TccDecoder::cc_decode_special_char(int channel,  uint8_t c1, uint8_t c2)
 {
 // data table copied from CCDecoder.cpp of guliberkli project
 /* 
- *	Copyright (C) 2003-2006 Gabest
- *	http://www.gabest.org
+ *    Copyright (C) 2003-2006 Gabest
+ *    http://www.gabest.org
  *
  */
   static const wchar_t specialchar[] = 
@@ -412,8 +412,8 @@ void TccDecoder::cc_decode_special_char(int channel,  uint8_t c1, uint8_t c2)
 void TccDecoder::cc_decode_extended_special_char(int channel,  uint8_t c1, uint8_t c2)
 {
 /* 
- *	Copyright (C) 2003-2006 Gabest
- *	http://www.gabest.org
+ *    Copyright (C) 2003-2006 Gabest
+ *    http://www.gabest.org
  *
  */
   static const wchar_t specialchar[] = 
@@ -462,8 +462,8 @@ void TccDecoder::cc_decode_extended_special_char(int channel,  uint8_t c1, uint8
 void TccDecoder::cc_decode_more_extended_special_char(int channel,  uint8_t c1, uint8_t c2)
 {
 /* 
- *	Copyright (C) 2003-2006 Gabest
- *	http://www.gabest.org
+ *    Copyright (C) 2003-2006 Gabest
+ *    http://www.gabest.org
  *
  */
   static const wchar_t specialchar[] = 
@@ -529,7 +529,7 @@ void TccDecoder::cc_decode_midrow_attr(int channel,  uint8_t c1, uint8_t c2)
 #ifdef LOG_DEBUG
   printf("cc_decoder: cc_decode_midrow_attr: attribute %x\n", c2);
   printf("cc_decoder: cc_decode_midrow_attr: ul %d, it %d, clr %d\n",
-	 attr.underline, attr.italic, attr.foreground);
+     attr.underline, attr.italic, attr.foreground);
 #endif
 
   buf->ccbuf_apply_attribute(&attr);
@@ -634,40 +634,40 @@ void TccDecoder::cc_decode_EIA608(uint16_t data)
         switch (c1) {
 
         case 0x10:             /* extended background attribute code */
-	  cc_decode_ext_attribute(channel, c1, c2);
-	  break;
+      cc_decode_ext_attribute(channel, c1, c2);
+      break;
 
         case 0x11:             /* attribute or special character */
-	  if ((c2 & 0x30) == 0x30) { /* special char: 0x30 <= c2 <= 0x3f  */
-	    cc_decode_special_char(channel, c1, c2);
-	  }
-	  else if (c2 & 0x20) {     /* midrow attribute: 0x20 <= c2 <= 0x2f */
-	    cc_decode_midrow_attr(channel, c1, c2);
-	  }
-	  break;
+      if ((c2 & 0x30) == 0x30) { /* special char: 0x30 <= c2 <= 0x3f  */
+        cc_decode_special_char(channel, c1, c2);
+      }
+      else if (c2 & 0x20) {     /* midrow attribute: 0x20 <= c2 <= 0x2f */
+        cc_decode_midrow_attr(channel, c1, c2);
+      }
+      break;
 
         case 0x12:             /* extended special character */
-	  if (c2 >= 0x20 && c2 < 0x40) {  /* special char: 0x20 <= c2 <= 0x3f  */
-	    cc_decode_extended_special_char(channel, c1, c2);
-	  }
-	  break;
+      if (c2 >= 0x20 && c2 < 0x40) {  /* special char: 0x20 <= c2 <= 0x3f  */
+        cc_decode_extended_special_char(channel, c1, c2);
+      }
+      break;
 
         case 0x13:             /* more extended special character */
-	  if (c2 >= 0x20 && c2 < 0x40) {  /* special char: 0x20 <= c2 <= 0x3f  */
-	    cc_decode_more_extended_special_char(channel, c1, c2);
-	  }
-	  break;
+      if (c2 >= 0x20 && c2 < 0x40) {  /* special char: 0x20 <= c2 <= 0x3f  */
+        cc_decode_more_extended_special_char(channel, c1, c2);
+      }
+      break;
 
         case 0x14:             /* possibly miscellaneous control code */
-	  cc_decode_misc_control_code(channel, c1, c2);
-	  break;
+      cc_decode_misc_control_code(channel, c1, c2);
+      break;
 
         case 0x17:            /* possibly misc. control code TAB offset */
-	                      /* 0x21 <= c2 <= 0x23 */
-	  if (c2 >= 0x21 && c2 <= 0x23) {
-	    cc_decode_tab(channel, c1, c2);
-	  }
-	  break;
+                          /* 0x21 <= c2 <= 0x23 */
+      if (c2 >= 0x21 && c2 <= 0x23) {
+        cc_decode_tab(channel, c1, c2);
+      }
+      break;
         }
       }
     }
@@ -739,8 +739,8 @@ void TccDecoder::decode(const uint8_t *buffer,size_t buf_len)
     case 0xff:
       /* expect EIA-608 CC1/CC2 encoding */
       if (good_parity(data1 | (data2 << 8))) {
-	cc_decode_EIA608(data1 | (data2 << 8));
-	f_offset++;
+    cc_decode_EIA608(data1 | (data2 << 8));
+    f_offset++;
       }
       else
        return;
@@ -755,9 +755,9 @@ void TccDecoder::decode(const uint8_t *buffer,size_t buf_len)
     case 0x01:
       odd_offset = data2 & 0x80;
       if (odd_offset)
-	skip = 2;
+    skip = 2;
       else
-	skip = 5;
+    skip = 5;
       break;
 
     default:

@@ -162,10 +162,10 @@ const char_t* Tinifile::PROFILE_GetLine(const char_t * szStart, const char_t * s
 
 int Tinifile::PROFILE_isspace(char_t c)
 {
-	if (tchar_traits<char_t>::isspace((tchar_traits<char_t>::uchar_t)c)) return 1;
-	if (c=='\r' || c==0x1a) return 1;
-	/* CR and ^Z (DOS EOF) are spaces too  (found on CD-ROMs) */
-	return 0;
+    if (tchar_traits<char_t>::isspace((tchar_traits<char_t>::uchar_t)c)) return 1;
+    if (c=='\r' || c==0x1a) return 1;
+    /* CR and ^Z (DOS EOF) are spaces too  (found on CD-ROMs) */
+    return 0;
 }
 
 const char_t* Tinifile::memrchr (const char_t *block, char_t c, size_t size)
@@ -370,13 +370,13 @@ INT Tinifile::PROFILE_GetSection( PROFILESECTION *section, LPCTSTR section_name,
                 PROFILE_CopyEntry( buffer, key->name, len - 1, 0 );
                 len -= strlen(buffer) + 1;
                 buffer += strlen(buffer) + 1;
-		if (len < 2)
-		    break;
-		if (return_values && key->value) {
-			buffer[-1] = '=';
-			PROFILE_CopyEntry ( buffer, key->value, len - 1, 0 );
-			len -= strlen(buffer) + 1;
-			buffer += strlen(buffer) + 1;
+        if (len < 2)
+            break;
+        if (return_values && key->value) {
+            buffer[-1] = '=';
+            PROFILE_CopyEntry ( buffer, key->value, len - 1, 0 );
+            len -= strlen(buffer) + 1;
+            buffer += strlen(buffer) + 1;
                 }
             }
             *buffer = '\0';
@@ -387,7 +387,7 @@ INT Tinifile::PROFILE_GetSection( PROFILESECTION *section, LPCTSTR section_name,
                   In this case, the return value is equal to cchReturnBuffer
                   minus two. */
             {
-		buffer[-1] = '\0';
+        buffer[-1] = '\0';
                 return INT(oldlen) - 2;
             }
             return INT(oldlen - len);
@@ -677,7 +677,7 @@ INT Tinifile::PROFILE_GetString( LPCTSTR section, LPCTSTR key_name, LPCTSTR def_
     if (!def_val) def_val = empty_str;
     if (key_name)
     {
-	if (!key_name[0])
+    if (!key_name[0])
         {
             /* Win95 returns 0 on keyname "". Tested with Likse32 bon 000227 */
             return 0;
@@ -704,42 +704,42 @@ INT Tinifile::PROFILE_GetString( LPCTSTR section, LPCTSTR key_name, LPCTSTR def_
 
 int Tinifile::PROFILE_GetPrivateProfileString( LPCTSTR section, LPCTSTR entry,LPCTSTR def_val, LPTSTR buffer, size_t len, BOOL allow_section_name_copy )
 {
-    int		ret;
-    LPCTSTR	pDefVal = NULL;
+    int        ret;
+    LPCTSTR    pDefVal = NULL;
 
     if (!filename)
-	    return 0;
+        return 0;
 
     /* strip any trailing ' ' of def_val. */
     if (def_val)
     {
         LPCTSTR p = &def_val[strlen(def_val)]; /* even "" works ! */
 
-	while (p > def_val)
-	{
-	    p--;
-	    if ((*p) != ' ')
-		break;
-	}
-	if (*p == ' ') /* ouch, contained trailing ' ' */
-	{
-	    int l = (int)(p - def_val);
+    while (p > def_val)
+    {
+        p--;
+        if ((*p) != ' ')
+        break;
+    }
+    if (*p == ' ') /* ouch, contained trailing ' ' */
+    {
+        int l = (int)(p - def_val);
             LPTSTR pp;
 
-	    pp = (LPTSTR)malloc((l + 1) * sizeof(char_t));
-	    _tcsncpy(pp, def_val, l);
-	    pp[l] = '\0';
+        pp = (LPTSTR)malloc((l + 1) * sizeof(char_t));
+        _tcsncpy(pp, def_val, l);
+        pp[l] = '\0';
             pDefVal = pp;
-	}
+    }
     }
     if (!pDefVal)
-	pDefVal = /*(LPCTSTR)*/def_val;
+    pDefVal = /*(LPCTSTR)*/def_val;
 
     if (PROFILE_Open()) {
-	if ((allow_section_name_copy) && (section == NULL))
+    if ((allow_section_name_copy) && (section == NULL))
             ret = PROFILE_GetSectionNames(buffer, len);
-	else
-	    /* PROFILE_GetString already handles the 'entry == NULL' case */
+    else
+        /* PROFILE_GetString already handles the 'entry == NULL' case */
             ret = PROFILE_GetString( section, entry, pDefVal, buffer, len );
     } else {
        _tcsncpy( buffer, pDefVal, len );
@@ -747,7 +747,7 @@ int Tinifile::PROFILE_GetPrivateProfileString( LPCTSTR section, LPCTSTR entry,LP
     }
 
     if (pDefVal != def_val) /* allocated */
-	free((void*)pDefVal);
+    free((void*)pDefVal);
 
 
     return ret;
@@ -756,7 +756,7 @@ int Tinifile::PROFILE_GetPrivateProfileString( LPCTSTR section, LPCTSTR entry,LP
 
 DWORD Tinifile::getPrivateProfileSection(const char_t *section, char_t *buffer,DWORD len)
 {
- DWORD	ret=0;
+ DWORD  ret=0;
  if (PROFILE_Open())
   ret=PROFILE_GetSection(CurProfile->section,section,buffer,len,TRUE);
  return ret;
@@ -772,13 +772,13 @@ BOOL Tinifile::writePrivateProfileString( const char_t * section, const char_t *
             PROFILE_FlushFile();
             PROFILE_ReleaseFile();  /* always return FALSE in this case */
         }
-	else {
-	    if (!section) {
-	    } else {
-		ret = PROFILE_SetString( section, entry, string, FALSE);
-		PROFILE_FlushFile();
-	    }
-	}
+    else {
+        if (!section) {
+        } else {
+        ret = PROFILE_SetString( section, entry, string, FALSE);
+        PROFILE_FlushFile();
+        }
+    }
     }
     return ret;
 }

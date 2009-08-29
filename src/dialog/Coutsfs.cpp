@@ -49,16 +49,16 @@ void ToutsfsPage::init(void)
  devicesList = &ToutputAudioSettings::devicesList;
  for (TdevicesList::iterator i=devicesList->begin();i!=devicesList->end();i++)
  {
-	 cbxAdd(IDC_CBX_AOUT_MULTICHANNEL_DEVICE, i->first.c_str());
+     cbxAdd(IDC_CBX_AOUT_MULTICHANNEL_DEVICE, i->first.c_str());
  }
 }
 
 void ToutsfsPage::multichanneldevice2dlg(void)
 {
-	const char_t *deviceName = cbxGetCurText(IDC_CBX_AOUT_MULTICHANNEL_DEVICE);
-	TdevicesList::iterator selectedDevice = devicesList->find(deviceName);
-	if (selectedDevice != devicesList->end())
-		cfgSet(IDFF_aoutMultichannelDeviceId, selectedDevice->second.c_str());
+    const char_t *deviceName = cbxGetCurText(IDC_CBX_AOUT_MULTICHANNEL_DEVICE);
+    TdevicesList::iterator selectedDevice = devicesList->find(deviceName);
+    if (selectedDevice != devicesList->end())
+        cfgSet(IDFF_aoutMultichannelDeviceId, selectedDevice->second.c_str());
 }
 
 void ToutsfsPage::cfg2dlg(void)
@@ -81,9 +81,9 @@ void ToutsfsPage::cfg2dlg(void)
  int selection = 0;
  for (TdevicesList::iterator i=devicesList->begin();i!=devicesList->end();i++)
  {
-	 if (!strcmp(deviceId, i->second.c_str()))
-		 cbxSetCurSel(IDC_CBX_AOUT_MULTICHANNEL_DEVICE, selection);
-	 selection ++;
+     if (!strcmp(deviceId, i->second.c_str()))
+         cbxSetCurSel(IDC_CBX_AOUT_MULTICHANNEL_DEVICE, selection);
+     selection ++;
  }
  connect2dlg();
 }
@@ -117,11 +117,11 @@ INT_PTR ToutsfsPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
      {
       case IDC_CHB_PASSTHROUGH_AC3:
       case IDC_CHB_PASSTHROUGH_DTS:
-	   {
+       {
         cfgSet(IDFF_aoutpassthroughAC3, getCheck(IDC_CHB_PASSTHROUGH_AC3));
         cfgSet(IDFF_aoutpassthroughDTS, getCheck(IDC_CHB_PASSTHROUGH_DTS));
         break;
-	   }
+       }
       case IDC_CHB_OUT_LPCM:
        setCheck(IDC_CHB_OUT_PCM16,0);
        setCheck(IDC_CHB_OUT_PCM24,0);

@@ -84,7 +84,7 @@ void TimgFilterSmootherLuma::Tblur::filtrow_1(unsigned char *sum,const unsigned 
 
   bitarray >>=1;
 
-  //		if (grad_x*grad_x+grad_y*grad_y > thresh) {
+  //        if (grad_x*grad_x+grad_y*grad_y > thresh) {
   if (smoother_blur_square_table[765+grad_x]+smoother_blur_square_table[765+grad_y] > thresh)
    bitarray |=16;
 

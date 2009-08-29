@@ -159,27 +159,27 @@ HRESULT TimgFilterLevels::process(TfilterQueue::iterator it,TffPict &pict,const 
      oldSettings.calcMap(map,&divisor,inMin,inMax);
      if (!equal)
       {
-	   if(cfg->mode!=6)
-	   {
-		   if (cfg->inAuto)
-			divisor=cfg->inMax-cfg->inMin+(cfg->inMax==cfg->inMin);
-		   for (int x=0;x<256;x++)
-			mapchroma[x]=limit(((x-128)*(oldSettings.outMax-oldSettings.outMin)+(divisor>>1))/divisor+128,16,240);
-	   }
-	   else
-	   { // Seb's BTB&WTW : always map chroma 
-		   for (int x=0;x<=16;x++) // [0~16]=1
-			mapchroma[x]=1;
-		   mapchroma[128]=128; // [128]=128
-		   for (int x=1;x<=112;x++) // [16~240]->[1~255]
-		   {
-		    divisor = x*127/112;
-			mapchroma[128+x]=128+divisor;
-			mapchroma[128-x]=128-divisor;
-		   }
-		   for (int x=240;x<=255;x++) // [240~255]=255
-			mapchroma[x]=255;
-	   }
+       if(cfg->mode!=6)
+       {
+           if (cfg->inAuto)
+            divisor=cfg->inMax-cfg->inMin+(cfg->inMax==cfg->inMin);
+           for (int x=0;x<256;x++)
+            mapchroma[x]=limit(((x-128)*(oldSettings.outMax-oldSettings.outMin)+(divisor>>1))/divisor+128,16,240);
+       }
+       else
+       { // Seb's BTB&WTW : always map chroma 
+           for (int x=0;x<=16;x++) // [0~16]=1
+            mapchroma[x]=1;
+           mapchroma[128]=128; // [128]=128
+           for (int x=1;x<=112;x++) // [16~240]->[1~255]
+           {
+            divisor = x*127/112;
+            mapchroma[128+x]=128+divisor;
+            mapchroma[128-x]=128-divisor;
+           }
+           for (int x=240;x<=255;x++) // [240~255]=255
+            mapchroma[x]=255;
+       }
       }
     }
    if (!srcY)
