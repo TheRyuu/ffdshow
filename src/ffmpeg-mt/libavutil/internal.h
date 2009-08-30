@@ -243,6 +243,15 @@ if((y)<(x)){\
 #undef  perror
 #define perror please_use_av_log_instead_of_perror
 
+#define CHECKED_ALLOC(p, size)\
+{\
+    p= av_malloc(size);\
+    if(p==NULL && (size)!=0){\
+        av_log(NULL, AV_LOG_ERROR, "Cannot allocate memory.");\
+        goto fail;\
+    }\
+}
+
 #define CHECKED_ALLOCZ(p, size)\
 {\
     p= av_mallocz(size);\
@@ -262,6 +271,13 @@ if((y)<(x)){\
 static av_always_inline av_const long long llrint(double x)
 {
     return rint(x);
+}
+#endif
+
+#ifndef log2
+static av_always_inline av_const double log2(double x)
+{
+    return log(x) * 1.44269504088896340736;
 }
 #endif
 
