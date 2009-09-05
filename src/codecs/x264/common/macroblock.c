@@ -221,7 +221,7 @@ static int x264_mb_predict_mv_direct16x16_temporal( x264_t *h )
 static int x264_mb_predict_mv_direct16x16_spatial( x264_t *h )
 {
     int ref[2];
-    DECLARE_ALIGNED_8( int16_t mv[2][2] );
+    ALIGNED_8( int16_t mv[2][2] );
     int i_list;
     int i8;
     const int8_t *l1ref0 = &h->fref1[0]->ref[0][ h->mb.i_b8_xy ];
@@ -520,8 +520,8 @@ static inline void x264_mb_mc_01xywh( x264_t *h, int x, int y, int width, int he
     int       mvy1   = x264_clip3( h->mb.cache.mv[1][i8][1], h->mb.mv_min[1], h->mb.mv_max[1] );
     int       i_mode = x264_size2pixel[height][width];
     int       i_stride0 = 16, i_stride1 = 16;
-    DECLARE_ALIGNED_16( uint8_t tmp0[16*16] );
-    DECLARE_ALIGNED_16( uint8_t tmp1[16*16] );
+    ALIGNED_ARRAY_16( uint8_t, tmp0,[16*16] );
+    ALIGNED_ARRAY_16( uint8_t, tmp1,[16*16] );
     uint8_t *src0, *src1;
 
     src0 = h->mc.get_ref( tmp0, &i_stride0, h->mb.pic.p_fref[0][i_ref0], h->mb.pic.i_stride[0],
@@ -703,7 +703,7 @@ int x264_macroblock_cache_init( x264_t *h )
         for( j=0; j<3; j++ )
         {
             /* shouldn't really be initialized, just silences a valgrind false-positive in predict_8x8_filter_mmx */
-            CHECKED_MALLOCZERO( h->mb.intra_border_backup[i][j], h->fdec->i_stride[j] );
+            CHECKED_MALLOCZERO( h->mb.intra_border_backup[i][j], (h->sps->i_mb_width*16+32)>>!!j );
             h->mb.intra_border_backup[i][j] += 8;
         }
 
@@ -850,7 +850,7 @@ static void ALWAYS_INLINE x264_macroblock_load_pic_pointers( x264_t *h, int i_mb
     h->mc.copy[i?PIXEL_8x8:PIXEL_16x16]( h->mb.pic.p_fenc[i], FENC_STRIDE,
         h->mb.pic.p_fenc_plane[i], i_stride2, w );
     memcpy( &h->mb.pic.p_fdec[i][-1-FDEC_STRIDE], intra_fdec-1, w*3/2+1 );
-    if( h->mb.b_interlaced )
+    if( h->mb.b_interlaced || h->mb.b_reencode_mb )
     {
         const uint8_t *plane_fdec = &h->fdec->plane[i][i_pix_offset];
         for( j = 0; j < w; j++ )
@@ -1016,7 +1016,7 @@ void x264_macroblock_cache_load( x264_t *h, int i_mb_x, int i_mb_y )
           + !!(h->mb.i_neighbour & MB_TOP);
     }
 
-    if( !h->mb.b_interlaced )
+    if( !h->mb.b_interlaced && !h->mb.b_reencode_mb )
     {
         copy_column8( h->mb.pic.p_fdec[0]-1+ 4*FDEC_STRIDE, h->mb.pic.p_fdec[0]+15+ 4*FDEC_STRIDE );
         copy_column8( h->mb.pic.p_fdec[0]-1+12*FDEC_STRIDE, h->mb.pic.p_fdec[0]+15+12*FDEC_STRIDE );

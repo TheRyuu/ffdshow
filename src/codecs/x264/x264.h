@@ -35,7 +35,7 @@
 */
 #include <stdarg.h>
 
-#define X264_BUILD "72"
+#define X264_BUILD "75"
 
 /* x264_t:
  *      opaque handler for encoder */
@@ -139,6 +139,7 @@ static const char * const x264_colmatrix_names[] = { "GBR", "bt709", "undef", ""
 
 /* Threading */
 #define X264_THREADS_AUTO 0 /* Automatically select optimal number of threads */
+#define X264_SYNC_LOOKAHEAD_AUTO -1 /* Automatically select optimal lookahead thread buffer size */
 
 /* Zones: override ratecontrol or other options for specific sections of the video.
  * See x264_encoder_reconfig() for which options can be changed.
@@ -158,6 +159,7 @@ typedef struct x264_param_t
     unsigned int cpu;
     int         i_threads;       /* encode multiple frames in parallel */
     int         b_deterministic; /* whether to allow non-deterministic optimizations when threaded */
+    int         i_sync_lookahead; /* threaded lookahead buffer */
 
     /* Video Properties */
     int         i_width;
@@ -297,6 +299,11 @@ typedef struct x264_param_t
     int b_aud;                  /* generate access unit delimiters */
     int b_repeat_headers;       /* put SPS/PPS before each keyframe */
     int i_sps_id;               /* SPS and PPS id number */
+
+    /* Slicing parameters */
+    int i_slice_max_size;    /* Max size per slice in bytes; includes estimated NAL overhead. */
+    int i_slice_max_mbs;     /* Max number of MBs per slice; overrides i_slice_count. */
+    int i_slice_count;       /* Number of slices per frame: forces rectangular slices. */
 
     /* Optional callback for freeing this x264_param_t when it is done being used.
      * Only used when the x264_param_t sits in memory for an indefinite period of time,
@@ -441,9 +448,17 @@ int x264_nal_decode( x264_nal_t *nal, void *, int );
  * Encoder functions:
  ****************************************************************************/
 
+/* Force a link error in the case of linking against an incompatible API version.
+ * Glue #defines exist to force correct macro expansion; the final output of the macro
+ * is x264_encoder_open_##X264_BUILD (for purposes of dlopen). 
+ * ffdshow doesn't use this code*/
+/*#define x264_encoder_glue1(x,y) x##y
+#define x264_encoder_glue2(x,y) x264_encoder_glue1(x,y)
+#define x264_encoder_open x264_encoder_glue2(x264_encoder_open_,X264_BUILD)*/
 /* x264_encoder_open:
  *      create a new encoder handler, all parameters from x264_param_t are copied */
-x264_t *x264_encoder_open   ( x264_param_t * );
+x264_t *x264_encoder_open( x264_param_t * );
+
 /* x264_encoder_reconfig:
  *      analysis-related parameters from x264_param_t are copied.
  *      this takes effect immediately, on whichever frame is encoded next;

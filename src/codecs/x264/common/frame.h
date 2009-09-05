@@ -40,6 +40,9 @@ typedef struct x264_frame_t /* ffdshow custom code */
     int     i_frame;    /* Presentation frame number */
     int     i_frame_num; /* Coded frame number */
     int     b_kept_as_ref;
+    uint8_t b_fdec;
+    uint8_t b_last_minigop_bframe; /* this frame is the last b in a sequence of bframes */
+    uint8_t i_bframes;   /* number of bframes following this nonb in coded order */
     float   f_qp_avg_rc; /* QPs as decided by ratecontrol */
     float   f_qp_avg_aq; /* QPs as decided by AQ in addition to ratecontrol */
 
@@ -66,6 +69,7 @@ typedef struct x264_frame_t /* ffdshow custom code */
     int16_t (*mv[2])[2];
     int16_t (*lowres_mvs[2][X264_BFRAME_MAX+1])[2];
     uint16_t (*lowres_costs[X264_BFRAME_MAX+2][X264_BFRAME_MAX+2]);
+    /* Actually a width-2 bitfield with 4 values per uint8_t. */
     uint8_t  (*lowres_inter_types[X264_BFRAME_MAX+2][X264_BFRAME_MAX+2]);
     int     *lowres_mv_costs[2][X264_BFRAME_MAX+1];
     int8_t  *ref[2];
@@ -105,6 +109,19 @@ typedef struct x264_frame_t /* ffdshow custom code */
 
 } x264_frame_t;
 
+/* synchronized frame list */
+typedef struct
+{
+   x264_frame_t **list;
+   int i_max_size;
+   int i_size;
+#if defined(HAVE_PTHREAD) /* ffdshow custom code */
+   x264_pthread_mutex_t     mutex;
+   x264_pthread_cond_t      cv_fill;  /* event signaling that the list became fuller */
+   x264_pthread_cond_t      cv_empty; /* event signaling that the list became emptier */
+#endif /* ffdshow custom code */
+} x264_synch_frame_list_t;
+
 typedef void (*x264_deblock_inter_t)( uint8_t *pix, int stride, int alpha, int beta, int8_t *tc0 );
 typedef void (*x264_deblock_intra_t)( uint8_t *pix, int stride, int alpha, int beta );
 typedef struct
@@ -119,7 +136,7 @@ typedef struct
     x264_deblock_intra_t deblock_h_chroma_intra;
 } x264_deblock_function_t;
 
-x264_frame_t *x264_frame_new( x264_t *h );
+x264_frame_t *x264_frame_new( x264_t *h, int b_fdec );
 void          x264_frame_delete( x264_frame_t *frame );
 
 int           x264_frame_copy_picture( x264_t *h, x264_frame_t *dst, x264_picture_t *src );
@@ -145,8 +162,15 @@ x264_frame_t *x264_frame_pop( x264_frame_t **list );
 void          x264_frame_unshift( x264_frame_t **list, x264_frame_t *frame );
 x264_frame_t *x264_frame_shift( x264_frame_t **list );
 void          x264_frame_push_unused( x264_t *h, x264_frame_t *frame );
-x264_frame_t *x264_frame_pop_unused( x264_t *h );
+x264_frame_t *x264_frame_pop_unused( x264_t *h, int b_fdec );
 void          x264_frame_sort( x264_frame_t **list, int b_dts );
+void          x264_frame_delete_list( x264_frame_t **list );
+
+int           x264_synch_frame_list_init( x264_synch_frame_list_t *slist, int nelem );
+void          x264_synch_frame_list_delete( x264_synch_frame_list_t *slist );
+void          x264_synch_frame_list_push( x264_synch_frame_list_t *slist, x264_frame_t *frame );
+int           x264_synch_frame_list_get_size( x264_synch_frame_list_t *slist );
+
 #define x264_frame_sort_dts(list) x264_frame_sort(list, 1)
 #define x264_frame_sort_pts(list) x264_frame_sort(list, 0)
 

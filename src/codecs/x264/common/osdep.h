@@ -91,9 +91,20 @@
 #else
 #define DECLARE_ALIGNED( var, n ) var __attribute__((aligned(n)))
 #endif
-#define DECLARE_ALIGNED_16( var ) DECLARE_ALIGNED( var, 16 )
-#define DECLARE_ALIGNED_8( var )  DECLARE_ALIGNED( var, 8 )
-#define DECLARE_ALIGNED_4( var )  DECLARE_ALIGNED( var, 4 )
+#define ALIGNED_16( var ) DECLARE_ALIGNED( var, 16 )
+#define ALIGNED_8( var )  DECLARE_ALIGNED( var, 8 )
+#define ALIGNED_4( var )  DECLARE_ALIGNED( var, 4 )
+
+// current arm compilers only maintain 8-byte stack alignment
+// and cannot align stack variables to more than 8-bytes
+#ifdef ARCH_ARM
+#define ALIGNED_ARRAY_16( type, name, sub1, ... )\
+    ALIGNED_8( uint8_t name##_8 [sizeof(type sub1 __VA_ARGS__) + 8] );\
+    type (*name) __VA_ARGS__ = (void*)(name##_8 + ((intptr_t)name##_8 & 8))
+#else
+#define ALIGNED_ARRAY_16( type, name, sub1, ... )\
+    ALIGNED_16( type name sub1 __VA_ARGS__ )
+#endif
 
 #if defined(__GNUC__) && (__GNUC__ > 3 || __GNUC__ == 3 && __GNUC_MINOR__ > 0)
 #define UNUSED __attribute__((unused))
@@ -150,6 +161,9 @@ static inline int x264_pthread_create( x264_pthread_t *t, void *a, void *(*f)(vo
 #define x264_pthread_cond_destroy    pthread_cond_destroy
 #define x264_pthread_cond_broadcast  pthread_cond_broadcast
 #define x264_pthread_cond_wait       pthread_cond_wait
+#define x264_pthread_attr_t          pthread_attr_t
+#define x264_pthread_attr_init       pthread_attr_init
+#define x264_pthread_attr_destroy    pthread_attr_destroy
 #else
 #define x264_pthread_mutex_t         int
 #define x264_pthread_mutex_init(m,f) 0
@@ -161,6 +175,9 @@ static inline int x264_pthread_create( x264_pthread_t *t, void *a, void *(*f)(vo
 #define x264_pthread_cond_destroy(c)
 #define x264_pthread_cond_broadcast(c)
 #define x264_pthread_cond_wait(c,m)
+#define x264_pthread_attr_t          int
+#define x264_pthread_attr_init(a)    0
+#define x264_pthread_attr_destroy(a)
 #endif
 
 #define WORD_SIZE sizeof(void*)
@@ -227,6 +244,25 @@ static int ALWAYS_INLINE x264_clz( uint32_t x )
     x >>= y^4;
     return z + lut[x];
 }
+#endif
+
+#ifdef USE_REAL_PTHREAD
+#ifdef SYS_MINGW
+#define x264_lower_thread_priority(p)\
+{\
+    x264_pthread_t handle = pthread_self();\
+    struct sched_param sp;\
+    int policy = SCHED_OTHER;\
+    pthread_getschedparam( handle, &policy, &sp );\
+    sp.sched_priority -= p;\
+    pthread_setschedparam( handle, policy, &sp );\
+}
+#else
+#include <unistd.h>
+#define x264_lower_thread_priority(p) { UNUSED int nice_ret = nice(p); }
+#endif /* USE_REAL_PTHREAD */
+#else
+#define x264_lower_thread_priority(p)
 #endif
 
 #endif /* X264_OSDEP_H */

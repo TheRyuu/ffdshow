@@ -1,4 +1,6 @@
-CFLAGS+= -I. -I../.. -Icommon/x86/
+CFLAGS+= -I. -I../.. -Icommon -Icommon/x86/ -Iencoder
+
+CFLAGS+=-DSYS_MINGW
 
 ifneq ($(64BIT),yes)
 CFLAGS+=-DHAVE_MMX -DHAVE_PTHREAD
@@ -13,7 +15,7 @@ SRCS_C=common/mc.c common/predict.c common/pixel.c common/macroblock.c \
 		common/common.c common/set.c common/quant.c common/vlc.c\
 		encoder/analyse.c encoder/me.c encoder/ratecontrol.c \
 		encoder/set.c encoder/macroblock.c encoder/cabac.c \
-		encoder/cavlc.c encoder/encoder.c ff_x264.c \
+		encoder/cavlc.c encoder/encoder.c encoder/lookahead.c ff_x264.c \
 
 ifneq ($(64BIT),yes)
 SRCS_C+=common/x86/mc-c.c common/x86/predict-c.c

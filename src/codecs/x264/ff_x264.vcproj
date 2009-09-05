@@ -424,6 +424,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\encoder\lookahead.c"
+				>
+			</File>
+			<File
 				RelativePath=".\encoder\macroblock.c"
 				>
 			</File>
