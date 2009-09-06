@@ -60,7 +60,7 @@ const char_t* TautoPresetProps::getExeItem(IffdshowDec*,unsigned int index)
 {
  static const char_t *exes[]=
   {
-   _l("mplayerc.exe"),
+   _l("mpc-hc.exe"),_l("mplayerc.exe"),_l("mpc-hc64.exe"),_l("mplayerc64.exe"),
    _l("zplayer.exe"),
    _l("bsplayer.exe"),_l("bsplay.exe"),
    _l("coreplayer.exe"),

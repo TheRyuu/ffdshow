@@ -998,7 +998,7 @@ bool TffdshowDecVideo::IsOldVMR9RenderlessAndRGB(void)
   return false;
 
  const char_t *fileName= getExeflnm();
- if (_strnicmp(_l("mplayerc.exe"),fileName,13)!=0)
+ if (_strnicmp(_l("mpc-hc.exe;mplayerc.exe;mpc-hc64.exe;mplayerc64.exe"),fileName,13)!=0)
   return false;
 
  // Check downstream filter
