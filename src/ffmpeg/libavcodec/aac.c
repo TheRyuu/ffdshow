@@ -1809,7 +1809,9 @@ AVCodec aac_decoder = {
     /*.pix_fmts = */NULL,
     /*.long_name = */NULL_IF_CONFIG_SMALL("Advanced Audio Coding"),
     #if __STDC_VERSION__ >= 199901L
-    .sample_fmts = (enum SampleFormat[]){SAMPLE_FMT_S16,SAMPLE_FMT_NONE},
+    .sample_fmts = (const enum SampleFormat[]) {
+        SAMPLE_FMT_S16,SAMPLE_FMT_NONE
+    },
     #else
     /*.sample_fmts = */NULL,
     #endif

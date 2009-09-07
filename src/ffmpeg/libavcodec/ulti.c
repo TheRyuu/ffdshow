@@ -392,13 +392,6 @@ static int ulti_decode_frame(AVCodecContext *avctx,
     return buf_size;
 }
 
-static av_cold int ulti_decode_end(AVCodecContext *avctx)
-{
-/*    UltimotionDecodeContext *s = avctx->priv_data;*/
-
-    return 0;
-}
-
 AVCodec ulti_decoder = {
     "ultimotion",
     CODEC_TYPE_VIDEO,
@@ -406,7 +399,7 @@ AVCodec ulti_decoder = {
     sizeof(UltimotionDecodeContext),
     ulti_decode_init,
     NULL,
-    ulti_decode_end,
+    NULL,
     ulti_decode_frame,
     /*.capabilities = */CODEC_CAP_DR1,
     /*.next = */NULL,

@@ -837,7 +837,7 @@ static int adpcm_decode_frame(AVCodecContext *avctx,
     return src - buf;
 }
 
-#ifdef CONFIG_DECODERS
+#if CONFIG_DECODERS
 #define ADPCM_DECODER(id,name,long_name_)       \
 AVCodec name ## _decoder = {                    \
     #name,                                      \

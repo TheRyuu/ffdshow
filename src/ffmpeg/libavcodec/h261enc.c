@@ -334,7 +334,7 @@ AVCodec h261_encoder = {
     /*.flush = */NULL,
     /*.supported_framerates = */NULL,
 #if __STDC_VERSION__ >= 199901L
-    .pix_fmts = (enum PixelFormat[]){PIX_FMT_YUV420P, PIX_FMT_NONE},
+    .pix_fmts = (const enum PixelFormat[]){PIX_FMT_YUV420P, PIX_FMT_NONE},
 #else
     /*.pix_fmts = */NULL,
 #endif

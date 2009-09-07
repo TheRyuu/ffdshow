@@ -3739,7 +3739,7 @@ AVCodec h263_encoder = {
     /*.flush=*/NULL,
     /*.supported_framerates=*/NULL,
 #if __STDC_VERSION__ >= 199901L
-    .pix_fmts= (enum PixelFormat[]){PIX_FMT_YUV420P, PIX_FMT_NONE},
+    .pix_fmts= (const enum PixelFormat[]){PIX_FMT_YUV420P, PIX_FMT_NONE},
 #else
     /*.pix_fmts = */NULL,
 #endif
@@ -3760,7 +3760,7 @@ AVCodec h263p_encoder = {
     /*.flush=*/NULL,
     /*.supported_framerates=*/NULL,
 #if __STDC_VERSION__ >= 199901L
-    .pix_fmts= (enum PixelFormat[]){PIX_FMT_YUV420P, PIX_FMT_NONE},
+    .pix_fmts= (const enum PixelFormat[]){PIX_FMT_YUV420P, PIX_FMT_NONE},
 #else
     /*.pix_fmts = */NULL,
 #endif
@@ -3781,7 +3781,7 @@ AVCodec flv_encoder = {
     /*.flush=*/NULL,
     /*.supported_framerates=*/NULL,
 #if __STDC_VERSION__ >= 199901L
-    .pix_fmts= (enum PixelFormat[]){PIX_FMT_YUV420P, PIX_FMT_NONE},
+    .pix_fmts= (const enum PixelFormat[]){PIX_FMT_YUV420P, PIX_FMT_NONE},
 #else
     /*.pix_fmts = */NULL,
 #endif
@@ -3802,7 +3802,7 @@ AVCodec mpeg4_encoder = {
     /*.flush=*/NULL,
     /*.supported_framerates=*/NULL,
 #if __STDC_VERSION__ >= 199901L
-    .pix_fmts= (enum PixelFormat[]){PIX_FMT_YUV420P, PIX_FMT_NONE},
+    .pix_fmts= (const enum PixelFormat[]){PIX_FMT_YUV420P, PIX_FMT_NONE},
 #else
     /*.pix_fmts = */NULL,
 #endif
@@ -3823,7 +3823,7 @@ AVCodec msmpeg4v1_encoder = {
     /*.flush=*/NULL,
     /*.supported_framerates=*/NULL,
 #if __STDC_VERSION__ >= 199901L
-    .pix_fmts= (enum PixelFormat[]){PIX_FMT_YUV420P, PIX_FMT_NONE},
+    .pix_fmts= (const enum PixelFormat[]){PIX_FMT_YUV420P, PIX_FMT_NONE},
 #else
     /*.pix_fmts = */NULL,
 #endif
@@ -3844,7 +3844,7 @@ AVCodec msmpeg4v2_encoder = {
     /*.flush=*/NULL,
     /*.supported_framerates=*/NULL,
 #if __STDC_VERSION__ >= 199901L
-    .pix_fmts= (enum PixelFormat[]){PIX_FMT_YUV420P, PIX_FMT_NONE},
+    .pix_fmts= (const enum PixelFormat[]){PIX_FMT_YUV420P, PIX_FMT_NONE},
 #else
     /*.pix_fmts = */NULL,
 #endif
@@ -3865,7 +3865,7 @@ AVCodec msmpeg4v3_encoder = {
     /*.flush=*/NULL,
     /*.supported_framerates=*/NULL,
 #if __STDC_VERSION__ >= 199901L
-    .pix_fmts= (enum PixelFormat[]){PIX_FMT_YUV420P, PIX_FMT_NONE},
+    .pix_fmts= (const enum PixelFormat[]){PIX_FMT_YUV420P, PIX_FMT_NONE},
 #else
     /*.pix_fmts = */NULL,
 #endif
@@ -3886,7 +3886,7 @@ AVCodec wmv1_encoder = {
     /*.flush=*/NULL,
     /*.supported_framerates=*/NULL,
 #if __STDC_VERSION__ >= 199901L
-    .pix_fmts= (enum PixelFormat[]){PIX_FMT_YUV420P, PIX_FMT_NONE},
+    .pix_fmts= (const enum PixelFormat[]){PIX_FMT_YUV420P, PIX_FMT_NONE},
 #else
     /*.pix_fmts = */NULL,
 #endif

@@ -1162,7 +1162,7 @@ AVCodec ffv1_decoder = {
     /*.flush = */NULL,
     /*.supported_framerates = */NULL,
     /*.pix_fmts = */NULL,
-    /*.long_name= */NULL_IF_CONFIG_SMALL("FFmpeg codec #1"),
+    /*.long_name= */NULL_IF_CONFIG_SMALL("FFmpeg video codec #1"),
 };
 
 #if CONFIG_FFV1_ENCODER
@@ -1180,10 +1180,10 @@ AVCodec ffv1_encoder = {
     /*.flush = */NULL,
     /*.supported_framerates = */NULL,
 #if __STDC_VERSION__ >= 199901L
-    .pix_fmts= (enum PixelFormat[]){PIX_FMT_YUV420P, PIX_FMT_YUV444P, PIX_FMT_YUV422P, PIX_FMT_YUV411P, PIX_FMT_YUV410P, PIX_FMT_RGB32, PIX_FMT_NONE},
+    .pix_fmts= (const enum PixelFormat[]){PIX_FMT_YUV420P, PIX_FMT_YUV444P, PIX_FMT_YUV422P, PIX_FMT_YUV411P, PIX_FMT_YUV410P, PIX_FMT_RGB32, PIX_FMT_NONE},
 #else
     /*.pix_fmts = */NULL,
 #endif
-    /*.long_name= */NULL_IF_CONFIG_SMALL("FFmpeg codec #1"),
+    /*.long_name= */NULL_IF_CONFIG_SMALL("FFmpeg video codec #1"),
 };
 #endif

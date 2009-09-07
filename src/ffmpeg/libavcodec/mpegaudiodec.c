@@ -1978,7 +1978,7 @@ static int mp_decode_layer3(MPADecodeContext *s)
         for(ch=0;ch<s->nb_channels;ch++) {
             g = &granules[ch][gr];
             if(get_bits_count(&s->gb)<0){
-                av_log(s->avctx, AV_LOG_ERROR, "mdb:%d, lastbuf:%d skipping granule %d\n",
+                av_log(s->avctx, AV_LOG_DEBUG, "mdb:%d, lastbuf:%d skipping granule %d\n",
                                             main_data_begin, s->last_buf_size, gr);
                 skip_bits_long(&s->gb, g->part2_3_length);
                 memset(g->sb_hybrid, 0, sizeof(g->sb_hybrid));
@@ -2260,7 +2260,7 @@ AVCodec mp1_decoder =
     /*.flush = */flush,
     /*.supported_framerates = */NULL,
     /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("MP2 (MPEG audio layer 1)"),
+    /*.long_name = */NULL_IF_CONFIG_SMALL("MP1 (MPEG audio layer 1)"),
 };
 #endif
 #if CONFIG_MP2_DECODER
