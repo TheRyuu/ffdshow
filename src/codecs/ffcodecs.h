@@ -238,7 +238,7 @@ static __inline bool mpeg12_codec(int x)   {return x==CODEC_ID_MPEG1VIDEO || x==
 static __inline bool mpeg1_codec(int x)    {return x==CODEC_ID_MPEG1VIDEO || x==CODEC_ID_LIBMPEG2;}
 static __inline bool mpeg2_codec(int x)    {return x==CODEC_ID_MPEG2VIDEO || x==CODEC_ID_LIBMPEG2;}
 static __inline bool mpeg4_codec(int x)    {return x==CODEC_ID_MPEG4 || xvid_codec(x) || x==CODEC_ID_SKAL;}
-static __inline bool spdif_codec(int x)    {return x==CODEC_ID_SPDIF_AC3 || x==CODEC_ID_SPDIF_DTS || x==CODEC_ID_SPDIF_EAC3;}
+static __inline bool spdif_codec(int x)    {return x==CODEC_ID_SPDIF_AC3 || x==CODEC_ID_SPDIF_DTS;}
 static __inline bool bitstream_codec(int x){return x==CODEC_ID_BITSTREAM_TRUEHD || x==CODEC_ID_BITSTREAM_DTSHD || x==CODEC_ID_SPDIF_EAC3;}
 static __inline bool huffyuv_codec(int x)  {return x==CODEC_ID_HUFFYUV || x==CODEC_ID_FFVHUFF;}
 static __inline bool x264_codec(int x)     {return x==CODEC_ID_X264 || x==CODEC_ID_X264_LOSSLESS;}
