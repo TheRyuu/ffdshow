@@ -22,9 +22,6 @@
 #include "xiph/vorbis/vorbisformat.h"
 #include "dsutil.h"
 
-
-float TsampleFormat::os_version=0;
-
 const int TsampleFormat::standardChannelMasks[]=
 {
  SPEAKER_FRONT_CENTER,
@@ -104,13 +101,6 @@ void TsampleFormat::init(const WAVEFORMATEXTENSIBLE &wfexten,const GUID *subtype
  if (wfexten.SubFormat==MEDIASUBTYPE_IEEE_FLOAT)
   sf=SF_FLOAT32;
 }
-void TsampleFormat::init(const WAVEFORMATEXTENSIBLE_IEC61937 &wfexten_iec61937,const GUID *subtype)
-{
- init(wfexten_iec61937.FormatExt,subtype);
- /*wfexten_iec61937.dwAverageBytesPerSec=0;
- wfexten_iec61937.dwEncodedSamplesPerSec=0;
- wfexten_iec61937.dwEncodedChannelCount=(wfexten_iec61937.FormatExt.Format.nChannels;*/
-}
 TsampleFormat::TsampleFormat(const VORBISFORMAT &vf):pcm_be(false)
 {
  init(vf);
@@ -160,8 +150,6 @@ TsampleFormat::TsampleFormat(const AM_MEDIA_TYPE &mt):pcm_be(false)
  else if (mt.formattype==FORMAT_VorbisFormatIll)
   init(*(const VORBISFORMATILL*)mt.pbFormat);
  else if (mt.formattype==FORMAT_WaveFormatEx)
-  /* commented by albain : the new structure does not work properly. Under investigation
-  init(*(const WAVEFORMATEXTENSIBLE_IEC61937*)mt.pbFormat,&mt.subtype);*/
   init(*(const WAVEFORMATEX*)mt.pbFormat,true,&mt.subtype);
  else
   {
@@ -306,56 +294,6 @@ WAVEFORMATEXTENSIBLE TsampleFormat::toWAVEFORMATEXTENSIBLE(bool alwayextensible)
  return wfex;
 }
 
-// New Windows 7 structure
-WAVEFORMATEXTENSIBLE_IEC61937 TsampleFormat::toWAVEFORMATEXTENSIBLE_IEC61937(bool alwayextensible) const
-{
- WAVEFORMATEXTENSIBLE_IEC61937 wfex_iec61937;
- memset(&wfex_iec61937,0,sizeof(wfex_iec61937));
- wfex_iec61937.FormatExt=toWAVEFORMATEXTENSIBLE(alwayextensible);
- wfex_iec61937.dwEncodedSamplesPerSec=freq;
- wfex_iec61937.dwEncodedChannelCount=nchannels;
- wfex_iec61937.dwAverageBytesPerSec=0;
-
- switch (sf)
- {
-  case SF_TRUEHD:
-   wfex_iec61937.FormatExt.SubFormat = KSDATAFORMAT_SUBTYPE_IEC61937_DOLBY_MLP;
-   wfex_iec61937.FormatExt.Format.wFormatTag = WAVE_FORMAT_EXTENSIBLE;
-   wfex_iec61937.FormatExt.Format.wBitsPerSample = 16;
-   wfex_iec61937.FormatExt.Format.cbSize = 34;
-   break;
-  case SF_DTSHD:
-   wfex_iec61937.FormatExt.SubFormat = KSDATAFORMAT_SUBTYPE_IEC61937_DTS_HD;
-   wfex_iec61937.FormatExt.Format.wFormatTag = WAVE_FORMAT_EXTENSIBLE;
-   wfex_iec61937.FormatExt.Format.wBitsPerSample = 16;
-   wfex_iec61937.FormatExt.Format.cbSize = 34;
-   break;
-  case SF_EAC3:
-   wfex_iec61937.FormatExt.SubFormat = KSDATAFORMAT_SUBTYPE_IEC61937_DOLBY_DIGITAL_PLUS;
-   wfex_iec61937.FormatExt.Format.wFormatTag = WAVE_FORMAT_EXTENSIBLE;
-   wfex_iec61937.FormatExt.Format.wBitsPerSample = 16;
-   wfex_iec61937.FormatExt.Format.cbSize = 34;
-   break;
- }
- return wfex_iec61937;
-}
-
-float TsampleFormat::getOSVersion(void)
-{
- if (os_version==0)
- {
-   OSVERSIONINFO osvi;
-   BOOL bIsWindowsXPorLater;
-
-   ZeroMemory(&osvi, sizeof(OSVERSIONINFO));
-   osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
-
-   GetVersionEx(&osvi);
-   os_version=(float)osvi.dwMajorVersion+(float)osvi.dwMajorVersion/10;
- }
- return os_version;
-}
-
 CMediaType TsampleFormat::toCMediaType(bool alwaysextensible) const
 {
  CMediaType mt;
@@ -375,12 +313,9 @@ CMediaType TsampleFormat::toCMediaType(bool alwaysextensible) const
   mt.subtype=MEDIASUBTYPE_DOLBY_DDPLUS;
  else
   mt.subtype=MEDIASUBTYPE_PCM;
-
  mt.formattype=FORMAT_WaveFormatEx;
- WAVEFORMATEXTENSIBLE_IEC61937 wfex_iec61937=toWAVEFORMATEXTENSIBLE_IEC61937(alwaysextensible);
- // cbSize = 54
- mt.SetFormat((BYTE*)&wfex_iec61937,
-    sizeof(wfex_iec61937.FormatExt.Format)+sizeof(wfex_iec61937.FormatExt)+wfex_iec61937.FormatExt.Format.cbSize); 
+ WAVEFORMATEXTENSIBLE wfex=toWAVEFORMATEXTENSIBLE(alwaysextensible);
+ mt.SetFormat((BYTE*)&wfex,sizeof(wfex.Format)+wfex.Format.cbSize);
  return mt;
 }
 
