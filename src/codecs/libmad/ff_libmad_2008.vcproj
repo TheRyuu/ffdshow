@@ -218,7 +218,7 @@
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="0"
 			ManagedExtensions="0"
-			WholeProgramOptimization="1"
+			WholeProgramOptimization="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -321,7 +321,7 @@
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="0"
 			ManagedExtensions="0"
-			WholeProgramOptimization="1"
+			WholeProgramOptimization="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
