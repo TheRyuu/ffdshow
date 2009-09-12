@@ -1229,6 +1229,8 @@ static void x264_mb_analyse_inter_p16x16( x264_t *h, x264_mb_analysis_t *a )
             h->mb.i_partition = D_16x16;
             x264_macroblock_cache_mv_ptr( h, 0, 0, 4, 4, 0, a->l0.me16x16.mv );
             a->l0.i_rd16x16 = x264_rd_cost_mb( h, a->i_lambda2 );
+            if( !(h->mb.i_cbp_luma|h->mb.i_cbp_chroma) )
+                h->mb.i_type = P_SKIP;
         }
     }
 }
@@ -2572,7 +2574,7 @@ int x264_macroblock_analyse( x264_t *h )
                 else if( i_partition == D_16x16 )
                 {
                     x264_macroblock_cache_ref( h, 0, 0, 4, 4, 0, analysis.l0.me16x16.i_ref );
-                    analysis.l0.me16x16.cost = analysis.l0.i_rd16x16;
+                    analysis.l0.me16x16.cost = i_cost;
                     x264_me_refine_qpel_rd( h, &analysis.l0.me16x16, analysis.i_lambda2, 0, 0 );
                 }
                 else if( i_partition == D_16x8 )
@@ -2876,12 +2878,12 @@ int x264_macroblock_analyse( x264_t *h )
                 {
                     if( i_type == B_L0_L0 )
                     {
-                        analysis.l0.me16x16.cost = analysis.l0.i_rd16x16;
+                        analysis.l0.me16x16.cost = i_cost;
                         x264_me_refine_qpel_rd( h, &analysis.l0.me16x16, analysis.i_lambda2, 0, 0 );
                     }
                     else if( i_type == B_L1_L1 )
                     {
-                        analysis.l1.me16x16.cost = analysis.l1.i_rd16x16;
+                        analysis.l1.me16x16.cost = i_cost;
                         x264_me_refine_qpel_rd( h, &analysis.l1.me16x16, analysis.i_lambda2, 0, 1 );
                     }
                     else if( i_type == B_BI_BI )
