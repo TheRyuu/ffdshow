@@ -193,6 +193,9 @@ static AVEvalExpr * parse_primary(Parser *p) {
     char *next= p->s;
     int i;
 
+    if (!d)
+        return NULL;
+
     /* number */
     d->value = av_strtod(p->s, &next);
     if(next != p->s){
@@ -296,6 +299,8 @@ static AVEvalExpr * parse_primary(Parser *p) {
 
 static AVEvalExpr * new_eval_expr(int type, int value, AVEvalExpr *p0, AVEvalExpr *p1){
     AVEvalExpr * e = av_mallocz(sizeof(AVEvalExpr));
+    if (!e)
+        return NULL;
     e->type     =type   ;
     e->value    =value  ;
     e->param[0] =p0     ;
@@ -315,6 +320,8 @@ static AVEvalExpr * parse_factor(Parser *p){
     while(p->s[0]=='^'){
         p->s++;
         e= new_eval_expr(e_pow, 1, e, parse_pow(p, &sign2));
+        if (!e)
+            return NULL;
         if (e->param[1]) e->param[1]->value *= (sign2|1);
     }
     if (e) e->value *= (sign|1);
@@ -326,6 +333,8 @@ static AVEvalExpr * parse_term(Parser *p){
     while(p->s[0]=='*' || p->s[0]=='/'){
         int c= *p->s++;
         e= new_eval_expr(c == '*' ? e_mul : e_div, 1, e, parse_factor(p));
+        if (!e)
+            return NULL;
     }
     return e;
 }
@@ -334,6 +343,8 @@ static AVEvalExpr * parse_subexpr(Parser *p) {
     AVEvalExpr * e = parse_term(p);
     while(*p->s == '+' || *p->s == '-') {
         e= new_eval_expr(e_add, 1, e, parse_term(p));
+        if (!e)
+            return NULL;
     };
 
     return e;
@@ -351,6 +362,8 @@ static AVEvalExpr * parse_expr(Parser *p) {
     while(*p->s == ';') {
         p->s++;
         e= new_eval_expr(e_last, 1, e, parse_subexpr(p));
+        if (!e)
+            return NULL;
     };
 
     p->stack_index++;

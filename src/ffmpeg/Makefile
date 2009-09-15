@@ -25,6 +25,7 @@ SRCS_C=\
       $(LAVC_DIR)/adpcm.c \
       $(LAVC_DIR)/allcodecs.c \
       $(LAVC_DIR)/asv1.c \
+      $(LAVC_DIR)/atrac.c \
       $(LAVC_DIR)/atrac3.c \
       $(LAVC_DIR)/audioconvert.c \
       $(LAVC_DIR)/avs.c \
