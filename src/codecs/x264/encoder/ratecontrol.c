@@ -841,6 +841,8 @@ void x264_ratecontrol_delete( x264_t *h )
         x264_free( rc->psz_mbtree_stat_file_tmpname );
         x264_free( rc->psz_mbtree_stat_file_name );
     }
+    if( rc->p_mbtree_stat_file_in )
+        fclose( rc->p_mbtree_stat_file_in );
     x264_free( rc->pred );
     x264_free( rc->pred_b_from_p );
     x264_free( rc->entry );
@@ -952,6 +954,8 @@ void x264_ratecontrol_start( x264_t *h, int i_force_qp )
                 q -= 6*log(zone->f_bitrate_factor)/log(2);
         }
     }
+
+    q = x264_clip3f( q, h->param.rc.i_qp_min, h->param.rc.i_qp_max );
 
     rc->qpa_rc =
     rc->qpa_aq = 0;

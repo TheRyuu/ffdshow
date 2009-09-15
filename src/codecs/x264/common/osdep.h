@@ -138,7 +138,7 @@ static inline int x264_pthread_create( x264_pthread_t *t, void *a, void *(*f)(vo
 #define HAVE_PTHREAD 1
 
 #elif defined(HAVE_PTHREAD)
-#include <pthread.h>
+#include "../../../pthreads/pthread.h"
 #define USE_REAL_PTHREAD
 
 #else
@@ -164,6 +164,7 @@ static inline int x264_pthread_create( x264_pthread_t *t, void *a, void *(*f)(vo
 #define x264_pthread_attr_t          pthread_attr_t
 #define x264_pthread_attr_init       pthread_attr_init
 #define x264_pthread_attr_destroy    pthread_attr_destroy
+#define X264_PTHREAD_MUTEX_INITIALIZER PTHREAD_MUTEX_INITIALIZER
 #else
 #define x264_pthread_mutex_t         int
 #define x264_pthread_mutex_init(m,f) 0
@@ -178,6 +179,7 @@ static inline int x264_pthread_create( x264_pthread_t *t, void *a, void *(*f)(vo
 #define x264_pthread_attr_t          int
 #define x264_pthread_attr_init(a)    0
 #define x264_pthread_attr_destroy(a)
+#define X264_PTHREAD_MUTEX_INITIALIZER 0
 #endif
 
 #define WORD_SIZE sizeof(void*)

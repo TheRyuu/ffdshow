@@ -23,7 +23,7 @@
 #include "TcodecSettings.h"
 #include "x264/x264.h"
 #define X264_BFRAME_MAX 16
-#define X264_LOOKAHEAD_MAX 1
+#define X264_LOOKAHEAD_MAX 0
 #include "x264/common/frame.h"
 #include "libavcodec/avcodec.h"
 #include "IffdshowBase.h"
@@ -65,7 +65,7 @@ const char_t* TvideoCodecX264::getName(void) const
  return codecName;
 }
 
-LRESULT TvideoCodecX264::beginCompress(int cfgcomode,int csp,const Trect &r)
+LRESULT __declspec(align(16))(TvideoCodecX264::beginCompress(int cfgcomode,int csp,const Trect &r))
 {
  x264_param_t param;
  x264_param_default(&param);
@@ -131,7 +131,8 @@ LRESULT TvideoCodecX264::beginCompress(int cfgcomode,int csp,const Trect &r)
  param.analyse.b_dct_decimate=coCfg->x264_b_dct_decimate;
 
  param.i_threads=coCfg->numthreads;
- param.b_deterministic=0;
+ param.b_deterministic=1;
+ param.i_sync_lookahead=0;
 
  if (coCfg->codecId==CODEC_ID_X264_LOSSLESS)
   {
@@ -237,7 +238,7 @@ void TvideoCodecX264::fill_x264_pict(x264_frame_t *out,const TffPict *in)
  out->i_type=X264_TYPE_AUTO;
  out->i_qpplus1=0;
 }
-HRESULT TvideoCodecX264::compress(const TffPict &pict,TencFrameParams &params)
+HRESULT __declspec(align(16))(TvideoCodecX264::compress(const TffPict &pict,TencFrameParams &params))
 {
  int i_nal;
  x264_nal_t *nal;

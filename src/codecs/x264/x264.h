@@ -139,7 +139,7 @@ static const char * const x264_colmatrix_names[] = { "GBR", "bt709", "undef", ""
 
 /* Threading */
 #define X264_THREADS_AUTO 0 /* Automatically select optimal number of threads */
-#define X264_SYNC_LOOKAHEAD_AUTO -1 /* Automatically select optimal lookahead thread buffer size */
+#define X264_SYNC_LOOKAHEAD_AUTO 0 /* Automatically select optimal lookahead thread buffer size */
 
 /* Zones: override ratecontrol or other options for specific sections of the video.
  * See x264_encoder_reconfig() for which options can be changed.

@@ -1,13 +1,11 @@
-CFLAGS+= -I. -I../.. -Icommon -Icommon/x86/ -Iencoder
+CFLAGS+= -I. -I../.. -I../../pthreads -Icommon -Icommon/x86/ -Iencoder
 
-CFLAGS+=-DSYS_MINGW
-
-ifneq ($(64BIT),yes)
-CFLAGS+=-DHAVE_MMX -DHAVE_PTHREAD
-endif
+CFLAGS+=-DSYS_MINGW -DHAVE_MMX -DHAVE_PTHREAD -DPTW32_STATIC_LIB
 
 ifneq ($(64BIT),yes)
 	CFLAGS+=-DARCH_X86
+else
+	CFLAGS+=-DARCH_X86_64
 endif
 
 SRCS_C=common/mc.c common/predict.c common/pixel.c common/macroblock.c \
@@ -27,12 +25,14 @@ SRCS_YASM=common/x86/cabac-a.asm common/x86/dct-a.asm common/x86/deblock-a.asm \
 			common/x86/x86inc.asm common/x86/x86inc.asm common/x86/x86util.asm
 endif
 
-ifneq ($(64BIT),yes)
-	YASMFLAGS+=-DHAVE_MMX
-endif
+YASMFLAGS+=-DHAVE_MMX
 
-ifneq ($(64BIT),yes)
-GCCLIBS=-lpthread
+ifeq ($(64BIT),yes)
+    CFLAGS+=-DARCH_X86_64
+    GCCLIBS=../../../bin/lib_x64/libpthreadGC2.a -lws2_32
+else
+    CFLAGS+=-DARCH_X86_32
+    GCCLIBS=../../../bin/lib_x86/libpthreadGC2.a -lws2_32
 endif
 
 SLIB=../../../bin/ff_x264.dll

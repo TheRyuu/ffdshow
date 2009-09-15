@@ -24,7 +24,7 @@
  */
 
 #include "avcodec.h"
-#include <pthread.h>
+#include "../../pthreads/pthread.h"
 #include "thread.h"
 
 #define MAX_DELAYED_RELEASED_BUFFERS 32
