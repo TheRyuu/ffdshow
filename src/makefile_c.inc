@@ -15,7 +15,7 @@ ifeq ($(64BIT),yes)
 endif
 
 ifeq ($(64BIT),yes)
-    TARGET_OS=x86_64-pc-mingw32
+    TARGET_OS=x86_64-w64-mingw32
     CFLAGS+=-DWIN64 -D_WIN64 -D__MINGW64__
     OPTFLAGS+=-O2 -m64
 else
