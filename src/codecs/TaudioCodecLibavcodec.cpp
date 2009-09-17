@@ -261,10 +261,19 @@ HRESULT TaudioCodecLibavcodec::decode(TbyteBuffer &src0)
      this->deci->getPostproc(&libmplayer);
      if (libmplayer != NULL)
      {
+     	 // fixme
+       if (codecId == CODEC_ID_VORBIS) {
          libmplayer->reorder_channel_nch(dst, 
              src_ch_layout,AF_CHANNEL_LAYOUT_FFDSHOW_DEFAULT,
              fmt.nchannels,
-             dstLength *8 / fmt.blockAlign(), fmt.blockAlign()/8);
+             dstLength / 2, 2);
+       } else {
+       	 libmplayer->reorder_channel_nch(dst, 
+             src_ch_layout,AF_CHANNEL_LAYOUT_FFDSHOW_DEFAULT,
+             fmt.nchannels,
+             dstLength * 8 / fmt.blockAlign(), fmt.blockAlign()/8);
+       	
+       }
      }
   }
 
