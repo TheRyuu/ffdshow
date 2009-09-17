@@ -21,7 +21,8 @@ SRCS_YASM=common/x86/cabac-a.asm common/x86/dct-a.asm common/x86/deblock-a.asm \
 YASMFLAGS=-DHAVE_MMX
 
 ifneq ($(64BIT),yes)
-CFLAGS+=-DARCH_X86_32
+CFLAGS+=-DARCH_X86
+YASMFLAGS+=-DARCH_X86
 SRCS_YASM+=common/x86/dct-32.asm common/x86/pixel-32.asm
 GCCLIBS=../../../bin/lib_x86/libpthreadGC2.a -lws2_32
 else
