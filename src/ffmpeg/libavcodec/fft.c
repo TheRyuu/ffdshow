@@ -62,7 +62,6 @@ av_cold int ff_fft_init(FFTContext *s, int nbits, int inverse)
 {
     int i, j, m, n;
     float alpha, c1, s1, s2;
-    int split_radix = 1;
     int av_unused has_vectors;
 
     if (nbits < 2 || nbits > 16)
@@ -87,31 +86,9 @@ av_cold int ff_fft_init(FFTContext *s, int nbits, int inverse)
     s->imdct_half  = ff_imdct_half_c;
     s->mdct_calc   = ff_mdct_calc_c;
     s->exptab1     = NULL;
+    s->split_radix = 1;
 
-#if HAVE_MMX && HAVE_YASM && ARCH_X86_32
-/* causes crashes on 64-bit Windows */	
-    has_vectors = mm_support();
-    if (has_vectors & FF_MM_SSE && HAVE_SSE) {
-        /* SSE for P3/P4/K8 */
-        s->imdct_calc  = ff_imdct_calc_sse;
-        /* crashes DTS decoder */
-        //s->imdct_half = ff_imdct_half_sse;
-        s->fft_permute = ff_fft_permute_sse;
-        s->fft_calc    = ff_fft_calc_sse;
-    } else if (has_vectors & FF_MM_3DNOWEXT && HAVE_AMD3DNOWEXT) {
-        /* 3DNowEx for K7 */
-        s->imdct_calc = ff_imdct_calc_3dn2;
-        s->imdct_half = ff_imdct_half_3dn2;
-        s->fft_calc   = ff_fft_calc_3dn2;
-    } else if (has_vectors & FF_MM_3DNOW && HAVE_AMD3DNOW) {
-        /* 3DNow! for K6-2/3 */
-        s->imdct_calc = ff_imdct_calc_3dn;
-        s->imdct_half = ff_imdct_half_3dn;
-        s->fft_calc   = ff_fft_calc_3dn;
-    }
-#endif
-
-    if (split_radix) {
+    if (s->split_radix) {
         for(j=4; j<=nbits; j++) {
             int m = 1<<j;
             double freq = 2*M_PI/m;

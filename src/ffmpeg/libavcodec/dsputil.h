@@ -640,6 +640,7 @@ typedef struct FFTContext {
     void (*imdct_calc)(struct MDCTContext *s, FFTSample *output, const FFTSample *input);
     void (*imdct_half)(struct MDCTContext *s, FFTSample *output, const FFTSample *input);
     void (*mdct_calc)(struct MDCTContext *s, FFTSample *output, const FFTSample *input);
+    int split_radix;
 } FFTContext;
 
 extern FFTSample* const ff_cos_tabs[13];
@@ -651,12 +652,7 @@ extern FFTSample* const ff_cos_tabs[13];
  */
 int ff_fft_init(FFTContext *s, int nbits, int inverse);
 void ff_fft_permute_c(FFTContext *s, FFTComplex *z);
-void ff_fft_permute_sse(FFTContext *s, FFTComplex *z);
 void ff_fft_calc_c(FFTContext *s, FFTComplex *z);
-void ff_fft_calc_sse(FFTContext *s, FFTComplex *z);
-void ff_fft_calc_3dn(FFTContext *s, FFTComplex *z);
-void ff_fft_calc_3dn2(FFTContext *s, FFTComplex *z);
-void ff_fft_calc_altivec(FFTContext *s, FFTComplex *z);
 
 /**
  * Do the permutation needed BEFORE calling ff_fft_calc().
@@ -715,25 +711,20 @@ void ff_kbd_window_init(float *window, float alpha, int n);
  * @param   n       size of half window
  */
 void ff_sine_window_init(float *window, int n);
+extern float ff_sine_32  [  32];
+extern float ff_sine_64  [  64];
 extern float ff_sine_128 [ 128];
 extern float ff_sine_256 [ 256];
 extern float ff_sine_512 [ 512];
 extern float ff_sine_1024[1024];
 extern float ff_sine_2048[2048];
 extern float ff_sine_4096[4096];
-extern float * const ff_sine_windows[6];
+extern float * const ff_sine_windows[13];
 
 int ff_mdct_init(MDCTContext *s, int nbits, int inverse, double scale);
 void ff_imdct_calc_c(MDCTContext *s, FFTSample *output, const FFTSample *input);
 void ff_imdct_half_c(MDCTContext *s, FFTSample *output, const FFTSample *input);
 void ff_mdct_calc_c(MDCTContext *s, FFTSample *output, const FFTSample *input);
-void ff_imdct_calc_3dn(MDCTContext *s, FFTSample *output, const FFTSample *input);
-void ff_imdct_half_3dn(MDCTContext *s, FFTSample *output, const FFTSample *input);
-void ff_imdct_calc_3dn2(MDCTContext *s, FFTSample *output, const FFTSample *input);
-void ff_imdct_half_3dn2(MDCTContext *s, FFTSample *output, const FFTSample *input);
-void ff_imdct_calc_sse(MDCTContext *s, FFTSample *output, const FFTSample *input);
-void ff_imdct_half_sse(MDCTContext *s, FFTSample *output, const FFTSample *input);
-void ff_mdct_calc(MDCTContext *s, FFTSample *out, const FFTSample *input);
 void ff_mdct_end(MDCTContext *s);
 
 /* Real Discrete Fourier Transform */
