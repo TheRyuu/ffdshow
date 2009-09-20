@@ -36,19 +36,21 @@
 #define DECLARE_ASM_CONST(n,t,v)    static const t v
 #endif
 
-#if defined(__GNUC__) && (__GNUC__ > 4 || __GNUC__ == 4 && __GNUC_MINOR__ > 1)
-#   define GCC420_OR_NEWER 1
+/* ffdshow custom code */
+#ifdef __GNUC__
+#    define AV_GCC_VERSION_AT_LEAST(x,y) (__GNUC__ > x || __GNUC__ == x && __GNUC_MINOR__ >= y)
 #else
-#   define GCC420_OR_NEWER 0
+#    define AV_GCC_VERSION_AT_LEAST(x,y) 0
 #endif
 
 #ifndef attribute_align_arg
-#if GCC420_OR_NEWER
+#if (!defined(__ICC) || __ICC > 1110) && AV_GCC_VERSION_AT_LEAST(4,2)
 #    define attribute_align_arg __attribute__((force_align_arg_pointer))
 #else
 #    define attribute_align_arg
 #endif
 #endif
+/* ffdshow custom code */
 
 #ifdef HAVE_BUILTIN_EXPECT
 #define likely(x) __builtin_expect ((x) != 0, 1)

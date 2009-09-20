@@ -5,9 +5,9 @@ all:.all
 
 #if FFDSHOW_PREFIX is set, assume cross-compilation
 ifeq ($(FFDSHOW_PREFIX),)
-  YASM=yasm.exe
+    YASM=yasm.exe
 else
-  YASM=yasm
+    YASM=yasm
 endif
 
 ifeq ($(64BIT),yes)
