@@ -53,7 +53,7 @@ typedef struct DVwork_chunk {
 typedef struct DVprofile {
     int              dsf;                   /* value of the dsf in the DV header */
     int              video_stype;           /* stype for VAUX source pack */
-    int              frame_size;            /* total size of one frame in bytes */
+    unsigned int     frame_size;            /* total size of one frame in bytes */
     int              difseg_size;           /* number of DIF segments per DIF channel */
     int              n_difchan;             /* number of DIF channels per frame */
     AVRational       time_base;             /* 1/framerate */

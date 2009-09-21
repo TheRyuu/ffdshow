@@ -500,7 +500,7 @@ bool Rasterizer::ScanConvert()
         std::vector<int>::iterator itX1 = heap.begin();
         std::vector<int>::iterator itX2 = heap.end(); // begin() + heap.size();
 
-        int x1, x2;
+        int x1 = 0, x2 = 0;
 
         for(; itX1 != itX2; ++itX1)
         {
