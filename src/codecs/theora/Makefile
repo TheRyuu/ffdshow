@@ -1,8 +1,8 @@
 CFLAGS+= -I. -I.. -I../.. -I../../xiph -Idec -Ienc -DUSE_ASM
 
 SRCS_C=\
-  cpu.c \
-  comment.c \
+	cpu.c \
+	comment.c \
 	huffman.c \
 	idct.c \
 	misc_common.c \
@@ -11,7 +11,7 @@ SRCS_C=\
 	dec/quant.c \
 	enc/blockmap.c \
 	enc/dct.c \
-  enc/dct_decode.c \
+	enc/dct_decode.c \
 	enc/dct_encode.c \
 	enc/dsp.c \
 	enc/encode.c \
@@ -48,7 +48,6 @@ SRCS_C+=\
 	enc/x86_32/idct_mmx.c \
 	enc/x86_32/dct_decode_mmx.c
 endif
-
 
 SLIB=../../../bin/ff_theora.dll
 

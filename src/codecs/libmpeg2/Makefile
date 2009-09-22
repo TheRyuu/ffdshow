@@ -6,9 +6,16 @@ endif
 
 #CFLAGS+=-fverbose-asm -save-temps
 
-SRCS_C= libmpeg2/alloc.c libmpeg2/decode.c libmpeg2/header.c \
-		libmpeg2/idct.c libmpeg2/idct_mmx.c libmpeg2/motion_comp.c \
-		libmpeg2/motion_comp_mmx.c libmpeg2/slice.c libmpeg2/cpu_accel.c libmpeg2/cpu_state.c\
+SRCS_C=libmpeg2/alloc.c \
+		libmpeg2/decode.c \
+		libmpeg2/header.c \
+		libmpeg2/idct.c \
+		libmpeg2/idct_mmx.c \
+		libmpeg2/motion_comp.c \
+		libmpeg2/motion_comp_mmx.c \
+		libmpeg2/slice.c \
+		libmpeg2/cpu_accel.c \
+		libmpeg2/cpu_state.c\
 		version.c
 
 SLIB=../../../bin/libmpeg2_ff.dll

@@ -235,7 +235,6 @@ SRCS_YASM=\
       $(LAVC_DIR)/x86/x86util.asm
 endif
 
-
 ifeq ($(64BIT),yes)
     CFLAGS+=-DARCH_X86_64
 else

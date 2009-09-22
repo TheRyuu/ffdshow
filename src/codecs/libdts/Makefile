@@ -1,6 +1,8 @@
 CFLAGS+= -I. -I../..
        
-SRCS_C=bitstream.c downmix.c parse.c
+SRCS_C=bitstream.c \
+		downmix.c \
+		parse.c
 
 SLIB=../../../bin/ff_libdts.dll
 DEF=ff_libdts.def

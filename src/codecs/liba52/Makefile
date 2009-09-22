@@ -1,6 +1,10 @@
 CFLAGS+= -I. -I../..
 
-SRCS_C=bit_allocate.c bitstream.c downmix.c imdct.c parse.c
+SRCS_C=bit_allocate.c \
+		bitstream.c \
+		downmix.c \
+		imdct.c \
+		parse.c
 
 SLIB=../../../bin/ff_liba52.dll
 DEF=ff_liba52.def
