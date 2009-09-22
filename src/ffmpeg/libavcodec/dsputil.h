@@ -390,6 +390,49 @@ typedef struct DSPContext {
     void (*vector_fmul_window)(float *dst, const float *src0, const float *src1, const float *win, float add_bias, int len);
     /* assume len is a multiple of 8, and arrays are 16-byte aligned */
     void (*int32_to_float_fmul_scalar)(float *dst, const int *src, float mul, int len);
+    /**
+     * Multiply a vector of floats by a scalar float.  Source and
+     * destination vectors must overlap exactly or not at all.
+     * @param dst result vector, 16-byte aligned
+     * @param src input vector, 16-byte aligned
+     * @param mul scalar value
+     * @param len length of vector, multiple of 4
+     */
+    void (*vector_fmul_scalar)(float *dst, const float *src, float mul,
+                               int len);
+    /**
+     * Multiply a vector of floats by concatenated short vectors of
+     * floats and by a scalar float.  Source and destination vectors
+     * must overlap exactly or not at all.
+     * [0]: short vectors of length 2, 8-byte aligned
+     * [1]: short vectors of length 4, 16-byte aligned
+     * @param dst output vector, 16-byte aligned
+     * @param src input vector, 16-byte aligned
+     * @param sv  array of pointers to short vectors
+     * @param mul scalar value
+     * @param len number of elements in src and dst, multiple of 4
+     */
+    void (*vector_fmul_sv_scalar[2])(float *dst, const float *src,
+                                     const float **sv, float mul, int len);
+    /**
+     * Multiply short vectors of floats by a scalar float, store
+     * concatenated result.
+     * [0]: short vectors of length 2, 8-byte aligned
+     * [1]: short vectors of length 4, 16-byte aligned
+     * @param dst output vector, 16-byte aligned
+     * @param sv  array of pointers to short vectors
+     * @param mul scalar value
+     * @param len number of output elements, multiple of 4
+     */
+    void (*sv_fmul_scalar[2])(float *dst, const float **sv,
+                              float mul, int len);
+    /**
+     * Calculate the scalar product of two vectors of floats.
+     * @param v1  first vector, 16-byte aligned
+     * @param v2  second vector, 16-byte aligned
+     * @param len length of vectors, multiple of 4
+     */
+    void (*butterflies_float)(float *restrict v1, float *restrict v2, int len);
 
     /* C version: convert floats from the range [384.0,386.0] to ints in [-32768,32767]
      * simd versions: convert floats from [-32768.0,32767.0] without rescaling and arrays are 16byte aligned */
@@ -459,11 +502,6 @@ typedef struct DSPContext {
     void (*h264_idct8_add4)(uint8_t *dst/*align 16*/, const int *blockoffset, DCTELEM *block/*align 16*/, int stride, const uint8_t nnzc[6*8]);
     void (*h264_idct_add8)(uint8_t **dst/*align 16*/, const int *blockoffset, DCTELEM *block/*align 16*/, int stride, const uint8_t nnzc[6*8]);
     void (*h264_idct_add16intra)(uint8_t *dst/*align 16*/, const int *blockoffset, DCTELEM *block/*align 16*/, int stride, const uint8_t nnzc[6*8]);
-
-    /* snow wavelet */
-    void (*vertical_compose97i)(IDWTELEM *b0, IDWTELEM *b1, IDWTELEM *b2, IDWTELEM *b3, IDWTELEM *b4, IDWTELEM *b5, int width);
-    void (*horizontal_compose97i)(IDWTELEM *b, int width);
-    void (*inner_add_yblock)(const uint8_t *obmc, const int obmc_stride, uint8_t * * block, int b_w, int b_h, int src_x, int src_y, int src_stride, slice_buffer * sb, int add, uint8_t * dst8);
 
     void (*prefetch)(void *mem, int stride, int h);
 
@@ -622,8 +660,6 @@ void get_psnr(uint8_t *orig_image[3], uint8_t *coded_image[3],
    FFTSample type */
 typedef float FFTSample;
 
-struct MDCTContext;
-
 typedef struct FFTComplex {
     FFTSample re, im;
 } FFTComplex;
@@ -635,12 +671,20 @@ typedef struct FFTContext {
     FFTComplex *exptab;
     FFTComplex *exptab1; /* only used by SSE code */
     FFTComplex *tmp_buf;
+    int mdct_size; /* size of MDCT (i.e. number of input data * 2) */
+    int mdct_bits; /* n = 2^nbits */
+    /* pre/post rotation tables */
+    FFTSample *tcos;
+    FFTSample *tsin;
     void (*fft_permute)(struct FFTContext *s, FFTComplex *z);
     void (*fft_calc)(struct FFTContext *s, FFTComplex *z);
-    void (*imdct_calc)(struct MDCTContext *s, FFTSample *output, const FFTSample *input);
-    void (*imdct_half)(struct MDCTContext *s, FFTSample *output, const FFTSample *input);
-    void (*mdct_calc)(struct MDCTContext *s, FFTSample *output, const FFTSample *input);
+    void (*imdct_calc)(struct FFTContext *s, FFTSample *output, const FFTSample *input);
+    void (*imdct_half)(struct FFTContext *s, FFTSample *output, const FFTSample *input);
+    void (*mdct_calc)(struct FFTContext *s, FFTSample *output, const FFTSample *input);
     int split_radix;
+    int permutation;
+#define FF_MDCT_PERM_NONE       0
+#define FF_MDCT_PERM_INTERLEAVE 1
 } FFTContext;
 
 extern FFTSample* const ff_cos_tabs[13];
@@ -673,28 +717,19 @@ void ff_fft_end(FFTContext *s);
 
 /* MDCT computation */
 
-typedef struct MDCTContext {
-    int n;  /* size of MDCT (i.e. number of input data * 2) */
-    int nbits; /* n = 2^nbits */
-    /* pre/post rotation tables */
-    FFTSample *tcos;
-    FFTSample *tsin;
-    FFTContext fft;
-} MDCTContext;
-
-static inline void ff_imdct_calc(MDCTContext *s, FFTSample *output, const FFTSample *input)
+static inline void ff_imdct_calc(FFTContext *s, FFTSample *output, const FFTSample *input)
 {
-    s->fft.imdct_calc(s, output, input);
+    s->imdct_calc(s, output, input);
 }
-static inline void ff_imdct_half(MDCTContext *s, FFTSample *output, const FFTSample *input)
+static inline void ff_imdct_half(FFTContext *s, FFTSample *output, const FFTSample *input)
 {
-    s->fft.imdct_half(s, output, input);
+    s->imdct_half(s, output, input);
 }
 
-static inline void ff_mdct_calc(MDCTContext *s, FFTSample *output,
+static inline void ff_mdct_calc(FFTContext *s, FFTSample *output,
                                 const FFTSample *input)
 {
-    s->fft.mdct_calc(s, output, input);
+    s->mdct_calc(s, output, input);
 }
 
 /**
@@ -721,11 +756,11 @@ extern float ff_sine_2048[2048];
 extern float ff_sine_4096[4096];
 extern float * const ff_sine_windows[13];
 
-int ff_mdct_init(MDCTContext *s, int nbits, int inverse, double scale);
-void ff_imdct_calc_c(MDCTContext *s, FFTSample *output, const FFTSample *input);
-void ff_imdct_half_c(MDCTContext *s, FFTSample *output, const FFTSample *input);
-void ff_mdct_calc_c(MDCTContext *s, FFTSample *output, const FFTSample *input);
-void ff_mdct_end(MDCTContext *s);
+int ff_mdct_init(FFTContext *s, int nbits, int inverse, double scale);
+void ff_imdct_calc_c(FFTContext *s, FFTSample *output, const FFTSample *input);
+void ff_imdct_half_c(FFTContext *s, FFTSample *output, const FFTSample *input);
+void ff_mdct_calc_c(FFTContext *s, FFTSample *output, const FFTSample *input);
+void ff_mdct_end(FFTContext *s);
 
 /* Real Discrete Fourier Transform */
 
