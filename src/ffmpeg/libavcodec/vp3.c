@@ -1000,7 +1000,7 @@ static int unpack_block_qpis(Vp3DecodeContext *s, GetBitContext *gb)
                 num_blocks_at_qpi += run_length;
 
             for (j = 0; j < run_length; i++) {
-                if (i > s->coded_fragment_list_index)
+                if (i >= s->coded_fragment_list_index)
                     return -1;
 
                 if (s->all_fragments[s->coded_fragment_list[i]].qpi == qpi) {
@@ -1078,10 +1078,9 @@ static int unpack_vlcs(Vp3DecodeContext *s, GetBitContext *gb,
                 coeff = zero_run = 0;
             } else {
                 bits_to_get = coeff_get_bits[token];
-                if (!bits_to_get)
-                    coeff = coeff_tables[token][0];
-                else
-                    coeff = coeff_tables[token][get_bits(gb, bits_to_get)];
+                if (bits_to_get)
+                    bits_to_get = get_bits(gb, bits_to_get);
+                coeff = coeff_tables[token][bits_to_get];
 
                 zero_run = zero_run_base[token];
                 if (zero_run_get_bits[token])
@@ -1107,6 +1106,10 @@ static int unpack_vlcs(Vp3DecodeContext *s, GetBitContext *gb,
     return eob_run;
 }
 
+static void reverse_dc_prediction(Vp3DecodeContext *s,
+                                  int first_fragment,
+                                  int fragment_width,
+                                  int fragment_height);
 /*
  * This function unpacks all of the DCT coefficient data from the
  * bitstream.
@@ -1128,9 +1131,21 @@ static int unpack_dct_coeffs(Vp3DecodeContext *s, GetBitContext *gb)
     residual_eob_run = unpack_vlcs(s, gb, &s->dc_vlc[dc_y_table], 0,
         s->first_coded_y_fragment, s->last_coded_y_fragment, residual_eob_run);
 
+    /* reverse prediction of the Y-plane DC coefficients */
+    reverse_dc_prediction(s, 0, s->fragment_width, s->fragment_height);
+
     /* unpack the C plane DC coefficients */
     residual_eob_run = unpack_vlcs(s, gb, &s->dc_vlc[dc_c_table], 0,
         s->first_coded_c_fragment, s->last_coded_c_fragment, residual_eob_run);
+
+    /* reverse prediction of the C-plane DC coefficients */
+    if (!(s->avctx->flags & CODEC_FLAG_GRAY))
+    {
+        reverse_dc_prediction(s, s->fragment_start[1],
+            s->fragment_width / 2, s->fragment_height / 2);
+        reverse_dc_prediction(s, s->fragment_start[2],
+            s->fragment_width / 2, s->fragment_height / 2);
+    }
 
     /* fetch the AC table indexes */
     ac_y_table = get_bits(gb, 4);
@@ -1961,14 +1976,6 @@ static int vp3_decode_frame(AVCodecContext *avctx,
         return -1;
     }
 
-    reverse_dc_prediction(s, 0, s->fragment_width, s->fragment_height);
-    if ((avctx->flags & CODEC_FLAG_GRAY) == 0) {
-        reverse_dc_prediction(s, s->fragment_start[1],
-            s->fragment_width / 2, s->fragment_height / 2);
-        reverse_dc_prediction(s, s->fragment_start[2],
-            s->fragment_width / 2, s->fragment_height / 2);
-    }
-
     for (i = 0; i < s->macroblock_height; i++)
         render_slice(s, i);
 
@@ -2302,7 +2309,7 @@ static av_cold int theora_decode_init(AVCodecContext *avctx)
     }
 
   for(i=0;i<3;i++) {
-    init_get_bits(&gb, header_start[i], header_len[i]);
+    init_get_bits(&gb, header_start[i], header_len[i] * 8);
 
     ptype = get_bits(&gb, 8);
 

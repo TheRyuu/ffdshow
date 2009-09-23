@@ -625,9 +625,6 @@ static int wma_decode_block(WMACodecContext *s)
 #endif
 
     if (s->ms_stereo && s->channel_coded[1]) {
-        float a, b;
-        int i;
-
         /* nominal case for ms stereo: we do it before mdct */
         /* no need to optimize this case because it should almost
            never happen */
@@ -637,12 +634,7 @@ static int wma_decode_block(WMACodecContext *s)
             s->channel_coded[0] = 1;
         }
 
-        for(i = 0; i < s->block_len; i++) {
-            a = s->coefs[0][i];
-            b = s->coefs[1][i];
-            s->coefs[0][i] = a + b;
-            s->coefs[1][i] = a - b;
-        }
+        s->dsp.butterflies_float(s->coefs[0], s->coefs[1], s->block_len);
     }
 
 next:
