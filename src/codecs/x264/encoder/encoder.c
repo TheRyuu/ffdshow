@@ -512,13 +512,11 @@ static int x264_validate_parameters( x264_t *h )
         float fps = h->param.i_fps_num > 0 && h->param.i_fps_den > 0 ? (float) h->param.i_fps_num / h->param.i_fps_den : 25.0;
         h->param.rc.i_lookahead = X264_MIN( h->param.rc.i_lookahead, X264_MAX( h->param.i_keyint_max, bufsize*fps ) );
     }
-
+    h->param.rc.f_qcompress = x264_clip3f( h->param.rc.f_qcompress, 0.0, 1.0 );
+    if( !h->param.rc.i_lookahead || h->param.i_keyint_max == 1 || h->param.rc.f_qcompress == 1 )
+        h->param.rc.b_mb_tree = 0;
     if( h->param.rc.b_stat_read )
         h->param.rc.i_lookahead = 0;
-    else if( !h->param.rc.i_lookahead || h->param.i_keyint_max == 1 )
-        h->param.rc.b_mb_tree = 0;
-    if( h->param.rc.f_qcompress == 1 )
-        h->param.rc.b_mb_tree = 0;
 #ifdef HAVE_PTHREAD
     if( h->param.i_sync_lookahead )
         h->param.i_sync_lookahead = x264_clip3( h->param.i_sync_lookahead, h->param.i_threads + h->param.i_bframe, X264_LOOKAHEAD_MAX );
@@ -874,6 +872,11 @@ x264_t *x264_encoder_open( x264_param_t *param )
             goto fail;
     if( x264_analyse_init_costs( h, X264_LOOKAHEAD_QP ) )
         goto fail;
+    if( h->cost_mv[1][2013] != 24 )
+    {
+    x264_log( h, X264_LOG_ERROR, "MV cost test failed: x264 has been miscompiled!\n" );
+        goto fail;
+    }
 
     h->out.i_nal = 0;
     h->out.i_bitstream = X264_MAX( 1000000, h->param.i_width * h->param.i_height * 4
