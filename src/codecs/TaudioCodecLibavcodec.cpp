@@ -168,6 +168,14 @@ if (avcodec)
 
 HRESULT TaudioCodecLibavcodec::decode(TbyteBuffer &src0)
 {
+ /* A few explanations about the audio fields
+  dstLength = size (in bytes) of the decoded audio data
+  Block : audio data for all audio channels (=sample), so number of channels x sample_size
+  Bits per sample = number of bits in one channel sample (6, 16, 24, 32, 64). The highest gives the best quality. Usually 16
+  Sample size : bits per sample in bytes so bps/8
+  Number of samples = number of blocks in the audio data = dstLength/block size, except for channels reordering
+ */
+
  // Dynamic range compression for AC3/DTS formats
  if (codecId == CODEC_ID_AC3 || codecId == CODEC_ID_EAC3 || codecId == CODEC_ID_DTS || codecId == CODEC_ID_MLP || codecId == CODEC_ID_TRUEHD)
   {
@@ -261,19 +269,10 @@ HRESULT TaudioCodecLibavcodec::decode(TbyteBuffer &src0)
      this->deci->getPostproc(&libmplayer);
      if (libmplayer != NULL)
      {
-     	 // fixme
-       if (codecId == CODEC_ID_VORBIS) {
-         libmplayer->reorder_channel_nch(dst, 
-             src_ch_layout,AF_CHANNEL_LAYOUT_FFDSHOW_DEFAULT,
-             fmt.nchannels,
-             dstLength / 2, 2);
-       } else {
-       	 libmplayer->reorder_channel_nch(dst, 
-             src_ch_layout,AF_CHANNEL_LAYOUT_FFDSHOW_DEFAULT,
-             fmt.nchannels,
-             dstLength * 8 / fmt.blockAlign(), fmt.blockAlign()/8);
-       	
-       }
+    	 libmplayer->reorder_channel_nch(dst, 
+        src_ch_layout,AF_CHANNEL_LAYOUT_FFDSHOW_DEFAULT,
+        fmt.nchannels,
+        dstLength * 8 /fmt.blockAlign(), fmt.bitsPerSample()/8);
      }
   }
 
