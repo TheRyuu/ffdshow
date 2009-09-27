@@ -39,15 +39,6 @@ clean:
 	$(MAKE) -C codecs/x264 clean
 	$(MAKE) -C codecs/xvidcore clean
 
-dep:
-	$(MAKE) .depend
-	$(MAKE) -C ffmpeg .depend
-	$(MAKE) -C ffmpeg-mt .depend
-	$(MAKE) -C mplayer .depend
-	$(MAKE) -C codecs/libmpeg2 .depend
-	$(MAKE) -C codecs/x264 .depend
-	$(MAKE) -C codecs/xvidcore .depend
-
 distclean:
 	$(MAKE) -C ffmpeg distclean
 	$(MAKE) -C ffmpeg-mt distclean
@@ -55,10 +46,3 @@ distclean:
 	$(MAKE) -C codecs/libmpeg2 distclean
 	$(MAKE) -C codecs/x264 distclean
 	$(MAKE) -C codecs/xvidcore distclean
-
-#
-# include dependency files if they exist
-#
-ifneq ($(wildcard .depend),)
-include .depend
-endif
