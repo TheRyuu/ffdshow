@@ -814,15 +814,15 @@
 #define IDFF_wmv1               1011
 #define IDFF_wmv2               1017
 #define IDFF_wmv3               1042
-#define IDFF_wvc1                1090
-#define IDFF_cavs                1091
+#define IDFF_wvc1               1090
+#define IDFF_cavs               1091
 #define IDFF_vp5                1093
 #define IDFF_vp6                1094
-#define IDFF_vp6f                1095
-#define IDFF_rt21                1096
-#define IDFF_vixl                1097
-#define IDFF_aasc                1098
-#define IDFF_qtrpza              1099
+#define IDFF_vp6f               1095
+#define IDFF_rt21               1096
+#define IDFF_vixl               1097
+#define IDFF_aasc               1098
+#define IDFF_qtrpza             1099
 #define IDFF_mjpg               1014
 #define IDFF_dvsd               1015
 #define IDFF_hfyu               1016
@@ -893,6 +893,7 @@
 #define IDFF_cdvc               1085
 #define IDFF_atrac3             1086
 #define IDFF_nellymoser         1087
+#define IDFF_wavpack            1089 //1088 is eac3
 #define IDFF_rawa               1036
 #define IDFF_avisV              1043
 #define IDFF_avisA              1048

@@ -133,6 +133,7 @@
  CODEC_OP(CODEC_ID_MLP               ,148,"mlp") \
  CODEC_OP(CODEC_ID_MP1               ,149,"mp1") \
  CODEC_OP(CODEC_ID_TRUEHD            ,150,"truehd") \
+ CODEC_OP(CODEC_ID_WAVPACK           ,151,"wavpack") \
  \
  /* Raw formats */ \
  CODEC_OP(CODEC_ID_RAW           ,300,"raw") \

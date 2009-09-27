@@ -164,6 +164,7 @@ SRCS_C=\
       $(LAVC_DIR)/vp6.c \
       $(LAVC_DIR)/vp6dsp.c \
       $(LAVC_DIR)/w32thread.c \
+      $(LAVC_DIR)/wavpack.c \
       $(LAVC_DIR)/wma.c \
       $(LAVC_DIR)/wmadec.c \
       $(LAVC_DIR)/wmv2.c \

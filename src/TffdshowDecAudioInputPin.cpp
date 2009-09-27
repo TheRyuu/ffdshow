@@ -158,7 +158,8 @@ STDMETHODIMP TffdshowDecAudioInputPin::Receive(IMediaSample* pIn)
    jitter=int(j);
    if ((uint64_t)ff_abs(j) > 100 * (REF_SECOND_MULT / 1000) // +-100ms jitter is allowed for now
        && codecId != CODEC_ID_FLAC
-       && codecId != CODEC_ID_TTA)
+       && codecId != CODEC_ID_TTA
+       && codecId != CODEC_ID_WAVPACK)
     {
      DPRINTF(_l("jitter correction"));
      buf.clear();
@@ -320,6 +321,7 @@ HRESULT TffdshowDecAudioInputPin::getMovieSource(const TaudioCodec* *moviePtr)
     *moviePtr=audio;
     return S_OK;
 }
+
 HRESULT TffdshowDecAudioInputPin::getInCodecString(char_t *buf,size_t buflen)
 {
     if (!buf) return E_POINTER;
@@ -358,9 +360,10 @@ STDMETHODIMP_(bool) TffdshowDecAudioInputPin::getsf(TsampleFormat &outsf)
     }
     return false;
 }
+
 int TffdshowDecAudioInputPin::getJitter(void) const
 {
-    if (codecId != CODEC_ID_FLAC && codecId != CODEC_ID_TTA)
+    if (codecId != CODEC_ID_FLAC && codecId != CODEC_ID_TTA && codecId != CODEC_ID_WAVPACK)
         return jitter/int(REF_SECOND_MULT/1000);
     else
         return 0;

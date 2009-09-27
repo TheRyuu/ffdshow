@@ -1159,6 +1159,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavcodec\wavpack.c"
+				>
+			</File>
+			<File
 				RelativePath="libavcodec\wma.c"
 				>
 			</File>

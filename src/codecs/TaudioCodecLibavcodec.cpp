@@ -58,7 +58,6 @@ bool TaudioCodecLibavcodec::init(const CMediaType &mt)
    }
    parser=libavcodec->av_parser_init(codecId);
 
-
    if (mt.formattype==FORMAT_WaveFormatEx)
     {
      const WAVEFORMATEX *wfex=(const WAVEFORMATEX*)mt.pbFormat;
@@ -77,7 +76,6 @@ bool TaudioCodecLibavcodec::init(const CMediaType &mt)
 
    if (codecId==CODEC_ID_WMAV1 || codecId==CODEC_ID_WMAV2)
     {
-     //bpssum=lastbps=avctx->bit_rate/1000;
      numframes=1;
     }
    Textradata extradata(mt,FF_INPUT_BUFFER_PADDING_SIZE);
@@ -154,7 +152,7 @@ const char_t* TaudioCodecLibavcodec::getName(void) const
 }
 void TaudioCodecLibavcodec::getInputDescr1(char_t *buf,size_t buflen) const
 {
- 
+
 if (avcodec)
 {
     // Show dca as dts
@@ -192,7 +190,7 @@ HRESULT TaudioCodecLibavcodec::decode(TbyteBuffer &src0)
 
  int size=(int)src0.size();
  unsigned char *src = size ? &src0[0] : NULL;
- 
+
  int maxLength=AVCODEC_MAX_AUDIO_FRAME_SIZE;
  TbyteBuffer newsrcBuffer;
 
@@ -204,7 +202,7 @@ HRESULT TaudioCodecLibavcodec::decode(TbyteBuffer &src0)
    void *dst=(void*)getDst(dstLength);
    int dstLength2=AVCODEC_MAX_AUDIO_FRAME_SIZE;
    void *dst2=buf2.alloc(dstLength);
-   
+
    int ret=0,ret2=0;
    // Use parser if available and do not use it for MLP/TrueHD stream
    if (parser && codecId != CODEC_ID_MLP && codecId != CODEC_ID_TRUEHD)
@@ -217,7 +215,6 @@ HRESULT TaudioCodecLibavcodec::decode(TbyteBuffer &src0)
            break;
        size-=ret;
        src+=ret;
-
 
        if (dstLength2 > 0) // This block could be parsed
        {
@@ -287,7 +284,6 @@ HRESULT TaudioCodecLibavcodec::decode(TbyteBuffer &src0)
  return S_OK;
 }
 
-
 void TaudioCodecLibavcodec::updateChannelMapping()
 {
     src_ch_layout = AF_CHANNEL_LAYOUT_FFDSHOW_DEFAULT;
@@ -300,8 +296,7 @@ void TaudioCodecLibavcodec::updateChannelMapping()
       src_ch_layout = AF_CHANNEL_LAYOUT_LAVC_AC3_DEFAULT;
     else if (!stricmp(codec, _l("dca")))
       src_ch_layout = AF_CHANNEL_LAYOUT_LAVC_DCA_DEFAULT;
-    else if (!stricmp(codec, _l("libfaad"))
-        || !stricmp(codec, _l("mpeg4aac")))
+    else if (!stricmp(codec, _l("libfaad")) || !stricmp(codec, _l("mpeg4aac")))
       src_ch_layout = AF_CHANNEL_LAYOUT_AAC_DEFAULT;
     else if (!stricmp(codec, _l("liba52")))
       src_ch_layout = AF_CHANNEL_LAYOUT_LAVC_LIBA52_DEFAULT;
