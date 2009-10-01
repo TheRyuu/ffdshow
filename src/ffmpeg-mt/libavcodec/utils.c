@@ -485,7 +485,15 @@ int attribute_align_arg avcodec_open(AVCodecContext *avctx, AVCodec *codec)
     }
 
     avctx->codec = codec;
-    avctx->codec_id = codec->id; /* ffdshow custom code */
+    if ((avctx->codec_type == CODEC_TYPE_UNKNOWN || avctx->codec_type == codec->type) &&
+        avctx->codec_id == CODEC_ID_NONE) {
+        avctx->codec_type = codec->type;
+        avctx->codec_id   = codec->id;
+    }
+    if(avctx->codec_id != codec->id || avctx->codec_type != codec->type){
+        av_log(avctx, AV_LOG_ERROR, "codec type or id mismatches\n");
+        goto free_and_end;
+    }
     avctx->frame_number = 0;
 
     if (HAVE_THREADS && avctx->thread_count>1 && !avctx->thread_opaque) {

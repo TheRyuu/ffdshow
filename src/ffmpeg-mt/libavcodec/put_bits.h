@@ -54,10 +54,10 @@ typedef struct PutBitContext {
 } PutBitContext;
 
 /**
- * Initializes the PutBitContext \p s.
+ * Initializes the PutBitContext s.
  *
  * @param buffer the buffer where to put bits
- * @param buffer_size the size in bytes of \p buffer
+ * @param buffer_size the size in bytes of buffer
  */
 static inline void init_put_bits(PutBitContext *s, uint8_t *buffer, int buffer_size)
 {
@@ -125,19 +125,23 @@ static inline void flush_put_bits(PutBitContext *s)
 void align_put_bits(PutBitContext *s);
 
 /**
- * Puts the string \p s in the bitstream.
+ * Puts the string s in the bitstream.
  *
  * @param terminate_string 0-terminates the written string if value is 1
  */
 void ff_put_string(PutBitContext * pbc, const char *s, int terminate_string);
 
 /**
- * Copies the content of \p src to the bitstream.
+ * Copies the content of src to the bitstream.
  *
- * @param length the number of bits of \p src to copy
+ * @param length the number of bits of src to copy
  */
 void ff_copy_bits(PutBitContext *pb, const uint8_t *src, int length);
 
+/**
+ * Write up to 31 bits into a bitstream.
+ * Use put_bits32 to write 32 bits.
+ */
 static inline void put_bits(PutBitContext *s, int n, unsigned int value)
 #ifndef ALT_BITSTREAM_WRITER
 {
@@ -145,7 +149,7 @@ static inline void put_bits(PutBitContext *s, int n, unsigned int value)
     int bit_left;
 
     //    printf("put_bits=%d %x\n", n, value);
-    assert(n == 32 || value < (1U << n));
+    assert(n <= 31 && value < (1U << n));
 
     bit_buf = s->bit_buf;
     bit_left = s->bit_left;
@@ -262,6 +266,22 @@ static inline void put_sbits(PutBitContext *pb, int bits, int32_t val)
 }
 
 /**
+ * Write exactly 32 bits into a bitstream
+ */
+static void av_unused put_bits32(PutBitContext *s, uint32_t value)
+{
+    int lo = value & 0xffff;
+    int hi = value >> 16;
+#ifdef ALT_BITSTREAM_WRITER_LE
+    put_bits(s, 16, lo);
+    put_bits(s, 16, hi);
+#else
+    put_bits(s, 16, hi);
+    put_bits(s, 16, lo);
+#endif
+}
+
+/**
  * Returns the pointer to the byte where the bitstream writer will put
  * the next bit.
  */
@@ -292,7 +312,7 @@ static inline void skip_put_bytes(PutBitContext *s, int n){
 /**
  * Skips the given number of bits.
  * Must only be used if the actual values in the bitstream do not matter.
- * If \p n is 0 the behavior is undefined.
+ * If n is 0 the behavior is undefined.
  */
 static inline void skip_put_bits(PutBitContext *s, int n){
 #ifdef ALT_BITSTREAM_WRITER
