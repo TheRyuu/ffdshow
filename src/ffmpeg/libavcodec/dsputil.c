@@ -4030,6 +4030,7 @@ static void sv_fmul_scalar_4_c(float *dst, const float **sv, float mul,
         dst[i+3] = sv[0][3] * mul;
     }
 }
+#endif
 
 static void butterflies_float_c(float *restrict v1, float *restrict v2,
                                 int len)
@@ -4041,7 +4042,6 @@ static void butterflies_float_c(float *restrict v1, float *restrict v2,
         v2[i] = t;
     }
 }
-#endif
 
 static void int32_to_float_fmul_scalar_c(float *dst, const int *src, float mul, int len){
     int i;
@@ -4593,8 +4593,8 @@ void attribute_align_arg dsputil_init(DSPContext* c, AVCodecContext *avctx)
     c->int32_to_float_fmul_scalar = int32_to_float_fmul_scalar_c;
     c->float_to_int16 = ff_float_to_int16_c;
     c->float_to_int16_interleave = ff_float_to_int16_interleave_c;
-#if CONFIG_AAC_DECODER
     c->butterflies_float = butterflies_float_c;
+#if CONFIG_AAC_DECODER
     c->vector_fmul_scalar = vector_fmul_scalar_c;
 
     c->vector_fmul_sv_scalar[0] = vector_fmul_sv_scalar_2_c;
