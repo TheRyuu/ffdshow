@@ -42,24 +42,16 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
     {
     case DLL_PROCESS_ATTACH:
         count++;
-#ifdef __GNUC__
         pthread_win32_process_attach_np();
         pthread_win32_thread_attach_np();
-#endif
-        //snprintf(pomS,40,"libavcodec: %i %i\n",count,hInstance);OutputDebugString(pomS);
         DisableThreadLibraryCalls(hInstance);
         InitializeCriticalSection( &g_csStaticDataLock );
         break;
 
     case DLL_PROCESS_DETACH:
         count--;
-#ifdef __GNUC__
         pthread_win32_thread_detach_np();
         pthread_win32_process_detach_np();
-#endif
-        //snprintf(pomS,40,"libavcodec: %i %i\n",count,hInstance);OutputDebugString(pomS);
-        //if (count<=0)
-        //av_free_static();
         DeleteCriticalSection( &g_csStaticDataLock );
         break;
     }

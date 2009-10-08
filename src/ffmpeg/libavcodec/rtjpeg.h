@@ -22,9 +22,7 @@
 #ifndef AVCODEC_RTJPEG_H
 #define AVCODEC_RTJPEG_H
 
-#ifdef __GNUC__
 #include <stdint.h>
-#endif
 #include "dsputil.h"
 
 typedef struct {

@@ -23,9 +23,7 @@
 #ifndef AVCODEC_CELP_FILTERS_H
 #define AVCODEC_CELP_FILTERS_H
 
-#ifdef __GNUC__
 #include <stdint.h>
-#endif
 
 /**
  * Circularly convolve fixed vector with a phase dispersion impulse

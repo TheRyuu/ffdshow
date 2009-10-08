@@ -24,8 +24,10 @@
 			OutputDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			ConfigurationType="2"
-			UseOfMFC="0"
+			UseOfMFC="1"
 			ATLMinimizesCRunTimeLibraryUsage="false"
+			CharacterSet="0"
+			WholeProgramOptimization="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -51,7 +53,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories=".,..,../codecs,../imgFilters,../zlib,libavcodec,libavutil"
-				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_DEBUG;_WINDOWS;HAVE_AV_CONFIG_H"
+				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_DEBUG;_WINDOWS;HAVE_AV_CONFIG_H;HAVE_PTHREAD;PTW32_STATIC_LIB"
 				ExceptionHandling="0"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="0"
@@ -81,9 +83,10 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="User32.lib libcmtd.lib kernel32.lib oldnames.lib pthreadVC2.lib $(NOINHERIT)"
+				AdditionalDependencies="User32.lib libcmtd.lib kernel32.lib oldnames.lib libpthreadGC2.a libgcc.a libmingwex.a libws2_32.a $(NOINHERIT)"
 				OutputFile="../../bin/ffmpegmt.dll"
 				SuppressStartupBanner="true"
+				AdditionalLibraryDirectories="../../bin/lib_x86;"
 				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile=".\libavcodec.def"
@@ -124,8 +127,10 @@
 			OutputDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			ConfigurationType="2"
-			UseOfMFC="0"
+			UseOfMFC="1"
 			ATLMinimizesCRunTimeLibraryUsage="false"
+			CharacterSet="0"
+			WholeProgramOptimization="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -151,7 +156,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories=".,..,../codecs,../imgFilters,../zlib,libavcodec,libavutil"
-				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_DEBUG;_WINDOWS;HAVE_AV_CONFIG_H"
+				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_DEBUG;_WINDOWS;HAVE_AV_CONFIG_H;HAVE_PTHREAD;PTW32_STATIC_LIB"
 				ExceptionHandling="0"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="0"
@@ -180,9 +185,10 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="User32.lib libcmtd.lib kernel32.lib oldnames.lib pthreadVC2.lib $(NOINHERIT)"
+				AdditionalDependencies="User32.lib libcmtd.lib kernel32.lib oldnames.lib libpthreadGC2.a libgcc.a libmingwex.a libws2_32.a $(NOINHERIT)"
 				OutputFile="../../bin/ffmpegmt.dll"
 				SuppressStartupBanner="true"
+				AdditionalLibraryDirectories="../../bin/lib_x64;"
 				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile=".\libavcodec.def"
@@ -225,7 +231,8 @@
 			ConfigurationType="2"
 			UseOfMFC="1"
 			ATLMinimizesCRunTimeLibraryUsage="false"
-			WholeProgramOptimization="1"
+			CharacterSet="0"
+			WholeProgramOptimization="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -254,9 +261,9 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
 				EnableFiberSafeOptimizations="true"
-				WholeProgramOptimization="true"
+				WholeProgramOptimization="false"
 				AdditionalIncludeDirectories=".,..,../codecs,../imgFilters,../zlib,libavcodec,libavutil"
-				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;NDEBUG;_WINDOWS;HAVE_AV_CONFIG_H"
+				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;NDEBUG;_WINDOWS;HAVE_AV_CONFIG_H;HAVE_PTHREAD;PTW32_STATIC_LIB"
 				StringPooling="true"
 				ExceptionHandling="0"
 				RuntimeLibrary="0"
@@ -288,10 +295,11 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="User32.lib libcmt.lib kernel32.lib oldnames.lib pthreadVC2.lib $(NOINHERIT)"
+				AdditionalDependencies="User32.lib libcmt.lib kernel32.lib oldnames.lib libpthreadGC2.a libgcc.a libmingwex.a libws2_32.a $(NOINHERIT)"
 				OutputFile="../../bin/ffmpegmt.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
+				AdditionalLibraryDirectories="../../bin/lib_x86;"
 				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile=".\libavcodec.def"
@@ -334,7 +342,8 @@
 			ConfigurationType="2"
 			UseOfMFC="1"
 			ATLMinimizesCRunTimeLibraryUsage="false"
-			WholeProgramOptimization="1"
+			CharacterSet="0"
+			WholeProgramOptimization="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -363,9 +372,9 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
-				WholeProgramOptimization="true"
+				WholeProgramOptimization="false"
 				AdditionalIncludeDirectories=".,..,../codecs,../imgFilters,../zlib,libavcodec,libavutil"
-				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;NDEBUG;_WINDOWS;HAVE_AV_CONFIG_H"
+				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;NDEBUG;_WINDOWS;HAVE_AV_CONFIG_H;HAVE_PTHREAD;PTW32_STATIC_LIB"
 				StringPooling="true"
 				ExceptionHandling="0"
 				RuntimeLibrary="0"
@@ -395,10 +404,11 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="User32.lib libcmt.lib kernel32.lib oldnames.lib pthreadVC2.lib $(NOINHERIT)"
+				AdditionalDependencies="User32.lib libcmt.lib kernel32.lib oldnames.lib libpthreadGC2.a libgcc.a libmingwex.a libws2_32.a $(NOINHERIT)"
 				OutputFile="../../bin/ffmpegmt.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
+				AdditionalLibraryDirectories="../../bin/lib_x64;"
 				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile=".\libavcodec.def"
@@ -604,6 +614,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\inttypes.h"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\mathops.h"
 				>
 			</File>
@@ -624,6 +638,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\pthreads\pthread.h"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\ratecontrol.h"
 				>
 			</File>
@@ -636,7 +654,19 @@
 				>
 			</File>
 			<File
+				RelativePath="..\pthreads\sched.h"
+				>
+			</File>
+			<File
+				RelativePath="..\pthreads\semaphore.h"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\simple_idct.h"
+				>
+			</File>
+			<File
+				RelativePath="..\stdint.h"
 				>
 			</File>
 			<File

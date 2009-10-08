@@ -27,9 +27,7 @@
 #ifndef AVCODEC_RV40DATA_H
 #define AVCODEC_RV40DATA_H
 
-#ifdef __GNUC__
 #include <stdint.h>
-#endif
 
 /**
  * standard widths and heights coded in RV40

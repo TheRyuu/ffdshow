@@ -23,8 +23,9 @@
 			OutputDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			ConfigurationType="2"
-			UseOfMFC="0"
+			UseOfMFC="1"
 			ATLMinimizesCRunTimeLibraryUsage="false"
+			WholeProgramOptimization="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -49,6 +50,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				WholeProgramOptimization="false"
 				AdditionalIncludeDirectories=".,..,../imgFilters,libaf,libvo,libavutil"
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_DEBUG;_WINDOWS"
 				BasicRuntimeChecks="3"
@@ -112,8 +114,9 @@
 			OutputDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			ConfigurationType="2"
-			UseOfMFC="0"
+			UseOfMFC="1"
 			ATLMinimizesCRunTimeLibraryUsage="false"
+			WholeProgramOptimization="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -138,6 +141,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				WholeProgramOptimization="false"
 				AdditionalIncludeDirectories=".,..,../imgFilters,libaf,libvo"
 				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;_DEBUG;_WINDOWS"
 				ExceptionHandling="0"
@@ -205,7 +209,7 @@
 			ConfigurationType="2"
 			UseOfMFC="1"
 			ATLMinimizesCRunTimeLibraryUsage="false"
-			WholeProgramOptimization="1"
+			WholeProgramOptimization="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -233,6 +237,7 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
+				WholeProgramOptimization="false"
 				AdditionalIncludeDirectories=".,..,../imgFilters,libaf,libvo,libavutil"
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;NDEBUG;_WINDOWS"
 				StringPooling="true"
@@ -300,7 +305,7 @@
 			ConfigurationType="2"
 			UseOfMFC="1"
 			ATLMinimizesCRunTimeLibraryUsage="false"
-			WholeProgramOptimization="1"
+			WholeProgramOptimization="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -328,6 +333,7 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
+				WholeProgramOptimization="false"
 				AdditionalIncludeDirectories=".,..,../imgFilters,libaf,libvo"
 				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;NDEBUG;_WINDOWS"
 				StringPooling="true"
@@ -723,15 +729,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\stdint.h"
+				>
+			</File>
+			<File
 				RelativePath=".\postproc\swscale.h"
 				>
 			</File>
 			<File
 				RelativePath=".\postproc\swscale_internal.h"
-				>
-			</File>
-			<File
-				RelativePath=".\postproc\swscale_multicpu.h"
 				>
 			</File>
 			<File

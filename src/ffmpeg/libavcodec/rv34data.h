@@ -27,9 +27,7 @@
 #ifndef AVCODEC_RV34DATA_H
 #define AVCODEC_RV34DATA_H
 
-#ifdef __GNUC__
 #include <stdint.h>
-#endif
 
 /**
  * number of ones in nibble minus one

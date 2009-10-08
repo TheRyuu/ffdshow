@@ -25,10 +25,8 @@
 #ifndef AVCODEC_TRUEMOTION1DATA_H
 #define AVCODEC_TRUEMOTION1DATA_H
 
-#ifdef __GNUC__
 #include <stdint.h>
 #include <stdlib.h>
-#endif
 
 /* Y delta tables, skinny and fat */
 static const int16_t ydt1[8] = { 0, -2, 2, -6, 6, -12, 12, -12 };

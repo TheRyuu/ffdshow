@@ -24,8 +24,10 @@
 			OutputDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			ConfigurationType="2"
-			UseOfMFC="0"
+			UseOfMFC="1"
 			ATLMinimizesCRunTimeLibraryUsage="false"
+			CharacterSet="0"
+			WholeProgramOptimization="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -50,6 +52,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				WholeProgramOptimization="false"
 				AdditionalIncludeDirectories=".,..,../codecs,../imgFilters,../zlib,libavcodec,libavutil"
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_DEBUG;_WINDOWS;HAVE_AV_CONFIG_H;CONFIG_H264_PARSER;CONFIG_VORBIS_DECODER;CONFIG_H264_DECODER;H264_MERGE_TESTING"
 				ExceptionHandling="0"
@@ -124,8 +127,10 @@
 			OutputDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			ConfigurationType="2"
-			UseOfMFC="0"
+			UseOfMFC="1"
 			ATLMinimizesCRunTimeLibraryUsage="false"
+			CharacterSet="0"
+			WholeProgramOptimization="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -150,6 +155,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				WholeProgramOptimization="false"
 				AdditionalIncludeDirectories=".,..,../codecs,../imgFilters,../zlib,libavcodec,libavutil"
 				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_DEBUG;_WINDOWS;HAVE_AV_CONFIG_H"
 				ExceptionHandling="0"
@@ -225,7 +231,8 @@
 			ConfigurationType="2"
 			UseOfMFC="1"
 			ATLMinimizesCRunTimeLibraryUsage="false"
-			WholeProgramOptimization="1"
+			CharacterSet="0"
+			WholeProgramOptimization="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -254,7 +261,7 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
 				EnableFiberSafeOptimizations="true"
-				WholeProgramOptimization="true"
+				WholeProgramOptimization="false"
 				AdditionalIncludeDirectories=".,..,../codecs,../imgFilters,../zlib,libavcodec,libavutil"
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;NDEBUG;_WINDOWS;HAVE_AV_CONFIG_H"
 				StringPooling="true"
@@ -334,7 +341,8 @@
 			ConfigurationType="2"
 			UseOfMFC="1"
 			ATLMinimizesCRunTimeLibraryUsage="false"
-			WholeProgramOptimization="1"
+			CharacterSet="0"
+			WholeProgramOptimization="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -363,7 +371,7 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
-				WholeProgramOptimization="true"
+				WholeProgramOptimization="false"
 				AdditionalIncludeDirectories=".,..,../codecs,../imgFilters,../zlib,libavcodec,libavutil"
 				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;NDEBUG;_WINDOWS;HAVE_AV_CONFIG_H"
 				StringPooling="true"
@@ -1392,6 +1400,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\inttypes.h"
+				>
+			</File>
+			<File
 				RelativePath="libavcodec\jpegls.h"
 				>
 			</File>
@@ -1557,6 +1569,10 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\sp5x.h"
+				>
+			</File>
+			<File
+				RelativePath="..\stdint.h"
 				>
 			</File>
 			<File

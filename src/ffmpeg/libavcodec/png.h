@@ -22,9 +22,7 @@
 #ifndef AVCODEC_PNG_H
 #define AVCODEC_PNG_H
 
-#ifdef __GNUC__
 #include <stdint.h>
-#endif
 
 #define PNG_COLOR_MASK_PALETTE    1
 #define PNG_COLOR_MASK_COLOR      2

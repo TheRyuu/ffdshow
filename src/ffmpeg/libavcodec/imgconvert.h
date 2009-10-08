@@ -24,9 +24,7 @@
 #ifndef AVCODEC_IMGCONVERT_H
 #define AVCODEC_IMGCONVERT_H
 
-#ifdef __GNUC__
 #include <stdint.h>
-#endif
 #include "avcodec.h"
 
 int ff_fill_linesize(AVPicture *picture, enum PixelFormat pix_fmt, int width);

@@ -22,9 +22,7 @@
 #ifndef AVCODEC_RA288_H
 #define AVCODEC_RA288_H
 
-#ifdef __GNUC__
 #include <stdint.h>
-#endif
 
 static const float amptable[8]={
      0.515625,  0.90234375,  1.57910156,  2.76342773,

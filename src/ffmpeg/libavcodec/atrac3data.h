@@ -28,9 +28,7 @@
 #ifndef AVCODEC_ATRAC3DATA_H
 #define AVCODEC_ATRAC3DATA_H
 
-#ifdef __GNUC__
 #include <stdint.h>
-#endif
 
 /* VLC tables */
 

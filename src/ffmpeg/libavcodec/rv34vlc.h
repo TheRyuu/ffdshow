@@ -27,9 +27,7 @@
 #ifndef AVCODEC_RV34VLC_H
 #define AVCODEC_RV34VLC_H
 
-#ifdef __GNUC__
 #include <stdint.h>
-#endif
 
 #define NUM_INTRA_TABLES 5
 #define NUM_INTER_TABLES 7

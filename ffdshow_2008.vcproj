@@ -1202,6 +1202,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\stdint.h"
+				>
+			</File>
+			<File
 				RelativePath="src\TaudioParser.h"
 				>
 			</File>

@@ -22,9 +22,7 @@
 #ifndef AVCODEC_RA144_H
 #define AVCODEC_RA144_H
 
-#ifdef __GNUC__
 #include <stdint.h>
-#endif
 
 static const int16_t gain_val_tab[256][3] = {
     { 541, 956,  768}, { 877, 581,  568}, { 675,1574,  635}, {1248,1464,  668},

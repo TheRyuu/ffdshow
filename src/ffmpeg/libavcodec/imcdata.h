@@ -24,9 +24,7 @@
 #ifndef AVCODEC_IMCDATA_H
 #define AVCODEC_IMCDATA_H
 
-#ifdef __GNUC__
 #include <stdint.h>
-#endif
 
 static const uint16_t band_tab[33] = {
       0,   3,   6,   9,  12,  16,  20,  24,  29,  34,  40,

@@ -1,86 +1,19 @@
-#ifndef _CYGWIN_INTTYPES_H
-#define _CYGWIN_INTTYPES_H
-/* /usr/include/inttypes.h for CYGWIN
- * Copyleft 2001-2002 by Felix Buenemann
- * <atmosfear at users.sourceforge.net>
- */
-typedef signed char int8_t;
-typedef unsigned char uint8_t;
-typedef short int int16_t;
-typedef unsigned short uint16_t;
-typedef int int32_t;
-typedef unsigned int uint32_t;
-#ifndef WIN64
-typedef signed int intptr_t;
-typedef unsigned int uintptr_t;
-#endif
+/* inttypes.h - fixed size integer types custom code from ffdshow-tryouts
 
-#ifdef _MSC_VER
- typedef __int64 int64_t;
- typedef unsigned __int64 uint64_t;
-#else
- typedef long long int64_t;
- typedef unsigned long long uint64_t;
-#endif
+   Copyright 2003, 2009 Red Hat, Inc.
 
-#ifndef WIN64
- #define __WORDSIZE 32
-#else
- #define __WORDSIZE 64
-#endif
-/*
-typedef unsigned short UINT16;
-typedef signed short INT16;
-typedef unsigned char UINT8;
-typedef unsigned int UINT32;
-typedef uint64_t UINT64;
-typedef signed char INT8;
-typedef signed int INT32;
-typedef int64_t INT64;
+This file is part of Cygwin.
 
-typedef long _ssize_t;
-typedef _ssize_t ssize_t;
-*/
+This software is a copyrighted work licensed under the terms of the
+Cygwin license.  Please consult the file "CYGWIN_LICENSE" for
+details. */
 
-#ifndef _I64_MIN
-#define _I64_MIN (-9223372036854775807LL-1)
-#endif
+#ifndef _INTTYPES_H
+#define _INTTYPES_H
 
-#ifndef _I64_MAX
-#define _I64_MAX 9223372036854775807LL
-#endif
-
-#ifndef _UI64_MAX
-#define _UI64_MAX 0xffffffffffffffffULL
-#endif
-
-#ifndef _UI32_MAX
-#define _UI32_MAX 0xffffffffL
-#endif
-
-#ifndef INT32_MIN
-#define INT32_MIN (-2147483647 - 1)
-#endif
-
-#ifndef INT32_MAX
-#define INT32_MAX 2147483647
-#endif
-
-#ifndef INT_MIN
-#define INT_MIN INT32_MIN
-#endif
-
-#ifndef INT_MAX
-#define INT_MAX INT32_MAX
-#endif
-
-#ifndef INT16_MIN
-#define INT16_MIN       (-0x7fff-1)
-#endif
-
-#ifndef INT16_MAX
-#define INT16_MAX       0x7fff
-#endif
+#include "stdint.h"
+#define __need_wchar_t
+#include <stddef.h>
 
 #if !defined(__cplusplus) || defined(__STDC_FORMAT_MACROS)
 
@@ -93,6 +26,7 @@ typedef _ssize_t ssize_t;
  */
 
 /* fprintf macros for signed types */
+
 #define PRId8 "d"
 #define PRId16 "d"
 #define PRId32 "d"
@@ -149,11 +83,11 @@ typedef _ssize_t ssize_t;
 #define PRIoPTR "o"
 
 /* fprintf macros for unsigned types */
+
 #define PRIu8 "u"
 #define PRIu16 "u"
 #define PRIu32 "u"
 #define PRIu64 "I64u"
-
 
 #define PRIuLEAST8 "u"
 #define PRIuLEAST16 "u"
@@ -271,7 +205,6 @@ typedef _ssize_t ssize_t;
 #define SCNxMAX "I64x"
 #define SCNxPTR "x"
 
-
 /* fscanf macros for unsigned int types */
 
 #define SCNu16 "hu"
@@ -296,6 +229,7 @@ typedef _ssize_t ssize_t;
  */
 
 /* signed char */
+
 #define SCNd8 "hhd"
 #define SCNdLEAST8 "hhd"
 #define SCNdFAST8 "hhd"
@@ -313,6 +247,7 @@ typedef _ssize_t ssize_t;
 #define SCNxFAST8 "hhx"
 
 /* unsigned char */
+
 #define SCNu8 "hhu"
 #define SCNuLEAST8 "hhu"
 #define SCNuFAST8 "hhu"

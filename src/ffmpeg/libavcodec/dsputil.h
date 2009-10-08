@@ -696,6 +696,8 @@ int ff_fft_init(FFTContext *s, int nbits, int inverse);
 void ff_fft_permute_c(FFTContext *s, FFTComplex *z);
 void ff_fft_calc_c(FFTContext *s, FFTComplex *z);
 
+void ff_fft_init_mmx(FFTContext *s);
+
 /**
  * Do the permutation needed BEFORE calling ff_fft_calc().
  */

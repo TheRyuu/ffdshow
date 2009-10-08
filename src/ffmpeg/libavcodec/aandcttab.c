@@ -21,11 +21,8 @@
  * AAN (Arai Agui Aakajima) (I)DCT tables
  */
 
-#ifdef __GNUC__
 #include <stdint.h>
-#else
 #include "libavutil/common.h"
-#endif
 
 const uint16_t ff_aanscales[64] = {
     /* precomputed values scaled up by 14 bits */

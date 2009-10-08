@@ -30,9 +30,7 @@
 #ifndef AVCODEC_QDM2DATA_H
 #define AVCODEC_QDM2DATA_H
 
-#ifdef __GNUC__
 #include <stdint.h>
-#endif
 
 /** VLC TABLES **/
 

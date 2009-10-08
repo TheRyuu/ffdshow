@@ -23,9 +23,7 @@
 #ifndef AVCODEC_CELP_MATH_H
 #define AVCODEC_CELP_MATH_H
 
-#ifdef __GNUC__
 #include <stdint.h>
-#endif
 
 /**
  * fixed-point implementation of cosine in [0; PI) domain.

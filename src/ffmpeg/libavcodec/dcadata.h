@@ -27,9 +27,7 @@
 #ifndef AVCODEC_DCADATA_H
 #define AVCODEC_DCADATA_H
 
-#ifdef __GNUC__
 #include <stdint.h>
-#endif
 
 /* Generic tables */
 

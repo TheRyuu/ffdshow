@@ -78,7 +78,7 @@
 
 // BOOST
 #pragma warning (push)
-#pragma warning(disable: 4244 4819)
+#pragma warning (disable: 4005 4244 4819)
 #include "boost/foreach.hpp"
 #include "boost/thread.hpp"
 #pragma warning (pop)
@@ -92,6 +92,7 @@
 //#define OSDTIMETABALE // OSD debug item "Time table" to reserch multithread time table. if you don't need this item comment out.
 //#define OSD_H264POC
 
+#include "stdint.h"
 #include "inttypes.h"
 #include "dwstring.h"
 #include "mem_align.h"

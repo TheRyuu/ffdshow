@@ -23,10 +23,7 @@
 #ifndef AVCODEC_DCAHUFF_H
 #define AVCODEC_DCAHUFF_H
 
-#ifdef __GNUC__
 #include <stdint.h>
-#endif
-
 #include <stdlib.h>
 
 #define TMODE_COUNT 4
