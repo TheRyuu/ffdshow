@@ -12,8 +12,6 @@ details. */
 #define _INTTYPES_H
 
 #include "stdint.h"
-#define __need_wchar_t
-#include <stddef.h>
 
 #if !defined(__cplusplus) || defined(__STDC_FORMAT_MACROS)
 
