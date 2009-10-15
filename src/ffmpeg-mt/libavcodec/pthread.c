@@ -30,10 +30,12 @@
 #define MAX_DELAYED_RELEASED_BUFFERS 32
 
 typedef int (action_func)(AVCodecContext *c, void *arg);
+typedef int (action_func2)(AVCodecContext *c, void *arg, int jobnr, int threadnr);
 
 typedef struct ThreadContext {
     pthread_t *workers;
     action_func *func;
+    action_func2 *func2;
     void *args;
     int *rets;
     int rets_count;
@@ -127,7 +129,8 @@ static void* attribute_align_arg worker(void *v)
         }
         pthread_mutex_unlock(&c->current_job_lock);
 
-        c->rets[our_job%c->rets_count] = c->func(avctx, (char*)c->args + our_job*c->job_size);
+        c->rets[our_job%c->rets_count] = c->func ? c->func(avctx, (char*)c->args + our_job*c->job_size):
+                                                   c->func2(avctx, c->args, our_job, self_id);
 
         pthread_mutex_lock(&c->current_job_lock);
         our_job = c->current_job++;
@@ -192,6 +195,13 @@ int avcodec_thread_execute(AVCodecContext *avctx, action_func* func, void *arg, 
     return 0;
 }
 
+int avcodec_thread_execute2(AVCodecContext *avctx, action_func2* func2, void *arg, int *ret, int job_count)
+{
+    ThreadContext *c= avctx->thread_opaque;
+    c->func2 = func2;
+    return avcodec_thread_execute(avctx, NULL, arg, ret, job_count, 0);
+}
+
 static int thread_init(AVCodecContext *avctx)
 {
     int i;
@@ -229,6 +239,7 @@ static int thread_init(AVCodecContext *avctx)
     avcodec_thread_park_workers(c, thread_count);
 
     avctx->execute = avcodec_thread_execute;
+    avctx->execute2 = avcodec_thread_execute2;
     return 0;
 }
 

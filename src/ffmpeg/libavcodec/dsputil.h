@@ -345,6 +345,8 @@ typedef struct DSPContext {
      */
     void (*sub_hfyu_median_prediction)(uint8_t *dst, uint8_t *src1, uint8_t *src2, int w, int *left, int *left_top);
     void (*add_hfyu_median_prediction)(uint8_t *dst, uint8_t *top, uint8_t *diff, int w, int *left, int *left_top);
+    int  (*add_hfyu_left_prediction)(uint8_t *dst, uint8_t *src, int w, int acc);
+    void (*add_hfyu_left_prediction_bgr32)(uint8_t *dst, uint8_t *src, int w, int *red, int *green, int *blue);
     /* this might write to dst[w] */
     void (*add_png_paeth_prediction)(uint8_t *dst, uint8_t *src, uint8_t *top, int w, int bpp);
     void (*bswap_buf)(uint32_t *dst, const uint32_t *src, int w);
@@ -685,7 +687,11 @@ typedef struct FFTContext {
 #define FF_MDCT_PERM_INTERLEAVE 1
 } FFTContext;
 
+#if CONFIG_HARDCODED_TABLES
+extern const FFTSample* const ff_cos_tabs[13];
+#else
 extern FFTSample* const ff_cos_tabs[13];
+#endif
 
 /**
  * Sets up a complex FFT.
@@ -777,7 +783,7 @@ typedef struct {
     int sign_convention;
 
     /* pre/post rotation tables */
-    FFTSample *tcos;
+    const FFTSample *tcos;
     FFTSample *tsin;
     FFTContext fft;
 } RDFTContext;

@@ -126,6 +126,17 @@ static av_cold int decode_init(AVCodecContext *avctx){
     return 0;
 }
 
+static av_cold int decode_end(AVCodecContext *avctx){
+    VideoXLContext * const a = avctx->priv_data;
+    AVFrame *pic = &a->pic;
+
+    if (pic->data[0])
+        avctx->release_buffer(avctx, pic);
+    av_freep(&a->pic);
+
+    return 0;
+}
+
 AVCodec xl_decoder = {
     "xl",
     CODEC_TYPE_VIDEO,
@@ -133,7 +144,7 @@ AVCodec xl_decoder = {
     sizeof(VideoXLContext),
     decode_init,
     NULL,
-    NULL,
+    decode_end,
     decode_frame,
     /*.capabilities = */CODEC_CAP_DR1,
     /*.next = */NULL,

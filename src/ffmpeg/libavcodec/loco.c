@@ -273,6 +273,17 @@ static av_cold int decode_init(AVCodecContext *avctx){
     return 0;
 }
 
+static av_cold int decode_end(AVCodecContext *avctx){
+    LOCOContext * const l = avctx->priv_data;
+    AVFrame *pic = &l->pic;
+
+    if (pic->data[0])
+        avctx->release_buffer(avctx, pic);
+    av_freep(&l->pic);
+
+    return 0;
+}
+
 AVCodec loco_decoder = {
     "loco",
     CODEC_TYPE_VIDEO,
@@ -280,7 +291,7 @@ AVCodec loco_decoder = {
     sizeof(LOCOContext),
     decode_init,
     NULL,
-    NULL,
+    decode_end,
     decode_frame,
     /*.capabilities = */CODEC_CAP_DR1,
     /*.next = */NULL,

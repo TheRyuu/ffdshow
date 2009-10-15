@@ -211,6 +211,17 @@ static av_cold int ir2_decode_init(AVCodecContext *avctx){
     return 0;
 }
 
+static av_cold int ir2_decode_end(AVCodecContext *avctx){
+    Ir2Context * const ic = avctx->priv_data;
+    AVFrame *pic = &ic->picture;
+
+    if (pic->data[0])
+        avctx->release_buffer(avctx, pic);
+    av_freep(&ic->picture);
+
+    return 0;
+}
+
 AVCodec indeo2_decoder = {
     "indeo2",
     CODEC_TYPE_VIDEO,
@@ -218,12 +229,12 @@ AVCodec indeo2_decoder = {
     sizeof(Ir2Context),
     ir2_decode_init,
     NULL,
-    NULL,
+    ir2_decode_end,
     ir2_decode_frame,
     /*.capabilities = */CODEC_CAP_DR1,
     /*.next = */NULL,
     /*.flush = */NULL,
     /*.supported_framerates = */NULL,
     /*.pix_fmts = */NULL,
-    /*.long_name = */"Intel Indeo 2",
+    /*.long_name = */NULL_IF_CONFIG_SMALL("Intel Indeo 2"),
 };
