@@ -1191,6 +1191,9 @@ static av_cold int decode_end(AVCodecContext *avctx)
     HYuvContext *s = avctx->priv_data;
     int i;
 
+    if (s->picture.data[0])
+        avctx->release_buffer(avctx, &s->picture);
+
     common_end(s);
     av_freep(&s->bitstream_buffer);
 

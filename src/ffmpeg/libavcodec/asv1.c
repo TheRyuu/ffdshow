@@ -302,7 +302,7 @@ static int decode_frame(AVCodecContext *avctx,
 {
     ASV1Context * const a = avctx->priv_data;
     AVFrame *picture = data;
-    AVFrame * const p= (AVFrame*)&a->picture;
+    AVFrame * const p= &a->picture;
     int mb_x, mb_y;
 
     if(p->data[0])
@@ -388,13 +388,13 @@ static av_cold void common_init(AVCodecContext *avctx){
     a->mb_width2  = (avctx->width  + 0) / 16;
     a->mb_height2 = (avctx->height + 0) / 16;
 
-    avctx->coded_frame= (AVFrame*)&a->picture;
+    avctx->coded_frame= &a->picture;
     a->avctx= avctx;
 }
 
 static av_cold int decode_init(AVCodecContext *avctx){
     ASV1Context * const a = avctx->priv_data;
-    AVFrame *p= (AVFrame*)&a->picture;
+    AVFrame *p= &a->picture;
     int i;
     const int scale= avctx->codec_id == CODEC_ID_ASV1 ? 1 : 2;
 
@@ -403,7 +403,7 @@ static av_cold int decode_init(AVCodecContext *avctx){
     ff_init_scantable(a->dsp.idct_permutation, &a->scantable, scantab);
     avctx->pix_fmt= PIX_FMT_YUV420P;
 
-    a->inv_qscale= ((uint8_t*)avctx->extradata)[0];
+    a->inv_qscale= avctx->extradata[0];
     if(a->inv_qscale == 0){
         av_log(avctx, AV_LOG_ERROR, "illegal qscale 0\n");
         if(avctx->codec_id == CODEC_ID_ASV1)
@@ -432,6 +432,9 @@ static av_cold int decode_end(AVCodecContext *avctx){
     av_freep(&a->bitstream_buffer);
     av_freep(&a->picture.qscale_table);
     a->bitstream_buffer_size=0;
+
+    if(a->picture.data[0])
+        avctx->release_buffer(avctx, &a->picture);
 
     return 0;
 }
