@@ -20,8 +20,6 @@ SRCS_C=\
       $(LAVC_DIR)/ac3dec_data.c \
       $(LAVC_DIR)/ac3enc.c \
       $(LAVC_DIR)/ac3tab.c \
-      $(LAVC_DIR)/celp_filters.c \
-      $(LAVC_DIR)/celp_math.c \
       $(LAVC_DIR)/adpcm.c \
       $(LAVC_DIR)/allcodecs.c \
       $(LAVC_DIR)/asv1.c \
@@ -34,6 +32,8 @@ SRCS_C=\
       $(LAVC_DIR)/cavs.c \
       $(LAVC_DIR)/cavsdec.c \
       $(LAVC_DIR)/cavsdsp.c \
+      $(LAVC_DIR)/celp_filters.c \
+      $(LAVC_DIR)/celp_math.c \
       $(LAVC_DIR)/cinepak.c \
       $(LAVC_DIR)/cook.c \
       $(LAVC_DIR)/corepng.c \
@@ -43,7 +43,6 @@ SRCS_C=\
       $(LAVC_DIR)/dca_parser.c \
       $(LAVC_DIR)/dsputil.c \
       $(LAVC_DIR)/dv.c \
-      $(LAVC_DIR)/dvdata.c \
       $(LAVC_DIR)/eac3dec.c \
       $(LAVC_DIR)/eac3dec_data.c \
       $(LAVC_DIR)/error_resilience.c \

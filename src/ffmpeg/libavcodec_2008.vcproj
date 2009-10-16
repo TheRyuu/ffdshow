@@ -587,10 +587,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\libavcodec\dvdata.c"
-				>
-			</File>
-			<File
 				RelativePath=".\libavcodec\eac3dec.c"
 				>
 			</File>
