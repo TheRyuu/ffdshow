@@ -212,7 +212,7 @@ template<class Tout,int conv> Tout* Tdither::ditherSamples(const float *bufIn,To
    for (size_t j=0;j<numsamples;j++,i++,bufInF+=nchannels,bufOutF+=nchannels)
     {
      if (i>31) i=0;
-     int64_t val=dither_output(dithering,i,*bufInF*INT32_MAX,k)>>conv;
+     int64_t val=dither_output(dithering,i,*bufInF*_I32_MAX,k)>>conv;
      *bufOutF=TsampleFormatInfo<Tout>::limit(val);
     }
   }

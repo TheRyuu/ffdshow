@@ -33,7 +33,7 @@ void TaudioFilterConvolver::Tconvolver::fft_response_t::init(const TwavReader<fl
  // create new response struct
  length=response[0].size();
  // make channel_data array big enough to hold pointers for all channels
- size_t number_of_response_channels=procchannel!=INT32_MAX?1:response.size();
+ size_t number_of_response_channels=procchannel!=_I32_MAX?1:response.size();
  channel_data.resize(number_of_response_channels);
  // how many chunks do we need for this response?
  number_of_chunks = (unsigned int)ceil((response[0].size())/(float)(chunk_length));
@@ -46,7 +46,7 @@ void TaudioFilterConvolver::Tconvolver::fft_response_t::init(const TwavReader<fl
  std::vector<complex> fft_complex(chunk_length+1);
  for (unsigned int index2 = 0; index2 < number_of_response_channels; ++index2)
   {
-   unsigned int respchannel=procchannel!=INT32_MAX?std::min(response.nchannels-1,procchannel):index2;
+   unsigned int respchannel=procchannel!=_I32_MAX?std::min(response.nchannels-1,procchannel):index2;
    // for each chunk
    for (unsigned int index3 = 0; index3 < number_of_chunks; ++index3)
     {
@@ -85,7 +85,7 @@ TaudioFilterConvolver::Tconvolver::Tconvolver(const TsampleFormat &infmt,const T
  fft_responses(1),
  input_chunk_ringbuffers(1)
 {
- number_of_response_channels=procchannel!=INT32_MAX?1:response.nchannels;
+ number_of_response_channels=procchannel!=_I32_MAX?1:response.nchannels;
  normalization_factor=sqrt(chunk_length * 2.0f);
  // --------------  chunk, pad, fft and store the responses
  // allocate array of response pointers
@@ -120,7 +120,7 @@ TaudioFilterConvolver::Tconvolver::Tconvolver(const TsampleFormat &infmt,const T
    for (unsigned int index2 = 0; index2 < chunk_length; ++index2)
     overlap_buffers[index][index2] = 0;
   }
- if (procchannel!=INT32_MAX)
+ if (procchannel!=_I32_MAX)
   {
    in_channels=out_channels=infmt.nchannels;
    in_channel[0]=out_channel[0]=procchannel;

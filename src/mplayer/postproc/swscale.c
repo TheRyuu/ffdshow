@@ -66,7 +66,7 @@ untested special converters
 #include <string.h>
 #include <math.h>
 #include <stdio.h>
-#include "ffdebug.h"
+#include "../../ffdebug.h"
 #include "config.h"
 #include "../libavutil/internal.h"
 #include "../libavutil/x86_cpu.h"

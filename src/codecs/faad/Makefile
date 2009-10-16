@@ -1,4 +1,4 @@
-CFLAGS+= -I. -I../.. -DSTDC_HEADERS
+CFLAGS+= -I. -DSTDC_HEADERS
 
 SRCS_C=bits.c \
 		cfft.c \

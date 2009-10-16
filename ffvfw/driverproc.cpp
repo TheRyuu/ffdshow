@@ -23,6 +23,7 @@
 #include <vfw.h>
 #include <commctrl.h>
 #include <stdio.h>
+#include <stdint.h>
 #include "ffdshow_mediaguids.h"
 #include "IffdshowEnc.h"
 #include <initguid.h>

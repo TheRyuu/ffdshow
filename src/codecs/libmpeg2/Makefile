@@ -1,4 +1,4 @@
-CFLAGS+= -I. -Iinclude -I../..
+CFLAGS+= -I. -Iinclude
 
 ifneq ($(64BIT),yes)
 	CFLAGS+=-DARCH_X86

@@ -18,7 +18,7 @@
 
 #include "config.h"
 #include <string.h>
-#include "../../../inttypes.h"
+#include <inttypes.h>
 #include "mpeg2.h"
 #include "../../compiler.h"
 

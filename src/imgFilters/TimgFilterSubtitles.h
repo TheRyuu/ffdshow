@@ -69,7 +69,7 @@ private:
  AdhocMode adhocMode; // 0: normal, 1: adhoc! process only DVD sub/menu, 2: after adhoc, second call. process none DVD sub (cc decoder, etc).
 
  class TglyphThread {
-     static const int max_memory_usage = 40000000; // 40MB
+     static const int max_memory_usage = 400000; // 4MB
      TimgFilterSubtitles *parent;
      boost::thread *thread;
      TprintPrefs copied_prefs;

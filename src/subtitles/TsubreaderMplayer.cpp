@@ -646,7 +646,7 @@ Tsubtitle* TsubtitleParserSSA::parse(Tstream &fd, int flags, REFERENCE_TIME star
      wchar_t *end;
      double t=strtod(line+7,&end);
      if (*end=='\0' && t!=0)
-      timer=Rational(t/100.0,INT32_MAX);
+      timer=Rational(t/100.0,_I32_MAX);
     }
    else if (inInfo && strnicmp(line,L"WrapStyle:",9)==0)
     {

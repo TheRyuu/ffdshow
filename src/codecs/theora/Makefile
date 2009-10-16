@@ -1,4 +1,4 @@
-CFLAGS+= -I. -I.. -I../.. -I../../xiph -Idec -Ienc -DUSE_ASM
+CFLAGS+= -I. -I../../xiph -Idec -Ienc -DUSE_ASM
 
 SRCS_C=\
 	cpu.c \

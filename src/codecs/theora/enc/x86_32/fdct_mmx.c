@@ -17,7 +17,7 @@
 
 /* mmx fdct implementation */
 
-#include "theora/theora.h"
+#include "../theora.h"
 #include "../codec_internal.h"
 #include "../dsp.h"
 

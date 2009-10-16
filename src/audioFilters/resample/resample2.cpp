@@ -36,15 +36,15 @@
 
 #define FELEM int16_t
 #define FELEM2 int32_t
-#define FELEM_MAX INT16_MAX
-#define FELEM_MIN INT16_MIN
+#define FELEM_MAX _I16_MAX
+#define FELEM_MIN _I16_MIN
 #else
 #define FILTER_SHIFT 22
 
 #define FELEM int32_t
 #define FELEM2 int64_t
-#define FELEM_MAX INT32_MAX
-#define FELEM_MIN INT32_MIN
+#define FELEM_MAX _I32_MAX
+#define FELEM_MIN _I32_MIN
 #endif
 */
 
@@ -322,8 +322,8 @@ template<> TreSampleContext<int16_t>::TreSampleContext(int io_channels,int outpu
  init(io_channels,output_rate,input_rate);
  switch (bits)
   {
-   case 15:resample_context=new TAVResampleContext<int16_t,int16_t,int32_t,int32_t,INT16_MAX,INT16_MIN,15>(output_rate, input_rate, filter_size, phase_shift,linear, cutoff);break;
-   case 22:resample_context=new TAVResampleContext<int16_t,int32_t,int64_t,int64_t,INT32_MAX,INT32_MIN,22>(output_rate, input_rate, filter_size, phase_shift,linear, cutoff);break;
+   case 15:resample_context=new TAVResampleContext<int16_t,int16_t,int32_t,int32_t,_I16_MAX,_I16_MIN,15>(output_rate, input_rate, filter_size, phase_shift,linear, cutoff);break;
+   case 22:resample_context=new TAVResampleContext<int16_t,int32_t,int64_t,int64_t,_I32_MAX,_I32_MIN,22>(output_rate, input_rate, filter_size, phase_shift,linear, cutoff);break;
   }
 }
 

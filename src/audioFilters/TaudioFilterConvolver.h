@@ -74,7 +74,7 @@ private:
      size_t length;
      std::vector< std::vector<complex> > channel_data; // individual response channels.
      unsigned int number_of_chunks;
-     void init(const TwavReader<float> &response,const TconvolverSettings *cfg,unsigned int chunk_length,float normalization_factor,Tfftforward &fft_plan_forward,unsigned int procchannel=INT32_MAX);
+     void init(const TwavReader<float> &response,const TconvolverSettings *cfg,unsigned int chunk_length,float normalization_factor,Tfftforward &fft_plan_forward,unsigned int procchannel=_I32_MAX);
     };
    std::vector<fft_response_t> fft_responses;
 
@@ -89,7 +89,7 @@ private:
      return a*invstrength+b*strength;
     }
   public:
-   Tconvolver(const TsampleFormat &infmt,const TwavReader<float> &response,const TconvolverSettings *cfg,unsigned int procchannel=INT32_MAX);
+   Tconvolver(const TsampleFormat &infmt,const TwavReader<float> &response,const TconvolverSettings *cfg,unsigned int procchannel=_I32_MAX);
    unsigned int number_of_response_channels;
    int process(const float * const in_data,float *out_data,size_t numsamples,const TconvolverSettings *cfg);
   };

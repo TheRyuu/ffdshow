@@ -1,4 +1,4 @@
-CFLAGS+=-I. -I.. -I../imgFilters -Ilibavutil -Ilibvo -Imp3lib -Ipostproc -std=gnu99
+CFLAGS+=-I. -I../imgFilters -Ilibavutil -Ilibvo -Imp3lib -Ipostproc -std=gnu99
 
 SRCS_C=\
 		mplayer.c \

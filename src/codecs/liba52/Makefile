@@ -1,4 +1,4 @@
-CFLAGS+= -I. -I../..
+CFLAGS+= -I.
 
 SRCS_C=bit_allocate.c \
 		bitstream.c \

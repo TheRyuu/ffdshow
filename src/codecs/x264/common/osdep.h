@@ -31,7 +31,7 @@
 #ifdef HAVE_STDINT_H
 #include <stdint.h>
 #else
-#include "../../../inttypes.h"
+#include <inttypes.h>
 #endif
 
 /* ffdshow custom code */

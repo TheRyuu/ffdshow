@@ -1,4 +1,4 @@
-CFLAGS+= -I. -I../..
+CFLAGS+= -I.
        
 SRCS_C=bitstream.c \
 		downmix.c \

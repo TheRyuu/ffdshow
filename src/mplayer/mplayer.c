@@ -2,7 +2,7 @@
 #include "config.h"
 #include <string.h>
 #include "fastmemcpy.h"
-#include "compiler.h"
+#include "../compiler.h"
 
 CpuCaps gCpuCaps;
 

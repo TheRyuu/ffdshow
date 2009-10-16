@@ -20,7 +20,7 @@
 
 #include <string.h>
 #include <stdlib.h>
-#include "tremor/ogg.h"
+#include "ogg.h"
 
 static unsigned long mask[]=
 {0x00000000,0x00000001,0x00000003,0x00000007,0x0000000f,

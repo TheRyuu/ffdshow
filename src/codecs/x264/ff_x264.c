@@ -22,7 +22,7 @@
 #ifdef HAVE_STDINT
 #  include <stdint.h>
 #else
-#  include "../../inttypes.h"
+#  include <inttypes.h>
 #endif
 #include "x264.h"
 #include "common/common.h"

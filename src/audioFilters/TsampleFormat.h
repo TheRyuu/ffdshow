@@ -344,8 +344,8 @@ template<> struct TsampleFormatInfo<int24_t>
 };
 template<> struct TsampleFormatInfo<int32_t>
 {
- static inline int32_t min(void) {return INT32_MIN;}
- static inline int32_t max(void) {return INT32_MAX;}
+ static inline int32_t min(void) {return _I32_MIN;}
+ static inline int32_t max(void) {return _I32_MAX;}
  static inline unsigned int bps(void) {return 32;}
  static inline int sf(void) {return TsampleFormat::SF_PCM32;}
  template<class Tv> static inline int32_t limit(Tv v)

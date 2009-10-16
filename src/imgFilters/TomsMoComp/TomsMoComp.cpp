@@ -71,7 +71,7 @@ From the Readme_TomsMoComp.txt file:
 #include <string.h>
 #include <unknwn.h>
 #include "TomsMoComp_ff.h"
-#include "../../inttypes.h"
+#include <inttypes.h>
 #ifdef __GNUC__
 #define __forceinline __attribute__((__always_inline__)) inline
 #endif

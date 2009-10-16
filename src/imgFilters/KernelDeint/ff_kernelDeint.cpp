@@ -23,7 +23,7 @@
 #include <malloc.h>
 #include <string.h>
 #include <unknwn.h>
-#include "../../inttypes.h"
+#include <inttypes.h>
 #include "../../simd.h"
 #include "ff_kernelDeint.h"
 #include "../../compiler.h"

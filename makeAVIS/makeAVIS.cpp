@@ -26,7 +26,7 @@
 #include <commdlg.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "../src/inttypes.h"
+#include "../src/inttypes.h" // ISO C9x  compliant inttypes.h for Microsoft Visual Studio
 //#include "../src/imgFilters/avisynth/avisynth.h"
 #include <io.h>
 #include <vfw.h>

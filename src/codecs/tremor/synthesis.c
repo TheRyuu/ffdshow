@@ -16,7 +16,7 @@
  ********************************************************************/
 
 #include <stdio.h>
-#include "tremor/ogg.h"
+#include "ogg.h"
 #include "ivorbiscodec.h"
 #include "codec_internal.h"
 #include "registry.h"

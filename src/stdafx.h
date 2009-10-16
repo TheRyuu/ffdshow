@@ -92,8 +92,8 @@
 //#define OSDTIMETABALE // OSD debug item "Time table" to reserch multithread time table. if you don't need this item comment out.
 //#define OSD_H264POC
 
-#include "stdint.h"
-#include "inttypes.h"
+#include "stdint.h" // ISO C9x  compliant stdint.h for Microsoft Visual Studio
+#include "inttypes.h" // ISO C9x  compliant inttypes.h for Microsoft Visual Studio
 #include "dwstring.h"
 #include "mem_align.h"
 #include "array_allocator.h"

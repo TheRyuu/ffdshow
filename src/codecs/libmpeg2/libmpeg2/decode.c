@@ -25,7 +25,7 @@
 
 #include <string.h>	/* memcmp/memset, try to remove */
 #include <stdlib.h>
-#include "../../../inttypes.h"
+#include <inttypes.h>
 
 #include "mpeg2.h"
 #include "attributes.h"

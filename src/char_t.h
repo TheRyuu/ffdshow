@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include <time.h>
 #include <wchar.h>
-#include "inttypes.h"
 
 #undef _l
 #ifdef UNICODE

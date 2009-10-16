@@ -1,4 +1,4 @@
-CFLAGS+= -I. -I../..
+CFLAGS+= -I.
        
 SRCS=TomsMoComp.cpp
 

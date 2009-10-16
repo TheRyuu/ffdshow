@@ -1,4 +1,4 @@
-CFLAGS+= -I. -I../..
+CFLAGS+= -I.
 
 ifneq ($(64BIT),yes)
 	CFLAGS+=-DARCH_IS_IA32 -DARCH_IS_32BIT

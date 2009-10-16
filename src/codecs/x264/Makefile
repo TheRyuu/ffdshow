@@ -1,4 +1,4 @@
-CFLAGS+= -I. -I../.. -I../../pthreads -Icommon -Icommon/x86/ -Iencoder
+CFLAGS+= -I. -I../../pthreads -Icommon -Icommon/x86/ -Iencoder
 
 CFLAGS+=-DSYS_MINGW -DHAVE_MMX -DHAVE_PTHREAD -DPTW32_STATIC_LIB
 

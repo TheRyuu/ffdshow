@@ -1,4 +1,4 @@
-CFLAGS+= -I. -I.. -D__i386__ -Dinline=__inline -U_LOW_ACCURACY_
+CFLAGS+= -I. -D__i386__ -Dinline=__inline -U_LOW_ACCURACY_
 
 SRCS_C=block.c \
 		codebook.c \
