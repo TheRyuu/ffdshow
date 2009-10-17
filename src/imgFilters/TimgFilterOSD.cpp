@@ -298,8 +298,6 @@ unsigned int TimgFilterOSD::TosdLine::print(
 //================================== TimgFilterOSD::Tosds ====================================
 TimgFilterOSD::Tosds::Tosds(IOSDprovider *Iprovider,const char_t *Iname):f(NULL),provider(Iprovider)
 {
- if (const char_t *sfmt=provider->getFormat())
-  startupFormat=sfmt;
  oldFormat[0]='\0';
  oldSave=-1;oldSaveFlnm[0]='\0';
  if (Iname)
@@ -317,7 +315,7 @@ TimgFilterOSD::Tosds::~Tosds()
 
 void TimgFilterOSD::Tosds::init(bool allowSave,IffdshowBase *deci,IffdshowDec *deciD,IffdshowDecVideo *deciV,const Tconfig *config,const TOSDsettingsVideo *cfg,int framecnt)
 {
- if (framecnt<startupDuration || provider->isOSD())
+ if (provider->isOSD())
   {
    is=true;
    const char_t *format;

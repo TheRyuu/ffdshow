@@ -108,7 +108,6 @@ private:
   private:
    char_t name[MAX_PATH];
    FILE *f;int oldSave;char_t oldSaveFlnm[MAX_PATH];
-   ffstring startupFormat;int startupDuration;
    char_t oldFormat[256];
   public:
    Tosds(IOSDprovider *Iprovider=NULL,const char_t *Iname=NULL);

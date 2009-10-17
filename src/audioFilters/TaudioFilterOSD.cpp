@@ -44,7 +44,7 @@ TaudioFilterOSD::~TaudioFilterOSD()
 bool TaudioFilterOSD::is(const TsampleFormat &fmt,const TfilterSettingsAudio *cfg0)
 {
  const TOSDsettingsAudio *cfg=(const TOSDsettingsAudio*)cfg0;
- return cfg->is || cfg->getFormat();
+ return !!cfg->is;
 }
 
 HRESULT TaudioFilterOSD::process(TfilterQueue::iterator it,TsampleFormat &fmt,void *samples,size_t numsamples,const TfilterSettingsAudio *cfg0)
