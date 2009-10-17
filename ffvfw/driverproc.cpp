@@ -23,7 +23,7 @@
 #include <vfw.h>
 #include <commctrl.h>
 #include <stdio.h>
-#include <stdint.h>
+#include "stdint.h" // ISO C9x  compliant stdint.h for Microsoft Visual Studio
 #include "ffdshow_mediaguids.h"
 #include "IffdshowEnc.h"
 #include <initguid.h>

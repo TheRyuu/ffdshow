@@ -68,14 +68,6 @@
 #include <vmr9.h>
 #include "msacmdrv.h"
 
-#ifdef __GNUC__
- #undef VISTA_SPDIF
-#else
- #if defined(WINVER) && WINVER<0x0600
-  #undef VISTA_SPDIF
- #endif
-#endif
-
 // BOOST
 #pragma warning (push)
 #pragma warning (disable: 4005 4244 4819)

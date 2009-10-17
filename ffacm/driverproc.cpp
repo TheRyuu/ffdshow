@@ -20,7 +20,7 @@
 #include <windows.h>
 #include <ole2.h>
 #include <stdio.h>
-#include <stdint.h>
+#include "stdint.h" // ISO C9x  compliant stdint.h for Microsoft Visual Studio
 #include <mmsystem.h>
 #include "acm/msacmdrv.h"
 #include "ffdebug.h"

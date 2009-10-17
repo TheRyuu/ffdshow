@@ -19,11 +19,8 @@
 #include "ToutputAudioSettings.h"
 #include "TsampleFormat.h"
 #include "TaudioFilterOutput.h"
-
-#ifdef VISTA_SPDIF
 #include <InitGuid.h>
 #include <IffMmdevice.h> // Vista header import (MMDeviceAPI.h)
-#endif
 
 const char_t* ToutputAudioSettings::connetTos[]=
 {
@@ -103,7 +100,6 @@ TdevicesList ToutputAudioSettings::getDevices(void)
   TdevicesList devicesList;
   devicesList[L"Use default device"] = L"";
 
-#ifdef VISTA_SPDIF
   IMMDeviceEnumerator *deviceEnumerator = NULL;
   // Enumerate audio devices
   HRESULT hr = CoCreateInstance(
@@ -203,6 +199,5 @@ TdevicesList ToutputAudioSettings::getDevices(void)
     CoTaskMemFree(deviceIdp);
     device->Release();
   }
-#endif
   return devicesList;
 }

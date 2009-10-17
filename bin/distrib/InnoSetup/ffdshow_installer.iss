@@ -1,6 +1,6 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision           = '3099'
+#define tryout_revision           = '3105'
 
 #define buildyear                 = '2009'
 #define buildmonth                =   '10'

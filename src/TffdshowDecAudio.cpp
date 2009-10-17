@@ -36,11 +36,8 @@
 #include "resource.h"
 #include "Tinfo.h"
 #include "ffcodecs.h"
-
-#ifdef VISTA_SPDIF
 #include <InitGuid.h>
 #include <IffMmdevice.h> // Vista header import (MMDeviceAPI.h)
-#endif
 
 const TfilterIDFF TffdshowDecAudio::nextFilters[]=
 {
@@ -391,7 +388,6 @@ HRESULT TffdshowDecAudio::getMediaType(CMediaType *mtOut)
    DPRINTF(_l("TffdshowDecAudio::getMediaType:%s"),descS);
   }
 
-#ifdef VISTA_SPDIF
  /* Change spdif format to analog in order to be able to change of audio device
   Explanation : output format = multichannel <=> analog directsound device  => Connection rejected, ffdshow audio will be unloaded
   Workaround : output format = analog <=> analog directsound device => Connection accepted, but the device have to be replaced (done in StartStreaming method)
@@ -405,7 +401,6 @@ HRESULT TffdshowDecAudio::getMediaType(CMediaType *mtOut)
      if (outsf.nchannels>5)
         *mtOut=outsf.toCMediaType(alwaysextensible);
  }
-#endif
  return S_OK;
 }
 
@@ -497,7 +492,6 @@ HRESULT TffdshowDecAudio::CompleteConnect(PIN_DIRECTION direction,IPin *pReceive
 HRESULT TffdshowDecAudio::StartStreaming(void)
 {
  DPRINTF(_l("TffdshowDecAudio::StartStreaming"));
-#ifdef VISTA_SPDIF
  // If a device is configured for multichannel streams then change it (if the transformed stream is multichannel)
     if (!audioDeviceChanged && strcmp(presetSettings->output->multichannelDeviceId, L""))
     {
@@ -655,7 +649,6 @@ HRESULT TffdshowDecAudio::StartStreaming(void)
   DPRINTF(_l("TffdshowDecAudio::StartStreaming Audio renderer replaced successfully"));
         audioDeviceChanged=true;
     }
-#endif
  firsttransform=true;
  ft1=ft2=0;
  return CTransformFilter::StartStreaming();
