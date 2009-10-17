@@ -57,6 +57,7 @@ public:
  virtual HRESULT addClosedCaption(const wchar_t* line) {return E_NOTIMPL;}
  virtual HRESULT hideClosedCaptions(void) {return E_NOTIMPL;}
  virtual bool shortOSDmessage(const char_t *msg,unsigned int duration) {return false;}
+ virtual bool shortOSDmessage(const char_t *msg,unsigned int duration,unsigned int posX,unsigned int posY) {return false;}
  virtual HRESULT registerOSDprovider(IOSDprovider *provider,const char *name) {return E_NOTIMPL;}
  virtual HRESULT unregisterOSDprovider(IOSDprovider *provider) {return E_NOTIMPL;}
  void setStopAtSubtitles(bool stop) {stopAtSubtitles = stop;}
@@ -66,13 +67,12 @@ public:
 };
 
 class TimgFilterOSD;
-struct TfontSettingsOSD;
 struct TresizeAspectSettings;
 class TimgFiltersPlayer :public TimgFilters
 {
 private:
  const TglobalSettingsDecVideo *globalCfg;
- const TfontSettingsOSD &globalFontSettingsOSD;TimgFilterOSD *osd;
+ TimgFilterOSD *osd;
  const bool &allowOutChange;
  TexpandSettings expandSettings;Tfilter *expand;
  TresizeAspectSettings *resizeSettingsDV;Tfilter *resizeDV;
@@ -80,14 +80,14 @@ protected:
  virtual void onFirstProcess(const TpresetVideo *cfg);
  virtual void makeQueue(const Tpreset *cfg,TfilterQueue &queue);
 public:
- TimgFiltersPlayer(IffdshowBase *Ideci,IprocVideoSink *Isink,const TfontSettingsOSD &IglobalFontSettingsOSD,bool &IallowOutChange);
+ TimgFiltersPlayer(IffdshowBase *Ideci,IprocVideoSink *Isink,bool &IallowOutChange);
  virtual ~TimgFiltersPlayer();
 
  virtual void getOutputFmt(TffPictBase &pict,const TpresetVideo *cfg);
  virtual HRESULT process(TffPict &pict,const TpresetVideo *cfg);
 
- TfontSettingsOSD *fontSettingsOSD;
  virtual bool shortOSDmessage(const char_t *msg,unsigned int duration);
+ virtual bool shortOSDmessage(const char_t *msg,unsigned int duration,unsigned int posX,unsigned int posY);
  virtual HRESULT addClosedCaption(const wchar_t *line),hideClosedCaptions(void);
  virtual HRESULT registerOSDprovider(IOSDprovider *provider,const char *name);
  virtual HRESULT unregisterOSDprovider(IOSDprovider *provider);

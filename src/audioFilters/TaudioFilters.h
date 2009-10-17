@@ -33,7 +33,6 @@ class TaudioFiltersPlayer : public TaudioFilters
 {
 private:
  const TglobalSettingsDecAudio *globalCfg;
- Tfilter *osd;
  int outsfs;
 protected:
  virtual void makeQueue(const Tpreset *cfg,TfilterQueue &queue);

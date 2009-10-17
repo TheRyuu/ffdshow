@@ -29,7 +29,6 @@ void TOSDpageDec::init(void)
  tbrSetRange(IDC_TBR_OSD_POSX,0,100,10);
  tbrSetRange(IDC_TBR_OSD_POSY,0,100,10);
 
- setFont(IDC_BT_OSD_PRESETS  ,parent->arrowsFont);
  setFont(IDC_BT_OSD_LINE_UP  ,parent->arrowsFont);
  setFont(IDC_BT_OSD_LINE_DOWN,parent->arrowsFont);
 
@@ -83,25 +82,6 @@ void TOSDpageDec::osds2dlg(void)
 {
  nostate=true;
  osdslabels.clear();
- cbxClear(IDC_CBX_OSD_PRESETS);
- int cnt=deciD->getOSDpresetCount2();
- const char_t *startpresetname=cfgGetStr(IDFF_OSDstartPreset);
- for (int i=0;i<cnt;i++)
-  {
-   const char_t *presetname=deciD->getOSDpresetName2(i);
-   if (startpresetname && strcmp(startpresetname,presetname)==0)
-    osdslabels.push_back(ffstring(presetname)+ffstring(_(IDC_CBX_OSD_PRESETS,_l(" (show on startup)"))));
-   else
-    osdslabels.push_back(presetname);
-   cbxAdd(IDC_CBX_OSD_PRESETS,osdslabels.back().c_str(),intptr_t(presetname));
-  }
- const char_t *curpreset=cfgGetStr(IDFF_OSDcurPreset);
- for (int i=0;i<cnt;i++)
-  if (strcmp(curpreset,(const char_t*)cbxGetItemData(IDC_CBX_OSD_PRESETS,i))==0)
-   {
-    cbxSetCurSel(IDC_CBX_OSD_PRESETS,i);
-    break;
-   }
  osd2dlg();
  nostate=false;
 }
@@ -114,7 +94,7 @@ int CALLBACK TOSDpageDec::osdsSort(LPARAM lParam1,LPARAM lParam2,LPARAM lParamSo
 
 void TOSDpageDec::osd2dlg(void)
 {
- const char_t *osdsStr=deciD->getOSDpresetFormat2(NULL);
+ const char_t *osdsStr=cfgGetStr(IDFF_OSDformat);
  if (strncmp(osdsStr,_l("user"),4)==0)
   {
    ListView_SetExtendedListViewStyleEx(hlv,LVS_EX_CHECKBOXES,0);
@@ -170,17 +150,8 @@ void TOSDpageDec::lv2osdFormat(void)
   if (ListView_GetCheckState(hlv,i))
    strncatf(format, countof(format), _l("%i "), lvGetItemParam(IDC_LV_OSD_LINES,i));
  if (format[strlen(format)-1]==' ') format[strlen(format)-1]='\0';
- deciD->setOSDpresetFormat(NULL,format);
+ cfgSet(IDFF_OSDformat, format);
  parent->setChange();
-}
-
-int TOSDpageDec::findPreset(const char_t *presetname)
-{
- int cnt=cbxGetItemCount(IDC_CBX_OSD_PRESETS);
- for (int i=0;i<cnt;i++)
-  if (stricmp((const char_t*)cbxGetItemData(IDC_CBX_OSD_PRESETS,i),presetname)==0)
-   return i;
- return CB_ERR;
 }
 
 INT_PTR TOSDpageDec::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -198,7 +169,7 @@ INT_PTR TOSDpageDec::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
        if (!getCheck(IDC_CHB_OSD_USER))
         lv2osdFormat();
        else
-        deciD->setOSDpresetFormat(NULL,_l("user"));
+        cfgSet(IDFF_OSDformat, _l("user"));
        osd2dlg();
        parent->setChange();
        break;
@@ -209,7 +180,7 @@ INT_PTR TOSDpageDec::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
          GetDlgItemText(m_hwnd,IDC_ED_OSD_USER,ed,250);
          char_t format[256];
          tsnprintf_s(format, 256, _TRUNCATE, _l("user%s"),ed);
-         deciD->setOSDpresetFormat(NULL,format);
+         cfgSet(IDFF_OSDformat, format);
          parent->setChange();
         };
        break;
@@ -316,149 +287,7 @@ void TOSDpageDec::onLineDown(void)
    lv2osdFormat();
   }
 }
-void TOSDpageDec::onPresets(void)
-{
- int ii=cbxGetCurSel(IDC_CBX_OSD_PRESETS);
- const char_t *curPresetName=(const char_t*)cbxGetCurItemData(IDC_CBX_OSD_PRESETS);
- const char_t *startupPresetName=cfgGetStr(IDFF_OSDstartPreset);
- enum
-  {
-   IDC_MNI_OSD_PRESETS_NEW       =6000,
-   IDC_MNI_OSD_PRESETS_SAVEAS_NEW,
-   IDC_MNI_OSD_PRESETS_RENAME,
-   IDC_MNI_OSD_PRESETS_DELETE,
-   IDC_MNI_OSD_PRESETS_ONSTARTUP,
-   IDC_MNI_OSD_PRESETS_SAVEAS,
-   IDC_MNI_OSD_PRESETS_SAVEONLY
-  };
- HMENU hm=CreatePopupMenu(),hmSaveAs=NULL;
- int ord=0;
- insertMenuItem(hm,ord,IDC_MNI_OSD_PRESETS_NEW,_l("New"),false);
- int size=deciD->getOSDpresetCount2();
- if (size>1)
-  {
-   hmSaveAs=CreatePopupMenu();
-   int ord2=0;
-   for (int i=0;i<size;i++)
-    {
-     const char_t *name2=deciD->getOSDpresetName2(i);
-     if (stricmp(curPresetName,name2)!=0)
-      insertMenuItem(hmSaveAs,ord2,IDC_MNI_OSD_PRESETS_SAVEAS+i,name2,false);
-    }
-   insertSeparator(hmSaveAs,ord2);
-   insertMenuItem(hmSaveAs,ord2,IDC_MNI_OSD_PRESETS_SAVEAS_NEW,_l("New preset..."),false);
-   insertSubmenu(hm,ord,_l("Save preset to..."),hmSaveAs);
-  }
- else
-  insertMenuItem(hm,ord,IDC_MNI_OSD_PRESETS_SAVEAS_NEW,_l("Save as..."),false);
- insertMenuItem(hm,ord,IDC_MNI_OSD_PRESETS_RENAME,_l("Rename preset..."),false);enable(hm,2,ii!=0);
- insertMenuItem(hm,ord,IDC_MNI_OSD_PRESETS_DELETE,_l("Delete preset"),false);enable(hm,3,ii!=0);
- insertSeparator(hm,ord);
- insertMenuItem(hm,ord,IDC_MNI_OSD_PRESETS_ONSTARTUP,_l("Show on startup"),stricmp(startupPresetName,curPresetName)==0);
- if (cfgGet(IDFF_OSDisSave))
-  {
-   insertSeparator(hm,ord);
-   insertMenuItem(hm,ord,IDC_MNI_OSD_PRESETS_SAVEONLY,_l("Don't display, only save data to file"),!!cfgGet(IDFF_OSDsaveOnly));
-  }
- RECT r;
- GetWindowRect(GetDlgItem(m_hwnd,IDC_BT_OSD_PRESETS),&r);
- POINT p={0,r.bottom-r.top};
- ClientToScreen(GetDlgItem(m_hwnd,IDC_BT_OSD_PRESETS),&p);
- int cmd=TrackPopupMenu(_(hm),TPM_LEFTALIGN|TPM_TOPALIGN|TPM_RETURNCMD,p.x,p.y,0,m_hwnd,NULL);
- PostMessage(m_hwnd,WM_NULL,0,0);
- if (cmd!=0)
-  if (cmd==IDC_MNI_OSD_PRESETS_SAVEONLY)
-   cfgSet(IDFF_OSDsaveOnly,1-cfgGet(IDFF_OSDsaveOnly));
-  else if (cmd>=IDC_MNI_OSD_PRESETS_SAVEAS)
-   {
-    char_t format[256];
-    ff_strncpy(format, deciD->getOSDpresetFormat2(curPresetName), countof(format));
-    char_t newPreset[40];GetMenuString(hmSaveAs,cmd,newPreset,40,MF_BYCOMMAND);
-    deciD->setOSDpresetFormat(newPreset,format);
-   }
-  else
-   switch (cmd)
-    {
-     case IDC_MNI_OSD_PRESETS_RENAME:
-      {
-       char_t newPresetName[40];
-       ff_strncpy(newPresetName, curPresetName, countof(newPresetName));
-       if (inputString(_(-IDD_OSD,_l("New preset name")),_(-IDD_OSD,_l("Enter new preset name")),newPresetName,40))
-        if (newPresetName[0] && findPreset(newPresetName)==CB_ERR)
-         {
-          deciD->setOSDpresetName(ii,newPresetName);
-          cfgSet(IDFF_OSDcurPreset,newPresetName);
-          if (strcmp(startupPresetName,curPresetName)==0)
-           cfgSet(IDFF_OSDstartPreset,newPresetName);
-          osds2dlg();
-         }
-        else
-         err(_(-IDD_OSD,_l("Preset already exists")));
-       break;
-      }
-     case IDC_MNI_OSD_PRESETS_SAVEAS_NEW:
-      {
-       char_t newPresetName[40];
-       ff_strncpy(newPresetName,curPresetName,countof(newPresetName));
-       if (inputString(_(-IDD_OSD,_l("New preset name")),_(-IDD_OSD,_l("Enter new preset name")),newPresetName,40))
-        if (newPresetName[0] && findPreset(newPresetName)==CB_ERR)
-         {
-          char_t format[256];
-          ff_strncpy(format,deciD->getOSDpresetFormat2(curPresetName),countof(format));
-          deciD->addOSDpreset(newPresetName,format);
-          cfgSet(IDFF_OSDcurPreset,newPresetName);
-          osds2dlg();
-         }
-        else
-         err(_(-IDD_OSD,_l("Preset already exists")));
-       break;
-      }
-     case IDC_MNI_OSD_PRESETS_DELETE:
-      if (MessageBox(m_hwnd,_(-IDD_OSD,_l("Do you really want to delete current OSD preset?")),_(-IDD_OSD,_l("Delete preset")),MB_ICONQUESTION|MB_YESNO)==IDYES)
-       {
-        deciD->deleteOSDpreset(curPresetName);
-        cfgSet(IDFF_OSDcurPreset,_l("default"));
-        if (strcmp(curPresetName,startupPresetName)==0)
-         cfgSet(IDFF_OSDstartPreset,_l(""));
-        osds2dlg();
-       }
-      break;
-     case IDC_MNI_OSD_PRESETS_NEW:
-      {
-       char_t newPresetName[40]=_l("");
-       if (inputString(_(-IDD_OSD,_l("New preset name")),_(-IDD_OSD,_l("Enter new preset name")),newPresetName,40))
-        if (newPresetName[0] && findPreset(newPresetName)==CB_ERR)
-         {
-          deciD->addOSDpreset(newPresetName,_l(""));
-          cfgSet(IDFF_OSDcurPreset,newPresetName);
-          osds2dlg();
-         }
-        else
-         err(_(-IDD_OSD,_l("Preset already exists")));
-       break;
-      }
-     case IDC_MNI_OSD_PRESETS_ONSTARTUP:
-      {
-       if (stricmp(startupPresetName,curPresetName)==0)
-        {
-         cfgSet(IDFF_OSDstartPreset,_l(""));
-         osds2dlg();
-        }
-       else
-        {
-         char_t durationS[20];_itoa(cfgGet(IDFF_OSDstartDuration),durationS,10);
-         if (inputString(_(-IDD_OSD,_l("Startup OSD preset")),_(-IDD_OSD,_l("Number of frames to show preset")),durationS,20))
-          {
-           cfgSet(IDFF_OSDstartPreset,curPresetName);
-           deci->putParam(IDFF_OSDstartDuration,atoi(durationS));
-           osds2dlg();
-          }
-        }
-       break;
-      }
-    }
- DestroyMenu(hm);
-}
+
 void TOSDpageDec::onSave(void)
 {
  char_t flnm[MAX_PATH];cfgGet(IDFF_OSDsaveFlnm,flnm,MAX_PATH);
@@ -496,7 +325,7 @@ void TOSDpageDec::translate(void)
  nostate=false;
 }
 
-TOSDpageDec::TOSDpageDec(TffdshowPageDec *Iparent):TconfPageDec(Iparent,NULL,0)
+TOSDpageDec::TOSDpageDec(TffdshowPageDec *Iparent,const TfilterIDFF *idff):TconfPageDec(Iparent,idff,0)
 {
  dialogId=IDD_OSD;
  idffInter=IDFF_isOSD;resInter=IDC_CHB_OSD;
@@ -515,7 +344,6 @@ TOSDpageDec::TOSDpageDec(TffdshowPageDec *Iparent):TconfPageDec(Iparent,NULL,0)
  bindHtracks(htbr);
  static const TbindCombobox<TOSDpageDec> cbx[]=
   {
-   IDC_CBX_OSD_PRESETS,IDFF_OSDcurPreset,BINDCBX_DATATEXT,&TOSDpageDec::osd2dlg,
    IDC_CBX_OSD_USERFORMAT, IDFF_OSD_userformat, BINDCBX_DATA, &TOSDpageDec::cfg2dlg,
    0
   };
@@ -524,7 +352,6 @@ TOSDpageDec::TOSDpageDec(TffdshowPageDec *Iparent):TconfPageDec(Iparent,NULL,0)
   {
    IDC_BT_OSD_LINE_UP,&TOSDpageDec::onLineUp,
    IDC_BT_OSD_LINE_DOWN,&TOSDpageDec::onLineDown,
-   IDC_BT_OSD_PRESETS,&TOSDpageDec::onPresets,
    IDC_BT_OSD_SAVE,&TOSDpageDec::onSave,
    0,NULL
   };
@@ -532,6 +359,10 @@ TOSDpageDec::TOSDpageDec(TffdshowPageDec *Iparent):TconfPageDec(Iparent,NULL,0)
 }
 
 //================================ TOSDpageDecVideo ================================
+TOSDpageVideo::TOSDpageVideo(TffdshowPageDec *Iparent,const TfilterIDFF *idff):TOSDpageDec(Iparent,idff)
+{
+}
+
 bool TOSDpageVideo::reset(bool testonly)
 {
  if (!testonly)
@@ -540,6 +371,11 @@ bool TOSDpageVideo::reset(bool testonly)
 }
 
 //================================ TOSDpageDecAudio ================================
+TOSDpageAudio::TOSDpageAudio(TffdshowPageDec *Iparent,const TfilterIDFF *idff):TOSDpageDec(Iparent,idff)
+{
+ idffOrder=maxOrder+1;
+}
+
 void TOSDpageAudio::init(void)
 {
  TOSDpageDec::init();

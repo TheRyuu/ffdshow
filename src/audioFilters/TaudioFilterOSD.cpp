@@ -44,12 +44,13 @@ TaudioFilterOSD::~TaudioFilterOSD()
 bool TaudioFilterOSD::is(const TsampleFormat &fmt,const TfilterSettingsAudio *cfg0)
 {
  const TOSDsettingsAudio *cfg=(const TOSDsettingsAudio*)cfg0;
- return cfg->is || cfg->getFormat(0);
+ return cfg->is || cfg->getFormat();
 }
 
 HRESULT TaudioFilterOSD::process(TfilterQueue::iterator it,TsampleFormat &fmt,void *samples,size_t numsamples,const TfilterSettingsAudio *cfg0)
 {
- const TOSDsettingsAudio *cfg=(const TOSDsettingsAudio*)cfg0;tempcfg=cfg;
+ const TOSDsettingsAudio *cfg=(const TOSDsettingsAudio*)cfg0;
+ tempcfg=cfg;
 
  clock_t curtime=-1;
  if (!registered && (cfg->is && (oldIs!=cfg->is || (curtime=clock())-lasttime>CLOCKS_PER_SEC*10))) //try every 10 seconds

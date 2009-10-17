@@ -14,13 +14,12 @@ private:
  void lv2osdFormat(void);
  bool nostate,user;
  strings osdslabels;
- int findPreset(const char_t *presetname);
  void onLineUp(void),onLineDown(void),onPresets(void),onSave(void);
  int dragitem;
 protected:
  virtual INT_PTR msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
- TOSDpageDec(TffdshowPageDec *Iparent);
 public:
+ TOSDpageDec(TffdshowPageDec *Iparent,const TfilterIDFF *idff);
  virtual void init(void);
  virtual void cfg2dlg(void);
  virtual void applySettings(void);
@@ -30,14 +29,14 @@ public:
 class TOSDpageVideo :public TOSDpageDec
 {
 public:
- TOSDpageVideo(TffdshowPageDec *Iparent):TOSDpageDec(Iparent) {}
+ TOSDpageVideo(TffdshowPageDec *Iparent,const TfilterIDFF *idff);
  virtual bool reset(bool testonly=false);
 };
 
 class TOSDpageAudio :public TOSDpageDec
 {
 public:
- TOSDpageAudio(TffdshowPageDec *Iparent):TOSDpageDec(Iparent) {}
+ TOSDpageAudio(TffdshowPageDec *Iparent,const TfilterIDFF *idff);
  virtual void init(void);
 };
 

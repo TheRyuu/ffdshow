@@ -92,7 +92,6 @@ void TffdshowPageDecAudio::onActivate(void)
  addTI(&tvis,new TdirectshowControlPageDec(this))->hti;
  HTREEITEM htiInfo=addTI(&tvis,new TinfoPageDecAudio(this))->hti;
  tvis.hParent=htiInfo;
- addTI(&tvis,new TOSDpageAudio(this));
  tvis.hParent=NULL;
  TreeView_Expand(htv,htiInfo,TVE_EXPAND);
  HTREEITEM htiMisc=addTI(&tvis,new TdlgMiscPage(this))->hti;

@@ -85,15 +85,6 @@ template<class tchar> DECLARE_INTERFACE_(IffdshowDecT,IUnknown)
  STDMETHOD (setKeyParamKeyCheck)(unsigned int i,int key,int *prev,const tchar* *prevDescr) PURE;
  STDMETHOD_(int,getInputBitrate2)(void) PURE;
  STDMETHOD (getPresetAutoloadItemHelp)(unsigned int index,const tchar* *helpPtr) PURE;
- STDMETHOD_(int,getOSDpresetCount2)(void) PURE;
- STDMETHOD_(const tchar*,getOSDpresetName2)(unsigned int i) PURE;
- STDMETHOD_(const tchar*,getOSDpresetFormat2)(const tchar *presetName) PURE;
- STDMETHOD (setOSDpresetFormat)(const tchar *presetName,const tchar *format) PURE;
- STDMETHOD (setOSDpresetName)(unsigned int i,const tchar *name) PURE;
- STDMETHOD (addOSDpreset)(const tchar *presetName,const tchar *format) PURE;
- STDMETHOD (deleteOSDpreset)(const tchar *presetName) PURE;
- STDMETHOD (cycleOSDpresets)(void) PURE;
- STDMETHOD_(const tchar*,getOSDstartupFormat)(int *duration) PURE;
  STDMETHOD_(TinputPin*, getInputPin)(void) PURE;
 };
 

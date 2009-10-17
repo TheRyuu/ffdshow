@@ -5,7 +5,6 @@ DECLARE_INTERFACE(IOSDprovider)
 {
  STDMETHOD_(const char_t*,getInfoItemName)(int type) PURE;
  STDMETHOD (getInfoItemValue)(int id,const char_t* *value,int *wasChange,int *splitline) PURE; 
- STDMETHOD_(const char_t*,getStartupFormat)(int *duration) PURE;
  STDMETHOD_(const char_t*,getFormat)(void) PURE;
  STDMETHOD_(bool,isOSD)(void) PURE;
  STDMETHOD (getSave)(int *isSave,const char_t* *flnm) PURE;

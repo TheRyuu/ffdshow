@@ -44,7 +44,7 @@ class TfontPageOSD :public TfontPage
 {
 protected:
 public:
- TfontPageOSD(TffdshowPageDec *Iparent);
+ TfontPageOSD(TffdshowPageDec *Iparent,const TfilterIDFF *idff);
 };
 
 #endif

@@ -110,15 +110,6 @@ public:
  STDMETHODIMP sendOnNewFiltersMsg(void);
  STDMETHODIMP setKeyParamKeyCheck(unsigned int i,int key,int *prev,const char_t* *prevDescr);
  STDMETHODIMP getPresetAutoloadItemHelp(unsigned int index,const char_t* *helpPtr);
- STDMETHODIMP_(int) getOSDpresetCount2(void);
- STDMETHODIMP_(const char_t*) getOSDpresetName2(unsigned int i);
- STDMETHODIMP_(const char_t*) getOSDpresetFormat2(const char_t *presetName);
- STDMETHODIMP setOSDpresetFormat(const char_t *presetName,const char_t *format);
- STDMETHODIMP setOSDpresetName(unsigned int i,const char_t *name);
- STDMETHODIMP addOSDpreset(const char_t *presetName,const char_t *format);
- STDMETHODIMP deleteOSDpreset(const char_t *presetName);
- STDMETHODIMP cycleOSDpresets(void);
- STDMETHODIMP_(const char_t*) getOSDstartupFormat(int *duration);
  STDMETHODIMP_(TinputPin*)getInputPin(void);
 
  // IDispatch
@@ -379,24 +370,6 @@ protected:
    STDMETHODIMP getPresetAutoloadItemHelp(unsigned int index,const tchar* *helpPtr)
     {
      return E_NOTIMPL;
-    }
-   STDMETHODIMP_(int) getOSDpresetCount2(void) {return deciD->getOSDpresetCount2();}
-   STDMETHODIMP_(const tchar*) getOSDpresetName2(unsigned int i)
-    {
-     return NULL;
-    }
-   STDMETHODIMP_(const tchar*) getOSDpresetFormat2(const tchar *presetName)
-    {
-     return NULL;
-    }
-   STDMETHODIMP setOSDpresetFormat(const tchar *presetName,const tchar *format) {return deciD->setOSDpresetFormat(text<char_t>(presetName),text<char_t>(format));}
-   STDMETHODIMP setOSDpresetName(unsigned int i,const tchar *name) {return deciD->setOSDpresetName(i,text<char_t>(name));}
-   STDMETHODIMP addOSDpreset(const tchar *presetName,const tchar *format) {return deciD->addOSDpreset(text<char_t>(presetName),text<char_t>(format));}
-   STDMETHODIMP deleteOSDpreset(const tchar *presetName) {return deciD->deleteOSDpreset(text<char_t>(presetName));}
-   STDMETHODIMP cycleOSDpresets(void) {return deciD->cycleOSDpresets();}
-   STDMETHODIMP_(const tchar*) getOSDstartupFormat(int *duration)
-    {
-     return NULL;
     }
 
    STDMETHODIMP_(TinputPin*) getInputPin(void){ return(deciD->getInputPin());};

@@ -107,13 +107,9 @@ TaudioFiltersPlayer::TaudioFiltersPlayer(IffdshowBase *Ideci,IprocAudioSink *Isi
 {
  deci->getGlobalSettings((TglobalSettingsBase**)&globalCfg);
  outsfs=presetSettings->output->outsfs;
- TaudioFilterOSD* f=getFilter<TaudioFilterOSD>();
- osd=f;
- f->setOutsfs(outsfs);
 }
 
 void TaudioFiltersPlayer::makeQueue(const Tpreset *cfg,TfilterQueue &queue)
 {
  TaudioFilters::makeQueue(cfg,queue);
- queue.add(osd,&globalCfg->osd);
 }

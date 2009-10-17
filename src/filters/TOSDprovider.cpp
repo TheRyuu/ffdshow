@@ -34,10 +34,6 @@ STDMETHODIMP_(const char_t*) TOSDprovider::getFormat(void)
 {
  return tempcfg?tempcfg->getFormat():_l("");
 }
-STDMETHODIMP_(const char_t*) TOSDprovider::getStartupFormat(int *duration)
-{
- return _deciD->getOSDstartupFormat(duration);
-}
 STDMETHODIMP_(bool) TOSDprovider::isOSD(void)
 {
  return tempcfg?!!tempcfg->is:false;

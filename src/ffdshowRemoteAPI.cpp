@@ -56,8 +56,9 @@ Tremote::Tremote(TintStrColl *Icoll,IffdshowBase *Ideci):deci(Ideci),Toptions(Ic
  fMode=1; // Default mode : fast forward
  fSeconds=10; // Default step : 10 seconds
  inExplorer=deci->inExplorer()==S_OK;
- OSDPositionX=0; // Horizontal position of the DrawOSD (default : Left of screen)
- OSDPositionY=10; // Vertical position of the DrawOSD (default : Top + 10px)
+ OSDPositionX=0; // Horizontal position of the OSD (default : Left of screen)
+ OSDPositionY=10; // Vertical position of the OSD (default : Top + 10px)
+ OSDDuration = 25; // Display duration of the OSD (default : 25 frames)
  streamsLoaded=false;
  foundHaali=false;
  noFFRWOSD=false;
@@ -201,7 +202,7 @@ unsigned int __stdcall Tremote::ffwdThreadProc(void *self0)
          ss = pos - hh*3600 - mm*60;
          tsnprintf_s(msg, countof(msg), _TRUNCATE, _l("%s %02i:%02i:%02i / %s"),mode<0?_l("<<"):_l(">>"), hh, mm, ss, duration_str);
          self->deciV->resetOSD();
-         self->deciV->drawOSD(self->OSDPositionX, self->OSDPositionY, msg);
+		 self->deciV->shortOSDmessage(msg,self->OSDDuration,self->OSDPositionX, self->OSDPositionY);
         }
         elapsedTime = GetTickCount() - currentTime;
         if (elapsedTime < 200 && elapsedTime > 0)
@@ -209,8 +210,6 @@ unsigned int __stdcall Tremote::ffwdThreadProc(void *self0)
         else
             Sleep(100);
      }
-     if (!noFFRWOSD)
-        self->deciV->drawOSD(self->OSDPositionX, self->OSDPositionY, _l(""));
  }
 
  //self->fThread=NULL;
@@ -317,8 +316,6 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
             CloseHandle(fEvent);
             CloseHandle(fThread);
             fThread = NULL; fEvent = NULL;
-            if (!noFFRWOSD)
-                deciV->drawOSD(OSDPositionX, OSDPositionY, _l(""));
         }
         if (fSeconds != 0)
         {
@@ -345,6 +342,9 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
         return TRUE;
     case WPRM_SET_OSDY:
         OSDPositionY=(int)lprm;
+        return TRUE;
+    case WPRM_SET_OSDDuration:
+        OSDDuration=(int)lprm;
         return TRUE;
     case WPRM_SET_FFRW_NO_OSD:
         noFFRWOSD=(int)lprm==1?true:false;
@@ -673,10 +673,10 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
        return TRUE;
       }
       case COPY_SET_SHORTOSD_MSG:
-          return SUCCEEDED(deciV->shortOSDmessage(text<char_t>((const char_t*)cds->lpData), 25))?TRUE:FALSE;
+          return SUCCEEDED(deciV->shortOSDmessage(text<char_t>((const char_t*)cds->lpData), OSDDuration))?TRUE:FALSE;
       case COPY_SET_OSD_MSG:
           deciV->resetOSD();
-          return SUCCEEDED(deciV->drawOSD(OSDPositionX, OSDPositionY, text<char_t>((const char_t*)cds->lpData)))?TRUE:FALSE;
+          return SUCCEEDED(deciV->shortOSDmessage(text<char_t>((const char_t*)cds->lpData),OSDDuration,OSDPositionX, OSDPositionY))?TRUE:FALSE;
     }
   }
  return DefWindowProc(hwnd,msg,wprm,lprm);

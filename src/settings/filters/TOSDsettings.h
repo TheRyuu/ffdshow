@@ -4,52 +4,35 @@
 #include "TfilterSettings.h"
 #include "TfontSettings.h"
 
-struct TOSDsettings :TfilterSettings
+struct TOSDsettings :TfilterSettingsVideo
 {
 public:
- typedef std::pair<ffstring,ffstring> Tpreset;
- typedef std::vector<Tpreset> Tpresets;
+ static const TfilterIDFF idffs;
 private:
  TOSDsettings& operator =(const TOSDsettings&);
- char_t curPreset[40];void onCurPresetChange(int id,const char_t*val);
- const char_t *defPreset;
- Tpresets presets;
- mutable bool changed;mutable const char_t *oldformat;
-protected:
- TOSDsettings(size_t IsizeofthisAll,TintStrColl *Icoll,TfilterIDFFs *filters,const char_t *IdefPreset);
+ mutable bool changed;
 public:
- size_t getSize(void) const {return presets.size();}
- const char_t* getPresetName(unsigned int i) const {return i>=presets.size()?NULL:presets[i].first.c_str();}
- HRESULT setPresetName(unsigned int i,const char_t *name);
- const char_t* getStartupFormat(int *duration) const;
- const char_t* getFormat(const char_t *presetName) const;
+ TOSDsettings(size_t IsizeofthisAll,TintStrColl *Icoll=NULL,TfilterIDFFs *filters=NULL);
  const char_t* getFormat(void) const;
- void addPreset(const char_t *presetName,const char_t *format);
- bool setFormat(const char_t *presetName,const char_t *format);
- bool erase(const char_t *presetName);
- bool cycle(void);
-
- char_t startPreset[40];int startDuration;
+ char_t format[40];
+ int startDuration;
  int isSave,saveOnly;char_t saveFlnm[MAX_PATH];
-
- void savePresets(const char_t *reg_child),loadPresets(const char_t *reg_child);
 };
 
 struct TOSDsettingsVideo : TOSDsettings
 {
 public:
  TOSDsettingsVideo(TintStrColl *Icoll=NULL,TfilterIDFFs *filters=NULL);
+ virtual void copy(const TfilterSettings *src);
+ virtual void reg_op(TregOp &t);
+ virtual void createFilters(size_t filtersorder,Tfilters *filters,TfilterQueue &queue) const;
+ virtual void createPages(TffdshowPageDec *parent) const;
+ void resetLook(void);
 
- TfontSettingsOSD font;
- char_t user[2048];int userPx,userPy;
  int linespace;
  int posX,posY;
  int userFormat;
- void resetLook(void);
-
- virtual void reg_op(TregOp &t);
- virtual void createFilters(size_t filtersorder,Tfilters *filters,TfilterQueue &queue) const;
- virtual void createPages(TffdshowPageDec *parent) const {}
+ TfontSettingsOSD font; //must be last, the implementation of the method 'copy' depends on that.
 };
 
 struct TOSDsettingsAudio : TOSDsettings
@@ -58,7 +41,7 @@ public:
  TOSDsettingsAudio(TintStrColl *Icoll=NULL,TfilterIDFFs *filters=NULL);
 
  virtual void createFilters(size_t filtersorder,Tfilters *filters,TfilterQueue &queue) const;
- virtual void createPages(TffdshowPageDec *parent) const {}
+ virtual void createPages(TffdshowPageDec *parent) const;
 };
 
 #endif

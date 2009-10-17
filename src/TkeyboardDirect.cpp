@@ -215,14 +215,6 @@ void Tkeyboard::keyProc(int code,bool remote)
       {
        switch (i->idff)
         {
-         case IDFF_isOSD:
-          if (isMod)
-           {
-            if (deci->getParam2(IDFF_isOSD))
-             deciV->cycleOSDpresets();
-            return;
-           }
-          break;
          case IDFF_isSubtitles:
           if (isMod)
            {

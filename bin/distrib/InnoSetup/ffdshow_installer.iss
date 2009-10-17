@@ -1,10 +1,10 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision           = '3105'
+#define tryout_revision           = '3107'
 
 #define buildyear                 = '2009'
 #define buildmonth                =   '10'
-#define buildday                  =   '16'
+#define buildday                  =   '17'
 
 ; Build specific options
 #define localize                  = True
@@ -599,6 +599,14 @@ Root: HKCU; Subkey: "{#= ff_reg_base}_audio\default"; ValueType: dword;  ValueNa
 Root: HKCU; Subkey: "{#= ff_reg_base}_audio\";                           ValueName: "ac3DRC";                                                Components: ffdshow;     Flags: deletevalue
 Root: HKCU; Subkey: "{#= ff_reg_base}_audio\";                           ValueName: "dtsDRC";                                                Components: ffdshow;     Flags: deletevalue
 
+; OSD upgrade path:
+Root: HKCU; Subkey: "{#= ff_reg_base}\default";       ValueType: dword;  ValueName: "isOSD";                ValueData: "1";                  Components: ffdshow;                                   Check:     GetDefaultPresetIsOSD
+Root: HKCU; Subkey: "{#= ff_reg_base}\default";       ValueType: dword;  ValueName: "isOSD";                ValueData: "0";                  Components: ffdshow;                                   Check: NOT GetDefaultPresetIsOSD
+Root: HKCU; Subkey: "{#= ff_reg_base}\";                                 ValueName: "isOSD";                                                 Components: ffdshow;     Flags: deletevalue
+Root: HKCU; Subkey: "{#= ff_reg_base}_audio\default"; ValueType: dword;  ValueName: "isOSD";                ValueData: "1";                  Components: ffdshow;                                   Check:     GetDefaultAudioPresetIsOSD
+Root: HKCU; Subkey: "{#= ff_reg_base}_audio\default"; ValueType: dword;  ValueName: "isOSD";                ValueData: "0";                  Components: ffdshow;                                   Check: NOT GetDefaultAudioPresetIsOSD
+Root: HKCU; Subkey: "{#= ff_reg_base}_audio\";                           ValueName: "isOSD";                                                 Components: ffdshow;     Flags: deletevalue
+
 [Run]
 Description: "{cm:run_audioConfig}"; Filename: "{syswow64}\rundll32.exe"; Parameters: "ffdshow.ax,configureAudio"; WorkingDir: "{app}";      Components: ffdshow;     Flags: postinstall nowait unchecked; MinVersion: 0,4
 Description: "{cm:run_audioConfig}"; Filename: "{win}\rundll32.exe";      Parameters: "ffdshow.ax,configureAudio"; WorkingDir: "{app}";      Components: ffdshow;     Flags: postinstall nowait unchecked; MinVersion: 4,0
@@ -775,6 +783,74 @@ if (Result) then
   if CheckTaskAudioInpreset('decoderDRC', 1, False) then
     begin
       Result := True;
+    end;
+end;
+
+function GetDefaultPresetIsOSD(): Boolean;
+var
+  regval: Cardinal;
+  presetList: TArrayOfString;
+  index: Integer;
+begin
+  Result := False;
+  if (RegQueryDwordValue(HKCU, '{#= ff_reg_base}', 'isOSD', regval)) then
+    begin
+      Result := True;
+    end;
+  if (Result) then
+    begin
+      if RegGetSubkeyNames(HKCU, '{#= ff_reg_base}\', presetList) then
+        begin
+          for index := 0 to GetArrayLength(presetList)-1 do
+            begin
+              if (RegQueryDwordValue(HKCU, '{#= ff_reg_base}\' + presetList[index], 'orderGrab', regval)) then
+                begin
+                  RegWriteDWordValue(HKCU, '{#= ff_reg_base}\' + presetList[index], 'orderOSD', regval + 1)
+                end;
+            end
+        end
+    end;
+  Result := False;
+  if (RegQueryDwordValue(HKCU, '{#= ff_reg_base}\default', 'isOSD', regval)) then
+    begin
+      if (regval = 1) then
+        begin
+          Result := True;
+        end;
+    end;
+end;
+
+function GetDefaultAudioPresetIsOSD(): Boolean;
+var
+  regval: Cardinal;
+  presetList: TArrayOfString;
+  index: Integer;
+begin
+  Result := False;
+  if (RegQueryDwordValue(HKCU, '{#= ff_reg_base}_audio', 'isOSD', regval)) then
+    begin
+      Result := True;
+    end;
+  if (Result) then
+    begin
+      if RegGetSubkeyNames(HKCU, '{#= ff_reg_base}_audio\', presetList) then
+        begin
+          for index := 0 to GetArrayLength(presetList)-1 do
+            begin
+              if (RegQueryDwordValue(HKCU, '{#= ff_reg_base}_audio\' + presetList[index], 'orderMixer', regval)) then
+                begin
+                  RegWriteDWordValue(HKCU, '{#= ff_reg_base}_audio\' + presetList[index], 'orderOSD', regval + 1)
+                end;
+            end
+        end
+    end;
+  Result := False;
+  if (RegQueryDwordValue(HKCU, '{#= ff_reg_base}_audio\default', 'isOSD', regval)) then
+    begin
+      if (regval = 1) then
+        begin
+          Result := True;
+        end;
     end;
 end;
 

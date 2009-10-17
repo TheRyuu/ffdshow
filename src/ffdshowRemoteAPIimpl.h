@@ -37,6 +37,7 @@ private:
  void start(void),stop(void);
  bool inExplorer;
  DWORD pdwROT;
+ int OSDDuration;
  int OSDPositionX, OSDPositionY;
  std::vector<Tstream> audioStreams, subtitleStreams;
  bool streamsLoaded;

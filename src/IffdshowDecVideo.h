@@ -36,27 +36,19 @@ template<class tchar> DECLARE_INTERFACE_(IffdshowDecVideoT,IUnknown)
  STDMETHOD (calcNewSize)(unsigned int inDx,unsigned int inDy,unsigned int *outDx,unsigned int *outDy) PURE;
  STDMETHOD (grabNow)(void) PURE;
  STDMETHOD (getOverlayControlCapability)(int idff) PURE; //S_OK - can be set, S_FALSE - not supported
- STDMETHOD (drawOSD)(int px,int py,const tchar *text) PURE; //accepts max. lines separated by \n
  STDMETHOD (lock)(int lockId) PURE;
  STDMETHOD (unlock)(int lockId) PURE;
  STDMETHOD (calcMeanQuant)(float *quant) PURE;
  STDMETHOD_(int,findAutoSubflnm2)(void) PURE;
  STDMETHOD (getFrameTime)(unsigned int framenum,unsigned int *sec) PURE;
  STDMETHOD (shortOSDmessage)(const tchar *msg,unsigned int duration) PURE; //duration is in frames
+ STDMETHOD (shortOSDmessage)(const tchar *msg,unsigned int duration,unsigned int posX,unsigned int posY) PURE; //duration is in frames
  STDMETHOD (setImgFilters_)(void *imgFiltersPtr) PURE;
  STDMETHOD (registerSelectedMediaTypes)(void) PURE;
  STDMETHOD (getFrameTimes)(int64_t *start,int64_t *stop) PURE;
  STDMETHOD (getSubtitleTimes)(int64_t *start,int64_t *stop) PURE;
  STDMETHOD (resetSubtitleTimes)(void) PURE;
  STDMETHOD (setFrameTimes)(int64_t start,int64_t stop) PURE;
- STDMETHOD_(int,getOSDpresetCount2)(void) PURE;
- STDMETHOD_(const tchar*,getOSDpresetName2)(unsigned int i) PURE;
- STDMETHOD_(const tchar*,getOSDpresetFormat2)(const tchar *presetName) PURE;
- STDMETHOD (setOSDpresetFormat)(const tchar *presetName,const tchar *format) PURE;
- STDMETHOD (setOSDpresetName)(unsigned int i,const tchar *name) PURE;
- STDMETHOD (addOSDpreset)(const tchar *presetName,const tchar *format) PURE;
- STDMETHOD (deleteOSDpreset)(const tchar *presetName) PURE;
- STDMETHOD (cycleOSDpresets)(void) PURE;
  STDMETHOD_(int,getCodecId)(const BITMAPINFOHEADER *hdr,const GUID *subtype,FOURCC *AVIfourcc) PURE;
  STDMETHOD (getFontManager)(TfontManager* *fontManagerPtr) PURE;
  STDMETHOD_(int,getInIsSync)(void) PURE;

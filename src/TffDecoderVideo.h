@@ -92,27 +92,19 @@ public:
  STDMETHODIMP calcNewSize(Trect inRect,unsigned int *outDx,unsigned int *outDy);
  STDMETHODIMP grabNow(void);
  STDMETHODIMP getOverlayControlCapability(int idff) {return E_NOTIMPL;}
- STDMETHODIMP drawOSD(int px,int py,const char_t *text);
  STDMETHODIMP lock(int lockId) {return TffdshowBase::lock(lockId);}
  STDMETHODIMP unlock(int lockId) {return TffdshowBase::unlock(lockId);}
  STDMETHODIMP calcMeanQuant(float *quant);
  STDMETHODIMP_(int) findAutoSubflnm2(void) {return E_NOTIMPL;}
  STDMETHODIMP getFrameTime(unsigned int framenum,unsigned int *sec);
  STDMETHODIMP shortOSDmessage(const char_t *msg,unsigned int duration);
+ STDMETHODIMP shortOSDmessage(const char_t *msg,unsigned int duration,unsigned int posX,unsigned int posY);
  STDMETHODIMP setImgFilters_(void *imgFiltersPtr) {return E_NOTIMPL;}
  STDMETHODIMP registerSelectedMediaTypes(void) {return E_NOTIMPL;}
  STDMETHODIMP getFrameTimes(int64_t *start,int64_t *stop) {return E_NOTIMPL;}
  STDMETHODIMP getSubtitleTimes(int64_t *start,int64_t *stop) {return E_NOTIMPL;}
  STDMETHODIMP resetSubtitleTimes(void);
  STDMETHODIMP setFrameTimes(int64_t start,int64_t stop) {return E_NOTIMPL;}
- STDMETHODIMP_(int) getOSDpresetCount2(void) {return TffdshowDec::getOSDpresetCount2();}
- STDMETHODIMP_(const char_t*) getOSDpresetName2(unsigned int i) {return TffdshowDec::getOSDpresetName2(i);}
- STDMETHODIMP_(const char_t*) getOSDpresetFormat2(const char_t *presetName) {return TffdshowDec::getOSDpresetFormat2(presetName);}
- STDMETHODIMP setOSDpresetFormat(const char_t *presetName,const char_t *format) {return TffdshowDec::setOSDpresetFormat(presetName,format);}
- STDMETHODIMP setOSDpresetName(unsigned int i,const char_t *name) {return TffdshowDec::setOSDpresetName(i,name);}
- STDMETHODIMP addOSDpreset(const char_t *presetName,const char_t *format) {return TffdshowDec::addOSDpreset(presetName,format);}
- STDMETHODIMP deleteOSDpreset(const char_t *presetName) {return TffdshowDec::deleteOSDpreset(presetName);}
- STDMETHODIMP cycleOSDpresets(void) {return TffdshowDec::cycleOSDpresets();}
  STDMETHODIMP_(int) getCodecId(const BITMAPINFOHEADER *hdr,const GUID *subtype,FOURCC *AVIfourcc);
  STDMETHODIMP getFontManager(TfontManager* *fontManagerPtr);
  STDMETHODIMP getInCodecString(char_t *buf,size_t buflen);
@@ -233,7 +225,6 @@ public:
  STDMETHODIMP compat_getOverlayControlCapability(int idff) {return getOverlayControlCapability(idff);}
  STDMETHODIMP compat_getParamName(unsigned int i,char *buf,unsigned int len) {return getBaseInterface<IffdshowBaseA>()->getParamName(i,buf,len);}
  STDMETHODIMP compat_getTranslator(Ttranslate* *trans) {return getTranslator(trans);}
- STDMETHODIMP compat_drawOSD(int px,int py,const char *txt) {return drawOSD(px,py,text<char_t>(txt));}
  STDMETHODIMP compat_lock(int lockId) {return TffdshowBase::lock(lockId);}
  STDMETHODIMP compat_unlock(int lockId) {return TffdshowBase::unlock(lockId);}
  STDMETHODIMP compat_getInstance2(void)
@@ -277,6 +268,7 @@ public:
  STDMETHODIMP compat_filterHasReset(unsigned int filterID) {return filterHasReset(filterID);}
  STDMETHODIMP compat_filterHasResetEx(unsigned int filterID,unsigned int filterPageId) {return filterHasResetEx(filterID,filterPageId);}
  STDMETHODIMP compat_shortOSDmessage(const char *msg,unsigned int duration) {return shortOSDmessage(text<char_t>(msg),duration);}
+ STDMETHODIMP compat_shortOSDmessage(const char *msg,unsigned int duration,unsigned int posX,unsigned int posY) {return shortOSDmessage(text<char_t>(msg),duration,posX,posY);}
  STDMETHODIMP compat_setImgFilters(TimgFilters *imgFiltersPtr) {return E_NOTIMPL;}
  STDMETHODIMP compat_registerSelectedMediaTypes(void) {return registerSelectedMediaTypes();}
  STDMETHODIMP compat_getFrameTimes(int64_t *start,int64_t *stop) {return getFrameTimes(start,stop);}
@@ -409,33 +401,19 @@ private:
    STDMETHODIMP calcNewSize(unsigned int inDx,unsigned int inDy,unsigned int *outDx,unsigned int *outDy) {return deciV->calcNewSize(inDx,inDy,outDx,outDy);}
    STDMETHODIMP grabNow(void) {return deciV->grabNow();}
    STDMETHODIMP getOverlayControlCapability(int idff) {return deciV->getOverlayControlCapability(idff);}
-   STDMETHODIMP drawOSD(int px,int py,const tchar *txt) {return deciV->drawOSD(px,py,text<char_t>(txt));}
    STDMETHODIMP lock(int lockId) {return deciV->lock(lockId);}
    STDMETHODIMP unlock(int lockId) {return deciV->unlock(lockId);}
    STDMETHODIMP calcMeanQuant(float *quant) {return deciV->calcMeanQuant(quant);}
    STDMETHODIMP_(int) findAutoSubflnm2(void) {return deciV->findAutoSubflnm2();}
    STDMETHODIMP getFrameTime(unsigned int framenum,unsigned int *sec) {return deciV->getFrameTime(framenum,sec);}
    STDMETHODIMP shortOSDmessage(const tchar *msg,unsigned int duration) {return deciV->shortOSDmessage(text<char_t>(msg),duration);}
+   STDMETHODIMP shortOSDmessage(const tchar *msg,unsigned int duration,unsigned int posX,unsigned int posY) {return deciV->shortOSDmessage(text<char_t>(msg),duration,posX,posY);}
    STDMETHODIMP setImgFilters_(void *imgFiltersPtr) {return E_NOTIMPL;}
    STDMETHODIMP registerSelectedMediaTypes(void) {return deciV->registerSelectedMediaTypes();}
    STDMETHODIMP getFrameTimes(int64_t *start,int64_t *stop) {return deciV->getFrameTimes(start,stop);}
    STDMETHODIMP getSubtitleTimes(int64_t *start,int64_t *stop) {return deciV->getSubtitleTimes(start,stop);}
    STDMETHODIMP resetSubtitleTimes(void) {return deciV->resetSubtitleTimes();}
    STDMETHODIMP setFrameTimes(int64_t start,int64_t stop) {return deciV->setFrameTimes(start,stop);}
-   STDMETHODIMP_(int) getOSDpresetCount2(void) {return deciV->getOSDpresetCount2();}
-   STDMETHODIMP_(const tchar*) getOSDpresetName2(unsigned int i)
-    {
-     return NULL;
-    }
-   STDMETHODIMP_(const tchar*) getOSDpresetFormat2(const tchar *presetName)
-    {
-     return NULL;
-    }
-   STDMETHODIMP setOSDpresetFormat(const tchar *presetName,const tchar *format) {return deciV->setOSDpresetFormat(text<char_t>(presetName),text<char_t>(format));}
-   STDMETHODIMP setOSDpresetName(unsigned int i,const tchar *name) {return deciV->setOSDpresetName(i,text<char_t>(name));}
-   STDMETHODIMP addOSDpreset(const tchar *presetName,const tchar *format) {return deciV->addOSDpreset(text<char_t>(presetName),text<char_t>(format));}
-   STDMETHODIMP deleteOSDpreset(const tchar *presetName) {return deciV->deleteOSDpreset(text<char_t>(presetName));}
-   STDMETHODIMP cycleOSDpresets(void) {return deciV->cycleOSDpresets();}
    STDMETHODIMP_(int) getCodecId(const BITMAPINFOHEADER *hdr,const GUID *subtype,FOURCC *AVIfourcc) {return deciV->getCodecId(hdr,subtype,AVIfourcc);}
    STDMETHODIMP getFontManager(TfontManager* *fontManagerPtr) {return deciV->getFontManager(fontManagerPtr);}
    STDMETHODIMP_(int) getInIsSync(void) {return deciV->getInIsSync();}

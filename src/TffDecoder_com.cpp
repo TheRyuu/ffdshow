@@ -35,6 +35,7 @@
 #include "Tinfo.h"
 #include "TlevelsSettings.h"
 #include "ToutputVideoSettings.h"
+#include "TimgFilterOSD.h"
 #include "imgFilters/avisynth/TimgFilterAvisynth.h"
 
 const TfilterIDFF TffdshowDecVideo::nextFilters[]=
@@ -48,16 +49,6 @@ const TfilterIDFF TffdshowDecVideo::nextFilters[]=
   /*full*/  0,
   /*half*/  0,
   /*dlgId*/ IDD_FLIP,
- },
- {
-  /*name*/  _l("OSD"),
-  /*id*/    0,
-  /*is*/    IDFF_isOSD,
-  /*order*/ 0,
-  /*show*/  0,
-  /*full*/  0,
-  /*half*/  0,
-  /*dlgId*/ IDD_OSD,
  },
  {
   /*name*/  _l("Keyboard & remote"),
@@ -250,7 +241,7 @@ STDMETHODIMP_(int) TffdshowDecVideo::getInputBitrate2(void)
 
 TimgFilters* TffdshowDecVideo::createImgFilters(void)
 {
- return new TimgFiltersPlayer(this,this,globalSettings->osd.font,allowOutChange);
+ return new TimgFiltersPlayer(this,this,allowOutChange);
 }
 
 STDMETHODIMP TffdshowDecVideo::calcNewSize(unsigned int inDx,unsigned int inDy ,unsigned int *outDx,unsigned int *outDy)
@@ -307,18 +298,6 @@ STDMETHODIMP TffdshowDecVideo::grabNow(void)
  return imgFilters?(imgFilters->grabNow(),S_OK):E_UNEXPECTED;
 }
 
-STDMETHODIMP TffdshowDecVideo::drawOSD(int px,int py,const char_t *text)
-{
- if ((globalSettings->filtermode&IDFF_FILTERMODE_PLAYER)==0) return E_UNEXPECTED;
- if (px<0 || px>100 || py<0 || py>100) return E_INVALIDARG;
- if (!text) return E_POINTER;
- globalSettings->osd.userPx=px;globalSettings->osd.userPy=py;
- if (strlen(text)>2048)
-  ff_strncpy(globalSettings->osd.user, text, countof(globalSettings->osd.user));
- else
-  ff_strncpy(globalSettings->osd.user, text, countof(globalSettings->osd.user));
- return S_OK;
-}
 STDMETHODIMP TffdshowDecVideo::calcMeanQuant(float *quant)
 {
  return inpin->calcMeanQuant(quant);
@@ -351,6 +330,12 @@ STDMETHODIMP TffdshowDecVideo::shortOSDmessage(const char_t *msg,unsigned int du
  if (!imgFilters || !presetSettings) return E_UNEXPECTED;
  return imgFilters->shortOSDmessage(msg,duration)?S_OK:S_FALSE;
 }
+STDMETHODIMP TffdshowDecVideo::shortOSDmessage(const char_t *msg,unsigned int duration,unsigned int posX,unsigned int posY)
+{
+ if (!msg || duration==0) return E_INVALIDARG;
+ if (!imgFilters || !presetSettings) return E_UNEXPECTED;
+ return imgFilters->shortOSDmessage(msg,duration,posX,posY)?S_OK:S_FALSE;
+}
 STDMETHODIMP TffdshowDecVideo::registerOSDprovider(IOSDprovider *provider,const char *name)
 {
  if (!imgFilters) return E_UNEXPECTED;
@@ -370,7 +355,6 @@ STDMETHODIMP TffdshowDecVideo::resetSubtitleTimes(void)
 
 STDMETHODIMP TffdshowDecVideo::resetOSD(void)
 {
- globalSettings->osd.resetLook();
  return S_OK;
 }
 

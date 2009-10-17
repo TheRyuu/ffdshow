@@ -260,7 +260,7 @@ void TglobalSettingsBase::addToCompatiblityList(char_t *list, const char_t *exe,
 }
 
 //===================================== TglobalSettingsDec ======================================
-TglobalSettingsDec::TglobalSettingsDec(const Tconfig *Iconfig,int Imode,const char_t *Ireg_child,TintStrColl *Icoll,TOSDsettings *Iosd):TglobalSettingsBase(Iconfig,Imode,Ireg_child,Icoll),osd(Iosd)
+TglobalSettingsDec::TglobalSettingsDec(const Tconfig *Iconfig,int Imode,const char_t *Ireg_child,TintStrColl *Icoll):TglobalSettingsBase(Iconfig,Imode,Ireg_child,Icoll)
 {
  static const TintOptionT<TglobalSettingsDec> iopts[]=
   {
@@ -285,18 +285,15 @@ TglobalSettingsDec::TglobalSettingsDec(const Tconfig *Iconfig,int Imode,const ch
 void TglobalSettingsDec::reg_op(TregOp &t)
 {
  TglobalSettingsBase::reg_op(t);
- osd->reg_op(t);
 }
 
 void TglobalSettingsDec::load(void)
 {
  TglobalSettingsBase::load();
- osd->loadPresets(reg_child);
 }
 void TglobalSettingsDec::save(void)
 {
  TglobalSettingsBase::save();
- osd->savePresets(reg_child);
 }
 
 void TglobalSettingsDec::fixMissing(int &codecId,int movie1,int movie2,int movie3)
@@ -343,7 +340,7 @@ void TglobalSettingsDec::cleanupCodecsList(std::vector<CodecID> &ids,Tstrptrs &c
 }
 
 //=================================== TglobalSettingsDecVideo ===================================
-TglobalSettingsDecVideo::TglobalSettingsDecVideo(const Tconfig *Iconfig,int Imode,TintStrColl *Icoll):TglobalSettingsDec(Iconfig,Imode,Imode&IDFF_FILTERMODE_VFW?FFDSHOWDECVIDEOVFW:FFDSHOWDECVIDEO,Icoll,&osd),sub(Icoll),osd(Icoll)
+TglobalSettingsDecVideo::TglobalSettingsDecVideo(const Tconfig *Iconfig,int Imode,TintStrColl *Icoll):TglobalSettingsDec(Iconfig,Imode,Imode&IDFF_FILTERMODE_VFW?FFDSHOWDECVIDEOVFW:FFDSHOWDECVIDEO,Icoll),sub(Icoll)
 {
  static const TintOptionT<TglobalSettingsDecVideo> iopts[]=
   {
@@ -1007,7 +1004,7 @@ void TglobalSettingsDecVideo::TsubtitlesSettings::getDefaultStr(int id,char_t *b
 }
 
 //=================================== TglobalSettingsDecAudio ===================================
-TglobalSettingsDecAudio::TglobalSettingsDecAudio(const Tconfig *Iconfig,int Imode,TintStrColl *Icoll,const char_t *Ireg_child):TglobalSettingsDec(Iconfig,Imode,Ireg_child,Icoll,&osd),osd(Icoll)
+TglobalSettingsDecAudio::TglobalSettingsDecAudio(const Tconfig *Iconfig,int Imode,TintStrColl *Icoll,const char_t *Ireg_child):TglobalSettingsDec(Iconfig,Imode,Ireg_child,Icoll)
 {
  static const TintOptionT<TglobalSettingsDecAudio> iopts[]=
   {

@@ -85,13 +85,12 @@ protected:
  void fixMissing(int &codecId,int movie);
  virtual int getDefault(int id);
  static void cleanupCodecsList(std::vector<CodecID> &ids,Tstrptrs &codecs);
- TglobalSettingsDec(const Tconfig *Iconfig,int Imode,const char_t *Ireg_child,TintStrColl *Icoll,TOSDsettings *Iosd);
+ TglobalSettingsDec(const Tconfig *Iconfig,int Imode,const char_t *Ireg_child,TintStrColl *Icoll);
 public:
  char_t defaultPreset[MAX_PATH];
  int autoPreset,autoPresetFileFirst;
 
  int streamsMenu;
- TOSDsettings *osd;
 
  virtual void load(void);
  virtual void save(void);
@@ -121,7 +120,6 @@ public:
  int alternateUncompressed;
 
  virtual void load(void);
- TOSDsettingsVideo osd;
 
  struct TsubtitlesSettings : Toptions
   {
@@ -152,7 +150,6 @@ protected:
  virtual void getDefaultStr(int id,char_t *buf,size_t buflen);
 public:
  TglobalSettingsDecAudio(const Tconfig *Iconfig,int Imode,TintStrColl *Icoll,const char_t *Ireg_child=FFDSHOWDECAUDIO);
- TOSDsettingsAudio osd;
  int wma1,wma2,mp2,mp3,ac3,aac,amr,rawa,avis,iadpcm,msadpcm,flac,lpcm,dts,vorbis,law,gsm,tta,otherAdpcm,qdm2,truespeech,mace,ra,imc,atrac3,nellymoser,wavpack,eac3,mlp,truehd,cook;
  int dtsinwav;
  int ac3drc,dtsdrc;

@@ -953,45 +953,6 @@ STDMETHODIMP TffdshowDec::sendOnNewFiltersMsg(void)
   return S_FALSE;
 }
 
-STDMETHODIMP_(int) TffdshowDec::getOSDpresetCount2(void)
-{
- return (int)globalSettings->osd->getSize();
-}
-STDMETHODIMP_(const char_t*) TffdshowDec::getOSDpresetName2(unsigned int i)
-{
- return globalSettings->osd->getPresetName(i);
-}
-STDMETHODIMP_(const char_t*) TffdshowDec::getOSDpresetFormat2(const char_t *presetName)
-{
- return globalSettings->osd->getFormat(presetName);
-}
-STDMETHODIMP TffdshowDec::setOSDpresetFormat(const char_t *presetName,const char_t *format)
-{
- return globalSettings->osd->setFormat(presetName,format)?S_OK:S_FALSE;
-}
-STDMETHODIMP TffdshowDec::setOSDpresetName(unsigned int i,const char_t *name)
-{
- return globalSettings->osd->setPresetName(i,name);
-}
-STDMETHODIMP TffdshowDec::addOSDpreset(const char_t *presetName,const char_t *format)
-{
- if (!presetName || presetName[0]=='\0' || !format) return E_INVALIDARG;
- globalSettings->osd->addPreset(presetName,format);
- return S_OK;
-}
-STDMETHODIMP TffdshowDec::deleteOSDpreset(const char_t *presetName)
-{
- return globalSettings->osd->erase(presetName)?S_OK:S_FALSE;
-}
-STDMETHODIMP TffdshowDec::cycleOSDpresets(void)
-{
- return globalSettings->osd->cycle()?S_OK:S_FALSE;
-}
-STDMETHODIMP_(const char_t*) TffdshowDec::getOSDstartupFormat(int *duration)
-{
- return globalSettings->osd->getStartupFormat(duration);
-}
-
 STDMETHODIMP_(TinputPin*) TffdshowDec::getInputPin()
 {
  return minput;

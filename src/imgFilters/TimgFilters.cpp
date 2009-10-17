@@ -215,11 +215,10 @@ void TimgFilters::grabNow(void)
 }
 
 //============================================== TimgFiltersPlayer ==============================================
-TimgFiltersPlayer::TimgFiltersPlayer(IffdshowBase *Ideci,IprocVideoSink *Isink,const TfontSettingsOSD &IglobalFontSettingsOSD,bool &IallowOutChange):
+TimgFiltersPlayer::TimgFiltersPlayer(IffdshowBase *Ideci,IprocVideoSink *Isink,bool &IallowOutChange):
  TimgFilters(Ideci,Isink),
  resizeSettingsDV(NULL),resizeDV(NULL),
  expand(NULL),
- globalFontSettingsOSD(IglobalFontSettingsOSD),fontSettingsOSD((TfontSettingsOSD*)calloc(1,sizeof(TfontSettingsOSD))),
  allowOutChange(IallowOutChange)
 {
  deci->getGlobalSettings((TglobalSettingsBase**)&globalCfg);
@@ -229,7 +228,6 @@ TimgFiltersPlayer::~TimgFiltersPlayer()
 {
  if (resizeSettingsDV) delete resizeSettingsDV;
  if (resizeDV) delete resizeDV;
- free(fontSettingsOSD);
 }
 
 void TimgFiltersPlayer::makeQueue(const Tpreset *cfg,TfilterQueue &queue)
@@ -237,7 +235,6 @@ void TimgFiltersPlayer::makeQueue(const Tpreset *cfg,TfilterQueue &queue)
  TimgFilters::makeQueue(cfg,queue);
  if (expand) queue.add(expand,&expandSettings);
  if (resizeDV) queue.add(resizeDV,resizeSettingsDV);
- queue.add(osd,&globalCfg->osd);
 }
 
 void TimgFiltersPlayer::onFirstProcess(const TpresetVideo *cfg)
@@ -270,6 +267,12 @@ bool TimgFiltersPlayer::shortOSDmessage(const char_t *msg,unsigned int duration)
 {
  return osd->shortOSDmessage(msg,duration);
 }
+
+bool TimgFiltersPlayer::shortOSDmessage(const char_t *msg,unsigned int duration,unsigned int posX,unsigned int posY)
+{
+ return osd->shortOSDmessage(msg,duration,posX,posY);
+}
+
 HRESULT TimgFiltersPlayer::registerOSDprovider(IOSDprovider *provider,const char *name)
 {
  return osd->registerOSDprovider(provider,name);
@@ -281,7 +284,6 @@ HRESULT TimgFiltersPlayer::unregisterOSDprovider(IOSDprovider *provider)
 
 HRESULT TimgFiltersPlayer::process(TffPict &pict,const TpresetVideo *cfg)
 {
- memcpy(fontSettingsOSD,&globalFontSettingsOSD,sizeof(*fontSettingsOSD));
  return TimgFilters::process(pict,cfg);
 }
 

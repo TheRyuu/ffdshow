@@ -483,7 +483,7 @@
 #define IDC_BT_OSD_LINE_DOWN            1249
 #define IDC_LV_OSD_LINES                1250
 #define IDC_LBL_FFDSHOW                 1251
-#define IDC_BT_OSD_PRESETS              1251
+//#define IDC_BT_OSD_PRESETS              1251
 #define IDC_LBL_CROP_TOP                1252
 #define IDC_BT_OSD_SAVE                 1252
 #define IDC_LBL_CROP_LEFT               1254
@@ -724,7 +724,7 @@
 #define IDC_ED_CREDITS_END_START        1468
 #define IDC_LBL_PRESETENC               1468
 #define IDC_LBL_CREDITS_END_END         1469
-#define IDC_CBX_OSD_PRESETS             1469
+//#define IDC_CBX_OSD_PRESETS             1469
 #define IDC_ED_CREDITS_END_END          1470
 #define IDC_LBL_LJPEG_CSP               1470
 #define IDC_GRP_CREDITS_REDUCTION       1471

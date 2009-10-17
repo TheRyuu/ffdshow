@@ -483,7 +483,7 @@ TfontPageSubtitles::TfontPageSubtitles(TffdshowPageDec *Iparent,const TfilterIDF
 }
 
 //========================================= TfontPageOSD ========================================
-TfontPageOSD::TfontPageOSD(TffdshowPageDec *Iparent):TfontPage(Iparent)
+TfontPageOSD::TfontPageOSD(TffdshowPageDec *Iparent, const TfilterIDFF *idff):TfontPage(Iparent,idff,2)
 {
  idff_fontcharset=IDFF_OSDfontCharset;
  idff_fontname=IDFF_OSDfontName;

@@ -88,8 +88,6 @@ INT_PTR TavisynthPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
       case IDC_CHB_AVISYNTH:
        c=getCheck(IDC_CHB_AVISYNTH);
        cfgSet(IDFF_isAvisynth,c);
-       if(!c)
-        cfgSet(IDFF_OSDuser,_l(""));
        break;
 
       case IDC_CHB_AVISYNTH_BUFFER:

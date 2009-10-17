@@ -215,13 +215,13 @@ TfontSettingsOSD::TfontSettingsOSD(TintStrColl *Icoll):TfontSettings(Icoll)
 
  static const TintOptionT<TfontSettings> iopts[]=
   {
-   IDFF_OSDfontCharset       ,&TfontSettings::charset        ,1,1,_l(""),0,
+   IDFF_OSDfontCharset       ,&TfontSettings::charset        ,1,1,_l(""),1,
      _l("OSDfontCharset"), DEFAULT_CHARSET,
-   IDFF_OSDfontSize          ,&TfontSettings::sizeP          ,2,255,_l(""),0,
+   IDFF_OSDfontSize          ,&TfontSettings::sizeP          ,2,255,_l(""),1,
      _l("OSDfontSize"), 17,
-   IDFF_OSDfontWeight        ,&TfontSettings::weight         ,0,900,_l(""),0,
+   IDFF_OSDfontWeight        ,&TfontSettings::weight         ,0,900,_l(""),1,
      _l("OSDfontWeight"), FW_NORMAL,
-   IDFF_OSDfontColor         ,&TfontSettings::color          ,1,1,_l(""),0,
+   IDFF_OSDfontColor         ,&TfontSettings::color          ,1,1,_l(""),1,
      _l("OSDfontColor"), RGB(110,220,0),
    IDFF_OSDfontOutlineColor  ,&TfontSettings::outlineColor   ,1,1,_l(""),1,
      _l("OSDfontOutlineColor"), RGB(0,0,0),
@@ -231,13 +231,13 @@ TfontSettingsOSD::TfontSettingsOSD(TintStrColl *Icoll):TfontSettings(Icoll)
      _l("OSDfontOutlineWidth"), 1,
    IDFF_OSDfontOpaqueBox     ,&TfontSettings::opaqueBox      ,0,0,_l(""),1,
      _l("OSDfontOpaqueBox"), 0,
-   IDFF_OSDfontSpacing       ,&TfontSettings::spacing        ,-10,10,_l(""),0,
+   IDFF_OSDfontSpacing       ,&TfontSettings::spacing        ,-10,10,_l(""),1,
      _l("OSDfontSpacing"), 0,
-   IDFF_OSDfontXscale        ,&TfontSettings::xscale         ,10,300,_l(""),0,
+   IDFF_OSDfontXscale        ,&TfontSettings::xscale         ,10,300,_l(""),1,
      _l("OSDfontXscale"), 100,
-   IDFF_OSDfontYscale        ,&TfontSettings::yscale         ,10,300,_l(""),0,
+   IDFF_OSDfontYscale        ,&TfontSettings::yscale         ,10,300,_l(""),1,
      _l("OSDfontYscale"), 100,
-   IDFF_OSDfontAspectAuto    ,&TfontSettings::aspectAuto     ,0,0,_l(""),0,
+   IDFF_OSDfontAspectAuto    ,&TfontSettings::aspectAuto     ,0,0,_l(""),1,
      _l("OSDfontAspectAuto"), 1,
    IDFF_OSDfontBodyAlpha     ,&TfontSettings::bodyAlpha      ,0,256,_l(""),1,
      _l("OSDfontBodyAlpha"), 256,
@@ -257,7 +257,7 @@ TfontSettingsOSD::TfontSettingsOSD(TintStrColl *Icoll):TfontSettings(Icoll)
  gdi_font_scale = 4;
  static const TstrOption sopts[]=
   {
-   IDFF_OSDfontName,(TstrVal)&TfontSettings::name,LF_FACESIZE,0,_l(""),0,
+   IDFF_OSDfontName,(TstrVal)&TfontSettings::name,LF_FACESIZE,0,_l(""),1,
      _l("OSDfontName"), NULL,
    0
   };

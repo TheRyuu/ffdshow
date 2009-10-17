@@ -92,7 +92,6 @@ DECLARE_INTERFACE_(IffDecoder, IUnknown)
  STDMETHOD (compat_getParamName)(unsigned int i,char *buf,unsigned int len) PURE;
  STDMETHOD (compat_getTranslator)(Ttranslate* *trans) PURE;
  STDMETHOD (compat_getIffDecoderVersion2)(void) PURE;
- STDMETHOD (compat_drawOSD)(int px,int py,const char *text) PURE; //accepts max. lines separated by \n
  STDMETHOD (compat_lock)(int lockId) PURE;
  STDMETHOD (compat_unlock)(int lockId) PURE;
  STDMETHOD (compat_getInstance2)(void) PURE;
@@ -122,6 +121,7 @@ DECLARE_INTERFACE_(IffDecoder, IUnknown)
  STDMETHOD (compat_filterHasReset)(unsigned int filterID) PURE;
  STDMETHOD (compat_filterHasResetEx)(unsigned int filterID,unsigned int filterPageId) PURE;
  STDMETHOD (compat_shortOSDmessage)(const char *msg,unsigned int duration) PURE; //duration is in frames
+ STDMETHOD (compat_shortOSDmessage)(const char *msg,unsigned int duration,unsigned posX,unsigned int posY) PURE; //duration is in frames
  STDMETHOD (compat_setImgFilters)(TimgFilters *imgFiltersPtr) PURE;
  STDMETHOD (compat_registerSelectedMediaTypes)(void) PURE;
  STDMETHOD (compat_getFrameTimes)(int64_t *start,int64_t *stop) PURE;

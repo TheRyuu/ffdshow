@@ -619,7 +619,10 @@
 #define IDFF_avisynthScript          1254 // Use this if you want to manipulate the setting through external API.
 #define IDFF_avisynthScriptMULTI_SZ  1265 // Used to save data. If both IDFF_avisynthScript and IDFF_avisynthScriptMULTI_SZ exist, IDFF_avisynthScriptMULTI_SZ is used. If only one of these exists, the exsiting one is used.
 
+#define IDFF_filterOSD             3527
 #define IDFF_isOSD                 1501
+#define IDFF_orderOSD              3528
+#define IDFF_showOSD               3529
 #define IDFF_OSDfontName           1509
 #define IDFF_OSDfontCharset        1502
 #define IDFF_OSDfontSize           1503
@@ -708,17 +711,18 @@
   #define IDFF_OSDtype_QueueCount        1563
   #define IDFF_OSDtype_Late              1564
   #define IDFF_OSDtype_AviSynth_Info     1566
-#define IDFF_OSDuser               1511 //don't use these, use drawOSD() instead
-#define IDFF_OSDuserPx             1512
-#define IDFF_OSDuserPy             1513
-#define IDFF_OSDcurPreset          1530
+//#define IDFF_OSDuser               1511 //don't use these, use shortOSDmessage(msg,duration,x,y) instead
+//#define IDFF_OSDuserPx             1512
+//#define IDFF_OSDuserPy             1513
+//#define IDFF_OSDcurPreset          1530
 #define IDFF_OSDposX               1533
 #define IDFF_OSDposY               1534
-#define IDFF_OSDstartPreset        1537
+//#define IDFF_OSDstartPreset        1537
 #define IDFF_OSDstartDuration      1538 //in frames
 #define IDFF_OSDisSave             1546
 #define IDFF_OSDsaveFlnm           1547
 #define IDFF_OSDsaveOnly           1555
+#define IDFF_OSDformat             3530
 
 #define IDFF_filterGrab    2000
 #define IDFF_isGrab        2001
@@ -1555,6 +1559,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//next:3527
+//next:3531
 
 #endif

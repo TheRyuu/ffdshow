@@ -515,7 +515,6 @@ void TtrayIconDecVideo::processCmd(HMENU hm,int cmd)
   }
  else if (cmd==IDFF_isAvisynth+IDC_FIRST_FILTER)
   {
-   deci->putParamStr(IDFF_OSDuser,_l(""));
    TtrayIconDec::processCmd(hm,cmd);
   }
  else

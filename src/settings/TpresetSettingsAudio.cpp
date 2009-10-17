@@ -33,6 +33,7 @@
 #include "TchannelSwapSettings.h"
 #include "TconvolverSettings.h"
 #include "ToutputAudioSettings.h"
+#include "TOSDSettings.h"
 #include "ffdshow_constants.h"
 #include "TsampleFormat.h"
 #include "IffdshowDecAudio.h"
@@ -133,6 +134,7 @@ TpresetAudio::TpresetAudio(const char_t *IpresetName,const char_t *Ireg_child,in
  new TlfeCrossoverSettings(options,filters);
  new TchannelSwapSettings(options,filters);
  new TmixerSettings(options,filters);
+ new TOSDsettingsAudio(options,filters);
  output=new ToutputAudioSettings(options,filters);
  output->order=filters->maxOrder()+1;
 }

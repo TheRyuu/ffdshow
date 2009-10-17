@@ -40,6 +40,7 @@
 #include "TvisSettings.h"
 #include "TgradFunSettings.h"
 #include "TgrabSettings.h"
+#include "TOSDSettings.h"
 #include "ThwOverlaySettings.h"
 #include "ToutputVideoSettings.h"
 #include "ffdshow_constants.h"
@@ -393,6 +394,7 @@ TpresetVideo::TpresetVideo(const char_t *Ireg_child, const char_t *IpresetName, 
    new TbitmapSettings(options,filters);
    subtitles=new TsubtitlesSettings(options,filters,filtermode);
    grab=new TgrabSettings(options,filters);
+   new TOSDsettingsVideo(options,filters);
    output=new ToutputVideoSettings(options,filters);
   }
  else

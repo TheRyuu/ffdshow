@@ -113,10 +113,6 @@ void TffdshowPageDecVideo::onActivate(void)
        addTI(&tvis,new TdirectshowControlPageDec(this))->hti;
        HTREEITEM htiInfo=addTI(&tvis,new TinfoPageDecVideo(this))->hti;
        tvis.hParent=htiInfo;
-       HTREEITEM htiOSD=addTI(&tvis,new TOSDpageVideo(this))->hti;
-       //tvis.hParent=htiOSD;
-       addTI(&tvis,new TfontPageOSD(this));
-       TreeView_Expand(htv,htiOSD,TVE_EXPAND);
        tvis.hParent=NULL;
        TreeView_Expand(htv,htiInfo,TVE_EXPAND);
       }

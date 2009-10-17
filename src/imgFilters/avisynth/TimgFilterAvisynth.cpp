@@ -1238,12 +1238,10 @@ HRESULT TimgFilterAvisynth::process(TfilterQueue::iterator it,TffPict &pict,cons
          if (!avisynth) avisynth=new Tavisynth;
 
          avisynth->init(oldcfg,input,&outcsp,pict);
-
-         deciV->drawOSD(0,50,_l(""));
         }
        catch (Tavisynth::AvisynthError &err)
         {
-         deciV->drawOSD(0,50,text<char_t>(err.msg));
+         deciV->shortOSDmessage(text<char_t>(err.msg),100);
          DPRINTFA("%s",err.msg);
         }
       }
