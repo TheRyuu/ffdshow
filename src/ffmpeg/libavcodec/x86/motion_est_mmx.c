@@ -90,7 +90,6 @@ static inline void sad8_1_mmx2(uint8_t *blk1, uint8_t *blk2, int stride, int h)
     );
 }
 
-#if AV_GCC_VERSION_AT_LEAST(4,2)
 static int sad16_sse2(void *v, uint8_t *blk2, uint8_t *blk1, int stride, int h)
 {
     int ret;
@@ -119,7 +118,6 @@ static int sad16_sse2(void *v, uint8_t *blk2, uint8_t *blk1, int stride, int h)
     );
     return ret;
 }
-#endif
 
 static inline void sad8_x2a_mmx2(uint8_t *blk1, uint8_t *blk2, int stride, int h)
 {
@@ -458,9 +456,7 @@ void dsputil_init_pix_mmx(DSPContext* c, AVCodecContext *avctx)
             c->pix_abs[1][3] = sad8_xy2_mmx2;
         }
     }
-#if AV_GCC_VERSION_AT_LEAST(4,2)
     if ((mm_flags & FF_MM_SSE2) && !(mm_flags & FF_MM_3DNOW) && avctx->codec_id != CODEC_ID_SNOW) {
         c->sad[0]= sad16_sse2;
     }
-#endif
 }

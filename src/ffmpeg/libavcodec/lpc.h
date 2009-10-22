@@ -22,10 +22,7 @@
 #ifndef AVCODEC_LPC_H
 #define AVCODEC_LPC_H
 
-#ifdef __GNUC__
 #include <stdint.h>
-#endif
-
 
 #ifdef LPC_USE_DOUBLE
 #define LPC_TYPE double

@@ -597,7 +597,7 @@ static void add_bytes_l2_mmx(uint8_t *dst, uint8_t *src1, uint8_t *src2, int w){
 }
 
 #if HAVE_7REGS && HAVE_TEN_OPERANDS
-static void add_hfyu_median_prediction_cmov(uint8_t *dst, uint8_t *top, uint8_t *diff, int w, int *left, int *left_top) {
+static void add_hfyu_median_prediction_cmov(uint8_t *dst, const uint8_t *top, const uint8_t *diff, int w, int *left, int *left_top) {
     x86_reg w2 = -w;
     x86_reg x;
     int l = *left & 0xff;
@@ -2350,7 +2350,9 @@ static void float_to_int16_sse2(int16_t *dst, const float *src, long len){
 void ff_float_to_int16_interleave6_sse(int16_t *dst, const float **src, int len);
 void ff_float_to_int16_interleave6_3dnow(int16_t *dst, const float **src, int len);
 void ff_float_to_int16_interleave6_3dn2(int16_t *dst, const float **src, int len);
-void ff_add_hfyu_median_prediction_mmx2(uint8_t *dst, uint8_t *top, uint8_t *diff, int w, int *left, int *left_top);
+void ff_add_hfyu_median_prediction_mmx2(uint8_t *dst, const uint8_t *top, const uint8_t *diff, int w, int *left, int *left_top);
+int  ff_add_hfyu_left_prediction_ssse3(uint8_t *dst, const uint8_t *src, int w, int left);
+int  ff_add_hfyu_left_prediction_sse4(uint8_t *dst, const uint8_t *src, int w, int left);
 void ff_x264_deblock_v_luma_sse2(uint8_t *pix, int stride, int alpha, int beta, int8_t *tc0);
 void ff_x264_deblock_h_luma_sse2(uint8_t *pix, int stride, int alpha, int beta, int8_t *tc0);
 void ff_x264_deblock_v8_luma_intra_mmxext(uint8_t *pix, int stride, int alpha, int beta);
@@ -2779,7 +2781,7 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
                 ff_cavsdsp_init_3dnow(c, avctx);
         }
 
-#if AV_GCC_VERSION_AT_LEAST(4,2)
+
 #define H264_QPEL_FUNCS(x, y, CPU)\
             c->put_h264_qpel_pixels_tab[0][x+y*4] = put_h264_qpel16_mc##x##y##_##CPU;\
             c->put_h264_qpel_pixels_tab[1][x+y*4] = put_h264_qpel8_mc##x##y##_##CPU;\
@@ -2835,12 +2837,15 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
             c->put_h264_chroma_pixels_tab[1]= put_h264_chroma_mc4_ssse3;
             c->avg_h264_chroma_pixels_tab[1]= avg_h264_chroma_mc4_ssse3;
             c->add_png_paeth_prediction= add_png_paeth_prediction_ssse3;
+#if HAVE_YASM && ARCH_X86_32
+            c->add_hfyu_left_prediction = ff_add_hfyu_left_prediction_ssse3;
+            if (mm_flags & FF_MM_SSE4) // not really sse4, just slow on Conroe
+                c->add_hfyu_left_prediction = ff_add_hfyu_left_prediction_sse4;
+#endif
         }
 #endif
 
-/* disable YASM based ASM for 64-bit builds */
-#if ARCH_X86_32
-#if CONFIG_GPL && HAVE_YASM
+#if CONFIG_GPL && HAVE_YASM && ARCH_X86_32
         if (mm_flags & FF_MM_MMX2){
 #if ARCH_X86_32
             c->h264_v_loop_filter_luma_intra = ff_x264_deblock_v_luma_intra_mmxext;
@@ -2859,9 +2864,6 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
             }
         }
 #endif
-#endif /* ARCH_X86_32 */
-
-#endif /* AV_GCC_VERSION_AT_LEAST(4,2) */
 
 /* disable audio related ASM for 64-bit builds */
 #if ARCH_X86_32

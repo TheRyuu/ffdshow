@@ -902,7 +902,7 @@ static void diff_bytes_mmx(uint8_t *dst, uint8_t *src1, uint8_t *src2, int w){
         dst[i+0] = src1[i+0]-src2[i+0];
 }
 
-static void sub_hfyu_median_prediction_mmx2(uint8_t *dst, uint8_t *src1, uint8_t *src2, int w, int *left, int *left_top){
+static void sub_hfyu_median_prediction_mmx2(uint8_t *dst, const uint8_t *src1, const uint8_t *src2, int w, int *left, int *left_top){
     x86_reg i=0;
     uint8_t l, lt;
 
@@ -1176,21 +1176,17 @@ HADAMARD8_DIFF_MMX(mmx)
 #define MMABS_SUM_8x8      MMABS_SUM_8x8_SSE2
 #define HSUM(a,t,dst)      HSUM_MMX2(a,t,dst)
 HADAMARD8_DIFF_MMX(mmx2)
-#if AV_GCC_VERSION_AT_LEAST(4,2)
 HADAMARD8_DIFF_SSE2(sse2)
-#endif
 #undef MMABS
 #undef MMABS_SUM_8x8
 #undef HSUM
 
-#if AV_GCC_VERSION_AT_LEAST(4,2)
 #if HAVE_SSSE3
 #define MMABS(a,z)         MMABS_SSSE3(a,z)
 #define MMABS_SUM_8x8      MMABS_SUM_8x8_NOSPILL
 HADAMARD8_DIFF_SSE2(ssse3)
 #undef MMABS
 #undef MMABS_SUM_8x8
-#endif
 #endif
 
 #define DCT_SAD4(m,mm,o)\
@@ -1373,7 +1369,7 @@ void dsputilenc_init_mmx(DSPContext* c, AVCodecContext *avctx)
 
             c->sub_hfyu_median_prediction= sub_hfyu_median_prediction_mmx2;
         }
-#if AV_GCC_VERSION_AT_LEAST(4,2)
+
         if(mm_flags & FF_MM_SSE2){
             c->get_pixels = get_pixels_sse2;
             c->sum_abs_dctelem= sum_abs_dctelem_sse2;
@@ -1392,7 +1388,7 @@ void dsputilenc_init_mmx(DSPContext* c, AVCodecContext *avctx)
             c->hadamard8_diff[1]= hadamard8_diff_ssse3;
         }
 #endif
-#endif /* AV_GCC_VERSION_AT_LEAST(4,2) */
+
         if(mm_flags & FF_MM_3DNOW){
             if(!(avctx->flags & CODEC_FLAG_BITEXACT)){
                 c->try_8x8basis= try_8x8basis_3dnow;
