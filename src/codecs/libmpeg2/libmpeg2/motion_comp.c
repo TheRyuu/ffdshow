@@ -23,21 +23,23 @@
 
 #include "config.h"
 
+#include <stddef.h>
 #include <inttypes.h>
 
 #include "mpeg2.h"
 #include "attributes.h"
 #include "mpeg2_internal.h"
+#include "../../simd.h"
 
 mpeg2_mc_t mpeg2_mc;
 
 void mpeg2_mc_init (uint32_t accel)
 {
 #ifdef ARCH_X86
-    if (accel & MPEG2_ACCEL_X86_MMXEXT)
+    if (accel & MPEG2_ACCEL_X86_SSE2)
+    mpeg2_mc = mpeg2_mc_sse2;
+    else if (accel & MPEG2_ACCEL_X86_MMXEXT)
 	mpeg2_mc = mpeg2_mc_mmxext;
-    else if (accel & MPEG2_ACCEL_X86_3DNOW)
-	mpeg2_mc = mpeg2_mc_3dnow;
     else if (accel & MPEG2_ACCEL_X86_MMX)
 	mpeg2_mc = mpeg2_mc_mmx;
     else

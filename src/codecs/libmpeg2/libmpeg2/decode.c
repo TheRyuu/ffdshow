@@ -380,7 +380,6 @@ uint32_t mpeg2_accel (uint32_t accel)
 {
     if (!mpeg2_accels) {
 	mpeg2_accels = mpeg2_detect_accel (accel) | MPEG2_ACCEL_DETECT;
-	mpeg2_cpu_state_init (mpeg2_accels);
 	mpeg2_idct_init (mpeg2_accels);
 	mpeg2_mc_init (mpeg2_accels);
     }

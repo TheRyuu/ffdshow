@@ -5,6 +5,7 @@
 //#define ACCEL_DETECT
 
 /* x86 architecture */
+#define ARCH_X86 1
 
 #ifdef __GNUC__
 /* Define if you have the `__builtin_expect' function. */
@@ -146,7 +147,7 @@
 #ifdef __GNUC__
 #define inline __attribute__ ((__always_inline__)) __inline
 #else
-#define inline __inline
+#define inline __forceinline
 #endif
 
 /* Define as `__restrict' if that's what the C compiler calls it, or to

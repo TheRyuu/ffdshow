@@ -23,31 +23,32 @@
 
 #include "config.h"
 
+#include <stddef.h>
 #include <inttypes.h>
 
 #include "mpeg2.h"
 #include "attributes.h"
 #include "mpeg2_internal.h"
 
-#if defined(ARCH_X86) || defined(ARCH_X86_64)
+#ifdef ARCH_X86
 static inline uint32_t arch_accel (uint32_t accel)
 {
     if (accel & (MPEG2_ACCEL_X86_3DNOW | MPEG2_ACCEL_X86_MMXEXT))
 	accel |= MPEG2_ACCEL_X86_MMX;
-	
+
     if (accel & (MPEG2_ACCEL_X86_SSE2 | MPEG2_ACCEL_X86_SSE3))
 	accel |= MPEG2_ACCEL_X86_MMXEXT;
-	
+
     if (accel & (MPEG2_ACCEL_X86_SSE3))
 	accel |= MPEG2_ACCEL_X86_SSE2;
 
     return accel;
 }
-#endif /* ARCH_X86 || ARCH_X86_64 */
+#endif /* ARCH_X86 */
 
 uint32_t mpeg2_detect_accel (uint32_t accel)
 {
-#if defined (ARCH_X86) || defined (ARCH_X86_64)
+#ifdef ARCH_X86
     accel = arch_accel (accel);
 #endif
     return accel;

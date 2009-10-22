@@ -24,6 +24,12 @@
 #ifndef LIBMPEG2_MPEG2_H
 #define LIBMPEG2_MPEG2_H
 
+#ifdef HAVE_STDINT
+#  include <stdint.h>
+#else
+#  include <inttypes.h>
+#endif
+
 #define MPEG2_VERSION(a,b,c) (((a)<<16)|((b)<<8)|(c))
 #define MPEG2_RELEASE MPEG2_VERSION (0, 5, 1)    /* 0.5.1 */
 
@@ -196,9 +202,7 @@ typedef enum {
     MPEG2_ALLOC_CONVERTED = 4
 } mpeg2_alloc_t;
 
-void * mpeg2_malloc (unsigned size, mpeg2_alloc_t reason);
+void * mpeg2_malloc (size_t size, mpeg2_alloc_t reason);
 void mpeg2_free (void * buf);
-void mpeg2_malloc_hooks (void * malloc (unsigned, mpeg2_alloc_t),
-             int free (void *));
 void mpeg2_set_rtStart(mpeg2dec_t *mpeg2dec,int64_t rtStart);
 #endif /* LIBMPEG2_MPEG2_H */

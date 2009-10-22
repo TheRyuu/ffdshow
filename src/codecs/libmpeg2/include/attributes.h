@@ -24,33 +24,14 @@
 #ifndef LIBMPEG2_ATTRIBUTES_H
 #define LIBMPEG2_ATTRIBUTES_H
 
-/* use GCC and MSVC attribs to align critical data structures */
-#if defined(__GNUC__)
-#define DECLARE_ALIGNED(n,t,v)      t v __attribute__ ((aligned (n)))
-#define DECLARE_ASM_CONST(n,t,v)    static const t v attribute_used __attribute__ ((aligned (n)))
-#elif defined(_MSC_VER)
-#define DECLARE_ALIGNED(n,t,v)      __declspec(align(n)) t v
-#define DECLARE_ASM_CONST(n,t,v)    __declspec(align(n)) static const t v
-#else
-#define DECLARE_ALIGNED(n,t,v)      t v
-#define DECLARE_ASM_CONST(n,t,v)    static const t v
-#endif
-
-/* ffdshow custom code */
+/* use MINGW GCC and MSVC attribs to align critical data structures */
 #ifdef __GNUC__
-#    define AV_GCC_VERSION_AT_LEAST(x,y) (__GNUC__ > x || __GNUC__ == x && __GNUC_MINOR__ >= y)
+  #define __align8(t,v) t v __attribute__ ((aligned (8)))
+  #define __align16(t,v) t v __attribute__ ((aligned (16)))
 #else
-#    define AV_GCC_VERSION_AT_LEAST(x,y) 0
+  #define __align8(t,v) __declspec(align(8)) t v
+  #define __align16(t,v) __declspec(align(16)) t v
 #endif
-
-#ifndef attribute_align_arg
-#if (!defined(__ICC) || __ICC > 1110) && AV_GCC_VERSION_AT_LEAST(4,2)
-#    define attribute_align_arg __attribute__((force_align_arg_pointer))
-#else
-#    define attribute_align_arg
-#endif
-#endif
-/* ffdshow custom code */
 
 #ifdef HAVE_BUILTIN_EXPECT
 #define likely(x) __builtin_expect ((x) != 0, 1)

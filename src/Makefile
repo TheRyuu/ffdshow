@@ -1,10 +1,12 @@
-ALLDLLS=LIBMPEG2 LIBMAD LIBFAAD2 THEORA X264 XVIDCORE LIBDTS SAMPLERATE TREMOR \
-        REALAAC TOMSMOCOMP KDINT UNRAR LIBA52 FFMPEG FFMPEGMT LIBMP VERINC REBASE
+ALLDLLS=LIBMAD LIBFAAD2 THEORA X264 XVIDCORE LIBDTS SAMPLERATE TREMOR \
+        REALAAC TOMSMOCOMP KDINT UNRAR LIBA52 FFMPEG FFMPEGMT LIBMP
 
-FFDLLS=LIBMPEG2 FFMPEG FFMPEGMT LIBMP TOMSMOCOMP KDINT \
-		THEORA X264 XVIDCORE REBASE
+FFDLLS=FFMPEG FFMPEGMT LIBMP TOMSMOCOMP KDINT \
+		THEORA X264 XVIDCORE
 
-ALLS=../bin/libmpeg2_ff.dll \
+ALLS=../bin/libavcodec.dll \
+     ../bin/ffmpegmt.dll \
+     ../bin/libmplayer.dll \
      ../bin/ff_libmad.dll \
      ../bin/ff_libfaad2.dll \
      ../bin/ff_theora.dll \
@@ -17,18 +19,13 @@ ALLS=../bin/libmpeg2_ff.dll \
      ../bin/TomsMoComp_ff.dll \
      ../bin/ff_kernelDeint.dll \
      ../bin/ff_unrar.dll \
-     ../bin/ff_liba52.dll \
-     ../bin/libavcodec.dll \
-     ../bin/ffmpegmt.dll \
-     ../bin/libmplayer.dll \
-     ../bin/verinc.exe \
-     ../bin/rebase.exe
+     ../bin/ff_liba52.dll
 
 .all: $(ALLDLLS)
 
-FF: $(FFDLLS) REBASE
+FF: $(FFDLLS)
 
-ALL: $(ALLDLLS) REBASE
+ALL: $(ALLDLLS)
 
 ../bin/libavcodec.dll:
 	$(MAKE) -C ffmpeg
@@ -44,11 +41,6 @@ FFMPEGMT:
 	$(MAKE) -C mplayer
 LIBMP:
 	$(MAKE) -C mplayer
-
-../bin/libmpeg2_ff.dll:
-	$(MAKE) -C codecs/libmpeg2
-LIBMPEG2:
-	$(MAKE) -C codecs/libmpeg2
 
 ../bin/ff_libmad.dll:
 	$(MAKE) -C codecs/libmad
@@ -115,23 +107,10 @@ KDINT:
 UNRAR:
 	$(MAKE) -C ../unrar
 
-../bin/verinc.exe:
-	$(MAKE) -C ../verinc
-	../bin/verinc.exe version.ver
-VERINC:
-	$(MAKE) -C ../verinc
-	../bin/verinc.exe version.ver
-
-../bin/rebase.exe:
-	$(MAKE) -C ../rebase
-REBASE:
-	$(MAKE) -C ../rebase
-
 clean:	
 	$(MAKE) -C ffmpeg clean
 	$(MAKE) -C ffmpeg-mt clean
 	$(MAKE) -C mplayer clean
-	$(MAKE) -C codecs/libmpeg2 clean
 	$(MAKE) -C codecs/libmad clean
 	$(MAKE) -C codecs/faad clean
 	$(MAKE) -C codecs/theora clean
@@ -145,14 +124,11 @@ clean:
 	$(MAKE) -C imgFilters/TomsMoComp clean
 	$(MAKE) -C imgFilters/KernelDeint clean
 	$(MAKE) -C ../unrar clean
-	$(MAKE) -C ../verinc clean
-	$(MAKE) -C ../rebase clean
 
 distclean:
 	$(MAKE) -C ffmpeg distclean
 	$(MAKE) -C ffmpeg-mt distclean
 	$(MAKE) -C mplayer distclean
-	$(MAKE) -C codecs/libmpeg2 distclean
 	$(MAKE) -C codecs/libmad distclean
 	$(MAKE) -C codecs/faad distclean
 	$(MAKE) -C codecs/theora distclean
@@ -166,7 +142,5 @@ distclean:
 	$(MAKE) -C imgFilters/TomsMoComp distclean
 	$(MAKE) -C imgFilters/KernelDeint distclean
 	$(MAKE) -C ../unrar distclean
-	$(MAKE) -C ../verinc distclean
-	$(MAKE) -C ../rebase distclean
 
 .PHONY: $(FFDLLS)

@@ -40,7 +40,7 @@
 #define PIC_CODING_EXT 0x100
 
 /* default intra quant matrix, in zig-zag order */
-static const DECLARE_ALIGNED(16, uint8_t, default_intra_quantizer_matrix[64]) = {
+static __align16(const uint8_t,default_intra_quantizer_matrix[64]) = {
     8,
     16, 16,
     19, 16, 19,
@@ -58,7 +58,7 @@ static const DECLARE_ALIGNED(16, uint8_t, default_intra_quantizer_matrix[64]) = 
     83
 };
 
-DECLARE_ALIGNED(16, uint8_t, mpeg2_scan_norm[64]) = {
+__align16(uint8_t,mpeg2_scan_norm[64]) = {
     /* Zig-Zag scan pattern */
      0,  1,  8, 16,  9,  2,  3, 10, 17, 24, 32, 25, 18, 11,  4,  5,
     12, 19, 26, 33, 40, 48, 41, 34, 27, 20, 13,  6,  7, 14, 21, 28,
@@ -66,7 +66,7 @@ DECLARE_ALIGNED(16, uint8_t, mpeg2_scan_norm[64]) = {
     58, 59, 52, 45, 38, 31, 39, 46, 53, 60, 61, 54, 47, 55, 62, 63
 };
 
-DECLARE_ALIGNED(16, uint8_t, mpeg2_scan_alt[64]) = {
+__align16(uint8_t,mpeg2_scan_alt[64]) = {
     /* Alternate scan pattern */
      0, 8,  16, 24,  1,  9,  2, 10, 17, 25, 32, 40, 48, 56, 57, 49,
     41, 33, 26, 18,  3, 11,  4, 12, 19, 27, 34, 42, 50, 58, 35, 43,
@@ -158,7 +158,7 @@ int mpeg2_header_sequence (mpeg2dec_t * mpeg2dec)
 
     sequence->flags = (SEQ_FLAG_PROGRESSIVE_SEQUENCE |
 		       SEQ_VIDEO_FORMAT_UNSPECIFIED);
-    sequence->display_extension_present_flag = 0;
+    sequence->display_extension_present_flag = 0; //ffdshow custom code
 
     sequence->pixel_width = buffer[3] >> 4;	/* aspect ratio */
     sequence->frame_period = frame_period[buffer[3] & 15];
@@ -848,7 +848,7 @@ int mpeg2_header_user_data (mpeg2dec_t * mpeg2dec)
 {
     mpeg2dec->user_data_len += mpeg2dec->chunk_ptr - 1 - mpeg2dec->chunk_start;
     mpeg2dec->chunk_start = mpeg2dec->chunk_ptr - 1;
-    
+
     return 0;
 }
 

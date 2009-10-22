@@ -59,12 +59,15 @@ static __forceinline void subps(const __m128 &src,__m128 &dst) {dst=_mm_sub_ps(d
 static __forceinline void xorps(const __m128 &src,__m128 &dst) {dst=_mm_xor_ps(dst,src);}
 static __forceinline void movss(const float &src,__m128 &dst) {dst=_mm_load_ss(&src);}
 
+#ifdef __SSE2__
 static __forceinline void movdqu(const void *src,__m128i &dst) {dst=_mm_loadu_si128((__m128i*)src);}
 static __forceinline void movdqu(const __m128i &src,__m128i &dst) {dst=_mm_loadu_si128(&src);}
 static __forceinline void movdqu(const __m128i &src,void *dst) {_mm_storeu_si128((__m128i*)dst,src);}
 static __forceinline void psraw(int i,__m128i &dst) {dst=_mm_srai_epi16(dst,i);}
 //static __forceinline void pslldq(int i,__m128i &dst) {dst=_mm_slli_si128(dst,i);}
 //static __forceinline void psrldq(int i,__m128i &dst) {dst=_mm_srli_si128(dst,i);}
+#endif
+
 }
 
 #pragma warning(pop)

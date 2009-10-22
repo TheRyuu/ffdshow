@@ -24,18 +24,22 @@
 
 #include "config.h"
 
+#include <stddef.h>
 #include <inttypes.h>
 
 #include "mpeg2.h"
 #include "attributes.h"
 #include "mpeg2_internal.h"
+#ifndef WIN64
+  #include "../../csimd.h"
+#else
+  #define _mm_empty()
+#endif
 
 extern mpeg2_mc_t mpeg2_mc;
 extern void (* mpeg2_idct_copy) (int16_t * block, uint8_t * dest, int stride);
 extern void (* mpeg2_idct_add) (int last, int16_t * block,
 				uint8_t * dest, int stride);
-extern void (* mpeg2_cpu_state_save) (cpu_state_t * state);
-extern void (* mpeg2_cpu_state_restore) (cpu_state_t * state);
 
 #include "vlc.h"
 
@@ -1579,8 +1583,7 @@ do {									\
 	} while (0);							\
 	decoder->v_offset += 16;					\
 	if (decoder->v_offset > decoder->limit_y) {			\
-	    if (mpeg2_cpu_state_restore)				\
-		mpeg2_cpu_state_restore (&cpu_state);			\
+	    _mm_empty();			\
 	    return;							\
 	}								\
 	decoder->offset = 0;						\
@@ -1854,15 +1857,13 @@ void mpeg2_slice (mpeg2_decoder_t * const decoder, const int code,
 #define bit_buf (decoder->bitstream_buf)
 #define bits (decoder->bitstream_bits)
 #define bit_ptr (decoder->bitstream_ptr)
-    cpu_state_t cpu_state;
 
     bitstream_init (decoder, buffer);
 
     if (slice_init (decoder, code))
 	return;
 
-    if (mpeg2_cpu_state_save)
-	mpeg2_cpu_state_save (&cpu_state);
+    _mm_empty();
 
     while (1) {
 	int macroblock_modes;
@@ -2110,8 +2111,7 @@ void mpeg2_slice (mpeg2_decoder_t * const decoder, const int code,
 		NEEDBITS (bit_buf, bits, bit_ptr);
 		continue;
 	    default:	/* end of slice, or error */
-		if (mpeg2_cpu_state_restore)
-		    mpeg2_cpu_state_restore (&cpu_state);
+		_mm_empty();
 		return;
 	    }
 	}
