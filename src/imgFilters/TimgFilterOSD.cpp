@@ -159,7 +159,7 @@ TimgFilterOSD::TosdLine::TosdLine(IffdshowBase *Ideci,IffdshowDec *IdeciD,Iffdsh
  font.init();
  if (strncmp(format.c_str(),_l("user"),4)==0)
   {
-   char_t s0[256]=_l(""),*s=s0;
+   char_t s0[1024]=_l(""),*s=s0;
    for (const char_t *f=format.c_str()+4;*f;)
     if (f[0]=='%' && f[1])
      {
@@ -210,7 +210,7 @@ TimgFilterOSD::TosdLine::TosdLine(IffdshowBase *Ideci,IffdshowDec *IdeciD,Iffdsh
  else
   {
    int type=atoi(format.c_str()+1);
-   char_t valName[256];
+   char_t valName[1024];
    ff_strncpy(valName, provider->getInfoItemName(type), countof(valName));
    strncat_s(valName, countof(valName), _l(": "), _TRUNCATE);
    tokens.push_back(TosdToken(valName));
@@ -288,7 +288,10 @@ unsigned int TimgFilterOSD::TosdLine::print(
        printprefs.fontchangesplit=1;
        printprefs.fontsplit=1;
       }
+     sub.subformat = deci->getParam2(IDFF_OSD_userformat);
      sub.set(text);
+     TsubtitleFormat subtitleFormat = TsubtitleFormat(config->getHtmlColors());
+     sub.format(subtitleFormat);
      result += font.print(&sub,wasChange,printprefs,dst,stride);
     }
   }
@@ -511,7 +514,7 @@ bool TimgFilterOSD::shortOSDmessage(const char_t *msg,unsigned int duration)
  return true;
 }
 
-bool TimgFilterOSD::shortOSDmessage(const char_t *msg,unsigned int duration, unsigned int posX, unsigned int posY)
+bool TimgFilterOSD::shortOSDmessageAbsolute(const char_t *msg,unsigned int duration, unsigned int posX, unsigned int posY)
 {
  cs.Lock();
  TshortOsdParameters parameters;

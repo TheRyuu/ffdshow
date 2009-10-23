@@ -306,7 +306,10 @@ const
   IDFF_avisynthScript       =1254;
   IDFF_avisynthInCsp        =1255;
 
+  IDFF_filterOSD            =3527;
   IDFF_isOSD                =1501;
+  IDFF_orderOSD             =3528;
+  IDFF_showOSD              =3529;
   IDFF_OSDfontName          =1509;
   IDFF_OSDfontCharset       =1502;
   IDFF_OSDfontSize          =1503;
@@ -321,9 +324,10 @@ const
    IDFF_OSDtype_cpuUsage  =1522;
    IDFF_OSDtype_systemTime=1523;
    IDFF_OSDtype_meanQuant =1524;
-  IDFF_OSDuser              =1511; //don't use these, use drawOSD() instead
-  IDFF_OSDuserPx            =1512;
-  IDFF_OSDuserPy            =1513;
+//IDFF_OSDuser              =1511; //don't use these, use shortOSDmessageAbsolute() instead
+//IDFF_OSDuserPx            =1512;
+//IDFF_OSDuserPy            =1513;
+  IDFF_OSDformat          =3530;
 
   IDFF_filterGrab   =2000;
   IDFF_isGrab       =2001;
@@ -479,7 +483,6 @@ type
     function getParamName(i:Integer;buf:PChar;len:integer):HRESULT;stdcall;
     function getTranslator(trans:ppointer):HRESULT;stdcall;
     function getIffDecoderVersion2:HRESULT;stdcall;
-    function drawOSD(px:Integer;py:Integer;const Text:pchar):HRESULT;stdcall; //accepts max. lines separated by \n
     function lock(lockId:integer):HRESULT;stdcall;
     function unlock(lockId:integer):HRESULT;stdcall;
     function getInstance2:HRESULT;stdcall;
@@ -509,6 +512,7 @@ type
     function filterHasReset(filterID:integer):HRESULT;stdcall;
     function filterHasResetEx(filterID:integer;filterPageId:integer):HRESULT;stdcall;
     function shortOSDmessage(msg:ppointer; duration:integer):HRESULT;stdcall; //duration is in frames
+    function shortOSDmessageAbsolute(msg:ppointer; duration:integer; posX:integer; posY:integer;):HRESULT;stdcall; //duration is in frames
     function setImgFilters(imgFiltersPtr:ppointer):HRESULT;stdcall;
     function registerSelectedMediaTypes:HRESULT;stdcall;
     function getFrameTimes(start:ppointer; stop:ppointer):HRESULT;stdcall;

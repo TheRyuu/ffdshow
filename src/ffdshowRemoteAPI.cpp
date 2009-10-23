@@ -202,7 +202,7 @@ unsigned int __stdcall Tremote::ffwdThreadProc(void *self0)
          ss = pos - hh*3600 - mm*60;
          tsnprintf_s(msg, countof(msg), _TRUNCATE, _l("%s %02i:%02i:%02i / %s"),mode<0?_l("<<"):_l(">>"), hh, mm, ss, duration_str);
          self->deciV->resetOSD();
-		 self->deciV->shortOSDmessage(msg,self->OSDDuration,self->OSDPositionX, self->OSDPositionY);
+         self->deciV->shortOSDmessageAbsolute(msg,self->OSDDuration,self->OSDPositionX, self->OSDPositionY);
         }
         elapsedTime = GetTickCount() - currentTime;
         if (elapsedTime < 200 && elapsedTime > 0)
@@ -676,7 +676,7 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
           return SUCCEEDED(deciV->shortOSDmessage(text<char_t>((const char_t*)cds->lpData), OSDDuration))?TRUE:FALSE;
       case COPY_SET_OSD_MSG:
           deciV->resetOSD();
-          return SUCCEEDED(deciV->shortOSDmessage(text<char_t>((const char_t*)cds->lpData),OSDDuration,OSDPositionX, OSDPositionY))?TRUE:FALSE;
+          return SUCCEEDED(deciV->shortOSDmessageAbsolute(text<char_t>((const char_t*)cds->lpData),OSDDuration,OSDPositionX, OSDPositionY))?TRUE:FALSE;
     }
   }
  return DefWindowProc(hwnd,msg,wprm,lprm);

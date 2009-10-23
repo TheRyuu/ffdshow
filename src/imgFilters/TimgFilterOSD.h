@@ -108,7 +108,7 @@ private:
   private:
    char_t name[MAX_PATH];
    FILE *f;int oldSave;char_t oldSaveFlnm[MAX_PATH];
-   char_t oldFormat[256];
+   char_t oldFormat[1024];
   public:
    Tosds(IOSDprovider *Iprovider=NULL,const char_t *Iname=NULL);
    ~Tosds();
@@ -175,7 +175,7 @@ public:
  virtual HRESULT process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg);
  virtual void done(void);
  bool shortOSDmessage(const char_t *msg,unsigned int duration);
- bool shortOSDmessage(const char_t *msg,unsigned int duration,unsigned int posX,unsigned int posY);
+ bool shortOSDmessageAbsolute(const char_t *msg,unsigned int duration,unsigned int posX,unsigned int posY);
  HRESULT registerOSDprovider(IOSDprovider *provider,const char *name);
  HRESULT unregisterOSDprovider(IOSDprovider *provider);
  virtual bool acceptRandomYV12andRGB32(void) {return true;}

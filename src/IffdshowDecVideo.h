@@ -42,7 +42,7 @@ template<class tchar> DECLARE_INTERFACE_(IffdshowDecVideoT,IUnknown)
  STDMETHOD_(int,findAutoSubflnm2)(void) PURE;
  STDMETHOD (getFrameTime)(unsigned int framenum,unsigned int *sec) PURE;
  STDMETHOD (shortOSDmessage)(const tchar *msg,unsigned int duration) PURE; //duration is in frames
- STDMETHOD (shortOSDmessage)(const tchar *msg,unsigned int duration,unsigned int posX,unsigned int posY) PURE; //duration is in frames
+ STDMETHOD (shortOSDmessageAbsolute)(const tchar *msg,unsigned int duration,unsigned int posX,unsigned int posY) PURE; //duration is in frames
  STDMETHOD (setImgFilters_)(void *imgFiltersPtr) PURE;
  STDMETHOD (registerSelectedMediaTypes)(void) PURE;
  STDMETHOD (getFrameTimes)(int64_t *start,int64_t *stop) PURE;

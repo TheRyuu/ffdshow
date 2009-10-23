@@ -39,7 +39,7 @@ void TOSDpageDec::init(void)
  GetWindowRect(hlv,&r);
  ListView_AddCol(hlv,ncol,r.right-r.left-26,_l("OSD item"),false);
 
- edLimitText(IDC_ED_OSD_USER,240);
+ edLimitText(IDC_ED_OSD_USER,1019);
  dragitem=-1;
  CRect rp;GetWindowRect(m_hwnd,&rp);
  CRect rc;GetWindowRect(hlv,&rc);
@@ -144,7 +144,7 @@ void TOSDpageDec::checkOSDline(int idff,bool check)
 }
 void TOSDpageDec::lv2osdFormat(void)
 {
- char_t format[256]=_l("");
+ char_t format[1024]=_l("");
  int cnt=ListView_GetItemCount(hlv);
  for (int i=0;i<cnt;i++)
   if (ListView_GetCheckState(hlv,i))
@@ -176,10 +176,10 @@ INT_PTR TOSDpageDec::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
       case IDC_ED_OSD_USER:
        if (HIWORD(wParam)==EN_CHANGE && !isSetWindowText)
         {
-         char_t ed[250];
-         GetDlgItemText(m_hwnd,IDC_ED_OSD_USER,ed,250);
-         char_t format[256];
-         tsnprintf_s(format, 256, _TRUNCATE, _l("user%s"),ed);
+         char_t ed[1020]; //4 chars are reserved for "user" prefix
+         GetDlgItemText(m_hwnd,IDC_ED_OSD_USER,ed,1020);
+         char_t format[1024];
+         tsnprintf_s(format, 1024, _TRUNCATE, _l("user%s"),ed);
          cfgSet(IDFF_OSDformat, format);
          parent->setChange();
         };
@@ -231,7 +231,7 @@ INT_PTR TOSDpageDec::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
               const char_t *shortcut=deci->getInfoItemShortcut((int)lvGetItemParam(IDC_LV_OSD_LINES,nmia->iItem));
               if (shortcut && shortcut[0])
                {
-                char_t osd[240];
+                char_t osd[1020];
                 tsnprintf_s(osd, countof(osd), _TRUNCATE, _l("%%%s"), shortcut);
                 SendDlgItemMessage(m_hwnd,IDC_ED_OSD_USER,EM_REPLACESEL,TRUE,LPARAM(osd));
                }

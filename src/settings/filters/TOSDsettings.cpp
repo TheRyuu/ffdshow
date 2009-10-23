@@ -65,7 +65,7 @@ TOSDsettings::TOSDsettings(size_t IsizeofthisAll, TintStrColl *Icoll,TfilterIDFF
  addOptions(iopts);
  static const TstrOption sopts[]=
   {
-   IDFF_OSDformat,(TstrVal)&TOSDsettings::format          ,40       ,0 ,_l(""),1,
+   IDFF_OSDformat,(TstrVal)&TOSDsettings::format          ,1024     ,0 ,_l(""),1,
      _l("OSDformat"),_l(""),
    IDFF_OSDsaveFlnm   ,(TstrVal)&TOSDsettings::saveFlnm   ,MAX_PATH ,0 ,_l(""),1,
      _l("OSDsaveFlnm"),_l(""),

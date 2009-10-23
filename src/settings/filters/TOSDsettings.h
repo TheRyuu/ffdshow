@@ -14,7 +14,7 @@ private:
 public:
  TOSDsettings(size_t IsizeofthisAll,TintStrColl *Icoll=NULL,TfilterIDFFs *filters=NULL);
  const char_t* getFormat(void) const;
- char_t format[40];
+ char_t format[1024];
  int startDuration;
  int isSave,saveOnly;char_t saveFlnm[MAX_PATH];
 };

@@ -330,11 +330,11 @@ STDMETHODIMP TffdshowDecVideo::shortOSDmessage(const char_t *msg,unsigned int du
  if (!imgFilters || !presetSettings) return E_UNEXPECTED;
  return imgFilters->shortOSDmessage(msg,duration)?S_OK:S_FALSE;
 }
-STDMETHODIMP TffdshowDecVideo::shortOSDmessage(const char_t *msg,unsigned int duration,unsigned int posX,unsigned int posY)
+STDMETHODIMP TffdshowDecVideo::shortOSDmessageAbsolute(const char_t *msg,unsigned int duration,unsigned int posX,unsigned int posY)
 {
  if (!msg || duration==0) return E_INVALIDARG;
  if (!imgFilters || !presetSettings) return E_UNEXPECTED;
- return imgFilters->shortOSDmessage(msg,duration,posX,posY)?S_OK:S_FALSE;
+ return imgFilters->shortOSDmessageAbsolute(msg,duration,posX,posY)?S_OK:S_FALSE;
 }
 STDMETHODIMP TffdshowDecVideo::registerOSDprovider(IOSDprovider *provider,const char *name)
 {

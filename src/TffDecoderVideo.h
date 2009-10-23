@@ -98,7 +98,7 @@ public:
  STDMETHODIMP_(int) findAutoSubflnm2(void) {return E_NOTIMPL;}
  STDMETHODIMP getFrameTime(unsigned int framenum,unsigned int *sec);
  STDMETHODIMP shortOSDmessage(const char_t *msg,unsigned int duration);
- STDMETHODIMP shortOSDmessage(const char_t *msg,unsigned int duration,unsigned int posX,unsigned int posY);
+ STDMETHODIMP shortOSDmessageAbsolute(const char_t *msg,unsigned int duration,unsigned int posX,unsigned int posY);
  STDMETHODIMP setImgFilters_(void *imgFiltersPtr) {return E_NOTIMPL;}
  STDMETHODIMP registerSelectedMediaTypes(void) {return E_NOTIMPL;}
  STDMETHODIMP getFrameTimes(int64_t *start,int64_t *stop) {return E_NOTIMPL;}
@@ -268,7 +268,7 @@ public:
  STDMETHODIMP compat_filterHasReset(unsigned int filterID) {return filterHasReset(filterID);}
  STDMETHODIMP compat_filterHasResetEx(unsigned int filterID,unsigned int filterPageId) {return filterHasResetEx(filterID,filterPageId);}
  STDMETHODIMP compat_shortOSDmessage(const char *msg,unsigned int duration) {return shortOSDmessage(text<char_t>(msg),duration);}
- STDMETHODIMP compat_shortOSDmessage(const char *msg,unsigned int duration,unsigned int posX,unsigned int posY) {return shortOSDmessage(text<char_t>(msg),duration,posX,posY);}
+ STDMETHODIMP compat_shortOSDmessageAbsolute(const char *msg,unsigned int duration,unsigned int posX,unsigned int posY) {return shortOSDmessageAbsolute(text<char_t>(msg),duration,posX,posY);}
  STDMETHODIMP compat_setImgFilters(TimgFilters *imgFiltersPtr) {return E_NOTIMPL;}
  STDMETHODIMP compat_registerSelectedMediaTypes(void) {return registerSelectedMediaTypes();}
  STDMETHODIMP compat_getFrameTimes(int64_t *start,int64_t *stop) {return getFrameTimes(start,stop);}
@@ -407,7 +407,7 @@ private:
    STDMETHODIMP_(int) findAutoSubflnm2(void) {return deciV->findAutoSubflnm2();}
    STDMETHODIMP getFrameTime(unsigned int framenum,unsigned int *sec) {return deciV->getFrameTime(framenum,sec);}
    STDMETHODIMP shortOSDmessage(const tchar *msg,unsigned int duration) {return deciV->shortOSDmessage(text<char_t>(msg),duration);}
-   STDMETHODIMP shortOSDmessage(const tchar *msg,unsigned int duration,unsigned int posX,unsigned int posY) {return deciV->shortOSDmessage(text<char_t>(msg),duration,posX,posY);}
+   STDMETHODIMP shortOSDmessageAbsolute(const tchar *msg,unsigned int duration,unsigned int posX,unsigned int posY) {return deciV->shortOSDmessageAbsolute(text<char_t>(msg),duration,posX,posY);}
    STDMETHODIMP setImgFilters_(void *imgFiltersPtr) {return E_NOTIMPL;}
    STDMETHODIMP registerSelectedMediaTypes(void) {return deciV->registerSelectedMediaTypes();}
    STDMETHODIMP getFrameTimes(int64_t *start,int64_t *stop) {return deciV->getFrameTimes(start,stop);}

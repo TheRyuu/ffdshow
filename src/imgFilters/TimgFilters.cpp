@@ -268,9 +268,9 @@ bool TimgFiltersPlayer::shortOSDmessage(const char_t *msg,unsigned int duration)
  return osd->shortOSDmessage(msg,duration);
 }
 
-bool TimgFiltersPlayer::shortOSDmessage(const char_t *msg,unsigned int duration,unsigned int posX,unsigned int posY)
+bool TimgFiltersPlayer::shortOSDmessageAbsolute(const char_t *msg,unsigned int duration,unsigned int posX,unsigned int posY)
 {
- return osd->shortOSDmessage(msg,duration,posX,posY);
+ return osd->shortOSDmessageAbsolute(msg,duration,posX,posY);
 }
 
 HRESULT TimgFiltersPlayer::registerOSDprovider(IOSDprovider *provider,const char *name)

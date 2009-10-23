@@ -711,7 +711,7 @@
   #define IDFF_OSDtype_QueueCount        1563
   #define IDFF_OSDtype_Late              1564
   #define IDFF_OSDtype_AviSynth_Info     1566
-//#define IDFF_OSDuser               1511 //don't use these, use shortOSDmessage(msg,duration,x,y) instead
+//#define IDFF_OSDuser               1511 //don't use these, use shortOSDmessageAbsolute(msg,duration,x,y) instead
 //#define IDFF_OSDuserPx             1512
 //#define IDFF_OSDuserPy             1513
 //#define IDFF_OSDcurPreset          1530
