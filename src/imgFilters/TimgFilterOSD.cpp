@@ -289,7 +289,9 @@ unsigned int TimgFilterOSD::TosdLine::print(
        printprefs.fontsplit=1;
       }
      sub.subformat = deci->getParam2(IDFF_OSD_userformat);
-     sub.set(text);
+     strings lines;
+	 strtok(text.c_str(),_l("\\n"),lines);
+	 sub.set(lines);
      TsubtitleFormat subtitleFormat = TsubtitleFormat(config->getHtmlColors());
      sub.format(subtitleFormat);
      result += font.print(&sub,wasChange,printprefs,dst,stride);
@@ -340,10 +342,7 @@ void TimgFilterOSD::Tosds::init(bool allowSave,IffdshowBase *deci,IffdshowDec *d
       push_back(new TosdLine(deci,deciD,deciV,config,ffstring(_l("user"))+ffstring(name),0,provider,true));
      if (strncmp(format,_l("user"),4)==0)
       {
-       strings lines;
-       strtok(format,_l("\\n"),lines);
-       for (size_t i=0;i<lines.size();i++)
-        push_back(new TosdLine(deci,deciD,deciV,config,ffstring(i==0?_l(""):_l("user"))+lines[i],0,provider));
+       push_back(new TosdLine(deci,deciD,deciV,config,format,0,provider));
        initSave=0;
       }
      else
