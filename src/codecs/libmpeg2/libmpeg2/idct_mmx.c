@@ -23,7 +23,7 @@
 
 #include "config.h"
 
-#include <stddef.h>
+#include <stdlib.h>
 #include <inttypes.h>
 
 #if defined(ARCH_X86)
@@ -686,7 +686,6 @@ static __forceinline void block_zero (int16_t * const block)
     movq_r2m (mm0, *(block+14*4));
     movq_r2m (mm0, *(block+15*4));
 }
-
 
 #define CPU_MMXEXT 0
 #define CPU_MMX 1

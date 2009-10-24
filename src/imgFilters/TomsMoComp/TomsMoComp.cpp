@@ -72,9 +72,6 @@ From the Readme_TomsMoComp.txt file:
 #include <unknwn.h>
 #include "TomsMoComp_ff.h"
 #include <inttypes.h>
-#ifdef __GNUC__
-#define __forceinline __attribute__((__always_inline__)) inline
-#endif
 #include "../../simd.h"
 #include "../../compiler.h"
 
@@ -1340,7 +1337,7 @@ public:
    _mm_empty();
   }
 };
-
+//======================================== version ========================================
 extern "C" ItomsMoComp* createI(void)
 {
  return new TomsMoComp;

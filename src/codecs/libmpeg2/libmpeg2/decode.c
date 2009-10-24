@@ -408,7 +408,7 @@ void mpeg2_reset (mpeg2dec_t * mpeg2dec, int full_reset)
 }
 
 static int ffdshow_accels=0;
-void mpeg2_set_accel(int accel)
+extern "C" void mpeg2_set_accel(int accel)
 {
  ffdshow_accels=accel;
 }

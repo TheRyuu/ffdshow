@@ -20,7 +20,7 @@
 #include "mem_align.h"
 #include "Tconfig.h"
 
-#ifdef __GNUC__
+#if defined(__GNUC__) && !defined(_WIN64)
 #define _aligned_malloc __mingw_aligned_malloc
 #define _aligned_realloc __mingw_aligned_realloc
 #define _aligned_free __mingw_aligned_free

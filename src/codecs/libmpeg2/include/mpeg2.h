@@ -175,16 +175,16 @@ void mpeg2_custom_fbuf (mpeg2dec_t * mpeg2dec, int custom_fbuf);
 #define MPEG2_ACCEL_X86_SSE3 16
 #define MPEG2_ACCEL_DETECT 0x80000000
 
-uint32_t mpeg2_accel (uint32_t accel);
-mpeg2dec_t * mpeg2_init (void);
-const mpeg2_info_t * mpeg2_info (mpeg2dec_t * mpeg2dec);
-void mpeg2_close (mpeg2dec_t * mpeg2dec);
+extern "C" uint32_t mpeg2_accel (uint32_t accel);
+extern "C" mpeg2dec_t * mpeg2_init (void);
+extern "C" const mpeg2_info_t * mpeg2_info (mpeg2dec_t * mpeg2dec);
+extern "C" void mpeg2_close (mpeg2dec_t * mpeg2dec);
 
-void mpeg2_buffer (mpeg2dec_t * mpeg2dec, uint8_t * start, uint8_t * end);
+extern "C" void mpeg2_buffer (mpeg2dec_t * mpeg2dec, uint8_t * start, uint8_t * end);
 int mpeg2_getpos (mpeg2dec_t * mpeg2dec);
-mpeg2_state_t mpeg2_parse (mpeg2dec_t * mpeg2dec);
+extern "C" mpeg2_state_t mpeg2_parse (mpeg2dec_t * mpeg2dec);
 
-void mpeg2_reset (mpeg2dec_t * mpeg2dec, int full_reset);
+extern "C" void mpeg2_reset (mpeg2dec_t * mpeg2dec, int full_reset);
 void mpeg2_skip (mpeg2dec_t * mpeg2dec, int skip);
 void mpeg2_slice_region (mpeg2dec_t * mpeg2dec, int start, int end);
 
@@ -204,5 +204,5 @@ typedef enum {
 
 void * mpeg2_malloc (size_t size, mpeg2_alloc_t reason);
 void mpeg2_free (void * buf);
-void mpeg2_set_rtStart(mpeg2dec_t *mpeg2dec,int64_t rtStart);
+extern "C" void mpeg2_set_rtStart(mpeg2dec_t *mpeg2dec,int64_t rtStart);
 #endif /* LIBMPEG2_MPEG2_H */

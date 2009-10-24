@@ -23,7 +23,7 @@
 
 #include "config.h"
 
-#include <stddef.h>
+#include <stdlib.h>
 #include <inttypes.h>
 
 #include "mpeg2.h"
@@ -36,9 +36,12 @@ mpeg2_mc_t mpeg2_mc;
 void mpeg2_mc_init (uint32_t accel)
 {
 #ifdef ARCH_X86
+    #ifdef __SSE2__
     if (accel & MPEG2_ACCEL_X86_SSE2)
     mpeg2_mc = mpeg2_mc_sse2;
-    else if (accel & MPEG2_ACCEL_X86_MMXEXT)
+    else
+    #endif
+    if (accel & MPEG2_ACCEL_X86_MMXEXT)
 	mpeg2_mc = mpeg2_mc_mmxext;
     else if (accel & MPEG2_ACCEL_X86_MMX)
 	mpeg2_mc = mpeg2_mc_mmx;

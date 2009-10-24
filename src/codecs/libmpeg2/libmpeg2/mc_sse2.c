@@ -21,11 +21,16 @@
  *
  */
 
+#include "config.h"
+
+#include <stdlib.h>
 #include <inttypes.h>
 #include "attributes.h"
 #include "../../simd.h"
 #include "mpeg2.h"
 #include "mpeg2_internal.h"
+
+#ifdef __SSE2__
 
 static const __m128i const_1_16_bytes=_mm_set1_epi16(1);
 
@@ -489,3 +494,5 @@ mpeg2_mc_t mpeg2_mc_sse2 =
         {MC_avg_o_16_sse2, MC_avg_x_16_sse2, MC_avg_y_16_sse2, MC_avg_xy_16_sse2,
         MC_avg_o_8_sse2,  MC_avg_x_8_sse2,  MC_avg_y_8_sse2,  MC_avg_xy_8_sse2}
 };
+
+#endif //__SSE2__

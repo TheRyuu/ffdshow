@@ -1,10 +1,10 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision           = '3107'
+#define tryout_revision           = '3115'
 
 #define buildyear                 = '2009'
 #define buildmonth                =   '10'
-#define buildday                  =   '17'
+#define buildday                  =   '24'
 
 ; Build specific options
 #define localize                  = True

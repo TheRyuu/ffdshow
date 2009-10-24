@@ -33,10 +33,6 @@
 #pragma warning(disable:4799)
 #pragma warning(disable:963)
 
-#if !defined(DEBUG) && (!defined(__INTEL_COMPILER) && !defined(__GNUC__))
- #pragma message("Microsoft compilers are unable to produce optimized binary of ff_kernelDeint, use GCC or Intel C++ Compiler instead.")
-#endif
-
 static const __int64 qword_4354h=0x4354435443544354LL;
 static const __int64 qword_15c2h=0x15c215c215c215c2LL;
 static const __int64 qword_0ed9h=0x0ed90ed90ed90ed9LL;
@@ -2530,19 +2526,8 @@ RowEnd:;
   }
 };
 
-extern "C" IkernelDeint* createI(bool IisYV12,unsigned int width,unsigned int height,unsigned int rowsize,int Iorder,int Ithreshold,bool Isharp,bool Itwoway,bool Ilinked,bool Imap,bool Ibob,int cpuflags)
-{
- return new TkernelDeint(IisYV12,width,height,rowsize,Iorder,Ithreshold,Isharp,Itwoway,Ilinked,Imap,Ibob,cpuflags);
-}
-
-extern "C" void __stdcall getVersion(char *ver,const char* *license)
-{
- strcpy(ver,"1.5.4, build date "__DATE__" "__TIME__" ("COMPILER COMPILER_X64 COMPILER_INFO")");
- *license="Based on the original KernelDeint plugin (c) 2003 Donald A. Graft\nMMX optimizations + new motion mask code (c) 2004 Kurt B. Pruenner";
-}
-
 //======================================== mem_align ========================================
-#ifdef __GNUC__
+#if defined(__GNUC__) && !defined(_WIN64)
 #define _aligned_malloc __mingw_aligned_malloc
 #define _aligned_realloc __mingw_aligned_realloc
 #define _aligned_free __mingw_aligned_free
@@ -2578,4 +2563,15 @@ void* aligned_calloc(size_t size1, size_t size2, size_t alignment)
  void *ret=aligned_malloc(size,alignment);
  if (ret) memset(ret,0,size);
  return ret;
+}
+//======================================== version ========================================
+extern "C" IkernelDeint* createI(bool IisYV12,unsigned int width,unsigned int height,unsigned int rowsize,int Iorder,int Ithreshold,bool Isharp,bool Itwoway,bool Ilinked,bool Imap,bool Ibob,int cpuflags)
+{
+ return new TkernelDeint(IisYV12,width,height,rowsize,Iorder,Ithreshold,Isharp,Itwoway,Ilinked,Imap,Ibob,cpuflags);
+}
+
+extern "C" void __stdcall getVersion(char *ver,const char* *license)
+{
+ strcpy(ver,"1.5.4, build date "__DATE__" "__TIME__" ("COMPILER COMPILER_X64 COMPILER_INFO")");
+ *license="Based on the original KernelDeint plugin (c) 2003 Donald A. Graft\nMMX optimizations + new motion mask code (c) 2004 Kurt B. Pruenner";
 }

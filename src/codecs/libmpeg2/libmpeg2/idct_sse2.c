@@ -19,6 +19,9 @@
  *
  */
 
+#include "config.h"
+
+#include <stdlib.h>
 #include <inttypes.h>
 #include "../../simd.h"
 #include "attributes.h"
@@ -26,6 +29,8 @@
 // Intel's SSE2 implementation of iDCT
 // AP-945
 // http://cache-www.intel.com/cd/00/00/01/76/17680_w_idct.pdf
+
+#ifdef __SSE2__
 
 static const int BITS_INV_ACC=4;
 static const int SHIFT_INV_ROW=16-BITS_INV_ACC;
@@ -322,3 +327,5 @@ void mpeg2_idct_add_sse2(int,int16_t* block, uint8_t* dest, const int stride)
     _mm_store_si128(&src6, zero);
     _mm_store_si128(&src7, zero);
 }
+
+#endif //__SSE2__

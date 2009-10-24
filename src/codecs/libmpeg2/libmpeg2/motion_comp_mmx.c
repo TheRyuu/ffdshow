@@ -23,7 +23,7 @@
 
 #include "config.h"
 
-#include <stddef.h>
+#include <stdlib.h>
 #include <inttypes.h>
 
 #if defined(ARCH_X86)
@@ -38,7 +38,6 @@
 using namespace csimd;
 
 #define CPU_MMXEXT 0
-#define CPU_3DNOW 1
 
 /* MMX code - needs a rewrite */
 

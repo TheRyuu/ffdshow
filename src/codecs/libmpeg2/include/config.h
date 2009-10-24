@@ -7,8 +7,8 @@
 /* x86 architecture */
 #define ARCH_X86 1
 
-#ifdef __GNUC__
 /* Define if you have the `__builtin_expect' function. */
+#ifdef __GNUC__
 #define HAVE_BUILTIN_EXPECT
 #endif
 
