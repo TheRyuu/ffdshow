@@ -235,7 +235,7 @@ unsigned int TimgFilterOSD::TosdLine::print(
     bool fileonly,
     const TfontSettings &fontSettings)
 {
-	return print(deci, pict, dst, stride, dxY, dyY, posX, posY, linespace, f, fileonly, fontSettings);
+    return print(deci, pict, dst, stride, dxY, dyY, posX, posY, linespace, f, fileonly, fontSettings);
 }
 
 unsigned int TimgFilterOSD::TosdLine::print(
@@ -289,9 +289,10 @@ unsigned int TimgFilterOSD::TosdLine::print(
        printprefs.fontsplit=1;
       }
      sub.subformat = deci->getParam2(IDFF_OSD_userformat);
+     text = stringreplace(text,_l("\\n"),_l("\n"),rfReplaceAll);
      strings lines;
-	 strtok(text.c_str(),_l("\\n"),lines);
-	 sub.set(lines);
+     strtok(text.c_str(),_l("\\n"),lines);
+     sub.set(lines);
      TsubtitleFormat subtitleFormat = TsubtitleFormat(config->getHtmlColors());
      sub.format(subtitleFormat);
      result += font.print(&sub,wasChange,printprefs,dst,stride);
@@ -560,10 +561,10 @@ HRESULT TimgFilterOSD::process(TfilterQueue::iterator it,TffPict &pict,const Tfi
    for (std::vector<TshortOsdTemp>::const_iterator o=shortOsdAbsoluteTemp.begin();o!=shortOsdAbsoluteTemp.end();o++)
    {
     TshortOsdParameters shortOsdParameters = o->second;
-	TosdLine *osdLine = new TosdLine(deci,deciD,deciV,parent->config,_l("shortosd")+o->first,shortOsdParameters.duration,NULL);
-	osdLine->posX = shortOsdParameters.posX;
-	osdLine->posY = shortOsdParameters.posY;
-	shortOsdAbsolute.push_back(osdLine);
+    TosdLine *osdLine = new TosdLine(deci,deciD,deciV,parent->config,_l("shortosd")+o->first,shortOsdParameters.duration,NULL);
+    osdLine->posX = shortOsdParameters.posX;
+    osdLine->posY = shortOsdParameters.posY;
+    shortOsdAbsolute.push_back(osdLine);
    }
    shortOsdAbsoluteTemp.clear();
    cs.Unlock();

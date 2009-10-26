@@ -132,7 +132,7 @@ private:
        stride_t stride[4],
        unsigned int dxY,
        unsigned int dyY,
-	   unsigned int x,
+       unsigned int x,
        unsigned int y,
        int linespace,
        bool fileonly,
