@@ -291,7 +291,7 @@ unsigned int TimgFilterOSD::TosdLine::print(
      sub.subformat = deci->getParam2(IDFF_OSD_userformat);
      text = stringreplace(text,_l("\\n"),_l("\n"),rfReplaceAll);
      strings lines;
-     strtok(text.c_str(),_l("\\n"),lines);
+     strtok(text.c_str(),_l("\n"),lines);
      sub.set(lines);
      TsubtitleFormat subtitleFormat = TsubtitleFormat(config->getHtmlColors());
      sub.format(subtitleFormat);
