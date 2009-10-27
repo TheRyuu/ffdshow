@@ -55,10 +55,9 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions=""
 				Optimization="0"
 				AdditionalIncludeDirectories="src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/mplayer;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/filters;src/xiph;src/codecs/theora/enc"
-				PreprocessorDefinitions="DEBUG;_DEBUG;WIN32;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;VISTA_SPDIF;ARCH_IS_32BIT;ARCH_IS_IA32"
+				PreprocessorDefinitions="DEBUG;_DEBUG;WIN32;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;ARCH_IS_32BIT;ARCH_IS_IA32"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="3"
 				SmallerTypeCheck="false"
@@ -170,10 +169,9 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions=""
 				Optimization="0"
 				AdditionalIncludeDirectories="src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/mplayer;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/filters;src/xiph;src/codecs/theora/enc"
-				PreprocessorDefinitions="DEBUG;_DEBUG;WIN64;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;VISTA_SPDIF;ARCH_IS_64BIT;ARCH_IS_GENERIC"
+				PreprocessorDefinitions="DEBUG;_DEBUG;WIN64;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;ARCH_IS_64BIT;ARCH_IS_X86_64"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="3"
 				SmallerTypeCheck="false"
@@ -292,7 +290,7 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
 				AdditionalIncludeDirectories="src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/mplayer;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/filters;src/xiph;src/codecs/theora/enc"
-				PreprocessorDefinitions="NDEBUG;WIN32;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;VISTA_SPDIF;ARCH_IS_32BIT;ARCH_IS_IA32"
+				PreprocessorDefinitions="NDEBUG;WIN32;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;ARCH_IS_32BIT;ARCH_IS_IA32"
 				StringPooling="true"
 				ExceptionHandling="1"
 				RuntimeLibrary="0"
@@ -414,7 +412,7 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
 				AdditionalIncludeDirectories="src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/mplayer;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/filters;src/xiph;src/codecs/theora/enc"
-				PreprocessorDefinitions="NDEBUG;WIN64;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;VISTA_SPDIF;ARCH_IS_64BIT;ARCH_IS_GENERIC"
+				PreprocessorDefinitions="NDEBUG;WIN64;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;ARCH_IS_64BIT;ARCH_IS_X86_64"
 				StringPooling="true"
 				ExceptionHandling="1"
 				RuntimeLibrary="0"
@@ -1202,6 +1200,10 @@
 			</File>
 			<File
 				RelativePath="src\stdafx.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\stdint.h"
 				>
 			</File>
 			<File
