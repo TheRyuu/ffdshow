@@ -22,6 +22,7 @@
 			IntermediateDirectory="debug"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+			UseOfMFC="1"
 			CharacterSet="0"
 			>
 			<Tool
@@ -42,7 +43,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
+				PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -64,6 +65,7 @@
 				AdditionalDependencies="imagehlp.lib"
 				OutputFile="../bin/rebase.exe"
 				LinkIncremental="2"
+				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(IntDir)/rebase.pdb"
 				SubSystem="1"
@@ -99,7 +101,8 @@
 			IntermediateDirectory="release"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
-			CharacterSet="2"
+			UseOfMFC="1"
+			CharacterSet="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -118,7 +121,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
+				PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="0"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -139,6 +142,7 @@
 				AdditionalDependencies="imagehlp.lib"
 				OutputFile="../bin/rebase.exe"
 				LinkIncremental="1"
+				DelayLoadDLLs="$(NOINHERIT)"
 				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"

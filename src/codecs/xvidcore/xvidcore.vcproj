@@ -195,7 +195,7 @@
 			ConfigurationType="2"
 			UseOfMFC="1"
 			CharacterSet="0"
-			WholeProgramOptimization="1"
+			WholeProgramOptimization="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -214,12 +214,14 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/MP"
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
+				WholeProgramOptimization="false"
 				AdditionalIncludeDirectories="../..;.;"
-				PreprocessorDefinitions="WIN32;_WIN32;NDEBUG;_WINDOWS;ARCH_IS_IA32;ARCH_IS_32BIT"
+				PreprocessorDefinitions="WIN32;_WIN32;NDEBUG;_WINDOWS;ARCH_IS_IA32;ARCH_IS_32BIT;_CRT_SECURE_NO_WARNINGS"
 				StringPooling="true"
 				ExceptionHandling="0"
 				RuntimeLibrary="0"
@@ -285,7 +287,7 @@
 			ConfigurationType="2"
 			UseOfMFC="1"
 			CharacterSet="0"
-			WholeProgramOptimization="1"
+			WholeProgramOptimization="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -305,12 +307,13 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/MP"
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
 				AdditionalIncludeDirectories="../..;.;"
-				PreprocessorDefinitions="WIN64;_WIN64;NDEBUG;_WINDOWS;ARCH_IS_X86_64;ARCH_IS_64BIT"
+				PreprocessorDefinitions="WIN64;_WIN64;NDEBUG;_WINDOWS;ARCH_IS_X86_64;ARCH_IS_64BIT;_CRT_SECURE_NO_WARNINGS"
 				StringPooling="true"
 				ExceptionHandling="0"
 				RuntimeLibrary="0"
