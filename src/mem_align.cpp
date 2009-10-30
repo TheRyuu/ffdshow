@@ -20,12 +20,6 @@
 #include "mem_align.h"
 #include "Tconfig.h"
 
-#if defined(__GNUC__) && !defined(_WIN64)
-#define _aligned_malloc __mingw_aligned_malloc
-#define _aligned_realloc __mingw_aligned_realloc
-#define _aligned_free __mingw_aligned_free
-#endif
-
 void* aligned_malloc(size_t size, size_t alignment)
 {
  return _aligned_malloc(size,alignment?alignment:Tconfig::cache_line);

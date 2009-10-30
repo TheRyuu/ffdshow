@@ -31,18 +31,6 @@
   #endif
 #endif
 
-#if _MSC_VER < 1400  // MSVC 7.1
- typedef int errno_t;
- #if !defined(_TRUNCATE)
-  #define _TRUNCATE ((size_t)-1)
- #endif
- template<class tchar> tchar* ff_strncpy(tchar *dst, const tchar *src, size_t count);
- template<class tchar> errno_t strncat_s(tchar *strDest, size_t numberOfElements, const tchar *strSource, size_t count);
- template<class tchar> int vsnprintf_s(tchar *buffer, size_t sizeOfBuffer, size_t count, const tchar *format, va_list argptr);
- template<class tchar> int tsnprintf_s(tchar *buffer, size_t sizeOfBuffer, size_t count, const tchar *format, ...);
- errno_t _splitpath_s(const char_t *path, char_t *drive, size_t driveNumberOfElements, char_t *dir, size_t dirNumberOfElements, char_t *fname, size_t nameNumberOfElements, char_t *ext, size_t extNumberOfElements);
- errno_t _makepath_s(char_t *path, size_t sizeInCharacters, const char_t *drive, const char_t *dir, const char_t *fname, const char_t *ext);
-#else // MSVC >= 8
  static __forceinline errno_t strncat_s(wchar_t *a, size_t b, const wchar_t *c, size_t d) {return wcsncat_s(a,b,c,d);}
  static __forceinline int vsnprintf_s(wchar_t *a, size_t b, size_t c, const wchar_t *d, va_list e){return _vsnwprintf_s(a,b,c,d,e);}
  static __forceinline errno_t _splitpath_s(const wchar_t * a,
@@ -61,7 +49,6 @@
   strncpy_s(dst, count, src, _TRUNCATE);
   return dst;
  }
-#endif // _MSC_VER
 
 static __forceinline wchar_t* strcat(wchar_t *a, const wchar_t *b) {return wcscat(a,b);}
 static __forceinline int strcmp(const wchar_t *a, const wchar_t *b) {return wcscmp(a,b);}
