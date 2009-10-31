@@ -1,11 +1,5 @@
 CFLAGS+= -I.
 
-ifneq ($(64BIT),yes)
-	CFLAGS+=-DARCH_IS_IA32 -DARCH_IS_32BIT
-else
-	CFLAGS+=-DARCH_IS_X86_64 -DARCH_IS_64BIT
-endif
-
 SRCS_C=decoder.c \
 		encoder.c \
 		xvid.c \
@@ -85,6 +79,14 @@ SRCS_YASM=bitstream/x86_asm/cbp_mmx.asm \
 		utils/x86_asm/interlacing_mmx.asm \
 		utils/x86_asm/cpuid.asm \
 		plugins/x86_asm/plugin_ssim-a.asm
+
+ifneq ($(64BIT),yes)
+	CFLAGS+=-DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS
+	YASMFLAGS+=-DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS
+else
+	CFLAGS+=-DARCH_IS_X86_64 -DARCH_IS_64BIT
+	YASMFLAGS+=-DARCH_IS_X86_64 -DARCH_IS_64BIT
+endif
 
 SLIB=../../../bin/xvidcore.dll
 DEF=xvid.def
