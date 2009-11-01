@@ -186,6 +186,7 @@
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(IntDir)/libmpeg2_ff.pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
 				ImportLibrary="$(IntDir)/libmpeg2_ff.lib"
 				TargetMachine="17"
 			/>
@@ -395,6 +396,7 @@
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
+				RandomizedBaseAddress="1"
 				ImportLibrary="$(IntDir)/libmpeg2_ff.lib"
 				TargetMachine="17"
 			/>

@@ -220,6 +220,7 @@
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				EntryPointSymbol="_DllMainCRTStartup"
+				RandomizedBaseAddress="1"
 				ImportLibrary="$(IntDir)/ffdshow.lib"
 				TargetMachine="17"
 			/>
@@ -459,6 +460,7 @@
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				EntryPointSymbol="_DllMainCRTStartup"
+				RandomizedBaseAddress="1"
 				ImportLibrary="$(IntDir)/ffdshow.lib"
 				TargetMachine="17"
 			/>

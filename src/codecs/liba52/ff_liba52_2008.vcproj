@@ -205,6 +205,7 @@
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
+				RandomizedBaseAddress="1"
 				ImportLibrary="$(IntDir)/ff_liba52.lib"
 				TargetMachine="17"
 			/>
@@ -402,6 +403,7 @@
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(IntDir)/ff_liba52.pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
 				ImportLibrary="$(IntDir)/ff_liba52.lib"
 				TargetMachine="17"
 			/>

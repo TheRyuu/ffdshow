@@ -51,7 +51,6 @@ SRCS_YASM=bitstream/x86_asm/cbp_mmx.asm \
 		dct/x86_asm/idct_3dne.asm \
 		dct/x86_asm/idct_mmx.asm \
 		dct/x86_asm/idct_sse2_dmitry.asm \
-		dct/x86_asm/simple_idct_mmx.asm \
 		image/x86_asm/colorspace_rgb_mmx.asm \
 		image/x86_asm/colorspace_yuv_mmx.asm \
 		image/x86_asm/colorspace_yuyv_mmx.asm \

@@ -187,6 +187,7 @@
 				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(IntDir)/ff_tremor.pdb"
+				RandomizedBaseAddress="1"
 				ImportLibrary="$(IntDir)/ff_tremor.lib"
 				TargetMachine="17"
 			/>
@@ -402,6 +403,7 @@
 				ProgramDatabaseFile="$(IntDir)/ff_tremor.pdb"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
+				RandomizedBaseAddress="1"
 				ImportLibrary="$(IntDir)/ff_tremor.lib"
 				TargetMachine="17"
 			/>

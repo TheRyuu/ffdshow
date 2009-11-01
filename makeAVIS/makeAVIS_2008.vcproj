@@ -170,6 +170,7 @@
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(IntDir)/makeAVIS.pdb"
 				SubSystem="1"
+				RandomizedBaseAddress="1"
 				TargetMachine="17"
 			/>
 			<Tool
@@ -364,6 +365,7 @@
 				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
+				RandomizedBaseAddress="1"
 				TargetMachine="17"
 			/>
 			<Tool

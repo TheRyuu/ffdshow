@@ -183,6 +183,7 @@
 				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(IntDir)/$(TargetName).pdb"
+				RandomizedBaseAddress="1"
 				ImportLibrary="$(IntDir)\ff_libmad.lib"
 				TargetMachine="17"
 			/>
@@ -388,6 +389,7 @@
 				ProgramDatabaseFile="$(IntDir)/$(TargetName).pdb"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
+				RandomizedBaseAddress="1"
 				ImportLibrary="$(IntDir)\ff_libmad.lib"
 				TargetMachine="17"
 			/>

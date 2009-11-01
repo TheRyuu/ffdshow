@@ -199,6 +199,7 @@
 				IgnoreAllDefaultLibraries="true"
 				DelayLoadDLLs="$(NOINHERIT)"
 				ProgramDatabaseFile="$(IntDir)/FLT_ffdshow.pdb"
+				RandomizedBaseAddress="1"
 				ImportLibrary="$(IntDir)/FLT_ffdshow.lib"
 				TargetMachine="17"
 			/>
@@ -398,6 +399,7 @@
 				ProgramDatabaseFile="$(IntDir)/FLT_ffdshow.pdb"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
+				RandomizedBaseAddress="1"
 				ImportLibrary="$(IntDir)/FLT_ffdshow.lib"
 				TargetMachine="17"
 			/>

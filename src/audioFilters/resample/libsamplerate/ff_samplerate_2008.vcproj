@@ -172,6 +172,7 @@
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(IntDir)/ff_samplerate.pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
 				ImportLibrary="$(IntDir)/ff_samplerate.lib"
 				TargetMachine="17"
 			/>
@@ -364,6 +365,7 @@
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
+				RandomizedBaseAddress="1"
 				ImportLibrary="$(IntDir)/ff_samplerate.lib"
 				TargetMachine="17"
 			/>

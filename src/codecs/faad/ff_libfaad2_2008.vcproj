@@ -193,6 +193,7 @@
 				DelayLoadDLLs="$(NOINHERIT)"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
+				RandomizedBaseAddress="1"
 				ImportLibrary="$(IntDir)/$(ProjectName).lib"
 				TargetMachine="17"
 			/>
@@ -380,6 +381,7 @@
 				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
+				RandomizedBaseAddress="1"
 				ImportLibrary="$(IntDir)/$(ProjectName).lib"
 				TargetMachine="17"
 			/>

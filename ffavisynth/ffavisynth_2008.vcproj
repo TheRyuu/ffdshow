@@ -203,6 +203,7 @@
 				ProgramDatabaseFile="$(IntDir)/ffavisynth.pdb"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
+				RandomizedBaseAddress="1"
 				ImportLibrary="$(IntDir)/ffavisynth.lib"
 				TargetMachine="17"
 			/>
@@ -402,6 +403,7 @@
 				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(IntDir)/ffavisynth.pdb"
+				RandomizedBaseAddress="1"
 				ImportLibrary="$(IntDir)/ffavisynth.lib"
 				TargetMachine="17"
 			/>
