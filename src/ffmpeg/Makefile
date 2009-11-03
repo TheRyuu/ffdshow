@@ -141,6 +141,7 @@ SRCS_C=\
       $(LAVC_DIR)/sp5xdec.c \
       $(LAVC_DIR)/svq1.c \
       $(LAVC_DIR)/svq1dec.c \
+      $(LAVC_DIR)/synth_filter.c \
       $(LAVC_DIR)/truemotion1.c \
       $(LAVC_DIR)/truemotion2.c \
       $(LAVC_DIR)/truespeech.c \

@@ -499,7 +499,7 @@
 				>
 			</File>
 			<File
-				RelativePath="libavcodec\asv1.c"
+				RelativePath=".\libavcodec\asv1.c"
 				>
 			</File>
 			<File
@@ -547,7 +547,7 @@
 				>
 			</File>
 			<File
-				RelativePath="libavcodec\cinepak.c"
+				RelativePath=".\libavcodec\cinepak.c"
 				>
 			</File>
 			<File
@@ -563,7 +563,7 @@
 				>
 			</File>
 			<File
-				RelativePath="libavcodec\cyuv.c"
+				RelativePath=".\libavcodec\cyuv.c"
 				>
 			</File>
 			<File
@@ -611,7 +611,7 @@
 				>
 			</File>
 			<File
-				RelativePath="libavcodec\fft.c"
+				RelativePath=".\libavcodec\fft.c"
 				>
 			</File>
 			<File
@@ -639,7 +639,7 @@
 				>
 			</File>
 			<File
-				RelativePath="libavcodec\golomb.c"
+				RelativePath=".\libavcodec\golomb.c"
 				>
 			</File>
 			<File
@@ -671,7 +671,7 @@
 				>
 			</File>
 			<File
-				RelativePath="libavcodec\h264.c"
+				RelativePath=".\libavcodec\h264.c"
 				>
 			</File>
 			<File
@@ -699,7 +699,7 @@
 				>
 			</File>
 			<File
-				RelativePath="libavcodec\imgconvert.c"
+				RelativePath=".\libavcodec\imgconvert.c"
 				>
 			</File>
 			<File
@@ -707,15 +707,15 @@
 				>
 			</File>
 			<File
-				RelativePath="libavcodec\indeo3.c"
+				RelativePath=".\libavcodec\indeo3.c"
 				>
 			</File>
 			<File
-				RelativePath="libavcodec\intrax8.c"
+				RelativePath=".\libavcodec\intrax8.c"
 				>
 			</File>
 			<File
-				RelativePath="libavcodec\intrax8dsp.c"
+				RelativePath=".\libavcodec\intrax8dsp.c"
 				>
 			</File>
 			<File
@@ -763,7 +763,7 @@
 				>
 			</File>
 			<File
-				RelativePath="libavcodec\mdct.c"
+				RelativePath=".\libavcodec\mdct.c"
 				>
 			</File>
 			<File
@@ -1007,43 +1007,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\libavcodec\snow.c"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath=".\libavcodec\sp5xdec.c"
 				>
 			</File>
 			<File
-				RelativePath="libavcodec\svq1.c"
+				RelativePath=".\libavcodec\svq1.c"
 				>
 			</File>
 			<File
-				RelativePath="libavcodec\svq1dec.c"
+				RelativePath=".\libavcodec\svq1dec.c"
 				>
 			</File>
 			<File
@@ -1073,6 +1045,10 @@
 						Name="VCCLCompilerTool"
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\libavcodec\synth_filter.c"
+				>
 			</File>
 			<File
 				RelativePath=".\libavcodec\truemotion1.c"
@@ -1171,11 +1147,11 @@
 				>
 			</File>
 			<File
-				RelativePath="libavcodec\wma.c"
+				RelativePath=".\libavcodec\wma.c"
 				>
 			</File>
 			<File
-				RelativePath="libavcodec\wmadec.c"
+				RelativePath=".\libavcodec\wmadec.c"
 				>
 			</File>
 			<File
@@ -1360,19 +1336,19 @@
 				>
 			</File>
 			<File
-				RelativePath="libavcodec\h264_parser.h"
+				RelativePath=".\libavcodec\h264_parser.h"
 				>
 			</File>
 			<File
-				RelativePath="libavcodec\h264data.h"
+				RelativePath=".\libavcodec\h264data.h"
 				>
 			</File>
 			<File
-				RelativePath="libavcodec\h264pred.h"
+				RelativePath=".\libavcodec\h264pred.h"
 				>
 			</File>
 			<File
-				RelativePath="libavcodec\huffman.h"
+				RelativePath=".\libavcodec\huffman.h"
 				>
 			</File>
 			<File
@@ -1388,15 +1364,15 @@
 				>
 			</File>
 			<File
-				RelativePath="libavcodec\indeo3data.h"
+				RelativePath=".\libavcodec\indeo3data.h"
 				>
 			</File>
 			<File
-				RelativePath="libavcodec\intrax8.h"
+				RelativePath=".\libavcodec\intrax8.h"
 				>
 			</File>
 			<File
-				RelativePath="libavcodec\intrax8huf.h"
+				RelativePath=".\libavcodec\intrax8huf.h"
 				>
 			</File>
 			<File
@@ -1404,11 +1380,11 @@
 				>
 			</File>
 			<File
-				RelativePath="libavcodec\jpegls.h"
+				RelativePath=".\libavcodec\jpegls.h"
 				>
 			</File>
 			<File
-				RelativePath="libavcodec\jpeglsdec.h"
+				RelativePath=".\libavcodec\jpeglsdec.h"
 				>
 			</File>
 			<File
@@ -1469,6 +1445,10 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\mpegaudiodecheader.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\mpegaudio_tablegen.h"
 				>
 			</File>
 			<File
@@ -1564,10 +1544,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\libavcodec\snow.h"
-				>
-			</File>
-			<File
 				RelativePath=".\libavcodec\sp5x.h"
 				>
 			</File>
@@ -1576,19 +1552,23 @@
 				>
 			</File>
 			<File
-				RelativePath="libavcodec\svq1.h"
+				RelativePath=".\libavcodec\svq1.h"
 				>
 			</File>
 			<File
-				RelativePath="libavcodec\svq1_cb.h"
+				RelativePath=".\libavcodec\svq1_cb.h"
 				>
 			</File>
 			<File
-				RelativePath="libavcodec\svq1_vlc.h"
+				RelativePath=".\libavcodec\svq1_vlc.h"
 				>
 			</File>
 			<File
 				RelativePath=".\libavcodec\swscale.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\synth_filter.h"
 				>
 			</File>
 			<File
