@@ -137,8 +137,8 @@ static  attribute_align_arg void FILTER_LINE_FUNC_NAME(YadifContext *yadctx, uin
             "psubusb     %%xmm3, %%xmm2 \n\t"\
             "psubusb     %%xmm4, %%xmm3 \n\t"\
             "pmaxub      %%xmm3, %%xmm2 \n\t"\
-            "pshuflw      $9,%%xmm2, %%xmm3 \n\t"\
-            "pshufhw      $9,%%xmm2, %%xmm3 \n\t"\
+            "movdqa %%xmm2, %%xmm3 \n\t" /* correct replacement (here)  */\
+            "psrldq $2, %%xmm3 \n\t"/* for "pshufw $9,%%mm2, %%mm3" - fix by Fizick */\
             "punpcklbw   %%xmm7, %%xmm2 \n\t" /* ABS(cur[x-refs-1] - cur[x+refs-1]) */\
             "punpcklbw   %%xmm7, %%xmm3 \n\t" /* ABS(cur[x-refs+1] - cur[x+refs+1]) */\
             "paddw       %%xmm2, %%xmm0 \n\t"\
