@@ -526,6 +526,17 @@ bool TimgFilterOSD::shortOSDmessageAbsolute(const char_t *msg,unsigned int durat
  return true;
 }
 
+bool TimgFilterOSD::cleanShortOSDmessages(void)
+{
+ cs.Lock();
+ shortOsdAbsolute.clear();
+ shortOsdAbsolute.clear();
+ shortOsdAbsoluteTemp.clear();
+ shortOsdRelativeTemp.clear();
+ cs.Unlock();
+ return true;
+}
+
 bool TimgFilterOSD::is(const TffPictBase &pict,const TfilterSettingsVideo *cfg0)
 {
  const TOSDsettingsVideo *cfg=(const TOSDsettingsVideo*)cfg0;

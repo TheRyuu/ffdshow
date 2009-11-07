@@ -349,6 +349,8 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
     case WPRM_SET_FFRW_NO_OSD:
         noFFRWOSD=(int)lprm==1?true:false;
         return TRUE;
+    case WPRM_SET_OSD_CLEAN:
+     return deciV->cleanShortOSDmessages();
     case WPRM_SET_AUDIO_STREAM:
         getStreams(false);
         setStream(1,(long)lprm);

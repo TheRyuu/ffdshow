@@ -336,6 +336,11 @@ STDMETHODIMP TffdshowDecVideo::shortOSDmessageAbsolute(const char_t *msg,unsigne
  if (!imgFilters || !presetSettings) return E_UNEXPECTED;
  return imgFilters->shortOSDmessageAbsolute(msg,duration,posX,posY)?S_OK:S_FALSE;
 }
+STDMETHODIMP TffdshowDecVideo::cleanShortOSDmessages(void)
+{
+ if (!imgFilters || !presetSettings) return E_UNEXPECTED;
+ return imgFilters->cleanShortOSDmessages()?S_OK:S_FALSE;
+}
 STDMETHODIMP TffdshowDecVideo::registerOSDprovider(IOSDprovider *provider,const char *name)
 {
  if (!imgFilters) return E_UNEXPECTED;

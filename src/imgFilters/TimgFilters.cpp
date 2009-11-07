@@ -273,6 +273,11 @@ bool TimgFiltersPlayer::shortOSDmessageAbsolute(const char_t *msg,unsigned int d
  return osd->shortOSDmessageAbsolute(msg,duration,posX,posY);
 }
 
+bool TimgFiltersPlayer::cleanShortOSDmessages(void)
+{
+ return osd->cleanShortOSDmessages();
+}
+
 HRESULT TimgFiltersPlayer::registerOSDprovider(IOSDprovider *provider,const char *name)
 {
  return osd->registerOSDprovider(provider,name);

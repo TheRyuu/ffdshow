@@ -176,6 +176,7 @@ public:
  virtual void done(void);
  bool shortOSDmessage(const char_t *msg,unsigned int duration);
  bool shortOSDmessageAbsolute(const char_t *msg,unsigned int duration,unsigned int posX,unsigned int posY);
+ bool cleanShortOSDmessages(void);
  HRESULT registerOSDprovider(IOSDprovider *provider,const char *name);
  HRESULT unregisterOSDprovider(IOSDprovider *provider);
  virtual bool acceptRandomYV12andRGB32(void) {return true;}

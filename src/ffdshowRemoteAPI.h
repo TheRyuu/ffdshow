@@ -60,6 +60,7 @@
 #define WPRM_SET_AUDIO_STREAM 25 // Set active audio stream
 #define WPRM_SET_SUBTITLE_STREAM 26 // Set active audio stream
 #define WPRM_SET_FFRW_NO_OSD 27 // No OSD when FF/RW
+#define WPRM_SET_OSD_CLEAN 29 // Clean all the OSD messages queue
 
 /* Following values : if MSG != ID of the remoteAPI */
 

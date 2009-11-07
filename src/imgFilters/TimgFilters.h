@@ -58,6 +58,7 @@ public:
  virtual HRESULT hideClosedCaptions(void) {return E_NOTIMPL;}
  virtual bool shortOSDmessage(const char_t *msg,unsigned int duration) {return false;}
  virtual bool shortOSDmessageAbsolute(const char_t *msg,unsigned int duration,unsigned int posX,unsigned int posY) {return false;}
+ virtual bool cleanShortOSDmessages(void) {return false;}
  virtual HRESULT registerOSDprovider(IOSDprovider *provider,const char *name) {return E_NOTIMPL;}
  virtual HRESULT unregisterOSDprovider(IOSDprovider *provider) {return E_NOTIMPL;}
  void setStopAtSubtitles(bool stop) {stopAtSubtitles = stop;}
@@ -88,6 +89,7 @@ public:
 
  virtual bool shortOSDmessage(const char_t *msg,unsigned int duration);
  virtual bool shortOSDmessageAbsolute(const char_t *msg,unsigned int duration,unsigned int posX,unsigned int posY);
+ virtual bool cleanShortOSDmessages(void);
  virtual HRESULT addClosedCaption(const wchar_t *line),hideClosedCaptions(void);
  virtual HRESULT registerOSDprovider(IOSDprovider *provider,const char *name);
  virtual HRESULT unregisterOSDprovider(IOSDprovider *provider);
