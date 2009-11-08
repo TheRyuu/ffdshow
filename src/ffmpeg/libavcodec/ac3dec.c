@@ -36,10 +36,6 @@
 #include "ac3dec.h"
 #include "ac3dec_data.h"
 
-#if _MSC_VER<1400
-#define powf pow
-#endif
-
 /** Large enough for maximum possible frame size when the specification limit is ignored */
 #define AC3_FRAME_BUFFER_SIZE 32768
 
@@ -611,11 +607,10 @@ static void do_rematrixing(AC3DecodeContext *s)
 
     end = FFMIN(s->end_freq[1], s->end_freq[2]);
 
-    i = ff_ac3_rematrix_band_tab[0];
     for(bnd=0; bnd<s->num_rematrixing_bands; bnd++) {
         if(s->rematrixing_flags[bnd]) {
             bndend = FFMIN(end, ff_ac3_rematrix_band_tab[bnd+1]);
-            for(; i<bndend; i++) {
+            for(i=ff_ac3_rematrix_band_tab[bnd]; i<bndend; i++) {
                 int tmp0 = s->fixed_coeffs[1][i];
                 s->fixed_coeffs[1][i] += s->fixed_coeffs[2][i];
                 s->fixed_coeffs[2][i]  = tmp0 - s->fixed_coeffs[2][i];
