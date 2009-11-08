@@ -163,6 +163,7 @@ private:
  };
 
  CCritSec cs;
+ CCritSec csClean;
  typedef std::pair<ffstring,TshortOsdParameters> TshortOsdTemp;
  std::vector<TshortOsdTemp> shortOsdRelativeTemp;
  std::vector<TshortOsdTemp> shortOsdAbsoluteTemp;

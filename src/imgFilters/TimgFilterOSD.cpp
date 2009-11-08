@@ -529,10 +529,12 @@ bool TimgFilterOSD::shortOSDmessageAbsolute(const char_t *msg,unsigned int durat
 bool TimgFilterOSD::cleanShortOSDmessages(void)
 {
  cs.Lock();
+ csClean.Lock();
  shortOsdAbsolute.clear();
  shortOsdAbsolute.clear();
  shortOsdAbsoluteTemp.clear();
  shortOsdRelativeTemp.clear();
+ csClean.Unlock();
  cs.Unlock();
  return true;
 }
@@ -583,6 +585,7 @@ HRESULT TimgFilterOSD::process(TfilterQueue::iterator it,TffPict &pict,const Tfi
 
  if (!provOSDs.empty() || !shortOsdRelative.empty() || !shortOsdAbsolute.empty())
   {
+   csClean.Lock();
    unsigned char *dst[4];
    char_t outputfourcc[20];
    deciV->getOutputFourcc(outputfourcc,20);
@@ -603,6 +606,7 @@ HRESULT TimgFilterOSD::process(TfilterQueue::iterator it,TffPict &pict,const Tfi
    y += shortOsdRelative.print(deci,pict,dst,stride2,dx1[0],dy1[0],x,y,cfg->linespace,false,cfg->font);
 
    shortOsdAbsolute.print(deci,pict,dst,stride2,dx1[0],dy1[0],cfg->linespace,false,cfg->font);
+   csClean.Unlock();
   }
  csProvider.Unlock();
  return parent->deliverSample(++it,pict);

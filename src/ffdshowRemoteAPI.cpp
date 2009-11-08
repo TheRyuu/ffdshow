@@ -201,7 +201,7 @@ unsigned int __stdcall Tremote::ffwdThreadProc(void *self0)
          mm = (pos - hh*3600)/60;
          ss = pos - hh*3600 - mm*60;
          tsnprintf_s(msg, countof(msg), _TRUNCATE, _l("%s %02i:%02i:%02i / %s"),mode<0?_l("<<"):_l(">>"), hh, mm, ss, duration_str);
-         self->deciV->resetOSD();
+         self->deciV->cleanShortOSDmessages();
          self->deciV->shortOSDmessageAbsolute(msg,self->OSDDuration,self->OSDPositionX, self->OSDPositionY);
         }
         elapsedTime = GetTickCount() - currentTime;
