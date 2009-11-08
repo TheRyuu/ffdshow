@@ -215,7 +215,7 @@ int av_audio_convert(AVAudioConvert *ctx,
 
     /* ffdshow custom code */
     #if __STDC_VERSION__ < 199901L
-    sample_fmt_info_init;
+    sample_fmt_info_init();
     #endif
 
     //FIXME optimize common cases
