@@ -677,7 +677,6 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
       case COPY_SET_SHORTOSD_MSG:
           return SUCCEEDED(deciV->shortOSDmessage(text<char_t>((const char_t*)cds->lpData), OSDDuration))?TRUE:FALSE;
       case COPY_SET_OSD_MSG:
-          deciV->resetOSD();
           return SUCCEEDED(deciV->shortOSDmessageAbsolute(text<char_t>((const char_t*)cds->lpData),OSDDuration,OSDPositionX, OSDPositionY))?TRUE:FALSE;
     }
   }

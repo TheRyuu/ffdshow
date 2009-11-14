@@ -57,7 +57,6 @@ template<class tchar> DECLARE_INTERFACE_(IffdshowDecVideoT,IUnknown)
  STDMETHOD_(unsigned int,getSubtitleLanguagesCount2)(void) PURE;
  STDMETHOD (getSubtitleLanguageDesc)(unsigned int num,const tchar* *descPtr) PURE;
  STDMETHOD (fillSubtitleLanguages)(const tchar **langs) PURE;
- STDMETHOD (resetOSD)(void) PURE;
  STDMETHOD (getFrameTimeMS)(unsigned int framenum,unsigned int *msec) PURE;
  STDMETHOD (getCurrentFrameTimeMS)(unsigned int *msec) PURE;
  STDMETHOD (frameStep)(int diff) PURE;

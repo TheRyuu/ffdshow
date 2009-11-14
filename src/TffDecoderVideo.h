@@ -115,7 +115,6 @@ public:
  STDMETHODIMP_(unsigned int) getSubtitleLanguagesCount2(void);
  STDMETHODIMP getSubtitleLanguageDesc(unsigned int num,const char_t* *descPtr);
  STDMETHODIMP fillSubtitleLanguages(const char_t **langs);
- STDMETHODIMP resetOSD(void);
  STDMETHODIMP getFrameTimeMS(unsigned int framenum,unsigned int *msec);
  STDMETHODIMP getCurrentFrameTimeMS(unsigned int *msec) {return getFrameTimeMS(currentFrame,msec);}
  STDMETHODIMP frameStep(int diff) {return TffdshowBase::frameStep(diff);}
@@ -429,7 +428,6 @@ private:
     {
      return E_NOTIMPL;
     }
-   STDMETHODIMP resetOSD(void) {return deciV->resetOSD();}
    STDMETHODIMP getFrameTimeMS(unsigned int framenum,unsigned int *msec) {return deciV->getFrameTimeMS(framenum,msec);}
    STDMETHODIMP getCurrentFrameTimeMS(unsigned int *msec) {return deciV->getCurrentFrameTimeMS(msec);}
    STDMETHODIMP frameStep(int diff) {return deciV->frameStep(diff);}

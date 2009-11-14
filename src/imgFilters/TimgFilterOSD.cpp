@@ -531,7 +531,7 @@ bool TimgFilterOSD::cleanShortOSDmessages(void)
  cs.Lock();
  csClean.Lock();
  shortOsdAbsolute.clear();
- shortOsdAbsolute.clear();
+ shortOsdRelative.clear();
  shortOsdAbsoluteTemp.clear();
  shortOsdRelativeTemp.clear();
  csClean.Unlock();

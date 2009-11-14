@@ -358,11 +358,6 @@ STDMETHODIMP TffdshowDecVideo::resetSubtitleTimes(void)
  return S_OK;
 }
 
-STDMETHODIMP TffdshowDecVideo::resetOSD(void)
-{
- return S_OK;
-}
-
 STDMETHODIMP_(int) TffdshowDecVideo::getCodecId(const BITMAPINFOHEADER *hdr,const GUID *subtype,FOURCC *AVIfourcc)
 {
  return globalSettings->getCodecId(hdr2fourcc(hdr,subtype),AVIfourcc);

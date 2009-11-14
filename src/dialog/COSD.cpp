@@ -388,8 +388,6 @@ TOSDpageVideo::TOSDpageVideo(TffdshowPageDec *Iparent,const TfilterIDFF *idff):T
 
 bool TOSDpageVideo::reset(bool testonly)
 {
- if (!testonly)
-  comptrQ<IffdshowDecVideo>(deciD)->resetOSD();
  return true;
 }
 
