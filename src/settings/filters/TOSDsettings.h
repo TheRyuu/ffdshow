@@ -15,7 +15,8 @@ public:
  TOSDsettings(size_t IsizeofthisAll,TintStrColl *Icoll=NULL,TfilterIDFFs *filters=NULL);
  const char_t* getFormat(void) const;
  char_t format[1024];
- int startDuration;
+ int isAutoHide;
+ int durationVisible;
  int isSave,saveOnly;char_t saveFlnm[MAX_PATH];
 };
 

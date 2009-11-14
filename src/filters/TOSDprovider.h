@@ -17,6 +17,8 @@ public:
  STDMETHODIMP getInfoItemValue(int id,const char_t* *value,int *wasChange,int *splitline);
  STDMETHODIMP_(const char_t*) getFormat(void);
  STDMETHODIMP_(bool) isOSD(void);
+ STDMETHODIMP_(bool) isAutoHide(void);
+ STDMETHODIMP_(int) getDurationVisible(void);
  STDMETHODIMP getSave(int *isSave,const char_t* *flnm);
  STDMETHODIMP_(int) getInfoShortcutItem(const char_t *s,int *toklen);
 };

@@ -7,6 +7,8 @@ DECLARE_INTERFACE(IOSDprovider)
  STDMETHOD (getInfoItemValue)(int id,const char_t* *value,int *wasChange,int *splitline) PURE; 
  STDMETHOD_(const char_t*,getFormat)(void) PURE;
  STDMETHOD_(bool,isOSD)(void) PURE;
+ STDMETHOD_(bool,isAutoHide)(void) PURE;
+ STDMETHOD_(int,getDurationVisible)(void) PURE;
  STDMETHOD (getSave)(int *isSave,const char_t* *flnm) PURE;
  STDMETHOD_(int,getInfoShortcutItem)(const char_t *s,int *toklen) PURE;
 };

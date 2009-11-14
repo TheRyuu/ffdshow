@@ -117,6 +117,10 @@ void TOSDpageDec::osd2dlg(void)
    ListView_SortItems(hlv,osdsSort,LPARAM(this));
    user=false;
   }
+ int isAutoHide=cfgGet(IDFF_OSDisAutoHide);
+ setCheck(IDC_CHB_OSD_IS_AUTO_HIDE,isAutoHide);
+ enable(isAutoHide,IDC_ED_OSD_DURATION_VISIBLE);
+ SetDlgItemInt(m_hwnd,IDC_ED_OSD_DURATION_VISIBLE,cfgGet(IDFF_OSDdurationVisible),FALSE);
  save2dlg();
 }
 
@@ -165,6 +169,21 @@ INT_PTR TOSDpageDec::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
        cfgSet(IDFF_isOSD,getCheck(IDC_CHB_OSD));
        parent->drawInter();
        return TRUE;
+      case IDC_CHB_OSD_IS_AUTO_HIDE:
+       cfgSet(IDFF_OSDisAutoHide,getCheck(IDC_CHB_OSD_IS_AUTO_HIDE));
+       osd2dlg();
+       parent->setChange();
+       break;
+      case IDC_ED_OSD_DURATION_VISIBLE:
+       if (HIWORD(wParam)==EN_CHANGE && !isSetWindowText)
+        {
+         HWND hed=GetDlgItem(m_hwnd,LOWORD(wParam));
+         if (hed!=GetFocus()) return FALSE;
+         repaint(hed);
+         parent->setChange();
+         break;
+        }
+       break;
       case IDC_CHB_OSD_USER:
        if (!getCheck(IDC_CHB_OSD_USER))
         lv2osdFormat();
@@ -303,6 +322,9 @@ void TOSDpageDec::applySettings(void)
  char_t flnm[MAX_PATH];
  GetDlgItemText(m_hwnd,IDC_ED_OSD_SAVE,flnm,MAX_PATH);
  cfgSet(IDFF_OSDsaveFlnm,flnm);
+
+ HWND hed=GetDlgItem(m_hwnd,IDC_ED_OSD_DURATION_VISIBLE);
+ eval(hed,0,10000,IDFF_OSDdurationVisible);
 }
 
 void TOSDpageDec::translate(void)
@@ -332,6 +354,7 @@ TOSDpageDec::TOSDpageDec(TffdshowPageDec *Iparent,const TfilterIDFF *idff):Tconf
  static const TbindCheckbox<TOSDpageDec> chb[]=
   {
    IDC_CHB_OSD_SAVE,IDFF_OSDisSave,&TOSDpageDec::save2dlg,
+   IDC_CHB_OSD_IS_AUTO_HIDE,IDFF_OSDisAutoHide,&TOSDpageDec::save2dlg,
    0,NULL,NULL
   };
  bindCheckboxes(chb);

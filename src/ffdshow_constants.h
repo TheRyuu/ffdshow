@@ -718,11 +718,12 @@
 #define IDFF_OSDposX               1533
 #define IDFF_OSDposY               1534
 //#define IDFF_OSDstartPreset        1537
-#define IDFF_OSDstartDuration      1538 //in frames
+#define IDFF_OSDdurationVisible    1538 //in frames
 #define IDFF_OSDisSave             1546
 #define IDFF_OSDsaveFlnm           1547
 #define IDFF_OSDsaveOnly           1555
 #define IDFF_OSDformat             3530
+#define IDFF_OSDisAutoHide         3531
 
 #define IDFF_filterGrab    2000
 #define IDFF_isGrab        2001
@@ -1559,6 +1560,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//next:3531
+//next:3532
 
 #endif

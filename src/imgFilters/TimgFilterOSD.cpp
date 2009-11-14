@@ -321,7 +321,7 @@ TimgFilterOSD::Tosds::~Tosds()
 
 void TimgFilterOSD::Tosds::init(bool allowSave,IffdshowBase *deci,IffdshowDec *deciD,IffdshowDecVideo *deciV,const Tconfig *config,const TOSDsettingsVideo *cfg,int framecnt)
 {
- if (provider->isOSD())
+ if (provider->isOSD() && (!provider->isAutoHide() || (provider->isAutoHide() && framecnt < provider->getDurationVisible())))
   {
    is=true;
    const char_t *format;
