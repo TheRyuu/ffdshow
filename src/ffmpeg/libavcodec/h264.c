@@ -1935,6 +1935,8 @@ static void free_tables(H264Context *h){
         av_freep(&hx->s.obmc_scratchpad);
         av_freep(&hx->rbsp_buffer[1]);
         av_freep(&hx->rbsp_buffer[0]);
+        hx->rbsp_buffer_size[0] = 0;
+        hx->rbsp_buffer_size[1] = 0;
         if (i) av_freep(&h->thread_context[i]);
     }
 }
@@ -6718,7 +6720,7 @@ static int decode_slice(struct AVCodecContext *avctx, void *arg){
         ff_init_cabac_states( &h->cabac);
         ff_init_cabac_decoder( &h->cabac,
                                s->gb.buffer + get_bits_count(&s->gb)/8,
-                               ( s->gb.size_in_bits - get_bits_count(&s->gb) + 7)/8);
+                               (get_bits_left(&s->gb) + 7)/8);
         /* calculate pre-state */
         for( i= 0; i < 460; i++ ) {
             int pre;
@@ -7992,7 +7994,7 @@ static int decode_frame(AVCodecContext *avctx,
     if(!(s->flags2 & CODEC_FLAG2_CHUNKS) || (s->mb_y >= s->mb_height && s->mb_height)){
         Picture *out = s->current_picture_ptr;
         Picture *cur = s->current_picture_ptr;
-        int i, pics, cross_idr, out_of_order, out_idx;
+        int i, pics, out_of_order, out_idx;
 
         field_end(h);
 
@@ -8100,15 +8102,15 @@ static int decode_frame(AVCodecContext *avctx,
                     out = h->delayed_pic[i];
                     out_idx = i;
                 }
-            cross_idr = !!h->delayed_pic[i] || h->delayed_pic[0]->key_frame || h->delayed_pic[0]->mmco_reset;
-
-            out_of_order = !cross_idr && out->poc < h->outputed_poc;
+            if(s->avctx->has_b_frames == 0 && (h->delayed_pic[0]->key_frame || h->delayed_pic[0]->mmco_reset))
+                h->outputed_poc= INT_MIN;
+            out_of_order = out->poc < h->outputed_poc;
 
             if(h->sps.bitstream_restriction_flag && s->avctx->has_b_frames >= h->sps.num_reorder_frames)
                 { }
             else if((out_of_order && pics-1 == s->avctx->has_b_frames && s->avctx->has_b_frames < MAX_DELAYED_PIC_COUNT)
                || (s->low_delay &&
-                ((!cross_idr && out->poc > h->outputed_poc + 2)
+                ((h->outputed_poc != INT_MIN && out->poc > h->outputed_poc + 2)
                  || cur->pict_type == FF_B_TYPE)))
             {
                 s->low_delay = 0;
@@ -8123,7 +8125,10 @@ static int decode_frame(AVCodecContext *avctx,
             if(!out_of_order && pics > s->avctx->has_b_frames){
                 *data_size = sizeof(AVFrame);
 
-                h->outputed_poc = out->poc;
+                if(out_idx==0 && h->delayed_pic[0] && (h->delayed_pic[0]->key_frame || h->delayed_pic[0]->mmco_reset)) {
+                    h->outputed_poc = INT_MIN;
+                } else
+                    h->outputed_poc = out->poc;
                 *pict= *(AVFrame*)out;
             }else{
                 av_log(avctx, AV_LOG_DEBUG, "no picture\n");

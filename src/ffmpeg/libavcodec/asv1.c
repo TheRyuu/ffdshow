@@ -25,7 +25,7 @@
  */
 
 #include "avcodec.h"
-#include "get_bits.h"
+#include "libavutil/common.h"
 #include "put_bits.h"
 #include "dsputil.h"
 #include "mpeg12data.h"
@@ -140,11 +140,11 @@ static av_cold void init_vlcs(ASV1Context *a){
 
 //FIXME write a reversed bitstream reader to avoid the double reverse
 static inline int asv2_get_bits(GetBitContext *gb, int n){
-    return ff_reverse[ get_bits(gb, n) << (8-n) ];
+    return av_reverse[ get_bits(gb, n) << (8-n) ];
 }
 
 static inline void asv2_put_bits(PutBitContext *pb, int n, int v){
-    put_bits(pb, n, ff_reverse[ v << (8-n) ]);
+    put_bits(pb, n, av_reverse[ v << (8-n) ]);
 }
 
 static inline int asv1_get_level(GetBitContext *gb){
@@ -325,7 +325,7 @@ static int decode_frame(AVCodecContext *avctx,
     else{
         int i;
         for(i=0; i<buf_size; i++)
-            a->bitstream_buffer[i]= ff_reverse[ buf[i] ];
+            a->bitstream_buffer[i]= av_reverse[ buf[i] ];
     }
 
     init_get_bits(&a->gb, a->bitstream_buffer, buf_size*8);
