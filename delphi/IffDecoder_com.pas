@@ -513,6 +513,7 @@ type
     function filterHasResetEx(filterID:integer;filterPageId:integer):HRESULT;stdcall;
     function shortOSDmessage(msg:ppointer; duration:integer):HRESULT;stdcall; //duration is in frames
     function shortOSDmessageAbsolute(msg:ppointer; duration:integer; posX:integer; posY:integer;):HRESULT;stdcall; //duration is in frames
+    function cleanShortOSDmessages:HRESULT;stdcall;
     function setImgFilters(imgFiltersPtr:ppointer):HRESULT;stdcall;
     function registerSelectedMediaTypes:HRESULT;stdcall;
     function getFrameTimes(start:ppointer; stop:ppointer):HRESULT;stdcall;
