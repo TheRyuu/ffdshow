@@ -269,6 +269,7 @@ public:
  STDMETHODIMP compat_filterHasResetEx(unsigned int filterID,unsigned int filterPageId) {return filterHasResetEx(filterID,filterPageId);}
  STDMETHODIMP compat_shortOSDmessage(const char *msg,unsigned int duration) {return shortOSDmessage(text<char_t>(msg),duration);}
  STDMETHODIMP compat_shortOSDmessageAbsolute(const char *msg,unsigned int duration,unsigned int posX,unsigned int posY) {return shortOSDmessageAbsolute(text<char_t>(msg),duration,posX,posY);}
+ STDMETHODIMP compat_cleanShortOSDmessages(void) {return cleanShortOSDmessages();}
  STDMETHODIMP compat_setImgFilters(TimgFilters *imgFiltersPtr) {return E_NOTIMPL;}
  STDMETHODIMP compat_registerSelectedMediaTypes(void) {return registerSelectedMediaTypes();}
  STDMETHODIMP compat_getFrameTimes(int64_t *start,int64_t *stop) {return getFrameTimes(start,stop);}

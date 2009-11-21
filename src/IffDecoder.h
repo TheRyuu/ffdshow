@@ -122,6 +122,7 @@ DECLARE_INTERFACE_(IffDecoder, IUnknown)
  STDMETHOD (compat_filterHasResetEx)(unsigned int filterID,unsigned int filterPageId) PURE;
  STDMETHOD (compat_shortOSDmessage)(const char *msg,unsigned int duration) PURE; //duration is in frames
  STDMETHOD (compat_shortOSDmessageAbsolute)(const char *msg,unsigned int duration,unsigned posX,unsigned int posY) PURE; //duration is in frames
+ STDMETHOD (compat_cleanShortOSDmessages)(void) PURE;
  STDMETHOD (compat_setImgFilters)(TimgFilters *imgFiltersPtr) PURE;
  STDMETHOD (compat_registerSelectedMediaTypes)(void) PURE;
  STDMETHOD (compat_getFrameTimes)(int64_t *start,int64_t *stop) PURE;
