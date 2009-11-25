@@ -2091,6 +2091,8 @@ static void free_tables(H264Context *h){
         av_freep(&hx->s.obmc_scratchpad);
         av_freep(&hx->rbsp_buffer[1]);
         av_freep(&hx->rbsp_buffer[0]);
+        hx->rbsp_buffer_size[0] = 0;
+        hx->rbsp_buffer_size[1] = 0;
         if (i) av_freep(&h->thread_context[i]);
     }
 }
@@ -4160,6 +4162,25 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
     if (!s->context_initialized) {
         if(h != h0)
             return -1;  // we cant (re-)initialize context during parallel decoding
+
+        avcodec_set_dimensions(s->avctx, s->width, s->height);
+        s->avctx->sample_aspect_ratio= h->sps.sar;
+        if(!s->avctx->sample_aspect_ratio.den)
+            s->avctx->sample_aspect_ratio.den = 1;
+
+        if(h->sps.timing_info_present_flag){
+            #if __STDC_VERSION__ >= 199901L
+            s->avctx->time_base= (AVRational){h->sps.num_units_in_tick * 2, h->sps.time_scale};
+            #else
+            s->avctx->time_base.num = h->sps.num_units_in_tick * 2;
+            s->avctx->time_base.den = h->sps.time_scale;
+            #endif
+            if(h->x264_build > 0 && h->x264_build < 44)
+                s->avctx->time_base.den *= 2;
+            av_reduce(&s->avctx->time_base.num, &s->avctx->time_base.den,
+                      s->avctx->time_base.num, s->avctx->time_base.den, 1<<30);
+        }
+
         if (MPV_common_init(s) < 0)
             return -1;
         s->first_field = 0;
@@ -4186,25 +4207,6 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
             for(i = 0; i < s->avctx->thread_count; i++)
                 if(context_init(h->thread_context[i]) < 0)
                     return -1;
-        }
-
-        s->avctx->width = s->width;
-        s->avctx->height = s->height;
-        s->avctx->sample_aspect_ratio= h->sps.sar;
-        if(!s->avctx->sample_aspect_ratio.den)
-            s->avctx->sample_aspect_ratio.den = 1;
-
-        if(h->sps.timing_info_present_flag){
-            #if __STDC_VERSION__ >= 199901L
-            s->avctx->time_base= (AVRational){h->sps.num_units_in_tick * 2, h->sps.time_scale};
-            #else
-            s->avctx->time_base.num = h->sps.num_units_in_tick * 2;
-            s->avctx->time_base.den = h->sps.time_scale;
-            #endif
-            if(h->x264_build > 0 && h->x264_build < 44)
-                s->avctx->time_base.den *= 2;
-            av_reduce(&s->avctx->time_base.num, &s->avctx->time_base.den,
-                      s->avctx->time_base.num, s->avctx->time_base.den, 1<<30);
         }
     }
 
@@ -7121,7 +7123,7 @@ static int decode_slice(struct AVCodecContext *avctx, void *arg){
         ff_init_cabac_states( &h->cabac);
         ff_init_cabac_decoder( &h->cabac,
                                s->gb.buffer + get_bits_count(&s->gb)/8,
-                               ( s->gb.size_in_bits - get_bits_count(&s->gb) + 7)/8);
+                               (get_bits_left(&s->gb) + 7)/8);
         /* calculate pre-state */
         for( i= 0; i < 460; i++ ) {
             int pre;
@@ -7891,7 +7893,7 @@ static void execute_decode_slices(H264Context *h, int context_count){
         }
 
         avctx->execute(avctx, (void *)decode_slice,
-                       (void **)h->thread_context, NULL, context_count, sizeof(void*));
+                       h->thread_context, NULL, context_count, sizeof(void*));
 
         /* pull back stuff from slices to master context */
         hx = h->thread_context[context_count - 1];

@@ -47,8 +47,6 @@
 //#define A32_BITSTREAM_READER
 #endif
 
-extern const uint8_t ff_reverse[256];
-
 #if ARCH_X86
 // avoid +32 for shift optimization (gcc should do that ...)
 static inline  int32_t NEG_SSR32( int32_t a, int8_t s){
@@ -704,6 +702,11 @@ static inline int decode210(GetBitContext *gb){
         return 0;
     else
         return 2 - get_bits1(gb);
+}
+
+static inline int get_bits_left(GetBitContext *gb)
+{
+    return gb->size_in_bits - get_bits_count(gb);
 }
 
 #endif /* AVCODEC_GET_BITS_H */
