@@ -26,19 +26,17 @@ ffdshow was originally developed by Milan Cutka. Since Milan Cutka stopped updat
 
 ### 4. Web links ###
 
-ffdshow-tryouts:
-http://ffdshow-tryout.sourceforge.net/
-http://sourceforge.net/project/showfiles.php?group_id=173941
+ffdshow:
+http://sourceforge.net/projects/ffdshow-tryout/
 
 ffdshow (old):
-http://ffdshow.sourceforge.net/tikiwiki/
 http://sourceforge.net/projects/ffdshow/
 
 Xvid:
 http://www.xvid.org/
 
 FFmpeg:
-http://ffmpeg.mplayerhq.hu/
+http://ffmpeg.org/
 
 libmpeg2:
 http://libmpeg2.sourceforge.net/

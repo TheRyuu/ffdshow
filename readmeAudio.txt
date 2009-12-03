@@ -23,25 +23,20 @@ ffdshow was originally developed by Milan Cutka. Since Milan Cutka stopped updat
 
 ### 5. Web links ###
 
-ffdshow-tryouts:
-http://ffdshow-tryout.sourceforge.net/
-http://sourceforge.net/project/showfiles.php?group_id=173941
-
 ffdshow:
-http://ffdshow.sourceforge.net/tikiwiki/
+http://sourceforge.net/projects/ffdshow-tryout/
+
+ffdshow (old):
 http://sourceforge.net/projects/ffdshow/
 
 FFmpeg:
-http://ffmpeg.mplayerhq.hu/
+http://ffmpeg.org/
 
 MPlayer:
 http://www.mplayerhq.hu/
 
 Doom9:
 http://forum.doom9.org/showthread.php?t=120465
-
-or Wikipedia, the free encyclopedia:
-http://en.wikipedia.org/wiki/Ffdshow
 
 ### 6. Copying ###
 

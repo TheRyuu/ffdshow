@@ -17,7 +17,7 @@ P4HT‚âdual coreƒ}ƒVƒ“‚Å‚Írev2546‚Æ”äŠr‚µ‚ÄƒtƒŒ[ƒ€ƒŒ[ƒg‚Å10`20“(Max 35%)ƒAƒbƒ
 
 5. Web links
 
-ffdshow: http://cutka.szm.sk/ffdshow/ or http://sourceforge.net/projects/ffdshow/
+ffdshow: http://sourceforge.net/projects/ffdshow-tryout/
 ffmpeg:  http://ffmpeg.org/
 mplayer: http://www.mplayerhq.hu/
 

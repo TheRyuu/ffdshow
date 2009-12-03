@@ -20,11 +20,10 @@ On P4HT or dual core CPU, 10% to 20% (Max 35%) of frame rate improvement is expe
 ### 5. Web links ###
 
 ffdshow:
-http://ffdshow.sourceforge.net/tikiwiki/
-http://sourceforge.net/projects/ffdshow/
+http://sourceforge.net/projects/ffdshow-tryout/
 
 FFmpeg:
-http://ffmpeg.mplayerhq.hu/
+http://ffmpeg.org/
 
 MPlayer:
 http://www.mplayerhq.hu/
