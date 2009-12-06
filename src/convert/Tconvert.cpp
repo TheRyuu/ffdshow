@@ -421,6 +421,7 @@ int Tconvert::convert(int incsp0,
      if (!ffdshow_converters)
       ffdshow_converters = new TffdshowConverters(libmplayer->GetCPUCount()/* avoid multithreading on P4HT */);
      UpdateSettings(video_full_range_flag, YCbCr_RGB_matrix_coefficients);
+     setJpeg(!!((incsp | outcsp) & FF_CSP_FLAGS_YUV_JPEG));
      ffdshow_converters->init(incsp1,outcsp1,(ffYCbCr_RGB_MatrixCoefficientsType)cspOptionsIturBt,cspOptionsWhiteCutoff,cspOptionsBlackCutoff,cspOptionsChromaCutoff,cspOptionsRGB_WhiteLevel,cspOptionsRGB_BlackLevel,m_dithering);
      ffdshow_converters->convert(src[0],src[1],src[2],dst[0],dx,dy,srcStride[0],srcStride[1],dstStride[0]);
      return dy;
