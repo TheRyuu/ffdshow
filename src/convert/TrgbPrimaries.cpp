@@ -98,25 +98,36 @@ void TrgbPrimaries::reset(void)
 void TrgbPrimaries::setJpeg(bool isjpeg, int rgb_add)
 {
  // force BT.601 PC-YUV for MJPEG.
- if (isjpeg)
+ if (deciV)
   {
-   cspOptionsIturBt = ITUR_BT601;
-   cspOptionsBlackCutoff = 0;
-   cspOptionsWhiteCutoff = 255;
-   cspOptionsChromaCutoff = 1;
-   if (!wasJpeg)
-    initXvid(rgb_add);
-   wasJpeg = true;
-  }
- else if (deciV && deciV->getMovieFOURCC() == FOURCC_FPS1)
-  {
-   cspOptionsIturBt = ITUR_BT709; // sRGB
-   cspOptionsBlackCutoff = 0;
-   cspOptionsWhiteCutoff = 255;
-   cspOptionsChromaCutoff = 1;
-   if (!wasFraps)
-    initXvid(rgb_add);
-   wasFraps = true;
+   const ToutputVideoSettings *outcfg = deciV->getToutputVideoSettings(); // This pointer may change during playback.
+   int cspOptionsInputLevelsMode = (int)outcfg->cspOptionsInputLevelsMode;
+   if (isjpeg)
+    {
+     cspOptionsIturBt = ITUR_BT601;
+     if (cspOptionsInputLevelsMode != TrgbPrimaries::CutomYCbCr)
+      {
+       cspOptionsBlackCutoff = 0;
+       cspOptionsWhiteCutoff = 255;
+      }
+     cspOptionsChromaCutoff = 1;
+     if (!wasJpeg)
+      initXvid(rgb_add);
+     wasJpeg = true;
+    }
+    else if (deciV->getMovieFOURCC() == FOURCC_FPS1)
+     {
+      cspOptionsIturBt = ITUR_BT709; // sRGB
+      if (cspOptionsInputLevelsMode != TrgbPrimaries::CutomYCbCr)
+       {
+        cspOptionsBlackCutoff = 0;
+        cspOptionsWhiteCutoff = 255;
+       }
+      cspOptionsChromaCutoff = 1;
+      if (!wasFraps)
+       initXvid(rgb_add);
+      wasFraps = true;
+     }
   }
 }
 
