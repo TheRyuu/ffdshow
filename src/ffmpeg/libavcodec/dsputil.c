@@ -4096,6 +4096,17 @@ static void butterflies_float_c(float *restrict v1, float *restrict v2,
     }
 }
 
+static float scalarproduct_float_c(const float *v1, const float *v2, int len)
+{
+    float p = 0.0;
+    int i;
+
+    for (i = 0; i < len; i++)
+        p += v1[i] * v2[i];
+
+    return p;
+}
+
 static void int32_to_float_fmul_scalar_c(float *dst, const int *src, float mul, int len){
     int i;
     for(i=0; i<len; i++)
@@ -4648,6 +4659,9 @@ void attribute_align_arg dsputil_init(DSPContext* c, AVCodecContext *avctx)
     c->int32_to_float_fmul_scalar = int32_to_float_fmul_scalar_c;
     c->float_to_int16 = ff_float_to_int16_c;
     c->float_to_int16_interleave = ff_float_to_int16_interleave_c;
+#if CONFIG_AAC_DECODER
+    c->scalarproduct_float = scalarproduct_float_c;
+#endif
     c->butterflies_float = butterflies_float_c;
 #if CONFIG_AAC_DECODER
     c->vector_fmul_scalar = vector_fmul_scalar_c;
