@@ -104,7 +104,10 @@ void TrgbPrimaries::setJpeg(bool isjpeg, int rgb_add)
    int cspOptionsInputLevelsMode = (int)outcfg->cspOptionsInputLevelsMode;
    if (isjpeg)
     {
-     cspOptionsIturBt = ITUR_BT601;
+     if ((int)outcfg->cspOptionsIturBt == ITUR_BT_AUTO) // it's possible that cspOptionsIturBt have already been updated in UpdateSettings method, so we're checking the value selected by the user.
+      {
+       cspOptionsIturBt = ITUR_BT601;
+      }
      if (cspOptionsInputLevelsMode != TrgbPrimaries::CutomYCbCr)
       {
        cspOptionsBlackCutoff = 0;
@@ -117,7 +120,10 @@ void TrgbPrimaries::setJpeg(bool isjpeg, int rgb_add)
     }
     else if (deciV->getMovieFOURCC() == FOURCC_FPS1)
      {
-      cspOptionsIturBt = ITUR_BT709; // sRGB
+      if ((int)outcfg->cspOptionsIturBt == ITUR_BT_AUTO) // it's possible that cspOptionsIturBt have already been updated in UpdateSettings method, so we're checking the value selected by the user.
+       {
+        cspOptionsIturBt = ITUR_BT709; // sRGB
+       }
       if (cspOptionsInputLevelsMode != TrgbPrimaries::CutomYCbCr)
        {
         cspOptionsBlackCutoff = 0;
