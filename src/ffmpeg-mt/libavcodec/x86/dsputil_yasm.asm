@@ -21,6 +21,13 @@
 
 %include "x86inc.asm"
 
+SECTION_RODATA
+pb_f: times 16 db 15
+pb_zzzzzzzz77777777: times 8 db -1
+pb_7: times 8 db 7
+pb_zzzz3333zzzzbbbb: db -1,-1,-1,-1,3,3,3,3,-1,-1,-1,-1,11,11,11,11
+pb_zz11zz55zz99zzdd: db -1,-1,1,1,-1,-1,5,5,-1,-1,9,9,-1,-1,13,13
+
 section .text align=16
 
 %macro PSWAPD_SSE 2

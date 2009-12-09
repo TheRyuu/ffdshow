@@ -1643,20 +1643,19 @@ static void ff_idct_xvid_mmx2_add(uint8_t *dest, int line_size, DCTELEM *block)
     add_pixels_clamped_mmx(block, dest, line_size);
 }
 
-#if HAVE_YASM
 void ff_x264_deblock_v_luma_sse2(uint8_t *pix, int stride, int alpha, int beta, int8_t *tc0);
 void ff_x264_deblock_h_luma_sse2(uint8_t *pix, int stride, int alpha, int beta, int8_t *tc0);
-void ff_x264_deblock_v8_luma_intra_mmxext(uint8_t *pix, int stride, int alpha, int beta);
 void ff_x264_deblock_h_luma_intra_mmxext(uint8_t *pix, int stride, int alpha, int beta);
-#if ARCH_X86_32
+void ff_x264_deblock_v_luma_intra_sse2(uint8_t *pix, int stride, int alpha, int beta);
+void ff_x264_deblock_h_luma_intra_sse2(uint8_t *pix, int stride, int alpha, int beta);
+
+#if HAVE_YASM && ARCH_X86_32
+void ff_x264_deblock_v8_luma_intra_mmxext(uint8_t *pix, int stride, int alpha, int beta);
 static void ff_x264_deblock_v_luma_intra_mmxext(uint8_t *pix, int stride, int alpha, int beta)
 {
     ff_x264_deblock_v8_luma_intra_mmxext(pix+0, stride, alpha, beta);
     ff_x264_deblock_v8_luma_intra_mmxext(pix+8, stride, alpha, beta);
 }
-#endif
-void ff_x264_deblock_v_luma_intra_sse2(uint8_t *pix, int stride, int alpha, int beta);
-void ff_x264_deblock_h_luma_intra_sse2(uint8_t *pix, int stride, int alpha, int beta);
 #endif
 
 
@@ -1708,7 +1707,7 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
                 }
                 c->idct_permutation_type= FF_LIBMPEG2_IDCT_PERM;
 #endif
-            }else if((CONFIG_VP3_DECODER || CONFIG_VP5_DECODER || CONFIG_VP6_DECODER || CONFIG_THEORA_DECODER) &&
+            }else if((CONFIG_VP3_DECODER || CONFIG_VP5_DECODER || CONFIG_VP6_DECODER) &&
                      idct_algo==FF_IDCT_VP3){
                 if(mm_flags & FF_MM_SSE2){
                     c->idct_put= ff_vp3_idct_put_sse2;
@@ -1931,7 +1930,7 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
             c->avg_h264_chroma_pixels_tab[1]= avg_h264_chroma_mc4_3dnow;
         }
 
-#if AV_GCC_VERSION_AT_LEAST(4,2)
+
 #define H264_QPEL_FUNCS(x, y, CPU)\
             c->put_h264_qpel_pixels_tab[0][x+y*4] = put_h264_qpel16_mc##x##y##_##CPU;\
             c->put_h264_qpel_pixels_tab[1][x+y*4] = put_h264_qpel8_mc##x##y##_##CPU;\
@@ -1984,9 +1983,7 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
         }
 #endif
 
-/* disable YASM based ASM for 64-bit builds */
-#if ARCH_X86_32
-#if CONFIG_GPL && HAVE_YASM
+#if CONFIG_GPL && HAVE_YASM && ARCH_X86_32
         if (mm_flags & FF_MM_MMX2){
 #if ARCH_X86_32
             c->h264_v_loop_filter_luma_intra = ff_x264_deblock_v_luma_intra_mmxext;
@@ -2005,9 +2002,6 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
             }
         }
 #endif
-#endif /* ARCH_X86_32 */
-
-#endif /* AV_GCC_VERSION_AT_LEAST(4,2) */
     }
 }
 

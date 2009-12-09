@@ -7954,7 +7954,7 @@ static int decode_nal_units(H264Context *h, const uint8_t *buf, int buf_size){
             next_avc= buf_index + nalsize;
         } else {
             // start code prefix search
-            for(; buf_index + 3 < buf_size; buf_index++){
+            for(; buf_index + 3 < next_avc; buf_index++){
                 // This should always succeed in the first iteration.
                 if(buf[buf_index] == 0 && buf[buf_index+1] == 0 && buf[buf_index+2] == 1)
                     break;
@@ -7963,6 +7963,7 @@ static int decode_nal_units(H264Context *h, const uint8_t *buf, int buf_size){
             if(buf_index+3 >= buf_size) break;
 
             buf_index+=3;
+            if(buf_index >= next_avc) continue;
         }
 
         hx = h->thread_context[context_count];
@@ -7980,11 +7981,7 @@ static int decode_nal_units(H264Context *h, const uint8_t *buf, int buf_size){
         }
 
         if (h->is_avc && (nalsize != consumed) && nalsize){
-            int i, debug_level = AV_LOG_DEBUG;
-            for (i = consumed; i < nalsize; i++)
-                if (buf[buf_index+i])
-                    debug_level = AV_LOG_ERROR;
-            av_log(h->s.avctx, debug_level, "AVC: Consumed only %d bytes instead of %d\n", consumed, nalsize);
+            av_log(h->s.avctx, AV_LOG_DEBUG, "AVC: Consumed only %d bytes instead of %d\n", consumed, nalsize);
         }
 
         buf_index += consumed;
@@ -8169,7 +8166,6 @@ static int decode_frame(AVCodecContext *avctx,
         h->nal_length_size = 2;
         cnt = 1;
 
-        // Decode sps from avcC
         for (i = 0; i < cnt; i++) {
             nalsize = AV_RB16(p) + 2;
             if(decode_nal_units(h, p, nalsize)  != nalsize) {
