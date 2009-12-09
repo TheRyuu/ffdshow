@@ -1,10 +1,10 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision           = '3123'
+#define tryout_revision           = '3154'
 
 #define buildyear                 = '2009'
-#define buildmonth                =   '11'
-#define buildday                  =   '01'
+#define buildmonth                =   '12'
+#define buildday                  =   '09'
 
 ; Build specific options
 #define localize                  = True
@@ -19,7 +19,7 @@
 
 #define include_info_before       = False
 #define include_gnu_license       = False
-#define include_setup_icon        = False
+#define include_setup_icon        = True
 
 ; Compiler settings
 #define is64bit                   = False
@@ -74,7 +74,6 @@
 #ifdef PREF_XXL
   #define localize               = False
   #define include_info_before    = True
-  #define include_setup_icon     = True
   #define filename_suffix        = '_xxl'
 #endif
 #ifdef PREF_XXL_X64
@@ -82,7 +81,6 @@
   #define include_x264           = True
   #define include_plugin_dscaler = False
   #define include_info_before    = True
-  #define include_setup_icon     = True
   #define filename_suffix        = '_xxl_x64'
 #endif
 #ifdef PREF_ALBAIN
@@ -128,7 +126,7 @@ OutputBaseFilename              = ffdshow_rev{#= tryout_revision}_{#= buildyear}
 OutputDir                       = {#= outputdir}
 PrivilegesRequired              = admin
 #if include_setup_icon
-SetupIconFile                   = ..\modern-wizard_icon.ico
+SetupIconFile                   = ..\..\..\src\FFd.ico
 #endif
 #if localize
 ShowLanguageDialog              = yes
@@ -137,6 +135,7 @@ ShowLanguageDialog              = no
 #endif
 ShowTasksTreeLines              = yes
 ShowUndisplayableLanguages      = no
+UninstallDisplayIcon            = {app}\ffdshow.ax,3
 UsePreviousTasks                = yes
 VersionInfoCompany              = ffdshow
 VersionInfoCopyright            = GNU
