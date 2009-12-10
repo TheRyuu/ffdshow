@@ -1,10 +1,10 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision           = '3154'
+#define tryout_revision           = '3155'
 
 #define buildyear                 = '2009'
 #define buildmonth                =   '12'
-#define buildday                  =   '09'
+#define buildday                  =   '10'
 
 ; Build specific options
 #define localize                  = True
@@ -19,7 +19,7 @@
 
 #define include_info_before       = False
 #define include_gnu_license       = False
-#define include_setup_icon        = True
+#define include_setup_icon        = False
 
 ; Compiler settings
 #define is64bit                   = False
@@ -105,18 +105,19 @@ ArchitecturesAllowed            = x64
 ArchitecturesInstallIn64BitMode = x64
 AppId                           = ffdshow64
 DefaultGroupName                = ffdshow64
+AppVerName                      = ffdshow x64 [rev {#= tryout_revision}] [{#= buildyear}-{#= buildmonth}-{#= buildday}]
 MinVersion                      = 0,5.01
 #else
 AppId                           = ffdshow
 DefaultGroupName                = ffdshow
+AppVerName                      = ffdshow [rev {#= tryout_revision}] [{#= buildyear}-{#= buildmonth}-{#= buildday}]
 MinVersion                      = 0,5.0
 #endif
 AllowCancelDuringInstall        = no
 AllowNoIcons                    = yes
 AllowUNCPath                    = no
 AppName                         = ffdshow
-AppVerName                      = ffdshow [rev {#= tryout_revision}] [{#= buildyear}-{#= buildmonth}-{#= buildday}]
-AppVersion                      = 1.0
+AppVersion                      = 1.0.0.{#= tryout_revision}
 Compression                     = lzma/ultra
 InternalCompressLevel           = ultra
 SolidCompression                = True
