@@ -136,7 +136,7 @@ ShowLanguageDialog              = no
 #endif
 ShowTasksTreeLines              = yes
 ShowUndisplayableLanguages      = no
-UninstallDisplayIcon            = {app}\ffdshow.ax,3
+UninstallDisplayIcon            = {app}\ffdshow.ax,9
 UsePreviousTasks                = yes
 VersionInfoCompany              = ffdshow
 VersionInfoCopyright            = GNU
