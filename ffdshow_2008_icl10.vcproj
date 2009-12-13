@@ -4890,6 +4890,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\codecs\TaudioCodecBitstream.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\codecs\TaudioCodecBitstream.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\codecs\TaudioCodecLiba52.cpp"
 				>
 			</File>

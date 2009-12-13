@@ -1551,7 +1551,8 @@ TrenderedTextSubtitleWord* TsubtitleText::newWord(
             prefs.shadowMode = 3;
             prefs.shadowSize = 0;
         } else {
-            prefs.shadowMode = 2;
+            if (prefs.shadowMode == 0) // If no shadow mode defined, take the classic with no gradient
+             prefs.shadowMode=2;
             prefs.shadowSize = -1 * w->props.shadowDepth;
         }
     }

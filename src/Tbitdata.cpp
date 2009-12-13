@@ -24,7 +24,7 @@ void Tbitdata::copy(const Tbitdata *bitdataToCopy)
 // Does not work in non word mode
 uint32_t Tbitdata::getBits(int number_of_bits)
 {
-  uint32_t rval=0;
+  uint64_t rval=0;
   if((bitsleft-number_of_bits)<0) return 0;
   if(!number_of_bits) return 0;
   int bitsToRead=number_of_bits;
@@ -35,7 +35,6 @@ uint32_t Tbitdata::getBits(int number_of_bits)
       int bits = (32-bitindex);
       // Read the byte and keep the last "bits" bits
       currentWord=(uint32_t)((wordpointer[0]<<24)+(wordpointer[1]<<16)+(wordpointer[2]<<8)+wordpointer[3]);
-
 
       rval |= (currentWord & ((uint32_t)pow((double)2,(double)bits) - 1));
 
@@ -59,8 +58,8 @@ uint32_t Tbitdata::getBits(int number_of_bits)
       }
   }
   bitsremaining=32-bitindex;
-  result=rval;
-  return rval;
+  result=(uint32_t)rval;
+  return (uint32_t)rval;
 }
 
 // Initialize the bytes alignment (use with non word mode)

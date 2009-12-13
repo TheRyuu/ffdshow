@@ -163,20 +163,20 @@
  CODEC_OP(CODEC_ID_PAL4          ,324,"raw") \
  CODEC_OP(CODEC_ID_PAL8          ,325,"raw") \
  CODEC_OP(CODEC_ID_YV16          ,326,"raw") \
- CODEC_OP(CODEC_ID_LPCM          ,398,"raw") \
- CODEC_OP(CODEC_ID_PCM           ,399,"raw") \
+ CODEC_OP(CODEC_ID_LPCM          ,398,"raw LPCM") \
+ CODEC_OP(CODEC_ID_PCM           ,399,"raw PCM") \
  \
- CODEC_OP(CODEC_ID_PCM_S32LE           ,200,"raw") \
- CODEC_OP(CODEC_ID_PCM_S32BE           ,201,"raw") \
- CODEC_OP(CODEC_ID_PCM_U32LE           ,202,"raw") \
- CODEC_OP(CODEC_ID_PCM_U32BE           ,203,"raw") \
- CODEC_OP(CODEC_ID_PCM_S24LE           ,204,"raw") \
- CODEC_OP(CODEC_ID_PCM_S24BE           ,205,"raw") \
- CODEC_OP(CODEC_ID_PCM_U24LE           ,206,"raw") \
- CODEC_OP(CODEC_ID_PCM_U24BE           ,207,"raw") \
- CODEC_OP(CODEC_ID_PCM_S16LE           ,208,"raw") \
- CODEC_OP(CODEC_ID_PCM_S16BE           ,209,"raw") \
- CODEC_OP(CODEC_ID_PCM_S24DAUD         ,210,"raw") \
+ CODEC_OP(CODEC_ID_PCM_S32LE           ,200,"raw PCM 32") \
+ CODEC_OP(CODEC_ID_PCM_S32BE           ,201,"raw PCM 32") \
+ CODEC_OP(CODEC_ID_PCM_U32LE           ,202,"raw PCM 32") \
+ CODEC_OP(CODEC_ID_PCM_U32BE           ,203,"raw PCM 32") \
+ CODEC_OP(CODEC_ID_PCM_S24LE           ,204,"raw PCM 24") \
+ CODEC_OP(CODEC_ID_PCM_S24BE           ,205,"raw PCM 24") \
+ CODEC_OP(CODEC_ID_PCM_U24LE           ,206,"raw PCM 24") \
+ CODEC_OP(CODEC_ID_PCM_U24BE           ,207,"raw PCM 24") \
+ CODEC_OP(CODEC_ID_PCM_S16LE           ,208,"raw PCM 16") \
+ CODEC_OP(CODEC_ID_PCM_S16BE           ,209,"raw PCM 16") \
+ CODEC_OP(CODEC_ID_PCM_S24DAUD         ,210,"raw PCM 24") \
  \
  CODEC_OP(CODEC_ID_XVID4         ,400,"xvid") \
  \
@@ -198,11 +198,11 @@
  \
  CODEC_OP(CODEC_ID_LIBA52        ,1300,"liba52") \
  \
- CODEC_OP(CODEC_ID_SPDIF_AC3     ,1400,"s/pdif") \
- CODEC_OP(CODEC_ID_SPDIF_DTS     ,1401,"s/pdif") \
+ CODEC_OP(CODEC_ID_SPDIF_AC3     ,1400,"AC3 s/pdif") \
+ CODEC_OP(CODEC_ID_SPDIF_DTS     ,1401,"DTS s/pdif") \
  CODEC_OP(CODEC_ID_BITSTREAM_TRUEHD  ,1402,"bitstream Dolby True HD") \
  CODEC_OP(CODEC_ID_BITSTREAM_DTSHD   ,1403,"bitstream DTS-HD") \
- CODEC_OP(CODEC_ID_SPDIF_EAC3    ,1404,"s/pdif") \
+ CODEC_OP(CODEC_ID_BITSTREAM_EAC3    ,1404,"bitstream EAC3") \
  \
  CODEC_OP(CODEC_ID_LIBDTS        ,1500,"libdts") \
  \
@@ -240,7 +240,7 @@ static __inline bool mpeg1_codec(int x)    {return x==CODEC_ID_MPEG1VIDEO || x==
 static __inline bool mpeg2_codec(int x)    {return x==CODEC_ID_MPEG2VIDEO || x==CODEC_ID_LIBMPEG2;}
 static __inline bool mpeg4_codec(int x)    {return x==CODEC_ID_MPEG4 || xvid_codec(x) || x==CODEC_ID_SKAL;}
 static __inline bool spdif_codec(int x)    {return x==CODEC_ID_SPDIF_AC3 || x==CODEC_ID_SPDIF_DTS;}
-static __inline bool bitstream_codec(int x){return x==CODEC_ID_BITSTREAM_TRUEHD || x==CODEC_ID_BITSTREAM_DTSHD || x==CODEC_ID_SPDIF_EAC3;}
+static __inline bool bitstream_codec(int x){return x==CODEC_ID_BITSTREAM_TRUEHD || x==CODEC_ID_BITSTREAM_DTSHD || x==CODEC_ID_BITSTREAM_EAC3;}
 static __inline bool huffyuv_codec(int x)  {return x==CODEC_ID_HUFFYUV || x==CODEC_ID_FFVHUFF;}
 static __inline bool x264_codec(int x)     {return x==CODEC_ID_X264 || x==CODEC_ID_X264_LOSSLESS;}
 static __inline bool lossless_codec(int x) {return huffyuv_codec(x) || x==CODEC_ID_LJPEG || x==CODEC_ID_FFV1 || x==CODEC_ID_DVVIDEO || x==CODEC_ID_X264_LOSSLESS;}

@@ -104,35 +104,73 @@ static const uint8_t thd_chancount[13] = {
 
 static int truehd_channels(int chanmap);
 
+struct TframeData
+{
+public:
+ uint32_t frame_size;
+ uint32_t space_size;
+
+ TframeData(uint32_t Iframe_size)
+ { 
+  frame_size=Iframe_size;
+  space_size=0;
+ }
+};
+
+struct TaudioParserData
+{
+public:
+ int channels;
+ uint32_t sample_rate;
+ uint32_t bit_rate;
+ uint32_t sample_blocks;
+ uint32_t ratebits;
+ uint32_t lastFrameTime;
+ bool isFirst;
+ DWORD wFormatTag;
+ int sample_format;
+ std::vector<TframeData> frames;
+ int nbFormatChanges;
+ int alternateSampleFormat;
+ void reset()
+ {
+  wFormatTag=0;sample_rate=0;bit_rate=0;sample_format=0;sample_blocks=0;lastFrameTime=0;isFirst=true;
+  nbFormatChanges=0;frames.clear();alternateSampleFormat=-1;
+ }
+ TaudioParserData()
+ {
+  reset();
+ }
+};
+
 class TaudioParser
 {
 private:
  TbyteBuffer backupbuf;
- int skipBytes;int includeBytes;bool hasMLPFrames;
+ int skipBytes;int includeBytes;
+ bool hasMLPFrames;
  bool useAC3CoreOnly;
  bool useAC3Passthrough;
  bool useDTSPassthrough;
  bool useTrueHDPassthrough;
  bool useDTSHDPassthrough;
  bool useEAC3Passthrough;
+ bool firstFrame;
  StreamFormat streamformat;
  TglobalSettingsDecAudio *globalSettings;
- int nbFormatChanges;
  CodecID codecId;
  bool searchSync;
-protected:
+ protected:
  comptrQ<IffdshowBase> deci;
  comptrQ<IffdshowDecAudio> deciA;
  IdecAudioSink *sinkA;
+ TaudioParserData audioParserData;
  virtual HRESULT parseDTS(unsigned char *src, int size, TbyteBuffer *newsrcBuffer);
  virtual HRESULT parseAC3(unsigned char *src, int size, TbyteBuffer *newsrcBuffer);
+ virtual void initConfig(void);
  //virtual void printbitssimple(uint32_t n); //DEBUG function 
+ uint32_t frame_size;
 public:
-  int channels;
-  uint32_t sample_rate;
-  uint32_t bit_rate;
-  DWORD wFormatTag;
-  int sample_format;
  TaudioParser(IffdshowBase *Ideci,IdecAudioSink *Isink);
  virtual ~TaudioParser();
  virtual CodecID parseStream(unsigned char *src, int size, TbyteBuffer *newsrcBuffer);
@@ -140,6 +178,7 @@ public:
  virtual void NewSegment(void);
  virtual void init(void);
  virtual bool checkOutputFormat(CodecID codecId);
+ virtual TaudioParserData getParserData(void);
  };
 
 #endif

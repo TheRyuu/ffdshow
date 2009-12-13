@@ -23,6 +23,7 @@
 #include "TglobalSettings.h"
 #include "ffmpeg/libavcodec/avcodec.h"
 #include "TaudioCodecLibavcodec.h"
+#include "WinUser.h"
 
 TffdshowDecAudioInputPin::TffdshowDecAudioInputPin(const char_t* pObjectName, TffdshowDecAudio* pFilter, HRESULT* phr, LPWSTR pName, int Inumber)
  :TinputPin(pObjectName,pFilter,phr,pName),
@@ -153,26 +154,28 @@ STDMETHODIMP TffdshowDecAudioInputPin::Receive(IMediaSample* pIn)
   }
 
  if (SUCCEEDED(hr))
-  {
-   REFERENCE_TIME j=filter->m_rtStartDec-rtStart;
-   jitter=int(j);
-   if ((uint64_t)ff_abs(j) > 100 * (REF_SECOND_MULT / 1000) // +-100ms jitter is allowed for now
-       && codecId != CODEC_ID_FLAC
-       && codecId != CODEC_ID_TTA
-       && codecId != CODEC_ID_WAVPACK)
-    {
-     DPRINTF(_l("jitter correction"));
-     buf.clear();
-     newSrcBuffer.clear();
-     filter->m_rtStartDec=filter->m_rtStartProc=rtStart;
-     if (audioParser) audioParser->NewSegment();
-    }
-  }
+ {
+  REFERENCE_TIME j=filter->m_rtStartDec-rtStart;
+  jitter=int(j);
+  if ((uint64_t)ff_abs(j) > 100 * (REF_SECOND_MULT / 1000) // +-100ms jitter is allowed for now
+      && codecId != CODEC_ID_FLAC
+      && codecId != CODEC_ID_TTA
+      && codecId != CODEC_ID_WAVPACK
+      && !bitstream_codec(codecId))
+   {
+    DPRINTF(_l("jitter correction"));
+    buf.clear();
+    newSrcBuffer.clear();
+    filter->m_rtStartDec=filter->m_rtStartProc=rtStart;
+    if (audioParser) audioParser->NewSegment();
+   }
+ }
 
  buf.append(src,srclen);
  buf.reserve(buf.size()+32);
 
  CodecID newCodecId=codecId;
+ TaudioParserData audioParserData;
  // Before sending data to the decoder, we parse it
  switch(codecId)
  {
@@ -200,57 +203,38 @@ STDMETHODIMP TffdshowDecAudioInputPin::Receive(IMediaSample* pIn)
         newSrcBuffer.clear();
         break;
     }
+    
+    // Get updated data from the parser
+    audioParserData = audioParser->getParserData();
+
 
     // Clear input buffer (if 2 source buffers are coexisting, sound will be garbled)
     buf.clear();
     if (codecId != newCodecId)
     {
-        DPRINTF(_l("TffdshowDecAudioInputPin : switching codec from %d to %d"), codecId, newCodecId);
-        codecId=newCodecId;
-        TsampleFormat fmt=TsampleFormat(TsampleFormat::SF_PCM16,
-        audioParser->sample_rate,audioParser->channels);
-        CMediaType mt=fmt.toCMediaType();
-        if (audioParser->channels != 0)
-            filter->insf.setChannels(audioParser->channels);
-        if (audioParser->sample_rate != 0)
-            filter->insf.freq=audioParser->sample_rate;
-        if (audioParser->sample_format != 0)
-            filter->insf.sf=audioParser->sample_format;
+     DPRINTF(_l("TffdshowDecAudioInputPin : switching codec from %s to %s"), getCodecName(codecId), getCodecName(newCodecId));
+     codecId=newCodecId;    
 
-        ((WAVEFORMATEX*)mt.Format())->wFormatTag=(WORD)audioParser->wFormatTag;
-        
-        // Check the output connection if the sample format has changed
-        if ((is_spdif_codec() || bitstream_codec(codecId)) && filter->m_pOutput != NULL)
-        {
-         filter->insf.sf=TsampleFormat::getSampleFormat(codecId);
+     // Update input sample format from (corrected or updated) parser data
+     if (audioParserData.channels != 0)
+         filter->insf.setChannels(audioParserData.channels);
+     if (audioParserData.sample_rate != 0)
+         filter->insf.freq=audioParserData.sample_rate;
+     if (audioParserData.sample_format != 0)
+         filter->insf.sf=audioParserData.sample_format;
+     filter->insf.alternateSF=audioParserData.alternateSampleFormat;
 
-         CMediaType outmt;
-         if (is_spdif_codec())
-          outmt=TsampleFormat::createMediaTypeSPDIF(audio->getInputSF().freq);
-         else
-          outmt=filter->insf.toCMediaType();
+     // Sample format from audio parser data
+     TsampleFormat fmt=TsampleFormat(
+      (audioParserData.sample_format != 0) ? audioParserData.sample_format : TsampleFormat::SF_PCM16,
+       audioParserData.sample_rate,audioParserData.channels);
 
-         filter->m_pOutput->SetMediaType(&outmt);
-         IPin *outConnectedPin=NULL;
-         filter->m_pOutput->ConnectedTo(&outConnectedPin);
-         if (outConnectedPin!=NULL)
-         {
-          hr=outConnectedPin->QueryAccept(&outmt);
-          
-          // The audio renderer does not accept this bitstream format
-          if (hr!=S_OK)
-           DPRINTF(_l("TffdshowDecAudioInputPin::Receive : the output sample format %s is not accepted by the renderer"),TsampleFormat::descriptionPCM(filter->insf.sf));
-          else
-           DPRINTF(_l("TffdshowDecAudioInputPin::Receive : the output sample format %s is accepted by the renderer"),TsampleFormat::descriptionPCM(filter->insf.sf));
-          outConnectedPin->Release();
-         }
-        }
-
-        if (audio) {delete audio;codec=audio=NULL;}
-            codec=audio=TaudioCodec::initSource(filter,this,codecId,filter->insf,mt);
-        if (!audio) return false;
-         filter->insf=audio->getInputSF();
-        jitter=0;
+     // Reinitialize the audio codec according to the new codecId
+     DPRINTF(_l("TffdshowDecAudioInputPin::Receive : Initialize audio codec %s"),getCodecName(codecId));
+     if (audio) {delete audio;codec=audio=NULL;}
+     codec=audio=TaudioCodec::initSource(filter,this,codecId,filter->insf,filter->insf.toCMediaType());
+     if (!audio) return false;
+     jitter=0;
     }
 
     // Update libavcodec context with correct channels and bitrate read from parser
@@ -259,21 +243,21 @@ STDMETHODIMP TffdshowDecAudioInputPin::Receive(IMediaSample* pIn)
         TaudioCodecLibavcodec *audioCodecLibavcodec=(TaudioCodecLibavcodec*)audio;
         if (audioCodecLibavcodec)
         {
-            if (audioParser->channels != 0)
-                audioCodecLibavcodec->avctx->channels=audioParser->channels;
-            if (audioParser->bit_rate != 0)
-                audioCodecLibavcodec->avctx->bit_rate=audioParser->bit_rate;
-            if (audioParser->sample_rate != 0)
-                audioCodecLibavcodec->avctx->sample_rate=audioParser->sample_rate;
+            if (audioParserData.channels != 0)
+                audioCodecLibavcodec->avctx->channels=audioParserData.channels;
+            if (audioParserData.bit_rate != 0)
+                audioCodecLibavcodec->avctx->bit_rate=audioParserData.bit_rate;
+            if (audioParserData.sample_rate != 0)
+                audioCodecLibavcodec->avctx->sample_rate=audioParserData.sample_rate;
         }
     }
 
-    if (audioParser->channels != 0)
-        filter->insf.setChannels(audioParser->channels);
-    if (audioParser->sample_rate != 0)
-        filter->insf.freq=audioParser->sample_rate;
-    if (audioParser->sample_format != 0)
-        filter->insf.sf=audioParser->sample_format;
+    if (audioParserData.channels != 0)
+        filter->insf.setChannels(audioParserData.channels);
+    if (audioParserData.sample_rate != 0)
+        filter->insf.freq=audioParserData.sample_rate;
+    if (audioParserData.sample_format != 0)
+        filter->insf.sf=audioParserData.sample_format;
 
     newSrcBuffer.reserve(newSrcBuffer.size()+32);
     return audio->decode(newSrcBuffer);
@@ -344,21 +328,36 @@ int TffdshowDecAudioInputPin::getInputBitrate(void) const
 
 STDMETHODIMP_(bool) TffdshowDecAudioInputPin::getsf(TsampleFormat &outsf)
 {
-    if (!audio) {
-        outsf=CurrentMediaType();
-    } else {
-        if (spdif_codec(audio->codecId)) {
-            outsf=TsampleFormat::createMediaTypeSPDIF(audio->getInputSF().freq);
-            return true;
-        } else if (bitstream_codec(audio->codecId)) {
-            outsf=audio->getInputSF();
-            outsf.sf=TsampleFormat::getSampleFormat(codecId);
-            return true;
-        } else {
-            outsf=audio->getInputSF();
-        }
-    }
-    return false;
+ if (!audio) 
+ {
+  outsf=CurrentMediaType();
+  DPRINTF(_l("TffdshowDecAudioInputPin::getsf audio codec not initialized yet"));
+  if (spdif_codec(codecId)) {
+   outsf=TsampleFormat::createMediaTypeSPDIF(outsf.freq);
+   outsf.alternateSF=filter->insf.alternateSF;
+   return true;
+  } else if (bitstream_codec(audio->codecId)) {
+   outsf.sf=TsampleFormat::getSampleFormat(codecId);
+   outsf.alternateSF=filter->insf.alternateSF;
+   return true;
+  }
+ } 
+ else 
+ {
+  if (spdif_codec(audio->codecId)) { // Special media type for SPDIF (AC3/DTS)
+   outsf=TsampleFormat::createMediaTypeSPDIF(audio->getInputSF().freq);
+   outsf.alternateSF=filter->insf.alternateSF;
+   return true;
+  } else if (bitstream_codec(audio->codecId)) {
+   outsf=audio->getInputSF();
+   outsf.sf=TsampleFormat::getSampleFormat(codecId);
+   outsf.alternateSF=filter->insf.alternateSF;
+   return true;
+  } else {
+   outsf=audio->getInputSF();
+  }
+ }
+ return false;
 }
 
 int TffdshowDecAudioInputPin::getJitter(void) const

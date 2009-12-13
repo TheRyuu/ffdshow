@@ -6,6 +6,22 @@
 struct VORBISFORMAT;
 struct VORBISFORMAT2;
 struct VORBISFORMATILL;
+
+
+struct TalternateSampleFormat
+{
+ int alternateFormatId; // 0 : none, 1 : standard, 2 : xonar, 3 : azuentech
+ GUID originalSubType; 
+ GUID mediaSubtype;
+ WORD wFormatTag;
+ GUID wSubFormat;
+ unsigned int nChannels;
+ WORD wBitsPerSample;
+ DWORD nSamplesPerSec;
+ DWORD dwChannelMask;
+ bool isExtensible;
+};
+
 struct TsampleFormat
 {
 protected:
@@ -21,7 +37,8 @@ public:
   dolby(DOLBY_NO),
   freq(0),
   sf(SF_NULL),
-  pcm_be(false)
+  pcm_be(false),
+  alternateSF(-1)
   {
   }
  TsampleFormat(const WAVEFORMATEX &wfex,bool wfextcheck=true,const GUID *subtype=NULL);
@@ -32,6 +49,7 @@ public:
  TsampleFormat(const AM_MEDIA_TYPE &mt);
  TsampleFormat(int Isf,int Ifreq,int Inumchannels,int Ichannelmask=0):sf(Isf),freq(Ifreq)
   {
+   alternateSF=-1;
    setChannels(Inumchannels,Ichannelmask);
   }
  void reset(void)
@@ -41,11 +59,20 @@ public:
    freq=0;
    sf=0;
    dolby=DOLBY_NO;
+   alternateSF=-1;
   }
  CMediaType toCMediaType(bool alwaysextensible=true) const;
+ CMediaType toCMediaTypeHD(bool alwaysextensible=true) const;
  static CMediaType createMediaTypeSPDIF(unsigned int frequency);
+ WAVEFORMATEX toWAVEFORMATEX(void) const;
  WAVEFORMATEXTENSIBLE toWAVEFORMATEXTENSIBLE(bool alwaysextensible=true) const;
+ WAVEFORMATEXTENSIBLE_IEC61937 toWAVEFORMATEXTENSIBLE_IEC61937(bool alwaysextensible=true) const;
+ void fillCommonWAVEFORMATEX(WAVEFORMATEX *pWfe, WAVEFORMATEXTENSIBLE *pWfex, bool alwaysextensible=true) const;
  static int getSampleFormat(CodecID codecId);
+ static void DPRINTMediaTypeInfo(CMediaType mt);
+ static void updateAlternateMediaType(CMediaType &mt, int newSF);
+ static const char_t *getGuidName(GUID guid);
+ static const TalternateSampleFormat alternateSampleFormats[];
 
  enum
   {
@@ -85,6 +112,7 @@ public:
  unsigned int freq;
  unsigned int nchannels;
  unsigned int channelmask;
+ int alternateSF;
  int speakers[8];
  int dolby;
  bool pcm_be;

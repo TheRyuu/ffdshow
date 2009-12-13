@@ -140,7 +140,7 @@ TffdshowDecAudio::TffdshowDecAudio(CLSID Iclsid,const char_t *className,const CL
  m_rtStartDec = m_rtStartProc = REFTIME_INVALID;
  currentOutsf.reset();
  actual.cbBuffer=0;
- audioDeviceChanged=false;
+
 }
 
 TffdshowDecAudioRaw::TffdshowDecAudioRaw(LPUNKNOWN punk,HRESULT *phr):TffdshowDecAudio(CLSID_FFDSHOWAUDIORAW,_l("TffdshowDecAudioRaw"),CLSID_TFFDSHOWAUDIORAWPAGE,IDS_FFDSHOWDECAUDIORAW,IDI_FFDSHOWAUDIO,punk,phr,IDFF_FILTERMODE_PLAYER|IDFF_FILTERMODE_AUDIORAW,defaultMerit,new TintStrColl)
@@ -301,22 +301,37 @@ CodecID TffdshowDecAudio::getCodecId(const CMediaType &mt)
  }
  if (codecId==CODEC_ID_MP3LIB && _strnicmp(_l("vix.exe"),getExeflnm(),8)==0)
   return CODEC_ID_NONE;
- // use SPDIF pass-through when AC3 / DTS pass-through are checked.
- if (   codecId == CODEC_ID_LIBA52
-     && inpin && inpin->audio
-     && (inpin->audio->codecId == CODEC_ID_LIBA52 || inpin->audio->codecId == CODEC_ID_SPDIF_AC3)
-     && presetSettings && presetSettings->output
-     && (presetSettings->output->passthroughAC3)
-    )
-  inpin->audio->codecId = codecId = CODEC_ID_SPDIF_AC3;
- if (   codecId == CODEC_ID_LIBDTS
-     && inpin && inpin->audio
-     && (inpin->audio->codecId == CODEC_ID_LIBDTS || inpin->audio->codecId == CODEC_ID_SPDIF_DTS)
-     && presetSettings && presetSettings->output
-     && (presetSettings->output->passthroughDTS)
-    )
-  inpin->audio->codecId = codecId = CODEC_ID_SPDIF_DTS;
- DPRINTF(_l("TffdshowDecAudio::getCodecId: codecId=%i"),codecId);
+ // use SPDIF/bistream pass-through where passthrough is checked for the corresponding format
+ // but don't publish the bistream/SPDIF format if passthroughPCMConnection is enabled 
+ // (some cards don't accept the official SPDIF/bitstream media types)
+ if (presetSettings && !presetSettings->output->passthroughPCMConnection && presetSettings->output)
+ {
+  DPRINTF(_l("TffdshowDecAudio::getCodecId Check if it is a SPDIF/bistream format"));
+  switch (codecId)
+  {
+  case CODEC_ID_LIBA52:case CODEC_ID_AC3: 
+   if (presetSettings->output->passthroughAC3)  codecId = CODEC_ID_SPDIF_AC3;
+   break;
+  case CODEC_ID_LIBDTS:case CODEC_ID_DTS:
+   if (presetSettings->output->passthroughDTS)  codecId = CODEC_ID_SPDIF_DTS;
+   break;
+  case CODEC_ID_TRUEHD:
+   if (presetSettings->output->passthroughTRUEHD) codecId = CODEC_ID_BITSTREAM_TRUEHD;
+   break;
+  case CODEC_ID_EAC3:
+   if (presetSettings->output->passthroughEAC3)  codecId = CODEC_ID_BITSTREAM_EAC3;
+   break;
+  /*case CODEC_ID_DTS_HD: //TODO
+   if (presetSettings->output->passthroughDTSHD)  codecId = CODEC_ID_BITSTREAM_DTSHD;
+   break;*/
+  default: break;
+  }
+  // Update codecID to bitstream format (but only if not already set as bitstream in the audio decoder)
+  if ((spdif_codec(codecId) || bitstream_codec(codecId)) && inpin && inpin->audio && !bitstream_codec(inpin->audio->codecId))
+   inpin->audio->codecId=codecId;
+ }
+
+ DPRINTF(_l("TffdshowDecAudio::getCodecId: codecId=%s (%i)"), getCodecName(codecId), codecId);
  return codecId;
 }
 
@@ -363,44 +378,39 @@ TsampleFormat TffdshowDecAudio::getOutsf(void)
  TsampleFormat outsf;
  if (inpin->getsf(outsf)) // SPDIF/HDMI
   return outsf;
- else
-  { 
+ else // PCM
+   return getOutsf(outsf);
+}
+
+TsampleFormat TffdshowDecAudio::getOutsf(TsampleFormat &outsf)
+{
+   DPRINTF(_l("TffdshowDecAudio::getOutsf PCM %lx"),outsf.sf);
    if (!audioFilters) audioFilters=new TaudioFiltersPlayer(this,this,presetSettings);
    audioFilters->getOutputFmt(outsf,presetSettings);
    return outsf;
-  }
 }
+
 
 HRESULT TffdshowDecAudio::getMediaType(CMediaType *mtOut)
 {
-  if (inpin->is_spdif_codec())
+ if (inpin->is_spdif_codec())
   *mtOut=TsampleFormat::createMediaTypeSPDIF(inpin->audio->getInputSF().freq);
  else
-  {
+ {
    if (!presetSettings) initPreset();
    TsampleFormat outsf=getOutsf();
+   DPRINTF(_l("TffdshowDecAudio::getMediaType sample format %d"),outsf.sf);
    if (outsf.sf==TsampleFormat::SF_AC3)
-    *mtOut=TsampleFormat::createMediaTypeSPDIF(outsf.freq);
+    *mtOut=TsampleFormat::createMediaTypeSPDIF(outsf.freq); // BUG : if 96khz set, and SPDIF is set in output section then inpin->audio->getInputSF().freq should be set instead
+   else if (getParam2(IDFF_aoutUseIEC61937))
+    *mtOut=outsf.toCMediaTypeHD(true);
    else
     *mtOut=outsf.toCMediaType(alwaysextensible);
    char_t descS[256];
    outsf.descriptionPCM(descS,256);
    DPRINTF(_l("TffdshowDecAudio::getMediaType:%s"),descS);
-  }
-
- /* Change spdif format to analog in order to be able to change of audio device
-  Explanation : output format = multichannel <=> analog directsound device  => Connection rejected, ffdshow audio will be unloaded
-  Workaround : output format = analog <=> analog directsound device => Connection accepted, but the device have to be replaced (done in StartStreaming method)
-  */
- if (!audioDeviceChanged
-     && presetSettings != NULL && presetSettings->output != NULL
-     && strcmp(presetSettings->output->multichannelDeviceId, L"")
-     && ((WAVEFORMATEX*)mtOut->pbFormat)->wFormatTag==WAVE_FORMAT_DOLBY_AC3_SPDIF)
- {
-     TsampleFormat outsf=getOutsf();
-     if (outsf.nchannels>5)
-        *mtOut=outsf.toCMediaType(alwaysextensible);
  }
+
  return S_OK;
 }
 
@@ -453,28 +463,59 @@ HRESULT TffdshowDecAudio::DecideBufferSize(IMemAllocator *pAllocator, ALLOCATOR_
 
 HRESULT TffdshowDecAudio::CheckTransform(const CMediaType *mtIn,const CMediaType *mtOut)
 {
- DPRINTF(_l("TffdshowDecAudio::CheckTransform"));
-#if 0
- return SUCCEEDED(CheckInputType(&inpin->CurrentMediaType())) && (mtOut->majortype==MEDIATYPE_Audio && (mtOut->subtype==MEDIASUBTYPE_PCM || mtOut->subtype==MEDIASUBTYPE_IEEE_FLOAT))?S_OK:VFW_E_TYPE_NOT_ACCEPTED;
+ DPRINTF(_l("TffdshowDecAudio::CheckTransform From :"));
+ TsampleFormat::DPRINTMediaTypeInfo(*mtIn);
+ DPRINTF(_l("TffdshowDecAudio::CheckTransform To :"));
+ TsampleFormat::DPRINTMediaTypeInfo(*mtOut);
+
+ HRESULT hr = S_OK;
+#if 0 
+ hr = SUCCEEDED(CheckInputType(&inpin->CurrentMediaType())) && (mtOut->majortype==MEDIATYPE_Audio && (mtOut->subtype==MEDIASUBTYPE_PCM || mtOut->subtype==MEDIASUBTYPE_IEEE_FLOAT))?S_OK:VFW_E_TYPE_NOT_ACCEPTED;
+ DPRINTF(_l("TffdshowDecAudio::CheckTransform result %lx"), hr);
+ return hr;
 #else //more strict check for output sample type
  if (!SUCCEEDED(CheckInputType(&inpin->CurrentMediaType()))) return VFW_E_TYPE_NOT_ACCEPTED;
  if (allowOutStream && *mtOut->Type()==MEDIATYPE_Stream)
-  {
+ {
    fileout=true;
    return S_OK;
-  }
+ }
  else
-  {
+ {
    fileout=false;
    if (!m_pInput->IsConnected() && m_pOutput->IsConnected())
     return S_OK;
    else
     {
+     CodecID codecId=CODEC_ID_NONE;
+     if (inpin != NULL)
+     {
+      this->inpin->getCodecId(&codecId);
+     }
+     if (spdif_codec(codecId) || bitstream_codec(codecId))
+     {
+      DPRINTF(_l("TffdshowDecAudio::CheckTransform on bitstream format, accept the transformation"));
+      return S_OK;
+     }
+
+
      CMediaType ffOut;
-     if (getMediaType(&ffOut)!=S_OK) return VFW_E_TYPE_NOT_ACCEPTED;
-     return ffOut==*mtOut?S_OK:VFW_E_TYPE_NOT_ACCEPTED;
+     if (getMediaType(&ffOut)!=S_OK)
+     {
+      DPRINTF(_l("TffdshowDecAudio::CheckTransform result VFW_E_TYPE_NOT_ACCEPTED"));
+      return VFW_E_TYPE_NOT_ACCEPTED;
+     }
+     DPRINTF(_l("TffdshowDecAudio::CheckTransform To generated by FFDShow :"));
+     TsampleFormat::DPRINTMediaTypeInfo(ffOut);
+     if (ffOut!=*mtOut)
+     {
+      DPRINTF(_l("TffdshowDecAudio::CheckTransform target format is different from FFDShow output format, refuse the transformation"));
+      return VFW_E_TYPE_NOT_ACCEPTED;
+     }
+     DPRINTF(_l("TffdshowDecAudio::CheckTransform result %lx"),hr);
+     return hr;
     }
-  }
+ }
 #endif
 }
 
@@ -492,163 +533,6 @@ HRESULT TffdshowDecAudio::CompleteConnect(PIN_DIRECTION direction,IPin *pReceive
 HRESULT TffdshowDecAudio::StartStreaming(void)
 {
  DPRINTF(_l("TffdshowDecAudio::StartStreaming"));
- // If a device is configured for multichannel streams then change it (if the transformed stream is multichannel)
-    if (!audioDeviceChanged && strcmp(presetSettings->output->multichannelDeviceId, L""))
-    {
-        TsampleFormat outsf=getOutsf();
-
-        if (outsf.nchannels>5) // Multichannel stream
-        {
-   DPRINTF(_l("TffdshowDecAudio::StartStreaming changing of audio renderer (%s) for multichannel support"),presetSettings->output->multichannelDeviceId);
-            /* Navigate through the graph until the direct sound device 
-            (the direct sound device may not be directly connected to ffdshow audio) */
-            IEnumFilters *filtersEnum = NULL;
-            graph->EnumFilters(&filtersEnum);
-            IBaseFilter *filterGraph;
-            HRESULT hr;
-            while (1)
-            {
-                unsigned long fetched;
-                filtersEnum->Next(1, &filterGraph, &fetched);
-                if (fetched < 1) break;
-                CLSID filterCLSID;
-                filterGraph->GetClassID(&filterCLSID);
-                if (IsEqualCLSID(filterCLSID,CLSID_DSoundRender)) // Direct sound device found
-                {
-                    // Find its input pin to disconnect it
-                    IPin *connectedPin = NULL;
-                    AM_MEDIA_TYPE connectedPinMediaType;
-                    IEnumPins *enumPins = NULL;
-                    filterGraph->EnumPins(&enumPins);
-                    IPin *filterPin;
-                    while (1)
-                    {
-                        enumPins->Next(1, &filterPin, &fetched);
-                        if (fetched < 1) break;
-                        
-                        PIN_DIRECTION pinDirection;
-                        filterPin->QueryDirection(&pinDirection);
-                        if (pinDirection == PINDIR_INPUT)
-                        {
-                            hr = filterPin->ConnectedTo(&connectedPin); //Retrieve pin connected to input pin
-                            if (FAILED(hr))
-                                break;
-                            filterPin->ConnectionMediaType(&connectedPinMediaType);
-                            filterGraph->Stop();
-                            hr = filterPin->Disconnect();
-                            break;
-                        }
-                        filterPin->Release();
-                    }
-                    enumPins->Release();
-
-                    if (connectedPin == NULL)
-                    {
-                        filterGraph->Release();
-      audioDeviceChanged=true;
-                        break;
-                    }
-
-                    // Add the multichannel device to the graph
-                    // Enumerate audio devices
-                    IMMDeviceEnumerator *deviceEnumerator = NULL;
-                    hr = CoCreateInstance(
-                      __uuidof(MMDeviceEnumerator), 
-                      NULL, 
-                      CLSCTX_INPROC_SERVER,
-                      __uuidof(IMMDeviceEnumerator), (LPVOID *)&deviceEnumerator);
-
-                    IMMDevice *newDevice = NULL;
-                    deviceEnumerator->GetDevice(presetSettings->output->multichannelDeviceId, &newDevice);
-                    DIRECTX_AUDIO_ACTIVATION_PARAMS  daap;
-                    daap.cbDirectXAudioActivationParams = sizeof(daap);
-                    static const GUID toto = {0xb13ff52e, 0xa5cf, 0x4fca, 0x9f, 0xc3, 0x42, 0x26, 0x5b, 0x0b, 0x14, 0xfb};
-
-                    daap.guidAudioSession = toto;
-                    daap.dwAudioStreamFlags = 0x00010000;//AUDCLNT_STREAMFLAGS_CROSSPROCESS;
-                    PROPVARIANT  var;
-                    PropVariantInit(&var);
-
-                    var.vt = VT_BLOB;
-                    var.blob.cbSize = sizeof(daap);
-                    var.blob.pBlobData = (BYTE*)&daap;
-                    IBaseFilter *audioRenderer = NULL;
-
-                    hr = newDevice->Activate(__uuidof(IBaseFilter),
-                                           CLSCTX_ALL, &var,
-                                           (void**)&audioRenderer);
-
-                    hr = graph->AddFilter(audioRenderer, L"New direct sound device");
-                    if (FAILED(hr))
-                    {
-                        graph->Reconnect(filterPin); // Reconnect automatically if replacement failed
-                        filterGraph->Run(0);
-                        filterPin->Release();
-      audioDeviceChanged=true;
-                        break;
-                    }
-     DPRINTF(_l("TffdshowDecAudio::StartStreaming new device added"));
-                    filterPin->Release();
-
-                    // Connect the input pin of the multichannel device to the disconnected output pin
-                    audioRenderer->EnumPins(&enumPins);
-                    while (1)
-                    {
-                        enumPins->Next(1, &filterPin, &fetched);
-                        if (fetched < 1) break;
-                        
-                        PIN_DIRECTION pinDirection;
-                        filterPin->QueryDirection(&pinDirection);
-                        if (pinDirection == PINDIR_INPUT)
-                        {
-       // Check that the chosen renderer accepts multichannel stream
-       TsampleFormat insf;
-       inpin->getsf(insf);
-       CMediaType mt=insf.toCMediaType();
-       hr=filterPin->QueryAccept(&mt);
-       if (FAILED(hr))
-       {
-        DPRINTF(_l("TffdshowDecAudio::StartStreaming the new device won't accept this multichannel stream. Aborting replacement"));
-        audioDeviceChanged=true;
-        break;
-       }
-
-                            hr = filterGraph->Release();
-                            PIN_INFO pinInfo;
-                            hr = connectedPin->QueryPinInfo(&pinInfo);
-                            hr = pinInfo.pFilter->Stop();
-                            hr = connectedPin->Disconnect();
-       hr = filterPin->Connect(connectedPin, &mt);
-                            hr = pinInfo.pFilter->Run(0);
-                            hr = audioRenderer->Run(0);
-                            if (FAILED(hr))
-                            {
-                                graph->Reconnect(filterPin); // Reconnect automatically if replacement failed
-        DPRINTF(_l("TffdshowDecAudio::StartStreaming Audio renderer replacement failed"));
-        audioDeviceChanged=true;
-                                filterGraph->Run(0);
-                            }
-                            if (pinInfo.pFilter != NULL)
-                            {
-                                pinInfo.pFilter->Release();
-                            }
-                            filterPin->Release();
-                            break;
-                        }
-                        filterPin->Release();
-                    }
-                    enumPins->Release();
-                    if (connectedPin != NULL)
-                        connectedPin->Release();
-                    break;
-                }
-                filterGraph->Release();
-            }
-            filtersEnum->Release();
-        }
-  DPRINTF(_l("TffdshowDecAudio::StartStreaming Audio renderer replaced successfully"));
-        audioDeviceChanged=true;
-    }
  firsttransform=true;
  ft1=ft2=0;
  return CTransformFilter::StartStreaming();
@@ -781,31 +665,69 @@ STDMETHODIMP TffdshowDecAudio::deliverProcessedSample(const void *buf,size_t num
  return m_pOutput->Deliver(pOut);
 }
 
-STDMETHODIMP TffdshowDecAudio::deliverSampleSPDIF2(void *buf,size_t size,int bit_rate,unsigned int sample_rate,BYTE type,int incRtDec,int frame_length)
+STDMETHODIMP TffdshowDecAudio::deliverSampleBistream(void *buf,size_t size,int bit_rate,unsigned int sample_rate,int incRtDec,int frame_length)
 {
- HRESULT hr=S_OK;;
- currentOutsf.sf=TsampleFormat::SF_AC3;
+ HRESULT hr=S_OK;
+ CMediaType mt;
+ TaudioParser *pAudioParser=NULL;
+ TaudioParserData audioParserData;
 
- CMediaType mt=TsampleFormat::createMediaTypeSPDIF(sample_rate);
+ CodecID codecId=CODEC_ID_NONE;
+ if (inpin != NULL)
+ {
+   inpin->getAudioParser(&pAudioParser);
+   this->inpin->getCodecId(&codecId);
+   if (pAudioParser != NULL) audioParserData=pAudioParser->getParserData();
+ }
+
+ if (bitstream_codec(codecId))
+ {
+  getMediaType(&mt);
+ }
+ else // SPDIF
+ {
+  currentOutsf.sf=TsampleFormat::SF_AC3;
+  mt=TsampleFormat::createMediaTypeSPDIF(sample_rate);
+ }
+
  WAVEFORMATEX *wfe=(WAVEFORMATEX*)mt.Format();
 
- size_t length;
+ size_t length=0;
+ size_t repetition_burst=0x800; // 2048 = AC3 
  if (!fileout)
+ {
+  if (codecId==CODEC_ID_BITSTREAM_TRUEHD) 
+   // Repetition rate of IEC frames is 15360 for TrueHD/MLP
+   repetition_burst=61440;// max length of MAT data: 61424 bytes (total=61432+8 header bytes)
+  else if (codecId==CODEC_ID_BITSTREAM_EAC3) // 6144 for DD Plus * 4 for IEC 60958 frames
+   repetition_burst=24576;
+  else if (codecId==CODEC_ID_BITSTREAM_DTSHD) //TODO : missing information for DTS-HD
+   repetition_burst=32768;
+  else 
   {
+   // AC3/DTS
+   repetition_burst=0x800; // 2048 = AC3 and DTS
+
    unsigned int size2;
    length=0;
-   while (length < odd2even(size) + sizeof(WORD) * 8)
-    length += 0x800; // 2048 = AC3 
+   if (codecId==CODEC_ID_SPDIF_AC3 || codecId==CODEC_ID_SPDIF_DTS) // Add 4 more words (8 bytes) for AC3/DTS (for backward compatibility)
+    while (length < odd2even(size) + sizeof(WORD) * 8)
+     length += repetition_burst;
+   else
+    while (length < odd2even(size)+ sizeof(WORD) * 4)
+     length += repetition_burst;
+  
    // bit_rate is not always correct. This is a bug of some where else. Because I can't fix it now, work around for it...
    if (bit_rate <= 1 && inpin->insample_rtStart != REFTIME_INVALID && inpin->insample_rtStop != REFTIME_INVALID)
     size2 = (unsigned int)(wfe->nBlockAlign * wfe->nSamplesPerSec * (inpin->insample_rtStop - inpin->insample_rtStart) / REF_SECOND_MULT);
    else
     size2 = (unsigned int)(int64_t(1) * wfe->nBlockAlign * wfe->nSamplesPerSec * size * 8 / bit_rate);
    while (length<size2)
-    length+=0x800;
+    length+=repetition_burst;
   }
- else
-  length=size;
+ }
+ if (length==0) length=repetition_burst;
+ 
 
  if (!fileout && FAILED(hr=ReconnectOutput(length/wfe->nBlockAlign,mt)))
   return hr;
@@ -815,38 +737,51 @@ STDMETHODIMP TffdshowDecAudio::deliverSampleSPDIF2(void *buf,size_t size,int bit
  if (FAILED(getDeliveryBuffer(&pOut,&pDataOut)))
   return E_FAIL;
 
- REFERENCE_TIME rtDur;
- if (bit_rate <= 1 && inpin->insample_rtStart != REFTIME_INVALID && inpin->insample_rtStop != REFTIME_INVALID)
+ REFERENCE_TIME rtDur,rtStart=m_rtStartProc,rtStop=REFTIME_INVALID;
+ if (bitstream_codec(codecId))
+ {
+  if (inpin->insample_rtStart != REFTIME_INVALID && inpin->insample_rtStop != REFTIME_INVALID)
   {
+   rtStart=inpin->insample_rtStart;
    rtDur = inpin->insample_rtStop - inpin->insample_rtStart;
   }
+  else
+   rtDur = REF_SECOND_MULT * size /wfe->nBlockAlign / wfe->nSamplesPerSec;
+  rtStop=rtStart+rtDur;
+ }
+ else if (bit_rate <= 1 && inpin->insample_rtStart != REFTIME_INVALID && inpin->insample_rtStop != REFTIME_INVALID)
+ {
+   rtDur = inpin->insample_rtStop - inpin->insample_rtStart;
+ }
  else
-  {
+ {
    if (frame_length) {
        size_t blocks = (size + frame_length - 1)/frame_length;
        rtDur = REF_SECOND_MULT*blocks*frame_length*8/bit_rate;
    } else {
        rtDur = REF_SECOND_MULT*size*8/bit_rate;
    }
-  }
- REFERENCE_TIME rtStart=m_rtStartProc,rtStop=m_rtStartProc+rtDur;
- //DPRINTF(_l("pin:%I64i startDec:%I64i"),rtStart,m_rtStartDec);
+ }
+ if (rtStop==REFTIME_INVALID)
+  rtStop=m_rtStartProc+rtDur;
+
+ //DPRINTF(_l("pin:%I64i startDec:%I64i duration:%I64i"),rtStart,m_rtStartDec,rtDur);
  m_rtStartProc+=rtDur;if (incRtDec) m_rtStartDec+=rtDur;
 
  if (rtStart<0)
   return S_OK;
 
  if (!fileout && hr==S_OK)
-  {
+ {
    m_pOutput->SetMediaType(&mt);
    pOut->SetMediaType(&mt);
-  }
+ }
 
  if (bit_rate <= 1 && inpin->insample_rtStart != REFTIME_INVALID && inpin->insample_rtStop != REFTIME_INVALID)
-  {
+ {
    rtStart = inpin->insample_rtStart;
    rtStop = inpin->insample_rtStop;
-  }
+ }
  pOut->SetTime(&rtStart,&rtStop);
  pOut->SetMediaTime(NULL,NULL);
 
@@ -857,28 +792,75 @@ STDMETHODIMP TffdshowDecAudio::deliverSampleSPDIF2(void *buf,size_t size,int bit
  pOut->SetActualDataLength((long)length);
 
  if (!fileout)
-  {
-   memset(pDataOut + 16 + size, 0, length -16 - size);
-   WORD *pDataOutW=(WORD*)pDataOut;
-   pDataOutW[0] = pDataOutW[1] = pDataOutW[2] = pDataOutW[3] = 0;
-   pDataOutW[4]=0xf872;
-   pDataOutW[5]=0x4e1f;
-   pDataOutW[6]=type;
-   pDataOutW[7]=WORD(size*8);
-   _swab((char*)buf,(char*)&pDataOutW[8],(int)(size & ~1));
-   if (size & 1) // _swab doesn't like odd number.
+ {
+    // IEC 61936 structure writing (HDMI bitstream, SPDIF)
+    DWORD type = 0x0001;
+    short subDataType = 0; // TODO : 0 for all these formats (but different for AAC and WMA Pro)
+    short errorFlag = 0;
+    short datatypeInfo = 0;
+    short bitstreamNumber = 0;
+    switch (codecId)
     {
-     pDataOut[16 + size] = ((BYTE*)buf)[size - 1];
-     pDataOut[15 + size] = 0;
+     case CODEC_ID_SPDIF_AC3:type=1;break;
+     case CODEC_ID_BITSTREAM_TRUEHD:type=22;break;
+     case CODEC_ID_BITSTREAM_EAC3:type=21;break;
+     case CODEC_ID_BITSTREAM_DTSHD:type=17;datatypeInfo=4;break; // = DTS Type IV : DTS-HD
+     case CODEC_ID_SPDIF_DTS:
+      if (pAudioParser == NULL || audioParserData.sample_blocks* 8 * 32==512) type=0x0b;
+      else if (audioParserData.sample_blocks* 8 * 32==1024) type=0x0c;
+      else type=0x0d;
+      break;
     }
-  }
+
+   DWORD Pc=type | (subDataType << 5) | (errorFlag << 7) | (datatypeInfo << 8) | (bitstreamNumber << 13);
+   
+   /*if (rtStart/REF_SECOND_MULT<2)
+   {
+    DPRINTF(_l("TffdshowDecAudio::deliverSampleBistream Delivering IEC sample format type %ld - sample size %ld - buffer length %ld"),Pc, size, length);
+    //TsampleFormat::DPRINTMediaTypeInfo(mt);
+   }*/
+
+   WORD *pDataOutW=(WORD*)pDataOut; // Header is filled with words instead of bytes
+
+   // Preamble : 16 bytes for AC3/DTS, 8 bytes for other formats
+   int index=0;
+   pDataOutW[0] = pDataOutW[1] = pDataOutW[2] = pDataOutW[3] = 0; // Stuffing at the beginning, not sure if this is useful
+   if (codecId==CODEC_ID_SPDIF_AC3 || codecId==CODEC_ID_SPDIF_DTS)
+    index=4; // First additional four words filled with 0 only for backward compatibility for AC3/DTS
+
+   // Fill after the input buffer with zeros if any extra bytes
+   if (length>8+index*2+size)
+    memset(pDataOut + 8 + index*2 + size, 0, length - 8 - index*2 - size); // Fill the output buffer with zeros
+
+   // Fill the 8 bytes (4 words) of IEC header
+   pDataOutW[index++]=0xf872;
+   pDataOutW[index++]=0x4e1f;
+   pDataOutW[index++]=Pc;
+   if (codecId==CODEC_ID_SPDIF_AC3 || codecId==CODEC_ID_SPDIF_DTS) 
+    pDataOutW[index++]=WORD(size*8); // size in bits for AC3/DTS
+   else
+    pDataOutW[index++]=WORD(size); // size in bytes for the others
+
+   // Apply fixed size for some formats
+   if (codecId==CODEC_ID_BITSTREAM_TRUEHD) pDataOutW[index-1]=WORD(61424);//61424 : repetition of MLP frames
+   else if (codecId==CODEC_ID_BITSTREAM_EAC3) pDataOutW[index-1]=WORD(24576);//24 576 : why ? this is the full size including IEC header
+
+   
+   // Data : swap bytes from first byte of data on size length (input buffer lentgh)
+   _swab((char*)buf,(char*)&pDataOutW[index],(int)(size & ~1));
+   if (size & 1) // _swab doesn't like odd number.
+   {
+    pDataOut[index*2 + size] = ((BYTE*)buf)[size - 1];
+    pDataOut[index*2 - 1 + size] = 0;
+   }
+ }
  else
-  {
+ {
    memcpy(pDataOut,buf,length);
    ft2+=length;
    pOut->SetTime(&ft1,&ft2);
    ft1+=length;
-  }
+ }
 
  HRESULT res=m_pOutput->Deliver(pOut);
  pOut=NULL;
@@ -956,11 +938,19 @@ STDMETHODIMP_(const char_t*) TffdshowDecAudio::getDecoderName(void)
 STDMETHODIMP TffdshowDecAudio::getOutCodecString(char_t *buf,size_t buflen)
 {
  if (!buf) return E_POINTER;
- if ((inpin && inpin->is_spdif_codec()) || currentOutsf.sf==TsampleFormat::SF_AC3)
-  {
-   tsnprintf_s(buf, buflen, _TRUNCATE, _l("S/PDIF"));
-   buf[buflen-1]='\0';
-  }
+ CodecID codecId=CODEC_ID_NONE;
+ if (inpin) inpin->getCodecId(&codecId);
+
+ if (bitstream_codec(codecId))
+ {
+  tsnprintf_s(buf, buflen, _TRUNCATE, _l("HDMI bitstream (%ld)"),codecId);
+  buf[buflen-1]='\0';
+ }
+ else if ((inpin && inpin->is_spdif_codec()) || currentOutsf.sf==TsampleFormat::SF_AC3)
+ {
+  tsnprintf_s(buf, buflen, _TRUNCATE, _l("S/PDIF (%ld)"),codecId);
+  buf[buflen-1]='\0';
+ }
  else
   currentOutsf.descriptionPCM(buf,buflen);
  return S_OK;
@@ -980,7 +970,9 @@ HRESULT TffdshowDecAudio::ReconnectOutput(size_t numsamples, CMediaType& mt)
  WAVEFORMATEX *wfe=(WAVEFORMATEX*)mt.Format();
  long cbBuffer=long(numsamples*wfe->nBlockAlign);
  if (mt!=m_pOutput->CurrentMediaType() || cbBuffer>actual.cbBuffer)
-  {
+ {
+   DPRINTF(_l("TffdshowDecAudio::ReconnectOutput because output media type changed"));
+   TsampleFormat::DPRINTMediaTypeInfo(mt);
    if (cbBuffer>actual.cbBuffer)
     {
      comptr<IMemInputPin> pPin;
@@ -1013,7 +1005,7 @@ HRESULT TffdshowDecAudio::ReconnectOutput(size_t numsamples, CMediaType& mt)
       }
     }
    return S_OK;
-  }
+ }
  return S_FALSE;
 }
 

@@ -16,6 +16,7 @@ private:
  int jitter;
  float prevpostgain;
  TaudioParser *audioParser;
+ CMediaType outmt;
 protected:
  virtual bool init(const CMediaType &mt);
  virtual void done(void);

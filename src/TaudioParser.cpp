@@ -6,24 +6,27 @@
 #include "dsutil.h"
 #include "ffdshow_mediaguids.h"
 #include "Tpresets.h"
+#include "MMDeviceAPI.h"
 
 TaudioParser::TaudioParser(IffdshowBase *Ideci,IdecAudioSink *Isink):
  deci(Ideci),
  deciA(Ideci),
- sinkA(Isink)
+ sinkA(Isink),
+ firstFrame(true)
 {
-    deci->getGlobalSettings((TglobalSettingsBase **)&globalSettings);
-    init();
+  includeBytes=0;skipBytes=0;frame_size=0;
+  deci->getGlobalSettings((TglobalSettingsBase **)&globalSettings);
+  init();
 }
 
 void TaudioParser::init(void)
 {
-    streamformat=UNDEFINED;channels=0;bit_rate=0;sample_rate=0;nbFormatChanges=0;
+    streamformat=UNDEFINED;
     codecId=CODEC_ID_NONE;
-    wFormatTag=0;sample_format=0;
-    includeBytes=0;skipBytes=0;
     hasMLPFrames=false;
     searchSync=true;
+    initConfig();
+    backupbuf.reserve(61440);
 }
 
 TaudioParser::~TaudioParser()
@@ -47,6 +50,12 @@ void TaudioParser::printbitssimple(uint32_t n) {
         DPRINTF(string.c_str());
     }
 #endif
+
+
+TaudioParserData TaudioParser::getParserData(void)
+{
+ return audioParserData;
+}
 
 /* This method is used by other decoders to parse AC3/DTS streams
  Returns the stream format and parsed buffer
@@ -85,23 +94,24 @@ CodecID TaudioParser::parseStream(unsigned char *src, int size,
             fwrite(src,sizeof(uint8_t),size,dumpfile);
     }
 #endif
+    audioParserData.frames.clear();
 
     if (codecId==CODEC_ID_NONE)
     sinkA->getCodecId(&codecId);
 
  // For DTS streams, DTS-HD blocks must be removed, libavcodec does not know how to handle them yet
- if ((codecId==CODEC_ID_DTS || codecId==CODEC_ID_LIBDTS || codecId == CODEC_ID_SPDIF_DTS 
+ if ((codecId==CODEC_ID_DTS || codecId==CODEC_ID_LIBDTS || codecId == CODEC_ID_SPDIF_DTS || codecId==CODEC_ID_BITSTREAM_DTSHD
      || codecId==CODEC_ID_PCM) && size >0)
  {
     parseDTS(src, size, newsrcBuffer);
-    return getCodecIdFromStream();
+    codecId=getCodecIdFromStream();
  }
  else if ((codecId==CODEC_ID_AC3 || codecId==CODEC_ID_EAC3 || codecId==CODEC_ID_MLP  || codecId==CODEC_ID_TRUEHD 
-     || codecId == CODEC_ID_LIBA52 || codecId==CODEC_ID_SPDIF_AC3)
+  || codecId == CODEC_ID_LIBA52 || codecId==CODEC_ID_SPDIF_AC3 || codecId==CODEC_ID_BITSTREAM_EAC3 || codecId==CODEC_ID_BITSTREAM_TRUEHD)
      && size >0)
  {
     parseAC3(src, size, newsrcBuffer);
-    return getCodecIdFromStream();
+    codecId=getCodecIdFromStream();
  }
  return codecId;
 }
@@ -109,37 +119,114 @@ CodecID TaudioParser::parseStream(unsigned char *src, int size,
 // This method is called for bitstream formats to check if the output renderer is compatible
 bool TaudioParser::checkOutputFormat(CodecID codecId)
 {
- TsampleFormat fmt=TsampleFormat(TsampleFormat::SF_PCM16,
-        sample_rate,channels);
+ TsampleFormat fmt=TsampleFormat((audioParserData.sample_format != 0) ? audioParserData.sample_format : TsampleFormat::SF_PCM16,
+        audioParserData.sample_rate,audioParserData.channels);
  fmt.sf=TsampleFormat::getSampleFormat(codecId);
+ fmt.alternateSF=-1;audioParserData.alternateSampleFormat=-1;
 
- if (spdif_codec(codecId))
- {
-  fmt=TsampleFormat::createMediaTypeSPDIF(sample_rate);
- }
-
- CMediaType mt=fmt.toCMediaType();
+ DPRINTF(_l("TaudioParser::checkOutputFormat for codec %s with sample format %ld"), getCodecName(codecId),fmt.sf);
 
  IPin *outConnectedPin=NULL;
  CTransformOutputPin *m_pOutput=deciA->getOutputPin();
  if (m_pOutput == NULL) return true;
  m_pOutput->ConnectedTo(&outConnectedPin);
- if (outConnectedPin!=NULL)
+ if (outConnectedPin==NULL) return false;
+ 
+ CMediaType mt;
+ if (spdif_codec(codecId))
  {
-  HRESULT hr=outConnectedPin->QueryAccept(&mt);
-  outConnectedPin->Release();
-  if (hr!=S_OK)
-  {
-   DPRINTF(_l("TaudioParser::checkOutputFormat : the output sample format (compressed stream to bitstream) %s is not accepted by the renderer for codec %s"),TsampleFormat::descriptionPCM(fmt.sf), getCodecName(codecId));
-   return false;
-  }
-  DPRINTF(_l("TaudioParser::checkOutputFormat : the output sample format (compressed stream to bitstream) %s is accepted by the renderer for codec %s"),TsampleFormat::descriptionPCM(fmt.sf), getCodecName(codecId));
-  return true;
+  mt=TsampleFormat::createMediaTypeSPDIF(audioParserData.sample_rate);
  }
- return false;
+ else
+ {
+  /* If PCM (uncompressed) format in output, then process it through the FFDShow filters :
+   because the filters will eventually modify it (mixer and resample for example) */
+  if (!spdif_codec(codecId) && ! bitstream_codec(codecId))
+  {
+   deciA->getOutsf(fmt);
+  }
+
+  if (deci->getParam2(IDFF_aoutUseIEC61937))
+   mt=fmt.toCMediaTypeHD();
+  else
+   mt=fmt.toCMediaType();
+ }
+
+ TsampleFormat::DPRINTMediaTypeInfo(mt);
+
+ HRESULT hr=S_OK;
+ int deviceId=deci->getParam2(IDFF_aoutpassthroughDeviceId);
+ if (deviceId<=1 || !bitstream_codec(codecId)) // Use the standard media types if set to default or standard
+ {
+  hr=outConnectedPin->QueryAccept(&mt);
+  if (hr==S_OK) 
+  {
+   FreeMediaType(mt);
+   return true;
+  }
+ }
+
+ if (mt.formattype!=FORMAT_WaveFormatEx || mt.pbFormat == NULL)
+ {
+  FreeMediaType(mt);
+  return false;
+ }
+ WAVEFORMATEX *wf=(WAVEFORMATEX*)mt.pbFormat;
+ if (wf->wFormatTag!=WAVE_FORMAT_EXTENSIBLE)
+ {
+  FreeMediaType(mt);
+  return false;
+ }
+
+ WAVEFORMATEXTENSIBLE *wfex=(WAVEFORMATEXTENSIBLE*)mt.pbFormat;
+ if (wfex==NULL) return false;
+
+ hr=VFW_E_NO_ACCEPTABLE_TYPES;
+
+ GUID originalSubtype=wfex->SubFormat;
+ for (int i=0;TsampleFormat::alternateSampleFormats[i].originalSubType!=GUID_NULL;i++)
+ {
+  if (TsampleFormat::alternateSampleFormats[i].originalSubType!=originalSubtype) continue;
+  // deviceId : 0 (try all media types), 1 (standard media types), 2 (xonar media types)
+  if (deviceId!= 0 && deviceId!=TsampleFormat::alternateSampleFormats[i].alternateFormatId) continue;
+  FreeMediaType(mt);
+  fmt.alternateSF=i;
+  if (deci->getParam2(IDFF_aoutUseIEC61937))
+   mt=fmt.toCMediaTypeHD();
+  else
+   mt=fmt.toCMediaType();
+  if (deviceId==0)
+  {
+   DPRINTF(_l("TaudioParser::getSupportedFormat format not supported, trying another one"));
+   hr=outConnectedPin->QueryAccept(&mt);
+  }
+  else
+  {
+   DPRINTF(_l("TaudioParser::getSupportedFormat We are in compatibility mode. The following format will be used without checking if it is supported"));
+   hr=S_OK;
+  }
+  
+  TsampleFormat::DPRINTMediaTypeInfo(mt);
+  
+  if (hr==S_OK)
+  {
+   // Store the new format for filters negociation
+   audioParserData.alternateSampleFormat=i;
+   break;
+  }		
+ }
+ FreeMediaType(mt);
+
+ if (hr!=S_OK)
+ {
+  DPRINTF(_l("TaudioParser::getSupportedFormat no compatible format supported"));
+  return false;
+ }
+ DPRINTF(_l("TaudioParser::getSupportedFormat this format is supported"));
+ return true;
 }
 
-CodecID TaudioParser::getCodecIdFromStream()
+void TaudioParser::initConfig(void)
 {
  // Apply Dobly True-HD passthrough if decoding if checkbox is selected
  useTrueHDPassthrough = deci->getParam2(IDFF_aoutpassthroughTRUEHD) == 1;
@@ -160,128 +247,138 @@ CodecID TaudioParser::getCodecIdFromStream()
  
  CodecID codecIDDTS = globalSettings->getCodecId(WAVE_FORMAT_DTS_W,NULL);
  useDTSPassthrough = (codecIDDTS != CODEC_ID_NONE) && (deci->getParam2(IDFF_aoutpassthroughDTS) == 1);
+}
 
-    // Don't allow more than 1 format change
- if (nbFormatChanges==2)
+CodecID TaudioParser::getCodecIdFromStream()
+{
+ initConfig();
+
+ // Don't allow more than 1 format change
+ if (audioParserData.nbFormatChanges>=4)
     return codecId;
 
- wFormatTag=0;
+ audioParserData.wFormatTag=0;
 
 switch (streamformat)
- {
-case REGULAR_AC3:
- if (useAC3Passthrough)
+{
+ case REGULAR_AC3:
+  if (useAC3Passthrough)
   {
-    if (codecId!=CODEC_ID_SPDIF_AC3) nbFormatChanges++;
-        codecId=CODEC_ID_SPDIF_AC3;
+    if (codecId==CODEC_ID_SPDIF_AC3) return codecId;
+    audioParserData.nbFormatChanges++;
+    codecId=CODEC_ID_SPDIF_AC3;
     if (checkOutputFormat(codecId))
-        return codecId;
+     return codecId;
     else
      deci->putParam(IDFF_aoutpassthroughAC3,0);
   }
-  wFormatTag=WAVE_FORMAT_AC3_W;
- break;
- case EAC3:
-  if (useEAC3Passthrough)
+  DPRINTF(_l("TaudioParser::getCodecIdFromStream change to AC3"));
+   audioParserData.wFormatTag=WAVE_FORMAT_AC3_W;
+  break;
+  case EAC3:
+   if (useEAC3Passthrough)
    {
-     if (codecId!=CODEC_ID_SPDIF_EAC3) nbFormatChanges++;
-         codecId=CODEC_ID_SPDIF_EAC3;
-     if (checkOutputFormat(codecId))
-         return codecId;
+     if (codecId==CODEC_ID_BITSTREAM_EAC3) return codecId;
+     audioParserData.nbFormatChanges++;
+     codecId=CODEC_ID_BITSTREAM_EAC3;
+     if (checkOutputFormat(codecId)) return codecId;
    }
-  wFormatTag=WAVE_FORMAT_EAC3;
- // TODO : if EAC3 decoder disabled, find a compatible EAC3 decoder and pull FFDShow Audio out of the graph
- // Problem : no EAC3 mediaguid exist
- break;
- case MLP:
-  if (useTrueHDPassthrough)
-   {
-     if (codecId!=CODEC_ID_BITSTREAM_TRUEHD) nbFormatChanges++;
-         codecId=CODEC_ID_BITSTREAM_TRUEHD;
-     if (checkOutputFormat(codecId))
-         return codecId;
-   }
-  wFormatTag=WAVE_FORMAT_MLP;
- break;
- case TRUEHD:
+   audioParserData.wFormatTag=WAVE_FORMAT_EAC3;
+  // TODO : if EAC3 decoder disabled, find a compatible EAC3 decoder and pull FFDShow Audio out of the graph
+  // Problem : no EAC3 mediaguid exist
+  break;
+  case MLP:
    if (useTrueHDPassthrough)
+   {
+      if (codecId==CODEC_ID_BITSTREAM_TRUEHD) return codecId;
+      audioParserData.nbFormatChanges++;
+      codecId=CODEC_ID_BITSTREAM_TRUEHD;
+      if (checkOutputFormat(codecId)) return codecId;
+   }
+   audioParserData.wFormatTag=WAVE_FORMAT_MLP;
+  break;
+  case TRUEHD:
+    if (useTrueHDPassthrough)
     {
-      if (codecId!=CODEC_ID_BITSTREAM_TRUEHD) nbFormatChanges++;     
-          codecId=CODEC_ID_BITSTREAM_TRUEHD;
-      if (checkOutputFormat(codecId))
-          return codecId;
+       if (codecId==CODEC_ID_BITSTREAM_TRUEHD) return codecId;
+       audioParserData.nbFormatChanges++;     
+       codecId=CODEC_ID_BITSTREAM_TRUEHD;
+       if (checkOutputFormat(codecId)) return codecId;
     }
-  wFormatTag=WAVE_FORMAT_TRUEHD;
- // TODO : if MLP decoder disabled, find a compatible MLP decoder and pull FFDShow Audio out of the graph
- // Problem : no MLP mediaguid exist
- break;
- case AC3_TRUEHD:
-  if (useTrueHDPassthrough)
-  {
-    if (codecId!=CODEC_ID_BITSTREAM_TRUEHD) nbFormatChanges++; 
-        codecId=CODEC_ID_BITSTREAM_TRUEHD;
- // Check if output is compatible
-    if (checkOutputFormat(codecId))
-        return codecId;
-  }
- // If AC3 codec is set to SPDIF and MLP decoder disabled and TRUEHD passthrough is disabled,
- // then send AC3 frams in passthrough and throw away TrueHD frames
- if (useAC3CoreOnly)
+   audioParserData.wFormatTag=WAVE_FORMAT_TRUEHD;
+  // TODO : if MLP decoder disabled, find a compatible MLP decoder and pull FFDShow Audio out of the graph
+  // Problem : no MLP mediaguid exist
+  break;
+  case AC3_TRUEHD:
+   if (useTrueHDPassthrough)
    {
-     if (useAC3Passthrough)
-      {
-      if (codecId!=CODEC_ID_SPDIF_AC3)
-        {
-        if (codecId!=CODEC_ID_SPDIF_AC3) nbFormatChanges++;
-                  codecId=CODEC_ID_SPDIF_AC3;
-        if (checkOutputFormat(codecId))
-            return codecId;
-        else
-         deci->putParam(IDFF_aoutpassthroughAC3,0);
-        }
-            return codecId;
-      }
-      else //MLP decoder is disabled and AC3 pass-through is disabled
-      {
- // TODO : find a compatible MLP decoder and pull FFDShow Audio out of the graph
- // Problem : no MLP mediaguid exist
-   wFormatTag=WAVE_FORMAT_AC3_W;
-      }
+     if (codecId==CODEC_ID_BITSTREAM_TRUEHD) return codecId;
+     audioParserData.nbFormatChanges++; 
+     codecId=CODEC_ID_BITSTREAM_TRUEHD;
+     // Check if output is compatible
+     if (checkOutputFormat(codecId)) return codecId;
    }
- else
+  // If AC3 codec is set to SPDIF and MLP decoder disabled and TRUEHD passthrough is disabled,
+  // then send AC3 frams in passthrough and throw away TrueHD frames
+   if (useAC3CoreOnly)
    {
-   wFormatTag=WAVE_FORMAT_TRUEHD;
+    if (useAC3Passthrough)
+    {
+     if (codecId==CODEC_ID_SPDIF_AC3) return codecId;
+     audioParserData.nbFormatChanges++;
+     codecId=CODEC_ID_SPDIF_AC3;
+     if (checkOutputFormat(codecId)) 
+      return codecId;
+     else 
+      deci->putParam(IDFF_aoutpassthroughAC3,0);
+     codecId=CODEC_ID_AC3;audioParserData.nbFormatChanges++;
+     return codecId;
+    }
+    else //MLP decoder is disabled and AC3 pass-through is disabled
+    {
+     // TODO : find a compatible MLP decoder and pull FFDShow Audio out of the graph
+     // Problem : no MLP mediaguid exist
+     audioParserData.wFormatTag=WAVE_FORMAT_AC3_W;
+    }
    }
- break;
- case DTS_HD:
-  if (useDTSHDPassthrough)
+   else
    {
-     if (codecId!=CODEC_ID_BITSTREAM_DTSHD) nbFormatChanges++;
-         codecId=CODEC_ID_BITSTREAM_DTSHD;
+    audioParserData.wFormatTag=WAVE_FORMAT_TRUEHD;
+   }
+  break;
+  case DTS_HD:
+   if (useDTSHDPassthrough)
+   {
+     if (codecId==CODEC_ID_BITSTREAM_DTSHD) return codecId;
+     audioParserData.nbFormatChanges++;
+     codecId=CODEC_ID_BITSTREAM_DTSHD;
      if (checkOutputFormat(codecId))
-         return codecId;
+      return codecId;
      else
       deci->putParam(IDFF_aoutpassthroughDTS,0);
    }
- case DTS:
- // If DTS Pass-through is enabled, then send DTS frames (or DTS core frames for DTS-HD stream)
- // in passthrough (DTS-HD frames are thrown away for DTS-HD stream)
-  if (useDTSPassthrough)
+   // Else jump to case DTS :
+  case DTS:
+  // If DTS Pass-through is enabled, then send DTS frames (or DTS core frames for DTS-HD stream)
+  // in passthrough (DTS-HD frames are thrown away for DTS-HD stream)
+   if (useDTSPassthrough)
    {
-    if (codecId!=CODEC_ID_SPDIF_DTS) nbFormatChanges++;
-        codecId=CODEC_ID_SPDIF_DTS;
-    if (checkOutputFormat(codecId))
-        return codecId;
-    else
-     deci->putParam(IDFF_aoutpassthroughDTS,0);
+     if (codecId==CODEC_ID_SPDIF_DTS) return codecId;
+     audioParserData.nbFormatChanges++;
+     codecId=CODEC_ID_SPDIF_DTS;
+     if (checkOutputFormat(codecId)) 
+      return codecId;
+     else
+      deci->putParam(IDFF_aoutpassthroughDTS,0);
     }
-  wFormatTag=WAVE_FORMAT_DTS_W;
- break;
- case UNDEFINED:return CODEC_ID_NONE;
- default:break;
+    audioParserData.wFormatTag=WAVE_FORMAT_DTS_W;
+  break;
+  case UNDEFINED:return CODEC_ID_NONE;
+  default:break;
  }
- //nbFormatChanges++;
- codecId=globalSettings->getCodecId(wFormatTag, NULL);
+ //audioParserData.nbFormatChanges++;
+ codecId=globalSettings->getCodecId(audioParserData.wFormatTag, NULL);
+ DPRINTF(_l("TaudioParser::getCodecIdFromStream %s"), getCodecName(codecId));
  return codecId;
 }
 
@@ -292,9 +389,9 @@ void TaudioParser::NewSegment(void)
  // init();
 
  // Solution 2: reset only the context
-    channels=0;bit_rate=0;sample_rate=0;nbFormatChanges=0;
-    sample_format=0;
-    includeBytes=0;skipBytes=0;searchSync=true;
+    audioParserData.channels=0;audioParserData.bit_rate=0;audioParserData.sample_rate=0;//audioParserData.nbFormatChanges=0;
+    audioParserData.sample_format=0;audioParserData.frames.clear();
+    includeBytes=0;skipBytes=0;searchSync=true;firstFrame=true;
 }
 
 HRESULT TaudioParser::parseDTS(unsigned char *src, int size, TbyteBuffer *newsrcBuffer)
@@ -316,8 +413,6 @@ HRESULT TaudioParser::parseDTS(unsigned char *src, int size, TbyteBuffer *newsrc
        bitdata.wordpointer=&*tmpBuffer.begin();
        backupbuf.clear();
    }
-
-   int dtsHDBlockSize = 0;
 
    if (includeBytes > 0)
    {
@@ -349,36 +444,73 @@ HRESULT TaudioParser::parseDTS(unsigned char *src, int size, TbyteBuffer *newsrc
    {
        if (bitdata.showBits(32) == 0x64582025) //DTS-HD block
        {
-           streamformat=DTS_HD;
+           if (streamformat!=DTS_HD)
+           {
+            streamformat=DTS_HD;
+            // Ooops, we have written the DTS frame in the source buffer whereas for bitstream we need a complete
+            // couple of DTS+DTSHD frame
+            if (useDTSHDPassthrough && newsrcBuffer->size() > 0)
+            {
+              backupbuf.append(&*newsrcBuffer->begin(), newsrcBuffer->size());
+              newsrcBuffer->clear();
+              audioParserData.frames.clear();
+            }
+           }
+
            // Save the start position and left length of the DTS HD block
            unsigned char *backuppointer=bitdata.wordpointer;
            int backupBitsLeft=bitdata.bitsleft;
 
            bitdata.getBits(32);
-           bitdata.getBits(8);
+
+           uint32_t dummy=bitdata.getBits(8);
            bitdata.getBits(2);
            bool blownupHeader = bitdata.getBits(1) == 1;
-           dtsHDBlockSize=0;
+           frame_size=0;
            if (blownupHeader)
            {
-               bitdata.getBits(12);
-               dtsHDBlockSize = bitdata.getBits(20) +1;
+               dummy=bitdata.getBits(12)+1; // header size
+               frame_size = bitdata.getBits(20) +1; // full dts-hd block size
            }
            else
            {
-               bitdata.getBits(8);
-               dtsHDBlockSize = bitdata.getBits(16) +1;
+               dummy=bitdata.getBits(8)+1; // header size
+               frame_size = bitdata.getBits(16) +1; // full dts-hd block size
            }
+
+           bitdata.wordpointer=backuppointer;
+           bitdata.bitsleft=backupBitsLeft;
            bitdata.bitindex=0;
-           bitdata.bitsleft=backupBitsLeft-dtsHDBlockSize*8;
-           if (bitdata.bitsleft<0)
+
+           audioParserData.sample_rate=96000;
+           audioParserData.channels=8;
+           audioParserData.sample_format=TsampleFormat::SF_PCM24;
+
+
+           if (frame_size>(uint32_t)bitdata.bitsleft/8)
            {
-               skipBytes=-bitdata.bitsleft/8;
-               bitdata.bitsleft=0;
-               //bitdata.wordpointer+=skipStartBitsLeft/8; // EOF
+              backupbuf.append(bitdata.wordpointer, bitdata.bitsleft/8);
+              bitdata.bitsleft=0;
            }
            else
-            bitdata.wordpointer=backuppointer+dtsHDBlockSize;
+           {
+            if (useDTSHDPassthrough) // DTS-HD will be taken only if in passthrough mode (no decoder yet)
+            {
+             if (backupbuf.size()!=0)
+              newsrcBuffer->append(&*backupbuf.begin(),backupbuf.size());
+             newsrcBuffer->append(bitdata.wordpointer, frame_size);
+             bitdata.bitsleft-=frame_size*8;
+             bitdata.wordpointer+=frame_size;
+             audioParserData.frames.push_back(TframeData(backupbuf.size()+frame_size));
+             backupbuf.clear(); 
+            }
+            else
+            {
+             bitdata.bitindex=0;
+             bitdata.bitsleft=backupBitsLeft-frame_size*8;
+             bitdata.wordpointer=backuppointer+frame_size;
+            }
+           }
        }
        else if ( // DTS block
            /* 14 bits and little endian bitstream */
@@ -394,6 +526,7 @@ HRESULT TaudioParser::parseDTS(unsigned char *src, int size, TbyteBuffer *newsrc
        {
            if (streamformat==UNDEFINED)
                streamformat=DTS;
+
            unsigned char *backuppointer=bitdata.wordpointer;
            int backupBitsLeft=bitdata.bitsleft;
 
@@ -407,14 +540,26 @@ HRESULT TaudioParser::parseDTS(unsigned char *src, int size, TbyteBuffer *newsrc
            bitdata.getBits2(32); /* Sync code */   
            bitdata.getBits2(1); /* Frame type */
            bitdata.getBits2(5); /* Samples deficit */
-           int crcpresent = bitdata.getBits2(1); /* CRC present */
-           int sample_blocks=(bitdata.getBits2(7)+1)/8; /* sample blocks */
-           int frame_size=bitdata.getBits2(14) + 1;
+           int crcpresent = bitdata.getBits2(1); /* CRC present */       
+           if (streamformat==DTS || !useDTSHDPassthrough)
+            audioParserData.sample_blocks=(bitdata.getBits2(7)+1)/8; /* sample blocks */
+           else
+            bitdata.getBits2(7);
 
+           
+           frame_size=bitdata.getBits2(14) + 1;
+           
            int amode = bitdata.getBits2(6);
   
-           sample_rate = dca_sample_rates[bitdata.getBits2(4)];
-           bit_rate = dca_bit_rates[bitdata.getBits2(5)];
+           if (streamformat==DTS || !useDTSHDPassthrough)
+           {
+            audioParserData.sample_rate = dca_sample_rates[bitdata.getBits2(4)];
+            audioParserData.bit_rate = dca_bit_rates[bitdata.getBits2(5)];
+           }
+           else
+           {
+            bitdata.getBits2(4);bitdata.getBits2(5);
+           }
 
 
            bitdata.getBits2(10);
@@ -436,9 +581,9 @@ HRESULT TaudioParser::parseDTS(unsigned char *src, int size, TbyteBuffer *newsrc
            if (ffmpegchannels>5)
                ffmpegchannels=5;
 
-           channels=primchannels+lfe;
+           audioParserData.channels=primchannels+lfe;
 
-           int datasize=(sample_blocks / 8) * 256 * sizeof(int16_t) * channels;
+           int datasize=(audioParserData.sample_blocks / 8) * 256 * sizeof(int16_t) * audioParserData.channels;
 
            bitdata.wordpointer=backuppointer;
            bitdata.bitsleft=backupBitsLeft;
@@ -447,17 +592,41 @@ HRESULT TaudioParser::parseDTS(unsigned char *src, int size, TbyteBuffer *newsrc
            if (!wordMode)
                frame_size = frame_size * 8 / 14 * 2;
 
-           // DTS frame not complete in this buffer. Backup it for next pass
-           if (frame_size>bitdata.bitsleft/8)
+           // DTS-HD bistream
+           if (streamformat==DTS_HD && useDTSHDPassthrough)
            {
+             if (frame_size>(uint32_t)bitdata.bitsleft/8)
+             {
               backupbuf.append(bitdata.wordpointer, bitdata.bitsleft/8);
               bitdata.bitsleft=0;
+             }
+             else // store the block into the source buffer
+             {
+              backupbuf.append(bitdata.wordpointer, frame_size);
+              bitdata.bitsleft-=frame_size*8;
+              bitdata.wordpointer+=frame_size;
+             }
+           }
+           // DTS frame not complete in this buffer. Backup it for next pass
+           else if (frame_size>(uint32_t)bitdata.bitsleft/8)
+           {
+            backupbuf.append(bitdata.wordpointer, bitdata.bitsleft/8);
+            bitdata.bitsleft=0;
+           }
+           else if (firstFrame) // Frame complete and store first frame in case it is an DTSHD stream (DTS frame---DTSHD frame)
+           {
+            firstFrame=false;
+            backupbuf.clear();
+            backupbuf.append(bitdata.wordpointer, frame_size);
+            bitdata.bitsleft-=frame_size*8;
+            bitdata.wordpointer+=frame_size;
            }
            else // store the block into the source buffer
            {
-               newsrcBuffer->append(bitdata.wordpointer, frame_size);
-               bitdata.bitsleft-=frame_size*8;
-               bitdata.wordpointer+=frame_size;
+             newsrcBuffer->append(bitdata.wordpointer, frame_size);
+             bitdata.bitsleft-=frame_size*8;
+             bitdata.wordpointer+=frame_size;
+             audioParserData.frames.push_back(TframeData(frame_size));
            }
        }
        else // Ignore the byte
@@ -484,7 +653,7 @@ HRESULT TaudioParser::parseAC3(unsigned char *src, int size, TbyteBuffer *newsrc
    bitdata.bitindex=0;
    bitdata.bitsleft=size*8;
    bitdata.wordpointer=src;
-
+   
    // Include the remaining bytes from the previous frame
    if (!backupbuf.empty())
    {
@@ -529,7 +698,8 @@ HRESULT TaudioParser::parseAC3(unsigned char *src, int size, TbyteBuffer *newsrc
            //searchSync=false;
            unsigned char *backuppointer=bitdata.wordpointer;
            int backupBitsLeft=bitdata.bitsleft;
-           int frame_size=0;
+           frame_size=0;
+           bool isEAC3=false;
 
            bitdata.getBits(16);
            uint32_t bitstream_id = bitdata.showBits(29) & 0x1F;
@@ -569,43 +739,54 @@ HRESULT TaudioParser::parseAC3(unsigned char *src, int size, TbyteBuffer *newsrc
 
                if (streamformat==REGULAR_AC3 || useAC3CoreOnly)
                {
-                sample_rate=ff_ac3_sample_rate_tab[sr_code] >> sr_shift;
-                bit_rate=(ff_ac3_bitrate_tab[frame_size_code>>1]*1000) >> sr_shift;
-                channels=ff_ac3_channels_tab[channel_mode]+lfe;
+                audioParserData.sample_rate=ff_ac3_sample_rate_tab[sr_code] >> sr_shift;
+                audioParserData.bit_rate=(ff_ac3_bitrate_tab[frame_size_code>>1]*1000) >> sr_shift;
+                audioParserData.channels=ff_ac3_channels_tab[channel_mode]+lfe;
                }
            }
            else // EAC3
            {
+               isEAC3=true;
                if (streamformat==UNDEFINED || streamformat==REGULAR_AC3)
-                   streamformat=EAC3;
+               {
+                streamformat=EAC3;
+                // Ooops, we have written the AC3 frame in the source buffer whereas for bitstream we need a complete
+                // couple of AC3+EAC3 frame
+                if (useEAC3Passthrough && newsrcBuffer->size() > 0)
+                {
+                  backupbuf.append(&*newsrcBuffer->begin(), newsrcBuffer->size());
+                  newsrcBuffer->clear();
+                  audioParserData.frames.clear();
+                }
+               }
 
                bitdata.getBits(2); // Frame type
                bitdata.getBits(3); // Substream id
                frame_size=(bitdata.getBits(11) + 1) << 1;
                int sr_code=bitdata.getBits(2); // Sample rate code
-               sample_rate=0;
+               audioParserData.sample_rate=0;
                int num_blocks=6;
                int sr_shift=0;
                if (sr_code==3)
                {
                    int sr_code2=bitdata.getBits(2);
-                   sample_rate=ff_ac3_sample_rate_tab[sr_code2] / 2;
+                   audioParserData.sample_rate=ff_ac3_sample_rate_tab[sr_code2] / 2;
                    sr_shift=1;
                }
                else
                {
                    num_blocks=eac3_blocks[bitdata.getBits(2)];
-                   sample_rate = ff_ac3_sample_rate_tab[sr_code];
+                   audioParserData.sample_rate = ff_ac3_sample_rate_tab[sr_code];
                }
 
                int channel_mode=bitdata.getBits(3);
                int lfe=bitdata.getBits(1);
-               channels = ff_ac3_channels_tab[channel_mode] + lfe;
+               audioParserData.channels = ff_ac3_channels_tab[channel_mode] + lfe;
 
                if (streamformat==EAC3)
                {
-                   bit_rate=(uint32_t)(8.0 *frame_size * sample_rate /
-                        (num_blocks * 256.0));
+                 audioParserData.bit_rate=(uint32_t)(8.0 *frame_size * audioParserData.sample_rate /
+                      (num_blocks * 256.0));
                }
 
            }
@@ -615,38 +796,73 @@ HRESULT TaudioParser::parseAC3(unsigned char *src, int size, TbyteBuffer *newsrc
            bitdata.bitsleft=backupBitsLeft;
            bitdata.bitindex=0;
 
-           // If AC3 codec is SPDIF or MLP decoder disabled, we keep AC3 frames otherwise (MLP) we throw them avay
+           // If AC3 codec is SPDIF or MLP decoder disabled, we keep AC3/EAC3 frames otherwise (MLP) we throw them avay
            if (useAC3CoreOnly || streamformat != AC3_TRUEHD)
            {
                // AC3 frame not complete in this buffer. 
                // Back it up for next pass
-               if (frame_size>bitdata.bitsleft/8)
+               if (frame_size>(uint32_t)bitdata.bitsleft/8)
                {
-                  backupbuf.clear();
-                  backupbuf.append(bitdata.wordpointer, bitdata.bitsleft/8);
-                  /*newsrcBuffer->append(bitdata.wordpointer, bitdata.bitsleft/8);
-                  includeBytes=frame_size-bitdata.bitsleft/8;*/
-                  bitdata.bitsleft=0;
+                backupbuf.clear();              
+                backupbuf.append(bitdata.wordpointer, bitdata.bitsleft/8);
+                bitdata.bitsleft=0;
                }
-               else // store the block into the source buffer
+               else if (firstFrame && streamformat!=EAC3) // Frame complete and store first frame in case it is an TrueHD stream (AC3 frame---TrueHD frame)
                {
-                   newsrcBuffer->append(bitdata.wordpointer, frame_size);
-                   bitdata.bitsleft-=frame_size*8;
-                   bitdata.wordpointer+=frame_size;
+                firstFrame=false;
+                backupbuf.clear();
+                backupbuf.append(bitdata.wordpointer, frame_size);
+                bitdata.bitsleft-=frame_size*8;
+                bitdata.wordpointer+=frame_size;
+               }
+               else if (streamformat==EAC3 && useEAC3Passthrough)
+               {
+                if (isEAC3) // This is an EAC3 frame that follows an AC3 frame (backed up) so store the AC3+EAC3 frame in the source buffer
+                {
+                 if (backupbuf.size()!=0)
+                  newsrcBuffer->append(&*backupbuf.begin(),backupbuf.size());
+                 newsrcBuffer->append(bitdata.wordpointer, frame_size);
+                 bitdata.bitsleft-=frame_size*8;
+                 bitdata.wordpointer+=frame_size;
+                 audioParserData.frames.push_back(TframeData(backupbuf.size()+frame_size));
+                 backupbuf.clear();
+                }
+                else // This is an AC3 frame, back it up because they have to be sent with an EAC3 frame
+                {
+                 backupbuf.clear();
+                 backupbuf.append(bitdata.wordpointer, frame_size);
+                 bitdata.bitsleft-=frame_size*8;
+                 bitdata.wordpointer+=frame_size;
+                }
+               }
+               else// store the AC3 block into the source buffer
+               {
+                // Recover the first frame we backed up (to check if the stream was different from regular AC3
+                if (backupbuf.size()>0)
+                {
+                 newsrcBuffer->append(&*backupbuf.begin(),backupbuf.size());
+                 audioParserData.frames.push_back(TframeData(backupbuf.size()));
+                 backupbuf.clear();
+                }
+
+                newsrcBuffer->append(bitdata.wordpointer, frame_size);
+                bitdata.bitsleft-=frame_size*8;
+                bitdata.wordpointer+=frame_size;
+                audioParserData.frames.push_back(TframeData(frame_size));
                }
            }
            else // MLP parser does not know how to handle AC3 frames interweaved
            {
-               bitdata.bitindex=0;
-               bitdata.bitsleft=backupBitsLeft-frame_size*8;
-               if (bitdata.bitsleft<0)
-               {
-                   skipBytes=-bitdata.bitsleft/8;
-                   bitdata.bitsleft=0;
-                   //bitdata.wordpointer+=skipStartBitsLeft/8; // EOF
-               }
-               else
-                bitdata.wordpointer=backuppointer+frame_size;
+            bitdata.bitindex=0;
+            bitdata.bitsleft=backupBitsLeft-frame_size*8;
+            if (bitdata.bitsleft<0)
+            {
+                skipBytes=-bitdata.bitsleft/8;
+                bitdata.bitsleft=0;
+                //bitdata.wordpointer+=skipStartBitsLeft/8; // EOF
+            }
+            else
+             bitdata.wordpointer=backuppointer+frame_size;
            }
        }
        else if (bitdata.showBits(32,32) == 0xf8726fba || // True HD major sync frame
@@ -654,14 +870,20 @@ HRESULT TaudioParser::parseAC3(unsigned char *src, int size, TbyteBuffer *newsrc
        {
            hasMLPFrames=true;
            searchSync=false;
-
-           int32_t frame_size=(((bitdata.wordpointer[0] << 8) | bitdata.wordpointer[1])& 0xfff) * 2;
+           uint32_t frame_size1 = bitdata.showBits(32,0);
+           WORD frame_time=(WORD)frame_size1;
+           //uint32_t frame_size = (((bitdata.wordpointer[0] << 8) | bitdata.wordpointer[1]) & 0xfff) *2;
+           frame_size=((frame_size1>>16) & 0xfff) * 2;         
 
            // Oops... current decoder is AC3 whereas we have MLP/TrueHD data =>
            // and AC3 codec is not set to SPDIF and MLP decoder is enabled. So drop AC3 frames and keep MLP/TrueHD only
            if ((streamformat==REGULAR_AC3 || streamformat==EAC3)
                && !useAC3CoreOnly)
+           {
                newsrcBuffer->clear();
+               audioParserData.frames.clear();
+           }        
+
 
            // Save the start position and left length of the MLP/TrueHD block
            unsigned char *backuppointer=bitdata.wordpointer;
@@ -690,41 +912,41 @@ HRESULT TaudioParser::parseAC3(unsigned char *src, int size, TbyteBuffer *newsrc
                int group1_bits=bitdata.getBits(4); // group1 bits
                if (!useAC3CoreOnly) // Don't update stream format with MLP config if we are in AC3 mode
                {
-               switch (group1_bits)
+                switch (group1_bits)
                  {
-               case 8:sample_format=TsampleFormat::SF_PCM8;break;
+                  case 8:audioParserData.sample_format=TsampleFormat::SF_PCM8;break;
                   case 0:
                   case 16:
-                  default:sample_format=TsampleFormat::SF_PCM16;break;
-                  case 20:sample_format=TsampleFormat::SF_LPCM20;break;
-                  case 24:sample_format=TsampleFormat::SF_PCM24;break;
-                  case 32:sample_format=TsampleFormat::SF_PCM32;break;
+                  default:audioParserData.sample_format=TsampleFormat::SF_PCM16;break;
+                  case 20:audioParserData.sample_format=TsampleFormat::SF_LPCM20;break;
+                  case 24:audioParserData.sample_format=TsampleFormat::SF_PCM24;break;
+                  case 32:audioParserData.sample_format=TsampleFormat::SF_PCM32;break;
                  }
                }
                int group2_bits=bitdata.getBits(4); // group2 bits
                ratebits=bitdata.getBits(4);
                group1_samplerate=(ratebits==0xF)?0:(ratebits & 8 ? 44100 : 48000) << (ratebits & 7);
                if (!useAC3CoreOnly) // Don't update stream format with MLP config if we are in AC3 mode
-                sample_rate=group1_samplerate;
+                audioParserData.sample_rate=group1_samplerate;
 
                uint32_t ratebits2=bitdata.getBits(4);
                group2_samplerate=(ratebits2==0xF)?0:(ratebits2 & 8 ? 44100 : 48000) << (ratebits2 & 7);
                bitdata.getBits(11); // Skip
                int channels_mlp=bitdata.getBits(5);
                if (!useAC3CoreOnly)
-                channels=mlp_channels[channels_mlp];
+                audioParserData.channels=mlp_channels[channels_mlp];
            }
            else // Dolby TrueHD (0xba)
            {
                isTrueHD=true;
                bitdata.getBits(32);
                int group1_bits=24; // group1 bits
-               sample_format=TsampleFormat::SF_PCM24;
+               audioParserData.sample_format=TsampleFormat::SF_PCM24;
                int group2_bits=0; // group2 bits
                ratebits=bitdata.getBits(4);
                group1_samplerate=(ratebits==0xF)?0:(ratebits & 8 ? 44100 : 48000) << (ratebits & 7);
                if (!useAC3CoreOnly) // Don't update stream format with MLP config if we are in AC3 mode
-                sample_rate=group1_samplerate;
+                audioParserData.sample_rate=group1_samplerate;
 
                group2_samplerate=0;
                bitdata.getBits(8); // Skip
@@ -735,21 +957,21 @@ HRESULT TaudioParser::parseAC3(unsigned char *src, int size, TbyteBuffer *newsrc
                if (!useAC3CoreOnly) // Don't update stream format with MLP config if we are in AC3 mode
                {
                    if (channels_thd_stream2)
-                       channels=truehd_channels(channels_thd_stream2);
+                       audioParserData.channels=truehd_channels(channels_thd_stream2);
                    else
-                       channels=truehd_channels(channels_thd_stream1);
+                       audioParserData.channels=truehd_channels(channels_thd_stream1);
                }
            }
 
            bitdata.getBits(48); // Skip
 
-           // WRONG frame_size=40 << (ratebits & 7);
+           audioParserData.ratebits=ratebits;
 
            int isVbr=bitdata.getBits(1);
            uint32_t peak_bitrate = (bitdata.getBits(15) * group1_samplerate + 8) >> 4;
 
            if (!useAC3CoreOnly) // Don't update stream format with MLP config if we are in AC3 mode
-            bit_rate=peak_bitrate;
+            audioParserData.bit_rate=peak_bitrate;
 
            int num_substreams = bitdata.getBits(4);
 
@@ -773,22 +995,33 @@ HRESULT TaudioParser::parseAC3(unsigned char *src, int size, TbyteBuffer *newsrc
                    bitdata.wordpointer+=frame_size;
            }
            else
-           {
+           {             
+               // Behaviour : feed frame by frame (one major frame or one non major frame)
                // MLP frame not complete in this buffer. 
                // Back it up until having complete frame
-               if (frame_size>bitdata.bitsleft/8)
+               if (frame_size>(uint32_t)bitdata.bitsleft/8)
                {
                   backupbuf.append(bitdata.wordpointer, bitdata.bitsleft/8);
-                  /*newsrcBuffer->append(bitdata.wordpointer, bitdata.bitsleft/8);
-                  includeBytes=frame_size-bitdata.bitsleft/8;*/
                   bitdata.bitsleft=0;
                }
                else // store the block into the source buffer
                {
-                   newsrcBuffer->append(bitdata.wordpointer, frame_size);
-                   bitdata.bitsleft-=frame_size*8;
-                   bitdata.wordpointer+=frame_size;
-               }               
+                  newsrcBuffer->append(bitdata.wordpointer, frame_size);
+                  bitdata.bitsleft-=frame_size*8;
+                  bitdata.wordpointer+=frame_size;
+                  TframeData frameData = TframeData(frame_size);
+           
+                  uint32_t rate=64 >> (audioParserData.ratebits & 7); // Used to calculate the number of zeros
+                  if (audioParserData.isFirst)
+                   audioParserData.isFirst=false;
+                  else
+                   frameData.space_size=((frame_time-audioParserData.lastFrameTime)&0xFF)*rate;
+                  
+                  // Store the frame time for later
+                  audioParserData.lastFrameTime=frame_time;
+
+                  audioParserData.frames.push_back(frameData);
+               }          
            }
        }
        else // If just AC3, skip byte, or if has MLP frams this is a non major sync frame
@@ -797,7 +1030,12 @@ HRESULT TaudioParser::parseAC3(unsigned char *src, int size, TbyteBuffer *newsrc
            // In those cases we should look after a sync frame first
            if (hasMLPFrames && !searchSync)
            {
-               int32_t frame_size=(((bitdata.wordpointer[0] << 8) | bitdata.wordpointer[1])& 0xfff) * 2;
+               uint32_t frame_size1 = bitdata.showBits(32,0);
+               //uint32_t frame_size = (((bitdata.wordpointer[0] << 8) | bitdata.wordpointer[1]) & 0xfff) *2;
+               WORD frame_time=(WORD)frame_size1;
+               frame_size=((frame_size1>>16) & 0xfff) * 2;
+
+
                if (frame_size < 3)
                {
                    bitdata.bitsleft-=8;
@@ -821,16 +1059,14 @@ HRESULT TaudioParser::parseAC3(unsigned char *src, int size, TbyteBuffer *newsrc
                {
                    // MLP/TrueHD frame not complete in this buffer. 
                    // Back it up until having complete frame
-                   if (frame_size>bitdata.bitsleft/8)
+                   if (frame_size>(uint32_t)bitdata.bitsleft/8)
                    {
                       backupbuf.append(bitdata.wordpointer, bitdata.bitsleft/8);
-                      /*newsrcBuffer->append(bitdata.wordpointer, bitdata.bitsleft/8);
-                      includeBytes=frame_size-bitdata.bitsleft/8;*/
                       bitdata.bitsleft=0;
                    }
                    else // store the block into the source buffer
                    {
-                       // Additional check : in case we are a midle of a frame, check that there is
+                       // Additional check : in case we are in a midle of a frame, check that there is
                        // no AC3 or major MLP frame inside this supposed non major frame
                        // In that case we were wrong : this is not a non major frame, 
                        // so we throw the bytes between
@@ -849,11 +1085,28 @@ HRESULT TaudioParser::parseAC3(unsigned char *src, int size, TbyteBuffer *newsrc
                            }
                            ptr++;
                        }
-                       if (skip) continue;
+                       if (skip)
+                       {
+                        backupbuf.clear();
+                        continue;
+                       }
 
+                       /* Behaviour : feed frame by frame ((non)major by (non)major frame)*/
                        newsrcBuffer->append(bitdata.wordpointer, frame_size);
                        bitdata.bitsleft-=frame_size*8;
                        bitdata.wordpointer+=frame_size;
+                       TframeData frameData = TframeData(frame_size);
+
+                       uint32_t rate=64 >> (audioParserData.ratebits & 7); // Used to calculate the number of zeros
+                       if (audioParserData.isFirst)
+                        audioParserData.isFirst=false;
+                       else
+                        frameData.space_size=((frame_time-audioParserData.lastFrameTime)&0xFF)*rate;
+                        
+                       // Store the frame time for later
+                       audioParserData.lastFrameTime=frame_time;
+
+                       audioParserData.frames.push_back(frameData);
                    }               
                }
            }

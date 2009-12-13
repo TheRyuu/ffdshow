@@ -1349,6 +1349,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\FFd.ico"
+				>
+			</File>
+			<File
 				RelativePath="src\ffdshow.ico"
 				>
 			</File>
@@ -4888,6 +4892,14 @@
 			</File>
 			<File
 				RelativePath=".\src\codecs\TaudioCodecAvisynth.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\codecs\TaudioCodecBitstream.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\codecs\TaudioCodecBitstream.h"
 				>
 			</File>
 			<File

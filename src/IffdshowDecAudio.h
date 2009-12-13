@@ -19,7 +19,7 @@ template<class tchar> DECLARE_INTERFACE_(IffdshowDecAudioT,IUnknown)
  STDMETHOD (deliverSample_)(void *buf,size_t numsamples,const TsampleFormat &fmt,float postgain) PURE;
  STDMETHOD (storeMixerMatrixData_)(const double matrix[6][6]) PURE;
  STDMETHOD (getMixerMatrixData_)(double matrix[6][6]) PURE;
- STDMETHOD (deliverSampleSPDIF)(void *buf,size_t bufsize,int bit_rate,unsigned int sample_rate,BYTE type,int incRtDec) PURE;
+ STDMETHOD (deliverSampleSPDIF)(void *buf,size_t bufsize,int bit_rate,unsigned int sample_rate,int incRtDec) PURE;
  STDMETHOD (storeVolumeData_)(unsigned int nchannels,const int channels[],const int volumes[]) PURE;
  STDMETHOD (getVolumeData_)(unsigned int *nchannels,int channels[],int volumes[]) PURE;
  STDMETHOD (storeFFTdata_)(unsigned int num,const float *fft) PURE;
@@ -36,8 +36,9 @@ template<class tchar> DECLARE_INTERFACE_(IffdshowDecAudioT,IUnknown)
  STDMETHOD_(int,getJitter)(void) PURE;
  STDMETHOD_(TffdshowDecAudioInputPin *, GetCurrentPin)(void) PURE;
  STDMETHOD_(TinputPin*, getInputPin)(void) PURE;
- STDMETHOD (deliverSampleSPDIF2)(void *buf,size_t bufsize,int bit_rate,unsigned int sample_rate,BYTE type,int incRtDec,int frame_length) PURE;
+ STDMETHOD (deliverSampleBistream)(void *buf,size_t bufsize,int bit_rate,unsigned int sample_rate,int incRtDec,int frame_length) PURE;
  STDMETHOD_(CTransformOutputPin*, getOutputPin)(void) PURE;
+ STDMETHOD_(TsampleFormat, getOutsf)(TsampleFormat &outsf)PURE;
 };
 
 struct IffdshowDecAudioA :IffdshowDecAudioT<char> {};

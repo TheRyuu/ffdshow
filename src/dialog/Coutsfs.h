@@ -9,7 +9,7 @@ class ToutsfsPage :public TconfPageDecAudio
 private:
  void ac32dlg(int &outsfs),connect2dlg(void);
  static const int ac3bitrates[];
- TdevicesList *devicesList;
+ int warningShowed;
 protected:
  virtual INT_PTR msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 public:
@@ -19,7 +19,7 @@ public:
  virtual void cfg2dlg(void);
  virtual void translate(void);
  virtual void applySettings(void);
- virtual void multichanneldevice2dlg(void);
+ virtual void dlg2compatmode(void);
 };
 
 #endif

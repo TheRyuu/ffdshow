@@ -122,7 +122,7 @@ HRESULT TaudioCodecLibDTS::decode(TbyteBuffer &src)
            case 1024:type=0x0c;break;
            default  :type=0x0d;break;
           }
-         HRESULT hr=deciA->deliverSampleSPDIF2(p,size,bit_rate,sample_rate,type,true,frame_length);
+         HRESULT hr=deciA->deliverSampleBistream(p,size,bit_rate,sample_rate,true,frame_length);
          if (hr!=S_OK)
           return hr;
         }

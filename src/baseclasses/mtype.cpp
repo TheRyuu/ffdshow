@@ -81,13 +81,15 @@ CMediaType::operator == (const CMediaType& rt) const
     // the particular format representation can still see them, but
     // they should duplicate information in the format block.
 
-    return ((IsEqualGUID(majortype,rt.majortype) == TRUE) &&
-        (IsEqualGUID(subtype,rt.subtype) == TRUE) &&
-        (IsEqualGUID(formattype,rt.formattype) == TRUE) &&
-        (cbFormat == rt.cbFormat) &&
-        ( (cbFormat == 0) ||
-          pbFormat != NULL && rt.pbFormat != NULL &&
-          (memcmp(pbFormat, rt.pbFormat, cbFormat) == 0)));
+    // Albain's modification : problem with the new WAVEFORMATEXTENSIBLE_IEC61947 structure
+    // When we compare 2 media types, they may be the same but one of them can have 
+    // a WAVEFORMATEXTENSIBLE_IEC61947 subtructure
+    if (!(IsEqualGUID(majortype,rt.majortype) == TRUE) || 
+     !(IsEqualGUID(subtype,rt.subtype) == TRUE) ||
+        !(IsEqualGUID(formattype,rt.formattype) == TRUE)) return false;
+    if (pbFormat != NULL && rt.pbFormat != NULL &&
+          memcmp(pbFormat, rt.pbFormat, std::min(cbFormat,rt.cbFormat)) == 0) return true;
+    return false;
 }
 
 

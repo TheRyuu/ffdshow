@@ -122,7 +122,7 @@ HRESULT TaudioCodecUncompressed::decode(TbyteBuffer &src)
                    {
                        libmplayer->reorder_channel_nch(dst0, 
                            AF_CHANNEL_LAYOUT_LPCM_DEFAULT,AF_CHANNEL_LAYOUT_FFDSHOW_DEFAULT,
-                           fmt.nchannels,sizeof(int32_t)*(dst-dst0)*8/fmt.blockAlign(), fmt.blockAlign()/8);
+                           fmt.nchannels,sizeof(int32_t)*(dst-dst0)*8/fmt.blockAlign(), fmt.bitsPerSample()/8);
                    }
 
                 samples=dst0;numsamples=sizeof(int32_t)*(dst-dst0)/fmt.blockAlign();

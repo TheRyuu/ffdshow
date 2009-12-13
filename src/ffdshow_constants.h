@@ -959,6 +959,9 @@
 #define IDFF_aoutpassthroughTRUEHD  3524
 #define IDFF_aoutpassthroughDTSHD   3525
 #define IDFF_aoutpassthroughEAC3    3526
+#define IDFF_aoutpassthroughPCMConnection 3533
+#define IDFF_aoutUseIEC61937        3532
+#define IDFF_aoutpassthroughDeviceId 3534
 
 #define IDFF_dithering          1311
 #define IDFF_noiseShaping       1312
@@ -1560,6 +1563,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//next:3532
+//next:3535
 
 #endif
