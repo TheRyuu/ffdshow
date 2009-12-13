@@ -398,8 +398,10 @@ void TsampleFormat::fillCommonWAVEFORMATEX(WAVEFORMATEX *pWfe, WAVEFORMATEXTENSI
  if (!alwayextensible && dwChannelMask==standardChannelMasks[nchannels-1])
   dwChannelMask=0;
 
- if (!hdFormat && dwChannelMask)
+ if (!hdFormat)
  {
+  if (dwChannelMask)
+  {
    pWfe->wFormatTag=WAVE_FORMAT_EXTENSIBLE;
    if (pWfex!=NULL)
    {
@@ -407,6 +409,9 @@ void TsampleFormat::fillCommonWAVEFORMATEX(WAVEFORMATEX *pWfe, WAVEFORMATEXTENSI
     pWfex->Samples.wValidBitsPerSample=pWfe->wBitsPerSample;
     pWfex->SubFormat=sf==SF_FLOAT32?MEDIASUBTYPE_IEEE_FLOAT:MEDIASUBTYPE_PCM;
    }
+  }
+  else
+   pWfe->cbSize=0;
  }
  else if (pWfex!=NULL && pWfex->dwChannelMask==0)
   pWfex->dwChannelMask=dwChannelMask;
