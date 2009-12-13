@@ -266,7 +266,7 @@ HRESULT TaudioCodecLibavcodec::decode(TbyteBuffer &src0)
      this->deci->getPostproc(&libmplayer);
      if (libmplayer != NULL)
      {
-    	 libmplayer->reorder_channel_nch(dst, 
+     libmplayer->reorder_channel_nch(dst,
         src_ch_layout,AF_CHANNEL_LAYOUT_FFDSHOW_DEFAULT,
         fmt.nchannels,
         dstLength * 8 /fmt.blockAlign(), fmt.bitsPerSample()/8);

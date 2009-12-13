@@ -131,7 +131,7 @@ bool TaudioParser::checkOutputFormat(CodecID codecId)
  if (m_pOutput == NULL) return true;
  m_pOutput->ConnectedTo(&outConnectedPin);
  if (outConnectedPin==NULL) return false;
- 
+
  CMediaType mt;
  if (spdif_codec(codecId))
  {
@@ -207,13 +207,13 @@ bool TaudioParser::checkOutputFormat(CodecID codecId)
   }
   
   TsampleFormat::DPRINTMediaTypeInfo(mt);
-  
+
   if (hr==S_OK)
   {
    // Store the new format for filters negociation
    audioParserData.alternateSampleFormat=i;
    break;
-  }		
+  }
  }
  FreeMediaType(mt);
 
@@ -540,17 +540,17 @@ HRESULT TaudioParser::parseDTS(unsigned char *src, int size, TbyteBuffer *newsrc
            bitdata.getBits2(32); /* Sync code */   
            bitdata.getBits2(1); /* Frame type */
            bitdata.getBits2(5); /* Samples deficit */
-           int crcpresent = bitdata.getBits2(1); /* CRC present */       
+           int crcpresent = bitdata.getBits2(1); /* CRC present */
            if (streamformat==DTS || !useDTSHDPassthrough)
             audioParserData.sample_blocks=(bitdata.getBits2(7)+1)/8; /* sample blocks */
            else
             bitdata.getBits2(7);
 
-           
+
            frame_size=bitdata.getBits2(14) + 1;
-           
+
            int amode = bitdata.getBits2(6);
-  
+
            if (streamformat==DTS || !useDTSHDPassthrough)
            {
             audioParserData.sample_rate = dca_sample_rates[bitdata.getBits2(4)];
@@ -653,7 +653,7 @@ HRESULT TaudioParser::parseAC3(unsigned char *src, int size, TbyteBuffer *newsrc
    bitdata.bitindex=0;
    bitdata.bitsleft=size*8;
    bitdata.wordpointer=src;
-   
+
    // Include the remaining bytes from the previous frame
    if (!backupbuf.empty())
    {
@@ -803,7 +803,7 @@ HRESULT TaudioParser::parseAC3(unsigned char *src, int size, TbyteBuffer *newsrc
                // Back it up for next pass
                if (frame_size>(uint32_t)bitdata.bitsleft/8)
                {
-                backupbuf.clear();              
+                backupbuf.clear();
                 backupbuf.append(bitdata.wordpointer, bitdata.bitsleft/8);
                 bitdata.bitsleft=0;
                }
@@ -882,7 +882,7 @@ HRESULT TaudioParser::parseAC3(unsigned char *src, int size, TbyteBuffer *newsrc
            {
                newsrcBuffer->clear();
                audioParserData.frames.clear();
-           }        
+           }
 
 
            // Save the start position and left length of the MLP/TrueHD block
@@ -995,7 +995,7 @@ HRESULT TaudioParser::parseAC3(unsigned char *src, int size, TbyteBuffer *newsrc
                    bitdata.wordpointer+=frame_size;
            }
            else
-           {             
+           {
                // Behaviour : feed frame by frame (one major frame or one non major frame)
                // MLP frame not complete in this buffer. 
                // Back it up until having complete frame
@@ -1010,18 +1010,18 @@ HRESULT TaudioParser::parseAC3(unsigned char *src, int size, TbyteBuffer *newsrc
                   bitdata.bitsleft-=frame_size*8;
                   bitdata.wordpointer+=frame_size;
                   TframeData frameData = TframeData(frame_size);
-           
+
                   uint32_t rate=64 >> (audioParserData.ratebits & 7); // Used to calculate the number of zeros
                   if (audioParserData.isFirst)
                    audioParserData.isFirst=false;
                   else
                    frameData.space_size=((frame_time-audioParserData.lastFrameTime)&0xFF)*rate;
-                  
+
                   // Store the frame time for later
                   audioParserData.lastFrameTime=frame_time;
 
                   audioParserData.frames.push_back(frameData);
-               }          
+               }
            }
        }
        else // If just AC3, skip byte, or if has MLP frams this is a non major sync frame
@@ -1102,12 +1102,12 @@ HRESULT TaudioParser::parseAC3(unsigned char *src, int size, TbyteBuffer *newsrc
                         audioParserData.isFirst=false;
                        else
                         frameData.space_size=((frame_time-audioParserData.lastFrameTime)&0xFF)*rate;
-                        
+
                        // Store the frame time for later
                        audioParserData.lastFrameTime=frame_time;
 
                        audioParserData.frames.push_back(frameData);
-                   }               
+                   }
                }
            }
            else // This is neither AC3/major MLP/non-major MLP frame so we throw away the byte
