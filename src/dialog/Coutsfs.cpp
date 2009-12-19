@@ -115,6 +115,7 @@ INT_PTR ToutsfsPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
       case IDC_CHB_PASSTHROUGH_TRUEHD:
       case IDC_CHB_PASSTHROUGH_DTSHD:
       case IDC_CHB_PASSTHROUGH_EAC3:
+      case IDC_CHB_PASSTHROUGH_PCM_CONNECT:
       {
         cfgSet(IDFF_aoutpassthroughAC3, getCheck(IDC_CHB_PASSTHROUGH_AC3));
         cfgSet(IDFF_aoutpassthroughDTS, getCheck(IDC_CHB_PASSTHROUGH_DTS));
