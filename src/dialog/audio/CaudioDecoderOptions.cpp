@@ -33,6 +33,7 @@ void TaudioDecoderOptionsPage::drc2dlg(void)
  int level = cfgGet(IDFF_audio_decoder_DRC_Level);
  tbrSet(IDC_TBR_DECODER_DRC_LEVEL, level);
  setText(IDC_LBL_DECODER_DRC_LEVEL,_l("%i %%"),level);
+ setCheck(IDC_CHB_AUDIO_DECODER_JITTER_CORRECTION,cfgGet(IDFF_audio_decoder_JitterCorrection));
 }
 
 INT_PTR TaudioDecoderOptionsPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -57,6 +58,7 @@ bool TaudioDecoderOptionsPage::reset(bool testonly)
   {
    deci->resetParam(IDFF_audio_decoder_DRC);
    deci->resetParam(IDFF_audio_decoder_DRC_Level);
+   deci->resetParam(IDFF_audio_decoder_JitterCorrection);
   }
  return true;
 }
@@ -74,6 +76,7 @@ TaudioDecoderOptionsPage::TaudioDecoderOptionsPage(TffdshowPageDec *Iparent):Tco
  static const TbindCheckbox<TaudioDecoderOptionsPage> chb[]=
   {
    IDC_CHB_AUDIO_DECODER_DRC,IDFF_audio_decoder_DRC,NULL,
+   IDC_CHB_AUDIO_DECODER_JITTER_CORRECTION,IDFF_audio_decoder_JitterCorrection,NULL,
    0,NULL,NULL
   };
  bindCheckboxes(chb);

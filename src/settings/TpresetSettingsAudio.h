@@ -26,7 +26,7 @@ public:
  virtual Tpreset* copy(void) const {return new_copy(this);}
 
  int preferredsfs;
- int dithering,noiseShaping,decoderDRC,decoderDRCLevel;
+ int dithering,noiseShaping,decoderDRC,decoderDRCLevel,jitterCorrection;
 
  ToutputAudioSettings *output;
 };

@@ -93,6 +93,8 @@ TpresetAudio::TpresetAudio(const char_t *IpresetName,const char_t *Ireg_child,in
      _l("decoderDRC")  ,0,
    IDFF_audio_decoder_DRC_Level,&TpresetAudio::decoderDRCLevel   ,0,0,_l(""),1,
      _l("decoderDRCLevel"),100,
+   IDFF_audio_decoder_JitterCorrection,&TpresetAudio::jitterCorrection,0,0,_l(""),1,
+     _l("decoderJitterCorrection"),1,
    0
   };
  addOptions(iopts);
@@ -149,6 +151,7 @@ Tpreset& TpresetAudio::operator=(const Tpreset &src0)
         dithering=src.dithering;noiseShaping=src.noiseShaping;
         decoderDRC = src.decoderDRC;
         decoderDRCLevel = src.decoderDRCLevel;
+        jitterCorrection = src.jitterCorrection;
     } catch (const std::bad_cast&) {
         DPRINTF(_l("In TpresetAudio::operator =, dynamic_cast failed. This must be a bug."));
         ASSERT(0);
