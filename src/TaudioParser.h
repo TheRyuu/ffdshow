@@ -150,16 +150,17 @@ private:
  int skipBytes;int includeBytes;
  bool hasMLPFrames;
  bool useAC3CoreOnly;
- bool useAC3Passthrough;
- bool useDTSPassthrough;
- bool useTrueHDPassthrough;
- bool useDTSHDPassthrough;
- bool useEAC3Passthrough;
+ bool useAC3Passthrough,usableAC3Passthrough;
+ bool useDTSPassthrough,usableDTSPassthrough;
+ bool useTrueHDPassthrough,usableTrueHDPassthrough;
+ bool useDTSHDPassthrough,usableDTSHDPassthrough;
+ bool useEAC3Passthrough,usableEAC3Passthrough;
  bool firstFrame;
  StreamFormat streamformat;
  TglobalSettingsDecAudio *globalSettings;
  CodecID codecId;
  bool searchSync;
+ bool initConfigDone;
  protected:
  comptrQ<IffdshowBase> deci;
  comptrQ<IffdshowDecAudio> deciA;
