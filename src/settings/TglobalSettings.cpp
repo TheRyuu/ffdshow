@@ -662,6 +662,7 @@ void TglobalSettingsDecVideo::load(void)
  FF_FOURCC_OP(DAVC,h264 & rawmask,c_h264) \
  FF_FOURCC_OP(PAVC,h264 & rawmask,c_h264) \
  FF_FOURCC_OP(AVC1,h264 & rawmask,c_h264) \
+ FF_FOURCC_OP(H264_HAALI,h264 & rawmask,c_h264) \
  /*FF_FOURCC_OP(SVM2,h264 & rawmask,c_h264)*/ \
  FF_FOURCC1_OP(MJPG,mjpg & rawmask,CODEC_ID_MJPEG) \
  FF_FOURCC1_OP(LJPG,mjpg & rawmask,CODEC_ID_MJPEG) \
@@ -831,7 +832,8 @@ const CodecID TglobalSettingsDecVideo::c_h264[IDFF_MOVIE_MAX+1]=
  CODEC_ID_NONE,
  CODEC_ID_NONE,
  CODEC_ID_NONE,
- CODEC_ID_H264_MT
+ CODEC_ID_H264_MT,
+ CODEC_ID_H264_DXVA
 };
 const CodecID TglobalSettingsDecVideo::c_mpeg4[IDFF_MOVIE_MAX+1]=
 {
@@ -885,7 +887,8 @@ const CodecID TglobalSettingsDecVideo::c_wvc1[IDFF_MOVIE_MAX+1]=
  CODEC_ID_NONE,
  CODEC_ID_NONE,
  CODEC_ID_NONE,
- CODEC_ID_WMV9_LIB
+ CODEC_ID_WMV9_LIB,
+ CODEC_ID_VC1_DXVA
 };
 const CodecID TglobalSettingsDecVideo::c_wmv3[IDFF_MOVIE_MAX+1]=
 {

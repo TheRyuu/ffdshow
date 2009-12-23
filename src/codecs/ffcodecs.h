@@ -213,7 +213,14 @@
  CODEC_OP(CODEC_ID_X264          ,1800,"x264") \
  CODEC_OP(CODEC_ID_X264_LOSSLESS ,1900,"x264 lossless") \
  \
- CODEC_OP(CODEC_ID_H264_MT       ,2000,"h264")
+ CODEC_OP(CODEC_ID_H264_MT       ,2000,"h264") \
+ \
+ CODEC_OP(CODEC_ID_H264_DXVA       ,2001,"h264 DXVA") \
+ \
+ CODEC_OP(CODEC_ID_VC1_DXVA       ,2002,"vc1 DXVA")
+
+
+
 
 enum CodecID
 {
@@ -245,6 +252,7 @@ static __inline bool huffyuv_codec(int x)  {return x==CODEC_ID_HUFFYUV || x==COD
 static __inline bool x264_codec(int x)     {return x==CODEC_ID_X264 || x==CODEC_ID_X264_LOSSLESS;}
 static __inline bool lossless_codec(int x) {return huffyuv_codec(x) || x==CODEC_ID_LJPEG || x==CODEC_ID_FFV1 || x==CODEC_ID_DVVIDEO || x==CODEC_ID_X264_LOSSLESS;}
 static __inline bool vc1_codec(int x)      {return x == CODEC_ID_VC1 || x == CODEC_ID_WMV9_LIB;}
+static __inline bool dxva_codec(int x)      {return x == CODEC_ID_H264_DXVA || x == CODEC_ID_VC1_DXVA;}
 
 //I'm not sure of all these
 static __inline bool sup_CBR(int x)           {return !lossless_codec(x) && !raw_codec(x);}
