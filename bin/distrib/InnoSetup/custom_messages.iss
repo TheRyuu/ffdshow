@@ -50,6 +50,12 @@ sc.FileAbortRetryIgnore=ÍË³öÕýÔÚÊ¹ÓÃ ffdshow µÄÓ¦ÓÃ³ÌÐòÈ»ºóÖØÊÔ¡£Èç¹ûÎÊÌâÈÔÈ»³öÏ
 sc.FinishedRestartLabel=°²×°³ÌÐòÐèÒªÖØÐÂÆô¶¯¼ÆËã»úÀ´Íê³É ffdshow µÄ°²×°¹ý³Ì¡£ÄãÏëÏÖÔÚÖØÐÂÆô¶¯Âð£¿%n%nÌáÊ¾£ºÈç¹ûÏÂ´Î°²×°²»ÏëÖØÐÂÆô¶¯¼ÆËã»ú£¬¿ÉÒÔ¹´Ñ¡¡°²»ÒªÔÚÏÂÁÐ³ÌÐòÖÐÊ¹ÓÃffdshow£º¡±¸´Ñ¡¿ò£¨Î»ÓÚ¡°ffdshowÊÓÆµ½âÂëÆ÷ÅäÖÃ¡±->¡°DirectShow¿ØÖÆ¡±£©£¬²¢°Ñ¡°explorer.exe¡±¼ÓÈëºóÃæµÄÁÐ±í¡£
 ;sc.WinVersionTooLowError=This build of ffdshow requires Windows 2000 or newer. Revision 2352 of ffdshow is the last one that works on Windows 98/ME.
 
+; Chinese (Traditional)
+tc.WelcomeLabel2=³o·|¦w¸Ë ffdshow ¨ì±zªº¹q¸£.%n%n«ØÄ³±z¦bÄ~Äò¤§«eÃö³¬¨ä¥¦©Ò¦³ªºÀ³¥Îµ{¦¡.
+tc.FileAbortRetryIgnore=°h¥X¨Ï¥Î ffdshow ªºÀ³¥Îµ{¦¡¨ÃÂIÀ» Retry. ¦pªG°ÝÃDÁÙ¬O«ùÄò, ½ÐÂIÀ» Abort, ­«·s±Ò°Ê±zªº¹q¸£¨Ã¦A¦¸°õ¦æ¦w¸Ëµ{¦¡.
+tc.FinishedRestartLabel=­n§¹¦¨ ffdshow ªº¦w¸Ë, ¦w¸Ëµ{¦¡¥²¶·­«·s±Ò°Ê±zªº¹q¸£. ±z·Q­n²{¦b­«·s±Ò°Ê¶Ü?%n%n´£¥Ü: ¬°¤FÁ×§K¤U¦¸­«·s±Ò°Ê¹q¸£, ¥i¥H©óµø°T¸Ñ½X¾¹²ÕºA¤ºªº "DirectShow ±±¨î" -> "¤£¨Ï¥Î ffdshow ©ó:" ¤¤¥[¤J "explorer.exe".
+tc.WinVersionTooLowError=¦¹ª©ªº ffdshow »Ý­n Windows 2000 ©Î§ó·sªºª©¥». 2352 ª©ªº ffdshow ¬O¦b Windows 98/ME ¤W¹B¦æªº³Ì«á¤@ª©.
+
 ; Add other languages here
 
 #endif
@@ -647,6 +653,80 @@ sc.shrt_audioConfig=ffdshow ÒôÆµ½âÂëÆ÷ÉèÖÃ
 sc.shrt_vfwConfig=ffdshow VFW ÉèÖÃ
 sc.shrt_uninstall=Ð¶ÔØ ffdshow
 ;sc.shrt_homepage=Homepage
+
+
+; Chinese (Traditional)
+tc.langid=1028
+tc.msg_uninstallFirst=±z¥²¶·¥ý²¾°£ÂÂª©ªº ffdshow.
+tc.simd_msg_sse=¦¹ª©ªº ffdshow »Ý­n¦³¤ä´© SSE «ü¥O¶°ªº CPU. ±zªº CPU ¨Ã¥¼¬Û®e³o¨Ç¥\¯à.
+tc.simd_msg_sse2=¦¹ª©ªº ffdshow ¶·­n¦³¤ä´© SSE2 «ü¥O¶°ªº CPU. ±zªº CPU ¨Ã¥¼¬Û®e³o¨Ç¥\¯à.
+tc.unsupported_cpu=¦¹ª©ªº ffdshow »Ý­n i686 ©Î§ó·sºØÃþªº CPU. ±zªº CPU ¨Ã¤£¤ä´©. 1940 ª©ªº ffdshow ¬O¯à¦bÂÂ¦¡ CPU ¹B§@ªº³Ì«á¤@ª©.
+
+tc.comp_ffdshowds=ffdshow DirectShow ¿z¿ï¾¹
+tc.comp_vfwInterface=VFW ¤¶­±
+tc.comp_makeAvis=AviSynth ¸}¥» serving
+tc.comp_appPlugins=À³¥Îµ{¦¡¥~±¾:
+tc.comp_msg_selectOneComp=±z¥²¶·¿ï¾Ü³Ì¤Ö¤@¶µ¤¸¥ó.
+
+tc.tsk_settings=³]©w
+tc.tsk_resetSettings=­«³]©Ò¦³ ffdshow ªº³]©w
+tc.tsk_videoFormats=µø°T®æ¦¡
+tc.tsk_videoFormatsSelect=¥H ffdshow ¸Ñ½X¤U¦Cµø°T®æ¦¡:
+tc.tsk_genericMpeg4=Generic MPEG-4
+tc.tsk_rawVideo=¥¼¸g³B²zµø°T
+tc.tsk_audioFormats=­µ°T®æ¦¡
+tc.tsk_audioFormatsSelect=¥H ffdshow ¸Ñ½X¤U¦C­µ°T®æ¦¡:
+tc.tsk_rawAudio=¥¼¸g³B²zµø°T
+tc.tsk_filters=¿z¿ï¾¹³]©w
+tc.tsk_filtersSelect=¹w³]±Ò¥Î¤U¦C¿z¿ï¾¹:
+tc.tsk_passthroughac3=±Ò¥Î AC3 pass-through (S/PDIF, HDMI)
+tc.tsk_passthroughdts=±Ò¥Î DTS pass-through (S/PDIF, HDMI)
+tc.tsk_volumeNorm=­µ¶q¼Ð·Ç¤Æ
+tc.tsk_subtitles=¦r¹õ
+tc.tsk_tweaks=½Õ®Õ
+tc.tsk_skipInloop=Always skip H.264 inloop deblocking
+tc.tsk_compatibilityManager=¬Û®e©ÊºÞ²z­û
+tc.tsk_whitelist=­­¨î ffdshow ¥u¯àµ¹¥Õ¦W³æ¤ºªºÀ³¥Îµ{¦¡¨Ï¥Î
+tc.tsk_whitelistPrompt=·í¥¼ª¾ªºÀ³¥Îµ{¦¡¹Á¸Õ¸ü¤J ffdshow ®ÉÅã¥Ü¬Û®e©ÊºÞ²z­ûµøµ¡
+
+tc.spk_Label1=´­Án¾¹³]©w
+tc.spk_Label2=½Ð¿ï¾Ü¥H¤U³Ì±µªñ±z¹q¸£²ÕºAªº´­Án¾¹³]©w. ±z¥i¥H¦b¦w¸Ë§¹¤§«á¨Ï¥Î "²V­µ¾¹" ³]©w­×§ï.
+tc.spk_Label3=´­Án¾¹³]©w:
+tc.spk_mono=³æÁn¹D
+tc.spk_stereo=¥ßÅéÁn
+tc.spk_quadro=¥|Án¹D
+tc.spk_rear_1ch=«á¤@Án¹D
+tc.spk_front_2ch=«e¤GÁn¹D
+tc.spk_side_2ch=°¼¤GÁn¹D
+tc.spk_rear_2ch=«á¤GÁn¹D
+tc.spk_front_3ch=«e¤TÁn¹D
+tc.spk_5ch=«e¤TÁn¹D + «á¤GÁn¹D
+tc.spk_7ch=«e¤TÁn¹D + °¼¤GÁn¹D + «á¤GÁn¹D
+tc.spk_headPhone=¦Õ¾÷
+tc.spk_surround=ÀôÂ¶
+tc.spk_subwoofer=subwoofer
+tc.spk_dolby1=Dolby Surround/ProLogic
+tc.spk_dolby2=Dolby ProLogic II
+tc.spk_hrtf=Head-related transfer function (HRTF)
+tc.spk_sameAsInput=»P¿é¤J¬Û¦P
+tc.spk_disableMixer=°±¥Î²V­µ¾¹
+tc.spk_voiceControl=Án­µ±±¨î (­µ¶q)
+tc.spk_expandStereo=©µ®i¥ßÅéÁn (ÀôÂ¶)
+tc.spk_unknownSpk=¥¼ª¾ªº´­Án¾¹²ÕºA
+
+tc.plg_Label1=¿ï¾Ü %1 ªº¥~±¾µ{¦¡¥Ø¿ý
+tc.plg_Label2=%1 ¥~±¾µ{¦¡À³¸Ó¦w¸Ë¦b­þ?
+tc.plg_Label3=½Ð¿ï¾Ü¦w¸Ëµ{¦¡À³¸Ó¦w¸Ë %1 ¥~±¾µ{¦¡ªº¸ê®Æ§¨, µM«áÂIÀ» Next.,
+
+tc.run_videoConfig=°õ¦æµø°T¸Ñ½X¾¹²ÕºA
+tc.run_audioConfig=°õ¦æ­µ°T¸Ñ½X¾¹²ÕºA
+tc.run_vfwConfig=°õ¦æµø°T½s½X¾¹²ÕºA
+
+tc.shrt_videoConfig=µø°T¸Ñ½X¾¹²ÕºA
+tc.shrt_audioConfig=­µ°T¸Ñ½X¾¹²ÕºA
+tc.shrt_vfwConfig=µø°T½s½X¾¹²ÕºA
+tc.shrt_uninstall=¤Ï¦w¸Ë ffdshow
+tc.shrt_homepage=­º­¶
 
 
 ; Add other languages here
