@@ -1,4 +1,4 @@
-[Messages]
+ï»¿[Messages]
 WelcomeLabel1=[name/ver]
 
 ; English
@@ -8,59 +8,61 @@ en.FinishedRestartLabel=To complete the installation of ffdshow, Setup must rest
 en.WinVersionTooLowError=This build of ffdshow requires Windows 2000 or newer. Revision 2352 of ffdshow is the last one that works on Windows 98/ME.
 
 #if localize
-; Japanese
-jp.WelcomeLabel2=‚±‚ÌƒvƒƒOƒ‰ƒ€‚Í‚²g—p‚ÌƒRƒ“ƒsƒ…[ƒ^‚Ö ffdshow ‚ğƒCƒ“ƒXƒg[ƒ‹‚µ‚Ü‚·B%n%n‘±s‚·‚é‘O‚É‘¼‚ÌƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ğ‚·‚×‚ÄI—¹‚µ‚Ä‚­‚¾‚³‚¢B
-jp.FileAbortRetryIgnore=ffdshow‚ğg—p’†‚ÌƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ğI—¹‚µ‚ÄuÄsv‚ğƒNƒŠƒbƒN‚µ‚Ä‚­‚¾‚³‚¢B‰ğŒˆ‚µ‚È‚¢ê‡‚Íu’†~v‚ğƒNƒŠƒbƒN‚µ‚ÄƒRƒ“ƒsƒ…[ƒ^‚ğÄ‹N“®ŒãA‚à‚¤ˆê“xƒZƒbƒgƒAƒbƒv‚ğÀs‚µ‚Ä‚­‚¾‚³‚¢B
-jp.FinishedRestartLabel=ffdshow ‚ÌƒCƒ“ƒXƒg[ƒ‹‚ğŠ®—¹‚·‚é‚½‚ß‚É‚ÍAƒRƒ“ƒsƒ…[ƒ^‚ğÄ‹N“®‚·‚é•K—v‚ª‚ ‚è‚Ü‚·B%n%n‚·‚®‚ÉÄ‹N“®‚µ‚Ü‚·‚©H%n%nƒqƒ“ƒgFƒrƒfƒIƒfƒR[ƒ_[İ’è‚Ìuî•ñ‚ÆƒfƒoƒbƒOv‚ÌuDon't use ffdshow in:vuexplorer.exev‚ğ—LŒø‚É‚µ‚Ä‚¨‚­‚ÆŸ‰ñ‚©‚çÄ‹N“®‚ª•s—v‚É‚È‚é‚©‚à‚µ‚ê‚Ü‚¹‚ñB
-jp.WinVersionTooLowError=‚±‚Ìƒo[ƒWƒ‡ƒ“‚Ìffdshow‚ÍWindows 2000ˆÈ~‚ª•K—v‚Å‚·BƒŠƒrƒWƒ‡ƒ“2352‚æ‚è‘O‚Ìƒo[ƒWƒ‡ƒ“‚ğŒäg—p‚­‚¾‚³‚¢B
+
+;Czech
+cz.WelcomeLabel2=Tento instalÃ¡tor nainstaluje na vÃ¡Å¡ poÄÃ­taÄ ffdshow.%n%nPÅ™edtÃ­m neÅ¾ spustÃ­te instalaci je doporuÄeno ukonÄit vÅ¡echny ostatnÃ­ aplikace.
+cz.FileAbortRetryIgnore=UkonÄete aplikaci pouÅ¾Ã­vajÃ­cÃ­ ffdshow a kliknÄ›te na Opakovat. Pokud problÃ©m pÅ™etrvÃ¡vÃ¡, ukonÄete instalaci tlaÄÃ­tkem PÅ™eruÅ¡it, restartujte poÄÃ­taÄ a znovu spusÅ¥te instalci.
+cz.FinishedRestartLabel=Aby mohla bÃ½t instalace ffdshow dokonÄena, musÃ­ instalÃ¡tor restartovat poÄÃ­taÄ. Chcete poÄÃ­taÄ restartovat nynÃ­?%n%nTip: PotÅ™ebÄ› restartovÃ¡nÃ­ se pro pÅ™Ã­Å¡tÄ› mÅ¯Å¾ete vyhnout pokud v nastavenÃ­ video dekodÃ©ru nastavÃ­te "DirectShow"-"ffdshow nepouÅ¾Ã­vat v:"-"explorer.exe".
+cz.WinVersionTooLowError=Tato verze ffdshow vyÅ¾aduje Windows 2000 nebo novÄ›jÅ¡Ã­. Revize 2352 ffdshow je poslednÃ­, kterÃ¡ funguje ve Windows 98/ME.
 
 ; German
 de.WelcomeLabel2=Dieser Assistent wird jetzt ffdshow auf Ihrem Computer installieren.%n%nSie sollten alle anderen Anwendungen beenden, bevor Sie mit dem Setup fortfahren.
-de.FileAbortRetryIgnore=Beenden Sie das Programm, das ffdshow verwendet und klicken Sie auf "Wiederholen". Sollte das Problem weiterhin bestehen, klicken Sie auf "Abbrechen", starten Sie Ihren Computer neu und führen Sie das Setup erneut aus.
-de.FinishedRestartLabel=Um die Installation von ffdshow zu fertig zu stellen, muss das Setup Ihren Computer neu starten. Soll jetzt neu gestartet werden?%n%nHinweis: Um ihren Computer beim nächsten Mal nicht neu starten zu müssen, kann es helfen, in der Videodekoder-Konfiguration unter "DirectShow-Optionen" -> "ffdshow nicht verwenden in:" zu aktivieren.
-de.WinVersionTooLowError=Dieses ffdshow-Build benötigt Windows 2000 oder neuer. ffdshow-Revision 2352 ist die letzte, die auf Windows 98/ME funktioniert.
+de.FileAbortRetryIgnore=Beenden Sie das Programm, das ffdshow verwendet und klicken Sie auf "Wiederholen". Sollte das Problem weiterhin bestehen, klicken Sie auf "Abbrechen", starten Sie Ihren Computer neu und fÃ¼hren Sie das Setup erneut aus.
+de.FinishedRestartLabel=Um die Installation von ffdshow zu fertig zu stellen, muss das Setup Ihren Computer neu starten. Soll jetzt neu gestartet werden?%n%nHinweis: Um ihren Computer beim nÃ¤chsten Mal nicht neu starten zu mÃ¼ssen, kann es helfen, in der Videodekoder-Konfiguration unter "DirectShow-Optionen" -> "ffdshow nicht verwenden in:" zu aktivieren.
+de.WinVersionTooLowError=Dieses ffdshow-Build benÃ¶tigt Windows 2000 oder neuer. ffdshow-Revision 2352 ist die letzte, die auf Windows 98/ME funktioniert.
 
 ; French
-fr.WelcomeLabel2=Ceci installera ffdshow sur votre ordinateur.%n%nIl est recommandé de fermer toutes les autres applications avant de continuer.
-fr.FileAbortRetryIgnore=Quitter l'application qui utilise ffdshow et cliquer sur Ressayer. Si le problème persiste, cliquer sur Annuler, redémarrer l'ordinateur et réinstaller de nouveau.
-fr.FinishedRestartLabel=Pour compléter l'installation de ffdshow, l'installation doit redémarrer votre ordinateur. Voulez-vous le redémarrer maintenant ?%n%nHint : Pour éviter de redémarrer votre ordinateur la prochaine fois, il est conseiller d'activer l'option "ne pas utiliser ffdshow dans :"-"explorer.exe" dans « Infos & Debogage » du panneau configuration du décodeur vidéo ffdshow.
-fr.WinVersionTooLowError=Cette version de ffdshow nécessite Windows 2000 ou plus récent. La révision 2352 de ffdshow est la dernière compatible avec Windows 98/ME.
+fr.WelcomeLabel2=Ceci installera ffdshow sur votre ordinateur.%n%nIl est recommandÃ© de fermer toutes les autres applications avant de continuer.
+fr.FileAbortRetryIgnore=Quitter l'application qui utilise ffdshow et cliquer sur Ressayer. Si le problÃ¨me persiste, cliquer sur Annuler, redÃ©marrer l'ordinateur et rÃ©installer de nouveau.
+fr.FinishedRestartLabel=Pour complÃ©ter l'installation de ffdshow, l'installation doit redÃ©marrer votre ordinateur. Voulez-vous le redÃ©marrer maintenant ?%n%nHint : Pour Ã©viter de redÃ©marrer votre ordinateur la prochaine fois, il est conseiller d'activer l'option "ne pas utiliser ffdshow dans :"-"explorer.exe" dans Â« Infos & Debogage Â» du panneau configuration du dÃ©codeur vidÃ©o ffdshow.
+fr.WinVersionTooLowError=Cette version de ffdshow nÃ©cessite Windows 2000 ou plus rÃ©cent. La rÃ©vision 2352 de ffdshow est la derniÃ¨re compatible avec Windows 98/ME.
 
-; Russian
-ru.WelcomeLabel2=Ïğîãğàììà óñòàíîâèò ffdshow íà Âàø êîìïüşòåğ.%n%nĞåêîìåíäóåòñÿ çàêğûòü âñå ïğî÷èå ïğèëîæåíèÿ ïåğåä òåì, êàê ïğîäîëæèòü.
-ru.FileAbortRetryIgnore=Çàêğîéòå âñå ïğèëîæåíèÿ, èñïîëüçóşùèå ffdshow, è íàæìèòå "Ïîâòîğ". Åñëè ñèòóàöèÿ ïîâòîğèòñÿ, íàæìèòå "Îòêàç", ïåğåçàãğóçèòå Âàø êîìïüşòåğ è ïîïğîáóéòå åù¸ ğàç.
-ru.FinishedRestartLabel=Äëÿ çàâåğøåíèÿ óñòàíîâêè ffdshow òğåáóåòñÿ ïåğåçàãğóçèòü êîìïüşòåğ. Ïğîèçâåñòè ïåğåçàãğóçêó ñåé÷àñ?%n%nÏîäñêàçêà: èçáåæàòü ïåğåçàãğóçêè êîìïüşòåğà â ñëåäóşùèé ğàç ìîæåò ïîìî÷ü âêëş÷åíèå "Îòëàäêà"-"Íå èñïîëüçîâàòü â"-"explorer.exe" â êîíôèãóğàöèè âèäåîäåêîäåğà.
-ru.WinVersionTooLowError=Äëÿ ıòîãî áèëäà ffdshow íåîáõîäèìî èñïîëüçîâàíèå Windows 2000 èëè íîâåå. Áèëä 2352 ffdshow ÿâëÿåòñÿ ïîñëåäíèì äëÿ èñïîëüçîâàíèÿ â ÎÑ Windows 98/ME.
+; Japanese
+jp.WelcomeLabel2=ã“ã®ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã¯ã”ä½¿ç”¨ã®ã‚³ãƒ³ãƒ”ãƒ¥ãƒ¼ã‚¿ã¸ ffdshow ã‚’ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ã—ã¾ã™ã€‚%n%nç¶šè¡Œã™ã‚‹å‰ã«ä»–ã®ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã‚’ã™ã¹ã¦çµ‚äº†ã—ã¦ãã ã•ã„ã€‚
+jp.FileAbortRetryIgnore=ffdshowã‚’ä½¿ç”¨ä¸­ã®ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã‚’çµ‚äº†ã—ã¦ã€Œå†è©¦è¡Œã€ã‚’ã‚¯ãƒªãƒƒã‚¯ã—ã¦ãã ã•ã„ã€‚è§£æ±ºã—ãªã„å ´åˆã¯ã€Œä¸­æ­¢ã€ã‚’ã‚¯ãƒªãƒƒã‚¯ã—ã¦ã‚³ãƒ³ãƒ”ãƒ¥ãƒ¼ã‚¿ã‚’å†èµ·å‹•å¾Œã€ã‚‚ã†ä¸€åº¦ã‚»ãƒƒãƒˆã‚¢ãƒƒãƒ—ã‚’å®Ÿè¡Œã—ã¦ãã ã•ã„ã€‚
+jp.FinishedRestartLabel=ffdshow ã®ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ã‚’å®Œäº†ã™ã‚‹ãŸã‚ã«ã¯ã€ã‚³ãƒ³ãƒ”ãƒ¥ãƒ¼ã‚¿ã‚’å†èµ·å‹•ã™ã‚‹å¿…è¦ãŒã‚ã‚Šã¾ã™ã€‚%n%nã™ãã«å†èµ·å‹•ã—ã¾ã™ã‹ï¼Ÿ%n%nãƒ’ãƒ³ãƒˆï¼šãƒ“ãƒ‡ã‚ªãƒ‡ã‚³ãƒ¼ãƒ€ãƒ¼è¨­å®šã®ã€Œæƒ…å ±ã¨ãƒ‡ãƒãƒƒã‚°ã€ã®ã€ŒDon't use ffdshow in:ã€ã€Œexplorer.exeã€ã‚’æœ‰åŠ¹ã«ã—ã¦ãŠãã¨æ¬¡å›ã‹ã‚‰å†èµ·å‹•ãŒä¸è¦ã«ãªã‚‹ã‹ã‚‚ã—ã‚Œã¾ã›ã‚“ã€‚
+jp.WinVersionTooLowError=ã“ã®ãƒãƒ¼ã‚¸ãƒ§ãƒ³ã®ffdshowã¯Windows 2000ä»¥é™ãŒå¿…è¦ã§ã™ã€‚ãƒªãƒ“ã‚¸ãƒ§ãƒ³2352ã‚ˆã‚Šå‰ã®ãƒãƒ¼ã‚¸ãƒ§ãƒ³ã‚’å¾¡ä½¿ç”¨ãã ã•ã„ã€‚
 
 ; Polish
-pl.WelcomeLabel2=Instalator zainstaluje ffdshow na twoim komputerze.%n%nZaleca siê zamkniêcie wszystkich innych aplikacji przed kontynuowaniem procesu instalacji.
-pl.FileAbortRetryIgnore=Zamknij aplikacjê u¿ywaj¹c¹ ffdshow i wciœnij Ponów. Jeœli problem nie ustêpuje, wciœnij Przerwij, zrestartuj komputer i ponownie uruchom instalacjê.
-pl.FinishedRestartLabel=By zakoñczyæ instalacjê ffdshow, instalator musi zrestartowaæ twój komputer. Czy chcia³byœ zrestartowaæ go teraz?%n%nPodpowiedŸ: By unikn¹æ restartowania komputera nastêpnym razem, zaznacz w zak³adce "Informacje" - "Nie u¿ywaj ffdshow w:" - "explorer.exe" w konfiguracji dekodera obrazu.
-pl.WinVersionTooLowError=Ta kompilacja ffdshow wymaga Windows 2000 lub nowszego. Wersja 2352 jest ostatni¹ dzia³aj¹c¹ na Windows 98/ME.
+pl.WelcomeLabel2=Instalator zainstaluje ffdshow na twoim komputerze.%n%nZaleca siÄ™ zamkniÄ™cie wszystkich innych aplikacji przed kontynuowaniem procesu instalacji.
+pl.FileAbortRetryIgnore=Zamknij aplikacjÄ™ uÅ¼ywajÄ…cÄ… ffdshow i wciÅ›nij PonÃ³w. JeÅ›li problem nie ustÄ™puje, wciÅ›nij Przerwij, zrestartuj komputer i ponownie uruchom instalacjÄ™.
+pl.FinishedRestartLabel=By zakoÅ„czyÄ‡ instalacjÄ™ ffdshow, instalator musi zrestartowaÄ‡ twÃ³j komputer. Czy chciaÅ‚byÅ› zrestartowaÄ‡ go teraz?%n%nPodpowiedÅº: By uniknÄ…Ä‡ restartowania komputera nastÄ™pnym razem, zaznacz w zakÅ‚adce "Informacje" - "Nie uÅ¼ywaj ffdshow w:" - "explorer.exe" w konfiguracji dekodera obrazu.
+pl.WinVersionTooLowError=Ta kompilacja ffdshow wymaga Windows 2000 lub nowszego. Wersja 2352 jest ostatniÄ… dziaÅ‚ajÄ…cÄ… na Windows 98/ME.
 
-;Czech
-cz.WelcomeLabel2=Tento instalátor nainstaluje na váš poèítaè ffdshow.%n%nPøedtím ne spustíte instalaci je doporuèeno ukonèit všechny ostatní aplikace.
-cz.FileAbortRetryIgnore=Ukonèete aplikaci pouívající ffdshow a kliknìte na Opakovat. Pokud problém pøetrvává, ukonèete instalaci tlaèítkem Pøerušit, restartujte poèítaè a znovu spuste instalci.
-cz.FinishedRestartLabel=Aby mohla bıt instalace ffdshow dokonèena, musí instalátor restartovat poèítaè. Chcete poèítaè restartovat nyní?%n%nTip: Potøebì restartování se pro pøíštì mùete vyhnout pokud v nastavení video dekodéru nastavíte "DirectShow"-"ffdshow nepouívat v:"-"explorer.exe".
-cz.WinVersionTooLowError=Tato verze ffdshow vyaduje Windows 2000 nebo novìjší. Revize 2352 ffdshow je poslední, která funguje ve Windows 98/ME.
+; Russian
+ru.WelcomeLabel2=ĞŸÑ€Ğ¾Ğ³Ñ€Ğ°Ğ¼Ğ¼Ğ° ÑƒÑÑ‚Ğ°Ğ½Ğ¾Ğ²Ğ¸Ñ‚ ffdshow Ğ½Ğ° Ğ’Ğ°Ñˆ ĞºĞ¾Ğ¼Ğ¿ÑŒÑÑ‚ĞµÑ€.%n%nĞ ĞµĞºĞ¾Ğ¼ĞµĞ½Ğ´ÑƒĞµÑ‚ÑÑ Ğ·Ğ°ĞºÑ€Ñ‹Ñ‚ÑŒ Ğ²ÑĞµ Ğ¿Ñ€Ğ¾Ñ‡Ğ¸Ğµ Ğ¿Ñ€Ğ¸Ğ»Ğ¾Ğ¶ĞµĞ½Ğ¸Ñ Ğ¿ĞµÑ€ĞµĞ´ Ñ‚ĞµĞ¼, ĞºĞ°Ğº Ğ¿Ñ€Ğ¾Ğ´Ğ¾Ğ»Ğ¶Ğ¸Ñ‚ÑŒ.
+ru.FileAbortRetryIgnore=Ğ—Ğ°ĞºÑ€Ğ¾Ğ¹Ñ‚Ğµ Ğ²ÑĞµ Ğ¿Ñ€Ğ¸Ğ»Ğ¾Ğ¶ĞµĞ½Ğ¸Ñ, Ğ¸ÑĞ¿Ğ¾Ğ»ÑŒĞ·ÑƒÑÑ‰Ğ¸Ğµ ffdshow, Ğ¸ Ğ½Ğ°Ğ¶Ğ¼Ğ¸Ñ‚Ğµ "ĞŸĞ¾Ğ²Ñ‚Ğ¾Ñ€". Ğ•ÑĞ»Ğ¸ ÑĞ¸Ñ‚ÑƒĞ°Ñ†Ğ¸Ñ Ğ¿Ğ¾Ğ²Ñ‚Ğ¾Ñ€Ğ¸Ñ‚ÑÑ, Ğ½Ğ°Ğ¶Ğ¼Ğ¸Ñ‚Ğµ "ĞÑ‚ĞºĞ°Ğ·", Ğ¿ĞµÑ€ĞµĞ·Ğ°Ğ³Ñ€ÑƒĞ·Ğ¸Ñ‚Ğµ Ğ’Ğ°Ñˆ ĞºĞ¾Ğ¼Ğ¿ÑŒÑÑ‚ĞµÑ€ Ğ¸ Ğ¿Ğ¾Ğ¿Ñ€Ğ¾Ğ±ÑƒĞ¹Ñ‚Ğµ ĞµÑ‰Ñ‘ Ñ€Ğ°Ğ·.
+ru.FinishedRestartLabel=Ğ”Ğ»Ñ Ğ·Ğ°Ğ²ĞµÑ€ÑˆĞµĞ½Ğ¸Ñ ÑƒÑÑ‚Ğ°Ğ½Ğ¾Ğ²ĞºĞ¸ ffdshow Ñ‚Ñ€ĞµĞ±ÑƒĞµÑ‚ÑÑ Ğ¿ĞµÑ€ĞµĞ·Ğ°Ğ³Ñ€ÑƒĞ·Ğ¸Ñ‚ÑŒ ĞºĞ¾Ğ¼Ğ¿ÑŒÑÑ‚ĞµÑ€. ĞŸÑ€Ğ¾Ğ¸Ğ·Ğ²ĞµÑÑ‚Ğ¸ Ğ¿ĞµÑ€ĞµĞ·Ğ°Ğ³Ñ€ÑƒĞ·ĞºÑƒ ÑĞµĞ¹Ñ‡Ğ°Ñ?%n%nĞŸĞ¾Ğ´ÑĞºĞ°Ğ·ĞºĞ°: Ğ¸Ğ·Ğ±ĞµĞ¶Ğ°Ñ‚ÑŒ Ğ¿ĞµÑ€ĞµĞ·Ğ°Ğ³Ñ€ÑƒĞ·ĞºĞ¸ ĞºĞ¾Ğ¼Ğ¿ÑŒÑÑ‚ĞµÑ€Ğ° Ğ² ÑĞ»ĞµĞ´ÑƒÑÑ‰Ğ¸Ğ¹ Ñ€Ğ°Ğ· Ğ¼Ğ¾Ğ¶ĞµÑ‚ Ğ¿Ğ¾Ğ¼Ğ¾Ñ‡ÑŒ Ğ²ĞºĞ»ÑÑ‡ĞµĞ½Ğ¸Ğµ "ĞÑ‚Ğ»Ğ°Ğ´ĞºĞ°"-"ĞĞµ Ğ¸ÑĞ¿Ğ¾Ğ»ÑŒĞ·Ğ¾Ğ²Ğ°Ñ‚ÑŒ Ğ²"-"explorer.exe" Ğ² ĞºĞ¾Ğ½Ñ„Ğ¸Ğ³ÑƒÑ€Ğ°Ñ†Ğ¸Ğ¸ Ğ²Ğ¸Ğ´ĞµĞ¾Ğ´ĞµĞºĞ¾Ğ´ĞµÑ€Ğ°.
+ru.WinVersionTooLowError=Ğ”Ğ»Ñ ÑÑ‚Ğ¾Ğ³Ğ¾ Ğ±Ğ¸Ğ»Ğ´Ğ° ffdshow Ğ½ĞµĞ¾Ğ±Ñ…Ğ¾Ğ´Ğ¸Ğ¼Ğ¾ Ğ¸ÑĞ¿Ğ¾Ğ»ÑŒĞ·Ğ¾Ğ²Ğ°Ğ½Ğ¸Ğµ Windows 2000 Ğ¸Ğ»Ğ¸ Ğ½Ğ¾Ğ²ĞµĞµ. Ğ‘Ğ¸Ğ»Ğ´ 2352 ffdshow ÑĞ²Ğ»ÑĞµÑ‚ÑÑ Ğ¿Ğ¾ÑĞ»ĞµĞ´Ğ½Ğ¸Ğ¼ Ğ´Ğ»Ñ Ğ¸ÑĞ¿Ğ¾Ğ»ÑŒĞ·Ğ¾Ğ²Ğ°Ğ½Ğ¸Ñ Ğ² ĞĞ¡ Windows 98/ME.
 
 ; Chinese (Simplified)
-sc.WelcomeLabel2=¼´½«°²×° ffdshow µ½ÄúµÄµçÄÔÖĞ¡£%n%n½¨ÒéÄúÔÚ¼ÌĞø°²×°Ç°¹Ø±ÕËùÓĞÆäËûÓ¦ÓÃ³ÌĞò¡£
-sc.FileAbortRetryIgnore=ÍË³öÕıÔÚÊ¹ÓÃ ffdshow µÄÓ¦ÓÃ³ÌĞòÈ»ºóÖØÊÔ¡£Èç¹ûÎÊÌâÈÔÈ»³öÏÖ£¬µ¥»÷¡°ÖĞÖ¹¡±°´Å¥£¬²¢ÖØĞÂÆô¶¯¼ÆËã»úÈ»ºóÔÙÔËĞĞ°²×°³ÌĞò¡£
-sc.FinishedRestartLabel=°²×°³ÌĞòĞèÒªÖØĞÂÆô¶¯¼ÆËã»úÀ´Íê³É ffdshow µÄ°²×°¹ı³Ì¡£ÄãÏëÏÖÔÚÖØĞÂÆô¶¯Âğ£¿%n%nÌáÊ¾£ºÈç¹ûÏÂ´Î°²×°²»ÏëÖØĞÂÆô¶¯¼ÆËã»ú£¬¿ÉÒÔ¹´Ñ¡¡°²»ÒªÔÚÏÂÁĞ³ÌĞòÖĞÊ¹ÓÃffdshow£º¡±¸´Ñ¡¿ò£¨Î»ÓÚ¡°ffdshowÊÓÆµ½âÂëÆ÷ÅäÖÃ¡±->¡°DirectShow¿ØÖÆ¡±£©£¬²¢°Ñ¡°explorer.exe¡±¼ÓÈëºóÃæµÄÁĞ±í¡£
+sc.WelcomeLabel2=å³å°†å®‰è£… ffdshow åˆ°æ‚¨çš„ç”µè„‘ä¸­ã€‚%n%nå»ºè®®æ‚¨åœ¨ç»§ç»­å®‰è£…å‰å…³é—­æ‰€æœ‰å…¶ä»–åº”ç”¨ç¨‹åºã€‚
+sc.FileAbortRetryIgnore=é€€å‡ºæ­£åœ¨ä½¿ç”¨ ffdshow çš„åº”ç”¨ç¨‹åºç„¶åé‡è¯•ã€‚å¦‚æœé—®é¢˜ä»ç„¶å‡ºç°ï¼Œå•å‡»â€œä¸­æ­¢â€æŒ‰é’®ï¼Œå¹¶é‡æ–°å¯åŠ¨è®¡ç®—æœºç„¶åå†è¿è¡Œå®‰è£…ç¨‹åºã€‚
+sc.FinishedRestartLabel=å®‰è£…ç¨‹åºéœ€è¦é‡æ–°å¯åŠ¨è®¡ç®—æœºæ¥å®Œæˆ ffdshow çš„å®‰è£…è¿‡ç¨‹ã€‚ä½ æƒ³ç°åœ¨é‡æ–°å¯åŠ¨å—ï¼Ÿ%n%næç¤ºï¼šå¦‚æœä¸‹æ¬¡å®‰è£…ä¸æƒ³é‡æ–°å¯åŠ¨è®¡ç®—æœºï¼Œå¯ä»¥å‹¾é€‰â€œä¸è¦åœ¨ä¸‹åˆ—ç¨‹åºä¸­ä½¿ç”¨ffdshowï¼šâ€å¤é€‰æ¡†ï¼ˆä½äºâ€œffdshowè§†é¢‘è§£ç å™¨é…ç½®â€->â€œDirectShowæ§åˆ¶â€ï¼‰ï¼Œå¹¶æŠŠâ€œexplorer.exeâ€åŠ å…¥åé¢çš„åˆ—è¡¨ã€‚
 ;sc.WinVersionTooLowError=This build of ffdshow requires Windows 2000 or newer. Revision 2352 of ffdshow is the last one that works on Windows 98/ME.
 
 ; Chinese (Traditional)
-tc.WelcomeLabel2=³o·|¦w¸Ë ffdshow ¨ì±zªº¹q¸£.%n%n«ØÄ³±z¦bÄ~Äò¤§«eÃö³¬¨ä¥¦©Ò¦³ªºÀ³¥Îµ{¦¡.
-tc.FileAbortRetryIgnore=°h¥X¨Ï¥Î ffdshow ªºÀ³¥Îµ{¦¡¨ÃÂIÀ» Retry. ¦pªG°İÃDÁÙ¬O«ùÄò, ½ĞÂIÀ» Abort, ­«·s±Ò°Ê±zªº¹q¸£¨Ã¦A¦¸°õ¦æ¦w¸Ëµ{¦¡.
-tc.FinishedRestartLabel=­n§¹¦¨ ffdshow ªº¦w¸Ë, ¦w¸Ëµ{¦¡¥²¶·­«·s±Ò°Ê±zªº¹q¸£. ±z·Q­n²{¦b­«·s±Ò°Ê¶Ü?%n%n´£¥Ü: ¬°¤FÁ×§K¤U¦¸­«·s±Ò°Ê¹q¸£, ¥i¥H©óµø°T¸Ñ½X¾¹²ÕºA¤ºªº "DirectShow ±±¨î" -> "¤£¨Ï¥Î ffdshow ©ó:" ¤¤¥[¤J "explorer.exe".
-tc.WinVersionTooLowError=¦¹ª©ªº ffdshow »İ­n Windows 2000 ©Î§ó·sªºª©¥». 2352 ª©ªº ffdshow ¬O¦b Windows 98/ME ¤W¹B¦æªº³Ì«á¤@ª©.
+tc.WelcomeLabel2=é€™æœƒå®‰è£ ffdshow åˆ°æ‚¨çš„é›»è…¦.%n%nå»ºè­°æ‚¨åœ¨ç¹¼çºŒä¹‹å‰é—œé–‰å…¶å®ƒæ‰€æœ‰çš„æ‡‰ç”¨ç¨‹å¼.
+tc.FileAbortRetryIgnore=é€€å‡ºä½¿ç”¨ ffdshow çš„æ‡‰ç”¨ç¨‹å¼ä¸¦é»æ“Š Retry. å¦‚æœå•é¡Œé‚„æ˜¯æŒçºŒ, è«‹é»æ“Š Abort, é‡æ–°å•Ÿå‹•æ‚¨çš„é›»è…¦ä¸¦å†æ¬¡åŸ·è¡Œå®‰è£ç¨‹å¼.
+tc.FinishedRestartLabel=è¦å®Œæˆ ffdshow çš„å®‰è£, å®‰è£ç¨‹å¼å¿…é ˆé‡æ–°å•Ÿå‹•æ‚¨çš„é›»è…¦. æ‚¨æƒ³è¦ç¾åœ¨é‡æ–°å•Ÿå‹•å—?%n%næç¤º: ç‚ºäº†é¿å…ä¸‹æ¬¡é‡æ–°å•Ÿå‹•é›»è…¦, å¯ä»¥æ–¼è¦–è¨Šè§£ç¢¼å™¨çµ„æ…‹å…§çš„ "DirectShow æ§åˆ¶" -> "ä¸ä½¿ç”¨ ffdshow æ–¼:" ä¸­åŠ å…¥ "explorer.exe".
+tc.WinVersionTooLowError=æ­¤ç‰ˆçš„ ffdshow éœ€è¦ Windows 2000 æˆ–æ›´æ–°çš„ç‰ˆæœ¬. 2352 ç‰ˆçš„ ffdshow æ˜¯åœ¨ Windows 98/ME ä¸Šé‹è¡Œçš„æœ€å¾Œä¸€ç‰ˆ.
 
 ; Add other languages here
 
 #endif
 
 [CustomMessages]
+
 ; English
 en.langid=1033
 en.msg_uninstallFirst=You must first uninstall your old version of ffdshow.
@@ -134,148 +136,148 @@ en.shrt_vfwConfig=VFW configuration
 en.shrt_uninstall=Uninstall ffdshow
 en.shrt_homepage=Homepage
 
-
 #if localize
-; Japanese
-jp.langid=1041
-jp.msg_uninstallFirst=ŒÃ‚¢ƒo[ƒWƒ‡ƒ“‚Ìffdshow‚ğƒAƒ“ƒCƒ“ƒXƒg[ƒ‹‚µ‚Ä‚©‚çƒCƒ“ƒXƒg[ƒ‹‚µ‚Ä‰º‚³‚¢B
-jp.simd_msg_sse=‚±‚Ìƒo[ƒWƒ‡ƒ“‚Ìffdshow‚ÍCPU‚ÌSSEƒTƒ|[ƒg‚ª•K—v‚Å‚·B‚¨g‚¢‚ÌCPU‚Í‚±‚ÌğŒ‚ğ–‚½‚µ‚Ü‚¹‚ñB
-jp.simd_msg_sse2=‚±‚Ìƒo[ƒWƒ‡ƒ“‚Ìffdshow‚ÍCPU‚ÌSSE2ƒTƒ|[ƒg‚ª•K—v‚Å‚·B‚¨g‚¢‚ÌCPU‚Í‚±‚ÌğŒ‚ğ–‚½‚µ‚Ü‚¹‚ñB
-jp.unsupported_cpu=‚±‚Ìƒo[ƒWƒ‡ƒ“‚Ìffdshow‚Íi686ˆÈ~‚ÌCPU‚ª•K—v‚Å‚·BƒŠƒrƒWƒ‡ƒ“1940‚ª‚±‚ÌŒÃ‚¢CPU‚Å“®ì‚·‚éÅŒã‚Ìƒrƒ‹ƒh‚Å‚·B
 
-jp.comp_ffdshowds=ffdshow DirectShow ƒtƒBƒ‹ƒ^[
-jp.comp_vfwInterface=VFW ƒCƒ“ƒ^[ƒtƒF[ƒX
-jp.comp_makeAvis=AviSynth ƒXƒNƒŠƒvƒgƒT[ƒrƒ“ƒO
-jp.comp_appPlugins=ƒAƒvƒŠƒP[ƒVƒ‡ƒ“ƒvƒ‰ƒOƒCƒ“
-jp.comp_msg_selectOneComp=­‚È‚­‚Æ‚àˆê‚Â‚ÌƒRƒ“ƒ|[ƒlƒ“ƒg‚ğ‘I‘ğ‚µ‚Ä‚­‚¾‚³‚¢B
+; Czech
+cz.langid=1029
+cz.msg_uninstallFirst=NejdÅ™Ã­ve musÃ­te odinstalovat starou verzi ffdshow.
+cz.simd_msg_sse=Toto sestavenÃ­ ffdshow vyÅ¾aduje procesor s podporou rozÅ¡Ã­Å™enÃ­ SSE. VÃ¡Å¡ procesor tato rozÅ¡Ã­Å™enÃ­ nepodporuje.
+cz.simd_msg_sse2=Toto sestavenÃ­ ffdshow vyÅ¾aduje procesor s podporou rozÅ¡Ã­Å™enÃ­ SSE2. VÃ¡Å¡ procesor tato rozÅ¡Ã­Å™enÃ­ nepodporuje.
+cz.unsupported_cpu=Toto sestavenÃ­ ffdshow vyÅ¾aduje procesor i686 nebo novÄ›jÅ¡Ã­. VÃ¡Å¡ procesor nenÃ­ podporovÃ¡n. ffdshow revize 1940 je poslednÃ­ verze funkÄnÃ­ na starÃ½ch procesorech.
 
-jp.tsk_settings=İ’è
-jp.tsk_resetSettings=ffdshow‚Ì‚·‚×‚Ä‚Ìİ’è‚ğ‰Šú’l‚É–ß‚·
-jp.tsk_videoFormats=ƒrƒfƒIEƒtƒH[ƒ}ƒbƒg
-jp.tsk_videoFormatsSelect=ˆÈ‰º‚Ì‚·‚×‚Ä‚ÌƒrƒfƒIƒtƒH[ƒ}ƒbƒg‚ğffdshow‚ÅƒfƒR[ƒh‚·‚é
-jp.tsk_genericMpeg4=Generic MPEG-4
-jp.tsk_rawVideo=Raw Video
-jp.tsk_audioFormats=ƒI[ƒfƒBƒIEƒtƒH[ƒ}ƒbƒg
-jp.tsk_audioFormatsSelect=ˆÈ‰º‚Ì‚·‚×‚Ä‚ÌƒI[ƒfƒBƒIƒtƒH[ƒ}ƒbƒg‚ğffdshow‚ÅƒfƒR[ƒh‚·‚é
-jp.tsk_rawAudio=Raw Audio
-jp.tsk_filters=ƒtƒBƒ‹ƒ^[‚Ìİ’è
-jp.tsk_filtersSelect=ˆÈ‰º‚ÌƒtƒBƒ‹ƒ^[‚ğ—LŒø‚É‚·‚é
-jp.tsk_passthroughac3=AC3‚ğƒpƒXEƒXƒ‹[‚·‚é(S/PDIF, HDMI)
-jp.tsk_passthroughdts=DTS‚ğƒpƒXEƒXƒ‹[‚·‚é(S/PDIF, HDMI)
-jp.tsk_volumeNorm=ƒ{ƒŠƒ…[ƒ€ ƒm[ƒ}ƒ‰ƒCƒY
-jp.tsk_subtitles=š–‹
-jp.tsk_tweaks=’²®E¬‹Z
-jp.tsk_skipInloop=í‚ÉH.264‚ÌƒfƒuƒƒbƒLƒ“ƒO‚ğƒXƒLƒbƒv‚·‚é
-jp.tsk_compatibilityManager=ŒİŠ·«ŠÇ—ƒvƒƒOƒ‰ƒ€
-jp.tsk_whitelist=ffdshow‚ğŠm”F‚³‚ê‚½ŒİŠ·ƒvƒƒOƒ‰ƒ€‚Ì‚İ‚Å—p‚¢‚é
-jp.tsk_whitelistPrompt=–¢’m‚ÌƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ªffdshow‚ğƒ[ƒh‚µ‚æ‚¤‚Æ‚µ‚½ƒ_ƒCƒAƒƒO‚ğ•\¦‚·‚é
+cz.comp_ffdshowds=ffdshow DirectShow filtr
+cz.comp_vfwInterface=VFW rozhranÃ­
+cz.comp_makeAvis=Podpora pro AviSynth
+cz.comp_appPlugins=Pluginy:
+cz.comp_msg_selectOneComp=MusÃ­te zvolit minimÃ¡lnÄ› jeden komponent.
 
-jp.spk_Label1=ƒXƒs[ƒJ[‚Ìİ’è
-jp.spk_Label2=Œ»İ‚ÌƒRƒ“ƒsƒ…[ƒ^\¬‚ÉÅ‚à‹ß‚¢ƒXƒs[ƒJ[‚Ìí—Ş‚ğ‘I‚ñ‚Å‚­‚¾‚³‚¢B%nƒCƒ“ƒXƒg[ƒ‹Œã‚Éuƒ~ƒLƒT[v‚Ìİ’è‚©‚ç•ÏX‚·‚é‚±‚Æ‚ào—ˆ‚Ü‚·B
-jp.spk_Label3=ƒXƒs[ƒJ[‚Ìí—Ş
-jp.spk_mono=ƒ‚ƒmƒ‰ƒ‹
-jp.spk_stereo=ƒXƒeƒŒƒI
-jp.spk_quadro=ƒtƒƒ“ƒg 2ch { ƒŠƒA 2ch
-jp.spk_rear_1ch=ƒŠƒA 1ch
-jp.spk_front_2ch=ƒtƒƒ“ƒg 2ch
-jp.spk_side_2ch=ƒTƒCƒh 2ch
-jp.spk_rear_2ch=ƒŠƒA 2ch
-jp.spk_front_3ch=ƒtƒƒ“ƒg 3ch
-jp.spk_5ch=ƒtƒƒ“ƒg 3ch { ƒŠƒA 2ch
-jp.spk_7ch=ƒtƒƒ“ƒg 3ch { ƒTƒCƒh 2ch { ƒŠƒA 2ch
-jp.spk_headPhone=ƒwƒbƒhƒtƒHƒ“
-jp.spk_surround=ƒTƒ‰ƒEƒ“ƒh
-jp.spk_subwoofer=ƒTƒuƒE[ƒtƒ@[
-jp.spk_dolby1=ƒhƒ‹ƒr[ƒTƒ‰ƒEƒ“ƒh/ƒvƒƒƒWƒbƒN
-jp.spk_dolby2=ƒhƒ‹ƒr[ƒvƒƒƒWƒbƒNII
-jp.spk_hrtf=“ª•”“`’BŠÖ” (HRTF)
-jp.spk_sameAsInput=“ü—Í‚Æ“¯‚¶
-jp.spk_disableMixer=ƒ~ƒLƒT[‚ğ–³Œø‚É‚·‚é
-jp.spk_voiceControl=ƒ{ƒCƒXƒRƒ“ƒgƒ[ƒ‹ iƒ{ƒŠƒ…[ƒ€j
-jp.spk_expandStereo=ƒXƒeƒŒƒI‚ğŠg’£‚·‚éiƒTƒ‰ƒEƒ“ƒhj
-jp.spk_unknownSpk=Unknown speaker configuration
+cz.tsk_settings=NastavenÃ­
+cz.tsk_resetSettings=VÃ½chozÃ­ nastavenÃ­ ffdshow
+cz.tsk_videoFormats=Video formÃ¡ty
+cz.tsk_videoFormatsSelect=DekÃ³dovat pomocÃ­ ffdshow nÃ¡sledujÃ­cÃ­ video formÃ¡ty:
+cz.tsk_genericMpeg4=ObecnÃ½ MPEG-4
+cz.tsk_rawVideo=Raw video
+cz.tsk_audioFormats=Audio formÃ¡ty
+cz.tsk_audioFormatsSelect=DekÃ³dovat pomocÃ­ ffdshow nÃ¡sledujÃ­cÃ­ audio formÃ¡ty:
+cz.tsk_rawAudio=Raw audio
+cz.tsk_filters=NastavenÃ­ filtrÅ¯
+cz.tsk_filtersSelect=Ve vÃ½chozÃ­m nastavenÃ­ povolit nÃ¡sledujÃ­cÃ­ filtry:
+cz.tsk_passthroughac3=Povolit AC3 pass-through (S/PDIF, HDMI)
+cz.tsk_passthroughdts=Povolit DTS pass-through (S/PDIF, HDMI)
+cz.tsk_volumeNorm=Normalizace
+cz.tsk_subtitles=Titulky
+cz.tsk_tweaks=LadÄ›nÃ­
+cz.tsk_skipInloop=VÅ¾dy vynechat H.264 inloop deblocking
+cz.tsk_compatibilityManager=NastavenÃ­ kompatibility
+cz.tsk_whitelist=PouÅ¾Ã­vat ffdshow jen v programech uvedenÃ½ch v seznamu kompatibilnÃ­ch programÅ¯
+cz.tsk_whitelistPrompt=Zobrazit dialog SprÃ¡vce kompatibility, pokud se ffdshow pokusÃ­ naÄÃ­st neznÃ¡mÃ¡ aplikace.
 
-jp.plg_Label1=%1 ƒvƒ‰ƒOƒCƒ“ƒCƒ“ƒXƒg[ƒ‹æ‚Ìw’è
-jp.plg_Label2=%1‚ÌƒCƒ“ƒXƒg[ƒ‹æ‚ğw’è‚µ‚Ä‚­‚¾‚³‚¢B
-jp.plg_Label3=%1 ƒvƒ‰ƒOƒCƒ“‚ğƒCƒ“ƒXƒg[ƒ‹‚·‚éƒtƒHƒ‹ƒ_‚ğw’è‚µ‚ÄAuŸ‚Öv‚ğƒNƒŠƒbƒN‚µ‚Ä‚­‚¾‚³‚¢B
+cz.spk_Label1=NastavenÃ­ reproduktorÅ¯
+cz.spk_Label2=Zvolte nastavenÃ­ kterÃ© nejvÃ­ce odpovÃ­dÃ¡ konfiguraci vaÅ¡eho poÄÃ­taÄe. PozdÄ›ji lze zmÄ›nit na strÃ¡nce nastavenÃ­ "Mixer".
+cz.spk_Label3=Konfigurace reproduktorÅ¯:
+cz.spk_mono=mono
+cz.spk_stereo=stereo
+cz.spk_quadro=quadro
+cz.spk_rear_1ch=zadnÃ­ 1k
+cz.spk_front_2ch=pÅ™ednÃ­ 2k
+cz.spk_side_2ch=postrannÃ­ 2k
+cz.spk_rear_2ch=zadnÃ­ 2k
+cz.spk_front_3ch=pÅ™ednÃ­ 3k
+cz.spk_5ch=pÅ™ednÃ­ 3k + zadnÃ­ 2k
+cz.spk_7ch=pÅ™ednÃ­ 3k + postrannÃ­ 2k + zadnÃ­ 2k
+cz.spk_headPhone=sluchÃ¡tka
+cz.spk_surround=surround
+cz.spk_subwoofer=subwoofer
+cz.spk_dolby1=Dolby Surround/ProLogic
+cz.spk_dolby2=Dolby ProLogic II
+cz.spk_hrtf=Head-related transfer function (HRTF)
+cz.spk_sameAsInput=Jako vstup
+cz.spk_disableMixer=ZakÃ¡zat Mixer
+cz.spk_voiceControl=Voice control (volume)
+cz.spk_expandStereo=RozÅ¡Ã­Å™enÃ­ sterea (surround)
+cz.spk_unknownSpk=NeznÃ¡mÃ¡ konfigurace
 
-jp.run_videoConfig=ƒrƒfƒIƒfƒR[ƒ_[‚Ìİ’è‚ğs‚¤
-jp.run_audioConfig=ƒI[ƒfƒBƒIƒfƒR[ƒ_[‚Ìİ’è‚ğs‚¤
-jp.run_vfwConfig=VFW‚Ìİ’è‚ğs‚¤
+cz.plg_Label1=Zvolte adresÃ¡Å™ pluginÅ¯ %1
+cz.plg_Label2=Kam mÃ¡ bÃ½t nainstalovÃ¡n %1 plugin?
+cz.plg_Label3=Zvolte adresÃ¡Å™ do kterÃ©ho mÃ¡ bÃ½t nainstalovÃ¡n %1 plugin, pokraÄujte tlaÄÃ­tkem DalÅ¡Ã­.,
 
-jp.shrt_videoConfig=ƒrƒfƒIƒfƒR[ƒ_[‚Ìİ’è
-jp.shrt_audioConfig=ƒI[ƒfƒBƒIƒfƒR[ƒ_[‚Ìİ’è
-jp.shrt_vfwConfig=VFW‚Ìİ’è
-jp.shrt_uninstall=ffdshow‚ÌƒAƒ“ƒCƒ“ƒXƒg[ƒ‹
-jp.shrt_homepage=ƒz[ƒ€ƒy[ƒW
+cz.run_videoConfig=OtevÅ™Ã­t nastavenÃ­ video dekodÃ©ru
+cz.run_audioConfig=OtevÅ™Ã­t nastavenÃ­ audio dekodÃ©ru
+cz.run_vfwConfig=OtevÅ™Ã­t nastavenÃ­ VFW
+
+cz.shrt_videoConfig=NastavenÃ­ video dekodÃ©ru
+cz.shrt_audioConfig=NastavenÃ­ audio dekodÃ©ru
+cz.shrt_vfwConfig=NastavenÃ­ VFW
+cz.shrt_uninstall=Odinstalovat ffdshow
+cz.shrt_homepage=DomovskÃ¡ strÃ¡nka
 
 
 ; German
 de.langid=1031
-de.msg_uninstallFirst=Sie müssen ihre alte ffdshow-Version erst deinstallieren.
-de.simd_msg_sse=Dieses ffdshow-Build benötigt einen Prozessor mit SSE-Unterstützung. Ihr Prozesser besitzt diese Eigenschaft nicht.
-de.simd_msg_sse2=Dieses ffdshow-Build benötigt einen Prozessor mit SSE2-Unterstützung. Ihr Prozesser besitzt diese Eigenschaft nicht.
-de.unsupported_cpu=Dieses ffdshow-Build benötigt einen Prozessor vom Typ i686 der neuer. Ihr Prozessor wird nicht unterstützt. ffdshow-Revision 1940 ist die letzte, die auf alten Prozessoren funktioniert.
+de.msg_uninstallFirst=Sie mÃ¼ssen ihre alte ffdshow-Version erst deinstallieren.
+de.simd_msg_sse=Dieses ffdshow-Build benÃ¶tigt einen Prozessor mit SSE-UnterstÃ¼tzung. Ihr Prozesser besitzt diese Eigenschaft nicht.
+de.simd_msg_sse2=Dieses ffdshow-Build benÃ¶tigt einen Prozessor mit SSE2-UnterstÃ¼tzung. Ihr Prozesser besitzt diese Eigenschaft nicht.
+de.unsupported_cpu=Dieses ffdshow-Build benÃ¶tigt einen Prozessor vom Typ i686 der neuer. Ihr Prozessor wird nicht unterstÃ¼tzt. ffdshow-Revision 1940 ist die letzte, die auf alten Prozessoren funktioniert.
 
 de.comp_ffdshowds=ffdshow-DirectShow-Filter
 de.comp_vfwInterface=VFW-Interface
-de.comp_makeAvis=Hilfe für AviSynth-Skripte
+de.comp_makeAvis=Hilfe fÃ¼r AviSynth-Skripte
 de.comp_appPlugins=Anwendungsplugins:
-de.comp_msg_selectOneComp=Sie müssen mindestens eine Komponente auswählen.
+de.comp_msg_selectOneComp=Sie mÃ¼ssen mindestens eine Komponente auswÃ¤hlen.
 
 de.tsk_settings=Einstellungen
-de.tsk_resetSettings=Alle ffdshow-Einstellungen zurücksetzen
+de.tsk_resetSettings=Alle ffdshow-Einstellungen zurÃ¼cksetzen
 de.tsk_videoFormats=Videoformate
 de.tsk_videoFormatsSelect=Folgende Videoformate mit ffdshow dekodieren:
-de.tsk_genericMpeg4=Gewöhnliches MPEG-4
+de.tsk_genericMpeg4=GewÃ¶hnliches MPEG-4
 de.tsk_rawVideo=Unkomprimierte Videodaten
 de.tsk_audioFormats=Audioformate
 de.tsk_audioFormatsSelect=Folgende Audioformate mit ffdshow dekodieren:
 de.tsk_rawAudio=Unkomprimierte Audiodaten
 de.tsk_filters=Filtereinstellungen
-de.tsk_filtersSelect=Folgende Filter standardmäßig aktivieren:
+de.tsk_filtersSelect=Folgende Filter standardmÃ¤ÃŸig aktivieren:
 de.tsk_passthroughac3=AC3-Durchleitung aktivieren (S/PDIF, HDMI)
 de.tsk_passthroughdts=DTS-Durchleitung aktivieren (S/PDIF, HDMI)
-de.tsk_volumeNorm=Lautstärke-Normalisierung
+de.tsk_volumeNorm=LautstÃ¤rke-Normalisierung
 de.tsk_subtitles=Untertitel
 de.tsk_tweaks=Optimierungen
-de.tsk_skipInloop=Internes H.264-Deblocking immer überspringen
-de.tsk_compatibilityManager=Kompatibilitätsmanager
-de.tsk_whitelist=ffdshow nur in Anwendungen, die auf der weißen Liste stehen, verwenden
-de.tsk_whitelistPrompt=Kompatibilitätsmanager-Fenster anzeigen, wenn eine unbekannte Anwendung versucht ffdshow zu laden
+de.tsk_skipInloop=Internes H.264-Deblocking immer Ã¼berspringen
+de.tsk_compatibilityManager=KompatibilitÃ¤tsmanager
+de.tsk_whitelist=ffdshow nur in Anwendungen, die auf der weiÃŸen Liste stehen, verwenden
+de.tsk_whitelistPrompt=KompatibilitÃ¤tsmanager-Fenster anzeigen, wenn eine unbekannte Anwendung versucht ffdshow zu laden
 
 de.spk_Label1=Lautsprecheraufbau
-de.spk_Label2=Wählen Sie unten den Lautsprecheraufbau, der am ehesten Ihrer Konfiguration entspricht. Er kann nach der Installation unter "Mixer" wieder geändert werden.
+de.spk_Label2=WÃ¤hlen Sie unten den Lautsprecheraufbau, der am ehesten Ihrer Konfiguration entspricht. Er kann nach der Installation unter "Mixer" wieder geÃ¤ndert werden.
 de.spk_Label3=Lautsprecheraufbau:
 de.spk_mono=Mono
 de.spk_stereo=Stereo
 de.spk_quadro=Quadro
-de.spk_rear_1ch=1 Rückkanal
-de.spk_front_2ch=2 Vorderkanäle
-de.spk_side_2ch=2 Seitenkanäle
-de.spk_rear_2ch=2 Rückkanäle
-de.spk_front_3ch=3 Vorderkanäle
-de.spk_5ch=3 Vorderkanäle + 2 Rückkanäle
-de.spk_7ch=3 Vorderkanäle + 2 Seitenkanäle + 2 Rückkanäle
-de.spk_headPhone=Kopfhörer
+de.spk_rear_1ch=1 RÃ¼ckkanal
+de.spk_front_2ch=2 VorderkanÃ¤le
+de.spk_side_2ch=2 SeitenkanÃ¤le
+de.spk_rear_2ch=2 RÃ¼ckkanÃ¤le
+de.spk_front_3ch=3 VorderkanÃ¤le
+de.spk_5ch=3 VorderkanÃ¤le + 2 RÃ¼ckkanÃ¤le
+de.spk_7ch=3 VorderkanÃ¤le + 2 SeitenkanÃ¤le + 2 RÃ¼ckkanÃ¤le
+de.spk_headPhone=KopfhÃ¶rer
 de.spk_surround=Surround
 de.spk_subwoofer=Subwoofer
 de.spk_dolby1=Dolby Surround/ProLogic
 de.spk_dolby2=Dolby ProLogic II
-de.spk_hrtf=Kopfbezogene Übertragungsfunktion (HRTF)
-de.spk_sameAsInput=mit Eingangskanälen übereinstimmend
+de.spk_hrtf=Kopfbezogene Ãœbertragungsfunktion (HRTF)
+de.spk_sameAsInput=mit EingangskanÃ¤len Ã¼bereinstimmend
 de.spk_disableMixer=Mixer deaktivieren
-de.spk_voiceControl=Sprachsteuerung (Lautstärke)
+de.spk_voiceControl=Sprachsteuerung (LautstÃ¤rke)
 de.spk_expandStereo=Stereo erweitern (Surround)
 de.spk_unknownSpk=Unbekannte Lautsprecherkonfiguration
 
-de.plg_Label1=%1-Pluginordner auswählen
+de.plg_Label1=%1-Pluginordner auswÃ¤hlen
 de.plg_Label2=Wohin soll das %1-Plugin installiert werden?
-de.plg_Label3=Bitte wählen Sie den Ordner, in den das %1-Plugin installiert werden soll. Klicken Sie anschließend auf "Weiter".
+de.plg_Label3=Bitte wÃ¤hlen Sie den Ordner, in den das %1-Plugin installiert werden soll. Klicken Sie anschlieÃŸend auf "Weiter".
 
-de.run_videoConfig=Videodekoder-Konfiguration ausführen
-de.run_audioConfig=Audiodekoder-Konfiguration ausführen
-de.run_vfwConfig=VFW-Konfiguration ausführen
+de.run_videoConfig=Videodekoder-Konfiguration ausfÃ¼hren
+de.run_audioConfig=Audiodekoder-Konfiguration ausfÃ¼hren
+de.run_vfwConfig=VFW-Konfiguration ausfÃ¼hren
 
 de.shrt_videoConfig=Videodekoder-Konfiguration
 de.shrt_audioConfig=Audiodekoder-Konfiguration
@@ -286,447 +288,447 @@ de.shrt_homepage=Webseite
 
 ; French
 fr.langid=1036
-fr.msg_uninstallFirst=Vous devez d'abord désintaller votre ancienne version de ffdshow.
-fr.simd_msg_sse=Cette version de ffdshow nécessite un CPU avec support des instructions SSE. Votre CPU n'a pas cette capacité.
-fr.simd_msg_sse2=Cette version de ffdshow nécessite un CPU avec support des instructions SSE2. Votre CPU n'a pas cette capacité.
-fr.unsupported_cpu=Cette version de ffdshow nécessite un CPU de type i686 ou plus récent. Votre CPU n'est plus supporté. La révision 1940 de ffdshow est la dernière compatible avec les anciens CPU.
+fr.msg_uninstallFirst=Vous devez d'abord dÃ©sintaller votre ancienne version de ffdshow.
+fr.simd_msg_sse=Cette version de ffdshow nÃ©cessite un CPU avec support des instructions SSE. Votre CPU n'a pas cette capacitÃ©.
+fr.simd_msg_sse2=Cette version de ffdshow nÃ©cessite un CPU avec support des instructions SSE2. Votre CPU n'a pas cette capacitÃ©.
+fr.unsupported_cpu=Cette version de ffdshow nÃ©cessite un CPU de type i686 ou plus rÃ©cent. Votre CPU n'est plus supportÃ©. La rÃ©vision 1940 de ffdshow est la derniÃ¨re compatible avec les anciens CPU.
 
 fr.comp_ffdshowds=Filtre ffdshow DirectShow
 fr.comp_vfwInterface=Interface VFW
 fr.comp_makeAvis=Service de scripts AviSynth
 fr.comp_appPlugins=Plugins d'applications :
-fr.comp_msg_selectOneComp=Vous devez sélectionner au moins un composant.
+fr.comp_msg_selectOneComp=Vous devez sÃ©lectionner au moins un composant.
 
-fr.tsk_settings=Paramètres
-fr.tsk_resetSettings=Réinitialiser tous les paramètres ffdshow
-fr.tsk_videoFormats=Formats vidéo
-fr.tsk_videoFormatsSelect=Décoder les formats vidéo suivants avec ffdshow :
-fr.tsk_genericMpeg4=MPEG-4 générique
-fr.tsk_rawVideo=Vidéo brut
+fr.tsk_settings=ParamÃ¨tres
+fr.tsk_resetSettings=RÃ©initialiser tous les paramÃ¨tres ffdshow
+fr.tsk_videoFormats=Formats vidÃ©o
+fr.tsk_videoFormatsSelect=DÃ©coder les formats vidÃ©o suivants avec ffdshow :
+fr.tsk_genericMpeg4=MPEG-4 gÃ©nÃ©rique
+fr.tsk_rawVideo=VidÃ©o brut
 fr.tsk_audioFormats=Formats audio
-fr.tsk_audioFormatsSelect=Décoder les formats audio suivants avec ffdshow :
+fr.tsk_audioFormatsSelect=DÃ©coder les formats audio suivants avec ffdshow :
 fr.tsk_rawAudio=Audio brut
-fr.tsk_filters=Paramètres des filtres
-fr.tsk_filtersSelect=Activer les filtres suivant par défaut :
+fr.tsk_filters=ParamÃ¨tres des filtres
+fr.tsk_filtersSelect=Activer les filtres suivant par dÃ©faut :
 fr.tsk_passthroughac3=Activer AC3 en pass-through (S/PDIF, HDMI)
 fr.tsk_passthroughdts=Activer DTS en pass-through (S/PDIF, HDMI)
 fr.tsk_volumeNorm=Normalisation du volume
 fr.tsk_subtitles=Sous-titres
 fr.tsk_tweaks=Optimisations
-fr.tsk_skipInloop=Toujours sauter le deblocking intégré H.264
-fr.tsk_compatibilityManager=Gestionnaire de compatibilité
-fr.tsk_whitelist=Restreindre l'usage de ffdshow à une liste blanche d'applications
-fr.tsk_whitelistPrompt=Afficher le gestionnaire de compatibilité lorsqu'une application inconnue essaye de charger ffdshow
+fr.tsk_skipInloop=Toujours sauter le deblocking intÃ©grÃ© H.264
+fr.tsk_compatibilityManager=Gestionnaire de compatibilitÃ©
+fr.tsk_whitelist=Restreindre l'usage de ffdshow Ã  une liste blanche d'applications
+fr.tsk_whitelistPrompt=Afficher le gestionnaire de compatibilitÃ© lorsqu'une application inconnue essaye de charger ffdshow
 
 fr.spk_Label1=Configuration des haut-parleurs
-fr.spk_Label2=Sélectionnez la configuration qui correspond le plus à celle de vos haut-parleurs. Vous pouvez la changer ultérieurement à partir des paramètres du Mixer.
+fr.spk_Label2=SÃ©lectionnez la configuration qui correspond le plus Ã  celle de vos haut-parleurs. Vous pouvez la changer ultÃ©rieurement Ã  partir des paramÃ¨tres du Mixer.
 fr.spk_Label3=Configuration des haut-parleurs :
 fr.spk_mono=Mono
-fr.spk_stereo=Stéréo
+fr.spk_stereo=StÃ©rÃ©o
 fr.spk_quadro=Quadri
-fr.spk_rear_1ch=1 canal arrière
+fr.spk_rear_1ch=1 canal arriÃ¨re
 fr.spk_front_2ch=2 canaux avant
-fr.spk_side_2ch=2 canaux latéraux
-fr.spk_rear_2ch=2 canaux arrière
+fr.spk_side_2ch=2 canaux latÃ©raux
+fr.spk_rear_2ch=2 canaux arriÃ¨re
 fr.spk_front_3ch=3 canaux avant
-fr.spk_5ch=3 canaux avant + 2 canaux arrière
-fr.spk_7ch=3 canaux avant + 2 canaux latéraux + 2 canaux arrière
+fr.spk_5ch=3 canaux avant + 2 canaux arriÃ¨re
+fr.spk_7ch=3 canaux avant + 2 canaux latÃ©raux + 2 canaux arriÃ¨re
 fr.spk_headPhone=Casque
 fr.spk_surround=Surround
 fr.spk_subwoofer=Subwoofer
 fr.spk_dolby1=Dolby Surround/ProLogic
 fr.spk_dolby2=Dolby ProLogic II
-fr.spk_hrtf=Fonction de transfert reliée à la tête (HRTF)
-fr.spk_sameAsInput=Pareil à l'entrée
-fr.spk_disableMixer=Désactiver le Mixer
-fr.spk_voiceControl=Contrôle vocal (volume)
-fr.spk_expandStereo=Étendre le stéréo (surround)
+fr.spk_hrtf=Fonction de transfert reliÃ©e Ã  la tÃªte (HRTF)
+fr.spk_sameAsInput=Pareil Ã  l'entrÃ©e
+fr.spk_disableMixer=DÃ©sactiver le Mixer
+fr.spk_voiceControl=ContrÃ´le vocal (volume)
+fr.spk_expandStereo=Ã‰tendre le stÃ©rÃ©o (surround)
 fr.spk_unknownSpk=Configuration des haut-parleurs inconnue
 
-fr.plg_Label1=Sélectionner le dossier de plugin %1
-fr.plg_Label2=Où doit-être installé le plugin %1 ?
-fr.plg_Label3=Sélectionnez le dossier où doit être installer le plugin %1, et appuyez sur suivant.
+fr.plg_Label1=SÃ©lectionner le dossier de plugin %1
+fr.plg_Label2=OÃ¹ doit-Ãªtre installÃ© le plugin %1 ?
+fr.plg_Label3=SÃ©lectionnez le dossier oÃ¹ doit Ãªtre installer le plugin %1, et appuyez sur suivant.
 
-fr.run_videoConfig=Lancer la configuration décodeur vidéo
-fr.run_audioConfig=Lancer la configuration décodeur audio
+fr.run_videoConfig=Lancer la configuration dÃ©codeur vidÃ©o
+fr.run_audioConfig=Lancer la configuration dÃ©codeur audio
 fr.run_vfwConfig=Lancer la configuration VFW
 
-fr.shrt_videoConfig=Configuration décodeur vidéo
-fr.shrt_audioConfig=Configuration décodeur audio
+fr.shrt_videoConfig=Configuration dÃ©codeur vidÃ©o
+fr.shrt_audioConfig=Configuration dÃ©codeur audio
 fr.shrt_vfwConfig=Configuration VFW
-fr.shrt_uninstall=Désinstaller ffdshow
+fr.shrt_uninstall=DÃ©sinstaller ffdshow
 ;fr.shrt_homepage=Homepage
 
 
-; Russian
-ru.langid=1049
-ru.msg_uninstallFirst=Ñïåğâà âû äîëæíû óäàëèòü ñòàğóş âåğñèş ffdshow.
-ru.simd_msg_sse=İòîò áèëä ffdshow òğåáóåò ÖÏÓ ñ ïîääåğæêîé SSE èíñòğóêöèé. Âàø ÖÏÓ èõ íå ïîääåğæèâàåò.
-ru.simd_msg_sse2=İòîò áèëä ffdshow òğåáóåò ÖÏÓ ñ ïîääåğæêîé SSE2 èíñòğóêöèé. Âàø ÖÏÓ èõ íå ïîääåğæèâàåò.
-ru.unsupported_cpu=İòîò áèëä ffdshow òğåáóåò ÖÏÓ ñ àğõèòåêòóğîé i686 èëè íîâåå. Âàø ÖÏÓ íå ïîääåğæèâàåòñÿ. Áèëä 1940 ffdshow ÿâëÿåòñÿ ïîñëåäíèì äëÿ èñïîëüçîâàíèÿ ñî ñòàğûìè ÖÏÓ.
+; Japanese
+jp.langid=1041
+jp.msg_uninstallFirst=å¤ã„ãƒãƒ¼ã‚¸ãƒ§ãƒ³ã®ffdshowã‚’ã‚¢ãƒ³ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ã—ã¦ã‹ã‚‰ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ã—ã¦ä¸‹ã•ã„ã€‚
+jp.simd_msg_sse=ã“ã®ãƒãƒ¼ã‚¸ãƒ§ãƒ³ã®ffdshowã¯CPUã®SSEã‚µãƒãƒ¼ãƒˆãŒå¿…è¦ã§ã™ã€‚ãŠä½¿ã„ã®CPUã¯ã“ã®æ¡ä»¶ã‚’æº€ãŸã—ã¾ã›ã‚“ã€‚
+jp.simd_msg_sse2=ã“ã®ãƒãƒ¼ã‚¸ãƒ§ãƒ³ã®ffdshowã¯CPUã®SSE2ã‚µãƒãƒ¼ãƒˆãŒå¿…è¦ã§ã™ã€‚ãŠä½¿ã„ã®CPUã¯ã“ã®æ¡ä»¶ã‚’æº€ãŸã—ã¾ã›ã‚“ã€‚
+jp.unsupported_cpu=ã“ã®ãƒãƒ¼ã‚¸ãƒ§ãƒ³ã®ffdshowã¯i686ä»¥é™ã®CPUãŒå¿…è¦ã§ã™ã€‚ãƒªãƒ“ã‚¸ãƒ§ãƒ³1940ãŒã“ã®å¤ã„CPUã§å‹•ä½œã™ã‚‹æœ€å¾Œã®ãƒ“ãƒ«ãƒ‰ã§ã™ã€‚
 
-ru.comp_ffdshowds=ffdshow DirectShow-ôèëüòğ
-ru.comp_vfwInterface=VFW èíòåğôåéñ
-ru.comp_makeAvis=Îáñëóæèâàíèå ñêğèïòîâ AviSynth
-ru.comp_appPlugins=Ïëàãèíû ïğèëîæåíèé:
-ru.comp_msg_selectOneComp=Âû äîëæíû îòìåòèòü õîòÿ áû îäèí êîìïîíåíò.
+jp.comp_ffdshowds=ffdshow DirectShow ãƒ•ã‚£ãƒ«ã‚¿ãƒ¼
+jp.comp_vfwInterface=VFW ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹
+jp.comp_makeAvis=AviSynth ã‚¹ã‚¯ãƒªãƒ—ãƒˆã‚µãƒ¼ãƒ“ãƒ³ã‚°
+jp.comp_appPlugins=ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ãƒ—ãƒ©ã‚°ã‚¤ãƒ³
+jp.comp_msg_selectOneComp=å°‘ãªãã¨ã‚‚ä¸€ã¤ã®ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚’é¸æŠã—ã¦ãã ã•ã„ã€‚
 
-ru.tsk_settings=Íàñòğîéêè
-ru.tsk_resetSettings=Ñáğîñèòü âñå íàñòğîéêè ffdshow
-ru.tsk_videoFormats=Âèäåîôîğìàòû
-ru.tsk_videoFormatsSelect=Äåêîäèğîâàòü ñëåäóşùèå âèäåîôîğìàòû ñ ffdshow:
-ru.tsk_genericMpeg4=Generic MPEG-4
-ru.tsk_rawVideo=Raw Video
-ru.tsk_audioFormats=Àóäèîôîğìàòû
-ru.tsk_audioFormatsSelect=Äåêîäèğîâàòü ñëåäóşùèå àóäèîôîğìàòû ñ ffdshow:
-ru.tsk_rawAudio=Raw Audio
-ru.tsk_filters=Íàñòğîéêè ôèëüòğîâ
-ru.tsk_filtersSelect=Âêëş÷èòü ñëåäóşùèå ôèëüòğû ïî óìîë÷àíèş:
-ru.tsk_passthroughac3=Ğàçğåøèòü AC3 ïğîïóñê (÷åğåç S/PDIF, HDMI)
-ru.tsk_passthroughdts=Ğàçğåøèòü DTS ïğîïóñê (÷åğåç S/PDIF, HDMI)
-ru.tsk_volumeNorm=Íîğìàëèçàöèÿ çâóêà
-ru.tsk_subtitles=Ñóáòèòğû
-ru.tsk_tweaks=Îïòèìèçàöèè
-ru.tsk_skipInloop=Îòêëş÷èòü ñîáñòâåííûé äåáëîêèíã H.264
-ru.tsk_compatibilityManager=Ìåíåäæåğ ñîâìåñòèìîñòè
-ru.tsk_whitelist=Ğàçğåøèòü èñïîëüçâîàíèå ffdshow òîëüêî ïğèëîæåíèÿìè èç áåëîãî ñïèñêà
-ru.tsk_whitelistPrompt=Îòîáğàæàòü îêíî Ìåíåäæåğà ñîâìåñòèìîñòè, êîãäà íåèçâåñòíîå ïğèëîæåíèå ïûòàåòñÿ çàïóñòèòü ffdshow
+jp.tsk_settings=è¨­å®š
+jp.tsk_resetSettings=ffdshowã®ã™ã¹ã¦ã®è¨­å®šã‚’åˆæœŸå€¤ã«æˆ»ã™
+jp.tsk_videoFormats=ãƒ“ãƒ‡ã‚ªãƒ»ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆ
+jp.tsk_videoFormatsSelect=ä»¥ä¸‹ã®ã™ã¹ã¦ã®ãƒ“ãƒ‡ã‚ªãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã‚’ffdshowã§ãƒ‡ã‚³ãƒ¼ãƒ‰ã™ã‚‹
+jp.tsk_genericMpeg4=Generic MPEG-4
+jp.tsk_rawVideo=Raw Video
+jp.tsk_audioFormats=ã‚ªãƒ¼ãƒ‡ã‚£ã‚ªãƒ»ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆ
+jp.tsk_audioFormatsSelect=ä»¥ä¸‹ã®ã™ã¹ã¦ã®ã‚ªãƒ¼ãƒ‡ã‚£ã‚ªãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã‚’ffdshowã§ãƒ‡ã‚³ãƒ¼ãƒ‰ã™ã‚‹
+jp.tsk_rawAudio=Raw Audio
+jp.tsk_filters=ãƒ•ã‚£ãƒ«ã‚¿ãƒ¼ã®è¨­å®š
+jp.tsk_filtersSelect=ä»¥ä¸‹ã®ãƒ•ã‚£ãƒ«ã‚¿ãƒ¼ã‚’æœ‰åŠ¹ã«ã™ã‚‹
+jp.tsk_passthroughac3=AC3ã‚’ãƒ‘ã‚¹ãƒ»ã‚¹ãƒ«ãƒ¼ã™ã‚‹(S/PDIF, HDMI)
+jp.tsk_passthroughdts=DTSã‚’ãƒ‘ã‚¹ãƒ»ã‚¹ãƒ«ãƒ¼ã™ã‚‹(S/PDIF, HDMI)
+jp.tsk_volumeNorm=ãƒœãƒªãƒ¥ãƒ¼ãƒ  ãƒãƒ¼ãƒãƒ©ã‚¤ã‚º
+jp.tsk_subtitles=å­—å¹•
+jp.tsk_tweaks=èª¿æ•´ãƒ»å°æŠ€
+jp.tsk_skipInloop=å¸¸ã«H.264ã®ãƒ‡ãƒ–ãƒ­ãƒƒã‚­ãƒ³ã‚°ã‚’ã‚¹ã‚­ãƒƒãƒ—ã™ã‚‹
+jp.tsk_compatibilityManager=äº’æ›æ€§ç®¡ç†ãƒ—ãƒ­ã‚°ãƒ©ãƒ 
+jp.tsk_whitelist=ffdshowã‚’ç¢ºèªã•ã‚ŒãŸäº’æ›ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã®ã¿ã§ç”¨ã„ã‚‹
+jp.tsk_whitelistPrompt=æœªçŸ¥ã®ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ãŒffdshowã‚’ãƒ­ãƒ¼ãƒ‰ã—ã‚ˆã†ã¨ã—ãŸæ™‚ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’è¡¨ç¤ºã™ã‚‹
 
-ru.spk_Label1=Íàñòğîéêà àóäèîñèñòåìû
-ru.spk_Label2=Âûáåğèòå êîíôèãóğàöèş äèíàìèêîâ, ñîâïàäàşùóş ñ Âàøåé. Âû ìîæåòå èçìåíèòü å¸ ïîñëå óñòàíîâêè, èñïîëüçóÿ íàñòğîéêè "Ìèêøåğ".
-ru.spk_Label3=Àóäèîñèñòåìà:
-ru.spk_mono=ìîíî
-ru.spk_stereo=ñòåğåî
-ru.spk_quadro=êâàäğî
-ru.spk_rear_1ch=1òûëîâîé êàíàë
-ru.spk_front_2ch=2 ïåğåäíèõ êàíàëà
-ru.spk_side_2ch=2 áîêîâûõ êàíàëà
-ru.spk_rear_2ch=2 òûëîâûõ êàíàëà
-ru.spk_front_3ch=3 ïåğåäíèõ êàíàëà
-ru.spk_5ch=5 êàíàëîâ
-ru.spk_7ch=3 ïåğåäíèõ êàíàëà + 2 áîêîâûõ êàíàëà + 2 òûëîâûõ êàíàëà
-ru.spk_headPhone=íàóøíèêè
-ru.spk_surround=îáú¸ìíûé
-ru.spk_subwoofer=ñàáâóôåğ
-ru.spk_dolby1=Dolby Surround/ProLogic
-ru.spk_dolby2=Dolby ProLogic II
-ru.spk_hrtf=Ïåğåõîäíàÿ ôóíêöèÿ "äëÿ ãîëîâû" (HRTF)
-ru.spk_sameAsInput=ñîâïàäàåò ñî âõîäîì
-ru.spk_disableMixer=îòêëş÷èòü Ìèêøåğ
-ru.spk_voiceControl=êîíòğîëü ñğåäíèõ
-ru.spk_expandStereo=ğàñøèğåííîå ñòåğåî
-ru.spk_unknownSpk=Íåèçâåñòíàÿ êîíôèãóğàöèÿ äèíàìèêîâ
+jp.spk_Label1=ã‚¹ãƒ”ãƒ¼ã‚«ãƒ¼ã®è¨­å®š
+jp.spk_Label2=ç¾åœ¨ã®ã‚³ãƒ³ãƒ”ãƒ¥ãƒ¼ã‚¿æ§‹æˆã«æœ€ã‚‚è¿‘ã„ã‚¹ãƒ”ãƒ¼ã‚«ãƒ¼ã®ç¨®é¡ã‚’é¸ã‚“ã§ãã ã•ã„ã€‚%nã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«å¾Œã«ã€ŒãƒŸã‚­ã‚µãƒ¼ã€ã®è¨­å®šã‹ã‚‰å¤‰æ›´ã™ã‚‹ã“ã¨ã‚‚å‡ºæ¥ã¾ã™ã€‚
+jp.spk_Label3=ã‚¹ãƒ”ãƒ¼ã‚«ãƒ¼ã®ç¨®é¡
+jp.spk_mono=ãƒ¢ãƒãƒ©ãƒ«
+jp.spk_stereo=ã‚¹ãƒ†ãƒ¬ã‚ª
+jp.spk_quadro=ãƒ•ãƒ­ãƒ³ãƒˆ 2ch ï¼‹ ãƒªã‚¢ 2ch
+jp.spk_rear_1ch=ãƒªã‚¢ 1ch
+jp.spk_front_2ch=ãƒ•ãƒ­ãƒ³ãƒˆ 2ch
+jp.spk_side_2ch=ã‚µã‚¤ãƒ‰ 2ch
+jp.spk_rear_2ch=ãƒªã‚¢ 2ch
+jp.spk_front_3ch=ãƒ•ãƒ­ãƒ³ãƒˆ 3ch
+jp.spk_5ch=ãƒ•ãƒ­ãƒ³ãƒˆ 3ch ï¼‹ ãƒªã‚¢ 2ch
+jp.spk_7ch=ãƒ•ãƒ­ãƒ³ãƒˆ 3ch ï¼‹ ã‚µã‚¤ãƒ‰ 2ch ï¼‹ ãƒªã‚¢ 2ch
+jp.spk_headPhone=ãƒ˜ãƒƒãƒ‰ãƒ•ã‚©ãƒ³
+jp.spk_surround=ã‚µãƒ©ã‚¦ãƒ³ãƒ‰
+jp.spk_subwoofer=ã‚µãƒ–ã‚¦ãƒ¼ãƒ•ã‚¡ãƒ¼
+jp.spk_dolby1=ãƒ‰ãƒ«ãƒ“ãƒ¼ã‚µãƒ©ã‚¦ãƒ³ãƒ‰/ãƒ—ãƒ­ãƒ­ã‚¸ãƒƒã‚¯
+jp.spk_dolby2=ãƒ‰ãƒ«ãƒ“ãƒ¼ãƒ—ãƒ­ãƒ­ã‚¸ãƒƒã‚¯II
+jp.spk_hrtf=é ­éƒ¨ä¼é”é–¢æ•° (HRTF)
+jp.spk_sameAsInput=å…¥åŠ›ã¨åŒã˜
+jp.spk_disableMixer=ãƒŸã‚­ã‚µãƒ¼ã‚’ç„¡åŠ¹ã«ã™ã‚‹
+jp.spk_voiceControl=ãƒœã‚¤ã‚¹ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ« ï¼ˆãƒœãƒªãƒ¥ãƒ¼ãƒ ï¼‰
+jp.spk_expandStereo=ã‚¹ãƒ†ãƒ¬ã‚ªã‚’æ‹¡å¼µã™ã‚‹ï¼ˆã‚µãƒ©ã‚¦ãƒ³ãƒ‰ï¼‰
+jp.spk_unknownSpk=Unknown speaker configuration
 
-ru.plg_Label1=Âûáîğ ïàïêè ïëàãèíà äëÿ %1
-ru.plg_Label2=Â êàêóş ïàïêó äîëæåí áûòü óñòàíîâëåí ïëàãèí äëÿ %1?
-ru.plg_Label3=Âûáåğèòå ïàïêó, â êîòîğóş äîëæåí áûòü óñòàíîâëåí ïëàãèí äëÿ %1, çàòåì íàæìèòå "Äàëåå".
+jp.plg_Label1=%1 ãƒ—ãƒ©ã‚°ã‚¤ãƒ³ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«å…ˆã®æŒ‡å®š
+jp.plg_Label2=%1ã®ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«å…ˆã‚’æŒ‡å®šã—ã¦ãã ã•ã„ã€‚
+jp.plg_Label3=%1 ãƒ—ãƒ©ã‚°ã‚¤ãƒ³ã‚’ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ã™ã‚‹ãƒ•ã‚©ãƒ«ãƒ€ã‚’æŒ‡å®šã—ã¦ã€ã€Œæ¬¡ã¸ã€ã‚’ã‚¯ãƒªãƒƒã‚¯ã—ã¦ãã ã•ã„ã€‚
 
-ru.run_videoConfig=Çàïóñòèòü êîíôèãóğàöèş âèäåîäåêîäåğà
-ru.run_audioConfig=Çàïóñòèòü êîíôèãóğàöèş àóäèîäåêîäåğà
-ru.run_vfwConfig=Çàïóñòèòü êîíôèãóğàöèş VFW èíòåğôåéñà
+jp.run_videoConfig=ãƒ“ãƒ‡ã‚ªãƒ‡ã‚³ãƒ¼ãƒ€ãƒ¼ã®è¨­å®šã‚’è¡Œã†
+jp.run_audioConfig=ã‚ªãƒ¼ãƒ‡ã‚£ã‚ªãƒ‡ã‚³ãƒ¼ãƒ€ãƒ¼ã®è¨­å®šã‚’è¡Œã†
+jp.run_vfwConfig=VFWã®è¨­å®šã‚’è¡Œã†
 
-ru.shrt_videoConfig=Êîíôèãóğàöèÿ âèäåîäåêîäåğà
-ru.shrt_audioConfig=Êîíôèãóğàöèÿ àóäèîäåêîäåğà
-ru.shrt_vfwConfig=Êîíôèãóğàöèÿ VFW èíòåğôåéñà
-ru.shrt_uninstall=Äåèíñòàëëÿöèÿ ffdshow
-ru.shrt_homepage=Âåá-ñòğàíèöà ffdshow
+jp.shrt_videoConfig=ãƒ“ãƒ‡ã‚ªãƒ‡ã‚³ãƒ¼ãƒ€ãƒ¼ã®è¨­å®š
+jp.shrt_audioConfig=ã‚ªãƒ¼ãƒ‡ã‚£ã‚ªãƒ‡ã‚³ãƒ¼ãƒ€ãƒ¼ã®è¨­å®š
+jp.shrt_vfwConfig=VFWã®è¨­å®š
+jp.shrt_uninstall=ffdshowã®ã‚¢ãƒ³ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«
+jp.shrt_homepage=ãƒ›ãƒ¼ãƒ ãƒšãƒ¼ã‚¸
 
 
 ; Polish
 pl.langid=1045
-pl.msg_uninstallFirst=Najpierw musisz odinstalowaæ star¹ wersjê ffdshow.
-pl.simd_msg_sse=Ta kompilacja ffdshow wymaga procesora z obs³ug¹ zestawu instrukcji SSE. Twój procesor ich nie obs³uguje.
-pl.simd_msg_sse2=Ta kompilacja ffdshow wymaga procesora z obs³ug¹ zestawu instrukcji SSE2. Twój procesor ich nie obs³uguje.
-pl.unsupported_cpu=Ta kompilacja ffdshow wymaga procesora o architekturze i686 lub nowszej. Twój procesor nie jest obs³ugiwany. Wersja 1940 jest ostatni¹, która dzia³a ze starymi procesorami.
+pl.msg_uninstallFirst=Najpierw musisz odinstalowaÄ‡ starÄ… wersjÄ™ ffdshow.
+pl.simd_msg_sse=Ta kompilacja ffdshow wymaga procesora z obsÅ‚ugÄ… zestawu instrukcji SSE. TwÃ³j procesor ich nie obsÅ‚uguje.
+pl.simd_msg_sse2=Ta kompilacja ffdshow wymaga procesora z obsÅ‚ugÄ… zestawu instrukcji SSE2. TwÃ³j procesor ich nie obsÅ‚uguje.
+pl.unsupported_cpu=Ta kompilacja ffdshow wymaga procesora o architekturze i686 lub nowszej. TwÃ³j procesor nie jest obsÅ‚ugiwany. Wersja 1940 jest ostatniÄ…, ktÃ³ra dziaÅ‚a ze starymi procesorami.
 
 pl.comp_ffdshowds=Filtr ffdshow (DirectShow)
 pl.comp_vfwInterface=Koder obrazu ffdshow (VFW)
-pl.comp_makeAvis=Obs³uga skryptów AviSynth
+pl.comp_makeAvis=ObsÅ‚uga skryptÃ³w AviSynth
 pl.comp_appPlugins=Komponenty innych aplikacji
-pl.comp_msg_selectOneComp=Musisz wybraæ co najmniej jeden sk³adnik.
+pl.comp_msg_selectOneComp=Musisz wybraÄ‡ co najmniej jeden skÅ‚adnik.
 
 pl.tsk_settings=Ustawienia
 pl.tsk_resetSettings=Zresetuj wszystkie ustawienia ffdshow
 pl.tsk_videoFormats=Formaty obrazu
-pl.tsk_videoFormatsSelect=Dekoduj nastêpuj¹ce formaty obrazu u¿ywaj¹c ffdshow:
+pl.tsk_videoFormatsSelect=Dekoduj nastÄ™pujÄ…ce formaty obrazu uÅ¼ywajÄ…c ffdshow:
 pl.tsk_genericMpeg4=MPEG-4
 pl.tsk_rawVideo=Nieskompresowany obraz
-pl.tsk_audioFormats=Formaty dŸwiêku
-pl.tsk_audioFormatsSelect=Dekoduj nastêpuj¹ce formaty dŸwiêku u¿ywaj¹c ffdshow:
-pl.tsk_rawAudio=Nieskompresowany dŸwiêk
-pl.tsk_filters=Ustawienia filtrów
-pl.tsk_filtersSelect=W³¹cz nastêpuj¹ce filtry jako domyœlne:
+pl.tsk_audioFormats=Formaty dÅºwiÄ™ku
+pl.tsk_audioFormatsSelect=Dekoduj nastÄ™pujÄ…ce formaty dÅºwiÄ™ku uÅ¼ywajÄ…c ffdshow:
+pl.tsk_rawAudio=Nieskompresowany dÅºwiÄ™k
+pl.tsk_filters=Ustawienia filtrÃ³w
+pl.tsk_filtersSelect=WÅ‚Ä…cz nastÄ™pujÄ…ce filtry jako domyÅ›lne:
 pl.tsk_passthroughac3=Przekazywanie AC3 (przez S/PDIF, HDMI)
 pl.tsk_passthroughdts=Przekazywanie DTS (przez S/PDIF, HDMI)
-pl.tsk_volumeNorm=G³oœnoœæ
+pl.tsk_volumeNorm=GÅ‚oÅ›noÅ›Ä‡
 pl.tsk_subtitles=Napisy
 pl.tsk_tweaks=Ustawienia dodatkowe
 pl.tsk_skipInloop=Zawsze pomijaj deblocking H.264
-pl.tsk_compatibilityManager=Mened¿er kompatybilnoœci
-pl.tsk_whitelist=Ogranicz u¿ycie ffdshow tylko do wskazanych aplikacji
-pl.tsk_whitelistPrompt=Wyœwietlaj dialog, kiedy nieznana aplikacja próbuje uruchomiæ ffdshow
+pl.tsk_compatibilityManager=MenedÅ¼er kompatybilnoÅ›ci
+pl.tsk_whitelist=Ogranicz uÅ¼ycie ffdshow tylko do wskazanych aplikacji
+pl.tsk_whitelistPrompt=WyÅ›wietlaj dialog, kiedy nieznana aplikacja prÃ³buje uruchomiÄ‡ ffdshow
 
-pl.spk_Label1=Ustawienia g³oœników
-pl.spk_Label2=Wybierz rodzaj g³oœników, który najbardziej odpowiada twojej konfiguracji. Ustawienia te mo¿esz zmieniæ w zak³adce "Mikser" w konfiguracji dekodera dŸwiêku.
-pl.spk_Label3=Rodzaj g³oœników:
+pl.spk_Label1=Ustawienia gÅ‚oÅ›nikÃ³w
+pl.spk_Label2=Wybierz rodzaj gÅ‚oÅ›nikÃ³w, ktÃ³ry najbardziej odpowiada twojej konfiguracji. Ustawienia te moÅ¼esz zmieniÄ‡ w zakÅ‚adce "Mikser" w konfiguracji dekodera dÅºwiÄ™ku.
+pl.spk_Label3=Rodzaj gÅ‚oÅ›nikÃ³w:
 pl.spk_mono=monofoniczne
 pl.spk_stereo=stereofoniczne
 pl.spk_quadro=kwadrofoniczne
-pl.spk_rear_1ch=1 kana³ tylny
-pl.spk_front_2ch=2 kana³y przednie
-pl.spk_side_2ch=2 kana³y boczne
-pl.spk_rear_2ch=2 kana³y tylne
-pl.spk_front_3ch=3 kana³y przednie
-pl.spk_5ch=3 kana³y przednie + 2 tylne
-pl.spk_7ch=3 kana³y przednie + 2 boczne + 2 tylne
-pl.spk_headPhone=s³uchawki
+pl.spk_rear_1ch=1 kanaÅ‚ tylny
+pl.spk_front_2ch=2 kanaÅ‚y przednie
+pl.spk_side_2ch=2 kanaÅ‚y boczne
+pl.spk_rear_2ch=2 kanaÅ‚y tylne
+pl.spk_front_3ch=3 kanaÅ‚y przednie
+pl.spk_5ch=3 kanaÅ‚y przednie + 2 tylne
+pl.spk_7ch=3 kanaÅ‚y przednie + 2 boczne + 2 tylne
+pl.spk_headPhone=sÅ‚uchawki
 pl.spk_surround=surround (przestrzenne)
-pl.spk_subwoofer=g³oœnik niskotonowy
+pl.spk_subwoofer=gÅ‚oÅ›nik niskotonowy
 pl.spk_dolby1=zgodne z Dolby Surround/ProLogic
 pl.spk_dolby2=zgodne z Dolby ProLogic II
 pl.spk_hrtf=zgodne z HRTF
-pl.spk_sameAsInput=Takie same jak na wejœciu dŸwiêku
-pl.spk_disableMixer=Wy³¹cz mikser
-pl.spk_voiceControl=Kontrola g³osu (g³oœnoœæ)
-pl.spk_expandStereo=RozprowadŸ sygna³ stereo (przestrzennie)
-pl.spk_unknownSpk=Nieznana konfiguracja g³oœników
+pl.spk_sameAsInput=Takie same jak na wejÅ›ciu dÅºwiÄ™ku
+pl.spk_disableMixer=WyÅ‚Ä…cz mikser
+pl.spk_voiceControl=Kontrola gÅ‚osu (gÅ‚oÅ›noÅ›Ä‡)
+pl.spk_expandStereo=RozprowadÅº sygnaÅ‚ stereo (przestrzennie)
+pl.spk_unknownSpk=Nieznana konfiguracja gÅ‚oÅ›nikÃ³w
 
 pl.plg_Label1=Wybierz katalog komponentu %1
-pl.plg_Label2=Gdzie powinien zostaæ zainstalowany komponent %1?
-pl.plg_Label3=Wybierz folder, w którym instalator powinien zainstalowaæ komponent %1 i wciœnij Dalej.
+pl.plg_Label2=Gdzie powinien zostaÄ‡ zainstalowany komponent %1?
+pl.plg_Label3=Wybierz folder, w ktÃ³rym instalator powinien zainstalowaÄ‡ komponent %1 i wciÅ›nij Dalej.
 
-pl.run_videoConfig=Uruchom konfiguracjê dekodera obrazu ffdshow
-pl.run_audioConfig=Uruchom konfiguracjê dekodera dŸwiêku ffdshow
-pl.run_vfwConfig=Uruchom konfiguracjê kodera obrazu ffdshow
+pl.run_videoConfig=Uruchom konfiguracjÄ™ dekodera obrazu ffdshow
+pl.run_audioConfig=Uruchom konfiguracjÄ™ dekodera dÅºwiÄ™ku ffdshow
+pl.run_vfwConfig=Uruchom konfiguracjÄ™ kodera obrazu ffdshow
 
 pl.shrt_videoConfig=Konfiguracja dekodera obrazu ffdshow
-pl.shrt_audioConfig=Konfiguracja dekodera dŸwiêku ffdshow
+pl.shrt_audioConfig=Konfiguracja dekodera dÅºwiÄ™ku ffdshow
 pl.shrt_vfwConfig=Konfiguracja kodera obrazu ffdshow
 pl.shrt_uninstall=Odinstaluj ffdshow
 pl.shrt_homepage=Strona domowa
 
 
-; Czech
-cz.langid=1029
-cz.msg_uninstallFirst=Nejdøíve musíte odinstalovat starou verzi ffdshow.
-cz.simd_msg_sse=Toto sestavení ffdshow vyaduje procesor s podporou rozšíøení SSE. Váš procesor tato rozšíøení nepodporuje.
-cz.simd_msg_sse2=Toto sestavení ffdshow vyaduje procesor s podporou rozšíøení SSE2. Váš procesor tato rozšíøení nepodporuje.
-cz.unsupported_cpu=Toto sestavení ffdshow vyaduje procesor i686 nebo novìjší. Váš procesor není podporován. ffdshow revize 1940 je poslední verze funkèní na starıch procesorech.
+; Russian
+ru.langid=1049
+ru.msg_uninstallFirst=Ğ¡Ğ¿ĞµÑ€Ğ²Ğ° Ğ²Ñ‹ Ğ´Ğ¾Ğ»Ğ¶Ğ½Ñ‹ ÑƒĞ´Ğ°Ğ»Ğ¸Ñ‚ÑŒ ÑÑ‚Ğ°Ñ€ÑƒÑ Ğ²ĞµÑ€ÑĞ¸Ñ ffdshow.
+ru.simd_msg_sse=Ğ­Ñ‚Ğ¾Ñ‚ Ğ±Ğ¸Ğ»Ğ´ ffdshow Ñ‚Ñ€ĞµĞ±ÑƒĞµÑ‚ Ğ¦ĞŸĞ£ Ñ Ğ¿Ğ¾Ğ´Ğ´ĞµÑ€Ğ¶ĞºĞ¾Ğ¹ SSE Ğ¸Ğ½ÑÑ‚Ñ€ÑƒĞºÑ†Ğ¸Ğ¹. Ğ’Ğ°Ñˆ Ğ¦ĞŸĞ£ Ğ¸Ñ… Ğ½Ğµ Ğ¿Ğ¾Ğ´Ğ´ĞµÑ€Ğ¶Ğ¸Ğ²Ğ°ĞµÑ‚.
+ru.simd_msg_sse2=Ğ­Ñ‚Ğ¾Ñ‚ Ğ±Ğ¸Ğ»Ğ´ ffdshow Ñ‚Ñ€ĞµĞ±ÑƒĞµÑ‚ Ğ¦ĞŸĞ£ Ñ Ğ¿Ğ¾Ğ´Ğ´ĞµÑ€Ğ¶ĞºĞ¾Ğ¹ SSE2 Ğ¸Ğ½ÑÑ‚Ñ€ÑƒĞºÑ†Ğ¸Ğ¹. Ğ’Ğ°Ñˆ Ğ¦ĞŸĞ£ Ğ¸Ñ… Ğ½Ğµ Ğ¿Ğ¾Ğ´Ğ´ĞµÑ€Ğ¶Ğ¸Ğ²Ğ°ĞµÑ‚.
+ru.unsupported_cpu=Ğ­Ñ‚Ğ¾Ñ‚ Ğ±Ğ¸Ğ»Ğ´ ffdshow Ñ‚Ñ€ĞµĞ±ÑƒĞµÑ‚ Ğ¦ĞŸĞ£ Ñ Ğ°Ñ€Ñ…Ğ¸Ñ‚ĞµĞºÑ‚ÑƒÑ€Ğ¾Ğ¹ i686 Ğ¸Ğ»Ğ¸ Ğ½Ğ¾Ğ²ĞµĞµ. Ğ’Ğ°Ñˆ Ğ¦ĞŸĞ£ Ğ½Ğµ Ğ¿Ğ¾Ğ´Ğ´ĞµÑ€Ğ¶Ğ¸Ğ²Ğ°ĞµÑ‚ÑÑ. Ğ‘Ğ¸Ğ»Ğ´ 1940 ffdshow ÑĞ²Ğ»ÑĞµÑ‚ÑÑ Ğ¿Ğ¾ÑĞ»ĞµĞ´Ğ½Ğ¸Ğ¼ Ğ´Ğ»Ñ Ğ¸ÑĞ¿Ğ¾Ğ»ÑŒĞ·Ğ¾Ğ²Ğ°Ğ½Ğ¸Ñ ÑĞ¾ ÑÑ‚Ğ°Ñ€Ñ‹Ğ¼Ğ¸ Ğ¦ĞŸĞ£.
 
-cz.comp_ffdshowds=ffdshow DirectShow filtr
-cz.comp_vfwInterface=VFW rozhraní
-cz.comp_makeAvis=Podpora pro AviSynth
-cz.comp_appPlugins=Pluginy:
-cz.comp_msg_selectOneComp=Musíte zvolit minimálnì jeden komponent.
+ru.comp_ffdshowds=ffdshow DirectShow-Ñ„Ğ¸Ğ»ÑŒÑ‚Ñ€
+ru.comp_vfwInterface=VFW Ğ¸Ğ½Ñ‚ĞµÑ€Ñ„ĞµĞ¹Ñ
+ru.comp_makeAvis=ĞĞ±ÑĞ»ÑƒĞ¶Ğ¸Ğ²Ğ°Ğ½Ğ¸Ğµ ÑĞºÑ€Ğ¸Ğ¿Ñ‚Ğ¾Ğ² AviSynth
+ru.comp_appPlugins=ĞŸĞ»Ğ°Ğ³Ğ¸Ğ½Ñ‹ Ğ¿Ñ€Ğ¸Ğ»Ğ¾Ğ¶ĞµĞ½Ğ¸Ğ¹:
+ru.comp_msg_selectOneComp=Ğ’Ñ‹ Ğ´Ğ¾Ğ»Ğ¶Ğ½Ñ‹ Ğ¾Ñ‚Ğ¼ĞµÑ‚Ğ¸Ñ‚ÑŒ Ñ…Ğ¾Ñ‚Ñ Ğ±Ñ‹ Ğ¾Ğ´Ğ¸Ğ½ ĞºĞ¾Ğ¼Ğ¿Ğ¾Ğ½ĞµĞ½Ñ‚.
 
-cz.tsk_settings=Nastavení
-cz.tsk_resetSettings=Vıchozí nastavení ffdshow
-cz.tsk_videoFormats=Video formáty
-cz.tsk_videoFormatsSelect=Dekódovat pomocí ffdshow následující video formáty:
-cz.tsk_genericMpeg4=Obecnı MPEG-4
-cz.tsk_rawVideo=Raw video
-cz.tsk_audioFormats=Audio formáty
-cz.tsk_audioFormatsSelect=Dekódovat pomocí ffdshow následující audio formáty:
-cz.tsk_rawAudio=Raw audio
-cz.tsk_filters=Nastavení filtrù
-cz.tsk_filtersSelect=Ve vıchozím nastavení povolit následující filtry:
-cz.tsk_passthroughac3=Povolit AC3 pass-through (S/PDIF, HDMI)
-cz.tsk_passthroughdts=Povolit DTS pass-through (S/PDIF, HDMI)
-cz.tsk_volumeNorm=Normalizace
-cz.tsk_subtitles=Titulky
-cz.tsk_tweaks=Ladìní
-cz.tsk_skipInloop=Vdy vynechat H.264 inloop deblocking
-cz.tsk_compatibilityManager=Nastavení kompatibility
-cz.tsk_whitelist=Pouívat ffdshow jen v programech uvedenıch v seznamu kompatibilních programù
-cz.tsk_whitelistPrompt=Zobrazit dialog Správce kompatibility, pokud se ffdshow pokusí naèíst neznámá aplikace.
+ru.tsk_settings=ĞĞ°ÑÑ‚Ñ€Ğ¾Ğ¹ĞºĞ¸
+ru.tsk_resetSettings=Ğ¡Ğ±Ñ€Ğ¾ÑĞ¸Ñ‚ÑŒ Ğ²ÑĞµ Ğ½Ğ°ÑÑ‚Ñ€Ğ¾Ğ¹ĞºĞ¸ ffdshow
+ru.tsk_videoFormats=Ğ’Ğ¸Ğ´ĞµĞ¾Ñ„Ğ¾Ñ€Ğ¼Ğ°Ñ‚Ñ‹
+ru.tsk_videoFormatsSelect=Ğ”ĞµĞºĞ¾Ğ´Ğ¸Ñ€Ğ¾Ğ²Ğ°Ñ‚ÑŒ ÑĞ»ĞµĞ´ÑƒÑÑ‰Ğ¸Ğµ Ğ²Ğ¸Ğ´ĞµĞ¾Ñ„Ğ¾Ñ€Ğ¼Ğ°Ñ‚Ñ‹ Ñ ffdshow:
+ru.tsk_genericMpeg4=Generic MPEG-4
+ru.tsk_rawVideo=Raw Video
+ru.tsk_audioFormats=ĞÑƒĞ´Ğ¸Ğ¾Ñ„Ğ¾Ñ€Ğ¼Ğ°Ñ‚Ñ‹
+ru.tsk_audioFormatsSelect=Ğ”ĞµĞºĞ¾Ğ´Ğ¸Ñ€Ğ¾Ğ²Ğ°Ñ‚ÑŒ ÑĞ»ĞµĞ´ÑƒÑÑ‰Ğ¸Ğµ Ğ°ÑƒĞ´Ğ¸Ğ¾Ñ„Ğ¾Ñ€Ğ¼Ğ°Ñ‚Ñ‹ Ñ ffdshow:
+ru.tsk_rawAudio=Raw Audio
+ru.tsk_filters=ĞĞ°ÑÑ‚Ñ€Ğ¾Ğ¹ĞºĞ¸ Ñ„Ğ¸Ğ»ÑŒÑ‚Ñ€Ğ¾Ğ²
+ru.tsk_filtersSelect=Ğ’ĞºĞ»ÑÑ‡Ğ¸Ñ‚ÑŒ ÑĞ»ĞµĞ´ÑƒÑÑ‰Ğ¸Ğµ Ñ„Ğ¸Ğ»ÑŒÑ‚Ñ€Ñ‹ Ğ¿Ğ¾ ÑƒĞ¼Ğ¾Ğ»Ñ‡Ğ°Ğ½Ğ¸Ñ:
+ru.tsk_passthroughac3=Ğ Ğ°Ğ·Ñ€ĞµÑˆĞ¸Ñ‚ÑŒ AC3 Ğ¿Ñ€Ğ¾Ğ¿ÑƒÑĞº (Ñ‡ĞµÑ€ĞµĞ· S/PDIF, HDMI)
+ru.tsk_passthroughdts=Ğ Ğ°Ğ·Ñ€ĞµÑˆĞ¸Ñ‚ÑŒ DTS Ğ¿Ñ€Ğ¾Ğ¿ÑƒÑĞº (Ñ‡ĞµÑ€ĞµĞ· S/PDIF, HDMI)
+ru.tsk_volumeNorm=ĞĞ¾Ñ€Ğ¼Ğ°Ğ»Ğ¸Ğ·Ğ°Ñ†Ğ¸Ñ Ğ·Ğ²ÑƒĞºĞ°
+ru.tsk_subtitles=Ğ¡ÑƒĞ±Ñ‚Ğ¸Ñ‚Ñ€Ñ‹
+ru.tsk_tweaks=ĞĞ¿Ñ‚Ğ¸Ğ¼Ğ¸Ğ·Ğ°Ñ†Ğ¸Ğ¸
+ru.tsk_skipInloop=ĞÑ‚ĞºĞ»ÑÑ‡Ğ¸Ñ‚ÑŒ ÑĞ¾Ğ±ÑÑ‚Ğ²ĞµĞ½Ğ½Ñ‹Ğ¹ Ğ´ĞµĞ±Ğ»Ğ¾ĞºĞ¸Ğ½Ğ³ H.264
+ru.tsk_compatibilityManager=ĞœĞµĞ½ĞµĞ´Ğ¶ĞµÑ€ ÑĞ¾Ğ²Ğ¼ĞµÑÑ‚Ğ¸Ğ¼Ğ¾ÑÑ‚Ğ¸
+ru.tsk_whitelist=Ğ Ğ°Ğ·Ñ€ĞµÑˆĞ¸Ñ‚ÑŒ Ğ¸ÑĞ¿Ğ¾Ğ»ÑŒĞ·Ğ²Ğ¾Ğ°Ğ½Ğ¸Ğµ ffdshow Ñ‚Ğ¾Ğ»ÑŒĞºĞ¾ Ğ¿Ñ€Ğ¸Ğ»Ğ¾Ğ¶ĞµĞ½Ğ¸ÑĞ¼Ğ¸ Ğ¸Ğ· Ğ±ĞµĞ»Ğ¾Ğ³Ğ¾ ÑĞ¿Ğ¸ÑĞºĞ°
+ru.tsk_whitelistPrompt=ĞÑ‚Ğ¾Ğ±Ñ€Ğ°Ğ¶Ğ°Ñ‚ÑŒ Ğ¾ĞºĞ½Ğ¾ ĞœĞµĞ½ĞµĞ´Ğ¶ĞµÑ€Ğ° ÑĞ¾Ğ²Ğ¼ĞµÑÑ‚Ğ¸Ğ¼Ğ¾ÑÑ‚Ğ¸, ĞºĞ¾Ğ³Ğ´Ğ° Ğ½ĞµĞ¸Ğ·Ğ²ĞµÑÑ‚Ğ½Ğ¾Ğµ Ğ¿Ñ€Ğ¸Ğ»Ğ¾Ğ¶ĞµĞ½Ğ¸Ğµ Ğ¿Ñ‹Ñ‚Ğ°ĞµÑ‚ÑÑ Ğ·Ğ°Ğ¿ÑƒÑÑ‚Ğ¸Ñ‚ÑŒ ffdshow
 
-cz.spk_Label1=Nastavení reproduktorù
-cz.spk_Label2=Zvolte nastavení které nejvíce odpovídá konfiguraci vašeho poèítaèe. Pozdìji lze zmìnit na stránce nastavení "Mixer".
-cz.spk_Label3=Konfigurace reproduktorù:
-cz.spk_mono=mono
-cz.spk_stereo=stereo
-cz.spk_quadro=quadro
-cz.spk_rear_1ch=zadní 1k
-cz.spk_front_2ch=pøední 2k
-cz.spk_side_2ch=postranní 2k
-cz.spk_rear_2ch=zadní 2k
-cz.spk_front_3ch=pøední 3k
-cz.spk_5ch=pøední 3k + zadní 2k
-cz.spk_7ch=pøední 3k + postranní 2k + zadní 2k
-cz.spk_headPhone=sluchátka
-cz.spk_surround=surround
-cz.spk_subwoofer=subwoofer
-cz.spk_dolby1=Dolby Surround/ProLogic
-cz.spk_dolby2=Dolby ProLogic II
-cz.spk_hrtf=Head-related transfer function (HRTF)
-cz.spk_sameAsInput=Jako vstup
-cz.spk_disableMixer=Zakázat Mixer
-cz.spk_voiceControl=Voice control (volume)
-cz.spk_expandStereo=Rozšíøení sterea (surround)
-cz.spk_unknownSpk=Neznámá konfigurace
+ru.spk_Label1=ĞĞ°ÑÑ‚Ñ€Ğ¾Ğ¹ĞºĞ° Ğ°ÑƒĞ´Ğ¸Ğ¾ÑĞ¸ÑÑ‚ĞµĞ¼Ñ‹
+ru.spk_Label2=Ğ’Ñ‹Ğ±ĞµÑ€Ğ¸Ñ‚Ğµ ĞºĞ¾Ğ½Ñ„Ğ¸Ğ³ÑƒÑ€Ğ°Ñ†Ğ¸Ñ Ğ´Ğ¸Ğ½Ğ°Ğ¼Ğ¸ĞºĞ¾Ğ², ÑĞ¾Ğ²Ğ¿Ğ°Ğ´Ğ°ÑÑ‰ÑƒÑ Ñ Ğ’Ğ°ÑˆĞµĞ¹. Ğ’Ñ‹ Ğ¼Ğ¾Ğ¶ĞµÑ‚Ğµ Ğ¸Ğ·Ğ¼ĞµĞ½Ğ¸Ñ‚ÑŒ ĞµÑ‘ Ğ¿Ğ¾ÑĞ»Ğµ ÑƒÑÑ‚Ğ°Ğ½Ğ¾Ğ²ĞºĞ¸, Ğ¸ÑĞ¿Ğ¾Ğ»ÑŒĞ·ÑƒÑ Ğ½Ğ°ÑÑ‚Ñ€Ğ¾Ğ¹ĞºĞ¸ "ĞœĞ¸ĞºÑˆĞµÑ€".
+ru.spk_Label3=ĞÑƒĞ´Ğ¸Ğ¾ÑĞ¸ÑÑ‚ĞµĞ¼Ğ°:
+ru.spk_mono=Ğ¼Ğ¾Ğ½Ğ¾
+ru.spk_stereo=ÑÑ‚ĞµÑ€ĞµĞ¾
+ru.spk_quadro=ĞºĞ²Ğ°Ğ´Ñ€Ğ¾
+ru.spk_rear_1ch=1Ñ‚Ñ‹Ğ»Ğ¾Ğ²Ğ¾Ğ¹ ĞºĞ°Ğ½Ğ°Ğ»
+ru.spk_front_2ch=2 Ğ¿ĞµÑ€ĞµĞ´Ğ½Ğ¸Ñ… ĞºĞ°Ğ½Ğ°Ğ»Ğ°
+ru.spk_side_2ch=2 Ğ±Ğ¾ĞºĞ¾Ğ²Ñ‹Ñ… ĞºĞ°Ğ½Ğ°Ğ»Ğ°
+ru.spk_rear_2ch=2 Ñ‚Ñ‹Ğ»Ğ¾Ğ²Ñ‹Ñ… ĞºĞ°Ğ½Ğ°Ğ»Ğ°
+ru.spk_front_3ch=3 Ğ¿ĞµÑ€ĞµĞ´Ğ½Ğ¸Ñ… ĞºĞ°Ğ½Ğ°Ğ»Ğ°
+ru.spk_5ch=5 ĞºĞ°Ğ½Ğ°Ğ»Ğ¾Ğ²
+ru.spk_7ch=3 Ğ¿ĞµÑ€ĞµĞ´Ğ½Ğ¸Ñ… ĞºĞ°Ğ½Ğ°Ğ»Ğ° + 2 Ğ±Ğ¾ĞºĞ¾Ğ²Ñ‹Ñ… ĞºĞ°Ğ½Ğ°Ğ»Ğ° + 2 Ñ‚Ñ‹Ğ»Ğ¾Ğ²Ñ‹Ñ… ĞºĞ°Ğ½Ğ°Ğ»Ğ°
+ru.spk_headPhone=Ğ½Ğ°ÑƒÑˆĞ½Ğ¸ĞºĞ¸
+ru.spk_surround=Ğ¾Ğ±ÑŠÑ‘Ğ¼Ğ½Ñ‹Ğ¹
+ru.spk_subwoofer=ÑĞ°Ğ±Ğ²ÑƒÑ„ĞµÑ€
+ru.spk_dolby1=Dolby Surround/ProLogic
+ru.spk_dolby2=Dolby ProLogic II
+ru.spk_hrtf=ĞŸĞµÑ€ĞµÑ…Ğ¾Ğ´Ğ½Ğ°Ñ Ñ„ÑƒĞ½ĞºÑ†Ğ¸Ñ "Ğ´Ğ»Ñ Ğ³Ğ¾Ğ»Ğ¾Ğ²Ñ‹" (HRTF)
+ru.spk_sameAsInput=ÑĞ¾Ğ²Ğ¿Ğ°Ğ´Ğ°ĞµÑ‚ ÑĞ¾ Ğ²Ñ…Ğ¾Ğ´Ğ¾Ğ¼
+ru.spk_disableMixer=Ğ¾Ñ‚ĞºĞ»ÑÑ‡Ğ¸Ñ‚ÑŒ ĞœĞ¸ĞºÑˆĞµÑ€
+ru.spk_voiceControl=ĞºĞ¾Ğ½Ñ‚Ñ€Ğ¾Ğ»ÑŒ ÑÑ€ĞµĞ´Ğ½Ğ¸Ñ…
+ru.spk_expandStereo=Ñ€Ğ°ÑÑˆĞ¸Ñ€ĞµĞ½Ğ½Ğ¾Ğµ ÑÑ‚ĞµÑ€ĞµĞ¾
+ru.spk_unknownSpk=ĞĞµĞ¸Ğ·Ğ²ĞµÑÑ‚Ğ½Ğ°Ñ ĞºĞ¾Ğ½Ñ„Ğ¸Ğ³ÑƒÑ€Ğ°Ñ†Ğ¸Ñ Ğ´Ğ¸Ğ½Ğ°Ğ¼Ğ¸ĞºĞ¾Ğ²
 
-cz.plg_Label1=Zvolte adresáø pluginù %1
-cz.plg_Label2=Kam má bıt nainstalován %1 plugin?
-cz.plg_Label3=Zvolte adresáø do kterého má bıt nainstalován %1 plugin, pokraèujte tlaèítkem Další.,
+ru.plg_Label1=Ğ’Ñ‹Ğ±Ğ¾Ñ€ Ğ¿Ğ°Ğ¿ĞºĞ¸ Ğ¿Ğ»Ğ°Ğ³Ğ¸Ğ½Ğ° Ğ´Ğ»Ñ %1
+ru.plg_Label2=Ğ’ ĞºĞ°ĞºÑƒÑ Ğ¿Ğ°Ğ¿ĞºÑƒ Ğ´Ğ¾Ğ»Ğ¶ĞµĞ½ Ğ±Ñ‹Ñ‚ÑŒ ÑƒÑÑ‚Ğ°Ğ½Ğ¾Ğ²Ğ»ĞµĞ½ Ğ¿Ğ»Ğ°Ğ³Ğ¸Ğ½ Ğ´Ğ»Ñ %1?
+ru.plg_Label3=Ğ’Ñ‹Ğ±ĞµÑ€Ğ¸Ñ‚Ğµ Ğ¿Ğ°Ğ¿ĞºÑƒ, Ğ² ĞºĞ¾Ñ‚Ğ¾Ñ€ÑƒÑ Ğ´Ğ¾Ğ»Ğ¶ĞµĞ½ Ğ±Ñ‹Ñ‚ÑŒ ÑƒÑÑ‚Ğ°Ğ½Ğ¾Ğ²Ğ»ĞµĞ½ Ğ¿Ğ»Ğ°Ğ³Ğ¸Ğ½ Ğ´Ğ»Ñ %1, Ğ·Ğ°Ñ‚ĞµĞ¼ Ğ½Ğ°Ğ¶Ğ¼Ğ¸Ñ‚Ğµ "Ğ”Ğ°Ğ»ĞµĞµ".
 
-cz.run_videoConfig=Otevøít nastavení video dekodéru
-cz.run_audioConfig=Otevøít nastavení audio dekodéru
-cz.run_vfwConfig=Otevøít nastavení VFW
+ru.run_videoConfig=Ğ—Ğ°Ğ¿ÑƒÑÑ‚Ğ¸Ñ‚ÑŒ ĞºĞ¾Ğ½Ñ„Ğ¸Ğ³ÑƒÑ€Ğ°Ñ†Ğ¸Ñ Ğ²Ğ¸Ğ´ĞµĞ¾Ğ´ĞµĞºĞ¾Ğ´ĞµÑ€Ğ°
+ru.run_audioConfig=Ğ—Ğ°Ğ¿ÑƒÑÑ‚Ğ¸Ñ‚ÑŒ ĞºĞ¾Ğ½Ñ„Ğ¸Ğ³ÑƒÑ€Ğ°Ñ†Ğ¸Ñ Ğ°ÑƒĞ´Ğ¸Ğ¾Ğ´ĞµĞºĞ¾Ğ´ĞµÑ€Ğ°
+ru.run_vfwConfig=Ğ—Ğ°Ğ¿ÑƒÑÑ‚Ğ¸Ñ‚ÑŒ ĞºĞ¾Ğ½Ñ„Ğ¸Ğ³ÑƒÑ€Ğ°Ñ†Ğ¸Ñ VFW Ğ¸Ğ½Ñ‚ĞµÑ€Ñ„ĞµĞ¹ÑĞ°
 
-cz.shrt_videoConfig=Nastavení video dekodéru
-cz.shrt_audioConfig=Nastavení audio dekodéru
-cz.shrt_vfwConfig=Nastavení VFW
-cz.shrt_uninstall=Odinstalovat ffdshow
-cz.shrt_homepage=Domovská stránka
+ru.shrt_videoConfig=ĞšĞ¾Ğ½Ñ„Ğ¸Ğ³ÑƒÑ€Ğ°Ñ†Ğ¸Ñ Ğ²Ğ¸Ğ´ĞµĞ¾Ğ´ĞµĞºĞ¾Ğ´ĞµÑ€Ğ°
+ru.shrt_audioConfig=ĞšĞ¾Ğ½Ñ„Ğ¸Ğ³ÑƒÑ€Ğ°Ñ†Ğ¸Ñ Ğ°ÑƒĞ´Ğ¸Ğ¾Ğ´ĞµĞºĞ¾Ğ´ĞµÑ€Ğ°
+ru.shrt_vfwConfig=ĞšĞ¾Ğ½Ñ„Ğ¸Ğ³ÑƒÑ€Ğ°Ñ†Ğ¸Ñ VFW Ğ¸Ğ½Ñ‚ĞµÑ€Ñ„ĞµĞ¹ÑĞ°
+ru.shrt_uninstall=Ğ”ĞµĞ¸Ğ½ÑÑ‚Ğ°Ğ»Ğ»ÑÑ†Ğ¸Ñ ffdshow
+ru.shrt_homepage=Ğ’ĞµĞ±-ÑÑ‚Ñ€Ğ°Ğ½Ğ¸Ñ†Ğ° ffdshow
 
 
 ; Chinese (Simplified)
 sc.langid=2052
-sc.msg_uninstallFirst=Äú±ØĞëÏÈĞ¶ÔØ¾É°æ±¾µÄ ffdshow¡£
-sc.simd_msg_sse=Õâ¸ö±àÒë°æµÄ ffdshow ĞèÒªÒ»¸öÖ§³Ö SSE Ö¸Áî¼¯µÄ CPU¡£µ«ÊÇÄúµÄ CPU ²¢²»Ö§³ÖÕâ¸ö¹¦ÄÜ¡£
-sc.simd_msg_sse2=Õâ¸ö±àÒë°æµÄ ffdshow ĞèÒªÒ»¸öÖ§³Ö SSE2 Ö¸Áî¼¯µÄ CPU¡£µ«ÊÇÄúµÄ CPU ²¢²»Ö§³ÖÕâ¸ö¹¦ÄÜ¡£
-sc.unsupported_cpu=Õâ¸ö±àÒë°æµÄ ffdshow ĞèÒª i686 »ò¸üĞÂµÄ CPU¡£ÄúµÄ CPU ²»±»Ö§³Ö¡£
+sc.msg_uninstallFirst=æ‚¨å¿…é¡»å…ˆå¸è½½æ—§ç‰ˆæœ¬çš„ ffdshowã€‚
+sc.simd_msg_sse=è¿™ä¸ªç¼–è¯‘ç‰ˆçš„ ffdshow éœ€è¦ä¸€ä¸ªæ”¯æŒ SSE æŒ‡ä»¤é›†çš„ CPUã€‚ä½†æ˜¯æ‚¨çš„ CPU å¹¶ä¸æ”¯æŒè¿™ä¸ªåŠŸèƒ½ã€‚
+sc.simd_msg_sse2=è¿™ä¸ªç¼–è¯‘ç‰ˆçš„ ffdshow éœ€è¦ä¸€ä¸ªæ”¯æŒ SSE2 æŒ‡ä»¤é›†çš„ CPUã€‚ä½†æ˜¯æ‚¨çš„ CPU å¹¶ä¸æ”¯æŒè¿™ä¸ªåŠŸèƒ½ã€‚
+sc.unsupported_cpu=è¿™ä¸ªç¼–è¯‘ç‰ˆçš„ ffdshow éœ€è¦ i686 æˆ–æ›´æ–°çš„ CPUã€‚æ‚¨çš„ CPU ä¸è¢«æ”¯æŒã€‚
 ;[The message above is only a partial translation:]  sc.unsupported_cpu=This build of ffdshow requires a CPU of type i686 or newer. Your CPU is not supported. Revision 1940 of ffdshow is the last one that works on old CPUs.
 
-sc.comp_ffdshowds=ffdshow DirectShow ÂË¾µ
-sc.comp_vfwInterface=VFW ½Ó¿Ú
-sc.comp_makeAvis=AviSynth ½Å±¾·şÎñ
-sc.comp_appPlugins=Ó¦ÓÃ³ÌĞò²å¼ş£º
-sc.comp_msg_selectOneComp=ÄúÖÁÉÙÒªÑ¡ÔñÒ»¸ö×é¼ş¡£
+sc.comp_ffdshowds=ffdshow DirectShow æ»¤é•œ
+sc.comp_vfwInterface=VFW æ¥å£
+sc.comp_makeAvis=AviSynth è„šæœ¬æœåŠ¡
+sc.comp_appPlugins=åº”ç”¨ç¨‹åºæ’ä»¶ï¼š
+sc.comp_msg_selectOneComp=æ‚¨è‡³å°‘è¦é€‰æ‹©ä¸€ä¸ªç»„ä»¶ã€‚
 
-sc.tsk_settings=ÉèÖÃ
-sc.tsk_resetSettings=ÖØÖÃËùÓĞ ffdshow ÉèÖÃ
-sc.tsk_videoFormats=ÊÓÆµ¸ñÊ½
-sc.tsk_videoFormatsSelect=Ê¹ÓÃ ffdshow ½âÂëÏÂÁĞÊÓÆµ¸ñÊ½£º
-sc.tsk_genericMpeg4=ÆÕÍ¨ MPEG-4 ¸ñÊ½
-sc.tsk_rawVideo=Ô­Ê¼ÊÓÆµ¸ñÊ½
-sc.tsk_audioFormats=ÒôÆµ¸ñÊ½
-sc.tsk_audioFormatsSelect=Ê¹ÓÃ ffdshow ½âÂëÏÂÁĞÒôÆµ¸ñÊ½£º
-sc.tsk_rawAudio=Ô­Ê¼ÒôÆµ¸ñÊ½
-sc.tsk_filters=ÂË¾µÉèÖÃ
-sc.tsk_filtersSelect=Ä¬ÈÏÆôÓÃÏÂÁĞÂË¾µ£º
+sc.tsk_settings=è®¾ç½®
+sc.tsk_resetSettings=é‡ç½®æ‰€æœ‰ ffdshow è®¾ç½®
+sc.tsk_videoFormats=è§†é¢‘æ ¼å¼
+sc.tsk_videoFormatsSelect=ä½¿ç”¨ ffdshow è§£ç ä¸‹åˆ—è§†é¢‘æ ¼å¼ï¼š
+sc.tsk_genericMpeg4=æ™®é€š MPEG-4 æ ¼å¼
+sc.tsk_rawVideo=åŸå§‹è§†é¢‘æ ¼å¼
+sc.tsk_audioFormats=éŸ³é¢‘æ ¼å¼
+sc.tsk_audioFormatsSelect=ä½¿ç”¨ ffdshow è§£ç ä¸‹åˆ—éŸ³é¢‘æ ¼å¼ï¼š
+sc.tsk_rawAudio=åŸå§‹éŸ³é¢‘æ ¼å¼
+sc.tsk_filters=æ»¤é•œè®¾ç½®
+sc.tsk_filtersSelect=é»˜è®¤å¯ç”¨ä¸‹åˆ—æ»¤é•œï¼š
 ;sc.tsk_passthroughac3=Enable AC3 pass-through (S/PDIF, HDMI)
 ;sc.tsk_passthroughdts=Enable DTS pass-through (S/PDIF, HDMI)
-sc.tsk_volumeNorm=ÒôÁ¿Õı³£»¯
-sc.tsk_subtitles=×ÖÄ»
-sc.tsk_tweaks=µ÷Õû
-sc.tsk_skipInloop=×ÜÊÇÌø¹ı H.264 inloop ³ı¿é
-sc.tsk_compatibilityManager=¼æÈİĞÔ¹ÜÀíÆ÷
-sc.tsk_whitelist=ÏŞÖÆÖ»ÓĞ°×Ãûµ¥ÖĞµÄÓ¦ÓÃ³ÌĞò²ÅÄÜÊ¹ÓÃ ffdshow
-sc.tsk_whitelistPrompt=µ±Î´ÖªÓ¦ÓÃ³ÌĞò×°ÔØ ffdshow Ê±ÏÔÊ¾¼æÈİĞÔ¹ÜÀíÆ÷´°¿Ú
+sc.tsk_volumeNorm=éŸ³é‡æ­£å¸¸åŒ–
+sc.tsk_subtitles=å­—å¹•
+sc.tsk_tweaks=è°ƒæ•´
+sc.tsk_skipInloop=æ€»æ˜¯è·³è¿‡ H.264 inloop é™¤å—
+sc.tsk_compatibilityManager=å…¼å®¹æ€§ç®¡ç†å™¨
+sc.tsk_whitelist=é™åˆ¶åªæœ‰ç™½åå•ä¸­çš„åº”ç”¨ç¨‹åºæ‰èƒ½ä½¿ç”¨ ffdshow
+sc.tsk_whitelistPrompt=å½“æœªçŸ¥åº”ç”¨ç¨‹åºè£…è½½ ffdshow æ—¶æ˜¾ç¤ºå…¼å®¹æ€§ç®¡ç†å™¨çª—å£
 
-sc.spk_Label1=ÑïÉùÆ÷ÉèÖÃ
-sc.spk_Label2=ÇëÑ¡Ôñ×î½Ó½üÄúµÄ¼ÆËã»úÅäÖÃµÄÑïÉùÆ÷ÉèÖÃ¡£°²×°Íê³ÉÖ®ºó£¬Äú¿ÉÒÔÔÚ¡°»ìÒô¡±ÉèÖÃÒ³ÖĞ¸Ä±äÕâ¸öÑ¡Ïî¡£
-sc.spk_Label3=ÑïÉùÆ÷ÉèÖÃ£º
-sc.spk_mono=µ¥ÉùµÀÑïÉùÆ÷
-sc.spk_stereo=Ë«ÉùµÀÑïÉùÆ÷
-sc.spk_quadro=ËÄÉùµÀÑïÉùÆ÷
-sc.spk_rear_1ch=Ò»¸öºóÖÃÑïÉùÆ÷
-sc.spk_front_2ch=Á½¸öÇ°ÖÃÑïÉùÆ÷
-sc.spk_side_2ch=Á½¸ö²àÖÃÑïÉùÆ÷
-sc.spk_rear_2ch=Á½¸öºóÖÃÑïÉùÆ÷
-sc.spk_front_3ch=Èı¸öÇ°ÖÃÑïÉùÆ÷
-sc.spk_5ch=Èı¸öÇ°ÖÃ + Á½¸öºóÖÃÑïÉùÆ÷
-sc.spk_7ch=Èı¸öÇ°ÖÃ + Á½¸ö²àÖÃ + Á½¸öºóÖÃÑïÉùÆ÷
-sc.spk_headPhone=¶ú»ú
-sc.spk_surround=»·ÈÆ
-sc.spk_subwoofer=µÍÒôÑïÉùÆ÷
-sc.spk_dolby1=¶Å±È»·ÈÆ/ProLogic
-sc.spk_dolby2=¶Å±È ProLogic II
-sc.spk_hrtf=ÈËÌåÍ·²¿Ïà¹Ø´«µİº¯Êı£¨HRTF£©
-sc.spk_sameAsInput=ÓëÊäÈëÏàÍ¬
-sc.spk_disableMixer=¹Ø±Õ»ìÒô
-sc.spk_voiceControl=ÈËÉù¿ØÖÆ£¨ÒôÁ¿£©
-sc.spk_expandStereo=À©Õ¹Á¢ÌåÉù£¨»·ÈÆ£©
-sc.spk_unknownSpk=Î´ÖªÑïÉùÆ÷ÅäÖÃ
+sc.spk_Label1=æ‰¬å£°å™¨è®¾ç½®
+sc.spk_Label2=è¯·é€‰æ‹©æœ€æ¥è¿‘æ‚¨çš„è®¡ç®—æœºé…ç½®çš„æ‰¬å£°å™¨è®¾ç½®ã€‚å®‰è£…å®Œæˆä¹‹åï¼Œæ‚¨å¯ä»¥åœ¨â€œæ··éŸ³â€è®¾ç½®é¡µä¸­æ”¹å˜è¿™ä¸ªé€‰é¡¹ã€‚
+sc.spk_Label3=æ‰¬å£°å™¨è®¾ç½®ï¼š
+sc.spk_mono=å•å£°é“æ‰¬å£°å™¨
+sc.spk_stereo=åŒå£°é“æ‰¬å£°å™¨
+sc.spk_quadro=å››å£°é“æ‰¬å£°å™¨
+sc.spk_rear_1ch=ä¸€ä¸ªåç½®æ‰¬å£°å™¨
+sc.spk_front_2ch=ä¸¤ä¸ªå‰ç½®æ‰¬å£°å™¨
+sc.spk_side_2ch=ä¸¤ä¸ªä¾§ç½®æ‰¬å£°å™¨
+sc.spk_rear_2ch=ä¸¤ä¸ªåç½®æ‰¬å£°å™¨
+sc.spk_front_3ch=ä¸‰ä¸ªå‰ç½®æ‰¬å£°å™¨
+sc.spk_5ch=ä¸‰ä¸ªå‰ç½® + ä¸¤ä¸ªåç½®æ‰¬å£°å™¨
+sc.spk_7ch=ä¸‰ä¸ªå‰ç½® + ä¸¤ä¸ªä¾§ç½® + ä¸¤ä¸ªåç½®æ‰¬å£°å™¨
+sc.spk_headPhone=è€³æœº
+sc.spk_surround=ç¯ç»•
+sc.spk_subwoofer=ä½éŸ³æ‰¬å£°å™¨
+sc.spk_dolby1=æœæ¯”ç¯ç»•/ProLogic
+sc.spk_dolby2=æœæ¯” ProLogic II
+sc.spk_hrtf=äººä½“å¤´éƒ¨ç›¸å…³ä¼ é€’å‡½æ•°ï¼ˆHRTFï¼‰
+sc.spk_sameAsInput=ä¸è¾“å…¥ç›¸åŒ
+sc.spk_disableMixer=å…³é—­æ··éŸ³
+sc.spk_voiceControl=äººå£°æ§åˆ¶ï¼ˆéŸ³é‡ï¼‰
+sc.spk_expandStereo=æ‰©å±•ç«‹ä½“å£°ï¼ˆç¯ç»•ï¼‰
+sc.spk_unknownSpk=æœªçŸ¥æ‰¬å£°å™¨é…ç½®
 
-sc.plg_Label1=Ñ¡Ôñ %1 ²å¼şÄ¿Â¼
-sc.plg_Label2=%1 ²å¼şÓ¦¸Ã°²×°ÔÚÄÄÀï£¿
-sc.plg_Label3=Ñ¡Ôñ°²×° %1 ²å¼şµÄÄ¿Â¼£¬È»ºóµ¥»÷¡°ÏÂÒ»²½¡±¡£
+sc.plg_Label1=é€‰æ‹© %1 æ’ä»¶ç›®å½•
+sc.plg_Label2=%1 æ’ä»¶åº”è¯¥å®‰è£…åœ¨å“ªé‡Œï¼Ÿ
+sc.plg_Label3=é€‰æ‹©å®‰è£… %1 æ’ä»¶çš„ç›®å½•ï¼Œç„¶åå•å‡»â€œä¸‹ä¸€æ­¥â€ã€‚
 
-sc.run_videoConfig=ÔËĞĞÊÓÆµ½âÂëÆ÷ÉèÖÃ³ÌĞò
-sc.run_audioConfig=ÔËĞĞÒôÆµ½âÂëÆ÷ÉèÖÃ³ÌĞò
-sc.run_vfwConfig=ÔËĞĞ VFW ÉèÖÃ³ÌĞò
+sc.run_videoConfig=è¿è¡Œè§†é¢‘è§£ç å™¨è®¾ç½®ç¨‹åº
+sc.run_audioConfig=è¿è¡ŒéŸ³é¢‘è§£ç å™¨è®¾ç½®ç¨‹åº
+sc.run_vfwConfig=è¿è¡Œ VFW è®¾ç½®ç¨‹åº
 
-sc.shrt_videoConfig=ffdshow ÊÓÆµ½âÂëÆ÷ÉèÖÃ
-sc.shrt_audioConfig=ffdshow ÒôÆµ½âÂëÆ÷ÉèÖÃ
-sc.shrt_vfwConfig=ffdshow VFW ÉèÖÃ
-sc.shrt_uninstall=Ğ¶ÔØ ffdshow
+sc.shrt_videoConfig=ffdshow è§†é¢‘è§£ç å™¨è®¾ç½®
+sc.shrt_audioConfig=ffdshow éŸ³é¢‘è§£ç å™¨è®¾ç½®
+sc.shrt_vfwConfig=ffdshow VFW è®¾ç½®
+sc.shrt_uninstall=å¸è½½ ffdshow
 ;sc.shrt_homepage=Homepage
 
 
 ; Chinese (Traditional)
 tc.langid=1028
-tc.msg_uninstallFirst=±z¥²¶·¥ı²¾°£ÂÂª©ªº ffdshow.
-tc.simd_msg_sse=¦¹ª©ªº ffdshow »İ­n¦³¤ä´© SSE «ü¥O¶°ªº CPU. ±zªº CPU ¨Ã¥¼¬Û®e³o¨Ç¥\¯à.
-tc.simd_msg_sse2=¦¹ª©ªº ffdshow ¶·­n¦³¤ä´© SSE2 «ü¥O¶°ªº CPU. ±zªº CPU ¨Ã¥¼¬Û®e³o¨Ç¥\¯à.
-tc.unsupported_cpu=¦¹ª©ªº ffdshow »İ­n i686 ©Î§ó·sºØÃşªº CPU. ±zªº CPU ¨Ã¤£¤ä´©. 1940 ª©ªº ffdshow ¬O¯à¦bÂÂ¦¡ CPU ¹B§@ªº³Ì«á¤@ª©.
+tc.msg_uninstallFirst=æ‚¨å¿…é ˆå…ˆç§»é™¤èˆŠç‰ˆçš„ ffdshow.
+tc.simd_msg_sse=æ­¤ç‰ˆçš„ ffdshow éœ€è¦æœ‰æ”¯æ´ SSE æŒ‡ä»¤é›†çš„ CPU. æ‚¨çš„ CPU ä¸¦æœªç›¸å®¹é€™äº›åŠŸèƒ½.
+tc.simd_msg_sse2=æ­¤ç‰ˆçš„ ffdshow é ˆè¦æœ‰æ”¯æ´ SSE2 æŒ‡ä»¤é›†çš„ CPU. æ‚¨çš„ CPU ä¸¦æœªç›¸å®¹é€™äº›åŠŸèƒ½.
+tc.unsupported_cpu=æ­¤ç‰ˆçš„ ffdshow éœ€è¦ i686 æˆ–æ›´æ–°ç¨®é¡çš„ CPU. æ‚¨çš„ CPU ä¸¦ä¸æ”¯æ´. 1940 ç‰ˆçš„ ffdshow æ˜¯èƒ½åœ¨èˆŠå¼ CPU é‹ä½œçš„æœ€å¾Œä¸€ç‰ˆ.
 
-tc.comp_ffdshowds=ffdshow DirectShow ¿z¿ï¾¹
-tc.comp_vfwInterface=VFW ¤¶­±
-tc.comp_makeAvis=AviSynth ¸}¥» serving
-tc.comp_appPlugins=À³¥Îµ{¦¡¥~±¾:
-tc.comp_msg_selectOneComp=±z¥²¶·¿ï¾Ü³Ì¤Ö¤@¶µ¤¸¥ó.
+tc.comp_ffdshowds=ffdshow DirectShow ç¯©é¸å™¨
+tc.comp_vfwInterface=VFW ä»‹é¢
+tc.comp_makeAvis=AviSynth è…³æœ¬ serving
+tc.comp_appPlugins=æ‡‰ç”¨ç¨‹å¼å¤–æ›:
+tc.comp_msg_selectOneComp=æ‚¨å¿…é ˆé¸æ“‡æœ€å°‘ä¸€é …å…ƒä»¶.
 
-tc.tsk_settings=³]©w
-tc.tsk_resetSettings=­«³]©Ò¦³ ffdshow ªº³]©w
-tc.tsk_videoFormats=µø°T®æ¦¡
-tc.tsk_videoFormatsSelect=¥H ffdshow ¸Ñ½X¤U¦Cµø°T®æ¦¡:
+tc.tsk_settings=è¨­å®š
+tc.tsk_resetSettings=é‡è¨­æ‰€æœ‰ ffdshow çš„è¨­å®š
+tc.tsk_videoFormats=è¦–è¨Šæ ¼å¼
+tc.tsk_videoFormatsSelect=ä»¥ ffdshow è§£ç¢¼ä¸‹åˆ—è¦–è¨Šæ ¼å¼:
 tc.tsk_genericMpeg4=Generic MPEG-4
-tc.tsk_rawVideo=¥¼¸g³B²zµø°T
-tc.tsk_audioFormats=­µ°T®æ¦¡
-tc.tsk_audioFormatsSelect=¥H ffdshow ¸Ñ½X¤U¦C­µ°T®æ¦¡:
-tc.tsk_rawAudio=¥¼¸g³B²zµø°T
-tc.tsk_filters=¿z¿ï¾¹³]©w
-tc.tsk_filtersSelect=¹w³]±Ò¥Î¤U¦C¿z¿ï¾¹:
-tc.tsk_passthroughac3=±Ò¥Î AC3 pass-through (S/PDIF, HDMI)
-tc.tsk_passthroughdts=±Ò¥Î DTS pass-through (S/PDIF, HDMI)
-tc.tsk_volumeNorm=­µ¶q¼Ğ·Ç¤Æ
-tc.tsk_subtitles=¦r¹õ
-tc.tsk_tweaks=½Õ®Õ
+tc.tsk_rawVideo=æœªç¶“è™•ç†è¦–è¨Š
+tc.tsk_audioFormats=éŸ³è¨Šæ ¼å¼
+tc.tsk_audioFormatsSelect=ä»¥ ffdshow è§£ç¢¼ä¸‹åˆ—éŸ³è¨Šæ ¼å¼:
+tc.tsk_rawAudio=æœªç¶“è™•ç†è¦–è¨Š
+tc.tsk_filters=ç¯©é¸å™¨è¨­å®š
+tc.tsk_filtersSelect=é è¨­å•Ÿç”¨ä¸‹åˆ—ç¯©é¸å™¨:
+tc.tsk_passthroughac3=å•Ÿç”¨ AC3 pass-through (S/PDIF, HDMI)
+tc.tsk_passthroughdts=å•Ÿç”¨ DTS pass-through (S/PDIF, HDMI)
+tc.tsk_volumeNorm=éŸ³é‡æ¨™æº–åŒ–
+tc.tsk_subtitles=å­—å¹•
+tc.tsk_tweaks=èª¿æ ¡
 tc.tsk_skipInloop=Always skip H.264 inloop deblocking
-tc.tsk_compatibilityManager=¬Û®e©ÊºŞ²z­û
-tc.tsk_whitelist=­­¨î ffdshow ¥u¯àµ¹¥Õ¦W³æ¤ºªºÀ³¥Îµ{¦¡¨Ï¥Î
-tc.tsk_whitelistPrompt=·í¥¼ª¾ªºÀ³¥Îµ{¦¡¹Á¸Õ¸ü¤J ffdshow ®ÉÅã¥Ü¬Û®e©ÊºŞ²z­ûµøµ¡
+tc.tsk_compatibilityManager=ç›¸å®¹æ€§ç®¡ç†å“¡
+tc.tsk_whitelist=é™åˆ¶ ffdshow åªèƒ½çµ¦ç™½åå–®å…§çš„æ‡‰ç”¨ç¨‹å¼ä½¿ç”¨
+tc.tsk_whitelistPrompt=ç•¶æœªçŸ¥çš„æ‡‰ç”¨ç¨‹å¼å˜—è©¦è¼‰å…¥ ffdshow æ™‚é¡¯ç¤ºç›¸å®¹æ€§ç®¡ç†å“¡è¦–çª—
 
-tc.spk_Label1=´­Án¾¹³]©w
-tc.spk_Label2=½Ğ¿ï¾Ü¥H¤U³Ì±µªñ±z¹q¸£²ÕºAªº´­Án¾¹³]©w. ±z¥i¥H¦b¦w¸Ë§¹¤§«á¨Ï¥Î "²V­µ¾¹" ³]©w­×§ï.
-tc.spk_Label3=´­Án¾¹³]©w:
-tc.spk_mono=³æÁn¹D
-tc.spk_stereo=¥ßÅéÁn
-tc.spk_quadro=¥|Án¹D
-tc.spk_rear_1ch=«á¤@Án¹D
-tc.spk_front_2ch=«e¤GÁn¹D
-tc.spk_side_2ch=°¼¤GÁn¹D
-tc.spk_rear_2ch=«á¤GÁn¹D
-tc.spk_front_3ch=«e¤TÁn¹D
-tc.spk_5ch=«e¤TÁn¹D + «á¤GÁn¹D
-tc.spk_7ch=«e¤TÁn¹D + °¼¤GÁn¹D + «á¤GÁn¹D
-tc.spk_headPhone=¦Õ¾÷
-tc.spk_surround=ÀôÂ¶
+tc.spk_Label1=æšè²å™¨è¨­å®š
+tc.spk_Label2=è«‹é¸æ“‡ä»¥ä¸‹æœ€æ¥è¿‘æ‚¨é›»è…¦çµ„æ…‹çš„æšè²å™¨è¨­å®š. æ‚¨å¯ä»¥åœ¨å®‰è£å®Œä¹‹å¾Œä½¿ç”¨ "æ··éŸ³å™¨" è¨­å®šä¿®æ”¹.
+tc.spk_Label3=æšè²å™¨è¨­å®š:
+tc.spk_mono=å–®è²é“
+tc.spk_stereo=ç«‹é«”è²
+tc.spk_quadro=å››è²é“
+tc.spk_rear_1ch=å¾Œä¸€è²é“
+tc.spk_front_2ch=å‰äºŒè²é“
+tc.spk_side_2ch=å´äºŒè²é“
+tc.spk_rear_2ch=å¾ŒäºŒè²é“
+tc.spk_front_3ch=å‰ä¸‰è²é“
+tc.spk_5ch=å‰ä¸‰è²é“ + å¾ŒäºŒè²é“
+tc.spk_7ch=å‰ä¸‰è²é“ + å´äºŒè²é“ + å¾ŒäºŒè²é“
+tc.spk_headPhone=è€³æ©Ÿ
+tc.spk_surround=ç’°ç¹
 tc.spk_subwoofer=subwoofer
 tc.spk_dolby1=Dolby Surround/ProLogic
 tc.spk_dolby2=Dolby ProLogic II
 tc.spk_hrtf=Head-related transfer function (HRTF)
-tc.spk_sameAsInput=»P¿é¤J¬Û¦P
-tc.spk_disableMixer=°±¥Î²V­µ¾¹
-tc.spk_voiceControl=Án­µ±±¨î (­µ¶q)
-tc.spk_expandStereo=©µ®i¥ßÅéÁn (ÀôÂ¶)
-tc.spk_unknownSpk=¥¼ª¾ªº´­Án¾¹²ÕºA
+tc.spk_sameAsInput=èˆ‡è¼¸å…¥ç›¸åŒ
+tc.spk_disableMixer=åœç”¨æ··éŸ³å™¨
+tc.spk_voiceControl=è²éŸ³æ§åˆ¶ (éŸ³é‡)
+tc.spk_expandStereo=å»¶å±•ç«‹é«”è² (ç’°ç¹)
+tc.spk_unknownSpk=æœªçŸ¥çš„æšè²å™¨çµ„æ…‹
 
-tc.plg_Label1=¿ï¾Ü %1 ªº¥~±¾µ{¦¡¥Ø¿ı
-tc.plg_Label2=%1 ¥~±¾µ{¦¡À³¸Ó¦w¸Ë¦b­ş?
-tc.plg_Label3=½Ğ¿ï¾Ü¦w¸Ëµ{¦¡À³¸Ó¦w¸Ë %1 ¥~±¾µ{¦¡ªº¸ê®Æ§¨, µM«áÂIÀ» Next.,
+tc.plg_Label1=é¸æ“‡ %1 çš„å¤–æ›ç¨‹å¼ç›®éŒ„
+tc.plg_Label2=%1 å¤–æ›ç¨‹å¼æ‡‰è©²å®‰è£åœ¨å“ª?
+tc.plg_Label3=è«‹é¸æ“‡å®‰è£ç¨‹å¼æ‡‰è©²å®‰è£ %1 å¤–æ›ç¨‹å¼çš„è³‡æ–™å¤¾, ç„¶å¾Œé»æ“Š Next.,
 
-tc.run_videoConfig=°õ¦æµø°T¸Ñ½X¾¹²ÕºA
-tc.run_audioConfig=°õ¦æ­µ°T¸Ñ½X¾¹²ÕºA
-tc.run_vfwConfig=°õ¦æµø°T½s½X¾¹²ÕºA
+tc.run_videoConfig=åŸ·è¡Œè¦–è¨Šè§£ç¢¼å™¨çµ„æ…‹
+tc.run_audioConfig=åŸ·è¡ŒéŸ³è¨Šè§£ç¢¼å™¨çµ„æ…‹
+tc.run_vfwConfig=åŸ·è¡Œè¦–è¨Šç·¨ç¢¼å™¨çµ„æ…‹
 
-tc.shrt_videoConfig=µø°T¸Ñ½X¾¹²ÕºA
-tc.shrt_audioConfig=­µ°T¸Ñ½X¾¹²ÕºA
-tc.shrt_vfwConfig=µø°T½s½X¾¹²ÕºA
-tc.shrt_uninstall=¤Ï¦w¸Ë ffdshow
-tc.shrt_homepage=­º­¶
+tc.shrt_videoConfig=è¦–è¨Šè§£ç¢¼å™¨çµ„æ…‹
+tc.shrt_audioConfig=éŸ³è¨Šè§£ç¢¼å™¨çµ„æ…‹
+tc.shrt_vfwConfig=è¦–è¨Šç·¨ç¢¼å™¨çµ„æ…‹
+tc.shrt_uninstall=åå®‰è£ ffdshow
+tc.shrt_homepage=é¦–é 
 
 
 ; Add other languages here
@@ -743,4 +745,5 @@ pr.langid=2070
 sk.langid=1051
 sn.langid=1060
 sp.langid=3082
+
 #endif
