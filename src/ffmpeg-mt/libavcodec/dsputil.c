@@ -33,7 +33,8 @@
 #include "faandct.h"
 #include "faanidct.h"
 #include "mathops.h"
-#include "h263.h"
+#include "mpegvideo.h"
+#include "config.h"
 
 uint8_t ff_cropTbl[256 + 2 * MAX_NEG_CROP] = {0, };
 uint32_t ff_squareTbl[512] = {0, };

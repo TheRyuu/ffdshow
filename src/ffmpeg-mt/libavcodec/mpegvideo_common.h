@@ -359,12 +359,12 @@ if(s->quarter_sample)
         pix_op[s->chroma_x_shift][uvdxy]
                 (dest_cr, ptr_cr, uvlinesize, h >> s->chroma_y_shift);
     }
+#if CONFIG_H261_ENCODER || CONFIG_H261_DECODER
     if(!is_mpeg12 && (CONFIG_H261_ENCODER || CONFIG_H261_DECODER) &&
          s->out_format == FMT_H261){
-#if (CONFIG_H261_ENCODER || CONFIG_H261_DECODER)
         ff_h261_loop_filter(s);
-#endif
     }
+#endif
 }
 /* apply one mpeg motion vector to the three components */
 static av_always_inline
@@ -729,8 +729,8 @@ static av_always_inline void MPV_motion_internal(MpegEncContext *s,
                         0, 0, 0,
                         ref_picture, pix_op, qpix_op,
                         s->mv[dir][0][0], s->mv[dir][0][1], 16);
-        }else if(!is_mpeg12 && CONFIG_WMV2 && s->mspel){
-#if CONFIG_WMV2
+#if CONFIG_WMV2_DECODER || CONFIG_WMV2_ENCODER
+        }else if(!is_mpeg12 && (CONFIG_WMV2_DECODER || CONFIG_WMV2_ENCODER) && s->mspel){
             ff_mspel_motion(s, dest_y, dest_cb, dest_cr,
                         ref_picture, pix_op,
                         s->mv[dir][0][0], s->mv[dir][0][1], 16);
