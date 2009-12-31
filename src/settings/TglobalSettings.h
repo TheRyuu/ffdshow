@@ -8,8 +8,8 @@
 #define MAX_COMPATIBILITYLIST_LENGTH 5000
 
 #define WHITELIST_EXE_FILENAME \
-    _l("3wPlayer.exe;ACDSee10.exe;ACDSee11.exe;ACDSee5.exe;ACDSee6.exe;ACDSee7.exe;ACDSee8.exe;ACDSee8Pro.exe;ACDSee9.exe;ACDSeePro2.exe;ACDSeePro25.exe;Acer Crystal Eye webcam.exe;aegisub.exe;afreecaplayer.exe;")\
-    _l("afreecastudio.exe;aim6.exe;ALLPlayer.exe;allradio.exe;AlltoaviV4.exe;ALShow.exe;ALSong.exe;AltDVB.exe;amcap.exe;amf_slv.exe;amvtransform.exe;Apollo DivX to DVD Creator.exe;Apollo3GPVideoConverter.exe;")\
+    _l("3wPlayer.exe;ACDSee10.exe;ACDSee11.exe;ACDSee5.exe;ACDSee6.exe;ACDSee7.exe;ACDSee8.exe;ACDSee8Pro.exe;ACDSee9.exe;ACDSeePro2.exe;ACDSeePro25.exe;acdseepro3.exe;Acer Crystal Eye webcam.exe;aegisub.exe;afreecaplayer.exe;")\
+    _l("afreecastudio.exe;AfterFX.exe;aim6.exe;aircamwin.exe;ALLPlayer.exe;allradio.exe;AlltoaviV4.exe;ALShow.exe;ALSong.exe;AltDVB.exe;amcap.exe;amf_slv.exe;amvtransform.exe;Apollo DivX to DVD Creator.exe;Apollo3GPVideoConverter.exe;")\
     _l("Ares.exe;AsfTools.exe;ass_help3r.exe;ASUSDVD.exe;Audition.exe;AutoGK.exe;autorun.exe;avant.exe;AVerTV.exe;Avi2Dvd.exe;avi2mpg.exe;avicodec.exe;avipreview.exe;aviutl.exe;avs2avi.exe;Badak.exe;")\
     _l("BearShare.exe;BePipe.exe;bestplayer.exe;bestplayer1.0.exe;bestpl~1.exe;BitComet.exe;BlazeDVD.exe;BoonPlayer.exe;bplay.exe;bsplay.exe;bsplayer.exe;BTVD3DShell.exe;Camfrog Video Chat.exe;CamRecorder.exe;CamtasiaStudio.exe;")\
     _l("carom.exe;CEC_MAIN.exe;christv.exe;chrome.exe;cinemaplayer.exe;CinergyDVR.exe;CodecInstaller.exe;ConvertXtoDvd.exe;coolpro2.exe;CorePlayer.exe;Crystal.exe;crystalfree.exe;CrystalPro.exe;cscript.exe;CTCMS.exe;")\
@@ -18,7 +18,7 @@
     _l("ehExtHost.exe;ehshell.exe;Encode360.exe;explorer.exe;fenglei.exe;ffmpeg.exe;filtermanager.exe;firefox.exe;Flash.exe;FLVPlayer4Free.exe;FMRadio.exe;Fortius.exe;FreeStyle.exe;FSViewer.exe;Funshion.exe;FusionHDTV.exe;")\
     _l("gameex.exe;GDivX Player.exe;gdsmux.exe;GoldWave.exe;gom.exe;GomEnc.exe;GoogleDesktop.exe;GoogleDesktopCrawl.exe;graphedit.exe;graphedt.exe;GraphStudio.exe;GraphStudio64.exe;gspot.exe;HBP.exe;HDVSplit.exe;honestechTV.exe;")\
     _l("HPWUCli.exe;i_view32.exe;ICQ.exe;ICQLite.exe;iexplore.exe;IHT.exe;IncMail.exe;InfoTool.exe;infotv.exe;InstallChecker.exe;Internet TV.exe;iPlayer.exe;ipod_video_converter.exe;IPODConverter.exe;")\
-    _l("JetAudio.exe;jwBrowser.exe;kmplayer.exe;KwMusic.exe;LA.exe;LifeCam.exe;LifeFrame.exe;Lilith.exe;makeAVIS.exe;MatroskaDiag.exe;Maxthon.exe;MDirect.exe;Media Center 12.exe;Media Jukebox.exe;Media Player Classic.exe;")\
+    _l("JetAudio.exe;jwBrowser.exe;kiteplayer.exe;kmplayer.exe;KwMusic.exe;LA.exe;LifeCam.exe;LifeFrame.exe;Lilith.exe;makeAVIS.exe;MatroskaDiag.exe;Maxthon.exe;MDirect.exe;Media Center 12.exe;Media Jukebox.exe;Media Player Classic.exe;")\
     _l("MediaLife.exe;MediaPortal.exe;MEDIAREVOLUTION.EXE;MediaServer.exe;megui.exe;mencoder.exe;Metacafe.exe;MMPlayer.exe;MovieMaker.exe;moviemk.exe;moviethumb.exe;MP4Converter.exe;Mp4Player.exe;mpc-hc.exe;mpc-hc64.exe;mpcstar.exe;MpegVideoWizard.exe;")\
     _l("mplayer2.exe;mplayerc.exe;mplayerc64.exe;msnmsgr.exe;msoobe.exe;MultimediaPlayer.exe;Munite.exe;MusicManager.exe;Muzikbrowzer.exe;Mv2PlayerPlus.exe;My Movies.exe;myplayer.exe;nero.exe;NeroHome.exe;NeroVision.exe;")\
     _l("NicoPlayer.exe;NMSTranscoder.exe;nvplayer.exe;Omgjbox.exe;OnlineTV.exe;Opera.exe;OrbStreamerClient.exe;OUTLOOK.EXE;PaintDotNet.exe;paltalk.exe;pcwmp.exe;PhotoScreensaver.scr;Photoshop.exe;Picasa2.exe;")\
@@ -33,7 +33,7 @@
 
 #define BLACKLIST_EXE_FILENAME \
     _l("age3.exe;AvatarMP.exe;BeachSoccer.exe;Bully.exe;cm2008.exe;cm2010.exe;cmr4.exe;cmr5.exe;conflictdeniedops.exe;conquer.exe;crazy_taxi_pc.exe;daoriginslauncher.exe;dark_horizon.exe;DaybreakDX.exe;dmc3se.exe;em3.exe;em4.exe;fable.exe;Edition.exe;FalconAF.exe;fallout3.exe;ff7.exe;fordorr.exe;fr2.exe;fr3.exe;freedom.exe;fsr.exe;game.bin;game.exe;Grandia2.exe;gta-vc.exe;gta3.exe;gta_sa.exe;")\
-    _l("gta-underground.exe;gta t‹rk.exe;guildII.exe;hl.exe;hl2.exe;juiced.exe;juiced2_hin.exe;launch.exe;lf2.exe;Main.exe;MassEffectLauncher.exe;maxpayne.exe;mixcraft.exe;mixcraft3.exe;mixcraft4.exe;mixcra~1.exe;morrowind.exe;nations.exe;ninjablade.exe;oblivion.exe;patriots.exe;pes2008.exe;pes2009.exe;pes2010.exe;pes4.exe;pes5.exe;pes6.exe;powerdvd8.exe;powerdvd9.exe;power2go.exe;premiere.exe;pwo.exe;questviewer.exe;rct.exe;residentevil3.exe;")\
+    _l("gta-underground.exe;gta t‹rk.exe;guildII.exe;hl.exe;hl2.exe;juiced.exe;juiced2_hin.exe;king.exe;launch.exe;ldd.exe;lf2.exe;Main.exe;MassEffectLauncher.exe;maxpayne.exe;mixcraft.exe;mixcraft3.exe;mixcraft4.exe;mixcra~1.exe;morrowind.exe;msninst.exe;nations.exe;ninjablade.exe;oblivion.exe;patriots.exe;pes2008.exe;pes2009.exe;pes2010.exe;pes4.exe;pes5.exe;pes6.exe;powerdvd8.exe;powerdvd9.exe;power2go.exe;premiere.exe;pwo.exe;questviewer.exe;rct.exe;residentevil3.exe;")\
     _l("rf.exe;rf_online.bin;RomeGame.exe;rometw.exe;sacred.exe;sega rally.exe;sh3.exe;sh4.exe;sims.exe;skin.exe;smartlogon.exe;starsword.exe;StreetFighterIV.exe;streetlegal_redline.exe;tw2008.exe;twoworlds.exe;vmcExtenderSetup.exe;wa.exe;war3.exe;worms 4 mayhem.exe;worms3d.exe;Yahoo.Messenger.YmApp.exe;yahoom~1.exe;YahooMessenger.exe;YahooMusicEngine.exe;yahoow~1.exe;YahooWidgetEngine.exe;YahooWidgets.exe;ymini.exe;zoo.exe;")
 
 struct TregOp;
