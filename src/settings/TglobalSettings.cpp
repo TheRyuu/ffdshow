@@ -831,8 +831,8 @@ const CodecID TglobalSettingsDecVideo::c_h264[IDFF_MOVIE_MAX+1]=
  CODEC_ID_NONE,
  CODEC_ID_NONE,
  CODEC_ID_NONE,
- CODEC_ID_H264_MT,
- CODEC_ID_H264_DXVA
+ CODEC_ID_NONE,
+ CODEC_ID_H264_MT
 };
 const CodecID TglobalSettingsDecVideo::c_mpeg4[IDFF_MOVIE_MAX+1]=
 {
@@ -887,16 +887,6 @@ const CodecID TglobalSettingsDecVideo::c_wvc1[IDFF_MOVIE_MAX+1]=
  CODEC_ID_NONE,
  CODEC_ID_NONE,
  CODEC_ID_WMV9_LIB,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_VC1_DXVA
 };
 const CodecID TglobalSettingsDecVideo::c_wmv3[IDFF_MOVIE_MAX+1]=
 {
