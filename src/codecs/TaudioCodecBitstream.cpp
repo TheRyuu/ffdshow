@@ -228,7 +228,7 @@ HRESULT TaudioCodecBitstream::decodeMAT(TbyteBuffer &src, TaudioParserData audio
    TframeData frameData=audioParserData.frames[l];
    uint32_t frame_size=frameData.frame_size;
    uint32_t nbZeros=(frameData.space_size-fullMATFrameSize)&0xFFF;
- 
+
    // Number of zeros to be added
    additional_blank_size += nbZeros;
 
@@ -264,7 +264,7 @@ HRESULT TaudioCodecBitstream::decodeMAT(TbyteBuffer &src, TaudioParserData audio
    // Fill the MAT frame into the output buffer
    int remainMATBytes=fillMATBuffer(ptr,frame_size);
    ptr+=(frame_size-remainMATBytes);
-   
+
    // Not all the bytes from the MAT frame could be filled, so submit the buffer
    if (remainMATBytes>0)
    {
@@ -302,7 +302,7 @@ HRESULT TaudioCodecBitstream::decode(TbyteBuffer &src)
     unsigned char *base=ptr;
     unsigned char *end=ptr+src.size();
     buffer_limit=2048;
-    
+
     TaudioParser *pAudioParser=NULL;
     sinkA->getAudioParser(&pAudioParser);
     if (pAudioParser == NULL)
@@ -336,7 +336,7 @@ HRESULT TaudioCodecBitstream::decode(TbyteBuffer &src)
      {
       bitstreamBuffer.reserve(buffer_limit);
      }
- 
+
      for (long l = 0; l<(long) audioParserData.frames.size() && ptr < end; l++)
      {
        numframes++;

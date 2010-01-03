@@ -351,7 +351,7 @@ void TsampleFormat::fillCommonWAVEFORMATEX(WAVEFORMATEX *pWfe, WAVEFORMATEXTENSI
    pWfe->nChannels=8; // 4 IEC lines, different from the number of channels
    if (pWfex!=NULL)
     pWfex->SubFormat=KSDATAFORMAT_SUBTYPE_IEC61937_DTS_HD;
-   
+
    // 96000 Hz (encoded sample rate) on vista instead of 196000 Hz on win7 ?
    /*if (OSMajorVersion==0)
    {

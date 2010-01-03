@@ -194,7 +194,7 @@ STDMETHODIMP TffdshowDecAudioInputPin::Receive(IMediaSample* pIn)
  case CODEC_ID_BITSTREAM_DTSHD:
     // Search for DTS in Wav only if option is checked
     if (codecId==CODEC_ID_PCM && !searchdts) break;
-    
+
     // Do not search for DTS in PCM in next frames (otherwise DTS syncword maybe wrongly detected)
     searchdts=false;
 
@@ -204,7 +204,7 @@ STDMETHODIMP TffdshowDecAudioInputPin::Receive(IMediaSample* pIn)
         newSrcBuffer.clear();
         break;
     }
-    
+
     // Get updated data from the parser
     audioParserData = audioParser->getParserData();
 
@@ -214,7 +214,7 @@ STDMETHODIMP TffdshowDecAudioInputPin::Receive(IMediaSample* pIn)
     if (codecId != newCodecId)
     {
      DPRINTF(_l("TffdshowDecAudioInputPin : switching codec from %s to %s"), getCodecName(codecId), getCodecName(newCodecId));
-     codecId=newCodecId;    
+     codecId=newCodecId;
 
      // Update input sample format from (corrected or updated) parser data
      if (audioParserData.channels != 0)
@@ -239,7 +239,7 @@ STDMETHODIMP TffdshowDecAudioInputPin::Receive(IMediaSample* pIn)
     }
 
     // Update libavcodec context with correct channels and bitrate read from parser
-    if (lavc_codec (codecId)) 
+    if (lavc_codec (codecId))
     {
         TaudioCodecLibavcodec *audioCodecLibavcodec=(TaudioCodecLibavcodec*)audio;
         if (audioCodecLibavcodec)
@@ -329,7 +329,7 @@ int TffdshowDecAudioInputPin::getInputBitrate(void) const
 
 STDMETHODIMP_(bool) TffdshowDecAudioInputPin::getsf(TsampleFormat &outsf)
 {
- if (!audio) 
+ if (!audio)
  {
   outsf=CurrentMediaType();
   DPRINTF(_l("TffdshowDecAudioInputPin::getsf audio codec not initialized yet"));
@@ -342,8 +342,8 @@ STDMETHODIMP_(bool) TffdshowDecAudioInputPin::getsf(TsampleFormat &outsf)
    outsf.alternateSF=filter->insf.alternateSF;
    return true;
   }
- } 
- else 
+ }
+ else
  {
   if (spdif_codec(audio->codecId)) { // Special media type for SPDIF (AC3/DTS)
    outsf=TsampleFormat::createMediaTypeSPDIF(audio->getInputSF().freq);

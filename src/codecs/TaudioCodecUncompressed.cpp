@@ -103,7 +103,7 @@ HRESULT TaudioCodecUncompressed::decode(TbyteBuffer &src)
             if (highDef) {
                 int32_t *dst=(int32_t*)getDst(4*src.size()/3),*dst0=dst;
                 size_t end1 = (src.size()/12)*12;
-                for (size_t i = 0 ; i < end1 ; i += 12) {                                     
+                for (size_t i = 0 ; i < end1 ; i += 12) {
                     *dst++ = (src[i]<<24) + (src[i+ 1]<<16) + (src[i+ 2]<<8);
                     *dst++ = (src[i+3]<<24) + (src[i+ 4]<<16) + (src[i+ 5]<<8);
                     *dst++ = (src[i+6]<<24) + (src[i+ 7]<<16) + (src[i+ 8]<<8);
@@ -120,7 +120,7 @@ HRESULT TaudioCodecUncompressed::decode(TbyteBuffer &src)
                    this->deci->getPostproc(&libmplayer);
                    if (libmplayer != NULL)
                    {
-                       libmplayer->reorder_channel_nch(dst0, 
+                       libmplayer->reorder_channel_nch(dst0,
                            AF_CHANNEL_LAYOUT_LPCM_DEFAULT,AF_CHANNEL_LAYOUT_FFDSHOW_DEFAULT,
                            fmt.nchannels,sizeof(int32_t)*(dst-dst0)*8/fmt.blockAlign(), fmt.bitsPerSample()/8);
                    }
