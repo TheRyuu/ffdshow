@@ -71,7 +71,7 @@ void TaudioCodecBitstream::getInputDescr1(char_t *buf,size_t buflen) const
     else if (codecId==CODEC_ID_SPDIF_AC3)
      ff_strncpy(buf,_l("Dolby Digital"),buflen);
     else if (codecId==CODEC_ID_SPDIF_DTS)
-     ff_strncpy(buf,_l("Dolby Digital"),buflen);
+     ff_strncpy(buf,_l("DTS"),buflen);
     else
      ff_strncpy(buf,_l("Compressed format"),buflen);
     buf[buflen-1]='\0';
