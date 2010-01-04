@@ -29,6 +29,14 @@ const int ToutsfsPage::ac3bitrates[]=
  32,40,48,56,64,80,96,112,128,160,192,224,256,320,384,448,512,576,640
 };
 
+const char_t* ToutsfsPage::bitstream_formats[]=
+{
+ _l("Try all formats (default)"),
+ _l("Try only standard formats"),
+ _l("Only Xonar formats"),
+ NULL
+};
+
 void ToutsfsPage::init(void)
 {
  for (int i=0;i<countof(ac3bitrates);i++)
@@ -41,12 +49,6 @@ void ToutsfsPage::init(void)
  static const int ac3s[]={IDC_CHB_OUT_AC3,IDC_LBL_OUT_AC3,IDC_CBX_OUT_AC3,IDC_CHB_AOUT_AC3ENCODE_MODE,0};
  enable(lavc && lavc->ok && !lavc->dec_only,ac3s);
  if (lavc) lavc->Release();
-
- cbxAdd(IDC_CBX_OUT_PASSTHROUGH_DEVICEID, _l("Try all formats (default)"), 0);
- cbxAdd(IDC_CBX_OUT_PASSTHROUGH_DEVICEID, _l("Try only standard formats"),1);
- cbxAdd(IDC_CBX_OUT_PASSTHROUGH_DEVICEID, _l("Only Xonar formats"),2);
- //cbxAdd(IDC_CBX_OUT_PASSTHROUGH_DEVICEID, _l("Only Auzentech media types"),3); //Not working for now ?
- cbxSetDataCurSel(IDC_CBX_OUT_PASSTHROUGH_DEVICEID,cfgGet(IDFF_aoutpassthroughDeviceId));
  
  setCheck(IDC_CHB_PASSTHROUGH_PCM_CONNECT  ,cfgGet(IDFF_aoutpassthroughPCMConnection)==1  );
 
@@ -57,7 +59,7 @@ void ToutsfsPage::init(void)
  addHint(IDC_CHB_PASSTHROUGH_TRUEHD, _l("Performs a Dolby TrueHD bitstream if your HT receiver supports it."));
  addHint(IDC_CHB_PASSTHROUGH_DTSHD, _l("Performs a DTS HD bitstream if your HT receiver supports it."));
  addHint(IDC_CBX_OUT_PASSTHROUGH_DEVICEID, _l("Change this parameter only if your card does not support the official media types"));
- addHint(IDC_CHB_PASSTHROUGH_PCM_CONNECT, _l("Check if you have troubles to make bitstream work. Some renderers need that the connection is done on PCM (uncompressed) format first then it would switch to bitstream"));
+ addHint(IDC_CHB_PASSTHROUGH_PCM_CONNECT, _l("Some renderers need that the connection is done on PCM (uncompressed) format first then it would switch to bitstream. If checked then FFDShow will assume that your receiver supports the bitstream formats you checked"));
  warningShowed=0;
 }
 
@@ -79,6 +81,7 @@ void ToutsfsPage::cfg2dlg(void)
  setCheck(IDC_CHB_ALWAYEXTENSIBLE,!cfgGet(IDFF_alwaysextensible));
  setCheck(IDC_CHB_ALLOWOUTSTREAM,cfgGet(IDFF_allowOutStream));
  setCheck(IDC_CHB_PASSTHROUGH_PCM_CONNECT,cfgGet(IDFF_aoutpassthroughPCMConnection)==1  );
+ cbxSetCurSel(IDC_CBX_OUT_PASSTHROUGH_DEVICEID,cfgGet(IDFF_aoutpassthroughDeviceId));
 
  connect2dlg();
 }
@@ -100,7 +103,6 @@ void ToutsfsPage::connect2dlg(void)
  int connect=cfgGet(IDFF_aoutConnectTo);
  cbxSetCurSel(IDC_CBX_AOUT_CONNECTTO,connect);
  enable(connect>0,IDC_CHB_AOUT_CONNECTTO_SPDIF);setCheck(IDC_CHB_AOUT_CONNECTTO_SPDIF,cfgGet(IDFF_aoutConnectToOnlySpdif));
- cbxSetDataCurSel(IDC_CBX_OUT_PASSTHROUGH_DEVICEID,cfgGet(IDFF_aoutpassthroughDeviceId));
 }
 
 INT_PTR ToutsfsPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -198,6 +200,7 @@ void ToutsfsPage::translate(void)
  TconfPageDec::translate();
 
  cbxTranslate(IDC_CBX_AOUT_CONNECTTO,ToutputAudioSettings::connetTos);
+ cbxTranslate(IDC_CBX_OUT_PASSTHROUGH_DEVICEID,ToutsfsPage::bitstream_formats);
 }
 
 void ToutsfsPage::dlg2compatmode(void)
@@ -232,7 +235,7 @@ ToutsfsPage::ToutsfsPage(TffdshowPageDec *Iparent):TconfPageDecAudio(Iparent)
   {
    IDC_CBX_OUT_AC3,IDFF_outAC3bitrate,BINDCBX_DATA,NULL,
    IDC_CBX_AOUT_CONNECTTO,IDFF_aoutConnectTo,BINDCBX_SEL,&ToutsfsPage::connect2dlg,
-   IDC_CBX_OUT_PASSTHROUGH_DEVICEID,IDFF_aoutpassthroughDeviceId,BINDCBX_DATA,&ToutsfsPage::dlg2compatmode,
+   IDC_CBX_OUT_PASSTHROUGH_DEVICEID,IDFF_aoutpassthroughDeviceId,BINDCBX_SEL,NULL,
    0
   };
  bindComboboxes(cbx);
