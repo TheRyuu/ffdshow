@@ -127,10 +127,12 @@ en.plg_Label2=Where should %1 plugin be installed?
 en.plg_Label3=Select the folder in which setup should install %1 plugin, then click Next.,
 
 en.run_videoConfig=Run video decoder configuration
+en.run_videoDXVAConfig=Run DXVA video decoder configuration
 en.run_audioConfig=Run audio decoder configuration
 en.run_vfwConfig=Run VFW configuration
 
 en.shrt_videoConfig=Video decoder configuration
+en.shrt_videoDXVAConfig=DXVA Video decoder configuration
 en.shrt_audioConfig=Audio decoder configuration
 en.shrt_vfwConfig=VFW configuration
 en.shrt_uninstall=Uninstall ffdshow
@@ -350,14 +352,16 @@ fr.plg_Label2=Où doit-être installé le plugin %1 ?
 fr.plg_Label3=Sélectionnez le dossier où doit être installer le plugin %1, et appuyez sur suivant.
 
 fr.run_videoConfig=Lancer la configuration décodeur vidéo
+fr.run_videoDXVAConfig=Lancer la configuration vidéo DXVA
 fr.run_audioConfig=Lancer la configuration décodeur audio
 fr.run_vfwConfig=Lancer la configuration VFW
 
 fr.shrt_videoConfig=Configuration décodeur vidéo
+fr.shrt_videoDXVAConfig=Configuration du décodeur vidéo DXVA
 fr.shrt_audioConfig=Configuration décodeur audio
 fr.shrt_vfwConfig=Configuration VFW
 fr.shrt_uninstall=Désinstaller ffdshow
-;fr.shrt_homepage=Homepage
+fr.shrt_homepage=Page d'accueil
 
 
 ; Japanese
