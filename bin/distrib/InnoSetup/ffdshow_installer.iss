@@ -1,10 +1,10 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision           = '3179'
+#define tryout_revision           = '3183'
 
 #define buildyear                 = '2010'
 #define buildmonth                =   '01'
-#define buildday                  =   '04'
+#define buildday                  =   '05'
 
 ; Build specific options
 #define localize                  = True
@@ -74,7 +74,7 @@
 #ifdef PREF_XXL
   #define localize               = False
   #define include_info_before    = True
-  #define include_setup_icon     = True
+;  #define include_setup_icon     = True
   #define filename_suffix        = '_xxl'
 #endif
 #ifdef PREF_XXL_X64
@@ -82,7 +82,7 @@
   #define include_x264           = True
   #define include_plugin_dscaler = False
   #define include_info_before    = True
-  #define include_setup_icon     = True
+;  #define include_setup_icon     = True
   #define filename_suffix        = '_xxl_x64'
 #endif
 #ifdef PREF_ALBAIN
