@@ -41,10 +41,15 @@
 #include "mpeg4data.h"
 #include "mathops.h"
 #include "unary.h"
+#include "flv.h"
 
 //#undef NDEBUG
 //#include <assert.h>
 
+// The defines below define the number of bits that are read at once for
+// reading vlc values. Changing these may improve speed and data cache needs
+// be aware though that decreasing them may need the number of stages that is
+// passed to get_vlc* to be increased.
 #define INTRA_MCBPC_VLC_BITS 6
 #define INTER_MCBPC_VLC_BITS 7
 #define CBPY_VLC_BITS 6
@@ -57,15 +62,32 @@
 #define CBPC_B_VLC_BITS 3
 
 #if CONFIG_ENCODERS
+//The uni_DCtab_* tables below contain unified bits+length tables to encode DC
+//differences in mpeg4. Unified in the sense that the specification specifies
+//this encoding in several steps.
 static uint8_t uni_DCtab_lum_len[512];
 static uint8_t uni_DCtab_chrom_len[512];
 static uint16_t uni_DCtab_lum_bits[512];
 static uint16_t uni_DCtab_chrom_bits[512];
 
+/**
+ * Table of number of bits a motion vector component needs.
+ */
 static uint8_t mv_penalty[MAX_FCODE+1][MAX_MV*2+1];
+
+/**
+ * Minimal fcode that a motion vector component would need.
+ */
 static uint8_t fcode_tab[MAX_MV*2+1];
+
+/**
+ * Minimal fcode that a motion vector component would need in umv.
+ * All entries in this table are 1.
+ */
 static uint8_t umv_fcode_tab[MAX_MV*2+1];
 
+//unified encoding tables for run length encoding of coefficients
+//unified in the sense that the specification specifies the encoding in several steps.
 static uint32_t uni_mpeg4_intra_rl_bits[64*64*2*2];
 static uint8_t  uni_mpeg4_intra_rl_len [64*64*2*2];
 static uint32_t uni_mpeg4_inter_rl_bits[64*64*2*2];
@@ -97,24 +119,21 @@ static uint8_t static_rl_table_store[5][2][2*MAX_RUN + MAX_LEVEL + 3];
 
 int h263_get_picture_format(int width, int height)
 {
-    int format;
-
     if (width == 128 && height == 96)
-        format = 1;
+        return 1;
     else if (width == 176 && height == 144)
-        format = 2;
+        return 2;
     else if (width == 352 && height == 288)
-        format = 3;
+        return 3;
     else if (width == 704 && height == 576)
-        format = 4;
+        return 4;
     else if (width == 1408 && height == 1152)
-        format = 5;
+        return 5;
     else
-        format = 7;
-    return format;
+        return 7;
 }
 
-static void show_pict_info(MpegEncContext *s){
+void ff_h263_show_pict_info(MpegEncContext *s){
     av_log(s->avctx, AV_LOG_DEBUG, "qp:%d %c size:%d rnd:%d%s%s%s%s%s%s%s%s%s %d/%d\n",
          s->qscale, av_get_pict_type_char(s->pict_type),
          s->gb.size_in_bits, 1-s->no_rounding,
@@ -133,65 +152,23 @@ static void show_pict_info(MpegEncContext *s){
 
 #if CONFIG_ENCODERS
 
-static void aspect_to_info(MpegEncContext * s, AVRational aspect){
+/**
+ * Returns the 4 bit value that specifies the given aspect ratio.
+ * This may be one of the standard aspect ratios or it specifies
+ * that the aspect will be stored explicitly later.
+ */
+static av_const int aspect_to_info(AVRational aspect){
     int i;
 
     if(aspect.num==0) aspect.num=aspect.den=1;//= (AVRational){1,1};
 
     for(i=1; i<6; i++){
         if(av_cmp_q(pixel_aspect[i], aspect) == 0){
-            s->aspect_ratio_info=i;
-            return;
+            return i;
         }
     }
 
-    s->aspect_ratio_info= FF_ASPECT_EXTENDED;
-}
-
-void ff_flv_encode_picture_header(MpegEncContext * s, int picture_number)
-{
-      int format;
-
-      align_put_bits(&s->pb);
-
-      put_bits(&s->pb, 17, 1);
-      put_bits(&s->pb, 5, (s->h263_flv-1)); /* 0: h263 escape codes 1: 11-bit escape codes */
-      put_bits(&s->pb, 8, (((int64_t)s->picture_number * 30 * s->avctx->time_base.num) / //FIXME use timestamp
-                           s->avctx->time_base.den) & 0xff); /* TemporalReference */
-      if (s->width == 352 && s->height == 288)
-        format = 2;
-      else if (s->width == 176 && s->height == 144)
-        format = 3;
-      else if (s->width == 128 && s->height == 96)
-        format = 4;
-      else if (s->width == 320 && s->height == 240)
-        format = 5;
-      else if (s->width == 160 && s->height == 120)
-        format = 6;
-      else if (s->width <= 255 && s->height <= 255)
-        format = 0; /* use 1 byte width & height */
-      else
-        format = 1; /* use 2 bytes width & height */
-      put_bits(&s->pb, 3, format); /* PictureSize */
-      if (format == 0) {
-        put_bits(&s->pb, 8, s->width);
-        put_bits(&s->pb, 8, s->height);
-      } else if (format == 1) {
-        put_bits(&s->pb, 16, s->width);
-        put_bits(&s->pb, 16, s->height);
-      }
-      put_bits(&s->pb, 2, s->pict_type == FF_P_TYPE); /* PictureType */
-      put_bits(&s->pb, 1, 1); /* DeblockingFlag: on */
-      put_bits(&s->pb, 5, s->qscale); /* Quantizer */
-      put_bits(&s->pb, 1, 0); /* ExtraInformation */
-
-      if(s->h263_aic){
-        s->y_dc_scale_table=
-          s->c_dc_scale_table= ff_aic_dc_scale_table;
-      }else{
-        s->y_dc_scale_table=
-          s->c_dc_scale_table= ff_mpeg1_dc_scale_table;
-      }
+    return FF_ASPECT_EXTENDED;
 }
 
 void h263_encode_picture_header(MpegEncContext * s, int picture_number)
@@ -286,7 +263,7 @@ void h263_encode_picture_header(MpegEncContext * s, int picture_number)
 
                 if (format == 7) {
             /* Custom Picture Format (CPFMT) */
-            aspect_to_info(s, s->avctx->sample_aspect_ratio);
+            s->aspect_ratio_info= aspect_to_info(s->avctx->sample_aspect_ratio);
 
             put_bits(&s->pb,4,s->aspect_ratio_info);
             put_bits(&s->pb,9,(s->width >> 2) - 1);
@@ -1612,7 +1589,7 @@ static void h263_encode_block(MpegEncContext * s, DCTELEM * block, int n)
             code = get_rl_index(rl, last, run, level);
             put_bits(&s->pb, rl->table_vlc[code][1], rl->table_vlc[code][0]);
             if (code == rl->n) {
-              if(s->h263_flv <= 1){
+              if(!CONFIG_FLV_ENCODER || s->h263_flv <= 1){
                 put_bits(&s->pb, 1, last);
                 put_bits(&s->pb, 6, run);
 
@@ -1626,20 +1603,7 @@ static void h263_encode_block(MpegEncContext * s, DCTELEM * block, int n)
                     put_sbits(&s->pb, 6, slevel>>5);
                 }
               }else{
-                if(level < 64) { // 7-bit level
-                        put_bits(&s->pb, 1, 0);
-                        put_bits(&s->pb, 1, last);
-                        put_bits(&s->pb, 6, run);
-
-                        put_sbits(&s->pb, 7, slevel);
-                    } else {
-                        /* 11-bit level */
-                        put_bits(&s->pb, 1, 1);
-                        put_bits(&s->pb, 1, last);
-                        put_bits(&s->pb, 6, run);
-
-                        put_sbits(&s->pb, 11, slevel);
-                    }
+                    ff_flv2_encode_ac_esc(&s->pb, slevel, level, run, last);
               }
             } else {
                 put_bits(&s->pb, 1, sign);
@@ -2290,7 +2254,7 @@ static void mpeg4_encode_vol_header(MpegEncContext * s, int vo_number, int vol_n
         put_bits(&s->pb, 3, 1);         /* is obj layer priority */
     }
 
-    aspect_to_info(s, s->avctx->sample_aspect_ratio);
+    s->aspect_ratio_info= aspect_to_info(s->avctx->sample_aspect_ratio);
 
     put_bits(&s->pb, 4, s->aspect_ratio_info);/* aspect ratio info */
     if (s->aspect_ratio_info == FF_ASPECT_EXTENDED){
@@ -3420,7 +3384,7 @@ void ff_mpeg4_clean_buffers(MpegEncContext *s)
  * finds the next resync_marker
  * @param p pointer to buffer to scan
  * @param end pointer to the end of the buffer
- * @return pointer to the next resync_marker, or \p end if none was found
+ * @return pointer to the next resync_marker, or end if none was found
  */
 const uint8_t *ff_h263_find_resync_marker(const uint8_t *restrict p, const uint8_t * restrict end)
 {
@@ -4464,15 +4428,8 @@ retry:
         }
         if (code == rl->n) {
             /* escape */
-            if (s->h263_flv > 1) {
-                int is11 = get_bits1(&s->gb);
-                last = get_bits1(&s->gb);
-                run = get_bits(&s->gb, 6);
-                if(is11){
-                    level = get_sbits(&s->gb, 11);
-                } else {
-                    level = get_sbits(&s->gb, 7);
-                }
+            if (CONFIG_FLV_DECODER && s->h263_flv > 1) {
+                ff_flv2_decode_ac_esc(&s->gb, &level, &run, &last);
             } else {
                 last = get_bits1(&s->gb);
                 run = get_bits(&s->gb, 6);
@@ -5335,7 +5292,6 @@ int h263_decode_picture_header(MpegEncContext *s)
                 gcd= av_gcd(s->avctx->time_base.den, s->avctx->time_base.num);
                 s->avctx->time_base.den /= gcd;
                 s->avctx->time_base.num /= gcd;
-//                av_log(s->avctx, AV_LOG_DEBUG, "%d/%d\n", s->avctx->time_base.den, s->avctx->time_base.num);
             }else{
                 s->avctx->time_base.num=1001;s->avctx->time_base.den=30000;// (AVRational){1001, 30000};
             }
@@ -5403,7 +5359,7 @@ int h263_decode_picture_header(MpegEncContext *s)
     }
 
      if(s->avctx->debug&FF_DEBUG_PICT_INFO){
-        show_pict_info(s);
+        ff_h263_show_pict_info(s);
      }
     if (s->pict_type == FF_I_TYPE && s->codec_tag == AV_RL32("ZYGO")){
         int i,j;
@@ -5739,9 +5695,9 @@ no_cplx_est:
 
             if(   h_sampling_factor_n==0 || h_sampling_factor_m==0
                || v_sampling_factor_n==0 || v_sampling_factor_m==0){
-
+                /* illegal scalability header (VERY broken encoder),
+                 * trying to workaround */
                 s->scalability=0;
-
                 *gb= bak;
             }else
                 av_log(s->avctx, AV_LOG_ERROR, "scalability not supported\n");
@@ -5854,6 +5810,8 @@ static int decode_vop_header(MpegEncContext *s, GetBitContext *gb){
         s->time= s->time_base*s->avctx->time_base.den + time_increment;
         if(s->workaround_bugs&FF_BUG_UMP4){
             if(s->time < s->last_non_b_time){
+                /* header is not mpeg-4-compatible, broken encoder,
+                 * trying to workaround */
                 s->time_base++;
                 s->time+= s->avctx->time_base.den;
             }
@@ -5864,6 +5822,7 @@ static int decode_vop_header(MpegEncContext *s, GetBitContext *gb){
         s->time= (s->last_time_base + time_incr)*s->avctx->time_base.den + time_increment;
         s->pb_time= s->pp_time - (s->last_non_b_time - s->time);
         if(s->pp_time <=s->pb_time || s->pp_time <= s->pp_time - s->pb_time || s->pp_time<=0){
+            /* messed up order, maybe after seeking? skipping current b-frame */
             return FRAME_SKIPPED;
         }
         ff_mpeg4_init_direct_mv(s);
@@ -6110,184 +6069,4 @@ end:
         s->low_delay=1;
     s->avctx->has_b_frames= !s->low_delay;
     return decode_vop_header(s, gb);
-}
-
-/* don't understand why they choose a different header ! */
-int intel_h263_decode_picture_header(MpegEncContext *s)
-{
-    int format;
-
-    /* picture header */
-    if (get_bits_long(&s->gb, 22) != 0x20) {
-        av_log(s->avctx, AV_LOG_ERROR, "Bad picture start code\n");
-        return -1;
-    }
-    s->picture_number = get_bits(&s->gb, 8); /* picture timestamp */
-
-    if (get_bits1(&s->gb) != 1) {
-        av_log(s->avctx, AV_LOG_ERROR, "Bad marker\n");
-        return -1;      /* marker */
-    }
-    if (get_bits1(&s->gb) != 0) {
-        av_log(s->avctx, AV_LOG_ERROR, "Bad H263 id\n");
-        return -1;      /* h263 id */
-    }
-    skip_bits1(&s->gb);         /* split screen off */
-    skip_bits1(&s->gb);         /* camera  off */
-    skip_bits1(&s->gb);         /* freeze picture release off */
-
-    format = get_bits(&s->gb, 3);
-    if (format != 7) {
-        av_log(s->avctx, AV_LOG_ERROR, "Intel H263 free format not supported\n");
-        return -1;
-    }
-    s->h263_plus = 0;
-
-    s->pict_type = FF_I_TYPE + get_bits1(&s->gb);
-
-    s->unrestricted_mv = get_bits1(&s->gb);
-    s->h263_long_vectors = s->unrestricted_mv;
-
-    if (get_bits1(&s->gb) != 0) {
-        av_log(s->avctx, AV_LOG_ERROR, "SAC not supported\n");
-        return -1;      /* SAC: off */
-    }
-    s->obmc= get_bits1(&s->gb);
-    s->pb_frame = get_bits1(&s->gb);
-
-    if(format == 7){
-        format = get_bits(&s->gb, 3);
-        if(format == 0 || format == 7){
-            av_log(s->avctx, AV_LOG_ERROR, "Wrong Intel H263 format\n");
-            return -1;
-        }
-        if(get_bits(&s->gb, 2))
-            av_log(s->avctx, AV_LOG_ERROR, "Bad value for reserved field\n");
-        s->loop_filter = get_bits1(&s->gb);
-        if(get_bits1(&s->gb))
-            av_log(s->avctx, AV_LOG_ERROR, "Bad value for reserved field\n");
-        if(get_bits1(&s->gb))
-            s->pb_frame = 2;
-        if(get_bits(&s->gb, 5))
-            av_log(s->avctx, AV_LOG_ERROR, "Bad value for reserved field\n");
-        if(get_bits(&s->gb, 5) != 1)
-            av_log(s->avctx, AV_LOG_ERROR, "Invalid marker\n");
-    }
-    if(format == 6){
-        int ar = get_bits(&s->gb, 4);
-        skip_bits(&s->gb, 9); // display width
-        skip_bits1(&s->gb);
-        skip_bits(&s->gb, 9); // display height
-        if(ar == 15){
-            skip_bits(&s->gb, 8); // aspect ratio - width
-            skip_bits(&s->gb, 8); // aspect ratio - height
-        }
-    }
-
-    s->chroma_qscale= s->qscale = get_bits(&s->gb, 5);
-    skip_bits1(&s->gb); /* Continuous Presence Multipoint mode: off */
-
-    if(s->pb_frame){
-        skip_bits(&s->gb, 3); //temporal reference for B-frame
-        skip_bits(&s->gb, 2); //dbquant
-    }
-
-    /* PEI */
-    while (get_bits1(&s->gb) != 0) {
-        skip_bits(&s->gb, 8);
-    }
-    s->f_code = 1;
-
-    s->y_dc_scale_table=
-    s->c_dc_scale_table= ff_mpeg1_dc_scale_table;
-
-    if(s->avctx->debug&FF_DEBUG_PICT_INFO)
-        show_pict_info(s);
-
-    return 0;
-}
-
-int flv_h263_decode_picture_header(MpegEncContext *s)
-{
-    int format, width, height;
-
-    /* picture header */
-    if (get_bits_long(&s->gb, 17) != 1) {
-        av_log(s->avctx, AV_LOG_ERROR, "Bad picture start code\n");
-        return -1;
-    }
-    format = get_bits(&s->gb, 5);
-    if (format != 0 && format != 1) {
-        av_log(s->avctx, AV_LOG_ERROR, "Bad picture format\n");
-        return -1;
-    }
-    s->h263_flv = format+1;
-    s->picture_number = get_bits(&s->gb, 8); /* picture timestamp */
-    format = get_bits(&s->gb, 3);
-    switch (format) {
-    case 0:
-        width = get_bits(&s->gb, 8);
-        height = get_bits(&s->gb, 8);
-        break;
-    case 1:
-        width = get_bits(&s->gb, 16);
-        height = get_bits(&s->gb, 16);
-        break;
-    case 2:
-        width = 352;
-        height = 288;
-        break;
-    case 3:
-        width = 176;
-        height = 144;
-        break;
-    case 4:
-        width = 128;
-        height = 96;
-        break;
-    case 5:
-        width = 320;
-        height = 240;
-        break;
-    case 6:
-        width = 160;
-        height = 120;
-        break;
-    default:
-        width = height = 0;
-        break;
-    }
-    if(avcodec_check_dimensions(s->avctx, width, height))
-        return -1;
-    s->width = width;
-    s->height = height;
-
-    s->pict_type = FF_I_TYPE + get_bits(&s->gb, 2);
-    s->dropable= s->pict_type > FF_P_TYPE;
-    if (s->dropable)
-        s->pict_type = FF_P_TYPE;
-
-    skip_bits1(&s->gb); /* deblocking flag */
-    s->chroma_qscale= s->qscale = get_bits(&s->gb, 5);
-
-    s->h263_plus = 0;
-
-    s->unrestricted_mv = 1;
-    s->h263_long_vectors = 0;
-
-    /* PEI */
-    while (get_bits1(&s->gb) != 0) {
-        skip_bits(&s->gb, 8);
-    }
-    s->f_code = 1;
-
-    if(s->avctx->debug & FF_DEBUG_PICT_INFO){
-        av_log(s->avctx, AV_LOG_DEBUG, "%c esc_type:%d, qp:%d num:%d\n",
-               s->dropable ? 'D' : av_get_pict_type_char(s->pict_type), s->h263_flv-1, s->qscale, s->picture_number);
-    }
-
-    s->y_dc_scale_table=
-    s->c_dc_scale_table= ff_mpeg1_dc_scale_table;
-
-    return 0;
 }

@@ -54,6 +54,8 @@ SRCS_C=\
       $(LAVC_DIR)/flac.c \
       $(LAVC_DIR)/flacdata.c \
       $(LAVC_DIR)/flacdec.c \
+      $(LAVC_DIR)/flvdec.c \
+      $(LAVC_DIR)/flvenc.c \
       $(LAVC_DIR)/fraps.c \
       $(LAVC_DIR)/g726.c \
       $(LAVC_DIR)/golomb.c \
@@ -74,6 +76,7 @@ SRCS_C=\
       $(LAVC_DIR)/imgconvert.c \
       $(LAVC_DIR)/indeo2.c \
       $(LAVC_DIR)/indeo3.c \
+      $(LAVC_DIR)/intelh263dec.c \
       $(LAVC_DIR)/intrax8.c \
       $(LAVC_DIR)/intrax8dsp.c \
       $(LAVC_DIR)/jfdctfst.c \

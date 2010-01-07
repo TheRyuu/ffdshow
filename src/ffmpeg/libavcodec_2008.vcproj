@@ -631,6 +631,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavcodec\flvdec.c"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\flvenc.c"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\fraps.c"
 				>
 			</File>
@@ -708,6 +716,10 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\indeo3.c"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\intelh263dec.c"
 				>
 			</File>
 			<File
@@ -1309,6 +1321,10 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\flacdata.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\flv.h"
 				>
 			</File>
 			<File

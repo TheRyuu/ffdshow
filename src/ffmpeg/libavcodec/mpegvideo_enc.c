@@ -35,6 +35,7 @@
 #include "msmpeg4.h"
 #include "faandct.h"
 #include "aandcttab.h"
+#include "flv.h"
 #include <limits.h>
 
 //#undef NDEBUG
@@ -3799,27 +3800,6 @@ AVCodec h263p_encoder = {
     /*.pix_fmts = */NULL,
 #endif
     /*.long_name= */NULL_IF_CONFIG_SMALL("H.263+ / H.263-1998 / H.263 version 2"),
-};
-
-AVCodec flv_encoder = {
-    "flv",
-    CODEC_TYPE_VIDEO,
-    CODEC_ID_FLV1,
-    sizeof(MpegEncContext),
-    /*.init=*/MPV_encode_init,
-    /*.encode=*/MPV_encode_picture,
-    /*.close=*/MPV_encode_end,
-    /*.decode=*/NULL,
-    /*.capabilities=*/0,
-    /*.next=*/NULL,
-    /*.flush=*/NULL,
-    /*.supported_framerates=*/NULL,
-#if __STDC_VERSION__ >= 199901L
-    .pix_fmts= (const enum PixelFormat[]){PIX_FMT_YUV420P, PIX_FMT_NONE},
-#else
-    /*.pix_fmts = */NULL,
-#endif
-    /*.long_name= */NULL_IF_CONFIG_SMALL("Flash Video (FLV) / Sorenson Spark / Sorenson H.263"),
 };
 
 AVCodec mpeg4_encoder = {
