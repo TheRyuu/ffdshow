@@ -657,13 +657,13 @@ void TglobalSettingsDecVideo::load(void)
  FF_FOURCC1_OP(U263,h263 & rawmask & dxvamask,CODEC_ID_H263) \
  FF_FOURCC1_OP(X263,h263 & rawmask & dxvamask,CODEC_ID_H263) \
  /*Force IDFF_MOVIE_LAVC in DXVA mode*/ \
- FF_FOURCC_OP(H264,(dxvamask==0) ? (h264 & rawmask) : IDFF_MOVIE_LAVC,c_h264) \
- FF_FOURCC_OP(X264,(dxvamask==0) ? (h264 & rawmask) : IDFF_MOVIE_LAVC,c_h264) \
- FF_FOURCC_OP(VSSH,(dxvamask==0) ? (h264 & rawmask) : IDFF_MOVIE_LAVC,c_h264) \
- FF_FOURCC_OP(DAVC,(dxvamask==0) ? (h264 & rawmask) : IDFF_MOVIE_LAVC,c_h264) \
- FF_FOURCC_OP(PAVC,(dxvamask==0) ? (h264 & rawmask) : IDFF_MOVIE_LAVC,c_h264) \
- FF_FOURCC_OP(AVC1,(dxvamask==0) ? (h264 & rawmask) : IDFF_MOVIE_LAVC,c_h264) \
- FF_FOURCC_OP(H264_HAALI,(dxvamask==0) ? (h264 & rawmask) : IDFF_MOVIE_LAVC,c_h264) \
+ FF_FOURCC_OP(H264,(dxvamask!=0) ? (h264 & rawmask) : IDFF_MOVIE_LAVC,c_h264) \
+ FF_FOURCC_OP(X264,(dxvamask!=0) ? (h264 & rawmask) : IDFF_MOVIE_LAVC,c_h264) \
+ FF_FOURCC_OP(VSSH,(dxvamask!=0) ? (h264 & rawmask) : IDFF_MOVIE_LAVC,c_h264) \
+ FF_FOURCC_OP(DAVC,(dxvamask!=0) ? (h264 & rawmask) : IDFF_MOVIE_LAVC,c_h264) \
+ FF_FOURCC_OP(PAVC,(dxvamask!=0) ? (h264 & rawmask) : IDFF_MOVIE_LAVC,c_h264) \
+ FF_FOURCC_OP(AVC1,(dxvamask!=0) ? (h264 & rawmask) : IDFF_MOVIE_LAVC,c_h264) \
+ FF_FOURCC_OP(H264_HAALI,(dxvamask!=0) ? (h264 & rawmask) : IDFF_MOVIE_LAVC,c_h264) \
  /*FF_FOURCC_OP(SVM2,h264 & rawmask,c_h264)*/ \
  FF_FOURCC1_OP(MJPG,mjpg & rawmask & dxvamask,CODEC_ID_MJPEG) \
  FF_FOURCC1_OP(LJPG,mjpg & rawmask & dxvamask,CODEC_ID_MJPEG) \
@@ -954,8 +954,8 @@ CodecID TglobalSettingsDecVideo::getCodecId(DWORD fourCC,FOURCC *AVIfourCC) cons
 {
  fourCC=FCCupper(fourCC);
  CodecID codecId=CODEC_ID_NONE;
- int rawmask=filtermode&IDFF_FILTERMODE_VIDEORAW?0:0xffff; // Disable all the codecs except RAW
- int dxvamask=filtermode&IDFF_FILTERMODE_VIDEODXVA?0:0xffff; // Disable all the codecs except DXVA supported codecs (H264,VC1 for now)
+ int rawmask=(filtermode&IDFF_FILTERMODE_VIDEORAW)?0:0xffff; // Disable all the codecs except RAW
+ int dxvamask=(filtermode&IDFF_FILTERMODE_VIDEODXVA)?0:0xffff; // Disable all the codecs except DXVA supported codecs (H264,VC1 for now)
  switch(fourCC)
   {
    #undef FF_FOURCC_OP
