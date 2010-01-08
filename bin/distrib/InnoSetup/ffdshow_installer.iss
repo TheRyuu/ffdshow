@@ -148,104 +148,104 @@ WizardSmallImageFile            = SetupModernSmall26.bmp
 
 [Languages]
 #if !include_gnu_license & !include_info_before
-Name: "en"; MessagesFile: "compiler:Default.isl"
+Name: "en";      MessagesFile: "compiler:Default.isl"
   #if localize
-Name: "ba"; MessagesFile: "compiler:Languages\Basque.isl"
-Name: "br"; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl"
-Name: "ca"; MessagesFile: "compiler:Languages\Catalan.isl"
-Name: "cz"; MessagesFile: "compiler:Languages\Czech.isl"
-Name: "da"; MessagesFile: "compiler:Languages\Danish.isl"
-Name: "du"; MessagesFile: "compiler:Languages\Dutch.isl"
-Name: "fi"; MessagesFile: "compiler:Languages\Finnish.isl"
-Name: "fr"; MessagesFile: "compiler:Languages\French.isl"
-Name: "de"; MessagesFile: "compiler:Languages\German.isl"
-Name: "hu"; MessagesFile: "compiler:Languages\Hungarian.isl"
-Name: "it"; MessagesFile: "compiler:Languages\Italian.isl"
-Name: "jp"; MessagesFile:          "languages\Japanese.isl"
-Name: "no"; MessagesFile: "compiler:Languages\Norwegian.isl"
-Name: "pl"; MessagesFile: "compiler:Languages\Polish.isl"
-Name: "pr"; MessagesFile: "compiler:Languages\Portuguese.isl"
-Name: "ru"; MessagesFile: "compiler:Languages\Russian.isl"
-Name: "sc"; MessagesFile:          "languages\ChineseSimp.isl"
-Name: "tc"; MessagesFile:          "languages\ChineseTrad.isl"
-Name: "sk"; MessagesFile: "compiler:Languages\Slovak.isl"
-Name: "sn"; MessagesFile: "compiler:Languages\Slovenian.isl"
-Name: "sp"; MessagesFile: "compiler:Languages\Spanish.isl"
+Name: "ca";      MessagesFile: "compiler:Languages\Catalan.isl"
+Name: "cs";      MessagesFile: "compiler:Languages\Czech.isl"
+Name: "da";      MessagesFile: "compiler:Languages\Danish.isl"
+Name: "de";      MessagesFile: "compiler:Languages\German.isl"
+Name: "es";      MessagesFile: "compiler:Languages\Spanish.isl"
+Name: "eu";      MessagesFile: "compiler:Languages\Basque.isl"
+Name: "fi";      MessagesFile: "compiler:Languages\Finnish.isl"
+Name: "fr";      MessagesFile: "compiler:Languages\French.isl"
+Name: "hu";      MessagesFile: "compiler:Languages\Hungarian.isl"
+Name: "it";      MessagesFile: "compiler:Languages\Italian.isl"
+Name: "ja";      MessagesFile:          "languages\Japanese.isl"
+Name: "nl";      MessagesFile: "compiler:Languages\Dutch.isl"
+Name: "no";      MessagesFile: "compiler:Languages\Norwegian.isl"
+Name: "pl";      MessagesFile: "compiler:Languages\Polish.isl"
+Name: "pt_BR";   MessagesFile: "compiler:Languages\BrazilianPortuguese.isl"
+Name: "pt_PT";   MessagesFile: "compiler:Languages\Portuguese.isl"
+Name: "ru";      MessagesFile: "compiler:Languages\Russian.isl"
+Name: "sk";      MessagesFile: "compiler:Languages\Slovak.isl"
+Name: "sl";      MessagesFile: "compiler:Languages\Slovenian.isl"
+Name: "zh_Hant"; MessagesFile:          "languages\ChineseTrad.isl"
+Name: "zh_Hans"; MessagesFile:          "languages\ChineseSimp.isl"
   #endif
 #elif include_gnu_license & !include_info_before
-Name: "en"; MessagesFile: "compiler:Default.isl";               LicenseFile: "gnu_license.txt"
+Name: "en";      MessagesFile: "compiler:Default.isl";               LicenseFile: "gnu_license.txt"
   #if localize
-Name: "ba"; MessagesFile: "compiler:Languages\Basque.isl"
-Name: "br"; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl"
-Name: "ca"; MessagesFile: "compiler:Languages\Catalan.isl"
-Name: "cz"; MessagesFile: "compiler:Languages\Czech.isl";       LicenseFile: "../../../copying.cz.txt"
-Name: "da"; MessagesFile: "compiler:Languages\Danish.isl"
-Name: "du"; MessagesFile: "compiler:Languages\Dutch.isl"
-Name: "fi"; MessagesFile: "compiler:Languages\Finnish.isl"
-Name: "fr"; MessagesFile: "compiler:Languages\French.isl"
-Name: "de"; MessagesFile: "compiler:Languages\German.isl";      LicenseFile: "../../../copying.de.txt"
-Name: "hu"; MessagesFile: "compiler:Languages\Hungarian.isl"
-Name: "it"; MessagesFile: "compiler:Languages\Italian.isl"
-Name: "jp"; MessagesFile:          "languages\Japanese.isl";    LicenseFile: "../../../copying.jp.txt"
-Name: "no"; MessagesFile: "compiler:Languages\Norwegian.isl"
-Name: "pl"; MessagesFile: "compiler:Languages\Polish.isl";      LicenseFile: "../../../copying.pl.txt"
-Name: "pr"; MessagesFile: "compiler:Languages\Portuguese.isl"
-Name: "ru"; MessagesFile: "compiler:Languages\Russian.isl";     LicenseFile: "../../../copying.ru.txt"
-Name: "sc"; MessagesFile:          "languages\ChineseSimp.isl"
-Name: "tc"; MessagesFile:          "languages\ChineseTrad.isl"
-Name: "sk"; MessagesFile: "compiler:Languages\Slovak.isl";      LicenseFile: "../../../copying.sk.txt"
-Name: "sn"; MessagesFile: "compiler:Languages\Slovenian.isl"
-Name: "sp"; MessagesFile: "compiler:Languages\Spanish.isl"
+Name: "ca";      MessagesFile: "compiler:Languages\Catalan.isl"
+Name: "cs";      MessagesFile: "compiler:Languages\Czech.isl";       LicenseFile: "../../../copying.cs.txt"
+Name: "da";      MessagesFile: "compiler:Languages\Danish.isl"
+Name: "de";      MessagesFile: "compiler:Languages\German.isl";      LicenseFile: "../../../copying.de.txt"
+Name: "es";      MessagesFile: "compiler:Languages\Spanish.isl"
+Name: "eu";      MessagesFile: "compiler:Languages\Basque.isl"
+Name: "fi";      MessagesFile: "compiler:Languages\Finnish.isl"
+Name: "fr";      MessagesFile: "compiler:Languages\French.isl"
+Name: "hu";      MessagesFile: "compiler:Languages\Hungarian.isl"
+Name: "it";      MessagesFile: "compiler:Languages\Italian.isl"
+Name: "ja";      MessagesFile:          "languages\Japanese.isl";    LicenseFile: "../../../copying.ja.txt"
+Name: "nl";      MessagesFile: "compiler:Languages\Dutch.isl"
+Name: "no";      MessagesFile: "compiler:Languages\Norwegian.isl"
+Name: "pl";      MessagesFile: "compiler:Languages\Polish.isl";      LicenseFile: "../../../copying.pl.txt"
+Name: "pt_BR";   MessagesFile: "compiler:Languages\BrazilianPortuguese.isl"
+Name: "pt_PT";   MessagesFile: "compiler:Languages\Portuguese.isl"
+Name: "ru";      MessagesFile: "compiler:Languages\Russian.isl";     LicenseFile: "../../../copying.ru.txt"
+Name: "sk";      MessagesFile: "compiler:Languages\Slovak.isl";      LicenseFile: "../../../copying.sk.txt"
+Name: "sl";      MessagesFile: "compiler:Languages\Slovenian.isl"
+Name: "zh_Hant"; MessagesFile:          "languages\ChineseTrad.isl"
+Name: "zh_Hans"; MessagesFile:          "languages\ChineseSimp.isl"
   #endif
 #elif !include_gnu_license & include_info_before
-Name: "en"; MessagesFile: "compiler:Default.isl";               InfoBeforeFile: "infobefore.rtf"
+Name: "en";      MessagesFile: "compiler:Default.isl";               InfoBeforeFile: "infobefore.rtf"
   #if localize
-Name: "ba"; MessagesFile: "compiler:Languages\Basque.isl"
-Name: "br"; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl"
-Name: "ca"; MessagesFile: "compiler:Languages\Catalan.isl"
-Name: "cz"; MessagesFile: "compiler:Languages\Czech.isl"
-Name: "da"; MessagesFile: "compiler:Languages\Danish.isl"
-Name: "du"; MessagesFile: "compiler:Languages\Dutch.isl"
-Name: "fi"; MessagesFile: "compiler:Languages\Finnish.isl"
-Name: "fr"; MessagesFile: "compiler:Languages\French.isl"
-Name: "de"; MessagesFile: "compiler:Languages\German.isl";      InfoBeforeFile: "infobefore\infobefore.de.rtf"
-Name: "hu"; MessagesFile: "compiler:Languages\Hungarian.isl"
-Name: "it"; MessagesFile: "compiler:Languages\Italian.isl"
-Name: "jp"; MessagesFile:          "languages\Japanese.isl"
-Name: "no"; MessagesFile: "compiler:Languages\Norwegian.isl"
-Name: "pl"; MessagesFile: "compiler:Languages\Polish.isl";      InfoBeforeFile: "infobefore\infobefore.pl.rtf"
-Name: "pr"; MessagesFile: "compiler:Languages\Portuguese.isl"
-Name: "ru"; MessagesFile: "compiler:Languages\Russian.isl"
-Name: "sc"; MessagesFile:          "languages\ChineseSimp.isl"
-Name: "tc"; MessagesFile:          "languages\ChineseTrad.isl"
-Name: "sk"; MessagesFile: "compiler:Languages\Slovak.isl"
-Name: "sn"; MessagesFile: "compiler:Languages\Slovenian.isl"
-Name: "sp"; MessagesFile: "compiler:Languages\Spanish.isl"
+Name: "ca";      MessagesFile: "compiler:Languages\Catalan.isl"
+Name: "cs";      MessagesFile: "compiler:Languages\Czech.isl"
+Name: "da";      MessagesFile: "compiler:Languages\Danish.isl"
+Name: "de";      MessagesFile: "compiler:Languages\German.isl";      InfoBeforeFile: "infobefore\infobefore.de.rtf"
+Name: "es";      MessagesFile: "compiler:Languages\Spanish.isl"
+Name: "eu";      MessagesFile: "compiler:Languages\Basque.isl"
+Name: "fi";      MessagesFile: "compiler:Languages\Finnish.isl"
+Name: "fr";      MessagesFile: "compiler:Languages\French.isl"
+Name: "hu";      MessagesFile: "compiler:Languages\Hungarian.isl"
+Name: "it";      MessagesFile: "compiler:Languages\Italian.isl"
+Name: "ja";      MessagesFile:          "languages\Japanese.isl"
+Name: "nl";      MessagesFile: "compiler:Languages\Dutch.isl"
+Name: "no";      MessagesFile: "compiler:Languages\Norwegian.isl"
+Name: "pl";      MessagesFile: "compiler:Languages\Polish.isl";      InfoBeforeFile: "infobefore\infobefore.pl.rtf"
+Name: "pt_BR";   MessagesFile: "compiler:Languages\BrazilianPortuguese.isl"
+Name: "pt_PT";   MessagesFile: "compiler:Languages\Portuguese.isl"
+Name: "ru";      MessagesFile: "compiler:Languages\Russian.isl"
+Name: "sk";      MessagesFile: "compiler:Languages\Slovak.isl"
+Name: "sl";      MessagesFile: "compiler:Languages\Slovenian.isl"
+Name: "zh_Hant"; MessagesFile:          "languages\ChineseTrad.isl"
+Name: "zh_Hans"; MessagesFile:          "languages\ChineseSimp.isl"
   #endif
 #else
-Name: "en"; MessagesFile: "compiler:Default.isl";               LicenseFile: "gnu_license.txt";         InfoBeforeFile: "infobefore.rtf"
+Name: "en";      MessagesFile: "compiler:Default.isl";               LicenseFile: "gnu_license.txt";         InfoBeforeFile: "infobefore.rtf"
   #if localize
-Name: "ba"; MessagesFile: "compiler:Languages\Basque.isl"
-Name: "br"; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl"
-Name: "ca"; MessagesFile: "compiler:Languages\Catalan.isl"
-Name: "cz"; MessagesFile: "compiler:Languages\Czech.isl";       LicenseFile: "../../../copying.cz.txt"
-Name: "da"; MessagesFile: "compiler:Languages\Danish.isl"
-Name: "du"; MessagesFile: "compiler:Languages\Dutch.isl"
-Name: "fi"; MessagesFile: "compiler:Languages\Finnish.isl"
-Name: "fr"; MessagesFile: "compiler:Languages\French.isl"
-Name: "de"; MessagesFile: "compiler:Languages\German.isl";      LicenseFile: "../../../copying.de.txt"; InfoBeforeFile: "infobefore\infobefore.de.rtf"
-Name: "hu"; MessagesFile: "compiler:Languages\Hungarian.isl"
-Name: "it"; MessagesFile: "compiler:Languages\Italian.isl"
-Name: "jp"; MessagesFile:          "languages\Japanese.isl";    LicenseFile: "../../../copying.jp.txt"
-Name: "no"; MessagesFile: "compiler:Languages\Norwegian.isl"
-Name: "pl"; MessagesFile: "compiler:Languages\Polish.isl";      LicenseFile: "../../../copying.pl.txt"; InfoBeforeFile: "infobefore\infobefore.pl.rtf"
-Name: "pr"; MessagesFile: "compiler:Languages\Portuguese.isl"
-Name: "ru"; MessagesFile: "compiler:Languages\Russian.isl";     LicenseFile: "../../../copying.ru.txt"
-Name: "sc"; MessagesFile:          "languages\ChineseSimp.isl"
-Name: "tc"; MessagesFile:          "languages\ChineseTrad.isl"
-Name: "sk"; MessagesFile: "compiler:Languages\Slovak.isl";      LicenseFile: "../../../copying.sk.txt"
-Name: "sn"; MessagesFile: "compiler:Languages\Slovenian.isl"
-Name: "sp"; MessagesFile: "compiler:Languages\Spanish.isl"
+Name: "ca";      MessagesFile: "compiler:Languages\Catalan.isl"
+Name: "cs";      MessagesFile: "compiler:Languages\Czech.isl";       LicenseFile: "../../../copying.cs.txt"
+Name: "da";      MessagesFile: "compiler:Languages\Danish.isl"
+Name: "de";      MessagesFile: "compiler:Languages\German.isl";      LicenseFile: "../../../copying.de.txt"; InfoBeforeFile: "infobefore\infobefore.de.rtf"
+Name: "es";      MessagesFile: "compiler:Languages\Spanish.isl"
+Name: "eu";      MessagesFile: "compiler:Languages\Basque.isl"
+Name: "fi";      MessagesFile: "compiler:Languages\Finnish.isl"
+Name: "fr";      MessagesFile: "compiler:Languages\French.isl"
+Name: "hu";      MessagesFile: "compiler:Languages\Hungarian.isl"
+Name: "it";      MessagesFile: "compiler:Languages\Italian.isl"
+Name: "ja";      MessagesFile:          "languages\Japanese.isl";    LicenseFile: "../../../copying.ja.txt"
+Name: "nl";      MessagesFile: "compiler:Languages\Dutch.isl"
+Name: "no";      MessagesFile: "compiler:Languages\Norwegian.isl"
+Name: "pl";      MessagesFile: "compiler:Languages\Polish.isl";      LicenseFile: "../../../copying.pl.txt"; InfoBeforeFile: "infobefore\infobefore.pl.rtf"
+Name: "pt_BR";   MessagesFile: "compiler:Languages\BrazilianPortuguese.isl"
+Name: "pt_PT";   MessagesFile: "compiler:Languages\Portuguese.isl"
+Name: "ru";      MessagesFile: "compiler:Languages\Russian.isl";     LicenseFile: "../../../copying.ru.txt"
+Name: "sk";      MessagesFile: "compiler:Languages\Slovak.isl";      LicenseFile: "../../../copying.sk.txt"
+Name: "sl";      MessagesFile: "compiler:Languages\Slovenian.isl"
+Name: "zh_Hant"; MessagesFile:          "languages\ChineseTrad.isl"
+Name: "zh_Hans"; MessagesFile:          "languages\ChineseSimp.isl"
   #endif
 #endif
 
@@ -375,15 +375,15 @@ Name: "whitelist\prompt";        Description: "{cm:tsk_whitelistPrompt}";       
   #define ff_sys = '{syswow64}'
 #endif
 
-Name: "{group}\{cm:shrt_audioConfig}"; Filename: "{#= ff_sys}\rundll32.exe"; Parameters: "ffdshow.ax,configureAudio"; WorkingDir: "{app}";       IconFilename: "{app}\ffdshow.ax"; IconIndex: 4; Components: ffdshow
-Name: "{group}\{cm:shrt_videoConfig}"; Filename: "{#= ff_sys}\rundll32.exe"; Parameters: "ffdshow.ax,configure";      WorkingDir: "{app}";       IconFilename: "{app}\ffdshow.ax"; IconIndex: 3; Components: ffdshow
-Name: "{group}\{cm:shrt_videoDXVAConfig}"; Filename: "{#= ff_sys}\rundll32.exe"; Parameters: "ffdshow.ax,configureDXVA"; WorkingDir: "{app}";       IconFilename: "{app}\ffdshow.ax"; IconIndex: 10; Components: ffdshow
-Name: "{group}\{cm:shrt_vfwConfig}";   Filename: "{#= ff_sys}\rundll32.exe"; Parameters: "ff_vfw.dll,configureVFW";   WorkingDir: "{#= ff_sys}"; IconFilename: "{app}\ffdshow.ax"; IconIndex: 5; Components: ffdshow\vfw
+Name: "{group}\{cm:shrt_audioConfig}";     Filename: "{#= ff_sys}\rundll32.exe"; Parameters: "ffdshow.ax,configureAudio"; WorkingDir: "{app}";       IconFilename: "{app}\ffdshow.ax"; IconIndex:  4; Components: ffdshow
+Name: "{group}\{cm:shrt_videoConfig}";     Filename: "{#= ff_sys}\rundll32.exe"; Parameters: "ffdshow.ax,configure";      WorkingDir: "{app}";       IconFilename: "{app}\ffdshow.ax"; IconIndex:  3; Components: ffdshow
+Name: "{group}\{cm:shrt_videoDXVAConfig}"; Filename: "{#= ff_sys}\rundll32.exe"; Parameters: "ffdshow.ax,configureDXVA";  WorkingDir: "{app}";       IconFilename: "{app}\ffdshow.ax"; IconIndex: 10; Components: ffdshow
+Name: "{group}\{cm:shrt_vfwConfig}";       Filename: "{#= ff_sys}\rundll32.exe"; Parameters: "ff_vfw.dll,configureVFW";   WorkingDir: "{#= ff_sys}"; IconFilename: "{app}\ffdshow.ax"; IconIndex:  5; Components: ffdshow\vfw
 #if include_makeavis
-Name: "{group}\makeAVIS";              Filename: "{app}\makeAVIS.exe"; Components: ffdshow\makeavis
+Name: "{group}\makeAVIS";                  Filename: "{app}\makeAVIS.exe"; Components: ffdshow\makeavis
 #endif
-Name: "{group}\{cm:shrt_uninstall}";   Filename: "{uninstallexe}"
-Name: "{group}\{cm:shrt_homepage}";    Filename: "http://ffdshow-tryout.sourceforge.net/";                                                       IconFilename: "{app}\ffdshow.ax"; IconIndex: 9; Components: ffdshow;
+Name: "{group}\{cm:shrt_uninstall}";       Filename: "{uninstallexe}"
+Name: "{group}\{cm:shrt_homepage}";        Filename: "http://ffdshow-tryout.sourceforge.net/";                                                       IconFilename: "{app}\ffdshow.ax"; IconIndex:  9; Components: ffdshow;
 
 [Files]
 ; For speaker config
@@ -462,25 +462,28 @@ Source: "{#= ff_manifest}\makeAVIS.exe.manifest"; DestDir: "{app}";             
 
 [InstallDelete]
 ; Private assemblies
-Type: files; Name: "{app}\msvcr80.dll";                       Components: ffdshow
-Type: files; Name: "{app}\microsoft.vc80.crt.manifest";       Components: ffdshow
+Type: files; Name: "{app}\msvcr80.dll";                            Components: ffdshow
+Type: files; Name: "{app}\microsoft.vc80.crt.manifest";            Components: ffdshow
 ; Localized shortcuts
 #if localize
-Type: files; Name: "{group}\Video decoder configuration.lnk"; Components: ffdshow
-Type: files; Name: "{group}\Audio decoder configuration.lnk"; Components: ffdshow
-Type: files; Name: "{group}\Uninstall ffdshow.lnk";           Components: ffdshow
-Type: files; Name: "{group}\Homepage.url";                    Components: ffdshow
-Type: files; Name: "{group}\VFW configuration.lnk";           Components: ffdshow\vfw
+Type: files; Name: "{group}\Video decoder configuration.lnk";      Components: ffdshow
+Type: files; Name: "{group}\DXVA Video decoder configuration.lnk"; Components: ffdshow
+Type: files; Name: "{group}\Audio decoder configuration.lnk";      Components: ffdshow
+Type: files; Name: "{group}\Uninstall ffdshow.lnk";                Components: ffdshow
+Type: files; Name: "{group}\Homepage.url";                         Components: ffdshow
+Type: files; Name: "{group}\VFW configuration.lnk";                Components: ffdshow\vfw
 #endif
 ; Files not included in this build
 #if !include_x264
-Type: files; Name: "{app}\ff_x264.dll";                       Components: ffdshow
+Type: files; Name: "{app}\ff_x264.dll";                            Components: ffdshow
 #endif
 #if !include_xvidcore
-Type: files; Name: "{app}\xvidcore.dll";                      Components: ffdshow
+Type: files; Name: "{app}\xvidcore.dll";                           Components: ffdshow
 #endif
 ; Outdated files
-Type: files; Name: "{app}\languages\ffdshow.1041.jp";         Components: ffdshow
+Type: files; Name: "{app}\languages\ffdshow.1029.cz";              Components: ffdshow
+Type: files; Name: "{app}\languages\ffdshow.1041.jp";              Components: ffdshow
+Type: files; Name: "{app}\languages\ffdshow.1053.se";              Components: ffdshow
 
 [Registry]
 #if is64bit
@@ -615,17 +618,17 @@ Root: HKCU; Subkey: "{#= ff_reg_base}_audio\default"; ValueType: dword;  ValueNa
 Root: HKCU; Subkey: "{#= ff_reg_base}_audio\";                           ValueName: "isOSD";                                                 Components: ffdshow;     Flags: deletevalue
 
 [Run]
-Description: "{cm:run_audioConfig}"; Filename: "{syswow64}\rundll32.exe"; Parameters: "ffdshow.ax,configureAudio"; WorkingDir: "{app}";      Components: ffdshow;     Flags: postinstall nowait unchecked; MinVersion: 0,4
-Description: "{cm:run_audioConfig}"; Filename: "{win}\rundll32.exe";      Parameters: "ffdshow.ax,configureAudio"; WorkingDir: "{app}";      Components: ffdshow;     Flags: postinstall nowait unchecked; MinVersion: 4,0
-Description: "{cm:run_videoConfig}"; Filename: "{syswow64}\rundll32.exe"; Parameters: "ffdshow.ax,configure";      WorkingDir: "{app}";      Components: ffdshow;     Flags: postinstall nowait unchecked; MinVersion: 0,4
-Description: "{cm:run_videoConfig}"; Filename: "{win}\rundll32.exe";      Parameters: "ffdshow.ax,configure";      WorkingDir: "{app}";      Components: ffdshow;     Flags: postinstall nowait unchecked; MinVersion: 4,0
-Description: "{cm:run_videoDXVAConfig}"; Filename: "{syswow64}\rundll32.exe"; Parameters: "ffdshow.ax,configureDXVA";      WorkingDir: "{app}";      Components: ffdshow;     Flags: postinstall nowait unchecked; MinVersion: 0,4
-Description: "{cm:run_videoDXVAConfig}"; Filename: "{win}\rundll32.exe";      Parameters: "ffdshow.ax,configureDXVA";      WorkingDir: "{app}";      Components: ffdshow;     Flags: postinstall nowait unchecked; MinVersion: 4,0
+Description: "{cm:run_audioConfig}";     Filename: "{syswow64}\rundll32.exe"; Parameters: "ffdshow.ax,configureAudio"; WorkingDir: "{app}";      Components: ffdshow;     Flags: postinstall nowait unchecked; MinVersion: 0,4
+Description: "{cm:run_audioConfig}";     Filename: "{win}\rundll32.exe";      Parameters: "ffdshow.ax,configureAudio"; WorkingDir: "{app}";      Components: ffdshow;     Flags: postinstall nowait unchecked; MinVersion: 4,0
+Description: "{cm:run_videoConfig}";     Filename: "{syswow64}\rundll32.exe"; Parameters: "ffdshow.ax,configure";      WorkingDir: "{app}";      Components: ffdshow;     Flags: postinstall nowait unchecked; MinVersion: 0,4
+Description: "{cm:run_videoConfig}";     Filename: "{win}\rundll32.exe";      Parameters: "ffdshow.ax,configure";      WorkingDir: "{app}";      Components: ffdshow;     Flags: postinstall nowait unchecked; MinVersion: 4,0
+Description: "{cm:run_videoDXVAConfig}"; Filename: "{syswow64}\rundll32.exe"; Parameters: "ffdshow.ax,configureDXVA";  WorkingDir: "{app}";      Components: ffdshow;     Flags: postinstall nowait unchecked; MinVersion: 0,4
+Description: "{cm:run_videoDXVAConfig}"; Filename: "{win}\rundll32.exe";      Parameters: "ffdshow.ax,configureDXVA";  WorkingDir: "{app}";      Components: ffdshow;     Flags: postinstall nowait unchecked; MinVersion: 4,0
 #if is64bit
-Description: "{cm:run_vfwConfig}";   Filename: "{sys}\rundll32.exe";      Parameters: "ff_vfw.dll,configureVFW";   WorkingDir: "{sys}";      Components: ffdshow\vfw; Flags: postinstall nowait unchecked
+Description: "{cm:run_vfwConfig}";       Filename: "{sys}\rundll32.exe";      Parameters: "ff_vfw.dll,configureVFW";   WorkingDir: "{sys}";      Components: ffdshow\vfw; Flags: postinstall nowait unchecked
 #else
-Description: "{cm:run_vfwConfig}";   Filename: "{syswow64}\rundll32.exe"; Parameters: "ff_vfw.dll,configureVFW";   WorkingDir: "{syswow64}"; Components: ffdshow\vfw; Flags: postinstall nowait unchecked; MinVersion: 0,4
-Description: "{cm:run_vfwConfig}";   Filename: "{win}\rundll32.exe";      Parameters: "ff_vfw.dll,configureVFW";   WorkingDir: "{sys}";      Components: ffdshow\vfw; Flags: postinstall nowait unchecked; MinVersion: 4,0
+Description: "{cm:run_vfwConfig}";       Filename: "{syswow64}\rundll32.exe"; Parameters: "ff_vfw.dll,configureVFW";   WorkingDir: "{syswow64}"; Components: ffdshow\vfw; Flags: postinstall nowait unchecked; MinVersion: 0,4
+Description: "{cm:run_vfwConfig}";       Filename: "{win}\rundll32.exe";      Parameters: "ff_vfw.dll,configureVFW";   WorkingDir: "{sys}";      Components: ffdshow\vfw; Flags: postinstall nowait unchecked; MinVersion: 4,0
 #endif
 
 ; All custom strings in the installer:
@@ -1223,4 +1226,5 @@ begin
   end
 end;
 #endif
+
 

@@ -10,10 +10,10 @@ en.WinVersionTooLowError=This build of ffdshow requires Windows 2000 or newer. R
 #if localize
 
 ;Czech
-cz.WelcomeLabel2=Tento instalátor nainstaluje na váš počítač ffdshow.%n%nPředtím než spustíte instalaci je doporučeno ukončit všechny ostatní aplikace.
-cz.FileAbortRetryIgnore=Ukončete aplikaci používající ffdshow a klikněte na Opakovat. Pokud problém přetrvává, ukončete instalaci tlačítkem Přerušit, restartujte počítač a znovu spusťte instalci.
-cz.FinishedRestartLabel=Aby mohla být instalace ffdshow dokončena, musí instalátor restartovat počítač. Chcete počítač restartovat nyní?%n%nTip: Potřebě restartování se pro příště můžete vyhnout pokud v nastavení video dekodéru nastavíte "DirectShow"-"ffdshow nepoužívat v:"-"explorer.exe".
-cz.WinVersionTooLowError=Tato verze ffdshow vyžaduje Windows 2000 nebo novější. Revize 2352 ffdshow je poslední, která funguje ve Windows 98/ME.
+cs.WelcomeLabel2=Tento instalátor nainstaluje na váš počítač ffdshow.%n%nPředtím než spustíte instalaci je doporučeno ukončit všechny ostatní aplikace.
+cs.FileAbortRetryIgnore=Ukončete aplikaci používající ffdshow a klikněte na Opakovat. Pokud problém přetrvává, ukončete instalaci tlačítkem Přerušit, restartujte počítač a znovu spusťte instalci.
+cs.FinishedRestartLabel=Aby mohla být instalace ffdshow dokončena, musí instalátor restartovat počítač. Chcete počítač restartovat nyní?%n%nTip: Potřebě restartování se pro příště můžete vyhnout pokud v nastavení video dekodéru nastavíte "DirectShow"-"ffdshow nepoužívat v:"-"explorer.exe".
+cs.WinVersionTooLowError=Tato verze ffdshow vyžaduje Windows 2000 nebo novější. Revize 2352 ffdshow je poslední, která funguje ve Windows 98/ME.
 
 ; German
 de.WelcomeLabel2=Dieser Assistent wird jetzt ffdshow auf Ihrem Computer installieren.%n%nSie sollten alle anderen Anwendungen beenden, bevor Sie mit dem Setup fortfahren.
@@ -28,10 +28,10 @@ fr.FinishedRestartLabel=Pour compléter l'installation de ffdshow, l'installatio
 fr.WinVersionTooLowError=Cette version de ffdshow nécessite Windows 2000 ou plus récent. La révision 2352 de ffdshow est la dernière compatible avec Windows 98/ME.
 
 ; Japanese
-jp.WelcomeLabel2=このプログラムはご使用のコンピュータへ ffdshow をインストールします。%n%n続行する前に他のアプリケーションをすべて終了してください。
-jp.FileAbortRetryIgnore=ffdshowを使用中のアプリケーションを終了して「再試行」をクリックしてください。解決しない場合は「中止」をクリックしてコンピュータを再起動後、もう一度セットアップを実行してください。
-jp.FinishedRestartLabel=ffdshow のインストールを完了するためには、コンピュータを再起動する必要があります。%n%nすぐに再起動しますか？%n%nヒント：ビデオデコーダー設定の「情報とデバッグ」の「Don't use ffdshow in:」「explorer.exe」を有効にしておくと次回から再起動が不要になるかもしれません。
-jp.WinVersionTooLowError=このバージョンのffdshowはWindows 2000以降が必要です。リビジョン2352より前のバージョンを御使用ください。
+ja.WelcomeLabel2=このプログラムはご使用のコンピュータへ ffdshow をインストールします。%n%n続行する前に他のアプリケーションをすべて終了してください。
+ja.FileAbortRetryIgnore=ffdshowを使用中のアプリケーションを終了して「再試行」をクリックしてください。解決しない場合は「中止」をクリックしてコンピュータを再起動後、もう一度セットアップを実行してください。
+ja.FinishedRestartLabel=ffdshow のインストールを完了するためには、コンピュータを再起動する必要があります。%n%nすぐに再起動しますか？%n%nヒント：ビデオデコーダー設定の「情報とデバッグ」の「Don't use ffdshow in:」「explorer.exe」を有効にしておくと次回から再起動が不要になるかもしれません。
+ja.WinVersionTooLowError=このバージョンのffdshowはWindows 2000以降が必要です。リビジョン2352より前のバージョンを御使用ください。
 
 ; Polish
 pl.WelcomeLabel2=Instalator zainstaluje ffdshow na twoim komputerze.%n%nZaleca się zamknięcie wszystkich innych aplikacji przed kontynuowaniem procesu instalacji.
@@ -46,16 +46,16 @@ ru.FinishedRestartLabel=Для завершения установки ffdshow �
 ru.WinVersionTooLowError=Для этого билда ffdshow необходимо использование Windows 2000 или новее. Билд 2352 ffdshow является последним для использования в ОС Windows 98/ME.
 
 ; Chinese (Simplified)
-sc.WelcomeLabel2=即将安装 ffdshow 到您的电脑中。%n%n建议您在继续安装前关闭所有其他应用程序。
-sc.FileAbortRetryIgnore=退出正在使用 ffdshow 的应用程序然后重试。如果问题仍然出现，单击“中止”按钮，并重新启动计算机然后再运行安装程序。
-sc.FinishedRestartLabel=安装程序需要重新启动计算机来完成 ffdshow 的安装过程。你想现在重新启动吗？%n%n提示：如果下次安装不想重新启动计算机，可以勾选“不要在下列程序中使用ffdshow：”复选框（位于“ffdshow视频解码器配置”->“DirectShow控制”），并把“explorer.exe”加入后面的列表。
-;sc.WinVersionTooLowError=This build of ffdshow requires Windows 2000 or newer. Revision 2352 of ffdshow is the last one that works on Windows 98/ME.
+zh_Hans.WelcomeLabel2=即将安装 ffdshow 到您的电脑中。%n%n建议您在继续安装前关闭所有其他应用程序。
+zh_Hans.FileAbortRetryIgnore=退出正在使用 ffdshow 的应用程序然后重试。如果问题仍然出现，单击“中止”按钮，并重新启动计算机然后再运行安装程序。
+zh_Hans.FinishedRestartLabel=安装程序需要重新启动计算机来完成 ffdshow 的安装过程。你想现在重新启动吗？%n%n提示：如果下次安装不想重新启动计算机，可以勾选“不要在下列程序中使用ffdshow：”复选框（位于“ffdshow视频解码器配置”->“DirectShow控制”），并把“explorer.exe”加入后面的列表。
+;zh_Hans.WinVersionTooLowError=This build of ffdshow requires Windows 2000 or newer. Revision 2352 of ffdshow is the last one that works on Windows 98/ME.
 
 ; Chinese (Traditional)
-tc.WelcomeLabel2=這會安裝 ffdshow 到您的電腦.%n%n建議您在繼續之前關閉其它所有的應用程式.
-tc.FileAbortRetryIgnore=退出使用 ffdshow 的應用程式並點擊 Retry. 如果問題還是持續, 請點擊 Abort, 重新啟動您的電腦並再次執行安裝程式.
-tc.FinishedRestartLabel=要完成 ffdshow 的安裝, 安裝程式必須重新啟動您的電腦. 您想要現在重新啟動嗎?%n%n提示: 為了避免下次重新啟動電腦, 可以於視訊解碼器組態內的 "DirectShow 控制" -> "不使用 ffdshow 於:" 中加入 "explorer.exe".
-tc.WinVersionTooLowError=此版的 ffdshow 需要 Windows 2000 或更新的版本. 2352 版的 ffdshow 是在 Windows 98/ME 上運行的最後一版.
+zh_Hant.WelcomeLabel2=這會安裝 ffdshow 到您的電腦.%n%n建議您在繼續之前關閉其它所有的應用程式.
+zh_Hant.FileAbortRetryIgnore=退出使用 ffdshow 的應用程式並點擊 Retry. 如果問題還是持續, 請點擊 Abort, 重新啟動您的電腦並再次執行安裝程式.
+zh_Hant.FinishedRestartLabel=要完成 ffdshow 的安裝, 安裝程式必須重新啟動您的電腦. 您想要現在重新啟動嗎?%n%n提示: 為了避免下次重新啟動電腦, 可以於視訊解碼器組態內的 "DirectShow 控制" -> "不使用 ffdshow 於:" 中加入 "explorer.exe".
+zh_Hant.WinVersionTooLowError=此版的 ffdshow 需要 Windows 2000 或更新的版本. 2352 版的 ffdshow 是在 Windows 98/ME 上運行的最後一版.
 
 ; Add other languages here
 
@@ -141,77 +141,79 @@ en.shrt_homepage=Homepage
 #if localize
 
 ; Czech
-cz.langid=1029
-cz.msg_uninstallFirst=Nejdříve musíte odinstalovat starou verzi ffdshow.
-cz.simd_msg_sse=Toto sestavení ffdshow vyžaduje procesor s podporou rozšíření SSE. Váš procesor tato rozšíření nepodporuje.
-cz.simd_msg_sse2=Toto sestavení ffdshow vyžaduje procesor s podporou rozšíření SSE2. Váš procesor tato rozšíření nepodporuje.
-cz.unsupported_cpu=Toto sestavení ffdshow vyžaduje procesor i686 nebo novější. Váš procesor není podporován. ffdshow revize 1940 je poslední verze funkční na starých procesorech.
+cs.langid=1029
+cs.msg_uninstallFirst=Nejdříve musíte odinstalovat starou verzi ffdshow.
+cs.simd_msg_sse=Toto sestavení ffdshow vyžaduje procesor s podporou rozšíření SSE. Váš procesor tato rozšíření nepodporuje.
+cs.simd_msg_sse2=Toto sestavení ffdshow vyžaduje procesor s podporou rozšíření SSE2. Váš procesor tato rozšíření nepodporuje.
+cs.unsupported_cpu=Toto sestavení ffdshow vyžaduje procesor i686 nebo novější. Váš procesor není podporován. ffdshow revize 1940 je poslední verze funkční na starých procesorech.
 
-cz.comp_ffdshowds=ffdshow DirectShow filtr
-cz.comp_vfwInterface=VFW rozhraní
-cz.comp_makeAvis=Podpora pro AviSynth
-cz.comp_appPlugins=Pluginy:
-cz.comp_msg_selectOneComp=Musíte zvolit minimálně jeden komponent.
+cs.comp_ffdshowds=ffdshow DirectShow filtr
+cs.comp_vfwInterface=VFW rozhraní
+cs.comp_makeAvis=Podpora pro AviSynth
+cs.comp_appPlugins=Pluginy:
+cs.comp_msg_selectOneComp=Musíte zvolit minimálně jeden komponent.
 
-cz.tsk_settings=Nastavení
-cz.tsk_resetSettings=Výchozí nastavení ffdshow
-cz.tsk_videoFormats=Video formáty
-cz.tsk_videoFormatsSelect=Dekódovat pomocí ffdshow následující video formáty:
-cz.tsk_genericMpeg4=Obecný MPEG-4
-cz.tsk_rawVideo=Raw video
-cz.tsk_audioFormats=Audio formáty
-cz.tsk_audioFormatsSelect=Dekódovat pomocí ffdshow následující audio formáty:
-cz.tsk_rawAudio=Raw audio
-cz.tsk_filters=Nastavení filtrů
-cz.tsk_filtersSelect=Ve výchozím nastavení povolit následující filtry:
-cz.tsk_passthroughac3=Povolit AC3 pass-through (S/PDIF, HDMI)
-cz.tsk_passthroughdts=Povolit DTS pass-through (S/PDIF, HDMI)
-cz.tsk_volumeNorm=Normalizace
-cz.tsk_subtitles=Titulky
-cz.tsk_tweaks=Ladění
-cz.tsk_skipInloop=Vždy vynechat H.264 inloop deblocking
-cz.tsk_compatibilityManager=Nastavení kompatibility
-cz.tsk_whitelist=Používat ffdshow jen v programech uvedených v seznamu kompatibilních programů
-cz.tsk_whitelistPrompt=Zobrazit dialog Správce kompatibility, pokud se ffdshow pokusí načíst neznámá aplikace.
+cs.tsk_settings=Nastavení
+cs.tsk_resetSettings=Výchozí nastavení ffdshow
+cs.tsk_videoFormats=Video formáty
+cs.tsk_videoFormatsSelect=Dekódovat pomocí ffdshow následující video formáty:
+cs.tsk_genericMpeg4=Obecný MPEG-4
+cs.tsk_rawVideo=Raw video
+cs.tsk_audioFormats=Audio formáty
+cs.tsk_audioFormatsSelect=Dekódovat pomocí ffdshow následující audio formáty:
+cs.tsk_rawAudio=Raw audio
+cs.tsk_filters=Nastavení filtrů
+cs.tsk_filtersSelect=Ve výchozím nastavení povolit následující filtry:
+cs.tsk_passthroughac3=Povolit AC3 pass-through (S/PDIF, HDMI)
+cs.tsk_passthroughdts=Povolit DTS pass-through (S/PDIF, HDMI)
+cs.tsk_volumeNorm=Normalizace
+cs.tsk_subtitles=Titulky
+cs.tsk_tweaks=Ladění
+cs.tsk_skipInloop=Vždy vynechat H.264 inloop deblocking
+cs.tsk_compatibilityManager=Nastavení kompatibility
+cs.tsk_whitelist=Používat ffdshow jen v programech uvedených v seznamu kompatibilních programů
+cs.tsk_whitelistPrompt=Zobrazit dialog Správce kompatibility, pokud se ffdshow pokusí načíst neznámá aplikace.
 
-cz.spk_Label1=Nastavení reproduktorů
-cz.spk_Label2=Zvolte nastavení které nejvíce odpovídá konfiguraci vašeho počítače. Později lze změnit na stránce nastavení "Mixer".
-cz.spk_Label3=Konfigurace reproduktorů:
-cz.spk_mono=mono
-cz.spk_stereo=stereo
-cz.spk_quadro=quadro
-cz.spk_rear_1ch=zadní 1k
-cz.spk_front_2ch=přední 2k
-cz.spk_side_2ch=postranní 2k
-cz.spk_rear_2ch=zadní 2k
-cz.spk_front_3ch=přední 3k
-cz.spk_5ch=přední 3k + zadní 2k
-cz.spk_7ch=přední 3k + postranní 2k + zadní 2k
-cz.spk_headPhone=sluchátka
-cz.spk_surround=surround
-cz.spk_subwoofer=subwoofer
-cz.spk_dolby1=Dolby Surround/ProLogic
-cz.spk_dolby2=Dolby ProLogic II
-cz.spk_hrtf=Head-related transfer function (HRTF)
-cz.spk_sameAsInput=Jako vstup
-cz.spk_disableMixer=Zakázat Mixer
-cz.spk_voiceControl=Voice control (volume)
-cz.spk_expandStereo=Rozšíření sterea (surround)
-cz.spk_unknownSpk=Neznámá konfigurace
+cs.spk_Label1=Nastavení reproduktorů
+cs.spk_Label2=Zvolte nastavení které nejvíce odpovídá konfiguraci vašeho počítače. Později lze změnit na stránce nastavení "Mixer".
+cs.spk_Label3=Konfigurace reproduktorů:
+cs.spk_mono=mono
+cs.spk_stereo=stereo
+cs.spk_quadro=quadro
+cs.spk_rear_1ch=zadní 1k
+cs.spk_front_2ch=přední 2k
+cs.spk_side_2ch=postranní 2k
+cs.spk_rear_2ch=zadní 2k
+cs.spk_front_3ch=přední 3k
+cs.spk_5ch=přední 3k + zadní 2k
+cs.spk_7ch=přední 3k + postranní 2k + zadní 2k
+cs.spk_headPhone=sluchátka
+cs.spk_surround=surround
+cs.spk_subwoofer=subwoofer
+cs.spk_dolby1=Dolby Surround/ProLogic
+cs.spk_dolby2=Dolby ProLogic II
+cs.spk_hrtf=Head-related transfer function (HRTF)
+cs.spk_sameAsInput=Jako vstup
+cs.spk_disableMixer=Zakázat Mixer
+cs.spk_voiceControl=Voice control (volume)
+cs.spk_expandStereo=Rozšíření sterea (surround)
+cs.spk_unknownSpk=Neznámá konfigurace
 
-cz.plg_Label1=Zvolte adresář pluginů %1
-cz.plg_Label2=Kam má být nainstalován %1 plugin?
-cz.plg_Label3=Zvolte adresář do kterého má být nainstalován %1 plugin, pokračujte tlačítkem Další.,
+cs.plg_Label1=Zvolte adresář pluginů %1
+cs.plg_Label2=Kam má být nainstalován %1 plugin?
+cs.plg_Label3=Zvolte adresář do kterého má být nainstalován %1 plugin, pokračujte tlačítkem Další.,
 
-cz.run_videoConfig=Otevřít nastavení video dekodéru
-cz.run_audioConfig=Otevřít nastavení audio dekodéru
-cz.run_vfwConfig=Otevřít nastavení VFW
+cs.run_videoConfig=Otevřít nastavení video dekodéru
+;cs.run_videoDXVAConfig=Run DXVA video decoder configuration
+cs.run_audioConfig=Otevřít nastavení audio dekodéru
+cs.run_vfwConfig=Otevřít nastavení VFW
 
-cz.shrt_videoConfig=Nastavení video dekodéru
-cz.shrt_audioConfig=Nastavení audio dekodéru
-cz.shrt_vfwConfig=Nastavení VFW
-cz.shrt_uninstall=Odinstalovat ffdshow
-cz.shrt_homepage=Domovská stránka
+cs.shrt_videoConfig=Nastavení video dekodéru
+;cs.shrt_videoDXVAConfig=DXVA Video decoder configuration
+cs.shrt_audioConfig=Nastavení audio dekodéru
+cs.shrt_vfwConfig=Nastavení VFW
+cs.shrt_uninstall=Odinstalovat ffdshow
+cs.shrt_homepage=Domovská stránka
 
 
 ; German
@@ -278,10 +280,12 @@ de.plg_Label2=Wohin soll das %1-Plugin installiert werden?
 de.plg_Label3=Bitte wählen Sie den Ordner, in den das %1-Plugin installiert werden soll. Klicken Sie anschließend auf "Weiter".
 
 de.run_videoConfig=Videodekoder-Konfiguration ausführen
+de.run_videoDXVAConfig=DXVA-Videodekoder-Konfiguration ausführen
 de.run_audioConfig=Audiodekoder-Konfiguration ausführen
 de.run_vfwConfig=VFW-Konfiguration ausführen
 
 de.shrt_videoConfig=Videodekoder-Konfiguration
+de.shrt_videoDXVAConfig=DXVA-Videodekoder-Konfiguration
 de.shrt_audioConfig=Audiodekoder-Konfiguration
 de.shrt_vfwConfig=VFW-Konfiguration
 de.shrt_uninstall=ffdshow deinstallieren
@@ -365,77 +369,79 @@ fr.shrt_homepage=Page d'accueil
 
 
 ; Japanese
-jp.langid=1041
-jp.msg_uninstallFirst=古いバージョンのffdshowをアンインストールしてからインストールして下さい。
-jp.simd_msg_sse=このバージョンのffdshowはCPUのSSEサポートが必要です。お使いのCPUはこの条件を満たしません。
-jp.simd_msg_sse2=このバージョンのffdshowはCPUのSSE2サポートが必要です。お使いのCPUはこの条件を満たしません。
-jp.unsupported_cpu=このバージョンのffdshowはi686以降のCPUが必要です。リビジョン1940がこの古いCPUで動作する最後のビルドです。
+ja.langid=1041
+ja.msg_uninstallFirst=古いバージョンのffdshowをアンインストールしてからインストールして下さい。
+ja.simd_msg_sse=このバージョンのffdshowはCPUのSSEサポートが必要です。お使いのCPUはこの条件を満たしません。
+ja.simd_msg_sse2=このバージョンのffdshowはCPUのSSE2サポートが必要です。お使いのCPUはこの条件を満たしません。
+ja.unsupported_cpu=このバージョンのffdshowはi686以降のCPUが必要です。リビジョン1940がこの古いCPUで動作する最後のビルドです。
 
-jp.comp_ffdshowds=ffdshow DirectShow フィルター
-jp.comp_vfwInterface=VFW インターフェース
-jp.comp_makeAvis=AviSynth スクリプトサービング
-jp.comp_appPlugins=アプリケーションプラグイン
-jp.comp_msg_selectOneComp=少なくとも一つのコンポーネントを選択してください。
+ja.comp_ffdshowds=ffdshow DirectShow フィルター
+ja.comp_vfwInterface=VFW インターフェース
+ja.comp_makeAvis=AviSynth スクリプトサービング
+ja.comp_appPlugins=アプリケーションプラグイン
+ja.comp_msg_selectOneComp=少なくとも一つのコンポーネントを選択してください。
 
-jp.tsk_settings=設定
-jp.tsk_resetSettings=ffdshowのすべての設定を初期値に戻す
-jp.tsk_videoFormats=ビデオ・フォーマット
-jp.tsk_videoFormatsSelect=以下のすべてのビデオフォーマットをffdshowでデコードする
-jp.tsk_genericMpeg4=Generic MPEG-4
-jp.tsk_rawVideo=Raw Video
-jp.tsk_audioFormats=オーディオ・フォーマット
-jp.tsk_audioFormatsSelect=以下のすべてのオーディオフォーマットをffdshowでデコードする
-jp.tsk_rawAudio=Raw Audio
-jp.tsk_filters=フィルターの設定
-jp.tsk_filtersSelect=以下のフィルターを有効にする
-jp.tsk_passthroughac3=AC3をパス・スルーする(S/PDIF, HDMI)
-jp.tsk_passthroughdts=DTSをパス・スルーする(S/PDIF, HDMI)
-jp.tsk_volumeNorm=ボリューム ノーマライズ
-jp.tsk_subtitles=字幕
-jp.tsk_tweaks=調整・小技
-jp.tsk_skipInloop=常にH.264のデブロッキングをスキップする
-jp.tsk_compatibilityManager=互換性管理プログラム
-jp.tsk_whitelist=ffdshowを確認された互換プログラムのみで用いる
-jp.tsk_whitelistPrompt=未知のアプリケーションがffdshowをロードしようとした時ダイアログを表示する
+ja.tsk_settings=設定
+ja.tsk_resetSettings=ffdshowのすべての設定を初期値に戻す
+ja.tsk_videoFormats=ビデオ・フォーマット
+ja.tsk_videoFormatsSelect=以下のすべてのビデオフォーマットをffdshowでデコードする
+ja.tsk_genericMpeg4=Generic MPEG-4
+ja.tsk_rawVideo=Raw Video
+ja.tsk_audioFormats=オーディオ・フォーマット
+ja.tsk_audioFormatsSelect=以下のすべてのオーディオフォーマットをffdshowでデコードする
+ja.tsk_rawAudio=Raw Audio
+ja.tsk_filters=フィルターの設定
+ja.tsk_filtersSelect=以下のフィルターを有効にする
+ja.tsk_passthroughac3=AC3をパス・スルーする(S/PDIF, HDMI)
+ja.tsk_passthroughdts=DTSをパス・スルーする(S/PDIF, HDMI)
+ja.tsk_volumeNorm=ボリューム ノーマライズ
+ja.tsk_subtitles=字幕
+ja.tsk_tweaks=調整・小技
+ja.tsk_skipInloop=常にH.264のデブロッキングをスキップする
+ja.tsk_compatibilityManager=互換性管理プログラム
+ja.tsk_whitelist=ffdshowを確認された互換プログラムのみで用いる
+ja.tsk_whitelistPrompt=未知のアプリケーションがffdshowをロードしようとした時ダイアログを表示する
 
-jp.spk_Label1=スピーカーの設定
-jp.spk_Label2=現在のコンピュータ構成に最も近いスピーカーの種類を選んでください。%nインストール後に「ミキサー」の設定から変更することも出来ます。
-jp.spk_Label3=スピーカーの種類
-jp.spk_mono=モノラル
-jp.spk_stereo=ステレオ
-jp.spk_quadro=フロント 2ch ＋ リア 2ch
-jp.spk_rear_1ch=リア 1ch
-jp.spk_front_2ch=フロント 2ch
-jp.spk_side_2ch=サイド 2ch
-jp.spk_rear_2ch=リア 2ch
-jp.spk_front_3ch=フロント 3ch
-jp.spk_5ch=フロント 3ch ＋ リア 2ch
-jp.spk_7ch=フロント 3ch ＋ サイド 2ch ＋ リア 2ch
-jp.spk_headPhone=ヘッドフォン
-jp.spk_surround=サラウンド
-jp.spk_subwoofer=サブウーファー
-jp.spk_dolby1=ドルビーサラウンド/プロロジック
-jp.spk_dolby2=ドルビープロロジックII
-jp.spk_hrtf=頭部伝達関数 (HRTF)
-jp.spk_sameAsInput=入力と同じ
-jp.spk_disableMixer=ミキサーを無効にする
-jp.spk_voiceControl=ボイスコントロール （ボリューム）
-jp.spk_expandStereo=ステレオを拡張する（サラウンド）
-jp.spk_unknownSpk=Unknown speaker configuration
+ja.spk_Label1=スピーカーの設定
+ja.spk_Label2=現在のコンピュータ構成に最も近いスピーカーの種類を選んでください。%nインストール後に「ミキサー」の設定から変更することも出来ます。
+ja.spk_Label3=スピーカーの種類
+ja.spk_mono=モノラル
+ja.spk_stereo=ステレオ
+ja.spk_quadro=フロント 2ch ＋ リア 2ch
+ja.spk_rear_1ch=リア 1ch
+ja.spk_front_2ch=フロント 2ch
+ja.spk_side_2ch=サイド 2ch
+ja.spk_rear_2ch=リア 2ch
+ja.spk_front_3ch=フロント 3ch
+ja.spk_5ch=フロント 3ch ＋ リア 2ch
+ja.spk_7ch=フロント 3ch ＋ サイド 2ch ＋ リア 2ch
+ja.spk_headPhone=ヘッドフォン
+ja.spk_surround=サラウンド
+ja.spk_subwoofer=サブウーファー
+ja.spk_dolby1=ドルビーサラウンド/プロロジック
+ja.spk_dolby2=ドルビープロロジックII
+ja.spk_hrtf=頭部伝達関数 (HRTF)
+ja.spk_sameAsInput=入力と同じ
+ja.spk_disableMixer=ミキサーを無効にする
+ja.spk_voiceControl=ボイスコントロール （ボリューム）
+ja.spk_expandStereo=ステレオを拡張する（サラウンド）
+ja.spk_unknownSpk=Unknown speaker configuration
 
-jp.plg_Label1=%1 プラグインインストール先の指定
-jp.plg_Label2=%1のインストール先を指定してください。
-jp.plg_Label3=%1 プラグインをインストールするフォルダを指定して、「次へ」をクリックしてください。
+ja.plg_Label1=%1 プラグインインストール先の指定
+ja.plg_Label2=%1のインストール先を指定してください。
+ja.plg_Label3=%1 プラグインをインストールするフォルダを指定して、「次へ」をクリックしてください。
 
-jp.run_videoConfig=ビデオデコーダーの設定を行う
-jp.run_audioConfig=オーディオデコーダーの設定を行う
-jp.run_vfwConfig=VFWの設定を行う
+ja.run_videoConfig=ビデオデコーダーの設定を行う
+;ja.run_videoDXVAConfig=Run DXVA video decoder configuration
+ja.run_audioConfig=オーディオデコーダーの設定を行う
+ja.run_vfwConfig=VFWの設定を行う
 
-jp.shrt_videoConfig=ビデオデコーダーの設定
-jp.shrt_audioConfig=オーディオデコーダーの設定
-jp.shrt_vfwConfig=VFWの設定
-jp.shrt_uninstall=ffdshowのアンインストール
-jp.shrt_homepage=ホームページ
+ja.shrt_videoConfig=ビデオデコーダーの設定
+;ja.shrt_videoDXVAConfig=DXVA Video decoder configuration
+ja.shrt_audioConfig=オーディオデコーダーの設定
+ja.shrt_vfwConfig=VFWの設定
+ja.shrt_uninstall=ffdshowのアンインストール
+ja.shrt_homepage=ホームページ
 
 
 ; Polish
@@ -502,10 +508,12 @@ pl.plg_Label2=Gdzie powinien zostać zainstalowany komponent %1?
 pl.plg_Label3=Wybierz folder, w którym instalator powinien zainstalować komponent %1 i wciśnij Dalej.
 
 pl.run_videoConfig=Uruchom konfigurację dekodera obrazu ffdshow
+;pl.run_videoDXVAConfig=Run DXVA video decoder configuration
 pl.run_audioConfig=Uruchom konfigurację dekodera dźwięku ffdshow
 pl.run_vfwConfig=Uruchom konfigurację kodera obrazu ffdshow
 
 pl.shrt_videoConfig=Konfiguracja dekodera obrazu ffdshow
+;pl.shrt_videoDXVAConfig=DXVA Video decoder configuration
 pl.shrt_audioConfig=Konfiguracja dekodera dźwięku ffdshow
 pl.shrt_vfwConfig=Konfiguracja kodera obrazu ffdshow
 pl.shrt_uninstall=Odinstaluj ffdshow
@@ -576,178 +584,184 @@ ru.plg_Label2=В какую папку должен быть установле�
 ru.plg_Label3=Выберите папку, в которую должен быть установлен плагин для %1, затем нажмите "Далее".
 
 ru.run_videoConfig=Запустить конфигурацию видеодекодера
+;ru.run_videoDXVAConfig=Run DXVA video decoder configuration
 ru.run_audioConfig=Запустить конфигурацию аудиодекодера
 ru.run_vfwConfig=Запустить конфигурацию VFW интерфейса
 
 ru.shrt_videoConfig=Конфигурация видеодекодера
+;ru.shrt_videoDXVAConfig=DXVA Video decoder configuration
 ru.shrt_audioConfig=Конфигурация аудиодекодера
 ru.shrt_vfwConfig=Конфигурация VFW интерфейса
 ru.shrt_uninstall=Деинсталляция ffdshow
 ru.shrt_homepage=Веб-страница ffdshow
 
 
-; Chinese (Simplified)
-sc.langid=2052
-sc.msg_uninstallFirst=您必须先卸载旧版本的 ffdshow。
-sc.simd_msg_sse=这个编译版的 ffdshow 需要一个支持 SSE 指令集的 CPU。但是您的 CPU 并不支持这个功能。
-sc.simd_msg_sse2=这个编译版的 ffdshow 需要一个支持 SSE2 指令集的 CPU。但是您的 CPU 并不支持这个功能。
-sc.unsupported_cpu=这个编译版的 ffdshow 需要 i686 或更新的 CPU。您的 CPU 不被支持。
-;[The message above is only a partial translation:]  sc.unsupported_cpu=This build of ffdshow requires a CPU of type i686 or newer. Your CPU is not supported. Revision 1940 of ffdshow is the last one that works on old CPUs.
-
-sc.comp_ffdshowds=ffdshow DirectShow 滤镜
-sc.comp_vfwInterface=VFW 接口
-sc.comp_makeAvis=AviSynth 脚本服务
-sc.comp_appPlugins=应用程序插件：
-sc.comp_msg_selectOneComp=您至少要选择一个组件。
-
-sc.tsk_settings=设置
-sc.tsk_resetSettings=重置所有 ffdshow 设置
-sc.tsk_videoFormats=视频格式
-sc.tsk_videoFormatsSelect=使用 ffdshow 解码下列视频格式：
-sc.tsk_genericMpeg4=普通 MPEG-4 格式
-sc.tsk_rawVideo=原始视频格式
-sc.tsk_audioFormats=音频格式
-sc.tsk_audioFormatsSelect=使用 ffdshow 解码下列音频格式：
-sc.tsk_rawAudio=原始音频格式
-sc.tsk_filters=滤镜设置
-sc.tsk_filtersSelect=默认启用下列滤镜：
-;sc.tsk_passthroughac3=Enable AC3 pass-through (S/PDIF, HDMI)
-;sc.tsk_passthroughdts=Enable DTS pass-through (S/PDIF, HDMI)
-sc.tsk_volumeNorm=音量正常化
-sc.tsk_subtitles=字幕
-sc.tsk_tweaks=调整
-sc.tsk_skipInloop=总是跳过 H.264 inloop 除块
-sc.tsk_compatibilityManager=兼容性管理器
-sc.tsk_whitelist=限制只有白名单中的应用程序才能使用 ffdshow
-sc.tsk_whitelistPrompt=当未知应用程序装载 ffdshow 时显示兼容性管理器窗口
-
-sc.spk_Label1=扬声器设置
-sc.spk_Label2=请选择最接近您的计算机配置的扬声器设置。安装完成之后，您可以在“混音”设置页中改变这个选项。
-sc.spk_Label3=扬声器设置：
-sc.spk_mono=单声道扬声器
-sc.spk_stereo=双声道扬声器
-sc.spk_quadro=四声道扬声器
-sc.spk_rear_1ch=一个后置扬声器
-sc.spk_front_2ch=两个前置扬声器
-sc.spk_side_2ch=两个侧置扬声器
-sc.spk_rear_2ch=两个后置扬声器
-sc.spk_front_3ch=三个前置扬声器
-sc.spk_5ch=三个前置 + 两个后置扬声器
-sc.spk_7ch=三个前置 + 两个侧置 + 两个后置扬声器
-sc.spk_headPhone=耳机
-sc.spk_surround=环绕
-sc.spk_subwoofer=低音扬声器
-sc.spk_dolby1=杜比环绕/ProLogic
-sc.spk_dolby2=杜比 ProLogic II
-sc.spk_hrtf=人体头部相关传递函数（HRTF）
-sc.spk_sameAsInput=与输入相同
-sc.spk_disableMixer=关闭混音
-sc.spk_voiceControl=人声控制（音量）
-sc.spk_expandStereo=扩展立体声（环绕）
-sc.spk_unknownSpk=未知扬声器配置
-
-sc.plg_Label1=选择 %1 插件目录
-sc.plg_Label2=%1 插件应该安装在哪里？
-sc.plg_Label3=选择安装 %1 插件的目录，然后单击“下一步”。
-
-sc.run_videoConfig=运行视频解码器设置程序
-sc.run_audioConfig=运行音频解码器设置程序
-sc.run_vfwConfig=运行 VFW 设置程序
-
-sc.shrt_videoConfig=ffdshow 视频解码器设置
-sc.shrt_audioConfig=ffdshow 音频解码器设置
-sc.shrt_vfwConfig=ffdshow VFW 设置
-sc.shrt_uninstall=卸载 ffdshow
-;sc.shrt_homepage=Homepage
-
-
 ; Chinese (Traditional)
-tc.langid=1028
-tc.msg_uninstallFirst=您必須先移除舊版的 ffdshow.
-tc.simd_msg_sse=此版的 ffdshow 需要有支援 SSE 指令集的 CPU. 您的 CPU 並未相容這些功能.
-tc.simd_msg_sse2=此版的 ffdshow 須要有支援 SSE2 指令集的 CPU. 您的 CPU 並未相容這些功能.
-tc.unsupported_cpu=此版的 ffdshow 需要 i686 或更新種類的 CPU. 您的 CPU 並不支援. 1940 版的 ffdshow 是能在舊式 CPU 運作的最後一版.
+zh_Hant.langid=1028
+zh_Hant.msg_uninstallFirst=您必須先移除舊版的 ffdshow.
+zh_Hant.simd_msg_sse=此版的 ffdshow 需要有支援 SSE 指令集的 CPU. 您的 CPU 並未相容這些功能.
+zh_Hant.simd_msg_sse2=此版的 ffdshow 須要有支援 SSE2 指令集的 CPU. 您的 CPU 並未相容這些功能.
+zh_Hant.unsupported_cpu=此版的 ffdshow 需要 i686 或更新種類的 CPU. 您的 CPU 並不支援. 1940 版的 ffdshow 是能在舊式 CPU 運作的最後一版.
 
-tc.comp_ffdshowds=ffdshow DirectShow 篩選器
-tc.comp_vfwInterface=VFW 介面
-tc.comp_makeAvis=AviSynth 腳本 serving
-tc.comp_appPlugins=應用程式外掛:
-tc.comp_msg_selectOneComp=您必須選擇最少一項元件.
+zh_Hant.comp_ffdshowds=ffdshow DirectShow 篩選器
+zh_Hant.comp_vfwInterface=VFW 介面
+zh_Hant.comp_makeAvis=AviSynth 腳本 serving
+zh_Hant.comp_appPlugins=應用程式外掛:
+zh_Hant.comp_msg_selectOneComp=您必須選擇最少一項元件.
 
-tc.tsk_settings=設定
-tc.tsk_resetSettings=重設所有 ffdshow 的設定
-tc.tsk_videoFormats=視訊格式
-tc.tsk_videoFormatsSelect=以 ffdshow 解碼下列視訊格式:
-tc.tsk_genericMpeg4=Generic MPEG-4
-tc.tsk_rawVideo=未經處理視訊
-tc.tsk_audioFormats=音訊格式
-tc.tsk_audioFormatsSelect=以 ffdshow 解碼下列音訊格式:
-tc.tsk_rawAudio=未經處理視訊
-tc.tsk_filters=篩選器設定
-tc.tsk_filtersSelect=預設啟用下列篩選器:
-tc.tsk_passthroughac3=啟用 AC3 pass-through (S/PDIF, HDMI)
-tc.tsk_passthroughdts=啟用 DTS pass-through (S/PDIF, HDMI)
-tc.tsk_volumeNorm=音量標準化
-tc.tsk_subtitles=字幕
-tc.tsk_tweaks=調校
-tc.tsk_skipInloop=Always skip H.264 inloop deblocking
-tc.tsk_compatibilityManager=相容性管理員
-tc.tsk_whitelist=限制 ffdshow 只能給白名單內的應用程式使用
-tc.tsk_whitelistPrompt=當未知的應用程式嘗試載入 ffdshow 時顯示相容性管理員視窗
+zh_Hant.tsk_settings=設定
+zh_Hant.tsk_resetSettings=重設所有 ffdshow 的設定
+zh_Hant.tsk_videoFormats=視訊格式
+zh_Hant.tsk_videoFormatsSelect=以 ffdshow 解碼下列視訊格式:
+zh_Hant.tsk_genericMpeg4=Generic MPEG-4
+zh_Hant.tsk_rawVideo=未經處理視訊
+zh_Hant.tsk_audioFormats=音訊格式
+zh_Hant.tsk_audioFormatsSelect=以 ffdshow 解碼下列音訊格式:
+zh_Hant.tsk_rawAudio=未經處理視訊
+zh_Hant.tsk_filters=篩選器設定
+zh_Hant.tsk_filtersSelect=預設啟用下列篩選器:
+zh_Hant.tsk_passthroughac3=啟用 AC3 pass-through (S/PDIF, HDMI)
+zh_Hant.tsk_passthroughdts=啟用 DTS pass-through (S/PDIF, HDMI)
+zh_Hant.tsk_volumeNorm=音量標準化
+zh_Hant.tsk_subtitles=字幕
+zh_Hant.tsk_tweaks=調校
+zh_Hant.tsk_skipInloop=Always skip H.264 inloop deblocking
+zh_Hant.tsk_compatibilityManager=相容性管理員
+zh_Hant.tsk_whitelist=限制 ffdshow 只能給白名單內的應用程式使用
+zh_Hant.tsk_whitelistPrompt=當未知的應用程式嘗試載入 ffdshow 時顯示相容性管理員視窗
 
-tc.spk_Label1=揚聲器設定
-tc.spk_Label2=請選擇以下最接近您電腦組態的揚聲器設定. 您可以在安裝完之後使用 "混音器" 設定修改.
-tc.spk_Label3=揚聲器設定:
-tc.spk_mono=單聲道
-tc.spk_stereo=立體聲
-tc.spk_quadro=四聲道
-tc.spk_rear_1ch=後一聲道
-tc.spk_front_2ch=前二聲道
-tc.spk_side_2ch=側二聲道
-tc.spk_rear_2ch=後二聲道
-tc.spk_front_3ch=前三聲道
-tc.spk_5ch=前三聲道 + 後二聲道
-tc.spk_7ch=前三聲道 + 側二聲道 + 後二聲道
-tc.spk_headPhone=耳機
-tc.spk_surround=環繞
-tc.spk_subwoofer=subwoofer
-tc.spk_dolby1=Dolby Surround/ProLogic
-tc.spk_dolby2=Dolby ProLogic II
-tc.spk_hrtf=Head-related transfer function (HRTF)
-tc.spk_sameAsInput=與輸入相同
-tc.spk_disableMixer=停用混音器
-tc.spk_voiceControl=聲音控制 (音量)
-tc.spk_expandStereo=延展立體聲 (環繞)
-tc.spk_unknownSpk=未知的揚聲器組態
+zh_Hant.spk_Label1=揚聲器設定
+zh_Hant.spk_Label2=請選擇以下最接近您電腦組態的揚聲器設定. 您可以在安裝完之後使用 "混音器" 設定修改.
+zh_Hant.spk_Label3=揚聲器設定:
+zh_Hant.spk_mono=單聲道
+zh_Hant.spk_stereo=立體聲
+zh_Hant.spk_quadro=四聲道
+zh_Hant.spk_rear_1ch=後一聲道
+zh_Hant.spk_front_2ch=前二聲道
+zh_Hant.spk_side_2ch=側二聲道
+zh_Hant.spk_rear_2ch=後二聲道
+zh_Hant.spk_front_3ch=前三聲道
+zh_Hant.spk_5ch=前三聲道 + 後二聲道
+zh_Hant.spk_7ch=前三聲道 + 側二聲道 + 後二聲道
+zh_Hant.spk_headPhone=耳機
+zh_Hant.spk_surround=環繞
+zh_Hant.spk_subwoofer=subwoofer
+zh_Hant.spk_dolby1=Dolby Surround/ProLogic
+zh_Hant.spk_dolby2=Dolby ProLogic II
+zh_Hant.spk_hrtf=Head-related transfer function (HRTF)
+zh_Hant.spk_sameAsInput=與輸入相同
+zh_Hant.spk_disableMixer=停用混音器
+zh_Hant.spk_voiceControl=聲音控制 (音量)
+zh_Hant.spk_expandStereo=延展立體聲 (環繞)
+zh_Hant.spk_unknownSpk=未知的揚聲器組態
 
-tc.plg_Label1=選擇 %1 的外掛程式目錄
-tc.plg_Label2=%1 外掛程式應該安裝在哪?
-tc.plg_Label3=請選擇安裝程式應該安裝 %1 外掛程式的資料夾, 然後點擊 Next.,
+zh_Hant.plg_Label1=選擇 %1 的外掛程式目錄
+zh_Hant.plg_Label2=%1 外掛程式應該安裝在哪?
+zh_Hant.plg_Label3=請選擇安裝程式應該安裝 %1 外掛程式的資料夾, 然後點擊 Next.,
 
-tc.run_videoConfig=執行視訊解碼器組態
-tc.run_audioConfig=執行音訊解碼器組態
-tc.run_vfwConfig=執行視訊編碼器組態
+zh_Hant.run_videoConfig=執行視訊解碼器組態
+;zh_Hant.run_videoDXVAConfig=Run DXVA video decoder configuration
+zh_Hant.run_audioConfig=執行音訊解碼器組態
+zh_Hant.run_vfwConfig=執行視訊編碼器組態
 
-tc.shrt_videoConfig=視訊解碼器組態
-tc.shrt_audioConfig=音訊解碼器組態
-tc.shrt_vfwConfig=視訊編碼器組態
-tc.shrt_uninstall=反安裝 ffdshow
-tc.shrt_homepage=首頁
+zh_Hant.shrt_videoConfig=視訊解碼器組態
+;zh_Hant.shrt_videoDXVAConfig=DXVA Video decoder configuration
+zh_Hant.shrt_audioConfig=音訊解碼器組態
+zh_Hant.shrt_vfwConfig=視訊編碼器組態
+zh_Hant.shrt_uninstall=反安裝 ffdshow
+zh_Hant.shrt_homepage=首頁
+
+
+; Chinese (Simplified)
+zh_Hans.langid=2052
+zh_Hans.msg_uninstallFirst=您必须先卸载旧版本的 ffdshow。
+zh_Hans.simd_msg_sse=这个编译版的 ffdshow 需要一个支持 SSE 指令集的 CPU。但是您的 CPU 并不支持这个功能。
+zh_Hans.simd_msg_sse2=这个编译版的 ffdshow 需要一个支持 SSE2 指令集的 CPU。但是您的 CPU 并不支持这个功能。
+zh_Hans.unsupported_cpu=这个编译版的 ffdshow 需要 i686 或更新的 CPU。您的 CPU 不被支持。
+;[The message above is only a partial translation:]  zh_Hans.unsupported_cpu=This build of ffdshow requires a CPU of type i686 or newer. Your CPU is not supported. Revision 1940 of ffdshow is the last one that works on old CPUs.
+
+zh_Hans.comp_ffdshowds=ffdshow DirectShow 滤镜
+zh_Hans.comp_vfwInterface=VFW 接口
+zh_Hans.comp_makeAvis=AviSynth 脚本服务
+zh_Hans.comp_appPlugins=应用程序插件：
+zh_Hans.comp_msg_selectOneComp=您至少要选择一个组件。
+
+zh_Hans.tsk_settings=设置
+zh_Hans.tsk_resetSettings=重置所有 ffdshow 设置
+zh_Hans.tsk_videoFormats=视频格式
+zh_Hans.tsk_videoFormatsSelect=使用 ffdshow 解码下列视频格式：
+zh_Hans.tsk_genericMpeg4=普通 MPEG-4 格式
+zh_Hans.tsk_rawVideo=原始视频格式
+zh_Hans.tsk_audioFormats=音频格式
+zh_Hans.tsk_audioFormatsSelect=使用 ffdshow 解码下列音频格式：
+zh_Hans.tsk_rawAudio=原始音频格式
+zh_Hans.tsk_filters=滤镜设置
+zh_Hans.tsk_filtersSelect=默认启用下列滤镜：
+;zh_Hans.tsk_passthroughac3=Enable AC3 pass-through (S/PDIF, HDMI)
+;zh_Hans.tsk_passthroughdts=Enable DTS pass-through (S/PDIF, HDMI)
+zh_Hans.tsk_volumeNorm=音量正常化
+zh_Hans.tsk_subtitles=字幕
+zh_Hans.tsk_tweaks=调整
+zh_Hans.tsk_skipInloop=总是跳过 H.264 inloop 除块
+zh_Hans.tsk_compatibilityManager=兼容性管理器
+zh_Hans.tsk_whitelist=限制只有白名单中的应用程序才能使用 ffdshow
+zh_Hans.tsk_whitelistPrompt=当未知应用程序装载 ffdshow 时显示兼容性管理器窗口
+
+zh_Hans.spk_Label1=扬声器设置
+zh_Hans.spk_Label2=请选择最接近您的计算机配置的扬声器设置。安装完成之后，您可以在“混音”设置页中改变这个选项。
+zh_Hans.spk_Label3=扬声器设置：
+zh_Hans.spk_mono=单声道扬声器
+zh_Hans.spk_stereo=双声道扬声器
+zh_Hans.spk_quadro=四声道扬声器
+zh_Hans.spk_rear_1ch=一个后置扬声器
+zh_Hans.spk_front_2ch=两个前置扬声器
+zh_Hans.spk_side_2ch=两个侧置扬声器
+zh_Hans.spk_rear_2ch=两个后置扬声器
+zh_Hans.spk_front_3ch=三个前置扬声器
+zh_Hans.spk_5ch=三个前置 + 两个后置扬声器
+zh_Hans.spk_7ch=三个前置 + 两个侧置 + 两个后置扬声器
+zh_Hans.spk_headPhone=耳机
+zh_Hans.spk_surround=环绕
+zh_Hans.spk_subwoofer=低音扬声器
+zh_Hans.spk_dolby1=杜比环绕/ProLogic
+zh_Hans.spk_dolby2=杜比 ProLogic II
+zh_Hans.spk_hrtf=人体头部相关传递函数（HRTF）
+zh_Hans.spk_sameAsInput=与输入相同
+zh_Hans.spk_disableMixer=关闭混音
+zh_Hans.spk_voiceControl=人声控制（音量）
+zh_Hans.spk_expandStereo=扩展立体声（环绕）
+zh_Hans.spk_unknownSpk=未知扬声器配置
+
+zh_Hans.plg_Label1=选择 %1 插件目录
+zh_Hans.plg_Label2=%1 插件应该安装在哪里？
+zh_Hans.plg_Label3=选择安装 %1 插件的目录，然后单击“下一步”。
+
+zh_Hans.run_videoConfig=运行视频解码器设置程序
+;zh_Hans.run_videoDXVAConfig=Run DXVA video decoder configuration
+zh_Hans.run_audioConfig=运行音频解码器设置程序
+zh_Hans.run_vfwConfig=运行 VFW 设置程序
+
+zh_Hans.shrt_videoConfig=ffdshow 视频解码器设置
+;zh_Hans.shrt_videoDXVAConfig=DXVA Video decoder configuration
+zh_Hans.shrt_audioConfig=ffdshow 音频解码器设置
+zh_Hans.shrt_vfwConfig=ffdshow VFW 设置
+zh_Hans.shrt_uninstall=卸载 ffdshow
+;zh_Hans.shrt_homepage=Homepage
 
 
 ; Add other languages here
-ba.langid=1069
-br.langid=1046
 ca.langid=1027
 da.langid=1030
-du.langid=1043
+es.langid=3082
+eu.langid=1069
 fi.langid=1035
 hu.langid=1038
 it.langid=1040
+nl.langid=1043
 no.langid=1044
-pr.langid=2070
+pt_BR.langid=1046
+pt_PT.langid=2070
 sk.langid=1051
-sn.langid=1060
-sp.langid=3082
+sl.langid=1060
 
 #endif
