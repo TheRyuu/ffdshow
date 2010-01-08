@@ -37,6 +37,7 @@
 #include "ChideShow.h"
 #include "COSD.h"
 #include "CcspOptions.h"
+#include "CDXVAOptions.h"
 #include "ISpecifyPropertyPagesVE.h"
 #include "resource.h"
 
@@ -73,6 +74,18 @@ TffdshowPageDecVideoSubtitles::TffdshowPageDecVideoSubtitles(LPUNKNOWN pUnk,HRES
 {
 }
 
+// DXVA pages
+CUnknown* WINAPI TffdshowPageDecVideoDXVA::CreateInstance(LPUNKNOWN punk,HRESULT *phr)
+{
+ TffdshowPageDecVideoDXVA *pNewObject=new TffdshowPageDecVideoDXVA(punk,phr,L"ffdshow DXVA",NAME("TffdshowDecVideoDXVAPage"),IDD_FFDSHOW,IDS_FFDSHOWDXVA);
+ if (pNewObject==NULL)
+  *phr=E_OUTOFMEMORY;
+ return pNewObject;
+}
+TffdshowPageDecVideoDXVA::TffdshowPageDecVideoDXVA(LPUNKNOWN pUnk,HRESULT *phr,const wchar_t *ItitleW,const char_t *name,int dialogId,int resstr):TffdshowPageDecVideo(pUnk,phr,ItitleW,name,dialogId,resstr)
+{
+}
+
 CUnknown* WINAPI TffdshowPageDecVideoVFW::CreateInstance(LPUNKNOWN punk,HRESULT *phr)
 {
  TffdshowPageDecVideoVFW *pNewObject=new TffdshowPageDecVideoVFW(punk,phr,L"Decoder",NAME("TffdshowDecVideoVFWpage"),IDD_FFDSHOW,IDS_FFDSHOWVFW);
@@ -104,18 +117,24 @@ void TffdshowPageDecVideo::onActivate(void)
  tvis.item.mask=TVIF_PARAM|TVIF_TEXT;
  if ((filterMode&IDFF_FILTERMODE_PROC)==0)
   {
-   if ((filterMode & IDFF_FILTERMODE_VIDEOSUBTITLES)==0)
+   // No codec page for DXVA & subtitles mode
+   if ((filterMode & IDFF_FILTERMODE_VIDEOSUBTITLES)==0 && (filterMode&IDFF_FILTERMODE_VIDEODXVA)==0)
     addTI(&tvis,new TcodecsPageVideo(this));
    if ((filterMode&IDFF_FILTERMODE_VFW)==0)
     {
+     // No directshow control page for subtitles decoder
      if ((filterMode & IDFF_FILTERMODE_VIDEOSUBTITLES)==0)
-      {
+     {
        addTI(&tvis,new TdirectshowControlPageDec(this))->hti;
+     }
+     // No decoder properties page for subtitles & DXVA decoder
+     if ((filterMode & IDFF_FILTERMODE_VIDEOSUBTITLES)==0)
+     {
        HTREEITEM htiInfo=addTI(&tvis,new TinfoPageDecVideo(this))->hti;
        tvis.hParent=htiInfo;
        tvis.hParent=NULL;
        TreeView_Expand(htv,htiInfo,TVE_EXPAND);
-      }
+     }
 
      HTREEITEM htiMisc=addTI(&tvis,new TdlgMiscPage(this))->hti;
      tvis.hParent=htiMisc;
@@ -126,16 +145,31 @@ void TffdshowPageDecVideo::onActivate(void)
  //presets page must be the last in pages list
  tvis.hParent=NULL;
  htiPresets=addTI(&tvis,new TpresetsPageVideo(this))->hti;
- tvis.hParent=htiPresets;
- if ((filterMode & IDFF_FILTERMODE_VIDEOSUBTITLES)==0)
+ tvis.hParent=htiPresets; 
+
+ // No Show/hide filters page for subtitles and DXVA (for now)
+ if ((filterMode & IDFF_FILTERMODE_VIDEOSUBTITLES)==0 && (filterMode&IDFF_FILTERMODE_VIDEODXVA)==0)
   htiBeforeShowHide=addTI(&tvis,new ThideShowPage(this,filterPages))->hti;
  if ((filterMode&IDFF_FILTERMODE_PROC)==0)
   {
-   if ((filterMode&IDFF_FILTERMODE_VIDEOSUBTITLES)==0)
+   // Codecs page to enable with DXVA
+   if ((filterMode&IDFF_FILTERMODE_VIDEODXVA)!=0)
+   {
+    addTI(&tvis,new TDXVAOptionsPage(this));
+   }
+   else if ((filterMode&IDFF_FILTERMODE_VIDEOSUBTITLES)==0 && (filterMode&IDFF_FILTERMODE_VIDEODXVA)==0) // No decoder options for DXVA & subtitles filter
+   {
     addTI(&tvis,new TdecoderOptionsPage(this));
-   addTI(&tvis,new TqueuePage(this));
-   addTI(&tvis,new ToutcspsPage(this));
-   addTI(&tvis,new TcspOptionsPage(this));
+#if DXVA_INSIDE_FFDSHOW
+    addTI(&tvis,new TDXVAOptionsPage(this));
+#endif
+   }
+   if ((filterMode&IDFF_FILTERMODE_VIDEODXVA)==0) // No queue & output options for DXVA
+   {
+    addTI(&tvis,new TqueuePage(this));
+    addTI(&tvis,new ToutcspsPage(this));
+    addTI(&tvis,new TcspOptionsPage(this));
+   }
   }
  sortOrder();
  if ((filterMode&IDFF_FILTERMODE_VFW)==0)
@@ -227,5 +261,14 @@ void CALLBACK configureSubtitles(HWND hwnd,HINSTANCE hinst,LPTSTR lpCmdLine,int 
  TffdshowPageDec::configure<IffdshowDecVideo>(
   CLSID_FFDSHOWSUBTITLES,
   IDFF_FILTERMODE_VIDEORAW | IDFF_FILTERMODE_VIDEOSUBTITLES,
+  lpCmdLine);
+}
+
+extern "C" void CALLBACK configureDXVA(HWND hwnd,HINSTANCE hinst,LPTSTR lpCmdLine,int nCmdShow);
+void CALLBACK configureDXVA(HWND hwnd,HINSTANCE hinst,LPTSTR lpCmdLine,int nCmdShow)
+{
+ TffdshowPageDec::configure<IffdshowDecVideo>(
+  CLSID_FFDSHOWDXVA,
+  IDFF_FILTERMODE_VIDEODXVA,
   lpCmdLine);
 }

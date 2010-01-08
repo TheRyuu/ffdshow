@@ -54,7 +54,7 @@ public:
  STDMETHODIMP processBuffer(void *buf,size_t numsamples,TsampleFormat *fmt);
  STDMETHODIMP storeMixerMatrixData_(const double matrix[6][6]) {return E_NOTIMPL;}
  STDMETHODIMP getMixerMatrixData_(double matrix[6][6]) {return E_NOTIMPL;}
- STDMETHODIMP deliverSampleSPDIF(void *buf,size_t bufsize,int bit_rate,unsigned int sample_rate,int incRtDec){return deliverSampleBistream(buf,bufsize,bit_rate,sample_rate,incRtDec,0);}
+ STDMETHODIMP deliverSampleSPDIF(void *buf,size_t bufsize,int bit_rate,unsigned int sample_rate,int incRtDec){return deliverSampleBistream(buf,bufsize,bit_rate,sample_rate,incRtDec,0,0);}
  STDMETHODIMP storeVolumeData_(unsigned int nchannels,const int channels[],const int volumes[]) {return E_NOTIMPL;}
  STDMETHODIMP getVolumeData_(unsigned int *nchannels,int channels[],int volumes[]) {return E_NOTIMPL;}
  STDMETHODIMP storeFFTdata_(unsigned int num,const float *fft) {return E_NOTIMPL;}
@@ -79,7 +79,7 @@ public:
  STDMETHODIMP Info(long lIndex, AM_MEDIA_TYPE** ppmt, DWORD* pdwFlags, LCID* plcid, DWORD* pdwGroup, WCHAR** ppszName, IUnknown** ppObject, IUnknown** ppUnk);
  STDMETHODIMP_(TffdshowDecAudioInputPin *) GetCurrentPin(void);
  STDMETHODIMP_(TinputPin*)getInputPin(void);
- STDMETHODIMP deliverSampleBistream(void *buf,size_t bufsize,int bit_rate,unsigned int sample_rate,int incRtDec,int frame_length);
+ STDMETHODIMP deliverSampleBistream(void *buf,size_t bufsize,int bit_rate,unsigned int sample_rate,int incRtDec,int frame_length,int iec_length);
  STDMETHODIMP_(CTransformOutputPin*)getOutputPin(void);
  STDMETHODIMP_(TsampleFormat) getOutsf(TsampleFormat &outsf);
 
@@ -152,7 +152,7 @@ private:
    STDMETHODIMP currentSampleFormat(unsigned int *nchannels,unsigned int *freq,int *sampleFormat) {return deciA->currentSampleFormat(nchannels,freq,sampleFormat);}
    STDMETHODIMP_(int) getJitter(void) {return deciA->getJitter();}
    STDMETHODIMP_(TinputPin*) getInputPin(void){ return((TinputPin*)deciA->GetCurrentPin());};
-   STDMETHODIMP deliverSampleBistream(void *buf,size_t bufsize,int bit_rate,unsigned int sample_rate,int incRtDec,int frame_length) {return deciA->deliverSampleBistream(buf,bufsize,bit_rate,sample_rate,incRtDec,frame_length);}
+   STDMETHODIMP deliverSampleBistream(void *buf,size_t bufsize,int bit_rate,unsigned int sample_rate,int incRtDec,int frame_length,int iec_length) {return deciA->deliverSampleBistream(buf,bufsize,bit_rate,sample_rate,incRtDec,frame_length,iec_length);}
    STDMETHODIMP_(CTransformOutputPin*) getOutputPin(void) { return deciA->getOutputPin();};
    STDMETHODIMP_(TsampleFormat) getOutsf(TsampleFormat &outsf) { return deciA->getOutsf(outsf);};
   } decAudio_char;

@@ -36,7 +36,7 @@ template<class tchar> DECLARE_INTERFACE_(IffdshowDecAudioT,IUnknown)
  STDMETHOD_(int,getJitter)(void) PURE;
  STDMETHOD_(TffdshowDecAudioInputPin *, GetCurrentPin)(void) PURE;
  STDMETHOD_(TinputPin*, getInputPin)(void) PURE;
- STDMETHOD (deliverSampleBistream)(void *buf,size_t bufsize,int bit_rate,unsigned int sample_rate,int incRtDec,int frame_length) PURE;
+ STDMETHOD (deliverSampleBistream)(void *buf,size_t bufsize,int bit_rate,unsigned int sample_rate,int incRtDec,int frame_length,int iec_length) PURE;
  STDMETHOD_(CTransformOutputPin*, getOutputPin)(void) PURE;
  STDMETHOD_(TsampleFormat, getOutsf)(TsampleFormat &outsf)PURE;
 };

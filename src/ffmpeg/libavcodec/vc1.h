@@ -314,6 +314,10 @@ typedef struct VC1Context{
     int parse_only;             ///< Context is used within parser
 
     int warn_interlaced;
+
+    // ==> Start patch MPC
+    int allow_interlaced;
+    // <== End patch MPC
 } VC1Context;
 
 /** Find VC-1 marker in buffer

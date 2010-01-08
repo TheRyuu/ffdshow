@@ -56,9 +56,8 @@
 #include "IVMRffdshow9.h"
 #include "IffdshowDecAudio.h"
 #include "qnetwork.h"
+#include "codecs\TvideoCodecLibavcodec.h"
 
-//#include "evr9.h"
-//#include "dxva.h"
 
 void TffdshowDecVideo::getMinMax(int id,int &min,int &max)
 {
@@ -75,8 +74,11 @@ TffdshowDecVideo::TffdshowDecVideo(CLSID Iclsid,const char_t *className,const CL
  TffdshowDec(Ioptions,
              className,punk,Iclsid,
              globalSettings=new TglobalSettingsDecVideo(&config,Imode,Ioptions),
-             dialogSettings=new TdialogSettingsDecVideo(Imode&IDFF_FILTERMODE_VFW?true:false,Ioptions),
-             presets=Imode&IDFF_FILTERMODE_PROC?(TpresetsVideo*)new TpresetsVideoProc(Imode):(Imode&IDFF_FILTERMODE_VFW?(TpresetsVideo*)new TpresetsVideoVFW(Imode):(TpresetsVideo*)new TpresetsVideoPlayer(Imode)),
+             dialogSettings=new TdialogSettingsDecVideo(Imode,Ioptions),
+             presets=
+              (Imode&IDFF_FILTERMODE_VIDEODXVA) ? (TpresetsVideo*)new TpresetsVideoDXVA(Imode) : 
+                (Imode&IDFF_FILTERMODE_PROC ? (TpresetsVideo*)new TpresetsVideoProc(Imode) : 
+                  (Imode&IDFF_FILTERMODE_VFW?(TpresetsVideo*)new TpresetsVideoVFW(Imode):(TpresetsVideo*)new TpresetsVideoPlayer(Imode))),
              (Tpreset*&)presetSettings,
              this,
              (TinputPin*&)inpin,
@@ -280,14 +282,33 @@ HRESULT TffdshowDecVideo::GetMediaType(int iPosition, CMediaType *mtOut)
 
  if (hwOverlay==2) iPosition/=2;
  if (iPosition<0) return E_INVALIDARG;
+
+#if DXVA_INSIDE_FFDSHOW
+ TvideoCodecDec *pDecoder=NULL;
+ getMovieSource((const TvideoCodecDec**)&pDecoder);
+ bool isDXVA = (pDecoder != NULL && pDecoder->useDXVA()!=0);
+#endif
  TcspInfos ocsps;size_t osize;
  if (outdv)
   osize=1;
+#if DXVA_INSIDE_FFDSHOW
+ else if (isDXVA)
+ {
+  // DXVA mode : special output format
+  TvideoCodecLibavcodecDxva *pDecoderDxva = (TvideoCodecLibavcodecDxva*)pDecoder;
+  pDecoderDxva->getDXVAOutputFormats(ocsps);
+  osize=ocsps.size();
+ }
  else
-  {
-   presetSettings->output->getOutputColorspaces(ocsps);
-   osize=ocsps.size();
-  }
+ {
+  presetSettings->output->getOutputColorspaces(ocsps);
+  osize=ocsps.size();
+ }
+#else
+ presetSettings->output->getOutputColorspaces(ocsps);
+ osize=ocsps.size();
+#endif
+ 
  if ((size_t)iPosition>=osize) return VFW_S_NO_MORE_ITEMS;
 
  TffPictBase pictOut;
@@ -295,7 +316,12 @@ HRESULT TffdshowDecVideo::GetMediaType(int iPosition, CMediaType *mtOut)
   pictOut=reconnectRect;
  else
   pictOut=inpin->pictIn;
- calcNewSize(pictOut);
+
+#if DXVA_INSIDE_FFDSHOW
+ // Don't recalculate output size (according to resize and crop filters if enabled) if we are in DXVA mode (because ffdshow filters won't be used)
+ if (!isDXVA)
+#endif
+  calcNewSize(pictOut);
 
  // Support mediatype with unknown dimension. This is necessary to support MEDIASUBTYPE_H264.
  // http://msdn.microsoft.com/en-us/library/dd757808(VS.85).aspx
@@ -369,7 +395,12 @@ HRESULT TffdshowDecVideo::GetMediaType(int iPosition, CMediaType *mtOut)
    vih2->AvgTimePerFrame=inpin->avgTimePerFrame;
    vih2->bmiHeader=bih;
    //vih2->dwControlFlags=AMCONTROL_USED | AMCONTROL_COLORINFO_PRESENT | (DXVA_NominalRange_Wide << DXVA_NominalRangeShift) | (DXVA_VideoTransferMatrix_BT601 << DXVA_VideoTransferMatrixShift);
+#if DXVA_INSIDE_FFDSHOW
+   hwDeinterlace=presetSettings->output->hwDeinterlace|isDXVA;
+#else
    hwDeinterlace=presetSettings->output->hwDeinterlace;
+#endif
+   
    if (hwDeinterlace)
     vih2->dwInterlaceFlags=AMINTERLACE_IsInterlaced|AMINTERLACE_DisplayModeBobOrWeave;
   }
@@ -390,42 +421,77 @@ HRESULT TffdshowDecVideo::setOutputMediaType(const CMediaType &mt)
    }
  if (!ok) return S_FALSE;
 */
- for (int i=0;cspFccs[i].name;i++)
-  {
-   const TcspInfo *cspInfo;
-   if (*(cspInfo=csp_getInfo(cspFccs[i].csp))->subtype==mt.subtype)
-    {
-     m_frame.dstColorspace=cspFccs[i].csp;
-     if (m_frame.dstColorspace==FF_CSP_NV12) m_frame.dstColorspace=FF_CSP_NV12|FF_CSP_FLAGS_YUV_ORDER; // HACK
-     int biWidth,outDy;
-     BITMAPINFOHEADER *bih;
-     if (mt.formattype==FORMAT_VideoInfo && mt.pbFormat) // && mt.pbFormat = work around other filter's bug.
-      {
-       VIDEOINFOHEADER *vih=(VIDEOINFOHEADER*)mt.pbFormat;
-       m_frame.dstStride=calcBIstride(biWidth=vih->bmiHeader.biWidth,cspInfo->Bpp*8);
-       outDy=vih->bmiHeader.biHeight;
-       bih=&vih->bmiHeader;
-      }
-     else if (mt.formattype==FORMAT_VideoInfo2 && mt.pbFormat)
-      {
-       VIDEOINFOHEADER2 *vih2=(VIDEOINFOHEADER2*)mt.pbFormat;
-       m_frame.dstStride=calcBIstride(biWidth=vih2->bmiHeader.biWidth,cspInfo->Bpp*8);
-       outDy=vih2->bmiHeader.biHeight;
-       bih=&vih2->bmiHeader;
-      }
-     else
-      return VFW_E_TYPE_NOT_ACCEPTED; //S_FALSE;
-     m_frame.dstSize=DIBSIZE(*bih);
+TcspInfos ocsps;
+#if DXVA_INSIDE_FFDSHOW
+TvideoCodecDec *pDecoder=NULL;
+ getMovieSource((const TvideoCodecDec**)&pDecoder);
+ bool isDXVA = (pDecoder != NULL && pDecoder->useDXVA()!=0); 
+ if (isDXVA)
+ {
+  // DXVA mode : special output format
+  TvideoCodecLibavcodecDxva *pDecoderDxva = (TvideoCodecLibavcodecDxva*)pDecoder;
+  pDecoderDxva->getDXVAOutputFormats(ocsps);
+ }
+#endif
 
-     char_t s[256];
-     DPRINTF(_l("TffdshowDecVideo::setOutputMediaType: colorspace:%s, biWidth:%i, dstStride:%i, Bpp:%i, dstSize:%i"),csp_getName(m_frame.dstColorspace,s,256),biWidth,m_frame.dstStride,cspInfo->Bpp,m_frame.dstSize);
-     if (csp_isRGB(m_frame.dstColorspace) && outDy>0)
-      m_frame.dstColorspace|=FF_CSP_FLAGS_VFLIP;
-     //else if (biheight<0)
-     // m_frame.colorspace|=FF_CSP_FLAGS_VFLIP;
-     return S_OK;
+ for (int i=0;cspFccs[i].name;i++)
+ {
+  const TcspInfo *cspInfo;
+#if DXVA_INSIDE_FFDSHOW
+  if (isDXVA) // Look for the right DXVA colorspace
+  {
+   bool ok=false;
+   for (TcspInfos::const_iterator oc=ocsps.begin();oc!=ocsps.end();oc++)
+   {
+    if (mt.subtype==*(*oc)->subtype)
+    {
+     cspInfo=(const TcspInfo *)(*oc);
+     ok=true;break;
     }
+   }
+   if (!ok) continue;
+   m_frame.dstColorspace=FF_CSP_NV12;
   }
+  else // Look for the right software decoding colorspace
+  {
+#endif
+   cspInfo=csp_getInfo(cspFccs[i].csp);
+   if (*cspInfo->subtype!=mt.subtype) continue;
+   m_frame.dstColorspace=cspFccs[i].csp;
+   if (m_frame.dstColorspace==FF_CSP_NV12) m_frame.dstColorspace=FF_CSP_NV12|FF_CSP_FLAGS_YUV_ORDER; // HACK
+#if DXVA_INSIDE_FFDSHOW
+  }
+#endif
+
+  
+  int biWidth,outDy;
+  BITMAPINFOHEADER *bih;
+  if (mt.formattype==FORMAT_VideoInfo && mt.pbFormat) // && mt.pbFormat = work around other filter's bug.
+   {
+    VIDEOINFOHEADER *vih=(VIDEOINFOHEADER*)mt.pbFormat;
+    m_frame.dstStride=calcBIstride(biWidth=vih->bmiHeader.biWidth,cspInfo->Bpp*8);
+    outDy=vih->bmiHeader.biHeight;
+    bih=&vih->bmiHeader;
+   }
+  else if (mt.formattype==FORMAT_VideoInfo2 && mt.pbFormat)
+   {
+    VIDEOINFOHEADER2 *vih2=(VIDEOINFOHEADER2*)mt.pbFormat;
+    m_frame.dstStride=calcBIstride(biWidth=vih2->bmiHeader.biWidth,cspInfo->Bpp*8);
+    outDy=vih2->bmiHeader.biHeight;
+    bih=&vih2->bmiHeader;
+   }
+  else
+   return VFW_E_TYPE_NOT_ACCEPTED; //S_FALSE;
+  m_frame.dstSize=DIBSIZE(*bih);
+
+  char_t s[256];
+  DPRINTF(_l("TffdshowDecVideo::setOutputMediaType: colorspace:%s, biWidth:%i, dstStride:%i, Bpp:%i, dstSize:%i"),csp_getName(m_frame.dstColorspace,s,256),biWidth,m_frame.dstStride,cspInfo->Bpp,m_frame.dstSize);
+  if (csp_isRGB(m_frame.dstColorspace) && outDy>0)
+   m_frame.dstColorspace|=FF_CSP_FLAGS_VFLIP;
+  //else if (biheight<0)
+  // m_frame.colorspace|=FF_CSP_FLAGS_VFLIP;
+  return S_OK;
+ }
  m_frame.dstColorspace=FF_CSP_NULL;
  return VFW_E_TYPE_NOT_ACCEPTED; //S_FALSE;
 }
@@ -504,6 +570,15 @@ HRESULT TffdshowDecVideo::CompleteConnect(PIN_DIRECTION direction,IPin *pReceive
   }
  else if (direction==PINDIR_OUTPUT)
   {
+#if DXVA_INSIDE_FFDSHOW
+   TvideoCodecDec *pDecoder=NULL;
+   getMovieSource((const TvideoCodecDec**)&pDecoder);
+   if (pDecoder != NULL && pDecoder->useDXVA()!=0)
+   {
+    TvideoCodecLibavcodecDxva *pDecoderDxva = (TvideoCodecLibavcodecDxva*)pDecoder;
+    pDecoderDxva->checkDXVAMode(pReceivePin);
+   }
+#endif
    const CLSID &out=GetCLSID(m_pOutput->GetConnected());
    outOverlayMixer=!!(out==CLSID_OverlayMixer);
   }
@@ -520,6 +595,25 @@ HRESULT TffdshowDecVideo::DecideBufferSize(IMemAllocator *pAlloc, ALLOCATOR_PROP
  if (!presetSettings) initPreset();
  if (m_IsQueueListedApp==-1) // Not initialized
   m_IsQueueListedApp= IsQueueListedApp(getExeflnm());
+
+#if DXVA_INSIDE_FFDSHOW
+ TvideoCodecDec *pDecoder=NULL;
+ getMovieSource((const TvideoCodecDec**)&pDecoder);
+ if (pDecoder != NULL && pDecoder->useDXVA()==2)
+ {
+  TvideoCodecLibavcodecDxva *pDecoderDxva = (TvideoCodecLibavcodecDxva*)pDecoder;
+		HRESULT					hr;
+		ALLOCATOR_PROPERTIES	Actual;
+
+		ppropInputRequest->cBuffers = pDecoderDxva->getPicEntryNumber();
+
+		if(FAILED(hr = pAlloc->SetProperties(ppropInputRequest, &Actual))) 
+			return hr;
+
+		return ppropInputRequest->cBuffers > Actual.cBuffers || ppropInputRequest->cbBuffer > Actual.cbBuffer
+			? E_FAIL : NOERROR;
+ }
+#endif
 
  m_IsOldVideoRenderer= IsOldRenderer();
  const CLSID &ref=GetCLSID(m_pOutput->GetConnected());
@@ -707,7 +801,7 @@ void TffdshowDecVideo::ConnectCompatibleFilter(void)
 
     IEnumMediaTypes *ppEnum = NULL;
     outPin->EnumMediaTypes(&ppEnum);
-    AM_MEDIA_TYPE *mediaTypes = (AM_MEDIA_TYPE*)alloca(sizeof(AM_MEDIA_TYPE));;
+    AM_MEDIA_TYPE *mediaTypes = (AM_MEDIA_TYPE*)alloca(sizeof(AM_MEDIA_TYPE));
     fetched=0;
     bool compatibleMediaTypeFound = false;
     while (1)
@@ -740,6 +834,7 @@ void TffdshowDecVideo::ConnectCompatibleFilter(void)
 
     outPin->Release();
     pGraphBuilder->Release();
+    inputConnectedPin->Release();inputConnectedPin=NULL;
 
     compatibleFilterConnected=true;
 }
@@ -1636,6 +1731,11 @@ HRESULT TffdshowDecVideo::reconnectOutput(const TffPict &newpict)
 
    if (!m_pOutput->IsConnected())
     return VFW_E_NOT_CONNECTED;
+#if DXVA_INSIDE_FFDSHOW
+   TvideoCodecDec *pDecoder=NULL;
+   getMovieSource((const TvideoCodecDec**)&pDecoder);
+   bool isDXVA = (pDecoder != NULL && pDecoder->useDXVA()!=0);
+#endif
 
    inReconnect=true;
    int newdy=newpict.rectFull.dy;
@@ -1673,7 +1773,11 @@ HRESULT TffdshowDecVideo::reconnectOutput(const TffPict &newpict)
        vih->dwPictAspectRatioY=newdy;
        vih->dwControlFlags=0;
       }
+#if DXVA_INSIDE_FFDSHOW
+     if(!isDXVA presetSettings->resize && presetSettings->resize->is && presetSettings->resize->SARinternally && presetSettings->resize->mode==0)
+#else
      if(presetSettings->resize && presetSettings->resize->is && presetSettings->resize->SARinternally && presetSettings->resize->mode==0)
+#endif
       {
        vih->dwPictAspectRatioX= newpict.rectFull.dx;
        vih->dwPictAspectRatioY= newpict.rectFull.dy;

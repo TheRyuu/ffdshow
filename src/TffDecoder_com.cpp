@@ -109,6 +109,13 @@ CUnknown* WINAPI TffdshowDecVideoSubtitles::CreateInstance(LPUNKNOWN punk,HRESUL
  return pNewObject;
 }
 
+CUnknown* WINAPI TffdshowDecVideoDXVA::CreateInstance(LPUNKNOWN punk,HRESULT *phr)
+{
+ TffdshowDecVideoDXVA *pNewObject=new TffdshowDecVideoDXVA(punk,phr);
+ if (pNewObject==NULL) *phr=E_OUTOFMEMORY;
+ return pNewObject;
+}
+
 template<> interfaces<char_t>::IffdshowDecVideo* TffdshowDecVideo::getDecVideoInterface(void)
 {
  return this;
@@ -578,7 +585,8 @@ STDMETHODIMP TffdshowDecVideo::getLate(int64_t *latePtr)
 void TffdshowDecVideo::initCodecSettings(void)
 {
  initPreset();
- outdv=!!presetSettings->output->dv;
+ if (presetSettings->output!=NULL)
+  outdv=!!presetSettings->output->dv;
 }
 
 STDMETHODIMP TffdshowDecVideo::getEncoderInfo(char_t *buf,size_t buflen)

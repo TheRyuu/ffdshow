@@ -617,182 +617,183 @@ void TglobalSettingsDecVideo::load(void)
   break;
 
 #define VIDEO_FOURCCS  \
- FF_FOURCC_OP (FFDS,fvfw & rawmask,c_mpeg4) \
- FF_FOURCC_OP (FVFW,fvfw & rawmask,c_mpeg4) \
- FF_FOURCC_OP (XVID,xvid & rawmask,c_mpeg4) \
- FF_FOURCC_OP (DIVX,dx50 & rawmask,c_mpeg4) \
- FF_FOURCC_OP (DX50,dx50 & rawmask,c_mpeg4) \
- FF_FOURCC_OP (MP4V,mp4v & rawmask,c_mpeg4) \
- FF_FOURCC_OP (3IVX,mp4v & rawmask,c_mpeg4) \
- FF_FOURCC_OP (WV1F,mp4v & rawmask,c_mpeg4) \
- FF_FOURCC_OP (FMP4,mp4v & rawmask,c_mpeg4) \
- FF_FOURCC_OP (SMP4,mp4v & rawmask,c_mpeg4) \
- FF_FOURCC_OP (WMV1,wmv1 & rawmask,c_wmv1) \
- FF_FOURCC_OP (WMV2,wmv2 & rawmask,c_wmv2) \
- FF_FOURCC_OP (WMV3,wmv3 & rawmask,c_wmv3) \
- FF_FOURCC1_OP(MSS1,mss2 & rawmask,CODEC_ID_WMV9_LIB) \
- FF_FOURCC1_OP(MSS2,mss2 & rawmask,CODEC_ID_WMV9_LIB) \
- FF_FOURCC1_OP(WVP2,wvp2 & rawmask,CODEC_ID_WMV9_LIB) \
- FF_FOURCC1_OP(WMVP,wvp2 & rawmask,CODEC_ID_WMV9_LIB) \
- FF_FOURCC_OP (WVC1,wvc1 & rawmask,c_wvc1) \
- FF_FOURCC_OP (WMVA,wvc1 & rawmask,c_wvc1) \
- FF_FOURCC1_OP(VP50,vp5 & rawmask,CODEC_ID_VP5) \
- FF_FOURCC1_OP(VP60,vp6 & rawmask,CODEC_ID_VP6) \
- FF_FOURCC1_OP(VP61,vp6 & rawmask,CODEC_ID_VP6) \
- FF_FOURCC1_OP(VP62,vp6 & rawmask,CODEC_ID_VP6) \
- FF_FOURCC1_OP(VP6F,vp6f & rawmask,CODEC_ID_VP6F) \
- FF_FOURCC1_OP(FLV4,vp6f & rawmask,CODEC_ID_VP6F) \
- FF_FOURCC1_OP(VP6A,vp6f & rawmask,CODEC_ID_VP6A) \
- FF_FOURCC1_OP(CAVS,cavs & rawmask,CODEC_ID_CAVS) \
- FF_FOURCC_OP (MPG1,mpg1 & rawmask,c_mpeg1) \
- FF_FOURCC_OP (MPG2,mpg2 & rawmask,c_mpeg2) \
- FF_FOURCC_OP (EM2V,em2v & rawmask,c_mpeg2) \
- FF_FOURCC_OP (MMES,em2v & rawmask,c_mpeg2) \
- FF_FOURCC_OP (MPEG,mpegAVI & rawmask,c_mpeg1) \
- FF_FOURCC1_OP(H263,h263 & rawmask,CODEC_ID_H263) \
- /*FF_FOURCC1_OP(I263,h263 & rawmask,CODEC_ID_H263I)*/ \
- FF_FOURCC1_OP(S263,h263 & rawmask,CODEC_ID_H263) \
- FF_FOURCC1_OP(L263,h263 & rawmask,CODEC_ID_H263) \
- FF_FOURCC1_OP(M263,h263 & rawmask,CODEC_ID_H263) \
- FF_FOURCC1_OP(U263,h263 & rawmask,CODEC_ID_H263) \
- FF_FOURCC1_OP(X263,h263 & rawmask,CODEC_ID_H263) \
- FF_FOURCC_OP(H264,h264 & rawmask,c_h264) \
- FF_FOURCC_OP(X264,h264 & rawmask,c_h264) \
- FF_FOURCC_OP(VSSH,h264 & rawmask,c_h264) \
- FF_FOURCC_OP(DAVC,h264 & rawmask,c_h264) \
- FF_FOURCC_OP(PAVC,h264 & rawmask,c_h264) \
- FF_FOURCC_OP(AVC1,h264 & rawmask,c_h264) \
- FF_FOURCC_OP(H264_HAALI,h264 & rawmask,c_h264) \
+ FF_FOURCC_OP (FFDS,fvfw & rawmask & dxvamask,c_mpeg4) \
+ FF_FOURCC_OP (FVFW,fvfw & rawmask & dxvamask,c_mpeg4) \
+ FF_FOURCC_OP (XVID,xvid & rawmask & dxvamask,c_mpeg4) \
+ FF_FOURCC_OP (DIVX,dx50 & rawmask & dxvamask,c_mpeg4) \
+ FF_FOURCC_OP (DX50,dx50 & rawmask & dxvamask,c_mpeg4) \
+ FF_FOURCC_OP (MP4V,mp4v & rawmask & dxvamask,c_mpeg4) \
+ FF_FOURCC_OP (3IVX,mp4v & rawmask & dxvamask,c_mpeg4) \
+ FF_FOURCC_OP (WV1F,mp4v & rawmask & dxvamask,c_mpeg4) \
+ FF_FOURCC_OP (FMP4,mp4v & rawmask & dxvamask,c_mpeg4) \
+ FF_FOURCC_OP (SMP4,mp4v & rawmask & dxvamask,c_mpeg4) \
+ FF_FOURCC_OP (WMV1,wmv1 & rawmask & dxvamask,c_wmv1) \
+ FF_FOURCC_OP (WMV2,wmv2 & rawmask & dxvamask,c_wmv2) \
+ FF_FOURCC_OP (WMV3,wmv3 & rawmask & dxvamask,c_wmv3) \
+ FF_FOURCC1_OP(MSS1,mss2 & rawmask & dxvamask,CODEC_ID_WMV9_LIB) \
+ FF_FOURCC1_OP(MSS2,mss2 & rawmask & dxvamask,CODEC_ID_WMV9_LIB) \
+ FF_FOURCC1_OP(WVP2,wvp2 & rawmask & dxvamask,CODEC_ID_WMV9_LIB) \
+ FF_FOURCC1_OP(WMVP,wvp2 & rawmask & dxvamask,CODEC_ID_WMV9_LIB) \
+ FF_FOURCC_OP (WVC1,wvc1 & rawmask & dxvamask,c_wvc1) \
+ FF_FOURCC_OP (WMVA,wvc1 & rawmask & dxvamask,c_wvc1) \
+ FF_FOURCC1_OP(VP50,vp5 & rawmask & dxvamask,CODEC_ID_VP5) \
+ FF_FOURCC1_OP(VP60,vp6 & rawmask & dxvamask,CODEC_ID_VP6) \
+ FF_FOURCC1_OP(VP61,vp6 & rawmask & dxvamask,CODEC_ID_VP6) \
+ FF_FOURCC1_OP(VP62,vp6 & rawmask & dxvamask,CODEC_ID_VP6) \
+ FF_FOURCC1_OP(VP6F,vp6f & rawmask & dxvamask,CODEC_ID_VP6F) \
+ FF_FOURCC1_OP(FLV4,vp6f & rawmask & dxvamask,CODEC_ID_VP6F) \
+ FF_FOURCC1_OP(VP6A,vp6f & rawmask & dxvamask,CODEC_ID_VP6A) \
+ FF_FOURCC1_OP(CAVS,cavs & rawmask & dxvamask,CODEC_ID_CAVS) \
+ FF_FOURCC_OP (MPG1,mpg1 & rawmask & dxvamask,c_mpeg1) \
+ FF_FOURCC_OP (MPG2,mpg2 & rawmask & dxvamask,c_mpeg2) \
+ FF_FOURCC_OP (EM2V,em2v & rawmask & dxvamask,c_mpeg2) \
+ FF_FOURCC_OP (MMES,em2v & rawmask & dxvamask,c_mpeg2) \
+ FF_FOURCC_OP (MPEG,mpegAVI & rawmask & dxvamask,c_mpeg1) \
+ FF_FOURCC1_OP(H263,h263 & rawmask & dxvamask,CODEC_ID_H263) \
+ /*FF_FOURCC1_OP(I263,h263 & rawmask & dxvamask,CODEC_ID_H263I)*/ \
+ FF_FOURCC1_OP(S263,h263 & rawmask & dxvamask,CODEC_ID_H263) \
+ FF_FOURCC1_OP(L263,h263 & rawmask & dxvamask,CODEC_ID_H263) \
+ FF_FOURCC1_OP(M263,h263 & rawmask & dxvamask,CODEC_ID_H263) \
+ FF_FOURCC1_OP(U263,h263 & rawmask & dxvamask,CODEC_ID_H263) \
+ FF_FOURCC1_OP(X263,h263 & rawmask & dxvamask,CODEC_ID_H263) \
+ /*Force IDFF_MOVIE_LAVC in DXVA mode*/ \
+ FF_FOURCC_OP(H264,(dxvamask==0) ? (h264 & rawmask) : IDFF_MOVIE_LAVC,c_h264) \
+ FF_FOURCC_OP(X264,(dxvamask==0) ? (h264 & rawmask) : IDFF_MOVIE_LAVC,c_h264) \
+ FF_FOURCC_OP(VSSH,(dxvamask==0) ? (h264 & rawmask) : IDFF_MOVIE_LAVC,c_h264) \
+ FF_FOURCC_OP(DAVC,(dxvamask==0) ? (h264 & rawmask) : IDFF_MOVIE_LAVC,c_h264) \
+ FF_FOURCC_OP(PAVC,(dxvamask==0) ? (h264 & rawmask) : IDFF_MOVIE_LAVC,c_h264) \
+ FF_FOURCC_OP(AVC1,(dxvamask==0) ? (h264 & rawmask) : IDFF_MOVIE_LAVC,c_h264) \
+ FF_FOURCC_OP(H264_HAALI,(dxvamask==0) ? (h264 & rawmask) : IDFF_MOVIE_LAVC,c_h264) \
  /*FF_FOURCC_OP(SVM2,h264 & rawmask,c_h264)*/ \
- FF_FOURCC1_OP(MJPG,mjpg & rawmask,CODEC_ID_MJPEG) \
- FF_FOURCC1_OP(LJPG,mjpg & rawmask,CODEC_ID_MJPEG) \
- FF_FOURCC1_OP(MJLS,mjpg & rawmask,CODEC_ID_JPEGLS) \
- FF_FOURCC1_OP(JPEG,(mjpg || svq1 || svq3) & rawmask,CODEC_ID_MJPEG) \
- FF_FOURCC1_OP(AVRN,avrn & rawmask,CODEC_ID_MJPEG) \
- FF_FOURCC1_OP(MJPA,avrn & rawmask,CODEC_ID_MJPEG) \
- FF_FOURCC1_OP(AMVV,avrn & rawmask,CODEC_ID_AMV) \
- FF_FOURCC1_OP(SP5X,avrn & rawmask,CODEC_ID_SP5X) \
- FF_FOURCC1_OP(SP51,avrn & rawmask,CODEC_ID_SP5X) \
- FF_FOURCC1_OP(SP52,avrn & rawmask,CODEC_ID_SP5X) \
- FF_FOURCC1_OP(SP53,avrn & rawmask,CODEC_ID_SP5X) \
- FF_FOURCC1_OP(SP54,avrn & rawmask,CODEC_ID_SP5X) \
- FF_FOURCC1_OP(SP55,avrn & rawmask,CODEC_ID_SP5X) \
- FF_FOURCC1_OP(SP56,avrn & rawmask,CODEC_ID_SP5X) \
- FF_FOURCC1_OP(SP57,avrn & rawmask,CODEC_ID_SP5X) \
- FF_FOURCC1_OP(DVSD,dvsd & rawmask,CODEC_ID_DVVIDEO) \
- FF_FOURCC1_OP(DV25,dvsd & rawmask,CODEC_ID_DVVIDEO) \
- FF_FOURCC1_OP(DV50,dvsd & rawmask,CODEC_ID_DVVIDEO) \
- FF_FOURCC1_OP(CDVC,cdvc & rawmask,CODEC_ID_DVVIDEO) \
- FF_FOURCC1_OP(CDV5,cdvc & rawmask,CODEC_ID_DVVIDEO) \
- FF_FOURCC1_OP(DVIS,cdvc & rawmask,CODEC_ID_DVVIDEO) \
- FF_FOURCC1_OP(PDVC,cdvc & rawmask,CODEC_ID_DVVIDEO) \
- FF_FOURCC1_OP(HFYU,hfyu & rawmask,CODEC_ID_HUFFYUV) \
- FF_FOURCC1_OP(FFVH,hfyu & rawmask,CODEC_ID_HUFFYUV) \
- FF_FOURCC1_OP(CYUV,cyuv & rawmask,CODEC_ID_CYUV) \
- FF_FOURCC1_OP(ASV1,asv1 & rawmask,CODEC_ID_ASV1) \
- FF_FOURCC1_OP(ASV2,asv1 & rawmask,CODEC_ID_ASV2) \
- FF_FOURCC1_OP(VCR1,vcr1 & rawmask,CODEC_ID_VCR1) \
- FF_FOURCC_OP (THEO,theo & rawmask,c_theora) \
- FF_FOURCC1_OP(SVQ1,svq1 & rawmask,CODEC_ID_SVQ1) \
- FF_FOURCC1_OP(SVQ3,svq3 & rawmask,CODEC_ID_SVQ3) \
- FF_FOURCC1_OP(RPZA,qtrpza & rawmask,CODEC_ID_RPZA) \
- FF_FOURCC1_OP(FFV1,ffv1 & rawmask,CODEC_ID_FFV1) \
- FF_FOURCC1_OP(VP31,vp3  & rawmask,CODEC_ID_VP3) \
- FF_FOURCC1_OP(RLE8,rle  & rawmask,CODEC_ID_MSRLE) \
- FF_FOURCC1_OP(MSZH,mszh & rawmask,CODEC_ID_MSZH) \
- FF_FOURCC1_OP(ZLIB,zlib & rawmask,CODEC_ID_ZLIB) \
- FF_FOURCC1_OP(FLV1,flv1 & rawmask,CODEC_ID_FLV1) \
- FF_FOURCC1_OP(PNG1,png1 & rawmask,CODEC_ID_COREPNG) \
- FF_FOURCC1_OP(MPNG,png1 & rawmask,CODEC_ID_PNG) \
- FF_FOURCC1_OP(AVIS,avis & rawmask,CODEC_ID_AVISYNTH) \
- FF_FOURCC1_OP(CRAM,cram & rawmask,CODEC_ID_MSVIDEO1) \
- FF_FOURCC1_OP(RT21,rt21 & rawmask,CODEC_ID_INDEO2) \
- FF_FOURCC1_OP(IV32,iv32 & rawmask,CODEC_ID_INDEO3) \
- FF_FOURCC1_OP(IV31,iv32 & rawmask,CODEC_ID_INDEO3) \
- FF_FOURCC1_OP(CVID,cvid & rawmask,CODEC_ID_CINEPAK) \
- FF_FOURCC1_OP(RV10,rv10 & rawmask,CODEC_ID_RV10) \
- FF_FOURCC1_OP(RV20,rv10 & rawmask,CODEC_ID_RV20) \
- FF_FOURCC1_OP(RV30,rv30 & rawmask,CODEC_ID_RV30) \
- FF_FOURCC1_OP(RV40,rv40 & rawmask,CODEC_ID_RV40) \
- FF_FOURCC1_OP(8BPS,_8bps& rawmask,CODEC_ID_8BPS) \
- FF_FOURCC1_OP(QRLE,qtrle& rawmask,CODEC_ID_QTRLE) \
- FF_FOURCC1_OP(DUCK,duck & rawmask,CODEC_ID_TRUEMOTION1) \
- FF_FOURCC1_OP(TM20,duck & rawmask,CODEC_ID_TRUEMOTION2) \
- FF_FOURCC1_OP(TSCC,tscc & rawmask,CODEC_ID_TSCC) \
- /*FF_FOURCC1_OP(SNOW,snow & rawmask,CODEC_ID_SNOW)*/ \
- FF_FOURCC1_OP(QPEG,qpeg & rawmask,CODEC_ID_QPEG) \
- FF_FOURCC1_OP(Q1_0,qpeg & rawmask,CODEC_ID_QPEG) \
- FF_FOURCC1_OP(Q1_1,qpeg & rawmask,CODEC_ID_QPEG) \
- FF_FOURCC1_OP(H261,h261 & rawmask,CODEC_ID_H261) \
- FF_FOURCC1_OP(M261,h261 & rawmask,CODEC_ID_H261) \
- FF_FOURCC1_OP(LOCO,loco & rawmask,CODEC_ID_LOCO) \
- FF_FOURCC1_OP(WNV1,wnv1 & rawmask,CODEC_ID_WNV1) \
- FF_FOURCC1_OP(CSCD,cscd & rawmask,CODEC_ID_CSCD) \
- FF_FOURCC1_OP(ZMBV,zmbv & rawmask,CODEC_ID_ZMBV) \
- FF_FOURCC1_OP(ULTI,ulti & rawmask,CODEC_ID_ULTI) \
- FF_FOURCC1_OP(VIXL,vixl & rawmask,CODEC_ID_VIXL) \
- FF_FOURCC1_OP(AASC,aasc & rawmask,CODEC_ID_AASC) \
- FF_FOURCC1_OP(FPS1,fps1 & rawmask,CODEC_ID_FRAPS) \
+ FF_FOURCC1_OP(MJPG,mjpg & rawmask & dxvamask,CODEC_ID_MJPEG) \
+ FF_FOURCC1_OP(LJPG,mjpg & rawmask & dxvamask,CODEC_ID_MJPEG) \
+ FF_FOURCC1_OP(MJLS,mjpg & rawmask & dxvamask,CODEC_ID_JPEGLS) \
+ FF_FOURCC1_OP(JPEG,(mjpg || svq1 || svq3) & rawmask & dxvamask,CODEC_ID_MJPEG) \
+ FF_FOURCC1_OP(AVRN,avrn & rawmask & dxvamask,CODEC_ID_MJPEG) \
+ FF_FOURCC1_OP(MJPA,avrn & rawmask & dxvamask,CODEC_ID_MJPEG) \
+ FF_FOURCC1_OP(AMVV,avrn & rawmask & dxvamask,CODEC_ID_AMV) \
+ FF_FOURCC1_OP(SP5X,avrn & rawmask & dxvamask,CODEC_ID_SP5X) \
+ FF_FOURCC1_OP(SP51,avrn & rawmask & dxvamask,CODEC_ID_SP5X) \
+ FF_FOURCC1_OP(SP52,avrn & rawmask & dxvamask,CODEC_ID_SP5X) \
+ FF_FOURCC1_OP(SP53,avrn & rawmask & dxvamask,CODEC_ID_SP5X) \
+ FF_FOURCC1_OP(SP54,avrn & rawmask & dxvamask,CODEC_ID_SP5X) \
+ FF_FOURCC1_OP(SP55,avrn & rawmask & dxvamask,CODEC_ID_SP5X) \
+ FF_FOURCC1_OP(SP56,avrn & rawmask & dxvamask,CODEC_ID_SP5X) \
+ FF_FOURCC1_OP(SP57,avrn & rawmask & dxvamask,CODEC_ID_SP5X) \
+ FF_FOURCC1_OP(DVSD,dvsd & rawmask & dxvamask,CODEC_ID_DVVIDEO) \
+ FF_FOURCC1_OP(DV25,dvsd & rawmask & dxvamask,CODEC_ID_DVVIDEO) \
+ FF_FOURCC1_OP(DV50,dvsd & rawmask & dxvamask,CODEC_ID_DVVIDEO) \
+ FF_FOURCC1_OP(CDVC,cdvc & rawmask & dxvamask,CODEC_ID_DVVIDEO) \
+ FF_FOURCC1_OP(CDV5,cdvc & rawmask & dxvamask,CODEC_ID_DVVIDEO) \
+ FF_FOURCC1_OP(DVIS,cdvc & rawmask & dxvamask,CODEC_ID_DVVIDEO) \
+ FF_FOURCC1_OP(PDVC,cdvc & rawmask & dxvamask,CODEC_ID_DVVIDEO) \
+ FF_FOURCC1_OP(HFYU,hfyu & rawmask & dxvamask,CODEC_ID_HUFFYUV) \
+ FF_FOURCC1_OP(FFVH,hfyu & rawmask & dxvamask,CODEC_ID_HUFFYUV) \
+ FF_FOURCC1_OP(CYUV,cyuv & rawmask & dxvamask,CODEC_ID_CYUV) \
+ FF_FOURCC1_OP(ASV1,asv1 & rawmask & dxvamask,CODEC_ID_ASV1) \
+ FF_FOURCC1_OP(ASV2,asv1 & rawmask & dxvamask,CODEC_ID_ASV2) \
+ FF_FOURCC1_OP(VCR1,vcr1 & rawmask & dxvamask,CODEC_ID_VCR1) \
+ FF_FOURCC_OP (THEO,theo & rawmask & dxvamask,c_theora) \
+ FF_FOURCC1_OP(SVQ1,svq1 & rawmask & dxvamask,CODEC_ID_SVQ1) \
+ FF_FOURCC1_OP(SVQ3,svq3 & rawmask & dxvamask,CODEC_ID_SVQ3) \
+ FF_FOURCC1_OP(RPZA,qtrpza & rawmask & dxvamask,CODEC_ID_RPZA) \
+ FF_FOURCC1_OP(FFV1,ffv1 & rawmask & dxvamask,CODEC_ID_FFV1) \
+ FF_FOURCC1_OP(VP31,vp3  & rawmask & dxvamask,CODEC_ID_VP3) \
+ FF_FOURCC1_OP(RLE8,rle  & rawmask & dxvamask,CODEC_ID_MSRLE) \
+ FF_FOURCC1_OP(MSZH,mszh & rawmask & dxvamask,CODEC_ID_MSZH) \
+ FF_FOURCC1_OP(ZLIB,zlib & rawmask & dxvamask,CODEC_ID_ZLIB) \
+ FF_FOURCC1_OP(FLV1,flv1 & rawmask & dxvamask,CODEC_ID_FLV1) \
+ FF_FOURCC1_OP(PNG1,png1 & rawmask & dxvamask,CODEC_ID_COREPNG) \
+ FF_FOURCC1_OP(MPNG,png1 & rawmask & dxvamask,CODEC_ID_PNG) \
+ FF_FOURCC1_OP(AVIS,avis & rawmask & dxvamask,CODEC_ID_AVISYNTH) \
+ FF_FOURCC1_OP(CRAM,cram & rawmask & dxvamask,CODEC_ID_MSVIDEO1) \
+ FF_FOURCC1_OP(RT21,rt21 & rawmask & dxvamask,CODEC_ID_INDEO2) \
+ FF_FOURCC1_OP(IV32,iv32 & rawmask & dxvamask,CODEC_ID_INDEO3) \
+ FF_FOURCC1_OP(IV31,iv32 & rawmask & dxvamask,CODEC_ID_INDEO3) \
+ FF_FOURCC1_OP(CVID,cvid & rawmask & dxvamask,CODEC_ID_CINEPAK) \
+ FF_FOURCC1_OP(RV10,rv10 & rawmask & dxvamask,CODEC_ID_RV10) \
+ FF_FOURCC1_OP(RV20,rv10 & rawmask & dxvamask,CODEC_ID_RV20) \
+ FF_FOURCC1_OP(RV30,rv30 & rawmask & dxvamask,CODEC_ID_RV30) \
+ FF_FOURCC1_OP(RV40,rv40 & rawmask & dxvamask,CODEC_ID_RV40) \
+ FF_FOURCC1_OP(8BPS,_8bps& rawmask & dxvamask,CODEC_ID_8BPS) \
+ FF_FOURCC1_OP(QRLE,qtrle& rawmask & dxvamask,CODEC_ID_QTRLE) \
+ FF_FOURCC1_OP(DUCK,duck & rawmask & dxvamask,CODEC_ID_TRUEMOTION1) \
+ FF_FOURCC1_OP(TM20,duck & rawmask & dxvamask,CODEC_ID_TRUEMOTION2) \
+ FF_FOURCC1_OP(TSCC,tscc & rawmask & dxvamask,CODEC_ID_TSCC) \
+ /*FF_FOURCC1_OP(SNOW,snow & rawmask & dxvamask,CODEC_ID_SNOW)*/ \
+ FF_FOURCC1_OP(QPEG,qpeg & rawmask & dxvamask,CODEC_ID_QPEG) \
+ FF_FOURCC1_OP(Q1_0,qpeg & rawmask & dxvamask,CODEC_ID_QPEG) \
+ FF_FOURCC1_OP(Q1_1,qpeg & rawmask & dxvamask,CODEC_ID_QPEG) \
+ FF_FOURCC1_OP(H261,h261 & rawmask & dxvamask,CODEC_ID_H261) \
+ FF_FOURCC1_OP(M261,h261 & rawmask & dxvamask,CODEC_ID_H261) \
+ FF_FOURCC1_OP(LOCO,loco & rawmask & dxvamask,CODEC_ID_LOCO) \
+ FF_FOURCC1_OP(WNV1,wnv1 & rawmask & dxvamask,CODEC_ID_WNV1) \
+ FF_FOURCC1_OP(CSCD,cscd & rawmask & dxvamask,CODEC_ID_CSCD) \
+ FF_FOURCC1_OP(ZMBV,zmbv & rawmask & dxvamask,CODEC_ID_ZMBV) \
+ FF_FOURCC1_OP(ULTI,ulti & rawmask & dxvamask,CODEC_ID_ULTI) \
+ FF_FOURCC1_OP(VIXL,vixl & rawmask & dxvamask,CODEC_ID_VIXL) \
+ FF_FOURCC1_OP(AASC,aasc & rawmask & dxvamask,CODEC_ID_AASC) \
+ FF_FOURCC1_OP(FPS1,fps1 & rawmask & dxvamask,CODEC_ID_FRAPS) \
  /* uncompressed video */ \
- FF_FOURCC1_OP(YUY2,rawv==1 || rawv==2 || rawv==FOURCC_YUY2,CODEC_ID_YUY2) \
- FF_FOURCC1_OP(YV12,rawv==1 || rawv==2 || rawv==FOURCC_YV12,CODEC_ID_YV12) \
- FF_FOURCC1_OP(YVYU,rawv==1 || rawv==2 || rawv==FOURCC_YVYU,CODEC_ID_YVYU) \
- FF_FOURCC1_OP(UYVY,rawv==1 || rawv==2 || rawv==FOURCC_UYVY,CODEC_ID_UYVY) \
- FF_FOURCC1_OP(VYUY,rawv==1 || rawv==2 || rawv==FOURCC_VYUY,CODEC_ID_VYUY) \
- FF_FOURCC1_OP(I420,rawv==1 || rawv==2 || rawv==FOURCC_I420,CODEC_ID_I420) \
- FF_FOURCC1_OP(IYUV,rawv==1 || rawv==2 || rawv==FOURCC_IYUV,CODEC_ID_I420) \
- FF_FOURCC1_OP(RGB2,rawv==1 || rawv==3 || rawv==FOURCC_RGB2,CODEC_ID_RGB2) \
- FF_FOURCC1_OP(RGB3,rawv==1 || rawv==3 || rawv==FOURCC_RGB3,CODEC_ID_RGB3) \
- FF_FOURCC1_OP(RGB5,rawv==1 || rawv==3 || rawv==FOURCC_RGB5,CODEC_ID_RGB5) \
- FF_FOURCC1_OP(RGB6,rawv==1 || rawv==3 || rawv==FOURCC_RGB6,CODEC_ID_RGB6) \
- FF_FOURCC1_OP(CLJR,rawv==1            || rawv==FOURCC_CLJR,CODEC_ID_CLJR) \
- FF_FOURCC1_OP(Y800,rawv==1 || rawv==2 || rawv==FOURCC_Y800,CODEC_ID_Y800) \
- FF_FOURCC1_OP(444P,rawv==1 || rawv==2 || rawv==FOURCC_444P,CODEC_ID_444P) \
- FF_FOURCC1_OP(YV24,rawv==1 || rawv==2 || rawv==FOURCC_YV24,CODEC_ID_444P) \
- FF_FOURCC1_OP(422P,rawv==1 || rawv==2 || rawv==FOURCC_422P,CODEC_ID_422P) \
- FF_FOURCC1_OP(YV16,rawv==1 || rawv==2 || rawv==FOURCC_YV16,CODEC_ID_YV16) \
- FF_FOURCC1_OP(411P,rawv==1 || rawv==2 || rawv==FOURCC_411P,CODEC_ID_411P) \
- FF_FOURCC1_OP(Y41B,rawv==1 || rawv==2 || rawv==FOURCC_Y41B,CODEC_ID_411P) \
- FF_FOURCC1_OP(410P,rawv==1 || rawv==2 || rawv==FOURCC_410P,CODEC_ID_410P) \
- FF_FOURCC1_OP(NV12,rawv==1 || rawv==2 || rawv==FOURCC_NV12,CODEC_ID_NV12) \
- FF_FOURCC1_OP(NV21,rawv==1 || rawv==2 || rawv==FOURCC_NV12,CODEC_ID_NV21) \
+ FF_FOURCC1_OP(YUY2,(rawv==1 || rawv==2 || rawv==FOURCC_YUY2)& dxvamask,CODEC_ID_YUY2) \
+ FF_FOURCC1_OP(YV12,(rawv==1 || rawv==2 || rawv==FOURCC_YV12)& dxvamask,CODEC_ID_YV12) \
+ FF_FOURCC1_OP(YVYU,(rawv==1 || rawv==2 || rawv==FOURCC_YVYU)& dxvamask,CODEC_ID_YVYU) \
+ FF_FOURCC1_OP(UYVY,(rawv==1 || rawv==2 || rawv==FOURCC_UYVY)& dxvamask,CODEC_ID_UYVY) \
+ FF_FOURCC1_OP(VYUY,(rawv==1 || rawv==2 || rawv==FOURCC_VYUY)& dxvamask,CODEC_ID_VYUY) \
+ FF_FOURCC1_OP(I420,(rawv==1 || rawv==2 || rawv==FOURCC_I420)& dxvamask,CODEC_ID_I420) \
+ FF_FOURCC1_OP(IYUV,(rawv==1 || rawv==2 || rawv==FOURCC_IYUV)& dxvamask,CODEC_ID_I420) \
+ FF_FOURCC1_OP(RGB2,(rawv==1 || rawv==3 || rawv==FOURCC_RGB2)& dxvamask,CODEC_ID_RGB2) \
+ FF_FOURCC1_OP(RGB3,(rawv==1 || rawv==3 || rawv==FOURCC_RGB3)& dxvamask,CODEC_ID_RGB3) \
+ FF_FOURCC1_OP(RGB5,(rawv==1 || rawv==3 || rawv==FOURCC_RGB5)& dxvamask,CODEC_ID_RGB5) \
+ FF_FOURCC1_OP(RGB6,(rawv==1 || rawv==3 || rawv==FOURCC_RGB6)& dxvamask,CODEC_ID_RGB6) \
+ FF_FOURCC1_OP(CLJR,(rawv==1            || rawv==FOURCC_CLJR)& dxvamask,CODEC_ID_CLJR) \
+ FF_FOURCC1_OP(Y800,(rawv==1 || rawv==2 || rawv==FOURCC_Y800)& dxvamask,CODEC_ID_Y800) \
+ FF_FOURCC1_OP(444P,(rawv==1 || rawv==2 || rawv==FOURCC_444P)& dxvamask,CODEC_ID_444P) \
+ FF_FOURCC1_OP(YV24,(rawv==1 || rawv==2 || rawv==FOURCC_YV24)& dxvamask,CODEC_ID_444P) \
+ FF_FOURCC1_OP(422P,(rawv==1 || rawv==2 || rawv==FOURCC_422P)& dxvamask,CODEC_ID_422P) \
+ FF_FOURCC1_OP(YV16,(rawv==1 || rawv==2 || rawv==FOURCC_YV16)& dxvamask,CODEC_ID_YV16) \
+ FF_FOURCC1_OP(411P,(rawv==1 || rawv==2 || rawv==FOURCC_411P)& dxvamask,CODEC_ID_411P) \
+ FF_FOURCC1_OP(Y41B,(rawv==1 || rawv==2 || rawv==FOURCC_Y41B)& dxvamask,CODEC_ID_411P) \
+ FF_FOURCC1_OP(410P,(rawv==1 || rawv==2 || rawv==FOURCC_410P)& dxvamask,CODEC_ID_410P) \
+ FF_FOURCC1_OP(NV12,(rawv==1 || rawv==2 || rawv==FOURCC_NV12)& dxvamask,CODEC_ID_NV12) \
+ FF_FOURCC1_OP(NV21,(rawv==1 || rawv==2 || rawv==FOURCC_NV12)& dxvamask,CODEC_ID_NV21) \
  /*FF_FOURCC1_OP(PAL1,rawv==1 || rawv==4 || rawv==FOURCC_PAL1,CODEC_ID_PAL1)*/ \
  /*FF_FOURCC1_OP(PAL4,rawv==1 || rawv==4 || rawv==FOURCC_PAL4,CODEC_ID_PAL4)*/ \
  /*FF_FOURCC1_OP(PAL8,rawv==1 || rawv==4 || rawv==FOURCC_PAL8,CODEC_ID_PAL8)*/ \
  /* mencoder's raw formats */ \
- FF_FOURCC1_OP(RGB24MPLAYER,rawv==1 || rawv==3 || rawv==FOURCC_RGB2,CODEC_ID_BGR2) \
- FF_FOURCC1_OP(RGB32MPLAYER,rawv==1 || rawv==3 || rawv==FOURCC_RGB3,CODEC_ID_BGR3) \
- FF_FOURCC1_OP(RGB15MPLAYER,rawv==1 || rawv==3 || rawv==FOURCC_RGB5,CODEC_ID_BGR5) \
- FF_FOURCC1_OP(RGB16MPLAYER,rawv==1 || rawv==3 || rawv==FOURCC_RGB6,CODEC_ID_BGR6) \
+ FF_FOURCC1_OP(RGB24MPLAYER,(rawv==1 || rawv==3 || rawv==FOURCC_RGB2)& dxvamask,CODEC_ID_BGR2) \
+ FF_FOURCC1_OP(RGB32MPLAYER,(rawv==1 || rawv==3 || rawv==FOURCC_RGB3)& dxvamask,CODEC_ID_BGR3) \
+ FF_FOURCC1_OP(RGB15MPLAYER,(rawv==1 || rawv==3 || rawv==FOURCC_RGB5)& dxvamask,CODEC_ID_BGR5) \
+ FF_FOURCC1_OP(RGB16MPLAYER,(rawv==1 || rawv==3 || rawv==FOURCC_RGB6)& dxvamask,CODEC_ID_BGR6) \
  /* exotic */ \
- FF_FOURCC_OP (MP4S,mp4v & rawmask,c_mpeg4) \
- FF_FOURCC_OP (SEDG,mp4v & rawmask,c_mpeg4) \
- FF_FOURCC_OP (M4S2,mp4v & rawmask,c_mpeg4) \
- FF_FOURCC_OP (BLZ0,mp4v & rawmask,c_mpeg4) \
- FF_FOURCC_OP (DXGM,mp4v & rawmask,c_mpeg4) \
- FF_FOURCC_OP (LMP4,mp4v & rawmask,c_mpeg4) \
- FF_FOURCC_OP (RMP4,mp4v & rawmask,c_mpeg4) \
- FF_FOURCC_OP (DM4V,mp4v & rawmask,c_mpeg4) \
- FF_FOURCC_OP (HDX4,mp4v & rawmask,c_mpeg4) \
- FF_FOURCC_OP (UMP4,mp4v & rawmask,c_mpeg4) \
- FF_FOURCC_OP (NDIG,mp4v & rawmask,c_mpeg4) \
- FF_FOURCC_OP (XVIX,xvid & rawmask,c_mpeg4) \
- FF_FOURCC_OP (3IV1,mp4v & rawmask,c_mpeg4) \
- FF_FOURCC_OP (3IV2,mp4v & rawmask,c_mpeg4) \
- FF_FOURCC1_OP(DIV3,div3 & rawmask,CODEC_ID_MSMPEG4V3) \
- FF_FOURCC1_OP(DVX3,div3 & rawmask,CODEC_ID_MSMPEG4V3) \
- FF_FOURCC1_OP(MP43,mp43 & rawmask,CODEC_ID_MSMPEG4V3) \
- FF_FOURCC1_OP(COL1,div3 & rawmask,CODEC_ID_MSMPEG4V3) \
- FF_FOURCC1_OP(DIV4,div3 & rawmask,CODEC_ID_MSMPEG4V3) \
- FF_FOURCC1_OP(DIV5,div3 & rawmask,CODEC_ID_MSMPEG4V3) \
- FF_FOURCC1_OP(DIV6,div3 & rawmask,CODEC_ID_MSMPEG4V3) \
- FF_FOURCC1_OP(AP41,div3 & rawmask,CODEC_ID_MSMPEG4V3) \
- FF_FOURCC1_OP(MPG3,div3 & rawmask,CODEC_ID_MSMPEG4V3) \
- FF_FOURCC1_OP(DIV2,mp42 & rawmask,CODEC_ID_MSMPEG4V2) \
- FF_FOURCC1_OP(MP42,mp42 & rawmask,CODEC_ID_MSMPEG4V2) \
- FF_FOURCC1_OP(MPG4,mp41 & rawmask,CODEC_ID_MSMPEG4V1) \
- FF_FOURCC1_OP(DIV1,mp41 & rawmask,CODEC_ID_MSMPEG4V1) \
- FF_FOURCC1_OP(MP41,mp41 & rawmask,CODEC_ID_MSMPEG4V1) \
+ FF_FOURCC_OP (MP4S,mp4v & rawmask & dxvamask,c_mpeg4) \
+ FF_FOURCC_OP (SEDG,mp4v & rawmask & dxvamask,c_mpeg4) \
+ FF_FOURCC_OP (M4S2,mp4v & rawmask & dxvamask,c_mpeg4) \
+ FF_FOURCC_OP (BLZ0,mp4v & rawmask & dxvamask,c_mpeg4) \
+ FF_FOURCC_OP (DXGM,mp4v & rawmask & dxvamask,c_mpeg4) \
+ FF_FOURCC_OP (LMP4,mp4v & rawmask & dxvamask,c_mpeg4) \
+ FF_FOURCC_OP (RMP4,mp4v & rawmask & dxvamask,c_mpeg4) \
+ FF_FOURCC_OP (DM4V,mp4v & rawmask & dxvamask,c_mpeg4) \
+ FF_FOURCC_OP (HDX4,mp4v & rawmask & dxvamask,c_mpeg4) \
+ FF_FOURCC_OP (UMP4,mp4v & rawmask & dxvamask,c_mpeg4) \
+ FF_FOURCC_OP (NDIG,mp4v & rawmask & dxvamask,c_mpeg4) \
+ FF_FOURCC_OP (XVIX,xvid & rawmask & dxvamask,c_mpeg4) \
+ FF_FOURCC_OP (3IV1,mp4v & rawmask & dxvamask,c_mpeg4) \
+ FF_FOURCC_OP (3IV2,mp4v & rawmask & dxvamask,c_mpeg4) \
+ FF_FOURCC1_OP(DIV3,div3 & rawmask & dxvamask,CODEC_ID_MSMPEG4V3) \
+ FF_FOURCC1_OP(DVX3,div3 & rawmask & dxvamask,CODEC_ID_MSMPEG4V3) \
+ FF_FOURCC1_OP(MP43,mp43 & rawmask & dxvamask,CODEC_ID_MSMPEG4V3) \
+ FF_FOURCC1_OP(COL1,div3 & rawmask & dxvamask,CODEC_ID_MSMPEG4V3) \
+ FF_FOURCC1_OP(DIV4,div3 & rawmask & dxvamask,CODEC_ID_MSMPEG4V3) \
+ FF_FOURCC1_OP(DIV5,div3 & rawmask & dxvamask,CODEC_ID_MSMPEG4V3) \
+ FF_FOURCC1_OP(DIV6,div3 & rawmask & dxvamask,CODEC_ID_MSMPEG4V3) \
+ FF_FOURCC1_OP(AP41,div3 & rawmask & dxvamask,CODEC_ID_MSMPEG4V3) \
+ FF_FOURCC1_OP(MPG3,div3 & rawmask & dxvamask,CODEC_ID_MSMPEG4V3) \
+ FF_FOURCC1_OP(DIV2,mp42 & rawmask & dxvamask,CODEC_ID_MSMPEG4V2) \
+ FF_FOURCC1_OP(MP42,mp42 & rawmask & dxvamask,CODEC_ID_MSMPEG4V2) \
+ FF_FOURCC1_OP(MPG4,mp41 & rawmask & dxvamask,CODEC_ID_MSMPEG4V1) \
+ FF_FOURCC1_OP(DIV1,mp41 & rawmask & dxvamask,CODEC_ID_MSMPEG4V1) \
+ FF_FOURCC1_OP(MP41,mp41 & rawmask & dxvamask,CODEC_ID_MSMPEG4V1) \
 
 #define FF_FOURCC_LIST(fourCC,decoder,codec) _l(#fourCC),
 
@@ -832,7 +833,8 @@ const CodecID TglobalSettingsDecVideo::c_h264[IDFF_MOVIE_MAX+1]=
  CODEC_ID_NONE,
  CODEC_ID_NONE,
  CODEC_ID_NONE,
- CODEC_ID_H264_MT
+ CODEC_ID_H264_MT,
+ CODEC_ID_H264_DXVA
 };
 const CodecID TglobalSettingsDecVideo::c_mpeg4[IDFF_MOVIE_MAX+1]=
 {
@@ -952,7 +954,8 @@ CodecID TglobalSettingsDecVideo::getCodecId(DWORD fourCC,FOURCC *AVIfourCC) cons
 {
  fourCC=FCCupper(fourCC);
  CodecID codecId=CODEC_ID_NONE;
- int rawmask=filtermode&IDFF_FILTERMODE_VIDEORAW?0:0xffff;
+ int rawmask=filtermode&IDFF_FILTERMODE_VIDEORAW?0:0xffff; // Disable all the codecs except RAW
+ int dxvamask=filtermode&IDFF_FILTERMODE_VIDEODXVA?0:0xffff; // Disable all the codecs except DXVA supported codecs (H264,VC1 for now)
  switch(fourCC)
   {
    #undef FF_FOURCC_OP

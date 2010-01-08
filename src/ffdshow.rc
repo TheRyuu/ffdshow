@@ -2248,7 +2248,7 @@ STYLE DS_SETFONT | DS_FIXEDSYS | DS_CONTROL | DS_CENTER | WS_CHILD
 EXSTYLE WS_EX_CONTROLPARENT
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
-    GROUPBOX        "Pass-through (S/PDIF, HDMI)",IDC_GRP_SF_PASSTHROUGH,0,0,178,55
+    GROUPBOX        "Pass-through (S/PDIF, HDMI)",IDC_GRP_SF_PASSTHROUGH,0,0,157,55
     CONTROL         "Dolby Digital (AC3)",IDC_CHB_PASSTHROUGH_AC3,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,4,10,75,10
     CONTROL         "DTS",IDC_CHB_PASSTHROUGH_DTS,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,4,40,29,10
     GROUPBOX        "Output format for uncompressed or decoded streams",IDC_GRP_SF_OUT,0,56,267,79
@@ -2275,10 +2275,10 @@ BEGIN
     CONTROL         "Dolby Digital Plus",IDC_CHB_PASSTHROUGH_EAC3,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,4,25,65,10
     CONTROL         "Dolby TrueHD",IDC_CHB_PASSTHROUGH_TRUEHD,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,82,10,65,10
     CONTROL         "DTS HD",IDC_CHB_PASSTHROUGH_DTSHD,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,82,40,35,10
-    COMBOBOX        IDC_CBX_OUT_PASSTHROUGH_DEVICEID,184,32,82,64,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_CBX_OUT_PASSTHROUGH_DEVICEID,166,32,99,64,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
     CONTROL         "Connect as PCM first",IDC_CHB_PASSTHROUGH_PCM_CONNECT,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,184,12,79,10
-    GROUPBOX        "Compatibility options",IDC_GRP_PASSTHROUGH_COMPATIBILITY,179,0,88,54
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,168,12,96,10
+    GROUPBOX        "Compatibility options",IDC_GRP_PASSTHROUGH_COMPATIBILITY,160,0,107,54
 END
 
 IDD_DOLBYDECODER DIALOGEX 0, 0, 267, 230
@@ -2971,6 +2971,20 @@ BEGIN
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,4,56,124,10
 END
 
+IDD_DXVAOPTIONS DIALOGEX 0, 0, 267, 230
+STYLE DS_SETFONT | DS_FIXEDSYS | DS_CONTROL | DS_CENTER | WS_CHILD
+EXSTYLE WS_EX_CONTROLPARENT
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    CONTROL         "H264",IDC_CHB_H264,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,11,25,51,11
+    GROUPBOX        "Hardware acceleration (DXVA) options",IDC_GRP_DXVA,0,0,267,95
+    EDITTEXT        IDC_ED_HELP,0,96,266,134,ES_MULTILINE | ES_READONLY | NOT WS_BORDER | WS_VSCROLL
+    GROUPBOX        "DXVA codecs enabled",IDC_GRP_DXVA2,4,15,254,26
+    CONTROL         "VC1",IDC_CHB_VC1,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,197,25,51,11
+    CONTROL         "Compatibility mode :",IDC_LBL_COMPATIBILITY_MODE,"Static",SS_LEFTNOWORDWRAP | WS_GROUP,6,53,80,8
+    COMBOBOX        IDC_CBX_COMPATIBILITY_MODE,88,51,127,91,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -3023,6 +3037,7 @@ IDD_RESAMPLE            TEXT                    "helpResample.txt"
 IDD_OUTSFS              TEXT                    "helpOutsfs.txt"
 IDD_CHANNELSWAP         TEXT                    "helpChannelSwap.txt"
 IDD_LICENSE             TEXT                    "../copying.txt"
+IDD_DXVAOPTIONS         TEXT                    "helpDXVAOptions.txt"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -3313,6 +3328,12 @@ END
 
 STRINGTABLE 
 BEGIN
+    IDD_AUDIODECODEROPTIONS "Decoder options"
+    IDD_DXVAOPTIONS         "Hardware acceleration (DXVA)"
+END
+
+STRINGTABLE 
+BEGIN
     IDD_CSP_OPTIONS         "   RGB conversion"
 END
 
@@ -3384,11 +3405,6 @@ END
 
 STRINGTABLE 
 BEGIN
-    IDD_AUDIODECODEROPTIONS "Decoder options"
-END
-
-STRINGTABLE 
-BEGIN
     IDD_SECONDPASS          "Two passes - 2nd pass"
     IDD_GENERIC_WMV9        "Generic"
     IDD_OUTCSPS             "Output"
@@ -3434,6 +3450,28 @@ BEGIN
 END
 
 #endif    // Neutral resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// French (France) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_FRA)
+#ifdef _WIN32
+LANGUAGE LANG_FRENCH, SUBLANG_FRENCH
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_MODERN_ICON_VA      ICON                    "FFva.ico"
+IDI_MODERN_4BIT_ICON_VA ICON                    "FFva4bit.ico"
+#endif    // French (France) resources
 /////////////////////////////////////////////////////////////////////////////
 
 

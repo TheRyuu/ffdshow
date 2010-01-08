@@ -665,7 +665,7 @@ STDMETHODIMP TffdshowDecAudio::deliverProcessedSample(const void *buf,size_t num
  return m_pOutput->Deliver(pOut);
 }
 
-STDMETHODIMP TffdshowDecAudio::deliverSampleBistream(void *buf,size_t size,int bit_rate,unsigned int sample_rate,int incRtDec,int frame_length)
+STDMETHODIMP TffdshowDecAudio::deliverSampleBistream(void *buf,size_t size,int bit_rate,unsigned int sample_rate,int incRtDec,int frame_length,int iec_length)
 {
  HRESULT hr=S_OK;
  CMediaType mt;
@@ -710,11 +710,8 @@ STDMETHODIMP TffdshowDecAudio::deliverSampleBistream(void *buf,size_t size,int b
 
    unsigned int size2;
    length=0;
-   if (codecId==CODEC_ID_SPDIF_AC3 || codecId==CODEC_ID_SPDIF_DTS) // Add 4 more words (8 bytes) for AC3/DTS (for backward compatibility)
-    while (length < odd2even(size) + sizeof(WORD) * 8)
-     length += repetition_burst;
-   else
-    while (length < odd2even(size)+ sizeof(WORD) * 4)
+   // Add 4 more words (8 bytes) for AC3/DTS (for backward compatibility, should be *4 for other codecs)
+   while (length < odd2even(size) + sizeof(WORD) * 8)
      length += repetition_burst;
   
    // bit_rate is not always correct. This is a bug of some where else. Because I can't fix it now, work around for it...
@@ -810,15 +807,16 @@ STDMETHODIMP TffdshowDecAudio::deliverSampleBistream(void *buf,size_t size,int b
       else if (audioParserData.sample_blocks* 8 * 32==1024) type=0x0c;
       else type=0x0d;
       break;
+     default:type=1;break; // AC3 encode mode
     }
 
    DWORD Pc=type | (subDataType << 5) | (errorFlag << 7) | (datatypeInfo << 8) | (bitstreamNumber << 13);
    
-   /*if (rtStart/REF_SECOND_MULT<2)
+   if (rtStart/REF_SECOND_MULT<2)
    {
     DPRINTF(_l("TffdshowDecAudio::deliverSampleBistream Delivering IEC sample format type %ld - sample size %ld - buffer length %ld"),Pc, size, length);
-    //TsampleFormat::DPRINTMediaTypeInfo(mt);
-   }*/
+    TsampleFormat::DPRINTMediaTypeInfo(mt);
+   }
 
    WORD *pDataOutW=(WORD*)pDataOut; // Header is filled with words instead of bytes
 
@@ -836,15 +834,20 @@ STDMETHODIMP TffdshowDecAudio::deliverSampleBistream(void *buf,size_t size,int b
    pDataOutW[index++]=0xf872;
    pDataOutW[index++]=0x4e1f;
    pDataOutW[index++]=Pc;
-   if (codecId==CODEC_ID_SPDIF_AC3 || codecId==CODEC_ID_SPDIF_DTS) 
-    pDataOutW[index++]=WORD(size*8); // size in bits for AC3/DTS
-   else
+   if (iec_length!=0)
+    pDataOutW[index++]=WORD(iec_length);
+   else if (bitstream_codec(codecId))
     pDataOutW[index++]=WORD(size); // size in bytes for the others
+   else
+    pDataOutW[index++]=WORD(size*8); // size in bits for AC3/DTS
 
-   // Apply fixed size for some formats
-   if (codecId==CODEC_ID_BITSTREAM_TRUEHD) pDataOutW[index-1]=WORD(61424);//61424 : repetition of MLP frames
-   else if (codecId==CODEC_ID_BITSTREAM_EAC3) pDataOutW[index-1]=WORD(24576);//24 576 : why ? this is the full size including IEC header
-
+   // Apply different size for some formats
+   /*switch (codecId)
+   {
+    case CODEC_ID_BITSTREAM_TRUEHD: pDataOutW[index-1]=WORD(61424);break;//61424 : repetition of MLP frames
+    case CODEC_ID_BITSTREAM_EAC3:pDataOutW[index-1]=WORD(24576);break;//24 576 : why ? this is the full size including IEC header
+    case CODEC_ID_BITSTREAM_DTSHD:pDataOutW[index-1]=WORD(((size-12) & ~0xf) + 0x18);break; // DTS-HD : (size without 12 extra bytes) & 0xF + 0x18
+   }*/
    
    // Data : swap bytes from first byte of data on size length (input buffer lentgh)
    _swab((char*)buf,(char*)&pDataOutW[index],(int)(size & ~1));

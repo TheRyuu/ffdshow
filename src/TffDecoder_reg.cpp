@@ -345,6 +345,41 @@ const AMOVIESETUP_MEDIATYPE TffdshowDecVideoSubtitles::inputMediaTypes[]=
  { &MEDIATYPE_Video, &MEDIASUBTYPE_RGB565 }
 };
 
+const AMOVIESETUP_MEDIATYPE TffdshowDecVideoDXVA::inputMediaTypes[]=
+{
+ { &MEDIATYPE_Video,              &MEDIASUBTYPE_NULL   },
+ { &MEDIATYPE_DVD_ENCRYPTED_PACK, &MEDIASUBTYPE_NULL   },
+ { &MEDIATYPE_DVD_ENCRYPTED_PACK, &MEDIASUBTYPE_MPEG2_VIDEO   },
+ { &MEDIATYPE_DVD_ENCRYPTED_PACK, &MEDIASUBTYPE_AVC1   },
+ { &MEDIATYPE_DVD_ENCRYPTED_PACK, &MEDIASUBTYPE_WVC1   },
+// Few most used FourCCs
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_H264   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_h264   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_AVC1   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_avc1   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_MP43   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_mp43   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_MP42   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_mp42   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_MP41   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_mp41   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_MP4V   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_mp4v   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_MP4S   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_mp4s   },
+ // MPEG1 & 2 Video MediaSubType & FourCCs
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_MPEG1Packet   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_MPEG1Payload   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_MPEG2_VIDEO   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_MPG2   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_mpg2   },
+// Other MPEG2
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_EM2V   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_em2v   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_MMES   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_mmes   }
+};
+
 const AMOVIESETUP_MEDIATYPE TffdshowDecVideo::outputMediaTypes[]=
 {
  { &MEDIATYPE_Video, &MEDIASUBTYPE_NULL   }
@@ -594,6 +629,46 @@ AMOVIESETUP_PIN TffdshowDecVideoSubtitles::pins[]=
  }
 };
 
+
+AMOVIESETUP_PIN TffdshowDecVideoDXVA::pins[]=
+{
+ {
+  L"Input",                                                  // String pin name
+  FALSE,                                                     // Is it rendered
+  FALSE,                                                     // Is it an output
+  FALSE,                                                     // Allowed none
+  FALSE,                                                     // Allowed many
+  &CLSID_NULL,                                               // Connects to filter
+  L"Output",                                                 // Connects to pin
+  sizeof(inputMediaTypes) / sizeof(AMOVIESETUP_MEDIATYPE),   // Number of types
+  inputMediaTypes                                            // The pin details
+ },
+ {
+  L"Output",                                                 // String pin name
+  FALSE,                                                     // Is it rendered
+  TRUE,                                                      // Is it an output
+  FALSE,                                                     // Allowed none
+  FALSE,                                                     // Allowed many
+  &CLSID_NULL,                                               // Connects to filter
+  L"Input",                                                  // Connects to pin
+  sizeof(outputMediaTypes) / sizeof(AMOVIESETUP_MEDIATYPE),  // Number of types
+  outputMediaTypes                                           // The pin details
+ }/*,
+ {
+  L"In Text",                                                  // String pin name
+  FALSE,                                                       // Is it rendered
+  FALSE,                                                       // Is it an output
+  FALSE,                                                       // Allowed none
+  FALSE,                                                       // Allowed many
+  &CLSID_NULL,                                                 // Connects to filter
+  NULL,                                                        // Connects to pin
+  sizeof(inputTextMediaTypes) / sizeof(AMOVIESETUP_MEDIATYPE), // Number of types
+  inputTextMediaTypes                                          // The pin details
+ }*/ //TODO : Support to DXVA subtitles to be added
+};
+
+
+
 const AMOVIESETUP_PIN TffdshowDecAudio::pins[]=
 {
  {
@@ -697,6 +772,16 @@ const AMOVIESETUP_FILTER TffdshowDecVideoSubtitles::filter=
 {
  &CLSID_FFDSHOWSUBTITLES,              // Filter CLSID
  FFDSHOWSUBTITLES_NAME_L,              // Filter name
+ defaultMerit,
+ sizeof(pins)/sizeof(AMOVIESETUP_PIN), // Number of pins
+ pins                                  // Pin details
+};
+
+const DWORD TffdshowDecVideoDXVA::defaultMerit=0xff800002; // Always be upper FFDShowDecoder merit in case DXVA decoding is enabled
+const AMOVIESETUP_FILTER TffdshowDecVideoDXVA::filter=
+{
+ &CLSID_FFDSHOWDXVA,                    // Filter CLSID
+ FFDSHOWDXVA_NAME_L,                    // Filter name
  defaultMerit,
  sizeof(pins)/sizeof(AMOVIESETUP_PIN), // Number of pins
  pins                                  // Pin details
@@ -865,6 +950,18 @@ CFactoryTemplate g_Templates[] =
   FFDSHOWRAW_NAME_L L" conf",
   &CLSID_TFFDSHOWPAGESUBTITLES,
   TffdshowPageDecVideoSubtitles::CreateInstance
+ },
+ {
+  FFDSHOWDXVA_NAME_L,
+  &CLSID_FFDSHOWDXVA,
+  TffdshowDecVideoDXVA::CreateInstance,
+  NULL,
+  &TffdshowDecVideoDXVA::filter
+ },
+ {
+  FFDSHOWDXVA_NAME_L L" conf",
+  &CLSID_TFFDSHOWPAGEDXVA,
+  TffdshowPageDecVideoDXVA::CreateInstance
  },
 };
 

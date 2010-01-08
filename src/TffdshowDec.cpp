@@ -957,3 +957,8 @@ STDMETHODIMP_(TinputPin*) TffdshowDec::getInputPin()
 {
  return minput;
 }
+
+STDMETHODIMP_(CTransformOutputPin*) TffdshowDec::getOutputPin()
+{
+ return m_pOutput;
+}

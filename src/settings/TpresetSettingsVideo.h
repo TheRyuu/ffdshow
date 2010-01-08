@@ -65,6 +65,9 @@ public:
 
  int isDyInterlaced,dyInterlaced;
  int bordersBrightness;
+ int dec_dxva_h264;
+ int dec_dxva_vc1;
+ int dec_dxva_compatibilityMode;
 
  TpostprocSettings *postproc;
  TsubtitlesSettings *subtitles;

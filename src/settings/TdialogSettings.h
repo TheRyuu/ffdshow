@@ -39,7 +39,7 @@ struct TdialogSettingsDecVideo :public TdialogSettingsDec
 protected:
  virtual int getDefault(int id);
 public:
- TdialogSettingsDecVideo(bool vfwdec,TintStrColl *Icoll);
+ TdialogSettingsDecVideo(int filtermode,TintStrColl *Icoll);
  int dlgCustColor0,dlgCustColor1,dlgCustColor2,dlgCustColor3,dlgCustColor4,dlgCustColor5,dlgCustColor6,dlgCustColor7,dlgCustColor8,dlgCustColor9,dlgCustColor10,dlgCustColor11,dlgCustColor12,dlgCustColor13,dlgCustColor14,dlgCustColor15;
 };
 

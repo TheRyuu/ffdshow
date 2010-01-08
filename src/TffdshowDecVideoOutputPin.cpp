@@ -20,6 +20,11 @@
 #include "TffdshowVideoInputPin.h"
 #include "TpresetSettingsVideo.h"
 #include "Tlibmplayer.h"
+#include <dxva.h>
+
+#include "codecs\TvideoCodecLibavcodec.h"
+#include "codecs\TvideoCodecLibavcodecDxva.h"
+#include "TffdshowDecVideoAllocatorDXVA.h"
 
 TffdshowDecVideoOutputPin::TffdshowDecVideoOutputPin(
         TCHAR *pObjectName,
@@ -30,9 +35,13 @@ TffdshowDecVideoOutputPin::TffdshowDecVideoOutputPin(
     fdv(Ifdv),
     queue(NULL),
     oldSettingOfMultiThread(-1),
-    isFirstFrame(true)
+    isFirstFrame(true),
+    pDXVA2Allocator(NULL),
+	   dwDXVA1SurfaceCount(0),
+	   guidDecoderDXVA1(GUID_NULL)
 {
  DPRINTF(_l("TffdshowDecVideoOutputPin::Constructor"));
+ memset (&ddUncompPixelFormat, 0, sizeof(ddUncompPixelFormat));
 }
 
 TffdshowDecVideoOutputPin::~TffdshowDecVideoOutputPin()
@@ -316,4 +325,119 @@ HRESULT TffdshowDecVideoOutputPin::GetDeliveryBuffer(IMediaSample ** ppSample,
  if (!m_pAllocator)
   return E_NOINTERFACE;
  return m_pAllocator->GetBuffer(ppSample,pStartTime,pEndTime,dwFlags);
+}
+
+STDMETHODIMP TffdshowDecVideoOutputPin::NonDelegatingQueryInterface(REFIID riid, void** ppv)
+{
+ if (riid == __uuidof(IAMVideoAcceleratorNotify))
+  return GetInterface((IAMVideoAcceleratorNotify*)this, ppv);
+	return __super::NonDelegatingQueryInterface(riid, ppv);
+}
+
+//CBaseOutputPin
+HRESULT TffdshowDecVideoOutputPin::InitAllocator(IMemAllocator **ppAlloc)
+{
+ DPRINTF(_l("TffdshowDecVideoOutputPin::InitAllocator"));
+ TvideoCodecDec *pCodec = NULL;
+ this->fdv->getMovieSource((const TvideoCodecDec **)&pCodec);
+ 
+ if (pCodec->useDXVA()==2)
+ {
+  DPRINTF(_l("TffdshowDecVideoOutputPin::InitAllocator DXVA mode"));
+  //TODO : improve this by using interfaces (TvideoCodecLibavcodecDxva may not be the only decoder that would be used for DXVA purpose)
+  TvideoCodecLibavcodecDxva *pDxvaCodec=(TvideoCodecLibavcodecDxva*)pCodec;
+	 
+		HRESULT hr = S_FALSE;
+  pDXVA2Allocator = new TffdshowDecVideoAllocatorDXVA(fdv, &hr);
+		if (!pDXVA2Allocator)
+		{
+		 return E_OUTOFMEMORY;
+		}
+		if (FAILED(hr))
+		{
+		 delete pDXVA2Allocator;
+		 return hr;
+		}
+		// Return the IMemAllocator interface.
+		return pDXVA2Allocator->QueryInterface(__uuidof(IMemAllocator), (void **)ppAlloc);
+ }
+ return __super::InitAllocator(ppAlloc);
+}
+
+
+// === IAMVideoAcceleratorNotify
+STDMETHODIMP TffdshowDecVideoOutputPin::GetUncompSurfacesInfo(const GUID *pGuid, LPAMVAUncompBufferInfo pUncompBufferInfo)
+{
+ DPRINTF(_l("TffdshowDecVideoOutputPin::GetUncompSurfacesInfo DXVA1 checking"));
+	HRESULT			hr = E_INVALIDARG;
+ TvideoCodecLibavcodecDxva *pCodec = NULL;
+ this->fdv->getMovieSource((const TvideoCodecDec **)&pCodec);
+	
+	if (SUCCEEDED (pCodec->checkDXVA1Decoder (pGuid)))
+	{
+		CComQIPtr<IAMVideoAccelerator>		pAMVideoAccelerator		= GetConnected();
+
+		if (pAMVideoAccelerator)
+		{
+			pUncompBufferInfo->dwMaxNumSurfaces		= pCodec->getPicEntryNumber();
+			pUncompBufferInfo->dwMinNumSurfaces		= pCodec->getPicEntryNumber();
+
+			hr = pCodec->findDXVA1DecoderConfiguration (pAMVideoAccelerator, pGuid, &pUncompBufferInfo->ddUncompPixelFormat);
+			if (SUCCEEDED (hr))
+			{
+				memcpy (&ddUncompPixelFormat, &pUncompBufferInfo->ddUncompPixelFormat, sizeof(DDPIXELFORMAT));
+				guidDecoderDXVA1 = *pGuid;
+			}
+		}
+	}
+ DPRINTF(_l("TffdshowDecVideoOutputPin::GetUncompSurfacesInfo DXVA1 checking result (%x)"),hr);
+	return hr;
+}
+
+STDMETHODIMP TffdshowDecVideoOutputPin::SetUncompSurfacesInfo(DWORD dwActualUncompSurfacesAllocated)      
+{
+	dwDXVA1SurfaceCount = dwActualUncompSurfacesAllocated;
+	return S_OK;
+}
+
+STDMETHODIMP TffdshowDecVideoOutputPin::GetCreateVideoAcceleratorData(const GUID *pGuid, LPDWORD pdwSizeMiscData, LPVOID *ppMiscData)
+{
+	HRESULT								hr						= E_UNEXPECTED;
+	AMVAUncompDataInfo					UncompInfo;
+	AMVACompBufferInfo					CompInfo[30];
+	DWORD								dwNumTypesCompBuffers	= countof(CompInfo);
+	CComQIPtr<IAMVideoAccelerator>		pAMVideoAccelerator		= GetConnected();
+	DXVA_ConnectMode*					pConnectMode;	
+
+ DPRINTF(_l("TffdshowDecVideoOutputPin::GetCreateVideoAcceleratorData DXVA1 create decoder"));
+
+	if (pAMVideoAccelerator)
+	{
+  TvideoCodecLibavcodecDxva *pCodec = NULL;
+  this->fdv->getMovieSource((const TvideoCodecDec **)&pCodec);
+
+		memcpy (&UncompInfo.ddUncompPixelFormat, &ddUncompPixelFormat, sizeof (DDPIXELFORMAT));
+		UncompInfo.dwUncompWidth		= pCodec->pictWidthRounded();
+		UncompInfo.dwUncompHeight		= pCodec->pictHeightRounded();
+		hr = pAMVideoAccelerator->GetCompBufferInfo(&guidDecoderDXVA1, &UncompInfo, &dwNumTypesCompBuffers, CompInfo);
+
+		if (SUCCEEDED (hr))
+		{
+   
+			hr = pCodec->createDXVA1Decoder (pAMVideoAccelerator, pGuid, dwDXVA1SurfaceCount);
+
+			if (SUCCEEDED (hr))
+			{
+				pCodec->setDXVA1Params(&guidDecoderDXVA1, &ddUncompPixelFormat);
+
+				pConnectMode					= (DXVA_ConnectMode*)CoTaskMemAlloc (sizeof(DXVA_ConnectMode));
+				pConnectMode->guidMode			= guidDecoderDXVA1;
+				pConnectMode->wRestrictedMode	= pCodec->getDXVA1RestrictedMode();
+				*pdwSizeMiscData				= sizeof(DXVA_ConnectMode);
+				*ppMiscData						= pConnectMode;
+			}
+		}
+	}
+ DPRINTF(_l("TffdshowDecVideoOutputPin::GetCreateVideoAcceleratorData DXVA1 create decoder result (%x)"),hr);
+	return hr;
 }

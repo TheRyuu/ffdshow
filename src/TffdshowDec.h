@@ -111,6 +111,7 @@ public:
  STDMETHODIMP setKeyParamKeyCheck(unsigned int i,int key,int *prev,const char_t* *prevDescr);
  STDMETHODIMP getPresetAutoloadItemHelp(unsigned int index,const char_t* *helpPtr);
  STDMETHODIMP_(TinputPin*)getInputPin(void);
+ STDMETHODIMP_(CTransformOutputPin*)getOutputPin(void);
 
  // IDispatch
  STDMETHODIMP GetTypeInfoCount(UINT FAR* pctinfo) {return E_NOTIMPL;}
@@ -373,6 +374,8 @@ protected:
     }
 
    STDMETHODIMP_(TinputPin*) getInputPin(void){ return(deciD->getInputPin());};
+   STDMETHODIMP_(CTransformOutputPin*) getOutputPin(void){ return(deciD->getOutputPin());};
+
   } dec_char;
  template<class Tinterface> Tinterface* getDecInterface(void);
 private:

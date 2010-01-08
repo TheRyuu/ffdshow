@@ -11,3 +11,4 @@ EXPORTS
   configureDec
   ffacm2creator
   configureSubtitles
+  configureDXVA

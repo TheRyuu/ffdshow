@@ -34,6 +34,14 @@ public:
  TffdshowPageDecVideoSubtitles(LPUNKNOWN pUnk,HRESULT *phr,const wchar_t *ItitleW,const char_t *name,int dialogId,int resstr);
 };
 
+// DXVA pages class definition
+class TffdshowPageDecVideoDXVA :public TffdshowPageDecVideo
+{
+public:
+ static CUnknown* WINAPI CreateInstance(LPUNKNOWN lpunk,HRESULT *phr);
+ TffdshowPageDecVideoDXVA(LPUNKNOWN pUnk,HRESULT *phr,const wchar_t *ItitleW,const char_t *name,int dialogId,int resstr);
+};
+
 class TffdshowPageDecVideoVFW :public TffdshowPageDecVideo
 {
 public:

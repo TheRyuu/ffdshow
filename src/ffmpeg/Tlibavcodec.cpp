@@ -112,6 +112,27 @@ Tlibavcodec::Tlibavcodec(const Tconfig *config):refcount(0)
  dll->loadFunction(av_parser_close,"av_parser_close"); 
  dll->loadFunction(avcodec_h264_search_recovery_point,"avcodec_h264_search_recovery_point");
  dll->loadFunction(avcodec_h264_decode_init_is_avc,"avcodec_h264_decode_init_is_avc");
+ 
+ //DXVA methods
+ dll->loadFunction(av_h264_decode_frame,"av_h264_decode_frame");
+ dll->loadFunction(av_vc1_decode_frame,"av_vc1_decode_frame");
+ 
+ dll->loadFunction(FFH264CheckCompatibility,"FFH264CheckCompatibility");
+ dll->loadFunction(FFH264DecodeBuffer,"FFH264DecodeBuffer");
+ dll->loadFunction(FFH264BuildPicParams,"FFH264BuildPicParams");
+ dll->loadFunction(FFH264SetCurrentPicture,"FFH264SetCurrentPicture");
+ dll->loadFunction(FFH264UpdateRefFramesList,"FFH264UpdateRefFramesList");
+ dll->loadFunction(FFH264IsRefFrameInUse,"FFH264IsRefFrameInUse");
+ dll->loadFunction(FF264UpdateRefFrameSliceLong,"FF264UpdateRefFrameSliceLong");
+ dll->loadFunction(FFH264SetDxvaSliceLong,"FFH264SetDxvaSliceLong");
+
+ dll->loadFunction(FFVC1UpdatePictureParam,"FFVC1UpdatePictureParam");
+ dll->loadFunction(FFIsSkipped,"FFIsSkipped");
+
+ dll->loadFunction(GetFFMpegPictureType,"GetFFMpegPictureType");
+ dll->loadFunction(FFIsInterlaced,"FFIsInterlaced");
+ dll->loadFunction(FFGetMBNumber,"FFGetMBNumber");
+ //DXVA methods end
 
  if (!dec_only)
   {

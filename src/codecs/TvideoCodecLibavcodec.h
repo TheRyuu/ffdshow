@@ -32,9 +32,11 @@ public:
 
 class TvideoCodecLibavcodec :public TvideoCodecDec,public TvideoCodecEnc,public TlibavcodecExt
 {
-private:
- void create(void);
+ friend class TDXVADecoderVC1;
+ friend class TDXVADecoderH264;
+protected:
  Tlibavcodec *libavcodec;
+ void create(void);
  AVCodec *avcodec;mutable char_t codecName[100];
  AVCodecContext *avctx;
  AVPaletteControl pal;
@@ -73,6 +75,7 @@ private:
  int got_picture;
  bool firstSeek; // firstSeek means start of palyback.
  bool mpeg2_new_sequence;
+ bool bReorderBFrame;
 protected:
  virtual LRESULT beginCompress(int cfgcomode,int csp,const Trect &r);
  virtual bool beginDecompress(TffPictBase &pict,FOURCC infcc,const CMediaType &mt,int sourceFlags);
@@ -106,6 +109,8 @@ public:
  virtual void getEncoderInfo(char_t *buf,size_t buflen) const;
  virtual const char* get_current_idct(void);
  virtual HRESULT BeginFlush();
+ bool	isReorderBFrame() { return bReorderBFrame; };
+ virtual void reorderBFrames(REFERENCE_TIME& rtStart, REFERENCE_TIME& rtStop);
 
  class TcodedPictureBuffer
   {

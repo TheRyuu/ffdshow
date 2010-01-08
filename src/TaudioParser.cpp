@@ -135,7 +135,7 @@ bool TaudioParser::checkOutputFormat(CodecID codecId)
  CTransformOutputPin *m_pOutput=deciA->getOutputPin();
  if (m_pOutput == NULL) return true;
  m_pOutput->ConnectedTo(&outConnectedPin);
- if (outConnectedPin==NULL) return false;
+ if (outConnectedPin==NULL) return true;
 
  CMediaType mt;
  if (spdif_codec(codecId))
@@ -167,8 +167,11 @@ bool TaudioParser::checkOutputFormat(CodecID codecId)
   if (hr==S_OK) 
   {
    FreeMediaType(mt);
+   DPRINTF(_l("TaudioParser::checkOutputFormat accepted for codec %s with sample format %ld"), getCodecName(codecId),fmt.sf);
    return true;
   }
+  else
+   DPRINTF(_l("TaudioParser::checkOutputFormat refused for codec %s with sample format %ld"), getCodecName(codecId),fmt.sf);
  }
 
  if (mt.formattype!=FORMAT_WaveFormatEx || mt.pbFormat == NULL)
@@ -293,7 +296,6 @@ switch (streamformat)
    }
    audioParserData.wFormatTag=WAVE_FORMAT_EAC3;
   // TODO : if EAC3 decoder disabled, find a compatible EAC3 decoder and pull FFDShow Audio out of the graph
-  // Problem : no EAC3 mediaguid exist
   break;
   case MLP:
    if (useTrueHDPassthrough)
@@ -381,19 +383,20 @@ switch (streamformat)
    if (useDTSPassthrough)
    {
      if (codecId==CODEC_ID_SPDIF_DTS) return codecId;
+     DPRINTF(_l("TaudioParser::getCodecIdFromStream DTS stream detected and DTS passthrough selected"));
      audioParserData.nbFormatChanges++;
      codecId=CODEC_ID_SPDIF_DTS;
      if (checkOutputFormat(codecId)) 
       return codecId;
      else
       usableDTSPassthrough=false;
+     DPRINTF(_l("TaudioParser::getCodecIdFromStream DTS passthrough not usable"));
     }
     audioParserData.wFormatTag=WAVE_FORMAT_DTS_W;
   break;
   case UNDEFINED:return CODEC_ID_NONE;
   default:break;
  }
- //audioParserData.nbFormatChanges++;
  codecId=globalSettings->getCodecId(audioParserData.wFormatTag, NULL);
  DPRINTF(_l("TaudioParser::getCodecIdFromStream %s"), getCodecName(codecId));
  return codecId;

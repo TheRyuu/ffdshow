@@ -14,6 +14,7 @@
 #define IDS_FFDSHOWDEC                  17
 #define IDS_FFDSHOWVIDEOPROC            18
 #define IDS_FFDSHOWDECVIDEOSUBTITLES    19
+#define IDS_FFDSHOWDECVIDEODXVA         20
 #define IDD_PAGESITE                    101
 #define IDD_ABOUT                       102
 #define IDD_FFDSHOW                     111
@@ -62,6 +63,7 @@
 #define IDD_WARPSHARP                   181
 #define IDS_FFDSHOWRAW                  182
 #define IDD_FFDSHOWAUDIO                182
+#define IDS_FFDSHOWDXVA                 183
 #define IDD_ABOUTAUDIO                  184
 #define IDI_FFVFW                       185
 #define IDD_VOLUME                      188
@@ -162,6 +164,8 @@
 #define IDD_COMPATIBILITY_MANAGER       295
 #define IDD_DEINTERLACE_YADIF           296
 #define IDI_MODERN_ICON_D               297
+#define IDI_MODERN_ICON_VA              299
+#define IDI_MODERN_4BIT_ICON_VA         301
 #define IDC_TBR_ASPECT_USER             1002
 #define IDC_TBR_PPQUAL                  1002
 #define IDC_TBR_LUMGAIN                 1003
@@ -547,6 +551,8 @@
 #define IDC_SEP_DSCALER                 1315
 #define IDC_CHB_WORKAROUND_EDGE         1315
 #define IDC_CHB_HUFFYUV_CTX             1315
+#define IDC_CHB_GRAY2                   1315
+#define IDC_CHB_VC1                     1315
 #define IDC_PLC_DSCALER                 1316
 #define IDC_CHB_WORKAROUND_HPELCHROMA   1316
 #define IDC_CHB_PERSPECTIVE             1317
@@ -1956,6 +1962,7 @@
 #define IDC_TXT_CSP_OPTIONS_INTERLACE_OR_PROGRESSIVE 2243
 #define IDD_AUDIODECODEROPTIONS         2244
 #define IDC_CHB_AUDIO_DECODER_DRC       2245
+#define IDD_DXVAOPTIONS                 2245
 #define IDC_TBR_DECODER_DRC_LEVEL       2246
 #define IDC_LBL_DECODER_DRC_LEVEL       2247
 #define IDC_CHB_SOFT_TELECINE           2248
@@ -1972,9 +1979,15 @@
 #define IDC_CHB_OSD_IS_AUTO_HIDE        2259
 #define IDC_GRP_PASSTHROUGH_COMPATIBILITY 2259
 #define IDC_ED_OSD_DURATION_VISIBLE     2260
+#define IDC_GRP_DXVA                    2260
 #define IDC_LBL_OSD_DURATION_VISIBLE    2261
-#define IDC_GRP_JITTER_CORRECTION 2262
+#define IDC_GRP_DXVA2                   2261
+#define IDC_CHB_H264                    2262
+#define IDC_GRP_JITTER_CORRECTION       2262
 #define IDC_CHB_AUDIO_DECODER_JITTER_CORRECTION 2263
+#define IDC_COMBO1                      2263
+#define IDC_CBX_COMPATIBILITY_MODE      2263
+#define IDC_LBL_COMPATIBILITY_MODE      2264
 #define ID_MNI_PRESET_NEWFROMDEFAULT    40004
 #define ID_MNI_PRESET_NEWFROMSELECTED   40005
 #define ID_MNI_PRESET_NEW_FROMFILE      40006
@@ -1989,9 +2002,9 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
-#define _APS_NEXT_RESOURCE_VALUE        298
+#define _APS_NEXT_RESOURCE_VALUE        302
 #define _APS_NEXT_COMMAND_VALUE         40015
-#define _APS_NEXT_CONTROL_VALUE         2260
+#define _APS_NEXT_CONTROL_VALUE         2265
 #define _APS_NEXT_SYMED_VALUE           107
 #endif
 #endif

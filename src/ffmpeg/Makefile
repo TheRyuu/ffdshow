@@ -221,7 +221,8 @@ SRCS_C=\
       $(LAVC_DIR)/x86/vp3dsp_mmx.c \
       $(LAVC_DIR)/x86/vp3dsp_sse2.c \
       $(LAVC_DIR)/x86/vp6dsp_mmx.c \
-      $(LAVC_DIR)/x86/vp6dsp_sse2.c
+      $(LAVC_DIR)/x86/vp6dsp_sse2.c \
+      $(LAVC_DIR)/ffmpegContext.c
 
 ifneq ($(64BIT),yes)
 SRCS_C+=\

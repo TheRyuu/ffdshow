@@ -248,7 +248,7 @@ HRESULT TaudioCodecBitstream::decodeMAT(TbyteBuffer &src, TaudioParserData audio
    // The buffer is full
    if (bitstreamBuffer.size()>=61440-8)
    {
-    HRESULT hr=deciA->deliverSampleBistream((void*)&*bitstreamBuffer.begin(),(size_t)bitstreamBuffer.size(),audioParserData.bit_rate,audioParserData.sample_rate,true, 0);
+    HRESULT hr=deciA->deliverSampleBistream((void*)&*bitstreamBuffer.begin(),(size_t)bitstreamBuffer.size(),audioParserData.bit_rate,audioParserData.sample_rate,true, 0,61424);
     bitstreamBuffer.clear();
     fillAdditionalBytes();
     // Fill last zero bytes if any
@@ -268,7 +268,7 @@ HRESULT TaudioCodecBitstream::decodeMAT(TbyteBuffer &src, TaudioParserData audio
    // Not all the bytes from the MAT frame could be filled, so submit the buffer
    if (remainMATBytes>0)
    {
-    HRESULT hr=deciA->deliverSampleBistream((void*)&*bitstreamBuffer.begin(),(size_t)bitstreamBuffer.size(),audioParserData.bit_rate,audioParserData.sample_rate,true, 0);
+    HRESULT hr=deciA->deliverSampleBistream((void*)&*bitstreamBuffer.begin(),(size_t)bitstreamBuffer.size(),audioParserData.bit_rate,audioParserData.sample_rate,true, 0,61424);
     bitstreamBuffer.clear();
     fillAdditionalBytes();
     // Fill the last mat bytes
@@ -361,10 +361,11 @@ HRESULT TaudioCodecBitstream::decode(TbyteBuffer &src)
        if (codecId==CODEC_ID_BITSTREAM_DTSHD)
        {
         WORD frame_size_swab=frame_size;
+        WORD iec_size=WORD((frame_size & ~0xf) + 0x18);
         swapbe(&frame_size_swab, 2);
         bitstreamBuffer.append((void*)&frame_size_swab, 2);
         bitstreamBuffer.append(ptr, frame_size);
-        HRESULT hr=deciA->deliverSampleBistream((void*)&*bitstreamBuffer.begin(),bitstreamBuffer.size(),audioParserData.bit_rate,audioParserData.sample_rate,true, (codecId==CODEC_ID_SPDIF_DTS)? (audioParserData.sample_blocks* 8 * 32): 0);
+        HRESULT hr=deciA->deliverSampleBistream((void*)&*bitstreamBuffer.begin(),bitstreamBuffer.size(),audioParserData.bit_rate,audioParserData.sample_rate,true, 0, iec_size);
         bitstreamBuffer.clear();
         if (hr!=S_OK)
         {
@@ -376,7 +377,10 @@ HRESULT TaudioCodecBitstream::decode(TbyteBuffer &src)
        }
        else
        {
-        HRESULT hr=deciA->deliverSampleBistream((void*)ptr,frame_size,audioParserData.bit_rate,audioParserData.sample_rate,true, (codecId==CODEC_ID_SPDIF_DTS)? (audioParserData.sample_blocks* 8 * 32): 0);
+        WORD iec_length=0;
+        if (codecId==CODEC_ID_BITSTREAM_EAC3)
+         iec_length=24576;
+        HRESULT hr=deciA->deliverSampleBistream((void*)ptr,frame_size,audioParserData.bit_rate,audioParserData.sample_rate,true, (codecId==CODEC_ID_SPDIF_DTS)? (audioParserData.sample_blocks* 8 * 32): 0, iec_length);
         ptr += frame_size;
 
         if (hr!=S_OK)

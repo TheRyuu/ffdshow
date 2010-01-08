@@ -5,7 +5,7 @@
 	Name="ffdshow"
 	ProjectGUID="{0C1CDCBB-5886-42B4-A928-F4B82DD3FD17}"
 	VCNestedProjectGUID="{30A21C7F-035D-41E2-95BE-B4FFA5F5176B}"
-	VCNestedProjectCRC32="2679046244"
+	VCNestedProjectCRC32="4042686044"
 	VCNestedProjectFileName="ffdshow_2008_icl10.vcproj">
 	<Platforms>
 		<Platform 
@@ -55,7 +55,7 @@
 				IgnoreImportLibrary="1"
 				RegisterOutput="0"
 				AdditionalLibraryDirectories=".\bin\lib_x86"
-				AdditionalDependencies="libcmtd.lib libcpmtd.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib dinput.lib dxguid.lib oldnames.lib shlwapi.lib Secur32.lib libboost_thread-vc90-mt-sgd-1_39_52655.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
+				AdditionalDependencies="libcmtd.lib libcpmtd.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib dinput.lib dxguid.lib oldnames.lib shlwapi.lib Secur32.lib d3d9.lib amstrmid.lib dxva2.lib  libboost_thread-vc90-mt-sgd-1_39_52655.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
 				IgnoreAllDefaultLibraries="1"
 				ModuleDefinitionFile=".\src\ffdshow.def"
 				DelayLoadDLLs="$(NOINHERIT)"
@@ -139,7 +139,7 @@
 				SuppressStartupBanner="1"
 				IgnoreImportLibrary="1"
 				AdditionalLibraryDirectories=".\bin\lib_x64"
-				AdditionalDependencies="libcmtd.lib libcpmtd.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib dinput.lib dxguid.lib oldnames.lib shlwapi.lib libboost_thread-vc90-mt-sgd-1_39_52655.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
+				AdditionalDependencies="libcmtd.lib libcpmtd.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib dinput.lib dxguid.lib oldnames.lib shlwapi.lib d3d9.lib amstrmid.lib dxva2.lib libboost_thread-vc90-mt-sgd-1_39_52655.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
 				IgnoreAllDefaultLibraries="1"
 				ModuleDefinitionFile=".\src\ffdshow.def"
 				DelayLoadDLLs="$(NOINHERIT)"
@@ -228,7 +228,7 @@
 				IgnoreImportLibrary="1"
 				RegisterOutput="0"
 				AdditionalLibraryDirectories=".\bin\lib_x86"
-				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib libcmt.lib libcpmt.lib winmm.lib comctl32.lib dinput.lib dxguid.lib oldnames.lib shlwapi.lib libboost_thread-vc90-mt-s-1_39_52655.lib libircmt.lib libmmt.lib svml_dispmt.lib"
+				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib libcmt.lib libcpmt.lib winmm.lib comctl32.lib dinput.lib dxguid.lib oldnames.lib shlwapi.lib d3d9.lib amstrmid.lib dxva2.lib libboost_thread-vc90-mt-s-1_39_52655.lib libircmt.lib libmmt.lib svml_dispmt.lib"
 				IgnoreAllDefaultLibraries="1"
 				ModuleDefinitionFile=".\src\ffdshow.def"
 				DelayLoadDLLs="$(NOINHERIT)"
@@ -320,7 +320,7 @@
 				SuppressStartupBanner="1"
 				IgnoreImportLibrary="1"
 				AdditionalLibraryDirectories=".\bin\lib_x64"
-				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib libcmt.lib libcpmt.lib winmm.lib comctl32.lib dinput.lib dxguid.lib oldnames.lib shlwapi.lib libboost_thread-vc90-mt-s-1_39_52655.lib libircmt.lib libmmt.lib svml_dispmt.lib"
+				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib libcmt.lib libcpmt.lib winmm.lib comctl32.lib dinput.lib dxguid.lib oldnames.lib shlwapi.lib d3d9.lib amstrmid.lib dxva2.lib libboost_thread-vc90-mt-s-1_39_52655.lib libircmt.lib libmmt.lib svml_dispmt.lib"
 				IgnoreAllDefaultLibraries="1"
 				ModuleDefinitionFile=".\src\ffdshow.def"
 				DelayLoadDLLs="$(NOINHERIT)"
@@ -3553,6 +3553,8 @@
 			RelativePath=".\src\xiph\vorbis\vorbisformat.h"/>
 		<File 
 			RelativePath=".\src\ffdshow.def"/>
+		<File
+			RelativePath=".\src\helpDXVAOptions.txt"/>
 	</Files>
 </VisualStudioProject>
 

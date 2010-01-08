@@ -408,7 +408,9 @@ void TcodecsPageVideo::fillCodecs(void)
 {
  if ((filterMode&IDFF_FILTERMODE_VIDEORAW)==0)
   {
-   static const int movies_h264[]={IDFF_MOVIE_LAVC,IDFF_MOVIE_FFMPEG_MT,0};
+   // Use preset setting instead
+   //static const int movies_h264[]={IDFF_MOVIE_LAVC,IDFF_MOVIE_FFMPEG_MT, IDFF_MOVIE_FFMPEG_DXVA, 0};
+   static const int movies_h264[]={IDFF_MOVIE_LAVC,IDFF_MOVIE_FFMPEG_MT, 0};
    static const Tformat::Toption options_h264[]={{0,_l("skip deblocking when safe"),IDFF_fastH264,1},{0,_l("skip deblocking always"),IDFF_fastH264,2},{0,NULL,0,0}};
    formats.push_back(Tformat(_l("H.264/AVC")     ,IDFF_h264,movies_h264,_l("H264, AVC1, X264, VSSH (incomplete), DAVC, PAVC. ffmpeg-mt is multithreaded libavcodec (experimental)."),options_h264));
    static const int movies_mpeg4[]={IDFF_MOVIE_LAVC,IDFF_MOVIE_XVID4,0};

@@ -1,0 +1,1 @@
+Enable these options if you want to enable hardware acceleration (or called DirectX Video Acceleration) if your graphic adapter supports it. This may be useful if your CPU is not powerful enough and you get stuttering. However, internal filters (crop, resize, subtitles,...) are disabled in DXVA mode

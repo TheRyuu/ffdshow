@@ -86,6 +86,7 @@ template<class tchar> DECLARE_INTERFACE_(IffdshowDecT,IUnknown)
  STDMETHOD_(int,getInputBitrate2)(void) PURE;
  STDMETHOD (getPresetAutoloadItemHelp)(unsigned int index,const tchar* *helpPtr) PURE;
  STDMETHOD_(TinputPin*, getInputPin)(void) PURE;
+ STDMETHOD_(CTransformOutputPin*, getOutputPin)(void) PURE;
 };
 
 struct IffdshowDecA :IffdshowDecT<char> {};

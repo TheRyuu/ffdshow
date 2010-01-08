@@ -414,27 +414,36 @@ bool TtrayIconDec::sortOrdFilters(const TordFilters &of1,const TordFilters &of2)
 //================================== TtrayIconDecVideo =====================================
 TtrayIconDecVideo::TtrayIconDecVideo(IffdshowBase *Ideci):TtrayIconDec(Ideci),deciV(Ideci)
 {
- if (mode & IDFF_FILTERMODE_VIDEOSUBTITLES)
+ if (mode & IDFF_FILTERMODE_VIDEODXVA)
   {
-   tsprintf(classname,_l("ffdshowsubtitle_tray_%i"),rand()%1000);
-   tip = _l("ffdshow subtitle filter");
-  }
- else if (mode & IDFF_FILTERMODE_VIDEORAW)
-  {
-   tsprintf(classname,_l("ffdshowraw_tray_%i"),rand()%1000);
-   tip = _l("ffdshow video decoder raw");
+   tsprintf(classname,_l("ffdshowdxva_tray_%i"),rand()%1000);
+   tip = _l("ffdshow DXVA decoder");
+   icon=IDI_MODERN_ICON_VA;
   }
  else
-  {
-   tsprintf(classname,_l("ffdshow_tray_%i"),rand()%1000);
-   tip = _l("ffdshow video decoder");
-  }
- icon=IDI_MODERN_ICON_V;
- if (cfgGet(IDFF_trayIconType)==2)
-  icon=IDI_FFDSHOW;
- else
-  if (!Tconfig::get_trayIconFullColorOS())
-   icon=IDI_MODERN_4BIT_ICON_V;
+ {
+  if (mode & IDFF_FILTERMODE_VIDEOSUBTITLES)
+   {
+    tsprintf(classname,_l("ffdshowsubtitle_tray_%i"),rand()%1000);
+    tip = _l("ffdshow subtitle filter");
+   }
+  else if (mode & IDFF_FILTERMODE_VIDEORAW)
+   {
+    tsprintf(classname,_l("ffdshowraw_tray_%i"),rand()%1000);
+    tip = _l("ffdshow video decoder raw");
+   }
+  else
+   {
+    tsprintf(classname,_l("ffdshow_tray_%i"),rand()%1000);
+    tip = _l("ffdshow video decoder");
+   }
+  icon=IDI_MODERN_ICON_V;
+  if (cfgGet(IDFF_trayIconType)==2)
+   icon=IDI_FFDSHOW;
+  else
+   if (!Tconfig::get_trayIconFullColorOS())
+    icon=IDI_MODERN_4BIT_ICON_V;
+ }
  setThreadName(DWORD(-1),"trayDecVideo");
 }
 

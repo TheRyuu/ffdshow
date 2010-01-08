@@ -8,6 +8,7 @@
 #define FFDSHOWDECAUDIO    _l("ffdshow64_audio")
 #define FFDSHOWDECAUDIORAW _l("ffdshow64_audio_raw")
 #define FFDSHOWENC         _l("ffdshow64_enc")
+#define FFDSHOWDECVIDEODXVA _l("ffdshow64_dxva")
 #else
 #define FFDSHOW            _l("ffdshow")
 #define FFDSHOWDECVIDEO    _l("ffdshow")
@@ -15,6 +16,7 @@
 #define FFDSHOWDECAUDIO    _l("ffdshow_audio")
 #define FFDSHOWDECAUDIORAW _l("ffdshow_audio_raw")
 #define FFDSHOWENC         _l("ffdshow_enc")
+#define FFDSHOWDECVIDEODXVA _l("ffdshow_dxva")
 #endif
 
 extern const char_t *FFDSHOW_VER;
@@ -80,6 +82,16 @@ typedef const TCHAR *PCTSTR;
 #define MAX_SUBTITLE_LENGTH 2000
 
 #define countof(array) (size_t)(sizeof(array)/sizeof(array[0]))
+
+#define SAFE_DELETE(p)       { if(p) { delete (p);     (p)=NULL; } }
+#define SAFE_RELEASE(p) { if ( (p) ) { (p)->Release(); (p) = 0; } } 
+
+#define SAFE_ARRAYDELETE( x )   \
+    if ( x )                    \
+    {                           \
+        delete[] x;             \
+        x = NULL;               \
+    }
 
 #define STRINGIFY(s) TOSTRING(s)
 #define TOSTRING(s) #s

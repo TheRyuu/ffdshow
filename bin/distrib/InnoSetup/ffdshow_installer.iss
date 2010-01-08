@@ -87,7 +87,7 @@
 #endif
 #ifdef PREF_ALBAIN
   #define sse_required           = True
-  #define filename_suffix        = '_dbt'
+  #define filename_suffix        = '_dbt_dxva_beta5'
 #endif
 #ifdef PREF_ALBAIN_X64
   #define is64bit                = True
@@ -377,6 +377,7 @@ Name: "whitelist\prompt";        Description: "{cm:tsk_whitelistPrompt}";       
 
 Name: "{group}\{cm:shrt_audioConfig}"; Filename: "{#= ff_sys}\rundll32.exe"; Parameters: "ffdshow.ax,configureAudio"; WorkingDir: "{app}";       IconFilename: "{app}\ffdshow.ax"; IconIndex: 4; Components: ffdshow
 Name: "{group}\{cm:shrt_videoConfig}"; Filename: "{#= ff_sys}\rundll32.exe"; Parameters: "ffdshow.ax,configure";      WorkingDir: "{app}";       IconFilename: "{app}\ffdshow.ax"; IconIndex: 3; Components: ffdshow
+Name: "{group}\{cm:shrt_videoDXVAConfig}"; Filename: "{#= ff_sys}\rundll32.exe"; Parameters: "ffdshow.ax,configureDXVA"; WorkingDir: "{app}";       IconFilename: "{app}\ffdshow.ax"; IconIndex: 10; Components: ffdshow
 Name: "{group}\{cm:shrt_vfwConfig}";   Filename: "{#= ff_sys}\rundll32.exe"; Parameters: "ff_vfw.dll,configureVFW";   WorkingDir: "{#= ff_sys}"; IconFilename: "{app}\ffdshow.ax"; IconIndex: 5; Components: ffdshow\vfw
 #if include_makeavis
 Name: "{group}\makeAVIS";              Filename: "{app}\makeAVIS.exe"; Components: ffdshow\makeavis
@@ -618,6 +619,8 @@ Description: "{cm:run_audioConfig}"; Filename: "{syswow64}\rundll32.exe"; Parame
 Description: "{cm:run_audioConfig}"; Filename: "{win}\rundll32.exe";      Parameters: "ffdshow.ax,configureAudio"; WorkingDir: "{app}";      Components: ffdshow;     Flags: postinstall nowait unchecked; MinVersion: 4,0
 Description: "{cm:run_videoConfig}"; Filename: "{syswow64}\rundll32.exe"; Parameters: "ffdshow.ax,configure";      WorkingDir: "{app}";      Components: ffdshow;     Flags: postinstall nowait unchecked; MinVersion: 0,4
 Description: "{cm:run_videoConfig}"; Filename: "{win}\rundll32.exe";      Parameters: "ffdshow.ax,configure";      WorkingDir: "{app}";      Components: ffdshow;     Flags: postinstall nowait unchecked; MinVersion: 4,0
+Description: "{cm:run_videoDXVAConfig}"; Filename: "{syswow64}\rundll32.exe"; Parameters: "ffdshow.ax,configureDXVA";      WorkingDir: "{app}";      Components: ffdshow;     Flags: postinstall nowait unchecked; MinVersion: 0,4
+Description: "{cm:run_videoDXVAConfig}"; Filename: "{win}\rundll32.exe";      Parameters: "ffdshow.ax,configureDXVA";      WorkingDir: "{app}";      Components: ffdshow;     Flags: postinstall nowait unchecked; MinVersion: 4,0
 #if is64bit
 Description: "{cm:run_vfwConfig}";   Filename: "{sys}\rundll32.exe";      Parameters: "ff_vfw.dll,configureVFW";   WorkingDir: "{sys}";      Components: ffdshow\vfw; Flags: postinstall nowait unchecked
 #else
@@ -1220,3 +1223,4 @@ begin
   end
 end;
 #endif
+

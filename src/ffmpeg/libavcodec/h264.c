@@ -4066,7 +4066,10 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
     }
 
     h->last_qscale_diff = 0;
-    tmp = h->pps.init_qp + get_se_golomb(&s->gb);
+    // ==> Start patch MPC
+    h->slice_qp_delta = get_se_golomb(&s->gb);
+    tmp = h->pps.init_qp + h->slice_qp_delta;
+    // <== End patch MPC
     if(tmp>51){
         av_log(s->avctx, AV_LOG_ERROR, "QP %u out of range\n", tmp);
         return -1;
@@ -4079,7 +4082,9 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
         get_bits1(&s->gb); /* sp_for_switch_flag */
     }
     if(h->slice_type==FF_SP_TYPE || h->slice_type == FF_SI_TYPE){
-        get_se_golomb(&s->gb); /* slice_qs_delta */
+    // ==> Start patch MPC
+        h->slice_qs_delta = get_se_golomb(&s->gb); /* slice_qs_delta */
+    // <== End patch MPC
     }
 
     h->deblocking_filter = 1;
@@ -7417,6 +7422,13 @@ int ff_h264_decode_seq_parameter_set(H264Context *h){
     sps->scaling_matrix_present = 0;
     sps->matrix_coefficients = 2; /* ffdshow custom code */
 
+    // ==> Start patch MPC Fidelity Range Extensions stuff
+    sps->chroma_format_idc = 1;
+    sps->bit_depth_luma   = 8;  // bit_depth_luma_minus8
+    sps->bit_depth_chroma = 8;  // bit_depth_chroma_minus8
+    sps->residual_color_transform_flag = 0;
+    // <== End patch MPC
+
     if(sps->profile_idc >= 100){ //high profile
         sps->chroma_format_idc= get_ue_golomb_31(&s->gb);
         if(sps->chroma_format_idc == 3)
@@ -7584,10 +7596,10 @@ int ff_h264_decode_picture_parameter_set(H264Context *h, int bit_length){
         case 3:
         case 4:
         case 5:
-#if 0
-|   slice_group_change_direction_flag               |1  |u(1)    |
-|   slice_group_change_rate_minus1                  |1  |ue(v)   |
-#endif
+            // ==> Start patch MPC
+            pps->slice_group_change_direction_flag=get_bits1(&s->gb);        //    |1  |u(1)    |
+            pps->slice_group_change_rate_minus1=get_ue_golomb(&s->gb);        //      |1  |ue(v)   |
+            // <== End patch MPC
             break;
         case 6:
 #if 0
@@ -7744,7 +7756,7 @@ static int decode_nal_units(H264Context *h, const uint8_t *buf, int buf_size){
             next_avc= buf_index + nalsize;
         } else {
             // start code prefix search
-            for(; buf_index + 3 < next_avc; buf_index++){
+            for(; buf_index + 3 < buf_size; buf_index++){
                 // This should always succeed in the first iteration.
                 if(buf[buf_index] == 0 && buf[buf_index+1] == 0 && buf[buf_index+2] == 1)
                     break;
@@ -8340,3 +8352,4 @@ AVCodec h264_decoder = {
 #if CONFIG_SVQ3_DECODER
 #include "svq3.c"
 #endif
+#include "h264_dxva.c"

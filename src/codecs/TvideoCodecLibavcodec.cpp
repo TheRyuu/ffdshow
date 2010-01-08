@@ -46,7 +46,8 @@ TvideoCodecLibavcodec::TvideoCodecLibavcodec(IffdshowBase *Ideci,IdecVideoSink *
  TvideoCodecDec(Ideci,IsinkD),
  TvideoCodecEnc(Ideci,NULL),
  codedPictureBuffer(this),
- h264RandomAccess(this)
+ h264RandomAccess(this),
+ bReorderBFrame(true)
 {
  create();
 }
@@ -197,6 +198,7 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
         if (fcc==FOURCC_AVC1 && mt.formattype==FORMAT_MPEG2Video) {
             const MPEG2VIDEOINFO *mpeg2info=(const MPEG2VIDEOINFO*)mt.pbFormat;
             avctx->nal_length_size=mpeg2info->dwFlags;
+            bReorderBFrame	= false;
         } else if (fcc==FOURCC_THEO) {
             if (mt.formattype==FORMAT_RLTheora) {
                 theorart=true;
@@ -672,7 +674,7 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
                 } else if (theorart) {
                     pict.rtStart = frame->reordered_opaque - segmentTimeStart;
                     pict.rtStop  = pict.rtStart + 1;
-                } else if (avctx->has_b_frames) {
+                } else if (avctx->has_b_frames && bReorderBFrame) {
                     // do not reorder timestamps in this case.
                     // Timestamps simply increase. 
                     // ex: AVI files
@@ -1425,6 +1427,16 @@ const char* TvideoCodecLibavcodec::get_current_idct(void)
   return libavcodec->avcodec_get_current_idct(avctx);
  else
   return NULL;
+}
+
+void TvideoCodecLibavcodec::reorderBFrames(REFERENCE_TIME& rtStart, REFERENCE_TIME& rtStop)
+{
+	// Re-order B-frames if needed
+	if (avctx->has_b_frames && bReorderBFrame)
+	{
+		rtStart	= b[inPosB].rtStart;
+		rtStop	= b [inPosB].rtStop;
+	}
 }
 
 TvideoCodecLibavcodec::TcodedPictureBuffer::TcodedPictureBuffer(TvideoCodecLibavcodec* Iparent):

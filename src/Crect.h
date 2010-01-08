@@ -55,6 +55,9 @@ struct CSize :SIZE
 {
     CSize(void) {}
     CSize(int Icx,int Icy) {cx=Icx;cy=Icy;}
+    // Operations
+    BOOL operator==(SIZE size) {return (cx==size.cx && cy==size.cy);}
+    BOOL operator!=(SIZE size) {return (cx!=size.cx || cy!=size.cy);}
 };
 
 struct CRect :RECT

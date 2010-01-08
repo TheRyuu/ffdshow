@@ -299,6 +299,12 @@ TpresetVideo::TpresetVideo(const char_t *Ireg_child, const char_t *IpresetName, 
      _l("h264skipOnDelay"),1,
    IDFF_h264skipOnDelayTime,&TpresetVideo::h264skipDelayTime  ,0,20000,_l(""),1,
      _l("h264skipDelayTime"),350,
+   IDFF_dec_DXVA_H264      ,&TpresetVideo::dec_dxva_h264      ,0,0,_l(""),1,
+     _l("dec_DXVA_H264"),0,
+   IDFF_dec_DXVA_VC1       ,&TpresetVideo::dec_dxva_vc1       ,0,0,_l(""),1,
+     _l("dec_DXVA_VC1"),0,
+   IDFF_dec_DXVA_CompatibilityMode,&TpresetVideo::dec_dxva_compatibilityMode,0,255,_l(""),0,
+     _l("dec_dxva_compatibilityMode"),0,
 
    IDFF_isDyInterlaced     ,&TpresetVideo::isDyInterlaced     ,0,0,_l(""),0,
      _l("isDyInterlaced"),0,
@@ -309,6 +315,9 @@ TpresetVideo::TpresetVideo(const char_t *Ireg_child, const char_t *IpresetName, 
      _l("bordersBrightness"),0,
    0
   };
+ // Be careful : any  setting added above must also be added into the following method :
+ // Tpreset& TpresetVideo::operator =(const Tpreset &src0)
+ // otherwise it won't be initialized correctly
  addOptions(iopts);
 
  static const TstrOption sopts[]=
@@ -371,7 +380,7 @@ TpresetVideo::TpresetVideo(const char_t *Ireg_child, const char_t *IpresetName, 
   };
  addAutoPresetItems(autoPresetItems);
 
- if (!(filtermode & IDFF_FILTERMODE_VIDEOSUBTITLES))
+ if (!(filtermode & IDFF_FILTERMODE_VIDEOSUBTITLES) && !(filtermode & IDFF_FILTERMODE_VIDEODXVA))
   {
    new TcropSettings(options,filters);
    new TdeinterlaceSettings(options,filters);
@@ -397,12 +406,17 @@ TpresetVideo::TpresetVideo(const char_t *Ireg_child, const char_t *IpresetName, 
    new TOSDsettingsVideo(options,filters);
    output=new ToutputVideoSettings(options,filters);
   }
- else
+ else if (!(filtermode & IDFF_FILTERMODE_VIDEODXVA))
   {
    postproc=NULL;levels=NULL;resize=NULL;vis=NULL;grab=NULL;
    subtitles=new TsubtitlesSettings(options,filters,filtermode);
    output=new ToutputVideoSettings(options,filters);
   }
+ else
+ {
+  postproc=NULL;levels=NULL;resize=NULL;vis=NULL;grab=NULL;subtitles=NULL;
+  output=new ToutputVideoSettings(options,filters);
+ }
 }
 
 void TpresetVideo::reg_op(TregOp &t)
@@ -425,7 +439,7 @@ void TpresetVideo::loadReg(void)
 {
  Tpreset::loadReg();
  //if (idct==6) idct=0;
- if (needOutcspsFix)
+ if (needOutcspsFix && output != NULL)
   {
    needOutcspsFix=0;
    char_t rkey[MAX_PATH];
@@ -439,8 +453,10 @@ void TpresetVideo::loadReg(void)
    char_t rkey[MAX_PATH];
    tsnprintf_s(rkey, countof(rkey), _TRUNCATE, FFDSHOW_REG_PARENT _l("\\%s"), reg_child);
    TregOpRegRead t(HKEY_CURRENT_USER,rkey);
-   vis->reg_op2(t);
-   grab->reg_op2(t);
+   if (vis!=NULL)
+    vis->reg_op2(t);
+   if (grab!=NULL)
+    grab->reg_op2(t);
   }
 }
 
@@ -481,6 +497,9 @@ Tpreset& TpresetVideo::operator =(const Tpreset &src0)
         dropDelayTime=src.dropDelayTime;
         h264skipOnDelay=src.h264skipOnDelay;
         h264skipDelayTime=src.h264skipDelayTime;
+        dec_dxva_h264=src.dec_dxva_h264;
+        dec_dxva_vc1=src.dec_dxva_vc1;
+        dec_dxva_compatibilityMode=src.dec_dxva_compatibilityMode;
         bordersBrightness=src.bordersBrightness;
         ff_strncpy(useQueueOnlyInList, src.useQueueOnlyInList, countof(useQueueOnlyInList));
 
@@ -496,6 +515,6 @@ Tpreset& TpresetVideo::operator =(const Tpreset &src0)
 //=========================== TpresetVideoPlayer ==========================
 TpresetVideoPlayer::TpresetVideoPlayer(const char_t *Ireg_child, const char_t *IpresetName, int filtermode):TpresetVideo(Ireg_child, IpresetName, filtermode)
 {
- if (!(filtermode & IDFF_FILTERMODE_VIDEOSUBTITLES))
+ if (!(filtermode & IDFF_FILTERMODE_VIDEOSUBTITLES) && !(filtermode & IDFF_FILTERMODE_VIDEODXVA))
  new ThwOverlaySettings(options,filters);
 }

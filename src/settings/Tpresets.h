@@ -2,6 +2,7 @@
 #define _TPRESETS_H_
 
 #include "interfaces.h"
+#include "ffdshow_constants.h"
 
 struct Tpreset;
 struct TautoPresetProps;
@@ -48,7 +49,7 @@ public:
 class TpresetsVideoProc :public TpresetsVideo
 {
 public:
- TpresetsVideoProc(int mode):TpresetsVideo(FFDSHOWDECVIDEO, mode) {}
+ TpresetsVideoProc(int mode):TpresetsVideo(FFDSHOWDECVIDEO,mode) {}
  virtual Tpresets* newPresets(void) {return new TpresetsVideoProc(filtermode);}
 };
 
@@ -66,6 +67,13 @@ class TpresetsVideoVFW :public TpresetsVideo
 public:
  TpresetsVideoVFW(int mode):TpresetsVideo(FFDSHOWDECVIDEOVFW, mode) {}
  virtual Tpresets* newPresets(void) {return new TpresetsVideoVFW(filtermode);}
+};
+
+class TpresetsVideoDXVA : public TpresetsVideo
+{
+public: // Use DXVA child key if in DXVA mode or else ffdshow video child key
+ TpresetsVideoDXVA(int mode):TpresetsVideo(FFDSHOWDECVIDEODXVA, mode) {} 
+ virtual Tpresets* newPresets(void) {return new TpresetsVideoDXVA(filtermode);}
 };
 
 struct TaudioAutoPresetProps;

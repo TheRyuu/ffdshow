@@ -95,7 +95,7 @@
 				Name="VCLinkerTool"
 				RegisterOutput="false"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="libcmtd.lib libcpmtd.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib dinput.lib dxguid.lib oldnames.lib shlwapi.lib Secur32.lib libboost_thread-vc90-mt-sgd-1_39_52655.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
+				AdditionalDependencies="libcmtd.lib libcpmtd.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib dinput.lib dxguid.lib oldnames.lib shlwapi.lib Secur32.lib d3d9.lib amstrmid.lib dxva2.lib libboost_thread-vc90-mt-sgd-1_39_52655.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
 				OutputFile="bin\ffdshow.ax"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories=".\bin\lib_x86"
@@ -208,7 +208,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="libcmtd.lib libcpmtd.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib dinput.lib dxguid.lib oldnames.lib shlwapi.lib libboost_thread-vc90-mt-sgd-1_39_52655.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
+				AdditionalDependencies="libcmtd.lib libcpmtd.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib dinput.lib dxguid.lib oldnames.lib shlwapi.lib d3d9.lib amstrmid.lib dxva2.lib libboost_thread-vc90-mt-sgd-1_39_52655.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
 				OutputFile="bin\ffdshow.ax"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
@@ -327,7 +327,7 @@
 				Name="VCLinkerTool"
 				RegisterOutput="false"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib libcmt.lib libcpmt.lib winmm.lib comctl32.lib dinput.lib dxguid.lib oldnames.lib shlwapi.lib libboost_thread-vc90-mt-s-1_39_52655.lib libircmt.lib libmmt.lib svml_dispmt.lib"
+				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib libcmt.lib libcpmt.lib winmm.lib comctl32.lib dinput.lib dxguid.lib oldnames.lib shlwapi.lib d3d9.lib amstrmid.lib dxva2.lib libboost_thread-vc90-mt-s-1_39_52655.lib libircmt.lib libmmt.lib svml_dispmt.lib"
 				OutputFile="bin\ffdshow.ax"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
@@ -447,7 +447,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib libcmt.lib libcpmt.lib winmm.lib comctl32.lib dinput.lib dxguid.lib oldnames.lib shlwapi.lib libboost_thread-vc90-mt-s-1_39_52655.lib libircmt.lib libmmt.lib svml_dispmt.lib"
+				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib libcmt.lib libcpmt.lib winmm.lib comctl32.lib dinput.lib dxguid.lib oldnames.lib shlwapi.lib d3d9.lib amstrmid.lib dxva2.lib libboost_thread-vc90-mt-s-1_39_52655.lib libircmt.lib libmmt.lib svml_dispmt.lib"
 				OutputFile="bin\ffdshow.ax"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
@@ -970,6 +970,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\TffDecoderDXVA.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\TffdshowBase.cpp"
 				>
 			</File>
@@ -987,6 +991,10 @@
 			</File>
 			<File
 				RelativePath=".\src\TffdshowDecVideoAllocator.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TffdshowDecVideoAllocatorDXVA.cpp"
 				>
 			</File>
 			<File
@@ -1255,6 +1263,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\TffdshowDecVideoAllocatorDXVA.h"
+				>
+			</File>
+			<File
 				RelativePath="src\TffdshowDecVideoOutputPin.h"
 				>
 			</File>
@@ -1348,6 +1360,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\FFd.ico"
+				>
+			</File>
+			<File
 				RelativePath="src\ffdshow.ico"
 				>
 			</File>
@@ -1373,6 +1389,14 @@
 			</File>
 			<File
 				RelativePath=".\src\FFv4bit.ico"
+				>
+			</File>
+			<File
+				RelativePath=".\src\FFva.ico"
+				>
+			</File>
+			<File
+				RelativePath=".\src\FFva4bit.ico"
 				>
 			</File>
 			<File
@@ -3410,6 +3434,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\dialog\CDXVAOptions.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\dialog\CDXVAOptions.h"
+				>
+			</File>
+			<File
 				RelativePath="src\dialog\Ceq.cpp"
 				>
 			</File>
@@ -5006,6 +5038,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\codecs\TvideoCodecLibavcodecDxva.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\codecs\TvideoCodecLibavcodecDxva.h"
+				>
+			</File>
+			<File
 				RelativePath="src\codecs\TvideoCodecLibmpeg2.cpp"
 				>
 			</File>
@@ -5098,6 +5138,46 @@
 				>
 				<File
 					RelativePath=".\src\codecs\xvidcore\xvid.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="DXVA"
+				>
+				<File
+					RelativePath=".\src\codecs\H264Nalu.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\codecs\H264Nalu.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\codecs\H264QuantizationMatrix.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\codecs\TDXVADecoder.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\codecs\TDXVADecoder.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\codecs\TDXVADecoderH264.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\codecs\TDXVADecoderH264.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\codecs\TDXVADecoderVC1.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\codecs\TDXVADecoderVC1.h"
 					>
 				</File>
 			</Filter>
@@ -6232,6 +6312,10 @@
 		</Filter>
 		<File
 			RelativePath="src\ffdshow.def"
+			>
+		</File>
+		<File
+			RelativePath=".\src\helpDXVAOptions.txt"
 			>
 		</File>
 	</Files>

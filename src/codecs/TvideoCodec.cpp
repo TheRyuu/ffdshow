@@ -23,6 +23,7 @@
 #include "TvideoCodec.h"
 #include "TvideoCodecLibavcodec.h"
 #include "TvideoCodec_ffmpeg-mt.h"
+#include "TvideoCodecLibavcodecDxva.h"
 #include "TvideoCodecUncompressed.h"
 #include "TvideoCodecXviD4.h"
 #include "TvideoCodecLibmpeg2.h"
@@ -46,6 +47,19 @@ TvideoCodec::~TvideoCodec()
 //===================================== TvideoCodecDec ======================================
 TvideoCodecDec* TvideoCodecDec::initDec(IffdshowBase *deci,IdecVideoSink *sink,CodecID codecId,FOURCC fcc,const CMediaType &mt)
 {
+ // DXVA mode is a preset setting
+ switch (codecId)
+ {
+  case CODEC_ID_H264:
+  case CODEC_ID_H264_MT:
+   if (deci->getParam2(IDFF_dec_DXVA_H264)) codecId=CODEC_ID_H264_DXVA;
+   break;
+  case CODEC_ID_VC1_DXVA:
+   if (deci->getParam2(IDFF_dec_DXVA_VC1)) codecId=CODEC_ID_VC1_DXVA;
+   break;
+  default: break;
+ }
+ 
  TvideoCodecDec *movie=NULL;
  if      (lavc_codec    (codecId)) movie=new TvideoCodecLibavcodec(deci,sink);
  else if (raw_codec     (codecId)) movie=new TvideoCodecUncompressed(deci,sink);
@@ -55,6 +69,7 @@ TvideoCodecDec* TvideoCodecDec::initDec(IffdshowBase *deci,IdecVideoSink *sink,C
  else if (codecId==CODEC_ID_AVISYNTH  ) movie=new TvideoCodecAvisynth(deci,sink);
  else if (codecId==CODEC_ID_THEORA_LIB) movie=new TvideoCodecTheora(deci,sink);
  else if (codecId==CODEC_ID_H264_MT) movie=new TvideoCodecLibavcodec_mt(deci,sink);
+ else if (codecId==CODEC_ID_H264_DXVA ||codecId==CODEC_ID_VC1_DXVA) movie=new TvideoCodecLibavcodecDxva(deci,sink, codecId);
  else return NULL;
  if (!movie) return NULL;
  if (movie->ok && movie->testMediaType(fcc,mt))

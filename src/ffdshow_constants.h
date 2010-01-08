@@ -5,6 +5,7 @@
 #define FFDSHOWRAW_NAME_L  L"ffdshow raw video filter"
 #define FFDSHOWVFW_NAME_L  L"ffdshow VFW decoder helper"
 #define FFDSHOWSUBTITLES_NAME_L  L"ffdshow subtitles filter"
+#define FFDSHOWDXVA_NAME_L  L"ffdshow DXVA Video Decoder"
 
 #define IDFF_autoPreset            1  //automatic preset loading enabled
 #define IDFF_trayIcon              3  //is tray icon visible
@@ -26,6 +27,7 @@
  #define IDFF_FILTERMODE_ENC        2048
  #define IDFF_FILTERMODE_AUDIORAW   4096
  #define IDFF_FILTERMODE_VIDEOSUBTITLES  8192
+ #define IDFF_FILTERMODE_VIDEODXVA  16384
 #define IDFF_currentFrame         14
 #define IDFF_decodingFps          15
 #define IDFF_buildHistogram       16
@@ -682,7 +684,8 @@
    #define IDFF_MOVIE_TREMOR  18
    #define IDFF_MOVIE_REALAAC 19
    #define IDFF_MOVIE_FFMPEG_MT 21
-   #define IDFF_MOVIE_MAX     21 // should equal highest value of codecs above (see TglobalSettings.cpp)
+   #define IDFF_MOVIE_FFMPEG_DXVA 22
+   #define IDFF_MOVIE_MAX     22 // should equal highest value of codecs above (see TglobalSettings.cpp)
   #define IDFF_OSDtype_accurDeblock        30
   #define IDFF_OSDtype_outputFOURCC      1540
   #define IDFF_OSDtype_inputFPS          1541
@@ -1277,6 +1280,11 @@
 #define IDFF_convolverLevelAdjustDB   2856 // *10
 #define IDFF_convolverLevelAdjustAuto 2857
 
+// DXVA
+#define IDFF_dec_DXVA_H264             3536
+#define IDFF_dec_DXVA_VC1              3537
+#define IDFF_dec_DXVA_CompatibilityMode 3538
+
 //----------------------- encoding -------------------------
 #define IDFF_numthreads      3322
 #define IDFF_enc_mode        3000
@@ -1564,6 +1572,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//next:3536
+//next:3539
 
 #endif

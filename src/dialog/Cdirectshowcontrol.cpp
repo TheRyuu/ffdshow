@@ -39,14 +39,16 @@ void TdirectshowControlPageDec::init(void)
  isMerit=(filterMode&(IDFF_FILTERMODE_VFW|IDFF_FILTERMODE_ENC|IDFF_FILTERMODE_VIDEORAW|IDFF_FILTERMODE_AUDIORAW))==0;
  if (isMerit)
   {
+   // Add 1 for DXVA filter
+   int offset=(filterMode&(IDFF_FILTERMODE_VIDEODXVA))==0 ? 0 : 1;
    //merits.push_back(std::make_pair(MERIT_SW_COMPRESSOR /*0x100000*/,_("SW compressor")));
    //merits.push_back(std::make_pair(MERIT_HW_COMPRESSOR /*0x100050*/,_("HW compressor")));
-   merits.push_back(std::make_pair(MERIT_DO_NOT_USE    /*0x200000*/,(const char_t*)_l("do not use")     ));
-   merits.push_back(std::make_pair(MERIT_UNLIKELY      /*0x400000*/,(const char_t*)_l("unlikely")       ));
-   merits.push_back(std::make_pair(MERIT_NORMAL        /*0x600000*/,(const char_t*)_l("normal")         ));
-   merits.push_back(std::make_pair(MERIT_PREFERRED     /*0x800000*/,(const char_t*)_l("preferred")      ));
-   merits.push_back(std::make_pair(cfgGet(IDFF_defaultMerit)       ,(const char_t*)_l("ffdshow default")));
-   merits.push_back(std::make_pair(0xffffff00                      ,(const char_t*)_l("very high")      ));
+   merits.push_back(std::make_pair(MERIT_DO_NOT_USE +offset   /*0x200000*/,(const char_t*)_l("do not use")     ));
+   merits.push_back(std::make_pair(MERIT_UNLIKELY +offset     /*0x400000*/,(const char_t*)_l("unlikely")       ));
+   merits.push_back(std::make_pair(MERIT_NORMAL +offset       /*0x600000*/,(const char_t*)_l("normal")         ));
+   merits.push_back(std::make_pair(MERIT_PREFERRED +offset     /*0x800000*/,(const char_t*)_l("preferred")      ));
+   merits.push_back(std::make_pair(cfgGet(IDFF_defaultMerit) +offset       ,(const char_t*)_l("ffdshow default")));
+   merits.push_back(std::make_pair(0xffffff00 +offset                      ,(const char_t*)_l("very high")      ));
    std::sort(merits.begin(),merits.end(),sortMerits);
    tbrSetRange(IDC_TBR_MERIT,0,(int)merits.size()-1,1);
    enable(1,idmerits);

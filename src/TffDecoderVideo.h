@@ -44,21 +44,21 @@ public:
 
  HRESULT CheckConnect(PIN_DIRECTION dir,IPin *pPin);
  HRESULT CheckInputType(const CMediaType *mtIn);
- HRESULT CompleteConnect(PIN_DIRECTION direction,IPin *pReceivePin);
- HRESULT GetMediaType(int iPos,CMediaType *pmt);
+ virtual HRESULT CompleteConnect(PIN_DIRECTION direction,IPin *pReceivePin);
+ virtual HRESULT GetMediaType(int iPos,CMediaType *pmt);
  HRESULT SetMediaType(PIN_DIRECTION direction,const CMediaType *pmt);
  HRESULT CheckTransform(const CMediaType *mtIn,const CMediaType *mtOut);
- HRESULT DecideBufferSize(IMemAllocator *pima,ALLOCATOR_PROPERTIES *pProperties);
+ virtual HRESULT DecideBufferSize(IMemAllocator *pima,ALLOCATOR_PROPERTIES *pProperties);
 
   // IAMExtendedSeeking
  STDMETHODIMP get_MarkerCount(long * pMarkerCount);
  STDMETHODIMP get_CurrentMarker(long * pCurrentMarker);
  STDMETHODIMP GetMarkerTime(long MarkerNum, double * pMarkerTime);
  STDMETHODIMP GetMarkerName(long MarkerNum, BSTR * pbstrMarkerName);
-private:
+protected:
  HRESULT DecideBufferSizeVMR(IMemAllocator *pima,ALLOCATOR_PROPERTIES *pProperties, const CLSID &ref);
  HRESULT DecideBufferSizeOld(IMemAllocator *pima,ALLOCATOR_PROPERTIES *pProperties, const CLSID &ref);
- virtual void getChapters(void);
+ void getChapters(void);
 
 public:
  virtual HRESULT NewSegment(REFERENCE_TIME tStart,REFERENCE_TIME tStop,double dRate);
@@ -332,6 +332,7 @@ public:
  STDMETHODIMP unlock_csCodecs_and_imgFilters(void);
  STDMETHODIMP_(void*) get_csReceive_ptr(void);
  STDMETHODIMP_(void*) get_csCodecs_and_imgFilters_ptr(void);
+ STDMETHODIMP reconnectOutput(const TffPict &newpict);
 
 private:
 #ifdef OSDTIMETABALE
@@ -493,6 +494,7 @@ private:
    STDMETHODIMP unlock_csCodecs_and_imgFilters(void) {return deciV->lock_csCodecs_and_imgFilters();}
    STDMETHODIMP_(void*) get_csReceive_ptr(void) {return deciV->get_csReceive_ptr();}
    STDMETHODIMP_(void*) get_csCodecs_and_imgFilters_ptr(void) {return deciV->get_csCodecs_and_imgFilters_ptr();}
+   STDMETHODIMP reconnectOutput(const TffPict &newpict) {return deciV->reconnectOutput(newpict);}
  } decVideo_char;
  template<class Tinterface> Tinterface* getDecVideoInterface(void);
  void ConnectCompatibleFilter(void);
@@ -512,7 +514,7 @@ protected:
  int m_IsQueueListedApp;        // -1: first run, 0: false, 1: true
  IPin *inputConnectedPin;
  Trect decodedPict;
-private:
+protected:
  static const int VERSION=38;
  static const int COMPAT_VERSION=28;
  TffdshowVideoInputPin *inpin;
@@ -541,7 +543,7 @@ private:
  bool IsOldRenderer(void);
  bool IsOldVMR9RenderlessAndRGB(void);
  bool IsVMR9Renderless(IPin *downstream_input_pin);
- HRESULT setOutputMediaType(const CMediaType &mt);
+ virtual HRESULT setOutputMediaType(const CMediaType &mt);
  struct
   {
    int dstColorspace;
@@ -557,7 +559,6 @@ private:
  REFERENCE_TIME vc1rtStart;int vc1frameCnt;
  int currentFrame;
  int decodingFps,decodingCsp;
- HRESULT reconnectOutput(const TffPict &newpict);
 
  clock_t lastTime;
  int waitForKeyframe;
@@ -575,7 +576,7 @@ private:
  int dvdproc;bool allowOutChange;
  bool outOverlayMixer,outOldRenderer,outdv;
  int hwDeinterlace;
- STDMETHODIMP_(int) get_trayIconType(void);
+ virtual STDMETHODIMP_(int) get_trayIconType(void);
  bool compatibleFilterConnected;
  DWORD inSampleTypeSpecificFlags;
  bool inSampleEverField1Repeat;
@@ -628,6 +629,24 @@ public:
  TffdshowDecVideoSubtitles(LPUNKNOWN punk,HRESULT *phr);
  static const AMOVIESETUP_FILTER filter;
  static const DWORD defaultMerit;
+};
+
+class TffdshowDecVideoDXVA :public TffdshowDecVideo
+{
+ static const AMOVIESETUP_MEDIATYPE inputMediaTypes[];
+public:
+ static AMOVIESETUP_PIN pins[];
+ static CUnknown* WINAPI CreateInstance(LPUNKNOWN punk,HRESULT *phr);
+ TffdshowDecVideoDXVA(LPUNKNOWN punk,HRESULT *phr);
+ static const AMOVIESETUP_FILTER filter;
+ static const DWORD defaultMerit;
+ virtual HRESULT GetMediaType(int iPos,CMediaType *pmt);
+ virtual HRESULT CompleteConnect(PIN_DIRECTION direction,IPin *pReceivePin);
+ virtual HRESULT DecideBufferSize(IMemAllocator *pAlloc, ALLOCATOR_PROPERTIES *ppropInputRequest);
+ virtual int GetPinCount(void);
+protected:
+ virtual HRESULT setOutputMediaType(const CMediaType &mt);
+ virtual STDMETHODIMP_(int) get_trayIconType(void);
 };
 
 #endif

@@ -245,6 +245,7 @@ HRESULT TffdshowVideoInputPin::CheckMediaType(const CMediaType* mt)
 
 STDMETHODIMP TffdshowVideoInputPin::ReceiveConnection(IPin* pConnector, const AM_MEDIA_TYPE* pmt)
 {
+    HRESULT hr;
     DPRINTF(_l("TffdshowVideoInputPin::ReceiveConnection"));
     CAutoLock cObjectLock(m_pLock);
     const CLSID &ref=GetCLSID(pConnector);
@@ -292,11 +293,12 @@ STDMETHODIMP TffdshowVideoInputPin::ReceiveConnection(IPin* pConnector, const AM
 
         // TODO: send ReceiveConnection downstream
     } else {
-        HRESULT hr=fv->deci->checkInputConnect(pConnector);
+        hr=fv->deci->checkInputConnect(pConnector);
         if (hr!=S_OK) return hr;
     }
 
-    return TinputPin::ReceiveConnection(pConnector, pmt);
+    hr=TinputPin::ReceiveConnection(pConnector, pmt);
+    return hr;
 }
 
 bool TffdshowVideoInputPin::init(const CMediaType &mt)
@@ -421,7 +423,7 @@ bool TffdshowVideoInputPin::init(const CMediaType &mt)
         return false;
     }
 
-    if (codecId==CODEC_ID_H264 || codecId==CODEC_ID_H264_MT) {
+    if (codecId==CODEC_ID_H264 || codecId==CODEC_ID_H264_MT || codecId == CODEC_ID_H264_DXVA) {
         Textradata extradata(mt,16);
         if (extradata.size)
             decodeH264SPS(extradata.data,extradata.size,pictIn);
@@ -529,6 +531,25 @@ STDMETHODIMP TffdshowVideoInputPin::NewSegment(REFERENCE_TIME tStart, REFERENCE_
 
 STDMETHODIMP TffdshowVideoInputPin::BeginFlush()
 {
+    // Deadlock in DXVA mode if we put a lock : don't know why but the DXVAAllocator is busy with a frame so there is already
+    // a lock when we enter in this method (which is normal), but the lock is never released by the decoder (which is not normal)
+    // so the following lock never goes through. This may be a problem in the future if we have internal filters for DXVA mode (or maybe
+    // it will be okay)
+    if (fv && fv->deci && video && video->useDXVA() != 0) 
+    {
+     m_rateAndFlush.m_flushing = true;
+     video->BeginFlush();
+     comptrQ<IffdshowDecVideo> deciV=fv->deci;
+     TimgFilters* filters;
+
+     if (deciV && deciV->getImgFilters_((void**)&filters) == S_OK && filters)
+      filters->onFlush();
+
+     m_rateAndFlush.flushed = true;
+     m_rateAndFlush.isDiscontinuity = true;
+     return CTransformInputPin::BeginFlush();
+    }
+    
     /*
      * Microsoft says m_csReceive can be locked after delivering BeginFlush call to downstream.
      * http://msdn.microsoft.com/en-us/library/dd375795(VS.85).aspx

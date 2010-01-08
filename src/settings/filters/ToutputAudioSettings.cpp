@@ -70,7 +70,7 @@ ToutputAudioSettings::ToutputAudioSettings(TintStrColl *Icoll,TfilterIDFFs *filt
    IDFF_aoutUseIEC61937         ,&ToutputAudioSettings::useIEC61937        ,0,1,_l(""),1,
      _l("useIEC61937"),0,
    IDFF_aoutpassthroughPCMConnection, &ToutputAudioSettings::passthroughPCMConnection, 0, 1, _l(""), 1,
-     _l("passthroughPCMConnection"), 0,
+     _l("passthroughPCMConnection"), 1,
    IDFF_aoutpassthroughDeviceId, &ToutputAudioSettings::passthroughDeviceId, 0, 3, _l(""), 1,
      _l("passthroughDeviceId"), 0,
    0
