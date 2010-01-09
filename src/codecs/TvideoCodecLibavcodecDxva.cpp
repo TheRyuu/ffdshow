@@ -141,17 +141,29 @@ TvideoCodecLibavcodecDxva::~TvideoCodecLibavcodecDxva()
 
 bool TvideoCodecLibavcodecDxva::checkDXVAMode(IPin *pReceivePin)
 {
+ DPRINTF(_l("TvideoCodecLibavcodecDxva::checkDXVAMode Checking for DXVA compatibility"));
  if (isDXVASupported())
-    {
+ {
   if (pReceivePin==NULL) return true;
-        if (nDXVAMode == MODE_DXVA1)
-            pDXVADecoder->ConfigureDXVA1(); // TODO : check errors!
-  else if (SUCCEEDED(configureDXVA2(pReceivePin)) &&    SUCCEEDED(setEVRForDXVA2(pReceivePin)))
-            nDXVAMode  = MODE_DXVA2;
-
+  if (nDXVAMode == MODE_DXVA1)
+  {
+   if (SUCCEEDED(pDXVADecoder->ConfigureDXVA1())) 
+   {
+    DPRINTF(_l("TvideoCodecLibavcodecDxva::checkDXVAMode DXVA1 configured successfully"));
+    return true;
+   }
+  }
+  else if (SUCCEEDED(configureDXVA2(pReceivePin)))
+  {
+   DPRINTF(_l("TvideoCodecLibavcodecDxva::checkDXVAMode DXVA2 configured successfully"));
+   if SUCCEEDED(setEVRForDXVA2(pReceivePin))
+    nDXVAMode  = MODE_DXVA2;
+   return true;
+  }
+  // We had a receivePin to check after DXVA and the mode didn't change : this means that it is not compatible
   if (nDXVAMode==MODE_SOFTWARE) return false; // DXVA not supported
-    }
- return true;
+ }
+ return false;
 
  /*TODO MPC
         CLSID ClsidSourceFilter = GetCLSID(m_pInput->GetConnected());
