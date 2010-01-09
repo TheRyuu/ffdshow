@@ -52,10 +52,16 @@ TvideoCodecDec* TvideoCodecDec::initDec(IffdshowBase *deci,IdecVideoSink *sink,C
  {
   case CODEC_ID_H264:
   case CODEC_ID_H264_MT:
-   if (deci->getParam2(IDFF_dec_DXVA_H264)) codecId=CODEC_ID_H264_DXVA;
+   if (deci->getParam2(IDFF_filterMode) & IDFF_FILTERMODE_VIDEODXVA) {
+    if (deci->getParam2(IDFF_dec_DXVA_H264)) codecId=CODEC_ID_H264_DXVA;
+    else return NULL;
+   }
    break;
   case CODEC_ID_VC1_DXVA:
-   if (deci->getParam2(IDFF_dec_DXVA_VC1)) codecId=CODEC_ID_VC1_DXVA;
+   if (deci->getParam2(IDFF_filterMode) & IDFF_FILTERMODE_VIDEODXVA) {
+    if (deci->getParam2(IDFF_dec_DXVA_VC1)) codecId=CODEC_ID_VC1_DXVA;
+    else return NULL;
+   }
    break;
   default: break;
  }
