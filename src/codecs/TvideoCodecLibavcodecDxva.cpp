@@ -144,7 +144,7 @@ bool TvideoCodecLibavcodecDxva::checkDXVAMode(IPin *pReceivePin)
  if (isDXVASupported())
     {
   if (pReceivePin==NULL) return true;
-        if (nDXVAMode == MODE_DXVA2)
+        if (nDXVAMode == MODE_DXVA1)
             pDXVADecoder->ConfigureDXVA1(); // TODO : check errors!
   else if (SUCCEEDED(configureDXVA2(pReceivePin)) &&    SUCCEEDED(setEVRForDXVA2(pReceivePin)))
             nDXVAMode  = MODE_DXVA2;
