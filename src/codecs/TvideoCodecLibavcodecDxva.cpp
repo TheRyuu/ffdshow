@@ -209,7 +209,7 @@ int TvideoCodecLibavcodecDxva::pictWidthRounded()
 int TvideoCodecLibavcodecDxva::pictHeightRounded()
 {
 	// Picture height should be rounded to 16 for DXVA
-	return ((avctx->width + 15) / 16) * 16;
+	return ((avctx->height + 15) / 16) * 16;
 }
 
 
