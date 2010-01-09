@@ -112,7 +112,8 @@ Tlibavcodec::Tlibavcodec(const Tconfig *config):refcount(0)
  dll->loadFunction(av_parser_close,"av_parser_close"); 
  dll->loadFunction(avcodec_h264_search_recovery_point,"avcodec_h264_search_recovery_point");
  dll->loadFunction(avcodec_h264_decode_init_is_avc,"avcodec_h264_decode_init_is_avc");
- 
+
+#if !COMPILE_AS_FFMPEG_MT
  //DXVA methods
  dll->loadFunction(av_h264_decode_frame,"av_h264_decode_frame");
  dll->loadFunction(av_vc1_decode_frame,"av_vc1_decode_frame");
@@ -133,6 +134,7 @@ Tlibavcodec::Tlibavcodec(const Tconfig *config):refcount(0)
  dll->loadFunction(FFIsInterlaced,"FFIsInterlaced");
  dll->loadFunction(FFGetMBNumber,"FFGetMBNumber");
  //DXVA methods end
+#endif
 
  if (!dec_only)
   {
