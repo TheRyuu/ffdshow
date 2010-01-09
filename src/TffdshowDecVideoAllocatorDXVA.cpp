@@ -31,8 +31,8 @@
 
 
 TDXVA2Sample::TDXVA2Sample(TffdshowDecVideoAllocatorDXVA *pAlloc, HRESULT *phr)
-			: CMediaSample(NAME("TDXVA2Sample"), (CBaseAllocator*)pAlloc, phr, NULL, 0)
-			, m_dwSurfaceId(0)
+            : CMediaSample(NAME("TDXVA2Sample"), (CBaseAllocator*)pAlloc, phr, NULL, 0)
+            , m_dwSurfaceId(0)
 { 
 }
 
@@ -44,55 +44,55 @@ STDMETHODIMP TDXVA2Sample::QueryInterface(REFIID riid, __deref_out void **ppv)
  CheckPointer(ppv,E_POINTER);
  ValidateReadWritePtr(ppv,sizeof(PVOID));
 
-	if (riid == __uuidof(IMFGetService))
-	{
-		return GetInterface((IMFGetService*) this, ppv);
-	}
-	if (riid==IID_IFFDSDXVA2Sample)
-	{
+    if (riid == __uuidof(IMFGetService))
+    {
+        return GetInterface((IMFGetService*) this, ppv);
+    }
+    if (riid==IID_IFFDSDXVA2Sample)
+    {
   return GetInterface<IFFDSDXVA2Sample>(this,ppv);
-	}
-	else
-	{
-		return CMediaSample::QueryInterface(riid, ppv);
-	}
+    }
+    else
+    {
+        return CMediaSample::QueryInterface(riid, ppv);
+    }
 }
 
 
 STDMETHODIMP_(ULONG) TDXVA2Sample::AddRef()
 {
-	return __super::AddRef();
+    return __super::AddRef();
 }
 
 STDMETHODIMP_(ULONG) TDXVA2Sample::Release()
 {
-	// Return a temporary variable for thread safety.
-	ULONG cRef = __super::Release();
-	return cRef;
+    // Return a temporary variable for thread safety.
+    ULONG cRef = __super::Release();
+    return cRef;
 }
 
 // IMFGetService::GetService
 STDMETHODIMP TDXVA2Sample::GetService(REFGUID guidService, REFIID riid, LPVOID *ppv)
 {
-	if (guidService != MR_BUFFER_SERVICE)
-	{
-		return MF_E_UNSUPPORTED_SERVICE;
-	}
-	else if (m_pSurface == NULL)
-	{
-		return E_NOINTERFACE;
-	}
-	else
-	{
-		return m_pSurface->QueryInterface(riid, ppv);
-	}
+    if (guidService != MR_BUFFER_SERVICE)
+    {
+        return MF_E_UNSUPPORTED_SERVICE;
+    }
+    else if (m_pSurface == NULL)
+    {
+        return E_NOINTERFACE;
+    }
+    else
+    {
+        return m_pSurface->QueryInterface(riid, ppv);
+    }
 }
 
 // Override GetPointer because this class does not manage a system memory buffer.
 // The EVR uses the MR_BUFFER_SERVICE service to get the Direct3D surface.
 STDMETHODIMP TDXVA2Sample::GetPointer(BYTE ** ppBuffer)
 {
-	return E_NOTIMPL;
+    return E_NOTIMPL;
 }
 
 
@@ -100,41 +100,41 @@ STDMETHODIMP TDXVA2Sample::GetPointer(BYTE ** ppBuffer)
 // Sets the pointer to the Direct3D surface. 
 void TDXVA2Sample::SetSurface(DWORD surfaceId, IDirect3DSurface9 *pSurf)
 {
-	m_pSurface = pSurf;
-	m_dwSurfaceId = surfaceId;
+    m_pSurface = pSurf;
+    m_dwSurfaceId = surfaceId;
 }
 
 STDMETHODIMP_(int) TDXVA2Sample::GetDXSurfaceId()
 {
-	return m_dwSurfaceId;
+    return m_dwSurfaceId;
 }
 
 
 
 //------------------------- TffdshowDecVideoAllocatorDXVA ----------------------------------------
 TffdshowDecVideoAllocatorDXVA::TffdshowDecVideoAllocatorDXVA(IffdshowDecVideo* IdeciV,  HRESULT* phr)
-					  : CBaseAllocator(NAME("TffdshowDecVideoAllocatorDXVA"), NULL, phr),
-   deciV(IdeciV)
+    : CBaseAllocator(NAME("TffdshowDecVideoAllocatorDXVA"), NULL, phr),
+    deciV(IdeciV)
 {
-	ppRTSurfaceArray	= NULL;
+    ppRTSurfaceArray    = NULL;
 }
 
 TffdshowDecVideoAllocatorDXVA::~TffdshowDecVideoAllocatorDXVA()
 {
-	Free();
+    Free();
 }
 
 HRESULT TffdshowDecVideoAllocatorDXVA::Alloc()
 {
- HRESULT										hr;
-	CComPtr<IDirectXVideoAccelerationService>	pDXVA2Service;
- TvideoCodecLibavcodecDxva *dxvaCodec=NULL;
- deciV->getMovieSource((const TvideoCodecDec**)&dxvaCodec);
+    HRESULT hr;
+    CComPtr<IDirectXVideoAccelerationService> pDXVA2Service;
+    TvideoCodecLibavcodecDxva *dxvaCodec=NULL;
+    deciV->getMovieSource((const TvideoCodecDec**)&dxvaCodec);
 
-	CheckPointer(dxvaCodec->m_pDeviceManager, E_UNEXPECTED);
-	hr = dxvaCodec->m_pDeviceManager->GetVideoService (dxvaCodec->hDevice, IID_IDirectXVideoAccelerationService, (void**)&pDXVA2Service);
-	CheckPointer (pDXVA2Service, E_UNEXPECTED);
-	CAutoLock lock(this);
+    CheckPointer(dxvaCodec->m_pDeviceManager, E_UNEXPECTED);
+    hr = dxvaCodec->m_pDeviceManager->GetVideoService (dxvaCodec->hDevice, IID_IDirectXVideoAccelerationService, (void**)&pDXVA2Service);
+    CheckPointer (pDXVA2Service, E_UNEXPECTED);
+    CAutoLock lock(this);
 
  hr = __super::Alloc();
 
@@ -142,7 +142,7 @@ HRESULT TffdshowDecVideoAllocatorDXVA::Alloc()
  {
   // Free the old resources.
   Free();
-		nSurfaceArrayCount = m_lCount;
+        nSurfaceArrayCount = m_lCount;
 
   // Allocate a new array of pointers.
   ppRTSurfaceArray = new IDirect3DSurface9*[m_lCount];
@@ -157,7 +157,7 @@ HRESULT TffdshowDecVideoAllocatorDXVA::Alloc()
  }
 
  // Allocate the surfaces.
-	D3DFORMAT m_dwFormat = dxvaCodec->videoDesc.Format;
+    D3DFORMAT m_dwFormat = dxvaCodec->videoDesc.Format;
  if (SUCCEEDED(hr))
   hr = pDXVA2Service->CreateSurface(
       dxvaCodec->pictWidthRounded(),
@@ -191,9 +191,9 @@ HRESULT TffdshowDecVideoAllocatorDXVA::Alloc()
    m_lFree.Add(pSample);
   }
 
-		hr = dxvaCodec->createDXVA2Decoder (m_lCount, ppRTSurfaceArray);
-		if (FAILED (hr)) Free();
-	}
+        hr = dxvaCodec->createDXVA2Decoder (m_lCount, ppRTSurfaceArray);
+        if (FAILED (hr)) Free();
+ }
 
  if (SUCCEEDED(hr))
   m_bChanged = FALSE;
@@ -208,7 +208,7 @@ void TffdshowDecVideoAllocatorDXVA::Free()
  TvideoCodecLibavcodecDxva *dxvaCodec=NULL;
  deciV->getMovieSource((const TvideoCodecDec**)&dxvaCodec);
 
-	dxvaCodec->flushDXVADecoder();
+ dxvaCodec->flushDXVADecoder();
  do
  {
   pSample = m_lFree.RemoveHead();
@@ -218,11 +218,11 @@ void TffdshowDecVideoAllocatorDXVA::Free()
  if (ppRTSurfaceArray)
  {
   for (long i = 0; i < (long)nSurfaceArrayCount; i++)
-   if (ppRTSurfaceArray[i] != NULL)	ppRTSurfaceArray[i]->Release();
+   if (ppRTSurfaceArray[i] != NULL) ppRTSurfaceArray[i]->Release();
 
   delete [] ppRTSurfaceArray;
-		ppRTSurfaceArray = NULL;
+      ppRTSurfaceArray = NULL;
  }
- m_lAllocated		 = 0;
-	nSurfaceArrayCount = 0;
+    m_lAllocated       = 0;
+    nSurfaceArrayCount = 0;
 }

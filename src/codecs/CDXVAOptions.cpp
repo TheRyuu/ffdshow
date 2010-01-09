@@ -77,4 +77,3 @@ TDXVAOptionsPage::TDXVAOptionsPage(TffdshowPageDec *Iparent):TconfPageDecVideo(I
   };
  bindCheckboxes(chb);
 }
-

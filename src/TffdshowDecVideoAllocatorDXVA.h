@@ -25,7 +25,7 @@ class TffdshowDecVideoAllocatorDXVA;
 
 DECLARE_INTERFACE_(IFFDSDXVA2Sample,IUnknown)
 {
-	STDMETHOD_(int, GetDXSurfaceId()) = 0;
+    STDMETHOD_(int, GetDXSurfaceId()) = 0;
 };
 
 class TDXVA2Sample : public CMediaSample, public IMFGetService, public IFFDSDXVA2Sample
@@ -38,15 +38,15 @@ public:
  // Note: CMediaSample does not derive from CUnknown, so we cannot use the
  //       DECLARE_IUNKNOWN macro that is used by most of the filter classes.
 
-	STDMETHODIMP			QueryInterface(REFIID riid, __deref_out void **ppv);
- STDMETHODIMP_(ULONG)	AddRef();
- STDMETHODIMP_(ULONG)	Release();
+ STDMETHODIMP         QueryInterface(REFIID riid, __deref_out void **ppv);
+ STDMETHODIMP_(ULONG) AddRef();
+ STDMETHODIMP_(ULONG) Release();
 
  // IMFGetService::GetService
  STDMETHODIMP GetService(REFGUID guidService, REFIID riid, LPVOID *ppv);
 
-	// IMPCDXVA2Sample
-	STDMETHODIMP_(int) GetDXSurfaceId();
+ // IMPCDXVA2Sample
+ STDMETHODIMP_(int) GetDXSurfaceId();
 
  // Override GetPointer because this class does not manage a system memory buffer.
  // The EVR uses the MR_BUFFER_SERVICE service to get the Direct3D surface.
@@ -56,27 +56,27 @@ private:
  CodecID dxvaCodecId;
  // Sets the pointer to the Direct3D surface. 
  void SetSurface(DWORD surfaceId, IDirect3DSurface9 *pSurf);
- CComPtr<IDirect3DSurface9>	m_pSurface;
- DWORD						m_dwSurfaceId;
+ CComPtr<IDirect3DSurface9> m_pSurface;
+ DWORD                      m_dwSurfaceId;
 };
 
 
 class TffdshowDecVideoAllocatorDXVA :  public CBaseAllocator
 {
 public:
-	TffdshowDecVideoAllocatorDXVA(IffdshowDecVideo *IdeciV, HRESULT* phr);
-	virtual ~TffdshowDecVideoAllocatorDXVA();
+    TffdshowDecVideoAllocatorDXVA(IffdshowDecVideo *IdeciV, HRESULT* phr);
+    virtual ~TffdshowDecVideoAllocatorDXVA();
 
 protected:
-	HRESULT		Alloc(void);
-	void		Free(void);
+    HRESULT Alloc(void);
+    void    Free(void);
 
 
 private :
-	IffdshowDecVideo *deciV;
+    IffdshowDecVideo *deciV;
 
-	IDirect3DSurface9**		ppRTSurfaceArray;
-	UINT					nSurfaceArrayCount;
+    IDirect3DSurface9** ppRTSurfaceArray;
+    UINT                nSurfaceArrayCount;
 };
 
 #endif
@@ -107,7 +107,7 @@ class TffdshowDecVideoAllocatorDXVA;
 
 DECLARE_INTERFACE_(IFFDSDXVA2Sample,IUnknown)
 {
-	STDMETHOD_(int, GetDXSurfaceId()) = 0;
+    STDMETHOD_(int, GetDXSurfaceId()) = 0;
 };
 
 class TDXVA2Sample : public CMediaSample, public IMFGetService, public IFFDSDXVA2Sample
@@ -120,15 +120,15 @@ public:
  // Note: CMediaSample does not derive from CUnknown, so we cannot use the
  //       DECLARE_IUNKNOWN macro that is used by most of the filter classes.
 
-	STDMETHODIMP			QueryInterface(REFIID riid, __deref_out void **ppv);
- STDMETHODIMP_(ULONG)	AddRef();
- STDMETHODIMP_(ULONG)	Release();
+ STDMETHODIMP         QueryInterface(REFIID riid, __deref_out void **ppv);
+ STDMETHODIMP_(ULONG) AddRef();
+ STDMETHODIMP_(ULONG) Release();
 
  // IMFGetService::GetService
  STDMETHODIMP GetService(REFGUID guidService, REFIID riid, LPVOID *ppv);
 
-	// IMPCDXVA2Sample
-	STDMETHODIMP_(int) GetDXSurfaceId();
+ // IMPCDXVA2Sample
+ STDMETHODIMP_(int) GetDXSurfaceId();
 
  // Override GetPointer because this class does not manage a system memory buffer.
  // The EVR uses the MR_BUFFER_SERVICE service to get the Direct3D surface.
@@ -138,27 +138,27 @@ private:
  CodecID dxvaCodecId;
  // Sets the pointer to the Direct3D surface. 
  void SetSurface(DWORD surfaceId, IDirect3DSurface9 *pSurf);
- CComPtr<IDirect3DSurface9>	m_pSurface;
- DWORD						m_dwSurfaceId;
+ CComPtr<IDirect3DSurface9> m_pSurface;
+ DWORD                      m_dwSurfaceId;
 };
 
 
 class TffdshowDecVideoAllocatorDXVA :  public CBaseAllocator
 {
 public:
-	TffdshowDecVideoAllocatorDXVA(IffdshowDecVideo *IdeciV, HRESULT* phr);
-	virtual ~TffdshowDecVideoAllocatorDXVA();
+    TffdshowDecVideoAllocatorDXVA(IffdshowDecVideo *IdeciV, HRESULT* phr);
+    virtual ~TffdshowDecVideoAllocatorDXVA();
 
 protected:
-	HRESULT		Alloc(void);
-	void		Free(void);
+    HRESULT Alloc(void);
+    void    Free(void);
 
 
 private :
-	IffdshowDecVideo *deciV;
+    IffdshowDecVideo *deciV;
 
-	IDirect3DSurface9**		ppRTSurfaceArray;
-	UINT					nSurfaceArrayCount;
+    IDirect3DSurface9** ppRTSurfaceArray;
+    UINT                nSurfaceArrayCount;
 };
 
 #endif
@@ -189,7 +189,7 @@ class TffdshowDecVideoAllocatorDXVA;
 
 DECLARE_INTERFACE_(IFFDSDXVA2Sample,IUnknown)
 {
-	STDMETHOD_(int, GetDXSurfaceId()) = 0;
+    STDMETHOD_(int, GetDXSurfaceId()) = 0;
 };
 
 class TDXVA2Sample : public CMediaSample, public IMFGetService, public IFFDSDXVA2Sample
@@ -202,15 +202,15 @@ public:
  // Note: CMediaSample does not derive from CUnknown, so we cannot use the
  //       DECLARE_IUNKNOWN macro that is used by most of the filter classes.
 
-	STDMETHODIMP			QueryInterface(REFIID riid, __deref_out void **ppv);
- STDMETHODIMP_(ULONG)	AddRef();
- STDMETHODIMP_(ULONG)	Release();
+ STDMETHODIMP         QueryInterface(REFIID riid, __deref_out void **ppv);
+ STDMETHODIMP_(ULONG) AddRef();
+ STDMETHODIMP_(ULONG) Release();
 
  // IMFGetService::GetService
  STDMETHODIMP GetService(REFGUID guidService, REFIID riid, LPVOID *ppv);
 
-	// IMPCDXVA2Sample
-	STDMETHODIMP_(int) GetDXSurfaceId();
+ // IMPCDXVA2Sample
+ STDMETHODIMP_(int) GetDXSurfaceId();
 
  // Override GetPointer because this class does not manage a system memory buffer.
  // The EVR uses the MR_BUFFER_SERVICE service to get the Direct3D surface.
@@ -220,27 +220,27 @@ private:
  CodecID dxvaCodecId;
  // Sets the pointer to the Direct3D surface. 
  void SetSurface(DWORD surfaceId, IDirect3DSurface9 *pSurf);
- CComPtr<IDirect3DSurface9>	m_pSurface;
- DWORD						m_dwSurfaceId;
+ CComPtr<IDirect3DSurface9> m_pSurface;
+ DWORD                      m_dwSurfaceId;
 };
 
 
 class TffdshowDecVideoAllocatorDXVA :  public CBaseAllocator
 {
 public:
-	TffdshowDecVideoAllocatorDXVA(IffdshowDecVideo *IdeciV, HRESULT* phr);
-	virtual ~TffdshowDecVideoAllocatorDXVA();
+    TffdshowDecVideoAllocatorDXVA(IffdshowDecVideo *IdeciV, HRESULT* phr);
+    virtual ~TffdshowDecVideoAllocatorDXVA();
 
 protected:
-	HRESULT		Alloc(void);
-	void		Free(void);
+    HRESULT Alloc(void);
+    void    Free(void);
 
 
 private :
-	IffdshowDecVideo *deciV;
+    IffdshowDecVideo *deciV;
 
-	IDirect3DSurface9**		ppRTSurfaceArray;
-	UINT					nSurfaceArrayCount;
+    IDirect3DSurface9** ppRTSurfaceArray;
+    UINT                nSurfaceArrayCount;
 };
 
 #endif

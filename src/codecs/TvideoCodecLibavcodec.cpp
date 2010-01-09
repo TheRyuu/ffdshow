@@ -198,7 +198,7 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
         if (fcc==FOURCC_AVC1 && mt.formattype==FORMAT_MPEG2Video) {
             const MPEG2VIDEOINFO *mpeg2info=(const MPEG2VIDEOINFO*)mt.pbFormat;
             avctx->nal_length_size=mpeg2info->dwFlags;
-            bReorderBFrame	= false;
+            bReorderBFrame=false;
         } else if (fcc==FOURCC_THEO) {
             if (mt.formattype==FORMAT_RLTheora) {
                 theorart=true;
@@ -1431,12 +1431,12 @@ const char* TvideoCodecLibavcodec::get_current_idct(void)
 
 void TvideoCodecLibavcodec::reorderBFrames(REFERENCE_TIME& rtStart, REFERENCE_TIME& rtStop)
 {
-	// Re-order B-frames if needed
-	if (avctx->has_b_frames && bReorderBFrame)
-	{
-		rtStart	= b[inPosB].rtStart;
-		rtStop	= b [inPosB].rtStop;
-	}
+    // Re-order B-frames if needed
+    if (avctx->has_b_frames && bReorderBFrame)
+    {
+        rtStart = b[inPosB].rtStart;
+        rtStop  = b[inPosB].rtStop;
+    }
 }
 
 TvideoCodecLibavcodec::TcodedPictureBuffer::TcodedPictureBuffer(TvideoCodecLibavcodec* Iparent):

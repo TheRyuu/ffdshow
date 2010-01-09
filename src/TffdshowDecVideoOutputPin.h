@@ -21,10 +21,10 @@ protected:
  void freeQueue(void);
  TffOutputQueue* queue;
  bool isFirstFrame;
- TffdshowDecVideoAllocatorDXVA*		pDXVA2Allocator;
-	DWORD						dwDXVA1SurfaceCount;
-	GUID						guidDecoderDXVA1;
-	DDPIXELFORMAT				ddUncompPixelFormat;
+ TffdshowDecVideoAllocatorDXVA* pDXVA2Allocator;
+    DWORD                       dwDXVA1SurfaceCount;
+    GUID                        guidDecoderDXVA1;
+    DDPIXELFORMAT               ddUncompPixelFormat;
 public:
  TffdshowDecVideoOutputPin(
         TCHAR *pObjectName,
@@ -61,9 +61,9 @@ public:
  virtual STDMETHODIMP NonDelegatingQueryInterface(REFIID riid, void** ppv);
 
  // IAMVideoAcceleratorNotify
-	virtual STDMETHODIMP	GetUncompSurfacesInfo(const GUID *pGuid, LPAMVAUncompBufferInfo pUncompBufferInfo);        
-	virtual STDMETHODIMP	SetUncompSurfacesInfo(DWORD dwActualUncompSurfacesAllocated);        
-	virtual STDMETHODIMP	GetCreateVideoAcceleratorData(const GUID *pGuid, LPDWORD pdwSizeMiscData, LPVOID *ppMiscData);
+ virtual STDMETHODIMP GetUncompSurfacesInfo(const GUID *pGuid, LPAMVAUncompBufferInfo pUncompBufferInfo);        
+ virtual STDMETHODIMP SetUncompSurfacesInfo(DWORD dwActualUncompSurfacesAllocated);        
+ virtual STDMETHODIMP GetCreateVideoAcceleratorData(const GUID *pGuid, LPDWORD pdwSizeMiscData, LPVOID *ppMiscData);
 };
 
 #endif

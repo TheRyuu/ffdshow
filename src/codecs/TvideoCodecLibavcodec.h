@@ -109,7 +109,7 @@ public:
  virtual void getEncoderInfo(char_t *buf,size_t buflen) const;
  virtual const char* get_current_idct(void);
  virtual HRESULT BeginFlush();
- bool	isReorderBFrame() { return bReorderBFrame; };
+ bool isReorderBFrame() { return bReorderBFrame; };
  virtual void reorderBFrames(REFERENCE_TIME& rtStart, REFERENCE_TIME& rtStop);
 
  class TcodedPictureBuffer

@@ -55,7 +55,7 @@ void TdirectshowControlPageDec::init(void)
   }
  else
   enable(0,idmerits);
- 
+
  edLimitText(IDC_ED_BLACKLIST,MAX_COMPATIBILITYLIST_LENGTH);
  edLimitText(IDC_ED_COMPATIBILITYLIST,MAX_COMPATIBILITYLIST_LENGTH);
  addHint(IDC_ED_BLACKLIST,_l("List of applications for which ffdshow should not load, separated by semicolons"));

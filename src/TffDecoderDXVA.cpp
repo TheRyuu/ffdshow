@@ -76,15 +76,15 @@ HRESULT TffdshowDecVideoDXVA::GetMediaType(int iPosition, CMediaType *mtOut)
  TvideoCodecDec *pDecoder=NULL;
  getMovieSource((const TvideoCodecDec**)&pDecoder);
  if (!pDecoder->useDXVA()) return VFW_S_NO_MORE_ITEMS;
- 
+
  TcspInfos ocsps;size_t osize;
- 
- 
+
+
  // DXVA mode : special output format
  TvideoCodecLibavcodecDxva *pDecoderDxva = (TvideoCodecLibavcodecDxva*)pDecoder;
  pDecoderDxva->getDXVAOutputFormats(ocsps);
  osize=ocsps.size();
- 
+
  if ((size_t)iPosition>=osize) return VFW_S_NO_MORE_ITEMS;
 
  TffPictBase pictOut;
@@ -92,7 +92,7 @@ HRESULT TffdshowDecVideoDXVA::GetMediaType(int iPosition, CMediaType *mtOut)
   pictOut=reconnectRect;
  else
   pictOut=inpin->pictIn;
- 
+
  // Support mediatype with unknown dimension. This is necessary to support MEDIASUBTYPE_H264.
  // http://msdn.microsoft.com/en-us/library/dd757808(VS.85).aspx
  // The downstream filter has to support reconnecting after this.
@@ -105,7 +105,7 @@ HRESULT TffdshowDecVideoDXVA::GetMediaType(int iPosition, CMediaType *mtOut)
  if (false && presetSettings->output->closest && !outdv && pictOut.csp != 0) ocsps.sort(pictOut.csp);
 
  oldRect=pictOut.rectFull;
- 
+
  const TcspInfo *c=ocsps[iPosition];
  BITMAPINFOHEADER bih;memset(&bih,0,sizeof(bih));
  bih.biSize  =sizeof(BITMAPINFOHEADER);
@@ -157,7 +157,7 @@ HRESULT TffdshowDecVideoDXVA::GetMediaType(int iPosition, CMediaType *mtOut)
    vih2->bmiHeader=bih;
    //vih2->dwControlFlags=AMCONTROL_USED | AMCONTROL_COLORINFO_PRESENT | (DXVA_NominalRange_Wide << DXVA_NominalRangeShift) | (DXVA_VideoTransferMatrix_BT601 << DXVA_VideoTransferMatrixShift);
    hwDeinterlace=1; // HW deinterlace for DXVA
-   
+
    if (hwDeinterlace)
     vih2->dwInterlaceFlags=AMINTERLACE_IsInterlaced|AMINTERLACE_DisplayModeBobOrWeave;
   }
@@ -170,12 +170,12 @@ HRESULT TffdshowDecVideoDXVA::setOutputMediaType(const CMediaType &mt)
  DPRINTF(_l("TffdshowDecVideoDXVA::setOutputMediaType"));
  TvideoCodecDec *pDecoder=NULL;
  getMovieSource((const TvideoCodecDec**)&pDecoder);
- 
+
  TcspInfos ocsps;
  // DXVA mode : special output format
  TvideoCodecLibavcodecDxva *pDecoderDxva = (TvideoCodecLibavcodecDxva*)pDecoder;
  pDecoderDxva->getDXVAOutputFormats(ocsps);
- 
+
 
  for (int i=0;cspFccs[i].name;i++)
  {
@@ -192,7 +192,7 @@ HRESULT TffdshowDecVideoDXVA::setOutputMediaType(const CMediaType &mt)
   }
   if (!ok) continue;
   m_frame.dstColorspace=FF_CSP_NV12;
-  
+
   int biWidth,outDy;
   BITMAPINFOHEADER *bih;
   if (mt.formattype==FORMAT_VideoInfo && mt.pbFormat) // && mt.pbFormat = work around other filter's bug.
@@ -273,16 +273,16 @@ HRESULT TffdshowDecVideoDXVA::DecideBufferSize(IMemAllocator *pAlloc, ALLOCATOR_
  if (pDecoder != NULL && pDecoder->useDXVA()==2) // DXVA2 : allocator must be allocated inside the decoder (DXVA1 : allocator managed by the renderer)
  {
   TvideoCodecLibavcodecDxva *pDecoderDxva = (TvideoCodecLibavcodecDxva*)pDecoder;
-		HRESULT					hr;
-		ALLOCATOR_PROPERTIES	Actual;
+        HRESULT hr;
+        ALLOCATOR_PROPERTIES Actual;
 
-		ppropInputRequest->cBuffers = pDecoderDxva->getPicEntryNumber();
+        ppropInputRequest->cBuffers = pDecoderDxva->getPicEntryNumber();
 
-		if(FAILED(hr = pAlloc->SetProperties(ppropInputRequest, &Actual))) 
-			return hr;
+        if(FAILED(hr = pAlloc->SetProperties(ppropInputRequest, &Actual))) 
+            return hr;
 
-		return ppropInputRequest->cBuffers > Actual.cBuffers || ppropInputRequest->cbBuffer > Actual.cbBuffer
-			? E_FAIL : NOERROR;
+        return ppropInputRequest->cBuffers > Actual.cBuffers || ppropInputRequest->cbBuffer > Actual.cbBuffer
+            ? E_FAIL : NOERROR;
  }
 
  m_IsOldVideoRenderer= IsOldRenderer();

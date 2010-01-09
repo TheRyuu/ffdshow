@@ -240,4 +240,3 @@ ToutsfsPage::ToutsfsPage(TffdshowPageDec *Iparent):TconfPageDecAudio(Iparent)
   };
  bindComboboxes(cbx);
 }
-

@@ -38,7 +38,7 @@ const TalternateSampleFormat TsampleFormat::alternateSampleFormats[]=
   1 ,KSDATAFORMAT_SUBTYPE_IEC61937_DTS_HD   , GUID_NULL                                 , 0                      ,MEDIASUBTYPE_DTS_HD                    , 0        ,  0            ,     0        , 0, true, // Standard #3  
   2, KSDATAFORMAT_SUBTYPE_IEC61937_DTS_HD,    KSDATAFORMAT_SUBTYPE_IEC61937_DOLBY_DIGITAL, WAVE_FORMAT_ESST_AC3   ,GUID_NULL                              , 8        , 16            , 192000       , 0, false, // xonar
   3, KSDATAFORMAT_SUBTYPE_IEC61937_DTS_HD   , MEDIASUBTYPE_CYBERLINK_BITSTREAM         , WAVE_FORMAT_CYBERLINK_DTS_HD, GUID_NULL                         , 2        , 16            , 96000        , 0, false, // Auzentech
-  
+
   1, KSDATAFORMAT_SUBTYPE_IEC61937_DOLBY_DIGITAL_PLUS, GUID_NULL                        , 0                      ,MEDIASUBTYPE_DOLBY_DDPLUS              , 0        ,  0            ,     0        , 0, true,
   2, KSDATAFORMAT_SUBTYPE_IEC61937_DOLBY_DIGITAL_PLUS, KSDATAFORMAT_SUBTYPE_IEC61937_DOLBY_DIGITAL, WAVE_FORMAT_ESST_AC3,GUID_NULL                       , 0        ,  0            ,     0        , 0, false,
   0
@@ -665,7 +665,7 @@ int TsampleFormat::getSampleFormat(CodecID codecId)
     case WAVE_FORMAT_PCM24:formatDescr.append(_l("PCM 24"));break;
     case WAVE_FORMAT_PCM32:formatDescr.append(_l("PCM 32"));break;
     case WAVE_FORMAT_LPCM:formatDescr.append(_l("LPCM"));break;
-    default: 
+    default:
      tsprintf(tmp, _l("format %ld"), wfex->wFormatTag);
      formatDescr.append(tmp);
    }

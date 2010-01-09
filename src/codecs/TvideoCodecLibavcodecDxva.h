@@ -15,27 +15,27 @@
 
 enum PCI_Vendors
 {
-	PCIV_ATI				= 0x1002,
-	PCIV_nVidia				= 0x10DE,
-	PCIV_Intel				= 0x8086,
-	PCIV_S3_Graphics		= 0x5333
+    PCIV_ATI                = 0x1002,
+    PCIV_nVidia             = 0x10DE,
+    PCIV_Intel              = 0x8086,
+    PCIV_S3_Graphics        = 0x5333
 };
 
 typedef enum
 {
-	MODE_SOFTWARE,
-	MODE_DXVA1,
-	MODE_DXVA2
+    MODE_SOFTWARE,
+    MODE_DXVA1,
+    MODE_DXVA2
 } DXVA_MODE;
 
-#define MAX_SUPPORTED_MODE			5
-#define ROUND_FRAMERATE(var,FrameRate)	if (labs ((long)(var - FrameRate)) < FrameRate*1/100) var = FrameRate;
+#define MAX_SUPPORTED_MODE 5
+#define ROUND_FRAMERATE(var,FrameRate) if (labs ((long)(var - FrameRate)) < FrameRate*1/100) var = FrameRate;
 typedef struct TDXVA_PARAMS
 {
-	const int			PicEntryNumber;
-	const UINT			PreferedConfigBitstream;
-	const GUID*			Decoder[MAX_SUPPORTED_MODE];
-	const WORD			RestrictedMode[MAX_SUPPORTED_MODE];
+    const int   PicEntryNumber;
+    const UINT  PreferedConfigBitstream;
+    const GUID* Decoder[MAX_SUPPORTED_MODE];
+    const WORD  RestrictedMode[MAX_SUPPORTED_MODE];
 } DXVA_PARAMS;
 
 struct Textradata;
@@ -58,8 +58,8 @@ private:
  DXVA_PARAMS *dxvaParamsp;
  virtual void detectVideoCard(HWND hwnd);
  GUID dxvaDecoderGUID;
- DXVA_MODE	nDXVAMode;
-	TDXVADecoder*	pDXVADecoder;
+ DXVA_MODE nDXVAMode;
+ TDXVADecoder* pDXVADecoder;
  CodecID dxvaCodecId;
  bool initDXVAMode;
 
@@ -68,15 +68,15 @@ private:
  AVRational sar; // aspect ratio
 
  // === DXVA1 variables
-	DDPIXELFORMAT							pixelFormat;
+    DDPIXELFORMAT                           pixelFormat;
 
-	// === DXVA2 variables
-	CComPtr<IDirect3DDeviceManager9>		m_pDeviceManager;
-	CComPtr<IDirectXVideoDecoderService>	m_pDecoderService;
-	CComPtr<IDirect3DSurface9>				pDecoderRenderTarget;
-	DXVA2_ConfigPictureDecode				dxva2Config;
-	HANDLE	hDevice;
-	DXVA2_VideoDesc	videoDesc; 
+    // === DXVA2 variables
+    CComPtr<IDirect3DDeviceManager9>        m_pDeviceManager;
+    CComPtr<IDirectXVideoDecoderService>    m_pDecoderService;
+    CComPtr<IDirect3DSurface9>              pDecoderRenderTarget;
+    DXVA2_ConfigPictureDecode               dxva2Config;
+    HANDLE hDevice;
+    DXVA2_VideoDesc videoDesc; 
  virtual void cleanup();
 
 protected:
@@ -85,18 +85,18 @@ protected:
  virtual void create(void);
  virtual bool beginDecompress(TffPictBase &pict,FOURCC fcc,const CMediaType &mt,int sourceFlags);
  virtual HRESULT decompress(const unsigned char *src,size_t srcLen0,IMediaSample *pIn);
-  
+
  // TvideoCodecLibavcodecDXVA methods
  virtual bool isVista(void);
- virtual REFERENCE_TIME		getAvrTimePerFrame(void); 
+ virtual REFERENCE_TIME getAvrTimePerFrame(void); 
 
 public:
  TvideoCodecLibavcodecDxva(IffdshowBase *Ideci,IdecVideoSink *IsinkD, CodecID IcodecId);
  virtual ~TvideoCodecLibavcodecDxva();
- 
+
  //TvideoCodecDec overloaded methods
  virtual bool onSeek(REFERENCE_TIME segmentStart);
- virtual int	useDXVA(void);
+ virtual int useDXVA(void);
  virtual int getType(void) const {return IDFF_MOVIE_FFMPEG_DXVA;}
  const char_t* getName(void) const;
 
@@ -117,16 +117,16 @@ public:
  virtual WORD getDXVA1RestrictedMode();
  virtual HRESULT createDXVA1Decoder(IAMVideoAccelerator*  pAMVideoAccelerator, const GUID* pDecoderGuid, DWORD dwSurfaceCount);
  virtual UINT getAdapter(IDirect3D9* pD3D, HWND hWnd);
- void flushDXVADecoder(void)	 { if (pDXVADecoder) pDXVADecoder->Flush(); }
+ void flushDXVADecoder(void) { if (pDXVADecoder) pDXVADecoder->Flush(); }
  
  virtual bool isDXVASupported();
  virtual int pictWidthRounded();
  virtual int pictHeightRounded();
- DDPIXELFORMAT*	getPixelFormat() { return &pixelFormat; };
-	int	getPCIVendor()  { return nPCIVendor; };
+ DDPIXELFORMAT* getPixelFormat() { return &pixelFormat; };
+ int getPCIVendor() { return nPCIVendor; };
  virtual void updateAspectRatio(void);
- DXVA2_ConfigPictureDecode*	getDXVA2Config(void) { return &dxva2Config; };
- 
+ DXVA2_ConfigPictureDecode* getDXVA2Config(void) { return &dxva2Config; };
+
 };
 
 #endif

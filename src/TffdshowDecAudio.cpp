@@ -1183,4 +1183,3 @@ STDMETHODIMP_(CTransformOutputPin*) TffdshowDecAudio::getOutputPin(void)
 {
  return m_pOutput;
 }
-

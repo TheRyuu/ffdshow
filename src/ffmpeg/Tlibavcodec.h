@@ -103,24 +103,24 @@ int (*avcodec_decode_audio2)(AVCodecContext *avctx, int16_t *samples,
  int (*av_vc1_decode_frame)(struct AVCodecContext* avctx, uint8_t *buf, int buf_size);
 
  // === H264 functions
- int	(*FFH264CheckCompatibility)(int nWidth, int nHeight, struct AVCodecContext* pAVCtx, BYTE* pBuffer, UINT nSize, int nPCIVendor, LARGE_INTEGER VideoDriverVersion);
- void (*FFH264DecodeBuffer) (struct AVCodecContext* pAVCtx, BYTE* pBuffer, UINT nSize, int* pFramePOC, int* pOutPOC, REFERENCE_TIME* pOutrtStart);
+ int     (*FFH264CheckCompatibility)(int nWidth, int nHeight, struct AVCodecContext* pAVCtx, BYTE* pBuffer, UINT nSize, int nPCIVendor, LARGE_INTEGER VideoDriverVersion);
+ void    (*FFH264DecodeBuffer) (struct AVCodecContext* pAVCtx, BYTE* pBuffer, UINT nSize, int* pFramePOC, int* pOutPOC, REFERENCE_TIME* pOutrtStart);
  HRESULT (*FFH264BuildPicParams) (DXVA_PicParams_H264* pDXVAPicParams, DXVA_Qmatrix_H264* pDXVAScalingMatrix, int* nFieldType, int* nSliceType, struct AVCodecContext* pAVCtx, int nPCIVendor);
  
- void	(*FFH264SetCurrentPicture) (int nIndex, DXVA_PicParams_H264* pDXVAPicParams, struct AVCodecContext* pAVCtx);
- void	(*FFH264UpdateRefFramesList) (DXVA_PicParams_H264* pDXVAPicParams, struct AVCodecContext* pAVCtx);
- BOOL	(*FFH264IsRefFrameInUse) (int nFrameNum, struct AVCodecContext* pAVCtx);
- void	(*FF264UpdateRefFrameSliceLong) (DXVA_PicParams_H264* pDXVAPicParams, DXVA_Slice_H264_Long* pSlice, struct AVCodecContext* pAVCtx);
- void	(*FFH264SetDxvaSliceLong) (struct AVCodecContext* pAVCtx, void* pSliceLong);
+ void    (*FFH264SetCurrentPicture) (int nIndex, DXVA_PicParams_H264* pDXVAPicParams, struct AVCodecContext* pAVCtx);
+ void    (*FFH264UpdateRefFramesList) (DXVA_PicParams_H264* pDXVAPicParams, struct AVCodecContext* pAVCtx);
+ BOOL    (*FFH264IsRefFrameInUse) (int nFrameNum, struct AVCodecContext* pAVCtx);
+ void    (*FF264UpdateRefFrameSliceLong) (DXVA_PicParams_H264* pDXVAPicParams, DXVA_Slice_H264_Long* pSlice, struct AVCodecContext* pAVCtx);
+ void    (*FFH264SetDxvaSliceLong) (struct AVCodecContext* pAVCtx, void* pSliceLong);
 
  // === VC1 functions
- HRESULT	(*FFVC1UpdatePictureParam) (DXVA_PictureParameters* pPicParams, struct AVCodecContext* pAVCtx, int* nFieldType, int* nSliceType, BYTE* pBuffer, UINT nSize);
- int	(*FFIsSkipped) (struct AVCodecContext* pAVCtx);
+ HRESULT (*FFVC1UpdatePictureParam) (DXVA_PictureParameters* pPicParams, struct AVCodecContext* pAVCtx, int* nFieldType, int* nSliceType, BYTE* pBuffer, UINT nSize);
+ int     (*FFIsSkipped) (struct AVCodecContext* pAVCtx);
 
  // === Common functions
- char*	(*GetFFMpegPictureType) (int nType);
- int (*FFIsInterlaced) (struct AVCodecContext* pAVCtx, int nHeight);
- unsigned long	(*FFGetMBNumber) (struct AVCodecContext* pAVCtx);
+ char*    (*GetFFMpegPictureType) (int nType);
+ int      (*FFIsInterlaced) (struct AVCodecContext* pAVCtx, int nHeight);
+ unsigned long (*FFGetMBNumber) (struct AVCodecContext* pAVCtx);
 };
 
 #endif

@@ -76,9 +76,9 @@ TffdshowDecVideo::TffdshowDecVideo(CLSID Iclsid,const char_t *className,const CL
              globalSettings=new TglobalSettingsDecVideo(&config,Imode,Ioptions),
              dialogSettings=new TdialogSettingsDecVideo(Imode,Ioptions),
              presets=
-              (Imode&IDFF_FILTERMODE_VIDEODXVA) ? (TpresetsVideo*)new TpresetsVideoDXVA(Imode) : 
-                (Imode&IDFF_FILTERMODE_PROC ? (TpresetsVideo*)new TpresetsVideoProc(Imode) : 
-                  (Imode&IDFF_FILTERMODE_VFW?(TpresetsVideo*)new TpresetsVideoVFW(Imode):(TpresetsVideo*)new TpresetsVideoPlayer(Imode))),
+             (Imode&IDFF_FILTERMODE_VIDEODXVA) ? (TpresetsVideo*)new TpresetsVideoDXVA(Imode) : 
+             (Imode&IDFF_FILTERMODE_PROC ? (TpresetsVideo*)new TpresetsVideoProc(Imode) : 
+             (Imode&IDFF_FILTERMODE_VFW?(TpresetsVideo*)new TpresetsVideoVFW(Imode):(TpresetsVideo*)new TpresetsVideoPlayer(Imode))),
              (Tpreset*&)presetSettings,
              this,
              (TinputPin*&)inpin,
@@ -232,10 +232,12 @@ HRESULT TffdshowDecVideo::checkAllowOutChange(IPin *pPin)
                  clsid==CLSID_DirectVobSubFilter ||
                  clsid==CLSID_DirectVobSubFilter2 ||
                  clsid==CLSID_HaaliVideoRenderer ||
-                 clsid==CLSID_FFDSHOW || clsid==CLSID_FFDSHOWRAW || clsid==CLSID_FFDSHOWSUBTITLES;
+                 clsid==CLSID_FFDSHOW ||
+                 clsid==CLSID_FFDSHOWRAW ||
+                 clsid==CLSID_FFDSHOWSUBTITLES;
    allowOutChange=dvdproc ||
-                  presetSettings->output->allowOutChange3==1 ||
-                  (presetSettings->output->allowOutChange3==2 && filterOk);
+                 presetSettings->output->allowOutChange3==1 ||
+                 (presetSettings->output->allowOutChange3==2 && filterOk);
 
    if (presetSettings->output->allowOutChange3==1 && presetSettings->output->outChangeCompatOnly)
     hr=filterOk ? S_OK : E_FAIL;
@@ -308,7 +310,7 @@ HRESULT TffdshowDecVideo::GetMediaType(int iPosition, CMediaType *mtOut)
  presetSettings->output->getOutputColorspaces(ocsps);
  osize=ocsps.size();
 #endif
- 
+
  if ((size_t)iPosition>=osize) return VFW_S_NO_MORE_ITEMS;
 
  TffPictBase pictOut;
@@ -463,7 +465,7 @@ TvideoCodecDec *pDecoder=NULL;
   }
 #endif
 
-  
+
   int biWidth,outDy;
   BITMAPINFOHEADER *bih;
   if (mt.formattype==FORMAT_VideoInfo && mt.pbFormat) // && mt.pbFormat = work around other filter's bug.
@@ -602,16 +604,16 @@ HRESULT TffdshowDecVideo::DecideBufferSize(IMemAllocator *pAlloc, ALLOCATOR_PROP
  if (pDecoder != NULL && pDecoder->useDXVA()==2)
  {
   TvideoCodecLibavcodecDxva *pDecoderDxva = (TvideoCodecLibavcodecDxva*)pDecoder;
-		HRESULT					hr;
-		ALLOCATOR_PROPERTIES	Actual;
+        HRESULT              hr;
+        ALLOCATOR_PROPERTIES Actual;
 
-		ppropInputRequest->cBuffers = pDecoderDxva->getPicEntryNumber();
+        ppropInputRequest->cBuffers = pDecoderDxva->getPicEntryNumber();
 
-		if(FAILED(hr = pAlloc->SetProperties(ppropInputRequest, &Actual))) 
-			return hr;
+        if(FAILED(hr = pAlloc->SetProperties(ppropInputRequest, &Actual))) 
+            return hr;
 
-		return ppropInputRequest->cBuffers > Actual.cBuffers || ppropInputRequest->cbBuffer > Actual.cbBuffer
-			? E_FAIL : NOERROR;
+        return ppropInputRequest->cBuffers > Actual.cBuffers || ppropInputRequest->cbBuffer > Actual.cbBuffer
+            ? E_FAIL : NOERROR;
  }
 #endif
 
