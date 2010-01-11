@@ -275,25 +275,28 @@ bool TvideoCodecLibavcodecDxva::isDXVASupported(void)
  EnumWindows(EnumFindProcessWnd, (LPARAM)&hWnd);
     detectVideoCard(hWnd);
 
- int nCompat;
-    nCompat = libavcodec->FFH264CheckCompatibility(pictWidthRounded(), pictHeightRounded(), avctx, (BYTE*)avctx->extradata, avctx->extradata_size, nPCIVendor, videoDriverVersion);
-
- int nCompatibilityMode=deci->getParam2(IDFF_dec_DXVA_CompatibilityMode);
-
  bool isDXVACompatible=true;
-    switch (nCompat)
+ if (dxvaCodecId == CODEC_ID_H264_DXVA)
+  {
+   int nCompat;
+   nCompat = libavcodec->FFH264CheckCompatibility(pictWidthRounded(), pictHeightRounded(), avctx, (BYTE*)avctx->extradata, avctx->extradata_size, nPCIVendor, videoDriverVersion);
+
+   int nCompatibilityMode=deci->getParam2(IDFF_dec_DXVA_CompatibilityMode);
+
+   switch (nCompat)
     {
-    case 1 :    // SAR not supported
+     case 1 :    // SAR not supported
          isDXVACompatible = false;
          DPRINTF(_l("TvideoCodecLibavcodecDxva::isDXVASupported : SAR is not supported"));
          if (nCompatibilityMode & 1) isDXVACompatible = true;
          break;
-    case 2 :    // Too much ref frames
+     case 2 :    // Too much ref frames
          isDXVACompatible = false;
          DPRINTF(_l("TvideoCodecLibavcodecDxva::isDXVASupported : too much reference frames"));
          if (nCompatibilityMode & 2) isDXVACompatible = true;
          break;
     }
+  }
  return isDXVACompatible;
 }
 
