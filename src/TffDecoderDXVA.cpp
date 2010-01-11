@@ -109,12 +109,12 @@ HRESULT TffdshowDecVideoDXVA::GetMediaType(int iPosition, CMediaType *mtOut)
  const TcspInfo *c=ocsps[iPosition];
  BITMAPINFOHEADER bih;memset(&bih,0,sizeof(bih));
  bih.biSize  =sizeof(BITMAPINFOHEADER);
- bih.biWidth =pictOut.rectFull.dx;
+ bih.biWidth =pDecoderDxva->pictWidthRounded();
  if(c->id == FF_CSP_420P)    // YV12 and odd number lines.
   {
    pictOut.rectFull.dy=odd2even(pictOut.rectFull.dy);
   }
- bih.biHeight=pictOut.rectFull.dy;
+ bih.biHeight=pDecoderDxva->pictHeightRounded();
  bih.biPlanes=WORD(c->numPlanes);
  bih.biCompression=c->fcc;
  bih.biBitCount=WORD(c->bpp);
@@ -132,7 +132,7 @@ HRESULT TffdshowDecVideoDXVA::GetMediaType(int iPosition, CMediaType *mtOut)
    if (!vih) return E_OUTOFMEMORY;
    ZeroMemory(vih,sizeof(VIDEOINFOHEADER));
 
-   vih->rcSource.left=0;vih->rcSource.right=bih.biWidth;vih->rcSource.top=0;vih->rcSource.bottom=bih.biHeight;
+   vih->rcSource.left=0;vih->rcSource.right=pictOut.rectFull.dx;vih->rcSource.top=0;vih->rcSource.bottom=pictOut.rectFull.dy;
    vih->rcTarget=vih->rcSource;
    vih->AvgTimePerFrame=inpin->avgTimePerFrame;
    vih->bmiHeader=bih;
@@ -151,7 +151,7 @@ HRESULT TffdshowDecVideoDXVA::GetMediaType(int iPosition, CMediaType *mtOut)
 
    //DPRINTF(_l("AR getMediaType: %i:%i"),vih2->dwPictAspectRatioX,vih2->dwPictAspectRatioY);
 
-   vih2->rcSource.left=0;vih2->rcSource.right=bih.biWidth;vih2->rcSource.top=0;vih2->rcSource.bottom=bih.biHeight;
+   vih2->rcSource.left=0;vih2->rcSource.right=pictOut.rectFull.dx;vih2->rcSource.top=0;vih2->rcSource.bottom=pictOut.rectFull.dy;
    vih2->rcTarget=vih2->rcSource;
    vih2->AvgTimePerFrame=inpin->avgTimePerFrame;
    vih2->bmiHeader=bih;
