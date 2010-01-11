@@ -159,6 +159,13 @@ bool TaudioParser::checkOutputFormat(CodecID codecId)
 
  TsampleFormat::DPRINTMediaTypeInfo(mt);
 
+ if (!bitstream_codec(codecId))
+ {
+  DPRINTF(_l("TaudioParser::checkOutputFormat Accept the format without testing it"));
+  return true;
+ }
+
+
  HRESULT hr=S_OK;
  int deviceId=deci->getParam2(IDFF_aoutpassthroughDeviceId);
  if (deviceId<=1 || !bitstream_codec(codecId)) // Use the standard media types if set to default or standard
