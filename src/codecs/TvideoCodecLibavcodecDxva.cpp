@@ -704,6 +704,10 @@ bool TvideoCodecLibavcodecDxva::beginDecompress(TffPictBase &pict,FOURCC fcc,con
  }
  bool result = TvideoCodecLibavcodec::beginDecompress(pict,fcc,mt,sourceFlags);
  if (!result) return false;
+ if (codecId == CODEC_ID_VC1)
+  {
+   bReorderBFrame = false;
+  }
  // One thread for DXVA mode
  int numthreads=1;
  sup_threads_dec(codecId);

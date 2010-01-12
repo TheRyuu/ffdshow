@@ -58,6 +58,7 @@ TvideoCodecDec* TvideoCodecDec::initDec(IffdshowBase *deci,IdecVideoSink *sink,C
    }
    break;
   case CODEC_ID_VC1:
+  case CODEC_ID_WMV9_LIB:
    if (deci->getParam2(IDFF_filterMode) & IDFF_FILTERMODE_VIDEODXVA) {
     if (deci->getParam2(IDFF_dec_DXVA_VC1)) codecId=CODEC_ID_VC1_DXVA;
     else return NULL;
