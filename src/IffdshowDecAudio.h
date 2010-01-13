@@ -39,6 +39,7 @@ template<class tchar> DECLARE_INTERFACE_(IffdshowDecAudioT,IUnknown)
  STDMETHOD (deliverSampleBistream)(void *buf,size_t bufsize,int bit_rate,unsigned int sample_rate,int incRtDec,int frame_length,int iec_length) PURE;
  STDMETHOD_(CTransformOutputPin*, getOutputPin)(void) PURE;
  STDMETHOD_(TsampleFormat, getOutsf)(TsampleFormat &outsf)PURE;
+ STDMETHOD (getInputTime)(REFERENCE_TIME &rtStart, REFERENCE_TIME &rtStop)PURE;
 };
 
 struct IffdshowDecAudioA :IffdshowDecAudioT<char> {};

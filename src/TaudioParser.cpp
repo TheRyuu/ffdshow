@@ -418,7 +418,8 @@ void TaudioParser::NewSegment(void)
  // Solution 2: reset only the context
     audioParserData.channels=0;audioParserData.bit_rate=0;audioParserData.sample_rate=0;//audioParserData.nbFormatChanges=0;
     audioParserData.sample_format=0;audioParserData.frames.clear();
-    includeBytes=0;skipBytes=0;searchSync=true;firstFrame=true;
+    includeBytes=0;skipBytes=0;firstFrame=true;
+    SearchSync();
 }
 
 HRESULT TaudioParser::parseDTS(unsigned char *src, int size, TbyteBuffer *newsrcBuffer)
@@ -531,7 +532,7 @@ HRESULT TaudioParser::parseDTS(unsigned char *src, int size, TbyteBuffer *newsrc
              audioParserData.frames.push_back(TframeData(backupbuf.size()+frame_size));
              backupbuf.clear(); 
             }
-            else
+            else // strip off HD blocks (DTS core only)
             {
              bitdata.bitindex=0;
              bitdata.bitsleft=backupBitsLeft-frame_size*8;
@@ -568,8 +569,10 @@ HRESULT TaudioParser::parseDTS(unsigned char *src, int size, TbyteBuffer *newsrc
            bitdata.getBits2(1); /* Frame type */
            bitdata.getBits2(5); /* Samples deficit */
            int crcpresent = bitdata.getBits2(1); /* CRC present */
-           if (streamformat==DTS || !useDTSHDPassthrough)
-            audioParserData.sample_blocks=(bitdata.getBits2(7)+1)/8; /* sample blocks */
+           uint32_t sample_blocks=(bitdata.getBits2(7)+1)/8; /* sample blocks */
+           // update the stream context with DTS core info only if we have a DTS stream or if we have a DTS-HD stream but we are in DTS core mode (HD blocks stripped off)
+           if (streamformat==DTS || !useDTSHDPassthrough) 
+            audioParserData.sample_blocks=sample_blocks;
            else
             bitdata.getBits2(7);
 
@@ -608,9 +611,12 @@ HRESULT TaudioParser::parseDTS(unsigned char *src, int size, TbyteBuffer *newsrc
            if (ffmpegchannels>5)
                ffmpegchannels=5;
 
-           audioParserData.channels=primchannels+lfe;
+           int channels=primchannels+lfe;
 
-           int datasize=(audioParserData.sample_blocks / 8) * 256 * sizeof(int16_t) * audioParserData.channels;
+           if (streamformat==DTS || !useDTSHDPassthrough)
+            audioParserData.channels=channels;
+
+           int datasize=(sample_blocks / 8) * 256 * sizeof(int16_t) * channels;
 
            bitdata.wordpointer=backuppointer;
            bitdata.bitsleft=backupBitsLeft;
@@ -633,7 +639,7 @@ HRESULT TaudioParser::parseDTS(unsigned char *src, int size, TbyteBuffer *newsrc
               bitdata.bitsleft-=frame_size*8;
               bitdata.wordpointer+=frame_size;
              }
-           }
+           } // DTS or DTS-HD in core mode
            // DTS frame not complete in this buffer. Backup it for next pass
            else if (frame_size>(uint32_t)bitdata.bitsleft/8)
            {
@@ -896,7 +902,7 @@ HRESULT TaudioParser::parseAC3(unsigned char *src, int size, TbyteBuffer *newsrc
            bitdata.showBits(32,32) == 0xf8726fbb) // MLP
        {
            hasMLPFrames=true;
-           searchSync=false;
+           
            uint32_t frame_size1 = bitdata.showBits(32,0);
            WORD frame_time=(WORD)frame_size1;
            //uint32_t frame_size = (((bitdata.wordpointer[0] << 8) | bitdata.wordpointer[1]) & 0xfff) *2;
@@ -904,12 +910,14 @@ HRESULT TaudioParser::parseAC3(unsigned char *src, int size, TbyteBuffer *newsrc
 
            // Oops... current decoder is AC3 whereas we have MLP/TrueHD data =>
            // and AC3 codec is not set to SPDIF and MLP decoder is enabled. So drop AC3 frames and keep MLP/TrueHD only
-           if ((streamformat==REGULAR_AC3 || streamformat==EAC3)
-               && !useAC3CoreOnly)
+           // Also if searchSync is true we throw away the first buffers
+           if (searchSync || ((streamformat==REGULAR_AC3 || streamformat==EAC3)
+               && !useAC3CoreOnly))
            {
-               newsrcBuffer->clear();
-               audioParserData.frames.clear();
+            newsrcBuffer->clear();
+            audioParserData.frames.clear();
            }
+           searchSync=false;
 
 
            // Save the start position and left length of the MLP/TrueHD block
@@ -1008,7 +1016,7 @@ HRESULT TaudioParser::parseAC3(unsigned char *src, int size, TbyteBuffer *newsrc
            bitdata.bitsleft=backupBitsLeft;
            bitdata.wordpointer=backuppointer;
 
-           // If codecId is AC3, throw avay the MLP/TrueHD block
+           // If codecId is AC3, strip off the TrueHD blocks (AC3 Core)
            if (streamformat==AC3_TRUEHD && useAC3CoreOnly)
            {
                bitdata.bitsleft-=frame_size*8;
@@ -1036,6 +1044,9 @@ HRESULT TaudioParser::parseAC3(unsigned char *src, int size, TbyteBuffer *newsrc
                   newsrcBuffer->append(bitdata.wordpointer, frame_size);
                   bitdata.bitsleft-=frame_size*8;
                   bitdata.wordpointer+=frame_size;
+
+                  if (searchSync) continue;
+
                   TframeData frameData = TframeData(frame_size);
 
                   uint32_t rate=64 >> (audioParserData.ratebits & 7); // Used to calculate the number of zeros

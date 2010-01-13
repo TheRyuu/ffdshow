@@ -1183,3 +1183,10 @@ STDMETHODIMP_(CTransformOutputPin*) TffdshowDecAudio::getOutputPin(void)
 {
  return m_pOutput;
 }
+
+STDMETHODIMP TffdshowDecAudio::getInputTime(REFERENCE_TIME &rtStart, REFERENCE_TIME &rtStop)
+{
+ if (inpin==NULL) return E_FAIL;
+ rtStart=inpin->insample_rtStart;
+ rtStop=inpin->insample_rtStop;
+}

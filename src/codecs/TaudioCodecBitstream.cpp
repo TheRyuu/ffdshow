@@ -305,6 +305,8 @@ HRESULT TaudioCodecBitstream::decode(TbyteBuffer &src)
 
     TaudioParser *pAudioParser=NULL;
     sinkA->getAudioParser(&pAudioParser);
+    
+    
     if (pAudioParser == NULL)
     {
       DPRINTF(_l("TaudioCodecBitstream::decode No Audio parser !!"));
@@ -325,9 +327,23 @@ HRESULT TaudioCodecBitstream::decode(TbyteBuffer &src)
       return S_OK;
      }
 
+     if (codecId==CODEC_ID_BITSTREAM_TRUEHD)
+     {
+       TinputPin *inpin = deciA->getInputPin();
+       REFERENCE_TIME rtStart, rtStop;
+       deciA->getInputTime(rtStart, rtStop);
+       if (rtStart<0)
+       {
+        bitstreamBuffer.clear();
+        src.clear();
+        pAudioParser->SearchSync();
+        return S_OK;
+       }
+       return decodeMAT(src, audioParserData);
+     }
+     
      switch(codecId)
      {
-      case CODEC_ID_BITSTREAM_TRUEHD: return decodeMAT(src, audioParserData);
       case CODEC_ID_BITSTREAM_DTSHD:buffer_limit=32768-16;break;
       default:buffer_limit=2048;break;//For now we don't reformat the bistream for other codecs including EAC3. TODO maybe
      }

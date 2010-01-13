@@ -159,7 +159,6 @@ private:
  StreamFormat streamformat;
  TglobalSettingsDecAudio *globalSettings;
  CodecID codecId;
- bool searchSync;
  bool initConfigDone;
  protected:
  comptrQ<IffdshowBase> deci;
@@ -171,6 +170,7 @@ private:
  virtual void initConfig(void);
  //virtual void printbitssimple(uint32_t n); //DEBUG function 
  uint32_t frame_size;
+ bool searchSync;
 public:
  TaudioParser(IffdshowBase *Ideci,IdecAudioSink *Isink);
  virtual ~TaudioParser();
@@ -180,6 +180,7 @@ public:
  virtual void init(void);
  virtual bool checkOutputFormat(CodecID codecId);
  virtual TaudioParserData getParserData(void);
+ void SearchSync() { searchSync=true;audioParserData.isFirst=true;}
  };
 
 #endif

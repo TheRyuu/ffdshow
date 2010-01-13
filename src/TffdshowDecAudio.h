@@ -82,6 +82,7 @@ public:
  STDMETHODIMP deliverSampleBistream(void *buf,size_t bufsize,int bit_rate,unsigned int sample_rate,int incRtDec,int frame_length,int iec_length);
  STDMETHODIMP_(CTransformOutputPin*)getOutputPin(void);
  STDMETHODIMP_(TsampleFormat) getOutsf(TsampleFormat &outsf);
+ STDMETHODIMP getInputTime(REFERENCE_TIME &rtStart, REFERENCE_TIME &rtStop);
 
  static const AMOVIESETUP_MEDIATYPE inputMediaTypes[],outputMediaTypes[];
  static const AMOVIESETUP_PIN pins[];
@@ -155,6 +156,7 @@ private:
    STDMETHODIMP deliverSampleBistream(void *buf,size_t bufsize,int bit_rate,unsigned int sample_rate,int incRtDec,int frame_length,int iec_length) {return deciA->deliverSampleBistream(buf,bufsize,bit_rate,sample_rate,incRtDec,frame_length,iec_length);}
    STDMETHODIMP_(CTransformOutputPin*) getOutputPin(void) { return deciA->getOutputPin();};
    STDMETHODIMP_(TsampleFormat) getOutsf(TsampleFormat &outsf) { return deciA->getOutsf(outsf);};
+   STDMETHODIMP getInputTime(REFERENCE_TIME &rtStart, REFERENCE_TIME &rtStop) { return deciA->getInputTime(rtStart,rtStop);};
   } decAudio_char;
  template<class Tinterface> Tinterface* getDecAudioInterface(void);
 protected:
