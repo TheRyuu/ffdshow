@@ -35,6 +35,7 @@
 #define HAVE_BIGENDIAN 0
 
 #define HAVE_FAST_UNALIGNED 1
+#define HAVE_FAST_CLZ 0
 
 #ifdef __GNUC__
   #define HAVE_ATTRIBUTE_PACKED 1

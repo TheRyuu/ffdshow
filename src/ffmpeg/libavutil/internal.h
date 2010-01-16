@@ -259,6 +259,20 @@ if ((y) < (x)) {\
 
 #ifndef __GNUC__
 
+#ifndef exp2
+static av_always_inline av_const double exp2(double x)
+{
+    return exp(x * 0.693147180559945);
+}
+#endif
+
+#ifndef exp2f
+static av_always_inline av_const float exp2f(float x)
+{
+    return exp2(x);
+}
+#endif
+
 #ifndef rint
 #define rint(x) (int)(x+0.5)
 #endif
@@ -274,6 +288,13 @@ static av_always_inline av_const long long llrint(double x)
 static av_always_inline av_const double log2(double x)
 {
     return log(x) * 1.44269504088896340736;
+}
+#endif
+
+#ifndef log2f
+static av_always_inline av_const float log2f(float x)
+{
+    return log2(x);
 }
 #endif
 

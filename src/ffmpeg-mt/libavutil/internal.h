@@ -156,8 +156,6 @@ extern const uint32_t ff_inverse[257];
 
 extern const uint8_t ff_sqrt_tab[256];
 
-static inline int av_log2_16bit(unsigned int v);
-
 static inline av_const unsigned int ff_sqrt(unsigned int a)
 {
     unsigned int b;
@@ -261,6 +259,20 @@ if ((y) < (x)) {\
 
 #ifndef __GNUC__
 
+#ifndef exp2
+static av_always_inline av_const double exp2(double x)
+{
+    return exp(x * 0.693147180559945);
+}
+#endif
+
+#ifndef exp2f
+static av_always_inline av_const float exp2f(float x)
+{
+    return exp2(x);
+}
+#endif
+
 #ifndef rint
 #define rint(x) (int)(x+0.5)
 #endif
@@ -276,6 +288,13 @@ static av_always_inline av_const long long llrint(double x)
 static av_always_inline av_const double log2(double x)
 {
     return log(x) * 1.44269504088896340736;
+}
+#endif
+
+#ifndef log2f
+static av_always_inline av_const float log2f(float x)
+{
+    return log2(x);
 }
 #endif
 

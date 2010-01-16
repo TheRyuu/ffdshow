@@ -140,7 +140,7 @@ static void field_end_noexecute(H264Context *h){
     s->current_picture_ptr->pict_type= s->pict_type;
 
     if(!s->dropable) {
-        execute_ref_pic_marking(h, h->mmco, h->mmco_index);
+        ff_h264_execute_ref_pic_marking(h, h->mmco, h->mmco_index);
         h->prev_poc_msb= h->poc_msb;
         h->prev_poc_lsb= h->poc_lsb;
     }
@@ -268,7 +268,7 @@ int decode_slice_header_noexecute (H264Context *h){
         h->prev_interlaced_frame = 1;
 
         init_scan_tables(h);
-        alloc_tables(h);
+        ff_h264_alloc_tables(h);
 
         for(i = 1; i < s->avctx->thread_count; i++) {
             H264Context *c;
@@ -350,12 +350,12 @@ int decode_slice_header_noexecute (H264Context *h){
         while(h->frame_num !=  h->prev_frame_num &&
               h->frame_num != (h->prev_frame_num+1)%(1<<h->sps.log2_max_frame_num)){
             av_log(NULL, AV_LOG_DEBUG, "Frame num gap %d %d\n", h->frame_num, h->prev_frame_num);
-            if (frame_start(h) < 0)
+            if (ff_h264_frame_start(h) < 0)
                 return -1;
             h->prev_frame_num++;
             h->prev_frame_num %= 1<<h->sps.log2_max_frame_num;
             s->current_picture_ptr->frame_num= h->prev_frame_num;
-            execute_ref_pic_marking(h, NULL, 0);
+            ff_h264_execute_ref_pic_marking(h, NULL, 0);
         }
 
         /* See if we have a decoded first field looking for a pair... */
@@ -399,7 +399,7 @@ int decode_slice_header_noexecute (H264Context *h){
             s0->first_field = FIELD_PICTURE;
         }
 
-        if((!FIELD_PICTURE || s0->first_field) && frame_start(h) < 0) {
+        if((!FIELD_PICTURE || s0->first_field) && ff_h264_frame_start(h) < 0) {
             s0->first_field = 0;
             return -1;
         }
@@ -483,10 +483,10 @@ int decode_slice_header_noexecute (H264Context *h){
         h->list_count= 0;
 
     if(!default_ref_list_done){
-        fill_default_ref_list(h);
+        ff_h264_fill_default_ref_list(h);
     }
 
-    if(h->slice_type_nos!=FF_I_TYPE && decode_ref_pic_list_reordering(h) < 0)
+    if(h->slice_type_nos!=FF_I_TYPE && ff_h264_decode_ref_pic_list_reordering(h) < 0)
         return -1;
 
     if(h->slice_type_nos!=FF_I_TYPE){
@@ -512,14 +512,14 @@ int decode_slice_header_noexecute (H264Context *h){
     }
 
     if(h->nal_ref_idc)
-        decode_ref_pic_marking(h0, &s->gb);
+        ff_h264_decode_ref_pic_marking(h0, &s->gb);
 
     if(FRAME_MBAFF)
-        fill_mbaff_ref_list(h);
+        ff_h264_fill_mbaff_ref_list(h);
 
     if(h->slice_type_nos==FF_B_TYPE && !h->direct_spatial_mv_pred)
-        direct_dist_scale_factor(h);
-    direct_ref_list_init(h);
+        ff_h264_direct_dist_scale_factor(h);
+    ff_h264_direct_ref_list_init(h);
 
     if( h->slice_type_nos != FF_I_TYPE && h->pps.cabac ){
         tmp = get_ue_golomb_31(&s->gb);
@@ -672,7 +672,7 @@ static int decode_nal_units_noexecute(H264Context *h, uint8_t *buf, int buf_size
         h->current_slice = 0;
         if (!s->first_field)
             s->current_picture_ptr= NULL;
-        reset_sei(h);
+        ff_h264_reset_sei(h);
     }
 
     for(;;){
@@ -1027,8 +1027,8 @@ int av_h264_decode_frame(struct AVCodecContext* avctx, uint8_t *buf, int buf_siz
             }
 
             /* ffdshow custom code */
-            cur->video_full_range_flag = h->sps.video_full_range_flag;
-            cur->YCbCr_RGB_matrix_coefficients = h->sps.matrix_coefficients;
+            cur->video_full_range_flag = h->sps.full_range;
+            cur->YCbCr_RGB_matrix_coefficients = h->sps.colorspace;
 
         //FIXME do something with unavailable reference frames
 

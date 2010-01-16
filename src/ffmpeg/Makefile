@@ -49,6 +49,7 @@ SRCS_C=\
       $(LAVC_DIR)/eval.c \
       $(LAVC_DIR)/faandct.c \
       $(LAVC_DIR)/faanidct.c \
+      $(LAVC_DIR)/ffmpegContext.c \
       $(LAVC_DIR)/fft.c \
       $(LAVC_DIR)/ffv1.c \
       $(LAVC_DIR)/flac.c \
@@ -67,7 +68,14 @@ SRCS_C=\
       $(LAVC_DIR)/h263_parser.c \
       $(LAVC_DIR)/h263dec.c \
       $(LAVC_DIR)/h264.c \
+      $(LAVC_DIR)/h264_cabac.c \
+      $(LAVC_DIR)/h264_cavlc.c \
+      $(LAVC_DIR)/h264_direct.c \
+      $(LAVC_DIR)/h264_loopfilter.c \
       $(LAVC_DIR)/h264_parser.c \
+      $(LAVC_DIR)/h264_ps.c \
+      $(LAVC_DIR)/h264_refs.c \
+      $(LAVC_DIR)/h264_sei.c \
       $(LAVC_DIR)/h264idct.c \
       $(LAVC_DIR)/h264pred.c \
       $(LAVC_DIR)/huffman.c \
@@ -79,6 +87,8 @@ SRCS_C=\
       $(LAVC_DIR)/intelh263dec.c \
       $(LAVC_DIR)/intrax8.c \
       $(LAVC_DIR)/intrax8dsp.c \
+      $(LAVC_DIR)/ituh263dec.c \
+      $(LAVC_DIR)/ituh263enc.c \
       $(LAVC_DIR)/jfdctfst.c \
       $(LAVC_DIR)/jfdctint.c \
       $(LAVC_DIR)/jpegls.c \
@@ -90,6 +100,7 @@ SRCS_C=\
       $(LAVC_DIR)/loco.c \
       $(LAVC_DIR)/mace.c \
       $(LAVC_DIR)/mdct.c \
+      $(LAVC_DIR)/mdct_tablegen.c \
       $(LAVC_DIR)/mjpeg.c \
       $(LAVC_DIR)/mjpeg_parser.c \
       $(LAVC_DIR)/mjpegbdec.c \
@@ -103,7 +114,10 @@ SRCS_C=\
       $(LAVC_DIR)/mpeg12.c \
       $(LAVC_DIR)/mpeg12data.c \
       $(LAVC_DIR)/mpeg12enc.c \
+      $(LAVC_DIR)/mpeg4video.c \
       $(LAVC_DIR)/mpeg4video_parser.c \
+      $(LAVC_DIR)/mpeg4videodec.c \
+      $(LAVC_DIR)/mpeg4videoenc.c \
       $(LAVC_DIR)/mpegaudio.c \
       $(LAVC_DIR)/mpegaudiodata.c \
       $(LAVC_DIR)/mpegaudiodec.c \
@@ -144,7 +158,9 @@ SRCS_C=\
       $(LAVC_DIR)/sp5xdec.c \
       $(LAVC_DIR)/svq1.c \
       $(LAVC_DIR)/svq1dec.c \
+      $(LAVC_DIR)/svq3.c \
       $(LAVC_DIR)/synth_filter.c \
+      $(LAVC_DIR)/tableprint.c \
       $(LAVC_DIR)/truemotion1.c \
       $(LAVC_DIR)/truemotion2.c \
       $(LAVC_DIR)/truespeech.c \
@@ -221,8 +237,7 @@ SRCS_C=\
       $(LAVC_DIR)/x86/vp3dsp_mmx.c \
       $(LAVC_DIR)/x86/vp3dsp_sse2.c \
       $(LAVC_DIR)/x86/vp6dsp_mmx.c \
-      $(LAVC_DIR)/x86/vp6dsp_sse2.c \
-      $(LAVC_DIR)/ffmpegContext.c
+      $(LAVC_DIR)/x86/vp6dsp_sse2.c
 
 ifneq ($(64BIT),yes)
 SRCS_C+=\
