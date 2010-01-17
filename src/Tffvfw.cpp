@@ -64,10 +64,7 @@ public:
    decodedPict = Trect(pict.rectFull, pict.rectFull.sar);
    if (!imgFilters) imgFilters=createImgFilters();
    HRESULT hr = imgFilters->process(pict,presetSettings);
-   if (hr == S_OK)
-    {
-     hr=imgFilters->deliverSample(pict);
-    }
+   hr=imgFilters->deliverSample(pict);
    return hr;
   }
  bool getFlip(void) const

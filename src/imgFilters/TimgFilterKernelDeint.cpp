@@ -216,7 +216,7 @@ HRESULT TimgFilterKernelDeint::process(TfilterQueue::iterator it,TffPict &pict,c
   }
  n++;
  pict.fieldtype=(pict.fieldtype & ~(FIELD_TYPE::MASK_PROG_INT)) | FIELD_TYPE::PROGRESSIVE_FRAME;
- return parent->deliverSample(++it,pict);
+ return parent->processSample(++it,pict);
 }
 void TimgFilterKernelDeint::onSeek(void)
 {
