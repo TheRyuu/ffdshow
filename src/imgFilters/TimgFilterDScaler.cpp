@@ -151,5 +151,5 @@ HRESULT TimgFilterDScalerFLT::process(TfilterQueue::iterator it,TffPict &pict,co
      di.PictureHistory[0]=p;
     }
   }
- return parent->deliverSample(++it,pict);
+ return parent->processSample(++it,pict);
 }

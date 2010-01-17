@@ -111,7 +111,7 @@ HRESULT TimgFilterOffset::process(TfilterQueue::iterator it,TffPict &pict,const 
      offset(128,srcV,stride1[2],dstV,stride2[2],dx1[2],dy1[2],cfg->V_X>>pict.cspInfo.shiftX[2],-cfg->V_Y>>pict.cspInfo.shiftY[2]);
     }
   }
- return parent->deliverSample(++it,pict);
+ return parent->processSample(++it,pict);
 }
 
 //================================== TimgFilterFlip ==================================
@@ -144,7 +144,7 @@ HRESULT TimgFilterFlip::process(TfilterQueue::iterator it,TffPict &pict,const Tf
       }
     }
   }
- return parent->deliverSample(++it,pict);
+ return parent->processSample(++it,pict);
 }
 
 //================================== TimgFilterMirror ==================================
@@ -214,5 +214,5 @@ HRESULT TimgFilterMirror::process(TfilterQueue::iterator it,TffPict &pict,const 
         (this->*mirrorFc)(i,dx,ptr[i]);
       }
   }
- return parent->deliverSample(++it,pict);
+ return parent->processSample(++it,pict);
 }

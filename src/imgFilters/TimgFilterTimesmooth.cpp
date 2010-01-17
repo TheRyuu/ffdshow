@@ -156,7 +156,7 @@ HRESULT TimgFilterTimesmooth::process(TfilterQueue::iterator it,TffPict &pict,co
    isFirstFrame=false;
    if (++framecount>=KERNEL) framecount=0;
   }
- return parent->deliverSample(++it,pict);
+ return parent->processSample(++it,pict);
 }
 void TimgFilterTimesmooth::smooth(const unsigned char *src,stride_t srcStride,unsigned char *dst,stride_t dstStride,unsigned char *Iaccum,unsigned int dx,unsigned int dy)
 {

@@ -426,7 +426,7 @@ HRESULT TimgFilterSmootherLuma::process(TfilterQueue::iterator it,TffPict &pict,
    if (!blur1) blur1=new Tblur(dx1[0],dy1[0]);
    blur1->run(srcY,stride1[0],dstY,stride2[0],cfg->smoothStrengthLuma);
   }
- return parent->deliverSample(++it,pict);
+ return parent->processSample(++it,pict);
 }
 
 //==================================== TimgFilterSmootherChroma ===================================
@@ -459,5 +459,5 @@ HRESULT TimgFilterSmootherChroma::process(TfilterQueue::iterator it,TffPict &pic
    if (!blur2) blur2=new Tblur(dx1[2],dy1[2]);
    blur2->run(srcV,stride1[2],dstV,stride2[2],cfg->smoothStrengthChroma);
   }
- return parent->deliverSample(++it,pict);
+ return parent->processSample(++it,pict);
 }

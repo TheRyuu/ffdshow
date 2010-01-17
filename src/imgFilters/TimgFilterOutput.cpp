@@ -201,5 +201,5 @@ HRESULT TimgFilterOutputConvert::process(TfilterQueue::iterator it,TffPict &pict
  init(pict,true,false);
  const unsigned char *src[4];
  getCur(cfg->csp,pict,true,src);
- return parent->deliverSample(++it,pict);
+ return parent->processSample(++it,pict);
 }

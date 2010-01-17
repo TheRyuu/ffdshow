@@ -1166,7 +1166,7 @@ STDMETHODIMP TffdshowDecVideo::flushDecodedSamples(void)
  return deliverDecodedSample(pict);
 }
 
-STDMETHODIMP TffdshowDecVideo::deliverDecodedSample(TffPict &pict)
+STDMETHODIMP TffdshowDecVideo::processDecodedSample(TffPict &pict)
 {
  // Maybe we're waiting for a keyframe still?
  if (waitForKeyframe && (pict.frametype&FRAME_TYPE::typemask)==FRAME_TYPE::I)
@@ -1304,6 +1304,16 @@ STDMETHODIMP TffdshowDecVideo::deliverDecodedSample(TffPict &pict)
  decodedPict = Trect(pict.rectFull, pict.rectFull.sar);
 
  return imgFilters->process(pict,presetSettings);
+}
+
+STDMETHODIMP TffdshowDecVideo::deliverDecodedSample(TffPict &pict)
+{
+ HRESULT hr = processDecodedSample(pict);
+ if (hr == S_OK)
+  {
+   hr = imgFilters->deliverSample(pict);
+  }
+ return hr;
 }
 
 STDMETHODIMP TffdshowDecVideo::deliverProcessedSample(TffPict &pict)

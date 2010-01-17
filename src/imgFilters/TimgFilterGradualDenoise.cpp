@@ -134,7 +134,7 @@ HRESULT TimgFilterGradualDenoise::process(TfilterQueue::iterator it,TffPict &pic
 
    (this->*denoiseFc)(cfg->gradualStrength,dx1[0],dy1[0],srcY,stride1[0],dstY,stride2[0]);
   }
- return parent->deliverSample(++it,pict);
+ return parent->processSample(++it,pict);
 }
 
 void TimgFilterGradualDenoise::onSeek(void)

@@ -63,7 +63,12 @@ public:
    // Store the decoded picture dimensions (used by some imgFilters)
    decodedPict = Trect(pict.rectFull, pict.rectFull.sar);
    if (!imgFilters) imgFilters=createImgFilters();
-   return imgFilters->process(pict,presetSettings);
+   HRESULT hr = imgFilters->process(pict,presetSettings);
+   if (hr == S_OK)
+    {
+     hr=imgFilters->deliverSample(pict);
+    }
+   return hr;
   }
  bool getFlip(void) const
   {

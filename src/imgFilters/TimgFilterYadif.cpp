@@ -176,7 +176,7 @@ HRESULT TimgFilterYadif::put_image(TffPict &pict, const unsigned char *src[4], i
 
         // DPRINTF(_l("rtStart=%I64i rtStop=%I64i"), pict.rtStart, pict.rtStop);
         last_rtStop = pict.rtStop;
-        HRESULT hr = parent->deliverSample(++it, pict);
+        HRESULT hr = parent->processSample(++it, pict);
         --it;
 
         if (frame_pos == double_frame_rate || hr != S_OK)
@@ -299,7 +299,7 @@ bool TimgFilterYadif::onPullImageFromSubtitlesFilter(void)
     }
     hasImageInBuffer = false;
     parent->setStopAtSubtitles(true);
-    parent->deliverSample(++it,pict1);
+    parent->processSample(++it,pict1);
     return true;
 }
 
@@ -339,13 +339,13 @@ HRESULT TimgFilterYadif::process(TfilterQueue::iterator it0,TffPict &pict,const 
     bool start_and_end_frame = ((fieldtype & FIELD_TYPE::SEQ_START) && (fieldtype & FIELD_TYPE::SEQ_END));
 
     if (!dllok){
-        return parent->deliverSample(++it,pict);
+        return parent->processSample(++it,pict);
     }
 
     if (((pict.fieldtype & FIELD_TYPE::PROGRESSIVE_FRAME) || pict.film) && !cfg->deinterlaceAlways){
         onDiscontinuity(pict);
         done();
-        return parent->deliverSample(++it,pict);
+        return parent->processSample(++it,pict);
     }
 
     if (pict.rectClip != pict.rectFull && !cfg->full)
@@ -359,7 +359,7 @@ HRESULT TimgFilterYadif::process(TfilterQueue::iterator it0,TffPict &pict,const 
         done();
         if (start_and_end_frame){
             // Only one frame in the sequence, means it is best to skip deinterlacing.
-            return parent->deliverSample(++it,pict);
+            return parent->processSample(++it,pict);
         }
     }
 
@@ -368,7 +368,7 @@ HRESULT TimgFilterYadif::process(TfilterQueue::iterator it0,TffPict &pict,const 
         // Besides it is not likely to be intalaced, bufferring a frame with long duration will make a mess.
         onDiscontinuity(pict);
         done();
-        return parent->deliverSample(++it,pict);
+        return parent->processSample(++it,pict);
     }
 
     const unsigned char *src[4];

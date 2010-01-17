@@ -1020,13 +1020,13 @@ void TimgFilterAvisynth::Tavisynth::process(TimgFilterAvisynth *self,TfilterQueu
          TffPict tempPict=pict;
 
          ++it;
-         self->parent->deliverSample(it,tempPict);
+         self->parent->processSample(it,tempPict);
          --it;
         }
        else
         {
          ++it;
-         self->parent->deliverSample(it,pict);
+         self->parent->processSample(it,pict);
          --it;
         }
       }

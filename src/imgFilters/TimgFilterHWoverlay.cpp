@@ -93,5 +93,5 @@ HRESULT TimgFilterHWoverlay::process(TfilterQueue::iterator it,TffPict &pict,con
     }
    old=*cfg;
   }
- return parent->deliverSample(++it,pict);
+ return parent->processSample(++it,pict);
 }

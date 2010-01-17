@@ -50,7 +50,7 @@ HRESULT TimgFilterDGbob::process(TfilterQueue::iterator it,TffPict &pict0,const 
  if (((pict0.fieldtype & FIELD_TYPE::PROGRESSIVE_FRAME) || pict0.film) && !cfg->deinterlaceAlways)
  {
   done();
-  return parent->deliverSample(++it,pict0);
+  return parent->processSample(++it,pict0);
  }
  init(pict0,cfg->full,0);
  const unsigned char *src_[4];
@@ -307,7 +307,7 @@ HRESULT TimgFilterDGbob::process(TfilterQueue::iterator it,TffPict &pict0,const 
     pict.clear(true);
    TtempPict *pp=picts0[0];memmove(picts0,picts0+1,4*sizeof(picts0[0]));picts0[4]=pp;
    pict.rtStart=rtStart;pict.rtStop=pict.rtStart+rtDuration;rtStart+=rtDuration;
-   HRESULT hr=parent->deliverSample(++it,pict);
+   HRESULT hr=parent->processSample(++it,pict);
    if (FAILED(hr))
     return hr;
    n++;

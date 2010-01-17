@@ -198,7 +198,7 @@ HRESULT TimgFilterGrab::process(TfilterQueue::iterator it,TffPict &pict,const Tf
     }
   }
  if (wasNow) InterlockedDecrement((LONG*)&now);
- return parent->deliverSample(++it,pict);
+ return parent->processSample(++it,pict);
 }
 
 HRESULT TimgFilterGrab::queryInterface(const IID &iid,void **ptr) const

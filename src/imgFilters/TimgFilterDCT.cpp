@@ -343,7 +343,7 @@ HRESULT TimgFilterDCT::process(TfilterQueue::iterator it,TffPict &pict,const Tfi
    if (dy1[0]&7)
     TffPict::copy(dstY,stride2[0],srcY,stride1[0],dx1[0],dy1[0]&7);
   }
- return parent->deliverSample(++it,pict);
+ return parent->processSample(++it,pict);
 }
 
 short TimgFilterDCT::iclip[1024],*TimgFilterDCT::iclp;

@@ -72,7 +72,7 @@ bool TimgFilter::is(const TffPictBase &pict,const TfilterSettingsVideo *cfg)
 
 HRESULT TimgFilter::flush(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)
 {
- return parent->deliverSample(++it,pict);
+ return parent->processSample(++it,pict);
 }
 
 bool TimgFilter::getOutputFmt(TffPictBase &pict,const TfilterSettingsVideo *cfg)

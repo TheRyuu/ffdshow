@@ -354,5 +354,5 @@ HRESULT TimgFilterResize::process(TfilterQueue::iterator it,TffPict &pict,const 
     }
    if (!parent->dirtyBorder) parent->dirtyBorder=1;
   }
- return parent->deliverSample(++it,pict);
+ return parent->processSample(++it,pict);
 }

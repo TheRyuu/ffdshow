@@ -71,7 +71,7 @@ HRESULT TimgFilterTomsMoComp::process(TfilterQueue::iterator it,TffPict &pict,co
    const TdeinterlaceSettings *cfg=(const TdeinterlaceSettings*)cfg0;
    if (((pict.fieldtype & FIELD_TYPE::PROGRESSIVE_FRAME) || pict.film)&& !cfg->deinterlaceAlways)
    {
-    return parent->deliverSample(++it,pict);
+    return parent->processSample(++it,pict);
    }
    init(pict,cfg->full,cfg->half);
    const unsigned char *src[4];
@@ -116,7 +116,7 @@ HRESULT TimgFilterTomsMoComp::process(TfilterQueue::iterator it,TffPict &pict,co
  if (pict.rectClip != pict.rectFull)
   parent->dirtyBorder=1;
 
- return parent->deliverSample(++it,pict);
+ return parent->processSample(++it,pict);
 }
 void TimgFilterTomsMoComp::onSeek(void)
 {

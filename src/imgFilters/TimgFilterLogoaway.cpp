@@ -750,5 +750,5 @@ HRESULT TimgFilterLogoaway::process(TfilterQueue::iterator it,TffPict &pict,cons
      plane[i].process(cfg);
     }
   }
- return parent->deliverSample(++it,pict);
+ return parent->processSample(++it,pict);
 }

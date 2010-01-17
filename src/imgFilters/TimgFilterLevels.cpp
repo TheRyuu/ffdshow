@@ -230,7 +230,7 @@ HRESULT TimgFilterLevels::process(TfilterQueue::iterator it,TffPict &pict,const 
      else if (lumaoffset==1 && chromaoffset==0 && oldSettings.onlyLuma==1) processPacked<1,0,1>(srcY,dstY);
     }
   }
- return parent->deliverSample(++it,pict);
+ return parent->processSample(++it,pict);
 }
 
 void TimgFilterLevels::resetHistory(void)

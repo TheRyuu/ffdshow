@@ -333,7 +333,7 @@ HRESULT TimgFilterShowMV::process(TfilterQueue::iterator it,TffPict &pict,const 
        }
     }
   }
- return parent->deliverSample(++it,pict);
+ return parent->processSample(++it,pict);
 }
 
 void TimgFilterShowMV::onSeek(void)

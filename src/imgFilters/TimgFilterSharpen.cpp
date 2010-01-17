@@ -103,7 +103,7 @@ HRESULT TimgFilterAsharp::process(TfilterQueue::iterator it,TffPict &pict,const 
       dst[y*stride2[0]+dx1[0]-1]=lastX1[y];
      }
   }
- return parent->deliverSample(++it,pict);
+ return parent->processSample(++it,pict);
 }
 
 //==================================== TimgFilterMplayerSharp ====================================
@@ -153,7 +153,7 @@ HRESULT TimgFilterMplayerSharp::process(TfilterQueue::iterator it,TffPict &pict,
    if (swsc)
     libmplayer->sws_scale_ordered(swsc,src,stride1,0,dy1[0],dst,stride2);
   }
- return parent->deliverSample(++it,pict);
+ return parent->processSample(++it,pict);
 }
 
 //==================================== TimgFilterUnsharp ====================================
@@ -239,7 +239,7 @@ HRESULT TimgFilterUnsharp::process(TfilterQueue::iterator it,TffPict &pict,const
    memcpy(dst_+stride2[0]*(dy1[0]-2),src_+stride1[0]*(dy1[0]-2),dx1[0]);
    memcpy(dst_+stride2[0]*(dy1[0]-1),src_+stride1[0]*(dy1[0]-1),dx1[0]);
   }
- return parent->deliverSample(++it,pict);
+ return parent->processSample(++it,pict);
 }
 
 //==================================== TimgFilterXsharp =====================================
@@ -336,7 +336,7 @@ HRESULT TimgFilterXsharp::process(TfilterQueue::iterator it,TffPict &pict,const 
 
    (this->*xsharpenFc)(dx1[0],dy1[0],cfg,src,stride1[0],dst,stride2[0]);
   }
- return parent->deliverSample(++it,pict);
+ return parent->processSample(++it,pict);
 }
 
 //==================================== TimgFilterMsharp =====================================
@@ -516,5 +516,5 @@ HRESULT TimgFilterMsharp::process(TfilterQueue::iterator it,TffPict &pict,const 
     }
    _mm_empty();
   }
- return parent->deliverSample(++it,pict);
+ return parent->processSample(++it,pict);
 }

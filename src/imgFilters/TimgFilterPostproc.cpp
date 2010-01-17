@@ -234,7 +234,7 @@ HRESULT TimgFilterPostprocMplayer::process(TfilterQueue::iterator it,TffPict &pi
                                 &pp_mode,pp_ctx,frametype);
     }
   }
- return parent->deliverSample(++it,pict);
+ return parent->processSample(++it,pict);
 }
 
 //============================== TimgFilterPostprocSpp ===============================
@@ -951,7 +951,7 @@ HRESULT TimgFilterPostprocSpp::process(TfilterQueue::iterator it,TffPict &pict,c
     }
   }
 #endif
- return parent->deliverSample(++it,pict);
+ return parent->processSample(++it,pict);
 }
 
 //============================== TimgFilterPostprocNic ===============================
@@ -996,7 +996,7 @@ HRESULT TimgFilterPostprocNic::process(TfilterQueue::iterator it,TffPict &pict,c
       }
     }
   }
- return parent->deliverSample(++it,pict);
+ return parent->processSample(++it,pict);
 }
 
 //============================ TimgFilterPostprocFspp ===============================
@@ -2528,5 +2528,5 @@ HRESULT TimgFilterPostprocFspp::process(TfilterQueue::iterator it,TffPict &pict,
      if (Tconfig::cpu_flags&FF_CPU_MMXEXT) _mm_sfence();
     }
   }
- return parent->deliverSample(++it,pict);
+ return parent->processSample(++it,pict);
 }

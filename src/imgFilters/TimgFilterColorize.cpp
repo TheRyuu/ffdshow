@@ -87,5 +87,5 @@ HRESULT TimgFilterColorize::process(TfilterQueue::iterator it,TffPict &pict,cons
    YUVcolor c0=cfg->colorizeColor;int c[3]={c0.Y,c0.U*2,c0.V*2};
    (this->*colorizeFc)(pict,cfg,c0,c);
   }
- return parent->deliverSample(++it,pict);
+ return parent->processSample(++it,pict);
 }

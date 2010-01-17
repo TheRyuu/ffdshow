@@ -609,7 +609,7 @@ HRESULT TimgFilterOSD::process(TfilterQueue::iterator it,TffPict &pict,const Tfi
    csClean.Unlock();
   }
  csProvider.Unlock();
- return parent->deliverSample(++it,pict);
+ return parent->processSample(++it,pict);
 }
 
 STDMETHODIMP_(const char_t*) TimgFilterOSD::getInfoItemName(int type)

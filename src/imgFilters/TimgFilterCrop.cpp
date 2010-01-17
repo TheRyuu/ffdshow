@@ -321,7 +321,7 @@ HRESULT TimgFilterCrop::process(TfilterQueue::iterator it,TffPict &pict,const Tf
   pict.rectClip=Trect(rectCrop,pict.rectClip.sar);
 
  pict.calcDiff();
- return parent->deliverSample(++it,pict);
+ return parent->processSample(++it,pict);
 }
 
 //========================= TimgFilterCropExpand ==============================
@@ -374,5 +374,5 @@ HRESULT TimgFilterCropExpand::process(TfilterQueue::iterator it,TffPict &pict,co
     }
    expand(pict,cfg,true);
   }
- return parent->deliverSample(++it,pict);
+ return parent->processSample(++it,pict);
 }

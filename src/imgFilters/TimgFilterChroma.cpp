@@ -89,5 +89,5 @@ HRESULT TimgFilterChroma::process(TfilterQueue::iterator it,TffPict &pict,const 
    getCurNext(csp1,pict,cfg->full,COPYMODE_NO,NULL,&dstU,&dstV,NULL);
    (this->*chromaFc)(cfg,srcU,srcV,dstU,dstV);
   }
- return parent->deliverSample(++it,pict);
+ return parent->processSample(++it,pict);
 }

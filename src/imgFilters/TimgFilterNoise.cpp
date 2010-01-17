@@ -288,7 +288,7 @@ HRESULT TimgFilterNoiseMplayer::process(TfilterQueue::iterator it,TffPict &pict,
      _mm_empty();
     }
   }
- return parent->deliverSample(++it,pict);
+ return parent->processSample(++it,pict);
 }
 
 //========================================= TimgFilterNoise =========================================
@@ -570,7 +570,7 @@ HRESULT TimgFilterNoise::process(TfilterQueue::iterator it,TffPict &pict,const T
     }
   }
  _mm_empty();
- return parent->deliverSample(++it,pict);
+ return parent->processSample(++it,pict);
 }
 #pragma warning(pop)
 
@@ -604,7 +604,7 @@ HRESULT TimgFilterFlicker::process(TfilterQueue::iterator it,TffPict &pict,const
    return luma->process(it,pict,&lumaSettings);
   }
  else
-  return parent->deliverSample(++it,pict);
+  return parent->processSample(++it,pict);
 }
 
 //========================================= TimgFilterShake =========================================
@@ -646,7 +646,7 @@ HRESULT TimgFilterShake::process(TfilterQueue::iterator it,TffPict &pict,const T
    return offset->process(it,pict,&offsetSettings);
   }
  else
-  return parent->deliverSample(++it,pict);
+  return parent->processSample(++it,pict);
 }
 
 //======================================= TimgFilterFilmLines =======================================
@@ -700,7 +700,7 @@ HRESULT TimgFilterFilmLines::process(TfilterQueue::iterator it,TffPict &pict,con
       }
     }
   }
- return parent->deliverSample(++it,pict);
+ return parent->processSample(++it,pict);
 }
 void TimgFilterFilmLines::onSeek(void)
 {
@@ -784,5 +784,5 @@ HRESULT TimgFilterScratches::process(TfilterQueue::iterator it,TffPict &pict,con
    else
     scratchesT++;
   }
- return parent->deliverSample(++it,pict);
+ return parent->processSample(++it,pict);
 }

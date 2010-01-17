@@ -285,6 +285,7 @@ public:
  STDMETHODIMP compat_putParamStrW(unsigned int paramID,const wchar_t *buf) {return putParamStr(paramID,buf);}
 
  // IdecVideoSink
+ STDMETHODIMP processDecodedSample(TffPict &pict);
  STDMETHODIMP deliverDecodedSample(TffPict &pict);
  STDMETHODIMP deliverPreroll(int frametype);
  STDMETHODIMP acceptsManyFrames(void) {return S_OK;}

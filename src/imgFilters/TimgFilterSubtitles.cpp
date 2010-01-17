@@ -475,7 +475,7 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
       if (!again)
           return S_OK;
       else
-          return parent->deliverSample(it,pict);
+          return parent->processSample(it,pict);
     } else {
         adhocMode = ADHOC_NORMAL;
     }
@@ -486,7 +486,7 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
         return S_OK;
     }
 
-    return parent->deliverSample(++it,pict);
+    return parent->processSample(++it,pict);
 }
 
 TsubtitlesTextpin* TimgFilterSubtitles::getTextpin()

@@ -107,7 +107,7 @@ HRESULT TimgFilterDScalerDI::process(TfilterQueue::iterator it,TffPict &pict0,co
  if (((pict0.fieldtype & FIELD_TYPE::PROGRESSIVE_FRAME) || pict0.film) && !cfg->deinterlaceAlways)
   {
    done();
-   return parent->deliverSample(++it,pict0);
+   return parent->processSample(++it,pict0);
   }
  if (cfg->dscalerFlnm[0] && stricmp(oldfltflnm,cfg->dscalerFlnm)!=0)
   {
@@ -211,7 +211,7 @@ HRESULT TimgFilterDScalerDI::process(TfilterQueue::iterator it,TffPict &pict0,co
    if (pict.rectClip != pict.rectFull)
     parent->dirtyBorder=1;
 
-   HRESULT hr=parent->deliverSample(++it,pict);
+   HRESULT hr=parent->processSample(++it,pict);
    if (FAILED(hr))
     return hr;
   }

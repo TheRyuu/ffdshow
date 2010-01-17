@@ -320,5 +320,5 @@ HRESULT TimgFilterGradfun::process(TfilterQueue::iterator it,TffPict &pict,const
    for (unsigned int i=0;i<pict.cspInfo.numPlanes;i++)
     gradFun->GF_filter(edge?pict.edgeData[i]:dst[i],edge?pict.stride[i]:stride2[i],edge?(pict.rectEdge.dx>>pict.cspInfo.shiftX[i])*pict.cspInfo.Bpp:dx2[i],edge?(pict.rectEdge.dy>>pict.cspInfo.shiftY[i]):dy2[i]);
   }
- return parent->deliverSample(++it,pict);
+ return parent->processSample(++it,pict);
 }

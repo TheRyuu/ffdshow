@@ -69,7 +69,7 @@ HRESULT TimgFilterDenoise3d::process(TfilterQueue::iterator it,TffPict &pict,con
 
    deNoise(pict,dx1[0],dy1[0],src,stride1,dst,stride2);
   }
- return parent->deliverSample(++it,pict);
+ return parent->processSample(++it,pict);
 }
 
 void TimgFilterDenoise3d::onSeek(void)

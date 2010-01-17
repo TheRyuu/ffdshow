@@ -169,7 +169,7 @@ HRESULT TimgFilterWarpsharp::process(TfilterQueue::iterator it,TffPict &pict,con
    getNext(FF_CSPS_MASK_YUV_PLANAR,pict,cfg->full,&dstY,NULL,NULL,NULL);
    warpsharp(srcY,dstY,cfg);
   }
- return parent->deliverSample(++it,pict);
+ return parent->processSample(++it,pict);
 }
 
 //=========================================== TimgFilterAwarpsharp ===========================================
@@ -219,5 +219,5 @@ HRESULT TimgFilterAwarpsharp::process(TfilterQueue::iterator it,TffPict &pict,co
    _mm_empty();
   }
  #endif
- return parent->deliverSample(++it,pict);
+ return parent->processSample(++it,pict);
 }

@@ -103,7 +103,7 @@ HRESULT TimgFilterBlur::process(TfilterQueue::iterator it,TffPict &pict,const Tf
    blur->process(srcY,stride1[0],bluredPict,bluredStride);
    (this->*mergeFc)(cfg,srcY,dstY);
   }
- return parent->deliverSample(++it,pict);
+ return parent->processSample(++it,pict);
 }
 
 //==================================== TimgFilterMplayerBlur ===================================
@@ -178,7 +178,7 @@ HRESULT TimgFilterMplayerBlur::process(TfilterQueue::iterator it,TffPict &pict,c
    if (swsc)
     libmplayer->sws_scale_ordered(swsc,src,stride1,0,dy1[0],dst,stride2);
   }
- return parent->deliverSample(++it,pict);
+ return parent->processSample(++it,pict);
 }
 
 //==================================== TimgFilterMplayerTNR ===================================
@@ -241,7 +241,7 @@ HRESULT TimgFilterMplayerTNR::process(TfilterQueue::iterator it,TffPict &pict,co
                               NULL,0,
                               &pp_mode,pp_ctx,pict.frametype&FRAME_TYPE::typemask);
   }
- return parent->deliverSample(++it,pict);
+ return parent->processSample(++it,pict);
 }
 
 void TimgFilterMplayerTNR::onSeek(void)

@@ -37,7 +37,8 @@ public:
 
  virtual void getOutputFmt(TffPictBase &pict,const TpresetVideo *cfg);
  virtual HRESULT process(TffPict &pict,const TpresetVideo *cfg);
- HRESULT deliverSample(TfilterQueue::iterator it,TffPict &pict);
+ HRESULT processSample(TfilterQueue::iterator it,TffPict &pict);
+ HRESULT deliverSample(TffPict &pict);
  HRESULT convertOutputSample(const TffPict &pict,int dstcsp,unsigned char *dst[4],int dstStride[4],LONG &dstSize,const ToutputVideoSettings *cfg);
  bool isAnyActiveDownstreamFilter(TfilterQueue::iterator it);
  void adhocDVDsub(TfilterQueue::iterator it,TffPict &pict);

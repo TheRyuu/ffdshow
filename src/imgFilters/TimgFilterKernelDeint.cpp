@@ -258,7 +258,7 @@ HRESULT TimgFilterKernelDeint2::process(TfilterQueue::iterator it,TffPict &pict,
  const TdeinterlaceSettings *cfg=(const TdeinterlaceSettings*)cfg0;
  if (((pict.fieldtype & FIELD_TYPE::PROGRESSIVE_FRAME) || pict.film) && !cfg->deinterlaceAlways)
  {
-  return parent->deliverSample(++it,pict);
+  return parent->processSample(++it,pict);
  }
  if (dll->ok)
   {
@@ -297,7 +297,7 @@ HRESULT TimgFilterKernelDeint2::process(TfilterQueue::iterator it,TffPict &pict,
      pict0.rtStop=pict.rtStart+rtDur/2;
 
      pict0.csp &= ~FF_CSP_FLAGS_INTERLACED;
-     parent->deliverSample(++it,pict0);
+     parent->processSample(++it,pict0);
      --it;
      getNext(csp1,pict,cfg->full,dst);
      pict.rtStart=pict.rtStart+rtDur/2;
@@ -309,7 +309,7 @@ HRESULT TimgFilterKernelDeint2::process(TfilterQueue::iterator it,TffPict &pict,
   parent->dirtyBorder=1;
 
  pict.csp &= ~FF_CSP_FLAGS_INTERLACED;
- return parent->deliverSample(++it,pict);
+ return parent->processSample(++it,pict);
 }
 
 void TimgFilterKernelDeint2::onSeek(void)

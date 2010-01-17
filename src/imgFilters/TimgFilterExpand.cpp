@@ -117,7 +117,7 @@ void TimgFilterExpand::expand(TffPict &pict,const TfilterSettingsVideo *cfg,bool
 HRESULT TimgFilterExpand::process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)
 {
  process(pict,cfg0);
- return parent->deliverSample(++it,pict);
+ return parent->processSample(++it,pict);
 }
 
 HRESULT TimgFilterExpand::process(TffPict &pict,const TfilterSettingsVideo *cfg0)

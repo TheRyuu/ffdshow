@@ -35,7 +35,7 @@ HRESULT TimgFilterDeinterlace::process(TfilterQueue::iterator it,TffPict &pict,c
  const TdeinterlaceSettings *cfg=(const TdeinterlaceSettings*)cfg0;
  if (((pict.fieldtype & FIELD_TYPE::PROGRESSIVE_FRAME) || pict.film) && !cfg->deinterlaceAlways)
  {
-  return parent->deliverSample(++it,pict);
+  return parent->processSample(++it,pict);
  }
  if (cfg->swapfields)
   if (pict.fieldtype&FIELD_TYPE::INT_TFF)
@@ -46,7 +46,7 @@ HRESULT TimgFilterDeinterlace::process(TfilterQueue::iterator it,TffPict &pict,c
  if (pict.rectClip != pict.rectFull)
   parent->dirtyBorder=1;
 
- return parent->deliverSample(++it,pict);
+ return parent->processSample(++it,pict);
 }
 
 //===================================== TimgFilterFramerateDoubler ====================================
@@ -190,7 +190,7 @@ HRESULT TimgFilterFramerateDoubler::process(TfilterQueue::iterator it,TffPict &p
  if (((pict.fieldtype & FIELD_TYPE::PROGRESSIVE_FRAME) || pict.film) && !cfg->deinterlaceAlways)
  {
   done();
-  return parent->deliverSample(++it,pict);
+  return parent->processSample(++it,pict);
  }
  init(pict,true,cfg->half);
  const unsigned char *src[4];
@@ -212,7 +212,7 @@ HRESULT TimgFilterFramerateDoubler::process(TfilterQueue::iterator it,TffPict &p
    TfilterQueue::iterator it1=it;
    REFERENCE_TIME dur=(pict.rtStop-pict.rtStart)/2;
    p1.rtStop=pict.rtStart+dur;
-   HRESULT hr=parent->deliverSample(++it1,p1);
+   HRESULT hr=parent->processSample(++it1,p1);
    if (FAILED(hr)) return hr;
    pict.rtStart+=dur;
   }
@@ -223,7 +223,7 @@ HRESULT TimgFilterFramerateDoubler::process(TfilterQueue::iterator it,TffPict &p
  if (pict.rectClip != pict.rectFull)
   parent->dirtyBorder=1;
 
- return parent->deliverSample(++it,pict);
+ return parent->processSample(++it,pict);
 }
 
 void TimgFilterFramerateDoubler::onSeek(void)
@@ -250,7 +250,7 @@ HRESULT TimgFilterMplayerDeinterlace::process(TfilterQueue::iterator it,TffPict 
  const TdeinterlaceSettings *cfg=(const TdeinterlaceSettings*)cfg0;
  if (((pict.fieldtype & FIELD_TYPE::PROGRESSIVE_FRAME) || pict.film) && !cfg->deinterlaceAlways)
  {
-  return parent->deliverSample(++it,pict);
+  return parent->processSample(++it,pict);
  }
  init(pict,cfg->full,cfg->half);
  bool cspChanged=false;
@@ -278,5 +278,5 @@ HRESULT TimgFilterMplayerDeinterlace::process(TfilterQueue::iterator it,TffPict 
  if (pict.rectClip != pict.rectFull)
   parent->dirtyBorder=1;
 
- return parent->deliverSample(++it,pict);
+ return parent->processSample(++it,pict);
 }

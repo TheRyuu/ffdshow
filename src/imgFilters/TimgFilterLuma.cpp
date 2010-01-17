@@ -138,7 +138,7 @@ HRESULT TimgFilterLuma::process(TfilterQueue::iterator it,TffPict &pict,const Tf
      processGamma(srcY,dstY,cfg);
     }
   }
- return parent->deliverSample(++it,pict);
+ return parent->processSample(++it,pict);
 }
 
 //===================================== TimgFilterGammaRGB =====================================
@@ -208,7 +208,7 @@ HRESULT TimgFilterGammaRGB::process(TfilterQueue::iterator it,TffPict &pict,cons
    else
     processGammaRGB32(src[0],dst[0],cfg);
   }
- return parent->deliverSample(++it,pict);
+ return parent->processSample(++it,pict);
 }
 
 //===================================== TimgFilterLevelFix =====================================
@@ -272,5 +272,5 @@ HRESULT TimgFilterLevelFix::process(TfilterQueue::iterator it,TffPict &pict,cons
                               NULL,0,
                               &pp_mode,pp_ctx,pict.frametype&FRAME_TYPE::typemask);
   }
- return parent->deliverSample(++it,pict);
+ return parent->processSample(++it,pict);
 }

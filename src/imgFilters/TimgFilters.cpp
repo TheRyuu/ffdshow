@@ -80,7 +80,7 @@ HRESULT TimgFilters::process(TffPict &pict,const TpresetVideo *cfg)
  if (cfg->isDyInterlaced && pict.rectFull.dy>(unsigned int)cfg->dyInterlaced)
   pict.csp|=FF_CSP_FLAGS_INTERLACED;
 
- HRESULT ret=deliverSample(queue.begin(),pict);
+ HRESULT ret=processSample(queue.begin(),pict);
 
  deciV->unlockCSReceive();
 
@@ -88,7 +88,7 @@ HRESULT TimgFilters::process(TffPict &pict,const TpresetVideo *cfg)
  
 }
 
-HRESULT TimgFilters::deliverSample(TfilterQueue::iterator it,TffPict &pict)
+HRESULT TimgFilters::processSample(TfilterQueue::iterator it,TffPict &pict)
 {
  if (it==queue.end())
   {
@@ -99,7 +99,6 @@ HRESULT TimgFilters::deliverSample(TfilterQueue::iterator it,TffPict &pict)
      pict.clearBorder(brightness, deciV->getToutputVideoSettings()->brightness2luma(brightness, pict.video_full_range_flag));
      dirtyBorder=2;
     }
-   return sink->deliverProcessedSample(pict);
   }
  else
   {
@@ -110,6 +109,11 @@ HRESULT TimgFilters::deliverSample(TfilterQueue::iterator it,TffPict &pict)
    else
     return filter->flush(it,pict,cfg);
   }
+}
+
+HRESULT TimgFilters::deliverSample(TffPict &pict)
+{
+ return sink->deliverProcessedSample(pict);
 }
 
 // draw DVD subtitles and menu before resize, if it is not done.

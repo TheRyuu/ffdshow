@@ -213,5 +213,5 @@ HRESULT TimgFilterPerspective::process(TfilterQueue::iterator it,TffPict &pict,c
           _mm_empty();
           break;
   }
- return parent->deliverSample(++it,pict);
+ return parent->processSample(++it,pict);
 }
