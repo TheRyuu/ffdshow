@@ -145,6 +145,12 @@ bool TvideoCodecLibavcodecDxva::checkDXVAMode(IPin *pReceivePin)
  if (isDXVASupported())
  {
   if (pReceivePin==NULL) return true;
+
+  if (connectedSplitter == TffdshowVideoInputPin::MPC_mpegSplitters)
+   {
+    bReorderBFrame = false;
+   }
+
   if (nDXVAMode == MODE_DXVA1)
   {
    if (SUCCEEDED(pDXVADecoder->ConfigureDXVA1())) 
@@ -166,10 +172,6 @@ bool TvideoCodecLibavcodecDxva::checkDXVAMode(IPin *pReceivePin)
  return false;
 
  /*TODO MPC
-        CLSID ClsidSourceFilter = GetCLSID(m_pInput->GetConnected());
-        if((ClsidSourceFilter == __uuidof(CMpegSourceFilter)) || (ClsidSourceFilter == __uuidof(CMpegSplitterFilter)))
-            bReorderBFrame = false;
-  
   if ( ((m_pOutput->CurrentMediaType().subtype == MEDIASUBTYPE_NV12) && (m_nDXVAMode == MODE_SOFTWARE)) ||
          ((m_pOutput->CurrentMediaType().subtype == MEDIASUBTYPE_YUY2) && (m_pAVCtx->width&1 || m_pAVCtx->height&1)) )
         return VFW_E_INVALIDMEDIATYPE;
@@ -706,7 +708,7 @@ bool TvideoCodecLibavcodecDxva::beginDecompress(TffPictBase &pict,FOURCC fcc,con
  if (!result) return false;
  if (codecId == CODEC_ID_VC1)
   {
-   bReorderBFrame = false;
+   bReorderBFrame = true;
   }
  // One thread for DXVA mode
  int numthreads=1;
