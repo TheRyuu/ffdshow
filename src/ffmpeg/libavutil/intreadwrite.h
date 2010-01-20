@@ -30,7 +30,9 @@
  * as inline functions.
  */
 
+#if ARCH_X86
 #   include "x86/intreadwrite.h"
+#endif
 
 /*
  * Map AV_RNXX <-> AV_R[BL]XX for all variants provided by per-arch headers.

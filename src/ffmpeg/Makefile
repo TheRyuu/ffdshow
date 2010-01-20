@@ -41,6 +41,7 @@ SRCS_C=\
       $(LAVC_DIR)/cyuv.c \
       $(LAVC_DIR)/dca.c \
       $(LAVC_DIR)/dca_parser.c \
+      $(LAVC_DIR)/dct.c \
       $(LAVC_DIR)/dsputil.c \
       $(LAVC_DIR)/dv.c \
       $(LAVC_DIR)/eac3dec.c \

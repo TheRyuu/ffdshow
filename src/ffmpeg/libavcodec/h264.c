@@ -311,29 +311,6 @@ static void chroma_dc_dequant_idct_c(DCTELEM *block, int qp, int qmul){
     block[stride*1 + xStride*1]= ((e-b)*qmul) >> 7;
 }
 
-#if 0
-static void chroma_dc_dct_c(DCTELEM *block){
-    const int stride= 16*2;
-    const int xStride= 16;
-    int a,b,c,d,e;
-
-    a= block[stride*0 + xStride*0];
-    b= block[stride*0 + xStride*1];
-    c= block[stride*1 + xStride*0];
-    d= block[stride*1 + xStride*1];
-
-    e= a-b;
-    a= a+b;
-    b= c-d;
-    c= c+d;
-
-    block[stride*0 + xStride*0]= (a+c);
-    block[stride*0 + xStride*1]= (e+b);
-    block[stride*1 + xStride*0]= (a-c);
-    block[stride*1 + xStride*1]= (e-b);
-}
-#endif
-
 static inline void mc_dir_part(H264Context *h, Picture *pic, int n, int square, int chroma_height, int delta, int list,
                            uint8_t *dest_y, uint8_t *dest_cb, uint8_t *dest_cr,
                            int src_x_offset, int src_y_offset,

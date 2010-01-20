@@ -575,6 +575,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavcodec\dct.c"
+				>
+			</File>
+			<File
 				RelativePath=".\DllEntry.c"
 				>
 			</File>
