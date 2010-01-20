@@ -25,9 +25,7 @@
 #include "libavutil/common.h"
 
 #if   ARCH_X86
-
-#include "x86/mathops.h"
-
+#   include "x86/mathops.h"
 #endif
 
 /* generic implementation */
@@ -109,6 +107,15 @@ static inline av_const int mid_pred(int a, int b, int c)
 static inline av_const int sign_extend(int val, unsigned bits)
 {
     return (val << (INT_BIT - bits)) >> (INT_BIT - bits);
+}
+#endif
+
+#ifndef COPY3_IF_LT
+#define COPY3_IF_LT(x, y, a, b, c, d)\
+if ((y) < (x)) {\
+    (x) = (y);\
+    (a) = (b);\
+    (c) = (d);\
 }
 #endif
 

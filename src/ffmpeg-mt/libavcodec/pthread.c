@@ -317,7 +317,6 @@ static int update_context_from_copy(AVCodecContext *dst, AVCodecContext *src, in
     COPY(bits_per_coded_sample);
     COPY(sample_aspect_ratio);
     COPY(idct_algo);
-    if (for_user) COPY(coded_frame);
     memcpy(dst->error, src->error, sizeof(src->error));
     COPY(last_predictor_count); //necessary?
     COPY(dtg_active_format);
@@ -331,7 +330,10 @@ static int update_context_from_copy(AVCodecContext *dst, AVCodecContext *src, in
     COPY(colorspace);
     COPY(color_range);
 
-    if (!for_user) {
+    if (for_user) {
+        COPY(coded_frame);
+        dst->has_b_frames += src->thread_count - 1;
+    } else {
         if (dst->codec->update_context)
             err = dst->codec->update_context(dst, src);
     }

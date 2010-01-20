@@ -18,7 +18,14 @@ SRCS_C=\
       $(LAVC_DIR)/faanidct.c \
       $(LAVC_DIR)/golomb.c \
       $(LAVC_DIR)/h264.c \
+      $(LAVC_DIR)/h264_cabac.c \
+      $(LAVC_DIR)/h264_cavlc.c \
+      $(LAVC_DIR)/h264_direct.c \
+      $(LAVC_DIR)/h264_loopfilter.c \
       $(LAVC_DIR)/h264_parser.c \
+      $(LAVC_DIR)/h264_ps.c \
+      $(LAVC_DIR)/h264_refs.c \
+      $(LAVC_DIR)/h264_sei.c \
       $(LAVC_DIR)/h264idct.c \
       $(LAVC_DIR)/h264pred.c \
       $(LAVC_DIR)/imgconvert.c \

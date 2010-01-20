@@ -335,7 +335,7 @@ void avcodec_default_release_buffer(AVCodecContext *s, AVFrame *pic){
     assert(pic->type==FF_BUFFER_TYPE_INTERNAL);
     assert(s->internal_buffer_count);
 
-    if(s->internal_buffer){ /*ffmpeg-mt*/
+    if(s->internal_buffer){
     buf = NULL; /* avoids warning */
     for(i=0; i<s->internal_buffer_count; i++){ //just 3-5 checks so is not worth to optimize
         buf= &((InternalBuffer*)s->internal_buffer)[i];
@@ -347,7 +347,7 @@ void avcodec_default_release_buffer(AVCodecContext *s, AVFrame *pic){
     last = &((InternalBuffer*)s->internal_buffer)[s->internal_buffer_count];
 
     FFSWAP(InternalBuffer, *buf, *last);
-    } /*ffmpeg-mt*/
+    }
 
     for(i=0; i<4; i++){
         pic->data[i]=NULL;
@@ -371,8 +371,10 @@ int avcodec_default_reget_buffer(AVCodecContext *s, AVFrame *pic){
     }
 
     /* If internal buffer type return the same buffer */
-    if(pic->type == FF_BUFFER_TYPE_INTERNAL)
+    if(pic->type == FF_BUFFER_TYPE_INTERNAL) {
+        pic->reordered_opaque= s->reordered_opaque;
         return 0;
+    }
 
     /*
      * Not internal type and reget_buffer not overridden, emulate cr buffer
@@ -599,7 +601,7 @@ int attribute_align_arg avcodec_decode_audio2(AVCodecContext *avctx, int16_t *sa
     return ret;
 }
 
-int avcodec_close(AVCodecContext *avctx)
+av_cold int avcodec_close(AVCodecContext *avctx)
 {
     /* If there is a user-supplied mutex locking routine, call it. */
     if (ff_lockmgr_cb) {
@@ -617,7 +619,7 @@ int avcodec_close(AVCodecContext *avctx)
 
     if (HAVE_THREADS && avctx->thread_opaque)
         avcodec_thread_free(avctx);
-    if (avctx->codec->close && !USE_FRAME_THREADING(avctx))
+    if (avctx->codec && avctx->codec->close && !USE_FRAME_THREADING(avctx))
         avctx->codec->close(avctx);
     avcodec_default_free_buffers(avctx);
     av_freep(&avctx->priv_data);
@@ -754,6 +756,9 @@ int av_get_bits_per_sample(enum CodecID codec_id){
         return 3;
     case CODEC_ID_ADPCM_SBPRO_4:
     case CODEC_ID_ADPCM_CT:
+    case CODEC_ID_ADPCM_IMA_WAV:
+    case CODEC_ID_ADPCM_MS:
+    case CODEC_ID_ADPCM_YAMAHA:
         return 4;
     case CODEC_ID_PCM_ALAW:
     case CODEC_ID_PCM_MULAW:
@@ -800,6 +805,12 @@ unsigned int av_xiphlacing(unsigned char *s, unsigned int v)
     return n;
 }
 
+int ff_match_2uint16(const uint16_t (*tab)[2], int size, int a, int b){
+    int i;
+    for(i=0; i<size && !(tab[i][0]==a && tab[i][1]==b); i++);
+    return i;
+}
+
 void av_log_missing_feature(void *avc, const char *feature, int want_sample)
 {
     av_log(avc, AV_LOG_WARNING, "%s not implemented. Update your FFmpeg "
@@ -819,4 +830,20 @@ void av_log_ask_for_sample(void *avc, const char *msg)
     av_log(avc, AV_LOG_WARNING, "If you want to help, upload a sample "
             "of this file to ftp://upload.ffmpeg.org/MPlayer/incoming/ "
             "and contact the ffmpeg-devel mailing list.\n");
+}
+
+int av_lockmgr_register(int (*cb)(void **mutex, enum AVLockOp op))
+{
+    if (ff_lockmgr_cb) {
+        if (ff_lockmgr_cb(&codec_mutex, AV_LOCK_DESTROY))
+            return -1;
+    }
+
+    ff_lockmgr_cb = cb;
+
+    if (ff_lockmgr_cb) {
+        if (ff_lockmgr_cb(&codec_mutex, AV_LOCK_CREATE))
+            return -1;
+    }
+    return 0;
 }

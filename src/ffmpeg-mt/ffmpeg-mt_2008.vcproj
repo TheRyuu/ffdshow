@@ -481,15 +481,43 @@
 				>
 			</File>
 			<File
-				RelativePath="libavcodec\golomb.c"
+				RelativePath=".\libavcodec\golomb.c"
 				>
 			</File>
 			<File
-				RelativePath="libavcodec\h264.c"
+				RelativePath=".\libavcodec\h264.c"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\h264_cabac.c"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\h264_cavlc.c"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\h264_direct.c"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\h264_loopfilter.c"
 				>
 			</File>
 			<File
 				RelativePath=".\libavcodec\h264_parser.c"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\h264_ps.c"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\h264_refs.c"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\h264_sei.c"
 				>
 			</File>
 			<File
@@ -501,7 +529,7 @@
 				>
 			</File>
 			<File
-				RelativePath="libavcodec\imgconvert.c"
+				RelativePath=".\libavcodec\imgconvert.c"
 				>
 			</File>
 			<File
@@ -598,15 +626,19 @@
 				>
 			</File>
 			<File
-				RelativePath="libavcodec\h264_parser.h"
+				RelativePath=".\libavcodec\h264_mvpred.h"
 				>
 			</File>
 			<File
-				RelativePath="libavcodec\h264data.h"
+				RelativePath=".\libavcodec\h264_parser.h"
 				>
 			</File>
 			<File
-				RelativePath="libavcodec\h264pred.h"
+				RelativePath=".\libavcodec\h264data.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\h264pred.h"
 				>
 			</File>
 			<File
