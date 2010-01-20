@@ -308,6 +308,11 @@ HRESULT TimgFilterDGbob::process(TfilterQueue::iterator it,TffPict &pict0,const 
    TtempPict *pp=picts0[0];memmove(picts0,picts0+1,4*sizeof(picts0[0]));picts0[4]=pp;
    pict.rtStart=rtStart;pict.rtStop=pict.rtStart+rtDuration;rtStart+=rtDuration;
    HRESULT hr=parent->processSample(++it,pict);
+   it--;
+   if (f==0)
+    {
+     parent->deliverSample(pict); // we have to deliver the additional frame that has been created (pict will be taken care of by the caller method)
+    }
    if (FAILED(hr))
     return hr;
    n++;

@@ -299,6 +299,7 @@ HRESULT TimgFilterKernelDeint2::process(TfilterQueue::iterator it,TffPict &pict,
      pict0.csp &= ~FF_CSP_FLAGS_INTERLACED;
      parent->processSample(++it,pict0);
      --it;
+     parent->deliverSample(pict0); // we have to deliver the additional frame that has been created (pict will be taken care of by the caller method)
      getNext(csp1,pict,cfg->full,dst);
      pict.rtStart=pict.rtStart+rtDur/2;
     }
