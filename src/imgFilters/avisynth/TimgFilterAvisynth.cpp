@@ -1022,6 +1022,7 @@ void TimgFilterAvisynth::Tavisynth::process(TimgFilterAvisynth *self,TfilterQueu
          ++it;
          self->parent->processSample(it,tempPict);
          --it;
+         self->parent->deliverSample(tempPict); // we have to deliver the additional frame that has been created (pict will be taken care of by the caller method)
         }
        else
         {
