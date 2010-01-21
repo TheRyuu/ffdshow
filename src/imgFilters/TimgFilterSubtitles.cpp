@@ -183,6 +183,8 @@ void TimgFilterSubtitles::resetSubtitles(int id)
      }
 }
 
+// DVD menus are being handled here (AM_KSPROPSETID_DvdSubPic)
+// animated menu movements are directed to here, and the updated frames are being delivered
 bool TimgFilterSubtitles::ctlSubtitles(int id,int type,unsigned int ctl_id,const void *ctl_data,unsigned int ctl_datalen)
 {
     Tembedded::iterator e=embedded.find(id);
@@ -221,6 +223,7 @@ bool TimgFilterSubtitles::ctlSubtitles(int id,int type,unsigned int ctl_id,const
          adhocMode = ADHOC_ADHOC_DRAW_DVD_SUB_ONLY;
 
         process(prevIt,pict,prevCfg);
+        parent->deliverSample(pict); // we have to deliver the frame that has been created
 
         again=false;
     }
