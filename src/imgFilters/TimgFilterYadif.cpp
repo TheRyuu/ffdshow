@@ -176,11 +176,12 @@ HRESULT TimgFilterYadif::put_image(TffPict &pict, const unsigned char *src[4], i
 
         // DPRINTF(_l("rtStart=%I64i rtStop=%I64i"), pict.rtStart, pict.rtStop);
         last_rtStop = pict.rtStop;
-        HRESULT hr = parent->processSample(++it, pict);
+        parent->processSample(++it, pict);
         --it;
+        HRESULT hr = S_OK;
         if (frame_pos < double_frame_rate)
          {
-          parent->deliverSample(pict); // we have to deliver the additional frame that has been created (pict will be taken care of by the caller method)
+          hr = parent->deliverSample(pict); // we have to deliver the additional frame that has been created (pict will be taken care of by the caller method)
          }
 
         if (frame_pos == double_frame_rate || hr != S_OK)
