@@ -1166,21 +1166,8 @@ STDMETHODIMP TffdshowDecVideo::flushDecodedSamples(void)
  return deliverDecodedSample(pict);
 }
 
-STDMETHODIMP TffdshowDecVideo::processDecodedSample(TffPict &pict)
+STDMETHODIMP TffdshowDecVideo::setFrameTime(TffPict &pict)
 {
- // Maybe we're waiting for a keyframe still?
- if (waitForKeyframe && (pict.frametype&FRAME_TYPE::typemask)==FRAME_TYPE::I)
-  waitForKeyframe=FALSE;
- // if so, then we don't want to pass this on to the renderer
- if (waitForKeyframe)
-  {
-   //DPRINTF(_l("still waiting for a keyframe"));
-   m_rtStart += inpin->avgTimePerFrame;
-   return S_OK;
-  }
-
- //if (m_frame.srcLength==0) return S_FALSE;
-
  HRESULT frameTimeOk=S_FALSE;
  int codecId = inpin->getInCodecId2();
  if (mpeg12_codec(codecId) && inpin->biIn.bmiHeader.biCompression!=FOURCC_MPEG)
@@ -1198,24 +1185,56 @@ STDMETHODIMP TffdshowDecVideo::processDecodedSample(TffPict &pict)
   frameTimeOk=(pict.rtStart!=REFTIME_INVALID) ? S_OK : S_FALSE;
 
  if (presetSettings->softTelecine && vc1_codec(codecId) && inSampleEverField1Repeat && inpin->avgTimePerFrame == 333666)
+ {
+  if (insample_rtStart != REFTIME_INVALID)
+   {
+    pict.rtStop = pict.rtStart + 417082;
+   }
+  else
+   {
+    pict.rtStart = vc1rtStart + vc1frameCnt * 417083;
+    pict.rtStop = pict.rtStart + 417082;
+   }
+ }
+else //not vc-1
+ {
+  if (frameTimeOk!=S_OK || pict.rtStop-pict.rtStart==0)
+   {
+    frameTimeOk=S_OK;
+    pict.rtStart = m_rtStart;
+    if (inSampleTypeSpecificFlags & AM_VIDEO_FLAG_REPEAT_FIELD)
+     {
+      // field 1 repeat flag. Haali's splitter use this for interlaced VC1 in EVO.
+      pict.rtStop = pict.rtStart + inpin->avgTimePerFrame + (inpin->avgTimePerFrame >> 1) - 1;
+     }
+    else
+     {
+      pict.rtStop = pict.rtStart + inpin->avgTimePerFrame - 1;
+     }
+   }
+ }
+ return frameTimeOk;
+}
+
+void TffdshowDecVideo::advanceTimeToNextFrame(TffPict &pict, bool frameTimeOk)
+{
+ int codecId = inpin->getInCodecId2();
+ if (presetSettings->softTelecine && vc1_codec(codecId) && inSampleEverField1Repeat && inpin->avgTimePerFrame == 333666)
   {
    if (insample_rtStart != REFTIME_INVALID)
     {
      vc1rtStart = insample_rtStart;
-     pict.rtStop = pict.rtStart + 417082;
      m_rtStart = pict.rtStop + 1;
      vc1frameCnt = 0;
     }
    else
     {
-     pict.rtStart = vc1rtStart + vc1frameCnt * 417083;
-     pict.rtStop = pict.rtStart + 417082;
      m_rtStart = pict.rtStop + 1;
     }
   }
- else
+ else //not vc-1
   {
-   if (frameTimeOk==S_OK && pict.rtStop-pict.rtStart!=0)
+   if (frameTimeOk && pict.rtStop-pict.rtStart!=0)
     {
      if (inpin->avgTimePerFrame==0)
       inpin->avgTimePerFrame=pict.rtStop-pict.rtStart;
@@ -1223,42 +1242,22 @@ STDMETHODIMP TffdshowDecVideo::processDecodedSample(TffPict &pict)
     }
    else
     {
-     frameTimeOk=S_OK;
-     pict.rtStart = m_rtStart;
      if (inSampleTypeSpecificFlags & AM_VIDEO_FLAG_REPEAT_FIELD)
       {
        // field 1 repeat flag. Haali's splitter use this for interlaced VC1 in EVO.
-       pict.rtStop = pict.rtStart + inpin->avgTimePerFrame + (inpin->avgTimePerFrame >> 1) - 1;
        m_rtStart += inpin->avgTimePerFrame + (inpin->avgTimePerFrame >> 1);
        inSampleEverField1Repeat = true;
       }
      else
       {
-       pict.rtStop = pict.rtStart + inpin->avgTimePerFrame - 1;
        m_rtStart += inpin->avgTimePerFrame;
       }
     }
   }
+}
 
- if ((inSampleEverField1Repeat || inpin->isInterlacedRawVideo) && !(inSampleTypeSpecificFlags & AM_VIDEO_FLAG_WEAVE))
-  {
-   if (inSampleTypeSpecificFlags & AM_VIDEO_FLAG_FIELD1FIRST)
-    pict.fieldtype = FIELD_TYPE::INT_TFF;
-   else
-    pict.fieldtype = FIELD_TYPE::INT_BFF;
-  }
-
- //LONGLONG mediaTime1=-1,mediaTime2=-1;
- //HRESULT mediaTimeOk=pIn->GetMediaTime(&mediaTime1,&mediaTime2);
- if (pict.mediatimeStart!=REFTIME_INVALID)
-  currentFrame=(unsigned long)pict.mediatimeStart;
- else if (frameTimeOk==S_OK && inpin->avgTimePerFrame)
-  currentFrame=long((pict.rtStart+segmentStart)/(inpin->avgTimePerFrame*1.0)+0.5);
- else
-  currentFrame++;
-
- vc1frameCnt++;
-
+void TffdshowDecVideo::setFrameVideoDelay(TffPict &pict)
+{
  int videoDelay;
  if (moviesecs>0 && presetSettings->isVideoDelayEnd && presetSettings->videoDelay!=presetSettings->videoDelayEnd)
   {
@@ -1279,6 +1278,46 @@ STDMETHODIMP TffdshowDecVideo::processDecodedSample(TffPict &pict)
   }
  pict.rtStart+=segmentStart;
  pict.rtStop+=segmentStart;
+}
+
+STDMETHODIMP TffdshowDecVideo::processDecodedSample(TffPict &pict)
+{
+ // Maybe we're waiting for a keyframe still?
+ if (waitForKeyframe && (pict.frametype&FRAME_TYPE::typemask)==FRAME_TYPE::I)
+  waitForKeyframe=FALSE;
+ // if so, then we don't want to pass this on to the renderer
+ if (waitForKeyframe)
+  {
+   //DPRINTF(_l("still waiting for a keyframe"));
+   m_rtStart += inpin->avgTimePerFrame;
+   return S_OK;
+  }
+
+ //if (m_frame.srcLength==0) return S_FALSE;
+
+ HRESULT frameTimeOk = setFrameTime(pict);
+ advanceTimeToNextFrame(pict, frameTimeOk==S_OK);
+
+ if ((inSampleEverField1Repeat || inpin->isInterlacedRawVideo) && !(inSampleTypeSpecificFlags & AM_VIDEO_FLAG_WEAVE))
+  {
+   if (inSampleTypeSpecificFlags & AM_VIDEO_FLAG_FIELD1FIRST)
+    pict.fieldtype = FIELD_TYPE::INT_TFF;
+   else
+    pict.fieldtype = FIELD_TYPE::INT_BFF;
+  }
+
+ //LONGLONG mediaTime1=-1,mediaTime2=-1;
+ //HRESULT mediaTimeOk=pIn->GetMediaTime(&mediaTime1,&mediaTime2);
+ if (pict.mediatimeStart!=REFTIME_INVALID)
+  currentFrame=(unsigned long)pict.mediatimeStart;
+ else if (frameTimeOk==S_OK && inpin->avgTimePerFrame)
+  currentFrame=long((pict.rtStart+segmentStart)/(inpin->avgTimePerFrame*1.0)+0.5);
+ else
+  currentFrame++;
+
+ vc1frameCnt++;
+
+ setFrameVideoDelay(pict);
 
  clock_t t=clock();
  decodingFps=(t!=lastTime)?1000*CLOCKS_PER_SEC/(t-lastTime):0;
