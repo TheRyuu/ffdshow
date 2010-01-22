@@ -622,8 +622,8 @@ extern int mm_flags;
 
 void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx);
 
-#define DECLARE_ALIGNED_16(t, v) DECLARE_ALIGNED(16, t, v)
-#define DECLARE_ALIGNED_8(t, v)  DECLARE_ALIGNED(8, t, v)
+#define DECLARE_ALIGNED_16(t, v, ...) DECLARE_ALIGNED(16, t, v)
+#define DECLARE_ALIGNED_8(t, v, ...)  DECLARE_ALIGNED(8, t, v)
 
 #if HAVE_MMX
 
@@ -705,11 +705,11 @@ typedef struct FFTContext {
 #endif
 
 #define COSTABLE(size) \
-    COSTABLE_CONST DECLARE_ALIGNED_16(FFTSample, ff_cos_##size[size/2])
+    COSTABLE_CONST DECLARE_ALIGNED_16(FFTSample, ff_cos_##size)[size/2]
 #define SINTABLE(size) \
-    SINTABLE_CONST DECLARE_ALIGNED_16(FFTSample, ff_sin_##size[size/2])
+    SINTABLE_CONST DECLARE_ALIGNED_16(FFTSample, ff_sin_##size)[size/2]
 #define SINETABLE(size) \
-    SINETABLE_CONST DECLARE_ALIGNED_16(float, ff_sine_##size[size])
+    SINETABLE_CONST DECLARE_ALIGNED_16(float, ff_sine_##size)[size]
 extern COSTABLE(16);
 extern COSTABLE(32);
 extern COSTABLE(64);

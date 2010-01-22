@@ -44,10 +44,6 @@
 #include "atrac.h"
 #include "atrac3data.h"
 
-#if _MSC_VER<1400
-#define powf pow
-#endif
-
 #define JOINT_STEREO    0x12
 #define STEREO          0x2
 
@@ -77,8 +73,8 @@ typedef struct {
     int               gcBlkSwitch;
     gain_block        gainBlock[2];
 
-    DECLARE_ALIGNED_16(float, spectrum[1024]);
-    DECLARE_ALIGNED_16(float, IMDCT_buf[1024]);
+    DECLARE_ALIGNED_16(float, spectrum)[1024];
+    DECLARE_ALIGNED_16(float, IMDCT_buf)[1024];
 
     float             delayBuf1[46]; ///<qmf delay buffers
     float             delayBuf2[46];
@@ -123,7 +119,7 @@ typedef struct {
     //@}
 } ATRAC3Context;
 
-static DECLARE_ALIGNED_16(float,mdct_window[512]);
+static DECLARE_ALIGNED_16(float,mdct_window)[512];
 static VLC              spectral_coeff_tab[7];
 static float            gain_tab1[16];
 static float            gain_tab2[31];
