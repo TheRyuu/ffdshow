@@ -541,9 +541,11 @@ int ff_h264_decode_mb_cavlc(H264Context *h){
     mb_xy = h->mb_xy = s->mb_x + s->mb_y*s->mb_stride;
     
     /* ffdshow custom code */
+    #if ENABLE_SLICE_MT_PATCH
     if(s->avctx->thread_count > 1) {
         s->dsp.clear_blocks(h->mb);
     }
+    #endif
 
     tprintf(s->avctx, "pic:%d mb:%d/%d\n", h->frame_num, s->mb_x, s->mb_y);
     cbp = 0; /* avoid warning. FIXME: find a solution without slowing

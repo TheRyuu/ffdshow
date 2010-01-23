@@ -428,9 +428,9 @@ typedef struct H264Context{
     /**
      * num_ref_idx_l0/1_active_minus1 + 1
      */
+    unsigned int list_count;
     uint8_t *list_counts;            ///< Array of list_count per MB specifying the slice type
     unsigned int ref_count[2];   ///< counts frames or fields, depending on current mb mode
-    unsigned int list_count;
     Picture *short_ref[32];
     Picture *long_ref[32];
     Picture default_ref_list[2][32]; ///< base reference list for all slices of a coded picture
