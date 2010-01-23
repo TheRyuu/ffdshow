@@ -2465,6 +2465,7 @@ static void float_to_int16_interleave_3dn2(int16_t *dst, const float **src, long
         float_to_int16_interleave_3dnow(dst, src, len, channels);
 }
 
+float ff_scalarproduct_float_sse(const float *v1, const float *v2, int order);
 
 void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
 {
@@ -2895,6 +2896,11 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
             c->int32_to_float_fmul_scalar = int32_to_float_fmul_scalar_sse;
             c->float_to_int16 = float_to_int16_sse;
             c->float_to_int16_interleave = float_to_int16_interleave_sse;
+#if CONFIG_AAC_DECODER
+#if HAVE_YASM
+            c->scalarproduct_float = ff_scalarproduct_float_sse;
+#endif
+#endif
         }
         if(mm_flags & FF_MM_3DNOW)
             c->vector_fmul_add = vector_fmul_add_3dnow; // faster than sse
