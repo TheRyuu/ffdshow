@@ -470,8 +470,8 @@ extern int mm_flags;
 
 void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx);
 
-#define DECLARE_ALIGNED_16(t, v) DECLARE_ALIGNED(16, t, v)
-#define DECLARE_ALIGNED_8(t, v)  DECLARE_ALIGNED(8, t, v)
+#define DECLARE_ALIGNED_16(t, v, ...) DECLARE_ALIGNED(16, t, v)
+#define DECLARE_ALIGNED_8(t, v, ...)  DECLARE_ALIGNED(8, t, v)
 
 #if HAVE_MMX
 

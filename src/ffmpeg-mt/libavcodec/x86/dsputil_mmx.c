@@ -40,7 +40,7 @@ int mm_flags; /* multimedia extension flags */
 DECLARE_ALIGNED_8 (const uint64_t, ff_bone) = 0x0101010101010101ULL;
 DECLARE_ALIGNED_8 (const uint64_t, ff_wtwo) = 0x0002000200020002ULL;
 
-DECLARE_ALIGNED_16(const uint64_t, ff_pdw_80000000[2]) =
+DECLARE_ALIGNED_16(const uint64_t, ff_pdw_80000000)[2] =
 {0x8000000080000000ULL, 0x8000000080000000ULL};
 
 DECLARE_ALIGNED_8 (const uint64_t, ff_pw_3  ) = 0x0003000300030003ULL;
@@ -67,8 +67,8 @@ DECLARE_ALIGNED_8 (const uint64_t, ff_pb_81 ) = 0x8181818181818181ULL;
 DECLARE_ALIGNED_8 (const uint64_t, ff_pb_A1 ) = 0xA1A1A1A1A1A1A1A1ULL;
 DECLARE_ALIGNED_8 (const uint64_t, ff_pb_FC ) = 0xFCFCFCFCFCFCFCFCULL;
 
-DECLARE_ALIGNED_16(const double, ff_pd_1[2]) = { 1.0, 1.0 };
-DECLARE_ALIGNED_16(const double, ff_pd_2[2]) = { 2.0, 2.0 };
+DECLARE_ALIGNED_16(const double, ff_pd_1)[2] = { 1.0, 1.0 };
+DECLARE_ALIGNED_16(const double, ff_pd_2)[2] = { 2.0, 2.0 };
 
 #define JUMPALIGN() __asm__ volatile (ASMALIGN(3)::)
 #define MOVQ_ZERO(regd)  __asm__ volatile ("pxor %%" #regd ", %%" #regd ::)
@@ -275,7 +275,7 @@ void put_pixels_clamped_mmx(const DCTELEM *block, uint8_t *pixels, int line_size
             :"memory");
 }
 
-DECLARE_ASM_CONST(8, uint8_t, ff_vector128[8]) =
+DECLARE_ASM_CONST(8, uint8_t, ff_vector128)[8] =
   { 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80 };
 
 #define put_signed_pixels_clamped_mmx_half(off) \

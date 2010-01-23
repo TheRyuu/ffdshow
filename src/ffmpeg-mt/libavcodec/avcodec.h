@@ -40,7 +40,7 @@
 #include "libavutil/avutil.h"
 
 #define LIBAVCODEC_VERSION_MAJOR 52
-#define LIBAVCODEC_VERSION_MINOR 41
+#define LIBAVCODEC_VERSION_MINOR 48
 #define LIBAVCODEC_VERSION_MICRO  0
 
 #define LIBAVCODEC_VERSION_INT  AV_VERSION_INT(LIBAVCODEC_VERSION_MAJOR, \
@@ -358,6 +358,14 @@ typedef struct RcOverride{
 #define CODEC_CAP_HWACCEL_VDPAU    0x0080
 /**
  * Codec can output multiple frames per AVPacket
+ * Normally demuxers return one frame at a time, demuxers which do not do
+ * are connected to a parser to split what they return into proper frames.
+ * This flag is reserved to the very rare category of codecs which have a
+ * bitstream that cannot be split into frames without timeconsuming
+ * operations like full decoding. Demuxers carring such bitstreams thus
+ * may return multiple frames in a packet. This has many disadvantages like
+ * prohibiting stream copy in many cases thus it should only be considered
+ * as a last resort.
  */
 #define CODEC_CAP_SUBFRAMES        0x0100
 /**
@@ -1104,7 +1112,8 @@ typedef struct AVCodecContext {
     void (*release_buffer)(struct AVCodecContext *c, AVFrame *pic);
 
     /**
-     * If 1 the stream has a 1 frame delay during decoding.
+     * Size of the frame reordering buffer in the decoder.
+     * For MPEG-2 it is 1 IPB or 0 low delay IP.
      * - encoding: Set by libavcodec.
      * - decoding: Set by libavcodec.
      */
