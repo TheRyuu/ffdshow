@@ -679,11 +679,7 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
                     // Timestamps simply increase. 
                     // ex: AVI files
 
-                    int pos;
-                    if (avctx->active_thread_type == FF_THREAD_FRAME)
-                        pos = inPosB - 1 - avctx->thread_count;
-                    else
-                        pos = inPosB - 2;
+                    int pos = inPosB - 2;
 
                     if (pos < 0)
                         pos += countof(b);
