@@ -212,8 +212,7 @@ HRESULT TimgFilterFramerateDoubler::process(TfilterQueue::iterator it,TffPict &p
    TfilterQueue::iterator it1=it;
    REFERENCE_TIME dur=(pict.rtStop-pict.rtStart)/2;
    p1.rtStop=pict.rtStart+dur;
-   parent->processSample(++it1,p1);
-   HRESULT hr=parent->deliverSample(p1); // we have to deliver the additional frame that has been created (pict will be taken care of by the caller method)
+   HRESULT hr=parent->processAndDeliverSample(++it1,p1); // we have to deliver the additional frame that has been created (pict will be taken care of by the caller method)
    if (FAILED(hr)) return hr;
    pict.rtStart+=dur;
   }

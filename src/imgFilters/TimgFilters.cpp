@@ -99,6 +99,7 @@ HRESULT TimgFilters::processSample(TfilterQueue::iterator it,TffPict &pict)
      pict.clearBorder(brightness, deciV->getToutputVideoSettings()->brightness2luma(brightness, pict.video_full_range_flag));
      dirtyBorder=2;
     }
+   return S_OK;
   }
  else
   {
@@ -114,6 +115,16 @@ HRESULT TimgFilters::processSample(TfilterQueue::iterator it,TffPict &pict)
 HRESULT TimgFilters::deliverSample(TffPict &pict)
 {
  return sink->deliverProcessedSample(pict);
+}
+
+HRESULT TimgFilters::processAndDeliverSample(TfilterQueue::iterator it,TffPict &pict)
+{
+ HRESULT hr = processSample(it, pict);
+ if (hr == S_OK)
+  {
+   hr = deliverSample(pict);
+  }
+ return hr;
 }
 
 // draw DVD subtitles and menu before resize, if it is not done.

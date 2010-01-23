@@ -541,8 +541,9 @@ void TimgFilterAvisynth::Tavisynth::init(const TavisynthSettings &oldcfg, Tinput
   }
 }
 
-void TimgFilterAvisynth::Tavisynth::process(TimgFilterAvisynth *self,TfilterQueue::iterator& it,TffPict &pict,const TavisynthSettings *cfg)
+HRESULT TimgFilterAvisynth::Tavisynth::process(TimgFilterAvisynth *self,TfilterQueue::iterator& it,TffPict &pict,const TavisynthSettings *cfg)
 {
+ HRESULT hr = S_FALSE;
  bool sequenceStart=(pict.fieldtype & FIELD_TYPE::MASK_SEQ) == FIELD_TYPE::SEQ_START;
  bool sequenceEnd=(pict.fieldtype & FIELD_TYPE::SEQ_END) == FIELD_TYPE::SEQ_END; // If the sequence starts & stops in the same frame, give stop precedence (again)
  bool isYV12=((pict.csp&FF_CSPS_MASK) == FF_CSP_420P);
@@ -812,7 +813,7 @@ void TimgFilterAvisynth::Tavisynth::process(TimgFilterAvisynth *self,TfilterQueu
 
  if ((buffersFilled < buffersNeeded) && !passFirstThrough && !passLastThrough)
   // Not enough has been buffered, so don't return frames yet
-  return;
+  return hr;
 
  if (debugPrint)
   {
@@ -1020,14 +1021,13 @@ void TimgFilterAvisynth::Tavisynth::process(TimgFilterAvisynth *self,TfilterQueu
          TffPict tempPict=pict;
 
          ++it;
-         self->parent->processSample(it,tempPict);
+         self->parent->processAndDeliverSample(it,tempPict); // we have to deliver the additional frame that has been created (pict will be taken care of by the caller method)
          --it;
-         self->parent->deliverSample(tempPict); // we have to deliver the additional frame that has been created (pict will be taken care of by the caller method)
         }
        else
         {
          ++it;
-         self->parent->processSample(it,pict);
+         hr = self->parent->processSample(it,pict);
          --it;
         }
       }
@@ -1045,6 +1045,8 @@ void TimgFilterAvisynth::Tavisynth::process(TimgFilterAvisynth *self,TfilterQueu
 
  if (sequenceEnd)
   skipAhead(false,false);
+
+ return hr;
 }
 
 //===================================== TimgFilterAvisynth =====================================
@@ -1193,6 +1195,7 @@ const char* TimgFilterAvisynth::getInfoBuffer(void)
 
 HRESULT TimgFilterAvisynth::process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)
 {
+ HRESULT hr = S_OK;
  if (is(pict,cfg0))
   {
    const TavisynthSettings *cfg=(const TavisynthSettings*)cfg0;
@@ -1248,11 +1251,11 @@ HRESULT TimgFilterAvisynth::process(TfilterQueue::iterator it,TffPict &pict,cons
       }
 
      if (avisynth && input && input->clip)
-      avisynth->process(this,it,pict,cfg);
+      hr = (avisynth->process(this,it,pict,cfg) == true);
     }
   }
 
- return S_OK;
+ return hr;
 }
 
 int TimgFilterAvisynth::getMaxBufferAhead() { return maxBufferAhead; }

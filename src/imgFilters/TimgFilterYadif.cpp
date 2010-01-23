@@ -144,7 +144,7 @@ HRESULT TimgFilterYadif::put_image(TffPict &pict, const unsigned char *src[4], i
         }        
     }
 
-    int hr = S_OK;
+    HRESULT hr = S_OK;
 
     for(int frame_pos = frame_start_pos ; frame_pos <= double_frame_rate ; frame_pos++){
         unsigned char *dst[4];
@@ -176,15 +176,14 @@ HRESULT TimgFilterYadif::put_image(TffPict &pict, const unsigned char *src[4], i
 
         // DPRINTF(_l("rtStart=%I64i rtStop=%I64i"), pict.rtStart, pict.rtStop);
         last_rtStop = pict.rtStop;
-        parent->processSample(++it, pict);
+        hr = parent->processSample(++it, pict);
         --it;
-        HRESULT hr = S_OK;
-        if (frame_pos < double_frame_rate)
+        if (frame_pos < double_frame_rate && hr == S_OK)
          {
           hr = parent->deliverSample(pict); // we have to deliver the additional frame that has been created (pict will be taken care of by the caller method)
          }
 
-        if (frame_pos == double_frame_rate || hr != S_OK)
+        if (frame_pos == double_frame_rate || FAILED(hr))
             break;
 
         // only if frame doubler is used and it has just delivered the first image.

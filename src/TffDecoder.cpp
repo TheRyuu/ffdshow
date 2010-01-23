@@ -1347,8 +1347,12 @@ STDMETHODIMP TffdshowDecVideo::processDecodedSample(TffPict &pict)
 
 STDMETHODIMP TffdshowDecVideo::deliverDecodedSample(TffPict &pict)
 {
- processDecodedSample(pict);
- return imgFilters->deliverSample(pict);
+ HRESULT hr = processDecodedSample(pict);
+ if (hr == S_OK)
+  {
+   hr = imgFilters->deliverSample(pict);
+  }
+ return hr;
 }
 
 STDMETHODIMP TffdshowDecVideo::deliverProcessedSample(TffPict &pict)

@@ -137,7 +137,7 @@ private:
    bool createClip(const TavisynthSettings *cfg,Tinput *input,TffPictBase& pict);
    void setOutFmt(const TavisynthSettings *cfg,Tinput *input,TffPictBase &pict);
    void init(const TavisynthSettings &oldcfg,Tinput *input,int *outcsp,TffPictBase &pict);
-   void process(TimgFilterAvisynth *self,TfilterQueue::iterator& it,TffPict &pict,const TavisynthSettings *cfg);
+   HRESULT process(TimgFilterAvisynth *self,TfilterQueue::iterator& it,TffPict &pict,const TavisynthSettings *cfg);
    char infoBuf[1000];
 
   private:
