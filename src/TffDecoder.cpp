@@ -1166,9 +1166,10 @@ STDMETHODIMP TffdshowDecVideo::flushDecodedSamples(void)
  return deliverDecodedSample(pict);
 }
 
-STDMETHODIMP TffdshowDecVideo::setFrameTime(TffPict &pict)
+STDMETHODIMP TffdshowDecVideo::setFrameTime(TffPict &pict, bool &frameTimeReconstructed)
 {
  HRESULT frameTimeOk=S_FALSE;
+ frameTimeReconstructed = false;
  int codecId = inpin->getInCodecId2();
  if (mpeg12_codec(codecId) && inpin->biIn.bmiHeader.biCompression!=FOURCC_MPEG)
   {
@@ -1201,6 +1202,7 @@ else //not vc-1
   if (frameTimeOk!=S_OK || pict.rtStop-pict.rtStart==0)
    {
     frameTimeOk=S_OK;
+    frameTimeReconstructed = true;
     pict.rtStart = m_rtStart;
     if (inSampleTypeSpecificFlags & AM_VIDEO_FLAG_REPEAT_FIELD)
      {
@@ -1216,7 +1218,7 @@ else //not vc-1
  return frameTimeOk;
 }
 
-void TffdshowDecVideo::advanceTimeToNextFrame(TffPict &pict, bool frameTimeOk)
+void TffdshowDecVideo::advanceTimeToNextFrame(TffPict &pict, bool frameTimeOk, bool frameTimeReconstructed)
 {
  int codecId = inpin->getInCodecId2();
  if (presetSettings->softTelecine && vc1_codec(codecId) && inSampleEverField1Repeat && inpin->avgTimePerFrame == 333666)
@@ -1234,7 +1236,7 @@ void TffdshowDecVideo::advanceTimeToNextFrame(TffPict &pict, bool frameTimeOk)
   }
  else //not vc-1
   {
-   if (frameTimeOk && pict.rtStop-pict.rtStart!=0)
+   if (frameTimeOk && !frameTimeReconstructed && pict.rtStop-pict.rtStart!=0)
     {
      if (inpin->avgTimePerFrame==0)
       inpin->avgTimePerFrame=pict.rtStop-pict.rtStart;
@@ -1295,8 +1297,9 @@ STDMETHODIMP TffdshowDecVideo::processDecodedSample(TffPict &pict)
 
  //if (m_frame.srcLength==0) return S_FALSE;
 
- HRESULT frameTimeOk = setFrameTime(pict);
- advanceTimeToNextFrame(pict, frameTimeOk==S_OK);
+ bool frameTimeReconstructed;
+ HRESULT frameTimeOk = setFrameTime(pict, frameTimeReconstructed);
+ advanceTimeToNextFrame(pict, frameTimeOk==S_OK, frameTimeReconstructed);
 
  if ((inSampleEverField1Repeat || inpin->isInterlacedRawVideo) && !(inSampleTypeSpecificFlags & AM_VIDEO_FLAG_WEAVE))
   {

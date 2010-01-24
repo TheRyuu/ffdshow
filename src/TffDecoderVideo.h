@@ -59,7 +59,7 @@ protected:
  HRESULT DecideBufferSizeVMR(IMemAllocator *pima,ALLOCATOR_PROPERTIES *pProperties, const CLSID &ref);
  HRESULT DecideBufferSizeOld(IMemAllocator *pima,ALLOCATOR_PROPERTIES *pProperties, const CLSID &ref);
  void getChapters(void);
- void advanceTimeToNextFrame(TffPict &pict, bool frameTimeOk);
+ void advanceTimeToNextFrame(TffPict &pict, bool frameTimeOk, bool frameTimeReconstructed);
 
 public:
  virtual HRESULT NewSegment(REFERENCE_TIME tStart,REFERENCE_TIME tStop,double dRate);
@@ -150,7 +150,7 @@ public:
  STDMETHODIMP unregisterOSDprovider(IOSDprovider *provider);
  STDMETHODIMP findOverlayControl2(IhwOverlayControl* *overlayPtr);
  STDMETHODIMP getChaptersList(void **ppChaptersList);
- STDMETHODIMP setFrameTime(TffPict &pict);
+ STDMETHODIMP setFrameTime(TffPict &pict, bool &frameTimeReconstructed);
  void setFrameVideoDelay(TffPict &pict);
 
  //compatibility
