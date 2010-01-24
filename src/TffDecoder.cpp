@@ -1350,7 +1350,14 @@ STDMETHODIMP TffdshowDecVideo::deliverDecodedSample(TffPict &pict)
  HRESULT hr = processDecodedSample(pict);
  if (hr == S_OK)
   {
-   hr = imgFilters->deliverSample(pict);
+   hr = deliverProcessedSample(pict);
+  }
+ else
+  {
+   if (!FAILED(hr))
+    {
+     hr = S_OK; // there wasn't anything wrong with the sample, we have just filtered it
+    }
   }
  return hr;
 }

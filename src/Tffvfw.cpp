@@ -63,12 +63,7 @@ public:
    // Store the decoded picture dimensions (used by some imgFilters)
    decodedPict = Trect(pict.rectFull, pict.rectFull.sar);
    if (!imgFilters) imgFilters=createImgFilters();
-   HRESULT hr = imgFilters->process(pict,presetSettings);
-   if (hr == S_OK)
-    {
-     hr = imgFilters->deliverSample(pict);
-    }
-   return hr;
+   return imgFilters->process(pict,presetSettings);
   }
  bool getFlip(void) const
   {
@@ -407,7 +402,19 @@ STDMETHODIMP Tffvfw::deliverDecodedSample(TffPict &pict)
  else if (autoforcedilace==2)
   pict.csp|=FF_CSP_FLAGS_INTERLACED;
 
- return decVFW->processPict(pict);
+ HRESULT hr = decVFW->processPict(pict);
+ if (hr == S_OK)
+  {
+   hr = deliverProcessedSample(pict);
+  }
+ else
+  {
+   if (!FAILED(hr))
+    {
+     hr = S_OK; // there wasn't anything wrong with the sample, we have just filtered it
+    }
+  }
+ return hr;
 }
 
 STDMETHODIMP Tffvfw::deliverProcessedSample(TffPict &pict)

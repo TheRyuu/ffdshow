@@ -46,7 +46,7 @@ void TimgFilterDGbob::done(void)
 }
 HRESULT TimgFilterDGbob::process(TfilterQueue::iterator it,TffPict &pict0,const TfilterSettingsVideo *cfg0)
 {
- HRESULT hr;
+ HRESULT hr = S_FALSE;
  const TdeinterlaceSettings *cfg=(const TdeinterlaceSettings*)cfg0;
  if (((pict0.fieldtype & FIELD_TYPE::PROGRESSIVE_FRAME) || pict0.film) && !cfg->deinterlaceAlways)
  {
@@ -308,14 +308,15 @@ HRESULT TimgFilterDGbob::process(TfilterQueue::iterator it,TffPict &pict0,const 
     pict.clear(true);
    TtempPict *pp=picts0[0];memmove(picts0,picts0+1,4*sizeof(picts0[0]));picts0[4]=pp;
    pict.rtStart=rtStart;pict.rtStop=pict.rtStart+rtDuration;rtStart+=rtDuration;
-   hr=parent->processSample(++it,pict);
-   it--;
-   if (f==0)
+   if (f == 0 && fcnt == 2) //first frame to be delivered
     {
-     if (hr == S_OK)
-      {
-       hr = parent->deliverSample(pict); // we have to deliver the additional frame that has been created (pict will be taken care of by the caller method)
-      }
+     parent->processAndDeliverSample(++it,pict); // we have to deliver the additional frame that has been created (pict will be taken care of by the caller method)
+     it--;
+    }
+   else //last frame to be delivered
+    {
+     pict0 = pict;
+     hr=parent->processSample(++it,pict0);
     }
    if (FAILED(hr))
     return hr;
