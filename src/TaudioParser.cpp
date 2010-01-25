@@ -573,8 +573,6 @@ HRESULT TaudioParser::parseDTS(unsigned char *src, int size, TbyteBuffer *newsrc
            // update the stream context with DTS core info only if we have a DTS stream or if we have a DTS-HD stream but we are in DTS core mode (HD blocks stripped off)
            if (streamformat==DTS || !useDTSHDPassthrough) 
             audioParserData.sample_blocks=sample_blocks;
-           else
-            bitdata.getBits2(7);
 
 
            frame_size=bitdata.getBits2(14) + 1;
