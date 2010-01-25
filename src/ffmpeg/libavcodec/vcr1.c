@@ -20,7 +20,7 @@
  */
 
 /**
- * @file vcr1.c
+ * @file libavcodec/vcr1.c
  * ati vcr1 codec.
  */
 
@@ -129,6 +129,15 @@ static av_cold int decode_init(AVCodecContext *avctx){
     return 0;
 }
 
+static av_cold int decode_end(AVCodecContext *avctx){
+    VCR1Context *s = avctx->priv_data;
+
+    if (s->picture.data[0])
+        avctx->release_buffer(avctx, &s->picture);
+
+    return 0;
+}
+
 AVCodec vcr1_decoder = {
     "vcr1",
     CODEC_TYPE_VIDEO,
@@ -136,7 +145,7 @@ AVCodec vcr1_decoder = {
     sizeof(VCR1Context),
     decode_init,
     NULL,
-    NULL,
+    decode_end,
     decode_frame,
     /*.capabilities = */CODEC_CAP_DR1,
     /*.next = */NULL,

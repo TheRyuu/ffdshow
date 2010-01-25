@@ -483,7 +483,7 @@ int attribute_align_arg avcodec_open(AVCodecContext *avctx, AVCodec *codec)
     avctx->codec_id = codec->id; /* ffdshow custom code */
     avctx->frame_number = 0;
 
-    if (HAVE_THREADS && avctx->thread_count>1 && !avctx->thread_opaque) {
+    if (HAVE_THREADS && !avctx->thread_opaque) {
         ret = avcodec_thread_init(avctx, avctx->thread_count);
         if (ret < 0) {
             av_freep(&avctx->priv_data);

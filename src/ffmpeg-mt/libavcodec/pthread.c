@@ -27,7 +27,8 @@
 #include "../../pthreads/pthread.h"
 #include "thread.h"
 
-#define MAX_DELAYED_RELEASED_BUFFERS 32
+/// Max number of frame buffers that can be allocated when using frame threads.
+#define MAX_BUFFERS 32
 
 typedef int (action_func)(AVCodecContext *c, void *arg);
 typedef int (action_func2)(AVCodecContext *c, void *arg, int jobnr, int threadnr);
@@ -83,8 +84,14 @@ typedef struct PerThreadContext {
      * Array of frames passed to ff_release_buffer(),
      * to be released later.
      */
-    AVFrame released_buffers[MAX_DELAYED_RELEASED_BUFFERS];
+    AVFrame released_buffers[MAX_BUFFERS];
     int num_released_buffers;
+
+    /**
+     * Array of progress values for ff_get_buffer().
+     */
+    int progress[MAX_BUFFERS][2];
+    uint8_t used_progress[MAX_BUFFERS];
 } PerThreadContext;
 
 typedef struct FrameThreadContext {
@@ -207,6 +214,11 @@ static int thread_init(AVCodecContext *avctx)
     int i;
     ThreadContext *c;
     int thread_count = avctx->thread_count;
+
+    avctx->thread_count = thread_count;
+
+    if (thread_count <= 1)
+        return 0;
 
     c = av_mallocz(sizeof(ThreadContext));
     if (!c)
@@ -355,6 +367,14 @@ static void update_context_from_user(AVCodecContext *dst, AVCodecContext *src)
     /* ffdshow custom code (end) */
 }
 
+static void free_progress(AVFrame *f)
+{
+    PerThreadContext *p = f->owner->thread_opaque;
+    int *progress = f->thread_opaque;
+
+    p->used_progress[(progress - p->progress[0]) / 2] = 0;
+}
+
 /// Release all frames passed to ff_release_buffer()
 static void handle_delayed_releases(PerThreadContext *p)
 {
@@ -363,9 +383,10 @@ static void handle_delayed_releases(PerThreadContext *p)
     while (p->num_released_buffers > 0) {
         AVFrame *f = &p->released_buffers[--p->num_released_buffers];
 
-        av_freep(&f->thread_opaque);
-
         pthread_mutex_lock(&fctx->buffer_mutex);
+        free_progress(f);
+        f->thread_opaque = NULL;
+
         f->owner->release_buffer(f->owner, f);
         pthread_mutex_unlock(&fctx->buffer_mutex);
     }
@@ -479,10 +500,12 @@ int ff_decode_frame_threaded(AVCodecContext *avctx,
 
 void ff_report_field_progress(AVFrame *f, int n, int field)
 {
-    PerThreadContext *p = f->owner->thread_opaque;
+    PerThreadContext *p;
     int *progress = f->thread_opaque;
 
-    if (progress[field] >= n) return;
+    if (!progress || progress[field] >= n) return;
+
+    p = f->owner->thread_opaque;
 
     if (f->owner->debug&FF_DEBUG_THREADS)
         av_log(f->owner, AV_LOG_DEBUG, "%p finished %d field %d\n", progress, n, field);
@@ -495,10 +518,12 @@ void ff_report_field_progress(AVFrame *f, int n, int field)
 
 void ff_await_field_progress(AVFrame *f, int n, int field)
 {
-    PerThreadContext *p = f->owner->thread_opaque;
+    PerThreadContext *p;
     int *progress = f->thread_opaque;
 
-    if (progress[field] >= n) return;
+    if (!progress || progress[field] >= n) return;
+
+    p = f->owner->thread_opaque;
 
     if (f->owner->debug&FF_DEBUG_THREADS)
         av_log(f->owner, AV_LOG_DEBUG, "thread awaiting %d field %d from %p\n", n, field, progress);
@@ -652,7 +677,8 @@ static int frame_thread_init(AVCodecContext *avctx)
     return 0;
 
 error:
-    frame_thread_free(avctx, i);
+    // the failed thread isn't completed but must be freed
+    frame_thread_free(avctx, i+1);
 
     return err;
 }
@@ -673,24 +699,42 @@ void ff_frame_thread_flush(AVCodecContext *avctx)
     fctx->prev_thread = NULL;
 }
 
+static int *allocate_progress(PerThreadContext *p)
+{
+    int i;
+
+    for (i = 0; i < MAX_BUFFERS; i++)
+        if (!p->used_progress[i]) break;
+
+    if (i == MAX_BUFFERS) {
+        av_log(p->avctx, AV_LOG_ERROR, "allocate_progress() overflow\n");
+        return NULL;
+    }
+
+    p->used_progress[i] = 1;
+
+    return p->progress[i];
+}
+
 int ff_get_buffer(AVCodecContext *avctx, AVFrame *f)
 {
     int ret, *progress;
     PerThreadContext *p = avctx->thread_opaque;
 
     f->owner = avctx;
-    f->thread_opaque = progress = av_malloc(sizeof(int)*2);
 
     if (!USE_FRAME_THREADING(avctx)) {
-        progress[0] =
-        progress[1] = INT_MAX;
+        f->thread_opaque = NULL;
         return avctx->get_buffer(avctx, f);
     }
+
+    pthread_mutex_lock(&p->parent->buffer_mutex);
+    f->thread_opaque = progress = allocate_progress(p);
+    if (!progress) return -1;
 
     progress[0] =
     progress[1] = -1;
 
-    pthread_mutex_lock(&p->parent->buffer_mutex);
     ret = avctx->get_buffer(avctx, f);
     pthread_mutex_unlock(&p->parent->buffer_mutex);
 
@@ -709,12 +753,11 @@ void ff_release_buffer(AVCodecContext *avctx, AVFrame *f)
     PerThreadContext *p = avctx->thread_opaque;
 
     if (!USE_FRAME_THREADING(avctx)) {
-        av_freep(&f->thread_opaque);
         avctx->release_buffer(avctx, f);
         return;
     }
 
-    if (p->num_released_buffers >= MAX_DELAYED_RELEASED_BUFFERS) {
+    if (p->num_released_buffers >= MAX_BUFFERS) {
         av_log(p->avctx, AV_LOG_ERROR, "too many delayed release_buffer calls!\n");
         return;
     }

@@ -776,7 +776,8 @@ void MPV_common_end(MpegEncContext *s)
     for(i=0; i<3; i++)
         av_freep(&s->visualization_buffer[i]);
 
-    avcodec_default_free_buffers(s->avctx);
+    if(!USE_FRAME_THREADING(s->avctx))
+        avcodec_default_free_buffers(s->avctx);
 }
 
 void init_rl(RLTable *rl, uint8_t static_store[2][2*MAX_RUN + MAX_LEVEL + 3])
@@ -1898,9 +1899,16 @@ void ff_init_block_index(MpegEncContext *s){ //FIXME maybe rename
 
     if(!(s->pict_type==FF_B_TYPE && s->avctx->draw_horiz_band && s->picture_structure==PICT_FRAME))
     {
+        if(s->picture_structure==PICT_FRAME){
         s->dest[0] += s->mb_y *   linesize << mb_size;
         s->dest[1] += s->mb_y * uvlinesize << (mb_size - s->chroma_y_shift);
         s->dest[2] += s->mb_y * uvlinesize << (mb_size - s->chroma_y_shift);
+        }else{
+            s->dest[0] += (s->mb_y>>1) *   linesize << mb_size;
+            s->dest[1] += (s->mb_y>>1) * uvlinesize << (mb_size - s->chroma_y_shift);
+            s->dest[2] += (s->mb_y>>1) * uvlinesize << (mb_size - s->chroma_y_shift);
+            assert((s->mb_y&1) == (s->picture_structure == PICT_BOTTOM_FIELD));
+        }
     }
 }
 
