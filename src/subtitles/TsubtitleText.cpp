@@ -1547,14 +1547,15 @@ TrenderedTextSubtitleWord* TsubtitleText::newWord(
 
     if (w->props.shadowDepth != -1)  {
         // SSA/ASS/ASS2
+        /* Use the same settings as SRT
         if (w->props.shadowDepth == 0) {
             prefs.shadowMode = 3;
             prefs.shadowSize = 0;
-        } else {
-            if (prefs.shadowMode == 0) // If no shadow mode defined, take the classic with no gradient
-             prefs.shadowMode=2;
-            prefs.shadowSize = -1 * w->props.shadowDepth;
-        }
+        } else {*/
+        // All subtitles
+        if (prefs.shadowMode == 0) // If no shadow mode defined, take the classic with no gradient
+         prefs.shadowMode=2;
+        prefs.shadowSize = -1 * w->props.shadowDepth;
     }
 
     prefs.outlineWidth=w->props.outlineWidth==-1 ? fontSettings.outlineWidth : w->props.outlineWidth;
