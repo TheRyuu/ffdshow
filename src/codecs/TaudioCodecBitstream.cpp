@@ -137,12 +137,15 @@ void TaudioCodecBitstream::fillAdditionalEndBytes(void)
 }
 
 
-// Fill MLP sync frame in the middle of the buffer at index 30708
+
 int TaudioCodecBitstream::fillMATBuffer(BYTE *src, size_t length,bool checkLength)
 {
  if (bitstreamBuffer.size()>=buffer_limit) return length;
  int remainedLength=length;
 
+ // Pos 30708 = middle of the MAT frame and we need to write the additinal middle bytes even if there 
+ // is a buffer overlapped. So if the buffer will overlap, we will cut it into 2 pieces 
+ // (we must not overwrite the bytes but shift the bytes)
  if (bitstreamBuffer.size()<=30708 && bitstreamBuffer.size()+length>30708)
  {  
   size_t writeBefore=30708-bitstreamBuffer.size();
@@ -162,6 +165,7 @@ int TaudioCodecBitstream::fillMATBuffer(BYTE *src, size_t length,bool checkLengt
   return remainedLength;
  }
 
+ // Buffer ends after the buffer limit
  if (bitstreamBuffer.size()+length>buffer_limit)
  {
   size_t writeBefore=buffer_limit-bitstreamBuffer.size();
@@ -177,6 +181,7 @@ int TaudioCodecBitstream::fillMATBuffer(BYTE *src, size_t length,bool checkLengt
  }
 
  appendMATBuffer((char *)src, length);
+
  return 0;
 }
 
@@ -191,6 +196,7 @@ void TaudioCodecBitstream::fillBlankBytes(size_t bufferSize)
    BYTE *blank_data=(BYTE*)alloca(sizeof(BYTE)*additional_blank_size);
    memset(blank_data,0,additional_blank_size);
    int remainedBytes=fillMATBuffer(blank_data,additional_blank_size,true);
+   // We couldn't write all the blank bytes in this buffer
    if (remainedBytes>=0)
    {
     additional_blank_size=remainedBytes;
@@ -231,6 +237,25 @@ HRESULT TaudioCodecBitstream::decodeMAT(TbyteBuffer &src, TaudioParserData audio
 
    // Number of zeros to be added
    additional_blank_size += nbZeros;
+
+   // Limit case : the previous buffer ended just before the buffer limit
+   if (bitstreamBuffer.size()>=buffer_limit)
+   {
+    fillAdditionalEndBytes();
+    size_t addedSize=SIZEOF_ARRAY(additional_MAT_end_bytesW)*2;
+    additional_blank_size-=addedSize;
+    HRESULT hr=deciA->deliverSampleBistream((void*)&*bitstreamBuffer.begin(),(size_t)bitstreamBuffer.size(),audioParserData.bit_rate,audioParserData.sample_rate,true, 0,61424);
+    bitstreamBuffer.clear();
+    fillAdditionalBytes();
+    // Fill last zero bytes if any
+    fillBlankBytes(buffer_limit);
+    if (hr!=S_OK)
+    {
+     DPRINTF(_l("TaudioCodecBitstream::decode failed (%lld)"),hr);
+     src.clear();
+     return hr;
+    }
+   }
 
    if (ptr+frame_size > end)
    {
@@ -332,7 +357,10 @@ HRESULT TaudioCodecBitstream::decode(TbyteBuffer &src)
        TinputPin *inpin = deciA->getInputPin();
        REFERENCE_TIME rtStart, rtStop;
        deciA->getInputTime(rtStart, rtStop);
-       if (rtStart<0)
+       int audioDelay=deci->getParam2(IDFF_audio_decoder_delay);
+       REFERENCE_TIME delay100ns=audioDelay*10000LL;
+
+       if (rtStart+delay100ns<0)
        {
         bitstreamBuffer.clear();
         src.clear();
