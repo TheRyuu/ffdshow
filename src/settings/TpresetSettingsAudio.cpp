@@ -79,7 +79,7 @@ bool TaudioAutoPresetProps::freqMatch(const char_t *expr,const char_t *)
 //============================== TpresetAudio =============================
 TpresetAudio::TpresetAudio(const char_t *IpresetName,const char_t *Ireg_child,int filtermode):
  Tpreset(Ireg_child,IpresetName,0,filtermode)
-{
+{ // Any new setting here must also be added in TpresetAudio::operator=(const Tpreset &src0) operator below
  static const TintOptionT<TpresetAudio> iopts[]=
   {
    IDFF_preferredsfs ,&TpresetAudio::preferredsfs,1,1,_l(""),1,
@@ -95,6 +95,8 @@ TpresetAudio::TpresetAudio(const char_t *IpresetName,const char_t *Ireg_child,in
      _l("decoderDRCLevel"),100,
    IDFF_audio_decoder_JitterCorrection,&TpresetAudio::jitterCorrection,0,0,_l(""),1,
      _l("decoderJitterCorrection"),1,
+   IDFF_audio_decoder_delay,&TpresetAudio::audioDelay,0,0,_l(""),1,
+     _l("decoderAudioDelay"),0,
    0
   };
  addOptions(iopts);
@@ -152,6 +154,7 @@ Tpreset& TpresetAudio::operator=(const Tpreset &src0)
         decoderDRC = src.decoderDRC;
         decoderDRCLevel = src.decoderDRCLevel;
         jitterCorrection = src.jitterCorrection;
+        audioDelay = src.audioDelay;
     } catch (const std::bad_cast&) {
         DPRINTF(_l("In TpresetAudio::operator =, dynamic_cast failed. This must be a bug."));
         ASSERT(0);

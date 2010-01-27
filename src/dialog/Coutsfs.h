@@ -16,6 +16,7 @@ public:
  static const char_t* bitstream_formats[];
  ToutsfsPage(TffdshowPageDec *Iparent);
  void init(void);
+ virtual void getTip(char_t *tipS,size_t len);
  virtual bool reset(bool testonly=false);
  virtual void cfg2dlg(void);
  virtual void translate(void);

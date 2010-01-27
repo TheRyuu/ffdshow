@@ -82,9 +82,17 @@ void ToutsfsPage::cfg2dlg(void)
  setCheck(IDC_CHB_ALLOWOUTSTREAM,cfgGet(IDFF_allowOutStream));
  setCheck(IDC_CHB_PASSTHROUGH_PCM_CONNECT,cfgGet(IDFF_aoutpassthroughPCMConnection)==1  );
  cbxSetCurSel(IDC_CBX_OUT_PASSTHROUGH_DEVICEID,cfgGet(IDFF_aoutpassthroughDeviceId));
+ SetDlgItemInt(m_hwnd,IDC_ED_AUDIO_DELAY,cfgGet(IDFF_audio_decoder_delay),TRUE);
 
  connect2dlg();
 }
+
+void ToutsfsPage::getTip(char_t *tipS,size_t len)
+{
+ if (cfgGet(IDFF_videoDelay))
+  strncatf(tipS, len, _l("\nAudio delay: %i msec"),cfgGet(IDFF_audio_decoder_delay));
+}
+
 void ToutsfsPage::ac32dlg(int &outsfs)
 {
  if (enabled(IDC_CHB_OUT_AC3))
@@ -239,4 +247,11 @@ ToutsfsPage::ToutsfsPage(TffdshowPageDec *Iparent):TconfPageDecAudio(Iparent)
    0
   };
  bindComboboxes(cbx);
+
+ static const TbindEditInt<ToutsfsPage> edInt[]=
+  {
+   IDC_ED_AUDIO_DELAY,INT_MIN/2,INT_MAX/2,IDFF_audio_decoder_delay,NULL,
+   0,NULL,NULL
+  };
+ bindEditInts(edInt);
 }

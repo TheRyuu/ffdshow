@@ -636,7 +636,17 @@ STDMETHODIMP TffdshowDecAudio::deliverProcessedSample(const void *buf,size_t num
   return E_FAIL;
 
  REFERENCE_TIME rtDurProc=REF_SECOND_MULT*numsamples/currentOutsf.freq;
- REFERENCE_TIME rtStart=m_rtStartProc,rtStop=m_rtStartProc+rtDurProc;
+
+ REFERENCE_TIME offset=0;
+ if (presetSettings && presetSettings->audioDelay != 0)
+ {
+   REFERENCE_TIME delay100ns=presetSettings->audioDelay*10000LL;
+   offset=delay100ns;
+ }
+
+ 
+ REFERENCE_TIME rtStart=m_rtStartProc+offset; 
+ REFERENCE_TIME rtStop=m_rtStartProc+offset+rtDurProc;
  m_rtStartProc+=rtDurProc;
  if (rtStart<0)
   return S_OK;
@@ -694,14 +704,14 @@ STDMETHODIMP TffdshowDecAudio::deliverSampleBistream(void *buf,size_t size,int b
 
  size_t length=0;
  size_t repetition_burst=0x800; // 2048 = AC3 
- if (!fileout)
+ if (!fileout) // If we are delivering the samples to an audio device, encapsulate the stream into IEC structure (otherwise stream it with no modification)
  {
   if (codecId==CODEC_ID_BITSTREAM_TRUEHD) 
-   // Repetition rate of IEC frames is 15360 for TrueHD/MLP
+   // Repetition rate of TrueHD/MLP buffers is 61440
    repetition_burst=61440;// max length of MAT data: 61424 bytes (total=61432+8 header bytes)
   else if (codecId==CODEC_ID_BITSTREAM_EAC3) // 6144 for DD Plus * 4 for IEC 60958 frames
    repetition_burst=24576;
-  else if (codecId==CODEC_ID_BITSTREAM_DTSHD) //TODO : missing information for DTS-HD
+  else if (codecId==CODEC_ID_BITSTREAM_DTSHD)
    repetition_burst=32768;
   else 
   {
@@ -711,6 +721,7 @@ STDMETHODIMP TffdshowDecAudio::deliverSampleBistream(void *buf,size_t size,int b
    unsigned int size2;
    length=0;
    // Add 4 more words (8 bytes) for AC3/DTS (for backward compatibility, should be *4 for other codecs)
+   // AC3/DTS streams start with 8 blank bytes (why, don't know but let's going on with)
    while (length < odd2even(size) + sizeof(WORD) * 8)
      length += repetition_burst;
   
@@ -737,7 +748,8 @@ STDMETHODIMP TffdshowDecAudio::deliverSampleBistream(void *buf,size_t size,int b
  REFERENCE_TIME rtDur,rtStart=m_rtStartProc,rtStop=REFTIME_INVALID;
  if (bitstream_codec(codecId))
  {
-  if (inpin->insample_rtStart != REFTIME_INVALID && inpin->insample_rtStop != REFTIME_INVALID)
+  if (inpin->insample_rtStart != REFTIME_INVALID && inpin->insample_rtStop != REFTIME_INVALID
+   && inpin->insample_rtStart > inpin->insample_rtStop)
   {
    rtStart=inpin->insample_rtStart;
    rtDur = inpin->insample_rtStop - inpin->insample_rtStart;
@@ -759,8 +771,19 @@ STDMETHODIMP TffdshowDecAudio::deliverSampleBistream(void *buf,size_t size,int b
        rtDur = REF_SECOND_MULT*size*8/bit_rate;
    }
  }
+
+ REFERENCE_TIME offset=0;
+
+ if (presetSettings && presetSettings->audioDelay != 0)
+ {
+   REFERENCE_TIME delay100ns=presetSettings->audioDelay*10000LL;
+   offset=delay100ns;
+ }
+
+ rtStart+=offset;
+
  if (rtStop==REFTIME_INVALID)
-  rtStop=m_rtStartProc+rtDur;
+  rtStop=m_rtStartProc+offset+rtDur;
 
  //DPRINTF(_l("pin:%I64i startDec:%I64i duration:%I64i"),rtStart,m_rtStartDec,rtDur);
  m_rtStartProc+=rtDur;if (incRtDec) m_rtStartDec+=rtDur;

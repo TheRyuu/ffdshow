@@ -971,6 +971,7 @@
 #define IDFF_audio_decoder_DRC  3509
 #define IDFF_audio_decoder_DRC_Level 3510
 #define IDFF_audio_decoder_JitterCorrection 3535
+#define IDFF_audio_decoder_delay  3540
 
 #define IDFF_filterDScaler        2200
 #define IDFF_isDScaler            2201
@@ -1284,6 +1285,7 @@
 #define IDFF_dec_DXVA_H264             3536
 #define IDFF_dec_DXVA_VC1              3537
 #define IDFF_dec_DXVA_CompatibilityMode 3538
+#define IDFF_dec_DXVA_PostProcessingMode 3539
 
 //----------------------- encoding -------------------------
 #define IDFF_numthreads      3322
@@ -1572,6 +1574,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//next:3539
+//next:3541
 
 #endif

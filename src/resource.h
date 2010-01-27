@@ -1988,6 +1988,12 @@
 #define IDC_COMBO1                      2263
 #define IDC_CBX_COMPATIBILITY_MODE      2263
 #define IDC_LBL_COMPATIBILITY_MODE      2264
+#define IDC_LBL_DXVA_POST_PROCESSING_MODE 2265
+#define IDC_ED_AUDIO_DELAY              2265
+#define IDC_CBX_DXVA_POST_PROCESSING_MODE 2266
+#define IDC_LBL_AUDIO_DELAY             2266
+#define IDC_LBL_AUDIO_DELAY2            2267
+#define IDC_LBL_AUDIO_DELAY_MS          2267
 #define ID_MNI_PRESET_NEWFROMDEFAULT    40004
 #define ID_MNI_PRESET_NEWFROMSELECTED   40005
 #define ID_MNI_PRESET_NEW_FROMFILE      40006
@@ -2004,7 +2010,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        302
 #define _APS_NEXT_COMMAND_VALUE         40015
-#define _APS_NEXT_CONTROL_VALUE         2265
+#define _APS_NEXT_CONTROL_VALUE         2267
 #define _APS_NEXT_SYMED_VALUE           107
 #endif
 #endif
