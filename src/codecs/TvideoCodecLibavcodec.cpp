@@ -127,8 +127,6 @@ void TvideoCodecLibavcodec::end(void)
     }
    if (avctx->slice_offset) free(avctx->slice_offset);
    if (codecinited) libavcodec->avcodec_close(avctx);codecinited=false;
-   if (avctx->thread_type != FF_THREAD_FRAME && threadcount)
-    libavcodec->avcodec_thread_free(avctx);
    libavcodec->av_free(avctx);avctx=NULL;
    libavcodec->av_free(frame);frame=NULL;
   }
