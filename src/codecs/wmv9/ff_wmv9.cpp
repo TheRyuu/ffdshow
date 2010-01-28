@@ -269,7 +269,7 @@ public:
      DWORD buflen=3*cfg.width*cfg.height/2;
      memcpy(bufptr,src[0],buflen); //always XVID_CSP_YV12
      buf->SetLength(buflen);
-     HRESULT res=pWMWriter->WriteSample(wrinputnum,QWORD(framenum*int64_t(10000000)/cfg.fps),0,buf);
+     pWMWriter->WriteSample(wrinputnum,QWORD(framenum*int64_t(10000000)/cfg.fps),0,buf);
      buf->Release();
      return 1;
     }

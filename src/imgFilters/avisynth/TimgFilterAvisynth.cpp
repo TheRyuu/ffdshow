@@ -1251,7 +1251,7 @@ HRESULT TimgFilterAvisynth::process(TfilterQueue::iterator it,TffPict &pict,cons
       }
 
      if (avisynth && input && input->clip)
-      hr = (avisynth->process(this,it,pict,cfg) == true);
+      hr = avisynth->process(this,it,pict,cfg);
     }
   }
 

@@ -294,7 +294,8 @@ HRESULT TffdshowDecVideoDXVA::DecideBufferSize(IMemAllocator *pAlloc, ALLOCATOR_
  // If queue can't work with Overlay Mixer, IsOldRenderer() returns true.
  isQueue=isQueue && !m_IsOldVideoRenderer &&
    (ref==CLSID_OverlayMixer || ref==CLSID_VideoMixingRenderer || ref==CLSID_VideoMixingRenderer9);
- isQueue=isQueue && !(m_IsOldVMR9RenderlessAndRGB=IsOldVMR9RenderlessAndRGB()); // inform MPC about queue only when queue is effective.
+ m_IsOldVMR9RenderlessAndRGB=IsOldVMR9RenderlessAndRGB();
+ isQueue=isQueue && !(m_IsOldVMR9RenderlessAndRGB); // inform MPC about queue only when queue is effective.
  // DPRINTF(_l("CLSID 0x%x,0x%x,0x%x"),ref.Data1,ref.Data2,ref.Data3);for(int i=0;i<8;i++) {DPRINTF(_l(",0x%2x"),ref.Data4[i]);}
  if (ref==CLSID_VideoRenderer || ref==CLSID_OverlayMixer)
   return DecideBufferSizeOld(pAlloc, ppropInputRequest,ref);
