@@ -920,6 +920,10 @@ int ff_mjpeg_decode_sos(MJpegDecodeContext *s)
             av_log(s->avctx, AV_LOG_ERROR, "decode_sos: index(%d) out of components\n", index);
             return -1;
         }
+        /* Metasoft MJPEG codec has Cb and Cr swapped */
+        if (s->avctx->codec_tag == MKTAG('M', 'T', 'S', 'J')
+            && nb_components == 3 && s->nb_components == 3 && i)
+            index = 3 - i;
 
         s->comp_index[i] = index;
 
@@ -960,7 +964,7 @@ int ff_mjpeg_decode_sos(MJpegDecodeContext *s)
     }
 
     if(s->avctx->debug & FF_DEBUG_PICT_INFO)
-        av_log(s->avctx, AV_LOG_DEBUG, "%s %s p:%d >>:%d ilv:%d bits:%d %s\n", s->lossless ? "lossless" : "sequencial DCT", s->rgb ? "RGB" : "",
+        av_log(s->avctx, AV_LOG_DEBUG, "%s %s p:%d >>:%d ilv:%d bits:%d %s\n", s->lossless ? "lossless" : "sequential DCT", s->rgb ? "RGB" : "",
                predictor, point_transform, ilv, s->bits,
                s->pegasus_rct ? "PRCT" : (s->rct ? "RCT" : ""));
 

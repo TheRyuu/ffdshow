@@ -850,7 +850,7 @@ AVCodec name ## _decoder = {                    \
     NULL,                                       \
     NULL,                                       \
     adpcm_decode_frame,                         \
-    /*.capabilities = */CODEC_CAP_SUBFRAMES,    \
+    /*.capabilities = */0,                      \
     /*.next = */NULL,                           \
     /*.flush = */NULL,                          \
     /*.supported_framerates = */NULL,           \
