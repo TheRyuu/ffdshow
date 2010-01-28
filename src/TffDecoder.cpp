@@ -1285,17 +1285,6 @@ void TffdshowDecVideo::setFrameVideoDelay(TffPict &pict)
 
 STDMETHODIMP TffdshowDecVideo::processDecodedSample(TffPict &pict)
 {
- // Maybe we're waiting for a keyframe still?
- if (waitForKeyframe && (pict.frametype&FRAME_TYPE::typemask)==FRAME_TYPE::I)
-  waitForKeyframe=FALSE;
- // if so, then we don't want to pass this on to the renderer
- if (waitForKeyframe)
-  {
-   //DPRINTF(_l("still waiting for a keyframe"));
-   m_rtStart += inpin->avgTimePerFrame;
-   return S_OK;
-  }
-
  //if (m_frame.srcLength==0) return S_FALSE;
 
  bool frameTimeReconstructed;
@@ -1351,6 +1340,17 @@ STDMETHODIMP TffdshowDecVideo::processDecodedSample(TffPict &pict)
 
 STDMETHODIMP TffdshowDecVideo::deliverDecodedSample(TffPict &pict)
 {
+ // Maybe we're waiting for a keyframe still?
+ if (waitForKeyframe && (pict.frametype&FRAME_TYPE::typemask)==FRAME_TYPE::I)
+  waitForKeyframe=FALSE;
+ // if so, then we don't want to pass this on to the renderer
+ if (waitForKeyframe)
+  {
+   //DPRINTF(_l("still waiting for a keyframe"));
+   m_rtStart += inpin->avgTimePerFrame;
+   return S_OK;
+  }
+
  HRESULT hr = processDecodedSample(pict);
  if (hr == S_OK)
   {
