@@ -690,7 +690,99 @@ REFERENCE_TIME TvideoCodecLibavcodecDxva::getAvrTimePerFrame(void)
  return avgTimePerFrame;
 }
 
+void TvideoCodecLibavcodecDxva::PostProcessUSWCFrame(void * pDXVABuffer, UINT pitch)
+{
+ UINT width = pictWidthRounded();
+ UINT height = pictHeightRounded();
 
+ int nPostProcessingMode=deci->getParam2(IDFF_dec_DXVA_PostProcessingMode);
+
+ switch (nPostProcessingMode)
+ {
+  case 1: //overlay subs / OSD on top of the decoded buffer
+   {
+    Tbuffer processedFrame;
+    GetProcessedFrame(processedFrame, width, height);
+    OverlayYV12OnUSWCFrame(processedFrame, (unsigned char*)pDXVABuffer, width, height, pitch);
+    processedFrame.clear();
+    break;
+   }
+ default:
+   break;
+ }
+}
+
+void TvideoCodecLibavcodecDxva::GetProcessedFrame(Tbuffer &processedFrame, UINT width, UINT height)
+{
+ int size = width * height * 3 / 2;
+ int csp = FF_CSP_420P|FF_CSP_FLAGS_YUV_ADJ; // we use YV12. there is no native FF_CSP_NV12 processing
+ processedFrame.free = false;
+ // process frame over black background:
+ TffPict pict;
+ pict.alloc(width,height,csp,processedFrame,0);
+ ((TffdshowDecVideo*)sinkD)->processDecodedSample(pict);
+}
+
+// performance might be improved by using _mm_stream_si32
+// to improve performance, we're doing here the conversion from YV12 to NV12 (USWC frame is NV12)
+// YV12 - Y,V,U - Y plane, Cr plane, Cb plane
+// NV12 - Y,U,V - Y plane, packed Cb, Cr samples
+void TvideoCodecLibavcodecDxva::OverlayYV12OnUSWCFrame(unsigned char * pSrc, unsigned char * pDest, UINT width, UINT height, UINT pitch)
+{
+ unsigned int x,y;
+ 
+ for(y = 0; y < height; y+=2)
+ {
+  for(x = 0; x < width; x+=2)
+  {
+   int srcY0Offset = y * width + x;
+   int srcY1Offset = srcY0Offset + width;
+   int srcCrOffset = width * height + y / 2 * width / 2 + x / 2;
+   int srcCbOffset = srcCrOffset + width * height / 4;
+   unsigned char srcY00 = pSrc[srcY0Offset + 0];
+   unsigned char srcY01 = pSrc[srcY0Offset + 1];
+   unsigned char srcY10 = pSrc[srcY1Offset + 0];
+   unsigned char srcY11 = pSrc[srcY1Offset + 1];
+   unsigned char srcCr = pSrc[srcCrOffset];
+   unsigned char srcCb = pSrc[srcCbOffset];
+   
+   // Black in yuv is 0,128,128
+   int diffCountY = 0;
+   if (srcY00 != 0)
+   {
+    int destY00Offset = y * pitch + x;
+    pDest[destY00Offset + 0] = srcY00;
+    diffCountY++;
+   }
+   if (srcY01 != 0)
+   {
+    int destY01Offset = y * pitch + x + 1;
+    pDest[destY01Offset] = srcY01;
+    diffCountY++;
+   }
+   if (srcY10 != 0)
+   {
+    int destY10Offset = (y + 1) * pitch + x;
+    pDest[destY10Offset + 0] = srcY10;
+    diffCountY++;
+   }
+   if (srcY11 != 0)
+   {
+    int destY11Offset = (y + 1) * pitch + x + 1;
+    pDest[destY11Offset] = srcY11;
+    diffCountY++;
+   }
+
+   if (diffCountY > 2 || srcCb != 128 || srcCr != 128)
+    {
+     int destCbOffset = pitch * height + y / 2 * pitch + x;
+     int destCrOffset = destCbOffset + 1;
+     pDest[destCbOffset] = srcCb;
+     pDest[destCrOffset] = srcCr;
+    }
+   }
+  }
+}
 #pragma endregion
 
 

@@ -647,7 +647,6 @@ public:
  virtual HRESULT GetMediaType(int iPos,CMediaType *pmt);
  virtual HRESULT CompleteConnect(PIN_DIRECTION direction,IPin *pReceivePin);
  virtual HRESULT DecideBufferSize(IMemAllocator *pAlloc, ALLOCATOR_PROPERTIES *ppropInputRequest);
- virtual int GetPinCount(void);
 protected:
  virtual HRESULT setOutputMediaType(const CMediaType &mt);
  virtual STDMETHODIMP_(int) get_trayIconType(void);

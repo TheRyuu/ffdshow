@@ -15,6 +15,7 @@ public:
  virtual void cfg2dlg(void);
  virtual void translate(void);
  static const char_t *dec_dxva_compatibilityModes[];
+ static const char_t *dec_dxva_postProcessingModes[];
 };
 
 #endif

@@ -33,12 +33,20 @@ const char_t* TDXVAOptionsPage::dec_dxva_compatibilityModes[]=
  NULL
 };
 
+const char_t* TDXVAOptionsPage::dec_dxva_postProcessingModes[]=
+{
+ _l("Disabled"),
+ _l("Surface overlay"),
+ NULL
+};
+
 void TDXVAOptionsPage::init(void)
 {
  addHint(IDC_GRP_DXVA2,_l("Enabling DXVA on those codecs will disable all FFDShow internal filters (subtitles, resize,...)"));
  addHint(IDC_CHB_H264,_l("Enable DXVA on H264 codec."));
  addHint(IDC_CHB_VC1,_l("Enable DXVA on VC1 codec."));
  addHint(IDC_CBX_COMPATIBILITY_MODE,_l("This option forces DXVA to be used even if the format is not compatible. You may get artifacts if you change that option."));
+ addHint(IDC_CBX_DXVA_POST_PROCESSING_MODE,_l("This option selects how the selected image filters will be applied.\nSurface overlay: subtitles / OSD will be overlayed on top of the decoded picture surface (done by software)"));
  cfg2dlg();
 }
 
@@ -47,6 +55,7 @@ void TDXVAOptionsPage::cfg2dlg(void)
  setCheck(IDC_CHB_H264, cfgGet(IDFF_dec_DXVA_H264));
  setCheck(IDC_CHB_VC1, cfgGet(IDFF_dec_DXVA_VC1));
  cbxSetCurSel(IDC_CBX_COMPATIBILITY_MODE,cfgGet(IDFF_dec_DXVA_CompatibilityMode));
+ cbxSetCurSel(IDC_CBX_DXVA_POST_PROCESSING_MODE,cfgGet(IDFF_dec_DXVA_PostProcessingMode));
 }
 
 INT_PTR TDXVAOptionsPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -70,6 +79,7 @@ void TDXVAOptionsPage::translate(void)
 {
  TconfPageBase::translate();
  cbxTranslate(IDC_CBX_COMPATIBILITY_MODE,TDXVAOptionsPage::dec_dxva_compatibilityModes);
+ cbxTranslate(IDC_CBX_DXVA_POST_PROCESSING_MODE,TDXVAOptionsPage::dec_dxva_postProcessingModes);
 }
 
 
@@ -87,6 +97,7 @@ TDXVAOptionsPage::TDXVAOptionsPage(TffdshowPageDec *Iparent):TconfPageDecVideo(I
  static const TbindCombobox<TDXVAOptionsPage> cbx[]=
   {
    IDC_CBX_COMPATIBILITY_MODE,IDFF_dec_DXVA_CompatibilityMode,BINDCBX_SEL,NULL,
+   IDC_CBX_DXVA_POST_PROCESSING_MODE,IDFF_dec_DXVA_PostProcessingMode,BINDCBX_SEL,NULL,
    0
   };
  bindComboboxes(cbx);

@@ -42,11 +42,6 @@ TffdshowDecVideoDXVA::TffdshowDecVideoDXVA(LPUNKNOWN punk,HRESULT *phr):Tffdshow
  DPRINTF(_l("TffdshowDecVideoDXVA constructor"));
 }
 
-int TffdshowDecVideoDXVA::GetPinCount(void)
-{
- return 2; // No subs supported for now
-}
-
 // get list of supported output colorspaces
 HRESULT TffdshowDecVideoDXVA::GetMediaType(int iPosition, CMediaType *mtOut)
 {

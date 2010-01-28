@@ -433,13 +433,13 @@ HRESULT TDXVADecoder::BeginFrame(int nSurfaceIndex, IMediaSample* pSampleToDeliv
         case ENGINE_DXVA2 :
             {
                 CComQIPtr<IMFGetService>    pSampleService;
-                CComPtr<IDirect3DSurface9>  pDecoderRenderTarget;
                 pSampleService = pSampleToDeliver;
                 if (pSampleService)
                 {
-                    hr = pSampleService->GetService (MR_BUFFER_SERVICE, __uuidof(IDirect3DSurface9), (void**) &pDecoderRenderTarget);
-                    if (SUCCEEDED (hr)) 
-                        DO_DXVA_PENDING_LOOP (m_pDirectXVideoDec->BeginFrame(pDecoderRenderTarget, NULL));
+                 m_pDecoderRenderTarget = NULL; //m_pDecoderRenderTarget has to be set to NULL before calling to GetService
+                 hr = pSampleService->GetService (MR_BUFFER_SERVICE, __uuidof(IDirect3DSurface9), (void**) &m_pDecoderRenderTarget);
+                 if (SUCCEEDED (hr)) 
+                  DO_DXVA_PENDING_LOOP (m_pDirectXVideoDec->BeginFrame(m_pDecoderRenderTarget, NULL));
                 }
             }
             break;
@@ -462,6 +462,15 @@ HRESULT TDXVADecoder::EndFrame(int nSurfaceIndex)
     HRESULT hr      = E_INVALIDARG;
     DWORD   dwDummy = nSurfaceIndex;
 
+    int nPicIndex = FindOldestFrame();
+    if (nPicIndex != -1)
+     {
+      if (m_pPictureStore[nPicIndex].rtStart >= 0)
+       {
+        CHECK_HR (PostProcessFrame(nPicIndex, m_pPictureStore[nPicIndex].pDecoderRenderTarget));
+       }
+     }
+
     switch (m_nEngine)
     {
     case ENGINE_DXVA1 :
@@ -483,6 +492,53 @@ HRESULT TDXVADecoder::EndFrame(int nSurfaceIndex)
     }
 
     return hr;
+}
+
+// we're not complying with DXVA 1.0 API because we might call GetBuffer() with 0xffffffff after we called EndFrame(), but it seems to work well
+HRESULT TDXVADecoder::PostProcessFrame(int dwBufferIndex, CComPtr<IDirect3DSurface9> pDecoderRenderTarget)
+{
+ HRESULT hr = E_INVALIDARG;
+ BYTE*   pDXVABuffer;
+
+ switch (m_nEngine)
+  {
+   case ENGINE_DXVA1 :
+    {
+     DWORD   dwTypeIndex = 0xffffffff;
+     LONG        lStride;
+     hr = m_pAMVideoAccelerator->GetBuffer(dwTypeIndex, dwBufferIndex, FALSE, (void**)&pDXVABuffer, &lStride);
+     ASSERT (SUCCEEDED (hr));
+     hr = E_INVALIDARG;
+     m_pCodec->PostProcessUSWCFrame(pDXVABuffer, lStride);
+     hr = m_pAMVideoAccelerator->ReleaseBuffer(dwTypeIndex, dwBufferIndex);
+     ASSERT (SUCCEEDED (hr));
+     return hr;
+    }
+   case ENGINE_DXVA2 :
+    {
+     CComQIPtr<IMFGetService> pSampleService;
+     D3DLOCKED_RECT lockedRect;
+     void * pDecodedFrame = NULL;
+     UINT dxva2pitch;
+
+     // Locking the surface as read-only should mean that the resulting D3DLOCKED_RECT will simply point to the actual USWC memory buffer.
+     // Locking without the read only flag might cause the driver to copy the frame buffer to a WB memory buffer,
+     // and copy its contents back to USWC memory when the surface is unlocked.
+     hr = pDecoderRenderTarget->LockRect(&lockedRect, NULL, D3DLOCK_READONLY);
+     ASSERT (SUCCEEDED (hr));
+     pDecodedFrame = lockedRect.pBits;  
+     dxva2pitch = lockedRect.Pitch;
+     m_pCodec->PostProcessUSWCFrame(pDecodedFrame, dxva2pitch);
+     pDecoderRenderTarget->UnlockRect();
+     break;
+    }
+   default :
+    {
+     ASSERT (FALSE);
+     break;
+    }
+   }
+ return hr;
 }
 
 // === Picture store functions
@@ -511,6 +567,7 @@ bool TDXVADecoder::AddToStore(int nSurfaceIndex, IMediaSample* pSample, bool bRe
         m_pPictureStore[nSurfaceIndex].bInUse      = true;
         m_pPictureStore[nSurfaceIndex].bDisplayed  = false;
         m_pPictureStore[nSurfaceIndex].pSample     = pSample;
+        m_pPictureStore[nSurfaceIndex].pDecoderRenderTarget = m_pDecoderRenderTarget;
         m_pPictureStore[nSurfaceIndex].nSliceType  = nSliceType;
 
         if (!bIsField)

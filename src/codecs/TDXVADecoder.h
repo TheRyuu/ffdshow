@@ -77,6 +77,7 @@ typedef struct
     int                         bInUse;            // Slot in use
     bool                        bDisplayed;        // True if picture have been presented
     CComPtr<IMediaSample>       pSample;           // Only for DXVA2 !
+    CComPtr<IDirect3DSurface9>  pDecoderRenderTarget;// Only for DXVA2 !
     REFERENCE_TIME              rtStart;
     REFERENCE_TIME              rtStop;
     FF_FIELD_TYPE               n1FieldType;       // Top or bottom for the 1st field
@@ -132,6 +133,7 @@ protected :
     HRESULT                        FindFreeDXVA1Buffer(DWORD dwTypeIndex, DWORD& dwBufferIndex);
     HRESULT                        BeginFrame(int nSurfaceIndex, IMediaSample* pSampleToDeliver);
     HRESULT                        EndFrame(int nSurfaceIndex);
+    HRESULT                        PostProcessFrame(int dwBufferIndex, CComPtr<IDirect3DSurface9> pDecoderRenderTarget);
     HRESULT                        QueryStatus(PVOID LPDXVAStatus, UINT nSize);
     BYTE                           GetConfigIntraResidUnsigned();
     BYTE                           GetConfigResidDiffAccelerator();
@@ -164,6 +166,7 @@ private :
 
     // === DXVA2 variables
     CComPtr<IDirectXVideoDecoder>  m_pDirectXVideoDec;
+    CComPtr<IDirect3DSurface9>     m_pDecoderRenderTarget;
     DXVA2_ConfigPictureDecode      m_DXVA2Config;
     DXVA2_DecodeExecuteParams      m_ExecuteParams;
 

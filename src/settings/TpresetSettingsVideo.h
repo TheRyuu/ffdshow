@@ -68,6 +68,7 @@ public:
  int dec_dxva_h264;
  int dec_dxva_vc1;
  int dec_dxva_compatibilityMode;
+ int dec_dxva_postProcessingMode;
 
  TpostprocSettings *postproc;
  TsubtitlesSettings *subtitles;

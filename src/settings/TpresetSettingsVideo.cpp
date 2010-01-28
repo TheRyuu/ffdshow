@@ -305,6 +305,8 @@ TpresetVideo::TpresetVideo(const char_t *Ireg_child, const char_t *IpresetName, 
      _l("dec_DXVA_VC1"),0,
    IDFF_dec_DXVA_CompatibilityMode,&TpresetVideo::dec_dxva_compatibilityMode,0,255,_l(""),0,
      _l("dec_dxva_compatibilityMode"),0,
+   IDFF_dec_DXVA_PostProcessingMode,&TpresetVideo::dec_dxva_postProcessingMode,0,255,_l(""),0,
+     _l("dec_dxva_postProcessingMode"),0,
 
    IDFF_isDyInterlaced     ,&TpresetVideo::isDyInterlaced     ,0,0,_l(""),0,
      _l("isDyInterlaced"),0,
@@ -415,6 +417,8 @@ TpresetVideo::TpresetVideo(const char_t *Ireg_child, const char_t *IpresetName, 
  else
  {
   postproc=NULL;levels=NULL;resize=NULL;vis=NULL;grab=NULL;subtitles=NULL;
+  subtitles=new TsubtitlesSettings(options,filters,filtermode);
+  new TOSDsettingsVideo(options,filters);
   output=new ToutputVideoSettings(options,filters);
  }
 }
@@ -500,6 +504,7 @@ Tpreset& TpresetVideo::operator =(const Tpreset &src0)
         dec_dxva_h264=src.dec_dxva_h264;
         dec_dxva_vc1=src.dec_dxva_vc1;
         dec_dxva_compatibilityMode=src.dec_dxva_compatibilityMode;
+        dec_dxva_postProcessingMode=src.dec_dxva_postProcessingMode;
         bordersBrightness=src.bordersBrightness;
         ff_strncpy(useQueueOnlyInList, src.useQueueOnlyInList, countof(useQueueOnlyInList));
 

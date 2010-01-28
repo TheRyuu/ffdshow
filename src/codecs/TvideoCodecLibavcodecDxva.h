@@ -89,6 +89,9 @@ protected:
  // TvideoCodecLibavcodecDXVA methods
  virtual bool isVista(void);
  virtual REFERENCE_TIME getAvrTimePerFrame(void); 
+ virtual void PostProcessUSWCFrame(void * PostProcessUSWCBuffer, UINT pitch);
+ virtual void GetProcessedFrame(Tbuffer &processedFrame, UINT width, UINT height);
+ virtual void OverlayYV12OnUSWCFrame(unsigned char * pSrc, unsigned char * pDest, UINT width, UINT height, UINT pitch);
 
 public:
  TvideoCodecLibavcodecDxva(IffdshowBase *Ideci,IdecVideoSink *IsinkD, CodecID IcodecId);

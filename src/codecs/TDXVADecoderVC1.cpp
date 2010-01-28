@@ -138,7 +138,6 @@ HRESULT TDXVADecoderVC1::DecodeFrame(BYTE* pDataIn, UINT nSize, REFERENCE_TIME r
 
     // Decode frame
     CHECK_HR (Execute());
-    CHECK_HR (EndFrame(nSurfaceIndex));
 
 #ifdef _DEBUG
     DisplayStatus();
@@ -169,6 +168,9 @@ HRESULT TDXVADecoderVC1::DecodeFrame(BYTE* pDataIn, UINT nSize, REFERENCE_TIME r
 
     AddToStore (nSurfaceIndex, pSampleToDeliver, (m_PictureParams.bPicBackwardPrediction != 1), rtStart, rtStop, 
                 false,(FF_FIELD_TYPE)nFieldType, (FF_SLICE_TYPE)nSliceType, 0);
+    
+    CHECK_HR (EndFrame(nSurfaceIndex));
+    
     m_bFlushed = false;
 
     return DisplayNextFrame();

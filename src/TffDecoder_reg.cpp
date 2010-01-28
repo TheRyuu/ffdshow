@@ -633,7 +633,7 @@ AMOVIESETUP_PIN TffdshowDecVideoDXVA::pins[]=
   L"Input",                                                  // Connects to pin
   sizeof(outputMediaTypes) / sizeof(AMOVIESETUP_MEDIATYPE),  // Number of types
   outputMediaTypes                                           // The pin details
- }/*,
+ },
  {
   L"In Text",                                                  // String pin name
   FALSE,                                                       // Is it rendered
@@ -644,7 +644,7 @@ AMOVIESETUP_PIN TffdshowDecVideoDXVA::pins[]=
   NULL,                                                        // Connects to pin
   sizeof(inputTextMediaTypes) / sizeof(AMOVIESETUP_MEDIATYPE), // Number of types
   inputTextMediaTypes                                          // The pin details
- }*/ //TODO : Support to DXVA subtitles to be added
+ }
 };
 
 
