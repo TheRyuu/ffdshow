@@ -211,7 +211,17 @@ HRESULT TimgFilterDScalerDI::process(TfilterQueue::iterator it,TffPict &pict0,co
    if (pict.rectClip != pict.rectFull)
     parent->dirtyBorder=1;
 
-   HRESULT hr=parent->processSample(++it,pict);
+   HRESULT hr;
+   if (f == 0)
+    {
+     hr=parent->processAndDeliverSample(++it,pict); // we have to deliver the additional frame that has been created (pict0 will be taken care of by the caller method)
+     --it;
+    }
+   else //last frame to be delivered
+    {
+     pict0 = pict;
+     hr=parent->processSample(++it,pict0);
+    }
    if (FAILED(hr))
     return hr;
   }

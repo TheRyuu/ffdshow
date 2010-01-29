@@ -310,7 +310,7 @@ HRESULT TimgFilterDGbob::process(TfilterQueue::iterator it,TffPict &pict0,const 
    pict.rtStart=rtStart;pict.rtStop=pict.rtStart+rtDuration;rtStart+=rtDuration;
    if (f == 0 && fcnt == 2) //first frame to be delivered
     {
-     parent->processAndDeliverSample(++it,pict); // we have to deliver the additional frame that has been created (pict will be taken care of by the caller method)
+     parent->processAndDeliverSample(++it,pict); // we have to deliver the additional frame that has been created (pict0 will be taken care of by the caller method)
      it--;
     }
    else //last frame to be delivered
