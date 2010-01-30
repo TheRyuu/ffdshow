@@ -114,10 +114,10 @@ HRESULT TimgFilterYadif::put_image(TffPict &pict, const unsigned char *src[4], i
     std::swap(pict.rtStop,  yadctx->buffered_rtStop);
 
     if(yadctx->do_deinterlace == 0)
-        return S_OK;
+        return S_FALSE;
     if(yadctx->do_deinterlace == 1){
         yadctx->do_deinterlace = 2;
-        return S_OK;
+        return S_FALSE;
     }else if(yadctx->do_deinterlace == 2){
         // second call on the first image
         yadctx->do_deinterlace = 3;
@@ -140,7 +140,7 @@ HRESULT TimgFilterYadif::put_image(TffPict &pict, const unsigned char *src[4], i
                 pict.rtStart = pict.rtStop;
         }else{
             // drop the second image
-            return S_OK;
+            return S_FALSE;
         }        
     }
 
@@ -171,7 +171,7 @@ HRESULT TimgFilterYadif::put_image(TffPict &pict, const unsigned char *src[4], i
 
         if (pict.rtStop < last_rtStop){
             DPRINTF(_l("yadif timestamp error, discarding a frame"));
-            return S_OK;
+            return S_FALSE;
         }
 
         // DPRINTF(_l("rtStart=%I64i rtStop=%I64i"), pict.rtStart, pict.rtStop);

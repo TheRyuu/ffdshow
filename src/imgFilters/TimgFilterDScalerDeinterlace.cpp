@@ -127,6 +127,7 @@ HRESULT TimgFilterDScalerDI::process(TfilterQueue::iterator it,TffPict &pict0,co
 
  int fieldnum=pict0.fieldtype&FIELD_TYPE::INT_BFF;
  REFERENCE_TIME rtStart=pict0.rtStart,rtDuration=(pict0.rtStop-pict0.rtStart)/2;
+ HRESULT hr = S_OK;
  for (int f=0;f<2;f++,fieldnum=1-fieldnum)
   {
    TffPict pict=pict0;
@@ -211,10 +212,9 @@ HRESULT TimgFilterDScalerDI::process(TfilterQueue::iterator it,TffPict &pict0,co
    if (pict.rectClip != pict.rectFull)
     parent->dirtyBorder=1;
 
-   HRESULT hr;
    if (f == 0)
     {
-     hr=parent->processAndDeliverSample(++it,pict); // we have to deliver the additional frame that has been created (pict0 will be taken care of by the caller method)
+     parent->processAndDeliverSample(++it,pict); // we have to deliver the additional frame that has been created (pict0 will be taken care of by the caller method)
      --it;
     }
    else //last frame to be delivered
@@ -225,6 +225,6 @@ HRESULT TimgFilterDScalerDI::process(TfilterQueue::iterator it,TffPict &pict0,co
    if (FAILED(hr))
     return hr;
   }
- return S_OK;
+ return hr;
 }
 #pragma optimize( "", on )
