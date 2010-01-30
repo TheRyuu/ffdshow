@@ -129,6 +129,7 @@ public:
  int getPCIVendor() { return nPCIVendor; };
  virtual void updateAspectRatio(void);
  DXVA2_ConfigPictureDecode* getDXVA2Config(void) { return &dxva2Config; };
+ virtual bool isPostProcessingEnabled(void);
 
 };
 

@@ -462,12 +462,15 @@ HRESULT TDXVADecoder::EndFrame(int nSurfaceIndex)
     HRESULT hr      = E_INVALIDARG;
     DWORD   dwDummy = nSurfaceIndex;
 
-    int nPicIndex = FindOldestFrame();
-    if (nPicIndex != -1)
+    if (m_pCodec->isPostProcessingEnabled())
      {
-      if (m_pPictureStore[nPicIndex].rtStart >= 0)
+      int nPicIndex = FindOldestFrame();
+      if (nPicIndex != -1)
        {
-        CHECK_HR (PostProcessFrame(nPicIndex, m_pPictureStore[nPicIndex].pDecoderRenderTarget));
+        if (m_pPictureStore[nPicIndex].rtStart >= 0)
+         {
+          CHECK_HR (PostProcessFrame(nPicIndex, m_pPictureStore[nPicIndex].pDecoderRenderTarget));
+         }
        }
      }
 

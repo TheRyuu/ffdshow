@@ -690,6 +690,12 @@ REFERENCE_TIME TvideoCodecLibavcodecDxva::getAvrTimePerFrame(void)
  return avgTimePerFrame;
 }
 
+bool TvideoCodecLibavcodecDxva::isPostProcessingEnabled(void)
+{
+ int nPostProcessingMode=deci->getParam2(IDFF_dec_DXVA_PostProcessingMode);
+ return (nPostProcessingMode > 0);
+}
+
 void TvideoCodecLibavcodecDxva::PostProcessUSWCFrame(void * pDXVABuffer, UINT pitch)
 {
  UINT width = pictWidthRounded();
