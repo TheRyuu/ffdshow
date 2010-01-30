@@ -476,7 +476,7 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
     if (adhocMode == ADHOC_ADHOC_DRAW_DVD_SUB_ONLY) {
       adhocMode = ADHOC_SECOND_DONT_DRAW_DVD_SUB;
       if (!again)
-          return S_OK;
+          return S_FALSE;
       else
           return parent->processSample(it,pict);
     } else {
@@ -486,7 +486,7 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
     if (parent->getStopAtSubtitles()) {
         // We just wanted to update prevPict.
         parent->setStopAtSubtitles(false);
-        return S_OK;
+        return S_FALSE;
     }
 
     return parent->processSample(++it,pict);
