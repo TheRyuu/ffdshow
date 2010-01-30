@@ -468,6 +468,7 @@ STDMETHODIMP TffdshowDecVideo::cycleSubLanguages(int step)
 
 bool TffdshowDecVideo::initSubtitles(int id,int type,const unsigned char *extradata,unsigned int extradatalen)
 {
+ if (!imgFilters) imgFilters=createImgFilters();
  return imgFilters?imgFilters->initSubtitles(id,type,extradata,extradatalen):false;
 }
 void TffdshowDecVideo::addSubtitle(int id,REFERENCE_TIME start,REFERENCE_TIME stop,const unsigned char *data,unsigned int datalen,bool utf8)

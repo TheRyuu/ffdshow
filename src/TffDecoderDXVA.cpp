@@ -225,6 +225,7 @@ HRESULT TffdshowDecVideoDXVA::CompleteConnect(PIN_DIRECTION direction,IPin *pRec
 {
  if (direction==PINDIR_INPUT)
   {
+   DPRINTF(_l("TffdshowDecVideoDXVA::CompleteConnect input"));
   }
  else if (direction==PINDIR_OUTPUT)
   {

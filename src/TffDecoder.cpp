@@ -234,7 +234,8 @@ HRESULT TffdshowDecVideo::checkAllowOutChange(IPin *pPin)
                  clsid==CLSID_HaaliVideoRenderer ||
                  clsid==CLSID_FFDSHOW ||
                  clsid==CLSID_FFDSHOWRAW ||
-                 clsid==CLSID_FFDSHOWSUBTITLES;
+                 clsid==CLSID_FFDSHOWSUBTITLES ||
+                 clsid==CLSID_FFDSHOWDXVA;
    allowOutChange=dvdproc ||
                  presetSettings->output->allowOutChange3==1 ||
                  (presetSettings->output->allowOutChange3==2 && filterOk);
@@ -285,31 +286,11 @@ HRESULT TffdshowDecVideo::GetMediaType(int iPosition, CMediaType *mtOut)
  if (hwOverlay==2) iPosition/=2;
  if (iPosition<0) return E_INVALIDARG;
 
-#if DXVA_INSIDE_FFDSHOW
- TvideoCodecDec *pDecoder=NULL;
- getMovieSource((const TvideoCodecDec**)&pDecoder);
- bool isDXVA = (pDecoder != NULL && pDecoder->useDXVA()!=0);
-#endif
  TcspInfos ocsps;size_t osize;
  if (outdv)
   osize=1;
-#if DXVA_INSIDE_FFDSHOW
- else if (isDXVA)
- {
-  // DXVA mode : special output format
-  TvideoCodecLibavcodecDxva *pDecoderDxva = (TvideoCodecLibavcodecDxva*)pDecoder;
-  pDecoderDxva->getDXVAOutputFormats(ocsps);
-  osize=ocsps.size();
- }
- else
- {
-  presetSettings->output->getOutputColorspaces(ocsps);
-  osize=ocsps.size();
- }
-#else
  presetSettings->output->getOutputColorspaces(ocsps);
  osize=ocsps.size();
-#endif
 
  if ((size_t)iPosition>=osize) return VFW_S_NO_MORE_ITEMS;
 
@@ -319,10 +300,6 @@ HRESULT TffdshowDecVideo::GetMediaType(int iPosition, CMediaType *mtOut)
  else
   pictOut=inpin->pictIn;
 
-#if DXVA_INSIDE_FFDSHOW
- // Don't recalculate output size (according to resize and crop filters if enabled) if we are in DXVA mode (because ffdshow filters won't be used)
- if (!isDXVA)
-#endif
   calcNewSize(pictOut);
 
  // Support mediatype with unknown dimension. This is necessary to support MEDIASUBTYPE_H264.
@@ -397,11 +374,7 @@ HRESULT TffdshowDecVideo::GetMediaType(int iPosition, CMediaType *mtOut)
    vih2->AvgTimePerFrame=inpin->avgTimePerFrame;
    vih2->bmiHeader=bih;
    //vih2->dwControlFlags=AMCONTROL_USED | AMCONTROL_COLORINFO_PRESENT | (DXVA_NominalRange_Wide << DXVA_NominalRangeShift) | (DXVA_VideoTransferMatrix_BT601 << DXVA_VideoTransferMatrixShift);
-#if DXVA_INSIDE_FFDSHOW
-   hwDeinterlace=presetSettings->output->hwDeinterlace|isDXVA;
-#else
    hwDeinterlace=presetSettings->output->hwDeinterlace;
-#endif
    
    if (hwDeinterlace)
     vih2->dwInterlaceFlags=AMINTERLACE_IsInterlaced|AMINTERLACE_DisplayModeBobOrWeave;
@@ -424,47 +397,13 @@ HRESULT TffdshowDecVideo::setOutputMediaType(const CMediaType &mt)
  if (!ok) return S_FALSE;
 */
 TcspInfos ocsps;
-#if DXVA_INSIDE_FFDSHOW
-TvideoCodecDec *pDecoder=NULL;
- getMovieSource((const TvideoCodecDec**)&pDecoder);
- bool isDXVA = (pDecoder != NULL && pDecoder->useDXVA()!=0); 
- if (isDXVA)
- {
-  // DXVA mode : special output format
-  TvideoCodecLibavcodecDxva *pDecoderDxva = (TvideoCodecLibavcodecDxva*)pDecoder;
-  pDecoderDxva->getDXVAOutputFormats(ocsps);
- }
-#endif
-
  for (int i=0;cspFccs[i].name;i++)
  {
   const TcspInfo *cspInfo;
-#if DXVA_INSIDE_FFDSHOW
-  if (isDXVA) // Look for the right DXVA colorspace
-  {
-   bool ok=false;
-   for (TcspInfos::const_iterator oc=ocsps.begin();oc!=ocsps.end();oc++)
-   {
-    if (mt.subtype==*(*oc)->subtype)
-    {
-     cspInfo=(const TcspInfo *)(*oc);
-     ok=true;break;
-    }
-   }
-   if (!ok) continue;
-   m_frame.dstColorspace=FF_CSP_NV12;
-  }
-  else // Look for the right software decoding colorspace
-  {
-#endif
    cspInfo=csp_getInfo(cspFccs[i].csp);
    if (*cspInfo->subtype!=mt.subtype) continue;
    m_frame.dstColorspace=cspFccs[i].csp;
    if (m_frame.dstColorspace==FF_CSP_NV12) m_frame.dstColorspace=FF_CSP_NV12|FF_CSP_FLAGS_YUV_ORDER; // HACK
-#if DXVA_INSIDE_FFDSHOW
-  }
-#endif
-
 
   int biWidth,outDy;
   BITMAPINFOHEADER *bih;
@@ -501,12 +440,13 @@ TvideoCodecDec *pDecoder=NULL;
 // set output colorspace
 HRESULT TffdshowDecVideo::SetMediaType(PIN_DIRECTION direction, const CMediaType *pmt)
 {
- DPRINTF(_l("TffdshowDecVideo::SetMediaType"));
  switch (direction)
   {
    case PINDIR_INPUT:
+    DPRINTF(_l("TffdshowDecVideo::SetMediaType Input"));
     return S_OK;
    case PINDIR_OUTPUT:
+    DPRINTF(_l("TffdshowDecVideo::SetMediaType Output"));
     return setOutputMediaType(*pmt);
    default:
     return E_UNEXPECTED;
@@ -569,18 +509,11 @@ HRESULT TffdshowDecVideo::CompleteConnect(PIN_DIRECTION direction,IPin *pReceive
 {
  if (direction==PINDIR_INPUT)
   {
+   DPRINTF(_l("TffdshowDecVideo::CompleteConnect input"));
   }
  else if (direction==PINDIR_OUTPUT)
   {
-#if DXVA_INSIDE_FFDSHOW
-   TvideoCodecDec *pDecoder=NULL;
-   getMovieSource((const TvideoCodecDec**)&pDecoder);
-   if (pDecoder != NULL && pDecoder->useDXVA()!=0)
-   {
-    TvideoCodecLibavcodecDxva *pDecoderDxva = (TvideoCodecLibavcodecDxva*)pDecoder;
-    pDecoderDxva->checkDXVAMode(pReceivePin);
-   }
-#endif
+   DPRINTF(_l("TffdshowDecVideoDXVA::CompleteConnect output"));
    const CLSID &out=GetCLSID(m_pOutput->GetConnected());
    outOverlayMixer=!!(out==CLSID_OverlayMixer);
   }
@@ -598,24 +531,6 @@ HRESULT TffdshowDecVideo::DecideBufferSize(IMemAllocator *pAlloc, ALLOCATOR_PROP
  if (m_IsQueueListedApp==-1) // Not initialized
   m_IsQueueListedApp= IsQueueListedApp(getExeflnm());
 
-#if DXVA_INSIDE_FFDSHOW
- TvideoCodecDec *pDecoder=NULL;
- getMovieSource((const TvideoCodecDec**)&pDecoder);
- if (pDecoder != NULL && pDecoder->useDXVA()==2)
- {
-  TvideoCodecLibavcodecDxva *pDecoderDxva = (TvideoCodecLibavcodecDxva*)pDecoder;
-        HRESULT              hr;
-        ALLOCATOR_PROPERTIES Actual;
-
-        ppropInputRequest->cBuffers = pDecoderDxva->getPicEntryNumber();
-
-        if(FAILED(hr = pAlloc->SetProperties(ppropInputRequest, &Actual))) 
-            return hr;
-
-        return ppropInputRequest->cBuffers > Actual.cBuffers || ppropInputRequest->cbBuffer > Actual.cbBuffer
-            ? E_FAIL : NOERROR;
- }
-#endif
 
  m_IsOldVideoRenderer= IsOldRenderer();
  const CLSID &ref=GetCLSID(m_pOutput->GetConnected());
@@ -1793,11 +1708,6 @@ HRESULT TffdshowDecVideo::reconnectOutput(const TffPict &newpict)
 
    if (!m_pOutput->IsConnected())
     return VFW_E_NOT_CONNECTED;
-#if DXVA_INSIDE_FFDSHOW
-   TvideoCodecDec *pDecoder=NULL;
-   getMovieSource((const TvideoCodecDec**)&pDecoder);
-   bool isDXVA = (pDecoder != NULL && pDecoder->useDXVA()!=0);
-#endif
 
    inReconnect=true;
    int newdy=newpict.rectFull.dy;
@@ -1835,11 +1745,7 @@ HRESULT TffdshowDecVideo::reconnectOutput(const TffPict &newpict)
        vih->dwPictAspectRatioY=newdy;
        vih->dwControlFlags=0;
       }
-#if DXVA_INSIDE_FFDSHOW
-     if(!isDXVA presetSettings->resize && presetSettings->resize->is && presetSettings->resize->SARinternally && presetSettings->resize->mode==0)
-#else
      if(presetSettings->resize && presetSettings->resize->is && presetSettings->resize->SARinternally && presetSettings->resize->mode==0)
-#endif
       {
        vih->dwPictAspectRatioX= newpict.rectFull.dx;
        vih->dwPictAspectRatioY= newpict.rectFull.dy;
