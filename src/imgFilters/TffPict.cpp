@@ -391,6 +391,7 @@ void TffPict::convertCSP(int Icsp,Tbuffer &buf,Tconvert *convert,int edge)
  * Prepare picture buffer for new image.
  * New picture is empty black image.
  * No real color space conversion here.
+ * Note: the original implementer decided that if the buffer is already big enough to contain the new picture, existing data will not be overwritten (by an empty picture) (this applies to the TBuffer class as well)
  */
 void TffPict::convertCSP(int Icsp,Tbuffer &buf,int edge)
 {
@@ -415,26 +416,34 @@ void TffPict::convertCSP(int Icsp,Tbuffer &buf,int edge)
    size_t size=0;
    for (unsigned int i=0;i<cspInfo.numPlanes;i++)
     size+=stride[i]*((odd2even(rectFull.dy)>>cspInfo.shiftY[i])+edge); // rectFull.dy should be added by 1 when rectFull.dy is odd number.
+   bool overwriteData = buf.size() < size;
    buf.alloc(size);
    data[0]=buf;
    data[1]=data[0]+stride[0]*((odd2even(rectFull.dy)>>cspInfo.shiftY[0])+edge);
    data[2]=data[1]+stride[1]*((odd2even(rectFull.dy)>>cspInfo.shiftY[1])+edge);
    data[3]=data[2]+stride[2]*((odd2even(rectFull.dy)>>cspInfo.shiftY[2])+edge);
-   // Black in yuv is 0,128,128
-   memset(data[0],0,stride[0]*(odd2even(rectFull.dy)>>cspInfo.shiftY[0])+edge);
-   for (unsigned int i=1;i<cspInfo.numPlanes;i++)
-    memset(data[i],128,  stride[i]*(odd2even(rectFull.dy)>>cspInfo.shiftY[i])+edge);
+   if (overwriteData)
+    {
+     // Black in yuv is 0,128,128
+     memset(data[0],0,stride[0]*(odd2even(rectFull.dy)>>cspInfo.shiftY[0])+edge);
+     for (unsigned int i=1;i<cspInfo.numPlanes;i++)
+      memset(data[i],128,stride[i]*(odd2even(rectFull.dy)>>cspInfo.shiftY[i])+edge);
+   }
   }
  else if ((csp & FF_CSPS_MASK) == FF_CSP_NV12)
   {
    stride[0]=stride[1]=((rectFull.dx+edge)/16+2)*16;
    size_t size = stride[0] * (odd2even(rectFull.dy) + (odd2even(rectFull.dy)>>1));
+   bool overwriteData = buf.size() < size;
    buf.alloc(size);
    data[0] = buf;
    data[1] = data[0] + stride[0] * (odd2even(rectFull.dy) + edge);
-   // Black in yuv is 0,128,128
-   memset(data[0],0,  stride[0]*(odd2even(rectFull.dy)));
-   memset(data[1],128,stride[1]*(odd2even(rectFull.dy)>>1));
+   if (overwriteData)
+   {
+    // Black in yuv is 0,128,128
+    memset(data[0],0,  stride[0]*(odd2even(rectFull.dy)));
+    memset(data[1],128,stride[1]*(odd2even(rectFull.dy)>>1));
+   }
   }
  else
   {
