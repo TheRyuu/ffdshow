@@ -509,7 +509,8 @@ HRESULT TDXVADecoder::PostProcessFrame(int dwBufferIndex, CComPtr<IDirect3DSurfa
     {
      DWORD   dwTypeIndex = 0xffffffff;
      LONG        lStride;
-     hr = m_pAMVideoAccelerator->GetBuffer(dwTypeIndex, dwBufferIndex, FALSE, (void**)&pDXVABuffer, &lStride);
+     // we're locking the surface as read-only, see notes below
+     hr = m_pAMVideoAccelerator->GetBuffer(dwTypeIndex, dwBufferIndex, TRUE, (void**)&pDXVABuffer, &lStride);
      ASSERT (SUCCEEDED (hr));
      hr = E_INVALIDARG;
      m_pCodec->PostProcessUSWCFrame(pDXVABuffer, lStride);
