@@ -500,6 +500,7 @@ HRESULT TDXVADecoder::EndFrame(int nSurfaceIndex)
 // we're not complying with DXVA 1.0 API because we might call GetBuffer() with 0xffffffff after we called EndFrame(), but it seems to work well
 HRESULT TDXVADecoder::PostProcessFrame(int dwBufferIndex, CComPtr<IDirect3DSurface9> pDecoderRenderTarget)
 {
+ DPRINTF(_l("TDXVADecoder::PostProcessFrame  %d\n"),dwBufferIndex);
  HRESULT hr = E_INVALIDARG;
  BYTE*   pDXVABuffer;
 
@@ -509,6 +510,13 @@ HRESULT TDXVADecoder::PostProcessFrame(int dwBufferIndex, CComPtr<IDirect3DSurfa
     {
      DWORD   dwTypeIndex = 0xffffffff;
      LONG        lStride;
+     int nTry;
+     DO_DXVA_PENDING_LOOP (m_pAMVideoAccelerator->QueryRenderStatus(dwTypeIndex, dwBufferIndex, 0));
+     if (hr == E_PENDING)
+     {
+      DPRINTF(_l("TDXVADecoder::PostProcessFrame Skipped\n"));
+      return S_OK;
+     }
      // we're locking the surface as read-only, see notes below
      hr = m_pAMVideoAccelerator->GetBuffer(dwTypeIndex, dwBufferIndex, TRUE, (void**)&pDXVABuffer, &lStride);
      ASSERT (SUCCEEDED (hr));
