@@ -748,11 +748,11 @@ STDMETHODIMP TffdshowDecAudio::deliverSampleBistream(void *buf,size_t size,int b
  REFERENCE_TIME rtDur,rtStart=m_rtStartProc,rtStop=REFTIME_INVALID;
  if (bitstream_codec(codecId))
  {
-  if (inpin->insample_rtStart != REFTIME_INVALID && inpin->insample_rtStop != REFTIME_INVALID
-   && inpin->insample_rtStart > inpin->insample_rtStop)
+  if (inpin->insample_rtStart != REFTIME_INVALID && inpin->insample_rtStop != REFTIME_INVALID)
   {
    rtStart=inpin->insample_rtStart;
    rtDur = inpin->insample_rtStop - inpin->insample_rtStart;
+   if (rtDur<0) rtDur=1;
   }
   else
    rtDur = REF_SECOND_MULT * size /wfe->nBlockAlign / wfe->nSamplesPerSec;
