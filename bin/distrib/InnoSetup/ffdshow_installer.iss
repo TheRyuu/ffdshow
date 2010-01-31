@@ -1,6 +1,6 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision           = '3251'
+#define tryout_revision           = '3252'
 
 #define buildyear                 = '2010'
 #define buildmonth                =   '01'
@@ -106,8 +106,8 @@ There is no 64-bit version of DScaler.
 #if is64bit
 ArchitecturesAllowed            = x64
 ArchitecturesInstallIn64BitMode = x64
-AppId                           = ffdshow64
-DefaultGroupName                = ffdshow64
+AppId                           = ffdshow x64
+DefaultGroupName                = ffdshow x64
 AppVerName                      = ffdshow x64 [rev {#= tryout_revision}] [{#= buildyear}-{#= buildmonth}-{#= buildday}]
 MinVersion                      = 0,5.01
 #else
