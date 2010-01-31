@@ -1,6 +1,6 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision           = '3250'
+#define tryout_revision           = '3251'
 
 #define buildyear                 = '2010'
 #define buildmonth                =   '01'
@@ -87,7 +87,7 @@
 #endif
 #ifdef PREF_ALBAIN
   #define sse_required           = True
-  #define filename_suffix        = '_dbt_thd_fix_beta1'
+  #define filename_suffix        = '_dbt_'
 #endif
 #ifdef PREF_ALBAIN_X64
   #define is64bit                = True
@@ -376,10 +376,10 @@ Name: "whitelist\prompt";        Description: "{cm:tsk_whitelistPrompt}";       
   #define ff_sys = '{syswow64}'
 #endif
 #if is64bit
-Name: {group}\{cm:shrt_audioConfig} 64 bits; Filename: {#= ff_sys}\rundll32.exe; Parameters: ffdshow.ax,configureAudio; WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 4; Components: ffdshow
-Name: {group}\{cm:shrt_videoConfig} 64 bits; Filename: {#= ff_sys}\rundll32.exe; Parameters: ffdshow.ax,configure; WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 3; Components: ffdshow
-Name: {group}\{cm:shrt_videoDXVAConfig} 64 bits; Filename: {#= ff_sys}\rundll32.exe; Parameters: ffdshow.ax,configureDXVA; WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 10; Components: ffdshow
-Name: {group}\{cm:shrt_vfwConfig} 64 bits; Filename: {#= ff_sys}\rundll32.exe; Parameters: ff_vfw.dll,configureVFW; WorkingDir: {#= ff_sys}; IconFilename: {app}\ffdshow.ax; IconIndex: 5; Components: ffdshow\vfw
+Name: {group}\{cm:shrt_audioConfig} x64; Filename: {#= ff_sys}\rundll32.exe; Parameters: ffdshow.ax,configureAudio; WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 4; Components: ffdshow
+Name: {group}\{cm:shrt_videoConfig} x64; Filename: {#= ff_sys}\rundll32.exe; Parameters: ffdshow.ax,configure; WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 3; Components: ffdshow
+Name: {group}\{cm:shrt_videoDXVAConfig} x64; Filename: {#= ff_sys}\rundll32.exe; Parameters: ffdshow.ax,configureDXVA; WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 10; Components: ffdshow
+Name: {group}\{cm:shrt_vfwConfig} x64; Filename: {#= ff_sys}\rundll32.exe; Parameters: ff_vfw.dll,configureVFW; WorkingDir: {#= ff_sys}; IconFilename: {app}\ffdshow.ax; IconIndex: 5; Components: ffdshow\vfw
 #else
 Name: {group}\{cm:shrt_audioConfig}; Filename: {#= ff_sys}\rundll32.exe; Parameters: ffdshow.ax,configureAudio; WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 4; Components: ffdshow
 Name: {group}\{cm:shrt_videoConfig}; Filename: {#= ff_sys}\rundll32.exe; Parameters: ffdshow.ax,configure; WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 3; Components: ffdshow
@@ -1235,5 +1235,7 @@ begin
   end
 end;
 #endif
+
+
 
 
