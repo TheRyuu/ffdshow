@@ -213,7 +213,7 @@
  CODEC_OP(CODEC_ID_X264          ,1800,"x264") \
  CODEC_OP(CODEC_ID_X264_LOSSLESS ,1900,"x264 lossless") \
  \
- CODEC_OP(CODEC_ID_H264_MT       ,2000,"h264") \
+ CODEC_OP(CODEC_ID_H264_MT       ,2000,"h264 multithreaded") \
  \
  CODEC_OP(CODEC_ID_H264_DXVA       ,2001,"h264 DXVA") \
  \

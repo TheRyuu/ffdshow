@@ -171,6 +171,11 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
     grayscale=deci->getParam2(IDFF_grayscale);
     if (grayscale && codecId!=CODEC_ID_THEORA) avctx->flags|=CODEC_FLAG_GRAY;
 
+    // Fix for new Haali custom media type and fourcc. ffmpeg does not understand it, we have to change it to FOURCC_AVC1 
+    // TODO : not sure if a better mapping is necessary for other FCCs (FOURCC_H264, FOURCC_h264, FOURCC_avc1...)
+    if (fcc==FOURCC_H264_HAALI)
+     fcc=FOURCC_AVC1;
+
     avctx->codec_tag=fcc;
     avctx->workaround_bugs=deci->getParam2(IDFF_workaroundBugs);
     avctx->error_concealment=deci->getParam2(IDFF_errorConcealment);
@@ -189,11 +194,11 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
     avctx->idct_algo=limit(deci->getParam2(IDFF_idct),0,6);
     if (extradata) delete extradata;
     extradata=new Textradata(mt,FF_INPUT_BUFFER_PADDING_SIZE);
-    if (extradata->size>0 && (codecId!=CODEC_ID_H264 || fcc==FOURCC_AVC1)) {
+    if (extradata->size>0 && (codecId!=CODEC_ID_H264 || fcc==FOURCC_AVC1 || fcc==FOURCC_H264_HAALI)) {
         avctx->extradata_size=(int)extradata->size;
         avctx->extradata=extradata->data;
         sendextradata=mpeg12_codec(codecId);
-        if (fcc==FOURCC_AVC1 && mt.formattype==FORMAT_MPEG2Video) {
+        if ((fcc==FOURCC_AVC1 || fcc==FOURCC_H264_HAALI) && mt.formattype==FORMAT_MPEG2Video) {
             const MPEG2VIDEOINFO *mpeg2info=(const MPEG2VIDEOINFO*)mt.pbFormat;
             avctx->nal_length_size=mpeg2info->dwFlags;
             bReorderBFrame=false;
@@ -306,7 +311,7 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
     }
 
     if (codecId == CODEC_ID_H264
-      && !(mt.subtype == MEDIASUBTYPE_AVC1 || mt.subtype == MEDIASUBTYPE_avc1)) {
+      && !isH264_mediatype(mt.subtype)) {
         ffstring sourceExt;
         extractfileext(deci->getSourceName(),sourceExt);
         sourceExt.ConvertToLowerCase();

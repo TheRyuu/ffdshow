@@ -73,9 +73,7 @@ HRESULT TffdshowVideoInputPin::CheckMediaType(const CMediaType* mt)
         if (hdr->biCompression==0 || hdr->biCompression == 0x0038002d) {
             if (mt->subtype == MEDIASUBTYPE_H264_TRANSPORT)
                 hdr->biCompression=FOURCC_H264;
-            else if (mt->subtype == MEDIASUBTYPE_AVC1 || mt->subtype == MEDIASUBTYPE_avc1)
-                hdr->biCompression = FOURCC_H264;
-            else if (mt->subtype == MEDIASUBTYPE_H264 || mt->subtype == MEDIASUBTYPE_h264)
+            else if (isH264_mediatype(mt->subtype))
                 hdr->biCompression = FOURCC_H264;
             else
                 hdr->biCompression=FOURCC_MPG2;
@@ -330,9 +328,7 @@ bool TffdshowVideoInputPin::init(const CMediaType &mt)
         if (biIn.bmiHeader.biCompression==0 || biIn.bmiHeader.biCompression == 0x0038002d) {
             if (mt.subtype == MEDIASUBTYPE_H264_TRANSPORT)
                 biIn.bmiHeader.biCompression = FOURCC_H264;
-            else if (mt.subtype == MEDIASUBTYPE_AVC1 || mt.subtype == MEDIASUBTYPE_avc1)
-                biIn.bmiHeader.biCompression = FOURCC_H264;
-            else if (mt.subtype == MEDIASUBTYPE_H264 || mt.subtype == MEDIASUBTYPE_h264)
+            else if (isH264_mediatype(mt.subtype))
                 biIn.bmiHeader.biCompression = FOURCC_H264;
             else
                 biIn.bmiHeader.biCompression=FOURCC_MPG2;
@@ -411,6 +407,7 @@ bool TffdshowVideoInputPin::init(const CMediaType &mt)
         }
     }
     codecId=(CodecID)getVideoCodecId(&biIn.bmiHeader,&mt.subtype,&biIn.bmiHeader.biCompression);
+    DPRINTF(_l("TffdshowVideoInputPin::initVideo Codec detected : %s"), getCodecName(codecId));
     if (codecId==CODEC_ID_NONE) {
         if (pCompatibleFilter!=NULL) {
             rawDecode=true;
