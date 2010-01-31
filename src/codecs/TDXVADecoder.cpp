@@ -517,8 +517,8 @@ HRESULT TDXVADecoder::PostProcessFrame(int dwBufferIndex, CComPtr<IDirect3DSurfa
       DPRINTF(_l("TDXVADecoder::PostProcessFrame Skipped\n"));
       return S_OK;
      }
-     // we're locking the surface as read-only, see notes below
-     hr = m_pAMVideoAccelerator->GetBuffer(dwTypeIndex, dwBufferIndex, TRUE, (void**)&pDXVABuffer, &lStride);
+
+     hr = m_pAMVideoAccelerator->GetBuffer(dwTypeIndex, dwBufferIndex, FALSE, (void**)&pDXVABuffer, &lStride);
      ASSERT (SUCCEEDED (hr));
      hr = E_INVALIDARG;
      m_pCodec->PostProcessUSWCFrame(pDXVABuffer, lStride);
@@ -533,10 +533,7 @@ HRESULT TDXVADecoder::PostProcessFrame(int dwBufferIndex, CComPtr<IDirect3DSurfa
      void * pDecodedFrame = NULL;
      UINT dxva2pitch;
 
-     // Locking the surface as read-only should mean that the resulting D3DLOCKED_RECT will simply point to the actual USWC memory buffer.
-     // Locking without the read only flag might cause the driver to copy the frame buffer to a WB memory buffer,
-     // and copy its contents back to USWC memory when the surface is unlocked.
-     hr = pDecoderRenderTarget->LockRect(&lockedRect, NULL, D3DLOCK_READONLY);
+     hr = pDecoderRenderTarget->LockRect(&lockedRect, NULL, 0);
      ASSERT (SUCCEEDED (hr));
      pDecodedFrame = lockedRect.pBits;  
      dxva2pitch = lockedRect.Pitch;
