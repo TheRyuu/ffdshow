@@ -1,10 +1,10 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision           = '3202'
+#define tryout_revision           = '3250'
 
 #define buildyear                 = '2010'
 #define buildmonth                =   '01'
-#define buildday                  =   '13'
+#define buildday                  =   '31'
 
 ; Build specific options
 #define localize                  = True
@@ -93,6 +93,7 @@
   #define is64bit                = True
   #define include_x264           = False
   #define include_plugin_dscaler = False
+  #define include_xvidcore       = False
   #define filename_suffix        = '_dbt_x64'
 #endif
 
@@ -374,16 +375,22 @@ Name: "whitelist\prompt";        Description: "{cm:tsk_whitelistPrompt}";       
 #else
   #define ff_sys = '{syswow64}'
 #endif
-
-Name: "{group}\{cm:shrt_audioConfig}";     Filename: "{#= ff_sys}\rundll32.exe"; Parameters: "ffdshow.ax,configureAudio"; WorkingDir: "{app}";       IconFilename: "{app}\ffdshow.ax"; IconIndex:  4; Components: ffdshow
-Name: "{group}\{cm:shrt_videoConfig}";     Filename: "{#= ff_sys}\rundll32.exe"; Parameters: "ffdshow.ax,configure";      WorkingDir: "{app}";       IconFilename: "{app}\ffdshow.ax"; IconIndex:  3; Components: ffdshow
-Name: "{group}\{cm:shrt_videoDXVAConfig}"; Filename: "{#= ff_sys}\rundll32.exe"; Parameters: "ffdshow.ax,configureDXVA";  WorkingDir: "{app}";       IconFilename: "{app}\ffdshow.ax"; IconIndex: 10; Components: ffdshow
-Name: "{group}\{cm:shrt_vfwConfig}";       Filename: "{#= ff_sys}\rundll32.exe"; Parameters: "ff_vfw.dll,configureVFW";   WorkingDir: "{#= ff_sys}"; IconFilename: "{app}\ffdshow.ax"; IconIndex:  5; Components: ffdshow\vfw
-#if include_makeavis
-Name: "{group}\makeAVIS";                  Filename: "{app}\makeAVIS.exe"; Components: ffdshow\makeavis
+#if is64bit
+Name: {group}\{cm:shrt_audioConfig} 64 bits; Filename: {#= ff_sys}\rundll32.exe; Parameters: ffdshow.ax,configureAudio; WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 4; Components: ffdshow
+Name: {group}\{cm:shrt_videoConfig} 64 bits; Filename: {#= ff_sys}\rundll32.exe; Parameters: ffdshow.ax,configure; WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 3; Components: ffdshow
+Name: {group}\{cm:shrt_videoDXVAConfig} 64 bits; Filename: {#= ff_sys}\rundll32.exe; Parameters: ffdshow.ax,configureDXVA; WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 10; Components: ffdshow
+Name: {group}\{cm:shrt_vfwConfig} 64 bits; Filename: {#= ff_sys}\rundll32.exe; Parameters: ff_vfw.dll,configureVFW; WorkingDir: {#= ff_sys}; IconFilename: {app}\ffdshow.ax; IconIndex: 5; Components: ffdshow\vfw
+#else
+Name: {group}\{cm:shrt_audioConfig}; Filename: {#= ff_sys}\rundll32.exe; Parameters: ffdshow.ax,configureAudio; WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 4; Components: ffdshow
+Name: {group}\{cm:shrt_videoConfig}; Filename: {#= ff_sys}\rundll32.exe; Parameters: ffdshow.ax,configure; WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 3; Components: ffdshow
+Name: {group}\{cm:shrt_videoDXVAConfig}; Filename: {#= ff_sys}\rundll32.exe; Parameters: ffdshow.ax,configureDXVA; WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 10; Components: ffdshow
+Name: {group}\{cm:shrt_vfwConfig}; Filename: {#= ff_sys}\rundll32.exe; Parameters: ff_vfw.dll,configureVFW; WorkingDir: {#= ff_sys}; IconFilename: {app}\ffdshow.ax; IconIndex: 5; Components: ffdshow\vfw
 #endif
-Name: "{group}\{cm:shrt_uninstall}";       Filename: "{uninstallexe}"
-Name: "{group}\{cm:shrt_homepage}";        Filename: "http://ffdshow-tryout.sourceforge.net/";                                                       IconFilename: "{app}\ffdshow.ax"; IconIndex:  9; Components: ffdshow;
+#if include_makeavis
+Name: {group}\makeAVIS; Filename: {app}\makeAVIS.exe; Components: ffdshow\makeavis
+#endif
+Name: {group}\{cm:shrt_uninstall}; Filename: {uninstallexe}
+Name: {group}\{cm:shrt_homepage}; Filename: http://ffdshow-tryout.sourceforge.net/; IconFilename: {app}\ffdshow.ax; IconIndex: 9; Components: ffdshow
 
 [Files]
 ; For speaker config
