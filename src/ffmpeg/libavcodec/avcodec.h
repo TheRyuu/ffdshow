@@ -39,7 +39,7 @@
 #include "libavutil/avutil.h"
 
 #define LIBAVCODEC_VERSION_MAJOR 52
-#define LIBAVCODEC_VERSION_MINOR 48
+#define LIBAVCODEC_VERSION_MINOR 49
 #define LIBAVCODEC_VERSION_MICRO  0
 
 #define LIBAVCODEC_VERSION_INT  AV_VERSION_INT(LIBAVCODEC_VERSION_MAJOR, \
@@ -681,6 +681,7 @@ typedef struct AVPanScan{
 #define FF_QSCALE_TYPE_MPEG1 0
 #define FF_QSCALE_TYPE_MPEG2 1
 #define FF_QSCALE_TYPE_H264  2
+#define FF_QSCALE_TYPE_VP56  3
 
 #define FF_BUFFER_TYPE_INTERNAL 1
 #define FF_BUFFER_TYPE_USER     2 ///< direct rendering buffers (image is (de)allocated by user)
@@ -1829,10 +1830,20 @@ typedef struct AVCodecContext {
      */
      int profile;
 #define FF_PROFILE_UNKNOWN -99
+
 #define FF_PROFILE_AAC_MAIN 0
 #define FF_PROFILE_AAC_LOW  1
 #define FF_PROFILE_AAC_SSR  2
 #define FF_PROFILE_AAC_LTP  3
+
+#define FF_PROFILE_H264_BASELINE    66
+#define FF_PROFILE_H264_MAIN        77
+#define FF_PROFILE_H264_EXTENDED    88
+#define FF_PROFILE_H264_HIGH        100
+#define FF_PROFILE_H264_HIGH_10     110
+#define FF_PROFILE_H264_HIGH_422    122
+#define FF_PROFILE_H264_HIGH_444    244
+#define FF_PROFILE_H264_CAVLC_444   44
 
     /**
      * level

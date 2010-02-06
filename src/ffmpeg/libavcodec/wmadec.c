@@ -918,6 +918,14 @@ static int wma_decode_superframe(AVCodecContext *avctx,
     return -1;
 }
 
+static av_cold void flush(AVCodecContext *avctx)
+{
+    WMACodecContext *s = avctx->priv_data;
+
+    s->last_bitoffset=
+    s->last_superframe_len= 0;
+}
+
 AVCodec wmav1_decoder =
 {
     "wmav1",
@@ -930,7 +938,7 @@ AVCodec wmav1_decoder =
     wma_decode_superframe,
     /*.capabilities = */0,
     /*.next = */NULL,
-    /*.flush = */NULL,
+    /*.flush = */flush,
     /*.supported_framerates = */NULL,
     /*.pix_fmts = */NULL,
     /*.long_name = */NULL_IF_CONFIG_SMALL("Windows Media Audio 1"),
@@ -948,7 +956,7 @@ AVCodec wmav2_decoder =
     wma_decode_superframe,
     /*.capabilities = */0,
     /*.next = */NULL,
-    /*.flush = */NULL,
+    /*.flush = */flush,
     /*.supported_framerates = */NULL,
     /*.pix_fmts = */NULL,
     /*.long_name = */NULL_IF_CONFIG_SMALL("Windows Media Audio 2"),

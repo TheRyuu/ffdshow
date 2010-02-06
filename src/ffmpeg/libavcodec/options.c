@@ -55,6 +55,7 @@ void avcodec_get_context_defaults(AVCodecContext *s){
 
     s->palctrl = NULL;
     s->reget_buffer= avcodec_default_reget_buffer;
+    s->reordered_opaque= AV_NOPTS_VALUE;
     
     s->bit_rate= 800*1000;
     s->bit_rate_tolerance= s->bit_rate*10;

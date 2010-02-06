@@ -340,15 +340,13 @@ void ff_h264_filter_mb_fast( H264Context *h, int mb_x, int mb_y, uint8_t *img_y,
         int16_t bS4[4] = {4,4,4,4};
         int16_t bS3[4] = {3,3,3,3};
         int16_t *bSH = FIELD_PICTURE ? bS3 : bS4;
+        if(left_type)
+            filter_mb_edgev( &img_y[4*0], linesize, bS4, qp0, h);
         if( IS_8x8DCT(mb_type) ) {
-            if(left_type)
-                filter_mb_edgev( &img_y[4*0], linesize, bS4, qp0, h);
             filter_mb_edgev( &img_y[4*2], linesize, bS3, qp, h);
             filter_mb_edgeh( &img_y[4*0*linesize], linesize, bSH, qp1, h);
             filter_mb_edgeh( &img_y[4*2*linesize], linesize, bS3, qp, h);
         } else {
-            if(left_type)
-                filter_mb_edgev( &img_y[4*0], linesize, bS4, qp0, h);
             filter_mb_edgev( &img_y[4*1], linesize, bS3, qp, h);
             filter_mb_edgev( &img_y[4*2], linesize, bS3, qp, h);
             filter_mb_edgev( &img_y[4*3], linesize, bS3, qp, h);
@@ -376,17 +374,14 @@ void ff_h264_filter_mb_fast( H264Context *h, int mb_x, int mb_y, uint8_t *img_y,
             edges = 4;
             bSv[0][0] = bSv[0][2] = bSv[1][0] = bSv[1][2] = 0x0002000200020002ULL;
         } else {
-            int mask_edge1 = (mb_type & (MB_TYPE_16x16 | MB_TYPE_8x16)) ? 3 :
-                             (mb_type & MB_TYPE_16x8) ? 1 : 0;
-            int mask_edge0 = (mb_type & (MB_TYPE_16x16 | MB_TYPE_8x16))
-                             && (h->left_type[0] & (MB_TYPE_16x16 | MB_TYPE_8x16))
-                             ? 3 : 0;
-            int step = IS_8x8DCT(mb_type) ? 2 : 1;
-            edges = (mb_type & MB_TYPE_16x16) && !(h->cbp & 15) ? 1 : 4;
+            int mask_edge1 = (3*(((5*mb_type)>>5)&1)) | (mb_type>>4); //(mb_type & (MB_TYPE_16x16 | MB_TYPE_8x16)) ? 3 : (mb_type & MB_TYPE_16x8) ? 1 : 0;
+            int mask_edge0 = 3*((mask_edge1>>1) & ((5*left_type)>>5)&1); // (mb_type & (MB_TYPE_16x16 | MB_TYPE_8x16)) && (h->left_type[0] & (MB_TYPE_16x16 | MB_TYPE_8x16)) ? 3 : 0;
+            int step =  1+(mb_type>>24); //IS_8x8DCT(mb_type) ? 2 : 1;
+            edges = 4 - 3*((mb_type>>3) & !(h->cbp & 15)); //(mb_type & MB_TYPE_16x16) && !(h->cbp & 15) ? 1 : 4;
             s->dsp.h264_loop_filter_strength( bS, h->non_zero_count_cache, h->ref_cache, h->mv_cache,
                                               h->list_count==2, edges, step, mask_edge0, mask_edge1, FIELD_PICTURE);
         }
-        if( IS_INTRA(h->left_type[0]) )
+        if( IS_INTRA(left_type) )
             bSv[0][0] = 0x0004000400040004ULL;
         if( IS_INTRA(h->top_type) )
             bSv[1][0] = FIELD_PICTURE ? 0x0003000300030003ULL : 0x0004000400040004ULL;
@@ -399,19 +394,15 @@ void ff_h264_filter_mb_fast( H264Context *h, int mb_x, int mb_y, uint8_t *img_y,
                 filter_mb_edgec##hv( &img_cr[2*edge*(dir?uvlinesize:1)], uvlinesize, bS[dir][edge], edge ? qpc : qpc##dir, h );\
             }\
         }
+        if(left_type)
+            FILTER(v,0,0);
         if( edges == 1 ) {
-            if(left_type)
-                FILTER(v,0,0);
             FILTER(h,1,0);
         } else if( IS_8x8DCT(mb_type) ) {
-            if(left_type)
-                FILTER(v,0,0);
             FILTER(v,0,2);
             FILTER(h,1,0);
             FILTER(h,1,2);
         } else {
-            if(left_type)
-                FILTER(v,0,0);
             FILTER(v,0,1);
             FILTER(v,0,2);
             FILTER(v,0,3);
@@ -427,9 +418,10 @@ void ff_h264_filter_mb_fast( H264Context *h, int mb_x, int mb_y, uint8_t *img_y,
 static int check_mv(H264Context *h, long b_idx, long bn_idx, int mvy_limit){
     int v;
 
-    v = h->ref_cache[0][b_idx] != h->ref_cache[0][bn_idx] |
-        h->mv_cache[0][b_idx][0] - h->mv_cache[0][bn_idx][0] + 3 >= 7U |
-        FFABS( h->mv_cache[0][b_idx][1] - h->mv_cache[0][bn_idx][1] ) >= mvy_limit;
+    v= h->ref_cache[0][b_idx] != h->ref_cache[0][bn_idx];
+    if(!v && h->ref_cache[0][b_idx]!=-1)
+        v= h->mv_cache[0][b_idx][0] - h->mv_cache[0][bn_idx][0] + 3 >= 7U |
+           FFABS( h->mv_cache[0][b_idx][1] - h->mv_cache[0][bn_idx][1] ) >= mvy_limit;
 
     if(h->list_count==2){
         if(!v)
@@ -518,7 +510,7 @@ static av_always_inline void filter_mb_dir(H264Context *h, int mb_x, int mb_y, u
                 int i, l;
                 int mv_done;
 
-                if( FRAME_MBAFF && IS_INTERLACED(mb_type ^ mbm_type)) { //FIXME not posible left
+                if( dir && FRAME_MBAFF && IS_INTERLACED(mb_type ^ mbm_type)) {
                     *(uint64_t*)bS= 0x0001000100010001ULL;
                     mv_done = 1;
                 }

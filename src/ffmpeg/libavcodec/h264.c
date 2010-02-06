@@ -1776,16 +1776,11 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
         }
 
         if(h->sps.timing_info_present_flag){
-            #if __STDC_VERSION__ >= 199901L
-            s->avctx->time_base= (AVRational){h->sps.num_units_in_tick * 2, h->sps.time_scale};
-            #else
-            s->avctx->time_base.num = h->sps.num_units_in_tick * 2;
-            s->avctx->time_base.den = h->sps.time_scale;
-            #endif
+            int64_t den= h->sps.time_scale;
             if(h->x264_build > 0 && h->x264_build < 44)
-                s->avctx->time_base.den *= 2;
+                den *= 2;
             av_reduce(&s->avctx->time_base.num, &s->avctx->time_base.den,
-                      s->avctx->time_base.num, s->avctx->time_base.den, 1<<30);
+                      h->sps.num_units_in_tick * 2, den, 1<<30);
         }
 
         if (MPV_common_init(s) < 0)
@@ -2739,6 +2734,9 @@ static int decode_nal_units(H264Context *h, const uint8_t *buf, int buf_size){
             if((err = decode_slice_header(hx, h)))
                break;
 
+            avctx->profile = hx->sps.profile_idc;
+            avctx->level   = hx->sps.level_idc;
+
             s->current_picture_ptr->key_frame |=
                     (hx->nal_unit_type == NAL_IDR_SLICE) ||
                     (h->sei_recovery_frame_cnt >= 0);
@@ -2757,6 +2755,9 @@ static int decode_nal_units(H264Context *h, const uint8_t *buf, int buf_size){
 
             if ((err = decode_slice_header(hx, h)) < 0)
                 break;
+
+            avctx->profile = hx->sps.profile_idc;
+            avctx->level   = hx->sps.level_idc;
 
             hx->s.data_partitioning = 1;
 
