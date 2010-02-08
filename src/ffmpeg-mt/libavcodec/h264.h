@@ -423,6 +423,8 @@ typedef struct H264Context{
     int redundant_pic_count;
 
     int direct_spatial_mv_pred;
+    int col_parity;
+    int col_fieldoff;
     int dist_scale_factor[16];
     int dist_scale_factor_field[2][32];
     int map_col_to_list0[2][16+32];
@@ -993,7 +995,7 @@ static void fill_decode_caches(H264Context *h, int mb_type){
                 }
             }
 
-            if((IS_DIRECT(mb_type) && !h->direct_spatial_mv_pred) && !FRAME_MBAFF)
+            if((IS_DIRECT(mb_type) && !h->direct_spatial_mv_pred))
                 continue;
 
             if(USES_LIST(topleft_type, list)){
