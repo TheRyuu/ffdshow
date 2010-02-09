@@ -206,19 +206,18 @@ void ff_h264_pred_direct_motion(H264Context * const h, int *mb_type){
 single_col:
             mb_type_col[0] =
             mb_type_col[1] = h->ref_list[1][0].mb_type[mb_xy];
-            if(IS_8X8(mb_type_col[0]) && !h->sps.direct_8x8_inference_flag){
-                /* FIXME save sub mb types from previous frames (or derive from MVs)
-                * so we know exactly what block size to use */
-                sub_mb_type = MB_TYPE_8x8|MB_TYPE_P0L0|MB_TYPE_P0L1|MB_TYPE_DIRECT2; /* B_SUB_4x4 */
-                *mb_type   |= MB_TYPE_8x8|MB_TYPE_L0L1;
-            }else if(!is_b8x8 && (mb_type_col[0] & MB_TYPE_16x16_OR_INTRA)){
-                sub_mb_type = MB_TYPE_16x16|MB_TYPE_P0L0|MB_TYPE_P0L1|MB_TYPE_DIRECT2; /* B_SUB_8x8 */
+
+            sub_mb_type = MB_TYPE_16x16|MB_TYPE_P0L0|MB_TYPE_P0L1|MB_TYPE_DIRECT2; /* B_SUB_8x8 */
+            if(!is_b8x8 && (mb_type_col[0] & MB_TYPE_16x16_OR_INTRA)){
                 *mb_type   |= MB_TYPE_16x16|MB_TYPE_P0L0|MB_TYPE_P0L1|MB_TYPE_DIRECT2; /* B_16x16 */
             }else if(!is_b8x8 && (mb_type_col[0] & (MB_TYPE_16x8|MB_TYPE_8x16))){
-                sub_mb_type = MB_TYPE_16x16|MB_TYPE_P0L0|MB_TYPE_P0L1|MB_TYPE_DIRECT2; /* B_SUB_8x8 */
                 *mb_type   |= MB_TYPE_L0L1|MB_TYPE_DIRECT2 | (mb_type_col[0] & (MB_TYPE_16x8|MB_TYPE_8x16));
             }else{
-                sub_mb_type = MB_TYPE_16x16|MB_TYPE_P0L0|MB_TYPE_P0L1|MB_TYPE_DIRECT2; /* B_SUB_8x8 */
+                if(!h->sps.direct_8x8_inference_flag){
+                    /* FIXME save sub mb types from previous frames (or derive from MVs)
+                    * so we know exactly what block size to use */
+                    sub_mb_type = MB_TYPE_8x8|MB_TYPE_P0L0|MB_TYPE_P0L1|MB_TYPE_DIRECT2; /* B_SUB_4x4 */
+                }
                 *mb_type   |= MB_TYPE_8x8|MB_TYPE_L0L1;
             }
         }
@@ -294,6 +293,7 @@ single_col:
         }
 
         if(IS_INTERLACED(*mb_type) != IS_INTERLACED(mb_type_col[0])){
+            int n=0;
             for(i8=0; i8<4; i8++){
                 int x8 = i8&1;
                 int y8 = i8>>1;
@@ -315,6 +315,7 @@ single_col:
                         a= pack16to32(mv[0][0],mv[0][1]);
                     if(ref[1] > 0)
                         b= pack16to32(mv[1][0],mv[1][1]);
+                    n++;
                 }else{
                     a= pack16to32(mv[0][0],mv[0][1]);
                     b= pack16to32(mv[1][0],mv[1][1]);
@@ -322,6 +323,8 @@ single_col:
                 fill_rectangle(&h->mv_cache[0][scan8[i8*4]], 2, 2, 8, a, 4);
                 fill_rectangle(&h->mv_cache[1][scan8[i8*4]], 2, 2, 8, b, 4);
             }
+            if(!is_b8x8 && !(n&3))
+                *mb_type= (*mb_type & ~(MB_TYPE_8x8|MB_TYPE_16x8|MB_TYPE_8x16|MB_TYPE_P1L0|MB_TYPE_P1L1))|MB_TYPE_16x16|MB_TYPE_DIRECT2;
         }else if(IS_16X16(*mb_type)){
             int a,b;
 
@@ -343,6 +346,7 @@ single_col:
             fill_rectangle(&h->mv_cache[0][scan8[0]], 4, 4, 8, a, 4);
             fill_rectangle(&h->mv_cache[1][scan8[0]], 4, 4, 8, b, 4);
         }else{
+            int n=0;
             for(i8=0; i8<4; i8++){
                 const int x8 = i8&1;
                 const int y8 = i8>>1;
@@ -368,6 +372,7 @@ single_col:
                                 fill_rectangle(&h->mv_cache[0][scan8[i8*4]], 2, 2, 8, 0, 4);
                             if(ref[1] == 0)
                                 fill_rectangle(&h->mv_cache[1][scan8[i8*4]], 2, 2, 8, 0, 4);
+                            n+=4;
                         }
                     }else{
                         int m=0;
@@ -383,9 +388,12 @@ single_col:
                     }
                     if(!(m&3))
                         h->sub_mb_type[i8]+= MB_TYPE_16x16 - MB_TYPE_8x8;
+                    n+=m;
                     }
                 }
             }
+            if(!is_b8x8 && !(n&15))
+                *mb_type= (*mb_type & ~(MB_TYPE_8x8|MB_TYPE_16x8|MB_TYPE_8x16|MB_TYPE_P1L0|MB_TYPE_P1L1))|MB_TYPE_16x16|MB_TYPE_DIRECT2;
         }
     }else{ /* direct temporal mv pred */
         const int *map_col_to_list0[2] = {h->map_col_to_list0[0], h->map_col_to_list0[1]};
