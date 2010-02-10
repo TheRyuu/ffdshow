@@ -251,6 +251,7 @@ static __inline bool bitstream_codec(int x){return x==CODEC_ID_BITSTREAM_TRUEHD 
 static __inline bool huffyuv_codec(int x)  {return x==CODEC_ID_HUFFYUV || x==CODEC_ID_FFVHUFF;}
 static __inline bool x264_codec(int x)     {return x==CODEC_ID_X264 || x==CODEC_ID_X264_LOSSLESS;}
 static __inline bool lossless_codec(int x) {return huffyuv_codec(x) || x==CODEC_ID_LJPEG || x==CODEC_ID_FFV1 || x==CODEC_ID_DVVIDEO || x==CODEC_ID_X264_LOSSLESS;}
+static __inline bool h264_codec(int x)      {return x == CODEC_ID_H264 || x == CODEC_ID_H264_MT;}
 static __inline bool vc1_codec(int x)      {return x == CODEC_ID_VC1 || x == CODEC_ID_WMV9_LIB;}
 static __inline bool dxva_codec(int x)      {return x == CODEC_ID_H264_DXVA || x == CODEC_ID_VC1_DXVA;}
 

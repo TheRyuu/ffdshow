@@ -881,7 +881,7 @@ HRESULT TffdshowDecVideo::Receive(IMediaSample *pSample)
 
  if (m_bSampleSkipped && late>0) return S_OK;
  int codecId = inpin->getInCodecId2();
- if (presetSettings->dropOnDelay && !mpeg12_codec(codecId) && !vc1_codec(codecId) && late>presetSettings->dropDelayTime*10000)
+ if (presetSettings->dropOnDelay && !mpeg12_codec(codecId) && !vc1_codec(codecId) && !h264_codec(codecId) && late>presetSettings->dropDelayTime*10000)
   {
    //MSR_NOTE(m_idSkip);
    setSampleSkipped(true);
@@ -931,7 +931,13 @@ HRESULT TffdshowDecVideo::Receive(IMediaSample *pSample)
  if (waitForKeyframe)
   waitForKeyframe--;
 
- if (hr==S_FALSE)
+ bool useDXVA = false;
+ TvideoCodecDec *pDecoder=NULL;
+ getMovieSource((const TvideoCodecDec**)&pDecoder);
+ if (pDecoder != NULL && pDecoder->useDXVA())
+  useDXVA = true;
+
+ if (hr==S_FALSE && !useDXVA)
   {
    setSampleSkipped(false);
    DPRINTF_SAMPLE_TIME(pSample);
