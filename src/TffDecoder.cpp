@@ -931,20 +931,23 @@ HRESULT TffdshowDecVideo::Receive(IMediaSample *pSample)
  if (waitForKeyframe)
   waitForKeyframe--;
 
- bool useDXVA = false;
- TvideoCodecDec *pDecoder=NULL;
- getMovieSource((const TvideoCodecDec**)&pDecoder);
- if (pDecoder != NULL && pDecoder->useDXVA())
-  useDXVA = true;
-
- if (hr==S_FALSE && !useDXVA)
+ if (hr==S_FALSE)
   {
-   setSampleSkipped(false);
-   DPRINTF_SAMPLE_TIME(pSample);
-   if (!m_bQualityChanged)
+   bool useDXVA = false;
+   TvideoCodecDec *pDecoder=NULL;
+   getMovieSource((const TvideoCodecDec**)&pDecoder);
+   if (pDecoder != NULL && pDecoder->useDXVA())
+    useDXVA = true;
+
+   if (!useDXVA)
     {
-     m_bQualityChanged=TRUE;
-     NotifyEvent(EC_QUALITY_CHANGE,0,0);
+     setSampleSkipped(false);
+     DPRINTF_SAMPLE_TIME(pSample);
+     if (!m_bQualityChanged)
+      {
+       m_bQualityChanged=TRUE;
+       NotifyEvent(EC_QUALITY_CHANGE,0,0);
+      }
     }
    hr=S_OK;
   }
