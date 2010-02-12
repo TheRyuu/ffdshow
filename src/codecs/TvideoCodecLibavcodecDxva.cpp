@@ -62,18 +62,20 @@ DXVA_PARAMS DXVA_Mpeg2 =
     { DXVA_RESTRICTED_MODE_MPEG2_A,  DXVA_RESTRICTED_MODE_MPEG2_C,     0 }
 };
 
+// Note regarding PicEntryNumber (H.264):
+// During H.264 decoding process, there is a maximum of 16 frames in the DPB, in addition to the current frame (17 total)
+// num_reorder_frame <= MaxDpbFrames <= 16
+// [ num_reorder_frame - the maximum number of frames that precede any frame in decoding order and follow it in output order ]
+// [ L4.1@High: MaxDpbFrames =  ((12,288 / 1.5) * 1024) / (width * height) ]
+//
+// We want to have enough DX surfaces to hold decoded frames until it's time to output them,
+// and we need num_reorder_frame + 1 surfaces, so we need a maximum of 17 DX surfaces
+// for more info, see http://lists.mplayerhq.hu/pipermail/ffmpeg-devel/2006-August/013793.html
+//
 // DXVA modes supported for H264
 DXVA_PARAMS DXVA_H264 =
 {
-    16, // PicEntryNumber
-    2,  // PreferedConfigBitstream
-    { &DXVA2_ModeH264_E, &DXVA2_ModeH264_F, &DXVA_Intel_H264_ClearVideo, &GUID_NULL },
-    { DXVA_RESTRICTED_MODE_H264_E, 0}
-};
-
-DXVA_PARAMS DXVA_H264_VISTA =
-{
-    22, // PicEntryNumber
+    17, // PicEntryNumber
     2,  // PreferedConfigBitstream
     { &DXVA2_ModeH264_E, &DXVA2_ModeH264_F, &DXVA_Intel_H264_ClearVideo, &GUID_NULL },
     { DXVA_RESTRICTED_MODE_H264_E, 0}
@@ -125,8 +127,6 @@ void TvideoCodecLibavcodecDxva::create(void)
  switch(dxvaCodecId)
  {
   case CODEC_ID_H264_DXVA:dxvaParamsp=&DXVA_H264;
-   if (isVista())
-    dxvaParamsp=&DXVA_H264_VISTA;
    break;
   case CODEC_ID_VC1_DXVA:dxvaParamsp=&DXVA_VC1;break;
   /*case CODEC_ID_MPEG2_DXVA:dxvaParamsp=&DXVA_Mpeg2;break;
