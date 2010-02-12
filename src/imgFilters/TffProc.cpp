@@ -146,7 +146,19 @@ STDMETHODIMP TffProcVideo::processTime(unsigned int framenum,int64_t ref_start,i
  pict.rtStart=ref_start;
  pict.rtStop=ref_stop;
  outcsp=Ioutcsp;dst=Idst;dstStride=IdstStride;
- return processPict(framenum,pict,outcsp);
+ HRESULT hr = processPict(framenum,pict,outcsp);
+ if (hr == S_OK)
+  {
+   hr = deliverProcessedSample(pict);
+  }
+ else
+  {
+   if (!FAILED(hr))
+    {
+     hr = S_OK; // there wasn't anything wrong with the sample, we have just filtered it
+    }
+  }
+ return hr;
 }
 HRESULT TffProcVideo::processPict(unsigned int framenum,TffPict &pict,int outcsp)
 {
