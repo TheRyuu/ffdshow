@@ -7,7 +7,7 @@
 		<CustomBuildRule
 			Name="yasm"
 			DisplayName="yasm"
-			CommandLine=".\yasm.cmd $(PlatformName) -I&quot;$(InputDir)&quot; &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;"
+			CommandLine=".\yasm.cmd $(PlatformName) &quot;$(InputDir).&quot; &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;"
 			Outputs="$(IntDir)\$(InputName).obj"
 			FileExtensions="*.asm"
 			ExecutionDescription="yasm assembling $(InputPath)"
