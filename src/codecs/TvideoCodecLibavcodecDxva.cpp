@@ -70,10 +70,21 @@ DXVA_PARAMS DXVA_Mpeg2 =
 //
 // We want to have enough DX surfaces to hold decoded frames until it's time to output them,
 // and we need num_reorder_frame + 1 surfaces, so we need a maximum of 17 DX surfaces
-// for more info, see http://lists.mplayerhq.hu/pipermail/ffmpeg-devel/2006-August/013793.html
+// unfortunately, VMR 9 (Windows XP) supports up to 16 surfaces.
+// this may only affect low-resolution videos (~960x540 and below) where num_reorder_frame = 16, and those are extremely rare. 
+//
+// for more info regarding frame re-ordering: see http://lists.mplayerhq.hu/pipermail/ffmpeg-devel/2006-August/013793.html
 //
 // DXVA modes supported for H264
 DXVA_PARAMS DXVA_H264 =
+{
+    16, // PicEntryNumber
+    2,  // PreferedConfigBitstream
+    { &DXVA2_ModeH264_E, &DXVA2_ModeH264_F, &DXVA_Intel_H264_ClearVideo, &GUID_NULL },
+    { DXVA_RESTRICTED_MODE_H264_E, 0}
+};
+
+DXVA_PARAMS DXVA_H264_VISTA =
 {
     17, // PicEntryNumber
     2,  // PreferedConfigBitstream
@@ -127,6 +138,8 @@ void TvideoCodecLibavcodecDxva::create(void)
  switch(dxvaCodecId)
  {
   case CODEC_ID_H264_DXVA:dxvaParamsp=&DXVA_H264;
+   if (isVista()) 	 
+	  dxvaParamsp=&DXVA_H264_VISTA;
    break;
   case CODEC_ID_VC1_DXVA:dxvaParamsp=&DXVA_VC1;break;
   /*case CODEC_ID_MPEG2_DXVA:dxvaParamsp=&DXVA_Mpeg2;break;
