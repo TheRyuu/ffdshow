@@ -1,10 +1,10 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision           = '3253'
+#define tryout_revision           = '3267'
 
 #define buildyear                 = '2010'
-#define buildmonth                =   '01'
-#define buildday                  =   '31'
+#define buildmonth                =   '02'
+#define buildday                  =   '13'
 
 ; Build specific options
 #define localize                  = True
@@ -504,7 +504,7 @@ Root: HKCU; Subkey: "Software\GNU";               Components: ffdshow;     Flags
 Root: HKCU; Subkey: "{#= ff_reg_base}";           Components: ffdshow;     Flags: uninsdeletekey
 Root: HKCU; Subkey: "{#= ff_reg_base}_audio";     Components: ffdshow;     Flags: uninsdeletekey
 Root: HKCU; Subkey: "{#= ff_reg_base}_audio_raw"; Components: ffdshow;     Flags: uninsdeletekey
-Root: HKLM; Subkey: "{#= ff_reg_base}_dxva";      Components: ffdshow;     Flags: uninsdeletekey
+Root: HKCU; Subkey: "{#= ff_reg_base}_dxva";      Components: ffdshow;     Flags: uninsdeletekey
 Root: HKCU; Subkey: "{#= ff_reg_base}_enc";       Components: ffdshow\vfw; Flags: uninsdeletekey
 Root: HKCU; Subkey: "{#= ff_reg_base}_vfw";       Components: ffdshow\vfw; Flags: uninsdeletekey
 Root: HKLM; Subkey: "Software\GNU";               Components: ffdshow;     Flags: uninsdeletekeyifempty
@@ -517,7 +517,7 @@ Root: HKLM; Subkey: "{#= ff_reg_base}_vfw";       Components: ffdshow\vfw; Flags
 Root: HKCU; Subkey: "{#= ff_reg_base}";           Components: ffdshow;     Flags: deletekey; Tasks: resetsettings
 Root: HKCU; Subkey: "{#= ff_reg_base}_audio";     Components: ffdshow;     Flags: deletekey; Tasks: resetsettings
 Root: HKCU; Subkey: "{#= ff_reg_base}_audio_raw"; Components: ffdshow;     Flags: deletekey; Tasks: resetsettings
-Root: HKLM; Subkey: "{#= ff_reg_base}_dxva";      Components: ffdshow;     Flags: deletekey; Tasks: resetsettings
+Root: HKCU; Subkey: "{#= ff_reg_base}_dxva";      Components: ffdshow;     Flags: deletekey; Tasks: resetsettings
 Root: HKCU; Subkey: "{#= ff_reg_base}_enc";       Components: ffdshow\vfw; Flags: deletekey; Tasks: resetsettings
 Root: HKCU; Subkey: "{#= ff_reg_base}_vfw";       Components: ffdshow\vfw; Flags: deletekey; Tasks: resetsettings
 Root: HKLM; Subkey: "{#= ff_reg_base}";           Components: ffdshow;     Flags: deletekey; Tasks: resetsettings

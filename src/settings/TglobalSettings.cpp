@@ -175,6 +175,8 @@ bool TglobalSettingsBase::exportReg(bool all,const char_t *regflnm,bool unicode)
    regExport(f,HKEY_CURRENT_USER ,FFDSHOW_REG_PARENT _l("\\") FFDSHOWDECVIDEOVFW,unicode);
    regExport(f,HKEY_LOCAL_MACHINE,FFDSHOW_REG_PARENT _l("\\") FFDSHOWDECVIDEOVFW,unicode);
   }
+ if (all || strcmp(reg_child,FFDSHOWDECVIDEODXVA)==0)
+  regExport(f,HKEY_CURRENT_USER ,FFDSHOW_REG_PARENT _l("\\") FFDSHOWDECVIDEODXVA,unicode);
  return true;
 }
 void TglobalSettingsBase::_reg_op_codec(short id,TregOp &tHKCU,TregOp *tHKLM,const char_t *name,int &val,int def)
