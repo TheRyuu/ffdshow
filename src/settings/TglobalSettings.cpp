@@ -340,7 +340,7 @@ void TglobalSettingsDec::cleanupCodecsList(std::vector<CodecID> &ids,Tstrptrs &c
 }
 
 //=================================== TglobalSettingsDecVideo ===================================
-TglobalSettingsDecVideo::TglobalSettingsDecVideo(const Tconfig *Iconfig,int Imode,TintStrColl *Icoll):TglobalSettingsDec(Iconfig,Imode,Imode&IDFF_FILTERMODE_VFW?FFDSHOWDECVIDEOVFW:FFDSHOWDECVIDEO,Icoll),sub(Icoll)
+TglobalSettingsDecVideo::TglobalSettingsDecVideo(const Tconfig *Iconfig,int Imode,TintStrColl *Icoll):TglobalSettingsDec(Iconfig,Imode,Imode&IDFF_FILTERMODE_VFW?FFDSHOWDECVIDEOVFW:(Imode&IDFF_FILTERMODE_VIDEODXVA?FFDSHOWDECVIDEODXVA:FFDSHOWDECVIDEO),Icoll),sub(Icoll)
 {
  static const TintOptionT<TglobalSettingsDecVideo> iopts[]=
   {
