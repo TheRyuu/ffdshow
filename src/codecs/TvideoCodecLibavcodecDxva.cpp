@@ -138,8 +138,8 @@ void TvideoCodecLibavcodecDxva::create(void)
  switch(dxvaCodecId)
  {
   case CODEC_ID_H264_DXVA:dxvaParamsp=&DXVA_H264;
-   if (isVista()) 	 
-	  dxvaParamsp=&DXVA_H264_VISTA;
+   if (isVista())
+    dxvaParamsp=&DXVA_H264_VISTA;
    break;
   case CODEC_ID_VC1_DXVA:dxvaParamsp=&DXVA_VC1;break;
   /*case CODEC_ID_MPEG2_DXVA:dxvaParamsp=&DXVA_Mpeg2;break;
@@ -903,7 +903,10 @@ HRESULT TvideoCodecLibavcodecDxva::decompress(const unsigned char *src,size_t sr
   pDXVADecoder->ConfigureDXVA1();
   }*/
 
-  hr = pDXVADecoder->DecodeFrame ((BYTE*)src, srcLen0, rtStart, rtStop);
+  if (src) //FIXME: this is a quick fix, when src == NULL we should deliver the frames that are still present in the simulated DPB
+   hr = pDXVADecoder->DecodeFrame ((BYTE*)src, srcLen0, rtStart, rtStop);
+  else
+   hr = S_FALSE;
   break;
  default :
   ASSERT (FALSE);
