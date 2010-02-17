@@ -922,8 +922,6 @@ static inline void backup_mb_border(H264Context *h, uint8_t *src_y, uint8_t *src
 
 static inline void xchg_mb_border(H264Context *h, uint8_t *src_y, uint8_t *src_cb, uint8_t *src_cr, int linesize, int uvlinesize, int xchg, int simple){
     MpegEncContext * const s = &h->s;
-    int temp8, i;
-    uint64_t temp64;
     int deblock_left;
     int deblock_top;
     int mb_xy;
@@ -1224,25 +1222,8 @@ static av_always_inline void hl_decode_mb_internal(H264Context *h, int simple){
             }
         }
     }
-#if ENABLE_SLICE_MT_PATCH
-    if((s->avctx->thread_count < 2) && (h->cbp || IS_INTRA(mb_type)))
-        s->dsp.clear_blocks(h->mb);
-#else
     if(h->cbp || IS_INTRA(mb_type))
         s->dsp.clear_blocks(h->mb);
-#endif
-
-    if(h->deblocking_filter && 0) {
-        backup_mb_border(h, dest_y, dest_cb, dest_cr, linesize, uvlinesize, simple);
-        fill_filter_caches(h, mb_type); //FIXME don't fill stuff which isn't used by filter_mb
-        h->chroma_qp[0] = get_chroma_qp(h, 0, s->current_picture.qscale_table[mb_xy]);
-        h->chroma_qp[1] = get_chroma_qp(h, 1, s->current_picture.qscale_table[mb_xy]);
-        if (!simple && FRAME_MBAFF) {
-            ff_h264_filter_mb     (h, mb_x, mb_y, dest_y, dest_cb, dest_cr, linesize, uvlinesize);
-        } else {
-            ff_h264_filter_mb_fast(h, mb_x, mb_y, dest_y, dest_cb, dest_cr, linesize, uvlinesize);
-        }
-    }
 }
 
 /**
@@ -1568,7 +1549,7 @@ static void field_end(H264Context *h){
 /**
  * Replicates H264 "master" context to thread contexts.
  */
-static void clone_slice(H264Context *dst, H264Context *src, int full) /* ffdshow custom code */
+static void clone_slice(H264Context *dst, H264Context *src)
 {
     memcpy(dst->block_offset,     src->block_offset, sizeof(dst->block_offset));
     dst->s.current_picture_ptr  = src->s.current_picture_ptr;
@@ -1590,63 +1571,6 @@ static void clone_slice(H264Context *dst, H264Context *src, int full) /* ffdshow
 
     memcpy(dst->dequant4_coeff,   src->dequant4_coeff,   sizeof(src->dequant4_coeff));
     memcpy(dst->dequant8_coeff,   src->dequant8_coeff,   sizeof(src->dequant8_coeff));
-
-    /* ffdshow custom code (begin) */
-    if(!full)
-        return;
-
-    dst->slice_type            = src->slice_type;
-
-    dst->mb_linesize           = src->mb_linesize;
-
-    dst->sps                   = src->sps;
-    dst->pps                   = src->pps;
-
-    dst->mb_mbaff              = src->mb_mbaff;
-    dst->mb_aff_frame          = src->mb_aff_frame;
-
-    dst->s.me.qpel_put         = src->s.me.qpel_put;
-    dst->s.me.qpel_avg         = src->s.me.qpel_avg;
-
-    /* weighted motion pred */
-
-    dst->use_weight            = src->use_weight;
-    if(dst->use_weight != 0) {
-        dst->use_weight_chroma        = src->use_weight_chroma;
-        dst->luma_log2_weight_denom   = src->luma_log2_weight_denom;
-        dst->chroma_log2_weight_denom = src->chroma_log2_weight_denom;
-
-        memcpy(dst->luma_weight,     src->luma_weight,     sizeof(src->luma_weight));
-        memcpy(dst->luma_offset,     src->luma_offset,     sizeof(src->luma_offset));
-        memcpy(dst->chroma_weight,   src->chroma_weight,   sizeof(src->chroma_weight));
-        memcpy(dst->chroma_offset,   src->chroma_offset,   sizeof(src->chroma_offset));
-
-        memcpy(dst->implicit_weight, src->implicit_weight, sizeof(src->implicit_weight));
-    }
-
-    /* deblocking */
-    dst->deblocking_filter     = src->deblocking_filter;
-    dst->slice_alpha_c0_offset = src->slice_alpha_c0_offset;
-    dst->slice_beta_offset     = src->slice_beta_offset;
-    dst->last_qscale_diff      = src->last_qscale_diff;
-    memcpy(dst->ref2frm, src->ref2frm, sizeof(src->ref2frm));
-
-    dst->slice_num             = src->slice_num;
-    dst->slice_type_nos        = src->slice_type_nos;
-
-    // FIXME not sure if below are necessary
-    dst->direct_spatial_mv_pred= src->direct_spatial_mv_pred;
-    dst->s.qscale              = src->s.qscale;
-    dst->b_stride              = src->b_stride;
-    dst->b8_stride             = src->b8_stride;
-    dst->list_count            = src->list_count;
-    dst->emu_edge_height       = src->emu_edge_height;
-    dst->emu_edge_width        = src->emu_edge_width;
-    dst->s.picture_structure   = src->s.picture_structure;
-    dst->s.codec_id              = src->s.codec_id;
-    dst->s.flags               = src->s.flags;
-    dst->s.flags2              = src->s.flags2;
-    /* ffdshow custom code (end) */
 }
 
 /**
@@ -1710,11 +1634,6 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
     h->slice_type_nos= slice_type & 3;
 
     s->pict_type= h->slice_type; // to make a few old functions happy, it's wrong though
-    if (s->pict_type == FF_B_TYPE && s0->last_picture_ptr == NULL) {
-        av_log(h->s.avctx, AV_LOG_ERROR,
-               "B picture before any references, skipping\n");
-        return -1;
-    }
 
     pps_id= get_ue_golomb(&s->gb);
     if(pps_id>=MAX_PPS_COUNT){
@@ -1908,7 +1827,7 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
         }
     }
     if(h != h0)
-        clone_slice(h, h0, 0); /* ffdshow custom code */
+        clone_slice(h, h0);
 
     s->current_picture_ptr->frame_num= h->frame_num; //FIXME frame_num cleanup
 
@@ -2193,7 +2112,7 @@ static void loop_filter(H264Context *h){
     if(h->deblocking_filter) {
         for(mb_x= 0; mb_x<s->mb_width; mb_x++){
             for(mb_y=end_mb_y - FRAME_MBAFF; mb_y<= end_mb_y; mb_y++){
-                int list, mb_xy, mb_type;
+                int mb_xy, mb_type;
                 mb_xy = h->mb_xy = mb_x + mb_y*s->mb_stride;
                 h->slice_num= h->slice_table[mb_xy];
                 mb_type= s->current_picture.mb_type[mb_xy];
@@ -2238,6 +2157,19 @@ static void loop_filter(H264Context *h){
     h->slice_type= old_slice_type;
     s->mb_x= 0;
     s->mb_y= end_mb_y - FRAME_MBAFF;
+    h->chroma_qp[0] = get_chroma_qp(h, 0, s->qscale);
+    h->chroma_qp[1] = get_chroma_qp(h, 1, s->qscale);
+}
+
+static void predict_field_decoding_flag(H264Context *h){
+    MpegEncContext * const s = &h->s;
+    const int mb_xy= s->mb_x + s->mb_y*s->mb_stride;
+    int mb_type = (h->slice_table[mb_xy-1] == h->slice_num)
+                ? s->current_picture.mb_type[mb_xy-1]
+                : (h->slice_table[mb_xy-s->mb_stride] == h->slice_num)
+                ? s->current_picture.mb_type[mb_xy-s->mb_stride]
+                : 0;
+    h->mb_mbaff = h->mb_field_decoding_flag = IS_INTERLACED(mb_type) ? 1 : 0;
 }
 
 static int decode_slice(struct AVCodecContext *avctx, void *arg){
@@ -2280,6 +2212,10 @@ static int decode_slice(struct AVCodecContext *avctx, void *arg){
             }
             eos = get_cabac_terminate( &h->cabac );
 
+            if((s->workaround_bugs & FF_BUG_TRUNCATED) && h->cabac.bytestream > h->cabac.bytestream_end + 2){
+                ff_er_add_slice(s, s->resync_mb_x, s->resync_mb_y, s->mb_x-1, s->mb_y, (AC_END|DC_END|MV_END)&part_mask);
+                return 0;
+            }
             if( ret < 0 || h->cabac.bytestream > h->cabac.bytestream_end + 2) {
                 av_log(h->s.avctx, AV_LOG_ERROR, "error while decoding MB %d %d, bytestream (%Id)\n", s->mb_x, s->mb_y, h->cabac.bytestream_end - h->cabac.bytestream);
                 ff_er_add_slice(s, s->resync_mb_x, s->resync_mb_y, s->mb_x, s->mb_y, (AC_ERROR|DC_ERROR|MV_ERROR)&part_mask);
@@ -2293,6 +2229,8 @@ static int decode_slice(struct AVCodecContext *avctx, void *arg){
                 ++s->mb_y;
                 if(FIELD_OR_MBAFF_PICTURE) {
                     ++s->mb_y;
+                    if(FRAME_MBAFF && s->mb_y < s->mb_height)
+                        predict_field_decoding_flag(h);
                 }
             }
 
@@ -2331,6 +2269,8 @@ static int decode_slice(struct AVCodecContext *avctx, void *arg){
                 ++s->mb_y;
                 if(FIELD_OR_MBAFF_PICTURE) {
                     ++s->mb_y;
+                    if(FRAME_MBAFF && s->mb_y < s->mb_height)
+                        predict_field_decoding_flag(h);
                 }
                 if(s->mb_y >= s->mb_height){
                     tprintf(s->avctx, "slice end %d %d\n", get_bits_count(&s->gb), s->gb.size_in_bits);
@@ -2410,184 +2350,6 @@ static int decode_slice(struct AVCodecContext *avctx, void *arg){
     return -1; //not reached
 }
 
-/* ffdshow custom code */
-#if ENABLE_SLICE_MT_PATCH
-static void copy_context_to_mb(H264mb *dst, H264Context *src)
-{
-    dst->mb_x                           = src->s.mb_x;
-    dst->mb_y                           = src->s.mb_y;
-    dst->qscale                         = src->s.qscale;
-    dst->chroma_qp[0]                   = src->chroma_qp[0];
-    dst->chroma_qp[1]                   = src->chroma_qp[1];
-    dst->chroma_pred_mode               = src->chroma_pred_mode;
-    dst->intra16x16_pred_mode           = src->intra16x16_pred_mode;
-    dst->topleft_samples_available      = src->topleft_samples_available;
-    dst->topright_samples_available     = src->topright_samples_available;
-
-    memcpy(dst->mb,                       src->mb,                       sizeof(src->mb));
-    memcpy(dst->intra4x4_pred_mode_cache, src->intra4x4_pred_mode_cache, sizeof(src->intra4x4_pred_mode_cache));
-    memcpy(dst->non_zero_count_cache,     src->non_zero_count_cache,     sizeof(src->non_zero_count_cache));
-
-    if(src->slice_type != FF_I_TYPE && src->slice_type != FF_SI_TYPE) {
-        memcpy(dst->sub_mb_type,              src->sub_mb_type,              sizeof(src->sub_mb_type));
-        memcpy(dst->mv_cache,                 src->mv_cache,                 sizeof(src->mv_cache));
-        memcpy(dst->mvd_cache,                src->mvd_cache,                sizeof(src->mvd_cache));
-        memcpy(dst->direct_cache,             src->direct_cache,             sizeof(src->direct_cache));
-        memcpy(dst->ref_cache,                src->ref_cache,                sizeof(src->ref_cache));
-    }
-
-    dst->top_mb_xy                      = src->top_mb_xy;
-    dst->left_mb_xy[0]                  = src->left_mb_xy[0];
-    dst->left_mb_xy[1]                  = src->left_mb_xy[1];
-    dst->cbp                            = src->cbp;
-    
-    dst->mb_xy                          = src->mb_xy;
-
-    /* FIXME not necessary? */
-    dst->top_samples_available          = src->top_samples_available;
-    dst->left_samples_available         = src->left_samples_available;
-}
-
-static void copy_mb_to_context(H264Context *dst, H264mb *src)
-{
-    dst->s.mb_x                         = src->mb_x;
-    dst->s.mb_y                         = src->mb_y;
-    dst->s.qscale                       = src->qscale;
-    dst->chroma_qp[0]                   = src->chroma_qp[0];
-    dst->chroma_qp[1]                   = src->chroma_qp[1];
-    dst->chroma_pred_mode               = src->chroma_pred_mode;
-    dst->intra16x16_pred_mode           = src->intra16x16_pred_mode;
-    dst->topleft_samples_available      = src->topleft_samples_available;
-    dst->topright_samples_available     = src->topright_samples_available;
-
-    memcpy(dst->mb,                       src->mb,                       sizeof(src->mb));
-    memcpy(dst->intra4x4_pred_mode_cache, src->intra4x4_pred_mode_cache, sizeof(src->intra4x4_pred_mode_cache));
-    memcpy(dst->non_zero_count_cache,     src->non_zero_count_cache,     sizeof(src->non_zero_count_cache));
-
-    if(dst->slice_type != FF_I_TYPE && dst->slice_type != FF_SI_TYPE) {
-        memcpy(dst->sub_mb_type,              src->sub_mb_type,              sizeof(src->sub_mb_type));
-        memcpy(dst->mv_cache,                 src->mv_cache,                 sizeof(src->mv_cache));
-        memcpy(dst->mvd_cache,                src->mvd_cache,                sizeof(src->mvd_cache));
-        memcpy(dst->direct_cache,             src->direct_cache,             sizeof(src->direct_cache));
-        memcpy(dst->ref_cache,                src->ref_cache,                sizeof(src->ref_cache));
-    }
-
-    /* Needed for deblocking */
-
-    dst->top_mb_xy                      = src->top_mb_xy;
-    dst->left_mb_xy[0]                  = src->left_mb_xy[0];
-    dst->left_mb_xy[1]                  = src->left_mb_xy[1];
-    dst->cbp                            = src->cbp;
-    
-    dst->mb_xy                          = src->mb_xy;
-
-    /* FIXME not necessary? */
-    dst->top_samples_available          = src->top_samples_available;
-    dst->left_samples_available         = src->left_samples_available;
-}
-
-#define MAXBLOCKS 128
-
-static int decode_mb_parallelized(struct AVCodecContext *avctx, void *arg)
-{
-    H264Context *h = *(void**)arg;
-    H264Context *h0 = avctx->priv_data;
-    MpegEncContext * const s = &h->s;
-    const int part_mask= s->partitioned_frame ? (AC_END|AC_ERROR) : 0x7F;
-    int i, ret;
-
-    if(h0 == h) {
-        /* first thread does entropy decode */
-
-        for(i = 0; i < MAXBLOCKS; i++) {
-            ret = ff_h264_decode_mb_cabac(h);
-            if(ret < 0 || h->cabac.bytestream > h->cabac.bytestream_end + 2) {
-                av_log(h->s.avctx, AV_LOG_ERROR,
-                   "error while decoding MB %d %d, bytestream (%td)\n",
-                   s->mb_x, s->mb_y, h->cabac.bytestream_end - h->cabac.bytestream);
-                ff_er_add_slice(s, s->resync_mb_x, s->resync_mb_y, s->mb_x, s->mb_y,
-                    (AC_ERROR|DC_ERROR|MV_ERROR)&part_mask);
-                return -1;
-            }
-
-            copy_context_to_mb(h->blocks[h->phaze] + i, h);
-            if(++s->mb_x >= s->mb_width) {
-                s->mb_x = 0;
-                ++s->mb_y;
-            }
-
-            if(get_cabac_terminate(&h->cabac) || s->mb_y >= s->mb_height)
-                return i + 1;
-        }
-        return 0;
-
-    } else {
-        /* second thread does hl decode */
-
-        for(i = 0; i < h0->todecode; i++) {
-            copy_mb_to_context(h, h0->blocks[!h0->phaze] + i);
-            ff_h264_hl_decode_mb(h);
-        }
-        return 0;
-    }
-}
-
-static int decode_slice2(struct AVCodecContext *avctx, void *arg){
-    H264Context *h = *(void**)arg;
-    MpegEncContext * const s = &h->s;
-    const int part_mask= s->partitioned_frame ? (AC_END|AC_ERROR) : 0x7F;
-    H264Context *h2 = h->thread_context[1];
-    int i, rv[2];
-
-    h->is_complex = FRAME_MBAFF || s->picture_structure != PICT_FRAME || s->codec_id != CODEC_ID_H264 ||
-                    (CONFIG_GRAY && (s->flags&CODEC_FLAG_GRAY)) || (CONFIG_H264_ENCODER && s->encoding);
-
-    clone_slice(h2, h, 1);
-
-    if(!h->blocks[0]) {
-        h->blocks[0] = av_malloc(sizeof(H264mb) * MAXBLOCKS);
-        h->blocks[1] = av_malloc(sizeof(H264mb) * MAXBLOCKS);
-    }
-
-    s->mb_skip_run= -1;
-
-    /* realign */
-    align_get_bits( &s->gb );
-
-    /* init cabac */
-    ff_init_cabac_states( &h->cabac);
-    ff_init_cabac_decoder( &h->cabac,
-               s->gb.buffer + get_bits_count(&s->gb)/8,
-               ( s->gb.size_in_bits - get_bits_count(&s->gb) + 7)/8);
-    ff_h264_init_cabac_states(h);
-
-    h->todecode = 0;
-
-    while(1) {
-    avctx->execute(avctx, (void *)decode_mb_parallelized,
-               (void **)h->thread_context, rv, 2, sizeof(void*));
-
-    h->phaze = !h->phaze;
-
-    if(rv[0] == -1)
-        return -1;
-    else if(rv[0] == 0) 
-        h->todecode = MAXBLOCKS;
-    else
-        break;
-    }
-
-    for(i = 0; i < rv[0]; i++) {
-      copy_mb_to_context(h2, h->blocks[!h->phaze] + i);
-      ff_h264_hl_decode_mb(h2);
-    }
-
-    tprintf(s->avctx, "slice end %d %d\n", get_bits_count(&s->gb), s->gb.size_in_bits);
-    ff_er_add_slice(s, s->resync_mb_x, s->resync_mb_y, s->mb_x-1, s->mb_y, (AC_END|DC_END|MV_END)&part_mask);
-    return 0;
-}
-#endif /* ENABLE_SLICE_MT_PATCH */
-
 /**
  * Call decode_slice() for each context.
  *
@@ -2601,16 +2363,7 @@ static void execute_decode_slices(H264Context *h, int context_count){
     int i;
 
     if(context_count == 1) {
-        /* ffdshow custom code, interlacing is not supported in multithreading mode */
-        #if ENABLE_SLICE_MT_PATCH
-        if(avctx->thread_count > 1 && h->pps.cabac && !(FIELD_OR_MBAFF_PICTURE)) {
-            decode_slice2(avctx, &h);
-        } else {
-            decode_slice(avctx, &h);
-        }
-        #else 
         decode_slice(avctx, &h);
-        #endif
     } else {
         for(i = 1; i < context_count; i++) {
             hx = h->thread_context[i];
@@ -2698,8 +2451,15 @@ static int decode_nal_units(H264Context *h, const uint8_t *buf, int buf_size){
         if (ptr==NULL || dst_length < 0){
             return -1;
         }
+        i= buf_index + consumed;
+        if((s->workaround_bugs & FF_BUG_AUTODETECT) && i+3<next_avc &&
+           buf[i]==0x00 && buf[i+1]==0x00 && buf[i+2]==0x01 && buf[i+3]==0xE0)
+            s->workaround_bugs |= FF_BUG_TRUNCATED;
+
+        if(!(s->workaround_bugs & FF_BUG_TRUNCATED)){
         while(ptr[dst_length - 1] == 0 && dst_length > 0)
             dst_length--;
+        }
         bit_length= !dst_length ? 0 : (8*dst_length - ff_h264_decode_rbsp_trailing(h, ptr + dst_length - 1));
 
         if(s->avctx->debug&FF_DEBUG_STARTCODE){

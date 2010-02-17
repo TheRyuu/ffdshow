@@ -535,13 +535,6 @@ int ff_h264_decode_mb_cavlc(H264Context *h){
     int dct8x8_allowed= h->pps.transform_8x8_mode;
 
     mb_xy = h->mb_xy = s->mb_x + s->mb_y*s->mb_stride;
-    
-    /* ffdshow custom code */
-    #if ENABLE_SLICE_MT_PATCH
-    if(s->avctx->thread_count > 1) {
-        s->dsp.clear_blocks(h->mb);
-    }
-    #endif
 
     tprintf(s->avctx, "pic:%d mb:%d/%d\n", h->frame_num, s->mb_x, s->mb_y);
     cbp = 0; /* avoid warning. FIXME: find a solution without slowing
@@ -554,8 +547,6 @@ int ff_h264_decode_mb_cavlc(H264Context *h){
             if(FRAME_MBAFF && (s->mb_y&1) == 0){
                 if(s->mb_skip_run==0)
                     h->mb_mbaff = h->mb_field_decoding_flag = get_bits1(&s->gb);
-                else
-                    predict_field_decoding_flag(h);
             }
             decode_mb_skip(h);
             return 0;
@@ -630,6 +621,7 @@ decode_intra_mb:
         h->ref_count[1] <<= 1;
     }
 
+    fill_decode_neighbors(h, mb_type);
     fill_decode_caches(h, mb_type);
 
     //mb_pred
