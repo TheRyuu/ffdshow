@@ -36,6 +36,8 @@
 
 #define HAVE_FAST_UNALIGNED 1
 #define HAVE_FAST_CLZ 0
+#define HAVE_LOCAL_ALIGNED_8 1
+#define HAVE_LOCAL_ALIGNED_16 1
 
 #ifdef __GNUC__
   #define HAVE_ATTRIBUTE_PACKED 1
@@ -62,6 +64,7 @@
 #define CONFIG_GRAY 1
 #define CONFIG_LIBAMR_NB 1
 #define CONFIG_LIBXVID 0
+#define CONFIG_MDCT 1
 #define CONFIG_MPEGAUDIO_HP 1
 #define CONFIG_SMALL 0
 #define CONFIG_ZLIB 1
