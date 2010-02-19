@@ -504,6 +504,21 @@ static inline void emms(void)
 #   define STRIDE_ALIGN 8
 #endif
 
+#define LOCAL_ALIGNED(a, t, v, s, ...)                          \
+    uint8_t la_##v[sizeof(t s __VA_ARGS__) + (a)];              \
+    t (*v) __VA_ARGS__ = (void *)FFALIGN((uintptr_t)la_##v, a)
+
+#if HAVE_LOCAL_ALIGNED_8
+#   define LOCAL_ALIGNED_8(t, v, s, ...) DECLARE_ALIGNED_8(t, v) s __VA_ARGS__
+#else
+#   define LOCAL_ALIGNED_8(t, v, s, ...) LOCAL_ALIGNED(8, t, v, s, __VA_ARGS__)
+#endif
+
+#if HAVE_LOCAL_ALIGNED_16
+#   define LOCAL_ALIGNED_16(t, v, s, ...) DECLARE_ALIGNED_16(t, v) s __VA_ARGS__
+#else
+#   define LOCAL_ALIGNED_16(t, v, s, ...) LOCAL_ALIGNED(16, t, v, s, __VA_ARGS__)
+#endif
 
 #define WRAPPER8_16(name8, name16)\
 static int name16(void /*MpegEncContext*/ *s, uint8_t *dst, uint8_t *src, int stride, int h){\

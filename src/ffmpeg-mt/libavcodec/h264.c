@@ -156,11 +156,11 @@ const uint8_t *ff_h264_decode_nal(H264Context *h, const uint8_t *src, int *dst_l
 # if HAVE_FAST_64BIT
 #   define RS 7
     for(i=0; i+1<length; i+=9){
-        if(!((~*(const uint64_t*)(src+i) & (*(const uint64_t*)(src+i) - 0x0100010001000101ULL)) & 0x8000800080008080ULL))
+        if(!((~AV_RN64A(src+i) & (AV_RN64A(src+i) - 0x0100010001000101ULL)) & 0x8000800080008080ULL))
 # else
 #   define RS 3
     for(i=0; i+1<length; i+=5){
-        if(!((~*(const uint32_t*)(src+i) & (*(const uint32_t*)(src+i) - 0x01000101U)) & 0x80008080U))
+        if(!((~AV_RN32A(src+i) & (AV_RN32A(src+i) - 0x01000101U)) & 0x80008080U))
 # endif
             continue;
         if(i>0 && !src[i]) i--;
@@ -1318,8 +1318,6 @@ static inline void backup_mb_border(H264Context *h, uint8_t *src_y, uint8_t *src
 
 static inline void xchg_mb_border(H264Context *h, uint8_t *src_y, uint8_t *src_cb, uint8_t *src_cr, int linesize, int uvlinesize, int xchg, int simple){
     MpegEncContext * const s = &h->s;
-    int temp8, i;
-    uint64_t temp64;
     int deblock_left;
     int deblock_top;
     int mb_xy;
@@ -1337,9 +1335,8 @@ static inline void xchg_mb_border(H264Context *h, uint8_t *src_y, uint8_t *src_c
     }
 
     if(h->deblocking_filter == 2) {
-        mb_xy = h->mb_xy;
-        deblock_left = h->slice_table[mb_xy] == h->slice_table[mb_xy - 1];
-        deblock_top  = h->slice_table[mb_xy] == h->slice_table[h->top_mb_xy];
+        deblock_left = h->left_type[0];
+        deblock_top  = h->top_type;
     } else {
         deblock_left = (s->mb_x > 0);
         deblock_top =  (s->mb_y > !!MB_FIELD);
@@ -1622,18 +1619,6 @@ static av_always_inline void hl_decode_mb_internal(H264Context *h, int simple){
     }
     if(h->cbp || IS_INTRA(mb_type))
         s->dsp.clear_blocks(h->mb);
-
-    if(h->deblocking_filter && 0) {
-        backup_mb_border(h, dest_y, dest_cb, dest_cr, linesize, uvlinesize, simple);
-        fill_filter_caches(h, mb_type); //FIXME don't fill stuff which isn't used by filter_mb
-        h->chroma_qp[0] = get_chroma_qp(h, 0, s->current_picture.qscale_table[mb_xy]);
-        h->chroma_qp[1] = get_chroma_qp(h, 1, s->current_picture.qscale_table[mb_xy]);
-        if (!simple && FRAME_MBAFF) {
-            ff_h264_filter_mb     (h, mb_x, mb_y, dest_y, dest_cb, dest_cr, linesize, uvlinesize);
-        } else {
-            ff_h264_filter_mb_fast(h, mb_x, mb_y, dest_y, dest_cb, dest_cr, linesize, uvlinesize);
-        }
-    }
 }
 
 /**
@@ -2048,11 +2033,6 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
     h->slice_type_nos= slice_type & 3;
 
     s->pict_type= h->slice_type; // to make a few old functions happy, it's wrong though
-    if (s->pict_type == FF_B_TYPE && s0->last_picture_ptr == NULL) {
-        av_log(h->s.avctx, AV_LOG_ERROR,
-               "B picture before any references, skipping\n");
-        return -1;
-    }
 
     pps_id= get_ue_golomb(&s->gb);
     if(pps_id>=MAX_PPS_COUNT){
@@ -2545,7 +2525,7 @@ static void loop_filter(H264Context *h){
     if(h->deblocking_filter) {
         for(mb_x= 0; mb_x<s->mb_width; mb_x++){
             for(mb_y=end_mb_y - FRAME_MBAFF; mb_y<= end_mb_y; mb_y++){
-                int list, mb_xy, mb_type;
+                int mb_xy, mb_type;
                 mb_xy = h->mb_xy = mb_x + mb_y*s->mb_stride;
                 h->slice_num= h->slice_table[mb_xy];
                 mb_type= s->current_picture.mb_type[mb_xy];
@@ -2590,6 +2570,19 @@ static void loop_filter(H264Context *h){
     h->slice_type= old_slice_type;
     s->mb_x= 0;
     s->mb_y= end_mb_y - FRAME_MBAFF;
+    h->chroma_qp[0] = get_chroma_qp(h, 0, s->qscale);
+    h->chroma_qp[1] = get_chroma_qp(h, 1, s->qscale);
+}
+
+static void predict_field_decoding_flag(H264Context *h){
+    MpegEncContext * const s = &h->s;
+    const int mb_xy= s->mb_x + s->mb_y*s->mb_stride;
+    int mb_type = (h->slice_table[mb_xy-1] == h->slice_num)
+                ? s->current_picture.mb_type[mb_xy-1]
+                : (h->slice_table[mb_xy-s->mb_stride] == h->slice_num)
+                ? s->current_picture.mb_type[mb_xy-s->mb_stride]
+                : 0;
+    h->mb_mbaff = h->mb_field_decoding_flag = IS_INTERLACED(mb_type) ? 1 : 0;
 }
 
 /**
@@ -2666,6 +2659,10 @@ static int decode_slice(struct AVCodecContext *avctx, void *arg){
             }
             eos = get_cabac_terminate( &h->cabac );
 
+            if((s->workaround_bugs & FF_BUG_TRUNCATED) && h->cabac.bytestream > h->cabac.bytestream_end + 2){
+                ff_er_add_slice(s, s->resync_mb_x, s->resync_mb_y, s->mb_x-1, s->mb_y, (AC_END|DC_END|MV_END)&part_mask);
+                return 0;
+            }
             if( ret < 0 || h->cabac.bytestream > h->cabac.bytestream_end + 2) {
                 av_log(h->s.avctx, AV_LOG_ERROR, "error while decoding MB %d %d, bytestream (%td)\n", s->mb_x, s->mb_y, h->cabac.bytestream_end - h->cabac.bytestream);
                 ff_er_add_slice(s, s->resync_mb_x, s->resync_mb_y, s->mb_x, s->mb_y, (AC_ERROR|DC_ERROR|MV_ERROR)&part_mask);
@@ -2679,6 +2676,8 @@ static int decode_slice(struct AVCodecContext *avctx, void *arg){
                 ++s->mb_y;
                 if(FIELD_OR_MBAFF_PICTURE) {
                     ++s->mb_y;
+                    if(FRAME_MBAFF && s->mb_y < s->mb_height)
+                        predict_field_decoding_flag(h);
                 }
             }
 
@@ -2717,6 +2716,8 @@ static int decode_slice(struct AVCodecContext *avctx, void *arg){
                 ++s->mb_y;
                 if(FIELD_OR_MBAFF_PICTURE) {
                     ++s->mb_y;
+                    if(FRAME_MBAFF && s->mb_y < s->mb_height)
+                        predict_field_decoding_flag(h);
                 }
                 if(s->mb_y >= s->mb_height){
                     tprintf(s->avctx, "slice end %d %d\n", get_bits_count(&s->gb), s->gb.size_in_bits);
@@ -2897,8 +2898,15 @@ static int decode_nal_units(H264Context *h, const uint8_t *buf, int buf_size){
         if (ptr==NULL || dst_length < 0){
             return -1;
         }
+        i= buf_index + consumed;
+        if((s->workaround_bugs & FF_BUG_AUTODETECT) && i+3<next_avc &&
+           buf[i]==0x00 && buf[i+1]==0x00 && buf[i+2]==0x01 && buf[i+3]==0xE0)
+            s->workaround_bugs |= FF_BUG_TRUNCATED;
+
+        if(!(s->workaround_bugs & FF_BUG_TRUNCATED)){
         while(ptr[dst_length - 1] == 0 && dst_length > 0)
             dst_length--;
+        }
         bit_length= !dst_length ? 0 : (8*dst_length - ff_h264_decode_rbsp_trailing(h, ptr + dst_length - 1));
 
         if(s->avctx->debug&FF_DEBUG_STARTCODE){

@@ -31,40 +31,38 @@
   #define HAVE_FAST_CMOV 0
 #endif
 
-#define HAVE_TEN_OPERANDS 1
+#define HAVE_BIGENDIAN 0
+#define HAVE_BSWAP 1
 #define HAVE_EBP_AVAILABLE 1
 #define HAVE_EBX_AVAILABLE 1
-
-#define HAVE_BIGENDIAN 0
-
-#define HAVE_FAST_UNALIGNED 1
 #define HAVE_FAST_CLZ 0
+#define HAVE_FAST_UNALIGNED 1
+#define HAVE_LOCAL_ALIGNED_16 1
+#define HAVE_LOCAL_ALIGNED_8 1
+#define HAVE_MALLOC_H 1
+#define HAVE_MEMALIGN 1
+#define HAVE_PTHREADS 1
+#define HAVE_TEN_OPERANDS 1
+#define HAVE_THREADS 1
+#define HAVE_YASM 1
 
 #ifdef __GNUC__
   #define HAVE_ATTRIBUTE_PACKED 1
+  #define HAVE_ATTRIBUTE_MAY_ALIAS 1
 #else
   #define HAVE_ATTRIBUTE_PACKED 0
-#endif
-
-#ifndef __GNUC__
+  #define HAVE_ATTRIBUTE_MAY_ALIAS 0
   #define EMULATE_FAST_INT
 #endif
 
-#define HAVE_BSWAP 1
-#define HAVE_MALLOC_H 1
-#define HAVE_MEMALIGN 1
-#define HAVE_THREADS 1
-#define HAVE_PTHREADS 1
-#define HAVE_YASM 1
-
 #define ASMALIGN(ZEROBITS) ".align 1<<" #ZEROBITS "\n\t"
 
-//#define CONFIG_AUDIO_NONSHORT 1
 #define CONFIG_HARDCODED_TABLES 0
 #define CONFIG_GPL 1
 #define CONFIG_GRAY 1
 #define CONFIG_LIBAMR_NB 1
 #define CONFIG_LIBXVID 0
+#define CONFIG_MDCT 1
 #define CONFIG_MPEGAUDIO_HP 1
 #define CONFIG_SMALL 0
 #define CONFIG_ZLIB 1

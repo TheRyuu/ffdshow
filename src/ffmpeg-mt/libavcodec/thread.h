@@ -49,8 +49,6 @@ int ff_decode_frame_threaded(AVCodecContext *avctx,
                         void *data, int *data_size,
                         const uint8_t *buf, int buf_size);
 
-#if HAVE_PTHREADS
-
 /**
  * If the codec defines update_context, call this after doing
  * all setup work for the next thread. update_context will be
@@ -91,6 +89,15 @@ void ff_report_field_progress(AVFrame *f, int progress, int field);
 void ff_await_field_progress(AVFrame *f, int progress, int field);
 
 /**
+ * Sets the progress for both fields to the highest possible value.
+ * Used to prevent deadlocks in later threads when a decoder exits early
+ * due to errors.
+ *
+ * @param f The frame being decoded.
+ */
+void ff_mark_picture_finished(AVFrame *f);
+
+/**
  * Allocate a frame with avctx->get_buffer() and set
  * values needed for multithreading. Codecs must call
  * this instead of using get_buffer() directly if
@@ -107,36 +114,11 @@ int ff_get_buffer(AVCodecContext *avctx, AVFrame *f);
 void ff_release_buffer(AVCodecContext *avctx, AVFrame *f);
 
 ///True if frame threading is active.
-#define USE_FRAME_THREADING(avctx) (avctx->active_thread_type == FF_THREAD_FRAME)
+#define USE_FRAME_THREADING(avctx) (HAVE_PTHREADS && avctx->active_thread_type == FF_THREAD_FRAME)
 ///True if calling AVCodecContext execute() will run in parallel.
-#define USE_AVCODEC_EXECUTE(avctx) (avctx->active_thread_type == FF_THREAD_SLICE)
+#define USE_AVCODEC_EXECUTE(avctx) (HAVE_THREADS  && avctx->active_thread_type == FF_THREAD_SLICE)
 
 // ffdshow custom code. return pointer to the copied AVCodecContext for thread 0.
 AVCodecContext* get_thread0_avctx(AVCodecContext *avctx);
-
-#else
-
-//Stub out these functions for systems without pthreads
-static inline void ff_report_frame_setup_done(AVCodecContext *avctx) {}
-static inline void ff_report_frame_progress(AVFrame *f, int progress) {}
-static inline void ff_report_field_progress(AVFrame *f, int progress, int field) {}
-static inline void ff_await_frame_progress(AVFrame *f, int progress) {}
-static inline void ff_await_field_progress(AVFrame *f, int progress, int field) {}
-
-static inline int ff_get_buffer(AVCodecContext *avctx, AVFrame *f)
-{
-    f->owner = avctx;
-    return avctx->get_buffer(avctx, f);
-}
-
-static inline void ff_release_buffer(AVCodecContext *avctx, AVFrame *f)
-{
-    f->owner->release_buffer(f->owner, f);
-}
-
-#define USE_FRAME_THREADING(avctx) 0
-#define USE_AVCODEC_EXECUTE(avctx) (HAVE_THREADS && avctx->active_thread_type)
-
-#endif
 
 #endif /* AVCODEC_THREAD_H */

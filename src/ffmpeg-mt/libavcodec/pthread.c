@@ -544,6 +544,12 @@ void ff_await_frame_progress(AVFrame *f, int n)
     ff_await_field_progress(f, n, 0);
 }
 
+void ff_mark_picture_finished(AVFrame *f)
+{
+    ff_report_field_progress(f, INT_MAX, 0);
+    ff_report_field_progress(f, INT_MAX, 1);
+}
+
 void ff_report_frame_setup_done(AVCodecContext *avctx) {
     PerThreadContext *p = avctx->thread_opaque;
 
@@ -730,7 +736,11 @@ int ff_get_buffer(AVCodecContext *avctx, AVFrame *f)
 
     pthread_mutex_lock(&p->parent->buffer_mutex);
     f->thread_opaque = progress = allocate_progress(p);
-    if (!progress) return -1;
+
+    if (!progress) {
+        pthread_mutex_unlock(&p->parent->buffer_mutex);
+        return -1;
+    }
 
     progress[0] =
     progress[1] = -1;

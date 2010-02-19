@@ -40,7 +40,7 @@
 #include "libavutil/avutil.h"
 
 #define LIBAVCODEC_VERSION_MAJOR 52
-#define LIBAVCODEC_VERSION_MINOR 49
+#define LIBAVCODEC_VERSION_MINOR 54
 #define LIBAVCODEC_VERSION_MICRO  0
 
 #define LIBAVCODEC_VERSION_INT  AV_VERSION_INT(LIBAVCODEC_VERSION_MAJOR, \
@@ -1031,6 +1031,7 @@ typedef struct AVCodecContext {
 #define FF_BUG_HPEL_CHROMA      2048
 #define FF_BUG_DC_CLIP          4096
 #define FF_BUG_MS               8192 ///< Work around various bugs in Microsoft's broken decoders.
+#define FF_BUG_TRUNCATED       16384
 //#define FF_BUG_FAKE_SCALABILITY 16 //Autodetection should work 100%.
 
     /**

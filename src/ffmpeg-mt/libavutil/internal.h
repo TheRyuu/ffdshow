@@ -231,17 +231,11 @@ static inline av_const unsigned int ff_sqrt(unsigned int a)
 #ifndef __GNUC__
 
 #ifndef exp2
-static av_always_inline av_const double exp2(double x)
-{
-    return exp(x * 0.693147180559945);
-}
+#define exp2(x) exp((x) * 0.693147180559945)
 #endif
 
 #ifndef exp2f
-static av_always_inline av_const float exp2f(float x)
-{
-    return exp2(x);
-}
+#define exp2f(x) exp2(x)
 #endif
 
 #ifndef rint
@@ -249,24 +243,15 @@ static av_always_inline av_const float exp2f(float x)
 #endif
 
 #ifndef llrint
-static av_always_inline av_const long long llrint(double x)
-{
-    return rint(x);
-}
+#define llrint(x) rint(x)
 #endif
 
 #ifndef log2
-static av_always_inline av_const double log2(double x)
-{
-    return log(x) * 1.44269504088896340736;
-}
+#define log2(x) (log(x) * 1.44269504088896340736)
 #endif
 
 #ifndef log2f
-static av_always_inline av_const float log2f(float x)
-{
-    return log2(x);
-}
+#define log2f(x) log2(x)
 #endif
 
 #ifndef lrint
