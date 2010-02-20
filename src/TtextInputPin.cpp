@@ -54,6 +54,7 @@ HRESULT TtextInputPin::CheckMediaType(const CMediaType *mtIn)
           (mtIn->subtype==MEDIASUBTYPE_UTF8 ||
            mtIn->subtype==MEDIASUBTYPE_VOBSUB ||
            mtIn->subtype==MEDIASUBTYPE_USF ||
+           mtIn->subtype==MEDIASUBTYPE_HDMV_PGS || //Bluray subs
            (mtIn->subtype==MEDIASUBTYPE_SSA  && supssa) ||
            (mtIn->subtype==MEDIASUBTYPE_ASS  && supssa) ||
            (mtIn->subtype==MEDIASUBTYPE_ASS2 && supssa))
@@ -72,6 +73,7 @@ HRESULT TtextInputPin::CheckMediaType(const CMediaType *mtIn)
 
 HRESULT TtextInputPin::SetMediaType(const CMediaType* mtIn)
 {
+ DPRINTF(_l("TtextInputPin::SetMediaType"));
  name[0]='\0';
  HRESULT hr=CDeCSSInputPin::SetMediaType(mtIn);
  if (hr!=S_OK) return hr;
@@ -80,7 +82,10 @@ HRESULT TtextInputPin::SetMediaType(const CMediaType* mtIn)
  if (mtIn->majortype==MEDIATYPE_Subtitle)
   {
    const SUBTITLEINFO *psi=(const SUBTITLEINFO*)mtIn->Format();
-   const char_t *isoname=TsubtitlesSettings::getLangDescrIso(text<char_t>(psi->IsoLang));
+   ffstring isolang = text<char_t>(psi->IsoLang);
+   const char_t *isoname=TsubtitlesSettings::getLangDescrIso(isolang.c_str());
+   if (isoname == NULL)
+    isoname = isolang.c_str();
    char_t trackname[512];
    text<char_t>(psi->TrackName, (int)countof(psi->TrackName), trackname, countof(trackname));
    tsnprintf_s(name, 256, _TRUNCATE, _l("%s%s%s"),trackname,trackname[0]?_l(" "):_l(""),isoname);
@@ -106,6 +111,8 @@ HRESULT TtextInputPin::SetMediaType(const CMediaType* mtIn)
     type=Tsubreader::SUB_SUBVIEWER|Tsubreader::SUB_ENC_UTF8;
    else if (mtIn->subtype==MEDIASUBTYPE_VOBSUB)
     type=Tsubreader::SUB_VOBSUB;
+   else if (mtIn->subtype==MEDIASUBTYPE_HDMV_PGS)
+    type=Tsubreader::SUB_PGS;
    else if (mtIn->subtype==MEDIASUBTYPE_SSA || mtIn->subtype==MEDIASUBTYPE_ASS || mtIn->subtype==MEDIASUBTYPE_ASS2)
     {
      type=Tsubreader::SUB_SSA;
@@ -134,6 +141,7 @@ HRESULT TtextInputPin::SetMediaType(const CMediaType* mtIn)
 }
 STDMETHODIMP TtextInputPin::ReceiveConnection(IPin* pConnector, const AM_MEDIA_TYPE* pmt)
 {
+ DPRINTF(_l("TtextInputPin::ReceiveConnection"));
  utf8=false;
  const CLSID &ref=GetCLSID(pConnector);
  ismatroska=false;
@@ -186,7 +194,7 @@ STDMETHODIMP TtextInputPin::BeginFlush(void)
 }
 STDMETHODIMP TtextInputPin::EndFlush(void)
 {
- if (Tsubreader::isDVDsub(type))
+ if (Tsubreader::isBitmapsub(type))
   filter->resetSubtitles(id);
  return S_OK;
 }

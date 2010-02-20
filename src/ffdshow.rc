@@ -2405,7 +2405,7 @@ STYLE DS_SETFONT | DS_FIXEDSYS | DS_CONTROL | DS_CENTER | WS_CHILD
 EXSTYLE WS_EX_CONTROLPARENT
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
-    GROUPBOX        "Vobsub",IDC_GRP_VOBSUB,0,0,266,137
+    GROUPBOX        "Bluray && DVD subtitles",IDC_GRP_VOBSUB,0,0,266,137
     CONTROL         "Enable",IDC_CHB_VOBSUB,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,4,11,236,9
     LTEXT           "Preferred languages:",IDC_LBL_VOBSUB_DEFLANG,4,25,75,8
     COMBOBOX        IDC_CBX_VOBSUB_DEFLANG,93,23,169,125,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
@@ -3431,7 +3431,7 @@ BEGIN
     IDD_AUDIODENOISE        "Noise reduction"
     IDD_AUDIOSWITCHER       "Stream switcher"
     IDD_CRYSTALITY          "Crystality"
-    IDD_VOBSUB              "Vobsub"
+    IDD_VOBSUB              "BluRay & DVD"
     IDD_LFECROSSOVER        "LFE Crossover"
     IDD_CHANNELSWAP         "Swap channels"
     IDD_SUBTITLESTEXT       "Text"

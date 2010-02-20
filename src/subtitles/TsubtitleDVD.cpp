@@ -309,6 +309,22 @@ TsubtitleDVD::TsubtitleDVD(REFERENCE_TIME Istart,const unsigned char *Idata,unsi
  changed=true;
  image=NULL;
 }
+
+TsubtitleDVD::TsubtitleDVD(REFERENCE_TIME Istart,TsubtitleDVDparent *Iparent):parent(Iparent)
+{
+ start=Istart;
+ stop=_I64_MAX;
+ memset(&sphli,0,sizeof(sphli));
+ forced=false;
+ if (parent->psphli && start==pts2rt(parent->psphli->StartPTM))
+  psphli=new AM_PROPERTY_SPHLI(*parent->psphli);
+ else
+  psphli=NULL;
+ offset[0]=DWORD(-1);
+ changed=true;
+ image=NULL;
+}
+
 TsubtitleDVD::~TsubtitleDVD()
 {
  lines.clear();
@@ -363,8 +379,8 @@ void TsubtitleDVD::drawPixel(const CPoint &pt,const YUVcolorA &color,CRect &rect
     } else {
         uint32_t *c = (uint32_t *)&plane[0].c[pty * plane[0].stride];
         uint32_t *r = (uint32_t *)&plane[0].r[pty * plane[0].stride];
-        c[ptx] = color.m_rgb;
-        r[ptx] = color.m_aaa64;
+        c[ptx] = (color.A<<24)|color.m_rgb;
+        r[ptx] = (color.A<<16)|(color.A<<8)|(color.A);///*(0x00404040) - */color.m_aaa64;
     }
 }
 
@@ -397,15 +413,29 @@ void TsubtitleDVD::drawPixels(CPoint pt,int len,const YUVcolorA &c,const CRect &
   }
 }
 
+TspuImage* TsubtitleDVD::createNewImage(const TspuPlane src[3],const CRect &rcclip,CRect rectReal,const TprintPrefs &prefs)
+{
+ TspuImage *image = NULL;
+ lines.clear();
+ rectReal.bottom++;
+ rectReal.right++;
+ if (Tconfig::cpu_flags&FF_CPU_SSE2)
+     image=new TspuImageSimd<Tsse2>(src,rcclip,rectReal,parent->rectOrig,prefs, FF_CSP_RGBA);
+ else
+     image=new TspuImageSimd<Tmmx>(src,rcclip,rectReal,parent->rectOrig,prefs, FF_CSP_RGBA);
+ lines.push_back(new TrenderedSubtitleLine(image));
+ return image;
+}
+
 void TsubtitleDVD::createImage(const TspuPlane src[3],const CRect &rcclip,CRect rectReal,const TprintPrefs &prefs) const
 {
     lines.clear();
     rectReal.bottom++;
     rectReal.right++;
     if (Tconfig::cpu_flags&FF_CPU_SSE2)
-        image=new TspuImageSimd<Tsse2>(src,rcclip,rectReal,parent->rectOrig,prefs);
+        image=new TspuImageSimd<Tsse2>(src,rcclip,rectReal,parent->rectOrig,prefs,FF_CSP_Y800);
     else
-        image=new TspuImageSimd<Tmmx>(src,rcclip,rectReal,parent->rectOrig,prefs);
+        image=new TspuImageSimd<Tmmx>(src,rcclip,rectReal,parent->rectOrig,prefs,FF_CSP_Y800);
     lines.push_back(new TrenderedSubtitleLine(image));
 }
 

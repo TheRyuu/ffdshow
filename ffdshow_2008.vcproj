@@ -132,7 +132,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Registering output..."
-				CommandLine="bin/register.bat"
+				CommandLine=""
 			/>
 		</Configuration>
 		<Configuration
@@ -367,7 +367,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Registering output..."
-				CommandLine="bin/register.bat"
+				CommandLine=""
 			/>
 		</Configuration>
 		<Configuration
@@ -1027,6 +1027,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\subtitles\TsubtitleDVD.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\subtitles\TsubtitlePGSParser.cpp"
+				>
+			</File>
+			<File
 				RelativePath="src\TtextInputPin.cpp"
 				>
 			</File>
@@ -1297,6 +1305,14 @@
 			</File>
 			<File
 				RelativePath="src\TkeyboardDirect.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\subtitles\TsubtitleDVD.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\subtitles\TsubtitlePGSParser.h"
 				>
 			</File>
 			<File
@@ -1595,43 +1611,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\subtitles\TsubtitleDVD.cpp"
+				RelativePath=".\src\subtitles\TsubtitlePGS.cpp"
 				>
-				<FileConfiguration
-					Name="Release Unicode|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="4"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release Unicode|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="4"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="4"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="4"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\src\subtitles\TsubtitleDVD.h"
+				RelativePath=".\src\subtitles\TsubtitlePGS.h"
 				>
 			</File>
 			<File
@@ -1672,6 +1656,14 @@
 			</File>
 			<File
 				RelativePath=".\src\subtitles\TsubtitlesTextpinDVD.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\subtitles\TsubtitlesTextpinPGS.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\subtitles\TsubtitlesTextpinPGS.h"
 				>
 			</File>
 			<File

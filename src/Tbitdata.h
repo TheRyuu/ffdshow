@@ -13,7 +13,7 @@
 class Tbitdata
 {
 public:
-    int bitsleft;
+    long bitsleft;
     int bitindex;
     int bitsremaining;
     unsigned char *wordpointer;
@@ -23,6 +23,7 @@ public:
     uint32_t currentWord;
 
     Tbitdata();
+    Tbitdata(unsigned char *buffer, size_t length);
     virtual void copy(const Tbitdata *bitdataToCopy);
     virtual uint32_t getBits(int number_of_bits);
     void align();
@@ -31,5 +32,9 @@ public:
     virtual uint32_t showBits(int number_of_bits, int bitsoffset);
     virtual uint32_t getBits2(int number_of_bits);
     virtual void bitstream_fill_current();
+    inline BYTE		readByte()  { return (BYTE) getBits( 8); };
+	   inline SHORT	readShort() { return (SHORT)getBits(16); };
+	   inline DWORD	readDword() { return (DWORD)getBits(32); };
+    inline void skipBytes(int nbBytes) { wordpointer+=nbBytes;bitsleft-=8*nbBytes;};
 };
 #endif

@@ -480,6 +480,7 @@ const AMOVIESETUP_MEDIATYPE inputTextMediaTypes[]=
 {
  { &MEDIATYPE_Text    , &MEDIASUBTYPE_NULL           },
  { &MEDIATYPE_Subtitle, &MEDIASUBTYPE_NULL           },
+ { &MEDIATYPE_Subtitle, &MEDIASUBTYPE_HDMV_PGS       },
  { &MEDIATYPE_Video   , &MEDIASUBTYPE_DVD_SUBPICTURE }
 };
 

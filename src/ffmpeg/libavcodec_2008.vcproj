@@ -455,7 +455,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavcodec\aac.c"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\aac_ac3_parser.c"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\aac_parser.c"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\aactab.c"
 				>
 			</File>
 			<File
@@ -915,6 +927,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavcodec\mpeg4audio.c"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\mpeg4video.c"
 				>
 			</File>
@@ -1240,7 +1256,23 @@
 			Filter="h;hpp;hxx;hm;inl"
 			>
 			<File
+				RelativePath=".\libavcodec\aac.h"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\aac_ac3_parser.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\aac_parser.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\aacdectab.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\aactab.h"
 				>
 			</File>
 			<File
@@ -1253,6 +1285,10 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\ac3_parser.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\ac3dec.h"
 				>
 			</File>
 			<File
@@ -1280,6 +1316,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavcodec\avpalettecontrol.h"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\bitstream.h"
 				>
 			</File>
@@ -1289,6 +1329,10 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\cabac.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\cavs.h"
 				>
 			</File>
 			<File
@@ -1332,6 +1376,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavcodec\dxva.h"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\eac3dec_data.h"
 				>
 			</File>
@@ -1356,6 +1404,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavcodec\ffmpegContext.h"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\flac.h"
 				>
 			</File>
@@ -1365,6 +1417,10 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\flv.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\get_bits.h"
 				>
 			</File>
 			<File
@@ -1432,6 +1488,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavcodec\internal.h"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\intrax8.h"
 				>
 			</File>
@@ -1453,6 +1513,10 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\lcl.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\lpc.h"
 				>
 			</File>
 			<File
@@ -1496,6 +1560,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavcodec\mpeg4audio.h"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\mpeg4data.h"
 				>
 			</File>
@@ -1521,6 +1589,10 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\mpegaudiodecheader.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\mpegaudiodectab.h"
 				>
 			</File>
 			<File
@@ -1553,6 +1625,10 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\png.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\put_bits.h"
 				>
 			</File>
 			<File

@@ -289,6 +289,13 @@ static av_always_inline av_const float truncf(float x)
 }
 #endif
 
+#ifndef cbrtf
+static float cbrtf(float x)
+{
+ return pow(x, 1.0/3);
+}
+#endif
+
 #endif /* __GNUC__ */
 
 /**

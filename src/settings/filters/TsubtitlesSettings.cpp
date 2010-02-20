@@ -736,10 +736,13 @@ const char_t* TsubtitlesSettings::getLangDescr(const char_t *lang)
 }
 const char_t* TsubtitlesSettings::getLangDescrIso(const char_t *isolang)
 {
- for (int i=0;langs[i].desc;i++)
+ // Browse the languages table until a matching isolang is found
+ for (int i=0;langs[i].desc != NULL;i++)
+ {
   if (langs[i].isolang && stricmp(langs[i].isolang,isolang)==0)
    return langs[i].desc;
- return isolang;
+ }
+ return NULL;
 }
 
 void TsubtitlesSettings::createFilters(size_t filtersorder,Tfilters *filters,TfilterQueue &queue) const

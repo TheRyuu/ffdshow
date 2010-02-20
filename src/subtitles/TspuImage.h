@@ -4,15 +4,17 @@
 #include "Tfont.h"
 #include "postproc/swscale.h"
 #include "Crect.h"
+#include "Tconvert.h"
 
 struct TspuPlane
 {
-private:
- size_t allocated;
+/*private:
+ size_t allocated;*/
 public:
- unsigned char *c,*r;
+ size_t allocated;
+ unsigned char *c,*r; // c[pos] : color[pos], r[pos] = alpha[pos]
  stride_t stride;
- TspuPlane():c(NULL),r(NULL),allocated(0) {}
+ TspuPlane():c(NULL),r(NULL),allocated(0){}
  ~TspuPlane()
   {
    if (c) aligned_free(c);
@@ -35,7 +37,7 @@ protected:
    int csp;
   public:
    int srcdx,srcdy,dstdx,dstdy;
-   static Tscaler *create(const TprintPrefs &prefs,int srcdx,int srcdy,int dstdx,int dstdy);
+   static Tscaler *create(const TprintPrefs &prefs,int srcdx,int srcdy,int dstdx,int dstdy, int csp=FF_CSP_Y800);
    Tscaler(const TprintPrefs &prefs,int Isrcdx,int Isrcdy,int Idstdx,int Idstdy):srcdx(Isrcdx),srcdy(Isrcdy),dstdx(Idstdx),dstdy(Idstdy),csp(prefs.csp & FF_CSPS_MASK) {}
    virtual ~Tscaler() {}
    virtual void scale(const unsigned char *srci,const unsigned char *srca,stride_t srcStride,unsigned char *dsti,unsigned char *dsta,stride_t dstStride)=0;
@@ -74,6 +76,10 @@ protected:
     {
      return alpha?256-alpha:0;
     }
+   static uint32_t canon_alpha32(uint32_t alpha)
+    {
+     return alpha?256-alpha:0;
+    }
   public:
    TscalerBilin(const TprintPrefs &prefs,int srcdx,int srcdy,int dstdx,int dstdy);
    virtual ~TscalerBilin();
@@ -83,15 +89,17 @@ protected:
   {
   private:
    SwsFilter filter;
-   SwsContext *ctx;
+   SwsContext *ctx, *alphactx;
+   Tconvert *convert;
    Tlibmplayer *libmplayer;
    TscalerApprox approx;
   public:
-   TscalerSw(const TprintPrefs &prefs,int srcdx,int srcdy,int dstdx,int dstdy);
+   TscalerSw(const TprintPrefs &prefs,int srcdx,int srcdy,int dstdx,int dstdy, int csp);
    virtual ~TscalerSw();
    virtual void scale(const unsigned char *srci,const unsigned char *srca,stride_t srcStride,unsigned char *dsti,unsigned char *dsta,stride_t dstStride);
   };
 public:
+ TspuImage(const TspuPlane src[3],const CRect &rcclip,const CRect &rectReal,const CRect &rectOrig,const TprintPrefs &prefs, int Icsp=FF_CSP_Y800);
  TspuImage(const TspuPlane src[3],const CRect &rcclip,const CRect &rectReal,const CRect &rectOrig,const TprintPrefs &prefs);
  virtual void ownprint(
     const TprintPrefs &prefs,
@@ -102,7 +110,7 @@ public:
 template<class _mm> struct TspuImageSimd : public TspuImage
 {
 public:
- TspuImageSimd(const TspuPlane src[3],const CRect &rcclip,const CRect &rectReal,const CRect &rectOrig,const TprintPrefs &prefs):TspuImage(src,rcclip,rectReal,rectOrig,prefs) {}
+ TspuImageSimd(const TspuPlane src[3],const CRect &rcclip,const CRect &rectReal,const CRect &rectOrig,const TprintPrefs &prefs, int csp):TspuImage(src,rcclip,rectReal,rectOrig,prefs,csp) {}
  virtual void ownprint(
     const TprintPrefs &prefs,
     unsigned char **dst,

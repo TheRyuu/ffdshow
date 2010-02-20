@@ -50,7 +50,6 @@ struct TsubtitleDVD :public Tsubtitle
 {
 private:
  bool forced;
- mutable TspuImage *image;
 protected:
  int csp;
  TsubtitleDVDparent *parent;
@@ -64,6 +63,7 @@ protected:
  void drawPixels(CPoint pt,int len,const YUVcolorA &c,const CRect &rc,CRect &rectReal,TspuPlane plane[3]) const;
  mutable TrenderedSubtitleLines lines;
  void createImage(const TspuPlane src[3],const CRect &rcclip,CRect rectReal,const TprintPrefs &prefs) const;
+ TspuImage* createNewImage(const TspuPlane src[3],const CRect &rcclip,CRect rectReal,const TprintPrefs &prefs);
  void linesprint(
     const TprintPrefs &prefs,
     unsigned char **dst,
@@ -75,6 +75,8 @@ public:
   }
 
  TsubtitleDVD(REFERENCE_TIME start,const unsigned char *Idata,unsigned int Idatalen,TsubtitleDVDparent *Iparent);
+ TsubtitleDVD(REFERENCE_TIME start,TsubtitleDVDparent *Iparent);
+ mutable TspuImage *image;
  virtual ~TsubtitleDVD();
  virtual void print(
     REFERENCE_TIME time,

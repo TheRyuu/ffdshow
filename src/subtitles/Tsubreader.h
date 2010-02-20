@@ -51,6 +51,9 @@ public:
    // text
    SUB_MPL2      =18,
 
+   //BluRay, HDDVD subtitles (PNG)
+   SUB_PGS       =19,
+
    SUB_USESTIME  =1024,
    SUB_FORMATMASK=SUB_USESTIME-1,
    SUB_ENC_UTF8  =2048,
@@ -58,6 +61,11 @@ public:
    SUB_ENC_UNIBE =8192,
    SUB_ENC_MASK  =SUB_ENC_UTF8+SUB_ENC_UNILE+SUB_ENC_UNIBE
   };
+ static bool isBitmapsub(int format)
+  {
+   format&=SUB_FORMATMASK;
+   return (isDVDsub(format) || format==SUB_PGS);
+  }
  static bool isDVDsub(int format)
   {
    format&=SUB_FORMATMASK;

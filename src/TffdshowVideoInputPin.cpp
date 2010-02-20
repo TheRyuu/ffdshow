@@ -301,6 +301,7 @@ STDMETHODIMP TffdshowVideoInputPin::ReceiveConnection(IPin* pConnector, const AM
 
 bool TffdshowVideoInputPin::init(const CMediaType &mt)
 {
+    DPRINTF(_l("TffdshowVideoInputPin::init"));
     bool dont_use_rtStop_from_upper_stream = false, truncated = false;
     isInterlacedRawVideo=false;
     if (mt.formattype==FORMAT_VideoInfo) {

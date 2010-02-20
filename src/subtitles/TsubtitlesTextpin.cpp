@@ -22,6 +22,7 @@
 #include "TsubtitlesTextpinVobSub.h"
 #include "TsubtitlesTextpinDVD.h"
 #include "TsubtitlesTextpinUSF.h"
+#include "TsubtitlesTextpinPGS.h"
 #include "Tsubreader.h"
 
 TsubtitlesTextpin::TsubtitlesTextpin(int Itype,IffdshowBase *Ideci):Tsubtitles(Ideci),type(Itype)
@@ -36,8 +37,14 @@ void TsubtitlesTextpin::resetSubtitles(void)
 
 TsubtitlesTextpin* TsubtitlesTextpin::create(int type,const unsigned char *extradata,unsigned int extradatalen,IffdshowBase *Ideci)
 {
+ TsubtitlesTextpin *subs = NULL;
  switch (type)
   {
+   case Tsubreader::SUB_PGS:
+    subs = new TsubtitlesTextpinPGS(type,Ideci);
+    if (subs != NULL && ((TsubtitlesTextpinPGS*)subs)->ok) return subs;
+    delete(subs);
+    return NULL;
    case Tsubreader::SUB_VOBSUB:
     return new TsubtitlesTextpinVobsub(type,Ideci,extradata,extradatalen);
    case Tsubreader::SUB_DVD:

@@ -325,10 +325,10 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
             TsubtitlesTextpin* pin = getTextpin();
             Tsubtitles* subtitles = NULL;
             bool isText = false;
-            bool isDVDsub = false;
+            bool isBitmapsub = false;
             int subformat = -1;
             if (pin 
-               && (adhocMode == ADHOC_NORMAL 
+             && (adhocMode == ADHOC_NORMAL 
                || (adhocMode == ADHOC_ADHOC_DRAW_DVD_SUB_ONLY && isdvdproc) 
                || (adhocMode == ADHOC_SECOND_DONT_DRAW_DVD_SUB && !isdvdproc))) {
                  subformat = pin->sub_format;
@@ -343,12 +343,12 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
                 subtitles = &subs;
             }
             isText = Tsubreader::isText(subformat);
-            isDVDsub = Tsubreader::isDVDsub(subformat);
+            isBitmapsub = Tsubreader::isBitmapsub(subformat);
 
             bool stereoScopic = cfg->stereoscopic && !isdvdproc && subformat != Tsubreader::SUB_SSA;
 
             int outcsp = FF_CSP_420P;
-            if (rgb32_if_possible && (isText || isDVDsub))
+            if (rgb32_if_possible && (isText || isBitmapsub))
                 outcsp = FF_CSP_RGB32;
 
             unsigned int sizeDx,sizeDy;

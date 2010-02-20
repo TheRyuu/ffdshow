@@ -67,6 +67,19 @@
 #define CONFIG_DECODERS 1
 #define CONFIG_ENCODERS 1	
 
+/* Note : when adding a new codec,
+you have to :
+1/ Add a 
+ #define CONFIG_<codec suffix>_<ENCODER|DECODER|PARSER> 
+depending on the type of codec you are adding
+2/ Add a 
+ REGISTER_<ENCODER|DECODER|PARSER> (<codec suffix>, <codec suffix lowercase>);
+ line to libavcodec/allcodecs.c
+3/ Define the codec into ffcodecs.h :
+ CODEC_OP(CODEC_ID_<codec suffix>, <unique id>, "<codec description">)
+*/
+
+
 #define CONFIG_AASC_DECODER 1
 #define CONFIG_AMV_DECODER 1
 #define CONFIG_ASV1_DECODER 1

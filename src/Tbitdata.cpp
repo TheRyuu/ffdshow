@@ -10,6 +10,17 @@ Tbitdata::Tbitdata()
     bitindex=0;
 }
 
+Tbitdata::Tbitdata(unsigned char *buffer, size_t length)
+{
+    wordMode=true;
+    bigEndian=true;
+    currentWord=0;
+    bitsremaining=0;
+    bitindex=0;
+    wordpointer=buffer;
+    bitsleft=8*length;
+}
+
 void Tbitdata::copy(const Tbitdata *bitdataToCopy)
 {
     wordMode=bitdataToCopy->wordMode;

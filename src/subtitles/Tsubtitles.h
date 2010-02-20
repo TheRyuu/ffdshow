@@ -17,9 +17,10 @@ protected:
  IffdshowBase *deci;
  const Tconfig *ffcfg;
  Tsubreader *subs;
- int sub_format;
  virtual void checkChange(const TsubtitlesSettings *cfg,bool *forceChange) {}
 public:
+ int sub_format;
+
  void init(void);
  Tsubtitles(IffdshowBase *Ideci);
  virtual ~Tsubtitles();
