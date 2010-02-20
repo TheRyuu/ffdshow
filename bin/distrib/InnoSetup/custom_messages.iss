@@ -204,12 +204,12 @@ cs.plg_Label2=Kam má být nainstalován %1 plugin?
 cs.plg_Label3=Zvolte adresář do kterého má být nainstalován %1 plugin, pokračujte tlačítkem Další.,
 
 cs.run_videoConfig=Otevřít nastavení video dekodéru
-;cs.run_videoDXVAConfig=Run DXVA video decoder configuration
+cs.run_videoDXVAConfig=Otevřít nastavení DXVA video dekodéru
 cs.run_audioConfig=Otevřít nastavení audio dekodéru
 cs.run_vfwConfig=Otevřít nastavení VFW
 
 cs.shrt_videoConfig=Nastavení video dekodéru
-;cs.shrt_videoDXVAConfig=DXVA Video decoder configuration
+cs.shrt_videoDXVAConfig=Nastavení DXVA video dekodéru
 cs.shrt_audioConfig=Nastavení audio dekodéru
 cs.shrt_vfwConfig=Nastavení VFW
 cs.shrt_uninstall=Odinstalovat ffdshow
