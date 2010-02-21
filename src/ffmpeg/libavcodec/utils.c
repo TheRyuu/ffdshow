@@ -600,10 +600,12 @@ av_cold int avcodec_close(AVCodecContext *avctx)
 
     //if (HAVE_THREADS && avctx->thread_opaque)
     //    avcodec_thread_free(avctx);
-    if (avctx->codec->close)
+    if (avctx->codec && avctx->codec->close)
         avctx->codec->close(avctx);
     avcodec_default_free_buffers(avctx);
     av_freep(&avctx->priv_data);
+    if(avctx->codec->encode)
+        av_freep(&avctx->extradata);
     avctx->codec = NULL;
     //entangled_thread_counter--; /* ffdshow custom comment out */
 
