@@ -693,6 +693,12 @@ STDMETHODIMP TffdshowDecAudio::deliverSampleBistream(void *buf,size_t size,int b
  if (bitstream_codec(codecId))
  {
   getMediaType(&mt);
+  if (codecId==CODEC_ID_BITSTREAM_TRUEHD && buf==NULL) // No data, just update the timestamps
+  {
+   REFERENCE_TIME rtDur=inpin->insample_rtStop - inpin->insample_rtStart;
+   m_rtStartProc+=rtDur;if (incRtDec) m_rtStartDec+=rtDur;
+   return S_OK;
+  }
  }
  else // SPDIF
  {
@@ -748,7 +754,8 @@ STDMETHODIMP TffdshowDecAudio::deliverSampleBistream(void *buf,size_t size,int b
  REFERENCE_TIME rtDur,rtStart=m_rtStartProc,rtStop=REFTIME_INVALID;
  if (bitstream_codec(codecId))
  {
-  if (inpin->insample_rtStart != REFTIME_INVALID && inpin->insample_rtStop != REFTIME_INVALID)
+  if (inpin->insample_rtStart != REFTIME_INVALID && inpin->insample_rtStop != REFTIME_INVALID
+   && inpin->insample_rtStart > inpin->insample_rtStop)
   {
    rtStart=inpin->insample_rtStart;
    rtDur = inpin->insample_rtStop - inpin->insample_rtStart;
@@ -781,6 +788,7 @@ STDMETHODIMP TffdshowDecAudio::deliverSampleBistream(void *buf,size_t size,int b
  }
 
  rtStart+=offset;
+ rtStop+=offset;
 
  if (rtStop==REFTIME_INVALID)
   rtStop=m_rtStartProc+offset+rtDur;

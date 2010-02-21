@@ -912,6 +912,7 @@ HRESULT TaudioParser::parseAC3(unsigned char *src, int size, TbyteBuffer *newsrc
            if (searchSync || ((streamformat==REGULAR_AC3 || streamformat==EAC3)
                && !useAC3CoreOnly))
            {
+            DPRINTF(_l("TaudioParser::parseAC3 search sync, drop frames"));
             newsrcBuffer->clear();
             audioParserData.frames.clear();
            }

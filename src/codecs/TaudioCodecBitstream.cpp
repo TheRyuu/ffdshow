@@ -360,13 +360,16 @@ HRESULT TaudioCodecBitstream::decode(TbyteBuffer &src)
        int audioDelay=deci->getParam2(IDFF_audio_decoder_delay);
        REFERENCE_TIME delay100ns=audioDelay*10000LL;
 
-       if (rtStart+delay100ns<0)
+       // Not a good idea : causes audio cuts (audio desync)
+       /*if (rtStart+delay100ns<0)
        {
+        DPRINTF(_l("TaudioCodecBitstream::decode drop frame (timestamp negative)"));
+        deciA->deliverSampleBistream(NULL,bitstreamBuffer.size(),audioParserData.bit_rate,audioParserData.sample_rate,true, 0, 0);
         bitstreamBuffer.clear();
         src.clear();
         pAudioParser->SearchSync();
         return S_OK;
-       }
+       }*/
        return decodeMAT(src, audioParserData);
      }
      
