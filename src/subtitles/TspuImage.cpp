@@ -56,7 +56,6 @@ TspuImage::TspuImage(const TspuPlane src[3],const CRect &rcclip,const CRect &rec
     if (rectReal.Width()<0) return;
     Tscaler *scaler=NULL;
     int scale=prefs.dvd?0x100:prefs.vobscale;
-    if (prefs.pgs) scale=prefs.pgsscale;
     for (unsigned int i = 0 ; i < cspInfo->numPlanes ; i++) {
         rect[i]=CRect(rectReal.left >> cspInfo->shiftX[i],                                                           // left
                       rectReal.top  >> cspInfo->shiftY[i],                                                           // top

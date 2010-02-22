@@ -528,8 +528,11 @@ void TsubtitleDVD::print(
    }
    DPRINTF(_l("rectReal: [%i,%i] - [%i,%i]"),rectReal.left,rectReal.top,rectReal.Width(),rectReal.Height());
    createImage(planes,rcclip,rectReal,prefs);
+   DPRINTF(_l("Image created"));
   }
+ DPRINTF(_l("Print lines"));
  linesprint(prefs,dst,stride);
+ DPRINTF(_l("Lines printed"));
 }
 
 void TsubtitleDVD::append(const unsigned char *Idata,unsigned int Idatalen)

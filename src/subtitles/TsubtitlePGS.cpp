@@ -83,12 +83,10 @@ void TsubtitlePGS::print(
   if (videoWidth==0) videoWidth=prefs.dx;
   if (videoHeight==0) videoHeight=prefs.dy;
 
-  prefs.pgs=true;
   // Calculate scale according to : 
   // 1/ difference of size between original and output size
   // 2/ scaling preference
   int scale100=(int)100*((float)prefs.dx/videoWidth);
-  prefs.pgsscale=(int)prefs.vobscale*scale100/100;
   scale100=(int)((float)scale100*prefs.vobscale/256);
 
   // Recalculate the coordinates proportionally
