@@ -660,8 +660,6 @@ void TspuImage::TscalerSw::scale(const unsigned char *srci,const unsigned char *
    unsigned char *dsta0[4] = {dsta, NULL, NULL, NULL};
    libmplayer->sws_scale_ordered(ctx,srci0,srcStride0,0,srcdy,dsti0,dstStride0);
    libmplayer->sws_scale_ordered(ctx,srca0,srcStride0,0,srcdy,dsta0,dstStride0);
-   /*const Tpalette palette = Tpalette();
-   convert->convert(FF_CSP_BGR32, src, dstStride1, FF_CSP_RGB32, dst, dstStride0, &palette);*/
   }
  
 }
@@ -700,96 +698,85 @@ template<class _mm> void TspuImageSimd<_mm>::ownprint(
     const TcspInfo *cspInfo = csp_getInfo(prefs.csp);
     if (!plane[0].stride || !plane[0].c || !plane[0].r) return;
     typename _mm::__m m0=_mm::setzero_si64();
-    if ((prefs.csp & FF_CSPS_MASK) ==FF_CSP_420P) {
-        typename _mm::__m m16=_mm::set1_pi16(16);
-        typename _mm::__m m128=_mm::set1_pi16(128);
-        unsigned int sizeDx=prefs.sizeDx?prefs.sizeDx:prefs.dx;
-        unsigned char *dst=Idst[0]+rect[0].top*Istride[0]+rect[0].left;
-        const unsigned char *c=plane[0].c,*r=plane[0].r;
-        // Y plane
-        for (int y=rect[0].top;y<rect[0].bottom;y++,dst+=Istride[0],c+=plane[0].stride,r+=plane[0].stride) {
-            int x=0,dx=rect[0].Width();if (rect[0].left+dx>(int)sizeDx>>cspInfo->shiftX[0]) dx=(sizeDx>>cspInfo->shiftX[0])-rect[0].left;
-            // for(;x<dx-32+1;x+=32)
-            for (;x<int(dx-_mm::size/2+1);x+=_mm::size/2) {
-                // Loads the dst, c and r values that are in 32 bits into a 64 bits register and interleaved with m0 (zero)
-                // So a 32 bits lword 0xWWXXYYZZ is stored as 0xWW00XX00YY00ZZ00
-                typename _mm::__m p8=_mm::unpacklo_pi8(_mm::load2(dst+x),m0);
-                typename _mm::__m c8=_mm::unpacklo_pi8(_mm::load2(c+x),m0);
-                typename _mm::__m r8=_mm::unpacklo_pi8(_mm::load2(r+x),m0);
-                _mm::store2(dst+x,_mm::packs_pu16(_mm::sub_pi16(p8,_mm::srai_pi16(_mm::mullo_pi16(_mm::sub_pi16(p8,c8),r8),4)),m0));
-            }
-            // Equivalent unoptimized operands for writing the rest of this line
-            // TODO : Why >>4 ? Normally r[x] is <= 0x40 (6 bits) so after multiplying by r[x] we should >>6 instead of 4
-            for (;x<dx;x++)
-                dst[x]=(unsigned char)(dst[x]-((dst[x]-c[x])*r[x]>>4));
+    if ((prefs.csp & FF_CSPS_MASK) ==FF_CSP_420P) 
+    {
+     typename _mm::__m m16=_mm::set1_pi16(16);
+     typename _mm::__m m128=_mm::set1_pi16(128);
+     typename _mm::__m m255=_mm::set1_pi16(255);
+     for (int i=0;i<(int)cspInfo->numPlanes;i++)
+     {
+      unsigned int sizeDx=prefs.sizeDx?prefs.sizeDx:prefs.dx;
+      unsigned char *dst=Idst[i]+rect[i].top*Istride[i]+rect[i].left;
+      const unsigned char *c=plane[i].c,*r=plane[i].r;
+      // For each Y,U,V plane
+      for (int y=rect[i].top;y<rect[i].bottom;y++,dst+=Istride[i],c+=plane[i].stride,r+=plane[i].stride) 
+      {
+        int x=0,dx=rect[i].Width();if (rect[i].left+dx>(int)sizeDx>>cspInfo->shiftX[i]) dx=(sizeDx>>cspInfo->shiftX[i])-rect[i].left;
+        if (rect[i].left+dx>(int)sizeDx>>cspInfo->shiftX[i])
+                dx=(sizeDx>>cspInfo->shiftX[i])-rect[i].left;
+        //_mm::size = 16
+        // Faster to calculate 32 by 32 bits
+        for (;x<int(dx-4+1);x+=4) 
+        {
+          typename _mm::__m p8=_mm::unpacklo_pi8(_mm::load2((uint32_t*)(dst+x)),m0);
+          typename _mm::__m c8=_mm::unpacklo_pi8(_mm::load2((uint32_t*)(c+x)),m0);
+          typename _mm::__m r8=_mm::unpacklo_pi8(_mm::load2((uint32_t*)(r+x)),m0);
+          typename _mm::__m invr8=_mm::sub_pi16(m255,r8);
+          typename _mm::__m result=  _mm::srli_pi16(
+               _mm::add_pi16(
+                _mm::add_pi16(
+                 _mm::mullo_pi16(invr8,p8),
+                  _mm::mullo_pi16(r8,c8)),
+                  m255),
+                  8); // foreach (p,c,r)[x,x+1,x+2,x+3]  : ( dstcolor*(255-alpha) + blendcolor*alpha + 255 )/255
+           _mm::store2((uint32_t*)(dst+x), _mm::packs_pu16(result, m0));
         }
-        // Other planes
-        for (int i=1;i<3;i++) {
-            unsigned char *dst=Idst[i]+rect[i].top*Istride[i]+rect[i].left;
-            const unsigned char *c=plane[i].c,*r=plane[i].r;
-            for (int y=rect[i].top;y<rect[i].bottom;y++,dst+=Istride[i],c+=plane[i].stride,r+=plane[i].stride) {
-                int x=0,dx=rect[i].Width();
-                if (rect[i].left+dx>(int)sizeDx>>cspInfo->shiftX[i])
-                    dx=(sizeDx>>cspInfo->shiftX[i])-rect[i].left;
-                for (;x<int(dx-_mm::size/2+1);x+=_mm::size/2) {
-                    typename _mm::__m p8  = _mm::unpacklo_pi8(_mm::load2(dst+x),m0);
-                    typename _mm::__m c8  = _mm::unpacklo_pi8(_mm::load2(c+x),m0);
-                    typename _mm::__m r8  = _mm::unpacklo_pi8(_mm::load2(r+x),m0);
-                    typename _mm::__m mm1 = _mm::sub_pi16(p8,m128);
-                    typename _mm::__m mm2 = _mm::sub_pi16(c8,m128);
-                    typename _mm::__m mm3 = _mm::sub_pi16(m16,r8);
-                    mm1 = _mm::mullo_pi16(mm1, mm3);
-                    mm1 = _mm::srai_pi16(mm1,4);
-                    mm2 = _mm::mullo_pi16(mm2, r8);
-                    mm2 = _mm::srai_pi16(mm2,4);
-                    mm1 = _mm::add_pi16(mm1,mm2);
-                    mm1 = _mm::add_pi16(mm1,m128);
-                    mm1 = _mm::packs_pu16(mm1, m0);
-                    _mm::store2(dst+x,mm1);
-                }
-                for (;x<dx;x++)
-                    dst[x]=(unsigned char)(dst[x]-((dst[x]-c[x])*r[x]>>4));
-            }
-        }
+        for (;x<dx;x++)
+         dst[x]=(unsigned char)((dst[x]*(255-r[x])+c[x]*r[x]+255)/255);
+      }
+     }
     } else {
         // RGB32
-        typename _mm::__m m128=_mm::set1_pi16(128);
-        typename _mm::__m m255=_mm::set1_pi16(255);
-        unsigned int sizeDx = prefs.sizeDx ? prefs.sizeDx : prefs.dx;
-        uint8_t *dst = Idst[0] + rect[0].top * Istride[0] + rect[0].left * 4;
-        const uint8_t *c = plane[0].c;
-        const uint8_t *r = plane[0].r;
-        for (int y = rect[0].top ; y < rect[0].bottom ; y++, dst += Istride[0], c+=plane[0].stride, r+=plane[0].stride) {
-            uint32_t *dstLn = (uint32_t *)dst;
-            const uint32_t *cLn = (const uint32_t *)c;
-            const uint32_t *rLn = (const uint32_t *)r;
-            int x=0, dx=rect[0].Width();
-            if (rect[0].left+dx > (int)sizeDx)
-                dx = (sizeDx - rect[0].left);
-            int endx = dx -_mm::size/2 + 1;
-            for (; x < dx ; x ++) {
-                /* It would be better to use the alpha composant of cLn instead of using the r plane which is useless
-                 but the background becomes white too (?) */
-                //int alpha=(int)((*(cLn+x))>>24);
+        for (int i=0;i<(int)cspInfo->numPlanes;i++)
+        {
+         typename _mm::__m m128=_mm::set1_pi16(128);
+         typename _mm::__m m255=_mm::set1_pi16(255);
+         unsigned int sizeDx = prefs.sizeDx ? prefs.sizeDx : prefs.dx;
+         uint8_t *dst = Idst[i] + rect[i].top * Istride[i] + rect[i].left * cspInfo->Bpp;
+         const uint8_t *c = plane[i].c;
+         const uint8_t *r = plane[i].r;
+         for (int y = rect[i].top ; y < rect[i].bottom ; y++, dst += Istride[i], c+=plane[i].stride, r+=plane[i].stride) {
+             uint32_t *dstLn = (uint32_t *)dst;
+             const uint32_t *cLn = (const uint32_t *)c;
+             const uint32_t *rLn = (const uint32_t *)r;
+             int x=0, dx=rect[i].Width();
+             if (rect[i].left+dx > (int)(sizeDx>>cspInfo->shiftX[i]))
+                 dx = ((sizeDx>>cspInfo->shiftX[i]) - rect[i].left);
+             int endx = dx -_mm::size/2 + 1;
+             for (; x < dx ; x ++) {
+                 /* It would be better to use the alpha composant of cLn instead of using the r plane which is useless
+                  but the background becomes white too (?) */
+                 //int alpha=(int)((*(cLn+x))>>24);
 
-                int alpha=(int)((*(rLn+x))&0xFF);
-                int invalpha=255-alpha;
-                typename _mm::__m p8=_mm::unpacklo_pi8(_mm::load2(dstLn+x),m0);
-                typename _mm::__m c8=_mm::unpacklo_pi8(_mm::load2(cLn+x), m0);
-                typename _mm::__m strength64=_mm::set1_pi16(short(alpha));
-                typename _mm::__m invstrength64=_mm::set1_pi16(short(invalpha));
-                //typename _mm::__m mask=_mm::cmpgt_pi16(p8,c8); // Not needed : the destination buffer is empty
-                
-                // p8 : current destination value, c8 : color value to blend, r8 : alpha value to blend
-                typename _mm::__m result=  _mm::srli_pi16(
-                    _mm::add_pi16(
+                 int alpha=(int)((*(rLn+x))&0xFF);
+                 int invalpha=255-alpha;
+                 typename _mm::__m p8=_mm::unpacklo_pi8(_mm::load2(dstLn+x),m0);
+                 typename _mm::__m c8=_mm::unpacklo_pi8(_mm::load2(cLn+x), m0);
+                 typename _mm::__m strength64=_mm::set1_pi16(short(alpha));
+                 typename _mm::__m invstrength64=_mm::set1_pi16(short(invalpha));
+                 //typename _mm::__m mask=_mm::cmpgt_pi16(p8,c8); // Not needed : the destination buffer is empty
+                 
+                 // p8 : current destination value, c8 : color value to blend, r8 : alpha value to blend
+                 typename _mm::__m result=  _mm::srli_pi16(
                      _mm::add_pi16(
-                      _mm::mullo_pi16(invstrength64,p8),
-                       _mm::mullo_pi16(strength64,c8)),
-                       m255),
-                       8); // foreach r,g,b : ( dstcolor*(255-alpha) + blendcolor*alpha + 255 )/255
-                _mm::store2(dstLn + x, _mm::packs_pu16(result, m0));
-            }
+                      _mm::add_pi16(
+                       _mm::mullo_pi16(invstrength64,p8),
+                        _mm::mullo_pi16(strength64,c8)),
+                        m255),
+                        8); // foreach r,g,b : ( dstcolor*(255-alpha) + blendcolor*alpha + 255 )/255
+                 _mm::store2(dstLn + x, _mm::packs_pu16(result, m0));
+             }
+         }
         }
     }
     _mm::empty();

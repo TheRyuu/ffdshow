@@ -173,13 +173,10 @@ void TsubtitlePGS::print(
     {
      uint32_t color = m_pCompositionObject->m_Colors[nPaletteIndex];
      unsigned char alpha = (color>>24)&0xFF;
-     //if (alpha>0)
-     {
       YUVcolorA c(RGB((color>>16)&0xFF,
        (color>>8)&0xFF,
        (color)&0xFF), alpha);
       drawPixels(pt,nCount,c,rcclip,rectReal,planes);
-     }
     }
 			 pt.x += nCount;
 		 }

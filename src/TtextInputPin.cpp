@@ -55,6 +55,7 @@ HRESULT TtextInputPin::CheckMediaType(const CMediaType *mtIn)
            mtIn->subtype==MEDIASUBTYPE_VOBSUB ||
            mtIn->subtype==MEDIASUBTYPE_USF ||
            mtIn->subtype==MEDIASUBTYPE_HDMV_PGS || //Bluray subs
+           (mtIn->subtype==MEDIASUBTYPE_NULL && mtIn->formattype == FORMAT_SubtitleInfo) || //Bluray subs
            (mtIn->subtype==MEDIASUBTYPE_SSA  && supssa) ||
            (mtIn->subtype==MEDIASUBTYPE_ASS  && supssa) ||
            (mtIn->subtype==MEDIASUBTYPE_ASS2 && supssa))
@@ -111,7 +112,7 @@ HRESULT TtextInputPin::SetMediaType(const CMediaType* mtIn)
     type=Tsubreader::SUB_SUBVIEWER|Tsubreader::SUB_ENC_UTF8;
    else if (mtIn->subtype==MEDIASUBTYPE_VOBSUB)
     type=Tsubreader::SUB_VOBSUB;
-   else if (mtIn->subtype==MEDIASUBTYPE_HDMV_PGS)
+   else if (mtIn->subtype==MEDIASUBTYPE_HDMV_PGS || (mtIn->subtype == MEDIASUBTYPE_NULL && mtIn->formattype == FORMAT_SubtitleInfo))
     type=Tsubreader::SUB_PGS;
    else if (mtIn->subtype==MEDIASUBTYPE_SSA || mtIn->subtype==MEDIASUBTYPE_ASS || mtIn->subtype==MEDIASUBTYPE_ASS2)
     {

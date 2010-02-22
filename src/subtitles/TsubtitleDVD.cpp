@@ -420,9 +420,9 @@ TspuImage* TsubtitleDVD::createNewImage(const TspuPlane src[3],const CRect &rccl
  rectReal.bottom++;
  rectReal.right++;
  if (Tconfig::cpu_flags&FF_CPU_SSE2)
-     image=new TspuImageSimd<Tsse2>(src,rcclip,rectReal,parent->rectOrig,prefs, FF_CSP_RGBA);
+  image=new TspuImageSimd<Tsse2>(src,rcclip,rectReal,parent->rectOrig,prefs, prefs.csp);
  else
-     image=new TspuImageSimd<Tmmx>(src,rcclip,rectReal,parent->rectOrig,prefs, FF_CSP_RGBA);
+  image=new TspuImageSimd<Tmmx>(src,rcclip,rectReal,parent->rectOrig,prefs, prefs.csp);
  lines.push_back(new TrenderedSubtitleLine(image));
  return image;
 }
@@ -433,9 +433,9 @@ void TsubtitleDVD::createImage(const TspuPlane src[3],const CRect &rcclip,CRect 
     rectReal.bottom++;
     rectReal.right++;
     if (Tconfig::cpu_flags&FF_CPU_SSE2)
-        image=new TspuImageSimd<Tsse2>(src,rcclip,rectReal,parent->rectOrig,prefs,FF_CSP_Y800);
+        image=new TspuImageSimd<Tsse2>(src,rcclip,rectReal,parent->rectOrig,prefs,prefs.csp);
     else
-        image=new TspuImageSimd<Tmmx>(src,rcclip,rectReal,parent->rectOrig,prefs,FF_CSP_Y800);
+        image=new TspuImageSimd<Tmmx>(src,rcclip,rectReal,parent->rectOrig,prefs,prefs.csp);
     lines.push_back(new TrenderedSubtitleLine(image));
 }
 
