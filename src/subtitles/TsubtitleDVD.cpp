@@ -490,10 +490,10 @@ void TsubtitleDVD::print(
    DPRINTF(_l("rect: [%i,%i] - [%i,%i]"),rcclip.left,rcclip.top,rcclip.Width(),rcclip.Height());
 
    YUVcolorA pal[4];
-   pal[0]=parent->sppal[parent->fsppal?sphli.ColCon.backcol :0];pal[0].setAlpha(sphli.ColCon.backcon);
-   pal[1]=parent->sppal[parent->fsppal?sphli.ColCon.patcol  :1];pal[1].setAlpha(sphli.ColCon.patcon);
-   pal[2]=parent->sppal[parent->fsppal?sphli.ColCon.emph1col:2];pal[2].setAlpha(sphli.ColCon.emph1con);
-   pal[3]=parent->sppal[parent->fsppal?sphli.ColCon.emph2col:3];pal[3].setAlpha(sphli.ColCon.emph2con);
+   pal[0]=parent->sppal[parent->fsppal?sphli.ColCon.backcol :0];pal[0].setAlpha(sphli.ColCon.backcon*16);
+   pal[1]=parent->sppal[parent->fsppal?sphli.ColCon.patcol  :1];pal[1].setAlpha(sphli.ColCon.patcon*16);
+   pal[2]=parent->sppal[parent->fsppal?sphli.ColCon.emph1col:2];pal[2].setAlpha(sphli.ColCon.emph1con*16);
+   pal[3]=parent->sppal[parent->fsppal?sphli.ColCon.emph2col:3];pal[3].setAlpha(sphli.ColCon.emph2con*16);
 
    int nField=0;
    int fAligned=1;
@@ -661,7 +661,7 @@ bool TsubtitleSVCD::parse(void)
    sppal[i].Y=*p++;
    sppal[i].U=*p++;
    sppal[i].V=*p++;
-   sppal[i].setAlpha(UCHAR(*p++>>4));
+   sppal[i].setAlpha(UCHAR(*p++>>4)*16);
   }
 
  if (*p++&0xc0)
@@ -772,16 +772,16 @@ bool TsubtitleCVD::parse(void)
      sppal[1][p[0]-0x2c].V=p[3];
      break;
     case 0x37:
-     sppal[0][3].setAlpha(UCHAR(p[2]>>4));
-     sppal[0][2].setAlpha(UCHAR(p[2]&0xf));
-     sppal[0][1].setAlpha(UCHAR(p[3]>>4));
-     sppal[0][0].setAlpha(UCHAR(p[3]&0xf));
+     sppal[0][3].setAlpha(UCHAR(p[2]>>4)*16);
+     sppal[0][2].setAlpha(UCHAR(p[2]&0xf)*16);
+     sppal[0][1].setAlpha(UCHAR(p[3]>>4)*16);
+     sppal[0][0].setAlpha(UCHAR(p[3]&0xf)*16);
      break;
     case 0x3f:
-     sppal[1][3].setAlpha(UCHAR(p[2]>>4));
-     sppal[1][2].setAlpha(UCHAR(p[2]&0xf));
-     sppal[1][1].setAlpha(UCHAR(p[3]>>4));
-     sppal[1][0].setAlpha(UCHAR(p[3]&0xf));
+     sppal[1][3].setAlpha(UCHAR(p[2]>>4)*16);
+     sppal[1][2].setAlpha(UCHAR(p[2]&0xf)*16);
+     sppal[1][1].setAlpha(UCHAR(p[3]>>4)*16);
+     sppal[1][0].setAlpha(UCHAR(p[3]&0xf)*16);
      break;
     case 0x47:
      offset[0] = (p[2]<<8)|p[3];
