@@ -44,7 +44,7 @@ struct TprintPrefs {
     int linespacing;
     unsigned int sizeDx,sizeDy;
     int stereoScopicParallax;
-    bool vobchangeposition;int vobscale,vobaamode,vobaagauss;
+    bool vobchangeposition;int subimgscale,vobaamode,vobaagauss;
     bool fontchangesplit,fontsplit;
     int textBorderLR;
     int tabsize;

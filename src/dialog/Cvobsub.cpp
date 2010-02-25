@@ -55,7 +55,7 @@ void TvobsubPage::cfg2dlg(void)
 }
 void TvobsubPage::scale2dlg(void)
 {
- int scale=cfgGet(IDFF_subVobsubScale);
+ int scale=cfgGet(IDFF_subImgScale);
  tbrSet(IDC_TBR_VOBSUB_SCALE,scale);
  setText(IDC_LBL_VOBSUB_SCALE,_l("%s %.3f"),_(IDC_LBL_VOBSUB_SCALE),scale/256.0f);
 }
@@ -102,7 +102,7 @@ TvobsubPage::TvobsubPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff):Tconf
  bindCheckboxes(chb);
  static const TbindTrackbar<TvobsubPage> htbr[]=
   {
-   IDC_TBR_VOBSUB_SCALE,IDFF_subVobsubScale,&TvobsubPage::scale2dlg,
+   IDC_TBR_VOBSUB_SCALE,IDFF_subImgScale,&TvobsubPage::scale2dlg,
    IDC_TBR_VOBSUB_GAUSS,IDFF_subVobsubAAswgauss,&TvobsubPage::gauss2dlg,
    0,0,NULL
   };

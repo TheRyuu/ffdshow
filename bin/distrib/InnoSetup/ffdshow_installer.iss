@@ -1,10 +1,10 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision           = '3275'
+#define tryout_revision           = '3286'
 
 #define buildyear                 = '2010'
 #define buildmonth                =   '02'
-#define buildday                  =   '20'
+#define buildday                  =   '25'
 
 ; Build specific options
 #define localize                  = True
@@ -44,7 +44,7 @@
 ;#define PREF_YAMAGATA
 ;#define PREF_XXL
 ;#define PREF_XXL_X64
-;#define PREF_ALBAIN
+#define PREF_ALBAIN
 ;#define PREF_ALBAIN_x64
 
 #ifdef PREF_CLSID
@@ -1235,6 +1235,7 @@ begin
   end
 end;
 #endif
+
 
 
 

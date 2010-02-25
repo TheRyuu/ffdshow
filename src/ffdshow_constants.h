@@ -491,7 +491,7 @@
 #define IDFF_subVobsubAA             837
 #define IDFF_subVobsubAAswgauss      851
 #define IDFF_subVobsubChangePosition 849
-#define IDFF_subVobsubScale          850
+#define IDFF_subImgScale             850
 #define IDFF_subLinespacing          838
 //#define IDFF_subTimeOverlap          839
 #define IDFF_subIsMinDuration        840

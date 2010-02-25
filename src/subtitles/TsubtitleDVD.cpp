@@ -384,6 +384,84 @@ void TsubtitleDVD::drawPixel(const CPoint &pt,const YUVcolorA &color,CRect &rect
     }
 }
 
+template<class _mm> void TsubtitleDVD::drawPixelSimd(const CPoint &pt,const YUVcolorA &color, int length, CRect &rectReal,TspuPlane plane[3]) const
+{
+ 
+    int ptx=pt.x,pty=pt.y;
+    if (color.A != 0) {
+        if (ptx<rectReal.left) rectReal.left=ptx;
+        if (ptx>rectReal.right) rectReal.right=ptx;
+        if (ptx+length<rectReal.left) rectReal.left=ptx+length;
+        if (ptx+length>rectReal.right) rectReal.right=ptx+length;
+    }
+
+    
+    if (csp == FF_CSP_420P) 
+    {
+     typename _mm::__m colorY=_mm::set1_pi8(char(color.Y));
+     typename _mm::__m colorU=_mm::set1_pi8(char(color.U));
+     typename _mm::__m colorV=_mm::set1_pi8(char(color.V));
+     typename _mm::__m colorA=_mm::set1_pi8(char(color.A));
+     int length0=length;
+     int cnt=length-_mm::size/2+1;
+
+     for (;cnt>0;cnt-=_mm::size/2,length-=_mm::size/2,ptx+=_mm::size/2)
+     {
+          _mm::store2(plane[0].c+pty*plane[0].stride+ptx, colorY);
+          _mm::store2(plane[0].r+pty*plane[0].stride+ptx, colorA);
+     }
+     for (;length>0;length--,ptx++)
+     {
+      plane[0].c[pty*plane[0].stride+ptx] = (uint8_t)color.Y;
+      plane[0].r[pty*plane[0].stride+ptx] = (uint8_t)color.A;
+     }
+
+     if (pty&1) {_mm::empty();return;}
+
+     // Reset values for next planes
+     length=length0; ptx=pt.x;
+
+     ptx /= 2;pty /= 2; length /= 2;
+     cnt=length-_mm::size/2+1;
+     for (;cnt>0;cnt-=_mm::size/2,length-=_mm::size/2,ptx+=_mm::size/2)
+     {
+          _mm::store2(plane[1].c+pty*plane[1].stride+ptx, colorV);
+          _mm::store2(plane[1].r+pty*plane[1].stride+ptx, colorA);
+          _mm::store2(plane[2].c+pty*plane[2].stride+ptx, colorU);
+          _mm::store2(plane[2].r+pty*plane[2].stride+ptx, colorA);
+     }
+     for (;length>0;length--,ptx++)
+     {
+      plane[1].c[pty*plane[1].stride+ptx] = (uint8_t)color.V;
+      plane[1].r[pty*plane[1].stride+ptx] = (uint8_t)color.A;
+      plane[2].c[pty*plane[2].stride+ptx] = (uint8_t)color.U;
+      plane[2].r[pty*plane[2].stride+ptx] = (uint8_t)color.A;
+     }
+    }
+    else
+    {
+     typename _mm::__m colorRGB=_mm::set_pi32(((color.A<<24)|color.m_rgb),((color.A<<24)|color.m_rgb));
+     typename _mm::__m alpha=_mm::set_pi32(((color.A<<16)|(color.A<<8)|color.A),((color.A<<16)|(color.A<<8)|color.A));
+     int cnt=length-_mm::size/8+1;
+     
+     for (;cnt>0;cnt-=_mm::size/8,length-=_mm::size/8,ptx+=_mm::size/8)
+     {
+      _mm::store2(plane[0].c+pty*plane[0].stride+ptx*4, colorRGB);
+      _mm::store2(plane[0].r+pty*plane[0].stride+ptx*4, alpha);
+     }
+
+     for (;length>0;length--,ptx++)
+     {
+      *(uint32_t*)(plane[0].c+pty*plane[0].stride+ptx*4) = color.m_rgb;
+      *(uint32_t*)(plane[0].r+pty*plane[0].stride+ptx*4) = (color.A<<16)|(color.A<<8)|color.A;
+     }
+    }
+    _mm::empty();
+}
+
+
+
+
 void TsubtitleDVD::drawPixels(CPoint pt,int len,const YUVcolorA &c,const CRect &rc,CRect &rectReal,TspuPlane plane[3]) const
 {
  if (pt.y < rc.top || pt.y >= rc.bottom) return;
@@ -406,11 +484,17 @@ void TsubtitleDVD::drawPixels(CPoint pt,int len,const YUVcolorA &c,const CRect &
    if (y<rectReal.top) rectReal.top=y;
    if (y>rectReal.bottom) rectReal.bottom=y;
   }
- while (len-->0)
+ if (Tconfig::cpu_flags&FF_CPU_SSE2)
+  drawPixelSimd<Tsse2>(CPoint(pt.x - rc.left, y),c,len,rectReal,plane);
+ else
+  drawPixelSimd<Tmmx>(CPoint(pt.x - rc.left, y),c,len,rectReal,plane);
+  pt.x+=len;
+
+ /*while (len-->0)
   {
    drawPixel(CPoint(pt.x - rc.left, y),c,rectReal,plane);
    pt.x++;
-  }
+  }*/
 }
 
 TspuImage* TsubtitleDVD::createNewImage(const TspuPlane src[3],const CRect &rcclip,CRect rectReal,const TprintPrefs &prefs)
@@ -460,7 +544,7 @@ void TsubtitleDVD::print(
     const stride_t *stride)
 {
  csp = prefs.csp & FF_CSPS_MASK;
-
+DPRINTF(_l("TsubtitleDVD::print"));
  if (this->offset[0]==DWORD(-1))
   return;
 
@@ -526,13 +610,9 @@ void TsubtitleDVD::print(
        rectReal.left &= ~1;
        rectReal.top &= ~1;
    }
-   DPRINTF(_l("rectReal: [%i,%i] - [%i,%i]"),rectReal.left,rectReal.top,rectReal.Width(),rectReal.Height());
    createImage(planes,rcclip,rectReal,prefs);
-   DPRINTF(_l("Image created"));
   }
- DPRINTF(_l("Print lines"));
  linesprint(prefs,dst,stride);
- DPRINTF(_l("Lines printed"));
 }
 
 void TsubtitleDVD::append(const unsigned char *Idata,unsigned int Idatalen)
@@ -544,6 +624,7 @@ void TsubtitleDVD::append(const unsigned char *Idata,unsigned int Idatalen)
 bool TsubtitleDVD::parse(void)
 {
  BYTE *p=&*data.begin();
+ DPRINTF(_l("TsubtitleDVD::parse"));
 
  WORD packetsize=short((p[0]<<8)|p[1]);
  WORD datasize=short((p[2]<<8)|p[3]);

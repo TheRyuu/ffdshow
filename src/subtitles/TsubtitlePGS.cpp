@@ -87,7 +87,7 @@ void TsubtitlePGS::print(
   // 1/ difference of size between original and output size
   // 2/ scaling preference
   int scale100=(int)100*((float)prefs.dx/videoWidth);
-  scale100=(int)((float)scale100*prefs.vobscale/256);
+  scale100=(int)((float)scale100*prefs.subimgscale/256);
 
   // Recalculate the coordinates proportionally
   centerPoint.x=(int)((float)centerPoint.x*scale100/100);

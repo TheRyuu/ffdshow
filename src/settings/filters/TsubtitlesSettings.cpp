@@ -661,8 +661,8 @@ TsubtitlesSettings::TsubtitlesSettings(TintStrColl *Icoll,TfilterIDFFs *filters,
      _l("subVobsubAAswgauss"), 700,
    IDFF_subVobsubChangePosition,&TsubtitlesSettings::vobsubChangePosition    ,0,0,_l(""),1,
      _l("subVobsubChangePosition"), 0,
-   IDFF_subVobsubScale         ,&TsubtitlesSettings::vobsubScale             ,0x10,0x300,_l(""),1,
-     _l("subVobsubScale"), 0x100,
+   IDFF_subImgScale            ,&TsubtitlesSettings::subimgscale             ,0x10,0x300,_l(""),1,
+     _l("subImgScale"), 0x100,
    IDFF_subLinespacing         ,&TsubtitlesSettings::linespacing             ,0,200,_l(""),1,
      _l("subLinespacing"), 100,
    IDFF_subIsMinDuration       ,&TsubtitlesSettings::isMinDuration           ,0,0,_l(""),1,
@@ -841,7 +841,7 @@ const int* TsubtitlesSettings::getResets(unsigned int pageId)
  if (pageId==0 || pageId==3)
   {
    static const int idResets[]={
-    IDFF_subVobsubAA,IDFF_subVobsubAAswgauss,IDFF_subVobsubChangePosition,IDFF_subVobsubScale,
+    IDFF_subVobsubAA,IDFF_subVobsubAAswgauss,IDFF_subVobsubChangePosition,IDFF_subImgScale,
     0};
    return idResets;
   }

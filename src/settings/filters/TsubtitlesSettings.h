@@ -37,7 +37,7 @@ public:
  static const char_t *getLangDescr(const char_t *lang),*getLangDescrIso(const char_t *isolang);
  int vobsub;
  int vobsubAA;static const char_t *vobsubAAs[];int vobsubAAswgauss;
- int vobsubChangePosition,vobsubScale;
+ int vobsubChangePosition,subimgscale;
  int linespacing;
  int isMinDuration,minDurationType,minDurationSubtitle,minDurationLine,minDurationChar;
  static const char_t *durations[];

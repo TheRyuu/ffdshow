@@ -367,7 +367,9 @@ void TsubtitlePGSParser::parseObject(Tbitdata &bitData, USHORT nSize)
 	}
 	else
  {
+#if DEBUG_PGS_PARSER
   DPRINTF(_l("TsubtitlePGSParser::parseObject Object size (%d)"), nSize-4);
+#endif
 		m_pCurrentObject->data.append(bitData.wordpointer, nSize-4);
   bitData.skipBytes(nSize-4);
  }

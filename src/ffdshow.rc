@@ -3042,6 +3042,7 @@ IDD_OUTSFS              TEXT                    "helpOutsfs.txt"
 IDD_CHANNELSWAP         TEXT                    "helpChannelSwap.txt"
 IDD_LICENSE             TEXT                    "../copying.txt"
 IDD_DXVAOPTIONS         TEXT                    "helpDXVAOptions.txt"
+IDD_VOBSUB              TEXT                    "helpSubIMGOptions.txt"
 
 /////////////////////////////////////////////////////////////////////////////
 //

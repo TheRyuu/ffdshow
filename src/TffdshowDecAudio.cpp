@@ -1219,4 +1219,5 @@ STDMETHODIMP TffdshowDecAudio::getInputTime(REFERENCE_TIME &rtStart, REFERENCE_T
  if (inpin==NULL) return E_FAIL;
  rtStart=inpin->insample_rtStart;
  rtStop=inpin->insample_rtStop;
+ return S_OK;
 }

@@ -707,14 +707,14 @@ void Tspudec::spudec_draw_scaled(
       }
     }
     else*/ {
-      if (/*oldscale!=prefs.vobscale || */scaled_frame_width != dxs || scaled_frame_height != dys || spu_aamode!=prefs.vobaamode) {  /* Resizing is needed */
+      if (/*oldscale!=prefs.subimgscale || */scaled_frame_width != dxs || scaled_frame_height != dys || spu_aamode!=prefs.vobaamode) {  /* Resizing is needed */
         spu_aamode=prefs.vobaamode;
-        oldscale=prefs.vobscale;
+        oldscale=prefs.subimgscale;
         /* scaled_x = scalex * x / 0x100
            scaled_y = scaley * y / 0x100
            order of operations is important because of rounding. */
-        unsigned int scalex = prefs.vobscale * dxs / orig_frame_width;
-        unsigned int scaley = prefs.vobscale * dys / orig_frame_height;
+        unsigned int scalex = prefs.subimgscale * dxs / orig_frame_width;
+        unsigned int scaley = prefs.subimgscale * dys / orig_frame_height;
         scaled_start_col = start_col * scalex / 0x100;
         scaled_start_row = start_row * scaley / 0x100;
          scaled_width = width * scalex / 0x100;

@@ -60,6 +60,7 @@ protected:
  static BYTE getNibble(const BYTE *p,DWORD *offset,int &nField,int &fAligned);
  static BYTE getHalfNibble(const BYTE *p,DWORD *offset,int &nField,int &n);
  void drawPixel(const CPoint &pt,const YUVcolorA &c,CRect &rectReal,TspuPlane plane[3]) const;
+ template<class _mm> void drawPixelSimd(const CPoint &pt,const YUVcolorA &color, int length, CRect &rectReal,TspuPlane plane[3]) const;
  void drawPixels(CPoint pt,int len,const YUVcolorA &c,const CRect &rc,CRect &rectReal,TspuPlane plane[3]) const;
  mutable TrenderedSubtitleLines lines;
  void createImage(const TspuPlane src[3],const CRect &rcclip,CRect rectReal,const TprintPrefs &prefs) const;

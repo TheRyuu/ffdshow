@@ -6311,6 +6311,10 @@
 			RelativePath=".\src\helpDXVAOptions.txt"
 			>
 		</File>
+		<File
+			RelativePath=".\src\helpSubIMGOptions.txt"
+			>
+		</File>
 	</Files>
 	<Globals>
 		<Global

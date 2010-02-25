@@ -166,6 +166,8 @@
 #define IDI_MODERN_ICON_D               297
 #define IDI_MODERN_ICON_VA              299
 #define IDI_MODERN_4BIT_ICON_VA         301
+#define IDD_                            303
+#define IDD_SUBIMGOPTIONS               303
 #define IDC_TBR_ASPECT_USER             1002
 #define IDC_TBR_PPQUAL                  1002
 #define IDC_TBR_LUMGAIN                 1003
@@ -2008,7 +2010,7 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
-#define _APS_NEXT_RESOURCE_VALUE        302
+#define _APS_NEXT_RESOURCE_VALUE        304
 #define _APS_NEXT_COMMAND_VALUE         40015
 #define _APS_NEXT_CONTROL_VALUE         40016
 #define _APS_NEXT_SYMED_VALUE           107

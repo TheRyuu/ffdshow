@@ -54,7 +54,7 @@ TprintPrefs::TprintPrefs(IffdshowBase *Ideci,const TfontSettings *IfontSettings)
      config=NULL;
      stereoScopicParallax=0;
      vobchangeposition = false;
-     vobscale = vobaamode = vobaagauss = 0;
+     subimgscale = vobaamode = vobaagauss = 0;
      fontchangesplit=false;
      fontsplit = 0;
      textBorderLR=0;
@@ -85,7 +85,7 @@ bool TprintPrefs::operator != (const TprintPrefs &rt) const
       && align == rt.align
       && linespacing == rt.linespacing
       && sizeDx == rt.sizeDx && sizeDy == rt.sizeDy
-      && vobchangeposition == rt.vobchangeposition && vobscale == rt.vobscale && vobaamode == rt.vobaamode && vobaagauss == rt.vobaagauss
+      && vobchangeposition == rt.vobchangeposition && subimgscale == rt.subimgscale && vobaamode == rt.vobaamode && vobaagauss == rt.vobaagauss
       && fontchangesplit == rt.fontchangesplit && fontsplit == rt.fontsplit
       && textBorderLR == rt.textBorderLR
       && tabsize == rt.tabsize

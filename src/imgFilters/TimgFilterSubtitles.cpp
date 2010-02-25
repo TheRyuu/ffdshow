@@ -50,7 +50,7 @@ TimgFilterSubtitles::TsubPrintPrefs::TsubPrintPrefs(
     align=cfg->align;
     linespacing=cfg->linespacing;
     vobchangeposition=!!cfg->vobsubChangePosition;
-    vobscale=cfg->vobsubScale;
+    subimgscale=cfg->subimgscale;
     vobaamode=cfg->vobsubAA;
     vobaagauss=cfg->vobsubAAswgauss;
     textBorderLR=2*cfg->splitBorder;
