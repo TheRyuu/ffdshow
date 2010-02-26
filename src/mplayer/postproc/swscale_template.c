@@ -2739,6 +2739,10 @@ inline static void RENAME(hcscale)(uint16_t *dst, long dstWidth, uint8_t *src1, 
     else if(isGray(srcFormat))
     {
     	return;
+    } else //srcFormat==IMGFMT_YV12
+    {
+	src1= formatConvBuffer;
+	src2= formatConvBuffer+2048;
     }
 
 #if HAVE_MMX
