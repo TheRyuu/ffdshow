@@ -643,7 +643,7 @@ BEGIN
     CONTROL         "Extended info",IDC_CHB_TRAYICONEXT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,30,115,8
     CONTROL         "Add tray icon menu to player's stream/languages menu",IDC_CHB_STREAMSMENU,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,43,242,8
-    GROUPBOX        "Configurate dialog",IDC_GRP_CFGDLG,0,56,267,44
+    GROUPBOX        "Configuration dialog",IDC_GRP_CFGDLG,0,56,267,44
     CONTROL         "Restore position",IDC_CHB_DLG_RESTOREPOS,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,68,125,8
     CONTROL         "Show hints",IDC_CHB_DLG_SHOWHINTS,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,133,68,115,8
     LTEXT           "Language:",IDC_LBL_LANG,5,83,35,8
