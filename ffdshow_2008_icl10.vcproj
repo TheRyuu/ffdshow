@@ -1028,14 +1028,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\subtitles\TsubtitleDVD.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\subtitles\TsubtitlePGSParser.cpp"
-				>
-			</File>
-			<File
 				RelativePath="src\TtextInputPin.cpp"
 				>
 			</File>
@@ -1612,11 +1604,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\subtitles\TsubtitleDVD.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\subtitles\TsubtitlePGS.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\src\subtitles\TsubtitlePGS.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\subtitles\TsubtitlePGSParser.cpp"
 				>
 			</File>
 			<File
@@ -6310,6 +6310,10 @@
 		</File>
 		<File
 			RelativePath=".\src\helpDXVAOptions.txt"
+			>
+		</File>
+		<File
+			RelativePath=".\src\helpSubIMGOptions.txt"
 			>
 		</File>
 	</Files>

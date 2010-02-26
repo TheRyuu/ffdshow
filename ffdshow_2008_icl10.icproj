@@ -5,7 +5,7 @@
 	Name="ffdshow"
 	ProjectGUID="{0C1CDCBB-5886-42B4-A928-F4B82DD3FD17}"
 	VCNestedProjectGUID="{30A21C7F-035D-41E2-95BE-B4FFA5F5176B}"
-	VCNestedProjectCRC32="1902128200"
+	VCNestedProjectCRC32="3511533904"
 	VCNestedProjectFileName="ffdshow_2008_icl10.vcproj">
 	<Platforms>
 		<Platform 
@@ -838,26 +838,6 @@
 				RelativePath="src\TkeyboardDirect.cpp">
 			</File>
 			<File 
-				RelativePath=".\src\subtitles\TsubtitleDVD.cpp">
-				<FileConfiguration 
-					Name="Release Unicode|Win32">
-					<Tool 
-						Name="CppCmplrTool">
-						<MarkNode/>
-					</Tool>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release Unicode|x64">
-					<Tool 
-						Name="CppCmplrTool">
-						<MarkNode/>
-					</Tool>
-				</FileConfiguration>
-			</File>
-			<File 
-				RelativePath=".\src\subtitles\TsubtitlePGSParser.cpp">
-			</File>
-			<File 
 				RelativePath="src\TtextInputPin.cpp">
 			</File>
 			<File 
@@ -1291,10 +1271,30 @@
 				RelativePath=".\src\subtitles\Tsubtitle.h">
 			</File>
 			<File 
+				RelativePath=".\src\subtitles\TsubtitleDVD.cpp">
+				<FileConfiguration 
+					Name="Release Unicode|Win32">
+					<Tool 
+						Name="CppCmplrTool">
+						<MarkNode/>
+					</Tool>
+				</FileConfiguration>
+				<FileConfiguration 
+					Name="Release Unicode|x64">
+					<Tool 
+						Name="CppCmplrTool">
+						<MarkNode/>
+					</Tool>
+				</FileConfiguration>
+			</File>
+			<File 
 				RelativePath=".\src\subtitles\TsubtitlePGS.cpp">
 			</File>
 			<File 
 				RelativePath=".\src\subtitles\TsubtitlePGS.h">
+			</File>
+			<File 
+				RelativePath=".\src\subtitles\TsubtitlePGSParser.cpp">
 			</File>
 			<File 
 				RelativePath=".\src\subtitles\TsubtitleProps.cpp">
@@ -4858,6 +4858,9 @@
 		</File>
 		<File 
 			RelativePath=".\src\helpDXVAOptions.txt">
+		</File>
+		<File 
+			RelativePath=".\src\helpSubIMGOptions.txt">
 		</File>
 	</Files>
 </VisualStudioProject>
