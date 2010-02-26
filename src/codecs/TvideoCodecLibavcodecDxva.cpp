@@ -823,7 +823,6 @@ bool TvideoCodecLibavcodecDxva::beginDecompress(TffPictBase &pict,FOURCC fcc,con
   }
  // One thread for DXVA mode
  int numthreads=1;
- sup_threads_dec(codecId);
  libavcodec->avcodec_thread_init(avctx,threadcount=numthreads);
  avctx->active_thread_type = FF_THREAD_SLICE;
  avctx->debug_mv=0;

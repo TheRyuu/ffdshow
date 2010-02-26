@@ -233,7 +233,7 @@ void TvideoCodecDec::TtelecineManager::get_fieldtype(TffPict &pict)
     if (cfg_softTelecine)
         pict.fieldtype = FIELD_TYPE::PROGRESSIVE_FRAME;
     else {
-        pict.repeat_first_field = group[segment_count & 3].repeat_pict;
+        pict.repeat_first_field = group[segment_count & 3].repeat_pict != 0;
         if (pict.repeat_first_field) {
             pict.fieldtype = group[(segment_count-1) & 3].fieldtype;
         }

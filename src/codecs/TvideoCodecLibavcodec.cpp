@@ -156,7 +156,7 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
         avctx->active_thread_type = FF_THREAD_SLICE;
 
     int numthreads=deci->getParam2(IDFF_numLAVCdecThreads);
-    if (numthreads>1 && sup_threads_dec(codecId))
+    if (numthreads>1 && (COMPILE_AS_FFMPEG_MT || sup_threads_dec(codecId)) )
         libavcodec->avcodec_thread_init(avctx,threadcount=numthreads);
     else
         threadcount=0;

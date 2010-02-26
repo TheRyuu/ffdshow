@@ -849,7 +849,7 @@ int Txvid_2pass::codec_2pass_get_quant(TencFrameParams *frame)
 {
 
 //  DWORD read;
-    int bytes1, bytes2;
+    int bytes1, bytes2 = 0;
     int overflow;
     int credits_pos;
     int capped_to_max_framesize = 0;
@@ -1001,7 +1001,7 @@ int Txvid_2pass::codec_2pass_get_quant(TencFrameParams *frame)
     }
     else    // Foxer: apply curve compression outside credits
     {
-        double dbytes, curve_temp;
+        double dbytes, curve_temp = 0;
 
         bytes2 = (config.mode == DLG_MODE_2PASS_2_INT) ? bytes1 : twopass.nns2.bytes;
 
