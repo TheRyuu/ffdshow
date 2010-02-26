@@ -693,7 +693,9 @@ static inline int mpeg1_decode_block_inter(MpegEncContext *s,
             if(((int32_t)GET_CACHE(re, &s->gb)) <= (int32_t)0xBFFFFFFF)
                 goto end;
         }
-
+#if MIN_CACHE_BITS < 19
+        UPDATE_CACHE(re, &s->gb);
+#endif
         /* now quantify & encode AC coefficients */
         for(;;) {
             GET_RL_VLC(level, run, re, &s->gb, rl->rl_vlc[0], TEX_VLC_BITS, 2, 0);
@@ -733,9 +735,14 @@ static inline int mpeg1_decode_block_inter(MpegEncContext *s,
             }
 
             block[j] = level;
+#if MIN_CACHE_BITS < 19
+            UPDATE_CACHE(re, &s->gb);
+#endif
             if(((int32_t)GET_CACHE(re, &s->gb)) <= (int32_t)0xBFFFFFFF)
                 break;
+#if MIN_CACHE_BITS >= 19
             UPDATE_CACHE(re, &s->gb);
+#endif
         }
 end:
         LAST_SKIP_BITS(re, &s->gb, 2);
@@ -768,6 +775,9 @@ static inline int mpeg1_fast_decode_block_inter(MpegEncContext *s, DCTELEM *bloc
             if(((int32_t)GET_CACHE(re, &s->gb)) <= (int32_t)0xBFFFFFFF)
                 goto end;
         }
+#if MIN_CACHE_BITS < 19
+        UPDATE_CACHE(re, &s->gb);
+#endif
 
         /* now quantify & encode AC coefficients */
         for(;;) {
@@ -804,9 +814,14 @@ static inline int mpeg1_fast_decode_block_inter(MpegEncContext *s, DCTELEM *bloc
             }
 
             block[j] = level;
+#if MIN_CACHE_BITS < 19
+            UPDATE_CACHE(re, &s->gb);
+#endif
             if(((int32_t)GET_CACHE(re, &s->gb)) <= (int32_t)0xBFFFFFFF)
                 break;
+#if MIN_CACHE_BITS >= 19
             UPDATE_CACHE(re, &s->gb);
+#endif
         }
 end:
         LAST_SKIP_BITS(re, &s->gb, 2);
@@ -851,6 +866,9 @@ static inline int mpeg2_decode_block_non_intra(MpegEncContext *s,
             if(((int32_t)GET_CACHE(re, &s->gb)) <= (int32_t)0xBFFFFFFF)
                 goto end;
         }
+#if MIN_CACHE_BITS < 19
+        UPDATE_CACHE(re, &s->gb);
+#endif
 
         /* now quantify & encode AC coefficients */
         for(;;) {
@@ -884,9 +902,14 @@ static inline int mpeg2_decode_block_non_intra(MpegEncContext *s,
 
             mismatch ^= level;
             block[j] = level;
+#if MIN_CACHE_BITS < 19
+            UPDATE_CACHE(re, &s->gb);
+#endif
             if(((int32_t)GET_CACHE(re, &s->gb)) <= (int32_t)0xBFFFFFFF)
                 break;
+#if MIN_CACHE_BITS >= 19
             UPDATE_CACHE(re, &s->gb);
+#endif
         }
 end:
         LAST_SKIP_BITS(re, &s->gb, 2);
@@ -921,6 +944,9 @@ static inline int mpeg2_fast_decode_block_non_intra(MpegEncContext *s,
         if(((int32_t)GET_CACHE(re, &s->gb)) <= (int32_t)0xBFFFFFFF)
             goto end;
     }
+#if MIN_CACHE_BITS < 19
+    UPDATE_CACHE(re, &s->gb);
+#endif
 
     /* now quantify & encode AC coefficients */
     for(;;) {
@@ -949,9 +975,14 @@ static inline int mpeg2_fast_decode_block_non_intra(MpegEncContext *s,
         }
 
         block[j] = level;
+#if MIN_CACHE_BITS < 19
+        UPDATE_CACHE(re, &s->gb);
+#endif
         if(((int32_t)GET_CACHE(re, &s->gb)) <= (int32_t)0xBFFFFFFF)
             break;
+#if MIN_CACHE_BITS >=19
         UPDATE_CACHE(re, &s->gb);
+#endif
     }
 end:
     LAST_SKIP_BITS(re, &s->gb, 2);
@@ -2143,7 +2174,7 @@ int ff_mpeg1_find_frame_end(ParseContext *pc, const uint8_t *buf, int buf_size, 
                     return i-3;
                 }
             }
-            if(s && state == PICTURE_START_CODE){
+            if(pc->frame_start_found == 0 && s && state == PICTURE_START_CODE){
                 ff_fetch_timestamp(s, i-3, 1);
             }
         }

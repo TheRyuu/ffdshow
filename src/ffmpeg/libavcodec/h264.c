@@ -51,15 +51,12 @@ static const uint8_t div6[52]={
 };
 
 void ff_h264_write_back_intra_pred_mode(H264Context *h){
-    const int mb_xy= h->mb_xy;
+    int8_t *mode= h->intra4x4_pred_mode + h->mb2br_xy[h->mb_xy];
 
-    h->intra4x4_pred_mode[mb_xy][0]= h->intra4x4_pred_mode_cache[7+8*1];
-    h->intra4x4_pred_mode[mb_xy][1]= h->intra4x4_pred_mode_cache[7+8*2];
-    h->intra4x4_pred_mode[mb_xy][2]= h->intra4x4_pred_mode_cache[7+8*3];
-    h->intra4x4_pred_mode[mb_xy][3]= h->intra4x4_pred_mode_cache[7+8*4];
-    h->intra4x4_pred_mode[mb_xy][4]= h->intra4x4_pred_mode_cache[4+8*4];
-    h->intra4x4_pred_mode[mb_xy][5]= h->intra4x4_pred_mode_cache[5+8*4];
-    h->intra4x4_pred_mode[mb_xy][6]= h->intra4x4_pred_mode_cache[6+8*4];
+    AV_COPY32(mode, h->intra4x4_pred_mode_cache + 4 + 8*4);
+    mode[4]= h->intra4x4_pred_mode_cache[7+8*3];
+    mode[5]= h->intra4x4_pred_mode_cache[7+8*2];
+    mode[6]= h->intra4x4_pred_mode_cache[7+8*1];
 }
 
 /**
@@ -599,7 +596,7 @@ static void free_tables(H264Context *h){
     av_freep(&h->list_counts);
 
     av_freep(&h->mb2b_xy);
-    av_freep(&h->mb2b8_xy);
+    av_freep(&h->mb2br_xy);
 
     for(i = 0; i < MAX_THREADS; i++) {
         hx = h->thread_context[i];
@@ -692,24 +689,23 @@ int ff_h264_alloc_tables(H264Context *h){
     FF_ALLOCZ_OR_GOTO(h->s.avctx, h->cbp_table, big_mb_num * sizeof(uint16_t), fail)
 
     FF_ALLOCZ_OR_GOTO(h->s.avctx, h->chroma_pred_mode_table, big_mb_num * sizeof(uint8_t), fail)
-    FF_ALLOCZ_OR_GOTO(h->s.avctx, h->mvd_table[0], 32*big_mb_num * sizeof(uint16_t), fail);
-    FF_ALLOCZ_OR_GOTO(h->s.avctx, h->mvd_table[1], 32*big_mb_num * sizeof(uint16_t), fail);
-    FF_ALLOCZ_OR_GOTO(h->s.avctx, h->direct_table, 32*big_mb_num * sizeof(uint8_t) , fail);
+    FF_ALLOCZ_OR_GOTO(h->s.avctx, h->mvd_table[0], 16*big_mb_num * sizeof(uint8_t), fail);
+    FF_ALLOCZ_OR_GOTO(h->s.avctx, h->mvd_table[1], 16*big_mb_num * sizeof(uint8_t), fail);
+    FF_ALLOCZ_OR_GOTO(h->s.avctx, h->direct_table, 4*big_mb_num * sizeof(uint8_t) , fail);
     FF_ALLOCZ_OR_GOTO(h->s.avctx, h->list_counts, big_mb_num * sizeof(uint8_t), fail)
 
     memset(h->slice_table_base, -1, (big_mb_num+s->mb_stride)  * sizeof(*h->slice_table_base));
     h->slice_table= h->slice_table_base + s->mb_stride*2 + 1;
 
     FF_ALLOCZ_OR_GOTO(h->s.avctx, h->mb2b_xy  , big_mb_num * sizeof(uint32_t), fail);
-    FF_ALLOCZ_OR_GOTO(h->s.avctx, h->mb2b8_xy , big_mb_num * sizeof(uint32_t), fail);
+    FF_ALLOCZ_OR_GOTO(h->s.avctx, h->mb2br_xy , big_mb_num * sizeof(uint32_t), fail);
     for(y=0; y<s->mb_height; y++){
         for(x=0; x<s->mb_width; x++){
             const int mb_xy= x + y*s->mb_stride;
             const int b_xy = 4*x + 4*y*h->b_stride;
-            const int b8_xy= 2*x + 2*y*h->b8_stride;
 
             h->mb2b_xy [mb_xy]= b_xy;
-            h->mb2b8_xy[mb_xy]= b8_xy;
+            h->mb2br_xy[mb_xy]= 8*(FMO ? mb_xy : (mb_xy % (2*s->mb_stride)));
         }
     }
 
@@ -733,7 +729,7 @@ static void clone_tables(H264Context *dst, H264Context *src){
     dst->slice_table              = src->slice_table;
     dst->cbp_table                = src->cbp_table;
     dst->mb2b_xy                  = src->mb2b_xy;
-    dst->mb2b8_xy                 = src->mb2b8_xy;
+    dst->mb2br_xy                 = src->mb2br_xy;
     dst->chroma_pred_mode_table   = src->chroma_pred_mode_table;
     dst->mvd_table[0]             = src->mvd_table[0];
     dst->mvd_table[1]             = src->mvd_table[1];
@@ -814,16 +810,20 @@ av_cold int ff_h264_decode_init(AVCodecContext *avctx){
 
     ff_h264_decode_init_vlc();
 
-    /* ffdshow custom code (begin) */
-    h->is_avc = avcodec_h264_decode_init_is_avc(avctx);
-    h->got_avcC = 0;
-    /* ffdshow custom code (end) */
-
     h->thread_context[0] = h;
     h->outputed_poc = INT_MIN;
     h->prev_poc_msb= 1<<16;
     h->x264_build = -1;
     ff_h264_reset_sei(h);
+
+    h->ref_cache[0][scan8[5 ]+1] = h->ref_cache[0][scan8[7 ]+1] = h->ref_cache[0][scan8[13]+1] =
+    h->ref_cache[1][scan8[5 ]+1] = h->ref_cache[1][scan8[7 ]+1] = h->ref_cache[1][scan8[13]+1] = PART_NOT_AVAILABLE;
+
+    /* ffdshow custom code (begin) */
+    h->is_avc = avcodec_h264_decode_init_is_avc(avctx);
+    h->got_avcC = 0;
+    /* ffdshow custom code (end) */
+
     return 0;
 }
 
@@ -924,7 +924,6 @@ static inline void xchg_mb_border(H264Context *h, uint8_t *src_y, uint8_t *src_c
     MpegEncContext * const s = &h->s;
     int deblock_left;
     int deblock_top;
-    int mb_xy;
     int top_idx = 1;
     uint8_t *top_border_m1;
     uint8_t *top_border;
@@ -1660,7 +1659,6 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
     s->mb_height= h->sps.mb_height * (2 - h->sps.frame_mbs_only_flag);
 
     h->b_stride=  s->mb_width*4;
-    h->b8_stride= s->mb_width*2;
 
     s->width = 16*s->mb_width - 2*FFMIN(h->sps.crop_right, 7);
     if(h->sps.frame_mbs_only_flag)
