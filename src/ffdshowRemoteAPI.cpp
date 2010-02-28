@@ -27,6 +27,7 @@
 #include "Tpresets.h"
 #include "TpresetSettings.h"
 #include "TffDecoderVideo.h"
+#include "TglobalSettings.h"
 #include "dsutil.h"
 #include "strmif.h"
 
@@ -73,12 +74,20 @@ Tremote::~Tremote()
 
 void Tremote::load(void)
 {
- TregOpRegRead t(HKEY_CURRENT_USER,FFDSHOW_REG_PARENT _l("\\") FFDSHOWDECVIDEO);
+ TglobalSettingsBase *pGlobalSettings=NULL;
+ deci->getGlobalSettings(&pGlobalSettings);
+ ffstring regkey=ffstring(FFDSHOW_REG_PARENT _l("\\"));
+ regkey.append(pGlobalSettings->getRegChild());
+ TregOpRegRead t(HKEY_CURRENT_USER,regkey.c_str());
  reg_op(t);
 }
 void Tremote::save(void)
 {
- TregOpRegWrite t(HKEY_CURRENT_USER,FFDSHOW_REG_PARENT _l("\\") FFDSHOWDECVIDEO);
+ TglobalSettingsBase *pGlobalSettings=NULL;
+ deci->getGlobalSettings(&pGlobalSettings);
+ ffstring regkey=ffstring(FFDSHOW_REG_PARENT _l("\\"));
+ regkey.append(pGlobalSettings->getRegChild());
+ TregOpRegWrite t(HKEY_CURRENT_USER,regkey.c_str());
  reg_op(t);
 }
 

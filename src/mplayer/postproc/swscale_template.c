@@ -2739,11 +2739,13 @@ inline static void RENAME(hcscale)(uint16_t *dst, long dstWidth, uint8_t *src1, 
     else if(isGray(srcFormat))
     {
     	return;
-    } else //srcFormat==IMGFMT_YV12
+    }//TODO : following code prevents DXVA crash but gives green picture 
+    /*else if(srcFormat==IMGFMT_YV12)
     {
-	src1= formatConvBuffer;
+   src1= formatConvBuffer;
 	src2= formatConvBuffer+2048;
-    }
+
+    }*/
 
 #if HAVE_MMX
 	// use the new MMX scaler if the mmx2 can't be used (its faster than the x86asm one)

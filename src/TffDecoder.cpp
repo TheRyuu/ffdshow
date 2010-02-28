@@ -2023,11 +2023,12 @@ void TffdshowDecVideo::getChapters(void)
         {
             char_t name[MAX_PATH],filtername[MAX_PATH];
             getFilterName(bff,name,filtername,countof(filtername));
-            if (!strcmp(_l("ffdshow Video Decoder"), filtername)
-                || !strcmp(_l("ffdshow raw video filter"), filtername)
-                || !strcmp(_l("ffdshow VFW decoder helper"), filtername)
-                || !strcmp(_l("ffdshow subtitles filter"), filtername)
-                || !strcmp(_l("ffdshow Audio Decoder"), filtername))
+            if (!strcmp(FFDSHOW_NAME_L, filtername)
+                || !strcmp(FFDSHOWRAW_NAME_L, filtername)
+                || !strcmp(FFDSHOWVFW_NAME_L, filtername)
+                || !strcmp(FFDSHOWSUBTITLES_NAME_L, filtername)
+                || !strcmp(FFDSHOWAUDIO_NAME_L, filtername)
+                || !strcmp(FFDSHOWDXVA_NAME_L, filtername))
                 continue;
             IAMExtendedSeeking *pAMExtendedSeeking = NULL;
             bff->QueryInterface(IID_IAMExtendedSeeking, (void**) &pAMExtendedSeeking);

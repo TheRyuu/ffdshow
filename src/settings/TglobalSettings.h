@@ -60,6 +60,7 @@ public:
  int addToROT;
  int allowedCPUflags;
  int compOnLoadMode;
+ const char_t* getRegChild(void) { return reg_child; };
 
  virtual void load(void);
  virtual void save(void);
