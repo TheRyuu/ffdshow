@@ -406,8 +406,10 @@ HRESULT TDXVADecoder::FindFreeDXVA1Buffer(DWORD dwTypeIndex, DWORD& dwBufferInde
 
 HRESULT TDXVADecoder::BeginFrame(int nSurfaceIndex, IMediaSample* pSampleToDeliver)
 {
+    //DPRINTF(_l("TDXVADecoder::BeginFrame %d\n"),nSurfaceIndex);
     HRESULT hr   = E_INVALIDARG;
     int     nTry = 0;
+    WORD wSurfaceIndex = (WORD)nSurfaceIndex;
 
     for (int i=0; i<20; i++)
     {
@@ -417,15 +419,14 @@ HRESULT TDXVADecoder::BeginFrame(int nSurfaceIndex, IMediaSample* pSampleToDeliv
             AMVABeginFrameInfo BeginFrameInfo;
 
             BeginFrameInfo.dwDestSurfaceIndex = nSurfaceIndex;
-            BeginFrameInfo.dwSizeInputData    = sizeof(nSurfaceIndex);
-            BeginFrameInfo.pInputData         = &nSurfaceIndex;
+            BeginFrameInfo.pInputData         = &wSurfaceIndex;
+            BeginFrameInfo.dwSizeInputData    = sizeof(wSurfaceIndex); // must be 2
             BeginFrameInfo.dwSizeOutputData   = 0;
             BeginFrameInfo.pOutputData        = NULL;
 
             DO_DXVA_PENDING_LOOP (m_pAMVideoAccelerator->BeginFrame(&BeginFrameInfo));
 
             ASSERT (SUCCEEDED (hr));
-      //DPRINTF(_l("TDXVADecoder::BeginFrame  %d\n"),nSurfaceIndex);
             if (SUCCEEDED (hr))
                 hr = FindFreeDXVA1Buffer (-1, m_dwBufferIndex);
             break;
@@ -459,8 +460,9 @@ HRESULT TDXVADecoder::BeginFrame(int nSurfaceIndex, IMediaSample* pSampleToDeliv
 
 HRESULT TDXVADecoder::EndFrame(int nSurfaceIndex)
 {
+    //DPRINTF(_l("TDXVADecoder::EndFrame %d\n"),nSurfaceIndex);
     HRESULT hr      = E_INVALIDARG;
-    DWORD   dwDummy = nSurfaceIndex;
+    WORD wSurfaceIndex = (WORD)nSurfaceIndex;
 
     if (m_pCodec->isPostProcessingEnabled())
      {
@@ -479,10 +481,9 @@ HRESULT TDXVADecoder::EndFrame(int nSurfaceIndex)
     case ENGINE_DXVA1 :
         AMVAEndFrameInfo            EndFrameInfo;
 
-        EndFrameInfo.dwSizeMiscData = sizeof (dwDummy);        // TODO : usefull ??
-        EndFrameInfo.pMiscData      = &dwDummy;
+        EndFrameInfo.dwSizeMiscData = sizeof(wSurfaceIndex); // must be 2
+        EndFrameInfo.pMiscData      = &wSurfaceIndex;
         hr = m_pAMVideoAccelerator->EndFrame(&EndFrameInfo);
-  //DPRINTF(_l("TDXVADecoder::EndFrame  %d\n"),nSurfaceIndex);
         ASSERT (SUCCEEDED (hr));
         break;
 
