@@ -24,6 +24,7 @@
 #include "Tlibmplayer.h"
 #include "IffdshowBase.h"
 #include "streams.h"
+#include "TsampleFormat.h"
 
 
 
@@ -361,7 +362,7 @@ HRESULT TaudioCodecBitstream::decode(TbyteBuffer &src)
        REFERENCE_TIME delay100ns=audioDelay*10000LL;
 
        // Not a good idea : causes audio cuts (audio desync)
-       /*if (rtStart+delay100ns<0)
+       if (deci->getParam2(IDFF_aoutpassthroughDeviceId)==TsampleFormat::XONAR && (rtStart+delay100ns)<0)
        {
         DPRINTF(_l("TaudioCodecBitstream::decode drop frame (timestamp negative)"));
         deciA->deliverSampleBistream(NULL,bitstreamBuffer.size(),audioParserData.bit_rate,audioParserData.sample_rate,true, 0, 0);
@@ -369,7 +370,7 @@ HRESULT TaudioCodecBitstream::decode(TbyteBuffer &src)
         src.clear();
         pAudioParser->SearchSync();
         return S_OK;
-       }*/
+       }
        return decodeMAT(src, audioParserData);
      }
      

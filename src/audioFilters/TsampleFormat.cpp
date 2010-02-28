@@ -28,19 +28,19 @@ int OSMinorVersion=0;
 
 const TalternateSampleFormat TsampleFormat::alternateSampleFormats[]=
 {
-//Id, originalwSubFormat                    , mediaSubtype                              , wFormatTag             , wSubFormat                            , nChannels, wBitsPerSample,nSamplesPerSec, dwChannelMask, isExtensible
-  1 ,KSDATAFORMAT_SUBTYPE_IEC61937_DOLBY_MLP, MEDIASUBTYPE_PCM                          , WAVE_FORMAT_EXTENSIBLE ,KSDATAFORMAT_SUBTYPE_IEC61937_DOLBY_MLP, 0        ,  0            ,     0        , KSAUDIO_SPEAKER_7POINT1, true, // Standard #2
-  1 ,KSDATAFORMAT_SUBTYPE_IEC61937_DOLBY_MLP, GUID_NULL                                 , 0                      ,MEDIASUBTYPE_DOLBY_TRUEHD              , 0        ,  0            ,     0        , 0, true, // Standard #3  
-  2, KSDATAFORMAT_SUBTYPE_IEC61937_DOLBY_MLP, KSDATAFORMAT_SUBTYPE_IEC61937_DOLBY_DIGITAL, WAVE_FORMAT_ESST_AC3,GUID_NULL                                , 0        ,  0            ,     0        , 0, false, // xonar
-  3, KSDATAFORMAT_SUBTYPE_IEC61937_DOLBY_MLP, MEDIASUBTYPE_CYBERLINK_BITSTREAM         , WAVE_FORMAT_CYBERLINK_TRUEHD, GUID_NULL                         , 8        , 16            , 192000       , 0, false, // Auzentech
+//Id            , originalwSubFormat                    , mediaSubtype                              , wFormatTag             , wSubFormat                            , nChannels, wBitsPerSample,nSamplesPerSec, dwChannelMask, isExtensible
+  STANDARD_ONLY ,KSDATAFORMAT_SUBTYPE_IEC61937_DOLBY_MLP, MEDIASUBTYPE_PCM                          , WAVE_FORMAT_EXTENSIBLE ,KSDATAFORMAT_SUBTYPE_IEC61937_DOLBY_MLP, 0        ,  0            ,     0        , KSAUDIO_SPEAKER_7POINT1, true, // Standard #2
+  STANDARD_ONLY ,KSDATAFORMAT_SUBTYPE_IEC61937_DOLBY_MLP, GUID_NULL                                 , 0                      ,MEDIASUBTYPE_DOLBY_TRUEHD              , 0        ,  0            ,     0        , 0, true, // Standard #3  
+  XONAR         , KSDATAFORMAT_SUBTYPE_IEC61937_DOLBY_MLP, KSDATAFORMAT_SUBTYPE_IEC61937_DOLBY_DIGITAL, WAVE_FORMAT_ESST_AC3,GUID_NULL                                , 0        ,  0            ,     0        , 0, false, // xonar
+  AUZENTECH     , KSDATAFORMAT_SUBTYPE_IEC61937_DOLBY_MLP, MEDIASUBTYPE_CYBERLINK_BITSTREAM         , WAVE_FORMAT_CYBERLINK_TRUEHD, GUID_NULL                         , 8        , 16            , 192000       , 0, false, // Auzentech
 
-  1 ,KSDATAFORMAT_SUBTYPE_IEC61937_DTS_HD   , MEDIASUBTYPE_PCM                          , WAVE_FORMAT_EXTENSIBLE ,KSDATAFORMAT_SUBTYPE_IEC61937_DTS_HD   , 0        ,  0            , 96000        , KSAUDIO_SPEAKER_7POINT1, true, // Standard #2 (Vista)
-  1 ,KSDATAFORMAT_SUBTYPE_IEC61937_DTS_HD   , GUID_NULL                                 , 0                      ,MEDIASUBTYPE_DTS_HD                    , 0        ,  0            ,     0        , 0, true, // Standard #3  
-  2, KSDATAFORMAT_SUBTYPE_IEC61937_DTS_HD,    KSDATAFORMAT_SUBTYPE_IEC61937_DOLBY_DIGITAL, WAVE_FORMAT_ESST_AC3   ,GUID_NULL                              , 8        , 16            , 192000       , 0, false, // xonar
-  3, KSDATAFORMAT_SUBTYPE_IEC61937_DTS_HD   , MEDIASUBTYPE_CYBERLINK_BITSTREAM         , WAVE_FORMAT_CYBERLINK_DTS_HD, GUID_NULL                         , 2        , 16            , 96000        , 0, false, // Auzentech
+  STANDARD_ONLY ,KSDATAFORMAT_SUBTYPE_IEC61937_DTS_HD   , MEDIASUBTYPE_PCM                          , WAVE_FORMAT_EXTENSIBLE ,KSDATAFORMAT_SUBTYPE_IEC61937_DTS_HD   , 0        ,  0            , 96000        , KSAUDIO_SPEAKER_7POINT1, true, // Standard #2 (Vista)
+  STANDARD_ONLY ,KSDATAFORMAT_SUBTYPE_IEC61937_DTS_HD   , GUID_NULL                                 , 0                      ,MEDIASUBTYPE_DTS_HD                    , 0        ,  0            ,     0        , 0, true, // Standard #3  
+  XONAR         , KSDATAFORMAT_SUBTYPE_IEC61937_DTS_HD,    KSDATAFORMAT_SUBTYPE_IEC61937_DOLBY_DIGITAL, WAVE_FORMAT_ESST_AC3   ,GUID_NULL                              , 8        , 16            , 192000       , 0, false, // xonar
+  AUZENTECH     , KSDATAFORMAT_SUBTYPE_IEC61937_DTS_HD   , MEDIASUBTYPE_CYBERLINK_BITSTREAM         , WAVE_FORMAT_CYBERLINK_DTS_HD, GUID_NULL                         , 2        , 16            , 96000        , 0, false, // Auzentech
 
-  1, KSDATAFORMAT_SUBTYPE_IEC61937_DOLBY_DIGITAL_PLUS, GUID_NULL                        , 0                      ,MEDIASUBTYPE_DOLBY_DDPLUS              , 0        ,  0            ,     0        , 0, true,
-  2, KSDATAFORMAT_SUBTYPE_IEC61937_DOLBY_DIGITAL_PLUS, KSDATAFORMAT_SUBTYPE_IEC61937_DOLBY_DIGITAL, WAVE_FORMAT_ESST_AC3,GUID_NULL                       , 0        ,  0            ,     0        , 0, false,
+  STANDARD_ONLY , KSDATAFORMAT_SUBTYPE_IEC61937_DOLBY_DIGITAL_PLUS, GUID_NULL                        , 0                      ,MEDIASUBTYPE_DOLBY_DDPLUS              , 0        ,  0            ,     0        , 0, true,
+  XONAR, KSDATAFORMAT_SUBTYPE_IEC61937_DOLBY_DIGITAL_PLUS, KSDATAFORMAT_SUBTYPE_IEC61937_DOLBY_DIGITAL, WAVE_FORMAT_ESST_AC3,GUID_NULL                       , 0        ,  0            ,     0        , 0, false,
   0
 };
  /*KSDATAFORMAT_SUBTYPE_IEC61937_DOLBY_MLP, KSDATAFORMAT_SUBTYPE_WAVEFORMATEX       , WAVE_FORMAT_RAW_SPORT  ,MEDIASUBTYPE_DOLBY_TRUEHD, 2, 16, 48000, 0,  false, // WinDVD

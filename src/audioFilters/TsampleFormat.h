@@ -74,6 +74,14 @@ public:
  static const char_t *getGuidName(GUID guid);
  static const TalternateSampleFormat alternateSampleFormats[];
 
+ enum deviceIds
+ {
+  ALL = 0,
+  STANDARD_ONLY = 1,
+  XONAR = 2,
+  AUZENTECH = 3
+ };
+
  enum
   {
    SF_NULL   =0,
