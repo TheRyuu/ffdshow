@@ -404,7 +404,7 @@ STDMETHODIMP TffdshowDecVideoOutputPin::GetCreateVideoAcceleratorData(const GUID
 {
     HRESULT                        hr                    = E_UNEXPECTED;
     AMVAUncompDataInfo             UncompInfo;
-    AMVACompBufferInfo             CompInfo[30];
+    AMVACompBufferInfo             CompInfo[COMP_BUFFER_COUNT];
     DWORD                          dwNumTypesCompBuffers = countof(CompInfo);
     CComQIPtr<IAMVideoAccelerator> pAMVideoAccelerator   = GetConnected();
     DXVA_ConnectMode*              pConnectMode;
