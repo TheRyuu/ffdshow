@@ -658,8 +658,9 @@ WORD TvideoCodecLibavcodecDxva::getDXVA1RestrictedMode()
 
 HRESULT TvideoCodecLibavcodecDxva::createDXVA1Decoder(IAMVideoAccelerator*  pAMVideoAccelerator, const GUID* pDecoderGuid, DWORD dwSurfaceCount)
 {
-    if (pDXVADecoder && dxvaDecoderGUID == *pDecoderGuid) 
-        return S_OK;
+    // commented because we may want to connect VMR9 after disconnecting overlay mixer (for example), and we have to make sure m_pAMVideoAccelerator is being updated.
+    /*if (pDXVADecoder && dxvaDecoderGUID == *pDecoderGuid) 
+        return S_OK;*/
     SAFE_DELETE (pDXVADecoder);
 
     nDXVAMode       = MODE_DXVA1;
