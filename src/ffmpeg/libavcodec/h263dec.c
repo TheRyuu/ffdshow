@@ -642,6 +642,7 @@ retry:
         }
 
     assert(s->bitstream_buffer_size==0);
+frame_end:
     /* divx 5.01+ bistream reorder stuff */
     if(s->codec_id==CODEC_ID_MPEG4 && s->divx_packed){
         int current_pos= get_bits_count(&s->gb)>>3;
@@ -676,7 +677,6 @@ retry:
 intrax8_decoded:
     ff_er_frame_end(s);
 
-frame_end:
     MPV_frame_end(s);
 
 assert(s->current_picture.pict_type == s->current_picture_ptr->pict_type);

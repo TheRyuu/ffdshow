@@ -912,7 +912,8 @@ static int decode_cabac_mb_ref( H264Context *h, int list, int n ) {
 static int decode_cabac_mb_mvd( H264Context *h, int ctxbase, int amvd, int *mvda) {
     int mvd;
 
-    if(!get_cabac(&h->cabac, &h->cabac_state[ctxbase+(amvd>2)+(amvd>32)])){
+    if(!get_cabac(&h->cabac, &h->cabac_state[ctxbase+((amvd-3)>>(INT_BIT-1))+((amvd-33)>>(INT_BIT-1))+2])){
+//    if(!get_cabac(&h->cabac, &h->cabac_state[ctxbase+(amvd>2)+(amvd>32)])){
         *mvda= 0;
         return 0;
     }
@@ -1502,8 +1503,7 @@ decode_intra_mb:
                     }else
                         ref=0;
                         fill_rectangle(&h->ref_cache[list][ scan8[0] ], 4, 4, 8, ref, 1);
-                }else
-                    fill_rectangle(&h->ref_cache[list][ scan8[0] ], 4, 4, 8, (uint8_t)LIST_NOT_USED, 1); //FIXME factorize and the other fill_rect below too
+                }
             }
             for(list=0; list<h->list_count; list++){
                 if(IS_DIR(mb_type, 0, list)){
@@ -1514,8 +1514,7 @@ decode_intra_mb:
 
                     fill_rectangle(h->mvd_cache[list][ scan8[0] ], 4, 4, 8, pack8to16(mpx,mpy), 2);
                     fill_rectangle(h->mv_cache[list][ scan8[0] ], 4, 4, 8, pack16to32(mx,my), 4);
-                }else
-                    fill_rectangle(h->mv_cache[list][ scan8[0] ], 4, 4, 8, 0, 4);
+                }
             }
         }
         else if(IS_16X8(mb_type)){

@@ -32,6 +32,8 @@
 
 #include "avcodec.h"
 #include "dsputil.h"
+#include "internal.h"
+#include "imgconvert.h"
 
 #if HAVE_MMX
 #include "x86/mmx.h"

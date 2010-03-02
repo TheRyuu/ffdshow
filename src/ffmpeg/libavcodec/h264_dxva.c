@@ -295,7 +295,7 @@ int decode_slice_header_noexecute (H264Context *h){
             c->sps = h->sps;
             c->pps = h->pps;
             init_scan_tables(c);
-            clone_tables(c, h);
+            clone_tables(c, h, i);
         }
 
         for(i = 0; i < s->avctx->thread_count; i++)
