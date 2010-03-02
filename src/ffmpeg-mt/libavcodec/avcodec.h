@@ -40,7 +40,7 @@
 #include "libavutil/avutil.h"
 
 #define LIBAVCODEC_VERSION_MAJOR 52
-#define LIBAVCODEC_VERSION_MINOR 54
+#define LIBAVCODEC_VERSION_MINOR 55
 #define LIBAVCODEC_VERSION_MICRO  0
 
 #define LIBAVCODEC_VERSION_INT  AV_VERSION_INT(LIBAVCODEC_VERSION_MAJOR, \
@@ -323,6 +323,7 @@ typedef struct RcOverride{
 #define CODEC_FLAG2_CHUNKS        0x00008000 ///< Input bitstream might be truncated at a packet boundaries instead of only at frame boundaries.
 #define CODEC_FLAG2_NON_LINEAR_QUANT 0x00010000 ///< Use MPEG-2 nonlinear quantizer.
 #define CODEC_FLAG2_BIT_RESERVOIR 0x00020000 ///< Use a bit reservoir when encoding if possible
+#define CODEC_FLAG2_MBTREE        0x00040000 ///< Use macroblock tree ratecontrol (x264 only)
 
 /* Unsupported options :
  *              Syntax Arithmetic coding (SAC)
@@ -369,7 +370,7 @@ typedef struct RcOverride{
  */
 #define CODEC_CAP_SUBFRAMES        0x0100
 /**
- * Codec supports frame-based multithreading.
+ * Codec supports frame-level multithreading.
  */
 #define CODEC_CAP_FRAME_THREADS    0x0200
 
@@ -631,7 +632,8 @@ typedef struct AVPanScan{
     short *dct_coeff;\
 \
     /**\
-     * motion referece frame index\
+     * motion reference frame index\
+     * the order in which these are stored can depend on the codec.\
      * - encoding: Set by user.\
      * - decoding: Set by libavcodec.\
      */\
@@ -653,7 +655,7 @@ typedef struct AVPanScan{
     int play_flags;\
 \
     /**\
-     * the AVCodecContext which ff_get_buffer was last called on\
+     * the AVCodecContext which ff_thread_get_buffer() was last called on\
      * - encoding: Set by libavcodec.\
      * - decoding: Set by libavcodec.\
      */\
@@ -843,7 +845,7 @@ typedef struct AVCodecContext {
      * If non NULL, 'draw_horiz_band' is called by the libavcodec
      * decoder to draw a horizontal band. It improves cache usage. Not
      * all codecs can do that. You must check the codec capabilities
-     * beforehand.
+     * beforehand. May be called by different threads at the same time.
      * The function is also used by hardware acceleration APIs.
      * It is called at least once during frame decoding to pass
      * the data needed for hardware render.
@@ -878,7 +880,7 @@ typedef struct AVCodecContext {
      * Samples per packet, initialized when calling 'init'.
      */
     int frame_size;
-    int frame_number;   ///< Number of audio or video frames returned so far
+    int frame_number;   ///< audio or video frame number
 #if LIBAVCODEC_VERSION_MAJOR < 53
     int real_pict_num;  ///< Returns the real picture number of previous encoded frame.
 #endif
@@ -1093,9 +1095,8 @@ typedef struct AVCodecContext {
      * height, as they normally need to be rounded up to the next multiple of 16.
      * if CODEC_CAP_DR1 is not set then get_buffer() must call
      * avcodec_default_get_buffer() instead of providing buffers allocated by
-     * some other means.
-     * May be called by different threads if frame threading is enabled, but not
-     * by more than one at the same time.
+     * some other means. May be called from a different thread if FF_THREAD_FRAME
+     * is set, but does not need to be reentrant.
      * - encoding: unused
      * - decoding: Set by libavcodec., user can override.
      */
@@ -1104,9 +1105,8 @@ typedef struct AVCodecContext {
     /**
      * Called to release buffers which were allocated with get_buffer.
      * A released buffer can be reused in get_buffer().
-     * pic.data[*] must be set to NULL.
-     * May be called by different threads if frame threading is enabled, but 
-     * not more than one at the same time.
+     * pic.data[*] must be set to NULL. May be called by different threads
+     * if frame threading is enabled, but not more than one at the same time.
      *
      * - encoding: unused
      * - decoding: Set by libavcodec., user can override.
@@ -2186,31 +2186,6 @@ typedef struct AVCodecContext {
     int64_t reordered_opaque3; /* ffdshow custom code */
 
     /**
-     * Whether this is a copy of the context which had init() called on it.
-     * This is used by multithreading - shared tables and picture pointers
-     * should be freed from the original context only.
-     * - encoding: Set by libavcodec.
-     * - decoding: Set by libavcodec.
-     */
-    int is_copy;
-
-    /**
-     * Which multithreading methods to use, for codecs that support more than one.
-     * - encoding: Set by user, otherwise the default is used.
-     * - decoding: Set by user, otherwise the default is used.
-     */
-    int thread_type;
-#define FF_THREAD_FRAME   1 //< Decode more than one frame at once
-#define FF_THREAD_SLICE   2 //< Decode more than one part of a single frame at once
-#define FF_THREAD_DEFAULT 3 //< Use both if possible.
-
-    /**
-     * Which multithreading methods are actually active at the moment.
-     * - encoding: Set by libavcodec.
-     * - decoding: Set by libavcodec.
-     */
-    int active_thread_type;
-    /**
      * Bits per sample/pixel of internal libavcodec pixel/sample format.
      * This field is applicable only when sample_fmt is SAMPLE_FMT_S32.
      * - encoding: set by user.
@@ -2310,6 +2285,44 @@ typedef struct AVCodecContext {
      */
     int (*execute2)(struct AVCodecContext *c, int (*func)(struct AVCodecContext *c2, void *arg, int jobnr, int threadnr), void *arg2, int *ret, int count);
 
+    /**
+     * explicit P-frame weighted prediction analysis method
+     * 0: off
+     * 1: fast blind weighting (one reference duplicate with -1 offset)
+     * 2: smart weighting (full fade detection analysis)
+     * - encoding: Set by user.
+     * - decoding: unused
+     */
+    int weighted_p_pred;
+
+    /**
+     * Whether this is a copy of the context which had init() called on it.
+     * This is used by multithreading - shared tables and picture pointers
+     * should be freed from the original context only.
+     * - encoding: Set by libavcodec.
+     * - decoding: Set by libavcodec.
+     */
+    int is_copy;
+
+    /**
+     * Which multithreading methods to use.
+     * Use of FF_THREAD_FRAME will increase decoding delay by one frame per thread,
+     * so clients which require strictly conforming DTS must not use it.
+     *
+     * - encoding: Set by user, otherwise the default is used.
+     * - decoding: Set by user, otherwise the default is used.
+     */
+    int thread_type;
+#define FF_THREAD_FRAME   1 //< Decode more than one frame at once
+#define FF_THREAD_SLICE   2 //< Decode more than one part of a single frame at once
+
+    /**
+     * Which multithreading methods are actually active at the moment.
+     * - encoding: Set by libavcodec.
+     * - decoding: Set by libavcodec.
+     */
+    int active_thread_type;
+    
     /* ffdshow custom stuff (begin) */
     
     /**
@@ -2398,21 +2411,21 @@ typedef struct AVCodec {
     const int64_t *channel_layouts;         ///< array of support channel layouts, or NULL if unknown. array is terminated by 0
 
     /**
-     * @defgroup framethreading Frame threading support functions.
+     * @defgroup framethreading Frame-level threading support functions.
      * @{
      */
     /**
-     * If the codec allocates writable tables in init(), define init_copy() to re-allocate
-     * them in the copied contexts. Before calling it, priv_data will be set to a copy of
-     * the original.
+     * If defined, called on thread contexts when they are created.
+     * If the codec allocates writable tables in init(), re-allocate them here.
+     * priv_data will be set to a copy of the original.
      */
     int (*init_copy)(AVCodecContext *);
     /**
-     * Copy all necessary context variables from the last thread before starting the next one.
-     * If the codec doesn't define this, the next thread will start automatically; otherwise,
-     * the codec must call ff_report_frame_setup_done(). Do not assume anything about the
-     * contents of priv data except that it has been copied from the original some time after
-     * codec init. Will not be called if frame threading is disabled.
+     * Copy necessary context variables from a previous thread context to the current one.
+     * If not defined, the next thread will start automatically; otherwise, the codec
+     * must call ff_thread_finish_setup().
+     *
+     * dst and src will (rarely) point to the same context, in which case memcpy should be skipped.
      */
     int (*update_context)(AVCodecContext *, AVCodecContext *from);
     /** @} */
