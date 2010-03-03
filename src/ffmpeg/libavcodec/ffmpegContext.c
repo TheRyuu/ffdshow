@@ -38,7 +38,7 @@
 
 #define VFW_E_INVALID_FILE_FORMAT        ((HRESULT)0x8004022FL)
 
-int av_h264_decode_frame(struct AVCodecContext* avctx, uint8_t *buf, int buf_size);
+int av_h264_decode_frame(struct AVCodecContext* avctx, int* nOutPOC, int64_t* rtStartTime, uint8_t *buf, int buf_size);
 int av_vc1_decode_frame(AVCodecContext *avctx, uint8_t *buf, int buf_size);
 
 
@@ -82,12 +82,9 @@ void FFH264DecodeBuffer (struct AVCodecContext* pAVCtx, BYTE* pBuffer, UINT nSiz
 	if (pBuffer != NULL)
 	{
 		H264Context*	h	= (H264Context*) pAVCtx->priv_data;
-		av_h264_decode_frame (pAVCtx, pBuffer, nSize);
+		av_h264_decode_frame (pAVCtx, pOutPOC, pOutrtStart, pBuffer, nSize);
 
 		if (h->s.current_picture_ptr  && pFramePOC) *pFramePOC = h->s.current_picture_ptr->field_poc[0];
-
-		if (pOutPOC)		*pOutPOC		= h->outputed_poc;
-		if (pOutrtStart)	*pOutrtStart	= h->outputed_rtstart;
 	}
 }
 
@@ -101,7 +98,7 @@ int FFH264CheckCompatibility(int nWidth, int nHeight, struct AVCodecContext* pAV
 	int supportLevel51 = 0;
 
 	if (pBuffer != NULL)
-		av_h264_decode_frame (pAVCtx, pBuffer, nSize);
+		av_h264_decode_frame (pAVCtx, NULL, NULL, pBuffer, nSize);
 
 	cur_sps		= pContext->sps_buffers[0];
 	cur_pps		= pContext->pps_buffers[0];

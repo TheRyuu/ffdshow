@@ -886,7 +886,7 @@ static int decode_nal_units_noexecute(H264Context *h, const uint8_t *buf, int bu
 }
 
 
-int av_h264_decode_frame(struct AVCodecContext* avctx, uint8_t *buf, int buf_size)
+int av_h264_decode_frame(struct AVCodecContext* avctx, int* nOutPOC, int64_t* rtStartTime, const uint8_t *buf, int buf_size)
 {
     H264Context *h = avctx->priv_data;
     MpegEncContext *s = &h->s;
@@ -913,12 +913,12 @@ int av_h264_decode_frame(struct AVCodecContext* avctx, uint8_t *buf, int buf_siz
         for(i=out_idx; h->delayed_pic[i]; i++)
             h->delayed_pic[i] = h->delayed_pic[i+1];
 
-        // ==> Start patch MPC DXVA
-        //if(out){
-        //    *data_size = sizeof(AVFrame);
-        //    *pict= *(AVFrame*)out;
-        //}
-        // <== End patch MPC DXVA
+        if(out){
+            // ==> Start patch MPC DXVA
+            if (nOutPOC)	 *nOutPOC		= out->poc;
+            if (rtStartTime) *rtStartTime	= out->reordered_opaque;
+            // <== End patch MPC DXVA
+        }
 
         return 0;
     }
@@ -986,7 +986,6 @@ int av_h264_decode_frame(struct AVCodecContext* avctx, uint8_t *buf, int buf_siz
         if (cur->field_poc[0]==INT_MAX || cur->field_poc[1]==INT_MAX) {
             /* Wait for second field. */
             // ==> Start patch MPC DXVA
-            h->outputed_poc = -1;
             //*data_size = 0;
             // <== End patch MPC DXVA
 
@@ -1112,17 +1111,16 @@ int av_h264_decode_frame(struct AVCodecContext* avctx, uint8_t *buf, int buf_siz
             }
             // ==> Start patch MPC DXVA
             if(!out_of_order && pics > s->avctx->has_b_frames){
-                //*data_size = sizeof(AVFrame);
+
 
                 if(out_idx==0 && h->delayed_pic[0] && (h->delayed_pic[0]->key_frame || h->delayed_pic[0]->mmco_reset)) {
                     h->outputed_poc = INT_MIN;
                 } else
                     h->outputed_poc = out->poc;
-
-                h->outputed_rtstart = out->reordered_opaque;
+                if (nOutPOC)     *nOutPOC		= out->poc;
+                if (rtStartTime) *rtStartTime	= out->reordered_opaque;
                 //*pict= *(AVFrame*)out;
             }else{
-                h->outputed_poc = -1;
                 av_log(avctx, AV_LOG_DEBUG, "no picture\n");
             }
             // <== End patch MPC DXVA
