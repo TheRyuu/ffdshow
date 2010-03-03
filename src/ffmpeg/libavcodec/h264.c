@@ -431,14 +431,14 @@ static inline void mc_part_weighted(H264Context *h, int n, int square, int chrom
             chroma_weight_avg(dest_cr, tmp_cr, h->mb_uvlinesize, 5, weight0, weight1, 0);
         }else{
             luma_weight_avg(dest_y, tmp_y, h->mb_linesize, h->luma_log2_weight_denom,
-                            h->luma_weight[0][refn0], h->luma_weight[1][refn1],
-                            h->luma_offset[0][refn0] + h->luma_offset[1][refn1]);
+                            h->luma_weight[0][refn0][0], h->luma_weight[1][refn1][0],
+                            h->luma_weight[0][refn0][1] + h->luma_weight[1][refn1][1]);
             chroma_weight_avg(dest_cb, tmp_cb, h->mb_uvlinesize, h->chroma_log2_weight_denom,
-                            h->chroma_weight[0][refn0][0], h->chroma_weight[1][refn1][0],
-                            h->chroma_offset[0][refn0][0] + h->chroma_offset[1][refn1][0]);
+                            h->chroma_weight[0][refn0][0][0], h->chroma_weight[1][refn1][0][0],
+                            h->chroma_weight[0][refn0][0][1] + h->chroma_weight[1][refn1][0][1]);
             chroma_weight_avg(dest_cr, tmp_cr, h->mb_uvlinesize, h->chroma_log2_weight_denom,
-                            h->chroma_weight[0][refn0][1], h->chroma_weight[1][refn1][1],
-                            h->chroma_offset[0][refn0][1] + h->chroma_offset[1][refn1][1]);
+                            h->chroma_weight[0][refn0][1][0], h->chroma_weight[1][refn1][1][0],
+                            h->chroma_weight[0][refn0][1][1] + h->chroma_weight[1][refn1][1][1]);
         }
     }else{
         int list = list1 ? 1 : 0;
@@ -449,12 +449,12 @@ static inline void mc_part_weighted(H264Context *h, int n, int square, int chrom
                     qpix_put, chroma_put);
 
         luma_weight_op(dest_y, h->mb_linesize, h->luma_log2_weight_denom,
-                       h->luma_weight[list][refn], h->luma_offset[list][refn]);
+                       h->luma_weight[list][refn][0], h->luma_weight[list][refn][1]);
         if(h->use_weight_chroma){
             chroma_weight_op(dest_cb, h->mb_uvlinesize, h->chroma_log2_weight_denom,
-                             h->chroma_weight[list][refn][0], h->chroma_offset[list][refn][0]);
+                             h->chroma_weight[list][refn][0][0], h->chroma_weight[list][refn][0][1]);
             chroma_weight_op(dest_cr, h->mb_uvlinesize, h->chroma_log2_weight_denom,
-                             h->chroma_weight[list][refn][1], h->chroma_offset[list][refn][1]);
+                             h->chroma_weight[list][refn][1][0], h->chroma_weight[list][refn][1][1]);
         }
     }
 }
@@ -1276,16 +1276,16 @@ static int pred_weight_table(H264Context *h){
 
             luma_weight_flag= get_bits1(&s->gb);
             if(luma_weight_flag){
-                h->luma_weight[list][i]= get_se_golomb(&s->gb);
-                h->luma_offset[list][i]= get_se_golomb(&s->gb);
-                if(   h->luma_weight[list][i] != luma_def
-                   || h->luma_offset[list][i] != 0) {
+                h->luma_weight[list][i][0]= get_se_golomb(&s->gb);
+                h->luma_weight[list][i][1]= get_se_golomb(&s->gb);
+                if(   h->luma_weight[list][i][0] != luma_def
+                   || h->luma_weight[list][i][1] != 0) {
                     h->use_weight= 1;
                     h->luma_weight_flag[list]= 1;
                 }
             }else{
-                h->luma_weight[list][i]= luma_def;
-                h->luma_offset[list][i]= 0;
+                h->luma_weight[list][i][0]= luma_def;
+                h->luma_weight[list][i][1]= 0;
             }
 
             if(CHROMA){
@@ -1293,10 +1293,10 @@ static int pred_weight_table(H264Context *h){
                 if(chroma_weight_flag){
                     int j;
                     for(j=0; j<2; j++){
-                        h->chroma_weight[list][i][j]= get_se_golomb(&s->gb);
-                        h->chroma_offset[list][i][j]= get_se_golomb(&s->gb);
-                        if(   h->chroma_weight[list][i][j] != chroma_def
-                           || h->chroma_offset[list][i][j] != 0) {
+                        h->chroma_weight[list][i][j][0]= get_se_golomb(&s->gb);
+                        h->chroma_weight[list][i][j][1]= get_se_golomb(&s->gb);
+                        if(   h->chroma_weight[list][i][j][0] != chroma_def
+                           || h->chroma_weight[list][i][j][1] != 0) {
                             h->use_weight_chroma= 1;
                             h->chroma_weight_flag[list]= 1;
                         }
@@ -1304,8 +1304,8 @@ static int pred_weight_table(H264Context *h){
                 }else{
                     int j;
                     for(j=0; j<2; j++){
-                        h->chroma_weight[list][i][j]= chroma_def;
-                        h->chroma_offset[list][i][j]= 0;
+                        h->chroma_weight[list][i][j][0]= chroma_def;
+                        h->chroma_weight[list][i][j][1]= 0;
                     }
                 }
             }
@@ -1343,16 +1343,14 @@ static void implicit_weight_table(H264Context *h){
         for(ref1=0; ref1 < h->ref_count[1]; ref1++){
             int poc1 = h->ref_list[1][ref1].poc;
             int td = av_clip(poc1 - poc0, -128, 127);
+            h->implicit_weight[ref0][ref1] = 32;
             if(td){
                 int tb = av_clip(cur_poc - poc0, -128, 127);
                 int tx = (16384 + (FFABS(td) >> 1)) / td;
-                int dist_scale_factor = av_clip((tb*tx + 32) >> 6, -1024, 1023) >> 2;
-                if(dist_scale_factor < -64 || dist_scale_factor > 128)
-                    h->implicit_weight[ref0][ref1] = 32;
-                else
+                int dist_scale_factor = (tb*tx + 32) >> 8;
+                if(dist_scale_factor >= -64 && dist_scale_factor <= 128)
                     h->implicit_weight[ref0][ref1] = 64 - dist_scale_factor;
-            }else
-                h->implicit_weight[ref0][ref1] = 32;
+            }
         }
     }
 }

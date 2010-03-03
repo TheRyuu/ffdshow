@@ -104,12 +104,12 @@ static void fill_dxva_slice_long(H264Context *h){
 		for(i=0; i<h->ref_count[j]; i++){
 			//         L0&L1          Y,Cb,Cr  Weight,Offset
 			// Weights  [2]    [32]     [3]         [2]
-			pSlice->Weights[j][i][0][0] = h->luma_weight[j][i];
-			pSlice->Weights[j][i][0][1] = h->luma_offset[j][i];
+			pSlice->Weights[j][i][0][0] = h->luma_weight[j][i][0];
+			pSlice->Weights[j][i][0][1] = h->luma_weight[j][i][1];
 
 			for(k=0; k<2; k++){
-				pSlice->Weights[j][i][k+1][0] = h->chroma_weight[j][i][k];
-				pSlice->Weights[j][i][k+1][1] = h->chroma_offset[j][i][k];
+				pSlice->Weights[j][i][k+1][0] = h->chroma_weight[j][i][k][0];
+				pSlice->Weights[j][i][k+1][1] = h->chroma_weight[j][i][k][1];
 			}
 		}
 	}
@@ -653,7 +653,7 @@ int decode_slice_header_noexecute (H264Context *h){
 
     s->avctx->refs= h->sps.ref_frame_count;
 
-	fill_dxva_slice_long(h);
+    fill_dxva_slice_long(h);
 
     if(s->avctx->debug&FF_DEBUG_PICT_INFO){
         av_log(h->s.avctx, AV_LOG_DEBUG, "slice:%d %s mb:%d %c%s%s pps:%u frame:%d poc:%d/%d ref:%d/%d qp:%d loop:%d:%d:%d weight:%d%s %s\n",

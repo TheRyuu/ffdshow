@@ -680,13 +680,14 @@ void ff_er_frame_end(MpegEncContext *s){
     Picture *pic= s->current_picture_ptr;
 
     if(!s->error_recognition || s->error_count==0 || s->avctx->lowres ||
+       s->picture_structure != PICT_FRAME || // we dont support ER of field pictures yet, though it should not crash if enabled
        s->error_count==3*s->mb_width*(s->avctx->skip_top + s->avctx->skip_bottom)) return;
 
     if(s->current_picture.motion_val[0] == NULL){
         av_log(s->avctx, AV_LOG_ERROR, "Warning MVs not available\n");
 
         for(i=0; i<2; i++){
-            pic->ref_index[i]= av_mallocz(size * sizeof(uint8_t));
+            pic->ref_index[i]= av_mallocz(s->mb_stride * s->mb_height * 4 * sizeof(uint8_t));
             pic->motion_val_base[i]= av_mallocz((size+4) * 2 * sizeof(uint16_t));
             pic->motion_val[i]= pic->motion_val_base[i]+4;
         }

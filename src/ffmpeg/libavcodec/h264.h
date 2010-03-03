@@ -422,10 +422,8 @@ typedef struct H264Context{
     int use_weight_chroma;
     int luma_log2_weight_denom;
     int chroma_log2_weight_denom;
-    int luma_weight[2][48];
-    int luma_offset[2][48];
-    int chroma_weight[2][48][2];
-    int chroma_offset[2][48][2];
+    int luma_weight[2][48][2];
+    int chroma_weight[2][48][2][2];
     int implicit_weight[48][48];
 
     //deblock
@@ -1015,6 +1013,7 @@ static void fill_decode_caches(H264Context *h, int mb_type){
                 AV_WN32A(&h->ref_cache[list][scan8[0] + 0 - 1*8], ((top_type ? LIST_NOT_USED : PART_NOT_AVAILABLE)&0xFF)*0x01010101);
             }
 
+            if(mb_type & (MB_TYPE_16x8|MB_TYPE_8x8)){
             for(i=0; i<2; i++){
                 int cache_idx = scan8[0] - 1 + i*2*8;
                 if(USES_LIST(left_type[i], list)){
@@ -1029,6 +1028,17 @@ static void fill_decode_caches(H264Context *h, int mb_type){
                     AV_ZERO32(h->mv_cache [list][cache_idx+8]);
                     h->ref_cache[list][cache_idx  ]=
                     h->ref_cache[list][cache_idx+8]= (left_type[i]) ? LIST_NOT_USED : PART_NOT_AVAILABLE;
+                }
+            }
+            }else{
+                if(USES_LIST(left_type[0], list)){
+                    const int b_xy= h->mb2b_xy[left_xy[0]] + 3;
+                    const int b8_xy= 4*left_xy[0] + 1;
+                    AV_COPY32(h->mv_cache[list][scan8[0] - 1], s->current_picture.motion_val[list][b_xy + h->b_stride*left_block[0]]);
+                    h->ref_cache[list][scan8[0] - 1]= s->current_picture.ref_index[list][b8_xy + (left_block[0]&~1)];
+                }else{
+                    AV_ZERO32(h->mv_cache [list][scan8[0] - 1]);
+                    h->ref_cache[list][scan8[0] - 1]= left_type[0] ? LIST_NOT_USED : PART_NOT_AVAILABLE;
                 }
             }
 
@@ -1085,9 +1095,6 @@ static void fill_decode_caches(H264Context *h, int mb_type){
                     AV_ZERO16(h->mvd_cache [list][scan8[0] - 1 + 2*8]);
                     AV_ZERO16(h->mvd_cache [list][scan8[0] - 1 + 3*8]);
                 }
-                AV_ZERO16(h->mvd_cache [list][scan8[5 ]+1]);
-                AV_ZERO16(h->mvd_cache [list][scan8[7 ]+1]);
-                AV_ZERO16(h->mvd_cache [list][scan8[13]+1]); //FIXME remove past 3 (init somewhere else)
                 AV_ZERO16(h->mvd_cache [list][scan8[4 ]]);
                 AV_ZERO16(h->mvd_cache [list][scan8[12]]);
                 if(h->slice_type_nos == FF_B_TYPE){
