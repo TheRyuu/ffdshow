@@ -278,7 +278,7 @@ HRESULT TDXVADecoderH264::DecodeFrame(BYTE* pDataIn, UINT nSize, REFERENCE_TIME 
     {
         hr = DisplayNextFrame();
 
-        if (nOutPOC != -1)
+        if (nOutPOC != INT_MIN)
         {
             m_nOutPOC    = nOutPOC;
             m_rtOutStart = rtOutStart;

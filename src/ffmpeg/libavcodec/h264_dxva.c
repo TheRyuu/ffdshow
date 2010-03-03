@@ -915,6 +915,8 @@ int av_h264_decode_frame(struct AVCodecContext* avctx, int* nOutPOC, int64_t* rt
 
         if(out){
             // ==> Start patch MPC DXVA
+            //*data_size = sizeof(AVFrame);
+            //*pict= *(AVFrame*)out;
             if (nOutPOC)	 *nOutPOC		= out->poc;
             if (rtStartTime) *rtStartTime	= out->reordered_opaque;
             // <== End patch MPC DXVA
@@ -1111,15 +1113,16 @@ int av_h264_decode_frame(struct AVCodecContext* avctx, int* nOutPOC, int64_t* rt
             }
             // ==> Start patch MPC DXVA
             if(!out_of_order && pics > s->avctx->has_b_frames){
-
+                //*data_size = sizeof(AVFrame);
 
                 if(out_idx==0 && h->delayed_pic[0] && (h->delayed_pic[0]->key_frame || h->delayed_pic[0]->mmco_reset)) {
                     h->outputed_poc = INT_MIN;
                 } else
                     h->outputed_poc = out->poc;
+                //*pict= *(AVFrame*)out;
                 if (nOutPOC)     *nOutPOC		= out->poc;
                 if (rtStartTime) *rtStartTime	= out->reordered_opaque;
-                //*pict= *(AVFrame*)out;
+                
             }else{
                 av_log(avctx, AV_LOG_DEBUG, "no picture\n");
             }
