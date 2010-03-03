@@ -189,7 +189,7 @@ HRESULT TDXVADecoderH264::DecodeFrame(BYTE* pDataIn, UINT nSize, REFERENCE_TIME 
     //IMFFDSDXVA2Sample    *pDXVA2Sample; Not used
     int                            nDXIndex = 0;
     UINT                           nNalOffset = 0;
-    int                            nOutPOC;
+    int                            nOutPOC = INT_MIN;
     REFERENCE_TIME                 rtOutStart;
 
     Nalu.SetBuffer (pDataIn, nSize, m_nNALLength); 
