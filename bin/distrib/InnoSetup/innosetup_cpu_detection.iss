@@ -68,7 +68,6 @@ Type
 	end;
 
 var
-  cpu_checked: Boolean;
   cpu_sse: Boolean;
   cpu_sse2: Boolean;
   cpu_cores: Integer;
@@ -111,38 +110,30 @@ begin
 
     cpu_family := CPUInfo.coreInfo.dwCPUFamily;
   end;
-
-  cpu_checked := true;
 end;
 
 function Is_SSE_Supported(): Boolean;
 begin
-	if NOT cpu_checked then begin
-		CPUCheck();
-	end;
   Result := cpu_sse;
 end;
 
 function Is_SSE2_Supported(): Boolean;
 begin
-	if NOT cpu_checked then begin
-		CPUCheck();
-	end;
   Result := cpu_sse2;
 end;
 
 function GetNumberOfCores(): Integer;
 begin
-	if NOT cpu_checked then begin
-		CPUCheck();
-	end;
   Result := cpu_cores;
+end;
+
+function HasMultipleCores(): Boolean;
+begin
+  Result := (cpu_cores > 1);
 end;
 
 function HasSupportedCPU(): Boolean;
 begin
-	if NOT cpu_checked then begin
-		CPUCheck();
-	end;
   Result := (cpu_family >= 6);
 end;
+

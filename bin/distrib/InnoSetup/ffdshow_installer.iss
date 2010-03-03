@@ -1,10 +1,10 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision           = '3286'
+#define tryout_revision           = '3301'
 
 #define buildyear                 = '2010'
-#define buildmonth                =   '02'
-#define buildday                  =   '25'
+#define buildmonth                =   '03'
+#define buildday                  =   '03'
 
 ; Build specific options
 #define localize                  = True
@@ -33,9 +33,6 @@
 
 ; Location of binaries
 #define bindir                    = '..\..'
-
-; Other
-#define cpu_detection             = True
 
 ; Custom builder preferences (uncomment one to enable, or define it through a command line parameter)
 ;#define PREF_CLSID
@@ -272,17 +269,12 @@ Name: "ffdshow\plugins\dscaler";    Description: "DScaler"
   #endif
 #endif
 
-; CPU detection code
-#if cpu_detection
-  #include "innosetup_cpu_detection.iss"
-#endif
-
 [Tasks]
 Name: "resetsettings";           Description: "{cm:tsk_resetSettings}";           Components: ffdshow;                                    Check: NOT IsUpdate; GroupDescription: "{cm:tsk_settings}"
 Name: "video";                   Description: "{cm:tsk_videoFormatsSelect}";      Components: ffdshow; Flags: unchecked;                  Check: NOT IsUpdate; GroupDescription: "{cm:tsk_videoFormats}"
 Name: "video\h264";              Description: "H.264 / AVC";                      Components: ffdshow
 Name: "video\h264\libavcodec";   Description: "libavcodec";                       Components: ffdshow; Flags:           exclusive
-Name: "video\h264\ffmpegmt";     Description: "ffmpeg-mt";                        Components: ffdshow; Flags: unchecked exclusive
+Name: "video\h264\ffmpegmt";     Description: "ffmpeg-mt";                        Components: ffdshow; Flags: unchecked exclusive;        Check: HasMultipleCores;
 Name: "video\divx";              Description: "DivX";                             Components: ffdshow
 Name: "video\xvid";              Description: "Xvid";                             Components: ffdshow
 Name: "video\mpeg4";             Description: "{cm:tsk_genericMpeg4}";            Components: ffdshow
@@ -957,26 +949,32 @@ begin
 end;
 #endif
 
+
+// CPU detection functions
+#include "innosetup_cpu_detection.iss"
+
+
 function InitializeSetup(): Boolean;
 begin
   Result := True;
 
-  #if cpu_detection
-  if Result AND NOT HasSupportedCPU() then begin
+  // Acquire CPU information
+  CPUCheck;
+
+  if NOT HasSupportedCPU() then begin
     Result := False;
     MsgBox(CustomMessage('unsupported_cpu'), mbError, MB_OK);
   end;
-    #if sse2_required
+  #if sse2_required
   if Result AND NOT Is_SSE2_Supported() then begin
     Result := False;
     MsgBox(CustomMessage('simd_msg_sse2'), mbError, MB_OK);
   end;
-    #elif sse_required
+  #elif sse_required
   if Result AND NOT Is_SSE_Supported() then begin
     Result := False;
     MsgBox(CustomMessage('simd_msg_sse'), mbError, MB_OK);
   end;
-    #endif
   #endif
 
   #if !is64bit
@@ -994,7 +992,6 @@ begin
   end
 end;
 
-#if cpu_detection
 procedure CurStepChanged(CurStep: TSetupStep);
 begin
   if CurStep = ssPostInstall then begin
@@ -1003,7 +1000,6 @@ begin
     end
   end
 end;
-#endif
 
 function InitializeUninstall(): Boolean;
 begin
@@ -1235,9 +1231,4 @@ begin
   end
 end;
 #endif
-
-
-
-
-
 
