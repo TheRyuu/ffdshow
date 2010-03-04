@@ -100,16 +100,16 @@ static void fill_dxva_slice_long(H264Context *h){
 	
 	// Fill prediction weights
 	memset (pSlice->Weights, 0, sizeof(pSlice->Weights));
-	for(j=0; j<2; j++){
-		for(i=0; i<h->ref_count[j]; i++){
+	for(i=0; i<2; i++){
+		for(j=0; j<h->ref_count[i]; j++){
 			//         L0&L1          Y,Cb,Cr  Weight,Offset
 			// Weights  [2]    [32]     [3]         [2]
-			pSlice->Weights[j][i][0][0] = h->luma_weight[j][i][0];
-			pSlice->Weights[j][i][0][1] = h->luma_weight[j][i][1];
+			pSlice->Weights[i][j][0][0] = h->luma_weight[j][i][0];
+			pSlice->Weights[i][j][0][1] = h->luma_weight[j][i][1];
 
 			for(k=0; k<2; k++){
-				pSlice->Weights[j][i][k+1][0] = h->chroma_weight[j][i][k][0];
-				pSlice->Weights[j][i][k+1][1] = h->chroma_weight[j][i][k][1];
+				pSlice->Weights[i][j][k+1][0] = h->chroma_weight[j][i][k][0];
+				pSlice->Weights[i][j][k+1][1] = h->chroma_weight[j][i][k][1];
 			}
 		}
 	}
@@ -499,9 +499,9 @@ int decode_slice_header_noexecute (H264Context *h){
     if(   (h->pps.weighted_pred          && h->slice_type_nos == FF_P_TYPE )
        ||  (h->pps.weighted_bipred_idc==1 && h->slice_type_nos== FF_B_TYPE ) )
         pred_weight_table(h);
-    else if(h->pps.weighted_bipred_idc==2 && h->slice_type_nos== FF_B_TYPE)
+    else if(h->pps.weighted_bipred_idc==2 && h->slice_type_nos== FF_B_TYPE){
         implicit_weight_table(h);
-    else {
+    }else {
         h->use_weight = 0;
         for (i = 0; i < 2; i++) {
             h->luma_weight_flag[i]   = 0;

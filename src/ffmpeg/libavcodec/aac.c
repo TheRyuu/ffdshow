@@ -474,7 +474,7 @@ static av_always_inline int lcg_random(int previous_val)
     return previous_val * 1664525 + 1013904223;
 }
 
-static void reset_predict_state(PredictorState *ps)
+static av_always_inline void reset_predict_state(PredictorState *ps)
 {
     ps->r0   = 0.0f;
     ps->r1   = 0.0f;
@@ -1243,7 +1243,7 @@ static av_always_inline float flt16_trunc(float pf)
     return pun.f;
 }
 
-static void predict(AACContext *ac, PredictorState *ps, float *coef,
+static av_always_inline void predict(AACContext *ac, PredictorState *ps, float *coef,
                     int output_enable)
 {
     const float a     = 0.953125; // 61.0 / 64
@@ -1943,6 +1943,7 @@ static int aac_decode_frame(AVCodecContext *avccontext, void *data,
     GetBitContext gb;
     enum RawDataBlockType elem_type;
     int err, elem_id, data_size_tmp;
+    int buf_consumed;
 
     init_get_bits(&gb, buf, buf_size * 8);
 
@@ -2043,7 +2044,8 @@ static int aac_decode_frame(AVCodecContext *avccontext, void *data,
     if (ac->output_configured)
         ac->output_configured = OC_LOCKED;
 
-    return buf_size;
+    buf_consumed = (get_bits_count(&gb) + 7) >> 3;
+    return buf_size > buf_consumed ? buf_consumed : buf_size;
 }
 
 static av_cold int aac_decode_close(AVCodecContext *avccontext)
