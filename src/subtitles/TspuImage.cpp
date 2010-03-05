@@ -673,7 +673,7 @@ template<class _mm> void TspuImageSimd<_mm>::print(int startx, int starty, unsig
   {
    unsigned char *dst=dstLn[i];
    const unsigned char *c=bmp[i],*r=msk[i];
-   for (int y=rect[i].top;y<rect[i].bottom;y++,dst+=stride[i],c+=plane[i].stride,r+=plane[i].stride)
+   for (int y=rect[i].top;y<=rect[i].bottom;y++,dst+=stride[i],c+=plane[i].stride,r+=plane[i].stride)
     {
      int x=0;
      for (;x<int(dx[i]-_mm::size/2+1);x+=_mm::size/2)
@@ -694,7 +694,6 @@ template<class _mm> void TspuImageSimd<_mm>::ownprint(
     unsigned char **Idst,
     const stride_t *Istride)
 {
- DPRINTF(_l("TspuImageSimd<_mm>::ownprint"));
     const TcspInfo *cspInfo = csp_getInfo(prefs.csp);
     if (!plane[0].stride || !plane[0].c || !plane[0].r) return;
     typename _mm::__m m0=_mm::setzero_si64();
@@ -711,7 +710,7 @@ template<class _mm> void TspuImageSimd<_mm>::ownprint(
       unsigned char *dst=Idst[i]+rect[i].top*Istride[i]+rect[i].left;
       const unsigned char *c=plane[i].c,*r=plane[i].r;
       
-      for (int y=rect[i].top;y<rect[i].bottom;y++,dst+=Istride[i],c+=plane[i].stride,r+=plane[i].stride) 
+      for (int y=rect[i].top;y<=rect[i].bottom;y++,dst+=Istride[i],c+=plane[i].stride,r+=plane[i].stride) 
       {
         int x=0,dx=rect[i].Width();
         if (rect[i].left+dx>(int)sizeDx) dx=sizeDx-rect[i].left;
@@ -745,7 +744,7 @@ template<class _mm> void TspuImageSimd<_mm>::ownprint(
          uint8_t *dst = Idst[i] + rect[i].top * Istride[i] + rect[i].left * cspInfo->Bpp;
          const uint8_t *c = plane[i].c;
          const uint8_t *r = plane[i].r;
-         for (int y = rect[i].top ; y < rect[i].bottom ; y++, dst += Istride[i], c+=plane[i].stride, r+=plane[i].stride) {
+         for (int y = rect[i].top ; y <= rect[i].bottom ; y++, dst += Istride[i], c+=plane[i].stride, r+=plane[i].stride) {
              uint32_t *dstLn = (uint32_t *)dst;
              const uint32_t *cLn = (const uint32_t *)c;
              const uint32_t *rLn = (const uint32_t *)r;
@@ -780,7 +779,6 @@ template<class _mm> void TspuImageSimd<_mm>::ownprint(
         }
     }
     _mm::empty();
-    DPRINTF(_l("TspuImageSimd<_mm>::ownprint end"));
 }
 
 template struct TspuImageSimd<Tmmx>;

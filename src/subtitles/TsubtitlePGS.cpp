@@ -170,10 +170,11 @@ void TsubtitlePGS::print(
 			 if (nPaletteIndex != 0xFF)		// 255 = Fully transparent
     {
      uint32_t color = m_pCompositionObject->m_Colors[nPaletteIndex];
+     // There is bug somewhere (in the PGS parsing) : R and B are inversed. Probably due to memory read/write order
      unsigned char alpha = (color>>24)&0xFF;
-      YUVcolorA c(RGB((color>>16)&0xFF,
+      YUVcolorA c(RGB((color)&0xFF,
        (color>>8)&0xFF,
-       (color)&0xFF), alpha);
+       (color>>16)&0xFF), alpha);
       drawPixels(pt,nCount,c,rcclip,rectReal,planes);
     }
 			 pt.x += nCount;
@@ -188,9 +189,8 @@ void TsubtitlePGS::print(
   /* // Free the composition object, not used anymore
   delete m_pCompositionObject;
   m_pCompositionObject = NULL;*/
-  rectReal.top++;
 
-  DPRINTF(_l("TsubtitlePGS::print Build image (left,right,top,bottom)=(%ld,%ld,%ld,%ld)\nParent rect (%ld,%ld,%ld,%ld)"),rectReal.left, rectReal.right, rectReal.top, rectReal.bottom, rcclip.left, rcclip.right, rcclip.top, rcclip.bottom);
+  //DPRINTF(_l("TsubtitlePGS::print Build image (left,right,top,bottom)=(%ld,%ld,%ld,%ld)\nParent rect (%ld,%ld,%ld,%ld)"),rectReal.left, rectReal.right, rectReal.top, rectReal.bottom, rcclip.left, rcclip.right, rcclip.top, rcclip.bottom);
   ownimage=createNewImage(planes, rcclip, rectReal, prefs);
  }
  ownimage->ownprint(prefs, dst, stride);

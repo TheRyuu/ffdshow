@@ -501,8 +501,8 @@ TspuImage* TsubtitleDVD::createNewImage(const TspuPlane src[3],const CRect &rccl
 {
  TspuImage *image = NULL;
  lines.clear();
- rectReal.bottom++;
- rectReal.right++;
+ //rectReal.bottom++;
+ //rectReal.right++;
  if (Tconfig::cpu_flags&FF_CPU_SSE2)
   image=new TspuImageSimd<Tsse2>(src,rcclip,rectReal,parent->rectOrig,prefs, prefs.csp);
  else
