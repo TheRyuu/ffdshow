@@ -37,14 +37,11 @@ void TsubtitlesTextpin::resetSubtitles(void)
 
 TsubtitlesTextpin* TsubtitlesTextpin::create(int type,const unsigned char *extradata,unsigned int extradatalen,IffdshowBase *Ideci)
 {
- TsubtitlesTextpin *subs = NULL;
+ DPRINTF(_l("TsubtitlesTextpin::create"));
  switch (type)
   {
    case Tsubreader::SUB_PGS:
-    subs = new TsubtitlesTextpinPGS(type,Ideci);
-    if (subs != NULL && ((TsubtitlesTextpinPGS*)subs)->ok) return subs;
-    delete(subs);
-    return NULL;
+    return new TsubtitlesTextpinPGS(type,Ideci);
    case Tsubreader::SUB_VOBSUB:
     return new TsubtitlesTextpinVobsub(type,Ideci,extradata,extradatalen);
    case Tsubreader::SUB_DVD:
