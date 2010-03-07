@@ -84,7 +84,7 @@ void FFH264DecodeBuffer (struct AVCodecContext* pAVCtx, BYTE* pBuffer, UINT nSiz
 		H264Context*	h	= (H264Context*) pAVCtx->priv_data;
 		av_h264_decode_frame (pAVCtx, pOutPOC, pOutrtStart, pBuffer, nSize);
 
-		if (h->s.current_picture_ptr  && pFramePOC) *pFramePOC = h->s.current_picture_ptr->field_poc[0];
+		if (h->s.current_picture_ptr != NULL  && pFramePOC) *pFramePOC = h->s.current_picture_ptr->field_poc[0];
 	}
 }
 
