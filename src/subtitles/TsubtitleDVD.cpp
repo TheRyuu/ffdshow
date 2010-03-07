@@ -386,7 +386,6 @@ void TsubtitleDVD::drawPixel(const CPoint &pt,const YUVcolorA &color,CRect &rect
 
 template<class _mm> void TsubtitleDVD::drawPixelSimd(const CPoint &pt,const YUVcolorA &color, int length, CRect &rectReal,TspuPlane plane[3]) const
 {
- 
     int ptx=pt.x,pty=pt.y;
     if (color.A != 0) {
         if (ptx<rectReal.left) rectReal.left=ptx;
@@ -398,10 +397,10 @@ template<class _mm> void TsubtitleDVD::drawPixelSimd(const CPoint &pt,const YUVc
     
     if (csp == FF_CSP_420P) 
     {
-     typename _mm::__m colorY=_mm::set1_pi8(char(color.Y));
-     typename _mm::__m colorU=_mm::set1_pi8(char(color.U));
-     typename _mm::__m colorV=_mm::set1_pi8(char(color.V));
-     typename _mm::__m colorA=_mm::set1_pi8(char(color.A));
+     typename _mm::__m colorY=_mm::set1_pi8(uint8_t(color.Y));
+     typename _mm::__m colorU=_mm::set1_pi8(uint8_t(color.U));
+     typename _mm::__m colorV=_mm::set1_pi8(uint8_t(color.V));
+     typename _mm::__m colorA=_mm::set1_pi8(uint8_t(color.A));
      int length0=length;
      int cnt=length-_mm::size/2+1;
 

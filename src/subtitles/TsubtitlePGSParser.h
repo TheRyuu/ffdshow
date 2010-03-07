@@ -36,7 +36,7 @@
     m_object_cropped_flag = false; m_forced_on_flag = false; m_version_number = 0; m_horizontal_position = 0; m_vertical_position = 0;
     m_width = 0; m_height = 0; m_cropping_horizontal_position = 0; m_cropping_vertical_position = 0; m_cropping_width = 0; m_cropping_height= 0;
     m_palette_id_ref = 0; m_bGotPalette = false; memsetd (m_Colors, 0xFF000000, sizeof(DWORD)*256);
-    m_data_length = 0; m_pVideoDescriptor = NULL;
+    m_data_length = 0; m_pVideoDescriptor = NULL; m_bEmptySubtitles = false;
    }
 
 	  SHORT				m_object_id_ref;
@@ -64,10 +64,11 @@
    bool     m_bReady;
    DWORD		m_Colors[256];
    bool     m_bGotPalette;
+   bool     m_bEmptySubtitles;
    VIDEO_DESCRIPTOR *m_pVideoDescriptor;
  };
 
- typedef stdext::hash_map<int,TcompositionObject*> TcompositionObjects;
+ typedef std::vector<TcompositionObject* > TcompositionObjects;
 #pragma endregion
 
 class TsubtitlePGSParser
@@ -117,6 +118,7 @@ private:
  void parsePalette(Tbitdata &bitData, USHORT nSize);
  void parseObject(Tbitdata &bitData, USHORT nSize);
  void parsePresentationSegment(Tbitdata &bitData, REFERENCE_TIME rtStart);
+ void parseWindow(Tbitdata &bitData, USHORT nSize);
  bool getPalette(TcompositionObject *pObject);
  
  IffdshowBase *deci;
@@ -132,6 +134,8 @@ private:
  ThdmvPalettes m_palettes;
  TcompositionObjects  m_compositionObjects;
  TcompositionObject *m_pCurrentObject;
+ TcompositionObject *m_pPreviousObject;
+ bool      m_bDisplayFlag;
 
  ThdmvPalette *m_pDefaultPalette;
 	int								m_nDefaultPaletteNbEntry;

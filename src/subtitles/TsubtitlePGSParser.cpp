@@ -29,6 +29,7 @@
 #include "Tconvert.h"
 
 #define DEBUG_PGS_PARSER 0
+#define DEBUG_PGS_TIMESTAMPS 1
 
 #pragma region Color conversion
 #define RGBA(r,g,b,a) (((a) << 24) | ((r) << 16) | ((g) << 8) | (b))
@@ -69,7 +70,7 @@ TsubtitlePGSParser::TsubtitlePGSParser(IffdshowBase *Ideci):
 TsubtitlePGSParser::~TsubtitlePGSParser()
 {
  for (TcompositionObjects::iterator c=m_compositionObjects.begin();c!=m_compositionObjects.end();c++)
-  delete (*c).second;
+  delete (*c);
  for (ThdmvPalettes::iterator p=m_palettes.begin();p!=m_palettes.end();p++)
   delete (*p).second;
 
@@ -82,7 +83,7 @@ void TsubtitlePGSParser::reset(void)
 #endif
  for (TcompositionObjects::iterator c=m_compositionObjects.begin();c!=m_compositionObjects.end();)
  {
-   delete (*c).second;
+   delete (*c);
    c = m_compositionObjects.erase(c);
  }
  for (ThdmvPalettes::iterator p=m_palettes.begin();p!=m_palettes.end();)
@@ -95,8 +96,10 @@ void TsubtitlePGSParser::reset(void)
 	m_nCurSegment				= NO_SEGMENT;
 	m_nSegSize					= 0;
 	m_pCurrentObject			= NULL;
+ m_pPreviousObject = NULL;
 	m_pDefaultPalette			= NULL;
 	m_nDefaultPaletteNbEntry	= 0;
+ m_bDisplayFlag = false;
 	memset (&m_VideoDescriptor, 0, sizeof(VIDEO_DESCRIPTOR));
 }
 
@@ -117,13 +120,14 @@ HRESULT TsubtitlePGSParser::parse(REFERENCE_TIME Istart, REFERENCE_TIME Istop, c
    // 3 bytes
 		 HDMV_SEGMENT_TYPE	nSegType	= (HDMV_SEGMENT_TYPE)m_bitdata.readByte();
 		 USHORT				nUnitSize	= m_bitdata.readShort();
+   m_bDisplayFlag = false;
 
    // Not enough data for this segment but this is a bug (segments are truncated somewhere or nUnitSize is not reliable)
-  if (m_data.size() < (size_t)nUnitSize+3)
-  {
-   //nUnitSize = m_data.size()-3;
-   return S_OK;
-  }
+   if (m_data.size() < (size_t)nUnitSize+3)
+   {
+    //nUnitSize = m_data.size()-3;
+    return S_OK;
+   }
 
 		 switch (nSegType)
 		 {
@@ -131,23 +135,10 @@ HRESULT TsubtitlePGSParser::parse(REFERENCE_TIME Istart, REFERENCE_TIME Istop, c
 		 case OBJECT :
 		 case PRESENTATION_SEG :
 		 case DISPLAY :
+   case WINDOW_DEF:
 			 m_nCurSegment = nSegType;
     m_nSegSize=nUnitSize;
 			 break;
-   case WINDOW_DEF:
-           /*
-            * Window Segment Structure (No new information provided):
-            *     2 bytes: Unkown,
-            *     2 bytes: X position of subtitle,
-            *     2 bytes: Y position of subtitle,
-            *     2 bytes: Width of subtitle,
-            *     2 bytes: Height of subtitle.
-            */
-    if (nUnitSize+3 <= (USHORT)m_data.size())
-     m_data.erase(m_data.begin(), m_data.begin()+nUnitSize+3);
-    else
-     m_data.clear();
-    continue;
 		 default :
     // Delete unknown segment
     if (nUnitSize+3 <= (USHORT)m_data.size())
@@ -157,6 +148,12 @@ HRESULT TsubtitlePGSParser::parse(REFERENCE_TIME Istart, REFERENCE_TIME Istop, c
 			 continue;
 		 }
 	 }
+
+  if (m_pCurrentObject == NULL)
+  {
+   m_pCurrentObject = new TcompositionObject();
+   m_compositionObjects.push_back(m_pCurrentObject);
+  }
   		
   switch (m_nCurSegment)
 	 {
@@ -164,7 +161,9 @@ HRESULT TsubtitlePGSParser::parse(REFERENCE_TIME Istart, REFERENCE_TIME Istop, c
 #if DEBUG_PGS_PARSER
 		  DPRINTF(_l("TsubtitlePGSParser::parse PALETTE            rtStart=%I64i, rtStop=%I64i"), rtStart, rtStop);
 #endif
-		  parsePalette(m_bitdata, m_nSegSize);
+    if (m_nSegSize !=2)
+		   parsePalette(m_bitdata, m_nSegSize);
+    else m_pCurrentObject->m_bEmptySubtitles = true;
 		  break;
 	  case OBJECT :
 #if DEBUG_PGS_PARSER
@@ -182,8 +181,13 @@ HRESULT TsubtitlePGSParser::parse(REFERENCE_TIME Istart, REFERENCE_TIME Istop, c
 #if DEBUG_PGS_PARSER
 		  DPRINTF(_l("TsubtitlePGSParser::parse WINDOW_DEF         rtStart=%I64i, rtStop=%I64i"), rtStart, rtStop);
 #endif
+    parseWindow(m_bitdata, m_nSegSize);
 		  break;
 	  case DISPLAY :
+    if (m_pCurrentObject->data.size() == 0) {
+     m_pCurrentObject->m_bEmptySubtitles = true;
+    }
+    m_bDisplayFlag = true;
 #if DEBUG_PGS_PARSER
 		  DPRINTF(_l("TsubtitlePGSParser::parse DISPLAY     rtStart=%I64i, rtStop=%I64i (size=%d)"), rtStart, rtStop, m_nSegSize);
 #endif
@@ -200,6 +204,29 @@ HRESULT TsubtitlePGSParser::parse(REFERENCE_TIME Istart, REFERENCE_TIME Istop, c
    m_data.erase(m_data.begin(), m_data.begin()+m_nSegSize+3);
   else
    m_data.clear();
+
+  if (m_bDisplayFlag)
+  {
+   if (m_pCurrentObject->m_bEmptySubtitles)
+   {
+    if (m_pPreviousObject != NULL)
+    {
+     m_pPreviousObject->m_rtStop = m_pCurrentObject->m_rtStart - 1L;
+     m_pPreviousObject->m_bReady = true;
+    }
+   }
+   else
+   {
+    if (m_pPreviousObject != NULL && m_pPreviousObject->m_rtStop == INVALID_TIME)
+    {
+     m_pPreviousObject->m_rtStop = m_pCurrentObject->m_rtStart - 1L;
+     m_pPreviousObject->m_bReady = true;
+    }
+    m_pPreviousObject = m_pCurrentObject;
+   }
+   m_pCurrentObject = new TcompositionObject();
+   m_compositionObjects.push_back(m_pCurrentObject);
+  }   
 	 return hr;
  }
 	return hr;
@@ -212,6 +239,7 @@ void TsubtitlePGSParser::parsePresentationSegment(Tbitdata &bitData, REFERENCE_T
 	BYTE					nObjectNumber;
 	bool					palette_update_flag;
 	BYTE					palette_id_ref;
+ if (m_pCurrentObject == NULL) return;
 
  m_VideoDescriptor.nVideoWidth   = bitData.readShort();
 	m_VideoDescriptor.nVideoHeight  = bitData.readShort();
@@ -222,50 +250,15 @@ void TsubtitlePGSParser::parsePresentationSegment(Tbitdata &bitData, REFERENCE_T
 	palette_update_flag	= !!(bitData.readByte() & 0x80);
 	palette_id_ref		= bitData.readByte();
 	nObjectNumber		= bitData.readByte();
+#if DEBUG_PGS_PARSER
+ DPRINTF(_l("TsubtitlePGSParser::parsePresentationSegment Object n°%d"),compositionDescriptor.nNumber);
+#endif
  
 	BYTE	bTemp;
  SHORT object_id_ref = bitData.readShort();
 
- TcompositionObjects::iterator c = m_compositionObjects.find(object_id_ref);
- if (c!=m_compositionObjects.end()) {
-  
-  // Problem : another object with the same id has to be added but the existing one
-  // is ready and has not been displayed yet (otherwise we wouldln't have it in the store)
-  if (c->second->m_bReady)
-  {
-#if DEBUG_PGS_PARSER
-   DPRINTF(_l("TsubtitlePGSParser::parsePresentationSegment Another object %d exists and should not be erased. Put it with %d id"), object_id_ref, (object_id_ref+1));
-#endif
-   m_pCurrentObject = new TcompositionObject();
-   m_compositionObjects.insert(std::make_pair(object_id_ref+1,m_pCurrentObject));
-  }
-  else
-  {
-#if DEBUG_PGS_PARSER
-   DPRINTF(_l("TsubtitlePGSParser::parsePresentationSegment Object %d exists"), object_id_ref);
-#endif
-   m_pCurrentObject = c->second;
-  }
- }
- else
- {
-  m_pCurrentObject = new TcompositionObject();
-  m_compositionObjects.insert(std::make_pair(object_id_ref,m_pCurrentObject));
- }
+ m_pCurrentObject->m_rtStart = rtStart;
 
- //TODO : Find a better way to detect a presentation(start time) vs presentation(end time) vs presentation(no time)
- if (m_pCurrentObject->m_rtStart==INVALID_TIME && m_nSegSize == 19)
-  m_pCurrentObject->m_rtStart = rtStart;
- else if (m_pCurrentObject->m_rtStart!=INVALID_TIME
-  && m_pCurrentObject->m_rtStop==INVALID_TIME && m_nSegSize == 11)
- {
-  m_pCurrentObject->m_rtStop = rtStart;
-  m_pCurrentObject->m_bReady = true;
-  return;
- }
- else return;
-
- 
  m_pCurrentObject->m_object_id_ref = object_id_ref;
  m_pCurrentObject->m_palette_id_ref = palette_id_ref;
 	m_pCurrentObject->m_window_id_ref	= bitData.readByte();
@@ -274,8 +267,8 @@ void TsubtitlePGSParser::parsePresentationSegment(Tbitdata &bitData, REFERENCE_T
 	bTemp = bitData.readByte();
 	m_pCurrentObject->m_object_cropped_flag	= !!(bTemp & 0x80);
 	m_pCurrentObject->m_forced_on_flag		= !!(bTemp & 0x40);
-	m_pCurrentObject->m_horizontal_position	= bitData.readShort();
-	m_pCurrentObject->m_vertical_position		= bitData.readShort();
+	/*m_pCurrentObject->m_horizontal_position	= */bitData.readShort();
+	/*m_pCurrentObject->m_vertical_position		= */bitData.readShort();
 
 	if (m_pCurrentObject->m_object_cropped_flag)
 	{
@@ -290,7 +283,24 @@ void TsubtitlePGSParser::parsePresentationSegment(Tbitdata &bitData, REFERENCE_T
 #endif
 }
 
-
+void TsubtitlePGSParser::parseWindow(Tbitdata &bitData, USHORT nSize)
+{
+ /*
+  * Window Segment Structure (No new information provided):
+  *     2 bytes: Unkown,
+  *     2 bytes: X position of subtitle,
+  *     2 bytes: Y position of subtitle,
+  *     2 bytes: Width of subtitle,
+  *     2 bytes: Height of subtitle.
+  */
+ if (m_pCurrentObject == NULL) return;
+ int numWindows = bitData.readByte();
+ bitData.readByte();
+ m_pCurrentObject->m_horizontal_position = bitData.readShort();
+ m_pCurrentObject->m_vertical_position = bitData.readShort();
+ m_pCurrentObject->m_width = bitData.readShort();
+ m_pCurrentObject->m_height = bitData.readShort();
+}
 
 void TsubtitlePGSParser::parsePalette(Tbitdata &bitData, USHORT nSize)
 {
@@ -391,6 +401,7 @@ bool TsubtitlePGSParser::getPalette(TcompositionObject *pObject)
  return false;
 }
 
+
 // Objects returned must be freed by the caller
 void TsubtitlePGSParser::getObjects(REFERENCE_TIME rt, TcompositionObjects *pObjects)
 {
@@ -408,18 +419,31 @@ void TsubtitlePGSParser::getObjects(REFERENCE_TIME rt, TcompositionObjects *pObj
  // Build the list of subs ready to be displayed
  for (TcompositionObjects::iterator c=m_compositionObjects.begin();c!=m_compositionObjects.end();)
  {
-  if (/*(*c).second->m_rtStart <= rt && (*c).second->m_rtStop > rt && */(*c).second->m_bReady)
+  if (/*(*c).second->m_rtStart <= rt && (*c).second->m_rtStop > rt && */(*c)->m_bReady)
   {
    // Get the right palette pointer before adding the element
-   if (!getPalette((*c).second))
+   if (!getPalette(*c))
    {
     // Palette not found, use default
-    memcpy(&((*c).second->m_Colors), &(m_pDefaultPalette->m_Colors), 256*sizeof(DWORD));
-    (*c).second->m_bGotPalette = true;
+    memcpy(&((*c)->m_Colors), &(m_pDefaultPalette->m_Colors), 256*sizeof(DWORD));
+    (*c)->m_bGotPalette = true;
    }
    // Pop the object from our store and push it to the returned store
-   pObjects->insert(std::make_pair((*c).first,(*c).second));
-   if (m_pCurrentObject == (*c).second) m_pCurrentObject = NULL;
+#if DEBUG_PGS_TIMESTAMPS
+   float stime=(*c)->m_rtStart/10000/1000;
+   int sh=(int)stime/3600;
+   int sm=(int)(stime-sh*3600)/60;
+   int ss=(int)(stime-sh*3600-sm*60);
+   int sms=(int)((float)1000*(stime-sh*3600-sm*60-ss));
+   float etime=(*c)->m_rtStop/10000/1000;
+   int eh=(int)etime/3600;
+   int em=(int)(etime-eh*3600)/60;
+   int es=(int)(etime-eh*3600-em*60);
+   int ems=(int)((float)1000*(etime-eh*3600-em*60-es));
+   DPRINTF(_l("TsubtitlePGSParser::getObjects %d:%d:%d.%d --> %d:%d:%d.%d"),sh,sm,ss,sms,eh,em,es,ems);
+#endif
+   pObjects->push_back(*c);
+   if (m_pCurrentObject == *c) m_pCurrentObject = NULL;
    c=m_compositionObjects.erase(c); 
   }
   else

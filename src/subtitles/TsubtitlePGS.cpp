@@ -72,7 +72,7 @@ void TsubtitlePGS::print(
     unsigned char **dst,
     const stride_t *stride)
 {
- DPRINTF(_l("TsubtitlePGS::print %I64i"),start);
+ //DPRINTF(_l("TsubtitlePGS::print %I64i"),start);
 
  //TsubPrintPrefs *subPrefs = (TsubPrintPrefs*)&prefs;
 

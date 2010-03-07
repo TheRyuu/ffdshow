@@ -36,7 +36,7 @@ TsubtitlesTextpinPGS::~TsubtitlesTextpinPGS(void)
  if (pSubtitlePGSParser) delete pSubtitlePGSParser;
  for (TcompositionObjects::iterator c=m_compositionObjects.begin();c!=m_compositionObjects.end();)
  {
-  delete (*c).second;
+  delete *c;
   c=m_compositionObjects.erase(c);
  }
 }
@@ -71,7 +71,7 @@ void TsubtitlesTextpinPGS::addSubtitle(REFERENCE_TIME start,REFERENCE_TIME stop,
  for (TcompositionObjects::iterator c=m_compositionObjects.begin();c!=m_compositionObjects.end();)
  {
   DPRINTF(_l("TsubtitlesTextpinPGS::addSubtitle Subtitles added"));
-  TsubtitlePGS *sub=new TsubtitlePGS(deci, start, stop, (*c).second, this);
+  TsubtitlePGS *sub=new TsubtitlePGS(deci, start, stop, *c, this);
   subs->push_back((Tsubtitle*)sub);
   c=m_compositionObjects.erase(c);
  }
