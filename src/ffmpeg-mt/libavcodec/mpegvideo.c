@@ -27,6 +27,7 @@
  * The simplest mpeg encoder (well, it was the simplest!).
  */
 
+#include "libavutil/intmath.h"
 #include "avcodec.h"
 #include "dsputil.h"
 #include "mpegvideo.h"
@@ -496,7 +497,7 @@ av_cold int MPV_common_init(MpegEncContext *s)
         return -1;
     }
 
-    if(USE_AVCODEC_EXECUTE(s->avctx) &&
+    if((HAVE_THREADS && s->avctx->active_thread_type == FF_THREAD_SLICE) &&
        (s->avctx->thread_count > MAX_THREADS || (s->avctx->thread_count > s->mb_height && s->mb_height))){
         av_log(s->avctx, AV_LOG_ERROR, "too many threads\n");
         return -1;
@@ -664,10 +665,9 @@ av_cold int MPV_common_init(MpegEncContext *s)
     }
 
     s->context_initialized = 1;
-
     s->thread_context[0]= s;
 
-    if (USE_AVCODEC_EXECUTE(s->avctx)) {
+    if (HAVE_THREADS && s->avctx->active_thread_type == FF_THREAD_SLICE) {
         threads = s->avctx->thread_count;
 
         for(i=1; i<threads; i++){
@@ -698,7 +698,7 @@ void MPV_common_end(MpegEncContext *s)
 {
     int i, j, k;
 
-    if (USE_AVCODEC_EXECUTE(s->avctx)) {
+    if (HAVE_THREADS && s->avctx->active_thread_type == FF_THREAD_SLICE) {
         for(i=0; i<s->avctx->thread_count; i++){
             free_duplicate_context(s->thread_context[i]);
         }
@@ -776,7 +776,7 @@ void MPV_common_end(MpegEncContext *s)
     for(i=0; i<3; i++)
         av_freep(&s->visualization_buffer[i]);
 
-    if(!USE_FRAME_THREADING(s->avctx))
+    if(!(HAVE_PTHREADS && s->avctx->active_thread_type == FF_THREAD_FRAME))
         avcodec_default_free_buffers(s->avctx);
 }
 
@@ -1113,7 +1113,7 @@ void MPV_frame_end(MpegEncContext *s)
 #endif
     s->avctx->coded_frame= (AVFrame*)s->current_picture_ptr;
 
-    if (USE_FRAME_THREADING(s->avctx) && s->codec_id != CODEC_ID_H264 && s->current_picture.reference)
+    if (HAVE_PTHREADS && s->avctx->active_thread_type == FF_THREAD_FRAME && s->codec_id != CODEC_ID_H264 && s->current_picture.reference)
         ff_report_frame_progress((AVFrame*)s->current_picture_ptr, s->mb_height - 1);
 }
 
@@ -1649,7 +1649,7 @@ void MPV_decode_mb_internal(MpegEncContext *s, DCTELEM block[12][64],
             /* decoding or more than one mb_type (MC was already done otherwise) */
             if(!s->encoding){
 
-                if(USE_FRAME_THREADING(s->avctx)) {
+                if(HAVE_PTHREADS && s->avctx->active_thread_type == FF_THREAD_FRAME) {
                     if (s->mv_dir & MV_DIR_FORWARD) {
                         ff_await_frame_progress((AVFrame*)s->last_picture_ptr, MPV_lowest_referenced_row(s, 0));
                     }

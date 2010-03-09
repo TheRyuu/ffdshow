@@ -638,7 +638,8 @@ static void hl_motion(H264Context *h, uint8_t *dest_y, uint8_t *dest_cb, uint8_t
 
     assert(IS_INTER(mb_type));
 
-    if(USE_FRAME_THREADING(s->avctx)) await_references(h);
+    if(HAVE_PTHREADS && s->avctx->active_thread_type == FF_THREAD_FRAME)
+        await_references(h);
     prefetch_motion(h, 0);
 
     if(IS_16X16(mb_type)){
@@ -947,16 +948,22 @@ av_cold int ff_h264_decode_init(AVCodecContext *avctx){
 
     ff_h264_decode_init_vlc();
 
-    /* ffdshow custom code (begin) */
-    h->is_avc = avcodec_h264_decode_init_is_avc(avctx);
-    h->got_avcC = 0;
-    /* ffdshow custom code (end) */
-
     h->thread_context[0] = h;
     h->outputed_poc = INT_MIN;
     h->prev_poc_msb= 1<<16;
     h->x264_build = -1;
     ff_h264_reset_sei(h);
+
+    /* ffdshow custom code (begin) */
+    h->is_avc = avcodec_h264_decode_init_is_avc(avctx);
+    h->got_avcC = 0;
+    /* ffdshow custom code (end) */
+
+    if(h->sps.bitstream_restriction_flag && s->avctx->has_b_frames < h->sps.num_reorder_frames){
+        s->avctx->has_b_frames = h->sps.num_reorder_frames;
+        s->low_delay = 0;
+    }
+
     return 0;
 }
 
@@ -1103,7 +1110,7 @@ int ff_h264_frame_start(H264Context *h){
             h->thread_context[i]->s.obmc_scratchpad = av_malloc(16*2*s->linesize + 8*2*s->uvlinesize);
 
     /* some macroblocks will be accessed before they're available */
-    if(FRAME_MBAFF || USE_AVCODEC_EXECUTE(s->avctx))
+    if(FRAME_MBAFF || (HAVE_THREADS && s->avctx->active_thread_type == FF_THREAD_SLICE))
         memset(h->slice_table, -1, (s->mb_height*s->mb_stride-1) * sizeof(*h->slice_table));
 
 //    s->decode= (s->flags&CODEC_FLAG_PSNR) || !s->encoding || s->current_picture.reference /*|| h->contains_intra*/ || 1;
@@ -1320,7 +1327,6 @@ static inline void xchg_mb_border(H264Context *h, uint8_t *src_y, uint8_t *src_c
     MpegEncContext * const s = &h->s;
     int deblock_left;
     int deblock_top;
-    int mb_xy;
     int top_idx = 1;
     uint8_t *top_border_m1;
     uint8_t *top_border;
@@ -1914,7 +1920,7 @@ static void field_end(H264Context *h){
         ff_report_field_progress((AVFrame*)s->current_picture_ptr, (16*s->mb_height >> FIELD_PICTURE) - 1,
                                  s->picture_structure==PICT_BOTTOM_FIELD);
 
-    if(!USE_FRAME_THREADING(avctx)){
+    if(!(HAVE_PTHREADS && avctx->active_thread_type == FF_THREAD_FRAME)){
         if(!s->dropable) {
             ff_h264_execute_ref_pic_marking(h, h->mmco, h->mmco_index);
             h->prev_poc_msb= h->poc_msb;
@@ -2070,7 +2076,7 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
 
     if (s->context_initialized
         && (   s->width != s->avctx->width || s->height != s->avctx->height)) {
-        if(h != h0 || USE_FRAME_THREADING(s->avctx)) {
+        if(h != h0 || (HAVE_PTHREADS && s->avctx->active_thread_type == FF_THREAD_FRAME)) {
             av_log_missing_feature(s->avctx, "Width/height changing with threads is", 0);
             return -1;   // width / height changed during parallelized decoding
         }
@@ -2112,7 +2118,7 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
         init_scan_tables(h);
         ff_h264_alloc_tables(h);
 
-        if (!USE_AVCODEC_EXECUTE(s->avctx)) {
+        if (!(HAVE_THREADS && s->avctx->active_thread_type == FF_THREAD_SLICE)) {
             if (context_init(h) < 0)
                 return -1;
         } else {
@@ -2340,9 +2346,9 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
     if(   (h->pps.weighted_pred          && h->slice_type_nos == FF_P_TYPE )
        ||  (h->pps.weighted_bipred_idc==1 && h->slice_type_nos== FF_B_TYPE ) )
         pred_weight_table(h);
-    else if(h->pps.weighted_bipred_idc==2 && h->slice_type_nos== FF_B_TYPE)
+    else if(h->pps.weighted_bipred_idc==2 && h->slice_type_nos== FF_B_TYPE){
         implicit_weight_table(h);
-    else {
+    }else {
         h->use_weight = 0;
         for (i = 0; i < 2; i++) {
             h->luma_weight_flag[i]   = 0;
@@ -2478,7 +2484,7 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
     }
 
     //FIXME: fix draw_edges+PAFF+frame threads
-    h->emu_edge_width= (s->flags&CODEC_FLAG_EMU_EDGE || (!h->sps.frame_mbs_only_flag && USE_FRAME_THREADING(s->avctx))) ? 0 : 16;
+    h->emu_edge_width= (s->flags&CODEC_FLAG_EMU_EDGE || (!h->sps.frame_mbs_only_flag && HAVE_PTHREADS && s->avctx->active_thread_type == FF_THREAD_FRAME)) ? 0 : 16;
     h->emu_edge_height= (FRAME_MBAFF || FIELD_PICTURE) ? 0 : h->emu_edge_width;
 
     s->avctx->refs= h->sps.ref_frame_count;
@@ -2841,7 +2847,7 @@ static int decode_nal_units(H264Context *h, const uint8_t *buf, int buf_size){
     int context_count = 0;
     int next_avc= h->is_avc ? 0 : buf_size;
 
-    h->max_contexts = USE_AVCODEC_EXECUTE(s->avctx) ? avctx->thread_count : 1;
+    h->max_contexts = (HAVE_THREADS && s->avctx->active_thread_type == FF_THREAD_SLICE) ? avctx->thread_count : 1;
 #if 0
     int i;
     for(i=0; i<50; i++){

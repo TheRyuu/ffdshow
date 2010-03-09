@@ -175,7 +175,7 @@ int avcodec_thread_execute(AVCodecContext *avctx, action_func* func, void *arg, 
     ThreadContext *c= avctx->thread_opaque;
     int dummy_ret;
 
-    if (!USE_AVCODEC_EXECUTE(avctx) || avctx->thread_count <= 1)
+    if (!(HAVE_THREADS && avctx->active_thread_type == FF_THREAD_SLICE) || avctx->thread_count <= 1)
         return avcodec_default_execute(avctx, func, arg, ret, job_count, job_size);
 
     if (job_count <= 0)
@@ -553,7 +553,7 @@ void ff_mark_picture_finished(AVFrame *f)
 void ff_report_frame_setup_done(AVCodecContext *avctx) {
     PerThreadContext *p = avctx->thread_opaque;
 
-    if (!USE_FRAME_THREADING(avctx)) return;
+    if (!(HAVE_PTHREADS && avctx->active_thread_type == FF_THREAD_FRAME)) return;
 
     pthread_mutex_lock(&p->progress_mutex);
     p->state = STATE_SETUP_FINISHED;
@@ -729,7 +729,7 @@ int ff_get_buffer(AVCodecContext *avctx, AVFrame *f)
 
     f->owner = avctx;
 
-    if (!USE_FRAME_THREADING(avctx)) {
+    if (!(HAVE_PTHREADS && avctx->active_thread_type == FF_THREAD_FRAME)) {
         f->thread_opaque = NULL;
         return avctx->get_buffer(avctx, f);
     }
@@ -762,7 +762,7 @@ void ff_release_buffer(AVCodecContext *avctx, AVFrame *f)
 {
     PerThreadContext *p = avctx->thread_opaque;
 
-    if (!USE_FRAME_THREADING(avctx)) {
+    if (!(HAVE_PTHREADS && avctx->active_thread_type == FF_THREAD_FRAME)) {
         avctx->release_buffer(avctx, f);
         return;
     }
@@ -807,9 +807,9 @@ int avcodec_thread_init(AVCodecContext *avctx, int thread_count)
     if (avctx->codec) {
         validate_thread_parameters(avctx);
 
-        if (USE_AVCODEC_EXECUTE(avctx))
+        if (HAVE_THREADS && avctx->active_thread_type == FF_THREAD_SLICE)
             return thread_init(avctx);
-        else if (USE_FRAME_THREADING(avctx))
+        else if (HAVE_PTHREADS && avctx->active_thread_type == FF_THREAD_FRAME)
             return frame_thread_init(avctx);
     }
 
@@ -818,7 +818,7 @@ int avcodec_thread_init(AVCodecContext *avctx, int thread_count)
 
 void avcodec_thread_free(AVCodecContext *avctx)
 {
-    if (USE_FRAME_THREADING(avctx))
+    if (HAVE_PTHREADS && avctx->active_thread_type == FF_THREAD_FRAME)
         frame_thread_free(avctx, avctx->thread_count);
     else
         thread_free(avctx);
@@ -830,7 +830,7 @@ AVCodecContext* get_thread0_avctx(AVCodecContext *avctx)
     FrameThreadContext *fctx;
     PerThreadContext *p;
 
-    if (USE_FRAME_THREADING(avctx) && avctx->thread_opaque){
+    if (HAVE_PTHREADS && avctx->active_thread_type == FF_THREAD_FRAME && avctx->thread_opaque){
         fctx = avctx->thread_opaque;
         p = &fctx->threads[0];
         return p->avctx;

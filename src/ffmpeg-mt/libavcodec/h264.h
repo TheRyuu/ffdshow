@@ -310,7 +310,7 @@ typedef struct H264Context{
      * non zero coeff count cache.
      * is 64 if not available.
      */
-    DECLARE_ALIGNED_8(uint8_t, non_zero_count_cache)[6*8];
+    DECLARE_ALIGNED(8, uint8_t, non_zero_count_cache)[6*8];
 
     /*
     .UU.YYYY
@@ -323,8 +323,8 @@ typedef struct H264Context{
     /**
      * Motion vector cache.
      */
-    DECLARE_ALIGNED_16(int16_t, mv_cache)[2][5*8][2];
-    DECLARE_ALIGNED_8(int8_t, ref_cache)[2][5*8];
+    DECLARE_ALIGNED(16, int16_t, mv_cache)[2][5*8][2];
+    DECLARE_ALIGNED(8, int8_t, ref_cache)[2][5*8];
 #define LIST_NOT_USED -1 //FIXME rename?
 #define PART_NOT_AVAILABLE -2
 
@@ -388,7 +388,7 @@ typedef struct H264Context{
     int mb_field_decoding_flag;
     int mb_mbaff;              ///< mb_aff_frame && mb_field_decoding_flag
 
-    DECLARE_ALIGNED_8(uint16_t, sub_mb_type)[4];
+    DECLARE_ALIGNED(8, uint16_t, sub_mb_type)[4];
 
     //POC stuff
     int poc_lsb;
@@ -471,7 +471,7 @@ typedef struct H264Context{
     GetBitContext *intra_gb_ptr;
     GetBitContext *inter_gb_ptr;
 
-    DECLARE_ALIGNED_16(DCTELEM, mb)[16*24];
+    DECLARE_ALIGNED(16, DCTELEM, mb)[16*24];
     DCTELEM mb_padding[256];        ///< as mb is addressed by scantable[i] and scantable is uint8_t we can either check that i is not too large or ensure that there is some unused stuff after mb
 
     /**
@@ -490,7 +490,7 @@ typedef struct H264Context{
     uint8_t     *chroma_pred_mode_table;
     int         last_qscale_diff;
     int16_t     (*mvd_table[2])[2];
-    DECLARE_ALIGNED_16(int16_t, mvd_cache)[2][5*8][2];
+    DECLARE_ALIGNED(16, int16_t, mvd_cache)[2][5*8][2];
     uint8_t     *direct_table;
     uint8_t     direct_cache[5*8];
 
