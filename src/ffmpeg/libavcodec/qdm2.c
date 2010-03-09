@@ -38,6 +38,7 @@
 #include "avcodec.h"
 #include "get_bits.h"
 #include "dsputil.h"
+#include "fft.h"
 #include "mpegaudio.h"
 
 #include "qdm2data.h"
@@ -122,7 +123,7 @@ typedef struct {
 } FFTCoefficient;
 
 typedef struct {
-    DECLARE_ALIGNED_16(QDM2Complex, complex)[MPA_MAX_CHANNELS][256];
+    DECLARE_ALIGNED(16, QDM2Complex, complex)[MPA_MAX_CHANNELS][256];
 } QDM2FFT;
 
 /**
@@ -172,9 +173,9 @@ typedef struct {
     float output_buffer[1024];
 
     /// Synthesis filter
-    DECLARE_ALIGNED_16(MPA_INT, synth_buf)[MPA_MAX_CHANNELS][512*2];
+    DECLARE_ALIGNED(16, MPA_INT, synth_buf)[MPA_MAX_CHANNELS][512*2];
     int synth_buf_offset[MPA_MAX_CHANNELS];
-    DECLARE_ALIGNED_16(int32_t, sb_samples)[MPA_MAX_CHANNELS][128][SBLIMIT];
+    DECLARE_ALIGNED(16, int32_t, sb_samples)[MPA_MAX_CHANNELS][128][SBLIMIT];
 
     /// Mixed temporary data used in decoding
     float tone_level[MPA_MAX_CHANNELS][30][64];
@@ -1927,7 +1928,7 @@ static av_cold int qdm2_decode_init(AVCodecContext *avctx)
         return -1;
     }
 
-    ff_rdft_init(&s->rdft_ctx, s->fft_order, IRDFT);
+    ff_rdft_init(&s->rdft_ctx, s->fft_order, IDFT_C2R);
 
     qdm2_init(s);
 
@@ -2041,7 +2042,7 @@ AVCodec qdm2_decoder =
     /*.id = */CODEC_ID_QDM2,
     /*.priv_data_size = */sizeof(QDM2Context),
     /*.init = */qdm2_decode_init,
-    /* .encode */ NULL,
+    /*.encode */NULL,
     /*.close = */qdm2_decode_close,
     /*.decode = */qdm2_decode_frame,
     /*.capabilities = */0,

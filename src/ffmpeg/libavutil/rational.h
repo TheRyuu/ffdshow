@@ -29,7 +29,7 @@
 #define AVUTIL_RATIONAL_H
 
 #include <stdint.h>
-#include "common.h"
+#include "attributes.h"
 
 /**
  * rational number numerator/denominator
@@ -90,11 +90,40 @@ AVRational av_mul_q(AVRational b, AVRational c) av_const;
 AVRational av_div_q(AVRational b, AVRational c) av_const;
 
 /**
+ * Adds two rationals.
+ * @param b first rational
+ * @param c second rational
+ * @return b+c
+ */
+AVRational av_add_q(AVRational b, AVRational c) av_const;
+
+/**
+ * Subtracts one rational from another.
+ * @param b first rational
+ * @param c second rational
+ * @return b-c
+ */
+AVRational av_sub_q(AVRational b, AVRational c) av_const;
+
+/**
  * Converts a double precision floating point number to a rational.
  * @param d double to convert
  * @param max the maximum allowed numerator and denominator
  * @return (AVRational) d
  */
 AVRational av_d2q(double d, int max) av_const;
+
+/**
+ * @return 1 if q1 is nearer to q than q2, -1 if q2 is nearer
+ * than q1, 0 if they have the same distance.
+ */
+int av_nearer_q(AVRational q, AVRational q1, AVRational q2);
+
+/**
+ * Finds the nearest value in q_list to q.
+ * @param q_list an array of rationals terminated by {0, 0}
+ * @return the index of the nearest value found in the array
+ */
+int av_find_nearest_q_idx(AVRational q, const AVRational* q_list);
 
 #endif /* AVUTIL_RATIONAL_H */

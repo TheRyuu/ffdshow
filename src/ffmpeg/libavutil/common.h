@@ -34,95 +34,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "attributes.h"
 
 #if defined(_MSC_VER) & !defined(__cplusplus)
 #    define inline __inline
-#endif
-
-#ifdef HAVE_AV_CONFIG_H
-#include "config.h"
-#endif
-
-#ifdef __GNUC__
-#    define AV_GCC_VERSION_AT_LEAST(x,y) (__GNUC__ > x || __GNUC__ == x && __GNUC_MINOR__ >= y)
-#else
-#    define AV_GCC_VERSION_AT_LEAST(x,y) 0
-#endif
-
-#ifndef av_always_inline
-#if AV_GCC_VERSION_AT_LEAST(3,1)
-#    define av_always_inline __attribute__((always_inline)) inline
-#else
-#    define av_always_inline inline
-#endif
-#endif
-
-#ifndef av_noinline
-#if AV_GCC_VERSION_AT_LEAST(3,1)
-#    define av_noinline __attribute__((noinline))
-#else
-#    define av_noinline
-#endif
-#endif
-
-#ifndef av_pure
-#if AV_GCC_VERSION_AT_LEAST(3,1)
-#    define av_pure __attribute__((pure))
-#else
-#    define av_pure
-#endif
-#endif
-
-#ifndef av_const
-#if AV_GCC_VERSION_AT_LEAST(2,6)
-#    define av_const __attribute__((const))
-#else
-#    define av_const
-#endif
-#endif
-
-#ifndef av_cold
-#if (!defined(__ICC) || __ICC > 1110) && AV_GCC_VERSION_AT_LEAST(4,3)
-#    define av_cold __attribute__((cold))
-#else
-#    define av_cold
-#endif
-#endif
-
-#ifndef av_flatten
-#if (!defined(__ICC) || __ICC > 1110) && AV_GCC_VERSION_AT_LEAST(4,1)
-#    define av_flatten __attribute__((flatten))
-#else
-#    define av_flatten
-#endif
-#endif
-
-#ifndef attribute_deprecated
-#if AV_GCC_VERSION_AT_LEAST(3,1)
-#    define attribute_deprecated __attribute__((deprecated))
-#else
-#    define attribute_deprecated
-#endif
-#endif
-
-#ifndef av_unused
-#if defined(__GNUC__)
-#    define av_unused __attribute__((unused))
-#else
-#    define av_unused
-#endif
-#endif
-
-#ifndef av_uninit
-#if defined(__GNUC__) && !defined(__ICC)
-#    define av_uninit(x) x=x
-#else
-#    define av_uninit(x) x
-#endif
-#endif
-
-#ifdef HAVE_AV_CONFIG_H
-#   include "intmath.h"
 #endif
 
 #ifdef HAVE_AV_CONFIG_H
@@ -148,8 +63,7 @@ extern const uint8_t ff_log2_tab[256];
 
 extern const uint8_t av_reverse[256];
 
-#ifndef av_log2
-static inline av_const int av_log2(unsigned int v)
+static inline av_const int av_log2_c(unsigned int v)
 {
     int n = 0;
     if (v & 0xffff0000) {
@@ -164,10 +78,8 @@ static inline av_const int av_log2(unsigned int v)
 
     return n;
 }
-#endif
 
-#ifndef av_log2_16bit
-static inline av_const int av_log2_16bit(unsigned int v)
+static inline av_const int av_log2_16bit_c(unsigned int v)
 {
     int n = 0;
     if (v & 0xff00) {
@@ -178,7 +90,22 @@ static inline av_const int av_log2_16bit(unsigned int v)
 
     return n;
 }
+
+#endif /* HAVE_AV_CONFIG_H */
+
+#ifdef HAVE_AV_CONFIG_H
+#   include "config.h"
+#   include "intmath.h"
 #endif
+
+#ifndef av_log2
+#   define av_log2       av_log2_c
+#endif
+#ifndef av_log2_16bit
+#   define av_log2_16bit av_log2_16bit_c
+#endif
+
+#ifdef HAVE_AV_CONFIG_H
 
 /**
  * Clips a signed integer value into the amin-amax range.

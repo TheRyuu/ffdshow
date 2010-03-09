@@ -35,8 +35,7 @@
 #include <stddef.h>
 #include <assert.h>
 #include "config.h"
-#include "common.h"
-#include "mem.h"
+#include "attributes.h"
 #include "timer.h"
 
 #ifndef attribute_align_arg
@@ -143,28 +142,6 @@
 
 /* math */
 
-extern const uint8_t ff_sqrt_tab[256];
-
-static inline av_const unsigned int ff_sqrt(unsigned int a)
-{
-    unsigned int b;
-
-    if (a < 255) return (ff_sqrt_tab[a + 1] - 1) >> 4;
-    else if (a < (1 << 12)) b = ff_sqrt_tab[a >> 4] >> 2;
-#if !CONFIG_SMALL
-    else if (a < (1 << 14)) b = ff_sqrt_tab[a >> 6] >> 1;
-    else if (a < (1 << 16)) b = ff_sqrt_tab[a >> 8]   ;
-#endif
-    else {
-        int s = av_log2_16bit(a >> 16) >> 1;
-        unsigned int c = a >> (s + 2);
-        b = ff_sqrt_tab[c >> (s + 8)];
-        b = FASTDIV(c,b) + (b << s);
-    }
-
-    return b - (a < b * b);
-}
-
 #if ARCH_X86
 #define MASK_ABS(mask, level)\
             __asm__ volatile(\
@@ -227,76 +204,7 @@ static inline av_const unsigned int ff_sqrt(unsigned int a)
     }\
 }
 
-/* ffdshow custom code */
-#ifndef __GNUC__
-
-#ifndef exp2
-#define exp2(x) exp((x) * 0.693147180559945)
-#endif
-
-#ifndef exp2f
-#define exp2f(x) exp2(x)
-#endif
-
-#ifndef rint
-#define rint(x) (int)(x+0.5)
-#endif
-
-#ifndef llrint
-#define llrint(x) rint(x)
-#endif
-
-#ifndef log2
-#define log2(x) (log(x) * 1.44269504088896340736)
-#endif
-
-#ifndef log2f
-#define log2f(x) log2(x)
-#endif
-
-#ifndef lrint
-static av_always_inline av_const long int lrint(double x)
-{
-    return rint(x);
-}
-#endif
-
-#ifndef lrintf
-static av_always_inline av_const long int lrintf(float x)
-{
-    return (int)(rint(x));
-}
-#endif
-
-#ifndef round
-static av_always_inline av_const double round(double x)
-{
-    return (x > 0) ? floor(x + 0.5) : ceil(x - 0.5);
-}
-#endif
-
-#ifndef roundf
-static av_always_inline av_const float roundf(float x)
-{
-    return (x > 0) ? floor(x + 0.5) : ceil(x - 0.5);
-}
-#endif
-
-#ifndef truncf
-static av_always_inline av_const float truncf(float x)
-{
-    return (x > 0) ? floor(x) : ceil(x);
-}
-#endif
-
-#ifndef cbrtf
-static float cbrtf(float x)
-{
- return pow(x, 1.0/3);
-}
-#endif
-
-#endif /* __GNUC__ */
+#include "libm.h"
 
 /**
  * Returns NULL if CONFIG_SMALL is true, otherwise the argument

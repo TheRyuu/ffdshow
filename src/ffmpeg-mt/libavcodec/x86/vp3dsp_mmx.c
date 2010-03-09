@@ -19,13 +19,14 @@
  */
 
 /**
- * @file vp3dsp_mmx.c
+ * @file libavcodec/x86/vp3dsp_mmx.c
  * MMX-optimized functions cribbed from the original VP3 source code.
  */
 
 #include "libavutil/x86_cpu.h"
 #include "libavcodec/dsputil.h"
 #include "dsputil_mmx.h"
+#include "vp3dsp_mmx.h"
 
 extern const uint16_t ff_vp3_idct_data[];
 

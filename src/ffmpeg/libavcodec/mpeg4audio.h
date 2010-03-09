@@ -22,9 +22,7 @@
 #ifndef AVCODEC_MPEG4AUDIO_H
 #define AVCODEC_MPEG4AUDIO_H
 
-#ifdef __GNUC__
 #include <stdint.h>
-#endif
 #include "get_bits.h"
 #include "put_bits.h"
 
@@ -59,7 +57,7 @@ enum AudioObjectType {
     AOT_AAC_LC,                ///< Y                       Low Complexity
     AOT_AAC_SSR,               ///< N (code in SoC repo)    Scalable Sample Rate
     AOT_AAC_LTP,               ///< N (code in SoC repo)    Long Term Prediction
-    AOT_SBR,                   ///< N (in progress)         Spectral Band Replication
+    AOT_SBR,                   ///< Y                       Spectral Band Replication
     AOT_AAC_SCALABLE,          ///< N                       Scalable
     AOT_TWINVQ,                ///< N                       Twin Vector Quantizer
     AOT_CELP,                  ///< N                       Code Excited Linear Prediction

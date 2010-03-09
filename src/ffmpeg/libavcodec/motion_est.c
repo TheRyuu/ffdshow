@@ -23,13 +23,14 @@
  */
 
 /**
- * @file motion_est.c
+ * @file libavcodec/motion_est.c
  * Motion estimation.
  */
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <limits.h>
+#include "libavutil/intmath.h"
 #include "avcodec.h"
 #include "dsputil.h"
 #include "mathops.h"

@@ -156,4 +156,7 @@ void add_pixels_clamped_mmx(const DCTELEM *block, uint8_t *pixels, int line_size
 void put_pixels_clamped_mmx(const DCTELEM *block, uint8_t *pixels, int line_size);
 void put_signed_pixels_clamped_mmx(const DCTELEM *block, uint8_t *pixels, int line_size);
 
+void ff_mmx_idct(DCTELEM *block);
+void ff_mmxext_idct(DCTELEM *block);
+
 #endif /* AVCODEC_X86_DSPUTIL_MMX_H */

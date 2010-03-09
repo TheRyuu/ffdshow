@@ -30,6 +30,7 @@
 #include "avcodec.h"
 #include "get_bits.h"
 #include "dsputil.h"
+#include "fft.h"
 
 #include "vorbis.h"
 
@@ -1795,8 +1796,8 @@ static int vorbis_parse_audio_packet(vorbis_context *vc)
 // Return the decoded audio packet through the standard api
 
 static int vorbis_decode_frame(AVCodecContext *avccontext,
-                        void *data, int *data_size,
-                        const uint8_t *buf, int buf_size)
+                               void *data, int *data_size,
+                               const uint8_t *buf, int buf_size)
 {
     vorbis_context *vc = avccontext->priv_data ;
     GetBitContext *gb = &(vc->gb);

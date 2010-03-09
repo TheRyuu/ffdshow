@@ -26,7 +26,10 @@
  * FFT/IFFT transforms.
  */
 
-#include "dsputil.h"
+#include <stdlib.h>
+#include <string.h>
+#include "libavutil/mathematics.h"
+#include "fft.h"
 
 /* cos(2*pi*x/n) for 0<=x<=n/4, followed by its reverse */
 #if !CONFIG_HARDCODED_TABLES
@@ -107,6 +110,10 @@ av_cold int ff_fft_init(FFTContext *s, int nbits, int inverse)
     s->exptab1     = NULL;
     s->split_radix = 1;
 
+    #if HAVE_MMX
+    ff_fft_init_mmx(s);
+    #endif
+	
     if (s->split_radix) {
         for(j=4; j<=nbits; j++) {
             ff_init_ff_cos_tabs(j);
