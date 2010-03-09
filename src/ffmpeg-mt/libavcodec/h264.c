@@ -52,12 +52,15 @@ static const uint8_t div6[52]={
 };
 
 void ff_h264_write_back_intra_pred_mode(H264Context *h){
-    int8_t *mode= h->intra4x4_pred_mode + h->mb2br_xy[h->mb_xy];
+    const int mb_xy= h->mb_xy;
 
-    AV_COPY32(mode, h->intra4x4_pred_mode_cache + 4 + 8*4);
-    mode[4]= h->intra4x4_pred_mode_cache[7+8*3];
-    mode[5]= h->intra4x4_pred_mode_cache[7+8*2];
-    mode[6]= h->intra4x4_pred_mode_cache[7+8*1];
+    h->intra4x4_pred_mode[mb_xy][0]= h->intra4x4_pred_mode_cache[7+8*1];
+    h->intra4x4_pred_mode[mb_xy][1]= h->intra4x4_pred_mode_cache[7+8*2];
+    h->intra4x4_pred_mode[mb_xy][2]= h->intra4x4_pred_mode_cache[7+8*3];
+    h->intra4x4_pred_mode[mb_xy][3]= h->intra4x4_pred_mode_cache[7+8*4];
+    h->intra4x4_pred_mode[mb_xy][4]= h->intra4x4_pred_mode_cache[4+8*4];
+    h->intra4x4_pred_mode[mb_xy][5]= h->intra4x4_pred_mode_cache[5+8*4];
+    h->intra4x4_pred_mode[mb_xy][6]= h->intra4x4_pred_mode_cache[6+8*4];
 }
 
 /**
@@ -563,14 +566,14 @@ static inline void mc_part_weighted(H264Context *h, int n, int square, int chrom
             chroma_weight_avg(dest_cr, tmp_cr, h->mb_uvlinesize, 5, weight0, weight1, 0);
         }else{
             luma_weight_avg(dest_y, tmp_y, h->mb_linesize, h->luma_log2_weight_denom,
-                            h->luma_weight[refn0][0][0] , h->luma_weight[refn1][1][0],
-                            h->luma_weight[refn0][0][1] + h->luma_weight[refn1][1][1]);
+                            h->luma_weight[0][refn0], h->luma_weight[1][refn1],
+                            h->luma_offset[0][refn0] + h->luma_offset[1][refn1]);
             chroma_weight_avg(dest_cb, tmp_cb, h->mb_uvlinesize, h->chroma_log2_weight_denom,
-                            h->chroma_weight[refn0][0][0][0] , h->chroma_weight[refn1][1][0][0],
-                            h->chroma_weight[refn0][0][0][1] + h->chroma_weight[refn1][1][0][1]);
+                            h->chroma_weight[0][refn0][0], h->chroma_weight[1][refn1][0],
+                            h->chroma_offset[0][refn0][0] + h->chroma_offset[1][refn1][0]);
             chroma_weight_avg(dest_cr, tmp_cr, h->mb_uvlinesize, h->chroma_log2_weight_denom,
-                            h->chroma_weight[refn0][0][1][0] , h->chroma_weight[refn1][1][1][0],
-                            h->chroma_weight[refn0][0][1][1] + h->chroma_weight[refn1][1][1][1]);
+                            h->chroma_weight[0][refn0][1], h->chroma_weight[1][refn1][1],
+                            h->chroma_offset[0][refn0][1] + h->chroma_offset[1][refn1][1]);
         }
     }else{
         int list = list1 ? 1 : 0;
@@ -581,12 +584,12 @@ static inline void mc_part_weighted(H264Context *h, int n, int square, int chrom
                     qpix_put, chroma_put);
 
         luma_weight_op(dest_y, h->mb_linesize, h->luma_log2_weight_denom,
-                       h->luma_weight[refn][list][0], h->luma_weight[refn][list][1]);
+                       h->luma_weight[list][refn], h->luma_offset[list][refn]);
         if(h->use_weight_chroma){
             chroma_weight_op(dest_cb, h->mb_uvlinesize, h->chroma_log2_weight_denom,
-                             h->chroma_weight[refn][list][0][0], h->chroma_weight[refn][list][0][1]);
+                             h->chroma_weight[list][refn][0], h->chroma_offset[list][refn][0]);
             chroma_weight_op(dest_cr, h->mb_uvlinesize, h->chroma_log2_weight_denom,
-                             h->chroma_weight[refn][list][1][0], h->chroma_weight[refn][list][1][1]);
+                             h->chroma_weight[list][refn][1], h->chroma_offset[list][refn][1]);
         }
     }
 }
@@ -730,7 +733,7 @@ static void free_tables(H264Context *h){
     av_freep(&h->list_counts);
 
     av_freep(&h->mb2b_xy);
-    av_freep(&h->mb2br_xy);
+    av_freep(&h->mb2b8_xy);
 
     for(i = 0; i < MAX_THREADS; i++) {
         hx = h->thread_context[i];
@@ -814,33 +817,33 @@ static void init_dequant_tables(H264Context *h){
 int ff_h264_alloc_tables(H264Context *h){
     MpegEncContext * const s = &h->s;
     const int big_mb_num= s->mb_stride * (s->mb_height+1);
-    const int row_mb_num= 2*s->mb_stride*s->avctx->thread_count;
     int x,y;
 
-    FF_ALLOCZ_OR_GOTO(h->s.avctx, h->intra4x4_pred_mode, row_mb_num * 8  * sizeof(uint8_t), fail)
+    FF_ALLOCZ_OR_GOTO(h->s.avctx, h->intra4x4_pred_mode, big_mb_num * 8  * sizeof(uint8_t), fail)
 
     FF_ALLOCZ_OR_GOTO(h->s.avctx, h->non_zero_count    , big_mb_num * 32 * sizeof(uint8_t), fail)
     FF_ALLOCZ_OR_GOTO(h->s.avctx, h->slice_table_base  , (big_mb_num+s->mb_stride) * sizeof(*h->slice_table_base), fail)
     FF_ALLOCZ_OR_GOTO(h->s.avctx, h->cbp_table, big_mb_num * sizeof(uint16_t), fail)
 
     FF_ALLOCZ_OR_GOTO(h->s.avctx, h->chroma_pred_mode_table, big_mb_num * sizeof(uint8_t), fail)
-    FF_ALLOCZ_OR_GOTO(h->s.avctx, h->mvd_table[0], 16*row_mb_num * sizeof(uint8_t), fail);
-    FF_ALLOCZ_OR_GOTO(h->s.avctx, h->mvd_table[1], 16*row_mb_num * sizeof(uint8_t), fail);
-    FF_ALLOCZ_OR_GOTO(h->s.avctx, h->direct_table, 4*big_mb_num * sizeof(uint8_t) , fail);
+    FF_ALLOCZ_OR_GOTO(h->s.avctx, h->mvd_table[0], 32*big_mb_num * sizeof(uint16_t), fail);
+    FF_ALLOCZ_OR_GOTO(h->s.avctx, h->mvd_table[1], 32*big_mb_num * sizeof(uint16_t), fail);
+    FF_ALLOCZ_OR_GOTO(h->s.avctx, h->direct_table, 32*big_mb_num * sizeof(uint8_t) , fail);
     FF_ALLOCZ_OR_GOTO(h->s.avctx, h->list_counts, big_mb_num * sizeof(uint8_t), fail)
 
     memset(h->slice_table_base, -1, (big_mb_num+s->mb_stride)  * sizeof(*h->slice_table_base));
     h->slice_table= h->slice_table_base + s->mb_stride*2 + 1;
 
     FF_ALLOCZ_OR_GOTO(h->s.avctx, h->mb2b_xy  , big_mb_num * sizeof(uint32_t), fail);
-    FF_ALLOCZ_OR_GOTO(h->s.avctx, h->mb2br_xy , big_mb_num * sizeof(uint32_t), fail);
+    FF_ALLOCZ_OR_GOTO(h->s.avctx, h->mb2b8_xy , big_mb_num * sizeof(uint32_t), fail);
     for(y=0; y<s->mb_height; y++){
         for(x=0; x<s->mb_width; x++){
             const int mb_xy= x + y*s->mb_stride;
             const int b_xy = 4*x + 4*y*h->b_stride;
+            const int b8_xy= 2*x + 2*y*h->b8_stride;
 
             h->mb2b_xy [mb_xy]= b_xy;
-            h->mb2br_xy[mb_xy]= 8*(FMO ? mb_xy : (mb_xy % (2*s->mb_stride)));
+            h->mb2b8_xy[mb_xy]= b8_xy;
         }
     }
 
@@ -858,17 +861,16 @@ fail:
 /**
  * Mimic alloc_tables(), but for every context thread.
  */
-static void clone_tables(H264Context *dst, H264Context *src, int i){
-    MpegEncContext * const s = &src->s;
-    dst->intra4x4_pred_mode       = src->intra4x4_pred_mode + i*8*2*s->mb_stride;
+static void clone_tables(H264Context *dst, H264Context *src){
+    dst->intra4x4_pred_mode       = src->intra4x4_pred_mode;
     dst->non_zero_count           = src->non_zero_count;
     dst->slice_table              = src->slice_table;
     dst->cbp_table                = src->cbp_table;
     dst->mb2b_xy                  = src->mb2b_xy;
-    dst->mb2br_xy                 = src->mb2br_xy;
+    dst->mb2b8_xy                 = src->mb2b8_xy;
     dst->chroma_pred_mode_table   = src->chroma_pred_mode_table;
-    dst->mvd_table[0]             = src->mvd_table[0] + i*8*2*s->mb_stride;
-    dst->mvd_table[1]             = src->mvd_table[1] + i*8*2*s->mb_stride;
+    dst->mvd_table[0]             = src->mvd_table[0];
+    dst->mvd_table[1]             = src->mvd_table[1];
     dst->direct_table             = src->direct_table;
     dst->list_counts              = src->list_counts;
 
@@ -883,9 +885,6 @@ static void clone_tables(H264Context *dst, H264Context *src, int i){
 static int context_init(H264Context *h){
     FF_ALLOCZ_OR_GOTO(h->s.avctx, h->top_borders[0], h->s.mb_width * (16+8+8) * sizeof(uint8_t), fail)
     FF_ALLOCZ_OR_GOTO(h->s.avctx, h->top_borders[1], h->s.mb_width * (16+8+8) * sizeof(uint8_t), fail)
-
-    h->ref_cache[0][scan8[5 ]+1] = h->ref_cache[0][scan8[7 ]+1] = h->ref_cache[0][scan8[13]+1] =
-    h->ref_cache[1][scan8[5 ]+1] = h->ref_cache[1][scan8[7 ]+1] = h->ref_cache[1][scan8[13]+1] = PART_NOT_AVAILABLE;
 
     return 0;
 fail:
@@ -1044,11 +1043,10 @@ static int decode_update_context(AVCodecContext *dst, AVCodecContext *src){
     h->dequant_coeff_pps = h1->dequant_coeff_pps;
 
     //POC timing
-    copy_fields(h, h1, poc_lsb, redundant_pic_count);
+    copy_fields(h, h1, poc_lsb, use_weight);
 
     //reference lists
     copy_fields(h, h1, ref_count, intra_gb);
-    copy_fields(h, h1, short_ref, cabac_init_idc);
 
     copy_picture_range(h->short_ref,   h1->short_ref,   32, s, s1);
     copy_picture_range(h->long_ref,    h1->long_ref,    32,  s, s1);
@@ -1674,16 +1672,16 @@ static int pred_weight_table(H264Context *h){
 
             luma_weight_flag= get_bits1(&s->gb);
             if(luma_weight_flag){
-                h->luma_weight[i][list][0]= get_se_golomb(&s->gb);
-                h->luma_weight[i][list][1]= get_se_golomb(&s->gb);
-                if(   h->luma_weight[i][list][0] != luma_def
-                   || h->luma_weight[i][list][1] != 0) {
+                h->luma_weight[list][i]= get_se_golomb(&s->gb);
+                h->luma_offset[list][i]= get_se_golomb(&s->gb);
+                if(   h->luma_weight[list][i] != luma_def
+                   || h->luma_offset[list][i] != 0) {
                     h->use_weight= 1;
                     h->luma_weight_flag[list]= 1;
                 }
             }else{
-                h->luma_weight[i][list][0]= luma_def;
-                h->luma_weight[i][list][1]= 0;
+                h->luma_weight[list][i]= luma_def;
+                h->luma_offset[list][i]= 0;
             }
 
             if(CHROMA){
@@ -1691,10 +1689,10 @@ static int pred_weight_table(H264Context *h){
                 if(chroma_weight_flag){
                     int j;
                     for(j=0; j<2; j++){
-                        h->chroma_weight[i][list][j][0]= get_se_golomb(&s->gb);
-                        h->chroma_weight[i][list][j][1]= get_se_golomb(&s->gb);
-                        if(   h->chroma_weight[i][list][j][0] != chroma_def
-                           || h->chroma_weight[i][list][j][1] != 0) {
+                        h->chroma_weight[list][i][j]= get_se_golomb(&s->gb);
+                        h->chroma_offset[list][i][j]= get_se_golomb(&s->gb);
+                        if(   h->chroma_weight[list][i][j] != chroma_def
+                           || h->chroma_offset[list][i][j] != 0) {
                             h->use_weight_chroma= 1;
                             h->chroma_weight_flag[list]= 1;
                         }
@@ -1702,8 +1700,8 @@ static int pred_weight_table(H264Context *h){
                 }else{
                     int j;
                     for(j=0; j<2; j++){
-                        h->chroma_weight[i][list][j][0]= chroma_def;
-                        h->chroma_weight[i][list][j][1]= 0;
+                        h->chroma_weight[list][i][j]= chroma_def;
+                        h->chroma_offset[list][i][j]= 0;
                     }
                 }
             }
@@ -1741,14 +1739,16 @@ static void implicit_weight_table(H264Context *h){
         for(ref1=0; ref1 < h->ref_count[1]; ref1++){
             int poc1 = h->ref_list[1][ref1].poc;
             int td = av_clip(poc1 - poc0, -128, 127);
-            h->implicit_weight[ref0][ref1] = 32;
             if(td){
                 int tb = av_clip(cur_poc - poc0, -128, 127);
                 int tx = (16384 + (FFABS(td) >> 1)) / td;
-                int dist_scale_factor = (tb*tx + 32) >> 8;
-                if(dist_scale_factor >= -64 && dist_scale_factor <= 128)
+                int dist_scale_factor = av_clip((tb*tx + 32) >> 6, -1024, 1023) >> 2;
+                if(dist_scale_factor < -64 || dist_scale_factor > 128)
+                    h->implicit_weight[ref0][ref1] = 32;
+                else
                     h->implicit_weight[ref0][ref1] = 64 - dist_scale_factor;
-            }
+            }else
+                h->implicit_weight[ref0][ref1] = 32;
         }
     }
 }
@@ -2066,6 +2066,7 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
     s->mb_height= h->sps.mb_height * (2 - h->sps.frame_mbs_only_flag);
 
     h->b_stride=  s->mb_width*4;
+    h->b8_stride= s->mb_width*2;
 
     s->width = 16*s->mb_width - 2*FFMIN(h->sps.crop_right, 7);
     if(h->sps.frame_mbs_only_flag)
@@ -2129,7 +2130,7 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
                 c->sps = h->sps;
                 c->pps = h->pps;
                 init_scan_tables(c);
-                clone_tables(c, h, i);
+                clone_tables(c, h);
             }
 
             for(i = 0; i < s->avctx->thread_count; i++)
