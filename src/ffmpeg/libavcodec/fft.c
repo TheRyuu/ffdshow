@@ -110,7 +110,7 @@ av_cold int ff_fft_init(FFTContext *s, int nbits, int inverse)
     s->exptab1     = NULL;
     s->split_radix = 1;
 
-    #if HAVE_MMX
+    #if HAVE_MMX && HAVE_YASM && ARCH_X86_32
     ff_fft_init_mmx(s);
     #endif
 	
