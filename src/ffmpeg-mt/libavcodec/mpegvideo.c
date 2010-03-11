@@ -149,7 +149,7 @@ void ff_copy_picture(Picture *dst, Picture *src){
  */
 static void free_frame_buffer(MpegEncContext *s, Picture *pic)
 {
-    ff_release_buffer(s->avctx, (AVFrame*)pic);
+    ff_thread_release_buffer(s->avctx, (AVFrame*)pic);
 }
 
 /**
@@ -159,7 +159,7 @@ static int alloc_frame_buffer(MpegEncContext *s, Picture *pic)
 {
     int r;
 
-    r = ff_get_buffer(s->avctx, (AVFrame*)pic);
+    r = ff_thread_get_buffer(s->avctx, (AVFrame*)pic);
 
     if (r<0 || !pic->age || !pic->type || !pic->data[0]) {
         av_log(s->avctx, AV_LOG_ERROR, "get_buffer() failed (%d %d %d %p)\n", r, pic->age, pic->type, pic->data[0]);
@@ -372,7 +372,7 @@ void ff_update_duplicate_context(MpegEncContext *dst, MpegEncContext *src){
 //STOP_TIMER("update_duplicate_context") //about 10k cycles / 0.01 sec for 1000frames on 1ghz with 2 threads
 }
 
-int ff_mpeg_update_context(AVCodecContext *dst, AVCodecContext *src)
+int ff_mpeg_update_thread_context(AVCodecContext *dst, AVCodecContext *src)
 {
     MpegEncContext *s = dst->priv_data, *s1 = src->priv_data;
 
@@ -1009,6 +1009,7 @@ int MPV_frame_start(MpegEncContext *s, AVCodecContext *avctx)
             s->last_picture_ptr= &s->picture[i];
             if(ff_alloc_picture(s, s->last_picture_ptr, 0) < 0)
                 return -1;
+            ff_thread_finish_frame((AVFrame*)s->last_picture_ptr);
         }
         if((s->next_picture_ptr==NULL || s->next_picture_ptr->data[0]==NULL) && s->pict_type==FF_B_TYPE){
             /* Allocate a dummy frame */
@@ -1016,6 +1017,7 @@ int MPV_frame_start(MpegEncContext *s, AVCodecContext *avctx)
             s->next_picture_ptr= &s->picture[i];
             if(ff_alloc_picture(s, s->next_picture_ptr, 0) < 0)
                 return -1;
+            ff_thread_finish_frame((AVFrame*)s->next_picture_ptr);
         }
     }
 
@@ -1113,8 +1115,9 @@ void MPV_frame_end(MpegEncContext *s)
 #endif
     s->avctx->coded_frame= (AVFrame*)s->current_picture_ptr;
 
-    if (HAVE_PTHREADS && s->avctx->active_thread_type == FF_THREAD_FRAME && s->codec_id != CODEC_ID_H264 && s->current_picture.reference)
-        ff_report_frame_progress((AVFrame*)s->current_picture_ptr, s->mb_height - 1);
+    if (HAVE_PTHREADS && s->avctx->active_thread_type == FF_THREAD_FRAME && s->codec_id != CODEC_ID_H264 && s->current_picture.reference){
+        ff_thread_report_progress((AVFrame*)s->current_picture_ptr, s->mb_height-1, 0);
+    }
 }
 
 /**
@@ -1651,10 +1654,10 @@ void MPV_decode_mb_internal(MpegEncContext *s, DCTELEM block[12][64],
 
                 if(HAVE_PTHREADS && s->avctx->active_thread_type == FF_THREAD_FRAME) {
                     if (s->mv_dir & MV_DIR_FORWARD) {
-                        ff_await_frame_progress((AVFrame*)s->last_picture_ptr, MPV_lowest_referenced_row(s, 0));
+                        ff_thread_await_progress((AVFrame*)s->last_picture_ptr, MPV_lowest_referenced_row(s, 0), 0);
                     }
                     if (s->mv_dir & MV_DIR_BACKWARD) {
-                        ff_await_frame_progress((AVFrame*)s->next_picture_ptr, MPV_lowest_referenced_row(s, 1));
+                        ff_thread_await_progress((AVFrame*)s->next_picture_ptr, MPV_lowest_referenced_row(s, 1), 0);
                     }
                 }
 
@@ -2177,5 +2180,5 @@ void ff_set_qscale(MpegEncContext * s, int qscale)
 void MPV_report_decode_progress(MpegEncContext *s)
 {
     if (s->pict_type != FF_B_TYPE && !s->partitioned_frame)
-        ff_report_frame_progress((AVFrame*)s->current_picture_ptr, s->mb_y);
+        ff_thread_report_progress((AVFrame*)s->current_picture_ptr, s->mb_y, 0);
 }

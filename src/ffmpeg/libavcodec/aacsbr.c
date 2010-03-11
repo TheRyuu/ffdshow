@@ -138,6 +138,7 @@ av_cold void ff_aac_sbr_init(void)
 av_cold void ff_aac_sbr_ctx_init(SpectralBandReplication *sbr)
 {
     sbr->kx[0] = sbr->kx[1] = 32; //Typo in spec, kx' inits to 32
+    sbr->data[0].e_a[1] = sbr->data[1].e_a[1] = -1;
     sbr->data[0].synthesis_filterbank_samples_offset = SBR_SYNTHESIS_BUF_SIZE - (1280 - 128);
     sbr->data[1].synthesis_filterbank_samples_offset = SBR_SYNTHESIS_BUF_SIZE - (1280 - 128);
     ff_mdct_init(&sbr->mdct, 7, 1, 1.0/64);
@@ -617,141 +618,131 @@ static int read_sbr_grid(AACContext *ac, SpectralBandReplication *sbr,
                          GetBitContext *gb, SBRData *ch_data)
 {
     int i;
-    unsigned bs_pointer;
-    int abs_bord_lead = 0;
+    unsigned bs_pointer = 0;
     // frameLengthFlag ? 15 : 16; 960 sample length frames unsupported; this value is numTimeSlots
     int abs_bord_trail = 16;
     int num_rel_lead, num_rel_trail;
-    uint8_t bs_rel_bord[2][3];
+    unsigned bs_num_env_old = ch_data->bs_num_env;
 
-    ch_data->bs_freq_res[0] = ch_data->bs_freq_res[ch_data->bs_num_env[1]];
-    ch_data->bs_num_env[0] = ch_data->bs_num_env[1];
+    ch_data->bs_freq_res[0] = ch_data->bs_freq_res[ch_data->bs_num_env];
     ch_data->bs_amp_res = sbr->bs_amp_res_header;
+    ch_data->t_env_num_env_old = ch_data->t_env[bs_num_env_old];
 
     switch (ch_data->bs_frame_class = get_bits(gb, 2)) {
     case FIXFIX:
-        ch_data->bs_num_env[1] = 1 << get_bits(gb, 2);
-        num_rel_lead           = ch_data->bs_num_env[1] - 1;
-        if (ch_data->bs_num_env[1] == 1)
+        ch_data->bs_num_env                 = 1 << get_bits(gb, 2);
+        num_rel_lead                        = ch_data->bs_num_env - 1;
+        if (ch_data->bs_num_env == 1)
             ch_data->bs_amp_res = 0;
 
-        if (ch_data->bs_num_env[1] > 4) {
+        if (ch_data->bs_num_env > 4) {
             av_log(ac->avccontext, AV_LOG_ERROR,
                    "Invalid bitstream, too many SBR envelopes in FIXFIX type SBR frame: %d\n",
-                   ch_data->bs_num_env[1]);
+                   ch_data->bs_num_env);
             return -1;
         }
 
-        bs_pointer = 0;
+        ch_data->t_env[0]                   = 0;
+        ch_data->t_env[ch_data->bs_num_env] = abs_bord_trail;
+
+        abs_bord_trail = (abs_bord_trail + (ch_data->bs_num_env >> 1)) /
+                   ch_data->bs_num_env;
+        for (i = 0; i < num_rel_lead; i++)
+            ch_data->t_env[i + 1] = ch_data->t_env[i] + abs_bord_trail;
 
         ch_data->bs_freq_res[1] = get_bits1(gb);
-        for (i = 1; i < ch_data->bs_num_env[1]; i++)
+        for (i = 1; i < ch_data->bs_num_env; i++)
             ch_data->bs_freq_res[i + 1] = ch_data->bs_freq_res[1];
         break;
     case FIXVAR:
-        abs_bord_trail         += get_bits(gb, 2);
-        num_rel_trail           = get_bits(gb, 2);
-        num_rel_lead            = 0;
-        ch_data->bs_num_env[1]  = num_rel_trail + 1;
+        abs_bord_trail                     += get_bits(gb, 2);
+        num_rel_trail                       = get_bits(gb, 2);
+        ch_data->bs_num_env                 = num_rel_trail + 1;
+        ch_data->t_env[0]                   = 0;
+        ch_data->t_env[ch_data->bs_num_env] = abs_bord_trail;
 
         for (i = 0; i < num_rel_trail; i++)
-            bs_rel_bord[1][i] = 2 * get_bits(gb, 2) + 2;
+            ch_data->t_env[ch_data->bs_num_env - 1 - i] =
+                ch_data->t_env[ch_data->bs_num_env - i] - 2 * get_bits(gb, 2) - 2;
 
-        bs_pointer = get_bits(gb, ceil_log2[ch_data->bs_num_env[1]]);
+        bs_pointer = get_bits(gb, ceil_log2[ch_data->bs_num_env]);
 
-        for (i = 0; i < ch_data->bs_num_env[1]; i++)
-            ch_data->bs_freq_res[ch_data->bs_num_env[1] - i] = get_bits1(gb);
+        for (i = 0; i < ch_data->bs_num_env; i++)
+            ch_data->bs_freq_res[ch_data->bs_num_env - i] = get_bits1(gb);
         break;
     case VARFIX:
-        abs_bord_lead           = get_bits(gb, 2);
-        num_rel_lead            = get_bits(gb, 2);
-        ch_data->bs_num_env[1]  = num_rel_lead + 1;
+        ch_data->t_env[0]                   = get_bits(gb, 2);
+        num_rel_lead                        = get_bits(gb, 2);
+        ch_data->bs_num_env                 = num_rel_lead + 1;
+        ch_data->t_env[ch_data->bs_num_env] = abs_bord_trail;
 
         for (i = 0; i < num_rel_lead; i++)
-            bs_rel_bord[0][i] = 2 * get_bits(gb, 2) + 2;
+            ch_data->t_env[i + 1] = ch_data->t_env[i] + 2 * get_bits(gb, 2) + 2;
 
-        bs_pointer = get_bits(gb, ceil_log2[ch_data->bs_num_env[1]]);
+        bs_pointer = get_bits(gb, ceil_log2[ch_data->bs_num_env]);
 
-        get_bits1_vector(gb, ch_data->bs_freq_res + 1, ch_data->bs_num_env[1]);
+        get_bits1_vector(gb, ch_data->bs_freq_res + 1, ch_data->bs_num_env);
         break;
     case VARVAR:
-        abs_bord_lead           = get_bits(gb, 2);
-        abs_bord_trail         += get_bits(gb, 2);
-        num_rel_lead            = get_bits(gb, 2);
-        num_rel_trail           = get_bits(gb, 2);
-        ch_data->bs_num_env[1]  = num_rel_lead + num_rel_trail + 1;
+        ch_data->t_env[0]                   = get_bits(gb, 2);
+        abs_bord_trail                     += get_bits(gb, 2);
+        num_rel_lead                        = get_bits(gb, 2);
+        num_rel_trail                       = get_bits(gb, 2);
+        ch_data->bs_num_env                 = num_rel_lead + num_rel_trail + 1;
 
-        if (ch_data->bs_num_env[1] > 5) {
+        if (ch_data->bs_num_env > 5) {
             av_log(ac->avccontext, AV_LOG_ERROR,
                    "Invalid bitstream, too many SBR envelopes in VARVAR type SBR frame: %d\n",
-                   ch_data->bs_num_env[1]);
+                   ch_data->bs_num_env);
             return -1;
         }
 
+        ch_data->t_env[ch_data->bs_num_env] = abs_bord_trail;
+
         for (i = 0; i < num_rel_lead; i++)
-            bs_rel_bord[0][i] = 2 * get_bits(gb, 2) + 2;
+            ch_data->t_env[i + 1] = ch_data->t_env[i] + 2 * get_bits(gb, 2) + 2;
         for (i = 0; i < num_rel_trail; i++)
-            bs_rel_bord[1][i] = 2 * get_bits(gb, 2) + 2;
+            ch_data->t_env[ch_data->bs_num_env - 1 - i] =
+                ch_data->t_env[ch_data->bs_num_env - i] - 2 * get_bits(gb, 2) - 2;
 
-        bs_pointer = get_bits(gb, ceil_log2[ch_data->bs_num_env[1]]);
+        bs_pointer = get_bits(gb, ceil_log2[ch_data->bs_num_env]);
 
-        get_bits1_vector(gb, ch_data->bs_freq_res + 1, ch_data->bs_num_env[1]);
+        get_bits1_vector(gb, ch_data->bs_freq_res + 1, ch_data->bs_num_env);
         break;
     }
 
-    if (bs_pointer > ch_data->bs_num_env[1] + 1) {
+    if (bs_pointer > ch_data->bs_num_env + 1) {
         av_log(ac->avccontext, AV_LOG_ERROR,
                "Invalid bitstream, bs_pointer points to a middle noise border outside the time borders table: %d\n",
                bs_pointer);
         return -1;
     }
 
-    ch_data->t_env_num_env_old = ch_data->t_env[ch_data->bs_num_env[0]];
-    ch_data->t_env[0]                      = abs_bord_lead;
-    ch_data->t_env[ch_data->bs_num_env[1]] = abs_bord_trail;
+    ch_data->bs_num_noise = (ch_data->bs_num_env > 1) + 1;
 
-    if (ch_data->bs_frame_class == FIXFIX) {
-        int temp = (abs_bord_trail + (ch_data->bs_num_env[1] >> 1)) /
-                   ch_data->bs_num_env[1];
-        for (i = 0; i < num_rel_lead; i++)
-            ch_data->t_env[i + 1] = ch_data->t_env[i] + temp;
-    } else if (ch_data->bs_frame_class > 1) { // VARFIX or VARVAR
-        for (i = 0; i < num_rel_lead; i++)
-            ch_data->t_env[i + 1] = ch_data->t_env[i] + bs_rel_bord[0][i];
-    }
-
-    if (ch_data->bs_frame_class & 1) { // FIXVAR or VARVAR
-        for (i = ch_data->bs_num_env[1] - 1; i > num_rel_lead; i--)
-            ch_data->t_env[i] = ch_data->t_env[i + 1] -
-                                bs_rel_bord[1][ch_data->bs_num_env[1] - 1 - i];
-    }
-
-    ch_data->bs_num_noise = (ch_data->bs_num_env[1] > 1) + 1;
-
-    ch_data->t_q[0] = ch_data->t_env[0];
+    ch_data->t_q[0]                     = ch_data->t_env[0];
+    ch_data->t_q[ch_data->bs_num_noise] = ch_data->t_env[ch_data->bs_num_env];
     if (ch_data->bs_num_noise > 1) {
         unsigned int idx;
         if (ch_data->bs_frame_class == FIXFIX) {
-            idx = ch_data->bs_num_env[1] >> 1;
+            idx = ch_data->bs_num_env >> 1;
         } else if (ch_data->bs_frame_class & 1) { // FIXVAR or VARVAR
-            idx = ch_data->bs_num_env[1] - FFMAX(bs_pointer - 1, 1);
+            idx = ch_data->bs_num_env - FFMAX(bs_pointer - 1, 1);
         } else { // VARFIX
             if (!bs_pointer)
                 idx = 1;
             else if (bs_pointer == 1)
-                idx = ch_data->bs_num_env[1] - 1;
+                idx = ch_data->bs_num_env - 1;
             else // bs_pointer > 1
                 idx = bs_pointer - 1;
         }
         ch_data->t_q[1] = ch_data->t_env[idx];
-        ch_data->t_q[2] = ch_data->t_env[ch_data->bs_num_env[1]];
-    } else
-        ch_data->t_q[1] = ch_data->t_env[ch_data->bs_num_env[1]];
+    }
 
-    ch_data->e_a[0] = -(ch_data->e_a[1] != ch_data->bs_num_env[0]); // l_APrev
+    ch_data->e_a[0] = -(ch_data->e_a[1] != bs_num_env_old); // l_APrev
     ch_data->e_a[1] = -1;
     if ((ch_data->bs_frame_class & 1) && bs_pointer) { // FIXVAR or VARVAR and bs_pointer != 0
-        ch_data->e_a[1] = ch_data->bs_num_env[1] + 1 - bs_pointer;
+        ch_data->e_a[1] = ch_data->bs_num_env + 1 - bs_pointer;
     } else if ((ch_data->bs_frame_class == 2) && (bs_pointer > 1)) // VARFIX and bs_pointer > 1
         ch_data->e_a[1] = bs_pointer - 1;
 
@@ -760,27 +751,26 @@ static int read_sbr_grid(AACContext *ac, SpectralBandReplication *sbr,
 
 static void copy_sbr_grid(SBRData *dst, const SBRData *src) {
     //These variables are saved from the previous frame rather than copied
-    dst->bs_freq_res[0] = dst->bs_freq_res[dst->bs_num_env[1]];
-    dst->bs_num_env[0]  = dst->bs_num_env[1];
-    dst->t_env_num_env_old = dst->t_env[dst->bs_num_env[0]];
-    dst->e_a[0]         = -(dst->e_a[1] != dst->bs_num_env[0]);
+    dst->bs_freq_res[0]    = dst->bs_freq_res[dst->bs_num_env];
+    dst->t_env_num_env_old = dst->t_env[dst->bs_num_env];
+    dst->e_a[0]            = -(dst->e_a[1] != dst->bs_num_env);
 
     //These variables are read from the bitstream and therefore copied
     memcpy(dst->bs_freq_res+1, src->bs_freq_res+1, sizeof(dst->bs_freq_res)-sizeof(*dst->bs_freq_res));
-    memcpy(dst->bs_num_env+1,  src->bs_num_env+1,  sizeof(dst->bs_num_env)- sizeof(*dst->bs_num_env));
     memcpy(dst->t_env,         src->t_env,         sizeof(dst->t_env));
     memcpy(dst->t_q,           src->t_q,           sizeof(dst->t_q));
-    dst->bs_amp_res     = src->bs_amp_res;
-    dst->bs_num_noise   = src->bs_num_noise;
-    dst->bs_frame_class = src->bs_frame_class;
-    dst->e_a[1]         = src->e_a[1];
+    dst->bs_num_env        = src->bs_num_env;
+    dst->bs_amp_res        = src->bs_amp_res;
+    dst->bs_num_noise      = src->bs_num_noise;
+    dst->bs_frame_class    = src->bs_frame_class;
+    dst->e_a[1]            = src->e_a[1];
 }
 
 /// Read how the envelope and noise floor data is delta coded
 static void read_sbr_dtdf(SpectralBandReplication *sbr, GetBitContext *gb,
                           SBRData *ch_data)
 {
-    get_bits1_vector(gb, ch_data->bs_df_env,   ch_data->bs_num_env[1]);
+    get_bits1_vector(gb, ch_data->bs_df_env,   ch_data->bs_num_env);
     get_bits1_vector(gb, ch_data->bs_df_noise, ch_data->bs_num_noise);
 }
 
@@ -835,9 +825,9 @@ static void read_sbr_envelope(SpectralBandReplication *sbr, GetBitContext *gb,
         }
     }
 
-    for (i = 0; i < ch_data->bs_num_env[1]; i++) {
+    for (i = 0; i < ch_data->bs_num_env; i++) {
         if (ch_data->bs_df_env[i]) {
-            // bs_freq_res[0] == bs_freq_res[bs_num_env[1]] from prev frame
+            // bs_freq_res[0] == bs_freq_res[bs_num_env] from prev frame
             if (ch_data->bs_freq_res[i + 1] == ch_data->bs_freq_res[i]) {
                 for (j = 0; j < sbr->n[ch_data->bs_freq_res[i + 1]]; j++)
                     ch_data->env_facs[i + 1][j] = ch_data->env_facs[i][j] + delta * (get_vlc2(gb, t_huff, 9, 3) - t_lav);
@@ -860,7 +850,7 @@ static void read_sbr_envelope(SpectralBandReplication *sbr, GetBitContext *gb,
     }
 
     //assign 0th elements of env_facs from last elements
-    memcpy(ch_data->env_facs[0], ch_data->env_facs[ch_data->bs_num_env[1]],
+    memcpy(ch_data->env_facs[0], ch_data->env_facs[ch_data->bs_num_env],
            sizeof(ch_data->env_facs[0]));
 }
 
@@ -1095,7 +1085,7 @@ static void sbr_dequant(SpectralBandReplication *sbr, int id_aac)
     if (id_aac == TYPE_CPE && sbr->bs_coupling) {
         float alpha      = sbr->data[0].bs_amp_res ?  1.0f :  0.5f;
         float pan_offset = sbr->data[0].bs_amp_res ? 12.0f : 24.0f;
-        for (e = 1; e <= sbr->data[0].bs_num_env[1]; e++) {
+        for (e = 1; e <= sbr->data[0].bs_num_env; e++) {
             for (k = 0; k < sbr->n[sbr->data[0].bs_freq_res[e]]; k++) {
                 float temp1 = exp2f(sbr->data[0].env_facs[e][k] * alpha + 7.0f);
                 float temp2 = exp2f((pan_offset - sbr->data[1].env_facs[e][k]) * alpha);
@@ -1116,7 +1106,7 @@ static void sbr_dequant(SpectralBandReplication *sbr, int id_aac)
     } else { // SCE or one non-coupled CPE
         for (ch = 0; ch < (id_aac == TYPE_CPE) + 1; ch++) {
             float alpha = sbr->data[ch].bs_amp_res ? 1.0f : 0.5f;
-            for (e = 1; e <= sbr->data[ch].bs_num_env[1]; e++)
+            for (e = 1; e <= sbr->data[ch].bs_num_env; e++)
                 for (k = 0; k < sbr->n[sbr->data[ch].bs_freq_res[e]]; k++)
                     sbr->data[ch].env_facs[e][k] =
                         exp2f(alpha * sbr->data[ch].env_facs[e][k] + 6.0f);
@@ -1455,7 +1445,7 @@ static void sbr_mapping(AACContext *ac, SpectralBandReplication *sbr,
     int e, i, m;
 
     memset(ch_data->s_indexmapped[1], 0, 7*sizeof(ch_data->s_indexmapped[1]));
-    for (e = 0; e < ch_data->bs_num_env[1]; e++) {
+    for (e = 0; e < ch_data->bs_num_env; e++) {
         const unsigned int ilim = sbr->n[ch_data->bs_freq_res[e + 1]];
         uint16_t *table = ch_data->bs_freq_res[e + 1] ? sbr->f_tablehigh : sbr->f_tablelow;
         int k;
@@ -1493,7 +1483,7 @@ static void sbr_mapping(AACContext *ac, SpectralBandReplication *sbr,
         }
     }
 
-    memcpy(ch_data->s_indexmapped[0], ch_data->s_indexmapped[ch_data->bs_num_env[1]], sizeof(ch_data->s_indexmapped[0]));
+    memcpy(ch_data->s_indexmapped[0], ch_data->s_indexmapped[ch_data->bs_num_env], sizeof(ch_data->s_indexmapped[0]));
 }
 
 /// Estimation of current envelope (14496-3 sp04 p218)
@@ -1503,7 +1493,7 @@ static void sbr_env_estimate(float (*e_curr)[48], float X_high[64][40][2],
     int e, i, m;
 
     if (sbr->bs_interpol_freq) {
-        for (e = 0; e < ch_data->bs_num_env[1]; e++) {
+        for (e = 0; e < ch_data->bs_num_env; e++) {
             const float recip_env_size = 0.5f / (ch_data->t_env[e + 1] - ch_data->t_env[e]);
             int ilb = ch_data->t_env[e]     * 2 + ENVELOPE_ADJUSTMENT_OFFSET;
             int iub = ch_data->t_env[e + 1] * 2 + ENVELOPE_ADJUSTMENT_OFFSET;
@@ -1521,7 +1511,7 @@ static void sbr_env_estimate(float (*e_curr)[48], float X_high[64][40][2],
     } else {
         int k, p;
 
-        for (e = 0; e < ch_data->bs_num_env[1]; e++) {
+        for (e = 0; e < ch_data->bs_num_env; e++) {
             const int env_size = 2 * (ch_data->t_env[e + 1] - ch_data->t_env[e]);
             int ilb = ch_data->t_env[e]     * 2 + ENVELOPE_ADJUSTMENT_OFFSET;
             int iub = ch_data->t_env[e + 1] * 2 + ENVELOPE_ADJUSTMENT_OFFSET;
@@ -1557,7 +1547,7 @@ static void sbr_gain_calc(AACContext *ac, SpectralBandReplication *sbr,
     // max gain limits : -3dB, 0dB, 3dB, inf dB (limiter off)
     static const float limgain[4] = { 0.70795, 1.0, 1.41254, 10000000000 };
 
-    for (e = 0; e < ch_data->bs_num_env[1]; e++) {
+    for (e = 0; e < ch_data->bs_num_env; e++) {
         int delta = !((e == e_a[1]) || (e == e_a[0]));
         for (k = 0; k < sbr->n_lim; k++) {
             float gain_boost, gain_max;
@@ -1640,14 +1630,14 @@ static void sbr_hf_assemble(float Y[2][38][64][2], const float X_high[64][40][2]
         memcpy(q_temp[2*ch_data->t_env[0]], q_temp[2*ch_data->t_env_num_env_old], 4*sizeof(q_temp[0]));
     }
 
-    for (e = 0; e < ch_data->bs_num_env[1]; e++) {
+    for (e = 0; e < ch_data->bs_num_env; e++) {
         for (i = 2 * ch_data->t_env[e]; i < 2 * ch_data->t_env[e + 1]; i++) {
             memcpy(g_temp[h_SL + i], sbr->gain[e], m_max * sizeof(sbr->gain[0][0]));
             memcpy(q_temp[h_SL + i], sbr->q_m[e],  m_max * sizeof(sbr->q_m[0][0]));
         }
     }
 
-    for (e = 0; e < ch_data->bs_num_env[1]; e++) {
+    for (e = 0; e < ch_data->bs_num_env; e++) {
         for (i = 2 * ch_data->t_env[e]; i < 2 * ch_data->t_env[e + 1]; i++) {
             int phi_sign = (1 - 2*(kx & 1));
 
@@ -1736,7 +1726,7 @@ void ff_sbr_apply(AACContext *ac, SpectralBandReplication *sbr, int ch,
         sbr_chirp(sbr, &sbr->data[ch]);
         sbr_hf_gen(ac, sbr, sbr->X_high, sbr->X_low, sbr->alpha0, sbr->alpha1,
                    sbr->data[ch].bw_array, sbr->data[ch].t_env,
-                   sbr->data[ch].bs_num_env[1]);
+                   sbr->data[ch].bs_num_env);
 
         // hf_adj
         sbr_mapping(ac, sbr, &sbr->data[ch], sbr->data[ch].e_a);

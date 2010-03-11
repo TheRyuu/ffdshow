@@ -949,7 +949,7 @@ static int unpack_vlcs(Vp3DecodeContext *s, GetBitContext *gb,
     if (blocks_ended)
         dct_tokens[j++] = blocks_ended << 2;
 
-    while (coeff_i < num_coeffs) {
+    while (coeff_i < num_coeffs && get_bits_left(gb) > 0) {
             /* decode a VLC into a token */
             token = get_vlc2(gb, vlc_table, 5, 3);
             /* use the token to get a zero run, a coefficient, and an eob run */
@@ -995,7 +995,7 @@ static int unpack_vlcs(Vp3DecodeContext *s, GetBitContext *gb,
                 }
 
                 if (coeff_index + zero_run > 64) {
-                    av_log(s->avctx, AV_LOG_ERROR, "Invalid zero run of %d with"
+                    av_log(s->avctx, AV_LOG_DEBUG, "Invalid zero run of %d with"
                            " %d coeffs left\n", zero_run, 64-coeff_index);
                     zero_run = 64 - coeff_index;
                 }

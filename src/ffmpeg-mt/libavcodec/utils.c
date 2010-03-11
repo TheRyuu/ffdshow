@@ -560,7 +560,7 @@ int attribute_align_arg avcodec_decode_video(AVCodecContext *avctx, AVFrame *pic
     if((avctx->coded_width||avctx->coded_height) && avcodec_check_dimensions(avctx,avctx->coded_width,avctx->coded_height))
         return -1;
     if((avctx->codec->capabilities & CODEC_CAP_DELAY) || buf_size || threaded){
-        if (threaded) ret = ff_decode_frame_threaded(avctx, picture,
+        if (threaded) ret = ff_thread_decode_frame(avctx, picture,
                                 got_picture_ptr, buf, buf_size);
         else ret = avctx->codec->decode(avctx, picture, got_picture_ptr,
                                 buf, buf_size);
@@ -715,7 +715,7 @@ void avcodec_init(void)
 void avcodec_flush_buffers(AVCodecContext *avctx)
 {
     if(HAVE_PTHREADS && avctx->active_thread_type == FF_THREAD_FRAME)
-        ff_frame_thread_flush(avctx);
+        ff_thread_flush(avctx);
     if(avctx->codec->flush)
         avctx->codec->flush(avctx);
 }
@@ -854,38 +854,30 @@ int av_lockmgr_register(int (*cb)(void **mutex, enum AVLockOp op))
 
 #if !HAVE_PTHREADS
 
-int ff_get_buffer(AVCodecContext *avctx, AVFrame *f)
+int ff_thread_get_buffer(AVCodecContext *avctx, AVFrame *f)
 {
     f->owner = avctx;
     return avctx->get_buffer(avctx, f);
 }
 
-void ff_release_buffer(AVCodecContext *avctx, AVFrame *f)
+void ff_thread_release_buffer(AVCodecContext *avctx, AVFrame *f)
 {
     f->owner->release_buffer(f->owner, f);
 }
 
-void ff_report_frame_setup_done(AVCodecContext *avctx)
+void ff_thread_finish_setup(AVCodecContext *avctx)
 {
 }
 
-void ff_report_frame_progress(AVFrame *f, int progress)
+void ff_thread_report_progress(AVFrame *f, int progress, int field)
 {
 }
 
-void ff_report_field_progress(AVFrame *f, int progress, int field)
+void ff_thread_await_progress(AVFrame *f, int progress, int field)
 {
 }
 
-void ff_await_frame_progress(AVFrame *f, int progress)
-{
-}
-
-void ff_await_field_progress(AVFrame *f, int progress, int field)
-{
-}
-
-void ff_mark_picture_finished(AVFrame *f)
+void ff_thread_finish_frame(AVFrame *f)
 {
 }
 

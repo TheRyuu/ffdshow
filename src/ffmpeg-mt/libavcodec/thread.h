@@ -32,86 +32,82 @@
 #include "avcodec.h"
 
 /**
- * Wait for all decoding threads to finish and then reset the internal state.
+ * Waits for decoding threads to finish and resets the internal
+ * state. Called by avcodec_flush_buffers().
  */
-void ff_frame_thread_flush(AVCodecContext *avctx);
+void ff_thread_flush(AVCodecContext *avctx);
 
 /**
- * Submit a new frame for multithreaded decoding. Parameters
- * are the same as avcodec_decode_video(). The result will be
- * what the codec output (X-1) frames ago, where X is the number
- * of threads.
+ * Submits a new frame to a decoding thread. Parameters are the
+ * same as avcodec_decode_video2(). Returns the earliest available
+ * decoded picture.
+ *
  * NULL AVFrames returned from the codec will be dropped if
- * the client is flushing frames at EOF, and the next available
- * frame will be returned.
+ * the client passes NULL data in.
  */
-int ff_decode_frame_threaded(AVCodecContext *avctx,
+int ff_thread_decode_frame(AVCodecContext *avctx,
                         void *data, int *data_size,
                         const uint8_t *buf, int buf_size);
 
 /**
- * If the codec defines update_context, call this after doing
- * all setup work for the next thread. update_context will be
- * called sometime afterwards, after which no variable read by
- * it may be changed by the codec.
+ * For codecs which define update_thread_context.
+ * Call this when the context is set up for the next frame to be
+ * decoded. The next decoding thread will start afterwards.
+ * The codec must not modify parts of the context read by
+ * update_thread_context after calling this or it will cause a race
+ * condition.
  */
-void ff_report_frame_setup_done(AVCodecContext *avctx);
+void ff_thread_finish_setup(AVCodecContext *avctx);
 
 /**
- * Call this function after decoding some part of a frame.
- * Subsequent calls with lower values for \p progress will be ignored.
+ * Call this when some part of the picture is finished decoding.
+ * Later calls with lower progress values will be ignored.
  *
- * @param f The frame being decoded
+ * @param f The AVFrame containing the current field or frame
  * @param progress The highest-numbered part finished so far
+ * @param field The field being decoded, for field pictures.
+ * 0 for top field or progressive, 1 for bottom.
  */
-void ff_report_frame_progress(AVFrame *f, int progress);
+void ff_thread_report_progress(AVFrame *f, int progress, int field);
 
 /**
- * Call this function before accessing some part of a reference frame.
- * On return, all parts up to the requested number will be available.
- */
-void ff_await_frame_progress(AVFrame *f, int progress);
-
-/**
- * Equivalent of ff_report_frame_progress() for pictures whose fields
- * are stored in seperate frames.
+ * Call this before accessing some part of a previous field or frame.
+ * Returns after the previous decoding thread has called ff_thread_report_progress()
+ * with sufficiently high progress.
  *
- * @param f The frame containing the current field
- * @param progress The highest-numbered part finished so far
- * @param field The current field. 0 for top field/frame, 1 for bottom.
+ * @param f The AVFrame containing the reference field or frame
+ * @param progress The highest-numbered part of the reference picture to wait for
+ * @param field The field being referenced, for field pictures.
+ * 0 for top field or progressive, 1 for bottom.
  */
-void ff_report_field_progress(AVFrame *f, int progress, int field);
+void ff_thread_await_progress(AVFrame *f, int progress, int field);
 
 /**
- * Equivalent of ff_await_frame_progress() for pictures whose fields
- * are stored in seperate frames.
- */
-void ff_await_field_progress(AVFrame *f, int progress, int field);
-
-/**
- * Sets the progress for both fields to the highest possible value.
- * Used to prevent deadlocks in later threads when a decoder exits early
- * due to errors.
+ * Convenience function to set progress for both fields to INT_MAX.
+ * Can be used to prevent deadlocks in later threads when a decoder
+ * exits early due to errors.
  *
- * @param f The frame being decoded.
+ * @param f The frame or field picture being decoded.
  */
-void ff_mark_picture_finished(AVFrame *f);
+void ff_thread_finish_frame(AVFrame *f);
 
 /**
- * Allocate a frame with avctx->get_buffer() and set
- * values needed for multithreading. Codecs must call
- * this instead of using get_buffer() directly if
- * frame threading is enabled.
+ * Replacement for get_buffer() for frame-level threading.
+ *
+ * Codecs with CODEC_CAP_FRAME_THREADS must call this instead
+ * of calling get_buffer() directly.
  */
-int ff_get_buffer(AVCodecContext *avctx, AVFrame *f);
+int ff_thread_get_buffer(AVCodecContext *avctx, AVFrame *f);
 
 /**
- * Release a frame at a later time, after all earlier
- * decoding threads have completed. On return, \p f->data
- * will be cleared. Codec must call this instead of using
- * release_buffer() directly if frame threading is enabled.
+ * Replacement for release_buffer() for frame-level threading.
+ *
+ * Codecs with CODEC_CAP_FRAME_THREADS must call this instead
+ * of calling release_buffer() directly.
+ *
+ * On return, \p f->data will be cleared.
  */
-void ff_release_buffer(AVCodecContext *avctx, AVFrame *f);
+void ff_thread_release_buffer(AVCodecContext *avctx, AVFrame *f);
 
 // ffdshow custom code. return pointer to the copied AVCodecContext for thread 0.
 AVCodecContext* get_thread0_avctx(AVCodecContext *avctx);

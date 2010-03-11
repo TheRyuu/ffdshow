@@ -153,8 +153,8 @@ static void await_reference_mb_row(H264Context * const h, Picture *ref, int mb_y
     //FIXME it can be safe to access mb stuff
     //even if pixels aren't deblocked yet
 
-    ff_await_field_progress((AVFrame*)ref, FFMIN(16*mb_y >> ref_field_picture, ref_height-1),
-                            ref_field_picture && ref_field);
+    ff_thread_await_progress((AVFrame*)ref, FFMIN(16*mb_y >> ref_field_picture, ref_height-1),
+                             ref_field_picture && ref_field);
 }
 
 static void pred_spatial_direct_motion(H264Context * const h, int *mb_type){
@@ -407,7 +407,7 @@ static void pred_temp_direct_motion(H264Context * const h, int *mb_type){
     MpegEncContext * const s = &h->s;
     int b8_stride = h->b8_stride;
     int b4_stride = h->b_stride;
-    int mb_xy = h->mb_xy;
+    int mb_xy = h->mb_xy, mb_y = s->mb_y;
     int mb_type_col[2];
     const int16_t (*l1mv0)[2], (*l1mv1)[2];
     const int8_t *l1ref0, *l1ref1;
@@ -417,16 +417,21 @@ static void pred_temp_direct_motion(H264Context * const h, int *mb_type){
 
     assert(h->ref_list[1][0].reference&3);
 
+    await_reference_mb_row(h, &h->ref_list[1][0], s->mb_y + !!IS_INTERLACED(*mb_type));
+
     if(IS_INTERLACED(h->ref_list[1][0].mb_type[mb_xy])){ // AFL/AFR/FR/FL -> AFL/FL
         if(!IS_INTERLACED(*mb_type)){                    //     AFR/FR    -> AFL/FL
+            mb_y = (s->mb_y&~1) + h->col_parity;
             mb_xy= s->mb_x + ((s->mb_y&~1) + h->col_parity)*s->mb_stride;
             b8_stride = 0;
         }else{
+            mb_y  += h->col_fieldoff/s->mb_stride;
             mb_xy += h->col_fieldoff; // non zero for FL -> FL & differ parity
         }
         goto single_col;
     }else{                                               // AFL/AFR/FR/FL -> AFR/FR
         if(IS_INTERLACED(*mb_type)){                     // AFL       /FL -> AFR/FR
+            mb_y = s->mb_y&~1;
             mb_xy= s->mb_x + (s->mb_y&~1)*s->mb_stride;
             mb_type_col[0] = h->ref_list[1][0].mb_type[mb_xy];
             mb_type_col[1] = h->ref_list[1][0].mb_type[mb_xy + s->mb_stride];
@@ -462,6 +467,8 @@ single_col:
             }
         }
     }
+
+    await_reference_mb_row(h, &h->ref_list[1][0], mb_y);
 
     l1mv0  = &h->ref_list[1][0].motion_val[0][h->mb2b_xy [mb_xy]];
     l1mv1  = &h->ref_list[1][0].motion_val[1][h->mb2b_xy [mb_xy]];

@@ -2419,7 +2419,7 @@ typedef struct AVCodec {
      * If the codec allocates writable tables in init(), re-allocate them here.
      * priv_data will be set to a copy of the original.
      */
-    int (*init_copy)(AVCodecContext *);
+    int (*init_thread_copy)(AVCodecContext *);
     /**
      * Copy necessary context variables from a previous thread context to the current one.
      * If not defined, the next thread will start automatically; otherwise, the codec
@@ -2427,7 +2427,7 @@ typedef struct AVCodec {
      *
      * dst and src will (rarely) point to the same context, in which case memcpy should be skipped.
      */
-    int (*update_context)(AVCodecContext *, AVCodecContext *from);
+    int (*update_thread_context)(AVCodecContext *dst, AVCodecContext *src);
     /** @} */
 } AVCodec;
 

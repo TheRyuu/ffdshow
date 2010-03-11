@@ -421,14 +421,14 @@ static void await_references(H264Context *h){
                 row <<= MB_MBAFF;
 
                 if(!FIELD_PICTURE && ref_field_picture){ // frame referencing two fields
-                    ff_await_field_progress((AVFrame*)ref_pic, FFMIN((row >> 1) - !(row&1), pic_height-1), 1);
-                    ff_await_field_progress((AVFrame*)ref_pic, FFMIN((row >> 1)           , pic_height-1), 0);
+                    ff_thread_await_progress((AVFrame*)ref_pic, FFMIN((row >> 1) - !(row&1), pic_height-1), 1);
+                    ff_thread_await_progress((AVFrame*)ref_pic, FFMIN((row >> 1)           , pic_height-1), 0);
                 }else if(FIELD_PICTURE && !ref_field_picture){ // field referencing one field of a frame
-                    ff_await_field_progress((AVFrame*)ref_pic, FFMIN(row*2 + ref_field    , pic_height-1), 0);
+                    ff_thread_await_progress((AVFrame*)ref_pic, FFMIN(row*2 + ref_field    , pic_height-1), 0);
                 }else if(FIELD_PICTURE){
-                    ff_await_field_progress((AVFrame*)ref_pic, FFMIN(row, pic_height-1), ref_field);
+                    ff_thread_await_progress((AVFrame*)ref_pic, FFMIN(row, pic_height-1), ref_field);
                 }else{
-                    ff_await_field_progress((AVFrame*)ref_pic, FFMIN(row, pic_height-1), 0);
+                    ff_thread_await_progress((AVFrame*)ref_pic, FFMIN(row, pic_height-1), 0);
                 }
             }
         }
@@ -989,7 +989,7 @@ static void copy_parameter_set(void **to, void **from, int count, int size)
 }
 
 #define copy_fields(to, from, start_field, end_field) memcpy(&to->start_field, &from->start_field, (char*)&to->end_field - (char*)&to->start_field)
-static int decode_update_context(AVCodecContext *dst, AVCodecContext *src){
+static int decode_update_thread_context(AVCodecContext *dst, AVCodecContext *src){
     H264Context *h= dst->priv_data, *h1= src->priv_data;
     MpegEncContext * const s = &h->s, * const s1 = &h1->s;
     int inited = s->context_initialized, err;
@@ -997,7 +997,7 @@ static int decode_update_context(AVCodecContext *dst, AVCodecContext *src){
 
     if(!s1->context_initialized) return 0;
 
-    err = ff_mpeg_update_context(dst, src);
+    err = ff_mpeg_update_thread_context(dst, src);
     if(err) return err;
 
     //FIXME handle width/height changing
@@ -1152,7 +1152,7 @@ static void decode_postinit(H264Context *h){
     if (h->next_output_pic) return;
 
     if (cur->field_poc[0]==INT_MAX || cur->field_poc[1]==INT_MAX) {
-        ff_report_frame_setup_done(s->avctx);
+        ff_thread_finish_setup(s->avctx);
         return;
     }
 
@@ -1284,7 +1284,7 @@ static void decode_postinit(H264Context *h){
         av_log(s->avctx, AV_LOG_DEBUG, "no picture\n");
     }
 
-    ff_report_frame_setup_done(s->avctx);
+    ff_thread_finish_setup(s->avctx);
 }
 
 static inline void backup_mb_border(H264Context *h, uint8_t *src_y, uint8_t *src_cb, uint8_t *src_cr, int linesize, int uvlinesize, int simple){
@@ -1917,7 +1917,7 @@ static void field_end(H264Context *h){
     s->mb_y= 0;
 
     if (!s->dropable)
-        ff_report_field_progress((AVFrame*)s->current_picture_ptr, (16*s->mb_height >> FIELD_PICTURE) - 1,
+        ff_thread_report_progress((AVFrame*)s->current_picture_ptr, (16*s->mb_height >> FIELD_PICTURE) - 1,
                                  s->picture_structure==PICT_BOTTOM_FIELD);
 
     if(!(HAVE_PTHREADS && avctx->active_thread_type == FF_THREAD_FRAME)){
@@ -2193,8 +2193,8 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
             h->prev_frame_num++;
             h->prev_frame_num %= 1<<h->sps.log2_max_frame_num;
             s->current_picture_ptr->frame_num= h->prev_frame_num;
-            ff_report_field_progress((AVFrame*)s->current_picture_ptr, INT_MAX, 0);
-            ff_report_field_progress((AVFrame*)s->current_picture_ptr, INT_MAX, 1);
+            ff_thread_report_progress((AVFrame*)s->current_picture_ptr, INT_MAX, 0);
+            ff_thread_report_progress((AVFrame*)s->current_picture_ptr, INT_MAX, 1);
             ff_h264_execute_ref_pic_marking(h, NULL, 0);
         }
 
@@ -2621,7 +2621,7 @@ static void decode_finish_row(H264Context *h){
 
     if (s->dropable) return;
 
-    ff_report_field_progress((AVFrame*)s->current_picture_ptr, top + height - 1,
+    ff_thread_report_progress((AVFrame*)s->current_picture_ptr, top + height - 1,
                              s->picture_structure==PICT_BOTTOM_FIELD);
 }
 
@@ -3387,5 +3387,5 @@ AVCodec h264_decoder = {
     /*.sample_fmts = */NULL,
     /*.channel_layouts = */NULL,
     /*.init_copy = */NULL,
-    /*.update_context = */ONLY_IF_THREADS_ENABLED(decode_update_context),
+    /*.update_context = */ONLY_IF_THREADS_ENABLED(decode_update_thread_context),
 };
