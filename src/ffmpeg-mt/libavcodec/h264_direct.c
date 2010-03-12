@@ -127,7 +127,7 @@ void ff_h264_direct_ref_list_init(H264Context * const h){
         h->col_parity= (FFABS(col_poc[0] - cur_poc) >= FFABS(col_poc[1] - cur_poc));
         ref1sidx=sidx= h->col_parity;
     }else if(!(s->picture_structure & h->ref_list[1][0].reference) && !h->ref_list[1][0].mbaff){ // FL -> FL & differ parity
-        h->col_fieldoff= s->mb_stride*(2*(h->ref_list[1][0].reference) - 3);
+        h->col_fieldoff= 2*(h->ref_list[1][0].reference) - 3;
     }
 
     if(cur->pict_type != FF_B_TYPE || h->direct_spatial_mv_pred)
@@ -147,7 +147,7 @@ static void await_reference_mb_row(H264Context * const h, Picture *ref, int mb_y
     int ref_field_picture = ref->field_picture;
     int ref_height = 16*h->s.mb_height >> ref_field_picture;
 
-    if(!(HAVE_PTHREADS && h->s.avctx->active_thread_type == FF_THREAD_FRAME))
+    if(!HAVE_PTHREADS || !(h->s.avctx->active_thread_type&FF_THREAD_FRAME))
         return;
 
     //FIXME it can be safe to access mb stuff
@@ -159,7 +159,7 @@ static void await_reference_mb_row(H264Context * const h, Picture *ref, int mb_y
 
 static void pred_spatial_direct_motion(H264Context * const h, int *mb_type){
     MpegEncContext * const s = &h->s;
-    int b8_stride = h->b8_stride;
+    int b8_stride = 2;
     int b4_stride = h->b_stride;
     int mb_xy = h->mb_xy, mb_y = s->mb_y;
     int mb_type_col[2];
@@ -237,20 +237,20 @@ static void pred_spatial_direct_motion(H264Context * const h, int *mb_type){
     if(IS_INTERLACED(h->ref_list[1][0].mb_type[mb_xy])){ // AFL/AFR/FR/FL -> AFL/FL
         if(!IS_INTERLACED(*mb_type)){                    //     AFR/FR    -> AFL/FL
             mb_y = (s->mb_y&~1) + h->col_parity;
-            mb_xy= s->mb_x + mb_y*s->mb_stride;
+            mb_xy= s->mb_x + ((s->mb_y&~1) + h->col_parity)*s->mb_stride;
             b8_stride = 0;
         }else{
             mb_y  += h->col_fieldoff;
-            mb_xy += h->col_fieldoff; // non zero for FL -> FL & differ parity
+            mb_xy += s->mb_stride*h->col_fieldoff; // non zero for FL -> FL & differ parity
         }
         goto single_col;
     }else{                                               // AFL/AFR/FR/FL -> AFR/FR
         if(IS_INTERLACED(*mb_type)){                     // AFL       /FL -> AFR/FR
             mb_y = s->mb_y&~1;
-            mb_xy= s->mb_x + mb_y*s->mb_stride;
+            mb_xy= s->mb_x + (s->mb_y&~1)*s->mb_stride;
             mb_type_col[0] = h->ref_list[1][0].mb_type[mb_xy];
             mb_type_col[1] = h->ref_list[1][0].mb_type[mb_xy + s->mb_stride];
-            b8_stride *= 3;
+            b8_stride = 2+4*s->mb_stride;
             b4_stride *= 6;
 
             sub_mb_type |= MB_TYPE_16x16|MB_TYPE_DIRECT2; /* B_SUB_8x8 */
@@ -286,12 +286,12 @@ single_col:
 
     l1mv0  = &h->ref_list[1][0].motion_val[0][h->mb2b_xy [mb_xy]];
     l1mv1  = &h->ref_list[1][0].motion_val[1][h->mb2b_xy [mb_xy]];
-    l1ref0 = &h->ref_list[1][0].ref_index [0][h->mb2b8_xy[mb_xy]];
-    l1ref1 = &h->ref_list[1][0].ref_index [1][h->mb2b8_xy[mb_xy]];
+    l1ref0 = &h->ref_list[1][0].ref_index [0][4*mb_xy];
+    l1ref1 = &h->ref_list[1][0].ref_index [1][4*mb_xy];
     if(!b8_stride){
         if(s->mb_y&1){
-            l1ref0 += h->b8_stride;
-            l1ref1 += h->b8_stride;
+            l1ref0 += 2;
+            l1ref1 += 2;
             l1mv0  +=  2*b4_stride;
             l1mv1  +=  2*b4_stride;
         }
@@ -366,11 +366,12 @@ single_col:
                 fill_rectangle(&h->ref_cache[0][scan8[i8*4]], 2, 2, 8, (uint8_t)ref[0], 1);
                 fill_rectangle(&h->ref_cache[1][scan8[i8*4]], 2, 2, 8, (uint8_t)ref[1], 1);
 
+                assert(b8_stride==2);
                 /* col_zero_flag */
-                if(!IS_INTRA(mb_type_col[0]) && !h->ref_list[1][0].long_ref && (   l1ref0[x8 + y8*b8_stride] == 0
-                                              || (l1ref0[x8 + y8*b8_stride] < 0 && l1ref1[x8 + y8*b8_stride] == 0
+                if(!IS_INTRA(mb_type_col[0]) && !h->ref_list[1][0].long_ref && (   l1ref0[i8] == 0
+                                              || (l1ref0[i8] < 0 && l1ref1[i8] == 0
                                                   && h->x264_build>33U))){
-                    const int16_t (*l1mv)[2]= l1ref0[x8 + y8*b8_stride] == 0 ? l1mv0 : l1mv1;
+                    const int16_t (*l1mv)[2]= l1ref0[i8] == 0 ? l1mv0 : l1mv1;
                     if(IS_SUB_8X8(sub_mb_type)){
                         const int16_t *mv_col = l1mv[x8*3 + y8*3*b4_stride];
                         if(FFABS(mv_col[0]) <= 1 && FFABS(mv_col[1]) <= 1){
@@ -405,7 +406,7 @@ single_col:
 
 static void pred_temp_direct_motion(H264Context * const h, int *mb_type){
     MpegEncContext * const s = &h->s;
-    int b8_stride = h->b8_stride;
+    int b8_stride = 2;
     int b4_stride = h->b_stride;
     int mb_xy = h->mb_xy, mb_y = s->mb_y;
     int mb_type_col[2];
@@ -425,8 +426,8 @@ static void pred_temp_direct_motion(H264Context * const h, int *mb_type){
             mb_xy= s->mb_x + ((s->mb_y&~1) + h->col_parity)*s->mb_stride;
             b8_stride = 0;
         }else{
-            mb_y  += h->col_fieldoff/s->mb_stride;
-            mb_xy += h->col_fieldoff; // non zero for FL -> FL & differ parity
+            mb_y  += h->col_fieldoff;
+            mb_xy += s->mb_stride*h->col_fieldoff; // non zero for FL -> FL & differ parity
         }
         goto single_col;
     }else{                                               // AFL/AFR/FR/FL -> AFR/FR
@@ -435,7 +436,7 @@ static void pred_temp_direct_motion(H264Context * const h, int *mb_type){
             mb_xy= s->mb_x + (s->mb_y&~1)*s->mb_stride;
             mb_type_col[0] = h->ref_list[1][0].mb_type[mb_xy];
             mb_type_col[1] = h->ref_list[1][0].mb_type[mb_xy + s->mb_stride];
-            b8_stride *= 3;
+            b8_stride = 2+4*s->mb_stride;
             b4_stride *= 6;
 
             sub_mb_type = MB_TYPE_16x16|MB_TYPE_P0L0|MB_TYPE_P0L1|MB_TYPE_DIRECT2; /* B_SUB_8x8 */
@@ -472,12 +473,12 @@ single_col:
 
     l1mv0  = &h->ref_list[1][0].motion_val[0][h->mb2b_xy [mb_xy]];
     l1mv1  = &h->ref_list[1][0].motion_val[1][h->mb2b_xy [mb_xy]];
-    l1ref0 = &h->ref_list[1][0].ref_index [0][h->mb2b8_xy[mb_xy]];
-    l1ref1 = &h->ref_list[1][0].ref_index [1][h->mb2b8_xy[mb_xy]];
+    l1ref0 = &h->ref_list[1][0].ref_index [0][4*mb_xy];
+    l1ref1 = &h->ref_list[1][0].ref_index [1][4*mb_xy];
     if(!b8_stride){
         if(s->mb_y&1){
-            l1ref0 += h->b8_stride;
-            l1ref1 += h->b8_stride;
+            l1ref0 += 2;
+            l1ref1 += 2;
             l1mv0  +=  2*b4_stride;
             l1mv1  +=  2*b4_stride;
         }
@@ -580,11 +581,12 @@ single_col:
                     continue;
                 }
 
-                ref0 = l1ref0[x8 + y8*b8_stride];
+                assert(b8_stride == 2);
+                ref0 = l1ref0[i8];
                 if(ref0 >= 0)
                     ref0 = map_col_to_list0[0][ref0 + ref_offset];
                 else{
-                    ref0 = map_col_to_list0[1][l1ref1[x8 + y8*b8_stride] + ref_offset];
+                    ref0 = map_col_to_list0[1][l1ref1[i8] + ref_offset];
                     l1mv= l1mv1;
                 }
                 scale = dist_scale_factor[ref0];

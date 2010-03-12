@@ -222,7 +222,7 @@ int ff_alloc_picture(MpegEncContext *s, Picture *pic, int shared){
             for(i=0; i<2; i++){
                 FF_ALLOCZ_OR_GOTO(s->avctx, pic->motion_val_base[i], 2 * (b4_array_size+4)  * sizeof(int16_t), fail)
                 pic->motion_val[i]= pic->motion_val_base[i]+4;
-                FF_ALLOCZ_OR_GOTO(s->avctx, pic->ref_index[i], b8_array_size * sizeof(uint8_t), fail)
+                FF_ALLOCZ_OR_GOTO(s->avctx, pic->ref_index[i], 4*mb_array_size * sizeof(uint8_t), fail)
             }
             pic->motion_subsample_log2= 2;
         }else if(s->out_format == FMT_H263 || s->encoding || (s->avctx->debug&FF_DEBUG_MV) || (s->avctx->debug_mv)){
@@ -376,7 +376,8 @@ int ff_mpeg_update_thread_context(AVCodecContext *dst, AVCodecContext *src)
 {
     MpegEncContext *s = dst->priv_data, *s1 = src->priv_data;
 
-    if(!s1->context_initialized) return 0;
+    /* ffdshow custom code */
+    if(/*dst == src ||*/ !s1->context_initialized) return 0;
 
     //FIXME can parameters change on I-frames? in that case dst may need a reinit
     if(!s->context_initialized){
@@ -497,7 +498,7 @@ av_cold int MPV_common_init(MpegEncContext *s)
         return -1;
     }
 
-    if((HAVE_THREADS && s->avctx->active_thread_type == FF_THREAD_SLICE) &&
+    if(s->avctx->active_thread_type&FF_THREAD_SLICE &&
        (s->avctx->thread_count > MAX_THREADS || (s->avctx->thread_count > s->mb_height && s->mb_height))){
         av_log(s->avctx, AV_LOG_ERROR, "too many threads\n");
         return -1;
@@ -667,7 +668,7 @@ av_cold int MPV_common_init(MpegEncContext *s)
     s->context_initialized = 1;
     s->thread_context[0]= s;
 
-    if (HAVE_THREADS && s->avctx->active_thread_type == FF_THREAD_SLICE) {
+    if (HAVE_THREADS && s->avctx->active_thread_type&FF_THREAD_SLICE) {
         threads = s->avctx->thread_count;
 
         for(i=1; i<threads; i++){
@@ -698,7 +699,7 @@ void MPV_common_end(MpegEncContext *s)
 {
     int i, j, k;
 
-    if (HAVE_THREADS && s->avctx->active_thread_type == FF_THREAD_SLICE) {
+    if (HAVE_THREADS && s->avctx->active_thread_type&FF_THREAD_SLICE) {
         for(i=0; i<s->avctx->thread_count; i++){
             free_duplicate_context(s->thread_context[i]);
         }
@@ -776,7 +777,7 @@ void MPV_common_end(MpegEncContext *s)
     for(i=0; i<3; i++)
         av_freep(&s->visualization_buffer[i]);
 
-    if(!(HAVE_PTHREADS && s->avctx->active_thread_type == FF_THREAD_FRAME))
+    if(!(s->avctx->active_thread_type&FF_THREAD_FRAME))
         avcodec_default_free_buffers(s->avctx);
 }
 
@@ -1652,7 +1653,7 @@ void MPV_decode_mb_internal(MpegEncContext *s, DCTELEM block[12][64],
             /* decoding or more than one mb_type (MC was already done otherwise) */
             if(!s->encoding){
 
-                if(HAVE_PTHREADS && s->avctx->active_thread_type == FF_THREAD_FRAME) {
+                if(HAVE_PTHREADS && s->avctx->active_thread_type&FF_THREAD_FRAME) {
                     if (s->mv_dir & MV_DIR_FORWARD) {
                         ff_thread_await_progress((AVFrame*)s->last_picture_ptr, MPV_lowest_referenced_row(s, 0), 0);
                     }

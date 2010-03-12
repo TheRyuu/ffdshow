@@ -220,7 +220,7 @@ int avcodec_default_get_buffer(AVCodecContext *s, AVFrame *pic){
     (*picture_number)++;
 
     if(buf->base[0] && (buf->width != w || buf->height != h || buf->pix_fmt != s->pix_fmt)){
-        if(HAVE_PTHREADS && s->active_thread_type == FF_THREAD_FRAME) {
+        if(s->active_thread_type&FF_THREAD_FRAME) {
             av_log_missing_feature(s, "Width/height changing with frame threads is", 0);
             return -1;
         }
@@ -494,7 +494,7 @@ int attribute_align_arg avcodec_open(AVCodecContext *avctx, AVCodec *codec)
         }
     }
 
-    if(avctx->codec->init && !(HAVE_PTHREADS && avctx->active_thread_type == FF_THREAD_FRAME)){
+    if(avctx->codec->init && !(avctx->active_thread_type&FF_THREAD_FRAME)){
         ret = avctx->codec->init(avctx);
         if (ret < 0) {
             goto free_and_end;
@@ -554,7 +554,7 @@ int attribute_align_arg avcodec_decode_video(AVCodecContext *avctx, AVFrame *pic
                          const uint8_t *buf, int buf_size)
 {
     int ret;
-    int threaded = (HAVE_PTHREADS && avctx->active_thread_type == FF_THREAD_FRAME);
+    int threaded = HAVE_PTHREADS && avctx->active_thread_type&FF_THREAD_FRAME;
 
     *got_picture_ptr= 0;
     if((avctx->coded_width||avctx->coded_height) && avcodec_check_dimensions(avctx,avctx->coded_width,avctx->coded_height))
@@ -621,7 +621,7 @@ av_cold int avcodec_close(AVCodecContext *avctx)
 
     if (HAVE_THREADS && avctx->thread_opaque)
         avcodec_thread_free(avctx);
-    if (avctx->codec && avctx->codec->close && !(HAVE_PTHREADS && avctx->active_thread_type == FF_THREAD_FRAME))
+    if (avctx->codec && avctx->codec->close && !(avctx->active_thread_type&FF_THREAD_FRAME))
         avctx->codec->close(avctx);
     avcodec_default_free_buffers(avctx);
     av_freep(&avctx->priv_data);
@@ -714,7 +714,7 @@ void avcodec_init(void)
 
 void avcodec_flush_buffers(AVCodecContext *avctx)
 {
-    if(HAVE_PTHREADS && avctx->active_thread_type == FF_THREAD_FRAME)
+    if(HAVE_PTHREADS && avctx->active_thread_type&FF_THREAD_FRAME)
         ff_thread_flush(avctx);
     if(avctx->codec->flush)
         avctx->codec->flush(avctx);
