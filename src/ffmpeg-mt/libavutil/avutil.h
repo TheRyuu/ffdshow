@@ -40,7 +40,7 @@
 #define AV_VERSION(a, b, c) AV_VERSION_DOT(a, b, c)
 
 #define LIBAVUTIL_VERSION_MAJOR 50
-#define LIBAVUTIL_VERSION_MINOR 11
+#define LIBAVUTIL_VERSION_MINOR 12
 #define LIBAVUTIL_VERSION_MICRO  0
 
 #define LIBAVUTIL_VERSION_INT   AV_VERSION_INT(LIBAVUTIL_VERSION_MAJOR, \
@@ -55,8 +55,11 @@
 
 
 #include "common.h"
+#include "error.h"
 #include "mathematics.h"
 #include "rational.h"
+#include "intfloat_readwrite.h"
 #include "log.h"
+#include "pixfmt.h"
 
 #endif /* AVUTIL_AVUTIL_H */

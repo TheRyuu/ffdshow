@@ -726,7 +726,8 @@ void TffdshowDecVideo::ConnectCompatibleFilter(void)
     {
      ppEnum->Next(1,&mediaTypes,&fetched);
      if (!fetched) break;
-     if (inpin->CheckMediaType(&(CMediaType(mediaTypes[0]))) == S_OK)
+     CMediaType mt = CMediaType(mediaTypes[0]);
+     if (inpin->CheckMediaType(&mt) == S_OK)
      {
          compatibleMediaTypeFound=true;
          break;

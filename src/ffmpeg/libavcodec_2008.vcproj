@@ -455,15 +455,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\libavcodec\aac.c"
-				>
-			</File>
-			<File
 				RelativePath=".\libavcodec\aac_ac3_parser.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\aac_parser.c"
 				>
 			</File>
 			<File
@@ -1588,11 +1580,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\libavcodec\mpegaudio3.h"
+				RelativePath=".\libavcodec\mpegaudio.h"
 				>
 			</File>
 			<File
-				RelativePath=".\libavcodec\mpegaudio.h"
+				RelativePath=".\libavcodec\mpegaudio3.h"
 				>
 			</File>
 			<File
@@ -1940,6 +1932,14 @@
 			Name="libavutil"
 			>
 			<File
+				RelativePath=".\libavutil\attributes.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libavutil\avconfig.h"
+				>
+			</File>
+			<File
 				RelativePath=".\libavutil\avstring.c"
 				>
 			</File>
@@ -1969,6 +1969,10 @@
 			</File>
 			<File
 				RelativePath=".\libavutil\crc_data.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libavutil\error.h"
 				>
 			</File>
 			<File
@@ -2033,6 +2037,18 @@
 			</File>
 			<File
 				RelativePath=".\libavutil\mem.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libavutil\pixdesc.c"
+				>
+			</File>
+			<File
+				RelativePath=".\libavutil\pixdesc.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libavutil\pixfmt.h"
 				>
 			</File>
 			<File

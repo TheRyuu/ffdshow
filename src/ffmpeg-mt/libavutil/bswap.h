@@ -29,6 +29,7 @@
 #include <stdint.h>
 #include "config.h"
 #include "attributes.h"
+#include "common.h" /* for MSVC */
 
 #if ARCH_X86
 #   include "x86/bswap.h"

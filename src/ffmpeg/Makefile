@@ -202,6 +202,7 @@ SRCS_C=\
     \
       $(LAVU_DIR)/avstring.c \
       $(LAVU_DIR)/crc.c \
+      $(LAVU_DIR)/intfloat_readwrite.c \
       $(LAVU_DIR)/lfg.c \
       $(LAVU_DIR)/lls.c \
       $(LAVU_DIR)/log.c \
@@ -209,6 +210,7 @@ SRCS_C=\
       $(LAVU_DIR)/mathematics.c \
       $(LAVU_DIR)/md5.c \
       $(LAVU_DIR)/mem.c \
+      $(LAVU_DIR)/pixdesc.c \
       $(LAVU_DIR)/random_seed.c \
       $(LAVU_DIR)/rational.c \
     \

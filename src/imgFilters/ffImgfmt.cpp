@@ -284,9 +284,9 @@ const TcspFcc cspFccs[]=
 
 char_t* csp_getName(int csp,char_t *buf,size_t len)
 {
- return csp_getName(csp_getInfo(csp),csp,buf,len);
+ return csp_getName2(csp_getInfo(csp),csp,buf,len);
 }
-char_t* csp_getName(const TcspInfo *cspInfo,int csp,char_t *buf,size_t len)
+char_t* csp_getName2(const TcspInfo *cspInfo,int csp,char_t *buf,size_t len)
 {
  const char_t *colorspaceName=cspInfo?cspInfo->name:_l("unknown");
  tsnprintf_s(buf,

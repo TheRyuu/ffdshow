@@ -91,8 +91,6 @@ static inline av_const int av_log2_16bit_c(unsigned int v)
     return n;
 }
 
-#endif /* HAVE_AV_CONFIG_H */
-
 #ifdef HAVE_AV_CONFIG_H
 #   include "config.h"
 #   include "intmath.h"
@@ -104,8 +102,6 @@ static inline av_const int av_log2_16bit_c(unsigned int v)
 #ifndef av_log2_16bit
 #   define av_log2_16bit av_log2_16bit_c
 #endif
-
-#ifdef HAVE_AV_CONFIG_H
 
 /**
  * Clips a signed integer value into the amin-amax range.

@@ -26,20 +26,14 @@
  * external API header
  */
 
-
 #include "../codecs/ffcodecs.h"
 #include "AVPaletteControl.h"
-#include "ffImgfmt.h"
-
-#ifdef HAVE_AV_CONFIG_H
-#include "libavutil/common.h"
-#endif
 
 #include <errno.h>
 #include "libavutil/avutil.h"
 
 #define LIBAVCODEC_VERSION_MAJOR 52
-#define LIBAVCODEC_VERSION_MINOR 55
+#define LIBAVCODEC_VERSION_MINOR 59
 #define LIBAVCODEC_VERSION_MICRO  0
 
 #define LIBAVCODEC_VERSION_INT  AV_VERSION_INT(LIBAVCODEC_VERSION_MAJOR, \
@@ -703,6 +697,58 @@ typedef struct AVPanScan{
 #define FF_BUFFER_HINTS_READABLE 0x02 // Codec will read from buffer.
 #define FF_BUFFER_HINTS_PRESERVE 0x04 // User must not alter buffer content.
 #define FF_BUFFER_HINTS_REUSABLE 0x08 // Codec will reuse the buffer (update).
+
+typedef struct AVPacket {
+    /**
+     * Presentation timestamp in AVStream->time_base units; the time at which
+     * the decompressed packet will be presented to the user.
+     * Can be AV_NOPTS_VALUE if it is not stored in the file.
+     * pts MUST be larger or equal to dts as presentation cannot happen before
+     * decompression, unless one wants to view hex dumps. Some formats misuse
+     * the terms dts and pts/cts to mean something different. Such timestamps
+     * must be converted to true pts/dts before they are stored in AVPacket.
+     */
+    int64_t pts;
+    /**
+     * Decompression timestamp in AVStream->time_base units; the time at which
+     * the packet is decompressed.
+     * Can be AV_NOPTS_VALUE if it is not stored in the file.
+     */
+    int64_t dts;
+    uint8_t *data;
+    int   size;
+    int   stream_index;
+    int   flags;
+    /**
+     * Duration of this packet in AVStream->time_base units, 0 if unknown.
+     * Equals next_pts - this_pts in presentation order.
+     */
+    int   duration;
+    void  (*destruct)(struct AVPacket *);
+    void  *priv;
+    int64_t pos;                            ///< byte position in stream, -1 if unknown
+
+    /**
+     * Time difference in AVStream->time_base units from the pts of this
+     * packet to the point at which the output from the decoder has converged
+     * independent from the availability of previous frames. That is, the
+     * frames are virtually identical no matter if decoding started from
+     * the very first frame or from this keyframe.
+     * Is AV_NOPTS_VALUE if unknown.
+     * This field is not the display duration of the current packet.
+     *
+     * The purpose of this field is to allow seeking in streams that have no
+     * keyframes in the conventional sense. It corresponds to the
+     * recovery point SEI in H.264 and match_time_delta in NUT. It is also
+     * essential for some types of subtitle streams to ensure that all
+     * subtitles are correctly displayed after seeking.
+     */
+    int64_t convergence_duration;
+} AVPacket;
+#define AV_PKT_FLAG_KEY   0x0001
+#if LIBAVCODEC_VERSION_MAJOR < 53
+#define PKT_FLAG_KEY AV_PKT_FLAG_KEY
+#endif
 
 /**
  * Audio Video Frame.
@@ -2970,26 +3016,6 @@ int av_picture_pad(AVPicture *dst, const AVPicture *src, int height, int width, 
             int padtop, int padbottom, int padleft, int padright, int *color);
 
 unsigned int av_xiphlacing(unsigned char *s, unsigned int v);
-
-/* error handling */
-#if EINVAL > 0
-#define AVERROR(e) (-(e)) /**< Returns a negative error code from a POSIX error code, to return from library functions. */
-#define AVUNERROR(e) (-(e)) /**< Returns a POSIX error code from a library function error return value. */
-#else
-/* Some platforms have E* and errno already negated. */
-#define AVERROR(e) (e)
-#define AVUNERROR(e) (e)
-#endif
-#define AVERROR_UNKNOWN     AVERROR(EINVAL)  /**< unknown error */
-#define AVERROR_IO          AVERROR(EIO)     /**< I/O error */
-#define AVERROR_NUMEXPECTED AVERROR(EDOM)    /**< Number syntax expected in filename. */
-#define AVERROR_INVALIDDATA AVERROR(EINVAL)  /**< invalid data found */
-#define AVERROR_NOMEM       AVERROR(ENOMEM)  /**< not enough memory */
-#define AVERROR_NOFMT       AVERROR(EILSEQ)  /**< unknown format */
-#define AVERROR_NOTSUPP     AVERROR(ENOSYS)  /**< Operation not supported. */
-#define AVERROR_NOENT       AVERROR(ENOENT)  /**< No such file or directory. */
-#define AVERROR_EOF         AVERROR(EPIPE)   /**< End of file. */
-#define AVERROR_PATCHWELCOME    -MKTAG('P','A','W','E') /**< Not yet implemented in FFmpeg. Patches welcome. */
 
 /**
  * Logs a generic warning message about a missing feature. This function is

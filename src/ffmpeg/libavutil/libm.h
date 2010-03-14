@@ -92,7 +92,7 @@ static av_always_inline av_const float truncf(float x)
 #ifndef cbrtf
 static float cbrtf(float x)
 {
-    return pow(x, 1.0/3);
+    return pow((float)x, (float)1.0/3);
 }
 #endif
 

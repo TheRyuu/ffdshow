@@ -3388,3 +3388,8 @@ AVCodec h264_decoder = {
     /*.init_copy = */NULL,
     /*.update_context = */ONLY_IF_THREADS_ENABLED(decode_update_thread_context),
 };
+
+#if !CONFIG_SVQ3_DECODER
+void ff_svq3_luma_dc_dequant_idct_c(DCTELEM *block, int qp) {};
+void ff_svq3_add_idct_c(uint8_t *dst, DCTELEM *block, int stride, int qp, int dc) {};
+#endif

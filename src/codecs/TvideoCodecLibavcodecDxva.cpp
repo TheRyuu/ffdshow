@@ -18,9 +18,6 @@
 
 #include "stdafx.h"
 
-#define HAVE_AV_CONFIG_H
-#define H264_MERGE_TESTING
-
 #include "ffmpeg/libavcodec/avcodec.h"
 #include "ffmpeg/Tlibavcodec.h"
 #include "ffmpeg/libavcodec/dvdata.h"

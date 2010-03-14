@@ -802,6 +802,14 @@
 			Name="libavutil"
 			>
 			<File
+				RelativePath=".\libavutil\attributes.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libavutil\avconfig.h"
+				>
+			</File>
+			<File
 				RelativePath=".\libavutil\avstring.h"
 				>
 			</File>
@@ -819,6 +827,10 @@
 			</File>
 			<File
 				RelativePath=".\libavutil\crc.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libavutil\error.h"
 				>
 			</File>
 			<File
@@ -847,6 +859,18 @@
 			</File>
 			<File
 				RelativePath=".\libavutil\mem.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libavutil\pixdesc.c"
+				>
+			</File>
+			<File
+				RelativePath=".\libavutil\pixdesc.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libavutil\pixfmt.h"
 				>
 			</File>
 			<File

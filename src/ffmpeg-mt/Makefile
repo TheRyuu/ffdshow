@@ -38,9 +38,11 @@ SRCS_C=\
       $(LAVC_DIR)/utils.c \
       $(LAVC_DIR)/vp3dsp.c \
     \
+      $(LAVU_DIR)/intfloat_readwrite.c \
       $(LAVU_DIR)/log.c \
       $(LAVU_DIR)/mathematics.c \
       $(LAVU_DIR)/mem.c \
+      $(LAVU_DIR)/pixdesc.c \
       $(LAVU_DIR)/rational.c \
     \
       $(LAVC_DIR)/x86/cpuid.c \
