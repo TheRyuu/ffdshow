@@ -32,6 +32,7 @@ public:
  virtual int getType(void) const {return IDFF_MOVIE_RAW;}
  virtual HRESULT decode(TbyteBuffer &src);
  virtual const char_t* getName(void) const {return _l("bitstream");}
+ virtual bool onSeek(REFERENCE_TIME segmentStart);
  };
 #endif
 

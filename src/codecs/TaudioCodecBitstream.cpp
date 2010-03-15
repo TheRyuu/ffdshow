@@ -247,15 +247,15 @@ HRESULT TaudioCodecBitstream::decodeMAT(TbyteBuffer &src, TaudioParserData audio
     additional_blank_size-=addedSize;
     HRESULT hr=deciA->deliverSampleBistream((void*)&*bitstreamBuffer.begin(),(size_t)bitstreamBuffer.size(),audioParserData.bit_rate,audioParserData.sample_rate,true, 0,61424);
     bitstreamBuffer.clear();
-    fillAdditionalBytes();
-    // Fill last zero bytes if any
-    fillBlankBytes(buffer_limit);
     if (hr!=S_OK)
     {
      DPRINTF(_l("TaudioCodecBitstream::decode failed (%lld)"),hr);
      src.clear();
      return hr;
     }
+    fillAdditionalBytes();
+    // Fill last zero bytes if any
+    fillBlankBytes(buffer_limit);
    }
 
    if (ptr+frame_size > end)
@@ -276,15 +276,16 @@ HRESULT TaudioCodecBitstream::decodeMAT(TbyteBuffer &src, TaudioParserData audio
    {
     HRESULT hr=deciA->deliverSampleBistream((void*)&*bitstreamBuffer.begin(),(size_t)bitstreamBuffer.size(),audioParserData.bit_rate,audioParserData.sample_rate,true, 0,61424);
     bitstreamBuffer.clear();
-    fillAdditionalBytes();
-    // Fill last zero bytes if any
-    fillBlankBytes(buffer_limit);
     if (hr!=S_OK)
     {
      DPRINTF(_l("TaudioCodecBitstream::decode failed (%lld)"),hr);
      src.clear();
      return hr;
     }
+    fillAdditionalBytes();
+    // Fill last zero bytes if any
+    fillBlankBytes(buffer_limit);
+
    }
 
    // Fill the MAT frame into the output buffer
@@ -296,16 +297,16 @@ HRESULT TaudioCodecBitstream::decodeMAT(TbyteBuffer &src, TaudioParserData audio
    {
     HRESULT hr=deciA->deliverSampleBistream((void*)&*bitstreamBuffer.begin(),(size_t)bitstreamBuffer.size(),audioParserData.bit_rate,audioParserData.sample_rate,true, 0,61424);
     bitstreamBuffer.clear();
-    fillAdditionalBytes();
-    // Fill the last mat bytes
-    fillMATBuffer(ptr,remainMATBytes);
-    ptr+=remainMATBytes;
     if (hr!=S_OK)
     {
      DPRINTF(_l("TaudioCodecBitstream::decode failed (%lld)"),hr);
      src.clear();
      return hr;
     }
+    fillAdditionalBytes();
+    // Fill the last mat bytes
+    fillMATBuffer(ptr,remainMATBytes);
+    ptr+=remainMATBytes;
    }
 
    // Now update the MAT size : it include the size of the MAT frame + the size of the extra bytes around and inside
@@ -449,4 +450,15 @@ HRESULT TaudioCodecBitstream::decode(TbyteBuffer &src)
      src.clear();
      return hr;
     }
+}
+
+bool TaudioCodecBitstream::onSeek(REFERENCE_TIME segmentStart)
+{
+ DPRINTF(_l("TaudioCodecBitstream::onSeek"));
+ bitstreamBuffer.clear();
+ additional_blank_size = 0;
+ filledBytes = 0;
+ fullMATFrameSize = 0;
+ //pAudioParser->SearchSync();
+ return false;
 }

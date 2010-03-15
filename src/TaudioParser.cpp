@@ -287,7 +287,7 @@ switch (streamformat)
     else
      useAC3Passthrough=false;
   }
-  DPRINTF(_l("TaudioParser::getCodecIdFromStream change to AC3"));
+  //DPRINTF(_l("TaudioParser::getCodecIdFromStream change to AC3"));
    audioParserData.wFormatTag=WAVE_FORMAT_AC3_W;
   break;
   case EAC3:
@@ -405,7 +405,7 @@ switch (streamformat)
   default:break;
  }
  codecId=globalSettings->getCodecId(audioParserData.wFormatTag, NULL);
- DPRINTF(_l("TaudioParser::getCodecIdFromStream %s"), getCodecName(codecId));
+ //DPRINTF(_l("TaudioParser::getCodecIdFromStream %s"), getCodecName(codecId));
  return codecId;
 }
 
