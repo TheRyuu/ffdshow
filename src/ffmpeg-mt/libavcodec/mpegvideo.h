@@ -723,6 +723,9 @@ void ff_copy_picture(Picture *dst, Picture *src);
  */
 int ff_alloc_picture(MpegEncContext *s, Picture *pic, int shared);
 
+extern const enum PixelFormat ff_pixfmt_list_420[];
+extern const enum PixelFormat ff_hwaccel_pixfmt_list_420[];
+
 static inline void ff_update_block_index(MpegEncContext *s){
     const int block_size= 8>>s->avctx->lowres;
 
@@ -773,6 +776,7 @@ int ff_get_mb_score(MpegEncContext * s, int mx, int my, int src_index,
 
 /* mpeg12.c */
 extern const uint8_t ff_mpeg1_dc_scale_table[128];
+extern const uint8_t * const ff_mpeg2_dc_scale_table[4];
 
 void mpeg1_encode_picture_header(MpegEncContext *s, int picture_number);
 void mpeg1_encode_mb(MpegEncContext *s,

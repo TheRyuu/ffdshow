@@ -614,7 +614,7 @@ static void free_tables(H264Context *h){
 
 static void init_dequant8_coeff_table(H264Context *h){
     int i,q,x;
-    const int transpose = (h->s.dsp.h264_idct8_add != ff_h264_idct8_add_c); //FIXME ugly
+    const int transpose = (h->h264dsp.h264_idct8_add != ff_h264_idct8_add_c); //FIXME ugly
     h->dequant8_coeff[0] = h->dequant8_buffer[0];
     h->dequant8_coeff[1] = h->dequant8_buffer[1];
 
@@ -637,7 +637,7 @@ static void init_dequant8_coeff_table(H264Context *h){
 
 static void init_dequant4_coeff_table(H264Context *h){
     int i,j,q,x;
-    const int transpose = (h->s.dsp.h264_idct_add != ff_h264_idct_add_c); //FIXME ugly
+    const int transpose = (h->h264dsp.h264_idct_add != ff_h264_idct_add_c); //FIXME ugly
     for(i=0; i<6; i++ ){
         h->dequant4_coeff[i] = h->dequant4_buffer[i];
         for(j=0; j<i; j++){
@@ -765,6 +765,7 @@ static av_cold void common_init(H264Context *h){
     s->height = s->avctx->height;
     s->codec_id= s->avctx->codec->id;
 
+    ff_h264dsp_init(&h->h264dsp);
     ff_h264_pred_init(&h->hpc, s->codec_id);
 
     h->dequant_coeff_pps= -1;
@@ -818,7 +819,7 @@ av_cold int ff_h264_decode_init(AVCodecContext *avctx){
     h->thread_context[0] = h;
     h->outputed_poc = INT_MIN;
     h->prev_poc_msb= 1<<16;
-    h->x264_build = -1;
+    //h->x264_build = -1;
     ff_h264_reset_sei(h);
 
     /* ffdshow custom code (begin) */
@@ -1067,8 +1068,8 @@ static av_always_inline void hl_decode_mb_internal(H264Context *h, int simple){
                             idct_dc_add =
                             idct_add    = s->dsp.add_pixels8;
                         }else{
-                            idct_dc_add = s->dsp.h264_idct8_dc_add;
-                            idct_add    = s->dsp.h264_idct8_add;
+                            idct_dc_add = h->h264dsp.h264_idct8_dc_add;
+                            idct_add    = h->h264dsp.h264_idct8_add;
                         }
                         for(i=0; i<16; i+=4){
                             uint8_t * const ptr= dest_y + block_offset[i];
@@ -1092,8 +1093,8 @@ static av_always_inline void hl_decode_mb_internal(H264Context *h, int simple){
                             idct_dc_add =
                             idct_add    = s->dsp.add_pixels4;
                         }else{
-                            idct_dc_add = s->dsp.h264_idct_dc_add;
-                            idct_add    = s->dsp.h264_idct_add;
+                            idct_dc_add = h->h264dsp.h264_idct_dc_add;
+                            idct_add    = h->h264dsp.h264_idct_add;
                         }
                         for(i=0; i<16; i++){
                             uint8_t * const ptr= dest_y + block_offset[i];
@@ -1144,7 +1145,7 @@ static av_always_inline void hl_decode_mb_internal(H264Context *h, int simple){
             hl_motion(h, dest_y, dest_cb, dest_cr,
                       s->me.qpel_put, s->dsp.put_h264_chroma_pixels_tab,
                       s->me.qpel_avg, s->dsp.avg_h264_chroma_pixels_tab,
-                      s->dsp.weight_h264_pixels_tab, s->dsp.biweight_h264_pixels_tab);
+                      h->h264dsp.weight_h264_pixels_tab, h->h264dsp.biweight_h264_pixels_tab);
         }
 
 
@@ -1161,7 +1162,7 @@ static av_always_inline void hl_decode_mb_internal(H264Context *h, int simple){
                             }
                         }
                     }else{
-                         s->dsp.h264_idct_add16intra(dest_y, block_offset, h->mb, linesize, h->non_zero_count_cache);
+                         h->h264dsp.h264_idct_add16intra(dest_y, block_offset, h->mb, linesize, h->non_zero_count_cache);
                     }
                 }else if(h->cbp&15){
                     if(transform_bypass){
@@ -1174,9 +1175,9 @@ static av_always_inline void hl_decode_mb_internal(H264Context *h, int simple){
                         }
                     }else{
                         if(IS_8x8DCT(mb_type)){
-                            s->dsp.h264_idct8_add4(dest_y, block_offset, h->mb, linesize, h->non_zero_count_cache);
+                            h->h264dsp.h264_idct8_add4(dest_y, block_offset, h->mb, linesize, h->non_zero_count_cache);
                         }else{
-                            s->dsp.h264_idct_add16(dest_y, block_offset, h->mb, linesize, h->non_zero_count_cache);
+                            h->h264dsp.h264_idct_add16(dest_y, block_offset, h->mb, linesize, h->non_zero_count_cache);
                         }
                     }
                 }
@@ -1207,8 +1208,8 @@ static av_always_inline void hl_decode_mb_internal(H264Context *h, int simple){
                 chroma_dc_dequant_idct_c(h->mb + 16*16, h->chroma_qp[0], h->dequant4_coeff[IS_INTRA(mb_type) ? 1:4][h->chroma_qp[0]][0]);
                 chroma_dc_dequant_idct_c(h->mb + 16*16+4*16, h->chroma_qp[1], h->dequant4_coeff[IS_INTRA(mb_type) ? 2:5][h->chroma_qp[1]][0]);
                 if(is_h264){
-                    idct_add = s->dsp.h264_idct_add;
-                    idct_dc_add = s->dsp.h264_idct_dc_add;
+                    idct_add = h->h264dsp.h264_idct_add;
+                    idct_dc_add = h->h264dsp.h264_idct_dc_add;
                     for(i=16; i<16+8; i++){
                         if(h->non_zero_count_cache[ scan8[i] ])
                             idct_add   (dest[(i&4)>>2] + block_offset[i], h->mb + i*16, uvlinesize);
@@ -1469,7 +1470,7 @@ static int init_poc(H264Context *h){
 static void init_scan_tables(H264Context *h){
     MpegEncContext * const s = &h->s;
     int i;
-    if(s->dsp.h264_idct_add == ff_h264_idct_add_c){ //FIXME little ugly
+    if(h->h264dsp.h264_idct_add == ff_h264_idct_add_c){ //FIXME little ugly
         memcpy(h->zigzag_scan, zigzag_scan, 16*sizeof(uint8_t));
         memcpy(h-> field_scan,  field_scan, 16*sizeof(uint8_t));
     }else{
@@ -1480,7 +1481,7 @@ static void init_scan_tables(H264Context *h){
 #undef T
         }
     }
-    if(s->dsp.h264_idct8_add == ff_h264_idct8_add_c){
+    if(h->h264dsp.h264_idct8_add == ff_h264_idct8_add_c){
         memcpy(h->zigzag_scan8x8,       ff_zigzag_direct,     64*sizeof(uint8_t));
         memcpy(h->zigzag_scan8x8_cavlc, zigzag_scan8x8_cavlc, 64*sizeof(uint8_t));
         memcpy(h->field_scan8x8,        field_scan8x8,        64*sizeof(uint8_t));
@@ -1698,7 +1699,7 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
 
         if(h->sps.timing_info_present_flag){
             int64_t den= h->sps.time_scale;
-            if(h->x264_build < 44U)
+            if(h->x264_build > 0 && h->x264_build < 44)
                 den *= 2;
             av_reduce(&s->avctx->time_base.num, &s->avctx->time_base.den,
                       h->sps.num_units_in_tick * 2, den, 1<<30);

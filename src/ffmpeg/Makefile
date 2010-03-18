@@ -79,6 +79,7 @@ SRCS_C=\
       $(LAVC_DIR)/h264_ps.c \
       $(LAVC_DIR)/h264_refs.c \
       $(LAVC_DIR)/h264_sei.c \
+      $(LAVC_DIR)/h264dsp.c \
       $(LAVC_DIR)/h264idct.c \
       $(LAVC_DIR)/h264pred.c \
       $(LAVC_DIR)/huffman.c \
@@ -103,7 +104,6 @@ SRCS_C=\
       $(LAVC_DIR)/loco.c \
       $(LAVC_DIR)/mace.c \
       $(LAVC_DIR)/mdct.c \
-      $(LAVC_DIR)/mdct_tablegen.c \
       $(LAVC_DIR)/mjpeg.c \
       $(LAVC_DIR)/mjpeg_parser.c \
       $(LAVC_DIR)/mjpegbdec.c \
@@ -163,7 +163,6 @@ SRCS_C=\
       $(LAVC_DIR)/svq1dec.c \
       $(LAVC_DIR)/svq3.c \
       $(LAVC_DIR)/synth_filter.c \
-      $(LAVC_DIR)/tableprint.c \
       $(LAVC_DIR)/truemotion1.c \
       $(LAVC_DIR)/truemotion2.c \
       $(LAVC_DIR)/truespeech.c \

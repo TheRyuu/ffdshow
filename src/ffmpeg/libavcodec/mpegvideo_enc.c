@@ -505,10 +505,7 @@ av_cold int MPV_encode_init(AVCodecContext *avctx)
 //        return -1;
     }
 
-    if(s->codec_id==CODEC_ID_MJPEG){
-        s->intra_quant_bias= 1<<(QUANT_BIAS_SHIFT-1); //(a + x/2)/x
-        s->inter_quant_bias= 0;
-    }else if(s->mpeg_quant || s->codec_id==CODEC_ID_MPEG1VIDEO || s->codec_id==CODEC_ID_MPEG2VIDEO){
+    if(s->mpeg_quant || s->codec_id==CODEC_ID_MPEG1VIDEO || s->codec_id==CODEC_ID_MPEG2VIDEO || s->codec_id==CODEC_ID_MJPEG){
         s->intra_quant_bias= 3<<(QUANT_BIAS_SHIFT-3); //(a + x*3/8)/x
         s->inter_quant_bias= 0;
     }else{
@@ -2904,12 +2901,14 @@ static int encode_picture(MpegEncContext *s, int picture_number)
 
     if (s->out_format == FMT_MJPEG) {
         /* for mjpeg, we do include qscale in the matrix */
-        s->intra_matrix[0] = ff_mpeg1_default_intra_matrix[0];
         for(i=1;i<64;i++){
             int j= s->dsp.idct_permutation[i];
 
             s->intra_matrix[j] = av_clip_uint8((ff_mpeg1_default_intra_matrix[i] * s->qscale) >> 3);
         }
+        s->y_dc_scale_table=
+        s->c_dc_scale_table= ff_mpeg2_dc_scale_table[s->intra_dc_precision];
+        s->intra_matrix[0] = ff_mpeg2_dc_scale_table[s->intra_dc_precision][8];
         ff_convert_matrix(&s->dsp, s->q_intra_matrix, s->q_intra_matrix16,
                        s->intra_matrix, s->intra_quant_bias, 8, 8, 1);
         s->qscale= 8;

@@ -731,6 +731,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavcodec\h264dsp.c"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\h264idct.c"
 				>
 			</File>
@@ -828,10 +832,6 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\mdct.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\mdct_tablegen.c"
 				>
 			</File>
 			<File
@@ -1111,10 +1111,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\libavcodec\tableprint.c"
-				>
-			</File>
-			<File
 				RelativePath=".\libavcodec\truemotion1.c"
 				>
 			</File>
@@ -1340,6 +1336,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavcodec\cbrt_tablegen.h"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\celp_filters.h"
 				>
 			</File>
@@ -1465,6 +1465,10 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\h264data.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\h264dsp.h"
 				>
 			</File>
 			<File
@@ -1640,6 +1644,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavcodec\qdm2_tablegen.h"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\qdm2data.h"
 				>
 			</File>
@@ -1725,10 +1733,6 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\synth_filter.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\tableprint.h"
 				>
 			</File>
 			<File

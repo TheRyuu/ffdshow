@@ -24,8 +24,11 @@
 #ifndef AVUTIL_ERROR_H
 #define AVUTIL_ERROR_H
 
+#include <errno.h>
+#include "avutil.h"
+
 /* error handling */
-#if EINVAL > 0
+#if EDOM > 0
 #define AVERROR(e) (-(e)) /**< Returns a negative error code from a POSIX error code, to return from library functions. */
 #define AVUNERROR(e) (-(e)) /**< Returns a POSIX error code from a library function error return value. */
 #else
@@ -38,6 +41,7 @@
 #define AVERROR_IO          AVERROR(EIO)     /**< I/O error */
 #define AVERROR_NOENT       AVERROR(ENOENT)  /**< No such file or directory. */
 #define AVERROR_NOMEM       AVERROR(ENOMEM)  /**< not enough memory */
+#define AVERROR_NUMEXPECTED AVERROR(EDOM)    /**< Number syntax expected in filename. */
 #define AVERROR_UNKNOWN     AVERROR(EINVAL)  /**< unknown error */
 #endif
 
@@ -45,8 +49,11 @@
 #define AVERROR_INVALIDDATA AVERROR(EINVAL)  /**< invalid data found */
 #define AVERROR_NOFMT       AVERROR(EILSEQ)  /**< unknown format */
 #define AVERROR_NOTSUPP     AVERROR(ENOSYS)  /**< Operation not supported. */
-#define AVERROR_NUMEXPECTED AVERROR(EDOM)    /**< Number syntax expected in filename. */
 
 #define AVERROR_PATCHWELCOME    (-MKTAG('P','A','W','E')) /**< Not yet implemented in FFmpeg. Patches welcome. */
+
+#if LIBAVUTIL_VERSION_MAJOR > 50
+#define AVERROR_NUMEXPECTED     (-MKTAG('N','U','E','X')) /**< Number syntax expected in filename. */
+#endif
 
 #endif /* AVUTIL_ERROR_H */

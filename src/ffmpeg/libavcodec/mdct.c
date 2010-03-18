@@ -61,7 +61,7 @@ av_cold void ff_kbd_window_init(float *window, float alpha, int n)
        window[i] = sqrt(local_window[i] / sum);
 }
 
-//#include "mdct_tablegen.h"
+#include "mdct_tablegen.h"
 
 /**
  * init MDCT or IMDCT computation.

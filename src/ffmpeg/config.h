@@ -28,6 +28,7 @@
   #define HAVE_FAST_CMOV 0
 #endif
 
+#define HAVE_ALTIVEC 0
 #define HAVE_BIGENDIAN 0
 #define HAVE_BSWAP 1
 #define HAVE_EBP_AVAILABLE 1
@@ -54,11 +55,14 @@
 
 #define ASMALIGN(ZEROBITS) ".align 1<<" #ZEROBITS "\n\t"
 
+#define CONFIG_DWT 0
 #define CONFIG_HARDCODED_TABLES 0
 #define CONFIG_GPL 1
 #define CONFIG_GRAY 1
+#define CONFIG_H264DSP 1
 #define CONFIG_LIBAMR_NB 1
 #define CONFIG_LIBXVID 0
+#define CONFIG_LPC 0
 #define CONFIG_MDCT 1
 #define CONFIG_MPEGAUDIO_HP 1
 #define CONFIG_SMALL 0
