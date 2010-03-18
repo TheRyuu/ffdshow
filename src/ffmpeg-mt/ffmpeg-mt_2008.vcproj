@@ -521,6 +521,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavcodec\h264dsp.c"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\h264idct.c"
 				>
 			</File>
@@ -635,6 +639,10 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\h264data.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\h264dsp.h"
 				>
 			</File>
 			<File

@@ -26,6 +26,7 @@ SRCS_C=\
       $(LAVC_DIR)/h264_ps.c \
       $(LAVC_DIR)/h264_refs.c \
       $(LAVC_DIR)/h264_sei.c \
+      $(LAVC_DIR)/h264dsp.c \
       $(LAVC_DIR)/h264idct.c \
       $(LAVC_DIR)/h264pred.c \
       $(LAVC_DIR)/imgconvert.c \

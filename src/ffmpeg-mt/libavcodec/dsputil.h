@@ -37,8 +37,6 @@
 //#define DEBUG
 /* dct code */
 typedef short DCTELEM;
-typedef int DWTELEM;
-typedef short IDWTELEM;
 
 void fdct_ifast (DCTELEM *data);
 void fdct_ifast248 (DCTELEM *data);
@@ -133,8 +131,8 @@ typedef void (*op_pixels_func)(uint8_t *block/*align width (8 or 16)*/, const ui
 typedef void (*tpel_mc_func)(uint8_t *block/*align width (8 or 16)*/, const uint8_t *pixels/*align 1*/, int line_size, int w, int h);
 typedef void (*qpel_mc_func)(uint8_t *dst/*align width (8 or 16)*/, uint8_t *src/*align 1*/, int stride);
 typedef void (*h264_chroma_mc_func)(uint8_t *dst/*align 8*/, uint8_t *src/*align 1*/, int srcStride, int h, int x, int y);
-typedef void (*h264_weight_func)(uint8_t *block, int stride, int log2_denom, int weight, int offset);
-typedef void (*h264_biweight_func)(uint8_t *dst, uint8_t *src, int stride, int log2_denom, int weightd, int weights, int offset);
+
+typedef void (*op_fill_func)(uint8_t *block/*align width (8 or 16)*/, uint8_t value, int line_size, int h);
 
 #define DEF_OLD_QPEL(name)\
 void ff_put_        ## name (uint8_t *dst/*align width (8 or 16)*/, uint8_t *src/*align 1*/, int stride);\
@@ -164,10 +162,6 @@ static void a(uint8_t *block, const uint8_t *pixels, int line_size, int h){\
 // h is limited to {width/2, width, 2*width} but never larger than 16 and never smaller then 2
 // although currently h<4 is not used as functions with width <8 are neither used nor implemented
 typedef int (*me_cmp_func)(void /*MpegEncContext*/ *s, uint8_t *blk1/*align width (8 or 16)*/, uint8_t *blk2/*align 1*/, int line_size, int h)/* __attribute__ ((const))*/;
-
-
-// for snow slices
-typedef struct slice_buffer_s slice_buffer;
 
 /**
  * Scantable.
@@ -318,23 +312,7 @@ typedef struct DSPContext {
     qpel_mc_func put_2tap_qpel_pixels_tab[4][16];
     qpel_mc_func avg_2tap_qpel_pixels_tab[4][16];
 
-    h264_weight_func weight_h264_pixels_tab[10];
-    h264_biweight_func biweight_h264_pixels_tab[10];
-
     me_cmp_func pix_abs[2][4];
-
-    void (*h264_v_loop_filter_luma)(uint8_t *pix/*align 16*/, int stride, int alpha, int beta, int8_t *tc0);
-    void (*h264_h_loop_filter_luma)(uint8_t *pix/*align 4 */, int stride, int alpha, int beta, int8_t *tc0);
-    /* v/h_loop_filter_luma_intra: align 16 */
-    void (*h264_v_loop_filter_luma_intra)(uint8_t *pix, int stride, int alpha, int beta);
-    void (*h264_h_loop_filter_luma_intra)(uint8_t *pix, int stride, int alpha, int beta);
-    void (*h264_v_loop_filter_chroma)(uint8_t *pix/*align 8*/, int stride, int alpha, int beta, int8_t *tc0);
-    void (*h264_h_loop_filter_chroma)(uint8_t *pix/*align 4*/, int stride, int alpha, int beta, int8_t *tc0);
-    void (*h264_v_loop_filter_chroma_intra)(uint8_t *pix/*align 8*/, int stride, int alpha, int beta);
-    void (*h264_h_loop_filter_chroma_intra)(uint8_t *pix/*align 8*/, int stride, int alpha, int beta);
-    // h264_loop_filter_strength: simd only. the C version is inlined in h264.c
-    void (*h264_loop_filter_strength)(int16_t bS[2][4][4], uint8_t nnz[40], int8_t ref[2][40], int16_t mv[2][40][2],
-                                      int bidir, int edges, int step, int mask_mv0, int mask_mv1, int field);
 
     /* (I)DCT */
     void (*fdct)(DCTELEM *block/* align 16*/);
@@ -386,21 +364,6 @@ typedef struct DSPContext {
 #define EDGE_WIDTH 16
 #define EDGE_TOP    1
 #define EDGE_BOTTOM 2
-
-    /* h264 functions */
-    /* NOTE!!! if you implement any of h264_idct8_add, h264_idct8_add4 then you must implement all of them
-       NOTE!!! if you implement any of h264_idct_add, h264_idct_add16, h264_idct_add16intra, h264_idct_add8 then you must implement all of them
-        The reason for above, is that no 2 out of one list may use a different permutation.
-    */
-    void (*h264_idct_add)(uint8_t *dst/*align 4*/, DCTELEM *block/*align 16*/, int stride);
-    void (*h264_idct8_add)(uint8_t *dst/*align 8*/, DCTELEM *block/*align 16*/, int stride);
-    void (*h264_idct_dc_add)(uint8_t *dst/*align 4*/, DCTELEM *block/*align 16*/, int stride);
-    void (*h264_idct8_dc_add)(uint8_t *dst/*align 8*/, DCTELEM *block/*align 16*/, int stride);
-    void (*h264_dct)(DCTELEM block[4][4]);
-    void (*h264_idct_add16)(uint8_t *dst/*align 16*/, const int *blockoffset, DCTELEM *block/*align 16*/, int stride, const uint8_t nnzc[6*8]);
-    void (*h264_idct8_add4)(uint8_t *dst/*align 16*/, const int *blockoffset, DCTELEM *block/*align 16*/, int stride, const uint8_t nnzc[6*8]);
-    void (*h264_idct_add8)(uint8_t **dst/*align 16*/, const int *blockoffset, DCTELEM *block/*align 16*/, int stride, const uint8_t nnzc[6*8]);
-    void (*h264_idct_add16intra)(uint8_t *dst/*align 16*/, const int *blockoffset, DCTELEM *block/*align 16*/, int stride, const uint8_t nnzc[6*8]);
 
     void (*prefetch)(void *mem, int stride, int h);
 

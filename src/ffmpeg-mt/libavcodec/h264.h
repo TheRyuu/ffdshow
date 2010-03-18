@@ -32,6 +32,7 @@
 #include "dsputil.h"
 #include "cabac.h"
 #include "mpegvideo.h"
+#include "h264dsp.h"
 #include "h264pred.h"
 #include "rectangle.h"
 
@@ -262,6 +263,7 @@ typedef struct MMCO{
  */
 typedef struct H264Context{
     MpegEncContext s;
+    H264DSPContext h264dsp;
     int chroma_qp[2]; //QPc
 
     int qp_thresh;      ///< QP threshold to skip loopfilter
@@ -1103,7 +1105,7 @@ static void fill_decode_caches(H264Context *h, int mb_type){
                     fill_rectangle(&h->direct_cache[scan8[0]], 4, 4, 8, MB_TYPE_16x16>>1, 1);
 
                     if(IS_DIRECT(top_type)){
-                        AV_WN32A(&h->direct_cache[scan8[0] - 1*8], 0x01010101*(MB_TYPE_DIRECT2>>1));
+                        AV_WN32A(&h->direct_cache[scan8[0] - 1*8], 0x01010101u*(MB_TYPE_DIRECT2>>1));
                     }else if(IS_8X8(top_type)){
                         int b8_xy = 4*top_xy;
                         h->direct_cache[scan8[0] + 0 - 1*8]= h->direct_table[b8_xy + 2];

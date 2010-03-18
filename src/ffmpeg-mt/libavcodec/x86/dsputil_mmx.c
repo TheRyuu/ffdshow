@@ -24,6 +24,7 @@
 
 #include "libavutil/x86_cpu.h"
 #include "libavcodec/dsputil.h"
+#include "libavcodec/h264dsp.h"
 #include "libavcodec/mpegvideo.h"
 #include "libavcodec/simple_idct.h"
 #include "dsputil_mmx.h"
@@ -1767,16 +1768,6 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
         c->put_h264_chroma_pixels_tab[0]= put_h264_chroma_mc8_mmx_rnd;
         c->put_h264_chroma_pixels_tab[1]= put_h264_chroma_mc4_mmx;
 
-        c->h264_idct_dc_add=
-        c->h264_idct_add= ff_h264_idct_add_mmx;
-        c->h264_idct8_dc_add=
-        c->h264_idct8_add= ff_h264_idct8_add_mmx;
-
-        c->h264_idct_add16     = ff_h264_idct_add16_mmx;
-        c->h264_idct8_add4     = ff_h264_idct8_add4_mmx;
-        c->h264_idct_add8      = ff_h264_idct_add8_mmx;
-        c->h264_idct_add16intra= ff_h264_idct_add16intra_mmx;
-
         if (mm_flags & FF_MM_MMX2) {
             c->prefetch = prefetch_mmx2;
 
@@ -1793,13 +1784,6 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
             c->avg_pixels_tab[1][0] = avg_pixels8_mmx2;
             c->avg_pixels_tab[1][1] = avg_pixels8_x2_mmx2;
             c->avg_pixels_tab[1][2] = avg_pixels8_y2_mmx2;
-
-            c->h264_idct_dc_add= ff_h264_idct_dc_add_mmx2;
-            c->h264_idct8_dc_add= ff_h264_idct8_dc_add_mmx2;
-            c->h264_idct_add16     = ff_h264_idct_add16_mmx2;
-            c->h264_idct8_add4     = ff_h264_idct8_add4_mmx2;
-            c->h264_idct_add8      = ff_h264_idct_add8_mmx2;
-            c->h264_idct_add16intra= ff_h264_idct_add16intra_mmx2;
 
             if(!(avctx->flags & CODEC_FLAG_BITEXACT)){
                 c->put_no_rnd_pixels_tab[0][1] = put_no_rnd_pixels16_x2_mmx2;
@@ -1851,31 +1835,6 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
             c->avg_h264_chroma_pixels_tab[1]= avg_h264_chroma_mc4_mmx2;
             c->avg_h264_chroma_pixels_tab[2]= avg_h264_chroma_mc2_mmx2;
             c->put_h264_chroma_pixels_tab[2]= put_h264_chroma_mc2_mmx2;
-            c->h264_v_loop_filter_luma= h264_v_loop_filter_luma_mmx2;
-            c->h264_h_loop_filter_luma= h264_h_loop_filter_luma_mmx2;
-            c->h264_v_loop_filter_chroma= h264_v_loop_filter_chroma_mmx2;
-            c->h264_h_loop_filter_chroma= h264_h_loop_filter_chroma_mmx2;
-            c->h264_v_loop_filter_chroma_intra= h264_v_loop_filter_chroma_intra_mmx2;
-            c->h264_h_loop_filter_chroma_intra= h264_h_loop_filter_chroma_intra_mmx2;
-            c->h264_loop_filter_strength= h264_loop_filter_strength_mmx2;
-
-            c->weight_h264_pixels_tab[0]= ff_h264_weight_16x16_mmx2;
-            c->weight_h264_pixels_tab[1]= ff_h264_weight_16x8_mmx2;
-            c->weight_h264_pixels_tab[2]= ff_h264_weight_8x16_mmx2;
-            c->weight_h264_pixels_tab[3]= ff_h264_weight_8x8_mmx2;
-            c->weight_h264_pixels_tab[4]= ff_h264_weight_8x4_mmx2;
-            c->weight_h264_pixels_tab[5]= ff_h264_weight_4x8_mmx2;
-            c->weight_h264_pixels_tab[6]= ff_h264_weight_4x4_mmx2;
-            c->weight_h264_pixels_tab[7]= ff_h264_weight_4x2_mmx2;
-
-            c->biweight_h264_pixels_tab[0]= ff_h264_biweight_16x16_mmx2;
-            c->biweight_h264_pixels_tab[1]= ff_h264_biweight_16x8_mmx2;
-            c->biweight_h264_pixels_tab[2]= ff_h264_biweight_8x16_mmx2;
-            c->biweight_h264_pixels_tab[3]= ff_h264_biweight_8x8_mmx2;
-            c->biweight_h264_pixels_tab[4]= ff_h264_biweight_8x4_mmx2;
-            c->biweight_h264_pixels_tab[5]= ff_h264_biweight_4x8_mmx2;
-            c->biweight_h264_pixels_tab[6]= ff_h264_biweight_4x4_mmx2;
-            c->biweight_h264_pixels_tab[7]= ff_h264_biweight_4x2_mmx2;
         } else if (mm_flags & FF_MM_3DNOW) {
             c->prefetch = prefetch_3dnow;
 
@@ -1938,9 +1897,6 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
             H264_QPEL_FUNCS(0, 0, sse2);
         }
         if(mm_flags & FF_MM_SSE2){
-            c->h264_idct8_add = ff_h264_idct8_add_sse2;
-            c->h264_idct8_add4= ff_h264_idct8_add4_sse2;
-
             H264_QPEL_FUNCS(0, 1, sse2);
             H264_QPEL_FUNCS(0, 2, sse2);
             H264_QPEL_FUNCS(0, 3, sse2);
@@ -1974,6 +1930,63 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
             c->avg_h264_chroma_pixels_tab[1]= avg_h264_chroma_mc4_ssse3;
         }
 #endif
+    }
+}
+
+#if CONFIG_H264DSP
+void ff_h264dsp_init_x86(H264DSPContext *c)
+{
+    mm_flags = mm_support();
+
+    if (mm_flags & FF_MM_MMX) {
+        c->h264_idct_dc_add=
+        c->h264_idct_add= ff_h264_idct_add_mmx;
+        c->h264_idct8_dc_add=
+        c->h264_idct8_add= ff_h264_idct8_add_mmx;
+
+        c->h264_idct_add16     = ff_h264_idct_add16_mmx;
+        c->h264_idct8_add4     = ff_h264_idct8_add4_mmx;
+        c->h264_idct_add8      = ff_h264_idct_add8_mmx;
+        c->h264_idct_add16intra= ff_h264_idct_add16intra_mmx;
+
+        if (mm_flags & FF_MM_MMX2) {
+            c->h264_idct_dc_add= ff_h264_idct_dc_add_mmx2;
+            c->h264_idct8_dc_add= ff_h264_idct8_dc_add_mmx2;
+            c->h264_idct_add16     = ff_h264_idct_add16_mmx2;
+            c->h264_idct8_add4     = ff_h264_idct8_add4_mmx2;
+            c->h264_idct_add8      = ff_h264_idct_add8_mmx2;
+            c->h264_idct_add16intra= ff_h264_idct_add16intra_mmx2;
+
+            c->h264_v_loop_filter_luma= h264_v_loop_filter_luma_mmx2;
+            c->h264_h_loop_filter_luma= h264_h_loop_filter_luma_mmx2;
+            c->h264_v_loop_filter_chroma= h264_v_loop_filter_chroma_mmx2;
+            c->h264_h_loop_filter_chroma= h264_h_loop_filter_chroma_mmx2;
+            c->h264_v_loop_filter_chroma_intra= h264_v_loop_filter_chroma_intra_mmx2;
+            c->h264_h_loop_filter_chroma_intra= h264_h_loop_filter_chroma_intra_mmx2;
+            c->h264_loop_filter_strength= h264_loop_filter_strength_mmx2;
+
+            c->weight_h264_pixels_tab[0]= ff_h264_weight_16x16_mmx2;
+            c->weight_h264_pixels_tab[1]= ff_h264_weight_16x8_mmx2;
+            c->weight_h264_pixels_tab[2]= ff_h264_weight_8x16_mmx2;
+            c->weight_h264_pixels_tab[3]= ff_h264_weight_8x8_mmx2;
+            c->weight_h264_pixels_tab[4]= ff_h264_weight_8x4_mmx2;
+            c->weight_h264_pixels_tab[5]= ff_h264_weight_4x8_mmx2;
+            c->weight_h264_pixels_tab[6]= ff_h264_weight_4x4_mmx2;
+            c->weight_h264_pixels_tab[7]= ff_h264_weight_4x2_mmx2;
+
+            c->biweight_h264_pixels_tab[0]= ff_h264_biweight_16x16_mmx2;
+            c->biweight_h264_pixels_tab[1]= ff_h264_biweight_16x8_mmx2;
+            c->biweight_h264_pixels_tab[2]= ff_h264_biweight_8x16_mmx2;
+            c->biweight_h264_pixels_tab[3]= ff_h264_biweight_8x8_mmx2;
+            c->biweight_h264_pixels_tab[4]= ff_h264_biweight_8x4_mmx2;
+            c->biweight_h264_pixels_tab[5]= ff_h264_biweight_4x8_mmx2;
+            c->biweight_h264_pixels_tab[6]= ff_h264_biweight_4x4_mmx2;
+            c->biweight_h264_pixels_tab[7]= ff_h264_biweight_4x2_mmx2;
+        }
+        if(mm_flags & FF_MM_SSE2){
+            c->h264_idct8_add = ff_h264_idct8_add_sse2;
+            c->h264_idct8_add4= ff_h264_idct8_add4_sse2;
+        }
 
 #if CONFIG_GPL && HAVE_YASM && ARCH_X86_32
         if (mm_flags & FF_MM_MMX2){
@@ -1996,6 +2009,7 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
 #endif
     }
 }
+#endif /* CONFIG_H264DSP */
 
 const char* avcodec_get_current_idct_mmx(AVCodecContext *avctx,DSPContext *c)
 {
