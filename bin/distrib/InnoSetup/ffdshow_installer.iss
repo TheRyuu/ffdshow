@@ -1,10 +1,10 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision           = '3301'
+#define tryout_revision           = '3322'
 
 #define buildyear                 = '2010'
 #define buildmonth                =   '03'
-#define buildday                  =   '03'
+#define buildday                  =   '18'
 
 ; Build specific options
 #define localize                  = True
@@ -589,10 +589,10 @@ Root: HKCU; Subkey: "{#= ff_reg_base}";               ValueType: dword;  ValueNa
 Root: HKCU; Subkey: "{#= ff_reg_base}_audio";         ValueType: dword;  ValueName: "isWhitelist";          ValueData: "1";                  Components: ffdshow; Tasks:     whitelist
 Root: HKCU; Subkey: "{#= ff_reg_base}_audio";         ValueType: dword;  ValueName: "isWhitelist";          ValueData: "0";                  Components: ffdshow; Tasks: NOT whitelist;             Check: NOT IsUpdate
 
-Root: HKCU; Subkey: "{#= ff_reg_base}";               ValueType: dword;  ValueName: "dontaskComp";          ValueData: "1";                  Components: ffdshow; Tasks: whitelist AND     whitelist\prompt
-Root: HKCU; Subkey: "{#= ff_reg_base}";               ValueType: dword;  ValueName: "dontaskComp";          ValueData: "0";                  Components: ffdshow; Tasks: whitelist AND NOT whitelist\prompt
-Root: HKCU; Subkey: "{#= ff_reg_base}_audio";         ValueType: dword;  ValueName: "dontaskComp";          ValueData: "1";                  Components: ffdshow; Tasks: whitelist AND     whitelist\prompt
-Root: HKCU; Subkey: "{#= ff_reg_base}_audio";         ValueType: dword;  ValueName: "dontaskComp";          ValueData: "0";                  Components: ffdshow; Tasks: whitelist AND NOT whitelist\prompt
+Root: HKCU; Subkey: "{#= ff_reg_base}";               ValueType: dword;  ValueName: "isCompMgr";            ValueData: "1";                  Components: ffdshow; Tasks: whitelist AND     whitelist\prompt
+Root: HKCU; Subkey: "{#= ff_reg_base}";               ValueType: dword;  ValueName: "isCompMgr";            ValueData: "0";                  Components: ffdshow; Tasks: whitelist AND NOT whitelist\prompt
+Root: HKCU; Subkey: "{#= ff_reg_base}_audio";         ValueType: dword;  ValueName: "isCompMgr";            ValueData: "1";                  Components: ffdshow; Tasks: whitelist AND     whitelist\prompt
+Root: HKCU; Subkey: "{#= ff_reg_base}_audio";         ValueType: dword;  ValueName: "isCompMgr";            ValueData: "0";                  Components: ffdshow; Tasks: whitelist AND NOT whitelist\prompt
 
 ; Registry keys for the audio/video formats:
 #include "reg_formats.iss"
