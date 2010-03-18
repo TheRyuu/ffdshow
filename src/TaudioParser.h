@@ -135,7 +135,7 @@ public:
  void reset()
  {
   wFormatTag=0;sample_rate=0;bit_rate=0;sample_format=0;sample_blocks=0;lastFrameTime=0;isFirst=true;
-  nbFormatChanges=0;frames.clear();alternateSampleFormat=-1;
+  nbFormatChanges=0;frames.clear();alternateSampleFormat=-1;channels=0;
  }
  TaudioParserData()
  {
