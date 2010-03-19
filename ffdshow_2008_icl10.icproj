@@ -5,7 +5,7 @@
 	Name="ffdshow"
 	ProjectGUID="{0C1CDCBB-5886-42B4-A928-F4B82DD3FD17}"
 	VCNestedProjectGUID="{30A21C7F-035D-41E2-95BE-B4FFA5F5176B}"
-	VCNestedProjectCRC32="3511533904"
+	VCNestedProjectCRC32="4192920116"
 	VCNestedProjectFileName="ffdshow_2008_icl10.vcproj">
 	<Platforms>
 		<Platform 
@@ -25,7 +25,8 @@
 				ATLMinimizesCRunTimeLibraryUsage="false"
 				CharacterSet="1"/>
 			<Tool 
-				Name="PreBuildEventTool"/>
+				Name="PreBuildEventTool"
+				CommandLine="if not exist &quot;%programfiles%\TortoiseSVN\bin\SubWCRev.exe&quot; goto x64&#xA;&quot;%programfiles%\TortoiseSVN\bin\SubWCRev.exe&quot; .\  src\SubWCRev.conf src\svn_version.h&#xA;goto End&#xA;&#xA;:x64&#xA;if not exist &quot;%ProgramW6432%\TortoiseSVN\bin\SubWCRev.exe&quot; goto NoSubWCRev&#xA;&quot;%ProgramW6432%\TortoiseSVN\bin\SubWCRev.exe&quot; .\  src\SubWCRev.conf src\svn_version.h&#xA;goto End&#xA;&#xA;:NoSubWCRev&#xA;if exist src\svn_version.h del src\svn_version.h&#xA;echo #define SVN_REVISION 0 &gt;&gt;  src\svn_version.h&#xA;echo #define BUILD_YEAR 2010 &gt;&gt;  src\svn_version.h&#xA;echo #define BUILD_MONTH 1 &gt;&gt;  src\svn_version.h&#xA;echo #define BUILD_DAY 1 &gt;&gt;  src\svn_version.h&#xA;&#xA;:End"/>
 			<Tool 
 				Name="CustomTool"/>
 			<Tool 
@@ -74,8 +75,7 @@
 				PreprocessorDefinitions="_DEBUG"/>
 			<Tool 
 				Name="PreLinkEventTool"
-				Description="Increasing build version"
-				CommandLine="&quot;bin/verinc.exe&quot; src/version.ver"/>
+				CommandLine=""/>
 			<Tool 
 				Name="LinkerTool"
 				RegisterOutput="false"
@@ -123,7 +123,8 @@
 				ATLMinimizesCRunTimeLibraryUsage="false"
 				CharacterSet="1"/>
 			<Tool 
-				Name="PreBuildEventTool"/>
+				Name="PreBuildEventTool"
+				CommandLine="if not exist &quot;%programfiles%\TortoiseSVN\bin\SubWCRev.exe&quot; goto x64&#xA;&quot;%programfiles%\TortoiseSVN\bin\SubWCRev.exe&quot; .\  src\SubWCRev.conf src\svn_version.h&#xA;goto End&#xA;&#xA;:x64&#xA;if not exist &quot;%ProgramW6432%\TortoiseSVN\bin\SubWCRev.exe&quot; goto NoSubWCRev&#xA;&quot;%ProgramW6432%\TortoiseSVN\bin\SubWCRev.exe&quot; .\  src\SubWCRev.conf src\svn_version.h&#xA;goto End&#xA;&#xA;:NoSubWCRev&#xA;if exist src\svn_version.h del src\svn_version.h&#xA;echo #define SVN_REVISION 0 &gt;&gt;  src\svn_version.h&#xA;echo #define BUILD_YEAR 2010 &gt;&gt;  src\svn_version.h&#xA;echo #define BUILD_MONTH 1 &gt;&gt;  src\svn_version.h&#xA;echo #define BUILD_DAY 1 &gt;&gt;  src\svn_version.h&#xA;&#xA;:End"/>
 			<Tool 
 				Name="CustomTool"/>
 			<Tool 
@@ -172,8 +173,7 @@
 				PreprocessorDefinitions="_DEBUG"/>
 			<Tool 
 				Name="PreLinkEventTool"
-				Description="Increasing build version"
-				CommandLine="&quot;bin/verinc.exe&quot; src/version.ver"/>
+				CommandLine=""/>
 			<Tool 
 				Name="LinkerTool"
 				IgnoreImportLibrary="true"
@@ -222,7 +222,8 @@
 				CharacterSet="1"
 				ManagedExtensions="0"/>
 			<Tool 
-				Name="PreBuildEventTool"/>
+				Name="PreBuildEventTool"
+				CommandLine="if not exist &quot;%programfiles%\TortoiseSVN\bin\SubWCRev.exe&quot; goto x64&#xA;&quot;%programfiles%\TortoiseSVN\bin\SubWCRev.exe&quot; .\  src\SubWCRev.conf src\svn_version.h&#xA;goto End&#xA;&#xA;:x64&#xA;if not exist &quot;%ProgramW6432%\TortoiseSVN\bin\SubWCRev.exe&quot; goto NoSubWCRev&#xA;&quot;%ProgramW6432%\TortoiseSVN\bin\SubWCRev.exe&quot; .\  src\SubWCRev.conf src\svn_version.h&#xA;goto End&#xA;&#xA;:NoSubWCRev&#xA;if exist src\svn_version.h del src\svn_version.h&#xA;echo #define SVN_REVISION 0 &gt;&gt;  src\svn_version.h&#xA;echo #define BUILD_YEAR 2010 &gt;&gt;  src\svn_version.h&#xA;echo #define BUILD_MONTH 1 &gt;&gt;  src\svn_version.h&#xA;echo #define BUILD_DAY 1 &gt;&gt;  src\svn_version.h&#xA;&#xA;:End"/>
 			<Tool 
 				Name="CustomTool"/>
 			<Tool 
@@ -276,8 +277,7 @@
 				PreprocessorDefinitions="NDEBUG"/>
 			<Tool 
 				Name="PreLinkEventTool"
-				Description="Increasing build version"
-				CommandLine="&quot;bin/verinc.exe&quot; src/version.ver"/>
+				CommandLine=""/>
 			<Tool 
 				Name="LinkerTool"
 				RegisterOutput="false"
@@ -329,7 +329,8 @@
 				CharacterSet="1"
 				ManagedExtensions="0"/>
 			<Tool 
-				Name="PreBuildEventTool"/>
+				Name="PreBuildEventTool"
+				CommandLine="if not exist &quot;%programfiles%\TortoiseSVN\bin\SubWCRev.exe&quot; goto x64&#xA;&quot;%programfiles%\TortoiseSVN\bin\SubWCRev.exe&quot; .\  src\SubWCRev.conf src\svn_version.h&#xA;goto End&#xA;&#xA;:x64&#xA;if not exist &quot;%ProgramW6432%\TortoiseSVN\bin\SubWCRev.exe&quot; goto NoSubWCRev&#xA;&quot;%ProgramW6432%\TortoiseSVN\bin\SubWCRev.exe&quot; .\  src\SubWCRev.conf src\svn_version.h&#xA;goto End&#xA;&#xA;:NoSubWCRev&#xA;if exist src\svn_version.h del src\svn_version.h&#xA;echo #define SVN_REVISION 0 &gt;&gt;  src\svn_version.h&#xA;echo #define BUILD_YEAR 2010 &gt;&gt;  src\svn_version.h&#xA;echo #define BUILD_MONTH 1 &gt;&gt;  src\svn_version.h&#xA;echo #define BUILD_DAY 1 &gt;&gt;  src\svn_version.h&#xA;&#xA;:End"/>
 			<Tool 
 				Name="CustomTool"/>
 			<Tool 
@@ -385,8 +386,7 @@
 				PreprocessorDefinitions="NDEBUG"/>
 			<Tool 
 				Name="PreLinkEventTool"
-				Description="Increasing build version"
-				CommandLine="&quot;bin/verinc.exe&quot; src/version.ver"/>
+				CommandLine=""/>
 			<Tool 
 				Name="LinkerTool"
 				IgnoreImportLibrary="true"

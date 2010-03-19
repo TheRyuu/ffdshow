@@ -1,10 +1,12 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision           = '3322'
+#include "..\..\..\src\svn_version.h"
 
-#define buildyear                 = '2010'
-#define buildmonth                =   '03'
-#define buildday                  =   '18'
+; Build revision and date
+#define tryout_revision           = SVN_REVISION
+#define buildyear                 = BUILD_YEAR
+#define buildmonth                = BUILD_MONTH
+#define buildday                  = BUILD_DAY
 
 ; Build specific options
 #define localize                  = True
@@ -105,19 +107,17 @@ ArchitecturesAllowed            = x64
 ArchitecturesInstallIn64BitMode = x64
 AppId                           = ffdshow64
 DefaultGroupName                = ffdshow x64
-AppVerName                      = ffdshow x64 [rev {#= tryout_revision}] [{#= buildyear}-{#= buildmonth}-{#= buildday}]
-MinVersion                      = 0,5.01
+AppVerName                      = ffdshow x64 v1.1.{#= tryout_revision} [{#= buildyear}-{#= buildmonth}-{#= buildday}]
 #else
 AppId                           = ffdshow
 DefaultGroupName                = ffdshow
-AppVerName                      = ffdshow [rev {#= tryout_revision}] [{#= buildyear}-{#= buildmonth}-{#= buildday}]
-MinVersion                      = 0,5.0
+AppVerName                      = ffdshow v1.1.{#= tryout_revision} [{#= buildyear}-{#= buildmonth}-{#= buildday}]
 #endif
 AllowCancelDuringInstall        = no
 AllowNoIcons                    = yes
 AllowUNCPath                    = no
 AppName                         = ffdshow
-AppVersion                      = 1.0.0.{#= tryout_revision}
+AppVersion                      = 1.1.{#= tryout_revision}.0
 Compression                     = lzma/ultra
 InternalCompressLevel           = ultra
 SolidCompression                = True
@@ -140,7 +140,7 @@ UninstallDisplayIcon            = {app}\ffdshow.ax,9
 UsePreviousTasks                = yes
 VersionInfoCompany              = ffdshow
 VersionInfoCopyright            = GNU
-VersionInfoVersion              = 1.0.0.{#= tryout_revision}
+VersionInfoVersion              = 1.1.{#= tryout_revision}.0
 WizardImageFile                 = MicrosoftModern01.bmp
 WizardSmallImageFile            = SetupModernSmall26.bmp
 
@@ -1231,4 +1231,7 @@ begin
   end
 end;
 #endif
+
+
+
 
