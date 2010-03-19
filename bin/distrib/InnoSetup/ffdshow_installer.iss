@@ -1,5 +1,7 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
+#define dummy Exec("update_version.bat","","",1,SW_HIDE)
+
 #include "..\..\..\src\svn_version.h"
 
 ; Build revision and date
@@ -1231,6 +1233,7 @@ begin
   end
 end;
 #endif
+
 
 
 
