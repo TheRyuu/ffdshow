@@ -819,7 +819,7 @@ av_cold int ff_h264_decode_init(AVCodecContext *avctx){
     h->thread_context[0] = h;
     h->outputed_poc = INT_MIN;
     h->prev_poc_msb= 1<<16;
-    //h->x264_build = -1;
+    h->x264_build = -1;
     ff_h264_reset_sei(h);
 
     /* ffdshow custom code (begin) */
@@ -1672,7 +1672,8 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
         s->height= 16*s->mb_height - 4*FFMIN(h->sps.crop_bottom, 3);
 
     if (s->context_initialized
-        && (   s->width != s->avctx->width || s->height != s->avctx->height)) {
+        && (   s->width != s->avctx->width || s->height != s->avctx->height
+            || av_cmp_q(h->sps.sar, s->avctx->sample_aspect_ratio))) {
         if(h != h0)
             return -1;   // width / height changed during parallelized decoding
         free_tables(h);
@@ -1699,7 +1700,7 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
 
         if(h->sps.timing_info_present_flag){
             int64_t den= h->sps.time_scale;
-            if(h->x264_build > 0 && h->x264_build < 44)
+            if(h->x264_build < 44U)
                 den *= 2;
             av_reduce(&s->avctx->time_base.num, &s->avctx->time_base.den,
                       h->sps.num_units_in_tick * 2, den, 1<<30);

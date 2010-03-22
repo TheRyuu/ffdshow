@@ -339,7 +339,7 @@ single_col:
             if(!IS_INTRA(mb_type_col[0]) && !h->ref_list[1][0].long_ref
                && (   (l1ref0[0] == 0 && FFABS(l1mv0[0][0]) <= 1 && FFABS(l1mv0[0][1]) <= 1)
                    || (l1ref0[0]  < 0 && l1ref1[0] == 0 && FFABS(l1mv1[0][0]) <= 1 && FFABS(l1mv1[0][1]) <= 1
-                       && (h->x264_build>33 || !h->x264_build)))){ /* ffmpeg 21681 causes problem with some files */
+                       && h->x264_build>33U))){
                 a=b=0;
                 if(ref[0] > 0)
                     a= mv[0];
@@ -370,7 +370,7 @@ single_col:
                 /* col_zero_flag */
                 if(!IS_INTRA(mb_type_col[0]) && !h->ref_list[1][0].long_ref && (   l1ref0[i8] == 0
                                               || (l1ref0[i8] < 0 && l1ref1[i8] == 0
-                                                  && (h->x264_build>33 || !h->x264_build)))){ /* ffmpeg 21681 causes problem with some files */
+                                                  && h->x264_build>33U))){
                     const int16_t (*l1mv)[2]= l1ref0[i8] == 0 ? l1mv0 : l1mv1;
                     if(IS_SUB_8X8(sub_mb_type)){
                         const int16_t *mv_col = l1mv[x8*3 + y8*3*b4_stride];
