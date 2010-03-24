@@ -596,6 +596,12 @@ Root: HKCU; Subkey: "{#= ff_reg_base}";               ValueType: dword;  ValueNa
 Root: HKCU; Subkey: "{#= ff_reg_base}_audio";         ValueType: dword;  ValueName: "isCompMgr";            ValueData: "1";                  Components: ffdshow; Tasks: whitelist AND     whitelist\prompt
 Root: HKCU; Subkey: "{#= ff_reg_base}_audio";         ValueType: dword;  ValueName: "isCompMgr";            ValueData: "0";                  Components: ffdshow; Tasks: whitelist AND NOT whitelist\prompt
 
+; DXVA Compatibility list
+Root: HKCU; Subkey: "{#= ff_reg_base}_DXVA";          ValueType: dword;  ValueName: "isCompMgr";            ValueData: "0";                  Components: ffdshow;     Flags: createvalueifdoesntexist
+Root: HKCU; Subkey: "{#= ff_reg_base}_DXVA";          ValueType: dword;  ValueName: "isBlacklist";          ValueData: "0";                  Components: ffdshow;     Flags: createvalueifdoesntexist
+Root: HKCU; Subkey: "{#= ff_reg_base}_DXVA";          ValueType: dword;  ValueName: "isWhitelist";          ValueData: "1";                  Components: ffdshow;     Flags: createvalueifdoesntexist
+Root: HKCU; Subkey: "{#= ff_reg_base}_DXVA";          ValueType: string;  ValueName: "Whitelist";           ValueData: "bsplayer.exe;coreplayer.exe;ehshell.exe;gom.exe;graphedit.exe;graphedt.exe;graphstudio.exe;graphstudio64.exe;kmplayer.exe;mpc-hc.exe;mpc-hc64.exe;mplayerc.exe;wmplayer.exe;zplayer.exe;";                  Components: ffdshow;     Flags: createvalueifdoesntexist
+
 ; Registry keys for the audio/video formats:
 #include "reg_formats.iss"
 

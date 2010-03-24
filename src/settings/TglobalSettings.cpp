@@ -60,7 +60,7 @@ TglobalSettingsBase::TglobalSettingsBase(const Tconfig *Iconfig,int Imode,const 
    IDFF_compManagerMode  ,&TglobalSettingsBase::compOnLoadMode   ,1,4,_l(""),0,
      NULL,1,
    IDFF_isCompMgr        ,&TglobalSettingsBase::isCompMgr        ,0,0,_l(""),0,
-     NULL,1,
+     _l("isCompMgr"),1,
    IDFF_isCompMgrChanged ,&TglobalSettingsBase::isCompMgrChanged ,0,0,_l(""),0,
      NULL,0,
    IDFF_addToROT         ,&TglobalSettingsBase::addToROT         ,0,0,_l(""),0,
@@ -108,9 +108,6 @@ void TglobalSettingsBase::load(void)
  TregOpRegRead tHKCU_global(HKEY_CURRENT_USER,FFDSHOW_REG_PARENT _l("\\") FFDSHOW);
  tHKCU_global._REG_OP_N(IDFF_trayIconType,_l("trayIconType"),trayIconType,1);
 
- // Load compatibility manager::dontask : shared by video and audio.
- tHKCU_global._REG_OP_N(IDFF_isCompMgr,_l("isCompMgr"),isCompMgr,1);
-
  // Load allowDPRINTF : shared by all.
  tHKCU_global._REG_OP_N(IDFF_allowDPRINTF,_l("allowDPRINTF"),allowDPRINTF,0);
 }
@@ -132,13 +129,6 @@ void TglobalSettingsBase::save(void)
    TregOpRegWrite tHKCU_global(HKEY_CURRENT_USER,FFDSHOW_REG_PARENT _l("\\") FFDSHOW);
    tHKCU_global._REG_OP_N(IDFF_trayIconType,_l("trayIconType"),trayIconType,0);
    trayIconChanged=0;
-  }
- // Save compatibility manager::dontask : shared by video and audio.
- if (isCompMgrChanged)
-  {
-   TregOpRegWrite tHKCU_global(HKEY_CURRENT_USER,FFDSHOW_REG_PARENT _l("\\") FFDSHOW);
-   tHKCU_global._REG_OP_N(IDFF_isCompMgr,_l("isCompMgr"),isCompMgr,0);
-   isCompMgrChanged=0;
   }
  // Save allowDPRINTF : shared by all.
  if (allowDPRINTFchanged)
