@@ -1,14 +1,14 @@
-@if "%1"=="" (SET SUBWCREV_DIR=.\) else (SET SUBWCREV_DIR=%1)
+@if not exist "%programfiles%\TortoiseSVN\bin\SubWCRev.exe" goto :x64
 
-@if not exist "%programfiles%\TortoiseSVN\bin\SubWCRev.exe" goto x64
-
-@"%programfiles%\TortoiseSVN\bin\SubWCRev.exe" %SUBWCREV_DIR% src\SubWCRev.conf src\svn_version.h
+@"%programfiles%\TortoiseSVN\bin\SubWCRev.exe" .\ src\SubWCRev.conf src\svn_version.h
+@if ERRORLEVEL 6 goto :NoSubWCRev
 @goto :eof
 
 :x64
-@if not exist "%ProgramW6432%\TortoiseSVN\bin\SubWCRev.exe" goto NoSubWCRev
+@if not exist "%ProgramW6432%\TortoiseSVN\bin\SubWCRev.exe" goto :NoSubWCRev
 
-@"%ProgramW6432%\TortoiseSVN\bin\SubWCRev.exe" %SUBWCREV_DIR% src\SubWCRev.conf src\svn_version.h
+@"%ProgramW6432%\TortoiseSVN\bin\SubWCRev.exe" .\ src\SubWCRev.conf src\svn_version.h
+@if ERRORLEVEL 6 goto :NoSubWCRev
 @goto :eof
 
 :NoSubWCRev
