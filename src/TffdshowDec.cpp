@@ -26,6 +26,8 @@
 #include "TkeyboardDirect.h"
 #include "ffdshowRemoteAPIimpl.h"
 #include "Tfilters.h"
+#include "IffdshowDecVideo.h"
+#include "dsutil.h"
 
 STDMETHODIMP_(int) TffdshowDec::getVersion2(void)
 {
@@ -961,4 +963,231 @@ STDMETHODIMP_(TinputPin*) TffdshowDec::getInputPin()
 STDMETHODIMP_(CTransformOutputPin*) TffdshowDec::getOutputPin()
 {
  return m_pOutput;
+}
+
+STDMETHODIMP TffdshowDec::getExternalStreams(void **pAudioStreams, void **pSubtitleStreams)
+{
+ *pAudioStreams=&externalAudioStreams;
+ *pSubtitleStreams=&externalSubtitleStreams;
+ return S_OK;
+}
+
+STDMETHODIMP TffdshowDec::extractExternalStreams(void)
+{
+ externalSubtitleStreams.clear();
+ externalAudioStreams.clear();
+ comptr<IEnumFilters> eff;
+ IFilterGraph    *m_pGraph = NULL;
+ comptr<IffdshowDecVideo> deciV;
+ this->NonDelegatingQueryInterface(getGUID<IffdshowDecVideo>(),(void**) &deciV);
+
+
+ getGraph(&m_pGraph); // Graph we belong to
+ if (m_pGraph == NULL) return E_FAIL;
+ bool foundHaali = false;
+ if (m_pGraph->EnumFilters(&eff)==S_OK)
+ {
+  eff->Reset();
+  const char_t *fileName = getSourceName();
+  for (comptr<IBaseFilter> bff;eff->Next(1,&bff,NULL)==S_OK;bff=NULL)
+  {
+   // Look for FFDShowVideo (we may be inside FFDShowAudio here)
+   if (deciV == NULL)
+    bff->QueryInterface(getGUID<IffdshowDecVideo>(), (void**)&deciV);
+   // Stop browsing the graph if we have found the streams and FFDShow video
+   if (deciV != NULL && foundHaali) break;
+
+   // We have found the streams but not FFDShow video
+   if (foundHaali) continue;
+
+   char_t name[MAX_PATH],filtername[MAX_PATH];
+   getFilterName(bff,name,filtername,countof(filtername));
+   FILTER_INFO filterinfo;
+   bff->QueryFilterInfo(&filterinfo);
+   if (filterinfo.pGraph)
+    filterinfo.pGraph->Release();
+
+   IAMStreamSelect *pAMStreamSelect = NULL;
+   bff->QueryInterface(IID_IAMStreamSelect, (void**) &pAMStreamSelect);
+   if (pAMStreamSelect == NULL)
+    continue;
+
+
+   // Haali splitter
+   if (!strcmp(filtername, fileName))
+   {
+    externalSubtitleStreams.clear();
+    externalAudioStreams.clear();
+    foundHaali = true;
+   }
+
+   DWORD cStreams = 0;
+   pAMStreamSelect->Count(&cStreams);
+   TexternalStreams localAudioStreams;
+
+   for (long streamNb=0; streamNb<(long)cStreams; streamNb++)
+   {
+    DWORD streamSelect = 0;
+    LCID streamLanguageId = 0;
+    DWORD streamGroup = 0;
+    WCHAR *pstreamName = NULL;
+    HRESULT hr = pAMStreamSelect->Info(streamNb, NULL, &streamSelect, 
+     &streamLanguageId, &streamGroup, &pstreamName, NULL, NULL);
+    if (hr != S_OK) continue;
+
+    // Not audio or subtitles
+    if (streamGroup != 1 && streamGroup != 2 && streamGroup != 6590033)
+    {
+     if (pstreamName != NULL)
+      CoTaskMemFree(pstreamName);
+     continue;
+    }
+
+    // Get language name
+    char_t languageName[256];
+    if (streamLanguageId == 0 || GetLocaleInfo(streamLanguageId, LOCALE_SLANGUAGE, languageName, 255) == 0)
+     tsnprintf_s(languageName, countof(languageName), _TRUNCATE, _l("Undetermined (%ld)"), streamNb);
+
+    char_t streamName[256];
+    if (pstreamName != NULL)
+     text<char_t>(pstreamName, -1, streamName, 255);
+    else
+     tsnprintf_s(streamName, countof(streamName), _TRUNCATE, _l("Undetermined (%ld)"), streamNb);
+
+    TexternalStream stream;
+    stream.filterName = ffstring(filtername);
+    stream.streamNb = streamNb;
+    if (streamSelect == AMSTREAMSELECTINFO_ENABLED ||
+     streamSelect == AMSTREAMSELECTINFO_EXCLUSIVE || 
+     streamSelect == (AMSTREAMSELECTINFO_ENABLED | AMSTREAMSELECTINFO_EXCLUSIVE))
+     stream.enabled = true;
+    else stream.enabled = false;
+
+    stream.streamName = ffstring(streamName);
+    stream.streamLanguageName = ffstring(languageName);
+    if (streamGroup == 1) // Audio
+    {
+     localAudioStreams.push_back(stream);
+    }
+    else // Subtitles
+    {
+     externalSubtitleStreams.push_back(stream);
+    }
+    if (pstreamName != NULL)
+     CoTaskMemFree(pstreamName);
+   }
+
+   // Only one filter may handle audio streams switching
+   if (externalAudioStreams.size() < localAudioStreams.size())
+   {
+    externalAudioStreams.clear();
+    for (unsigned int i=0;i<localAudioStreams.size();i++)
+    {
+     externalAudioStreams.push_back(localAudioStreams[i]);
+    }
+   }
+
+   pAMStreamSelect->Release();
+  }
+ }
+
+ // If subtitles streams already found somewhere else skip next step
+ if (externalSubtitleStreams.size() > 0) return S_OK;
+ if (deciV == NULL) return S_OK; 
+
+ Ttranslate *tr = NULL;getTranslator(&tr);
+
+ // Now add subtitle streams connected to FFDShow input text pin if any
+ int textpinconnectedCnt=deciV->getConnectedTextPinCnt();
+ if (!textpinconnectedCnt) return S_OK;
+ 
+ int currentEmbeddedStream = getParam2(IDFF_subShowEmbedded);
+ for (int i=0;i<textpinconnectedCnt;i++)
+ {
+  const char_t *textname;int found,id;
+  deciV->getConnectedTextPinInfo(i,&textname,&id,&found);
+  if (found)
+  {
+   char_t s[256];
+   ff_strncpy(s, tr->translate(_l("embedded")), countof(s));
+   if (textname[0])
+    strncatf(s, countof(s), _l(" (%s)"), textname);
+   else
+    strncatf(s, countof(s), _l(" (%d)"), id);
+
+   TexternalStream stream;
+   stream.filterName = ffstring(_l("FFDSHOW"));
+   stream.streamNb = id;
+   if (currentEmbeddedStream == id)
+    stream.enabled = true;
+   else stream.enabled = false;
+
+   stream.streamName = ffstring(s);
+   stream.streamLanguageName = ffstring(s);
+   externalSubtitleStreams.push_back(stream);
+  }
+ }
+
+ return S_OK;
+}
+
+STDMETHODIMP TffdshowDec::setExternalStream(int group, long streamNb)
+{
+ TexternalStreams *pStreams = NULL;
+ TexternalStream *pStream = NULL;
+ if (group == 1) // Audio
+  pStreams = &externalAudioStreams;
+ else // Subtitles
+  pStreams = &externalSubtitleStreams;
+
+ for (long l = 0; l<(long)pStreams->size(); l++)
+ {
+  if ((*pStreams)[l].streamNb == streamNb)
+  {
+   pStream = &(*pStreams)[l];
+   break;
+  }
+ }
+ if (pStream == NULL) return E_FAIL;
+
+
+ // Embedded subtitles within FFDShow
+ if (!strcmp(pStream->filterName.c_str(), _l("FFDSHOW")))
+ {
+  int oldId=getParam2(IDFF_subShowEmbedded);
+  putParam(IDFF_subShowEmbedded,streamNb==oldId?0:streamNb);
+ }
+ else
+ {
+  comptr<IEnumFilters> eff;
+  IFilterGraph    *m_pGraph = NULL;
+  getGraph(&m_pGraph); // Graph we belong to
+  if (m_pGraph->EnumFilters(&eff)==S_OK)
+  {
+   eff->Reset();
+   const char_t *fileName = getSourceName();
+   for (comptr<IBaseFilter> bff;eff->Next(1,&bff,NULL)==S_OK;bff=NULL)
+   {
+    char_t name[MAX_PATH],filtername[MAX_PATH];
+    getFilterName(bff,name,filtername,countof(filtername));
+
+    if (strcmp(pStream->filterName.c_str(), filtername)) continue;
+
+    IAMStreamSelect *pAMStreamSelect = NULL;
+    bff->QueryInterface(IID_IAMStreamSelect, (void**) &pAMStreamSelect);
+    if (pAMStreamSelect == NULL)
+     continue;
+
+    /*if (foundHaali && strcmp(filtername, fileName))
+    {
+    pAMStreamSelect->Release();
+    continue;
+    }*/
+    pAMStreamSelect->Enable(streamNb, AMSTREAMSELECTENABLE_ENABLE);
+    pAMStreamSelect->Release();
+    break;
+   }
+  }
+ }
+ return S_OK;
 }

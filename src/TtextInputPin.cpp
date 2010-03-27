@@ -181,6 +181,7 @@ HRESULT TtextInputPin::CompleteConnect(IPin *pReceivePin)
 
 STDMETHODIMP TtextInputPin::NewSegment(REFERENCE_TIME tStart,REFERENCE_TIME tStop,double dRate)
 {
+ DPRINTF(_l("TtextInputPin::NewSegment"));
  segmentStart=tStart;
  filter->resetSubtitles(id);
  return CBaseInputPin::NewSegment(tStart,tStop,dRate);
@@ -241,6 +242,7 @@ HRESULT TtextInputPin::Receive(IMediaSample *pSample)
 
  if (firsttime)
   {
+    DPRINTF(_l("TtextInputPin::Receive initSubtitles"));
    firsttime=false;
    found=filter->initSubtitles(id,type,extradata,extradatasize);
   }
@@ -277,6 +279,6 @@ HRESULT TtextInputPin::getInfo(const char_t* *namePtr,int *idPtr,int *foundPtr)
 {
  if (namePtr) *namePtr=name;
  if (idPtr) *idPtr=id;
- if (foundPtr) *foundPtr=found;
+ if (foundPtr) *foundPtr=found|IsConnected();
  return S_OK;
 }

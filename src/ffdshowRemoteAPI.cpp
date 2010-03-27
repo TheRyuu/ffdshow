@@ -31,7 +31,7 @@
 #include "dsutil.h"
 #include "strmif.h"
 
-Tremote::Tremote(TintStrColl *Icoll,IffdshowBase *Ideci):deci(Ideci),Toptions(Icoll)
+Tremote::Tremote(TintStrColl *Icoll,IffdshowBase *Ideci):deci(Ideci),deciD(Ideci),Toptions(Icoll)
 {
  static const TintOptionT<Tremote> iopts[]=
   {
@@ -43,10 +43,22 @@ Tremote::Tremote(TintStrColl *Icoll,IffdshowBase *Ideci):deci(Ideci),Toptions(Ic
      _l("remoteMessageUser"),WM_APP+18,
    IDFF_remoteAcceptKeys   ,&Tremote::acceptKeys   ,1,1,_l(""),0,
      _l("remoteAcceptKeys"),1,
+   IDFF_remoteSubStream    ,&Tremote::currentSubStream,0,255,_l(""),0,
+     NULL,0,
+   IDFF_remoteAudioStream  ,&Tremote::currentAudioStream,0,255,_l(""),0,
+     NULL,0,
+   IDFF_remoteFastForward  ,&Tremote::fSeconds,1,1,_l(""),0,
+     NULL,0,
+   IDFF_remoteFastForwardMode, &Tremote::fMode,-1,1,_l(""),0,
+     NULL,(int)FAST_FORWARD_MODE,
    0
   };
  addOptions(iopts);
  setOnChange(IDFF_isRemote,this,&Tremote::onChange);
+ setOnChange(IDFF_remoteSubStream,this,&Tremote::onSubStreamChange);
+ setOnChange(IDFF_remoteAudioStream,this,&Tremote::onAudioStreamChange);
+ setOnChange(IDFF_remoteFastForward,this,&Tremote::onFastForwardChange);
+ setOnChange(IDFF_remoteFastForwardMode,this,&Tremote::onFastForwardChange);
  load();
 
  h=NULL;
@@ -54,8 +66,6 @@ Tremote::Tremote(TintStrColl *Icoll,IffdshowBase *Ideci):deci(Ideci),Toptions(Ic
  keys=NULL;hThread=NULL;
  fThread=NULL;
  fEvent=NULL;
- fMode=1; // Default mode : fast forward
- fSeconds=10; // Default step : 10 seconds
  inExplorer=deci->inExplorer()==S_OK;
  OSDPositionX=0; // Horizontal position of the OSD (default : Left of screen)
  OSDPositionY=10; // Vertical position of the OSD (default : Top + 10px)
@@ -64,6 +74,9 @@ Tremote::Tremote(TintStrColl *Icoll,IffdshowBase *Ideci):deci(Ideci),Toptions(Ic
  foundHaali=false;
  noFFRWOSD=false;
  tr=NULL;
+ fSeconds=currentAudioStream=currentSubStream=0;
+ fMode=FAST_FORWARD_MODE;
+ pAudioStreams = pSubtitleStreams = NULL;
 }
 Tremote::~Tremote()
 {
@@ -105,6 +118,7 @@ void Tremote::start(void)
  if (hThread) return;
  deciD=deci;
  deciV=deci;
+ deciD->getExternalStreams((void **)&pAudioStreams, (void **)&pSubtitleStreams);
  if (!tr) deci->getTranslator(&tr);
  remotemsg=messageMode==0?RegisterWindowMessage(_l(FFDSHOW_REMOTE_MESSAGE)):messageUser;
  paramid=0;subtitleIdx=0;
@@ -171,9 +185,9 @@ unsigned int __stdcall Tremote::ffwdThreadProc(void *self0)
  Tremote *self=(Tremote*)self0;
  HANDLE fEvent=self->fEvent;
  IFilterGraph    *m_pGraph = NULL;
- self->deci->getGraph(&m_pGraph); // Graph we belong to
+ if ((self->deci != NULL && self->deci->getGraph(&m_pGraph) != S_OK) || m_pGraph == NULL) return 0; // Graph we belong to
  comptrQ<IMediaControl> _pMC=m_pGraph;
- if (self->deci != NULL && _pMC != NULL)
+ if (_pMC != NULL)
  {
     _pMC->Run();
     int seconds = self->fSeconds;
@@ -315,24 +329,7 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
         }
     case WPRM_FASTFORWARD:
     case WPRM_FASTREWIND:
-        fMode=(wprm==WPRM_FASTFORWARD)?1:-1;
-        fSeconds = (int) lprm; // Update the step size in seconds
-        if (fThread != NULL)
-        {
-            SetEvent(fEvent);
-            WaitForSingleObject(fThread, 3000);
-
-            CloseHandle(fEvent);
-            CloseHandle(fThread);
-            fThread = NULL; fEvent = NULL;
-        }
-        if (fSeconds != 0)
-        {
-            unsigned threadID;
-            // Create a manual-reset nonsignaled unnamed event
-            fEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
-            fThread=(HANDLE)_beginthreadex(NULL,65536,ffwdThreadProc,this,NULL,&threadID);
-        }
+        fastForward((ffrwMode)((wprm==WPRM_FASTFORWARD)?1:-1),(int) lprm);
         return TRUE;
     case WPRM_GET_FASTFORWARD:
         if (fThread == NULL)
@@ -362,12 +359,12 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
      return deciV->cleanShortOSDmessages();
     case WPRM_SET_AUDIO_STREAM:
         getStreams(false);
-        setStream(1,(long)lprm);
+        deciD->setExternalStream(1,(long)lprm);
         getStreams(true);
         return TRUE;
     case WPRM_SET_SUBTITLE_STREAM:
         getStreams(false);
-        setStream(2,(long)lprm);
+        deciD->setExternalStream(2,(long)lprm);
         getStreams(true);
         return TRUE;
     case WPRM_GET_FRAMERATE:
@@ -546,18 +543,18 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
             strcpy(stringList, _l(""));
             getStreams(false);
             
-            for (long l = 0; l<(long)audioStreams.size(); l++)
+            for (long l = 0; l<(long)pAudioStreams->size(); l++)
             {
-                long streamNb = audioStreams[l].streamNb;
+                long streamNb = (*pAudioStreams)[l].streamNb;
                 char_t tmpStr[40];
                 tsnprintf_s(tmpStr, countof(tmpStr), _TRUNCATE, _l("%ld"), streamNb);
                 char_t enabled[6];
-                if (audioStreams[l].enabled)
+                if ((*pAudioStreams)[l].enabled)
                     strcpy(enabled, _l("true"));
                 else
                     strcpy(enabled, _l("false"));
-                ffstring xmlString = _l("<stream><id>") + ffstring(tmpStr)+_l("</id><name>")+ffstring(audioStreams[l].streamName)
-                    +_l("</name><language_name>")+ffstring(audioStreams[l].streamLanguageName)+_l("</language_name><enabled>")
+                ffstring xmlString = _l("<stream><id>") + ffstring(tmpStr)+_l("</id><name>")+ffstring((*pAudioStreams)[l].streamName)
+                    +_l("</name><language_name>")+ffstring((*pAudioStreams)[l].streamLanguageName)+_l("</language_name><enabled>")
                     +ffstring(enabled)+_l("</enabled></stream>");
 
                 // Resize the string if needed
@@ -588,18 +585,18 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
             strcpy(stringList, _l(""));
             getStreams(false);
             
-            for (long l = 0; l<(long)subtitleStreams.size(); l++)
+            for (long l = 0; l<(long)pSubtitleStreams->size(); l++)
             {
-                long streamNb = subtitleStreams[l].streamNb;
+                long streamNb = (*pSubtitleStreams)[l].streamNb;
                 char_t tmpStr[40];
                 char_t enabled[6];
-                if (subtitleStreams[l].enabled)
+                if ((*pSubtitleStreams)[l].enabled)
                     strcpy(enabled, _l("true"));
                 else
                     strcpy(enabled, _l("false"));
                 tsnprintf_s(tmpStr, countof(tmpStr), _TRUNCATE, _l("%ld"), streamNb);
-                ffstring xmlString = _l("<stream><id>") + ffstring(tmpStr)+_l("</id><name>")+ffstring(subtitleStreams[l].streamName)
-                    +_l("</name><language_name>")+ffstring(subtitleStreams[l].streamLanguageName)+_l("</language_name><enabled>")
+                ffstring xmlString = _l("<stream><id>") + ffstring(tmpStr)+_l("</id><name>")+ffstring((*pSubtitleStreams)[l].streamName)
+                    +_l("</name><language_name>")+ffstring((*pSubtitleStreams)[l].streamLanguageName)+_l("</language_name><enabled>")
                     +ffstring(enabled)+_l("</enabled></stream>");
 
                 // Resize the string if needed
@@ -697,221 +694,55 @@ void Tremote::getStreams(bool reload)
 {
     if (streamsLoaded && !reload)
         return;
-    
-    audioStreams.clear();
-    subtitleStreams.clear();
 
-    comptr<IEnumFilters> eff;
-    IFilterGraph    *m_pGraph = NULL;
-    deci->getGraph(&m_pGraph); // Graph we belong to
-    if (m_pGraph->EnumFilters(&eff)==S_OK)
-    {
-        eff->Reset();
-        const char_t *fileName = deci->getSourceName();
-        for (comptr<IBaseFilter> bff;eff->Next(1,&bff,NULL)==S_OK;bff=NULL)
-        {
-            char_t name[MAX_PATH],filtername[MAX_PATH];
-            getFilterName(bff,name,filtername,countof(filtername));
-            FILTER_INFO filterinfo;
-            bff->QueryFilterInfo(&filterinfo);
-            if (filterinfo.pGraph)
-                filterinfo.pGraph->Release();
-
-            IAMStreamSelect *pAMStreamSelect = NULL;
-            bff->QueryInterface(IID_IAMStreamSelect, (void**) &pAMStreamSelect);
-            if (pAMStreamSelect == NULL)
-                continue;
-            
-            foundHaali = false;
-
-            // Haali splitter
-            if (!strcmp(filtername, fileName))
-            {
-                audioStreams.clear();
-                subtitleStreams.clear();
-                foundHaali = true;
-            }
-
-            DWORD cStreams = 0;
-            pAMStreamSelect->Count(&cStreams);
-            std::vector<Tstream> localAudioStreams;
-
-            for (long streamNb=0; streamNb<(long)cStreams; streamNb++)
-            {
-                DWORD streamSelect = 0;
-                LCID streamLanguageId = 0;
-                DWORD streamGroup = 0;
-                WCHAR *pstreamName = NULL;
-                HRESULT hr = pAMStreamSelect->Info(streamNb, NULL, &streamSelect, 
-                    &streamLanguageId, &streamGroup, &pstreamName, NULL, NULL);
-
-                if (hr != S_OK)
-                    continue;
-
-                // Not audio or subtitles
-                if (streamGroup != 1 && streamGroup != 2 && streamGroup != 6590033)
-                {
-                    if (pstreamName != NULL)
-                        CoTaskMemFree(pstreamName);
-                    continue;
-                }
-
-                // Get language name
-                char_t languageName[256];
-                if (streamLanguageId == 0 || GetLocaleInfo(streamLanguageId, LOCALE_SLANGUAGE, languageName, 255) == 0)
-                {
-                    tsnprintf_s(languageName, countof(languageName), _TRUNCATE, _l("Undetermined (%ld)"), streamNb);
-                }
-
-                char_t streamName[256];
-                if (pstreamName != NULL)
-                {
-                    text<char_t>(pstreamName, -1, streamName, 255);
-                    //wcsncpy(streamName, pstreamName, 255);
-                }
-                else
-                    tsnprintf_s(streamName, countof(streamName), _TRUNCATE, _l("Undetermined (%ld)"), streamNb);
-
-                Tstream stream;
-                stream.filterName = ffstring(filtername);
-                stream.streamNb = streamNb;
-                if (streamSelect == AMSTREAMSELECTINFO_ENABLED ||
-                    streamSelect == AMSTREAMSELECTINFO_EXCLUSIVE || 
-                    streamSelect == (AMSTREAMSELECTINFO_ENABLED | AMSTREAMSELECTINFO_EXCLUSIVE))
-                    stream.enabled = true;
-                else stream.enabled = false;
-
-                stream.streamName = ffstring(streamName);
-                stream.streamLanguageName = ffstring(languageName);
-                
-                if (streamGroup == 1) // Audio
-                {
-                    localAudioStreams.push_back(stream);
-                }
-                else // Subtitles
-                {
-                    subtitleStreams.push_back(stream);
-                }
-                if (pstreamName != NULL)
-                    CoTaskMemFree(pstreamName);
-            }
-
-            // Only one filter may handle audio streams switching
-            if (audioStreams.size() < localAudioStreams.size())
-            {
-                audioStreams.clear();
-                for (unsigned int i=0;i<localAudioStreams.size();i++)
-                {
-                    audioStreams.push_back(localAudioStreams[i]);
-                }
-            }
-            
-            pAMStreamSelect->Release();
-            if (foundHaali)
-                break;
-        }
-    }
-
-    // If subtitles streams already found somewhere else skip next step
-    if (subtitleStreams.size() > 0)
-    {
-        streamsLoaded = true;
-        return;
-    }
-
-    // Now add subtitle streams connected to FFDShow input text pin if any
-    int textpinconnectedCnt=deciV->getConnectedTextPinCnt();
-    if (!textpinconnectedCnt)
-    {
-        streamsLoaded = true;
-        return;
-    }
-
-    int currentEmbeddedStream = deci->getParam2(IDFF_subShowEmbedded);
-    for (int i=0;i<textpinconnectedCnt;i++)
-    {
-        const char_t *textname;int found,id;
-        deciV->getConnectedTextPinInfo(i,&textname,&id,&found);
-        if (found)
-        {
-           char_t s[256];
-           ff_strncpy(s, tr->translate(_l("embedded")), countof(s));
-           if (textname[0])
-            strncatf(s, countof(s), _l(" (%s)"), textname);
-           else
-            strncatf(s, countof(s), _l(" (%d)"), id);
-
-            Tstream stream;
-            stream.filterName = ffstring(_l("FFDSHOW"));
-            stream.streamNb = id;
-            if (currentEmbeddedStream == id)
-                stream.enabled = true;
-            else stream.enabled = false;
-
-            stream.streamName = ffstring(s);
-            stream.streamLanguageName = ffstring(s);
-            subtitleStreams.push_back(stream);
-        }
-    }
+    if (deciD != NULL && deciD->extractExternalStreams() != S_OK) return;
     streamsLoaded = true;
 }
 
-void Tremote::setStream(int group, long streamNb)
+void Tremote::onSubStreamChange(int id,int val)
 {
-    std::vector<Tstream> *pStreams = NULL;
-    Tstream *pStream = NULL;
-    if (group == 1) // Audio   
-        pStreams = &audioStreams;
-    else // Subtitles
-        pStreams = &subtitleStreams;
+ getStreams(true);
+ if (pSubtitleStreams == NULL || pSubtitleStreams->size() == 0) {currentSubStream=0;return;}
+ if (pSubtitleStreams->size()<=(unsigned int)currentSubStream)
+  currentSubStream = 0;
+ deciD->setExternalStream(2, (*pSubtitleStreams)[currentSubStream].streamNb);
+}
 
-    for (long l = 0; l<(long)pStreams->size(); l++)
-    {
-        if ((*pStreams)[l].streamNb == streamNb)
-        {
-            pStream = &(*pStreams)[l];
-            break;
-        }
-    }
-    if (pStream == NULL) return;
+void Tremote::onAudioStreamChange(int id,int val)
+{
+ getStreams(true);
+ if (pAudioStreams == NULL || pAudioStreams->size() == 0) {currentAudioStream=0;return;}
+ if (pAudioStreams->size()<=(unsigned int)currentAudioStream)
+  currentAudioStream = 0;
+ deciD->setExternalStream(1, (*pAudioStreams)[currentAudioStream].streamNb);
+}
+
+void Tremote::onFastForwardChange(int id,int val)
+{
+ ffrwMode mode = (ffrwMode)fMode;
+ if (fSeconds<0) { mode = REWIND_MODE; fSeconds*=-1;}
+ fastForward(mode, fSeconds);
+}
 
 
-    // Embedded subtitles within FFDShow
-    if (!strcmp(pStream->filterName.c_str(), _l("FFDSHOW")))
-    {
-        int oldId=deci->getParam2(IDFF_subShowEmbedded);
-        deci->putParam(IDFF_subShowEmbedded,streamNb==oldId?0:streamNb);
-    }
-    else
-    {
-        comptr<IEnumFilters> eff;
-        IFilterGraph    *m_pGraph = NULL;
-        deci->getGraph(&m_pGraph); // Graph we belong to
-        if (m_pGraph->EnumFilters(&eff)==S_OK)
-        {
-            eff->Reset();
-            const char_t *fileName = deci->getSourceName();
-            for (comptr<IBaseFilter> bff;eff->Next(1,&bff,NULL)==S_OK;bff=NULL)
-            {
-                char_t name[MAX_PATH],filtername[MAX_PATH];
-                getFilterName(bff,name,filtername,countof(filtername));
+void Tremote::fastForward(ffrwMode mode, int seconds)
+{
+ fMode=(int)mode;
+ fSeconds = abs(seconds); // Update the step size in seconds
+ if (fThread != NULL)
+ {
+     SetEvent(fEvent);
+     WaitForSingleObject(fThread, 3000);
 
-                if (strcmp(pStream->filterName.c_str(), filtername)) continue;
-
-                IAMStreamSelect *pAMStreamSelect = NULL;
-                bff->QueryInterface(IID_IAMStreamSelect, (void**) &pAMStreamSelect);
-                if (pAMStreamSelect == NULL)
-                    continue;
-                
-                /*if (foundHaali && strcmp(filtername, fileName))
-                {
-                    pAMStreamSelect->Release();
-                    continue;
-                }*/
-                pAMStreamSelect->Enable(streamNb, AMSTREAMSELECTENABLE_ENABLE);
-                pAMStreamSelect->Release();
-                break;
-            }
-        }
-    }
+     CloseHandle(fEvent);
+     CloseHandle(fThread);
+     fThread = NULL; fEvent = NULL;
+ }
+ if (fSeconds != 0)
+ {
+     unsigned threadID;
+     // Create a manual-reset nonsignaled unnamed event
+     fEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
+     fThread=(HANDLE)_beginthreadex(NULL,65536,ffwdThreadProc,this,NULL,&threadID);
+ }
 }

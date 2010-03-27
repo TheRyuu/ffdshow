@@ -69,6 +69,8 @@ bool TimgFilterPostprocBase::pp_codec(int CodecID)
         case CODEC_ID_VP5:
         case CODEC_ID_VP6:
         case CODEC_ID_VP6F:
+        case CODEC_ID_H264:
+        case CODEC_ID_H264_MT:
             return true;
         default: return false;
     }

@@ -4,6 +4,15 @@
 #include "IffdshowDec.h"
 #include "TffdshowBase.h"
 
+struct TexternalStream
+{
+ ffstring filterName;
+ ffstring streamName;
+ ffstring streamLanguageName;
+ long streamNb;
+ bool enabled;
+};
+typedef std::vector<TexternalStream> TexternalStreams;
 class Tkeyboard;
 class Tmouse;
 struct TglobalSettingsDec;
@@ -375,6 +384,9 @@ protected:
 
    STDMETHODIMP_(TinputPin*) getInputPin(void){ return(deciD->getInputPin());};
    STDMETHODIMP_(CTransformOutputPin*) getOutputPin(void){ return(deciD->getOutputPin());};
+   STDMETHODIMP extractExternalStreams(void) {return deciD->extractExternalStreams();}
+   STDMETHODIMP getExternalStreams(void **pAudioStreams, void **pSubtitleStreams) {return deciD->getExternalStreams(pAudioStreams,pSubtitleStreams);}
+   STDMETHODIMP setExternalStream(int group, long streamNb) {return deciD->setExternalStream(group,streamNb);}
 
   } dec_char;
  template<class Tinterface> Tinterface* getDecInterface(void);
@@ -460,8 +472,13 @@ public:
    m_dirtyStop=true;
    return CmyTransformFilter::Stop();
   }
+ STDMETHODIMP extractExternalStreams(void);
+ STDMETHODIMP getExternalStreams(void **pAudioStreams, void **pSubtitleStreams);
+ STDMETHODIMP setExternalStream(int group, long streamNb);
 protected:
  bool m_dirtyStop; // Work around DVBViewer compatibility issue. Old DVBViewer doesn't call NewSegment after Stop and before next play.
+ TexternalStreams externalSubtitleStreams;
+ TexternalStreams externalAudioStreams;
 };
 
 #endif

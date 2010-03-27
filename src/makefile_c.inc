@@ -36,6 +36,7 @@ endif
 
 ifeq ($(DEBUG),yes)
     CFLAGS+=-DDEBUG -D_DEBUG -g 
+    OPTFLAGS+=-fomit-frame-pointer
     YASMFLAGS+=-g cv8
 else
     CFLAGS+=-DNDEBUG -UDEBUG

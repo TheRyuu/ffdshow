@@ -804,6 +804,10 @@
 #define IDFF_remoteMessageMode  1751 // 0 - use RegisterWindowMessage, 1 - let user specify message number (default WM_APP+18)
 #define IDFF_remoteMessageUser  1752
 #define IDFF_remoteAcceptKeys   1753 // remote API window accepts keyboard messages
+#define IDFF_remoteSubStream    3541
+#define IDFF_remoteAudioStream  3542
+#define IDFF_remoteFastForward  3543
+#define IDFF_remoteFastForwardMode  3544
 
 #define IDFF_isMouse            1770
 #define IDFF_mouseAlways        1771
@@ -1574,6 +1578,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//next:3541
+//next:3545
 
 #endif

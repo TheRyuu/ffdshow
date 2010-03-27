@@ -32,6 +32,7 @@
 #include "Ttranslate.h"
 #include "TSpecifyPropertyPagesVE.h"
 #include "dsutil.h"
+#include "TffdshowDec.h"
 
 //==================================== TtrayIconBase =====================================
 unsigned int TtrayIconBase::run(CAMEvent *ev,HWND *hwndRef)
@@ -447,41 +448,41 @@ TtrayIconDecVideo::TtrayIconDecVideo(IffdshowBase *Ideci):TtrayIconDec(Ideci),de
  setThreadName(DWORD(-1),"trayDecVideo");
 }
 
-HMENU TtrayIconDecVideo::makeSubtitlesMenu(void)
+/**
+ * This method scans the graph for filters supporting the IAMStreamSelect interface (such as Haali)
+ * and retrieves the subtitle streams
+ */
+
+
+void TtrayIconDecVideo::makeAudioSubsSubMenus(HMENU *smn, HMENU *amn)
 {
  strings files;
  TsubtitlesFile::findPossibleSubtitles(deci->getSourceName(),deci->getParamStr2(IDFF_subSearchDir),files);
  int textpinconnectedCnt=deciV->getConnectedTextPinCnt();
- if (files.empty() && !textpinconnectedCnt) return NULL;
  HMENU hm=CreatePopupMenu();
  int ord=0;
  const char_t *cursubflnm=deciV->getCurrentSubFlnm();
  for (strings::const_iterator f=files.begin();f!=files.end();f++,ord++)
   insertMenuItem(hm,ord,IDC_FIRST_SUBFILE+ord, stringreplace(*f,_l("&"),_l("&&"),rfReplaceAll).c_str() ,false,stricmp(f->c_str(),cursubflnm)==0,true);
- if (textpinconnectedCnt)
-  {
-   std::vector<std::pair<ffstring,int> > textpins;
-   for (int i=0;i<textpinconnectedCnt;i++)
-    {
-     const char_t *textname;int found,id;
-     deciV->getConnectedTextPinInfo(i,&textname,&id,&found);
-     if (found)
-      {
-       char_t s[256];
-       ff_strncpy(s, tr->translate(_l("embedded")), countof(s));
-       if (textname[0])
-        strncatf(s, countof(s), _l(" (%s)"), textname);
-       textpins.push_back(std::make_pair(ffstring(s),id));
-      }
-    }
-   if (!textpins.empty())
-    {
-     if (!files.empty()) insertSeparator(hm,ord);
-     int subShown=deci->getParam2(IDFF_subShowEmbedded);
-     for (size_t i=0;i<textpins.size();i++)
-      insertMenuItem(hm,ord,IDC_FIRST_TEXTPIN+textpins[i].second,stringreplace(textpins[i].first,_l("&"),_l("&&"),rfReplaceAll).c_str() ,false,textpins[i].second==subShown,true);
-    }
+ 
+ deciD->extractExternalStreams();
+ TexternalStreams *pAudioStreams = NULL,*pSubtitleStreams = NULL;
+ deciD->getExternalStreams((void **)&pAudioStreams, (void **)&pSubtitleStreams);
+ if (pSubtitleStreams != NULL)
+ {
+  if (pSubtitleStreams->size() > 0) {
+   if (!files.empty()) insertSeparator(hm,ord);
   }
+
+  for (unsigned int i=0; i< pSubtitleStreams->size();i++)
+  {
+   TexternalStream stream = (*pSubtitleStreams)[i];
+   insertMenuItem(hm,ord,IDC_FIRST_TEXTPIN+stream.streamNb,stringreplace(
+    stream.streamName,_l("&"),_l("&&"),rfReplaceAll).c_str(),
+     false,stream.enabled,true);
+  }
+ }
+
  if (int langcnt=deciV->getSubtitleLanguagesCount2())
   {
    insertSeparator(hm,ord);
@@ -493,23 +494,50 @@ HMENU TtrayIconDecVideo::makeSubtitlesMenu(void)
       insertMenuItem(hm,ord,IDC_FIRST_SUBLANG+i,lang,false,i==curlang,true);
     }
   }
- return ord?hm:(DestroyMenu(hm),(HMENU)NULL);
+ if (ord)
+  *smn=hm;
+ else 
+  DestroyMenu(hm);
+
+ // Now the audio streams
+ ord = 0;
+ if (pAudioStreams->size() > 1)
+ {
+  HMENU ahm=CreatePopupMenu();
+  *amn=ahm;
+  for (unsigned int i=0; i< pAudioStreams->size();i++)
+  {
+   TexternalStream stream = (*pAudioStreams)[i];
+   insertMenuItem(ahm,ord,IDC_FIRST_AUDIOSTREAM+stream.streamNb,stringreplace(
+    stream.streamName,_l("&"),_l("&&"),rfReplaceAll).c_str(),
+     false,stream.enabled,true);
+  }
+ }
+ //return ord?hm:(DestroyMenu(hm),(HMENU)NULL);
 }
 
 void TtrayIconDecVideo::insertSubmenuCallback(HMENU hm,int &ord,const TfilterIDFF *f)
 {
  if (f->id==IDFF_filterSubtitles)
-  if (HMENU smn=makeSubtitlesMenu())
-   insertSubmenu(hm,ord,_l("Subtitle sources"),true,smn);
+ {
+  HMENU smn = NULL, amn = NULL;
+  makeAudioSubsSubMenus(&smn, &amn);
+  if (smn != NULL) insertSubmenu(hm,ord,_l("Subtitle sources"),true,smn);
+  if (amn != NULL) { insertSeparator(hm,ord);insertSubmenu(hm,ord,_l("Audio sources"),true,amn);}
+ }
 }
 
 void TtrayIconDecVideo::processCmd(HMENU hm,int cmd)
 {
+ if (cmd>=IDC_FIRST_AUDIOSTREAM)
+ {
+  int id=cmd-IDC_FIRST_AUDIOSTREAM;
+  deciD->setExternalStream(1, id);
+ }
  if (cmd>=IDC_FIRST_TEXTPIN)
   {
    int id=cmd-IDC_FIRST_TEXTPIN;
-   int oldId=deci->getParam2(IDFF_subShowEmbedded);
-   deci->putParam(IDFF_subShowEmbedded,id==oldId?0:id);
+   deciD->setExternalStream(2, id);
   }
  else if (cmd>=IDC_FIRST_SUBLANG)
   deci->putParam(IDFF_subCurLang,cmd-IDC_FIRST_SUBLANG);

@@ -399,7 +399,7 @@ HRESULT TffdshowDecAudio::getMediaType(CMediaType *mtOut)
  {
    if (!presetSettings) initPreset();
    TsampleFormat outsf=getOutsf();
-   DPRINTF(_l("TffdshowDecAudio::getMediaType sample format %d"),outsf.sf);
+   //DPRINTF(_l("TffdshowDecAudio::getMediaType sample format %d"),outsf.sf);
    if (outsf.sf==TsampleFormat::SF_AC3)
     *mtOut=TsampleFormat::createMediaTypeSPDIF(outsf.freq); // BUG : if 96khz set, and SPDIF is set in output section then inpin->audio->getInputSF().freq should be set instead
    else if (getParam2(IDFF_aoutUseIEC61937))
@@ -408,7 +408,7 @@ HRESULT TffdshowDecAudio::getMediaType(CMediaType *mtOut)
     *mtOut=outsf.toCMediaType(alwaysextensible);
    char_t descS[256];
    outsf.descriptionPCM(descS,256);
-   DPRINTF(_l("TffdshowDecAudio::getMediaType:%s"),descS);
+   //DPRINTF(_l("TffdshowDecAudio::getMediaType:%s"),descS);
  }
 
  return S_OK;

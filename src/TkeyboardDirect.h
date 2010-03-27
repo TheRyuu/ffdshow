@@ -60,7 +60,11 @@ private:
   idff_videodelaySub=-8,
   idff_videodelayAdd=-9,
   idff_presetPrev   =-10,
-  idff_presetNext   =-11
+  idff_presetNext   =-11,
+  idff_fastForward  =-12,
+  idff_rewind       =-13,
+  idff_subStreamNext=-14,
+  idff_audioStreamNext=-15
  };
  virtual void reg_op(TregOp &t);
  void keyProc(int code,bool remote);

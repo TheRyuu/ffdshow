@@ -146,16 +146,22 @@ bool TimgFilterSubtitles::initSubtitles(int id,int type,const unsigned char *ext
     boost::unique_lock<boost::recursive_mutex> lock(csEmbedded);
     Tembedded::iterator e=embedded.find(id);
     if (e!=embedded.end()) {
+        DPRINTF(_l("TimgFilterSubtitles::initSubtitles Subtitles already exist for this id (%d). Delete and overwrite"),id);
         delete e->second;
         e->second=TsubtitlesTextpin::create(type,extradata,extradatalen,deci);
     } else {
+        DPRINTF(_l("TimgFilterSubtitles::initSubtitles Adding subtitles for this id (%d)"),id);
         e=embedded.insert(std::make_pair(id,TsubtitlesTextpin::create(type,extradata,extradatalen,deci))).first;
     }
 
     sequenceEnded=true;
 
     if(!e->second)
+    {
+         DPRINTF(_l("TimgFilterSubtitles::initSubtitles failed"));
          return false;
+    }
+    DPRINTF(_l("TimgFilterSubtitles::initSubtitles succeeded"));
     return *e->second;
 }
 

@@ -4,20 +4,23 @@
 #include "Toptions.h"
 #include "ffdshowRemoteAPI.h"
 #include "interfaces.h"
+#include "TffdshowDec.h"
 
+
+enum ffrwMode {
+ FAST_FORWARD_MODE = 1,
+ REWIND_MODE = -1
+};
+
+enum streamType {
+ AUDIO_STREAM_TYPE = 1,
+ SUBTITLES_STREAM_TYPE = 2
+};
 class Ttranslate;
 class Tkeyboard;
 class Tremote : public Toptions
 {
-private:
- struct Tstream
- {
-     ffstring filterName;
-     ffstring streamName;
-     ffstring streamLanguageName;
-     long streamNb;
-     bool enabled;
- };
+private: 
  int is,messageMode,messageUser,acceptKeys;
  IffdshowBase *deci;comptrQ<IffdshowDec> deciD;comptrQ<IffdshowDecVideo> deciV;
  UINT remotemsg;
@@ -39,18 +42,22 @@ private:
  DWORD pdwROT;
  int OSDDuration;
  int OSDPositionX, OSDPositionY;
- std::vector<Tstream> audioStreams, subtitleStreams;
+ TexternalStreams *pAudioStreams, *pSubtitleStreams;
  bool streamsLoaded;
  bool foundHaali;
  bool noFFRWOSD;
  Ttranslate *tr;
+ int currentSubStream, currentAudioStream;
 public:
  Tremote(TintStrColl *Icoll,IffdshowBase *Ideci);
  ~Tremote();
  void load(void),save(void);
  void onChange(int id,int val);
  void getStreams(bool reload);
- void setStream(int group, long streamNb);
+ void fastForward(ffrwMode mode, int seconds);
+ void onSubStreamChange(int id,int val);
+ void onAudioStreamChange(int id,int val);
+ void onFastForwardChange(int id,int val);
 };
 
 #endif

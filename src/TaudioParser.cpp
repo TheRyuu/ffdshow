@@ -7,6 +7,7 @@
 #include "ffdshow_mediaguids.h"
 #include "Tpresets.h"
 #include "MMDeviceAPI.h"
+#include "TffdshowDecAudioInputPin.h"
 
 TaudioParser::TaudioParser(IffdshowBase *Ideci,IdecAudioSink *Isink):
  deci(Ideci),
@@ -268,8 +269,9 @@ CodecID TaudioParser::getCodecIdFromStream()
 {
  initConfig();
 
- // Don't allow more than 1 format change
- if (audioParserData.nbFormatChanges>=4)
+ REFERENCE_TIME m_tStart = deciA->GetCurrentPin()->CurrentStartTime();
+ // Don't allow more than 1 format change and only if the last seek occurred during the last 3 seconds
+ if (audioParserData.nbFormatChanges>=4 || (m_tStart / 10000 / 1000 > 3))
     return codecId;
 
  audioParserData.wFormatTag=0;
@@ -415,8 +417,9 @@ void TaudioParser::NewSegment(void)
  // Solution 1 : reset the parser to detect the stream format again. This could result in codec switch
  // init();
 
+
  // Solution 2: reset only the context
-    audioParserData.channels=0;audioParserData.bit_rate=0;audioParserData.sample_rate=0;//audioParserData.nbFormatChanges=0;
+    audioParserData.channels=0;audioParserData.bit_rate=0;audioParserData.sample_rate=0;audioParserData.nbFormatChanges=0;
     audioParserData.sample_format=0;audioParserData.frames.clear();
     includeBytes=0;skipBytes=0;firstFrame=true;
     SearchSync();

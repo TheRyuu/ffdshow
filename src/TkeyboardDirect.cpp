@@ -24,6 +24,7 @@
 #include "ffdshow_constants.h"
 #include "reg.h"
 #include "Tconfig.h"
+#include "ffdshowRemoteAPIimpl.h"
 
 //============================ TdirectInput ============================
 TdirectInput::TdirectInput(TintStrColl *Icoll,const char_t *Iname,const GUID &IdeviceId,const DIDATAFORMAT &IdeviceFormat,void *Istate,void *Istateprev,size_t Istatesize,IffdshowBase *Ideci):
@@ -165,7 +166,6 @@ void Tkeyboard::initKeysParam(void)
  keysParams.push_back(TkeyParam(_l("Toggle postprocessing"),'P',IDFF_isPostproc));
  keysParams.push_back(TkeyParam(_l("Toggle blur"),'B',IDFF_isBlur));
  keysParams.push_back(TkeyParam(_l("Toggle resize"),'R',IDFF_isResize));
- keysParams.push_back(TkeyParam(_l("Toggle subtitles"),'S',IDFF_isSubtitles));
  keysParams.push_back(TkeyParam(_l("Toggle sharpen"),'H',IDFF_isSharpen));
  keysParams.push_back(TkeyParam(_l("Toggle flip"),'F',IDFF_flip));
  keysParams.push_back(TkeyParam(_l("Toggle avisynth"),'A',IDFF_isAvisynth));
@@ -183,6 +183,12 @@ void Tkeyboard::initKeysParam(void)
 
  keysParams.push_back(TkeyParam(_l("Previous preset"),0xdb,idff_presetPrev));
  keysParams.push_back(TkeyParam(_l("Next preset"),0xdd,idff_presetNext));
+
+ keysParams.push_back(TkeyParam(_l("Fast forward"),0x26,idff_fastForward));
+ keysParams.push_back(TkeyParam(_l("Rewind"),0x28,idff_rewind));
+ keysParams.push_back(TkeyParam(_l("Next subtitles file"),'S',IDFF_isSubtitles));
+ keysParams.push_back(TkeyParam(_l("Next subtitles stream"),'s',idff_subStreamNext));
+ keysParams.push_back(TkeyParam(_l("Next audio stream"),'a',idff_audioStreamNext));
 }
 void Tkeyboard::keyProc(int code,bool remote)
 {
@@ -344,6 +350,49 @@ void Tkeyboard::keyProc(int code,bool remote)
             tsnprintf_s(msg, countof(msg), _TRUNCATE, _l("preset: %s"), preset);
             deciV->shortOSDmessage(msg,30);
            }
+          return;
+         }
+        case idff_subStreamNext: deci->putParam(IDFF_remoteSubStream,deci->getParam2(IDFF_remoteSubStream)+1);return;
+        case idff_audioStreamNext: deci->putParam(IDFF_remoteAudioStream,deci->getParam2(IDFF_remoteAudioStream)+1);return;
+        case idff_fastForward:
+         {
+          ffrwMode fMode = (ffrwMode)deci->getParam2(IDFF_remoteFastForwardMode);
+          int fSeconds = deci->getParam2(IDFF_remoteFastForward);
+          if (fMode == REWIND_MODE)
+          {
+           if (fSeconds>=240) fSeconds = 40;
+           else if (fSeconds>=40) fSeconds = 6;
+           else { fSeconds = 0; fMode = FAST_FORWARD_MODE;}
+          }
+          else
+          {
+           if (fSeconds>=40) fSeconds = 240;
+           else if (fSeconds>=6) fSeconds = 40;
+           else fSeconds = 6;
+          }
+          fSeconds*= ((fMode == FAST_FORWARD_MODE) ? 1 : -1);
+          deci->putParam(IDFF_remoteFastForward,fSeconds);
+          return;
+         }
+        case idff_rewind:
+         {
+          ffrwMode fMode = (ffrwMode)deci->getParam2(IDFF_remoteFastForwardMode);
+          int fSeconds = deci->getParam2(IDFF_remoteFastForward);
+          if (fMode == REWIND_MODE)
+          {
+           if (fSeconds>=40) fSeconds = 240;
+           else if (fSeconds>=6) fSeconds = 40;
+           else fSeconds = 6;
+          }
+          else
+          {
+           if (fSeconds>=240) fSeconds = 40;
+           else if (fSeconds>=40) fSeconds = 6;
+           else if (fSeconds >0) fSeconds = 0;
+           else { fSeconds = 6; fMode = REWIND_MODE;}
+          }
+          fSeconds*= ((fMode == FAST_FORWARD_MODE) ? 1 : -1);
+          deci->putParam(IDFF_remoteFastForward,fSeconds);
           return;
          }
        }

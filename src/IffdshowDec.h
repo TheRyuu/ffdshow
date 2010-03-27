@@ -87,6 +87,9 @@ template<class tchar> DECLARE_INTERFACE_(IffdshowDecT,IUnknown)
  STDMETHOD (getPresetAutoloadItemHelp)(unsigned int index,const tchar* *helpPtr) PURE;
  STDMETHOD_(TinputPin*, getInputPin)(void) PURE;
  STDMETHOD_(CTransformOutputPin*, getOutputPin)(void) PURE;
+ STDMETHOD (extractExternalStreams)(void) PURE;
+ STDMETHOD (getExternalStreams)(void **pAudioStreams, void **pSubtitleStreams) PURE;
+ STDMETHOD (setExternalStream)(int group, long streamNb) PURE;
 };
 
 struct IffdshowDecA :IffdshowDecT<char> {};
