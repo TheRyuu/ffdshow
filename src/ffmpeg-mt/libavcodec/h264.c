@@ -1911,16 +1911,16 @@ static void init_scan_tables(H264Context *h){
     }
 }
 
-static void field_end(H264Context *h){
+static void field_end(H264Context *h, int in_setup){
     MpegEncContext * const s = &h->s;
     AVCodecContext * const avctx= s->avctx;
     s->mb_y= 0;
 
-    if (!s->dropable)
+    if (!in_setup && !s->dropable)
         ff_thread_report_progress((AVFrame*)s->current_picture_ptr, (16*s->mb_height >> FIELD_PICTURE) - 1,
                                  s->picture_structure==PICT_BOTTOM_FIELD);
 
-    if(!HAVE_PTHREADS || !(avctx->active_thread_type&FF_THREAD_FRAME)){
+    if(in_setup || !(avctx->active_thread_type&FF_THREAD_FRAME)){
         if(!s->dropable) {
             ff_h264_execute_ref_pic_marking(h, h->mmco, h->mmco_index);
             h->prev_poc_msb= h->poc_msb;
@@ -2011,7 +2011,7 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
 
     if(first_mb_in_slice == 0){ //FIXME better field boundary detection
         if(h0->current_slice && FIELD_PICTURE){
-            field_end(h);
+            field_end(h, 1);
         }
 
         h0->current_slice = 0;
@@ -3157,7 +3157,7 @@ static int decode_frame(AVCodecContext *avctx,
 
         if(s->flags2 & CODEC_FLAG2_CHUNKS) decode_postinit(h);
 
-        field_end(h);
+        field_end(h, 0);
 
         if (!h->next_output_pic) {
             /* Wait for second field. */
