@@ -633,6 +633,12 @@ static int is_intra_more_likely(MpegEncContext *s){
             undamaged_count++;
     }
 
+    if(s->codec_id == CODEC_ID_H264){
+        H264Context *h= (void*)s;
+        if(h->ref_count[0] <= 0 || !h->ref_list[0][0].data[0])
+            return 1;
+    }
+
     if(undamaged_count < 5) return 0; //almost all MBs damaged -> use temporal prediction
 
     skip_amount= FFMAX(undamaged_count/50, 1); //check only upto 50 MBs

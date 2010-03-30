@@ -174,9 +174,9 @@ int decode_slice_header_noexecute (H264Context *h){
         s->me.qpel_avg= s->dsp.avg_h264_qpel_pixels_tab;
     }
 
-	// ==> Start patch MPC DXVA
+    // ==> Start patch MPC DXVA
     h->first_mb_in_slice= get_ue_golomb(&s->gb);
-	// <== End patch MPC DXVA
+    // <== End patch MPC DXVA
 
     if(h->first_mb_in_slice == 0){ //FIXME better field boundary detection
         if(h0->current_slice && FIELD_PICTURE){
@@ -246,7 +246,8 @@ int decode_slice_header_noexecute (H264Context *h){
         s->height= 16*s->mb_height - 4*FFMIN(h->sps.crop_bottom, 3);
 
     if (s->context_initialized
-        && (   s->width != s->avctx->width || s->height != s->avctx->height)) {
+        && (   s->width != s->avctx->width || s->height != s->avctx->height
+            || av_cmp_q(h->sps.sar, s->avctx->sample_aspect_ratio))) {
         if(h != h0)
             return -1;   // width / height changed during parallelized decoding
         free_tables(h);
@@ -403,7 +404,7 @@ int decode_slice_header_noexecute (H264Context *h){
         }
     }
     //if(h != h0)
-    //    clone_slice(h, h0, 0); /* ffdshow custom code */
+    //    clone_slice(h, h0); /* ffdshow custom code */
 
     s->current_picture_ptr->frame_num= h->frame_num; //FIXME frame_num cleanup
 
@@ -500,7 +501,7 @@ int decode_slice_header_noexecute (H264Context *h){
        ||  (h->pps.weighted_bipred_idc==1 && h->slice_type_nos== FF_B_TYPE ) )
         pred_weight_table(h);
     else if(h->pps.weighted_bipred_idc==2 && h->slice_type_nos== FF_B_TYPE){
-        implicit_weight_table(h);
+        implicit_weight_table(h, -1);
     }else {
         h->use_weight = 0;
         for (i = 0; i < 2; i++) {
@@ -512,8 +513,14 @@ int decode_slice_header_noexecute (H264Context *h){
     if(h->nal_ref_idc)
         ff_h264_decode_ref_pic_marking(h0, &s->gb);
 
-    if(FRAME_MBAFF)
+    if(FRAME_MBAFF){
         ff_h264_fill_mbaff_ref_list(h);
+
+        if(h->pps.weighted_bipred_idc==2 && h->slice_type_nos== FF_B_TYPE){
+            implicit_weight_table(h, 0);
+            implicit_weight_table(h, 1);
+        }
+    }
 
     if(h->slice_type_nos==FF_B_TYPE && !h->direct_spatial_mv_pred)
         ff_h264_direct_dist_scale_factor(h);
