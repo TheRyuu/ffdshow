@@ -25,14 +25,8 @@ struct TsubtitlePGS :public TsubtitleDVD
     const stride_t *stride);
 
  virtual Tsubtitle* copy(void) {return new TsubtitlePGS(*this);}
- Trect rect;
- CPoint centerPoint;
- CSize size;
- stride_t stride;
- TffPict *bitmap;
  Tconvert *convert;
  IffdshowBase *deci;
- TspuImage *ownimage;
  TcompositionObject *m_pCompositionObject;
  int videoWidth, videoHeight;
 };

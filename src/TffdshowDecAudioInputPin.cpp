@@ -161,6 +161,8 @@ STDMETHODIMP TffdshowDecAudioInputPin::Receive(IMediaSample* pIn)
       && codecId != CODEC_ID_FLAC
       && codecId != CODEC_ID_TTA
       && codecId != CODEC_ID_WAVPACK
+	  && codecId != CODEC_ID_TRUEHD
+	  && codecId != CODEC_ID_MLP
       && !bitstream_codec(codecId)
       && filter->getParam2(IDFF_audio_decoder_JitterCorrection))
    {

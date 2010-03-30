@@ -413,16 +413,16 @@ switch (streamformat)
 
 void TaudioParser::NewSegment(void)
 {
+ DPRINTF(_l("TaudioParser::NewSegment"));
  // A new segment has arrived (occurs when there is some skipping or a change of stream) :
  // Solution 1 : reset the parser to detect the stream format again. This could result in codec switch
- // init();
-
-
+ init();
+ 
  // Solution 2: reset only the context
-    audioParserData.channels=0;audioParserData.bit_rate=0;audioParserData.sample_rate=0;audioParserData.nbFormatChanges=0;
-    audioParserData.sample_format=0;audioParserData.frames.clear();
-    includeBytes=0;skipBytes=0;firstFrame=true;
-    SearchSync();
+ /*audioParserData.channels=0;audioParserData.bit_rate=0;audioParserData.sample_rate=0;audioParserData.nbFormatChanges=0;
+ audioParserData.sample_format=0;audioParserData.frames.clear();
+ includeBytes=0;skipBytes=0;firstFrame=true;*/
+ SearchSync();
 }
 
 HRESULT TaudioParser::parseDTS(unsigned char *src, int size, TbyteBuffer *newsrcBuffer)
