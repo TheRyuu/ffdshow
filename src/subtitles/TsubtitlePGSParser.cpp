@@ -257,6 +257,10 @@ void TsubtitlePGSParser::parsePresentationSegment(Tbitdata &bitData, REFERENCE_T
 	palette_update_flag	= !!(bitData.readByte() & 0x80);
 	palette_id_ref		= bitData.readByte();
 	nObjectNumber		= bitData.readByte();
+
+ m_pCurrentObject->m_palette_id_ref = palette_id_ref;
+ m_pCurrentObject->m_pVideoDescriptor = &m_VideoDescriptor;
+
 #if DEBUG_PGS_PARSER
  DPRINTF(_l("TsubtitlePGSParser::parsePresentationSegment Object n°%d"),compositionDescriptor.nNumber);
 #endif
@@ -285,7 +289,7 @@ void TsubtitlePGSParser::parsePresentationSegment(Tbitdata &bitData, REFERENCE_T
    m_pCurrentObject->m_rtStop = rtStart;
  }
 
- m_pCurrentObject->m_palette_id_ref = palette_id_ref;
+ 
  
  for (int i=0;i<nObjectNumber; i++)
  {
@@ -293,7 +297,7 @@ void TsubtitlePGSParser::parsePresentationSegment(Tbitdata &bitData, REFERENCE_T
   SHORT object_id_ref = bitData.readShort();
   SHORT window_id_ref	= bitData.readByte();
 	 
-  m_pCurrentObject->m_pVideoDescriptor = &m_VideoDescriptor;
+  
   m_pCurrentObject->m_bCompositionObject[object_id_ref]=window_id_ref;
 
 	 bTemp = bitData.readByte();
