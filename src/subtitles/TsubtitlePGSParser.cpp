@@ -155,7 +155,7 @@ HRESULT TsubtitlePGSParser::parse(REFERENCE_TIME Istart, REFERENCE_TIME Istop, c
    m_pCurrentObject = new TcompositionObject();
    m_compositionObjects.push_back(m_pCurrentObject);
   }
-  int i;bool bEmptySubtitles;
+  int i=0;
   switch (m_nCurSegment)
 	 {
 	  case PALETTE :
@@ -185,15 +185,9 @@ HRESULT TsubtitlePGSParser::parse(REFERENCE_TIME Istart, REFERENCE_TIME Istop, c
     parseWindow(m_bitdata, m_nSegSize);
 		  break;
 	  case DISPLAY :
-    bEmptySubtitles = true;
-    for (i=0;i<MAX_WINDOWS; i++) 
-    {
-     if (m_pCurrentObject->m_Windows[0].data.size() != 0)
-     {
-      bEmptySubtitles = false; break;
-     }
-    }
-    if (bEmptySubtitles) m_pCurrentObject->m_bEmptySubtitles = true;
+    if (m_pCurrentObject->isEmpty())
+     m_pCurrentObject->m_bEmptySubtitles = true;
+
     m_bDisplayFlag = true;
 #if DEBUG_PGS_PARSER
 		  DPRINTF(_l("TsubtitlePGSParser::parse DISPLAY     rtStart=%I64i, rtStop=%I64i (size=%d)"), rtStart, rtStop, m_nSegSize);
@@ -211,30 +205,6 @@ HRESULT TsubtitlePGSParser::parse(REFERENCE_TIME Istart, REFERENCE_TIME Istop, c
    m_data.erase(m_data.begin(), m_data.begin()+m_nSegSize+3);
   else
    m_data.clear();
-
-  /*if (m_bDisplayFlag)
-  {
-   if (m_pCurrentObject->m_bEmptySubtitles)
-   {
-    if (m_pPreviousObject != NULL)
-    {
-     m_pPreviousObject->m_rtStop = m_pCurrentObject->m_rtStart - 1L;
-     m_pPreviousObject->m_bReady = true;
-    }
-   }
-   else
-   {
-    if (m_pPreviousObject != NULL && m_pPreviousObject->m_rtStop == INVALID_TIME)
-    {
-     m_pPreviousObject->m_rtStop = m_pCurrentObject->m_rtStart - 1L;
-     m_pPreviousObject->m_bReady = true;
-    }
-    m_pPreviousObject = m_pCurrentObject;
-   }
-   m_pCurrentObject = new TcompositionObject();
-   m_compositionObjects.push_back(m_pCurrentObject);
-  }*/
-	 return hr;
  }
 	return hr;
 }
@@ -266,11 +236,12 @@ void TsubtitlePGSParser::parsePresentationSegment(Tbitdata &bitData, REFERENCE_T
 #endif
  if (nObjectNumber>0) 
  {
-   if (m_pPreviousObject != NULL && m_pPreviousObject->m_rtStop == INVALID_TIME)
+   if (m_pPreviousObject != NULL)
    {
-    m_pPreviousObject->m_rtStop = m_pCurrentObject->m_rtStart - 1L;
+    if (m_pPreviousObject->m_rtStop == INVALID_TIME) m_pPreviousObject->m_rtStop = m_pCurrentObject->m_rtStart - 1L;
     m_pPreviousObject->m_bReady = true;
    }
+   
    m_pPreviousObject = m_pCurrentObject;
    m_pCurrentObject = new TcompositionObject();
    m_compositionObjects.push_back(m_pCurrentObject);  
@@ -286,7 +257,9 @@ void TsubtitlePGSParser::parsePresentationSegment(Tbitdata &bitData, REFERENCE_T
    m_pPreviousObject->m_bReady = true;
   }
   else
+  {
    m_pCurrentObject->m_rtStop = rtStart;
+  }
  }
 
  
@@ -446,17 +419,6 @@ bool TsubtitlePGSParser::getPalette(TcompositionObject *pObject)
 // Objects returned must be freed by the caller
 void TsubtitlePGSParser::getObjects(REFERENCE_TIME rt, TcompositionObjects *pObjects)
 {
- /*for (TcompositionObjects::iterator c=m_compositionObjects.begin();c!=m_compositionObjects.end();)
- {
-  // Clear passed subs and only those that were entirely parsed (the m_rtStop should be set)
-  if ((*c).second->m_rtStop < rt && (*c).second->m_rtStop != INVALID_TIME) 
-  {
-   if (m_pCurrentObject == (*c).second) m_pCurrentObject = NULL;
-   delete (*c).second;
-   c=m_compositionObjects.erase(c);
-  } else  c++;
- }*/
- 
  // Build the list of subs ready to be displayed
  for (TcompositionObjects::iterator c=m_compositionObjects.begin();c!=m_compositionObjects.end();)
  {

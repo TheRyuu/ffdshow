@@ -52,6 +52,7 @@
     memset(&m_bCompositionObject[0], 0, sizeof(BYTE)*64); data.clear();
     for (int i=0;i<MAX_WINDOWS;i++) { m_Windows[i].reset(); }
    }
+   bool isEmpty() { for (int i=0;i<MAX_WINDOWS;i++) {if (m_Windows[i].data.size() == 0) return false;} return true;}
 
 	  bool				m_object_cropped_flag;
 	  bool				m_forced_on_flag;
