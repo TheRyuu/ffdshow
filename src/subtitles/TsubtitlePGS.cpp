@@ -71,14 +71,17 @@ void TsubtitlePGS::print(
 
  for (int i=0;i<MAX_WINDOWS;i++)
  {
-  TwindowDefinition window = m_pCompositionObject->m_Windows[i];
-  if (window.data.size() == 0) continue;
-  CPoint centerPoint = CPoint(window.m_horizontal_position+window.m_width/2,
-  window.m_vertical_position+window.m_height/2); 
-  CSize size = CSize(window.m_width, window.m_height);
+  TwindowDefinition *pWindow = &(m_pCompositionObject->m_Windows[i]);
+  if (pWindow->data.size() == 0) continue;
+  CPoint centerPoint = CPoint(pWindow->m_horizontal_position+pWindow->m_width/2,
+  pWindow->m_vertical_position+pWindow->m_height/2); 
+  CSize size = CSize(pWindow->m_width, pWindow->m_height);
   
-  if (window.ownimage == NULL || forceChange)
+  if (pWindow->ownimage == NULL || forceChange)
   {
+   char_t rtString[32];
+   rt2Str(m_pCompositionObject->m_rtStart, rtString);
+   //DPRINTF(_l("TsubtitlePGS::print %s window %d (%d x %d) at (%d,%d)"), rtString, i, pWindow->m_width, pWindow->m_height, pWindow->m_horizontal_position, pWindow->m_vertical_position);
    parent->rectOrig = Trect(0,0,prefs.dx,prefs.dy);
    if (videoWidth==0) videoWidth=prefs.dx;
    if (videoHeight==0) videoHeight=prefs.dy;
@@ -115,7 +118,7 @@ void TsubtitlePGS::print(
    // TspuPlane is size to the output picture because our subs rectangle can be resized up to it
    TspuPlane *planes=parent->allocPlanes(rcclip, prefs.csp);
    
-   Tbitdata bitdata = Tbitdata(&window.data[0], window.data.size());
+   Tbitdata bitdata = Tbitdata(&pWindow->data[0], pWindow->data.size());
    BYTE			bTemp;
    BYTE			bSwitch;
    int nPaletteIndex = 0; //Index of RGBA color
@@ -186,14 +189,11 @@ void TsubtitlePGS::print(
 		  }
 	  }
    // Don't free the composition object : it may be needed if the subtitles settings change
-   /* // Free the composition object, not used anymore
-   delete m_pCompositionObject;
-   m_pCompositionObject = NULL;*/
 
    //DPRINTF(_l("TsubtitlePGS::print Build image (left,right,top,bottom)=(%ld,%ld,%ld,%ld)\nParent rect (%ld,%ld,%ld,%ld)"),rectReal.left, rectReal.right, rectReal.top, rectReal.bottom, rcclip.left, rcclip.right, rcclip.top, rcclip.bottom);
-   window.ownimage=createNewImage(planes, rcclip, rectReal, prefs);
+   m_pCompositionObject->m_Windows[i].ownimage=createNewImage(planes, rcclip, rectReal, prefs);
   }
-  window.ownimage->ownprint(prefs, dst, stride);
+  pWindow->ownimage->ownprint(prefs, dst, stride);
  }
 }
  

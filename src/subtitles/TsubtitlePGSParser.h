@@ -12,7 +12,19 @@
 
 #pragma region PSG subs Structures & types
 
-#define MAX_WINDOWS 2 // Maximum number of windows
+static inline void rt2Str(REFERENCE_TIME rTime, char_t *string)
+{
+ if (!string) return;
+ float rtimems=rTime/10000;
+ float rtimes=rtimems/1000;
+ int h=(int)rtimes/3600;
+ int m=(int)(rtimes-h*3600)/60;
+ int s=(int)(rtimes-h*3600-m*60);
+ int ms=(int)((float)(rtimems-(float)1000*(h*3600+m*60+s)));
+ tsprintf(string, _l("%d:%d:%d.%d"),h,m,s,ms);
+}
+
+#define MAX_WINDOWS 3 // Maximum number of windows
 
  static const REFERENCE_TIME INVALID_TIME = _I64_MIN;
  struct VIDEO_DESCRIPTOR
@@ -52,7 +64,7 @@
     memset(&m_bCompositionObject[0], 0, sizeof(BYTE)*64); data.clear();
     for (int i=0;i<MAX_WINDOWS;i++) { m_Windows[i].reset(); }
    }
-   bool isEmpty() { for (int i=0;i<MAX_WINDOWS;i++) {if (m_Windows[i].data.size() == 0) return false;} return true;}
+   bool isEmpty() { for (int i=0;i<MAX_WINDOWS;i++) {if (m_Windows[i].data.size() != 0) return false;} return true;}
 
 	  bool				m_object_cropped_flag;
 	  bool				m_forced_on_flag;

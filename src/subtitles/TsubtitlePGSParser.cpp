@@ -29,7 +29,8 @@
 #include "Tconvert.h"
 
 #define DEBUG_PGS_PARSER 0
-#define DEBUG_PGS_TIMESTAMPS 1
+#define DEBUG_PGS_TIMESTAMPS 0
+
 
 #pragma region Color conversion
 #define RGBA(r,g,b,a) (((a) << 24) | ((r) << 16) | ((g) << 8) | (b))
@@ -60,6 +61,10 @@ DWORD YCrCbToRGB_Rec709(BYTE A, BYTE Y, BYTE Cr, BYTE Cb)
 }
 #pragma endregion
 
+#if DEBUG_PGS_TIMESTAMPS
+static int counter=0;
+#endif
+
 TsubtitlePGSParser::TsubtitlePGSParser(IffdshowBase *Ideci):
  deci(Ideci)
 {
@@ -76,6 +81,7 @@ TsubtitlePGSParser::~TsubtitlePGSParser()
 
 }
 
+
 void TsubtitlePGSParser::reset(void)
 {
 #if DEBUG_PGS_PARSER
@@ -91,6 +97,9 @@ void TsubtitlePGSParser::reset(void)
    delete (*p).second;
    p = m_palettes.erase(p);
  }
+#if DEBUG_PGS_TIMESTAMPS
+ counter = 0;
+#endif
 
  m_nColorNumber				= 0;
 	m_nCurSegment				= NO_SEGMENT;
@@ -121,7 +130,6 @@ HRESULT TsubtitlePGSParser::parse(REFERENCE_TIME Istart, REFERENCE_TIME Istop, c
    // 3 bytes
 		 HDMV_SEGMENT_TYPE	nSegType	= (HDMV_SEGMENT_TYPE)m_bitdata.readByte();
 		 USHORT				nUnitSize	= m_bitdata.readShort();
-   m_bDisplayFlag = false;
 
    // Not enough data for this segment but this is a bug (segments are truncated somewhere or nUnitSize is not reliable)
    if (m_data.size() < (size_t)nUnitSize+3)
@@ -149,6 +157,13 @@ HRESULT TsubtitlePGSParser::parse(REFERENCE_TIME Istart, REFERENCE_TIME Istop, c
 			 continue;
 		 }
 	 }
+  
+  // Seeking occurred, we need a presentation segment first
+  if (m_pCurrentObject == NULL && m_nCurSegment!=PRESENTATION_SEG)
+  {
+    m_data.erase(m_data.begin(), m_data.begin()+m_nSegSize+3);
+    continue;
+  }
 
   if (m_pCurrentObject == NULL)
   {
@@ -158,45 +173,57 @@ HRESULT TsubtitlePGSParser::parse(REFERENCE_TIME Istart, REFERENCE_TIME Istop, c
   int i=0;
   switch (m_nCurSegment)
 	 {
-	  case PALETTE :
-#if DEBUG_PGS_PARSER
-		  DPRINTF(_l("TsubtitlePGSParser::parse PALETTE            rtStart=%I64i, rtStop=%I64i"), rtStart, rtStop);
-#endif
+	  case PALETTE:
+    #if DEBUG_PGS_PARSER
+	       DPRINTF(_l("TsubtitlePGSParser::parse PALETTE            rtStart=%I64i, rtStop=%I64i"), rtStart, rtStop);
+    #endif
     if (m_nSegSize !=2)
 		   parsePalette(m_bitdata, m_nSegSize);
     else m_pCurrentObject->m_bEmptySubtitles = true;
 		  break;
-	  case OBJECT :
-#if DEBUG_PGS_PARSER
-		  DPRINTF(_l("TsubtitlePGSParser::parse OBJECT            rtStart=%I64i, rtStop=%I64i"), rtStart, rtStop);
-#endif
+	  case OBJECT:
+     #if DEBUG_PGS_PARSER
+	       DPRINTF(_l("TsubtitlePGSParser::parse OBJECT            rtStart=%I64i, rtStop=%I64i"), rtStart, rtStop);
+     #endif
 		  parseObject(m_bitdata, m_nSegSize);
 		  break;
-	  case PRESENTATION_SEG :
-#if DEBUG_PGS_PARSER
-		  DPRINTF(_l("TsubtitlePGSParser::parse PRESENTATION_SEG   rtStart=%I64i, rtStop=%I64i (size=%d)"), rtStart, rtStop, m_nSegSize);
-#endif
+	  case PRESENTATION_SEG:
+     #if DEBUG_PGS_PARSER
+		       DPRINTF(_l("TsubtitlePGSParser::parse PRESENTATION_SEG   rtStart=%I64i, rtStop=%I64i (size=%d)"), rtStart, rtStop, m_nSegSize);
+     #endif
     parsePresentationSegment(m_bitdata, rtStart);
 		  break;
-	  case WINDOW_DEF :
-#if DEBUG_PGS_PARSER
-		  DPRINTF(_l("TsubtitlePGSParser::parse WINDOW_DEF         rtStart=%I64i, rtStop=%I64i"), rtStart, rtStop);
-#endif
+	  case WINDOW_DEF:
+     #if DEBUG_PGS_PARSER
+		       DPRINTF(_l("TsubtitlePGSParser::parse WINDOW_DEF         rtStart=%I64i, rtStop=%I64i"), rtStart, rtStop);
+     #endif
     parseWindow(m_bitdata, m_nSegSize);
 		  break;
-	  case DISPLAY :
+   case DISPLAY:
+    for (TcompositionObjects::iterator c=m_compositionObjects.begin();c!=m_compositionObjects.end();c++)
+     if ((*c)->m_rtStop != INVALID_TIME && !(*c)->m_bReady) 
+     {
+      #if DEBUG_PGS_TIMESTAMPS
+       char_t rtS1[32], rtS2[32];
+       rt2Str((*c)->m_rtStart, rtS1); rt2Str((*c)->m_rtStop, rtS2);
+       DPRINTF(_l("object display %s --> %s"), rtS1, rtS2);
+      #endif
+      (*c)->m_bReady = true;
+     }
+    
     if (m_pCurrentObject->isEmpty())
+    {
+     DPRINTF(_l("Empty subtitles"));
      m_pCurrentObject->m_bEmptySubtitles = true;
-
-    m_bDisplayFlag = true;
-#if DEBUG_PGS_PARSER
-		  DPRINTF(_l("TsubtitlePGSParser::parse DISPLAY     rtStart=%I64i, rtStop=%I64i (size=%d)"), rtStart, rtStop, m_nSegSize);
-#endif
+    }
+    #if DEBUG_PGS_PARSER
+		      DPRINTF(_l("TsubtitlePGSParser::parse DISPLAY     rtStart=%I64i, rtStop=%I64i (size=%d)"), rtStart, rtStop, m_nSegSize);
+    #endif
 		  break;
 	  default:
-#if DEBUG_PGS_PARSER
-		  DPRINTF(_l("TsubtitlePGSParser::parse UNKNOWN Seg %d     rtStart=%I64i"), m_nCurSegment, rtStart);
-#endif
+    #if DEBUG_PGS_PARSER
+		      DPRINTF(_l("TsubtitlePGSParser::parse UNKNOWN Seg %d     rtStart=%I64i"), m_nCurSegment, rtStart);
+    #endif
     break;
 	 }
 
@@ -220,9 +247,9 @@ void TsubtitlePGSParser::parsePresentationSegment(Tbitdata &bitData, REFERENCE_T
 
  m_VideoDescriptor.nVideoWidth   = bitData.readShort();
 	m_VideoDescriptor.nVideoHeight  = bitData.readShort();
-	m_VideoDescriptor.bFrameRate	= bitData.readByte();
+	m_VideoDescriptor.bFrameRate	= (bitData.readByte() >> 4);
  compositionDescriptor.nNumber	= bitData.readShort();
-	compositionDescriptor.bState	= bitData.readByte();
+	compositionDescriptor.bState	= (bitData.readByte() >> 6);
 
 	palette_update_flag	= !!(bitData.readByte() & 0x80);
 	palette_id_ref		= bitData.readByte();
@@ -231,46 +258,49 @@ void TsubtitlePGSParser::parsePresentationSegment(Tbitdata &bitData, REFERENCE_T
  m_pCurrentObject->m_palette_id_ref = palette_id_ref;
  m_pCurrentObject->m_pVideoDescriptor = &m_VideoDescriptor;
 
-#if DEBUG_PGS_PARSER
- DPRINTF(_l("TsubtitlePGSParser::parsePresentationSegment Object n°%d"),compositionDescriptor.nNumber);
-#endif
- if (nObjectNumber>0) 
+ // A subtitle segment can have several presentation segments (2 normally)
+ // The first segment has an object number always > 0 and the second is always = 0
+ if (nObjectNumber>0) // New subtitle
  {
-   if (m_pPreviousObject != NULL)
-   {
-    if (m_pPreviousObject->m_rtStop == INVALID_TIME) m_pPreviousObject->m_rtStop = m_pCurrentObject->m_rtStart - 1L;
-    m_pPreviousObject->m_bReady = true;
-   }
-   
+  #if DEBUG_PGS_TIMESTAMPS
+    counter++;
+    char_t rtString[32];
+    rt2Str(rtStart, rtString);
+    DPRINTF(_l("%d: nObjectNumber:%d  bState:%d Time: %s"), counter, nObjectNumber, compositionDescriptor.bState,rtString);
+  #endif
+  if (m_pCurrentObject->m_rtStart != INVALID_TIME) // First subtitle
+  {
    m_pPreviousObject = m_pCurrentObject;
    m_pCurrentObject = new TcompositionObject();
    m_compositionObjects.push_back(m_pCurrentObject);  
-   m_pCurrentObject->m_rtStart = rtStart;
- }
-
- if (compositionDescriptor.bState == 0/* && nObjectNumber == 0*/)
- {
-  if (m_pPreviousObject != NULL && m_pPreviousObject->m_rtStop == INVALID_TIME
-   && (m_pCurrentObject->m_Windows[0].m_objectId + m_pCurrentObject->m_Windows[1].m_objectId) > 0)
-  {
-   m_pPreviousObject->m_rtStop = rtStart;
-   m_pPreviousObject->m_bReady = true;
   }
+  m_pCurrentObject->m_rtStart = rtStart;
+ }
+ #if DEBUG_PGS_TIMESTAMPS
   else
   {
-   m_pCurrentObject->m_rtStop = rtStart;
+   char_t rtString[32];
+   rt2Str(rtStart, rtString);
+   DPRINTF(_l("%d: nObjectNumber:%d  bState:%d Time: %s"), counter, nObjectNumber, compositionDescriptor.bState,rtString);
+  }
+ #endif
+
+ if (compositionDescriptor.bState == 0 && nObjectNumber == 0) // Clear the screen
+ {
+  for (TcompositionObjects::iterator c=m_compositionObjects.begin();c!=m_compositionObjects.end();c++)
+  {
+   if ((*c)->m_rtStop == INVALID_TIME) (*c)->m_rtStop = rtStart;
+   if ((*c) != m_pCurrentObject) (*c)->m_bReady = true;
   }
  }
-
  
- 
+ if (nObjectNumber >0)
  for (int i=0;i<nObjectNumber; i++)
  {
 	 BYTE	bTemp;
   SHORT object_id_ref = bitData.readShort();
   SHORT window_id_ref	= bitData.readByte();
 	 
-  
   m_pCurrentObject->m_bCompositionObject[object_id_ref]=window_id_ref;
 
 	 bTemp = bitData.readByte();
@@ -307,6 +337,7 @@ void TsubtitlePGSParser::parseWindow(Tbitdata &bitData, USHORT nSize)
   */
  if (m_pCurrentObject == NULL) return;
  int numWindows = bitData.readByte();
+ //if (!m_pCurrentObject->m_bReady)
  for (int i=0;i<numWindows && i < MAX_WINDOWS;i++)
  {
   bitData.readByte();
@@ -370,31 +401,47 @@ void TsubtitlePGSParser::parseObject(Tbitdata &bitData, USHORT nSize)
  if (m_pCurrentObject == NULL) return;
 	
 	m_pCurrentObject->m_version_number	= bitData.readByte();
-	m_sequence_desc	= bitData.readByte();
+ // sequence_descriptor 2 bit  first_in_sequence_flag, last_in_sequence_flag
+	m_sequence_desc	= (bitData.readByte()>>6);
 
-	if (m_sequence_desc & 0x80)
+ BYTE windowId = m_pCurrentObject->m_bCompositionObject[object_id];
+
+	if ((m_sequence_desc & 2) == 2)
 	{
+  // We have an object to display, stop previous subs to current start if previous stops are not set
+  for (TcompositionObjects::iterator c=m_compositionObjects.begin();c!=m_compositionObjects.end();c++)
+  {
+   if ((*c) != m_pCurrentObject && (*c)->m_rtStop == INVALID_TIME)
+   {
+    (*c)->m_rtStop = m_pCurrentObject->m_rtStart - 1L;
+    (*c)->m_bReady = true;
+   }
+  }
+  #if DEBUG_PGS_TIMESTAMPS
+    DPRINTF(_l("%d: object has picture data"), counter);
+  #endif
   m_nOSDCount = 0;
   DWORD	object_data_length  = (DWORD)bitData.getBits(24);
   m_pCurrentObject->m_data_length = object_data_length;
-  m_pCurrentObject->m_Windows[object_id].m_objectId = object_id;
+  
+  m_pCurrentObject->m_Windows[windowId].m_objectId = object_id;
 		
 		/*m_pCurrentObject->m_width			= */bitData.readShort();
 		/*m_pCurrentObject->m_height 			= */bitData.readShort();
-  m_pCurrentObject->m_Windows[object_id].data.reserve(object_data_length-4);
-  m_pCurrentObject->m_Windows[object_id].data.append(bitData.wordpointer, nSize-11);
-#if DEBUG_PGS_PARSER
-  DPRINTF(_l("TsubtitlePGSParser::parseObject Object %d x %d size (%d)"), m_pCurrentObject->m_width, m_pCurrentObject->m_height, nSize-11);
-#endif
+  m_pCurrentObject->m_Windows[windowId].data.reserve(object_data_length-4);
+  m_pCurrentObject->m_Windows[windowId].data.append(bitData.wordpointer, nSize-11);
+  #if DEBUG_PGS_PARSER
+    DPRINTF(_l("TsubtitlePGSParser::parseObject Object %d x %d size (%d)"), m_pCurrentObject->m_width, m_pCurrentObject->m_height, nSize-11);
+  #endif
   bitData.skipBytes(nSize-11);
 	}
 	else
  {
-#if DEBUG_PGS_PARSER
-  DPRINTF(_l("TsubtitlePGSParser::parseObject Object size (%d)"), nSize-4);
-#endif
+  #if DEBUG_PGS_PARSER
+    DPRINTF(_l("TsubtitlePGSParser::parseObject Object size (%d)"), nSize-4);
+  #endif
   m_nOSDCount ++;
-		m_pCurrentObject->m_Windows[object_id].data.append(bitData.wordpointer, nSize-4);
+		m_pCurrentObject->m_Windows[windowId].data.append(bitData.wordpointer, nSize-4);
   bitData.skipBytes(nSize-4);
  }
  getPalette(m_pCurrentObject);
@@ -409,9 +456,9 @@ bool TsubtitlePGSParser::getPalette(TcompositionObject *pObject)
   pObject->m_bGotPalette = true;
   return true;
  }
-#if DEBUG_PGS_PARSER
- DPRINTF(_l("TsubtitlePGSParser::getPalette Palette with reference %d not found"),pObject->m_palette_id_ref);
-#endif
+ #if DEBUG_PGS_PARSER
+  DPRINTF(_l("TsubtitlePGSParser::getPalette Palette with reference %d not found"),pObject->m_palette_id_ref);
+ #endif
  return false;
 }
 
@@ -424,27 +471,44 @@ void TsubtitlePGSParser::getObjects(REFERENCE_TIME rt, TcompositionObjects *pObj
  {
   if (/*(*c).second->m_rtStart <= rt && (*c).second->m_rtStop > rt && */(*c)->m_bReady)
   {
+   if ((*c)->m_bEmptySubtitles)
+   {
+    #if DEBUG_PGS_TIMESTAMPS
+          char_t rtString[32];
+          rt2Str((*c)->m_rtStart, rtString);
+          DPRINTF(_l("TsubtitlePGSParser::getObjects Empty subtitle starting at %s"),rtString);
+     #endif
+    delete (*c);
+    c=m_compositionObjects.erase(c);
+    continue;
+   }
    // Get the right palette pointer before adding the element
    if (!getPalette(*c))
    {
+    // Palette not found and default does not exist
+    if (m_pDefaultPalette == NULL)
+    {
+     #if DEBUG_PGS_TIMESTAMPS
+          char_t rtString[32];
+          rt2Str((*c)->m_rtStart, rtString);
+          DPRINTF(_l("TsubtitlePGSParser::getObjects No palette to print this sub starting at %s"),rtString);
+     #endif
+     delete (*c);
+     c=m_compositionObjects.erase(c);
+     continue;
+    }
+
     // Palette not found, use default
     memcpy(&((*c)->m_Colors), &(m_pDefaultPalette->m_Colors), 256*sizeof(DWORD));
     (*c)->m_bGotPalette = true;
    }
    // Pop the object from our store and push it to the returned store
-#if DEBUG_PGS_TIMESTAMPS
-   float stime=(*c)->m_rtStart/10000/1000;
-   int sh=(int)stime/3600;
-   int sm=(int)(stime-sh*3600)/60;
-   int ss=(int)(stime-sh*3600-sm*60);
-   int sms=(int)((float)1000*(stime-sh*3600-sm*60-ss));
-   float etime=(*c)->m_rtStop/10000/1000;
-   int eh=(int)etime/3600;
-   int em=(int)(etime-eh*3600)/60;
-   int es=(int)(etime-eh*3600-em*60);
-   int ems=(int)((float)1000*(etime-eh*3600-em*60-es));
-   DPRINTF(_l("TsubtitlePGSParser::getObjects %d:%d:%d.%d --> %d:%d:%d.%d"),sh,sm,ss,sms,eh,em,es,ems);
-#endif
+   #if DEBUG_PGS_TIMESTAMPS
+      char_t rtString[32], rtString2[32];
+      rt2Str((*c)->m_rtStart, rtString);
+      rt2Str((*c)->m_rtStop, rtString2);
+      DPRINTF(_l("TsubtitlePGSParser::getObjects %s --> %s"),rtString, rtString2);
+   #endif
    pObjects->push_back(*c);
    if (m_pCurrentObject == *c) m_pCurrentObject = NULL;
    c=m_compositionObjects.erase(c); 
