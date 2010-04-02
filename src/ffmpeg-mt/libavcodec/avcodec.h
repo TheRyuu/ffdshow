@@ -1140,7 +1140,7 @@ typedef struct AVCodecContext {
     /**
      * Called at the beginning of each frame to get a buffer for it.
      * If pic.reference is set then the frame will be read later by libavcodec.
-     * avcodec_align_dimensions() should be used to find the required width and
+     * avcodec_align_dimensions2() should be used to find the required width and
      * height, as they normally need to be rounded up to the next multiple of 16.
      * if CODEC_CAP_DR1 is not set then get_buffer() must call
      * avcodec_default_get_buffer() instead of providing buffers allocated by
@@ -1380,7 +1380,9 @@ typedef struct AVCodecContext {
     /* lower 16 bits - CPU features */
 #define FF_MM_MMX      0x0001 ///< standard MMX
 #define FF_MM_3DNOW    0x0004 ///< AMD 3DNOW
+#if LIBAVCODEC_VERSION_MAJOR < 53
 #define FF_MM_MMXEXT   0x0002 ///< SSE integer functions or AMD MMX ext
+#endif
 #define FF_MM_MMX2     0x0002 ///< SSE integer functions or AMD MMX ext
 #define FF_MM_SSE      0x0008 ///< SSE functions
 #define FF_MM_SSE2     0x0010 ///< PIV SSE2 functions
@@ -2532,6 +2534,7 @@ typedef struct AVPicture {
 } AVPicture;
 
 void avcodec_get_chroma_sub_sample(enum PixelFormat pix_fmt, int *h_shift, int *v_shift);
+const char *avcodec_get_pix_fmt_name(enum PixelFormat pix_fmt);
 void avcodec_set_dimensions(AVCodecContext *s, int width, int height);
 
 /* external high level API */
@@ -2631,7 +2634,28 @@ AVFrame *avcodec_alloc_frame(void);
 int avcodec_default_get_buffer(AVCodecContext *s, AVFrame *pic);
 void avcodec_default_release_buffer(AVCodecContext *s, AVFrame *pic);
 int avcodec_default_reget_buffer(AVCodecContext *s, AVFrame *pic);
+
+/**
+ * Returns the amount of padding in pixels which the get_buffer callback must
+ * provide around the edge of the image for codecs which do not have the
+ * CODEC_FLAG_EMU_EDGE flag.
+ *
+ * @return Required padding in pixels.
+ */
+unsigned avcodec_get_edge_width(void);
+/**
+ * Modifies width and height values so that they will result in a memory
+ * buffer that is acceptable for the codec if you do not use any horizontal
+ * padding.
+ */
 void avcodec_align_dimensions(AVCodecContext *s, int *width, int *height);
+/**
+ * Modifies width and height values so that they will result in a memory
+ * buffer that is acceptable for the codec if you also ensure that all
+ * line sizes are a multiple of the respective linesize_align[i].
+ */
+void avcodec_align_dimensions2(AVCodecContext *s, int *width, int *height,
+                               int linesize_align[4]);
 
 /**
  * Checks if the given dimension of a picture is valid, meaning that all
