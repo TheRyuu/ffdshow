@@ -34,11 +34,11 @@ TsubtitlesTextpinPGS::TsubtitlesTextpinPGS(int Itype,IffdshowBase *Ideci):
 TsubtitlesTextpinPGS::~TsubtitlesTextpinPGS(void)
 {
  if (pSubtitlePGSParser) delete pSubtitlePGSParser;
- for (TcompositionObjects::iterator c=m_compositionObjects.begin();c!=m_compositionObjects.end();)
+ /*for (TcompositionObjects::iterator c=m_compositionObjects.begin();c!=m_compositionObjects.end();)
  {
   delete *c;
   c=m_compositionObjects.erase(c);
- }
+ }*/
 }
 
 
@@ -62,19 +62,8 @@ void TsubtitlesTextpinPGS::addSubtitle(REFERENCE_TIME start,REFERENCE_TIME stop,
   {
    (*s)->stop=start;
    break;
-  }*/
-
+  }*/ 
  pSubtitlePGSParser->parse(start, stop, data, datalen);
- pSubtitlePGSParser->getObjects(start, &m_compositionObjects);
-
- // Each composition object is given to TsubtitlePGS instance and freed by it
- for (TcompositionObjects::iterator c=m_compositionObjects.begin();c!=m_compositionObjects.end();)
- {
-  DPRINTF(_l("TsubtitlesTextpinPGS::addSubtitle Subtitles added"));
-  TsubtitlePGS *sub=new TsubtitlePGS(deci, start, stop, *c, this);
-  subs->push_back((Tsubtitle*)sub);
-  c=m_compositionObjects.erase(c);
- }
 }
 
 
@@ -83,31 +72,45 @@ void TsubtitlesTextpinPGS::addSubtitle(REFERENCE_TIME start,REFERENCE_TIME stop,
 // Retrieve the list of subtitles to display for the giving start=>stop sequence
 Tsubtitle* TsubtitlesTextpinPGS::getSubtitle(const TsubtitlesSettings *cfg,REFERENCE_TIME rtStart,REFERENCE_TIME rtStop,bool *forceChange)
 {
-    // Clear passed subs
-    for (Tsubreader::iterator s0=subs->begin() ; s0!=subs->end() ;) {
-        if ((*s0)->stop < rtStart) {
-            delete *s0;
-            s0=subs->erase(s0);
-        } else
-            s0++;
-    }
+ m_compositionObjects.clear();
+ pSubtitlePGSParser->getObjects(rtStart, rtStop, &m_compositionObjects);
+ foreach (TcompositionObject *pCompositionObject, m_compositionObjects) {
+  if (pCompositionObject->m_pSubtitlePGS == NULL) {
+   for (int i=0;i<pCompositionObject->m_nWindows; i++) {
+    DPRINTF(_l("TsubtitlesTextpinPGS::addSubtitle Subtitles added"));
+    TsubtitlePGS *sub=new TsubtitlePGS(deci, rtStart, rtStop, pCompositionObject, &pCompositionObject->m_Windows[i], this);
+    subs->push_back((Tsubtitle*)sub);
+   }
+  }
+ }
+ // Clear passed subs
+ for (Tsubreader::iterator s0=subs->begin() ; s0!=subs->end() ;) 
+ {
+  if ((*s0)->stop != INVALID_TIME && (*s0)->stop < rtStart) 
+  {
+   delete *s0;
+   s0=subs->erase(s0);
+  } 
+  else s0++;
+ }
 
-    // Rebuild the list
-    subtitles.clear();
-    REFERENCE_TIME start=_I64_MAX,stop=_I64_MIN;
-    foreach (Tsubtitle *sub, *subs) {
-        if ( rtStart <= sub->stop
-          && rtStop  >= sub->start) {
-            subtitles.push_back(sub);
-            if (sub->start < start) start=sub->start;
-            if (sub->stop  > stop ) stop =sub->stop ;
-        }
-    }
-    if (subtitles.empty())
-        return NULL;
-    subtitles.start=start;
-    subtitles.stop=stop;
-    return &subtitles;
+ // Rebuild the list
+ subtitles.clear();
+ REFERENCE_TIME start=_I64_MAX,stop=_I64_MIN;
+ foreach (Tsubtitle *sub, *subs) {
+  ((TsubtitlePGS*)sub)->updateTimestamps();
+  if ((sub->stop == INVALID_TIME || rtStart <= sub->stop)
+    && rtStop  >= sub->start) {
+   subtitles.push_back(sub);
+   if (sub->start < start) start=sub->start;
+   if (sub->stop != INVALID_TIME && sub->stop  > stop ) stop =sub->stop ;
+  }
+ }
+ if (subtitles.empty())
+     return NULL;
+ subtitles.start=start;
+ subtitles.stop=stop;
+ return &subtitles;
 }
 
 void TsubtitlesTextpinPGS::Tsubtitles::print(

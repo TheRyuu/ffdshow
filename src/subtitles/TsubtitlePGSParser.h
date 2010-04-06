@@ -10,8 +10,11 @@
 #include "TsubtitleDVD.h"
 #include "interfaces.h"
 
+#define DEBUG_PGS_TIMESTAMPS 0
+
 #pragma region PSG subs Structures & types
 
+struct TsubtitlePGS;
 static inline void rt2Str(REFERENCE_TIME rTime, char_t *string)
 {
  if (!string) return;
@@ -44,11 +47,25 @@ static inline void rt2Str(REFERENCE_TIME rTime, char_t *string)
 
  struct TwindowDefinition
  {
-  int m_horizontal_position, m_vertical_position, m_width, m_height, m_objectId;TspuImage *ownimage;
+  int m_horizontal_position, m_vertical_position, m_width, m_height, m_objectId, m_windowId;TspuImage *ownimage;
+  SHORT				m_cropping_horizontal_position;
+	 SHORT				m_cropping_vertical_position;
+	 SHORT				m_cropping_width;
+	 SHORT				m_cropping_height;
+  bool				m_object_cropped_flag;
+	 bool				m_forced_on_flag;
+  REFERENCE_TIME		m_rtStart;
+	 REFERENCE_TIME		m_rtStop;
   TbyteBuffer data; // RGB indexes
-  void reset() {m_horizontal_position=m_vertical_position=m_width=m_height=0;m_objectId=0;data.clear();ownimage=NULL;}
+  void reset() {m_horizontal_position=m_vertical_position=m_width=m_height=m_objectId=m_windowId=0;data.clear();ownimage=NULL;
+  m_cropping_horizontal_position=m_cropping_vertical_position=m_cropping_width=m_cropping_height=0;
+  m_rtStart=m_rtStop=INVALID_TIME;
+  m_object_cropped_flag=m_forced_on_flag=false;}
   TwindowDefinition() { reset();}
+  bool isReady() {return (data.size() == 0 || (data.size()!=0 && m_rtStart != INVALID_TIME && m_rtStop != INVALID_TIME)) ? true : false;}
  };
+
+ typedef std::vector<TwindowDefinition* > TwindowsDefinition;
 
  class TcompositionObject
  {
@@ -56,44 +73,39 @@ static inline void rt2Str(REFERENCE_TIME rTime, char_t *string)
    TcompositionObject() { reset();};
    void reset()
    {
-    m_bReady = false; m_rtStart	= INVALID_TIME;	m_rtStop	= INVALID_TIME;
-    m_object_cropped_flag = false; m_forced_on_flag = false; m_version_number = 0;
-    m_cropping_horizontal_position = 0; m_cropping_vertical_position = 0; m_cropping_width = 0; m_cropping_height= 0;
+    m_nWindows = 0;
+    m_compositionNumber = -1;
+    m_bReady = false;
+    m_version_number = 0;
     m_palette_id_ref = 0; m_bGotPalette = false; memsetd (m_Colors, 0xFF000000, sizeof(DWORD)*256);
     m_data_length = 0; m_pVideoDescriptor = NULL; m_bEmptySubtitles = false;
-    memset(&m_bCompositionObject[0], 0, sizeof(BYTE)*64); data.clear();
+    memset(&m_bCompositionObject[0], 0, sizeof(BYTE)*64);
     for (int i=0;i<MAX_WINDOWS;i++) { m_Windows[i].reset(); }
+    m_rtTime = INVALID_TIME;
+    m_nState = 0;
+    m_pSubtitlePGS = NULL;
    }
-   bool isEmpty() { for (int i=0;i<MAX_WINDOWS;i++) {if (m_Windows[i].data.size() != 0) return false;} return true;}
+   bool isEmpty() { if (m_nWindows == 0) return true;for (int i=0;i<MAX_WINDOWS;i++) {if (m_Windows[i].data.size() != 0) return false;} return true;}
+   bool isReady() { for (int i=0;i<MAX_WINDOWS;i++) {if (!m_Windows[i].isReady()) return false;} return true;}
 
-	  bool				m_object_cropped_flag;
-	  bool				m_forced_on_flag;
+   int     m_compositionNumber;
+   REFERENCE_TIME		m_rtTime;
 	  BYTE				m_version_number;
    DWORD   m_data_length;
-
-	  /*SHORT				m_horizontal_position;
-	  SHORT				m_vertical_position;
-	  SHORT				m_width;
-	  SHORT				m_height;*/
-
-	  SHORT				m_cropping_horizontal_position;
-	  SHORT				m_cropping_vertical_position;
-	  SHORT				m_cropping_width;
-	  SHORT				m_cropping_height;
-
-   BYTE m_palette_id_ref;
-
-	  REFERENCE_TIME		m_rtStart;
-	  REFERENCE_TIME		m_rtStop;
-   TbyteBuffer data; // RGB indexes
+   BYTE    m_palette_id_ref;
+   
    bool     m_bReady;
-   DWORD		m_Colors[256];
+   DWORD		  m_Colors[256];
    bool     m_bGotPalette;
    bool     m_bEmptySubtitles;
    VIDEO_DESCRIPTOR *m_pVideoDescriptor;
    TwindowDefinition m_Windows[MAX_WINDOWS];
+   int      m_nWindows;
+   int      m_nState;
    BYTE m_bCompositionObject[64];
+   TsubtitlePGS *m_pSubtitlePGS;
  };
+
 
  typedef std::vector<TcompositionObject* > TcompositionObjects;
 #pragma endregion
@@ -138,7 +150,7 @@ public:
  TsubtitlePGSParser(IffdshowBase *deci);
  virtual ~TsubtitlePGSParser();
  HRESULT parse(REFERENCE_TIME Istart, REFERENCE_TIME Istop, const unsigned char *data, size_t datalen);
- void getObjects(REFERENCE_TIME rt, TcompositionObjects *pObjects);
+ void getObjects(REFERENCE_TIME rtStart, REFERENCE_TIME rtStop, TcompositionObjects *pObjects);
  virtual void reset(void);
 
 private:
