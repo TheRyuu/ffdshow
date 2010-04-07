@@ -27,6 +27,7 @@
 #include "mem.h"
 
 #define vsnprintf _vsnprintf
+#define snprintf _snprintf
 
 int av_strstart(const char *str, const char *pfx, const char **ptr)
 {

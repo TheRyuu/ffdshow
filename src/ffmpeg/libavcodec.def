@@ -40,6 +40,32 @@ EXPORTS
   av_parser_parse
   av_parser_close
   
+  sws_getContext
+  sws_freeContext
+  sws_scale
+  sws_scale_ordered
+  sws_getDefaultFilter
+  sws_freeFilter
+  sws_getConstVec
+  sws_getGaussianVec
+  sws_normalizeVec
+  sws_freeVec
+  palette8topacked32
+  palette8topacked24
+  palette8torgb32
+  palette8tobgr32
+  palette8torgb24
+  palette8tobgr24
+  palette8torgb16
+  palette8tobgr16
+  palette8torgb15
+  palette8tobgr15
+  GetCPUCount
+  
+  pp_postprocess
+  pp_get_context
+  pp_free_context
+  
   FFH264DecodeBuffer
   FFH264BuildPicParams
   FFH264CheckCompatibility

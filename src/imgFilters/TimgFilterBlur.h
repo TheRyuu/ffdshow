@@ -2,10 +2,10 @@
 #define _TIMGFILTERBLUR_H_
 
 #include "TimgFilter.h"
-#include "postproc/postprocess.h"
+#include "libpostproc/postprocess_internal.h"
 
 class T3x3blurSWS;
-struct Tlibmplayer;
+struct Tlibavcodec;
 struct TblurSettings;
 DECLARE_FILTER(TimgFilterBlur,public,TimgFilter)
 private:
@@ -24,34 +24,34 @@ public:
 };
 
 struct SwsContext;
-DECLARE_FILTER(TimgFilterMplayerBlur,public,TimgFilter)
+DECLARE_FILTER(TimgFilterAvcodecBlur,public,TimgFilter)
 private:
  SwsContext *swsc;
  int oldradius,oldluma,oldchroma;
- Tlibmplayer *libmplayer;
+ Tlibavcodec *libavcodec;
 protected:
  virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
  virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const {return SWS_IN_CSPS;}
  virtual int getSupportedOutputColorspaces(const TfilterSettingsVideo *cfg) const {return SWS_OUT_CSPS;}
  virtual void onSizeChange(void);
 public:
- TimgFilterMplayerBlur(IffdshowBase *Ideci,Tfilters *Iparent);
- virtual ~TimgFilterMplayerBlur();
+ TimgFilterAvcodecBlur(IffdshowBase *Ideci,Tfilters *Iparent);
+ virtual ~TimgFilterAvcodecBlur();
  virtual void done(void);
  virtual HRESULT process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0);
 };
 
-DECLARE_FILTER(TimgFilterMplayerTNR,public,TimgFilter)
+DECLARE_FILTER(TimgFilterAvcodecTNR,public,TimgFilter)
 private:
  void *pp_ctx;PPMode pp_mode;
- Tlibmplayer *libmplayer;
+ Tlibavcodec *libavcodec;
 protected:
  virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
  virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const {return FF_CSPS_MASK_YUV_PLANAR;}
  virtual void onSizeChange(void);
 public:
- TimgFilterMplayerTNR(IffdshowBase *Ideci,Tfilters *Iparent);
- virtual ~TimgFilterMplayerTNR();
+ TimgFilterAvcodecTNR(IffdshowBase *Ideci,Tfilters *Iparent);
+ virtual ~TimgFilterAvcodecTNR();
  virtual void done(void);
  virtual HRESULT process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0);
  virtual void onSeek(void);

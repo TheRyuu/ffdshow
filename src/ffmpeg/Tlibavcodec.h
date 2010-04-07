@@ -3,6 +3,8 @@
 
 #include "../codecs/ffcodecs.h"
 #include <dxva.h>
+#include "TpostprocSettings.h"
+#include "ffImgfmt.h"
 // Do not include avcodec.h in this file, ffmpeg and ffmpeg-mt may conflict.
 
 struct AVCodecContext;
@@ -10,6 +12,11 @@ struct AVCodec;
 struct AVFrame;
 struct AVCodecParserContext;
 struct AVPaletteControl;
+struct SwsContext;
+struct SwsFilter;
+struct SwsVector;
+struct SwsParams;
+struct PPMode;
 
 struct Tconfig;
 class Tdll;
@@ -39,6 +46,12 @@ public:
  static bool getVersion(const Tconfig *config,ffstring &vers,ffstring &license);
  static bool check(const Tconfig *config);
  static int lavcCpuFlags(void);
+ static int ppCpuCaps(int csp);
+ static int swsCpuCaps(void);
+ static void pp_mode_defaults(PPMode &ppMode);
+ static int getPPmode(const TpostprocSettings *cfg,int currentq);
+ static void swsInitParams(SwsParams *params,int resizeMethod);
+ static void swsInitParams(SwsParams *params,int resizeMethod,int flags);
 
  bool ok,dec_only;
  AVCodecContext* avcodec_alloc_context(TlibavcodecExt *ext=NULL);
@@ -97,6 +110,48 @@ int (*avcodec_decode_audio2)(AVCodecContext *avctx, int16_t *samples,
    const char_t *descr;
   };
  static const Tdia_size dia_sizes[];
+
+ //libswscale imports
+ SwsContext* (*sws_getContext)(int srcW, int srcH, enum PixelFormat srcFormat,
+                           int dstW, int dstH, enum PixelFormat dstFormat, int flags,
+                           SwsParams *params, //FFDShow structure
+                           SwsFilter *srcFilter, SwsFilter *dstFilter, const double *param);
+
+ void (*sws_freeContext)(SwsContext *c);
+ SwsFilter* (*sws_getDefaultFilter)(float lumaGBlur, float chromaGBlur,
+                                float lumaSharpen, float chromaSharpen,
+                                float chromaHShift, float chromaVShift,
+                                int verbose);
+ void (*sws_freeFilter)(SwsFilter *filter);
+ int (*sws_scale)(SwsContext *c, const uint8_t* src[], const stride_t srcStride[], int srcSliceY,
+              int srcSliceH, uint8_t* dst[], const stride_t dstStride[]);
+ int (*sws_scale_ordered)(SwsContext *c, const uint8_t* src[], const stride_t srcStride[], int srcSliceY,
+                      int srcSliceH, uint8_t* dst[], stride_t dstStride[]);
+ SwsVector *(*sws_getConstVec)(double c, int length);
+ SwsVector *(*sws_getGaussianVec)(double variance, double quality);
+ void (*sws_normalizeVec)(SwsVector *a, double height);
+ void (*sws_freeVec)(SwsVector *a);
+ void (*palette8topacked32)(const uint8_t *src, uint8_t *dst, long num_pixels, const uint8_t *palette);
+ void (*palette8topacked24)(const uint8_t *src, uint8_t *dst, long num_pixels, const uint8_t *palette);
+ void (*palette8torgb32)(const uint8_t *src, uint8_t *dst, long num_pixels, const uint8_t *palette);
+ void (*palette8tobgr32)(const uint8_t *src, uint8_t *dst, long num_pixels, const uint8_t *palette);
+ void (*palette8torgb24)(const uint8_t *src, uint8_t *dst, long num_pixels, const uint8_t *palette);
+ void (*palette8tobgr24)(const uint8_t *src, uint8_t *dst, long num_pixels, const uint8_t *palette);
+ void (*palette8torgb16)(const uint8_t *src, uint8_t *dst, long num_pixels, const uint8_t *palette);
+ void (*palette8tobgr16)(const uint8_t *src, uint8_t *dst, long num_pixels, const uint8_t *palette);
+ void (*palette8torgb15)(const uint8_t *src, uint8_t *dst, long num_pixels, const uint8_t *palette);
+ void (*palette8tobgr15)(const uint8_t *src, uint8_t *dst, long num_pixels, const uint8_t *palette);
+ int (*GetCPUCount)(void);
+
+ //libpostproc imports
+ void  (*pp_postprocess)(const uint8_t * src[3], const stride_t srcStride[3],
+                     uint8_t * dst[3], const stride_t dstStride[3],
+                     int horizontalSize, int verticalSize,
+                     const /*QP_STORE_T*/int8_t *QP_store,  int QP_stride,
+                     /*pp_mode*/void *mode, /*pp_context*/void *ppContext, int pict_type);
+ /*pp_context*/void *(*pp_get_context)(int width, int height, int flags);
+ void (*pp_free_context)(/*pp_context*/void *ppContext);
+
 
  // DXVA imports
  int (*av_h264_decode_frame)(struct AVCodecContext* avctx, uint8_t *buf, int buf_size);

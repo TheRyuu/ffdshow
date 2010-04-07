@@ -22,7 +22,7 @@
 #include "TdeinterlaceSettings.h"
 #include "IffdshowBase.h"
 #include "IffdshowDecVideo.h"
-#include "Tlibmplayer.h"
+#include "Tlibavcodec.h"
 #include "Tconfig.h"
 #include "simd.h"
 
@@ -231,21 +231,21 @@ void TimgFilterFramerateDoubler::onSeek(void)
  if (old) delete old;old=NULL;
 }
 
-//========================================= TimgFilterMplayerDeinterlace ==========================================
-TimgFilterMplayerDeinterlace::TimgFilterMplayerDeinterlace(IffdshowBase *Ideci,Tfilters *Iparent):TimgFilter(Ideci,Iparent)
+//========================================= TimgFilterAvcodecDeinterlace ==========================================
+TimgFilterAvcodecDeinterlace::TimgFilterAvcodecDeinterlace(IffdshowBase *Ideci,Tfilters *Iparent):TimgFilter(Ideci,Iparent)
 {
- libmplayer=NULL;
- pp_ctx=NULL;Tlibmplayer::pp_mode_defaults(pp_mode);
+ libavcodec=NULL;
+ pp_ctx=NULL;Tlibavcodec::pp_mode_defaults(pp_mode);
 }
-TimgFilterMplayerDeinterlace::~TimgFilterMplayerDeinterlace()
+TimgFilterAvcodecDeinterlace::~TimgFilterAvcodecDeinterlace()
 {
- if (libmplayer) libmplayer->Release();
+ if (libavcodec) libavcodec->Release();
 }
-void TimgFilterMplayerDeinterlace::done(void)
+void TimgFilterAvcodecDeinterlace::done(void)
 {
- if (pp_ctx) libmplayer->pp_free_context(pp_ctx);pp_ctx=NULL;
+ if (pp_ctx) libavcodec->pp_free_context(pp_ctx);pp_ctx=NULL;
 }
-HRESULT TimgFilterMplayerDeinterlace::process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)
+HRESULT TimgFilterAvcodecDeinterlace::process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)
 {
  const TdeinterlaceSettings *cfg=(const TdeinterlaceSettings*)cfg0;
  if (((pict.fieldtype & FIELD_TYPE::PROGRESSIVE_FRAME) || pict.film) && !cfg->deinterlaceAlways)
@@ -262,12 +262,12 @@ HRESULT TimgFilterMplayerDeinterlace::process(TfilterQueue::iterator it,TffPict 
 
  if (!pp_ctx)
   {
-   if (!libmplayer) deci->getPostproc(&libmplayer);
-   pp_ctx=libmplayer->pp_get_context(dx1[0],dy1[0],Tlibmplayer::ppCpuCaps(csp1));
+   if (!libavcodec) deci->getLibavcodec(&libavcodec);
+   pp_ctx=libavcodec->pp_get_context(dx1[0],dy1[0],Tlibavcodec::ppCpuCaps(csp1));
   }
  const TdeinterlaceSettings::TmethodProps &methodProps=TdeinterlaceSettings::getMethod(cfg->cfgId);
  pp_mode.lumMode=pp_mode.chromMode=methodProps.id;
- libmplayer->pp_postprocess(tempPict1,stride1,
+ libavcodec->pp_postprocess(tempPict1,stride1,
                             tempPict2,stride2,
                             dx1[0],dy1[0],
                             NULL,0,

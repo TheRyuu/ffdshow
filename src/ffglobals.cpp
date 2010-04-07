@@ -1621,13 +1621,9 @@ const char_t *fourcc2str(FOURCC fcc,char_t *name,size_t namelength)
    case FOURCC_PAL1:ff_strncpy(name,_l("2 colors"),namelength);break;
    case FOURCC_PAL4:ff_strncpy(name,_l("16 colors"),namelength);break;
    case FOURCC_PAL8:ff_strncpy(name,_l("256 colors"),namelength);break;
-   case FOURCC_RGB15MPLAYER:
    case FOURCC_RGB5:ff_strncpy(name,_l("RGB555"),namelength);break;
-   case FOURCC_RGB16MPLAYER:
    case FOURCC_RGB6:ff_strncpy(name,_l("RGB565"),namelength);break;
-   case FOURCC_RGB24MPLAYER:
    case FOURCC_RGB2:ff_strncpy(name,_l("RGB24") ,namelength);break;
-   case FOURCC_RGB32MPLAYER:
    case FOURCC_RGB3:ff_strncpy(name,_l("RGB32") ,namelength);break;
    case FOURCC_RLE4:ff_strncpy(name,_l("MSRLE4"),namelength);break;
    case FOURCC_RLE8:ff_strncpy(name,_l("MSRLE8"),namelength);break;

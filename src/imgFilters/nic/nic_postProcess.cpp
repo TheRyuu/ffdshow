@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "nic_postProcess.h"
-#include "postproc/postprocFilters.h"
+#include "libpostproc/postprocess_internal.h"
 #include "simd.h"
 #include "Tconfig.h"
 

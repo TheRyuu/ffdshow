@@ -20,8 +20,8 @@
 #include "TimgFilterResize.h"
 #include "IffdshowBase.h"
 #include "IffdshowDecVideo.h"
-#include "postproc/swscale.h"
-#include "Tlibmplayer.h"
+#include "libswscale/swscale.h"
+#include "Tlibavcodec.h"
 #include "Tconfig.h"
 #include "SimpleResize.h"
 #include "TimgFilters.h"
@@ -32,7 +32,7 @@ TimgFilterResize::TimgFilterResize(IffdshowBase *Ideci,Tfilters *Iparent):
  TimgFilter(Ideci,Iparent),
  swsparams(new SwsParams)
 {
- libmplayer=NULL;swsc=NULL;swsf=NULL;
+ libavcodec=NULL;swsc=NULL;swsf=NULL;
  simple=NULL;
  sizeChanged=true;
  oldinterlace=oldWarped=false;
@@ -40,14 +40,14 @@ TimgFilterResize::TimgFilterResize(IffdshowBase *Ideci,Tfilters *Iparent):
 }
 TimgFilterResize::~TimgFilterResize()
 {
- if (libmplayer) libmplayer->Release();
+ if (libavcodec) libavcodec->Release();
  delete swsparams;
 }
 
 void TimgFilterResize::done(void)
 {
- if (swsf) libmplayer->sws_freeFilter(swsf);swsf=NULL;
- if (swsc) libmplayer->sws_freeContext(swsc);swsc=NULL;
+ if (swsf) libavcodec->sws_freeFilter(swsf);swsf=NULL;
+ if (swsc) libavcodec->sws_freeContext(swsc);swsc=NULL;
  if (simple) delete simple;simple=NULL;
 }
 void TimgFilterResize::onSizeChange(void)
@@ -121,6 +121,7 @@ HRESULT TimgFilterResize::process(TfilterQueue::iterator it,TffPict &pict,const 
 {
  const TresizeAspectSettings *cfg=(const TresizeAspectSettings*)cfg0;
  init(pict,cfg->full,0);
+ int flags = Tconfig::sws_cpu_flags;
  if (sizeChanged || !cfg->equal(oldSettings) || oldSettings.is!=cfg->is || oldSettings.full!=cfg->full || oldcsp != pict.csp)
   {
    sizeChanged=false;
@@ -149,14 +150,12 @@ HRESULT TimgFilterResize::process(TfilterQueue::iterator it,TffPict &pict,const 
      switch (TresizeAspectSettings::methodsProps[oldSettings.methodLuma].library)
       {
        case TresizeAspectSettings::LIB_SWSCALER:
-        memset(swsparams,0,sizeof(*swsparams));
-        swsparams->cpu=Tconfig::sws_cpu_flags;
-        swsparams->methodLuma.method=TresizeAspectSettings::methodsProps[oldSettings.methodLuma].flags;
+        Tlibavcodec::swsInitParams(swsparams,TresizeAspectSettings::methodsProps[oldSettings.methodLuma].flags);
         switch (oldSettings.methodLuma)
          {
-          case TresizeAspectSettings::METHOD_SWS_BICUBIC:swsparams->methodLuma.param=oldSettings.bicubicLumaParam;break;
-          case TresizeAspectSettings::METHOD_SWS_GAUSS:swsparams->methodLuma.param=oldSettings.gaussLumaParam;break;
-          case TresizeAspectSettings::METHOD_SWS_LANCZOS:swsparams->methodLuma.param=oldSettings.lanczosLumaParam;break;
+          case TresizeAspectSettings::METHOD_SWS_BICUBIC:swsparams->methodLuma.param[0]=(double)oldSettings.bicubicLumaParam/100;break;
+          case TresizeAspectSettings::METHOD_SWS_GAUSS:swsparams->methodLuma.param[0]=(double)oldSettings.gaussLumaParam/10;break;
+          case TresizeAspectSettings::METHOD_SWS_LANCZOS:swsparams->methodLuma.param[0]=(double)oldSettings.lanczosLumaParam;break;
          }
         if (oldSettings.methodsLocked)
          swsparams->methodChroma=swsparams->methodLuma;
@@ -165,9 +164,9 @@ HRESULT TimgFilterResize::process(TfilterQueue::iterator it,TffPict &pict,const 
           swsparams->methodChroma.method=TresizeAspectSettings::methodsProps[oldSettings.methodChroma].flags;
           switch (oldSettings.methodChroma)
            {
-            case TresizeAspectSettings::METHOD_SWS_BICUBIC:swsparams->methodChroma.param=oldSettings.bicubicChromaParam;break;
-            case TresizeAspectSettings::METHOD_SWS_GAUSS:swsparams->methodChroma.param=oldSettings.gaussChromaParam;break;
-            case TresizeAspectSettings::METHOD_SWS_LANCZOS:swsparams->methodChroma.param=oldSettings.lanczosChromaParam;break;
+            case TresizeAspectSettings::METHOD_SWS_BICUBIC:swsparams->methodChroma.param[0]=(double)oldSettings.bicubicChromaParam/100;break;
+            case TresizeAspectSettings::METHOD_SWS_GAUSS:swsparams->methodChroma.param[0]=(double)oldSettings.gaussChromaParam/10;break;
+            case TresizeAspectSettings::METHOD_SWS_LANCZOS:swsparams->methodChroma.param[0]=(double)oldSettings.lanczosChromaParam;break;
            }
          }
         break;
@@ -228,31 +227,38 @@ HRESULT TimgFilterResize::process(TfilterQueue::iterator it,TffPict &pict,const 
        cspChanged|=getNext(SWS_OUT_CSPS,pict,newpict.rectClip,dst,&newpict.rectFull);
        if (cspChanged || !swsc || oldinterlace!=interlace)
         {
-         if (!libmplayer) deci->getPostproc(&libmplayer);
-         if (swsc) libmplayer->sws_freeContext(swsc);swsc=NULL;
-         if (swsf) libmplayer->sws_freeFilter(swsf);swsf=NULL;
+         if (!libavcodec) deci->getLibavcodec(&libavcodec);
+         if (swsc) libavcodec->sws_freeContext(swsc);swsc=NULL;
+         if (swsf) libavcodec->sws_freeFilter(swsf);swsf=NULL;
          oldinterlace=interlace;
          if(cfg->accurateRounding)
-          swsparams->subsampling|=SWS_ACCURATE_RND;
-         swsf=libmplayer->sws_getDefaultFilter(oldSettings.GblurLum/100.0f,oldSettings.GblurChrom/100.0f,oldSettings.sharpenLum/100.0f,oldSettings.sharpenChrom/100.0f,0,0,0);
+          flags|=SWS_ACCURATE_RND;
+
+         // Add the CPU flags and others (SWS_ACCURATE_RND if set) to the chroma & luma flags
+         SwsParams mixedparams;
+         memcpy(&mixedparams, swsparams, sizeof(SwsParams));
+         mixedparams.methodChroma.method|=flags;
+         mixedparams.methodLuma.method|=flags;
+
+         swsf=libavcodec->sws_getDefaultFilter(oldSettings.GblurLum/100.0f,oldSettings.GblurChrom/100.0f,oldSettings.sharpenLum/100.0f,oldSettings.sharpenChrom/100.0f,0,0,0);
          if (!oldinterlace)
-          swsc=libmplayer->sws_getContext(pictRect.dx,pictRect.dy,csp_ffdshow2mplayer(csp1),newpict.rectClip.dx,newpict.rectClip.dy,csp_ffdshow2mplayer(csp2),swsparams,swsf,NULL,NULL);
+          swsc=libavcodec->sws_getContext(pictRect.dx,pictRect.dy,csp_ffdshow2lavc(csp1),newpict.rectClip.dx,newpict.rectClip.dy,csp_ffdshow2lavc(csp2),flags,&mixedparams,swsf,NULL,NULL);
          else
-          swsc=libmplayer->sws_getContext(pictRect.dx,pictRect.dy/2,csp_ffdshow2mplayer(csp1),newpict.rectClip.dx,newpict.rectClip.dy/2,csp_ffdshow2mplayer(csp2),swsparams,swsf,NULL,NULL);
+          swsc=libavcodec->sws_getContext(pictRect.dx,pictRect.dy/2,csp_ffdshow2lavc(csp1),newpict.rectClip.dx,newpict.rectClip.dy/2,csp_ffdshow2lavc(csp2),flags,&mixedparams,swsf,NULL,NULL);
         }
        if (!oldinterlace)
-        libmplayer->sws_scale_ordered(swsc,src,stride1,0,pictRect.dy,dst,stride2);
+        libavcodec->sws_scale_ordered(swsc,src,stride1,0,pictRect.dy,dst,stride2);
        else
         {
          stride_t stride1I[]={stride1[0]*2,stride1[1]*2,stride1[2]*2,stride1[3]*2};
          stride_t stride2I[]={stride2[0]*2,stride2[1]*2,stride2[2]*2,stride2[3]*2};
-         libmplayer->sws_scale_ordered(swsc,src,stride1I,0,pictRect.dy/2,dst,stride2I);
+         libavcodec->sws_scale_ordered(swsc,src,stride1I,0,pictRect.dy/2,dst,stride2I);
          for (unsigned int i=0;i<pict.cspInfo.numPlanes;i++)
           {
            src[i]+=stride1[i];
            dst[i]+=stride2[i];
           }
-         libmplayer->sws_scale_ordered(swsc,src,stride1I,0,pictRect.dy/2,dst,stride2I);
+         libavcodec->sws_scale_ordered(swsc,src,stride1I,0,pictRect.dy/2,dst,stride2I);
         }
        break;
       }

@@ -173,7 +173,7 @@ void Tconfig::initCPU(int allowed_cpu_flags)
         available_cpu_flags |= FF_CPU_MMX|FF_CPU_MMXEXT;
 #endif
         cpu_flags = available_cpu_flags & allowed_cpu_flags;
-        sws_cpu_flags = Tlibmplayer::swsCpuCaps();
+        sws_cpu_flags = Tlibavcodec::swsCpuCaps();
         lavc_cpu_flags = Tlibavcodec::lavcCpuFlags();
         //GetCpuCaps(&gCpuCaps);
         cache_line = 64;//gCpuCaps.cl_size;

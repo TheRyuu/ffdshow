@@ -25,8 +25,8 @@
 #include "IffdshowDecVideo.h"
 #include "T3x3blur.h"
 #include "Tconfig.h"
-#include "Tlibmplayer.h"
-#include "postproc/swscale.h"
+#include "libswscale/swscale.h"
+#include "Tlibavcodec.h"
 #include "simd.h"
 
 //=========================================== TimgFilterWarpsharp ===========================================
@@ -34,7 +34,7 @@ TimgFilterWarpsharp::TimgFilterWarpsharp(IffdshowBase *Ideci,Tfilters *Iparent):
 {
  blur=NULL;
  swsblur=NULL;
- libmplayer=NULL;
+ libavcodec=NULL;
  if (Tconfig::cpu_flags&FF_CPU_SSE2)
   warpsharpbumpFc=warpsharpbump<Tsse2>;
  else
@@ -42,7 +42,7 @@ TimgFilterWarpsharp::TimgFilterWarpsharp(IffdshowBase *Ideci,Tfilters *Iparent):
 }
 TimgFilterWarpsharp::~TimgFilterWarpsharp()
 {
- if (libmplayer) libmplayer->Release();
+ if (libavcodec) libavcodec->Release();
 }
 
 void TimgFilterWarpsharp::done(void)
@@ -52,7 +52,7 @@ void TimgFilterWarpsharp::done(void)
    aligned_free(blur);
    blur=NULL;
   }
- if (swsblur) libmplayer->sws_freeContext(swsblur);swsblur=NULL;
+ if (swsblur) libavcodec->sws_freeContext(swsblur);swsblur=NULL;
 }
 
 template<class _mm> void TimgFilterWarpsharp::warpsharpbump(const unsigned char *src,stride_t srcStride,unsigned char *dst,stride_t dstStride,unsigned int dxY,unsigned int dyY,int wsthresh)
@@ -93,7 +93,7 @@ template<class _mm> void TimgFilterWarpsharp::warpsharpbump(const unsigned char 
 void TimgFilterWarpsharp::warpsharpblur(const unsigned char *src,stride_t srcStride,unsigned char *dst,stride_t dstStride,unsigned int dx,unsigned int dy)
 {
  if (swsblur)
-  libmplayer->sws_scale_ordered(swsblur,&src,&srcStride,0,dy,&dst,&dstStride);
+  libavcodec->sws_scale_ordered(swsblur,&src,&srcStride,0,dy,&dst,&dstStride);
  else
   TffPict::copy(dst,dstStride,src,srcStride,dx,dy);
 }
@@ -111,17 +111,18 @@ void TimgFilterWarpsharp::warpsharp(const unsigned char *src,unsigned char *dst,
  if (!swsblur)
   {
    SwsFilter swsf;
-   swsf.lumV=swsf.lumH=libmplayer->sws_getConstVec(1/5.0,5);
+   swsf.lumV=swsf.lumH=libavcodec->sws_getConstVec(1/5.0,5);
    swsf.lumV->coeff[0]=1;
    swsf.lumV->coeff[1]=4;
    swsf.lumV->coeff[2]=6;
    swsf.lumV->coeff[3]=4;
    swsf.lumV->coeff[4]=1;
-   libmplayer->sws_normalizeVec(swsf.lumV,1);
+   libavcodec->sws_normalizeVec(swsf.lumV,1);
    swsf.chrH=swsf.chrV=NULL;
-   SwsParams params;Tlibmplayer::swsInitParams(&params,0);
-   swsblur=libmplayer->sws_getContext(dx1[0],dy1[0],IMGFMT_Y800,dx1[0],dy1[0],IMGFMT_Y800,&params,&swsf,NULL,NULL);
-   libmplayer->sws_freeVec(swsf.lumV);
+   int swsflags = Tconfig::sws_cpu_flags;
+   SwsParams params;Tlibavcodec::swsInitParams(&params,0,swsflags);
+   swsblur=libavcodec->sws_getContext(dx1[0],dy1[0],PIX_FMT_GRAY8,dx1[0],dy1[0],PIX_FMT_GRAY8,swsflags,&params,&swsf,NULL,NULL);
+   libavcodec->sws_freeVec(swsf.lumV);
   }
  warpsharpblur(dst,stride2[0],blur,blurworkStride,dx1[0],dy1[0]);
 
@@ -162,7 +163,7 @@ HRESULT TimgFilterWarpsharp::process(TfilterQueue::iterator it,TffPict &pict,con
   {
    const TwarpsharpSettings *cfg=(const TwarpsharpSettings*)cfg0;
    init(pict,cfg->full,cfg->half);
-   if (!libmplayer) deci->getPostproc(&libmplayer);
+   if (!libavcodec) deci->getLibavcodec(&libavcodec);
    const unsigned char *srcY;
    getCur(FF_CSPS_MASK_YUV_PLANAR,pict,cfg->full,&srcY,NULL,NULL,NULL);
    unsigned char *dstY;

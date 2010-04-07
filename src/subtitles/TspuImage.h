@@ -2,7 +2,7 @@
 #define _TSPUIMAGE_H_
 
 #include "Tfont.h"
-#include "postproc/swscale.h"
+#include "libswscale/swscale.h"
 #include "Crect.h"
 #include "Tconvert.h"
 
@@ -24,7 +24,7 @@ public:
  void setZero();
 };
 
-struct Tlibmplayer;
+struct Tlibavcodec;
 struct TspuImage : TrenderedSubtitleWordBase
 {
 protected:
@@ -91,7 +91,7 @@ protected:
    SwsFilter filter;
    SwsContext *ctx, *alphactx;
    Tconvert *convert;
-   Tlibmplayer *libmplayer;
+   Tlibavcodec *libavcodec;
    TscalerApprox approx;
   public:
    TscalerSw(const TprintPrefs &prefs,int srcdx,int srcdy,int dstdx,int dstdy, int csp);

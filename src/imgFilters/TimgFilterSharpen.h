@@ -23,21 +23,21 @@ public:
 
 struct SwsContext;
 struct SwsFilter;
-struct Tlibmplayer;
-DECLARE_FILTER(TimgFilterMplayerSharp,public,TimgFilter)
+struct Tlibavcodec;
+DECLARE_FILTER(TimgFilterLibavcodecSharp,public,TimgFilter)
 private:
- Tlibmplayer *libmplayer;
+ Tlibavcodec *libavcodec;
  SwsContext *swsc;
  SwsFilter *swsf;
- int oldmplayersharpenluma,oldmplayersharpenchroma;
+ int oldavcodecsharpenluma,oldavcodecsharpenchroma;
 protected:
  virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
  virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const {return SWS_IN_CSPS;}
  virtual int getSupportedOutputColorspaces(const TfilterSettingsVideo *cfg) const {return SWS_OUT_CSPS;}
  virtual void onSizeChange(void) {done();}
 public:
- TimgFilterMplayerSharp(IffdshowBase *Ideci,Tfilters *Iparent);
- virtual ~TimgFilterMplayerSharp();
+ TimgFilterLibavcodecSharp(IffdshowBase *Ideci,Tfilters *Iparent);
+ virtual ~TimgFilterLibavcodecSharp();
  virtual void done(void);
  virtual HRESULT process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0);
 };

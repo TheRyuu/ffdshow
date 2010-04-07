@@ -20,9 +20,9 @@
 #include "TimgFilterBlur.h"
 #include "TblurSettings.h"
 #include "T3x3blur.h"
-#include "Tlibmplayer.h"
+#include "libswscale/swscale.h"
+#include "Tlibavcodec.h"
 #include "Tconfig.h"
-#include "postproc/swscale.h"
 #include "IffdshowBase.h"
 #include "simd.h"
 
@@ -106,33 +106,33 @@ HRESULT TimgFilterBlur::process(TfilterQueue::iterator it,TffPict &pict,const Tf
  return parent->processSample(++it,pict);
 }
 
-//==================================== TimgFilterMplayerBlur ===================================
-TimgFilterMplayerBlur::TimgFilterMplayerBlur(IffdshowBase *Ideci,Tfilters *Iparent):TimgFilter(Ideci,Iparent)
+//==================================== TimgFilterAvcodecBlur ===================================
+TimgFilterAvcodecBlur::TimgFilterAvcodecBlur(IffdshowBase *Ideci,Tfilters *Iparent):TimgFilter(Ideci,Iparent)
 {
  swsc=NULL;
- libmplayer=NULL;
+ libavcodec=NULL;
 }
-TimgFilterMplayerBlur::~TimgFilterMplayerBlur()
+TimgFilterAvcodecBlur::~TimgFilterAvcodecBlur()
 {
- if (libmplayer) libmplayer->Release();
+ if (libavcodec) libavcodec->Release();
 }
 
-void TimgFilterMplayerBlur::done(void)
+void TimgFilterAvcodecBlur::done(void)
 {
- if (swsc) libmplayer->sws_freeContext(swsc);swsc=NULL;
+ if (swsc) libavcodec->sws_freeContext(swsc);swsc=NULL;
 }
-void TimgFilterMplayerBlur::onSizeChange(void)
+void TimgFilterAvcodecBlur::onSizeChange(void)
 {
  done();
 }
 
-bool TimgFilterMplayerBlur::is(const TffPictBase &pict,const TfilterSettingsVideo *cfg0)
+bool TimgFilterAvcodecBlur::is(const TffPictBase &pict,const TfilterSettingsVideo *cfg0)
 {
  const TblurSettings *cfg=(const TblurSettings*)cfg0;
- return super::is(pict,cfg) && cfg->isMplayerBlur && (cfg->mplayerBlurLuma || cfg->mplayerBlurChroma);
+ return super::is(pict,cfg) && cfg->isAvcodecBlur && (cfg->avcodecBlurLuma || cfg->avcodecBlurChroma);
 }
 
-HRESULT TimgFilterMplayerBlur::process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)
+HRESULT TimgFilterAvcodecBlur::process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)
 {
  if (is(pict,cfg0))
   {
@@ -143,68 +143,69 @@ HRESULT TimgFilterMplayerBlur::process(TfilterQueue::iterator it,TffPict &pict,c
    cspChanged|=getCur(SWS_IN_CSPS,pict,cfg->full,&src[0],&src[1],&src[2],&src[3]);
    unsigned char *dst[4];
    cspChanged|=getNext(SWS_OUT_CSPS,pict,cfg->full,&dst[0],&dst[1],&dst[2],&dst[3]);
-   if (cspChanged || !swsc || oldradius!=cfg->mplayerBlurRadius || oldluma!=cfg->mplayerBlurLuma || oldchroma!=cfg->mplayerBlurChroma)
+   if (cspChanged || !swsc || oldradius!=cfg->avcodecBlurRadius || oldluma!=cfg->avcodecBlurLuma || oldchroma!=cfg->avcodecBlurChroma)
     {
      done();
-     if (!libmplayer) deci->getPostproc(&libmplayer);
-     oldradius=cfg->mplayerBlurRadius;oldluma=cfg->mplayerBlurLuma;oldchroma=cfg->mplayerBlurChroma;
+     if (!libavcodec) deci->getLibavcodec(&libavcodec);
+     oldradius=cfg->avcodecBlurRadius;oldluma=cfg->avcodecBlurLuma;oldchroma=cfg->avcodecBlurChroma;
      SwsFilter swsf;
      if (oldluma)
       {
-       swsf.lumH=libmplayer->sws_getGaussianVec(oldluma/100.0,oldradius);libmplayer->sws_normalizeVec(swsf.lumH,1.0);
-       swsf.lumV=libmplayer->sws_getGaussianVec(oldluma/100.0,oldradius);libmplayer->sws_normalizeVec(swsf.lumV,1.0);
+       swsf.lumH=libavcodec->sws_getGaussianVec(oldluma/100.0,oldradius);libavcodec->sws_normalizeVec(swsf.lumH,1.0);
+       swsf.lumV=libavcodec->sws_getGaussianVec(oldluma/100.0,oldradius);libavcodec->sws_normalizeVec(swsf.lumV,1.0);
       }
      else swsf.lumH=swsf.lumV=NULL;
      if (oldchroma)
       {
-       swsf.chrH=libmplayer->sws_getGaussianVec(oldchroma/100.0,oldradius);libmplayer->sws_normalizeVec(swsf.chrH,1.0);
-       swsf.chrV=libmplayer->sws_getGaussianVec(oldchroma/100.0,oldradius);libmplayer->sws_normalizeVec(swsf.chrV,1.0);
+       swsf.chrH=libavcodec->sws_getGaussianVec(oldchroma/100.0,oldradius);libavcodec->sws_normalizeVec(swsf.chrH,1.0);
+       swsf.chrV=libavcodec->sws_getGaussianVec(oldchroma/100.0,oldradius);libavcodec->sws_normalizeVec(swsf.chrV,1.0);
       }
      else swsf.chrH=swsf.chrV=NULL;
-     SwsParams params;Tlibmplayer::swsInitParams(&params,0);
-     swsc=libmplayer->sws_getContext(dx1[0],dy1[0],csp_ffdshow2mplayer(csp1),dx1[0],dy1[0],csp_ffdshow2mplayer(csp2),&params,&swsf,NULL,NULL);
+     int swsflags = Tconfig::sws_cpu_flags;
+     SwsParams params;Tlibavcodec::swsInitParams(&params,0,swsflags);
+     swsc=libavcodec->sws_getContext(dx1[0],dy1[0],csp_ffdshow2lavc(csp1),dx1[0],dy1[0],csp_ffdshow2lavc(csp2),swsflags,&params,&swsf,NULL,NULL);
      if (oldluma)
       {
-       libmplayer->sws_freeVec(swsf.lumH);
-       libmplayer->sws_freeVec(swsf.lumV);
+       libavcodec->sws_freeVec(swsf.lumH);
+       libavcodec->sws_freeVec(swsf.lumV);
       }
      if (oldchroma)
       {
-       libmplayer->sws_freeVec(swsf.chrH);
-       libmplayer->sws_freeVec(swsf.chrV);
+       libavcodec->sws_freeVec(swsf.chrH);
+       libavcodec->sws_freeVec(swsf.chrV);
       }
     }
 
    if (swsc)
-    libmplayer->sws_scale_ordered(swsc,src,stride1,0,dy1[0],dst,stride2);
+    libavcodec->sws_scale_ordered(swsc,src,stride1,0,dy1[0],dst,stride2);
   }
  return parent->processSample(++it,pict);
 }
 
-//==================================== TimgFilterMplayerTNR ===================================
-TimgFilterMplayerTNR::TimgFilterMplayerTNR(IffdshowBase *Ideci,Tfilters *Iparent):TimgFilter(Ideci,Iparent)
+//==================================== TimgFilterAvcodecTNR ===================================
+TimgFilterAvcodecTNR::TimgFilterAvcodecTNR(IffdshowBase *Ideci,Tfilters *Iparent):TimgFilter(Ideci,Iparent)
 {
- pp_ctx=NULL;Tlibmplayer::pp_mode_defaults(pp_mode);
- libmplayer=NULL;
+ pp_ctx=NULL;Tlibavcodec::pp_mode_defaults(pp_mode);
+ libavcodec=NULL;
 }
-TimgFilterMplayerTNR::~TimgFilterMplayerTNR()
+TimgFilterAvcodecTNR::~TimgFilterAvcodecTNR()
 {
- if (libmplayer) libmplayer->Release();
+ if (libavcodec) libavcodec->Release();
 }
 
-void TimgFilterMplayerTNR::done(void)
+void TimgFilterAvcodecTNR::done(void)
 {
- if (pp_ctx) libmplayer->pp_free_context(pp_ctx);pp_ctx=NULL;
+ if (pp_ctx) libavcodec->pp_free_context(pp_ctx);pp_ctx=NULL;
 }
-void TimgFilterMplayerTNR::onSizeChange(void)
+void TimgFilterAvcodecTNR::onSizeChange(void)
 {
  done();
 }
 
-bool TimgFilterMplayerTNR::is(const TffPictBase &pict,const TfilterSettingsVideo *cfg0)
+bool TimgFilterAvcodecTNR::is(const TffPictBase &pict,const TfilterSettingsVideo *cfg0)
 {
  const TblurSettings *cfg=(const TblurSettings*)cfg0;
- if (super::is(pict,cfg) && cfg->isMplayerTNR)
+ if (super::is(pict,cfg) && cfg->isAvcodecTNR)
   {
    Trect newRect=pict.getRect(cfg->full,cfg->half);
    return newRect.dx>=16 && newRect.dy>=16;
@@ -213,7 +214,7 @@ bool TimgFilterMplayerTNR::is(const TffPictBase &pict,const TfilterSettingsVideo
   return false;
 }
 
-HRESULT TimgFilterMplayerTNR::process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)
+HRESULT TimgFilterAvcodecTNR::process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)
 {
  if (is(pict,cfg0))
   {
@@ -228,14 +229,14 @@ HRESULT TimgFilterMplayerTNR::process(TfilterQueue::iterator it,TffPict &pict,co
 
    if (!pp_ctx)
     {
-     if (!libmplayer) deci->getPostproc(&libmplayer);
-     pp_ctx=libmplayer->pp_get_context(dx1[0],dy1[0],Tlibmplayer::ppCpuCaps(csp1));
+     if (!libavcodec) deci->getLibavcodec(&libavcodec);
+     pp_ctx=libavcodec->pp_get_context(dx1[0],dy1[0],Tlibavcodec::ppCpuCaps(csp1));
     }
    pp_mode.lumMode=TEMP_NOISE_FILTER;
    pp_mode.chromMode=TEMP_NOISE_FILTER;
-   pp_mode.maxTmpNoise[0]=cfg->mplayerTNR1;pp_mode.maxTmpNoise[1]=cfg->mplayerTNR2;pp_mode.maxTmpNoise[2]=cfg->mplayerTNR3;
+   pp_mode.maxTmpNoise[0]=cfg->avcodecTNR1;pp_mode.maxTmpNoise[1]=cfg->avcodecTNR2;pp_mode.maxTmpNoise[2]=cfg->avcodecTNR3;
 
-   libmplayer->pp_postprocess(tempPict1,stride1,
+   libavcodec->pp_postprocess(tempPict1,stride1,
                               tempPict2,stride2,
                               dx1[0],dy1[0],
                               NULL,0,
@@ -244,7 +245,7 @@ HRESULT TimgFilterMplayerTNR::process(TfilterQueue::iterator it,TffPict &pict,co
  return parent->processSample(++it,pict);
 }
 
-void TimgFilterMplayerTNR::onSeek(void)
+void TimgFilterAvcodecTNR::onSeek(void)
 {
  done();
 }

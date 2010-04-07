@@ -1,5 +1,7 @@
 LAVC_DIR=libavcodec
 LAVU_DIR=libavutil
+LAVS_DIR=libswscale
+LAVP_DIR=libpostproc
 ZLIB_DIR=../zlib
 
 CFLAGS+= -I. -I$(LAVC_DIR) -I$(LAVU_DIR) -I../imgFilters -I$(ZLIB_DIR) \
@@ -241,7 +243,18 @@ SRCS_C=\
       $(LAVC_DIR)/x86/vp3dsp_mmx.c \
       $(LAVC_DIR)/x86/vp3dsp_sse2.c \
       $(LAVC_DIR)/x86/vp6dsp_mmx.c \
-      $(LAVC_DIR)/x86/vp6dsp_sse2.c
+      $(LAVC_DIR)/x86/vp6dsp_sse2.c \
+   \
+      $(LAVS_DIR)/rgb2rgb.c \
+      $(LAVS_DIR)/swscale.c \
+      $(LAVS_DIR)/swutils.c \
+      $(LAVS_DIR)/yuv2rgb.c \
+      $(LAVS_DIR)/sww32thread.c \
+   \
+      $(LAVS_DIR)/x86/yuv2rgb_mmx.c \
+   \
+      $(LAVP_DIR)/postprocess.c
+      
 
 ifneq ($(64BIT),yes)
 SRCS_C+=\
@@ -278,6 +291,7 @@ include ../makefile_c.inc
 clean:
 	rm -f *.o *.d $(LAVC_DIR)/*.o $(LAVC_DIR)/*.d $(LAVC_DIR)/x86/*.o $(LAVC_DIR)/x86/*.d \
     $(LAVC_DIR)/amr_float/*.o $(LAVC_DIR)/amr_float/*.d $(LAVU_DIR)/*.o $(LAVU_DIR)/*.d \
+	$(LAVS_DIR)/*.o $(LAVS_DIR)/*.d $(LAVP_DIR)/*.o $(LAVP_DIR)/*.d \
     $(ZLIB_DIR)/*.o $(ZLIB_DIR)/*.d $(SLIB)
 
 #

@@ -2,7 +2,7 @@
 #define _TIMGFILTERDEINTERLACE_H_
 
 #include "TimgFilter.h"
-#include "postproc/postprocess.h"
+#include "libpostproc/postprocess_internal.h"
 #include "simd.h"
 
 DECLARE_FILTER(TimgFilterDeinterlace,public,TimgFilter)
@@ -13,17 +13,17 @@ public:
  virtual HRESULT process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0);
 };
 
-struct Tlibmplayer;
-DECLARE_FILTER(TimgFilterMplayerDeinterlace,public,TimgFilter)
+struct Tlibavcodec;
+DECLARE_FILTER(TimgFilterAvcodecDeinterlace,public,TimgFilter)
 private:
- Tlibmplayer *libmplayer;
+ Tlibavcodec *libavcodec;
  void *pp_ctx;PPMode pp_mode;
 protected:
  virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const {return FF_CSPS_MASK_YUV_PLANAR;}
  virtual void onSizeChange(void) {done();}
 public:
- TimgFilterMplayerDeinterlace(IffdshowBase *Ideci,Tfilters *Iparent);
- virtual ~TimgFilterMplayerDeinterlace();
+ TimgFilterAvcodecDeinterlace(IffdshowBase *Ideci,Tfilters *Iparent);
+ virtual ~TimgFilterAvcodecDeinterlace();
  virtual void done(void);
  virtual HRESULT process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0);
 };

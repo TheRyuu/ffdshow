@@ -2,7 +2,7 @@
 #define _TIMGFILTERPOSTPROC_H_
 
 #include "TimgFilter.h"
-#include "postproc/postprocess.h"
+#include "libpostproc/postprocess_internal.h"
 #include "nic/nic_postProcess.h"
 #include "simd.h"
 
@@ -25,18 +25,18 @@ public:
  virtual void onSeek(void);
 };
 
-struct Tlibmplayer;
-DECLARE_FILTER(TimgFilterPostprocMplayer,public,TimgFilterPostprocBase)
+struct Tlibavcodec;
+DECLARE_FILTER(TimgFilterPostprocAvcodec,public,TimgFilterPostprocBase)
 private:
- Tlibmplayer *libmplayer;
+ Tlibavcodec *libavcodec;
  void *pp_ctx;PPMode pp_mode;
 protected:
  virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
  virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const {return FF_CSPS_MASK_YUV_PLANAR;}
  virtual void onSizeChange(void);
 public:
- TimgFilterPostprocMplayer(IffdshowBase *Ideci,Tfilters *Iparent);
- virtual ~TimgFilterPostprocMplayer();
+ TimgFilterPostprocAvcodec(IffdshowBase *Ideci,Tfilters *Iparent);
+ virtual ~TimgFilterPostprocAvcodec();
  virtual void done(void);
  virtual HRESULT process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0);
 };

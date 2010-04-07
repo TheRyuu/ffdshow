@@ -31,6 +31,7 @@
 #include "avcodec.h"
 #include "get_bits.h"
 #include "put_bits.h"
+#include "malloc.h"
 
 const uint8_t ff_log2_run[32]={
  0, 0, 0, 0, 1, 1, 1, 1,
@@ -275,7 +276,8 @@ int init_vlc_sparse(VLC *vlc, int nb_bits, int nb_codes,
              const void *symbols, int symbols_wrap, int symbols_size,
              int flags)
 {
-    VLCcode buf[nb_codes];
+    //VLCcode buf[nb_codes];
+    VLCcode *buf = (VLCcode*)alloca(sizeof(VLCcode)*nb_codes);
     int i, j;
 
     vlc->bits = nb_bits;

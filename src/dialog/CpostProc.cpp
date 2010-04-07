@@ -18,10 +18,10 @@
 
 #include "stdafx.h"
 #include "CpostProc.h"
-#include "Tlibmplayer.h"
+#include "libpostproc/postprocess_internal.h"
 #include "Tconfig.h"
 
-const int TpostProcPage::idMplayer[]={IDC_CHB_POSTPROC_MPLAYER,IDC_LBL_PP_LEVELFIX,IDC_CHB_LEVELFIX_LUM,IDC_CHB_FULLYRANGE,IDC_CHB_POSTPROC_MPLAYER_ACCURATE,0};
+const int TpostProcPage::idAvcodec[]={IDC_CHB_POSTPROC_MPLAYER,IDC_LBL_PP_LEVELFIX,IDC_CHB_LEVELFIX_LUM,IDC_CHB_FULLYRANGE,IDC_CHB_POSTPROC_MPLAYER_ACCURATE,0};
 const int TpostProcPage::idNics[]={IDC_CHB_POSTPROC_NIC,IDC_LBL_POSTPROC_NIC_XTHRES,IDC_TBR_POSTPROC_NIC_XTHRES,IDC_LBL_POSTPROC_NIC_YTHRES,IDC_TBR_POSTPROC_NIC_YTHRES,0};
 const int TpostProcPage::idSPP[]={IDC_CHB_POSTPROC_SPP,IDC_CHB_POSTPROC_SPP_SOFT,0};
 
@@ -44,24 +44,24 @@ void TpostProcPage::postProc2dlg(void)
  setCheck(IDC_CHB_AUTOQ,cfgGet(IDFF_autoq));
 
  int method=deci->getParam2(IDFF_postprocMethod);
- int isMplayer=0,isNic=0,isSPP=0,isFSPP=0;
+ int isAvcodec=0,isNic=0,isSPP=0,isFSPP=0;
  switch (method)
   {
-   case 0:isMplayer=1;break;
+   case 0:isAvcodec=1;break;
    case 1:isNic=1;break;
-   case 2:isMplayer=isNic=1;break;
+   case 2:isAvcodec=isNic=1;break;
    case 4:isSPP=1;break;
    case 5:isFSPP=1;break;
   }
- setCheck(IDC_CHB_POSTPROC_MPLAYER  ,isMplayer==1);
+ setCheck(IDC_CHB_POSTPROC_MPLAYER  ,isAvcodec==1);
  setCheck(IDC_CHB_POSTPROC_NIC      ,isNic==1);
  setCheck(IDC_CHB_POSTPROC_NIC_FIRST,cfgGet(IDFF_postprocMethodNicFirst));
  setCheck(IDC_CHB_POSTPROC_SPP      ,isSPP==1);enable(isSPP,IDC_CHB_POSTPROC_SPP_SOFT);setCheck(IDC_CHB_POSTPROC_SPP_SOFT,cfgGet(IDFF_postprocSPPmode)==1);
  setCheck(IDC_CHB_POSTPROC_FSPP     ,isFSPP==1);
 
- enable(isMplayer && isNic,IDC_CHB_POSTPROC_NIC_FIRST);
+ enable(isAvcodec && isNic,IDC_CHB_POSTPROC_NIC_FIRST);
  strength2dlg();
- mplayer2dlg(isMplayer);
+ avcodec2dlg(isAvcodec);
  nic2dlg(isNic);
  setPPchbs();
  setCheck(IDC_RBT_PPPRESETS,!cfgGet(IDFF_ppIsCustom));
@@ -73,9 +73,9 @@ void TpostProcPage::strength2dlg(void)
  tbrSet(IDC_TBR_DEBLOCKSTRENGTH,strength);
  setText(IDC_LBL_DEBLOCKSTRENGTH,_l("%s %i%%"),_(IDC_LBL_DEBLOCKSTRENGTH),100*strength/256);
 }
-void TpostProcPage::mplayer2dlg(int is)
+void TpostProcPage::avcodec2dlg(int is)
 {
- if (is!=-1) enable(is,idMplayer+1);
+ if (is!=-1) enable(is,idAvcodec+1);
 
  bool levelfixlum=!!cfgGet(IDFF_levelFixLum);
  setCheck(IDC_CHB_LEVELFIX_LUM,levelfixlum);
@@ -85,11 +85,11 @@ void TpostProcPage::mplayer2dlg(int is)
   enable(levelfixlum,IDC_CHB_FULLYRANGE);
  setCheck(IDC_CHB_FULLYRANGE,cfgGet(IDFF_fullYrange));
 
- setCheck(IDC_CHB_POSTPROC_MPLAYER_ACCURATE,cfgGet(IDFF_deblockMplayerAccurate));
+ setCheck(IDC_CHB_POSTPROC_MPLAYER_ACCURATE,cfgGet(IDFF_deblockAvcodecAccurate));
 }
-void TpostProcPage::mplayer2dlg_1(void)
+void TpostProcPage::avcodec2dlg_1(void)
 {
- mplayer2dlg(-1);
+ avcodec2dlg(-1);
 }
 
 void TpostProcPage::nic2dlg(int is)
@@ -185,13 +185,13 @@ INT_PTR TpostProcPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
        setCheck(IDC_CHB_POSTPROC_FSPP,0);
       case IDC_CHB_POSTPROC_FSPP:
        {
-        int isMplayer=getCheck(IDC_CHB_POSTPROC_MPLAYER),isNic=getCheck(IDC_CHB_POSTPROC_NIC),isSPP=getCheck(IDC_CHB_POSTPROC_SPP),isFSPP=getCheck(IDC_CHB_POSTPROC_FSPP);
+        int isAvcodec=getCheck(IDC_CHB_POSTPROC_MPLAYER),isNic=getCheck(IDC_CHB_POSTPROC_NIC),isSPP=getCheck(IDC_CHB_POSTPROC_SPP),isFSPP=getCheck(IDC_CHB_POSTPROC_FSPP);
         if      ( isFSPP)                        cfgSet(IDFF_postprocMethod,5);
         else if ( isSPP )                        cfgSet(IDFF_postprocMethod,4);
-        else if (!isMplayer && !isNic && !isSPP) cfgSet(IDFF_postprocMethod,3);
-        else if ( isMplayer && !isNic && !isSPP) cfgSet(IDFF_postprocMethod,0);
-        else if (!isMplayer &&  isNic && !isSPP) cfgSet(IDFF_postprocMethod,1);
-        else if ( isMplayer &&  isNic && !isSPP) cfgSet(IDFF_postprocMethod,2);
+        else if (!isAvcodec && !isNic && !isSPP) cfgSet(IDFF_postprocMethod,3);
+        else if ( isAvcodec && !isNic && !isSPP) cfgSet(IDFF_postprocMethod,0);
+        else if (!isAvcodec &&  isNic && !isSPP) cfgSet(IDFF_postprocMethod,1);
+        else if ( isAvcodec &&  isNic && !isSPP) cfgSet(IDFF_postprocMethod,2);
         cfg2dlg();
         return TRUE;
        }
@@ -216,10 +216,10 @@ TpostProcPage::TpostProcPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff):T
  resInter=IDC_CHB_POSTPROC;
  static const TbindCheckbox<TpostProcPage> chb[]=
   {
-   IDC_CHB_LEVELFIX_LUM,IDFF_levelFixLum,&TpostProcPage::mplayer2dlg_1,
-   //IDC_CHB_LEVELFIX_CHROM,IDFF_levelFixChrom,&TpostProcPage::mplayer2dlg_1,
+   IDC_CHB_LEVELFIX_LUM,IDFF_levelFixLum,&TpostProcPage::avcodec2dlg_1,
+   //IDC_CHB_LEVELFIX_CHROM,IDFF_levelFixChrom,&TpostProcPage::avcodec2dlg_1,
    IDC_CHB_FULLYRANGE,IDFF_fullYrange,NULL,
-   IDC_CHB_POSTPROC_MPLAYER_ACCURATE,IDFF_deblockMplayerAccurate,NULL,
+   IDC_CHB_POSTPROC_MPLAYER_ACCURATE,IDFF_deblockAvcodecAccurate,NULL,
    IDC_CHB_POSTPROC_NIC_FIRST,IDFF_postprocMethodNicFirst,NULL,
    IDC_CHB_POSTPROC_SPP_SOFT,IDFF_postprocSPPmode,NULL,
    IDC_CHB_AUTOQ,IDFF_autoq,&TpostProcPage::onAuto,

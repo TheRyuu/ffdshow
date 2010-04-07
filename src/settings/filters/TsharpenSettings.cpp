@@ -74,9 +74,9 @@ TsharpenSettings::TsharpenSettings(TintStrColl *Icoll,TfilterIDFFs *filters):Tfi
      _l("asharpB"),0,
    IDFF_asharpHQBF           ,&TsharpenSettings::asharpHQBF      ,0,0,_l(""),1,
      _l("asharpHQBF"),0,
-   IDFF_mplayerSharpLuma     ,&TsharpenSettings::mplayerLuma     ,0,400,_l(""),1,
+   IDFF_avcodecSharpLuma     ,&TsharpenSettings::avcodecLuma     ,0,400,_l(""),1,
      _l("mplayerSharpLuma"),50,
-   IDFF_mplayerSharpChroma   ,&TsharpenSettings::mplayerChroma   ,0,400,_l(""),1,
+   IDFF_avcodecSharpChroma   ,&TsharpenSettings::avcodecChroma   ,0,400,_l(""),1,
      _l("mplayerSharpChroma"),50,
    0
   };
@@ -95,7 +95,7 @@ void TsharpenSettings::createFilters(size_t filtersorder,Tfilters *filters,Tfilt
      case SHARPEN_UNSHARP:queueFilter<TimgFilterUnsharp>(filtersorder,filters,queue); return;
      case SHARPEN_MSHARP:queueFilter<TimgFilterMsharp>(filtersorder,filters,queue); return;
      case SHARPEN_ASHARP:queueFilter<TimgFilterAsharp>(filtersorder,filters,queue); return;
-     case SHARPEN_MPLAYER:queueFilter<TimgFilterMplayerSharp>(filtersorder,filters,queue); return;
+     case SHARPEN_MPLAYER:queueFilter<TimgFilterLibavcodecSharp>(filtersorder,filters,queue); return;
     }
   }
 }
@@ -112,7 +112,7 @@ const int* TsharpenSettings::getResets(unsigned int pageId)
   IDFF_unsharp_strength,IDFF_unsharp_threshold,
   IDFF_msharp_strength,IDFF_msharp_threshold,IDFF_msharpHQ,IDFF_msharpMask,
   IDFF_asharpT,IDFF_asharpD,IDFF_asharpB,IDFF_asharpHQBF,
-  IDFF_mplayerSharpLuma,IDFF_mplayerSharpChroma,
+  IDFF_avcodecSharpLuma,IDFF_avcodecSharpChroma,
   0};
  return idResets;
 }
@@ -143,8 +143,8 @@ bool TsharpenSettings::getTip(unsigned int pageId,char_t *buf,size_t len)
           vals[2]=asharpB;
           break;
    case 5:name=_l("swscaler");capts[0]=_l("Luma sharpening");capts[1]=_l("Chroma sharpening");
-          vals[0]=mplayerLuma;
-          vals[1]=mplayerChroma;
+          vals[0]=avcodecLuma;
+          vals[1]=avcodecChroma;
           break;
   }
  tsnprintf_s(tipS, countof(tipS), _TRUNCATE, _l("method:%s\n"), name);

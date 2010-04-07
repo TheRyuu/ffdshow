@@ -24,8 +24,8 @@
 #include "IffdshowBase.h"
 #include "T3x3blur.h"
 #include "Tconfig.h"
-#include "Tlibmplayer.h"
-#include "postproc/swscale.h"
+#include "libswscale/swscale.h"
+#include "Tlibavcodec.h"
 #include "simd.h"
 
 //==================================== TimgFilterAsharp ====================================
@@ -106,28 +106,28 @@ HRESULT TimgFilterAsharp::process(TfilterQueue::iterator it,TffPict &pict,const 
  return parent->processSample(++it,pict);
 }
 
-//==================================== TimgFilterMplayerSharp ====================================
-TimgFilterMplayerSharp::TimgFilterMplayerSharp(IffdshowBase *Ideci,Tfilters *Iparent):TimgFilter(Ideci,Iparent)
+//==================================== TimgFilterLibavcodecSharp ====================================
+TimgFilterLibavcodecSharp::TimgFilterLibavcodecSharp(IffdshowBase *Ideci,Tfilters *Iparent):TimgFilter(Ideci,Iparent)
 {
- libmplayer=NULL;swsc=NULL;swsf=NULL;oldmplayersharpenluma=oldmplayersharpenchroma=-1;
+ libavcodec=NULL;swsc=NULL;swsf=NULL;oldavcodecsharpenluma=oldavcodecsharpenchroma=-1;
 }
-TimgFilterMplayerSharp::~TimgFilterMplayerSharp()
+TimgFilterLibavcodecSharp::~TimgFilterLibavcodecSharp()
 {
- if (libmplayer) libmplayer->Release();
+ if (libavcodec) libavcodec->Release();
 }
-void TimgFilterMplayerSharp::done(void)
+void TimgFilterLibavcodecSharp::done(void)
 {
- if (swsf) libmplayer->sws_freeFilter(swsf);swsf=NULL;
- if (swsc) libmplayer->sws_freeContext(swsc);swsc=NULL;
+ if (swsf) libavcodec->sws_freeFilter(swsf);swsf=NULL;
+ if (swsc) libavcodec->sws_freeContext(swsc);swsc=NULL;
 }
 
-bool TimgFilterMplayerSharp::is(const TffPictBase &pict,const TfilterSettingsVideo *cfg0)
+bool TimgFilterLibavcodecSharp::is(const TffPictBase &pict,const TfilterSettingsVideo *cfg0)
 {
  const TsharpenSettings *cfg=(const TsharpenSettings*)cfg0;
- return super::is(pict,cfg) && (cfg->mplayerLuma || cfg->mplayerChroma);
+ return super::is(pict,cfg) && (cfg->avcodecLuma || cfg->avcodecChroma);
 }
 
-HRESULT TimgFilterMplayerSharp::process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)
+HRESULT TimgFilterLibavcodecSharp::process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)
 {
  if (is(pict,cfg0))
   {
@@ -140,18 +140,19 @@ HRESULT TimgFilterMplayerSharp::process(TfilterQueue::iterator it,TffPict &pict,
    cspChanged|=getNext(SWS_OUT_CSPS,pict,cfg->full,dst);
    if (cspChanged) done();
 
-   if (!swsc || oldmplayersharpenluma!=cfg->mplayerLuma || oldmplayersharpenchroma!=cfg->mplayerChroma)
+   if (!swsc || oldavcodecsharpenluma!=cfg->avcodecLuma || oldavcodecsharpenchroma!=cfg->avcodecChroma)
     {
-     oldmplayersharpenluma=cfg->mplayerLuma;oldmplayersharpenchroma=cfg->mplayerChroma;
-     if (!libmplayer) deci->getPostproc(&libmplayer);
+     oldavcodecsharpenluma=cfg->avcodecLuma;oldavcodecsharpenchroma=cfg->avcodecChroma;
+     if (!libavcodec) deci->getLibavcodec(&libavcodec);
      done();
-     swsf=libmplayer->sws_getDefaultFilter(0,0,oldmplayersharpenluma/100.0f,oldmplayersharpenchroma/100.0f,0,0,0);
-     SwsParams params;Tlibmplayer::swsInitParams(&params,0);
-     swsc=libmplayer->sws_getContext(dx1[0],dy1[0],csp_ffdshow2mplayer(csp1),dx1[0],dy1[0],csp_ffdshow2mplayer(csp2),&params,swsf,NULL,NULL);
+     swsf=libavcodec->sws_getDefaultFilter(0,0,oldavcodecsharpenluma/100.0f,oldavcodecsharpenchroma/100.0f,0,0,0);
+     int swsflags = Tconfig::sws_cpu_flags;
+     SwsParams params;Tlibavcodec::swsInitParams(&params,0,swsflags);
+     swsc=libavcodec->sws_getContext(dx1[0],dy1[0],csp_ffdshow2lavc(csp1),dx1[0],dy1[0],csp_ffdshow2lavc(csp2),swsflags,&params,swsf,NULL,NULL);
     }
 
    if (swsc)
-    libmplayer->sws_scale_ordered(swsc,src,stride1,0,dy1[0],dst,stride2);
+    libavcodec->sws_scale_ordered(swsc,src,stride1,0,dy1[0],dst,stride2);
   }
  return parent->processSample(++it,pict);
 }

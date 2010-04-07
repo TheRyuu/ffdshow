@@ -12,13 +12,13 @@
 
  */
 
-// to ffdshow imported from mplayer
+// to ffdshow imported from ffmpeg
 
 #include "stdafx.h"
 #include "ffImgfmt.h"
 #include "spudec.h"
-#include "postproc/swscale.h"
-#include "Tlibmplayer.h"
+#include "libswscale/swscale.h"
+#include "Tlibavcodec.h"
 #include "IffdshowBase.h"
 #include "ffdshow_constants.h"
 #include "Tconfig.h"
@@ -148,7 +148,7 @@ void Tspudec::spudec_cut_image(void)
 
 int Tspudec::mkalpha(int i)
 {
-  /* In mplayer's alpha planes, 0 is transparent, then 1 is nearly
+  /* In avcodec's alpha planes, 0 is transparent, then 1 is nearly
      opaque upto 255 which is transparent */
   switch (i) {
   case 0xf:
@@ -605,7 +605,7 @@ void Tspudec::spudec_calc_bbox( unsigned int dxs, unsigned int dys, unsigned int
     }
   }
 }
-/* transform mplayer's alpha value into an opacity value that is linear */
+/* transform avcodec's alpha value into an opacity value that is linear */
 int Tspudec::canon_alpha(int alpha)
 {
  return alpha ? 256 - alpha : 0;
@@ -664,18 +664,18 @@ void Tspudec::sws_spu_image(unsigned char *d1, unsigned char *d2, int dw, int dh
 {
  if (!filter.lumH || oldgauss != prefs.vobaagauss)
   {
-   if (filter.lumH) libmplayer->sws_freeVec(filter.lumH);
-   filter.lumH = filter.lumV = filter.chrH = filter.chrV = libmplayer->sws_getGaussianVec(prefs.vobaagauss/1000.0, 3.0);
-   libmplayer->sws_normalizeVec(filter.lumH, 1.0);
+   if (filter.lumH) libavcodec->sws_freeVec(filter.lumH);
+   filter.lumH = filter.lumV = filter.chrH = filter.chrV = libavcodec->sws_getGaussianVec(prefs.vobaagauss/1000.0, 3.0);
+   libavcodec->sws_normalizeVec(filter.lumH, 1.0);
    oldgauss = prefs.vobaagauss;
   }
-
- SwsParams params;Tlibmplayer::swsInitParams(&params,SWS_GAUSS);
- SwsContext *ctx=libmplayer->sws_getContext(sw, sh, IMGFMT_Y800, dw, dh, IMGFMT_Y800, &params, &filter, NULL,NULL);
- libmplayer->sws_scale_ordered(ctx,(const uint8_t**)&s1,&ss,0,sh,&d1,&ds);
+ int swsflags = Tconfig::sws_cpu_flags | SWS_GAUSS;
+ SwsParams params;Tlibavcodec::swsInitParams(&params,SWS_GAUSS,Tconfig::sws_cpu_flags);
+ SwsContext *ctx=libavcodec->sws_getContext(sw, sh, PIX_FMT_GRAY8, dw, dh, PIX_FMT_GRAY8, swsflags, &params, &filter, NULL,NULL);
+ libavcodec->sws_scale_ordered(ctx,(const uint8_t**)&s1,&ss,0,sh,&d1,&ds);
  for (stride_t i=ss*sh-1; i>=0; i--) s2[i]=(unsigned char)canon_alpha(s2[i]);
- libmplayer->sws_scale_ordered(ctx,(const uint8_t**)&s2,&ss,0,sh,&d2,&ds);
- libmplayer->sws_freeContext(ctx);
+ libavcodec->sws_scale_ordered(ctx,(const uint8_t**)&s2,&ss,0,sh,&d2,&ds);
+ libavcodec->sws_freeContext(ctx);
 }
 
 void Tspudec::spudec_draw_scaled(
@@ -1058,7 +1058,7 @@ Tspudec::Tspudec(IffdshowBase *Ideci,const YUVcolorA *palette, const YUVcolorA *
     spu_alignment = -1;
     sub_pos=0;
     oldgauss=-1;
-    deci->getPostproc(&libmplayer);
+    deci->getLibavcodec(&libavcodec);
     this->packet = NULL;
     this->image = NULL;
     this->scaled_imageY=this->scaled_imageUV = NULL;
@@ -1095,7 +1095,7 @@ Tspudec::Tspudec(unsigned int *palette)
 */
 Tspudec::~Tspudec()
 {
-    if (filter.lumH) libmplayer->sws_freeVec(filter.lumH);
+    if (filter.lumH) libavcodec->sws_freeVec(filter.lumH);
     while (queue_head)
       spudec_free_packet(spudec_dequeue_packet());
     if (packet)
@@ -1106,5 +1106,5 @@ Tspudec::~Tspudec()
         free(scaled_imageUV);
     if (image)
       free(image);
-    libmplayer->Release();
+    libavcodec->Release();
 }

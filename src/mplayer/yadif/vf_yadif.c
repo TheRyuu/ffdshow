@@ -17,7 +17,9 @@
  * with MPlayer; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#include <process.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -46,6 +48,31 @@
 
 #define MIN3(a,b,c) MIN(MIN(a,b),c)
 #define MAX3(a,b,c) MAX(MAX(a,b),c)
+
+#if !defined(HAVE_THREADS)
+int GetCPUCount(void)
+{
+    return 1;
+}
+int isP4HT (void)
+{
+    return 0;
+}
+#else
+#include "libavutil/isP4HT.c"
+#endif
+
+int GetCPUCount(void){
+    int CPUCount;
+    SYSTEM_INFO si;
+    GetSystemInfo(&si);
+    if(isP4HT() &&si.dwNumberOfProcessors>=2)
+        CPUCount = si.dwNumberOfProcessors>>1;
+    else
+        CPUCount= si.dwNumberOfProcessors;
+    return CPUCount;
+}
+
 
 //===========================================================================//
 

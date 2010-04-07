@@ -74,22 +74,22 @@ TblurSettings::TblurSettings(TintStrColl *Icoll,TfilterIDFFs *filters):TfilterSe
      _l("blurIsGradual"),1,
    IDFF_gradualStrength        ,&TblurSettings::gradualStrength         ,5,100,_l(""),1,
      _l("gradualStrength"),40,
-   IDFF_blurIsMplayerTNR       ,&TblurSettings::isMplayerTNR            ,0,0,_l(""),1,
-     _l("blurIsMplayerTNR"),0,
-   IDFF_mplayerTNR1            ,&TblurSettings::mplayerTNR1             ,-3,-3,_l(""),1,
-     _l("mplayerTNR1"),700,
-   IDFF_mplayerTNR2            ,&TblurSettings::mplayerTNR2             ,-3,-3,_l(""),1,
-     _l("mplayerTNR2"),1500,
-   IDFF_mplayerTNR3            ,&TblurSettings::mplayerTNR3             ,-3,-3,_l(""),1,
-     _l("mplayerTNR3"),3000,
-   IDFF_blurIsMplayer          ,&TblurSettings::isMplayerBlur           ,0,0,_l(""),1,
-     _l("blurIsMplayerBLur"),0,
-   IDFF_mplayerBlurRadius      ,&TblurSettings::mplayerBlurRadius       ,1,9,_l(""),1,
-     _l("mplayerBlurRadius"),3,
-   IDFF_mplayerBlurLuma        ,&TblurSettings::mplayerBlurLuma         ,0,400,_l(""),1,
-     _l("mplayerBlurLuma"),100,
-   IDFF_mplayerBlurChroma      ,&TblurSettings::mplayerBlurChroma       ,0,400,_l(""),1,
-     _l("mplayerBlurChroma"),150,
+   IDFF_blurIsAvcodecTNR       ,&TblurSettings::isAvcodecTNR            ,0,0,_l(""),1,
+     _l("blurIsAvcodecTNR"),0,
+   IDFF_avcodecTNR1            ,&TblurSettings::avcodecTNR1             ,-3,-3,_l(""),1,
+     _l("avcodecTNR1"),700,
+   IDFF_avcodecTNR2            ,&TblurSettings::avcodecTNR2             ,-3,-3,_l(""),1,
+     _l("avcodecTNR2"),1500,
+   IDFF_avcodecTNR3            ,&TblurSettings::avcodecTNR3             ,-3,-3,_l(""),1,
+     _l("avcodecTNR3"),3000,
+   IDFF_blurIsAvcodec          ,&TblurSettings::isAvcodecBlur           ,0,0,_l(""),1,
+     _l("blurIsAvcodecBLur"),0,
+   IDFF_avcodecBlurRadius      ,&TblurSettings::avcodecBlurRadius       ,1,9,_l(""),1,
+     _l("avcodecBlurRadius"),3,
+   IDFF_avcodecBlurLuma        ,&TblurSettings::avcodecBlurLuma         ,0,400,_l(""),1,
+     _l("avcodecBlurLuma"),100,
+   IDFF_avcodecBlurChroma      ,&TblurSettings::avcodecBlurChroma       ,0,400,_l(""),1,
+     _l("avcodecBlurChroma"),150,
    IDFF_blurIsDenoise3d        ,&TblurSettings::isDenoise3d             ,0,0,_l(""),1,
      _l("isDenoise3d"),0,
    IDFF_denoise3Dluma          ,&TblurSettings::denoise3Dluma           ,0,2000,_l(""),1,
@@ -109,9 +109,9 @@ void TblurSettings::getMinMax(int id,int &min,int &max)
 {
  switch (id)
   {
-   case IDFF_mplayerTNR1:min=1;max=mplayerTNR2;return;
-   case IDFF_mplayerTNR2:min=mplayerTNR1;max=mplayerTNR3;return;
-   case IDFF_mplayerTNR3:min=mplayerTNR2;max=5000;return;
+   case IDFF_avcodecTNR1:min=1;max=avcodecTNR2;return;
+   case IDFF_avcodecTNR2:min=avcodecTNR1;max=avcodecTNR3;return;
+   case IDFF_avcodecTNR3:min=avcodecTNR2;max=5000;return;
   }
 }
 void TblurSettings::createFilters(size_t filtersorder,Tfilters *filters,TfilterQueue &queue) const
@@ -126,8 +126,8 @@ void TblurSettings::createFilters(size_t filtersorder,Tfilters *filters,TfilterQ
      setOnChange(IDFF_blurIsSmoothLuma,filters,&Tfilters::onQueueChange);
      setOnChange(IDFF_blurIsSmoothChroma,filters,&Tfilters::onQueueChange);
      setOnChange(IDFF_blurIsGradual,filters,&Tfilters::onQueueChange);
-     setOnChange(IDFF_blurIsMplayerTNR,filters,&Tfilters::onQueueChange);
-     setOnChange(IDFF_blurIsMplayer,filters,&Tfilters::onQueueChange);
+     setOnChange(IDFF_blurIsAvcodecTNR,filters,&Tfilters::onQueueChange);
+     setOnChange(IDFF_blurIsAvcodec,filters,&Tfilters::onQueueChange);
      setOnChange(IDFF_blurIsDenoise3d,filters,&Tfilters::onQueueChange);
      setOnChange(IDFF_denoise3Dhq,filters,&Tfilters::onQueueChange);
     }
@@ -136,8 +136,8 @@ void TblurSettings::createFilters(size_t filtersorder,Tfilters *filters,TfilterQ
    if (isSmoothChroma) queueFilter<TimgFilterSmootherChroma>(filtersorder,filters,queue);
    if (isTempSmooth) queueFilter<TimgFilterTimesmooth>(filtersorder,filters,queue);
    if (isGradual) queueFilter<TimgFilterGradualDenoise>(filtersorder,filters,queue);
-   if (isMplayerTNR) queueFilter<TimgFilterMplayerTNR>(filtersorder,filters,queue);
-   if (isMplayerBlur) queueFilter<TimgFilterMplayerBlur>(filtersorder,filters,queue);
+   if (isAvcodecTNR) queueFilter<TimgFilterAvcodecTNR>(filtersorder,filters,queue);
+   if (isAvcodecBlur) queueFilter<TimgFilterAvcodecBlur>(filtersorder,filters,queue);
    if (isDenoise3d)
     if (denoise3Dhq)
      queueFilter<TimgFilterDenoise3dHQ>(filtersorder,filters,queue);
@@ -156,8 +156,8 @@ const int* TblurSettings::getResets(unsigned int pageId)
   IDFF_blurStrength,
   IDFF_tempSmooth,IDFF_tempSmoothColor,
   IDFF_gradualStrength,
-  IDFF_mplayerTNR1,IDFF_mplayerTNR2,IDFF_mplayerTNR3,
-  IDFF_mplayerBlurRadius,IDFF_mplayerBlurLuma,IDFF_mplayerBlurChroma,
+  IDFF_avcodecTNR1,IDFF_avcodecTNR2,IDFF_avcodecTNR3,
+  IDFF_avcodecBlurRadius,IDFF_avcodecBlurLuma,IDFF_avcodecBlurChroma,
   IDFF_denoise3Dluma,IDFF_denoise3Dchroma,IDFF_denoise3Dtime,IDFF_denoise3Dhq,
   0};
  return idResets;
@@ -171,8 +171,8 @@ bool TblurSettings::getTip(unsigned int pageId,char_t *tipS,size_t len)
  if (isSmoothLuma)   strncatf(tip,countof(tip),_l("luminance smoother: %i\n"),smoothStrengthLuma);
  if (isSmoothChroma) strncatf(tip,countof(tip),_l("chroma smoother %i\n"),smoothStrengthChroma);
  if (isGradual)      strncatf(tip,countof(tip),_l("gradual denoise: %i\n"),gradualStrength);
- if (isMplayerTNR)   strncatf(tip,countof(tip),_l("mplayer TNR: %i,%i,%i\n"),mplayerTNR1,mplayerTNR2,mplayerTNR3);
- if (isMplayerBlur)  strncatf(tip,countof(tip),_l("swscaler gaussian blur - radius:%i, luma:%.2f, chroma:%.2f\n"),mplayerBlurRadius,mplayerBlurLuma/100.0f,mplayerBlurChroma/100.0f);
+ if (isAvcodecTNR)   strncatf(tip,countof(tip),_l("avcodec TNR: %i,%i,%i\n"),avcodecTNR1,avcodecTNR2,avcodecTNR3);
+ if (isAvcodecBlur)  strncatf(tip,countof(tip),_l("swscaler gaussian blur - radius:%i, luma:%.2f, chroma:%.2f\n"),avcodecBlurRadius,avcodecBlurLuma/100.0f,avcodecBlurChroma/100.0f);
  if (isDenoise3d)    strncatf(tip,countof(tip),_l("denoise 3d %s - luma:%.2f, chroma:%.2f, time:%.2f"),denoise3Dhq?_l("hq"):_l(""),denoise3Dluma/100.0f,denoise3Dchroma/100.0f,denoise3Dtime/100.0f);
  if (tip[strlen(tip)-1]=='\n') tip[strlen(tip)-1]='\0';
  ff_strncpy(tipS,tip,len);

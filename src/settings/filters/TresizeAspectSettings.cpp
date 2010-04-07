@@ -23,7 +23,7 @@
 #include "CresizeBorders.h"
 #include "CresizeSettings.h"
 #include "TffdshowPageDec.h"
-#include "postproc/swscale.h"
+#include "libswscale/swscale.h"
 
 const TresizeAspectSettings::TmethodProps TresizeAspectSettings::methodsProps[]=
 {

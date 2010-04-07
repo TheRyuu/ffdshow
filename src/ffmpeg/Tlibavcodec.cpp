@@ -20,6 +20,8 @@
 #include "Tlibavcodec.h"
 #include "Tdll.h"
 #include "ffmpeg/libavcodec/avcodec.h"
+#include "ffmpeg/libswscale/swscale.h"
+#include "ffmpeg/libpostproc/postprocess_internal.h"
 #include "TvideoCodecLibavcodec.h"
 
 const char_t* Tlibavcodec::idctNames[]=
@@ -64,6 +66,7 @@ const Tlibavcodec::Tdia_size Tlibavcodec::dia_sizes[]=
  6,_l("size 6 diamond"),
  0,NULL
 };
+
 
 //===================================== Tlibavcodec ====================================
 Tlibavcodec::Tlibavcodec(const Tconfig *config):refcount(0)
@@ -114,6 +117,35 @@ Tlibavcodec::Tlibavcodec(const Tconfig *config):refcount(0)
  dll->loadFunction(avcodec_h264_decode_init_is_avc,"avcodec_h264_decode_init_is_avc");
 
 #if !COMPILE_AS_FFMPEG_MT
+ //libswscale methods
+ dll->loadFunction(sws_getContext, "sws_getContext");
+ dll->loadFunction(sws_freeContext, "sws_freeContext");
+ dll->loadFunction(sws_getDefaultFilter, "sws_getDefaultFilter");
+ dll->loadFunction(sws_freeFilter, "sws_freeFilter");
+ dll->loadFunction(sws_scale, "sws_scale");
+ dll->loadFunction(sws_scale_ordered, "sws_scale_ordered");
+
+ dll->loadFunction(palette8topacked32, "palette8topacked32");
+ dll->loadFunction(palette8topacked24, "palette8topacked24");
+ dll->loadFunction(palette8torgb32, "palette8torgb32");
+ dll->loadFunction(palette8tobgr32, "palette8tobgr32");
+ dll->loadFunction(palette8torgb24, "palette8torgb24");
+ dll->loadFunction(palette8tobgr24, "palette8tobgr24");
+ dll->loadFunction(palette8torgb16, "palette8torgb16");
+ dll->loadFunction(palette8tobgr16, "palette8tobgr16");
+ dll->loadFunction(palette8torgb15, "palette8torgb15");
+ dll->loadFunction(palette8tobgr15, "palette8tobgr15");
+ dll->loadFunction(GetCPUCount, "GetCPUCount");
+ dll->loadFunction(sws_getConstVec, "sws_getConstVec");
+ dll->loadFunction(sws_getGaussianVec, "sws_getGaussianVec");
+ dll->loadFunction(sws_normalizeVec, "sws_normalizeVec");
+ dll->loadFunction(sws_freeVec, "sws_freeVec");
+
+ //libpostproc methods
+ dll->loadFunction(pp_postprocess, "pp_postprocess");
+ dll->loadFunction(pp_get_context, "pp_get_context");
+ dll->loadFunction(pp_free_context, "pp_free_context");
+
  //DXVA methods
  dll->loadFunction(av_h264_decode_frame,"av_h264_decode_frame");
  dll->loadFunction(av_vc1_decode_frame,"av_vc1_decode_frame");
@@ -181,6 +213,97 @@ int Tlibavcodec::lavcCpuFlags(void)
  lavc_cpu_flags = ~lavc_cpu_flags;
  return lavc_cpu_flags;
 }
+
+//Used by libswscale start
+int Tlibavcodec::swsCpuCaps(void)
+{
+ int cpu=0;
+ if (Tconfig::cpu_flags&FF_CPU_MMX)    cpu|=SWS_CPU_CAPS_MMX;
+ if (Tconfig::cpu_flags&FF_CPU_MMXEXT) cpu|=SWS_CPU_CAPS_MMX2;
+ if (Tconfig::cpu_flags&FF_CPU_3DNOW)  cpu|=SWS_CPU_CAPS_3DNOW;
+ return cpu;
+}
+void Tlibavcodec::swsInitParams(SwsParams *params,int resizeMethod)
+{
+ memset(params,0,sizeof(*params));
+ //params->cpu=Tconfig::sws_cpu_flags;
+ params->methodLuma.method=params->methodChroma.method=resizeMethod;
+ params->methodLuma.param[0]=params->methodChroma.param[0]=SWS_PARAM_DEFAULT;
+ params->methodLuma.param[1]=params->methodChroma.param[1]=SWS_PARAM_DEFAULT;
+
+}
+void Tlibavcodec::swsInitParams(SwsParams *params,int resizeMethod,int flags)
+{
+ swsInitParams(params, resizeMethod);
+ params->methodLuma.method|=flags;
+ params->methodChroma.method|=flags;
+}
+//Used by libswscale end
+
+//Used by libpostproc start
+int Tlibavcodec::ppCpuCaps(int csp)
+{
+ int cpu=0;
+ if (Tconfig::cpu_flags&FF_CPU_MMX)    cpu|=PP_CPU_CAPS_MMX;
+ if (Tconfig::cpu_flags&FF_CPU_MMXEXT) cpu|=PP_CPU_CAPS_MMX2;
+ if (Tconfig::cpu_flags&FF_CPU_3DNOW)  cpu|=PP_CPU_CAPS_3DNOW;
+
+ switch (csp&FF_CSPS_MASK)
+  {
+   case 0:
+   case FF_CSP_420P:cpu|=PP_FORMAT_420;break;
+   case FF_CSP_422P:cpu|=PP_FORMAT_422;break;
+   case FF_CSP_411P:cpu|=PP_FORMAT_411;break;
+   case FF_CSP_444P:cpu|=PP_FORMAT_444;break;
+   //case FF_CSP_410P:cpu|=PP_FORMAT_410;break;
+  }
+
+ return cpu;
+}
+
+void Tlibavcodec::pp_mode_defaults(PPMode &ppMode)
+{
+ ppMode.lumMode=0;
+ ppMode.chromMode=0;
+ ppMode.maxTmpNoise[0]=700;
+ ppMode.maxTmpNoise[1]=1500;
+ ppMode.maxTmpNoise[2]=3000;
+ ppMode.maxAllowedY=234;
+ ppMode.minAllowedY=16;
+ ppMode.baseDcDiff=256/8;
+ ppMode.flatnessThreshold=56-16-1;
+ ppMode.maxClippedThreshold=0.01f;
+ ppMode.error=0;
+ ppMode.forcedQuant=0;
+}
+
+int Tlibavcodec::getPPmode(const TpostprocSettings *cfg,int currentq)
+{
+ int result=0;
+ if (!cfg->isCustom)
+  {
+   int ppqual=cfg->autoq?currentq:cfg->qual;
+   if (ppqual<0) ppqual=0;
+   if (ppqual>PP_QUALITY_MAX) ppqual=PP_QUALITY_MAX;
+   static const int ppPresets[1+PP_QUALITY_MAX]=
+    {
+     0,
+     LUM_H_DEBLOCK,
+     LUM_H_DEBLOCK|LUM_V_DEBLOCK,
+     LUM_H_DEBLOCK|LUM_V_DEBLOCK|CHROM_H_DEBLOCK,
+     LUM_H_DEBLOCK|LUM_V_DEBLOCK|CHROM_H_DEBLOCK|CHROM_V_DEBLOCK,
+     LUM_H_DEBLOCK|LUM_V_DEBLOCK|CHROM_H_DEBLOCK|CHROM_V_DEBLOCK|LUM_DERING,
+     LUM_H_DEBLOCK|LUM_V_DEBLOCK|CHROM_H_DEBLOCK|CHROM_V_DEBLOCK|LUM_DERING|CHROM_DERING
+    };
+   result=ppPresets[ppqual];
+  }
+ else
+  result=cfg->custom;
+ if (cfg->levelFixLum) result|=LUM_LEVEL_FIX;
+ //if (cfg->levelFixChrom) result|=CHROM_LEVEL_FIX;
+ return result;
+}
+//Used by libpostproc end
 
 AVCodecContext* Tlibavcodec::avcodec_alloc_context(TlibavcodecExt *ext)
 {

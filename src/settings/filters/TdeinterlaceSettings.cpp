@@ -18,7 +18,7 @@
 
 #include "stdafx.h"
 #include "TdeinterlaceSettings.h"
-#include "postproc/postprocFilters.h"
+#include "libpostproc/postprocess_internal.h"
 #include "CdeinterlaceTomsMoComp.h"
 #include "CdeinterlaceFramedoubler.h"
 #include "CdeinterlaceKernel.h"
@@ -173,7 +173,7 @@ void TdeinterlaceSettings::createFilters(size_t filtersorder,Tfilters *filters,T
      case KERNELDEINT:queueFilter<TimgFilterKernelDeint2>(filtersorder,filters,queue); return;
      case KERNELBOB:queueFilter<TimgFilterKernelBob>(filtersorder,filters,queue); return;
      case YADIF:queueFilter<TimgFilterYadif>(filtersorder,filters,queue); return;
-     default:queueFilter<TimgFilterMplayerDeinterlace>(filtersorder,filters,queue); return; //mplayer deinterlacers
+     default:queueFilter<TimgFilterAvcodecDeinterlace>(filtersorder,filters,queue); return; //mplayer deinterlacers
     }
   }
  if (getMethod(cfgId).id != YADIF || !is || !show)

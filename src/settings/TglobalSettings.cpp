@@ -752,11 +752,6 @@ void TglobalSettingsDecVideo::load(void)
  /*FF_FOURCC1_OP(PAL1,rawv==1 || rawv==4 || rawv==FOURCC_PAL1,CODEC_ID_PAL1)*/ \
  /*FF_FOURCC1_OP(PAL4,rawv==1 || rawv==4 || rawv==FOURCC_PAL4,CODEC_ID_PAL4)*/ \
  /*FF_FOURCC1_OP(PAL8,rawv==1 || rawv==4 || rawv==FOURCC_PAL8,CODEC_ID_PAL8)*/ \
- /* mencoder's raw formats */ \
- FF_FOURCC1_OP(RGB24MPLAYER,(rawv==1 || rawv==3 || rawv==FOURCC_RGB2)& dxvamask,CODEC_ID_BGR2) \
- FF_FOURCC1_OP(RGB32MPLAYER,(rawv==1 || rawv==3 || rawv==FOURCC_RGB3)& dxvamask,CODEC_ID_BGR3) \
- FF_FOURCC1_OP(RGB15MPLAYER,(rawv==1 || rawv==3 || rawv==FOURCC_RGB5)& dxvamask,CODEC_ID_BGR5) \
- FF_FOURCC1_OP(RGB16MPLAYER,(rawv==1 || rawv==3 || rawv==FOURCC_RGB6)& dxvamask,CODEC_ID_BGR6) \
  /* exotic */ \
  FF_FOURCC_OP (MP4S,mp4v & rawmask & dxvamask,c_mpeg4) \
  FF_FOURCC_OP (SEDG,mp4v & rawmask & dxvamask,c_mpeg4) \

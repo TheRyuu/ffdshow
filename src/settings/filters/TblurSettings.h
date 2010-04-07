@@ -16,8 +16,8 @@ public:
  int isTempSmooth,tempSmooth,tempSmoothColor;
  int isSmoothLuma,isSmoothChroma,smoothStrengthLuma,smoothStrengthChroma;
  int isGradual,gradualStrength;
- int isMplayerTNR,mplayerTNR1,mplayerTNR2,mplayerTNR3;
- int isMplayerBlur,mplayerBlurRadius,mplayerBlurLuma,mplayerBlurChroma;
+ int isAvcodecTNR,avcodecTNR1,avcodecTNR2,avcodecTNR3;
+ int isAvcodecBlur,avcodecBlurRadius,avcodecBlurLuma,avcodecBlurChroma;
  int isDenoise3d,denoise3Dluma,denoise3Dchroma,denoise3Dtime,denoise3Dhq;
  virtual void createFilters(size_t filtersorder,Tfilters *filters,TfilterQueue &queue) const;
  virtual void createPages(TffdshowPageDec *parent) const;

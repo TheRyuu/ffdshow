@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2006 Milan Cutka
  * luminance gain and offset based on DVD2AVI source code
  * fast gamma correction by Michael Herf (http://www.stereopsis.com)
- * RGB gamma correction working in YUV from mplayer's vf_eq2 filter by Hampa Hug, Daniel Moreno, Richard Felker
+ * RGB gamma correction working in YUV from avcodec's vf_eq2 filter by Hampa Hug, Daniel Moreno, Richard Felker
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 #include "stdafx.h"
 #include "TimgFilterLuma.h"
 #include "TpictPropSettings.h"
-#include "Tlibmplayer.h"
+#include "Tlibavcodec.h"
 #include "IffdshowBase.h"
 #include "simd.h"
 #include "Tconfig.h"
@@ -214,17 +214,17 @@ HRESULT TimgFilterGammaRGB::process(TfilterQueue::iterator it,TffPict &pict,cons
 //===================================== TimgFilterLevelFix =====================================
 TimgFilterLevelFix::TimgFilterLevelFix(IffdshowBase *Ideci,Tfilters *Iparent):TimgFilter(Ideci,Iparent)
 {
- pp_ctx=NULL;Tlibmplayer::pp_mode_defaults(pp_mode);
- libmplayer=NULL;
+ pp_ctx=NULL;Tlibavcodec::pp_mode_defaults(pp_mode);
+ libavcodec=NULL;
 }
 TimgFilterLevelFix::~TimgFilterLevelFix()
 {
- if (libmplayer) libmplayer->Release();
+ if (libavcodec) libavcodec->Release();
 }
 
 void TimgFilterLevelFix::done(void)
 {
- if (pp_ctx) libmplayer->pp_free_context(pp_ctx);pp_ctx=NULL;
+ if (pp_ctx) libavcodec->pp_free_context(pp_ctx);pp_ctx=NULL;
 }
 void TimgFilterLevelFix::onSizeChange(void)
 {
@@ -251,8 +251,8 @@ HRESULT TimgFilterLevelFix::process(TfilterQueue::iterator it,TffPict &pict,cons
 
    if (!pp_ctx)
     {
-     if (!libmplayer) deci->getPostproc(&libmplayer);
-     pp_ctx=libmplayer->pp_get_context(dx1[0],dy1[0],Tlibmplayer::ppCpuCaps(csp1));
+     if (!libavcodec) deci->getLibavcodec(&libavcodec);
+     pp_ctx=libavcodec->pp_get_context(dx1[0],dy1[0],Tlibavcodec::ppCpuCaps(csp1));
     }
 
    pp_mode.lumMode=LUM_LEVEL_FIX;
@@ -266,7 +266,7 @@ HRESULT TimgFilterLevelFix::process(TfilterQueue::iterator it,TffPict &pict,cons
      pp_mode.minAllowedY=16;
      pp_mode.maxAllowedY=234;
     }
-   libmplayer->pp_postprocess(tempPict1,stride1,
+   libavcodec->pp_postprocess(tempPict1,stride1,
                               tempPict2,stride2,
                               dx1[0],dy1[0],
                               NULL,0,

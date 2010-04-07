@@ -1,21 +1,27 @@
+#ifndef FFMPEG_CONFIG_H
+#define FFMPEG_CONFIG_H
 #ifdef __GNUC__
 	#define HAVE_INLINE_ASM 1
-  #define HAVE_MMX 1
-  #define HAVE_SSE 1
-  #define HAVE_SSSE3 1
-  #define HAVE_AMD3DNOW 1
-  #define HAVE_AMD3DNOWEXT 1
-  #define ARCH_X86 1  
-  #ifdef ARCH_X86_64
-    #define HAVE_FAST_64BIT 1
-    #define HAVE_CMOV 1
-    #define HAVE_FAST_CMOV 1
-  #else
-    #define ARCH_X86_32 1
-  #endif
+	#define HAVE_MMX 1
+	#define HAVE_MMX2 1
+	#define HAVE_SSE 1
+	#define HAVE_SSSE3 1
+	#define HAVE_AMD3DNOW 1
+	#define HAVE_AMD3DNOWEXT 1
+	#define ARCH_X86 1
+	#ifdef ARCH_X86_64
+		#define HAVE_FAST_64BIT 1
+		#define HAVE_CMOV 1
+		#define HAVE_FAST_CMOV 1
+	#else
+		#define ARCH_X86_64 0
+		#define ARCH_X86_32 1
+	#endif
+	#define restrict restrict
 #else
 	#define HAVE_INLINE_ASM 0
 	#define HAVE_MMX 0
+	#define HAVE_MMX2 0
 	#define HAVE_SSE 0
 	#define HAVE_SSSE3 0
 	#define HAVE_AMD3DNOW 0
@@ -24,12 +30,23 @@
 	#define ARCH_X86_32 0
 	#define ARCH_X86_64 0
 	#define HAVE_FAST_64BIT 0
-  #define HAVE_CMOV 0
-  #define HAVE_FAST_CMOV 0
+	#define HAVE_CMOV 0
+	#define HAVE_FAST_CMOV 0
+ #define restrict
+	#define __asm__ __asm
 #endif
-
+// Use DPRINTF instead of av_log. To be used for debug purpose because DPRINTF will be always called (the
+// registry switch is not read)
+//#define USE_DPRINTF 1
+#define FFMPEG_LICENSE "LGPL version 2.1 or later"
+#define CC_TYPE "gcc"
+#define CC_VERSION __VERSION__
+#define ASMALIGN(ZEROBITS) ".align 1 << " #ZEROBITS "\n\t"
+#define EXTERN_PREFIX "_"
+#define EXTERN_ASM _
 #define HAVE_ALTIVEC 0
 #define HAVE_BIGENDIAN 0
+#define HAVE_ALTIVEC_H 0
 #define HAVE_BSWAP 1
 #define HAVE_EBP_AVAILABLE 1
 #define HAVE_EBX_AVAILABLE 1
@@ -53,8 +70,6 @@
   #define EMULATE_FAST_INT
 #endif
 
-#define ASMALIGN(ZEROBITS) ".align 1<<" #ZEROBITS "\n\t"
-
 #define CONFIG_DWT 0
 #define CONFIG_HARDCODED_TABLES 0
 #define CONFIG_GPL 1
@@ -69,7 +84,11 @@
 #define CONFIG_ZLIB 1
 
 #define CONFIG_DECODERS 1
-#define CONFIG_ENCODERS 1	
+#define CONFIG_ENCODERS 1
+#define CONFIG_SWSCALE 1
+#define CONFIG_SWSCALE_ALPHA 1
+#define CONFIG_POSTPROC 1
+#define CONFIG_RUNTIME_CPUDETECT 1
 
 /* Note : when adding a new codec,
 you have to :
@@ -237,3 +256,4 @@ depending on the type of codec you are adding
 #define CONFIG_MPEGAUDIO_PARSER 1
 #define CONFIG_MPEG4VIDEO_PARSER 1
 #define CONFIG_MLP_PARSER 1
+#endif

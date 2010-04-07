@@ -8,7 +8,7 @@ struct SwsContext;
 struct SwsFilter;
 struct SwsParams;
 class SimpleResize;
-struct Tlibmplayer;
+struct Tlibavcodec;
 DECLARE_FILTER(TimgFilterResize,public,TimgFilter)
 private:
  bool sizeChanged,inited;
@@ -18,7 +18,7 @@ private:
 
  bool oldinterlace,oldWarped;
 
- Tlibmplayer *libmplayer;SwsContext *swsc;SwsFilter *swsf;SwsParams *swsparams;
+ Tlibavcodec *libavcodec;SwsContext *swsc;SwsFilter *swsf;SwsParams *swsparams;
 
  SimpleResize *simple;
 

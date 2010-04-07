@@ -8,10 +8,10 @@
 class T3x3blurSWS;
 struct TwarpsharpSettings;
 struct SwsContext;
-struct Tlibmplayer;
+struct Tlibavcodec;
 DECLARE_FILTER(TimgFilterWarpsharp,public,TimgFilter)
 private:
- Tlibmplayer *libmplayer;
+ Tlibavcodec *libavcodec;
  unsigned char *blur;
  SwsContext *swsblur;
  stride_t blurworkStride;

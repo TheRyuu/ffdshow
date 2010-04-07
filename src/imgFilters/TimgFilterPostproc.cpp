@@ -19,7 +19,7 @@
 #include "stdafx.h"
 #include "TimgFilterPostproc.h"
 #include "TpostprocSettings.h"
-#include "Tlibmplayer.h"
+#include "Tlibavcodec.h"
 #include "TvideoCodec.h"
 #include "IffdshowBase.h"
 #include "IffdshowDecVideo.h"
@@ -46,6 +46,7 @@ TimgFilterPostprocBase::~TimgFilterPostprocBase()
 
 bool TimgFilterPostprocBase::pp_codec(int CodecID)
 {
+ return true;
   if(raw_codec(CodecID))
     return true;
     switch (CodecID) {
@@ -107,7 +108,7 @@ int TimgFilterPostprocBase::prepare(const TpostprocSettings *cfg,int maxquant,in
  else
   deci->putParam(IDFF_currentq,currentq=cfg->qual);
  //DPRINTF("currentq: %i",currentq);
- int ppmode=Tlibmplayer::getPPmode(cfg,currentq);
+ int ppmode=Tlibavcodec::getPPmode(cfg,currentq);
  if (!ppmode) return ppmode;
  unsigned int deblockStrength=cfg->deblockStrength;
  if (!movie) deciV->getMovieSource(&movie);
@@ -151,30 +152,30 @@ void TimgFilterPostprocBase::onSeek(void)
  testh264=true;wasIP=false;
 }
 
-//============================ TimgFilterPostprocMplayer ============================
-TimgFilterPostprocMplayer::TimgFilterPostprocMplayer(IffdshowBase *Ideci,Tfilters *Iparent):TimgFilterPostprocBase(Ideci,Iparent,false)
+//============================ TimgFilterPostprocAvcodec ============================
+TimgFilterPostprocAvcodec::TimgFilterPostprocAvcodec(IffdshowBase *Ideci,Tfilters *Iparent):TimgFilterPostprocBase(Ideci,Iparent,false)
 {
- libmplayer=NULL;
- pp_ctx=NULL;Tlibmplayer::pp_mode_defaults(pp_mode);
+ libavcodec=NULL;
+ pp_ctx=NULL;Tlibavcodec::pp_mode_defaults(pp_mode);
 }
-TimgFilterPostprocMplayer::~TimgFilterPostprocMplayer()
+TimgFilterPostprocAvcodec::~TimgFilterPostprocAvcodec()
 {
- if (libmplayer) libmplayer->Release();
+ if (libavcodec) libavcodec->Release();
 }
 
-void TimgFilterPostprocMplayer::done(void)
+void TimgFilterPostprocAvcodec::done(void)
 {
- if (pp_ctx) libmplayer->pp_free_context(pp_ctx);pp_ctx=NULL;
+ if (pp_ctx) libavcodec->pp_free_context(pp_ctx);pp_ctx=NULL;
 }
-void TimgFilterPostprocMplayer::onSizeChange(void)
+void TimgFilterPostprocAvcodec::onSizeChange(void)
 {
  done();
 }
 
-bool TimgFilterPostprocMplayer::is(const TffPictBase &pict,const TfilterSettingsVideo *cfg0)
+bool TimgFilterPostprocAvcodec::is(const TffPictBase &pict,const TfilterSettingsVideo *cfg0)
 {
  const TpostprocSettings *cfg=(const TpostprocSettings*)cfg0;
- if (super::is(pict,cfg) && Tlibmplayer::getPPmode(cfg,cfg->qual))
+ if (super::is(pict,cfg) && Tlibavcodec::getPPmode(cfg,cfg->qual))
   {
    Trect r=pict.getRect(cfg->full,cfg->half);
    return pictRect.dx>=16 && pictRect.dy>=16;
@@ -183,7 +184,7 @@ bool TimgFilterPostprocMplayer::is(const TffPictBase &pict,const TfilterSettings
   return false;
 }
 
-HRESULT TimgFilterPostprocMplayer::process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)
+HRESULT TimgFilterPostprocAvcodec::process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)
 {
  const TpostprocSettings *cfg=(const TpostprocSettings*)cfg0;
  if (int ppmode=prepare(cfg,31,0))
@@ -200,12 +201,12 @@ HRESULT TimgFilterPostprocMplayer::process(TfilterQueue::iterator it,TffPict &pi
 
      if (!pp_ctx)
       {
-       if (!libmplayer) deci->getPostproc(&libmplayer);
-       pp_ctx=libmplayer->pp_get_context(dx1[0],dy1[0],Tlibmplayer::ppCpuCaps(csp1));
+       if (!libavcodec) deci->getLibavcodec(&libavcodec);
+       pp_ctx=libavcodec->pp_get_context(dx1[0],dy1[0],Tlibavcodec::ppCpuCaps(csp1));
       }
      pp_mode.lumMode=ppmode&15;
      pp_mode.chromMode=(ppmode>>4)&15;
-     if (cfg->deblockMplayerAccurate)
+     if (cfg->deblockAvcodecAccurate)
       {
        pp_mode.baseDcDiff=128;
        pp_mode.flatnessThreshold=7;
@@ -231,7 +232,7 @@ HRESULT TimgFilterPostprocMplayer::process(TfilterQueue::iterator it,TffPict &pi
        pp_mode.maxAllowedY=234;
       }
      int frametype=pict.frametype&FRAME_TYPE::typemask; //3 = B
-     libmplayer->pp_postprocess(tempPict1,stride1,
+     libavcodec->pp_postprocess(tempPict1,stride1,
                                 tempPict2,stride2,
                                 dx1[0],dy1[0],
                                 quants,quantsDx,
@@ -968,7 +969,7 @@ TimgFilterPostprocNic::TimgFilterPostprocNic(IffdshowBase *Ideci,Tfilters *Ipare
 bool TimgFilterPostprocNic::is(const TffPictBase &pict,const TfilterSettingsVideo *cfg0)
 {
  const TpostprocSettings *cfg=(const TpostprocSettings*)cfg0;
- if (super::is(pict,cfg) && Tlibmplayer::getPPmode(cfg,cfg->qual)&~(LUM_LEVEL_FIX|CHROM_LEVEL_FIX))
+ if (super::is(pict,cfg) && Tlibavcodec::getPPmode(cfg,cfg->qual)&~(LUM_LEVEL_FIX|CHROM_LEVEL_FIX))
   {
    Trect r=pict.getRect(cfg->full,cfg->half);
    return pictRect.dx>=16 && pictRect.dy>=16;

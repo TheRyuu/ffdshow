@@ -25,6 +25,7 @@
 #include "TkeyboardDirect.h"
 #include "Ttranslate.h"
 #include "Tlibmplayer.h"
+#include "Tlibavcodec.h"
 #include "TimgFilters.h"
 #include "TfontManager.h"
 #include "Tpresets.h"
@@ -224,7 +225,7 @@ STDMETHODIMP TffdshowDecVideo::getInputDAR(unsigned int *a1,unsigned int *a2)
 
 STDMETHODIMP TffdshowDecVideo::getPPmode(unsigned int *ppmode)
 {
- *ppmode=Tlibmplayer::getPPmode(presetSettings->postproc,currentq);
+ *ppmode=Tlibavcodec::getPPmode(presetSettings->postproc,currentq);
  return S_OK;
 }
 void TffdshowDecVideo::sendOnChange(int paramID,int val)

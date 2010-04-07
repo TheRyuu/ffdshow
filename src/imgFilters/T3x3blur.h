@@ -4,12 +4,12 @@
 #include "interfaces.h"
 #include "ffImgfmt.h"
 
-struct Tlibmplayer;
+struct Tlibavcodec;
 struct SwsContext;
 class T3x3blurSWS
 {
 private:
- Tlibmplayer *libmplayer;
+ Tlibavcodec *libavcodec;
  SwsContext *swsc;
  unsigned int dx,dy;
 public:

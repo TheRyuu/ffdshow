@@ -28,7 +28,7 @@ public:
  int msharpHQ,msharpMask;
  static const int msharpStrengthDef=100,msharpThresholdDef=15;
  int asharpT,asharpD,asharpB,asharpHQBF;
- int mplayerLuma,mplayerChroma;
+ int avcodecLuma,avcodecChroma;
  virtual void createFilters(size_t filtersorder,Tfilters *filters,TfilterQueue &queue) const;
  virtual void createPages(TffdshowPageDec *parent) const;
  virtual bool getTip(unsigned int pageId,char_t *buf,size_t buflen);

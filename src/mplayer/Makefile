@@ -3,11 +3,6 @@ CFLAGS+=-I. -I../imgFilters -Ilibavutil -Ilibvo -Imp3lib -Ipostproc -std=gnu99
 SRCS_C=\
 		mplayer.c \
 		libavutil/mem.c \
-		postproc/rgb2rgb.c \
-		postproc/yuv2rgb.c \
-		postproc/swscale.c \
-		postproc/postprocess.c \
-		postproc/w32thread.c \
 		libaf/reorder_ch.c \
 		libvo/aclib.c \
 		yadif/vf_yadif.c \

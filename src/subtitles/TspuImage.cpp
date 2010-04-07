@@ -20,7 +20,7 @@
 #include "TspuImage.h"
 #include "simd.h"
 #include "TffPict.h"
-#include "Tlibmplayer.h"
+#include "Tlibavcodec.h"
 #include "Tconfig.h"
 #include "IffdshowBase.h"
 
@@ -628,21 +628,22 @@ TspuImage::TscalerSw::TscalerSw(const TprintPrefs &prefs,int srcdx,int srcdy,int
  Tscaler(prefs,srcdx,srcdy,dstdx,dstdy),
  approx(prefs,srcdx,srcdy,dstdx,dstdy)
 {
- prefs.deci->getPostproc(&libmplayer);
- int mplayercsp=csp_ffdshow2mplayer(csp);
- filter.lumH=filter.lumV=filter.chrH=filter.chrV=libmplayer->sws_getGaussianVec(prefs.vobaagauss/1000.0, 3.0);
- libmplayer->sws_normalizeVec(filter.lumH,1.0);
- SwsParams params;Tlibmplayer::swsInitParams(&params,SWS_GAUSS);
- ctx=libmplayer->sws_getContext(srcdx,srcdy,mplayercsp,dstdx,dstdy,mplayercsp,&params,&filter,NULL,NULL);
- alphactx=libmplayer->sws_getContext(srcdx,srcdy,mplayercsp,dstdx,dstdy,mplayercsp,&params,&filter,NULL,NULL);
+ prefs.deci->getLibavcodec(&libavcodec);
+ PixelFormat avcodeccsp=csp_ffdshow2lavc(csp);
+ filter.lumH=filter.lumV=filter.chrH=filter.chrV=libavcodec->sws_getGaussianVec(prefs.vobaagauss/1000.0, 3.0);
+ libavcodec->sws_normalizeVec(filter.lumH,1.0);
+ int swsflags = Tconfig::cpu_flags | SWS_GAUSS;
+ SwsParams params;Tlibavcodec::swsInitParams(&params,SWS_GAUSS,Tconfig::sws_cpu_flags);
+ ctx=libavcodec->sws_getContext(srcdx,srcdy,avcodeccsp,dstdx,dstdy,avcodeccsp,swsflags,&params,&filter,NULL,NULL);
+ alphactx=libavcodec->sws_getContext(srcdx,srcdy,avcodeccsp,dstdx,dstdy,avcodeccsp,swsflags,&params,&filter,NULL,NULL);
  convert = new Tconvert(prefs.deci,dstdx,dstdy);
 }
 TspuImage::TscalerSw::~TscalerSw()
 {
- libmplayer->sws_freeVec(filter.lumH);
- if (ctx) libmplayer->sws_freeContext(ctx);
- if (alphactx) libmplayer->sws_freeContext(alphactx);
- libmplayer->Release();
+ libavcodec->sws_freeVec(filter.lumH);
+ if (ctx) libavcodec->sws_freeContext(ctx);
+ if (alphactx) libavcodec->sws_freeContext(alphactx);
+ libavcodec->Release();
  if (convert) delete convert;
 }
 void TspuImage::TscalerSw::scale(const unsigned char *srci,const unsigned char *srca,stride_t srcStride,unsigned char *dsti,unsigned char *dsta,stride_t dstStride)
@@ -657,8 +658,9 @@ void TspuImage::TscalerSw::scale(const unsigned char *srci,const unsigned char *
    const unsigned char *srca0[4] = {srca, NULL, NULL, NULL};
    unsigned char *dsti0[4] = {dsti, NULL, NULL, NULL};
    unsigned char *dsta0[4] = {dsta, NULL, NULL, NULL};
-   libmplayer->sws_scale_ordered(ctx,srci0,srcStride0,0,srcdy,dsti0,dstStride0);
-   libmplayer->sws_scale_ordered(ctx,srca0,srcStride0,0,srcdy,dsta0,dstStride0);
+   libavcodec->sws_scale_ordered(ctx,srci0,srcStride0,0,srcdy,dsti0,dstStride0);
+   //TODO : libswscale now supports alpha scaling, this step is not necessary in RGB mode
+   libavcodec->sws_scale_ordered(ctx,srca0,srcStride0,0,srcdy,dsta0,dstStride0);
   }
  
 }

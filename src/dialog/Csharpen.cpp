@@ -47,8 +47,8 @@ void TsharpenPage::cfg2dlg(void)
           idff2=IDFF_asharpD;
           idff3=IDFF_asharpB;
           break;
-   case 5:idff1=IDFF_mplayerSharpLuma;
-          idff2=IDFF_mplayerSharpChroma;
+   case 5:idff1=IDFF_avcodecSharpLuma;
+          idff2=IDFF_avcodecSharpChroma;
           idff3=0;
           break;
   }
@@ -57,7 +57,7 @@ void TsharpenPage::cfg2dlg(void)
  unsharp2dlg(sharpenMethod);
  msharpen2dlg(sharpenMethod);
  asharp2dlg(sharpenMethod);
- mplayer2dlg(sharpenMethod);
+ avcodec2dlg(sharpenMethod);
 }
 void TsharpenPage::xsharpen2dlg(int sharpenMethod)
 {
@@ -106,15 +106,15 @@ void TsharpenPage::asharp2dlg(int sharpenMethod)
   }
  enable(sharpenMethod==4,IDC_CHB_SHARPEN_ASHARP_HQBF);setCheck(IDC_CHB_SHARPEN_ASHARP_HQBF,cfgGet(IDFF_asharpHQBF));
 }
-void TsharpenPage::mplayer2dlg(int sharpenMethod)
+void TsharpenPage::avcodec2dlg(int sharpenMethod)
 {
  setCheck(IDC_RBT_SHARPEN_MPLAYER,sharpenMethod==5);
  if (sharpenMethod==5)
   {
    enable(1,IDC_LBL_SHARPEN2);enable(1,IDC_TBR_SHARPEN2);
    enable(0,IDC_LBL_SHARPEN3);enable(0,IDC_TBR_SHARPEN3);
-   tbrSetRange(IDC_TBR_SHARPEN1,0,400,16);tbrSet(IDC_TBR_SHARPEN1,cfgGet(IDFF_mplayerSharpLuma  ),IDC_LBL_SHARPEN1,_(IDC_LBL_SHARPEN1,_l("Luminance sharpening:")),100);
-   tbrSetRange(IDC_TBR_SHARPEN2,0,400,16);tbrSet(IDC_TBR_SHARPEN2,cfgGet(IDFF_mplayerSharpChroma),IDC_LBL_SHARPEN2,_(IDC_LBL_SHARPEN2,_l("Chroma sharpening:")),100);
+   tbrSetRange(IDC_TBR_SHARPEN1,0,400,16);tbrSet(IDC_TBR_SHARPEN1,cfgGet(IDFF_avcodecSharpLuma  ),IDC_LBL_SHARPEN1,_(IDC_LBL_SHARPEN1,_l("Luminance sharpening:")),100);
+   tbrSetRange(IDC_TBR_SHARPEN2,0,400,16);tbrSet(IDC_TBR_SHARPEN2,cfgGet(IDFF_avcodecSharpChroma),IDC_LBL_SHARPEN2,_(IDC_LBL_SHARPEN2,_l("Chroma sharpening:")),100);
   }
 }
 
@@ -138,7 +138,7 @@ INT_PTR TsharpenPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
           case 1:unsharp2dlg(1);break;
           case 2:msharpen2dlg(2);break;
           case 4:asharp2dlg(4);break;
-          case 5:mplayer2dlg(5);break;
+          case 5:avcodec2dlg(5);break;
          }
         return TRUE;
        }

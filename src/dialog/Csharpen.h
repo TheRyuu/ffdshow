@@ -6,7 +6,7 @@
 class TsharpenPage :public TconfPageDecVideo
 {
 private:
- void xsharpen2dlg(int sharpenMethod),unsharp2dlg(int sharpenMethod),msharpen2dlg(int sharpenMethod),asharp2dlg(int sharpenMethod),mplayer2dlg(int sharpenMethod);
+ void xsharpen2dlg(int sharpenMethod),unsharp2dlg(int sharpenMethod),msharpen2dlg(int sharpenMethod),asharp2dlg(int sharpenMethod),avcodec2dlg(int sharpenMethod);
  int idff1,idff2,idff3;
 protected:
  virtual INT_PTR msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam);

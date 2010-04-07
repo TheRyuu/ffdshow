@@ -43,7 +43,7 @@ void TblurPage::cfg2dlg(void)
  smooth2dlg();
  tempsmooth2dlg();
  gradual2dlg();
- mplayer2dlg();
+ avcodec2dlg();
  swscaler2dlg();
  denoise3d2dlg();
 }
@@ -72,29 +72,29 @@ void TblurPage::denoise3d2dlg(void)
  strncatf(s, countof(s), _l(", %s%.2f"),_(IDC_CHB_BLUR_DENOISE3D,_l("time:")),x/100.0f);tbrSet(IDC_TBR_BLUR_DENOISE3D_TIME,x);
  setDlgItemText(m_hwnd,IDC_CHB_BLUR_DENOISE3D,s);
 }
-void TblurPage::mplayer2dlg(void)
+void TblurPage::avcodec2dlg(void)
 {
- setCheck(IDC_CHB_BLUR_MPLAYER,cfgGet(IDFF_blurIsMplayerTNR));
+ setCheck(IDC_CHB_BLUR_MPLAYER,cfgGet(IDFF_blurIsAvcodecTNR));
  int x;char_t s[256];
  tsnprintf_s(s, countof(s), _TRUNCATE, _l("%s "), _(IDC_CHB_BLUR_MPLAYER));
- x=cfgGet(IDFF_mplayerTNR1);
+ x=cfgGet(IDFF_avcodecTNR1);
  strncatf(s, countof(s), _l("%i")  ,x);tbrSet(IDC_TBR_BLUR_MPLAYER1,x);
- x=cfgGet(IDFF_mplayerTNR2);
+ x=cfgGet(IDFF_avcodecTNR2);
  strncatf(s, countof(s), _l(", %i"),x);tbrSet(IDC_TBR_BLUR_MPLAYER2,x);
- x=cfgGet(IDFF_mplayerTNR3);
+ x=cfgGet(IDFF_avcodecTNR3);
  strncatf(s, countof(s), _l(", %i"),x);tbrSet(IDC_TBR_BLUR_MPLAYER3,x);
  setDlgItemText(m_hwnd,IDC_CHB_BLUR_MPLAYER,s);
 }
 void TblurPage::swscaler2dlg(void)
 {
- setCheck(IDC_CHB_BLUR_SWSCALER,cfgGet(IDFF_blurIsMplayer));
+ setCheck(IDC_CHB_BLUR_SWSCALER,cfgGet(IDFF_blurIsAvcodec));
  int x;char_t s[256];
  tsnprintf_s(s, countof(s), _TRUNCATE, _l("%s - "), _(IDC_CHB_BLUR_SWSCALER));
- x=cfgGet(IDFF_mplayerBlurRadius);
+ x=cfgGet(IDFF_avcodecBlurRadius);
  strncatf(s, countof(s),_l("%s%i"),_(IDC_CHB_BLUR_SWSCALER,_l("radius:")),x);tbrSet(IDC_TBR_BLUR_SWSCALER_RADIUS,x);
- x=cfgGet(IDFF_mplayerBlurLuma);
+ x=cfgGet(IDFF_avcodecBlurLuma);
  strncatf(s, countof(s), _l(", %s%.2f"),_(IDC_CHB_BLUR_SWSCALER,_l("luma blur:")),x/100.0f);tbrSet(IDC_TBR_BLUR_SWSCALER_LUMA,x);
- x=cfgGet(IDFF_mplayerBlurChroma);
+ x=cfgGet(IDFF_avcodecBlurChroma);
  strncatf(s, countof(s), _l(", %s%.2f"),_(IDC_CHB_BLUR_SWSCALER,_l("chroma blur:")),x/100.0f);tbrSet(IDC_TBR_BLUR_SWSCALER_CHROMA,x);
  setDlgItemText(m_hwnd,IDC_CHB_BLUR_SWSCALER,s);
 }
@@ -127,8 +127,8 @@ TblurPage::TblurPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff):TconfPage
    IDC_CHB_BLUR_SMOOTHLUMA,IDFF_blurIsSmoothLuma,NULL,
    IDC_CHB_BLUR_SMOOTHCHROMA,IDFF_blurIsSmoothChroma,NULL,
    IDC_CHB_BLUR_GRADUAL,IDFF_blurIsGradual,NULL,
-   IDC_CHB_BLUR_MPLAYER,IDFF_blurIsMplayerTNR,NULL,
-   IDC_CHB_BLUR_SWSCALER,IDFF_blurIsMplayer,NULL,
+   IDC_CHB_BLUR_MPLAYER,IDFF_blurIsAvcodecTNR,NULL,
+   IDC_CHB_BLUR_SWSCALER,IDFF_blurIsAvcodec,NULL,
    IDC_CHB_BLUR_DENOISE3D,IDFF_blurIsDenoise3d,&TblurPage::denoise3d2dlg,
    IDC_CHB_BLUR_DENOISE3DHQ,IDFF_denoise3Dhq,NULL,
    0,NULL,NULL
@@ -141,12 +141,12 @@ TblurPage::TblurPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff):TconfPage
    IDC_TBR_BLUR_SMOOTHLUMA,IDFF_smoothStrengthLuma,&TblurPage::smooth2dlg,
    IDC_TBR_BLUR_SMOOTHCHROMA,IDFF_smoothStrengthChroma,&TblurPage::smooth2dlg,
    IDC_TBR_BLUR_GRADUAL,IDFF_gradualStrength,&TblurPage::gradual2dlg,
-   IDC_TBR_BLUR_MPLAYER1,IDFF_mplayerTNR1,&TblurPage::mplayer2dlg,
-   IDC_TBR_BLUR_MPLAYER2,IDFF_mplayerTNR2,&TblurPage::mplayer2dlg,
-   IDC_TBR_BLUR_MPLAYER3,IDFF_mplayerTNR3,&TblurPage::mplayer2dlg,
-   IDC_TBR_BLUR_SWSCALER_RADIUS,IDFF_mplayerBlurRadius,&TblurPage::swscaler2dlg,
-   IDC_TBR_BLUR_SWSCALER_LUMA,IDFF_mplayerBlurLuma,&TblurPage::swscaler2dlg,
-   IDC_TBR_BLUR_SWSCALER_CHROMA,IDFF_mplayerBlurChroma,&TblurPage::swscaler2dlg,
+   IDC_TBR_BLUR_MPLAYER1,IDFF_avcodecTNR1,&TblurPage::avcodec2dlg,
+   IDC_TBR_BLUR_MPLAYER2,IDFF_avcodecTNR2,&TblurPage::avcodec2dlg,
+   IDC_TBR_BLUR_MPLAYER3,IDFF_avcodecTNR3,&TblurPage::avcodec2dlg,
+   IDC_TBR_BLUR_SWSCALER_RADIUS,IDFF_avcodecBlurRadius,&TblurPage::swscaler2dlg,
+   IDC_TBR_BLUR_SWSCALER_LUMA,IDFF_avcodecBlurLuma,&TblurPage::swscaler2dlg,
+   IDC_TBR_BLUR_SWSCALER_CHROMA,IDFF_avcodecBlurChroma,&TblurPage::swscaler2dlg,
    IDC_TBR_BLUR_DENOISE3D_LUMA,IDFF_denoise3Dluma,&TblurPage::denoise3d2dlg,
    IDC_TBR_BLUR_DENOISE3D_CHROMA,IDFF_denoise3Dchroma,&TblurPage::denoise3d2dlg,
    IDC_TBR_BLUR_DENOISE3D_TIME,IDFF_denoise3Dtime,&TblurPage::denoise3d2dlg,

@@ -171,7 +171,7 @@
 #define IDFF_ppIsCustom             103 //custom postprocessing settings are enabled
 #define IDFF_ppcustom               104 //custom postprocessing settings
 #define IDFF_currentq               105
-#define IDFF_deblockMplayerAccurate 123
+#define IDFF_deblockAvcodecAccurate 123
 #define IDFF_deblockStrength        110
 #define IDFF_levelFixLum            107
 //#define IDFF_levelFixChrom          108
@@ -298,8 +298,8 @@
 #define IDFF_asharpD               424
 #define IDFF_asharpB               425
 #define IDFF_asharpHQBF            426
-#define IDFF_mplayerSharpLuma      440
-#define IDFF_mplayerSharpChroma    441
+#define IDFF_avcodecSharpLuma      440
+#define IDFF_avcodecSharpChroma    441
 
 #define IDFF_filterWarpsharp       430
 #define IDFF_isWarpsharp           431
@@ -559,14 +559,14 @@
 #define IDFF_smoothStrengthChroma    909
 #define IDFF_blurIsGradual           924
 #define IDFF_gradualStrength         913
-#define IDFF_blurIsMplayerTNR        925
-#define IDFF_mplayerTNR1             915
-#define IDFF_mplayerTNR2             916
-#define IDFF_mplayerTNR3             917
-#define IDFF_blurIsMplayer           927
-#define IDFF_mplayerBlurRadius       928
-#define IDFF_mplayerBlurLuma         929
-#define IDFF_mplayerBlurChroma       930
+#define IDFF_blurIsAvcodecTNR        925
+#define IDFF_avcodecTNR1             915
+#define IDFF_avcodecTNR2             916
+#define IDFF_avcodecTNR3             917
+#define IDFF_blurIsAvcodec           927
+#define IDFF_avcodecBlurRadius       928
+#define IDFF_avcodecBlurLuma         929
+#define IDFF_avcodecBlurChroma       930
 #define IDFF_blurIsDenoise3d         931
 #define IDFF_denoise3Dluma           932
 #define IDFF_denoise3Dchroma         933

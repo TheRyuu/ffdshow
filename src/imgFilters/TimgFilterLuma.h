@@ -2,7 +2,7 @@
 #define _TIMGFILTERLUMA_H_
 
 #include "TimgFilter.h"
-#include "postproc/postprocess.h"
+#include "libpostproc/postprocess_internal.h"
 
 struct TpictPropSettings;
 DECLARE_FILTER(TimgFilterLuma,public,TimgFilter)
@@ -34,10 +34,10 @@ public:
  virtual HRESULT process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0);
 };
 
-struct Tlibmplayer;
+struct Tlibavcodec;
 DECLARE_FILTER(TimgFilterLevelFix,public,TimgFilter)
 private:
- Tlibmplayer *libmplayer;
+ Tlibavcodec *libavcodec;
  void *pp_ctx;PPMode pp_mode;
 protected:
  virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);

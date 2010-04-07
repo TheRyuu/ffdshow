@@ -119,7 +119,7 @@ void ff_fft_init_arm(FFTContext *s);
 /**
  * Do the permutation needed BEFORE calling ff_fft_calc().
  */
-static inline void ff_fft_permute(FFTContext *s, FFTComplex *z)
+static av_always_inline void ff_fft_permute(FFTContext *s, FFTComplex *z)
 {
     s->fft_permute(s, z);
 }
@@ -127,7 +127,7 @@ static inline void ff_fft_permute(FFTContext *s, FFTComplex *z)
  * Do a complex FFT with the parameters defined in ff_fft_init(). The
  * input data must be permuted before. No 1.0/sqrt(n) normalization is done.
  */
-static inline void ff_fft_calc(FFTContext *s, FFTComplex *z)
+static av_always_inline void ff_fft_calc(FFTContext *s, FFTComplex *z)
 {
     s->fft_calc(s, z);
 }
@@ -135,16 +135,16 @@ void ff_fft_end(FFTContext *s);
 
 /* MDCT computation */
 
-static inline void ff_imdct_calc(FFTContext *s, FFTSample *output, const FFTSample *input)
+static av_always_inline void ff_imdct_calc(FFTContext *s, FFTSample *output, const FFTSample *input)
 {
     s->imdct_calc(s, output, input);
 }
-static inline void ff_imdct_half(FFTContext *s, FFTSample *output, const FFTSample *input)
+static av_always_inline void ff_imdct_half(FFTContext *s, FFTSample *output, const FFTSample *input)
 {
     s->imdct_half(s, output, input);
 }
 
-static inline void ff_mdct_calc(FFTContext *s, FFTSample *output,
+static av_always_inline void ff_mdct_calc(FFTContext *s, FFTSample *output,
                                 const FFTSample *input)
 {
     s->mdct_calc(s, output, input);

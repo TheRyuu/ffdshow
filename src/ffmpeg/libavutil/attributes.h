@@ -36,7 +36,7 @@
 #if AV_GCC_VERSION_AT_LEAST(3,1)
 #    define av_always_inline __attribute__((always_inline)) inline
 #else
-#    define av_always_inline inline
+#    define av_always_inline __inline
 #endif
 #endif
 
@@ -59,8 +59,8 @@
 #ifndef av_const
 #if AV_GCC_VERSION_AT_LEAST(2,6)
 #    define av_const __attribute__((const))
-#else
-#    define av_const
+#else 
+#	 define av_const
 #endif
 #endif
 

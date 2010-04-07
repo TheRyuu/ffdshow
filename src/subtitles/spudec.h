@@ -1,15 +1,15 @@
 #ifndef _SPUDEC_H_
 #define _SPUDEC_H_
 
-#include "postproc/swscale.h"
+#include "libswscale/swscale.h"
 #include "Tfont.h"
 #include "interfaces.h"
 
-struct Tlibmplayer;
+struct Tlibavcodec;
 class Tspudec
 {
 private:
- Tlibmplayer *libmplayer;
+ Tlibavcodec *libavcodec;
  int spu_aamode;
  int spu_alignment;
  IffdshowBase *deci;

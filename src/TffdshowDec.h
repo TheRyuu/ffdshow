@@ -142,6 +142,9 @@ public:
 
  // CTransformFilter
  HRESULT NewSegment(REFERENCE_TIME tStart,REFERENCE_TIME tStop,double dRate);
+
+ 
+
 protected:
  struct TffdshowDec_char : interfaces<tchar_traits<char_t>::other_char_t>::IffdshowDec, CUnknown
   {

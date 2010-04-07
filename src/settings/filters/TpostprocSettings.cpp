@@ -18,7 +18,7 @@
 
 #include "stdafx.h"
 #include "TpostprocSettings.h"
-#include "postproc/postprocFilters.h"
+#include "libpostproc/postprocess_internal.h"
 #include "TimgFilterPostproc.h"
 #include "CpostProc.h"
 #include "TffdshowPageDec.h"
@@ -64,7 +64,7 @@ TpostprocSettings::TpostprocSettings(TintStrColl *Icoll,TfilterIDFFs *filters):T
      _l("ppIsCustom"),0,
    IDFF_ppcustom              ,&TpostprocSettings::custom                ,1,1,_l(""),1,
      _l("ppcustom"),0,
-   IDFF_deblockMplayerAccurate,&TpostprocSettings::deblockMplayerAccurate,0,0,_l(""),1,
+   IDFF_deblockAvcodecAccurate,&TpostprocSettings::deblockAvcodecAccurate,0,0,_l(""),1,
      _l("deblockMplayerAccurate"),0,
    IDFF_deblockStrength       ,&TpostprocSettings::deblockStrength       ,0,512,_l(""),1,
      _l("deblockStrength"),deblockStrengthDef,
@@ -100,18 +100,18 @@ void TpostprocSettings::createFilters(size_t filtersorder,Tfilters *filters,Tfil
     switch (method)
      {
       case 0:
-       queueFilter<TimgFilterPostprocMplayer>(filtersorder,filters,queue); break;
+       queueFilter<TimgFilterPostprocAvcodec>(filtersorder,filters,queue); break;
       case 1:
        queueFilter<TimgFilterPostprocNic>(filtersorder,filters,queue); break;
       case 2:
        if (nicFirst)
         {
          queueFilter<TimgFilterPostprocNic>(filtersorder,filters,queue);
-         queueFilter<TimgFilterPostprocMplayer>(filtersorder,filters,queue);
+         queueFilter<TimgFilterPostprocAvcodec>(filtersorder,filters,queue);
         }
        else
         {
-         queueFilter<TimgFilterPostprocMplayer>(filtersorder,filters,queue);
+         queueFilter<TimgFilterPostprocAvcodec>(filtersorder,filters,queue);
          queueFilter<TimgFilterPostprocNic>(filtersorder,filters,queue);
         }
        break;
@@ -133,7 +133,7 @@ const int* TpostprocSettings::getResets(unsigned int pageId)
   IDFF_postprocMethod,IDFF_postprocMethodNicFirst,
   IDFF_ppIsCustom,IDFF_ppcustom,
   IDFF_ppqual,IDFF_autoq,
-  IDFF_deblockMplayerAccurate,
+  IDFF_deblockAvcodecAccurate,
   IDFF_deblockStrength,
   IDFF_levelFixLum,/*IDFF_levelFixChrom,*/IDFF_fullYrange,
   IDFF_postprocNicXthresh,IDFF_postprocNicYthresh,
@@ -164,7 +164,7 @@ bool TpostprocSettings::getTip(unsigned int pageId,char_t *tipS,size_t len)
  strncatf(tipS, len, _l("processing strength: %i\n"),deblockStrength);
  switch (method)
   {
-   case 0:strncat_s(tipS, len, _l("mplayer"), _TRUNCATE);break;
+   case 0:strncat_s(tipS, len, _l("ffmpeg"), _TRUNCATE);break;
    case 1:strncat_s(tipS, len, _l("Nic's"), _TRUNCATE);break;
    case 2:strncat_s(tipS, len, nicFirst ? _l("Nic's + mplayer") : _l("mplayer + Nic's"), _TRUNCATE);break;
    case 4:strncat_s(tipS, len, _l("SPP"), _TRUNCATE);break;

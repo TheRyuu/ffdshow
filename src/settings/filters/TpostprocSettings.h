@@ -15,7 +15,7 @@ public:
  int qual;
  int autoq;
  int isCustom,custom;
- int deblockMplayerAccurate;
+ int deblockAvcodecAccurate;
  int deblockStrength;
  static const int deblockStrengthDef;
  int levelFixLum/*,levelFixChrom*/;

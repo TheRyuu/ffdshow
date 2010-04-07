@@ -3,15 +3,16 @@
 
 #include "ffImgfmt.h"
 
-struct Tlibmplayer;
+struct Tlibavcodec;
 struct SwsContext;
 struct Tswscale
 {
 private:
- Tlibmplayer *libmplayer;
+ Tlibavcodec *libavcodec;
  unsigned int dx,dy;
+ int sws_flags;
 public:
- Tswscale(Tlibmplayer *Ilibmplayer);
+ Tswscale(Tlibavcodec *Ilibavcodec);
  ~Tswscale();
  SwsContext *swsc;
  static bool getVersion(char *ver);
