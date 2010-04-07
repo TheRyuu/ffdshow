@@ -57,7 +57,6 @@ void TsubtitlePGS::updateTimestamps(void)
 
 TsubtitlePGS::~TsubtitlePGS()
 {
- //if (m_pCompositionObject) delete m_pCompositionObject;
  //ownimage is freed by TsubtitleLines
 }
 
@@ -88,8 +87,8 @@ void TsubtitlePGS::print(
    char_t rtString[32], rtString2[32];
    rt2Str(m_pWindow->m_rtStart, rtString);
    rt2Str(m_pWindow->m_rtStop, rtString2);
-   DPRINTF(_l("TsubtitlePGS::print Object [%d] %s (%d x %d) at (%d,%d) %s -> %s "), 
-    m_pCompositionObject->m_compositionNumber,rtString, m_pWindow->m_width, m_pWindow->m_height, 
+   DPRINTF(_l("TsubtitlePGS::print Object [%d] (%d x %d) at (%d,%d) %s -> %s "), 
+    m_pCompositionObject->m_compositionNumber, m_pWindow->m_width, m_pWindow->m_height, 
     m_pWindow->m_horizontal_position, m_pWindow->m_vertical_position,
     rtString, rtString2);
   #endif

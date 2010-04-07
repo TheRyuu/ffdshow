@@ -155,7 +155,7 @@ HRESULT TsubtitlePGSParser::parse(REFERENCE_TIME Istart, REFERENCE_TIME Istop, c
   // Seeking occurred, we need a presentation segment first
   if (m_pCurrentObject == NULL && m_nCurSegment!=PRESENTATION_SEG)
   {
-   if (m_data.size() < m_nSegSize +3)
+   if (m_data.size() < (unsigned int)m_nSegSize +3)
    {
     m_data.clear(); return S_OK;
    }
@@ -268,7 +268,7 @@ void TsubtitlePGSParser::parsePresentationSegment(Tbitdata &bitData, REFERENCE_T
  m_pCurrentObject->m_palette_id_ref = palette_id_ref;
  m_pCurrentObject->m_pVideoDescriptor = &m_VideoDescriptor;
 
- if (/*compositionDescriptor.bState == 2 ||*/ (compositionDescriptor.bState == 0 && nObjectNumber == 0)) // Clear screen
+ if (compositionDescriptor.bState == 0 && nObjectNumber == 0) // Clear screen
  {
   for (TcompositionObjects::iterator c=m_compositionObjects.begin();c!=m_compositionObjects.end();c++)
   {
@@ -289,7 +289,6 @@ void TsubtitlePGSParser::parsePresentationSegment(Tbitdata &bitData, REFERENCE_T
      #endif
     }
    }
-   //if ((*c) != m_pCurrentObject || (*c)->m_nWindows > 0) (*c)->m_bReady = true;
   }
  }
  
@@ -302,7 +301,6 @@ void TsubtitlePGSParser::parsePresentationSegment(Tbitdata &bitData, REFERENCE_T
 	  BYTE	bTemp;
    SHORT object_id_ref = bitData.readShort();
    SHORT window_id_ref	= bitData.readByte();
-   m_pCurrentObject->m_bCompositionObject[object_id_ref]=window_id_ref;
    #if DEBUG_PGS_TIMESTAMPS
    DPRINTF(_l("[%d] PCS Object[%d]:id %d window:%d"),m_pCurrentObject->m_compositionNumber, i, object_id_ref, window_id_ref);
    #endif
@@ -347,12 +345,8 @@ void TsubtitlePGSParser::parsePresentationSegment(Tbitdata &bitData, REFERENCE_T
       objectWindowFound = true; break;
      }
     }
-    /*if ((*c) != m_pCurrentObject && compositionDescriptor.bState == 0 && objectWindowFound && (*c)->m_Windows[i].m_rtStop == INVALID_TIME)
-     (*c)->m_Windows[i].m_rtStop = rtStart;
-    else*/
     // The object/window has not been found and it has no stop time so we end it now
-    if ((/*(objectWindowFound && compositionDescriptor.bState == 0) ||*/ (!objectWindowFound && compositionDescriptor.bState == 2)) 
-     && (*c)->m_Windows[i].m_rtStop == INVALID_TIME)
+    if (!objectWindowFound && compositionDescriptor.bState >= 0 && (*c)->m_Windows[i].m_rtStop == INVALID_TIME)
     {
      (*c)->m_Windows[i].m_rtStop = rtStart;
      #if DEBUG_PGS_TIMESTAMPS
@@ -376,15 +370,7 @@ void TsubtitlePGSParser::parsePresentationSegment(Tbitdata &bitData, REFERENCE_T
        (*c)->m_Windows[i].m_vertical_position, ((*c)->m_Windows[i].data.size() > 0)? _l("has data") : _l("no data"));
     }
     #endif
-
    }
-
-   /*bool isReady = true;
-   for (int i=0;i<MAX_WINDOWS;i++)
-   {
-    if ((*c)->m_Windows[i].m_rtStop == INVALID_TIME) {isReady = false; break;}
-   }
-   if (isReady) (*c)->m_bReady = true;*/
   }
  }
  

@@ -18,6 +18,7 @@ struct TsubtitlePGS;
 static inline void rt2Str(REFERENCE_TIME rTime, char_t *string)
 {
  if (!string) return;
+ if (rTime <= 0)  { tsprintf(string, _l("%d:%d:%d.%d"),0,0,0,0); return;}
  float rtimems=rTime/10000;
  float rtimes=rtimems/1000;
  int h=(int)rtimes/3600;
@@ -79,7 +80,6 @@ static inline void rt2Str(REFERENCE_TIME rTime, char_t *string)
     m_version_number = 0;
     m_palette_id_ref = 0; m_bGotPalette = false; memsetd (m_Colors, 0xFF000000, sizeof(DWORD)*256);
     m_data_length = 0; m_pVideoDescriptor = NULL; m_bEmptySubtitles = false;
-    memset(&m_bCompositionObject[0], 0, sizeof(BYTE)*64);
     for (int i=0;i<MAX_WINDOWS;i++) { m_Windows[i].reset(); }
     m_rtTime = INVALID_TIME;
     m_nState = 0;
@@ -102,7 +102,6 @@ static inline void rt2Str(REFERENCE_TIME rTime, char_t *string)
    TwindowDefinition m_Windows[MAX_WINDOWS];
    int      m_nWindows;
    int      m_nState;
-   BYTE m_bCompositionObject[64];
    TsubtitlePGS *m_pSubtitlePGS;
  };
 
