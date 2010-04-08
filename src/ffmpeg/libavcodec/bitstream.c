@@ -276,8 +276,11 @@ int init_vlc_sparse(VLC *vlc, int nb_bits, int nb_codes,
              const void *symbols, int symbols_wrap, int symbols_size,
              int flags)
 {
-    //VLCcode buf[nb_codes];
+    #if __STDC_VERSION__ >= 199901L
+    VLCcode buf[nb_codes];
+    #else
     VLCcode *buf = (VLCcode*)alloca(sizeof(VLCcode)*nb_codes);
+    #endif
     int i, j;
 
     vlc->bits = nb_bits;

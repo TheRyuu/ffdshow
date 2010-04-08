@@ -1,5 +1,6 @@
 #ifndef FFMPEG_CONFIG_H
 #define FFMPEG_CONFIG_H
+
 #ifdef __GNUC__
 	#define HAVE_INLINE_ASM 1
 	#define HAVE_MMX 1
@@ -8,15 +9,20 @@
 	#define HAVE_SSSE3 1
 	#define HAVE_AMD3DNOW 1
 	#define HAVE_AMD3DNOWEXT 1
+
 	#define ARCH_X86 1
+
 	#ifdef ARCH_X86_64
 		#define HAVE_FAST_64BIT 1
 		#define HAVE_CMOV 1
 		#define HAVE_FAST_CMOV 1
+		#define HAVE_STRUCT_TIMESPEC 1
 	#else
-		#define ARCH_X86_64 0
 		#define ARCH_X86_32 1
+		#define ARCH_X86_64 0
 	#endif
+
+	#define PTW32_STATIC_LIB 1
 	#define restrict restrict
 #else
 	#define HAVE_INLINE_ASM 0
@@ -32,21 +38,27 @@
 	#define HAVE_FAST_64BIT 0
 	#define HAVE_CMOV 0
 	#define HAVE_FAST_CMOV 0
- #define restrict
+
+	#define restrict
 	#define __asm__ __asm
 #endif
+
 // Use DPRINTF instead of av_log. To be used for debug purpose because DPRINTF will be always called (the
 // registry switch is not read)
 //#define USE_DPRINTF 1
-#define FFMPEG_LICENSE "LGPL version 2.1 or later"
+
+#define FFMPEG_LICENSE "GPL version 2.1 or later"
 #define CC_TYPE "gcc"
 #define CC_VERSION __VERSION__
+
 #define ASMALIGN(ZEROBITS) ".align 1 << " #ZEROBITS "\n\t"
+
 #define EXTERN_PREFIX "_"
 #define EXTERN_ASM _
+
 #define HAVE_ALTIVEC 0
-#define HAVE_BIGENDIAN 0
 #define HAVE_ALTIVEC_H 0
+#define HAVE_BIGENDIAN 0
 #define HAVE_BSWAP 1
 #define HAVE_EBP_AVAILABLE 1
 #define HAVE_EBX_AVAILABLE 1
@@ -62,12 +74,12 @@
 #define HAVE_YASM 1
 
 #ifdef __GNUC__
-  #define HAVE_ATTRIBUTE_PACKED 1
-  #define HAVE_ATTRIBUTE_MAY_ALIAS 1
+	#define HAVE_ATTRIBUTE_PACKED 1
+	#define HAVE_ATTRIBUTE_MAY_ALIAS 1
 #else
-  #define HAVE_ATTRIBUTE_PACKED 0
-  #define HAVE_ATTRIBUTE_MAY_ALIAS 0
-  #define EMULATE_FAST_INT
+	#define HAVE_ATTRIBUTE_PACKED 0
+	#define HAVE_ATTRIBUTE_MAY_ALIAS 0
+	#define EMULATE_FAST_INT
 #endif
 
 #define CONFIG_DWT 0
@@ -90,18 +102,17 @@
 #define CONFIG_POSTPROC 1
 #define CONFIG_RUNTIME_CPUDETECT 1
 
-/* Note : when adding a new codec,
-you have to :
-1/ Add a 
- #define CONFIG_<codec suffix>_<ENCODER|DECODER|PARSER> 
-depending on the type of codec you are adding
-2/ Add a 
- REGISTER_<ENCODER|DECODER|PARSER> (<codec suffix>, <codec suffix lowercase>);
- line to libavcodec/allcodecs.c
-3/ Define the codec into ffcodecs.h :
- CODEC_OP(CODEC_ID_<codec suffix>, <unique id>, "<codec description">)
+/* 
+Note: when adding a new codec, you have to:
+1)	Add a
+		#define CONFIG_<codec suffix>_<ENCODER|DECODER|PARSER>
+		depending on the type of codec you are adding
+2)	Add a
+		REGISTER_<ENCODER|DECODER|PARSER> (<codec suffix>, <codec suffix lowercase>);
+		line to libavcodec/allcodecs.c
+3)	Define the codec into ffcodecs.h :
+		CODEC_OP(CODEC_ID_<codec suffix>, <unique id>, "<codec description">)
 */
-
 
 #define CONFIG_AASC_DECODER 1
 #define CONFIG_AMV_DECODER 1
@@ -256,4 +267,5 @@ depending on the type of codec you are adding
 #define CONFIG_MPEGAUDIO_PARSER 1
 #define CONFIG_MPEG4VIDEO_PARSER 1
 #define CONFIG_MLP_PARSER 1
-#endif
+
+#endif /* FFMPEG_CONFIG_H */

@@ -183,7 +183,8 @@ typedef struct SwsContext {
     int flags;                    ///< Flags passed by the user to select scaler algorithm, optimizations, subsampling, etc...
     
     //SwsParams params; //Old FFDShow custom code
-void * yuvTable;            // pointer to the yuv->rgb table start so it can be freed()
+    
+    void * yuvTable;            // pointer to the yuv->rgb table start so it can be freed()
     uint8_t * table_rV[256];
     uint8_t * table_gU[256];
     int    table_gV[256];
@@ -415,8 +416,12 @@ const char *sws_format_name(enum PixelFormat format);
         || (x)==PIX_FMT_RGB32       \
         || (x)==PIX_FMT_RGB32_1     \
         || (x)==PIX_FMT_RGB24       \
-        || (x)==PIX_FMT_RGB565      \
-        || (x)==PIX_FMT_RGB555      \
+        || (x)==PIX_FMT_RGB565BE    \
+        || (x)==PIX_FMT_RGB565LE    \
+        || (x)==PIX_FMT_RGB555BE    \
+        || (x)==PIX_FMT_RGB555LE    \
+        || (x)==PIX_FMT_RGB444BE    \
+        || (x)==PIX_FMT_RGB444LE    \
         || (x)==PIX_FMT_RGB8        \
         || (x)==PIX_FMT_RGB4        \
         || (x)==PIX_FMT_RGB4_BYTE   \
@@ -427,8 +432,12 @@ const char *sws_format_name(enum PixelFormat format);
            (x)==PIX_FMT_BGR32       \
         || (x)==PIX_FMT_BGR32_1     \
         || (x)==PIX_FMT_BGR24       \
-        || (x)==PIX_FMT_BGR565      \
-        || (x)==PIX_FMT_BGR555      \
+        || (x)==PIX_FMT_BGR565BE    \
+        || (x)==PIX_FMT_BGR565LE    \
+        || (x)==PIX_FMT_BGR555BE    \
+        || (x)==PIX_FMT_BGR555LE    \
+        || (x)==PIX_FMT_BGR444BE    \
+        || (x)==PIX_FMT_BGR444LE    \
         || (x)==PIX_FMT_BGR8        \
         || (x)==PIX_FMT_BGR4        \
         || (x)==PIX_FMT_BGR4_BYTE   \
@@ -458,6 +467,7 @@ const char *sws_format_name(enum PixelFormat format);
         || (x)==PIX_FMT_RGB32_1     \
         || (x)==PIX_FMT_YUVA420P    \
     )
+#define usePal(x) (av_pix_fmt_descriptors[x].flags & PIX_FMT_PAL)
 
 extern const uint64_t ff_dither4[2];
 extern const uint64_t ff_dither8[2];

@@ -3599,13 +3599,14 @@ static void RENAME(postProcess)(const uint8_t src[], stride_t srcStride, uint8_t
         }*/
     }
 
-#if   HAVE_AMD3DNOW
-    if(c.cpuCaps & PP_CPU_CAPS_3DNOW)
+    /* ffdshow custom code */
+    if(HAVE_AMD3DNOW && (c.cpuCaps & PP_CPU_CAPS_3DNOW)) {
     	__asm__ volatile("femms");
-#elif HAVE_MMX
-    if(c.cpuCaps & PP_CPU_CAPS_MMX)
-    	__asm__ volatile("emms");
-#endif
+    } else {
+      if(HAVE_MMX && (c.cpuCaps & PP_CPU_CAPS_MMX)) {
+    	  __asm__ volatile("emms");
+    	}
+    }
 
 #ifdef DEBUG_BRIGHTNESS
     if(!isColor){

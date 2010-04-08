@@ -147,7 +147,6 @@ typedef struct SwsFilter{
     SwsVector *chrV;
 } SwsFilter;
 
-
 struct SwsContext;
 
 /**
