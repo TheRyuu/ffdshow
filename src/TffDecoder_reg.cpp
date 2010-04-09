@@ -768,7 +768,7 @@ const AMOVIESETUP_FILTER TffdshowDecVideoDXVA::filter=
  pins                                  // Pin details
 };
 
-const DWORD TffdshowDecAudio::defaultMerit=0x40000000-1; // One less than ac3filter
+const DWORD TffdshowDecAudio::defaultMerit=0xff800001; // a hack to be always the first
 const AMOVIESETUP_FILTER TffdshowDecAudio::filter=
 {
  &CLSID_FFDSHOWAUDIO,                  // Filter CLSID
