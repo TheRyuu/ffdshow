@@ -46,7 +46,6 @@ TimgFilterPostprocBase::~TimgFilterPostprocBase()
 
 bool TimgFilterPostprocBase::pp_codec(int CodecID)
 {
- return true;
   if(raw_codec(CodecID))
     return true;
     switch (CodecID) {
