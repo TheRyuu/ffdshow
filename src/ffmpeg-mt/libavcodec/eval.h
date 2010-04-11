@@ -28,6 +28,8 @@
 #ifndef AVCODEC_EVAL_H
 #define AVCODEC_EVAL_H
 
+typedef struct ff_expr_s AVExpr;
+
 /**
  * Parses and evaluates an expression.
  * Note, this is significantly slower than ff_parse_eval()
@@ -47,8 +49,6 @@ double ff_eval2(const char *s, const double *const_value, const char * const *co
                double (**func2)(void *, double, double), const char **func2_name,
                void *opaque, const char **error);
 
-typedef struct ff_expr_s AVEvalExpr;
-
 /**
  * Parses a expression.
  * @param s expression as a zero terminated string for example "1+2^3+5*5+sin(2/3)"
@@ -58,10 +58,10 @@ typedef struct ff_expr_s AVEvalExpr;
  * @param func1_name NULL terminated array of zero terminated strings of func1 identifers
  * @param func2_name NULL terminated array of zero terminated strings of func2 identifers
  * @param error pointer to a char* which is set to an error message if something goes wrong
- * @return AVEvalExpr which must be freed with ff_eval_free by the user when it is not needed anymore
+ * @return AVExpr which must be freed with ff_free_expr() by the user when it is not needed anymore
  *         NULL if anything went wrong
  */
-AVEvalExpr * ff_parse(const char *s, const char * const *const_name,
+AVExpr * ff_parse(const char *s, const char * const *const_name,
                double (**func1)(void *, double), const char **func1_name,
                double (**func2)(void *, double, double), const char **func2_name,
                const char **error);
@@ -71,8 +71,12 @@ AVEvalExpr * ff_parse(const char *s, const char * const *const_name,
  * @param opaque a pointer which will be passed to all functions from func1 and func2
  * @return the value of the expression
  */
-double ff_parse_eval(AVEvalExpr * e, const double *const_value, void *opaque);
-void ff_eval_free(AVEvalExpr * e);
+double ff_parse_eval(AVExpr * e, const double *const_value, void *opaque);
+
+/**
+ * Frees a parsed expression previously created with ff_parse().
+ */
+void ff_free_expr(AVExpr *e);
 
 /**
  * Parses the string in numstr and returns its value as a double. If
