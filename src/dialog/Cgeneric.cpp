@@ -44,7 +44,7 @@ void TgenericPage::cfg2dlg(void)
   {
    flags.push_back(std::make_tuple(_(IDC_LV_GENERIC,_l("Interlaced encoding")),IDFF_enc_interlacing,1,false));
    if (codecId!=CODEC_ID_SKAL)
-    flags.push_back(std::make_tuple(_(IDC_LV_GENERIC,_l("Top field first (for intelaced encoding only)")),IDFF_enc_interlacing_tff,1,false));
+    flags.push_back(std::make_tuple(_(IDC_LV_GENERIC,_l("Top field first (for interlaced encoding only)")),IDFF_enc_interlacing_tff,1,false));
   }
  if (sup_part(codecId)) flags.push_back(std::make_tuple(_(IDC_LV_GENERIC,_l("Data partitioning")),IDFF_enc_part,1,false));
  switch (codecId)
