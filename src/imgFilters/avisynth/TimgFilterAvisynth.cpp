@@ -472,6 +472,13 @@ void TimgFilterAvisynth::Tavisynth::done(void)
  if (buffers) delete[] buffers; buffers=0;
 }
 
+void TimgFilterAvisynth::Tavisynth::clearInput(void)
+{
+ for (int i = 0; i < numBuffers; i++)
+  buffers[i].input=0;
+ done();
+}
+
 void TimgFilterAvisynth::Tavisynth::init(const TavisynthSettings &oldcfg, Tinput* input,int *outcsp, TffPictBase& pict)
 {
  infoBuf[0]=0;
@@ -550,12 +557,13 @@ HRESULT TimgFilterAvisynth::Tavisynth::process(TimgFilterAvisynth *self,TfilterQ
  Tinput* input=self->input;
 
  if (sequenceStart)
-  passFirstThrough=true;
+  passFirstThrough=false;
 
  if (sequenceEnd)
   passLastThrough=true;
 
- if (passFirstThrough)
+// if (passFirstThrough)
+ if (sequenceStart)
   resetBuffers=true;
 
  if (restart)
@@ -1068,9 +1076,10 @@ TimgFilterAvisynth::~TimgFilterAvisynth()
 
 void TimgFilterAvisynth::done(void)
 {
- if (avisynth) delete avisynth; avisynth=0;
  if (input) delete input; input=0;
+ if (avisynth) avisynth->clearInput();
  if (outFmtInput) delete outFmtInput; outFmtInput=0;
+ if (avisynth) delete avisynth; avisynth=0;
 }
 
 void TimgFilterAvisynth::onSizeChange(void)

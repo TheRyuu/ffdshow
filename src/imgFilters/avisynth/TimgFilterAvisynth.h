@@ -124,7 +124,8 @@ private:
   public:
    Tavisynth(): 
     restart(true),
-    passFirstThrough(true),
+    passFirstThrough(false),
+    passLastThrough(false),
     buffers(NULL),
     frameScaleDen(1),
     frameScaleNum(1)
@@ -134,6 +135,7 @@ private:
 
    void skipAhead(bool passFirstThrough, bool clearLastOutStopTime);
    void done(void);
+   void clearInput(void);
    bool createClip(const TavisynthSettings *cfg,Tinput *input,TffPictBase& pict);
    void setOutFmt(const TavisynthSettings *cfg,Tinput *input,TffPictBase &pict);
    void init(const TavisynthSettings &oldcfg,Tinput *input,int *outcsp,TffPictBase &pict);
