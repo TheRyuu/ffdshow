@@ -1,6 +1,4 @@
 /*
- * simple arithmetic expression evaluator
- *
  * Copyright (c) 2002-2006 Michael Niedermayer <michaelni@gmx.at>
  * Copyright (c) 2006 Oded Shimon <ods15@ods15.dyndns.org>
  *
@@ -28,17 +26,7 @@
  * see http://joe.hotchkiss.com/programming/eval/eval.html
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
-
-#ifndef __GNUC__
-#include <malloc.h>
-#endif
-
-#include "libavutil/mathematics.h"
-#include "avcodec.h"
+#include "libavutil/avutil.h"
 #include "eval.h"
 
 typedef struct Parser{
@@ -46,10 +34,10 @@ typedef struct Parser{
     char *s;
     const double *const_value;
     const char * const *const_name;          // NULL terminated
-    double (**func1)(void *, double a); // NULL terminated
-    const char **func1_name;          // NULL terminated
-    double (**func2)(void *, double a, double b); // NULL terminated
-    const char **func2_name;          // NULL terminated
+    double (* const *func1)(void *, double a);           // NULL terminated
+    const char * const *func1_name;          // NULL terminated
+    double (* const *func2)(void *, double a, double b); // NULL terminated
+    const char * const *func2_name;          // NULL terminated
     void *opaque;
     const char **error;
 #define VARS 10
@@ -123,7 +111,7 @@ static int strmatch(const char *s, const char *prefix){
     return 1;
 }
 
-struct ff_expr_s {
+struct AVExpr {
     enum {
         e_value, e_const, e_func0, e_func1, e_func2,
         e_squish, e_gauss, e_ld,
@@ -138,7 +126,7 @@ struct ff_expr_s {
         double (*func1)(void *, double);
         double (*func2)(void *, double, double);
     } a;
-    AVExpr *param[2];
+    struct AVExpr *param[2];
 };
 
 static double eval_expr(Parser * p, AVExpr * e) {
@@ -385,9 +373,9 @@ static int verify_expr(AVExpr * e) {
     }
 }
 
-AVExpr * ff_parse(const char *s, const char * const *const_name,
-               double (**func1)(void *, double), const char **func1_name,
-               double (**func2)(void *, double, double), const char **func2_name,
+AVExpr *ff_parse_expr(const char *s, const char * const *const_name,
+               double (* const *func1)(void *, double), const char * const *func1_name,
+               double (* const *func2)(void *, double, double), const char * const *func2_name,
                const char **error){
     Parser p;
     AVExpr *e = NULL;
@@ -420,7 +408,7 @@ end:
     return e;
 }
 
-double ff_parse_eval(AVExpr * e, const double *const_value, void *opaque) {
+double ff_eval_expr(AVExpr * e, const double *const_value, void *opaque) {
     Parser p;
 
     p.const_value= const_value;
@@ -428,14 +416,14 @@ double ff_parse_eval(AVExpr * e, const double *const_value, void *opaque) {
     return eval_expr(&p, e);
 }
 
-double ff_eval2(const char *s, const double *const_value, const char * const *const_name,
-               double (**func1)(void *, double), const char **func1_name,
-               double (**func2)(void *, double, double), const char **func2_name,
+double ff_parse_and_eval_expr(const char *s, const double *const_value, const char * const *const_name,
+               double (* const *func1)(void *, double), const char * const *func1_name,
+               double (* const *func2)(void *, double, double), const char * const *func2_name,
                void *opaque, const char **error){
-    AVExpr * e = ff_parse(s, const_name, func1, func1_name, func2, func2_name, error);
+    AVExpr * e = ff_parse_expr(s, const_name, func1, func1_name, func2, func2_name, error);
     double d;
     if (!e) return NAN;
-    d = ff_parse_eval(e, const_value, opaque);
+    d = ff_eval_expr(e, const_value, opaque);
     ff_free_expr(e);
     return d;
 }

@@ -579,6 +579,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavcodec\dcadsp.c"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\dca_parser.c"
 				>
 			</File>
@@ -1361,6 +1365,10 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\dcadata.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\dcadsp.h"
 				>
 			</File>
 			<File
