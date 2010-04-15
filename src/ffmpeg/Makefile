@@ -290,9 +290,9 @@ include ../makefile_c.inc
 
 clean:
 	rm -f *.o *.d $(LAVC_DIR)/*.o $(LAVC_DIR)/*.d $(LAVC_DIR)/x86/*.o $(LAVC_DIR)/x86/*.d \
-    $(LAVC_DIR)/amr_float/*.o $(LAVC_DIR)/amr_float/*.d $(LAVU_DIR)/*.o $(LAVU_DIR)/*.d \
-	$(LAVS_DIR)/*.o $(LAVS_DIR)/*.d $(LAVP_DIR)/*.o $(LAVP_DIR)/*.d \
-    $(ZLIB_DIR)/*.o $(ZLIB_DIR)/*.d $(SLIB)
+	$(LAVC_DIR)/amr_float/*.o $(LAVC_DIR)/amr_float/*.d $(LAVU_DIR)/*.o $(LAVU_DIR)/*.d \
+	$(LAVS_DIR)/*.o $(LAVS_DIR)/*.d $(LAVS_DIR)/x86/*.o $(LAVS_DIR)/x86/*.d \
+	$(LAVP_DIR)/*.o $(LAVP_DIR)/*.d $(ZLIB_DIR)/*.o $(ZLIB_DIR)/*.d $(SLIB)
 
 #
 # include dependency files if they exist
