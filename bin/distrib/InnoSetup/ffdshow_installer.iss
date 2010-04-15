@@ -2,7 +2,7 @@
 
 #define dummy Exec("update_version.bat","","",1,SW_HIDE)
 
-#include "..\..\..\src\svn_version.h"
+#include "languages\..\..\..\..\src\svn_version.h"
 
 ; Build revision and date
 #define tryout_revision           = SVN_REVISION
