@@ -132,7 +132,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Registering output..."
-				CommandLine=""
+				CommandLine="bin/register.bat"
 			/>
 		</Configuration>
 		<Configuration
@@ -367,7 +367,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Registering output..."
-				CommandLine=""
+				CommandLine="bin/register.bat"
 			/>
 		</Configuration>
 		<Configuration
