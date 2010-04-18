@@ -130,13 +130,29 @@ void TspuImage::TscalerPoint::scale(const unsigned char *srci,const unsigned cha
      int unscaled_y=y*0x100/scaley;
      stride_t strides=srcStride*unscaled_y;
      stride_t scaled_strides=dstStride*y;
-     for (int x=0;x<dstdx;x++)
+     if ((csp & FF_CSPS_MASK) ==FF_CSP_420P)
+     {
+      for (int x=0;x<dstdx;x++)
       {
        int unscaled_x=x*0x100/scalex;
        dsti[scaled_strides+x]=srci[strides+unscaled_x];
        dsta[scaled_strides+x]=srca[strides+unscaled_x];
       }
-    }
+     }
+     else //RGB32
+     {
+      uint32_t *dstiLn32 = (uint32_t*)&dsti[scaled_strides];
+      uint32_t *dstaLn32 = (uint32_t*)&dsta[scaled_strides];
+      uint32_t *srci32 = (uint32_t*)&srci[strides];
+      uint32_t *srca32 = (uint32_t*)&srca[strides];
+      for (int x=0;x<dstdx;x++)
+      {
+       int unscaled_x=x*0x100/scalex;
+       dstiLn32[x]=srci32[unscaled_x];
+       dstaLn32[x]=srca32[unscaled_x];
+      }
+     }
+   }
   }
 }
 
@@ -207,6 +223,7 @@ void TspuImage::TscalerApprox::scale(const unsigned char *srci,const unsigned ch
         g+=tmp*(((*srci32)>>8)&0xFF);
         b+=tmp*(((*srci32))&0xFF);
        }
+      if (cnt == 0) continue;
       *dstiLn32=(alpha?((r/alpha)<<16)|((g/alpha)<<8)|(b/alpha):0);
      alpha=alpha/cnt;
      *dstaLn32=(cnt?((alpha<<16)|(alpha<<8)|(alpha)):0);
@@ -280,7 +297,7 @@ void TspuImage::TscalerFull::scale(const unsigned char *srci,const unsigned char
      ? unscaled_y_bottom - floor(unscaled_y_bottom)
      : 0.0;
    unsigned char *dstiLn=dsti,*dstaLn=dsta;
-   for (int x = 0; x < dstdx; ++x,dstiLn+=cspInfo->Bpp,dstaLn+=cspInfo->Bpp)
+   for (int x = 0; x < dstdx; ++x)
     {
      const double unscaled_x = x * inv_scalex;
      const double unscaled_x_right = unscaled_x + inv_scalex;
@@ -296,7 +313,7 @@ void TspuImage::TscalerFull::scale(const unsigned char *srci,const unsigned char
      double alpha = 0.0;
      double tmp;
      uint32_t rgb = 0;
-     uint32_t r=0,g=0,b=0;
+     double r=0.0,g=0.0,b=0.0;
      stride_t base;
      /* Now use these informations to compute a good alpha,
         and lightness.  The sum is on each of the 9
@@ -512,15 +529,15 @@ void TspuImage::TscalerFull::scale(const unsigned char *srci,const unsigned char
      {
       uint32_t *dstiLn32 = (uint32_t*)dstiLn;
       uint32_t *dstaLn32 = (uint32_t*)dstaLn;
-      uint32_t alpha32 = (uint32_t)alpha;
-      *dstiLn32 = (alpha > 0 ? ((r/alpha32)<<16)|((g/alpha32)<<8)|(b/alpha32) : 0);
+      //uint32_t alpha32 = (uint32_t)alpha;
+      dstiLn32[x] = (alpha > 0 ? (((uint32_t)(r/alpha))<<16)|(((uint32_t)(g/alpha))<<8)|(((uint32_t)(b/alpha))) : 0);
       uint32_t alpha2 = (uint32_t)(alpha * scalex * scaley / 0x10000);
-      *dstaLn32 = ((alpha2<<16)|(alpha2<<8)|(alpha2));
+      dstaLn32[x] = ((alpha2<<16)|(alpha2<<8)|(alpha2));
      }
      else
      {
-      *dstiLn = (unsigned char)(alpha > 0 ? color / alpha : 0);
-      *dstaLn = (unsigned char)(alpha * scalex * scaley / 0x10000);
+      dstiLn[x] = (unsigned char)(alpha > 0 ? color / alpha : 0);
+      dstaLn[x] = (unsigned char)(alpha * scalex * scaley / 0x10000);
      }
     }
   }
@@ -636,7 +653,7 @@ TspuImage::TscalerSw::TscalerSw(const TprintPrefs &prefs,int srcdx,int srcdy,int
  SwsParams params;Tlibavcodec::swsInitParams(&params,SWS_GAUSS,Tconfig::sws_cpu_flags);
  ctx=libavcodec->sws_getContext(srcdx,srcdy,avcodeccsp,dstdx,dstdy,avcodeccsp,swsflags,&params,&filter,NULL,NULL);
  alphactx=libavcodec->sws_getContext(srcdx,srcdy,avcodeccsp,dstdx,dstdy,avcodeccsp,swsflags,&params,&filter,NULL,NULL);
- convert = new Tconvert(prefs.deci,dstdx,dstdy);
+ //convert = new Tconvert(prefs.deci,dstdx,dstdy);
 }
 TspuImage::TscalerSw::~TscalerSw()
 {
@@ -644,7 +661,7 @@ TspuImage::TscalerSw::~TscalerSw()
  if (ctx) libavcodec->sws_freeContext(ctx);
  if (alphactx) libavcodec->sws_freeContext(alphactx);
  libavcodec->Release();
- if (convert) delete convert;
+ //if (convert) delete convert;
 }
 void TspuImage::TscalerSw::scale(const unsigned char *srci,const unsigned char *srca,stride_t srcStride,unsigned char *dsti,unsigned char *dsta,stride_t dstStride)
 {
@@ -659,7 +676,7 @@ void TspuImage::TscalerSw::scale(const unsigned char *srci,const unsigned char *
    unsigned char *dsti0[4] = {dsti, NULL, NULL, NULL};
    unsigned char *dsta0[4] = {dsta, NULL, NULL, NULL};
    libavcodec->sws_scale_ordered(ctx,srci0,srcStride0,0,srcdy,dsti0,dstStride0);
-   //TODO : libswscale now supports alpha scaling, this step is not necessary in RGB mode
+   //TODO : libswscale now supports alpha scaling for RGB32, this step is not necessary in RGB mode
    libavcodec->sws_scale_ordered(ctx,srca0,srcStride0,0,srcdy,dsta0,dstStride0);
   }
  
@@ -712,7 +729,6 @@ template<class _mm> void TspuImageSimd<_mm>::ownprint(
       unsigned int sizeDx=prefs.sizeDx?prefs.sizeDx:prefs.dx;
       unsigned char *dst=Idst[i]+rect[i].top*Istride[i]+rect[i].left;
       const unsigned char *c=plane[i].c,*r=plane[i].r;
-      
       for (int y=rect[i].top;y<rect[i].bottom;y++,dst+=Istride[i],c+=plane[i].stride,r+=plane[i].stride) 
       {
         int x=0,dx=rect[i].Width();
@@ -740,6 +756,8 @@ template<class _mm> void TspuImageSimd<_mm>::ownprint(
       }
      } // End of YUV planes
     } else {
+        typename _mm::__m r8msk=_mm::set1_pi64(0xFFFF000000000000); // Alpha mask
+        typename _mm::__m invr8msk=_mm::set1_pi64(0x000000FF00FF00FF); // Alpha mask
         // RGB32
         for (int i=0;i<(int)cspInfo->numPlanes;i++)
         {
@@ -754,30 +772,61 @@ template<class _mm> void TspuImageSimd<_mm>::ownprint(
              int x=0, dx=rect[i].Width();
              if (rect[i].left+dx > (int)sizeDx)
                  dx = (sizeDx - rect[i].left);
-             int endx = dx -_mm::size/2 + 1;
-             for (; x < dx ; x ++) {
-                 /* It would be better to use the alpha composant of cLn instead of using the r plane which is useless
-                  but the background becomes white too (?) */
-                 //int alpha=(int)((*(cLn+x))>>24);
+             int endx = dx -_mm::size/8 + 1;
+             if (0)
+             /* Register size is 128 bits or 16 bytes = _mm::size
+                which can store 2 x 64 bits. each ARGB will take 64 bits in unpacked state so _mm::size/8 */
+             for (; x < endx ; x+=_mm::size/8) {
+                 // load2 gives : A1R1G1B1, A2R2G2B2, 0000, 0000
+                 // then unpacklo_pi8 gives :
+                 //c8a = 0A1 0R1 0G1 0B1, 0A2 0R2 0G2 0B2
+                 typename _mm::__m c8a=_mm::unpacklo_pi8(_mm::load2(cLn+x), m0);
+                 //c8 = 00 0R1 0G1 0B1, 00 0R2 0G2 0B2
+                 typename _mm::__m c8=_mm::and_si64(c8a, invr8msk);
+                 //p8 = 00  0R1 0G1 0B1, 00  0R2 0G2 0B2
+                 typename _mm::__m p8=_mm::and_si64(_mm::unpacklo_pi8(_mm::load2(dstLn+x), m0),invr8msk);
 
-                 int alpha=(int)((*(rLn+x))&0xFF);
-                 int invalpha=255-alpha;
-                 typename _mm::__m p8=_mm::unpacklo_pi8(_mm::load2(dstLn+x),m0);
-                 typename _mm::__m c8=_mm::unpacklo_pi8(_mm::load2(cLn+x), m0);
-                 typename _mm::__m strength64=_mm::set1_pi16(short(alpha));
-                 typename _mm::__m invstrength64=_mm::set1_pi16(short(invalpha));
-                 //typename _mm::__m mask=_mm::cmpgt_pi16(p8,c8); // Not needed : the destination buffer is empty
-                 
-                 // p8 : current destination value, c8 : color value to blend, r8 : alpha value to blend
-                 typename _mm::__m result=  _mm::srli_pi16(
+                 /* We don't use this method : libswscale with alpha channel support (PIX_FMT_RGB32 = ARGB) does not work correctly
+                 //r8_tmp = (0A1 00 00 00, 0A2 00 00 00) >> 16 = 00 0A1 00 00, 00 0A2 00 00
+                 //typename _mm::__m r8_tmp=_mm::srli_si64(_mm::and_si64(c8a, r8msk),16);
+                 // r8 = 00 0A1 0A1 0A1, 00 0A2 0A2 0A2
+                 typename _mm::__m r8=_mm::add_pi16(
+                                       _mm::add_pi16(r8_tmp,
+                                         _mm::srli_si64(r8_tmp, 16)),
+                                       _mm::srli_si64(r8_tmp, 32));*/
+
+                 // Tha alpha channel is stored as followed : 00 0A1 0A1 0A1, 00 0A2 0A2 0A2
+                 typename _mm::__m r8=_mm::unpacklo_pi8(_mm::load2(rLn+x), m0);
+
+                 // r8inv = 00 0(255-A1) 0(255-A1) 0(255-A1), 00 0(255-A2) 0(255-A2) 0(255-A2)
+                 typename _mm::__m r8inv=_mm::sub_pi16(invr8msk, r8);
+
+                 typename _mm::__m result=  _mm::add_pi16(
+                  _mm::srli_pi16(
                      _mm::add_pi16(
                       _mm::add_pi16(
-                       _mm::mullo_pi16(invstrength64,p8),
-                        _mm::mullo_pi16(strength64,c8)),
+                       _mm::mullo_pi16(r8inv,p8),
+                        _mm::mullo_pi16(r8,c8)),
                         m255),
-                        8); // foreach r,g,b : ( dstcolor*(255-alpha) + blendcolor*alpha + 255 )/255
+                        8),
+                        r8msk); // foreach r,g,b : ( dstcolor*(255-alpha) + blendcolor*alpha + 255 )/255
                  _mm::store2(dstLn + x, _mm::packs_pu16(result, m0));
              }
+             for (; x < dx ; x ++) {
+              //int32_t a=cLn[x]>>24;
+              int32_t a=rLn[x]&0xFF;
+              int32_t r1=(cLn[x]>>16)&0xFF;
+              int32_t g1=(cLn[x]>>8)&0xFF;
+              int32_t b1=cLn[x]&0xFF;
+              int32_t r2=(dstLn[x]>>16)&0xFF;
+              int32_t g2=(dstLn[x]>>8)&0xFF;
+              int32_t b2=dstLn[x]&0xFF;
+              int32_t re=(r2*(255-a)+r1*a)/255;
+              int32_t ge=(g2*(255-a)+g1*a)/255;
+              int32_t be=(b2*(255-a)+b1*a)/255;
+              dstLn[x]=(re<<16)+(ge<<8)+be;
+             }
+
          }
         }
     }

@@ -379,83 +379,88 @@ void TsubtitleDVD::drawPixel(const CPoint &pt,const YUVcolorA &color,CRect &rect
     } else {
         uint32_t *c = (uint32_t *)&plane[0].c[pty * plane[0].stride];
         uint32_t *r = (uint32_t *)&plane[0].r[pty * plane[0].stride];
-        c[ptx] = (color.A<<24)|color.m_rgb;
+        c[ptx] = /*(color.A<<24)|*/color.m_rgb;
         r[ptx] = (color.A<<16)|(color.A<<8)|(color.A);///*(0x00404040) - */color.m_aaa64;
     }
 }
 
 template<class _mm> void TsubtitleDVD::drawPixelSimd(const CPoint &pt,const YUVcolorA &color, int length, CRect &rectReal,TspuPlane plane[3]) const
 {
-    int ptx=pt.x,pty=pt.y;
-    if (color.A != 0) {
-        if (ptx<rectReal.left) rectReal.left=ptx;
-        if (ptx>rectReal.right) rectReal.right=ptx;
-        if (ptx+length<rectReal.left) rectReal.left=ptx+length;
-        if (ptx+length>rectReal.right) rectReal.right=ptx+length;
-    }
+ // Draw input color on (length) pixels on the same line starting at pt(x,y)
+ int ptx=pt.x,pty=pt.y;
+ if (color.A != 0) {
+     if (ptx<rectReal.left) rectReal.left=ptx;
+     if (ptx>rectReal.right) rectReal.right=ptx;
+     if (ptx+length<rectReal.left) rectReal.left=ptx+length;
+     if (ptx+length>rectReal.right) rectReal.right=ptx+length;
+ }
+ 
+ if (csp == FF_CSP_420P) 
+ {
+  typename _mm::__m colorY=_mm::set1_pi8(uint8_t(color.Y));
+  typename _mm::__m colorU=_mm::set1_pi8(uint8_t(color.U));
+  typename _mm::__m colorV=_mm::set1_pi8(uint8_t(color.V));
+  typename _mm::__m colorA=_mm::set1_pi8(uint8_t(color.A));
+  int length0=length;
+  int cnt=length-_mm::size/2+1;
 
-    
-    if (csp == FF_CSP_420P) 
-    {
-     typename _mm::__m colorY=_mm::set1_pi8(uint8_t(color.Y));
-     typename _mm::__m colorU=_mm::set1_pi8(uint8_t(color.U));
-     typename _mm::__m colorV=_mm::set1_pi8(uint8_t(color.V));
-     typename _mm::__m colorA=_mm::set1_pi8(uint8_t(color.A));
-     int length0=length;
-     int cnt=length-_mm::size/2+1;
+  for (;cnt>0;cnt-=_mm::size/2,length-=_mm::size/2,ptx+=_mm::size/2)
+  {
+       _mm::store2(plane[0].c+pty*plane[0].stride+ptx, colorY);
+       _mm::store2(plane[0].r+pty*plane[0].stride+ptx, colorA);
+  }
+  for (;length>0;length--,ptx++)
+  {
+   plane[0].c[pty*plane[0].stride+ptx] = (uint8_t)color.Y;
+   plane[0].r[pty*plane[0].stride+ptx] = (uint8_t)color.A;
+  }
 
-     for (;cnt>0;cnt-=_mm::size/2,length-=_mm::size/2,ptx+=_mm::size/2)
-     {
-          _mm::store2(plane[0].c+pty*plane[0].stride+ptx, colorY);
-          _mm::store2(plane[0].r+pty*plane[0].stride+ptx, colorA);
-     }
-     for (;length>0;length--,ptx++)
-     {
-      plane[0].c[pty*plane[0].stride+ptx] = (uint8_t)color.Y;
-      plane[0].r[pty*plane[0].stride+ptx] = (uint8_t)color.A;
-     }
+  if (pty&1) {_mm::empty();return;}
 
-     if (pty&1) {_mm::empty();return;}
+  // Reset values for next planes
+  length=length0; ptx=pt.x;
 
-     // Reset values for next planes
-     length=length0; ptx=pt.x;
+  ptx /= 2;pty /= 2; length /= 2;
+  cnt=length-_mm::size/2+1;
+  for (;cnt>0;cnt-=_mm::size/2,length-=_mm::size/2,ptx+=_mm::size/2)
+  {
+       _mm::store2(plane[1].c+pty*plane[1].stride+ptx, colorV);
+       _mm::store2(plane[1].r+pty*plane[1].stride+ptx, colorA);
+       _mm::store2(plane[2].c+pty*plane[2].stride+ptx, colorU);
+       _mm::store2(plane[2].r+pty*plane[2].stride+ptx, colorA);
+  }
+  for (;length>0;length--,ptx++)
+  {
+   plane[1].c[pty*plane[1].stride+ptx] = (uint8_t)color.V;
+   plane[1].r[pty*plane[1].stride+ptx] = (uint8_t)color.A;
+   plane[2].c[pty*plane[2].stride+ptx] = (uint8_t)color.U;
+   plane[2].r[pty*plane[2].stride+ptx] = (uint8_t)color.A;
+  }
+ }
+ else
+ {
+  // The following gives ARGB,ARGB,ARGB,ARGB on the 128 bits register
+  //typename _mm::__m colorRGB=_mm::set_pi32(((color.A<<24)|color.m_rgb),((color.A<<24)|color.m_rgb));
+  // The following gives 0RGB,0RGB,0RGB,0RGB on the 128 bits register (libswscale problem with alpha scaling)
+  typename _mm::__m colorRGB=_mm::set_pi32(color.m_rgb,color.m_rgb);
+  typename _mm::__m alpha=_mm::set_pi32(((color.A<<16)|(color.A<<8)|color.A),((color.A<<16)|(color.A<<8)|color.A));
+  /* We write 128 by 128 bits (=_mm::size=16 bytes) which represents 4 pixels at a time in RGB32
+     so we can write cnt times =  using SSE instructions */
+  int cnt=length-_mm::size/4+1;
+  
+  for (;cnt>0;cnt-=_mm::size/4,length-=_mm::size/4,ptx+=_mm::size/4)
+  {
+   _mm::storeU(plane[0].c+pty*plane[0].stride+ptx*4, colorRGB);
+   _mm::storeU(plane[0].r+pty*plane[0].stride+ptx*4, alpha);
+  }
 
-     ptx /= 2;pty /= 2; length /= 2;
-     cnt=length-_mm::size/2+1;
-     for (;cnt>0;cnt-=_mm::size/2,length-=_mm::size/2,ptx+=_mm::size/2)
-     {
-          _mm::store2(plane[1].c+pty*plane[1].stride+ptx, colorV);
-          _mm::store2(plane[1].r+pty*plane[1].stride+ptx, colorA);
-          _mm::store2(plane[2].c+pty*plane[2].stride+ptx, colorU);
-          _mm::store2(plane[2].r+pty*plane[2].stride+ptx, colorA);
-     }
-     for (;length>0;length--,ptx++)
-     {
-      plane[1].c[pty*plane[1].stride+ptx] = (uint8_t)color.V;
-      plane[1].r[pty*plane[1].stride+ptx] = (uint8_t)color.A;
-      plane[2].c[pty*plane[2].stride+ptx] = (uint8_t)color.U;
-      plane[2].r[pty*plane[2].stride+ptx] = (uint8_t)color.A;
-     }
-    }
-    else
-    {
-     typename _mm::__m colorRGB=_mm::set_pi32(((color.A<<24)|color.m_rgb),((color.A<<24)|color.m_rgb));
-     typename _mm::__m alpha=_mm::set_pi32(((color.A<<16)|(color.A<<8)|color.A),((color.A<<16)|(color.A<<8)|color.A));
-     int cnt=length-_mm::size/8+1;
-     
-     for (;cnt>0;cnt-=_mm::size/8,length-=_mm::size/8,ptx+=_mm::size/8)
-     {
-      _mm::store2(plane[0].c+pty*plane[0].stride+ptx*4, colorRGB);
-      _mm::store2(plane[0].r+pty*plane[0].stride+ptx*4, alpha);
-     }
-
-     for (;length>0;length--,ptx++)
-     {
-      *(uint32_t*)(plane[0].c+pty*plane[0].stride+ptx*4) = color.m_rgb;
-      *(uint32_t*)(plane[0].r+pty*plane[0].stride+ptx*4) = (color.A<<16)|(color.A<<8)|color.A;
-     }
-    }
-    _mm::empty();
+  for (;length>0;length--,ptx++)
+  {
+   *(uint32_t*)(plane[0].c+pty*plane[0].stride+ptx*4) = color.m_rgb;//(color.A<<24|color.m_rgb);
+   *(uint32_t*)(plane[0].r+pty*plane[0].stride+ptx*4) = (color.A<<16)|(color.A<<8)|color.A;
+  }
+ }
+ _mm::empty();
 }
 
 
@@ -483,25 +488,25 @@ void TsubtitleDVD::drawPixels(CPoint pt,int len,const YUVcolorA &c,const CRect &
    if (y<rectReal.top) rectReal.top=y;
    if (y>rectReal.bottom) rectReal.bottom=y;
   }
- if (Tconfig::cpu_flags&FF_CPU_SSE2)
+ /*if (Tconfig::cpu_flags&FF_CPU_SSE2)
   drawPixelSimd<Tsse2>(CPoint(pt.x - rc.left, y),c,len,rectReal,plane);
  else
   drawPixelSimd<Tmmx>(CPoint(pt.x - rc.left, y),c,len,rectReal,plane);
-  pt.x+=len;
+  pt.x+=len;*/
 
- /*while (len-->0)
+ while (len-->0)
   {
    drawPixel(CPoint(pt.x - rc.left, y),c,rectReal,plane);
    pt.x++;
-  }*/
+  }
 }
 
 TspuImage* TsubtitleDVD::createNewImage(const TspuPlane src[3],const CRect &rcclip,CRect rectReal,const TprintPrefs &prefs)
 {
  TspuImage *image = NULL;
  lines.clear();
- rectReal.top++;
- rectReal.bottom++;
+ //rectReal.top++;
+ //rectReal.bottom++;
  //rectReal.right++;
  if (Tconfig::cpu_flags&FF_CPU_SSE2)
   image=new TspuImageSimd<Tsse2>(src,rcclip,rectReal,parent->rectOrig,prefs, prefs.csp);

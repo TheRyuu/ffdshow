@@ -90,7 +90,7 @@ protected:
   private:
    SwsFilter filter;
    SwsContext *ctx, *alphactx;
-   Tconvert *convert;
+   //Tconvert *convert;
    Tlibavcodec *libavcodec;
    TscalerApprox approx;
   public:

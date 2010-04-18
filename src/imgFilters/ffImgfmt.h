@@ -119,7 +119,7 @@ static __inline int csp_lavc2ffdshow(enum PixelFormat pix_fmt)
    case PIX_FMT_UYVY422 :return FF_CSP_UYVY;
    case PIX_FMT_RGB24   :return FF_CSP_RGB24;
    case PIX_FMT_BGR24   :return FF_CSP_BGR24;
-   case PIX_FMT_RGB32   :return FF_CSP_RGB32;
+   case PIX_FMT_RGB32   :case PIX_FMT_ARGB:return FF_CSP_RGB32;
    case PIX_FMT_RGB555  :return FF_CSP_RGB15;
    case PIX_FMT_RGB565  :return FF_CSP_RGB16;
    case PIX_FMT_PAL8    :return FF_CSP_PAL8;
@@ -147,6 +147,8 @@ static __inline enum PixelFormat csp_ffdshow2lavc(int pix_fmt)
    case FF_CSP_PAL8:return PIX_FMT_PAL8;
    case FF_CSP_Y800:return PIX_FMT_GRAY8;
    case FF_CSP_NV12:return PIX_FMT_NV12;
+   case FF_CSP_ABGR:return PIX_FMT_ABGR;
+   case FF_CSP_RGBA:return PIX_FMT_RGBA;
    default         :return PIX_FMT_NB;
   }
 }
