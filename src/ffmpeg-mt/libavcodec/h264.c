@@ -1152,7 +1152,10 @@ static void decode_postinit(H264Context *h){
     if (h->next_output_pic) return;
 
     if (cur->field_poc[0]==INT_MAX || cur->field_poc[1]==INT_MAX) {
-        ff_thread_finish_setup(s->avctx);
+        //FIXME this allows the next thread to start once we encounter the first field of a PAFF packet
+        //This works if the next packet contains the second field. It does not work if both fields are
+        //in the same packet.
+        //ff_thread_finish_setup(s->avctx);
         return;
     }
 
@@ -2515,8 +2518,6 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
     //FIXME: fix draw_edges+PAFF+frame threads
     h->emu_edge_width= (s->flags&CODEC_FLAG_EMU_EDGE || (!h->sps.frame_mbs_only_flag && s->avctx->active_thread_type&FF_THREAD_FRAME)) ? 0 : 16;
     h->emu_edge_height= (FRAME_MBAFF || FIELD_PICTURE) ? 0 : h->emu_edge_width;
-
-    s->avctx->refs= h->sps.ref_frame_count;
 
     if(s->avctx->debug&FF_DEBUG_PICT_INFO){
         av_log(h->s.avctx, AV_LOG_DEBUG, "slice:%d %s mb:%d %c%s%s pps:%u frame:%d poc:%d/%d ref:%d/%d qp:%d loop:%d:%d:%d weight:%d%s %s\n",

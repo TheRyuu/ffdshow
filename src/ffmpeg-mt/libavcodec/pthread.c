@@ -315,32 +315,34 @@ static int update_thread_context_from_copy(AVCodecContext *dst, AVCodecContext *
     //coded_width/height are not copied here, so that codecs' update_thread_context can see when they change
     //many encoding parameters could be theoretically changed during encode, but aren't copied ATM
 
-    COPY(sub_id);
-    COPY(width);
-    COPY(height);
-    COPY(pix_fmt);
-    COPY(real_pict_num); //necessary?
-    COPY(delay);
-    COPY(max_b_frames);
+    if (dst != src) {
+        COPY(sub_id);
+        COPY(width);
+        COPY(height);
+        COPY(pix_fmt);
+        COPY(real_pict_num); //necessary?
+        COPY(delay);
+        COPY(max_b_frames);
 
-    COPY_FIELDS(mv_bits, opaque);
+        COPY_FIELDS(mv_bits, opaque);
 
-    COPY(has_b_frames);
-    COPY(bits_per_coded_sample);
-    COPY(sample_aspect_ratio);
-    COPY(idct_algo);
-    memcpy(dst->error, src->error, sizeof(src->error));
-    COPY(last_predictor_count); //necessary?
-    COPY(dtg_active_format);
-    COPY(color_table_id);
-    COPY(profile);
-    COPY(level);
-    COPY(bits_per_raw_sample);
-    COPY(ticks_per_frame);
-    COPY(color_primaries);
-    COPY(color_trc);
-    COPY(colorspace);
-    COPY(color_range);
+        COPY(has_b_frames);
+        COPY(bits_per_coded_sample);
+        COPY(sample_aspect_ratio);
+        COPY(idct_algo);
+        memcpy(dst->error, src->error, sizeof(src->error));
+        COPY(last_predictor_count); //necessary?
+        COPY(dtg_active_format);
+        COPY(color_table_id);
+        COPY(profile);
+        COPY(level);
+        COPY(bits_per_raw_sample);
+        COPY(ticks_per_frame);
+        COPY(color_primaries);
+        COPY(color_trc);
+        COPY(colorspace);
+        COPY(color_range);
+    }
 
     if (for_user) {
         COPY(coded_frame);
