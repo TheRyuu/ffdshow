@@ -180,7 +180,9 @@ int decode_slice_header_noexecute (H264Context *h){
 
     if(h->first_mb_in_slice == 0){ //FIXME better field boundary detection
         if(h0->current_slice && FIELD_PICTURE){
-            field_end(h);
+            // ==> Start patch MPC DXVA
+            field_end_noexecute(h);
+            // <== End patch MPC DXVA
         }
 
         h0->current_slice = 0;

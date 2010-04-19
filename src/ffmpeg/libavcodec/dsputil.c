@@ -35,6 +35,7 @@
 #include "mathops.h"
 #include "mpegvideo.h"
 #include "config.h"
+#include "lpc.h"
 #include "ac3dec.h"
 #include "vorbis.h"
 #include "png.h"
@@ -541,6 +542,27 @@ static void put_signed_pixels_clamped_c(const DCTELEM *block,
     }
 }
 
+static void put_pixels_nonclamped_c(const DCTELEM *block, uint8_t *restrict pixels,
+                                    int line_size)
+{
+    int i;
+
+    /* read the pixels */
+    for(i=0;i<8;i++) {
+        pixels[0] = block[0];
+        pixels[1] = block[1];
+        pixels[2] = block[2];
+        pixels[3] = block[3];
+        pixels[4] = block[4];
+        pixels[5] = block[5];
+        pixels[6] = block[6];
+        pixels[7] = block[7];
+
+        pixels += line_size;
+        block += 8;
+    }
+}
+
 static void add_pixels_clamped_c(const DCTELEM *block, uint8_t *restrict pixels,
                           int line_size)
 {
@@ -630,6 +652,42 @@ static int sum_abs_dctelem_c(DCTELEM *block)
     for(i=0; i<64; i++)
         sum+= FFABS(block[i]);
     return sum;
+}
+
+static void fill_block16_c(uint8_t *block, uint8_t value, int line_size, int h)
+{
+    int i;
+
+    for (i = 0; i < h; i++) {
+        memset(block, value, 16);
+        block += line_size;
+    }
+}
+
+static void fill_block8_c(uint8_t *block, uint8_t value, int line_size, int h)
+{
+    int i;
+
+    for (i = 0; i < h; i++) {
+        memset(block, value, 8);
+        block += line_size;
+    }
+}
+
+static void scale_block_c(const uint8_t src[64]/*align 8*/, uint8_t *dst/*align 8*/, int linesize)
+{
+    int i, j;
+    uint16_t *dst1 = (uint16_t *) dst;
+    uint16_t *dst2 = (uint16_t *)(dst + linesize);
+
+    for (j = 0; j < 8; j++) {
+        for (i = 0; i < 8; i++) {
+            dst1[i] = dst2[i] = src[i] * 0x0101;
+        }
+        src  += 8;
+        dst1 += linesize;
+        dst2 += linesize;
+    }
 }
 
 #if 0
@@ -3770,7 +3828,6 @@ void ff_vector_fmul_window_c(float *dst, const float *src0, const float *src1, c
     }
 }
 
-#if CONFIG_AAC_DECODER
 static void vector_fmul_scalar_c(float *dst, const float *src, float mul,
                                  int len)
 {
@@ -3822,7 +3879,6 @@ static void sv_fmul_scalar_4_c(float *dst, const float **sv, float mul,
         dst[i+3] = sv[0][3] * mul;
     }
 }
-#endif
 
 static void butterflies_float_c(float *restrict v1, float *restrict v2,
                                 int len)
@@ -3850,6 +3906,51 @@ static void int32_to_float_fmul_scalar_c(float *dst, const int *src, float mul, 
     int i;
     for(i=0; i<len; i++)
         dst[i] = src[i] * mul;
+}
+
+static inline uint32_t clipf_c_one(uint32_t a, uint32_t mini,
+                   uint32_t maxi, uint32_t maxisign)
+{
+
+    if(a > mini) return mini;
+    else if((a^(1<<31)) > maxisign) return maxi;
+    else return a;
+}
+
+static void vector_clipf_c_opposite_sign(float *dst, const float *src, float *min, float *max, int len){
+    int i;
+    uint32_t mini = *(uint32_t*)min;
+    uint32_t maxi = *(uint32_t*)max;
+    uint32_t maxisign = maxi ^ (1<<31);
+    uint32_t *dsti = (uint32_t*)dst;
+    const uint32_t *srci = (const uint32_t*)src;
+    for(i=0; i<len; i+=8) {
+        dsti[i + 0] = clipf_c_one(srci[i + 0], mini, maxi, maxisign);
+        dsti[i + 1] = clipf_c_one(srci[i + 1], mini, maxi, maxisign);
+        dsti[i + 2] = clipf_c_one(srci[i + 2], mini, maxi, maxisign);
+        dsti[i + 3] = clipf_c_one(srci[i + 3], mini, maxi, maxisign);
+        dsti[i + 4] = clipf_c_one(srci[i + 4], mini, maxi, maxisign);
+        dsti[i + 5] = clipf_c_one(srci[i + 5], mini, maxi, maxisign);
+        dsti[i + 6] = clipf_c_one(srci[i + 6], mini, maxi, maxisign);
+        dsti[i + 7] = clipf_c_one(srci[i + 7], mini, maxi, maxisign);
+    }
+}
+static void vector_clipf_c(float *dst, const float *src, float min, float max, int len){
+    int i;
+    if(min < 0 && max > 0) {
+        vector_clipf_c_opposite_sign(dst, src, &min, &max, len);
+    } else {
+        for(i=0; i < len; i+=8) {
+            dst[i    ] = av_clipf(src[i    ], min, max);
+            dst[i + 1] = av_clipf(src[i + 1], min, max);
+            dst[i + 2] = av_clipf(src[i + 2], min, max);
+            dst[i + 3] = av_clipf(src[i + 3], min, max);
+            dst[i + 4] = av_clipf(src[i + 4], min, max);
+            dst[i + 5] = av_clipf(src[i + 5], min, max);
+            dst[i + 6] = av_clipf(src[i + 6], min, max);
+            dst[i + 7] = av_clipf(src[i + 7], min, max);
+        }
+    }
 }
 
 static av_always_inline int float_to_int16_one(const float *src){
@@ -3881,6 +3982,26 @@ void ff_float_to_int16_interleave_c(int16_t *dst, const float **src, long len, i
             for(i=0, j=c; i<len; i++, j+=channels)
                 dst[j] = float_to_int16_one(src[c]+i);
     }
+}
+
+static int32_t scalarproduct_int16_c(int16_t * v1, int16_t * v2, int order, int shift)
+{
+    int res = 0;
+
+    while (order--)
+        res += (*v1++ * *v2++) >> shift;
+
+    return res;
+}
+
+static int32_t scalarproduct_and_madd_int16_c(int16_t *v1, int16_t *v2, int16_t *v3, int order, int mul)
+{
+    int res = 0;
+    while (order--) {
+        res   += *v1 * *v2++;
+        *v1++ += mul * *v3++;
+    }
+    return res;
 }
 
 #define W0 2048
@@ -4128,6 +4249,7 @@ av_cold void attribute_align_arg dsputil_init(DSPContext* c, AVCodecContext *avc
     c->diff_pixels = diff_pixels_c;
     c->put_pixels_clamped = put_pixels_clamped_c;
     c->put_signed_pixels_clamped = put_signed_pixels_clamped_c;
+//    c->put_pixels_nonclamped = put_pixels_nonclamped_c;
     c->add_pixels_clamped = add_pixels_clamped_c;
     c->add_pixels8 = add_pixels8_c;
     c->add_pixels4 = add_pixels4_c;
@@ -4138,6 +4260,10 @@ av_cold void attribute_align_arg dsputil_init(DSPContext* c, AVCodecContext *avc
     c->clear_blocks = clear_blocks_c;
     c->pix_sum = pix_sum_c;
     c->pix_norm1 = pix_norm1_c;
+
+//    c->fill_block_tab[0] = fill_block16_c;
+//    c->fill_block_tab[1] = fill_block8_c;
+//    c->scale_block = scale_block_c;
 
     /* TODO [0] 16  [1] 8 */
     c->pix_abs[0][0] = pix_abs16_c;
@@ -4330,6 +4456,7 @@ av_cold void attribute_align_arg dsputil_init(DSPContext* c, AVCodecContext *avc
     if (CONFIG_VP3_DECODER) {
         c->vp3_h_loop_filter= ff_vp3_h_loop_filter_c;
         c->vp3_v_loop_filter= ff_vp3_v_loop_filter_c;
+        c->vp3_idct_dc_add= ff_vp3_idct_dc_add_c;
     }
     if (CONFIG_VP6_DECODER) {
         c->vp6_filter_diag4= ff_vp6_filter_diag4_c;
@@ -4354,8 +4481,11 @@ av_cold void attribute_align_arg dsputil_init(DSPContext* c, AVCodecContext *avc
     c->vector_fmul_add = vector_fmul_add_c;
     c->vector_fmul_window = ff_vector_fmul_window_c;
     c->int32_to_float_fmul_scalar = int32_to_float_fmul_scalar_c;
+//    c->vector_clipf = vector_clipf_c;
     c->float_to_int16 = ff_float_to_int16_c;
     c->float_to_int16_interleave = ff_float_to_int16_interleave_c;
+//    c->scalarproduct_int16 = scalarproduct_int16_c;
+//    c->scalarproduct_and_madd_int16 = scalarproduct_and_madd_int16_c;
 #if CONFIG_AAC_DECODER
     c->scalarproduct_float = scalarproduct_float_c;
 #endif
