@@ -60,6 +60,7 @@ TrenderedTextSubtitleWord::TrenderedTextSubtitleWord(
         msk[1] = aligned_calloc3<uint8_t>(dx[1], dy[1], 16);
         memset(msk[1], 0, dx[1] * dy[1]);
     }
+
     m_bodyYUV = YUVcolorA(props.SecondaryColour,props.SecondaryColourA);
     oldFader = 0;
     updateMask(1 << 16, 2);

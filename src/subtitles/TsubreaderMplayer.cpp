@@ -296,7 +296,11 @@ Tsubtitle* TsubtitleParserSubviewer::parse(Tstream &fd,int flags, REFERENCE_TIME
            continue;
           current.start = this->hmsToTime(a1,a2,a3,a4/10);
           current.stop  = this->hmsToTime(b1,b2,b3,b4/10);
+
          }
+         current.defProps.tStart = current.defProps.karaokeStart = current.start;
+         current.defProps.tStop = current.stop;
+        
         for (;;) {
             if (!fd.fgets (line, this->LINE_LEN)) goto end;//break;
             len=0;
@@ -509,7 +513,15 @@ bool TsubtitleParserSSA::Tstyle::toCOLORREF(const ffstring& colourStr,COLORREF &
    radix=16;
   }
  else
-  radix=10;
+ {
+	if (s1.compare(0,1,L"-",1)==0)
+	{
+		colour=0x000000;
+		alpha=256;
+		return true;
+	}
+	radix=10;
+ }
  s2=s1;
  if (s1.size()>6)
   {

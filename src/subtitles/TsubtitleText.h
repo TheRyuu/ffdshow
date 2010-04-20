@@ -73,6 +73,7 @@ private:
    TSubtitleProps &props;
    const TSubtitleProps &defprops;
    Twords &words;
+   int sfmt;
   public:
 
    struct TparenthesesContent {
@@ -102,7 +103,7 @@ private:
    };
 
    int parse_parentheses(TparenthesesContents &contents, ffstring arg);
-   Tssa(TSubtitleProps &Iprops,const TSubtitleProps &Idefprops,Twords &Iwords):props(Iprops),defprops(Idefprops),words(Iwords) {}
+   Tssa(TSubtitleProps &Iprops,const TSubtitleProps &Idefprops,Twords &Iwords,int Isfmt):props(Iprops),defprops(Idefprops),words(Iwords),sfmt(Isfmt){}
    typedef void (Tssa::*TssaAction)(ffstring &arg);
    typedef int (*Tstr_cmp_func)(const wchar_t *a, const wchar_t *b, size_t c);
 
@@ -124,6 +125,7 @@ private:
    void karaoke_kf(ffstring &arg);
    void karaoke_ko(ffstring &arg);
    void karaoke_k(ffstring &arg);
+   void karaoke_fixProperties();
    template<bool TSubtitleProps::*offset> void boolProp(ffstring &arg);
    template<COLORREF TSubtitleProps::*offset> void color(ffstring &arg);
    template<int TSubtitleProps::*offset> void alpha(ffstring &arg);
@@ -193,7 +195,7 @@ struct TsubtitleLine :
 {
 private:
  typedef std::vector<TsubtitleWord> Tbase;
- void applyWords(const TsubtitleFormat::Twords &words);
+ void applyWords(const TsubtitleFormat::Twords &words,int subFormat);
 public:
  TSubtitleProps props;
  int lineBreakReason; // 0: none, 1: \n, 2: \N

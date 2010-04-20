@@ -9,6 +9,8 @@ struct Rational;
 class TfontManager;
 struct TprintPrefs;
 
+#define DEFAULT_SECONDARY_COLOR 0x50FFFF // Yellow color for default
+
 struct TSubtitleProps
 {
  TSubtitleProps(void) {reset();}

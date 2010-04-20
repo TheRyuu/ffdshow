@@ -893,12 +893,26 @@ void TsubtitleFormat::Tssa::fad(ffstring &arg)
     }
 }
 
+void TsubtitleFormat::Tssa::karaoke_fixProperties()
+{
+  /* SRT subtitles do not define (most of the time) any secondary color
+      So we have to put the secondary color into the primary color and vice versa for the karaoke word
+      that will be added later */
+   if ((sfmt==Tsubreader::SUB_SUBVIEWER || sfmt==Tsubreader::SUB_SUBVIEWER2)
+    && props.karaokeMode != TSubtitleProps::KARAOKE_NONE && props.SecondaryColour == 0xffffff)
+   {
+    props.SecondaryColour = DEFAULT_SECONDARY_COLOR;
+    props.isColor=true;
+   }
+}
+
 void TsubtitleFormat::Tssa::karaoke_kf(ffstring &arg)
 {
     intProp<&TSubtitleProps::tmpFadT1, 0, INT_MAX>(arg);
     props.karaokeDuration = (REFERENCE_TIME)props.tmpFadT1 * 100000;
     props.karaokeMode = TSubtitleProps::KARAOKE_kf;
     props.karaokeNewWord = true;
+    karaoke_fixProperties();
 }
 void TsubtitleFormat::Tssa::karaoke_ko(ffstring &arg)
 {
@@ -906,6 +920,7 @@ void TsubtitleFormat::Tssa::karaoke_ko(ffstring &arg)
     props.karaokeDuration = (REFERENCE_TIME)props.tmpFadT1 * 100000;
     props.karaokeMode = TSubtitleProps::KARAOKE_ko;
     props.karaokeNewWord = true;
+    karaoke_fixProperties();
 }
 void TsubtitleFormat::Tssa::karaoke_k(ffstring &arg)
 {
@@ -913,6 +928,7 @@ void TsubtitleFormat::Tssa::karaoke_k(ffstring &arg)
     props.karaokeDuration = (REFERENCE_TIME)props.tmpFadT1 * 100000;
     props.karaokeMode = TSubtitleProps::KARAOKE_k;
     props.karaokeNewWord = true;
+    karaoke_fixProperties();
 }
 
 void TsubtitleFormat::Tssa::fade(ffstring &arg)
@@ -1115,7 +1131,7 @@ TsubtitleFormat::Twords TsubtitleFormat::processSSA(const TsubtitleLine &line, i
     const wchar_t *l=line[0];
     props=parent.defProps;
     const wchar_t *l1=l,*l2=l;
-    Tssa ssa(props,parent.defProps,words);
+    Tssa ssa(props,parent.defProps,words, sfmt);
     while (*l2) {
         if (l2[0]=='{' /*&& l2[1]=='\\'*/) {
             if (const wchar_t *end=strchr(l2+1,'}')) {
@@ -1125,11 +1141,8 @@ TsubtitleFormat::Twords TsubtitleFormat::processSSA(const TsubtitleLine &line, i
             }
             l2++;
         }
-        // Process HTML tags in SSA subs when extended tags option is checked
-        else if (parent.defProps.extendedTags) // Add HTML support within SSA
+        else // Add HTML support within SSA
             processHTMLTags(words,l,l1,l2);
-        else
-            l2++;
     }
 
     words.add(l,l1,l2,props,0);
@@ -1203,7 +1216,9 @@ size_t TsubtitleLine::strlen(void) const
   len+=::strlen(*w);
  return len;
 }
-void TsubtitleLine::applyWords(const TsubtitleFormat::Twords &words)
+
+// This method duplicate the words with karaoke settings
+void TsubtitleLine::applyWords(const TsubtitleFormat::Twords &words, int subFormat)
 {
  bool karaokeNewWord = false;
  for (TsubtitleFormat::Twords::const_iterator w=words.begin();w!=words.end();w++)
@@ -1220,6 +1235,16 @@ void TsubtitleLine::applyWords(const TsubtitleFormat::Twords &words)
    TsubtitleWord word(this->front()+w->i1,w->i2-w->i1);
    word.props=w->props;
    word.props.karaokeNewWord = karaokeNewWord;
+
+   /* With SRT subtitles the secondary color is (most of the time) not set
+       so we have to revert the primary (which is the overlay color of karaoke) with the secondary color */
+   if ((subFormat==Tsubreader::SUB_SUBVIEWER || subFormat==Tsubreader::SUB_SUBVIEWER2)
+    && word.props.karaokeMode != TSubtitleProps::KARAOKE_NONE)
+   {
+    word.props.SecondaryColour = w->props.color;
+    word.props.color = w->props.SecondaryColour;
+   }
+   
    this->push_back(word);
    karaokeNewWord = false;
   }
@@ -1228,13 +1253,11 @@ void TsubtitleLine::applyWords(const TsubtitleFormat::Twords &words)
 }
 void TsubtitleLine::format(TsubtitleFormat &format,int sfmt, TsubtitleText &parent)
 {
- // Use SSA parser for SRT subs when extended tags option is checked
- // This option will be removed (and SSA parser applied to SUBVIEWER)
- // when the garble issue with Shift JIS (ANSI/DBCS) subs will be resovled
- if (sfmt==Tsubreader::SUB_SSA || (sfmt==Tsubreader::SUB_SUBVIEWER && parent.defProps.extendedTags))
-  applyWords(format.processSSA(*this, sfmt, parent));
+ // Use SSA parser for SRT subs
+ if (sfmt==Tsubreader::SUB_SSA || sfmt==Tsubreader::SUB_SUBVIEWER || sfmt==Tsubreader::SUB_SUBVIEWER2)
+  applyWords(format.processSSA(*this, sfmt, parent),sfmt);
  else
-  applyWords(format.processHTML(*this));
+  applyWords(format.processHTML(*this),sfmt);
 }void TsubtitleLine::fix(TtextFix &fix)
 {
  foreach (TsubtitleWord &word, *this)
@@ -1272,7 +1295,7 @@ void TsubtitleText::format(TsubtitleFormat &format)
 void TsubtitleText::prepareKaraoke(void)
 {
     int sfmt=subformat&Tsubreader::SUB_FORMATMASK;
-    if (sfmt != Tsubreader::SUB_SSA)
+    if (sfmt != Tsubreader::SUB_SSA && sfmt != Tsubreader::SUB_SUBVIEWER && sfmt != Tsubreader::SUB_SUBVIEWER2)
         return;
 
     TsubtitleText temp(subformat, defProps);
