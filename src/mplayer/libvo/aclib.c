@@ -1,4 +1,5 @@
 #include "config.h"
+
 #ifdef USE_FASTMEMCPY
 
 /*
@@ -9,7 +10,6 @@
 */
 #include <string.h>
 #include <stddef.h>
-#include "config.h"
 #include "../libavutil/x86_cpu.h"
 #include "../cpudetect.h"
 #include "fastmemcpy.h"
@@ -27,25 +27,25 @@
 
 //Note: we have MMX, MMX2, 3DNOW version there is no 3DNOW+MMX2 one
 //Plain C versions
-//#if !HAVE_MMX || defined (RUNTIME_CPUDETECT)
+//#if !HAVE_MMX || CONFIG_RUNTIME_CPUDETECT
 //#define COMPILE_C
 //#endif
 
 #ifdef CAN_COMPILE_X86_ASM
 
-#if (HAVE_MMX && !HAVE_AMD3DNOW && !HAVE_MMX2) || defined (RUNTIME_CPUDETECT)
+#if (HAVE_MMX && !HAVE_AMD3DNOW && !HAVE_MMX2) || CONFIG_RUNTIME_CPUDETECT
 #define COMPILE_MMX
 #endif
 
-#if (HAVE_MMX2 && !HAVE_SSE2) || defined (RUNTIME_CPUDETECT)
+#if (HAVE_MMX2 && !HAVE_SSE2) || CONFIG_RUNTIME_CPUDETECT
 #define COMPILE_MMX2
 #endif
 
-#if (HAVE_AMD3DNOW && !HAVE_MMX2) || defined (RUNTIME_CPUDETECT)
+#if (HAVE_AMD3DNOW && !HAVE_MMX2) || CONFIG_RUNTIME_CPUDETECT
 #define COMPILE_3DNOW
 #endif
 
-#if HAVE_SSE2 || defined (RUNTIME_CPUDETECT)
+#if HAVE_SSE2 || CONFIG_RUNTIME_CPUDETECT
 #define COMPILE_SSE
 #endif
 
@@ -118,8 +118,8 @@ void* (*fast_memcpy)(void * to, const void * from, size_t len)=NULL;
 
 void init_fast_memcpy(void)
 {
-#ifdef RUNTIME_CPUDETECT
-#ifdef CAN_COMPILE_X86_ASM
+#if CONFIG_RUNTIME_CPUDETECT
+	#ifdef CAN_COMPILE_X86_ASM
 	// ordered per speed fasterst first
 	if(gCpuCaps.hasSSE2)
 		fast_memcpy=fast_memcpy_SSE;
@@ -130,23 +130,21 @@ void init_fast_memcpy(void)
 	else if(gCpuCaps.hasMMX)
 		fast_memcpy=fast_memcpy_MMX;
 	else
-#endif //CAN_COMPILE_X86_ASM
+	#endif // CAN_COMPILE_X86_ASM
 		fast_memcpy=memcpy; // prior to mmx we use the standart memcpy
 #else
-#if HAVE_SSE2
+	#if HAVE_SSE2
 		fast_memcpy=fast_memcpy_SSE;
-#elif HAVE_MMX2
+	#elif HAVE_MMX2
 		fast_memcpy=fast_memcpy_MMX2;
-#elif HAVE_AMD3DNOW
+	#elif HAVE_AMD3DNOW
 		fast_memcpy=fast_memcpy_3DNow;
-#elif HAVE_MMX
+	#elif HAVE_MMX
 		fast_memcpy=fast_memcpy_MMX;
-#else
+	#else
 		fast_memcpy=memcpy; // prior to mmx we use the standart memcpy
-#endif
-
-#endif //!RUNTIME_CPUDETECT
+	#endif
+#endif // !CONFIG_RUNTIME_CPUDETECT
 }
 
 #endif /* use fastmemcpy */
-
