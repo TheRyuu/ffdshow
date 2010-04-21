@@ -1,8 +1,8 @@
-CFLAGS+=-I. -I../imgFilters -Ilibavutil -Ilibvo -Imp3lib -Ipostproc -std=gnu99
+CFLAGS+=-I. -Ilibvo -Imp3lib -Iyadif -I../ffmpeg -std=gnu99
 
 SRCS_C=\
 		mplayer.c \
-		libavutil/mem.c \
+		../ffmpeg/libavutil/mem.c \
 		libaf/reorder_ch.c \
 		libvo/aclib.c \
 		yadif/vf_yadif.c \
@@ -37,7 +37,7 @@ include ../makefile_c.inc
 .all: $(SLIB)
 
 clean:
-	rm -f *.o *.d postproc/*.o postproc/*.d yadif/*.o yadif/*.d libaf/*.o libaf/*.d libvo/*.o libvo/*.d mp3lib/*.o mp3lib/*.d libavutil/mem.o libavutil/mem.d $(SLIB)
+	rm -f *.o *.d yadif/*.o yadif/*.d libaf/*.o libaf/*.d libvo/*.o libvo/*.d mp3lib/*.o mp3lib/*.d ../ffmpeg/libavutil/mem.o ../ffmpeg/libavutil/mem.d $(SLIB)
 
 #
 # include dependency files if they exist

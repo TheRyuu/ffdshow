@@ -15,8 +15,7 @@
 #include <signal.h>
 #include <math.h>
 
-#include "../config.h"
-#include "../libavutil/internal.h"
+#include "config.h"
 
 #ifdef WIN64
   #undef HAVE_AMD3DNOW
@@ -33,11 +32,12 @@
 #include "mpg123.h"
 #include "huffman.h"
 #include "inttypes.h"
-#include "../libavutil/bswap.h"
-#include "../cpudetect.h"
-#include "../mp_msg.h"
-
-#include "../libvo/fastmemcpy.h"
+#include "libavutil/common.h"
+#include "libavutil/mem.h"
+#include "libavutil/bswap.h"
+#include "cpudetect.h"
+#include "mp_msg.h"
+#include "libvo/fastmemcpy.h"
 
 static const long outscale = 32768;
 #include "tabinit.c"
@@ -348,7 +348,9 @@ extern void dct64_sse(short *, short *, real *);
 void (*dct64_MMX_func)(short *, short *, real *);
 #endif
 
-#include "../cpudetect.h"
+#include "cpudetect.h"
+
+extern void make_decode_tables_MMX(long scaleval);
 
 // Init decoder tables.  Call first, once!
 mp3lib_ctx* MP3_Init(int mono){

@@ -27,7 +27,6 @@
 #include <math.h>
 
 #include "config.h"
-#include "libavutil/internal.h"
 #include "cpudetect.h"
 
 #include "mp_msg.h"
@@ -36,11 +35,11 @@
 #include <malloc.h>
 #endif
 
-#include "ffImgfmt.h"
-
+#include "../imgFilters/ffImgfmt.h"
+#include "libavutil/mem.h"
+#include "libavutil/internal.h"
 #include "libvo/fastmemcpy.h"
 #include "vf_yadif.h"
-#include "libavutil/mem.h"
 
 #define MIN(a,b) ((a) > (b) ? (b) : (a))
 #define MAX(a,b) ((a) < (b) ? (b) : (a))
@@ -59,7 +58,7 @@ int isP4HT (void)
     return 0;
 }
 #else
-#include "libavutil/isP4HT.c"
+#include "isP4HT.c"
 #endif
 
 int GetCPUCount(void){

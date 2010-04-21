@@ -1,14 +1,14 @@
-#ifndef __MPLAYER_MEMCPY
-#define __MPLAYER_MEMCPY
+#ifndef MPLAYER_FASTMEMCPY
+#define MPLAYER_FASTMEMCPY
 
 #include <stddef.h>
-#include "../config.h"
-#include "../libavutil/internal.h"
+#include "config.h"
 
-#if defined(USE_FASTMEMCPY) && (HAVE_MMX || HAVE_MMX2 || HAVE_AMD3DNOW || HAVE_SSE || HAVE_SSE2)
+#if USE_FASTMEMCPY && (HAVE_MMX || HAVE_MMX2 || HAVE_AMD3DNOW || HAVE_SSE || HAVE_SSE2)
 extern void* (*fast_memcpy)(void * to, const void * from, size_t len);
 #define memcpy(a,b,c) fast_memcpy(a,b,c)
 #endif
+
 void init_fast_memcpy(void);
 
 static inline void * memcpy_pic(unsigned char * dst, unsigned char * src, int bytesPerLine, int height, int dstStride, int srcStride)
@@ -39,4 +39,4 @@ static inline void * memcpy_pic(unsigned char * dst, unsigned char * src, int by
 	return retval;
 }
 
-#endif
+#endif /* MPLAYER_FASTMEMCPY */

@@ -3,7 +3,7 @@
 * See ChangeLog of mpg123-0.59s-pre.1 for detail
 * Applied to mplayer by Nick Kurshev <nickols_k@mail.ru>
 */
-#include "../libavutil/internal.h"
+#include "libavutil/internal.h"
 
 #define real float /* ugly - but only way */
 

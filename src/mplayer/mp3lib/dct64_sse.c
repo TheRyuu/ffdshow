@@ -5,7 +5,9 @@
  * and mp3lib/dct64_mmx.c
  */
 
-#include "mem.h"
+#include "libavutil/mem.h"
+#include "libavutil/internal.h"
+
 typedef float real;
 
 extern float __attribute__((aligned(16))) costab_mmx[];

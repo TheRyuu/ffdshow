@@ -23,7 +23,7 @@
  * 2003/06/21: Moved to GCC inline assembly - Alex Beregszaszi
  */
 
-#include "../libavutil/internal.h"
+#include "libavutil/internal.h"
 
 #define real float /* ugly - but only way */
 

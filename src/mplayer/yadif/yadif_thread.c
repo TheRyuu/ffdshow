@@ -26,8 +26,9 @@
 #include <windows.h>
 #include <process.h>
 #include <inttypes.h>
-#include "ffImgfmt.h"
+#include "../imgFilters/ffImgfmt.h"
 #include "libavutil/mem.h"
+#include "libavutil/internal.h"
 #include "vf_yadif.h"
 
 typedef struct ThreadAPIContext{
