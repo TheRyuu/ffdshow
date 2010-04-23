@@ -54,6 +54,7 @@ public:
  int SSAMaintainInside;
  int SSAUseMovieDimensions;
  int SSAoverrideScale;
+ int pgs;
  static const int delayDef=0,speedDef=1000;
  virtual void createFilters(size_t filtersorder,Tfilters *filters,TfilterQueue &queue) const;
  virtual void createPages(TffdshowPageDec *parent) const;

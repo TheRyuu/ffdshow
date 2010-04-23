@@ -29,7 +29,6 @@ void TvobsubPage::init(void)
 
 void TvobsubPage::cfg2dlg(void)
 {
- setCheck(IDC_CHB_VOBSUB,cfgGet(IDFF_subVobsub));
  cbxSetCurSel(IDC_CBX_VOBSUB_AA,cfgGet(IDFF_subVobsubAA));
  cbxSetDataCurSel(IDC_CBX_VOBSUB_DEFLANG,cfgGet(IDFF_subDefLang));
  cbxSetDataCurSel(IDC_CBX_VOBSUB_DEFLANG2,cfgGet(IDFF_subDefLang2));
@@ -95,7 +94,6 @@ TvobsubPage::TvobsubPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff):Tconf
  dialogId=IDD_VOBSUB;
  static const TbindCheckbox<TvobsubPage> chb[]=
   {
-   IDC_CHB_VOBSUB,IDFF_subVobsub,NULL,
    IDC_CHB_VOBSUB_CHANGEPOSITION,IDFF_subVobsubChangePosition,NULL,
    0,NULL,NULL
   };

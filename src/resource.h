@@ -163,6 +163,7 @@
 #define IDD_QUEUEMSG_8                  294
 #define IDD_COMPATIBILITY_MANAGER       295
 #define IDD_DEINTERLACE_YADIF           296
+#define IDD_SUBTITLES_POS               2230
 #define IDI_MODERN_ICON_D               297
 #define IDI_MODERN_ICON_VA              299
 #define IDI_MODERN_4BIT_ICON_VA         301
@@ -1427,6 +1428,7 @@
 #define IDC_TBR_LINES_A                 1790
 #define IDC_CHB_SUBFIX_PUNCTUATION      1790
 #define IDC_CHB_SUBEXTENDEDTAGS         1790
+#define IDC_CHB_SUBTEXTPIN_SSA2         1790
 #define IDC_ED_QUANT_TABLE_INTER28      1791
 #define IDC_TBR_LINES_TRANSPARENCY      1791
 #define IDC_CHB_SUBFIX_CAPITAL          1791
@@ -1944,7 +1946,6 @@
 #define IDC_CHB_SUB_SSA_OVERRIDE_POSITION 2227
 #define IDC_CHB_SUB_SSA_OVERRIDE_SCALING 2228
 #define IDC_CHB_SUB_SSA_USE_INPUT_DIMENSIONS 2229
-#define IDD_SUBTITLES_SSA               2230
 #define IDC_CHB_SUB_SSA_KEEP_TEXT_INSIDE 2231
 #define IDC_CBX_OUT_HWDEINT_FIELDORDER  2232
 #define IDC_TXT_OUT_DEINT_FIELDORDER    2233
@@ -2002,6 +2003,9 @@
 #define ID_MNI_PRESET_RENAMETOEXE       40010
 #define ID_TRANSLATE_CONTROLCAPTION     40011
 #define ID_TRANSLATE_ASSOCIATEDSTRINGS  40012
+#define IDC_GRP_SUBTITLESPOS            40013
+#define IDC_GRP_TEXT_SUBTITLES          40014
+#define IDC_CHB_BLURAY                  40015
 #define IDC_STATIC                      -1
 #define IDC_GRP_WINAMP2                 65535
 
@@ -2012,7 +2016,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        304
 #define _APS_NEXT_COMMAND_VALUE         40015
-#define _APS_NEXT_CONTROL_VALUE         40016
+#define _APS_NEXT_CONTROL_VALUE         40020
 #define _APS_NEXT_SYMED_VALUE           107
 #endif
 #endif

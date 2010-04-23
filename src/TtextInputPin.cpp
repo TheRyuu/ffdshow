@@ -39,6 +39,7 @@ TtextInputPin::TtextInputPin(TffdshowDecVideo* pFilter,HRESULT* phr,const wchar_
 {
  supdvddec=filter->getParam2(IDFF_supDVDdec) && filter->getParam2(IDFF_mpg2);
  supssa=!!filter->getParam2(IDFF_subTextpinSSA);
+ suppgs=filter->getParam2(IDFF_subPGS);
  name[0]='\0';
 }
 TtextInputPin::~TtextInputPin()
@@ -54,8 +55,8 @@ HRESULT TtextInputPin::CheckMediaType(const CMediaType *mtIn)
           (mtIn->subtype==MEDIASUBTYPE_UTF8 ||
            mtIn->subtype==MEDIASUBTYPE_VOBSUB ||
            mtIn->subtype==MEDIASUBTYPE_USF ||
-           mtIn->subtype==MEDIASUBTYPE_HDMV_PGS || //Bluray subs
-           (mtIn->subtype==MEDIASUBTYPE_NULL && mtIn->formattype == FORMAT_SubtitleInfo) || //Bluray subs
+           (mtIn->subtype==MEDIASUBTYPE_HDMV_PGS && suppgs) || //Bluray subs
+           (mtIn->subtype==MEDIASUBTYPE_NULL && mtIn->formattype == FORMAT_SubtitleInfo && suppgs) || //Bluray subs
            (mtIn->subtype==MEDIASUBTYPE_SSA  && supssa) ||
            (mtIn->subtype==MEDIASUBTYPE_ASS  && supssa) ||
            (mtIn->subtype==MEDIASUBTYPE_ASS2 && supssa))

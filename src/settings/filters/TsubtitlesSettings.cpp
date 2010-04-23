@@ -24,6 +24,7 @@
 #include "TimgFilterSubtitles.h"
 #include "Csubtitles.h"
 #include "CsubtitlesText.h"
+#include "CsubtitlesPos.h"
 #include "Cfont.h"
 #include "Cvobsub.h"
 #include "TffdshowPageDec.h"
@@ -689,13 +690,15 @@ TsubtitlesSettings::TsubtitlesSettings(TintStrColl *Icoll,TfilterIDFFs *filters,
    IDFF_subWordWrap            ,&TsubtitlesSettings::wordWrap                ,0,2,_l(""),1,
      _l("subWordWrap"),0,
    IDFF_subExtendedTags        ,&TsubtitlesSettings::extendedTags            ,0,0,_l(""),1,
-     _l("subExtendedTags"),0,
+     _l("subExtendedTags"),1,
    IDFF_subSSAOverridePlacement,&TsubtitlesSettings::SSAOverridePlacement    ,0,0,_l(""),1,
      _l("subSSAOverridePlacement"),0,
    IDFF_subSSAMaintainInside   ,&TsubtitlesSettings::SSAMaintainInside       ,0,0,_l(""),1,
      _l("subSSAMaintainInside"),0,
    IDFF_subSSAUseMovieDimensions,&TsubtitlesSettings::SSAUseMovieDimensions  ,0,0,_l(""),1,
      _l("subSSAUseMovieDimensions"),0,
+   IDFF_subPGS                  ,&TsubtitlesSettings::pgs                    ,0,0,_l(""),1,
+     _l("subPGS"),1,
    0
   };
  addOptions(iopts);
@@ -771,6 +774,7 @@ void TsubtitlesSettings::createFilters(size_t filtersorder,Tfilters *filters,Tfi
 void TsubtitlesSettings::createPages(TffdshowPageDec *parent) const
 {
  parent->addFilterPage<TsubtitlesPage>(&idffs);
+ parent->addFilterPage<TsubtitlesPosPage>(&idffs);
  parent->addFilterPage<TsubtitlesTextPage>(&idffs);
  parent->addFilterPage<TfontPageSubtitles>(&idffs);
  parent->addFilterPage<TvobsubPage>(&idffs);

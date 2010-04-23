@@ -1253,8 +1253,10 @@ void TsubtitleLine::applyWords(const TsubtitleFormat::Twords &words, int subForm
 }
 void TsubtitleLine::format(TsubtitleFormat &format,int sfmt, TsubtitleText &parent)
 {
- // Use SSA parser for SRT subs
- if (sfmt==Tsubreader::SUB_SSA || sfmt==Tsubreader::SUB_SUBVIEWER || sfmt==Tsubreader::SUB_SUBVIEWER2)
+ // Use SSA parser for SRT subs SRT subs when extended tags option is checked
+ // This option will be removed (and SSA parser applied to SUBVIEWER)
+ // when the garble issue with Shift JIS (ANSI/DBCS) subs will be resovled
+ if (sfmt==Tsubreader::SUB_SSA || ((sfmt==Tsubreader::SUB_SUBVIEWER || sfmt==Tsubreader::SUB_SUBVIEWER2) && parent.defProps.extendedTags))
   applyWords(format.processSSA(*this, sfmt, parent),sfmt);
  else
   applyWords(format.processHTML(*this),sfmt);

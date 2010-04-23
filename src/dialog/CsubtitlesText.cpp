@@ -166,7 +166,7 @@ void TsubtitlesTextPage::translate(void)
  cbxTranslate(IDC_CBX_SUB_WORDWRAP,TsubtitlesSettings::wordWraps);
 }
 
-TsubtitlesTextPage::TsubtitlesTextPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff):TconfPageDecVideo(Iparent,idff,4)
+TsubtitlesTextPage::TsubtitlesTextPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff):TconfPageDecVideo(Iparent,idff,5)
 {
  dialogId=IDD_SUBTITLESTEXT;
  static const TbindCheckbox<TsubtitlesTextPage> chb[]=

@@ -28,48 +28,31 @@ void TsubtitlesPage::init(void)
  SendDlgItemMessage(m_hwnd,IDC_CBX_SUB_FLNM,CB_LIMITTEXT,MAX_PATH,0);
  edLimitText(IDC_ED_SUB_SEARCH_DIR,MAX_PATH);
  edLimitText(IDC_ED_SUB_SEARCH_EXT,MAX_PATH);
-
- tbrSetRange(IDC_TBR_SUB_POSX,0,100,10);
- tbrSetRange(IDC_TBR_SUB_POSY,0,100,10);
- tbrSetRange(IDC_TBR_SUB_STEREOSCOPICPAR,-100,100);
-
  autosubfirsttime=true;
- addHint(IDC_CHB_SUBTEXTPIN_SSA,_l("Very incomplete and experimental.\nSend me samples which don't work."));
  addHint(IDC_ED_SUB_SEARCH_EXT,_l("ffdshow searches subtitle files in the folders which are configured in the edit box above.\nFor video.avi, ffdshow searches video.utf, video.idx, video.sub,... and use the file which is found at the first time.\nEnumerate extensions in the order you like and separate them by semicolons.\n\nutf;idx;sub;srt;smi;rt;txt;ssa;aqt;mpl;usf is the default settings."));
  addHint(IDC_CHB_SUBEXTENDEDTAGS,_l("Experimental, may give garbled subtitles."));
  setFont(IDC_BT_SUBTITLES_EXPAND,parent->arrowsFont);
 }
+
+static const int idEmbedded[]={IDC_CHB_SUBCC,IDC_CHB_SUBTEXTPIN_SSA,IDC_CHB_VOBSUB,IDC_CHB_BLURAY, 0};
 
 void TsubtitlesPage::cfg2dlg(void)
 {
  sub2dlg();
  enable(filterMode&IDFF_FILTERMODE_PLAYER,IDC_BT_SUBTITLES_RESET);
  setCheck(IDC_CHB_SUB_WATCH,cfgGet(IDFF_subWatch));
- static const int idEmbedd[]={IDC_CHB_SUBTEXTPIN,IDC_CHB_SUBCC,IDC_CHB_SUBTEXTPIN_SSA,0};
+ static const int idEmbedd[]={IDC_CHB_SUBTEXTPIN,IDC_CHB_SUBCC,IDC_CHB_SUBTEXTPIN_SSA,IDC_CHB_VOBSUB,IDC_CHB_BLURAY, 0};
  setCheck(IDC_CHB_SUBTEXTPIN,cfgGet(IDFF_subTextpin));
  setCheck(IDC_CHB_SUBCC,cfgGet(IDFF_subCC));
  setCheck(IDC_CHB_SUBTEXTPIN_SSA,cfgGet(IDFF_subTextpinSSA));
  setCheck(IDC_CHB_SUBEXTENDEDTAGS,cfgGet(IDFF_subExtendedTags));
+ setCheck(IDC_CHB_VOBSUB,cfgGet(IDFF_subVobsub));
+ setCheck(IDC_CHB_BLURAY,cfgGet(IDFF_subPGS));
+ enable(getCheck(IDC_CHB_SUBTEXTPIN), idEmbedded, FALSE);
  enable((filterMode&IDFF_FILTERMODE_VFW)==0,idEmbedd);
- stereo2dlg();
 }
 void TsubtitlesPage::sub2dlg(void)
 {
- char_t s[260];int x;
-
- x=cfgGet(IDFF_subPosX);
- TsubtitlesSettings::getPosHoriz(x, s, this, IDC_LBL_SUB_POSX, countof(s));
- setDlgItemText(m_hwnd,IDC_LBL_SUB_POSX,s);
- tbrSet(IDC_TBR_SUB_POSX,x);
-
- x=cfgGet(IDFF_subPosY);
- TsubtitlesSettings::getPosVert(x, s, this, IDC_LBL_SUB_POSY, countof(s));
- setDlgItemText(m_hwnd,IDC_LBL_SUB_POSY,s);
- tbrSet(IDC_TBR_SUB_POSY,x);
-
- expand2dlg();
- cbxSetCurSel(IDC_CBX_SUBTITLES_ALIGN,cfgGet(IDFF_subAlign));
-
  const char_t *subfilename=cfgGetStr(IDFF_subFilename);
  if (SendDlgItemMessage(m_hwnd,IDC_CBX_SUB_FLNM,CB_SELECTSTRING,WPARAM(-1),LPARAM(subfilename))==CB_ERR)
   {
@@ -120,30 +103,8 @@ void TsubtitlesPage::auto2dlg(void)
     //}
   }
 }
-void TsubtitlesPage::stereo2dlg(void)
-{
- static const int idStereo[]={IDC_LBL_SUB_STEREOSCOPICPAR,IDC_TBR_SUB_STEREOSCOPICPAR,0};
- int is=cfgGet(IDFF_subStereoscopic);
- setCheck(IDC_CHB_SUB_STEREOSCOPIC,is);
- tbrSet(IDC_TBR_SUB_STEREOSCOPICPAR,cfgGet(IDFF_subStereoscopicPar),IDC_LBL_SUB_STEREOSCOPICPAR,NULL,10.0f);
- enable(is,idStereo);
- enable(!is,IDC_CHB_SUBEXTENDEDTAGS,false);
-}
-void TsubtitlesPage::expand2dlg(void)
-{
- int isExpand=cfgGet(IDFF_subIsExpand);
- setCheck(IDC_CHB_SUBTITLES_EXPAND,isExpand);
- static const int idExpand[]={IDC_ED_SUBTITLES_EXPAND_X,IDC_LBL_SUBTITLES_EXPAND2,IDC_ED_SUBTITLES_EXPAND_Y,IDC_BT_SUBTITLES_EXPAND,0};
- enable(isExpand,idExpand);
- int e1,e2;TsubtitlesSettings::getExpand(1,cfgGet(IDFF_subExpand),&e1,&e2);
- if (e1==0 && e2==0)
-  {
-   e1=4;e2=3;
-   cfgSet(IDFF_subExpand,1);
-  }
- SetDlgItemInt(m_hwnd,IDC_ED_SUBTITLES_EXPAND_X,e1,FALSE);
- SetDlgItemInt(m_hwnd,IDC_ED_SUBTITLES_EXPAND_Y,e2,FALSE);
-}
+
+
 
 void TsubtitlesPage::applySettings(void)
 {
@@ -168,6 +129,11 @@ INT_PTR TsubtitlesPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
    case WM_COMMAND:
     switch (LOWORD(wParam))
      {
+      case IDC_CHB_SUBTEXTPIN:
+      {
+       enable(getCheck(IDC_CHB_SUBTEXTPIN), idEmbedded, FALSE);
+       break;
+      }
       case IDC_CBX_SUB_FLNM:
        if (HIWORD(wParam)==CBN_SELCHANGE || HIWORD(wParam)==CBN_EDITUPDATE)
         parent->setChange();
@@ -204,23 +170,7 @@ INT_PTR TsubtitlesPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
          return TRUE;
         }
        break;
-      case IDC_ED_SUBTITLES_EXPAND_X:
-      case IDC_ED_SUBTITLES_EXPAND_Y:
-       if (HIWORD(wParam)==EN_CHANGE && !isSetWindowText)
-        {
-         HWND hed=GetDlgItem(m_hwnd,LOWORD(wParam));
-         if (hed!=GetFocus()) return FALSE;
-         repaint(hed);
-         int x,y;
-         if (eval(GetDlgItem(m_hwnd,IDC_ED_SUBTITLES_EXPAND_X),1,10000,&x) && eval(GetDlgItem(m_hwnd,IDC_ED_SUBTITLES_EXPAND_Y),1,10000,&y))
-          {
-           cfgSet(IDFF_subExpand,MAKELONG(y,x));
-           return S_OK;
-          }
-        }
-       break;
-     }
-    break;
+    }
    case WM_CTLCOLOREDIT:
     {
      HWND hwnd=HWND(lParam);
@@ -267,41 +217,12 @@ void TsubtitlesPage::onSearchdir(void)
    sub2dlg();
   }
 }
-void TsubtitlesPage::onExpandClick(void)
-{
- static const char_t *letterboxes[]=
-  {
-   _l("4:3"),
-   _l("5:4"),
-   _l("16:9"),
-   NULL
-  };
- int cmd=selectFromMenu(letterboxes,IDC_BT_SUBTITLES_EXPAND,false);
- int x,y;
- switch (cmd)
-  {
-   case 0:x=4;y=3;break;
-   case 1:x=5;y=4;break;
-   case 2:x=16;y=9;break;
-   default:return;
-  }
- cfgSet(IDFF_subExpand,MAKELONG(y,x));
- expand2dlg();
-}
 
-void TsubtitlesPage::onSSAConfigClick(void)
-{
-     TsubtitlesSSAConfig *dlg=new TsubtitlesSSAConfig(deci,m_hwnd,10,10);
- if (dlg->show())
-  parent->setChange();
- delete dlg;
-}
+
 
 void TsubtitlesPage::translate(void)
 {
  TconfPageBase::translate();
-
- cbxTranslate(IDC_CBX_SUBTITLES_ALIGN,TsubtitlesSettings::alignments);
 }
 
 TsubtitlesPage::TsubtitlesPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff):TconfPageDecVideo(Iparent,idff,1)
@@ -311,24 +232,16 @@ TsubtitlesPage::TsubtitlesPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff)
  static const TbindCheckbox<TsubtitlesPage> chb[]=
   {
    IDC_CHB_SUB_WATCH,IDFF_subWatch,NULL,
-   IDC_CHB_SUB_STEREOSCOPIC,IDFF_subStereoscopic,&TsubtitlesPage::stereo2dlg,
    IDC_CHB_SUBTEXTPIN,IDFF_subTextpin,NULL,
    IDC_CHB_SUB_SEARCHHEURISTIC,IDFF_subSearchHeuristic,&TsubtitlesPage::auto2dlg,
-   IDC_CHB_SUBTITLES_EXPAND,IDFF_subIsExpand,&TsubtitlesPage::expand2dlg,
    IDC_CHB_SUBCC,IDFF_subCC,&TsubtitlesPage::cfg2dlg,
    IDC_CHB_SUBTEXTPIN_SSA,IDFF_subTextpinSSA,NULL,
    IDC_CHB_SUBEXTENDEDTAGS,IDFF_subExtendedTags,NULL,
+   IDC_CHB_VOBSUB,IDFF_subVobsub,NULL,
+   IDC_CHB_BLURAY,IDFF_subPGS,NULL,
    0,NULL,NULL
   };
  bindCheckboxes(chb);
- static const TbindTrackbar<TsubtitlesPage> htbr[]=
-  {
-   IDC_TBR_SUB_POSX,IDFF_subPosX,&TsubtitlesPage::sub2dlg,
-   IDC_TBR_SUB_POSY,IDFF_subPosY,&TsubtitlesPage::sub2dlg,
-   IDC_TBR_SUB_STEREOSCOPICPAR,IDFF_subStereoscopicPar,&TsubtitlesPage::stereo2dlg,
-   0,0,NULL
-  };
- bindHtracks(htbr);
  static const TbindRadiobutton<TsubtitlesPage> rbt[]=
   {
    IDC_RBT_SUB_SEARCHDIR,IDFF_subAutoFlnm,1,&TsubtitlesPage::sub2dlg,
@@ -344,18 +257,10 @@ TsubtitlesPage::TsubtitlesPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff)
    0
   };
  bindEditInts(edInt);
- static const TbindCombobox<TsubtitlesPage> cbx[]=
-  {
-   IDC_CBX_SUBTITLES_ALIGN,IDFF_subAlign,BINDCBX_SEL,NULL,
-   0
-  };
- bindComboboxes(cbx);
  static const TbindButton<TsubtitlesPage> bt[]=
   {
    IDC_BT_SUB_LOADFILE,&TsubtitlesPage::onLoadfile,
    IDC_BT_SUB_SEARCHDIR,&TsubtitlesPage::onSearchdir,
-   IDC_BT_SUBTITLES_EXPAND,&TsubtitlesPage::onExpandClick,
-   IDC_BT_SUB_SSA_CONFIG, &TsubtitlesPage::onSSAConfigClick,
    0,NULL
   };
  bindButtons(bt);

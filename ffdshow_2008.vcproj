@@ -132,7 +132,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Registering output..."
-				CommandLine="bin/register.bat"
+				CommandLine=""
 			/>
 		</Configuration>
 		<Configuration
@@ -3995,6 +3995,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\dialog\CsubtitlesPos.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\dialog\CsubtitlesPos.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\dialog\CsubtitlesText.cpp"
 				>
 			</File>
@@ -4196,14 +4204,6 @@
 			</File>
 			<File
 				RelativePath=".\src\dialog\TSpecifyPropertyPagesVE.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\dialog\TsubtitlesSSAConfig.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\dialog\TsubtitlesSSAConfig.h"
 				>
 			</File>
 			<File
