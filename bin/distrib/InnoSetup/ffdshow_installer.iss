@@ -45,7 +45,7 @@
 ;#define PREF_YAMAGATA
 ;#define PREF_XXL
 ;#define PREF_XXL_X64
-#define PREF_ALBAIN
+;#define PREF_ALBAIN
 ;#define PREF_ALBAIN_x64
 
 #ifdef PREF_CLSID
@@ -1239,11 +1239,3 @@ begin
   end
 end;
 #endif
-
-
-
-
-
-
-
-
