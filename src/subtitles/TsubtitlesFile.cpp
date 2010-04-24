@@ -226,7 +226,7 @@ void TsubtitlesFile::done(void)
 
 bool TsubtitlesFile::init(const TsubtitlesSettings *cfg,const char_t *IsubFlnm,double Ifps,bool watch,int checkOnly)
 {
- if (!cfg->is)
+ if (!cfg->is || !cfg->isSubFiles)
   return false;
 
  if (!IsubFlnm || (checkOnly==2 || stricmp(subFlnm,IsubFlnm)!=0))
@@ -257,7 +257,14 @@ bool TsubtitlesFile::init(const TsubtitlesSettings *cfg,const char_t *IsubFlnm,d
    else if ((sub_format&Tsubreader::SUB_FORMATMASK)==Tsubreader::SUB_USF)
     subs=new TsubreaderUSF2(fs,deci,false);
    else
+   {
+    if ((sub_format&Tsubreader::SUB_FORMATMASK)==Tsubreader::SUB_SSA && !deci->getParam2(IDFF_subSSA)) return false;
+    if (((sub_format&Tsubreader::SUB_FORMATMASK)==Tsubreader::SUB_SUBVIEWER 
+     || (sub_format&Tsubreader::SUB_FORMATMASK)==Tsubreader::SUB_SUBVIEWER2)&& !cfg->isSubText) return false;
+    if ((sub_format&Tsubreader::SUB_FORMATMASK)==Tsubreader::SUB_PGS && !cfg->pgs) return false;
+
     subs=new TsubreaderMplayer(fs,sub_format,fps,cfg,ffcfg,false);
+   }
   }
  fclose(f);
  if (checkOnly==2)

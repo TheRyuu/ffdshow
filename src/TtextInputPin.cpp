@@ -38,7 +38,7 @@ TtextInputPin::TtextInputPin(TffdshowDecVideo* pFilter,HRESULT* phr,const wchar_
  utf8(false)
 {
  supdvddec=filter->getParam2(IDFF_supDVDdec) && filter->getParam2(IDFF_mpg2);
- supssa=!!filter->getParam2(IDFF_subTextpinSSA);
+ supssa=!!filter->getParam2(IDFF_subSSA);
  suppgs=filter->getParam2(IDFF_subPGS);
  name[0]='\0';
 }

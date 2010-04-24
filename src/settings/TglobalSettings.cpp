@@ -965,8 +965,8 @@ TglobalSettingsDecVideo::TsubtitlesSettings::TsubtitlesSettings(TintStrColl *Ico
   {
    IDFF_subTextpin        ,&TsubtitlesSettings::textpin        ,0,0,_l(""),0,
      _l("subTextpin"),0,
-   IDFF_subTextpinSSA     ,&TsubtitlesSettings::textpinSSA     ,0,0,_l(""),0,
-     _l("subTextpinSSA"),0,
+   IDFF_subSSA            ,&TsubtitlesSettings::subSSA         ,0,0,_l(""),0,
+     _l("subSSA"),0,
    IDFF_subWatch          ,&TsubtitlesSettings::watch          ,0,0,_l(""),1,
      _l("subWatch"),0,
    IDFF_subSearchHeuristic,&TsubtitlesSettings::searchHeuristic,0,0,_l(""),1,
@@ -979,7 +979,7 @@ TglobalSettingsDecVideo::TsubtitlesSettings::TsubtitlesSettings(TintStrColl *Ico
    IDFF_subSearchDir,(TstrVal)&TsubtitlesSettings::searchDir,2*MAX_PATH ,0 ,_l(""),0,
      _l("subSearchDir"),NULL,
    IDFF_subSearchExt,(TstrVal)&TsubtitlesSettings::searchExt,2*MAX_PATH ,0 ,_l(""),0,
-     _l("subSearchExt"),_l("utf;idx;sub;srt;smi;rt;txt;ass;ssa;aqt;mpl;usf"),
+     _l("subSearchExt"),_l("utf;idx;sub;srt;smi;rt;txt;ass;ssa;aqt;mpl;usf;sup"),
    0
   };
  addOptions(sopts);

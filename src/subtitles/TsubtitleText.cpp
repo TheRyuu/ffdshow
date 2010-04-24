@@ -1141,8 +1141,11 @@ TsubtitleFormat::Twords TsubtitleFormat::processSSA(const TsubtitleLine &line, i
             }
             l2++;
         }
-        else // Add HTML support within SSA
+        // Process HTML tags in SSA subs when extended tags option is checked
+        else if (parent.defProps.extendedTags) // Add HTML support within SSA
             processHTMLTags(words,l,l1,l2);
+        else
+            l2++;
     }
 
     words.add(l,l1,l2,props,0);

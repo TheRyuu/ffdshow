@@ -30,25 +30,28 @@ void TsubtitlesPage::init(void)
  edLimitText(IDC_ED_SUB_SEARCH_EXT,MAX_PATH);
  autosubfirsttime=true;
  addHint(IDC_ED_SUB_SEARCH_EXT,_l("ffdshow searches subtitle files in the folders which are configured in the edit box above.\nFor video.avi, ffdshow searches video.utf, video.idx, video.sub,... and use the file which is found at the first time.\nEnumerate extensions in the order you like and separate them by semicolons.\n\nutf;idx;sub;srt;smi;rt;txt;ssa;aqt;mpl;usf is the default settings."));
- addHint(IDC_CHB_SUBEXTENDEDTAGS,_l("Experimental, may give garbled subtitles."));
+ addHint(IDC_CHB_SUBEXTENDEDTAGS,_l("May give garbled subtitles on Hebrew language."));
  setFont(IDC_BT_SUBTITLES_EXPAND,parent->arrowsFont);
 }
 
-static const int idEmbedded[]={IDC_CHB_SUBCC,IDC_CHB_SUBTEXTPIN_SSA,IDC_CHB_VOBSUB,IDC_CHB_BLURAY, 0};
+static const int idEmbedded[]={IDC_CHB_SUBCC,IDC_CHB_SUBTEXT_SSA,IDC_CHB_VOBSUB,IDC_CHB_BLURAY, 0};
 
 void TsubtitlesPage::cfg2dlg(void)
 {
  sub2dlg();
  enable(filterMode&IDFF_FILTERMODE_PLAYER,IDC_BT_SUBTITLES_RESET);
  setCheck(IDC_CHB_SUB_WATCH,cfgGet(IDFF_subWatch));
- static const int idEmbedd[]={IDC_CHB_SUBTEXTPIN,IDC_CHB_SUBCC,IDC_CHB_SUBTEXTPIN_SSA,IDC_CHB_VOBSUB,IDC_CHB_BLURAY, 0};
+ static const int idEmbedd[]={IDC_CHB_SUBTEXTPIN,IDC_CHB_SUBCC,IDC_CHB_SUBTEXT_SSA,IDC_CHB_VOBSUB,IDC_CHB_BLURAY, 0};
  setCheck(IDC_CHB_SUBTEXTPIN,cfgGet(IDFF_subTextpin));
  setCheck(IDC_CHB_SUBCC,cfgGet(IDFF_subCC));
- setCheck(IDC_CHB_SUBTEXTPIN_SSA,cfgGet(IDFF_subTextpinSSA));
+ setCheck(IDC_CHB_SUBTEXT_SSA,cfgGet(IDFF_subSSA));
  setCheck(IDC_CHB_SUBEXTENDEDTAGS,cfgGet(IDFF_subExtendedTags));
  setCheck(IDC_CHB_VOBSUB,cfgGet(IDFF_subVobsub));
  setCheck(IDC_CHB_BLURAY,cfgGet(IDFF_subPGS));
- enable(getCheck(IDC_CHB_SUBTEXTPIN), idEmbedded, FALSE);
+ setCheck(IDC_CHB_SUBTEXT,cfgGet(IDFF_subText));
+ setCheck(IDC_CHB_SUBTITLES_FILES,cfgGet(IDFF_subFiles));
+ enable(getCheck(IDC_CHB_SUBTEXT), IDC_CHB_SUBEXTENDEDTAGS, FALSE);enable(getCheck(IDC_CHB_SUBTEXT), IDC_CHB_SUBEXTENDEDTAGS, FALSE);
+ //enable(getCheck(IDC_CHB_SUBTEXTPIN), idEmbedded, FALSE);
  enable((filterMode&IDFF_FILTERMODE_VFW)==0,idEmbedd);
 }
 void TsubtitlesPage::sub2dlg(void)
@@ -129,9 +132,14 @@ INT_PTR TsubtitlesPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
    case WM_COMMAND:
     switch (LOWORD(wParam))
      {
+      case IDC_CHB_SUBTEXT:
+      {
+       enable(getCheck(IDC_CHB_SUBTEXT), IDC_CHB_SUBEXTENDEDTAGS, FALSE);
+       break;
+      }
       case IDC_CHB_SUBTEXTPIN:
       {
-       enable(getCheck(IDC_CHB_SUBTEXTPIN), idEmbedded, FALSE);
+       //enable(getCheck(IDC_CHB_SUBTEXTPIN), idEmbedded, FALSE);
        break;
       }
       case IDC_CBX_SUB_FLNM:
@@ -235,10 +243,12 @@ TsubtitlesPage::TsubtitlesPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff)
    IDC_CHB_SUBTEXTPIN,IDFF_subTextpin,NULL,
    IDC_CHB_SUB_SEARCHHEURISTIC,IDFF_subSearchHeuristic,&TsubtitlesPage::auto2dlg,
    IDC_CHB_SUBCC,IDFF_subCC,&TsubtitlesPage::cfg2dlg,
-   IDC_CHB_SUBTEXTPIN_SSA,IDFF_subTextpinSSA,NULL,
+   IDC_CHB_SUBTEXT_SSA,IDFF_subSSA,NULL,
    IDC_CHB_SUBEXTENDEDTAGS,IDFF_subExtendedTags,NULL,
    IDC_CHB_VOBSUB,IDFF_subVobsub,NULL,
    IDC_CHB_BLURAY,IDFF_subPGS,NULL,
+   IDC_CHB_SUBTEXT,IDFF_subText,NULL,
+   IDC_CHB_SUBTITLES_FILES,IDFF_subFiles,NULL,
    0,NULL,NULL
   };
  bindCheckboxes(chb);

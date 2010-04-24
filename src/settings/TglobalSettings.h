@@ -131,7 +131,7 @@ public:
    char_t searchDir[2*MAX_PATH];char_t searchExt[2*MAX_PATH];
    int searchHeuristic;
    int watch;
-   int textpin,textpinSSA;
+   int textpin,subSSA;
   } sub;
 
  TglobalSettingsDecVideo(const Tconfig *Iconfig,int Imode,TintStrColl *Icoll);

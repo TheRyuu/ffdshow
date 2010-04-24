@@ -163,7 +163,6 @@
 #define IDD_QUEUEMSG_8                  294
 #define IDD_COMPATIBILITY_MANAGER       295
 #define IDD_DEINTERLACE_YADIF           296
-#define IDD_SUBTITLES_POS               2230
 #define IDI_MODERN_ICON_D               297
 #define IDI_MODERN_ICON_VA              299
 #define IDI_MODERN_4BIT_ICON_VA         301
@@ -321,6 +320,7 @@
 #define IDC_LBL_ZOOMX                   1105
 #define IDC_TBR_RESIZE_HWARP            1105
 #define IDC_TBR_ZOOMX                   1106
+#define IDC_CHB_SUBTITLES_FILES         1106
 #define IDC_LBL_ZOOMY                   1107
 #define IDC_LBL_FONT_WEIGHT             1108
 #define IDC_TBR_ZOOMY                   1108
@@ -1424,6 +1424,7 @@
 #define IDC_TBR_LINES_F                 1789
 #define IDC_CBX_SUBFIX_IL               1789
 #define IDC_CHB_SUBTEXTPIN_SSA          1789
+#define IDC_CHB_SUBTEXT_SSA             1789
 #define IDC_ED_QUANT_TABLE_INTER27      1790
 #define IDC_TBR_LINES_A                 1790
 #define IDC_CHB_SUBFIX_PUNCTUATION      1790
@@ -1432,6 +1433,7 @@
 #define IDC_ED_QUANT_TABLE_INTER28      1791
 #define IDC_TBR_LINES_TRANSPARENCY      1791
 #define IDC_CHB_SUBFIX_CAPITAL          1791
+#define IDC_CHB_SUBTEXT                 1791
 #define IDC_ED_QUANT_TABLE_INTER29      1792
 #define IDC_TBR_SCRATCHES_F             1792
 #define IDC_CHB_SUBFIX_NUMBERS          1792
@@ -1946,6 +1948,7 @@
 #define IDC_CHB_SUB_SSA_OVERRIDE_POSITION 2227
 #define IDC_CHB_SUB_SSA_OVERRIDE_SCALING 2228
 #define IDC_CHB_SUB_SSA_USE_INPUT_DIMENSIONS 2229
+#define IDD_SUBTITLES_POS               2230
 #define IDC_CHB_SUB_SSA_KEEP_TEXT_INSIDE 2231
 #define IDC_CBX_OUT_HWDEINT_FIELDORDER  2232
 #define IDC_TXT_OUT_DEINT_FIELDORDER    2233
@@ -2006,6 +2009,8 @@
 #define IDC_GRP_SUBTITLESPOS            40013
 #define IDC_GRP_TEXT_SUBTITLES          40014
 #define IDC_CHB_BLURAY                  40015
+#define IDC_GRP_SUBFORMATS              40016
+#define IDC_GRP_SUBSOURCES              40021
 #define IDC_STATIC                      -1
 #define IDC_GRP_WINAMP2                 65535
 
@@ -2016,7 +2021,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        304
 #define _APS_NEXT_COMMAND_VALUE         40015
-#define _APS_NEXT_CONTROL_VALUE         40020
+#define _APS_NEXT_CONTROL_VALUE         40022
 #define _APS_NEXT_SYMED_VALUE           107
 #endif
 #endif

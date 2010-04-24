@@ -50,6 +50,13 @@ int Tsubreader::sub_autodetect(Tstream &fd,const Tconfig *config)
      format=SUB_INVALID;
      break;
     }
+   //TODO : external bluray subtitles support. The test should also be improved
+   /*if (j==1 && !memcmp(line, L"PG\0", 3*2))
+   {
+    format=SUB_PGS;
+    DPRINTF(_l("FOUND BLURAY SUBS!!"));
+    break;
+   }*/
    int i;wchar_t p;
    if (swscanf (line, L"{%d}{%d}", &i, &i)==2)
     {

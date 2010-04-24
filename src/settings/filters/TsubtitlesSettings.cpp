@@ -699,6 +699,10 @@ TsubtitlesSettings::TsubtitlesSettings(TintStrColl *Icoll,TfilterIDFFs *filters,
      _l("subSSAUseMovieDimensions"),0,
    IDFF_subPGS                  ,&TsubtitlesSettings::pgs                    ,0,0,_l(""),1,
      _l("subPGS"),1,
+   IDFF_subFiles                ,&TsubtitlesSettings::isSubFiles             ,0,0,_l(""),1,
+     _l("subFiles"),1,
+   IDFF_subText                 ,&TsubtitlesSettings::isSubText              ,0,0,_l(""),1,
+     _l("subText"),1,
    0
   };
  addOptions(iopts);
