@@ -16,6 +16,8 @@ private:
  FILETIME lastwritetime;
  static void findPossibleSubtitles(const char_t *dir,strings &files);
  static const char_t *exts[];
+ FILE *f;
+ TstreamFile fs;
 protected:
  virtual void checkChange(const TsubtitlesSettings *cfg,bool *forceChange);
 public:
@@ -23,6 +25,7 @@ public:
  static bool extMatch(const char_t *flnm);
  static void findPossibleSubtitles(const char_t *aviFlnm,const char_t *sdir,strings &files);
  static void findSubtitlesFile(const char_t *aviFlnm,const char_t *sdir,const char_t *sext,char_t *subFlnm,size_t buflen,int heuristic,IcheckSubtitle *checkSubtitle);
+ virtual Tsubtitle* getSubtitle(const TsubtitlesSettings *cfg,REFERENCE_TIME rtStart, REFERENCE_TIME rtStop,bool *forceChange);
 
  TsubtitlesFile(IffdshowBase *Ideci);
  virtual ~TsubtitlesFile();

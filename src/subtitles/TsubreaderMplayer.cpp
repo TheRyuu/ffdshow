@@ -1113,6 +1113,7 @@ Tsubtitle* TsubtitleParserMPL2::parse(Tstream &fd,int flags, REFERENCE_TIME, REF
     return store(current);
 }
 
+
 TsubtitleParserBase* TsubtitleParserBase::getParser(int format,double fps,const TsubtitlesSettings *cfg,const Tconfig *ffcfg,Tsubreader *subreader,bool utf8,bool isEmbedded)
 {
  switch (format&Tsubreader::SUB_FORMATMASK)

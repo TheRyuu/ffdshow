@@ -1583,6 +1583,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\subtitles\TsubreaderPGS.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\subtitles\TsubreaderPGS.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\subtitles\TsubreaderUSF.cpp"
 				>
 			</File>

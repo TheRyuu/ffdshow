@@ -5,6 +5,10 @@
 #include "TsubtitleText.h"
 #include "Tstream.h"
 
+#ifndef SAFE_FREE
+#define SAFE_FREE(x)	{if (x)	free(x);	(x) = 0;}	/* helper macro */
+#endif
+
 struct TsubtitlesSettings;
 struct Tsubreader : public std::vector<Tsubtitle*>
 {
@@ -15,6 +19,7 @@ protected:
  void processDuration(const TsubtitlesSettings *cfg);
  std::vector<TsubtitleTexts> processedSubtitleTexts;
 public:
+ virtual void getSubtitle(const TsubtitlesSettings *cfg, REFERENCE_TIME rtStart, REFERENCE_TIME rtStop, bool *forceChange=NULL) {};
  void push_back(Tsubtitle* const &sub)
   {
    IsProcessOverlapDone = false;
@@ -59,7 +64,8 @@ public:
    SUB_ENC_UTF8  =2048,
    SUB_ENC_UNILE =4096,
    SUB_ENC_UNIBE =8192,
-   SUB_ENC_MASK  =SUB_ENC_UTF8+SUB_ENC_UNILE+SUB_ENC_UNIBE
+   SUB_ENC_MASK  =SUB_ENC_UTF8+SUB_ENC_UNILE+SUB_ENC_UNIBE,
+   SUB_KEEP_FILE_OPENED = 16384
   };
  static bool isBitmapsub(int format)
   {
@@ -92,7 +98,7 @@ public:
  bool IsProcessOverlapDone;
  Tsubtitle* operator[](size_t pos) const;
  size_t count() const; // overridding size makes trouble as some calls to size() in this class expect the size of the base class.
- void onSeek();
+ virtual void onSeek();
  void dropRendered();
  size_t getMemorySize() const;
 };

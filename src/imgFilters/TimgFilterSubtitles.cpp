@@ -523,6 +523,7 @@ void TimgFilterSubtitles::onSeek()
         TsubtitlesTextpin* pin = getTextpin();
         if (pin)
             pin->onSeek();
+        if (subs) subs.onSeek();
         glyphThread.onSeek();
     }
 }

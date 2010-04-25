@@ -22,6 +22,7 @@
 #include "TsubreaderMplayer.h"
 #include "TsubreaderVobsub.h"
 #include "TsubreaderUSF.h"
+#include "TsubreaderPGS.h"
 #include "TsubtitlesSettings.h"
 #include "IffdshowBase.h"
 #include "distance.h"
@@ -41,9 +42,10 @@ const char_t* TsubtitlesFile::exts[]=
  _l("aqt"),
  _l("mpl"),
  _l("usf"),
+ _l("sup"),
  NULL
 };
-const char_t* TsubtitlesFile::mask=_l("Subtitles (*.utf;*.sub;*.srt;*.smi;*.rt;*.txt;*.ssa;*.ass;*.aqt;*.mpl;*.idx)\0*.utf;*.sub;*.srt;*.smi;*.rt;*.txt;*.ssa;*.ass;*.aqt;*.mpl;*.usf;*.idx\0All files (*.*)\0*.*\0");
+const char_t* TsubtitlesFile::mask=_l("Subtitles (*.utf;*.sub;*.srt;*.smi;*.rt;*.txt;*.ssa;*.ass;*.aqt;*.mpl;*.idx;*.sup)\0*.utf;*.sub;*.srt;*.smi;*.rt;*.txt;*.ssa;*.ass;*.aqt;*.mpl;*.usf;*.idx;*.sup\0All files (*.*)\0*.*\0");
 
 bool TsubtitlesFile::extMatch(const char_t *flnm)
 {
@@ -211,10 +213,12 @@ void TsubtitlesFile::findPossibleSubtitles(const char_t *aviFlnm,const char_t *s
 TsubtitlesFile::TsubtitlesFile(IffdshowBase *Ideci):Tsubtitles(Ideci)
 {
  hwatch=NULL;
+ f=NULL;
  subFlnm[0]='\0';
 }
 TsubtitlesFile::~TsubtitlesFile()
 {
+ if (f!=NULL) { fclose(f); f=NULL;}
  if (hwatch) FindCloseChangeNotification(hwatch);
 }
 
@@ -237,8 +241,13 @@ bool TsubtitlesFile::init(const TsubtitlesSettings *cfg,const char_t *IsubFlnm,d
    done();
   }
  if (subFlnm[0]=='\0') return false;
- FILE *f=fopen(subFlnm,_l("rb"));if (!f) return false;
- TstreamFile fs(f,TfontSettings::GDI_charset_to_code_page(deci->getParam2(IDFF_fontCharset)));
+ if (f!= NULL)
+ {
+  fclose(f);
+  f=NULL;
+ }
+ f=fopen(subFlnm,_l("rb"));if (!f) return false;
+ fs = TstreamFile(f,TfontSettings::GDI_charset_to_code_page(deci->getParam2(IDFF_fontCharset)));
  sub_format=Tsubreader::sub_autodetect(fs,ffcfg);
  if (sub_format!=Tsubreader::SUB_INVALID && checkOnly!=2)
   {
@@ -256,25 +265,35 @@ bool TsubtitlesFile::init(const TsubtitlesSettings *cfg,const char_t *IsubFlnm,d
     }
    else if ((sub_format&Tsubreader::SUB_FORMATMASK)==Tsubreader::SUB_USF)
     subs=new TsubreaderUSF2(fs,deci,false);
+   else if ((sub_format&Tsubreader::SUB_FORMATMASK)==Tsubreader::SUB_PGS)
+   {
+    if (!cfg->pgs) return false;
+    subs=new TsubreaderPGS(deci, fs,fps,cfg,ffcfg);
+   }
    else
    {
     if ((sub_format&Tsubreader::SUB_FORMATMASK)==Tsubreader::SUB_SSA && !deci->getParam2(IDFF_subSSA)) return false;
     if (((sub_format&Tsubreader::SUB_FORMATMASK)==Tsubreader::SUB_SUBVIEWER 
      || (sub_format&Tsubreader::SUB_FORMATMASK)==Tsubreader::SUB_SUBVIEWER2)&& !cfg->isSubText) return false;
-    if ((sub_format&Tsubreader::SUB_FORMATMASK)==Tsubreader::SUB_PGS && !cfg->pgs) return false;
-
     subs=new TsubreaderMplayer(fs,sub_format,fps,cfg,ffcfg,false);
    }
   }
- fclose(f);
+ // Keep the file descriptor opened if SUB_KEEP_FILE_OPENED flag is present
+ if ((sub_format&Tsubreader::SUB_KEEP_FILE_OPENED) == 0)
+ {
+  fclose(f);
+  f=NULL;
+ }
  if (checkOnly==2)
   return sub_format!=Tsubreader::SUB_INVALID;
- if (!subs || subs->empty())
-  {
-   if (subs) delete subs;subs=NULL;
-   subFlnm[0]='\0';
-   return false;
-  }
+
+ // We can have empty subtitles if the file is read progressively
+ if (!subs || (subs->empty() && ((sub_format&Tsubreader::SUB_KEEP_FILE_OPENED) == 0)))
+ {
+  if (subs) delete subs;subs=NULL;
+  subFlnm[0]='\0';
+  return false;
+ }
  if (!checkOnly)
   {
    //subs->adjust_subs_time(6.0);
@@ -301,4 +320,10 @@ void TsubtitlesFile::checkChange(const TsubtitlesSettings *cfg,bool *forceChange
      if (forceChange) *forceChange=true;
     }
   }
+}
+
+Tsubtitle* TsubtitlesFile::getSubtitle(const TsubtitlesSettings *cfg,REFERENCE_TIME rtStart, REFERENCE_TIME rtStop,bool *forceChange)
+{
+ if (subs) subs->getSubtitle(cfg, rtStart, rtStop, forceChange);
+ return Tsubtitles::getSubtitle(cfg, rtStart, rtStop, forceChange);
 }
