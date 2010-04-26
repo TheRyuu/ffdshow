@@ -62,7 +62,7 @@ protected:
    return ::getc(f);
   }
 public:
- TstreamFile() {};
+ TstreamFile() { own=false; f= NULL;}; //Empty Tstream
  TstreamFile(FILE *If,int codepage=CP_ACP):f(If),ownf(false),Tstream(ENC_AUTODETECT,codepage)
   {
    detectUnicode();
