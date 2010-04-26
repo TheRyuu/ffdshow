@@ -20,17 +20,21 @@
  */
 
 /**
- * @file libavutil/log.c
+ * @file
  * logging functions
  */
 
+#include <unistd.h>
+#include <stdlib.h>
 #include "avutil.h"
 #include "log.h"
+#include "../../ffdebug.c"
 
 #if LIBAVUTIL_VERSION_MAJOR > 50
 static
 #endif
-int av_log_level = AV_LOG_INFO;
+int av_log_level = AV_LOG_WARNING;
+
 
 void av_log_default_callback(void* ptr, int level, const char* fmt, va_list vl)
 {
@@ -73,7 +77,12 @@ void av_log(void* avcl, int level, const char *fmt, ...)
 
 void av_vlog(void* avcl, int level, const char *fmt, va_list vl)
 {
+#if USE_DPRINTF
+	allowDPRINTF=1;
+	DPRINTFA(fmt, vl);
+#else
     av_log_callback(avcl, level, fmt, vl);
+#endif
 }
 
 int av_log_get_level(void)

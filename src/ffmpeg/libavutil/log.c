@@ -20,10 +20,12 @@
  */
 
 /**
- * @file libavutil/log.c
+ * @file
  * logging functions
  */
 
+#include <unistd.h>
+#include <stdlib.h>
 #include "avutil.h"
 #include "log.h"
 #include "../../ffdebug.c"
