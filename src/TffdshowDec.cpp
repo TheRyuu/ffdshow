@@ -1133,6 +1133,7 @@ STDMETHODIMP TffdshowDec::extractExternalStreams(void)
 
 STDMETHODIMP TffdshowDec::setExternalStream(int group, long streamNb)
 {
+ CAutoLock lock(&m_csSetExternalStream);
  TexternalStreams *pStreams = NULL;
  TexternalStream *pStream = NULL;
  if (group == 1) // Audio

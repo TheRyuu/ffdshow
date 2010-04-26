@@ -30,6 +30,7 @@
 #include "TglobalSettings.h"
 #include "dsutil.h"
 #include "strmif.h"
+#include "Ttranslate.h"
 
 Tremote::Tremote(TintStrColl *Icoll,IffdshowBase *Ideci):deci(Ideci),deciD(Ideci),Toptions(Icoll)
 {
@@ -571,7 +572,7 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
             text<char_t>(stringList, (char_t*)cd.lpData);
             cd.cbData = sizeof(char_t)*(strlen(stringList)+1);
             DWORD_PTR ret = 0;
-            DPRINTF(_l("Sending : %s"), stringList);
+            //DPRINTF(_l("Sending : %s"), stringList);
             SendMessageTimeout((HWND)wprm, WM_COPYDATA, MSG_GET_AUDIOSTREAMSLIST, (LPARAM)&cd, 
                 SMTO_ABORTIFHUNG, 1500, &ret);
             return TRUE;
@@ -613,7 +614,7 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
             text<char_t>(stringList, (char_t*)cd.lpData);
             cd.cbData = sizeof(char_t)*(strlen(stringList)+1);
             DWORD_PTR ret = 0;
-            DPRINTF(_l("Sending : %s"), stringList);
+            //DPRINTF(_l("Sending : %s"), stringList);
             SendMessageTimeout((HWND)wprm, WM_COPYDATA, MSG_GET_SUBTITLESTREAMSLIST, (LPARAM)&cd, 
                 SMTO_ABORTIFHUNG, 1500, &ret);
             return TRUE;
@@ -701,20 +702,28 @@ void Tremote::getStreams(bool reload)
 
 void Tremote::onSubStreamChange(int id,int val)
 {
+ if (id==0 && val==0) return;
  getStreams(true);
  if (pSubtitleStreams == NULL || pSubtitleStreams->size() == 0) {currentSubStream=0;return;}
  if (pSubtitleStreams->size()<=(unsigned int)currentSubStream)
   currentSubStream = 0;
  deciD->setExternalStream(2, (*pSubtitleStreams)[currentSubStream].streamNb);
+ char_t msg[255];
+ tsnprintf_s(msg, countof(msg), _TRUNCATE, _l("%s : %s"), tr->translate(_l("Subtitles stream")), (*pSubtitleStreams)[currentSubStream].streamName.c_str());
+ deciV->shortOSDmessage(msg,30);
 }
 
 void Tremote::onAudioStreamChange(int id,int val)
 {
+ if (id==0 && val==0) return;
  getStreams(true);
  if (pAudioStreams == NULL || pAudioStreams->size() == 0) {currentAudioStream=0;return;}
  if (pAudioStreams->size()<=(unsigned int)currentAudioStream)
   currentAudioStream = 0;
  deciD->setExternalStream(1, (*pAudioStreams)[currentAudioStream].streamNb);
+  char_t msg[255];
+  tsnprintf_s(msg, countof(msg), _TRUNCATE, _l("%s : %s"), tr->translate(_l("Audio stream")), (*pAudioStreams)[currentAudioStream].streamName.c_str());
+ deciV->shortOSDmessage(msg,30);
 }
 
 void Tremote::onFastForwardChange(int id,int val)

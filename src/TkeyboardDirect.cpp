@@ -207,7 +207,7 @@ void Tkeyboard::keyProc(int code,bool remote)
  if (!always && !remote && !windowActive())
   return;
  clock_t t1=clock();
- bool isPress=t1-prevT>CLOCKS_PER_SEC/5;
+ bool isPress=((long)t1-(long)prevT)>(long)CLOCKS_PER_SEC/5;
  DPRINTF(_l("prev:%i, now:%i, isPress:%i"),prevT,t1,isPress);
  clock_t prevT0=prevT;
  prevT=t1;
@@ -231,7 +231,7 @@ void Tkeyboard::keyProc(int code,bool remote)
               if (lang && lang[0])
                {
                 char_t msg[256];
-                tsnprintf_s(msg, countof(msg), _TRUNCATE, _l("subtitles language: %s"), lang);
+                tsnprintf_s(msg, countof(msg), _TRUNCATE, tr->translate(_l("subtitles language: %s")), lang);
                 deciV->shortOSDmessage(msg,30);
                }
              }
@@ -284,7 +284,7 @@ void Tkeyboard::keyProc(int code,bool remote)
           if (shortosd)
            {
             char_t msg[256];
-            tsnprintf_s(msg, countof(msg), _TRUNCATE, _l("subtitles %s: %i"), isMod ? _l("size") : _l("delay"), deci->getParam2(idff));
+            tsnprintf_s(msg, countof(msg), _TRUNCATE, tr->translate(_l("subtitles %s: %i")), isMod ? tr->translate(_l("size")) : tr->translate(_l("delay")), deci->getParam2(idff));
             deciV->shortOSDmessage(msg,30);
            }
           return;
@@ -296,7 +296,7 @@ void Tkeyboard::keyProc(int code,bool remote)
           if (shortosd)
            {
             char_t msg[256];
-            tsnprintf_s(msg, countof(msg), _TRUNCATE, _l("subtitles %s: %i"), isMod ? _l("size") : _l("delay"), deci->getParam2(idff));
+            tsnprintf_s(msg, countof(msg), _TRUNCATE, tr->translate(_l("subtitles %s: %i")), isMod ? tr->translate(_l("size")) : tr->translate(_l("delay")), deci->getParam2(idff));
             deciV->shortOSDmessage(msg,30);
            }
           return;
@@ -308,7 +308,7 @@ void Tkeyboard::keyProc(int code,bool remote)
           if (shortosd)
            {
             char_t msg[256];
-            tsnprintf_s(msg, countof(msg), _TRUNCATE, _l("subtitles %s position : %i"), isMod ? _l("horizontal") : _l("vertical"), deci->getParam2(idff));
+            tsnprintf_s(msg, countof(msg), _TRUNCATE, tr->translate(_l("subtitles %s position : %i")), isMod ? tr->translate(_l("horizontal")) : tr->translate(_l("vertical")), deci->getParam2(idff));
             deciV->shortOSDmessage(msg,30);
            }
           return;
@@ -320,7 +320,7 @@ void Tkeyboard::keyProc(int code,bool remote)
           if (shortosd)
            {
             char_t msg[256];
-            tsnprintf_s(msg, countof(msg), _TRUNCATE, _l("subtitles %s position : %i"), isMod ? _l("horizontal") : _l("vertical"), deci->getParam2(idff));
+            tsnprintf_s(msg, countof(msg), _TRUNCATE, tr->translate(_l("subtitles %s position : %i")), isMod ? tr->translate(_l("horizontal")) : tr->translate(_l("vertical")), deci->getParam2(idff));
             deciV->shortOSDmessage(msg,30);
            }
           return;
@@ -334,7 +334,7 @@ void Tkeyboard::keyProc(int code,bool remote)
           if (shortosd)
            {
             char_t msg[256];
-            tsnprintf_s(msg, countof(msg), _TRUNCATE, _l("video delay: %i ms"), delay);
+            tsnprintf_s(msg, countof(msg), _TRUNCATE, tr->translate(_l("video delay: %i ms")), delay);
             deciV->shortOSDmessage(msg,30);
            }
           return;
@@ -347,7 +347,7 @@ void Tkeyboard::keyProc(int code,bool remote)
            {
             char_t msg[256],preset[256];
             deciD->getActivePresetName(preset,256);
-            tsnprintf_s(msg, countof(msg), _TRUNCATE, _l("preset: %s"), preset);
+            tsnprintf_s(msg, countof(msg), _TRUNCATE, tr->translate(_l("preset: %s")), preset);
             deciV->shortOSDmessage(msg,30);
            }
           return;
@@ -427,6 +427,7 @@ Tkeyboard::Tkeyboard(TintStrColl *Icoll,IffdshowBase *Ideci):TdirectInput(Icoll,
    0
   };
  addOptions(iopts);
+ deci->getTranslator(&tr);
  setOnChange(IDFF_isKeys,this,&Tkeyboard::onChange);
 
  prevT=0;
@@ -436,6 +437,7 @@ Tkeyboard::Tkeyboard(TintStrColl *Icoll,IffdshowBase *Ideci):TdirectInput(Icoll,
 }
 Tkeyboard::~Tkeyboard()
 {
+ if (tr) tr->release();
  unhook();
 }
 

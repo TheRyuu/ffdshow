@@ -482,6 +482,7 @@ protected:
  bool m_dirtyStop; // Work around DVBViewer compatibility issue. Old DVBViewer doesn't call NewSegment after Stop and before next play.
  TexternalStreams externalSubtitleStreams;
  TexternalStreams externalAudioStreams;
+ CCritSec m_csSetExternalStream;
 };
 
 #endif

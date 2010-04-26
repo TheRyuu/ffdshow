@@ -3,6 +3,7 @@
 
 #include "Toptions.h"
 #include "interfaces.h"
+#include "Ttranslate.h"
 
 struct IDirectInput;
 struct IDirectInputDevice;
@@ -11,6 +12,7 @@ class TdirectInput :public Toptions
 private:
  const char_t *name;
  const GUID &deviceId;const DIDATAFORMAT &deviceFormat;
+
  IDirectInput *di;
  IDirectInputDevice *did;
  char_t classname[40];
@@ -79,6 +81,7 @@ private:
  uint8_t dkeys[256],dprevkeys[256];
  int keydown;
  void exportGMLkey(int &id,FILE *f,TkeysParams::const_iterator k,const char *second=NULL);
+ Ttranslate *tr;
 protected:
  virtual void processState(void);
 public:
