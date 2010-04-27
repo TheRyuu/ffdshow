@@ -21,8 +21,3 @@ include ../../makefile_c.inc
 
 clean: 
 	rm -f *.o *~ $(SLIB) *.d
-
-#
-# include dependency files if they exist
-#
--include $(SRCS:.cpp=.d) $(SRCS_C:.c=.d)

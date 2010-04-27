@@ -28,8 +28,3 @@ include ../../makefile_c.inc
 
 clean:
 	rm -f *.o libmpeg2/*.o *~ $(SLIB) *.d libmpeg2/*.d
-
-#
-# include dependency files if they exist
-#
--include $(SRCS:.cpp=.d) $(SRCS_C:.c=.d)

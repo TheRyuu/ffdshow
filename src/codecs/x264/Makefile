@@ -63,8 +63,3 @@ include ../../makefile_c.inc
 
 clean:
 	rm -f *.o encoder/*.o common/*.o common/x86/*.o *~ $(SLIB) *.d encoder/*.d common/*.d common/x86/*.d
-
-#
-# include dependency files if they exist
-#
--include $(SRCS:.cpp=.d) $(SRCS_C:.c=.d)

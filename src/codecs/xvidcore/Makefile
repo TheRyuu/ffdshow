@@ -96,12 +96,6 @@ include ../../makefile_c.inc
 
 clean:
 	rm -f *.o bitstream/*.o bitstream/x86_asm/*.o dct/*.o dct/x86_asm/*.o \
-		image/*.o image/x86_asm/*.o motion/*.o motion/x86_asm/*.o \
-		plugins/*.o plugins/x86_asm/*.o prediction/*.o quant/*.o quant/x86_asm/*.o \
-		utils/*.o utils/x86_asm/*.o \
-		*~ $(SLIB) *.d bitstream/*.d dct/*.d image/*.d motion/*.d plugins/*.d prediction/*.d quant/*.d utils/*.d
-
-#
-# include dependency files if they exist
-#
--include $(SRCS:.cpp=.d) $(SRCS_C:.c=.d)
+		image/*.o image/x86_asm/*.o motion/*.o motion/x86_asm/*.o plugins/*.o plugins/x86_asm/*.o \
+		prediction/*.o quant/*.o quant/x86_asm/*.o utils/*.o utils/x86_asm/*.o \
+		*.d bitstream/*.d dct/*.d image/*.d motion/*.d plugins/*.d prediction/*.d quant/*.d utils/*.d *~ $(SLIB) 

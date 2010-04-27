@@ -30,16 +30,9 @@ endif
 SLIB=../../bin/libmplayer.dll
 DEF=libmplayer.def
 
-NOINTRIN=1
-
 include ../makefile_c.inc
 
 .all: $(SLIB)
 
 clean:
 	rm -f *.o *.d yadif/*.o yadif/*.d libaf/*.o libaf/*.d libvo/*.o libvo/*.d mp3lib/*.o mp3lib/*.d ../ffmpeg/libavutil/mem.o ../ffmpeg/libavutil/mem.d $(SLIB)
-
-#
-# include dependency files if they exist
-#
--include $(SRCS:.cpp=.d) $(SRCS_C:.c=.d)

@@ -59,8 +59,3 @@ include ../../makefile_c.inc
 
 clean:
 	rm -f $(SLIB) *.o *.d dec/*.o dec/*.d enc/*.o enc/*.d enc/x86_32/*.o enc/x86_32/*.d enc/x86_64/*.o *.d enc/x86_64/*.d ../../xiph/ogg/*.o ../../xiph/ogg/*.d
-
-#
-# include dependency files if they exist
-#
--include $(SRCS:.cpp=.d) $(SRCS_C:.c=.d)
