@@ -631,6 +631,7 @@ Tsubtitle* TsubtitleParserSSA::parse(Tstream &fd, int flags, REFERENCE_TIME star
  */
  wchar_t line0[this->LINE_LEN+1];
  wchar_t *line=line0;
+ int playResXscript=0,playResYscript=0;
  while (fd.fgets(line, this->LINE_LEN))
   {
 #if 0
@@ -650,9 +651,13 @@ Tsubtitle* TsubtitleParserSSA::parse(Tstream &fd, int flags, REFERENCE_TIME star
      inInfo=1;
     }
    else if (inInfo && strnicmp(line,L"PlayResX:",8)==0)
-    strToInt(line+9,&playResX);
+   {
+	   strToInt(line+9,&playResXscript);
+   }
    else if (inInfo && strnicmp(line,L"PlayResY:",8)==0)
-    strToInt(line+9,&playResY);
+   {
+	   strToInt(line+9,&playResYscript);
+   }   
    else if (inInfo && strnicmp(line,L"Timer:",6)==0)
     {
      wchar_t *end;
@@ -792,6 +797,32 @@ Tsubtitle* TsubtitleParserSSA::parse(Tstream &fd, int flags, REFERENCE_TIME star
       }
      strings fields;
      strtok(line+7,L",",fields);
+
+	//Fix for missing or incomplete movie dimensions in the script
+	 if (playResXscript == 0 && playResYscript == 0)//Assume 384x288 like VSFilter
+	 {
+		playResX = 384;
+		playResY = 288;
+	 }
+	 else//At least one of the two is set
+	 {
+		 if (playResXscript == 0 || playResYscript == 0)//Assume 4/3 aspect ratio like VSFilter, but only if one of them is missing
+		 {
+			if (playResXscript == 0)
+				playResX = playResYscript*4/3;
+			else
+				playResX = playResXscript;
+			if (playResYscript == 0)
+				playResY = playResXscript*3/4;
+			else
+				playResY= playResYscript;
+		 }
+		 else//Both are set, use them
+		 {
+			playResX = playResXscript;
+			playResY = playResYscript;
+		 }
+	 }
      Tstyle style(playResX,playResY,version,wrapStyle);
      for (size_t i=0;i<fields.size() && i<styleFormat.size();i++)
        if (styleFormat[i])

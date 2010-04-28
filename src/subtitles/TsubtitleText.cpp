@@ -1602,7 +1602,8 @@ TrenderedTextSubtitleWord* TsubtitleText::newWord(
     }
     prefs.outlineBlur=w->props.blur ? true : false;
 
-    if (fontSettings.blur || (w->props.version >= TsubtitleParserSSA::ASS && lf.lfHeight > int(37 * gdi_font_scale))) // FIXME: messy. just trying to resemble vsfilter.
+    //if (fontSettings.blur || (w->props.version >= TsubtitleParserSSA::ASS && lf.lfHeight > int(37 * gdi_font_scale))) // FIXME: messy. just trying to resemble vsfilter.
+	if (fontSettings.blur)
         prefs.blur=true;
     else
         prefs.blur=false;
