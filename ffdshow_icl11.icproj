@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="windows-1250"?>
+<VisualStudioProject
+	ProjectType="Intel C++ Project"
+	Version="11.1"
+	Name="ffdshow"
+	ProjectGUID="{0C1CDCBB-5886-42B4-A928-F4B82DD3FD17}"
+	VCNestedProjectGUID="{30A21C7F-035D-41E2-95BE-B4FFA5F5176B}"
+	VCNestedProjectFileName="ffdshow_icl11.vcproj">
+	<Configurations>
+		<Configuration
+			Name="Debug Unicode|Win32">
+			<Tool
+				Name="CppCmplrTool"
+				LoopUnrolling="0"/>
+		</Configuration>
+		<Configuration
+			Name="Debug Unicode|x64">
+			<Tool
+				Name="CppCmplrTool"
+				LoopUnrolling="0"/>
+		</Configuration>
+		<Configuration
+			Name="Release Unicode|Win32">
+			<Tool
+				Name="CppCmplrTool"
+				Optimization="1000"
+				GlobalOptimizations="true"
+				InterproceduralOptimization="1"
+				LoopUnrolling="4"/>
+		</Configuration>
+		<Configuration
+			Name="Release Unicode|x64">
+			<Tool
+				Name="CppCmplrTool"
+				Optimization="1000"
+				GlobalOptimizations="true"
+				InterproceduralOptimization="1"
+				ImproveFloatingPointConsistency="0"
+				UseProcExt="0"
+				RequireProcExt="0"
+				LoopUnrolling="4"/>
+		</Configuration>
+	</Configurations>
+	<Files/>
+</VisualStudioProject>

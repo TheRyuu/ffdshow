@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<VisualStudioProject
+	ProjectType="Intel C++ Project"
+	Version="11.1"
+	Name="ff_vfw"
+	ProjectGUID="{7DED1201-8517-4009-9B4C-38FE7EB4D9D3}"
+	VCNestedProjectGUID="{1EBF3292-5911-4B07-A06C-E33A72CD62EB}"
+	VCNestedProjectFileName="ff_vfw_icl11.vcproj">
+	<Configurations>
+		<Configuration
+			Name="Release|Win32">
+			<Tool
+				Name="CppCmplrTool"
+				Optimization="1000"
+				GlobalOptimizations="true"
+				InterproceduralOptimization="1"/>
+		</Configuration>
+		<Configuration
+			Name="Release|x64">
+			<Tool
+				Name="CppCmplrTool"
+				Optimization="1000"
+				GlobalOptimizations="true"
+				InterproceduralOptimization="1"/>
+		</Configuration>
+	</Configurations>
+	<Files/>
+</VisualStudioProject>

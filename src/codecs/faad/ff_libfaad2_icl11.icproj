@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="windows-1250"?>
+<VisualStudioProject
+	ProjectType="Intel C++ Project"
+	Version="11.1"
+	Name="ff_libfaad2"
+	ProjectGUID="{3DFCD606-291B-4765-9913-A6EC1D83F33F}"
+	VCNestedProjectGUID="{BF29FAFC-7E71-4671-A2F8-D510EF5C0685}"
+	VCNestedProjectFileName="ff_libfaad2_icl11.vcproj">
+	<Configurations>
+		<Configuration
+			Name="Release|Win32">
+			<Tool
+				Name="CppCmplrTool"
+				Optimization="1000"
+				GlobalOptimizations="true"
+				InterproceduralOptimization="1"/>
+		</Configuration>
+		<Configuration
+			Name="Release|x64">
+			<Tool
+				Name="CppCmplrTool"
+				Optimization="1000"
+				GlobalOptimizations="true"
+				InterproceduralOptimization="1"
+				ImproveFloatingPointConsistency="0"
+				UseProcExt="0"
+				RequireProcExt="0"/>
+		</Configuration>
+	</Configurations>
+	<Files/>
+</VisualStudioProject>

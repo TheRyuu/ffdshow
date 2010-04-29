@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<VisualStudioProject
+	ProjectType="Intel C++ Project"
+	Version="11.1"
+	Name="makeAVIS"
+	ProjectGUID="{C08EB9AF-B0E4-4052-9791-275525ABA140}"
+	VCNestedProjectGUID="{5A4518FA-F2D9-4632-ACD3-85A7FCF91CE4}"
+	VCNestedProjectFileName="makeAVIS_icl11.vcproj">
+	<Configurations>
+		<Configuration
+			Name="Release|Win32">
+			<Tool
+				Name="CppCmplrTool"
+				Optimization="1000"/>
+		</Configuration>
+		<Configuration
+			Name="Release|x64">
+			<Tool
+				Name="CppCmplrTool"
+				Optimization="1000"/>
+		</Configuration>
+	</Configurations>
+	<Files/>
+</VisualStudioProject>

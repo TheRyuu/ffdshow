@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<VisualStudioProject
+	ProjectType="Intel C++ Project"
+	Version="11.1"
+	Name="ff_libmad"
+	ProjectGUID="{997933F0-7FF5-4108-B514-C1DD9F87E71F}"
+	VCNestedProjectGUID="{B8000FD0-4A45-4D79-B320-1AFBE61C01C0}"
+	VCNestedProjectFileName="ff_libmad_icl11.vcproj">
+	<Configurations>
+		<Configuration
+			Name="Release|Win32">
+			<Tool
+				Name="CppCmplrTool"
+				Optimization="1000"
+				GlobalOptimizations="true"
+				InterproceduralOptimization="1"/>
+		</Configuration>
+		<Configuration
+			Name="Release|x64">
+			<Tool
+				Name="CppCmplrTool"
+				Optimization="1000"
+				GlobalOptimizations="true"
+				InterproceduralOptimization="1"
+				ImproveFloatingPointConsistency="0"
+				UseProcExt="0"
+				RequireProcExt="0"/>
+		</Configuration>
+	</Configurations>
+	<Files/>
+</VisualStudioProject>
