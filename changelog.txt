@@ -1,4 +1,126 @@
-﻿Changelog for Beta 6
+﻿Changelog for Beta 7
+Bugfixes
+    *
+      Various H.264 and MPEG-2 seeking issues fixed
+    *
+      Several memory leak fixes
+    *
+      Subtitle fixes:
+          o
+            Don't show closed caption if “Subtitles” is not checked
+          o
+            Non-DVD subtitles: check if “Subtitles” is checked before showing subtitles
+          o
+            Setting “Maintain outside text inside screen” was not always applied correctly
+          o
+            Subtitle file could not be disabled during DVD playback
+          o
+            Duration of SSA move tags was randomly applied
+          o
+            Various fixes to alignment, line spacing, movement and positioning of ASS, SSA and SRT subtitles
+          o
+            Several crash fixes
+    *
+      Fixes in the Audio mixer and LFE crossover filter:
+          o
+            Center and LFE were too loud when downmixing 5.1→2ch
+          o
+            If the original sound had LFE channel, it was overwritten
+          o
+            If the center channel existed, left and right channels were ignored
+    *
+      Several MLP/TrueHD/LPCM decoding fixes
+    *
+      Playing a CSS-protected DVD using MPC or MPC-HC caused a crash in certain scenarios
+    *
+      Fixed DVD menu positioning and freeze issue
+    *
+      Fixed several crashes in WMP11 and Media Center
+    *
+      ffdshow.ax failed to register when a registry key was missing
+    *
+      Removed black lines in Perspective Correction filter
+    *
+      ffdshow would crash when using the Grab filter and the Resize filter with aspect ratio correction
+    *
+      Many fixes across multiple ffdshow components including OSD, deinterlacing, remote API, DVD and MPEG-2 playback
+
+New and improved features
+
+    *
+      New multi-threaded H.264 decoder: ffmpeg-mt
+    *
+      DTS-HD and Dolby TrueHD bitstreaming support for the ATI Radeon HD5000 series, ASUS Xonar sound cards and Intel Clarkdale CPUs
+    *
+      New color space converters:
+          o
+            Supported input color spaces: progressive YV12, progressive NV12, YV16, YUY2
+          o
+            Supported output color spaces: RGB24, RGB32
+          o
+            High quality chroma upscaling
+          o
+            Added dithering to reduce “banding”
+          o
+            Support for color primary parameters such as ITU-R BT.601/709, input and output levels
+          o
+            RGB conversion done in 11-bit or higher
+          o
+            Significant improvements in YV12 → YUY2, YUY2 → RGB, and YV12 → RGB conversion performance
+          o
+            Requires SSE2-capable CPU; for better performance multi-core CPU recommended
+    *
+      New RGB conversion options:
+          o
+            Output levels (“Computer monitor” or “TV/Projector”)
+          o
+            YCbCr specification “Auto” (uses H.264's VUI or width > 1024: BT.709, width <= 1024: BT.601)
+    *
+      Various improvements in the Subtitle filter:
+          o
+            Improved rendering quality, memory usage and performance
+          o
+            General code cleanup
+          o
+            SSA/ASS subtitles: better compatibility (support for position & move tags), better calculation of line wrapping, new dialog to configure ASS specific options. Also support added for ASS tags within SRT subtitles (SubViewer)
+    *
+      FFDShowAPI: .NET wrapper around FFDShowRemoteAPI allows integration of ffdshow with third-party applications
+    *
+      FFDShowRemoteAPI:
+          o
+            Improved subtitle/audio streams detection; now compatible with most filters handling the IAMStreamSelect interface
+          o
+            New command to disable FF/RW OSD
+          o
+            When using absolute positioning, x and y coordinates are now representing pixels instead of percentages
+          o
+            Added new parameter to determine the duration in which a message will be displayed
+    *
+      OSD settings are now based on the current ffdshow preset; this allows turning OSD on/off using the “Automatic preset loading” mechanism
+    *
+      Buffered video RAM access improves video memory access in certain scenarios
+    *
+      AviSynth filter now uses AviSynth's frames for buffering which improves performance and reduces the filter's memory usage
+    *
+      “Max. amplification” in the Normalization filter will only be applied after pressing “Apply”
+    *
+      Better handling of DVD menus
+    *
+      Improved autocrop algorithm
+    *
+      Added RealVideo 8 (RV30) support
+    *
+      Added soft telecine detection
+    *
+      Added several new preset autoload conditions
+    *
+      libavcodec is now used by default to decode Theora videos
+    *
+      libavcodec is now used as Dolby TrueHD decoder instead of MLP
+    *
+      Various updates to libavcodec
+
+Changelog for Beta 6
 Bugfixes:
     *
       Important security fix: Buffer overflow vulnerability was fixed
