@@ -52,11 +52,11 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\debug_unicode_2008_icl10/ffdshow.tlb"
+				TypeLibraryName=".\debug_unicode_2008_ICL11/ffdshow.tlb"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/Qvec- /MP"
+				AdditionalOptions="/MP"
 				Optimization="0"
 				AdditionalIncludeDirectories="src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/mplayer;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/filters;src/xiph;src/codecs/theora/enc"
 				PreprocessorDefinitions="DEBUG;_DEBUG;WIN32;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;ARCH_IS_32BIT;ARCH_IS_IA32"
@@ -168,11 +168,11 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="3"
-				TypeLibraryName=".\debug_unicode_2008_x64_icl10/ffdshow.tlb"
+				TypeLibraryName=".\debug_unicode_2008_x64_ICL11/ffdshow.tlb"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/Qvec- /MP"
+				AdditionalOptions="/MP"
 				Optimization="0"
 				AdditionalIncludeDirectories="src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/mplayer;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/filters;src/xiph;src/codecs/theora/enc"
 				PreprocessorDefinitions="DEBUG;_DEBUG;WIN64;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;ARCH_IS_64BIT;ARCH_IS_X86_64"
@@ -285,11 +285,11 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\release_unicode_2008_icl10/ffdshow.tlb"
+				TypeLibraryName=".\release_unicode_2008_ICL11/ffdshow.tlb"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/Qvec- /MP"
+				AdditionalOptions="/MP"
 				Optimization="2"
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="true"
@@ -408,11 +408,11 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="3"
-				TypeLibraryName=".\release_unicode_2008_x64_icl10/ffdshow.tlb"
+				TypeLibraryName=".\release_unicode_2008_x64_ICL11/ffdshow.tlb"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/Qvec- /MP"
+				AdditionalOptions="/MP"
 				Optimization="2"
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="true"
