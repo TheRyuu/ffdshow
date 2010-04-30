@@ -579,11 +579,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\libavcodec\dcadsp.c"
+				RelativePath=".\libavcodec\dca_parser.c"
 				>
 			</File>
 			<File
-				RelativePath=".\libavcodec\dca_parser.c"
+				RelativePath=".\libavcodec\dcadsp.c"
 				>
 			</File>
 			<File
@@ -1837,6 +1837,26 @@
 			</File>
 			<File
 				RelativePath="..\zlib\deflate.h"
+				>
+			</File>
+			<File
+				RelativePath="..\zlib\gzclose.c"
+				>
+			</File>
+			<File
+				RelativePath="..\zlib\gzguts.h"
+				>
+			</File>
+			<File
+				RelativePath="..\zlib\gzlib.c"
+				>
+			</File>
+			<File
+				RelativePath="..\zlib\gzread.c"
+				>
+			</File>
+			<File
+				RelativePath="..\zlib\gzwrite.c"
 				>
 			</File>
 			<File

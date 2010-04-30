@@ -220,6 +220,10 @@ SRCS_C=\
       $(ZLIB_DIR)/compress.c \
       $(ZLIB_DIR)/crc32.c \
       $(ZLIB_DIR)/deflate.c \
+      $(ZLIB_DIR)/gzclose.c \
+      $(ZLIB_DIR)/gzlib.c \
+      $(ZLIB_DIR)/gzread.c \
+      $(ZLIB_DIR)/gzwrite.c \
       $(ZLIB_DIR)/infback.c \
       $(ZLIB_DIR)/inffast.c \
       $(ZLIB_DIR)/inflate.c \
