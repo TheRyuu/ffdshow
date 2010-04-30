@@ -52,7 +52,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\debug_unicode_2008_ICL11/ffdshow.tlb"
+				TypeLibraryName=".\debug_unicode_ICL11/ffdshow.tlb"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
@@ -168,7 +168,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="3"
-				TypeLibraryName=".\debug_unicode_2008_x64_ICL11/ffdshow.tlb"
+				TypeLibraryName=".\debug_unicode_x64_ICL11/ffdshow.tlb"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
@@ -285,7 +285,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\release_unicode_2008_ICL11/ffdshow.tlb"
+				TypeLibraryName=".\release_unicode_ICL11/ffdshow.tlb"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
@@ -408,7 +408,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="3"
-				TypeLibraryName=".\release_unicode_2008_x64_ICL11/ffdshow.tlb"
+				TypeLibraryName=".\release_unicode_x64_ICL11/ffdshow.tlb"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
