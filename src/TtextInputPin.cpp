@@ -37,9 +37,6 @@ TtextInputPin::TtextInputPin(TffdshowDecVideo* pFilter,HRESULT* phr,const wchar_
  found(false),
  utf8(false)
 {
- supdvddec=filter->getParam2(IDFF_supDVDdec) && filter->getParam2(IDFF_mpg2);
- supssa=!!filter->getParam2(IDFF_subSSA);
- suppgs=filter->getParam2(IDFF_subPGS);
  name[0]='\0';
 }
 TtextInputPin::~TtextInputPin()
@@ -49,17 +46,22 @@ TtextInputPin::~TtextInputPin()
 
 HRESULT TtextInputPin::CheckMediaType(const CMediaType *mtIn)
 {
+ /* Return S_OK (accept the subtitles connection) if embedded subtitles are enabled (IDFF_subTextpin)
+    and if the given subtitles format is enabled 
+    (IDFF_subText for text, IDFF_subVobsub for DVD subs, IDFF_subSSA for SSA subs, IDFF_subPGS for bluray subs)
+ */
  return (filter->getParam2(IDFF_subTextpin) || mtIn->majortype==MEDIATYPE_DVD_ENCRYPTED_PACK) &&
-         (mtIn->majortype==MEDIATYPE_Text ||
+         (mtIn->majortype==MEDIATYPE_Text && (filter->getParam2(IDFF_subText) == 1))||
          (mtIn->majortype==MEDIATYPE_Subtitle &&
           (mtIn->subtype==MEDIASUBTYPE_UTF8 ||
-           mtIn->subtype==MEDIASUBTYPE_VOBSUB ||
+           (mtIn->subtype==MEDIASUBTYPE_VOBSUB && (filter->getParam2(IDFF_subVobsub) == 1))||
            mtIn->subtype==MEDIASUBTYPE_USF ||
-           (mtIn->subtype==MEDIASUBTYPE_HDMV_PGS && suppgs) || //Bluray subs
-           (mtIn->subtype==MEDIASUBTYPE_NULL && mtIn->formattype == FORMAT_SubtitleInfo && suppgs) || //Bluray subs
-           (mtIn->subtype==MEDIASUBTYPE_SSA  && supssa) ||
-           (mtIn->subtype==MEDIASUBTYPE_ASS  && supssa) ||
-           (mtIn->subtype==MEDIASUBTYPE_ASS2 && supssa))
+           (mtIn->subtype==MEDIASUBTYPE_HDMV_PGS 
+             && (filter->getParam2(IDFF_subPGS) == 1)) || //Bluray subs
+           (mtIn->subtype==MEDIASUBTYPE_NULL && mtIn->formattype == FORMAT_SubtitleInfo 
+             && (filter->getParam2(IDFF_subPGS) == 1)) || //Bluray subs
+           ((mtIn->subtype==MEDIASUBTYPE_SSA  || mtIn->subtype==MEDIASUBTYPE_ASS || mtIn->subtype==MEDIASUBTYPE_ASS2)
+             && (filter->getParam2(IDFF_subSSA) == 1))
          ) ||
          (
           (mtIn->majortype==MEDIATYPE_DVD_ENCRYPTED_PACK ||

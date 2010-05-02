@@ -137,11 +137,11 @@ INT_PTR TsubtitlesPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
        enable(getCheck(IDC_CHB_SUBTEXT), IDC_CHB_SUBEXTENDEDTAGS, FALSE);
        break;
       }
-      case IDC_CHB_SUBTEXTPIN:
+      /*case IDC_CHB_SUBTEXTPIN:
       {
-       //enable(getCheck(IDC_CHB_SUBTEXTPIN), idEmbedded, FALSE);
+       enable(getCheck(IDC_CHB_SUBTEXTPIN), idEmbedded, FALSE);
        break;
-      }
+      }*/
       case IDC_CBX_SUB_FLNM:
        if (HIWORD(wParam)==CBN_SELCHANGE || HIWORD(wParam)==CBN_EDITUPDATE)
         parent->setChange();

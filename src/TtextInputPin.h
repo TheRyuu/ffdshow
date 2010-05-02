@@ -9,7 +9,6 @@ class TtextInputPin :public CDeCSSInputPin
 private:
  TffdshowDecVideo *filter;
  int id;
- int supdvddec,supssa,suppgs;
  bool firsttime,found;
  int type;
  REFERENCE_TIME segmentStart;
