@@ -11,6 +11,7 @@
 			Name="Release|Win32">
 			<Tool
 				Name="CppCmplrTool"
+				Optimization="1000"
 				GlobalOptimizations="true"
 				InterproceduralOptimization="1"/>
 		</Configuration>
@@ -18,6 +19,7 @@
 			Name="Release|x64">
 			<Tool
 				Name="CppCmplrTool"
+				Optimization="1000"
 				GlobalOptimizations="true"
 				InterproceduralOptimization="1"
 				ImproveFloatingPointConsistency="0"

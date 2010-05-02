@@ -23,8 +23,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug Unicode|Win32"
-			OutputDirectory="debug_unicode_icl11"
-			IntermediateDirectory="debug_unicode_icl11"
+			OutputDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
+			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
 			ConfigurationType="2"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"

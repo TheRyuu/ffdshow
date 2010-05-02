@@ -21,8 +21,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug Unicode|Win32"
-			OutputDirectory="Debug_Unicode_$(PlatformName)_2008"
-			IntermediateDirectory="Debug_Unicode_$(PlatformName)_2008"
+			OutputDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
+			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
 			ConfigurationType="2"
 			UseOfMFC="0"
 			CharacterSet="1"

@@ -230,8 +230,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(ConfigurationName)_$(PlatformName)_2008"
-			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_2008"
+			OutputDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
+			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
 			ConfigurationType="2"
 			UseOfMFC="1"
 			ATLMinimizesCRunTimeLibraryUsage="false"
