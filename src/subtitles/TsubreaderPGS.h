@@ -19,6 +19,7 @@ private:
  Tstream *pStream;
  IffdshowBase *deci;
  TsubtitlePGSParser *pSubtitlePGSParser;
+ REFERENCE_TIME rtPos;
 public:
  TsubreaderPGS(IffdshowBase *Ideci, Tstream &Ifd, double Ifps,const TsubtitlesSettings *Icfg,const Tconfig *Iffcfg);
  virtual ~TsubreaderPGS();

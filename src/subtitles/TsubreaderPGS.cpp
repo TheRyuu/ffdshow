@@ -40,22 +40,30 @@ TsubreaderPGS::TsubreaderPGS(IffdshowBase *Ideci, Tstream &Ifd, double Ifps,cons
 void TsubreaderPGS::onSeek(void)
 {
  clear();
+ rtPos = INVALID_TIME;
  pStream->rewind();
  if (pSubtitlePGSParser!=NULL) pSubtitlePGSParser->reset();
 }
 
 void TsubreaderPGS::getSubtitle(const TsubtitlesSettings *cfg, REFERENCE_TIME rtStart, REFERENCE_TIME rtStop, bool *forceChange)
 {
- // Parse 10 seconds before subtitles occur
- //rtStart+=10000*1000*10;
- rtStop+=10000*1000*10; 
  parse(0, rtStart, rtStop);
 }
 
 // Blu-Ray subtitles files parser
-void TsubreaderPGS::parse(int flags, REFERENCE_TIME rtStart, REFERENCE_TIME rtStop) {
+void TsubreaderPGS::parse(int flags, REFERENCE_TIME rtStart, REFERENCE_TIME rtStop) 
+{
+
+ // Parse 10 seconds before subtitles occur
+ REFERENCE_TIME parseRtStart=rtStart-10000*1000*10;
+ REFERENCE_TIME parseRtStop=rtStop+10000*1000*10; 
 
  REFERENCE_TIME segStart=INVALID_TIME, segStop=INVALID_TIME;
+ if (rtPos == INVALID_TIME) rtPos = parseRtStart;
+
+ REFERENCE_TIME oldRtPos = rtPos;
+ 
+ bool isSeeking=true;
  do {
   if (!pStream->read(data,1,2)) break;
   if (data[0] != 80 || data[1] != 0x47) { DPRINTF(_l("TsubreaderPGS::parse wrong format"));break;}
@@ -73,20 +81,23 @@ void TsubreaderPGS::parse(int flags, REFERENCE_TIME rtStart, REFERENCE_TIME rtSt
   pStream->read(data,1,3); // Segment type (1 byte) and segment length (2 bytes)
   size_t datalen = data[2] + (((uint32_t)data[1]) << 8);
 
-  // Passed subtitles, jump to next segment
-  if (rtStart != INVALID_TIME && rtStart > segStop) 
+  // Already parsed subtitles, jump to next segment
+  if (isSeeking && (rtPos >= segStop)) 
   {
    if (!pStream->seek(datalen, SEEK_CUR)) break;
    continue;
   }
+  isSeeking = false;
 
   // Subtitles after given range, stop here and return the current list
-  if (!((rtStart == INVALID_TIME || rtStart < segStop) 
-   && (rtStop == INVALID_TIME || rtStop >= segStart)))
+  if (segStop > parseRtStop)
   {
    pStream->seek(-13, SEEK_CUR);
    break;
   }
+
+  rtPos = segStop;
+
 #if DEBUG_PGS_TIMESTAMPS
   char_t rtString[25];
   rt2Str(segStart, rtString);
@@ -104,6 +115,12 @@ void TsubreaderPGS::parse(int flags, REFERENCE_TIME rtStart, REFERENCE_TIME rtSt
 
  TcompositionObjects compositionObjects;
  pSubtitlePGSParser->getObjects(rtStart, rtStop, &compositionObjects); 
+
+ foreach (Tsubtitle *pSubtitle, (*this))
+ {
+  ((TsubtitlePGS*)pSubtitle)->updateTimestamps();
+ }
+
  foreach (TcompositionObject *pCompositionObject, compositionObjects) {
   if (pCompositionObject->m_pSubtitlePGS == NULL) {
    for (int i=0;i<pCompositionObject->m_nWindows; i++) {
