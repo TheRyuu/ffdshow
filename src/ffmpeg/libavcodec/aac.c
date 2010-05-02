@@ -21,7 +21,7 @@
  */
 
 /**
- * @file libavcodec/aac.c
+ * @file
  * AAC decoder
  * @author Oded Shimon  ( ods15 ods15 dyndns org )
  * @author Maxim Gavrilov ( maxim.gavrilov gmail com )
@@ -925,8 +925,8 @@ static inline float *VMUL4S(float *dst, const float *v, unsigned idx,
                             unsigned sign, const float *scale)
 {
     unsigned nz = idx >> 12;
-    union float754 s, t;
-    s.f= t.f = *scale;
+    union float754 s = { .f = *scale };
+    union float754 t;
 
     t.i = s.i ^ (sign & 1<<31);
     *dst++ = v[idx    & 3] * t.f;
@@ -1888,15 +1888,12 @@ static void spectral_to_sample(AACContext *ac)
                     apply_channel_coupling(ac, che, type, i, BETWEEN_TNS_AND_IMDCT, apply_dependent_coupling);
                 if (type != TYPE_CCE || che->coup.coupling_point == AFTER_IMDCT) {
                     imdct_and_windowing(ac, &che->ch[0], imdct_bias);
-                    if (ac->m4ac.sbr > 0) {
-                        ff_sbr_dequant(ac, &che->sbr, type == TYPE_CPE ? TYPE_CPE : TYPE_SCE);
-                        ff_sbr_apply(ac, &che->sbr, 0, che->ch[0].ret, che->ch[0].ret);
+                    if (type == TYPE_CPE) {
+                        imdct_and_windowing(ac, &che->ch[1], imdct_bias);
                     }
-                }
-                if (type == TYPE_CPE) {
-                    imdct_and_windowing(ac, &che->ch[1], imdct_bias);
-                    if (ac->m4ac.sbr > 0)
-                        ff_sbr_apply(ac, &che->sbr, 1, che->ch[1].ret, che->ch[1].ret);
+                    if (ac->m4ac.sbr > 0) {
+                        ff_sbr_apply(ac, &che->sbr, type, che->ch[0].ret, che->ch[1].ret);
+                    }
                 }
                 if (type <= TYPE_CCE)
                     apply_channel_coupling(ac, che, type, i, AFTER_IMDCT, apply_independent_coupling);
