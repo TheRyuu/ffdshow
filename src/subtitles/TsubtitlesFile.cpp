@@ -231,7 +231,10 @@ void TsubtitlesFile::done(void)
 bool TsubtitlesFile::init(const TsubtitlesSettings *cfg,const char_t *IsubFlnm,double Ifps,bool watch,int checkOnly)
 {
  if (!cfg->is || !cfg->isSubFiles)
+ {
+  DPRINTF(_l("TsubtitlesFile::init subtitles files disabled is(%d), isSubFiles(%d)"),cfg->is, cfg->isSubFiles);
   return false;
+ }
 
  if (!IsubFlnm || (checkOnly==2 || stricmp(subFlnm,IsubFlnm)!=0))
   ff_strncpy(subFlnm, IsubFlnm ? IsubFlnm : _l(""), countof(subFlnm));
@@ -267,14 +270,28 @@ bool TsubtitlesFile::init(const TsubtitlesSettings *cfg,const char_t *IsubFlnm,d
     subs=new TsubreaderUSF2(fs,deci,false);
    else if ((sub_format&Tsubreader::SUB_FORMATMASK)==Tsubreader::SUB_PGS)
    {
-    if (!cfg->pgs) return false;
+    if (!cfg->pgs) 
+    {
+     DPRINTF(_l("TsubtitlesFile::init Blu-Ray subtitles detected but disabled by user"));
+     return false;
+    }
+    DPRINTF(_l("TsubtitlesFile::init Blu-Ray subtitles detected"));
     subs=new TsubreaderPGS(deci, fs,fps,cfg,ffcfg);
    }
    else
    {
-    if ((sub_format&Tsubreader::SUB_FORMATMASK)==Tsubreader::SUB_SSA && !deci->getParam2(IDFF_subSSA)) return false;
+    if ((sub_format&Tsubreader::SUB_FORMATMASK)==Tsubreader::SUB_SSA && !deci->getParam2(IDFF_subSSA)) 
+    {
+     DPRINTF(_l("TsubtitlesFile::init SSA subtitles detected but disabled by user"));
+     return false;
+    }
     if (((sub_format&Tsubreader::SUB_FORMATMASK)==Tsubreader::SUB_SUBVIEWER 
-     || (sub_format&Tsubreader::SUB_FORMATMASK)==Tsubreader::SUB_SUBVIEWER2)&& !cfg->isSubText) return false;
+     || (sub_format&Tsubreader::SUB_FORMATMASK)==Tsubreader::SUB_SUBVIEWER2)&& !cfg->isSubText) 
+    {
+     DPRINTF(_l("TsubtitlesFile::init text subtitles detected but disabled by user"));
+     return false;
+    }
+    DPRINTF(_l("TsubtitlesFile::init text subtitles detected"));
     subs=new TsubreaderMplayer(fs,sub_format,fps,cfg,ffcfg,false);
    }
   }

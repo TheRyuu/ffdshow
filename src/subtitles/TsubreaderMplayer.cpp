@@ -296,7 +296,6 @@ Tsubtitle* TsubtitleParserSubviewer::parse(Tstream &fd,int flags, REFERENCE_TIME
            continue;
           current.start = this->hmsToTime(a1,a2,a3,a4/10);
           current.stop  = this->hmsToTime(b1,b2,b3,b4/10);
-
          }
          current.defProps.tStart = current.defProps.karaokeStart = current.start;
          current.defProps.tStop = current.stop;
@@ -1144,7 +1143,6 @@ Tsubtitle* TsubtitleParserMPL2::parse(Tstream &fd,int flags, REFERENCE_TIME, REF
      ;
     return store(current);
 }
-
 
 TsubtitleParserBase* TsubtitleParserBase::getParser(int format,double fps,const TsubtitlesSettings *cfg,const Tconfig *ffcfg,Tsubreader *subreader,bool utf8,bool isEmbedded)
 {

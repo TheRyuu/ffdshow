@@ -256,7 +256,8 @@ void Tsubreader::dropRendered()
 void Tsubreader::onSeek()
 {
     dropRendered();
-    processedSubtitleTexts.clear();
+    // Why dropping text ? This clears all the parsed text subtitles
+    //processedSubtitleTexts.clear();
 }
 
 Tsubtitle* Tsubreader::operator[](size_t pos) const
