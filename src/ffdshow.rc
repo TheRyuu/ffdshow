@@ -2963,9 +2963,9 @@ BEGIN
     CONTROL         "Ignore ASS/ASS2 font size",IDC_CHB_SUB_SSA_OVERRIDE_SCALING,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,11,142,97,10
     GROUPBOX        "Subtitles placement",IDC_GRP_SUBTITLESPOS,4,0,266,228
-    LTEXT           "Horizontal position:",IDC_LBL_SUB_POSX,19,16,62,8
+    LTEXT           "Horizontal position:",IDC_LBL_SUB_POSX,19,16,110,8
     CONTROL         "",IDC_TBR_SUB_POSX,"msctls_trackbar32",TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,15,28,120,10
-    LTEXT           "Vertical position:",IDC_LBL_SUB_POSY,136,16,54,8
+    LTEXT           "Vertical position:",IDC_LBL_SUB_POSY,136,16,119,8
     CONTROL         "",IDC_TBR_SUB_POSY,"msctls_trackbar32",TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,135,28,125,10
     CONTROL         "Letterbox",IDC_CHB_SUBTITLES_EXPAND,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,11,49,43,10
     EDITTEXT        IDC_ED_SUBTITLES_EXPAND_X,57,47,26,13,ES_AUTOHSCROLL | ES_NUMBER,WS_EX_RIGHT
