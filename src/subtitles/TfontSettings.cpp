@@ -316,6 +316,8 @@ TfontSettingsSub::TfontSettingsSub(TintStrColl *Icoll):TfontSettings(Icoll)
      _l("fontShadowMode"), 1, // Default shadow mode to gradient (best rendering)
    IDFF_fontBlur               ,&TfontSettings::blur               ,0,0,_l(""),1,
      _l("fontBlur"), 0,
+   IDFF_fontShadowOverride     ,&TfontSettings::shadowOverride     ,0,0,_l(""),1,
+     _l("fontShadowOverride"), 0,
    0
   };
  addOptions(iopts);

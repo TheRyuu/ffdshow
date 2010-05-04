@@ -49,7 +49,7 @@ public:
  int split;
  int overrideScale,aspectAuto;
  int outlineWidth;
- int shadowSize, shadowMode; // Subtitles shadow
+ int shadowSize, shadowMode, shadowOverride; // Subtitles shadow
  int blur;
  /**
   * gdi_font_scale: 4: for OSD. rendering_window is 4x5.

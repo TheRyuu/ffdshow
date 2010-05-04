@@ -71,6 +71,12 @@ void TfontPage::init(void)
  addHint(IDC_CBX_FONT_WEIGHT,_l("Weight - most fonts supports only small subset of listed weights."));
  addHint(IDC_TBR_FONT_SPACING,_l("Spacing - distance between characters."));
  addHint(IDC_CHB_FONT_ASPECT_AUTO,_l("Works when the video has non-square pixel aspect ratio."));
+
+ // Subtitles mode
+ if (idff_fontcharset==IDFF_fontCharset)
+  show(true, IDC_CHB_FONT_SHADOW_OVERRIDE);
+ else
+  show(false, IDC_CHB_FONT_SHADOW_OVERRIDE);
 }
 
 void TfontPage::selectCharset(int ii)
@@ -130,6 +136,9 @@ void TfontPage::font2dlg(void)
  fillCharsets();
  setCheck(IDC_CHB_FONT_BLUR,cfgGet(idff_fontblur));
  setCheck(IDC_CHB_FONT_ASPECT_AUTO,cfgGet(idff_fontaspectauto));
+ // Subtitles mode
+ if (idff_fontcharset==IDFF_fontCharset)
+  setCheck(IDC_CHB_FONT_SHADOW_OVERRIDE,cfgGet(IDFF_fontShadowOverride));
  selectCharset(cfgGet(idff_fontcharset));
  int opaquebox=cfgGet(idff_fontopaquebox);
  setCheck(IDC_FONT_OPAQUE_BOX,opaquebox);
@@ -455,6 +464,7 @@ TfontPageSubtitles::TfontPageSubtitles(TffdshowPageDec *Iparent,const TfilterIDF
    IDC_FONT_OPAQUE_BOX,idff_fontopaquebox,&TfontPageSubtitles::font2dlg,
    IDC_CHB_FONT_BLUR,idff_fontblur,&TfontPageSubtitles::font2dlg,
    IDC_CHB_FONT_ASPECT_AUTO,idff_fontaspectauto,&TfontPageSubtitles::font2dlg,
+   IDC_CHB_FONT_SHADOW_OVERRIDE,IDFF_fontShadowOverride,&TfontPageSubtitles::font2dlg,
    0,NULL,NULL
   };
  bindCheckboxes(chb);
@@ -480,6 +490,7 @@ TfontPageSubtitles::TfontPageSubtitles(TffdshowPageDec *Iparent,const TfilterIDF
    0
   };
  bindComboboxes(cbx);
+ show(true, IDC_CHB_FONT_SHADOW_OVERRIDE);
 }
 
 //========================================= TfontPageOSD ========================================
@@ -537,4 +548,5 @@ TfontPageOSD::TfontPageOSD(TffdshowPageDec *Iparent, const TfilterIDFF *idff):Tf
    0
   };
  bindComboboxes(cbx);
+ show(false, IDC_CHB_FONT_SHADOW_OVERRIDE);
 }

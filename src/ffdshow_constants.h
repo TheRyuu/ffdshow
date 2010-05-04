@@ -545,6 +545,7 @@
 #define IDFF_fontOutlineAlpha        3390
 #define IDFF_fontShadowAlpha         3376
 #define IDFF_fontBlur                3406
+#define IDFF_fontShadowOverride      3548
 
 #define IDFF_filterBlur              900
 #define IDFF_isBlur                  901
@@ -1582,6 +1583,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//next:3548
+//next:3549
 
 #endif

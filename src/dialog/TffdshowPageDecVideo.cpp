@@ -160,9 +160,6 @@ void TffdshowPageDecVideo::onActivate(void)
    else if ((filterMode&IDFF_FILTERMODE_VIDEOSUBTITLES)==0 && (filterMode&IDFF_FILTERMODE_VIDEODXVA)==0) // No decoder options for DXVA & subtitles filter
    {
     addTI(&tvis,new TdecoderOptionsPage(this));
-#if DXVA_INSIDE_FFDSHOW
-    addTI(&tvis,new TDXVAOptionsPage(this));
-#endif
    }
    if ((filterMode&IDFF_FILTERMODE_VIDEODXVA)==0) // No queue & output options for DXVA
    {

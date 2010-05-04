@@ -1813,6 +1813,8 @@
 #define IDC_TBR_FONT_YSCALE             2089
 #define IDC_LBL_FONT_YSCALE             2090
 #define IDC_GRP_AUTOCROP                2091
+#define IDC_CHB_FONT_ASPECT_AUTO2       2091
+#define IDC_CHB_FONT_SHADOW_OVERRIDE    5000
 #define IDC_CHB_CODEC_OPT3              2092
 #define IDC_CHB_CODEC_OPT4              2093
 #define IDC_LBL_CROP_TOLERANCE          2094
