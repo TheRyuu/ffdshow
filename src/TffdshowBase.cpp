@@ -235,8 +235,8 @@ void TffdshowBase::sendOnChange(int paramID,int val)
  if ((!applying && onChangeWnd && onChangeMsg &&
      paramID!=IDFF_lastPage &&
      paramID!=IDFF_applying) ||
-     paramID!=IDFF_remoteSubStream ||
-     paramID!=IDFF_remoteAudioStream
+     paramID==IDFF_remoteSubStream ||
+     paramID==IDFF_remoteAudioStream
     )
   PostMessage(onChangeWnd,onChangeMsg,paramID,val);
 }
