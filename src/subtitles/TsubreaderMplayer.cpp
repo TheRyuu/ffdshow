@@ -300,6 +300,7 @@ Tsubtitle* TsubtitleParserSubviewer::parse(Tstream &fd,int flags, REFERENCE_TIME
          }
          current.defProps.tStart = current.defProps.karaokeStart = current.start;
          current.defProps.tStop = current.stop;
+         current.defProps.wrapStyle = cfg.wordWrap; // Lines breaks
         
         for (;;) {
             if (!fd.fgets (line, this->LINE_LEN)) goto end;//break;

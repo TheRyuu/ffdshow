@@ -1307,7 +1307,8 @@ void TsubtitleText::prepareKaraoke(void)
     TsubtitleLine tempLine;
     int wrapStyle = 0;
     foreach (TsubtitleLine &line, *this) {
-        if (line.props.wrapStyle == 2 || line.lineBreakReason == 2) {
+
+        if (line.props.wrapStyle == 2 || line.lineBreakReason == 2 || sfmt != Tsubreader::SUB_SSA) {
             temp.push_back(tempLine);
             tempLine.clear();
         } else if (!tempLine.empty()) {

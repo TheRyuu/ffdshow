@@ -30,12 +30,12 @@ public:
 class TtextFix;
 class TsubtitleParser :public TsubtitleParserBase
 {
-private:
+protected:
  Tsubreader *subreader;
  TsubtitlesSettings cfg;
  const Tconfig *ffcfg;
  TtextFix textfix;
-protected:
+
  TsubtitleFormat textformat;
  TsubtitleParser(int Iformat,double Ifps,const TsubtitlesSettings *Icfg,const Tconfig *Iffcfg,Tsubreader *Isubreader);
  static const wchar_t* sub_readtext(const wchar_t *source, TsubtitleText &sub);
