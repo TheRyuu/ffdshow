@@ -441,20 +441,20 @@ EXSTYLE WS_EX_CONTROLPARENT
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     GROUPBOX        "",IDC_STATIC,0,0,266,230
-    CONTROL         "Embedded subtitles",IDC_CHB_SUBTEXTPIN,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,103,74,10
+    CONTROL         "Embedded subtitles",IDC_CHB_SUBTEXTPIN,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,103,101,10
     CONTROL         "Subtitles",IDC_CHB_SUBTITLES,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,4,0,40,10,WS_EX_ACCEPTFILES
     CONTROL         "Search in",IDC_RBT_SUB_SEARCHDIR,"Button",BS_AUTORADIOBUTTON,13,130,40,10
     EDITTEXT        IDC_ED_SUB_SEARCH_DIR,56,128,169,12,ES_AUTOHSCROLL
     PUSHBUTTON      "...",IDC_BT_SUB_SEARCHDIR,229,128,21,12,BS_NOTIFY
     CONTROL         "Heuristic search",IDC_CHB_SUB_SEARCHHEURISTIC,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,56,143,64,10
-    CONTROL         "File",IDC_RBT_SUB_FLNM,"Button",BS_AUTORADIOBUTTON,14,174,25,10
+    CONTROL         "File",IDC_RBT_SUB_FLNM,"Button",BS_AUTORADIOBUTTON,14,174,42,10
     COMBOBOX        IDC_CBX_SUB_FLNM,56,172,170,13,CBS_DROPDOWN | CBS_AUTOHSCROLL | WS_VSCROLL | WS_TABSTOP
     PUSHBUTTON      "...",IDC_BT_SUB_LOADFILE,228,172,21,12
-    CONTROL         "Watch for file changes",IDC_CHB_SUB_WATCH,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,56,190,85,10
+    CONTROL         "Watch for file changes",IDC_CHB_SUB_WATCH,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,56,190,105,10
     PUSHBUTTON      "Reload",IDC_BT_SUB_LOAD,162,188,41,13
     CONTROL         "Substation alpha subtitles (SSA, ASS and ASS2)",IDC_CHB_SUBTEXT_SSA,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,8,62,163,10
-    CONTROL         "Closed captions decoding",IDC_CHB_SUBCC,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,8,77,92,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,8,62,201,10
+    CONTROL         "Closed captions decoding",IDC_CHB_SUBCC,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,8,77,162,10
     LTEXT           "Delay:",IDC_LBL_SUB_DELAY,4,210,25,8
     EDITTEXT        IDC_ED_SUB_DELAY,29,210,41,12,ES_AUTOHSCROLL,WS_EX_RIGHT
     LTEXT           "ms",IDC_LBL_SUB_DELAYMS,74,212,13,8
@@ -466,12 +466,12 @@ BEGIN
     EDITTEXT        IDC_ED_SUB_SEARCH_EXT,120,152,105,12,ES_AUTOHSCROLL
     RTEXT           "Extensions priority",IDC_TXT_SERCH_ORDER,53,156,62,8
     CONTROL         "Process SSA tags in text subtitles (karaoke, styles,...)",IDC_CHB_SUBTEXTPIN_SSA2,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,20,48,186,11
-    CONTROL         "DVD subtitles (vobsub)",IDC_CHB_VOBSUB,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,79,20,85,9
-    CONTROL         "Blu-Ray subtitles",IDC_CHB_BLURAY,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,8,21,67,9
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,20,48,220,11
+    CONTROL         "DVD subtitles (vobsub)",IDC_CHB_VOBSUB,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,91,20,118,9
+    CONTROL         "Blu-Ray subtitles",IDC_CHB_BLURAY,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,8,21,82,9
     GROUPBOX        "",IDC_GRP_TEXT_SUBTITLES,11,116,242,87
-    CONTROL         "Text subtitles",IDC_CHB_SUBTEXT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,8,36,56,10
-    CONTROL         "Subtitles files",IDC_CHB_SUBTITLES_FILES,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,117,54,10,WS_EX_ACCEPTFILES
+    CONTROL         "Text subtitles",IDC_CHB_SUBTEXT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,8,36,102,10
+    CONTROL         "Subtitles files",IDC_CHB_SUBTITLES_FILES,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,117,104,10,WS_EX_ACCEPTFILES
     GROUPBOX        "Formats enabled",IDC_GRP_SUBFORMATS,3,10,257,81
     GROUPBOX        "Sources enabled",IDC_GRP_SUBSOURCES,4,94,256,114
 END
@@ -2486,7 +2486,7 @@ EXSTYLE WS_EX_CONTROLPARENT
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     CONTROL         "Split long subtitle lines",IDC_CHB_SUB_SPLIT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,4,10,113,11
-    LTEXT           "Left-right borders:",IDC_LBL_SUB_SPLIT_BORDER,16,30,61,8
+    LTEXT           "Left-right borders:",IDC_LBL_SUB_SPLIT_BORDER,16,30,103,8
     EDITTEXT        IDC_ED_SUB_SPLIT_BORDER,121,29,64,12,ES_AUTOHSCROLL
     LTEXT           "pixels",IDC_LBL_SUB_SPLIT_BORDER2,189,31,19,8
     LTEXT           "Line spacing:",IDC_LBL_SUB_LINESPACING,4,45,123,8
@@ -2498,21 +2498,21 @@ BEGIN
     LTEXT           "ms",IDC_LBL_SUB_MINDURATION2,239,62,17,8
     LTEXT           "Corrections:",IDC_LBL_SUBFIX,4,84,161,8
     CONTROL         "Replace double ' by a ""  AND """" by """,IDC_CHB_SUBFIX_AP,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,16,94,125,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,16,94,145,10
     CONTROL         "Try to correct I and l",IDC_CHB_SUBFIX_IL,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,16,106,113,10
     COMBOBOX        IDC_CBX_SUBFIX_IL,131,104,127,94,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
     CONTROL         "Try to correct punctuation (?. -> ? ; !. -> ! etc.)",IDC_CHB_SUBFIX_PUNCTUATION,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,16,118,167,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,16,118,200,10
     CONTROL         "Try to correct orthography",IDC_CHB_SUBFIX_ORTOGRAPHY,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,16,131,98,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,16,131,114,10
     COMBOBOX        IDC_CBX_SUBFIX_ORTOGRAPHY,131,129,127,14,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
     CONTROL         "Try to correct capital letters",IDC_CHB_SUBFIX_CAPITAL,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,16,143,101,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,16,143,137,10
     CONTROL         "Remove unwanted space between numbers",IDC_CHB_SUBFIX_NUMBERS,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,16,155,153,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,16,155,190,10
     GROUPBOX        "Text subtitles",IDC_GRP_SUBTITLESTEXT,0,0,266,230
     CONTROL         "Remove subtitles for hearing impaired",IDC_CHB_SUBFIX_HEARING,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,16,167,132,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,16,167,162,10
     COMBOBOX        IDC_CBX_SUB_WORDWRAP,121,9,137,13,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
 END
 
@@ -2955,13 +2955,13 @@ EXSTYLE WS_EX_CONTROLPARENT
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     CONTROL         "Use placement with H/V sliders if no position defined",IDC_CHB_SUB_SSA_OVERRIDE_POSITION,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,11,87,177,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,11,87,243,10
     CONTROL         "Maintain outside text inside the picture",IDC_CHB_SUB_SSA_KEEP_TEXT_INSIDE,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,11,105,136,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,11,105,236,10
     CONTROL         "Use movie dimensions instead of ASS script information",IDC_CHB_SUB_SSA_USE_INPUT_DIMENSIONS,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,11,125,187,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,11,125,246,10
     CONTROL         "Ignore ASS/ASS2 font size",IDC_CHB_SUB_SSA_OVERRIDE_SCALING,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,11,142,97,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,11,142,179,10
     GROUPBOX        "Subtitles placement",IDC_GRP_SUBTITLESPOS,4,0,266,228
     LTEXT           "Horizontal position:",IDC_LBL_SUB_POSX,19,16,110,8
     CONTROL         "",IDC_TBR_SUB_POSX,"msctls_trackbar32",TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,15,28,120,10
@@ -2974,7 +2974,7 @@ BEGIN
     PUSHBUTTON      "6",IDC_BT_SUBTITLES_EXPAND,113,47,11,13
     LTEXT           "Alignment:",IDC_LBL_SUBTITLES_ALIGN,136,49,49,8,SS_CENTERIMAGE
     COMBOBOX        IDC_CBX_SUBTITLES_ALIGN,188,47,72,13,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
-    CONTROL         "Stereoscopic",IDC_CHB_SUB_STEREOSCOPIC,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,11,66,53,10
+    CONTROL         "Stereoscopic",IDC_CHB_SUB_STEREOSCOPIC,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,11,66,70,10
     LTEXT           "Parallax:",IDC_LBL_SUB_STEREOSCOPICPAR,83,66,30,8
     CONTROL         "",IDC_TBR_SUB_STEREOSCOPICPAR,"msctls_trackbar32",TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,113,66,147,10
 END
