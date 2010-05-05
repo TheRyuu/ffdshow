@@ -256,7 +256,20 @@ int TSubtitleProps::get_marginBottom(unsigned int screenHeight) const
 int TSubtitleProps::get_maxWidth(unsigned int screenWidth, int subFormat, IffdshowBase *deci) const
 {
   int result = 0;
-  int resX = (refResX>0) ? refResX:screenWidth;
+  int resX;
+  // SSA/ASS subtitles. refResX is always >0.
+  if (refResX>0)
+	  resX = refResX;
+  // SRT subtitles. VSFilter assumes 384x288 input dimensions, and does
+  // positioning calculations based on that, so we assume that too if
+  // position is set (through position tags) so our results are equivalent.
+  // If not, use video dimensions.
+  else {
+	  if (isPos && !deci->getParam2(IDFF_subSSAUseMovieDimensions))
+		  resX = 384;
+	  else
+		  resX = screenWidth;
+  }
   int mL = marginL == -1 ? 0 : marginL;
   int mR = marginR == -1 ? 0 : marginR;
 
@@ -302,7 +315,7 @@ int TSubtitleProps::get_maxWidth(unsigned int screenWidth, int subFormat, Iffdsh
         if (mL > pos.x) mL = pos.x; // MarginL should not exceed posX
         if (mR > resX-pos.x) mR = resX-pos.x; // MarginR should not exceed posX
         int margin = std::min(pos.x-mL, resX-mR-pos.x);
-        // Calculated margin should not goes out of the screen
+        // Calculated margin should not go out of the screen
         if (pos.x-margin < 0) margin = pos.x;
         if (pos.x+margin > resX) margin = resX-pos.x;
         result = margin*2;

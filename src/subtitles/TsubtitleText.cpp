@@ -981,9 +981,12 @@ bool TsubtitleFormat::Tssa::arg2int(const ffstring &arg, int min, int max, int &
 bool TsubtitleFormat::Tssa::color2int(ffstring arg, int &intval)
 {
     int radix;
-    if (arg.ConvertToLowerCase().compare(0,2,ffstring(_l("&h")))==0) {
+    if (arg.ConvertToLowerCase().compare(0,2,ffstring(_l("&h")))==0 || arg.ConvertToLowerCase().compare(0,1,ffstring(_l("&")))==0) {
         radix=16;
-        arg.erase(0,2);
+        if (arg.ConvertToLowerCase().compare(0,2,ffstring(_l("&h")))==0)
+         arg.erase(0,2);
+        else
+	        arg.erase(0,1);
     } else
         radix=10;
     wchar_t *endbuf;
@@ -1256,10 +1259,7 @@ void TsubtitleLine::applyWords(const TsubtitleFormat::Twords &words, int subForm
 }
 void TsubtitleLine::format(TsubtitleFormat &format,int sfmt, TsubtitleText &parent)
 {
- // Use SSA parser for SRT subs SRT subs when extended tags option is checked
- // This option will be removed (and SSA parser applied to SUBVIEWER)
- // when the garble issue with Shift JIS (ANSI/DBCS) subs will be resovled
- if (sfmt==Tsubreader::SUB_SSA || ((sfmt==Tsubreader::SUB_SUBVIEWER || sfmt==Tsubreader::SUB_SUBVIEWER2) && parent.defProps.extendedTags))
+ if (sfmt==Tsubreader::SUB_SSA || sfmt==Tsubreader::SUB_SUBVIEWER || sfmt==Tsubreader::SUB_SUBVIEWER2)
   applyWords(format.processSSA(*this, sfmt, parent),sfmt);
  else
   applyWords(format.processHTML(*this),sfmt);
@@ -1462,7 +1462,18 @@ size_t TsubtitleText::prepareGlyph(const TprintPrefs &prefs, Tfont &font, bool f
 
             TrenderedSubtitleLine *line=NULL;
             int cx=0,cy=0;
-            unsigned int refResX=prefs.xinput, refResY=prefs.yinput;
+            unsigned int refResX, refResY;
+            // Use 384x288 as default input dimensions like VSFilter, 
+			         // unless IDFF_subSSAUseMovieDimensions is checked.
+			         if (deci->getParam2(IDFF_subSSAUseMovieDimensions)) {
+				         refResX=prefs.xinput;
+				         refResY=prefs.yinput;
+			         }
+			         else {
+				         refResX=384;
+				         refResY=288;
+			         }
+
             bool firstLine=true;
             for (TsubtitleLine::const_iterator w0=l->begin();w0!=l->end();w0++) {
                 TsubtitleWord w(*w0);
