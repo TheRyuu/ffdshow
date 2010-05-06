@@ -981,17 +981,24 @@ bool TsubtitleFormat::Tssa::arg2int(const ffstring &arg, int min, int max, int &
 bool TsubtitleFormat::Tssa::color2int(ffstring arg, int &intval)
 {
     int radix;
-    if (arg.ConvertToLowerCase().compare(0,2,ffstring(_l("&h")))==0 || arg.ConvertToLowerCase().compare(0,1,ffstring(_l("&")))==0) {
-        radix=16;
-        if (arg.ConvertToLowerCase().compare(0,2,ffstring(_l("&h")))==0)
-         arg.erase(0,2);
-        else
-	     arg.erase(0,1);
-    } else
-        radix=10;
-    wchar_t *endbuf;
-    intval=strtol(arg.c_str(),&endbuf,radix);
-    return (*endbuf=='&' || *endbuf==NULL);
+	if (!arg.empty())
+	{
+		if (arg.ConvertToLowerCase().compare(0,2,ffstring(_l("&h")))==0 || arg.ConvertToLowerCase().compare(0,1,ffstring(_l("&")))==0)
+		{
+			radix=16;
+			if (arg.ConvertToLowerCase().compare(0,2,ffstring(_l("&h")))==0)
+				arg.erase(0,2);
+		    else
+				arg.erase(0,1);
+		}
+		else
+			radix=10;
+		wchar_t *endbuf;
+		intval=strtol(arg.c_str(),&endbuf,radix);
+		return (*endbuf=='&' || *endbuf==NULL);
+	}
+	else
+		return false;
 }
 
 template<COLORREF TSubtitleProps::*offset> void TsubtitleFormat::Tssa::color(ffstring &arg)
@@ -1464,17 +1471,18 @@ size_t TsubtitleText::prepareGlyph(const TprintPrefs &prefs, Tfont &font, bool f
             int cx=0,cy=0;
             unsigned int refResX, refResY;
             // Use 384x288 as default input dimensions like VSFilter, 
-			         // unless IDFF_subSSAUseMovieDimensions is checked.
-			         if (deci->getParam2(IDFF_subSSAUseMovieDimensions)) {
-				         refResX=prefs.xinput;
-				         refResY=prefs.yinput;
-			         }
-			         else {
-				         refResX=384;
-				         refResY=288;
-			         }
+			// unless IDFF_subSSAUseMovieDimensions is checked.
+			if (deci->getParam2(IDFF_subSSAUseMovieDimensions)) {
+			    refResX=prefs.xinput;
+				refResY=prefs.yinput;
+			}
+			else {
+				refResX=384;
+				refResY=288;
+			}
 
             bool firstLine=true;
+
             for (TsubtitleLine::const_iterator w0=l->begin();w0!=l->end();w0++) {
                 TsubtitleWord w(*w0);
                 LOGFONT lf;

@@ -456,7 +456,7 @@ Tsubtitle* TsubtitleParserRt::parse(Tstream &fd,int flags, REFERENCE_TIME start,
 TsubtitleParserSSA::TsubtitleParserSSA(int Iformat,double Ifps,const TsubtitlesSettings *Icfg,const Tconfig *Iffcfg,Tsubreader *Isubreader,bool isEmbedded0):
  TsubtitleParser(Iformat,Ifps,Icfg,Iffcfg,Isubreader),
  inV4styles(0),inEvents(0),inInfo(0),
- playResX(0),playResY(0),wrapStyle(0),
+ playResX(0),playResY(0),wrapStyle(0),scaleBorderAndShadow(0),
  timer(1,1),
  isEmbedded(isEmbedded0)
 {
@@ -474,6 +474,14 @@ void TsubtitleParserSSA::strToInt(const ffstring &str,int *i)
 {
  if (!str.empty())
   {
+   if (str.compare(1,3,L"yes",3)==0) {
+	*i = 1;
+	return;
+   }
+   else if (str.compare(1,2,L"no",2)==0) {
+	*i = 0;
+	return;
+   }
    wchar_t *end;
    int val=strtol(str.c_str(),&end,10);
    if (*end=='\0' && val>=0) *i=val;
@@ -669,6 +677,10 @@ Tsubtitle* TsubtitleParserSSA::parse(Tstream &fd, int flags, REFERENCE_TIME star
     {
      strToInt(line+10,&wrapStyle);
     }
+   else if (inInfo && strnicmp(line,L"ScaledBorderAndShadow:",21)==0)
+    {
+	 strToInt(line+22,&scaleBorderAndShadow);
+    }
    else if (strnicmp(line,L"[V4 Styles]",11)==0)
     {
      version=SSA;
@@ -823,7 +835,7 @@ Tsubtitle* TsubtitleParserSSA::parse(Tstream &fd, int flags, REFERENCE_TIME star
 			playResY = playResYscript;
 		 }
 	 }
-     Tstyle style(playResX,playResY,version,wrapStyle);
+     Tstyle style(playResX,playResY,version,wrapStyle,scaleBorderAndShadow);
      for (size_t i=0;i<fields.size() && i<styleFormat.size();i++)
        if (styleFormat[i])
         style.*(styleFormat[i])=fields[i];

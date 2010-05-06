@@ -14,7 +14,7 @@ struct TprintPrefs;
 struct TSubtitleProps
 {
  TSubtitleProps(void) {reset();}
- TSubtitleProps(unsigned int IrefResX,unsigned int IrefResY, int IwrapStyle) {reset();refResX=IrefResX;refResY=IrefResY;wrapStyle=IwrapStyle;}
+ TSubtitleProps(unsigned int IrefResX,unsigned int IrefResY, int IwrapStyle, int IscaleBorderAndShadow) {reset();refResX=IrefResX;refResY=IrefResY;wrapStyle=IwrapStyle;scaleBorderAndShadow=IscaleBorderAndShadow;}
  TSubtitleProps(bool Iitalic, bool Iunderline) {reset();italic=Iitalic;underline=Iunderline;}
  int bold;
  bool italic,underline,strikeout,blur;
@@ -26,6 +26,7 @@ struct TSubtitleProps
  CPoint org;
  unsigned int t1,t2;
  int wrapStyle; // -1 = default
+ int scaleBorderAndShadow;
  int size;
  int scaleX,scaleY; //in percents, -1 = default
  char_t fontname[LF_FACESIZE];
