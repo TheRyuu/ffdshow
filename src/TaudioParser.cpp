@@ -271,8 +271,8 @@ CodecID TaudioParser::getCodecIdFromStream()
 
  REFERENCE_TIME m_tStart = deciA->GetCurrentPin()->CurrentStartTime();
  // Don't allow more than 1 format change and only if the last seek occurred during the last 3 seconds
- if (audioParserData.nbFormatChanges>=4 || (m_tStart / 10000 / 1000 > 3))
-    return codecId;
+ //if (audioParserData.nbFormatChanges>=4 || (m_tStart / 10000 / 1000 > 3))
+    //return codecId;
 
  audioParserData.wFormatTag=0;
 
