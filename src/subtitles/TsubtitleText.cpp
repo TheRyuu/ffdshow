@@ -986,12 +986,12 @@ bool TsubtitleFormat::Tssa::color2int(ffstring arg, int &intval)
         if (arg.ConvertToLowerCase().compare(0,2,ffstring(_l("&h")))==0)
          arg.erase(0,2);
         else
-	        arg.erase(0,1);
+	     arg.erase(0,1);
     } else
         radix=10;
     wchar_t *endbuf;
     intval=strtol(arg.c_str(),&endbuf,radix);
-    return *endbuf=='&';
+    return (*endbuf=='&' || *endbuf==NULL);
 }
 
 template<COLORREF TSubtitleProps::*offset> void TsubtitleFormat::Tssa::color(ffstring &arg)
