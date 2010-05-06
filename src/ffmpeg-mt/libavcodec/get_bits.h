@@ -660,11 +660,7 @@ static inline int get_xbits_trace(GetBitContext *s, int n, char *file, const cha
 #define tprintf(p, ...) av_log(p, AV_LOG_DEBUG, __VA_ARGS__)
 
 #else //TRACE
- #ifdef __GNUC__
   #define tprintf(p, ...) {}
- #else
-  #define tprintf(p) {}
- #endif
 #endif
 
 static inline int decode012(GetBitContext *gb){

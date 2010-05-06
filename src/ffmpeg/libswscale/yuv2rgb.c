@@ -32,10 +32,8 @@
 #include "rgb2rgb.h"
 #include "swscale.h"
 #include "swscale_internal.h"
-#include "../libavutil/intreadwrite.h"
-#include "../libavutil/x86_cpu.h"
-#include "../libavutil/avutil.h"
-#include "../libavutil/bswap.h"
+#include "libavutil/x86_cpu.h"
+#include "libavutil/bswap.h"
 #include "ffImgfmt.h"
 
 extern const uint8_t dither_4x4_16[4][8];
@@ -546,7 +544,7 @@ CLOSEYUV2RGBFUNC(1)
 SwsFunc ff_yuv2rgb_get_func_ptr(SwsContext *c)
 {
     SwsFunc t = NULL;
-#if HAVE_MMX && CONFIG_GPL
+#if HAVE_MMX
      t = ff_yuv2rgb_init_mmx(c);
 #endif
 #if HAVE_VIS
