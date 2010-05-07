@@ -345,7 +345,7 @@ BYTE TsubtitleDVD::getHalfNibble(const BYTE *p,DWORD *offset,int &nField,int &n)
  return ret;
 }
 
-void TsubtitleDVD::drawPixel(const CPoint &pt,const YUVcolorA &color,CRect &rectReal,TspuPlane plane[3]) const
+void TsubtitleDVD::drawPixel(const CPoint &pt,const YUVcolorA &color, const CRect &rc, CRect &rectReal,TspuPlane plane[3],bool skipEdge) const
 {
 /*
  if (c.Reserved==0) return;
@@ -361,8 +361,8 @@ void TsubtitleDVD::drawPixel(const CPoint &pt,const YUVcolorA &color,CRect &rect
 */
     int ptx=pt.x,pty=pt.y;
     if (color.A != 0) {
-        if (ptx<rectReal.left) rectReal.left=ptx;
-        if (ptx>rectReal.right) rectReal.right=ptx;
+     if (ptx+rc.left<rectReal.left  && (!skipEdge || ptx>2)) rectReal.left=ptx+rc.left;
+     if (ptx+rc.left>rectReal.right && (!skipEdge || ptx+rc.left!=rc.right-1)) rectReal.right=ptx+rc.left;
     }
     if (csp == FF_CSP_420P) {
         plane[0].c[pty*plane[0].stride+ptx]=color.Y;
@@ -384,15 +384,15 @@ void TsubtitleDVD::drawPixel(const CPoint &pt,const YUVcolorA &color,CRect &rect
     }
 }
 
-template<class _mm> void TsubtitleDVD::drawPixelSimd(const CPoint &pt,const YUVcolorA &color, int length, CRect &rectReal,TspuPlane plane[3]) const
+template<class _mm> void TsubtitleDVD::drawPixelSimd(const CPoint &pt,const YUVcolorA &color, int length, const CRect &rc, CRect &rectReal,TspuPlane plane[3],bool skipEdge) const
 {
  // Draw input color on (length) pixels on the same line starting at pt(x,y)
  int ptx=pt.x,pty=pt.y;
  if (color.A != 0) {
-     if (ptx<rectReal.left) rectReal.left=ptx;
-     if (ptx>rectReal.right) rectReal.right=ptx;
-     if (ptx+length<rectReal.left) rectReal.left=ptx+length;
-     if (ptx+length>rectReal.right) rectReal.right=ptx+length;
+     if (ptx<rectReal.left && (!skipEdge || pt.x!=0)) 
+      rectReal.left=ptx;
+     if (ptx+length>rectReal.right && (!skipEdge || pt.x+length+rc.left!=rc.right-1))
+      rectReal.right=ptx+length;
  }
  
  if (csp == FF_CSP_420P) 
@@ -466,7 +466,7 @@ template<class _mm> void TsubtitleDVD::drawPixelSimd(const CPoint &pt,const YUVc
 
 
 
-void TsubtitleDVD::drawPixels(CPoint pt,int len,const YUVcolorA &c,const CRect &rc,CRect &rectReal,TspuPlane plane[3]) const
+void TsubtitleDVD::drawPixels(CPoint pt,int len,const YUVcolorA &c,const CRect &rc,CRect &rectReal,TspuPlane plane[3],bool skipEdge) const
 {
  if (pt.y < rc.top || pt.y >= rc.bottom) return;
  if (pt.x < rc.left) {len -= rc.left - pt.x; pt.x = rc.left;}
@@ -483,22 +483,38 @@ void TsubtitleDVD::drawPixels(CPoint pt,int len,const YUVcolorA &c,const CRect &
   }
 
  int y=pt.y-rc.top;
- if (c.A!=0)
+ if (c.A!=0 && (!skipEdge || (y!=rc.top && y!=rc.bottom-1)))
   {
    if (y<rectReal.top) rectReal.top=y;
    if (y>rectReal.bottom) rectReal.bottom=y;
   }
  /*if (Tconfig::cpu_flags&FF_CPU_SSE2)
-  drawPixelSimd<Tsse2>(CPoint(pt.x - rc.left, y),c,len,rectReal,plane);
+  drawPixelSimd<Tsse2>(CPoint(pt.x - rc.left, y),c,len,rc,rectReal,plane,skipEdge);
  else
-  drawPixelSimd<Tmmx>(CPoint(pt.x - rc.left, y),c,len,rectReal,plane);
+  drawPixelSimd<Tmmx>(CPoint(pt.x - rc.left, y),c,len,rc,rectReal,plane,skipEdge);
   pt.x+=len;*/
 
  while (len-->0)
   {
-   drawPixel(CPoint(pt.x - rc.left, y),c,rectReal,plane);
+   drawPixel(CPoint(pt.x - rc.left, y),c, rc, rectReal,plane, skipEdge);
    pt.x++;
   }
+}
+
+TspuImage* TsubtitleDVD::createNewImage(const TspuPlane src[3],const CRect &rcclip,CRect rectReal, CRect finalRect,
+                                        const TprintPrefs &prefs)
+{
+ TspuImage *image = NULL;
+ lines.clear();
+ //rectReal.top++;
+ //rectReal.bottom++;
+ //rectReal.right++;
+ if (Tconfig::cpu_flags&FF_CPU_SSE2)
+  image=new TspuImageSimd<Tsse2>(src,rcclip,rectReal,parent->rectOrig, finalRect, prefs, prefs.csp);
+ else
+  image=new TspuImageSimd<Tmmx>(src,rcclip,rectReal,parent->rectOrig, finalRect, prefs, prefs.csp);
+ lines.push_back(new TrenderedSubtitleLine(image));
+ return image;
 }
 
 TspuImage* TsubtitleDVD::createNewImage(const TspuPlane src[3],const CRect &rcclip,CRect rectReal,const TprintPrefs &prefs)

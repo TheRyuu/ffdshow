@@ -85,6 +85,9 @@ typedef const TCHAR *PCTSTR;
 
 #define SAFE_DELETE(p)       { if(p) { delete (p);     (p)=NULL; } }
 #define SAFE_RELEASE(p) { if ( (p) ) { (p)->Release(); (p) = 0; } } 
+#ifndef SAFE_FREE
+#define SAFE_FREE(x)	{if (x)	free(x);	(x) = 0;}	/* helper macro */
+#endif
 
 #define SAFE_ARRAYDELETE( x )   \
     if ( x )                    \

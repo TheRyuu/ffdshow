@@ -23,6 +23,7 @@
 #include "Tlibavcodec.h"
 #include "Tconfig.h"
 #include "IffdshowBase.h"
+#include "TimgFilterGrab.h"
 
 //=================================================== TspuPlane ===================================================
 void TspuPlane::alloc(const CSize &sz, int div, int csp)
@@ -49,7 +50,7 @@ void TspuPlane::setZero()
     memset(r, 0, allocated);
 }
 //=================================================== TspuImage ===================================================
-TspuImage::TspuImage(const TspuPlane src[3],const CRect &rcclip,const CRect &rectReal,const CRect &rectOrig,const TprintPrefs &prefs, int Icsp):TrenderedSubtitleWordBase(false)
+TspuImage::TspuImage(const TspuPlane src[3],const CRect &rcclip,const CRect &rectReal,const CRect &rectOrig,const CRect &IfinalRect, const TprintPrefs &prefs, int Icsp):TrenderedSubtitleWordBase(false)
 {
     csp = prefs.csp & FF_CSPS_MASK;
     const TcspInfo *cspInfo = csp_getInfo(prefs.csp);
@@ -57,31 +58,48 @@ TspuImage::TspuImage(const TspuPlane src[3],const CRect &rcclip,const CRect &rec
     Tscaler *scaler=NULL;
     int scale=prefs.dvd?0x100:prefs.subimgscale;
     for (unsigned int i = 0 ; i < cspInfo->numPlanes ; i++) {
-        rect[i]=CRect(rectReal.left >> cspInfo->shiftX[i],                                                           // left
+        originalRect[i]=CRect(rectReal.left >> cspInfo->shiftX[i],                                                           // left
                       rectReal.top  >> cspInfo->shiftY[i],                                                           // top
                       (rectReal.left >> cspInfo->shiftX[i]) + roundRshift(rectReal.Width(), cspInfo->shiftX[i]),     // right
                       (rectReal.top  >> cspInfo->shiftY[i]) + roundRshift(rectReal.Height(), cspInfo->shiftY[i]));   // bottom
+        rect[i]=CRect(IfinalRect.left >> cspInfo->shiftX[i],                                                           // left
+                      IfinalRect.top  >> cspInfo->shiftY[i],                                                           // top
+                      (IfinalRect.left >> cspInfo->shiftX[i]) + roundRshift(IfinalRect.Width(), cspInfo->shiftX[i]),     // right
+                      (IfinalRect.top  >> cspInfo->shiftY[i]) + roundRshift(IfinalRect.Height(), cspInfo->shiftY[i]));   // bottom
         int dstdx = roundDiv(scale * (rectOrig.Width() ?
-                            roundDiv(prefs.dx * (rect[i].Width() + 1), (unsigned int)rectOrig.Width() ) :
-                            rect[i].Width() ),
+                            roundDiv(prefs.dx * (originalRect[i].Width() + 1), (unsigned int)rectOrig.Width() ) :
+                            originalRect[i].Width() ),
                         0x100U);
         int dstdy = roundDiv(scale * (rectOrig.Height() ?
-                            roundDiv(prefs.dy * (rect[i].Height() + 1), (unsigned int)rectOrig.Height()) :
-                            rect[i].Height()),
+                            roundDiv(prefs.dy * (originalRect[i].Height() + 1), (unsigned int)rectOrig.Height()) :
+                            originalRect[i].Height()),
                         0x100U);
         plane[i].alloc(CSize(dstdx,dstdy), 1, prefs.csp);
-        if (!scaler || scaler->srcdx != rect[i].Width() + 1 || scaler->srcdy != rect[i].Height() + 1) {
+        if (!scaler || scaler->srcdx != originalRect[i].Width() + 1 || scaler->srcdy != originalRect[i].Height() + 1) {
             if (scaler)
                 delete scaler;
-            scaler = Tscaler::create(prefs, rect[i].Width() + 1, rect[i].Height() + 1, dstdx, dstdy, Icsp);
+            scaler = Tscaler::create(prefs, originalRect[i].Width() + 1, originalRect[i].Height() + 1, dstdx, dstdy, Icsp);
         }
         scaler->scale(
-            src[i].c + rect[i].top * src[i].stride + rect[i].left * cspInfo->Bpp,
-            src[i].r + rect[i].top * src[i].stride + rect[i].left * cspInfo->Bpp,
+            src[i].c + originalRect[i].top * src[i].stride + originalRect[i].left * cspInfo->Bpp,
+            src[i].r + originalRect[i].top * src[i].stride + originalRect[i].left * cspInfo->Bpp,
             src[i].stride,
             plane[i].c,
             plane[i].r,
             plane[i].stride);
+
+
+        /* Debug methods to dump the buffers to bmp files (the buffers must be RGB32)
+        const unsigned char *psrc[4] = {src[i].c + originalRect[i].top * src[i].stride + originalRect[i].left * cspInfo->Bpp, NULL, NULL, NULL};
+        stride_t srcstride[4] = {src[i].stride, 0, 0, 0};
+        TimgFilterGrab::grabRGB32ToBMP(psrc,srcstride, originalRect[i].Width(),
+         originalRect[i].Height(), _l("c:\\Temp\\orig.bmp"));
+        const unsigned char *pdst[4] = {plane[i].c, NULL, NULL, NULL};
+        stride_t dststride[4] = {plane[i].stride, 0, 0, 0};
+        TimgFilterGrab::grabRGB32ToBMP(pdst,dststride, dstdx, dstdy,
+         _l("c:\\Temp\\dest.bmp"));*/
+
+        originalRect[i] += CPoint(roundRshift(rcclip.left,cspInfo->shiftX[i]),roundRshift(rcclip.top,cspInfo->shiftY[i]));
         rect[i] += CPoint(roundRshift(rcclip.left,cspInfo->shiftX[i]),roundRshift(rcclip.top,cspInfo->shiftY[i]));
         rect[i].left = roundDiv(int(prefs.dx*rect[i].left),rectOrig.Width());rect[i].right=rect[i].left+dstdx;
         rect[i].top = roundDiv(int(prefs.dy*rect[i].top),rectOrig.Height());rect[i].bottom=rect[i].top+dstdy;
@@ -766,6 +784,7 @@ template<class _mm> void TspuImageSimd<_mm>::ownprint(
          const uint8_t *c = plane[i].c;
          const uint8_t *r = plane[i].r;
          for (int y = rect[i].top ; y < rect[i].bottom ; y++, dst += Istride[i], c+=plane[i].stride, r+=plane[i].stride) {
+             if (y<0) continue; if (y>=(int)prefs.dy) break;
              uint32_t *dstLn = (uint32_t *)dst;
              const uint32_t *cLn = (const uint32_t *)c;
              const uint32_t *rLn = (const uint32_t *)r;
@@ -773,7 +792,7 @@ template<class _mm> void TspuImageSimd<_mm>::ownprint(
              if (rect[i].left+dx > (int)sizeDx)
                  dx = (sizeDx - rect[i].left);
              int endx = dx -_mm::size/8 + 1;
-             if (0)
+             //if (0)
              /* Register size is 128 bits or 16 bytes = _mm::size
                 which can store 2 x 64 bits. each ARGB will take 64 bits in unpacked state so _mm::size/8 */
              for (; x < endx ; x+=_mm::size/8) {

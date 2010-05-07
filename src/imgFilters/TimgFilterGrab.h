@@ -83,6 +83,7 @@ private:
    // see the comment above the FF_CSP_ enum definition.
    virtual int requiredCSP() {return FF_CSP_RGB24|FF_CSP_FLAGS_VFLIP;}
    virtual int compress(const unsigned char *src[4],stride_t stride[4],unsigned char *dst,unsigned int dstlen,int qual);
+   virtual int compressRGB32(const unsigned char *src[4],stride_t stride[4],unsigned char *dst,unsigned int dstlen,int qual);
   };
  TimgExport *exp[3];
  unsigned char *dstbuf;unsigned int dstbuflen;
@@ -98,6 +99,7 @@ public:
  virtual ~TimgFilterGrab();
  virtual void done(void);
  virtual HRESULT process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg);
+ static HRESULT grabRGB32ToBMP(const unsigned char *src[4],stride_t stride[4], int dx, int dy, char_t *filename);
 
  virtual HRESULT queryInterface(const IID &iid,void **ptr) const;
  STDMETHODIMP grabNow(void);

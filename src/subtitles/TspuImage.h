@@ -31,6 +31,7 @@ protected:
  int csp;
  TspuPlane plane[3];
  CRect rect[3];
+ CRect originalRect[3];
  class Tscaler
   {
   protected:
@@ -99,8 +100,7 @@ protected:
    virtual void scale(const unsigned char *srci,const unsigned char *srca,stride_t srcStride,unsigned char *dsti,unsigned char *dsta,stride_t dstStride);
   };
 public:
- TspuImage(const TspuPlane src[3],const CRect &rcclip,const CRect &rectReal,const CRect &rectOrig,const TprintPrefs &prefs, int Icsp=FF_CSP_Y800);
- TspuImage(const TspuPlane src[3],const CRect &rcclip,const CRect &rectReal,const CRect &rectOrig,const TprintPrefs &prefs);
+ TspuImage(const TspuPlane src[3],const CRect &rcclip,const CRect &rectReal,const CRect &rectOrig,const CRect &IfinalRect, const TprintPrefs &prefs, int Icsp=FF_CSP_Y800);
  virtual void ownprint(
     const TprintPrefs &prefs,
     unsigned char **dst,
@@ -110,7 +110,8 @@ public:
 template<class _mm> struct TspuImageSimd : public TspuImage
 {
 public:
- TspuImageSimd(const TspuPlane src[3],const CRect &rcclip,const CRect &rectReal,const CRect &rectOrig,const TprintPrefs &prefs, int csp):TspuImage(src,rcclip,rectReal,rectOrig,prefs,csp) {}
+ TspuImageSimd(const TspuPlane src[3],const CRect &rcclip,const CRect &rectReal,const CRect &rectOrig,const TprintPrefs &prefs, int csp):TspuImage(src,rcclip,rectReal,rectOrig,CRect(),prefs,csp) {}
+ TspuImageSimd(const TspuPlane src[3],const CRect &rcclip,const CRect &rectReal,const CRect &rectOrig,const CRect &finalRect, const TprintPrefs &prefs, int csp):TspuImage(src,rcclip,rectReal,rectOrig,finalRect,prefs,csp) {}
  virtual void ownprint(
     const TprintPrefs &prefs,
     unsigned char **dst,

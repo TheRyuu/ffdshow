@@ -77,10 +77,7 @@ void TsubtitlePGS::print(
 
  if (m_pWindow->data.size() == 0 ||
   m_pWindow->m_rtStart > time || (m_pWindow->m_rtStop != INVALID_TIME && m_pWindow->m_rtStop <= time)) return;
- CPoint centerPoint = CPoint(m_pWindow->m_horizontal_position+m_pWindow->m_width/2,
- m_pWindow->m_vertical_position+m_pWindow->m_height/2); 
- CSize size = CSize(m_pWindow->m_width, m_pWindow->m_height);
-
+ 
  if (m_pWindow->ownimage == NULL || forceChange)
  {
   #if DEBUG_PGS_TIMESTAMPS
@@ -96,37 +93,20 @@ void TsubtitlePGS::print(
   if (videoWidth==0) videoWidth=prefs.dx;
   if (videoHeight==0) videoHeight=prefs.dy;
 
-  // Calculate scale according to : 
-  // 1/ difference of size between original and output size
-  // 2/ scaling preference
   int scale100=(int)100*((float)prefs.dx/videoWidth);
   scale100=(int)((float)scale100*prefs.subimgscale/256);
 
-  // Recalculate the coordinates proportionally
-  centerPoint.x=(int)((float)centerPoint.x*scale100/100);
-  centerPoint.y=(int)((float)centerPoint.y*scale100/100);
+  // size : original size, newSize : size after scaling 
+  CSize size = CSize(m_pWindow->m_width, m_pWindow->m_height);
   
-  CSize newSize(size.cx*scale100/100, size.cy*scale100/100);
-
-  // Starting point of our subtitles with the new coordinates
-  CPoint pt(centerPoint.x-newSize.cx/2, centerPoint.y-newSize.cy/2);
-  if (pt.x + newSize.cx > (LONG)prefs.dx) pt.x = prefs.dx-newSize.cx - 2;
-  if (pt.y + newSize.cy > (LONG)prefs.dy) pt.y = prefs.dy-newSize.cy - 2;
-  if (pt.x<0) pt.x=0;
-  if (pt.y<0) pt.y=0;
-  
-  // Rectangle of our subtitles with the new position and new size
-  CRect rcclip(pt, newSize);
-
-  // Rectangle of our subtitles with the new position but original size
-  CRect rc(pt, size);
-
+  // Rectangle of our subtitles with the original size and top left position
+  CRect rc(CPoint(m_pWindow->m_horizontal_position,m_pWindow->m_vertical_position), size);
 
   // Real size of out subtitles rectangle after it has been reduced (due to transparent aeras) = cropping rectangle
   CRect rectReal(INT_MAX/2,INT_MAX/2,INT_MIN/2,INT_MIN/2);
 
-  // TspuPlane is size to the output picture because our subs rectangle can be resized up to it
-  TspuPlane *planes=parent->allocPlanes(rcclip, prefs.csp);
+  // Allocate the planes with original size and position
+  TspuPlane *planes=parent->allocPlanes(rc, prefs.csp);
   
   Tbitdata bitdata = Tbitdata(&m_pWindow->data[0], m_pWindow->data.size());
   BYTE			bTemp;
@@ -134,8 +114,7 @@ void TsubtitlePGS::print(
   int nPaletteIndex = 0; //Index of RGBA color
   int nCount = 0; // Repetition count of the pixel
 
-  pt.x=rc.left;
-  pt.y=rc.top;
+  CPoint pt=CPoint(rc.left,rc.top);
 
   while (pt.y<rc.bottom && bitdata.bitsleft>0)
   {
@@ -188,7 +167,7 @@ void TsubtitlePGS::print(
       YUVcolorA c(RGB((color)&0xFF,
        (color>>8)&0xFF,
        (color>>16)&0xFF), alpha);
-      drawPixels(pt,nCount,c,rcclip,rectReal,planes);
+     drawPixels(pt,nCount,c,rc,rectReal,planes, true);
     }
 		  pt.x += nCount;
 	  }
@@ -198,9 +177,34 @@ void TsubtitlePGS::print(
     pt.x = rc.left;
 	  }
   }
-  //DPRINTF(_l("TsubtitlePGS::print Build image (left,right,top,bottom)=(%ld,%ld,%ld,%ld)\nParent rect (%ld,%ld,%ld,%ld)"),rectReal.left, rectReal.right, rectReal.top, rectReal.bottom, rcclip.left, rcclip.right, rcclip.top, rcclip.bottom);
-  m_pWindow->ownimage=createNewImage(planes, rcclip, rectReal, prefs);
+
+  // Recover the skipped edges
+  rectReal.left--;
+
+  // Now reposition the center of the real rectangle (rcclip) proportionnaly to original size % new size
+  CPoint centerPoint = CPoint(rectReal.left+rectReal.Width()/2, rectReal.top+rectReal.Height()/2); 
+  
+  // Recalculate the coordinates proportionally
+  centerPoint.x=(int)((float)centerPoint.x*scale100/100);
+  centerPoint.y=(int)((float)centerPoint.y*scale100/100);
+
+  
+  CSize newSize((int)((float)rectReal.Width()*scale100/100), (int)((float)rectReal.Height()*scale100/100));
+  CPoint newTopLeft(centerPoint.x-newSize.cx/2,centerPoint.y-newSize.cy/2);
+  /*if (newSize.cx > (long)prefs.dx) newSize.cx= (long)prefs.dx-1;
+  if (newSize.cy > (long)prefs.dy) newSize.cy= (long)prefs.dy-1;*/
+  if (newTopLeft.x+newSize.cx > (long)prefs.dx) newTopLeft.x= (long)prefs.dx-newSize.cx;
+  if (newTopLeft.y+newSize.cy > (long)prefs.dy) newTopLeft.y= (long)prefs.dy-newSize.cy;
+  if (newTopLeft.x <0) newTopLeft.x = 0;
+  if (newTopLeft.y <0) newTopLeft.y = 0;
+
+  // Rectangle of our subtitles with the final size and position
+  CRect rcclip(newTopLeft, newSize);
+
+  //DPRINTF(_l("TsubtitlePGS::print Build image original(left,right,top,bottom)=(%ld,%ld,%ld,%ld) resized(%ld,%ld,%ld,%ld)"),rectReal.left, rectReal.right, rectReal.top, rectReal.bottom, rcclip.left, rcclip.right, rcclip.top, rcclip.bottom);
+  m_pWindow->ownimage=createNewImage(planes, rc, rectReal,rcclip, prefs);
  }
+ //DPRINTF(_l("TsubtitlePGS::print Print image"));
  m_pWindow->ownimage->ownprint(prefs, dst, stride);
 }
  

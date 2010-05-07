@@ -59,12 +59,13 @@ protected:
  DWORD offset[2];
  static BYTE getNibble(const BYTE *p,DWORD *offset,int &nField,int &fAligned);
  static BYTE getHalfNibble(const BYTE *p,DWORD *offset,int &nField,int &n);
- void drawPixel(const CPoint &pt,const YUVcolorA &c,CRect &rectReal,TspuPlane plane[3]) const;
- template<class _mm> void drawPixelSimd(const CPoint &pt,const YUVcolorA &color, int length, CRect &rectReal,TspuPlane plane[3]) const;
- void drawPixels(CPoint pt,int len,const YUVcolorA &c,const CRect &rc,CRect &rectReal,TspuPlane plane[3]) const;
+ void drawPixel(const CPoint &pt,const YUVcolorA &c,const CRect &rc,CRect &rectReal,TspuPlane plane[3], bool skipEdge=true) const;
+ template<class _mm> void drawPixelSimd(const CPoint &pt,const YUVcolorA &color, int length, const CRect &rc, CRect &rectReal,TspuPlane plane[3],bool skipEdge=true) const;
+ void drawPixels(CPoint pt,int len,const YUVcolorA &c,const CRect &rc,CRect &rectReal,TspuPlane plane[3], bool skipEdge=false) const;
  mutable TrenderedSubtitleLines lines;
  void createImage(const TspuPlane src[3],const CRect &rcclip,CRect rectReal,const TprintPrefs &prefs) const;
  TspuImage* createNewImage(const TspuPlane src[3],const CRect &rcclip,CRect rectReal,const TprintPrefs &prefs);
+ TspuImage* createNewImage(const TspuPlane src[3],const CRect &rcclip,CRect rectReal, CRect finalRect, const TprintPrefs &prefs);
  void linesprint(
     const TprintPrefs &prefs,
     unsigned char **dst,

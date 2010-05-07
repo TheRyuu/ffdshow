@@ -107,6 +107,15 @@ int TimgFilterGrab::TimgExportBMP::compress(const unsigned char *src[4],stride_t
  bfh.bfSize=sizeof(bfh)+sizeof(bch)+bch.bcWidth*bch.bcHeight*3;
  return bfh.bfSize;
 }
+int TimgFilterGrab::TimgExportBMP::compressRGB32(const unsigned char *src[4],stride_t stride[4],unsigned char *dst,unsigned int dstlen,int qual)
+{
+ bch.bcBitCount=32;
+ memcpy(dst,&bfh,sizeof(bfh));
+ memcpy(dst+sizeof(bfh),&bch,sizeof(bch));
+ TffPict::copy(dst+sizeof(bfh)+sizeof(bch),bch.bcWidth*4,src[0],stride[0],bch.bcWidth*4,bch.bcHeight, true);
+ bfh.bfSize=sizeof(bfh)+sizeof(bch)+bch.bcWidth*bch.bcHeight*4;
+ return bfh.bfSize;
+}
 
 //============================== TimgFilterGrab =============================
 TimgFilterGrab::TimgFilterGrab(IffdshowBase *Ideci,Tfilters *Iparent):TimgFilter(Ideci,Iparent)
@@ -142,6 +151,30 @@ int TimgFilterGrab::getSupportedInputColorspaces(const TfilterSettingsVideo *cfg
 {
  const TgrabSettings *cfg=(const TgrabSettings*)cfg0;
  return exp[cfg->format] && exp[cfg->format]->ok?exp[cfg->format]->requiredCSP():FF_CSPS_MASK;
+}
+
+// Helper static method to save a buffer to a BMP file
+HRESULT TimgFilterGrab::grabRGB32ToBMP(const unsigned char *src[4],stride_t stride[4], int dx, int dy, char_t *filename)
+{
+ TimgExportBMP *exp=new TimgExportBMP;
+ if (!exp || !exp->ok) return E_FAIL;
+ exp->init(dx, dy);
+ unsigned char *dstbuf;unsigned int dstbuflen;
+ dstbuf=(unsigned char*)malloc(dstbuflen=dx*dy*4+1024);
+ int len=exp->compressRGB32(src,stride,dstbuf,dstbuflen,0);
+ if (len)
+ {
+  FILE *f=fopen(filename,_l("wb"));
+  if (f)
+   {
+    fwrite(dstbuf,1,len,f);
+    fclose(f);
+   }
+ }
+ else return E_FAIL;
+ if (dstbuf) ::free(dstbuf);dstbuf=NULL;
+ SAFE_DELETE(exp);
+ return S_OK;
 }
 
 HRESULT TimgFilterGrab::process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)
