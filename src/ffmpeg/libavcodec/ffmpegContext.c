@@ -628,7 +628,15 @@ HRESULT FFVC1UpdatePictureParam (DXVA_PictureParameters* pPicParams, struct AVCo
 
 unsigned long FFGetMBNumber(struct AVCodecContext* pAVCtx)
 {
-    MpegEncContext*		s = GetMpegEncContext(pAVCtx);
+  MpegEncContext*	s = NULL;
+
+	switch (pAVCtx->codec_id)
+	{
+	case CODEC_ID_VC1 :
+	case CODEC_ID_H264 :
+		s = (MpegEncContext*) pAVCtx->priv_data;
+		break;
+	}
 
 	return (s != NULL) ? s->mb_num : 0;
 }
