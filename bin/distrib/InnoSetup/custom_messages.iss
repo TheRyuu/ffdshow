@@ -21,6 +21,12 @@ de.FileAbortRetryIgnore=Beenden Sie das Programm, das ffdshow verwendet und klic
 de.FinishedRestartLabel=Um die Installation von ffdshow zu fertig zu stellen, muss das Setup Ihren Computer neu starten. Soll jetzt neu gestartet werden?%n%nHinweis: Um ihren Computer beim nächsten Mal nicht neu starten zu müssen, kann es helfen, in der Videodekoder-Konfiguration unter "DirectShow-Optionen" -> "ffdshow nicht verwenden in:" zu aktivieren.
 de.WinVersionTooLowError=Dieses ffdshow-Build benötigt Windows 2000 oder neuer. ffdshow-Revision 2352 ist die letzte, die auf Windows 98/ME funktioniert.
 
+; Spanish
+es.WelcomeLabel2=Esto instalará ffdshow en su ordenador.%n%nSe recomienda cerrar las demás aplicaciones antes de continuar.
+es.FileAbortRetryIgnore=Cierre la aplicacion que está usando ffdshow y haga clic en Reintentar. Si el problema persiste, haga clic en Abortar, reinicie su ordenador y vuelva a ejecutar el programa de instalación.
+es.FinishedRestartLabel=Para completar la instalación de ffdshow es necesario reiniciar su ordenador. ¿Quiere reiniciar ahora?%n%nConsejo: Para evitar tener que reiniciar el ordenador la próxima vez, puede ser útil activar la opción "Control DirectShow" -> "No usar ffdshow con:" -> "explorer.exe" en el panel de configuración del decodificador de Vídeo.
+es.WinVersionTooLowError=Esta versión de ffdshow requiere Windows 2000 o posterior. La versión 2352 de ffdshow es la última que funciona en Windows 98/ME.
+
 ; French
 fr.WelcomeLabel2=Ceci installera ffdshow sur votre ordinateur.%n%nIl est recommandé de fermer toutes les autres applications avant de continuer.
 fr.FileAbortRetryIgnore=Quitter l'application qui utilise ffdshow et cliquer sur Ressayer. Si le problème persiste, cliquer sur Annuler, redémarrer l'ordinateur et réinstaller de nouveau.
@@ -290,6 +296,82 @@ de.shrt_audioConfig=Audiodekoder-Konfiguration
 de.shrt_vfwConfig=VFW-Konfiguration
 de.shrt_uninstall=ffdshow deinstallieren
 de.shrt_homepage=Webseite
+
+
+; Spanish
+es.langid=3082
+es.msg_uninstallFirst=Debe desinstalar primero la versión anterior de ffdshow.
+es.simd_msg_sse=Esta versión de ffdshow requiere una CPU con soporte de extensiones SSE. Su CPU carece de esta característica.
+es.simd_msg_sse2=Esta versión de ffdshow requiere una CPU con soporte de extensiones SSE2. Su CPU carece de esta característica.
+es.unsupported_cpu=Esta versión de ffdshow requiere una CPU i686 o posterior. Su CPU no es compatible. La versión 1940 de ffdshow es la última que funciona en CPUs anteriores.
+
+es.comp_ffdshowds=Filtro DirectShow ffdshow
+es.comp_vfwInterface=Interfaz VFW 
+es.comp_makeAvis=Servidor de scripts AviSynth 
+es.comp_appPlugins=Plugins de aplicaciones:
+es.comp_msg_selectOneComp=Debe seleccionar al menos un componente.
+
+es.tsk_settings=Configuración
+es.tsk_resetSettings=Restablecer la configuración de ffdshow
+es.tsk_videoFormats=Formatos de vídeo
+es.tsk_videoFormatsSelect=Decodificar los siguientes formatos de vídeo con ffdshow:
+es.tsk_genericMpeg4=MPEG-4 genérico
+es.tsk_rawVideo=Vídeo en bruto
+es.tsk_audioFormats=Formatos de audio
+es.tsk_audioFormatsSelect=Decodificar los siguientes formatos de audio con ffdshow:
+es.tsk_rawAudio=Audio en bruto
+es.tsk_filters=Configuración de filtros
+es.tsk_defaultFilters=Activar los siguientes filtros como predeterminados:
+es.tsk_passthroughac3=Activar paso directo para AC3 (S/PDIF, HDMI)
+es.tsk_passthroughdts=Activar paso directo para DTS (S/PDIF, HDMI)
+es.tsk_volumeNorm=Normalización de volumen
+es.tsk_subtitles=Subtítulos
+es.tsk_tweaks=Modificaciones
+es.tsk_skipInloop=Omitir siempre el desbloqueo interno H.264
+es.tsk_compatibilityManager=Administrador de compatibilidad
+es.tsk_whitelist=Permitir usar ffdshow sólo a las aplicaciones incluidas en la lista de compatibilidad
+es.tsk_whitelistPrompt=Mostrar ventana del administrador de compatibilidad cuando una aplicación desconocida intente usar ffdshow
+
+es.spk_Label1=Configuración de altavoces
+es.spk_Label2=Elija la configuración de altavoces que más se parezca a la de su equipo. Puede cambiarla posteriormente en la página de ajustes de “Mezclador”.
+es.spk_Label3=Configuración de altavoces:
+es.spk_mono=mono
+es.spk_stereo=estéreo
+es.spk_quadro=4 canales
+es.spk_rear_1ch=1 trasero
+es.spk_front_2ch=2 frontales
+es.spk_side_2ch=2 laterales
+es.spk_rear_2ch=2 traseros
+es.spk_front_3ch=3 frontales
+es.spk_5ch=3 frontales + 2 traseros
+es.spk_7ch=3 frontales + 2 laterales + 2 traseros
+es.spk_headPhone=auriculares
+es.spk_surround=envolvente
+es.spk_subwoofer=graves
+es.spk_dolby1=Dolby Surround/ProLogic
+es.spk_dolby2=Dolby ProLogic II
+es.spk_hrtf=Función de transferencia vinculada a la cabeza (HRTF)
+es.spk_sameAsInput=Igual que la entrada
+es.spk_disableMixer=Desactivar Mezclador
+es.spk_voiceControl=Control de voz (volumen)
+es.spk_expandStereo=Amplificar estéreo (surround)
+es.spk_unknownSpk=Configuración de altavoces desconocida
+
+es.plg_Label1=Elija la carpeta de plugins de %1
+es.plg_Label2=¿Dónde debe instalarse el plugin de %1?
+es.plg_Label3=Elija la carpeta donde debe instalarse el plugin de %1 y pulse Siguiente.
+
+es.run_videoConfig=Abrir configuración del decodificador de vídeo
+es.run_videoDXVAConfig=Abrir configuración del decodificador de vídeo DXVA
+es.run_audioConfig=Abrir configuración del decodificador de audio
+es.run_vfwConfig=Abrir configuración de VFW
+
+es.shrt_videoConfig=Configuración del decodificador de vídeo
+es.shrt_videoDXVAConfig=Configuración del decodificador de vídeo DXVA
+es.shrt_audioConfig=Configuración del decodificador de audio
+es.shrt_vfwConfig=Configuración de VFW
+es.shrt_uninstall=Desinstalar ffdshow
+es.shrt_homepage=Página web
 
 
 ; French
@@ -752,7 +834,6 @@ zh_Hans.shrt_uninstall=卸载 ffdshow
 ; Add other languages here
 ca.langid=1027
 da.langid=1030
-es.langid=3082
 eu.langid=1069
 fi.langid=1035
 hu.langid=1038
