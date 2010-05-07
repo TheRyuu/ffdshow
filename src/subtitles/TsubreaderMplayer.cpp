@@ -472,19 +472,19 @@ TsubtitleParserSSA::TsubtitleParserSSA(int Iformat,double Ifps,const TsubtitlesS
 
 void TsubtitleParserSSA::strToInt(const ffstring &str,int *i)
 {
- if (!str.empty())
+  if (!str.empty())
   {
-   if (str.compare(1,3,L"yes",3)==0) {
-	*i = 1;
-	return;
-   }
-   else if (str.compare(1,2,L"no",2)==0) {
-	*i = 0;
-	return;
-   }
-   wchar_t *end;
-   int val=strtol(str.c_str(),&end,10);
-   if (*end=='\0' && val>=0) *i=val;
+     if (str.compare(0,4,L" yes",4)==0) {
+        *i = 1;
+        return;
+     }
+     else if (str.compare(0,3,L" no",3)==0) {
+        *i = 0;
+        return;
+     }
+     wchar_t *end;
+     int val=strtol(str.c_str(),&end,10);
+     if (*end=='\0' && val>=0) *i=val;
   }
 }
 
@@ -522,13 +522,13 @@ bool TsubtitleParserSSA::Tstyle::toCOLORREF(const ffstring& colourStr,COLORREF &
   }
  else
  {
-	if (s1.compare(0,1,L"-",1)==0)
-	{
-		colour=0x000000;
-		alpha=256;
-		return true;
-	}
-	radix=10;
+    if (s1.compare(0,1,L"-",1)==0)
+    {
+       colour=0x000000;
+       alpha=256;
+       return true;
+    }
+    radix=10;
  }
  s2=s1;
  if (s1.size()>6)
@@ -660,11 +660,11 @@ Tsubtitle* TsubtitleParserSSA::parse(Tstream &fd, int flags, REFERENCE_TIME star
     }
    else if (inInfo && strnicmp(line,L"PlayResX:",8)==0)
    {
-	   strToInt(line+9,&playResXscript);
+       strToInt(line+9,&playResXscript);
    }
    else if (inInfo && strnicmp(line,L"PlayResY:",8)==0)
    {
-	   strToInt(line+9,&playResYscript);
+       strToInt(line+9,&playResYscript);
    }   
    else if (inInfo && strnicmp(line,L"Timer:",6)==0)
     {
@@ -810,31 +810,31 @@ Tsubtitle* TsubtitleParserSSA::parse(Tstream &fd, int flags, REFERENCE_TIME star
      strings fields;
      strtok(line+7,L",",fields);
 
-	//Fix for missing or incomplete movie dimensions in the script
-	 if (playResXscript == 0 && playResYscript == 0)//Assume 384x288 like VSFilter
-	 {
-		playResX = 384;
-		playResY = 288;
-	 }
-	 else//At least one of the two is set
-	 {
-		 if (playResXscript == 0 || playResYscript == 0)//Assume 4/3 aspect ratio like VSFilter, but only if one of them is missing
-		 {
-			if (playResXscript == 0)
-				playResX = playResYscript*4/3;
-			else
-				playResX = playResXscript;
-			if (playResYscript == 0)
-				playResY = playResXscript*3/4;
-			else
-				playResY= playResYscript;
-		 }
-		 else//Both are set, use them
-		 {
-			playResX = playResXscript;
-			playResY = playResYscript;
-		 }
-	 }
+     // Fix for missing or incomplete movie dimensions in the script
+     if (playResXscript == 0 && playResYscript == 0) // Assume 384x288 like VSFilter
+     {
+        playResX = 384;
+        playResY = 288;
+     }
+     else // At least one of the two is set
+     {
+         if (playResXscript == 0 || playResYscript == 0) // Assume 4/3 aspect ratio like VSFilter, but only if one of them is missing
+         {
+            if (playResXscript == 0)
+               playResX = playResYscript*4/3;
+            else
+               playResX = playResXscript;
+            if (playResYscript == 0)
+               playResY = playResXscript*3/4;
+            else
+               playResY= playResYscript;
+         }
+         else // Both are set, use them
+         {
+            playResX = playResXscript;
+            playResY = playResYscript;
+         }
+     }
      Tstyle style(playResX,playResY,version,wrapStyle,scaleBorderAndShadow);
      for (size_t i=0;i<fields.size() && i<styleFormat.size();i++)
        if (styleFormat[i])

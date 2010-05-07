@@ -505,13 +505,13 @@ void TrenderedSubtitleLines::printASS(
                     case 5: // SSA top
                     case 6:
                     case 7:
-                      						// If SRT subtitles with SSA tags, apply the vertical position
+                            // If SRT subtitles with SSA tags, apply the vertical position
                             // setting but inversed.
-						                  if ((prefs.subformat & Tsubreader::SUB_FORMATMASK) != Tsubreader::SUB_SSA)
-                         pval.y=((double)(100-prefs.ypos)*prefsdy)/100.0;
-						                  else
-                         pval.y = pkey.marginTop - pval.topOverhang;
-                        break;
+                            if ((prefs.subformat & Tsubreader::SUB_FORMATMASK) != Tsubreader::SUB_SSA)
+                               pval.y=((double)(100-prefs.ypos)*prefsdy)/100.0;
+                            else
+                               pval.y = pkey.marginTop - pval.topOverhang;
+                            break;
                     case 1: // SSA bottom
                     case 2:
                     case 3:

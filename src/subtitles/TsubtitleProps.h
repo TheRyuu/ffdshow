@@ -32,7 +32,7 @@ struct TSubtitleProps
  char_t fontname[LF_FACESIZE];
  int encoding; // -1 = default
  int version;  // -1 = default
- int extendedTags; // 0 = default
+ int extendedTags; // 1 = default
  double spacing;  //INT_MIN = default
  double x; // Calculated x position
  double y; // Calculated y position

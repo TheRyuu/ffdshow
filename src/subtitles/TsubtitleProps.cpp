@@ -31,7 +31,8 @@ void TSubtitleProps::reset(void)
 {
  wrapStyle=-1;
  scaleBorderAndShadow=0;
- refResX=refResY=0;
+ refResX=384; // Default VSFilter reference
+ refResY=288; // dimensions
  bold=-1;
  italic=underline=strikeout=false;
  isColor=false;
@@ -60,7 +61,7 @@ void TSubtitleProps::reset(void)
  karaokeStart = 0;
  karaokeDuration = 0;
  karaokeNewWord = false;
- extendedTags=0;
+ extendedTags=1;
  x=0;
  y=0;
  lineID=0;
@@ -70,7 +71,7 @@ void TSubtitleProps::toLOGFONT(LOGFONT &lf,const TfontSettings &fontSettings,uns
 {
  memset(&lf,0,sizeof(lf));
  lf.lfHeight=(LONG)limit(size?size:fontSettings.getSize(dx,dy),3U,255U) * gdi_font_scale;
- if (refResY && dy)
+ if (size)
   lf.lfHeight=(clipdy ? clipdy : dy)*lf.lfHeight/refResY;
  int yscale=get_yscale(fontSettings.yscale,sar,fontSettings.aspectAuto,fontSettings.overrideScale);
  lf.lfHeight=lf.lfHeight*yscale/100;
@@ -260,16 +261,16 @@ int TSubtitleProps::get_maxWidth(unsigned int screenWidth, int subFormat, Iffdsh
   int resX;
   // SSA/ASS subtitles. refResX is always >0.
   if (refResX>0)
-	  resX = refResX;
+     resX = refResX;
   // SRT subtitles. VSFilter assumes 384x288 input dimensions, and does
   // positioning calculations based on that, so we assume that too if
   // position is set (through position tags) so our results are equivalent.
   // If not, use video dimensions.
   else {
-	  if (isPos && !deci->getParam2(IDFF_subSSAUseMovieDimensions))
-		  resX = 384;
-	  else
-		  resX = screenWidth;
+     if (isPos && !deci->getParam2(IDFF_subSSAUseMovieDimensions))
+        resX = 384;
+     else
+        resX = screenWidth;
   }
   int mL = marginL == -1 ? 0 : marginL;
   int mR = marginR == -1 ? 0 : marginR;
