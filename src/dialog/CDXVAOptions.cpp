@@ -28,8 +28,9 @@
 const char_t* TDXVAOptionsPage::dec_dxva_compatibilityModes[]=
 {
  _l("Normal"),
- _l("Ignore aspect ratio"),
- _l("Ignore number of reference frames"),
+ _l("Skip level check"),
+ _l("Skip ref frame check"),
+ _l("Skip all checks"),
  NULL
 };
 
@@ -45,7 +46,7 @@ void TDXVAOptionsPage::init(void)
  addHint(IDC_GRP_DXVA2,_l("Enabling DXVA on those codecs will disable all FFDShow internal filters (subtitles, resize,...)"));
  addHint(IDC_CHB_H264,_l("Enable DXVA on H264 codec."));
  addHint(IDC_CHB_VC1,_l("Enable DXVA on VC1 codec."));
- addHint(IDC_CBX_COMPATIBILITY_MODE,_l("This option forces DXVA to be used even if the format is not compatible. You may get artifacts if you change that option."));
+ addHint(IDC_CBX_COMPATIBILITY_MODE,_l("This option forces DXVA to be used even if the format is not compatible. You may get artifacts if you change this option."));
  addHint(IDC_CBX_DXVA_POST_PROCESSING_MODE,_l("This option selects how the selected image filters will be applied.\nSurface overlay: subtitles / OSD will be overlayed on top of the decoded picture surface (done by software)"));
  cfg2dlg();
 }

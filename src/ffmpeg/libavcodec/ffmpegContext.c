@@ -67,7 +67,6 @@ int IsVista()
 	return 0;
 }
 
-
 char* GetFFMpegPictureType(int nType)
 {
 	static char*	s_FFMpegPictTypes[] = { "? ", "I ", "P ", "B ", "S ", "SI", "SP" };
@@ -88,6 +87,36 @@ void FFH264DecodeBuffer (struct AVCodecContext* pAVCtx, BYTE* pBuffer, UINT nSiz
 	}
 }
 
+// returns 1 if version is equal to or higher than A.B.C.D, returns 0 otherwise
+int DriverVersionCheck(LARGE_INTEGER VideoDriverVersion, int A, int B, int C, int D)
+{
+	if (HIWORD(VideoDriverVersion.HighPart) > A)
+	{
+		return 1;
+	}
+	else if (HIWORD(VideoDriverVersion.HighPart) == A)
+	{
+		if (LOWORD(VideoDriverVersion.HighPart) > B)
+		{
+			return 1;
+		}
+		else if (LOWORD(VideoDriverVersion.HighPart) == B)
+		{
+			if (HIWORD(VideoDriverVersion.LowPart) > C)
+			{
+				return 1;
+			}
+			else if (HIWORD(VideoDriverVersion.LowPart) == C)
+			{
+				if (LOWORD(VideoDriverVersion.LowPart) >= D)
+				{
+					return 1;
+				}
+			}
+		}
+	}
+	return 0;
+}
 
 int FFH264CheckCompatibility(int nWidth, int nHeight, struct AVCodecContext* pAVCtx, BYTE* pBuffer, UINT nSize, int nPCIVendor, LARGE_INTEGER VideoDriverVersion)
 {
@@ -95,121 +124,95 @@ int FFH264CheckCompatibility(int nWidth, int nHeight, struct AVCodecContext* pAV
 	SPS*			cur_sps;
 	PPS*			cur_pps;
 
-	int supportLevel51 = 0;
+	int video_is_level51 = 0;
+	int no_level51_support = 1;
+	int too_much_ref_frames = 0;
 
 	if (pBuffer != NULL)
+	{
 		av_h264_decode_frame (pAVCtx, NULL, NULL, pBuffer, nSize);
+	}
 
 	cur_sps		= pContext->sps_buffers[0];
 	cur_pps		= pContext->pps_buffers[0];
-
+	
 	if (cur_sps != NULL)
 	{
-		if (nPCIVendor == PCIV_nVidia) 
-  {
-			// nVidia cards support level 5.1 since drivers v6.14.11.7800 for XP and drivers v7.15.11.7800 for Vista
-			// vA.B.C.D
-			int A, B, C, D;
-			if (IsVista()) 
-   {
-				A = 7; B = 15; C = 11; D = 7800;
-			} 
-   else 
-   {
-				A = 6; B = 14; C = 11; D = 7800;
-			}
-
-			if (HIWORD(VideoDriverVersion.HighPart) > A) 
-   {
-				supportLevel51 = 1;
-			}
-   else if (HIWORD(VideoDriverVersion.HighPart) == A) 
-   {
-				if (LOWORD(VideoDriverVersion.HighPart) > B) {
-					supportLevel51 = 1;
-			}
-   else if (LOWORD(VideoDriverVersion.HighPart) == B) 
-   {
-					if (HIWORD(VideoDriverVersion.LowPart) > C) 
-     {
-						supportLevel51 = 1;
-			  }
-     else if (HIWORD(VideoDriverVersion.LowPart) == C) 
-     {
-						if (LOWORD(VideoDriverVersion.LowPart) >= D) 
-      {
-							supportLevel51 = 1;
-						}
-			  }
-		  }
-		 }
-	 }
-		else if (nPCIVendor == PCIV_S3_Graphics)
-			supportLevel51 = 1;
-  else if (nPCIVendor == PCIV_ATI)
+		video_is_level51 = cur_sps->level_idc >= 51 ? 1 : 0;
+		
+		if (nPCIVendor == PCIV_nVidia)
 		{
-			// ATI cards support level 5.1 since drivers v8.14.1.6105 (Catalyst 10.4)
-			// vA.B.C.D
-			int A, B, C, D;
-			
-			A = 8; B = 14; C = 1; D = 6105;
-
-			if (HIWORD(VideoDriverVersion.HighPart) > A)
+			// nVidia cards support level 5.1 since drivers v6.14.11.7800 for XP and drivers v7.15.11.7800 for Vista
+			if (IsVista())
 			{
-				supportLevel51 = 1;
+				no_level51_support = !DriverVersionCheck(VideoDriverVersion, 7, 15, 11, 7800);
 			}
-			else if (HIWORD(VideoDriverVersion.HighPart) == A)
+			else
 			{
-				if (LOWORD(VideoDriverVersion.HighPart) > B)
-				{
-					supportLevel51 = 1;
-				}
-				else if (LOWORD(VideoDriverVersion.HighPart) == B)
-				{
-					if (HIWORD(VideoDriverVersion.LowPart) > C)
-					{
-						supportLevel51 = 1;
-					}
-					else if (HIWORD(VideoDriverVersion.LowPart) == C)
-					{
-						if (LOWORD(VideoDriverVersion.LowPart) >= D)
-						{
-							supportLevel51 = 1;
-						}
-					}
-				}
+				no_level51_support = !DriverVersionCheck(VideoDriverVersion, 6, 14, 11, 7800);
 			}
 		}
+		else if (nPCIVendor == PCIV_S3_Graphics)
+		{
+			no_level51_support = 0;
+		}
+		else if (nPCIVendor == PCIV_ATI)
+		{
+#if 0			
+			// ATI cards support level 5.1 since drivers v8.14.1.6105 (Catalyst 10.4)
+			no_level51_support = !DriverVersionCheck(VideoDriverVersion, 8, 14, 1, 6105);
+#else
+			// An UVD version check is needed to determine whether L5.1 is really supported by the graphics card
+			// UVD+ or UVD2 seems to be required?
+			// So for now disable level 5.1 for ATI by default. This can be overridden through the compatibility check options.
+			no_level51_support = 1;
+#endif
+		}
 
-		// Check max num reference frame according to the level
 		#define MAX_DPB_41 12288 // DPB value for level 4.1
 
-		if (supportLevel51 == 1) {
-			// 11 refs as absolute max, but for Nvidia(Vista, HD) - 16
-   if(PCIV_nVidia)
+		// Check maximum allowed number reference frames
+		if(nPCIVendor == PCIV_nVidia && !no_level51_support)
+		{
+			// L5.1 is supported
+			if(IsVista())
 			{
-			 if(IsVista()) {
-				 if(nWidth>1279) {
-					 if (cur_sps->ref_frame_count > 16)
-						 return 2;	// Too much ref frames					
-				 } else {
-					 if (cur_sps->ref_frame_count > 11)
-						 return 2;	// Too much ref frames
-				 }
-			 } else {
-				 if (cur_sps->ref_frame_count > 14)
-					 return 2;	// Too much ref frames
-			 }
-   }
-		} else {
-			// level 4.1 with 11 refs as absolute max
-			if (cur_sps->ref_frame_count > min(11, (1024*MAX_DPB_41/(nWidth*nHeight*1.5))))
-				return 2;	// Too much ref frames
+				// max is 16 for HD and 11 otherwise
+				if(nWidth >= 1280)
+				{
+					if (cur_sps->ref_frame_count > 16)
+					{
+						too_much_ref_frames = 1;
+					}
+				}
+				else
+				{
+					if (cur_sps->ref_frame_count > 11)
+					{
+						too_much_ref_frames = 1;
+					}
+				}
+			}
+			else 
+			{
+				// max is 14
+				if (cur_sps->ref_frame_count > 14)
+				{
+					too_much_ref_frames = 1;
+				}
+			}
 		}
-	
+		else
+		{
+			// maximum of 11 or less, depending on DPB check
+			if (cur_sps->ref_frame_count > min(11, (1024*MAX_DPB_41/(nWidth*nHeight*1.5))))
+			{
+				too_much_ref_frames = 1;
+			}
+		}	
 	}
-		
-	return 0;
+	
+	return (video_is_level51 * no_level51_support * DXVA_UNSUPPORTED_LEVEL) + (too_much_ref_frames * DXVA_TOO_MUCH_REF_FRAMES);
 }
 
 
@@ -309,6 +312,7 @@ HRESULT FFH264BuildPicParams (DXVA_PicParams_H264* pDXVAPicParams, DXVA_Qmatrix_
 		pDXVAPicParams->weighted_bipred_idc				= cur_pps->weighted_bipred_idc;
 		pDXVAPicParams->frame_mbs_only_flag				= cur_sps->frame_mbs_only_flag;
 		pDXVAPicParams->transform_8x8_mode_flag			= cur_pps->transform_8x8_mode;
+		pDXVAPicParams->MinLumaBipredSize8x8Flag		= h->sps.level_idc >= 31;
 		pDXVAPicParams->IntraPicFlag					= (h->slice_type == FF_I_TYPE );
 
 		pDXVAPicParams->bit_depth_luma_minus8			= cur_sps->bit_depth_luma   - 8;	// bit_depth_luma_minus8
@@ -402,7 +406,7 @@ void FFH264UpdateRefFramesList (DXVA_PicParams_H264* pDXVAPicParams, struct AVCo
 		{
 			// Short list reference frames
             pic				= h->short_ref[h->short_ref_count - i - 1];
-			AssociatedFlag	= 0;
+			AssociatedFlag	= pic->long_ref != 0;
 		}
         else if (i >= h->short_ref_count && i < h->long_ref_count)
 		{
@@ -416,7 +420,7 @@ void FFH264UpdateRefFramesList (DXVA_PicParams_H264* pDXVAPicParams, struct AVCo
 
 		if (pic != NULL)
 		{
-			pDXVAPicParams->FrameNumList[i]					= pic->frame_num;
+			pDXVAPicParams->FrameNumList[i]	= pic->long_ref ? pic->pic_id : pic->frame_num;
 
 			if (pic->field_poc[0] != INT_MAX)
 			{
@@ -493,7 +497,6 @@ void FF264UpdateRefFrameSliceLong(DXVA_PicParams_H264* pDXVAPicParams, DXVA_Slic
 	{
 		if(h->ref_count[0] > 0){
 			for(i=0; i < h->ref_count[0]; i++){
-//				   pSlice->RefPicList[0][i].Index7Bits = h->ref_list[0][i].frame_num; //nSurfaceIndex; TODO : check this !
 			   pSlice->RefPicList[0][i].Index7Bits = FFH264FindRefFrameIndex (h->ref_list[0][i].frame_num, pDXVAPicParams);
 			   pSlice->RefPicList[0][i].AssociatedFlag = 0;
 			   if((h->s.picture_structure != PICT_FRAME)){
@@ -625,20 +628,9 @@ HRESULT FFVC1UpdatePictureParam (DXVA_PictureParameters* pPicParams, struct AVCo
 
 unsigned long FFGetMBNumber(struct AVCodecContext* pAVCtx)
 {
-	VC1Context*		vc1 = NULL;
-	H264Context*	h	= NULL;
+    MpegEncContext*		s = GetMpegEncContext(pAVCtx);
 
-	switch (pAVCtx->codec_id)
-	{
-	case CODEC_ID_VC1 :
-		vc1 = (VC1Context*) pAVCtx->priv_data;
-		return vc1->s.mb_num;
-	case CODEC_ID_H264 :
-		h	= (H264Context*) pAVCtx->priv_data;
-		return h->s.mb_num;
-	}
-
-	return 0;
+	return (s != NULL) ? s->mb_num : 0;
 }
 
 int FFIsSkipped(struct AVCodecContext* pAVCtx)

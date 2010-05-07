@@ -12,14 +12,18 @@
 #include <videoacc.h>
 #include "TDXVADecoder.h"
 
-
 enum PCI_Vendors
 {
-    PCIV_ATI                = 0x1002,
-    PCIV_nVidia             = 0x10DE,
-    PCIV_Intel              = 0x8086,
-    PCIV_S3_Graphics        = 0x5333
+	PCIV_ATI				= 0x1002,
+	PCIV_nVidia				= 0x10DE,
+	PCIV_Intel				= 0x8086,
+	PCIV_S3_Graphics		= 0x5333
 };
+
+// Bitmasks for DXVA compatibility check
+#define DXVA_UNSUPPORTED_LEVEL   1
+#define DXVA_TOO_MUCH_REF_FRAMES 2
+#define DXVA_INCOMPATIBLE_SAR    4
 
 typedef enum
 {

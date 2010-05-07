@@ -287,28 +287,45 @@ bool TvideoCodecLibavcodecDxva::isDXVASupported(void)
  EnumWindows(EnumFindProcessWnd, (LPARAM)&hWnd);
     detectVideoCard(hWnd);
 
- bool isDXVACompatible=true;
+ bool isDXVACompatible = true;
+ 
  if (dxvaCodecId == CODEC_ID_H264_DXVA)
-  {
-   int nCompat;
-   nCompat = libavcodec->FFH264CheckCompatibility(pictWidthRounded(), pictHeightRounded(), avctx, (BYTE*)avctx->extradata, avctx->extradata_size, nPCIVendor, videoDriverVersion);
+ {
+   /* a non-zero value indicates that an incompatibility was detected */ 	
+   int nCompat = libavcodec->FFH264CheckCompatibility(pictWidthRounded(), pictHeightRounded(), avctx, (BYTE*)avctx->extradata, avctx->extradata_size, nPCIVendor, videoDriverVersion);
 
-   int nCompatibilityMode=deci->getParam2(IDFF_dec_DXVA_CompatibilityMode);
-
-   switch (nCompat)
-    {
-     case 1 :    // SAR not supported
-         isDXVACompatible = false;
-         DPRINTF(_l("TvideoCodecLibavcodecDxva::isDXVASupported : SAR is not supported"));
-         if (nCompatibilityMode & 1) isDXVACompatible = true;
+	 if(nCompat > 0)
+	 {
+	   int nCompatibilityMode=deci->getParam2(IDFF_dec_DXVA_CompatibilityMode);
+	   
+	   // debug output
+	   if(nCompat & DXVA_UNSUPPORTED_LEVEL) 
+	   	 DPRINTF(_l("TvideoCodecLibavcodecDxva::isDXVASupported : unsupported level"));
+	   if(nCompat & DXVA_TOO_MUCH_REF_FRAMES) 
+	   	 DPRINTF(_l("TvideoCodecLibavcodecDxva::isDXVASupported : too much reference frames"));	   
+   
+     switch (nCompatibilityMode)
+     {
+     	 case 0:
+     	 	 // full check
+     	 	 isDXVACompatible = false;
+     	 	 break;
+       case 1 :
+       	 // skip level check
+         if(nCompat != DXVA_UNSUPPORTED_LEVEL) isDXVACompatible = false;
+				 break;
+       case 2 :
+       	 // skip reference frame check
+       	 if(nCompat != DXVA_TOO_MUCH_REF_FRAMES) isDXVACompatible = false;
          break;
-     case 2 :    // Too much ref frames
-         isDXVACompatible = false;
-         DPRINTF(_l("TvideoCodecLibavcodecDxva::isDXVASupported : too much reference frames"));
-         if (nCompatibilityMode & 2) isDXVACompatible = true;
-         break;
-    }
-  }
+       case 3 :
+       	 // skip all checks
+       	 //if(nCompat != (DXVA_UNSUPPORTED_LEVEL | DXVA_TOO_MUCH_REF_FRAMES)) m_bDXVACompatible = false; // example of how a combination of two ignored checks can be done
+       	 break;
+     }
+   }
+ }
+ 
  return isDXVACompatible;
 }
 
