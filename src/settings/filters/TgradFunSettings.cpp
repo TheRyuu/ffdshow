@@ -24,7 +24,7 @@
 
 const TfilterIDFF TgradFunSettings::idffs=
 {
- /*name*/      _l("GradFun"),
+ /*name*/      _l("DeBand"),
  /*id*/        IDFF_filterGradFun,
  /*is*/        IDFF_isGradFun,
  /*order*/     IDFF_orderGradFun,

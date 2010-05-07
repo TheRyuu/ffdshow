@@ -45,7 +45,7 @@ void TsubtitleParser::trail_space(wchar_t *s) {
 
 Tsubtitle* TsubtitleParser::store(TsubtitleText &sub)
 {
- sub.defProps.extendedTags=cfg.extendedTags;
+ sub.defProps.extendedTags=1; //cfg.extendedTags;
  sub.format(textformat);
  sub.prepareKaraoke();
  sub.fix(textfix);
