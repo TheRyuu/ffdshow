@@ -26,5 +26,6 @@ public:
  virtual void onSeek();
  virtual void parse(int flags=TsubtitleParser::PARSETIME, REFERENCE_TIME rtStart=REFTIME_INVALID, REFERENCE_TIME rtStop=REFTIME_INVALID);
  virtual void getSubtitle(const TsubtitlesSettings *cfg, REFERENCE_TIME rtStart, REFERENCE_TIME rtStop, bool *forceChange=NULL);
+ virtual int getFormat() { return SUB_PGS | SUB_KEEP_FILE_OPENED;};
 };
 #endif

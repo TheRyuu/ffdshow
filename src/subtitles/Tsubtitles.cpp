@@ -72,12 +72,14 @@ Tsubtitle* Tsubtitles::getSubtitle(const TsubtitlesSettings *cfg,REFERENCE_TIME 
 
  if (oldsub)
   {
-   if(time >= oldsub->start && time < oldsub->stop)
+   if(time >= oldsub->start && time < oldsub->stop) {
     return oldsub; // OK!
+   }
   }
  else
   {
-   if(time > nosub_range_start && time < nosub_range_end)
+   if(time > nosub_range_start && time < nosub_range_end 
+    && (subs->getFormat() & Tsubreader::SUB_FORMATMASK) != Tsubreader::SUB_PGS)
     return oldsub; // OK!
   }
  // sub changed!
@@ -90,6 +92,7 @@ Tsubtitle* Tsubtitles::getSubtitle(const TsubtitlesSettings *cfg,REFERENCE_TIME 
  // check current sub.
  if (time >= (*subs)[current_sub]->start && time < (*subs)[current_sub]->stop)
   return oldsub=(*subs)[current_sub];
+
  // check next sub.
  if(current_sub>=0 && current_sub+1<subs->count())
   {

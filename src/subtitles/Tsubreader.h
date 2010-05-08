@@ -67,6 +67,7 @@ public:
    SUB_ENC_MASK  =SUB_ENC_UTF8+SUB_ENC_UNILE+SUB_ENC_UNIBE,
    SUB_KEEP_FILE_OPENED = 16384
   };
+ virtual int getFormat(void) { return SUB_INVALID;}
  static bool isBitmapsub(int format)
   {
    format&=SUB_FORMATMASK;
