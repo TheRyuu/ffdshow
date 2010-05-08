@@ -62,10 +62,13 @@ TspuImage::TspuImage(const TspuPlane src[3],const CRect &rcclip,const CRect &rec
                       rectReal.top  >> cspInfo->shiftY[i],                                                           // top
                       (rectReal.left >> cspInfo->shiftX[i]) + roundRshift(rectReal.Width(), cspInfo->shiftX[i]),     // right
                       (rectReal.top  >> cspInfo->shiftY[i]) + roundRshift(rectReal.Height(), cspInfo->shiftY[i]));   // bottom
-        rect[i]=CRect(IfinalRect.left >> cspInfo->shiftX[i],                                                           // left
+        if (IfinalRect != CRect())
+         rect[i]=CRect(IfinalRect.left >> cspInfo->shiftX[i],                                                           // left
                       IfinalRect.top  >> cspInfo->shiftY[i],                                                           // top
                       (IfinalRect.left >> cspInfo->shiftX[i]) + roundRshift(IfinalRect.Width(), cspInfo->shiftX[i]),     // right
                       (IfinalRect.top  >> cspInfo->shiftY[i]) + roundRshift(IfinalRect.Height(), cspInfo->shiftY[i]));   // bottom
+        else
+         rect[i]=CRect(originalRect[i]);
         int dstdx = roundDiv(scale * (rectOrig.Width() ?
                             roundDiv(prefs.dx * (originalRect[i].Width() + 1), (unsigned int)rectOrig.Width() ) :
                             originalRect[i].Width() ),
@@ -100,7 +103,10 @@ TspuImage::TspuImage(const TspuPlane src[3],const CRect &rcclip,const CRect &rec
          _l("c:\\Temp\\dest.bmp"));*/
 
         originalRect[i] += CPoint(roundRshift(rcclip.left,cspInfo->shiftX[i]),roundRshift(rcclip.top,cspInfo->shiftY[i]));
-        rect[i] += CPoint(roundRshift(rcclip.left,cspInfo->shiftX[i]),roundRshift(rcclip.top,cspInfo->shiftY[i]));
+        // Add rcclip coordinates to rect[i] if we don't have a finalRect which is absolute coord
+        if (IfinalRect==CRect())
+         rect[i] += CPoint(roundRshift(rcclip.left,cspInfo->shiftX[i]),roundRshift(rcclip.top,cspInfo->shiftY[i]));
+        
         rect[i].left = roundDiv(int(prefs.dx*rect[i].left),rectOrig.Width());rect[i].right=rect[i].left+dstdx;
         rect[i].top = roundDiv(int(prefs.dy*rect[i].top),rectOrig.Height());rect[i].bottom=rect[i].top+dstdy;
         dx[i] = rect[i].Width();dy[i]=rect[i].Height();
@@ -792,7 +798,7 @@ template<class _mm> void TspuImageSimd<_mm>::ownprint(
              if (rect[i].left+dx > (int)sizeDx)
                  dx = (sizeDx - rect[i].left);
              int endx = dx -_mm::size/8 + 1;
-             //if (0)
+             
              /* Register size is 128 bits or 16 bytes = _mm::size
                 which can store 2 x 64 bits. each ARGB will take 64 bits in unpacked state so _mm::size/8 */
              for (; x < endx ; x+=_mm::size/8) {

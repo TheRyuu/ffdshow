@@ -182,7 +182,7 @@ void TsubtitlePGS::print(
   rectReal.left--;
 
   // Now reposition the center of the real rectangle (rcclip) proportionnaly to original size % new size
-  CPoint centerPoint = CPoint(rectReal.left+rectReal.Width()/2, rectReal.top+rectReal.Height()/2); 
+  CPoint centerPoint = CPoint(rc.left+rectReal.left+rectReal.Width()/2, rc.top+rectReal.top+rectReal.Height()/2); 
   
   // Recalculate the coordinates proportionally
   centerPoint.x=(int)((float)centerPoint.x*scale100/100);

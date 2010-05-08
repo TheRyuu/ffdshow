@@ -114,7 +114,7 @@ void TsubreaderPGS::parse(int flags, REFERENCE_TIME rtStart, REFERENCE_TIME rtSt
  } while(1);
 
  TcompositionObjects compositionObjects;
- pSubtitlePGSParser->getObjects(rtStart, rtStop, &compositionObjects); 
+ pSubtitlePGSParser->getObjects(rtStart, rtStop+10000*1000*10, &compositionObjects); 
 
  foreach (Tsubtitle *pSubtitle, (*this))
  {
@@ -128,7 +128,7 @@ void TsubreaderPGS::parse(int flags, REFERENCE_TIME rtStart, REFERENCE_TIME rtSt
     char_t rtString[32],rtString2[32];
     rt2Str(pCompositionObject->m_Windows[i].m_rtStart, rtString);
     rt2Str(pCompositionObject->m_Windows[i].m_rtStop, rtString2);
-    DPRINTF(_l("TsubreaderPGS::parse [%d] WindowId %d Subtitles added %s --> %s %s"),pCompositionObject->m_compositionNumber,
+    DPRINTF(_l("[%d] TsubreaderPGS::parse WindowId %d Subtitles added %s --> %s %s"),pCompositionObject->m_compositionNumber,
      pCompositionObject->m_Windows[i].m_windowId, rtString, rtString2, (pCompositionObject->m_Windows[i].data.size() > 0)? _l("has data") : _l("no data"));
 #endif
     TsubtitlePGS *sub=new TsubtitlePGS(deci, rtStart, rtStop, pCompositionObject, &pCompositionObject->m_Windows[i], this);

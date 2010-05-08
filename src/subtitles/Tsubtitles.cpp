@@ -79,7 +79,7 @@ Tsubtitle* Tsubtitles::getSubtitle(const TsubtitlesSettings *cfg,REFERENCE_TIME 
  else
   {
    if(time > nosub_range_start && time < nosub_range_end 
-    && (subs->getFormat() & Tsubreader::SUB_FORMATMASK) != Tsubreader::SUB_PGS)
+    && (subs->getFormat() & Tsubreader::SUB_FORMATMASK) != Tsubreader::SUB_PGS) //True for PGS external files only (not embedded)
     return oldsub; // OK!
   }
  // sub changed!

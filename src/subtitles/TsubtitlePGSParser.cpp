@@ -591,7 +591,8 @@ void TsubtitlePGSParser::getObjects(REFERENCE_TIME rtStart, REFERENCE_TIME rtSto
    }
 
    if ((*c)->m_Windows[i].m_rtStart != INVALID_TIME && (*c)->m_Windows[i].data.size() > 0
-    && (*c)->m_Windows[i].m_rtStart <= rtStart && ((*c)->m_Windows[i].m_rtStop == INVALID_TIME || (*c)->m_Windows[i].m_rtStop > rtStart))
+    && ( ((*c)->m_Windows[i].m_rtStart <= rtStart && ((*c)->m_Windows[i].m_rtStop == INVALID_TIME || (*c)->m_Windows[i].m_rtStop > rtStart))
+        || ((*c)->m_Windows[i].m_rtStop != INVALID_TIME && (*c)->m_Windows[i].m_rtStop > rtStart && (*c)->m_Windows[i].m_rtStop <= rtStop)))
    {
     // Get the right palette pointer before adding the element
     if (!getPalette(*c))

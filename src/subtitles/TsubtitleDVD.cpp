@@ -361,8 +361,8 @@ void TsubtitleDVD::drawPixel(const CPoint &pt,const YUVcolorA &color, const CRec
 */
     int ptx=pt.x,pty=pt.y;
     if (color.A != 0) {
-     if (ptx+rc.left<rectReal.left  && (!skipEdge || ptx>2)) rectReal.left=ptx+rc.left;
-     if (ptx+rc.left>rectReal.right && (!skipEdge || ptx+rc.left!=rc.right-1)) rectReal.right=ptx+rc.left;
+     if (ptx<rectReal.left  && (!skipEdge || ptx>2)) rectReal.left=ptx;
+     if (ptx>rectReal.right && (!skipEdge || ptx!=(rc.Width())-1)) rectReal.right=ptx;
     }
     if (csp == FF_CSP_420P) {
         plane[0].c[pty*plane[0].stride+ptx]=color.Y;
@@ -391,7 +391,7 @@ template<class _mm> void TsubtitleDVD::drawPixelSimd(const CPoint &pt,const YUVc
  if (color.A != 0) {
      if (ptx<rectReal.left && (!skipEdge || pt.x!=0)) 
       rectReal.left=ptx;
-     if (ptx+length>rectReal.right && (!skipEdge || pt.x+length+rc.left!=rc.right-1))
+     if (ptx+length>rectReal.right && (!skipEdge || pt.x+length!=rc.Width()-1))
       rectReal.right=ptx+length;
  }
  
