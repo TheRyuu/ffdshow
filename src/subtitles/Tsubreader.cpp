@@ -41,6 +41,7 @@ int Tsubreader::sub_autodetect(Tstream &fd,const Tconfig *config)
  int j=0;
  static const int LINE_LEN=1000;
  int format=SUB_INVALID;
+ DPRINTF(_l("Tsubreader::sub_autodetect"));
  while (j < 100)
   {
    j++;
@@ -149,7 +150,7 @@ int Tsubreader::sub_autodetect(Tstream &fd,const Tconfig *config)
      break;
     }
    //TODO : external bluray subtitles support. The test should also be improved
-   if (j==1 && !memcmp(line, L"PG\0", 3*2))
+   if (j==1 && !memcmp(line, L"PG", 2*2))
    {
     // Keep file opened because it will take too much memory to load all the subtitles
     format=SUB_PGS|SUB_USESTIME|SUB_KEEP_FILE_OPENED; 
