@@ -70,7 +70,7 @@ void TSubtitleProps::reset(void)
 void TSubtitleProps::toLOGFONT(LOGFONT &lf,const TfontSettings &fontSettings,unsigned int dx,unsigned int dy,unsigned int clipdy,const Rational& sar,unsigned int gdi_font_scale) const
 {
  memset(&lf,0,sizeof(lf));
- lf.lfHeight=(LONG)limit(size?size:fontSettings.getSize(dx,dy),3U,255U) * gdi_font_scale;
+ lf.lfHeight=(LONG)limit(size?size:fontSettings.getSize(refResY,clipdy),3U,255U) * gdi_font_scale;
  if (size)
   lf.lfHeight=(clipdy ? clipdy : dy)*lf.lfHeight/refResY;
  int yscale=get_yscale(fontSettings.yscale,sar,fontSettings.aspectAuto,fontSettings.overrideScale);

@@ -143,7 +143,7 @@ TfontSettings::TfontSettings(TintStrColl *Icoll):Toptions(Icoll)
     color = RGB(110,220,0);
     outlineColor = RGB(0,0,0);
     shadowColor = RGB(0,0,0);
-    outlineWidth = 1;
+    outlineWidth = 2;
     opaqueBox = 0;
     spacing = 0;
     xscale = 100;
@@ -152,11 +152,11 @@ TfontSettings::TfontSettings(TintStrColl *Icoll):Toptions(Icoll)
     bodyAlpha = 256;
     outlineAlpha = 256;
     shadowAlpha = 128;
-    shadowSize = 8;
-    shadowMode = 3;
+    shadowSize = 5;
+    shadowMode = 2;
     blur = 0;
     autosize=0;
-    sizeA=50;
+    sizeA=18;
     split=0;
     autosizeVideoWindow=0;
     gdi_font_scale = 4;
@@ -273,13 +273,13 @@ TfontSettingsSub::TfontSettingsSub(TintStrColl *Icoll):TfontSettings(Icoll)
    IDFF_fontCharset            ,&TfontSettings::charset            ,1,1,_l(""),1,
      _l("fontCharset"), DEFAULT_CHARSET,
    IDFF_fontAutosize           ,&TfontSettings::autosize           ,0,0,_l(""),1,
-     _l("fontAutosize"), 0,
+     _l("fontAutosize"), 1,
    IDFF_fontAutosizeVideoWindow,&TfontSettings::autosizeVideoWindow,0,0,_l(""),1,
      _l("fontAutosizeVideoWindow"), 0,
    IDFF_fontSizeP              ,&TfontSettings::sizeP              ,2,255,_l(""),1,
      _l("fontSize"), 26,
    IDFF_fontSizeA              ,&TfontSettings::sizeA              ,1,100,_l(""),1,
-     _l("fontSizeA"), 60,
+     _l("fontSizeA"), 18,
    IDFF_fontWeight             ,&TfontSettings::weight             ,0,900,_l(""),1,
      _l("fontWeight"), FW_BOLD,
    IDFF_fontColor              ,&TfontSettings::color              ,1,1,_l(""),1,
@@ -311,9 +311,9 @@ TfontSettingsSub::TfontSettingsSub(TintStrColl *Icoll):TfontSettings(Icoll)
    IDFF_fontShadowAlpha        ,&TfontSettings::shadowAlpha        ,0,256,_l(""),1,
      _l("fontShadowAlpha"), 128,
    IDFF_fontShadowSize         ,&TfontSettings::shadowSize        ,0,50,_l(""),1,
-     _l("fontShadowSize"), 8,
+     _l("fontShadowSize"), 5,
    IDFF_fontShadowMode         ,&TfontSettings::shadowMode         ,0,3,_l(""),1,
-     _l("fontShadowMode"), 1, // Default shadow mode to gradient (best rendering)
+     _l("fontShadowMode"), 2, // Default shadow mode to classic (like VSFilter)
    IDFF_fontBlur               ,&TfontSettings::blur               ,0,0,_l(""),1,
      _l("fontBlur"), 0,
    IDFF_fontShadowOverride     ,&TfontSettings::shadowOverride     ,0,0,_l(""),1,

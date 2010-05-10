@@ -13,12 +13,12 @@ public:
    return *this;
   }
  virtual void reg_op(TregOp &t);
- unsigned int getSize(unsigned int AVIdx,unsigned int AVIdy) const
+ unsigned int getSize(unsigned int refResY,unsigned int clipdy) const
   {
-   if (autosize && AVIdx && AVIdy)
-    return limit(sizeA*ff_sqrt(AVIdx*AVIdx+AVIdy*AVIdy)/1000,3U,255U);
+   if (autosize && clipdy && refResY)
+      return (sizeA * clipdy / refResY) + 0.5;
    else
-    return sizeP;
+      return sizeP;
   }
  bool getTip(char_t *buf,size_t len)
   {

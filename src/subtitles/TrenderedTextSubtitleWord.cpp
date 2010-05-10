@@ -755,8 +755,14 @@ unsigned int TrenderedTextSubtitleWord::getShadowSize(LONG fontHeight, unsigned 
    else
       return (-1 * prefs.shadowSize) - 0.5;
   }
+ 
+ unsigned int shadowSize;
+ if (prefs.fontSettings.autosize && prefs.shadowSize > 0) // non SSA/ASS/ASS2 and autosize enabled
+   shadowSize = prefs.shadowSize*fontHeight/(gdi_font_scale * 250)+2.6;
+ else
+   shadowSize = prefs.shadowSize;
 
- unsigned int shadowSize = prefs.shadowSize*fontHeight/(gdi_font_scale * 45)+2.6;
+/* unsigned int shadowSize = prefs.shadowSize*fontHeight/(gdi_font_scale * 45)+2.6;
  if (prefs.shadowMode==0)
   shadowSize*=0.6;
  else if (prefs.shadowMode==1)
@@ -767,7 +773,8 @@ unsigned int TrenderedTextSubtitleWord::getShadowSize(LONG fontHeight, unsigned 
  if (shadowSize==0)
   shadowSize = 1;
  if (shadowSize>16)
-  shadowSize = 16;
+  shadowSize = 16; */
+
  return shadowSize;
 }
 
