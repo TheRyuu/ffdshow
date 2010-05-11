@@ -412,9 +412,7 @@ Source: "{#= bindir}\ff_x264.dll";                DestDir: "{app}";             
 #if include_xvidcore
 Source: "{#= bindir}\xvidcore.dll";               DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
 #endif
-#if !is64bit
-Source: "{#= bindir}\ff_kernelDeint.dll";         DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
-#endif
+Source: "{#= bindir}\ff_kernelDeint.dll";         DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion; Check: Is_SSE_Supported;
 Source: "{#= bindir}\TomsMoComp_ff.dll";          DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
 Source: "{#= bindir}\libmpeg2_ff.dll";            DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion restartreplace uninsrestartdelete
 
@@ -1240,4 +1238,5 @@ begin
   end
 end;
 #endif
+
 
