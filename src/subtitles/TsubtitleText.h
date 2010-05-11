@@ -319,7 +319,7 @@ public:
     int get_splitdx_for_new_line(const TsubtitleWord &w,int splitdx,int dx, const TprintPrefs &prefs, int gdi_font_scale, IffdshowBase *deci) const {
         // This method calculates the maximum length of the line considering the left/right margin and eventually
         // basing on the position set through a position tag
-        return w.props.get_maxWidth(dx, prefs.subformat, deci) * gdi_font_scale;
+        return w.props.get_maxWidth(dx, prefs.textBorderLR, prefs.subformat, deci) * gdi_font_scale;
     }
 
     // return size of released memory

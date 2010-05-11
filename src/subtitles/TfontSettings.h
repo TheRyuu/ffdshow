@@ -16,7 +16,7 @@ public:
  unsigned int getSize(unsigned int refResY,unsigned int clipdy) const
   {
    if (autosize && clipdy && refResY)
-      return (sizeA * clipdy / refResY) + 0.5;
+      return (int)((sizeA * clipdy / refResY) + 0.5);
    else
       return sizeP;
   }

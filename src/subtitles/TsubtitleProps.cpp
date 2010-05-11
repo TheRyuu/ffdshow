@@ -255,7 +255,7 @@ int TSubtitleProps::get_marginBottom(unsigned int screenHeight) const
  return result*screenHeight/resY;
 }
 
-int TSubtitleProps::get_maxWidth(unsigned int screenWidth, int subFormat, IffdshowBase *deci) const
+int TSubtitleProps::get_maxWidth(unsigned int screenWidth, int textBorderLR, int subFormat, IffdshowBase *deci) const
 {
   int result = 0;
   int resX;
@@ -272,8 +272,8 @@ int TSubtitleProps::get_maxWidth(unsigned int screenWidth, int subFormat, Iffdsh
      else
         resX = screenWidth;
   }
-  int mL = marginL == -1 ? 0 : marginL;
-  int mR = marginR == -1 ? 0 : marginR;
+  int mL = marginL == -1 ? textBorderLR/2 : marginL;
+  int mR = marginR == -1 ? textBorderLR/2 : marginR;
 
 
   /* Calculate the maximum width of line according to the position to be set
