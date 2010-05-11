@@ -292,7 +292,7 @@ bool TvideoCodecLibavcodecDxva::isDXVASupported(void)
  if (dxvaCodecId == CODEC_ID_H264_DXVA)
  {
    /* a non-zero value indicates that an incompatibility was detected */ 	
-   int nCompat = libavcodec->FFH264CheckCompatibility(pictWidthRounded(), pictHeightRounded(), avctx, (BYTE*)avctx->extradata, avctx->extradata_size, nPCIVendor, videoDriverVersion);
+   int nCompat = libavcodec->FFH264CheckCompatibility(pictWidthRounded(), pictHeightRounded(), avctx, (BYTE*)avctx->extradata, avctx->extradata_size, nPCIVendor, nPCIDevice, videoDriverVersion);
 
 	 if(nCompat > 0)
 	 {
