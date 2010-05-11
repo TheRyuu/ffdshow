@@ -22,7 +22,7 @@
 #define SWSCALE_SWSCALE_H
 
 /**
- * @file libswscale/swscale.h
+ * @file
  * @brief
  *     external api for the swscale stuff
  */
@@ -30,6 +30,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
 #include "libavutil/avutil.h"
 #include "ffImgfmt.h"
 
@@ -220,13 +221,13 @@ struct SwsContext *sws_getContextEx(int srcW, int srcH, enum PixelFormat srcForm
  *                  the destination image
  * @return          the height of the output slice
  */
-int sws_scale(struct SwsContext *context, const uint8_t* src[], const stride_t srcStride[],
+int sws_scale(struct SwsContext *context, const uint8_t* const srcSlice[], const stride_t srcStride[],
               int srcSliceY, int srcSliceH, uint8_t* const dst[], const stride_t dstStride[]);
 #if LIBSWSCALE_VERSION_MAJOR < 1
 /**
  * @deprecated Use sws_scale() instead.
  */
-int sws_scale_ordered(struct SwsContext *context, const uint8_t* src[],
+int sws_scale_ordered(struct SwsContext *context, const uint8_t* const src[],
 		stride_t srcStride[], int srcSliceY, int srcSliceH,
         uint8_t* dst[], stride_t dstStride[]) attribute_deprecated;
 #endif
