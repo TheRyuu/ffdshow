@@ -304,7 +304,7 @@ TpresetVideo::TpresetVideo(const char_t *Ireg_child, const char_t *IpresetName, 
    IDFF_dec_DXVA_VC1       ,&TpresetVideo::dec_dxva_vc1       ,0,0,_l(""),1,
      _l("dec_DXVA_VC1"),0,
    IDFF_dec_DXVA_CompatibilityMode,&TpresetVideo::dec_dxva_compatibilityMode,0,255,_l(""),0,
-     _l("dec_dxva_compatibilityMode"),0,
+     _l("dec_dxva_compatibilityMode"),1,
    IDFF_dec_DXVA_PostProcessingMode,&TpresetVideo::dec_dxva_postProcessingMode,0,255,_l(""),0,
      _l("dec_dxva_postProcessingMode"),0,
 
