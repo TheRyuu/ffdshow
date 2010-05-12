@@ -26,17 +26,9 @@
 
 #include "avcodec.h"
 
-#define REGISTER_ENCODER(X,x) { \
-          extern AVCodec x##_encoder; \
-          if(CONFIG_##X##_ENCODER)  avcodec_register(&x##_encoder); }
 #define REGISTER_DECODER(X,x) { \
           extern AVCodec x##_decoder; \
           if(CONFIG_##X##_DECODER)  avcodec_register(&x##_decoder); }
-#define REGISTER_ENCDEC(X,x)  REGISTER_ENCODER(X,x); REGISTER_DECODER(X,x)
-
-#define REGISTER_PARSER(X,x) { \
-          extern AVCodecParser x##_parser; \
-          if(CONFIG_##X##_PARSER)  av_register_codec_parser(&x##_parser); }
 
 void avcodec_register_all(void)
 {
@@ -49,4 +41,3 @@ void avcodec_register_all(void)
     /* video codecs */
     REGISTER_DECODER (H264, h264);
 }
-
