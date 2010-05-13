@@ -2492,7 +2492,7 @@ AVCodec mpeg2video_decoder = {
     /*.flush=*/flush,
     /*.supported_framerates = */NULL,
     /*.pix_fmts = */NULL,
-/*.long_name= */NULL_IF_CONFIG_SMALL("MPEG-2 video"),
+    /*.long_name= */NULL_IF_CONFIG_SMALL("MPEG-2 video"),
 };
 
 //legacy decoder

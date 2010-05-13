@@ -40,11 +40,11 @@
 #include "mathops.h"
 
 #if CONFIG_FLOAT
-#   define SHR(a,b)       ((a)*(1.0/(1<<(b))))
+#   define SHR(a,b)       ((a)*(1.0f/(1<<(b))))
 #   define compute_antialias compute_antialias_float
 #   define FIXR_OLD(a)    ((int)((a) * FRAC_ONE + 0.5))
-#   define FIXR(x)        (x)
-#   define FIXHR(x)       (x)
+#   define FIXR(x)        ((float)(x))
+#   define FIXHR(x)       ((float)(x))
 #   define MULH3(x, y, s) ((s)*(y)*(x))
 #   define MULLx(x, y, s) ((y)*(x))
 #   define RENAME(a) a ## _float
@@ -792,8 +792,7 @@ void RENAME(ff_mpa_synth_filter)(MPA_INT *synth_buf_ptr, int *synth_buf_offset,
     offset = *synth_buf_offset;
     synth_buf = synth_buf_ptr + offset;
 
-#if FRAC_BITS <= 15
-    assert(!CONFIG_FLOAT);
+#if FRAC_BITS <= 15 && !CONFIG_FLOAT
     dct32(tmp, sb_samples);
     for(j=0;j<32;j++) {
         /* NOTE: can cause a loss in precision if very high amplitude
