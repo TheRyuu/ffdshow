@@ -28,6 +28,7 @@
 #include "Tfilters.h"
 #include "IffdshowDecVideo.h"
 #include "dsutil.h"
+#include "TsubtitlesFile.h"
 
 STDMETHODIMP_(int) TffdshowDec::getVersion2(void)
 {
@@ -731,32 +732,110 @@ STDMETHODIMP TffdshowDec::Count(DWORD* pcStreams)
  tr->release();
  addOwnStreams();
  *pcStreams=(DWORD)streams.size();
+ 
+ // Now the subtitles streams
+ // Subtitle files
+ char_t *pdummy;
+ if (getCurrentSubtitlesFile(&pdummy) == S_OK) // Returns E_NOTIMPL if TffdshowDec is not TffdshowDecVideo
+ {
+  TsubtitlesFile::findPossibleSubtitles(getSourceName(),getParamStr2(IDFF_subSearchDir),subtitleFiles);
+  *pcStreams += subtitleFiles.size();
+ }
+ // Subtitle streams
+ extractExternalStreams();
+ *pcStreams += externalSubtitleStreams.size();
+ *pcStreams += externalAudioStreams.size();
  return S_OK;
 }
 STDMETHODIMP TffdshowDec::Info(long lIndex, AM_MEDIA_TYPE** ppmt, DWORD* pdwFlags, LCID* plcid, DWORD* pdwGroup, WCHAR** ppszName, IUnknown** ppObject, IUnknown** ppUnk)
 {
- if (lIndex<0 || lIndex>=(long)streams.size() || !presetSettings) return E_INVALIDARG;
+ // In order : audio streams, embedded subtitles, external subtitles, then FFDShow filters
+ int offset = subtitleFiles.size() + externalSubtitleStreams.size() + externalAudioStreams.size();
+ if (lIndex<0 || lIndex>=(long)streams.size() + offset || !presetSettings) return E_INVALIDARG;
+ if (lIndex >= offset)
+ {
+  lIndex-=offset;
+  if (ppmt) *ppmt=getInputMediaType(lIndex);
+  if (pdwFlags)
+   *pdwFlags=streams[lIndex]->getFlags();
+  if (plcid) *plcid=0;
+  if (pdwGroup) *pdwGroup=streams[lIndex]->group;
+  if (ppszName)
+   {
+    ffstring name=streams[lIndex]->getName();//stringreplace(ffstring(streams[lIndex]->getName()),"&","&&",rfReplaceAll);
+    size_t wlen=(name.size()+1)*sizeof(WCHAR);
+    *ppszName=(WCHAR*)CoTaskMemAlloc(wlen);memset(*ppszName,0,wlen);
+    nCopyAnsiToWideChar(*ppszName,name.c_str());
+   }
+  if (ppObject) *ppObject=NULL;
+  if (ppUnk) *ppUnk=NULL;
+  return S_OK;
+ }
+
  if (ppmt) *ppmt=getInputMediaType(lIndex);
- if (pdwFlags)
-  *pdwFlags=streams[lIndex]->getFlags();
  if (plcid) *plcid=0;
- if (pdwGroup) *pdwGroup=streams[lIndex]->group;
- if (ppszName)
+ 
+
+ // Subtitles files
+ if (lIndex >= (long)(externalAudioStreams.size() + externalSubtitleStreams.size()))
+ {
+  lIndex -= externalAudioStreams.size() + externalSubtitleStreams.size();
+  if (pdwGroup) *pdwGroup = 2; // Subtitle files (arbitrary group)
+  const wchar_t *subtitleFilename = subtitleFiles[lIndex].c_str();
+  if (ppszName)
   {
-   ffstring name=streams[lIndex]->getName();//stringreplace(ffstring(streams[lIndex]->getName()),"&","&&",rfReplaceAll);
-   size_t wlen=(name.size()+1)*sizeof(WCHAR);
+   size_t wlen=(subtitleFiles[lIndex].size()+1)*sizeof(WCHAR);
    *ppszName=(WCHAR*)CoTaskMemAlloc(wlen);memset(*ppszName,0,wlen);
-   nCopyAnsiToWideChar(*ppszName,name.c_str());
+   nCopyAnsiToWideChar(*ppszName,subtitleFilename);
   }
- if (ppObject) *ppObject=NULL;
- if (ppUnk) *ppUnk=NULL;
+  if (pdwFlags)
+  {
+   char_t *cursubflnm = NULL;
+   if (getCurrentSubtitlesFile(&cursubflnm) != S_OK) return E_NOTIMPL;
+   
+   if (cursubflnm != NULL && stricmp(subtitleFilename,cursubflnm)==0)
+    *pdwFlags = AMSTREAMSELECTINFO_ENABLED|AMSTREAMSELECTINFO_EXCLUSIVE;
+   else
+    *pdwFlags = 0;
+  }
+  return S_OK;
+ }
+
+ TexternalStream stream;
+ if (lIndex < (long)externalAudioStreams.size())
+ {
+  if (pdwGroup) *pdwGroup = 1; // Audio stream
+  stream = externalAudioStreams[lIndex];
+ }
+ else
+ {
+  lIndex -= externalAudioStreams.size();
+  if (pdwGroup) *pdwGroup = 2; // Subtitles stream
+  stream = externalSubtitleStreams[lIndex];
+ }
+
+ if (pdwFlags)
+ {
+  if (stream.enabled)
+   *pdwFlags = AMSTREAMSELECTINFO_ENABLED|AMSTREAMSELECTINFO_EXCLUSIVE;
+  else
+   *pdwFlags = 0;
+ }
+ if (ppszName)
+ {
+  size_t wlen=(stream.streamName.size()+1)*sizeof(WCHAR);
+  *ppszName=(WCHAR*)CoTaskMemAlloc(wlen);memset(*ppszName,0,wlen);
+  nCopyAnsiToWideChar(*ppszName,stream.streamName.c_str());
+ }
  return S_OK;
 }
 STDMETHODIMP TffdshowDec::Enable(long lIndex, DWORD dwFlags)
 {
+ int offset = subtitleFiles.size() + externalSubtitleStreams.size() + externalAudioStreams.size();
+ if (lIndex<0 || lIndex >=(long)streams.size() + offset) return E_INVALIDARG;
  if (firsttransform) return S_OK;
  if (/*!(dwFlags&AMSTREAMSELECTENABLE_ENABLE)*/dwFlags!=AMSTREAMSELECTENABLE_ENABLE) return E_NOTIMPL;
- if (lIndex<0 || lIndex>=(long)streams.size()) return E_INVALIDARG;
+ 
  if (streams[lIndex]->action())
   {
    saveGlobalSettings();
@@ -1002,6 +1081,9 @@ STDMETHODIMP TffdshowDec::extractExternalStreams(void)
 
    char_t name[MAX_PATH],filtername[MAX_PATH];
    getFilterName(bff,name,filtername,countof(filtername));
+
+   if (!strcmp(filtername, FFDSHOW_NAME_L) || !strcmp(filtername, FFDSHOWDXVA_NAME_L)) continue;
+
    FILTER_INFO filterinfo;
    bff->QueryFilterInfo(&filterinfo);
    if (filterinfo.pGraph)

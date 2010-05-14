@@ -2208,6 +2208,12 @@ HRESULT TffdshowDecVideo::EndFlush(void)
     return TffdshowDec::EndFlush();
 }
 
+STDMETHODIMP TffdshowDecVideo::getCurrentSubtitlesFile(char_t **ppSubtitleFile)
+{
+ *ppSubtitleFile = imgFilters?imgFilters->getCurrentSubFlnm():_l("");
+ return S_OK;
+}
+
 #ifdef OSDTIMETABALE
 /* Usage
  *

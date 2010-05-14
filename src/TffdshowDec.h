@@ -390,6 +390,7 @@ protected:
    STDMETHODIMP extractExternalStreams(void) {return deciD->extractExternalStreams();}
    STDMETHODIMP getExternalStreams(void **pAudioStreams, void **pSubtitleStreams) {return deciD->getExternalStreams(pAudioStreams,pSubtitleStreams);}
    STDMETHODIMP setExternalStream(int group, long streamNb) {return deciD->setExternalStream(group,streamNb);}
+   STDMETHODIMP getCurrentSubtitlesFile(tchar **ppSubtitleFile) {return E_NOTIMPL;}
 
   } dec_char;
  template<class Tinterface> Tinterface* getDecInterface(void);
@@ -466,6 +467,7 @@ protected:
     }
   };
  Tstreams streams;
+ strings subtitleFiles;
  static bool streamsSort(const Tstream *s1,const Tstream *s2);
  virtual AM_MEDIA_TYPE* getInputMediaType(int lIndex);
  virtual void addOwnStreams(void) {}
@@ -478,6 +480,7 @@ public:
  STDMETHODIMP extractExternalStreams(void);
  STDMETHODIMP getExternalStreams(void **pAudioStreams, void **pSubtitleStreams);
  STDMETHODIMP setExternalStream(int group, long streamNb);
+ STDMETHODIMP getCurrentSubtitlesFile(char_t **ppSubtitleFile) { return E_NOTIMPL; }
 protected:
  bool m_dirtyStop; // Work around DVBViewer compatibility issue. Old DVBViewer doesn't call NewSegment after Stop and before next play.
  TexternalStreams externalSubtitleStreams;

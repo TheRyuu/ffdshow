@@ -36,9 +36,9 @@ Tremote::Tremote(TintStrColl *Icoll,IffdshowBase *Ideci):deci(Ideci),deciD(Ideci
 {
  static const TintOptionT<Tremote> iopts[]=
   {
-   IDFF_isRemote           ,&Tremote::is           ,0,0,_l(""),0,
+   IDFF_isRemote           ,&Tremote::is           ,1,0,_l(""),0,
      _l("isRemote"),0,
-   IDFF_remoteMessageMode  ,&Tremote::messageMode  ,0,1,_l(""),0,
+   IDFF_remoteMessageMode  ,&Tremote::messageMode  ,1,1,_l(""),0,
      _l("remoteMessageMode"),0,
    IDFF_remoteMessageUser  ,&Tremote::messageUser  ,1,1,_l(""),0,
      _l("remoteMessageUser"),WM_APP+18,

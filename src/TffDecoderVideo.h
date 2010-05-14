@@ -153,6 +153,8 @@ public:
  STDMETHODIMP setFrameTime(TffPict &pict, bool &frameTimeReconstructed);
  void setFrameVideoDelay(TffPict &pict);
 
+ STDMETHODIMP getCurrentSubtitlesFile(char_t **ppSubtitleFile);
+
  //compatibility
  STDMETHODIMP compat_getIffDecoderVersion2(void);
  STDMETHODIMP compat_getParam(unsigned int paramID, int* value) {return getParam(paramID,value);}
