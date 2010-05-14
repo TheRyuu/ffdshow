@@ -75,11 +75,11 @@
 				ObjectFile="$(IntDir)\"
 				ProgramDataBaseFileName="$(IntDir)\"
 				BrowseInformation="0"
-				WarningLevel="4"
+				WarningLevel="3"
 				SuppressStartupBanner="true"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="4"
-				DisableSpecificWarnings="4996,4250"
+				DisableSpecificWarnings="963;964;4250;4996"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -191,11 +191,11 @@
 				ObjectFile="$(IntDir)\"
 				ProgramDataBaseFileName="$(IntDir)\"
 				BrowseInformation="0"
-				WarningLevel="4"
+				WarningLevel="3"
 				SuppressStartupBanner="true"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="3"
-				DisableSpecificWarnings="4996,4250"
+				DisableSpecificWarnings="963;964;4250;4996"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -314,7 +314,7 @@
 				WarningLevel="0"
 				SuppressStartupBanner="true"
 				CompileAs="0"
-				DisableSpecificWarnings="4996,4250"
+				DisableSpecificWarnings="4250;4996"
 				OmitDefaultLibName="true"
 			/>
 			<Tool
@@ -437,7 +437,7 @@
 				WarningLevel="0"
 				SuppressStartupBanner="true"
 				CompileAs="0"
-				DisableSpecificWarnings="4996,4250"
+				DisableSpecificWarnings="4250;4996"
 				OmitDefaultLibName="true"
 			/>
 			<Tool

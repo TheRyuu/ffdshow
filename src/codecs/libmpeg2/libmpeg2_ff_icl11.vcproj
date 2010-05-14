@@ -63,11 +63,11 @@
 				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="0"
 				BrowseInformation="0"
-				WarningLevel="0"
+				WarningLevel="3"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="4"
 				CompileAs="2"
-				DisableSpecificWarnings="4996"
+				DisableSpecificWarnings="963;964;4996"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -160,11 +160,11 @@
 				BufferSecurityCheck="true"
 				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="0"
-				WarningLevel="0"
+				WarningLevel="3"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="3"
 				CompileAs="2"
-				DisableSpecificWarnings="4996"
+				DisableSpecificWarnings="963;964;4996"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"

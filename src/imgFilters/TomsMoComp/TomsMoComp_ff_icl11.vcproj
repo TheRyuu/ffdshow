@@ -270,11 +270,11 @@
 				ObjectFile="$(IntDir)\"
 				ProgramDataBaseFileName="$(IntDir)\"
 				BrowseInformation="0"
-				WarningLevel="4"
+				WarningLevel="3"
 				SuppressStartupBanner="true"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="4"
-				DisableSpecificWarnings="4996"
+				DisableSpecificWarnings="963;964;4996"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -370,11 +370,11 @@
 				ObjectFile="$(IntDir)\"
 				ProgramDataBaseFileName="$(IntDir)\"
 				BrowseInformation="1"
-				WarningLevel="4"
+				WarningLevel="3"
 				SuppressStartupBanner="true"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="3"
-				DisableSpecificWarnings="4996"
+				DisableSpecificWarnings="963;964;4996"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
