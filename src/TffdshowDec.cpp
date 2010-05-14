@@ -736,6 +736,7 @@ STDMETHODIMP TffdshowDec::Count(DWORD* pcStreams)
  // Now the subtitles streams
  // Subtitle files
  char_t *pdummy;
+ subtitleFiles.clear();
  if (getCurrentSubtitlesFile(&pdummy) == S_OK) // Returns E_NOTIMPL if TffdshowDec is not TffdshowDecVideo
  {
   TsubtitlesFile::findPossibleSubtitles(getSourceName(),getParamStr2(IDFF_subSearchDir),subtitleFiles);
