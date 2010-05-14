@@ -154,6 +154,7 @@ public:
  void setFrameVideoDelay(TffPict &pict);
 
  STDMETHODIMP getCurrentSubtitlesFile(char_t **ppSubtitleFile);
+ STDMETHODIMP setSubtitlesFile(const char_t *pSubtitleFile);
 
  //compatibility
  STDMETHODIMP compat_getIffDecoderVersion2(void);

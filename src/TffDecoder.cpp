@@ -2214,6 +2214,14 @@ STDMETHODIMP TffdshowDecVideo::getCurrentSubtitlesFile(char_t **ppSubtitleFile)
  return S_OK;
 }
 
+STDMETHODIMP TffdshowDecVideo::setSubtitlesFile(const char_t *pSubtitleFile)
+{
+ putParamStr(IDFF_subTempFilename, pSubtitleFile);
+ putParam(IDFF_isSubtitles, 1);
+ putParam(IDFF_subShowEmbedded, 0);
+ return S_OK;
+}
+
 #ifdef OSDTIMETABALE
 /* Usage
  *

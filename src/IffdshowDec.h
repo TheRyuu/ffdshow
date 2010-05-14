@@ -91,6 +91,7 @@ template<class tchar> DECLARE_INTERFACE_(IffdshowDecT,IUnknown)
  STDMETHOD (getExternalStreams)(void **pAudioStreams, void **pSubtitleStreams) PURE;
  STDMETHOD (setExternalStream)(int group, long streamNb) PURE;
  STDMETHOD (getCurrentSubtitlesFile)(tchar **ppSubtitleFile) PURE;
+ STDMETHOD (setSubtitlesFile)(const tchar *pSubtitleFile) PURE;
 };
 
 struct IffdshowDecA :IffdshowDecT<char> {};

@@ -833,17 +833,38 @@ STDMETHODIMP TffdshowDec::Enable(long lIndex, DWORD dwFlags)
 {
  int offset = subtitleFiles.size() + externalSubtitleStreams.size() + externalAudioStreams.size();
  if (lIndex<0 || lIndex >=(long)streams.size() + offset) return E_INVALIDARG;
- if (firsttransform) return S_OK;
- if (/*!(dwFlags&AMSTREAMSELECTENABLE_ENABLE)*/dwFlags!=AMSTREAMSELECTENABLE_ENABLE) return E_NOTIMPL;
- 
- if (streams[lIndex]->action())
-  {
-   saveGlobalSettings();
-   saveKeysSettings();
-   saveRemoteSettings();
-   saveActivePreset(NULL);
-  }
- return S_OK;
+ if (lIndex >= offset)
+ {
+  if (firsttransform) return S_OK;
+  if (/*!(dwFlags&AMSTREAMSELECTENABLE_ENABLE)*/dwFlags!=AMSTREAMSELECTENABLE_ENABLE) return E_NOTIMPL;
+  
+  if (streams[lIndex]->action())
+   {
+    saveGlobalSettings();
+    saveKeysSettings();
+    saveRemoteSettings();
+    saveActivePreset(NULL);
+   }
+  return S_OK;
+ }
+
+
+  // Subtitles files
+ if (lIndex >= (long)(externalAudioStreams.size() + externalSubtitleStreams.size()))
+ {
+  lIndex -= externalAudioStreams.size() + externalSubtitleStreams.size();
+  if (lIndex >= subtitleFiles.size()) return E_INVALIDARG;
+  setSubtitlesFile(subtitleFiles[lIndex].c_str());
+  return S_OK;
+ }
+
+ if (lIndex < (long)externalAudioStreams.size())
+  return setExternalStream(1, lIndex);
+ else
+ {
+  lIndex -= (long)externalAudioStreams.size();
+  return setExternalStream(2, lIndex);
+ }
 }
 
 TffdshowDec::TstreamFilter::TstreamFilter(TffdshowDec *Iself,int Iorder,int Igroup,const TfilterIDFF *If,Ttranslate *Itr):Tstream(Iself,Iorder,Igroup),f(If)
