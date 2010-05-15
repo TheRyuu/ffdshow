@@ -9,6 +9,8 @@ using System.Collections;
 using Microsoft.Win32;
 using System.IO;
 using System.Runtime.Remoting.Messaging;
+using FFDShowAPI.Interfaces;
+using MediaPortal.Player.FFDShow.Interfaces;
 
 namespace FFDShowAPI
 {
@@ -17,13 +19,18 @@ namespace FFDShowAPI
     /// </summary>
     public class FFDShowAPI : IDisposable
     {
+        #region Guids
+        public static Guid FFDShowVideoGuid = new Guid("04FE9017-F873-410E-871E-AB91661A4EF7");
+        public static Guid FFDShowVideoDXVAGuid = new Guid("0B0EFF97-C750-462C-9488-B10E7D87F1A6");
+        public static Guid FFDShowVideoRawGuid = new Guid("0B390488-D80F-4A68-8408-48DC199F0E97");
+        #endregion
 
         #region Constants
         /// <summary>
         /// Identifier of Window messages structure that can carry string for interprocess communication
         /// </summary>
         public const int WM_COPYDATA = 0x004A;
-        
+
         /// <summary>
         /// List of commands understood by FFDShow remote API
         /// These are commands that concern integers transmission (get or set) or 
@@ -58,12 +65,12 @@ namespace FFDShowAPI
             SET_SUBTITLE_STREAM = 26,
             SET_FFRW_NO_OSD = 27
         }
-        
+
         /// <summary>
         /// List of commands understood by FFDShow remote API.
         /// These are commands that require strings transmissions
         /// </summary>
-        #pragma warning disable 1591
+#pragma warning disable 1591
         public enum FFD_MSG
         {
             GET_PARAMSTR = 19,
@@ -75,13 +82,13 @@ namespace FFDShowAPI
             GET_AUDIOSTREAMSLIST = 300,
             GET_SUBTITLESTREAMSLIST = 301
         }
-        #pragma warning restore 1591
+#pragma warning restore 1591
 
         //Copy data flags
         private const int FFDSM_SET_ACTIVE_PRESET_STR = 10;
         private const int FFDSM_SET_SHORTOSD_MSG = 18;
         private const int FFDSM_SET_OSD_MSG = 19;
-        
+
 
         /// <summary>
         /// Playing state
@@ -166,7 +173,7 @@ namespace FFDShowAPI
         #region Variables
         private static string AppRegKey = @"SOFTWARE\GNU\ffdshow";
         private static string AppAudioRegKey = @"SOFTWARE\GNU\ffdshow_audio";
-        
+
         private uint FFDShowAPIRemoteId = 32786;
         /// <summary>
         /// Unique identifier of the running instance of FFDShow
@@ -180,10 +187,16 @@ namespace FFDShowAPI
         private FileNameMode fileNameMode = FileNameMode.FullPath;
         private int initFFDShowInstanceHandle = 0;
         private static bool ffrwNoOSD = false;
+        private IffdshowDec ffdshowDec = null;
+        private IffDecoder ffDecoder = null;
+        private IAMStreamSelect streamSelect = null;
+        public enum FFDShowAPIMode { DirectShowMode, InterProcessMode};
+        private FFDShowAPIMode ffdshowAPIMode = FFDShowAPIMode.InterProcessMode;
 
         //private AutoResetEvent resetEvent = new AutoResetEvent(false);
-        
+
         #endregion Variables
+
 
         #region WIN32 Class
 
@@ -246,6 +259,18 @@ namespace FFDShowAPI
 
             [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = false)]
             public static extern IntPtr PostMessage(IntPtr hwnd, Int32 msg, Int32 hwndFrom, ref COPYDATASTRUCT cds);
+
+            // Use COM interop to call the Win32 API GetLocalInfo.
+            [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+            public static extern int GetLocaleInfo(
+                // The locale identifier.
+               int Locale,
+                // The information type.
+               int LCType,
+                // The buffer size.
+               [In, MarshalAs(UnmanagedType.LPWStr)] string lpLCData, int cchData
+             );
+
 
 
             // Import the GlobalSize function
@@ -388,7 +413,7 @@ namespace FFDShowAPI
             }
         }
 
-        
+
         #endregion Base Properties
 
         #region Presets properties
@@ -772,6 +797,29 @@ namespace FFDShowAPI
             get
             {
                 SortedDictionary<int, Stream> subtitleStreams = new SortedDictionary<int, Stream>();
+                if (ffdshowAPIMode == FFDShowAPIMode.DirectShowMode && streamSelect != null)
+                {
+                    int streamsNb = 0;
+                    streamSelect.Count(out streamsNb);
+                    if (streamsNb == 0) return subtitleStreams;
+                    for (int i = 0; i < streamsNb; i++)
+                    {
+                        AMMediaType mediaType; AMStreamSelectInfoFlags flag; int group, langId;
+                        string streamName; object pppunk, ppobject;
+                        streamSelect.Info(i, out mediaType, out flag, out langId,
+                                   out group, out streamName, out pppunk, out ppobject);
+                        if (group == 2)
+                        {
+                            String languageName = new String(' ', 256);
+                            Win32.GetLocaleInfo(langId, 2, languageName, 255);
+                            Stream stream = new Stream(streamName, languageName,
+                                (flag & AMStreamSelectInfoFlags.Enabled) == AMStreamSelectInfoFlags.Enabled ? true : false);
+                            subtitleStreams.Add(i, stream);
+                        }
+                    }
+                    return subtitleStreams;
+                }
+
                 string listString = getCustomParam(FFD_MSG.GET_SUBTITLESTREAMSLIST, 0);
                 parseStreamsString(listString, subtitleStreams);
                 return subtitleStreams;
@@ -787,6 +835,29 @@ namespace FFDShowAPI
             get
             {
                 SortedDictionary<int, Stream> audioStreams = new SortedDictionary<int, Stream>();
+                if (ffdshowAPIMode == FFDShowAPIMode.DirectShowMode && streamSelect != null)
+                {
+                    int streamsNb = 0;
+                    streamSelect.Count(out streamsNb);
+                    if (streamsNb == 0) return audioStreams;
+                    for (int i = 0; i < streamsNb; i++)
+                    {
+                        AMMediaType mediaType; AMStreamSelectInfoFlags flag; int group, langId;
+                        string streamName; object pppunk, ppobject;
+                        streamSelect.Info(i, out mediaType, out flag, out langId,
+                                   out group, out streamName, out pppunk, out ppobject);
+                        if (group == 1)
+                        {
+                            String languageName = new String(' ', 256);
+                            Win32.GetLocaleInfo(langId, 2, languageName, 255);
+                            Stream stream = new Stream(streamName, languageName,
+                                (flag & AMStreamSelectInfoFlags.Enabled) == AMStreamSelectInfoFlags.Enabled ? true : false);
+                            audioStreams.Add(i, stream);
+                        }
+                    }
+                    return audioStreams;
+                }
+
                 string listString = getCustomParam(FFD_MSG.GET_AUDIOSTREAMSLIST, 0);
                 parseStreamsString(listString, audioStreams);
                 return audioStreams;
@@ -802,7 +873,7 @@ namespace FFDShowAPI
             {
                 //return SendMessage(FFD_WPRM.GET_CURRENT_AUDIO_STREAM, 0);
                 SortedDictionary<int, Stream> audioStreams = AudioStreams;
-                foreach (KeyValuePair<int,Stream> audioStream in audioStreams)
+                foreach (KeyValuePair<int, Stream> audioStream in audioStreams)
                 {
                     if (audioStream.Value.enabled)
                         return audioStream.Key;
@@ -811,7 +882,10 @@ namespace FFDShowAPI
             }
             set
             {
-                SendMessage(FFD_WPRM.SET_AUDIO_STREAM, value);
+                if (ffdshowAPIMode == FFDShowAPIMode.InterProcessMode)
+                    SendMessage(FFD_WPRM.SET_AUDIO_STREAM, value);
+                else if (streamSelect != null)
+                    streamSelect.Enable(value, AMStreamSelectEnableFlags.Enable);
             }
         }
 
@@ -872,7 +946,10 @@ namespace FFDShowAPI
             }
             set
             {
-                SendMessage(FFD_WPRM.SET_SUBTITLE_STREAM, value);
+                if (ffdshowAPIMode == FFDShowAPIMode.InterProcessMode)
+                    SendMessage(FFD_WPRM.SET_SUBTITLE_STREAM, value);
+                else if (streamSelect != null)
+                    streamSelect.Enable(value, AMStreamSelectEnableFlags.Enable);
             }
         }
 
@@ -928,6 +1005,20 @@ namespace FFDShowAPI
                 setIntParam(FFDShowConstants.FFDShowDataId.IDFF_subShowEmbedded, 0);
             }
         }
+
+        public bool SubtitlesEnabled
+        {
+            get
+            {
+                return (getIntParam(FFDShowConstants.FFDShowDataId.IDFF_isSubtitles) ==1) ? true : false;
+            }
+            set
+            {
+                setIntParam(FFDShowConstants.FFDShowDataId.IDFF_isSubtitles, (value==true) ? 1 : 0);
+            }
+        }
+
+        
 
         /// <summary>
         /// List of subtitle files
@@ -1018,7 +1109,7 @@ namespace FFDShowAPI
                     {
                         for (int i = 0; i < list.Length; i++)
                         {
-                            if (i==0)
+                            if (i == 0)
                                 list[i] = list[i].Replace("<chapter><time>", "");
                             if (i == list.Length - 1)
                                 list[i] = list[i].Replace("</name></chapter>", "");
@@ -1090,7 +1181,7 @@ namespace FFDShowAPI
         {
             get
             {
-                return getIntParam(FFDShowConstants.FFDShowDataId.IDFF_resizeMode)==5;
+                return getIntParam(FFDShowConstants.FFDShowDataId.IDFF_resizeMode) == 5;
             }
             set
             {
@@ -1136,7 +1227,7 @@ namespace FFDShowAPI
                     setIntParam(FFDShowConstants.FFDShowDataId.IDFF_isAspect, 0);
             }
         }
-           
+
 
         /// <summary>
         /// Get or set the horizontal resize
@@ -1211,7 +1302,7 @@ namespace FFDShowAPI
                 setIntParam(FFDShowConstants.FFDShowDataId.IDFF_hue, value);
             }
         }
-        
+
         /// <summary>
         /// Gets or sets the picture saturation
         /// </summary>
@@ -1231,7 +1322,7 @@ namespace FFDShowAPI
                 setIntParam(FFDShowConstants.FFDShowDataId.IDFF_saturation, value);
             }
         }
-        
+
         /// <summary>
         /// Gets or sets the picture contrast
         /// </summary>
@@ -1251,7 +1342,7 @@ namespace FFDShowAPI
                 setIntParam(FFDShowConstants.FFDShowDataId.IDFF_lumGain, value);
             }
         }
-        
+
         /// <summary>
         /// Gets or sets the picture brightness
         /// </summary>
@@ -1287,13 +1378,28 @@ namespace FFDShowAPI
         #endregion PostProcessing Properties
 
         #region Constructors
+
         /// <summary>
-        /// Basic constructor
+        /// Constructor using a DirectShow graph filter. 
+        /// Recommanded if you have access to DirectShow graph. 
+        /// However it cannot be using with the ROT (running object table)
+        /// </summary>
+        /// <param name="filter">FFDShow filter object</param>
+        public FFDShowAPI(object filter)
+        {
+            ffdshowDec = filter as IffdshowDec;
+            ffDecoder = filter as IffDecoder;
+            streamSelect = filter as IAMStreamSelect;
+            ffdshowAPIMode = FFDShowAPIMode.DirectShowMode;
+        }
+
+
+        /// <summary>
+        /// Basic constructor using interprocess communication
         /// </summary>
         public FFDShowAPI()
         {
             initOSD();
-            //init();
         }
 
         /// <summary>
@@ -1304,7 +1410,6 @@ namespace FFDShowAPI
         {
             this.FFDShowAPIRemote = FFDShowAPIRemote;
             initOSD();
-            //init();
         }
 
         /// <summary>
@@ -1387,6 +1492,7 @@ namespace FFDShowAPI
         /// <returns>True if FFDShow instance found</returns>
         private bool init()
         {
+            if (ffdshowAPIMode == FFDShowAPIMode.DirectShowMode) return true;
             if (fileName == null && initFFDShowInstanceHandle == 0)
             {
                 ffDShowInstanceHandle = Win32.FindWindow(strAppName, null);
@@ -1505,7 +1611,7 @@ namespace FFDShowAPI
             }
             return true;
         }
-		
+
         /// <summary>
         /// Look for an active FFDShow instance basing on constructor parameters
         /// </summary>
@@ -1682,7 +1788,10 @@ namespace FFDShowAPI
         /// <returns>File name</returns>
         public string getFileName()
         {
-            return getCustomParam(FFD_MSG.GET_SOURCEFILE, 0);//FFDSM_GET_FILENAME);
+            //TODO in directshow mode
+            if (ffdshowAPIMode == FFDShowAPIMode.InterProcessMode)
+                return getCustomParam(FFD_MSG.GET_SOURCEFILE, 0);//FFDSM_GET_FILENAME);
+            else return "NOT IMPLEMENTED";
         }
 
 
@@ -1704,7 +1813,7 @@ namespace FFDShowAPI
         /// <returns>Result of the registration</returns>
         public int setROTRegistration(ROTRegistration registration)
         {
-            return SendMessage(FFD_WPRM.SET_ADDTOROT, (int) registration);
+            return SendMessage(FFD_WPRM.SET_ADDTOROT, (int)registration);
         }
 
         /// <summary>
@@ -1873,7 +1982,11 @@ namespace FFDShowAPI
         /// <returns>Value of the parameter</returns>
         public int getIntParam(FFDShowConstants.FFDShowDataId param)
         {
-            return SendMessage(FFD_WPRM.GET_PARAM_VALUE_INT, (int)param);
+            if (ffdshowAPIMode == FFDShowAPIMode.InterProcessMode)
+                return SendMessage(FFD_WPRM.GET_PARAM_VALUE_INT, (int)param);
+            else if (ffDecoder != null)
+                return ffDecoder.compat_getParam2((uint)param);
+            else return 0;
         }
 
         /// <summary>
@@ -1883,8 +1996,13 @@ namespace FFDShowAPI
         /// <param name="value">Value to set</param>
         public void setIntParam(FFDShowConstants.FFDShowDataId param, int value)
         {
-            SendMessage(FFD_WPRM.SET_PARAM_NAME, (int) param);
-            SendMessage(FFD_WPRM.SET_PARAM_VALUE_INT, value);
+            if (ffdshowAPIMode == FFDShowAPIMode.InterProcessMode)
+            {
+                SendMessage(FFD_WPRM.SET_PARAM_NAME, (int)param);
+                SendMessage(FFD_WPRM.SET_PARAM_VALUE_INT, value);
+            }
+            else if (ffDecoder != null)
+                ffDecoder.compat_putParam((uint)param, value);
         }
 
         /// <summary>
@@ -1920,7 +2038,7 @@ namespace FFDShowAPI
             }
 
             // Check that the received string corresponds to the paramId we requested
-            if ((param != 0 && receiver.ReceivedType == (int) param) || receiver.ReceivedType == (int)type)
+            if ((param != 0 && receiver.ReceivedType == (int)param) || receiver.ReceivedType == (int)type)
                 return receiver.ReceivedString;
             else return null;
         }
@@ -1933,32 +2051,11 @@ namespace FFDShowAPI
         /// <returns>String value of the parameter</returns>
         public string getStringParam(FFDShowConstants.FFDShowDataId param)
         {
-            #region Dumped code
-            /*int result = SendMessage(FFDSM_SET_PARAM_NAME, (int) param);
-            Win32.COPYDATASTRUCT cd = new Win32.COPYDATASTRUCT();
-            cd.dwData = FFD_MSG_VALUE_STR;
-            IntPtr data = Marshal.AllocHGlobal(256);
-            cd.lpData = data;
-            cd.cbData = Win32.GlobalSize(cd.lpData);
-            if (receiver == null)
-                receiver = new FFDShowReceiver();
-            receiver.ReceivedString = null;
-            receiver.ReceivedType = 0;
-            receiver.ParentThread = Thread.CurrentThread;
-            int ret = Win32.SendMessage(new IntPtr(ffDShowInstanceHandle), Win32.WM_COPYDATA, receiver.Handle.ToInt32(), ref cd);
-            if (ret != TRUE)
-                return null;
-            try
-            {
-                Thread.Sleep(requestTimeout);
-            }
-            catch (ThreadInterruptedException) { };
-            // Check that the received string corresponds to the paramId we requested
-            if (receiver.ReceivedType == (int)param)
-                return receiver.ReceivedString;
-            else return null;*/
-            #endregion
-            return getCustomParam(FFD_MSG.GET_PARAMSTR, param);
+            if (ffdshowAPIMode == FFDShowAPIMode.InterProcessMode)
+                return getCustomParam(FFD_MSG.GET_PARAMSTR, param);
+            else if (ffDecoder != null)
+                return ffDecoder.compat_getParamStr2((uint)param); //TODO : ascii mode ??
+            else return null;
         }
 
         /// <summary>
@@ -1969,7 +2066,11 @@ namespace FFDShowAPI
         /// <returns></returns>
         public int setStringParam(FFDShowConstants.FFDShowDataId param, string value)
         {
-            int result = SendMessage(FFD_WPRM.SET_PARAM_NAME, (int) param);
+            if (ffdshowAPIMode == FFDShowAPIMode.DirectShowMode && ffDecoder != null)
+            {
+                return ffDecoder.compat_putParamStrW((uint)param, value);
+            }
+            int result = SendMessage(FFD_WPRM.SET_PARAM_NAME, (int)param);
             //IntPtr WindowHandle = new IntPtr(this.FFDShowAPIRemote);
 
             Win32.COPYDATASTRUCT cd = new Win32.COPYDATASTRUCT();
@@ -1985,7 +2086,7 @@ namespace FFDShowAPI
             returnedValue = Win32.SendMessage(new IntPtr(ffDShowInstanceHandle), (int)Win32.WM_COPYDATA, 0, ref cd);
 #else
             Win32.SendMessageTimeout(new IntPtr(ffDShowInstanceHandle), (int)Win32.WM_COPYDATA, receiver.Handle, ref cd,
-                Win32.SendMessageTimeoutFlags.SMTO_ABORTIFHUNG, (int)requestTimeout, out returnedValue);            
+                Win32.SendMessageTimeoutFlags.SMTO_ABORTIFHUNG, (int)requestTimeout, out returnedValue);
 #endif
             Marshal.FreeHGlobal(cd.lpData);
             return returnedValue.ToInt32();
