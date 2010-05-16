@@ -735,13 +735,15 @@ STDMETHODIMP TffdshowDec::Count(DWORD* pcStreams)
  
  // Now the subtitles streams
  // Subtitle files
- char_t *pdummy;
+ char_t *pdummy = NULL;
  subtitleFiles.clear();
  if (getCurrentSubtitlesFile(&pdummy) == S_OK) // Returns E_NOTIMPL if TffdshowDec is not TffdshowDecVideo
  {
   TsubtitlesFile::findPossibleSubtitles(getSourceName(),getParamStr2(IDFF_subSearchDir),subtitleFiles);
   *pcStreams += subtitleFiles.size();
  }
+ if (pdummy)
+  CoTaskMemFree(pdummy);
  // Subtitle streams
  extractExternalStreams();
  *pcStreams += externalSubtitleStreams.size();
@@ -750,12 +752,14 @@ STDMETHODIMP TffdshowDec::Count(DWORD* pcStreams)
 }
 STDMETHODIMP TffdshowDec::Info(long lIndex, AM_MEDIA_TYPE** ppmt, DWORD* pdwFlags, LCID* plcid, DWORD* pdwGroup, WCHAR** ppszName, IUnknown** ppObject, IUnknown** ppUnk)
 {
- // In order : audio streams, embedded subtitles, external subtitles, then FFDShow filters
- int offset = subtitleFiles.size() + externalSubtitleStreams.size() + externalAudioStreams.size();
- if (lIndex<0 || lIndex>=(long)streams.size() + offset || !presetSettings) return E_INVALIDARG;
- if (lIndex >= offset)
+ // In order : audio streams, embedded subtitles, then FFDShow filters then in last external subtitles (which can vary)
+ long firstFilterIndex = externalSubtitleStreams.size() + externalAudioStreams.size();
+ long firstSubFileIndex = firstFilterIndex + streams.size();
+ long count = firstSubFileIndex + subtitleFiles.size();
+ if (lIndex<0 || lIndex>= count || !presetSettings) return E_INVALIDARG;
+ if (lIndex >= firstFilterIndex && lIndex<firstSubFileIndex)
  {
-  lIndex-=offset;
+  lIndex-=firstFilterIndex;
   if (ppmt) *ppmt=getInputMediaType(lIndex);
   if (pdwFlags)
    *pdwFlags=streams[lIndex]->getFlags();
@@ -778,10 +782,10 @@ STDMETHODIMP TffdshowDec::Info(long lIndex, AM_MEDIA_TYPE** ppmt, DWORD* pdwFlag
  
 
  // Subtitles files
- if (lIndex >= (long)(externalAudioStreams.size() + externalSubtitleStreams.size()))
+ if (lIndex >= firstSubFileIndex)
  {
-  lIndex -= externalAudioStreams.size() + externalSubtitleStreams.size();
-  if (pdwGroup) *pdwGroup = 2; // Subtitle files (arbitrary group)
+  lIndex -= firstSubFileIndex;
+  if (pdwGroup) *pdwGroup = 4; // Subtitle files (arbitrary group)
   const wchar_t *subtitleFilename = subtitleFiles[lIndex].c_str();
   if (ppszName)
   {
@@ -798,6 +802,7 @@ STDMETHODIMP TffdshowDec::Info(long lIndex, AM_MEDIA_TYPE** ppmt, DWORD* pdwFlag
     *pdwFlags = AMSTREAMSELECTINFO_ENABLED|AMSTREAMSELECTINFO_EXCLUSIVE;
    else
     *pdwFlags = 0;
+   if (cursubflnm) CoTaskMemFree(cursubflnm);
   }
   return S_OK;
  }
@@ -832,9 +837,13 @@ STDMETHODIMP TffdshowDec::Info(long lIndex, AM_MEDIA_TYPE** ppmt, DWORD* pdwFlag
 }
 STDMETHODIMP TffdshowDec::Enable(long lIndex, DWORD dwFlags)
 {
- int offset = subtitleFiles.size() + externalSubtitleStreams.size() + externalAudioStreams.size();
- if (lIndex<0 || lIndex >=(long)streams.size() + offset) return E_INVALIDARG;
- if (lIndex >= offset)
+ // In order : audio streams, embedded subtitles, then FFDShow filters then in last external subtitles (which can vary)
+ long firstFilterIndex = externalSubtitleStreams.size() + externalAudioStreams.size();
+ long firstSubFileIndex = firstFilterIndex + streams.size();
+ long count = firstSubFileIndex + subtitleFiles.size();
+
+ if (lIndex<0 || lIndex >=count) return E_INVALIDARG;
+ if (lIndex >= firstFilterIndex && lIndex<firstSubFileIndex)
  {
   if (firsttransform) return S_OK;
   if (/*!(dwFlags&AMSTREAMSELECTENABLE_ENABLE)*/dwFlags!=AMSTREAMSELECTENABLE_ENABLE) return E_NOTIMPL;
@@ -851,10 +860,10 @@ STDMETHODIMP TffdshowDec::Enable(long lIndex, DWORD dwFlags)
 
 
   // Subtitles files
- if (lIndex >= (long)(externalAudioStreams.size() + externalSubtitleStreams.size()))
+ if (lIndex >= firstSubFileIndex)
  {
-  lIndex -= externalAudioStreams.size() + externalSubtitleStreams.size();
-  if (lIndex >= subtitleFiles.size()) return E_INVALIDARG;
+  lIndex -= firstSubFileIndex;
+  if (lIndex >= (long)subtitleFiles.size()) return E_INVALIDARG;
   setSubtitlesFile(subtitleFiles[lIndex].c_str());
   return S_OK;
  }

@@ -2210,7 +2210,11 @@ HRESULT TffdshowDecVideo::EndFlush(void)
 
 STDMETHODIMP TffdshowDecVideo::getCurrentSubtitlesFile(char_t **ppSubtitleFile)
 {
- *ppSubtitleFile = imgFilters?imgFilters->getCurrentSubFlnm():_l("");
+ if (!ppSubtitleFile) return E_FAIL;
+ char_t *pSubtitleFile = imgFilters?imgFilters->getCurrentSubFlnm():_l("");
+ size_t len=(strlen(pSubtitleFile)+1)*sizeof(char_t);
+ *ppSubtitleFile=(char_t*)CoTaskMemAlloc(len);memset(*ppSubtitleFile,0,len);
+ strcpy(*ppSubtitleFile, pSubtitleFile);
  return S_OK;
 }
 
