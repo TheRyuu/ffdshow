@@ -34,9 +34,13 @@ namespace FFDShowAPI.Interfaces
         int compat_loadDialogSettings();
         //int compat_getPresets (Tpresets *presets2);
         //int compat_setPresets (const Tpresets *presets2);
+        int compat_getPresets(IntPtr presets2);
+        int compat_setPresets (IntPtr presets2);
         int compat_savePresets();
         //int compat_getPresetPtr (Tpreset**preset);
         //int compat_setPresetPtr (Tpreset *preset);
+        int compat_getPresetPtr (IntPtr preset);
+        int compat_setPresetPtr (IntPtr preset);
         int compat_renameActivePreset([In, MarshalAs(UnmanagedType.AnsiBStr)] string newName);
         int compat_setOnChangeMsg(IntPtr wnd, uint msg);
         int compat_setOnFrameMsg(IntPtr wnd, uint msg);
@@ -44,6 +48,7 @@ namespace FFDShowAPI.Interfaces
         int compat_showCfgDlg(IntPtr owner);
         int compat_getXvidVersion([Out, MarshalAs(UnmanagedType.AnsiBStr)] string buf, uint len);
         //int compat_getMovieSource (const TvideoCodecDec* *moviePtr);
+        int compat_getMovieSource (IntPtr moviePtr);
         int compat_getOutputDimensions(out uint x, out uint y);
         int compat_getCpuUsage2();
         int compat_getOutputFourcc([Out, MarshalAs(UnmanagedType.AnsiBStr)] string buf, uint len);
@@ -51,6 +56,7 @@ namespace FFDShowAPI.Interfaces
         int compat_getHistogram(uint[] dst);
         int compat_setFilterOrder(uint filterID, uint newOrder);
         //int compat_buildHistogram (const TffPict *pict,int full);
+        int compat_buildHistogram (IntPtr pict,int full);
         int compat_cpuSupportsMMX();
         int compat_cpuSupportsMMXEXT();
         int compat_cpuSupportsSSE();
@@ -72,18 +78,22 @@ namespace FFDShowAPI.Interfaces
         int compat_getKeyParamKey2(uint i);
         int compat_setKeyParamKey(uint i, int key);
         //int compat_getImgFilters (TimgFilters* *imgFiltersPtr);
+        int compat_getImgFilters (IntPtr imgFiltersPtr);
         int compat_getQuant(out int[] quantPtr);
         int compat_calcNewSize(uint inDx, uint inDy, out uint outDx, out uint outDy);
         int compat_grabNow();
         int compat_getOverlayControlCapability(int idff); //S_OK - can be set, S_FALSE - not supported
         int compat_getParamName(uint i, [Out, MarshalAs(UnmanagedType.AnsiBStr)] string buf, uint len);
         //int compat_getTranslator (Ttranslate* *trans);
+        int compat_getTranslator (IntPtr trans);
         int compat_getIffDecoderVersion2();
         int compat_lock(int lockId);
         int compat_unlock(int lockId);
         int compat_getInstance2();
         //int compat_getGraph(out IFilterGraph graphPtr);
         //int compat_getConfig (Tconfig* *configPtr);
+        int compat_getGraph(IntPtr graphPtr);
+        int compat_getConfig (IntPtr configPtr);
         int compat_initDialog();
         int compat_initPresets();
         int compat_calcMeanQuant(out float quant);

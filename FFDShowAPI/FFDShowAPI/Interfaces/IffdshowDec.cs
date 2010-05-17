@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
 using DirectShowLib;
+using System.Security;
 
 namespace FFDShowAPI.Interfaces
 {
-    [Guid("10F99065-70D5-4bcc-9D88-3801F3E3881B"),
+    [Guid("10F99065-70D5-4bcc-9D88-3801F3E3881B"),SuppressUnmanagedCodeSecurity,
     InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     public interface IffdshowDec
     {
@@ -15,7 +16,7 @@ namespace FFDShowAPI.Interfaces
         int loadKeysSettings();
         
         //int getGraph(/*IFilterGraph*/IntPtr graphPtr);
-        //int getGraph([Out, MarshalAs(UnmanagedType.Interface)] out object graphPtr);
+        int getGraph([Out, MarshalAs(UnmanagedType.Interface)] out object graphPtr);
         
         int seek(int seconds);
         int tell(out int seconds);
@@ -41,15 +42,15 @@ namespace FFDShowAPI.Interfaces
         
         //int getPresets(Tpresets *presets2);
         //int setPresets(Tpresets *presets2);
-        //int getPresets(object presets2);
-        //int setPresets(object presets2);
+        int getPresets(object presets2);
+        int setPresets(object presets2);
         
         int savePresets();
 
         //int getPresetPtr(Tpreset**preset);
         //int setPresetPtr(Tpreset *preset);
-        //int getPresetPtr(object preset);
-        //int setPresetPtr(object preset);
+        int getPresetPtr(object preset);
+        int setPresetPtr(object preset);
 
         int renameActivePreset(string newName);
         int isDefaultPreset(string presetName);
@@ -67,9 +68,9 @@ namespace FFDShowAPI.Interfaces
         //int newSample(IMediaSample* *samplePtr);
         //int deliverSample_unused(IMediaSample *sample);
         //STDMETHOD_(TfilterIDFF*,getFilterIDFF_notimpl();
-        /*int getPresetsPtr(object presetsPtr);
+        int getPresetsPtr(object presetsPtr);
         int newSample(object samplePtr);
-        int deliverSample_unused(object sample);*/
+        int deliverSample_unused(object sample);
 
         object getFilterIDFF_notimpl();
         int resetOrder();
@@ -77,7 +78,7 @@ namespace FFDShowAPI.Interfaces
         int putStringParams(string parameters, char sep, int loaddef);
 
         //STDMETHOD_(TfilterIDFF*,getNextFilterIDFF();
-        //object getNextFilterIDFF();
+        object getNextFilterIDFF();
 
         int cyclePresets(int step);
         int exportKeysToGML(string flnm);
@@ -85,13 +86,13 @@ namespace FFDShowAPI.Interfaces
         string getActivePresetName2();
 
         //int createPresetPages(string presetname,TffdshowPageDec *pages);
-        //int createPresetPages(string presetname, object pages);
+        int createPresetPages(string presetname, object pages);
 
         int getEncoderInfo(out string buf, int buflen);
         string getDecoderName();
 
         //int getFilterIDFFs(string presetname,TfilterIDFFs* *filters);
-        //int getFilterIDFFs(string presetname, object filters);
+        int getFilterIDFFs(string presetname, object filters);
 
         int initRemote();
         int saveRemoteSettings();
@@ -106,9 +107,9 @@ namespace FFDShowAPI.Interfaces
         //STDMETHOD_(Tstrptrs*,getCodecsList();
         //int queryFilterInterface(IID &iid,void **ptr);
         //int setOnNewFiltersMsg(IntPtr wnd,uint msg);
-        //object getCodecsList();
-        //int queryFilterInterface(out Guid iid, IntPtr[] ptr);
-        //int setOnNewFiltersMsg(int wnd, uint msg);
+        object getCodecsList();
+        int queryFilterInterface(out Guid iid, IntPtr[] ptr);
+        int setOnNewFiltersMsg(int wnd, uint msg);
 
         int sendOnNewFiltersMsg();
         int setKeyParamKeyCheck(uint i, int key, out int prev, out string prevDescr);
@@ -117,8 +118,8 @@ namespace FFDShowAPI.Interfaces
 
         //STDMETHOD_(TinputPin*, getInputPin();
         //STDMETHOD_(CTransformOutputPin*, getOutputPin();
-        //object getInputPin();
-        //object getOutputPin();
+        object getInputPin();
+        object getOutputPin();
 
         int extractExternalStreams();
 
@@ -126,8 +127,7 @@ namespace FFDShowAPI.Interfaces
         //int setExternalStream(int group, long streamNb);
         int getExternalStreams(IntPtr[] pAudioStreams, IntPtr[] pSubtitleStreams);
         int setExternalStream(int group, long streamNb);
-
-        int getCurrentSubtitlesFile(out string ppSubtitleFile);
+        int getCurrentSubtitlesFile([Out, MarshalAs(UnmanagedType.LPWStr)]out string ppSubtitleFile);
         int setSubtitlesFile(string pSubtitleFile);
     };
 }

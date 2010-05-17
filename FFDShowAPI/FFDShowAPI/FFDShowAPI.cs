@@ -189,6 +189,8 @@ namespace FFDShowAPI
         private static bool ffrwNoOSD = false;
         private IffdshowDec ffdshowDec = null;
         private IffDecoder ffDecoder = null;
+        private IffdshowBase ffdshowBase = null;
+        private IffdshowDecVideo ffdshowDecVideo = null;
         private IAMStreamSelect streamSelect = null;
         public enum FFDShowAPIMode { DirectShowMode, InterProcessMode};
         private FFDShowAPIMode ffdshowAPIMode = FFDShowAPIMode.InterProcessMode;
@@ -776,6 +778,10 @@ namespace FFDShowAPI
             /// </summary>
             public bool enabled;
             /// <summary>
+            /// True if this is an external file
+            /// </summary>
+            public bool isFile;
+            /// <summary>
             /// Constructor of a stream structure
             /// </summary>
             /// <param name="name">Name of the stream</param>
@@ -786,17 +792,49 @@ namespace FFDShowAPI
                 this.name = name;
                 this.languageName = languageName;
                 this.enabled = enabled;
+                this.isFile = false;
+            }
+
+            /// <summary>
+            /// Constructor of a stream structure with external file flag
+            /// </summary>
+            /// <param name="name">Name of the stream</param>
+            /// <param name="languageName">Language name of the stream</param>
+            /// <param name="enabled">True if the stream is active</param>
+            /// <param name="isFile">True if this stream is an external file</param>
+            public Stream(string name, string languageName, bool enabled, bool isFile)
+            {
+                this.name = name;
+                this.languageName = languageName;
+                this.enabled = enabled;
+                this.isFile = isFile;
+            }
+        }
+
+        public class Streams : SortedDictionary<int, Stream>
+        {
+            public enum StreamType { EmbeddedOnly, FilesOnly }
+            public int Size(StreamType type)
+            {
+                int cnt = 0;
+                foreach (KeyValuePair<int,Stream> streamPair in this)
+                {
+                    if (type == StreamType.EmbeddedOnly && !streamPair.Value.isFile) cnt++;
+                    else if (type == StreamType.FilesOnly && streamPair.Value.isFile) cnt++;
+                }
+                return cnt;
             }
         }
 
         /// <summary>
-        /// Gets the list of internal subtitle streams
+        /// Gets the list of subtitle streams
+        /// Includes the subtitles files in DirectShow mode
         /// </summary>
-        public SortedDictionary<int, Stream> SubtitleStreams
+        public Streams SubtitleStreams
         {
             get
             {
-                SortedDictionary<int, Stream> subtitleStreams = new SortedDictionary<int, Stream>();
+                Streams subtitleStreams = new Streams();
                 if (ffdshowAPIMode == FFDShowAPIMode.DirectShowMode && streamSelect != null)
                 {
                     int streamsNb = 0;
@@ -808,12 +846,21 @@ namespace FFDShowAPI
                         string streamName; object pppunk, ppobject;
                         streamSelect.Info(i, out mediaType, out flag, out langId,
                                    out group, out streamName, out pppunk, out ppobject);
-                        if (group == 2)
+                        if (group == 2 || group == 4)
                         {
-                            String languageName = new String(' ', 256);
-                            Win32.GetLocaleInfo(langId, 2, languageName, 255);
-                            Stream stream = new Stream(streamName, languageName,
-                                (flag & AMStreamSelectInfoFlags.Enabled) == AMStreamSelectInfoFlags.Enabled ? true : false);
+                            if ((streamName == null || streamName.Equals("")) && subtitleStreams.Count == 0) streamName = "No subtitles";
+                            String langName = "";
+                            if (group == 2)
+                            {
+                                String languageName = new String(' ', 256);
+                                Win32.GetLocaleInfo(langId, 2, languageName, 255);
+                                if (!languageName.Equals(new String(' ', 256)))
+                                    langName = languageName;
+                            }
+
+                            Stream stream = new Stream(streamName, langName,
+                                (flag & AMStreamSelectInfoFlags.Enabled) == AMStreamSelectInfoFlags.Enabled ? true : false,
+                                (group == 4) ? true : false);
                             subtitleStreams.Add(i, stream);
                         }
                     }
@@ -830,11 +877,11 @@ namespace FFDShowAPI
         /// <summary>
         /// Gets the list of internal audio streams
         /// </summary>
-        public SortedDictionary<int, Stream> AudioStreams
+        public Streams AudioStreams
         {
             get
             {
-                SortedDictionary<int, Stream> audioStreams = new SortedDictionary<int, Stream>();
+                Streams audioStreams = new Streams();
                 if (ffdshowAPIMode == FFDShowAPIMode.DirectShowMode && streamSelect != null)
                 {
                     int streamsNb = 0;
@@ -872,7 +919,7 @@ namespace FFDShowAPI
             get
             {
                 //return SendMessage(FFD_WPRM.GET_CURRENT_AUDIO_STREAM, 0);
-                SortedDictionary<int, Stream> audioStreams = AudioStreams;
+                Streams audioStreams = AudioStreams;
                 foreach (KeyValuePair<int, Stream> audioStream in audioStreams)
                 {
                     if (audioStream.Value.enabled)
@@ -889,7 +936,7 @@ namespace FFDShowAPI
             }
         }
 
-        private void parseStreamsString(string listString, SortedDictionary<int, Stream> streamsList)
+        private void parseStreamsString(string listString, Streams streamsList)
         {
             string[] list = null;
             if (listString != null && listString.Length > 0)
@@ -935,8 +982,7 @@ namespace FFDShowAPI
         {
             get
             {
-                //return SendMessage(FFD_WPRM.GET_CURRENT_SUBTITLE_STREAM, 0);
-                SortedDictionary<int, Stream> subtitleStreams = SubtitleStreams;
+                Streams subtitleStreams = SubtitleStreams;
                 foreach (KeyValuePair<int, Stream> subtitleStream in subtitleStreams)
                 {
                     if (subtitleStream.Value.enabled)
@@ -991,15 +1037,25 @@ namespace FFDShowAPI
         /// <summary>
         /// Set/get the current external subtitles file
         /// </summary>
-        public string CurrentSubtitles
+        public string CurrentSubtitleFile
         {
             get
             {
-                return getCustomParam(FFD_MSG.GET_CURRENT_SUBTITLES, 0);//FFDSM_GET_CURRENT_SUBTITLES);
+                if (ffdshowAPIMode == FFDShowAPIMode.InterProcessMode)
+                    return getCustomParam(FFD_MSG.GET_CURRENT_SUBTITLES, 0);//FFDSM_GET_CURRENT_SUBTITLES);
+                else
+                {
+                    string customSubtitleFile = getStringParam(FFDShowConstants.FFDShowDataId.IDFF_subTempFilename);
+                    if (customSubtitleFile != null && !customSubtitleFile.Equals("")) return customSubtitleFile;
+                    string fileName = null;
+                    ffdshowDec.getCurrentSubtitlesFile(out fileName);
+                    return fileName;
+                }
             }
             set
             {
                 setStringParam(FFDShowConstants.FFDShowDataId.IDFF_subTempFilename, value);
+                setStringParam(FFDShowConstants.FFDShowDataId.IDFF_subFilename, value);
                 //setIntParam(FFDShowConstants.FFDShowDataId.IDFF_subAutoFlnm, 0);
                 setIntParam(FFDShowConstants.FFDShowDataId.IDFF_isSubtitles, 1);
                 setIntParam(FFDShowConstants.FFDShowDataId.IDFF_subShowEmbedded, 0);
@@ -1027,13 +1083,25 @@ namespace FFDShowAPI
         {
             get
             {
-                string[] list = null;
-                string listString = getCustomParam(FFD_MSG.GET_SUBTITLEFILESLIST, 0);//FFDSM_GET_SUBTITLEFILES);
-                if (listString != null)
+                if (ffdshowAPIMode == FFDShowAPIMode.InterProcessMode)
                 {
-                    list = listString.Split(';');
+                    string[] list = null;
+                    string listString = getCustomParam(FFD_MSG.GET_SUBTITLEFILESLIST, 0);//FFDSM_GET_SUBTITLEFILES);
+                    if (listString != null)
+                    {
+                        list = listString.Split(';');
+                    }
+                    return list;
                 }
-                return list;
+                
+                Streams streams = SubtitleStreams;
+                List<String> subtitleFiles = new List<string>();
+                foreach (KeyValuePair<int, Stream> stream in streams)
+                {
+                    if (stream.Value.isFile)
+                        subtitleFiles.Add(stream.Value.name);
+                }
+                return subtitleFiles.ToArray();
             }
         }
 
@@ -1389,8 +1457,13 @@ namespace FFDShowAPI
         {
             ffdshowDec = filter as IffdshowDec;
             ffDecoder = filter as IffDecoder;
+            ffdshowDecVideo = filter as IffdshowDecVideo;
             streamSelect = filter as IAMStreamSelect;
-            ffdshowAPIMode = FFDShowAPIMode.DirectShowMode;
+            ffdshowBase = filter as IffdshowBase;
+            if (ffdshowDec == null || ffDecoder == null || ffdshowDecVideo == null || ffdshowBase == null)
+                ffdshowAPIMode = FFDShowAPIMode.InterProcessMode;
+            else
+                ffdshowAPIMode = FFDShowAPIMode.DirectShowMode;
         }
 
 
@@ -1984,8 +2057,8 @@ namespace FFDShowAPI
         {
             if (ffdshowAPIMode == FFDShowAPIMode.InterProcessMode)
                 return SendMessage(FFD_WPRM.GET_PARAM_VALUE_INT, (int)param);
-            else if (ffDecoder != null)
-                return ffDecoder.compat_getParam2((uint)param);
+            else if (ffdshowBase != null)
+                return ffdshowBase.getParam2((uint)param);
             else return 0;
         }
 
@@ -2001,8 +2074,8 @@ namespace FFDShowAPI
                 SendMessage(FFD_WPRM.SET_PARAM_NAME, (int)param);
                 SendMessage(FFD_WPRM.SET_PARAM_VALUE_INT, value);
             }
-            else if (ffDecoder != null)
-                ffDecoder.compat_putParam((uint)param, value);
+            else if (ffdshowBase != null)
+                ffdshowBase.putParam((uint)param, value);
         }
 
         /// <summary>
@@ -2053,8 +2126,8 @@ namespace FFDShowAPI
         {
             if (ffdshowAPIMode == FFDShowAPIMode.InterProcessMode)
                 return getCustomParam(FFD_MSG.GET_PARAMSTR, param);
-            else if (ffDecoder != null)
-                return ffDecoder.compat_getParamStr2((uint)param); //TODO : ascii mode ??
+            else if (ffdshowBase != null)
+                return ffdshowBase.getParamStr2((uint)param); //TODO : ascii mode ??
             else return null;
         }
 
@@ -2068,7 +2141,7 @@ namespace FFDShowAPI
         {
             if (ffdshowAPIMode == FFDShowAPIMode.DirectShowMode && ffDecoder != null)
             {
-                return ffDecoder.compat_putParamStrW((uint)param, value);
+                return ffdshowBase.putParamStr((uint)param, value);
             }
             int result = SendMessage(FFD_WPRM.SET_PARAM_NAME, (int)param);
             //IntPtr WindowHandle = new IntPtr(this.FFDShowAPIRemote);

@@ -461,7 +461,20 @@ void TtrayIconDecVideo::makeAudioSubsSubMenus(HMENU *smn, HMENU *amn)
  int textpinconnectedCnt=deciV->getConnectedTextPinCnt();
  HMENU hm=CreatePopupMenu();
  int ord=0;
- const char_t *cursubflnm=deciV->getCurrentSubFlnm();
+ // Custom subtitle file
+ const char_t *cursubflnm=deci->getParamStr2(IDFF_subTempFilename);
+ if (cursubflnm && strcmp(cursubflnm, _l("")))
+ {
+   // The custom subtitle file is not in the list, add it
+   if (std::find(files.begin(), files.end(), cursubflnm) == files.end())
+   {
+    insertMenuItem(hm,ord,IDC_FIRST_SUBFILE+ord, stringreplace(ffstring(cursubflnm),_l("&"),_l("&&"),rfReplaceAll).c_str() ,false, true,true);
+    ord++;
+   }
+ }
+ else
+  cursubflnm = deciV->getCurrentSubFlnm();
+
  for (strings::const_iterator f=files.begin();f!=files.end();f++,ord++)
   insertMenuItem(hm,ord,IDC_FIRST_SUBFILE+ord, stringreplace(*f,_l("&"),_l("&&"),rfReplaceAll).c_str() ,false,stricmp(f->c_str(),cursubflnm)==0,true);
  
