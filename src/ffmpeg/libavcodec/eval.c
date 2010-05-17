@@ -20,7 +20,7 @@
  */
 
 /**
- * @file libavcodec/eval.c
+ * @file
  * simple arithmetic expression evaluator.
  *
  * see http://joe.hotchkiss.com/programming/eval/eval.html
@@ -373,9 +373,10 @@ static int verify_expr(AVExpr * e) {
     }
 }
 
-AVExpr *ff_parse_expr(const char *s, const char * const *const_name,
-               double (* const *func1)(void *, double), const char * const *func1_name,
-               double (* const *func2)(void *, double, double), const char * const *func2_name,
+AVExpr *ff_parse_expr(const char *s,
+                      const char * const *const_name,
+                      const char * const *func1_name, double (* const *func1)(void *, double),
+                      const char * const *func2_name, double (* const *func2)(void *, double, double),
                const char **error){
     Parser p;
     AVExpr *e = NULL;
@@ -416,11 +417,12 @@ double ff_eval_expr(AVExpr * e, const double *const_value, void *opaque) {
     return eval_expr(&p, e);
 }
 
-double ff_parse_and_eval_expr(const char *s, const double *const_value, const char * const *const_name,
-               double (* const *func1)(void *, double), const char * const *func1_name,
-               double (* const *func2)(void *, double, double), const char * const *func2_name,
+double ff_parse_and_eval_expr(const char *s,
+                              const char * const *const_name, const double *const_value,
+                              const char * const *func1_name, double (* const *func1)(void *, double),
+                              const char * const *func2_name, double (* const *func2)(void *, double, double),
                void *opaque, const char **error){
-    AVExpr * e = ff_parse_expr(s, const_name, func1, func1_name, func2, func2_name, error);
+    AVExpr *e = ff_parse_expr(s, const_name, func1_name, func1, func2_name, func2, error);
     double d;
     if (!e) return NAN;
     d = ff_eval_expr(e, const_value, opaque);
