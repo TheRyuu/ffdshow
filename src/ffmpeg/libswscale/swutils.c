@@ -316,7 +316,7 @@ static int initFilter(int16_t **outFilter, int16_t **filterPos, int *outFilterSi
                 }
 /*                else if (flags & SWS_X) {
                     double p= param ? param*0.01 : 0.3;
-                    coeff = d ? sin(d*PI)/(d*PI) : 1.0;
+                    coeff = d ? sin(d*M_PI)/(d*M_PI) : 1.0;
                     coeff*= pow(2.0, - p*d*d);
                 }*/
                 else if (flags & SWS_X) {
@@ -790,20 +790,11 @@ int sws_getColorspaceDetails(SwsContext *c, int **inv_table, int *srcRange, int 
 static int handle_jpeg(enum PixelFormat *format)
 {
     switch (*format) {
-    case PIX_FMT_YUVJ420P:
-        *format = PIX_FMT_YUV420P;
-        return 1;
-    case PIX_FMT_YUVJ422P:
-        *format = PIX_FMT_YUV422P;
-        return 1;
-    case PIX_FMT_YUVJ444P:
-        *format = PIX_FMT_YUV444P;
-        return 1;
-    case PIX_FMT_YUVJ440P:
-        *format = PIX_FMT_YUV440P;
-        return 1;
-    default:
-        return 0;
+    case PIX_FMT_YUVJ420P: *format = PIX_FMT_YUV420P; return 1;
+    case PIX_FMT_YUVJ422P: *format = PIX_FMT_YUV422P; return 1;
+    case PIX_FMT_YUVJ444P: *format = PIX_FMT_YUV444P; return 1;
+    case PIX_FMT_YUVJ440P: *format = PIX_FMT_YUV440P; return 1;
+    default:                                          return 0;
     }
 }
 

@@ -30,6 +30,7 @@
 #include "eval.h"
 
 typedef struct Parser{
+    const AVClass *class;
     int stack_index;
     char *s;
     const double *const_value;
@@ -39,10 +40,13 @@ typedef struct Parser{
     double (* const *func2)(void *, double a, double b); // NULL terminated
     const char * const *func2_name;          // NULL terminated
     void *opaque;
-    const char **error;
+    int log_offset;
+    void *log_ctx;
 #define VARS 10
     double var[VARS];
 } Parser;
+
+static const AVClass class = { "Eval", av_default_item_name, NULL, LIBAVUTIL_VERSION_INT, offsetof(Parser,log_offset), offsetof(Parser,log_ctx) };
 
 #ifdef __GNUC__
 static const int8_t si_prefixes['z' - 'E' + 1]={
@@ -205,7 +209,7 @@ static AVExpr * parse_primary(Parser *p) {
 
     p->s= strchr(p->s, '(');
     if(p->s==NULL){
-        *p->error = "undefined constant or missing (";
+        av_log(p, AV_LOG_ERROR, "undefined constant or missing (\n");
         p->s= next;
         ff_free_expr(d);
         return NULL;
@@ -215,7 +219,7 @@ static AVExpr * parse_primary(Parser *p) {
         av_freep(&d);
         d = parse_expr(p);
         if(p->s[0] != ')'){
-            *p->error = "missing )";
+            av_log(p, AV_LOG_ERROR, "missing )\n");
             ff_free_expr(d);
             return NULL;
         }
@@ -228,7 +232,7 @@ static AVExpr * parse_primary(Parser *p) {
         d->param[1] = parse_expr(p);
     }
     if(p->s[0] != ')'){
-        *p->error = "missing )";
+        av_log(p, AV_LOG_ERROR, "missing )\n");
         ff_free_expr(d);
         return NULL;
     }
@@ -277,7 +281,7 @@ static AVExpr * parse_primary(Parser *p) {
             }
         }
 
-        *p->error = "unknown function";
+        av_log(p, AV_LOG_ERROR, "unknown function\n");
         ff_free_expr(d);
         return NULL;
     }
@@ -377,7 +381,8 @@ AVExpr *ff_parse_expr(const char *s,
                       const char * const *const_name,
                       const char * const *func1_name, double (* const *func1)(void *, double),
                       const char * const *func2_name, double (* const *func2)(void *, double, double),
-               const char **error){
+                      int log_offset, void *log_ctx)
+{
     Parser p;
     AVExpr *e = NULL;
     char *w = av_malloc(strlen(s) + 1);
@@ -390,6 +395,7 @@ AVExpr *ff_parse_expr(const char *s,
         if (!isspace(*s++)) *wp++ = s[-1];
     *wp++ = 0;
 
+    p.class      = &class;
     p.stack_index=100;
     p.s= w;
     p.const_name = const_name;
@@ -397,7 +403,8 @@ AVExpr *ff_parse_expr(const char *s,
     p.func1_name = func1_name;
     p.func2      = func2;
     p.func2_name = func2_name;
-    p.error= error;
+    p.log_offset = log_offset;
+    p.log_ctx    = log_ctx;
 
     e = parse_expr(&p);
     if (!verify_expr(e)) {
@@ -421,8 +428,9 @@ double ff_parse_and_eval_expr(const char *s,
                               const char * const *const_name, const double *const_value,
                               const char * const *func1_name, double (* const *func1)(void *, double),
                               const char * const *func2_name, double (* const *func2)(void *, double, double),
-               void *opaque, const char **error){
-    AVExpr *e = ff_parse_expr(s, const_name, func1_name, func1, func2_name, func2, error);
+                              void *opaque, int log_offset, void *log_ctx)
+{
+    AVExpr *e = ff_parse_expr(s, const_name, func1_name, func1, func2_name, func2, log_offset, log_ctx);
     double d;
     if (!e) return NAN;
     d = ff_eval_expr(e, const_value, opaque);

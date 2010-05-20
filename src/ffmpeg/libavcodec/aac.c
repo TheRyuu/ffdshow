@@ -1949,6 +1949,7 @@ static int aac_decode_frame(AVCodecContext *avccontext, void *data,
     int err, elem_id, data_size_tmp;
     int buf_consumed;
     int samples = 1024, multiplier;
+    int buf_offset;
 
     init_get_bits(&gb, buf, buf_size * 8);
 
@@ -2060,7 +2061,11 @@ static int aac_decode_frame(AVCodecContext *avccontext, void *data,
         ac->output_configured = OC_LOCKED;
 
     buf_consumed = (get_bits_count(&gb) + 7) >> 3;
-    return buf_size > buf_consumed ? buf_consumed : buf_size;
+    for (buf_offset = buf_consumed; buf_offset < buf_size; buf_offset++)
+        if (buf[buf_offset])
+            break;
+
+    return buf_size > buf_offset ? buf_consumed : buf_size;
 }
 
 static av_cold int aac_decode_close(AVCodecContext *avccontext)
@@ -2083,7 +2088,7 @@ static av_cold int aac_decode_close(AVCodecContext *avccontext)
 
 AVCodec aac_decoder = {
     "aac",
-    CODEC_TYPE_AUDIO,
+    AVMEDIA_TYPE_AUDIO,
     CODEC_ID_AAC,
     sizeof(AACContext),
     /*.init = */aac_decode_init,
