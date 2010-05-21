@@ -496,14 +496,14 @@ Type: files; Name: "{app}\languages\ffdshow.1053.se";              Components: f
 Root: HKCU; Subkey: "Software\GNU";               Components: ffdshow;     Flags: uninsdeletekeyifempty
 Root: HKCU; Subkey: "{#= ff_reg_base}";           Components: ffdshow;     Flags: uninsdeletekey
 Root: HKCU; Subkey: "{#= ff_reg_base}_audio";     Components: ffdshow;     Flags: uninsdeletekey
-Root: HKCU; Subkey: "{#= ff_reg_base}_audio_raw"; Components: ffdshow;     Flags: uninsdeletekey
+Root: HKCU; Subkey: "{#= ff_reg_base}_audio_raw"; Components: ffdshow;     Flags: dontcreatekey uninsdeletekey
 Root: HKCU; Subkey: "{#= ff_reg_base}_dxva";      Components: ffdshow;     Flags: uninsdeletekey
-Root: HKCU; Subkey: "{#= ff_reg_base}_enc";       Components: ffdshow\vfw; Flags: uninsdeletekey
+Root: HKCU; Subkey: "{#= ff_reg_base}_enc";       Components: ffdshow;     Flags: dontcreatekey uninsdeletekey
+Root: HKCU; Subkey: "{#= ff_reg_base}_raw";       Components: ffdshow;     Flags: dontcreatekey uninsdeletekey
 Root: HKCU; Subkey: "{#= ff_reg_base}_vfw";       Components: ffdshow\vfw; Flags: uninsdeletekey
 Root: HKLM; Subkey: "Software\GNU";               Components: ffdshow;     Flags: uninsdeletekeyifempty
 Root: HKLM; Subkey: "{#= ff_reg_base}";           Components: ffdshow;     Flags: uninsdeletekey
 Root: HKLM; Subkey: "{#= ff_reg_base}_audio";     Components: ffdshow;     Flags: uninsdeletekey
-Root: HKLM; Subkey: "{#= ff_reg_base}_enc";       Components: ffdshow\vfw; Flags: uninsdeletekey
 Root: HKLM; Subkey: "{#= ff_reg_base}_vfw";       Components: ffdshow\vfw; Flags: uninsdeletekey
 
 ; Reset settings
@@ -511,11 +511,11 @@ Root: HKCU; Subkey: "{#= ff_reg_base}";           Components: ffdshow;     Flags
 Root: HKCU; Subkey: "{#= ff_reg_base}_audio";     Components: ffdshow;     Flags: deletekey; Tasks: resetsettings
 Root: HKCU; Subkey: "{#= ff_reg_base}_audio_raw"; Components: ffdshow;     Flags: deletekey; Tasks: resetsettings
 Root: HKCU; Subkey: "{#= ff_reg_base}_dxva";      Components: ffdshow;     Flags: deletekey; Tasks: resetsettings
-Root: HKCU; Subkey: "{#= ff_reg_base}_enc";       Components: ffdshow\vfw; Flags: deletekey; Tasks: resetsettings
+Root: HKCU; Subkey: "{#= ff_reg_base}_enc";       Components: ffdshow;     Flags: deletekey; Tasks: resetsettings
+Root: HKCU; Subkey: "{#= ff_reg_base}_raw";       Components: ffdshow;     Flags: deletekey; Tasks: resetsettings
 Root: HKCU; Subkey: "{#= ff_reg_base}_vfw";       Components: ffdshow\vfw; Flags: deletekey; Tasks: resetsettings
 Root: HKLM; Subkey: "{#= ff_reg_base}";           Components: ffdshow;     Flags: deletekey; Tasks: resetsettings
 Root: HKLM; Subkey: "{#= ff_reg_base}_audio";     Components: ffdshow;     Flags: deletekey; Tasks: resetsettings
-Root: HKLM; Subkey: "{#= ff_reg_base}_enc";       Components: ffdshow\vfw; Flags: deletekey; Tasks: resetsettings
 Root: HKLM; Subkey: "{#= ff_reg_base}_vfw";       Components: ffdshow\vfw; Flags: deletekey; Tasks: resetsettings
 
 ; Path
@@ -1238,5 +1238,6 @@ begin
   end
 end;
 #endif
+
 
 
