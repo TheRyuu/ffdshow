@@ -60,7 +60,7 @@ TglobalSettingsBase::TglobalSettingsBase(const Tconfig *Iconfig,int Imode,const 
    IDFF_compManagerMode  ,&TglobalSettingsBase::compOnLoadMode   ,1,4,_l(""),0,
      NULL,1,
    IDFF_isCompMgr        ,&TglobalSettingsBase::isCompMgr        ,0,0,_l(""),0,
-     _l("isCompMgr"),1,
+     _l("isCompMgr"),0,
    IDFF_isCompMgrChanged ,&TglobalSettingsBase::isCompMgrChanged ,0,0,_l(""),0,
      NULL,0,
    IDFF_addToROT         ,&TglobalSettingsBase::addToROT         ,0,0,_l(""),0,
@@ -167,6 +167,11 @@ bool TglobalSettingsBase::exportReg(bool all,const char_t *regflnm,bool unicode)
   }
  if (all || strcmp(reg_child,FFDSHOWDECVIDEODXVA)==0)
   regExport(f,HKEY_CURRENT_USER ,FFDSHOW_REG_PARENT _l("\\") FFDSHOWDECVIDEODXVA,unicode);
+ if (all || strcmp(reg_child,FFDSHOWDECVIDEORAW)==0)
+  regExport(f,HKEY_CURRENT_USER ,FFDSHOW_REG_PARENT _l("\\") FFDSHOWDECVIDEORAW,unicode);
+ if (all || strcmp(reg_child,FFDSHOWDECAUDIORAW)==0)
+  regExport(f,HKEY_CURRENT_USER ,FFDSHOW_REG_PARENT _l("\\") FFDSHOWDECAUDIORAW,unicode);
+  
  return true;
 }
 void TglobalSettingsBase::_reg_op_codec(short id,TregOp &tHKCU,TregOp *tHKLM,const char_t *name,int &val,int def)

@@ -2,20 +2,22 @@
 #define _FFGLOBALS_H_
 
 #ifdef WIN64
-#define FFDSHOW            _l("ffdshow64")
-#define FFDSHOWDECVIDEO    _l("ffdshow64")
-#define FFDSHOWDECVIDEOVFW _l("ffdshow64_vfw")
-#define FFDSHOWDECAUDIO    _l("ffdshow64_audio")
-#define FFDSHOWDECAUDIORAW _l("ffdshow64_audio_raw")
-#define FFDSHOWENC         _l("ffdshow64_enc")
+#define FFDSHOW             _l("ffdshow64")
+#define FFDSHOWDECVIDEO     _l("ffdshow64")
+#define FFDSHOWDECVIDEORAW  _l("ffdshow64_raw")
+#define FFDSHOWDECVIDEOVFW  _l("ffdshow64_vfw")
+#define FFDSHOWDECAUDIO     _l("ffdshow64_audio")
+#define FFDSHOWDECAUDIORAW  _l("ffdshow64_audio_raw")
+#define FFDSHOWENC          _l("ffdshow64_enc")
 #define FFDSHOWDECVIDEODXVA _l("ffdshow64_dxva")
 #else
-#define FFDSHOW            _l("ffdshow")
-#define FFDSHOWDECVIDEO    _l("ffdshow")
-#define FFDSHOWDECVIDEOVFW _l("ffdshow_vfw")
-#define FFDSHOWDECAUDIO    _l("ffdshow_audio")
-#define FFDSHOWDECAUDIORAW _l("ffdshow_audio_raw")
-#define FFDSHOWENC         _l("ffdshow_enc")
+#define FFDSHOW             _l("ffdshow")
+#define FFDSHOWDECVIDEO     _l("ffdshow")
+#define FFDSHOWDECVIDEORAW  _l("ffdshow_raw")
+#define FFDSHOWDECVIDEOVFW  _l("ffdshow_vfw")
+#define FFDSHOWDECAUDIO     _l("ffdshow_audio")
+#define FFDSHOWDECAUDIORAW  _l("ffdshow_audio_raw")
+#define FFDSHOWENC          _l("ffdshow_enc")
 #define FFDSHOWDECVIDEODXVA _l("ffdshow_dxva")
 #endif
 

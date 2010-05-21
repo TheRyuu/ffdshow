@@ -104,8 +104,10 @@ TdialogSettingsDec::TdialogSettingsDec(const char_t *Ireg_child,TintStrColl *Ico
 
 //==================================== TdialogSettingsDecVideo =====================================
 TdialogSettingsDecVideo::TdialogSettingsDecVideo(int filtermode,TintStrColl *Icoll) : // Registry child key according to filter mode
- TdialogSettingsDec(((filtermode&IDFF_FILTERMODE_VFW) != 0) ? FFDSHOWDECVIDEOVFW :
-                     ((filtermode&IDFF_FILTERMODE_VIDEODXVA) != 0) ? FFDSHOWDECVIDEODXVA : FFDSHOWDECVIDEO,Icoll)
+	TdialogSettingsDec( ((filtermode&IDFF_FILTERMODE_VIDEODXVA) != 0) ? FFDSHOWDECVIDEODXVA : 
+											(((filtermode&IDFF_FILTERMODE_VFW) != 0) ? FFDSHOWDECVIDEOVFW : 
+											(((filtermode&IDFF_FILTERMODE_VIDEORAW) != 0) ? FFDSHOWDECVIDEORAW : 
+											FFDSHOWDECVIDEO)), Icoll )
 {
  static const TintOptionT<TdialogSettingsDecVideo> iopts[]=
   {

@@ -76,6 +76,13 @@ public: // Use DXVA child key if in DXVA mode or else ffdshow video child key
  virtual Tpresets* newPresets(void) {return new TpresetsVideoDXVA(filtermode);}
 };
 
+class TpresetsVideoRaw : public TpresetsVideo
+{
+public:
+ TpresetsVideoRaw(int mode):TpresetsVideo(FFDSHOWDECVIDEORAW, mode) {} 
+ virtual Tpresets* newPresets(void) {return new TpresetsVideoRaw(filtermode);}
+};
+
 struct TaudioAutoPresetProps;
 class TpresetsAudio :public Tpresets
 {

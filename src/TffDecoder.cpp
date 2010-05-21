@@ -76,9 +76,10 @@ TffdshowDecVideo::TffdshowDecVideo(CLSID Iclsid,const char_t *className,const CL
              globalSettings=new TglobalSettingsDecVideo(&config,Imode,Ioptions),
              dialogSettings=new TdialogSettingsDecVideo(Imode,Ioptions),
              presets=
-             (Imode&IDFF_FILTERMODE_VIDEODXVA) ? (TpresetsVideo*)new TpresetsVideoDXVA(Imode) : 
-             (Imode&IDFF_FILTERMODE_PROC ? (TpresetsVideo*)new TpresetsVideoProc(Imode) : 
-             (Imode&IDFF_FILTERMODE_VFW?(TpresetsVideo*)new TpresetsVideoVFW(Imode):(TpresetsVideo*)new TpresetsVideoPlayer(Imode))),
+             	(Imode&IDFF_FILTERMODE_VIDEODXVA) ? (TpresetsVideo*)new TpresetsVideoDXVA(Imode) : 
+             	((Imode&IDFF_FILTERMODE_VIDEORAW) ? (TpresetsVideo*)new TpresetsVideoRaw(Imode) : 
+             	((Imode&IDFF_FILTERMODE_VFW) ? (TpresetsVideo*)new TpresetsVideoVFW(Imode) : 
+             	((Imode&IDFF_FILTERMODE_PROC) ? (TpresetsVideo*)new TpresetsVideoProc(Imode) :	(TpresetsVideo*)new TpresetsVideoPlayer(Imode)))),
              (Tpreset*&)presetSettings,
              this,
              (TinputPin*&)inpin,
