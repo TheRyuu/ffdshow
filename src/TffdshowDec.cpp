@@ -869,14 +869,14 @@ STDMETHODIMP TffdshowDec::Enable(long lIndex, DWORD dwFlags)
 
  if (lIndex < (long)externalAudioStreams.size())
  {
-  DPRINTF(_l("TffdshowDec::Enable subtitle stream n°%ld"), lIndex);
-  return setExternalStream(1, lIndex);
+  DPRINTF(_l("TffdshowDec::Enable subtitle stream n°%ld"), externalAudioStreams[lIndex].streamNb);
+  return setExternalStream(1, externalAudioStreams[lIndex].streamNb);
  }
  else
  {
   lIndex -= (long)externalAudioStreams.size();
-  DPRINTF(_l("TffdshowDec::Enable subtitle stream n°%ld"), lIndex);
-  return setExternalStream(2, lIndex);
+  DPRINTF(_l("TffdshowDec::Enable subtitle stream n°%ld"), externalSubtitleStreams[lIndex].streamNb);
+  return setExternalStream(2, externalSubtitleStreams[lIndex].streamNb);
  }
 }
 
@@ -1093,6 +1093,7 @@ STDMETHODIMP TffdshowDec::extractExternalStreams(void)
  IFilterGraph    *m_pGraph = NULL;
  comptr<IffdshowDecVideo> deciV;
  this->NonDelegatingQueryInterface(getGUID<IffdshowDecVideo>(),(void**) &deciV);
+ Ttranslate *tr = NULL;getTranslator(&tr);
 
 
  getGraph(&m_pGraph); // Graph we belong to
@@ -1151,8 +1152,9 @@ STDMETHODIMP TffdshowDec::extractExternalStreams(void)
      &streamLanguageId, &streamGroup, &pstreamName, NULL, NULL);
     if (hr != S_OK) continue;
 
-    // Not audio or subtitles
-    if (streamGroup != 1 && streamGroup != 2 && streamGroup != 6590033)
+    // Not audio or subtitles or only one audio stream
+    if ((streamGroup != 1 && streamGroup != 2 && streamGroup != 6590033)
+     || (streamGroup == 1 && cStreams == 1))
     {
      if (pstreamName != NULL)
       CoTaskMemFree(pstreamName);
@@ -1162,20 +1164,18 @@ STDMETHODIMP TffdshowDec::extractExternalStreams(void)
     // Get language name
     char_t languageName[256];
     if (streamLanguageId == 0 || GetLocaleInfo(streamLanguageId, LOCALE_SLANGUAGE, languageName, 255) == 0)
-     tsnprintf_s(languageName, countof(languageName), _TRUNCATE, _l("Undetermined (%ld)"), streamNb);
+     tsnprintf_s(languageName, countof(languageName), _TRUNCATE, _l("%s (%ld)"), tr->translate(_l("Undetermined")),streamNb);
 
     char_t streamName[256];
     if (pstreamName != NULL)
      text<char_t>(pstreamName, -1, streamName, 255);
     else
-     tsnprintf_s(streamName, countof(streamName), _TRUNCATE, _l("Undetermined (%ld)"), streamNb);
+     tsnprintf_s(streamName, countof(streamName), _TRUNCATE, _l("%s (%ld)"), tr->translate(_l("Undetermined")), streamNb);
 
     TexternalStream stream;
     stream.filterName = ffstring(filtername);
     stream.streamNb = streamNb;
-    if (streamSelect == AMSTREAMSELECTINFO_ENABLED ||
-     streamSelect == AMSTREAMSELECTINFO_EXCLUSIVE || 
-     streamSelect == (AMSTREAMSELECTINFO_ENABLED | AMSTREAMSELECTINFO_EXCLUSIVE))
+    if ((streamSelect & AMSTREAMSELECTINFO_ENABLED) == AMSTREAMSELECTINFO_ENABLED)
      stream.enabled = true;
     else stream.enabled = false;
 
@@ -1209,9 +1209,7 @@ STDMETHODIMP TffdshowDec::extractExternalStreams(void)
 
  // If subtitles streams already found somewhere else skip next step
  if (externalSubtitleStreams.size() > 0) return S_OK;
- if (deciV == NULL) return S_OK; 
-
- Ttranslate *tr = NULL;getTranslator(&tr);
+ if (deciV == NULL) return S_OK;  
 
  // Now add subtitle streams connected to FFDShow input text pin if any
  int textpinconnectedCnt=deciV->getConnectedTextPinCnt();
