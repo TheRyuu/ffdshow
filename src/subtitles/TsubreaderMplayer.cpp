@@ -74,7 +74,6 @@ Tsubtitle* TsubtitleParserSami::parse(Tstream &fd,int flags, REFERENCE_TIME star
     wchar_t text[this->LINE_LEN+1], *p=NULL,*q;
     int state;
 
-
     /* read the first line */
     if (!s)
      if ((s = fd.fgets(line, this->LINE_LEN))==NULL) return NULL;
@@ -365,7 +364,6 @@ Tsubtitle* TsubtitleParserSubviewer2::parse(Tstream &fd,int flags, REFERENCE_TIM
   end:
     return current.empty()?NULL:store(current);
 }
-
 
 Tsubtitle* TsubtitleParserVplayer::parse(Tstream &fd,int flags, REFERENCE_TIME start, REFERENCE_TIME stop) {
         wchar_t line[this->LINE_LEN+1];
@@ -679,7 +677,7 @@ Tsubtitle* TsubtitleParserSSA::parse(Tstream &fd, int flags, REFERENCE_TIME star
     }
    else if (inInfo && strnicmp(line,L"ScaledBorderAndShadow:",21)==0)
     {
-	 strToInt(line+22,&scaleBorderAndShadow);
+     strToInt(line+22,&scaleBorderAndShadow);
     }
    else if (strnicmp(line,L"[V4 Styles]",11)==0)
     {
@@ -1185,8 +1183,8 @@ TsubreaderMplayer::TsubreaderMplayer(Tstream &fd,int sub_format,double fps,const
 
  fd.rewind();
 
- while (parser->parse(fd))
-  ;
+ while (parser->parse(fd));
+
  delete parser;
 
  processDuration(cfg);

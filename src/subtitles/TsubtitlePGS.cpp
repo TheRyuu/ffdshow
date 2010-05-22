@@ -60,7 +60,6 @@ TsubtitlePGS::~TsubtitlePGS()
  //ownimage is freed by TsubtitleLines
 }
 
-
 void TsubtitlePGS::print(
     REFERENCE_TIME time,
     bool wasseek,
@@ -98,7 +97,7 @@ void TsubtitlePGS::print(
 
   // size : original size, newSize : size after scaling 
   CSize size = CSize(m_pWindow->m_width, m_pWindow->m_height);
-  
+
   // Rectangle of our subtitles with the original size and top left position
   CRect rc(CPoint(m_pWindow->m_horizontal_position,m_pWindow->m_vertical_position), size);
 
@@ -107,10 +106,10 @@ void TsubtitlePGS::print(
 
   // Allocate the planes with original size and position
   TspuPlane *planes=parent->allocPlanes(rc, prefs.csp);
-  
+
   Tbitdata bitdata = Tbitdata(&m_pWindow->data[0], m_pWindow->data.size());
-  BYTE			bTemp;
-  BYTE			bSwitch;
+  BYTE bTemp;
+  BYTE bSwitch;
   int nPaletteIndex = 0; //Index of RGBA color
   int nCount = 0; // Repetition count of the pixel
 
@@ -120,62 +119,62 @@ void TsubtitlePGS::print(
   {
    bTemp = bitdata.readByte();
    if (bTemp != 0)
-	  {
-		  nPaletteIndex = bTemp;
-		  nCount = 1;
-	  }
-	  else
-	  {
-		  bSwitch = bitdata.readByte();
-		  if (!(bSwitch & 0x80))
-		  {
-			  if (!(bSwitch & 0x40))
-			  {
-				  nCount		= bSwitch & 0x3F;
-				  if (nCount > 0)
-					  nPaletteIndex	= 0;
-			  }
-			  else
-			  {
-				  nCount			= (bSwitch&0x3F) <<8 | (SHORT)bitdata.readByte();
-				  nPaletteIndex	= 0;
-			  }
-		  }
-		  else
-		  {
-			  if (!(bSwitch & 0x40))
-			  {
-				  nCount			= bSwitch & 0x3F;
-				  nPaletteIndex	= bitdata.readByte();
-			  }
-			  else
-			  {
-				  nCount			= (bSwitch&0x3F) <<8 | (SHORT)bitdata.readByte();
-				  nPaletteIndex	= bitdata.readByte();
-			  }
-		  }
-	  }
+      {
+          nPaletteIndex = bTemp;
+          nCount = 1;
+      }
+      else
+      {
+          bSwitch = bitdata.readByte();
+          if (!(bSwitch & 0x80))
+          {
+              if (!(bSwitch & 0x40))
+              {
+                  nCount = bSwitch & 0x3F;
+                  if (nCount > 0)
+                      nPaletteIndex = 0;
+              }
+              else
+              {
+                  nCount = (bSwitch&0x3F) <<8 | (SHORT)bitdata.readByte();
+                  nPaletteIndex = 0;
+              }
+          }
+          else
+          {
+              if (!(bSwitch & 0x40))
+              {
+                  nCount = bSwitch & 0x3F;
+                  nPaletteIndex = bitdata.readByte();
+              }
+              else
+              {
+                  nCount = (bSwitch&0x3F) <<8 | (SHORT)bitdata.readByte();
+                  nPaletteIndex = bitdata.readByte();
+              }
+          }
+      }
 
    // 1 or more pixels to fill with the palette index
-	  if (nCount>0) // Fill this series of pixels on this line
-	  {
-		  if (nPaletteIndex != 0xFF)		// 255 = Fully transparent
-    {
-     uint32_t color = m_pCompositionObject->m_Colors[nPaletteIndex];
-     // There is bug somewhere (in the PGS parsing) : R and B are inversed. Probably due to memory read/write order
-     unsigned char alpha = (color>>24)&0xFF;
-      YUVcolorA c(RGB((color)&0xFF,
-       (color>>8)&0xFF,
-       (color>>16)&0xFF), alpha);
-     drawPixels(pt,nCount,c,rc,rectReal,planes, true);
-    }
-		  pt.x += nCount;
-	  }
-	  else // This line is fully filled
-	  {
+      if (nCount>0) // Fill this series of pixels on this line
+      {
+          if (nPaletteIndex != 0xFF) // 255 = Fully transparent
+          {
+          uint32_t color = m_pCompositionObject->m_Colors[nPaletteIndex];
+          // There is bug somewhere (in the PGS parsing) : R and B are inversed. Probably due to memory read/write order
+          unsigned char alpha = (color>>24)&0xFF;
+           YUVcolorA c(RGB((color)&0xFF,
+            (color>>8)&0xFF,
+            (color>>16)&0xFF), alpha);
+          drawPixels(pt,nCount,c,rc,rectReal,planes, true);
+          }
+          pt.x += nCount;
+      }
+      else // This line is fully filled
+      {
     pt.y++;
     pt.x = rc.left;
-	  }
+      }
   }
 
   // Recover the skipped edges
@@ -183,12 +182,11 @@ void TsubtitlePGS::print(
 
   // Now reposition the center of the real rectangle (rcclip) proportionnaly to original size % new size
   CPoint centerPoint = CPoint(rc.left+rectReal.left+rectReal.Width()/2, rc.top+rectReal.top+rectReal.Height()/2); 
-  
+
   // Recalculate the coordinates proportionally
   centerPoint.x=(int)((float)centerPoint.x*scale100/100);
   centerPoint.y=(int)((float)centerPoint.y*scale100/100);
 
-  
   CSize newSize((int)((float)rectReal.Width()*scale100/100), (int)((float)rectReal.Height()*scale100/100));
   CPoint newTopLeft(centerPoint.x-newSize.cx/2,centerPoint.y-newSize.cy/2);
   /*if (newSize.cx > (long)prefs.dx) newSize.cx= (long)prefs.dx-1;
@@ -207,4 +205,3 @@ void TsubtitlePGS::print(
  //DPRINTF(_l("TsubtitlePGS::print Print image"));
  m_pWindow->ownimage->ownprint(prefs, dst, stride);
 }
- 

@@ -14,10 +14,10 @@
 
 enum PCI_Vendors
 {
-	PCIV_ATI				= 0x1002,
-	PCIV_nVidia				= 0x10DE,
-	PCIV_Intel				= 0x8086,
-	PCIV_S3_Graphics		= 0x5333
+    PCIV_ATI         = 0x1002,
+    PCIV_nVidia      = 0x10DE,
+    PCIV_Intel       = 0x8086,
+    PCIV_S3_Graphics = 0x5333
 };
 
 // Bitmasks for DXVA compatibility check
@@ -71,7 +71,7 @@ private:
  int nARMode; // aspect ratio mode
  AVRational sar; // aspect ratio
 
- // === DXVA1 variables
+    // === DXVA1 variables
     DDPIXELFORMAT                           pixelFormat;
 
     // === DXVA2 variables
@@ -125,7 +125,7 @@ public:
  virtual HRESULT createDXVA1Decoder(IAMVideoAccelerator*  pAMVideoAccelerator, const GUID* pDecoderGuid, DWORD dwSurfaceCount);
  virtual UINT getAdapter(IDirect3D9* pD3D, HWND hWnd);
  void flushDXVADecoder(void) { if (pDXVADecoder) pDXVADecoder->Flush(); }
- 
+
  virtual bool isDXVASupported();
  virtual int pictWidthRounded();
  virtual int pictHeightRounded();

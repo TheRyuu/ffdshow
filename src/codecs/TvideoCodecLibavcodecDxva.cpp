@@ -288,44 +288,44 @@ bool TvideoCodecLibavcodecDxva::isDXVASupported(void)
     detectVideoCard(hWnd);
 
  bool isDXVACompatible = true;
- 
+
  if (dxvaCodecId == CODEC_ID_H264_DXVA)
  {
-   /* a non-zero value indicates that an incompatibility was detected */ 	
+   /* a non-zero value indicates that an incompatibility was detected */    
    int nCompat = libavcodec->FFH264CheckCompatibility(pictWidthRounded(), pictHeightRounded(), avctx, (BYTE*)avctx->extradata, avctx->extradata_size, nPCIVendor, nPCIDevice, videoDriverVersion);
 
-	 if(nCompat > 0)
-	 {
-	   int nCompatibilityMode=deci->getParam2(IDFF_dec_DXVA_CompatibilityMode);
-	   
-	   // debug output
-	   if(nCompat & DXVA_UNSUPPORTED_LEVEL) 
-	   	 DPRINTF(_l("TvideoCodecLibavcodecDxva::isDXVASupported : unsupported level"));
-	   if(nCompat & DXVA_TOO_MUCH_REF_FRAMES) 
-	   	 DPRINTF(_l("TvideoCodecLibavcodecDxva::isDXVASupported : too much reference frames"));	   
-   
+     if(nCompat > 0)
+     {
+       int nCompatibilityMode=deci->getParam2(IDFF_dec_DXVA_CompatibilityMode);
+
+       // debug output
+       if(nCompat & DXVA_UNSUPPORTED_LEVEL) 
+         DPRINTF(_l("TvideoCodecLibavcodecDxva::isDXVASupported : unsupported level"));
+       if(nCompat & DXVA_TOO_MUCH_REF_FRAMES) 
+         DPRINTF(_l("TvideoCodecLibavcodecDxva::isDXVASupported : too much reference frames"));       
+
      switch (nCompatibilityMode)
      {
-     	 case 0:
-     	 	 // full check
-     	 	 isDXVACompatible = false;
-     	 	 break;
+       case 0:
+         // full check
+         isDXVACompatible = false;
+         break;
        case 1 :
-       	 // skip level check
+         // skip level check
          if(nCompat != DXVA_UNSUPPORTED_LEVEL) isDXVACompatible = false;
-				 break;
+         break;
        case 2 :
-       	 // skip reference frame check
-       	 if(nCompat != DXVA_TOO_MUCH_REF_FRAMES) isDXVACompatible = false;
+         // skip reference frame check
+         if(nCompat != DXVA_TOO_MUCH_REF_FRAMES) isDXVACompatible = false;
          break;
        case 3 :
-       	 // skip all checks
-       	 //if(nCompat != (DXVA_UNSUPPORTED_LEVEL | DXVA_TOO_MUCH_REF_FRAMES)) m_bDXVACompatible = false; // example of how a combination of two ignored checks can be done
-       	 break;
+         // skip all checks
+         //if(nCompat != (DXVA_UNSUPPORTED_LEVEL | DXVA_TOO_MUCH_REF_FRAMES)) m_bDXVACompatible = false; // example of how a combination of two ignored checks can be done
+         break;
      }
    }
  }
- 
+
  return isDXVACompatible;
 }
 
@@ -352,7 +352,7 @@ void TvideoCodecLibavcodecDxva::getDXVAOutputFormats(TcspInfos &ocsps)
   pCsp->subtype=dxvaParamsp->Decoder[nPos];
   ocsps.push_back(pCsp);
     }
-     // Static list for DXVA2
+    // Static list for DXVA2
  nVideoOutputCount=SIZEOF_ARRAY(dxva2List);
  for (int nPos=0; nPos<nVideoOutputCount; nPos++)
     {
@@ -379,7 +379,6 @@ BOOL TvideoCodecLibavcodecDxva::isSupportedDecoderConfig(const D3DFORMAT nD3DFor
     DPRINTF(_l("TvideoCodecLibavcodecDxva::isSupportedDecoderConfig  0x%08x  %d"), nD3DFormat, bRet);
     return bRet;
 }
-
 
 void TvideoCodecLibavcodecDxva::fillInVideoDescription(DXVA2_VideoDesc *pDesc)
 {
@@ -452,8 +451,6 @@ HRESULT TvideoCodecLibavcodecDxva::findDXVA2DecoderConfiguration(IDirectXVideoDe
  return hr;
 }
 
-
-
 HRESULT TvideoCodecLibavcodecDxva::configureDXVA2(IPin *pPin)
 {
  HRESULT hr                       = S_OK;
@@ -519,13 +516,13 @@ HRESULT TvideoCodecLibavcodecDxva::configureDXVA2(IPin *pPin)
     guidDecoder = pDecoderGuids[iGuid];
   }
 
-    if (pDecoderGuids) CoTaskMemFree(pDecoderGuids);
+ if (pDecoderGuids) CoTaskMemFree(pDecoderGuids);
  if (!bFoundDXVA2Configuration) hr = E_FAIL; // Unable to find a configuration.
 
  if (SUCCEEDED(hr))
  {
   // Store the things we will need later.
-        m_pDeviceManager    = pDeviceManager;
+  m_pDeviceManager  = pDeviceManager;
   m_pDecoderService = pDecoderService;
   dxva2Config       = config;
   dxvaDecoderGUID   = guidDecoder;
@@ -587,12 +584,11 @@ HRESULT TvideoCodecLibavcodecDxva::setEVRForDXVA2(IPin *pPin)
  return hr;
 }
 
-
 HRESULT TvideoCodecLibavcodecDxva::createDXVA2Decoder(UINT nNumRenderTargets, IDirect3DSurface9** pDecoderRenderTargets)
 {
     HRESULT hr;
     CComPtr<IDirectXVideoDecoder> pDirectXVideoDec;
-    
+
     pDecoderRenderTarget    = NULL;
 
     if (pDXVADecoder) pDXVADecoder->SetDirectXVideoDec (NULL);
@@ -613,7 +609,6 @@ HRESULT TvideoCodecLibavcodecDxva::createDXVA2Decoder(UINT nNumRenderTargets, ID
 
     return hr;
 }
-
 
 HRESULT TvideoCodecLibavcodecDxva::findDXVA1DecoderConfiguration(IAMVideoAccelerator* pAMVideoAccelerator, const GUID* guidDecoder, DDPIXELFORMAT* pPixelFormat)
 {
@@ -764,7 +759,7 @@ void TvideoCodecLibavcodecDxva::GetProcessedFrame(Tbuffer &processedFrame, UINT 
 void TvideoCodecLibavcodecDxva::OverlayYV12OnUSWCFrame(unsigned char * pSrc, unsigned char * pDest, UINT width, UINT height, UINT pitch)
 {
  unsigned int x,y;
- 
+
  for(y = 0; y < height; y+=2)
  {
   for(x = 0; x < width; x+=2)
@@ -779,7 +774,7 @@ void TvideoCodecLibavcodecDxva::OverlayYV12OnUSWCFrame(unsigned char * pSrc, uns
    unsigned char srcY11 = pSrc[srcY1Offset + 1];
    unsigned char srcCr = pSrc[srcCrOffset];
    unsigned char srcCb = pSrc[srcCbOffset];
-   
+
    // Black in yuv is 0,128,128
    int diffCountY = 0;
    if (srcY00 != 0)
@@ -818,7 +813,6 @@ void TvideoCodecLibavcodecDxva::OverlayYV12OnUSWCFrame(unsigned char * pSrc, uns
   }
 }
 #pragma endregion
-
 
 //------------------------- TvideoCodecLibavcodec overloaded methods -----------------------------
 bool TvideoCodecLibavcodecDxva::beginDecompress(TffPictBase &pict,FOURCC fcc,const CMediaType &mt,int sourceFlags)
@@ -890,8 +884,6 @@ HRESULT TvideoCodecLibavcodecDxva::decompress(const unsigned char *src,size_t sr
  else
   sar=containerSar;
 
-
-
  switch (nDXVAMode)
  {
  case MODE_SOFTWARE : return TvideoCodecLibavcodec::decompress(src,srcLen0,pIn);
@@ -900,7 +892,6 @@ HRESULT TvideoCodecLibavcodecDxva::decompress(const unsigned char *src,size_t sr
   CheckPointer (pDXVADecoder, E_UNEXPECTED);
   updateAspectRatio();
 
-  
   /* TODO : update picture size
   TffPict pict;
   pict.setSize(m_pCodec->mb_width,m_pCodec->mb_height);

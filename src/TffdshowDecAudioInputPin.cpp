@@ -161,8 +161,8 @@ STDMETHODIMP TffdshowDecAudioInputPin::Receive(IMediaSample* pIn)
       && codecId != CODEC_ID_FLAC
       && codecId != CODEC_ID_TTA
       && codecId != CODEC_ID_WAVPACK
-	  && codecId != CODEC_ID_TRUEHD
-	  && codecId != CODEC_ID_MLP
+      && codecId != CODEC_ID_TRUEHD
+      && codecId != CODEC_ID_MLP
       && !bitstream_codec(codecId)
       && filter->getParam2(IDFF_audio_decoder_JitterCorrection))
    {
@@ -209,7 +209,6 @@ STDMETHODIMP TffdshowDecAudioInputPin::Receive(IMediaSample* pIn)
 
     // Get updated data from the parser
     audioParserData = audioParser->getParserData();
-
 
     // Clear input buffer (if 2 source buffers are coexisting, sound will be garbled)
     buf.clear();

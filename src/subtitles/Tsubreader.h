@@ -6,7 +6,7 @@
 #include "Tstream.h"
 
 #ifndef SAFE_FREE
-#define SAFE_FREE(x)	{if (x)	free(x);	(x) = 0;}	/* helper macro */
+#define SAFE_FREE(x) {if (x) free(x); (x) = 0;} /* helper macro */
 #endif
 
 struct TsubtitlesSettings;

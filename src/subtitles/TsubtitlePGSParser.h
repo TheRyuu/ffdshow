@@ -32,15 +32,15 @@ static inline void rt2Str(REFERENCE_TIME rTime, char_t *string)
 
  static const REFERENCE_TIME INVALID_TIME = _I64_MIN;
  struct VIDEO_DESCRIPTOR
-	{
-		SHORT		nVideoWidth;
-		SHORT		nVideoHeight;
-		BYTE		bFrameRate;		// <= Frame rate here!
-	};
+   {
+        SHORT nVideoWidth;
+        SHORT nVideoHeight;
+        BYTE bFrameRate; // <= Frame rate here!
+   };
 
  struct ThdmvPalette
  {
-  DWORD		m_Colors[256];
+  DWORD m_Colors[256];
   ThdmvPalette() {reset();};
   void reset() {memsetd (m_Colors, 0xFF000000, sizeof(DWORD)*256);}
   ~ThdmvPalette() {};
@@ -49,14 +49,14 @@ static inline void rt2Str(REFERENCE_TIME rTime, char_t *string)
  struct TwindowDefinition
  {
   int m_horizontal_position, m_vertical_position, m_width, m_height, m_objectId, m_windowId;TspuImage *ownimage;
-  SHORT				m_cropping_horizontal_position;
-	 SHORT				m_cropping_vertical_position;
-	 SHORT				m_cropping_width;
-	 SHORT				m_cropping_height;
-  bool				m_object_cropped_flag;
-	 bool				m_forced_on_flag;
-  REFERENCE_TIME		m_rtStart;
-	 REFERENCE_TIME		m_rtStop;
+  SHORT m_cropping_horizontal_position;
+  SHORT m_cropping_vertical_position;
+  SHORT m_cropping_width;
+  SHORT m_cropping_height;
+  bool m_object_cropped_flag;
+  bool m_forced_on_flag;
+  REFERENCE_TIME m_rtStart;
+  REFERENCE_TIME m_rtStop;
   TbyteBuffer data; // RGB indexes
   void reset() {m_horizontal_position=m_vertical_position=m_width=m_height=m_objectId=m_windowId=0;data.clear();ownimage=NULL;
   m_cropping_horizontal_position=m_cropping_vertical_position=m_cropping_width=m_cropping_height=0;
@@ -88,23 +88,22 @@ static inline void rt2Str(REFERENCE_TIME rTime, char_t *string)
    bool isEmpty() { if (m_nWindows == 0) return true;for (int i=0;i<MAX_WINDOWS;i++) {if (m_Windows[i].data.size() != 0) return false;} return true;}
    bool isReady() { for (int i=0;i<MAX_WINDOWS;i++) {if (!m_Windows[i].isReady()) return false;} return true;}
 
-   int     m_compositionNumber;
-   REFERENCE_TIME		m_rtTime;
-	  BYTE				m_version_number;
-   DWORD   m_data_length;
-   BYTE    m_palette_id_ref;
-   
-   bool     m_bReady;
-   DWORD		  m_Colors[256];
-   bool     m_bGotPalette;
-   bool     m_bEmptySubtitles;
+   int m_compositionNumber;
+   REFERENCE_TIME m_rtTime;
+   BYTE m_version_number;
+   DWORD m_data_length;
+   BYTE m_palette_id_ref;
+
+   bool m_bReady;
+   DWORD m_Colors[256];
+   bool m_bGotPalette;
+   bool m_bEmptySubtitles;
    VIDEO_DESCRIPTOR *m_pVideoDescriptor;
    TwindowDefinition m_Windows[MAX_WINDOWS];
-   int      m_nWindows;
-   int      m_nState;
+   int m_nWindows;
+   int m_nState;
    TsubtitlePGS *m_pSubtitlePGS;
  };
-
 
  typedef std::vector<TcompositionObject* > TcompositionObjects;
 #pragma endregion
@@ -112,36 +111,36 @@ static inline void rt2Str(REFERENCE_TIME rTime, char_t *string)
 class TsubtitlePGSParser
 {
  #pragma region Internal structures
-	enum HDMV_SEGMENT_TYPE
-	{
-		NO_SEGMENT			= 0xFFFF,
-		PALETTE				= 0x14,
-		OBJECT				= 0x15,
-		PRESENTATION_SEG	= 0x16,
-		WINDOW_DEF			= 0x17,
-		INTERACTIVE_SEG		= 0x18,
-		DISPLAY		= 0x80,
-		HDMV_SUB1			= 0x81,
-		HDMV_SUB2			= 0x82
-	};
-	struct COMPOSITION_DESCRIPTOR
-	{
-		SHORT		nNumber;
-		BYTE		bState;
-	};
-	struct SEQUENCE_DESCRIPTOR
-	{
-		BYTE		bFirstIn  : 1;
-		BYTE		bLastIn	  : 1;
-		BYTE		bReserved : 8;
-	};
+    enum HDMV_SEGMENT_TYPE
+    {
+        NO_SEGMENT       = 0xFFFF,
+        PALETTE          = 0x14,
+        OBJECT           = 0x15,
+        PRESENTATION_SEG = 0x16,
+        WINDOW_DEF       = 0x17,
+        INTERACTIVE_SEG  = 0x18,
+        DISPLAY          = 0x80,
+        HDMV_SUB1        = 0x81,
+        HDMV_SUB2        = 0x82
+    };
+    struct COMPOSITION_DESCRIPTOR
+    {
+        SHORT nNumber;
+        BYTE bState;
+    };
+    struct SEQUENCE_DESCRIPTOR
+    {
+        BYTE bFirstIn  : 1;
+        BYTE bLastIn   : 1;
+        BYTE bReserved : 8;
+    };
  struct HDMV_PALETTE
  {
-  BYTE		entry_id;
-  BYTE		Y;
-  BYTE		Cr;
-  BYTE		Cb;  
-	 BYTE		T;		// HDMV rule : 0 transparent, 255 opaque (compatible DirectX)
+  BYTE entry_id;
+  BYTE Y;
+  BYTE Cr;
+  BYTE Cb;  
+  BYTE T; // HDMV rule : 0 transparent, 255 opaque (compatible DirectX)
  };
 #pragma endregion
 
@@ -160,11 +159,11 @@ private:
  bool getPalette(TcompositionObject *pObject);
  
  IffdshowBase *deci;
- HDMV_SEGMENT_TYPE				m_nCurSegment;
-	int								m_nTotalSegBuffer;
-	int								m_nSegBufferPos;
-	int								m_nSegSize;
- Tbitdata   m_bitdata;
+ HDMV_SEGMENT_TYPE m_nCurSegment;
+    int m_nTotalSegBuffer;
+    int m_nSegBufferPos;
+    int m_nSegSize;
+ Tbitdata m_bitdata;
  TbyteBuffer m_data;
  TbyteBuffer m_segmentBuffer;
  typedef stdext::hash_map<int,ThdmvPalette*> ThdmvPalettes;
@@ -173,16 +172,16 @@ private:
  TcompositionObjects  m_compositionObjects;
  TcompositionObject *m_pCurrentObject;
  TcompositionObject *m_pPreviousObject;
- bool      m_bDisplayFlag;
+ bool m_bDisplayFlag;
 
  ThdmvPalette *m_pDefaultPalette;
-	int								m_nDefaultPaletteNbEntry;
-	int								m_nColorNumber;
- int        m_nOSDCount;
- HDMV_PALETTE       *m_pPalette;
- VIDEO_DESCRIPTOR	m_VideoDescriptor;
+ int m_nDefaultPaletteNbEntry;
+ int m_nColorNumber;
+ int m_nOSDCount;
+ HDMV_PALETTE *m_pPalette;
+ VIDEO_DESCRIPTOR m_VideoDescriptor;
  TcompositionObject m_CurrentPresentationDescriptor;
- DWORD		m_Colors[256];
+ DWORD m_Colors[256];
 };
 
 #endif
