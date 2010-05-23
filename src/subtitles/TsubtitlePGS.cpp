@@ -180,6 +180,9 @@ void TsubtitlePGS::print(
   // Recover the skipped edges
   rectReal.left--;
 
+  // Remove first line which is garbage
+  rectReal.top++;
+
   // Now reposition the center of the real rectangle (rcclip) proportionnaly to original size % new size
   CPoint centerPoint = CPoint(rc.left+rectReal.left+rectReal.Width()/2, rc.top+rectReal.top+rectReal.Height()/2); 
 
