@@ -74,7 +74,7 @@ void TsubtitlePGS::print(
  csp = prefs.csp & FF_CSPS_MASK;
  updateTimestamps();
 
- if (m_pWindow->data.size() == 0 ||
+ if (m_pWindow->data[0].size() == 0 ||
   m_pWindow->m_rtStart > time || (m_pWindow->m_rtStop != INVALID_TIME && m_pWindow->m_rtStop <= time)) return;
  
  if (m_pWindow->ownimage == NULL || forceChange)
@@ -107,81 +107,128 @@ void TsubtitlePGS::print(
   // Allocate the planes with original size and position
   TspuPlane *planes=parent->allocPlanes(rc, prefs.csp);
 
-  Tbitdata bitdata = Tbitdata(&m_pWindow->data[0], m_pWindow->data.size());
-  BYTE bTemp;
-  BYTE bSwitch;
+  Tbitdata bitdata = Tbitdata(&m_pWindow->data[0][0], m_pWindow->data[0].size());
+  uint32_t bTemp;
+  uint32_t bSwitch;
   int nPaletteIndex = 0; //Index of RGBA color
   int nCount = 0; // Repetition count of the pixel
+  int pictureIndex = 0;
 
   CPoint pt=CPoint(rc.left,rc.top);
 
-  while (pt.y<rc.bottom && bitdata.bitsleft>0)
+  while (pt.y<rc.bottom)
   {
+   if (bitdata.bitsleft<=0)
+   {
+    pictureIndex++;
+    if (pictureIndex < RLE_ARRAY_SIZE && m_pWindow->data[pictureIndex].size() > 0)
+    {
+     bitdata = Tbitdata(&m_pWindow->data[pictureIndex][0], m_pWindow->data[pictureIndex].size());
+    }
+    else break;
+   }
+   
    bTemp = bitdata.readByte();
    if (bTemp != 0)
-      {
-          nPaletteIndex = bTemp;
-          nCount = 1;
-      }
-      else
-      {
-          bSwitch = bitdata.readByte();
-          if (!(bSwitch & 0x80))
-          {
-              if (!(bSwitch & 0x40))
-              {
-                  nCount = bSwitch & 0x3F;
-                  if (nCount > 0)
-                      nPaletteIndex = 0;
-              }
-              else
-              {
-                  nCount = (bSwitch&0x3F) <<8 | (SHORT)bitdata.readByte();
-                  nPaletteIndex = 0;
-              }
-          }
-          else
-          {
-              if (!(bSwitch & 0x40))
-              {
-                  nCount = bSwitch & 0x3F;
-                  nPaletteIndex = bitdata.readByte();
-              }
-              else
-              {
-                  nCount = (bSwitch&0x3F) <<8 | (SHORT)bitdata.readByte();
-                  nPaletteIndex = bitdata.readByte();
-              }
-          }
-      }
+   {
+       nPaletteIndex = bTemp;
+       nCount = 1;
+   }
+   else
+   {
+    bSwitch = bitdata.readByte();
+    if (!(bSwitch & 0x80))
+    {
+     if (!(bSwitch & 0x40))
+     {
+      nCount = bSwitch & 0x3F;
+      if (nCount > 0) nPaletteIndex = 0;
+     }
+     else
+     {
+      nCount = (bSwitch&0x3F) <<8 | (SHORT)bitdata.readByte();
+      nPaletteIndex = 0;
+     }
+    }
+    else
+    {
+        if (!(bSwitch & 0x40))
+        {
+         nCount = bSwitch & 0x3F;
+         nPaletteIndex = bitdata.readByte();
+        }
+        else
+        {
+         nCount = (bSwitch&0x3F) <<8 | (SHORT)bitdata.readByte();
+         nPaletteIndex = bitdata.readByte();
+        }
+    }
+   } // if bTemp !=0
 
    // 1 or more pixels to fill with the palette index
-      if (nCount>0) // Fill this series of pixels on this line
-      {
-          if (nPaletteIndex != 0xFF) // 255 = Fully transparent
-          {
-          uint32_t color = m_pCompositionObject->m_Colors[nPaletteIndex];
-          // There is bug somewhere (in the PGS parsing) : R and B are inversed. Probably due to memory read/write order
-          unsigned char alpha = (color>>24)&0xFF;
-           YUVcolorA c(RGB((color)&0xFF,
-            (color>>8)&0xFF,
-            (color>>16)&0xFF), alpha);
-          drawPixels(pt,nCount,c,rc,rectReal,planes, true);
-          }
-          pt.x += nCount;
-      }
-      else // This line is fully filled
-      {
+   if (nCount>0) // Fill this series of pixels on this line
+   {
+    bool nextline = false;
+    if (pt.x + nCount > rc.right) // Beyond the line (error)
+    {
+#if DEBUG_PGS_TIMESTAMPS
+     DPRINTF(_l("TsubtitlePGS::print RLE data beyond line width starting at (%d,%d) on %d pixels (width=%d), changing to %d pixels"),
+      pt.x, pt.y, nCount, rc.Width(), (rc.right - pt.x));
+#endif
+     nCount = rc.right - pt.x;
+     nextline = true;
+    }
+
+    if (nPaletteIndex != 0xFF && nCount>0) // 255 = Fully transparent
+    {
+     uint32_t color = m_pCompositionObject->m_Colors[nPaletteIndex];
+     // There is bug somewhere (in the PGS parsing) : R and B are inversed. Probably due to memory read/write order
+     unsigned char alpha = (color>>24)&0xFF;
+      YUVcolorA c(RGB((color)&0xFF,
+       (color>>8)&0xFF,
+       (color>>16)&0xFF), alpha);
+     drawPixels(pt,nCount,c,rc,rectReal,planes, true);
+    }
+    pt.x += nCount;
+
+    if (nextline)
+    {
+     pt.y++;
+     pt.x = rc.left;
+    }
+   }
+   else // This line is fully filled
+   {
     pt.y++;
     pt.x = rc.left;
-      }
-  }
+   }
+  } //While
 
   // Recover the skipped edges
   rectReal.left--;
 
-  // Remove first line which is garbage
+  // First garbage line
   rectReal.top++;
+
+  // Apply crop area
+  if (m_pWindow->m_object_cropped_flag)
+  {
+#if DEBUG_PGS_TIMESTAMPS
+   DPRINTF(_l("Crop (%d,%d) on (%d x %d) inside (%d,%d) on (%d x %d)"), m_pWindow->m_cropping_horizontal_position, m_pWindow->m_cropping_vertical_position,
+    m_pWindow->m_cropping_width, m_pWindow->m_cropping_height,
+    m_pWindow->m_horizontal_position, m_pWindow->m_vertical_position,
+    m_pWindow->m_width, m_pWindow->m_height);
+#endif
+   int leftCrop = abs(m_pWindow->m_cropping_horizontal_position - m_pWindow->m_horizontal_position);
+   int rightCrop = abs(m_pWindow->m_horizontal_position + m_pWindow->m_width - (m_pWindow->m_cropping_horizontal_position + m_pWindow->m_cropping_width));
+   int topCrop = abs(m_pWindow->m_cropping_vertical_position - m_pWindow->m_vertical_position);
+   int bottomCrop = abs(m_pWindow->m_vertical_position + m_pWindow->m_height - (m_pWindow->m_cropping_vertical_position + m_pWindow->m_cropping_height));
+
+   if (rectReal.left < leftCrop) rectReal.left = leftCrop;
+   if (rectReal.right > m_pWindow->m_width - rightCrop) rectReal.right = m_pWindow->m_width - rightCrop;
+   if (rectReal.top < topCrop) rectReal.top = topCrop;
+   if (rectReal.bottom > m_pWindow->m_height - bottomCrop) rectReal.bottom = m_pWindow->m_height - bottomCrop;
+  }
 
   // Now reposition the center of the real rectangle (rcclip) proportionnaly to original size % new size
   CPoint centerPoint = CPoint(rc.left+rectReal.left+rectReal.Width()/2, rc.top+rectReal.top+rectReal.Height()/2); 

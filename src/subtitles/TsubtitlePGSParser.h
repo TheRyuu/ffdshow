@@ -29,6 +29,7 @@ static inline void rt2Str(REFERENCE_TIME rTime, char_t *string)
 }
 
 #define MAX_WINDOWS 3 // Maximum number of windows
+#define RLE_ARRAY_SIZE 2 // Maximum parts of RLE buffers in multipart subtitle
 
  static const REFERENCE_TIME INVALID_TIME = _I64_MIN;
  struct VIDEO_DESCRIPTOR
@@ -57,13 +58,15 @@ static inline void rt2Str(REFERENCE_TIME rTime, char_t *string)
   bool m_forced_on_flag;
   REFERENCE_TIME m_rtStart;
   REFERENCE_TIME m_rtStop;
-  TbyteBuffer data; // RGB indexes
-  void reset() {m_horizontal_position=m_vertical_position=m_width=m_height=m_objectId=m_windowId=0;data.clear();ownimage=NULL;
+  TbyteBuffer data[RLE_ARRAY_SIZE]; // RGB indexes
+  int dataIndex;
+  void reset() {m_horizontal_position=m_vertical_position=m_width=m_height=m_objectId=m_windowId=0;ownimage=NULL;
   m_cropping_horizontal_position=m_cropping_vertical_position=m_cropping_width=m_cropping_height=0;
   m_rtStart=m_rtStop=INVALID_TIME;
-  m_object_cropped_flag=m_forced_on_flag=false;}
+  m_object_cropped_flag=m_forced_on_flag=false; for (int i=0;i<RLE_ARRAY_SIZE;i++) { data[i].clear();};dataIndex = 0;
+  }
   TwindowDefinition() { reset();}
-  bool isReady() {return (data.size() == 0 || (data.size()!=0 && m_rtStart != INVALID_TIME && m_rtStop != INVALID_TIME)) ? true : false;}
+  bool isReady() {return (data[0].size() == 0 || (data[0].size()!=0 && m_rtStart != INVALID_TIME && m_rtStop != INVALID_TIME)) ? true : false;}
  };
 
  typedef std::vector<TwindowDefinition* > TwindowsDefinition;
@@ -85,7 +88,7 @@ static inline void rt2Str(REFERENCE_TIME rTime, char_t *string)
     m_nState = 0;
     m_pSubtitlePGS = NULL;
    }
-   bool isEmpty() { if (m_nWindows == 0) return true;for (int i=0;i<MAX_WINDOWS;i++) {if (m_Windows[i].data.size() != 0) return false;} return true;}
+   bool isEmpty() { if (m_nWindows == 0) return true;for (int i=0;i<MAX_WINDOWS;i++) {if (m_Windows[i].data[0].size() != 0) return false;} return true;}
    bool isReady() { for (int i=0;i<MAX_WINDOWS;i++) {if (!m_Windows[i].isReady()) return false;} return true;}
 
    int m_compositionNumber;
