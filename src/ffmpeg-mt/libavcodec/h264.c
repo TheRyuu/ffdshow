@@ -20,7 +20,7 @@
  */
 
 /**
- * @file libavcodec/h264.c
+ * @file
  * H.264 / AVC / MPEG4 part10 codec.
  * @author Michael Niedermayer <michaelni@gmx.at>
  */
@@ -892,6 +892,8 @@ fail:
     return -1; // free_tables will clean up for us
 }
 
+static int decode_nal_units(H264Context *h, const uint8_t *buf, int buf_size);
+
 static av_cold void common_init(H264Context *h){
     MpegEncContext * const s = &h->s;
 
@@ -1021,6 +1023,8 @@ static int decode_update_thread_context(AVCodecContext *dst, AVCodecContext *src
         // frame_start may not be called for the next thread (if it's decoding a bottom field)
         // so this has to be allocated here
         h->s.obmc_scratchpad = av_malloc(16*2*s->linesize + 8*2*s->uvlinesize);
+
+        s->dsp.clear_blocks(h->mb);
     }
 
     //extradata/NAL handling
@@ -3610,7 +3614,7 @@ av_cold int ff_h264_decode_end(AVCodecContext *avctx)
 
 AVCodec h264_decoder = {
     "h264",
-    CODEC_TYPE_VIDEO,
+    AVMEDIA_TYPE_VIDEO,
     CODEC_ID_H264,
     sizeof(H264Context),
     /*.init = */ff_h264_decode_init,

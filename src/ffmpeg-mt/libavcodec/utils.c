@@ -580,13 +580,13 @@ int attribute_align_arg avcodec_decode_video(AVCodecContext *avctx, AVFrame *pic
                          const uint8_t *buf, int buf_size)
 {
     int ret;
-    int threaded = HAVE_PTHREADS && avctx->active_thread_type&FF_THREAD_FRAME;
+    int threaded = avctx->active_thread_type&FF_THREAD_FRAME;
 
     *got_picture_ptr= 0;
     if((avctx->coded_width||avctx->coded_height) && avcodec_check_dimensions(avctx,avctx->coded_width,avctx->coded_height))
         return -1;
     if((avctx->codec->capabilities & CODEC_CAP_DELAY) || buf_size || threaded){
-        if (threaded) ret = ff_thread_decode_frame(avctx, picture,
+        if (HAVE_PTHREADS && threaded) ret = ff_thread_decode_frame(avctx, picture,
                                 got_picture_ptr, buf, buf_size);
         else ret = avctx->codec->decode(avctx, picture, got_picture_ptr,
                                 buf, buf_size);
@@ -667,14 +667,18 @@ av_cold int avcodec_close(AVCodecContext *avctx)
 
 AVCodec *avcodec_find_encoder(enum CodecID id)
 {
-    AVCodec *p;
+    AVCodec *p, *experimental=NULL;
     p = first_avcodec;
     while (p) {
-        if (p->encode != NULL && p->id == id)
-            return p;
+        if (p->encode != NULL && p->id == id) {
+            if (p->capabilities & CODEC_CAP_EXPERIMENTAL && !experimental) {
+                experimental = p;
+            } else
+                return p;
+        }
         p = p->next;
     }
-    return NULL;
+    return experimental;
 }
 
 AVCodec *avcodec_find_encoder_by_name(const char *name)
