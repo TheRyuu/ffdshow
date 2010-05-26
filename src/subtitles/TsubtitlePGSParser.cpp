@@ -255,7 +255,7 @@ void TsubtitlePGSParser::parsePresentationSegment(Tbitdata &bitData, REFERENCE_T
    m_compositionObjects.push_back(m_pCurrentObject);
  }
 
- #if DEBUG_PGS_TIMESTAMPS
+ #if DEBUG_PGS
   char_t rtString[32];
   rt2Str(rtStart, rtString);
   DPRINTF(_l("[%d] PCS nObjects:%d state:%d %s"),compositionDescriptor.nNumber, nObjectNumber, compositionDescriptor.bState, rtString);
@@ -276,7 +276,7 @@ void TsubtitlePGSParser::parsePresentationSegment(Tbitdata &bitData, REFERENCE_T
     if ((*c)->m_Windows[i].m_rtStop == INVALID_TIME && (*c)->m_Windows[i].data[0].size() > 0)
     {
      (*c)->m_Windows[i].m_rtStop=rtStart;
-     #if DEBUG_PGS_TIMESTAMPS
+     #if DEBUG_PGS
      char_t rtString[32], rtString2[32];
      rt2Str((*c)->m_Windows[i].m_rtStart, rtString);
      rt2Str((*c)->m_Windows[i].m_rtStop, rtString2);
@@ -319,7 +319,7 @@ void TsubtitlePGSParser::parsePresentationSegment(Tbitdata &bitData, REFERENCE_T
           pWindowDefinition->m_cropping_height = bitData.readShort();
       }
 
-   #if DEBUG_PGS_TIMESTAMPS
+   #if DEBUG_PGS
    DPRINTF(_l("[%d] PCS Object[%d]:id %d window:%d at (%d,%d)"),
     m_pCurrentObject->m_compositionNumber, i, object_id_ref, window_id_ref,
     pWindowDefinition->m_horizontal_position, pWindowDefinition->m_vertical_position);
@@ -349,7 +349,7 @@ void TsubtitlePGSParser::parsePresentationSegment(Tbitdata &bitData, REFERENCE_T
     if (!objectWindowFound && compositionDescriptor.bState >= 0 && (*c)->m_Windows[i].m_rtStop == INVALID_TIME)
     {
      (*c)->m_Windows[i].m_rtStop = rtStart;
-     #if DEBUG_PGS_TIMESTAMPS
+     #if DEBUG_PGS
       char_t rtString[32], rtString2[32];
       rt2Str((*c)->m_Windows[i].m_rtStart, rtString);
       rt2Str((*c)->m_Windows[i].m_rtStop, rtString2);
@@ -361,7 +361,7 @@ void TsubtitlePGSParser::parsePresentationSegment(Tbitdata &bitData, REFERENCE_T
       #endif
      
     }
-    #if DEBUG_PGS_TIMESTAMPS
+    #if DEBUG_PGS
     else if (objectWindowFound && (*c)->m_Windows[i].m_rtStop == INVALID_TIME)
     {
      DPRINTF(_l("[%d] PCS from comp %d continue displaying Object[%d]:id %d WindowId:%d (%d x %d at %d,%d) %s"),
@@ -409,7 +409,7 @@ void TsubtitlePGSParser::parseWindow(Tbitdata &bitData, USHORT nSize)
     if (m_pCurrentObject->m_Windows[j].m_height == 0)
      m_pCurrentObject->m_Windows[j].m_height = height;
 
-    #if DEBUG_PGS_TIMESTAMPS
+    #if DEBUG_PGS
     DPRINTF(_l("TsubtitlePGSParser::parseWindow  Window[%d] id:%d ObjectId:%d (%d x %d at %d,%d) %s"),
      i, window_id, m_pCurrentObject->m_compositionNumber ,m_pCurrentObject->m_Windows[j].m_width, m_pCurrentObject->m_Windows[j].m_height,
      m_pCurrentObject->m_Windows[j].m_horizontal_position, m_pCurrentObject->m_Windows[j].m_vertical_position,
@@ -481,7 +481,7 @@ void TsubtitlePGSParser::parseObject(Tbitdata &bitData, USHORT nSize)
     && (*c)->m_Windows[i].m_rtStop == INVALID_TIME && (*c)->m_Windows[i].data[0].size() > 0)
    {
     (*c)->m_Windows[i].m_rtStop=m_pCurrentObject->m_rtTime;
-    #if DEBUG_PGS_TIMESTAMPS
+    #if DEBUG_PGS
     char_t rtString[32], rtString2[32];
     rt2Str((*c)->m_Windows[i].m_rtStart, rtString);
     rt2Str((*c)->m_Windows[i].m_rtStop, rtString2);
@@ -518,7 +518,7 @@ void TsubtitlePGSParser::parseObject(Tbitdata &bitData, USHORT nSize)
    pWindow->dataIndex = 1;
  }
  
- #if DEBUG_PGS_TIMESTAMPS
+ #if DEBUG_PGS
  DPRINTF(_l("[%d] ODS Object[%d]:id %d windowId:%d has picture data (%d x %d at %d,%d)"), 
   m_pCurrentObject->m_compositionNumber, i, object_id,
   pWindow->m_windowId, pWindow->m_width, pWindow->m_height, pWindow->m_horizontal_position, pWindow->m_vertical_position);

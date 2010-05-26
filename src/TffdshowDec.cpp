@@ -1166,6 +1166,7 @@ STDMETHODIMP TffdshowDec::extractExternalStreams(void)
     if (streamLanguageId == 0 || GetLocaleInfo(streamLanguageId, LOCALE_SLANGUAGE, languageName, 255) == 0)
      tsnprintf_s(languageName, countof(languageName), _TRUNCATE, _l("%s (%ld)"), tr->translate(_l("Undetermined")),streamNb);
 
+
     char_t streamName[256];
     if (pstreamName != NULL)
      text<char_t>(pstreamName, -1, streamName, 255);
@@ -1178,6 +1179,9 @@ STDMETHODIMP TffdshowDec::extractExternalStreams(void)
     if ((streamSelect & AMSTREAMSELECTINFO_ENABLED) == AMSTREAMSELECTINFO_ENABLED)
      stream.enabled = true;
     else stream.enabled = false;
+
+    /*DPRINTF(_l("extract stream %d %s from filter %s %s"), streamNb, streamName, filtername,
+     (stream.enabled ? _l("Enabled") : _l("")));*/
 
     stream.streamName = ffstring(streamName);
     stream.streamLanguageName = ffstring(languageName);
@@ -1235,6 +1239,9 @@ STDMETHODIMP TffdshowDec::extractExternalStreams(void)
    if (currentEmbeddedStream == id)
     stream.enabled = true;
    else stream.enabled = false;
+
+   /*DPRINTF(_l("extract internal stream %d %s %s"), stream.streamNb, s,
+     (stream.enabled ? _l("Enabled") : _l("")));*/
 
    stream.streamName = ffstring(s);
    stream.streamLanguageName = ffstring(s);

@@ -461,6 +461,7 @@ void TtrayIconDecVideo::makeAudioSubsSubMenus(HMENU *smn, HMENU *amn)
  int textpinconnectedCnt=deciV->getConnectedTextPinCnt();
  HMENU hm=CreatePopupMenu();
  int ord=0;
+ int isEmbedded = deci->getParam2(IDFF_subShowEmbedded);
  // Custom subtitle file
  const char_t *cursubflnm=deci->getParamStr2(IDFF_subTempFilename);
  if (cursubflnm && strcmp(cursubflnm, _l("")))
@@ -468,7 +469,7 @@ void TtrayIconDecVideo::makeAudioSubsSubMenus(HMENU *smn, HMENU *amn)
    // The custom subtitle file is not in the list, add it
    if (std::find(files.begin(), files.end(), cursubflnm) == files.end())
    {
-    insertMenuItem(hm,ord,IDC_FIRST_SUBFILE+ord, stringreplace(ffstring(cursubflnm),_l("&"),_l("&&"),rfReplaceAll).c_str() ,false, true,true);
+    insertMenuItem(hm,ord,IDC_FIRST_SUBFILE+ord, stringreplace(ffstring(cursubflnm),_l("&"),_l("&&"),rfReplaceAll).c_str() ,false, isEmbedded ? false : true,true);
     ord++;
    }
  }
@@ -476,7 +477,8 @@ void TtrayIconDecVideo::makeAudioSubsSubMenus(HMENU *smn, HMENU *amn)
   cursubflnm = deciV->getCurrentSubFlnm();
 
  for (strings::const_iterator f=files.begin();f!=files.end();f++,ord++)
-  insertMenuItem(hm,ord,IDC_FIRST_SUBFILE+ord, stringreplace(*f,_l("&"),_l("&&"),rfReplaceAll).c_str() ,false,stricmp(f->c_str(),cursubflnm)==0,true);
+  insertMenuItem(hm,ord,IDC_FIRST_SUBFILE+ord, stringreplace(*f,_l("&"),_l("&&"),rfReplaceAll).c_str() ,false, 
+  (!isEmbedded && stricmp(f->c_str(),cursubflnm)==0),true);
  
  deciD->extractExternalStreams();
  TexternalStreams *pAudioStreams = NULL,*pSubtitleStreams = NULL;

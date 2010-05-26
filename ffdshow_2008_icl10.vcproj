@@ -890,7 +890,7 @@
 				>
 			</File>
 			<File
-				RelativePath="src\TffDecoder.cpp"
+				RelativePath="src\TffdshowDecVideo.cpp"
 				>
 				<FileConfiguration
 					Name="Debug Unicode|Win32"

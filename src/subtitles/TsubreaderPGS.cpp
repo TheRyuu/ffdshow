@@ -98,7 +98,7 @@ void TsubreaderPGS::parse(int flags, REFERENCE_TIME rtStart, REFERENCE_TIME rtSt
 
   rtPos = segStop;
 
-#if DEBUG_PGS_TIMESTAMPS
+#if DEBUG_PGS
   char_t rtString[25];
   rt2Str(segStart, rtString);
   DPRINTF(_l("TsubreaderPGS::parse %s Segment type %X"),rtString, data[0]);
@@ -124,7 +124,7 @@ void TsubreaderPGS::parse(int flags, REFERENCE_TIME rtStart, REFERENCE_TIME rtSt
  foreach (TcompositionObject *pCompositionObject, compositionObjects) {
   if (pCompositionObject->m_pSubtitlePGS == NULL) {
    for (int i=0;i<pCompositionObject->m_nWindows; i++) {
-#if DEBUG_PGS_TIMESTAMPS
+#if DEBUG_PGS
     char_t rtString[32],rtString2[32];
     rt2Str(pCompositionObject->m_Windows[i].m_rtStart, rtString);
     rt2Str(pCompositionObject->m_Windows[i].m_rtStop, rtString2);

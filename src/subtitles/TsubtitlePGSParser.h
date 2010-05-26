@@ -10,7 +10,7 @@
 #include "TsubtitleDVD.h"
 #include "interfaces.h"
 
-#define DEBUG_PGS_TIMESTAMPS 0
+#define DEBUG_PGS 0
 
 #pragma region PSG subs Structures & types
 

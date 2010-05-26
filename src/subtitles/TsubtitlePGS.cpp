@@ -79,7 +79,7 @@ void TsubtitlePGS::print(
  
  if (m_pWindow->ownimage == NULL || forceChange)
  {
-  #if DEBUG_PGS_TIMESTAMPS
+  #if DEBUG_PGS
    char_t rtString[32], rtString2[32];
    rt2Str(m_pWindow->m_rtStart, rtString);
    rt2Str(m_pWindow->m_rtStop, rtString2);
@@ -171,7 +171,7 @@ void TsubtitlePGS::print(
     bool nextline = false;
     if (pt.x + nCount > rc.right) // Beyond the line (error)
     {
-#if DEBUG_PGS_TIMESTAMPS
+#if DEBUG_PGS
      DPRINTF(_l("TsubtitlePGS::print RLE data beyond line width starting at (%d,%d) on %d pixels (width=%d), changing to %d pixels"),
       pt.x, pt.y, nCount, rc.Width(), (rc.right - pt.x));
 #endif
@@ -213,7 +213,7 @@ void TsubtitlePGS::print(
   // Apply crop area
   if (m_pWindow->m_object_cropped_flag)
   {
-#if DEBUG_PGS_TIMESTAMPS
+#if DEBUG_PGS
    DPRINTF(_l("Crop (%d,%d) on (%d x %d) inside (%d,%d) on (%d x %d)"), m_pWindow->m_cropping_horizontal_position, m_pWindow->m_cropping_vertical_position,
     m_pWindow->m_cropping_width, m_pWindow->m_cropping_height,
     m_pWindow->m_horizontal_position, m_pWindow->m_vertical_position,
