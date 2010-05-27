@@ -477,7 +477,7 @@ private:
     {
      return E_NOTIMPL;
     }
-   STDMETHODIMP getConnectedTextPinInfo(int i,const char_t* *trackName, const char_t* *langName,int *id,int *found)
+   STDMETHODIMP getConnectedTextPinInfo(int i,const tchar* *trackName, const tchar* *langName,int *id,int *found)
    {
     return E_NOTIMPL;
    }
