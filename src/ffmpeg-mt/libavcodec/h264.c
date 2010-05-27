@@ -914,46 +914,14 @@ static av_cold void common_init(H264Context *h){
     memset(h->pps.scaling_matrix8, 16, 2*64*sizeof(uint8_t));
 }
 
-int ff_h264_decode_extradata(H264Context *h)
-{
-    AVCodecContext *avctx = h->s.avctx;
-
-    /* ffdshow custom code */
-    if(*(char *)avctx->extradata == 1 || avctx->codec_tag == 0x31637661 || avctx->codec_tag == 0x31435641) {
-        int i, cnt, nalsize;
-        unsigned char *p = avctx->extradata;
-        unsigned char *pend=p+avctx->extradata_size;
-
-        h->is_avc = 1;
-
-        h->nal_length_size = 2;
-        cnt = 1;
-
-        for (i = 0; i < cnt; i++) {
-            nalsize = AV_RB16(p) + 2;
-            if(decode_nal_units(h, p, nalsize) < 0) {
-                av_log(avctx, AV_LOG_ERROR, "Decoding sps %d from avcC failed\n", i);
-                return -1;
-            }
-            p += nalsize;
-        }
-        // Decode pps from avcC
-        for (i = 0; p<pend-2; i++) {
-            nalsize = AV_RB16(p) + 2;
-            if(decode_nal_units(h, p, nalsize)  != nalsize) {
-                av_log(avctx, AV_LOG_ERROR, "Decoding pps %d from avcC failed\n", i);
-                return -1;
-            }
-            p += nalsize;
-        }
-        // Now store right nal length size, that will be use to parse all other nals
-        h->nal_length_size = avctx->nal_length_size ? avctx->nal_length_size : 4; //((*(((char*)(avctx->extradata))+4))&0x03)+1;
+// ffdshow custom code - adapted for DirectShow
+av_cold int avcodec_h264_decode_init_is_avc(AVCodecContext *avctx){
+    if(avctx->extradata_size > 0 && avctx->extradata &&
+       (*(char *)avctx->extradata == 1 || (avctx->codec_tag == 0x31637661 || avctx->codec_tag == 0x31435641))){
+        return 1;
     } else {
-        h->is_avc = 0;
-        if(decode_nal_units(h, avctx->extradata, avctx->extradata_size) < 0)
-            return -1;
+        return 0;
     }
-    return 0;
 }
 
 av_cold int ff_h264_decode_init(AVCodecContext *avctx){
@@ -990,9 +958,10 @@ av_cold int ff_h264_decode_init(AVCodecContext *avctx){
     h->x264_build = -1;
     ff_h264_reset_sei(h);
 
-    if(avctx->extradata_size > 0 && avctx->extradata &&
-        ff_h264_decode_extradata(h))
-        return -1;
+    /* ffdshow custom code (begin) */
+    h->is_avc = avcodec_h264_decode_init_is_avc(avctx);
+    h->got_avcC = 0;
+    /* ffdshow custom code (end) */
 
     if(h->sps.bitstream_restriction_flag && s->avctx->has_b_frames < h->sps.num_reorder_frames){
         s->avctx->has_b_frames = h->sps.num_reorder_frames;
@@ -1060,6 +1029,7 @@ static int decode_update_thread_context(AVCodecContext *dst, AVCodecContext *src
 
     //extradata/NAL handling
     h->is_avc          = h1->is_avc;
+    h->got_avcC   = h1->got_avcC;
 
     //SPS/PPS
     copy_parameter_set((void**)h->sps_buffers, (void**)h1->sps_buffers, MAX_SPS_COUNT, sizeof(SPS));
@@ -3377,6 +3347,45 @@ static int decode_frame(AVCodecContext *avctx,
         return 0;
     }
 
+    /* ffdshow custom code (begin) */
+    if(h->is_avc && !h->got_avcC) {
+        int i, cnt, nalsize;
+        unsigned char *p = avctx->extradata, *pend=p+avctx->extradata_size;
+
+        h->nal_length_size = 2;
+        cnt = 1;
+
+        for (i = 0; i < cnt; i++) {
+            nalsize = AV_RB16(p) + 2;
+            if(decode_nal_units(h, p, nalsize) < 0) { // mpc-hc fix for files created by certain digital cameras
+                av_log(avctx, AV_LOG_ERROR, "Decoding sps %d from avcC failed\n", i);
+                return -1;
+            }
+            p += nalsize;
+        }
+        // Decode pps from avcC
+        for (i = 0; p<pend-2; i++) {
+            nalsize = AV_RB16(p) + 2;
+            if(decode_nal_units(h, p, nalsize)  != nalsize) {
+                av_log(avctx, AV_LOG_ERROR, "Decoding pps %d from avcC failed\n", i);
+                return -1;
+            }
+            p += nalsize;
+        }
+        // Now store right nal length size, that will be use to parse all other nals
+        h->nal_length_size = avctx->nal_length_size?avctx->nal_length_size:4;//((*(((char*)(avctx->extradata))+4))&0x03)+1;
+        // Do not reparse avcC
+        h->got_avcC = 1;
+    }
+
+    if(!h->got_avcC && !h->is_avc && s->avctx->extradata_size){
+        if(decode_nal_units(h, s->avctx->extradata, s->avctx->extradata_size) < 0)
+            return -1;
+        h->got_avcC = 1;
+        s->picture_number++;
+    }
+    /* ffdshow custom code (end) */
+
     buf_index=decode_nal_units(h, buf, buf_size);
     if(buf_index < 0)
         return -1;
@@ -3437,7 +3446,7 @@ int avcodec_h264_search_recovery_point(AVCodecContext *avctx,
 
     avctx = get_thread0_avctx(avctx); // Next frame will start on thread 0, and we want to store SPS and PPS in the context of thread 0.
     h = avctx->priv_data;
-    h->is_avc = avctx->extradata_size > 0 && avctx->extradata && (*(char *)avctx->extradata == 1 || avctx->codec_tag == 0x31637661 || avctx->codec_tag == 0x31435641);  
+    h->is_avc = avcodec_h264_decode_init_is_avc(avctx);
     s = &h->s;
     users_MpegEncContext_avctx = s->avctx; // save it and write back before return.
 
