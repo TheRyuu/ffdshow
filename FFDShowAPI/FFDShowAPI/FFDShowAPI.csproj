@@ -93,7 +93,9 @@
     <Compile Include="FFDShowConstants.cs" />
     <Compile Include="Interfaces\DirectShow.cs" />
     <Compile Include="Interfaces\IffDecoder.cs" />
+    <Compile Include="Interfaces\IffdshowBase.cs" />
     <Compile Include="Interfaces\IffdshowDec.cs" />
+    <Compile Include="Interfaces\IffdshowDecVideo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

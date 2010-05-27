@@ -284,7 +284,7 @@ namespace FFDShowAPI
             using (FFDShowAPI ffdshowAPI = new FFDShowAPI())
             {
                 if (!ffdshowAPI.checkFFDShowActive()) return;
-                string text = "Subtitle files :\nCurrent :" + ffdshowAPI.CurrentSubtitles + "\n";
+                string text = "Subtitle files :\nCurrent :" + ffdshowAPI.CurrentSubtitleFile + "\n";
                 string[] subs = ffdshowAPI.SubtitleFiles;
                 for (int i = 0; i < subs.Length; i++)
                 {

@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Runtime.InteropServices;
 
-namespace MediaPortal.Player.FFDShow.Interfaces
+namespace FFDShowAPI.Interfaces
 {
     [Guid("00F99064-70D5-4bcc-9D88-3801F3E3881B"),
     InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
@@ -79,6 +78,7 @@ namespace MediaPortal.Player.FFDShow.Interfaces
         int hideClosedCaptions();
         int getConnectedTextPinCnt();
         //int getConnectedTextPinInfo(int i,const tchar* *name,int *id,int *found);
+        //int getConnectedTextPinInfo(int i,const tchar* *trackName, const tchar* *langName,int *id,int *found);
         //int registerOSDprovider(IOSDprovider *provider,const char *name);
         //int unregisterOSDprovider(IOSDprovider *provider);
         //int findOverlayControl2(IhwOverlayControl* *overlayPtr);
