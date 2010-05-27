@@ -546,10 +546,18 @@ STDMETHODIMP_(int) TffdshowDecVideo::getConnectedTextPinCnt(void)
 }
 STDMETHODIMP TffdshowDecVideo::getConnectedTextPinInfo(int i,const char_t* *name,int *id,int *found)
 {
- if (!name && !found) return E_POINTER;
+ if (!name || !found) return E_POINTER;
  if (i>=(int)textpins.getNumConnectedInpins()) return E_INVALIDARG;
  TtextInputPin *pin=textpins.getConnectedInpin(i);
  return pin->getInfo(name,id,found);
+}
+
+STDMETHODIMP TffdshowDecVideo::getConnectedTextPinInfo(int i,const char_t* *trackName, const char_t* *langName,int *id,int *found)
+{
+if (!trackName || !langName || !found) return E_POINTER;
+ if (i>=(int)textpins.getNumConnectedInpins()) return E_INVALIDARG;
+ TtextInputPin *pin=textpins.getConnectedInpin(i);
+ return pin->getInfo(trackName,langName,id,found);
 }
 
 STDMETHODIMP TffdshowDecVideo::getLevelsMap(unsigned int map[256])

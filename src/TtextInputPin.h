@@ -33,8 +33,11 @@ public:
  STDMETHODIMP Receive(IMediaSample * pSample);
  bool needSegment;
  char_t name[512]; // 256 chars max because of WideCharToMultiByte.
+ char_t trackName[512];
+ char_t langName[512];
  STDMETHODIMP NewSegment(REFERENCE_TIME tStart,REFERENCE_TIME tStop,double dRate);
  HRESULT getInfo(const char_t* *name,int *id,int *found);
+ HRESULT getInfo(const char_t* *trackNamePtr, const char_t* *langNamePtr,int *idPtr,int *foundPtr);
 };
 
 #endif

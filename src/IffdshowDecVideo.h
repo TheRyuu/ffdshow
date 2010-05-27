@@ -84,6 +84,7 @@ template<class tchar> DECLARE_INTERFACE_(IffdshowDecVideoT,IUnknown)
  STDMETHOD (hideClosedCaptions)(void) PURE;
  STDMETHOD_(int,getConnectedTextPinCnt)(void) PURE;
  STDMETHOD (getConnectedTextPinInfo)(int i,const tchar* *name,int *id,int *found) PURE;
+ STDMETHOD (getConnectedTextPinInfo)(int i,const char_t* *trackName, const char_t* *langName,int *id,int *found) PURE;
  STDMETHOD (registerOSDprovider)(IOSDprovider *provider,const char *name) PURE;
  STDMETHOD (unregisterOSDprovider)(IOSDprovider *provider) PURE;
  STDMETHOD (findOverlayControl2)(IhwOverlayControl* *overlayPtr) PURE;

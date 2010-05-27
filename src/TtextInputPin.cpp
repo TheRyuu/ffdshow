@@ -37,7 +37,7 @@ TtextInputPin::TtextInputPin(TffdshowDecVideo* pFilter,HRESULT* phr,const wchar_
  found(false),
  utf8(false)
 {
- name[0]='\0';
+ name[0]=langName[0]=trackName[0]='\0';
 }
 TtextInputPin::~TtextInputPin()
 {
@@ -87,12 +87,16 @@ HRESULT TtextInputPin::SetMediaType(const CMediaType* mtIn)
   {
    const SUBTITLEINFO *psi=(const SUBTITLEINFO*)mtIn->Format();
    ffstring isolang = text<char_t>(psi->IsoLang);
-   const char_t *isoname=TsubtitlesSettings::getLangDescrIso(isolang.c_str());
-   if (isoname == NULL)
-    isoname = isolang.c_str();
-   char_t trackname[512];
-   text<char_t>(psi->TrackName, (int)countof(psi->TrackName), trackname, countof(trackname));
-   tsnprintf_s(name, 256, _TRUNCATE, _l("%s%s%s"),trackname,trackname[0]?_l(" "):_l(""),isoname);
+   
+   Ttranslate *tr = NULL;filter->getTranslator(&tr);
+   const char_t *isoname=tr->translate(TsubtitlesSettings::getLangDescrIso(isolang.c_str()));
+   
+   if (isoname == NULL) isoname = isolang.c_str();
+
+   if (isoname) text<char_t>(isoname, strlen(isoname), langName, countof(langName));
+
+   text<char_t>(psi->TrackName, (int)countof(psi->TrackName), trackName, countof(trackName));
+   tsnprintf_s(name, 256, _TRUNCATE, _l("%s%s%s%s"),trackName,trackName[0]?_l(" ["):_l(""),isoname,trackName[0]?_l("]"):_l(""));
    if (extradata)
     {
      free(extradata);
@@ -281,6 +285,15 @@ STDMETHODIMP TtextInputPin::Disconnect(void)
 HRESULT TtextInputPin::getInfo(const char_t* *namePtr,int *idPtr,int *foundPtr)
 {
  if (namePtr) *namePtr=name;
+ if (idPtr) *idPtr=id;
+ if (foundPtr) *foundPtr=found|IsConnected();
+ return S_OK;
+}
+
+HRESULT TtextInputPin::getInfo(const char_t* *trackNamePtr, const char_t* *langNamePtr,int *idPtr,int *foundPtr)
+{
+ if (trackName) *trackNamePtr=trackName;
+ if (langName) *langNamePtr=langName;
  if (idPtr) *idPtr=id;
  if (foundPtr) *foundPtr=found|IsConnected();
  return S_OK;

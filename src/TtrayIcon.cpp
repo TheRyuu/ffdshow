@@ -492,13 +492,13 @@ void TtrayIconDecVideo::makeAudioSubsSubMenus(HMENU *smn, HMENU *amn)
   for (unsigned int i=0; i< pSubtitleStreams->size();i++)
   {
    TexternalStream stream = (*pSubtitleStreams)[i];
-   insertMenuItem(hm,ord,IDC_FIRST_TEXTPIN+stream.streamNb,stringreplace(
-    stream.streamName,_l("&"),_l("&&"),rfReplaceAll).c_str(),
-     false,stream.enabled,true);
+   ffstring menuItem = stringreplace(stream.streamName,_l("&"),_l("&&"),rfReplaceAll);
+   if (stream.streamLanguageName.length() > 0) menuItem += ffstring(_l(" ("))+stream.streamLanguageName+ffstring(_l(")"));
+   insertMenuItem(hm,ord,IDC_FIRST_TEXTPIN+stream.streamNb,menuItem.c_str(), false,stream.enabled,true);
   }
  }
 
- if (int langcnt=deciV->getSubtitleLanguagesCount2())
+ /*if (int langcnt=deciV->getSubtitleLanguagesCount2())
   {
    insertSeparator(hm,ord);
    int curlang=deci->getParam2(IDFF_subCurLang);
@@ -508,7 +508,7 @@ void TtrayIconDecVideo::makeAudioSubsSubMenus(HMENU *smn, HMENU *amn)
      if (lang[0])
       insertMenuItem(hm,ord,IDC_FIRST_SUBLANG+i,lang,false,i==curlang,true);
     }
-  }
+  }*/
  if (ord)
   *smn=hm;
  else 
@@ -523,9 +523,9 @@ void TtrayIconDecVideo::makeAudioSubsSubMenus(HMENU *smn, HMENU *amn)
   for (unsigned int i=0; i< pAudioStreams->size();i++)
   {
    TexternalStream stream = (*pAudioStreams)[i];
-   insertMenuItem(ahm,ord,IDC_FIRST_AUDIOSTREAM+stream.streamNb,stringreplace(
-    stream.streamName,_l("&"),_l("&&"),rfReplaceAll).c_str(),
-     false,stream.enabled,true);
+   ffstring menuItem = stringreplace(stream.streamName,_l("&"),_l("&&"),rfReplaceAll);
+   if (stream.streamLanguageName.length() > 0) menuItem += ffstring(_l(" ("))+stream.streamLanguageName+ffstring(_l(")"));
+   insertMenuItem(ahm,ord,IDC_FIRST_AUDIOSTREAM+stream.streamNb,menuItem.c_str(),false,stream.enabled,true);
   }
  }
  //return ord?hm:(DestroyMenu(hm),(HMENU)NULL);

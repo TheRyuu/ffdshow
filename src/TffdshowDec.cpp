@@ -842,6 +842,7 @@ STDMETHODIMP TffdshowDec::Enable(long lIndex, DWORD dwFlags)
  if (lIndex<0 || lIndex >=count) return E_INVALIDARG;
  if (lIndex >= firstFilterIndex && lIndex<firstSubFileIndex)
  {
+  lIndex -= firstFilterIndex;
   DPRINTF(_l("TffdshowDec::Enable postprocessing stream n°%ld"), lIndex);
   if (firsttransform) return S_OK;
   if (/*!(dwFlags&AMSTREAMSELECTENABLE_ENABLE)*/dwFlags!=AMSTREAMSELECTENABLE_ENABLE) return E_NOTIMPL;
@@ -1162,14 +1163,17 @@ STDMETHODIMP TffdshowDec::extractExternalStreams(void)
     }
 
     // Get language name
-    char_t languageName[256];
-    if (streamLanguageId == 0 || GetLocaleInfo(streamLanguageId, LOCALE_SLANGUAGE, languageName, 255) == 0)
-     tsnprintf_s(languageName, countof(languageName), _TRUNCATE, _l("%s (%ld)"), tr->translate(_l("Undetermined")),streamNb);
-
+    char_t languageName[256] = _l("");
+    if (streamLanguageId != 0) GetLocaleInfo(streamLanguageId, LOCALE_SLANGUAGE, languageName, 255);
 
     char_t streamName[256];
-    if (pstreamName != NULL)
-     text<char_t>(pstreamName, -1, streamName, 255);
+    if (pstreamName)
+    {
+     if (!strncmp(pstreamName, _l("Undetermined, "), 14) && strlen(pstreamName) > 15) // MPC
+      text<char_t>(&pstreamName[14], -1, streamName, 255);
+     else 
+      text<char_t>(pstreamName, -1, streamName, 255);
+    }
     else
      tsnprintf_s(streamName, countof(streamName), _TRUNCATE, _l("%s (%ld)"), tr->translate(_l("Undetermined")), streamNb);
 
@@ -1222,16 +1226,21 @@ STDMETHODIMP TffdshowDec::extractExternalStreams(void)
  int currentEmbeddedStream = getParam2(IDFF_subShowEmbedded);
  for (int i=0;i<textpinconnectedCnt;i++)
  {
-  const char_t *textname;int found,id;
-  deciV->getConnectedTextPinInfo(i,&textname,&id,&found);
+  const char_t *trackName = NULL, *langName = NULL;
+  int found,id;
+  deciV->getConnectedTextPinInfo(i,&trackName,&langName,&id,&found);
   if (found)
   {
-   char_t s[256];
-   ff_strncpy(s, tr->translate(_l("embedded")), countof(s));
-   if (textname[0])
-    strncatf(s, countof(s), _l(" (%s)"), textname);
+   char_t s[256] = _l("");
+   if (trackName[0])
+   {
+    strncatf(s, countof(s), _l("%s"), trackName);
+   }
    else
+   {
+    ff_strncpy(s, tr->translate(_l("embedded")), countof(s));
     strncatf(s, countof(s), _l(" (%d)"), id);
+   }
 
    TexternalStream stream;
    stream.filterName = ffstring(_l("FFDSHOW"));
@@ -1242,9 +1251,9 @@ STDMETHODIMP TffdshowDec::extractExternalStreams(void)
 
    /*DPRINTF(_l("extract internal stream %d %s %s"), stream.streamNb, s,
      (stream.enabled ? _l("Enabled") : _l("")));*/
-
-   stream.streamName = ffstring(s);
-   stream.streamLanguageName = ffstring(s);
+   
+   stream.streamName = ffstring(trackName);
+   stream.streamLanguageName = ffstring(langName);
    externalSubtitleStreams.push_back(stream);
   }
  }
