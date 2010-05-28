@@ -816,6 +816,9 @@ STDMETHODIMP TffdshowDec::Info(long lIndex, AM_MEDIA_TYPE** ppmt, DWORD* pdwFlag
   if (pdwGroup) *pdwGroup = 2; // Subtitles stream
   stream = externalSubtitleStreams[lIndex];
  }
+ DPRINTF(_l("TffdshowDec::Info %s [%s] (%ld)"), stream.streamName.c_str(), stream.streamLanguageName.c_str(), stream.langId);
+
+ if (plcid) *plcid=stream.langId;
 
  if (pdwFlags)
  {
@@ -826,9 +829,11 @@ STDMETHODIMP TffdshowDec::Info(long lIndex, AM_MEDIA_TYPE** ppmt, DWORD* pdwFlag
  }
  if (ppszName)
  {
-  size_t wlen=(stream.streamName.size()+1)*sizeof(WCHAR);
+  ffstring streamName = stream.streamName;
+  if (stream.langId == 0 && stream.streamLanguageName.length() > 0)  streamName += _l(" [") + stream.streamLanguageName+_l("]");
+  size_t wlen=(streamName.length()+1)*sizeof(WCHAR);
   *ppszName=(WCHAR*)CoTaskMemAlloc(wlen);memset(*ppszName,0,wlen);
-  nCopyAnsiToWideChar(*ppszName,stream.streamName.c_str());
+  nCopyAnsiToWideChar(*ppszName,streamName.c_str());
  }
  return S_OK;
 }
@@ -1180,6 +1185,7 @@ STDMETHODIMP TffdshowDec::extractExternalStreams(void)
     TexternalStream stream;
     stream.filterName = ffstring(filtername);
     stream.streamNb = streamNb;
+    stream.langId = streamLanguageId;
     if ((streamSelect & AMSTREAMSELECTINFO_ENABLED) == AMSTREAMSELECTINFO_ENABLED)
      stream.enabled = true;
     else stream.enabled = false;
@@ -1228,7 +1234,8 @@ STDMETHODIMP TffdshowDec::extractExternalStreams(void)
  {
   const char_t *trackName = NULL, *langName = NULL;
   int found,id;
-  deciV->getConnectedTextPinInfo(i,&trackName,&langName,&id,&found);
+  LCID langId = 0;
+  deciV->getConnectedTextPinInfo(i,&trackName,&langName,&langId,&id,&found);
   if (found)
   {
    char_t s[256] = _l("");
@@ -1245,6 +1252,7 @@ STDMETHODIMP TffdshowDec::extractExternalStreams(void)
    TexternalStream stream;
    stream.filterName = ffstring(_l("FFDSHOW"));
    stream.streamNb = id;
+   stream.langId = langId;
    if (currentEmbeddedStream == id)
     stream.enabled = true;
    else stream.enabled = false;

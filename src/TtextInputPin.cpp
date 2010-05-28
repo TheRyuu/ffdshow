@@ -37,7 +37,7 @@ TtextInputPin::TtextInputPin(TffdshowDecVideo* pFilter,HRESULT* phr,const wchar_
  found(false),
  utf8(false)
 {
- name[0]=langName[0]=trackName[0]='\0';
+ name[0]=langName[0]=trackName[0]='\0';langId=0;
 }
 TtextInputPin::~TtextInputPin()
 {
@@ -90,6 +90,7 @@ HRESULT TtextInputPin::SetMediaType(const CMediaType* mtIn)
    
    Ttranslate *tr = NULL;filter->getTranslator(&tr);
    const char_t *isoname=tr->translate(TsubtitlesSettings::getLangDescrIso(isolang.c_str()));
+   langId=TsubtitlesSettings::getLangId(isolang.c_str());
    
    if (isoname == NULL) isoname = isolang.c_str();
 
@@ -290,11 +291,12 @@ HRESULT TtextInputPin::getInfo(const char_t* *namePtr,int *idPtr,int *foundPtr)
  return S_OK;
 }
 
-HRESULT TtextInputPin::getInfo(const char_t* *trackNamePtr, const char_t* *langNamePtr,int *idPtr,int *foundPtr)
+HRESULT TtextInputPin::getInfo(const char_t* *trackNamePtr, const char_t* *langNamePtr,LCID *langIdPtr,int *idPtr,int *foundPtr)
 {
  if (trackName) *trackNamePtr=trackName;
  if (langName) *langNamePtr=langName;
  if (idPtr) *idPtr=id;
+ if (langIdPtr) *langIdPtr = langId;
  if (foundPtr) *foundPtr=found|IsConnected();
  return S_OK;
 }

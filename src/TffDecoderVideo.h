@@ -146,7 +146,7 @@ public:
  STDMETHODIMP hideClosedCaptions(void);
  STDMETHODIMP_(int) getConnectedTextPinCnt(void);
  STDMETHODIMP getConnectedTextPinInfo(int i,const char_t* *name,int *id,int *found);
- STDMETHODIMP getConnectedTextPinInfo(int i,const char_t* *trackName, const char_t* *langName,int *id,int *found);
+ STDMETHODIMP getConnectedTextPinInfo(int i,const char_t* *trackName, const char_t* *langName,LCID *landId,int *id,int *found);
  STDMETHODIMP registerOSDprovider(IOSDprovider *provider,const char *name);
  STDMETHODIMP unregisterOSDprovider(IOSDprovider *provider);
  STDMETHODIMP findOverlayControl2(IhwOverlayControl* *overlayPtr);
@@ -477,7 +477,7 @@ private:
     {
      return E_NOTIMPL;
     }
-   STDMETHODIMP getConnectedTextPinInfo(int i,const tchar* *trackName, const tchar* *langName,int *id,int *found)
+   STDMETHODIMP getConnectedTextPinInfo(int i,const tchar* *trackName, const tchar* *langName,LCID *landId,int *id,int *found)
    {
     return E_NOTIMPL;
    }

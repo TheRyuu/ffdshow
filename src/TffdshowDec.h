@@ -11,6 +11,7 @@ struct TexternalStream
  ffstring streamLanguageName;
  long streamNb;
  bool enabled;
+ LCID langId;
 };
 typedef std::vector<TexternalStream> TexternalStreams;
 class Tkeyboard;
