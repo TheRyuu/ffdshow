@@ -327,6 +327,8 @@ HMENU TtrayIconDec::createMenu(int &ord)
       insertSubmenuCallback(hm,ord,f);
      }
   }
+
+ 
  return hm;
 }
 
@@ -454,14 +456,18 @@ TtrayIconDecVideo::TtrayIconDecVideo(IffdshowBase *Ideci):TtrayIconDec(Ideci),de
  */
 
 
-void TtrayIconDecVideo::makeAudioSubsSubMenus(HMENU *smn, HMENU *amn)
+void TtrayIconDecVideo::makeAudioSubsSubMenus(HMENU *smn, HMENU *ssmn, HMENU *amn)
 {
  strings files;
  TsubtitlesFile::findPossibleSubtitles(deci->getSourceName(),deci->getParamStr2(IDFF_subSearchDir),files);
+ 
  int textpinconnectedCnt=deciV->getConnectedTextPinCnt();
- HMENU hm=CreatePopupMenu();
- int ord=0;
  int isEmbedded = deci->getParam2(IDFF_subShowEmbedded);
+
+ int ord=0;
+ HMENU hm=CreatePopupMenu();
+ 
+
  // Custom subtitle file
  const char_t *cursubflnm=deci->getParamStr2(IDFF_subTempFilename);
  if (cursubflnm && strcmp(cursubflnm, _l("")))
@@ -480,39 +486,31 @@ void TtrayIconDecVideo::makeAudioSubsSubMenus(HMENU *smn, HMENU *amn)
   insertMenuItem(hm,ord,IDC_FIRST_SUBFILE+ord, stringreplace(*f,_l("&"),_l("&&"),rfReplaceAll).c_str() ,false, 
   (!isEmbedded && stricmp(f->c_str(),cursubflnm)==0),true);
  
- deciD->extractExternalStreams();
- TexternalStreams *pAudioStreams = NULL,*pSubtitleStreams = NULL;
- deciD->getExternalStreams((void **)&pAudioStreams, (void **)&pSubtitleStreams);
- if (pSubtitleStreams != NULL)
- {
-  if (pSubtitleStreams->size() > 0) {
-   if (!files.empty()) insertSeparator(hm,ord);
-  }
 
+ if (ord)
+  *smn=hm;
+ else 
+  DestroyMenu(hm);
+
+ // Extract the external audio/subtitle streams
+ TexternalStreams *pAudioStreams = NULL,*pSubtitleStreams = NULL;
+ deciD->extractExternalStreams();
+ deciD->getExternalStreams((void **)&pAudioStreams, (void **)&pSubtitleStreams);
+
+ // Now the subtitle streams
+ ord = 0;
+ if (pSubtitleStreams != NULL && pSubtitleStreams->size() > 0)
+ {
+  HMENU shm=CreatePopupMenu();
+  *ssmn=shm;
   for (unsigned int i=0; i< pSubtitleStreams->size();i++)
   {
    TexternalStream stream = (*pSubtitleStreams)[i];
    ffstring menuItem = stringreplace(stream.streamName,_l("&"),_l("&&"),rfReplaceAll);
    if (stream.streamLanguageName.length() > 0) menuItem += ffstring(_l(" ("))+stream.streamLanguageName+ffstring(_l(")"));
-   insertMenuItem(hm,ord,IDC_FIRST_TEXTPIN+stream.streamNb,menuItem.c_str(), false,stream.enabled,true);
+   insertMenuItem(shm,ord,IDC_FIRST_TEXTPIN+stream.streamNb,menuItem.c_str(), false,stream.enabled,true);
   }
  }
-
- /*if (int langcnt=deciV->getSubtitleLanguagesCount2())
-  {
-   insertSeparator(hm,ord);
-   int curlang=deci->getParam2(IDFF_subCurLang);
-   for (int i=0;i<langcnt;i++)
-    {
-     const char_t *lang;deciV->getSubtitleLanguageDesc(i,&lang);
-     if (lang[0])
-      insertMenuItem(hm,ord,IDC_FIRST_SUBLANG+i,lang,false,i==curlang,true);
-    }
-  }*/
- if (ord)
-  *smn=hm;
- else 
-  DestroyMenu(hm);
 
  // Now the audio streams
  ord = 0;
@@ -535,10 +533,13 @@ void TtrayIconDecVideo::insertSubmenuCallback(HMENU hm,int &ord,const TfilterIDF
 {
  if (f->id==IDFF_filterSubtitles)
  {
-  HMENU smn = NULL, amn = NULL;
-  makeAudioSubsSubMenus(&smn, &amn);
-  if (smn != NULL) insertSubmenu(hm,ord,_l("Subtitle sources"),true,smn);
-  if (amn != NULL) { insertSeparator(hm,ord);insertSubmenu(hm,ord,_l("Audio sources"),true,amn);}
+  HMENU smn = NULL, ssmn = NULL, amn = NULL;
+  makeAudioSubsSubMenus(&smn, &ssmn, &amn);
+  int lord = ord+1000;
+  if (smn != NULL || ssmn != NULL || amn != NULL) insertSeparator(hm,lord);
+  if (smn != NULL) insertSubmenu(hm,lord,_l("Subtitle files"),true,smn);
+  if (ssmn != NULL) insertSubmenu(hm,lord,_l("Subtitle streams"),true,ssmn);
+  if (amn != NULL) insertSubmenu(hm,lord,_l("Audio streams"),true,amn);
  }
 }
 

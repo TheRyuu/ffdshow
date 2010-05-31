@@ -704,31 +704,43 @@ STDMETHODIMP TffdshowDec::Count(DWORD* pcStreams)
 {
  if (!pcStreams) return E_POINTER;
  if (cfgDlgHwnd || !presetSettings)
-  {
-   *pcStreams=0;
-   return S_OK;
-  }
+ {
+  *pcStreams=0;
+  return S_OK;
+ }
+ *pcStreams=0;
+
  for (Tstreams::iterator s=streams.begin();s!=streams.end();s++) delete *s;streams.clear();
  Ttranslate *tr;getTranslator(&tr);
- for (unsigned int i=0;i<presets->size();i++)
-  streams.push_back(new TstreamPreset(this,-200+i,0,(*presets)[i]->presetName));
- const char_t *activepresetname=getActivePresetName2();
- if (activepresetname)
+
+ if (isStreamsMenu())
+ {
+  for (unsigned int i=0;i<presets->size();i++)
+  {
+   streams.push_back(new TstreamPreset(this,-200+i,0,(*presets)[i]->presetName));
+  }
+  const char_t *activepresetname=getActivePresetName2();
+  if (activepresetname)
   {
    const TfilterIDFFs *filters;getFilterIDFFs(activepresetname,&filters);
    for (TfilterIDFFs::const_iterator f=filters->begin();f!=filters->end();f++)
+   {
     if (f->idff->is && (f->idff->show==0 || getParam2(f->idff->show)))
      // 10 is the group of the stream. 1 is for audio stream so should not be used
      streams.push_back(new TstreamFilter(this,getParam2(f->idff->order),10,f->idff,tr));      
+   }
    std::sort(streams.begin(),streams.end(),streamsSort);
   }
- for (const TfilterIDFF *f=getNextFilterIDFF();f && f->name;f++)
-  if (f->show==0 || getParam2(f->show))
-      // Group 1 or 2 should not be used : for audio (1) and subtitle (2) streams
-      streams.push_back(new TstreamFilter(this,f->order?getParam2(f->order):1000,f->order?10:20,f,tr));
+  for (const TfilterIDFF *f=getNextFilterIDFF();f && f->name;f++)
+  {
+   if (f->show==0 || getParam2(f->show))
+       // Group 1 or 2 should not be used : for audio (1) and subtitle (2) streams
+       streams.push_back(new TstreamFilter(this,f->order?getParam2(f->order):1000,f->order?10:20,f,tr));
+  }
+  addOwnStreams();
+  *pcStreams=(DWORD)streams.size();
+ }
  tr->release();
- addOwnStreams();
- *pcStreams=(DWORD)streams.size();
  
  // Now the subtitles streams
  // Subtitle files
@@ -750,11 +762,12 @@ STDMETHODIMP TffdshowDec::Count(DWORD* pcStreams)
 STDMETHODIMP TffdshowDec::Info(long lIndex, AM_MEDIA_TYPE** ppmt, DWORD* pdwFlags, LCID* plcid, DWORD* pdwGroup, WCHAR** ppszName, IUnknown** ppObject, IUnknown** ppUnk)
 {
  // In order : audio streams, embedded subtitles, then FFDShow filters then in last external subtitles (which can vary)
+ long internalStreams = (isStreamsMenu() ? streams.size() : 0);
  long firstFilterIndex = externalSubtitleStreams.size() + externalAudioStreams.size();
- long firstSubFileIndex = firstFilterIndex + streams.size();
+ long firstSubFileIndex = firstFilterIndex + internalStreams;
  long count = firstSubFileIndex + subtitleFiles.size();
  if (lIndex<0 || lIndex>= count || !presetSettings) return E_INVALIDARG;
- if (lIndex >= firstFilterIndex && lIndex<firstSubFileIndex)
+ if (internalStreams > 0 && lIndex >= firstFilterIndex && lIndex<firstSubFileIndex)
  {
   lIndex-=firstFilterIndex;
   if (ppmt) *ppmt=getInputMediaType(lIndex);
@@ -840,12 +853,13 @@ STDMETHODIMP TffdshowDec::Info(long lIndex, AM_MEDIA_TYPE** ppmt, DWORD* pdwFlag
 STDMETHODIMP TffdshowDec::Enable(long lIndex, DWORD dwFlags)
 {
  // In order : audio streams, embedded subtitles, then FFDShow filters then in last external subtitles (which can vary)
+ long internalStreams = (isStreamsMenu() ? streams.size() : 0);
  long firstFilterIndex = externalSubtitleStreams.size() + externalAudioStreams.size();
- long firstSubFileIndex = firstFilterIndex + streams.size();
+ long firstSubFileIndex = firstFilterIndex + internalStreams;
  long count = firstSubFileIndex + subtitleFiles.size();
 
  if (lIndex<0 || lIndex >=count) return E_INVALIDARG;
- if (lIndex >= firstFilterIndex && lIndex<firstSubFileIndex)
+ if (internalStreams > 0 && lIndex >= firstFilterIndex && lIndex<firstSubFileIndex)
  {
   lIndex -= firstFilterIndex;
   DPRINTF(_l("TffdshowDec::Enable postprocessing stream n°%ld"), lIndex);

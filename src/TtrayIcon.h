@@ -126,7 +126,7 @@ class TtrayIconDecVideo :public TtrayIconDec
 {
 private:
  comptrQ<IffdshowDecVideo> deciV;
- void makeAudioSubsSubMenus(HMENU *smn, HMENU *amn);
+ void makeAudioSubsSubMenus(HMENU *smn, HMENU *ssmn, HMENU *amn);
  enum
   {
    IDC_FIRST_SUBFILE=8999,
