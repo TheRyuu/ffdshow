@@ -37,6 +37,16 @@ const char_t* TsubtitlesSettings::alignments[]=
  _l("right"),
  NULL
 };
+
+const char_t* TsubtitlesSettings::subfilesmodes[]=
+{
+ _l("All subtitle files"),
+ _l("Video file match"),
+ _l("Partial match (heuristic)"),
+ _l("Video file match then partial match"),
+ NULL
+};
+
 const char_t* TsubtitlesSettings::vobsubAAs[]=
 {
  _l("none (fastest, most ugly)"),

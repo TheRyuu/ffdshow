@@ -267,6 +267,8 @@ TglobalSettingsDec::TglobalSettingsDec(const Tconfig *Iconfig,int Imode,const ch
      _l("autoPresetFileFirst"),0,
    IDFF_streamsOptionsMenu ,&TglobalSettingsDec::streamsMenu        ,0,0,_l(""),0,
      _l("streamsOptionsMenu"),0,
+   IDFF_streamsSubFilesMode ,&TglobalSettingsDec::streamsSubFilesMode,0,3,_l(""),0,
+     _l("streamsSubFilesMode"),3,
    0
   };
  addOptions(iopts);
@@ -989,6 +991,7 @@ TglobalSettingsDecVideo::TsubtitlesSettings::TsubtitlesSettings(TintStrColl *Ico
   };
  addOptions(sopts);
 }
+
 
 void TglobalSettingsDecVideo::TsubtitlesSettings::getDefaultStr(int id,char_t *buf,size_t buflen)
 {

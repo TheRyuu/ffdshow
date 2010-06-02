@@ -746,9 +746,12 @@ STDMETHODIMP TffdshowDec::Count(DWORD* pcStreams)
  // Subtitle files
  char_t *pdummy = NULL;
  subtitleFiles.clear();
- if (getCurrentSubtitlesFile(&pdummy) == S_OK) // Returns E_NOTIMPL if TffdshowDec is not TffdshowDecVideo
+ if (getParam2(IDFF_subFiles) && getCurrentSubtitlesFile(&pdummy) == S_OK) // Returns E_NOTIMPL if TffdshowDec is not TffdshowDecVideo
  {
-  TsubtitlesFile::findPossibleSubtitles(getSourceName(),getParamStr2(IDFF_subSearchDir),subtitleFiles);
+  TsubtitlesFile::findPossibleSubtitles(getSourceName(),
+   getParamStr2(IDFF_subSearchDir),
+   subtitleFiles, 
+   (TsubtitlesFile::subtitleFilesSearchMode)getParam2(IDFF_streamsSubFilesMode));
   *pcStreams += subtitleFiles.size();
  }
  if (pdummy)
@@ -762,10 +765,11 @@ STDMETHODIMP TffdshowDec::Count(DWORD* pcStreams)
 STDMETHODIMP TffdshowDec::Info(long lIndex, AM_MEDIA_TYPE** ppmt, DWORD* pdwFlags, LCID* plcid, DWORD* pdwGroup, WCHAR** ppszName, IUnknown** ppObject, IUnknown** ppUnk)
 {
  // In order : audio streams, embedded subtitles, then FFDShow filters then in last external subtitles (which can vary)
- long internalStreams = (isStreamsMenu() ? streams.size() : 0);
+ long internalStreams = isStreamsMenu() ? streams.size() : 0;
+ long subFiles = getParam2(IDFF_subFiles) ? subtitleFiles.size() : 0;
  long firstFilterIndex = externalSubtitleStreams.size() + externalAudioStreams.size();
  long firstSubFileIndex = firstFilterIndex + internalStreams;
- long count = firstSubFileIndex + subtitleFiles.size();
+ long count = firstSubFileIndex + subFiles;
  if (lIndex<0 || lIndex>= count || !presetSettings) return E_INVALIDARG;
  if (internalStreams > 0 && lIndex >= firstFilterIndex && lIndex<firstSubFileIndex)
  {
@@ -843,7 +847,8 @@ STDMETHODIMP TffdshowDec::Info(long lIndex, AM_MEDIA_TYPE** ppmt, DWORD* pdwFlag
  if (ppszName)
  {
   ffstring streamName = stream.streamName;
-  if (stream.langId == 0 && stream.streamLanguageName.length() > 0)  streamName += _l(" [") + stream.streamLanguageName+_l("]");
+  if (stream.streamName.length() == 0 && stream.streamLanguageName.length() > 0) streamName = stream.streamLanguageName;
+  else if (stream.langId == 0 && stream.streamLanguageName.length() > 0)  streamName += _l(" [") + stream.streamLanguageName+_l("]");
   size_t wlen=(streamName.length()+1)*sizeof(WCHAR);
   *ppszName=(WCHAR*)CoTaskMemAlloc(wlen);memset(*ppszName,0,wlen);
   nCopyAnsiToWideChar(*ppszName,streamName.c_str());

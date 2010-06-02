@@ -91,7 +91,7 @@ public:
  char_t defaultPreset[MAX_PATH];
  int autoPreset,autoPresetFileFirst;
 
- int streamsMenu;
+ int streamsMenu, streamsSubFilesMode;
 
  virtual void load(void);
  virtual void save(void);

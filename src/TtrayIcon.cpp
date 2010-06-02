@@ -459,7 +459,10 @@ TtrayIconDecVideo::TtrayIconDecVideo(IffdshowBase *Ideci):TtrayIconDec(Ideci),de
 void TtrayIconDecVideo::makeAudioSubsSubMenus(HMENU *smn, HMENU *ssmn, HMENU *amn)
 {
  strings files;
- TsubtitlesFile::findPossibleSubtitles(deci->getSourceName(),deci->getParamStr2(IDFF_subSearchDir),files);
+ TsubtitlesFile::findPossibleSubtitles(deci->getSourceName(),
+  deci->getParamStr2(IDFF_subSearchDir),
+  files,
+  (TsubtitlesFile::subtitleFilesSearchMode)deci->getParam2(IDFF_streamsSubFilesMode));
  
  int textpinconnectedCnt=deciV->getConnectedTextPinCnt();
  int isEmbedded = deci->getParam2(IDFF_subShowEmbedded);

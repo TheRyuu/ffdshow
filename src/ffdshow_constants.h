@@ -66,6 +66,7 @@
 #define IDFF_subCurLang           73
 #define IDFF_addToROT             74
 #define IDFF_streamsOptionsMenu   75
+#define IDFF_streamsSubFilesMode 3549
 #define IDFF_dvdproc              76
 //#define IDFF_ac3drc               79
 //#define IDFF_ac3SPDIF             3386
@@ -1583,6 +1584,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//next:3549
+//next:3550
 
 #endif

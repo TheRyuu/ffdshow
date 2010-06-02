@@ -20,6 +20,7 @@
 #include "Ctray.h"
 #include "Ttranslate.h"
 #include "TffdshowPageBase.h"
+#include "TsubtitlesSettings.h"
 
 void TdlgMiscPage::init(void)
 {
@@ -32,6 +33,13 @@ void TdlgMiscPage::init(void)
  edLimitText(IDC_ED_PATH_DSCALER,MAX_PATH);
  static const int idDscaler[]={IDC_LBL_PATH_DSCALER,IDC_ED_PATH_DSCALER,IDC_BT_PATH_DSCALER,0};
  enable((filterMode&IDFF_FILTERMODE_AUDIO)==0,idDscaler);
+ addHint(IDC_CBX_SUBFILES_MODE, _l("All subtitles: all subtitles files found\nVideo file match: list of subtitle files built from the following mask : <video filename>.ext or <video filename>.<suffix>.ext\nPartial match: list built with heuristic comparison on video file name\nVideo file match then partial: use heuristic if no exact match found on video file"));
+}
+
+void TdlgMiscPage::translate(void)
+{
+ TconfPageBase::translate();
+ cbxTranslate(IDC_CBX_SUBFILES_MODE,TsubtitlesSettings::subfilesmodes);
 }
 
 void TdlgMiscPage::cfg2dlg(void)
@@ -64,6 +72,7 @@ void TdlgMiscPage::tray2dlg(void)
   }
  setCheck(IDC_CHB_TRAYICONEXT,cfgGet(IDFF_trayIconExt));enable(tray,IDC_CHB_TRAYICONEXT);
  setCheck(IDC_CHB_STREAMSMENU,cfgGet(IDFF_streamsOptionsMenu));enable((filterMode&(IDFF_FILTERMODE_ENC|IDFF_FILTERMODE_VFW))==0,IDC_CHB_STREAMSMENU);
+ cbxSetCurSel(IDC_CBX_SUBFILES_MODE,cfgGet(IDFF_streamsSubFilesMode));
 }
 void TdlgMiscPage::paths2dlg(void)
 {
@@ -156,4 +165,11 @@ TdlgMiscPage::TdlgMiscPage(TffdshowPageBase *Iparent):TconfPageBase(Iparent)
    0,0,0,NULL
   };
  bindRadioButtons(rbt);
+
+ static const TbindCombobox<TdlgMiscPage> cbx[]=
+ {
+  IDC_CBX_SUBFILES_MODE,IDFF_streamsSubFilesMode,BINDCBX_SEL,NULL,
+  0
+ };
+ bindComboboxes(cbx);
 }

@@ -464,7 +464,10 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
         cd.dwData = MSG_GET_SUBTITLEFILESLIST;
         if (!deciV) return FALSE;
         strings files;
-        TsubtitlesFile::findPossibleSubtitles(deci->getSourceName(),deci->getParamStr2(IDFF_subSearchDir),files);
+        TsubtitlesFile::findPossibleSubtitles(deci->getSourceName(),
+         deci->getParamStr2(IDFF_subSearchDir),
+         files, 
+         (TsubtitlesFile::subtitleFilesSearchMode)deci->getParam2(IDFF_streamsSubFilesMode));
         if (files.size() == 0)
         {
             return FALSE;
@@ -669,7 +672,10 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
       {
        if (!deciV || cds->cbData==0) return FALSE;
        strings files;
-       TsubtitlesFile::findPossibleSubtitles(deci->getSourceName(),deci->getParamStr2(IDFF_subSearchDir),files);
+       TsubtitlesFile::findPossibleSubtitles(deci->getSourceName(),
+        deci->getParamStr2(IDFF_subSearchDir),
+        files,
+        (TsubtitlesFile::subtitleFilesSearchMode)deci->getParam2(IDFF_streamsSubFilesMode));
        if (subtitleIdx>=files.size())
         ((char_t*)cds->lpData)[0]='\0';
        else

@@ -539,6 +539,8 @@
 #define IDC_LBL_LEVELS_INPUT            1291
 #define IDC_CBX_LANG                    1292
 #define IDC_LBL_LANG                    1293
+#define IDC_LBL_SUBFILES_MODE           1294
+#define IDC_CBX_SUBFILES_MODE           1295
 #define IDC_CHB_WORKAROUND_AUTODETECT   1307
 #define IDC_CHB_DSCALER                 1308
 #define IDC_CHB_WORKAROUND_OLDMSMPEG4   1308
@@ -1814,7 +1816,6 @@
 #define IDC_LBL_FONT_YSCALE             2090
 #define IDC_GRP_AUTOCROP                2091
 #define IDC_CHB_FONT_ASPECT_AUTO2       2091
-#define IDC_CHB_FONT_SHADOW_OVERRIDE    5000
 #define IDC_CHB_CODEC_OPT3              2092
 #define IDC_CHB_CODEC_OPT4              2093
 #define IDC_LBL_CROP_TOLERANCE          2094
@@ -2002,6 +2003,7 @@
 #define IDC_LBL_AUDIO_DELAY             2275
 #define IDC_LBL_AUDIO_DELAY2            2276
 #define IDC_LBL_AUDIO_DELAY_MS          2277
+#define IDC_CHB_FONT_SHADOW_OVERRIDE    5000
 #define ID_MNI_PRESET_NEWFROMDEFAULT    40004
 #define ID_MNI_PRESET_NEWFROMSELECTED   40005
 #define ID_MNI_PRESET_NEW_FROMFILE      40006
