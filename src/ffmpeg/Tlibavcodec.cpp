@@ -124,8 +124,8 @@ Tlibavcodec::Tlibavcodec(const Tconfig *config):refcount(0)
  dll->loadFunction(sws_scale, "sws_scale");
  dll->loadFunction(sws_scale_ordered, "sws_scale_ordered");
 
- dll->loadFunction(palette8topacked32, "palette8topacked32");
- dll->loadFunction(palette8topacked24, "palette8topacked24");
+ dll->loadFunction(sws_convertPalette8ToPacked32, "sws_convertPalette8ToPacked32");
+ dll->loadFunction(sws_convertPalette8ToPacked24, "sws_convertPalette8ToPacked24");
  dll->loadFunction(palette8torgb32, "palette8torgb32");
  dll->loadFunction(palette8tobgr32, "palette8tobgr32");
  dll->loadFunction(palette8torgb24, "palette8torgb24");

@@ -49,8 +49,8 @@ EXPORTS
   sws_getGaussianVec
   sws_normalizeVec
   sws_freeVec
-  palette8topacked32
-  palette8topacked24
+  sws_convertPalette8ToPacked32
+  sws_convertPalette8ToPacked24
   palette8torgb32
   palette8tobgr32
   palette8torgb24

@@ -130,8 +130,8 @@ int (*avcodec_decode_audio2)(AVCodecContext *avctx, int16_t *samples,
  SwsVector *(*sws_getGaussianVec)(double variance, double quality);
  void (*sws_normalizeVec)(SwsVector *a, double height);
  void (*sws_freeVec)(SwsVector *a);
- void (*palette8topacked32)(const uint8_t *src, uint8_t *dst, long num_pixels, const uint8_t *palette);
- void (*palette8topacked24)(const uint8_t *src, uint8_t *dst, long num_pixels, const uint8_t *palette);
+ void (*sws_convertPalette8ToPacked32)(const uint8_t *src, uint8_t *dst, long num_pixels, const uint8_t *palette);
+ void (*sws_convertPalette8ToPacked24)(const uint8_t *src, uint8_t *dst, long num_pixels, const uint8_t *palette);
  void (*palette8torgb32)(const uint8_t *src, uint8_t *dst, long num_pixels, const uint8_t *palette);
  void (*palette8tobgr32)(const uint8_t *src, uint8_t *dst, long num_pixels, const uint8_t *palette);
  void (*palette8torgb24)(const uint8_t *src, uint8_t *dst, long num_pixels, const uint8_t *palette);
