@@ -809,14 +809,27 @@ STDMETHODIMP TffdshowDec::Info(long lIndex, AM_MEDIA_TYPE** ppmt, DWORD* pdwFlag
   }
   if (pdwFlags)
   {
-   char_t *cursubflnm = NULL;
-   if (getCurrentSubtitlesFile(&cursubflnm) != S_OK) return E_NOTIMPL;
-   
-   if (cursubflnm != NULL && stricmp(subtitleFilename,cursubflnm)==0)
-    *pdwFlags = AMSTREAMSELECTINFO_ENABLED|AMSTREAMSELECTINFO_EXCLUSIVE;
+   char_t *curSubflnm = NULL;
+   if (getCurrentSubtitlesFile(&curSubflnm) != S_OK) return E_NOTIMPL;
+
+   // Current subtitle file : can be a custom subtitle file (IDFF_subTempFilename) or (if null) call getCurrentSubtitlesFile
+   const char_t *curCustomSubflnm=getParamStr2(IDFF_subTempFilename);
+   if (curCustomSubflnm && strcmp(curCustomSubflnm, _l("")) != 0)
+   {
+    if (!getParam2(IDFF_subShowEmbedded) && curCustomSubflnm != NULL && stricmp(subtitleFilename,curCustomSubflnm)==0)
+     *pdwFlags = AMSTREAMSELECTINFO_ENABLED|AMSTREAMSELECTINFO_EXCLUSIVE;
+    else
+     *pdwFlags = 0;
+   }
    else
-    *pdwFlags = 0;
-   if (cursubflnm) CoTaskMemFree(cursubflnm);
+   {
+    if (!getParam2(IDFF_subShowEmbedded) && curSubflnm != NULL && stricmp(subtitleFilename,curSubflnm)==0)
+     *pdwFlags = AMSTREAMSELECTINFO_ENABLED|AMSTREAMSELECTINFO_EXCLUSIVE;
+    else
+     *pdwFlags = 0;
+   }
+
+   if (curSubflnm) CoTaskMemFree(curSubflnm);
   }
   return S_OK;
  }
