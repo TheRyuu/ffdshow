@@ -19,7 +19,7 @@ static inline void rt2Str(REFERENCE_TIME rTime, char_t *string)
 {
  if (!string) return;
  if (rTime <= 0)  { tsprintf(string, _l("%d:%d:%d.%d"),0,0,0,0); return;}
- float rtimems=rTime/10000;
+ float rtimems=(float)(rTime/10000);
  float rtimes=rtimems/1000;
  int h=(int)rtimes/3600;
  int m=(int)(rtimes-h*3600)/60;
@@ -155,10 +155,10 @@ public:
  virtual void reset(void);
 
 private:
- void parsePalette(Tbitdata &bitData, USHORT nSize);
- void parseObject(Tbitdata &bitData, USHORT nSize);
+ void parsePalette(Tbitdata &bitData, int nSize);
+ void parseObject(Tbitdata &bitData, int nSize);
  void parsePresentationSegment(Tbitdata &bitData, REFERENCE_TIME rtStart);
- void parseWindow(Tbitdata &bitData, USHORT nSize);
+ void parseWindow(Tbitdata &bitData, int nSize);
  bool getPalette(TcompositionObject *pObject);
  
  IffdshowBase *deci;

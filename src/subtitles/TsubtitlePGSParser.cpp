@@ -375,7 +375,7 @@ void TsubtitlePGSParser::parsePresentationSegment(Tbitdata &bitData, REFERENCE_T
  }
 }
 
-void TsubtitlePGSParser::parseWindow(Tbitdata &bitData, USHORT nSize)
+void TsubtitlePGSParser::parseWindow(Tbitdata &bitData, int nSize)
 {
  /*
   * Window Segment Structure (No new information provided):
@@ -421,7 +421,7 @@ void TsubtitlePGSParser::parseWindow(Tbitdata &bitData, USHORT nSize)
  }
 }
 
-void TsubtitlePGSParser::parsePalette(Tbitdata &bitData, USHORT nSize)
+void TsubtitlePGSParser::parsePalette(Tbitdata &bitData, int nSize)
 {
     BYTE palette_id = bitData.readByte();
     BYTE palette_version_number = bitData.readByte(); //TODO
@@ -442,7 +442,7 @@ void TsubtitlePGSParser::parsePalette(Tbitdata &bitData, USHORT nSize)
  m_nDefaultPaletteNbEntry = palette_id;
  m_pDefaultPalette->reset();
 
- int y, cr, cb, a, entry_id;
+ BYTE y, cr, cb, a, entry_id;
  /*int r_add, g_add, b_add;
  int r, g, b;
  uint8_t ff_cropTbl[256 + 2 * 1024] = {0, };
@@ -451,20 +451,20 @@ void TsubtitlePGSParser::parsePalette(Tbitdata &bitData, USHORT nSize)
  m_nColorNumber = nNbEntry;
  bool bIsHD = m_VideoDescriptor.nVideoWidth>720;
  for (int i=0; i<m_nColorNumber; i++)
-    {
+ {
   entry_id = bitData.readByte();
   y = bitData.readByte();
   cr = bitData.readByte();
   cb = bitData.readByte();
   a = bitData.readByte();
   if (bIsHD)
-                m_pDefaultPalette->m_Colors[entry_id] = YCrCbToRGB_Rec709(a, y, cr, cb);
-            else
-                m_pDefaultPalette->m_Colors[entry_id] = YCrCbToRGB_Rec601(a, y, cr, cb);
-    }
+   m_pDefaultPalette->m_Colors[entry_id] = YCrCbToRGB_Rec709(a, y, cr, cb);
+  else
+   m_pDefaultPalette->m_Colors[entry_id] = YCrCbToRGB_Rec601(a, y, cr, cb);
+ }
 }
 
-void TsubtitlePGSParser::parseObject(Tbitdata &bitData, USHORT nSize)
+void TsubtitlePGSParser::parseObject(Tbitdata &bitData, int nSize)
 {
  SHORT object_id = bitData.readShort();
  BYTE m_sequence_desc;
@@ -530,7 +530,7 @@ void TsubtitlePGSParser::parseObject(Tbitdata &bitData, USHORT nSize)
  if (m_sequence_desc == 0xc0 && (nSize - object_data_length) != 7)
  {
   DPRINTF(_l("TsubtitlePGSParser::parseObject unexpected picture size"));
-  if (object_data_length > nSize - 7) object_data_length = nSize - 7;
+  if (object_data_length > (DWORD)(nSize - 7)) object_data_length = (DWORD)(nSize - 7);
  }
 
  //m_pCurrentObject->m_Windows[windowId].m_objectId = object_id;

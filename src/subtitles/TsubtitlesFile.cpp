@@ -215,14 +215,23 @@ void TsubtitlesFile::findPossibleSubtitles(const char_t *aviFlnm,const char_t *s
  extractfilenameWOext(aviFlnm,videoFlnmNoExt);
  videoFlnmNoExt.ConvertToLowerCase();
 
- if (SUBFILES_VIDEO_FILE_HEURISTIC)
+ if (searchMode == SUBFILES_VIDEO_FILE_HEURISTIC)
  {
   for (strings::iterator f=files.begin();f!=files.end();f++)
   {
    ffstring flnmNoExt;
    extractfilenameWOext((*f).c_str(),flnmNoExt);
    flnmNoExt.ConvertToLowerCase();
-   if (strncmp(videoFlnmNoExt.c_str(), flnmNoExt.c_str(), videoFlnmNoExt.length()) == 0) { videoFileMatch = true; break; }
+   if (strncmp(videoFlnmNoExt.c_str(), flnmNoExt.c_str(), videoFlnmNoExt.length()) == 0) 
+   {
+    /* Common portion of video and subtitle filenames. Check if lengths are equal (identical names) 
+       or if this is a dot "." right after like in videofile.<suffix>.ext */
+    if (videoFlnmNoExt.length() == flnmNoExt.length() || flnmNoExt[videoFlnmNoExt.length()] == _l('.'))
+    {
+     videoFileMatch = true; 
+     break;
+    }
+   }
   }
  }
 
@@ -238,7 +247,8 @@ void TsubtitlesFile::findPossibleSubtitles(const char_t *aviFlnm,const char_t *s
    if (searchMode == SUBFILES_VIDEO_FILE_MATCH 
     || (searchMode == SUBFILES_VIDEO_FILE_HEURISTIC && videoFileMatch))
    { 
-    if (strncmp(videoFlnmNoExt.c_str(), flnmNoExt.c_str(), videoFlnmNoExt.length()) != 0)
+    if (strncmp(videoFlnmNoExt.c_str(), flnmNoExt.c_str(), videoFlnmNoExt.length()) != 0
+        || (videoFlnmNoExt.length() != flnmNoExt.length() && flnmNoExt[videoFlnmNoExt.length()] != _l('.')))
      f = files.erase(f);
     else 
      f++;
