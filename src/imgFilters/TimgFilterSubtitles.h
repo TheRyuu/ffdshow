@@ -45,6 +45,7 @@ private:
  AdhocMode prevAdhocMode;
  int subFlnmChanged;
  const char_t* findAutoSubFlnm(const TsubtitlesSettings *cfg);
+ bool first;
 
  bool sequenceEnded;
  TprintPrefs oldprefs;

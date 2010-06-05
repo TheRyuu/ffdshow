@@ -1326,7 +1326,7 @@ STDMETHODIMP TffdshowDec::setExternalStream(int group, long streamNb)
  if (!strcmp(pStream->filterName.c_str(), _l("FFDSHOW")))
  {
   int oldId=getParam2(IDFF_subShowEmbedded);
-  putParam(IDFF_subShowEmbedded,streamNb==oldId?0:streamNb);
+  putParam(IDFF_subShowEmbedded,streamNb);
  }
  else
  {

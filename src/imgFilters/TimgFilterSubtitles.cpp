@@ -74,7 +74,8 @@ TimgFilterSubtitles::TimgFilterSubtitles(IffdshowBase *Ideci,Tfilters *Iparent):
     adhocMode(ADHOC_NORMAL),
     prevAdhocMode(ADHOC_NORMAL),
     glyphThread(this,Ideci),
-    prevTime(0)
+    prevTime(0),
+    first(true)
 {
     oldstereo=oldsplitborder=-1;
     AVIfps=-1;
@@ -291,7 +292,14 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
     if (subFlnmChanged) {
         const char_t *subflnm=cfg->autoFlnm?findAutoSubFlnm(cfg):cfg->flnm;
         if (subFlnmChanged!=-1 || stricmp(subflnm,subs.subFlnm)!=0)
-            subs.init(cfg,subflnm,AVIfps,!!deci->getParam2(IDFF_subWatch),false);
+        {
+            if (subs.init(cfg,subflnm,AVIfps,!!deci->getParam2(IDFF_subWatch),false) == true && first == true)
+            {
+             DPRINTF(_l("TimgFilterSubtitles::process subtitle file %s detected"), subflnm);
+             deci->putParam(IDFF_subShowEmbedded, 0);
+             first = false;
+            }
+        }
         subFlnmChanged=0;
     }
 
