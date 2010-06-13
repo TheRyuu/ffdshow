@@ -52,7 +52,6 @@ SRCS_C=\
       $(LAVC_DIR)/eac3dec.c \
       $(LAVC_DIR)/eac3dec_data.c \
       $(LAVC_DIR)/error_resilience.c \
-      $(LAVC_DIR)/eval.c \
       $(LAVC_DIR)/faandct.c \
       $(LAVC_DIR)/faanidct.c \
       $(LAVC_DIR)/ffmpegContext.c \
@@ -148,6 +147,7 @@ SRCS_C=\
       $(LAVC_DIR)/qpeg.c \
       $(LAVC_DIR)/qtrle.c \
       $(LAVC_DIR)/ra144.c \
+      $(LAVC_DIR)/ra144dec.c \
       $(LAVC_DIR)/ra288.c \
       $(LAVC_DIR)/rangecoder.c \
       $(LAVC_DIR)/ratecontrol.c \
@@ -205,6 +205,7 @@ SRCS_C=\
     \
       $(LAVU_DIR)/avstring.c \
       $(LAVU_DIR)/crc.c \
+      $(LAVU_DIR)/eval.c \
       $(LAVU_DIR)/intfloat_readwrite.c \
       $(LAVU_DIR)/lfg.c \
       $(LAVU_DIR)/lls.c \
