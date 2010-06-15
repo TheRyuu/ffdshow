@@ -509,5 +509,9 @@ int av_parse_and_eval_expr(double *d, const char *s,
     }
     *d = av_eval_expr(e, const_values, opaque);
     av_free_expr(e);
+#ifdef __GNUC__
     return isnan(*d) ? AVERROR(EINVAL) : 0;
+#else
+	return 0;
+#endif
 }
