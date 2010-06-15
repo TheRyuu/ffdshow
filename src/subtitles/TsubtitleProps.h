@@ -48,6 +48,9 @@ struct TSubtitleProps
  int alignment;
 
  int marginR,marginL,marginV,marginTop,marginBottom; // -1 = default
+ double angleX; // 0 = default
+ double angleY; // 0 = default
+ double angleZ; // 0 = default
  int borderStyle; // -1 = default
  double outlineWidth,shadowDepth; // -1 = default
  int layer; // 0 = default

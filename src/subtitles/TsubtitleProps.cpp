@@ -46,6 +46,9 @@ void TSubtitleProps::reset(void)
  scaleX=scaleY=-1;
  alignment=-1;
  marginR=marginL=marginV=marginTop=marginBottom=-1;
+ angleX=0;
+ angleY=0;
+ angleZ=0;
  borderStyle=-1;
  layer=0;
  outlineWidth=shadowDepth=-1;

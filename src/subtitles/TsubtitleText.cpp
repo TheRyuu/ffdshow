@@ -1113,6 +1113,9 @@ void TsubtitleFormat::Tssa::processTokens(const wchar_t *l,const wchar_t* &l1,co
             !processToken(l3,L"\\fscy",&Tssa::template intProp<&TSubtitleProps::scaleY,1,1000>) &&
             !processToken(l3,L"\\fsp",&Tssa::template doubleProp<&TSubtitleProps::spacing,INT_MIN+1,INT_MAX>) &&
             !processToken(l3,L"\\fs",&Tssa::template intProp<&TSubtitleProps::size,1,INT_MAX>) &&
+            !processToken(l3,L"\\frx",&Tssa::template doubleProp<&TSubtitleProps::angleX,1,360>) &&
+            !processToken(l3,L"\\fry",&Tssa::template doubleProp<&TSubtitleProps::angleY,1,360>) &&
+            !processToken(l3,L"\\frz",&Tssa::template doubleProp<&TSubtitleProps::angleZ,1,360>) &&
             !processToken(l3,L"\\fe",&Tssa::template intProp<&TSubtitleProps::encoding,0,255>) &&
             !processToken(l3,L"\\i",&Tssa::template boolProp<&TSubtitleProps::italic>) &&
             !processToken(l3,L"\\fade",&Tssa::fade) &&

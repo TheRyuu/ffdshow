@@ -591,6 +591,7 @@ void TsubtitleParserSSA::Tstyle::toProps(void)
  strToInt(fontScaleX,&props.scaleX);
  strToInt(fontScaleY,&props.scaleY);
  strToInt(alignment,&props.alignment);
+ strToDouble(angleZ,&props.angleZ);
  strToInt(marginLeft,&props.marginL);
  strToInt(marginRight,&props.marginR);
  strToInt(marginV,&props.marginV);
@@ -748,6 +749,8 @@ Tsubtitle* TsubtitleParserSSA::parse(Tstream &fd, int flags, REFERENCE_TIME star
         styleFormat.push_back(&Tstyle::fontScaleY);
        else if (strnicmp(f->first,L"Spacing",7)==0)
         styleFormat.push_back(&Tstyle::spacing);
+       else if (strnicmp(f->first,L"Angle",5)==0)
+        styleFormat.push_back(&Tstyle::angleZ);
        else if (strnicmp(f->first,L"outline",7)==0)
         styleFormat.push_back(&Tstyle::outlineWidth);
        else if (strnicmp(f->first,L"shadow",6)==0)

@@ -247,12 +247,12 @@ void TrenderedTextSubtitleWord::Transform(CPoint org, double scalex)
   */
     double scaley = 1;
 
-    double caz = cos((3.1415/180)*0/*m_style.fontAngleZ*/);
-    double saz = sin((3.1415/180)*0/*m_style.fontAngleZ*/);
-    double cax = cos((3.1415/180)*0/*m_style.fontAngleX*/);
-    double sax = sin((3.1415/180)*0/*m_style.fontAngleX*/);
-    double cay = cos((3.1415/180)*0/*m_style.fontAngleY*/);
-    double say = sin((3.1415/180)*0/*m_style.fontAngleY*/);
+    double caz = cos((3.1415/180)*0/*props.angleZ*/);
+    double saz = sin((3.1415/180)*0/*props.angleZ*/);
+    double cax = cos((3.1415/180)*0/*props.angleX*/);
+    double sax = sin((3.1415/180)*0/*props.angleX*/);
+    double cay = cos((3.1415/180)*0/*props.angleY*/);
+    double say = sin((3.1415/180)*0/*props.angleY*/);
 
     for(int i = 0; i < mPathPoints; i++) {
         double x, y, z, xx, yy, zz;
