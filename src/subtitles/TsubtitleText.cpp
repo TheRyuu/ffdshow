@@ -1028,9 +1028,9 @@ void TsubtitleFormat::Tssa::alphaAll(ffstring &arg)
 {
     int a;
     if (color2int(arg,a)) {
-         props.colorA=a;
-         props.OutlineColourA=a;
-         props.ShadowColourA=a;
+         props.colorA=256-a;
+         props.OutlineColourA=256-a;
+         props.ShadowColourA=256-a;
          props.isColor=true;
     } else {
          props.colorA=defprops.colorA;
