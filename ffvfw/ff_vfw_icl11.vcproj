@@ -80,7 +80,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				IgnoreImportLibrary="true"
+				IgnoreImportLibrary="false"
 				AdditionalDependencies="kernel32.lib ole32.lib libcmtd.lib libcpmtd.lib winmm.lib comctl32.lib ..\bin\lib_x86\libboost_thread-vc90-mt-sgd-1_43_61772.lib"
 				OutputFile="../bin/ff_vfw.dll"
 				SuppressStartupBanner="true"
@@ -182,7 +182,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				IgnoreImportLibrary="true"
+				IgnoreImportLibrary="false"
 				AdditionalDependencies="kernel32.lib ole32.lib libcmtd.lib libcpmtd.lib winmm.lib comctl32.lib ..\bin\lib_x64\libboost_thread-vc90-mt-sgd-1_43_61772.lib $(NOINHERIT)"
 				OutputFile="../bin/ff_vfw.dll"
 				SuppressStartupBanner="true"
@@ -289,7 +289,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				IgnoreImportLibrary="true"
+				IgnoreImportLibrary="false"
 				AdditionalDependencies="kernel32.lib ole32.lib libcmt.lib libcpmt.lib winmm.lib comctl32.lib ..\bin\lib_x86\libboost_thread-vc90-mt-s-1_43_61772.lib $(NOINHERIT)"
 				OutputFile="../bin/ff_vfw.dll"
 				LinkIncremental="1"
@@ -399,7 +399,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				IgnoreImportLibrary="true"
+				IgnoreImportLibrary="false"
 				AdditionalDependencies="kernel32.lib ole32.lib libcmt.lib libcpmt.lib winmm.lib comctl32.lib ..\bin\lib_x64\libboost_thread-vc90-mt-s-1_43_61772.lib $(NOINHERIT)"
 				OutputFile="../bin/ff_vfw.dll"
 				LinkIncremental="1"

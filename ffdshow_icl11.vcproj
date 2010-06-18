@@ -341,6 +341,7 @@
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile=".\src\ffdshow.def"
 				DelayLoadDLLs="$(NOINHERIT)"
+				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
@@ -898,48 +899,6 @@
 				>
 			</File>
 			<File
-				RelativePath="src\TffdshowDecVideo.cpp"
-				>
-				<FileConfiguration
-					Name="Debug Unicode|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions=""
-						GeneratePreprocessedFile="0"
-						ForceConformanceInForLoopScope="true"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug Unicode|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions=""
-						GeneratePreprocessedFile="0"
-						ForceConformanceInForLoopScope="true"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release Unicode|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions=""
-						AssemblerOutput="4"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release Unicode|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions=""
-						AssemblerOutput="4"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath="src\TffDecoder_com.cpp"
 				>
 				<FileConfiguration
@@ -998,6 +957,48 @@
 			<File
 				RelativePath=".\src\TffdshowDecAudioInputPin.cpp"
 				>
+			</File>
+			<File
+				RelativePath="src\TffdshowDecVideo.cpp"
+				>
+				<FileConfiguration
+					Name="Debug Unicode|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AdditionalOptions=""
+						GeneratePreprocessedFile="0"
+						ForceConformanceInForLoopScope="true"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug Unicode|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AdditionalOptions=""
+						GeneratePreprocessedFile="0"
+						ForceConformanceInForLoopScope="true"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release Unicode|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AdditionalOptions=""
+						AssemblerOutput="4"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release Unicode|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AdditionalOptions=""
+						AssemblerOutput="4"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\src\TffdshowDecVideoAllocator.cpp"
