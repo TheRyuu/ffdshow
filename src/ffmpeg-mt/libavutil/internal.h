@@ -235,4 +235,10 @@
     type ff_##name args
 #endif
 
+#if HAVE_THREADS	 
+#   define ONLY_IF_THREADS_ENABLED(x) x	 
+#else	 
+#   define ONLY_IF_THREADS_ENABLED(x) NULL	 
+#endif
+
 #endif /* AVUTIL_INTERNAL_H */
