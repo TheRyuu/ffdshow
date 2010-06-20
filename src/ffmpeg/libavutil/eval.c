@@ -186,7 +186,7 @@ void av_free_expr(AVExpr *e)
 static int parse_primary(AVExpr **e, Parser *p)
 {
     AVExpr *d = av_mallocz(sizeof(AVExpr));
-    char *next= p->s;
+    char *next = p->s, *s0 = p->s;
     int ret, i;
 
     if (!d)
@@ -215,7 +215,7 @@ static int parse_primary(AVExpr **e, Parser *p)
 
     p->s= strchr(p->s, '(');
     if (p->s==NULL) {
-        av_log(p, AV_LOG_ERROR, "undefined constant or missing (\n");
+        av_log(p, AV_LOG_ERROR, "Undefined constant or missing '(' in '%s'\n", s0);
         p->s= next;
         av_free_expr(d);
         return AVERROR(EINVAL);
@@ -226,7 +226,7 @@ static int parse_primary(AVExpr **e, Parser *p)
         if ((ret = parse_expr(&d, p)) < 0)
             return ret;
         if (p->s[0] != ')') {
-            av_log(p, AV_LOG_ERROR, "missing )\n");
+            av_log(p, AV_LOG_ERROR, "Missing ')' in '%s'\n", s0);
             av_free_expr(d);
             return AVERROR(EINVAL);
         }
@@ -243,7 +243,7 @@ static int parse_primary(AVExpr **e, Parser *p)
         parse_expr(&d->param[1], p);
     }
     if (p->s[0] != ')') {
-        av_log(p, AV_LOG_ERROR, "missing )\n");
+        av_log(p, AV_LOG_ERROR, "Missing ')' or too many args in '%s'\n", s0);
         av_free_expr(d);
         return AVERROR(EINVAL);
     }
@@ -294,7 +294,7 @@ static int parse_primary(AVExpr **e, Parser *p)
             }
         }
 
-        av_log(p, AV_LOG_ERROR, "unknown function\n");
+        av_log(p, AV_LOG_ERROR, "Unknown function in '%s'\n", s0);
         av_free_expr(d);
         return AVERROR(EINVAL);
     }
@@ -452,6 +452,7 @@ int av_parse_expr(AVExpr **expr, const char *s,
     AVExpr *e = NULL;
     char *w = av_malloc(strlen(s) + 1);
     char *wp = w;
+    const char *s0 = s;
     int ret = 0;
 
     if (!w)
@@ -474,6 +475,11 @@ int av_parse_expr(AVExpr **expr, const char *s,
 
     if ((ret = parse_expr(&e, &p)) < 0)
         goto end;
+    if (*p.s) {
+        av_log(&p, AV_LOG_ERROR, "Invalid chars '%s' at the end of expression '%s'\n", p.s, s0);
+        ret = AVERROR(EINVAL);
+        goto end;
+    }
     if (!verify_expr(e)) {
         av_free_expr(e);
         ret = AVERROR(EINVAL);
@@ -512,6 +518,6 @@ int av_parse_and_eval_expr(double *d, const char *s,
 #ifdef __GNUC__
     return isnan(*d) ? AVERROR(EINVAL) : 0;
 #else
-	return 0;
+    return 0;
 #endif
 }
