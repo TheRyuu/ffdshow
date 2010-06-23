@@ -156,15 +156,12 @@ DEFINE_GUID_FOURCC(avc1)
 DEFINE_GUID_FOURCC(H264_HAALI)
 DEFINE_GUID(H264_HAALI_CUSTOM, 0x31564343, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71);
 
-static __inline bool isH264_mediatype(GUID subtype) {return (subtype == MEDIASUBTYPE_H264 || subtype == MEDIASUBTYPE_h264 || subtype == MEDIASUBTYPE_AVC1 || subtype == MEDIASUBTYPE_avc1 || subtype == MEDIASUBTYPE_H264_HAALI || subtype == H264_HAALI_CUSTOM);}
-
 //theora
 #define FOURCC_THEO mmioFOURCC('T','H','E','O')
 #define FOURCC_VP31 mmioFOURCC('V','P','3','1')
 DEFINE_GUID(FORMAT_TheoraIll, 0xa99f116c, 0xdffa, 0x412c, 0x95, 0xde, 0x72, 0x5f, 0x99, 0x87, 0x48, 0x26);
 DEFINE_GUID(MEDIASUBTYPE_RLTheora, 0xd124b2b1, 0x8968, 0x4ae8, 0xb2, 0x88, 0xfe, 0x16, 0xea, 0x34, 0xb0, 0xce);
 DEFINE_GUID(FORMAT_RLTheora , 0xe69b30d1, 0x7d65, 0x4166, 0xb9, 0x90, 0x10, 0x3d, 0xa8, 0xc9, 0x11, 0xe3 );
-//31564343-0000-0010-8000-00AA00389B71 : Haali custom media type
 
 //quicktime
 #define FOURCC_JPEG mmioFOURCC('J','P','E','G')

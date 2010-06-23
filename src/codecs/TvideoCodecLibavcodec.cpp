@@ -172,9 +172,8 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
     if (grayscale && codecId!=CODEC_ID_THEORA) avctx->flags|=CODEC_FLAG_GRAY;
 
     // Fix for new Haali custom media type and fourcc. ffmpeg does not understand it, we have to change it to FOURCC_AVC1 
-    // TODO : not sure if a better mapping is necessary for other FCCs (FOURCC_H264, FOURCC_h264, FOURCC_avc1...)
     if (fcc==FOURCC_H264_HAALI)
-     fcc=FOURCC_AVC1;
+    		fcc=FOURCC_AVC1;
 
     avctx->codec_tag=fcc;
     avctx->workaround_bugs=deci->getParam2(IDFF_workaroundBugs);
@@ -311,15 +310,16 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
     }
 
     if (codecId == CODEC_ID_H264
-      && !isH264_mediatype(mt.subtype)) {
+      && !(mt.subtype == MEDIASUBTYPE_AVC1 || mt.subtype == MEDIASUBTYPE_avc1)) {
         ffstring sourceExt;
         extractfileext(deci->getSourceName(),sourceExt);
         sourceExt.ConvertToLowerCase();
         // avi and ogm files do not have access unit delimiter
         // Neuview Source is an AVI splitter that does not implement IFileSourceFilter.
-        // What about ogg, ogv and ogx?
         if ( sourceExt != L"avi"
+          && sourceExt != L"ogg"
           && sourceExt != L"ogm"
+          && sourceExt != L"ogv"
           && sourceExt != L"mkv" // old MKVtoolnix use MEDIASUBTYPE_H264 and does not add access unit delimiter.
           && !(deci->getParam2(IDFF_filterMode) & IDFF_FILTERMODE_VFW) // VFW: avi files
           && !(sourceExt == L"" && connectedSplitter == TffdshowVideoInputPin::NeuviewSource)) {
