@@ -62,7 +62,7 @@ DECLARE_ALIGNED(8,  const uint64_t, ff_pw_128) = 0x0080008000800080ULL;
 DECLARE_ALIGNED(8,  const uint64_t, ff_pw_255) = 0x00ff00ff00ff00ffULL;
 
 DECLARE_ALIGNED(8,  const uint64_t, ff_pb_1  ) = 0x0101010101010101ULL;
-DECLARE_ALIGNED(8,  const uint64_t, ff_pb_3  ) = 0x0303030303030303ULL;
+DECLARE_ALIGNED(16, const xmm_reg,  ff_pb_3  ) = {0x0303030303030303ULL, 0x0303030303030303ULL};
 DECLARE_ALIGNED(8,  const uint64_t, ff_pb_7  ) = 0x0707070707070707ULL;
 DECLARE_ALIGNED(8,  const uint64_t, ff_pb_1F ) = 0x1F1F1F1F1F1F1F1FULL;
 DECLARE_ALIGNED(8,  const uint64_t, ff_pb_3F ) = 0x3F3F3F3F3F3F3F3FULL;
@@ -2270,6 +2270,40 @@ static void int32_to_float_fmul_scalar_sse2(float *dst, const int *src, float mu
         "jl 1b \n"
         :"+r"(i)
         :"r"(dst+len), "r"(src+len), "m"(mul)
+    );
+}
+
+static void vector_clipf_sse(float *dst, const float *src, float min, float max,
+                             int len)
+{
+    x86_reg i = (len-16)*4;
+    __asm__ volatile(
+        "movss  %3, %%xmm4 \n"
+        "movss  %4, %%xmm5 \n"
+        "shufps $0, %%xmm4, %%xmm4 \n"
+        "shufps $0, %%xmm5, %%xmm5 \n"
+        "1: \n\t"
+        "movaps    (%2,%0), %%xmm0 \n\t" // 3/1 on intel
+        "movaps  16(%2,%0), %%xmm1 \n\t"
+        "movaps  32(%2,%0), %%xmm2 \n\t"
+        "movaps  48(%2,%0), %%xmm3 \n\t"
+        "maxps      %%xmm4, %%xmm0 \n\t"
+        "maxps      %%xmm4, %%xmm1 \n\t"
+        "maxps      %%xmm4, %%xmm2 \n\t"
+        "maxps      %%xmm4, %%xmm3 \n\t"
+        "minps      %%xmm5, %%xmm0 \n\t"
+        "minps      %%xmm5, %%xmm1 \n\t"
+        "minps      %%xmm5, %%xmm2 \n\t"
+        "minps      %%xmm5, %%xmm3 \n\t"
+        "movaps  %%xmm0,   (%1,%0) \n\t"
+        "movaps  %%xmm1, 16(%1,%0) \n\t"
+        "movaps  %%xmm2, 32(%1,%0) \n\t"
+        "movaps  %%xmm3, 48(%1,%0) \n\t"
+        "sub  $64, %0 \n\t"
+        "jge 1b \n\t"
+        :"+&r"(i)
+        :"r"(dst), "r"(src), "m"(min), "m"(max)
+        :"memory"
     );
 }
 

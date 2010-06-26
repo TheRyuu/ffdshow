@@ -24,7 +24,7 @@
  */
 
 /**
- * @file libavcodec/huffyuv.c
+ * @file
  * huffyuv codec for libavcodec.
  */
 
@@ -231,17 +231,12 @@ static void heap_sift(HeapElem *h, int root, int size)
     }
 }
 
-static void generate_len_table(uint8_t *dst, const uint64_t *stats, int size){
-#if __STDC_VERSION__ >= 199901L
-    HeapElem h[size];
-    int up[2*size];
-    int len[2*size];
-#else
-    HeapElem *h=_alloca(sizeof(HeapElem)*size);
-    int *up=_alloca(sizeof(int)*2*size);
-    int *len=_alloca(sizeof(int)*2*size);
-#endif
+static void generate_len_table(uint8_t *dst, const uint64_t *stats){
+    HeapElem h[256];
+    int up[2*256];
+    int len[2*256];
     int offset, i, next;
+    int size = 256;
 
     for(offset=1; ; offset<<=1){
         for(i=0; i<size; i++){
@@ -654,7 +649,7 @@ static av_cold int encode_init(AVCodecContext *avctx)
     }
 
     for(i=0; i<3; i++){
-        generate_len_table(s->len[i], s->stats[i], 256);
+        generate_len_table(s->len[i], s->stats[i]);
 
         if(generate_bits_table(s->bits[i], s->len[i])<0){
             return -1;
@@ -1230,7 +1225,7 @@ static int encode_frame(AVCodecContext *avctx, unsigned char *buf, int buf_size,
 
     if(s->context){
         for(i=0; i<3; i++){
-            generate_len_table(s->len[i], s->stats[i], 256);
+            generate_len_table(s->len[i], s->stats[i]);
             if(generate_bits_table(s->bits[i], s->len[i])<0)
                 return -1;
             size+= store_table(s, s->len[i], &buf[size]);
@@ -1423,7 +1418,7 @@ static av_cold int encode_end(AVCodecContext *avctx)
 #if CONFIG_HUFFYUV_DECODER
 AVCodec huffyuv_decoder = {
     "huffyuv",
-    CODEC_TYPE_VIDEO,
+    AVMEDIA_TYPE_VIDEO,
     CODEC_ID_HUFFYUV,
     sizeof(HYuvContext),
     decode_init,
@@ -1442,7 +1437,7 @@ AVCodec huffyuv_decoder = {
 #if CONFIG_FFVHUFF_DECODER
 AVCodec ffvhuff_decoder = {
     "ffvhuff",
-    CODEC_TYPE_VIDEO,
+    AVMEDIA_TYPE_VIDEO,
     CODEC_ID_FFVHUFF,
     sizeof(HYuvContext),
     decode_init,
@@ -1461,7 +1456,7 @@ AVCodec ffvhuff_decoder = {
 #if CONFIG_HUFFYUV_ENCODER
 AVCodec huffyuv_encoder = {
     "huffyuv",
-    CODEC_TYPE_VIDEO,
+    AVMEDIA_TYPE_VIDEO,
     CODEC_ID_HUFFYUV,
     sizeof(HYuvContext),
     /*.init=*/encode_init,
@@ -1484,7 +1479,7 @@ AVCodec huffyuv_encoder = {
 #if CONFIG_FFVHUFF_ENCODER
 AVCodec ffvhuff_encoder = {
     "ffvhuff",
-    CODEC_TYPE_VIDEO,
+    AVMEDIA_TYPE_VIDEO,
     CODEC_ID_FFVHUFF,
     sizeof(HYuvContext),
     /*.init=*/encode_init,

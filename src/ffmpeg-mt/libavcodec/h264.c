@@ -3597,6 +3597,9 @@ av_cold void ff_h264_free_context(H264Context *h)
 
     free_tables(h); //FIXME cleanup init stuff perhaps
 
+    if (!h->s.context_initialized)
+        return;
+
     for(i = 0; i < MAX_SPS_COUNT; i++)
         av_freep(h->sps_buffers + i);
 

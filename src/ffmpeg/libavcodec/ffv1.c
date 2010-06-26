@@ -21,7 +21,7 @@
  */
 
 /**
- * @file libavcodec/ffv1.c
+ * @file
  * FF Video Codec 1 (a lossless codec)
  */
 
@@ -32,10 +32,6 @@
 #include "rangecoder.h"
 #include "golomb.h"
 #include "mathops.h"
-
-#ifndef __GNUC__
-#include <malloc.h>
-#endif
 
 #define MAX_PLANES 4
 #define CONTEXT_SIZE 32
@@ -241,6 +237,7 @@ typedef struct FFV1Context{
     uint8_t state_transition[256];
     int run_index;
     int colorspace;
+    int_fast16_t *sample_buffer;
 
     DSPContext dsp;
 }FFV1Context;
@@ -513,21 +510,16 @@ static inline int encode_line(FFV1Context *s, int w, int_fast16_t *sample[2], in
 static void encode_plane(FFV1Context *s, uint8_t *src, int w, int h, int stride, int plane_index){
     int x,y,i;
     const int ring_size= s->avctx->context_model ? 3 : 2;
-#if __STDC_VERSION__ >= 199901L
-    int_fast16_t sample_buffer[ring_size][w+6], *sample[ring_size];
-#else
-    int_fast16_t **sample_buffer = _alloca(ring_size * (w+6) * sizeof(int_fast16_t));
-    int_fast16_t **sample = _alloca(ring_size * sizeof(int_fast16_t *));
-#endif
+    int_fast16_t *sample[3];
     s->run_index=0;
 
-    memset(sample_buffer, 0, sizeof(sample_buffer));
+    memset(s->sample_buffer, 0, ring_size*(w+6)*sizeof(*s->sample_buffer));
 
     for(y=0; y<h; y++){
         for(i=0; i<ring_size; i++)
-            sample[i]= sample_buffer[(h+i-y)%ring_size]+3;
+            sample[i]= s->sample_buffer + (w+6)*((h+i-y)%ring_size) + 3;
 
-        sample[0][-1]= sample[1][0  ];  // FIXME MSVC build crashes for obvious reason
+        sample[0][-1]= sample[1][0  ];
         sample[1][ w]= sample[1][w-1];
 //{START_TIMER
         if(s->avctx->bits_per_raw_sample<=8){
@@ -548,20 +540,15 @@ static void encode_plane(FFV1Context *s, uint8_t *src, int w, int h, int stride,
 static void encode_rgb_frame(FFV1Context *s, uint32_t *src, int w, int h, int stride){
     int x, y, p, i;
     const int ring_size= s->avctx->context_model ? 3 : 2;
-#if __STDC_VERSION__ >= 199901L
-    int_fast16_t sample_buffer[3][ring_size][w+6], *sample[3][ring_size];
-#else
-    int_fast16_t ***sample_buffer = _alloca(3 * ring_size * (w+6) * sizeof(int_fast16_t));
-    int_fast16_t ***sample = _alloca(3 * ring_size * sizeof(int_fast16_t*));
-#endif
+    int_fast16_t *sample[3][3];
     s->run_index=0;
 
-    memset(sample_buffer, 0, sizeof(sample_buffer));
+    memset(s->sample_buffer, 0, ring_size*3*(w+6)*sizeof(*s->sample_buffer));
 
     for(y=0; y<h; y++){
         for(i=0; i<ring_size; i++)
             for(p=0; p<3; p++)
-                sample[p][i]= sample_buffer[p][(h+i-y)%ring_size]+3;
+                sample[p][i]= s->sample_buffer + p*ring_size*(w+6) + ((h+i-y)%ring_size)*(w+6) + 3;
 
         for(x=0; x<w; x++){
             int v= src[x + stride*y];
@@ -644,6 +631,10 @@ static av_cold int common_init(AVCodecContext *avctx){
     s->height= avctx->height;
 
     assert(s->width && s->height);
+
+    s->sample_buffer = av_malloc(6 * (s->width+6) * sizeof(*s->sample_buffer));
+    if (!s->sample_buffer)
+        return AVERROR(ENOMEM);
 
     return 0;
 }
@@ -839,6 +830,8 @@ static av_cold int common_end(AVCodecContext *avctx){
         av_freep(&p->vlc_state);
     }
 
+    av_freep(&s->sample_buffer);
+
     return 0;
 }
 
@@ -901,18 +894,13 @@ static av_always_inline void decode_line(FFV1Context *s, int w, int_fast16_t *sa
 
 static void decode_plane(FFV1Context *s, uint8_t *src, int w, int h, int stride, int plane_index){
     int x, y;
-    #if __STDC_VERSION__ >= 199901L
-    int_fast16_t sample_buffer[2][w+6];
-    #else
-    int_fast16_t **sample_buffer = _alloca(2 * (w+6) * sizeof(int_fast16_t));
-    #endif
     int_fast16_t *sample[2];
-    sample[0]=sample_buffer[0]+3;
-    sample[1]=sample_buffer[1]+3;
+    sample[0]=s->sample_buffer    +3;
+    sample[1]=s->sample_buffer+w+6+3;
 
     s->run_index=0;
 
-    memset(sample_buffer, 0, sizeof(sample_buffer));
+    memset(s->sample_buffer, 0, 2*(w+6)*sizeof(*s->sample_buffer));
 
     for(y=0; y<h; y++){
         int_fast16_t *temp= sample[0]; //FIXME try a normal buffer
@@ -941,20 +929,15 @@ static void decode_plane(FFV1Context *s, uint8_t *src, int w, int h, int stride,
 
 static void decode_rgb_frame(FFV1Context *s, uint32_t *src, int w, int h, int stride){
     int x, y, p;
-#if __STDC_VERSION__ >= 199901L
-    int_fast16_t sample_buffer[3][2][w+6];
-#else
-    int_fast16_t *sample_buffer[3][2];
-#endif
     int_fast16_t *sample[3][2];
     for(x=0; x<3; x++){
-        sample[x][0] = sample_buffer[x][0]+3;
-        sample[x][1] = sample_buffer[x][1]+3;
+        sample[x][0] = s->sample_buffer +  x*2   *(w+6) + 3;
+        sample[x][1] = s->sample_buffer + (x*2+1)*(w+6) + 3;
     }
 
     s->run_index=0;
 
-    memset(sample_buffer, 0, sizeof(sample_buffer));
+    memset(s->sample_buffer, 0, 6*(w+6)*sizeof(*s->sample_buffer));
 
     for(y=0; y<h; y++){
         for(p=0; p<3; p++){
@@ -981,7 +964,7 @@ static void decode_rgb_frame(FFV1Context *s, uint32_t *src, int w, int h, int st
             b += g;
             r += g;
 
-            src[x + stride*y]= b + (g<<8) + (r<<16);
+            src[x + stride*y]= b + (g<<8) + (r<<16) + (0xFF<<24);
         }
     }
 }
@@ -1194,7 +1177,7 @@ static int decode_frame(AVCodecContext *avctx, void *data, int *data_size, const
 
 AVCodec ffv1_decoder = {
     "ffv1",
-    CODEC_TYPE_VIDEO,
+    AVMEDIA_TYPE_VIDEO,
     CODEC_ID_FFV1,
     sizeof(FFV1Context),
     decode_init,
@@ -1212,7 +1195,7 @@ AVCodec ffv1_decoder = {
 #if CONFIG_FFV1_ENCODER
 AVCodec ffv1_encoder = {
     "ffv1",
-    CODEC_TYPE_VIDEO,
+    AVMEDIA_TYPE_VIDEO,
     CODEC_ID_FFV1,
     sizeof(FFV1Context),
     encode_init,

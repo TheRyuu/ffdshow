@@ -20,7 +20,7 @@
  */
 
 /**
- * @file libavcodec/pcm.c
+ * @file
  * PCM codecs
  */
 
@@ -98,6 +98,10 @@ static av_cold int pcm_decode_init(AVCodecContext * avctx)
 
     /* ffdshow custom code */
     avctx->sample_fmt = SAMPLE_FMT_S16;
+
+    if (avctx->sample_fmt == SAMPLE_FMT_S32)
+        avctx->bits_per_raw_sample = av_get_bits_per_sample(avctx->codec->id);
+
     return 0;
 }
 
@@ -154,7 +158,7 @@ static int pcm_decode_frame(AVCodecContext *avctx,
 #define PCM_DECODER(id,sample_fmt_,name,long_name_)         \
 AVCodec name ## _decoder = {                    \
     #name,                                      \
-    CODEC_TYPE_AUDIO,                           \
+    AVMEDIA_TYPE_AUDIO,                         \
     id,                                         \
     sizeof(PCMDecode),                          \
     pcm_decode_init,                            \
@@ -173,7 +177,7 @@ AVCodec name ## _decoder = {                    \
 #define PCM_DECODER(id,sample_fmt_,name,long_name_)         \
 AVCodec name ## _decoder = {                    \
     #name,                                      \
-    CODEC_TYPE_AUDIO,                           \
+    AVMEDIA_TYPE_AUDIO,                         \
     id,                                         \
     sizeof(PCMDecode),                          \
     pcm_decode_init,                            \
