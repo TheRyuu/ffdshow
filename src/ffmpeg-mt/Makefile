@@ -57,14 +57,12 @@ SRCS_C=\
       $(LAVC_DIR)/x86/vp3dsp_mmx.c \
       $(LAVC_DIR)/x86/vp3dsp_sse2.c
 
-ifneq ($(64BIT),yes)
 SRCS_YASM=\
       $(LAVC_DIR)/x86/dsputil_yasm.asm \
       $(LAVC_DIR)/x86/h264_deblock_sse2.asm \
       $(LAVC_DIR)/x86/h264_idct_sse2.asm \
       $(LAVC_DIR)/x86/h264_intrapred.asm \
       $(LAVC_DIR)/x86/x86util.asm
-endif
 
 ifeq ($(64BIT),yes)
     CFLAGS+=-DARCH_X86_64

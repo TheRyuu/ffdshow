@@ -239,6 +239,10 @@ SRCS_C=\
       $(LAVC_DIR)/x86/dsputil_mmx.c \
       $(LAVC_DIR)/x86/dsputilenc_mmx.c \
       $(LAVC_DIR)/x86/fdct_mmx.c \
+      $(LAVC_DIR)/x86/fft.c \
+      $(LAVC_DIR)/x86/fft_3dn.c \
+      $(LAVC_DIR)/x86/fft_3dn2.c \
+      $(LAVC_DIR)/x86/fft_sse.c \
       $(LAVC_DIR)/x86/idct_mmx.c \
       $(LAVC_DIR)/x86/idct_mmx_xvid.c \
       $(LAVC_DIR)/x86/idct_sse2_xvid.c \
@@ -262,17 +266,7 @@ SRCS_C=\
       $(LAVS_DIR)/x86/yuv2rgb_mmx.c \
    \
       $(LAVP_DIR)/postprocess.c
-      
 
-ifneq ($(64BIT),yes)
-SRCS_C+=\
-      $(LAVC_DIR)/x86/fft.c \
-      $(LAVC_DIR)/x86/fft_3dn.c \
-      $(LAVC_DIR)/x86/fft_3dn2.c \
-      $(LAVC_DIR)/x86/fft_sse.c
-endif
-
-ifneq ($(64BIT),yes)
 SRCS_YASM=\
       $(LAVC_DIR)/x86/dsputil_yasm.asm \
       $(LAVC_DIR)/x86/fft_mmx.asm \
@@ -280,7 +274,6 @@ SRCS_YASM=\
       $(LAVC_DIR)/x86/h264_idct_sse2.asm \
       $(LAVC_DIR)/x86/h264_intrapred.asm \
       $(LAVC_DIR)/x86/x86util.asm
-endif
 
 ifeq ($(64BIT),yes)
     CFLAGS+=-DARCH_X86_64

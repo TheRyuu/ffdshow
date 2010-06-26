@@ -1988,7 +1988,7 @@ void ff_h264dsp_init_x86(H264DSPContext *c)
             c->h264_idct8_add4= ff_h264_idct8_add4_sse2;
         }
 
-#if CONFIG_GPL && HAVE_YASM && ARCH_X86_32
+#if CONFIG_GPL && HAVE_YASM
         if (mm_flags & FF_MM_MMX2){
 #if ARCH_X86_32
             c->h264_v_loop_filter_luma_intra = ff_x264_deblock_v_luma_intra_mmxext;

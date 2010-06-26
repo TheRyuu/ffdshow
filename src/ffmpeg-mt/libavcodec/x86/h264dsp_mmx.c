@@ -2349,7 +2349,7 @@ void ff_pred8x8_tm_vp8_ssse3       (uint8_t *src, int stride);
 
 void ff_h264_pred_init_x86(H264PredContext *h, int codec_id)
 {
-#if HAVE_YASM && ARCH_X86_32
+#if HAVE_YASM
     if (mm_flags & FF_MM_MMX) {
         h->pred16x16[VERT_PRED8x8] = ff_pred16x16_vertical_mmx;
         h->pred16x16[HOR_PRED8x8 ] = ff_pred16x16_horizontal_mmx;

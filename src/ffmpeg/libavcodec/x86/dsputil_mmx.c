@@ -2708,7 +2708,7 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
             c->avg_h264_chroma_pixels_tab[2]= avg_h264_chroma_mc2_mmx2;
             c->put_h264_chroma_pixels_tab[2]= put_h264_chroma_mc2_mmx2;
 
-#if HAVE_YASM && ARCH_X86_32
+#if HAVE_YASM
             c->add_hfyu_median_prediction = ff_add_hfyu_median_prediction_mmx2;
 #endif
 #if HAVE_7REGS && HAVE_TEN_OPERANDS
@@ -2835,7 +2835,7 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
             c->put_h264_chroma_pixels_tab[1]= put_h264_chroma_mc4_ssse3;
             c->avg_h264_chroma_pixels_tab[1]= avg_h264_chroma_mc4_ssse3;
             c->add_png_paeth_prediction= add_png_paeth_prediction_ssse3;
-#if HAVE_YASM && ARCH_X86_32
+#if HAVE_YASM
             c->add_hfyu_left_prediction = ff_add_hfyu_left_prediction_ssse3;
             if (mm_flags & FF_MM_SSE4) // not really sse4, just slow on Conroe
                 c->add_hfyu_left_prediction = ff_add_hfyu_left_prediction_sse4;
@@ -2843,7 +2843,9 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
         }
 #endif
 
-/* disable audio related ASM for 64-bit builds */
+/* disable audio related ASM for 64-bit builds
+ * todo: test if it still causes crashes
+ */
 #if ARCH_X86_32
         if(mm_flags & FF_MM_3DNOW){
             c->vorbis_inverse_coupling = vorbis_inverse_coupling_3dnow;
@@ -2945,7 +2947,7 @@ void ff_h264dsp_init_x86(H264DSPContext *c)
             c->h264_idct8_add4= ff_h264_idct8_add4_sse2;
         }
 
-#if CONFIG_GPL && HAVE_YASM && ARCH_X86_32
+#if CONFIG_GPL && HAVE_YASM
         if (mm_flags & FF_MM_MMX2){
 #if ARCH_X86_32
             c->h264_v_loop_filter_luma_intra = ff_x264_deblock_v_luma_intra_mmxext;
