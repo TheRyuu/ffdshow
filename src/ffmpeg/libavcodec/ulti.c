@@ -20,7 +20,7 @@
  */
 
 /**
- * @file libavcodec/ulti.c
+ * @file
  * IBM Ultimotion Video Decoder.
  */
 
@@ -209,8 +209,10 @@ static void ulti_grad(AVFrame *frame, int x, int y, uint8_t *Y, int chroma, int 
 
 static int ulti_decode_frame(AVCodecContext *avctx,
                              void *data, int *data_size,
-                             const uint8_t *buf, int buf_size)
+                             AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     UltimotionDecodeContext *s=avctx->priv_data;
     int modifier = 0;
     int uniq = 0;
@@ -404,7 +406,7 @@ static int ulti_decode_frame(AVCodecContext *avctx,
 
 AVCodec ulti_decoder = {
     "ultimotion",
-    CODEC_TYPE_VIDEO,
+    AVMEDIA_TYPE_VIDEO,
     CODEC_ID_ULTI,
     sizeof(UltimotionDecodeContext),
     ulti_decode_init,

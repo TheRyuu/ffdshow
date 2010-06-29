@@ -20,7 +20,7 @@
  */
 
 /**
- * @file libavcodec/truemotion2.c
+ * @file
  * Duck TrueMotion2 decoder.
  */
 
@@ -757,8 +757,10 @@ static const int tm2_stream_order[TM2_NUM_STREAMS] = {
 
 static int decode_frame(AVCodecContext *avctx,
                         void *data, int *data_size,
-                        const uint8_t *buf, int buf_size)
+                        AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     TM2Context * const l = avctx->priv_data;
     AVFrame * const p= (AVFrame*)&l->pic;
     int i, skip, t;
@@ -870,7 +872,7 @@ static av_cold int decode_end(AVCodecContext *avctx){
 
 AVCodec truemotion2_decoder = {
     "truemotion2",
-    CODEC_TYPE_VIDEO,
+    AVMEDIA_TYPE_VIDEO,
     CODEC_ID_TRUEMOTION2,
     sizeof(TM2Context),
     decode_init,

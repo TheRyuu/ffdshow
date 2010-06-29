@@ -21,7 +21,7 @@
  */
 
 /**
- * @file libavcodec/rv10.c
+ * @file
  * RV10/RV20 decoder
  */
 
@@ -644,8 +644,10 @@ static int get_slice_offset(AVCodecContext *avctx, const uint8_t *buf, int n)
 
 static int rv10_decode_frame(AVCodecContext *avctx,
                              void *data, int *data_size,
-                             const uint8_t *buf, int buf_size)
+                             AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     MpegEncContext *s = avctx->priv_data;
     int i;
     AVFrame *pict = data;
@@ -706,7 +708,7 @@ static int rv10_decode_frame(AVCodecContext *avctx,
 
 AVCodec rv10_decoder = {
     "rv10",
-    CODEC_TYPE_VIDEO,
+    AVMEDIA_TYPE_VIDEO,
     CODEC_ID_RV10,
     sizeof(MpegEncContext),
     rv10_decode_init,
@@ -723,7 +725,7 @@ AVCodec rv10_decoder = {
 
 AVCodec rv20_decoder = {
     "rv20",
-    CODEC_TYPE_VIDEO,
+    AVMEDIA_TYPE_VIDEO,
     CODEC_ID_RV20,
     sizeof(MpegEncContext),
     rv10_decode_init,
@@ -737,4 +739,3 @@ AVCodec rv20_decoder = {
     /*.pix_fmts = */NULL,
     /*.long_name = */NULL_IF_CONFIG_SMALL("RealVideo 2.0"),
 };
-

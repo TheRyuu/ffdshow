@@ -11,6 +11,7 @@ CFLAGS+= -I. -I$(LAVC_DIR) -I$(LAVU_DIR) -I../pthreads -I../imgFilters -I$(ZLIB_
 SRCS_C=\
       DllEntry.c \
       $(LAVC_DIR)/allcodecs.c \
+      $(LAVC_DIR)/avpacket.c \
       $(LAVC_DIR)/bitstream.c \
       $(LAVC_DIR)/cabac.c \
       $(LAVC_DIR)/dsputil.c \

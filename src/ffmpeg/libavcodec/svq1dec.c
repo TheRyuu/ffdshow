@@ -6,6 +6,8 @@
  * Copyright (C) 2002 the xine project
  * Copyright (C) 2002 the ffmpeg project
  *
+ * SVQ1 Encoder (c) 2004 Mike Melanson <melanson@pcisys.net>
+ *
  * This file is part of FFmpeg.
  *
  * FFmpeg is free software; you can redistribute it and/or
@@ -640,8 +642,10 @@ static int svq1_decode_frame_header (GetBitContext *bitbuf,MpegEncContext *s) {
 
 static int svq1_decode_frame(AVCodecContext *avctx,
                              void *data, int *data_size,
-                             const uint8_t *buf, int buf_size)
+                             AVPacket *avpkt)
 {
+  const uint8_t *buf = avpkt->data;
+  int buf_size = avpkt->size;
   MpegEncContext *s=avctx->priv_data;
   uint8_t        *current, *previous;
   int             result, i, x, y, width, height;

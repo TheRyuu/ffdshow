@@ -20,7 +20,7 @@
  */
 
 /**
- * @file libavcodec/zmbv.c
+ * @file
  * Zip Motion Blocks Video decoder
  */
 
@@ -392,8 +392,10 @@ static int zmbv_decode_intra(ZmbvContext *c)
     return 0;
 }
 
-static int decode_frame(AVCodecContext *avctx, void *data, int *data_size, const uint8_t *buf, int buf_size)
+static int decode_frame(AVCodecContext *avctx, void *data, int *data_size, AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     ZmbvContext * const c = avctx->priv_data;
     uint8_t *outptr;
     int zret = Z_OK; // Zlib return code
@@ -653,7 +655,7 @@ static av_cold int decode_end(AVCodecContext *avctx)
 
 AVCodec zmbv_decoder = {
     "zmbv",
-    CODEC_TYPE_VIDEO,
+    AVMEDIA_TYPE_VIDEO,
     CODEC_ID_ZMBV,
     sizeof(ZmbvContext),
     decode_init,

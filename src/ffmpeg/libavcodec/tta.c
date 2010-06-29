@@ -386,8 +386,10 @@ static int set_position (TTAstate *s,unsigned int pos) {
 
 static int tta_decode_frame(AVCodecContext *avctx,
 			    void *data, int *data_size,
-			    const uint8_t *buf, int buf_size)
+			    AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     TTAstate *s = avctx->priv_data;
     unsigned int k, depth, unary, binary;
     uint8_t *p = data;
@@ -532,7 +534,7 @@ static void tta_flush(AVCodecContext *avctx)
 
 AVCodec tta_decoder = {
     "tta",
-    CODEC_TYPE_AUDIO,
+    AVMEDIA_TYPE_AUDIO,
     CODEC_ID_TTA,
     sizeof(TTAstate),
     /*.init = */tta_decode_init,

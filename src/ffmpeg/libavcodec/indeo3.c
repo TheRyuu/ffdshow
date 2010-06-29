@@ -1074,8 +1074,10 @@ static int iv_decode_frame(AVCodecContext *avctx,
 
 static int indeo3_decode_frame(AVCodecContext *avctx,
                                void *data, int *data_size,
-                               const uint8_t *buf, int buf_size)
+                               AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     Indeo3DecodeContext *s=avctx->priv_data;
     uint8_t *src, *dest;
     int y;
@@ -1136,7 +1138,7 @@ static av_cold int indeo3_decode_end(AVCodecContext *avctx)
 
 AVCodec indeo3_decoder = {
     "indeo3",
-    CODEC_TYPE_VIDEO,
+    AVMEDIA_TYPE_VIDEO,
     CODEC_ID_INDEO3,
     sizeof(Indeo3DecodeContext),
     indeo3_decode_init,

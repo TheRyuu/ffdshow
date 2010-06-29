@@ -457,6 +457,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavcodec\avpacket.c"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\bitstream.c"
 				>
 			</File>

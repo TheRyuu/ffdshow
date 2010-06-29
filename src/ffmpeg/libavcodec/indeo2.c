@@ -20,7 +20,7 @@
  */
 
 /**
- * @file libavcodec/indeo2.c
+ * @file
  * Intel Indeo 2 decoder.
  */
 #define ALT_BITSTREAM_READER_LE
@@ -137,8 +137,10 @@ static int ir2_decode_plane_inter(Ir2Context *ctx, int width, int height, uint8_
 
 static int ir2_decode_frame(AVCodecContext *avctx,
                         void *data, int *data_size,
-                        const uint8_t *buf, int buf_size)
+                        AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     Ir2Context * const s = avctx->priv_data;
     AVFrame *picture = data;
     AVFrame * const p= (AVFrame*)&s->picture;
@@ -224,7 +226,7 @@ static av_cold int ir2_decode_end(AVCodecContext *avctx){
 
 AVCodec indeo2_decoder = {
     "indeo2",
-    CODEC_TYPE_VIDEO,
+    AVMEDIA_TYPE_VIDEO,
     CODEC_ID_INDEO2,
     sizeof(Ir2Context),
     ir2_decode_init,

@@ -437,7 +437,7 @@ static av_cold int png_enc_init(AVCodecContext *avctx){
 
 AVCodec png_encoder = {
     "png",
-    CODEC_TYPE_VIDEO,
+    AVMEDIA_TYPE_VIDEO,
     CODEC_ID_PNG,
     sizeof(PNGEncContext),
     /*.init=*/png_enc_init,

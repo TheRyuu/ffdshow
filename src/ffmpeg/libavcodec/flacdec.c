@@ -20,7 +20,7 @@
  */
 
 /**
- * @file libavcodec/flacdec.c
+ * @file
  * FLAC (Free Lossless Audio Codec) decoder
  * @author Alex Beregszaszi
  *
@@ -636,8 +636,10 @@ static int decode_frame(FLACContext *s)
 
 static int flac_decode_frame(AVCodecContext *avctx,
                             void *data, int *data_size,
-                            const uint8_t *buf, int buf_size)
+                            AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     FLACContext *s = avctx->priv_data;
     int i, j = 0, input_buf_size = 0, bytes_read = 0;
     int16_t *samples_16 = data;
@@ -797,7 +799,7 @@ static void flac_flush(AVCodecContext *avctx)
 
 AVCodec flac_decoder = {
     "flac",
-    CODEC_TYPE_AUDIO,
+    AVMEDIA_TYPE_AUDIO,
     CODEC_ID_FLAC,
     sizeof(FLACContext),
     /*.init = */flac_decode_init,

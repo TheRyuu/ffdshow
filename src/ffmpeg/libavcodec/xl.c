@@ -20,7 +20,7 @@
  */
 
 /**
- * @file libavcodec/xl.c
+ * @file
  * Miro VideoXL codec.
  */
 
@@ -40,8 +40,10 @@ static const int xl_table[32] = {
 
 static int decode_frame(AVCodecContext *avctx,
                         void *data, int *data_size,
-                        const uint8_t *buf, int buf_size)
+                        AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     VideoXLContext * const a = avctx->priv_data;
     AVFrame * const p= (AVFrame*)&a->pic;
     uint8_t *Y, *U, *V;
@@ -138,7 +140,7 @@ static av_cold int decode_end(AVCodecContext *avctx){
 
 AVCodec xl_decoder = {
     "xl",
-    CODEC_TYPE_VIDEO,
+    AVMEDIA_TYPE_VIDEO,
     CODEC_ID_VIXL,
     sizeof(VideoXLContext),
     decode_init,

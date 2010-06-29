@@ -1794,8 +1794,10 @@ static int vorbis_parse_audio_packet(vorbis_context *vc)
 
 static int vorbis_decode_frame(AVCodecContext *avccontext,
                                void *data, int *data_size,
-                               const uint8_t *buf, int buf_size)
+                               AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size       = avpkt->size;
     vorbis_context *vc = avccontext->priv_data ;
     GetBitContext *gb = &(vc->gb);
     #if __STDC_VERSION__ >= 199901L

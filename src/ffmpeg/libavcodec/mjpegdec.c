@@ -26,7 +26,7 @@
  */
 
 /**
- * @file libavcodec/mjpegdec.c
+ * @file
  * MJPEG decoder.
  */
 
@@ -1204,8 +1204,10 @@ found:
 
 int ff_mjpeg_decode_frame(AVCodecContext *avctx,
                               void *data, int *data_size,
-                              const uint8_t *buf, int buf_size)
+                              AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     MJpegDecodeContext *s = avctx->priv_data;
     const uint8_t *buf_end, *buf_ptr;
     int start_code;
@@ -1478,7 +1480,7 @@ av_cold int ff_mjpeg_decode_end(AVCodecContext *avctx)
 
 AVCodec mjpeg_decoder = {
     "mjpeg",
-    CODEC_TYPE_VIDEO,
+    AVMEDIA_TYPE_VIDEO,
     CODEC_ID_MJPEG,
     sizeof(MJpegDecodeContext),
     /*.init=*/ff_mjpeg_decode_init,

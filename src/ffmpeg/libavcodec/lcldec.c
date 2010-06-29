@@ -20,7 +20,7 @@
  */
 
 /**
- * @file libavcodec/lcldec.c
+ * @file
  * LCL (LossLess Codec Library) Video Codec
  * Decoder for MSZH and ZLIB codecs
  * Experimental encoder for ZLIB RGB24
@@ -157,8 +157,10 @@ static int zlib_decomp(AVCodecContext *avctx, const uint8_t *src, int src_len, i
  * Decode a frame
  *
  */
-static int decode_frame(AVCodecContext *avctx, void *data, int *data_size, const uint8_t *buf, int buf_size)
+static int decode_frame(AVCodecContext *avctx, void *data, int *data_size, AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     LclDecContext * const c = avctx->priv_data;
     unsigned char *encoded = (unsigned char *)buf;
     unsigned int pixel_ptr;
@@ -609,7 +611,7 @@ static av_cold int decode_end(AVCodecContext *avctx)
 #if CONFIG_MSZH_DECODER
 AVCodec mszh_decoder = {
     "mszh",
-    CODEC_TYPE_VIDEO,
+    AVMEDIA_TYPE_VIDEO,
     CODEC_ID_MSZH,
     sizeof(LclDecContext),
     decode_init,
@@ -628,7 +630,7 @@ AVCodec mszh_decoder = {
 #if CONFIG_ZLIB_DECODER
 AVCodec zlib_decoder = {
     "zlib",
-    CODEC_TYPE_VIDEO,
+    AVMEDIA_TYPE_VIDEO,
     CODEC_ID_ZLIB,
     sizeof(LclDecContext),
     decode_init,

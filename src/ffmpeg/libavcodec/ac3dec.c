@@ -1311,8 +1311,10 @@ static int decode_audio_block(AC3DecodeContext *s, int blk)
  * Decode a single AC-3 frame.
  */
 static int ac3_decode_frame(AVCodecContext * avctx, void *data, int *data_size,
-                            const uint8_t *buf, int buf_size)
+                            AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     AC3DecodeContext *s = avctx->priv_data;
     int16_t *out_samples = (int16_t *)data;
     int blk, ch, err;
@@ -1437,7 +1439,7 @@ static av_cold int ac3_decode_end(AVCodecContext *avctx)
 
 AVCodec ac3_decoder = {
     /*.name = */"ac3",
-    /*.type = */CODEC_TYPE_AUDIO,
+    /*.type = */AVMEDIA_TYPE_AUDIO,
     /*.id = */CODEC_ID_AC3,
     /*.priv_data_size = */sizeof (AC3DecodeContext),
     /*.init = */ac3_decode_init,
@@ -1455,7 +1457,7 @@ AVCodec ac3_decoder = {
 #if CONFIG_EAC3_DECODER
 AVCodec eac3_decoder = {
     /*.name = */"eac3",
-    /*.type = */CODEC_TYPE_AUDIO,
+    /*.type = */AVMEDIA_TYPE_AUDIO,
     /*.id = */CODEC_ID_EAC3,
     /*.priv_data_size = */sizeof (AC3DecodeContext),
     /*.init = */ac3_decode_init,

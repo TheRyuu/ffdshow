@@ -523,6 +523,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavcodec\avpacket.c"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\avs.c"
 				>
 			</File>

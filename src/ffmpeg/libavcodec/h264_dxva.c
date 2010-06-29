@@ -843,8 +843,10 @@ static int decode_nal_units_noexecute(H264Context *h, const uint8_t *buf, int bu
 }
 
 
-int av_h264_decode_frame(struct AVCodecContext* avctx, int* nOutPOC, int64_t* rtStartTime, const uint8_t *buf, int buf_size)
+int av_h264_decode_frame(struct AVCodecContext* avctx, int* nOutPOC, int64_t* rtStartTime, AVPacket *avpkt)                      
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     H264Context *h = avctx->priv_data;
     MpegEncContext *s = &h->s;
     //AVFrame *pict = data;

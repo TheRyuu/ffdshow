@@ -20,7 +20,7 @@
  */
 
 /**
- * @file libavcodec/ac3enc.c
+ * @file
  * The simplest AC-3 encoder.
  */
 //#define DEBUG
@@ -1300,7 +1300,7 @@ static av_cold int AC3_encode_close(AVCodecContext *avctx)
 
 AVCodec ac3_encoder = {
     "ac3",
-    CODEC_TYPE_AUDIO,
+    AVMEDIA_TYPE_AUDIO,
     CODEC_ID_AC3,
     sizeof(AC3EncodeContext),
     /*.init=*/AC3_encode_init,

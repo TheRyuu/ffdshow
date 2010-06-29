@@ -334,8 +334,10 @@ static av_cold int g726_close(AVCodecContext *avctx)
 
 static int g726_decode_frame(AVCodecContext *avctx,
                              void *data, int *data_size,
-                             const uint8_t *buf, int buf_size)
+                             AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     G726Context *c = avctx->priv_data;
     short *samples = data;
     GetBitContext gb;
@@ -354,7 +356,7 @@ static int g726_decode_frame(AVCodecContext *avctx,
 
 AVCodec adpcm_g726_decoder = {
     "g726",
-    CODEC_TYPE_AUDIO,
+    AVMEDIA_TYPE_AUDIO,
     CODEC_ID_ADPCM_G726,
     sizeof(G726Context),
     /*.init = */g726_init,

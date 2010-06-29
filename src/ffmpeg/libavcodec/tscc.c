@@ -20,7 +20,7 @@
  */
 
 /**
- * @file libavcodec/tscc.c
+ * @file
  * TechSmith Camtasia decoder
  *
  * Fourcc: TSCC
@@ -67,8 +67,10 @@ typedef struct TsccContext {
  * Decode a frame
  *
  */
-static int decode_frame(AVCodecContext *avctx, void *data, int *data_size, const uint8_t *buf, int buf_size)
+static int decode_frame(AVCodecContext *avctx, void *data, int *data_size, AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     CamtasiaContext * const c = avctx->priv_data;
     const unsigned char *encoded = buf;
     unsigned char *outptr;
@@ -196,19 +198,19 @@ static av_cold int decode_end(AVCodecContext *avctx)
 }
 
 AVCodec tscc_decoder = {
-    "camtasia",
-    CODEC_TYPE_VIDEO,
-    CODEC_ID_TSCC,
-    sizeof(CamtasiaContext),
-    decode_init,
-    NULL,
-    decode_end,
-    decode_frame,
-    /*.capabilities = */CODEC_CAP_DR1,
-    /*.next = */NULL,
-    /*.flush = */NULL,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("TechSmith Screen Capture Codec"),
+        "camtasia",
+        AVMEDIA_TYPE_VIDEO,
+        CODEC_ID_TSCC,
+        sizeof(CamtasiaContext),
+        decode_init,
+        NULL,
+        decode_end,
+        decode_frame,
+        /*.capabilities = */CODEC_CAP_DR1,
+        /*.next = */NULL,
+        /*.flush = */NULL,
+        /*.supported_framerates = */NULL,
+        /*.pix_fmts = */NULL,
+        /*.long_name = */NULL_IF_CONFIG_SMALL("TechSmith Screen Capture Codec"),
 };
 

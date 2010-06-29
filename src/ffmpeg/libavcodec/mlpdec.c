@@ -943,8 +943,10 @@ static int output_data(MLPDecodeContext *m, unsigned int substr,
  *  otherwise returns the number of bytes consumed. */
 
 static int read_access_unit(AVCodecContext *avctx, void* data, int *data_size,
-                            const uint8_t *buf, int buf_size)
+                            AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     MLPDecodeContext *m = avctx->priv_data;
     GetBitContext gb;
     unsigned int length, substr;
@@ -1139,7 +1141,7 @@ error:
 
 AVCodec mlp_decoder = {
     "mlp",
-    CODEC_TYPE_AUDIO,
+    AVMEDIA_TYPE_AUDIO,
     CODEC_ID_MLP,
     sizeof(MLPDecodeContext),
     /*.init = */mlp_decode_init,
@@ -1157,7 +1159,7 @@ AVCodec mlp_decoder = {
 #if CONFIG_TRUEHD_DECODER
 AVCodec truehd_decoder = {
     "truehd",
-    CODEC_TYPE_AUDIO,
+    AVMEDIA_TYPE_AUDIO,
     CODEC_ID_TRUEHD,
     sizeof(MLPDecodeContext),
     /*.init = */mlp_decode_init,

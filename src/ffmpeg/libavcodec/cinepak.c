@@ -20,7 +20,7 @@
  */
 
 /**
- * @file libavcodec/cinepak.c
+ * @file
  * Cinepak video decoder
  * by Ewald Snel <ewald@rambo.its.tudelft.nl>
  * For more information on the Cinepak algorithm, visit:
@@ -410,8 +410,10 @@ static av_cold int cinepak_decode_init(AVCodecContext *avctx)
 
 static int cinepak_decode_frame(AVCodecContext *avctx,
                                 void *data, int *data_size,
-                                const uint8_t *buf, int buf_size)
+                                AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     CinepakContext *s = avctx->priv_data;
 
     s->data = buf;
@@ -455,7 +457,7 @@ static av_cold int cinepak_decode_end(AVCodecContext *avctx)
 
 AVCodec cinepak_decoder = {
     "cinepak",
-    CODEC_TYPE_VIDEO,
+    AVMEDIA_TYPE_VIDEO,
     CODEC_ID_CINEPAK,
     sizeof(CinepakContext),
     cinepak_decode_init,

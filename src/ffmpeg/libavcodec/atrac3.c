@@ -21,7 +21,7 @@
  */
 
 /**
- * @file libavcodec/atrac3.c
+ * @file
  * Atrac 3 compatible decoder.
  * This decoder handles Sony's ATRAC3 data.
  *
@@ -817,7 +817,9 @@ static int decodeFrame(ATRAC3Context *q, const uint8_t* databuf)
 
 static int atrac3_decode_frame(AVCodecContext *avctx,
             void *data, int *data_size,
-            const uint8_t *buf, int buf_size) {
+            AVPacket *avpkt) {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     ATRAC3Context *q = avctx->priv_data;
     int result = 0, i;
     const uint8_t* databuf;
@@ -1014,7 +1016,7 @@ static av_cold int atrac3_decode_init(AVCodecContext *avctx)
 AVCodec atrac3_decoder =
 {
     /*.name = */"atrac3",
-    /*.type = */CODEC_TYPE_AUDIO,
+    /*.type = */AVMEDIA_TYPE_AUDIO,
     /*.id = */CODEC_ID_ATRAC3,
     /*.priv_data_size = */sizeof(ATRAC3Context),
     /*.init = */atrac3_decode_init,

@@ -21,7 +21,7 @@
  */
 
 /**
- * @file libavcodec/h261dec.c
+ * @file
  * H.261 decoder.
  */
 
@@ -544,8 +544,10 @@ static int get_consumed_bytes(MpegEncContext *s, int buf_size){
 
 static int h261_decode_frame(AVCodecContext *avctx,
                              void *data, int *data_size,
-                             const uint8_t *buf, int buf_size)
+                             AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     H261Context *h= avctx->priv_data;
     MpegEncContext *s = &h->s;
     int ret;
@@ -641,7 +643,7 @@ static av_cold int h261_decode_end(AVCodecContext *avctx)
 
 AVCodec h261_decoder = {
     "h261",
-    CODEC_TYPE_VIDEO,
+    AVMEDIA_TYPE_VIDEO,
     CODEC_ID_H261,
     sizeof(H261Context),
     /*.init = */h261_decode_init,

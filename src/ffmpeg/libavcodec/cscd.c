@@ -135,7 +135,9 @@ static void add_frame_32(AVFrame *f, const uint8_t *src,
 #endif
 
 static int decode_frame(AVCodecContext *avctx, void *data, int *data_size,
-                        const uint8_t *buf, int buf_size) {
+                        AVPacket *avpkt) {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     CamStudioContext *c = avctx->priv_data;
     AVFrame *picture = data;
 
@@ -247,7 +249,7 @@ static av_cold int decode_end(AVCodecContext *avctx) {
 
 AVCodec cscd_decoder = {
     "camstudio",
-    CODEC_TYPE_VIDEO,
+    AVMEDIA_TYPE_VIDEO,
     CODEC_ID_CSCD,
     sizeof(CamStudioContext),
     decode_init,

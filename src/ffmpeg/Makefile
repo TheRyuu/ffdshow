@@ -30,6 +30,7 @@ SRCS_C=\
       $(LAVC_DIR)/atrac3.c \
       $(LAVC_DIR)/audioconvert.c \
       $(LAVC_DIR)/avfft.c \
+      $(LAVC_DIR)/avpacket.c \
       $(LAVC_DIR)/avs.c \
       $(LAVC_DIR)/bitstream.c \
       $(LAVC_DIR)/cabac.c \

@@ -267,6 +267,7 @@ static attribute_align_arg void *frame_worker_thread(void *arg)
     AVCodecContext *avctx = p->avctx;
     FrameThreadContext * fctx = p->parent;
     AVCodec *codec = avctx->codec;
+    AVPacket avpkt;
 
     while (1) {
         if (p->state == STATE_INPUT_READY && !fctx->die) {
@@ -281,7 +282,10 @@ static attribute_align_arg void *frame_worker_thread(void *arg)
         if (!codec->update_thread_context) ff_thread_finish_setup(avctx);
 
         pthread_mutex_lock(&p->mutex);
-        p->result = codec->decode(avctx, &p->picture, &p->got_picture, p->buf, p->buf_size);
+        av_init_packet(&avpkt);
+        avpkt.data = p->buf;
+        avpkt.size = p->buf_size;
+        p->result = codec->decode(avctx, &p->picture, &p->got_picture, &avpkt);
 
         if (p->state == STATE_SETTING_UP) ff_thread_finish_setup(avctx);
 
@@ -395,14 +399,14 @@ static void handle_delayed_releases(PerThreadContext *p)
 }
 
 /// Submit a frame to the next decoding thread
-static int submit_frame(PerThreadContext * p, const uint8_t *buf, int buf_size)
+static int submit_frame(PerThreadContext * p, AVPacket *avpkt)
 {
     FrameThreadContext *fctx = p->parent;
     PerThreadContext *prev_thread = fctx->prev_thread;
     AVCodec *codec = p->avctx->codec;
     int err = 0;
 
-    if (!buf_size && !(codec->capabilities & CODEC_CAP_DELAY)) return 0;
+    if (!avpkt->size && !(codec->capabilities & CODEC_CAP_DELAY)) return 0;
 
     pthread_mutex_lock(&p->mutex);
 
@@ -420,11 +424,11 @@ static int submit_frame(PerThreadContext * p, const uint8_t *buf, int buf_size)
         if (err) return err;
     }
 
-    //FIXME: the client API should allow copy-on-write
-    p->buf = av_fast_realloc(p->buf, &p->allocated_buf_size, buf_size + FF_INPUT_BUFFER_PADDING_SIZE);
-    memcpy(p->buf, buf, buf_size);
-    memset(p->buf + buf_size, 0, FF_INPUT_BUFFER_PADDING_SIZE);
-    p->buf_size = buf_size;
+    //FIXME: try to reuse the avpkt data instead of copying it
+    p->buf = av_fast_realloc(p->buf, &p->allocated_buf_size, avpkt->size + FF_INPUT_BUFFER_PADDING_SIZE);
+    memcpy(p->buf, avpkt->data, avpkt->size);
+    memset(p->buf + avpkt->size, 0, FF_INPUT_BUFFER_PADDING_SIZE);
+    p->buf_size = avpkt->size;
 
     p->state = STATE_SETTING_UP;
     pthread_cond_signal(&p->input_cond);
@@ -437,7 +441,7 @@ static int submit_frame(PerThreadContext * p, const uint8_t *buf, int buf_size)
 
 int ff_thread_decode_frame(AVCodecContext *avctx,
                              void *data, int *data_size,
-                             const uint8_t *buf, int buf_size)
+                             AVPacket *avpkt)
 {
     FrameThreadContext *fctx = avctx->thread_opaque;
     PerThreadContext * p;
@@ -446,7 +450,7 @@ int ff_thread_decode_frame(AVCodecContext *avctx,
 
     p = &fctx->threads[fctx->next_decoding];
     update_thread_context_from_user(p->avctx, avctx);
-    err = submit_frame(p, buf, buf_size);
+    err = submit_frame(p, avpkt);
     if (err) return err;
 
     // ffdshow custom code
@@ -490,7 +494,7 @@ int ff_thread_decode_frame(AVCodecContext *avctx,
         p->got_picture = 0;
 
         if (returning_thread >= thread_count) returning_thread = 0;
-    } while (!buf_size && !*data_size && returning_thread != fctx->next_finished);
+    } while (!avpkt->size && !*data_size && returning_thread != fctx->next_finished);
 
     update_thread_context_from_copy(avctx, p->avctx, 1);
 

@@ -20,7 +20,7 @@
  */
 
 /**
- * @file libavcodec/msrle.c
+ * @file
  * MS RLE Video Decoder by Mike Melanson (melanson@pcisys.net)
  * For more information about the MS RLE format, visit:
  *   http://www.pcisys.net/~melanson/codecs/
@@ -74,8 +74,10 @@ static av_cold int msrle_decode_init(AVCodecContext *avctx)
 
 static int msrle_decode_frame(AVCodecContext *avctx,
                               void *data, int *data_size,
-                              const uint8_t *buf, int buf_size)
+                              AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     MsrleContext *s = avctx->priv_data;
     int istride = FFALIGN(avctx->width*avctx->bits_per_coded_sample, 32) / 8;
 
@@ -99,24 +101,24 @@ static int msrle_decode_frame(AVCodecContext *avctx,
     }
 
     /* FIXME how to correctly detect RLE ??? */
-    if (avctx->height * istride == buf_size) { /* assume uncompressed */
+    if (avctx->height * istride == avpkt->size) { /* assume uncompressed */
         int linesize = avctx->width * avctx->bits_per_coded_sample / 8;
         uint8_t *ptr = s->frame.data[0];
-        uint8_t *buf2 = buf + (avctx->height-1)*istride;
+        uint8_t *buf = avpkt->data + (avctx->height-1)*istride;
         int i, j;
 
         for (i = 0; i < avctx->height; i++) {
             if (avctx->bits_per_coded_sample == 4) {
                 for (j = 0; j < avctx->width - 1; j += 2) {
-                    ptr[j+0] = buf2[j>>1] >> 4;
-                    ptr[j+1] = buf2[j>>1] & 0xF;
+                    ptr[j+0] = buf[j>>1] >> 4;
+                    ptr[j+1] = buf[j>>1] & 0xF;
                 }
                 if (avctx->width & 1)
-                    ptr[j+0] = buf2[j>>1] >> 4;
+                    ptr[j+0] = buf[j>>1] >> 4;
             } else {
-                memcpy(ptr, buf2, linesize);
+                memcpy(ptr, buf, linesize);
             }
-            buf2 -= istride;
+            buf -= istride;
             ptr += s->frame.linesize[0];
         }
     } else {
@@ -143,7 +145,7 @@ static av_cold int msrle_decode_end(AVCodecContext *avctx)
 
 AVCodec msrle_decoder = {
     "msrle",
-    CODEC_TYPE_VIDEO,
+    AVMEDIA_TYPE_VIDEO,
     CODEC_ID_MSRLE,
     sizeof(MsrleContext),
     msrle_decode_init,

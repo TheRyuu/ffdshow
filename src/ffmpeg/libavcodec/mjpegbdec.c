@@ -20,7 +20,7 @@
  */
 
 /**
- * @file libavcodec/mjpegbdec.c
+ * @file
  * Apple MJPEG-B decoder.
  */
 
@@ -39,8 +39,10 @@ static uint32_t read_offs(AVCodecContext *avctx, GetBitContext *gb, uint32_t siz
 
 static int mjpegb_decode_frame(AVCodecContext *avctx,
                               void *data, int *data_size,
-                              const uint8_t *buf, int buf_size)
+                              AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     MJpegDecodeContext *s = avctx->priv_data;
     const uint8_t *buf_end, *buf_ptr;
     AVFrame *picture = data;
@@ -145,7 +147,7 @@ read_header:
 
 AVCodec mjpegb_decoder = {
     "mjpegb",
-    CODEC_TYPE_VIDEO,
+    AVMEDIA_TYPE_VIDEO,
     CODEC_ID_MJPEGB,
     sizeof(MJpegDecodeContext),
     /*.init=*/ff_mjpeg_decode_init,

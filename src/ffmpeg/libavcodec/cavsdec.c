@@ -20,7 +20,7 @@
  */
 
 /**
- * @file libavcodec/cavsdec.c
+ * @file
  * Chinese AVS video (AVS1-P2, JiZhun profile) decoder
  * @author Stefan Gehrer <stefan.gehrer@gmx.de>
  */
@@ -634,7 +634,9 @@ static void cavs_flush(AVCodecContext * avctx) {
 }
 
 static int cavs_decode_frame(AVCodecContext * avctx,void *data, int *data_size,
-                             const uint8_t * buf, int buf_size) {
+                             AVPacket *avpkt) {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     AVSContext *h = avctx->priv_data;
     MpegEncContext *s = &h->s;
     int input_size;
@@ -709,7 +711,7 @@ static int cavs_decode_frame(AVCodecContext * avctx,void *data, int *data_size,
 
 AVCodec cavs_decoder = {
     "cavs",
-    CODEC_TYPE_VIDEO,
+    AVMEDIA_TYPE_VIDEO,
     CODEC_ID_CAVS,
     sizeof(AVSContext),
     /*.init=*/ff_cavs_init,
