@@ -88,7 +88,7 @@ template<class tchar> DECLARE_INTERFACE_(IffdshowDecT,IUnknown)
  STDMETHOD_(TinputPin*, getInputPin)(void) PURE;
  STDMETHOD_(CTransformOutputPin*, getOutputPin)(void) PURE;
  STDMETHOD (extractExternalStreams)(void) PURE;
- STDMETHOD (getExternalStreams)(void **pAudioStreams, void **pSubtitleStreams) PURE;
+ STDMETHOD (getExternalStreams)(void **pAudioStreams, void **pSubtitleStreams, void **pEditionStreams) PURE;
  STDMETHOD (setExternalStream)(int group, long streamNb) PURE;
  STDMETHOD (getCurrentSubtitlesFile)(tchar **ppSubtitleFile) PURE;
  STDMETHOD (setSubtitlesFile)(const tchar *pSubtitleFile) PURE;

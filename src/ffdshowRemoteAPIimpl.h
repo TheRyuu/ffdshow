@@ -42,7 +42,7 @@ private:
  DWORD pdwROT;
  int OSDDuration;
  int OSDPositionX, OSDPositionY;
- TexternalStreams *pAudioStreams, *pSubtitleStreams;
+ TexternalStreams *pAudioStreams, *pSubtitleStreams, *pEditionStreams;
  bool streamsLoaded;
  bool foundHaali;
  bool noFFRWOSD;

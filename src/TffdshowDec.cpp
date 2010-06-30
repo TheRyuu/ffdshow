@@ -760,6 +760,7 @@ STDMETHODIMP TffdshowDec::Count(DWORD* pcStreams)
  extractExternalStreams();
  *pcStreams += externalSubtitleStreams.size();
  *pcStreams += externalAudioStreams.size();
+ *pcStreams += externalEditionStreams.size();
  return S_OK;
 }
 STDMETHODIMP TffdshowDec::Info(long lIndex, AM_MEDIA_TYPE** ppmt, DWORD* pdwFlags, LCID* plcid, DWORD* pdwGroup, WCHAR** ppszName, IUnknown** ppObject, IUnknown** ppUnk)
@@ -767,7 +768,7 @@ STDMETHODIMP TffdshowDec::Info(long lIndex, AM_MEDIA_TYPE** ppmt, DWORD* pdwFlag
  // In order : audio streams, embedded subtitles, then FFDShow filters then in last external subtitles (which can vary)
  long internalStreams = isStreamsMenu() ? streams.size() : 0;
  long subFiles = getParam2(IDFF_subFiles) ? subtitleFiles.size() : 0;
- long firstFilterIndex = externalSubtitleStreams.size() + externalAudioStreams.size();
+ long firstFilterIndex = externalSubtitleStreams.size() + externalAudioStreams.size() + externalEditionStreams.size();
  long firstSubFileIndex = firstFilterIndex + internalStreams;
  long count = firstSubFileIndex + subFiles;
  if (lIndex<0 || lIndex>= count || !presetSettings) return E_INVALIDARG;
@@ -816,14 +817,14 @@ STDMETHODIMP TffdshowDec::Info(long lIndex, AM_MEDIA_TYPE** ppmt, DWORD* pdwFlag
    const char_t *curCustomSubflnm=getParamStr2(IDFF_subTempFilename);
    if (curCustomSubflnm && strcmp(curCustomSubflnm, _l("")) != 0)
    {
-    if (!getParam2(IDFF_subShowEmbedded) && curCustomSubflnm != NULL && stricmp(subtitleFilename,curCustomSubflnm)==0)
+    if (getParam2(IDFF_subShowEmbedded)==0 && curCustomSubflnm != NULL && stricmp(subtitleFilename,curCustomSubflnm)==0)
      *pdwFlags = AMSTREAMSELECTINFO_ENABLED|AMSTREAMSELECTINFO_EXCLUSIVE;
     else
      *pdwFlags = 0;
    }
    else
    {
-    if (!getParam2(IDFF_subShowEmbedded) && curSubflnm != NULL && stricmp(subtitleFilename,curSubflnm)==0)
+    if (getParam2(IDFF_subShowEmbedded)==0 && curSubflnm != NULL && stricmp(subtitleFilename,curSubflnm)==0)
      *pdwFlags = AMSTREAMSELECTINFO_ENABLED|AMSTREAMSELECTINFO_EXCLUSIVE;
     else
      *pdwFlags = 0;
@@ -840,13 +841,20 @@ STDMETHODIMP TffdshowDec::Info(long lIndex, AM_MEDIA_TYPE** ppmt, DWORD* pdwFlag
   if (pdwGroup) *pdwGroup = 1; // Audio stream
   stream = externalAudioStreams[lIndex];
  }
- else
+ else if (lIndex < (long) (externalAudioStreams.size() + externalSubtitleStreams.size()))
  {
   lIndex -= externalAudioStreams.size();
   if (pdwGroup) *pdwGroup = 2; // Subtitles stream
   stream = externalSubtitleStreams[lIndex];
  }
- DPRINTF(_l("TffdshowDec::Info %s [%s] (%ld)"), stream.streamName.c_str(), stream.streamLanguageName.c_str(), stream.langId);
+ else // Editions
+ {
+  lIndex -= externalAudioStreams.size();
+  lIndex -= externalSubtitleStreams.size();
+  if (pdwGroup) *pdwGroup = 18; // Editions streams
+  stream = externalEditionStreams[lIndex];
+ }
+ DPRINTF(_l("TffdshowDec::Info Stream #%d %s [%s] (%ld)"), lIndex, stream.streamName.c_str(), stream.streamLanguageName.c_str(), stream.langId);
 
  if (plcid) *plcid=stream.langId;
 
@@ -872,7 +880,7 @@ STDMETHODIMP TffdshowDec::Enable(long lIndex, DWORD dwFlags)
 {
  // In order : audio streams, embedded subtitles, then FFDShow filters then in last external subtitles (which can vary)
  long internalStreams = (isStreamsMenu() ? streams.size() : 0);
- long firstFilterIndex = externalSubtitleStreams.size() + externalAudioStreams.size();
+ long firstFilterIndex = externalSubtitleStreams.size() + externalAudioStreams.size() + externalEditionStreams.size();
  long firstSubFileIndex = firstFilterIndex + internalStreams;
  long count = firstSubFileIndex + subtitleFiles.size();
 
@@ -907,14 +915,21 @@ STDMETHODIMP TffdshowDec::Enable(long lIndex, DWORD dwFlags)
 
  if (lIndex < (long)externalAudioStreams.size())
  {
-  DPRINTF(_l("TffdshowDec::Enable subtitle stream n°%ld"), externalAudioStreams[lIndex].streamNb);
+  DPRINTF(_l("TffdshowDec::Enable subtitle stream #%ld Id %ld"), lIndex, externalAudioStreams[lIndex].streamNb);
   return setExternalStream(1, externalAudioStreams[lIndex].streamNb);
+ }
+ else if (lIndex < (long)(externalAudioStreams.size() + externalSubtitleStreams.size()))
+ {
+  lIndex -= (long)externalAudioStreams.size();
+  DPRINTF(_l("TffdshowDec::Enable subtitle stream #%ld Id %ld"), lIndex, externalSubtitleStreams[lIndex].streamNb);
+  return setExternalStream(2, externalSubtitleStreams[lIndex].streamNb);
  }
  else
  {
   lIndex -= (long)externalAudioStreams.size();
-  DPRINTF(_l("TffdshowDec::Enable subtitle stream n°%ld"), externalSubtitleStreams[lIndex].streamNb);
-  return setExternalStream(2, externalSubtitleStreams[lIndex].streamNb);
+  lIndex -= (long)externalSubtitleStreams.size();
+  DPRINTF(_l("TffdshowDec::Enable edition #%ld Id %ld"), lIndex, externalEditionStreams[lIndex].streamNb);
+  return setExternalStream(18, externalEditionStreams[lIndex].streamNb);
  }
 }
 
@@ -1116,10 +1131,11 @@ STDMETHODIMP_(CTransformOutputPin*) TffdshowDec::getOutputPin()
  return m_pOutput;
 }
 
-STDMETHODIMP TffdshowDec::getExternalStreams(void **pAudioStreams, void **pSubtitleStreams)
+STDMETHODIMP TffdshowDec::getExternalStreams(void **pAudioStreams, void **pSubtitleStreams, void **pEditionStreams)
 {
  *pAudioStreams=&externalAudioStreams;
  *pSubtitleStreams=&externalSubtitleStreams;
+ *pEditionStreams=&externalEditionStreams;
  return S_OK;
 }
 
@@ -1127,6 +1143,7 @@ STDMETHODIMP TffdshowDec::extractExternalStreams(void)
 {
  externalSubtitleStreams.clear();
  externalAudioStreams.clear();
+ externalEditionStreams.clear();
  comptr<IEnumFilters> eff;
  IFilterGraph    *m_pGraph = NULL;
  comptr<IffdshowDecVideo> deciV;
@@ -1190,9 +1207,12 @@ STDMETHODIMP TffdshowDec::extractExternalStreams(void)
      &streamLanguageId, &streamGroup, &pstreamName, NULL, NULL);
     if (hr != S_OK) continue;
 
-    // Not audio or subtitles or only one audio stream
-    if ((streamGroup != 1 && streamGroup != 2 && streamGroup != 6590033)
-     || (streamGroup == 1 && cStreams == 1))
+    //DPRINTF(_l("TffdshowDec::extractExternalStreams Group %ld Stream %s"), streamGroup, pstreamName);
+
+    // Not audio neither subtitles neither editions or only one audio stream
+    if ((streamGroup != 1 && streamGroup != 2 && streamGroup != 6590033 && streamGroup != 18)
+     || (streamGroup == 1 && cStreams == 1) // audio, only one
+     || (streamGroup == 18 && cStreams == 1)) //editions, only one
     {
      if (pstreamName != NULL)
       CoTaskMemFree(pstreamName);
@@ -1231,9 +1251,13 @@ STDMETHODIMP TffdshowDec::extractExternalStreams(void)
     {
      localAudioStreams.push_back(stream);
     }
-    else // Subtitles
+    else if (streamGroup == 2 || streamGroup == 6590033)// Subtitles
     {
      externalSubtitleStreams.push_back(stream);
+    }
+    else
+    {
+     externalEditionStreams.push_back(stream);
     }
     if (pstreamName != NULL)
      CoTaskMemFree(pstreamName);
@@ -1308,8 +1332,10 @@ STDMETHODIMP TffdshowDec::setExternalStream(int group, long streamNb)
  TexternalStream *pStream = NULL;
  if (group == 1) // Audio
   pStreams = &externalAudioStreams;
- else // Subtitles
+ else if (group == 2 || group == 6590033)// Subtitles
   pStreams = &externalSubtitleStreams;
+ else
+  pStreams = &externalEditionStreams;
 
  for (long l = 0; l<(long)pStreams->size(); l++)
  {
@@ -1325,6 +1351,7 @@ STDMETHODIMP TffdshowDec::setExternalStream(int group, long streamNb)
  // Embedded subtitles within FFDShow
  if (!strcmp(pStream->filterName.c_str(), _l("FFDSHOW")))
  {
+  DPRINTF(_l("TffdshowDec::setExternalStream set internal ffdshow stream %ld"), streamNb);
   int oldId=getParam2(IDFF_subShowEmbedded);
   putParam(IDFF_subShowEmbedded,streamNb);
  }
@@ -1354,6 +1381,7 @@ STDMETHODIMP TffdshowDec::setExternalStream(int group, long streamNb)
     pAMStreamSelect->Release();
     continue;
     }*/
+    DPRINTF(_l("TffdshowDec::setExternalStream set external stream %ld inside filter %s"), streamNb, filtername);
     pAMStreamSelect->Enable(streamNb, AMSTREAMSELECTENABLE_ENABLE);
     pAMStreamSelect->Release();
     break;

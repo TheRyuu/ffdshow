@@ -456,7 +456,7 @@ TtrayIconDecVideo::TtrayIconDecVideo(IffdshowBase *Ideci):TtrayIconDec(Ideci),de
  */
 
 
-void TtrayIconDecVideo::makeAudioSubsSubMenus(HMENU *smn, HMENU *ssmn, HMENU *amn)
+void TtrayIconDecVideo::makeStreamsSubMenus(HMENU *smn, HMENU *ssmn, HMENU *amn, HMENU *emn)
 {
  strings files;
  TsubtitlesFile::findPossibleSubtitles(deci->getSourceName(),
@@ -496,9 +496,9 @@ void TtrayIconDecVideo::makeAudioSubsSubMenus(HMENU *smn, HMENU *ssmn, HMENU *am
   DestroyMenu(hm);
 
  // Extract the external audio/subtitle streams
- TexternalStreams *pAudioStreams = NULL,*pSubtitleStreams = NULL;
+ TexternalStreams *pAudioStreams = NULL,*pSubtitleStreams = NULL, *pEditionStreams = NULL;
  deciD->extractExternalStreams();
- deciD->getExternalStreams((void **)&pAudioStreams, (void **)&pSubtitleStreams);
+ deciD->getExternalStreams((void **)&pAudioStreams, (void **)&pSubtitleStreams, (void**)&pEditionStreams);
 
  // Now the subtitle streams
  ord = 0;
@@ -529,6 +529,21 @@ void TtrayIconDecVideo::makeAudioSubsSubMenus(HMENU *smn, HMENU *ssmn, HMENU *am
    insertMenuItem(ahm,ord,IDC_FIRST_AUDIOSTREAM+stream.streamNb,menuItem.c_str(),false,stream.enabled,true);
   }
  }
+
+ // Now the editions
+ ord = 0;
+ if (pEditionStreams->size() > 1)
+ {
+  HMENU ehm=CreatePopupMenu();
+  *emn=ehm;
+  for (unsigned int i=0; i< pEditionStreams->size();i++)
+  {
+   TexternalStream stream = (*pEditionStreams)[i];
+   ffstring menuItem = stringreplace(stream.streamName,_l("&"),_l("&&"),rfReplaceAll);
+   if (stream.streamLanguageName.length() > 0) menuItem += ffstring(_l(" ("))+stream.streamLanguageName+ffstring(_l(")"));
+   insertMenuItem(ehm,ord,IDC_FIRST_EDITIONSTREAM+stream.streamNb,menuItem.c_str(),false,stream.enabled,true);
+  }
+ }
  //return ord?hm:(DestroyMenu(hm),(HMENU)NULL);
 }
 
@@ -536,24 +551,30 @@ void TtrayIconDecVideo::insertSubmenuCallback(HMENU hm,int &ord,const TfilterIDF
 {
  if (f->id==IDFF_filterSubtitles)
  {
-  HMENU smn = NULL, ssmn = NULL, amn = NULL;
-  makeAudioSubsSubMenus(&smn, &ssmn, &amn);
+  HMENU smn = NULL, ssmn = NULL, amn = NULL, emn = NULL;
+  makeStreamsSubMenus(&smn, &ssmn, &amn, &emn);
   int lord = ord+1000;
-  if (smn != NULL || ssmn != NULL || amn != NULL) insertSeparator(hm,lord);
+  if (smn != NULL || ssmn != NULL || amn != NULL || emn != NULL) insertSeparator(hm,lord);
   if (smn != NULL) insertSubmenu(hm,lord,_l("Subtitle files"),true,smn);
   if (ssmn != NULL) insertSubmenu(hm,lord,_l("Subtitle streams"),true,ssmn);
   if (amn != NULL) insertSubmenu(hm,lord,_l("Audio streams"),true,amn);
+  if (emn != NULL) insertSubmenu(hm,lord,_l("Editions"),true,emn);
  }
 }
 
 void TtrayIconDecVideo::processCmd(HMENU hm,int cmd)
 {
- if (cmd>=IDC_FIRST_AUDIOSTREAM)
+ if (cmd>=IDC_FIRST_EDITIONSTREAM)
+ {
+  int id=cmd-IDC_FIRST_EDITIONSTREAM;
+  deciD->setExternalStream(18, id);
+ }
+ else if (cmd>=IDC_FIRST_AUDIOSTREAM)
  {
   int id=cmd-IDC_FIRST_AUDIOSTREAM;
   deciD->setExternalStream(1, id);
  }
- if (cmd>=IDC_FIRST_TEXTPIN)
+ else if (cmd>=IDC_FIRST_TEXTPIN)
   {
    int id=cmd-IDC_FIRST_TEXTPIN;
    deciD->setExternalStream(2, id);

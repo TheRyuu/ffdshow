@@ -119,7 +119,7 @@ void Tremote::start(void)
  if (hThread) return;
  deciD=deci;
  deciV=deci;
- deciD->getExternalStreams((void **)&pAudioStreams, (void **)&pSubtitleStreams);
+ deciD->getExternalStreams((void **)&pAudioStreams, (void **)&pSubtitleStreams, (void**)&pEditionStreams);
  if (!tr) deci->getTranslator(&tr);
  remotemsg=messageMode==0?RegisterWindowMessage(_l(FFDSHOW_REMOTE_MESSAGE)):messageUser;
  paramid=0;subtitleIdx=0;

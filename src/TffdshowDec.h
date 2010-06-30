@@ -389,7 +389,7 @@ protected:
    STDMETHODIMP_(TinputPin*) getInputPin(void){ return(deciD->getInputPin());};
    STDMETHODIMP_(CTransformOutputPin*) getOutputPin(void){ return(deciD->getOutputPin());};
    STDMETHODIMP extractExternalStreams(void) {return deciD->extractExternalStreams();}
-   STDMETHODIMP getExternalStreams(void **pAudioStreams, void **pSubtitleStreams) {return deciD->getExternalStreams(pAudioStreams,pSubtitleStreams);}
+   STDMETHODIMP getExternalStreams(void **pAudioStreams, void **pSubtitleStreams, void **pEditionStreams) {return deciD->getExternalStreams(pAudioStreams,pSubtitleStreams,pEditionStreams);}
    STDMETHODIMP setExternalStream(int group, long streamNb) {return deciD->setExternalStream(group,streamNb);}
    STDMETHODIMP getCurrentSubtitlesFile(tchar **ppSubtitleFile) {return E_NOTIMPL;}
    STDMETHODIMP setSubtitlesFile(const tchar *pSubtitleFile) {return E_NOTIMPL;}
@@ -480,7 +480,7 @@ public:
    return CmyTransformFilter::Stop();
   }
  STDMETHODIMP extractExternalStreams(void);
- STDMETHODIMP getExternalStreams(void **pAudioStreams, void **pSubtitleStreams);
+ STDMETHODIMP getExternalStreams(void **pAudioStreams, void **pSubtitleStreams, void **pEditionStreams);
  STDMETHODIMP setExternalStream(int group, long streamNb);
  STDMETHODIMP getCurrentSubtitlesFile(char_t **ppSubtitleFile) { return E_NOTIMPL; }
  STDMETHODIMP setSubtitlesFile(const char_t *pSubtitleFile) {return E_NOTIMPL; }
@@ -488,6 +488,7 @@ protected:
  bool m_dirtyStop; // Work around DVBViewer compatibility issue. Old DVBViewer doesn't call NewSegment after Stop and before next play.
  TexternalStreams externalSubtitleStreams;
  TexternalStreams externalAudioStreams;
+ TexternalStreams externalEditionStreams;
  CCritSec m_csSetExternalStream;
 };
 

@@ -126,13 +126,14 @@ class TtrayIconDecVideo :public TtrayIconDec
 {
 private:
  comptrQ<IffdshowDecVideo> deciV;
- void makeAudioSubsSubMenus(HMENU *smn, HMENU *ssmn, HMENU *amn);
+ void makeStreamsSubMenus(HMENU *smn, HMENU *ssmn, HMENU *amn, HMENU *emn);
  enum
   {
    IDC_FIRST_SUBFILE=8999,
    IDC_FIRST_SUBLANG=10999,
    IDC_FIRST_TEXTPIN=11999,
-   IDC_FIRST_AUDIOSTREAM=12999
+   IDC_FIRST_AUDIOSTREAM=12999,
+   IDC_FIRST_EDITIONSTREAM=13999
   };
 protected:
  virtual void insertSubmenuCallback(HMENU hm,int &ord,const TfilterIDFF *f);
