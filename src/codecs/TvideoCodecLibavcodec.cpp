@@ -400,8 +400,6 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
             avctx->slice_offset[i]=((DWORD*)(src+1))[2*i+1];
         skip=1+2*sizeof(DWORD)*avctx->slice_count;
     }
-    else if (codecId==CODEC_ID_COREPNG)
-        avctx->corepng_frame_type=pIn && pIn->IsSyncPoint()==S_OK?SAMPLE_I:SAMPLE_P;
     else if (src && theorart) {
         struct _TheoraPacket
          {

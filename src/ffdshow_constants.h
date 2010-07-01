@@ -920,6 +920,7 @@
 #define IDFF_rv40               1332
 #define IDFF_rv30               1333
 #define IDFF_cook               1334
+#define IDFF_vp8                1335
 
 #define IDFF_filterOutputVideo   1357
 #define IDFF_hwOverlayOld        1317

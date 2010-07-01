@@ -431,6 +431,7 @@ void TcodecsPageVideo::fillCodecs(void)
    formats.push_back(Tformat(_l("VP5")           ,IDFF_vp5 ,IDFF_MOVIE_LAVC,_l("VP5 Video (VP50)")));
    formats.push_back(Tformat(_l("VP6")           ,IDFF_vp6 ,IDFF_MOVIE_LAVC,_l("VP6 Video (VP60, VP61, VP62)")));
    formats.push_back(Tformat(_l("VP6F")          ,IDFF_vp6f,IDFF_MOVIE_LAVC,_l("Flash Video (VP6F, FLV4, VP6A)")));
+   formats.push_back(Tformat(_l("VP8")           ,IDFF_vp8 ,IDFF_MOVIE_LAVC,_l("VP8 Video (VP80)")));
    static const int movies_mpeg12[]={IDFF_MOVIE_LAVC,IDFF_MOVIE_LIBMPEG2,0};
    static const Tformat::Toption options_mpeg12[]={{IDFF_MOVIE_LAVC,_l("use speedup tricks"),IDFF_fastMpeg2,1},{0,NULL,0}};
    if ((filterMode&IDFF_FILTERMODE_VFW)==0)

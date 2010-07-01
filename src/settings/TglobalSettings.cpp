@@ -365,6 +365,7 @@ TglobalSettingsDecVideo::TglobalSettingsDecVideo(const Tconfig *Iconfig,int Imod
    IDFF_vp5            ,&TglobalSettingsDecVideo::vp5            ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_vp6            ,&TglobalSettingsDecVideo::vp6            ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_vp6f           ,&TglobalSettingsDecVideo::vp6f           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+   IDFF_vp8            ,&TglobalSettingsDecVideo::vp8            ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_cavs           ,&TglobalSettingsDecVideo::cavs           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_mjpg           ,&TglobalSettingsDecVideo::mjpg           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_avrn           ,&TglobalSettingsDecVideo::avrn           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
@@ -464,6 +465,7 @@ void TglobalSettingsDecVideo::reg_op_codec(TregOp &t,TregOp *t2)
  _reg_op_codec(IDFF_vp5 ,t,t2,_l("vp5") ,vp5,0);
  _reg_op_codec(IDFF_vp6 ,t,t2,_l("vp6") ,vp6,0);
  _reg_op_codec(IDFF_vp6f,t,t2,_l("vp6f"),vp6f,0);
+ _reg_op_codec(IDFF_vp8 ,t,t2,_l("vp8") ,vp8,0);
  _reg_op_codec(IDFF_cavs,t,t2,_l("cavs"),cavs,0);
  _reg_op_codec(IDFF_rawv,t,t2,
   filtermode & IDFF_FILTERMODE_VIDEOSUBTITLES ? NULL :
@@ -558,6 +560,7 @@ void TglobalSettingsDecVideo::load(void)
  fixMissing(vp5 ,IDFF_MOVIE_LAVC);
  fixMissing(vp6 ,IDFF_MOVIE_LAVC);
  fixMissing(vp6f,IDFF_MOVIE_LAVC);
+ fixMissing(vp8 ,IDFF_MOVIE_LAVC);
  fixMissing(cavs,IDFF_MOVIE_LAVC);
  fixMissing(avrn,IDFF_MOVIE_LAVC);
  fixMissing(mjpg,IDFF_MOVIE_LAVC);
@@ -642,6 +645,7 @@ void TglobalSettingsDecVideo::load(void)
  FF_FOURCC1_OP(VP6F,vp6f & rawmask & dxvamask,CODEC_ID_VP6F) \
  FF_FOURCC1_OP(FLV4,vp6f & rawmask & dxvamask,CODEC_ID_VP6F) \
  FF_FOURCC1_OP(VP6A,vp6f & rawmask & dxvamask,CODEC_ID_VP6A) \
+ FF_FOURCC1_OP(VP80,vp8 & rawmask & dxvamask,CODEC_ID_VP8) \
  FF_FOURCC1_OP(CAVS,cavs & rawmask & dxvamask,CODEC_ID_CAVS) \
  FF_FOURCC_OP (MPG1,mpg1 & rawmask & dxvamask,c_mpeg1) \
  FF_FOURCC_OP (MPG2,mpg2 & rawmask & dxvamask,c_mpeg2) \
@@ -702,7 +706,7 @@ void TglobalSettingsDecVideo::load(void)
  FF_FOURCC1_OP(MSZH,mszh & rawmask & dxvamask,CODEC_ID_MSZH) \
  FF_FOURCC1_OP(ZLIB,zlib & rawmask & dxvamask,CODEC_ID_ZLIB) \
  FF_FOURCC1_OP(FLV1,flv1 & rawmask & dxvamask,CODEC_ID_FLV1) \
- FF_FOURCC1_OP(PNG1,png1 & rawmask & dxvamask,CODEC_ID_COREPNG) \
+ FF_FOURCC1_OP(PNG1,png1 & rawmask & dxvamask,CODEC_ID_PNG) \
  FF_FOURCC1_OP(MPNG,png1 & rawmask & dxvamask,CODEC_ID_PNG) \
  FF_FOURCC1_OP(AVIS,avis & rawmask & dxvamask,CODEC_ID_AVISYNTH) \
  FF_FOURCC1_OP(CRAM,cram & rawmask & dxvamask,CODEC_ID_MSVIDEO1) \
