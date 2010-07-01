@@ -567,10 +567,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\libavcodec\corepng.c"
-				>
-			</File>
-			<File
 				RelativePath=".\libavcodec\cscd.c"
 				>
 			</File>
@@ -1208,6 +1204,14 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\vp6dsp.c"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\vp8.c"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\vp8dsp.c"
 				>
 			</File>
 			<File

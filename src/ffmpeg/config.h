@@ -148,7 +148,6 @@ Note: when adding a new codec, you have to:
 #define CONFIG_AVS_DECODER 1
 #define CONFIG_CAVS_DECODER 1
 #define CONFIG_CINEPAK_DECODER 1
-#define CONFIG_COREPNG_DECODER 1
 #define CONFIG_CSCD_DECODER 1
 #define CONFIG_CYUV_DECODER 1
 #define CONFIG_DVVIDEO_DECODER 1
@@ -202,6 +201,7 @@ Note: when adding a new codec, you have to:
 #define CONFIG_VP6_DECODER 1
 #define CONFIG_VP6A_DECODER 1
 #define CONFIG_VP6F_DECODER 1
+#define CONFIG_VP8_DECODER 1
 #define CONFIG_WMV1_DECODER 1
 #define CONFIG_WMV2_DECODER 1
 #define CONFIG_WMV3_DECODER 1

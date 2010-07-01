@@ -41,7 +41,6 @@ SRCS_C=\
       $(LAVC_DIR)/celp_math.c \
       $(LAVC_DIR)/cinepak.c \
       $(LAVC_DIR)/cook.c \
-      $(LAVC_DIR)/corepng.c \
       $(LAVC_DIR)/cscd.c \
       $(LAVC_DIR)/cyuv.c \
       $(LAVC_DIR)/dca.c \
@@ -190,6 +189,8 @@ SRCS_C=\
       $(LAVC_DIR)/vp56dsp.c \
       $(LAVC_DIR)/vp6.c \
       $(LAVC_DIR)/vp6dsp.c \
+      $(LAVC_DIR)/vp8.c \
+      $(LAVC_DIR)/vp8dsp.c \
       $(LAVC_DIR)/w32thread.c \
       $(LAVC_DIR)/wavpack.c \
       $(LAVC_DIR)/wma.c \
@@ -257,6 +258,7 @@ SRCS_C=\
       $(LAVC_DIR)/x86/vp3dsp_sse2.c \
       $(LAVC_DIR)/x86/vp6dsp_mmx.c \
       $(LAVC_DIR)/x86/vp6dsp_sse2.c \
+      $(LAVC_DIR)/x86/vp8dsp-init.c \
    \
       $(LAVS_DIR)/rgb2rgb.c \
       $(LAVS_DIR)/swscale.c \
@@ -274,6 +276,7 @@ SRCS_YASM=\
       $(LAVC_DIR)/x86/h264_deblock_sse2.asm \
       $(LAVC_DIR)/x86/h264_idct_sse2.asm \
       $(LAVC_DIR)/x86/h264_intrapred.asm \
+      $(LAVC_DIR)/x86/vp8dsp.asm \
       $(LAVC_DIR)/x86/x86util.asm
 
 ifeq ($(64BIT),yes)

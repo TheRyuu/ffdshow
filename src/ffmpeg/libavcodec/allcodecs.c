@@ -1,5 +1,5 @@
 /*
- * Provides registration of all codecs, parsers and bitstream filters for libavcodec.
+ * Provide registration of all codecs, parsers and bitstream filters for libavcodec.
  * Copyright (c) 2002 Fabrice Bellard
  *
  * This file is part of FFmpeg.
@@ -20,8 +20,8 @@
  */
 
 /**
- * @file libavcodec/allcodecs.c
- * Provides registration of all codecs, parsers and bitstream filters for libavcodec.
+ * @file
+ * Provide registration of all codecs, parsers and bitstream filters for libavcodec.
  */
 
 #include "avcodec.h"
@@ -54,7 +54,6 @@ void avcodec_register_all(void)
     REGISTER_DECODER (AVS, avs);
     REGISTER_DECODER (CAVS, cavs);
     REGISTER_DECODER (CINEPAK, cinepak);
-    REGISTER_DECODER (COREPNG, corepng);
     REGISTER_DECODER (CSCD, cscd);
     REGISTER_DECODER (CYUV, cyuv);
     REGISTER_ENCDEC  (DVVIDEO, dvvideo);
@@ -109,6 +108,7 @@ void avcodec_register_all(void)
     REGISTER_DECODER (VP6, vp6);
     REGISTER_DECODER (VP6A, vp6a);
     REGISTER_DECODER (VP6F, vp6f);
+    REGISTER_DECODER (VP8, vp8);
     REGISTER_ENCDEC  (WMV1, wmv1);
     REGISTER_ENCDEC  (WMV2, wmv2);
     REGISTER_DECODER (WMV3, wmv3);
