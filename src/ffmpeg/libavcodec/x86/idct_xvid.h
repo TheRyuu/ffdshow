@@ -19,16 +19,14 @@
  */
 
 /*!
- * @file idct_xvid.h
+ * @file
  * header for Xvid IDCT functions
  */
 
 #ifndef AVCODEC_X86_IDCT_XVID_H
 #define AVCODEC_X86_IDCT_XVID_H
 
-#ifdef __GNUC__
 #include <stdint.h>
-#endif
 
 void ff_idct_xvid_mmx(short *block);
 void ff_idct_xvid_mmx2(short *block);

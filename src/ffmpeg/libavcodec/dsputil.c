@@ -4588,7 +4588,7 @@ const char* avcodec_get_current_idct(AVCodecContext *avctx)
 #if HAVE_MMX
     return avcodec_get_current_idct_mmx(avctx,c);
 #else
-	return "";
+    return "";
 #endif
 }
 

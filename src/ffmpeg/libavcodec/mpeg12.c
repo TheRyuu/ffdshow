@@ -2151,7 +2151,7 @@ int ff_mpeg1_find_frame_end(ParseContext *pc, const uint8_t *buf, int buf_size, 
             if(pc->frame_start_found==0 && state >= SLICE_MIN_START_CODE && state <= SLICE_MAX_START_CODE){
                 i++;
                 pc->frame_start_found=4;
-                
+
                 pc->rtStart=*rtStart; /* ffdshow custom code */
                 *rtStart=_I64_MIN;    /* ffdshow custom code */
             }

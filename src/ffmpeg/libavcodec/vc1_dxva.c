@@ -25,8 +25,8 @@ int av_vc1_decode_frame(AVCodecContext *avctx, AVPacket *avpkt)
     uint8_t *buf2 = NULL;
 
     v->allow_interlaced = 1;
-    v->lumshift			= 0;
-    v->lumscale			= 32;
+    v->lumshift         = 0;
+    v->lumscale         = 32;
 
     /* We need to set current_picture_ptr before reading the header,
      * otherwise we cannot store anything in there. */

@@ -1358,7 +1358,7 @@ static int pred_weight_table(H264Context *h){
 
 /**
  * Initialize implicit_weight table.
- * @param field, 0/1 initialize the weight for interlaced MBAFF
+ * @param field  0/1 initialize the weight for interlaced MBAFF
  *                -1 initializes the rest
  */
 static void implicit_weight_table(H264Context *h, int field){
@@ -1839,7 +1839,7 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
     if(h0->current_slice == 0){
         while(h->frame_num !=  h->prev_frame_num &&
               h->frame_num != (h->prev_frame_num+1)%(1<<h->sps.log2_max_frame_num)){
-            av_log(NULL, AV_LOG_DEBUG, "Frame num gap %d %d\n", h->frame_num, h->prev_frame_num);
+            av_log(h->s.avctx, AV_LOG_DEBUG, "Frame num gap %d %d\n", h->frame_num, h->prev_frame_num);
             if (ff_h264_frame_start(h) < 0)
                 return -1;
             h->prev_frame_num++;

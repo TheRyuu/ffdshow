@@ -148,7 +148,7 @@ void avcodec_register_all(void)
     REGISTER_DECODER (WMAV2, wmav2);
     REGISTER_DECODER (WAVPACK, wavpack);
 
-    /* pcm codecs */
+    /* PCM codecs */
     REGISTER_DECODER (PCM_ALAW, pcm_alaw);
     REGISTER_DECODER (PCM_MULAW,pcm_mulaw);
 
@@ -180,6 +180,6 @@ void avcodec_register_all(void)
     REGISTER_PARSER  (AC3, ac3);
     REGISTER_PARSER  (DCA, dca);
     REGISTER_PARSER  (MLP, mlp);
-    REGISTER_PARSER  (MPEGAUDIO, mpegaudio);    
+    REGISTER_PARSER  (MPEGAUDIO, mpegaudio);
 }
 

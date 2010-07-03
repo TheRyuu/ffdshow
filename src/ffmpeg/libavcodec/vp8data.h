@@ -78,7 +78,7 @@ static const uint8_t vp8_pred4x4_mode[] =
     [HOR_PRED8x8]   = HOR_PRED,
     [PLANE_PRED8x8] = TM_VP8_PRED,
 #else
-    /* see h264pred.h for the correct order */		
+    /* see h264pred.h for the correct order */
     DC_PRED,
     HOR_PRED,
     VERT_PRED,

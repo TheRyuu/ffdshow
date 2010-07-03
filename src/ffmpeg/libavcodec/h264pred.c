@@ -1299,6 +1299,6 @@ void ff_h264_pred_init(H264PredContext *h, int codec_id){
     h->pred16x16_add[ HOR_PRED8x8]= pred16x16_horizontal_add_c;
 
 #if HAVE_MMX
-	ff_h264_pred_init_x86(h, codec_id);
+    ff_h264_pred_init_x86(h, codec_id);
 #endif
 }
