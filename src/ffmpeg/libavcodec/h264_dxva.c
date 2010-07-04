@@ -304,7 +304,7 @@ int decode_slice_header_noexecute(H264Context *h){
     if(h0->current_slice == 0){
         while(h->frame_num !=  h->prev_frame_num &&
               h->frame_num != (h->prev_frame_num+1)%(1<<h->sps.log2_max_frame_num)){
-            av_log(NULL, AV_LOG_DEBUG, "Frame num gap %d %d\n", h->frame_num, h->prev_frame_num);
+            av_log(h->s.avctx, AV_LOG_DEBUG, "Frame num gap %d %d\n", h->frame_num, h->prev_frame_num);
             if (ff_h264_frame_start(h) < 0)
                 return -1;
             h->prev_frame_num++;
@@ -843,10 +843,8 @@ static int decode_nal_units_noexecute(H264Context *h, const uint8_t *buf, int bu
 }
 
 
-int av_h264_decode_frame(struct AVCodecContext* avctx, int* nOutPOC, int64_t* rtStartTime, AVPacket *avpkt)                      
+int av_h264_decode_frame(struct AVCodecContext* avctx, int* nOutPOC, int64_t* rtStartTime, const uint8_t *buf, int buf_size)
 {
-    const uint8_t *buf = avpkt->data;
-    int buf_size = avpkt->size;
     H264Context *h = avctx->priv_data;
     MpegEncContext *s = &h->s;
     //AVFrame *pict = data;
