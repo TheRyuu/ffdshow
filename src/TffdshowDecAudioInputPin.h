@@ -6,7 +6,7 @@
 #include "TaudioParser.h"
 
 class TffdshowDecAudio;
-class TffdshowDecAudioInputPin :public TinputPin,public IdecAudioSink
+class TffdshowDecAudioInputPin :public TinputPin,public IdecAudioSink, public IPinConnection
 {
 private:
  TffdshowDecAudio *filter;
@@ -17,10 +17,15 @@ private:
  float prevpostgain;
  TaudioParser *audioParser;
  CMediaType outmt;
+ HANDLE m_hNotifyEvent;
+ CAMEvent m_evBlock;
 protected:
  virtual bool init(const CMediaType &mt);
  virtual void done(void);
 public:
+
+ DECLARE_IUNKNOWN
+
  REFERENCE_TIME insample_rtStart,insample_rtStop;
  TffdshowDecAudioInputPin(const char_t* pObjectName, TffdshowDecAudio* pFilter, HRESULT* phr, LPWSTR pName,int Inumber);
  virtual ~TffdshowDecAudioInputPin();
@@ -29,10 +34,27 @@ public:
  int number;
 
  bool is_spdif_codec(void) const {return  audio && spdif_codec(audio->codecId);}
+ bool isActive();
 
+ // IPin
  STDMETHODIMP Receive(IMediaSample* pSample);
  STDMETHODIMP EndFlush(void);
+ STDMETHODIMP BeginFlush();
+ STDMETHODIMP EndOfStream();
  STDMETHODIMP NewSegment(REFERENCE_TIME tStart,REFERENCE_TIME tStop,double dRate);
+ HRESULT CompleteConnect(IPin* pReceivePin);
+
+ HRESULT Active(void);
+ HRESULT Inactive(void);
+
+ 
+ 
+
+ // IPinConnection
+	STDMETHODIMP DynamicQueryAccept(const AM_MEDIA_TYPE* pmt);
+	STDMETHODIMP NotifyEndOfStream(HANDLE hNotifyEvent);
+	STDMETHODIMP IsEndPin();
+	STDMETHODIMP DynamicDisconnect();
 
  // IdecAudioSink
  STDMETHODIMP deliverDecodedSample(void *buf,size_t numsamples,const TsampleFormat &fmt,float postgain);

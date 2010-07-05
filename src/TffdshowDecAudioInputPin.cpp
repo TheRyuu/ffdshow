@@ -34,7 +34,9 @@ TffdshowDecAudioInputPin::TffdshowDecAudioInputPin(const char_t* pObjectName, Tf
   prevpostgain(1.0f),
   insample_rtStart(REFTIME_INVALID),
   insample_rtStop(REFTIME_INVALID),
-  audioParser(NULL)
+  audioParser(NULL),
+  m_hNotifyEvent(NULL),
+  m_evBlock(true)
 {
 }
 TffdshowDecAudioInputPin::~TffdshowDecAudioInputPin()
@@ -85,6 +87,11 @@ STDMETHODIMP TffdshowDecAudioInputPin::EndFlush(void)
  CAutoLock cAutoLock(&m_csReceive);
  buf.clear();
  newSrcBuffer.clear();
+
+ if (!IsConnected() || filter->m_pOutput == NULL || !filter->m_pOutput->IsConnected())
+  return VFW_E_NOT_CONNECTED;
+
+ if (!isActive()) block(true);
  return TinputPin::EndFlush();
 }
 
@@ -106,10 +113,22 @@ STDMETHODIMP TffdshowDecAudioInputPin::NewSegment(REFERENCE_TIME tStart,REFERENC
 STDMETHODIMP TffdshowDecAudioInputPin::Receive(IMediaSample* pIn)
 {
  if (this!=filter->inpin)
-  return S_FALSE;
+ {
+  //DPRINTF(_l("TffdshowDecAudioInputPin::Receive Not right pin : this = %u, filter inpin = %u"), this, filter->inpin);
+  m_evBlock.Wait();
+  //if (isActive())  DPRINTF(_l("TffdshowDecAudioInputPin::Receive Pin active unlocked : this = %u, filter inpin = %u"), this, filter->inpin);
+ }
+
+ if(!isActive())
+	{
+  //DPRINTF(_l("TffdshowDecAudioInputPin::Receive Pin unlocked : this = %u, filter inpin = %u"), this, filter->inpin);
+  if (this!=filter->inpin) return S_FALSE;
+  return E_FAIL;
+ }
 
  CAutoLock cAutoLock(&m_csReceive);
 
+ /* Commented by albain for external audio files. To revert in case of side effects*/
  if (filter->IsStopped())
   return S_FALSE;
 
@@ -137,6 +156,7 @@ STDMETHODIMP TffdshowDecAudioInputPin::Receive(IMediaSample* pIn)
 
  REFERENCE_TIME rtStart=_I64_MIN,rtStop=_I64_MIN;
  hr=pIn->GetTime(&rtStart,&rtStop);
+
 
  if (hr == S_OK)
   {
@@ -262,14 +282,27 @@ STDMETHODIMP TffdshowDecAudioInputPin::Receive(IMediaSample* pIn)
         filter->insf.sf=audioParserData.sample_format;
 
     newSrcBuffer.reserve(newSrcBuffer.size()+32);
-    return audio->decode(newSrcBuffer);
+    //return audio->decode(newSrcBuffer);
+    hr=audio->decode(newSrcBuffer);
+    if (hr == S_FALSE) 
+     return S_OK;
+    else if (hr != S_OK) DPRINTF(_l("TffdshowDecAudioInputPin::Receive decode failed pin %u (%lx)"),this,hr);
+    return hr;
     break;
  default:
     // Decode data
-    return audio->decode(buf);
+    hr = audio->decode(buf);
+    if (hr == S_FALSE)
+     return S_OK;
+    else if (hr != S_OK) DPRINTF(_l("TffdshowDecAudioInputPin::Receive decode failed pin %u (%lx)"),this,hr);
+    return hr;
     break;
  }
- return audio->decode(buf);
+ hr = audio->decode(buf);
+ if (hr == S_FALSE)
+  return S_OK;
+ else if (hr != S_OK) DPRINTF(_l("TffdshowDecAudioInputPin::Receive decode failed pin %u (%lx)"),this,hr);
+ return hr;
 }
 
 STDMETHODIMP TffdshowDecAudioInputPin::deliverDecodedSample(void *buf,size_t numsamples,const TsampleFormat &fmt,float postgain)
@@ -374,4 +407,101 @@ STDMETHODIMP TffdshowDecAudioInputPin::getAudioParser(TaudioParser **ppAudioPars
 {
     *ppAudioParser=audioParser;
     return S_OK;
+}
+
+
+HRESULT TffdshowDecAudioInputPin::CompleteConnect(IPin* pReceivePin)
+{
+	HRESULT hr = __super::CompleteConnect(pReceivePin);
+ if(FAILED(hr)) return hr;
+ m_hNotifyEvent = NULL;
+ return S_OK;
+}
+
+bool TffdshowDecAudioInputPin::isActive()
+{
+ return (this==filter->inpin) ? true : false;
+}
+
+
+HRESULT TffdshowDecAudioInputPin::Active()
+{
+ 
+	block(!isActive());
+
+	return __super::Active();
+}
+
+HRESULT TffdshowDecAudioInputPin::Inactive()
+{
+	block(false);
+
+	return __super::Inactive();
+}
+
+void TffdshowDecAudioInputPin::block(bool is)
+{
+	if(is) m_evBlock.Reset();
+	else m_evBlock.Set();
+}
+
+
+// IPin
+STDMETHODIMP TffdshowDecAudioInputPin::BeginFlush()
+{
+ CAutoLock lck(&filter->m_csFilter);
+	HRESULT hr;
+ if(FAILED(hr = __super::BeginFlush())) 
+		return hr;
+
+ if (!IsConnected() || filter->m_pOutput == NULL || !filter->m_pOutput->IsConnected())
+  return VFW_E_NOT_CONNECTED;
+
+ filter->m_pOutput->BeginFlush();
+
+ if (!isActive()) block(false);
+ return S_OK;
+}
+
+
+STDMETHODIMP TffdshowDecAudioInputPin::EndOfStream()
+{
+ CAutoLock cAutoLock(&m_csReceive);
+
+ if (!IsConnected() || filter->m_pOutput == NULL || !filter->m_pOutput->IsConnected())
+  return VFW_E_NOT_CONNECTED;
+
+	if(m_hNotifyEvent)
+	{
+		SetEvent(m_hNotifyEvent), m_hNotifyEvent = NULL;
+		return S_OK;
+	}
+ return S_OK;
+}
+
+
+// IPinConnection
+
+STDMETHODIMP TffdshowDecAudioInputPin::DynamicQueryAccept(const AM_MEDIA_TYPE* pmt)
+{
+	return QueryAccept(pmt);
+}
+
+STDMETHODIMP TffdshowDecAudioInputPin::NotifyEndOfStream(HANDLE hNotifyEvent)
+{
+	if(m_hNotifyEvent) SetEvent(m_hNotifyEvent);
+	m_hNotifyEvent = hNotifyEvent;
+	return S_OK;
+}
+
+STDMETHODIMP TffdshowDecAudioInputPin::IsEndPin()
+{
+	return S_OK;
+}
+
+STDMETHODIMP TffdshowDecAudioInputPin::DynamicDisconnect()
+{
+	CAutoLock cAutoLock(&m_csReceive);
+	Disconnect();
+	return S_OK;
 }

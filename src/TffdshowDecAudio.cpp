@@ -321,7 +321,7 @@ CodecID TffdshowDecAudio::getCodecId(const CMediaType &mt)
   case CODEC_ID_EAC3:
    if (presetSettings->output->passthroughEAC3)  codecId = CODEC_ID_BITSTREAM_EAC3;
    break;
-  /*case CODEC_ID_DTS_HD: //TODO
+  /*case CODEC_ID_DTS_HD: //TODO : no DTS-HD software decoder yet
    if (presetSettings->output->passthroughDTSHD)  codecId = CODEC_ID_BITSTREAM_DTSHD;
    break;*/
   default: break;
@@ -863,7 +863,7 @@ STDMETHODIMP TffdshowDecAudio::deliverSampleBistream(void *buf,size_t size,int b
    // Fill the 8 bytes (4 words) of IEC header
    pDataOutW[index++]=0xf872;
    pDataOutW[index++]=0x4e1f;
-   pDataOutW[index++]=Pc;
+   pDataOutW[index++]=(WORD)Pc;
    if (iec_length!=0)
     pDataOutW[index++]=WORD(iec_length);
    else if (bitstream_codec(codecId))
@@ -1113,7 +1113,23 @@ STDMETHODIMP TffdshowDecAudio::setCurrentStream(unsigned int i)
 }
 STDMETHODIMP TffdshowDecAudio::setCurrentStream2(TffdshowDecAudioInputPin *newipin)
 {
- if (newipin==inpin) return S_OK;
+ //DPRINTF(_l("TffdshowDecAudio::setCurrentStream2 Current pin = %u, New pin = %u"), inpin, newipin);
+ if (newipin==inpin)
+ {
+  return S_OK;
+ }
+
+ // Set current input pin to none so that they flush themselves
+ inpin = NULL;
+
+ // Let the other pins deliver their last samples
+ for (int i=0;i<(int)inpins.getNumConnectedInpins();i++)
+ {
+  if (newipin == inpins.getConnectedInpin(i)) continue;
+  inpins.getConnectedInpin(i)->block(false);
+  inpins.getConnectedInpin(i)->block(true);
+ }
+ 
  //CAutoLock cs(&m_csReceive);
  if (m_pOutput)
   {
@@ -1129,7 +1145,11 @@ STDMETHODIMP TffdshowDecAudio::setCurrentStream2(TffdshowDecAudioInputPin *newip
  comptrQ<IMediaSeeking> _pMS=m_pGraph;
  LONGLONG _rtNow=0;
  if (_pMS) _hr=_pMS->GetCurrentPosition(&_rtNow);
+ 
+ // Set new pin and unblock the stream
  inpin=newipin;
+ inpin->block(false);
+
  if (SUCCEEDED(_hr) && _pMS)
   _hr=_pMS->SetPositions(&_rtNow,AM_SEEKING_AbsolutePositioning,NULL,AM_SEEKING_NoPositioning);
  if (_fs==State_Running && _pMS)
