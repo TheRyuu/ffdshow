@@ -685,6 +685,8 @@ int ff_h264_execute_ref_pic_marking(H264Context *h, MMCO *mmco, int mmco_count);
 
 int ff_h264_decode_ref_pic_marking(H264Context *h, GetBitContext *gb);
 
+void ff_generate_sliding_window_mmcos(H264Context *h);
+
 
 /**
  * Check if the top & left blocks are available if needed & change the dc mode so it only uses the available blocks.
@@ -1274,7 +1276,7 @@ static inline int get_dct8x8_allowed(H264Context *h){
 /**
  * decodes a P_SKIP or B_SKIP macroblock
  */
-static void decode_mb_skip(H264Context *h){
+static void av_unused decode_mb_skip(H264Context *h){
     MpegEncContext * const s = &h->s;
     const int mb_xy= h->mb_xy;
     int mb_type=0;
