@@ -728,7 +728,7 @@ if (_strnicmp(l2,L"<i>",3)==0) {words.add(l,l1,l2,props,3);props.italic=true;}
     words.add(l,l1,l2,props,7);props.isColor=false;props.size=0;props.fontname[0]='\0';
    }
    // Hacks for badly written HTML tags go here. Comment everything to only parse good HTML tags
-  else if (_strnicmp(l2,L"< i>",4)==0) {words.add(l,l1,l2,props,4);props.underline=true;}
+  else if (_strnicmp(l2,L"< i>",4)==0) {words.add(l,l1,l2,props,4);props.italic=true;}
   else if (_strnicmp(l2,L"< /i>",5)==0) {words.add(l,l1,l2,props,5);props.italic=false;}
   else if (_strnicmp(l2,L"< u>",4)==0) {words.add(l,l1,l2,props,4);props.underline=true;}
   else if (_strnicmp(l2,L"< /u>",5)==0) {words.add(l,l1,l2,props,5);props.underline=false;}
