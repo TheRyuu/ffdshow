@@ -1113,11 +1113,7 @@ STDMETHODIMP TffdshowDecAudio::setCurrentStream(unsigned int i)
 }
 STDMETHODIMP TffdshowDecAudio::setCurrentStream2(TffdshowDecAudioInputPin *newipin)
 {
- //DPRINTF(_l("TffdshowDecAudio::setCurrentStream2 Current pin = %u, New pin = %u"), inpin, newipin);
- if (newipin==inpin)
- {
-  return S_OK;
- }
+ if (newipin==inpin) return S_OK;
 
  // Set current input pin to none so that they flush themselves
  inpin = NULL;
@@ -1129,6 +1125,9 @@ STDMETHODIMP TffdshowDecAudio::setCurrentStream2(TffdshowDecAudioInputPin *newip
   inpins.getConnectedInpin(i)->block(false);
   inpins.getConnectedInpin(i)->block(true);
  }
+ 
+ // Set new pin
+ inpin=newipin;
  
  //CAutoLock cs(&m_csReceive);
  if (m_pOutput)
@@ -1146,8 +1145,7 @@ STDMETHODIMP TffdshowDecAudio::setCurrentStream2(TffdshowDecAudioInputPin *newip
  LONGLONG _rtNow=0;
  if (_pMS) _hr=_pMS->GetCurrentPosition(&_rtNow);
  
- // Set new pin and unblock the stream
- inpin=newipin;
+ // Unblock the stream on the new pin
  inpin->block(false);
 
  if (SUCCEEDED(_hr) && _pMS)
@@ -1159,7 +1157,7 @@ STDMETHODIMP TffdshowDecAudio::setCurrentStream2(TffdshowDecAudioInputPin *newip
 
 STDMETHODIMP_(TffdshowDecAudioInputPin *) TffdshowDecAudio::GetCurrentPin(void)
 {
-    return inpin;
+ return inpin;
 }
 
 

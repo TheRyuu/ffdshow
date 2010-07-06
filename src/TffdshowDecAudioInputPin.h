@@ -19,6 +19,7 @@ private:
  CMediaType outmt;
  HANDLE m_hNotifyEvent;
  CAMEvent m_evBlock;
+ bool m_useBlock;
 protected:
  virtual bool init(const CMediaType &mt);
  virtual void done(void);

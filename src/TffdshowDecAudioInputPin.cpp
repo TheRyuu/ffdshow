@@ -25,6 +25,7 @@
 #include "TaudioCodecLibavcodec.h"
 #include "WinUser.h"
 
+
 TffdshowDecAudioInputPin::TffdshowDecAudioInputPin(const char_t* pObjectName, TffdshowDecAudio* pFilter, HRESULT* phr, LPWSTR pName, int Inumber)
  :TinputPin(pObjectName,pFilter,phr,pName),
   filter(pFilter),
@@ -36,13 +37,15 @@ TffdshowDecAudioInputPin::TffdshowDecAudioInputPin(const char_t* pObjectName, Tf
   insample_rtStop(REFTIME_INVALID),
   audioParser(NULL),
   m_hNotifyEvent(NULL),
-  m_evBlock(true)
+  m_evBlock(true),
+  m_useBlock(false)
 {
 }
 TffdshowDecAudioInputPin::~TffdshowDecAudioInputPin()
 {
     if (audioParser) delete(audioParser);
     audioParser=NULL;
+    block(true);
 }
 
 bool TffdshowDecAudioInputPin::init(const CMediaType &mt)
@@ -81,6 +84,44 @@ void TffdshowDecAudioInputPin::done(void)
  codecId=CODEC_ID_NONE;
 }
 
+// IPin
+STDMETHODIMP TffdshowDecAudioInputPin::BeginFlush()
+{
+ CAutoLock lck(&filter->m_csFilter);
+	HRESULT hr;
+ if(FAILED(hr = __super::BeginFlush())) 
+		return hr;
+
+ /*if (!IsConnected() || filter->m_pOutput == NULL || !filter->m_pOutput->IsConnected())
+  return VFW_E_NOT_CONNECTED;
+
+ if (isActive())
+  return filter->m_pOutput->DeliverBeginFlush();
+ else */if (m_useBlock)
+  block(false);
+ return S_OK;
+}
+
+
+STDMETHODIMP TffdshowDecAudioInputPin::EndOfStream()
+{
+ CAutoLock cAutoLock(&m_csReceive);
+
+ if (!IsConnected() || filter->m_pOutput == NULL || !filter->m_pOutput->IsConnected())
+  return VFW_E_NOT_CONNECTED;
+
+	if(m_hNotifyEvent)
+	{
+		SetEvent(m_hNotifyEvent), m_hNotifyEvent = NULL;
+		return S_OK;
+	}
+
+ if (isActive())
+  return filter->m_pOutput->DeliverEndOfStream();
+
+ return S_OK;
+}
+
 STDMETHODIMP TffdshowDecAudioInputPin::EndFlush(void)
 {
  DPRINTF(_l("TffdshowDecAudioInputPin::EndFlush"));
@@ -88,10 +129,15 @@ STDMETHODIMP TffdshowDecAudioInputPin::EndFlush(void)
  buf.clear();
  newSrcBuffer.clear();
 
- if (!IsConnected() || filter->m_pOutput == NULL || !filter->m_pOutput->IsConnected())
+
+ /*if (!IsConnected() || filter->m_pOutput == NULL || !filter->m_pOutput->IsConnected())
   return VFW_E_NOT_CONNECTED;
 
- if (!isActive()) block(true);
+ if (isActive())
+  return filter->m_pOutput->DeliverEndFlush();
+ else */if (m_useBlock)
+  block(true);
+
  return TinputPin::EndFlush();
 }
 
@@ -115,20 +161,20 @@ STDMETHODIMP TffdshowDecAudioInputPin::Receive(IMediaSample* pIn)
  if (this!=filter->inpin)
  {
   //DPRINTF(_l("TffdshowDecAudioInputPin::Receive Not right pin : this = %u, filter inpin = %u"), this, filter->inpin);
-  m_evBlock.Wait();
-  //if (isActive())  DPRINTF(_l("TffdshowDecAudioInputPin::Receive Pin active unlocked : this = %u, filter inpin = %u"), this, filter->inpin);
+  if (m_useBlock)
+   m_evBlock.Wait();
+  else return S_FALSE;
  }
-
+ 
  if(!isActive())
-	{
+ {
   //DPRINTF(_l("TffdshowDecAudioInputPin::Receive Pin unlocked : this = %u, filter inpin = %u"), this, filter->inpin);
   if (this!=filter->inpin) return S_FALSE;
   return E_FAIL;
  }
 
- CAutoLock cAutoLock(&m_csReceive);
+ //CAutoLock cAutoLock(&m_csReceive);
 
- /* Commented by albain for external audio files. To revert in case of side effects*/
  if (filter->IsStopped())
   return S_FALSE;
 
@@ -157,12 +203,11 @@ STDMETHODIMP TffdshowDecAudioInputPin::Receive(IMediaSample* pIn)
  REFERENCE_TIME rtStart=_I64_MIN,rtStop=_I64_MIN;
  hr=pIn->GetTime(&rtStart,&rtStop);
 
-
  if (hr == S_OK)
   {
    insample_rtStart = rtStart;
    insample_rtStop = rtStop;
-   //DPRINTF(_l("audio sample start duration %I64i %I64i"),rtStart,rtStop-rtStart);
+   //DPRINTF(_l("TffdshowDecAudioInputPin::Receive audio sample start duration %I64i %I64i"),rtStart,rtStop-rtStart);
   }
 
  if (pIn->IsDiscontinuity()==S_OK)
@@ -282,27 +327,29 @@ STDMETHODIMP TffdshowDecAudioInputPin::Receive(IMediaSample* pIn)
         filter->insf.sf=audioParserData.sample_format;
 
     newSrcBuffer.reserve(newSrcBuffer.size()+32);
-    //return audio->decode(newSrcBuffer);
     hr=audio->decode(newSrcBuffer);
     if (hr == S_FALSE) 
      return S_OK;
-    else if (hr != S_OK) DPRINTF(_l("TffdshowDecAudioInputPin::Receive decode failed pin %u (%lx)"),this,hr);
-    return hr;
+    else
+     if (hr != S_OK) DPRINTF(_l("TffdshowDecAudioInputPin::Receive decode failed pin %u (%lx)"),this,hr);
+      return hr;
     break;
  default:
     // Decode data
     hr = audio->decode(buf);
     if (hr == S_FALSE)
      return S_OK;
-    else if (hr != S_OK) DPRINTF(_l("TffdshowDecAudioInputPin::Receive decode failed pin %u (%lx)"),this,hr);
-    return hr;
+    else
+     if (hr != S_OK) DPRINTF(_l("TffdshowDecAudioInputPin::Receive decode failed pin %u (%lx)"),this,hr);
+      return hr;
     break;
  }
  hr = audio->decode(buf);
  if (hr == S_FALSE)
   return S_OK;
- else if (hr != S_OK) DPRINTF(_l("TffdshowDecAudioInputPin::Receive decode failed pin %u (%lx)"),this,hr);
- return hr;
+ else
+  if (hr != S_OK) DPRINTF(_l("TffdshowDecAudioInputPin::Receive decode failed pin %u (%lx)"),this,hr);
+   return hr;
 }
 
 STDMETHODIMP TffdshowDecAudioInputPin::deliverDecodedSample(void *buf,size_t numsamples,const TsampleFormat &fmt,float postgain)
@@ -405,8 +452,8 @@ int TffdshowDecAudioInputPin::getJitter(void) const
 
 STDMETHODIMP TffdshowDecAudioInputPin::getAudioParser(TaudioParser **ppAudioParser)
 {
-    *ppAudioParser=audioParser;
-    return S_OK;
+ *ppAudioParser=audioParser;
+ return S_OK;
 }
 
 
@@ -415,6 +462,50 @@ HRESULT TffdshowDecAudioInputPin::CompleteConnect(IPin* pReceivePin)
 	HRESULT hr = __super::CompleteConnect(pReceivePin);
  if(FAILED(hr)) return hr;
  m_hNotifyEvent = NULL;
+
+ // Some source filters are not multithreaded, in that case we must not use the blocking mode
+ unsigned int numstreams=filter->inpins.getNumConnectedInpins();
+ bool noBlock = false;
+ for (unsigned int i=0;i<numstreams;i++)
+ {
+  TffdshowDecAudioInputPin *inpin=filter->inpins[i];
+  if (noBlock) 
+  {
+   inpin->m_useBlock = false;
+   continue;
+  }
+
+  IPin *pPin = NULL;
+  inpin->ConnectedTo(&pPin);
+  if (!pPin) continue;
+  PIN_INFO pinInfo;
+  if (SUCCEEDED(pPin->QueryPinInfo(&pinInfo)))
+  {
+   CLSID clsid;
+   if (pinInfo.pFilter && SUCCEEDED(pinInfo.pFilter->GetClassID(&clsid)))
+   {
+    if (clsid == CLSID_AviSplitter || clsid == CLSID_MPC_OggSplitter || clsid == CLSID_MPC_AC3DTSSourceFilter)
+    {
+     DPRINTF(_l("TffdshowDecAudioInputPin::CompleteConnect Use blocking mode on pin %u"), this);
+     m_useBlock = true;
+    }
+    /* Damm it, Haali is monothreaded (all pins are managed in the same thread), so we cannot use the blocking mode
+       even if another source filter needs it (DTS/AC3 source filter).
+       This is annoying because we can't use Haali with an external AC3/DTS file (albain) */
+    else if (clsid == CLSID_HaaliMediaSplitter)
+    {
+     DPRINTF(_l("TffdshowDecAudioInputPin::CompleteConnect Disable all blocking modes, source filter is monothreaded on pin %u"), this);
+     noBlock = true;
+     i = 0;
+    }
+   }
+   SAFE_RELEASE(pPin);
+   SAFE_RELEASE(pinInfo.pFilter); 
+  }
+ }
+
+ 
+
  return S_OK;
 }
 
@@ -426,58 +517,23 @@ bool TffdshowDecAudioInputPin::isActive()
 
 HRESULT TffdshowDecAudioInputPin::Active()
 {
- 
-	block(!isActive());
-
+ if (m_useBlock) block(!isActive());
 	return __super::Active();
 }
 
 HRESULT TffdshowDecAudioInputPin::Inactive()
 {
-	block(false);
-
+	if (m_useBlock) block(false);
 	return __super::Inactive();
 }
 
 void TffdshowDecAudioInputPin::block(bool is)
 {
+ if (!m_useBlock) return;
 	if(is) m_evBlock.Reset();
 	else m_evBlock.Set();
 }
 
-
-// IPin
-STDMETHODIMP TffdshowDecAudioInputPin::BeginFlush()
-{
- CAutoLock lck(&filter->m_csFilter);
-	HRESULT hr;
- if(FAILED(hr = __super::BeginFlush())) 
-		return hr;
-
- if (!IsConnected() || filter->m_pOutput == NULL || !filter->m_pOutput->IsConnected())
-  return VFW_E_NOT_CONNECTED;
-
- filter->m_pOutput->BeginFlush();
-
- if (!isActive()) block(false);
- return S_OK;
-}
-
-
-STDMETHODIMP TffdshowDecAudioInputPin::EndOfStream()
-{
- CAutoLock cAutoLock(&m_csReceive);
-
- if (!IsConnected() || filter->m_pOutput == NULL || !filter->m_pOutput->IsConnected())
-  return VFW_E_NOT_CONNECTED;
-
-	if(m_hNotifyEvent)
-	{
-		SetEvent(m_hNotifyEvent), m_hNotifyEvent = NULL;
-		return S_OK;
-	}
- return S_OK;
-}
 
 
 // IPinConnection
