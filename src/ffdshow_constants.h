@@ -6,6 +6,7 @@
 #define FFDSHOWVFW_NAME_L  L"ffdshow VFW decoder helper"
 #define FFDSHOWSUBTITLES_NAME_L  L"ffdshow subtitles filter"
 #define FFDSHOWDXVA_NAME_L  L"ffdshow DXVA Video Decoder"
+#define IS_FFDSHOW_VIDEO(filtername) (filtername!=NULL && (!strcmp(filtername, FFDSHOW_NAME_L) || !strcmp(filtername, FFDSHOWDXVA_NAME_L) || !strcmp(filtername, FFDSHOWRAW_NAME_L) || !strcmp(filtername, FFDSHOWSUBTITLES_NAME_L)))
 
 #define IDFF_autoPreset            1  //automatic preset loading enabled
 #define IDFF_trayIcon              3  //is tray icon visible

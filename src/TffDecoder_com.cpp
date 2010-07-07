@@ -39,8 +39,10 @@
 #include "TimgFilterOSD.h"
 #include "imgFilters/avisynth/TimgFilterAvisynth.h"
 
+// This is the list of global filters (not part of the preset) to be displayed in the context menu
 const TfilterIDFF TffdshowDecVideo::nextFilters[]=
 {
+#if 0
  {
   /*name*/  _l("Flip"),
   /*id*/    0,
@@ -61,6 +63,7 @@ const TfilterIDFF TffdshowDecVideo::nextFilters[]=
   /*half*/  0,
   /*dlgId*/ IDD_KEYS,
  },
+#endif
 #if 0
  {
   /*name*/  _l("Mouse"),

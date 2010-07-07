@@ -39,18 +39,9 @@
 #include <InitGuid.h>
 #include <IffMmdevice.h> // Vista header import (MMDeviceAPI.h)
 
+// This is the list of global filters (not part of the preset) to be displayed in the context menu
 const TfilterIDFF TffdshowDecAudio::nextFilters[]=
 {
- {
-  /*name*/  _l("OSD"),
-  /*id*/    0,
-  /*is*/    IDFF_isOSD,
-  /*order*/ 0,
-  /*show*/  0,
-  /*full*/  0,
-  /*half*/  0,
-  /*dlgId*/ IDD_OSD,
- },
  NULL,0
 };
 

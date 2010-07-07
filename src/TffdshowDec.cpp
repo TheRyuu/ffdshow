@@ -1172,7 +1172,7 @@ STDMETHODIMP TffdshowDec::extractExternalStreams(void)
    char_t name[MAX_PATH],filtername[MAX_PATH];
    getFilterName(bff,name,filtername,countof(filtername));
 
-   if (!strcmp(filtername, FFDSHOW_NAME_L) || !strcmp(filtername, FFDSHOWDXVA_NAME_L) || !strcmp(filtername, FFDSHOWRAW_NAME_L) || !strcmp(filtername, FFDSHOWSUBTITLES_NAME_L)) continue;
+   if (IS_FFDSHOW_VIDEO(filtername)) continue;
 
    FILTER_INFO filterinfo;
    bff->QueryFilterInfo(&filterinfo);
