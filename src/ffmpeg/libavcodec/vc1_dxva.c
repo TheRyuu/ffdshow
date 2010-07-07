@@ -16,10 +16,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-int av_vc1_decode_frame(AVCodecContext *avctx, AVPacket *avpkt)
+int av_vc1_decode_frame(AVCodecContext *avctx, const uint8_t *buf, int buf_size)
 {
-    const uint8_t *buf = avpkt->data;
-    int buf_size = avpkt->size;
     VC1Context *v = avctx->priv_data;
     MpegEncContext *s = &v->s;
     uint8_t *buf2 = NULL;

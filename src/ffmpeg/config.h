@@ -109,6 +109,7 @@
 #define cbrtf(x) pow((float)x, (float)1.0/3)
 #endif
 
+#define CONFIG_DCT 1
 #define CONFIG_DWT 0
 #define CONFIG_HARDCODED_TABLES 0
 #define CONFIG_GPL 1

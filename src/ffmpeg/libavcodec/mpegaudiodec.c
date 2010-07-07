@@ -269,6 +269,9 @@ static av_cold int decode_init(AVCodecContext * avctx)
 #if HAVE_MMX && CONFIG_FLOAT
     ff_mpegaudiodec_init_mmx(s);
 #endif
+#if CONFIG_FLOAT
+    ff_dct_init(&s->dct, 5, DCT_II);
+#endif
     avctx->sample_fmt= OUT_FMT;
     s->error_recognition= avctx->error_recognition;
 
@@ -299,9 +302,6 @@ static av_cold int decode_init(AVCodecContext * avctx)
                     scale_factor_mult[i][2]);
         }
 
-#if CONFIG_FLOAT
-        ff_dct_init(&s->dct, 5, DCT_II);
-#endif
         RENAME(ff_mpa_synth_init)(RENAME(ff_mpa_synth_window));
 
         /* huffman decode tables */

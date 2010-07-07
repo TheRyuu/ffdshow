@@ -238,6 +238,7 @@ SRCS_C=\
     \
       $(LAVC_DIR)/x86/cpuid.c \
       $(LAVC_DIR)/x86/cavsdsp_mmx.c \
+      $(LAVC_DIR)/x86/dct32_sse.c \
       $(LAVC_DIR)/x86/dsputil_mmx.c \
       $(LAVC_DIR)/x86/dsputilenc_mmx.c \
       $(LAVC_DIR)/x86/fdct_mmx.c \
