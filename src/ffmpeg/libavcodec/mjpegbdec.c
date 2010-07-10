@@ -160,4 +160,8 @@ AVCodec mjpegb_decoder = {
     /*.supported_framerates = */NULL,
     /*.pix_fmts = */NULL,
     /*.long_name = */NULL_IF_CONFIG_SMALL("Apple MJPEG-B"),
+    /*.supported_samplerates = */NULL,
+    /*.sample_fmts = */NULL,
+    /*.channel_layouts = */NULL,
+    /*.max_lowres = */3,
 };
