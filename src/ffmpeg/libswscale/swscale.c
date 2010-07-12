@@ -1679,7 +1679,7 @@ static int planarCopyWrapper(SwsContext *c, const uint8_t* src[], stride_t srcSt
 
                 for (i=0; i<height; i++) {
                     for (j=0; j<length; j++)
-                        ((uint16_t*)dstPtr)[j] = bswap_16(((const uint16_t*)srcPtr)[j]);
+                        ((uint16_t*)dstPtr)[j] = av_bswap16(((const uint16_t*)srcPtr)[j]);
                     srcPtr+= srcStride[plane];
                     dstPtr+= dstStride[plane];
                 }

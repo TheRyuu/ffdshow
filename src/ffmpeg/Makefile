@@ -277,6 +277,7 @@ SRCS_YASM=\
       $(LAVC_DIR)/x86/h264_deblock_sse2.asm \
       $(LAVC_DIR)/x86/h264_idct_sse2.asm \
       $(LAVC_DIR)/x86/h264_intrapred.asm \
+      $(LAVC_DIR)/x86/vc1dsp_yasm.asm \
       $(LAVC_DIR)/x86/vp8dsp.asm \
       $(LAVC_DIR)/x86/x86util.asm
 

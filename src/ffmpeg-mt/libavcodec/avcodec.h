@@ -34,7 +34,7 @@
 #include "libavutil/avutil.h"
 
 #define LIBAVCODEC_VERSION_MAJOR 52
-#define LIBAVCODEC_VERSION_MINOR 80
+#define LIBAVCODEC_VERSION_MINOR 83
 #define LIBAVCODEC_VERSION_MICRO  0
 
 #define LIBAVCODEC_VERSION_INT  AV_VERSION_INT(LIBAVCODEC_VERSION_MAJOR, \
@@ -228,6 +228,18 @@ enum AVChromaLocation{
     AVCHROMA_LOC_BOTTOMLEFT =5,
     AVCHROMA_LOC_BOTTOM     =6,
     AVCHROMA_LOC_NB           , ///< Not part of ABI
+};
+
+/**
+ * LPC analysis type
+ */
+enum AVLPCType {
+    AV_LPC_TYPE_DEFAULT     = -1, ///< use the codec default LPC type
+    AV_LPC_TYPE_NONE        =  0, ///< do not use LPC prediction or use all zero coefficients
+    AV_LPC_TYPE_FIXED       =  1, ///< fixed LPC coefficients
+    AV_LPC_TYPE_LEVINSON    =  2, ///< Levinson-Durbin recursion
+    AV_LPC_TYPE_CHOLESKY    =  3, ///< Cholesky factorization
+    AV_LPC_TYPE_NB              , ///< Not part of ABI
 };
 
 /**
@@ -1171,7 +1183,7 @@ typedef struct AVCodecContext {
      * some other means. May be called from a different thread if FF_THREAD_FRAME
      * is set, but does not need to be reentrant.
      * - encoding: unused
-     * - decoding: Set by libavcodec., user can override.
+     * - decoding: Set by libavcodec, user can override.
      */
     int (*get_buffer)(struct AVCodecContext *c, AVFrame *pic);
 
@@ -1182,7 +1194,7 @@ typedef struct AVCodecContext {
      * if frame threading is enabled, but not more than one at the same time.
      *
      * - encoding: unused
-     * - decoding: Set by libavcodec., user can override.
+     * - decoding: Set by libavcodec, user can override.
      */
     void (*release_buffer)(struct AVCodecContext *c, AVFrame *pic);
 
@@ -1796,7 +1808,7 @@ typedef struct AVCodecContext {
      * avcodec_default_reget_buffer() instead of providing buffers allocated by
      * some other means.
      * - encoding: unused
-     * - decoding: Set by libavcodec., user can override
+     * - decoding: Set by libavcodec, user can override.
      */
     int (*reget_buffer)(struct AVCodecContext *c, AVFrame *pic);
 
@@ -2180,12 +2192,15 @@ typedef struct AVCodecContext {
     int compression_level;
 #define FF_COMPRESSION_DEFAULT -1
 
+#if LIBAVCODEC_VERSION_MAJOR < 53
     /**
      * Sets whether to use LPC mode - used by FLAC encoder.
      * - encoding: Set by user.
      * - decoding: unused
+     * @deprecated Deprecated in favor of lpc_type and lpc_passes.
      */
     int use_lpc;
+#endif
 
     /**
      * LPC coefficient precision - used by FLAC encoder
@@ -2422,6 +2437,20 @@ typedef struct AVCodecContext {
     float crf_max;
 
     int log_level_offset;
+
+    /**
+     * Determines which LPC analysis algorithm to use.
+     * - encoding: Set by user
+     * - decoding: unused
+     */
+    enum AVLPCType lpc_type;
+
+    /**
+     * Number of passes to use for Cholesky factorization during LPC analysis
+     * - encoding: Set by user
+     * - decoding: unused
+     */
+    int lpc_passes;
 
     /**
      * Whether this is a copy of the context which had init() called on it.

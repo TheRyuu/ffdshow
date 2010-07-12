@@ -89,7 +89,7 @@ LOCAL unsigned int getbits_fast(mp3lib_ctx *ctx,int number_of_bits)
   if((ctx->bitsleft-=number_of_bits)<0) return 0;
   if(!number_of_bits) return 0;
 #if ARCH_X86
-  rval = bswap_16(*((uint16_t *)ctx->wordpointer));
+  rval = av_bswap16(*((uint16_t *)ctx->wordpointer));
 #else
   /*
    * we may not be able to address unaligned 16-bit data on non-x86 cpus.
@@ -132,7 +132,7 @@ LOCAL void set_pointer(mp3lib_ctx *ctx,int backstep)
 LOCAL int stream_head_read(mp3lib_ctx *ctx,unsigned char *hbuf,uint32_t *newhead){
   if(mp3_read(ctx,hbuf,4) != 4) return FALSE;
 #if ARCH_X86
-  *newhead = bswap_32(*((uint32_t*)hbuf));
+  *newhead = av_bswap32(*((uint32_t*)hbuf));
 #else
   /*
    * we may not be able to address unaligned 32-bit data on non-x86 cpus.

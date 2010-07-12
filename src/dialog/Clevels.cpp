@@ -504,11 +504,11 @@ void TlevelsPage::onCurveLoad(void)
   {
    FILE *f=fopen(curvesflnm,_l("rb"));if (!f) return;
    int16_t w;
-   if (fread(&w,1,2,f)==2 && be2me_16(w)==4)
-    if (fread(&w,1,2,f)==2 && be2me_16(w)==5)
+   if (fread(&w,1,2,f)==2 && av_be2ne16(w)==4)
+    if (fread(&w,1,2,f)==2 && av_be2ne16(w)==5)
      {
       int16_t cnt;
-      if (fread(&cnt,1,2,f)==2 && (cnt=be2me_16(cnt))>0)
+      if (fread(&cnt,1,2,f)==2 && (cnt=av_be2ne16(cnt))>0)
        {
         cnt=std::min(cnt,int16_t(10));
         cfgSet(IDFF_levelsNumPoints,cnt);
@@ -519,8 +519,8 @@ void TlevelsPage::onCurveLoad(void)
           int16_t x,y;
           if (fread(&y,1,2,f)!=2 || fread(&x,1,2,f)!=2)
            break;
-          pts[numpoints].first=limit_uint8(be2me_16(x));
-          pts[numpoints].second=limit_uint8(be2me_16(y));
+          pts[numpoints].first=limit_uint8(av_be2ne16(x));
+          pts[numpoints].second=limit_uint8(av_be2ne16(y));
           numpoints++;
          }
         std::sort(pts,pts+numpoints);
