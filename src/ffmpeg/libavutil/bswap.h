@@ -29,7 +29,6 @@
 #include <stdint.h>
 #include "libavutil/avconfig.h"
 #include "attributes.h"
-#include "common.h" /* for MSVC */
 
 #ifdef HAVE_AV_CONFIG_H
 

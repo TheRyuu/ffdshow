@@ -24,11 +24,6 @@
 #include "attributes.h"
 #include "bswap.h"
 
-/* ffdshow custom code */
-#if defined(_MSC_VER)
-#define av_alias
-#endif
-
 typedef union {
     uint64_t u64;
     uint32_t u32[2];
