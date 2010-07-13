@@ -3643,6 +3643,7 @@ AVCodec h264_decoder = {
     /*.supported_samplerates = */NULL,
     /*.sample_fmts = */NULL,
     /*.channel_layouts = */NULL,
+    /*.max_lowres = */0,
     /*.init_copy = */NULL,
     /*.update_context = */ONLY_IF_THREADS_ENABLED(decode_update_thread_context),
 };
