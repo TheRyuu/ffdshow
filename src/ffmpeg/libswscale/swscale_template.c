@@ -80,7 +80,7 @@
         "mov                        (%%"REG_d"), %%"REG_S"  \n\t"\
         "jb                                  1b             \n\t"\
         :: "r" (&c->redDither),\
-        "r" (dest), "g" (width)\
+        "r" (dest), "g" ((x86_reg)width)\
         : "%"REG_a, "%"REG_d, "%"REG_S\
     );
 
@@ -142,7 +142,7 @@
         "mov                        (%%"REG_d"), %%"REG_S"  \n\t"\
         "jb                                  1b             \n\t"\
         :: "r" (&c->redDither),\
-        "r" (dest), "g" (width)\
+        "r" (dest), "g" ((x86_reg)width)\
         : "%"REG_a, "%"REG_d, "%"REG_S\
     );
 
@@ -180,7 +180,7 @@
 /*
     :: "m" (-lumFilterSize), "m" (-chrFilterSize),
        "m" (lumMmxFilter+lumFilterSize*4), "m" (chrMmxFilter+chrFilterSize*4),
-       "r" (dest), "m" (dstW),
+       "r" (dest), "m" (dstW_reg),
        "m" (lumSrc+lumFilterSize), "m" (chrSrc+chrFilterSize)
     : "%eax", "%ebx", "%ecx", "%edx", "%esi"
 */
@@ -234,7 +234,7 @@
 #define YSCALEYUV2PACKEDX_END                     \
         :: "r" (&c->redDither),                   \
             "m" (dummy), "m" (dummy), "m" (dummy),\
-            "r" (dest), "m" (dstW)                \
+            "r" (dest), "m" (dstW_reg)            \
         : "%"REG_a, "%"REG_d, "%"REG_S            \
     );
 
@@ -1025,6 +1025,7 @@ static inline void RENAME(yuv2packedX)(SwsContext *c, const int16_t *lumFilter, 
 {
 #if COMPILE_TEMPLATE_MMX
     x86_reg dummy=0;
+    x86_reg dstW_reg = dstW;
     if(!(c->flags & SWS_BITEXACT)) {
         if (c->flags & SWS_ACCURATE_RND) {
             switch(c->dstFormat) {
@@ -1063,7 +1064,7 @@ static inline void RENAME(yuv2packedX)(SwsContext *c, const int16_t *lumFilter, 
 
                 :: "r" (&c->redDither),
                 "m" (dummy), "m" (dummy), "m" (dummy),
-                "r" (dest), "m" (dstW)
+                "r" (dest), "m" (dstW_reg)
                 : "%"REG_a, "%"REG_c, "%"REG_d, "%"REG_S
                 );
                 return;
@@ -1137,7 +1138,7 @@ static inline void RENAME(yuv2packedX)(SwsContext *c, const int16_t *lumFilter, 
 
                 :: "r" (&c->redDither),
                 "m" (dummy), "m" (dummy), "m" (dummy),
-                "r" (dest),  "m" (dstW)
+                "r" (dest),  "m" (dstW_reg)
                 : "%"REG_a, "%"REG_c, "%"REG_d, "%"REG_S
                 );
                 return;
@@ -2326,9 +2327,9 @@ static inline void RENAME(hyscale_fast)(SwsContext *c, int16_t *dst,
         for (i=dstWidth-1; (i*xInc)>>16 >=srcW-1; i--) dst[i] = src[srcW-1]*128;
     } else {
 #endif /* COMPILE_TEMPLATE_MMX2 */
-    x86_reg dstWidth_reg = dstWidth;
     x86_reg xInc_shr16 = xInc >> 16;
     uint16_t xInc_mask = xInc & 0xffff;
+    x86_reg dstWidth_reg = dstWidth;
     //NO MMX just normal asm ...
     __asm__ volatile(
         "xor %%"REG_a", %%"REG_a"            \n\t" // i
@@ -2468,9 +2469,9 @@ static inline void RENAME(hcscale_fast)(SwsContext *c, int16_t *dst,
         }
     } else {
 #endif /* COMPILE_TEMPLATE_MMX2 */
-        x86_reg dstWidth_reg = dstWidth;
         x86_reg xInc_shr16 = (x86_reg) (xInc >> 16);
         uint16_t xInc_mask = xInc & 0xffff;
+        x86_reg dstWidth_reg = dstWidth;
         __asm__ volatile(
             "xor %%"REG_a", %%"REG_a"               \n\t" // i
             "xor %%"REG_d", %%"REG_d"               \n\t" // xx

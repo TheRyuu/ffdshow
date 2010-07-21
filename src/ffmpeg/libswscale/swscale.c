@@ -57,6 +57,7 @@ untested special converters
   BGR32 -> BGR24 & RGB32 -> RGB24
   BGR24 -> YV12
 */
+
 #include <windows.h>
 #include <inttypes.h>
 #include <string.h>
@@ -1683,9 +1684,11 @@ static int planarCopyWrapper(SwsContext *c, const uint8_t* src[], stride_t srcSt
                     srcPtr+= srcStride[plane];
                     dstPtr+= dstStride[plane];
                 }
-            } else if (dstStride[plane]==srcStride[plane] && srcStride[plane] > 0)
-                memcpy(dst[plane] + dstStride[plane]*y, src[plane], height*dstStride[plane]);
-            else {
+            } else if (dstStride[plane] == srcStride[plane] &&
+                       srcStride[plane] > 0 && srcStride[plane] == length) {
+                memcpy(dst[plane] + dstStride[plane]*y, src[plane],
+                       height*dstStride[plane]);
+            } else {
                 if(is16BPS(c->srcFormat) && is16BPS(c->dstFormat))
                     length*=2;
                 for (i=0; i<height; i++) {

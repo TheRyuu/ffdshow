@@ -209,6 +209,7 @@ SRCS_C=\
       $(LAVU_DIR)/crc.c \
       $(LAVU_DIR)/eval.c \
       $(LAVU_DIR)/intfloat_readwrite.c \
+      $(LAVU_DIR)/inverse.c \
       $(LAVU_DIR)/lfg.c \
       $(LAVU_DIR)/lls.c \
       $(LAVU_DIR)/log.c \

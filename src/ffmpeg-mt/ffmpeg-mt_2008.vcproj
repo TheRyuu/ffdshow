@@ -850,6 +850,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavutil\inverse.c"
+				>
+			</File>
+			<File
 				RelativePath=".\libavutil\log.c"
 				>
 			</File>

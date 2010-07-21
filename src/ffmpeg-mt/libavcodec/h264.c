@@ -999,6 +999,16 @@ static void copy_parameter_set(void **to, void **from, int count, int size)
     }
 }
 
+static int decode_init_thread_copy(AVCodecContext *avctx){
+    H264Context *h= avctx->priv_data;
+
+    if (!avctx->is_copy) return 0;
+    memset(h->sps_buffers, 0, sizeof(h->sps_buffers));
+    memset(h->pps_buffers, 0, sizeof(h->pps_buffers));
+
+    return 0;
+}
+
 #define copy_fields(to, from, start_field, end_field) memcpy(&to->start_field, &from->start_field, (char*)&to->end_field - (char*)&to->start_field)
 static int decode_update_thread_context(AVCodecContext *dst, AVCodecContext *src){
     H264Context *h= dst->priv_data, *h1= src->priv_data;
@@ -1014,6 +1024,12 @@ static int decode_update_thread_context(AVCodecContext *dst, AVCodecContext *src
 
     //FIXME handle width/height changing
     if(!inited){
+        for(i = 0; i < MAX_SPS_COUNT; i++)
+            av_freep(h->sps_buffers + i);
+
+        for(i = 0; i < MAX_PPS_COUNT; i++)
+            av_freep(h->pps_buffers + i);
+
         memcpy(&h->s + 1, &h1->s + 1, sizeof(H264Context) - sizeof(MpegEncContext)); //copy all fields after MpegEnc
         memset(h->sps_buffers, 0, sizeof(h->sps_buffers));
         memset(h->pps_buffers, 0, sizeof(h->pps_buffers));
@@ -3600,9 +3616,6 @@ av_cold void ff_h264_free_context(H264Context *h)
 
     free_tables(h); //FIXME cleanup init stuff perhaps
 
-    if (!h->s.context_initialized)
-        return;
-
     for(i = 0; i < MAX_SPS_COUNT; i++)
         av_freep(h->sps_buffers + i);
 
@@ -3644,7 +3657,7 @@ AVCodec h264_decoder = {
     /*.sample_fmts = */NULL,
     /*.channel_layouts = */NULL,
     /*.max_lowres = */0,
-    /*.init_copy = */NULL,
+    /*.init_thread_copy = */ONLY_IF_THREADS_ENABLED(decode_init_thread_copy),
     /*.update_context = */ONLY_IF_THREADS_ENABLED(decode_update_thread_context),
 };
 

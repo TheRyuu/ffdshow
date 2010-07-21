@@ -41,6 +41,7 @@ SRCS_C=\
       $(LAVC_DIR)/vp3dsp.c \
     \
       $(LAVU_DIR)/intfloat_readwrite.c \
+      $(LAVU_DIR)/inverse.c \
       $(LAVU_DIR)/log.c \
       $(LAVU_DIR)/mathematics.c \
       $(LAVU_DIR)/mem.c \
