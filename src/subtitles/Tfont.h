@@ -56,6 +56,8 @@ struct TprintPrefs {
     double outlineWidth;
     Rational sar;
     bool opaqueBox;
+    int italic;
+    int underline;
     int subformat;
     unsigned int xinput,yinput;
     TfontSettings fontSettings;

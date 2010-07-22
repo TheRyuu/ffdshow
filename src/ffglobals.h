@@ -81,7 +81,7 @@ typedef const TCHAR *PCTSTR;
 #define REF_SECOND_MULT 10000000LL
 #define REFTIME_INVALID _I64_MIN
 
-#define MAX_SUBTITLE_LENGTH 2000
+#define MAX_SUBTITLE_LENGTH 10000
 
 #define countof(array) (size_t)(sizeof(array)/sizeof(array[0]))
 

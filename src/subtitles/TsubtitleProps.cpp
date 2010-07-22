@@ -73,27 +73,43 @@ void TSubtitleProps::reset(void)
 void TSubtitleProps::toLOGFONT(LOGFONT &lf,const TfontSettings &fontSettings,unsigned int dx,unsigned int dy,unsigned int clipdy,const Rational& sar,unsigned int gdi_font_scale) const
 {
  memset(&lf,0,sizeof(lf));
- lf.lfHeight=(LONG)limit(size?size:fontSettings.getSize(refResY,clipdy),3U,255U) * gdi_font_scale;
- if (size)
+ if (size && fontSettings.sizeOverride == 0)
+ {
+  lf.lfHeight=(LONG) size * gdi_font_scale;
   lf.lfHeight=(clipdy ? clipdy : dy)*lf.lfHeight/refResY;
- int yscale=get_yscale(fontSettings.yscale,sar,fontSettings.aspectAuto,fontSettings.overrideScale);
+ }
+ else
+  lf.lfHeight=(LONG)limit(fontSettings.getSize(dx,dy),3U,255U) * gdi_font_scale;
+ int yscale=get_yscale(fontSettings.yscale,sar,fontSettings.aspectAuto,fontSettings.fontSettingsOverride);
  lf.lfHeight=lf.lfHeight*yscale/100;
  lf.lfWidth=0;
- if (bold==-1)
+ if (bold==-1 || fontSettings.fontSettingsOverride)
   lf.lfWeight=fontSettings.weight;
  else if (bold==0)
   lf.lfWeight=0;
  else
   lf.lfWeight=700;
- lf.lfItalic=italic;
- lf.lfUnderline=underline;
+ if ((italic && !fontSettings.fontSettingsOverride) || (fontSettings.italic && this->version >= 4 && fontSettings.fontSettingsOverride) || (fontSettings.italic && this->version < 4))
+  lf.lfItalic=1;
+ else
+  lf.lfItalic=0;
+ if ((underline && !fontSettings.fontSettingsOverride) || (fontSettings.underline && this->version >= 4 && fontSettings.fontSettingsOverride) || (fontSettings.underline && this->version < 4))
+  lf.lfUnderline=1;
+ else
+  lf.lfUnderline=0;
  lf.lfStrikeOut=strikeout;
- lf.lfCharSet=BYTE(encoding!=-1?encoding:fontSettings.charset);
+ if (encoding != -1 && fontSettings.fontSettingsOverride == 0)
+  lf.lfCharSet=BYTE(encoding);
+ else
+  lf.lfCharSet=BYTE(fontSettings.charset);
  lf.lfOutPrecision=OUT_TT_PRECIS;
  lf.lfClipPrecision=CLIP_DEFAULT_PRECIS;
  lf.lfQuality=ANTIALIASED_QUALITY;
  lf.lfPitchAndFamily=DEFAULT_PITCH|FF_DONTCARE;
- ff_strncpy(lf.lfFaceName,fontname[0]?fontname:fontSettings.name,LF_FACESIZE);
+ if (fontname[0] && fontSettings.fontSettingsOverride == 0)
+  ff_strncpy(lf.lfFaceName,fontname,LF_FACESIZE);
+ else
+  ff_strncpy(lf.lfFaceName,fontSettings.name,LF_FACESIZE);
 }
 
 int TSubtitleProps::get_spacing(unsigned int dy, unsigned int clipdy, unsigned int gdi_font_scale) const
@@ -382,10 +398,10 @@ int TSubtitleProps::alignASS2SSA(int align)
  return align;
 }
 
-int TSubtitleProps::get_xscale(int Ixscale,const Rational& sar,int aspectAuto,int overrideScale) const
+int TSubtitleProps::get_xscale(int Ixscale,const Rational& sar,int aspectAuto,int fontSettingsOverride) const
 {
  int result;
- if (scaleX==-1 || overrideScale)
+ if (scaleX==-1 || fontSettingsOverride)
   result=Ixscale;
  else
   result=scaleX;
@@ -394,10 +410,10 @@ int TSubtitleProps::get_xscale(int Ixscale,const Rational& sar,int aspectAuto,in
  return result;
 }
 
-int TSubtitleProps::get_yscale(int Iyscale,const Rational& sar,int aspectAuto,int overrideScale) const
+int TSubtitleProps::get_yscale(int Iyscale,const Rational& sar,int aspectAuto,int fontSettingsOverride) const
 {
  int result;
- if (scaleY==-1 || overrideScale)
+ if (scaleY==-1 || fontSettingsOverride)
   result=Iyscale;
  else
   result=scaleY;

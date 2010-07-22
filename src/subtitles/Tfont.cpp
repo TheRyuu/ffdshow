@@ -67,6 +67,8 @@ TprintPrefs::TprintPrefs(IffdshowBase *Ideci,const TfontSettings *IfontSettings)
      clipdy=0;
      sar=Rational(1,1);
      opaqueBox=false;
+     italic=0;
+     underline=0;
      subformat=-1;
      xinput=0;
      yinput=0;
@@ -97,6 +99,8 @@ bool TprintPrefs::operator != (const TprintPrefs &rt) const
       && outlineWidth == rt.outlineWidth
       && sar == rt.sar
       && opaqueBox == rt.opaqueBox
+      && italic == rt.italic
+      && underline == rt.underline
       && subformat == rt.subformat
       && xinput == rt.xinput && yinput == rt.yinput
       && fontSettings == rt.fontSettings
@@ -495,9 +499,15 @@ void TrenderedSubtitleLines::printASS(
                     case 9: // SSA mid
                     case 10:
                     case 11:
+                        // If the subs are SRT with SSA mid aligment tags or if they are SSA,
+                        // IDFF_subSSAOverridePlacement is present and they don't have any
+                        // position defined, then apply the vertical position slider setting.
+                        if ((pkey.marginBottom == 0 || (prefs.deci->getParam2(IDFF_subSSAOverridePlacement)
+                            || (prefs.subformat & Tsubreader::SUB_FORMATMASK) != Tsubreader::SUB_SSA)) && !pkey.isPos && !pkey.isMove)
+                            pval.y=((double)prefs.ypos*prefsdy)/100.0-pval.height - pval.topOverhang;
                         // With middle alignment and position/move tag we position the paragraph to the requested
                         // position basing on the anchor point set at the middle
-                        if (pkey.isPos || pkey.isMove)
+                        else if (pkey.isPos || pkey.isMove)
                             pval.y=pkey.marginTop-pval.height/2.0;
                         else // otherwise put the paragraph on the center of the screen (vertical margin is ignored)
                             pval.y=(prefsdy - pval.height)/2.0;
@@ -505,26 +515,28 @@ void TrenderedSubtitleLines::printASS(
                     case 5: // SSA top
                     case 6:
                     case 7:
-                            // If SRT subtitles with SSA tags, apply the vertical position
-                            // setting but inversed.
-                            if ((prefs.subformat & Tsubreader::SUB_FORMATMASK) != Tsubreader::SUB_SSA)
-                               pval.y=((double)(100-prefs.ypos)*prefsdy)/100.0;
-                            else
-                               pval.y = pkey.marginTop - pval.topOverhang;
-                            break;
+                        // If the subs are SRT with SSA top aligment tags or if they are SSA,
+                        // IDFF_subSSAOverridePlacement is present and they don't have any
+                        // position defined, then apply the vertical position slider setting
+                        // but inversed.
+                        if (((prefs.subformat & Tsubreader::SUB_FORMATMASK) != Tsubreader::SUB_SSA) || (!pkey.isPos && !pkey.isMove && ((prefs.subformat & Tsubreader::SUB_FORMATMASK) == Tsubreader::SUB_SSA) && prefs.deci->getParam2(IDFF_subSSAOverridePlacement)))
+                           pval.y=((double)(100-prefs.ypos)*prefsdy)/100.0;
+                        else
+                           pval.y = pkey.marginTop - pval.topOverhang;
+                        break;
                     case 1: // SSA bottom
                     case 2:
                     case 3:
                     default:
-                        // If the text is supposed to be placed at the bottom of the screen 
-                        // or has no vertical alignment defined
-                        // then apply the vertical position setting
-                        if (pkey.marginBottom == 0 && (prefs.deci->getParam2(IDFF_subSSAOverridePlacement)
-                          || (prefs.subformat & Tsubreader::SUB_FORMATMASK) != Tsubreader::SUB_SSA))
+                        // If the subs are SRT with SSA bottom aligment tags or if they are SSA,
+                        // IDFF_subSSAOverridePlacement is present and they don't have any
+                        // position defined, then apply the vertical position slider setting.
+                        if ((pkey.marginBottom == 0 || (prefs.deci->getParam2(IDFF_subSSAOverridePlacement)
+                            || (prefs.subformat & Tsubreader::SUB_FORMATMASK) != Tsubreader::SUB_SSA)) && !pkey.isPos && !pkey.isMove)
                             pval.y=((double)prefs.ypos*prefsdy)/100.0-pval.height - pval.topOverhang;
                         else
                             pval.y=(double)prefsdy - 1 - pkey.marginBottom - pval.height - pval.topOverhang;
-                    break;
+                        break;
                     }
 
                     // If option is checked (or if subs are SUBVIEWER), correct vertical placement if text goes out of the screen
@@ -558,43 +570,69 @@ void TrenderedSubtitleLines::printASS(
                 case 1: // left(SSA)
                 case 5:
                 case 9:
-                    x=marginL - leftOverhang;
+                    if (!pkey.isPos && !pkey.isMove && prefs.deci->getParam2(IDFF_subSSAOverridePlacement))
+                    {
+                        x = (prefs.xpos * prefsdx)/100;
+                        x = x - cdx / 2;
+                        if (x < 0) x = 0;
+                        if (x + cdx >= prefsdx) x = prefsdx - cdx;
+                    }
+                    else
+                        x=marginL - leftOverhang;
                     break;
                 case 3: // right(SSA)
                 case 7:
                 case 11:
-                    x=prefsdx - cdx - marginR - leftOverhang;
+                    if (!pkey.isPos && !pkey.isMove && prefs.deci->getParam2(IDFF_subSSAOverridePlacement))
+                    {
+                        x = (prefs.xpos * prefsdx)/100;
+                        x = x - cdx / 2;
+                        if (x < 0) x = 0;
+                        if (x + cdx >= prefsdx) x = prefsdx - cdx;
+                    }
+                    else
+                        x=prefsdx - cdx - marginR - leftOverhang;
                     break;
                 case 2: // center(SSA)
                 case 6:
                 case 10:
-                    // If the text is supposed to be placed at the center of the screen 
-                    // or has no horizontal alignment defined
-                    // then apply the horizontal position setting
-                    if (marginL==0 && prefs.deci->getParam2(IDFF_subSSAOverridePlacement))
-                        x = ((double)prefs.xpos * prefsdx)/100.0 - (int)(cdx+marginR)/2 - leftOverhang;
+                    // If the text is supposed to be placed at the center of the screen, 
+                    // has no horizontal alignment defined or IDFF_subSSAOverridePlacement
+                    // is present then apply the horizontal position setting
+                    if (!pkey.isPos && !pkey.isMove && prefs.deci->getParam2(IDFF_subSSAOverridePlacement))
+                    {
+                        x = (prefs.xpos * prefsdx)/100;
+                        x = x - cdx / 2;
+                        if (x < 0) x = 0;
+                        if (x + cdx >= prefsdx) x = prefsdx - cdx;
+                    }
                     else if (lineprops.isPos || lineprops.isMove) // If position defined, then marginL is relative to left border of the screen
                         x = marginL-leftOverhang;
                     else // else marginL is relative to the center of the screen
                         x = ((int)prefsdx - marginL - marginR - (int)cdx)/2 + marginL - leftOverhang;
                     break;
                 default: // non SSA/ASS
-                    x=(prefs.xpos * prefsdx)/100;
-                    switch (prefs.align) {
-                        case ALIGN_LEFT:
-                            break;
-                        case ALIGN_FFDSHOW:
-                            x = x - cdx / 2;
-                            if (x < 0) x = 0;
-                            if (x + cdx >= prefsdx) x = prefsdx - cdx;
-                            break;
-                        case ALIGN_CENTER:
-                            x = x - cdx / 2;
-                            break;
-                        case ALIGN_RIGHT:
-                            x = x - cdx;
-                            break;
+                    if (!lineprops.isPos && !lineprops.isMove)
+                    {
+                        x=(prefs.xpos * prefsdx)/100;
+                        switch (prefs.align) {
+                            case ALIGN_LEFT:
+                                break;
+                            case ALIGN_FFDSHOW:
+                                x = x - cdx / 2;
+                                if (x < 0) x = 0;
+                                if (x + cdx >= prefsdx) x = prefsdx - cdx;
+                                break;
+                            case ALIGN_CENTER:
+                                x = x - cdx / 2;
+                                break;
+                            case ALIGN_RIGHT:
+                                x = x - cdx;
+                                break;
+                        }
                     }
+                    else
+                        x = marginL-leftOverhang;
                 }
 
                 // If option is checked, correct horizontal placement if text goes out of the screen

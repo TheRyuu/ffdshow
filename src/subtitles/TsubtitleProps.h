@@ -59,8 +59,8 @@ struct TSubtitleProps
  int get_marginL(unsigned int screenWidth,unsigned int lineWidth=0) const;
  int get_marginTop(unsigned int screenHeight) const;
  int get_marginBottom(unsigned int screenHeight) const;
- int get_xscale(int Ixscale,const Rational& sar,int aspectAuto,int overrideScale) const;
- int get_yscale(int Iyscale,const Rational& sar,int aspectAuto,int overrideScale) const;
+ int get_xscale(int Ixscale,const Rational& sar,int aspectAuto,int fontSettingsOverride) const;
+ int get_yscale(int Iyscale,const Rational& sar,int aspectAuto,int fontSettingsOverride) const;
  int get_movedistanceV(unsigned int screenHeight) const;
  int get_movedistanceH(unsigned int screenWidth) const;
  int get_maxWidth(unsigned int screenWidth, int textBorderLR, int subFormat, IffdshowBase *deci) const;

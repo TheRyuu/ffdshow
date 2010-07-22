@@ -13,10 +13,10 @@ public:
    return *this;
   }
  virtual void reg_op(TregOp &t);
- unsigned int getSize(unsigned int refResY,unsigned int clipdy) const
+ unsigned int getSize(unsigned int dx,unsigned int dy) const
   {
-   if (autosize && clipdy && refResY)
-      return sizeA * clipdy / refResY;
+   if (autosize && dx && dy)
+      return limit(sizeA*ff_sqrt(dx*dx+dy*dy)/1000,3U,255U);
    else
       return sizeP;
   }
@@ -38,19 +38,23 @@ public:
  static const char_t *shadowModes[];
 
  char_t name[260];
+ int fontSettingsOverride;
  int charset;
  int autosize,autosizeVideoWindow;
- int sizeP,sizeA;
+ int sizeP,sizeA,sizeOverride;
  int xscale,yscale;
  int spacing,weight;
  int opaqueBox;
- int color,outlineColor,shadowColor;
+ int italic;
+ int underline;
+ int color,outlineColor,shadowColor,colorOverride;
  int bodyAlpha,outlineAlpha,shadowAlpha;
  int split;
- int overrideScale,aspectAuto;
- int outlineWidth;
+ int aspectAuto;
+ int outlineWidth, outlineWidthOverride;
  int shadowSize, shadowMode, shadowOverride; // Subtitles shadow
  int blur;
+ int scaleBorderAndShadowOverride;
  /**
   * gdi_font_scale: 4: for OSD. rendering_window is 4x5.
   *                 8-16: for subtitles. 16:very sharp (slow), 12:soft & sharp, (moderately slow) 8:blurry (fast)

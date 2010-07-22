@@ -55,7 +55,6 @@ public:
  int SSAOverridePlacement;
  int SSAMaintainInside;
  int SSAUseMovieDimensions;
- int SSAoverrideScale;
  int pgs;
  int isSubFiles;
  int isSubText;

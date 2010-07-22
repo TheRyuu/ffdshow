@@ -145,6 +145,8 @@ TfontSettings::TfontSettings(TintStrColl *Icoll):Toptions(Icoll)
     shadowColor = RGB(0,0,0);
     outlineWidth = 2;
     opaqueBox = 0;
+    italic = 0;
+    underline = 0;
     spacing = 0;
     xscale = 100;
     yscale = 100;
@@ -171,10 +173,12 @@ bool TfontSettings::operator == (const TfontSettings &rt) const
       && xscale == rt.xscale && yscale == rt.yscale
       && spacing == rt.spacing && weight == rt.weight
       && opaqueBox == rt.opaqueBox
+      && italic == rt.italic
+      && underline == rt.underline
       && color == rt.color && outlineColor == rt.outlineColor && shadowColor == rt.shadowColor
       && bodyAlpha == rt.bodyAlpha && outlineAlpha == rt.outlineAlpha && shadowAlpha == rt.shadowAlpha
       && split == rt.split
-      && overrideScale == rt.overrideScale && aspectAuto == rt.aspectAuto
+      && aspectAuto == rt.aspectAuto
       && outlineWidth == rt.outlineWidth
       && shadowSize == rt.shadowSize &&  shadowMode == rt.shadowMode
       && blur == rt.blur
@@ -231,6 +235,10 @@ TfontSettingsOSD::TfontSettingsOSD(TintStrColl *Icoll):TfontSettings(Icoll)
      _l("OSDfontOutlineWidth"), 1,
    IDFF_OSDfontOpaqueBox     ,&TfontSettings::opaqueBox      ,0,0,_l(""),1,
      _l("OSDfontOpaqueBox"), 0,
+   IDFF_OSDfontItalic        ,&TfontSettings::italic         ,0,0,_l(""),1,
+     _l("OSDfontItalic"), 0,
+   IDFF_OSDfontUnderline     ,&TfontSettings::underline      ,0,0,_l(""),1,
+     _l("OSDfontUnderline"), 0,
    IDFF_OSDfontSpacing       ,&TfontSettings::spacing        ,-10,10,_l(""),1,
      _l("OSDfontSpacing"), 0,
    IDFF_OSDfontXscale        ,&TfontSettings::xscale         ,10,300,_l(""),1,
@@ -279,7 +287,7 @@ TfontSettingsSub::TfontSettingsSub(TintStrColl *Icoll):TfontSettings(Icoll)
    IDFF_fontSizeP              ,&TfontSettings::sizeP              ,2,255,_l(""),1,
      _l("fontSize"), 26,
    IDFF_fontSizeA              ,&TfontSettings::sizeA              ,1,100,_l(""),1,
-     _l("fontSizeA"), 18,
+     _l("fontSizeA"), 31,
    IDFF_fontWeight             ,&TfontSettings::weight             ,0,900,_l(""),1,
      _l("fontWeight"), FW_BOLD,
    IDFF_fontColor              ,&TfontSettings::color              ,1,1,_l(""),1,
@@ -292,6 +300,10 @@ TfontSettingsSub::TfontSettingsSub(TintStrColl *Icoll):TfontSettings(Icoll)
      _l("fontOutlineWidth"), 2,
    IDFF_fontOpaqueBox          ,&TfontSettings::opaqueBox          ,0,0,_l(""),1,
      _l("fontOpaqueBox"), 0,
+   IDFF_fontItalic             ,&TfontSettings::italic             ,0,0,_l(""),1,
+     _l("fontItalic"), 0,
+   IDFF_fontUnderline          ,&TfontSettings::underline          ,0,0,_l(""),1,
+     _l("fontUnderline"), 0,
    IDFF_fontSpacing            ,&TfontSettings::spacing            ,-10,10,_l(""),1,
      _l("fontSpacing"), 0,
    IDFF_fontSplitting          ,&TfontSettings::split              ,0,0,_l(""),1,
@@ -300,8 +312,6 @@ TfontSettingsSub::TfontSettingsSub(TintStrColl *Icoll):TfontSettings(Icoll)
      _l("fontXscale"), 100,
    IDFF_fontYscale             ,&TfontSettings::yscale             ,10,300,_l(""),1,
      _l("fontYscale"), 100,
-   IDFF_fontOverrideScale      ,&TfontSettings::overrideScale      ,0,0,_l(""),1,
-     _l("fontOverrideScale"), 0,
    IDFF_fontAspectAuto         ,&TfontSettings::aspectAuto         ,0,0,_l(""),1,
      _l("fontAspectAuto"), 1,
    IDFF_fontBodyAlpha          ,&TfontSettings::bodyAlpha          ,0,256,_l(""),1,
@@ -318,6 +328,16 @@ TfontSettingsSub::TfontSettingsSub(TintStrColl *Icoll):TfontSettings(Icoll)
      _l("fontBlur"), 0,
    IDFF_fontShadowOverride     ,&TfontSettings::shadowOverride     ,0,0,_l(""),1,
      _l("fontShadowOverride"), 0,
+   IDFF_fontOutlineWidthOverride ,&TfontSettings::outlineWidthOverride ,0,0,_l(""),1,
+     _l("fontOutlineWidthOverride"), 0,
+   IDFF_fontSizeOverride       ,&TfontSettings::sizeOverride       ,0,0,_l(""),1,
+     _l("fontSizeOverride"), 0,
+   IDFF_fontSettingsOverride   ,&TfontSettings::fontSettingsOverride ,0,0,_l(""),1,
+     _l("fontSettingsOverride"), 0,
+   IDFF_fontColorOverride      ,&TfontSettings::colorOverride      ,0,0,_l(""),1,
+     _l("fontColorOverride"), 0,
+   IDFF_scaleBorderAndShadowOverride ,&TfontSettings::scaleBorderAndShadowOverride ,0,0,_l(""),1,
+     _l("scaleBorderAndShadowOverride"), 1,
    0
   };
  addOptions(iopts);

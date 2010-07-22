@@ -521,33 +521,41 @@
 #define IDFF_subSSAMaintainInside    3497
 #define IDFF_subSSAUseMovieDimensions 3498
 
-#define IDFF_fontName                820
-#define IDFF_fontCharset             802
-#define IDFF_fontAutosize            823
-#define IDFF_fontAutosizeVideoWindow 829
-#define IDFF_fontSizeP               803
-//#define IDFF_fontSize            803
-#define IDFF_fontSizeA               824
-#define IDFF_fontWeight              804
-#define IDFF_fontOutlineWidth        3387
-#define IDFF_fontOpaqueBox           3400
-#define IDFF_fontSpacing             808
-#define IDFF_fontColor               809
-#define IDFF_fontOutlineColor        3391
-#define IDFF_fontShadowColor         3392
-#define IDFF_fontSplitting           831
-#define IDFF_fontXscale              832 // *100, multiplier of character width
-#define IDFF_fontYscale              3411
-#define IDFF_fontOverrideScale       3414
-#define IDFF_fontAspectAuto          3415
-#define IDFF_fontFast                854
-#define IDFF_fontShadowMode          3374 // 0 - Glowing, 1 - classic gradient, 2 - classic
-#define IDFF_fontShadowSize          3375
-#define IDFF_fontBodyAlpha           3389
-#define IDFF_fontOutlineAlpha        3390
-#define IDFF_fontShadowAlpha         3376
-#define IDFF_fontBlur                3406
-#define IDFF_fontShadowOverride      3548
+#define IDFF_fontName                 820
+#define IDFF_fontCharset              802
+#define IDFF_fontAutosize             823
+#define IDFF_fontAutosizeVideoWindow  829
+#define IDFF_fontSizeP                803
+//#define IDFF_fontSize               803
+#define IDFF_fontSizeA                824
+#define IDFF_fontWeight               804
+#define IDFF_fontOutlineWidth         3387
+#define IDFF_fontOpaqueBox            3400
+#define IDFF_fontSpacing              808
+#define IDFF_fontColor                809
+#define IDFF_fontOutlineColor         3391
+#define IDFF_fontShadowColor          3392
+#define IDFF_fontSplitting            831
+#define IDFF_fontXscale               832 // *100, multiplier of character width
+#define IDFF_fontYscale               3411
+#define IDFF_fontAspectAuto           3415
+#define IDFF_fontFast                 854
+#define IDFF_fontShadowMode           3374 // 0 - Glowing, 1 - classic gradient, 2 - classic
+#define IDFF_fontShadowSize           3375
+#define IDFF_fontBodyAlpha            3389
+#define IDFF_fontOutlineAlpha         3390
+#define IDFF_fontShadowAlpha          3376
+#define IDFF_fontBlur                 3406
+#define IDFF_fontShadowOverride       3548
+#define IDFF_fontOutlineWidthOverride 3550
+#define IDFF_fontSizeOverride         3551
+#define IDFF_fontSettingsOverride     3552
+#define IDFF_fontColorOverride        3553
+#define IDFF_scaleBorderAndShadowOverride 3554
+#define IDFF_fontItalic               3555
+#define IDFF_OSDfontItalic            3556
+#define IDFF_fontUnderline            3557
+#define IDFF_OSDfontUnderline         3558
 
 #define IDFF_filterBlur              900
 #define IDFF_isBlur                  901
@@ -1586,6 +1594,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//next:3550
+//next:3559
 
 #endif

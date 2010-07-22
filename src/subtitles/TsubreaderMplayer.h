@@ -9,7 +9,7 @@ class TsubtitleParserBase
 {
 private:
 protected:
- static const int LINE_LEN=MAX_SUBTITLE_LENGTH; // Maximal length of line of a subtitle
+ static const int LINE_LEN=MAX_SUBTITLE_LENGTH; // Maximum length of subtitle lines
  int format;
  double fps;
  REFERENCE_TIME frameToTime(int frame)

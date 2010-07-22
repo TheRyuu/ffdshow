@@ -125,8 +125,8 @@ TrenderedTextSubtitleWord::TrenderedTextSubtitleWord(
     m_outlineWidth=1;
     outlineWidth_double = prefs.outlineWidth;
 
-    // Scale border if scaleBorderAndShadow is set
-    if (props.scaleBorderAndShadow)
+    // Scale border
+    if (props.scaleBorderAndShadow || (prefs.fontSettings.scaleBorderAndShadowOverride && props.version >= 4 && !prefs.fontSettings.fontSettingsOverride))
        outlineWidth_double = outlineWidth_double * prefs.clipdy / props.refResY;
 
     if (!prefs.opaqueBox) {
@@ -749,8 +749,8 @@ unsigned int TrenderedTextSubtitleWord::getShadowSize(LONG fontHeight, unsigned 
   return 0;
  if (prefs.shadowSize < 0) // SSA/ASS/ASS2
   {
-   // Scale shadow if scaleBorderAndShadow is set
-   if (props.scaleBorderAndShadow)
+   // Scale shadow
+   if (props.scaleBorderAndShadow || (prefs.fontSettings.scaleBorderAndShadowOverride && props.version >= 4 && !prefs.fontSettings.fontSettingsOverride))
       return (-1 * prefs.shadowSize * prefs.clipdy / props.refResY) - 0.5;
    else
       return (-1 * prefs.shadowSize) - 0.5;

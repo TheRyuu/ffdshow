@@ -1437,18 +1437,18 @@ size_t TsubtitleText::prepareGlyph(const TprintPrefs &prefs, Tfont &font, bool f
             for (TsubtitleLine::const_iterator w=l->begin();w!=l->end();w++) {
                 LOGFONT lf;
                 TtoGdiFont gf(w->props, font.hdc, lf, prefs, dx, dy, fontManager);
-                SetTextCharacterExtra(font.hdc,w->props.spacing==INT_MIN ? prefs.fontSettings.spacing : w->props.get_spacing(dy, prefs.clipdy, gdi_font_scale));
+                SetTextCharacterExtra(font.hdc,(w->props.spacing==INT_MIN || prefs.fontSettings.fontSettingsOverride) ? prefs.fontSettings.spacing : w->props.get_spacing(dy, prefs.clipdy, gdi_font_scale));
                 const wchar_t *p=*w;
                 int xscale=w->props.get_xscale(
                         prefs.fontSettings.xscale,
                         prefs.sar,
                         prefs.fontSettings.aspectAuto,
-                        prefs.fontSettings.overrideScale)
+                        prefs.fontSettings.fontSettingsOverride)
                     * 100
                     / w->props.get_yscale(
                         prefs.fontSettings.yscale,prefs.sar,
                         prefs.fontSettings.aspectAuto,
-                        prefs.fontSettings.overrideScale);
+                        prefs.fontSettings.fontSettingsOverride);
                 wordWrapMode=w->props.wrapStyle;
                 splitdxMax=get_splitdx_for_new_line(*w, splitdx0, dx, prefs, gdi_font_scale, deci);
                 allStr+=p;
@@ -1498,7 +1498,7 @@ size_t TsubtitleText::prepareGlyph(const TprintPrefs &prefs, Tfont &font, bool f
                 TsubtitleWord w(*w0);
                 LOGFONT lf;
                 TtoGdiFont gf(w.props, font.hdc, lf, prefs, dx, dy, fontManager);
-                SetTextCharacterExtra(font.hdc,w.props.spacing==INT_MIN ? prefs.fontSettings.spacing : w.props.get_spacing(dy, prefs.clipdy, gdi_font_scale));
+                SetTextCharacterExtra(font.hdc,(w.props.spacing==INT_MIN || prefs.fontSettings.fontSettingsOverride) ? prefs.fontSettings.spacing : w.props.get_spacing(dy, prefs.clipdy, gdi_font_scale));
                 if (!line) {
                     line=new TrenderedSubtitleLine(w.props);
                     // Propagate input dimensions to the line properties 
@@ -1604,8 +1604,9 @@ TrenderedTextSubtitleWord* TsubtitleText::newWord(
             s1.erase(s1.size()-1,1);
     }
 
-    if (w->props.shadowDepth != -1)  {
-        // SSA/ASS/ASS2 Use the same settings as SRT if no shadow mode defined
+    if (w->props.shadowDepth != -1) // SSA/ASS/ASS2 subtitles
+    {
+        // Use the same settings as SRT if no shadow mode is defined or if shadow override is enabled
         if (prefs.shadowMode == 0 || fontSettings.shadowOverride)
         {
          prefs.shadowMode=fontSettings.shadowMode;
@@ -1614,13 +1615,17 @@ TrenderedTextSubtitleWord* TsubtitleText::newWord(
         else
          prefs.shadowSize = -1 * w->props.shadowDepth;
     }
-    else // SSA/ASS/ASS2 Use the same settings as SRT if no shadow mode defined
+    else // SRT subtitles
     {
      prefs.shadowMode=fontSettings.shadowMode;
      prefs.shadowSize=fontSettings.shadowSize;
     }
 
-    prefs.outlineWidth=w->props.outlineWidth==-1 ? fontSettings.outlineWidth : w->props.outlineWidth;
+    // Outline width
+    if (w->props.outlineWidth == -1 || fontSettings.outlineWidthOverride != 0)
+     prefs.outlineWidth = fontSettings.outlineWidth;
+    else
+     prefs.outlineWidth = w->props.outlineWidth;
 
     if (prefs.shadowMode==-1) {
         // OSD
@@ -1629,11 +1634,13 @@ TrenderedTextSubtitleWord* TsubtitleText::newWord(
     }
 
     YUVcolorA shadowYUV1;
-    if (!w->props.isColor) {
+    if (!w->props.isColor || fontSettings.colorOverride != 0)
+    {
         shadowYUV1=prefs.shadowYUV;
         if (prefs.shadowMode<=1)
             shadowYUV1.A = uint32_t(256*sqrt((double)shadowYUV1.A/256.0));
     }
+
     prefs.outlineBlur=w->props.blur ? true : false;
 
     //if (fontSettings.blur || (w->props.version >= TsubtitleParserSSA::ASS && lf.lfHeight > int(37 * gdi_font_scale))) // FIXME: messy. just trying to resemble vsfilter.
@@ -1642,18 +1649,18 @@ TrenderedTextSubtitleWord* TsubtitleText::newWord(
     else
         prefs.blur=false;
 
-    if (w->props.outlineWidth==-1 && fontSettings.opaqueBox) {
+    if ((w->props.outlineWidth==-1 && fontSettings.opaqueBox) || (w->props.outlineWidth!=-1 && fontSettings.opaqueBox && fontSettings.fontSettingsOverride)) {
         prefs.opaqueBox=true;
     }
 
-    double xscale=(double)w->props.get_xscale(fontSettings.xscale,prefs.sar,fontSettings.aspectAuto,fontSettings.overrideScale)*100.0/(double)w->props.get_yscale(fontSettings.yscale,prefs.sar,fontSettings.aspectAuto,fontSettings.overrideScale);
+    double xscale=(double)w->props.get_xscale(fontSettings.xscale,prefs.sar,fontSettings.aspectAuto,fontSettings.fontSettingsOverride)*100.0/(double)w->props.get_yscale(fontSettings.yscale,prefs.sar,fontSettings.aspectAuto,fontSettings.fontSettingsOverride);
     return new TrenderedTextSubtitleWord(
         font.hdc,
         s1.c_str(),
         slen,
-        w->props.isColor ? YUVcolorA(w->props.color,w->props.colorA) : prefs.yuvcolor,
-        w->props.isColor ? YUVcolorA(w->props.OutlineColour,w->props.OutlineColourA) : prefs.outlineYUV,
-        w->props.isColor ? YUVcolorA(w->props.ShadowColour,w->props.ShadowColourA) : shadowYUV1,
+        (w->props.isColor && fontSettings.colorOverride == 0) ? YUVcolorA(w->props.color,w->props.colorA) : prefs.yuvcolor,
+        (w->props.isColor && fontSettings.colorOverride == 0) ? YUVcolorA(w->props.OutlineColour,w->props.OutlineColourA) : prefs.outlineYUV,
+        (w->props.isColor && fontSettings.colorOverride == 0) ? YUVcolorA(w->props.ShadowColour,w->props.ShadowColourA) : shadowYUV1,
         prefs,
         lf,
         xscale,

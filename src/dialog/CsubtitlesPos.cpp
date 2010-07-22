@@ -29,11 +29,9 @@ void TsubtitlesPosPage::init(void)
  setCheck(IDC_CHB_SUB_SSA_OVERRIDE_POSITION,deci->getParam2(IDFF_subSSAOverridePlacement) == 1);
  setCheck(IDC_CHB_SUB_SSA_KEEP_TEXT_INSIDE ,deci->getParam2(IDFF_subSSAMaintainInside) == 1);
  setCheck(IDC_CHB_SUB_SSA_USE_INPUT_DIMENSIONS ,deci->getParam2(IDFF_subSSAUseMovieDimensions) == 1);
- setCheck(IDC_CHB_SUB_SSA_OVERRIDE_SCALING ,deci->getParam2(IDFF_fontOverrideScale) == 1);
- addHint(IDC_CHB_SUB_SSA_OVERRIDE_POSITION,_l("When a subtitle has no position defined, then apply the horizontal and vertical positions defined in the subtitles section."));
- addHint(IDC_CHB_SUB_SSA_KEEP_TEXT_INSIDE,_l("If some text comes partially or totally out of the screen, then correct its position so that the whole text is visible."));
- addHint(IDC_CHB_SUB_SSA_USE_INPUT_DIMENSIONS,_l("Use movie dimensions to calculate coordinates instead of ASS resolution references. This information is not always present or accurate in ASS scripts."));
- addHint(IDC_CHB_SUB_SSA_OVERRIDE_SCALING,_l("Override scaling by the H/V scaling defined in the font section."));
+ addHint(IDC_CHB_SUB_SSA_OVERRIDE_POSITION,_l("Overrides SSA/ASS default positioning with the values set in the horizontal and vertical position sliders. Subtitles with \\pos(x,y) tags are not affected by this setting"));
+ addHint(IDC_CHB_SUB_SSA_KEEP_TEXT_INSIDE,_l("If some text comes partially or totally out of the screen, then correct its position so that the whole text is visible"));
+ addHint(IDC_CHB_SUB_SSA_USE_INPUT_DIMENSIONS,_l("Use movie dimensions to calculate coordinates instead of the SSA/ASS resolution references present in the script. This information is not always present or accurate"));
 }
 
 void TsubtitlesPosPage::cfg2dlg(void)
@@ -146,7 +144,6 @@ TsubtitlesPosPage::TsubtitlesPosPage(TffdshowPageDec *Iparent,const TfilterIDFF 
    IDC_CHB_SUB_SSA_OVERRIDE_POSITION,IDFF_subSSAOverridePlacement,NULL,
    IDC_CHB_SUB_SSA_KEEP_TEXT_INSIDE,IDFF_subSSAMaintainInside,NULL,
    IDC_CHB_SUB_SSA_USE_INPUT_DIMENSIONS,IDFF_subSSAUseMovieDimensions,NULL,
-   IDC_CHB_SUB_SSA_OVERRIDE_SCALING,IDFF_fontOverrideScale,NULL,
    0,NULL,NULL
   };
  bindCheckboxes(chb);

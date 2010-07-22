@@ -68,15 +68,52 @@ void TfontPage::init(void)
 
  cbxCharset=GetDlgItem(m_hwnd,IDC_CBX_FONT_CHARSET);
  boldFont=NULL;
- addHint(IDC_CBX_FONT_WEIGHT,_l("Weight - most fonts supports only small subset of listed weights."));
- addHint(IDC_TBR_FONT_SPACING,_l("Spacing - distance between characters."));
- addHint(IDC_CHB_FONT_ASPECT_AUTO,_l("Works when the video has non-square pixel aspect ratio."));
+ addHint(IDC_CBX_FONT_WEIGHT,_l("Sets font weight. Most fonts support only small subset of the listed weights"));
+ addHint(IDC_TBR_FONT_SPACING,_l("Sets the distance between characters"));
+ addHint(IDC_CHB_FONT_ASPECT_AUTO,_l("Corrects font scale when the video has non-square pixel aspect ratio"));
+ addHint(IDC_CHB_FONT_AUTOSIZE,_l("Adjusts font size automatically so subtitles always have the same apparent size. Shadow size is scaled too, but it'll appear larger at lower resolutions"));
+ addHint(IDC_CHB_FONT_SETTINGS_OVERRIDE,_l("Overrides the following SSA/ASS font settings: name, charset, weight, italic, underline, spacing, scale X, scale Y and opaque box"));
+ addHint(IDC_CHB_FONT_SIZE_OVERRIDE,_l("Overrides SSA/ASS font size"));
+ addHint(IDC_CHB_FONT_OUTLINEWIDTH_OVERRIDE,_l("Overrides SSA/ASS outline width"));
+ addHint(IDC_CHB_FONT_SHADOW_OVERRIDE,_l("Overrides SSA/ASS shadow size"));
+ addHint(IDC_CHB_FONT_COLOR_OVERRIDE,_l("Overrides SSA/ASS body, outline and shadow colors and alpha"));
+ addHint(IDC_CHB_SCALEBORDERANDSHADOW_OVERRIDE,_l("In SSA/ASS subtitles, always scale outline width and shadow size"));
 
  // Subtitles mode
  if (idff_fontcharset==IDFF_fontCharset)
   show(true, IDC_CHB_FONT_SHADOW_OVERRIDE);
  else
   show(false, IDC_CHB_FONT_SHADOW_OVERRIDE);
+
+ if (idff_fontcharset==IDFF_fontCharset)
+  show(true, IDC_CHB_FONT_OUTLINEWIDTH_OVERRIDE);
+ else
+  show(false, IDC_CHB_FONT_OUTLINEWIDTH_OVERRIDE);
+
+ if (idff_fontcharset==IDFF_fontCharset)
+  show(true, IDC_CHB_FONT_SIZE_OVERRIDE);
+ else
+  show(false, IDC_CHB_FONT_SIZE_OVERRIDE);
+
+ if (idff_fontcharset==IDFF_fontCharset)
+  show(true, IDC_CHB_FONT_SETTINGS_OVERRIDE);
+ else
+  show(false, IDC_CHB_FONT_SETTINGS_OVERRIDE);
+
+ if (idff_fontcharset==IDFF_fontCharset)
+  show(true, IDC_CHB_FONT_COLOR_OVERRIDE);
+ else
+  show(false, IDC_CHB_FONT_COLOR_OVERRIDE);
+
+ if (idff_fontcharset==IDFF_fontCharset)
+  show(true, IDC_GRP_FONT_OVERRIDE);
+ else
+  show(false, IDC_GRP_FONT_OVERRIDE);
+
+ if (idff_fontcharset==IDFF_fontCharset)
+  show(true, IDC_CHB_SCALEBORDERANDSHADOW_OVERRIDE);
+ else
+  show(false, IDC_CHB_SCALEBORDERANDSHADOW_OVERRIDE);
 }
 
 void TfontPage::selectCharset(int ii)
@@ -139,9 +176,29 @@ void TfontPage::font2dlg(void)
  // Subtitles mode
  if (idff_fontcharset==IDFF_fontCharset)
   setCheck(IDC_CHB_FONT_SHADOW_OVERRIDE,cfgGet(IDFF_fontShadowOverride));
+
+ if (idff_fontcharset==IDFF_fontCharset)
+  setCheck(IDC_CHB_FONT_OUTLINEWIDTH_OVERRIDE,cfgGet(IDFF_fontOutlineWidthOverride));
+
+ if (idff_fontcharset==IDFF_fontCharset)
+  setCheck(IDC_CHB_FONT_SIZE_OVERRIDE,cfgGet(IDFF_fontSizeOverride));
+
+ if (idff_fontcharset==IDFF_fontCharset)
+  setCheck(IDC_CHB_FONT_SETTINGS_OVERRIDE,cfgGet(IDFF_fontSettingsOverride));
+
+ if (idff_fontcharset==IDFF_fontCharset)
+  setCheck(IDC_CHB_FONT_COLOR_OVERRIDE,cfgGet(IDFF_fontColorOverride));
+
+ if (idff_fontcharset==IDFF_fontCharset)
+  setCheck(IDC_CHB_SCALEBORDERANDSHADOW_OVERRIDE,cfgGet(IDFF_scaleBorderAndShadowOverride));
+
  selectCharset(cfgGet(idff_fontcharset));
  int opaquebox=cfgGet(idff_fontopaquebox);
  setCheck(IDC_FONT_OPAQUE_BOX,opaquebox);
+ int italic=cfgGet(idff_fontitalic);
+ setCheck(IDC_CHB_FONT_ITALIC,italic);
+ int underline=cfgGet(idff_fontunderline);
+ setCheck(IDC_CHB_FONT_UNDERLINE,underline);
  int shadowsize=cfgGet(idff_fontshadowsize);
  int shadowmode=cfgGet(idff_fontshadowmode);
  repaint(GetDlgItem(m_hwnd,IDC_IMG_FONT_COLOR));
@@ -379,6 +436,8 @@ bool TfontPage::reset(bool testonly)
    deci->resetParam(idff_fontshadowsize);
    deci->resetParam(idff_fontshadowalpha);
    deci->resetParam(idff_fontopaquebox);
+   deci->resetParam(idff_fontitalic);
+   deci->resetParam(idff_fontunderline);
    deci->resetParam(idff_fontaspectauto);
   }
  return true;
@@ -458,13 +517,22 @@ TfontPageSubtitles::TfontPageSubtitles(TffdshowPageDec *Iparent,const TfilterIDF
  idff_fontshadowsize=IDFF_fontShadowSize;
  idff_fontshadowmode=IDFF_fontShadowMode;
  idff_fontopaquebox=IDFF_fontOpaqueBox;
+ idff_fontitalic=IDFF_fontItalic;
+ idff_fontunderline=IDFF_fontUnderline;
  idff_fontblur=IDFF_fontBlur;
  static const TbindCheckbox<TfontPageSubtitles> chb[]=
   {
    IDC_FONT_OPAQUE_BOX,idff_fontopaquebox,&TfontPageSubtitles::font2dlg,
+   IDC_CHB_FONT_ITALIC,idff_fontitalic,&TfontPageSubtitles::font2dlg,
+   IDC_CHB_FONT_UNDERLINE,idff_fontunderline,&TfontPageSubtitles::font2dlg,
    IDC_CHB_FONT_BLUR,idff_fontblur,&TfontPageSubtitles::font2dlg,
    IDC_CHB_FONT_ASPECT_AUTO,idff_fontaspectauto,&TfontPageSubtitles::font2dlg,
    IDC_CHB_FONT_SHADOW_OVERRIDE,IDFF_fontShadowOverride,&TfontPageSubtitles::font2dlg,
+   IDC_CHB_FONT_OUTLINEWIDTH_OVERRIDE,IDFF_fontOutlineWidthOverride,&TfontPageSubtitles::font2dlg,
+   IDC_CHB_FONT_SIZE_OVERRIDE,IDFF_fontSizeOverride,&TfontPageSubtitles::font2dlg,
+   IDC_CHB_FONT_SETTINGS_OVERRIDE,IDFF_fontSettingsOverride,&TfontPageSubtitles::font2dlg,
+   IDC_CHB_FONT_COLOR_OVERRIDE,IDFF_fontColorOverride,&TfontPageSubtitles::font2dlg,
+   IDC_CHB_SCALEBORDERANDSHADOW_OVERRIDE,IDFF_scaleBorderAndShadowOverride,&TfontPageSubtitles::font2dlg,
    0,NULL,NULL
   };
  bindCheckboxes(chb);
@@ -491,6 +559,12 @@ TfontPageSubtitles::TfontPageSubtitles(TffdshowPageDec *Iparent,const TfilterIDF
   };
  bindComboboxes(cbx);
  show(true, IDC_CHB_FONT_SHADOW_OVERRIDE);
+ show(true, IDC_CHB_FONT_OUTLINEWIDTH_OVERRIDE);
+ show(true, IDC_CHB_FONT_SIZE_OVERRIDE);
+ show(true, IDC_CHB_FONT_SETTINGS_OVERRIDE);
+ show(true, IDC_CHB_FONT_COLOR_OVERRIDE);
+ show(true, IDC_GRP_FONT_OVERRIDE);
+ show(true, IDC_CHB_SCALEBORDERANDSHADOW_OVERRIDE);
 }
 
 //========================================= TfontPageOSD ========================================
@@ -517,10 +591,14 @@ TfontPageOSD::TfontPageOSD(TffdshowPageDec *Iparent, const TfilterIDFF *idff):Tf
  idff_fontshadowsize=IDFF_OSDfontShadowSize;
  idff_fontshadowmode=IDFF_OSDfontShadowMode;
  idff_fontopaquebox=IDFF_OSDfontOpaqueBox;
+ idff_fontitalic=IDFF_OSDfontItalic;
+ idff_fontunderline=IDFF_OSDfontUnderline;
  idff_fontblur=IDFF_OSDfontBlur;
  static const TbindCheckbox<TfontPageOSD> chb[]=
   {
    IDC_FONT_OPAQUE_BOX,idff_fontopaquebox,&TfontPageOSD::font2dlg,
+   IDC_CHB_FONT_ITALIC,idff_fontitalic,&TfontPageOSD::font2dlg,
+   IDC_CHB_FONT_UNDERLINE,idff_fontunderline,&TfontPageOSD::font2dlg,
    IDC_CHB_FONT_BLUR,idff_fontblur,&TfontPageOSD::font2dlg,
    IDC_CHB_FONT_ASPECT_AUTO,idff_fontaspectauto,&TfontPageOSD::font2dlg,
    0,NULL,NULL
@@ -549,4 +627,10 @@ TfontPageOSD::TfontPageOSD(TffdshowPageDec *Iparent, const TfilterIDFF *idff):Tf
   };
  bindComboboxes(cbx);
  show(false, IDC_CHB_FONT_SHADOW_OVERRIDE);
+ show(false, IDC_CHB_FONT_OUTLINEWIDTH_OVERRIDE);
+ show(false, IDC_CHB_FONT_SIZE_OVERRIDE);
+ show(false, IDC_CHB_FONT_SETTINGS_OVERRIDE);
+ show(false, IDC_CHB_FONT_COLOR_OVERRIDE);
+ show(false, IDC_GRP_FONT_OVERRIDE);
+ show(false, IDC_CHB_SCALEBORDERANDSHADOW_OVERRIDE);
 }
