@@ -898,6 +898,26 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="libavcore"
+			>
+			<File
+				RelativePath=".\libavcore\avcore.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcore\imgutils.c"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcore\imgutils.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcore\utils.c"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath=".\libavcodec.def"
 			>

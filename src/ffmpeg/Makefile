@@ -1,10 +1,11 @@
 LAVC_DIR=libavcodec
 LAVU_DIR=libavutil
+LAVCORE_DIR=libavcore
 LAVS_DIR=libswscale
 LAVP_DIR=libpostproc
 ZLIB_DIR=../zlib
 
-CFLAGS+= -I. -I$(LAVC_DIR) -I$(LAVU_DIR) -I../imgFilters -I$(ZLIB_DIR) \
+CFLAGS+= -I. -I$(LAVC_DIR) -I$(LAVU_DIR) -I$(LAVCORE_DIR) -I../imgFilters -I$(ZLIB_DIR) \
          -DHAVE_AV_CONFIG_H -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -std=gnu99
 
 #CFLAGS+= -save-temps
@@ -221,6 +222,9 @@ SRCS_C=\
       $(LAVU_DIR)/random_seed.c \
       $(LAVU_DIR)/rational.c \
     \
+      $(LAVCORE_DIR)/imgutils.c \
+      $(LAVCORE_DIR)/utils.c \
+    \
       $(ZLIB_DIR)/adler32.c \
       $(ZLIB_DIR)/compress.c \
       $(ZLIB_DIR)/crc32.c \
@@ -298,5 +302,6 @@ include ../makefile_c.inc
 clean:
 	rm -f *.o *.d $(LAVC_DIR)/*.o $(LAVC_DIR)/*.d $(LAVC_DIR)/x86/*.o $(LAVC_DIR)/x86/*.d \
 	$(LAVC_DIR)/amr_float/*.o $(LAVC_DIR)/amr_float/*.d $(LAVU_DIR)/*.o $(LAVU_DIR)/*.d \
+	$(LAVCORE_DIR)/*.o $(LAVCORE_DIR)/*.d \
 	$(LAVS_DIR)/*.o $(LAVS_DIR)/*.d $(LAVS_DIR)/x86/*.o $(LAVS_DIR)/x86/*.d \
 	$(LAVP_DIR)/*.o $(LAVP_DIR)/*.d $(ZLIB_DIR)/*.o $(ZLIB_DIR)/*.d $(SLIB)

@@ -1,8 +1,9 @@
 LAVC_DIR=libavcodec
 LAVU_DIR=libavutil
+LAVCORE_DIR=libavcore
 ZLIB_DIR=../zlib
 
-CFLAGS+= -I. -I$(LAVC_DIR) -I$(LAVU_DIR) -I../pthreads -I../imgFilters -I$(ZLIB_DIR) \
+CFLAGS+= -I. -I$(LAVC_DIR) -I$(LAVU_DIR) -I$(LAVCORE_DIR) -I../pthreads -I../imgFilters -I$(ZLIB_DIR) \
          -DHAVE_AV_CONFIG_H -D_ISOC99_SOURCE -std=gnu99
 
 #CFLAGS+= -save-temps
@@ -48,6 +49,9 @@ SRCS_C=\
       $(LAVU_DIR)/pixdesc.c \
       $(LAVU_DIR)/rational.c \
     \
+      $(LAVCORE_DIR)/imgutils.c \
+      $(LAVCORE_DIR)/utils.c \
+    \
       $(LAVC_DIR)/x86/cpuid.c \
       $(LAVC_DIR)/x86/dsputil_mmx.c \
       $(LAVC_DIR)/x86/fdct_mmx.c \
@@ -83,4 +87,5 @@ include ../makefile_c.inc
 
 clean:
 	rm -f *.o *.d $(LAVC_DIR)/*.o $(LAVC_DIR)/*.d $(LAVC_DIR)/x86/*.o $(LAVC_DIR)/x86/*.d \
-    $(LAVU_DIR)/*.o $(LAVU_DIR)/*.d $(ZLIB_DIR)/*.o $(ZLIB_DIR)/*.d $(SLIB)
+	$(LAVCORE_DIR)/*.o $(LAVCORE_DIR)/*.d \
+  $(LAVU_DIR)/*.o $(LAVU_DIR)/*.d $(ZLIB_DIR)/*.o $(ZLIB_DIR)/*.d $(SLIB)

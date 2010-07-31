@@ -1997,7 +1997,8 @@ static int decode_frame(AVCodecContext * avctx,
     }
     /* update codec info */
     avctx->channels = s->nb_channels;
-    avctx->bit_rate = s->bit_rate;
+    if (!avctx->bit_rate)
+        avctx->bit_rate = s->bit_rate;
     avctx->sub_id = s->layer;
 
     if(*data_size < 1152*avctx->channels*sizeof(OUT_INT))
