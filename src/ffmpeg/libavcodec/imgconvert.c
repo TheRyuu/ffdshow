@@ -38,7 +38,6 @@
 #include "libavcore/imgutils.h"
 
 #if HAVE_MMX
-#include "x86/mmx.h"
 #include "x86/dsputil_mmx.h"
 #endif
 
@@ -749,6 +748,7 @@ int ff_set_systematic_pal(uint32_t pal[256], enum PixelFormat pix_fmt){
     return 0;
 }
 
+#if LIBAVCODEC_VERSION_MAJOR < 53
 int ff_fill_linesize(AVPicture *picture, enum PixelFormat pix_fmt, int width)
 {
     return av_fill_image_linesizes(picture->linesize, pix_fmt, width);
@@ -759,6 +759,7 @@ int ff_fill_pointer(AVPicture *picture, uint8_t *ptr, enum PixelFormat pix_fmt,
 {
     return av_fill_image_pointers(picture->data, pix_fmt, height, ptr, picture->linesize);
 }
+#endif
 
 void ff_img_copy_plane(uint8_t *dst, int dst_wrap,
                            const uint8_t *src, int src_wrap,
