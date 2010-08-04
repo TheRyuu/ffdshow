@@ -71,11 +71,11 @@ TaudioCodecUncompressed::~TaudioCodecUncompressed()
 void TaudioCodecUncompressed::getInputDescr1(char_t *buf,size_t buflen) const
 {
     if (lpcm20)
-        ff_strncpy(buf,_l("20-bit lpcm"),buflen);
+        ff_strncpy(buf,_l("20-bit LPCM"),buflen);
     else if (lpcm24)
-        ff_strncpy(buf,_l("24-bit lpcm"),buflen);
+        ff_strncpy(buf,_l("24-bit LPCM"),buflen);
     else
-        ff_strncpy(buf,_l("pcm"),buflen);
+        ff_strncpy(buf,_l("PCM"),buflen);
     buf[buflen-1]='\0';
 }
 

@@ -155,9 +155,28 @@ void TaudioCodecLibavcodec::getInputDescr1(char_t *buf,size_t buflen) const
 
 if (avcodec)
 {
-    // Show dca as dts
-    if (!strcmp(text<char_t>(avcodec->name), _l("dca")))
-        ff_strncpy(buf,_l("dts"),buflen);
+    if (!strcmp(text<char_t>(avcodec->name), _l("mp3")))
+        ff_strncpy(buf,_l("MP3"),buflen);
+    else if (!strcmp(text<char_t>(avcodec->name), _l("mp2")))
+        ff_strncpy(buf,_l("MP2"),buflen);
+    else if (!strcmp(text<char_t>(avcodec->name), _l("ac3")))
+        ff_strncpy(buf,_l("AC3"),buflen);
+    else if (!strcmp(text<char_t>(avcodec->name), _l("eac3")))
+        ff_strncpy(buf,_l("E-AC3"),buflen);
+    else if (!strcmp(text<char_t>(avcodec->name), _l("truehd")))
+        ff_strncpy(buf,_l("TrueHD"),buflen);
+    else if (!strcmp(text<char_t>(avcodec->name), _l("mlp")))
+        ff_strncpy(buf,_l("MLP"),buflen);
+    else if (!strcmp(text<char_t>(avcodec->name), _l("dca")))
+        ff_strncpy(buf,_l("DTS"),buflen);
+    else if (!strcmp(text<char_t>(avcodec->name), _l("aac")))
+        ff_strncpy(buf,_l("AAC"),buflen);
+    else if (!strcmp(text<char_t>(avcodec->name), _l("vorbis")))
+        ff_strncpy(buf,_l("Vorbis"),buflen);
+    else if (!strcmp(text<char_t>(avcodec->name), _l("flac")))
+        ff_strncpy(buf,_l("FLAC"),buflen);
+    else if (!strcmp(text<char_t>(avcodec->name), _l("tta")))
+        ff_strncpy(buf,_l("TTA"),buflen);
     else
         ff_strncpy(buf,(const char_t *)text<char_t>(avcodec->name),buflen);
 }

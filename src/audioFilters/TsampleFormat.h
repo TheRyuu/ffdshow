@@ -221,12 +221,15 @@ public:
     {
      case 1:chnls=_l("mono");break;
      case 2:chnls=_l("stereo");break;
+     case 6:chnls=_l("5.1");break;
+     case 7:chnls=_l("6.1");break;
+     case 8:chnls=_l("7.1");break;
      default:
-      tsnprintf_s(buf, buflen, _TRUNCATE, _l("%u Hz, %u channels"), freq, nchannels);
+      tsnprintf_s(buf, buflen, _TRUNCATE, _l("%u channels, %u Hz"), nchannels, freq);
       buf[buflen-1]='\0';
       return;
     }
-   tsnprintf_s(buf, buflen, _TRUNCATE, _l("%u Hz, %s"), freq, chnls);
+   tsnprintf_s(buf, buflen, _TRUNCATE, _l("%s, %u Hz"), chnls, freq);
    buf[buflen-1]='\0';
   }
  static const char_t *descriptionPCM(int sf,bool pcm_be=false)
