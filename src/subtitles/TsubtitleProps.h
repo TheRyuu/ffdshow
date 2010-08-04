@@ -8,6 +8,16 @@ struct TfontSettings;
 struct Rational;
 class TfontManager;
 struct TprintPrefs;
+struct Ttransform {
+  // Create different t1 and t2 for every effect,
+  // as there can be multiple /t tags with different
+  // times and style overriders 
+  bool isTransform;
+  bool isAlpha;
+  int alpha;
+  REFERENCE_TIME alphaT1,alphaT2;
+  double accel;  
+};
 
 #define DEFAULT_SECONDARY_COLOR 0x50FFFF // Yellow color for default
 
@@ -22,9 +32,11 @@ struct TSubtitleProps
  int colorA,SecondaryColourA, TertiaryColourA, OutlineColourA, ShadowColourA;
  unsigned int refResX,refResY;
  bool isPos,isMove,isOrg;
+ Ttransform transform;
+ unsigned int transformT1,transformT2;
  CPoint pos,pos2; // move from pos to pos2
  CPoint org;
- unsigned int t1,t2;
+ unsigned int moveT1,moveT2;
  int wrapStyle; // -1 = default
  int scaleBorderAndShadow;
  int size;

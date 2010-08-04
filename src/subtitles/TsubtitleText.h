@@ -78,12 +78,12 @@ private:
 
    struct TparenthesesContent {
        ffstring str;
-       int64_t intval;
+       double doubleval;
        bool ok; // is number?
        TparenthesesContent(ffstring Istr) {
            wchar_t *bufend;
            str = Istr;
-           intval = _strtoi64(Istr.c_str(), &bufend, 10);
+           doubleval = strtod(Istr.c_str(), &bufend);
            ok = (*bufend == 0 && bufend != Istr.c_str());
        }
    };
@@ -91,11 +91,12 @@ private:
 
    struct TstoreParam {
        size_t offset;
-       int64_t min;
-       int64_t max;
-       int64_t default_value;
-       size_t size; // sizeof actual intx_t
-       TstoreParam(size_t Ioffset, int64_t Imin, int64_t Imax, int64_t Idefault_value, size_t Isize):offset(Ioffset),min(Imin),max(Imax),default_value(Idefault_value),size(Isize) {}
+       double min;
+       double max;
+       double default_value;
+       size_t size; // size of actual intx_t or double
+       bool isInteger; // Integer or double value
+       TstoreParam(size_t Ioffset, double Imin, double Imax, double Idefault_value, size_t Isize, bool IisInteger):offset(Ioffset),min(Imin),max(Imax),default_value(Idefault_value),size(Isize),isInteger(IisInteger) {}
    };
    struct TstoreParams: public std::vector<TstoreParam> {
        // returns number of contents that have the value within the range (min...max) and have been written to. 
@@ -120,6 +121,7 @@ private:
    void pos(ffstring &arg);
    void move(ffstring &arg);
    void org(ffstring &arg);
+   void transform(ffstring &arg);
    void fad(ffstring &arg);
    void fade(ffstring &arg);
    void karaoke_kf(ffstring &arg);

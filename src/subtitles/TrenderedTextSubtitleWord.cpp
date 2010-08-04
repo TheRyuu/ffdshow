@@ -548,7 +548,7 @@ void TrenderedTextSubtitleWord::drawShadow()
         secondaryColoredWord = new TrenderedTextSubtitleWord(*this, secondaryColor_t());
 }
 
-void TrenderedTextSubtitleWord::updateMask(int fader, int create) const
+void TrenderedTextSubtitleWord::updateMask(int fader, int create, bool isAlpha, int bodyA, int outlineA, int shadowA) const
 {
  // shadowMode 0: glowing, 1:classic with gradient, 2: classic with no gradient, >=3: no shadow
  if (create == 0 && oldFader == fader)
@@ -562,6 +562,12 @@ void TrenderedTextSubtitleWord::updateMask(int fader, int create) const
  unsigned int bodyYUVa = m_bodyYUV.A * fader >> 16;
  unsigned int outlineYUVa = m_outlineYUV.A * fader >> 16;
  unsigned int shadowYUVa = m_shadowYUV.A * fader >> 16;
+ if (isAlpha)
+ {
+     bodyYUVa = bodyA;
+     outlineYUVa = outlineA;
+     shadowYUVa = shadowA;
+ }
  if (bodyYUVa != 256 || outlineYUVa != 256 || create == 2 || bodyYUVa != oldBodyYUVa || outlineYUVa != oldOutlineYUVa)
   {
    oldBodyYUVa = bodyYUVa;
@@ -939,7 +945,37 @@ void TrenderedTextSubtitleWord::print(int startx, int starty, unsigned int sdx[3
    bodyYUVa = bodyYUVa * fader;
    outlineYUVa = outlineYUVa * fader;
    shadowYUVa = shadowYUVa * fader;
-   updateMask(int(fader * (1 << 16)), false);  // updateMask doesn't accept floating point because it use MMX.
+   updateMask(int(fader * (1 << 16)), false);  // updateMask doesn't accept floating point because it uses MMX.
+  }
+ if (props.transform.isTransform && props.transform.isAlpha)
+  {
+   if (rtStart < props.transform.alphaT1)
+   {
+       bodyYUVa = bodyYUVa;
+       outlineYUVa = outlineYUVa;
+       shadowYUVa = shadowYUVa;
+   }
+   else if (rtStart < props.transform.alphaT2)
+   {
+       // accelerator formula: y = x^accel, with x between [0;1] = (t-t1)/(t2-t1), t being the current time. Not implemented
+       float transformTime = props.transform.alphaT2 - props.transform.alphaT1;
+       float rangeBody = abs(bodyYUVa - (256-props.transform.alpha));
+       float rangeOutline = abs(outlineYUVa - (256-props.transform.alpha));
+       float rangeShadow = abs(shadowYUVa - (256-props.transform.alpha));
+       float stepBody = rangeBody/transformTime;
+       float stepOutline = rangeOutline/transformTime;
+       float stepShadow = rangeShadow/transformTime;
+       bodyYUVa = (bodyYUVa > (256-props.transform.alpha)) ? bodyYUVa-(stepBody * (rtStart - props.transform.alphaT1)) : bodyYUVa+(stepBody * (rtStart - props.transform.alphaT1));
+       outlineYUVa = (outlineYUVa > (256-props.transform.alpha)) ? outlineYUVa-(stepOutline * (rtStart - props.transform.alphaT1)) : outlineYUVa+(stepOutline * (rtStart - props.transform.alphaT1));
+       shadowYUVa = (shadowYUVa > (256-props.transform.alpha)) ? shadowYUVa-(stepShadow * (rtStart - props.transform.alphaT1)) : shadowYUVa+(stepShadow * (rtStart - props.transform.alphaT1));
+   }
+   else
+   {
+       bodyYUVa = 256-props.transform.alpha;
+       outlineYUVa = 256-props.transform.alpha;
+       shadowYUVa = 256-props.transform.alpha;
+   }
+   updateMask(1 << 16, 1, true, bodyYUVa, outlineYUVa, shadowYUVa);
   }
 #ifdef WIN64
  if (Tconfig::cpu_flags&FF_CPU_SSE2)

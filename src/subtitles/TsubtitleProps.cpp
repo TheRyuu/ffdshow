@@ -39,6 +39,11 @@ void TSubtitleProps::reset(void)
  isPos=false;
  isMove=false;
  isOrg=false;
+ transform.isTransform=false;
+ transform.isAlpha=false;
+ transform.alpha=0;
+ transform.alphaT1=transform.alphaT2=REFTIME_INVALID;
+ transform.accel=1.0; 
  size=0;
  fontname[0]='\0';
  encoding=-1;
@@ -368,14 +373,14 @@ int TSubtitleProps::get_movedistanceH(unsigned int screenWidth) const
 
 REFERENCE_TIME TSubtitleProps::get_moveStart() const
 {
- return t1*10000+tStart;
+ return moveT1*10000+tStart;
 }
 
 REFERENCE_TIME TSubtitleProps::get_moveStop() const
 {
- if (t2==0)
+ if (moveT2==0)
   return tStop;
- return t2*10000+tStart;
+ return moveT2*10000+tStart;
 }
 
 int TSubtitleProps::alignASS2SSA(int align)
