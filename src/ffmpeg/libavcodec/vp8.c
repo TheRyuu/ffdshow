@@ -494,9 +494,8 @@ static int decode_frame_header(VP8Context *s, const uint8_t *buf, int buf_size)
                 for (l = 0; l < NUM_DCT_TOKENS-1; l++)
                     if (vp56_rac_get_prob_branchy(c, vp8_token_update_probs[i][j][k][l])) {
                         int prob = vp8_rac_get_uint(c, 8);
-                        for (m = 0; m < 16; m++)
-                            if (vp8_coeff_band[m] == j)
-                                s->prob->token[i][m][k][l] = prob;
+                        for (m = 0; vp8_coeff_band_indexes[j][m] >= 0; m++)
+                            s->prob->token[i][vp8_coeff_band_indexes[j][m]][k][l] = prob;
                     }
 
     if ((s->mbskip_enabled = vp8_rac_get(c)))
@@ -644,18 +643,31 @@ const uint8_t *get_submv_prob(uint32_t left, uint32_t top)
 static av_always_inline
 int decode_splitmvs(VP8Context *s, VP56RangeCoder *c, VP8Macroblock *mb)
 {
-    int part_idx = mb->partitioning =
-        vp8_rac_get_tree(c, vp8_mbsplit_tree, vp8_mbsplit_prob);
-    int n, num = vp8_mbsplit_count[part_idx];
+    int part_idx;
+    int n, num;
     VP8Macroblock *top_mb  = &mb[2];
     VP8Macroblock *left_mb = &mb[-1];
     const uint8_t *mbsplits_left = vp8_mbsplits[left_mb->partitioning],
                   *mbsplits_top = vp8_mbsplits[top_mb->partitioning],
-                  *mbsplits_cur = vp8_mbsplits[part_idx],
-                  *firstidx = vp8_mbfirstidx[part_idx];
+                  *mbsplits_cur, *firstidx;
     VP56mv *top_mv  = top_mb->bmv;
     VP56mv *left_mv = left_mb->bmv;
     VP56mv *cur_mv  = mb->bmv;
+
+    if (vp56_rac_get_prob_branchy(c, vp8_mbsplit_prob[0])) {
+        if (vp56_rac_get_prob_branchy(c, vp8_mbsplit_prob[1])) {
+            part_idx = VP8_SPLITMVMODE_16x8 + vp56_rac_get_prob(c, vp8_mbsplit_prob[2]);
+        } else {
+            part_idx = VP8_SPLITMVMODE_8x8;
+        }
+    } else {
+        part_idx = VP8_SPLITMVMODE_4x4;
+    }
+
+    num = vp8_mbsplit_count[part_idx];
+    mbsplits_cur = vp8_mbsplits[part_idx],
+    firstidx = vp8_mbfirstidx[part_idx];
+    mb->partitioning = part_idx;
 
     for (n = 0; n < num; n++) {
         int k = firstidx[n];
@@ -673,20 +685,19 @@ int decode_splitmvs(VP8Context *s, VP56RangeCoder *c, VP8Macroblock *mb)
 
         submv_prob = get_submv_prob(left, above);
 
-        switch (vp8_rac_get_tree(c, vp8_submv_ref_tree, submv_prob)) {
-        case VP8_SUBMVMODE_NEW4X4:
-            mb->bmv[n].y = mb->mv.y + read_mv_component(c, s->prob->mvc[0]);
-            mb->bmv[n].x = mb->mv.x + read_mv_component(c, s->prob->mvc[1]);
-            break;
-        case VP8_SUBMVMODE_ZERO4X4:
-            AV_ZERO32(&mb->bmv[n]);
-            break;
-        case VP8_SUBMVMODE_LEFT4X4:
+        if (vp56_rac_get_prob_branchy(c, submv_prob[0])) {
+            if (vp56_rac_get_prob_branchy(c, submv_prob[1])) {
+                if (vp56_rac_get_prob_branchy(c, submv_prob[2])) {
+                    mb->bmv[n].y = mb->mv.y + read_mv_component(c, s->prob->mvc[0]);
+                    mb->bmv[n].x = mb->mv.x + read_mv_component(c, s->prob->mvc[1]);
+                } else {
+                    AV_ZERO32(&mb->bmv[n]);
+                }
+            } else {
+                AV_WN32A(&mb->bmv[n], above);
+            }
+        } else {
             AV_WN32A(&mb->bmv[n], left);
-            break;
-        case VP8_SUBMVMODE_TOP4X4:
-            AV_WN32A(&mb->bmv[n], above);
-            break;
         }
     }
 
@@ -810,22 +821,20 @@ void decode_mb_mode(VP8Context *s, VP8Macroblock *mb, int mb_x, int mb_y, uint8_
  * @return 0 if no coeffs were decoded
  *         otherwise, the index of the last coeff decoded plus one
  */
-static int decode_block_coeffs(VP56RangeCoder *c, DCTELEM block[16],
-                               uint8_t probs[8][3][NUM_DCT_TOKENS-1],
-                               int i, int zero_nhood, int16_t qmul[2])
+static int decode_block_coeffs_internal(VP56RangeCoder *c, DCTELEM block[16],
+                                        uint8_t probs[8][3][NUM_DCT_TOKENS-1],
+                                        int i, uint8_t *token_prob, int16_t qmul[2])
 {
-    uint8_t *token_prob = probs[i][zero_nhood];
-    int nonzero = 0;
-    int coeff;
-
+    goto skip_eob;
     do {
+        int coeff;
         if (!vp56_rac_get_prob_branchy(c, token_prob[0]))   // DCT_EOB
-            return nonzero;
+            return i;
 
 skip_eob:
         if (!vp56_rac_get_prob_branchy(c, token_prob[1])) { // DCT_0
             if (++i == 16)
-                return nonzero; // invalid input; blocks should end with EOB
+                return i; // invalid input; blocks should end with EOB
             token_prob = probs[i][0];
             goto skip_eob;
         }
@@ -835,7 +844,7 @@ skip_eob:
             token_prob = probs[i+1][1];
         } else {
             if (!vp56_rac_get_prob_branchy(c, token_prob[3])) { // DCT 2,3,4
-                coeff = vp56_rac_get_prob(c, token_prob[4]);
+                coeff = vp56_rac_get_prob_branchy(c, token_prob[4]);
                 if (coeff)
                     coeff += vp56_rac_get_prob(c, token_prob[5]);
                 coeff += 2;
@@ -859,13 +868,21 @@ skip_eob:
             }
             token_prob = probs[i+1][2];
         }
-
-        // todo: full [16] qmat? load into register?
         block[zigzag_scan[i]] = (vp8_rac_get(c) ? -coeff : coeff) * qmul[!!i];
-        nonzero = ++i;
-    } while (i < 16);
+    } while (++i < 16);
 
-    return nonzero;
+    return i;
+}
+
+static av_always_inline
+int decode_block_coeffs(VP56RangeCoder *c, DCTELEM block[16],
+                        uint8_t probs[8][3][NUM_DCT_TOKENS-1],
+                        int i, int zero_nhood, int16_t qmul[2])
+{
+    uint8_t *token_prob = probs[i][zero_nhood];
+    if (!vp56_rac_get_prob_branchy(c, token_prob[0]))   // DCT_EOB
+        return 0;
+    return decode_block_coeffs_internal(c, block, probs, i, token_prob, qmul);
 }
 
 static av_always_inline
