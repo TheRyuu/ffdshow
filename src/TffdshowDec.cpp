@@ -868,8 +868,8 @@ STDMETHODIMP TffdshowDec::Info(long lIndex, AM_MEDIA_TYPE** ppmt, DWORD* pdwFlag
  if (ppszName)
  {
   ffstring streamName = stream.streamName;
-  if (stream.streamName.length() == 0 && stream.streamLanguageName.length() > 0) streamName = stream.streamLanguageName;
-  else if (stream.langId == 0 && stream.streamLanguageName.length() > 0)  streamName += _l(" [") + stream.streamLanguageName+_l("]");
+  if (stream.streamName.length() == 0 && stream.streamLanguageName.length() > 0) streamName = _l("[") + stream.streamLanguageName + _l("]");
+  else if (stream.langId == 0 && stream.streamLanguageName.length() > 0)  streamName += _l(" [") + stream.streamLanguageName + _l("]");
   size_t wlen=(streamName.length()+1)*sizeof(WCHAR);
   *ppszName=(WCHAR*)CoTaskMemAlloc(wlen);memset(*ppszName,0,wlen);
   nCopyAnsiToWideChar(*ppszName,streamName.c_str());
