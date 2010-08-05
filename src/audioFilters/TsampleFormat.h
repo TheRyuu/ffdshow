@@ -242,13 +242,13 @@ public:
      case SF_PCM32:return pcm_be?_l("32-bit integer BE"):_l("32-bit integer");
      case SF_FLOAT32:return pcm_be?_l("32-bit float BE"):_l("32-bit float");
      case SF_FLOAT64:return pcm_be?_l("64-bit float BE"):_l("64-bit float");
-     case SF_AC3:return _l("ac3");
+     case SF_AC3:return _l("AC3");
      case SF_LPCM16:return _l("16-bit LPCM");
      case SF_LPCM20:return _l("20-bit LPCM");
-     case SF_TRUEHD:return _l("Bitstream Dolby True HD");
-     case SF_DTSHD:return _l("Bitstream DTS HD");
+     case SF_TRUEHD:return _l("Bitstream Dolby TrueHD");
+     case SF_DTSHD:return _l("Bitstream DTS-HD");
      case SF_EAC3:return _l("Bitstream Dolby Digital Plus");
-     default:return _l("unknown");
+     default:return _l("Unknown");
     }
   }
  const char_t *descriptionPCM(void) const
@@ -263,7 +263,10 @@ public:
     {
      char_t *buf2=(char_t*)_alloca(buflen*sizeof(char_t));
      description(buf2,buflen);
-     tsnprintf_s(buf, buflen, _TRUNCATE, _l("%s %s"), buf2, descriptionPCM());
+     if (sf==SF_PCM8 || sf==SF_PCM16 || sf==SF_PCM24 || sf==SF_PCM32 || sf==SF_FLOAT32 || sf==SF_FLOAT64)
+      tsnprintf_s(buf, buflen, _TRUNCATE, _l("PCM, %s, %s"), buf2, descriptionPCM());
+     else
+      tsnprintf_s(buf, buflen, _TRUNCATE, _l("%s, %s"), buf2, descriptionPCM());
     }
    buf[buflen-1]='\0';
   }

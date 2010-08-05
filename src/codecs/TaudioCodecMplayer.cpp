@@ -61,9 +61,9 @@ TaudioCodecMplayer::~TaudioCodecMplayer()
 void TaudioCodecMplayer::getInputDescr1(char_t *buf,size_t buflen) const
 {
  if (layer)
-  tsnprintf_s(buf, buflen, _TRUNCATE, _l("mp%i"), layer);
+  tsnprintf_s(buf, buflen, _TRUNCATE, _l("MP%i"), layer);
  else
-  tsnprintf_s(buf, buflen, _TRUNCATE, _l("mp1/2/3"));
+  tsnprintf_s(buf, buflen, _TRUNCATE, _l("MP1/2/3"));
 }
 HRESULT TaudioCodecMplayer::decode(TbyteBuffer &src0)
 {

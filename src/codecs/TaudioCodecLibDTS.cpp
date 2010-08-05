@@ -94,7 +94,7 @@ TaudioCodecLibDTS::~TaudioCodecLibDTS()
 
 void TaudioCodecLibDTS::getInputDescr1(char_t *buf,size_t buflen) const
 {
- ff_strncpy(buf,_l("dts"),buflen);
+ ff_strncpy(buf,_l("DTS"),buflen);
  buf[buflen-1]='\0';
 }
 

@@ -64,9 +64,9 @@ TaudioCodecBitstream::~TaudioCodecBitstream()
 void TaudioCodecBitstream::getInputDescr1(char_t *buf,size_t buflen) const
 {
     if (codecId==CODEC_ID_BITSTREAM_TRUEHD)
-     ff_strncpy(buf,_l("Dolby True HD"),buflen);
+     ff_strncpy(buf,_l("Dolby TrueHD"),buflen);
     else if (codecId==CODEC_ID_BITSTREAM_DTSHD)
-     ff_strncpy(buf,_l("DTS HD"),buflen);
+     ff_strncpy(buf,_l("DTS-HD"),buflen);
     else if (codecId==CODEC_ID_BITSTREAM_EAC3)
      ff_strncpy(buf,_l("Dolby Digital Plus"),buflen);
     else if (codecId==CODEC_ID_SPDIF_AC3)
