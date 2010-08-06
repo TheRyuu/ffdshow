@@ -22,6 +22,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
+#include "libavcore/imgutils.h"
 #include "avcodec.h"
 #include "vp56.h"
 #include "vp8data.h"
@@ -224,7 +225,7 @@ static void vp8_decode_flush(AVCodecContext *avctx)
 
 static int update_dimensions(VP8Context *s, int width, int height)
 {
-    if (avcodec_check_dimensions(s->avctx, width, height))
+    if (av_check_image_size(width, height, 0, s->avctx))
         return AVERROR_INVALIDDATA;
 
     vp8_decode_flush(s->avctx);
@@ -305,11 +306,11 @@ static int setup_partitions(VP8Context *s, const uint8_t *buf, int buf_size)
         if (buf_size - size < 0)
             return -1;
 
-        vp56_init_range_decoder(&s->coeff_partition[i], buf, size);
+        ff_vp56_init_range_decoder(&s->coeff_partition[i], buf, size);
         buf      += size;
         buf_size -= size;
     }
-    vp56_init_range_decoder(&s->coeff_partition[i], buf, buf_size);
+    ff_vp56_init_range_decoder(&s->coeff_partition[i], buf, buf_size);
 
     return 0;
 }
@@ -445,7 +446,7 @@ static int decode_frame_header(VP8Context *s, const uint8_t *buf, int buf_size)
             return ret;
     }
 
-    vp56_init_range_decoder(c, buf, header_size);
+    ff_vp56_init_range_decoder(c, buf, header_size);
     buf      += header_size;
     buf_size -= header_size;
 
@@ -1155,8 +1156,8 @@ static av_always_inline void prefetch_motion(VP8Context *s, VP8Macroblock *mb, i
     /* Don't prefetch refs that haven't been used very often this frame. */
     if (s->ref_count[ref-1] > (mb_xy >> 5)) {
         int x_off = mb_x << 4, y_off = mb_y << 4;
-        int mx = mb->mv.x + x_off + 8;
-        int my = mb->mv.y + y_off;
+        int mx = (mb->mv.x>>2) + x_off + 8;
+        int my = (mb->mv.y>>2) + y_off;
         uint8_t **src= s->framep[ref]->data;
         int off= mx + (my + (mb_x&3)*4)*s->linesize + 64;
         s->dsp.prefetch(src[0]+off, s->linesize, 4);

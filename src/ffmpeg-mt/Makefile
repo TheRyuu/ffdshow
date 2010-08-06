@@ -68,6 +68,7 @@ SRCS_YASM=\
       $(LAVC_DIR)/x86/h264_deblock_sse2.asm \
       $(LAVC_DIR)/x86/h264_idct_sse2.asm \
       $(LAVC_DIR)/x86/h264_intrapred.asm \
+      $(LAVC_DIR)/x86/h264_weight_sse2.asm \
       $(LAVC_DIR)/x86/x86util.asm
 
 ifeq ($(64BIT),yes)

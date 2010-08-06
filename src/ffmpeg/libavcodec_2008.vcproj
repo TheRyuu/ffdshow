@@ -1199,6 +1199,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavcodec\vp56rac.c"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\vp6.c"
 				>
 			</File>
