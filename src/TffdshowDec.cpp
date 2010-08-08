@@ -1322,6 +1322,20 @@ STDMETHODIMP TffdshowDec::extractExternalStreams(void)
   }
  }
 
+ // If we have at least 1 external subtitles stream but not haali, add one entry for "No subtitles"
+ if (!foundHaali && externalSubtitleStreams.size() > 0)
+ {
+   TexternalStream stream;
+   stream.filterName = ffstring(_l("FFDSHOW"));
+   stream.streamNb = 0;
+   stream.langId = 0;
+   stream.enabled = false;
+   stream.streamName = trans->translate(_l("No subtitles"));
+   stream.streamLanguageName = _l("");
+   externalSubtitleStreams.push_back(stream);
+   
+ }
+
  return S_OK;
 }
 
