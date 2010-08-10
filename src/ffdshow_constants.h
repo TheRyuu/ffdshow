@@ -545,7 +545,7 @@
 #define IDFF_fontBodyAlpha            3389
 #define IDFF_fontOutlineAlpha         3390
 #define IDFF_fontShadowAlpha          3376
-#define IDFF_fontBlur                 3406
+#define IDFF_fontBlur                 3406 // 0 - disabled, 1 - enabled, 2 - enabled for border only
 #define IDFF_fontShadowOverride       3548
 #define IDFF_fontOutlineWidthOverride 3550
 #define IDFF_fontSizeOverride         3551

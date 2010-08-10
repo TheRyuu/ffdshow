@@ -177,6 +177,8 @@ if (avcodec)
         ff_strncpy(buf,_l("FLAC"),buflen);
     else if (!strcmp(text<char_t>(avcodec->name), _l("tta")))
         ff_strncpy(buf,_l("TTA"),buflen);
+    else if (!strcmp(text<char_t>(avcodec->name), _l("wmav2")))
+        ff_strncpy(buf,_l("WMAV2"),buflen);
     else
         ff_strncpy(buf,(const char_t *)text<char_t>(avcodec->name),buflen);
 }

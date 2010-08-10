@@ -1743,10 +1743,10 @@ TrenderedTextSubtitleWord* TsubtitleText::newWord(
             shadowYUV1.A = uint32_t(256*sqrt((double)shadowYUV1.A/256.0));
     }
 
-    prefs.outlineBlur=w->props.blur ? true : false;
+    prefs.outlineBlur=(w->props.blur || fontSettings.blur == 2) ? true : false;
 
     //if (fontSettings.blur || (w->props.version >= TsubtitleParserSSA::ASS && lf.lfHeight > int(37 * gdi_font_scale))) // FIXME: messy. just trying to resemble vsfilter.
-    if (fontSettings.blur)
+    if (fontSettings.blur == 1)
         prefs.blur=true;
     else
         prefs.blur=false;

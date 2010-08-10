@@ -72,6 +72,10 @@ void TfontPage::init(void)
  addHint(IDC_TBR_FONT_SPACING,_l("Sets the distance between characters"));
  addHint(IDC_CHB_FONT_ASPECT_AUTO,_l("Corrects font scale when the video has non-square pixel aspect ratio"));
  addHint(IDC_CHB_FONT_AUTOSIZE,_l("Adjusts font size automatically so subtitles always have the same apparent size. Shadow size is scaled too, but it'll appear larger at lower resolutions"));
+ if (idff_fontcharset==IDFF_fontCharset)
+  addHint(IDC_CHB_FONT_BLUR,_l("Unchecked - Blur is not applied\rChecked - Blur is applied to the entire subtitle\rIndeterminate - Blur is applied to the subtitle's outline only"));
+ else
+  addHint(IDC_CHB_FONT_BLUR,_l("Unchecked - Blur is not applied\rChecked - Blur is applied to the entire OSD\rIndeterminate - Blur is applied to the OSD's outline only"));
  addHint(IDC_CHB_FONT_SETTINGS_OVERRIDE,_l("Overrides the following SSA/ASS font settings: name, charset, weight, italic, underline, spacing, scale X, scale Y and opaque box"));
  addHint(IDC_CHB_FONT_SIZE_OVERRIDE,_l("Overrides SSA/ASS font size"));
  addHint(IDC_CHB_FONT_OUTLINEWIDTH_OVERRIDE,_l("Overrides SSA/ASS outline width"));
@@ -171,7 +175,6 @@ void TfontPage::font2dlg(void)
  cbxSetDataCurSel(IDC_CBX_FONT_WEIGHT,cfgGet(idff_fontweight));
  SendDlgItemMessage(m_hwnd,IDC_CBX_FONT_NAME,CB_SELECTSTRING,WPARAM(-1),LPARAM(cfgGetStr(idff_fontname)));
  fillCharsets();
- setCheck(IDC_CHB_FONT_BLUR,cfgGet(idff_fontblur));
  setCheck(IDC_CHB_FONT_ASPECT_AUTO,cfgGet(idff_fontaspectauto));
  // Subtitles mode
  if (idff_fontcharset==IDFF_fontCharset)
@@ -192,9 +195,12 @@ void TfontPage::font2dlg(void)
  if (idff_fontcharset==IDFF_fontCharset)
   setCheck(IDC_CHB_SCALEBORDERANDSHADOW_OVERRIDE,cfgGet(IDFF_scaleBorderAndShadowOverride));
 
+
  selectCharset(cfgGet(idff_fontcharset));
  int opaquebox=cfgGet(idff_fontopaquebox);
  setCheck(IDC_FONT_OPAQUE_BOX,opaquebox);
+ int fontBlur=cfgGet(idff_fontblur);
+ setCheck3(IDC_CHB_FONT_BLUR,fontBlur);
  int italic=cfgGet(idff_fontitalic);
  setCheck(IDC_CHB_FONT_ITALIC,italic);
  int underline=cfgGet(idff_fontunderline);
@@ -278,6 +284,12 @@ INT_PTR TfontPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
          cfgSet(idff_fontautosize,getCheck(IDC_CHB_FONT_AUTOSIZE));
          size2dlg();
         }
+       return TRUE;
+      case IDC_CHB_FONT_BLUR:
+       if (idff_fontcharset==IDFF_fontCharset)
+        cfgSet(IDFF_fontBlur,getCheck3(IDC_CHB_FONT_BLUR));
+       else
+        cfgSet(idff_fontblur,getCheck3(IDC_CHB_FONT_BLUR));
        return TRUE;
       case IDC_CHB_FONT_AUTOSIZE_VIDEOWINDOW:
        if (idff_fontautosizevideowindow)
@@ -436,6 +448,7 @@ bool TfontPage::reset(bool testonly)
    deci->resetParam(idff_fontshadowsize);
    deci->resetParam(idff_fontshadowalpha);
    deci->resetParam(idff_fontopaquebox);
+   deci->resetParam(idff_fontblur);
    deci->resetParam(idff_fontitalic);
    deci->resetParam(idff_fontunderline);
    deci->resetParam(idff_fontaspectauto);
@@ -517,15 +530,15 @@ TfontPageSubtitles::TfontPageSubtitles(TffdshowPageDec *Iparent,const TfilterIDF
  idff_fontshadowsize=IDFF_fontShadowSize;
  idff_fontshadowmode=IDFF_fontShadowMode;
  idff_fontopaquebox=IDFF_fontOpaqueBox;
+ idff_fontblur=IDFF_fontBlur;
  idff_fontitalic=IDFF_fontItalic;
  idff_fontunderline=IDFF_fontUnderline;
- idff_fontblur=IDFF_fontBlur;
  static const TbindCheckbox<TfontPageSubtitles> chb[]=
   {
    IDC_FONT_OPAQUE_BOX,idff_fontopaquebox,&TfontPageSubtitles::font2dlg,
+   IDC_CHB_FONT_BLUR,idff_fontblur,&TfontPageSubtitles::font2dlg,
    IDC_CHB_FONT_ITALIC,idff_fontitalic,&TfontPageSubtitles::font2dlg,
    IDC_CHB_FONT_UNDERLINE,idff_fontunderline,&TfontPageSubtitles::font2dlg,
-   IDC_CHB_FONT_BLUR,idff_fontblur,&TfontPageSubtitles::font2dlg,
    IDC_CHB_FONT_ASPECT_AUTO,idff_fontaspectauto,&TfontPageSubtitles::font2dlg,
    IDC_CHB_FONT_SHADOW_OVERRIDE,IDFF_fontShadowOverride,&TfontPageSubtitles::font2dlg,
    IDC_CHB_FONT_OUTLINEWIDTH_OVERRIDE,IDFF_fontOutlineWidthOverride,&TfontPageSubtitles::font2dlg,
@@ -591,15 +604,15 @@ TfontPageOSD::TfontPageOSD(TffdshowPageDec *Iparent, const TfilterIDFF *idff):Tf
  idff_fontshadowsize=IDFF_OSDfontShadowSize;
  idff_fontshadowmode=IDFF_OSDfontShadowMode;
  idff_fontopaquebox=IDFF_OSDfontOpaqueBox;
+ idff_fontblur=IDFF_OSDfontBlur;
  idff_fontitalic=IDFF_OSDfontItalic;
  idff_fontunderline=IDFF_OSDfontUnderline;
- idff_fontblur=IDFF_OSDfontBlur;
  static const TbindCheckbox<TfontPageOSD> chb[]=
   {
    IDC_FONT_OPAQUE_BOX,idff_fontopaquebox,&TfontPageOSD::font2dlg,
+   IDC_CHB_FONT_BLUR,idff_fontblur,&TfontPageOSD::font2dlg,
    IDC_CHB_FONT_ITALIC,idff_fontitalic,&TfontPageOSD::font2dlg,
    IDC_CHB_FONT_UNDERLINE,idff_fontunderline,&TfontPageOSD::font2dlg,
-   IDC_CHB_FONT_BLUR,idff_fontblur,&TfontPageOSD::font2dlg,
    IDC_CHB_FONT_ASPECT_AUTO,idff_fontaspectauto,&TfontPageOSD::font2dlg,
    0,NULL,NULL
   };
