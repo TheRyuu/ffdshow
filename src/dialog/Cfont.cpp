@@ -195,7 +195,6 @@ void TfontPage::font2dlg(void)
  if (idff_fontcharset==IDFF_fontCharset)
   setCheck(IDC_CHB_SCALEBORDERANDSHADOW_OVERRIDE,cfgGet(IDFF_scaleBorderAndShadowOverride));
 
-
  selectCharset(cfgGet(idff_fontcharset));
  int opaquebox=cfgGet(idff_fontopaquebox);
  setCheck(IDC_FONT_OPAQUE_BOX,opaquebox);

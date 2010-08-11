@@ -1464,6 +1464,7 @@ void TsubtitleText::prepareKaraoke(void)
               karaokeStart += karaokeDuration;
               karaokeDuration = word.props.karaokeDuration;
           }
+          word.props.karaokeStart = karaokeStart;
           word.props.karaokeDuration = karaokeDuration;
         }
     }
