@@ -1351,7 +1351,7 @@ void TsubtitleLine::applyWords(const TsubtitleFormat::Twords &words, int subForm
   {
    karaokeNewWord |= w->props.karaokeNewWord;
    this->props=w->props;
-   if (w->i1==w->i2 && !karaokeNewWord)
+   if (w->i1==w->i2 && !w->i1 && !karaokeNewWord)
     continue;
    if (w->i1==0 && w->i2==this->front().size())
     {
@@ -1401,6 +1401,49 @@ TsubtitleText::TsubtitleText(const TsubtitleText &src):
     defProps = src.defProps;
     old_prefs = src.old_prefs;
     rendering_ready = src.rendering_ready;
+}
+
+void TsubtitleText::fixFade(void)
+{
+    int tempFadeA1,tempFadeA2,tempFadeA3;
+    REFERENCE_TIME tempFadeT1,tempFadeT2,tempFadeT3,tempFadeT4;
+    tempFadeA1=0;tempFadeA2=255;tempFadeA3=0;
+    tempFadeT1=tempFadeT2=tempFadeT3=tempFadeT4=REFTIME_INVALID;
+    bool lineHasFad = false;
+    
+    foreach (TsubtitleLine &line, *this) {
+        foreach (TsubtitleWord &word, line) {
+            if (word.props.isFad) {
+                tempFadeA1 = word.props.fadeA1;
+                tempFadeA2 = word.props.fadeA2;
+                tempFadeA3 = word.props.fadeA3;
+                tempFadeT1 = word.props.fadeT1;
+                tempFadeT2 = word.props.fadeT2;
+                tempFadeT3 = word.props.fadeT3;
+                tempFadeT4 = word.props.fadeT4;
+                lineHasFad = true;
+                break;
+            }
+        }
+    }
+
+    if (!lineHasFad)
+        return;
+
+    foreach (TsubtitleLine &line, *this) {
+        foreach (TsubtitleWord &word, line) {
+            if (lineHasFad) {
+                word.props.fadeA1 = tempFadeA1;
+                word.props.fadeA2 = tempFadeA2;
+                word.props.fadeA3 = tempFadeA3;
+                word.props.fadeT1 = tempFadeT1;
+                word.props.fadeT2 = tempFadeT2;
+                word.props.fadeT3 = tempFadeT3;
+                word.props.fadeT4 = tempFadeT4;
+                word.props.isFad = true;
+            }
+        }
+    }
 }
 
 void TsubtitleText::format(TsubtitleFormat &format)

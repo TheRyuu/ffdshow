@@ -275,6 +275,8 @@ public:
 
     void format(TsubtitleFormat &format);
 
+    void fixFade(void);
+
     void prepareKaraoke(void);
 
     template<class Tval> void propagateProps(Tbase::iterator it,Tval TSubtitleProps::*offset,Tval val,Tbase::iterator itend) {

@@ -47,6 +47,14 @@ Tsubtitle* TsubtitleParser::store(TsubtitleText &sub)
 {
  sub.defProps.extendedTags=1; //cfg.extendedTags;
  sub.format(textformat);
+
+ // The \fad and \fade tags affect the whole subtitle in VSFilter/MPC,
+ // and only one tag is allowed per subtitle. If there are more they're
+ // ignored and the first one is used. fixFade() corrects this, without
+ // it \fad and \fade affect whatever is after them, and there can be
+ // multiple text chunks with different fade effects in each subtitle.
+ sub.fixFade();
+
  sub.prepareKaraoke();
  sub.fix(textfix);
  subreader->push_back(new TsubtitleText(sub));
