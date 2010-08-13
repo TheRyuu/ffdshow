@@ -968,8 +968,11 @@ Tsubtitle* TsubtitleParserSSA::parse(Tstream &fd, int flags, REFERENCE_TIME star
          current.defProps.tStart = current.defProps.karaokeStart = current.start;
          current.defProps.tStop = current.stop;
 
-         // FIXME
-         // \h removal : \h is hard space, so it should be replaced HARD sapce, soft space for band-aid.
+         // Trail space removal
+         while (event.text.size() && event.text.at(event.text.size()-1)==' ')
+            event.text.erase(event.text.size()-1,1);
+
+         // \h removal, replaced by spaces
          for (size_t i=0 ; i<event.text.size() ; i++)
          {
           if (event.text[i]=='\\' && event.text[i+1]=='h')

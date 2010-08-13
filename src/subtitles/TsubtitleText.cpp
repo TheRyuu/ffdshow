@@ -1745,10 +1745,6 @@ TrenderedTextSubtitleWord* TsubtitleText::newWord(
     int gdi_font_scale = prefs.fontSettings.gdi_font_scale;
     TfontSettings &fontSettings = prefs.fontSettings;
     ffstring s1(s);
-    if (trimRightSpaces) {
-        while (s1.size() && s1.at(s1.size()-1)==' ')
-            s1.erase(s1.size()-1,1);
-    }
 
     if (w->props.shadowDepth != -1) // SSA/ASS/ASS2 subtitles
     {
