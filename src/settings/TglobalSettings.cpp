@@ -979,7 +979,7 @@ TglobalSettingsDecVideo::TsubtitlesSettings::TsubtitlesSettings(TintStrColl *Ico
    IDFF_subSSA            ,&TsubtitlesSettings::subSSA         ,0,0,_l(""),1,
      _l("subSSA"),1,
    IDFF_subWatch          ,&TsubtitlesSettings::watch          ,0,0,_l(""),1,
-     _l("subWatch"),0,
+     _l("subWatch"),1,
    IDFF_subSearchHeuristic,&TsubtitlesSettings::searchHeuristic,0,0,_l(""),1,
      _l("subSearchHeuristic"),0,
    0

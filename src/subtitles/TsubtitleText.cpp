@@ -1014,6 +1014,18 @@ void TsubtitleFormat::Tssa::karaoke_k(ffstring &arg)
 void TsubtitleFormat::Tssa::fade(ffstring &arg)
 {
     // \fade(<a1>, <a2>, <a3>, <t1>, <t2>, <t3>, <t4>)
+
+    TparenthesesContents contents;
+    parse_parentheses(contents,arg);
+
+    if (contents.size() == 2)
+    {
+        // Workaround for \fade(<t1>, <t2>), found in some scripts,
+        // meaning the same as \fad(<t1>, <t2>)
+        Tssa::fad(arg);
+        return;
+    }
+
     TstoreParams store;
     store.push_back(TstoreParam(offsetof(TSubtitleProps, fadeA1), 0, 255,             0,    sizeof(props.fadeA1),true));
     store.push_back(TstoreParam(offsetof(TSubtitleProps, fadeA2), 0, 255,             255,  sizeof(props.fadeA2),true));
@@ -1023,19 +1035,18 @@ void TsubtitleFormat::Tssa::fade(ffstring &arg)
     store.push_back(TstoreParam(offsetof(TSubtitleProps, fadeT3), 0, INT_MAX, 2000, sizeof(props.fadeT3),true));
     store.push_back(TstoreParam(offsetof(TSubtitleProps, fadeT4), 0, INT_MAX, 3000, sizeof(props.fadeT4),true));
 
-    TparenthesesContents contents;
-    parse_parentheses(contents,arg);
-    store.writeProps(contents, &props);
+    if (store.writeProps(contents, &props) == 7)
+    {
+        props.fadeA1 = 256 - props.fadeA1;
+        props.fadeA2 = 256 - props.fadeA2;
+        props.fadeA3 = 256 - props.fadeA3;
 
-    props.fadeA1 = 256 - props.fadeA1;
-    props.fadeA2 = 256 - props.fadeA2;
-    props.fadeA3 = 256 - props.fadeA3;
-
-    props.fadeT1 = props.tStart + props.fadeT1 * 10000;
-    props.fadeT2 = props.tStart + props.fadeT2 * 10000;
-    props.fadeT3 = props.tStart + props.fadeT3 * 10000;
-    props.fadeT4 = props.tStart + props.fadeT4 * 10000;
-    props.isFad = true;
+        props.fadeT1 = props.tStart + props.fadeT1 * 10000;
+        props.fadeT2 = props.tStart + props.fadeT2 * 10000;
+        props.fadeT3 = props.tStart + props.fadeT3 * 10000;
+        props.fadeT4 = props.tStart + props.fadeT4 * 10000;
+        props.isFad = true;
+    }
 }
 
 template<int TSubtitleProps::*offset1,int TSubtitleProps::*offset2,int min,int max> bool TsubtitleFormat::Tssa::intProp2(ffstring &arg)
