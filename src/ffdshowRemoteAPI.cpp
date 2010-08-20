@@ -141,6 +141,7 @@ if (h)
   {
    SendMessage(h,WM_CLOSE,0,0);
    WaitForSingleObject(hThread,INFINITE);
+   CloseHandle(hThread);
    hThread=NULL;
   }
  deciD=NULL;deciV=NULL;
