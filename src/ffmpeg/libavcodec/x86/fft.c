@@ -21,10 +21,7 @@
 
 av_cold void ff_fft_init_mmx(FFTContext *s)
 {
-/* Crashes on 64-bit?
- * ToDo: verify if that is still the case with the current code and with GCC 4.4.x and above
- */
-#if HAVE_YASM && ARCH_X86_32
+#if HAVE_YASM
     int has_vectors = mm_support();
     if (has_vectors & FF_MM_SSE && HAVE_SSE) {
         /* SSE for P3/P4/K8 */
