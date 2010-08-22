@@ -98,6 +98,12 @@
   #define filename_suffix        = '_dbt_x64'
 #endif
 
+#if is64bit
+  #define ff_sys = '{sys}'
+#else
+  #define ff_sys = '{syswow64}'
+#endif
+
 ; Fail if no proper settings were chosen
 #if is64bit & include_plugin_dscaler
 There is no 64-bit version of DScaler.
@@ -337,8 +343,8 @@ Name: "audio\mp2";               Description: "MP1, MP2";                       
 Name: "audio\mp2\libmad";        Description: "libmad";                           Components: ffdshow; Flags:           exclusive
 Name: "audio\mp2\libavcodec";    Description: "libavcodec";                       Components: ffdshow; Flags: unchecked exclusive
 Name: "audio\vorbis";            Description: "Vorbis";                           Components: ffdshow
-Name: "audio\vorbis\tremor";     Description: "tremor";                           Components: ffdshow; Flags:           exclusive
-Name: "audio\vorbis\libavcodec"; Description: "libavcodec";                       Components: ffdshow; Flags: unchecked exclusive
+Name: "audio\vorbis\libavcodec"; Description: "libavcodec";                       Components: ffdshow; Flags: exclusive
+Name: "audio\vorbis\tremor";     Description: "tremor";                           Components: ffdshow; Flags: unchecked exclusive
 Name: "audio\flac";              Description: "FLAC";                             Components: ffdshow
 Name: "audio\tta";               Description: "True Audio";                       Components: ffdshow
 Name: "audio\amr";               Description: "AMR";                              Components: ffdshow
@@ -353,11 +359,7 @@ Name: "filter";                  Description: "{cm:tsk_filtersSelect}";         
 Name: "filter\passthroughac3";   Description: "{cm:tsk_passthroughac3}";          Components: ffdshow; Flags: unchecked
 Name: "filter\passthroughdts";   Description: "{cm:tsk_passthroughdts}";          Components: ffdshow; Flags: unchecked
 Name: "filter\normalize";        Description: "{cm:tsk_volumeNorm}";              Components: ffdshow; Flags: unchecked
-#if is64bit
-Name: "filter\subtitles";        Description: "{cm:tsk_subtitles}";               Components: ffdshow
-#else
 Name: "filter\subtitles";        Description: "{cm:tsk_subtitles}";               Components: ffdshow; Flags: unchecked
-#endif
 #ifndef PREF_YAMAGATA
 Name: "skiph264inloop";          Description: "{cm:tsk_skipInloop}";              Components: ffdshow; Flags: unchecked;                  Check: NOT IsUpdate; GroupDescription: "{cm:tsk_tweaks}"
 #endif
@@ -365,11 +367,6 @@ Name: "whitelist";               Description: "{cm:tsk_whitelist}";             
 Name: "whitelist\prompt";        Description: "{cm:tsk_whitelistPrompt}";         Components: ffdshow; Flags: unchecked
 
 [Icons]
-#if is64bit
-  #define ff_sys = '{sys}'
-#else
-  #define ff_sys = '{syswow64}'
-#endif
 #if is64bit
 Name: {group}\{cm:shrt_audioConfig} x64; Filename: {#= ff_sys}\rundll32.exe; Parameters: ffdshow.ax,configureAudio; WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 4; Components: ffdshow
 Name: {group}\{cm:shrt_videoConfig} x64; Filename: {#= ff_sys}\rundll32.exe; Parameters: ffdshow.ax,configure; WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 3; Components: ffdshow
@@ -626,18 +623,10 @@ Root: HKCU; Subkey: "{#= ff_reg_base}_audio\default"; ValueType: dword;  ValueNa
 Root: HKCU; Subkey: "{#= ff_reg_base}_audio\";                           ValueName: "isOSD";                                                 Components: ffdshow;     Flags: deletevalue
 
 [Run]
-Description: "{cm:run_audioConfig}";     Filename: "{syswow64}\rundll32.exe"; Parameters: "ffdshow.ax,configureAudio"; WorkingDir: "{app}";      Components: ffdshow;     Flags: postinstall nowait unchecked; MinVersion: 0,4
-Description: "{cm:run_audioConfig}";     Filename: "{win}\rundll32.exe";      Parameters: "ffdshow.ax,configureAudio"; WorkingDir: "{app}";      Components: ffdshow;     Flags: postinstall nowait unchecked; MinVersion: 4,0
-Description: "{cm:run_videoConfig}";     Filename: "{syswow64}\rundll32.exe"; Parameters: "ffdshow.ax,configure";      WorkingDir: "{app}";      Components: ffdshow;     Flags: postinstall nowait unchecked; MinVersion: 0,4
-Description: "{cm:run_videoConfig}";     Filename: "{win}\rundll32.exe";      Parameters: "ffdshow.ax,configure";      WorkingDir: "{app}";      Components: ffdshow;     Flags: postinstall nowait unchecked; MinVersion: 4,0
-Description: "{cm:run_videoDXVAConfig}"; Filename: "{syswow64}\rundll32.exe"; Parameters: "ffdshow.ax,configureDXVA";  WorkingDir: "{app}";      Components: ffdshow;     Flags: postinstall nowait unchecked; MinVersion: 0,4
-Description: "{cm:run_videoDXVAConfig}"; Filename: "{win}\rundll32.exe";      Parameters: "ffdshow.ax,configureDXVA";  WorkingDir: "{app}";      Components: ffdshow;     Flags: postinstall nowait unchecked; MinVersion: 4,0
-#if is64bit
-Description: "{cm:run_vfwConfig}";       Filename: "{sys}\rundll32.exe";      Parameters: "ff_vfw.dll,configureVFW";   WorkingDir: "{sys}";      Components: ffdshow\vfw; Flags: postinstall nowait unchecked
-#else
-Description: "{cm:run_vfwConfig}";       Filename: "{syswow64}\rundll32.exe"; Parameters: "ff_vfw.dll,configureVFW";   WorkingDir: "{syswow64}"; Components: ffdshow\vfw; Flags: postinstall nowait unchecked; MinVersion: 0,4
-Description: "{cm:run_vfwConfig}";       Filename: "{win}\rundll32.exe";      Parameters: "ff_vfw.dll,configureVFW";   WorkingDir: "{sys}";      Components: ffdshow\vfw; Flags: postinstall nowait unchecked; MinVersion: 4,0
-#endif
+Description: "{cm:run_audioConfig}";     Filename: "{#= ff_sys}\rundll32.exe"; Parameters: "ffdshow.ax,configureAudio"; WorkingDir: "{app}";       Components: ffdshow;     Flags: postinstall nowait unchecked
+Description: "{cm:run_videoConfig}";     Filename: "{#= ff_sys}\rundll32.exe"; Parameters: "ffdshow.ax,configure";      WorkingDir: "{app}";       Components: ffdshow;     Flags: postinstall nowait unchecked
+Description: "{cm:run_videoDXVAConfig}"; Filename: "{#= ff_sys}\rundll32.exe"; Parameters: "ffdshow.ax,configureDXVA";  WorkingDir: "{app}";       Components: ffdshow;     Flags: postinstall nowait unchecked
+Description: "{cm:run_vfwConfig}";       Filename: "{#= ff_sys}\rundll32.exe"; Parameters: "ff_vfw.dll,configureVFW";   WorkingDir: "{#= ff_sys}"; Components: ffdshow\vfw; Flags: postinstall nowait unchecked
 
 ; All custom strings in the installer:
 #include "custom_messages.iss"
