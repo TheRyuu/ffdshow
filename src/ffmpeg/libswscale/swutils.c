@@ -28,6 +28,7 @@ static char THIS_FILE[] = __FILE__;
 // FFDShow : renamed from utils.c because it enters in conflict during linking with libavcodec/utils.c (when using MSVC to compile)
 
 #define _SVID_SOURCE //needed for MAP_ANONYMOUS
+#define _DARWIN_C_SOURCE // needed for MAP_ANON
 #include <inttypes.h>
 #include <string.h>
 #include <math.h>
@@ -983,8 +984,8 @@ SwsContext *sws_getContextEx(int srcW, int srcH, enum PixelFormat srcFormat,
             c->chrMmx2FilterCodeSize = initMMX2HScaler(c->chrDstW, c->chrXInc, NULL, NULL, NULL, 4);
 
 #ifdef MAP_ANONYMOUS
-            c->lumMmx2FilterCode = mmap(NULL, c->lumMmx2FilterCodeSize, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, 0, 0);
-            c->chrMmx2FilterCode = mmap(NULL, c->chrMmx2FilterCodeSize, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, 0, 0);
+            c->lumMmx2FilterCode = mmap(NULL, c->lumMmx2FilterCodeSize, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+            c->chrMmx2FilterCode = mmap(NULL, c->chrMmx2FilterCodeSize, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
 #elif HAVE_VIRTUALALLOC
             c->lumMmx2FilterCode = VirtualAlloc(NULL, c->lumMmx2FilterCodeSize, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
             c->chrMmx2FilterCode = VirtualAlloc(NULL, c->chrMmx2FilterCodeSize, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
