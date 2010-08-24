@@ -485,6 +485,7 @@
 #define IDFF_subSearchExt            862
 #define IDFF_subSearchHeuristic      856
 #define IDFF_subWatch                826
+#define IDFF_subEmbeddedPriority     3559
 #define IDFF_subStereoscopic         833
 #define IDFF_subStereoscopicPar      834 // stereoscopic parallax <-10%,10%> of picture width
 #define IDFF_subDefLang              836
@@ -1594,6 +1595,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//next:3559
+//next:3560
 
 #endif

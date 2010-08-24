@@ -293,7 +293,7 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
         const char_t *subflnm=cfg->autoFlnm?findAutoSubFlnm(cfg):cfg->flnm;
         if (subFlnmChanged!=-1 || stricmp(subflnm,subs.subFlnm)!=0)
         {
-            if (subs.init(cfg,subflnm,AVIfps,!!deci->getParam2(IDFF_subWatch),false) == true && first == true)
+            if (subs.init(cfg,subflnm,AVIfps,!!deci->getParam2(IDFF_subWatch),false) == true && first == true && deci->getParam2(IDFF_subEmbeddedPriority) == 0)
             {
              DPRINTF(_l("TimgFilterSubtitles::process subtitle file %s detected"), subflnm);
              deci->putParam(IDFF_subShowEmbedded, 0);

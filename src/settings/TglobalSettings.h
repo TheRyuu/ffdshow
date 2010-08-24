@@ -131,6 +131,7 @@ public:
    char_t searchDir[2*MAX_PATH];char_t searchExt[2*MAX_PATH];
    int searchHeuristic;
    int watch;
+   int embeddedPriority;
    int textpin,subSSA;
   } sub;
 

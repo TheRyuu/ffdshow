@@ -29,7 +29,8 @@ void TsubtitlesPage::init(void)
  edLimitText(IDC_ED_SUB_SEARCH_DIR,MAX_PATH);
  edLimitText(IDC_ED_SUB_SEARCH_EXT,MAX_PATH);
  autosubfirsttime=true;
- addHint(IDC_ED_SUB_SEARCH_EXT,_l("ffdshow searches subtitle files in the folders which are configured in the edit box above.\nFor video.avi, ffdshow searches video.utf, video.idx, video.sub,... and use the file which is found at the first time.\nEnumerate extensions in the order you like and separate them by semicolons.\n\nutf;idx;sub;srt;smi;rt;txt;ssa;aqt;mpl;usf is the default settings."));
+ addHint(IDC_ED_SUB_SEARCH_EXT,_l("ffdshow searches subtitle files in the folders which are configured in the edit box above.\nFor video.avi, ffdshow searches video.utf, video.idx, video.sub,... and use the file which is found at the first time.\nEnumerate extensions in the order you like and separate them by semicolons.\n\nutf;idx;sub;srt;smi;rt;txt;ssa;aqt;mpl;usf is the default settings"));
+ addHint(IDC_CHB_SUB_EMBEDDED_PRIORITY,_l("If embedded subtitles are present, use them instead of any detected subtitle file"));
  setFont(IDC_BT_SUBTITLES_EXPAND,parent->arrowsFont);
 }
 
@@ -40,6 +41,7 @@ void TsubtitlesPage::cfg2dlg(void)
  sub2dlg();
  enable(filterMode&IDFF_FILTERMODE_PLAYER,IDC_BT_SUBTITLES_RESET);
  setCheck(IDC_CHB_SUB_WATCH,cfgGet(IDFF_subWatch));
+ setCheck(IDC_CHB_SUB_EMBEDDED_PRIORITY,cfgGet(IDFF_subEmbeddedPriority));
  static const int idEmbedd[]={IDC_CHB_SUBTEXTPIN,IDC_CHB_SUBCC,IDC_CHB_SUBTEXT_SSA,IDC_CHB_VOBSUB,IDC_CHB_BLURAY, 0};
  setCheck(IDC_CHB_SUBTEXTPIN,cfgGet(IDFF_subTextpin));
  setCheck(IDC_CHB_SUBCC,cfgGet(IDFF_subCC));
@@ -232,6 +234,7 @@ TsubtitlesPage::TsubtitlesPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff)
  static const TbindCheckbox<TsubtitlesPage> chb[]=
   {
    IDC_CHB_SUB_WATCH,IDFF_subWatch,NULL,
+   IDC_CHB_SUB_EMBEDDED_PRIORITY,IDFF_subEmbeddedPriority,NULL,
    IDC_CHB_SUBTEXTPIN,IDFF_subTextpin,NULL,
    IDC_CHB_SUB_SEARCHHEURISTIC,IDFF_subSearchHeuristic,&TsubtitlesPage::auto2dlg,
    IDC_CHB_SUBCC,IDFF_subCC,&TsubtitlesPage::cfg2dlg,
