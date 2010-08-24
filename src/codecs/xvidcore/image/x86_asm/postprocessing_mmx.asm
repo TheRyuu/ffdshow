@@ -5,7 +5,7 @@
 ; *
 ; *  Copyright(C) 2004 Peter Ross <pross@xvid.org>
 ; *
-; *  XviD is free software; you can redistribute it and/or modify it
+; *  Xvid is free software; you can redistribute it and/or modify it
 ; *  under the terms of the GNU General Public License as published by
 ; *  the Free Software Foundation; either version 2 of the License, or
 ; *  (at your option) any later version.
@@ -19,7 +19,7 @@
 ; *  along with this program; if not, write to the Free Software
 ; *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 ; *
-; * $Id: postprocessing_mmx.asm,v 1.12 2008/12/04 18:30:36 Isibaar Exp $
+; * $Id: postprocessing_mmx.asm,v 1.14 2010/03/09 10:00:14 Isibaar Exp $
 ; *
 ; *************************************************************************/
 
@@ -114,7 +114,4 @@ image_brightness_mmx:
 ENDFUNC
 ;//////////////////////////////////////////////////////////////////////
 
-%ifidn __OUTPUT_FORMAT__,elf
-section ".note.GNU-stack" noalloc noexec nowrite progbits
-%endif
-
+NON_EXEC_STACK

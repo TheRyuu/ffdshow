@@ -6,7 +6,7 @@
 ; *  Copyright(C) 2004 Peter Ross <pross@xvid.org>
 ; *               2004 Dcoder <dcoder@alexandria.cc>
 ; *
-; *  XviD is free software; you can redistribute it and/or modify it
+; *  Xvid is free software; you can redistribute it and/or modify it
 ; *  under the terms of the GNU General Public License as published by
 ; *  the Free Software Foundation; either version 2 of the License, or
 ; *  (at your option) any later version.
@@ -128,7 +128,4 @@ image_brightness_sse2:
 ENDFUNC
 ;//////////////////////////////////////////////////////////////////////
 
-%ifidn __OUTPUT_FORMAT__,elf
-section ".note.GNU-stack" noalloc noexec nowrite progbits
-%endif
-
+NON_EXEC_STACK

@@ -4,6 +4,7 @@
  *  - Native API implementation  -
  *
  *  Copyright(C) 2001-2004 Peter Ross <pross@xvid.org>
+ *               2002-2010 Michael Militzer <isibaar@xvid.org>
  *
  *  This program is free software ; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -19,7 +20,7 @@
  *  along with this program ; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
  *
- * $Id: xvid.c,v 1.81 2009/06/02 13:06:49 Isibaar Exp $
+ * $Id: xvid.c,v 1.83 2010/03/09 10:00:14 Isibaar Exp $
  *
  ****************************************************************************/
 
@@ -41,6 +42,11 @@
 #ifdef MIN
 #undef MIN
 #endif
+#endif
+
+#if defined(__amigaos4__)
+#include <exec/exec.h>
+#include <proto/exec.h>
 #endif
 
 #include "xvid.h"
@@ -69,7 +75,7 @@ unsigned int xvid_debug = 0; /* xvid debug mask */
 
 #if (defined(ARCH_IS_IA32) || defined(ARCH_IS_X86_64)) && defined(_MSC_VER)
 #	include <windows.h>
-#elif defined(ARCH_IS_IA32) || defined(ARCH_IS_X86_64) || defined(ARCH_IS_PPC)
+#elif defined(ARCH_IS_IA32) || defined(ARCH_IS_X86_64) || (defined(ARCH_IS_PPC) && !defined(__amigaos4__))
 #	include <signal.h>
 #	include <setjmp.h>
 
@@ -81,7 +87,6 @@ unsigned int xvid_debug = 0; /* xvid debug mask */
 	   longjmp(mark, 1);
 	}
 #endif
-
 
 /*
  * Calls the funcptr, and returns whether SIGILL (illegal instruction) was
@@ -105,7 +110,7 @@ sigill_check(void (*func)())
 	}
 	return(0);
 }
-#elif defined(ARCH_IS_IA32) || defined(ARCH_IS_X86_64) || defined(ARCH_IS_PPC)
+#elif defined(ARCH_IS_IA32) || defined(ARCH_IS_X86_64) || (defined(ARCH_IS_PPC) && !defined(__amigaos4__))
 static int
 sigill_check(void (*func)())
 {
@@ -157,8 +162,18 @@ detect_cpu_flags(void)
 #endif
 
 #if defined(ARCH_IS_PPC)
+#if defined(__amigaos4__)
+        {
+                uint32_t vector_unit = VECTORTYPE_NONE;
+                IExec->GetCPUInfoTags(GCIT_VectorUnit, &vector_unit, TAG_END);
+                if (vector_unit == VECTORTYPE_ALTIVEC) {
+                        cpu_flags |= XVID_CPU_ALTIVEC;
+                }
+        }
+#else
 	if (!sigill_check(altivec_trigger))
 		cpu_flags |= XVID_CPU_ALTIVEC;
+#endif
 #endif
 
 	return cpu_flags;
@@ -166,7 +181,7 @@ detect_cpu_flags(void)
 
 
 /*****************************************************************************
- * XviD Init Entry point
+ * Xvid Init Entry point
  *
  * Well this function initialize all internal function pointers according
  * to the CPU features forced by the library client or autodetected (depending
@@ -349,7 +364,7 @@ int xvid_gbl_init(xvid_gbl_init_t * init)
 
 		/* Quantization related functions */
 		quant_h263_intra   = quant_h263_intra_mmx;
-        quant_h263_inter   = quant_h263_inter_mmx;
+                quant_h263_inter   = quant_h263_inter_mmx;
 		dequant_h263_intra = dequant_h263_intra_mmx;
 		dequant_h263_inter = dequant_h263_inter_mmx;
 		quant_mpeg_intra   = quant_mpeg_intra_mmx;
@@ -707,6 +722,14 @@ xvid_gbl_info(xvid_gbl_info_t * info)
       info -> num_threads = 1;
   }
 
+#elif defined(__amigaos4__)
+
+  {
+    uint32_t num_threads = 1;
+    IExec->GetCPUInfoTags(GCIT_NumberOfCPUs, &num_threads, TAG_END);
+    info->num_threads = num_threads;
+  }
+
 #endif
 
 	return 0;
@@ -754,7 +777,7 @@ xvid_gbl_convert(xvid_gbl_convert_t* convert)
 }
 
 /*****************************************************************************
- * XviD Global Entry point
+ * Xvid Global Entry point
  *
  * Well this function initialize all internal function pointers according
  * to the CPU features forced by the library client or autodetected (depending
@@ -787,7 +810,7 @@ xvid_global(void *handle,
 }
 
 /*****************************************************************************
- * XviD Native decoder entry point
+ * Xvid Native decoder entry point
  *
  * This function is just a wrapper to all the option cases.
  *
@@ -819,7 +842,7 @@ xvid_decore(void *handle,
 
 
 /*****************************************************************************
- * XviD Native encoder entry point
+ * Xvid Native encoder entry point
  *
  * This function is just a wrapper to all the option cases.
  *
