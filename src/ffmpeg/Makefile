@@ -263,8 +263,7 @@ SRCS_C=\
       $(LAVC_DIR)/x86/vc1dsp_mmx.c \
       $(LAVC_DIR)/x86/vp3dsp_mmx.c \
       $(LAVC_DIR)/x86/vp3dsp_sse2.c \
-      $(LAVC_DIR)/x86/vp6dsp_mmx.c \
-      $(LAVC_DIR)/x86/vp6dsp_sse2.c \
+      $(LAVC_DIR)/x86/vp56dsp_init.c \
       $(LAVC_DIR)/x86/vp8dsp-init.c \
    \
       $(LAVS_DIR)/rgb2rgb.c \
@@ -272,7 +271,6 @@ SRCS_C=\
       $(LAVS_DIR)/swutils.c \
       $(LAVS_DIR)/yuv2rgb.c \
       $(LAVS_DIR)/sww32thread.c \
-   \
       $(LAVS_DIR)/x86/yuv2rgb_mmx.c \
    \
       $(LAVP_DIR)/postprocess.c
@@ -285,6 +283,7 @@ SRCS_YASM=\
       $(LAVC_DIR)/x86/h264_intrapred.asm \
       $(LAVC_DIR)/x86/h264_weight_sse2.asm \
       $(LAVC_DIR)/x86/vc1dsp_yasm.asm \
+      $(LAVC_DIR)/x86/vp56dsp.asm \
       $(LAVC_DIR)/x86/vp8dsp.asm \
       $(LAVC_DIR)/x86/x86util.asm
 
