@@ -1319,6 +1319,8 @@ DCT_SAD_FUNC(ssse3)
 
 void dsputilenc_init_mmx(DSPContext* c, AVCodecContext *avctx)
 {
+    int mm_flags = mm_support();
+
     if (mm_flags & FF_MM_MMX) {
         const int dct_algo = avctx->dct_algo;
         if(dct_algo==FF_DCT_AUTO || dct_algo==FF_DCT_MMX){

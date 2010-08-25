@@ -430,7 +430,6 @@ static inline int get_penalty_factor(int lambda, int lambda2, int type){
 /* should be defined by architectures supporting
    one or more MultiMedia extension */
 int mm_support(void);
-extern int mm_flags;
 
 void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx);
 
@@ -447,16 +446,10 @@ static inline void emms(void)
  #endif
 }
 
-
-#define emms_c() \
-{\
-    if (mm_flags & FF_MM_MMX)\
-        emms();\
-}
+#define emms_c() emms()
 
 #else
 
-#define mm_flags 0
 #define mm_support() 0
 
 #endif
