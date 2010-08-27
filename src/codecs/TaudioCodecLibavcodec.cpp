@@ -63,6 +63,8 @@ bool TaudioCodecLibavcodec::init(const CMediaType &mt)
      const WAVEFORMATEX *wfex=(const WAVEFORMATEX*)mt.pbFormat;
      avctx->bit_rate=wfex->nAvgBytesPerSec*8;
      avctx->bits_per_coded_sample=wfex->wBitsPerSample;
+     if (wfex->wBitsPerSample == 0 && codecId==CODEC_ID_COOK)
+      avctx->bits_per_coded_sample = 16;
      avctx->block_align=wfex->nBlockAlign;
     }
    else
@@ -86,16 +88,62 @@ bool TaudioCodecLibavcodec::init(const CMediaType &mt)
     }
    else if (codecId==CODEC_ID_COOK && mt.formattype==FORMAT_WaveFormatEx && mt.pbFormat)
     {
-     /* this code needs fixing */
-     avctx->extradata=mt.pbFormat+sizeof(WAVEFORMATEX);
-     avctx->extradata_size=mt.cbFormat-sizeof(WAVEFORMATEX);
-     for (;avctx->extradata_size;avctx->extradata=(uint8_t*)avctx->extradata+1,avctx->extradata_size--)
-      if (memcmp(avctx->extradata,"cook",4)==0)
-       {
-        avctx->extradata=(uint8_t*)avctx->extradata+12;
-        avctx->extradata_size-=12;
-        break;
-       }
+     /* Cook specifications : extradata is located after the real audio info, 4 or 5 depending on the version
+        @See http://wiki.multimedia.cx/index.php?title=RealMedia the audio block information
+        TODO : add support for header version 3
+     */
+
+     DWORD cbSize = ((const WAVEFORMATEX*)mt.pbFormat)->cbSize;
+     BYTE* fmt = mt.Format() + sizeof(WAVEFORMATEX) + cbSize;
+     
+     for(int i = 0, len = mt.FormatLength() - (sizeof(WAVEFORMATEX) + cbSize); i < len-4; i++, fmt++)
+		   {
+			   if(fmt[0] == '.' || fmt[1] == 'r' || fmt[2] == 'a')
+				   break;
+		   }
+
+     m_realAudioInfo = *(TrealAudioInfo*) fmt;
+     m_realAudioInfo.bswap();
+     
+     BYTE* p = NULL;
+     if(m_realAudioInfo.version2 == 4)
+		   {
+      // Skip the TrealAudioInfo4 data
+      p = (BYTE*)((TrealAudioInfo4*)fmt+1);
+			   int len = *p++; p += len; len = *p++; p += len; 
+			   ASSERT(len == 4);
+      //DPRINTF(_l("TaudioCodecLibavcodec cook version 4"));
+		   }
+		   else if(m_realAudioInfo.version2 == 5)
+		   {
+      // Skip the TrealAudioInfo5 data
+			   p = (BYTE*)((TrealAudioInfo5*)fmt+1);
+      //DPRINTF(_l("TaudioCodecLibavcodec cook version 5"));
+		   }
+		   else
+		   {
+			   return VFW_E_TYPE_NOT_ACCEPTED;
+		   }
+
+     /* Cook specifications : after the end of TrealAudio4 or TrealAudio5 structure, we have this :
+       byte[3]  Unknown
+       #if version == 5
+        byte     Unknown
+       #endif
+        dword    Codec extradata length
+        byte[]   Codec extradata
+     */
+     
+     // Skip the 3 unknown bytes
+     p += 3;
+		   // + skip 1 byte if version 5
+     if(m_realAudioInfo.version2 == 5) p++;
+
+     // Extradata size : next 4 bytes
+     avctx->extradata_size = std::min((DWORD)((mt.Format() + mt.FormatLength()) - (p + 4)), *(DWORD*)p);
+     // Extradata starts after the 4 bytes size
+		   avctx->extradata = (uint8_t*)(p + 4);
+     avctx->block_align = m_realAudioInfo.coded_frame_size;
     }
    else
     {
@@ -195,25 +243,66 @@ HRESULT TaudioCodecLibavcodec::decode(TbyteBuffer &src0)
   Number of samples = number of blocks in the audio data = dstLength/block size, except for channels reordering
  */
 
- // Dynamic range compression for AC3/DTS formats
- if (codecId == CODEC_ID_AC3 || codecId == CODEC_ID_EAC3 || codecId == CODEC_ID_DTS || codecId == CODEC_ID_MLP || codecId == CODEC_ID_TRUEHD)
-  {
-   if (deci->getParam2(IDFF_audio_decoder_DRC))
-    {
-     float drcLevel=(float)deci->getParam2(IDFF_audio_decoder_DRC_Level) / 100;
-     avctx->drc_scale=drcLevel;
-    }
-   else
-    {
-     avctx->drc_scale=0.0;
-    }
-  }
-
  int size=(int)src0.size();
  unsigned char *src = size ? &src0[0] : NULL;
+ int step_size = 0;
+
+ // Dynamic range compression for AC3/DTS formats
+ if (codecId == CODEC_ID_AC3 || codecId == CODEC_ID_EAC3 || codecId == CODEC_ID_DTS || codecId == CODEC_ID_MLP || codecId == CODEC_ID_TRUEHD)
+ {
+  if (deci->getParam2(IDFF_audio_decoder_DRC))
+   {
+    float drcLevel=(float)deci->getParam2(IDFF_audio_decoder_DRC_Level) / 100;
+    avctx->drc_scale=drcLevel;
+   }
+  else
+   {
+    avctx->drc_scale=0.0;
+   }
+ }
+ else if (codecId == CODEC_ID_COOK)  //Special behaviour for real audio cook decoder
+ {
+  int w = m_realAudioInfo.coded_frame_size;
+  int h = m_realAudioInfo.sub_packet_h;
+  int sps = m_realAudioInfo.sub_packet_size;
+  step_size = w;
+  size_t len = w*h;
+  avctx->block_align = m_realAudioInfo.sub_packet_size;
+
+  BYTE *pBuf = (BYTE*)srcBuf.resize(len*2);
+  memcpy(pBuf+buflen,&*src0.begin(), src0.size());
+
+  buflen += src0.size();
+
+  if (buflen >= len)
+  {
+   src =(BYTE*) pBuf;
+   BYTE *src_end = pBuf+len;
+
+   if(sps > 0)
+   {
+    for(int y = 0; y < h; y++)
+    {
+     for(int x = 0, w2 = w / sps; x < w2; x++)
+     {
+      memcpy(src_end + sps*(h*x+((h+1)/2)*(y&1)+(y>>1)), src, sps);
+      src += sps;
+     }
+    }
+    src = pBuf + len;
+    src_end = pBuf + len*2;
+   }
+   size = src_end - src;
+   buflen = 0;
+  }
+  else
+  {
+   src0.clear();
+   return S_OK;
+  }
+ }
 
  int maxLength=AVCODEC_MAX_AUDIO_FRAME_SIZE;
- TbyteBuffer newsrcBuffer;
 
  while (size > 0)
   {
@@ -260,6 +349,7 @@ HRESULT TaudioCodecLibavcodec::decode(TbyteBuffer &src0)
             pAudioParser->NewSegment();
           break;
        }
+       
        size-=ret;
        src+=ret;
    }
@@ -331,5 +421,6 @@ void TaudioCodecLibavcodec::updateChannelMapping()
 
 bool TaudioCodecLibavcodec::onSeek(REFERENCE_TIME segmentStart)
 {
+ buflen = 0;
  return avctx?(libavcodec->avcodec_flush_buffers(avctx),true):false;
 }

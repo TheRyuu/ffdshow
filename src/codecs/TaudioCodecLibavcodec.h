@@ -4,7 +4,7 @@
 #include "TaudioCodec.h"
 #include "Tlibavcodec.h"
 #include "TaudioParser.h"
-
+#include "TrealAudioInfo.h"
 
 class TaudioCodecLibavcodec :public TaudioCodec
 {
@@ -18,6 +18,7 @@ private:
  Tbuffer buf2, buf3;
  //TbyteBuffer backupbuf;
  int src_ch_layout;
+ TrealAudioInfo m_realAudioInfo;
  //int skipBytes;int includeBytes;bool hasMLPFrames;bool useSPDIF;
  //StreamFormat streamformat;
 protected:

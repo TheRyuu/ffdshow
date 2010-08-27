@@ -1044,6 +1044,7 @@ TglobalSettingsDecAudio::TglobalSettingsDecAudio(const Tconfig *Iconfig,int Imod
    IDFF_wavpack                ,&TglobalSettingsDecAudio::wavpack                ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_avisA                  ,&TglobalSettingsDecAudio::avis                   ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_rawa                   ,&TglobalSettingsDecAudio::rawa                   ,0,0             ,_l(""),0,NULL,0,
+   IDFF_cook                   ,&TglobalSettingsDecAudio::cook                   ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_showCurrentVolume      ,&TglobalSettingsDecAudio::showCurrentVolume      ,0,0             ,_l(""),0,
      _l("showCurrentVolume"),0,
    IDFF_showCurrentFFT         ,&TglobalSettingsDecAudio::showCurrentFFT         ,0,0             ,_l(""),0,
@@ -1120,7 +1121,7 @@ void TglobalSettingsDecAudio::reg_op_codec(TregOp &t,TregOp *t2)
  _reg_op_codec(IDFF_ra        ,t,t2,_l("ra")        ,ra        ,0);
  _reg_op_codec(IDFF_imc       ,t,t2,_l("imc")       ,imc       ,0);
  _reg_op_codec(IDFF_atrac3    ,t,t2,_l("atrac3")    ,atrac3    ,0);
- //_reg_op_codec(IDFF_cook      ,t,t2,_l("cook")      ,cook      ,0);
+ _reg_op_codec(IDFF_cook      ,t,t2,_l("cook")      ,cook      ,0);
  _reg_op_codec(IDFF_nellymoser,t,t2,_l("nellymoser"),nellymoser,0);
  _reg_op_codec(IDFF_wavpack   ,t,t2,_l("wavpack")   ,wavpack   ,0);
  _reg_op_codec(IDFF_avisA     ,t,t2,_l("avis")      ,avis      ,IDFF_MOVIE_AVIS);
@@ -1154,7 +1155,7 @@ void TglobalSettingsDecAudio::load(void)
  fixMissing(ra        ,IDFF_MOVIE_LAVC);
  fixMissing(imc       ,IDFF_MOVIE_LAVC);
  fixMissing(atrac3    ,IDFF_MOVIE_LAVC);
- //fixMissing(cook      ,IDFF_MOVIE_LAVC);
+ fixMissing(cook      ,IDFF_MOVIE_LAVC);
  fixMissing(nellymoser,IDFF_MOVIE_LAVC);
  fixMissing(wavpack   ,IDFF_MOVIE_LAVC);
 }
@@ -1222,6 +1223,7 @@ void TglobalSettingsDecAudio::load(void)
  /*FF_WAVE_FORMAT1_OP(VORBIS1P,vorbis& rawmask,CODEC_ID_TREMOR)*/ \
  /*FF_WAVE_FORMAT1_OP(VORBIS2P,vorbis& rawmask,CODEC_ID_TREMOR)*/ \
  /*FF_WAVE_FORMAT1_OP(VORBIS3P,vorbis& rawmask,CODEC_ID_TREMOR)*/ \
+ FF_WAVE_FORMAT1_OP(COOK2  ,cook   & rawmask,CODEC_ID_COOK) \
  FF_WAVE_FORMAT1_OP(LPCM   ,lpcm   & rawmask,CODEC_ID_LPCM) \
  FF_WAVE_FORMAT1_OP(AVIS   ,avis   & rawmask,CODEC_ID_AVISYNTH) \
  FF_WAVE_FORMAT1_OP(PCM8   ,rawa==IDFF_MOVIE_RAW || rawa==(TsampleFormat::SF_ALLINT<<8) || rawa==(TsampleFormat::SF_PCM8 <<8),CODEC_ID_PCM) \

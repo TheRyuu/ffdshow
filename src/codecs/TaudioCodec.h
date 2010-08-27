@@ -29,6 +29,8 @@ protected:
  void* getDst(size_t needed);
  virtual void getInputDescr1(char_t *buf,size_t buflen) const =0;
  unsigned int bpssum,numframes,lastbps;
+ Tbuffer srcBuf;
+ size_t buflen;
 public:
  TaudioCodec(IffdshowBase *Ideci,IdecAudioSink *Isink);
  static TaudioCodec* initSource(IffdshowBase *Ideci,IdecAudioSink *sink,CodecID codecId,const TsampleFormat &fmt,const CMediaType &mt);

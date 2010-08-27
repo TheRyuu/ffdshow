@@ -5011,6 +5011,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\codecs\TrealAudioInfo.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\codecs\TrealAudioInfo.h"
+				>
+			</File>
+			<File
 				RelativePath="src\codecs\TvideoCodec.cpp"
 				>
 			</File>
