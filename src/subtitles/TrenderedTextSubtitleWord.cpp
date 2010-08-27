@@ -424,7 +424,7 @@ void TrenderedTextSubtitleWord::drawShadow()
         int starty = overhang.top - 1;
         int endx = dx[0] - overhang.right + 1;
         int endy = dy[0] - overhang.bottom + 1;
-        bmp[0]=blur(bmp[0], dx[0], dy[0], startx, starty, endx, endy, true);
+        bmp[0]=blur(bmp[0], dx[0], dy[0], startx, starty, endx, endy);
     }
 
     if (prefs.opaqueBox) {
@@ -504,7 +504,7 @@ void TrenderedTextSubtitleWord::drawShadow()
         }
 
         if (prefs.outlineBlur || (prefs.shadowMode==0 && m_shadowSize>0)) // blur outline and msk
-            msk[0]=blur(msk[0], dx[0], dy[0], 0, 0, dx[0], dy[0], false);
+            msk[0]=blur(msk[0], dx[0], dy[0], 0, 0, dx[0], dy[0]);
         if (matrix)
             aligned_free(matrix);
     }  else {
@@ -784,7 +784,7 @@ unsigned int TrenderedTextSubtitleWord::getShadowSize(LONG fontHeight, unsigned 
  return shadowSize;
 }
 
-unsigned char* TrenderedTextSubtitleWord::blur(unsigned char *src,stride_t Idx,stride_t Idy,int startx,int starty,int endx, int endy, bool mild)
+unsigned char* TrenderedTextSubtitleWord::blur(unsigned char *src,stride_t Idx,stride_t Idy,int startx,int starty,int endx, int endy)
 {
  /*
   *  Copied and modified from guliverkli, Rasterizer.cpp
@@ -793,35 +793,56 @@ unsigned char* TrenderedTextSubtitleWord::blur(unsigned char *src,stride_t Idx,s
   *  http://www.gabest.org
   */
  unsigned char *dst = aligned_calloc3<uint8_t>(Idx,Idy,16);
- int sx=startx <= 0 ? 1 : startx;
- int sy=starty <= 0 ? 1 : starty;
- int ex=endx >= Idx ? Idx-1 : endx;
- int ey=endy >= Idy ? Idy-1 : endy;
+ int sx = startx <= 0 ? 1 : startx;
+ int sy = starty <= 0 ? 1 : starty;
+ int ex = endx >= Idx ? Idx-1 : endx;
+ int ey = endy >= Idy ? Idy-1 : endy;
 
- if (mild)
-  {
-   for (int y=sy ; y < ey ; y++)
-    for (int x=sx ; x < ex ; x++)
+ // 3x3 box blur, with different strength based on the user settings. 
+ // 1           2           1
+ // 2     (2^factor)-12     2
+ // 1           2           1 , then divide by 2^factor
+ // After applying the filter, the result has to be divided by the sum
+ // of all pixel weights. Keep this in mind when adding extra options!
+
+ if (prefs.blurMode < 6)
+ {
+     int factor = 0;
+     switch (prefs.blurMode)
      {
-      int pos=Idx*y+x;
-      unsigned char *srcpos=src+pos;
-      dst[pos] =   (srcpos[-1-Idx]   + (srcpos[-Idx] << 1) +  srcpos[+1-Idx]
-                 + (srcpos[-1] << 1) + (srcpos[0]*20)      + (srcpos[+1] << 1)
-                 +  srcpos[-1+Idx]   + (srcpos[+Idx] << 1) +  srcpos[+1+Idx]) >> 5;
+         case 0: factor = 9; break;
+         case 1: factor = 8; break;
+         case 2: factor = 7; break;
+         case 3: factor = 6; break;
+         case 4: factor = 5; break;
+         case 5: factor = 4; break;
      }
-  }
- else
-  {
-   for (int y=sy ; y < ey ; y++)
-    for (int x=sx ; x < ex ; x++)
-     {
-      int pos=Idx*y+x;
-      unsigned char *srcpos=src+pos;
-      dst[pos] =   (srcpos[-1-Idx]   + (srcpos[-Idx] << 1) +  srcpos[+1-Idx]
-                 + (srcpos[-1] << 1) + (srcpos[0] << 2)    + (srcpos[+1] << 1)
-                 +  srcpos[-1+Idx]   + (srcpos[+Idx] << 1) +  srcpos[+1+Idx]) >> 4;
-     }
-  }
+
+     for (int y = sy ; y < ey ; y++)
+         for (int x = sx ; x < ex ; x++)
+         {
+             int pos = Idx*y+x;
+             unsigned char *srcpos = src+pos;
+             dst[pos] =   (srcpos[-1-Idx]   + (srcpos[-Idx] << 1)            +  srcpos[+1-Idx]
+                        + (srcpos[-1] << 1) + (srcpos[0]*((1 << factor)-12)) + (srcpos[+1] << 1)
+                        +  srcpos[-1+Idx]   + (srcpos[+Idx] << 1)            +  srcpos[+1+Idx])  >> factor;
+         }
+ }
+
+ // The last option (extreme) applies a 3x3 box blur without any pixel weighting
+ else if (prefs.blurMode == 6)
+ {
+     for (int y = sy ; y < ey ; y++)
+         for (int x = sx ; x < ex ; x++)
+         {
+             int pos = Idx*y+x;
+             unsigned char *srcpos = src+pos;
+             dst[pos] =   (srcpos[-1-Idx]  +  srcpos[-Idx]  +  srcpos[+1-Idx]
+                        +  srcpos[-1]      +  srcpos[0]     +  srcpos[+1]
+                        +  srcpos[-1+Idx]  +  srcpos[+Idx]  +  srcpos[+1+Idx])  / 9;
+         }
+ }
+
  if (startx==0)
   for (int y=starty ; y<endy ; y++)
    dst[Idx*y]=src[Idx*y];

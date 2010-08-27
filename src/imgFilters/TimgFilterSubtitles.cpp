@@ -60,6 +60,7 @@ TimgFilterSubtitles::TsubPrintPrefs::TsubPrintPrefs(
     // Copy subtitles shadow vars
     int i;
     deci->getParam(IDFF_fontShadowMode, &shadowMode);
+    deci->getParam(IDFF_fontBlurMode, &blurMode);
     deci->getParam(IDFF_fontShadowSize, &i);
     shadowSize=i;
     deci->getParam(IDFF_fontShadowAlpha, &shadowAlpha);

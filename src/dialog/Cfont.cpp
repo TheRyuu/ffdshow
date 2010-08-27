@@ -73,15 +73,16 @@ void TfontPage::init(void)
  addHint(IDC_CHB_FONT_ASPECT_AUTO,_l("Corrects font scale when the video has non-square pixel aspect ratio"));
  addHint(IDC_CHB_FONT_AUTOSIZE,_l("Adjusts font size automatically so subtitles always have the same apparent size. Shadow size is scaled too, but it'll appear larger at lower resolutions"));
  if (idff_fontcharset==IDFF_fontCharset)
-  addHint(IDC_CHB_FONT_BLUR,_l("Unchecked - Blur is not applied\rChecked - Blur is applied to the entire subtitle\rIndeterminate - Blur is applied to the subtitle's outline only"));
+  addHint(IDC_CHB_FONT_BLUR,_l("Controls if and where blur is applied\rUnchecked - Blur is not applied\rChecked - Blur is applied to the whole subtitle\rIndeterminate - Blur is applied to the subtitle's outline only"));
  else
-  addHint(IDC_CHB_FONT_BLUR,_l("Unchecked - Blur is not applied\rChecked - Blur is applied to the entire OSD\rIndeterminate - Blur is applied to the OSD's outline only"));
- addHint(IDC_CHB_FONT_SETTINGS_OVERRIDE,_l("Overrides the following SSA/ASS font settings: name, charset, weight, italic, underline, spacing, scale X, scale Y and opaque box"));
+  addHint(IDC_CHB_FONT_BLUR,_l("Controls if and where blur is applied\rUnchecked - Blur is not applied\rChecked - Blur is applied to the whole OSD\rIndeterminate - Blur is applied to the OSD's outline only"));
+ addHint(IDC_CHB_FONT_SETTINGS_OVERRIDE,_l("Overrides the following SSA/ASS font settings: name, charset, weight, italic, underline, spacing, scale X, scale Y, opaque box and blur"));
  addHint(IDC_CHB_FONT_SIZE_OVERRIDE,_l("Overrides SSA/ASS font size"));
  addHint(IDC_CHB_FONT_OUTLINEWIDTH_OVERRIDE,_l("Overrides SSA/ASS outline width"));
  addHint(IDC_CHB_FONT_SHADOW_OVERRIDE,_l("Overrides SSA/ASS shadow size"));
  addHint(IDC_CHB_FONT_COLOR_OVERRIDE,_l("Overrides SSA/ASS body, outline and shadow colors and alpha"));
  addHint(IDC_CHB_SCALEBORDERANDSHADOW_OVERRIDE,_l("In SSA/ASS subtitles, always scale outline width and shadow size"));
+ addHint(IDC_CBX_BLUR_MODE,_l("Adjusts the amount of blur applied\rThe filter is a 3x3 box blur, this setting controls the weight of the center pixel compared to the others. Stronger values will lower the center pixel weight, thus blurring things more. Strong is the old non-configurable blur strength"));
 
  // Subtitles mode
  if (idff_fontcharset==IDFF_fontCharset)
@@ -206,6 +207,7 @@ void TfontPage::font2dlg(void)
  setCheck(IDC_CHB_FONT_UNDERLINE,underline);
  int shadowsize=cfgGet(idff_fontshadowsize);
  int shadowmode=cfgGet(idff_fontshadowmode);
+ int blurmode=cfgGet(idff_fontblurmode);
  repaint(GetDlgItem(m_hwnd,IDC_IMG_FONT_COLOR));
  repaint(GetDlgItem(m_hwnd,IDC_IMG_FONT_COLOR_OUTLINE));
  repaint(GetDlgItem(m_hwnd,IDC_IMG_FONT_COLOR_SHADOW));
@@ -443,6 +445,7 @@ bool TfontPage::reset(bool testonly)
    deci->resetParam(idff_fontoutlinecolor);
    deci->resetParam(idff_fontoutlinealpha);
    deci->resetParam(idff_fontshadowmode);
+   deci->resetParam(idff_fontblurmode);
    deci->resetParam(idff_fontshadowcolor);
    deci->resetParam(idff_fontshadowsize);
    deci->resetParam(idff_fontshadowalpha);
@@ -466,12 +469,15 @@ void TfontPage::translate(void)
  cbxSetCurSel(IDC_CBX_FONT_WEIGHT,sel);
 
  cbxTranslate(IDC_CBX_FONT_SUBSHADOW_MODE,TfontSettings::shadowModes);
+ cbxTranslate(IDC_CBX_BLUR_MODE,TfontSettings::blurModes);
 }
 
 void TfontPage::shadow2dlg(void)
 {
  int shadowmode=cfgGet(idff_fontshadowmode);
+ int blurmode=cfgGet(idff_fontblurmode);
  cbxSetCurSel(IDC_CBX_FONT_SUBSHADOW_MODE,shadowmode);
+ cbxSetCurSel(IDC_CBX_BLUR_MODE,blurmode);
  static const int idShadows[]={IDC_TBR_FONT_SUBSHADOW_ALPHA,IDC_TBR_FONT_SUBSHADOW_SIZE,0};
  enable(shadowmode!=3,idShadows);
  int outlinewidth=cfgGet(idff_fontoutlinewidth);
@@ -521,6 +527,7 @@ TfontPageSubtitles::TfontPageSubtitles(TffdshowPageDec *Iparent,const TfilterIDF
  idff_fontaspectauto=IDFF_fontAspectAuto;
  idff_fontfast=IDFF_fontFast;
  idff_fontshadowmode=IDFF_fontShadowMode;
+ idff_fontblurmode=IDFF_fontBlurMode;
  idff_fontoutlinecolor=IDFF_fontOutlineColor;
  idff_fontshadowcolor=IDFF_fontShadowColor;
  idff_fontbodyalpha=IDFF_fontBodyAlpha;
@@ -567,6 +574,7 @@ TfontPageSubtitles::TfontPageSubtitles(TffdshowPageDec *Iparent,const TfilterIDF
    IDC_CBX_FONT_WEIGHT,idff_fontweight,BINDCBX_DATA,NULL,
    IDC_CBX_FONT_NAME,idff_fontname,BINDCBX_TEXT,&TfontPageSubtitles::fillCharsets,
    IDC_CBX_FONT_SUBSHADOW_MODE,idff_fontshadowmode,BINDCBX_SEL,&TfontPageSubtitles::font2dlg,
+   IDC_CBX_BLUR_MODE,idff_fontblurmode,BINDCBX_SEL,&TfontPageSubtitles::font2dlg,
    0
   };
  bindComboboxes(cbx);
@@ -602,6 +610,7 @@ TfontPageOSD::TfontPageOSD(TffdshowPageDec *Iparent, const TfilterIDFF *idff):Tf
  idff_fontshadowalpha=IDFF_OSDfontShadowAlpha;
  idff_fontshadowsize=IDFF_OSDfontShadowSize;
  idff_fontshadowmode=IDFF_OSDfontShadowMode;
+ idff_fontblurmode=IDFF_OSDfontBlurMode;
  idff_fontopaquebox=IDFF_OSDfontOpaqueBox;
  idff_fontblur=IDFF_OSDfontBlur;
  idff_fontitalic=IDFF_OSDfontItalic;
@@ -635,6 +644,7 @@ TfontPageOSD::TfontPageOSD(TffdshowPageDec *Iparent, const TfilterIDFF *idff):Tf
    IDC_CBX_FONT_WEIGHT,idff_fontweight,BINDCBX_DATA,NULL,
    IDC_CBX_FONT_NAME,idff_fontname,BINDCBX_TEXT,&TfontPageOSD::fillCharsets,
    IDC_CBX_FONT_SUBSHADOW_MODE,idff_fontshadowmode,BINDCBX_SEL,&TfontPageOSD::font2dlg,
+   IDC_CBX_BLUR_MODE,idff_fontblurmode,BINDCBX_SEL,&TfontPageOSD::font2dlg,
    0
   };
  bindComboboxes(cbx);

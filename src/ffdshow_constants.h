@@ -542,6 +542,7 @@
 #define IDFF_fontAspectAuto           3415
 #define IDFF_fontFast                 854
 #define IDFF_fontShadowMode           3374 // 0 - Glowing, 1 - classic gradient, 2 - classic
+#define IDFF_fontBlurMode             3560
 #define IDFF_fontShadowSize           3375
 #define IDFF_fontBodyAlpha            3389
 #define IDFF_fontOutlineAlpha         3390
@@ -656,6 +657,7 @@
 #define IDFF_OSDfontShadowAlpha    3397
 #define IDFF_OSDfontShadowSize     3398
 #define IDFF_OSDfontShadowMode     3399
+#define IDFF_OSDfontBlurMode       3561
 #define IDFF_OSDfontBlur           3407
 #define IDFF_OSDfontXscale         1532
 #define IDFF_OSDfontYscale         3412
@@ -1595,6 +1597,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//next:3560
+//next:3562
 
 #endif

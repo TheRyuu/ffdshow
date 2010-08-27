@@ -46,6 +46,18 @@ const char_t* TfontSettings::shadowModes[]=
  NULL
 };
 
+const char_t* TfontSettings::blurModes[]=
+{
+ _l("Softest"),
+ _l("Softer"),
+ _l("Soft"),
+ _l("Normal"),
+ _l("Strong"),
+ _l("Stronger"),
+ _l("Extreme"),
+ NULL
+};
+
 #define ffdshowUTF8 253
 const int TfontSettings::charsets[]=
 {
@@ -157,6 +169,7 @@ TfontSettings::TfontSettings(TintStrColl *Icoll):Toptions(Icoll)
     shadowSize = 5;
     shadowMode = 2;
     blur = 0;
+    blurMode = 0;
     autosize=0;
     sizeA=18;
     split=0;
@@ -181,7 +194,7 @@ bool TfontSettings::operator == (const TfontSettings &rt) const
       && aspectAuto == rt.aspectAuto
       && outlineWidth == rt.outlineWidth
       && shadowSize == rt.shadowSize &&  shadowMode == rt.shadowMode
-      && blur == rt.blur
+      && blur == rt.blur && blurMode == rt.blurMode
       && gdi_font_scale == rt.gdi_font_scale)
         return true;
     return false;
@@ -257,6 +270,8 @@ TfontSettingsOSD::TfontSettingsOSD(TintStrColl *Icoll):TfontSettings(Icoll)
      _l("OSDfontShadowSize"), 8,
    IDFF_OSDfontShadowMode    ,&TfontSettings::shadowMode     ,0,3,_l(""),1,
      _l("OSDfontShadowMode"), 3,
+   IDFF_OSDfontBlurMode      ,&TfontSettings::blurMode       ,0,6,_l(""),1,
+     _l("OSDfontBlurMode"), 3,
    IDFF_OSDfontBlur          ,&TfontSettings::blur           ,0,2,_l(""),1,
      _l("OSDfontBlur"), 0,
    0
@@ -320,10 +335,12 @@ TfontSettingsSub::TfontSettingsSub(TintStrColl *Icoll):TfontSettings(Icoll)
      _l("fontOutlineAlpha"), 256,
    IDFF_fontShadowAlpha        ,&TfontSettings::shadowAlpha        ,0,256,_l(""),1,
      _l("fontShadowAlpha"), 128,
-   IDFF_fontShadowSize         ,&TfontSettings::shadowSize        ,0,50,_l(""),1,
+   IDFF_fontShadowSize         ,&TfontSettings::shadowSize         ,0,50,_l(""),1,
      _l("fontShadowSize"), 5,
    IDFF_fontShadowMode         ,&TfontSettings::shadowMode         ,0,3,_l(""),1,
      _l("fontShadowMode"), 2, // Default shadow mode to classic (like VSFilter)
+   IDFF_fontBlurMode           ,&TfontSettings::blurMode           ,0,6,_l(""),1,
+     _l("fontBlurMode"), 3,
    IDFF_fontBlur               ,&TfontSettings::blur               ,0,2,_l(""),1,
      _l("fontBlur"), 0,
    IDFF_fontShadowOverride     ,&TfontSettings::shadowOverride     ,0,0,_l(""),1,

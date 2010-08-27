@@ -36,6 +36,7 @@ public:
  static int getCharset(const char_t *name);
  static int GDI_charset_to_code_page(int charset);
  static const char_t *shadowModes[];
+ static const char_t *blurModes[];
 
  char_t name[260];
  int fontSettingsOverride;
@@ -53,7 +54,7 @@ public:
  int aspectAuto;
  int outlineWidth, outlineWidthOverride;
  int shadowSize, shadowMode, shadowOverride; // Subtitles shadow
- int blur;
+ int blur, blurMode;
  int scaleBorderAndShadowOverride;
  /**
   * gdi_font_scale: 4: for OSD. rendering_window is 4x5.

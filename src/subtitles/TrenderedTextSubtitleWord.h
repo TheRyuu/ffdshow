@@ -45,7 +45,7 @@ private:
     void drawShadow();
 
     void updateMask(int fader = 1 << 16, int create = 1, bool isAlpha = false, int bodyA = 256, int outlineA = 256, int shadowA = 256) const; // create: 0=update, 1=new, 2=update after copy (karaoke)
-    unsigned char* blur(unsigned char *src,stride_t Idx,stride_t Idy,int startx,int starty,int endx, int endy, bool mild);
+    unsigned char* blur(unsigned char *src,stride_t Idx,stride_t Idy,int startx,int starty,int endx, int endy);
     unsigned int getShadowSize(LONG fontHeight, unsigned int gdi_font_scale);
     CRect getOverhangPrivate();
 

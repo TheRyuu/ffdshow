@@ -52,6 +52,7 @@ struct TprintPrefs {
     int shadowMode, shadowAlpha; // Subtitles shadow
     double shadowSize;
     bool blur,outlineBlur;
+    int blurMode;
     int csp;
     double outlineWidth;
     Rational sar;

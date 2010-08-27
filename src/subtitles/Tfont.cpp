@@ -62,6 +62,7 @@ TprintPrefs::TprintPrefs(IffdshowBase *Ideci,const TfontSettings *IfontSettings)
      dvd=false;
      shadowMode = shadowSize = csp = 0;
      outlineWidth = 0;
+     blurMode = 0;
      blur=false;
      outlineBlur=false;
      clipdy=0;
@@ -94,7 +95,7 @@ bool TprintPrefs::operator != (const TprintPrefs &rt) const
       && dvd == rt.dvd
       && shadowMode == rt.shadowMode && shadowAlpha == rt.shadowAlpha
       && shadowSize == rt.shadowSize
-      && blur == rt.blur && outlineBlur == rt.outlineBlur
+      && blur == rt.blur && outlineBlur == rt.outlineBlur && blurMode == rt.blurMode
       && csp == rt.csp
       && outlineWidth == rt.outlineWidth
       && sar == rt.sar
