@@ -14,8 +14,6 @@
 
 	#ifdef ARCH_X86_64
 		#define HAVE_FAST_64BIT 1
-		#define HAVE_CMOV 1
-		#define HAVE_FAST_CMOV 1
 		#define HAVE_STRUCT_TIMESPEC 1
 	#else
 		#define ARCH_X86_32 1
@@ -36,8 +34,6 @@
 	#define ARCH_X86_32 0
 	#define ARCH_X86_64 0
 	#define HAVE_FAST_64BIT 0
-	#define HAVE_CMOV 0
-	#define HAVE_FAST_CMOV 0
 
 	#define restrict
 	#define __asm__ __asm
@@ -92,9 +88,11 @@
 #define HAVE_ALTIVEC_H 0
 #define HAVE_BIGENDIAN 0
 #define HAVE_BSWAP 1
+#define HAVE_CMOV 1
 #define HAVE_EBP_AVAILABLE 1
 #define HAVE_EBX_AVAILABLE 1
 #define HAVE_FAST_CLZ 0
+#define HAVE_FAST_CMOV 1
 #define HAVE_FAST_UNALIGNED 1
 #define HAVE_LOCAL_ALIGNED_16 1
 #define HAVE_LOCAL_ALIGNED_8 1
