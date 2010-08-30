@@ -754,8 +754,8 @@ STDMETHODIMP TffdshowDec::Count(DWORD* pcStreams)
    (TsubtitlesFile::subtitleFilesSearchMode)getParam2(IDFF_streamsSubFilesMode));
   *pcStreams += subtitleFiles.size();
  }
- if (pdummy)
-  CoTaskMemFree(pdummy);
+ if (pdummy) CoTaskMemFree(pdummy);
+
  // Subtitle streams
  extractExternalStreams();
  *pcStreams += externalSubtitleStreams.size();
