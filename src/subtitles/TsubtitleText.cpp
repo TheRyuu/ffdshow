@@ -1801,7 +1801,7 @@ TrenderedTextSubtitleWord* TsubtitleText::newWord(
     else
         prefs.blur=false;
 
-    if ((w->props.outlineWidth==-1 && fontSettings.opaqueBox) || (w->props.outlineWidth!=-1 && fontSettings.opaqueBox && fontSettings.fontSettingsOverride)) {
+    if ((w->props.outlineWidth==-1 && fontSettings.opaqueBox) || (w->props.outlineWidth > 0 && fontSettings.opaqueBox && fontSettings.fontSettingsOverride) || (w->props.outlineWidth > 0 && w->props.borderStyle == 3 && !fontSettings.fontSettingsOverride)) {
         prefs.opaqueBox=true;
     }
 
