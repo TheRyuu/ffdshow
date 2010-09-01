@@ -1590,7 +1590,7 @@ char_t *guid2str(const GUID &riid,char_t *dest,int bufsize)
 FOURCC hdr2fourcc(const BITMAPINFOHEADER *hdr,const GUID *subtype)
 {
  if (subtype && *subtype==MEDIASUBTYPE_QTRle) return FOURCC_QRLE;
- if (subtype && *subtype==MEDIASUBTYPE_QTRpza) return FOURCC_RPZA;
+ if ((subtype && *subtype==MEDIASUBTYPE_QTRpza) || (subtype && *subtype==MEDIASUBTYPE_AZPR)) return FOURCC_RPZA;
  if (hdr->biCompression==0)
   {
    if (subtype)

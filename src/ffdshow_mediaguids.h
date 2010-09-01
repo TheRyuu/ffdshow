@@ -170,6 +170,8 @@ DEFINE_GUID(FORMAT_RLTheora , 0xe69b30d1, 0x7d65, 0x4166, 0xb9, 0x90, 0x10, 0x3d
 #define FOURCC_SVQ3 mmioFOURCC('S','V','Q','3')
 #define FOURCC_QRLE mmioFOURCC('Q','R','L','E')
 #define FOURCC_RPZA mmioFOURCC('R','P','Z','A')
+#define FOURCC_AZPR 0x72707A61
+DEFINE_GUID_FOURCC(AZPR)
 
 //real
 #define FOURCC_RV10 mmioFOURCC('R','V','1','0')
