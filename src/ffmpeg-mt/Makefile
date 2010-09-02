@@ -56,6 +56,7 @@ SRCS_C=\
       $(LAVC_DIR)/x86/dsputil_mmx.c \
       $(LAVC_DIR)/x86/fdct_mmx.c \
       $(LAVC_DIR)/x86/h264_intrapred_init.c \
+      $(LAVC_DIR)/x86/h264dsp_mmx.c \
       $(LAVC_DIR)/x86/idct_mmx.c \
       $(LAVC_DIR)/x86/idct_mmx_xvid.c \
       $(LAVC_DIR)/x86/idct_sse2_xvid.c \
@@ -68,7 +69,7 @@ SRCS_YASM=\
       $(LAVC_DIR)/x86/h264_deblock_sse2.asm \
       $(LAVC_DIR)/x86/h264_idct_sse2.asm \
       $(LAVC_DIR)/x86/h264_intrapred.asm \
-      $(LAVC_DIR)/x86/h264_weight_sse2.asm \
+      $(LAVC_DIR)/x86/h264_weight.asm \
       $(LAVC_DIR)/x86/vp3dsp.asm \
       $(LAVC_DIR)/x86/x86util.asm
 
