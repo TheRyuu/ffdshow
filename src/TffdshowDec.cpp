@@ -86,7 +86,8 @@ TffdshowDec::TffdshowDec(TintStrColl *Ioptions,const TCHAR *name,LPUNKNOWN punk,
   IdefaultMerit),
  proppageid(Iproppageid),
  dec_char(punk,this),
- m_dirtyStop(false)
+ m_dirtyStop(false),
+ m_isCounting(false)
 {
  static const TintOptionT<TffdshowDec> iopts[]=
   {
@@ -703,12 +704,14 @@ bool TffdshowDec::streamsSort(const Tstream *s1,const Tstream *s2)
 STDMETHODIMP TffdshowDec::Count(DWORD* pcStreams)
 {
  if (!pcStreams) return E_POINTER;
- if (cfgDlgHwnd || !presetSettings)
+ if (cfgDlgHwnd || !presetSettings || m_isCounting)
  {
   *pcStreams=0;
   return S_OK;
  }
  *pcStreams=0;
+
+ m_isCounting = true; // To avoid self call
 
  for (Tstreams::iterator s=streams.begin();s!=streams.end();s++) delete *s;streams.clear();
  Ttranslate *tr;getTranslator(&tr);
@@ -761,6 +764,7 @@ STDMETHODIMP TffdshowDec::Count(DWORD* pcStreams)
  *pcStreams += externalSubtitleStreams.size();
  *pcStreams += externalAudioStreams.size();
  *pcStreams += externalEditionStreams.size();
+ m_isCounting = false;
  return S_OK;
 }
 STDMETHODIMP TffdshowDec::Info(long lIndex, AM_MEDIA_TYPE** ppmt, DWORD* pdwFlags, LCID* plcid, DWORD* pdwGroup, WCHAR** ppszName, IUnknown** ppObject, IUnknown** ppUnk)

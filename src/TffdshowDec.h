@@ -490,6 +490,7 @@ protected:
  TexternalStreams externalAudioStreams;
  TexternalStreams externalEditionStreams;
  CCritSec m_csSetExternalStream;
+ bool m_isCounting;
 };
 
 #endif
