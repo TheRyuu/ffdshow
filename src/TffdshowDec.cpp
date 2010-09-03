@@ -803,6 +803,7 @@ STDMETHODIMP TffdshowDec::Info(long lIndex, AM_MEDIA_TYPE** ppmt, DWORD* pdwFlag
  // Subtitles files
  if (lIndex >= firstSubFileIndex)
  {
+  if (ppmt) (*ppmt)->majortype=MEDIATYPE_Text;
   lIndex -= firstSubFileIndex;
   if (pdwGroup) *pdwGroup = 4; // Subtitle files (arbitrary group)
   const wchar_t *subtitleFilename = subtitleFiles[lIndex].c_str();
@@ -842,17 +843,20 @@ STDMETHODIMP TffdshowDec::Info(long lIndex, AM_MEDIA_TYPE** ppmt, DWORD* pdwFlag
  TexternalStream stream;
  if (lIndex < (long)externalAudioStreams.size())
  {
+  if (ppmt) (*ppmt)->majortype=MEDIATYPE_Audio;
   if (pdwGroup) *pdwGroup = 1; // Audio stream
   stream = externalAudioStreams[lIndex];
  }
  else if (lIndex < (long) (externalAudioStreams.size() + externalSubtitleStreams.size()))
  {
+  if (ppmt) (*ppmt)->majortype=MEDIATYPE_Text;
   lIndex -= externalAudioStreams.size();
   if (pdwGroup) *pdwGroup = 2; // Subtitles stream
   stream = externalSubtitleStreams[lIndex];
  }
  else // Editions
  {
+  if (ppmt) (*ppmt)->majortype=MEDIATYPE_Video;
   lIndex -= externalAudioStreams.size();
   lIndex -= externalSubtitleStreams.size();
   if (pdwGroup) *pdwGroup = 18; // Editions streams
