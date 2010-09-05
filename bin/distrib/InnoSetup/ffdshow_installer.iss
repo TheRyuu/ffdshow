@@ -367,10 +367,17 @@ Name: "whitelist";               Description: "{cm:tsk_whitelist}";             
 Name: "whitelist\prompt";        Description: "{cm:tsk_whitelistPrompt}";         Components: ffdshow; Flags: unchecked
 
 [Icons]
+#if is64bit
 Name: {group}\{cm:shrt_audioConfig} x64; Filename: {#= ff_sys}\rundll32.exe; Parameters: """{app}\ffdshow.ax"",configureAudio"; WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 4; Components: ffdshow
 Name: {group}\{cm:shrt_videoConfig} x64; Filename: {#= ff_sys}\rundll32.exe; Parameters: """{app}\ffdshow.ax"",configure"; WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 3; Components: ffdshow
 Name: {group}\{cm:shrt_videoDXVAConfig} x64; Filename: {#= ff_sys}\rundll32.exe; Parameters: """{app}\ffdshow.ax"",configureDXVA"; WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 10; Components: ffdshow
 Name: {group}\{cm:shrt_vfwConfig} x64; Filename: {#= ff_sys}\rundll32.exe; Parameters: """{#= ff_sys}\ff_vfw.dll"",configureVFW"; WorkingDir: {#= ff_sys}; IconFilename: {app}\ffdshow.ax; IconIndex: 5; Components: ffdshow\vfw
+#else
+Name: {group}\{cm:shrt_audioConfig}; Filename: {#= ff_sys}\rundll32.exe; Parameters: """{app}\ffdshow.ax"",configureAudio"; WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 4; Components: ffdshow
+Name: {group}\{cm:shrt_videoConfig}; Filename: {#= ff_sys}\rundll32.exe; Parameters: """{app}\ffdshow.ax"",configure"; WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 3; Components: ffdshow
+Name: {group}\{cm:shrt_videoDXVAConfig}; Filename: {#= ff_sys}\rundll32.exe; Parameters: """{app}\ffdshow.ax"",configureDXVA"; WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 10; Components: ffdshow
+Name: {group}\{cm:shrt_vfwConfig}; Filename: {#= ff_sys}\rundll32.exe; Parameters: """{#= ff_sys}\ff_vfw.dll"",configureVFW"; WorkingDir: {#= ff_sys}; IconFilename: {app}\ffdshow.ax; IconIndex: 5; Components: ffdshow\vfw
+#endif
 #if include_makeavis
 Name: {group}\makeAVIS; Filename: {app}\makeAVIS.exe; Components: ffdshow\makeavis
 #endif
