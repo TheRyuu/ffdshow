@@ -1321,12 +1321,12 @@ void dsputilenc_init_mmx(DSPContext* c, AVCodecContext *avctx)
 {
     int mm_flags = mm_support();
 
-    if (mm_flags & FF_MM_MMX) {
+    if (mm_flags & AV_CPU_FLAG_MMX) {
         const int dct_algo = avctx->dct_algo;
         if(dct_algo==FF_DCT_AUTO || dct_algo==FF_DCT_MMX){
-            if(mm_flags & FF_MM_SSE2){
+            if(mm_flags & AV_CPU_FLAG_SSE2){
                 c->fdct = ff_fdct_sse2;
-            }else if(mm_flags & FF_MM_MMX2){
+            }else if(mm_flags & AV_CPU_FLAG_MMX2){
                 c->fdct = ff_fdct_mmx2;
             }else{
                 c->fdct = ff_fdct_mmx;
@@ -1344,7 +1344,7 @@ void dsputilenc_init_mmx(DSPContext* c, AVCodecContext *avctx)
         c->hadamard8_diff[1]= hadamard8_diff_mmx;
 
         c->pix_norm1 = pix_norm1_mmx;
-        c->sse[0] = (mm_flags & FF_MM_SSE2) ? sse16_sse2 : sse16_mmx;
+        c->sse[0] = (mm_flags & AV_CPU_FLAG_SSE2) ? sse16_sse2 : sse16_mmx;
           c->sse[1] = sse8_mmx;
         c->vsad[4]= vsad_intra16_mmx;
 
@@ -1359,7 +1359,7 @@ void dsputilenc_init_mmx(DSPContext* c, AVCodecContext *avctx)
         }
         c->add_8x8basis= add_8x8basis_mmx;
 
-        if (mm_flags & FF_MM_MMX2) {
+        if (mm_flags & AV_CPU_FLAG_MMX2) {
             c->sum_abs_dctelem= sum_abs_dctelem_mmx2;
             c->hadamard8_diff[0]= hadamard8_diff16_mmx2;
             c->hadamard8_diff[1]= hadamard8_diff_mmx2;
@@ -1372,7 +1372,7 @@ void dsputilenc_init_mmx(DSPContext* c, AVCodecContext *avctx)
             c->sub_hfyu_median_prediction= sub_hfyu_median_prediction_mmx2;
         }
 
-        if(mm_flags & FF_MM_SSE2){
+        if(mm_flags & AV_CPU_FLAG_SSE2){
             c->get_pixels = get_pixels_sse2;
             c->sum_abs_dctelem= sum_abs_dctelem_sse2;
             c->hadamard8_diff[0]= hadamard8_diff16_sse2;
@@ -1380,7 +1380,7 @@ void dsputilenc_init_mmx(DSPContext* c, AVCodecContext *avctx)
         }
 
 #if HAVE_SSSE3
-        if(mm_flags & FF_MM_SSSE3){
+        if(mm_flags & AV_CPU_FLAG_SSSE3){
             if(!(avctx->flags & CODEC_FLAG_BITEXACT)){
                 c->try_8x8basis= try_8x8basis_ssse3;
             }
@@ -1391,7 +1391,7 @@ void dsputilenc_init_mmx(DSPContext* c, AVCodecContext *avctx)
         }
 #endif
 
-        if(mm_flags & FF_MM_3DNOW){
+        if(mm_flags & AV_CPU_FLAG_3DNOW){
             if(!(avctx->flags & CODEC_FLAG_BITEXACT)){
                 c->try_8x8basis= try_8x8basis_3dnow;
             }

@@ -197,17 +197,17 @@ Tlibavcodec::~Tlibavcodec()
 
 int Tlibavcodec::lavcCpuFlags(void)
 {
- int lavc_cpu_flags=FF_MM_FORCE; // reversed later
- if (Tconfig::cpu_flags&FF_CPU_MMX)    lavc_cpu_flags|=FF_MM_MMX;
- if (Tconfig::cpu_flags&FF_CPU_MMXEXT) lavc_cpu_flags|=FF_MM_MMXEXT;
- if (Tconfig::cpu_flags&FF_CPU_SSE)    lavc_cpu_flags|=FF_MM_SSE;
- if (Tconfig::cpu_flags&FF_CPU_SSE2)   lavc_cpu_flags|=FF_MM_SSE2;
- if (Tconfig::cpu_flags&FF_CPU_3DNOW)  lavc_cpu_flags|=FF_MM_3DNOW;
- if (Tconfig::cpu_flags&FF_CPU_3DNOWEXT)  lavc_cpu_flags|=FF_MM_3DNOWEXT;
- if (Tconfig::cpu_flags&FF_CPU_SSE3)   lavc_cpu_flags|=FF_MM_SSE3;
- if (Tconfig::cpu_flags&FF_CPU_SSSE3)  lavc_cpu_flags|=FF_MM_SSSE3;
- if (Tconfig::cpu_flags&FF_CPU_SSE41)  lavc_cpu_flags|=FF_MM_SSE4;
- if (Tconfig::cpu_flags&FF_CPU_SSE42)  lavc_cpu_flags|=FF_MM_SSE42;
+ int lavc_cpu_flags=AV_CPU_FLAG_FORCE; // reversed later
+ if (Tconfig::cpu_flags&FF_CPU_MMX)    lavc_cpu_flags|=AV_CPU_FLAG_MMX;
+ if (Tconfig::cpu_flags&FF_CPU_MMXEXT) lavc_cpu_flags|=AV_CPU_FLAG_MMX2;
+ if (Tconfig::cpu_flags&FF_CPU_SSE)    lavc_cpu_flags|=AV_CPU_FLAG_SSE;
+ if (Tconfig::cpu_flags&FF_CPU_SSE2)   lavc_cpu_flags|=AV_CPU_FLAG_SSE2;
+ if (Tconfig::cpu_flags&FF_CPU_3DNOW)  lavc_cpu_flags|=AV_CPU_FLAG_3DNOW;
+ if (Tconfig::cpu_flags&FF_CPU_3DNOWEXT)  lavc_cpu_flags|=AV_CPU_FLAG_3DNOWEXT;
+ if (Tconfig::cpu_flags&FF_CPU_SSE3)   lavc_cpu_flags|=AV_CPU_FLAG_SSE3;
+ if (Tconfig::cpu_flags&FF_CPU_SSSE3)  lavc_cpu_flags|=AV_CPU_FLAG_SSSE3;
+ if (Tconfig::cpu_flags&FF_CPU_SSE41)  lavc_cpu_flags|=AV_CPU_FLAG_SSE4;
+ if (Tconfig::cpu_flags&FF_CPU_SSE42)  lavc_cpu_flags|=AV_CPU_FLAG_SSE42;
  // reverse bits for AVCodecContext::dsp_mask.
  lavc_cpu_flags = ~lavc_cpu_flags;
  return lavc_cpu_flags;

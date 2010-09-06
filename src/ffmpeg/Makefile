@@ -11,6 +11,8 @@ CFLAGS+= -I. -I$(LAVC_DIR) -I$(LAVU_DIR) -I$(LAVCORE_DIR) -I../imgFilters -I$(ZL
 #CFLAGS+= -save-temps
 #CFLAGS+= -fverbose-asm
 
+YASMFLAGS+= -Pconfig.asm
+
 SRCS_C=\
       DllEntry.c \
       $(LAVC_DIR)/8bps.c \
@@ -279,7 +281,7 @@ SRCS_YASM=\
       $(LAVC_DIR)/x86/dsputil_yasm.asm \
       $(LAVC_DIR)/x86/fft_mmx.asm \
       $(LAVC_DIR)/x86/h264_chromamc.asm \
-      $(LAVC_DIR)/x86/h264_deblock_sse2.asm \
+      $(LAVC_DIR)/x86/h264_deblock.asm \
       $(LAVC_DIR)/x86/h264_idct_sse2.asm \
       $(LAVC_DIR)/x86/h264_intrapred.asm \
       $(LAVC_DIR)/x86/h264_weight.asm \
