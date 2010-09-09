@@ -2008,6 +2008,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavutil\cpu.c"
+				>
+			</File>
+			<File
+				RelativePath=".\libavutil\cpu.h"
+				>
+			</File>
+			<File
 				RelativePath=".\libavutil\crc.c"
 				>
 			</File>

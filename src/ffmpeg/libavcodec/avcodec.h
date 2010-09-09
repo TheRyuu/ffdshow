@@ -35,7 +35,7 @@
 
 #define LIBAVCODEC_VERSION_MAJOR 52
 #define LIBAVCODEC_VERSION_MINOR 87
-#define LIBAVCODEC_VERSION_MICRO  1
+#define LIBAVCODEC_VERSION_MICRO  5
 
 #define LIBAVCODEC_VERSION_INT  AV_VERSION_INT(LIBAVCODEC_VERSION_MAJOR, \
                                                LIBAVCODEC_VERSION_MINOR, \
@@ -46,6 +46,17 @@
 #define LIBAVCODEC_BUILD        LIBAVCODEC_VERSION_INT
 
 #define LIBAVCODEC_IDENT        "Lavc" AV_STRINGIFY(LIBAVCODEC_VERSION)
+
+/**
+ * Those FF_API_* defines are not part of public API.
+ * They may change, break or disappear at any time.
+ */
+#ifndef FF_API_PALETTE_CONTROL
+#define FF_API_PALETTE_CONTROL  (LIBAVCODEC_VERSION_MAJOR < 54)
+#endif
+#ifndef FF_API_MM_FLAGS
+#define FF_API_MM_FLAGS         (LIBAVCODEC_VERSION_MAJOR < 53)
+#endif
 
 #define AV_NOPTS_VALUE          INT64_C(0x8000000000000000)
 #define AV_TIME_BASE            1000000
@@ -1764,12 +1775,14 @@ typedef struct AVCodecContext {
      */
     int lmax;
 
+#if FF_API_PALETTE_CONTROL
     /**
      * palette control structure
      * - encoding: ??? (no palette-enabled encoder yet)
      * - decoding: Set by user.
      */
     struct AVPaletteControl *palctrl;
+#endif
 
     /**
      * noise reduction strength
@@ -3178,15 +3191,15 @@ void av_fast_malloc(void *ptr, unsigned int *size, unsigned int min_size);
  */
 attribute_deprecated void av_free_static(void);
 
+#if LIBAVCODEC_VERSION_MAJOR < 53
 /**
- * Copy image data in src_data to dst_data.
- *
- * @param dst_linesize linesizes for the image in dst_data
- * @param src_linesize linesizes for the image in src_data
+ * @deprecated Deprecated in favor of av_image_copy().
  */
+attribute_deprecated
 void av_picture_data_copy(uint8_t *dst_data[4], int dst_linesize[4],
                           uint8_t *src_data[4], int src_linesize[4],
                           enum PixelFormat pix_fmt, int width, int height);
+#endif
 
 /**
  * Copy image src to dst. Wraps av_picture_data_copy() above.

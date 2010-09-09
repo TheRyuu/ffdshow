@@ -22,6 +22,7 @@
  * MMX optimization by Nick Kurshev <nickols_k@mail.ru>
  */
 
+#include "libavutil/cpu.h"
 #include "libavutil/x86_cpu.h"
 #include "libavcodec/dsputil.h"
 #include "libavcodec/mpegvideo.h"
@@ -1319,7 +1320,7 @@ DCT_SAD_FUNC(ssse3)
 
 void dsputilenc_init_mmx(DSPContext* c, AVCodecContext *avctx)
 {
-    int mm_flags = mm_support();
+    int mm_flags = av_get_cpu_flags();
 
     if (mm_flags & AV_CPU_FLAG_MMX) {
         const int dct_algo = avctx->dct_algo;

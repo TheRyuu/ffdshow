@@ -27,6 +27,7 @@
  * DSP utils
  */
 
+#include "libavcore/imgutils.h"
 #include "avcodec.h"
 #include "dsputil.h"
 #include "simple_idct.h"
@@ -116,6 +117,9 @@ void ff_init_scantable(uint8_t *permutation, ScanTable *st, const uint8_t *src_s
         int j;
         j = src_scantable[i];
         st->permutated[i] = permutation[j];
+#if ARCH_PPC
+        st->inverse[j] = i;
+#endif
     }
 
     end=-1;

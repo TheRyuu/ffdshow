@@ -1681,7 +1681,7 @@ void ff_vp3_idct_add_sse2(uint8_t *dest, int line_size, DCTELEM *block);
 
 void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
 {
-    int mm_flags = mm_support();
+    int mm_flags = av_get_cpu_flags();
 
     if (avctx->dsp_mask) {
         if (avctx->dsp_mask & AV_CPU_FLAG_FORCE)
