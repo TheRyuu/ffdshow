@@ -1225,7 +1225,7 @@ static inline void RENAME(rgb16to32)(const uint8_t *src, uint8_t *dst, long src_
     }
 }
 
-static inline void RENAME(rgb32tobgr32)(const uint8_t *src, uint8_t *dst, long src_size)
+static inline void RENAME(shuffle_bytes_2103)(const uint8_t *src, uint8_t *dst, long src_size)
 {
     x86_reg idx = 15 - src_size;
     const uint8_t *s = src-idx;
@@ -1751,16 +1751,6 @@ static inline void RENAME(yuy2toyv12)(const uint8_t *src, uint8_t *ydst, uint8_t
                      SFENCE"     \n\t"
                      :::"memory");
 #endif
-}
-
-static inline void RENAME(yvu9toyv12)(const uint8_t *ysrc, const uint8_t *usrc, const uint8_t *vsrc,
-                                      uint8_t *ydst, uint8_t *udst, uint8_t *vdst,
-                                      long width, long height, long lumStride, long chromStride)
-{
-    /* Y Plane */
-    memcpy(ydst, ysrc, width*height);
-
-    /* XXX: implement upscaling for U,V */
 }
 
 static inline void RENAME(planar2x)(const uint8_t *src, uint8_t *dst, long srcWidth, long srcHeight, long srcStride, long dstStride)
@@ -2922,7 +2912,7 @@ static inline void RENAME(rgb2rgb_init)(void)
     rgb24to15       = RENAME(rgb24to15);
     rgb24to16       = RENAME(rgb24to16);
     rgb24tobgr24    = RENAME(rgb24tobgr24);
-    rgb32tobgr32    = RENAME(rgb32tobgr32);
+    shuffle_bytes_2103 = RENAME(shuffle_bytes_2103);
     rgb32tobgr16    = RENAME(rgb32tobgr16);
     rgb32tobgr15    = RENAME(rgb32tobgr15);
     yv12toyuy2      = RENAME(yv12toyuy2);
@@ -2930,7 +2920,6 @@ static inline void RENAME(rgb2rgb_init)(void)
     yuv422ptoyuy2   = RENAME(yuv422ptoyuy2);
     yuv422ptouyvy   = RENAME(yuv422ptouyvy);
     yuy2toyv12      = RENAME(yuy2toyv12);
-//    yvu9toyv12      = RENAME(yvu9toyv12);
     planar2x        = RENAME(planar2x);
     rgb24toyv12     = RENAME(rgb24toyv12);
     interleaveBytes = RENAME(interleaveBytes);

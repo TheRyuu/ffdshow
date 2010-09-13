@@ -44,6 +44,16 @@ SRCS_C=\
     $(LAVC_DIR)/utils.c \
     $(LAVC_DIR)/vp3dsp.c \
     \
+    $(LAVC_DIR)/x86/dsputil_mmx.c \
+    $(LAVC_DIR)/x86/fdct_mmx.c \
+    $(LAVC_DIR)/x86/h264_intrapred_init.c \
+    $(LAVC_DIR)/x86/h264dsp_mmx.c \
+    $(LAVC_DIR)/x86/idct_mmx.c \
+    $(LAVC_DIR)/x86/idct_mmx_xvid.c \
+    $(LAVC_DIR)/x86/idct_sse2_xvid.c \
+    $(LAVC_DIR)/x86/mpegvideo_mmx.c \
+    $(LAVC_DIR)/x86/simple_idct_mmx.c \
+    \
     $(LAVU_DIR)/cpu.c \
     $(LAVU_DIR)/intfloat_readwrite.c \
     $(LAVU_DIR)/inverse.c \
@@ -53,18 +63,11 @@ SRCS_C=\
     $(LAVU_DIR)/pixdesc.c \
     $(LAVU_DIR)/rational.c \
     \
-    $(LAVCORE_DIR)/imgutils.c \
-    $(LAVCORE_DIR)/utils.c \
+    $(LAVU_DIR)/x86/cpu.c \
     \
-    $(LAVC_DIR)/x86/dsputil_mmx.c \
-    $(LAVC_DIR)/x86/fdct_mmx.c \
-    $(LAVC_DIR)/x86/h264_intrapred_init.c \
-    $(LAVC_DIR)/x86/h264dsp_mmx.c \
-    $(LAVC_DIR)/x86/idct_mmx.c \
-    $(LAVC_DIR)/x86/idct_mmx_xvid.c \
-    $(LAVC_DIR)/x86/idct_sse2_xvid.c \
-    $(LAVC_DIR)/x86/mpegvideo_mmx.c \
-    $(LAVC_DIR)/x86/simple_idct_mmx.c
+    $(LAVCORE_DIR)/imgutils.c \
+    $(LAVCORE_DIR)/utils.c
+
 
 SRCS_YASM=\
     $(LAVC_DIR)/x86/dsputil_yasm.asm \

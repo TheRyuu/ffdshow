@@ -48,7 +48,7 @@ void (*rgb16to32)(const uint8_t *src, uint8_t *dst, long src_size);
 void (*rgb24tobgr24)(const uint8_t *src, uint8_t *dst, long src_size);
 void (*rgb24to16)(const uint8_t *src, uint8_t *dst, long src_size);
 void (*rgb24to15)(const uint8_t *src, uint8_t *dst, long src_size);
-void (*rgb32tobgr32)(const uint8_t *src, uint8_t *dst, long src_size);
+void (*shuffle_bytes_2103)(const uint8_t *src, uint8_t *dst, long src_size);
 void (*rgb32tobgr16)(const uint8_t *src, uint8_t *dst, long src_size);
 void (*rgb32tobgr15)(const uint8_t *src, uint8_t *dst, long src_size);
 
@@ -176,11 +176,20 @@ DECLARE_ASM_CONST(8, uint64_t, blue_15mask)  = 0x0000001f0000001fULL;
 #define RENAME(a) a ## _MMX2
 #include "rgb2rgb_template.c"
 
+//SSE2 versions
+#undef RENAME
+#undef HAVE_SSE2
+#define HAVE_SSE2 1
+#define RENAME(a) a ## _SSE2
+#include "rgb2rgb_template.c"
+
 //3DNOW versions
 #undef RENAME
 #undef HAVE_MMX2
+#undef HAVE_SSE2
 #undef HAVE_AMD3DNOW
 #define HAVE_MMX2 0
+#define HAVE_SSE2 0
 #define HAVE_AMD3DNOW 1
 #define RENAME(a) a ## _3DNOW
 #include "rgb2rgb_template.c"
@@ -197,7 +206,9 @@ DECLARE_ASM_CONST(8, uint64_t, blue_15mask)  = 0x0000001f0000001fULL;
 void sws_rgb2rgb_init(int flags)
 {
 #if HAVE_MMX2 || HAVE_AMD3DNOW || HAVE_MMX
-    if (flags & SWS_CPU_CAPS_MMX2)
+    if (flags & SWS_CPU_CAPS_SSE2)
+        rgb2rgb_init_SSE2();
+    else if (flags & SWS_CPU_CAPS_MMX2)
         rgb2rgb_init_MMX2();
     else if (flags & SWS_CPU_CAPS_3DNOW)
         rgb2rgb_init_3DNOW();
@@ -543,7 +554,6 @@ void shuffle_bytes_##a##b##c##d(const uint8_t *src, uint8_t *dst, long src_size)
 
 DEFINE_SHUFFLE_BYTES(0, 3, 2, 1);
 DEFINE_SHUFFLE_BYTES(1, 2, 3, 0);
-DEFINE_SHUFFLE_BYTES(2, 1, 0, 3);
 DEFINE_SHUFFLE_BYTES(3, 0, 1, 2);
 DEFINE_SHUFFLE_BYTES(3, 2, 1, 0);
 

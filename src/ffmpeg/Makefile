@@ -210,42 +210,6 @@ SRCS_C=\
     $(LAVC_DIR)/amr_float/interf_dec.c \
     $(LAVC_DIR)/amr_float/sp_dec.c \
     \
-    $(LAVU_DIR)/avstring.c \
-    $(LAVU_DIR)/cpu.c \
-    $(LAVU_DIR)/crc.c \
-    $(LAVU_DIR)/eval.c \
-    $(LAVU_DIR)/intfloat_readwrite.c \
-    $(LAVU_DIR)/inverse.c \
-    $(LAVU_DIR)/lfg.c \
-    $(LAVU_DIR)/lls.c \
-    $(LAVU_DIR)/log.c \
-    $(LAVU_DIR)/lzo.c \
-    $(LAVU_DIR)/mathematics.c \
-    $(LAVU_DIR)/md5.c \
-    $(LAVU_DIR)/mem.c \
-    $(LAVU_DIR)/pixdesc.c \
-    $(LAVU_DIR)/random_seed.c \
-    $(LAVU_DIR)/rational.c \
-    \
-    $(LAVCORE_DIR)/imgutils.c \
-    $(LAVCORE_DIR)/utils.c \
-    \
-    $(ZLIB_DIR)/adler32.c \
-    $(ZLIB_DIR)/compress.c \
-    $(ZLIB_DIR)/crc32.c \
-    $(ZLIB_DIR)/deflate.c \
-    $(ZLIB_DIR)/gzclose.c \
-    $(ZLIB_DIR)/gzlib.c \
-    $(ZLIB_DIR)/gzread.c \
-    $(ZLIB_DIR)/gzwrite.c \
-    $(ZLIB_DIR)/infback.c \
-    $(ZLIB_DIR)/inffast.c \
-    $(ZLIB_DIR)/inflate.c \
-    $(ZLIB_DIR)/inftrees.c \
-    $(ZLIB_DIR)/trees.c \
-    $(ZLIB_DIR)/uncompr.c \
-    $(ZLIB_DIR)/zutil.c \
-    \
     $(LAVC_DIR)/x86/cavsdsp_mmx.c \
     $(LAVC_DIR)/x86/dct32_sse.c \
     $(LAVC_DIR)/x86/dsputil_mmx.c \
@@ -269,6 +233,28 @@ SRCS_C=\
     $(LAVC_DIR)/x86/vp56dsp_init.c \
     $(LAVC_DIR)/x86/vp8dsp-init.c \
     \
+    $(LAVU_DIR)/avstring.c \
+    $(LAVU_DIR)/cpu.c \
+    $(LAVU_DIR)/crc.c \
+    $(LAVU_DIR)/eval.c \
+    $(LAVU_DIR)/intfloat_readwrite.c \
+    $(LAVU_DIR)/inverse.c \
+    $(LAVU_DIR)/lfg.c \
+    $(LAVU_DIR)/lls.c \
+    $(LAVU_DIR)/log.c \
+    $(LAVU_DIR)/lzo.c \
+    $(LAVU_DIR)/mathematics.c \
+    $(LAVU_DIR)/md5.c \
+    $(LAVU_DIR)/mem.c \
+    $(LAVU_DIR)/pixdesc.c \
+    $(LAVU_DIR)/random_seed.c \
+    $(LAVU_DIR)/rational.c \
+    \
+    $(LAVU_DIR)/x86/cpu.c \
+    \
+    $(LAVCORE_DIR)/imgutils.c \
+    $(LAVCORE_DIR)/utils.c \
+    \
     $(LAVS_DIR)/rgb2rgb.c \
     $(LAVS_DIR)/swscale.c \
     $(LAVS_DIR)/swutils.c \
@@ -276,7 +262,23 @@ SRCS_C=\
     $(LAVS_DIR)/sww32thread.c \
     $(LAVS_DIR)/x86/yuv2rgb_mmx.c \
     \
-    $(LAVP_DIR)/postprocess.c
+    $(LAVP_DIR)/postprocess.c \
+    \
+    $(ZLIB_DIR)/adler32.c \
+    $(ZLIB_DIR)/compress.c \
+    $(ZLIB_DIR)/crc32.c \
+    $(ZLIB_DIR)/deflate.c \
+    $(ZLIB_DIR)/gzclose.c \
+    $(ZLIB_DIR)/gzlib.c \
+    $(ZLIB_DIR)/gzread.c \
+    $(ZLIB_DIR)/gzwrite.c \
+    $(ZLIB_DIR)/infback.c \
+    $(ZLIB_DIR)/inffast.c \
+    $(ZLIB_DIR)/inflate.c \
+    $(ZLIB_DIR)/inftrees.c \
+    $(ZLIB_DIR)/trees.c \
+    $(ZLIB_DIR)/uncompr.c \
+    $(ZLIB_DIR)/zutil.c
 
 SRCS_YASM=\
     $(LAVC_DIR)/x86/dsputil_yasm.asm \
