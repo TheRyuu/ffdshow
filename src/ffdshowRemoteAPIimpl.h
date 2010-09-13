@@ -46,6 +46,7 @@ private:
  bool streamsLoaded;
  bool foundHaali;
  bool noFFRWOSD;
+ CCritSec m_csRemote;
  Ttranslate *tr;
  int currentSubStream, currentAudioStream;
 public:

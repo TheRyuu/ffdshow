@@ -378,6 +378,7 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
         }
         return FALSE;
  }
+ CAutoLock lock(&m_csRemote);
 
  switch(msg)
  {
@@ -393,7 +394,7 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
             cd.cbData = sizeof(char_t)*(strlen(paramStr)+1);
             DWORD_PTR ret = 0;
             SendMessageTimeout((HWND)wprm, WM_COPYDATA, lprm, (LPARAM)&cd, 
-                SMTO_ABORTIFHUNG, 1500, &ret);
+                SMTO_ABORTIFHUNG, 750, &ret);
             return TRUE;
         }
     case MSG_GET_CURRENT_SUBTITLES:
@@ -409,7 +410,7 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
             cd.cbData = sizeof(char_t)*(strlen(paramStr)+1);
             DWORD_PTR ret = 0;
             SendMessageTimeout((HWND)wprm, WM_COPYDATA, MSG_GET_CURRENT_SUBTITLES, (LPARAM)&cd, 
-                SMTO_ABORTIFHUNG, 1500, &ret);
+                SMTO_ABORTIFHUNG, 750, &ret);
             return TRUE;
         }
     case MSG_GET_PRESETLIST:
@@ -443,7 +444,7 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
             cd.cbData = sizeof(char_t)*(strlen(presetList)+1);
             DWORD_PTR ret = 0;
             SendMessageTimeout((HWND)wprm, WM_COPYDATA, MSG_GET_PRESETLIST, (LPARAM)&cd, 
-                SMTO_ABORTIFHUNG, 1500, &ret);
+                SMTO_ABORTIFHUNG, 750, &ret);
             return TRUE;
         }
     case MSG_GET_SOURCEFILE:
@@ -456,7 +457,7 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
         cd.cbData = sizeof(char_t)*(strlen(fileName)+1);
         DWORD_PTR ret = 0;
         SendMessageTimeout((HWND)wprm, WM_COPYDATA, MSG_GET_SOURCEFILE, (LPARAM)&cd, 
-            SMTO_ABORTIFHUNG, 2000, &ret);
+            SMTO_ABORTIFHUNG, 750, &ret);
         return TRUE;
       }
     case MSG_GET_SUBTITLEFILESLIST:
@@ -498,7 +499,7 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
             cd.cbData = sizeof(char_t)*(strlen(filesList)+1);
             DWORD_PTR ret = 0;
             SendMessageTimeout((HWND)wprm, WM_COPYDATA, MSG_GET_SUBTITLEFILESLIST, (LPARAM)&cd, 
-                SMTO_ABORTIFHUNG, 1500, &ret);
+                SMTO_ABORTIFHUNG, 750, &ret);
             //SendMessage((HWND)wprm, WM_COPYDATA, MSG_GET_SUBTITLEFILESLIST, (LPARAM)&cd);
         }
         return TRUE;
@@ -536,7 +537,7 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
             cd.cbData = sizeof(char_t)*(strlen(stringList)+1);
             DWORD_PTR ret = 0;
             SendMessageTimeout((HWND)wprm, WM_COPYDATA, MSG_GET_CHAPTERSLIST, (LPARAM)&cd, 
-                SMTO_ABORTIFHUNG, 1500, &ret);
+                SMTO_ABORTIFHUNG, 750, &ret);
             return TRUE;
         }
         case MSG_GET_AUDIOSTREAMSLIST:
@@ -578,7 +579,7 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
             DWORD_PTR ret = 0;
             //DPRINTF(_l("Sending : %s"), stringList);
             SendMessageTimeout((HWND)wprm, WM_COPYDATA, MSG_GET_AUDIOSTREAMSLIST, (LPARAM)&cd, 
-                SMTO_ABORTIFHUNG, 1500, &ret);
+                SMTO_ABORTIFHUNG, 750, &ret);
             return TRUE;
         }
         case MSG_GET_SUBTITLESTREAMSLIST:
@@ -620,7 +621,7 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
             DWORD_PTR ret = 0;
             //DPRINTF(_l("Sending : %s"), stringList);
             SendMessageTimeout((HWND)wprm, WM_COPYDATA, MSG_GET_SUBTITLESTREAMSLIST, (LPARAM)&cd, 
-                SMTO_ABORTIFHUNG, 1500, &ret);
+                SMTO_ABORTIFHUNG, 750, &ret);
             return TRUE;
         }
  }
