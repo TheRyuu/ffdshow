@@ -53,7 +53,7 @@ const byte ZZ_SCAN8[64] =
    58, 59, 52, 45, 38, 31, 39, 46, 53, 60, 61, 54, 47, 55, 62, 63
 };
 
-int IsVista()
+int IsVistaOrAbove()
 {
 	OSVERSIONINFO osver;
 
@@ -127,6 +127,7 @@ int FFH264CheckCompatibility(int nWidth, int nHeight, struct AVCodecContext* pAV
 	int video_is_level51 = 0;
 	int no_level51_support = 1;
 	int too_much_ref_frames = 0;
+	int profile_higher_than_high = 0;
 	int max_ref_frames = 0;
 	int max_ref_frames_dpb41 = min(11, 8388608/(nWidth * nHeight) );
 
@@ -141,12 +142,13 @@ int FFH264CheckCompatibility(int nWidth, int nHeight, struct AVCodecContext* pAV
 	if (cur_sps != NULL)
 	{
 		video_is_level51 = cur_sps->level_idc >= 51 ? 1 : 0;
+		profile_higher_than_high = (cur_sps->profile_idc > 100);
 		max_ref_frames = max_ref_frames_dpb41; // default value is calculate
 
 		if (nPCIVendor == PCIV_nVidia)
 		{
 			// nVidia cards support level 5.1 since drivers v6.14.11.7800 for XP and drivers v7.15.11.7800 for Vista/7
-			if (IsVista())
+			if (IsVistaOrAbove())
 			{
 				if (DriverVersionCheck(VideoDriverVersion, 7, 15, 11, 7800))
 				{
@@ -192,7 +194,7 @@ int FFH264CheckCompatibility(int nWidth, int nHeight, struct AVCodecContext* pAV
 		}
 	}
 
-	return (video_is_level51 * no_level51_support * DXVA_UNSUPPORTED_LEVEL) + (too_much_ref_frames * DXVA_TOO_MUCH_REF_FRAMES);
+	return (video_is_level51 * no_level51_support * DXVA_UNSUPPORTED_LEVEL) + (too_much_ref_frames * DXVA_TOO_MANY_REF_FRAMES) + (profile_higher_than_high * DXVA_PROFILE_HIGHER_THAN_HIGH);
 }
 
 
@@ -241,7 +243,7 @@ HRESULT FFH264BuildPicParams (DXVA_PicParams_H264* pDXVAPicParams, DXVA_Qmatrix_
 	H264Context*			h			= (H264Context*) pAVCtx->priv_data;
 	SPS*					cur_sps;
 	PPS*					cur_pps;
-    MpegEncContext* const	s = &h->s;
+	MpegEncContext* const	s = &h->s;
 	int						field_pic_flag;
 	HRESULT					hr = E_FAIL;
 
@@ -255,49 +257,49 @@ HRESULT FFH264BuildPicParams (DXVA_PicParams_H264* pDXVAPicParams, DXVA_Qmatrix_
 		*nFieldType = h->s.picture_structure;
 		if (h->sps.pic_struct_present_flag)
 		{
-            switch (h->sei_pic_struct)
-            {
-            case SEI_PIC_STRUCT_TOP_FIELD:
-            case SEI_PIC_STRUCT_TOP_BOTTOM:
-            case SEI_PIC_STRUCT_TOP_BOTTOM_TOP:
+			switch (h->sei_pic_struct)
+			{
+			case SEI_PIC_STRUCT_TOP_FIELD:
+			case SEI_PIC_STRUCT_TOP_BOTTOM:
+			case SEI_PIC_STRUCT_TOP_BOTTOM_TOP:
 				*nFieldType = PICT_TOP_FIELD;
-                break;
-            case SEI_PIC_STRUCT_BOTTOM_FIELD:
-            case SEI_PIC_STRUCT_BOTTOM_TOP:
-            case SEI_PIC_STRUCT_BOTTOM_TOP_BOTTOM:
+				break;
+			case SEI_PIC_STRUCT_BOTTOM_FIELD:
+			case SEI_PIC_STRUCT_BOTTOM_TOP:
+			case SEI_PIC_STRUCT_BOTTOM_TOP_BOTTOM:
 				*nFieldType = PICT_BOTTOM_FIELD;
-                break;
-            case SEI_PIC_STRUCT_FRAME_DOUBLING:
-            case SEI_PIC_STRUCT_FRAME_TRIPLING:
-            case SEI_PIC_STRUCT_FRAME:
+				break;
+			case SEI_PIC_STRUCT_FRAME_DOUBLING:
+			case SEI_PIC_STRUCT_FRAME_TRIPLING:
+			case SEI_PIC_STRUCT_FRAME:
 				*nFieldType = PICT_FRAME;
-                break;
+				break;
 			}
 		}
 
 		*nSliceType = h->slice_type;
 
 		if (cur_sps->mb_width==0 || cur_sps->mb_height==0) return VFW_E_INVALID_FILE_FORMAT;
-		pDXVAPicParams->wFrameWidthInMbsMinus1			= cur_sps->mb_width  - 1;		// pic_width_in_mbs_minus1;
-		pDXVAPicParams->wFrameHeightInMbsMinus1			= cur_sps->mb_height * (2 - cur_sps->frame_mbs_only_flag) - 1;		// pic_height_in_map_units_minus1;
-		pDXVAPicParams->num_ref_frames					= cur_sps->ref_frame_count;		// num_ref_frames;
-		pDXVAPicParams->field_pic_flag					= field_pic_flag;
-		pDXVAPicParams->MbaffFrameFlag					= (h->sps.mb_aff && (field_pic_flag==0));
-		pDXVAPicParams->residual_colour_transform_flag	= cur_sps->residual_color_transform_flag;
-		pDXVAPicParams->sp_for_switch_flag				= h->sp_for_switch_flag;
-		pDXVAPicParams->chroma_format_idc				= cur_sps->chroma_format_idc;
-		pDXVAPicParams->RefPicFlag						= h->ref_pic_flag;
-		pDXVAPicParams->constrained_intra_pred_flag		= cur_pps->constrained_intra_pred;
-		pDXVAPicParams->weighted_pred_flag				= cur_pps->weighted_pred;
-		pDXVAPicParams->weighted_bipred_idc				= cur_pps->weighted_bipred_idc;
-		pDXVAPicParams->frame_mbs_only_flag				= cur_sps->frame_mbs_only_flag;
-		pDXVAPicParams->transform_8x8_mode_flag			= cur_pps->transform_8x8_mode;
-		pDXVAPicParams->MinLumaBipredSize8x8Flag		= h->sps.level_idc >= 31;
-		pDXVAPicParams->IntraPicFlag					= (h->slice_type == FF_I_TYPE );
+		pDXVAPicParams->wFrameWidthInMbsMinus1					= cur_sps->mb_width  - 1;		// pic_width_in_mbs_minus1;
+		pDXVAPicParams->wFrameHeightInMbsMinus1					= cur_sps->mb_height * (2 - cur_sps->frame_mbs_only_flag) - 1;		// pic_height_in_map_units_minus1;
+		pDXVAPicParams->num_ref_frames							= cur_sps->ref_frame_count;		// num_ref_frames;
+		pDXVAPicParams->field_pic_flag							= field_pic_flag;
+		pDXVAPicParams->MbaffFrameFlag							= (h->sps.mb_aff && (field_pic_flag==0));
+		pDXVAPicParams->residual_colour_transform_flag			= cur_sps->residual_color_transform_flag;
+		pDXVAPicParams->sp_for_switch_flag						= h->sp_for_switch_flag;
+		pDXVAPicParams->chroma_format_idc						= cur_sps->chroma_format_idc;
+		pDXVAPicParams->RefPicFlag								= h->ref_pic_flag;
+		pDXVAPicParams->constrained_intra_pred_flag				= cur_pps->constrained_intra_pred;
+		pDXVAPicParams->weighted_pred_flag						= cur_pps->weighted_pred;
+		pDXVAPicParams->weighted_bipred_idc						= cur_pps->weighted_bipred_idc;
+		pDXVAPicParams->frame_mbs_only_flag						= cur_sps->frame_mbs_only_flag;
+		pDXVAPicParams->transform_8x8_mode_flag					= cur_pps->transform_8x8_mode;
+		pDXVAPicParams->MinLumaBipredSize8x8Flag				= h->sps.level_idc >= 31;
+		pDXVAPicParams->IntraPicFlag							= (h->slice_type == FF_I_TYPE );
 
-		pDXVAPicParams->bit_depth_luma_minus8			= cur_sps->bit_depth_luma   - 8;	// bit_depth_luma_minus8
-		pDXVAPicParams->bit_depth_chroma_minus8			= cur_sps->bit_depth_chroma - 8;	// bit_depth_chroma_minus8
-	//	pDXVAPicParams->StatusReportFeedbackNumber		= SET IN DecodeFrame;
+		pDXVAPicParams->bit_depth_luma_minus8					= cur_sps->bit_depth_luma   - 8;	// bit_depth_luma_minus8
+		pDXVAPicParams->bit_depth_chroma_minus8					= cur_sps->bit_depth_chroma - 8;	// bit_depth_chroma_minus8
+	//	pDXVAPicParams->StatusReportFeedbackNumber				= SET IN DecodeFrame;
 
 
 	//	pDXVAPicParams->CurrFieldOrderCnt						= SET IN UpdateRefFramesList;
@@ -305,7 +307,7 @@ HRESULT FFH264BuildPicParams (DXVA_PicParams_H264* pDXVAPicParams, DXVA_Qmatrix_
 	//	pDXVAPicParams->FrameNumList							= SET IN UpdateRefFramesList;
 	//	pDXVAPicParams->UsedForReferenceFlags					= SET IN UpdateRefFramesList;
 	//	pDXVAPicParams->NonExistingFrameFlags
-		pDXVAPicParams->frame_num						= h->frame_num;
+		pDXVAPicParams->frame_num								= h->frame_num;
 	//	pDXVAPicParams->SliceGroupMap
 
 
@@ -382,16 +384,16 @@ void FFH264UpdateRefFramesList (DXVA_PicParams_H264* pDXVAPicParams, struct AVCo
 
 	for(i=0; i<16; i++)
 	{
-        if (i < h->short_ref_count)
+		if (i < h->short_ref_count)
 		{
 			// Short list reference frames
-            pic				= h->short_ref[h->short_ref_count - i - 1];
+			pic				= h->short_ref[h->short_ref_count - i - 1];
 			AssociatedFlag	= pic->long_ref != 0;
 		}
-        else if (i >= h->short_ref_count && i < h->long_ref_count)
+		else if (i >= h->short_ref_count && i < h->long_ref_count)
 		{
 			// Long list reference frames
-            pic			= h->short_ref[h->short_ref_count + h->long_ref_count - i - 1];
+			pic				= h->short_ref[h->short_ref_count + h->long_ref_count - i - 1];
 			AssociatedFlag	= 1;
 		}
 		else
@@ -422,7 +424,7 @@ void FFH264UpdateRefFramesList (DXVA_PicParams_H264* pDXVAPicParams, struct AVCo
 
 			pDXVAPicParams->RefFrameList[i].AssociatedFlag	= AssociatedFlag;
 			pDXVAPicParams->RefFrameList[i].Index7Bits		= (UCHAR)pic->opaque;
-        }
+		}
 		else
 		{
 			pDXVAPicParams->FrameNumList[i]					= 0;
@@ -460,32 +462,32 @@ BOOL FFH264IsRefFrameInUse (int nFrameNum, struct AVCodecContext* pAVCtx)
 void FF264UpdateRefFrameSliceLong(DXVA_PicParams_H264* pDXVAPicParams, DXVA_Slice_H264_Long* pSlice, struct AVCodecContext* pAVCtx)
 {
 	H264Context*			h			= (H264Context*) pAVCtx->priv_data;
-    MpegEncContext* const	s = &h->s;
+	MpegEncContext* const	s = &h->s;
 	HRESULT					hr = E_FAIL;
 	unsigned int			i,j,k;
 
 	for(i=0; i<32; i++)
-	{ pSlice->RefPicList[0][i].AssociatedFlag = 1;
-	  pSlice->RefPicList[0][i].bPicEntry = 255;
-	  pSlice->RefPicList[0][i].Index7Bits = 127;
-	  pSlice->RefPicList[1][i].AssociatedFlag = 1;
-	  pSlice->RefPicList[1][i].bPicEntry = 255;
-	  pSlice->RefPicList[1][i].Index7Bits = 127;
+	{	pSlice->RefPicList[0][i].AssociatedFlag = 1;
+		pSlice->RefPicList[0][i].bPicEntry = 255;
+		pSlice->RefPicList[0][i].Index7Bits = 127;
+		pSlice->RefPicList[1][i].AssociatedFlag = 1;
+		pSlice->RefPicList[1][i].bPicEntry = 255;
+		pSlice->RefPicList[1][i].Index7Bits = 127;
 	}
 
 	if(h->slice_type != FF_I_TYPE && h->slice_type != FF_SI_TYPE)
 	{
-		if(h->ref_count[0] > 0){
-			for(i=0; i < h->ref_count[0]; i++){
-			   pSlice->RefPicList[0][i].Index7Bits = FFH264FindRefFrameIndex (h->ref_list[0][i].frame_num, pDXVAPicParams);
-			   pSlice->RefPicList[0][i].AssociatedFlag = 0;
-			   if((h->s.picture_structure != PICT_FRAME)){
-			     if((h->sei_pic_struct == SEI_PIC_STRUCT_BOTTOM_FIELD) ||
-					   (h->sei_pic_struct == SEI_PIC_STRUCT_TOP_BOTTOM) ||
-					   (h->sei_pic_struct == SEI_PIC_STRUCT_TOP_BOTTOM_TOP)){
-						   pSlice->RefPicList[0][i].AssociatedFlag = 1;
-				   }
-			   }
+		if(h->ref_count[0] > 0) {
+			for(i=0; i < h->ref_count[0]; i++) {
+				pSlice->RefPicList[0][i].Index7Bits = FFH264FindRefFrameIndex (h->ref_list[0][i].frame_num, pDXVAPicParams);
+				pSlice->RefPicList[0][i].AssociatedFlag = 0;
+				if((h->s.picture_structure != PICT_FRAME)) {
+					if((h->sei_pic_struct == SEI_PIC_STRUCT_BOTTOM_FIELD) ||
+						(h->sei_pic_struct == SEI_PIC_STRUCT_TOP_BOTTOM) ||
+						(h->sei_pic_struct == SEI_PIC_STRUCT_TOP_BOTTOM_TOP)) {
+						pSlice->RefPicList[0][i].AssociatedFlag = 1;
+					}
+				}
 			}
 		}
 	}
@@ -494,17 +496,17 @@ void FF264UpdateRefFrameSliceLong(DXVA_PicParams_H264* pDXVAPicParams, DXVA_Slic
 
 	if(h->slice_type == FF_B_TYPE || h->slice_type == FF_S_TYPE || h->slice_type == FF_BI_TYPE)
 	{
-		if(h->ref_count[1] > 0){
-			for(i=0; i < h->ref_count[1]; i++){
-			   pSlice->RefPicList[1][i].Index7Bits = FFH264FindRefFrameIndex (h->ref_list[1][i].frame_num, pDXVAPicParams);
-			   pSlice->RefPicList[1][i].AssociatedFlag = 0;
-			   if((h->s.picture_structure != PICT_FRAME)){
-				   if((h->sei_pic_struct == SEI_PIC_STRUCT_BOTTOM_FIELD) ||
-					   (h->sei_pic_struct == SEI_PIC_STRUCT_TOP_BOTTOM) ||
-					   (h->sei_pic_struct == SEI_PIC_STRUCT_TOP_BOTTOM_TOP)){
-						   pSlice->RefPicList[1][i].AssociatedFlag = 1;
-				   }
-			   }
+		if(h->ref_count[1] > 0) {
+			for(i=0; i < h->ref_count[1]; i++) {
+				pSlice->RefPicList[1][i].Index7Bits = FFH264FindRefFrameIndex (h->ref_list[1][i].frame_num, pDXVAPicParams);
+				pSlice->RefPicList[1][i].AssociatedFlag = 0;
+				if((h->s.picture_structure != PICT_FRAME)) {
+					if((h->sei_pic_struct == SEI_PIC_STRUCT_BOTTOM_FIELD) ||
+						(h->sei_pic_struct == SEI_PIC_STRUCT_TOP_BOTTOM) ||
+						(h->sei_pic_struct == SEI_PIC_STRUCT_TOP_BOTTOM_TOP)) {
+						pSlice->RefPicList[1][i].AssociatedFlag = 1;
+					}
+				}
 			}
 		}
 	}
@@ -519,10 +521,10 @@ void FF264UpdateRefFrameSliceLong(DXVA_PicParams_H264* pDXVAPicParams, DXVA_Slic
 	}
 
 	if(h->slice_type == FF_P_TYPE || h->slice_type == FF_I_TYPE ||
-	   h->slice_type ==FF_SP_TYPE  || h->slice_type == FF_SI_TYPE)
+		h->slice_type ==FF_SP_TYPE  || h->slice_type == FF_SI_TYPE)
 	{
 		for(i = 0; i < 16; i++)
-		 pSlice->RefPicList[1][i].bPicEntry = 0xff;
+		pSlice->RefPicList[1][i].bPicEntry = 0xff;
 	}
 }
 

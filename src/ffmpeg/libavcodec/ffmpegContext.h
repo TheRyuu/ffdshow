@@ -1,8 +1,4 @@
 /* 
- * $Id: FfmpegContext.h 1308 2009-10-25 13:21:21Z casimir666 $
- *
- * (C) 2006-2007 see AUTHORS
- *
  * This file is part of mplayerc.
  *
  * Mplayerc is free software; you can redistribute it and/or modify
@@ -42,9 +38,10 @@ enum PCI_Vendors
 };
 
 // Bitmasks for DXVA compatibility check
-#define DXVA_UNSUPPORTED_LEVEL   1
-#define DXVA_TOO_MUCH_REF_FRAMES 2
-#define DXVA_INCOMPATIBLE_SAR    4
+#define DXVA_UNSUPPORTED_LEVEL			1
+#define DXVA_TOO_MANY_REF_FRAMES		2
+#define DXVA_INCOMPATIBLE_SAR			4
+#define DXVA_PROFILE_HIGHER_THAN_HIGH	8
 
 // === H264 functions
 void			FFH264DecodeBuffer (struct AVCodecContext* pAVCtx, BYTE* pBuffer, UINT nSize, int* pFramePOC, int* pOutPOC, REFERENCE_TIME* pOutrtStart);
@@ -61,7 +58,7 @@ HRESULT			FFVC1UpdatePictureParam (DXVA_PictureParameters* pPicParams, struct AV
 int				FFIsSkipped(struct AVCodecContext* pAVCtx);
 
 // === Common functions
-int				IsVista();
+int			IsVistaOrAbove();
 char*			GetFFMpegPictureType(int nType);
 int				FFIsInterlaced(struct AVCodecContext* pAVCtx, int nHeight);
 unsigned long	FFGetMBNumber(struct AVCodecContext* pAVCtx);
