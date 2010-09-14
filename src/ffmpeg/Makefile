@@ -285,7 +285,7 @@ SRCS_YASM=\
     $(LAVC_DIR)/x86/fft_mmx.asm \
     $(LAVC_DIR)/x86/h264_chromamc.asm \
     $(LAVC_DIR)/x86/h264_deblock.asm \
-    $(LAVC_DIR)/x86/h264_idct_sse2.asm \
+    $(LAVC_DIR)/x86/h264_idct.asm \
     $(LAVC_DIR)/x86/h264_intrapred.asm \
     $(LAVC_DIR)/x86/h264_weight.asm \
     $(LAVC_DIR)/x86/vc1dsp_yasm.asm \
