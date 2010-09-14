@@ -1140,6 +1140,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\IDSMPropertyBag.h"
+				>
+			</File>
+			<File
 				RelativePath="src\IffDecoder.h"
 				>
 			</File>

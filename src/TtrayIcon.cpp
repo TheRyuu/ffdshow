@@ -456,7 +456,7 @@ TtrayIconDecVideo::TtrayIconDecVideo(IffdshowBase *Ideci):TtrayIconDec(Ideci),de
  */
 
 
-void TtrayIconDecVideo::makeStreamsSubMenus(HMENU *smn, HMENU *ssmn, HMENU *amn, HMENU *emn)
+void TtrayIconDecVideo::makeStreamsSubMenus(HMENU *smn, HMENU *ssmn, HMENU *amn, HMENU *emn, HMENU *cmn)
 {
  strings files;
  TsubtitlesFile::findPossibleSubtitles(deci->getSourceName(),
@@ -544,6 +544,37 @@ void TtrayIconDecVideo::makeStreamsSubMenus(HMENU *smn, HMENU *ssmn, HMENU *amn,
    insertMenuItem(ehm,ord,IDC_FIRST_EDITIONSTREAM+stream.streamNb,menuItem.c_str(),false,stream.enabled,true);
   }
  }
+
+ // Now the chapters
+ ord = 0;
+ std::vector<std::pair<long, ffstring> > *pChaptersList = NULL;
+ deciV->getChaptersList((void**)&pChaptersList);
+ if (pChaptersList->size() > 1)
+ {
+  int seconds = 0;
+  deci->tell(&seconds);
+  unsigned int currentChapter = 0;
+  for (unsigned int i=pChaptersList->size()-1; i >= 0;i--)
+  {
+   std::pair<long, ffstring> chapter = (*pChaptersList)[i];
+   if (chapter.first <= (long)seconds)
+   {
+    currentChapter = i; break;
+   }
+  }
+
+
+  HMENU chm=CreatePopupMenu();
+  *cmn=chm;
+  for (unsigned int i=0; i< pChaptersList->size();i++)
+  {
+   std::pair<long, ffstring> chapter = (*pChaptersList)[i];
+   
+   ffstring menuItem = stringreplace(chapter.second,_l("&"),_l("&&"),rfReplaceAll);
+   insertMenuItem(chm,ord,IDC_FIRST_CHAPTERSTREAM+i,menuItem.c_str(),false, (currentChapter == i) ? true : false ,true);
+  }
+ }
+ 
  //return ord?hm:(DestroyMenu(hm),(HMENU)NULL);
 }
 
@@ -551,20 +582,32 @@ void TtrayIconDecVideo::insertSubmenuCallback(HMENU hm,int &ord,const TfilterIDF
 {
  if (f->id==IDFF_filterSubtitles)
  {
-  HMENU smn = NULL, ssmn = NULL, amn = NULL, emn = NULL;
-  makeStreamsSubMenus(&smn, &ssmn, &amn, &emn);
+  HMENU smn = NULL, ssmn = NULL, amn = NULL, emn = NULL, cmn = NULL;
+  makeStreamsSubMenus(&smn, &ssmn, &amn, &emn, &cmn);
   int lord = ord+1000;
-  if (smn != NULL || ssmn != NULL || amn != NULL || emn != NULL) insertSeparator(hm,lord);
+  if (smn != NULL || ssmn != NULL || amn != NULL || emn != NULL || cmn != NULL) insertSeparator(hm,lord);
   if (smn != NULL) insertSubmenu(hm,lord,_l("Subtitle files"),true,smn);
   if (ssmn != NULL) insertSubmenu(hm,lord,_l("Subtitle streams"),true,ssmn);
   if (amn != NULL) insertSubmenu(hm,lord,_l("Audio streams"),true,amn);
   if (emn != NULL) insertSubmenu(hm,lord,_l("Editions"),true,emn);
+  if (cmn != NULL) insertSubmenu(hm,lord,_l("Chapters"),true,cmn);
  }
 }
 
 void TtrayIconDecVideo::processCmd(HMENU hm,int cmd)
 {
- if (cmd>=IDC_FIRST_EDITIONSTREAM)
+ if (cmd>=IDC_FIRST_CHAPTERSTREAM)
+ {
+  int id=cmd-IDC_FIRST_CHAPTERSTREAM;
+  std::vector<std::pair<long, ffstring> > *pChaptersList = NULL;
+  deciV->getChaptersList((void**)&pChaptersList);
+  if (pChaptersList != NULL && pChaptersList->size() > id)
+  {
+   std::pair<long, ffstring> chapter = (*pChaptersList)[id];
+   deci->seek((int)chapter.first);
+  }
+ }
+ else if (cmd>=IDC_FIRST_EDITIONSTREAM)
  {
   int id=cmd-IDC_FIRST_EDITIONSTREAM;
   deciD->setExternalStream(18, id);

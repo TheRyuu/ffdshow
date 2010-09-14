@@ -57,6 +57,7 @@
 #include "IffdshowDecAudio.h"
 #include "qnetwork.h"
 #include "codecs\TvideoCodecLibavcodec.h"
+#include "IDSMPropertyBag.h"
 
 
 void TffdshowDecVideo::getMinMax(int id,int &min,int &max)
@@ -2033,16 +2034,25 @@ void TffdshowDecVideo::getChapters(void)
                 || !strcmp(FFDSHOWAUDIO_NAME_L, filtername)
                 || !strcmp(FFDSHOWDXVA_NAME_L, filtername))
                 continue;
+            IDSMChapterBag *pChapterBag = NULL;
             IAMExtendedSeeking *pAMExtendedSeeking = NULL;
             bff->QueryInterface(IID_IAMExtendedSeeking, (void**) &pAMExtendedSeeking);
-            if (pAMExtendedSeeking == NULL)
+            bff->QueryInterface(IID_IDSMChapterBag, (void**) &pChapterBag);
+            if (pAMExtendedSeeking == NULL && pChapterBag == NULL)
                 continue;
+
             long markerCount = 0;
-            pAMExtendedSeeking->get_MarkerCount(&markerCount);
+
+            if (pChapterBag != NULL)
+             markerCount = pChapterBag->ChapGetCount();
+            else
+             pAMExtendedSeeking->get_MarkerCount(&markerCount);
+            
             if (markerCount == 0)
             {
-                pAMExtendedSeeking->Release();
-                continue;
+             SAFE_RELEASE(pAMExtendedSeeking);
+             SAFE_RELEASE(pChapterBag);
+             continue;
             }
             chaptersList.clear();
             
@@ -2051,8 +2061,17 @@ void TffdshowDecVideo::getChapters(void)
             {
                 double markerTime = 0;
                 BSTR markerName = NULL;
-                pAMExtendedSeeking->GetMarkerTime(i, &markerTime);
-                pAMExtendedSeeking->GetMarkerName(i, &markerName);
+                if (pChapterBag != NULL)
+                {
+                 REFERENCE_TIME rtMarker = 0;
+                 pChapterBag->ChapGet(i-1, &rtMarker, &markerName);
+                 markerTime = (double)(rtMarker/100000000);
+                }
+                else
+                {
+                 pAMExtendedSeeking->GetMarkerTime(i, &markerTime);
+                 pAMExtendedSeeking->GetMarkerName(i, &markerName);
+                }
                 if (markerName != NULL)
                 {
                     //char_t fMarkerName[MAX_PATH];
@@ -2080,7 +2099,8 @@ void TffdshowDecVideo::getChapters(void)
                 }
                 markerName = NULL;
             }
-            pAMExtendedSeeking->Release();
+            SAFE_RELEASE(pAMExtendedSeeking);
+            SAFE_RELEASE(pChapterBag);
             break;
         }
     }
