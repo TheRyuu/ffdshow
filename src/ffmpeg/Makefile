@@ -282,6 +282,7 @@ SRCS_C=\
 
 SRCS_YASM=\
     $(LAVC_DIR)/x86/dsputil_yasm.asm \
+    $(LAVC_DIR)/x86/dsputilenc_yasm.asm \
     $(LAVC_DIR)/x86/fft_mmx.asm \
     $(LAVC_DIR)/x86/h264_chromamc.asm \
     $(LAVC_DIR)/x86/h264_deblock.asm \
