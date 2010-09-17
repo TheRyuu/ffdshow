@@ -1887,14 +1887,18 @@ int sws_scale(SwsContext *c, const uint8_t* const src[], const stride_t srcStrid
     if (srcSliceH == 0)
         return 0;
 
-    if (!check_image_pointers(src, c->srcFormat, srcStride)) {
+    // These checks cause PGS subs to disappear if YV12, YUY2, NV12, etc.
+    // colorspaces are used in combination with bilinear or swscaler gaussian
+    // smoothing methods. RGB32 works fine. Disable them until we fix the bug
+    // in ffdshow 
+    /*if (!check_image_pointers(src, c->srcFormat, srcStride)) {
         av_log(c, AV_LOG_ERROR, "bad src image pointers\n");
         return 0;
     }
     if (!check_image_pointers(dst, c->dstFormat, dstStride)) {
         av_log(c, AV_LOG_ERROR, "bad dst image pointers\n");
         return 0;
-    }
+    }*/
 
     if (c->sliceDir == 0 && srcSliceY != 0 && srcSliceY + srcSliceH != c->srcH) {
         av_log(c, AV_LOG_ERROR, "Slices start in the middle!\n");
