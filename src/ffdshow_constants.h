@@ -700,7 +700,6 @@
    //#define IDFF_MOVIE_SPDIF   16
    #define IDFF_MOVIE_LIBDTS  17
    #define IDFF_MOVIE_TREMOR  18
-   #define IDFF_MOVIE_REALAAC 19
    #define IDFF_MOVIE_FFMPEG_MT 21
    #define IDFF_MOVIE_FFMPEG_DXVA 22
    #define IDFF_MOVIE_MAX     22 // should equal highest value of codecs above (see TglobalSettings.cpp)

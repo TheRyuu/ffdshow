@@ -4983,14 +4983,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\codecs\TaudioCodecRealaac.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\codecs\TaudioCodecRealaac.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\codecs\TaudioCodecTremor.cpp"
 				>
 			</File>

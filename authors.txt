@@ -37,7 +37,6 @@ projects/libraries that the tryouts depend resp. build upon:
           o MPlayer
           o libtheora
           o Tremor
-    * "realaac" is an AAC decoder from Helix DNA Technology
     * msvidc and msrle decoders by Mike Melanson
     * Resizing and various audio/image filters from:
           o MPlayer

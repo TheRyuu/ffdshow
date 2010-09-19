@@ -51,7 +51,6 @@ const char_t* Tcodec::getMovieSourceName(int source)
    case IDFF_MOVIE_LIBA52     :return _l("liba52");
    case IDFF_MOVIE_LIBDTS     :return _l("libdts");
    case IDFF_MOVIE_TREMOR     :return _l("Tremor");
-   case IDFF_MOVIE_REALAAC    :return _l("realaac");
    case IDFF_MOVIE_FFMPEG_DXVA:return _l("DXVA");
    default:
    case 0:return _l("disabled");

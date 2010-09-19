@@ -1139,7 +1139,7 @@ void TglobalSettingsDecAudio::load(void)
  fixMissing(dts       ,IDFF_MOVIE_LIBDTS,IDFF_MOVIE_LAVC);
  fixMissing(mp2       ,IDFF_MOVIE_MPLAYER,IDFF_MOVIE_LIBMAD,IDFF_MOVIE_LAVC);
  fixMissing(mp3       ,IDFF_MOVIE_MPLAYER,IDFF_MOVIE_LIBMAD,IDFF_MOVIE_LAVC);
- fixMissing(aac       ,IDFF_MOVIE_LIBFAAD,IDFF_MOVIE_REALAAC);
+ fixMissing(aac       ,IDFF_MOVIE_LIBFAAD);
  fixMissing(avis      ,IDFF_MOVIE_AVIS);
  fixMissing(iadpcm    ,IDFF_MOVIE_LAVC);
  fixMissing(msadpcm   ,IDFF_MOVIE_LAVC);
@@ -1322,7 +1322,7 @@ const CodecID TglobalSettingsDecAudio::c_aac[IDFF_MOVIE_MAX+1]=
  CODEC_ID_NONE,
  CODEC_ID_NONE,
  CODEC_ID_NONE,
- CODEC_ID_REALAAC
+ CODEC_ID_NONE
 };
 const CodecID TglobalSettingsDecAudio::c_vorbis[IDFF_MOVIE_MAX+1]=
 {

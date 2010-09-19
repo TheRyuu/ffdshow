@@ -40,7 +40,6 @@
 #include "TimgFilterTomsMoComp.h"
 #include "TimgFilterKernelDeint.h"
 #include "TaudioFilterResample.h"
-#include "TaudioCodecRealaac.h"
 #include "Tstream.h"
 #include "Ttranslate.h"
 
@@ -194,7 +193,6 @@ const TversionsDlg::TversionInfo* TaboutPageDecAudio::fcsVersions(void)
    Tlibmplayer::dllname,getVersion<Tlibmplayer>,
    TaudioCodecLibMAD::dllname,getVersion<TaudioCodecLibMAD>,
    TaudioCodecLibFAAD::dllname,getVersion<TaudioCodecLibFAAD>,
-   TaudioCodecRealaac::dllname,getVersion<TaudioCodecRealaac>,
    TaudioCodecLiba52::dllname,getVersion<TaudioCodecLiba52>,
    TaudioCodecLibDTS::dllname,getVersion<TaudioCodecLibDTS>,
    TaudioCodecTremor::dllname,getVersion<TaudioCodecTremor>,

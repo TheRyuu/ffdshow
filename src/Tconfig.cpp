@@ -36,7 +36,6 @@
 #include "TaudioCodecLiba52.h"
 #include "TaudioCodecLibDTS.h"
 #include "TaudioCodecTremor.h"
-#include "TaudioCodecRealaac.h"
 #include "Tdll.h"
 #include "cpudetect.h"
 #include <tlhelp32.h>
@@ -142,7 +141,6 @@ void Tconfig::init1(HINSTANCE hi)
  isDecoder[IDFF_MOVIE_LIBA52]=check(TaudioCodecLiba52::dllname);
  isDecoder[IDFF_MOVIE_LIBDTS]=check(TaudioCodecLibDTS::dllname);
  isDecoder[IDFF_MOVIE_TREMOR]=check(TaudioCodecTremor::dllname);
- isDecoder[IDFF_MOVIE_REALAAC]=check(TaudioCodecRealaac::dllname);
 
  is_WMEncEng = done_WMEncEng = false;
 }

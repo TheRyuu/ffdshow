@@ -29,7 +29,6 @@
 #include "TaudioCodecLiba52.h"
 #include "TaudioCodecLibDTS.h"
 #include "TaudioCodecTremor.h"
-#include "TaudioCodecRealaac.h"
 #include "TaudioCodecBitstream.h"
 
 TaudioCodec* TaudioCodec::initSource(IffdshowBase *Ideci,IdecAudioSink *Isink, CodecID codecId,const TsampleFormat &fmt,const CMediaType &mt)
@@ -65,7 +64,6 @@ TaudioCodec* TaudioCodec::getDecLib(CodecID codecId,IffdshowBase *deci,IdecAudio
  else if (codecId==CODEC_ID_LIBFAAD)  movie=new TaudioCodecLibFAAD(deci,sink);
  else if (codecId==CODEC_ID_AVISYNTH) movie=new TaudioCodecAvisynth(deci,sink);
  else if (codecId==CODEC_ID_TREMOR)   movie=new TaudioCodecTremor(deci,sink);
- else if (codecId==CODEC_ID_REALAAC)  movie=new TaudioCodecRealaac(deci,sink);
  else if (codecId==CODEC_ID_LIBA52)  movie=new TaudioCodecLiba52(deci,sink);
  else if (codecId==CODEC_ID_LIBDTS)  movie=new TaudioCodecLibDTS(deci,sink);
  else if (spdif_codec(codecId) || bitstream_codec(codecId))
