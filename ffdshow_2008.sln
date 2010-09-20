@@ -33,6 +33,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ff_acm", "ffacm\ff_acm_2008
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ffdshow_all", "ffdshow_all_2008.vcproj", "{F49D9CEE-F57E-4283-945E-9F728BEBB21F}"
 	ProjectSection(ProjectDependencies) = postProject
+		{C60F760B-5AFF-4C37-9EF7-A275665DBF21} = {C60F760B-5AFF-4C37-9EF7-A275665DBF21}
 		{BA17CB30-A775-4F55-B1F2-E5D0B2C8CC84} = {BA17CB30-A775-4F55-B1F2-E5D0B2C8CC84}
 		{864F0D43-412C-44DF-98AD-E8C24B230D5C} = {864F0D43-412C-44DF-98AD-E8C24B230D5C}
 		{29432947-08F2-41AA-953F-47E45252DD57} = {29432947-08F2-41AA-953F-47E45252DD57}
@@ -56,6 +57,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ff_libfaad2", "src\codecs\faad\ff_libfaad2_2008.vcproj", "{BF29FAFC-7E71-4671-A2F8-D510EF5C0685}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libmpeg2_ff", "src\codecs\libmpeg2\libmpeg2_ff.vcproj", "{A0116059-A93E-4A03-BA72-73E8C64B3C34}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ff_kernelDeint", "src\imgFilters\KernelDeint\ff_kernelDeint_2008.vcproj", "{C60F760B-5AFF-4C37-9EF7-A275665DBF21}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TomsMoComp_ff", "src\imgFilters\TomsMoComp\TomsMoComp_ff_2008.vcproj", "{864F0D43-412C-44DF-98AD-E8C24B230D5C}"
 EndProject
@@ -205,6 +208,14 @@ Global
 		{A0116059-A93E-4A03-BA72-73E8C64B3C34}.Release Unicode|Win32.Build.0 = Release|Win32
 		{A0116059-A93E-4A03-BA72-73E8C64B3C34}.Release Unicode|x64.ActiveCfg = Release|x64
 		{A0116059-A93E-4A03-BA72-73E8C64B3C34}.Release Unicode|x64.Build.0 = Release|x64
+		{C60F760B-5AFF-4C37-9EF7-A275665DBF21}.Debug Unicode|Win32.ActiveCfg = Debug|Win32
+		{C60F760B-5AFF-4C37-9EF7-A275665DBF21}.Debug Unicode|Win32.Build.0 = Debug|Win32
+		{C60F760B-5AFF-4C37-9EF7-A275665DBF21}.Debug Unicode|x64.ActiveCfg = Debug|x64
+		{C60F760B-5AFF-4C37-9EF7-A275665DBF21}.Debug Unicode|x64.Build.0 = Debug|x64
+		{C60F760B-5AFF-4C37-9EF7-A275665DBF21}.Release Unicode|Win32.ActiveCfg = Release|Win32
+		{C60F760B-5AFF-4C37-9EF7-A275665DBF21}.Release Unicode|Win32.Build.0 = Release|Win32
+		{C60F760B-5AFF-4C37-9EF7-A275665DBF21}.Release Unicode|x64.ActiveCfg = Release|x64
+		{C60F760B-5AFF-4C37-9EF7-A275665DBF21}.Release Unicode|x64.Build.0 = Release|x64
 		{864F0D43-412C-44DF-98AD-E8C24B230D5C}.Debug Unicode|Win32.ActiveCfg = Debug|Win32
 		{864F0D43-412C-44DF-98AD-E8C24B230D5C}.Debug Unicode|Win32.Build.0 = Debug|Win32
 		{864F0D43-412C-44DF-98AD-E8C24B230D5C}.Debug Unicode|x64.ActiveCfg = Debug|x64
