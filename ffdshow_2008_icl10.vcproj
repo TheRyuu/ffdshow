@@ -1141,6 +1141,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\IDSMPropertyBag.h"
+				>
+			</File>
+			<File
 				RelativePath="src\IffDecoder.h"
 				>
 			</File>
@@ -4977,14 +4981,6 @@
 			</File>
 			<File
 				RelativePath="src\codecs\TaudioCodecMplayer.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\codecs\TaudioCodecRealaac.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\codecs\TaudioCodecRealaac.h"
 				>
 			</File>
 			<File

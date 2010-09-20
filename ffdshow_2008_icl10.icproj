@@ -5,7 +5,7 @@
 	Name="ffdshow"
 	ProjectGUID="{0C1CDCBB-5886-42B4-A928-F4B82DD3FD17}"
 	VCNestedProjectGUID="{30A21C7F-035D-41E2-95BE-B4FFA5F5176B}"
-	VCNestedProjectCRC32="4050753082"
+	VCNestedProjectCRC32="400274467"
 	VCNestedProjectFileName="ffdshow_2008_icl10.vcproj">
 	<Platforms>
 		<Platform 
@@ -921,6 +921,9 @@
 			</File>
 			<File 
 				RelativePath=".\src\ffmpeg\libavcodec\golomb.h">
+			</File>
+			<File 
+				RelativePath=".\src\IDSMPropertyBag.h">
 			</File>
 			<File 
 				RelativePath="src\IffDecoder.h">
@@ -3824,12 +3827,6 @@
 			</File>
 			<File 
 				RelativePath="src\codecs\TaudioCodecMplayer.h">
-			</File>
-			<File 
-				RelativePath=".\src\codecs\TaudioCodecRealaac.cpp">
-			</File>
-			<File 
-				RelativePath=".\src\codecs\TaudioCodecRealaac.h">
 			</File>
 			<File 
 				RelativePath=".\src\codecs\TaudioCodecTremor.cpp">

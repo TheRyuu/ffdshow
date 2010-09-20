@@ -14,8 +14,6 @@ Project("{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}") = "ff_tremor", "src\codecs\tre
 EndProject
 Project("{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}") = "ff_unrar", "unrar\ff_unrar_2008_icl10.icproj", "{9C78112E-B79D-4AE6-859D-F71383126B4E}"
 EndProject
-Project("{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}") = "ff_realaac", "src\codecs\realaac\ff_realaac_2008_icl10.icproj", "{35264226-DBDE-4CC1-A046-B366FA979D8E}"
-EndProject
 Project("{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}") = "ff_libfaad2", "src\codecs\faad\ff_libfaad2_2008_icl10.icproj", "{3DFCD606-291B-4765-9913-A6EC1D83F33F}"
 EndProject
 Project("{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}") = "libmpeg2_ff", "src\codecs\libmpeg2\libmpeg2_ff_icl.icproj", "{A0A5B5A7-8D65-425A-8FB1-18C7B015CB99}"
@@ -84,14 +82,6 @@ Global
 		{9C78112E-B79D-4AE6-859D-F71383126B4E}.Release|Win32.Build.0 = Release|Win32
 		{9C78112E-B79D-4AE6-859D-F71383126B4E}.Release|x64.ActiveCfg = Release|x64
 		{9C78112E-B79D-4AE6-859D-F71383126B4E}.Release|x64.Build.0 = Release|x64
-		{35264226-DBDE-4CC1-A046-B366FA979D8E}.Debug|Win32.ActiveCfg = Debug|Win32
-		{35264226-DBDE-4CC1-A046-B366FA979D8E}.Debug|Win32.Build.0 = Debug|Win32
-		{35264226-DBDE-4CC1-A046-B366FA979D8E}.Debug|x64.ActiveCfg = Debug|x64
-		{35264226-DBDE-4CC1-A046-B366FA979D8E}.Debug|x64.Build.0 = Debug|x64
-		{35264226-DBDE-4CC1-A046-B366FA979D8E}.Release|Win32.ActiveCfg = Release|Win32
-		{35264226-DBDE-4CC1-A046-B366FA979D8E}.Release|Win32.Build.0 = Release|Win32
-		{35264226-DBDE-4CC1-A046-B366FA979D8E}.Release|x64.ActiveCfg = Release|x64
-		{35264226-DBDE-4CC1-A046-B366FA979D8E}.Release|x64.Build.0 = Release|x64
 		{3DFCD606-291B-4765-9913-A6EC1D83F33F}.Debug|Win32.ActiveCfg = Debug|Win32
 		{3DFCD606-291B-4765-9913-A6EC1D83F33F}.Debug|Win32.Build.0 = Debug|Win32
 		{3DFCD606-291B-4765-9913-A6EC1D83F33F}.Debug|x64.ActiveCfg = Debug|x64
