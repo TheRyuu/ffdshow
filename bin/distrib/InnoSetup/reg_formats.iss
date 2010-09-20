@@ -138,7 +138,6 @@ Root: HKLM; Subkey: "{#= ff_reg_base}";       ValueType: dword; ValueName: "zmbv
 ; 15 = ff_liba52.dll
 ; 17 = ff_libdts.dll
 ; 18 = ff_tremor.dll
-; 19 = ff_realaac.dll
 
 ; Audio formats to decode
 Root: HKCU; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "aac";        ValueData:  "8"; Components: ffdshow;     Tasks: audio\aac\libfaad2

@@ -8,6 +8,10 @@ pushd src\ffmpeg-mt
 make -j4
 popd
 
+pushd src\imgFilters\KernelDeint
+make -j4
+popd
+
 pushd src\mplayer
 make -j4
 popd
