@@ -64,7 +64,9 @@ void TgradFunSettings::createFilters(size_t filtersorder,Tfilters *filters,Tfilt
 }
 void TgradFunSettings::createPages(TffdshowPageDec *parent) const
 {
- parent->addFilterPage<TgradFunPage>(&idffs);
+ #ifndef WIN64
+  parent->addFilterPage<TgradFunPage>(&idffs);
+ #endif
 }
 
 const int* TgradFunSettings::getResets(unsigned int pageId)
