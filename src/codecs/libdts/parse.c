@@ -1302,6 +1302,6 @@ void dca_free (dca_state_t * state)
 //===========================================================================
 void __stdcall getVersion(char *ver,const char* *license)
 {
- strcpy(ver, VERSION", build date "__DATE__" "__TIME__" ("COMPILER COMPILER_X64 COMPILER_INFO")");
+ strcpy(ver, VERSION", "COMPILER COMPILER_X64 COMPILER_INFO" ("__DATE__" "__TIME__")");
  *license="(C) 2004 Gildas Bazin <gbazin@videolan.org>";
 }

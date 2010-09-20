@@ -20,7 +20,6 @@ public:
  int (*xvid_encore)(void *handle,int opt,void *param1,void *param2);
  int (*xvid_plugin_single)(void *handle,int opt,void *param1,void *param2);
  int (*xvid_plugin_lumimasking)(void *handle,int opt,void *param1,void *param2);
- static bool getVersion(const Tconfig *config,ffstring &vers,ffstring &license);
  static const char_t *dllname;
 private:
  void *enchandle,*dechandle;

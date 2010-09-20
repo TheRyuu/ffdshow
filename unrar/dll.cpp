@@ -1,5 +1,6 @@
 #include "rar.hpp"
 #include "dll.hpp"
+#include "../src/compiler.h"
 
 static int RarErrorToDll(int ErrCode);
 
@@ -360,6 +361,6 @@ static int RarErrorToDll(int ErrCode)
 
 extern "C" void __stdcall getVersion(char *ver,const char* *license)
 {
- sprintf(ver,"%d.%02d %s %d",RARVER_MAJOR,RARVER_MINOR,St(MBeta),RARVER_BETA);
+ sprintf(ver,"%d.%02d beta %d, %s%s%s (%s %s)",RARVER_MAJOR,RARVER_MINOR,RARVER_BETA,COMPILER,COMPILER_X64,COMPILER_INFO,__DATE__,__TIME__);
  *license="Alexander L. Roshal";
 }

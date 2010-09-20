@@ -147,7 +147,7 @@ void TaboutPage::translate(void)
  TregOpRegRead tNSI(HKEY_LOCAL_MACHINE,FFDSHOW_REG_PARENT _l("\\") FFDSHOW);
  tNSI._REG_OP_N(0,_l("revision"),revision,0);
  if(revision)
-  setText(IDC_LBL_FFDSHOWVERSION,_l("ffdshow tryouts revision %d  %s"),revision,FFDSHOW_VER);
+  setText(IDC_LBL_FFDSHOWVERSION,_l("ffdshow tryouts rev%d %s"),revision,FFDSHOW_VER);
  else
   setText(IDC_LBL_FFDSHOWVERSION,_l("%s %s"),_(IDC_LBL_FFDSHOWVERSION),FFDSHOW_VER);
 }
@@ -166,14 +166,14 @@ const TversionsDlg::TversionInfo* TaboutPageDecVideo::fcsVersions(void)
    _l("libavcodec.dll"),Tlibavcodec::getVersion,
    _l("ffmpegmt.dll"),Tlibavcodec_mt::getVersion,
    Tlibmplayer::dllname,getVersion<Tlibmplayer>,
-   TvideoCodecXviD4::dllname,TvideoCodecXviD4::getVersion,
+   TvideoCodecXviD4::dllname,getVersion<TvideoCodecXviD4>,
    TvideoCodecTheora::dllname,getVersion<TvideoCodecTheora>,
-   TvideoCodecLibmpeg2::dllname,getVersion<TvideoCodecLibmpeg2>,
    TvideoCodecWmv9::dllname,getVersion<TvideoCodecWmv9>,
-   Tavisynth_c::dllname,Tavisynth_c::getVersion,
-   TimgFilterTomsMoComp::dllname,getVersion<TimgFilterTomsMoComp>,
    TimgFilterKernelDeint2::dllname,getVersion<TimgFilterKernelDeint2>,
    TstreamRAR::dllname,getVersion<TstreamRAR>,
+   TvideoCodecLibmpeg2::dllname,getVersion<TvideoCodecLibmpeg2>,
+   TimgFilterTomsMoComp::dllname,getVersion<TimgFilterTomsMoComp>,
+   Tavisynth_c::dllname,Tavisynth_c::getVersion,
    NULL
   };
  return fcsDecVideo;
@@ -191,12 +191,12 @@ const TversionsDlg::TversionInfo* TaboutPageDecAudio::fcsVersions(void)
   {
    _l("libavcodec.dll"),Tlibavcodec::getVersion,
    Tlibmplayer::dllname,getVersion<Tlibmplayer>,
-   TaudioCodecLibMAD::dllname,getVersion<TaudioCodecLibMAD>,
-   TaudioCodecLibFAAD::dllname,getVersion<TaudioCodecLibFAAD>,
    TaudioCodecLiba52::dllname,getVersion<TaudioCodecLiba52>,
    TaudioCodecLibDTS::dllname,getVersion<TaudioCodecLibDTS>,
-   TaudioCodecTremor::dllname,getVersion<TaudioCodecTremor>,
+   TaudioCodecLibFAAD::dllname,getVersion<TaudioCodecLibFAAD>,
+   TaudioCodecLibMAD::dllname,getVersion<TaudioCodecLibMAD>,
    TaudioFilterResampleSRC::dllname,getVersion<TaudioFilterResampleSRC>,
+   TaudioCodecTremor::dllname,getVersion<TaudioCodecTremor>,
    Tavisynth_c::dllname,Tavisynth_c::getVersion,
    NULL
   };
@@ -215,7 +215,7 @@ const TversionsDlg::TversionInfo* TaboutPageEnc::fcsVersions(void)
   {
    _l("libavcodec.dll"),Tlibavcodec::getVersion,
    Tlibmplayer::dllname,getVersion<Tlibmplayer>,
-   TvideoCodecXviD4::dllname,TvideoCodecXviD4::getVersion,
+   TvideoCodecXviD4::dllname,getVersion<TvideoCodecXviD4>,
    TvideoCodecTheora::dllname,getVersion<TvideoCodecTheora>,
    TvideoCodecWmv9::dllname,getVersion<TvideoCodecWmv9>,
    TvideoCodecX264::dllname,getVersion<TvideoCodecX264>,

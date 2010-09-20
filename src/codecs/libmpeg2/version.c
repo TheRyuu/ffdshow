@@ -24,6 +24,6 @@
 
 extern "C" void __stdcall getVersion(char *ver,const char* *license)
 {
- strcpy(ver,VERSION", build date "__DATE__" "__TIME__" ("COMPILER COMPILER_X64 COMPILER_INFO")");
+ strcpy(ver,VERSION", "COMPILER COMPILER_X64 COMPILER_INFO" ("__DATE__" "__TIME__")");
  *license="(C) 2000-2003 Michel Lespinasse <walken@zoy.org>\n(C) 1999-2000 Aaron Holtzman <aholtzma@ess.engr.uvic.ca>";
 }

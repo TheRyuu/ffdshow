@@ -22,6 +22,6 @@
 
 void __stdcall getVersion(char *ver,const char* *license)
 {
- strcpy(ver, FAAD2_VERSION", build date "__DATE__" "__TIME__" ("COMPILER COMPILER_X64 COMPILER_INFO")");
- *license="FAAD2 AAC/HE-AAC/HE-AACv2/DRM decoder (c) Nero AG, www.nero.com";
+ strcpy(ver, FAAD2_VERSION", "COMPILER COMPILER_X64 COMPILER_INFO" ("__DATE__" "__TIME__")");
+ *license="FAAD2 AAC/HE-AAC/HE-AAC v2/DRM decoder\n(C) Nero AG, www.nero.com";
 }

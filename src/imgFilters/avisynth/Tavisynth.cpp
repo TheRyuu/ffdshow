@@ -43,7 +43,7 @@ bool Tavisynth::getVersion(const Tconfig *config,ffstring &vers,ffstring &licens
      AVSValue eval_args[]={script,"ffdshow_version_avisynth_script"};
      AVSValue val=env->Invoke("Eval",AVSValue(eval_args,2));
      vers=val.AsString();
-     license=_l("(c) 2000-2003 Ben Rudiak-Gold and all subsequent developers");
+     license=_l("(C) 2000-2003 Ben Rudiak-Gold and all subsequent developers");
      res=true;
     }
    catch (AvisynthError &err)
@@ -122,7 +122,7 @@ bool Tavisynth_c::getVersion(const Tconfig *config,ffstring &vers,ffstring &lice
      AVSValue eval_args[]={script,"ffdshow_version_avisynth_script"};
      AVSValue val=env->Invoke("Eval",AVSValue(eval_args,2));
      vers=val.AsString();
-     license=_l("(c) 2000-2003 Ben Rudiak-Gold and all subsequent developers");
+     license=_l("(C) 2000-2003 Ben Rudiak-Gold and all subsequent developers");
      res=true;
     }
    catch (AvisynthError &err)

@@ -1345,6 +1345,6 @@ extern "C" ItomsMoComp* createI(void)
 
 extern "C" void __stdcall getVersion(char *ver,const char* *license)
 {
- strcpy(ver,"1.0.1.8, build date "__DATE__" "__TIME__" ("COMPILER COMPILER_X64 COMPILER_INFO")");
- *license="(c) 2002 Tom Barry";
+ strcpy(ver,"1.0.1.8, "COMPILER COMPILER_X64 COMPILER_INFO" ("__DATE__" "__TIME__")");
+ *license="(C) 2002 Tom Barry";
 }

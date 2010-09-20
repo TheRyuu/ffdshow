@@ -28,6 +28,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "../../compiler.h"
 
 #if !defined(_WIN32)
 #include <unistd.h>
@@ -873,4 +874,10 @@ xvid_encore(void *handle,
 	default:
 		return XVID_ERR_FAIL;
 	}
+}
+
+void __stdcall getVersion(char *ver,const char* *license)
+{
+ sprintf(ver,"%d.%d.%d, %s%s%s (%s %s)",XVID_VERSION_MAJOR(XVID_VERSION),XVID_VERSION_MINOR(XVID_VERSION),XVID_VERSION_PATCH(XVID_VERSION),COMPILER,COMPILER_X64,COMPILER_INFO,__DATE__,__TIME__);
+ *license="";
 }

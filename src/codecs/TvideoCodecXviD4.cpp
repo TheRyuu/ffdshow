@@ -24,6 +24,7 @@
 #include "TcodecSettings.h"
 #include "IffdshowBase.h"
 #include "dsutil.h"
+#include "../compiler.h"
 
 const TmeXviDpreset meXviDpresets[]=
 {
@@ -137,30 +138,6 @@ TvideoCodecXviD4::~TvideoCodecXviD4()
    dll=NULL;
   }
  delete frame;
-}
-bool TvideoCodecXviD4::getVersion(const Tconfig *config,ffstring &vers,ffstring &license)
-{
- Tdll *dl=new Tdll(dllname,config);
- int (*xvid_global)(void *handle, int opt, void *param1, void *param2);
- dl->loadFunction(xvid_global,"xvid_global");
- bool res=false;
- if (xvid_global)
-  {
-   res=true;
-   xvid_gbl_info_t info;
-   memset(&info,0,sizeof(info));
-   info.version=XVID_VERSION;
-   xvid_global(0,XVID_GBL_INFO,&info,NULL);
-   vers=ffstring::intToStr(XVID_VERSION_MAJOR(info.actual_version))+_l(".")+ffstring::intToStr(XVID_VERSION_MINOR(info.actual_version))+_l(".")+ffstring::intToStr(XVID_VERSION_PATCH(info.actual_version));
-   license.clear();
-  }
- else
-  {
-   vers=_l("XviD: not found");
-   license.clear();
-  }
- delete dl;
- return res;
 }
 
 //-------------------------- decompression ----------------------------

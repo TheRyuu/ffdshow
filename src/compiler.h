@@ -8,23 +8,23 @@
 
 #if defined(__INTEL_COMPILER)
   #if __INTEL_COMPILER  >= 1100
-    #define COMPILER "icl 11"
+    #define COMPILER "ICL 11"
   #elif __INTEL_COMPILER  >= 1000
-    #define COMPILER "icl 10"
+    #define COMPILER "ICL 10"
   #else
-    #define COMPILER "icl"
+    #define COMPILER "ICL"
   #endif
 #elif defined(_MSC_VER)
   #if _MSC_VER>=1500
-    #define COMPILER "msvc 2008"
+    #define COMPILER "MSVC 2008"
   #else
 #define COMPILER "unknown and not supported"
   #endif
 #elif defined(__GNUC__)
   #ifdef __SSE__
-    #define COMPILER_SSE " sse"
+    #define COMPILER_SSE " SSE"
     #ifdef __SSE2__
-      #define COMPILER_SSE2 ",sse2"
+      #define COMPILER_SSE2 ", SSE2"
     #else
       #define COMPILER_SSE2 ""
     #endif
