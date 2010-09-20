@@ -97,6 +97,10 @@
 #include <math.h>
 #include <string.h>
 
+#if ARCH_ARM
+#   include "arm/aac.h"
+#endif
+
 union float754 {
     float f;
     uint32_t i;
@@ -2074,20 +2078,13 @@ AVCodec aac_decoder = {
     AVMEDIA_TYPE_AUDIO,
     CODEC_ID_AAC,
     sizeof(AACContext),
-    /*.init = */aac_decode_init,
-    /*.encode = */NULL,
-    /*.close = */aac_decode_close,
-    /*.decode = */aac_decode_frame,
-    /*.capabilities = */0,
-    /*.next = */NULL,
-    /*.flush = */NULL,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("Advanced Audio Coding"),
-    #if __STDC_VERSION__ >= 199901L
+    aac_decode_init,
+    NULL,
+    aac_decode_close,
+    aac_decode_frame,
+    .long_name = NULL_IF_CONFIG_SMALL("Advanced Audio Coding"),
     .sample_fmts = (const enum SampleFormat[]) {
         SAMPLE_FMT_S16,SAMPLE_FMT_NONE
     },
     .channel_layouts = aac_channel_layout,
-    #endif
 };

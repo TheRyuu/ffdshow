@@ -328,7 +328,7 @@ Name: "audio\mp3\mp3lib";        Description: "mp3lib";                         
 Name: "audio\mp3\libavcodec";    Description: "libavcodec";                       Components: ffdshow; Flags: unchecked exclusive
 Name: "audio\aac";               Description: "AAC";                              Components: ffdshow
 Name: "audio\aac\libfaad2";      Description: "libfaad2";                         Components: ffdshow; Flags:           exclusive
-;Name: "audio\aac\libavcodec";    Description: "libavcodec";                       Components: ffdshow; Flags: unchecked exclusive
+Name: "audio\aac\libavcodec";    Description: "libavcodec";                       Components: ffdshow; Flags: unchecked exclusive
 Name: "audio\ac3";               Description: "AC3";                              Components: ffdshow
 Name: "audio\ac3\liba52";        Description: "liba52";                           Components: ffdshow; Flags:           exclusive
 Name: "audio\ac3\libavcodec";    Description: "libavcodec";                       Components: ffdshow; Flags: unchecked exclusive
@@ -1227,6 +1227,7 @@ begin
   end
 end;
 #endif
+
 
 
 

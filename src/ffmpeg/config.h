@@ -242,7 +242,7 @@ Note: when adding a new codec, you have to:
 #define CONFIG_ZLIB_DECODER 1
 #define CONFIG_ZMBV_DECODER 1
 
-#define CONFIG_AAC_DECODER 0
+#define CONFIG_AAC_DECODER 1
 #define CONFIG_AC3_DECODER 1
 #define CONFIG_ATRAC3_DECODER 1
 #define CONFIG_COOK_DECODER 1

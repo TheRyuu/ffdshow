@@ -1139,7 +1139,7 @@ void TglobalSettingsDecAudio::load(void)
  fixMissing(dts       ,IDFF_MOVIE_LIBDTS,IDFF_MOVIE_LAVC);
  fixMissing(mp2       ,IDFF_MOVIE_MPLAYER,IDFF_MOVIE_LIBMAD,IDFF_MOVIE_LAVC);
  fixMissing(mp3       ,IDFF_MOVIE_MPLAYER,IDFF_MOVIE_LIBMAD,IDFF_MOVIE_LAVC);
- fixMissing(aac       ,IDFF_MOVIE_LIBFAAD);
+ fixMissing(aac       ,IDFF_MOVIE_LIBFAAD,IDFF_MOVIE_LAVC);
  fixMissing(avis      ,IDFF_MOVIE_AVIS);
  fixMissing(iadpcm    ,IDFF_MOVIE_LAVC);
  fixMissing(msadpcm   ,IDFF_MOVIE_LAVC);

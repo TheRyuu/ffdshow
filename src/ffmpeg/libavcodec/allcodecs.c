@@ -118,7 +118,7 @@ void avcodec_register_all(void)
     REGISTER_DECODER (ZMBV, zmbv);
 
     /* audio codecs */
-    //REGISTER_DECODER (AAC, aac);
+    REGISTER_DECODER (AAC, aac);
     REGISTER_ENCDEC  (AC3, ac3);
     REGISTER_DECODER (ATRAC3, atrac3);
     REGISTER_DECODER (COOK, cook);

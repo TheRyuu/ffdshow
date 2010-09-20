@@ -18,6 +18,10 @@ SRCS_C=\
     DllEntry.c \
     $(LAVC_DIR)/8bps.c \
     $(LAVC_DIR)/aac_ac3_parser.c \
+    $(LAVC_DIR)/aacadtsdec.c \
+    $(LAVC_DIR)/aacdec.c \
+    $(LAVC_DIR)/aacps.c \
+    $(LAVC_DIR)/aacsbr.c \
     $(LAVC_DIR)/aactab.c \
     $(LAVC_DIR)/aandcttab.c \
     $(LAVC_DIR)/aasc.c \
@@ -123,6 +127,7 @@ SRCS_C=\
     $(LAVC_DIR)/mpeg12.c \
     $(LAVC_DIR)/mpeg12data.c \
     $(LAVC_DIR)/mpeg12enc.c \
+    $(LAVC_DIR)/mpeg4audio.c \
     $(LAVC_DIR)/mpeg4video.c \
     $(LAVC_DIR)/mpeg4video_parser.c \
     $(LAVC_DIR)/mpeg4videodec.c \
