@@ -1,5 +1,5 @@
 ALLDLLS=LIBMPEG2 LIBMAD LIBFAAD2 THEORA X264 XVIDCORE LIBDTS SAMPLERATE TREMOR \
-		REALAAC TOMSMOCOMP KDINT UNRAR LIBA52 FFMPEG FFMPEGMT LIBMP
+		TOMSMOCOMP KDINT UNRAR LIBA52 FFMPEG FFMPEGMT LIBMP
 
 FFDLLS=FFMPEG FFMPEGMT LIBMP \
 		X264 XVIDCORE
@@ -16,7 +16,6 @@ ALLS=../bin/libavcodec.dll \
      ../bin/ff_libdts.dll \
      ../bin/ff_samplerate.dll \
      ../bin/ff_tremor.dll \
-     ../bin/ff_realaac.dll \
      ../bin/TomsMoComp_ff.dll \
      ../bin/ff_kernelDeint.dll \
      ../bin/ff_unrar.dll \
@@ -93,11 +92,6 @@ SAMPLERATE:
 TREMOR:
 	$(MAKE) -C codecs/tremor
 
-../bin/ff_realaac.dll:
-	$(MAKE) -C codecs/realaac
-REALAAC:
-	$(MAKE) -C codecs/realaac
-
 ../bin/TomsMoComp_ff.dll:
 	$(MAKE) -C imgFilters/TomsMoComp
 TOMSMOCOMP:
@@ -127,7 +121,6 @@ clean:
 	$(MAKE) -C codecs/libdts clean
 	$(MAKE) -C audioFilters/resample/libsamplerate clean
 	$(MAKE) -C codecs/tremor clean
-	$(MAKE) -C codecs/realaac clean
 	$(MAKE) -C imgFilters/TomsMoComp clean
 	$(MAKE) -C imgFilters/KernelDeint clean
 	$(MAKE) -C ../unrar clean
@@ -146,7 +139,6 @@ distclean:
 	$(MAKE) -C codecs/libdts distclean
 	$(MAKE) -C audioFilters/resample/libsamplerate distclean
 	$(MAKE) -C codecs/tremor distclean
-	$(MAKE) -C codecs/realaac distclean
 	$(MAKE) -C imgFilters/TomsMoComp distclean
 	$(MAKE) -C imgFilters/KernelDeint distclean
 	$(MAKE) -C ../unrar distclean
