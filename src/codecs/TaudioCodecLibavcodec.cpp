@@ -207,6 +207,14 @@ if (avcodec)
         ff_strncpy(buf,_l("MP3"),buflen);
     else if (!strcmp(text<char_t>(avcodec->name), _l("mp2")))
         ff_strncpy(buf,_l("MP2"),buflen);
+    else if (!strcmp(text<char_t>(avcodec->name), _l("mp1")))
+        ff_strncpy(buf,_l("MP1"),buflen);
+    else if (!strcmp(text<char_t>(avcodec->name), _l("mp3float")))
+        ff_strncpy(buf,_l("MP3"),buflen);
+    else if (!strcmp(text<char_t>(avcodec->name), _l("mp2float")))
+        ff_strncpy(buf,_l("MP2"),buflen);
+    else if (!strcmp(text<char_t>(avcodec->name), _l("mp1float")))
+        ff_strncpy(buf,_l("MP1"),buflen);
     else if (!strcmp(text<char_t>(avcodec->name), _l("ac3")))
         ff_strncpy(buf,_l("AC3"),buflen);
     else if (!strcmp(text<char_t>(avcodec->name), _l("eac3")))

@@ -135,6 +135,7 @@ SRCS_C=\
     $(LAVC_DIR)/mpegaudio.c \
     $(LAVC_DIR)/mpegaudiodata.c \
     $(LAVC_DIR)/mpegaudiodec.c \
+    $(LAVC_DIR)/mpegaudiodec_float.c \
     $(LAVC_DIR)/mpegaudiodecheader.c \
     $(LAVC_DIR)/mpegaudio_parser.c \
     $(LAVC_DIR)/mpegvideo.c \
