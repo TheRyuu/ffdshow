@@ -466,6 +466,7 @@ const AMOVIESETUP_MEDIATYPE TffdshowDecAudio::inputMediaTypes[]=
  { &MEDIATYPE_Audio , &MEDIASUBTYPE_DOLBY_DDPLUS },
  { &MEDIATYPE_Audio , &MEDIASUBTYPE_PCM        },
  { &MEDIATYPE_Audio , &MEDIASUBTYPE_RAW        },
+ { &MEDIATYPE_Audio , &MEDIASUBTYPE_NONE       },
  { &MEDIATYPE_Audio , &MEDIASUBTYPE_IEEE_FLOAT }
 };
 

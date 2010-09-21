@@ -272,7 +272,7 @@ DWORD TsampleFormat::getPCMformat(const CMediaType &mtIn,DWORD def)
  if (*mtIn.FormatType()!=FORMAT_WaveFormatEx)
   return def;
  const WAVEFORMATEX *wfex=(const WAVEFORMATEX*)mtIn.Format();
- if (wfex->wFormatTag!=WAVE_FORMAT_EXTENSIBLE && wfex->wFormatTag!=WAVE_FORMAT_PCM && wfex->wFormatTag!=WAVE_FORMAT_IEEE_FLOAT && mtIn.subtype!=MEDIASUBTYPE_RAW)
+ if (wfex->wFormatTag!=WAVE_FORMAT_EXTENSIBLE && wfex->wFormatTag!=WAVE_FORMAT_PCM && wfex->wFormatTag!=WAVE_FORMAT_IEEE_FLOAT && mtIn.subtype!=MEDIASUBTYPE_RAW && mtIn.subtype!=MEDIASUBTYPE_NONE)
   return def;
  TsampleFormat sf(mtIn);
  switch (sf.sf)
