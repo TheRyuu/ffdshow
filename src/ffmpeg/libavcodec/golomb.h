@@ -65,7 +65,7 @@ static inline int get_ue_golomb(GetBitContext *gb){
 
     OPEN_READER(re, gb);
     /* ffdshow custom code */
-    #if defined(__INTEL_COMPILER) || defined(DEBUG)
+    #if defined(__INTEL_COMPILER < 1100) || defined(DEBUG)
         #ifdef ALT_BITSTREAM_READER_LE
     re_cache= AV_RL32( ((const uint8_t *)(gb)->buffer)+(re_index>>3) ) >> (re_index&0x07);
         #else
