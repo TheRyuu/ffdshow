@@ -6,10 +6,8 @@ EXPORTS
   avcodec_open
   avcodec_alloc_context
   avcodec_alloc_frame
-  avcodec_decode_video
   avcodec_decode_video2
   avcodec_encode_video
-  avcodec_decode_audio2
   avcodec_decode_audio3
   avcodec_encode_audio
   avcodec_flush_buffers
@@ -36,5 +34,7 @@ EXPORTS
   avcodec_h264_search_recovery_point
 
   av_parser_init
-  av_parser_parse
+  av_parser_parse2
   av_parser_close
+  
+  av_init_packet

@@ -185,7 +185,11 @@ void TffPict::readLibavcodec(int Icsp,const char_t *flnm,const char_t *ext,Tbuff
    fclose(f);
    AVFrame *frame=libavcodec->avcodec_alloc_frame();
    int got_picture=0;
-   int ret=libavcodec->avcodec_decode_video(avctx,frame,&got_picture,src,srclen);
+   AVPacket avpkt;
+   libavcodec->av_init_packet(&avpkt);
+   avpkt.data = src;
+   avpkt.size = srclen;
+   int ret=libavcodec->avcodec_decode_video2(avctx,frame,&got_picture,&avpkt);
    if (got_picture && frame->data[0] && frame->data[1])
     {
      const stride_t linesize[4]={frame->linesize[0],frame->linesize[1],frame->linesize[2],frame->linesize[3]};

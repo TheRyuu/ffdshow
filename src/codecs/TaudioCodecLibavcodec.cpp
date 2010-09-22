@@ -320,6 +320,8 @@ HRESULT TaudioCodecLibavcodec::decode(TbyteBuffer &src0)
        break;  // workaround when skipping TrueHD in MPC?
    int dstLength=AVCODEC_MAX_AUDIO_FRAME_SIZE;
    void *dst=(void*)getDst(dstLength);
+   AVPacket avpkt;
+   libavcodec->av_init_packet(&avpkt);
    int dstLength2=AVCODEC_MAX_AUDIO_FRAME_SIZE;
    void *dst2=buf2.alloc(dstLength);
 
@@ -328,18 +330,20 @@ HRESULT TaudioCodecLibavcodec::decode(TbyteBuffer &src0)
    if (parser && codecId != CODEC_ID_MLP && codecId != CODEC_ID_TRUEHD)
    {
        // Parse the input buffer src(size) and returned parsed data into dst2(dstLength2)
-       ret=libavcodec->av_parser_parse(parser, avctx, (uint8_t**)&dst2, &dstLength2,
-           (const uint8_t*)src, size, AV_NOPTS_VALUE, AV_NOPTS_VALUE);
+       ret=libavcodec->av_parser_parse2(parser, avctx, (uint8_t**)&dst2, &dstLength2,
+           (const uint8_t*)src, size, AV_NOPTS_VALUE, AV_NOPTS_VALUE, AV_NOPTS_VALUE);
        // dstLength2==0 : nothing parsed
        if (ret<0 || (ret==0 && dstLength2==0))
            break;
        size-=ret;
        src+=ret;
+       avpkt.data=(uint8_t*)dst2;
+       avpkt.size=dstLength2;
 
        if (dstLength2 > 0) // This block could be parsed
        {
-          // Decode the parsed buffer dst2(dstLength2) into dst(dstLength)
-          ret2=libavcodec->avcodec_decode_audio2(avctx,(int16_t*)dst,&dstLength,(const uint8_t*)dst2,dstLength2);
+          // Decode the parsed buffer avpkt.data(avpkt.size) into dst(dstLength)
+          ret2=libavcodec->avcodec_decode_audio3(avctx,(int16_t*)dst,&dstLength,&avpkt);
           // If nothing could be decoded, skip this data and continue
           if (ret2<0 || (ret2==0 &&dstLength==0))
             continue;
@@ -349,7 +353,9 @@ HRESULT TaudioCodecLibavcodec::decode(TbyteBuffer &src0)
    }
    else
    {
-       ret=libavcodec->avcodec_decode_audio2(avctx,(int16_t*)dst,&dstLength,src,size);
+       avpkt.data = src;
+       avpkt.size = size;
+       ret=libavcodec->avcodec_decode_audio3(avctx,(int16_t*)dst,&dstLength,&avpkt);
        if (ret<0 || (ret==0 && dstLength==0))
        {
            DPRINTF(_l("Unable to decode this frame"));

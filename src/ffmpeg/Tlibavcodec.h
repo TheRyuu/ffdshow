@@ -10,6 +10,7 @@
 struct AVCodecContext;
 struct AVCodec;
 struct AVFrame;
+struct AVPacket;
 struct AVCodecParserContext;
 struct AVPaletteControl;
 struct SwsContext;
@@ -65,13 +66,12 @@ public:
  int  (*avcodec_open0)(AVCodecContext *avctx, AVCodec *codec);
  int  avcodec_open(AVCodecContext *avctx, AVCodec *codec);
  AVFrame* (*avcodec_alloc_frame)(void);
- int (*avcodec_decode_video)(AVCodecContext *avctx, AVFrame *picture,
+ int (*avcodec_decode_video2)(AVCodecContext *avctx, AVFrame *picture,
                              int *got_picture_ptr,
-                             const uint8_t *buf, int buf_size);
-int (*avcodec_decode_audio2)(AVCodecContext *avctx, int16_t *samples,
+                             AVPacket *avpkt);
+ int (*avcodec_decode_audio3)(AVCodecContext *avctx, int16_t *samples,
                          int *frame_size_ptr,
-                         const uint8_t *buf, int buf_size);
-
+                         AVPacket *avpkt);
  int (*avcodec_encode_video)(AVCodecContext *avctx, uint8_t *buf, int buf_size, const AVFrame *pict);
  int (*avcodec_encode_audio)(AVCodecContext *avctx, uint8_t *buf, int buf_size, const short *samples);
  void (*avcodec_flush_buffers)(AVCodecContext *avctx);
@@ -96,8 +96,10 @@ int (*avcodec_decode_audio2)(AVCodecContext *avctx, int16_t *samples,
  void (*av_free)(void *ptr);
  
  AVCodecParserContext* (*av_parser_init)(int codec_id);
- int (*av_parser_parse)(AVCodecParserContext *s,AVCodecContext *avctx,uint8_t **poutbuf, int *poutbuf_size,const uint8_t *buf, int buf_size,int64_t pts, int64_t dts);
+ int (*av_parser_parse2)(AVCodecParserContext *s,AVCodecContext *avctx,uint8_t **poutbuf, int *poutbuf_size,const uint8_t *buf, int buf_size,int64_t pts, int64_t dts, int64_t pos);
  void (*av_parser_close)(AVCodecParserContext *s);
+
+ void (*av_init_packet)(AVPacket *pkt);
 
  int (*avcodec_h264_search_recovery_point)(AVCodecContext *avctx,
                          const uint8_t *buf, int buf_size, int *recovery_frame_cnt);

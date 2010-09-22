@@ -447,6 +447,9 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
     if (src && h264_on_MPEG2_system)
         size = codedPictureBuffer.append(src, size);
 
+    AVPacket avpkt;
+    libavcodec->av_init_packet(&avpkt);
+
     while (!src || size>0) {
         int used_bytes;
 
@@ -456,7 +459,9 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
         avctx->reordered_opaque3 = size;
 
         if (sendextradata && extradata->data && extradata->size > 0) {
-            used_bytes=libavcodec->avcodec_decode_video(avctx,frame,&got_picture,extradata->data,(int)extradata->size);
+            avpkt.data = (uint8_t *)extradata->data;
+            avpkt.size = (int)extradata->size;
+            used_bytes=libavcodec->avcodec_decode_video2(avctx,frame,&got_picture,&avpkt);
             sendextradata=false;
             if (used_bytes>0) used_bytes=0;
             if (mpeg12_codec(codecId)) {
@@ -477,7 +482,9 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
                       memcpy(ffbuf,src,size);memset(ffbuf+size,0,FF_INPUT_BUFFER_PADDING_SIZE);
                       if (h264RandomAccess.search(ffbuf, size)) {
                           memcpy(ffbuf,src,size);memset(ffbuf+size,0,FF_INPUT_BUFFER_PADDING_SIZE);
-                          used_bytes=libavcodec->avcodec_decode_video(avctx,frame,&got_picture,ffbuf,size);
+                          avpkt.data = ffbuf;
+                          avpkt.size = size;
+                          used_bytes=libavcodec->avcodec_decode_video2(avctx,frame,&got_picture,&avpkt);
                           if (used_bytes < 0)
                               return S_OK;
                           h264RandomAccess.judgeUsability(&got_picture);
@@ -486,10 +493,15 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
                   }
               } else {
                   memcpy(ffbuf,src,size);memset(ffbuf+size,0,FF_INPUT_BUFFER_PADDING_SIZE);
-                  used_bytes=libavcodec->avcodec_decode_video(avctx,frame,&got_picture,ffbuf,size);
+                  avpkt.data = ffbuf;
+                  avpkt.size = size;
+                  used_bytes=libavcodec->avcodec_decode_video2(avctx,frame,&got_picture,&avpkt);
               }
-            } else
-                used_bytes=libavcodec->avcodec_decode_video(avctx,frame,&got_picture,NULL,0);
+            } else {
+                avpkt.data = NULL;
+                avpkt.size = 0;
+                used_bytes=libavcodec->avcodec_decode_video2(avctx,frame,&got_picture,&avpkt);
+            }
         }
 
         if (used_bytes<0)
@@ -1512,7 +1524,12 @@ int TvideoCodecLibavcodec::TcodedPictureBuffer::send(int *got_picture_ptr)
      parent->avctx->reordered_opaque = out_rtStart;
      parent->avctx->reordered_opaque2 = out_rtStop;
      parent->avctx->reordered_opaque3 = out_size;
-     int used = parent->libavcodec->avcodec_decode_video(parent->avctx, parent->frame, got_picture_ptr, (uint8_t *)outBuf + used_bytes, out_size);
+
+     AVPacket avpkt;
+     parent->libavcodec->av_init_packet(&avpkt);
+     avpkt.data = (uint8_t *)outBuf + used_bytes;
+     avpkt.size = out_size;
+     int used = parent->libavcodec->avcodec_decode_video2(parent->avctx, parent->frame, got_picture_ptr, &avpkt);
 
      if (used < 0)
          return -1;
