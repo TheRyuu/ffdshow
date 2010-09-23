@@ -2,7 +2,7 @@
 
 #define dummy Exec("update_version.bat","","",1,SW_HIDE)
 
-#include "languages\..\..\..\..\src\svn_version.h"
+#include "languages\..\..\..\src\svn_version.h"
 
 ; Build revision and date
 #define tryout_revision           = SVN_REVISION
@@ -36,7 +36,7 @@
 #define outputdir                 = '.'
 
 ; Location of binaries
-#define bindir                    = '..\..'
+#define bindir                    = '..\'
 
 ; Custom builder preferences (uncomment one to enable, or define it through a command line parameter)
 ;#define PREF_CLSID
@@ -50,14 +50,14 @@
 
 #ifdef PREF_CLSID
   #define filename_suffix        = '_clsid'
-  #define bindir                 = '..\..\x86'
-  #define outputdir              = '..\..\..\..\'
+  #define bindir                 = '..\x86'
+  #define outputdir              = '..\..\..\'
 #endif
 #ifdef PREF_CLSID_ICL
   #define sse_required           = True
   #define filename_suffix        = '_clsid_icl10'
-  #define bindir                 = '..\..\x86'
-  #define outputdir              = '..\..\..\..\'
+  #define bindir                 = '..\x86'
+  #define outputdir              = '..\..\..\'
 #endif
 #ifdef PREF_CLSID_X64
   #define is64bit                = True
@@ -65,8 +65,8 @@
   #define include_xvidcore       = False
   #define include_plugin_dscaler = False
   #define filename_suffix        = '_clsid_x64'
-  #define bindir                 = '..\..\x64'
-  #define outputdir              = '..\..\..\..\'
+  #define bindir                 = '..\x64'
+  #define outputdir              = '..\..\..\'
 #endif
 #ifdef PREF_YAMAGATA
   #define include_xvidcore       = False
@@ -135,7 +135,7 @@ OutputBaseFilename              = ffdshow_rev{#= tryout_revision}_{#= buildyear}
 OutputDir                       = {#= outputdir}
 PrivilegesRequired              = admin
 #if include_setup_icon
-SetupIconFile                   = ..\..\..\src\FFd.ico
+SetupIconFile                   = ..\..\src\FFd.ico
 #endif
 #if localize
 ShowLanguageDialog              = yes
@@ -232,23 +232,23 @@ Name: "zh_Hans"; MessagesFile:          "languages\ChineseSimp.isl"
 Name: "en";      MessagesFile: "compiler:Default.isl";               LicenseFile: "gnu_license.txt";         InfoBeforeFile: "infobefore.rtf"
   #if localize
 Name: "ca";      MessagesFile: "compiler:Languages\Catalan.isl"
-Name: "cs";      MessagesFile: "compiler:Languages\Czech.isl";       LicenseFile: "../../../copying.cs.txt"
+Name: "cs";      MessagesFile: "compiler:Languages\Czech.isl";       LicenseFile: "..\..\copying.cs.txt"
 Name: "da";      MessagesFile: "compiler:Languages\Danish.isl"
-Name: "de";      MessagesFile: "compiler:Languages\German.isl";      LicenseFile: "../../../copying.de.txt"; InfoBeforeFile: "infobefore\infobefore.de.rtf"
+Name: "de";      MessagesFile: "compiler:Languages\German.isl";      LicenseFile: "..\..\copying.de.txt";   InfoBeforeFile: "infobefore\infobefore.de.rtf"
 Name: "es";      MessagesFile: "compiler:Languages\Spanish.isl"
 Name: "eu";      MessagesFile: "compiler:Languages\Basque.isl"
 Name: "fi";      MessagesFile: "compiler:Languages\Finnish.isl"
 Name: "fr";      MessagesFile: "compiler:Languages\French.isl"
 Name: "hu";      MessagesFile: "compiler:Languages\Hungarian.isl"
 Name: "it";      MessagesFile: "compiler:Languages\Italian.isl"
-Name: "ja";      MessagesFile:          "languages\Japanese.isl";    LicenseFile: "../../../copying.ja.txt"
+Name: "ja";      MessagesFile:          "languages\Japanese.isl";    LicenseFile: "..\..\copying.ja.txt"
 Name: "nl";      MessagesFile: "compiler:Languages\Dutch.isl"
 Name: "no";      MessagesFile: "compiler:Languages\Norwegian.isl"
-Name: "pl";      MessagesFile: "compiler:Languages\Polish.isl";      LicenseFile: "../../../copying.pl.txt"; InfoBeforeFile: "infobefore\infobefore.pl.rtf"
+Name: "pl";      MessagesFile: "compiler:Languages\Polish.isl";      LicenseFile: "..\..\copying.pl.txt";   InfoBeforeFile: "infobefore\infobefore.pl.rtf"
 Name: "pt_BR";   MessagesFile: "compiler:Languages\BrazilianPortuguese.isl"
 Name: "pt_PT";   MessagesFile: "compiler:Languages\Portuguese.isl"
-Name: "ru";      MessagesFile: "compiler:Languages\Russian.isl";     LicenseFile: "../../../copying.ru.txt"
-Name: "sk";      MessagesFile: "compiler:Languages\Slovak.isl";      LicenseFile: "../../../copying.sk.txt"
+Name: "ru";      MessagesFile: "compiler:Languages\Russian.isl";     LicenseFile: "..\..\copying.ru.txt"
+Name: "sk";      MessagesFile: "compiler:Languages\Slovak.isl";      LicenseFile: "..\..\copying.sk.txt"
 Name: "sl";      MessagesFile: "compiler:Languages\Slovenian.isl"
 Name: "zh_Hant"; MessagesFile:          "languages\ChineseTrad.isl"
 Name: "zh_Hans"; MessagesFile:          "languages\ChineseSimp.isl"
@@ -424,7 +424,7 @@ Source: "{#= bindir}\ff_wmv9.dll";                DestDir: "{app}";             
 Source: "{#= bindir}\ff_vfw.dll";                 DestDir: "{sys}";                         Components: ffdshow\vfw;                Flags: ignoreversion restartreplace uninsrestartdelete
 
 #if include_plugin_avisynth
-Source: "..\..\ffavisynth.avsi";                  DestDir: "{code:GetAviSynthPluginDir}";   Components: ffdshow\plugins\avisynth;   Flags: ignoreversion restartreplace uninsrestartdelete
+Source: "..\ffavisynth.avsi";                     DestDir: "{code:GetAviSynthPluginDir}";   Components: ffdshow\plugins\avisynth;   Flags: ignoreversion restartreplace uninsrestartdelete
 Source: "{#= bindir}\ffavisynth.dll";             DestDir: "{code:GetAviSynthPluginDir}";   Components: ffdshow\plugins\avisynth;   Flags: ignoreversion restartreplace uninsrestartdelete
 #endif
 #if include_plugin_virtualdub
@@ -439,16 +439,16 @@ Source: "{#= bindir}\makeAVIS.exe";               DestDir: "{app}";             
 Source: "{#= bindir}\ff_acm.acm";                 DestDir: "{sys}";                         Components: ffdshow\makeavis;           Flags: ignoreversion restartreplace uninsrestartdelete
 #endif
 
-Source: "..\..\languages\*.*";                    DestDir: "{app}\languages";               Components: ffdshow;                    Flags: ignoreversion
-Source: "..\..\custom matrices\*.*";              DestDir: "{app}\custom matrices";         Components: ffdshow\vfw;                Flags: ignoreversion
-Source: "..\..\openIE.js";                        DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
+Source: "..\languages\*.*";                       DestDir: "{app}\languages";               Components: ffdshow;                    Flags: ignoreversion
+Source: "..\custom matrices\*.*";                 DestDir: "{app}\custom matrices";         Components: ffdshow\vfw;                Flags: ignoreversion
+Source: "..\openIE.js";                           DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
 Source: "gnu_license.txt";                        DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
 Source: "Boost_Software_License_1.0.txt";         DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
 
 #if is64bit
-  #define ff_manifest = '..\..\manifest64'
+  #define ff_manifest = '..\manifest64'
 #else
-  #define ff_manifest = '..\..\manifest32'
+  #define ff_manifest = '..\manifest32'
 #endif
 
 Source: "{#= ff_manifest}\ffdshow.ax.manifest";   DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.03
@@ -1227,7 +1227,4 @@ begin
   end
 end;
 #endif
-
-
-
 
