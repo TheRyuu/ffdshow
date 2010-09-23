@@ -177,7 +177,7 @@ HRESULT TimgFilterAvcodecBlur::process(TfilterQueue::iterator it,TffPict &pict,c
     }
 
    if (swsc)
-    libavcodec->sws_scale_ordered(swsc,src,stride1,0,dy1[0],dst,stride2);
+    libavcodec->sws_scale(swsc,src,stride1,0,dy1[0],dst,stride2);
   }
  return parent->processSample(++it,pict);
 }
