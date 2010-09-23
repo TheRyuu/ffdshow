@@ -8,13 +8,13 @@
 	VCNestedProjectFileName="ff_wmv9_icl11.vcproj">
 	<Configurations>
 		<Configuration
-			Name="Release Unicode|Win32">
+			Name="Release|Win32">
 			<Tool
 				Name="CppCmplrTool"
 				Optimization="1000"/>
 		</Configuration>
 		<Configuration
-			Name="Release Unicode|x64">
+			Name="Release|x64">
 			<Tool
 				Name="CppCmplrTool"
 				Optimization="1000"

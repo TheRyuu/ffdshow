@@ -20,9 +20,9 @@
 	</ToolFiles>
 	<Configurations>
 		<Configuration
-			Name="Debug Unicode|Win32"
-			OutputDirectory="Debug_Unicode_$(PlatformName)_2008"
-			IntermediateDirectory="Debug_Unicode_$(PlatformName)_2008"
+			Name="Debug|Win32"
+			OutputDirectory="$(ConfigurationName)_$(PlatformName)_2008"
+			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			ConfigurationType="2"
 			UseOfMFC="0"
 			CharacterSet="1"
@@ -113,9 +113,9 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="Debug Unicode|x64"
-			OutputDirectory="Debug_Unicode_$(PlatformName)_2008"
-			IntermediateDirectory="Debug_Unicode_$(PlatformName)_2008"
+			Name="Debug|x64"
+			OutputDirectory="$(ConfigurationName)_$(PlatformName)_2008"
+			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			ConfigurationType="2"
 			CharacterSet="1"
 			>
@@ -205,9 +205,9 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="Release Unicode|Win32"
-			OutputDirectory="Release_Unicode_$(PlatformName)_2008"
-			IntermediateDirectory="Release_Unicode_$(PlatformName)_2008"
+			Name="Release|Win32"
+			OutputDirectory="$(ConfigurationName)_$(PlatformName)_2008"
+			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			ConfigurationType="2"
 			CharacterSet="1"
 			ManagedExtensions="0"
@@ -302,9 +302,9 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="Release Unicode|x64"
-			OutputDirectory="Release_Unicode_$(PlatformName)_2008"
-			IntermediateDirectory="Release_Unicode_$(PlatformName)_2008"
+			Name="Release|x64"
+			OutputDirectory="$(ConfigurationName)_$(PlatformName)_2008"
+			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			ConfigurationType="2"
 			CharacterSet="1"
 			ManagedExtensions="0"
@@ -428,42 +428,6 @@
 			<File
 				RelativePath="stdafx.cpp"
 				>
-				<FileConfiguration
-					Name="Debug Unicode|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions=""
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug Unicode|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions=""
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release Unicode|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions=""
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release Unicode|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions=""
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug|Win32"
 					>

@@ -20,7 +20,7 @@
 	</ToolFiles>
 	<Configurations>
 		<Configuration
-			Name="Debug Unicode|Win32"
+			Name="Debug|Win32"
 			OutputDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
 			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
 			ConfigurationType="2"
@@ -113,7 +113,7 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="Debug Unicode|x64"
+			Name="Debug|x64"
 			OutputDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
 			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
 			ConfigurationType="2"
@@ -205,7 +205,7 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="Release Unicode|Win32"
+			Name="Release|Win32"
 			OutputDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
 			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
 			ConfigurationType="2"
@@ -302,7 +302,7 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="Release Unicode|x64"
+			Name="Release|x64"
 			OutputDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
 			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
 			ConfigurationType="2"
@@ -429,42 +429,6 @@
 			<File
 				RelativePath="stdafx.cpp"
 				>
-				<FileConfiguration
-					Name="Debug Unicode|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions=""
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug Unicode|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions=""
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release Unicode|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions=""
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release Unicode|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions=""
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug|Win32"
 					>
