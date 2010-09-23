@@ -247,18 +247,18 @@ HRESULT TimgFilterResize::process(TfilterQueue::iterator it,TffPict &pict,const 
           swsc=libavcodec->sws_getContext(pictRect.dx,pictRect.dy/2,csp_ffdshow2lavc(csp1),newpict.rectClip.dx,newpict.rectClip.dy/2,csp_ffdshow2lavc(csp2),flags,&mixedparams,swsf,NULL,NULL);
         }
        if (!oldinterlace)
-        libavcodec->sws_scale_ordered(swsc,src,stride1,0,pictRect.dy,dst,stride2);
+        libavcodec->sws_scale(swsc,src,stride1,0,pictRect.dy,dst,stride2);
        else
         {
          stride_t stride1I[]={stride1[0]*2,stride1[1]*2,stride1[2]*2,stride1[3]*2};
          stride_t stride2I[]={stride2[0]*2,stride2[1]*2,stride2[2]*2,stride2[3]*2};
-         libavcodec->sws_scale_ordered(swsc,src,stride1I,0,pictRect.dy/2,dst,stride2I);
+         libavcodec->sws_scale(swsc,src,stride1I,0,pictRect.dy/2,dst,stride2I);
          for (unsigned int i=0;i<pict.cspInfo.numPlanes;i++)
           {
            src[i]+=stride1[i];
            dst[i]+=stride2[i];
           }
-         libavcodec->sws_scale_ordered(swsc,src,stride1I,0,pictRect.dy/2,dst,stride2I);
+         libavcodec->sws_scale(swsc,src,stride1I,0,pictRect.dy/2,dst,stride2I);
         }
        break;
       }

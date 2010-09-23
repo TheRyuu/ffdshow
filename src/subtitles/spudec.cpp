@@ -672,9 +672,9 @@ void Tspudec::sws_spu_image(unsigned char *d1, unsigned char *d2, int dw, int dh
  int swsflags = Tconfig::sws_cpu_flags | SWS_GAUSS;
  SwsParams params;Tlibavcodec::swsInitParams(&params,SWS_GAUSS,Tconfig::sws_cpu_flags);
  SwsContext *ctx=libavcodec->sws_getContext(sw, sh, PIX_FMT_GRAY8, dw, dh, PIX_FMT_GRAY8, swsflags, &params, &filter, NULL,NULL);
- libavcodec->sws_scale_ordered(ctx,(const uint8_t**)&s1,&ss,0,sh,&d1,&ds);
+ libavcodec->sws_scale(ctx,(const uint8_t**)&s1,&ss,0,sh,&d1,&ds);
  for (stride_t i=ss*sh-1; i>=0; i--) s2[i]=(unsigned char)canon_alpha(s2[i]);
- libavcodec->sws_scale_ordered(ctx,(const uint8_t**)&s2,&ss,0,sh,&d2,&ds);
+ libavcodec->sws_scale(ctx,(const uint8_t**)&s2,&ss,0,sh,&d2,&ds);
  libavcodec->sws_freeContext(ctx);
 }
 

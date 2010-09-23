@@ -93,7 +93,7 @@ template<class _mm> void TimgFilterWarpsharp::warpsharpbump(const unsigned char 
 void TimgFilterWarpsharp::warpsharpblur(const unsigned char *src,stride_t srcStride,unsigned char *dst,stride_t dstStride,unsigned int dx,unsigned int dy)
 {
  if (swsblur)
-  libavcodec->sws_scale_ordered(swsblur,&src,&srcStride,0,dy,&dst,&dstStride);
+  libavcodec->sws_scale(swsblur,&src,&srcStride,0,dy,&dst,&dstStride);
  else
   TffPict::copy(dst,dstStride,src,srcStride,dx,dy);
 }

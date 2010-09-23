@@ -44,7 +44,7 @@ T3x3blurSWS::~T3x3blurSWS()
 void T3x3blurSWS::process(const unsigned char *src,stride_t srcStride,unsigned char *dst,stride_t dstStride)
 {
  if (swsc)
-  libavcodec->sws_scale_ordered(swsc,&src,&srcStride,0,dy,&dst,&dstStride);
+  libavcodec->sws_scale(swsc,&src,&srcStride,0,dy,&dst,&dstStride);
  else
   TffPict::copy(dst,dstStride,src,srcStride,dx,dy);
 }

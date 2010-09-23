@@ -123,7 +123,6 @@ Tlibavcodec::Tlibavcodec(const Tconfig *config):refcount(0)
  dll->loadFunction(sws_getDefaultFilter, "sws_getDefaultFilter");
  dll->loadFunction(sws_freeFilter, "sws_freeFilter");
  dll->loadFunction(sws_scale, "sws_scale");
- dll->loadFunction(sws_scale_ordered, "sws_scale_ordered");
 
  dll->loadFunction(sws_convertPalette8ToPacked32, "sws_convertPalette8ToPacked32");
  dll->loadFunction(sws_convertPalette8ToPacked24, "sws_convertPalette8ToPacked24");

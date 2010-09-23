@@ -124,10 +124,8 @@ public:
                                 float chromaHShift, float chromaVShift,
                                 int verbose);
  void (*sws_freeFilter)(SwsFilter *filter);
- int (*sws_scale)(SwsContext *c, const uint8_t* src[], const stride_t srcStride[], int srcSliceY,
-              int srcSliceH, uint8_t* dst[], const stride_t dstStride[]);
- int (*sws_scale_ordered)(SwsContext *c, const uint8_t* src[], const stride_t srcStride[], int srcSliceY,
-                      int srcSliceH, uint8_t* dst[], stride_t dstStride[]);
+ int (*sws_scale)(struct SwsContext *context, const uint8_t* const srcSlice[], const stride_t srcStride[],
+              int srcSliceY, int srcSliceH, uint8_t* const dst[], const stride_t dstStride[]);
  SwsVector *(*sws_getConstVec)(double c, int length);
  SwsVector *(*sws_getGaussianVec)(double variance, double quality);
  void (*sws_normalizeVec)(SwsVector *a, double height);

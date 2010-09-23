@@ -44,7 +44,6 @@ EXPORTS
   sws_getContext
   sws_freeContext
   sws_scale
-  sws_scale_ordered
   sws_getDefaultFilter
   sws_freeFilter
   sws_getConstVec

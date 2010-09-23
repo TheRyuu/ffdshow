@@ -699,9 +699,9 @@ void TspuImage::TscalerSw::scale(const unsigned char *srci,const unsigned char *
    const unsigned char *srca0[4] = {srca, NULL, NULL, NULL};
    unsigned char *dsti0[4] = {dsti, NULL, NULL, NULL};
    unsigned char *dsta0[4] = {dsta, NULL, NULL, NULL};
-   libavcodec->sws_scale_ordered(ctx,srci0,srcStride0,0,srcdy,dsti0,dstStride0);
+   libavcodec->sws_scale(ctx,srci0,srcStride0,0,srcdy,dsti0,dstStride0);
    //TODO : libswscale now supports alpha scaling for RGB32, this step is not necessary in RGB mode
-   libavcodec->sws_scale_ordered(ctx,srca0,srcStride0,0,srcdy,dsta0,dstStride0);
+   libavcodec->sws_scale(ctx,srca0,srcStride0,0,srcdy,dsta0,dstStride0);
   }
  
 }

@@ -47,5 +47,5 @@ void Tswscale::done(void)
 }
 bool Tswscale::convert(const uint8_t* src[], const stride_t srcStride[], uint8_t* dst[], stride_t dstStride[])
 {
- return swsc && libavcodec->sws_scale_ordered(swsc,src,srcStride,0,dy,dst,dstStride)>0;
+ return swsc && libavcodec->sws_scale(swsc,src,srcStride,0,dy,dst,dstStride)>0;
 }
