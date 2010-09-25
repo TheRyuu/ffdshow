@@ -711,9 +711,6 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
                 telecineManager.get_timestamps(pict);
 
                 hr=sinkD->deliverDecodedSample(pict);
-#if COMPILE_AS_FFMPEG_MT
-                avctx->got_first_frame = 1;
-#endif
                 if (hr != S_OK
                     || (used_bytes && sinkD->acceptsManyFrames()!=S_OK)
                     || avctx->codec_id==CODEC_ID_LOCO)
@@ -756,9 +753,6 @@ bool TvideoCodecLibavcodec::onSeek(REFERENCE_TIME segmentStart)
     mpeg2_new_sequence = true;
 
     if (avctx) {
-#if COMPILE_AS_FFMPEG_MT
-        avctx->got_first_frame = 0;
-#endif
         if (!firstSeek && connectedSplitter == TffdshowVideoInputPin::Haali_Media_splitter)
             avctx->h264_has_to_drop_first_non_ref = 1;
         else
@@ -1543,13 +1537,19 @@ int TvideoCodecLibavcodec::TcodedPictureBuffer::send(int *got_picture_ptr)
 TvideoCodecLibavcodec::Th264RandomAccess::Th264RandomAccess(TvideoCodecLibavcodec *Iparent):
  parent(Iparent)
 {
-    onSeek();
+    recovery_mode = 1;
+    recovery_frame_cnt = 0;
 }
 
 void TvideoCodecLibavcodec::Th264RandomAccess::onSeek(void)
 {
     recovery_mode = 1;
     recovery_frame_cnt = 0;
+
+    if (parent->avctx->active_thread_type == FF_THREAD_FRAME)
+        thread_delay = parent->avctx->thread_count;
+    else
+        thread_delay = 1;
 }
 
 // return 0:not found, don't send it to libavcodec, 1:send it anyway.
@@ -1583,7 +1583,7 @@ void TvideoCodecLibavcodec::Th264RandomAccess::judgeUsability(int *got_picture_p
 
     AVFrame *frame = parent->frame;
 
-    if (frame->h264_max_frame_num == 0)
+    if (--thread_delay > 0 || frame->h264_max_frame_num == 0)
         return;
 
     if (recovery_mode ==1 || recovery_mode ==2) {

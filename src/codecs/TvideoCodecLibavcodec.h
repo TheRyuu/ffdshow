@@ -136,6 +136,7 @@ public:
    int recovery_mode;  // 0:OK, 1:searching 2: found, 3:waiting for frame_num decoded, 4:waiting for POC outputed
    int recovery_frame_cnt;
    int recovery_poc;
+   int thread_delay;
 
   public:
    Th264RandomAccess(TvideoCodecLibavcodec* Iparent);

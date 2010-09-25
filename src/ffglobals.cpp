@@ -830,7 +830,7 @@ bool decodeH264SPS(const unsigned char *hdr,size_t len,TffPictBase &pict)
     sps->mb_width= get_ue_golomb(&gb) + 1;
     sps->mb_height= get_ue_golomb(&gb) + 1;
     if((unsigned)sps->mb_width >= INT_MAX/16 || (unsigned)sps->mb_height >= INT_MAX/16 /*||
-       avcodec_check_dimensions(NULL, 16*sps->mb_width, 16*sps->mb_height)*/)
+       av_image_check_size(16*sps->mb_width, 16*sps->mb_height, 0, NULL)*/)
         return false;
 
     sps->frame_mbs_only_flag= get_bits1(&gb);

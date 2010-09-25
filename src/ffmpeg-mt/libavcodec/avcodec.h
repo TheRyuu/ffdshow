@@ -2521,14 +2521,6 @@ typedef struct AVCodecContext {
      */
     int isDVD;
 
-    /**
-     * DirectShow workaround for delivering the first frame without delay
-     * - encoding: unused
-     * - decoding: set by user
-     * Delay delaying until the first frame is delivered by setting 0 after seeking.
-     * After delivering the first frame, user must set 1 to enable multithreading.
-     */
-    int got_first_frame;
     /* ffdshow custom stuff (end) */
 } AVCodecContext;
 

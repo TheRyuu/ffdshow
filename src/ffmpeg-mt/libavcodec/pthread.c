@@ -453,33 +453,20 @@ int ff_thread_decode_frame(AVCodecContext *avctx,
     err = submit_frame(p, avpkt);
     if (err) return err;
 
-    // ffdshow custom code
-    // if (avctx->got_first_frame) {}
-    // DirectShow workaround for delivering the first frame without delay
-    // delay delaying until the first frame is delivered.
+    fctx->next_decoding++;
 
-    if (avctx->got_first_frame) {
-        fctx->next_decoding++;
+    if (fctx->delaying) {
+        if (fctx->next_decoding >= (thread_count-1)) fctx->delaying = 0;
 
-        if (fctx->delaying && avpkt->size) {
-            if (fctx->next_decoding >= (thread_count-1)) fctx->delaying = 0;
-
-            *data_size=0;
-            return 0;
-        }
+        *data_size=0;
+        return 0;
     }
 
     //If it's draining frames at EOF, ignore null frames from the codec.
     //Only return one when we've run out of codec frames to return.
     do {
-#if 0
         p = &fctx->threads[returning_thread++];
-#else
-        // ffdshow custom code block
-        p = &fctx->threads[returning_thread];
-        if (avctx->got_first_frame)
-            returning_thread++;
-#endif
+
         if (p->state != STATE_INPUT_READY) {
             pthread_mutex_lock(&p->progress_mutex);
             while (p->state != STATE_INPUT_READY)
