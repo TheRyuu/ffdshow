@@ -104,7 +104,7 @@ IF %ERRORLEVEL% NEQ 0 GOTO :GotError
 @cd ..\..\..
 
 @echo [Building installer]
-@cd bin\distrib\innosetup
+@cd bin\distrib
 @%ISCC% ffdshow_installer.iss
 @IF %ERRORLEVEL% NEQ 0 GOTO :GotError
 @cd ..\..\..
