@@ -266,9 +266,6 @@ TcoSettings::TcoSettings(TintStrColl *Icoll):Toptions(Icoll),options(Icoll)
    IDFF_enc_xvid_vhq_custom          ,&TcoSettings::xvid_vhq_custom          ,1,1,_l(""),1,
      _l("xvid_vhq_custom"),XVID_ME_RD::HALFPELREFINE16|XVID_ME_RD::HALFPELREFINE8|XVID_ME_RD::QUARTERPELREFINE16|XVID_ME_RD::QUARTERPELREFINE8|XVID_ME_RD::CHECKPREDICTION|XVID_ME_RD::EXTSEARCH,
 
-   IDFF_enc_skalSearchMetric,&TcoSettings::skalSearchMetric,0,2,_l(""),1,
-     _l("skalSearchMetric"),0,
-
    IDFF_enc_quant_type            ,&TcoSettings::quant_type,0,5,_l(""),1,
      _l("quant_type"),QUANT::H263,
    IDFF_enc_qmatrix_intra_custom0 ,&TcoSettings::qmatrix_intra_custom0 ,1,1,_l(""),1,
@@ -552,10 +549,6 @@ TcoSettings::TcoSettings(TintStrColl *Icoll):Toptions(Icoll),options(Icoll)
      _l("ff_border_masking1000"),0,
    IDFF_enc_ff_naq                      ,&TcoSettings::ff_naq                      ,0,0,_l(""),1,
      _l("ff_naq"),1,
-   IDFF_enc_isSkalMasking               ,&TcoSettings::isSkalMasking               ,0,0,_l(""),1,
-     _l("isSkalMasking"),0,
-   IDFF_enc_skalMaskingAmp              ,&TcoSettings::skalMaskingAmp              ,0,4000,_l(""),1,
-     _l("skalMaskingAmp"),800,
 
    IDFF_enc_theo_hq              ,&TcoSettings::theo_hq              ,0,0,_l(""),1,
      _l("theo_hq"),0,

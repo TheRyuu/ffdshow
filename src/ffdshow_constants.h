@@ -694,7 +694,6 @@
    #define IDFF_MOVIE_XVID4    9
    #define IDFF_MOVIE_AVIS    10
    #define IDFF_MOVIE_WMV9    12
-   #define IDFF_MOVIE_SKAL    13
    #define IDFF_MOVIE_X264    14
    #define IDFF_MOVIE_LIBA52  15
    //#define IDFF_MOVIE_SPDIF   16
@@ -1407,7 +1406,6 @@
 #define IDFF_enc_is_xvid_vhq_custom        3068
 #define IDFF_enc_xvid_vhq_custom           3069
 
-#define IDFF_enc_skalSearchMetric          3310
 
 #define IDFF_enc_quant_type                3070
 #define IDFF_enc_qmatrix_intra_custom0     3272
@@ -1555,8 +1553,6 @@
 #define IDFF_enc_is_ff_border_masking         3334
 #define IDFF_enc_ff_border_masking1000        3335
 #define IDFF_enc_ff_naq                       3182
-#define IDFF_enc_isSkalMasking                3308
-#define IDFF_enc_skalMaskingAmp               3309
 
 #define IDFF_enc_theo_hq               3196
 #define IDFF_enc_theo_sharpness        3329

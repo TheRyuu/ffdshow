@@ -84,8 +84,6 @@ public:
  int me_nsse_weight;
  int me_iterative;
 
- int skalSearchMetric;
-
  int quant_type;
  int getQuantType(int quant) const; //0 - H.263, 1 - MPEG, 4 - custom (MPEG)
  int32_t qmatrix_intra_custom0,qmatrix_intra_custom4,qmatrix_intra_custom8,qmatrix_intra_custom12,qmatrix_intra_custom16,qmatrix_intra_custom20,qmatrix_intra_custom24,qmatrix_intra_custom28,qmatrix_intra_custom32,qmatrix_intra_custom36,qmatrix_intra_custom40,qmatrix_intra_custom44,qmatrix_intra_custom48,qmatrix_intra_custom52,qmatrix_intra_custom56,qmatrix_intra_custom60;
@@ -175,7 +173,6 @@ public:
   }
  int xvid_lum_masking;
  int xvid_chromaopt;
- int isSkalMasking,skalMaskingAmp;
 
  int xvid_motion_search;
  int is_xvid_me_custom,xvid_me_custom;

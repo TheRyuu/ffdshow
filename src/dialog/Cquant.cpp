@@ -54,9 +54,7 @@ void TquantPage::cfg2dlg(void)
  setText(IDC_ED_I_QUANTFACTOR,_l("%.2f"),float(cfgGet(IDFF_enc_i_quant_factor)/100.0));
  setText(IDC_ED_I_QUANTOFFSET,_l("%.2f"),float(cfgGet(IDFF_enc_i_quant_offset)/100.0));
  static const int idIquants[]={IDC_LBL_Q_I,IDC_ED_Q_I_MIN,IDC_ED_Q_I_MAX,0};
- if (codecId==CODEC_ID_SKAL)
-  enable(0,idIquants);
- else if (codecId==CODEC_ID_X264)
+ if (codecId==CODEC_ID_X264)
   {
  setDlgItemText(m_hwnd,IDC_LBL_Q_P,_(IDC_LBL_Q_P,_l("All frames")));
  enable(0,idIquants);
@@ -72,7 +70,7 @@ void TquantPage::cfg2dlg(void)
  SetDlgItemInt(m_hwnd,IDC_ED_Q_P_MIN,cfgGet(IDFF_enc_q_p_min),FALSE);
  SetDlgItemInt(m_hwnd,IDC_ED_Q_P_MAX,cfgGet(IDFF_enc_q_p_max),FALSE);
  static const int idPquants[]={IDC_LBL_Q_P,IDC_ED_Q_P_MIN,IDC_ED_Q_P_MAX,0};
- enable(is && codecId!=CODEC_ID_MJPEG && codecId!=CODEC_ID_SKAL,idPquants);
+ enable(is && codecId!=CODEC_ID_MJPEG,idPquants);
 
  SetDlgItemInt(m_hwnd,IDC_ED_Q_B_MIN,cfgGet(IDFF_enc_q_b_min),FALSE);
  SetDlgItemInt(m_hwnd,IDC_ED_Q_B_MAX,cfgGet(IDFF_enc_q_b_max),FALSE);

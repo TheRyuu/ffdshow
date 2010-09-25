@@ -25,7 +25,6 @@ const FOURCC* getCodecFOURCCs(CodecID codecId)
  switch (codecId)
   {
    case CODEC_ID_MPEG4:
-   case CODEC_ID_SKAL:
    case CODEC_ID_XVID4:
     {
      static const FOURCC fccs[]={FOURCC_XVID,FOURCC_FFDS,FOURCC_FVFW,FOURCC_DX50,FOURCC_DIVX,FOURCC_MP4V,0};

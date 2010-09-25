@@ -110,8 +110,6 @@
 #define IDI_MODERN_ICON_A               232
 #define IDD_HIDESHOW                    233
 #define IDI_MODERN_ICON_E               233
-#define IDD_MASKING_SKAL                234
-#define IDD_ME_SKAL                     235
 #define IDI_MODERN_4BIT_ICON_V          235
 #define IDD_FREEVERB                    236
 #define IDI_MODERN_4BIT_ICON_A          236
@@ -753,17 +751,12 @@
 #define IDC_BT_HIDESHOW_SHOW            1477
 #define IDC_ED_CREDITS_P_QUANT          1478
 #define IDC_BT_HIDESHOW_HIDE            1478
-#define IDC_CHB_SKAL_MASKING            1478
 #define IDC_RBT_CREDITS_SIZE            1479
-#define IDC_LBL_SKAL_MASKING            1479
 #define IDC_BT_HIDESHOW_HIDE_ALL        1479
 #define IDC_LBL_CREDITS_SIZE_START      1480
-#define IDC_ED_SKAL_MASKING             1480
 #define IDC_BT_HIDESHOW_SHOW_ALL        1480
 #define IDC_ED_CREDITS_SIZE_START       1481
-#define IDC_LBL_SKAL_SEARCHMETRIC       1481
 #define IDC_LBL_CREDITS_SIZE_END        1482
-#define IDC_CBX_SKAL_SEARCHMETRIC       1482
 #define IDC_ED_CREDITS_SIZE_END         1483
 #define IDC_LV_VERSIONS                 1483
 #define IDC_CHB_CREDITS_GRAY            1484

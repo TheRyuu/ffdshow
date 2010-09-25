@@ -3559,14 +3559,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\dialog\CmaskingSKAL.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\dialog\CmaskingSKAL.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\dialog\CmaskingTHEO.cpp"
 				>
 			</File>
@@ -3596,14 +3588,6 @@
 			</File>
 			<File
 				RelativePath=".\src\dialog\Cme.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\dialog\CmeSkal.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\dialog\CmeSkal.h"
 				>
 			</File>
 			<File
@@ -4896,14 +4880,6 @@
 			</File>
 			<File
 				RelativePath=".\src\codecs\TvideoCodecLibmpeg2.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\codecs\TvideoCodecSkal.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\codecs\TvideoCodecSkal.h"
 				>
 			</File>
 			<File

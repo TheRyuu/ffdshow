@@ -26,7 +26,6 @@
 #include "avisynth/Tavisynth.h"
 #include "TvideoCodecXviD4.h"
 #include "TvideoCodecLibmpeg2.h"
-#include "TvideoCodecSkal.h"
 #include "TvideoCodecTheora.h"
 #define TREMOR_OGG_H // FIXME (dirty) This is necessary to avoid including various versions of ogg.h.
 #define OGG_OGG_H
@@ -219,7 +218,6 @@ const TversionsDlg::TversionInfo* TaboutPageEnc::fcsVersions(void)
    TvideoCodecTheora::dllname,getVersion<TvideoCodecTheora>,
    TvideoCodecWmv9::dllname,getVersion<TvideoCodecWmv9>,
    TvideoCodecX264::dllname,getVersion<TvideoCodecX264>,
-   TvideoCodecSkal::dllname,TvideoCodecSkal::getVersion,
    Tavisynth_c::dllname,Tavisynth_c::getVersion,
    NULL
   };

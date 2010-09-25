@@ -46,7 +46,6 @@ const char_t* Tcodec::getMovieSourceName(int source)
    case IDFF_MOVIE_XVID4      :return _l("Xvid");
    case IDFF_MOVIE_AVIS       :return _l("AviSynth");
    case IDFF_MOVIE_WMV9       :return _l("wmv9");
-   case IDFF_MOVIE_SKAL       :return _l("sklmp4");
    case IDFF_MOVIE_X264       :return _l("x264");
    case IDFF_MOVIE_LIBA52     :return _l("liba52");
    case IDFF_MOVIE_LIBDTS     :return _l("libdts");

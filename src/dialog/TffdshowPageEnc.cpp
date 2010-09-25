@@ -31,12 +31,10 @@
 #include "Cme.h"
 #include "CmeXvid.h"
 #include "CmeX264.h"
-#include "CmeSkal.h"
 #include "Cquant.h"
 #include "CquantTables.h"
 #include "Cmasking.h"
 #include "CmaskingXVID.h"
-#include "CmaskingSKAL.h"
 #include "CmaskingTHEO.h"
 #include "CmaskingX264.h"
 #include "Conepass.h"
@@ -176,7 +174,6 @@ void TffdshowPageEnc::onActivate(void)
                           NULL),&localCfg.codecId);
    addTI(&tvis,TconfPages(new TmePage(this),
                           new TmeXvidPage(this),
-                          new TmeSkalPage(this),
                           new TmeX264page(this),
                           NULL),&localCfg.codecId);
    HTREEITEM htiQuant=addTI(&tvis,new TquantPage(this))->hti;
@@ -186,7 +183,6 @@ void TffdshowPageEnc::onActivate(void)
    TreeView_Expand(htv,htiQuant,TVE_EXPAND);
    addTI(&tvis,TconfPages(new TmaskingPage(this),
                           new TmaskingPageXvid(this),
-                          new TmaskingPageSkal(this),
                           new TmaskingPageTheo(this),
                           new TmaskingPageX264(this),
                           NULL),&localCfg.codecId);
