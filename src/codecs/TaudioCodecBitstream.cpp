@@ -21,7 +21,6 @@
 #include "IffdshowDec.h"
 #include "IffdshowDecAudio.h"
 #include "ffdshow_mediaguids.h"
-#include "Tlibmplayer.h"
 #include "IffdshowBase.h"
 #include "streams.h"
 #include "TsampleFormat.h"

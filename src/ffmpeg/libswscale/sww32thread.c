@@ -143,14 +143,3 @@ fail:
     sws_thread_free(s);
     return -1;
 }
-
-int GetCPUCount(void){
-    int CPUCount;
-    SYSTEM_INFO si;
-    GetSystemInfo(&si);
-    if(isP4HT() &&si.dwNumberOfProcessors>=2)
-        CPUCount = si.dwNumberOfProcessors>>1;
-    else
-        CPUCount= si.dwNumberOfProcessors;
-    return CPUCount;
-}

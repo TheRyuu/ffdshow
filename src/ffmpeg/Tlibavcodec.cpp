@@ -165,6 +165,11 @@ Tlibavcodec::Tlibavcodec(const Tconfig *config):refcount(0)
  dll->loadFunction(FFIsInterlaced,"FFIsInterlaced");
  dll->loadFunction(FFGetMBNumber,"FFGetMBNumber");
  //DXVA methods end
+
+ //yadif methods
+ dll->loadFunction(yadif_init,"yadif_init");
+ dll->loadFunction(yadif_uninit,"yadif_uninit");
+ dll->loadFunction(yadif_filter,"yadif_filter");
 #endif
 
  if (!dec_only)

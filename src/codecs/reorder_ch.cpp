@@ -1,38 +1,31 @@
 /*
- * common functions for reordering audio channels
+ * Common functions for reordering audio channels.
+ * Imported from Mplayer
  *
  * Copyright (C) 2007 Ulion <ulion A gmail P com>
  *
- * This file is part of MPlayer.
- *
- * MPlayer is free software; you can redistribute it and/or modify
+ * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * MPlayer is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License along
- * with MPlayer; if not, write to the Free Software Foundation, Inc.,
+ * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#include "stdafx.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <inttypes.h>
 #include <string.h>
-#include "libvo/fastmemcpy.h"
 
 #include "reorder_ch.h"
-
-#ifdef TEST
-#define mp_msg(mod,lev, fmt, args... )  printf( fmt, ## args )
-#else
-#include "mp_msg.h"
-#endif
 
 
 #define REORDER_COPY_5(DEST,SRC,SAMPLES,S0,S1,S2,S3,S4) \
@@ -52,22 +45,22 @@ static int reorder_copy_5ch(void *dest, const void *src,
     switch (samplesize) {
     case 1:
     {
-        int8_t *dest_8 = dest;
-        const int8_t *src_8 = src;
+        int8_t *dest_8 = (int8_t *)dest;
+        const int8_t *src_8 = (int8_t *)src;
         REORDER_COPY_5(dest_8,src_8,samples,s0,s1,s2,s3,s4);
         break;
     }
     case 2:
     {
-        int16_t *dest_16 = dest;
-        const int16_t *src_16 = src;
+        int16_t *dest_16 = (int16_t *)dest;
+        const int16_t *src_16 = (int16_t *)src;
         REORDER_COPY_5(dest_16,src_16,samples,s0,s1,s2,s3,s4);
         break;
     }
     case 3:
     {
-        int8_t *dest_8 = dest;
-        const int8_t *src_8 = src;
+        int8_t *dest_8 = (int8_t *)dest;
+        const int8_t *src_8 = (int8_t *)src;
         for (i = 0; i < samples; i += 15) {
             dest_8[i]    = src_8[i+s0*3];
             dest_8[i+1]  = src_8[i+s0*3+1];
@@ -88,22 +81,20 @@ static int reorder_copy_5ch(void *dest, const void *src,
     }
     case 4:
     {
-        int32_t *dest_32 = dest;
-        const int32_t *src_32 = src;
+        int32_t *dest_32 = (int32_t *)dest;
+        const int32_t *src_32 = (int32_t *)src;
         REORDER_COPY_5(dest_32,src_32,samples,s0,s1,s2,s3,s4);
         break;
     }
     case 8:
     {
-        int64_t *dest_64 = dest;
-        const int64_t *src_64 = src;
+        int64_t *dest_64 = (int64_t *)dest;
+        const int64_t *src_64 = (int64_t *)src;
         REORDER_COPY_5(dest_64,src_64,samples,s0,s1,s2,s3,s4);
         break;
     }
     default:
-        mp_msg(MSGT_GLOBAL, MSGL_WARN,
-               "[reorder_ch] Unsupported sample size: %d, please "
-               "report this error on the MPlayer mailing list.\n",samplesize);
+        DPRINTF(_l("[reorder_ch] Unsupported sample size: %d"),samplesize);
         return 0;
     }
     return 1;
@@ -129,22 +120,22 @@ static int reorder_copy_6ch(void *dest, const void *src,
     switch (samplesize) {
     case 1:
     {
-        int8_t *dest_8 = dest;
-        const int8_t *src_8 = src;
+        int8_t *dest_8 = (int8_t *)dest;
+        const int8_t *src_8 = (int8_t *)src;
         REORDER_COPY_6(dest_8,src_8,samples,s0,s1,s2,s3,s4,s5);
         break;
     }
     case 2:
     {
-        int16_t *dest_16 = dest;
-        const int16_t *src_16 = src;
+        int16_t *dest_16 = (int16_t *)dest;
+        const int16_t *src_16 = (int16_t *)src;
         REORDER_COPY_6(dest_16,src_16,samples,s0,s1,s2,s3,s4,s5);
         break;
     }
     case 3:
     {
-        int8_t *dest_8 = dest;
-        const int8_t *src_8 = src;
+        int8_t *dest_8 = (int8_t *)dest;
+        const int8_t *src_8 = (int8_t *)src;
         for (i = 0; i < samples; i += 18) {
             dest_8[i]    = src_8[i+s0*3];
             dest_8[i+1]  = src_8[i+s0*3+1];
@@ -168,22 +159,20 @@ static int reorder_copy_6ch(void *dest, const void *src,
     }
     case 4:
     {
-        int32_t *dest_32 = dest;
-        const int32_t *src_32 = src;
+        int32_t *dest_32 = (int32_t *)dest;
+        const int32_t *src_32 = (int32_t *)src;
         REORDER_COPY_6(dest_32,src_32,samples,s0,s1,s2,s3,s4,s5);
         break;
     }
     case 8:
     {
-        int64_t *dest_64 = dest;
-        const int64_t *src_64 = src;
+        int64_t *dest_64 = (int64_t *)dest;
+        const int64_t *src_64 = (int64_t *)src;
         REORDER_COPY_6(dest_64,src_64,samples,s0,s1,s2,s3,s4,s5);
         break;
     }
     default:
-        mp_msg(MSGT_GLOBAL, MSGL_WARN,
-               "[reorder_ch] Unsupported sample size: %d, please "
-               "report this error on the MPlayer mailing list.\n",samplesize);
+        DPRINTF(_l("[reorder_ch] Unsupported sample size: %d"),samplesize);
         return 0;
     }
     return 1;
@@ -209,22 +198,22 @@ static int reorder_copy_8ch(void *dest, const void *src,
     switch (samplesize) {
     case 1:
     {
-        int8_t *dest_8 = dest;
-        const int8_t *src_8 = src;
+        int8_t *dest_8 = (int8_t *)dest;
+        const int8_t *src_8 = (int8_t *)src;
         REORDER_COPY_8(dest_8,src_8,samples,s0,s1,s2,s3,s4,s5,s6,s7);
         break;
     }
     case 2:
     {
-        int16_t *dest_16 = dest;
-        const int16_t *src_16 = src;
+        int16_t *dest_16 = (int16_t *)dest;
+        const int16_t *src_16 = (int16_t *)src;
         REORDER_COPY_8(dest_16,src_16,samples,s0,s1,s2,s3,s4,s5,s6,s7);
         break;
     }
     case 3:
     {
-        int8_t *dest_8 = dest;
-        const int8_t *src_8 = src;
+        int8_t *dest_8 = (int8_t *)dest;
+        const int8_t *src_8 = (int8_t *)src;
         for (i = 0; i < samples; i += 24) {
             dest_8[i]    = src_8[i+s0*3];
             dest_8[i+1]  = src_8[i+s0*3+1];
@@ -254,22 +243,20 @@ static int reorder_copy_8ch(void *dest, const void *src,
     }
     case 4:
     {
-        int32_t *dest_32 = dest;
-        const int32_t *src_32 = src;
+        int32_t *dest_32 = (int32_t *)dest;
+        const int32_t *src_32 = (int32_t *)src;
         REORDER_COPY_8(dest_32,src_32,samples,s0,s1,s2,s3,s4,s5,s6,s7);
         break;
     }
     case 8:
     {
-        int64_t *dest_64 = dest;
-        const int64_t *src_64 = src;
+        int64_t *dest_64 = (int64_t *)dest;
+        const int64_t *src_64 = (int64_t *)src;
         REORDER_COPY_8(dest_64,src_64,samples,s0,s1,s2,s3,s4,s5,s6,s7);
         break;
     }
     default:
-        mp_msg(MSGT_GLOBAL, MSGL_WARN,
-               "[reorder_ch] Unsupported sample size: %d, please "
-               "report this error on the MPlayer mailing list.\n",samplesize);
+        DPRINTF(_l("[reorder_ch] Unsupported sample size: %d"),samplesize);
         return 0;
     }
     return 1;
@@ -283,13 +270,11 @@ void reorder_channel_copy(void *src,
                           int samplesize)
 {
     if (dest_layout==src_layout) {
-        fast_memcpy(dest, src, samples*samplesize);
+        memcpy(dest, src, samples*samplesize);
         return;
     }
     if (!AF_IS_SAME_CH_NUM(dest_layout,src_layout)) {
-        mp_msg(MSGT_GLOBAL, MSGL_WARN, "[reorder_ch] different channel count "
-               "between src and dest: %x, %x\n",
-               AF_GET_CH_NUM_WITH_LFE(src_layout),
+        DPRINTF(_l("[reorder_ch] different channel count between src and dest: %x, %x"),AF_GET_CH_NUM_WITH_LFE(src_layout),
                AF_GET_CH_NUM_WITH_LFE(dest_layout));
         return;
     }
@@ -388,10 +373,9 @@ void reorder_channel_copy(void *src,
 		      reorder_copy_8ch(dest, src, samples, samplesize, 0, 1, 2, 3, 6, 7, 4, 5);
         break;
     default:
-        mp_msg(MSGT_GLOBAL, MSGL_WARN, "[reorder_channel_copy] unsupport "
-               "from %x to %x, %d * %d\n", src_layout, dest_layout,
+        DPRINTF(_l("[reorder_channel_copy] unsupport from %x to %x, %d * %d"),src_layout, dest_layout,
                samples, samplesize);
-        fast_memcpy(dest, src, samples*samplesize);
+        memcpy(dest, src, samples*samplesize);
     }
 }
 
@@ -411,7 +395,7 @@ static int reorder_self_2(void *src, unsigned int samples,
     switch (samplesize) {
     case 1:
     {
-        int8_t *src_8 = src;
+        int8_t *src_8 = (int8_t *)src;
         int8_t tmp;
         if (chnum==6) {
             REORDER_SELF_SWAP_2(src_8,tmp,samples,6,s0,s1);
@@ -423,7 +407,7 @@ static int reorder_self_2(void *src, unsigned int samples,
     }
     case 2:
     {
-        int16_t *src_16 = src;
+        int16_t *src_16 = (int16_t *)src;
         int16_t tmp;
         if (chnum==6) {
             REORDER_SELF_SWAP_2(src_16,tmp,samples,6,s0,s1);
@@ -438,7 +422,7 @@ static int reorder_self_2(void *src, unsigned int samples,
     }
     case 3:
     {
-        int8_t *src_8 = src;
+        int8_t *src_8 = (int8_t *)src;
         int8_t tmp0, tmp1, tmp2;
         for (i = 0; i < samples; i += chnum*3) {
             tmp0 = src_8[i+s0*3];
@@ -454,7 +438,7 @@ static int reorder_self_2(void *src, unsigned int samples,
     }
     case 4:
     {
-        int32_t *src_32 = src;
+        int32_t *src_32 = (int32_t *)src;
         int32_t tmp;
         if (chnum==6) {
             REORDER_SELF_SWAP_2(src_32,tmp,samples,6,s0,s1);
@@ -469,7 +453,7 @@ static int reorder_self_2(void *src, unsigned int samples,
     }
     case 8:
     {
-        int64_t *src_64 = src;
+        int64_t *src_64 = (int64_t *)src;
         int64_t tmp;
         if (chnum==6) {
             REORDER_SELF_SWAP_2(src_64,tmp,samples,6,s0,s1);
@@ -483,9 +467,7 @@ static int reorder_self_2(void *src, unsigned int samples,
         break;
     }
     default:
-        mp_msg(MSGT_GLOBAL, MSGL_WARN,
-               "[reorder_ch] Unsupported sample size: %d, please "
-               "report this error on the MPlayer mailing list.\n",samplesize);
+        DPRINTF(_l("[reorder_ch] Unsupported sample size: %d"),samplesize);
         return 0;
     }
     return 1;
@@ -507,7 +489,7 @@ static int reorder_self_3(void *src, unsigned int samples,
     switch (samplesize) {
     case 1:
     {
-        int8_t *src_8 = src;
+        int8_t *src_8 = (int8_t *)src;
         int8_t tmp;
         if (chnum==6) {
             REORDER_SELF_SWAP_3(src_8,tmp,samples,6,s0,s1,s2);
@@ -519,7 +501,7 @@ static int reorder_self_3(void *src, unsigned int samples,
     }
     case 2:
     {
-        int16_t *src_16 = src;
+        int16_t *src_16 = (int16_t *)src;
         int16_t tmp;
         if (chnum==6) {
             REORDER_SELF_SWAP_3(src_16,tmp,samples,6,s0,s1,s2);
@@ -531,7 +513,7 @@ static int reorder_self_3(void *src, unsigned int samples,
     }
     case 3:
     {
-        int8_t *src_8 = src;
+        int8_t *src_8 = (int8_t *)src;
         int8_t tmp0, tmp1, tmp2;
         for (i = 0; i < samples; i += chnum*3) {
             tmp0 = src_8[i+s0*3];
@@ -550,7 +532,7 @@ static int reorder_self_3(void *src, unsigned int samples,
     }
     case 4:
     {
-        int32_t *src_32 = src;
+        int32_t *src_32 = (int32_t *)src;
         int32_t tmp;
         if (chnum==6) {
             REORDER_SELF_SWAP_3(src_32,tmp,samples,6,s0,s1,s2);
@@ -566,7 +548,7 @@ static int reorder_self_3(void *src, unsigned int samples,
     }
     case 8:
     {
-        int64_t *src_64 = src;
+        int64_t *src_64 = (int64_t *)src;
         int64_t tmp;
         if (chnum==6) {
             REORDER_SELF_SWAP_3(src_64,tmp,samples,6,s0,s1,s2);
@@ -577,9 +559,7 @@ static int reorder_self_3(void *src, unsigned int samples,
         break;
     }
     default:
-        mp_msg(MSGT_GLOBAL, MSGL_WARN,
-               "[reorder_ch] Unsupported sample size: %d, please "
-               "report this error on the MPlayer mailing list.\n",samplesize);
+        DPRINTF(_l("[reorder_ch] Unsupported sample size: %d"),samplesize);
         return 0;
     }
     return 1;
@@ -602,7 +582,7 @@ static int reorder_self_4_step_1(void *src, unsigned int samples,
     switch (samplesize) {
     case 1:
     {
-        int8_t *src_8 = src;
+        int8_t *src_8 = (int8_t *)src;
         int8_t tmp;
         if (chnum==6) {
             REORDER_SELF_SWAP_4_STEP_1(src_8,tmp,samples,6,s0,s1,s2,s3);
@@ -614,7 +594,7 @@ static int reorder_self_4_step_1(void *src, unsigned int samples,
     }
     case 2:
     {
-        int16_t *src_16 = src;
+        int16_t *src_16 = (int16_t *)src;
         int16_t tmp;
         if (chnum==6) {
             REORDER_SELF_SWAP_4_STEP_1(src_16,tmp,samples,6,s0,s1,s2,s3);
@@ -626,7 +606,7 @@ static int reorder_self_4_step_1(void *src, unsigned int samples,
     }
     case 3:
     {
-        int8_t *src_8 = src;
+        int8_t *src_8 = (int8_t *)src;
         int8_t tmp0, tmp1, tmp2;
         for (i = 0; i < samples; i += chnum*3) {
             tmp0 = src_8[i+s0*3];
@@ -648,7 +628,7 @@ static int reorder_self_4_step_1(void *src, unsigned int samples,
     }
     case 4:
     {
-        int32_t *src_32 = src;
+        int32_t *src_32 = (int32_t *)src;
         int32_t tmp;
         if (chnum==6) {
             REORDER_SELF_SWAP_4_STEP_1(src_32,tmp,samples,6,s0,s1,s2,s3);
@@ -660,7 +640,7 @@ static int reorder_self_4_step_1(void *src, unsigned int samples,
     }
     case 8:
     {
-        int64_t *src_64 = src;
+        int64_t *src_64 = (int64_t *)src;
         int64_t tmp;
         if (chnum==6) {
             REORDER_SELF_SWAP_4_STEP_1(src_64,tmp,samples,6,s0,s1,s2,s3);
@@ -671,9 +651,7 @@ static int reorder_self_4_step_1(void *src, unsigned int samples,
         break;
     }
     default:
-        mp_msg(MSGT_GLOBAL, MSGL_WARN,
-               "[reorder_ch] Unsupported sample size: %d, please "
-               "report this error on the MPlayer mailing list.\n",samplesize);
+        DPRINTF(_l("[reorder_ch] Unsupported sample size: %d"),samplesize);
         return 0;
     }
     return 1;
@@ -697,21 +675,21 @@ static int reorder_self_4_step_2(void *src, unsigned int samples,
     switch (samplesize) {
 	case 1:
 	{
-		int8_t *src_8 = src;
+		int8_t *src_8 = (int8_t *)src;
 		int8_t tmp;
 		REORDER_SELF_SWAP_4_STEP_2(src_8,tmp,samples,chnum,s0,s1,s2,s3);
 		break;
 	}
 	case 2:
 	{
-		int16_t *src_16 = src;
+		int16_t *src_16 = (int16_t *)src;
         int16_t tmp;
 		REORDER_SELF_SWAP_4_STEP_2(src_16,tmp,samples,chnum,s0,s1,s2,s3);
 		break;
 	}
     case 3:
     {
-        int8_t *src_8 = src;
+        int8_t *src_8 = (int8_t *)src;
         int8_t tmp0, tmp1, tmp2;
         for (i = 0; i < samples; i += chnum*3) {
             tmp0 = src_8[i+s0*3];
@@ -737,23 +715,20 @@ static int reorder_self_4_step_2(void *src, unsigned int samples,
     }
     case 4:
     {
-        int32_t *src_32 = src;
+        int32_t *src_32 = (int32_t *)src;
         int32_t tmp;
         REORDER_SELF_SWAP_4_STEP_2(src_32,tmp,samples,chnum,s0,s1,s2,s3);
 		break;
     }
     case 8:
     {
-        int64_t *src_64 = src;
+        int64_t *src_64 = (int64_t *)src;
         int64_t tmp;
         REORDER_SELF_SWAP_4_STEP_2(src_64,tmp,samples,chnum,s0,s1,s2,s3);
         break;
     }
     default:
-        mp_msg(MSGT_GLOBAL, MSGL_WARN,
-               "[reorder_ch] Unsupported sample size: %d, please "
-               "report this error on the MPlayer mailing list.\n",samplesize);
-        return 0;
+        DPRINTF(_l("[reorder_ch] Unsupported sample size: %d"),samplesize);
     }
     return 1;
 }
@@ -776,7 +751,7 @@ static int reorder_self_5_step_1(void *src, unsigned int samples,
     switch (samplesize) {
     case 1:
     {
-        int8_t *src_8 = src;
+        int8_t *src_8 = (int8_t *)src;
         int8_t tmp;
         if (chnum==6) {
             REORDER_SELF_SWAP_5_STEP_1(src_8,tmp,samples,6,s0,s1,s2,s3,s4);
@@ -788,7 +763,7 @@ static int reorder_self_5_step_1(void *src, unsigned int samples,
     }
     case 2:
     {
-        int16_t *src_16 = src;
+        int16_t *src_16 = (int16_t *)src;
         int16_t tmp;
         if (chnum==6) {
             REORDER_SELF_SWAP_5_STEP_1(src_16,tmp,samples,6,s0,s1,s2,s3,s4);
@@ -800,7 +775,7 @@ static int reorder_self_5_step_1(void *src, unsigned int samples,
     }
     case 3:
     {
-        int8_t *src_8 = src;
+        int8_t *src_8 = (int8_t *)src;
         int8_t tmp0, tmp1, tmp2;
         for (i = 0; i < samples; i += chnum*3) {
             tmp0 = src_8[i+s0*3];
@@ -825,7 +800,7 @@ static int reorder_self_5_step_1(void *src, unsigned int samples,
     }
     case 4:
     {
-        int32_t *src_32 = src;
+        int32_t *src_32 = (int32_t *)src;
         int32_t tmp;
         if (chnum==6) {
             REORDER_SELF_SWAP_5_STEP_1(src_32,tmp,samples,6,s0,s1,s2,s3,s4);
@@ -837,7 +812,7 @@ static int reorder_self_5_step_1(void *src, unsigned int samples,
     }
     case 8:
     {
-        int64_t *src_64 = src;
+        int64_t *src_64 = (int64_t *)src;
         int64_t tmp;
         if (chnum==6) {
             REORDER_SELF_SWAP_5_STEP_1(src_64,tmp,samples,6,s0,s1,s2,s3,s4);
@@ -848,9 +823,7 @@ static int reorder_self_5_step_1(void *src, unsigned int samples,
         break;
     }
     default:
-        mp_msg(MSGT_GLOBAL, MSGL_WARN,
-               "[reorder_ch] Unsupported sample size: %d, please "
-               "report this error on the MPlayer mailing list.\n",samplesize);
+        DPRINTF(_l("[reorder_ch] Unsupported sample size: %d"),samplesize);
         return 0;
     }
     return 1;
@@ -877,21 +850,21 @@ static int reorder_self_2_3(void *src, unsigned int samples,
     switch (samplesize) {
     case 1:
     {
-        int8_t *src_8 = src;
+        int8_t *src_8 = (int8_t *)src;
         int8_t tmp;
         REORDER_SELF_SWAP_2_3(src_8,tmp,samples,6,s0,s1,s2,s3,s4);
         break;
     }
     case 2:
     {
-        int16_t *src_16 = src;
+        int16_t *src_16 = (int16_t *)src;
         int16_t tmp;
         REORDER_SELF_SWAP_2_3(src_16,tmp,samples,6,s0,s1,s2,s3,s4);
         break;
     }
     case 3:
     {
-        int8_t *src_8 = src;
+        int8_t *src_8 = (int8_t *)src;
         int8_t tmp0, tmp1, tmp2;
         for (i = 0; i < samples; i += 18) {
             tmp0 = src_8[i+s0*3];
@@ -919,22 +892,20 @@ static int reorder_self_2_3(void *src, unsigned int samples,
     }
     case 4:
     {
-        int32_t *src_32 = src;
+        int32_t *src_32 = (int32_t *)src;
         int32_t tmp;
         REORDER_SELF_SWAP_2_3(src_32,tmp,samples,6,s0,s1,s2,s3,s4);
         break;
     }
     case 8:
     {
-        int64_t *src_64 = src;
+        int64_t *src_64 = (int64_t *)src;
         int64_t tmp;
         REORDER_SELF_SWAP_2_3(src_64,tmp,samples,6,s0,s1,s2,s3,s4);
         break;
     }
     default:
-        mp_msg(MSGT_GLOBAL, MSGL_WARN,
-               "[reorder_ch] Unsupported sample size: %d, please "
-               "report this error on the MPlayer mailing list.\n",samplesize);
+        DPRINTF(_l("[reorder_ch] Unsupported sample size: %d"),samplesize);
         return 0;
     }
     return 1;
@@ -960,21 +931,21 @@ static int reorder_self_3_3(void *src, unsigned int samples,
     switch (samplesize) {
     case 1:
     {
-        int8_t *src_8 = src;
+        int8_t *src_8 = (int8_t *)src;
         int8_t tmp;
         REORDER_SELF_SWAP_3_3(src_8,tmp,samples,6,s0,s1,s2,s3,s4,s5);
         break;
     }
     case 2:
     {
-        int16_t *src_16 = src;
+        int16_t *src_16 = (int16_t *)src;
         int16_t tmp;
         REORDER_SELF_SWAP_3_3(src_16,tmp,samples,6,s0,s1,s2,s3,s4,s5);
         break;
     }
     case 3:
     {
-        int8_t *src_8 = src;
+        int8_t *src_8 = (int8_t *)src;
         int8_t tmp0, tmp1, tmp2;
         for (i = 0; i < samples; i += 18) {
             tmp0 = src_8[i+s0*3];
@@ -1005,22 +976,20 @@ static int reorder_self_3_3(void *src, unsigned int samples,
     }
     case 4:
     {
-        int32_t *src_32 = src;
+        int32_t *src_32 = (int32_t *)src;
         int32_t tmp;
         REORDER_SELF_SWAP_3_3(src_32,tmp,samples,6,s0,s1,s2,s3,s4,s5);
         break;
     }
     case 8:
     {
-        int64_t *src_64 = src;
+        int64_t *src_64 = (int64_t *)src;
         int64_t tmp;
         REORDER_SELF_SWAP_3_3(src_64,tmp,samples,6,s0,s1,s2,s3,s4,s5);
         break;
     }
     default:
-        mp_msg(MSGT_GLOBAL, MSGL_WARN,
-               "[reorder_ch] Unsupported sample size: %d, please "
-               "report this error on the MPlayer mailing list.\n",samplesize);
+        DPRINTF(_l("[reorder_ch] Unsupported sample size: %d"),samplesize);
         return 0;
     }
     return 1;
@@ -1046,21 +1015,21 @@ static int reorder_self_2_4(void *src, unsigned int samples,
     switch (samplesize) {
     case 1:
     {
-        int8_t *src_8 = src;
+        int8_t *src_8 = (int8_t *)src;
         int8_t tmp;
         REORDER_SELF_SWAP_2_4(src_8,tmp,samples,6,s0,s1,s2,s3,s4,s5);
         break;
     }
     case 2:
     {
-        int16_t *src_16 = src;
+        int16_t *src_16 = (int16_t *)src;
         int16_t tmp;
         REORDER_SELF_SWAP_2_4(src_16,tmp,samples,6,s0,s1,s2,s3,s4,s5);
         break;
     }
     case 3:
     {
-        int8_t *src_8 = src;
+        int8_t *src_8 = (int8_t *)src;
         int8_t tmp0, tmp1, tmp2;
         for (i = 0; i < samples; i += 18) {
             tmp0 = src_8[i+s0*3];
@@ -1091,22 +1060,20 @@ static int reorder_self_2_4(void *src, unsigned int samples,
     }
     case 4:
     {
-        int32_t *src_32 = src;
+        int32_t *src_32 = (int32_t *)src;
         int32_t tmp;
         REORDER_SELF_SWAP_2_4(src_32,tmp,samples,6,s0,s1,s2,s3,s4,s5);
         break;
     }
     case 8:
     {
-        int64_t *src_64 = src;
+        int64_t *src_64 = (int64_t *)src;
         int64_t tmp;
         REORDER_SELF_SWAP_2_4(src_64,tmp,samples,6,s0,s1,s2,s3,s4,s5);
         break;
     }
     default:
-        mp_msg(MSGT_GLOBAL, MSGL_WARN,
-               "[reorder_ch] Unsupported sample size: %d, please "
-               "report this error on the MPlayer mailing list.\n",samplesize);
+        DPRINTF(_l("[reorder_ch] Unsupported sample size: %d"),samplesize);
         return 0;
     }
     return 1;
@@ -1122,11 +1089,7 @@ void reorder_channel(void *src,
     if (dest_layout==src_layout)
         return;
     if (!AF_IS_SAME_CH_NUM(dest_layout,src_layout)) {
-        mp_msg(MSGT_GLOBAL, MSGL_WARN,
-               "[reorder_channel] different channel count "
-               "between current and target: %x, %x\n",
-               AF_GET_CH_NUM_WITH_LFE(src_layout),
-               AF_GET_CH_NUM_WITH_LFE(dest_layout));
+        DPRINTF(_l("[reorder_channel] different channel count between current and target: %x, %x"),AF_GET_CH_NUM_WITH_LFE(src_layout),AF_GET_CH_NUM_WITH_LFE(dest_layout));
         return;
     }
     switch ((src_layout<<16)|dest_layout) {
@@ -1233,9 +1196,7 @@ void reorder_channel(void *src,
         reorder_self_3(src, samples, samplesize, 8, 7, 6, 3);
         break;
     default:
-        mp_msg(MSGT_GLOBAL, MSGL_WARN,
-               "[reorder_channel] unsupported from %x to %x, %d * %d\n",
-               src_layout, dest_layout, samples, samplesize);
+        DPRINTF(_l("[reorder_channel] unsupported from %x to %x, %d * %d"),src_layout, dest_layout, samples, samplesize);
     }
 }
 
@@ -1307,7 +1268,7 @@ void reorder_channel_copy_nch(void *src,
     if (chnum < 5 || chnum > 6 || src_layout < 0 || dest_layout < 0 ||
             src_layout >= AF_CHANNEL_LAYOUT_SOURCE_NUM ||
             dest_layout >= AF_CHANNEL_LAYOUT_SOURCE_NUM)
-        fast_memcpy(dest, src, samples*samplesize);
+        memcpy(dest, src, samples*samplesize);
     else if (chnum == 6)
         reorder_channel_copy(src, channel_layout_mapping_6ch[src_layout],
                              dest, channel_layout_mapping_6ch[dest_layout],

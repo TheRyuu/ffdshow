@@ -4,7 +4,3 @@ EXPORTS
   MP3_Init
   MP3_DecodeFrame
   MP3_Done
-  yadif_init
-  yadif_uninit
-  yadif_filter
-  reorder_channel_nch

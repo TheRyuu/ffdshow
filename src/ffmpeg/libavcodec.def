@@ -82,3 +82,6 @@ EXPORTS
   FFIsInterlaced
   FFGetMBNumber
   
+  yadif_init
+  yadif_uninit
+  yadif_filter

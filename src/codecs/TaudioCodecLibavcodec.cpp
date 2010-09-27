@@ -18,7 +18,6 @@
 
 #include "stdafx.h"
 #include "TaudioCodecLibavcodec.h"
-#include "Tlibmplayer.h"
 #include "IffdshowBase.h"
 #include "IffdshowDec.h"
 #include "IffdshowDecAudio.h"
@@ -26,6 +25,7 @@
 #include "ffdshow_mediaguids.h"
 #include "xiph/vorbis/vorbisformat.h"
 #include "ffmpeg/libavcodec/avcodec.h"
+#include "reorder_ch.h"
 
 TaudioCodecLibavcodec::TaudioCodecLibavcodec(IffdshowBase *deci,IdecAudioSink *Isink):
  Tcodec(deci),
@@ -389,15 +389,9 @@ HRESULT TaudioCodecLibavcodec::decode(TbyteBuffer &src0)
   // Correct channel mapping
   if (dstLength > 0 && fmt.nchannels >= 5)
   {
-     Tlibmplayer *libmplayer = NULL;
-     this->deci->getPostproc(&libmplayer);
-     if (libmplayer != NULL)
-     {
-     libmplayer->reorder_channel_nch(dst,
-        src_ch_layout,AF_CHANNEL_LAYOUT_FFDSHOW_DEFAULT,
-        fmt.nchannels,
-        dstLength * 8 /fmt.blockAlign(), fmt.bitsPerSample()/8);
-     }
+      reorder_channel_nch(dst,
+         src_ch_layout,AF_CHANNEL_LAYOUT_FFDSHOW_DEFAULT,
+         fmt.nchannels, dstLength * 8 /fmt.blockAlign(), fmt.bitsPerSample()/8);
   }
 
   if (dstLength > 0)

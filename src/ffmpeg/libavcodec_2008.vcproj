@@ -2212,6 +2212,58 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="libavfilter"
+			>
+			<File
+				RelativePath=".\libavfilter\vf_yadif.c"
+				>
+			</File>
+			<File
+				RelativePath=".\libavfilter\vf_yadif.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libavfilter\vf_yadif_template.c"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\libavfilter\yadif_thread.c"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath=".\libavcodec.def"
 			>

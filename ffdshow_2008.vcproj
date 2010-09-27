@@ -4735,6 +4735,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\codecs\reorder_ch.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\codecs\reorder_ch.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\codecs\TaudioCodec.cpp"
 				>
 			</File>

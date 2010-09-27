@@ -21,8 +21,8 @@
 #include "IffdshowDec.h"
 #include "IffdshowDecAudio.h"
 #include "ffdshow_mediaguids.h"
-#include "Tlibmplayer.h"
 #include "IffdshowBase.h"
+#include "reorder_ch.h"
 
 TaudioCodecUncompressed::TaudioCodecUncompressed(IffdshowBase *deci,IdecAudioSink *Isink):
     Tcodec(deci),
@@ -116,14 +116,8 @@ HRESULT TaudioCodecUncompressed::decode(TbyteBuffer &src)
                 }
 
                 // Fix wrong channels order for 8 channels LPCM
-                Tlibmplayer *libmplayer = NULL;
-                   this->deci->getPostproc(&libmplayer);
-                   if (libmplayer != NULL)
-                   {
-                       libmplayer->reorder_channel_nch(dst0,
-                           AF_CHANNEL_LAYOUT_LPCM_DEFAULT,AF_CHANNEL_LAYOUT_FFDSHOW_DEFAULT,
-                           fmt.nchannels,sizeof(int32_t)*(dst-dst0)*8/fmt.blockAlign(), fmt.bitsPerSample()/8);
-                   }
+                reorder_channel_nch(dst0, AF_CHANNEL_LAYOUT_LPCM_DEFAULT,AF_CHANNEL_LAYOUT_FFDSHOW_DEFAULT,
+                   fmt.nchannels,sizeof(int32_t)*(dst-dst0)*8/fmt.blockAlign(), fmt.bitsPerSample()/8);
 
                 samples=dst0;numsamples=sizeof(int32_t)*(dst-dst0)/fmt.blockAlign();
             } else {

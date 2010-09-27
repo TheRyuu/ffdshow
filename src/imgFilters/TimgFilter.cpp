@@ -19,7 +19,6 @@
 #include "stdafx.h"
 #include "TimgFilter.h"
 #include "TimgFilters.h"
-#include "Tlibmplayer.h"
 #include "Tconvert.h"
 #include "IffdshowBase.h"
 #include "IffdshowDec.h"

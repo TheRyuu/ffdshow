@@ -164,12 +164,6 @@ int GetCPUCount(void)
 {
     return 1;
 }
-int isP4HT (void)
-{
-    return 0;
-}
-#else
-#include "isP4HT.c"
 #endif
 
 int sws_isSupportedOutput(enum PixelFormat pix_fmt)

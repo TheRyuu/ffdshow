@@ -31,11 +31,6 @@ Tlibmplayer::Tlibmplayer(const Tconfig *config):refcount(0)
  dll->loadFunction(MP3_Init,"MP3_Init");
  dll->loadFunction(MP3_DecodeFrame,"MP3_DecodeFrame");
  dll->loadFunction(MP3_Done,"MP3_Done");
- dll->loadFunction(yadif_init,"yadif_init");
- dll->loadFunction(yadif_uninit,"yadif_uninit");
- dll->loadFunction(yadif_filter,"yadif_filter");
- dll->loadFunction(reorder_channel_nch,"reorder_channel_nch");
- //dll->loadFunction(GetCPUCount,"GetCPUCount");
 
  if (dll->ok)
   init_mplayer(Tconfig::cpu_flags&FF_CPU_MMX,

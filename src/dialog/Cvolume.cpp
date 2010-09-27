@@ -74,7 +74,7 @@ void TvolumePage::switchDb(void)
    else
     tbrSetRange(tbrs[i],-300,0,10);
   }
- setDlgItemText(m_hwnd,IDC_LBL_VOLUME_NORMALIZE_MAX2,isdb?_l("db"):_l("%"));
+ setDlgItemText(m_hwnd,IDC_LBL_VOLUME_NORMALIZE_MAX2,isdb?_l("dB"):_l("%"));
  master2dlg();
  speakers2dlg();
  normalize2dlg();

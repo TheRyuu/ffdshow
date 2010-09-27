@@ -37,7 +37,6 @@
 #include "libavutil/bswap.h"
 #include "cpudetect.h"
 #include "mp_msg.h"
-#include "libvo/fastmemcpy.h"
 
 static const long outscale = 32768;
 #include "tabinit.c"

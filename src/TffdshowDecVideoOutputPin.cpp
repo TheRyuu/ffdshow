@@ -19,7 +19,6 @@
 #include "TffdshowDecVideoOutputPin.h"
 #include "TffdshowVideoInputPin.h"
 #include "TpresetSettingsVideo.h"
-#include "Tlibmplayer.h"
 #include <dxva.h>
 
 #include "codecs\TvideoCodecLibavcodec.h"

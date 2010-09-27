@@ -1,12 +1,8 @@
-CFLAGS+=-I. -Ilibvo -Imp3lib -Iyadif -I../ffmpeg -std=gnu99
+CFLAGS+=-I. -Imp3lib -I../ffmpeg -std=gnu99
 
 SRCS_C=\
 		mplayer.c \
 		../ffmpeg/libavutil/mem.c \
-		libaf/reorder_ch.c \
-		libvo/aclib.c \
-		yadif/vf_yadif.c \
-		yadif/yadif_thread.c \
 		mp3lib/sr1.c
 		
 ifneq ($(64BIT),yes)
@@ -35,4 +31,4 @@ include ../makefile_c.inc
 .all: $(SLIB)
 
 clean:
-	rm -f *.o *.d yadif/*.o yadif/*.d libaf/*.o libaf/*.d libvo/*.o libvo/*.d mp3lib/*.o mp3lib/*.d ../ffmpeg/libavutil/mem.o ../ffmpeg/libavutil/mem.d $(SLIB)
+	rm -f *.o *.d mp3lib/*.o mp3lib/*.d ../ffmpeg/libavutil/mem.o ../ffmpeg/libavutil/mem.d $(SLIB)

@@ -363,7 +363,6 @@ void sws_thread_free(struct SwsContext *s);
 int sws_thread_execute(struct SwsContext *s, int (*func)(struct SwsContext *c2), int *ret, int count);
 int sws_default_execute(struct SwsContext *c, int (*func)(struct SwsContext *c2), int *ret, int count);
 int GetCPUCount(void);
-int isP4HT (void);
 
 #ifdef __cplusplus
 }

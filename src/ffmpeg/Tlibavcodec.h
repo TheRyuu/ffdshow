@@ -5,6 +5,7 @@
 #include <dxva.h>
 #include "TpostprocSettings.h"
 #include "ffImgfmt.h"
+#include "libavfilter/vf_yadif.h"
 // Do not include avcodec.h in this file, ffmpeg and ffmpeg-mt may conflict.
 
 struct AVCodecContext;
@@ -175,6 +176,10 @@ public:
  char*    (*GetFFMpegPictureType) (int nType);
  int      (*FFIsInterlaced) (struct AVCodecContext* pAVCtx, int nHeight);
  unsigned long (*FFGetMBNumber) (struct AVCodecContext* pAVCtx);
+
+ void (*yadif_init)(YadifContext *yadctx);
+ void (*yadif_uninit)(YadifContext *yadctx);
+ void (*yadif_filter)(YadifContext *yadctx, uint8_t *dst[3], stride_t dst_stride[3], int width, int height, int parity, int tff);
 };
 
 #endif

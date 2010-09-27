@@ -35,7 +35,6 @@
 #include "TimgFilters.h"
 #include "TffdshowVideoInputPin.h"
 #include "TtextInputPin.h"
-#include "Tlibmplayer.h"
 #include "TfontManager.h"
 #include "TvideoCodec.h"
 #include "dsutil.h"

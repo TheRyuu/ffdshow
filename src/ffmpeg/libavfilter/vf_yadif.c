@@ -27,18 +27,15 @@
 #include <math.h>
 
 #include "config.h"
-#include "cpudetect.h"
-
-#include "mp_msg.h"
 
 #ifdef HAVE_MALLOC_H
 #include <malloc.h>
 #endif
 
-#include "../imgFilters/ffImgfmt.h"
-#include "libavutil/mem.h"
-#include "libavutil/internal.h"
-#include "libvo/fastmemcpy.h"
+#include "../../imgFilters/ffImgfmt.h"
+#include "../libavutil/mem.h"
+#include "../libavutil/internal.h"
+#include "../libavutil/cpu.h"
 #include "vf_yadif.h"
 
 #define MIN(a,b) ((a) > (b) ? (b) : (a))
@@ -53,22 +50,13 @@ int GetCPUCount(void)
 {
     return 1;
 }
-int isP4HT (void)
-{
-    return 0;
-}
-#else
-#include "isP4HT.c"
 #endif
 
 int GetCPUCount(void){
     int CPUCount;
     SYSTEM_INFO si;
     GetSystemInfo(&si);
-    if(isP4HT() &&si.dwNumberOfProcessors>=2)
-        CPUCount = si.dwNumberOfProcessors>>1;
-    else
-        CPUCount= si.dwNumberOfProcessors;
+    CPUCount= si.dwNumberOfProcessors;
     return CPUCount;
 }
 
@@ -85,7 +73,7 @@ static void yadif_default_execute(YadifContext *yadctx, int (*func)(YadifThreadC
 
 static void (*filter_line)(YadifContext *yadctx, uint8_t *dst, uint8_t *prev, uint8_t *cur, uint8_t *next, int w, int refs, int parity);
 
-#if HAVE_FAST_64BIT || (HAVE_MMX && NAMED_ASM_ARGS)
+#if HAVE_FAST_64BIT || (HAVE_MMX)
 
 #define LOAD4(mem,dst) \
             "movd      "mem", "#dst" \n\t"\
@@ -492,20 +480,21 @@ attribute_align_arg void yadif_filter(YadifContext *yadctx, uint8_t *dst[3], str
         ::[regbuf] "r"(regbuf)
     );
 #endif
-#if HAVE_MMX && NAMED_ASM_ARGS
+#if HAVE_MMX
     if(filter_line == filter_line_mmx2) __asm__ volatile("emms \n\t" : : : "memory");
 #endif
 }
 
 void yadif_init(YadifContext *yadctx){
 
+    int cpuFlags = av_get_cpu_flags();
     filter_line = filter_line_c;
-#if HAVE_FAST_64BIT || (HAVE_MMX && NAMED_ASM_ARGS)
-    if(gCpuCaps.hasSSSE3)
+#if HAVE_FAST_64BIT || (HAVE_MMX)
+    if (cpuFlags & AV_CPU_FLAG_SSSE3)
         filter_line = filter_line_ssse3;
-    else if(gCpuCaps.hasSSE2)
+    else if (cpuFlags & AV_CPU_FLAG_SSE2)
         filter_line = filter_line_sse2;
-    else if(gCpuCaps.hasMMX2)
+    else if (cpuFlags & AV_CPU_FLAG_MMX2)
         filter_line = filter_line_mmx2;
 #endif
     yadctx->execute = yadif_default_execute;

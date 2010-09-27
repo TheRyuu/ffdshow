@@ -22,7 +22,7 @@
 #include "stdafx.h"
 #include "TdeinterlaceSettings.h"
 #include "TimgFilterYadif.h"
-#include "yadif/vf_yadif.h"
+#include "libavfilter/vf_yadif.h"
 #include "IffdshowBase.h"
 #include "Tconfig.h"
 
@@ -150,7 +150,7 @@ HRESULT TimgFilterYadif::put_image(TffPict &pict, const unsigned char *src[4], i
         unsigned char *dst[4];
         bool cspChanged = getNext(csp1, pict, full, dst);
 
-        libmplayer->yadif_filter(yadctx,
+        libavcodec->yadif_filter(yadctx,
                                  dst,
                                  pict.stride,
                                  dx, dy,
@@ -227,7 +227,7 @@ void TimgFilterYadif::done(void)
     {
         int i;
 
-        libmplayer->yadif_uninit(yadctx);
+        libavcodec->yadif_uninit(yadctx);
         for(i=0; i<3*3; i++){
             uint8_t **p= &yadctx->ref[i%3][i/3];
             if(*p) ::free(*p - 3 * yadctx->stride[i/3]);
@@ -250,7 +250,7 @@ YadifContext* TimgFilterYadif::getContext(int mode, int field_order_mode){
 
     yadctx->mode = mode;
     yadctx->field_order_mode = field_order_mode;
-    libmplayer->yadif_init(yadctx);
+    libavcodec->yadif_init(yadctx);
 
     return yadctx;
 }
@@ -264,8 +264,8 @@ YadifContext* TimgFilterYadif::getContext(int mode, int field_order_mode){
 TimgFilterYadif::TimgFilterYadif(IffdshowBase *Ideci,Tfilters *Iparent,bool Ibob):TimgFilter(Ideci,Iparent)
 {
     hasImageInBuffer = false;
-    deci->getPostproc(&libmplayer);
-    dllok = libmplayer && libmplayer->yadif_filter && libmplayer->yadif_init;
+    deci->getLibavcodec(&libavcodec);
+    dllok = libavcodec && libavcodec->yadif_filter && libavcodec->yadif_init;
     yadctx = NULL;
     last_rtStop = REFTIME_INVALID;
 }
@@ -273,7 +273,7 @@ TimgFilterYadif::TimgFilterYadif(IffdshowBase *Ideci,Tfilters *Iparent,bool Ibob
 TimgFilterYadif::~TimgFilterYadif()
 {
     done();
-    if (libmplayer) libmplayer->Release();
+    if (libavcodec) libavcodec->Release();
 }
 
 bool TimgFilterYadif::is(const TffPictBase &pict,const TfilterSettingsVideo *cfg)

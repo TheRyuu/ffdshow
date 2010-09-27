@@ -3,11 +3,11 @@
 
 #include "TimgFilter.h"
 #include "TdeinterlaceSettings.h"
-#include "Tlibmplayer.h"
+#include "Tlibavcodec.h"
 
 DECLARE_FILTER(TimgFilterYadif,public,TimgFilter)
 private:
- Tlibmplayer *libmplayer;
+ Tlibavcodec *libavcodec;
  TdeinterlaceSettings oldcfg;
  YadifContext* yadctx;
  const TdeinterlaceSettings *cfg;
