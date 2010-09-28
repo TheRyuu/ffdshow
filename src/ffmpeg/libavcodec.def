@@ -9,7 +9,7 @@ EXPORTS
   avcodec_decode_video2
   avcodec_encode_video
   avcodec_decode_audio3
-  avcodec_encode_audio  
+  avcodec_encode_audio
   avcodec_flush_buffers
   avcodec_close
   getVersion
@@ -38,9 +38,9 @@ EXPORTS
   av_parser_init
   av_parser_parse2
   av_parser_close
-  
+
   av_init_packet
-  
+
   sws_getContext
   sws_freeContext
   sws_scale
@@ -61,11 +61,11 @@ EXPORTS
   palette8torgb15
   palette8tobgr15
   GetCPUCount
-  
+
   pp_postprocess
   pp_get_context
   pp_free_context
-  
+
   FFH264DecodeBuffer
   FFH264BuildPicParams
   FFH264CheckCompatibility
@@ -81,7 +81,7 @@ EXPORTS
   GetFFMpegPictureType
   FFIsInterlaced
   FFGetMBNumber
-  
+
   yadif_init
   yadif_uninit
   yadif_filter

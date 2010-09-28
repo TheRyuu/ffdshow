@@ -12,10 +12,6 @@ pushd src\imgFilters\KernelDeint
 make -j4
 popd
 
-pushd src\mplayer
-make -j4
-popd
-
 pushd src\codecs\x264
 make -j4
 popd
