@@ -292,8 +292,6 @@ CodecID TffdshowDecAudio::getCodecId(const CMediaType &mt)
            break;
      }
  }
- if (codecId==CODEC_ID_MP3LIB && _strnicmp(_l("vix.exe"),getExeflnm(),8)==0)
-  return CODEC_ID_NONE;
  // use SPDIF/bistream pass-through where passthrough is checked for the corresponding format
  // but don't publish the bistream/SPDIF format if passthroughPCMConnection is enabled 
  // (some cards don't accept the official SPDIF/bitstream media types)

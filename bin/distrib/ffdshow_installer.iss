@@ -390,7 +390,6 @@ Source: "ffSpkCfg.dll"; Flags: dontcopy
 
 Source: "{#= bindir}\libavcodec.dll";             DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
 Source: "{#= bindir}\ffmpegmt.dll";               DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
-Source: "{#= bindir}\libmplayer.dll";             DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
 Source: "{#= bindir}\ff_liba52.dll";              DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
 Source: "{#= bindir}\ff_libdts.dll";              DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
 Source: "{#= bindir}\ff_libfaad2.dll";            DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
@@ -1227,4 +1226,5 @@ begin
   end
 end;
 #endif
+
 

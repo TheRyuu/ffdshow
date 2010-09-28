@@ -21,7 +21,6 @@
 #include "IffdshowBase.h"
 #include "IffdshowDecAudio.h"
 #include "TaudioCodecLibavcodec.h"
-#include "TaudioCodecMplayer.h"
 #include "TaudioCodecLibMAD.h"
 #include "TaudioCodecLibFAAD.h"
 #include "TaudioCodecUncompressed.h"
@@ -58,7 +57,6 @@ TaudioCodec* TaudioCodec::getDecLib(CodecID codecId,IffdshowBase *deci,IdecAudio
 {
  TaudioCodec *movie;
  if      (lavc_codec   (codecId)) movie=new TaudioCodecLibavcodec(deci,sink);
- else if (mplayer_codec(codecId)) movie=new TaudioCodecMplayer(deci,sink);
  else if (raw_codec    (codecId)) movie=new TaudioCodecUncompressed(deci,sink);
  else if (codecId==CODEC_ID_LIBMAD)   movie=new TaudioCodecLibMAD(deci,sink);
  else if (codecId==CODEC_ID_LIBFAAD)  movie=new TaudioCodecLibFAAD(deci,sink);

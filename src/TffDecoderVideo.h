@@ -264,7 +264,6 @@ public:
  STDMETHODIMP compat_getCurrentFrameTime(unsigned int *sec) {return getCurrentFrameTime(sec);}
  STDMETHODIMP compat_getFrameTime(unsigned int framenum,unsigned int *sec) {return getFrameTime(framenum,sec);}
  STDMETHODIMP compat_getCurTime2(void) {return getCurTime2();}
- STDMETHODIMP compat_getPostproc(Tlibmplayer* *postprocPtr) {return getPostproc(postprocPtr);}
  STDMETHODIMP compat_stop(void) {return stop();}
  STDMETHODIMP compat_run(void) {return run();}
  STDMETHODIMP compat_getState2(void) {return getState2();}

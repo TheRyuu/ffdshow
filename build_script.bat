@@ -62,10 +62,6 @@ IF %ERRORLEVEL% NEQ 0 GOTO :GotError
 @make clean
 @IF %ERRORLEVEL% NEQ 0 GOTO :GotError
 @cd ..\..
-@cd src\mplayer
-@make clean
-@IF %ERRORLEVEL% NEQ 0 GOTO :GotError
-@cd ..\..
 @cd src\codecs\x264
 @make clean
 @IF %ERRORLEVEL% NEQ 0 GOTO :GotError
@@ -87,10 +83,6 @@ IF %ERRORLEVEL% NEQ 0 GOTO :GotError
 @IF %ERRORLEVEL% NEQ 0 GOTO :GotError
 @cd ..\..
 @cd src\ffmpeg-mt
-@make %FF_MAKE_PARAM%
-@IF %ERRORLEVEL% NEQ 0 GOTO :GotError
-@cd ..\..
-@cd src\mplayer
 @make %FF_MAKE_PARAM%
 @IF %ERRORLEVEL% NEQ 0 GOTO :GotError
 @cd ..\..

@@ -2936,18 +2936,6 @@
 				RelativePath=".\src\imgFilters\TimgFilterYadif.h"
 				>
 			</File>
-			<File
-				RelativePath=".\src\mplayer\Tlibmplayer.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\mplayer\Tlibmplayer.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\mplayer\yadif\vf_yadif.h"
-				>
-			</File>
 			<Filter
 				Name="com"
 				>
@@ -4810,14 +4798,6 @@
 			</File>
 			<File
 				RelativePath=".\src\codecs\TaudioCodecLibMAD.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\codecs\TaudioCodecMplayer.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\codecs\TaudioCodecMplayer.h"
 				>
 			</File>
 			<File

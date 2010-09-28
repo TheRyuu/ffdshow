@@ -8,7 +8,6 @@
 
 struct TdialogSettingsBase;
 class TcpuUsage;
-struct Tlibmplayer;
 struct Tconfig;
 class TinputPin;
 class TinfoBase;
@@ -46,7 +45,6 @@ public:
  STDMETHODIMP getConfig(const Tconfig* *configPtr);
  STDMETHODIMP getInstance(HINSTANCE *hi);
  STDMETHODIMP_(HINSTANCE) getInstance2(void);
- STDMETHODIMP getPostproc(Tlibmplayer* *postprocPtr);
  STDMETHODIMP getTranslator(Ttranslate* *trans);
  STDMETHODIMP initDialog(void);
  STDMETHODIMP showCfgDlg(HWND owner);
@@ -179,7 +177,6 @@ protected:
    STDMETHODIMP getConfig(const Tconfig* *configPtr) {return deci->getConfig(configPtr);}
    STDMETHODIMP getInstance(HINSTANCE *hi) {return deci->getInstance(hi);}
    STDMETHODIMP_(HINSTANCE) getInstance2(void) {return deci->getInstance2();}
-   STDMETHODIMP getPostproc(Tlibmplayer* *postprocPtr) {return deci->getPostproc(postprocPtr);}
    STDMETHODIMP getTranslator(Ttranslate* *trans) {return deci->getTranslator(trans);}
    STDMETHODIMP initDialog(void) {return deci->initDialog();}
    STDMETHODIMP showCfgDlg(HWND owner) {return deci->showCfgDlg(owner);}
@@ -325,7 +322,6 @@ protected:
  virtual HRESULT onDoneDialog(void) {return S_OK;}
  Ttranslate *trans;
  void onLangChange(int id,const char_t *newval);
- Tlibmplayer *libmplayer;
  Tlibavcodec *libavcodec;
  FILE *dbgfile;
  int notreg;

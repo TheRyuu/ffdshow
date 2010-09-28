@@ -47,8 +47,6 @@ public:
  static void initCPU(int allowedCpuFlags);
  static DWORD getCPUcount(void);
  static int get_trayIconFullColorOS(void);
- typedef void* (__cdecl Tfastmemcpy)(void * to, const void * from, size_t len);
- static Tfastmemcpy *fastmemcpy;
  static int cache_line;
  bool check(const char_t *dllname) const;
  int isDecoder[IDFF_MOVIE_MAX+1];

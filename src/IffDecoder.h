@@ -19,7 +19,6 @@ class TimgFilters;
 class Ttranslate;
 struct IFilterGraph;
 struct Tconfig;
-struct Tlibmplayer;
 DECLARE_INTERFACE_(IffDecoder, IUnknown)
 {
  STDMETHOD (compat_getParam)(unsigned int paramID, int* value) PURE;
@@ -110,7 +109,6 @@ DECLARE_INTERFACE_(IffDecoder, IUnknown)
  STDMETHOD (compat_getCurrentFrameTime)(unsigned int *sec) PURE;
  STDMETHOD (compat_getFrameTime)(unsigned int framenum,unsigned int *sec) PURE;
  STDMETHOD (compat_getCurTime2)(void) PURE;
- STDMETHOD (compat_getPostproc)(Tlibmplayer* *postprocPtr) PURE;
  STDMETHOD (compat_stop)(void) PURE;
  STDMETHOD (compat_run)(void) PURE;
  STDMETHOD (compat_getState2)(void) PURE;

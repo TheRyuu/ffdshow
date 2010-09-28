@@ -184,8 +184,6 @@
  \
  CODEC_OP(CODEC_ID_THEORA_LIB    ,600,"libtheora") \
  \
- CODEC_OP(CODEC_ID_MP3LIB        ,700,"mp3lib") \
- \
  CODEC_OP(CODEC_ID_LIBMAD        ,800,"libmad") \
  \
  CODEC_OP(CODEC_ID_LIBFAAD       ,900,"faad2") \
@@ -238,7 +236,6 @@ static __inline bool lavc_codec(int x)     {return x>0 && x<200;}
 static __inline bool raw_codec(int x)      {return x>=300 && x<400;}
 static __inline bool xvid_codec(int x)     {return x==CODEC_ID_XVID4;}
 static __inline bool theora_codec(int x)   {return x==CODEC_ID_THEORA_LIB;}
-static __inline bool mplayer_codec(int x)  {return x==CODEC_ID_MP3LIB;}
 static __inline bool wmv9_codec(int x)     {return x>=1000 && x<1100;}
 static __inline bool mpeg12_codec(int x)   {return x==CODEC_ID_MPEG1VIDEO || x==CODEC_ID_MPEG2VIDEO || x==CODEC_ID_LIBMPEG2;}
 static __inline bool mpeg1_codec(int x)    {return x==CODEC_ID_MPEG1VIDEO || x==CODEC_ID_LIBMPEG2;}

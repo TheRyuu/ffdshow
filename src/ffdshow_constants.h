@@ -688,7 +688,6 @@
    #define IDFF_MOVIE_THEO     3
    #define IDFF_MOVIE_RAW      4
    #define IDFF_MOVIE_LIBMPEG2 5
-   #define IDFF_MOVIE_MPLAYER  6
    #define IDFF_MOVIE_LIBMAD   7
    #define IDFF_MOVIE_LIBFAAD  8
    #define IDFF_MOVIE_XVID4    9

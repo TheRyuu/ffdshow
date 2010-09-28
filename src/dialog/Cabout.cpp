@@ -22,7 +22,6 @@
 #include "ffImgfmt.h"
 #include "Tlibavcodec.h"
 #include "ffmpeg-mt/Tlibavcodec_mt.h"
-#include "Tlibmplayer.h"
 #include "avisynth/Tavisynth.h"
 #include "TvideoCodecXviD4.h"
 #include "TvideoCodecLibmpeg2.h"
@@ -164,7 +163,6 @@ const TversionsDlg::TversionInfo* TaboutPageDecVideo::fcsVersions(void)
   {
    _l("libavcodec.dll"),Tlibavcodec::getVersion,
    _l("ffmpegmt.dll"),Tlibavcodec_mt::getVersion,
-   Tlibmplayer::dllname,getVersion<Tlibmplayer>,
    TvideoCodecXviD4::dllname,getVersion<TvideoCodecXviD4>,
    TvideoCodecTheora::dllname,getVersion<TvideoCodecTheora>,
    TvideoCodecWmv9::dllname,getVersion<TvideoCodecWmv9>,
@@ -189,7 +187,6 @@ const TversionsDlg::TversionInfo* TaboutPageDecAudio::fcsVersions(void)
  static const TversionsDlg::TversionInfo fcsDecAudio[]=
   {
    _l("libavcodec.dll"),Tlibavcodec::getVersion,
-   Tlibmplayer::dllname,getVersion<Tlibmplayer>,
    TaudioCodecLiba52::dllname,getVersion<TaudioCodecLiba52>,
    TaudioCodecLibDTS::dllname,getVersion<TaudioCodecLibDTS>,
    TaudioCodecLibFAAD::dllname,getVersion<TaudioCodecLibFAAD>,
@@ -213,7 +210,6 @@ const TversionsDlg::TversionInfo* TaboutPageEnc::fcsVersions(void)
  static const TversionsDlg::TversionInfo fcsEnc[]=
   {
    _l("libavcodec.dll"),Tlibavcodec::getVersion,
-   Tlibmplayer::dllname,getVersion<Tlibmplayer>,
    TvideoCodecXviD4::dllname,getVersion<TvideoCodecXviD4>,
    TvideoCodecTheora::dllname,getVersion<TvideoCodecTheora>,
    TvideoCodecWmv9::dllname,getVersion<TvideoCodecWmv9>,

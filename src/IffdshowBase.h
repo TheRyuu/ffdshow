@@ -14,7 +14,6 @@
 class Ttranslate;
 struct Tconfig;
 struct TglobalSettingsBase;
-struct Tlibmplayer;
 struct Tlibavcodec;
 struct IFilterGraph;
 struct TffdshowParamInfo;
@@ -41,7 +40,6 @@ template<class tchar> DECLARE_INTERFACE_(IffdshowBaseT,IUnknown)
  STDMETHOD (getConfig)(const Tconfig* *configPtr) PURE;
  STDMETHOD (getInstance)(HINSTANCE *hi) PURE;
  STDMETHOD_(HINSTANCE,getInstance2)(void) PURE;
- STDMETHOD (getPostproc)(Tlibmplayer* *postprocPtr) PURE;
  STDMETHOD (getTranslator)(Ttranslate* *trans) PURE;
  STDMETHOD (initDialog)(void) PURE;
  STDMETHOD (showCfgDlg)(HWND owner) PURE;

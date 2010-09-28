@@ -40,7 +40,6 @@ const char_t* Tcodec::getMovieSourceName(int source)
    case IDFF_MOVIE_THEO       :return _l("libtheora");
    case IDFF_MOVIE_RAW        :return _l("uncompressed");
    case IDFF_MOVIE_LIBMPEG2   :return _l("libmpeg2");
-   case IDFF_MOVIE_MPLAYER    :return _l("mp3lib");
    case IDFF_MOVIE_LIBMAD     :return _l("libmad");
    case IDFF_MOVIE_LIBFAAD    :return _l("libfaad2");
    case IDFF_MOVIE_XVID4      :return _l("Xvid");

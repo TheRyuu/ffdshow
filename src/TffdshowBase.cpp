@@ -29,7 +29,6 @@
 #include "TdialogSettings.h"
 #include "TcpuUsage.h"
 #include "Ttranslate.h"
-#include "Tlibmplayer.h"
 #include "Tlibavcodec.h"
 #include "dsutil.h"
 #include "IffdshowParamsEnum.h"
@@ -96,7 +95,7 @@ TffdshowBase::TffdshowBase(LPUNKNOWN pUnk,TintStrColl *Ioptions,TglobalSettingsB
  onFrameWnd=NULL;onFrameMsg=0;
  applying=0;
  trayHwnd=NULL;hTrayThread=NULL;
- libmplayer=NULL;libavcodec=NULL;
+ libavcodec=NULL;
  dbgfile=NULL;
  notreg=false;
  moviesecs=-1;
@@ -114,7 +113,6 @@ TffdshowBase::~TffdshowBase()
  delete globalSettings;
  delete dialogSettings;
  if (dbgfile) fclose(dbgfile);
- if (libmplayer) libmplayer->Release();
  if (info) delete info;
 }
 
@@ -439,16 +437,6 @@ STDMETHODIMP TffdshowBase::cpuSupportsSSE5(void)
 {
  return (Tconfig::cpu_flags&FF_CPU_SSE5)?1:0;
 }
-STDMETHODIMP TffdshowBase::getPostproc(Tlibmplayer* *postprocPtr)
-{
- if (!postprocPtr) return E_POINTER;
- if (!libmplayer)
-  libmplayer=new Tlibmplayer(&config);
- libmplayer->AddRef();
- *postprocPtr=libmplayer;
- return S_OK;
-}
-
 STDMETHODIMP TffdshowBase::dbgInit(void)
 {
  dbgDone();
@@ -574,9 +562,6 @@ HRESULT TffdshowBase::onJoinFilterGraph(IFilterGraph *pGraph,LPCWSTR pName)
 HRESULT TffdshowBase::onGraphJoin(IFilterGraph *pGraph)
 {
  DPRINTF(_l("Join filter graph"));
- if (!config.isDecoder[IDFF_MOVIE_MPLAYER])
-  return VFW_E_CANNOT_CONNECT;
-
  if (globalSettings->multipleInstances==4)
   return E_FAIL;
  else if (globalSettings->multipleInstances==2)

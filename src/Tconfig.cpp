@@ -21,7 +21,6 @@
 #include "reg.h"
 #include "ffImgfmt.h"
 #include "Tlibavcodec.h"
-#include "Tlibmplayer.h"
 #include "avisynth/Tavisynth.h"
 #include "TvideoCodecLibmpeg2.h"
 #include "TvideoCodecTheora.h"
@@ -36,25 +35,14 @@
 #include "TaudioCodecLibDTS.h"
 #include "TaudioCodecTremor.h"
 #include "Tdll.h"
-#include "cpudetect.h"
 #include <tlhelp32.h>
 #include <shlwapi.h>
 #include "ThtmlColors.h"
 #include "TdialogSettings.h"
 
-#ifndef WIN64
-extern "C"
-{
- Tconfig::Tfastmemcpy memcpy_x86;
- Tconfig::Tfastmemcpy memcpy_mmx;
- Tconfig::Tfastmemcpy memcpy_xmm;
-}
-#endif
-
 bool Tconfig::winNT;
 int Tconfig::cpu_flags=0,Tconfig::available_cpu_flags=0,Tconfig::lavc_cpu_flags=0,Tconfig::sws_cpu_flags=0;
 int Tconfig::cache_line=32;
-Tconfig::Tfastmemcpy* Tconfig::fastmemcpy=memcpy;
 
 extern "C"
 {
@@ -129,7 +117,6 @@ void Tconfig::init1(HINSTANCE hi)
  isDecoder[IDFF_MOVIE_LIBMPEG2]=check(TvideoCodecLibmpeg2::dllname);
  isDecoder[IDFF_MOVIE_THEO]=check(TvideoCodecTheora::dllname);
  isDecoder[IDFF_MOVIE_RAW]=1;
- isDecoder[IDFF_MOVIE_MPLAYER]=check(Tlibmplayer::dllname);
  isDecoder[IDFF_MOVIE_LIBMAD]=check(TaudioCodecLibMAD::dllname);
  isDecoder[IDFF_MOVIE_LIBFAAD]=check(TaudioCodecLibFAAD::dllname);
  isDecoder[IDFF_MOVIE_XVID4]=check(TvideoCodecXviD4::dllname);
@@ -171,15 +158,7 @@ void Tconfig::initCPU(int allowed_cpu_flags)
         cpu_flags = available_cpu_flags & allowed_cpu_flags;
         sws_cpu_flags = Tlibavcodec::swsCpuCaps();
         lavc_cpu_flags = Tlibavcodec::lavcCpuFlags();
-        //GetCpuCaps(&gCpuCaps);
-        cache_line = 64;//gCpuCaps.cl_size;
-#ifndef WIN64
-        if      (cpu_flags & FF_CPU_MMXEXT) fastmemcpy = memcpy_xmm;
-        else if (cpu_flags & FF_CPU_MMX)    fastmemcpy = memcpy_mmx;
-        else                                fastmemcpy = memcpy_x86;
-#else
-        fastmemcpy = memcpy;
-#endif
+        cache_line = 64;
     }
 }
 

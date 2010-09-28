@@ -67,7 +67,7 @@ TimgFilterDScalerDI::TimgFilterDScalerDI(IffdshowBase *Ideci,Tfilters *Iparent):
 
  memset(&di,0,sizeof(di));
  di.Version=DEINTERLACE_INFO_CURRENT_VERSION;
- di.pMemcpy=Tconfig::fastmemcpy;
+ di.pMemcpy=memcpy;
 
  di.CpuFeatureFlags=TDScalerSettings::dscalerCpu();
 
