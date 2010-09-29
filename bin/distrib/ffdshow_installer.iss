@@ -323,7 +323,6 @@ Name: "video\rawv";              Description: "{cm:tsk_rawVideo}";              
 Name: "audio";                   Description: "{cm:tsk_audioFormatsSelect}";      Components: ffdshow; Flags: unchecked;                  Check: NOT IsUpdate; GroupDescription: "{cm:tsk_audioFormats}"
 Name: "audio\mp3";               Description: "MP3";                              Components: ffdshow
 Name: "audio\mp3\libmad";        Description: "libmad";                           Components: ffdshow; Flags:           exclusive
-Name: "audio\mp3\mp3lib";        Description: "mp3lib";                           Components: ffdshow; Flags: unchecked exclusive
 Name: "audio\mp3\libavcodec";    Description: "libavcodec";                       Components: ffdshow; Flags: unchecked exclusive
 Name: "audio\aac";               Description: "AAC";                              Components: ffdshow
 Name: "audio\aac\libfaad2";      Description: "libfaad2";                         Components: ffdshow; Flags:           exclusive
@@ -1222,6 +1221,7 @@ begin
   end
 end;
 #endif
+
 
 
 
