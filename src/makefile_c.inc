@@ -16,7 +16,7 @@ ifeq ($(64BIT),yes)
 else
     TARGET_OS=i686-pc-mingw32
     CFLAGS+=-DWIN32 -D_WIN32 -D__MINGW32__
-    OPTFLAGS+=-O3 -march=i686 -mmmx
+    OPTFLAGS+=-O2 -march=i686 -mmmx
 endif
 
 CFLAGS+=-mno-cygwin -mdll -mthreads -pipe

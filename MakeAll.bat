@@ -19,7 +19,3 @@ popd
 pushd src\codecs\xvidcore
 make -j4
 popd
-
-REM uncomment the following 2 lines to build theora
-REM pushd src\codecs\theora
-REM make -j4
