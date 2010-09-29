@@ -424,9 +424,7 @@ void TcodecsPageVideo::fillCodecs(void)
    formats.push_back(Tformat(_l("MP41")          ,IDFF_mp41,IDFF_MOVIE_LAVC,_l("MP41, MPG4, DIV1")));
    formats.push_back(Tformat(_l("H.263 (+)")     ,IDFF_h263,IDFF_MOVIE_LAVC,_l("H263, L263, M263, U263, X263, S263 (in 3gp files)")));
    formats.push_back(Tformat(_l("FLV1")          ,IDFF_flv1,IDFF_MOVIE_LAVC,_l("Flash Video (FLV1)")));
-   static const int movies_theora[]={IDFF_MOVIE_LAVC,IDFF_MOVIE_THEO,0};
-   static const Tformat::Toption options_theora[]={{IDFF_MOVIE_THEO,_l("Internal postprocessing"),IDFF_libtheoraPostproc,1},{0,NULL,0}};
-   formats.push_back(Tformat(_l("Theora")        ,IDFF_theo,movies_theora,_l("Theora Video (THEO)"),options_theora));
+   formats.push_back(Tformat(_l("Theora")        ,IDFF_theo,IDFF_MOVIE_LAVC,_l("Theora Video (THEO)")));
    formats.push_back(Tformat(_l("VP3")           ,IDFF_vp3 ,IDFF_MOVIE_LAVC,_l("VP3 Video (VP31)")));
    formats.push_back(Tformat(_l("VP5")           ,IDFF_vp5 ,IDFF_MOVIE_LAVC,_l("VP5 Video (VP50)")));
    formats.push_back(Tformat(_l("VP6")           ,IDFF_vp6 ,IDFF_MOVIE_LAVC,_l("VP6 Video (VP60, VP61, VP62)")));

@@ -20,7 +20,7 @@
 #include "TffdshowVideoInputPin.h"
 #include "dsutil.h"
 #include "TvideoCodec.h"
-#include "theora/theora.h"
+#include "theora.h"
 #include "TffDecoderVideo.h"
 #include "Tconvert.h"
 #include "TffdshowVideo.h"

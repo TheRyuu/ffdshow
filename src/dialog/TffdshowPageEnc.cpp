@@ -23,7 +23,6 @@
 #include "Cgeneric.h"
 #include "CgenericHuffyuv.h"
 #include "CgenericWmv9.h"
-#include "CgenericTHEO.h"
 #include "CgenericRAW.h"
 #include "CgenericFFV1.h"
 #include "CgenericLJPEG.h"
@@ -35,7 +34,6 @@
 #include "CquantTables.h"
 #include "Cmasking.h"
 #include "CmaskingXVID.h"
-#include "CmaskingTHEO.h"
 #include "CmaskingX264.h"
 #include "Conepass.h"
 #include "ConepassXvid.h"
@@ -165,7 +163,6 @@ void TffdshowPageEnc::onActivate(void)
    addTI(&tvis,TconfPages(new TgenericPage(this),
                           new TgenericHuffyuvPage(this),
                           new TgenericWmv9page(this),
-                          new TgenericTHEOpage(this),
                           new TgenericRAWpage(this),
                           new TgenericFFV1page(this),
                           new TgenericLJPEGpage(this),
@@ -183,7 +180,6 @@ void TffdshowPageEnc::onActivate(void)
    TreeView_Expand(htv,htiQuant,TVE_EXPAND);
    addTI(&tvis,TconfPages(new TmaskingPage(this),
                           new TmaskingPageXvid(this),
-                          new TmaskingPageTheo(this),
                           new TmaskingPageX264(this),
                           NULL),&localCfg.codecId);
    addTI(&tvis,TconfPages(new TonePassPage(this),

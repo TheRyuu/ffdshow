@@ -25,8 +25,6 @@
 #include "avisynth/Tavisynth.h"
 #include "TvideoCodecXviD4.h"
 #include "TvideoCodecLibmpeg2.h"
-#include "TvideoCodecTheora.h"
-#define TREMOR_OGG_H // FIXME (dirty) This is necessary to avoid including various versions of ogg.h.
 #define OGG_OGG_H
 #include "TvideoCodecWmv9.h"
 #include "TvideoCodecX264.h"
@@ -164,7 +162,6 @@ const TversionsDlg::TversionInfo* TaboutPageDecVideo::fcsVersions(void)
    _l("libavcodec.dll"),Tlibavcodec::getVersion,
    _l("ffmpegmt.dll"),Tlibavcodec_mt::getVersion,
    TvideoCodecXviD4::dllname,getVersion<TvideoCodecXviD4>,
-   TvideoCodecTheora::dllname,getVersion<TvideoCodecTheora>,
    TvideoCodecWmv9::dllname,getVersion<TvideoCodecWmv9>,
    TimgFilterKernelDeint2::dllname,getVersion<TimgFilterKernelDeint2>,
    TstreamRAR::dllname,getVersion<TstreamRAR>,
@@ -211,7 +208,6 @@ const TversionsDlg::TversionInfo* TaboutPageEnc::fcsVersions(void)
   {
    _l("libavcodec.dll"),Tlibavcodec::getVersion,
    TvideoCodecXviD4::dllname,getVersion<TvideoCodecXviD4>,
-   TvideoCodecTheora::dllname,getVersion<TvideoCodecTheora>,
    TvideoCodecWmv9::dllname,getVersion<TvideoCodecWmv9>,
    TvideoCodecX264::dllname,getVersion<TvideoCodecX264>,
    Tavisynth_c::dllname,Tavisynth_c::getVersion,

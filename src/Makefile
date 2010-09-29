@@ -1,4 +1,4 @@
-ALLDLLS=LIBMPEG2 LIBMAD LIBFAAD2 THEORA X264 XVIDCORE LIBDTS SAMPLERATE TREMOR \
+ALLDLLS=LIBMPEG2 LIBMAD LIBFAAD2 X264 XVIDCORE LIBDTS SAMPLERATE TREMOR \
 		TOMSMOCOMP KDINT UNRAR LIBA52 FFMPEG FFMPEGMT
 
 FFDLLS=FFMPEG FFMPEGMT X264 XVIDCORE
@@ -8,7 +8,6 @@ ALLS=../bin/libavcodec.dll \
      ../bin/libmpeg2_ff.dll \
      ../bin/ff_libmad.dll \
      ../bin/ff_libfaad2.dll \
-     ../bin/ff_theora.dll \
      ../bin/ff_x264.dll \
      ../bin/ff_xvidcore.dll \
      ../bin/ff_libdts.dll \
@@ -49,11 +48,6 @@ LIBMAD:
 	$(MAKE) -C codecs/faad
 LIBFAAD2:
 	$(MAKE) -C codecs/faad
-
-../bin/ff_theora.dll:
-	$(MAKE) -C codecs/theora
-THEORA:
-	$(MAKE) -C codecs/theora
 
 ../bin/ff_x264.dll:
 	$(MAKE) -C codecs/x264
@@ -106,7 +100,6 @@ clean:
 	$(MAKE) -C codecs/libmpeg2 clean
 	$(MAKE) -C codecs/libmad clean
 	$(MAKE) -C codecs/faad clean
-	$(MAKE) -C codecs/theora clean
 	$(MAKE) -C codecs/x264 clean
 	$(MAKE) -C codecs/xvidcore clean
 	$(MAKE) -C codecs/liba52 clean
@@ -123,7 +116,6 @@ distclean:
 	$(MAKE) -C codecs/libmpeg2 distclean
 	$(MAKE) -C codecs/libmad distclean
 	$(MAKE) -C codecs/faad distclean
-	$(MAKE) -C codecs/theora distclean
 	$(MAKE) -C codecs/x264 distclean
 	$(MAKE) -C codecs/xvidcore distclean
 	$(MAKE) -C codecs/liba52 distclean

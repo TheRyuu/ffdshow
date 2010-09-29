@@ -182,8 +182,6 @@
  \
  CODEC_OP(CODEC_ID_LIBMPEG2      ,500,"libmpeg2") \
  \
- CODEC_OP(CODEC_ID_THEORA_LIB    ,600,"libtheora") \
- \
  CODEC_OP(CODEC_ID_LIBMAD        ,800,"libmad") \
  \
  CODEC_OP(CODEC_ID_LIBFAAD       ,900,"faad2") \
@@ -235,7 +233,6 @@ const char_t* getCodecName(CodecID codecId);
 static __inline bool lavc_codec(int x)     {return x>0 && x<200;}
 static __inline bool raw_codec(int x)      {return x>=300 && x<400;}
 static __inline bool xvid_codec(int x)     {return x==CODEC_ID_XVID4;}
-static __inline bool theora_codec(int x)   {return x==CODEC_ID_THEORA_LIB;}
 static __inline bool wmv9_codec(int x)     {return x>=1000 && x<1100;}
 static __inline bool mpeg12_codec(int x)   {return x==CODEC_ID_MPEG1VIDEO || x==CODEC_ID_MPEG2VIDEO || x==CODEC_ID_LIBMPEG2;}
 static __inline bool mpeg1_codec(int x)    {return x==CODEC_ID_MPEG1VIDEO || x==CODEC_ID_LIBMPEG2;}
@@ -253,12 +250,12 @@ static __inline bool dxva_codec(int x)      {return x == CODEC_ID_H264_DXVA || x
 //I'm not sure of all these
 static __inline bool sup_CBR(int x)           {return !lossless_codec(x) && !raw_codec(x);}
 static __inline bool sup_VBR_QUAL(int x)      {return !lossless_codec(x) && !raw_codec(x);}
-static __inline bool sup_VBR_QUANT(int x)     {return (lavc_codec(x) || xvid_codec(x) || theora_codec(x) || x==CODEC_ID_X264) && !lossless_codec(x) && x!=CODEC_ID_SNOW;}
+static __inline bool sup_VBR_QUANT(int x)     {return (lavc_codec(x) || xvid_codec(x) || x==CODEC_ID_X264) && !lossless_codec(x) && x!=CODEC_ID_SNOW;}
 static __inline bool sup_XVID2PASS(int x)     {return sup_VBR_QUANT(x) && x!=CODEC_ID_SNOW;}
 static __inline bool sup_LAVC2PASS(int x)     {return (lavc_codec(x) && !lossless_codec(x) && x!=CODEC_ID_MJPEG && !raw_codec(x)) || x==CODEC_ID_X264;}
 
 static __inline bool sup_interlace(int x)         {return x==CODEC_ID_MPEG4 || x==CODEC_ID_MPEG2VIDEO || xvid_codec(x);}
-static __inline bool sup_gray(int x)              {return x!=CODEC_ID_LJPEG && x!=CODEC_ID_FFV1 && x!=CODEC_ID_SNOW && !theora_codec(x) && !wmv9_codec(x) && !raw_codec(x) && x!=CODEC_ID_DVVIDEO && !x264_codec(x);}
+static __inline bool sup_gray(int x)              {return x!=CODEC_ID_LJPEG && x!=CODEC_ID_FFV1 && x!=CODEC_ID_SNOW && !wmv9_codec(x) && !raw_codec(x) && x!=CODEC_ID_DVVIDEO && !x264_codec(x);}
 static __inline bool sup_globalheader(int x)      {return x==CODEC_ID_MPEG4;}
 static __inline bool sup_part(int x)              {return x==CODEC_ID_MPEG4;}
 static __inline bool sup_packedBitstream(int x)   {return xvid_codec(x);}
@@ -268,13 +265,13 @@ static __inline bool sup_bframes(int x)           {return x==CODEC_ID_MPEG4 || x
 static __inline bool sup_adaptiveBframes(int x)   {return lavc_codec(x) || x==CODEC_ID_X264;}
 static __inline bool sup_closedGop(int x)         {return sup_bframes(x) && !x264_codec(x);}
 static __inline bool sup_lavcme(int x)            {return lavc_codec(x) && x!=CODEC_ID_MJPEG && !lossless_codec(x);}
-static __inline bool sup_quantProps(int x)        {return !lossless_codec(x) && !theora_codec(x) && !wmv9_codec(x) && !raw_codec(x) && x!=CODEC_ID_SNOW;}
+static __inline bool sup_quantProps(int x)        {return !lossless_codec(x) && !wmv9_codec(x) && !raw_codec(x) && x!=CODEC_ID_SNOW;}
 static __inline bool sup_trellisQuant(int x)      {return x==CODEC_ID_MPEG4 || x==CODEC_ID_MPEG1VIDEO || x==CODEC_ID_MPEG2VIDEO || x==CODEC_ID_XVID4 || x==CODEC_ID_H263 || x==CODEC_ID_H263P || x==CODEC_ID_X264;}
 static __inline bool sup_masking(int x)           {return x==CODEC_ID_MPEG4 || x==CODEC_ID_H263 || x==CODEC_ID_H263P || x==CODEC_ID_MPEG1VIDEO || x==CODEC_ID_MPEG2VIDEO || xvid_codec(x) || x==CODEC_ID_X264;}
 static __inline bool sup_lavcOnePass(int x)       {return (lavc_codec(x) && !lossless_codec(x)) || x==CODEC_ID_X264;}
 static __inline bool sup_perFrameQuant(int x)     {return !lossless_codec(x) && !wmv9_codec(x) && !raw_codec(x) && x!=CODEC_ID_SNOW;}
 static __inline bool sup_4mv(int x)               {return x==CODEC_ID_MPEG4 || x==CODEC_ID_H263 || x==CODEC_ID_H263P || x==CODEC_ID_SNOW;}
-static __inline bool sup_aspect(int x)            {return x==CODEC_ID_MPEG4 || x==CODEC_ID_MPEG1VIDEO || x==CODEC_ID_MPEG2VIDEO || x==CODEC_ID_XVID4 || x==CODEC_ID_THEORA_LIB || x264_codec(x);}
+static __inline bool sup_aspect(int x)            {return x==CODEC_ID_MPEG4 || x==CODEC_ID_MPEG1VIDEO || x==CODEC_ID_MPEG2VIDEO || x==CODEC_ID_XVID4 || x264_codec(x);}
 static __inline bool sup_PSNR(int x)              {return (lavc_codec(x) && !lossless_codec(x)) || xvid_codec(x) || x264_codec(x);}
 static __inline bool sup_quantBias(int x)         {return lavc_codec(x) && !lossless_codec(x);}
 static __inline bool sup_MPEGquant(int x)         {return x==CODEC_ID_MPEG4 || x==CODEC_ID_MSMPEG4V3 || x==CODEC_ID_MPEG2VIDEO || xvid_codec(x);}

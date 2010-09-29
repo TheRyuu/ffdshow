@@ -23,8 +23,6 @@
 #include "Tlibavcodec.h"
 #include "avisynth/Tavisynth.h"
 #include "TvideoCodecLibmpeg2.h"
-#include "TvideoCodecTheora.h"
-#define TREMOR_OGG_H // FIXME (dirty) This is necessary to avoid including various versions of ogg.h.
 #define OGG_OGG_H
 #include "TaudioCodecLibMAD.h"
 #include "TaudioCodecLibFAAD.h"
@@ -115,7 +113,6 @@ void Tconfig::init1(HINSTANCE hi)
  isDecoder[IDFF_MOVIE_FFMPEG_MT]=Tdll::check(_l("ffmpegmt.dll"),this);
  isDecoder[IDFF_MOVIE_FFMPEG_DXVA]=Tlibavcodec::check(this);
  isDecoder[IDFF_MOVIE_LIBMPEG2]=check(TvideoCodecLibmpeg2::dllname);
- isDecoder[IDFF_MOVIE_THEO]=check(TvideoCodecTheora::dllname);
  isDecoder[IDFF_MOVIE_RAW]=1;
  isDecoder[IDFF_MOVIE_LIBMAD]=check(TaudioCodecLibMAD::dllname);
  isDecoder[IDFF_MOVIE_LIBFAAD]=check(TaudioCodecLibFAAD::dllname);

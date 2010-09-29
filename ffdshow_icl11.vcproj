@@ -3417,14 +3417,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\dialog\CgenericTHEO.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\dialog\CgenericTHEO.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\dialog\CgenericWmv9.cpp"
 				>
 			</File>
@@ -3550,14 +3542,6 @@
 			</File>
 			<File
 				RelativePath=".\src\dialog\Cmasking.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\dialog\CmaskingTHEO.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\dialog\CmaskingTHEO.h"
 				>
 			</File>
 			<File
@@ -4874,14 +4858,6 @@
 			</File>
 			<File
 				RelativePath=".\src\codecs\TvideoCodecLibmpeg2.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\codecs\TvideoCodecTheora.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\codecs\TvideoCodecTheora.h"
 				>
 			</File>
 			<File

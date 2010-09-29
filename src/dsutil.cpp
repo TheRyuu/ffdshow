@@ -20,7 +20,7 @@
 #include "stdafx.h"
 #include "dsutil.h"
 #include "TffRect.h"
-#include "theora/theora.h"
+#include "theora.h"
 #include "xiph/vorbis/vorbisformat.h"
 #include "ffdshow_mediaguids.h"
 

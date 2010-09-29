@@ -420,8 +420,6 @@ TglobalSettingsDecVideo::TglobalSettingsDecVideo(const Tconfig *Iconfig,int Imod
      _l("fastMpeg2"),0,
    IDFF_fastH264       ,&TglobalSettingsDecVideo::fastH264       ,0,3,_l(""),1,
      _l("fastH264"),0,
-   IDFF_libtheoraPostproc,&TglobalSettingsDecVideo::libtheoraPostproc ,0,0,_l(""),1,
-     _l("libtheoraPostproc"),0,
    IDFF_alternateUncompressed,&TglobalSettingsDecVideo::alternateUncompressed,0,0,_l(""),1,
      _l("alternateUncompressed"),0,
    0
@@ -527,7 +525,6 @@ void TglobalSettingsDecVideo::fixNewCodecs(void)
  if (mpg2==2) mpg2=IDFF_MOVIE_LIBMPEG2;
  if (em2v==2) em2v=IDFF_MOVIE_LIBMPEG2;
  if (mpegAVI==2) mpegAVI=IDFF_MOVIE_LIBMPEG2;
- if (theo==1) theo=IDFF_MOVIE_THEO;
  //if (rawv==1 && forceInCSP!=0) rawv=forceInCSP;
 }
 
@@ -577,7 +574,7 @@ void TglobalSettingsDecVideo::load(void)
  fixMissing(mpg2,IDFF_MOVIE_LAVC,IDFF_MOVIE_LIBMPEG2);
  fixMissing(mpegAVI,IDFF_MOVIE_LAVC,IDFF_MOVIE_LIBMPEG2);
  fixMissing(em2v,IDFF_MOVIE_LAVC,IDFF_MOVIE_LIBMPEG2);
- fixMissing(theo,IDFF_MOVIE_LAVC,IDFF_MOVIE_THEO);
+ fixMissing(theo,IDFF_MOVIE_LAVC);
  fixMissing(cram,IDFF_MOVIE_LAVC);
  fixMissing(rt21,IDFF_MOVIE_LAVC);
  fixMissing(iv32,IDFF_MOVIE_LAVC);
@@ -870,7 +867,7 @@ const CodecID TglobalSettingsDecVideo::c_theora[IDFF_MOVIE_MAX+1]=
  CODEC_ID_NONE,
  CODEC_ID_THEORA,
  CODEC_ID_NONE,
- CODEC_ID_THEORA_LIB
+ CODEC_ID_NONE
 };
 const CodecID TglobalSettingsDecVideo::c_wvc1[IDFF_MOVIE_MAX+1]=
 {

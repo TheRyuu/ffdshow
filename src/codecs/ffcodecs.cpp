@@ -109,7 +109,6 @@ const FOURCC* getCodecFOURCCs(CodecID codecId)
      return fccs;
     }
    case CODEC_ID_THEORA:
-   case CODEC_ID_THEORA_LIB:
     {
      static const FOURCC fccs[]={FOURCC_THEO,0};
      return fccs;

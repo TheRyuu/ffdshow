@@ -43,7 +43,6 @@
 #define IDFF_fastMpeg2            90
 #define IDFF_fastH264             91
 //#define IDFF_autodetect24P       3490
-#define IDFF_libtheoraPostproc    92
 //#define IDFF_subCurrentFlnm       29
 //#define IDFF_lastFrameLength      41
 #define IDFF_movieDuration        38
@@ -685,7 +684,6 @@
    #define IDFF_MOVIE_NONE     0
    #define IDFF_MOVIE_LAVC     1
    //#define IDFF_MOVIE_XVID   2
-   #define IDFF_MOVIE_THEO     3
    #define IDFF_MOVIE_RAW      4
    #define IDFF_MOVIE_LIBMPEG2 5
    #define IDFF_MOVIE_LIBMAD   7

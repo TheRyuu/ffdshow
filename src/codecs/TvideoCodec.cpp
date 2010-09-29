@@ -27,7 +27,6 @@
 #include "TvideoCodecUncompressed.h"
 #include "TvideoCodecXviD4.h"
 #include "TvideoCodecLibmpeg2.h"
-#include "TvideoCodecTheora.h"
 #include "TvideoCodecWmv9.h"
 #include "TvideoCodecAvisynth.h"
 #include "TvideoCodecX264.h"
@@ -73,8 +72,7 @@ TvideoCodecDec* TvideoCodecDec::initDec(IffdshowBase *deci,IdecVideoSink *sink,C
  else if (codecId==CODEC_ID_XVID4     ) movie=new TvideoCodecXviD4(deci,sink);
  else if (codecId==CODEC_ID_LIBMPEG2  ) movie=new TvideoCodecLibmpeg2(deci,sink);
  else if (codecId==CODEC_ID_AVISYNTH  ) movie=new TvideoCodecAvisynth(deci,sink);
- else if (codecId==CODEC_ID_THEORA_LIB) movie=new TvideoCodecTheora(deci,sink);
- else if (codecId==CODEC_ID_H264_MT) movie=new TvideoCodecLibavcodec_mt(deci,sink);
+ else if (codecId==CODEC_ID_H264_MT   ) movie=new TvideoCodecLibavcodec_mt(deci,sink);
  else if (codecId==CODEC_ID_H264_DXVA ||codecId==CODEC_ID_VC1_DXVA) movie=new TvideoCodecLibavcodecDxva(deci,sink, codecId);
  else return NULL;
  if (!movie) return NULL;
@@ -276,7 +274,6 @@ void TvideoCodecs::init(IffdshowBase *deci,IencVideoSink *sink)
  push_back(new TvideoCodecLibavcodec(deci,sink));
  push_back(new TvideoCodecXviD4(deci,sink));
  push_back(new TvideoCodecX264(deci,sink));
- push_back(new TvideoCodecTheora(deci,sink));
  push_back(new TvideoCodecWmv9(deci,sink));
  push_back(new TvideoCodecUncompressed(deci,sink));
 }
