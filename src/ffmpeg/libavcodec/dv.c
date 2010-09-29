@@ -1083,6 +1083,8 @@ static int dvvideo_decode_frame(AVCodecContext *avctx,
     const uint8_t *buf = avpkt->data;
     int buf_size = avpkt->size;
     DVVideoContext *s = avctx->priv_data;
+    const uint8_t* vsc_pack;
+    int apt, is16_9;
 
     s->sys = dv_frame_profile(s->sys, buf, buf_size);
     if (!s->sys || buf_size < s->sys->frame_size || dv_init_dynamic_tables(s->sys)) {
@@ -1115,6 +1117,14 @@ static int dvvideo_decode_frame(AVCodecContext *avctx,
     /* return image */
     *data_size = sizeof(AVFrame);
     *(AVFrame*)data = s->picture;
+
+    /* Determine the codec's sample_aspect ratio from the packet */
+    vsc_pack = buf + 80*5 + 48 + 5;
+    if ( *vsc_pack == dv_video_control ) {
+        apt = buf[4] & 0x07;
+        is16_9 = (vsc_pack && ((vsc_pack[2] & 0x07) == 0x02 || (!apt && (vsc_pack[2] & 0x07) == 0x07)));
+        avctx->sample_aspect_ratio = s->sys->sar[is16_9];
+    }
 
     return s->sys->frame_size;
 }

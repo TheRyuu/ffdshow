@@ -74,7 +74,7 @@ AVCodecParserContext *av_parser_init(int codec_id)
     s->fetch_timestamp=1;
     s->pict_type = FF_I_TYPE;
     s->key_frame = -1;
-    s->convergence_duration = AV_NOPTS_VALUE;
+    s->convergence_duration = 0;
     s->dts_sync_point       = INT_MIN;
     s->dts_ref_dts_delta    = INT_MIN;
     s->pts_dts_delta        = INT_MIN;
@@ -149,6 +149,12 @@ int av_parser_parse2(AVCodecParserContext *s,
 {
     int index, i;
     uint8_t dummy_buf[FF_INPUT_BUFFER_PADDING_SIZE];
+
+    if(!(s->flags & PARSER_FLAG_FETCHED_OFFSET)) {
+        s->next_frame_offset =
+        s->cur_offset        = pos;
+        s->flags |= PARSER_FLAG_FETCHED_OFFSET;
+    }
 
     if (buf_size == 0) {
         /* padding is always necessary even if EOF, so we add it here */

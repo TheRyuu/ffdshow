@@ -20,7 +20,7 @@
  */
 
 /**
- * @file libavcodec/dvdata.h
+ * @file
  * Constants for DV codec.
  */
 
@@ -288,7 +288,7 @@ static const DVprofile dv_profiles[] = {
       /*.ltc_divisor = */25,
       /*.height = */576,
       /*.width = */720,
-      /*.sar = */{{59, 54}, {118, 81}},
+      /*.sar = */{{16, 15}, {64, 45}},
       /*.work_chunks = */&work_chunks_dv25pal[0],
       /*.idct_factor = */&dv_idct_factor_sd[0],
       /*.pix_fmt = */PIX_FMT_YUV420P,
@@ -309,7 +309,7 @@ static const DVprofile dv_profiles[] = {
       /*.ltc_divisor = */25,
       /*.height = */576,
       /*.width = */720,
-      /*.sar = */{{59, 54}, {118, 81}},
+      /*.sar = */{{16, 15}, {64, 45}},
       /*.work_chunks = */&work_chunks_dv25pal411[0],
       /*.idct_factor = */&dv_idct_factor_sd[0],
       /*.pix_fmt = */PIX_FMT_YUV411P,
@@ -330,7 +330,7 @@ static const DVprofile dv_profiles[] = {
       /*.ltc_divisor = */30,
       /*.height = */480,
       /*.width = */720,
-      /*.sar = */{{10, 11}, {40, 33}},
+      /*.sar = */{{8, 9}, {32, 27}},
       /*.work_chunks = */&work_chunks_dv50ntsc[0],
       /*.idct_factor = */&dv_idct_factor_sd[0],
       /*.pix_fmt = */PIX_FMT_YUV422P,
@@ -351,7 +351,7 @@ static const DVprofile dv_profiles[] = {
       /*.ltc_divisor = */25,
       /*.height = */576,
       /*.width = */720,
-      /*.sar = */{{59, 54}, {118, 81}},
+      /*.sar = */{{16, 15}, {64, 45}},
       /*.work_chunks = */&work_chunks_dv50pal[0],
       /*.idct_factor = */&dv_idct_factor_sd[0],
       /*.pix_fmt = */PIX_FMT_YUV422P,
@@ -458,7 +458,7 @@ static const DVprofile dv_profiles[] = {
       /*.ltc_divisor = */25,
       /*.height = */576,
       /*.width = */720,
-      /*.sar = */{{59, 54}, {118, 81}},
+      /*.sar = */{{16, 15}, {64, 45}},
       /*.work_chunks = */&work_chunks_dv25pal[0],
       /*.idct_factor = */&dv_idct_factor_sd[0],
       /*.pix_fmt = */PIX_FMT_YUV420P,

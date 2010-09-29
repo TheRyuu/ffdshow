@@ -85,6 +85,7 @@
 #define HAVE_PPC4XX 0
 #define HAVE_VIS 0
 
+#define HAVE_ALIGNED_STACK 0
 #define HAVE_ALTIVEC_H 0
 #define HAVE_BIGENDIAN 0
 #define HAVE_BSWAP 1
