@@ -23,7 +23,7 @@
 #include "IffdshowDecAudio.h"
 #include "dsutil.h"
 #include "ffdshow_mediaguids.h"
-#include "xiph/vorbis/vorbisformat.h"
+#include "codecs/ogg headers/vorbisformat.h"
 #include "ffmpeg/libavcodec/avcodec.h"
 #include "reorder_ch.h"
 

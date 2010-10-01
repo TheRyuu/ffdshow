@@ -25,8 +25,8 @@
 #include "IffdshowDec.h"
 #include "IffdshowDecAudio.h"
 #include "ffdshow_mediaguids.h"
-#include "xiph/vorbis/vorbisformat.h"
-#include "xiph/ogm/ogmstreams.h"
+#include "codecs/ogg headers/vorbisformat.h"
+#include "codecs/ogg headers/ogmstreams.h"
 #include "dsutil.h"
 
 const char_t* TaudioCodecTremor::dllname=_l("ff_tremor.dll");

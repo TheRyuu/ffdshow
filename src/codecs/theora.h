@@ -23,7 +23,7 @@ extern "C"
 {
 #endif /* __cplusplus */
 
-#include "../../xiph/ogg/ogg.h"
+#include "codecs/ogg headers/ogg.h"
 
 /** \mainpage
  * 

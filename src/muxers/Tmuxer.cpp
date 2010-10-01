@@ -21,15 +21,11 @@
 #include "TmuxerFile.h"
 #include "ffImgfmt.h"
 #include "ffcodecs.h"
-#include "TmuxerOGM.h"
-#include "TmuxerOGG.h"
 #include "IffdshowBase.h"
 
 const char_t* Tmuxer::muxers[]=
 {
  _l("Raw frames"),
- _l("OGM"),
- _l("OGG (works with Theora only)"),
  NULL
 };
 
@@ -38,8 +34,6 @@ Tmuxer* Tmuxer::getMuxer(int id,IffdshowBase *deci)
  switch (id)
   {
    case MUXER_FILE:return new TmuxerFile(deci);
-   case MUXER_OGM:return new TmuxerOGM(deci);
-   case MUXER_OGG:return new TmuxerOGG(deci);
    default:return NULL;
   }
 }

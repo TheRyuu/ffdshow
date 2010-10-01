@@ -4970,6 +4970,26 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="ogg headers"
+				>
+				<File
+					RelativePath=".\src\codecs\ogg headers\ogg.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\codecs\ogg headers\ogmstreams.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\codecs\ogg headers\os_types.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\codecs\ogg headers\vorbisformat.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="convert"
@@ -5665,22 +5685,6 @@
 					RelativePath=".\src\muxers\TmuxerFile.h"
 					>
 				</File>
-				<File
-					RelativePath=".\src\muxers\TmuxerOGG.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\src\muxers\TmuxerOGG.h"
-					>
-				</File>
-				<File
-					RelativePath=".\src\muxers\TmuxerOGM.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\src\muxers\TmuxerOGM.h"
-					>
-				</File>
 			</Filter>
 			<Filter
 				Name="acm"
@@ -5724,114 +5728,6 @@
 			</File>
 			<File
 				RelativePath=".\src\DeCSSInputPin.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="xiph"
-			>
-			<File
-				RelativePath=".\src\xiph\ogg\bitwise.c"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-						WarningLevel="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-						WarningLevel="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-						WarningLevel="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-						WarningLevel="0"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\src\xiph\ogg\framing.c"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-						WarningLevel="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-						WarningLevel="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-						WarningLevel="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-						WarningLevel="0"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\src\xiph\vorbis\ivorbiscodec.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\xiph\ogg\ogg.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\xiph\ogm\ogmstreams.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\xiph\ogg\os_types.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\xiph\theora\theora.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\xiph\vorbis\vorbisformat.h"
 				>
 			</File>
 		</Filter>

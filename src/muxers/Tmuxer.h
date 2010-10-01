@@ -12,8 +12,6 @@ public:
  enum
   {
    MUXER_FILE=0,
-   MUXER_OGM =1,
-   MUXER_OGG =2
   };
  static const char_t *muxers[];
  static Tmuxer* getMuxer(int id,IffdshowBase *deci);

@@ -23,7 +23,6 @@
 #include "Tlibavcodec.h"
 #include "avisynth/Tavisynth.h"
 #include "TvideoCodecLibmpeg2.h"
-#define OGG_OGG_H
 #include "TaudioCodecLibMAD.h"
 #include "TaudioCodecLibFAAD.h"
 #include "TvideoCodecXviD4.h"

@@ -25,7 +25,6 @@
 #include "avisynth/Tavisynth.h"
 #include "TvideoCodecXviD4.h"
 #include "TvideoCodecLibmpeg2.h"
-#define OGG_OGG_H
 #include "TvideoCodecWmv9.h"
 #include "TvideoCodecX264.h"
 #include "TaudioCodecLibMAD.h"
