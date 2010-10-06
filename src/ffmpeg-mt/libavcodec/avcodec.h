@@ -418,7 +418,7 @@ typedef struct RcOverride{
 /**
  * Codec supports frame-level multithreading.
  */
-#define CODEC_CAP_FRAME_THREADS    0x0800
+#define CODEC_CAP_FRAME_THREADS    0x0400
 
 
 //The following defines may change, don't expect compatibility if you use them.
@@ -708,6 +708,8 @@ typedef struct AVPanScan{
     int num_sprite_warping_points,real_sprite_warping_points;\
     int play_flags;\
 \
+    /* ffdshow custom stuff (begin) */\
+\
     /**\
      * the AVCodecContext which ff_thread_get_buffer() was last called on\
      * - encoding: Set by libavcodec.\
@@ -721,8 +723,6 @@ typedef struct AVPanScan{
      * - decoding: Set by libavcodec.\
      */\
     void *thread_opaque;\
-\
-    /* ffdshow custom stuffs (begin) */\
 \
     int h264_poc_decoded;\
     int h264_poc_outputed;\
@@ -743,7 +743,7 @@ typedef struct AVPanScan{
      * - decoding: Set by libavcodec.\
      */\
     YCbCr_RGB_MatrixCoefficientsType YCbCr_RGB_matrix_coefficients;
-    /* ffdshow custom stuffs (end) */
+    /* ffdshow custom stuff (end) */
 
 
 #define FF_QSCALE_TYPE_MPEG1 0
@@ -2585,8 +2585,8 @@ typedef struct AVCodec {
     const enum SampleFormat *sample_fmts;   ///< array of supported sample formats, or NULL if unknown, array is terminated by -1
     const int64_t *channel_layouts;         ///< array of support channel layouts, or NULL if unknown. array is terminated by 0
     uint8_t max_lowres;                     ///< maximum value for lowres supported by the decoder
-    AVClass *priv_class;                    ///< AVClass for the private context
 
+    /* ffmpeg-mt */
     /**
      * @defgroup framethreading Frame-level threading support functions.
      * @{
@@ -2606,6 +2606,9 @@ typedef struct AVCodec {
      */
     int (*update_thread_context)(AVCodecContext *dst, AVCodecContext *src);
     /** @} */
+    
+    /* this must be at the end of the struct */
+    AVClass *priv_class;                    ///< AVClass for the private context
 } AVCodec;
 
 /**

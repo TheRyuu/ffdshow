@@ -707,11 +707,21 @@ typedef struct AVPanScan{
     int num_sprite_warping_points,real_sprite_warping_points;\
     int play_flags;\
 \
-    /* ffmpeg-mt */\
-    struct AVCodecContext *owner;\
-    void *thread_opaque;\
+    /* ffdshow custom stuff (begin) */\
 \
-    /* ffdshow custom stuffs (begin) */\
+    /**\
+     * the AVCodecContext which ff_thread_get_buffer() was last called on\
+     * - encoding: Set by libavcodec.\
+     * - decoding: Set by libavcodec.\
+     */\
+    struct AVCodecContext *owner;\
+\
+    /**\
+     * used by multithreading to store frame-specific info\
+     * - encoding: Set by libavcodec.\
+     * - decoding: Set by libavcodec.\
+     */\
+    void *thread_opaque;\
 \
     int h264_poc_decoded;\
     int h264_poc_outputed;\
@@ -732,7 +742,7 @@ typedef struct AVPanScan{
      * - decoding: Set by libavcodec.\
      */\
     YCbCr_RGB_MatrixCoefficientsType YCbCr_RGB_matrix_coefficients;
-    /* ffdshow custom stuffs (end) */
+    /* ffdshow custom stuff (end) */
 
 
 #define FF_QSCALE_TYPE_MPEG1 0
@@ -2527,7 +2537,6 @@ typedef struct AVCodecContext {
      */
     int isDVD;
 
-    int got_first_frame; /* ffmpeg-mt */
     /* ffdshow custom stuff (end) */
 } AVCodecContext;
 
@@ -2571,11 +2580,30 @@ typedef struct AVCodec {
     const enum SampleFormat *sample_fmts;   ///< array of supported sample formats, or NULL if unknown, array is terminated by -1
     const int64_t *channel_layouts;         ///< array of support channel layouts, or NULL if unknown. array is terminated by 0
     uint8_t max_lowres;                     ///< maximum value for lowres supported by the decoder
-    AVClass *priv_class;                    ///< AVClass for the private context
 
     /* ffmpeg-mt */
+    /**
+     * @defgroup framethreading Frame-level threading support functions.
+     * @{
+     */
+    /**
+     * If defined, called on thread contexts when they are created.
+     * If the codec allocates writable tables in init(), re-allocate them here.
+     * priv_data will be set to a copy of the original.
+     */
     int (*init_thread_copy)(AVCodecContext *);
+    /**
+     * Copy necessary context variables from a previous thread context to the current one.
+     * If not defined, the next thread will start automatically; otherwise, the codec
+     * must call ff_thread_finish_setup().
+     *
+     * dst and src will (rarely) point to the same context, in which case memcpy should be skipped.
+     */
     int (*update_thread_context)(AVCodecContext *dst, AVCodecContext *src);
+    /** @} */
+    
+    /* this must be at the end of the struct */
+    AVClass *priv_class;                    ///< AVClass for the private context
 } AVCodec;
 
 /**
