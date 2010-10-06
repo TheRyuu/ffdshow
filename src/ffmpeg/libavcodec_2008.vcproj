@@ -667,7 +667,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\libavcodec\gsm.c"
+				RelativePath=".\libavcodec\gsmdec.c"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\gsmdec_data.c"
 				>
 			</File>
 			<File
@@ -968,6 +972,10 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\mpegvideo_enc.c"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\msgsmdec.c"
 				>
 			</File>
 			<File

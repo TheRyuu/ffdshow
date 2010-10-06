@@ -102,6 +102,7 @@
 #define HAVE_PTHREADS 1
 #define HAVE_TEN_OPERANDS 1
 #define HAVE_THREADS 1
+#define HAVE_XMM_CLOBBERS 1
 #define HAVE_YASM 1
 
 #ifdef __GNUC__
@@ -250,6 +251,8 @@ Note: when adding a new codec, you have to:
 #define CONFIG_DCA_DECODER 0
 #define CONFIG_EAC3_DECODER 0
 #define CONFIG_FLAC_DECODER 0
+#define CONFIG_GSM_DECODER 0
+#define CONFIG_GSM_MS_DECODER 0
 #define CONFIG_IMC_DECODER 0
 #define CONFIG_MACE3_DECODER 0
 #define CONFIG_MACE6_DECODER 0
@@ -260,7 +263,6 @@ Note: when adding a new codec, you have to:
 #define CONFIG_MP2FLOAT_DECODER 0
 #define CONFIG_MP3_DECODER 0
 #define CONFIG_MP3FLOAT_DECODER 0
-#define CONFIG_MSGSM_DECODER 0
 #define CONFIG_NELLYMOSER_DECODER 0
 #define CONFIG_QDM2_DECODER 0
 #define CONFIG_RA_144_DECODER 0

@@ -74,7 +74,8 @@ SRCS_C=\
     $(LAVC_DIR)/fraps.c \
     $(LAVC_DIR)/g726.c \
     $(LAVC_DIR)/golomb.c \
-    $(LAVC_DIR)/gsm.c \
+    $(LAVC_DIR)/gsmdec.c \
+    $(LAVC_DIR)/gsmdec_data.c \
     $(LAVC_DIR)/h261.c \
     $(LAVC_DIR)/h261dec.c \
     $(LAVC_DIR)/h261enc.c \
@@ -141,6 +142,7 @@ SRCS_C=\
     $(LAVC_DIR)/mpegaudio_parser.c \
     $(LAVC_DIR)/mpegvideo.c \
     $(LAVC_DIR)/mpegvideo_enc.c \
+    $(LAVC_DIR)/msgsmdec.c \
     $(LAVC_DIR)/msmpeg4.c \
     $(LAVC_DIR)/msmpeg4data.c \
     $(LAVC_DIR)/msrle.c \

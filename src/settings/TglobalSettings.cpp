@@ -1197,7 +1197,7 @@ void TglobalSettingsDecAudio::load(void)
  FF_WAVE_FORMAT1_OP(MULAW  ,law    & rawmask,CODEC_ID_PCM_MULAW) \
  /*FF_WAVE_FORMAT1_OP(QT_ULAW,law    & rawmask,CODEC_ID_PCM_MULAW)*/ \
  FF_WAVE_FORMAT1_OP(GSM610 ,gsm    & rawmask,CODEC_ID_GSM_MS) \
- /*FF_WAVE_FORMAT1_OP(QT_GSM ,gsm    & rawmask,CODEC_ID_GSM_MS)*/ \
+ /*FF_WAVE_FORMAT1_OP(QT_GSM ,gsm    & rawmask,CODEC_ID_GSM)*/ \
  FF_WAVE_FORMAT1_OP(FLAC   ,flac   & rawmask,CODEC_ID_FLAC) \
  FF_WAVE_FORMAT1_OP(TTA    ,tta    & rawmask,CODEC_ID_TTA) \
  FF_WAVE_FORMAT1_OP(QDM2   ,qdm2   & rawmask,CODEC_ID_QDM2) \
