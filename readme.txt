@@ -41,9 +41,6 @@ http://ffmpeg.org/
 libmpeg2:
 http://libmpeg2.sourceforge.net/
 
-MPlayer:
-http://www.mplayerhq.hu/
-
 xsharpen, unsharp mask, msharpen, hue and saturation code
 http://neuron2.net/
 

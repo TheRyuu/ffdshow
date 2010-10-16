@@ -15,7 +15,9 @@ The ffdshow tryouts project is maintained by the following Doom9 forum members:
     * LaughingMan aka Eragon4ever < eragon4ever at users dot sourceforge dot net > from Germany
     * MatMaul
     * pizza_phd
+    * STaRGaZeR
     * videomixer9
+    * XhmikosR
 
 Thanks to the GPL we use code from quite a few sources ;-)
 Here's a list of individuals that contributed to the ffdshow tryouts and
@@ -34,12 +36,9 @@ projects/libraries that the tryouts depend resp. build upon:
           o libFAAD2
           o libmad
           o libmpeg2
-          o MPlayer
-          o libtheora
           o Tremor
     * msvidc and msrle decoders by Mike Melanson
     * Resizing and various audio/image filters from:
-          o MPlayer
           o FFmpeg (libswscale)
     * Colorspace conversions from:
           o Xvid
@@ -80,7 +79,7 @@ projects/libraries that the tryouts depend resp. build upon:
           o Closed Caption Decoder by Mike Baker
           o xine project
     * Binary distributions created using:
-          o MinGW / GCC (compiled by CC979)
+          o MinGW / GCC
           o yasm
           o Inno Setup
     * Special thanks to:

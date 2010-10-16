@@ -29,17 +29,12 @@ Short term ToDo list:
 
 Mid term ToDo list:
 
-   1. Add support for Cook audio.
-   2. Add support for ALAC audio.
-   3. Support ADTS header for AAC audio streams.
-   4. Fill Wiki with content: FAQ, Tips & Tricks, and most importantly documentation for the many options of ffdshow.
+   1. Add support for ALAC audio.
+   2. Fill Wiki with content: FAQ, Tips & Tricks, and most importantly documentation for the many options of ffdshow.
 
 
 Long term ToDo list:
 
-   1. Update libswscale
-   2. Update libtheora
-   3. Update mp3lib
-   4. Improve subtitle support (vobsub, ASS/SSA).
-   5. Improve translation functionality.
-   6. Improve presets functionality.
+   1. Improve subtitle support (vobsub, ASS/SSA).
+   2. Improve translation functionality.
+   3. Improve presets functionality.

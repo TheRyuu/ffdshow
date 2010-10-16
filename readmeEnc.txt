@@ -1,7 +1,7 @@
 
 ### 1. About ffdshow video encoder ###
 
-VFW (Video for Windows) and DirectShow codec. Uses the libavcodec library from the FFmpeg project for encoding. A few other encoding libraries, such as xvidcore and libtheora, are also supported.
+VFW (Video for Windows) and DirectShow codec. Uses the libavcodec library from the FFmpeg project for encoding. A few other encoding libraries, such as xvidcore, are also supported.
 
 ### 2. Features: ###
 
@@ -14,7 +14,6 @@ H263, H263+
 HuffYUV in YV12 colorspace
 MJPEG
 MPEG 1/2
-Theora (not for regular use, format specification hasn't stabilized yet)
 
 - All common encoding modes: constant bitrate, fixed quantizer, fixed quality, two pass encoding (depends on compressor features).
 - For libavcodec and Xvid detailed selection of motion estimation method.
@@ -51,9 +50,6 @@ http://ffmpeg.org/
 
 Xvid:
 http://www.xvid.org/
-
-MPlayer:
-http://www.mplayerhq.hu/
 
 MJPEGtools:
 http://mjpeg.sourceforge.net/
