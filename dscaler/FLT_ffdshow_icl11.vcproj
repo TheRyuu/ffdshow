@@ -20,9 +20,8 @@
 	<Configurations>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
-			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\common_icl11.vsprops"
 			UseOfMFC="1"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			ManagedExtensions="0"
@@ -98,7 +97,7 @@
 				ProgramDatabaseFile="$(IntDir)/FLT_ffdshow.pdb"
 				RandomizedBaseAddress="2"
 				DataExecutionPrevention="2"
-				ImportLibrary="$(IntDir)/FLT_ffdshow.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -126,9 +125,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|x64"
-			OutputDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
-			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\common_icl11.vsprops"
 			UseOfMFC="1"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			ManagedExtensions="0"
@@ -203,7 +201,7 @@
 				ProgramDatabaseFile="$(IntDir)/FLT_ffdshow.pdb"
 				RandomizedBaseAddress="2"
 				DataExecutionPrevention="2"
-				ImportLibrary="$(IntDir)/FLT_ffdshow.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"
 			/>
 			<Tool
@@ -231,9 +229,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
-			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\common.vsprops"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			>
@@ -304,7 +301,7 @@
 				EnableCOMDATFolding="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(IntDir)/FLT_ffdshow.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -332,9 +329,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|x64"
-			OutputDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
-			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\common_icl11.vsprops"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			>
@@ -403,7 +399,7 @@
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				RandomizedBaseAddress="1"
-				ImportLibrary="$(IntDir)/FLT_ffdshow.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"
 			/>
 			<Tool

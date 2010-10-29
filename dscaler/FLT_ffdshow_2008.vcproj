@@ -20,9 +20,8 @@
 	<Configurations>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(ConfigurationName)_$(PlatformName)_2008"
-			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\common.vsprops"
 			UseOfMFC="1"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			ManagedExtensions="0"
@@ -66,7 +65,7 @@
 				RuntimeTypeInfo="false"
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
-				ProgramDataBaseFileName="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\$(TargetName).pdb"
 				BrowseInformation="0"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
@@ -94,10 +93,10 @@
 				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				DelayLoadDLLs="$(NOINHERIT)"
-				ProgramDatabaseFile="$(IntDir)/FLT_ffdshow.pdb"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(IntDir)/FLT_ffdshow.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -125,9 +124,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|x64"
-			OutputDirectory="$(ConfigurationName)_$(PlatformName)_2008"
-			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\common.vsprops"
 			UseOfMFC="1"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			ManagedExtensions="0"
@@ -171,7 +169,7 @@
 				RuntimeTypeInfo="false"
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
-				ProgramDataBaseFileName="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\$(TargetName).pdb"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 				CompileAs="0"
@@ -198,9 +196,9 @@
 				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				DelayLoadDLLs="$(NOINHERIT)"
-				ProgramDatabaseFile="$(IntDir)/FLT_ffdshow.pdb"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				RandomizedBaseAddress="1"
-				ImportLibrary="$(IntDir)/FLT_ffdshow.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"
 			/>
 			<Tool
@@ -228,9 +226,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(ConfigurationName)_$(PlatformName)_2008"
-			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\common.vsprops"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			>
@@ -267,7 +264,7 @@
 				RuntimeTypeInfo="false"
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
-				ProgramDataBaseFileName="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\$(TargetName).pdb"
 				BrowseInformation="0"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
@@ -296,12 +293,12 @@
 				IgnoreAllDefaultLibraries="true"
 				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(IntDir)/FLT_ffdshow.pdb"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(IntDir)/FLT_ffdshow.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -329,9 +326,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|x64"
-			OutputDirectory="$(ConfigurationName)_$(PlatformName)_2008"
-			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\common.vsprops"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			>
@@ -368,7 +364,7 @@
 				RuntimeTypeInfo="false"
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
-				ProgramDataBaseFileName="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\$(TargetName).pdb"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 				Detect64BitPortabilityProblems="false"
@@ -396,11 +392,11 @@
 				IgnoreAllDefaultLibraries="true"
 				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(IntDir)/FLT_ffdshow.pdb"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				RandomizedBaseAddress="1"
-				ImportLibrary="$(IntDir)/FLT_ffdshow.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"
 			/>
 			<Tool

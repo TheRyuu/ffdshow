@@ -20,9 +20,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
-			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\..\..\common_icl11.vsprops"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="0"
@@ -91,7 +90,7 @@
 				ProgramDatabaseFile="$(IntDir)/$(TargetName).pdb"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(IntDir)\ff_libmad.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -118,9 +117,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|x64"
-			OutputDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
-			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\..\..\common_icl11.vsprops"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="0"
@@ -187,7 +185,7 @@
 				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(IntDir)/$(TargetName).pdb"
-				ImportLibrary="$(IntDir)\ff_libmad.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"
 			/>
 			<Tool
@@ -215,9 +213,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
-			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\..\..\common_icl11.vsprops"
 			UseOfMFC="1"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="0"
@@ -292,7 +289,7 @@
 				EnableCOMDATFolding="2"
 				RandomizedBaseAddress="2"
 				DataExecutionPrevention="2"
-				ImportLibrary="$(IntDir)\ff_libmad.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -319,9 +316,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|x64"
-			OutputDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
-			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\..\..\common_icl11.vsprops"
 			UseOfMFC="1"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="0"
@@ -396,7 +392,7 @@
 				EnableCOMDATFolding="2"
 				RandomizedBaseAddress="2"
 				DataExecutionPrevention="2"
-				ImportLibrary="$(IntDir)\ff_libmad.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"
 			/>
 			<Tool

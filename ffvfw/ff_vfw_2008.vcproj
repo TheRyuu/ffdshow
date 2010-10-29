@@ -20,9 +20,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(ConfigurationName)_$(PlatformName)_2008"
-			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\common.vsprops"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			>
@@ -58,7 +57,7 @@
 				RuntimeTypeInfo="false"
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
-				ProgramDataBaseFileName="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\$(TargetName).pdb"
 				BrowseInformation="0"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
@@ -89,11 +88,11 @@
 				ModuleDefinitionFile=".\ff_vfw.def"
 				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(IntDir)/ff_vfw.pdb"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(IntDir)/ff_vfw.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -118,13 +117,13 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				CommandLine="copy ..\bin\ff_vfw.dll &quot;$(SystemRoot)&quot;\System32"
+				ExcludedFromBuild="true"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Debug|x64"
-			OutputDirectory="$(ConfigurationName)_$(PlatformName)_2008"
-			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\common.vsprops"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			>
@@ -160,7 +159,7 @@
 				RuntimeTypeInfo="false"
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
-				ProgramDataBaseFileName="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\$(TargetName).pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 				Detect64BitPortabilityProblems="false"
@@ -190,10 +189,10 @@
 				ModuleDefinitionFile=".\ff_vfw.def"
 				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(IntDir)/ff_vfw.pdb"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
-				ImportLibrary="$(IntDir)/ff_vfw.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"
 			/>
 			<Tool
@@ -218,13 +217,13 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				CommandLine="copy ..\bin\ff_vfw.dll &quot;$(SystemRoot)&quot;\System32"
+				ExcludedFromBuild="true"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(ConfigurationName)_$(PlatformName)_2008"
-			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\common.vsprops"
 			UseOfMFC="1"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			ManagedExtensions="0"
@@ -267,7 +266,7 @@
 				RuntimeTypeInfo="false"
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
-				ProgramDataBaseFileName="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\$(TargetName).pdb"
 				BrowseInformation="0"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
@@ -296,13 +295,13 @@
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile=".\ff_vfw.def"
 				DelayLoadDLLs="$(NOINHERIT)"
-				ProgramDatabaseFile="$(IntDir)/ff_vfw.pdb"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(IntDir)/ff_vfw.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -328,13 +327,13 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				CommandLine="copy ..\bin\ff_vfw.dll &quot;$(SystemRoot)&quot;\System32"
+				ExcludedFromBuild="true"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Release|x64"
-			OutputDirectory="$(ConfigurationName)_$(PlatformName)_2008"
-			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\common.vsprops"
 			UseOfMFC="1"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			ManagedExtensions="0"
@@ -377,7 +376,7 @@
 				RuntimeTypeInfo="false"
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
-				ProgramDataBaseFileName="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\$(TargetName).pdb"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 				CompileAs="0"
@@ -405,12 +404,12 @@
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile=".\ff_vfw.def"
 				DelayLoadDLLs="$(NOINHERIT)"
-				ProgramDatabaseFile="$(IntDir)/ff_vfw.pdb"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				RandomizedBaseAddress="1"
-				ImportLibrary="$(IntDir)/ff_vfw.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"
 			/>
 			<Tool
@@ -436,6 +435,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				CommandLine="copy ..\bin\ff_vfw.dll &quot;$(SystemRoot)&quot;\System32"
+				ExcludedFromBuild="true"
 			/>
 		</Configuration>
 	</Configurations>

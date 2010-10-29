@@ -21,9 +21,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(ConfigurationName)_$(PlatformName)_2008"
-			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\common.vsprops"
 			UseOfMFC="0"
 			CharacterSet="0"
 			>
@@ -80,11 +79,11 @@
 				IgnoreAllDefaultLibraries="true"
 				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(IntDir)/ffvdub.pdb"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(IntDir)/ffvdub.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -112,9 +111,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|x64"
-			OutputDirectory="$(ConfigurationName)_$(PlatformName)_2008"
-			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\common.vsprops"
 			CharacterSet="0"
 			>
 			<Tool
@@ -171,10 +169,10 @@
 				IgnoreAllDefaultLibraries="true"
 				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(IntDir)/ffvdub.pdb"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
-				ImportLibrary="$(IntDir)/ffvdub.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"
 			/>
 			<Tool
@@ -202,9 +200,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(ConfigurationName)_$(PlatformName)_2008"
-			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\common.vsprops"
 			UseOfMFC="1"
 			CharacterSet="0"
 			ManagedExtensions="0"
@@ -242,6 +239,7 @@
 				EnableFunctionLevelLinking="false"
 				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="2"
+				ProgramDataBaseFileName="$(IntDir)\$(TargetName).pdb"
 				BrowseInformation="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="false"
@@ -268,13 +266,13 @@
 				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				DelayLoadDLLs="$(NOINHERIT)"
-				ProgramDatabaseFile="$(IntDir)/ffvdub.pdb"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(IntDir)/ffvdub.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -302,9 +300,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|x64"
-			OutputDirectory="$(ConfigurationName)_$(PlatformName)_2008"
-			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\common.vsprops"
 			UseOfMFC="1"
 			CharacterSet="0"
 			ManagedExtensions="0"
@@ -368,12 +365,12 @@
 				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				DelayLoadDLLs="$(NOINHERIT)"
-				ProgramDatabaseFile="$(IntDir)/ffvdub.pdb"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				RandomizedBaseAddress="1"
-				ImportLibrary="$(IntDir)/ffvdub.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"
 			/>
 			<Tool

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="windows-1250"?>
+<VisualStudioPropertySheet
+	ProjectType="Visual C++"
+	Version="8.00"
+	Name="common_icl11"
+	OutputDirectory="$(SolutionDir)obj\$(ConfigurationName)_$(PlatformName)_ICL11"
+	IntermediateDirectory="$(SolutionDir)obj\$(ConfigurationName)_$(PlatformName)_ICL11\$(ProjectName)"
+	>
+</VisualStudioPropertySheet>

@@ -20,9 +20,8 @@
 	<Configurations>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(ConfigurationName)_$(PlatformName)_2008"
-			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\..\..\common.vsprops"
 			UseOfMFC="1"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			WholeProgramOptimization="0"
@@ -90,11 +89,12 @@
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile=".\ff_libfaad2.def"
 				DelayLoadDLLs="$(NOINHERIT)"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(IntDir)/ff_libfaad2.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="0"
 			/>
 			<Tool
@@ -122,9 +122,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|x64"
-			OutputDirectory="$(ConfigurationName)_$(PlatformName)_2008"
-			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\..\..\common.vsprops"
 			UseOfMFC="1"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			WholeProgramOptimization="0"
@@ -191,10 +190,11 @@
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile=".\ff_libfaad2.def"
 				DelayLoadDLLs="$(NOINHERIT)"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				RandomizedBaseAddress="1"
-				ImportLibrary="$(IntDir)/$(ProjectName).lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"
 			/>
 			<Tool
@@ -222,9 +222,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(ConfigurationName)_$(PlatformName)_2008"
-			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\..\..\common.vsprops"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			>
@@ -289,7 +288,7 @@
 				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(IntDir)/ff_libfaad2.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="0"
 			/>
 			<Tool
@@ -317,9 +316,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|x64"
-			OutputDirectory="$(ConfigurationName)_$(PlatformName)_2008"
-			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\..\..\common.vsprops"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			>
@@ -382,7 +380,7 @@
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				RandomizedBaseAddress="1"
-				ImportLibrary="$(IntDir)/$(ProjectName).lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"
 			/>
 			<Tool

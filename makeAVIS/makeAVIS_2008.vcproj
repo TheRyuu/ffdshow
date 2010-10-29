@@ -21,9 +21,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(ConfigurationName)_$(PlatformName)_2008"
-			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			ConfigurationType="1"
+			InheritedPropertySheets="..\common.vsprops"
 			CharacterSet="0"
 			>
 			<Tool
@@ -78,7 +77,7 @@
 				IgnoreAllDefaultLibraries="true"
 				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(IntDir)/makeAVIS.pdb"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				SubSystem="1"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
@@ -110,9 +109,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|x64"
-			OutputDirectory="$(ConfigurationName)_$(PlatformName)_2008"
-			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			ConfigurationType="1"
+			InheritedPropertySheets="..\common.vsprops"
 			CharacterSet="0"
 			>
 			<Tool
@@ -168,7 +166,7 @@
 				IgnoreAllDefaultLibraries="true"
 				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(IntDir)/makeAVIS.pdb"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				SubSystem="1"
 				RandomizedBaseAddress="1"
 				TargetMachine="17"
@@ -199,9 +197,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(ConfigurationName)_$(PlatformName)_2008"
-			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			ConfigurationType="1"
+			InheritedPropertySheets="..\common.vsprops"
 			UseOfMFC="1"
 			CharacterSet="0"
 			ManagedExtensions="0"
@@ -238,6 +235,7 @@
 				ForceConformanceInForLoopScope="true"
 				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="0"
+				ProgramDataBaseFileName="$(IntDir)\$(TargetName).pdb"
 				BrowseInformation="0"
 				WarningLevel="3"
 				DebugInformationFormat="0"
@@ -263,7 +261,7 @@
 				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				DelayLoadDLLs="$(NOINHERIT)"
-				ProgramDatabaseFile="$(IntDir)/makeAVIS.pdb"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
@@ -297,9 +295,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|x64"
-			OutputDirectory="$(ConfigurationName)_$(PlatformName)_2008"
-			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			ConfigurationType="1"
+			InheritedPropertySheets="..\common.vsprops"
 			UseOfMFC="1"
 			CharacterSet="0"
 			ManagedExtensions="0"
@@ -361,7 +358,7 @@
 				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				DelayLoadDLLs="$(NOINHERIT)"
-				ProgramDatabaseFile="$(IntDir)/makeAVIS.pdb"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"

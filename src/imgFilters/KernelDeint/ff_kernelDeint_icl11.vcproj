@@ -21,9 +21,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
-			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\..\..\common_icl11.vsprops"
 			UseOfMFC="1"
 			CharacterSet="0"
 			>
@@ -82,7 +81,7 @@
 				SubSystem="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(IntDir)/$(ProjectName).lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -110,9 +109,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|x64"
-			OutputDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
-			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\..\..\common_icl11.vsprops"
 			UseOfMFC="1"
 			CharacterSet="0"
 			>
@@ -171,7 +169,7 @@
 				SubSystem="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(IntDir)/$(ProjectName).lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"
 			/>
 			<Tool
@@ -199,9 +197,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
-			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\..\..\common_icl11.vsprops"
 			UseOfMFC="1"
 			CharacterSet="0"
 			>
@@ -265,7 +262,7 @@
 				EnableCOMDATFolding="2"
 				RandomizedBaseAddress="2"
 				DataExecutionPrevention="2"
-				ImportLibrary="$(IntDir)/$(ProjectName).lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -293,9 +290,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|x64"
-			OutputDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
-			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\..\..\common_icl11.vsprops"
 			UseOfMFC="1"
 			CharacterSet="0"
 			>
@@ -359,7 +355,7 @@
 				EnableCOMDATFolding="2"
 				RandomizedBaseAddress="2"
 				DataExecutionPrevention="2"
-				ImportLibrary="$(IntDir)/$(ProjectName).lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"
 			/>
 			<Tool

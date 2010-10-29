@@ -20,9 +20,8 @@
 	<Configurations>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
-			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\..\..\common_icl11.vsprops"
 			UseOfMFC="1"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			ManagedExtensions="0"
@@ -98,7 +97,7 @@
 				EnableCOMDATFolding="2"
 				RandomizedBaseAddress="2"
 				DataExecutionPrevention="2"
-				ImportLibrary="$(IntDir)/TomsMoComp_ff.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -125,9 +124,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|x64"
-			OutputDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
-			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\..\..\common_icl11.vsprops"
 			UseOfMFC="1"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			ManagedExtensions="0"
@@ -202,7 +200,7 @@
 				EnableCOMDATFolding="2"
 				RandomizedBaseAddress="2"
 				DataExecutionPrevention="2"
-				ImportLibrary="$(IntDir)/TomsMoComp_ff.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"
 			/>
 			<Tool
@@ -230,9 +228,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
-			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\..\..\common_icl11.vsprops"
 			UseOfMFC="1"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			>
@@ -303,7 +300,7 @@
 				EnableCOMDATFolding="0"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(IntDir)/TomsMoComp_ff.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -330,9 +327,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|x64"
-			OutputDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
-			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\..\..\common_icl11.vsprops"
 			UseOfMFC="1"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			>
@@ -403,7 +399,7 @@
 				EnableCOMDATFolding="0"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(IntDir)/TomsMoComp_ff.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"
 			/>
 			<Tool

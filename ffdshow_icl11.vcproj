@@ -23,9 +23,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
-			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
 			ConfigurationType="2"
+			InheritedPropertySheets=".\common_icl11.vsprops"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
@@ -109,7 +108,7 @@
 				EntryPointSymbol="_DllMainCRTStartup@12"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(IntDir)/ffdshow.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -139,9 +138,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|x64"
-			OutputDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
-			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
 			ConfigurationType="2"
+			InheritedPropertySheets=".\common_icl11.vsprops"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
@@ -224,7 +222,7 @@
 				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				EntryPointSymbol="_DllMainCRTStartup"
 				RandomizedBaseAddress="1"
-				ImportLibrary="$(IntDir)/ffdshow.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"
 			/>
 			<Tool
@@ -255,9 +253,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
-			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
 			ConfigurationType="2"
+			InheritedPropertySheets=".\common_icl11.vsprops"
 			UseOfMFC="1"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
@@ -348,7 +345,7 @@
 				EntryPointSymbol="_DllMainCRTStartup@12"
 				RandomizedBaseAddress="2"
 				DataExecutionPrevention="2"
-				ImportLibrary="$(IntDir)/ffdshow.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -379,9 +376,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|x64"
-			OutputDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
-			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
 			ConfigurationType="2"
+			InheritedPropertySheets=".\common_icl11.vsprops"
 			UseOfMFC="1"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
@@ -470,7 +466,7 @@
 				EntryPointSymbol="_DllMainCRTStartup"
 				RandomizedBaseAddress="2"
 				DataExecutionPrevention="2"
-				ImportLibrary="$(IntDir)/ffdshow.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"
 			/>
 			<Tool

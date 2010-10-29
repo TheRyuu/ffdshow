@@ -23,9 +23,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(ConfigurationName)_$(PlatformName)_2008"
-			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			ConfigurationType="2"
+			InheritedPropertySheets=".\common.vsprops"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
@@ -72,7 +71,7 @@
 				PrecompiledHeaderFile="$(IntDir)/$(TargetName).pch"
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
-				ProgramDataBaseFileName="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\$(TargetName).pdb"
 				BrowseInformation="0"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
@@ -108,7 +107,7 @@
 				EntryPointSymbol="_DllMainCRTStartup@12"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(IntDir)/ffdshow.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -133,13 +132,13 @@
 				Name="VCPostBuildEventTool"
 				Description="Registering output..."
 				CommandLine="bin/register.bat"
+				ExcludedFromBuild="true"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Debug|x64"
-			OutputDirectory="$(ConfigurationName)_$(PlatformName)_2008"
-			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			ConfigurationType="2"
+			InheritedPropertySheets=".\common.vsprops"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
@@ -186,7 +185,7 @@
 				PrecompiledHeaderFile="$(IntDir)/$(TargetName).pch"
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
-				ProgramDataBaseFileName="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\$(TargetName).pdb"
 				BrowseInformation="0"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
@@ -221,7 +220,7 @@
 				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				EntryPointSymbol="_DllMainCRTStartup"
 				RandomizedBaseAddress="1"
-				ImportLibrary="$(IntDir)/ffdshow.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"
 			/>
 			<Tool
@@ -247,13 +246,13 @@
 				Name="VCPostBuildEventTool"
 				Description="Registering output..."
 				CommandLine="bin/register.bat"
+				ExcludedFromBuild="true"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(ConfigurationName)_$(PlatformName)_2008"
-			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			ConfigurationType="2"
+			InheritedPropertySheets=".\common.vsprops"
 			UseOfMFC="1"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
@@ -262,6 +261,7 @@
 			<Tool
 				Name="VCPreBuildEventTool"
 				CommandLine="update_version.bat"
+				ExcludedFromBuild="false"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -304,7 +304,7 @@
 				PrecompiledHeaderFile="$(IntDir)/$(TargetName).pch"
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
-				ProgramDataBaseFileName="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\$(TargetName).pdb"
 				BrowseInformation="0"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
@@ -342,7 +342,7 @@
 				EntryPointSymbol="_DllMainCRTStartup@12"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(IntDir)/ffdshow.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -368,13 +368,13 @@
 				Name="VCPostBuildEventTool"
 				Description="Registering output..."
 				CommandLine="bin/register.bat"
+				ExcludedFromBuild="true"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Release|x64"
-			OutputDirectory="$(ConfigurationName)_$(PlatformName)_2008"
-			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			ConfigurationType="2"
+			InheritedPropertySheets=".\common.vsprops"
 			UseOfMFC="1"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
@@ -425,7 +425,7 @@
 				PrecompiledHeaderFile="$(IntDir)/$(TargetName).pch"
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
-				ProgramDataBaseFileName="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\$(TargetName).pdb"
 				BrowseInformation="0"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
@@ -461,7 +461,7 @@
 				EnableCOMDATFolding="2"
 				EntryPointSymbol="_DllMainCRTStartup"
 				RandomizedBaseAddress="1"
-				ImportLibrary="$(IntDir)/ffdshow.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"
 			/>
 			<Tool
@@ -488,6 +488,7 @@
 				Name="VCPostBuildEventTool"
 				Description="Registering output..."
 				CommandLine="bin/register.bat"
+				ExcludedFromBuild="true"
 			/>
 		</Configuration>
 	</Configurations>

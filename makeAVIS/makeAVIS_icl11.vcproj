@@ -21,9 +21,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
-			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
 			ConfigurationType="1"
+			InheritedPropertySheets="..\common_icl11.vsprops"
 			CharacterSet="0"
 			>
 			<Tool
@@ -110,9 +109,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|x64"
-			OutputDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
-			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
 			ConfigurationType="1"
+			InheritedPropertySheets="..\common_icl11.vsprops"
 			CharacterSet="0"
 			>
 			<Tool
@@ -199,9 +197,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
-			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
 			ConfigurationType="1"
+			InheritedPropertySheets="..\common_icl11.vsprops"
 			UseOfMFC="1"
 			CharacterSet="0"
 			ManagedExtensions="0"
@@ -297,9 +294,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|x64"
-			OutputDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
-			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_ICL11"
 			ConfigurationType="1"
+			InheritedPropertySheets="..\common_icl11.vsprops"
 			UseOfMFC="1"
 			CharacterSet="0"
 			ManagedExtensions="0"

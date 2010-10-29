@@ -21,9 +21,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(ConfigurationName)$(PlatformName)"
-			IntermediateDirectory="$(ConfigurationName)$(PlatformName)"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\..\..\common.vsprops"
 			UseOfMFC="1"
 			CharacterSet="0"
 			>
@@ -107,9 +106,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|x64"
-			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
-			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\..\..\common.vsprops"
 			UseOfMFC="1"
 			CharacterSet="0"
 			>
@@ -194,9 +192,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(ConfigurationName)$(PlatformName)"
-			IntermediateDirectory="$(ConfigurationName)$(PlatformName)"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\..\..\common.vsprops"
 			UseOfMFC="1"
 			CharacterSet="0"
 			WholeProgramOptimization="0"
@@ -261,7 +258,7 @@
 				EnableCOMDATFolding="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(OutDir)/xvidcore.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -288,9 +285,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|x64"
-			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
-			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\..\..\common.vsprops"
 			UseOfMFC="1"
 			CharacterSet="0"
 			WholeProgramOptimization="0"
@@ -355,7 +351,7 @@
 				EnableCOMDATFolding="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(OutDir)/xvidcore.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"
 			/>
 			<Tool
