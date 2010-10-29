@@ -23,9 +23,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="debug_2008_icl10"
-			IntermediateDirectory="debug_2008_icl10"
 			ConfigurationType="2"
+			InheritedPropertySheets=".\common_icl10.vsprops"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
@@ -72,7 +71,7 @@
 				PrecompiledHeaderFile="$(IntDir)/$(TargetName).pch"
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
-				ProgramDataBaseFileName="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\$(TargetName).pdb"
 				BrowseInformation="0"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
@@ -108,7 +107,7 @@
 				EntryPointSymbol="_DllMainCRTStartup@12"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(IntDir)/ffdshow.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -137,9 +136,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|x64"
-			OutputDirectory="debug_2008_x64_icl10"
-			IntermediateDirectory="debug_2008_x64_icl10"
 			ConfigurationType="2"
+			InheritedPropertySheets=".\common_icl10.vsprops"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
@@ -186,7 +184,7 @@
 				PrecompiledHeaderFile="$(IntDir)/$(TargetName).pch"
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
-				ProgramDataBaseFileName="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\$(TargetName).pdb"
 				BrowseInformation="0"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
@@ -221,7 +219,7 @@
 				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				EntryPointSymbol="_DllMainCRTStartup"
 				RandomizedBaseAddress="1"
-				ImportLibrary="$(IntDir)/ffdshow.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"
 			/>
 			<Tool
@@ -247,13 +245,13 @@
 				Name="VCPostBuildEventTool"
 				Description="Registering output..."
 				CommandLine="bin/register.bat"
+				ExcludedFromBuild="true"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="release_2008_icl10"
-			IntermediateDirectory="release_2008_icl10"
 			ConfigurationType="2"
+			InheritedPropertySheets=".\common_icl10.vsprops"
 			UseOfMFC="1"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
@@ -305,7 +303,7 @@
 				PrecompiledHeaderFile="$(IntDir)/$(TargetName).pch"
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
-				ProgramDataBaseFileName="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\$(TargetName).pdb"
 				BrowseInformation="0"
 				WarningLevel="0"
 				SuppressStartupBanner="true"
@@ -343,7 +341,7 @@
 				EntryPointSymbol="_DllMainCRTStartup@12"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(IntDir)/ffdshow.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -369,13 +367,13 @@
 				Name="VCPostBuildEventTool"
 				Description="Registering output..."
 				CommandLine="bin/register.bat"
+				ExcludedFromBuild="true"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Release|x64"
-			OutputDirectory="release_2008_x64_icl10"
-			IntermediateDirectory="release_2008_x64_icl10"
 			ConfigurationType="2"
+			InheritedPropertySheets=".\common_icl10.vsprops"
 			UseOfMFC="1"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
@@ -426,7 +424,7 @@
 				PrecompiledHeaderFile="$(IntDir)/$(TargetName).pch"
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
-				ProgramDataBaseFileName="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\$(TargetName).pdb"
 				BrowseInformation="0"
 				WarningLevel="0"
 				SuppressStartupBanner="true"
@@ -462,7 +460,7 @@
 				EnableCOMDATFolding="2"
 				EntryPointSymbol="_DllMainCRTStartup"
 				RandomizedBaseAddress="1"
-				ImportLibrary="$(IntDir)/ffdshow.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"
 			/>
 			<Tool
@@ -489,6 +487,7 @@
 				Name="VCPostBuildEventTool"
 				Description="Registering output..."
 				CommandLine="bin/register.bat"
+				ExcludedFromBuild="true"
 			/>
 		</Configuration>
 	</Configurations>
@@ -690,22 +689,6 @@
 						UsePrecompiledHeader="0"
 					/>
 				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\src\ffdshowRemoteAPI.cpp"
@@ -728,22 +711,6 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -1790,22 +1757,6 @@
 						AssemblerOutput="4"
 					/>
 				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="4"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="4"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\src\imgFilters\SimpleResize.h"
@@ -2206,22 +2157,6 @@
 						AssemblerOutput="4"
 					/>
 				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="4"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="4"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\src\imgFilters\TimgFilterDenoise3d.h"
@@ -2446,22 +2381,6 @@
 			<File
 				RelativePath=".\src\imgFilters\TimgFilterLogoaway.cpp"
 				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="4"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="4"
-					/>
-				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|Win32"
 					>
@@ -3011,18 +2930,6 @@
 				RelativePath=".\src\imgFilters\TimgFilterYadif.h"
 				>
 			</File>
-			<File
-				RelativePath=".\src\mplayer\Tlibmplayer.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\mplayer\Tlibmplayer.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\mplayer\yadif\vf_yadif.h"
-				>
-			</File>
 			<Filter
 				Name="com"
 				>
@@ -3045,22 +2952,6 @@
 				<File
 					RelativePath=".\src\imgFilters\nic\nic_postProcess.cpp"
 					>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							AssemblerOutput="4"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|x64"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							AssemblerOutput="4"
-						/>
-					</FileConfiguration>
 					<FileConfiguration
 						Name="Release|Win32"
 						>
@@ -3105,22 +2996,6 @@
 				<File
 					RelativePath=".\src\imgFilters\asharp\asharp.cpp"
 					>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							AssemblerOutput="4"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|x64"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							AssemblerOutput="4"
-						/>
-					</FileConfiguration>
 					<FileConfiguration
 						Name="Release|Win32"
 						>
@@ -3536,14 +3411,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\dialog\CgenericTHEO.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\dialog\CgenericTHEO.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\dialog\CgenericWmv9.cpp"
 				>
 			</File>
@@ -3672,22 +3539,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\dialog\CmaskingSKAL.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\dialog\CmaskingSKAL.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\dialog\CmaskingTHEO.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\dialog\CmaskingTHEO.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\dialog\CmaskingX264.cpp"
 				>
 			</File>
@@ -3709,14 +3560,6 @@
 			</File>
 			<File
 				RelativePath=".\src\dialog\Cme.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\dialog\CmeSkal.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\dialog\CmeSkal.h"
 				>
 			</File>
 			<File
@@ -3850,22 +3693,6 @@
 			<File
 				RelativePath=".\src\dialog\Cperspective.cpp"
 				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="4"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="4"
-					/>
-				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|Win32"
 					>
@@ -4406,22 +4233,6 @@
 						AssemblerOutput="4"
 					/>
 				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="4"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="4"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\src\settings\TpresetSettingsVideo.h"
@@ -4444,22 +4255,6 @@
 					<File
 						RelativePath=".\src\settings\filters\TavisynthSettings.cpp"
 						>
-						<FileConfiguration
-							Name="Release|Win32"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-								AssemblerOutput="4"
-							/>
-						</FileConfiguration>
-						<FileConfiguration
-							Name="Release|x64"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-								AssemblerOutput="4"
-							/>
-						</FileConfiguration>
 						<FileConfiguration
 							Name="Release|Win32"
 							>
@@ -4912,6 +4707,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\codecs\reorder_ch.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\codecs\reorder_ch.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\codecs\TaudioCodec.cpp"
 				>
 			</File>
@@ -4976,14 +4779,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\codecs\TaudioCodecMplayer.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\codecs\TaudioCodecMplayer.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\codecs\TaudioCodecTremor.cpp"
 				>
 			</File>
@@ -5005,6 +4800,10 @@
 			</File>
 			<File
 				RelativePath=".\src\codecs\Tcodec.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\codecs\theora.h"
 				>
 			</File>
 			<File
@@ -5057,22 +4856,6 @@
 			</File>
 			<File
 				RelativePath=".\src\codecs\TvideoCodecLibmpeg2.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\codecs\TvideoCodecSkal.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\codecs\TvideoCodecSkal.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\codecs\TvideoCodecTheora.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\codecs\TvideoCodecTheora.h"
 				>
 			</File>
 			<File
@@ -5184,6 +4967,26 @@
 				</File>
 				<File
 					RelativePath=".\src\codecs\TDXVADecoderVC1.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="ogg headers"
+				>
+				<File
+					RelativePath=".\src\codecs\ogg headers\ogg.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\codecs\ogg headers\ogmstreams.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\codecs\ogg headers\os_types.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\codecs\ogg headers\vorbisformat.h"
 					>
 				</File>
 			</Filter>
@@ -5498,22 +5301,6 @@
 						AssemblerOutput="4"
 					/>
 				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="4"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="4"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\src\audioFilters\TaudioFilter.h"
@@ -5550,22 +5337,6 @@
 			<File
 				RelativePath=".\src\audioFilters\TaudioFilterConvolver.cpp"
 				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="4"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="4"
-					/>
-				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|Win32"
 					>
@@ -5686,22 +5457,6 @@
 						AssemblerOutput="4"
 					/>
 				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="4"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="4"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\src\audioFilters\TaudioFilterMixer.h"
@@ -5742,22 +5497,6 @@
 			<File
 				RelativePath=".\src\audioFilters\TaudioFilterVolume.cpp"
 				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="4"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="4"
-					/>
-				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|Win32"
 					>
@@ -5841,22 +5580,6 @@
 				<File
 					RelativePath=".\src\audioFilters\resample\resample2.cpp"
 					>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							AssemblerOutput="4"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|x64"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							AssemblerOutput="4"
-						/>
-					</FileConfiguration>
 					<FileConfiguration
 						Name="Release|Win32"
 						>
@@ -5962,22 +5685,6 @@
 					RelativePath=".\src\muxers\TmuxerFile.h"
 					>
 				</File>
-				<File
-					RelativePath=".\src\muxers\TmuxerOGG.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\src\muxers\TmuxerOGG.h"
-					>
-				</File>
-				<File
-					RelativePath=".\src\muxers\TmuxerOGM.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\src\muxers\TmuxerOGM.h"
-					>
-				</File>
 			</Filter>
 			<Filter
 				Name="acm"
@@ -6021,114 +5728,6 @@
 			</File>
 			<File
 				RelativePath=".\src\DeCSSInputPin.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="xiph"
-			>
-			<File
-				RelativePath=".\src\xiph\ogg\bitwise.c"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-						WarningLevel="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-						WarningLevel="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-						WarningLevel="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-						WarningLevel="0"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\src\xiph\ogg\framing.c"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-						WarningLevel="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-						WarningLevel="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-						WarningLevel="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-						WarningLevel="0"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\src\xiph\vorbis\ivorbiscodec.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\xiph\ogg\ogg.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\xiph\ogm\ogmstreams.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\xiph\ogg\os_types.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\xiph\theora\theora.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\xiph\vorbis\vorbisformat.h"
 				>
 			</File>
 		</Filter>

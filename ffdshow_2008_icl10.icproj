@@ -5,7 +5,7 @@
 	Name="ffdshow"
 	ProjectGUID="{0C1CDCBB-5886-42B4-A928-F4B82DD3FD17}"
 	VCNestedProjectGUID="{30A21C7F-035D-41E2-95BE-B4FFA5F5176B}"
-	VCNestedProjectCRC32="400274467"
+	VCNestedProjectCRC32="3925657118"
 	VCNestedProjectFileName="ffdshow_2008_icl10.vcproj">
 	<Platforms>
 		<Platform 
@@ -18,9 +18,8 @@
 			Name="Debug|Win32">
 			<Tool 
 				Name="GeneralTool"
-				OutputDirectory="debug_unicode_2008_icl10"
-				IntermediateDirectory="debug_unicode_2008_icl10"
 				ConfigurationType="2"
+				InheritedPropertySheets=".\common_icl10.vsprops"
 				UseOfMFC="0"
 				ATLMinimizesCRunTimeLibraryUsage="false"
 				CharacterSet="1"/>
@@ -41,7 +40,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\debug_unicode_2008_icl10/ffdshow.tlb"/>
+				TypeLibraryName=".\debug_2008_icl10\ffdshow.tlb"/>
 			<Tool 
 				Name="CppCmplrTool"
 				Optimization="0"
@@ -60,7 +59,7 @@
 				PrecompiledHeaderFile="$(IntDir)/$(TargetName).pch"
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
-				ProgramDataBaseFileName="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\$(TargetName).pdb"
 				BrowseInformation="0"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
@@ -93,7 +92,7 @@
 				EntryPointSymbol="_DllMainCRTStartup@12"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(IntDir)/ffdshow.lib"/>
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"/>
 			<Tool 
 				Name="VCALinkTool"/>
 			<Tool 
@@ -116,9 +115,8 @@
 			Name="Debug|x64">
 			<Tool 
 				Name="GeneralTool"
-				OutputDirectory="debug_unicode_2008_x64_icl10"
-				IntermediateDirectory="debug_unicode_2008_x64_icl10"
 				ConfigurationType="2"
+				InheritedPropertySheets=".\common_icl10.vsprops"
 				UseOfMFC="0"
 				ATLMinimizesCRunTimeLibraryUsage="false"
 				CharacterSet="1"/>
@@ -139,7 +137,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="3"
-				TypeLibraryName=".\debug_unicode_2008_x64_icl10/ffdshow.tlb"/>
+				TypeLibraryName=".\debug_2008_x64_icl10\ffdshow.tlb"/>
 			<Tool 
 				Name="CppCmplrTool"
 				Optimization="0"
@@ -158,7 +156,7 @@
 				PrecompiledHeaderFile="$(IntDir)/$(TargetName).pch"
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
-				ProgramDataBaseFileName="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\$(TargetName).pdb"
 				BrowseInformation="0"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
@@ -190,7 +188,7 @@
 				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				EntryPointSymbol="_DllMainCRTStartup"
 				RandomizedBaseAddress="1"
-				ImportLibrary="$(IntDir)/ffdshow.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"/>
 			<Tool 
 				Name="VCALinkTool"/>
@@ -208,15 +206,15 @@
 			<Tool 
 				Name="PostBuildEventTool"
 				Description="Registering output..."
-				CommandLine="bin/register.bat"/>
+				CommandLine="bin/register.bat"
+				ExcludedFromBuild="true"/>
 		</Configuration>
 		<Configuration 
 			Name="Release|Win32">
 			<Tool 
 				Name="GeneralTool"
-				OutputDirectory="release_unicode_2008_icl10"
-				IntermediateDirectory="release_unicode_2008_icl10"
 				ConfigurationType="2"
+				InheritedPropertySheets=".\common_icl10.vsprops"
 				UseOfMFC="1"
 				ATLMinimizesCRunTimeLibraryUsage="false"
 				CharacterSet="1"
@@ -238,7 +236,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\release_unicode_2008_icl10/ffdshow.tlb"/>
+				TypeLibraryName=".\release_2008_icl10\ffdshow.tlb"/>
 			<Tool 
 				Name="CppCmplrTool"
 				AdditionalOptions="/Qip"
@@ -261,7 +259,7 @@
 				PrecompiledHeaderFile="$(IntDir)/$(TargetName).pch"
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
-				ProgramDataBaseFileName="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\$(TargetName).pdb"
 				BrowseInformation="0"
 				WarningLevel="0"
 				SuppressStartupBanner="true"
@@ -297,7 +295,7 @@
 				EntryPointSymbol="_DllMainCRTStartup@12"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(IntDir)/ffdshow.lib"/>
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"/>
 			<Tool 
 				Name="VCALinkTool"/>
 			<Tool 
@@ -315,15 +313,15 @@
 			<Tool 
 				Name="PostBuildEventTool"
 				Description="Registering output..."
-				CommandLine="bin/register.bat"/>
+				CommandLine="bin/register.bat"
+				ExcludedFromBuild="true"/>
 		</Configuration>
 		<Configuration 
 			Name="Release|x64">
 			<Tool 
 				Name="GeneralTool"
-				OutputDirectory="release_unicode_2008_x64_icl10"
-				IntermediateDirectory="release_unicode_2008_x64_icl10"
 				ConfigurationType="2"
+				InheritedPropertySheets=".\common_icl10.vsprops"
 				UseOfMFC="1"
 				ATLMinimizesCRunTimeLibraryUsage="false"
 				CharacterSet="1"
@@ -345,7 +343,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="3"
-				TypeLibraryName=".\release_unicode_2008_x64_icl10/ffdshow.tlb"/>
+				TypeLibraryName=".\release_2008_x64_icl10\ffdshow.tlb"/>
 			<Tool 
 				Name="CppCmplrTool"
 				AdditionalOptions="/Qip"
@@ -367,7 +365,7 @@
 				PrecompiledHeaderFile="$(IntDir)/$(TargetName).pch"
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
-				ProgramDataBaseFileName="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\$(TargetName).pdb"
 				BrowseInformation="0"
 				WarningLevel="0"
 				SuppressStartupBanner="true"
@@ -404,7 +402,7 @@
 				EnableCOMDATFolding="2"
 				EntryPointSymbol="_DllMainCRTStartup"
 				RandomizedBaseAddress="1"
-				ImportLibrary="$(IntDir)/ffdshow.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"/>
 			<Tool 
 				Name="VCALinkTool"/>
@@ -423,7 +421,8 @@
 			<Tool 
 				Name="PostBuildEventTool"
 				Description="Registering output..."
-				CommandLine="bin/register.bat"/>
+				CommandLine="bin/register.bat"
+				ExcludedFromBuild="true"/>
 		</Configuration>
 	</Configurations>
 	<Files>
@@ -1400,18 +1399,6 @@
 						Name="CppCmplrTool"
 						AssemblerOutput="4"/>
 				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release|Win32">
-					<Tool 
-						Name="CppCmplrTool"
-						AssemblerOutput="4"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release|x64">
-					<Tool 
-						Name="CppCmplrTool"
-						AssemblerOutput="4"/>
-				</FileConfiguration>
 			</File>
 			<File 
 				RelativePath=".\src\imgFilters\SimpleResize.h">
@@ -1713,18 +1700,6 @@
 						Name="CppCmplrTool"
 						AssemblerOutput="4"/>
 				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release|Win32">
-					<Tool 
-						Name="CppCmplrTool"
-						AssemblerOutput="4"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release|x64">
-					<Tool 
-						Name="CppCmplrTool"
-						AssemblerOutput="4"/>
-				</FileConfiguration>
 			</File>
 			<File 
 				RelativePath=".\src\imgFilters\TimgFilterDenoise3d.h">
@@ -1893,18 +1868,6 @@
 			</File>
 			<File 
 				RelativePath=".\src\imgFilters\TimgFilterLogoaway.cpp">
-				<FileConfiguration 
-					Name="Release|Win32">
-					<Tool 
-						Name="CppCmplrTool"
-						AssemblerOutput="4"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release|x64">
-					<Tool 
-						Name="CppCmplrTool"
-						AssemblerOutput="4"/>
-				</FileConfiguration>
 				<FileConfiguration 
 					Name="Release|Win32">
 					<Tool 
@@ -2319,15 +2282,6 @@
 			<File 
 				RelativePath=".\src\imgFilters\TimgFilterYadif.h">
 			</File>
-			<File 
-				RelativePath=".\src\mplayer\Tlibmplayer.cpp">
-			</File>
-			<File 
-				RelativePath=".\src\mplayer\Tlibmplayer.h">
-			</File>
-			<File 
-				RelativePath=".\src\mplayer\yadif\vf_yadif.h">
-			</File>
 			<Filter 
 				Name="com">
 				<File 
@@ -2344,18 +2298,6 @@
 				Name="nic">
 				<File 
 					RelativePath=".\src\imgFilters\nic\nic_postProcess.cpp">
-					<FileConfiguration 
-						Name="Release|Win32">
-						<Tool 
-							Name="CppCmplrTool"
-							AssemblerOutput="4"/>
-					</FileConfiguration>
-					<FileConfiguration 
-						Name="Release|x64">
-						<Tool 
-							Name="CppCmplrTool"
-							AssemblerOutput="4"/>
-					</FileConfiguration>
 					<FileConfiguration 
 						Name="Release|Win32">
 						<Tool 
@@ -2389,18 +2331,6 @@
 				Name="asharp">
 				<File 
 					RelativePath=".\src\imgFilters\asharp\asharp.cpp">
-					<FileConfiguration 
-						Name="Release|Win32">
-						<Tool 
-							Name="CppCmplrTool"
-							AssemblerOutput="4"/>
-					</FileConfiguration>
-					<FileConfiguration 
-						Name="Release|x64">
-						<Tool 
-							Name="CppCmplrTool"
-							AssemblerOutput="4"/>
-					</FileConfiguration>
 					<FileConfiguration 
 						Name="Release|Win32">
 						<Tool 
@@ -2717,12 +2647,6 @@
 				RelativePath=".\src\dialog\CgenericRAW.h">
 			</File>
 			<File 
-				RelativePath=".\src\dialog\CgenericTHEO.cpp">
-			</File>
-			<File 
-				RelativePath=".\src\dialog\CgenericTHEO.h">
-			</File>
-			<File 
 				RelativePath=".\src\dialog\CgenericWmv9.cpp">
 			</File>
 			<File 
@@ -2819,18 +2743,6 @@
 				RelativePath=".\src\dialog\Cmasking.h">
 			</File>
 			<File 
-				RelativePath=".\src\dialog\CmaskingSKAL.cpp">
-			</File>
-			<File 
-				RelativePath=".\src\dialog\CmaskingSKAL.h">
-			</File>
-			<File 
-				RelativePath=".\src\dialog\CmaskingTHEO.cpp">
-			</File>
-			<File 
-				RelativePath=".\src\dialog\CmaskingTHEO.h">
-			</File>
-			<File 
 				RelativePath=".\src\dialog\CmaskingX264.cpp">
 			</File>
 			<File 
@@ -2847,12 +2759,6 @@
 			</File>
 			<File 
 				RelativePath=".\src\dialog\Cme.h">
-			</File>
-			<File 
-				RelativePath=".\src\dialog\CmeSkal.cpp">
-			</File>
-			<File 
-				RelativePath=".\src\dialog\CmeSkal.h">
 			</File>
 			<File 
 				RelativePath=".\src\dialog\CmeX264.cpp">
@@ -2952,18 +2858,6 @@
 			</File>
 			<File 
 				RelativePath=".\src\dialog\Cperspective.cpp">
-				<FileConfiguration 
-					Name="Release|Win32">
-					<Tool 
-						Name="CppCmplrTool"
-						AssemblerOutput="4"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release|x64">
-					<Tool 
-						Name="CppCmplrTool"
-						AssemblerOutput="4"/>
-				</FileConfiguration>
 				<FileConfiguration 
 					Name="Release|Win32">
 					<Tool 
@@ -3369,18 +3263,6 @@
 						Name="CppCmplrTool"
 						AssemblerOutput="4"/>
 				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release|Win32">
-					<Tool 
-						Name="CppCmplrTool"
-						AssemblerOutput="4"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release|x64">
-					<Tool 
-						Name="CppCmplrTool"
-						AssemblerOutput="4"/>
-				</FileConfiguration>
 			</File>
 			<File 
 				RelativePath=".\src\settings\TpresetSettingsVideo.h">
@@ -3397,18 +3279,6 @@
 					Name="video">
 					<File 
 						RelativePath=".\src\settings\filters\TavisynthSettings.cpp">
-						<FileConfiguration 
-							Name="Release|Win32">
-							<Tool 
-								Name="CppCmplrTool"
-								AssemblerOutput="4"/>
-						</FileConfiguration>
-						<FileConfiguration 
-							Name="Release|x64">
-							<Tool 
-								Name="CppCmplrTool"
-								AssemblerOutput="4"/>
-						</FileConfiguration>
 						<FileConfiguration 
 							Name="Release|Win32">
 							<Tool 
@@ -3751,6 +3621,12 @@
 				RelativePath=".\src\codecs\qtpalette.h">
 			</File>
 			<File 
+				RelativePath=".\src\codecs\reorder_ch.cpp">
+			</File>
+			<File 
+				RelativePath=".\src\codecs\reorder_ch.h">
+			</File>
+			<File 
 				RelativePath=".\src\codecs\TaudioCodec.cpp">
 			</File>
 			<File 
@@ -3799,12 +3675,6 @@
 				RelativePath=".\src\codecs\TaudioCodecLibMAD.h">
 			</File>
 			<File 
-				RelativePath=".\src\codecs\TaudioCodecMplayer.cpp">
-			</File>
-			<File 
-				RelativePath=".\src\codecs\TaudioCodecMplayer.h">
-			</File>
-			<File 
 				RelativePath=".\src\codecs\TaudioCodecTremor.cpp">
 			</File>
 			<File 
@@ -3821,6 +3691,9 @@
 			</File>
 			<File 
 				RelativePath=".\src\codecs\Tcodec.h">
+			</File>
+			<File 
+				RelativePath=".\src\codecs\theora.h">
 			</File>
 			<File 
 				RelativePath=".\src\codecs\TrealAudioInfo.cpp">
@@ -3860,18 +3733,6 @@
 			</File>
 			<File 
 				RelativePath=".\src\codecs\TvideoCodecLibmpeg2.h">
-			</File>
-			<File 
-				RelativePath=".\src\codecs\TvideoCodecSkal.cpp">
-			</File>
-			<File 
-				RelativePath=".\src\codecs\TvideoCodecSkal.h">
-			</File>
-			<File 
-				RelativePath=".\src\codecs\TvideoCodecTheora.cpp">
-			</File>
-			<File 
-				RelativePath=".\src\codecs\TvideoCodecTheora.h">
 			</File>
 			<File 
 				RelativePath=".\src\codecs\TvideoCodecUncompressed.cpp">
@@ -3955,6 +3816,21 @@
 				</File>
 				<File 
 					RelativePath=".\src\codecs\TDXVADecoderVC1.h">
+				</File>
+			</Filter>
+			<Filter 
+				Name="ogg headers">
+				<File 
+					RelativePath=".\src\codecs\ogg headers\ogg.h">
+				</File>
+				<File 
+					RelativePath=".\src\codecs\ogg headers\ogmstreams.h">
+				</File>
+				<File 
+					RelativePath=".\src\codecs\ogg headers\os_types.h">
+				</File>
+				<File 
+					RelativePath=".\src\codecs\ogg headers\vorbisformat.h">
 				</File>
 			</Filter>
 		</Filter>
@@ -4218,18 +4094,6 @@
 						Name="CppCmplrTool"
 						AssemblerOutput="4"/>
 				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release|Win32">
-					<Tool 
-						Name="CppCmplrTool"
-						AssemblerOutput="4"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release|x64">
-					<Tool 
-						Name="CppCmplrTool"
-						AssemblerOutput="4"/>
-				</FileConfiguration>
 			</File>
 			<File 
 				RelativePath=".\src\audioFilters\TaudioFilter.h">
@@ -4261,18 +4125,6 @@
 			</File>
 			<File 
 				RelativePath=".\src\audioFilters\TaudioFilterConvolver.cpp">
-				<FileConfiguration 
-					Name="Release|Win32">
-					<Tool 
-						Name="CppCmplrTool"
-						AssemblerOutput="4"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release|x64">
-					<Tool 
-						Name="CppCmplrTool"
-						AssemblerOutput="4"/>
-				</FileConfiguration>
 				<FileConfiguration 
 					Name="Release|Win32">
 					<Tool 
@@ -4363,18 +4215,6 @@
 						Name="CppCmplrTool"
 						AssemblerOutput="4"/>
 				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release|Win32">
-					<Tool 
-						Name="CppCmplrTool"
-						AssemblerOutput="4"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release|x64">
-					<Tool 
-						Name="CppCmplrTool"
-						AssemblerOutput="4"/>
-				</FileConfiguration>
 			</File>
 			<File 
 				RelativePath=".\src\audioFilters\TaudioFilterMixer.h">
@@ -4405,18 +4245,6 @@
 			</File>
 			<File 
 				RelativePath=".\src\audioFilters\TaudioFilterVolume.cpp">
-				<FileConfiguration 
-					Name="Release|Win32">
-					<Tool 
-						Name="CppCmplrTool"
-						AssemblerOutput="4"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release|x64">
-					<Tool 
-						Name="CppCmplrTool"
-						AssemblerOutput="4"/>
-				</FileConfiguration>
 				<FileConfiguration 
 					Name="Release|Win32">
 					<Tool 
@@ -4479,18 +4307,6 @@
 				Name="resample">
 				<File 
 					RelativePath=".\src\audioFilters\resample\resample2.cpp">
-					<FileConfiguration 
-						Name="Release|Win32">
-						<Tool 
-							Name="CppCmplrTool"
-							AssemblerOutput="4"/>
-					</FileConfiguration>
-					<FileConfiguration 
-						Name="Release|x64">
-						<Tool 
-							Name="CppCmplrTool"
-							AssemblerOutput="4"/>
-					</FileConfiguration>
 					<FileConfiguration 
 						Name="Release|Win32">
 						<Tool 
@@ -4570,18 +4386,6 @@
 				<File 
 					RelativePath=".\src\muxers\TmuxerFile.h">
 				</File>
-				<File 
-					RelativePath=".\src\muxers\TmuxerOGG.cpp">
-				</File>
-				<File 
-					RelativePath=".\src\muxers\TmuxerOGG.h">
-				</File>
-				<File 
-					RelativePath=".\src\muxers\TmuxerOGM.cpp">
-				</File>
-				<File 
-					RelativePath=".\src\muxers\TmuxerOGM.h">
-				</File>
 			</Filter>
 			<Filter 
 				Name="acm">
@@ -4615,89 +4419,6 @@
 			</File>
 			<File 
 				RelativePath=".\src\DeCSSInputPin.h">
-			</File>
-		</Filter>
-		<Filter 
-			Name="xiph">
-			<File 
-				RelativePath=".\src\xiph\ogg\bitwise.c">
-				<FileConfiguration 
-					Name="Debug|Win32">
-					<Tool 
-						Name="CppCmplrTool"
-						UsePrecompiledHeader="0"
-						WarningLevel="0"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Debug|x64">
-					<Tool 
-						Name="CppCmplrTool"
-						UsePrecompiledHeader="0"
-						WarningLevel="0"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release|Win32">
-					<Tool 
-						Name="CppCmplrTool"
-						UsePrecompiledHeader="0"
-						WarningLevel="0"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release|x64">
-					<Tool 
-						Name="CppCmplrTool"
-						UsePrecompiledHeader="0"
-						WarningLevel="0"/>
-				</FileConfiguration>
-			</File>
-			<File 
-				RelativePath=".\src\xiph\ogg\framing.c">
-				<FileConfiguration 
-					Name="Debug|Win32">
-					<Tool 
-						Name="CppCmplrTool"
-						UsePrecompiledHeader="0"
-						WarningLevel="0"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Debug|x64">
-					<Tool 
-						Name="CppCmplrTool"
-						UsePrecompiledHeader="0"
-						WarningLevel="0"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release|Win32">
-					<Tool 
-						Name="CppCmplrTool"
-						UsePrecompiledHeader="0"
-						WarningLevel="0"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release|x64">
-					<Tool 
-						Name="CppCmplrTool"
-						UsePrecompiledHeader="0"
-						WarningLevel="0"/>
-				</FileConfiguration>
-			</File>
-			<File 
-				RelativePath=".\src\xiph\vorbis\ivorbiscodec.h">
-			</File>
-			<File 
-				RelativePath=".\src\xiph\ogg\ogg.h">
-			</File>
-			<File 
-				RelativePath=".\src\xiph\ogm\ogmstreams.h">
-			</File>
-			<File 
-				RelativePath=".\src\xiph\ogg\os_types.h">
-			</File>
-			<File 
-				RelativePath=".\src\xiph\theora\theora.h">
-			</File>
-			<File 
-				RelativePath=".\src\xiph\vorbis\vorbisformat.h">
 			</File>
 		</Filter>
 		<Filter 
