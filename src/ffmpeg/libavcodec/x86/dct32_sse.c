@@ -26,6 +26,9 @@
 #include "libavcodec/dsputil.h"
 #include "fft.h"
 
+/* ffdshow custom code */
+#pragma GCC target ("sse")
+
 DECLARE_ALIGNED(16, static const float, b1)[] = {
      0.500603,  0.505471,  0.515447,  0.531043,
      0.553104,  0.582935,  0.622504,  0.674808,
@@ -289,6 +292,8 @@ void ff_dct32_float_sse(FFTSample *out, const FFTSample *in)
         :"+&r"(tmp1)
         :"r"(out), "r"(b1), "r"(smask), "r"(in)
         :"memory"
+         XMM_CLOBBERS(, "%xmm0", "%xmm1", "%xmm2", "%xmm3",
+                        "%xmm4", "%xmm5", "%xmm6", "%xmm7")
         );
 }
 

@@ -34,7 +34,7 @@
 #include "libavutil/cpu.h"
 
 #define LIBAVCODEC_VERSION_MAJOR 52
-#define LIBAVCODEC_VERSION_MINOR 92
+#define LIBAVCODEC_VERSION_MINOR 93
 #define LIBAVCODEC_VERSION_MICRO  0
 
 #define LIBAVCODEC_VERSION_INT  AV_VERSION_INT(LIBAVCODEC_VERSION_MAJOR, \
@@ -2477,6 +2477,16 @@ typedef struct AVCodecContext {
     int lpc_passes;
 
     /**
+     * Number of slices.
+     * Indicates number of picture subdivisions. Used for parallelized
+     * decoding.
+     * - encoding: Set by user
+     * - decoding: unused
+     */
+    int slices;
+
+    /* ffdshow custom stuff (begin) */
+    /**
      * Whether this is a copy of the context which had init() called on it.
      * This is used by multithreading - shared tables and picture pointers
      * should be freed from the original context only.
@@ -2503,9 +2513,7 @@ typedef struct AVCodecContext {
      * - decoding: Set by libavcodec.
      */
     int active_thread_type;
-    
-    /* ffdshow custom stuff (begin) */
-    
+       
     /**
      * minimum and maxminum quantizer for I frames. If 0, derived from qmin, i_quant_factor, i_quant_offset
      * - encoding: set by user.
