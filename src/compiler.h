@@ -15,8 +15,10 @@
     #define COMPILER "ICL"
   #endif
 #elif defined(_MSC_VER)
-  #if _MSC_VER>=1500
+  #if _MSC_VER==1500
     #define COMPILER "MSVC 2008"
+  #elif _MSC_VER==1600
+    #define COMPILER "MSVC 2010"
   #else
 #define COMPILER "unknown and not supported"
   #endif

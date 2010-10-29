@@ -89,7 +89,11 @@ public:
  int cfgGet(int id),cfgSet(int id,int val);
  template<class Ttray> static unsigned int __stdcall start(TtrayIconStartData *sd)
   {
+#if defined(_MSC_VER) && (_MSC_VER == 1600)
+   return (new Ttray(std::tr1::get<0>(*sd)))->run(std::tr1::get<1>(*sd),std::tr1::get<2>(*sd));
+#else
    return (new Ttray(sd->get<1>()))->run(sd->get<2>(),sd->get<3>());
+#endif
   }
 };
 

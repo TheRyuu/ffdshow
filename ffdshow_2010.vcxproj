@@ -1,0 +1,1660 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Template|Win32">
+      <Configuration>Template</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Template|x64">
+      <Configuration>Template</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectName>ffdshow</ProjectName>
+    <ProjectGuid>{30A21C7F-035D-41E2-95BE-B4FFA5F5176B}</ProjectGuid>
+    <RootNamespace>ffdshow</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>Static</UseOfMfc>
+    <CharacterSet>Unicode</CharacterSet>
+    <CLRSupport>false</CLRSupport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Template|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>Static</UseOfMfc>
+    <CharacterSet>Unicode</CharacterSet>
+    <CLRSupport>false</CLRSupport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+    <Import Project="yasm.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="common.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="common.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Template|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="common.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="common.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</IgnoreImportLibrary>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</GenerateManifest>
+    <EmbedManifest Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</EmbedManifest>
+    <PostBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</PostBuildEventUseInBuild>
+    <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</IgnoreImportLibrary>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</GenerateManifest>
+    <EmbedManifest Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</EmbedManifest>
+    <PostBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</PostBuildEventUseInBuild>
+    <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</IgnoreImportLibrary>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</GenerateManifest>
+    <EmbedManifest Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</EmbedManifest>
+    <PostBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</PostBuildEventUseInBuild>
+    <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</IgnoreImportLibrary>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</GenerateManifest>
+    <EmbedManifest Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</EmbedManifest>
+    <PostBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</PostBuildEventUseInBuild>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Template|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Template|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Template|x64'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Template|x64'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Template|x64'" />
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.ax</TargetExt>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.ax</TargetExt>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.ax</TargetExt>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.ax</TargetExt>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <PreBuildEvent>
+      <Command>update_version.bat</Command>
+    </PreBuildEvent>
+    <Midl>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <TypeLibraryName>.\Debug/ffdshow.tlb</TypeLibraryName>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/mplayer;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/filters;src/xiph;src/codecs/theora/enc;$(DXSDK_DIR)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>DEBUG;_DEBUG;WIN32;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;ARCH_IS_32BIT;ARCH_IS_IA32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <SmallerTypeCheck>false</SmallerTypeCheck>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>StdAfx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>$(IntDir)</ProgramDataBaseFileName>
+      <BrowseInformation>
+      </BrowseInformation>
+      <WarningLevel>Level4</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <DisableSpecificWarnings>4996;4250;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <PreLinkEvent>
+      <Command>
+      </Command>
+    </PreLinkEvent>
+    <Link>
+      <RegisterOutput>false</RegisterOutput>
+      <AdditionalDependencies>libcmtd.lib;libcpmtd.lib;winmm.lib;comctl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;dinput.lib;dxguid.lib;oldnames.lib;shlwapi.lib;Secur32.lib;d3d9.lib;amstrmid.lib;dxva2.lib;libboost_thread-vc100-mt-sgd-1_43.lib</AdditionalDependencies>
+      <OutputFile>bin\ffdshow.ax</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>.\bin\lib_x86;$(DXSDK_DIR)Lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
+      <ModuleDefinitionFile>.\src\ffdshow.def</ModuleDefinitionFile>
+      <DelayLoadDLLs>
+      </DelayLoadDLLs>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(IntDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <EntryPointSymbol>_DllMainCRTStartup%4012</EntryPointSymbol>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(OutDir)/$(ProjectName).lib</ImportLibrary>
+    </Link>
+    <PostBuildEvent>
+      <Message>Registering output...</Message>
+      <Command>bin/register.bat</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <PreBuildEvent>
+      <Command>update_version.bat</Command>
+    </PreBuildEvent>
+    <Midl>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetEnvironment>X64</TargetEnvironment>
+      <TypeLibraryName>.\Debug/ffdshow.tlb</TypeLibraryName>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/mplayer;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/filters;src/xiph;src/codecs/theora/enc;$(DXSDK_DIR)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>DEBUG;_DEBUG;WIN64;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;ARCH_IS_64BIT;ARCH_IS_X86_64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <SmallerTypeCheck>false</SmallerTypeCheck>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>StdAfx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>$(IntDir)</ProgramDataBaseFileName>
+      <BrowseInformation>
+      </BrowseInformation>
+      <WarningLevel>Level4</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4996;4250;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <PreLinkEvent>
+      <Command>
+      </Command>
+    </PreLinkEvent>
+    <Link>
+      <AdditionalDependencies>libcmtd.lib;libcpmtd.lib;winmm.lib;comctl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;dinput.lib;dxguid.lib;oldnames.lib;shlwapi.lib;d3d9.lib;amstrmid.lib;dxva2.lib;libboost_thread-vc100-mt-sgd-1_43.lib</AdditionalDependencies>
+      <OutputFile>bin\ffdshow.ax</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>.\bin\lib_x64;$(DXSDK_DIR)Lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
+      <ModuleDefinitionFile>.\src\ffdshow.def</ModuleDefinitionFile>
+      <DelayLoadDLLs>
+      </DelayLoadDLLs>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(IntDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <EntryPointSymbol>_DllMainCRTStartup</EntryPointSymbol>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <ImportLibrary>$(OutDir)/$(ProjectName).lib</ImportLibrary>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+    <PostBuildEvent>
+      <Message>Registering output...</Message>
+      <Command>bin/register64.bat</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <PreBuildEvent>
+      <Command>update_version.bat</Command>
+    </PreBuildEvent>
+    <Midl>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <TypeLibraryName>.\Release/ffdshow.tlb</TypeLibraryName>
+    </Midl>
+    <ClCompile>
+      <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <AdditionalIncludeDirectories>src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/mplayer;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/filters;src/xiph;src/codecs/theora/enc;$(DXSDK_DIR)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;WIN32;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;ARCH_IS_32BIT;ARCH_IS_IA32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>StdAfx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>$(IntDir)</ProgramDataBaseFileName>
+      <BrowseInformation>
+      </BrowseInformation>
+      <WarningLevel>Level4</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <CompileAs>Default</CompileAs>
+      <DisableSpecificWarnings>4996;4250;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <OmitDefaultLibName>true</OmitDefaultLibName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <PreLinkEvent>
+      <Command>
+      </Command>
+    </PreLinkEvent>
+    <Link>
+      <RegisterOutput>false</RegisterOutput>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;libcmt.lib;libcpmt.lib;winmm.lib;comctl32.lib;dinput.lib;dxguid.lib;oldnames.lib;shlwapi.lib;d3d9.lib;amstrmid.lib;dxva2.lib;libboost_thread-vc100-mt-s-1_43.lib</AdditionalDependencies>
+      <OutputFile>bin\ffdshow.ax</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>.\bin\lib_x86;$(DXSDK_DIR)Lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
+      <ModuleDefinitionFile>.\src\ffdshow.def</ModuleDefinitionFile>
+      <DelayLoadDLLs>
+      </DelayLoadDLLs>
+      <ProgramDatabaseFile>$(IntDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <EntryPointSymbol>_DllMainCRTStartup%4012</EntryPointSymbol>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(OutDir)/$(ProjectName).lib</ImportLibrary>
+    </Link>
+    <Manifest>
+      <AdditionalManifestFiles>bin\manifest32\ffdshow.ax.manifest;%(AdditionalManifestFiles)</AdditionalManifestFiles>
+    </Manifest>
+    <PostBuildEvent>
+      <Message>Registering output...</Message>
+      <Command>bin/register.bat</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <PreBuildEvent>
+      <Command>update_version.bat</Command>
+    </PreBuildEvent>
+    <Midl>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetEnvironment>X64</TargetEnvironment>
+      <TypeLibraryName>.\Release/ffdshow.tlb</TypeLibraryName>
+    </Midl>
+    <ClCompile>
+      <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <AdditionalIncludeDirectories>src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/mplayer;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/filters;src/xiph;src/codecs/theora/enc;$(DXSDK_DIR)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;WIN64;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;ARCH_IS_64BIT;ARCH_IS_X86_64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>StdAfx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>$(IntDir)</ProgramDataBaseFileName>
+      <BrowseInformation>
+      </BrowseInformation>
+      <WarningLevel>Level4</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <CompileAs>Default</CompileAs>
+      <DisableSpecificWarnings>4996;4250;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <OmitDefaultLibName>true</OmitDefaultLibName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <PreLinkEvent>
+      <Command>
+      </Command>
+    </PreLinkEvent>
+    <Link>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;libcmt.lib;libcpmt.lib;winmm.lib;comctl32.lib;dinput.lib;dxguid.lib;oldnames.lib;shlwapi.lib;d3d9.lib;amstrmid.lib;dxva2.lib;libboost_thread-vc100-mt-s-1_43.lib</AdditionalDependencies>
+      <OutputFile>bin\ffdshow.ax</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>.\bin\lib_x64;$(DXSDK_DIR)Lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
+      <ModuleDefinitionFile>.\src\ffdshow.def</ModuleDefinitionFile>
+      <DelayLoadDLLs>
+      </DelayLoadDLLs>
+      <ProgramDatabaseFile>$(IntDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <EntryPointSymbol>_DllMainCRTStartup</EntryPointSymbol>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <ImportLibrary>$(OutDir)/$(ProjectName).lib</ImportLibrary>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+    <Manifest>
+      <AdditionalManifestFiles>bin\manifest64\ffdshow.ax.manifest;%(AdditionalManifestFiles)</AdditionalManifestFiles>
+    </Manifest>
+    <PostBuildEvent>
+      <Message>Registering output...</Message>
+      <Command>bin/register64.bat</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <None Include="authors.txt" />
+    <None Include="copying.txt" />
+    <None Include="readme.txt" />
+    <None Include="readmeAudio.txt" />
+    <None Include="readmeEnc.txt" />
+    <None Include="readmeMultiCPU.jp.txt" />
+    <None Include="readmeMultiCPU.txt" />
+    <None Include="todo.txt" />
+    <None Include="src\helpChannelSwap.txt" />
+    <None Include="src\helpCredits.txt" />
+    <None Include="src\helpCrop.txt" />
+    <None Include="src\helpDCT.txt" />
+    <None Include="src\helpDecoderoptions.txt" />
+    <None Include="src\helpDeinterlace.txt" />
+    <None Include="src\helpFF1.txt" />
+    <None Include="src\helpFIR.txt" />
+    <None Include="src\helpGeneric_FFV1.txt" />
+    <None Include="src\helpGeneric_THEO.txt" />
+    <None Include="src\helpLevels.txt" />
+    <None Include="src\helpOffset.txt" />
+    <None Include="src\helpOut.txt" />
+    <None Include="src\helpOutsfs.txt" />
+    <None Include="src\helpOverlay.txt" />
+    <None Include="src\helpPerspective.txt" />
+    <None Include="src\helpPictprop.txt" />
+    <None Include="src\helpQueue.txt" />
+    <None Include="src\helpResample.txt" />
+    <None Include="src\helpResizeAspect.txt" />
+    <None Include="src\helpResizeSettings.txt" />
+    <None Include="src\helpSharpen.txt" />
+    <None Include="src\helpShowMV.txt" />
+    <None Include="src\helpTray.txt" />
+    <None Include="src\helpWarpsharp.txt" />
+    <None Include="src\arrows.bmp" />
+    <None Include="src\arrows_mask_d.bmp" />
+    <None Include="src\arrows_mask_u.bmp" />
+    <None Include="src\arrows_mask_ud.bmp" />
+    <None Include="src\checked.bmp" />
+    <None Include="src\classic_icon_xp.bmp" />
+    <None Include="src\down.ico" />
+    <None Include="src\empty.bmp" />
+    <None Include="src\FFa.ico" />
+    <None Include="src\FFa4bit.ico" />
+    <None Include="src\FFd.ico" />
+    <None Include="src\ffdshow.ico" />
+    <None Include="src\ffdshowAudio.ico" />
+    <None Include="src\FFe.ico" />
+    <None Include="src\FFe4bit.ico" />
+    <None Include="src\FFv.ico" />
+    <None Include="src\FFv4bit.ico" />
+    <None Include="src\FFva.ico" />
+    <None Include="src\FFva4bit.ico" />
+    <None Include="src\ffvfw.ico" />
+    <None Include="src\gradient.bmp" />
+    <None Include="src\left.ico" />
+    <None Include="src\mask.bmp" />
+    <None Include="src\modern_icon_xp.bmp" />
+    <None Include="src\right.ico" />
+    <None Include="src\up.ico" />
+    <CustomBuildStep Include="src\convert\colorspace_mmx.inc">
+      <FileType>Document</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </CustomBuildStep>
+    <CustomBuildStep Include="src\convert\colorspace_win64_sse2.inc">
+      <FileType>Document</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </CustomBuildStep>
+    <None Include="src\ffdshow.def" />
+    <None Include="src\helpDXVAOptions.txt" />
+    <None Include="src\helpSubIMGOptions.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\checkHardCodedBlackList.cpp" />
+    <ClCompile Include="src\dsutil.cpp" />
+    <ClCompile Include="src\dwstring.cpp" />
+    <ClCompile Include="src\ffdebug.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="src\ffdshowRemoteAPI.cpp" />
+    <ClCompile Include="src\ffglobals.cpp" />
+    <ClCompile Include="src\ffmpeg\libavcodec\golomb.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="src\inifiles.cpp" />
+    <ClCompile Include="src\mem_align.cpp" />
+    <ClCompile Include="src\mmintrin64.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </PrecompiledHeader>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="src\stdafx.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions)</AdditionalOptions>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(AdditionalOptions)</AdditionalOptions>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="src\TaudioParser.cpp" />
+    <ClCompile Include="src\Tbitdata.cpp" />
+    <ClCompile Include="src\TcpuUsage.cpp" />
+    <ClCompile Include="src\Teval.cpp" />
+    <ClCompile Include="src\TffDecoder_com.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="src\TffDecoder_reg.cpp" />
+    <ClCompile Include="src\TffDecoderDXVA.cpp" />
+    <ClCompile Include="src\TffdshowBase.cpp" />
+    <ClCompile Include="src\TffdshowDec.cpp" />
+    <ClCompile Include="src\TffdshowDecAudio.cpp" />
+    <ClCompile Include="src\TffdshowDecAudioInputPin.cpp" />
+    <ClCompile Include="src\TffdshowDecVideo.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <PreprocessToFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</PreprocessToFile>
+      <PreprocessSuppressLineNumbers Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</PreprocessSuppressLineNumbers>
+      <ForceConformanceInForLoopScope Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ForceConformanceInForLoopScope>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions)</AdditionalOptions>
+      <PreprocessToFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</PreprocessToFile>
+      <PreprocessSuppressLineNumbers Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</PreprocessSuppressLineNumbers>
+      <ForceConformanceInForLoopScope Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ForceConformanceInForLoopScope>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AssemblyAndSourceCode</AssemblerOutput>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(AdditionalOptions)</AdditionalOptions>
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AssemblyAndSourceCode</AssemblerOutput>
+    </ClCompile>
+    <ClCompile Include="src\TffdshowDecVideoAllocator.cpp" />
+    <ClCompile Include="src\TffdshowDecVideoAllocatorDXVA.cpp" />
+    <ClCompile Include="src\TffdshowDecVideoOutputPin.cpp" />
+    <ClCompile Include="src\TffdshowVideoInputPin.cpp" />
+    <ClCompile Include="src\TffOutputQ.cpp" />
+    <ClCompile Include="src\TffProcBase.cpp" />
+    <ClCompile Include="src\Tinfo.cpp" />
+    <ClCompile Include="src\TinputPin.cpp" />
+    <ClCompile Include="src\TkeyboardDirect.cpp" />
+    <ClCompile Include="src\TtextInputPin.cpp" />
+    <ClCompile Include="src\Ttranslate.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="src\TtrayIcon.cpp" />
+    <ClCompile Include="src\subtitles\cc_decoder.cpp" />
+    <ClCompile Include="src\subtitles\distance.cpp" />
+    <ClCompile Include="src\subtitles\Rasterizer.cpp" />
+    <ClCompile Include="src\subtitles\spudec.cpp" />
+    <ClCompile Include="src\subtitles\Tfont.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AssemblyAndSourceCode</AssemblerOutput>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(AdditionalOptions)</AdditionalOptions>
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AssemblyAndSourceCode</AssemblerOutput>
+    </ClCompile>
+    <ClCompile Include="src\subtitles\TfontSettings.cpp" />
+    <ClCompile Include="src\subtitles\ThtmlColors.cpp" />
+    <ClCompile Include="src\subtitles\TrenderedTextSubtitleWord.cpp" />
+    <ClCompile Include="src\subtitles\TspuImage.cpp" />
+    <ClCompile Include="src\subtitles\Tstream.cpp" />
+    <ClCompile Include="src\subtitles\Tsubreader.cpp" />
+    <ClCompile Include="src\subtitles\TsubreaderMplayer.cpp" />
+    <ClCompile Include="src\subtitles\TsubreaderPGS.cpp" />
+    <ClCompile Include="src\subtitles\TsubreaderUSF.cpp" />
+    <ClCompile Include="src\subtitles\TsubreaderVobsub.cpp" />
+    <ClCompile Include="src\subtitles\TsubtitleDVD.cpp" />
+    <ClCompile Include="src\subtitles\TsubtitlePGS.cpp" />
+    <ClCompile Include="src\subtitles\TsubtitlePGSParser.cpp" />
+    <ClCompile Include="src\subtitles\TsubtitleProps.cpp" />
+    <ClCompile Include="src\subtitles\Tsubtitles.cpp" />
+    <ClCompile Include="src\subtitles\TsubtitlesFile.cpp" />
+    <ClCompile Include="src\subtitles\TsubtitlesTextpin.cpp" />
+    <ClCompile Include="src\subtitles\TsubtitlesTextpinDVD.cpp" />
+    <ClCompile Include="src\subtitles\TsubtitlesTextpinPGS.cpp" />
+    <ClCompile Include="src\subtitles\TsubtitlesTextpinText.cpp" />
+    <ClCompile Include="src\subtitles\TsubtitlesTextpinUSF.cpp" />
+    <ClCompile Include="src\subtitles\TsubtitlesTextpinVobSub.cpp" />
+    <ClCompile Include="src\subtitles\TsubtitleText.cpp" />
+    <ClCompile Include="src\subtitles\TsubtitleUSF.cpp" />
+    <ClCompile Include="src\subtitles\TsubtitleVobsub.cpp" />
+    <ClCompile Include="src\subtitles\TwordWrap.cpp" />
+    <ClCompile Include="src\subtitles\vobsub.cpp" />
+    <ClCompile Include="src\imgFilters\2xsai.cpp" />
+    <ClCompile Include="src\imgFilters\md5sum.cpp" />
+    <ClCompile Include="src\imgFilters\SimpleResize.cpp">
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AssemblyAndSourceCode</AssemblerOutput>
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AssemblyAndSourceCode</AssemblerOutput>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\T3x3blur.cpp" />
+    <ClCompile Include="src\imgFilters\TcubicTable.cpp" />
+    <ClCompile Include="src\imgFilters\TffPict.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\ThwOverlayControlOverlay.cpp" />
+    <ClCompile Include="src\imgFilters\ThwOverlayControlVMR9.cpp" />
+    <ClCompile Include="src\imgFilters\TimgFilter.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\avisynth\TimgFilterAvisynth.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AssemblyAndSourceCode</AssemblerOutput>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(AdditionalOptions)</AdditionalOptions>
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AssemblyAndSourceCode</AssemblerOutput>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterBitmap.cpp" />
+    <ClCompile Include="src\imgFilters\TimgFilterBlur.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterChroma.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterColorize.cpp" />
+    <ClCompile Include="src\imgFilters\TimgFilterCrop.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterDCT.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterDeinterlace.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AssemblyAndSourceCode</AssemblerOutput>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(AdditionalOptions)</AdditionalOptions>
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AssemblyAndSourceCode</AssemblerOutput>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterDenoise3d.cpp">
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AssemblyAndSourceCode</AssemblerOutput>
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AssemblyAndSourceCode</AssemblerOutput>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterDGbob.cpp" />
+    <ClCompile Include="src\imgFilters\TimgFilterDScaler.cpp" />
+    <ClCompile Include="src\imgFilters\TimgFilterDScalerDeinterlace.cpp" />
+    <ClCompile Include="src\imgFilters\TimgFilterExpand.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterGrab.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterGradfun.cpp">
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AssemblyAndSourceCode</AssemblerOutput>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterGradualDenoise.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterHWoverlay.cpp" />
+    <ClCompile Include="src\imgFilters\TimgFilterKernelDeint.cpp" />
+    <ClCompile Include="src\imgFilters\TimgFilterLevels.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterLogoaway.cpp">
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AssemblyAndSourceCode</AssemblerOutput>
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AssemblyAndSourceCode</AssemblerOutput>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterLuma.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AssemblyAndSourceCode</AssemblerOutput>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(AdditionalOptions)</AdditionalOptions>
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AssemblyAndSourceCode</AssemblerOutput>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterNoise.cpp" />
+    <ClCompile Include="src\imgFilters\TimgFilterOffset.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AssemblyAndSourceCode</AssemblerOutput>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(AdditionalOptions)</AdditionalOptions>
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </AssemblerOutput>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterOSD.cpp" />
+    <ClCompile Include="src\imgFilters\TimgFilterOutput.cpp" />
+    <ClCompile Include="src\imgFilters\TimgFilterPerspective.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AssemblyAndSourceCode</AssemblerOutput>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(AdditionalOptions)</AdditionalOptions>
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AssemblyAndSourceCode</AssemblerOutput>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterPostproc.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterResize.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilters.cpp" />
+    <ClCompile Include="src\imgFilters\TimgFilterSharpen.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AssemblyAndSourceCode</AssemblerOutput>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(AdditionalOptions)</AdditionalOptions>
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AssemblyAndSourceCode</AssemblerOutput>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterShowMV.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterSmoother.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterSubtitles.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterTimesmooth.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterTomsMoComp.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterWarpsharp.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterYadif.cpp" />
+    <ClCompile Include="src\imgFilters\TffProc.cpp" />
+    <ClCompile Include="src\imgFilters\nic\nic_postProcess.cpp">
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AssemblyAndSourceCode</AssemblerOutput>
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AssemblyAndSourceCode</AssemblerOutput>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\asharp\asharp.cpp">
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AssemblyAndSourceCode</AssemblerOutput>
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AssemblyAndSourceCode</AssemblerOutput>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\avisynth\Tavisynth.cpp" />
+    <ClCompile Include="src\dialog\Cabout.cpp" />
+    <ClCompile Include="src\dialog\CaudioDenoise.cpp" />
+    <ClCompile Include="src\dialog\CaudioSwitcher.cpp" />
+    <ClCompile Include="src\dialog\Cavisynth.cpp" />
+    <ClCompile Include="src\dialog\Cbitmap.cpp" />
+    <ClCompile Include="src\dialog\Cblur.cpp" />
+    <ClCompile Include="src\dialog\CchannelSwap.cpp" />
+    <ClCompile Include="src\dialog\Ccodecs.cpp" />
+    <ClCompile Include="src\dialog\Cconvolver.cpp" />
+    <ClCompile Include="src\dialog\Ccredits.cpp" />
+    <ClCompile Include="src\dialog\Ccrop.cpp" />
+    <ClCompile Include="src\dialog\Ccrystality.cpp" />
+    <ClCompile Include="src\dialog\CcspOptions.cpp" />
+    <ClCompile Include="src\dialog\CcurveAlt.cpp" />
+    <ClCompile Include="src\dialog\CcurveNormal.cpp" />
+    <ClCompile Include="src\dialog\Cdct.cpp" />
+    <ClCompile Include="src\dialog\CdecoderOptions.cpp" />
+    <ClCompile Include="src\dialog\Cdeinterlace.cpp" />
+    <ClCompile Include="src\dialog\CdeinterlaceDGBob.cpp" />
+    <ClCompile Include="src\dialog\CdeinterlaceDScaler.cpp" />
+    <ClCompile Include="src\dialog\CdeinterlaceFramedoubler.cpp" />
+    <ClCompile Include="src\dialog\CdeinterlaceKernel.cpp" />
+    <ClCompile Include="src\dialog\CdeinterlaceTomsMoComp.cpp" />
+    <ClCompile Include="src\dialog\CdeinterlaceYadif.cpp" />
+    <ClCompile Include="src\dialog\Cdelay.cpp" />
+    <ClCompile Include="src\dialog\Cdirectshowcontrol.cpp" />
+    <ClCompile Include="src\dialog\CdolbyDecoder.cpp" />
+    <ClCompile Include="src\dialog\CDScaler.cpp" />
+    <ClCompile Include="src\dialog\CDXVAOptions.cpp" />
+    <ClCompile Include="src\dialog\Ceq.cpp" />
+    <ClCompile Include="src\dialog\Cfir.cpp" />
+    <ClCompile Include="src\dialog\CfirstPass.cpp" />
+    <ClCompile Include="src\dialog\Cfont.cpp" />
+    <ClCompile Include="src\dialog\Cfreeverb.cpp" />
+    <ClCompile Include="src\dialog\Cgeneric.cpp" />
+    <ClCompile Include="src\dialog\CgenericDV.cpp" />
+    <ClCompile Include="src\dialog\CgenericFFV1.cpp" />
+    <ClCompile Include="src\dialog\CgenericHuffyuv.cpp" />
+    <ClCompile Include="src\dialog\CgenericLJPEG.cpp" />
+    <ClCompile Include="src\dialog\CgenericRAW.cpp" />
+    <ClCompile Include="src\dialog\CgenericWmv9.cpp" />
+    <ClCompile Include="src\dialog\Cgrab.cpp" />
+    <ClCompile Include="src\dialog\CgradFun.cpp" />
+    <ClCompile Include="src\dialog\Cgraph.cpp" />
+    <ClCompile Include="src\dialog\ChideShow.cpp" />
+    <ClCompile Include="src\dialog\Cin.cpp" />
+    <ClCompile Include="src\dialog\Cinfosimd.cpp" />
+    <ClCompile Include="src\dialog\Ckeys.cpp" />
+    <ClCompile Include="src\dialog\Clevels.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="src\dialog\ClfeCrossover.cpp" />
+    <ClCompile Include="src\dialog\Clogoaway.cpp" />
+    <ClCompile Include="src\dialog\Cmasking.cpp" />
+    <ClCompile Include="src\dialog\CmaskingX264.cpp" />
+    <ClCompile Include="src\dialog\CmaskingXVID.cpp" />
+    <ClCompile Include="src\dialog\Cme.cpp" />
+    <ClCompile Include="src\dialog\CmeX264.cpp" />
+    <ClCompile Include="src\dialog\CmeXvid.cpp" />
+    <ClCompile Include="src\dialog\Cmixer.cpp" />
+    <ClCompile Include="src\dialog\Cnoise.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="src\dialog\Coffset.cpp" />
+    <ClCompile Include="src\dialog\Conepass.cpp" />
+    <ClCompile Include="src\dialog\ConepassXvid.cpp" />
+    <ClCompile Include="src\dialog\COSD.cpp" />
+    <ClCompile Include="src\dialog\Cout.cpp" />
+    <ClCompile Include="src\dialog\Coutcsps.cpp" />
+    <ClCompile Include="src\dialog\Coutsfs.cpp" />
+    <ClCompile Include="src\dialog\Coverlay.cpp" />
+    <ClCompile Include="src\dialog\Cperspective.cpp">
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AssemblyAndSourceCode</AssemblerOutput>
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AssemblyAndSourceCode</AssemblerOutput>
+    </ClCompile>
+    <ClCompile Include="src\dialog\CpictProp.cpp" />
+    <ClCompile Include="src\dialog\CpostProc.cpp" />
+    <ClCompile Include="src\dialog\Cpresets.cpp" />
+    <ClCompile Include="src\dialog\Cprocsfs.cpp" />
+    <ClCompile Include="src\dialog\Cquant.cpp" />
+    <ClCompile Include="src\dialog\CquantTables.cpp" />
+    <ClCompile Include="src\dialog\Cqueue.cpp" />
+    <ClCompile Include="src\dialog\Cresample.cpp" />
+    <ClCompile Include="src\dialog\CresizeAspect.cpp" />
+    <ClCompile Include="src\dialog\CresizeBorders.cpp" />
+    <ClCompile Include="src\dialog\CresizeSettings.cpp" />
+    <ClCompile Include="src\dialog\CsecondPass.cpp" />
+    <ClCompile Include="src\dialog\Csharpen.cpp" />
+    <ClCompile Include="src\dialog\CshowMV.cpp" />
+    <ClCompile Include="src\dialog\Csubtitles.cpp" />
+    <ClCompile Include="src\dialog\CsubtitlesPos.cpp" />
+    <ClCompile Include="src\dialog\CsubtitlesText.cpp" />
+    <ClCompile Include="src\dialog\Ctray.cpp" />
+    <ClCompile Include="src\dialog\Cvobsub.cpp" />
+    <ClCompile Include="src\dialog\Cvolume.cpp" />
+    <ClCompile Include="src\dialog\Cwarpsharp.cpp" />
+    <ClCompile Include="src\dialog\Cwinamp2.cpp" />
+    <ClCompile Include="src\dialog\TbitrateDlg.cpp" />
+    <ClCompile Include="src\dialog\TcompatibilityList.cpp" />
+    <ClCompile Include="src\dialog\TcompatibilityManager.cpp" />
+    <ClCompile Include="src\dialog\TconfPageBase.cpp" />
+    <ClCompile Include="src\dialog\TconfPageDec.cpp" />
+    <ClCompile Include="src\dialog\TDScalerSettings.cpp" />
+    <ClCompile Include="src\dialog\TffdshowPageBase.cpp" />
+    <ClCompile Include="src\dialog\TffdshowPageDec.cpp" />
+    <ClCompile Include="src\dialog\TffdshowPageDecAudio.cpp" />
+    <ClCompile Include="src\dialog\TffdshowPageDecVideo.cpp" />
+    <ClCompile Include="src\dialog\TffdshowPageEnc.cpp" />
+    <ClCompile Include="src\dialog\TflatButtons.cpp" />
+    <ClCompile Include="src\dialog\TpageSite.cpp" />
+    <ClCompile Include="src\dialog\TperfectDlg.cpp" />
+    <ClCompile Include="src\dialog\TpresetAutoload.cpp" />
+    <ClCompile Include="src\dialog\TpresetsEncDlg.cpp" />
+    <ClCompile Include="src\dialog\TSpecifyPropertyPagesVE.cpp" />
+    <ClCompile Include="src\dialog\TversionsDlg.cpp" />
+    <ClCompile Include="src\dialog\Twidget.cpp" />
+    <ClCompile Include="src\dialog\Twindow.cpp" />
+    <ClCompile Include="src\dialog\audio\CaudioDecoderOptions.cpp" />
+    <ClCompile Include="src\settings\reg.cpp" />
+    <ClCompile Include="src\settings\TcodecSettings.cpp">
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AssemblyAndSourceCode</AssemblerOutput>
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">AssemblyAndSourceCode</AssemblerOutput>
+    </ClCompile>
+    <ClCompile Include="src\Tconfig.cpp" />
+    <ClCompile Include="src\settings\TdialogSettings.cpp" />
+    <ClCompile Include="src\settings\TglobalSettings.cpp" />
+    <ClCompile Include="src\settings\Toptions.cpp" />
+    <ClCompile Include="src\settings\TpresetEnc.cpp" />
+    <ClCompile Include="src\settings\Tpresets.cpp" />
+    <ClCompile Include="src\settings\TpresetSettings.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="src\settings\TpresetSettingsAudio.cpp" />
+    <ClCompile Include="src\settings\TpresetSettingsVideo.cpp">
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AssemblyAndSourceCode</AssemblerOutput>
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AssemblyAndSourceCode</AssemblerOutput>
+    </ClCompile>
+    <ClCompile Include="src\settings\TfilterSettings.cpp" />
+    <ClCompile Include="src\settings\filters\TavisynthSettings.cpp">
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AssemblyAndSourceCode</AssemblerOutput>
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AssemblyAndSourceCode</AssemblerOutput>
+    </ClCompile>
+    <ClCompile Include="src\settings\filters\TbitmapSettings.cpp" />
+    <ClCompile Include="src\settings\filters\TblurSettings.cpp" />
+    <ClCompile Include="src\settings\filters\TcropSettings.cpp" />
+    <ClCompile Include="src\settings\filters\TdctSettings.cpp" />
+    <ClCompile Include="src\settings\filters\TdeinterlaceSettings.cpp" />
+    <ClCompile Include="src\settings\filters\TdscalerFilterSettings.cpp" />
+    <ClCompile Include="src\settings\filters\TexpandSettings.cpp" />
+    <ClCompile Include="src\settings\filters\TgrabSettings.cpp" />
+    <ClCompile Include="src\settings\filters\TgradFunSettings.cpp" />
+    <ClCompile Include="src\settings\filters\ThwOverlaySettings.cpp" />
+    <ClCompile Include="src\settings\filters\TlevelsSettings.cpp" />
+    <ClCompile Include="src\settings\filters\TlogoawaySettings.cpp" />
+    <ClCompile Include="src\settings\filters\TnoiseSettings.cpp" />
+    <ClCompile Include="src\settings\filters\ToffsetSettings.cpp" />
+    <ClCompile Include="src\settings\filters\TOSDsettings.cpp" />
+    <ClCompile Include="src\settings\filters\ToutputVideoSettings.cpp" />
+    <ClCompile Include="src\settings\filters\TperspectiveSettings.cpp" />
+    <ClCompile Include="src\settings\filters\TpictPropSettings.cpp" />
+    <ClCompile Include="src\settings\filters\TpostprocSettings.cpp" />
+    <ClCompile Include="src\settings\filters\TresizeAspectSettings.cpp" />
+    <ClCompile Include="src\settings\filters\TsharpenSettings.cpp" />
+    <ClCompile Include="src\settings\filters\TsubtitlesSettings.cpp" />
+    <ClCompile Include="src\settings\filters\TvisSettings.cpp" />
+    <ClCompile Include="src\settings\filters\TwarpsharpSettings.cpp" />
+    <ClCompile Include="src\settings\filters\TaudioDenoiseSettings.cpp" />
+    <ClCompile Include="src\settings\filters\TchannelSwapSettings.cpp" />
+    <ClCompile Include="src\settings\filters\TconvolverSettings.cpp" />
+    <ClCompile Include="src\settings\filters\TcrystalitySettings.cpp" />
+    <ClCompile Include="src\settings\filters\TdelaySettings.cpp" />
+    <ClCompile Include="src\settings\filters\TdolbyDecoderSettings.cpp" />
+    <ClCompile Include="src\settings\filters\TeqSettings.cpp">
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AssemblyAndSourceCode</AssemblerOutput>
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">AssemblyAndSourceCode</AssemblerOutput>
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AssemblyAndSourceCode</AssemblerOutput>
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AssemblyAndSourceCode</AssemblerOutput>
+    </ClCompile>
+    <ClCompile Include="src\settings\filters\TfirSettings.cpp" />
+    <ClCompile Include="src\settings\filters\TfreeverbSettings.cpp" />
+    <ClCompile Include="src\settings\filters\TlfeCrossoverSettings.cpp" />
+    <ClCompile Include="src\settings\filters\TmixerSettings.cpp" />
+    <ClCompile Include="src\settings\filters\ToutputAudioSettings.cpp" />
+    <ClCompile Include="src\settings\filters\TresampleSettings.cpp" />
+    <ClCompile Include="src\settings\filters\TvolumeSettings.cpp" />
+    <ClCompile Include="src\settings\filters\Twinamp2settings.cpp" />
+    <ClCompile Include="src\settings\lzo\minilzo.c">
+      <ExceptionHandling Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </ExceptionHandling>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+      <ExceptionHandling Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </ExceptionHandling>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </PrecompiledHeader>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsC</CompileAs>
+      <ExceptionHandling Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </ExceptionHandling>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
+      <ExceptionHandling Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </ExceptionHandling>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </PrecompiledHeader>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="src\codecs\ffcodecs.cpp" />
+    <ClCompile Include="src\codecs\mp3header.cpp" />
+    <ClCompile Include="src\codecs\reorder_ch.cpp" />
+    <ClCompile Include="src\codecs\TaudioCodec.cpp" />
+    <ClCompile Include="src\codecs\TaudioCodecAvisynth.cpp" />
+    <ClCompile Include="src\codecs\TaudioCodecBitstream.cpp" />
+    <ClCompile Include="src\codecs\TaudioCodecLiba52.cpp" />
+    <ClCompile Include="src\codecs\TaudioCodecLibavcodec.cpp" />
+    <ClCompile Include="src\codecs\TaudioCodecLibDTS.cpp" />
+    <ClCompile Include="src\codecs\TaudioCodecLibFAAD.cpp" />
+    <ClCompile Include="src\codecs\TaudioCodecLibMAD.cpp" />
+    <ClCompile Include="src\codecs\TaudioCodecTremor.cpp" />
+    <ClCompile Include="src\codecs\TaudioCodecUncompressed.cpp" />
+    <ClCompile Include="src\codecs\Tcodec.cpp" />
+    <ClCompile Include="src\codecs\TrealAudioInfo.cpp" />
+    <ClCompile Include="src\codecs\TvideoCodec.cpp" />
+    <ClCompile Include="src\codecs\TvideoCodec_ffmpeg-mt.cpp" />
+    <ClCompile Include="src\codecs\TvideoCodecAvisynth.cpp" />
+    <ClCompile Include="src\codecs\TvideoCodecLibavcodec.cpp" />
+    <ClCompile Include="src\codecs\TvideoCodecLibavcodecDxva.cpp" />
+    <ClCompile Include="src\codecs\TvideoCodecLibmpeg2.cpp" />
+    <ClCompile Include="src\codecs\TvideoCodecUncompressed.cpp" />
+    <ClCompile Include="src\codecs\TvideoCodecWmv9.cpp" />
+    <ClCompile Include="src\codecs\TvideoCodecX264.cpp" />
+    <ClCompile Include="src\codecs\TvideoCodecXviD4.cpp" />
+    <ClCompile Include="src\ffmpeg\Tlibavcodec.cpp" />
+    <ClCompile Include="src\ffmpeg-mt\Tlibavcodec_mt.cpp" />
+    <ClCompile Include="src\codecs\H264Nalu.cpp" />
+    <ClCompile Include="src\codecs\TDXVADecoder.cpp" />
+    <ClCompile Include="src\codecs\TDXVADecoderH264.cpp" />
+    <ClCompile Include="src\codecs\TDXVADecoderVC1.cpp" />
+    <ClCompile Include="src\convert\ffdshow_converters.cpp">
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AssemblyAndSourceCode</AssemblerOutput>
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AssemblyAndSourceCode</AssemblerOutput>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\ffImgfmt.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="src\convert\image.cpp">
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AssemblyAndSourceCode</AssemblerOutput>
+    </ClCompile>
+    <ClCompile Include="src\convert\Tconvert.cpp" />
+    <ClCompile Include="src\convert\TrgbPrimaries.cpp" />
+    <ClCompile Include="src\convert\Tswscale.cpp" />
+    <ClCompile Include="src\audioFilters\dither.cpp" />
+    <ClCompile Include="src\audioFilters\fftsg.cpp" />
+    <ClCompile Include="src\audioFilters\firfilter.cpp" />
+    <ClCompile Include="src\audioFilters\mixer.cpp" />
+    <ClCompile Include="src\audioFilters\TaudioFilter.cpp">
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AssemblyAndSourceCode</AssemblerOutput>
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AssemblyAndSourceCode</AssemblerOutput>
+    </ClCompile>
+    <ClCompile Include="src\audioFilters\TaudioFilterChannelSwap.cpp" />
+    <ClCompile Include="src\audioFilters\TaudioFilterConvolver.cpp">
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AssemblyAndSourceCode</AssemblerOutput>
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AssemblyAndSourceCode</AssemblerOutput>
+    </ClCompile>
+    <ClCompile Include="src\audioFilters\TaudioFilterCrystality.cpp" />
+    <ClCompile Include="src\audioFilters\TaudioFilterDelay.cpp" />
+    <ClCompile Include="src\audioFilters\TaudioFilterDenoise.cpp" />
+    <ClCompile Include="src\audioFilters\TaudioFilterDolbyDecoder.cpp" />
+    <ClCompile Include="src\audioFilters\TaudioFilterEQ.cpp" />
+    <ClCompile Include="src\audioFilters\TaudioFilterEQsuper.cpp" />
+    <ClCompile Include="src\audioFilters\TaudioFilterFIR.cpp" />
+    <ClCompile Include="src\audioFilters\TaudioFilterFreeverb.cpp" />
+    <ClCompile Include="src\audioFilters\TaudioFilterHeadphone.cpp" />
+    <ClCompile Include="src\audioFilters\TaudioFilterLFEcrossover.cpp" />
+    <ClCompile Include="src\audioFilters\TaudioFilterMixer.cpp">
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AssemblyAndSourceCode</AssemblerOutput>
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AssemblyAndSourceCode</AssemblerOutput>
+    </ClCompile>
+    <ClCompile Include="src\audioFilters\TaudioFilterOSD.cpp" />
+    <ClCompile Include="src\audioFilters\TaudioFilterOutput.cpp" />
+    <ClCompile Include="src\audioFilters\TaudioFilterResample.cpp" />
+    <ClCompile Include="src\audioFilters\TaudioFilters.cpp" />
+    <ClCompile Include="src\audioFilters\TaudioFilterVolume.cpp">
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AssemblyAndSourceCode</AssemblerOutput>
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AssemblyAndSourceCode</AssemblerOutput>
+    </ClCompile>
+    <ClCompile Include="src\audioFilters\TaudioFilterWinamp2.cpp" />
+    <ClCompile Include="src\audioFilters\TsampleFormat.cpp" />
+    <ClCompile Include="src\audioFilters\winamp2\Twinamp2.cpp" />
+    <ClCompile Include="src\audioFilters\freeverb\revmodel.cpp" />
+    <ClCompile Include="src\audioFilters\resample\resample2.cpp">
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AssemblyAndSourceCode</AssemblerOutput>
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AssemblyAndSourceCode</AssemblerOutput>
+    </ClCompile>
+    <ClCompile Include="src\audioFilters\TffProcAudio.cpp" />
+    <ClCompile Include="src\2pass.cpp" />
+    <ClCompile Include="src\codecs\TencStats.cpp" />
+    <ClCompile Include="src\TffdshowEnc.cpp" />
+    <ClCompile Include="src\Tffvfw.cpp" />
+    <ClCompile Include="src\Tperfect.cpp" />
+    <ClCompile Include="src\muxers\Tmuxer.cpp" />
+    <ClCompile Include="src\muxers\TmuxerFile.cpp" />
+    <ClCompile Include="src\acm\Tacm.cpp" />
+    <ClCompile Include="src\CSSauth.cpp" />
+    <ClCompile Include="src\CSSscramble.cpp" />
+    <ClCompile Include="src\DeCSSInputPin.cpp" />
+    <ClCompile Include="src\filters\Tfilter.cpp" />
+    <ClCompile Include="src\filters\Tfilters.cpp" />
+    <ClCompile Include="src\filters\TOSDprovider.cpp" />
+    <ClCompile Include="src\baseclasses\amfilter.cpp" />
+    <ClCompile Include="src\baseclasses\combase.cpp" />
+    <ClCompile Include="src\baseclasses\dllentry.cpp" />
+    <ClCompile Include="src\baseclasses\dllsetup.cpp" />
+    <ClCompile Include="src\baseclasses\mtype.cpp" />
+    <ClCompile Include="src\baseclasses\outputq.cpp" />
+    <ClCompile Include="src\baseclasses\pstream.cpp" />
+    <ClCompile Include="src\baseclasses\strmiids.cpp" />
+    <ClCompile Include="src\baseclasses\transfrm.cpp" />
+    <ClCompile Include="src\baseclasses\wxdebug.cpp" />
+    <ClCompile Include="src\baseclasses\wxlist.cpp" />
+    <ClCompile Include="src\baseclasses\wxutil.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <yasm Include="src\cpuid.asm" />
+    <yasm Include="src\memcpy.asm">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </yasm>
+    <yasm Include="src\subtitles\fontRenderer.asm" />
+    <yasm Include="src\imgFilters\simple_idct_mmx.asm" />
+    <yasm Include="src\imgFilters\Skal\fdct_mmx_skal.asm" />
+    <yasm Include="src\imgFilters\Skal\fdct_sse2_skal.asm" />
+    <yasm Include="src\imgFilters\Skal\idct_mmx.asm" />
+    <yasm Include="src\imgFilters\Skal\idct_sse2_dmitry.asm" />
+    <yasm Include="src\convert\colorspace_rgb_mmx.asm">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </yasm>
+    <yasm Include="src\convert\colorspace_rgb_win64_sse2.asm">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </yasm>
+    <yasm Include="src\audioFilters\dotproduct.asm">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </yasm>
+    <yasm Include="src\audioFilters\TaudioFilterConvert.asm">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </yasm>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\array_allocator.h" />
+    <ClInclude Include="src\autoptr.h" />
+    <ClInclude Include="src\char_t.h" />
+    <ClInclude Include="src\checkHardCodedBlackList.h" />
+    <ClInclude Include="src\comptr.h" />
+    <ClInclude Include="src\csimd.h" />
+    <ClInclude Include="src\dsutil.h" />
+    <ClInclude Include="src\dwstring.h" />
+    <ClInclude Include="src\FastDelegate.h" />
+    <ClInclude Include="src\ffdebug.h" />
+    <ClInclude Include="src\ffdshow_constants.h" />
+    <ClInclude Include="src\ffdshow_mediaguids.h" />
+    <ClInclude Include="src\ffdshowRemoteAPI.h" />
+    <ClInclude Include="src\ffdshowRemoteAPIimpl.h" />
+    <ClInclude Include="src\ffglobals.h" />
+    <ClInclude Include="src\ffmpeg\libavcodec\golomb.h" />
+    <ClInclude Include="src\IDSMPropertyBag.h" />
+    <ClInclude Include="src\IffDecoder.h" />
+    <ClInclude Include="src\IffdshowBase.h" />
+    <ClInclude Include="src\IffdshowDec.h" />
+    <ClInclude Include="src\IffdshowDecAudio.h" />
+    <ClInclude Include="src\IffdshowDecVideo.h" />
+    <ClInclude Include="src\IffdshowParamsEnum.h" />
+    <ClInclude Include="src\inifiles.h" />
+    <ClInclude Include="src\interfaces.h" />
+    <ClInclude Include="src\inttypes.h" />
+    <ClInclude Include="src\IVMRffdshow9.h" />
+    <ClInclude Include="src\line.h" />
+    <ClInclude Include="src\mem_align.h" />
+    <ClInclude Include="src\PODtypes.h" />
+    <ClInclude Include="src\rational.h" />
+    <ClInclude Include="src\simd.h" />
+    <ClInclude Include="src\simd_common.h" />
+    <ClInclude Include="src\simd_instructions.h" />
+    <ClInclude Include="src\stdafx.h" />
+    <ClInclude Include="src\stdint.h" />
+    <ClInclude Include="src\TaudioParser.h" />
+    <ClInclude Include="src\Tbitdata.h" />
+    <ClInclude Include="src\TcpuUsage.h" />
+    <ClInclude Include="src\Tdll.h" />
+    <ClInclude Include="src\Teval.h" />
+    <ClInclude Include="src\TfakeImediaSample.h" />
+    <ClInclude Include="src\TffDecoderVideo.h" />
+    <ClInclude Include="src\TffdshowBase.h" />
+    <ClInclude Include="src\TffdshowDec.h" />
+    <ClInclude Include="src\TffdshowDecAudio.h" />
+    <ClInclude Include="src\TffdshowDecAudioInputPin.h" />
+    <ClInclude Include="src\TffdshowDecVideoAllocator.h" />
+    <ClInclude Include="src\TffdshowDecVideoAllocatorDXVA.h" />
+    <ClInclude Include="src\TffdshowDecVideoOutputPin.h" />
+    <ClInclude Include="src\TffdshowVideo.h" />
+    <ClInclude Include="src\TffdshowVideoInputPin.h" />
+    <ClInclude Include="src\TffOutputQ.h" />
+    <ClInclude Include="src\TffProcBase.h" />
+    <ClInclude Include="src\Tinfo.h" />
+    <ClInclude Include="src\TinputPin.h" />
+    <ClInclude Include="src\TkeyboardDirect.h" />
+    <ClInclude Include="src\subtitles\TsubtitleDVD.h" />
+    <ClInclude Include="src\subtitles\TsubtitlePGSParser.h" />
+    <ClInclude Include="src\TtextInputPin.h" />
+    <ClInclude Include="src\Ttimer.h" />
+    <ClInclude Include="src\Ttranslate.h" />
+    <ClInclude Include="src\TtrayIcon.h" />
+    <ClInclude Include="src\resource.h" />
+    <ClInclude Include="src\subtitles\cc_decoder.h" />
+    <ClInclude Include="src\subtitles\distance.h" />
+    <ClInclude Include="src\subtitles\Rasterizer.h" />
+    <ClInclude Include="src\subtitles\spudec.h" />
+    <ClInclude Include="src\subtitles\Tfont.h" />
+    <ClInclude Include="src\subtitles\TfontManager.h" />
+    <ClInclude Include="src\subtitles\TfontSettings.h" />
+    <ClInclude Include="src\subtitles\ThtmlColors.h" />
+    <ClInclude Include="src\subtitles\TrenderedTextSubtitleWord.h" />
+    <ClInclude Include="src\subtitles\TspuImage.h" />
+    <ClInclude Include="src\subtitles\Tstream.h" />
+    <ClInclude Include="src\subtitles\Tsubreader.h" />
+    <ClInclude Include="src\subtitles\TsubreaderMplayer.h" />
+    <ClInclude Include="src\subtitles\TsubreaderPGS.h" />
+    <ClInclude Include="src\subtitles\TsubreaderUSF.h" />
+    <ClInclude Include="src\subtitles\TsubreaderVobsub.h" />
+    <ClInclude Include="src\subtitles\Tsubtitle.h" />
+    <ClInclude Include="src\subtitles\TsubtitlePGS.h" />
+    <ClInclude Include="src\subtitles\TsubtitleProps.h" />
+    <ClInclude Include="src\subtitles\Tsubtitles.h" />
+    <ClInclude Include="src\subtitles\TsubtitlesFile.h" />
+    <ClInclude Include="src\subtitles\TsubtitlesTextpin.h" />
+    <ClInclude Include="src\subtitles\TsubtitlesTextpinDVD.h" />
+    <ClInclude Include="src\subtitles\TsubtitlesTextpinPGS.h" />
+    <ClInclude Include="src\subtitles\TsubtitlesTextpinText.h" />
+    <ClInclude Include="src\subtitles\TsubtitlesTextpinUSF.h" />
+    <ClInclude Include="src\subtitles\TsubtitlesTextpinVobSub.h" />
+    <ClInclude Include="src\subtitles\TsubtitleText.h" />
+    <ClInclude Include="src\subtitles\TsubtitleUSF.h" />
+    <ClInclude Include="src\subtitles\TsubtitleVobsub.h" />
+    <ClInclude Include="src\subtitles\TtoGdiFont.h" />
+    <ClInclude Include="src\subtitles\TwordWrap.h" />
+    <ClInclude Include="src\subtitles\vobsub.h" />
+    <ClInclude Include="src\imgFilters\2xsai.h" />
+    <ClInclude Include="src\imgFilters\md5sum.h" />
+    <ClInclude Include="src\imgFilters\SimpleResize.h" />
+    <ClInclude Include="src\imgFilters\T3x3blur.h" />
+    <ClInclude Include="src\imgFilters\TcubicTable.h" />
+    <ClInclude Include="src\imgFilters\TffPict.h" />
+    <ClInclude Include="src\imgFilters\TffRect.h" />
+    <ClInclude Include="src\imgFilters\ThwOverlayControlOverlay.h" />
+    <ClInclude Include="src\imgFilters\ThwOverlayControlVMR9.h" />
+    <ClInclude Include="src\imgFilters\TimgFilter.h" />
+    <ClInclude Include="src\imgFilters\avisynth\TimgFilterAvisynth.h" />
+    <ClInclude Include="src\imgFilters\TimgFilterBitmap.h" />
+    <ClInclude Include="src\imgFilters\TimgFilterBlur.h" />
+    <ClInclude Include="src\imgFilters\TimgFilterChroma.h" />
+    <ClInclude Include="src\imgFilters\TimgFilterColorize.h" />
+    <ClInclude Include="src\imgFilters\TimgFilterCrop.h" />
+    <ClInclude Include="src\imgFilters\TimgFilterDCT.h" />
+    <ClInclude Include="src\imgFilters\TimgFilterDeinterlace.h" />
+    <ClInclude Include="src\imgFilters\TimgFilterDenoise3d.h" />
+    <ClInclude Include="src\imgFilters\TimgFilterDGbob.h" />
+    <ClInclude Include="src\imgFilters\TimgFilterDScaler.h" />
+    <ClInclude Include="src\imgFilters\TimgFilterDScalerDeinterlace.h" />
+    <ClInclude Include="src\imgFilters\TimgFilterExpand.h" />
+    <ClInclude Include="src\imgFilters\TimgFilterGrab.h" />
+    <ClInclude Include="src\imgFilters\TimgFilterGradfun.h" />
+    <ClInclude Include="src\imgFilters\TimgFilterGradualDenoise.h" />
+    <ClInclude Include="src\imgFilters\TimgFilterHWoverlay.h" />
+    <ClInclude Include="src\imgFilters\TimgFilterKernelDeint.h" />
+    <ClInclude Include="src\imgFilters\TimgFilterLevels.h" />
+    <ClInclude Include="src\imgFilters\TimgFilterLogoaway.h" />
+    <ClInclude Include="src\imgFilters\TimgFilterLuma.h" />
+    <ClInclude Include="src\imgFilters\TimgFilterNoise.h" />
+    <ClInclude Include="src\imgFilters\TimgFilterOffset.h" />
+    <ClInclude Include="src\imgFilters\TimgFilterOSD.h" />
+    <ClInclude Include="src\imgFilters\TimgFilterOutput.h" />
+    <ClInclude Include="src\imgFilters\TimgFilterPerspective.h" />
+    <ClInclude Include="src\imgFilters\TimgFilterPostproc.h" />
+    <ClInclude Include="src\imgFilters\TimgFilterResize.h" />
+    <ClInclude Include="src\imgFilters\TimgFilters.h" />
+    <ClInclude Include="src\imgFilters\TimgFilterSharpen.h" />
+    <ClInclude Include="src\imgFilters\TimgFilterShowMV.h" />
+    <ClInclude Include="src\imgFilters\TimgFilterSmoother.h" />
+    <ClInclude Include="src\imgFilters\TimgFilterSubtitles.h" />
+    <ClInclude Include="src\imgFilters\TimgFilterTimesmooth.h" />
+    <ClInclude Include="src\imgFilters\TimgFilterTomsMoComp.h" />
+    <ClInclude Include="src\imgFilters\TimgFilterWarpsharp.h" />
+    <ClInclude Include="src\imgFilters\TimgFilterYadif.h" />
+    <ClInclude Include="src\imgFilters\IffProc.h" />
+    <ClInclude Include="src\imgFilters\TffProc.h" />
+    <ClInclude Include="src\imgFilters\nic\nic_postProcess.h" />
+    <ClInclude Include="src\imgFilters\DScaler\DS_ApiCommon.h" />
+    <ClInclude Include="src\imgFilters\DScaler\DS_Deinterlace.h" />
+    <ClInclude Include="src\imgFilters\DScaler\DS_Filter.h" />
+    <ClInclude Include="src\imgFilters\asharp\asharp.h" />
+    <ClInclude Include="src\imgFilters\avisynth\avisynth.h" />
+    <ClInclude Include="src\imgFilters\avisynth\Tavisynth.h" />
+    <ClInclude Include="src\imgFilters\awarpsharp\aws_api.h" />
+    <ClInclude Include="src\dialog\Cabout.h" />
+    <ClInclude Include="src\dialog\CaudioDenoise.h" />
+    <ClInclude Include="src\dialog\CaudioSwitcher.h" />
+    <ClInclude Include="src\dialog\Cavisynth.h" />
+    <ClInclude Include="src\dialog\Cbitmap.h" />
+    <ClInclude Include="src\dialog\Cblur.h" />
+    <ClInclude Include="src\dialog\CchannelSwap.h" />
+    <ClInclude Include="src\dialog\Ccodecs.h" />
+    <ClInclude Include="src\dialog\Cconvolver.h" />
+    <ClInclude Include="src\dialog\Ccredits.h" />
+    <ClInclude Include="src\dialog\Ccrop.h" />
+    <ClInclude Include="src\dialog\Ccrystality.h" />
+    <ClInclude Include="src\dialog\CcspOptions.h" />
+    <ClInclude Include="src\dialog\CcurveAlt.h" />
+    <ClInclude Include="src\dialog\CcurveNormal.h" />
+    <ClInclude Include="src\dialog\Cdct.h" />
+    <ClInclude Include="src\dialog\CdecoderOptions.h" />
+    <ClInclude Include="src\dialog\Cdeinterlace.h" />
+    <ClInclude Include="src\dialog\CdeinterlaceDGBob.h" />
+    <ClInclude Include="src\dialog\CdeinterlaceDScaler.h" />
+    <ClInclude Include="src\dialog\CdeinterlaceFramedoubler.h" />
+    <ClInclude Include="src\dialog\CdeinterlaceKernel.h" />
+    <ClInclude Include="src\dialog\CdeinterlacePanel.h" />
+    <ClInclude Include="src\dialog\CdeinterlaceTomsMoComp.h" />
+    <ClInclude Include="src\dialog\CdeinterlaceYadif.h" />
+    <ClInclude Include="src\dialog\Cdelay.h" />
+    <ClInclude Include="src\dialog\Cdirectshowcontrol.h" />
+    <ClInclude Include="src\dialog\CdolbyDecoder.h" />
+    <ClInclude Include="src\dialog\CDScaler.h" />
+    <ClInclude Include="src\dialog\CDXVAOptions.h" />
+    <ClInclude Include="src\dialog\Ceq.h" />
+    <ClInclude Include="src\dialog\Cfir.h" />
+    <ClInclude Include="src\dialog\CfirstPass.h" />
+    <ClInclude Include="src\dialog\Cfont.h" />
+    <ClInclude Include="src\dialog\Cfreeverb.h" />
+    <ClInclude Include="src\dialog\Cgeneric.h" />
+    <ClInclude Include="src\dialog\CgenericDV.h" />
+    <ClInclude Include="src\dialog\CgenericFFV1.h" />
+    <ClInclude Include="src\dialog\CgenericHuffyuv.h" />
+    <ClInclude Include="src\dialog\CgenericLJPEG.h" />
+    <ClInclude Include="src\dialog\CgenericRAW.h" />
+    <ClInclude Include="src\dialog\CgenericWmv9.h" />
+    <ClInclude Include="src\dialog\Cgrab.h" />
+    <ClInclude Include="src\dialog\CgradFun.h" />
+    <ClInclude Include="src\dialog\Cgraph.h" />
+    <ClInclude Include="src\dialog\ChideShow.h" />
+    <ClInclude Include="src\dialog\Cin.h" />
+    <ClInclude Include="src\dialog\Cinfosimd.h" />
+    <ClInclude Include="src\dialog\Ckeys.h" />
+    <ClInclude Include="src\dialog\Clevels.h" />
+    <ClInclude Include="src\dialog\ClfeCrossover.h" />
+    <ClInclude Include="src\dialog\Clogoaway.h" />
+    <ClInclude Include="src\dialog\Cmasking.h" />
+    <ClInclude Include="src\dialog\CmaskingX264.h" />
+    <ClInclude Include="src\dialog\CmaskingXVID.h" />
+    <ClInclude Include="src\dialog\Cme.h" />
+    <ClInclude Include="src\dialog\CmeX264.h" />
+    <ClInclude Include="src\dialog\CmeXvid.h" />
+    <ClInclude Include="src\dialog\Cmixer.h" />
+    <ClInclude Include="src\dialog\Cnoise.h" />
+    <ClInclude Include="src\dialog\Coffset.h" />
+    <ClInclude Include="src\dialog\Conepass.h" />
+    <ClInclude Include="src\dialog\ConepassXvid.h" />
+    <ClInclude Include="src\dialog\COSD.h" />
+    <ClInclude Include="src\dialog\Cout.h" />
+    <ClInclude Include="src\dialog\Coutcsps.h" />
+    <ClInclude Include="src\dialog\Coutsfs.h" />
+    <ClInclude Include="src\dialog\Coverlay.h" />
+    <ClInclude Include="src\dialog\Cperspective.h" />
+    <ClInclude Include="src\dialog\CpictProp.h" />
+    <ClInclude Include="src\dialog\CpostProc.h" />
+    <ClInclude Include="src\dialog\Cpresets.h" />
+    <ClInclude Include="src\dialog\Cprocsfs.h" />
+    <ClInclude Include="src\dialog\Cquant.h" />
+    <ClInclude Include="src\dialog\CquantTables.h" />
+    <ClInclude Include="src\dialog\Cqueue.h" />
+    <ClInclude Include="src\dialog\Cresample.h" />
+    <ClInclude Include="src\dialog\CresizeAspect.h" />
+    <ClInclude Include="src\dialog\CresizeBorders.h" />
+    <ClInclude Include="src\dialog\CresizeSettings.h" />
+    <ClInclude Include="src\dialog\CsecondPass.h" />
+    <ClInclude Include="src\dialog\Csharpen.h" />
+    <ClInclude Include="src\dialog\CshowMV.h" />
+    <ClInclude Include="src\dialog\Csubtitles.h" />
+    <ClInclude Include="src\dialog\CsubtitlesPos.h" />
+    <ClInclude Include="src\dialog\CsubtitlesText.h" />
+    <ClInclude Include="src\dialog\Ctray.h" />
+    <ClInclude Include="src\dialog\Cvobsub.h" />
+    <ClInclude Include="src\dialog\Cvolume.h" />
+    <ClInclude Include="src\dialog\Cwarpsharp.h" />
+    <ClInclude Include="src\dialog\Cwinamp2.h" />
+    <ClInclude Include="src\dialog\IPropertyPageFF.h" />
+    <ClInclude Include="src\dialog\ISpecifyPropertyPagesVE.h" />
+    <ClInclude Include="src\dialog\TbitrateDlg.h" />
+    <ClInclude Include="src\dialog\TcompatibilityList.h" />
+    <ClInclude Include="src\dialog\TcompatibilityManager.h" />
+    <ClInclude Include="src\dialog\TconfPageBase.h" />
+    <ClInclude Include="src\dialog\TconfPageDec.h" />
+    <ClInclude Include="src\dialog\TconfPageDecAudio.h" />
+    <ClInclude Include="src\dialog\TconfPageDecVideo.h" />
+    <ClInclude Include="src\dialog\TconfPageEnc.h" />
+    <ClInclude Include="src\dialog\TDScalerSettings.h" />
+    <ClInclude Include="src\dialog\TffdshowPageBase.h" />
+    <ClInclude Include="src\dialog\TffdshowPageDec.h" />
+    <ClInclude Include="src\dialog\TffdshowPageDecAudio.h" />
+    <ClInclude Include="src\dialog\TffdshowPageDecVideo.h" />
+    <ClInclude Include="src\dialog\TffdshowPageEnc.h" />
+    <ClInclude Include="src\dialog\TflatButtons.h" />
+    <ClInclude Include="src\dialog\TpageSite.h" />
+    <ClInclude Include="src\dialog\TperfectDlg.h" />
+    <ClInclude Include="src\dialog\TpresetAutoload.h" />
+    <ClInclude Include="src\dialog\TpresetsEncDlg.h" />
+    <ClInclude Include="src\dialog\TSpecifyPropertyPagesVE.h" />
+    <ClInclude Include="src\dialog\TversionsDlg.h" />
+    <ClInclude Include="src\dialog\Twidget.h" />
+    <ClInclude Include="src\dialog\Twindow.h" />
+    <ClInclude Include="src\dialog\audio\CaudioDecoderOptions.h" />
+    <ClInclude Include="src\settings\reg.h" />
+    <ClInclude Include="src\settings\TcodecSettings.h" />
+    <ClInclude Include="src\Tconfig.h" />
+    <ClInclude Include="src\settings\TdialogSettings.h" />
+    <ClInclude Include="src\settings\TglobalSettings.h" />
+    <ClInclude Include="src\settings\Toptions.h" />
+    <ClInclude Include="src\settings\TpresetEnc.h" />
+    <ClInclude Include="src\settings\Tpresets.h" />
+    <ClInclude Include="src\settings\TpresetSettings.h" />
+    <ClInclude Include="src\settings\TpresetSettingsAudio.h" />
+    <ClInclude Include="src\settings\TpresetSettingsVideo.h" />
+    <ClInclude Include="src\settings\TfilterSettings.h" />
+    <ClInclude Include="src\settings\filters\TavisynthSettings.h" />
+    <ClInclude Include="src\settings\filters\TbitmapSettings.h" />
+    <ClInclude Include="src\settings\filters\TblurSettings.h" />
+    <ClInclude Include="src\settings\filters\TcropSettings.h" />
+    <ClInclude Include="src\settings\filters\TdctSettings.h" />
+    <ClInclude Include="src\settings\filters\TdeinterlaceSettings.h" />
+    <ClInclude Include="src\settings\filters\TdscalerFilterSettings.h" />
+    <ClInclude Include="src\settings\filters\TexpandSettings.h" />
+    <ClInclude Include="src\settings\filters\TgrabSettings.h" />
+    <ClInclude Include="src\settings\filters\TgradFunSettings.h" />
+    <ClInclude Include="src\settings\filters\ThwOverlaySettings.h" />
+    <ClInclude Include="src\settings\filters\TlevelsSettings.h" />
+    <ClInclude Include="src\settings\filters\TlogoawaySettings.h" />
+    <ClInclude Include="src\settings\filters\TnoiseSettings.h" />
+    <ClInclude Include="src\settings\filters\ToffsetSettings.h" />
+    <ClInclude Include="src\settings\filters\TOSDsettings.h" />
+    <ClInclude Include="src\settings\filters\ToutputVideoSettings.h" />
+    <ClInclude Include="src\settings\filters\TperspectiveSettings.h" />
+    <ClInclude Include="src\settings\filters\TpictPropSettings.h" />
+    <ClInclude Include="src\settings\filters\TpostprocSettings.h" />
+    <ClInclude Include="src\settings\filters\TresizeAspectSettings.h" />
+    <ClInclude Include="src\settings\filters\TsharpenSettings.h" />
+    <ClInclude Include="src\settings\filters\TsubtitlesSettings.h" />
+    <ClInclude Include="src\settings\filters\TvisSettings.h" />
+    <ClInclude Include="src\settings\filters\TwarpsharpSettings.h" />
+    <ClInclude Include="src\settings\filters\TaudioDenoiseSettings.h" />
+    <ClInclude Include="src\settings\filters\TchannelSwapSettings.h" />
+    <ClInclude Include="src\settings\filters\TconvolverSettings.h" />
+    <ClInclude Include="src\settings\filters\TcrystalitySettings.h" />
+    <ClInclude Include="src\settings\filters\TdelaySettings.h" />
+    <ClInclude Include="src\settings\filters\TdolbyDecoderSettings.h" />
+    <ClInclude Include="src\settings\filters\TeqSettings.h" />
+    <ClInclude Include="src\settings\filters\TfirSettings.h" />
+    <ClInclude Include="src\settings\filters\TfreeverbSettings.h" />
+    <ClInclude Include="src\settings\filters\TlfeCrossoverSettings.h" />
+    <ClInclude Include="src\settings\filters\TmixerSettings.h" />
+    <ClInclude Include="src\settings\filters\ToutputAudioSettings.h" />
+    <ClInclude Include="src\settings\filters\TresampleSettings.h" />
+    <ClInclude Include="src\settings\filters\TvolumeSettings.h" />
+    <ClInclude Include="src\settings\filters\Twinamp2settings.h" />
+    <ClInclude Include="src\settings\lzo\lzoconf.h" />
+    <ClInclude Include="src\settings\lzo\minilzo.h" />
+    <ClInclude Include="src\codecs\ffcodecs.h" />
+    <ClInclude Include="src\codecs\mp3header.h" />
+    <ClInclude Include="src\codecs\qtpalette.h" />
+    <ClInclude Include="src\codecs\reorder_ch.h" />
+    <ClInclude Include="src\codecs\TaudioCodec.h" />
+    <ClInclude Include="src\codecs\TaudioCodecAvisynth.h" />
+    <ClInclude Include="src\codecs\TaudioCodecBitstream.h" />
+    <ClInclude Include="src\codecs\TaudioCodecLiba52.h" />
+    <ClInclude Include="src\codecs\TaudioCodecLibavcodec.h" />
+    <ClInclude Include="src\codecs\TaudioCodecLibDTS.h" />
+    <ClInclude Include="src\codecs\TaudioCodecLibFAAD.h" />
+    <ClInclude Include="src\codecs\TaudioCodecLibMAD.h" />
+    <ClInclude Include="src\codecs\TaudioCodecTremor.h" />
+    <ClInclude Include="src\codecs\TaudioCodecUncompressed.h" />
+    <ClInclude Include="src\codecs\Tcodec.h" />
+    <ClInclude Include="src\codecs\theora.h" />
+    <ClInclude Include="src\codecs\TrealAudioInfo.h" />
+    <ClInclude Include="src\codecs\TvideoCodec.h" />
+    <ClInclude Include="src\codecs\TvideoCodecAvisynth.h" />
+    <ClInclude Include="src\codecs\TvideoCodecLibavcodec.h" />
+    <ClInclude Include="src\codecs\TvideoCodecLibavcodecDxva.h" />
+    <ClInclude Include="src\codecs\TvideoCodecLibmpeg2.h" />
+    <ClInclude Include="src\codecs\TvideoCodecUncompressed.h" />
+    <ClInclude Include="src\codecs\TvideoCodecWmv9.h" />
+    <ClInclude Include="src\codecs\TvideoCodecX264.h" />
+    <ClInclude Include="src\codecs\TvideoCodecXviD4.h" />
+    <ClInclude Include="src\ffmpeg\libavcodec\avcodec.h" />
+    <ClInclude Include="src\ffmpeg\Tlibavcodec.h" />
+    <ClInclude Include="src\ffmpeg-mt\Tlibavcodec_mt.h" />
+    <ClInclude Include="src\codecs\libmpeg2\include\mpeg2.h" />
+    <ClInclude Include="src\codecs\xvidcore\xvid.h" />
+    <ClInclude Include="src\codecs\H264Nalu.h" />
+    <ClInclude Include="src\codecs\H264QuantizationMatrix.h" />
+    <ClInclude Include="src\codecs\TDXVADecoder.h" />
+    <ClInclude Include="src\codecs\TDXVADecoderH264.h" />
+    <ClInclude Include="src\codecs\TDXVADecoderVC1.h" />
+    <ClInclude Include="src\codecs\ogg headers\ogg.h" />
+    <ClInclude Include="src\codecs\ogg headers\ogmstreams.h" />
+    <ClInclude Include="src\codecs\ogg headers\os_types.h" />
+    <ClInclude Include="src\codecs\ogg headers\vorbisformat.h" />
+    <ClInclude Include="src\convert\convert_yuy2.h" />
+    <ClInclude Include="src\convert\convert_yv12.h" />
+    <ClInclude Include="src\convert\ffdshow_converters.h" />
+    <ClInclude Include="src\imgFilters\ffImgfmt.h" />
+    <ClInclude Include="src\convert\image.h" />
+    <ClInclude Include="src\convert\Tconvert.h" />
+    <ClInclude Include="src\convert\TrgbPrimaries.h" />
+    <ClInclude Include="src\convert\Tswscale.h" />
+    <ClInclude Include="src\convert\TYCbCr2RGB_coeffs.h" />
+    <ClInclude Include="src\audioFilters\dither.h" />
+    <ClInclude Include="src\audioFilters\fftsg.h" />
+    <ClInclude Include="src\audioFilters\firfilter.h" />
+    <ClInclude Include="src\audioFilters\mixer.h" />
+    <ClInclude Include="src\audioFilters\supereq.h" />
+    <ClInclude Include="src\audioFilters\TaudioFilter.h" />
+    <ClInclude Include="src\audioFilters\TaudioFilterChannelSwap.h" />
+    <ClInclude Include="src\audioFilters\TaudioFilterConvolver.h" />
+    <ClInclude Include="src\audioFilters\TaudioFilterCrystality.h" />
+    <ClInclude Include="src\audioFilters\TaudioFilterDelay.h" />
+    <ClInclude Include="src\audioFilters\TaudioFilterDenoise.h" />
+    <ClInclude Include="src\audioFilters\TaudioFilterDolbyDecoder.h" />
+    <ClInclude Include="src\audioFilters\TaudioFilterEQ.h" />
+    <ClInclude Include="src\audioFilters\TaudioFilterEQsuper.h" />
+    <ClInclude Include="src\audioFilters\TaudioFilterFIR.h" />
+    <ClInclude Include="src\audioFilters\TaudioFilterFreeverb.h" />
+    <ClInclude Include="src\audioFilters\TaudioFilterHeadphone.h" />
+    <ClInclude Include="src\audioFilters\TaudioFilterLFEcrossover.h" />
+    <ClInclude Include="src\audioFilters\TaudioFilterMixer.h" />
+    <ClInclude Include="src\audioFilters\TaudioFilterOSD.h" />
+    <ClInclude Include="src\audioFilters\TaudioFilterOutput.h" />
+    <ClInclude Include="src\audioFilters\TaudioFilterResample.h" />
+    <ClInclude Include="src\audioFilters\TaudioFilters.h" />
+    <ClInclude Include="src\audioFilters\TaudioFilterVolume.h" />
+    <ClInclude Include="src\audioFilters\TaudioFilterWinamp2.h" />
+    <ClInclude Include="src\audioFilters\TsampleFormat.h" />
+    <ClInclude Include="src\audioFilters\winamp2\DSP.H" />
+    <ClInclude Include="src\audioFilters\winamp2\Twinamp2.h" />
+    <ClInclude Include="src\audioFilters\freeverb\allpass.h" />
+    <ClInclude Include="src\audioFilters\freeverb\comb.h" />
+    <ClInclude Include="src\audioFilters\freeverb\denormals.h" />
+    <ClInclude Include="src\audioFilters\freeverb\revmodel.h" />
+    <ClInclude Include="src\audioFilters\resample\resample2.h" />
+    <ClInclude Include="src\audioFilters\IffProcAudio.h" />
+    <ClInclude Include="src\audioFilters\TffProcAudio.h" />
+    <ClInclude Include="src\2pass.h" />
+    <ClInclude Include="src\IffdshowEnc.h" />
+    <ClInclude Include="src\codecs\TencStats.h" />
+    <ClInclude Include="src\TffdshowEnc.h" />
+    <ClInclude Include="src\Tffvfw.h" />
+    <ClInclude Include="src\Tperfect.h" />
+    <ClInclude Include="src\muxers\Tmuxer.h" />
+    <ClInclude Include="src\muxers\TmuxerFile.h" />
+    <ClInclude Include="src\acm\msacmdrv.h" />
+    <ClInclude Include="src\acm\Tacm.h" />
+    <ClInclude Include="src\CSSauth.h" />
+    <ClInclude Include="src\CSSscramble.h" />
+    <ClInclude Include="src\DeCSSInputPin.h" />
+    <ClInclude Include="src\filters\IOSDprovider.h" />
+    <ClInclude Include="src\filters\Tfilter.h" />
+    <ClInclude Include="src\filters\Tfilters.h" />
+    <ClInclude Include="src\filters\TOSDprovider.h" />
+    <ClInclude Include="src\baseclasses\amfilter.h" />
+    <ClInclude Include="src\baseclasses\Amvideo.h" />
+    <ClInclude Include="src\baseclasses\combase.h" />
+    <ClInclude Include="src\baseclasses\comlite.h" />
+    <ClInclude Include="src\baseclasses\control.h" />
+    <ClInclude Include="src\baseclasses\dllsetup.h" />
+    <ClInclude Include="src\baseclasses\dvdmedia.h" />
+    <ClInclude Include="src\baseclasses\errors.h" />
+    <ClInclude Include="src\baseclasses\evcode.h" />
+    <ClInclude Include="src\baseclasses\fourcc.h" />
+    <ClInclude Include="src\baseclasses\ksuuids.h" />
+    <ClInclude Include="src\baseclasses\mpconfig.h" />
+    <ClInclude Include="src\baseclasses\mtype.h" />
+    <ClInclude Include="src\baseclasses\outputq.h" />
+    <ClInclude Include="src\baseclasses\pstream.h" />
+    <ClInclude Include="src\baseclasses\qnetwork.h" />
+    <ClInclude Include="src\baseclasses\reftime.h" />
+    <ClInclude Include="src\baseclasses\streams.h" />
+    <ClInclude Include="src\baseclasses\strmif.h" />
+    <ClInclude Include="src\baseclasses\transfrm.h" />
+    <ClInclude Include="src\baseclasses\uuids.h" />
+    <ClInclude Include="src\baseclasses\vfwmsgs.h" />
+    <ClInclude Include="src\baseclasses\wxdebug.h" />
+    <ClInclude Include="src\baseclasses\wxlist.h" />
+    <ClInclude Include="src\baseclasses\wxutil.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="src\ffdshow.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuildStep Include="src\imgFilters\awarpsharp\aws.obj">
+      <FileType>Document</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </CustomBuildStep>
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="src\imgFilters\awarpsharp\aws.obj">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </Object>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="yasm.targets" />
+  </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties DevPartner_IsInstrumented="1" />
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

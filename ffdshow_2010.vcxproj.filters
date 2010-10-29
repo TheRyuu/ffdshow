@@ -1,0 +1,2838 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="doc">
+      <UniqueIdentifier>{850cfc30-db13-4618-a36a-11f3af0ea10a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="doc\hints">
+      <UniqueIdentifier>{a60bbd75-978e-4002-b707-e9a19ce2f4d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{742c7aa7-8310-405c-b593-777b295c25ba}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{0a583822-f175-4c2a-a523-4a521bbe99af}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{e4d9614a-6287-4faa-8077-b2a16c4246e9}</UniqueIdentifier>
+      <Extensions>ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe</Extensions>
+    </Filter>
+    <Filter Include="subtitles">
+      <UniqueIdentifier>{2a5dd688-4cd6-4273-9ca2-448c2cefadd8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="imgFilters">
+      <UniqueIdentifier>{f98693c5-0a8b-4566-addd-c054440348cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="imgFilters\com">
+      <UniqueIdentifier>{e789ad90-c235-43f5-8bf1-fc7843913375}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="imgFilters\nic">
+      <UniqueIdentifier>{13340616-bec2-496c-8a01-f9cc21dad8a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="imgFilters\dscaler">
+      <UniqueIdentifier>{3e3b1df9-cb03-453e-b799-963bd99209e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="imgFilters\asharp">
+      <UniqueIdentifier>{f17bd889-5a41-42b2-8e60-78f9d371387f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="imgFilters\avisynth">
+      <UniqueIdentifier>{a0533e33-db95-4d3e-affd-d3eb8a63452b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="imgFilters\awarpsharp">
+      <UniqueIdentifier>{8c09ed32-8522-441b-885f-ab10aba19aed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="imgFilters\skal">
+      <UniqueIdentifier>{290018a0-f5f2-4a32-81a1-72ed1a21ce12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dialog">
+      <UniqueIdentifier>{2672a3a1-34e9-484c-a10f-d8021cb8c117}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dialog\audio">
+      <UniqueIdentifier>{f2e71984-dc83-4be0-92d1-d24f0192a317}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="settings">
+      <UniqueIdentifier>{996a04d2-68f0-47af-bb1d-bb8866ebcea6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="settings\filters">
+      <UniqueIdentifier>{361c40a4-66ad-4d7a-aa1a-831f8667bad2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="settings\filters\video">
+      <UniqueIdentifier>{4fc50dfa-fcd8-4e08-8fb8-49450df12b31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="settings\filters\audio">
+      <UniqueIdentifier>{45735ce9-7561-4fb1-88b7-c0e910ee0d8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="settings\lzo">
+      <UniqueIdentifier>{68ef0e37-136c-4fc2-8210-3367706de2c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="codecs">
+      <UniqueIdentifier>{1172a871-eacb-482c-a7ad-d258c1280eca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="codecs\libavcodec">
+      <UniqueIdentifier>{7d08c430-2156-45b6-916b-5b2949e3a39b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="codecs\libmpeg2">
+      <UniqueIdentifier>{5456afa1-5b6f-4cff-8156-7f08e7f08bd5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="codecs\xvid">
+      <UniqueIdentifier>{257242c5-00eb-471b-9e36-6fb01f7d92fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="codecs\DXVA">
+      <UniqueIdentifier>{2febd7e3-ce48-4b98-9ec6-baeaba396565}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="codecs\ogg headers">
+      <UniqueIdentifier>{055be820-df68-4989-a8f0-5a9216b05b3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="convert">
+      <UniqueIdentifier>{e664d0cf-abed-4d3f-9969-3c6ff75a2b03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audioFilters">
+      <UniqueIdentifier>{0d3d7339-212b-4e30-af95-10f08e1fe4e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audioFilters\winamp2">
+      <UniqueIdentifier>{5c953f04-37d8-495c-a35a-b3275b9aad85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audioFilters\freeverb">
+      <UniqueIdentifier>{54ff079a-8700-416f-8977-71fa9c4aebbf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audioFilters\resample">
+      <UniqueIdentifier>{b0aa80c2-36ec-4fe2-92d5-e029999f3308}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audioFilters\com">
+      <UniqueIdentifier>{9c9505c6-56ae-41f7-8227-e8f333a3c264}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ffvfw">
+      <UniqueIdentifier>{87440e1e-e5ca-4631-bcda-158fbb67d906}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ffvfw\muxers">
+      <UniqueIdentifier>{d511f188-2c7f-4611-9790-2b14d0adafd8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ffvfw\acm">
+      <UniqueIdentifier>{ef69f66a-60c9-499c-a893-26dd105ccb4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="decss">
+      <UniqueIdentifier>{f855d37a-4e70-48ec-8ef0-6f2425216fc4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="baseclasses">
+      <UniqueIdentifier>{59fdcee8-f607-497f-8c66-e7c06d601ef3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="authors.txt">
+      <Filter>doc</Filter>
+    </None>
+    <None Include="copying.txt">
+      <Filter>doc</Filter>
+    </None>
+    <None Include="readme.txt">
+      <Filter>doc</Filter>
+    </None>
+    <None Include="readmeAudio.txt">
+      <Filter>doc</Filter>
+    </None>
+    <None Include="readmeEnc.txt">
+      <Filter>doc</Filter>
+    </None>
+    <None Include="readmeMultiCPU.jp.txt">
+      <Filter>doc</Filter>
+    </None>
+    <None Include="readmeMultiCPU.txt">
+      <Filter>doc</Filter>
+    </None>
+    <None Include="todo.txt">
+      <Filter>doc</Filter>
+    </None>
+    <None Include="src\helpChannelSwap.txt">
+      <Filter>doc\hints</Filter>
+    </None>
+    <None Include="src\helpCredits.txt">
+      <Filter>doc\hints</Filter>
+    </None>
+    <None Include="src\helpCrop.txt">
+      <Filter>doc\hints</Filter>
+    </None>
+    <None Include="src\helpDCT.txt">
+      <Filter>doc\hints</Filter>
+    </None>
+    <None Include="src\helpDecoderoptions.txt">
+      <Filter>doc\hints</Filter>
+    </None>
+    <None Include="src\helpDeinterlace.txt">
+      <Filter>doc\hints</Filter>
+    </None>
+    <None Include="src\helpFF1.txt">
+      <Filter>doc\hints</Filter>
+    </None>
+    <None Include="src\helpFIR.txt">
+      <Filter>doc\hints</Filter>
+    </None>
+    <None Include="src\helpGeneric_FFV1.txt">
+      <Filter>doc\hints</Filter>
+    </None>
+    <None Include="src\helpGeneric_THEO.txt">
+      <Filter>doc\hints</Filter>
+    </None>
+    <None Include="src\helpLevels.txt">
+      <Filter>doc\hints</Filter>
+    </None>
+    <None Include="src\helpOffset.txt">
+      <Filter>doc\hints</Filter>
+    </None>
+    <None Include="src\helpOut.txt">
+      <Filter>doc\hints</Filter>
+    </None>
+    <None Include="src\helpOutsfs.txt">
+      <Filter>doc\hints</Filter>
+    </None>
+    <None Include="src\helpOverlay.txt">
+      <Filter>doc\hints</Filter>
+    </None>
+    <None Include="src\helpPerspective.txt">
+      <Filter>doc\hints</Filter>
+    </None>
+    <None Include="src\helpPictprop.txt">
+      <Filter>doc\hints</Filter>
+    </None>
+    <None Include="src\helpQueue.txt">
+      <Filter>doc\hints</Filter>
+    </None>
+    <None Include="src\helpResample.txt">
+      <Filter>doc\hints</Filter>
+    </None>
+    <None Include="src\helpResizeAspect.txt">
+      <Filter>doc\hints</Filter>
+    </None>
+    <None Include="src\helpResizeSettings.txt">
+      <Filter>doc\hints</Filter>
+    </None>
+    <None Include="src\helpSharpen.txt">
+      <Filter>doc\hints</Filter>
+    </None>
+    <None Include="src\helpShowMV.txt">
+      <Filter>doc\hints</Filter>
+    </None>
+    <None Include="src\helpTray.txt">
+      <Filter>doc\hints</Filter>
+    </None>
+    <None Include="src\helpWarpsharp.txt">
+      <Filter>doc\hints</Filter>
+    </None>
+    <None Include="src\arrows.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\arrows_mask_d.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\arrows_mask_u.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\arrows_mask_ud.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\checked.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\classic_icon_xp.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\down.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\empty.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\FFa.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\FFa4bit.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\FFd.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\ffdshow.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\ffdshowAudio.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\FFe.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\FFe4bit.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\FFv.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\FFv4bit.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\FFva.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\FFva4bit.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\ffvfw.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\gradient.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\left.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\mask.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\modern_icon_xp.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\right.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\up.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\ffdshow.def">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="src\helpDXVAOptions.txt" />
+    <None Include="src\helpSubIMGOptions.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\checkHardCodedBlackList.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dsutil.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dwstring.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ffdebug.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ffdshowRemoteAPI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ffglobals.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ffmpeg\libavcodec\golomb.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\inifiles.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mem_align.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mmintrin64.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TaudioParser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tbitdata.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TcpuUsage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Teval.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TffDecoder_com.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TffDecoder_reg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TffDecoderDXVA.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TffdshowBase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TffdshowDec.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TffdshowDecAudio.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TffdshowDecAudioInputPin.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TffdshowDecVideo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TffdshowDecVideoAllocator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TffdshowDecVideoAllocatorDXVA.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TffdshowDecVideoOutputPin.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TffdshowVideoInputPin.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TffOutputQ.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TffProcBase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tinfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TinputPin.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TkeyboardDirect.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TtextInputPin.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ttranslate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TtrayIcon.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\subtitles\cc_decoder.cpp">
+      <Filter>subtitles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\subtitles\distance.cpp">
+      <Filter>subtitles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\subtitles\Rasterizer.cpp">
+      <Filter>subtitles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\subtitles\spudec.cpp">
+      <Filter>subtitles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\subtitles\Tfont.cpp">
+      <Filter>subtitles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\subtitles\TfontSettings.cpp">
+      <Filter>subtitles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\subtitles\ThtmlColors.cpp">
+      <Filter>subtitles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\subtitles\TrenderedTextSubtitleWord.cpp">
+      <Filter>subtitles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\subtitles\TspuImage.cpp">
+      <Filter>subtitles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\subtitles\Tstream.cpp">
+      <Filter>subtitles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\subtitles\Tsubreader.cpp">
+      <Filter>subtitles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\subtitles\TsubreaderMplayer.cpp">
+      <Filter>subtitles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\subtitles\TsubreaderPGS.cpp">
+      <Filter>subtitles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\subtitles\TsubreaderUSF.cpp">
+      <Filter>subtitles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\subtitles\TsubreaderVobsub.cpp">
+      <Filter>subtitles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\subtitles\TsubtitleDVD.cpp">
+      <Filter>subtitles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\subtitles\TsubtitlePGS.cpp">
+      <Filter>subtitles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\subtitles\TsubtitlePGSParser.cpp">
+      <Filter>subtitles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\subtitles\TsubtitleProps.cpp">
+      <Filter>subtitles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\subtitles\Tsubtitles.cpp">
+      <Filter>subtitles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\subtitles\TsubtitlesFile.cpp">
+      <Filter>subtitles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\subtitles\TsubtitlesTextpin.cpp">
+      <Filter>subtitles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\subtitles\TsubtitlesTextpinDVD.cpp">
+      <Filter>subtitles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\subtitles\TsubtitlesTextpinPGS.cpp">
+      <Filter>subtitles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\subtitles\TsubtitlesTextpinText.cpp">
+      <Filter>subtitles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\subtitles\TsubtitlesTextpinUSF.cpp">
+      <Filter>subtitles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\subtitles\TsubtitlesTextpinVobSub.cpp">
+      <Filter>subtitles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\subtitles\TsubtitleText.cpp">
+      <Filter>subtitles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\subtitles\TsubtitleUSF.cpp">
+      <Filter>subtitles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\subtitles\TsubtitleVobsub.cpp">
+      <Filter>subtitles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\subtitles\TwordWrap.cpp">
+      <Filter>subtitles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\subtitles\vobsub.cpp">
+      <Filter>subtitles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\2xsai.cpp">
+      <Filter>imgFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\md5sum.cpp">
+      <Filter>imgFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\SimpleResize.cpp">
+      <Filter>imgFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\T3x3blur.cpp">
+      <Filter>imgFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TcubicTable.cpp">
+      <Filter>imgFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TffPict.cpp">
+      <Filter>imgFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\ThwOverlayControlOverlay.cpp">
+      <Filter>imgFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\ThwOverlayControlVMR9.cpp">
+      <Filter>imgFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilter.cpp">
+      <Filter>imgFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\avisynth\TimgFilterAvisynth.cpp">
+      <Filter>imgFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterBitmap.cpp">
+      <Filter>imgFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterBlur.cpp">
+      <Filter>imgFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterChroma.cpp">
+      <Filter>imgFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterColorize.cpp">
+      <Filter>imgFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterCrop.cpp">
+      <Filter>imgFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterDCT.cpp">
+      <Filter>imgFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterDeinterlace.cpp">
+      <Filter>imgFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterDenoise3d.cpp">
+      <Filter>imgFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterDGbob.cpp">
+      <Filter>imgFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterDScaler.cpp">
+      <Filter>imgFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterDScalerDeinterlace.cpp">
+      <Filter>imgFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterExpand.cpp">
+      <Filter>imgFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterGrab.cpp">
+      <Filter>imgFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterGradfun.cpp">
+      <Filter>imgFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterGradualDenoise.cpp">
+      <Filter>imgFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterHWoverlay.cpp">
+      <Filter>imgFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterKernelDeint.cpp">
+      <Filter>imgFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterLevels.cpp">
+      <Filter>imgFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterLogoaway.cpp">
+      <Filter>imgFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterLuma.cpp">
+      <Filter>imgFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterNoise.cpp">
+      <Filter>imgFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterOffset.cpp">
+      <Filter>imgFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterOSD.cpp">
+      <Filter>imgFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterOutput.cpp">
+      <Filter>imgFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterPerspective.cpp">
+      <Filter>imgFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterPostproc.cpp">
+      <Filter>imgFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterResize.cpp">
+      <Filter>imgFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilters.cpp">
+      <Filter>imgFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterSharpen.cpp">
+      <Filter>imgFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterShowMV.cpp">
+      <Filter>imgFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterSmoother.cpp">
+      <Filter>imgFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterSubtitles.cpp">
+      <Filter>imgFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterTimesmooth.cpp">
+      <Filter>imgFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterTomsMoComp.cpp">
+      <Filter>imgFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterWarpsharp.cpp">
+      <Filter>imgFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TimgFilterYadif.cpp">
+      <Filter>imgFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\TffProc.cpp">
+      <Filter>imgFilters\com</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\nic\nic_postProcess.cpp">
+      <Filter>imgFilters\nic</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\asharp\asharp.cpp">
+      <Filter>imgFilters\asharp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\avisynth\Tavisynth.cpp">
+      <Filter>imgFilters\avisynth</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\Cabout.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\CaudioDenoise.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\CaudioSwitcher.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\Cavisynth.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\Cbitmap.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\Cblur.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\CchannelSwap.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\Ccodecs.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\Cconvolver.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\Ccredits.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\Ccrop.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\Ccrystality.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\CcspOptions.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\CcurveAlt.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\CcurveNormal.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\Cdct.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\CdecoderOptions.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\Cdeinterlace.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\CdeinterlaceDGBob.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\CdeinterlaceDScaler.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\CdeinterlaceFramedoubler.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\CdeinterlaceKernel.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\CdeinterlaceTomsMoComp.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\CdeinterlaceYadif.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\Cdelay.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\Cdirectshowcontrol.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\CdolbyDecoder.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\CDScaler.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\CDXVAOptions.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\Ceq.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\Cfir.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\CfirstPass.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\Cfont.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\Cfreeverb.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\Cgeneric.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\CgenericDV.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\CgenericFFV1.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\CgenericHuffyuv.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\CgenericLJPEG.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\CgenericRAW.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\CgenericWmv9.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\Cgrab.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\CgradFun.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\Cgraph.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\ChideShow.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\Cin.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\Cinfosimd.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\Ckeys.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\Clevels.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\ClfeCrossover.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\Clogoaway.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\Cmasking.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\CmaskingX264.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\CmaskingXVID.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\Cme.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\CmeX264.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\CmeXvid.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\Cmixer.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\Cnoise.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\Coffset.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\Conepass.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\ConepassXvid.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\COSD.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\Cout.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\Coutcsps.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\Coutsfs.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\Coverlay.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\Cperspective.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\CpictProp.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\CpostProc.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\Cpresets.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\Cprocsfs.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\Cquant.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\CquantTables.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\Cqueue.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\Cresample.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\CresizeAspect.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\CresizeBorders.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\CresizeSettings.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\CsecondPass.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\Csharpen.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\CshowMV.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\Csubtitles.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\CsubtitlesPos.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\CsubtitlesText.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\Ctray.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\Cvobsub.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\Cvolume.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\Cwarpsharp.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\Cwinamp2.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\TbitrateDlg.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\TcompatibilityList.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\TcompatibilityManager.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\TconfPageBase.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\TconfPageDec.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\TDScalerSettings.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\TffdshowPageBase.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\TffdshowPageDec.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\TffdshowPageDecAudio.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\TffdshowPageDecVideo.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\TffdshowPageEnc.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\TflatButtons.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\TpageSite.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\TperfectDlg.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\TpresetAutoload.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\TpresetsEncDlg.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\TSpecifyPropertyPagesVE.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\TversionsDlg.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\Twidget.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\Twindow.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\audio\CaudioDecoderOptions.cpp">
+      <Filter>dialog\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\settings\reg.cpp">
+      <Filter>settings</Filter>
+    </ClCompile>
+    <ClCompile Include="src\settings\TcodecSettings.cpp">
+      <Filter>settings</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tconfig.cpp">
+      <Filter>settings</Filter>
+    </ClCompile>
+    <ClCompile Include="src\settings\TdialogSettings.cpp">
+      <Filter>settings</Filter>
+    </ClCompile>
+    <ClCompile Include="src\settings\TglobalSettings.cpp">
+      <Filter>settings</Filter>
+    </ClCompile>
+    <ClCompile Include="src\settings\Toptions.cpp">
+      <Filter>settings</Filter>
+    </ClCompile>
+    <ClCompile Include="src\settings\TpresetEnc.cpp">
+      <Filter>settings</Filter>
+    </ClCompile>
+    <ClCompile Include="src\settings\Tpresets.cpp">
+      <Filter>settings</Filter>
+    </ClCompile>
+    <ClCompile Include="src\settings\TpresetSettings.cpp">
+      <Filter>settings</Filter>
+    </ClCompile>
+    <ClCompile Include="src\settings\TpresetSettingsAudio.cpp">
+      <Filter>settings</Filter>
+    </ClCompile>
+    <ClCompile Include="src\settings\TpresetSettingsVideo.cpp">
+      <Filter>settings</Filter>
+    </ClCompile>
+    <ClCompile Include="src\settings\TfilterSettings.cpp">
+      <Filter>settings\filters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\settings\filters\TavisynthSettings.cpp">
+      <Filter>settings\filters\video</Filter>
+    </ClCompile>
+    <ClCompile Include="src\settings\filters\TbitmapSettings.cpp">
+      <Filter>settings\filters\video</Filter>
+    </ClCompile>
+    <ClCompile Include="src\settings\filters\TblurSettings.cpp">
+      <Filter>settings\filters\video</Filter>
+    </ClCompile>
+    <ClCompile Include="src\settings\filters\TcropSettings.cpp">
+      <Filter>settings\filters\video</Filter>
+    </ClCompile>
+    <ClCompile Include="src\settings\filters\TdctSettings.cpp">
+      <Filter>settings\filters\video</Filter>
+    </ClCompile>
+    <ClCompile Include="src\settings\filters\TdeinterlaceSettings.cpp">
+      <Filter>settings\filters\video</Filter>
+    </ClCompile>
+    <ClCompile Include="src\settings\filters\TdscalerFilterSettings.cpp">
+      <Filter>settings\filters\video</Filter>
+    </ClCompile>
+    <ClCompile Include="src\settings\filters\TexpandSettings.cpp">
+      <Filter>settings\filters\video</Filter>
+    </ClCompile>
+    <ClCompile Include="src\settings\filters\TgrabSettings.cpp">
+      <Filter>settings\filters\video</Filter>
+    </ClCompile>
+    <ClCompile Include="src\settings\filters\TgradFunSettings.cpp">
+      <Filter>settings\filters\video</Filter>
+    </ClCompile>
+    <ClCompile Include="src\settings\filters\ThwOverlaySettings.cpp">
+      <Filter>settings\filters\video</Filter>
+    </ClCompile>
+    <ClCompile Include="src\settings\filters\TlevelsSettings.cpp">
+      <Filter>settings\filters\video</Filter>
+    </ClCompile>
+    <ClCompile Include="src\settings\filters\TlogoawaySettings.cpp">
+      <Filter>settings\filters\video</Filter>
+    </ClCompile>
+    <ClCompile Include="src\settings\filters\TnoiseSettings.cpp">
+      <Filter>settings\filters\video</Filter>
+    </ClCompile>
+    <ClCompile Include="src\settings\filters\ToffsetSettings.cpp">
+      <Filter>settings\filters\video</Filter>
+    </ClCompile>
+    <ClCompile Include="src\settings\filters\TOSDsettings.cpp">
+      <Filter>settings\filters\video</Filter>
+    </ClCompile>
+    <ClCompile Include="src\settings\filters\ToutputVideoSettings.cpp">
+      <Filter>settings\filters\video</Filter>
+    </ClCompile>
+    <ClCompile Include="src\settings\filters\TperspectiveSettings.cpp">
+      <Filter>settings\filters\video</Filter>
+    </ClCompile>
+    <ClCompile Include="src\settings\filters\TpictPropSettings.cpp">
+      <Filter>settings\filters\video</Filter>
+    </ClCompile>
+    <ClCompile Include="src\settings\filters\TpostprocSettings.cpp">
+      <Filter>settings\filters\video</Filter>
+    </ClCompile>
+    <ClCompile Include="src\settings\filters\TresizeAspectSettings.cpp">
+      <Filter>settings\filters\video</Filter>
+    </ClCompile>
+    <ClCompile Include="src\settings\filters\TsharpenSettings.cpp">
+      <Filter>settings\filters\video</Filter>
+    </ClCompile>
+    <ClCompile Include="src\settings\filters\TsubtitlesSettings.cpp">
+      <Filter>settings\filters\video</Filter>
+    </ClCompile>
+    <ClCompile Include="src\settings\filters\TvisSettings.cpp">
+      <Filter>settings\filters\video</Filter>
+    </ClCompile>
+    <ClCompile Include="src\settings\filters\TwarpsharpSettings.cpp">
+      <Filter>settings\filters\video</Filter>
+    </ClCompile>
+    <ClCompile Include="src\settings\filters\TaudioDenoiseSettings.cpp">
+      <Filter>settings\filters\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\settings\filters\TchannelSwapSettings.cpp">
+      <Filter>settings\filters\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\settings\filters\TconvolverSettings.cpp">
+      <Filter>settings\filters\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\settings\filters\TcrystalitySettings.cpp">
+      <Filter>settings\filters\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\settings\filters\TdelaySettings.cpp">
+      <Filter>settings\filters\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\settings\filters\TdolbyDecoderSettings.cpp">
+      <Filter>settings\filters\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\settings\filters\TeqSettings.cpp">
+      <Filter>settings\filters\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\settings\filters\TfirSettings.cpp">
+      <Filter>settings\filters\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\settings\filters\TfreeverbSettings.cpp">
+      <Filter>settings\filters\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\settings\filters\TlfeCrossoverSettings.cpp">
+      <Filter>settings\filters\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\settings\filters\TmixerSettings.cpp">
+      <Filter>settings\filters\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\settings\filters\ToutputAudioSettings.cpp">
+      <Filter>settings\filters\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\settings\filters\TresampleSettings.cpp">
+      <Filter>settings\filters\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\settings\filters\TvolumeSettings.cpp">
+      <Filter>settings\filters\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\settings\filters\Twinamp2settings.cpp">
+      <Filter>settings\filters\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\settings\lzo\minilzo.c">
+      <Filter>settings\lzo</Filter>
+    </ClCompile>
+    <ClCompile Include="src\codecs\ffcodecs.cpp">
+      <Filter>codecs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\codecs\mp3header.cpp">
+      <Filter>codecs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\codecs\reorder_ch.cpp">
+      <Filter>codecs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\codecs\TaudioCodec.cpp">
+      <Filter>codecs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\codecs\TaudioCodecAvisynth.cpp">
+      <Filter>codecs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\codecs\TaudioCodecBitstream.cpp">
+      <Filter>codecs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\codecs\TaudioCodecLiba52.cpp">
+      <Filter>codecs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\codecs\TaudioCodecLibavcodec.cpp">
+      <Filter>codecs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\codecs\TaudioCodecLibDTS.cpp">
+      <Filter>codecs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\codecs\TaudioCodecLibFAAD.cpp">
+      <Filter>codecs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\codecs\TaudioCodecLibMAD.cpp">
+      <Filter>codecs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\codecs\TaudioCodecTremor.cpp">
+      <Filter>codecs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\codecs\TaudioCodecUncompressed.cpp">
+      <Filter>codecs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\codecs\Tcodec.cpp">
+      <Filter>codecs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\codecs\TrealAudioInfo.cpp">
+      <Filter>codecs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\codecs\TvideoCodec.cpp">
+      <Filter>codecs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\codecs\TvideoCodec_ffmpeg-mt.cpp">
+      <Filter>codecs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\codecs\TvideoCodecAvisynth.cpp">
+      <Filter>codecs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\codecs\TvideoCodecLibavcodec.cpp">
+      <Filter>codecs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\codecs\TvideoCodecLibavcodecDxva.cpp">
+      <Filter>codecs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\codecs\TvideoCodecLibmpeg2.cpp">
+      <Filter>codecs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\codecs\TvideoCodecUncompressed.cpp">
+      <Filter>codecs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\codecs\TvideoCodecWmv9.cpp">
+      <Filter>codecs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\codecs\TvideoCodecX264.cpp">
+      <Filter>codecs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\codecs\TvideoCodecXviD4.cpp">
+      <Filter>codecs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ffmpeg\Tlibavcodec.cpp">
+      <Filter>codecs\libavcodec</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ffmpeg-mt\Tlibavcodec_mt.cpp">
+      <Filter>codecs\libavcodec</Filter>
+    </ClCompile>
+    <ClCompile Include="src\codecs\H264Nalu.cpp">
+      <Filter>codecs\DXVA</Filter>
+    </ClCompile>
+    <ClCompile Include="src\codecs\TDXVADecoder.cpp">
+      <Filter>codecs\DXVA</Filter>
+    </ClCompile>
+    <ClCompile Include="src\codecs\TDXVADecoderH264.cpp">
+      <Filter>codecs\DXVA</Filter>
+    </ClCompile>
+    <ClCompile Include="src\codecs\TDXVADecoderVC1.cpp">
+      <Filter>codecs\DXVA</Filter>
+    </ClCompile>
+    <ClCompile Include="src\convert\ffdshow_converters.cpp">
+      <Filter>convert</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgFilters\ffImgfmt.cpp">
+      <Filter>convert</Filter>
+    </ClCompile>
+    <ClCompile Include="src\convert\image.cpp">
+      <Filter>convert</Filter>
+    </ClCompile>
+    <ClCompile Include="src\convert\Tconvert.cpp">
+      <Filter>convert</Filter>
+    </ClCompile>
+    <ClCompile Include="src\convert\TrgbPrimaries.cpp">
+      <Filter>convert</Filter>
+    </ClCompile>
+    <ClCompile Include="src\convert\Tswscale.cpp">
+      <Filter>convert</Filter>
+    </ClCompile>
+    <ClCompile Include="src\audioFilters\dither.cpp">
+      <Filter>audioFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\audioFilters\fftsg.cpp">
+      <Filter>audioFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\audioFilters\firfilter.cpp">
+      <Filter>audioFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\audioFilters\mixer.cpp">
+      <Filter>audioFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\audioFilters\TaudioFilter.cpp">
+      <Filter>audioFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\audioFilters\TaudioFilterChannelSwap.cpp">
+      <Filter>audioFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\audioFilters\TaudioFilterConvolver.cpp">
+      <Filter>audioFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\audioFilters\TaudioFilterCrystality.cpp">
+      <Filter>audioFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\audioFilters\TaudioFilterDelay.cpp">
+      <Filter>audioFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\audioFilters\TaudioFilterDenoise.cpp">
+      <Filter>audioFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\audioFilters\TaudioFilterDolbyDecoder.cpp">
+      <Filter>audioFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\audioFilters\TaudioFilterEQ.cpp">
+      <Filter>audioFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\audioFilters\TaudioFilterEQsuper.cpp">
+      <Filter>audioFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\audioFilters\TaudioFilterFIR.cpp">
+      <Filter>audioFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\audioFilters\TaudioFilterFreeverb.cpp">
+      <Filter>audioFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\audioFilters\TaudioFilterHeadphone.cpp">
+      <Filter>audioFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\audioFilters\TaudioFilterLFEcrossover.cpp">
+      <Filter>audioFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\audioFilters\TaudioFilterMixer.cpp">
+      <Filter>audioFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\audioFilters\TaudioFilterOSD.cpp">
+      <Filter>audioFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\audioFilters\TaudioFilterOutput.cpp">
+      <Filter>audioFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\audioFilters\TaudioFilterResample.cpp">
+      <Filter>audioFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\audioFilters\TaudioFilters.cpp">
+      <Filter>audioFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\audioFilters\TaudioFilterVolume.cpp">
+      <Filter>audioFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\audioFilters\TaudioFilterWinamp2.cpp">
+      <Filter>audioFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\audioFilters\TsampleFormat.cpp">
+      <Filter>audioFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\audioFilters\winamp2\Twinamp2.cpp">
+      <Filter>audioFilters\winamp2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\audioFilters\freeverb\revmodel.cpp">
+      <Filter>audioFilters\freeverb</Filter>
+    </ClCompile>
+    <ClCompile Include="src\audioFilters\resample\resample2.cpp">
+      <Filter>audioFilters\resample</Filter>
+    </ClCompile>
+    <ClCompile Include="src\audioFilters\TffProcAudio.cpp">
+      <Filter>audioFilters\com</Filter>
+    </ClCompile>
+    <ClCompile Include="src\2pass.cpp">
+      <Filter>ffvfw</Filter>
+    </ClCompile>
+    <ClCompile Include="src\codecs\TencStats.cpp">
+      <Filter>ffvfw</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TffdshowEnc.cpp">
+      <Filter>ffvfw</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tffvfw.cpp">
+      <Filter>ffvfw</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tperfect.cpp">
+      <Filter>ffvfw</Filter>
+    </ClCompile>
+    <ClCompile Include="src\muxers\Tmuxer.cpp">
+      <Filter>ffvfw\muxers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\muxers\TmuxerFile.cpp">
+      <Filter>ffvfw\muxers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\acm\Tacm.cpp">
+      <Filter>ffvfw\acm</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CSSauth.cpp">
+      <Filter>decss</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CSSscramble.cpp">
+      <Filter>decss</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DeCSSInputPin.cpp">
+      <Filter>decss</Filter>
+    </ClCompile>
+    <ClCompile Include="src\filters\Tfilter.cpp">
+      <Filter>settings\filters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\filters\Tfilters.cpp">
+      <Filter>settings\filters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\filters\TOSDprovider.cpp">
+      <Filter>settings\filters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\baseclasses\amfilter.cpp">
+      <Filter>baseclasses</Filter>
+    </ClCompile>
+    <ClCompile Include="src\baseclasses\combase.cpp">
+      <Filter>baseclasses</Filter>
+    </ClCompile>
+    <ClCompile Include="src\baseclasses\dllentry.cpp">
+      <Filter>baseclasses</Filter>
+    </ClCompile>
+    <ClCompile Include="src\baseclasses\dllsetup.cpp">
+      <Filter>baseclasses</Filter>
+    </ClCompile>
+    <ClCompile Include="src\baseclasses\mtype.cpp">
+      <Filter>baseclasses</Filter>
+    </ClCompile>
+    <ClCompile Include="src\baseclasses\outputq.cpp">
+      <Filter>baseclasses</Filter>
+    </ClCompile>
+    <ClCompile Include="src\baseclasses\pstream.cpp">
+      <Filter>baseclasses</Filter>
+    </ClCompile>
+    <ClCompile Include="src\baseclasses\strmiids.cpp">
+      <Filter>baseclasses</Filter>
+    </ClCompile>
+    <ClCompile Include="src\baseclasses\transfrm.cpp">
+      <Filter>baseclasses</Filter>
+    </ClCompile>
+    <ClCompile Include="src\baseclasses\wxdebug.cpp">
+      <Filter>baseclasses</Filter>
+    </ClCompile>
+    <ClCompile Include="src\baseclasses\wxlist.cpp">
+      <Filter>baseclasses</Filter>
+    </ClCompile>
+    <ClCompile Include="src\baseclasses\wxutil.cpp">
+      <Filter>baseclasses</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <yasm Include="src\cpuid.asm">
+      <Filter>Source Files</Filter>
+    </yasm>
+    <yasm Include="src\memcpy.asm">
+      <Filter>Source Files</Filter>
+    </yasm>
+    <yasm Include="src\subtitles\fontRenderer.asm">
+      <Filter>subtitles</Filter>
+    </yasm>
+    <yasm Include="src\imgFilters\simple_idct_mmx.asm">
+      <Filter>imgFilters</Filter>
+    </yasm>
+    <yasm Include="src\imgFilters\Skal\fdct_mmx_skal.asm">
+      <Filter>imgFilters\skal</Filter>
+    </yasm>
+    <yasm Include="src\imgFilters\Skal\fdct_sse2_skal.asm">
+      <Filter>imgFilters\skal</Filter>
+    </yasm>
+    <yasm Include="src\imgFilters\Skal\idct_mmx.asm">
+      <Filter>imgFilters\skal</Filter>
+    </yasm>
+    <yasm Include="src\imgFilters\Skal\idct_sse2_dmitry.asm">
+      <Filter>imgFilters\skal</Filter>
+    </yasm>
+    <yasm Include="src\convert\colorspace_rgb_mmx.asm">
+      <Filter>convert</Filter>
+    </yasm>
+    <yasm Include="src\audioFilters\dotproduct.asm">
+      <Filter>audioFilters</Filter>
+    </yasm>
+    <yasm Include="src\audioFilters\TaudioFilterConvert.asm">
+      <Filter>audioFilters</Filter>
+    </yasm>
+    <yasm Include="src\convert\colorspace_rgb_win64_sse2.asm">
+      <Filter>convert</Filter>
+    </yasm>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\array_allocator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\autoptr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\char_t.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\checkHardCodedBlackList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\comptr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\csimd.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dsutil.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dwstring.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FastDelegate.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ffdebug.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ffdshow_constants.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ffdshow_mediaguids.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ffdshowRemoteAPI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ffdshowRemoteAPIimpl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ffglobals.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ffmpeg\libavcodec\golomb.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IDSMPropertyBag.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IffDecoder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IffdshowBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IffdshowDec.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IffdshowDecAudio.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IffdshowDecVideo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IffdshowParamsEnum.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\inifiles.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\interfaces.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\inttypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IVMRffdshow9.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\line.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mem_align.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PODtypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rational.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\simd.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\simd_common.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\simd_instructions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\stdint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TaudioParser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tbitdata.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TcpuUsage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tdll.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Teval.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TfakeImediaSample.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TffDecoderVideo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TffdshowBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TffdshowDec.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TffdshowDecAudio.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TffdshowDecAudioInputPin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TffdshowDecVideoAllocator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TffdshowDecVideoAllocatorDXVA.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TffdshowDecVideoOutputPin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TffdshowVideo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TffdshowVideoInputPin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TffOutputQ.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TffProcBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tinfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TinputPin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TkeyboardDirect.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\subtitles\TsubtitleDVD.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\subtitles\TsubtitlePGSParser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TtextInputPin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ttimer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ttranslate.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TtrayIcon.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\resource.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\subtitles\cc_decoder.h">
+      <Filter>subtitles</Filter>
+    </ClInclude>
+    <ClInclude Include="src\subtitles\distance.h">
+      <Filter>subtitles</Filter>
+    </ClInclude>
+    <ClInclude Include="src\subtitles\Rasterizer.h">
+      <Filter>subtitles</Filter>
+    </ClInclude>
+    <ClInclude Include="src\subtitles\spudec.h">
+      <Filter>subtitles</Filter>
+    </ClInclude>
+    <ClInclude Include="src\subtitles\Tfont.h">
+      <Filter>subtitles</Filter>
+    </ClInclude>
+    <ClInclude Include="src\subtitles\TfontManager.h">
+      <Filter>subtitles</Filter>
+    </ClInclude>
+    <ClInclude Include="src\subtitles\TfontSettings.h">
+      <Filter>subtitles</Filter>
+    </ClInclude>
+    <ClInclude Include="src\subtitles\ThtmlColors.h">
+      <Filter>subtitles</Filter>
+    </ClInclude>
+    <ClInclude Include="src\subtitles\TrenderedTextSubtitleWord.h">
+      <Filter>subtitles</Filter>
+    </ClInclude>
+    <ClInclude Include="src\subtitles\TspuImage.h">
+      <Filter>subtitles</Filter>
+    </ClInclude>
+    <ClInclude Include="src\subtitles\Tstream.h">
+      <Filter>subtitles</Filter>
+    </ClInclude>
+    <ClInclude Include="src\subtitles\Tsubreader.h">
+      <Filter>subtitles</Filter>
+    </ClInclude>
+    <ClInclude Include="src\subtitles\TsubreaderMplayer.h">
+      <Filter>subtitles</Filter>
+    </ClInclude>
+    <ClInclude Include="src\subtitles\TsubreaderPGS.h">
+      <Filter>subtitles</Filter>
+    </ClInclude>
+    <ClInclude Include="src\subtitles\TsubreaderUSF.h">
+      <Filter>subtitles</Filter>
+    </ClInclude>
+    <ClInclude Include="src\subtitles\TsubreaderVobsub.h">
+      <Filter>subtitles</Filter>
+    </ClInclude>
+    <ClInclude Include="src\subtitles\Tsubtitle.h">
+      <Filter>subtitles</Filter>
+    </ClInclude>
+    <ClInclude Include="src\subtitles\TsubtitlePGS.h">
+      <Filter>subtitles</Filter>
+    </ClInclude>
+    <ClInclude Include="src\subtitles\TsubtitleProps.h">
+      <Filter>subtitles</Filter>
+    </ClInclude>
+    <ClInclude Include="src\subtitles\Tsubtitles.h">
+      <Filter>subtitles</Filter>
+    </ClInclude>
+    <ClInclude Include="src\subtitles\TsubtitlesFile.h">
+      <Filter>subtitles</Filter>
+    </ClInclude>
+    <ClInclude Include="src\subtitles\TsubtitlesTextpin.h">
+      <Filter>subtitles</Filter>
+    </ClInclude>
+    <ClInclude Include="src\subtitles\TsubtitlesTextpinDVD.h">
+      <Filter>subtitles</Filter>
+    </ClInclude>
+    <ClInclude Include="src\subtitles\TsubtitlesTextpinPGS.h">
+      <Filter>subtitles</Filter>
+    </ClInclude>
+    <ClInclude Include="src\subtitles\TsubtitlesTextpinText.h">
+      <Filter>subtitles</Filter>
+    </ClInclude>
+    <ClInclude Include="src\subtitles\TsubtitlesTextpinUSF.h">
+      <Filter>subtitles</Filter>
+    </ClInclude>
+    <ClInclude Include="src\subtitles\TsubtitlesTextpinVobSub.h">
+      <Filter>subtitles</Filter>
+    </ClInclude>
+    <ClInclude Include="src\subtitles\TsubtitleText.h">
+      <Filter>subtitles</Filter>
+    </ClInclude>
+    <ClInclude Include="src\subtitles\TsubtitleUSF.h">
+      <Filter>subtitles</Filter>
+    </ClInclude>
+    <ClInclude Include="src\subtitles\TsubtitleVobsub.h">
+      <Filter>subtitles</Filter>
+    </ClInclude>
+    <ClInclude Include="src\subtitles\TtoGdiFont.h">
+      <Filter>subtitles</Filter>
+    </ClInclude>
+    <ClInclude Include="src\subtitles\TwordWrap.h">
+      <Filter>subtitles</Filter>
+    </ClInclude>
+    <ClInclude Include="src\subtitles\vobsub.h">
+      <Filter>subtitles</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\2xsai.h">
+      <Filter>imgFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\md5sum.h">
+      <Filter>imgFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\SimpleResize.h">
+      <Filter>imgFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\T3x3blur.h">
+      <Filter>imgFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\TcubicTable.h">
+      <Filter>imgFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\TffPict.h">
+      <Filter>imgFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\TffRect.h">
+      <Filter>imgFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\ThwOverlayControlOverlay.h">
+      <Filter>imgFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\ThwOverlayControlVMR9.h">
+      <Filter>imgFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\TimgFilter.h">
+      <Filter>imgFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\avisynth\TimgFilterAvisynth.h">
+      <Filter>imgFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\TimgFilterBitmap.h">
+      <Filter>imgFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\TimgFilterBlur.h">
+      <Filter>imgFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\TimgFilterChroma.h">
+      <Filter>imgFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\TimgFilterColorize.h">
+      <Filter>imgFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\TimgFilterCrop.h">
+      <Filter>imgFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\TimgFilterDCT.h">
+      <Filter>imgFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\TimgFilterDeinterlace.h">
+      <Filter>imgFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\TimgFilterDenoise3d.h">
+      <Filter>imgFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\TimgFilterDGbob.h">
+      <Filter>imgFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\TimgFilterDScaler.h">
+      <Filter>imgFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\TimgFilterDScalerDeinterlace.h">
+      <Filter>imgFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\TimgFilterExpand.h">
+      <Filter>imgFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\TimgFilterGrab.h">
+      <Filter>imgFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\TimgFilterGradfun.h">
+      <Filter>imgFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\TimgFilterGradualDenoise.h">
+      <Filter>imgFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\TimgFilterHWoverlay.h">
+      <Filter>imgFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\TimgFilterKernelDeint.h">
+      <Filter>imgFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\TimgFilterLevels.h">
+      <Filter>imgFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\TimgFilterLogoaway.h">
+      <Filter>imgFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\TimgFilterLuma.h">
+      <Filter>imgFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\TimgFilterNoise.h">
+      <Filter>imgFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\TimgFilterOffset.h">
+      <Filter>imgFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\TimgFilterOSD.h">
+      <Filter>imgFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\TimgFilterOutput.h">
+      <Filter>imgFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\TimgFilterPerspective.h">
+      <Filter>imgFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\TimgFilterPostproc.h">
+      <Filter>imgFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\TimgFilterResize.h">
+      <Filter>imgFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\TimgFilters.h">
+      <Filter>imgFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\TimgFilterSharpen.h">
+      <Filter>imgFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\TimgFilterShowMV.h">
+      <Filter>imgFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\TimgFilterSmoother.h">
+      <Filter>imgFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\TimgFilterSubtitles.h">
+      <Filter>imgFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\TimgFilterTimesmooth.h">
+      <Filter>imgFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\TimgFilterTomsMoComp.h">
+      <Filter>imgFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\TimgFilterWarpsharp.h">
+      <Filter>imgFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\TimgFilterYadif.h">
+      <Filter>imgFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\IffProc.h">
+      <Filter>imgFilters\com</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\TffProc.h">
+      <Filter>imgFilters\com</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\nic\nic_postProcess.h">
+      <Filter>imgFilters\nic</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\DScaler\DS_ApiCommon.h">
+      <Filter>imgFilters\dscaler</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\DScaler\DS_Deinterlace.h">
+      <Filter>imgFilters\dscaler</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\DScaler\DS_Filter.h">
+      <Filter>imgFilters\dscaler</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\asharp\asharp.h">
+      <Filter>imgFilters\asharp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\avisynth\avisynth.h">
+      <Filter>imgFilters\avisynth</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\avisynth\Tavisynth.h">
+      <Filter>imgFilters\avisynth</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\awarpsharp\aws_api.h">
+      <Filter>imgFilters\awarpsharp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\Cabout.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\CaudioDenoise.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\CaudioSwitcher.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\Cavisynth.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\Cbitmap.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\Cblur.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\CchannelSwap.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\Ccodecs.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\Cconvolver.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\Ccredits.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\Ccrop.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\Ccrystality.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\CcspOptions.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\CcurveAlt.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\CcurveNormal.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\Cdct.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\CdecoderOptions.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\Cdeinterlace.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\CdeinterlaceDGBob.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\CdeinterlaceDScaler.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\CdeinterlaceFramedoubler.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\CdeinterlaceKernel.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\CdeinterlacePanel.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\CdeinterlaceTomsMoComp.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\CdeinterlaceYadif.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\Cdelay.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\Cdirectshowcontrol.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\CdolbyDecoder.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\CDScaler.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\CDXVAOptions.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\Ceq.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\Cfir.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\CfirstPass.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\Cfont.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\Cfreeverb.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\Cgeneric.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\CgenericDV.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\CgenericFFV1.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\CgenericHuffyuv.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\CgenericLJPEG.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\CgenericRAW.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\CgenericWmv9.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\Cgrab.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\CgradFun.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\Cgraph.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\ChideShow.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\Cin.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\Cinfosimd.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\Ckeys.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\Clevels.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\ClfeCrossover.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\Clogoaway.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\Cmasking.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\CmaskingX264.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\CmaskingXVID.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\Cme.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\CmeX264.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\CmeXvid.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\Cmixer.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\Cnoise.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\Coffset.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\Conepass.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\ConepassXvid.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\COSD.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\Cout.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\Coutcsps.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\Coutsfs.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\Coverlay.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\Cperspective.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\CpictProp.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\CpostProc.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\Cpresets.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\Cprocsfs.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\Cquant.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\CquantTables.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\Cqueue.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\Cresample.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\CresizeAspect.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\CresizeBorders.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\CresizeSettings.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\CsecondPass.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\Csharpen.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\CshowMV.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\Csubtitles.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\CsubtitlesPos.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\CsubtitlesText.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\Ctray.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\Cvobsub.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\Cvolume.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\Cwarpsharp.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\Cwinamp2.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\IPropertyPageFF.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\ISpecifyPropertyPagesVE.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\TbitrateDlg.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\TcompatibilityList.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\TcompatibilityManager.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\TconfPageBase.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\TconfPageDec.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\TconfPageDecAudio.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\TconfPageDecVideo.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\TconfPageEnc.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\TDScalerSettings.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\TffdshowPageBase.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\TffdshowPageDec.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\TffdshowPageDecAudio.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\TffdshowPageDecVideo.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\TffdshowPageEnc.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\TflatButtons.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\TpageSite.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\TperfectDlg.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\TpresetAutoload.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\TpresetsEncDlg.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\TSpecifyPropertyPagesVE.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\TversionsDlg.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\Twidget.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\Twindow.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\audio\CaudioDecoderOptions.h">
+      <Filter>dialog\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="src\settings\reg.h">
+      <Filter>settings</Filter>
+    </ClInclude>
+    <ClInclude Include="src\settings\TcodecSettings.h">
+      <Filter>settings</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tconfig.h">
+      <Filter>settings</Filter>
+    </ClInclude>
+    <ClInclude Include="src\settings\TdialogSettings.h">
+      <Filter>settings</Filter>
+    </ClInclude>
+    <ClInclude Include="src\settings\TglobalSettings.h">
+      <Filter>settings</Filter>
+    </ClInclude>
+    <ClInclude Include="src\settings\Toptions.h">
+      <Filter>settings</Filter>
+    </ClInclude>
+    <ClInclude Include="src\settings\TpresetEnc.h">
+      <Filter>settings</Filter>
+    </ClInclude>
+    <ClInclude Include="src\settings\Tpresets.h">
+      <Filter>settings</Filter>
+    </ClInclude>
+    <ClInclude Include="src\settings\TpresetSettings.h">
+      <Filter>settings</Filter>
+    </ClInclude>
+    <ClInclude Include="src\settings\TpresetSettingsAudio.h">
+      <Filter>settings</Filter>
+    </ClInclude>
+    <ClInclude Include="src\settings\TpresetSettingsVideo.h">
+      <Filter>settings</Filter>
+    </ClInclude>
+    <ClInclude Include="src\settings\TfilterSettings.h">
+      <Filter>settings\filters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\settings\filters\TavisynthSettings.h">
+      <Filter>settings\filters\video</Filter>
+    </ClInclude>
+    <ClInclude Include="src\settings\filters\TbitmapSettings.h">
+      <Filter>settings\filters\video</Filter>
+    </ClInclude>
+    <ClInclude Include="src\settings\filters\TblurSettings.h">
+      <Filter>settings\filters\video</Filter>
+    </ClInclude>
+    <ClInclude Include="src\settings\filters\TcropSettings.h">
+      <Filter>settings\filters\video</Filter>
+    </ClInclude>
+    <ClInclude Include="src\settings\filters\TdctSettings.h">
+      <Filter>settings\filters\video</Filter>
+    </ClInclude>
+    <ClInclude Include="src\settings\filters\TdeinterlaceSettings.h">
+      <Filter>settings\filters\video</Filter>
+    </ClInclude>
+    <ClInclude Include="src\settings\filters\TdscalerFilterSettings.h">
+      <Filter>settings\filters\video</Filter>
+    </ClInclude>
+    <ClInclude Include="src\settings\filters\TexpandSettings.h">
+      <Filter>settings\filters\video</Filter>
+    </ClInclude>
+    <ClInclude Include="src\settings\filters\TgrabSettings.h">
+      <Filter>settings\filters\video</Filter>
+    </ClInclude>
+    <ClInclude Include="src\settings\filters\TgradFunSettings.h">
+      <Filter>settings\filters\video</Filter>
+    </ClInclude>
+    <ClInclude Include="src\settings\filters\ThwOverlaySettings.h">
+      <Filter>settings\filters\video</Filter>
+    </ClInclude>
+    <ClInclude Include="src\settings\filters\TlevelsSettings.h">
+      <Filter>settings\filters\video</Filter>
+    </ClInclude>
+    <ClInclude Include="src\settings\filters\TlogoawaySettings.h">
+      <Filter>settings\filters\video</Filter>
+    </ClInclude>
+    <ClInclude Include="src\settings\filters\TnoiseSettings.h">
+      <Filter>settings\filters\video</Filter>
+    </ClInclude>
+    <ClInclude Include="src\settings\filters\ToffsetSettings.h">
+      <Filter>settings\filters\video</Filter>
+    </ClInclude>
+    <ClInclude Include="src\settings\filters\TOSDsettings.h">
+      <Filter>settings\filters\video</Filter>
+    </ClInclude>
+    <ClInclude Include="src\settings\filters\ToutputVideoSettings.h">
+      <Filter>settings\filters\video</Filter>
+    </ClInclude>
+    <ClInclude Include="src\settings\filters\TperspectiveSettings.h">
+      <Filter>settings\filters\video</Filter>
+    </ClInclude>
+    <ClInclude Include="src\settings\filters\TpictPropSettings.h">
+      <Filter>settings\filters\video</Filter>
+    </ClInclude>
+    <ClInclude Include="src\settings\filters\TpostprocSettings.h">
+      <Filter>settings\filters\video</Filter>
+    </ClInclude>
+    <ClInclude Include="src\settings\filters\TresizeAspectSettings.h">
+      <Filter>settings\filters\video</Filter>
+    </ClInclude>
+    <ClInclude Include="src\settings\filters\TsharpenSettings.h">
+      <Filter>settings\filters\video</Filter>
+    </ClInclude>
+    <ClInclude Include="src\settings\filters\TsubtitlesSettings.h">
+      <Filter>settings\filters\video</Filter>
+    </ClInclude>
+    <ClInclude Include="src\settings\filters\TvisSettings.h">
+      <Filter>settings\filters\video</Filter>
+    </ClInclude>
+    <ClInclude Include="src\settings\filters\TwarpsharpSettings.h">
+      <Filter>settings\filters\video</Filter>
+    </ClInclude>
+    <ClInclude Include="src\settings\filters\TaudioDenoiseSettings.h">
+      <Filter>settings\filters\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="src\settings\filters\TchannelSwapSettings.h">
+      <Filter>settings\filters\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="src\settings\filters\TconvolverSettings.h">
+      <Filter>settings\filters\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="src\settings\filters\TcrystalitySettings.h">
+      <Filter>settings\filters\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="src\settings\filters\TdelaySettings.h">
+      <Filter>settings\filters\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="src\settings\filters\TdolbyDecoderSettings.h">
+      <Filter>settings\filters\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="src\settings\filters\TeqSettings.h">
+      <Filter>settings\filters\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="src\settings\filters\TfirSettings.h">
+      <Filter>settings\filters\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="src\settings\filters\TfreeverbSettings.h">
+      <Filter>settings\filters\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="src\settings\filters\TlfeCrossoverSettings.h">
+      <Filter>settings\filters\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="src\settings\filters\TmixerSettings.h">
+      <Filter>settings\filters\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="src\settings\filters\ToutputAudioSettings.h">
+      <Filter>settings\filters\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="src\settings\filters\TresampleSettings.h">
+      <Filter>settings\filters\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="src\settings\filters\TvolumeSettings.h">
+      <Filter>settings\filters\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="src\settings\filters\Twinamp2settings.h">
+      <Filter>settings\filters\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="src\settings\lzo\lzoconf.h">
+      <Filter>settings\lzo</Filter>
+    </ClInclude>
+    <ClInclude Include="src\settings\lzo\minilzo.h">
+      <Filter>settings\lzo</Filter>
+    </ClInclude>
+    <ClInclude Include="src\codecs\ffcodecs.h">
+      <Filter>codecs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\codecs\mp3header.h">
+      <Filter>codecs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\codecs\qtpalette.h">
+      <Filter>codecs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\codecs\reorder_ch.h">
+      <Filter>codecs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\codecs\TaudioCodec.h">
+      <Filter>codecs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\codecs\TaudioCodecAvisynth.h">
+      <Filter>codecs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\codecs\TaudioCodecBitstream.h">
+      <Filter>codecs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\codecs\TaudioCodecLiba52.h">
+      <Filter>codecs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\codecs\TaudioCodecLibavcodec.h">
+      <Filter>codecs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\codecs\TaudioCodecLibDTS.h">
+      <Filter>codecs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\codecs\TaudioCodecLibFAAD.h">
+      <Filter>codecs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\codecs\TaudioCodecLibMAD.h">
+      <Filter>codecs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\codecs\TaudioCodecTremor.h">
+      <Filter>codecs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\codecs\TaudioCodecUncompressed.h">
+      <Filter>codecs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\codecs\Tcodec.h">
+      <Filter>codecs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\codecs\theora.h">
+      <Filter>codecs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\codecs\TrealAudioInfo.h">
+      <Filter>codecs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\codecs\TvideoCodec.h">
+      <Filter>codecs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\codecs\TvideoCodecAvisynth.h">
+      <Filter>codecs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\codecs\TvideoCodecLibavcodec.h">
+      <Filter>codecs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\codecs\TvideoCodecLibavcodecDxva.h">
+      <Filter>codecs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\codecs\TvideoCodecLibmpeg2.h">
+      <Filter>codecs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\codecs\TvideoCodecUncompressed.h">
+      <Filter>codecs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\codecs\TvideoCodecWmv9.h">
+      <Filter>codecs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\codecs\TvideoCodecX264.h">
+      <Filter>codecs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\codecs\TvideoCodecXviD4.h">
+      <Filter>codecs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ffmpeg\libavcodec\avcodec.h">
+      <Filter>codecs\libavcodec</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ffmpeg\Tlibavcodec.h">
+      <Filter>codecs\libavcodec</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ffmpeg-mt\Tlibavcodec_mt.h">
+      <Filter>codecs\libavcodec</Filter>
+    </ClInclude>
+    <ClInclude Include="src\codecs\libmpeg2\include\mpeg2.h">
+      <Filter>codecs\libmpeg2</Filter>
+    </ClInclude>
+    <ClInclude Include="src\codecs\xvidcore\xvid.h">
+      <Filter>codecs\xvid</Filter>
+    </ClInclude>
+    <ClInclude Include="src\codecs\H264Nalu.h">
+      <Filter>codecs\DXVA</Filter>
+    </ClInclude>
+    <ClInclude Include="src\codecs\H264QuantizationMatrix.h">
+      <Filter>codecs\DXVA</Filter>
+    </ClInclude>
+    <ClInclude Include="src\codecs\TDXVADecoder.h">
+      <Filter>codecs\DXVA</Filter>
+    </ClInclude>
+    <ClInclude Include="src\codecs\TDXVADecoderH264.h">
+      <Filter>codecs\DXVA</Filter>
+    </ClInclude>
+    <ClInclude Include="src\codecs\TDXVADecoderVC1.h">
+      <Filter>codecs\DXVA</Filter>
+    </ClInclude>
+    <ClInclude Include="src\codecs\ogg headers\ogg.h">
+      <Filter>codecs\ogg headers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\codecs\ogg headers\ogmstreams.h">
+      <Filter>codecs\ogg headers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\codecs\ogg headers\os_types.h">
+      <Filter>codecs\ogg headers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\codecs\ogg headers\vorbisformat.h">
+      <Filter>codecs\ogg headers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\convert\convert_yuy2.h">
+      <Filter>convert</Filter>
+    </ClInclude>
+    <ClInclude Include="src\convert\convert_yv12.h">
+      <Filter>convert</Filter>
+    </ClInclude>
+    <ClInclude Include="src\convert\ffdshow_converters.h">
+      <Filter>convert</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgFilters\ffImgfmt.h">
+      <Filter>convert</Filter>
+    </ClInclude>
+    <ClInclude Include="src\convert\image.h">
+      <Filter>convert</Filter>
+    </ClInclude>
+    <ClInclude Include="src\convert\Tconvert.h">
+      <Filter>convert</Filter>
+    </ClInclude>
+    <ClInclude Include="src\convert\TrgbPrimaries.h">
+      <Filter>convert</Filter>
+    </ClInclude>
+    <ClInclude Include="src\convert\Tswscale.h">
+      <Filter>convert</Filter>
+    </ClInclude>
+    <ClInclude Include="src\convert\TYCbCr2RGB_coeffs.h">
+      <Filter>convert</Filter>
+    </ClInclude>
+    <ClInclude Include="src\audioFilters\dither.h">
+      <Filter>audioFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\audioFilters\fftsg.h">
+      <Filter>audioFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\audioFilters\firfilter.h">
+      <Filter>audioFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\audioFilters\mixer.h">
+      <Filter>audioFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\audioFilters\supereq.h">
+      <Filter>audioFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\audioFilters\TaudioFilter.h">
+      <Filter>audioFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\audioFilters\TaudioFilterChannelSwap.h">
+      <Filter>audioFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\audioFilters\TaudioFilterConvolver.h">
+      <Filter>audioFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\audioFilters\TaudioFilterCrystality.h">
+      <Filter>audioFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\audioFilters\TaudioFilterDelay.h">
+      <Filter>audioFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\audioFilters\TaudioFilterDenoise.h">
+      <Filter>audioFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\audioFilters\TaudioFilterDolbyDecoder.h">
+      <Filter>audioFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\audioFilters\TaudioFilterEQ.h">
+      <Filter>audioFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\audioFilters\TaudioFilterEQsuper.h">
+      <Filter>audioFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\audioFilters\TaudioFilterFIR.h">
+      <Filter>audioFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\audioFilters\TaudioFilterFreeverb.h">
+      <Filter>audioFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\audioFilters\TaudioFilterHeadphone.h">
+      <Filter>audioFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\audioFilters\TaudioFilterLFEcrossover.h">
+      <Filter>audioFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\audioFilters\TaudioFilterMixer.h">
+      <Filter>audioFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\audioFilters\TaudioFilterOSD.h">
+      <Filter>audioFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\audioFilters\TaudioFilterOutput.h">
+      <Filter>audioFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\audioFilters\TaudioFilterResample.h">
+      <Filter>audioFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\audioFilters\TaudioFilters.h">
+      <Filter>audioFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\audioFilters\TaudioFilterVolume.h">
+      <Filter>audioFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\audioFilters\TaudioFilterWinamp2.h">
+      <Filter>audioFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\audioFilters\TsampleFormat.h">
+      <Filter>audioFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\audioFilters\winamp2\DSP.H">
+      <Filter>audioFilters\winamp2</Filter>
+    </ClInclude>
+    <ClInclude Include="src\audioFilters\winamp2\Twinamp2.h">
+      <Filter>audioFilters\winamp2</Filter>
+    </ClInclude>
+    <ClInclude Include="src\audioFilters\freeverb\allpass.h">
+      <Filter>audioFilters\freeverb</Filter>
+    </ClInclude>
+    <ClInclude Include="src\audioFilters\freeverb\comb.h">
+      <Filter>audioFilters\freeverb</Filter>
+    </ClInclude>
+    <ClInclude Include="src\audioFilters\freeverb\denormals.h">
+      <Filter>audioFilters\freeverb</Filter>
+    </ClInclude>
+    <ClInclude Include="src\audioFilters\freeverb\revmodel.h">
+      <Filter>audioFilters\freeverb</Filter>
+    </ClInclude>
+    <ClInclude Include="src\audioFilters\resample\resample2.h">
+      <Filter>audioFilters\resample</Filter>
+    </ClInclude>
+    <ClInclude Include="src\audioFilters\IffProcAudio.h">
+      <Filter>audioFilters\com</Filter>
+    </ClInclude>
+    <ClInclude Include="src\audioFilters\TffProcAudio.h">
+      <Filter>audioFilters\com</Filter>
+    </ClInclude>
+    <ClInclude Include="src\2pass.h">
+      <Filter>ffvfw</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IffdshowEnc.h">
+      <Filter>ffvfw</Filter>
+    </ClInclude>
+    <ClInclude Include="src\codecs\TencStats.h">
+      <Filter>ffvfw</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TffdshowEnc.h">
+      <Filter>ffvfw</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tffvfw.h">
+      <Filter>ffvfw</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tperfect.h">
+      <Filter>ffvfw</Filter>
+    </ClInclude>
+    <ClInclude Include="src\muxers\Tmuxer.h">
+      <Filter>ffvfw\muxers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\muxers\TmuxerFile.h">
+      <Filter>ffvfw\muxers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\acm\msacmdrv.h">
+      <Filter>ffvfw\acm</Filter>
+    </ClInclude>
+    <ClInclude Include="src\acm\Tacm.h">
+      <Filter>ffvfw\acm</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CSSauth.h">
+      <Filter>decss</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CSSscramble.h">
+      <Filter>decss</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DeCSSInputPin.h">
+      <Filter>decss</Filter>
+    </ClInclude>
+    <ClInclude Include="src\filters\IOSDprovider.h">
+      <Filter>settings\filters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\filters\Tfilter.h">
+      <Filter>settings\filters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\filters\Tfilters.h">
+      <Filter>settings\filters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\filters\TOSDprovider.h">
+      <Filter>settings\filters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\baseclasses\amfilter.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="src\baseclasses\Amvideo.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="src\baseclasses\combase.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="src\baseclasses\comlite.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="src\baseclasses\control.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="src\baseclasses\dllsetup.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="src\baseclasses\dvdmedia.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="src\baseclasses\errors.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="src\baseclasses\evcode.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="src\baseclasses\fourcc.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="src\baseclasses\ksuuids.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="src\baseclasses\mpconfig.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="src\baseclasses\mtype.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="src\baseclasses\outputq.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="src\baseclasses\pstream.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="src\baseclasses\qnetwork.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="src\baseclasses\reftime.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="src\baseclasses\streams.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="src\baseclasses\strmif.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="src\baseclasses\transfrm.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="src\baseclasses\uuids.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="src\baseclasses\vfwmsgs.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="src\baseclasses\wxdebug.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="src\baseclasses\wxlist.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="src\baseclasses\wxutil.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="src\ffdshow.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuildStep Include="src\convert\colorspace_mmx.inc">
+      <Filter>convert</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="src\convert\colorspace_win64_sse2.inc">
+      <Filter>convert</Filter>
+    </CustomBuildStep>
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="src\imgFilters\awarpsharp\aws.obj">
+      <Filter>imgFilters\awarpsharp</Filter>
+    </Object>
+  </ItemGroup>
+</Project>

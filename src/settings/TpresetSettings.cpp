@@ -519,10 +519,17 @@ int Tpreset::getMaxOrder(void) const
 
 bool Tpreset::Torders::orderSort(const Torder &o1,const Torder &o2)
 {
+#if defined(_MSC_VER) && (_MSC_VER == 1600)
+ if (std::tr1::get<CFG-1>(o1)->order==std::tr1::get<CFG-1>(o2)->order)
+  return std::tr1::get<ORDERDEF-1>(o1)<std::tr1::get<ORDERDEF-1>(o2);
+ else
+  return std::tr1::get<CFG-1>(o1)->order<std::tr1::get<CFG-1>(o2)->order;
+#else
  if (o1.get<CFG>()->order==o2.get<CFG>()->order)
   return o1.get<ORDERDEF>()<o2.get<ORDERDEF>();
  else
   return o1.get<CFG>()->order<o2.get<CFG>()->order;
+#endif
 }
 void Tpreset::Torders::sort(void)
 {
@@ -535,7 +542,11 @@ void Tpreset::fixOrder(void)
  orders.sort();
  int o=min_order;
  for (Torders::iterator i=orders.begin();i!=orders.end();i++,o++)
+#if defined(_MSC_VER) && (_MSC_VER == 1600)
+  std::tr1::get<CFG-1>(*i)->order=o;
+#else
   i->get<CFG>()->order=o;
+#endif
 }
 TfilterSettings* Tpreset::getSettings(int filterID) const
 {
@@ -564,7 +575,11 @@ bool Tpreset::setFilterOrder(unsigned int filterID,unsigned int newOrder)
  o=&fs->order;
  Torders orders;getOrders(orders);
  for (Torders::iterator i=orders.begin();i!=orders.end();i++)
+#if defined(_MSC_VER) && (_MSC_VER == 1600)
+  std::tr1::get<CFG-1>(*i)->order=std::tr1::get<CFG-1>(*i)->order*10+1;
+#else
   i->get<CFG>()->order=i->get<CFG>()->order*10+1;
+#endif
  *o=newOrder*10;
  fixOrder();
  return true;
@@ -576,8 +591,13 @@ bool Tpreset::resetOrder(void)
  bool waschange=false;
  for (Torders::iterator o=orders.begin();o!=orders.end();o++)
   {
+#if defined(_MSC_VER) && (_MSC_VER == 1600)
+   waschange|=(std::tr1::get<CFG-1>(*o)->order!=std::tr1::get<ORDERDEF-1>(*o));
+   std::tr1::get<CFG-1>(*o)->order=std::tr1::get<ORDERDEF-1>(*o);
+#else
    waschange|=(o->get<CFG>()->order!=o->get<ORDERDEF>());
    o->get<CFG>()->order=o->get<ORDERDEF>();
+#endif
   }
  return waschange;
 }
@@ -593,7 +613,11 @@ void Tpreset::createFilters(Tfilters *filters,TfilterQueue &queue) const
  getOrders(orders,true);
  orders.sort();
  for (Torders::const_iterator o=orders.begin();o!=orders.end();o++)
+#if defined(_MSC_VER) && (_MSC_VER == 1600)
+  std::tr1::get<CFG-1>(*o)->createFilters(std::tr1::get<ORDER-1>(*o),filters,queue);
+#else
   o->get<CFG>()->createFilters(o->get<ORDER>(),filters,queue);
+#endif
 }
 
 void Tpreset::createPages(TffdshowPageDec *pages) const
@@ -601,7 +625,11 @@ void Tpreset::createPages(TffdshowPageDec *pages) const
  Torders orders;
  getOrders(orders);
  for (Torders::const_iterator o=orders.begin();o!=orders.end();o++)
+#if defined(_MSC_VER) && (_MSC_VER == 1600)
+  std::tr1::get<CFG-1>(*o)->createPages(pages);
+#else
   o->get<CFG>()->createPages(pages);
+#endif
 }
 
 bool Tpreset::autoloadScreenSizeMatch(void) const
