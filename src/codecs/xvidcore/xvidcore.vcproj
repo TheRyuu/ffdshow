@@ -4,7 +4,7 @@
 	Version="9,00"
 	Name="xvidcore"
 	ProjectGUID="{340D7FC0-5EF2-4C3E-9F8B-01C0923F268F}"
-	RootNamespace="xvidcore_2005"
+	RootNamespace="xvidcore"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="0"
 	>
