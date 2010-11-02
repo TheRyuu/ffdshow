@@ -107,13 +107,16 @@ double av_strtod(const char *numstr, char **tail)
     return d;
 }
 
+#define IS_IDENTIFIER_CHAR(c) ((c) - '0' <= 9U || (c) - 'a' <= 25U || (c) - 'A' <= 25U || (c) == '_')
+
 static int strmatch(const char *s, const char *prefix)
 {
     int i;
     for (i=0; prefix[i]; i++) {
         if (prefix[i] != s[i]) return 0;
     }
-    return 1;
+    /* return 1 only if the s identifier is terminated */
+    return !IS_IDENTIFIER_CHAR(s[i]);
 }
 
 struct AVExpr {
@@ -408,12 +411,12 @@ static int parse_expr(AVExpr **e, Parser *p)
     if ((ret = parse_subexpr(&e0, p)) < 0)
         return ret;
     while (*p->s == ';') {
+        p->s++;
         e1 = e0;
         if ((ret = parse_subexpr(&e2, p)) < 0) {
             av_free_expr(e1);
             return ret;
         }
-        p->s++;
         e0 = new_eval_expr(e_last, 1, e1, e2);
         if (!e0) {
             av_free_expr(e1);

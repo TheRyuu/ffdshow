@@ -785,7 +785,7 @@ int avcodec_thread_init(AVCodecContext *avctx, int thread_count)
         return -1;
     }
 
-    avctx->thread_count = thread_count;
+    avctx->thread_count = FFMAX(1, thread_count);;
 
     if (avctx->codec) {
         validate_thread_parameters(avctx);

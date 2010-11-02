@@ -664,7 +664,11 @@ static av_noinline void OPNAME ## h264_qpel16_h_lowpass_l2_ ## MMX(uint8_t *dst,
         : "+a"(src), "+c"(dst), "+d"(src2), "+g"(h)\
         : "D"((x86_reg)src2Stride), "S"((x86_reg)dstStride),\
           "m"(ff_pw_5), "m"(ff_pw_16)\
-        : "memory"\
+        : XMM_CLOBBERS("%xmm0" , "%xmm1" , "%xmm2" , "%xmm3" , \
+                       "%xmm4" , "%xmm5" , "%xmm6" , "%xmm7" , \
+                       "%xmm8" , "%xmm9" , "%xmm10", "%xmm11", \
+                       "%xmm12", "%xmm13", "%xmm14", "%xmm15",)\
+          "memory"\
     );\
 }
 #else // ARCH_X86_64
@@ -720,7 +724,9 @@ static av_noinline void OPNAME ## h264_qpel8_h_lowpass_l2_ ## MMX(uint8_t *dst, 
         "jg 1b                      \n\t"\
         : "+a"(src), "+c"(dst), "+d"(src2), "+g"(h)\
         : "D"((x86_reg)src2Stride), "S"((x86_reg)dstStride)\
-        : "memory"\
+        : XMM_CLOBBERS("%xmm0", "%xmm1", "%xmm2", "%xmm3", \
+                       "%xmm4", "%xmm5", "%xmm6", "%xmm7",)\
+          "memory"\
     );\
 }\
 QPEL_H264_H16_XMM(OPNAME, OP, MMX)\
@@ -761,7 +767,9 @@ static av_noinline void OPNAME ## h264_qpel8_h_lowpass_ ## MMX(uint8_t *dst, uin
         " jnz 1b                    \n\t"\
         : "+a"(src), "+c"(dst), "+g"(h)\
         : "D"((x86_reg)srcStride), "S"((x86_reg)dstStride)\
-        : "memory"\
+        : XMM_CLOBBERS("%xmm0", "%xmm1", "%xmm2", "%xmm3", \
+                       "%xmm4", "%xmm5", "%xmm6", "%xmm7",)\
+          "memory"\
     );\
 }\
 static void OPNAME ## h264_qpel16_h_lowpass_ ## MMX(uint8_t *dst, uint8_t *src, int dstStride, int srcStride){\
@@ -816,7 +824,9 @@ static av_noinline void OPNAME ## h264_qpel8or16_v_lowpass_ ## MMX(uint8_t *dst,
         \
         : "+a"(src), "+c"(dst)\
         : "S"((x86_reg)srcStride), "D"((x86_reg)dstStride), "g"(h)\
-        : "memory"\
+        : XMM_CLOBBERS("%xmm0", "%xmm1", "%xmm2", "%xmm3", \
+                       "%xmm4", "%xmm5", "%xmm6", "%xmm7",)\
+          "memory"\
     );\
 }\
 static void OPNAME ## h264_qpel8_v_lowpass_ ## MMX(uint8_t *dst, uint8_t *src, int dstStride, int srcStride){\
@@ -826,6 +836,10 @@ static av_noinline void OPNAME ## h264_qpel16_v_lowpass_ ## MMX(uint8_t *dst, ui
     OPNAME ## h264_qpel8or16_v_lowpass_ ## MMX(dst  , src  , dstStride, srcStride, 16);\
     OPNAME ## h264_qpel8or16_v_lowpass_ ## MMX(dst+8, src+8, dstStride, srcStride, 16);\
 }
+
+/* ffdshow custom code */
+#pragma GCC push_options
+#pragma GCC target ("sse2")
 
 static av_always_inline void put_h264_qpel8or16_hv1_lowpass_sse2(int16_t *tmp, uint8_t *src, int tmpStride, int srcStride, int size){
     int w = (size+8)>>3;
@@ -869,12 +883,17 @@ static av_always_inline void put_h264_qpel8or16_hv1_lowpass_sse2(int16_t *tmp, u
             "2:                         \n\t"
             : "+a"(src)
             : "c"(tmp), "S"((x86_reg)srcStride), "g"(size)
-            : "memory"
+            : XMM_CLOBBERS("%xmm0", "%xmm1", "%xmm2", "%xmm3",
+                           "%xmm4", "%xmm5", "%xmm6", "%xmm7",)
+              "memory"
         );
         tmp += 8;
         src += 8 - (size+5)*srcStride;
     }
 }
+
+/* ffdshow custom code */
+#pragma GCC pop_options
 
 #define QPEL_H264_HV2_XMM(OPNAME, OP, MMX)\
 static av_always_inline void OPNAME ## h264_qpel8or16_hv2_lowpass_ ## MMX(uint8_t *dst, int16_t *tmp, int dstStride, int tmpStride, int size){\
@@ -932,7 +951,9 @@ static av_always_inline void OPNAME ## h264_qpel8or16_hv2_lowpass_ ## MMX(uint8_
             " jnz 1b                    \n\t"\
             : "+a"(tmp), "+c"(dst), "+g"(h)\
             : "S"((x86_reg)dstStride)\
-            : "memory"\
+            : XMM_CLOBBERS("%xmm0", "%xmm1", "%xmm2", "%xmm3", \
+                           "%xmm4", "%xmm5", "%xmm6", "%xmm7",)\
+              "memory"\
         );\
     }else{\
         __asm__ volatile(\
@@ -966,7 +987,9 @@ static av_always_inline void OPNAME ## h264_qpel8or16_hv2_lowpass_ ## MMX(uint8_
             " jnz 1b                    \n\t"\
             : "+a"(tmp), "+c"(dst), "+g"(h)\
             : "S"((x86_reg)dstStride)\
-            : "memory"\
+            : XMM_CLOBBERS("%xmm0", "%xmm1", "%xmm2", "%xmm3", \
+                           "%xmm4", "%xmm5", "%xmm6", "%xmm7",)\
+              "memory"\
         );\
     }\
 }
@@ -1161,6 +1184,9 @@ QPEL_H264(avg_, AVG_3DNOW_OP, 3dnow)
 #define PAVGB "pavgb"
 QPEL_H264(put_,       PUT_OP, mmx2)
 QPEL_H264(avg_,  AVG_MMX2_OP, mmx2)
+/* ffdshow custom code */
+#pragma GCC push_options
+#pragma GCC target ("sse2")
 QPEL_H264_V_XMM(put_,       PUT_OP, sse2)
 QPEL_H264_V_XMM(avg_,  AVG_MMX2_OP, sse2)
 QPEL_H264_HV_XMM(put_,       PUT_OP, sse2)
@@ -1174,6 +1200,7 @@ QPEL_H264_HV_XMM(put_,       PUT_OP, ssse3)
 QPEL_H264_HV_XMM(avg_,  AVG_MMX2_OP, ssse3)
 #endif
 #undef PAVGB
+#pragma GCC pop_options
 
 H264_MC_4816(3dnow)
 H264_MC_4816(mmx2)
