@@ -5,7 +5,7 @@
 	Name="ff_libmad"
 	ProjectGUID="{997933F0-7FF5-4108-B514-C1DD9F87E71F}"
 	VCNestedProjectGUID="{B8000FD0-4A45-4D79-B320-1AFBE61C01C0}"
-	VCNestedProjectCRC32="2132337724"
+	VCNestedProjectCRC32="781906303"
 	VCNestedProjectFileName="ff_libmad_2008_icl10.vcproj">
 	<Platforms>
 		<Platform 
@@ -18,9 +18,8 @@
 			Name="Debug|Win32">
 			<Tool 
 				Name="GeneralTool"
-				OutputDirectory="debug_2008_icl10"
-				IntermediateDirectory="debug_2008_icl10"
 				ConfigurationType="2"
+				InheritedPropertySheets="..\..\..\common_icl10.vsprops"
 				UseOfMFC="0"
 				ATLMinimizesCRunTimeLibraryUsage="false"
 				CharacterSet="0"/>
@@ -48,7 +47,7 @@
 				RuntimeTypeInfo="false"
 				AssemblerListingLocation="$(IntDir)/"
 				ObjectFile="$(IntDir)/"
-				ProgramDataBaseFileName="$(IntDir)/"
+				ProgramDataBaseFileName="$(IntDir)\$(TargetName).pdb"
 				BrowseInformation="0"
 				SuppressStartupBanner="true"
 				Detect64BitPortabilityProblems="false"
@@ -77,7 +76,7 @@
 				ProgramDatabaseFile="$(IntDir)/$(TargetName).pdb"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(IntDir)\ff_libmad.lib"/>
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"/>
 			<Tool 
 				Name="VCALinkTool"/>
 			<Tool 
@@ -98,9 +97,8 @@
 			Name="Debug|x64">
 			<Tool 
 				Name="GeneralTool"
-				OutputDirectory="debug_2008_x64_icl10"
-				IntermediateDirectory="debug_2008_x64_icl10"
 				ConfigurationType="2"
+				InheritedPropertySheets="..\..\..\common_icl10.vsprops"
 				UseOfMFC="0"
 				ATLMinimizesCRunTimeLibraryUsage="false"
 				CharacterSet="0"/>
@@ -129,7 +127,7 @@
 				RuntimeTypeInfo="false"
 				AssemblerListingLocation="$(IntDir)/"
 				ObjectFile="$(IntDir)/"
-				ProgramDataBaseFileName="$(IntDir)/"
+				ProgramDataBaseFileName="$(IntDir)\$(TargetName).pdb"
 				SuppressStartupBanner="true"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="3"
@@ -155,7 +153,7 @@
 				ModuleDefinitionFile="ff_libmad.def"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(IntDir)/$(TargetName).pdb"
-				ImportLibrary="$(IntDir)\ff_libmad.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"/>
 			<Tool 
 				Name="VCALinkTool"/>
@@ -177,9 +175,8 @@
 			Name="Release|Win32">
 			<Tool 
 				Name="GeneralTool"
-				OutputDirectory="release_2008_icl10"
-				IntermediateDirectory="release_2008_icl10"
 				ConfigurationType="2"
+				InheritedPropertySheets="..\..\..\common_icl10.vsprops"
 				UseOfMFC="1"
 				ATLMinimizesCRunTimeLibraryUsage="false"
 				CharacterSet="0"
@@ -214,7 +211,7 @@
 				RuntimeTypeInfo="false"
 				AssemblerListingLocation="$(IntDir)/"
 				ObjectFile="$(IntDir)/"
-				ProgramDataBaseFileName="$(IntDir)/"
+				ProgramDataBaseFileName="$(IntDir)\$(TargetName).pdb"
 				BrowseInformation="0"
 				WarningLevel="1"
 				SuppressStartupBanner="true"
@@ -244,7 +241,7 @@
 				EnableCOMDATFolding="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(IntDir)\ff_libmad.lib"/>
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"/>
 			<Tool 
 				Name="VCALinkTool"/>
 			<Tool 
@@ -265,9 +262,8 @@
 			Name="Release|x64">
 			<Tool 
 				Name="GeneralTool"
-				OutputDirectory="release_2008_x64_icl10"
-				IntermediateDirectory="release_2008_x64_icl10"
 				ConfigurationType="2"
+				InheritedPropertySheets="..\..\..\common_icl10.vsprops"
 				UseOfMFC="1"
 				ATLMinimizesCRunTimeLibraryUsage="false"
 				CharacterSet="0"
@@ -303,7 +299,7 @@
 				RuntimeTypeInfo="false"
 				AssemblerListingLocation="$(IntDir)/"
 				ObjectFile="$(IntDir)/"
-				ProgramDataBaseFileName="$(IntDir)/"
+				ProgramDataBaseFileName="$(IntDir)\$(TargetName).pdb"
 				WarningLevel="0"
 				SuppressStartupBanner="true"
 				CompileAs="1"
@@ -333,7 +329,7 @@
 				ProgramDatabaseFile="$(IntDir)/$(TargetName).pdb"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				ImportLibrary="$(IntDir)\ff_libmad.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"/>
 			<Tool 
 				Name="VCALinkTool"/>

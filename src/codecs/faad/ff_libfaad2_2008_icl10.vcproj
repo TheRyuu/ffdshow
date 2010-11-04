@@ -20,9 +20,8 @@
 	<Configurations>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="release_2008_icl10"
-			IntermediateDirectory="release_2008_icl10"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\..\..\common_icl10.vsprops"
 			UseOfMFC="1"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			WholeProgramOptimization="0"
@@ -94,7 +93,7 @@
 				EnableCOMDATFolding="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(IntDir)/ff_libfaad2.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="0"
 			/>
 			<Tool
@@ -122,9 +121,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|x64"
-			OutputDirectory="release_2008_x64_icl10"
-			IntermediateDirectory="release_2008_x64_icl10"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\..\..\common_icl10.vsprops"
 			UseOfMFC="1"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			WholeProgramOptimization="0"
@@ -192,7 +190,7 @@
 				ModuleDefinitionFile=".\ff_libfaad2.def"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				ImportLibrary="$(IntDir)/$(ProjectName).lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"
 			/>
 			<Tool
@@ -220,9 +218,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="debug_2008_icl10"
-			IntermediateDirectory="debug_2008_icl10"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\..\..\common_icl10.vsprops"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			>
@@ -286,7 +283,7 @@
 				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(IntDir)/ff_libfaad2.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="0"
 			/>
 			<Tool
@@ -314,9 +311,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|x64"
-			OutputDirectory="debug_2008_x64_icl10"
-			IntermediateDirectory="debug_2008_x64_icl10"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\..\..\common_icl10.vsprops"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			>
@@ -377,7 +373,7 @@
 				ModuleDefinitionFile=".\ff_libfaad2.def"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
-				ImportLibrary="$(IntDir)/$(ProjectName).lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"
 			/>
 			<Tool

@@ -21,9 +21,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="debug_2008_icl10"
-			IntermediateDirectory="debug_2008_icl10"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\common_icl10.vsprops"
 			UseOfMFC="0"
 			CharacterSet="0"
 			>
@@ -109,9 +108,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|x64"
-			OutputDirectory="debug_2008_x64_icl10"
-			IntermediateDirectory="debug_2008_x64_icl10"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\common_icl10.vsprops"
 			CharacterSet="0"
 			>
 			<Tool
@@ -194,9 +192,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="release_2008_icl10"
-			IntermediateDirectory="release_2008_icl10"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\common_icl10.vsprops"
 			UseOfMFC="1"
 			CharacterSet="0"
 			ManagedExtensions="0"
@@ -287,9 +284,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|x64"
-			OutputDirectory="release_2008_x64_icl10"
-			IntermediateDirectory="release_2008_x64_icl10"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\common_icl10.vsprops"
 			UseOfMFC="1"
 			CharacterSet="0"
 			ManagedExtensions="0"

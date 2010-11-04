@@ -5,7 +5,7 @@
 	Name="ff_tremor"
 	ProjectGUID="{0B4D4596-3C85-46D0-BCDF-59AA6581CF41}"
 	VCNestedProjectGUID="{E2FBCE81-39C0-4D44-B4C5-0D5348998BC4}"
-	VCNestedProjectCRC32="2475335183"
+	VCNestedProjectCRC32="3502605226"
 	VCNestedProjectFileName="ff_tremor_2008_icl10.vcproj">
 	<Platforms>
 		<Platform 
@@ -18,9 +18,8 @@
 			Name="Debug|Win32">
 			<Tool 
 				Name="GeneralTool"
-				OutputDirectory="debug_2008_icl10"
-				IntermediateDirectory="debug_2008_icl10"
 				ConfigurationType="2"
+				InheritedPropertySheets="..\..\..\common_icl10.vsprops"
 				UseOfMFC="0"
 				ATLMinimizesCRunTimeLibraryUsage="false"/>
 			<Tool 
@@ -50,7 +49,7 @@
 				RuntimeTypeInfo="false"
 				AssemblerListingLocation="$(IntDir)/"
 				ObjectFile="$(IntDir)/"
-				ProgramDataBaseFileName="$(IntDir)/"
+				ProgramDataBaseFileName="$(IntDir)\$(TargetName).pdb"
 				BrowseInformation="0"
 				SuppressStartupBanner="true"
 				Detect64BitPortabilityProblems="false"
@@ -79,7 +78,7 @@
 				ProgramDatabaseFile="$(IntDir)/ff_tremor.pdb"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(IntDir)/ff_tremor.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="1"/>
 			<Tool 
 				Name="VCALinkTool"/>
@@ -101,9 +100,8 @@
 			Name="Debug|x64">
 			<Tool 
 				Name="GeneralTool"
-				OutputDirectory="debug_2008_x64_icl10"
-				IntermediateDirectory="debug_2008_x64_icl10"
 				ConfigurationType="2"
+				InheritedPropertySheets="..\..\..\common_icl10.vsprops"
 				UseOfMFC="0"
 				ATLMinimizesCRunTimeLibraryUsage="false"/>
 			<Tool 
@@ -133,7 +131,7 @@
 				RuntimeTypeInfo="false"
 				AssemblerListingLocation="$(IntDir)/"
 				ObjectFile="$(IntDir)/"
-				ProgramDataBaseFileName="$(IntDir)/"
+				ProgramDataBaseFileName="$(IntDir)\$(TargetName).pdb"
 				SuppressStartupBanner="true"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="3"
@@ -159,7 +157,7 @@
 				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(IntDir)/ff_tremor.pdb"
-				ImportLibrary="$(IntDir)/ff_tremor.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"/>
 			<Tool 
 				Name="VCALinkTool"/>
@@ -181,9 +179,8 @@
 			Name="Release|Win32">
 			<Tool 
 				Name="GeneralTool"
-				OutputDirectory="release_2008_icl10"
-				IntermediateDirectory="release_2008_icl10"
 				ConfigurationType="2"
+				InheritedPropertySheets="..\..\..\common_icl10.vsprops"
 				UseOfMFC="1"
 				ATLMinimizesCRunTimeLibraryUsage="false"
 				ManagedExtensions="0"
@@ -223,7 +220,7 @@
 				RuntimeTypeInfo="false"
 				AssemblerListingLocation="$(IntDir)/"
 				ObjectFile="$(IntDir)/"
-				ProgramDataBaseFileName="$(IntDir)/"
+				ProgramDataBaseFileName="$(IntDir)\$(TargetName).pdb"
 				BrowseInformation="0"
 				WarningLevel="0"
 				SuppressStartupBanner="true"
@@ -254,7 +251,7 @@
 				EnableCOMDATFolding="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(IntDir)/ff_tremor.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="1"/>
 			<Tool 
 				Name="VCALinkTool"/>
@@ -276,9 +273,8 @@
 			Name="Release|x64">
 			<Tool 
 				Name="GeneralTool"
-				OutputDirectory="release_2008_x64_icl10"
-				IntermediateDirectory="release_2008_x64_icl10"
 				ConfigurationType="2"
+				InheritedPropertySheets="..\..\..\common_icl10.vsprops"
 				UseOfMFC="1"
 				ATLMinimizesCRunTimeLibraryUsage="false"
 				ManagedExtensions="0"
@@ -318,7 +314,7 @@
 				RuntimeTypeInfo="false"
 				AssemblerListingLocation="$(IntDir)/"
 				ObjectFile="$(IntDir)/"
-				ProgramDataBaseFileName="$(IntDir)/"
+				ProgramDataBaseFileName="$(IntDir)\$(TargetName).pdb"
 				WarningLevel="0"
 				SuppressStartupBanner="true"
 				CompileAs="1"
@@ -349,7 +345,7 @@
 				ProgramDatabaseFile="$(IntDir)/ff_tremor.pdb"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				ImportLibrary="$(IntDir)/ff_tremor.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"/>
 			<Tool 
 				Name="VCALinkTool"/>

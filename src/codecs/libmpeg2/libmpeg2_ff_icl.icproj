@@ -5,7 +5,7 @@
 	Name="libmpeg2_ff"
 	ProjectGUID="{A0A5B5A7-8D65-425A-8FB1-18C7B015CB99}"
 	VCNestedProjectGUID="{A0116059-A93E-4A03-BA72-73E8C64B3C34}"
-	VCNestedProjectCRC32="410858164"
+	VCNestedProjectCRC32="2727006937"
 	VCNestedProjectFileName="libmpeg2_ff_icl.vcproj">
 	<Platforms>
 		<Platform 
@@ -18,9 +18,8 @@
 			Name="Debug|Win32">
 			<Tool 
 				Name="GeneralTool"
-				OutputDirectory="$(ConfigurationName)$(PlatformName)_ICL"
-				IntermediateDirectory="$(ConfigurationName)$(PlatformName)_ICL"
 				ConfigurationType="2"
+				InheritedPropertySheets="..\..\..\common_icl10.vsprops"
 				UseOfMFC="0"
 				ATLMinimizesCRunTimeLibraryUsage="false"
 				CharacterSet="0"/>
@@ -77,7 +76,7 @@
 				SubSystem="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(IntDir)/libmpeg2_ff.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="1"/>
 			<Tool 
 				Name="VCALinkTool"/>
@@ -99,9 +98,8 @@
 			Name="Debug|x64">
 			<Tool 
 				Name="GeneralTool"
-				OutputDirectory="$(ConfigurationName)$(PlatformName)_ICL"
-				IntermediateDirectory="$(ConfigurationName)$(PlatformName)_ICL"
 				ConfigurationType="2"
+				InheritedPropertySheets="..\..\..\common_icl10.vsprops"
 				UseOfMFC="1"
 				CharacterSet="0"/>
 			<Tool 
@@ -156,7 +154,7 @@
 				ProgramDatabaseFile="$(IntDir)/libmpeg2_ff.pdb"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
-				ImportLibrary="$(IntDir)/libmpeg2_ff.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"/>
 			<Tool 
 				Name="VCALinkTool"/>
@@ -178,9 +176,8 @@
 			Name="Release|Win32">
 			<Tool 
 				Name="GeneralTool"
-				OutputDirectory="$(ConfigurationName)$(PlatformName)_ICL"
-				IntermediateDirectory="$(ConfigurationName)$(PlatformName)_ICL"
 				ConfigurationType="2"
+				InheritedPropertySheets="..\..\..\common_icl10.vsprops"
 				UseOfMFC="1"
 				CharacterSet="0"
 				ManagedExtensions="0"
@@ -245,7 +242,7 @@
 				EnableCOMDATFolding="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(IntDir)/libmpeg2_ff.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="1"/>
 			<Tool 
 				Name="VCALinkTool"/>
@@ -267,9 +264,8 @@
 			Name="Release|x64">
 			<Tool 
 				Name="GeneralTool"
-				OutputDirectory="$(ConfigurationName)$(PlatformName)_ICL"
-				IntermediateDirectory="$(ConfigurationName)$(PlatformName)_ICL"
 				ConfigurationType="2"
+				InheritedPropertySheets="..\..\..\common_icl10.vsprops"
 				UseOfMFC="1"
 				CharacterSet="0"
 				ManagedExtensions="0"
@@ -333,7 +329,7 @@
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				RandomizedBaseAddress="1"
-				ImportLibrary="$(IntDir)/libmpeg2_ff.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"/>
 			<Tool 
 				Name="VCALinkTool"/>

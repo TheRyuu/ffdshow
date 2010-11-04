@@ -5,7 +5,7 @@
 	Name="ff_unrar"
 	ProjectGUID="{9C78112E-B79D-4AE6-859D-F71383126B4E}"
 	VCNestedProjectGUID="{82199D65-5E04-48FB-99B5-9396D55566AE}"
-	VCNestedProjectCRC32="3531206559"
+	VCNestedProjectCRC32="2436224905"
 	VCNestedProjectFileName="ff_unrar_2008_icl10.vcproj"
 	Keyword="Win32Proj">
 	<Platforms>
@@ -19,9 +19,8 @@
 			Name="Debug|Win32">
 			<Tool 
 				Name="GeneralTool"
-				OutputDirectory="debug_2008_icl10"
-				IntermediateDirectory="debug_2008_icl10"
 				ConfigurationType="2"
+				InheritedPropertySheets="..\common_icl10.vsprops"
 				UseOfMFC="0"
 				CharacterSet="0"/>
 			<Tool 
@@ -91,9 +90,8 @@
 			Name="Debug|x64">
 			<Tool 
 				Name="GeneralTool"
-				OutputDirectory="debug_2008_x64_icl10"
-				IntermediateDirectory="debug_2008_x64_icl10"
 				ConfigurationType="2"
+				InheritedPropertySheets="..\common_icl10.vsprops"
 				CharacterSet="0"/>
 			<Tool 
 				Name="PreBuildEventTool"/>
@@ -160,9 +158,8 @@
 			Name="Release|Win32">
 			<Tool 
 				Name="GeneralTool"
-				OutputDirectory="release_2008_icl10"
-				IntermediateDirectory="release_2008_icl10"
 				ConfigurationType="2"
+				InheritedPropertySheets="..\common_icl10.vsprops"
 				UseOfMFC="1"
 				CharacterSet="0"
 				ManagedExtensions="0"
@@ -238,9 +235,8 @@
 			Name="Release|x64">
 			<Tool 
 				Name="GeneralTool"
-				OutputDirectory="release_2008_x64_icl10"
-				IntermediateDirectory="release_2008_x64_icl10"
 				ConfigurationType="2"
+				InheritedPropertySheets="..\common_icl10.vsprops"
 				UseOfMFC="1"
 				CharacterSet="0"
 				ManagedExtensions="0"
