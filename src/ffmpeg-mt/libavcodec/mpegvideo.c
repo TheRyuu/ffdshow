@@ -563,7 +563,7 @@ av_cold int MPV_common_init(MpegEncContext *s)
 
     if(s->codec_id == CODEC_ID_MPEG2VIDEO && !s->progressive_sequence)
         s->mb_height = (s->height + 31) / 32 * 2;
-    else
+    else if (s->codec_id != CODEC_ID_H264)
         s->mb_height = (s->height + 15) / 16;
 
     if(s->avctx->pix_fmt == PIX_FMT_NONE){
@@ -1039,7 +1039,14 @@ int MPV_frame_start(MpegEncContext *s, AVCodecContext *avctx)
             return -1;
 
         s->current_picture_ptr= pic;
-        s->current_picture_ptr->top_field_first= s->top_field_first; //FIXME use only the vars from current_pic
+        //FIXME use only the vars from current_pic
+        if(s->codec_id == CODEC_ID_MPEG1VIDEO || s->codec_id == CODEC_ID_MPEG2VIDEO) {
+            if(s->picture_structure == PICT_FRAME)
+                s->current_picture_ptr->top_field_first= s->top_field_first;
+            else
+                s->current_picture_ptr->top_field_first= (s->picture_structure == PICT_TOP_FIELD) == s->first_field;
+        } else
+            s->current_picture_ptr->top_field_first= s->top_field_first;
         s->current_picture_ptr->interlaced_frame= !s->progressive_frame && !s->progressive_sequence;
         s->current_picture_ptr->field_picture= s->picture_structure != PICT_FRAME;
     }
@@ -1176,7 +1183,7 @@ void MPV_frame_end(MpegEncContext *s)
 #endif
     s->avctx->coded_frame= (AVFrame*)s->current_picture_ptr;
 
-    if (HAVE_PTHREADS && s->avctx->active_thread_type == FF_THREAD_FRAME && s->codec_id != CODEC_ID_H264 && s->current_picture.reference){
+    if (s->codec_id != CODEC_ID_H264 && s->current_picture.reference) {
         ff_thread_report_progress((AVFrame*)s->current_picture_ptr, s->mb_height-1, 0);
     }
 }

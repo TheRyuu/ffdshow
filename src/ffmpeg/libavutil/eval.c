@@ -122,7 +122,7 @@ static int strmatch(const char *s, const char *prefix)
 struct AVExpr {
     enum {
         e_value, e_const, e_func0, e_func1, e_func2,
-        e_squish, e_gauss, e_ld,
+        e_squish, e_gauss, e_ld, e_isnan,
         e_mod, e_max, e_min, e_eq, e_gt, e_gte,
         e_pow, e_mul, e_div, e_add,
         e_last, e_st, e_while,
@@ -148,6 +148,7 @@ static double eval_expr(Parser *p, AVExpr *e)
         case e_squish: return 1/(1+exp(4*eval_expr(p, e->param[0])));
         case e_gauss: { double d = eval_expr(p, e->param[0]); return exp(-d*d/2)/sqrt(2*M_PI); }
         case e_ld:     return e->value * p->var[av_clip(eval_expr(p, e->param[0]), 0, VARS-1)];
+        case e_isnan:  return e->value * !!isnan(eval_expr(p, e->param[0]));
         case e_while: {
             double d = NAN;
             while (eval_expr(p, e->param[0]))
@@ -276,6 +277,7 @@ static int parse_primary(AVExpr **e, Parser *p)
     else if (strmatch(next, "lte"   )) { AVExpr *tmp = d->param[1]; d->param[1] = d->param[0]; d->param[0] = tmp; d->type = e_gt; }
     else if (strmatch(next, "lt"    )) { AVExpr *tmp = d->param[1]; d->param[1] = d->param[0]; d->param[0] = tmp; d->type = e_gte; }
     else if (strmatch(next, "ld"    )) d->type = e_ld;
+    else if (strmatch(next, "isnan" )) d->type = e_isnan;
     else if (strmatch(next, "st"    )) d->type = e_st;
     else if (strmatch(next, "while" )) d->type = e_while;
     else {
@@ -440,7 +442,8 @@ static int verify_expr(AVExpr *e)
         case e_func1:
         case e_squish:
         case e_ld:
-        case e_gauss: return verify_expr(e->param[0]);
+        case e_gauss:
+        case e_isnan: return verify_expr(e->param[0]);
         default: return verify_expr(e->param[0]) && verify_expr(e->param[1]);
     }
 }

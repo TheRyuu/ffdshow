@@ -262,6 +262,7 @@ SRCS_C=\
     $(LAVU_DIR)/x86/cpu.c \
     \
     $(LAVCORE_DIR)/imgutils.c \
+    $(LAVCORE_DIR)/samplefmt.c \
     $(LAVCORE_DIR)/utils.c \
     \
     $(LAVFILTER_DIR)/vf_yadif.c \

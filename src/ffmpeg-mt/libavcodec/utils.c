@@ -29,6 +29,7 @@
 #include "libavutil/crc.h"
 #include "libavutil/pixdesc.h"
 #include "libavcore/imgutils.h"
+#include "libavcore/samplefmt.h"
 #include "avcodec.h"
 #include "dsputil.h"
 #include "imgconvert.h"
@@ -144,7 +145,7 @@ void avcodec_align_dimensions2(AVCodecContext *s, int *width, int *height, int l
     case PIX_FMT_YUVA420P:
         w_align= 16; //FIXME check for non mpeg style codecs and use less alignment
         h_align= 16;
-        if(s->codec_id == CODEC_ID_MPEG2VIDEO || s->codec_id == CODEC_ID_MJPEG || s->codec_id == CODEC_ID_AMV)
+        if(s->codec_id == CODEC_ID_MPEG2VIDEO || s->codec_id == CODEC_ID_MJPEG || s->codec_id == CODEC_ID_AMV || s->codec_id == CODEC_ID_H264)
             h_align= 32; // interlaced is rounded up to 2 MBs
         break;
     case PIX_FMT_YUV411P:
@@ -511,25 +512,26 @@ int attribute_align_arg avcodec_open(AVCodecContext *avctx, AVCodec *codec)
     avctx->codec = codec;
     avctx->codec_id = codec->id; /* ffdshow custom code */
     avctx->frame_number = 0;
+
+    if (HAVE_THREADS && !avctx->thread_opaque) {
+        ret = avcodec_thread_init(avctx, avctx->thread_count);
+        if (ret < 0) {
+            goto free_and_end;
+        }
+    }
+
     if (avctx->codec->max_lowres < avctx->lowres) {
         av_log(avctx, AV_LOG_ERROR, "The maximum value for lowres supported by the decoder is %d\n",
                avctx->codec->max_lowres);
         goto free_and_end;
     }
 
-    if (HAVE_THREADS && !avctx->thread_opaque) {
-        ret = avcodec_thread_init(avctx, avctx->thread_count);
-        if (ret < 0) {
-            av_freep(&avctx->priv_data);
-            avctx->codec= NULL;
-            goto end;
-        }
-    }
-
     if(avctx->codec->init && !(avctx->active_thread_type&FF_THREAD_FRAME)){
-        ret = avctx->codec->init(avctx);
-        if (ret < 0) {
-            goto free_and_end;
+        if(avctx->codec->init){
+            ret = avctx->codec->init(avctx);
+            if (ret < 0) {
+                goto free_and_end;
+            }
         }
     }
     ret=0;
@@ -761,6 +763,17 @@ unsigned avcodec_version( void )
   return LIBAVCODEC_VERSION_INT;
 }
 
+const char *avcodec_configuration(void)
+{
+    return FFMPEG_CONFIGURATION;
+}
+
+const char *avcodec_license(void)
+{
+#define LICENSE_PREFIX "libavcodec license: "
+    return LICENSE_PREFIX FFMPEG_LICENSE + sizeof(LICENSE_PREFIX) - 1;
+}
+
 void avcodec_init(void)
 {
     static int initialized = 0;
@@ -838,21 +851,11 @@ int av_get_bits_per_sample(enum CodecID codec_id){
     }
 }
 
+#if FF_API_OLD_SAMPLE_FMT
 int av_get_bits_per_sample_format(enum SampleFormat sample_fmt) {
-    switch (sample_fmt) {
-    case SAMPLE_FMT_U8:
-        return 8;
-    case SAMPLE_FMT_S16:
-        return 16;
-    case SAMPLE_FMT_S32:
-    case SAMPLE_FMT_FLT:
-        return 32;
-    case SAMPLE_FMT_DBL:
-        return 64;
-    default:
-        return 0;
-    }
+    return av_get_bits_per_sample_fmt(sample_fmt);
 }
+#endif
 
 #if !HAVE_THREADS
 int avcodec_thread_init(AVCodecContext *s, int thread_count){
