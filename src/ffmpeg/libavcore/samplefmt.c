@@ -25,6 +25,8 @@ typedef struct SampleFmtInfo {
 } SampleFmtInfo;
 
 /** this table gives more information about formats */
+// FFDShow modification : the following code is C99, which MSVC does not support
+#ifdef __GNUC__
 static const SampleFmtInfo sample_fmt_info[AV_SAMPLE_FMT_NB] = {
     [AV_SAMPLE_FMT_U8]  = { .name = "u8",  .bits = 8 },
     [AV_SAMPLE_FMT_S16] = { .name = "s16", .bits = 16 },
@@ -32,6 +34,16 @@ static const SampleFmtInfo sample_fmt_info[AV_SAMPLE_FMT_NB] = {
     [AV_SAMPLE_FMT_FLT] = { .name = "flt", .bits = 32 },
     [AV_SAMPLE_FMT_DBL] = { .name = "dbl", .bits = 64 },
 };
+#else
+//FFDShow modification for MSVC compilation
+static const SampleFmtInfo sample_fmt_info[AV_SAMPLE_FMT_NB] = {
+    /*[AV_SAMPLE_FMT_U8]  = */{ /*.name =*/ "u8",  /*.bits = */  8 },
+    /*[AV_SAMPLE_FMT_S16] = */{ /*.name =*/ "s16", /*.bits = */ 16 },
+    /*[AV_SAMPLE_FMT_S32] = */{ /*.name =*/ "s32", /*.bits = */ 32 },
+    /*[AV_SAMPLE_FMT_FLT] = */{ /*.name =*/ "flt", /*.bits = */ 32 },
+    /*[AV_SAMPLE_FMT_DBL] = */{ /*.name =*/ "dbl", /*.bits = */ 64 },
+};
+#endif
 
 const char *av_get_sample_fmt_name(enum AVSampleFormat sample_fmt)
 {

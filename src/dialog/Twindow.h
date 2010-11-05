@@ -20,7 +20,7 @@ private:
   {
    Tenable *e=(Tenable*)lParam;
 #if defined(_MSC_VER) && (_MSC_VER == 1600)
-   std::tr1::get<0>(*e)->enable2(hwnd,std::tr1::get<1>(*e),std::tr1::get<2>(*e));
+   std::get<0>(*e)->enable2(hwnd,std::get<1>(*e),std::get<2>(*e));
 #else
    e->get<1>()->enable2(hwnd,e->get<2>(),e->get<3>());
 #endif

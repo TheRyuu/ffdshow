@@ -80,7 +80,7 @@ if (codecId==CODEC_ID_X264)
    LVITEM lvi;memset(&lvi,0,sizeof(lvi));
    lvi.mask=LVIF_TEXT|LVIF_PARAM;
 #if defined(_MSC_VER) && (_MSC_VER == 1600)
-   lvi.pszText=LPTSTR(std::tr1::get<NAME-1>(*f));
+   lvi.pszText=LPTSTR(std::get<NAME-1>(*f));
 #else
    lvi.pszText=LPTSTR(f->get<NAME>());
 #endif
@@ -88,7 +88,7 @@ if (codecId==CODEC_ID_X264)
    lvi.iItem=100;
    int ii=ListView_InsertItem(hlv,&lvi);
 #if defined(_MSC_VER) && (_MSC_VER == 1600)
-   ListView_SetCheckState(hlv,ii,cfgGet(std::tr1::get<IDFF-1>(*f))&std::tr1::get<VAL-1>(*f));
+   ListView_SetCheckState(hlv,ii,cfgGet(std::get<IDFF-1>(*f))&std::get<VAL-1>(*f));
 #else
    ListView_SetCheckState(hlv,ii,cfgGet(f->get<IDFF>())&f->get<VAL>());
 #endif
@@ -167,10 +167,10 @@ INT_PTR TgenericPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
             Tflag *f=(Tflag*)nmlv->lParam;
 #if defined(_MSC_VER) && (_MSC_VER == 1600)
             if (nmlv->uNewState&8192)
-             cfgSet(std::tr1::get<IDFF-1>(*f),cfgGet(std::tr1::get<IDFF-1>(*f))|std::tr1::get<VAL-1>(*f));
+             cfgSet(std::get<IDFF-1>(*f),cfgGet(std::get<IDFF-1>(*f))|std::get<VAL-1>(*f));
             else if (nmlv->uNewState&4096)
-             cfgSet(std::tr1::get<IDFF-1>(*f),cfgGet(std::tr1::get<IDFF-1>(*f))&~std::tr1::get<VAL-1>(*f));
-            if (std::tr1::get<REPAINT-1>(*f))
+             cfgSet(std::get<IDFF-1>(*f),cfgGet(std::get<IDFF-1>(*f))&~std::get<VAL-1>(*f));
+            if (std::get<REPAINT-1>(*f))
              cfg2dlg();
 #else
             if (nmlv->uNewState&8192)
