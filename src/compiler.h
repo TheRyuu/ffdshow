@@ -7,18 +7,20 @@
 #endif
 
 #if defined(__INTEL_COMPILER)
-  #if __INTEL_COMPILER  >= 1100
+  #if __INTEL_COMPILER >= 1200
+    #define COMPILER "ICL 12"
+  #elif __INTEL_COMPILER >= 1100
     #define COMPILER "ICL 11"
-  #elif __INTEL_COMPILER  >= 1000
+  #elif __INTEL_COMPILER >= 1000
     #define COMPILER "ICL 10"
   #else
     #define COMPILER "ICL"
   #endif
 #elif defined(_MSC_VER)
-  #if _MSC_VER==1500
-    #define COMPILER "MSVC 2008"
-  #elif _MSC_VER==1600
+  #if _MSC_VER==1600
     #define COMPILER "MSVC 2010"
+  #elif _MSC_VER==1500
+    #define COMPILER "MSVC 2008"
   #else
 #define COMPILER "unknown and not supported"
   #endif
