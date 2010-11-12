@@ -97,9 +97,9 @@ static av_cold int pcm_decode_init(AVCodecContext * avctx)
     }
 
     /* ffdshow custom code */
-    avctx->sample_fmt = SAMPLE_FMT_S16;
+    avctx->sample_fmt = AV_SAMPLE_FMT_S16;
 
-    if (avctx->sample_fmt == SAMPLE_FMT_S32)
+    if (avctx->sample_fmt == AV_SAMPLE_FMT_S32)
         avctx->bits_per_raw_sample = av_get_bits_per_sample(avctx->codec->id);
 
     return 0;
@@ -173,7 +173,7 @@ AVCodec name ## _decoder = {                    \
     /*.supported_framerates = */NULL,           \
     /*.pix_fmts = */NULL,                       \
     /*.long_name = */NULL_IF_CONFIG_SMALL(long_name_), \
-    /*.sample_fmts = */(enum SampleFormat[]){sample_fmt_,SAMPLE_FMT_NONE}, \
+    /*.sample_fmts = */(enum SampleFormat[]){sample_fmt_,AV_SAMPLE_FMT_NONE}, \
 }
 #else
 #define PCM_DECODER(id,sample_fmt_,name,long_name_)         \
@@ -199,5 +199,5 @@ AVCodec name ## _decoder = {                    \
 #define PCM_DECODER(id,sample_fmt_,name,long_name_)
 #endif
 
-PCM_DECODER(CODEC_ID_PCM_ALAW,  SAMPLE_FMT_S16, pcm_alaw,  "A-law PCM" );
-PCM_DECODER(CODEC_ID_PCM_MULAW, SAMPLE_FMT_S16, pcm_mulaw, "mu-law PCM");
+PCM_DECODER(CODEC_ID_PCM_ALAW,  AV_SAMPLE_FMT_S16, pcm_alaw,  "A-law PCM" );
+PCM_DECODER(CODEC_ID_PCM_MULAW, AV_SAMPLE_FMT_S16, pcm_mulaw, "mu-law PCM");

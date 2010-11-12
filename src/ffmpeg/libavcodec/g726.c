@@ -321,7 +321,7 @@ static av_cold int g726_init(AVCodecContext * avctx)
     avctx->coded_frame->key_frame = 1;
 
     if (avctx->codec->decode)
-        avctx->sample_fmt = SAMPLE_FMT_S16;
+        avctx->sample_fmt = AV_SAMPLE_FMT_S16;
 
     /* select a frame size that will end on a byte boundary and have a size of
        approximately 1024 bytes */

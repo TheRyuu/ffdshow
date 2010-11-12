@@ -72,19 +72,19 @@
 
 #if CONFIG_FLOAT
 typedef float OUT_INT;
-#define OUT_FMT SAMPLE_FMT_FLT
+#define OUT_FMT AV_SAMPLE_FMT_FLT
 #elif CONFIG_MPEGAUDIO_HP && CONFIG_AUDIO_NONSHORT
 typedef int32_t OUT_INT;
 #define OUT_MAX INT32_MAX
 #define OUT_MIN INT32_MIN
 #define OUT_SHIFT (WFRAC_BITS + FRAC_BITS - 31)
-#define OUT_FMT SAMPLE_FMT_S32
+#define OUT_FMT AV_SAMPLE_FMT_S32
 #else
 typedef int16_t OUT_INT;
 #define OUT_MAX INT16_MAX
 #define OUT_MIN INT16_MIN
 #define OUT_SHIFT (WFRAC_BITS + FRAC_BITS - 15)
-#define OUT_FMT SAMPLE_FMT_S16
+#define OUT_FMT AV_SAMPLE_FMT_S16
 #endif
 
 #if CONFIG_FLOAT
@@ -188,6 +188,7 @@ void ff_mpa_synth_filter_float(MPADecodeContext *s,
                          INTFLOAT sb_samples[SBLIMIT]);
 
 void ff_mpegaudiodec_init_mmx(MPADecodeContext *s);
+void ff_mpegaudiodec_init_altivec(MPADecodeContext *s);
 
 /* fast header check for resync */
 static inline int ff_mpa_check_header(uint32_t header){

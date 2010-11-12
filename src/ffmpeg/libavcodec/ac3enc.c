@@ -661,12 +661,12 @@ static av_cold int AC3_encode_init(AVCodecContext *avctx)
     int i, j, ch;
     float alpha;
     int bw_code;
-    /* ffdshow custom code (begin) */
+
     avctx->frame_size = AC3_FRAME_SIZE;
 
     ac3_common_init();
 
-    /* number of channels */
+    /* ffdshow custom code (begin) */
     if (channels < 1 || channels > 6)
         return -1;
     s->channel_mode = avctx->ac3mode;
@@ -1314,7 +1314,7 @@ AVCodec ac3_encoder = {
     /*.pix_fmts = */NULL,
     /*.long_name = */NULL_IF_CONFIG_SMALL("ATSC A/52A (AC-3)"),
     #if __STDC_VERSION__ >= 199901L
-    .sample_fmts = (enum SampleFormat[]){SAMPLE_FMT_S16,SAMPLE_FMT_NONE},
+    .sample_fmts = (enum SampleFormat[]){AV_SAMPLE_FMT_S16,AV_SAMPLE_FMT_NONE},
     #else
     /*.sample_fmts = */NULL,
     #endif
