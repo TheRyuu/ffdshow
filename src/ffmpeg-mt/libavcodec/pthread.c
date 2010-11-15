@@ -384,6 +384,11 @@ static void update_context_from_user(AVCodecContext *dst, AVCodecContext *src)
 
     dst->frame_number     = src->frame_number;
     dst->reordered_opaque = src->reordered_opaque;
+    /* ffdshow custom code (begin) */
+    dst->reordered_opaque2 = src->reordered_opaque2;
+    dst->reordered_opaque3 = src->reordered_opaque3;
+    dst->h264_has_to_drop_first_non_ref = src->h264_has_to_drop_first_non_ref;
+    /* ffdshow custom code (end) */
 #undef copy_fields
 }
 
@@ -591,7 +596,7 @@ static void frame_thread_free(AVCodecContext *avctx, int thread_count)
 
     park_frame_worker_threads(fctx, thread_count);
 
-    if (fctx->prev_thread && fctx->prev_thread != fctx->threads)
+    if (fctx->prev_thread)
         update_context_from_thread(fctx->threads->avctx, fctx->prev_thread->avctx, 0);
 
     fctx->die = 1;
@@ -698,11 +703,11 @@ void ff_thread_flush(AVCodecContext *avctx)
 {
     FrameThreadContext *fctx = avctx->thread_opaque;
 
-    if (!fctx || !fctx->prev_thread) return; // ffdshow custom code
+    if (!avctx->thread_opaque) return;
 
     park_frame_worker_threads(fctx, avctx->thread_count);
 
-    if (fctx->prev_thread && fctx->prev_thread != fctx->threads)
+    if (fctx->prev_thread)
         update_context_from_thread(fctx->threads->avctx, fctx->prev_thread->avctx, 0);
 
     fctx->next_decoding = fctx->next_finished = 0;
