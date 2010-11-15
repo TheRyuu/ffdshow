@@ -1,5 +1,4 @@
 /*
- * Multithreading support
  * Copyright (c) 2008 Alexander Strange <astrange@ithinksw.com>
  *
  * This file is part of FFmpeg.
@@ -20,8 +19,8 @@
  */
 
 /**
- * @file thread.h
- * Multithreading support header.
+ * @file
+ * Multithreading support functions
  * @author Alexander Strange <astrange@ithinksw.com>
  */
 
@@ -32,80 +31,67 @@
 #include "avcodec.h"
 
 /**
- * Waits for decoding threads to finish and resets the internal
+ * Waits for decoding threads to finish and resets internal
  * state. Called by avcodec_flush_buffers().
+ *
+ * @param avctx The context.
  */
 void ff_thread_flush(AVCodecContext *avctx);
 
 /**
- * Submits a new frame to a decoding thread. Parameters are the
- * same as avcodec_decode_video2(). Returns the earliest available
- * decoded picture.
+ * Submits a new frame to a decoding thread.
+ * Returns the next available frame in picture. *got_picture_ptr
+ * will be 0 if none is available.
  *
- * NULL AVFrames returned from the codec will be dropped if
- * the client passes NULL data in.
+ * Parameters are the same as avcodec_decode_video2().
  */
-int ff_thread_decode_frame(AVCodecContext *avctx,
-                        void *data, int *data_size,
-                        AVPacket *avpkt);
+int ff_thread_decode_frame(AVCodecContext *avctx, AVFrame *picture,
+                           int *got_picture_ptr, AVPacket *avpkt);
 
 /**
- * For codecs which define update_thread_context.
- * Call this when the context is set up for the next frame to be
- * decoded. The next decoding thread will start afterwards.
- * The codec must not modify parts of the context read by
- * update_thread_context after calling this or it will cause a race
- * condition.
+ * Codecs which define update_thread_context should call this
+ * when they are ready for the next thread to start decoding
+ * the next frame. After calling it, do not change any variables
+ * read by the update_thread_context method.
+ *
+ * @param avctx The context.
  */
 void ff_thread_finish_setup(AVCodecContext *avctx);
 
 /**
  * Call this when some part of the picture is finished decoding.
- * Later calls with lower progress values will be ignored.
+ * Later calls with lower values of progress have no effect.
  *
- * @param f The AVFrame containing the current field or frame
- * @param progress The highest-numbered part finished so far
- * @param field The field being decoded, for field pictures.
- * 0 for top field or progressive, 1 for bottom.
+ * @param f The picture being decoded.
+ * @param progress Value, in arbitrary units, of how much of the picture has decoded.
+ * @param field The field being decoded, for field-picture codecs.
+ * 0 for top field or frame pictures, 1 for bottom field.
  */
 void ff_thread_report_progress(AVFrame *f, int progress, int field);
 
 /**
- * Call this before accessing some part of a previous field or frame.
- * Returns after the previous decoding thread has called ff_thread_report_progress()
- * with sufficiently high progress.
+ * Call this before accessing some part of a picture.
  *
- * @param f The AVFrame containing the reference field or frame
- * @param progress The highest-numbered part of the reference picture to wait for
- * @param field The field being referenced, for field pictures.
- * 0 for top field or progressive, 1 for bottom.
+ * @param f The picture being referenced.
+ * @param progress Value, in arbitrary units, to wait for.
+ * @param field The field being referenced, for field-picture codecs.
+ * 0 for top field or frame pictures, 1 for bottom field.
  */
 void ff_thread_await_progress(AVFrame *f, int progress, int field);
 
 /**
- * Convenience function to set progress for both fields to INT_MAX.
- * Can be used to prevent deadlocks in later threads when a decoder
- * exits early due to errors.
+ * Call this function instead of avctx->get_buffer(f).
  *
- * @param f The frame or field picture being decoded.
- */
-void ff_thread_finish_frame(AVFrame *f);
-
-/**
- * Replacement for get_buffer() for frame-level threading.
- *
- * Codecs with CODEC_CAP_FRAME_THREADS must call this instead
- * of calling get_buffer() directly.
+ * @param avctx The current context.
+ * @param f The frame to write into.
  */
 int ff_thread_get_buffer(AVCodecContext *avctx, AVFrame *f);
 
 /**
- * Replacement for release_buffer() for frame-level threading.
+ * Call this function instead of avctx->release_buffer(f).
  *
- * Codecs with CODEC_CAP_FRAME_THREADS must call this instead
- * of calling release_buffer() directly.
- *
- * On return, \p f->data will be cleared.
+ * @param avctx The current context.
+ * @param f The picture being released.
  */
 void ff_thread_release_buffer(AVCodecContext *avctx, AVFrame *f);
 

@@ -1077,7 +1077,8 @@ int MPV_frame_start(MpegEncContext *s, AVCodecContext *avctx)
             s->last_picture_ptr= &s->picture[i];
             if(ff_alloc_picture(s, s->last_picture_ptr, 0) < 0)
                 return -1;
-            ff_thread_finish_frame((AVFrame*)s->last_picture_ptr);
+            ff_thread_report_progress((AVFrame*)s->last_picture_ptr, INT_MAX, 0);
+            ff_thread_report_progress((AVFrame*)s->last_picture_ptr, INT_MAX, 1);
         }
         if((s->next_picture_ptr==NULL || s->next_picture_ptr->data[0]==NULL) && s->pict_type==FF_B_TYPE){
             /* Allocate a dummy frame */
@@ -1085,7 +1086,8 @@ int MPV_frame_start(MpegEncContext *s, AVCodecContext *avctx)
             s->next_picture_ptr= &s->picture[i];
             if(ff_alloc_picture(s, s->next_picture_ptr, 0) < 0)
                 return -1;
-            ff_thread_finish_frame((AVFrame*)s->next_picture_ptr);
+            ff_thread_report_progress((AVFrame*)s->next_picture_ptr, INT_MAX, 0);
+            ff_thread_report_progress((AVFrame*)s->next_picture_ptr, INT_MAX, 1);
         }
     }
 

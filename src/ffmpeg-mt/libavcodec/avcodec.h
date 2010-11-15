@@ -36,8 +36,8 @@
 #include "libavutil/cpu.h"
 
 #define LIBAVCODEC_VERSION_MAJOR 52
-#define LIBAVCODEC_VERSION_MINOR 94
-#define LIBAVCODEC_VERSION_MICRO  4
+#define LIBAVCODEC_VERSION_MINOR 97
+#define LIBAVCODEC_VERSION_MICRO  0
 
 #define LIBAVCODEC_VERSION_INT  AV_VERSION_INT(LIBAVCODEC_VERSION_MAJOR, \
                                                LIBAVCODEC_VERSION_MINOR, \
@@ -419,8 +419,8 @@ typedef struct RcOverride{
  */
 #define CODEC_CAP_CHANNEL_CONF     0x0400
 /**
- * Codec supports frame-level multithreading.
- */
+* Codec supports frame-level multithreading.
+*/
 #define CODEC_CAP_FRAME_THREADS    0x0800
 
 
@@ -959,7 +959,8 @@ typedef struct AVCodecContext {
      * If non NULL, 'draw_horiz_band' is called by the libavcodec
      * decoder to draw a horizontal band. It improves cache usage. Not
      * all codecs can do that. You must check the codec capabilities
-     * beforehand. May be called by different threads at the same time.
+     * beforehand. May be called by different threads at the same time,
+     * so implementations must be reentrant.
      * The function is also used by hardware acceleration APIs.
      * It is called at least once during frame decoding to pass
      * the data needed for hardware render.
@@ -1212,8 +1213,10 @@ typedef struct AVCodecContext {
      * height, as they normally need to be rounded up to the next multiple of 16.
      * if CODEC_CAP_DR1 is not set then get_buffer() must call
      * avcodec_default_get_buffer() instead of providing buffers allocated by
-     * some other means. May be called from a different thread if FF_THREAD_FRAME
-     * is set, but does not need to be reentrant.
+     * some other means.
+     * May be called from a different thread if thread_type==FF_THREAD_FRAME
+     * is set, but not by more than one thread at once, so does not need to be
+     * reentrant.
      * - encoding: unused
      * - decoding: Set by libavcodec, user can override.
      */
@@ -1222,9 +1225,10 @@ typedef struct AVCodecContext {
     /**
      * Called to release buffers which were allocated with get_buffer.
      * A released buffer can be reused in get_buffer().
-     * pic.data[*] must be set to NULL. May be called by different threads
-     * if frame threading is enabled, but not more than one at the same time.
-     *
+     * pic.data[*] must be set to NULL.
+     * May be called from a different thread if thread_type==FF_THREAD_FRAME
+     * is set, but not by more than one thread at once, so does not need to be
+     * reentrant.
      * - encoding: unused
      * - decoding: Set by libavcodec, user can override.
      */
@@ -2506,7 +2510,7 @@ typedef struct AVCodecContext {
     /**
      * Which multithreading methods to use.
      * Use of FF_THREAD_FRAME will increase decoding delay by one frame per thread,
-     * so clients which require strictly conforming DTS must not use it.
+     * so clients which require strictly conforming DTS should not use it.
      *
      * - encoding: Set by user, otherwise the default is used.
      * - decoding: Set by user, otherwise the default is used.
@@ -2516,7 +2520,7 @@ typedef struct AVCodecContext {
 #define FF_THREAD_SLICE   2 //< Decode more than one part of a single frame at once
 
     /**
-     * Which multithreading methods are actually active at the moment.
+     * Which multithreading methods are in use by the codec.
      * - encoding: Set by libavcodec.
      * - decoding: Set by libavcodec.
      */

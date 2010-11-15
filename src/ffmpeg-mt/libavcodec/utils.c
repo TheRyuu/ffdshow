@@ -955,8 +955,4 @@ void ff_thread_await_progress(AVFrame *f, int progress, int field)
 {
 }
 
-void ff_thread_finish_frame(AVFrame *f)
-{
-}
-
 #endif
