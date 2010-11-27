@@ -149,7 +149,7 @@
       <Culture>0x041b</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>kernel32.lib;ole32.lib;libcmtd.lib;libcpmtd.lib;winmm.lib;comctl32.lib;..\bin\lib_x86\libboost_thread-vc100-mt-sgd-1_44_64745.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;ole32.lib;libcmtd.lib;libcpmtd.lib;winmm.lib;comctl32.lib;..\bin\lib_x86\libboost_thread-vc100-mt-sgd-1_45_66662.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>../bin/ff_vfw.dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
@@ -201,7 +201,7 @@
       <Culture>0x041b</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>kernel32.lib;ole32.lib;libcmtd.lib;libcpmtd.lib;winmm.lib;comctl32.lib;..\bin\lib_x64\libboost_thread-vc100-mt-sgd-1_44_64745.lib</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;ole32.lib;libcmtd.lib;libcpmtd.lib;winmm.lib;comctl32.lib;..\bin\lib_x64\libboost_thread-vc100-mt-sgd-1_45_66662.lib</AdditionalDependencies>
       <OutputFile>../bin/ff_vfw.dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
@@ -258,7 +258,7 @@
       <Culture>0x041b</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>kernel32.lib;ole32.lib;libcmt.lib;libcpmt.lib;winmm.lib;comctl32.lib;..\bin\lib_x86\libboost_thread-vc100-mt-s-1_44_64745.lib</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;ole32.lib;libcmt.lib;libcpmt.lib;winmm.lib;comctl32.lib;..\bin\lib_x86\libboost_thread-vc100-mt-s-1_45_66662.lib</AdditionalDependencies>
       <OutputFile>../bin/ff_vfw.dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
@@ -319,7 +319,7 @@
       <Culture>0x041b</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>kernel32.lib;ole32.lib;libcmt.lib;libcpmt.lib;winmm.lib;comctl32.lib;..\bin\lib_x64\libboost_thread-vc100-mt-s-1_44_64745.lib</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;ole32.lib;libcmt.lib;libcpmt.lib;winmm.lib;comctl32.lib;..\bin\lib_x64\libboost_thread-vc100-mt-s-1_45_66662.lib</AdditionalDependencies>
       <OutputFile>../bin/ff_vfw.dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
