@@ -799,6 +799,7 @@
 #define IDC_CBX_MULTIPLE_INSTANCES      1501
 #define IDC_ED_CURVENORMAL_HIGH         1502
 #define IDC_LBL_MULTIPLE_INSTANCES      1502
+#define IDC_LBL_RESAMPLE_FREQ3          1502
 #define IDC_ED_CURVENORMAL_LOW          1503
 #define IDC_LBL_MERIT                   1503
 #define IDC_ED_CURVENORMAL_BITRATEPAYBACKDELAY 1504
@@ -1611,6 +1612,7 @@
 #define IDC_CHB_CONVOLVER               1880
 #define IDC_LBL_CONVOLVER_FILE          1881
 #define IDC_BT_RESAMPLE_FREQ            1881
+#define IDC_BT_RESAMPLE_FREQ2           1882
 #define IDC_ED_CONVOLVER_FILE           1883
 #define IDC_BT_CONVOLVER_FILE           1884
 #define IDC_CHB_B_PYRAMID               1885

@@ -135,9 +135,9 @@ void TvolumePage::cfg2volTbr(int tbr,int lbl,int idff,int lbltran,int mult)
    int db=ff_round(value2db(x/100.0));
    tbrSet(tbr,mult*db);
    if (lbltran)
-    setText(lbl,_l("%s %i db"),_(lbltran),db);
+    setText(lbl,_l("%s %i dB"),_(lbltran),db);
    else
-    setText(lbl,_l("%i db"),db);
+    setText(lbl,_l("%i dB"),db);
   }
  else
   {
@@ -279,7 +279,7 @@ void TvolumePage::onFrame(void)
 {
  int amp=(filter && getCheck(IDC_CHB_VOLUME_NORMALIZE)&& getCheck(IDC_CHB_VOLUME))?filter->getCurrentNormalization():100;
  if (isdb)
-  setText(IDC_LBL_VOLUME_NORMALIZE_CURRENT,_l("%s %4.1f db"),_(IDC_LBL_VOLUME_NORMALIZE_CURRENT),value2db(amp/100.0));
+  setText(IDC_LBL_VOLUME_NORMALIZE_CURRENT,_l("%s %4.1f dB"),_(IDC_LBL_VOLUME_NORMALIZE_CURRENT),value2db(amp/100.0));
  else
   setText(IDC_LBL_VOLUME_NORMALIZE_CURRENT,_l("%s %i%%"),_(IDC_LBL_VOLUME_NORMALIZE_CURRENT),amp);
  if (getCheck(IDC_CHB_VOLUME_SHOWCURRENT))
