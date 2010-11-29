@@ -338,10 +338,13 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
             bool forceChange=false;
             Tsubtitle *sub=NULL;
             TsubtitlesTextpin* pin = getTextpin();
+            int subShowEmbedded = deci->getParam2(IDFF_subShowEmbedded);
             Tsubtitles* subtitles = NULL;
             bool isText = false;
             bool isBitmapsub = false;
             int subformat = -1;
+            // Occurs when the pin has not received any data yet (MPC/libav splitter)
+            if (pin == NULL && subShowEmbedded > 0) return S_OK;
             if (pin 
              && (adhocMode == ADHOC_NORMAL 
                || (adhocMode == ADHOC_ADHOC_DRAW_DVD_SUB_ONLY && isdvdproc) 
@@ -511,7 +514,7 @@ TsubtitlesTextpin* TimgFilterSubtitles::getTextpin()
 {
     // make sure csEmbedded is locked
     int shownEmbedded=deci->getParam2(IDFF_subShowEmbedded);
-    if (embedded.size() && shownEmbedded) {
+    if (embedded.size() && shownEmbedded > 0) {
         Tembedded::iterator e=embedded.find(shownEmbedded);
         if (e!=embedded.end() && e->second)
             return e->second;
