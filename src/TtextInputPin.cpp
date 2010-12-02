@@ -92,7 +92,7 @@ HRESULT TtextInputPin::SetMediaType(const CMediaType* mtIn)
  if (mtIn->majortype==MEDIATYPE_Subtitle)
   {
    const SUBTITLEINFO *psi=(const SUBTITLEINFO*)mtIn->Format();
-   ffstring isolang = text<char_t>(psi->IsoLang);
+   ffstring isolang = (psi->IsoLang[0])? text<char_t>(psi->IsoLang) : _l("Und");
    
    Ttranslate *tr = NULL;filter->getTranslator(&tr);
    const char_t *isoname=tr->translate(TsubtitlesSettings::getLangDescrIso(isolang.c_str()));

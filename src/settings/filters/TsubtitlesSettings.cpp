@@ -60,7 +60,7 @@ const TsubtitlesSettings::Tlang TsubtitlesSettings::langs[]=
 {
 // "cc","Closed Caption",
   {_l("default"),             _l("")  ,   NULL  ,0},
- {_l("undefined"),              NULL ,_l("und"),0},
+ {_l("Undetermined"),           NULL ,_l("und"),0},
  {_l("(Afan) Oromo"),        _l("OM"),   NULL  ,0},
  {_l("Abkhazian"),           _l("AB"),_l("abk"),0},
  {_l("Achinese"),               NULL ,_l("ace"),0},
@@ -226,6 +226,7 @@ const TsubtitlesSettings::Tlang TsubtitlesSettings::langs[]=
  {_l("Rhaeto-Romance"),      _l("RM"),_l("roh"),0},
  {_l("Romanian"),            _l("RO"),_l("ron"),1048},
  {_l("Romanian"),            _l("RO"),_l("run"),1048},
+ {_l("Romanian"),            _l("RO"),_l("rum"),1048},
  {_l("Russian"),             _l("RU"),_l("rus"),1049},
  {_l("Samoan"),              _l("SM"),_l("smo"),0},
  {_l("Sangho"),              _l("SG"),_l("sag"),0},
