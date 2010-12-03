@@ -2200,6 +2200,14 @@
 			Name="libavcore"
 			>
 			<File
+				RelativePath=".\libavcore\audioconvert.c"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcore\audioconvert.h"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcore\avcore.h"
 				>
 			</File>

@@ -25,6 +25,7 @@
  */
 //#define DEBUG
 //#define DEBUG_BITALLOC
+#include "libavcore/audioconvert.h"
 #include "libavutil/crc.h"
 #include "avcodec.h"
 #include "libavutil/common.h" /* for av_reverse */
@@ -620,26 +621,26 @@ static av_cold int set_channel_info(AC3EncodeContext *s, int channels,
     ch_layout = *channel_layout;
     if (!ch_layout)
         ch_layout = avcodec_guess_channel_layout(channels, CODEC_ID_AC3, NULL);
-    if (avcodec_channel_layout_num_channels(ch_layout) != channels)
+    if (av_get_channel_layout_nb_channels(ch_layout) != channels)
         return -1;
 
-    s->lfe = !!(ch_layout & CH_LOW_FREQUENCY);
+    s->lfe = !!(ch_layout & AV_CH_LOW_FREQUENCY);
     s->nb_all_channels = channels;
     s->nb_channels = channels - s->lfe;
     s->lfe_channel = s->lfe ? s->nb_channels : -1;
     if (s->lfe)
-        ch_layout -= CH_LOW_FREQUENCY;
+        ch_layout -= AV_CH_LOW_FREQUENCY;
 
     switch (ch_layout) {
-    case CH_LAYOUT_MONO:           s->channel_mode = AC3_CHMODE_MONO;   break;
-    case CH_LAYOUT_STEREO:         s->channel_mode = AC3_CHMODE_STEREO; break;
-    case CH_LAYOUT_SURROUND:       s->channel_mode = AC3_CHMODE_3F;     break;
-    case CH_LAYOUT_2_1:            s->channel_mode = AC3_CHMODE_2F1R;   break;
-    case CH_LAYOUT_4POINT0:        s->channel_mode = AC3_CHMODE_3F1R;   break;
-    case CH_LAYOUT_QUAD:
-    case CH_LAYOUT_2_2:            s->channel_mode = AC3_CHMODE_2F2R;   break;
-    case CH_LAYOUT_5POINT0:
-    case CH_LAYOUT_5POINT0_BACK:   s->channel_mode = AC3_CHMODE_3F2R;   break;
+    case AV_CH_LAYOUT_MONO:           s->channel_mode = AC3_CHMODE_MONO;   break;
+    case AV_CH_LAYOUT_STEREO:         s->channel_mode = AC3_CHMODE_STEREO; break;
+    case AV_CH_LAYOUT_SURROUND:       s->channel_mode = AC3_CHMODE_3F;     break;
+    case AV_CH_LAYOUT_2_1:            s->channel_mode = AC3_CHMODE_2F1R;   break;
+    case AV_CH_LAYOUT_4POINT0:        s->channel_mode = AC3_CHMODE_3F1R;   break;
+    case AV_CH_LAYOUT_QUAD:
+    case AV_CH_LAYOUT_2_2:            s->channel_mode = AC3_CHMODE_2F2R;   break;
+    case AV_CH_LAYOUT_5POINT0:
+    case AV_CH_LAYOUT_5POINT0_BACK:   s->channel_mode = AC3_CHMODE_3F2R;   break;
     default:
         return -1;
     }
@@ -647,7 +648,7 @@ static av_cold int set_channel_info(AC3EncodeContext *s, int channels,
     s->channel_map = ff_ac3_enc_channel_map[s->channel_mode][s->lfe];
     *channel_layout = ch_layout;
     if (s->lfe)
-        *channel_layout |= CH_LOW_FREQUENCY;
+        *channel_layout |= AV_CH_LOW_FREQUENCY;
 
     return 0;
 }

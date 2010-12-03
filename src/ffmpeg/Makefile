@@ -261,6 +261,7 @@ SRCS_C=\
     \
     $(LAVU_DIR)/x86/cpu.c \
     \
+    $(LAVCORE_DIR)/audioconvert.c \
     $(LAVCORE_DIR)/imgutils.c \
     $(LAVCORE_DIR)/samplefmt.c \
     $(LAVCORE_DIR)/utils.c \
