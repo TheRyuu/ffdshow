@@ -10,6 +10,7 @@ struct TexternalStream
  ffstring streamName;
  ffstring streamLanguageName;
  long streamNb;
+ long internalStreamNb;
  bool enabled;
  LCID langId;
 };

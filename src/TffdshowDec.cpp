@@ -1158,6 +1158,19 @@ STDMETHODIMP TffdshowDec::extractExternalStreams(void)
  this->NonDelegatingQueryInterface(getGUID<IffdshowDecVideo>(),(void**) &deciV);
  Ttranslate *tr = NULL;getTranslator(&tr);
 
+ // Id of the active embedded subtitles PIN
+ int embeddedSub = getParam2(IDFF_subShowEmbedded);
+ int internalSubPinId = -1;
+ 
+ // Retrieve the first connected subtitle PIN (used by Haali)
+ int textpinconnectedCnt=deciV->getConnectedTextPinCnt();
+ if (textpinconnectedCnt > 0)
+ {
+  const char_t *trackName = NULL, *langName = NULL; int found,id; LCID langId = 0;
+  deciV->getConnectedTextPinInfo(0,&trackName,&langName,&langId,&id,&found);
+  internalSubPinId = id;
+ }
+
 
  getGraph(&m_pGraph); // Graph we belong to
  if (m_pGraph == NULL) return E_FAIL;
@@ -1246,6 +1259,7 @@ STDMETHODIMP TffdshowDec::extractExternalStreams(void)
     stream.filterName = ffstring(filtername);
     stream.streamNb = streamNb;
     stream.langId = streamLanguageId;
+    stream.internalStreamNb = -1;
     if ((streamSelect & AMSTREAMSELECTINFO_ENABLED) == AMSTREAMSELECTINFO_ENABLED)
      stream.enabled = true;
     else stream.enabled = false;
@@ -1261,6 +1275,9 @@ STDMETHODIMP TffdshowDec::extractExternalStreams(void)
     }
     else if (streamGroup == 2 || streamGroup == 6590033)// Subtitles
     {
+     // If external subtitles used, disable internal subtitle
+     if (embeddedSub == 0) stream.enabled = false;
+     stream.internalStreamNb = internalSubPinId;
      externalSubtitleStreams.push_back(stream);
     }
     else
@@ -1290,7 +1307,6 @@ STDMETHODIMP TffdshowDec::extractExternalStreams(void)
  if (deciV == NULL) return S_OK;  
 
  // Now add subtitle streams connected to FFDShow input text pin if any
- int textpinconnectedCnt=deciV->getConnectedTextPinCnt();
  if (!textpinconnectedCnt) return S_OK;
  
  int currentEmbeddedStream = getParam2(IDFF_subShowEmbedded);
@@ -1337,11 +1353,11 @@ STDMETHODIMP TffdshowDec::extractExternalStreams(void)
    stream.filterName = ffstring(_l("FFDSHOW"));
    stream.streamNb = 0;
    stream.langId = 0;
+   stream.internalStreamNb = -1;
    stream.enabled = false;
    stream.streamName = trans->translate(_l("No subtitles"));
    stream.streamLanguageName = _l("");
    externalSubtitleStreams.push_back(stream);
-   
  }
 
  return S_OK;
@@ -1406,6 +1422,10 @@ STDMETHODIMP TffdshowDec::setExternalStream(int group, long streamNb)
     DPRINTF(_l("TffdshowDec::setExternalStream set external stream %ld inside filter %s"), streamNb, filtername);
     pAMStreamSelect->Enable(streamNb, AMSTREAMSELECTENABLE_ENABLE);
     pAMStreamSelect->Release();
+
+    // Lastly, enable the FFDShow subtitle text PIN
+    if (pStream->internalStreamNb >= 0)
+     putParam(IDFF_subShowEmbedded,pStream->internalStreamNb);
     break;
    }
   }
