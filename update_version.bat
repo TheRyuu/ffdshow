@@ -1,13 +1,13 @@
 @if not exist "%programfiles%\TortoiseSVN\bin\SubWCRev.exe" goto :x64
 
-@"%programfiles%\TortoiseSVN\bin\SubWCRev.exe" .\ src\SubWCRev.conf src\svn_version.h
+@"%programfiles%\TortoiseSVN\bin\SubWCRev.exe" .\ src\SubWCRev.conf src\svn_version.h -f
 @if %ERRORLEVEL% neq 0 goto :NoSubWCRev
 @goto :eof
 
 :x64
 @if not exist "%ProgramW6432%\TortoiseSVN\bin\SubWCRev.exe" goto :NoSubWCRev
 
-@"%ProgramW6432%\TortoiseSVN\bin\SubWCRev.exe" .\ src\SubWCRev.conf src\svn_version.h
+@"%ProgramW6432%\TortoiseSVN\bin\SubWCRev.exe" .\ src\SubWCRev.conf src\svn_version.h -f
 @if %ERRORLEVEL% neq 0 goto :NoSubWCRev
 @goto :eof
 
