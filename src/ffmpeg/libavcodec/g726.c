@@ -325,8 +325,10 @@ static av_cold int g726_init(AVCodecContext * avctx)
 
     /* select a frame size that will end on a byte boundary and have a size of
        approximately 1024 bytes */
+#ifdef __GNUC__
     if (avctx->codec->encode)
         avctx->frame_size = ((int[]){ 4096, 2736, 2048, 1640 })[index];
+#endif
 
     return 0;
 }
