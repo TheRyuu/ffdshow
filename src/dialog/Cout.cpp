@@ -196,7 +196,7 @@ void ToutPage::onAspect(void)
  GetWindowRect(GetDlgItem(m_hwnd,IDC_BT_ASPECT),&r);
  int aspectmode=cbxGetCurSel(IDC_CBX_ASPECT);
  HMENU hmn=CreatePopupMenu();
- const Taspect *aspects=aspectmode==0?sampleAspects:displayAspects;
+ const Taspect *aspects=aspectmode==0?&sampleAspects[0]:&displayAspects[0];
  for (int ord=0;aspects[ord].caption;)
   insertMenuItem(hmn,ord,ord+100,aspects[ord].caption,false);
  int cmd=TrackPopupMenu(_(hmn),TPM_LEFTALIGN|TPM_TOPALIGN|TPM_RETURNCMD,r.left-1,r.bottom,0,m_hwnd,0);
