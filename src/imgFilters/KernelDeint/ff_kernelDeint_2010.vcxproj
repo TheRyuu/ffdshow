@@ -183,7 +183,6 @@
       </PrecompiledHeader>
       <BrowseInformation>
       </BrowseInformation>
-      <WarningLevel>Level4</WarningLevel>
     </ClCompile>
     <Link>
       <AdditionalDependencies>libcmt.lib;kernel32.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -224,7 +223,6 @@
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <WarningLevel>Level4</WarningLevel>
     </ClCompile>
     <Link>
       <AdditionalDependencies>libcmt.lib;kernel32.lib;%(AdditionalDependencies)</AdditionalDependencies>

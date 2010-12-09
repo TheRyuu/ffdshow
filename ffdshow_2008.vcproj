@@ -306,7 +306,6 @@
 				ObjectFile="$(IntDir)\"
 				ProgramDataBaseFileName="$(IntDir)\$(TargetName).pdb"
 				BrowseInformation="0"
-				WarningLevel="4"
 				SuppressStartupBanner="true"
 				CompileAs="0"
 				DisableSpecificWarnings="4996,4250"
@@ -427,7 +426,6 @@
 				ObjectFile="$(IntDir)\"
 				ProgramDataBaseFileName="$(IntDir)\$(TargetName).pdb"
 				BrowseInformation="0"
-				WarningLevel="4"
 				SuppressStartupBanner="true"
 				CompileAs="0"
 				DisableSpecificWarnings="4996,4250"
@@ -558,6 +556,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\src\helpDXVAOptions.txt"
+					>
+				</File>
+				<File
 					RelativePath=".\src\helpFF1.txt"
 					>
 				</File>
@@ -623,6 +625,10 @@
 				</File>
 				<File
 					RelativePath=".\src\helpShowMV.txt"
+					>
+				</File>
+				<File
+					RelativePath=".\src\helpSubIMGOptions.txt"
 					>
 				</File>
 				<File
@@ -5918,14 +5924,6 @@
 		</Filter>
 		<File
 			RelativePath=".\src\ffdshow.def"
-			>
-		</File>
-		<File
-			RelativePath=".\src\helpDXVAOptions.txt"
-			>
-		</File>
-		<File
-			RelativePath=".\src\helpSubIMGOptions.txt"
 			>
 		</File>
 	</Files>

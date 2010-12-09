@@ -230,7 +230,6 @@
 				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="0"
 				BrowseInformation="0"
-				WarningLevel="4"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -322,7 +321,6 @@
 				BufferSecurityCheck="false"
 				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="0"
-				WarningLevel="4"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"

@@ -242,7 +242,6 @@
 				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="2"
 				BrowseInformation="0"
-				WarningLevel="4"
 				DebugInformationFormat="3"
 				DisableSpecificWarnings="4996;4100;4127;4201;4005"
 			/>
@@ -339,7 +338,6 @@
 				EnableFunctionLevelLinking="false"
 				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="2"
-				WarningLevel="4"
 				DebugInformationFormat="3"
 				DisableSpecificWarnings="4996;4100;4127"
 			/>

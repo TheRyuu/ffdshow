@@ -563,6 +563,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\src\helpDXVAOptions.txt"
+					>
+				</File>
+				<File
 					RelativePath=".\src\helpFF1.txt"
 					>
 				</File>
@@ -628,6 +632,10 @@
 				</File>
 				<File
 					RelativePath=".\src\helpShowMV.txt"
+					>
+				</File>
+				<File
+					RelativePath=".\src\helpSubIMGOptions.txt"
 					>
 				</File>
 				<File
@@ -5915,14 +5923,6 @@
 		</Filter>
 		<File
 			RelativePath=".\src\ffdshow.def"
-			>
-		</File>
-		<File
-			RelativePath=".\src\helpDXVAOptions.txt"
-			>
-		</File>
-		<File
-			RelativePath=".\src\helpSubIMGOptions.txt"
 			>
 		</File>
 	</Files>

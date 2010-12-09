@@ -67,7 +67,6 @@
 				ObjectFile="$(IntDir)\"
 				ProgramDataBaseFileName="$(IntDir)\$(TargetName).pdb"
 				BrowseInformation="0"
-				WarningLevel="4"
 				SuppressStartupBanner="true"
 				DisableSpecificWarnings="4996"
 			/>
@@ -173,7 +172,6 @@
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
 				ProgramDataBaseFileName="$(IntDir)\$(TargetName).pdb"
-				WarningLevel="4"
 				SuppressStartupBanner="true"
 				DisableSpecificWarnings="4996"
 			/>

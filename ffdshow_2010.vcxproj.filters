@@ -162,6 +162,9 @@
     <None Include="src\helpDeinterlace.txt">
       <Filter>doc\hints</Filter>
     </None>
+    <None Include="src\helpDXVAOptions.txt">
+      <Filter>doc\hints</Filter>
+    </None>
     <None Include="src\helpFF1.txt">
       <Filter>doc\hints</Filter>
     </None>
@@ -211,6 +214,9 @@
       <Filter>doc\hints</Filter>
     </None>
     <None Include="src\helpShowMV.txt">
+      <Filter>doc\hints</Filter>
+    </None>
+    <None Include="src\helpSubIMGOptions.txt">
       <Filter>doc\hints</Filter>
     </None>
     <None Include="src\helpTray.txt">
@@ -300,8 +306,6 @@
     <None Include="src\ffdshow.def">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="src\helpDXVAOptions.txt" />
-    <None Include="src\helpSubIMGOptions.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\checkHardCodedBlackList.cpp">

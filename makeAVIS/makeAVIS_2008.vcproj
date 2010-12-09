@@ -237,7 +237,6 @@
 				UsePrecompiledHeader="0"
 				ProgramDataBaseFileName="$(IntDir)\$(TargetName).pdb"
 				BrowseInformation="0"
-				WarningLevel="3"
 				DebugInformationFormat="0"
 				DisableSpecificWarnings="4996"
 			/>
@@ -334,7 +333,6 @@
 				ForceConformanceInForLoopScope="true"
 				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="0"
-				WarningLevel="3"
 				DebugInformationFormat="0"
 				DisableSpecificWarnings="4996"
 			/>
