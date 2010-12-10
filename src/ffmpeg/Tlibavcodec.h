@@ -177,9 +177,9 @@ public:
  int      (*FFIsInterlaced) (struct AVCodecContext* pAVCtx, int nHeight);
  unsigned long (*FFGetMBNumber) (struct AVCodecContext* pAVCtx);
 
- void (*yadif_init)(YadifContext *yadctx);
- void (*yadif_uninit)(YadifContext *yadctx);
- void (*yadif_filter)(YadifContext *yadctx, uint8_t *dst[3], stride_t dst_stride[3], int width, int height, int parity, int tff);
+ void (*yadif_init)(YADIFContext *yadctx);
+ void (*yadif_uninit)(YADIFContext *yadctx);
+ void (*yadif_filter)(YADIFContext *yadctx, uint8_t *dst[3], stride_t dst_stride[3], int width, int height, int parity, int tff);
 };
 
 #endif

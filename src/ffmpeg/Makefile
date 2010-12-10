@@ -266,8 +266,14 @@ SRCS_C=\
     $(LAVCORE_DIR)/samplefmt.c \
     $(LAVCORE_DIR)/utils.c \
     \
+    $(LAVFILTER_DIR)/asrc_anullsrc.c \
+    $(LAVFILTER_DIR)/avfilter.c \
+    $(LAVFILTER_DIR)/avfiltergraph.c \
+    $(LAVFILTER_DIR)/defaults.c \
+    $(LAVFILTER_DIR)/formats.c \
     $(LAVFILTER_DIR)/vf_yadif.c \
     $(LAVFILTER_DIR)/yadif_thread.c \
+    $(LAVFILTER_DIR)/x86/yadif.c \
     \
     $(LAVS_DIR)/rgb2rgb.c \
     $(LAVS_DIR)/swscale.c \
@@ -326,5 +332,6 @@ clean:
 	rm -f *.o *.d $(LAVC_DIR)/*.o $(LAVC_DIR)/*.d $(LAVC_DIR)/x86/*.o $(LAVC_DIR)/x86/*.d \
 	$(LAVC_DIR)/amr_float/*.o $(LAVC_DIR)/amr_float/*.d $(LAVU_DIR)/*.o $(LAVU_DIR)/*.d \
 	$(LAVU_DIR)/x86/*.o $(LAVU_DIR)/x86/*.d $(LAVCORE_DIR)/*.o $(LAVCORE_DIR)/*.d \
-	$(LAVFILTER_DIR)/*.o $(LAVFILTER_DIR)/*.d $(LAVS_DIR)/*.o $(LAVS_DIR)/*.d $(LAVS_DIR)/x86/*.o \
-	$(LAVS_DIR)/x86/*.d $(LAVP_DIR)/*.o $(LAVP_DIR)/*.d $(ZLIB_DIR)/*.o $(ZLIB_DIR)/*.d $(SLIB)
+	$(LAVFILTER_DIR)/*.o $(LAVFILTER_DIR)/*.d $(LAVFILTER_DIR)/x86/*.o $(LAVFILTER_DIR)/x86/*.d \
+	$(LAVS_DIR)/*.o $(LAVS_DIR)/*.d $(LAVS_DIR)/x86/*.o $(LAVS_DIR)/x86/*.d $(LAVP_DIR)/*.o \
+	$(LAVP_DIR)/*.d $(ZLIB_DIR)/*.o $(ZLIB_DIR)/*.d $(SLIB)

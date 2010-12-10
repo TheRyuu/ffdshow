@@ -59,7 +59,7 @@ static void WINAPI attribute_align_arg thread_func(void *v){
  * Free what has been allocated by yadif_thread_init().
  * Must be called after decoding has finished, especially do not call while yadif_thread_execute() is running.
  */
-void yadif_thread_free(YadifContext *yadctx){
+void yadif_thread_free(YADIFContext *yadctx){
     ThreadAPIContext *threadAPIContext= yadctx->thread_opaque;
     int i;
 
@@ -77,7 +77,7 @@ void yadif_thread_free(YadifContext *yadctx){
     av_freep(&yadctx->thread_opaque);
 }
 
-void yadif_thread_execute(YadifContext *yadctx, int (*func)(YadifThreadContext *yadThreadCtx), int count){
+void yadif_thread_execute(YADIFContext *yadctx, int (*func)(YadifThreadContext *yadThreadCtx), int count){
     ThreadAPIContext *threadAPIContext= yadctx->thread_opaque;
     int i;
 
@@ -94,7 +94,7 @@ void yadif_thread_execute(YadifContext *yadctx, int (*func)(YadifThreadContext *
     }
 }
 
-int yadif_thread_init(YadifContext *yadctx, int thread_count){
+int yadif_thread_init(YADIFContext *yadctx, int thread_count){
     int i;
     ThreadAPIContext *threadAPIContext;
     uint32_t threadid;

@@ -240,12 +240,12 @@ void TimgFilterYadif::done(void)
     last_rtStop = REFTIME_INVALID;
 }
 
-YadifContext* TimgFilterYadif::getContext(int mode, int field_order_mode){
+YADIFContext* TimgFilterYadif::getContext(int mode, int field_order_mode){
 
-    YadifContext *yadctx = (YadifContext*)malloc(sizeof(YadifContext));
+    YADIFContext *yadctx = (YADIFContext*)malloc(sizeof(YADIFContext));
     if (!yadctx) return yadctx;
 
-    memset(yadctx, 0, sizeof(YadifContext));
+    memset(yadctx, 0, sizeof(YADIFContext));
     yadctx->do_deinterlace=1;
 
     yadctx->mode = mode;

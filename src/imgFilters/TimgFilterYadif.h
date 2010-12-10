@@ -9,7 +9,7 @@ DECLARE_FILTER(TimgFilterYadif,public,TimgFilter)
 private:
  Tlibavcodec *libavcodec;
  TdeinterlaceSettings oldcfg;
- YadifContext* yadctx;
+ YADIFContext* yadctx;
  const TdeinterlaceSettings *cfg;
  TfilterQueue::iterator it;
  bool hasImageInBuffer;
@@ -21,7 +21,7 @@ private:
  virtual void onSizeChange(void);
  HRESULT onDiscontinuity(const TffPict &pict);
 
- YadifContext* getContext(int mode, int parity);
+ YADIFContext* getContext(int mode, int parity);
  HRESULT put_image(TffPict &pict, const unsigned char *src[4], int full);
  void store_ref(const uint8_t *src[3], stride_t src_stride[3], int width, int height);
  int config(TffPict &pict);

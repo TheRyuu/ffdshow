@@ -21,8 +21,11 @@
 #ifndef _VF_YADIF_H_
 #define _VF_YADIF_H_
 
+#include "../../imgFilters/ffImgfmt.h"
+#include "avfilter.h"
+
 typedef struct YadifThreadContext{
-    struct YadifContext *yadctx;
+    struct YADIFContext *yadctx;
     int plane_start;
     int plane_end;
     int y_start[3];
@@ -30,9 +33,9 @@ typedef struct YadifThreadContext{
 } YadifThreadContext;
 
 /**
- * YadifContext
+ * YADIFContext
  */
-typedef struct YadifContext {
+typedef struct YADIFContext {
     int mode;
     int field_order_mode;
     int64_t buffered_rtStart;
@@ -57,7 +60,7 @@ typedef struct YadifContext {
      */
     int thread_count;
     void *thread_opaque;
-    int (*execute)(struct YadifContext *yadctx, int (*func)(YadifThreadContext *yadThreadCtx), int count);
+    int (*execute)(struct YADIFContext *yadctx, int (*func)(YadifThreadContext *yadThreadCtx), int count);
     YadifThreadContext *threadCtx;
 
     /*
@@ -70,10 +73,20 @@ typedef struct YadifContext {
     int height;
     int parity;
     int tff;
-} YadifContext;
 
-void yadif_filter(YadifContext *p, uint8_t *dst[3], stride_t dst_stride[3], int width, int height, int parity, int tff);
-void yadif_init(YadifContext *yadctx);
-void yadif_uninit(YadifContext *yadctx);
+    int frame_pending;
+
+    AVFilterBufferRef *cur;
+    AVFilterBufferRef *next;
+    AVFilterBufferRef *prev;
+    AVFilterBufferRef *out;
+    void (*filter_line)(uint8_t *dst,
+                        uint8_t *prev, uint8_t *cur, uint8_t *next,
+                        int w, int refs, int parity, int mode);
+} YADIFContext;
+
+void yadif_filter(YADIFContext *p, uint8_t *dst[3], stride_t dst_stride[3], int width, int height, int parity, int tff);
+void yadif_init(YADIFContext *yadctx);
+void yadif_uninit(YADIFContext *yadctx);
 
 #endif // _VF_YADIF_H_
