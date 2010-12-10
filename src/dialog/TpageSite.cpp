@@ -127,7 +127,7 @@ INT_PTR TpageSite::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
        IDOK,TanchorInfo::BOTTOM|TanchorInfo::RIGHT,
        IDCANCEL,TanchorInfo::BOTTOM|TanchorInfo::RIGHT,
        IDC_BT_EXPORT,TanchorInfo::BOTTOM|TanchorInfo::RIGHT,
-       IDC_BT_DONATE,TanchorInfo::BOTTOM|TanchorInfo::LEFT,
+       //IDC_BT_DONATE,TanchorInfo::BOTTOM|TanchorInfo::LEFT,
        IDC_LINE,TanchorInfo::BOTTOM|TanchorInfo::LEFT|TanchorInfo::RIGHT,
        IDC_TAB,TanchorInfo::LEFT|TanchorInfo::TOP|TanchorInfo::RIGHT|TanchorInfo::BOTTOM,
        0,0
@@ -176,7 +176,7 @@ INT_PTR TpageSite::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
        PostMessage(htab,TCM_SETCURSEL,pg,0);
        setActivePage(propertypages[pg]);
       }
-     addHint(IDC_BT_DONATE,_l("Thank you!"));
+     //addHint(IDC_BT_DONATE,_l("Thank you!"));
 
      // Re-center the %&#@*! pagesite dialog
 
@@ -225,11 +225,11 @@ INT_PTR TpageSite::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
        if (HIWORD(wParam)==BN_CLICKED)
         applyChanges();
        return TRUE;
-      case IDC_BT_DONATE:
+/*      case IDC_BT_DONATE:
        if (HIWORD(wParam)==BN_CLICKED)
         {
          ShellExecute(m_hwnd,_l("open"),_l("http://order.kagi.com/?6FAEY"),NULL,_l("."),SW_SHOWNORMAL);
-/*
+
          static const char_t *donations[]={_l("PayPal"),_l("Kagi"),NULL};
          int cmd=selectFromMenu(donations,IDC_BT_DONATE,false);
          if (isIn(cmd,0,1))
@@ -241,9 +241,9 @@ INT_PTR TpageSite::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
             };
            ShellExecute(m_hwnd,_l("open"),urls[cmd],NULL,_l("."),SW_SHOWNORMAL);
           }
-*/
         }
        return TRUE;
+*/
       case IDC_BT_EXPORT:
        if (HIWORD(wParam)==BN_CLICKED)
         {

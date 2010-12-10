@@ -8,7 +8,7 @@ class TaboutPage :public TconfPageBase
 {
 private:
  char_t regflnm[MAX_PATH];
- void onExport(void),onAbout(void),onDonate(void),onLicense(void);
+ void onExport(void),onAbout(void),/*onDonate(void),*/onLicense(void);
  char_t *lic;
 protected:
  const char_t *capt;int helpId;

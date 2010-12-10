@@ -100,10 +100,10 @@ void TaboutPage::onAbout(void)
 {
  TversionsDlg verdlg(deci,m_hwnd,fcsVersions());
 }
-void TaboutPage::onDonate(void)
+/*void TaboutPage::onDonate(void)
 {
  ShellExecute(m_hwnd,_l("open"),_l("http://order.kagi.com/?6FAEY"),NULL,_l("."),SW_SHOWNORMAL);
-}
+}*/
 
 TaboutPage::TaboutPage(TffdshowPageBase *Iparent):TconfPageBase(Iparent)
 {
@@ -115,7 +115,7 @@ TaboutPage::TaboutPage(TffdshowPageBase *Iparent):TconfPageBase(Iparent)
    IDC_BT_EXPORT,&TaboutPage::onExport,
    //IDC_LBL_FFDSHOWVERSION,&TaboutPage::onAbout,
    IDC_BT_FFDSHOWVERSION,&TaboutPage::onAbout,
-   IDC_BT_DONATE,&TaboutPage::onDonate,
+   //IDC_BT_DONATE,&TaboutPage::onDonate,
    IDC_CHB_LICENSE,&TaboutPage::onLicense,
    0,NULL
   };

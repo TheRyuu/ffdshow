@@ -1528,7 +1528,7 @@
 #define IDC_ED_QUANT_TABLE_INTRA7       1835
 #define IDC_BT_EXPORT                   1835
 #define IDC_ED_QUANT_TABLE_INTRA8       1836
-#define IDC_BT_DONATE                   1836
+//#define IDC_BT_DONATE                   1836
 #define IDC_LBL_SUB_SPLIT_BORDER        1836
 #define IDC_ED_QUANT_TABLE_INTRA9       1837
 #define IDC_CHB_SUB_SEARCHHEURISTIC     1837
