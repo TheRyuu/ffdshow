@@ -7,16 +7,15 @@
 #include "Tbitdata.h"
 #include "ffcodecs.h"
 
-enum StreamFormat
-{
- UNDEFINED=0,
- REGULAR_AC3=1,
- EAC3=2,
- MLP=3,
- TRUEHD=4,
- AC3_TRUEHD=5,
- DTS=6,
- DTS_HD=7
+enum StreamFormat {
+    UNDEFINED=0,
+    REGULAR_AC3=1,
+    EAC3=2,
+    MLP=3,
+    TRUEHD=4,
+    AC3_TRUEHD=5,
+    DTS=6,
+    DTS_HD=7
 };
 
 /**
@@ -64,14 +63,12 @@ const uint16_t ff_ac3_frame_size_tab[38][3] = {
     { 1280, 1394, 1920 },
 };
 
-static const uint32_t dca_sample_rates[16] =
-{
+static const uint32_t dca_sample_rates[16] = {
     0, 8000, 16000, 32000, 0, 0, 11025, 22050, 44100, 0, 0,
     12000, 24000, 48000, 96000, 192000
 };
 
-static const uint32_t dca_bit_rates[32] =
-{
+static const uint32_t dca_bit_rates[32] = {
     32000, 56000, 64000, 96000, 112000, 128000,
     192000, 224000, 256000, 320000, 384000,
     448000, 512000, 576000, 640000, 768000,
@@ -98,89 +95,97 @@ static const uint8_t mlp_channels[32] = {
 };
 
 static const uint8_t thd_chancount[13] = {
-//  LR    C   LFE  LRs LRvh  LRc LRrs  Cs   Ts  LRsd  LRw  Cvh  LFE2
-     2,   1,   1,   2,   2,   2,   2,   1,   1,   2,   2,   1,   1
+    //  LR    C   LFE  LRs LRvh  LRc LRrs  Cs   Ts  LRsd  LRw  Cvh  LFE2
+    2,   1,   1,   2,   2,   2,   2,   1,   1,   2,   2,   1,   1
 };
 
 static int truehd_channels(int chanmap);
 
-struct TframeData
-{
+struct TframeData {
 public:
- uint32_t frame_size;
- uint32_t space_size;
+    uint32_t frame_size;
+    uint32_t space_size;
 
- TframeData(uint32_t Iframe_size)
- { 
-  frame_size=Iframe_size;
-  space_size=0;
- }
+    TframeData(uint32_t Iframe_size) {
+        frame_size=Iframe_size;
+        space_size=0;
+    }
 };
 
-struct TaudioParserData
-{
+struct TaudioParserData {
 public:
- int channels;
- uint32_t sample_rate;
- uint32_t bit_rate;
- uint32_t sample_blocks;
- uint32_t ratebits;
- uint32_t lastFrameTime;
- bool isFirst;
- DWORD wFormatTag;
- int sample_format;
- std::vector<TframeData> frames;
- int nbFormatChanges;
- int alternateSampleFormat;
- void reset()
- {
-  wFormatTag=0;sample_rate=0;bit_rate=0;sample_format=0;sample_blocks=0;lastFrameTime=0;isFirst=true;
-  nbFormatChanges=0;frames.clear();alternateSampleFormat=-1;channels=0;
- }
- TaudioParserData()
- {
-  reset();
- }
+    int channels;
+    uint32_t sample_rate;
+    uint32_t bit_rate;
+    uint32_t sample_blocks;
+    uint32_t ratebits;
+    uint32_t lastFrameTime;
+    bool isFirst;
+    DWORD wFormatTag;
+    int sample_format;
+    std::vector<TframeData> frames;
+    int nbFormatChanges;
+    int alternateSampleFormat;
+    void reset() {
+        wFormatTag=0;
+        sample_rate=0;
+        bit_rate=0;
+        sample_format=0;
+        sample_blocks=0;
+        lastFrameTime=0;
+        isFirst=true;
+        nbFormatChanges=0;
+        frames.clear();
+        alternateSampleFormat=-1;
+        channels=0;
+    }
+    TaudioParserData() {
+        reset();
+    }
 };
 
 class TaudioParser
 {
 private:
- TbyteBuffer backupbuf;
- int skipBytes;int includeBytes;
- bool hasMLPFrames;
- bool useAC3CoreOnly;
- bool useAC3Passthrough,usableAC3Passthrough;
- bool useDTSPassthrough,usableDTSPassthrough;
- bool useTrueHDPassthrough,usableTrueHDPassthrough;
- bool useDTSHDPassthrough,usableDTSHDPassthrough;
- bool useEAC3Passthrough,usableEAC3Passthrough;
- bool firstFrame;
- StreamFormat streamformat;
- TglobalSettingsDecAudio *globalSettings;
- CodecID codecId;
- bool initConfigDone;
- protected:
- comptrQ<IffdshowBase> deci;
- comptrQ<IffdshowDecAudio> deciA;
- IdecAudioSink *sinkA;
- TaudioParserData audioParserData;
- virtual HRESULT parseDTS(unsigned char *src, int size, TbyteBuffer *newsrcBuffer);
- virtual HRESULT parseAC3(unsigned char *src, int size, TbyteBuffer *newsrcBuffer);
- virtual void initConfig(void);
- //virtual void printbitssimple(uint32_t n); //DEBUG function 
- uint32_t frame_size;
- bool searchSync;
+    TbyteBuffer backupbuf;
+    int skipBytes;
+    int includeBytes;
+    bool hasMLPFrames;
+    bool useAC3CoreOnly;
+    bool useAC3Passthrough,usableAC3Passthrough;
+    bool useDTSPassthrough,usableDTSPassthrough;
+    bool useTrueHDPassthrough,usableTrueHDPassthrough;
+    bool useDTSHDPassthrough,usableDTSHDPassthrough;
+    bool useEAC3Passthrough,usableEAC3Passthrough;
+    bool firstFrame;
+    StreamFormat streamformat;
+    TglobalSettingsDecAudio *globalSettings;
+    CodecID codecId;
+    bool initConfigDone;
+protected:
+    comptrQ<IffdshowBase> deci;
+    comptrQ<IffdshowDecAudio> deciA;
+    IdecAudioSink *sinkA;
+    TaudioParserData audioParserData;
+    virtual HRESULT parseDTS(unsigned char *src, int size, TbyteBuffer *newsrcBuffer);
+    virtual HRESULT parseAC3(unsigned char *src, int size, TbyteBuffer *newsrcBuffer);
+    virtual void initConfig(void);
+    //virtual void printbitssimple(uint32_t n); //DEBUG function
+    uint32_t frame_size;
+    bool searchSync;
 public:
- TaudioParser(IffdshowBase *Ideci,IdecAudioSink *Isink);
- virtual ~TaudioParser();
- virtual CodecID parseStream(unsigned char *src, int size, TbyteBuffer *newsrcBuffer);
- virtual CodecID getCodecIdFromStream(void);
- virtual void NewSegment(void);
- virtual void init(void);
- virtual bool checkOutputFormat(CodecID codecId);
- virtual TaudioParserData getParserData(void);
- void SearchSync() { searchSync=true;audioParserData.isFirst=true;}
- };
+    TaudioParser(IffdshowBase *Ideci,IdecAudioSink *Isink);
+    virtual ~TaudioParser();
+    virtual CodecID parseStream(unsigned char *src, int size, TbyteBuffer *newsrcBuffer);
+    virtual CodecID getCodecIdFromStream(void);
+    virtual void NewSegment(void);
+    virtual void init(void);
+    virtual bool checkOutputFormat(CodecID codecId);
+    virtual TaudioParserData getParserData(void);
+    void SearchSync() {
+        searchSync=true;
+        audioParserData.isFirst=true;
+    }
+};
 
 #endif

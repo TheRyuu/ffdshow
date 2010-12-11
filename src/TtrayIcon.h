@@ -12,167 +12,161 @@ struct TfilterIDFF;
 class TtrayIconBase
 {
 private:
- const Tconfig *config;
- ATOM at;
- HWND h;
- void init(void);
- static LRESULT CALLBACK trayWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM lprm);
- HINSTANCE hi;
- #ifdef UNICODE
- struct NOTIFYICONDATAW
-  {
-   DWORD cbSize;
-   HWND hWnd;
-   UINT uID;
-   UINT uFlags;
-   UINT uCallbackMessage;
-   HICON hIcon;
-   WCHAR   szTip[128];
-   DWORD dwState;
-   DWORD dwStateMask;
-   WCHAR   szInfo[256];
-   union
-    {
-     UINT  uTimeout;
-     UINT  uVersion;
-    } DUMMYUNIONNAME;
-   WCHAR   szInfoTitle[64];
-   DWORD dwInfoFlags;
-  } nid;
- #else
- struct NOTIFYICONDATAA
-  {
-   DWORD cbSize;
-   HWND hWnd;
-   UINT uID;
-   UINT uFlags;
-   UINT uCallbackMessage;
-   HICON hIcon;
-   CHAR   szTip[128];
-   DWORD dwState;
-   DWORD dwStateMask;
-   CHAR   szInfo[256];
-   union
-    {
-     UINT  uTimeout;
-     UINT  uVersion;
-    } DUMMYUNIONNAME;
-   CHAR   szInfoTitle[64];
-   DWORD dwInfoFlags;
-  } nid;
- #endif
- enum
-  {
-   TRAYICON=2999,
-   MSG_TRAYICON=WM_APP+9,
-   TMR_TRAYICON=2998,
-  };
- bool visible;
-protected:
- TtrayIconBase(IffdshowBase *Ideci);
- virtual ~TtrayIconBase();
- unsigned int run(CAMEvent *ev,HWND *hwndRef);
-
- int mode;
- Ttranslate *tr;
- char_t classname[60];
- const char_t *tip;int icon;
- comptr<IffdshowBase> deci;
- virtual HMENU createMenu(int &ord);
- void insertSeparator(HMENU hm,int &ord);
- void insertSubmenu(HMENU hm,int &ord,const char_t *caption,bool translate,HMENU subMenu);
- int insertMenuItem(HMENU hm,int &ord,int id,const char_t *caption,bool translate,bool checked,bool enabled);
- virtual LRESULT processTrayMsg(HWND hwnd,WPARAM wprm,LPARAM lprm);
- virtual void processCmd(HMENU hm,int cmd);
-public:
- void show(void),hide(void);
- int cfgGet(int id),cfgSet(int id,int val);
- template<class Ttray> static unsigned int __stdcall start(TtrayIconStartData *sd)
-  {
-#if defined(_MSC_VER) && (_MSC_VER == 1600)
-   return (new Ttray(std::get<0>(*sd)))->run(std::get<1>(*sd),std::get<2>(*sd));
+    const Tconfig *config;
+    ATOM at;
+    HWND h;
+    void init(void);
+    static LRESULT CALLBACK trayWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM lprm);
+    HINSTANCE hi;
+#ifdef UNICODE
+    struct NOTIFYICONDATAW {
+        DWORD cbSize;
+        HWND hWnd;
+        UINT uID;
+        UINT uFlags;
+        UINT uCallbackMessage;
+        HICON hIcon;
+        WCHAR   szTip[128];
+        DWORD dwState;
+        DWORD dwStateMask;
+        WCHAR   szInfo[256];
+        union {
+            UINT  uTimeout;
+            UINT  uVersion;
+        } DUMMYUNIONNAME;
+        WCHAR   szInfoTitle[64];
+        DWORD dwInfoFlags;
+    } nid;
 #else
-   return (new Ttray(sd->get<1>()))->run(sd->get<2>(),sd->get<3>());
+    struct NOTIFYICONDATAA {
+        DWORD cbSize;
+        HWND hWnd;
+        UINT uID;
+        UINT uFlags;
+        UINT uCallbackMessage;
+        HICON hIcon;
+        CHAR   szTip[128];
+        DWORD dwState;
+        DWORD dwStateMask;
+        CHAR   szInfo[256];
+        union {
+            UINT  uTimeout;
+            UINT  uVersion;
+        } DUMMYUNIONNAME;
+        CHAR   szInfoTitle[64];
+        DWORD dwInfoFlags;
+    } nid;
 #endif
-  }
+    enum {
+        TRAYICON=2999,
+        MSG_TRAYICON=WM_APP+9,
+        TMR_TRAYICON=2998,
+    };
+    bool visible;
+protected:
+    TtrayIconBase(IffdshowBase *Ideci);
+    virtual ~TtrayIconBase();
+    unsigned int run(CAMEvent *ev,HWND *hwndRef);
+
+    int mode;
+    Ttranslate *tr;
+    char_t classname[60];
+    const char_t *tip;
+    int icon;
+    comptr<IffdshowBase> deci;
+    virtual HMENU createMenu(int &ord);
+    void insertSeparator(HMENU hm,int &ord);
+    void insertSubmenu(HMENU hm,int &ord,const char_t *caption,bool translate,HMENU subMenu);
+    int insertMenuItem(HMENU hm,int &ord,int id,const char_t *caption,bool translate,bool checked,bool enabled);
+    virtual LRESULT processTrayMsg(HWND hwnd,WPARAM wprm,LPARAM lprm);
+    virtual void processCmd(HMENU hm,int cmd);
+public:
+    void show(void),hide(void);
+    int cfgGet(int id),cfgSet(int id,int val);
+    template<class Ttray> static unsigned int __stdcall start(TtrayIconStartData *sd) {
+#if defined(_MSC_VER) && (_MSC_VER == 1600)
+        return (new Ttray(std::get<0>(*sd)))->run(std::get<1>(*sd),std::get<2>(*sd));
+#else
+        return (new Ttray(sd->get<1>()))->run(sd->get<2>(),sd->get<3>());
+#endif
+    }
 };
 
 struct TfilterIDFF;
 class TtrayIconDec :public TtrayIconBase
 {
 protected:
- enum
-  {
-   IDC_FIRST_PRESET=3999,
-   IDC_FIRST_GRAPH =4999,
-   IDC_FIRST_FILTER=5999
-  };
+    enum {
+        IDC_FIRST_PRESET=3999,
+        IDC_FIRST_GRAPH =4999,
+        IDC_FIRST_FILTER=5999
+    };
 private:
- void insertMenuItemFilter(HMENU hm,int &ord,const TfilterIDFF *idff);
- stdext::hash_map<int,ffstring> graphnames;
+    void insertMenuItemFilter(HMENU hm,int &ord,const TfilterIDFF *idff);
+    stdext::hash_map<int,ffstring> graphnames;
 protected:
- TtrayIconDec(IffdshowBase *Ideci);
+    TtrayIconDec(IffdshowBase *Ideci);
 
- comptrQ<IffdshowDec> deciD;
- typedef std::pair<int,const TfilterIDFF*> TordFilters;
- static bool sortOrdFilters(const TordFilters &of1,const TordFilters &of2);
- virtual void insertSubmenuCallback(HMENU hm,int &ord,const TfilterIDFF *f) {}
+    comptrQ<IffdshowDec> deciD;
+    typedef std::pair<int,const TfilterIDFF*> TordFilters;
+    static bool sortOrdFilters(const TordFilters &of1,const TordFilters &of2);
+    virtual void insertSubmenuCallback(HMENU hm,int &ord,const TfilterIDFF *f) {}
 
- virtual HMENU createMenu(int &ord);
- void negate_Param(int id);
- virtual void processCmd(HMENU hm,int cmd);
- virtual LRESULT processTrayMsg(HWND hwnd,WPARAM wprm,LPARAM lprm);
- void showFilterCfg(const char_t *fltname);
- virtual bool showffdshowCfg(char_t* filterName){return false;}
+    virtual HMENU createMenu(int &ord);
+    void negate_Param(int id);
+    virtual void processCmd(HMENU hm,int cmd);
+    virtual LRESULT processTrayMsg(HWND hwnd,WPARAM wprm,LPARAM lprm);
+    void showFilterCfg(const char_t *fltname);
+    virtual bool showffdshowCfg(char_t* filterName) {
+        return false;
+    }
 };
 
 class TtrayIconDecVideo :public TtrayIconDec
 {
 private:
- comptrQ<IffdshowDecVideo> deciV;
- void makeStreamsSubMenus(HMENU *smn, HMENU *ssmn, HMENU *amn, HMENU *emn, HMENU *cmn);
- enum
-  {
-   IDC_FIRST_SUBFILE=8999,
-   IDC_FIRST_SUBLANG=10999,
-   IDC_FIRST_TEXTPIN=11999,
-   IDC_FIRST_AUDIOSTREAM=12999,
-   IDC_FIRST_EDITIONSTREAM=13999,
-   IDC_FIRST_CHAPTERSTREAM=14999
-  };
+    comptrQ<IffdshowDecVideo> deciV;
+    void makeStreamsSubMenus(HMENU *smn, HMENU *ssmn, HMENU *amn, HMENU *emn, HMENU *cmn);
+    enum {
+        IDC_FIRST_SUBFILE=8999,
+        IDC_FIRST_SUBLANG=10999,
+        IDC_FIRST_TEXTPIN=11999,
+        IDC_FIRST_AUDIOSTREAM=12999,
+        IDC_FIRST_EDITIONSTREAM=13999,
+        IDC_FIRST_CHAPTERSTREAM=14999
+    };
 protected:
- virtual void insertSubmenuCallback(HMENU hm,int &ord,const TfilterIDFF *f);
- virtual void processCmd(HMENU hm,int cmd);
- virtual bool showffdshowCfg(char_t* filterName);
+    virtual void insertSubmenuCallback(HMENU hm,int &ord,const TfilterIDFF *f);
+    virtual void processCmd(HMENU hm,int cmd);
+    virtual bool showffdshowCfg(char_t* filterName);
 public:
- TtrayIconDecVideo(IffdshowBase *Ideci);
+    TtrayIconDecVideo(IffdshowBase *Ideci);
 };
 
 class TtrayIconDecAudio :public TtrayIconDec
 {
 private:
- comptrQ<IffdshowDecAudio> deciA;
- enum
-  {
-   IDC_FIRST_STREAM=9999
-  };
+    comptrQ<IffdshowDecAudio> deciA;
+    enum {
+        IDC_FIRST_STREAM=9999
+    };
 protected:
- virtual HMENU createMenu(int &ord);
- virtual void processCmd(HMENU hm,int cmd);
- virtual bool showffdshowCfg(char_t* filterName);
+    virtual HMENU createMenu(int &ord);
+    virtual void processCmd(HMENU hm,int cmd);
+    virtual bool showffdshowCfg(char_t* filterName);
 public:
- TtrayIconDecAudio(IffdshowBase *Ideci);
+    TtrayIconDecAudio(IffdshowBase *Ideci);
 };
 
 struct IffdshowEnc;
 class TtrayIconEnc :public TtrayIconBase
 {
 private:
- comptrQ<IffdshowEnc> deciE;
+    comptrQ<IffdshowEnc> deciE;
 protected:
- virtual LRESULT processTrayMsg(HWND hwnd,WPARAM wprm,LPARAM lprm);
+    virtual LRESULT processTrayMsg(HWND hwnd,WPARAM wprm,LPARAM lprm);
 public:
- TtrayIconEnc(IffdshowBase *Ideci);
+    TtrayIconEnc(IffdshowBase *Ideci);
 };
 
 #endif

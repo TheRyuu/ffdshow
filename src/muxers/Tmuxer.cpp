@@ -23,19 +23,19 @@
 #include "ffcodecs.h"
 #include "IffdshowBase.h"
 
-const char_t* Tmuxer::muxers[]=
-{
- _l("Raw frames"),
- NULL
+const char_t* Tmuxer::muxers[]= {
+    _l("Raw frames"),
+    NULL
 };
 
 Tmuxer* Tmuxer::getMuxer(int id,IffdshowBase *deci)
 {
- switch (id)
-  {
-   case MUXER_FILE:return new TmuxerFile(deci);
-   default:return NULL;
-  }
+    switch (id) {
+        case MUXER_FILE:
+            return new TmuxerFile(deci);
+        default:
+            return NULL;
+    }
 }
 
 Tmuxer::Tmuxer(IffdshowBase *Ideci):deci(Ideci)

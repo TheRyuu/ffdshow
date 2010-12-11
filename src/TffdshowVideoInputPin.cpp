@@ -51,8 +51,12 @@ TffdshowVideoInputPin::~TffdshowVideoInputPin()
 
 HRESULT TffdshowVideoInputPin::CheckMediaType(const CMediaType* mt)
 {
-    if (mt->majortype!=MEDIATYPE_Video && !(mt->majortype==MEDIATYPE_DVD_ENCRYPTED_PACK && supdvddec)) return VFW_E_TYPE_NOT_ACCEPTED;
-    if (mt->subtype==MEDIASUBTYPE_DVD_SUBPICTURE) return VFW_E_TYPE_NOT_ACCEPTED;
+    if (mt->majortype!=MEDIATYPE_Video && !(mt->majortype==MEDIATYPE_DVD_ENCRYPTED_PACK && supdvddec)) {
+        return VFW_E_TYPE_NOT_ACCEPTED;
+    }
+    if (mt->subtype==MEDIASUBTYPE_DVD_SUBPICTURE) {
+        return VFW_E_TYPE_NOT_ACCEPTED;
+    }
     BITMAPINFOHEADER *hdr=NULL,hdr0;
 
     if (mt->formattype==FORMAT_VideoInfo) {
@@ -71,23 +75,26 @@ HRESULT TffdshowVideoInputPin::CheckMediaType(const CMediaType* mt)
         MPEG2VIDEOINFO *mpeg2info=(MPEG2VIDEOINFO*)mt->pbFormat;
         hdr=&(hdr0=mpeg2info->hdr.bmiHeader);
         if (hdr->biCompression==0 || hdr->biCompression == 0x0038002d) {
-            if (mt->subtype == MEDIASUBTYPE_H264_TRANSPORT)
+            if (mt->subtype == MEDIASUBTYPE_H264_TRANSPORT) {
                 hdr->biCompression=FOURCC_H264;
-            else if (mt->subtype == MEDIASUBTYPE_AVC1 || mt->subtype == MEDIASUBTYPE_avc1 || mt->subtype == MEDIASUBTYPE_H264 || mt->subtype == MEDIASUBTYPE_h264 || mt->subtype == MEDIASUBTYPE_H264_HAALI)
+            } else if (mt->subtype == MEDIASUBTYPE_AVC1 || mt->subtype == MEDIASUBTYPE_avc1 || mt->subtype == MEDIASUBTYPE_H264 || mt->subtype == MEDIASUBTYPE_h264 || mt->subtype == MEDIASUBTYPE_H264_HAALI) {
                 hdr->biCompression = FOURCC_H264;
-            else
+            } else {
                 hdr->biCompression=FOURCC_MPG2;
+            }
         }
     } else if (mt->formattype==FORMAT_TheoraIll) {
         sTheoraFormatBlock *oggFormat=(sTheoraFormatBlock*)mt->pbFormat;
         hdr=&hdr0;
-        hdr->biWidth=oggFormat->width;hdr->biHeight=oggFormat->height;
+        hdr->biWidth=oggFormat->width;
+        hdr->biHeight=oggFormat->height;
         hdr->biCompression=FOURCC_THEO;
     } else if (mt->formattype==FORMAT_RLTheora) {
         hdr=&hdr0;
         hdr->biCompression=FOURCC_THEO;
-    } else
+    } else {
         return VFW_E_TYPE_NOT_ACCEPTED;
+    }
 
     char_t pomS[60];
     DPRINTF(_l("TffdshowVideoInputPin::CheckMediaType: %s, %i, %i"),fourcc2str(hdr2fourcc(hdr,&mt->subtype),pomS,60),hdr->biWidth,hdr->biHeight);
@@ -97,8 +104,8 @@ HRESULT TffdshowVideoInputPin::CheckMediaType(const CMediaType* mt)
        So instead of saying "Media Type not supported", we says it is but only if there is an existing filter that can
        take this format in charge, and then ffdshow will be plugged after this codec (plug is done by TffdshowDecVideo::ConnectCompatibleFilter). */
     int res = getVideoCodecId(hdr,&mt->subtype,NULL);
-    
-     OSVERSIONINFO osvi;
+
+    OSVERSIONINFO osvi;
     ZeroMemory(&osvi, sizeof(OSVERSIONINFO));
     osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
     GetVersionEx(&osvi);
@@ -106,138 +113,132 @@ HRESULT TffdshowVideoInputPin::CheckMediaType(const CMediaType* mt)
     exeFilename.ConvertToLowerCase();
 
     if (res == 0 && pCompatibleFilter == NULL &&
-        fv->deci->getParam2(IDFF_alternateUncompressed)==1 && // Enable WMP11 postprocessing
-        fv->deci->getParam2(IDFF_rawv)!=0 && // Raw video not on disabled
-        (exeFilename == _l("wmplayer.exe") ||  
-         exeFilename == _l("ehshell.exe")))   // Only WMP and Media Center are concerned
-    {
+            fv->deci->getParam2(IDFF_alternateUncompressed)==1 && // Enable WMP11 postprocessing
+            fv->deci->getParam2(IDFF_rawv)!=0 && // Raw video not on disabled
+            (exeFilename == _l("wmplayer.exe") ||
+             exeFilename == _l("ehshell.exe"))) { // Only WMP and Media Center are concerned
         bool doPostProcessing = false;
-        if (osvi.dwMajorVersion > 5) // OS >= VISTA
-           doPostProcessing = true;
-        else if (osvi.dwMajorVersion == 5  // If OS=XP, check version of WMP
-            && exeFilename== _l("ehshell.exe")) // But only for Media Center
-        {
-           // Read WMP version from the aRegistry
-           HKEY hKey= NULL;
-           LONG regErr;
+        if (osvi.dwMajorVersion > 5) { // OS >= VISTA
+            doPostProcessing = true;
+        } else if (osvi.dwMajorVersion == 5 // If OS=XP, check version of WMP
+                   && exeFilename== _l("ehshell.exe")) { // But only for Media Center
+            // Read WMP version from the aRegistry
+            HKEY hKey= NULL;
+            LONG regErr;
 
-           // Read WMP version from the following registry key
-           regErr = RegOpenKeyEx(HKEY_LOCAL_MACHINE, _l("SOFTWARE\\Microsoft\\MediaPlayer\\Setup\\Installed Versions"), 0, KEY_READ, &hKey);
-           if(regErr!=ERROR_SUCCESS)
-               return res==CODEC_ID_NONE?VFW_E_TYPE_NOT_ACCEPTED:S_OK;
+            // Read WMP version from the following registry key
+            regErr = RegOpenKeyEx(HKEY_LOCAL_MACHINE, _l("SOFTWARE\\Microsoft\\MediaPlayer\\Setup\\Installed Versions"), 0, KEY_READ, &hKey);
+            if(regErr!=ERROR_SUCCESS) {
+                return res==CODEC_ID_NONE?VFW_E_TYPE_NOT_ACCEPTED:S_OK;
+            }
 
-           DWORD dwType;
-           BYTE buf[4096] = { '\0' };   // make it big enough for any kind of values
-           DWORD dwSize = sizeof(buf);
-           regErr = RegQueryValueEx(hKey, _T("wmplayer.exe"), 0, &dwType, buf, &dwSize);
+            DWORD dwType;
+            BYTE buf[4096] = { '\0' };   // make it big enough for any kind of values
+            DWORD dwSize = sizeof(buf);
+            regErr = RegQueryValueEx(hKey, _T("wmplayer.exe"), 0, &dwType, buf, &dwSize);
 
-           if(hKey)
-               RegCloseKey(hKey);
+            if(hKey) {
+                RegCloseKey(hKey);
+            }
 
-           if (regErr != ERROR_SUCCESS || dwType != REG_BINARY)
-           {
-               return res==CODEC_ID_NONE?VFW_E_TYPE_NOT_ACCEPTED:S_OK;
-           }
+            if (regErr != ERROR_SUCCESS || dwType != REG_BINARY) {
+                return res==CODEC_ID_NONE?VFW_E_TYPE_NOT_ACCEPTED:S_OK;
+            }
 
-           if (buf[2] >= 0x0b) // Third byte is the major version number
-               doPostProcessing = true;
+            if (buf[2] >= 0x0b) { // Third byte is the major version number
+                doPostProcessing = true;
+            }
         }
 
 
-        if (doPostProcessing)
-        {
-           DPRINTF(_l("TffdshowVideoInputPin::CheckMediaType: input format disabled or not supported. Trying to maintain in the graph..."));     
-           IFilterMapper2 *pMapper = NULL;
-           IEnumMoniker *pEnum = NULL;
+        if (doPostProcessing) {
+            DPRINTF(_l("TffdshowVideoInputPin::CheckMediaType: input format disabled or not supported. Trying to maintain in the graph..."));
+            IFilterMapper2 *pMapper = NULL;
+            IEnumMoniker *pEnum = NULL;
 
-           HRESULT hr = CoCreateInstance(CLSID_FilterMapper2, 
-               NULL, CLSCTX_INPROC, IID_IFilterMapper2, 
-               (void **) &pMapper);
+            HRESULT hr = CoCreateInstance(CLSID_FilterMapper2,
+                                          NULL, CLSCTX_INPROC, IID_IFilterMapper2,
+                                          (void **) &pMapper);
 
-           if (FAILED(hr))
-           {
-               // Error handling omitted for clarity.
-           }
+            if (FAILED(hr)) {
+                // Error handling omitted for clarity.
+            }
 
-           GUID arrayInTypes[2];
-           arrayInTypes[0] = mt->majortype;//MEDIATYPE_Video;
-           arrayInTypes[1] = mt->subtype;//MEDIASUBTYPE_dvsd;
+            GUID arrayInTypes[2];
+            arrayInTypes[0] = mt->majortype;//MEDIATYPE_Video;
+            arrayInTypes[1] = mt->subtype;//MEDIASUBTYPE_dvsd;
 
-           hr = pMapper->EnumMatchingFilters(
-                   &pEnum,
-                   0,                  // Reserved.
-                   TRUE,               // Use exact match?
-                   MERIT_DO_NOT_USE+1, // Minimum merit.
-                   TRUE,               // At least one input pin?
-                   1,                  // Number of major type/subtype pairs for input.
-                   arrayInTypes,       // Array of major type/subtype pairs for input.
-                   NULL,               // Input medium.
-                   NULL,               // Input pin category.
-                   FALSE,              // Must be a renderer?
-                   TRUE,               // At least one output pin?
-                   0,                  // Number of major type/subtype pairs for output.
-                   NULL,               // Array of major type/subtype pairs for output.
-                   NULL,               // Output medium.
-                   NULL);              // Output pin category.
+            hr = pMapper->EnumMatchingFilters(
+                     &pEnum,
+                     0,                  // Reserved.
+                     TRUE,               // Use exact match?
+                     MERIT_DO_NOT_USE+1, // Minimum merit.
+                     TRUE,               // At least one input pin?
+                     1,                  // Number of major type/subtype pairs for input.
+                     arrayInTypes,       // Array of major type/subtype pairs for input.
+                     NULL,               // Input medium.
+                     NULL,               // Input pin category.
+                     FALSE,              // Must be a renderer?
+                     TRUE,               // At least one output pin?
+                     0,                  // Number of major type/subtype pairs for output.
+                     NULL,               // Array of major type/subtype pairs for output.
+                     NULL,               // Output medium.
+                     NULL);              // Output pin category.
 
-           // Enumerate the monikers.
-           IMoniker *pMoniker;
-           ULONG cFetched;
+            // Enumerate the monikers.
+            IMoniker *pMoniker;
+            ULONG cFetched;
 
-           while (pEnum->Next(1, &pMoniker, &cFetched) == S_OK)
-           {
-               IPropertyBag *pPropBag = NULL;
-               hr = pMoniker->BindToStorage(0, 0, IID_IPropertyBag, 
-                  (void **)&pPropBag);
+            while (pEnum->Next(1, &pMoniker, &cFetched) == S_OK) {
+                IPropertyBag *pPropBag = NULL;
+                hr = pMoniker->BindToStorage(0, 0, IID_IPropertyBag,
+                                             (void **)&pPropBag);
 
-               if (SUCCEEDED(hr))
-               {
-                   // To retrieve the friendly name of the filter, do the following:
-                   VARIANT varName;
-                   VariantInit(&varName);
-                   hr = pPropBag->Read(L"FriendlyName", &varName, 0);
-                   if (SUCCEEDED(hr))
-                   {
-                       if (varName.pbstrVal == NULL || _strnicmp(FFDSHOW_NAME_L,varName.bstrVal,22)!=0)
-                       {
-                           // Display the name in your UI somehow.
-                           DPRINTF(_l("TffdshowVideoInputPin::CheckMediaType: compatible filter found (%s)"), varName.pbstrVal);
-                           hr = pMoniker->BindToObject(NULL, NULL, IID_IBaseFilter, (void**)&pCompatibleFilter);
-                       }
-                   }
+                if (SUCCEEDED(hr)) {
+                    // To retrieve the friendly name of the filter, do the following:
+                    VARIANT varName;
+                    VariantInit(&varName);
+                    hr = pPropBag->Read(L"FriendlyName", &varName, 0);
+                    if (SUCCEEDED(hr)) {
+                        if (varName.pbstrVal == NULL || _strnicmp(FFDSHOW_NAME_L,varName.bstrVal,22)!=0) {
+                            // Display the name in your UI somehow.
+                            DPRINTF(_l("TffdshowVideoInputPin::CheckMediaType: compatible filter found (%s)"), varName.pbstrVal);
+                            hr = pMoniker->BindToObject(NULL, NULL, IID_IBaseFilter, (void**)&pCompatibleFilter);
+                        }
+                    }
 
-                   // Now add the filter to the graph. Remember to release pFilter later.
-                   IFilterGraph *pGraph=NULL;
-                   fv->deci->getGraph(&pGraph);
+                    // Now add the filter to the graph. Remember to release pFilter later.
+                    IFilterGraph *pGraph=NULL;
+                    fv->deci->getGraph(&pGraph);
 
-                   IGraphBuilder *pGraphBuilder = NULL;
-                   hr = pGraph->QueryInterface(IID_IGraphBuilder, (void **)&pGraphBuilder);
-                   if (hr==S_OK)
-                   {
-                       pGraphBuilder->AddFilter(pCompatibleFilter, varName.bstrVal);
-                   }
-                   else
-                   {
-                       pCompatibleFilter->Release();
-                       pCompatibleFilter=NULL;
-                   }
-                   
-                   // Clean up.
-                   VariantClear(&varName);
-                   pGraphBuilder->Release();
-                   pPropBag->Release();
-               }
-               pMoniker->Release();
-               if (pCompatibleFilter != NULL)
-                   break;
-           }
+                    IGraphBuilder *pGraphBuilder = NULL;
+                    hr = pGraph->QueryInterface(IID_IGraphBuilder, (void **)&pGraphBuilder);
+                    if (hr==S_OK) {
+                        pGraphBuilder->AddFilter(pCompatibleFilter, varName.bstrVal);
+                    } else {
+                        pCompatibleFilter->Release();
+                        pCompatibleFilter=NULL;
+                    }
 
-           // Clean up.
-           pMapper->Release();
-           pEnum->Release();
+                    // Clean up.
+                    VariantClear(&varName);
+                    pGraphBuilder->Release();
+                    pPropBag->Release();
+                }
+                pMoniker->Release();
+                if (pCompatibleFilter != NULL) {
+                    break;
+                }
+            }
+
+            // Clean up.
+            pMapper->Release();
+            pEnum->Release();
         }
     }
-    if (pCompatibleFilter != NULL) return S_OK;
+    if (pCompatibleFilter != NULL) {
+        return S_OK;
+    }
     return res==CODEC_ID_NONE?VFW_E_TYPE_NOT_ACCEPTED:S_OK;
 }
 
@@ -247,19 +248,20 @@ STDMETHODIMP TffdshowVideoInputPin::ReceiveConnection(IPin* pConnector, const AM
     DPRINTF(_l("TffdshowVideoInputPin::ReceiveConnection"));
     CAutoLock cObjectLock(m_pLock);
     const CLSID &ref=GetCLSID(pConnector);
-    if (ref == CLSID_MPC_MatroskaSplitter || ref == CLSID_GabestMatroskaSplitter)
-     connectedSplitter = MPC_matroska_splitter;
-    else if (ref == CLSID_HaaliMediaSplitter)
-     connectedSplitter = Haali_Media_splitter;
-    else if (ref == CLSID_MPC_MpegSourceFilter || ref == CLSID_MPC_MpegSplitterFilter)
-     connectedSplitter = MPC_mpegSplitters;
-    else if (ref == CLSID_DVBSourceFilter)
-     connectedSplitter = DVBSourceFilter;
-    else if (ref == CLSID_PBDA_DTFilter)
-     connectedSplitter = PBDA_DTFilter;
-    else if (ref == CLSID_NeuviewSource)
-     connectedSplitter = NeuviewSource;
-    
+    if (ref == CLSID_MPC_MatroskaSplitter || ref == CLSID_GabestMatroskaSplitter) {
+        connectedSplitter = MPC_matroska_splitter;
+    } else if (ref == CLSID_HaaliMediaSplitter) {
+        connectedSplitter = Haali_Media_splitter;
+    } else if (ref == CLSID_MPC_MpegSourceFilter || ref == CLSID_MPC_MpegSplitterFilter) {
+        connectedSplitter = MPC_mpegSplitters;
+    } else if (ref == CLSID_DVBSourceFilter) {
+        connectedSplitter = DVBSourceFilter;
+    } else if (ref == CLSID_PBDA_DTFilter) {
+        connectedSplitter = PBDA_DTFilter;
+    } else if (ref == CLSID_NeuviewSource) {
+        connectedSplitter = NeuviewSource;
+    }
+
 #if 0
     PIN_INFO pininfo;
     FILTER_INFO filterinfo;
@@ -267,11 +269,15 @@ STDMETHODIMP TffdshowVideoInputPin::ReceiveConnection(IPin* pConnector, const AM
     if (pininfo.pFilter) {
         pininfo.pFilter->QueryFilterInfo(&filterinfo);
         DPRINTF (_l("TffdshowVideoInputPin::ReceiveConnection filter=%s pin=%s"),filterinfo.achName,pininfo.achName);
-        if (filterinfo.pGraph)
+        if (filterinfo.pGraph) {
             filterinfo.pGraph->Release();
+        }
         pininfo.pFilter->Release();
     }
-    DPRINTF(_l("CLSID 0x%x,0x%x,0x%x"),ref.Data1,ref.Data2,ref.Data3);for(int i=0;i<8;i++) {DPRINTF(_l(",0x%2x"),ref.Data4[i]);}
+    DPRINTF(_l("CLSID 0x%x,0x%x,0x%x"),ref.Data1,ref.Data2,ref.Data3);
+    for(int i=0; i<8; i++) {
+        DPRINTF(_l(",0x%2x"),ref.Data4[i]);
+    }
 #endif
 
     if (m_Connected) {
@@ -286,13 +292,15 @@ STDMETHODIMP TffdshowVideoInputPin::ReceiveConnection(IPin* pConnector, const AM
         // return S_OK;
 
         return (CheckMediaType(&mt) != S_OK || SetMediaType(&mt) != S_OK/* || !initVideo(mt)*/)
-                ? VFW_E_TYPE_NOT_ACCEPTED
-                : S_OK;
+               ? VFW_E_TYPE_NOT_ACCEPTED
+               : S_OK;
 
         // TODO: send ReceiveConnection downstream
     } else {
         hr=fv->deci->checkInputConnect(pConnector);
-        if (hr!=S_OK) return hr;
+        if (hr!=S_OK) {
+            return hr;
+        }
     }
 
     hr=TinputPin::ReceiveConnection(pConnector, pmt);
@@ -319,7 +327,8 @@ bool TffdshowVideoInputPin::init(const CMediaType &mt)
         fixMPEGinAVI(biIn.bmiHeader.biCompression);
     } else if (mt.formattype==FORMAT_MPEGVideo) {
         MPEG1VIDEOINFO *mpeg1info=(MPEG1VIDEOINFO*)mt.pbFormat;
-        biIn.bmiHeader=mpeg1info->hdr.bmiHeader;biIn.bmiHeader.biCompression=FOURCC_MPG1;
+        biIn.bmiHeader=mpeg1info->hdr.bmiHeader;
+        biIn.bmiHeader.biCompression=FOURCC_MPG1;
         pictIn.setSize(std::max(mpeg1info->hdr.rcSource.right,mpeg1info->hdr.bmiHeader.biWidth),std::max(mpeg1info->hdr.rcSource.bottom,mpeg1info->hdr.bmiHeader.biHeight));
     } else if (mt.formattype==FORMAT_MPEG2Video) {
         MPEG2VIDEOINFO *mpeg2info=(MPEG2VIDEOINFO*)mt.pbFormat;
@@ -327,12 +336,13 @@ bool TffdshowVideoInputPin::init(const CMediaType &mt)
         pictIn.setSize(std::max(mpeg2info->hdr.rcSource.right,mpeg2info->hdr.bmiHeader.biWidth),std::max(mpeg2info->hdr.rcSource.bottom,mpeg2info->hdr.bmiHeader.biHeight));
         pictIn.setDar(Rational(mpeg2info->hdr.dwPictAspectRatioX,mpeg2info->hdr.dwPictAspectRatioY));
         if (biIn.bmiHeader.biCompression==0 || biIn.bmiHeader.biCompression == 0x0038002d) {
-            if (mt.subtype == MEDIASUBTYPE_H264_TRANSPORT)
+            if (mt.subtype == MEDIASUBTYPE_H264_TRANSPORT) {
                 biIn.bmiHeader.biCompression = FOURCC_H264;
-            else if (mt.subtype == MEDIASUBTYPE_AVC1 || mt.subtype == MEDIASUBTYPE_avc1 || mt.subtype == MEDIASUBTYPE_H264 || mt.subtype == MEDIASUBTYPE_h264 || mt.subtype == MEDIASUBTYPE_H264_HAALI)
+            } else if (mt.subtype == MEDIASUBTYPE_AVC1 || mt.subtype == MEDIASUBTYPE_avc1 || mt.subtype == MEDIASUBTYPE_H264 || mt.subtype == MEDIASUBTYPE_h264 || mt.subtype == MEDIASUBTYPE_H264_HAALI) {
                 biIn.bmiHeader.biCompression = FOURCC_H264;
-            else
+            } else {
                 biIn.bmiHeader.biCompression=FOURCC_MPG2;
+            }
         } else {
             biIn.bmiHeader.biCompression=FCCupper(biIn.bmiHeader.biCompression);
             dont_use_rtStop_from_upper_stream = true;
@@ -345,8 +355,7 @@ bool TffdshowVideoInputPin::init(const CMediaType &mt)
         pictIn.setDar(Rational(oggFormat->aspectNumerator,oggFormat->aspectDenominator));
         biIn.bmiHeader.biBitCount=12;
     } else if (mt.formattype==FORMAT_RLTheora) {
-        struct RLTheora
-        {
+        struct RLTheora {
             VIDEOINFOHEADER hdr;
             DWORD headerSize[3];    // 0: Header, 1: Comment, 2: Codebook
         };
@@ -354,8 +363,9 @@ bool TffdshowVideoInputPin::init(const CMediaType &mt)
         GetBitContext gb;
         init_get_bits(&gb,(const uint8_t*)(rl+1),rl->headerSize[0]);
         int ptype = get_bits(&gb, 8);
-        if (!(ptype&0x80))
-         return false;
+        if (!(ptype&0x80)) {
+            return false;
+        }
         biIn.bmiHeader.biCompression=FOURCC_THEO;
         skip_bits(&gb, 6*8); /* "theora" */
         int major=get_bits(&gb,8); /* version major */
@@ -367,32 +377,33 @@ bool TffdshowVideoInputPin::init(const CMediaType &mt)
             ;//flipped_image = 1;
         }
 
-         biIn.bmiHeader.biWidth = get_bits(&gb, 16) << 4;
-         biIn.bmiHeader.biHeight = get_bits(&gb, 16) << 4;
-         pictIn.setSize(biIn.bmiHeader.biWidth,biIn.bmiHeader.biHeight);
+        biIn.bmiHeader.biWidth = get_bits(&gb, 16) << 4;
+        biIn.bmiHeader.biHeight = get_bits(&gb, 16) << 4;
+        pictIn.setSize(biIn.bmiHeader.biWidth,biIn.bmiHeader.biHeight);
 
-         skip_bits(&gb, 24); /* frame width */
-         skip_bits(&gb, 24); /* frame height */
+        skip_bits(&gb, 24); /* frame width */
+        skip_bits(&gb, 24); /* frame height */
 
-         skip_bits(&gb, 8); /* offset x */
-         skip_bits(&gb, 8); /* offset y */
+        skip_bits(&gb, 8); /* offset x */
+        skip_bits(&gb, 8); /* offset y */
 
-         skip_bits(&gb, 32); /* fps numerator */
-         skip_bits(&gb, 32); /* fps denumerator */
+        skip_bits(&gb, 32); /* fps numerator */
+        skip_bits(&gb, 32); /* fps denumerator */
 
-         Rational sample_aspect_ratio;
-         sample_aspect_ratio.num = get_bits(&gb, 24); /* aspect numerator */
-         sample_aspect_ratio.den = get_bits(&gb, 24); /* aspect denumerator */
-         pictIn.setSar(sample_aspect_ratio);
-    } else
+        Rational sample_aspect_ratio;
+        sample_aspect_ratio.num = get_bits(&gb, 24); /* aspect numerator */
+        sample_aspect_ratio.den = get_bits(&gb, 24); /* aspect denumerator */
+        pictIn.setSar(sample_aspect_ratio);
+    } else {
         return false;
+    }
 
     REFERENCE_TIME avgTimePerFrame0=getAvgTimePerFrame(mt);
     avgTimePerFrame=avgTimePerFrame0?avgTimePerFrame0:400000;
 
     char_t pomS[60];
     DPRINTF(_l("TffdshowVideoInputPin::initVideo: %s, width:%i, height:%i, aspectX:%i, aspectY:%i"),fourcc2str(hdr2fourcc(&biIn.bmiHeader,&mt.subtype),pomS,60) ,pictIn.rectFull.dx,pictIn.rectFull.dy,pictIn.rectFull.dar().num,pictIn.rectFull.dar().den);
-   again:
+again:
     // FIXME Experimental //
     // VC1 (in EVO) stream may have attached media type during playback (say, once per 5 second).
     // When I try to use its codec private data, the video heavily stutters.
@@ -423,13 +434,15 @@ bool TffdshowVideoInputPin::init(const CMediaType &mt)
 
     if (codecId==CODEC_ID_H264 || codecId==CODEC_ID_H264_MT || codecId == CODEC_ID_H264_DXVA) {
         Textradata extradata(mt,16);
-        if (extradata.size)
+        if (extradata.size) {
             decodeH264SPS(extradata.data,extradata.size,pictIn);
+        }
     }
     if (mpeg4_codec(codecId)) {
         Textradata extradata(mt,16);
-        if (extradata.size)
+        if (extradata.size) {
             decodeMPEG4pictureHeader(extradata.data,extradata.size,pictIn);
+        }
     } else if (mpeg12_codec(codecId)) {
         Textradata extradata(mt,16);
         if (extradata.size) {
@@ -451,11 +464,11 @@ bool TffdshowVideoInputPin::init(const CMediaType &mt)
     } else {
         fv->initCodecSettings();
         codec=video=TvideoCodecDec::initDec(fv->deci,fv->sink,codecId,biIn.bmiHeader.biCompression,mt);
-        if (!video)
+        if (!video) {
             return false;
-        else {
-            static const GUID CLSID_NeroDigitalParser={0xE206E4DE,0xA7EE,0x4A62,0xB3,0xE9,0x4F,0xBC,0x8F,0xE8,0x4C,0x73};
-            static const GUID CLSID_HalliMatroskaFile={0x55DA30FC,0xF16B,0x49FC,0xBA,0xA5,0xAE,0x59,0xFC,0x65,0xF8,0x2D};
+        } else {
+            static const GUID CLSID_NeroDigitalParser= {0xE206E4DE,0xA7EE,0x4A62,0xB3,0xE9,0x4F,0xBC,0x8F,0xE8,0x4C,0x73};
+            static const GUID CLSID_HalliMatroskaFile= {0x55DA30FC,0xF16B,0x49FC,0xBA,0xA5,0xAE,0x59,0xFC,0x65,0xF8,0x2D};
             //dont_use_rtStop_from_upper_stream=biIn.bmiHeader.biCompression==FOURCC_AVC1 && (searchPreviousFilter(this,CLSID_NeroDigitalParser) || searchPreviousFilter(this,CLSID_HalliMatroskaFile));
             video->connectedSplitter = connectedSplitter;
             video->isInterlacedRawVideo=isInterlacedRawVideo;
@@ -463,7 +476,8 @@ bool TffdshowVideoInputPin::init(const CMediaType &mt)
             if (!video->beginDecompress(pictIn,
                                         biIn.bmiHeader.biCompression,mt,
                                         (dont_use_rtStop_from_upper_stream ? TvideoCodecDec::SOURCE_NEROAVC : 0) | (truncated ? TvideoCodecDec::SOURCE_TRUNCATED : 0))) {
-                delete video;codec=video=NULL;
+                delete video;
+                codec=video=NULL;
                 return false;
             }
         }
@@ -477,18 +491,23 @@ bool TffdshowVideoInputPin::init(const CMediaType &mt)
 
 void TffdshowVideoInputPin::done()
 {
-    if (video) delete video;codec=video=NULL;
+    if (video) {
+        delete video;
+    }
+    codec=video=NULL;
     memset(&biIn,0,sizeof(biIn));
     avgTimePerFrame=0;
-    codecId=CODEC_ID_NONE;rawDecode=false;
-    autosubflnm[0]=oldSubSearchDir[0]='\0';oldSubHeuristic=false;
+    codecId=CODEC_ID_NONE;
+    rawDecode=false;
+    autosubflnm[0]=oldSubSearchDir[0]='\0';
+    oldSubHeuristic=false;
 }
 
 STDMETHODIMP TffdshowVideoInputPin::GetAllocator(IMemAllocator** ppAllocator)
 {
-    if (!raw_codec(codecId))
+    if (!raw_codec(codecId)) {
         return TinputPin::GetAllocator(ppAllocator);
-    else {
+    } else {
         CheckPointer(ppAllocator, E_POINTER);
         if (m_pAllocator==NULL) {
             m_pAllocator=&allocator;
@@ -503,7 +522,9 @@ STDMETHODIMP TffdshowVideoInputPin::GetAllocator(IMemAllocator** ppAllocator)
 STDMETHODIMP TffdshowVideoInputPin::NotifyAllocator(IMemAllocator *pAllocator,BOOL bReadOnly)
 {
     HRESULT hr=TinputPin::NotifyAllocator(pAllocator,bReadOnly);
-    if (FAILED(hr)) return hr;
+    if (FAILED(hr)) {
+        return hr;
+    }
     usingOwnAllocator=(pAllocator==(IMemAllocator*)&allocator);
     return S_OK;
 }
@@ -515,8 +536,9 @@ STDMETHODIMP TffdshowVideoInputPin::NewSegment(REFERENCE_TIME tStart, REFERENCE_
     HRESULT hr=TinputPin::NewSegment(tStart,tStop,dRate);
     m_rateAndFlush.isDiscontinuity = true;
     m_rateAndFlush.rate.StartTime = m_rateAndFlush.ratechange.StartTime = 0;
-    if (dRate != 0)
+    if (dRate != 0) {
         m_rateAndFlush.rate.Rate = m_rateAndFlush.ratechange.Rate = (LONG)(10000 / dRate);
+    }
     fv->unlockReceive();
     return hr;
 }
@@ -533,21 +555,21 @@ STDMETHODIMP TffdshowVideoInputPin::BeginFlush()
     // a lock when we enter in this method (which is normal), but the lock is never released by the decoder (which is not normal)
     // so the following lock never goes through. This may be a problem in the future if we have internal filters for DXVA mode (or maybe
     // it will be okay)
-    if (fv && fv->deci && video && video->useDXVA() != 0) 
-    {
-     m_rateAndFlush.m_flushing = true;
-     video->BeginFlush();
-     comptrQ<IffdshowDecVideo> deciV=fv->deci;
-     TimgFilters* filters;
+    if (fv && fv->deci && video && video->useDXVA() != 0) {
+        m_rateAndFlush.m_flushing = true;
+        video->BeginFlush();
+        comptrQ<IffdshowDecVideo> deciV=fv->deci;
+        TimgFilters* filters;
 
-     if (deciV && deciV->getImgFilters_((void**)&filters) == S_OK && filters)
-      filters->onFlush();
+        if (deciV && deciV->getImgFilters_((void**)&filters) == S_OK && filters) {
+            filters->onFlush();
+        }
 
-     m_rateAndFlush.flushed = true;
-     m_rateAndFlush.isDiscontinuity = true;
-     return CTransformInputPin::BeginFlush();
+        m_rateAndFlush.flushed = true;
+        m_rateAndFlush.isDiscontinuity = true;
+        return CTransformInputPin::BeginFlush();
     }
-    
+
     /*
      * Microsoft says m_csReceive can be locked after delivering BeginFlush call to downstream.
      * http://msdn.microsoft.com/en-us/library/dd375795(VS.85).aspx
@@ -557,14 +579,16 @@ STDMETHODIMP TffdshowVideoInputPin::BeginFlush()
     if (fv && fv->deci) {
         {
             m_rateAndFlush.m_flushing = true;
-            if (video)
+            if (video) {
                 video->BeginFlush();
+            }
         }
         comptrQ<IffdshowDecVideo> deciV=fv->deci;
         TimgFilters* filters;
 
-        if (deciV && deciV->getImgFilters_((void**)&filters) == S_OK && filters)
+        if (deciV && deciV->getImgFilters_((void**)&filters) == S_OK && filters) {
             filters->onFlush();
+        }
 
         m_rateAndFlush.flushed = true;
         m_rateAndFlush.isDiscontinuity = true;
@@ -603,8 +627,9 @@ HRESULT TffdshowVideoInputPin::decompress(IMediaSample *pSample,long *srcLen)
         return S_FALSE;
     }
     *srcLen=pSample->GetActualDataLength();
-    if (bitstream && strippacket)
+    if (bitstream && strippacket) {
         StripPacket(bitstream,*srcLen);
+    }
     return video->decompress(bitstream,*srcLen,pSample);
 }
 
@@ -614,18 +639,22 @@ STDMETHODIMP TffdshowVideoInputPin::EndOfStream()
     if (deciV) {
         CAutoLock lock1((CCritSec*)deciV->get_csReceive_ptr());
         CAutoLock lock2(&m_csCodecs_and_imgFilters);
-        if (m_rateAndFlush.m_flushing)
+        if (m_rateAndFlush.m_flushing) {
             return S_OK;
+        }
         m_rateAndFlush.m_endflush = false;
         video->onEndOfStream();
         return TinputPin::EndOfStream();
-    } else
+    } else {
         return E_UNEXPECTED;
+    }
 }
 
 HRESULT TffdshowVideoInputPin::getAVIfps(unsigned int *fps1000)
 {
-    if (!fps1000 || avgTimePerFrame==0) return S_FALSE;
+    if (!fps1000 || avgTimePerFrame==0) {
+        return S_FALSE;
+    }
 
     *fps1000=(unsigned int)(REF_SECOND_MULT*1000/avgTimePerFrame);
     return S_OK;
@@ -633,37 +662,49 @@ HRESULT TffdshowVideoInputPin::getAVIfps(unsigned int *fps1000)
 
 HRESULT TffdshowVideoInputPin::getAverageTimePerFrame(int64_t *avg)
 {
-    if (IsConnected() && m_mt.cbFormat)
+    if (IsConnected() && m_mt.cbFormat) {
         *avg=getAvgTimePerFrame(m_mt);
-    else
+    } else {
         *avg=avgTimePerFrame;
+    }
     return S_OK;
 }
 
 HRESULT TffdshowVideoInputPin::getAVIdimensions(unsigned int *x,unsigned int *y)
 {
-    if (!x || !y) return E_POINTER;
-    *x=pictIn.rectFull.dx;*y=pictIn.rectFull.dy;
+    if (!x || !y) {
+        return E_POINTER;
+    }
+    *x=pictIn.rectFull.dx;
+    *y=pictIn.rectFull.dy;
     return (pictIn.rectFull.dx==0 || pictIn.rectFull.dy==0)?S_FALSE:S_OK;
 }
 
 HRESULT TffdshowVideoInputPin::getInputSAR(unsigned int *a1,unsigned int *a2)
 {
-    if (!a1 || !a2) return E_POINTER;
-    *a1=pictIn.rectFull.sar.num;*a2=pictIn.rectFull.sar.den;
+    if (!a1 || !a2) {
+        return E_POINTER;
+    }
+    *a1=pictIn.rectFull.sar.num;
+    *a2=pictIn.rectFull.sar.den;
     return *a1 && *a2?S_OK:S_FALSE;
 }
 
 HRESULT TffdshowVideoInputPin::getInputDAR(unsigned int *a1,unsigned int *a2)
 {
-    if (!a1 || !a2) return E_POINTER;
-    *a1=pictIn.rectFull.dar().num;*a2=pictIn.rectFull.dar().den;
+    if (!a1 || !a2) {
+        return E_POINTER;
+    }
+    *a1=pictIn.rectFull.dar().num;
+    *a2=pictIn.rectFull.dar().den;
     return *a1 && *a2?S_OK:S_FALSE;
 }
 
 HRESULT TffdshowVideoInputPin::getMovieSource(const TvideoCodecDec* *moviePtr)
 {
-    if (!moviePtr) return S_FALSE;
+    if (!moviePtr) {
+        return S_FALSE;
+    }
     *moviePtr=video;
     return S_OK;
 }
@@ -675,61 +716,88 @@ FOURCC TffdshowVideoInputPin::getMovieFOURCC()
 
 HRESULT TffdshowVideoInputPin::getFrameTime(unsigned int framenum,unsigned int *sec)
 {
-    if (!sec) return E_POINTER;
-    if (avgTimePerFrame==0) return E_FAIL;
+    if (!sec) {
+        return E_POINTER;
+    }
+    if (avgTimePerFrame==0) {
+        return E_FAIL;
+    }
     *sec=(unsigned int)(avgTimePerFrame*framenum/REF_SECOND_MULT);
     return S_OK;
 }
 
 HRESULT TffdshowVideoInputPin::getFrameTimeMS(unsigned int framenum,unsigned int *msec)
 {
-    if (!msec) return E_POINTER;
-    if (avgTimePerFrame==0) return E_FAIL;
+    if (!msec) {
+        return E_POINTER;
+    }
+    if (avgTimePerFrame==0) {
+        return E_FAIL;
+    }
     *msec=(unsigned int)(avgTimePerFrame*framenum/10000);
     return S_OK;
 }
 
 HRESULT TffdshowVideoInputPin::calcMeanQuant(float *quant)
 {
-    if (!quant) return E_POINTER;
-    if (!video) return S_FALSE;
+    if (!quant) {
+        return E_POINTER;
+    }
+    if (!video) {
+        return S_FALSE;
+    }
     *quant=video->calcMeanQuant();
     return S_OK;
 }
 
 HRESULT TffdshowVideoInputPin::quantsAvailable()
 {
-    if (!video) return E_FAIL;
+    if (!video) {
+        return E_FAIL;
+    }
     return video->quants?S_OK:S_FALSE;
 }
 
 HRESULT TffdshowVideoInputPin::getQuantMatrices(uint8_t intra8[64],uint8_t inter8[64])
 {
-    if (!intra8 || !inter8) return E_POINTER;
-    if (!video) return E_FAIL;
-    if ((!video->inter_matrix && !video->intra_matrix) || (video->intra_matrix[0]==0 && video->inter_matrix[0]==0)) return E_UNEXPECTED;
+    if (!intra8 || !inter8) {
+        return E_POINTER;
+    }
+    if (!video) {
+        return E_FAIL;
+    }
+    if ((!video->inter_matrix && !video->intra_matrix) || (video->intra_matrix[0]==0 && video->inter_matrix[0]==0)) {
+        return E_UNEXPECTED;
+    }
     if (video->inter_matrix)
-        for (int i=0;i<64;i++)
+        for (int i=0; i<64; i++) {
             inter8[i]=(uint8_t)video->inter_matrix[i];
-    else
+        }
+    else {
         memset(inter8,0,64);
+    }
     if (video->intra_matrix)
-        for (int i=0;i<64;i++)
+        for (int i=0; i<64; i++) {
             intra8[i]=(uint8_t)video->intra_matrix[i];
-    else
+        }
+    else {
         memset(intra8,0,64);
+    }
     return S_OK;
 }
 
 HRESULT TffdshowVideoInputPin::getInCodecString(char_t *buf,size_t buflen)
 {
-    if (!buf) return E_POINTER;
+    if (!buf) {
+        return E_POINTER;
+    }
     if (video) {
         char_t name[60];
         tsnprintf_s(buf, buflen, _TRUNCATE, _l("%s (%s)"),fourcc2str(biIn.bmiHeader.biCompression,name,60),video->getName());
         buf[buflen-1]='\0';
-    } else
+    } else {
         buf[0]='\0';
+    }
     return S_OK;
 }
 
@@ -740,15 +808,20 @@ bool TffdshowVideoInputPin::waitForKeyframes()
 
 void TffdshowVideoInputPin::setSampleSkipped()
 {
-    if (video)
+    if (video) {
         video->onDiscontinuity();
+    }
 }
 
 const char_t* TffdshowVideoInputPin::findAutoSubflnm(IcheckSubtitle *checkSubtitle,const char_t *searchDir,const char_t *searchExt,bool heuristic)
 {
-    if (IsConnected()==FALSE) return _l("");
+    if (IsConnected()==FALSE) {
+        return _l("");
+    }
     const char_t *AVIname=getFileSourceName();
-    if (AVIname[0]=='\0') return _l("");
+    if (AVIname[0]=='\0') {
+        return _l("");
+    }
     if (autosubflnm[0]=='\0' || oldSubHeuristic!=heuristic || stricmp(oldSubSearchDir,searchDir)!=0) {
         oldSubHeuristic=heuristic;
         ff_strncpy(oldSubSearchDir, searchDir, countof(oldSubSearchDir));
@@ -764,10 +837,12 @@ int TffdshowVideoInputPin::getVideoCodecId(const BITMAPINFOHEADER *hdr,const GUI
     // Here, ffdshow rejects connection to PBDA DTFilter if the four CC is 'MPEG'.
     FOURCC fourcc = 0;
     int id = fv->getVideoCodecId(hdr, subtype, &fourcc);
-    if (connectedSplitter == PBDA_DTFilter && fourcc == FOURCC_MPEG)
+    if (connectedSplitter == PBDA_DTFilter && fourcc == FOURCC_MPEG) {
         return CODEC_ID_NONE;
-    if (AVIfourcc && fourcc)
+    }
+    if (AVIfourcc && fourcc) {
         *AVIfourcc = fourcc;
+    }
     return id;
 }
 
@@ -775,57 +850,48 @@ const long TffdshowVideoInputPin::MAX_SPEED = 2;
 
 HRESULT TffdshowVideoInputPin::SetPropSetRate(DWORD Id, LPVOID pInstanceData, DWORD cbInstanceData, LPVOID pPropertyData, DWORD cbPropData)
 {
-    switch(Id)
-    {
-    case AM_RATE_SimpleRateChange:
-        {
+    switch(Id) {
+        case AM_RATE_SimpleRateChange: {
             CAutoLock lock(&m_csCodecs_and_imgFilters);
             AM_SimpleRateChange* p = (AM_SimpleRateChange*)pPropertyData;
-            if(!m_rateAndFlush.correctTS) return E_PROP_ID_UNSUPPORTED;
+            if(!m_rateAndFlush.correctTS) {
+                return E_PROP_ID_UNSUPPORTED;
+            }
             m_rateAndFlush.ratechange.Rate = p->Rate;
             m_rateAndFlush.ratechange.StartTime = p->StartTime;
             DPRINTF(_l("Simple Rate Change StartTime=%s, Rate=%d\n"), Trt2str(p->StartTime).c_str(), p->Rate);
         }
         break;
-    case AM_RATE_CorrectTS:
-        {
+        case AM_RATE_CorrectTS: {
             LONG* p = (LONG*)pPropertyData;
             m_rateAndFlush.correctTS = (*p != 0);
             DPRINTF(_l("Rate Change Correct TS =%d\n"), m_rateAndFlush.correctTS);
         }
         break;
-    case AM_RATE_UseRateVersion:
-        {
-            if(*(WORD*)pPropertyData == 0x0101)
-            {
+        case AM_RATE_UseRateVersion: {
+            if(*(WORD*)pPropertyData == 0x0101) {
                 DPRINTF(_l("Rate Change 1.1\n"));
                 m_rateAndFlush.correctTS = true;
                 // todo get 1.1 working properly
                 return E_UNEXPECTED;
-            }
-            else if(*(WORD*)pPropertyData == 0x0100)
-            {
+            } else if(*(WORD*)pPropertyData == 0x0100) {
                 DPRINTF(_l("Rate Change 1.0\n"));
                 m_rateAndFlush.correctTS = true;
-            }
-            else
-            {
+            } else {
                 return E_UNEXPECTED;
             }
         }
         break;
-    default:
-        return E_PROP_ID_UNSUPPORTED;
+        default:
+            return E_PROP_ID_UNSUPPORTED;
     }
     return S_OK;
 }
 
 HRESULT TffdshowVideoInputPin::GetPropSetRate(DWORD Id, LPVOID pInstanceData, DWORD InstanceLength, LPVOID pPropertyData, DWORD cbPropData, DWORD *pcbReturned)
 {
-    switch(Id)
-    {
-    case AM_RATE_MaxFullDataRate:
-        {
+    switch(Id) {
+        case AM_RATE_MaxFullDataRate: {
             DPRINTF(_l("MaxFullDataRate\n"));
             AM_MaxFullDataRate* p = (AM_MaxFullDataRate*)pPropertyData;
             // this is not what is says you're supposed to return in the documentation
@@ -835,8 +901,7 @@ HRESULT TffdshowVideoInputPin::GetPropSetRate(DWORD Id, LPVOID pInstanceData, DW
             *pcbReturned = sizeof(AM_MaxFullDataRate);
         }
         break;
-    case AM_RATE_QueryFullFrameRate:
-        {
+        case AM_RATE_QueryFullFrameRate: {
             DPRINTF(_l("QueryFullFrameRate\n"));
             AM_QueryRate* p = (AM_QueryRate*)pPropertyData;
             // this is not what is says you're supposed to return in the documentation
@@ -847,41 +912,39 @@ HRESULT TffdshowVideoInputPin::GetPropSetRate(DWORD Id, LPVOID pInstanceData, DW
             *pcbReturned = sizeof(AM_QueryRate);
         }
         break;
-    case AM_RATE_QueryLastRateSegPTS:
-        {
+        case AM_RATE_QueryLastRateSegPTS: {
             DPRINTF(_l("QueryLastRateSegPTS\n"));
             REFERENCE_TIME* LastPTS = (REFERENCE_TIME*)pPropertyData;
             *pcbReturned = sizeof(REFERENCE_TIME);
         }
         break;
-    default:
-        return E_PROP_ID_UNSUPPORTED;
+        default:
+            return E_PROP_ID_UNSUPPORTED;
     }
     return S_OK;
 }
 
 HRESULT TffdshowVideoInputPin::SupportPropSetRate(DWORD dwPropID, DWORD *pTypeSupport)
 {
-    switch(dwPropID)
-    {
-    case AM_RATE_SimpleRateChange:
-        *pTypeSupport = KSPROPERTY_SUPPORT_SET;
-        break;
-    case AM_RATE_MaxFullDataRate:
-        *pTypeSupport = KSPROPERTY_SUPPORT_GET;
-        break;
-    case AM_RATE_QueryFullFrameRate:
-        *pTypeSupport = KSPROPERTY_SUPPORT_GET;
-        break;
-    case AM_RATE_CorrectTS:
-        *pTypeSupport = KSPROPERTY_SUPPORT_SET;
-        break;
-    case AM_RATE_UseRateVersion:
-        *pTypeSupport = KSPROPERTY_SUPPORT_SET;
-        break;
-    case AM_RATE_QueryLastRateSegPTS:
-        *pTypeSupport = KSPROPERTY_SUPPORT_GET;
-        break;
+    switch(dwPropID) {
+        case AM_RATE_SimpleRateChange:
+            *pTypeSupport = KSPROPERTY_SUPPORT_SET;
+            break;
+        case AM_RATE_MaxFullDataRate:
+            *pTypeSupport = KSPROPERTY_SUPPORT_GET;
+            break;
+        case AM_RATE_QueryFullFrameRate:
+            *pTypeSupport = KSPROPERTY_SUPPORT_GET;
+            break;
+        case AM_RATE_CorrectTS:
+            *pTypeSupport = KSPROPERTY_SUPPORT_SET;
+            break;
+        case AM_RATE_UseRateVersion:
+            *pTypeSupport = KSPROPERTY_SUPPORT_SET;
+            break;
+        case AM_RATE_QueryLastRateSegPTS:
+            *pTypeSupport = KSPROPERTY_SUPPORT_GET;
+            break;
     }
     return S_OK;
 }
@@ -889,11 +952,12 @@ HRESULT TffdshowVideoInputPin::SupportPropSetRate(DWORD dwPropID, DWORD *pTypeSu
 //================================ TffdshowVideoEncInputPin ================================
 STDMETHODIMP TffdshowVideoEncInputPin::NonDelegatingQueryInterface(REFIID riid, void** ppv)
 {
- if (riid==IID_IMixerPinConfig) {
-     isOverlay=true;
-     return GetInterface<IMixerPinConfig>(this,ppv);
- } else
-     return TffdshowVideoInputPin::NonDelegatingQueryInterface(riid, ppv);
+    if (riid==IID_IMixerPinConfig) {
+        isOverlay=true;
+        return GetInterface<IMixerPinConfig>(this,ppv);
+    } else {
+        return TffdshowVideoInputPin::NonDelegatingQueryInterface(riid, ppv);
+    }
 }
 
 STDMETHODIMP TffdshowVideoEncInputPin::SetRelativePosition(THIS_ IN DWORD dwLeft, IN DWORD dwTop, IN DWORD dwRight, IN DWORD dwBottom)

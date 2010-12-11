@@ -33,86 +33,87 @@ TffProcBase::~TffProcBase()
 
 void TffProcBase::initDeci(IUnknown *unk)
 {
- deci=unk;deciD=unk;
- deci->putParam(IDFF_filterMode,filtermode|IDFF_FILTERMODE_PROC);
- deciD->initPresets();
+    deci=unk;
+    deciD=unk;
+    deci->putParam(IDFF_filterMode,filtermode|IDFF_FILTERMODE_PROC);
+    deciD->initPresets();
 }
 
 STDMETHODIMP TffProcBase::loadPreset(const char *presetName)
 {
- deciD->setActivePreset(text<char_t>(presetName),true);
- return S_OK;
+    deciD->setActivePreset(text<char_t>(presetName),true);
+    return S_OK;
 }
 STDMETHODIMP TffProcBase::setTempPreset(const char *tempPresetName)
 {
- deciD->createTempPreset(text<char_t>(tempPresetName));
- deciD->setActivePreset(text<char_t>(tempPresetName),false);
- return S_OK;
+    deciD->createTempPreset(text<char_t>(tempPresetName));
+    deciD->setActivePreset(text<char_t>(tempPresetName),false);
+    return S_OK;
 }
 STDMETHODIMP TffProcBase::setActivePreset(const char *presetName)
 {
- return deciD->setActivePreset(text<char_t>(presetName),false);
+    return deciD->setActivePreset(text<char_t>(presetName),false);
 }
 STDMETHODIMP TffProcBase::saveBytestreamConfig(void *buf,size_t len)
 {
- return deci->savePresetMem(buf,len);
+    return deci->savePresetMem(buf,len);
 }
 STDMETHODIMP TffProcBase::loadBytestreamConfig(const void *buf,size_t len)
 {
- return deci->loadPresetMem(buf,len);
+    return deci->loadPresetMem(buf,len);
 }
 
 void TffProcBase::saveConfig(TregOpIDstreamWrite &t)
 {
- int procLen=0;
- saveBytestreamConfig(&procLen,0);
- if (procLen>0)
-  {
-   void *procBuf=malloc(procLen);
-   if (saveBytestreamConfig(procBuf,procLen)==S_OK)
-    {
-     t.append((char)0);
-     t.append((short int)0);
-     t.append(procBuf,procLen);
+    int procLen=0;
+    saveBytestreamConfig(&procLen,0);
+    if (procLen>0) {
+        void *procBuf=malloc(procLen);
+        if (saveBytestreamConfig(procBuf,procLen)==S_OK) {
+            t.append((char)0);
+            t.append((short int)0);
+            t.append(procBuf,procLen);
+        }
+        free(procBuf);
     }
-   free(procBuf);
-  }
 }
 void TffProcBase::loadConfig(bool notreg,const unsigned char *buf,size_t len)
 {
- setActivePreset(notreg?"ffdshow proc temporary preset":"ffdshow proc");
- loadBytestreamConfig(buf,len);
+    setActivePreset(notreg?"ffdshow proc temporary preset":"ffdshow proc");
+    loadBytestreamConfig(buf,len);
 }
 
 STDMETHODIMP TffProcBase::config(HWND owner)
 {
- return deci->showCfgDlg(owner);
+    return deci->showCfgDlg(owner);
 }
 
 STDMETHODIMP TffProcBase::putStringParam(const char *param,char sep)
 {
- return deciD->putStringParams(text<char_t>(param),sep,false);
+    return deciD->putStringParams(text<char_t>(param),sep,false);
 }
 
 STDMETHODIMP TffProcBase::getParamsEnum(IffdshowParamsEnum* *enumPtr)
 {
- if (!enumPtr) return E_POINTER;
- return deci->QueryInterface(IID_IffdshowParamsEnum,(void**)enumPtr);
+    if (!enumPtr) {
+        return E_POINTER;
+    }
+    return deci->QueryInterface(IID_IffdshowParamsEnum,(void**)enumPtr);
 }
 
 STDMETHODIMP TffProcBase::notifyParamsChanged(void)
 {
- return deci->notifyParamsChanged();
+    return deci->notifyParamsChanged();
 }
 STDMETHODIMP TffProcBase::saveActivePreset(const char *name)
 {
- return deciD->saveActivePreset(text<char_t>(name));
+    return deciD->saveActivePreset(text<char_t>(name));
 }
 STDMETHODIMP TffProcBase::putParam(unsigned int paramID,int val)
 {
- return deci->putParam(paramID,val);
+    return deci->putParam(paramID,val);
 }
 STDMETHODIMP TffProcBase::setBasePageSite(IPropertyPage *page)
 {
- return page->SetObjects(1,(IUnknown**)&deci);
+    return page->SetObjects(1,(IUnknown**)&deci);
 }

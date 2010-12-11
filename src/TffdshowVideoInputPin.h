@@ -16,7 +16,9 @@ private:
     int supdvddec;
     bool usingOwnAllocator,rawDecode;
     TvideoCodecDec *video;
-    char_t autosubflnm[MAX_PATH];bool oldSubHeuristic;char_t oldSubSearchDir[MAX_PATH];
+    char_t autosubflnm[MAX_PATH];
+    bool oldSubHeuristic;
+    char_t oldSubSearchDir[MAX_PATH];
     int connectedSplitter;
     bool wasVC1;
 protected:
@@ -33,7 +35,7 @@ public:
      * This mutex must be locked inside m_csReceive.
      * If you want to lock both, lock m_csReceive FIRST.
      * This is unlocked in deliverProcessedSample to avoid dead lock.
-     * 
+     *
      */
     CCritSec m_csCodecs_and_imgFilters;
     struct TrateAndFlush {
@@ -42,8 +44,7 @@ public:
         AM_SimpleRateChange ratechange,rate;
         bool isDiscontinuity;
         bool flushed;
-        TrateAndFlush()
-        {
+        TrateAndFlush() {
             isDiscontinuity = false;
             correctTS = false;
             flushed = false;
@@ -55,7 +56,9 @@ public:
         }
     } m_rateAndFlush;
 
-    TrateAndFlush* getRateInfo() {return &m_rateAndFlush;}
+    TrateAndFlush* getRateInfo() {
+        return &m_rateAndFlush;
+    }
     static const long MAX_SPEED;
     TffdshowVideoInputPin(TCHAR *objectName,TffdshowVideo *pFilter,HRESULT *phr);
     virtual ~TffdshowVideoInputPin();
@@ -71,7 +74,9 @@ public:
     STDMETHODIMP NotifyAllocator(IMemAllocator *pAllocator,BOOL bReadOnly);
 
     HRESULT getAVIfps(unsigned int *fps1000);
-    int getAVIfps1000_2(void) {return avgTimePerFrame==0?25000:int(REF_SECOND_MULT*1000/avgTimePerFrame);}
+    int getAVIfps1000_2(void) {
+        return avgTimePerFrame==0?25000:int(REF_SECOND_MULT*1000/avgTimePerFrame);
+    }
     HRESULT getAVIdimensions(unsigned int *x,unsigned int *y);
     HRESULT getInputSAR(unsigned int *a1,unsigned int *a2);
     HRESULT getInputDAR(unsigned int *a1,unsigned int *a2);
@@ -90,24 +95,26 @@ public:
     STDMETHODIMP EndOfStream();
 
     TffdshowDecVideoAllocator allocator;
-    BITMAPINFO biIn;TffPictBase pictIn;
+    BITMAPINFO biIn;
+    TffPictBase pictIn;
     REFERENCE_TIME avgTimePerFrame;
     int sourceFlags;
     bool waitForKeyframes();
     void setSampleSkipped();
-    const char* get_current_idct(){return video->get_current_idct();}
+    const char* get_current_idct() {
+        return video->get_current_idct();
+    }
     bool isInterlacedRawVideo;
     IBaseFilter *pCompatibleFilter;
-    enum
-     {
-      MPC_matroska_splitter,
-      Haali_Media_splitter,
-      MPC_mpegSplitters,
-      DVBSourceFilter,
-      PBDA_DTFilter,
-      NeuviewSource,
-      Unknown_Splitter
-     };
+    enum {
+        MPC_matroska_splitter,
+        Haali_Media_splitter,
+        MPC_mpegSplitters,
+        DVBSourceFilter,
+        PBDA_DTFilter,
+        NeuviewSource,
+        Unknown_Splitter
+    };
 };
 
 class TffdshowVideoEncInputPin :public IMixerPinConfig,public TffdshowVideoInputPin

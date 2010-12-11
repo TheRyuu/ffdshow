@@ -31,11 +31,19 @@ class CDeCSSInputPin : public CTransformInputPin, public IKsPropertySet
 protected:
     // return S_FALSE here if you don't want the base class
     // to call CTransformFilter::Receive with this sample
-    virtual HRESULT Transform(IMediaSample* pSample) {return S_OK;}
+    virtual HRESULT Transform(IMediaSample* pSample) {
+        return S_OK;
+    }
 
-    virtual HRESULT SetPropSetRate(DWORD Id, LPVOID pInstanceData, DWORD cbInstanceData, LPVOID pPropertyData, DWORD cbPropData) {return E_NOTIMPL;}
-    virtual HRESULT GetPropSetRate(DWORD Id, LPVOID pInstanceData, DWORD InstanceLength, LPVOID pPropertyData, DWORD cbPropData, DWORD *pcbReturned) {return E_NOTIMPL;}
-    virtual HRESULT SupportPropSetRate(DWORD dwPropID, DWORD *pTypeSupport) {return E_NOTIMPL;}
+    virtual HRESULT SetPropSetRate(DWORD Id, LPVOID pInstanceData, DWORD cbInstanceData, LPVOID pPropertyData, DWORD cbPropData) {
+        return E_NOTIMPL;
+    }
+    virtual HRESULT GetPropSetRate(DWORD Id, LPVOID pInstanceData, DWORD InstanceLength, LPVOID pPropertyData, DWORD cbPropData, DWORD *pcbReturned) {
+        return E_NOTIMPL;
+    }
+    virtual HRESULT SupportPropSetRate(DWORD dwPropID, DWORD *pTypeSupport) {
+        return E_NOTIMPL;
+    }
 
 public:
     CDeCSSInputPin(const char_t* pObjectName, CTransformFilter* pFilter, HRESULT* phr, const wchar_t *pName);

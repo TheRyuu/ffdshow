@@ -18,17 +18,17 @@
 #define IDFF_autoPresetFileFirst   5  //try to load preset from file
 #define IDFF_autoLoadedFromFile    6
 #define IDFF_filterMode            7
- #define IDFF_FILTERMODE_PLAYER        1
- #define IDFF_FILTERMODE_CONFIG        2
- #define IDFF_FILTERMODE_PROC          4
- #define IDFF_FILTERMODE_VFW           8
- #define IDFF_FILTERMODE_VIDEO       256
- #define IDFF_FILTERMODE_VIDEORAW    512
- #define IDFF_FILTERMODE_AUDIO      1024
- #define IDFF_FILTERMODE_ENC        2048
- #define IDFF_FILTERMODE_AUDIORAW   4096
- #define IDFF_FILTERMODE_VIDEOSUBTITLES  8192
- #define IDFF_FILTERMODE_VIDEODXVA  16384
+#define IDFF_FILTERMODE_PLAYER        1
+#define IDFF_FILTERMODE_CONFIG        2
+#define IDFF_FILTERMODE_PROC          4
+#define IDFF_FILTERMODE_VFW           8
+#define IDFF_FILTERMODE_VIDEO       256
+#define IDFF_FILTERMODE_VIDEORAW    512
+#define IDFF_FILTERMODE_AUDIO      1024
+#define IDFF_FILTERMODE_ENC        2048
+#define IDFF_FILTERMODE_AUDIORAW   4096
+#define IDFF_FILTERMODE_VIDEOSUBTITLES  8192
+#define IDFF_FILTERMODE_VIDEODXVA  16384
 #define IDFF_currentFrame         14
 #define IDFF_decodingFps          15
 #define IDFF_buildHistogram       16
@@ -662,70 +662,70 @@
 #define IDFF_OSDfontYscale         3412
 #define IDFF_OSDfontAspectAuto     3413
 //#define IDFF_OSDfontFast           1535
-  #define IDFF_OSDtype_inputSize          1520
-  #define IDFF_OSDtype_inputAspect        1550
-  #define IDFF_OSDtype_inputSizeAspect    1552
-  #define IDFF_OSDtype_outputSize         1521
-  #define IDFF_OSDtype_outputAspect       1551
-  #define IDFF_OSDtype_cpuUsage           1522
-  #define IDFF_OSDtype_TimeOnffdshow      1565
-  #define IDFF_OSDtype_systemTime         1523
-  #define IDFF_OSDtype_meanQuant          1524
-  #define IDFF_OSDtype_currentFrameTime   1525
-  #define IDFF_OSDtype_remainingFrameTime 1526
-  #define IDFF_OSDtype_movieTime          1527
-  #define IDFF_OSDtype_bps                1529
-  #define IDFF_OSDtype_encoderInfo        1531
-  #define IDFF_OSDtype_shortMsg           1528
-  #define IDFF_OSDtype_shortInfo          1536
-  #define IDFF_OSDtype_gmcWarpPoints      1539
-  #define IDFF_OSDtype_movieSource        33
-  #define IDFF_OSD_userformat             3491
-   #define IDFF_MOVIE_NONE     0
-   #define IDFF_MOVIE_LAVC     1
-   //#define IDFF_MOVIE_XVID   2
-   #define IDFF_MOVIE_RAW      4
-   #define IDFF_MOVIE_LIBMPEG2 5
-   #define IDFF_MOVIE_LIBMAD   7
-   #define IDFF_MOVIE_LIBFAAD  8
-   #define IDFF_MOVIE_XVID4    9
-   #define IDFF_MOVIE_AVIS    10
-   #define IDFF_MOVIE_WMV9    12
-   #define IDFF_MOVIE_X264    14
-   #define IDFF_MOVIE_LIBA52  15
-   //#define IDFF_MOVIE_SPDIF   16
-   #define IDFF_MOVIE_LIBDTS  17
-   #define IDFF_MOVIE_FFMPEG_MT 21
-   #define IDFF_MOVIE_FFMPEG_DXVA 22
-   #define IDFF_MOVIE_MAX     22 // should equal highest value of codecs above (see TglobalSettings.cpp)
-  #define IDFF_OSDtype_accurDeblock        30
-  #define IDFF_OSDtype_outputFOURCC      1540
-  #define IDFF_OSDtype_inputFPS          1541
-  #define IDFF_OSDtype_sourceFlnm        1542
-  #define IDFF_OSDtype_inputFOURCC       1543
-  #define IDFF_OSDtype_inCodecString     1544
-  #define IDFF_OSDtype_outCodecString    1545
-  #define IDFF_OSDtype_outSpeakersConfig 1549
-  #define IDFF_frameType                   31
-  #define IDFF_frameSize                   41
-  #define IDFF_OSDtype_frameMD5          1548
-  #define IDFF_OSDtype_frameTimestamps   1553
-  #define IDFF_OSDtype_frameDuration     1554
-  #define IDFF_OSDtype_h264_poc          3523
-  #define IDFF_OSDtype_exeflnm           1556
-  #define IDFF_OSDtype_activePresetName  3483
-  #define IDFF_OSDtype_sourceFlnmWOpath  1557
-  #define IDFF_OSDtype_sampleFrequency   1558
-  #define IDFF_OSDtype_nchannels         1559
-  #define IDFF_OSDtype_audioSampleFormat 1560
-  #define IDFF_OSDtype_audioJitter       1561
-  #define IDFF_OSDtype_idct              3370
-  #ifdef OSDTIMETABALE
-   #define IDFF_OSDtype_timetable        1562
-  #endif
-  #define IDFF_OSDtype_QueueCount        1563
-  #define IDFF_OSDtype_Late              1564
-  #define IDFF_OSDtype_AviSynth_Info     1566
+#define IDFF_OSDtype_inputSize          1520
+#define IDFF_OSDtype_inputAspect        1550
+#define IDFF_OSDtype_inputSizeAspect    1552
+#define IDFF_OSDtype_outputSize         1521
+#define IDFF_OSDtype_outputAspect       1551
+#define IDFF_OSDtype_cpuUsage           1522
+#define IDFF_OSDtype_TimeOnffdshow      1565
+#define IDFF_OSDtype_systemTime         1523
+#define IDFF_OSDtype_meanQuant          1524
+#define IDFF_OSDtype_currentFrameTime   1525
+#define IDFF_OSDtype_remainingFrameTime 1526
+#define IDFF_OSDtype_movieTime          1527
+#define IDFF_OSDtype_bps                1529
+#define IDFF_OSDtype_encoderInfo        1531
+#define IDFF_OSDtype_shortMsg           1528
+#define IDFF_OSDtype_shortInfo          1536
+#define IDFF_OSDtype_gmcWarpPoints      1539
+#define IDFF_OSDtype_movieSource        33
+#define IDFF_OSD_userformat             3491
+#define IDFF_MOVIE_NONE     0
+#define IDFF_MOVIE_LAVC     1
+//#define IDFF_MOVIE_XVID   2
+#define IDFF_MOVIE_RAW      4
+#define IDFF_MOVIE_LIBMPEG2 5
+#define IDFF_MOVIE_LIBMAD   7
+#define IDFF_MOVIE_LIBFAAD  8
+#define IDFF_MOVIE_XVID4    9
+#define IDFF_MOVIE_AVIS    10
+#define IDFF_MOVIE_WMV9    12
+#define IDFF_MOVIE_X264    14
+#define IDFF_MOVIE_LIBA52  15
+//#define IDFF_MOVIE_SPDIF   16
+#define IDFF_MOVIE_LIBDTS  17
+#define IDFF_MOVIE_FFMPEG_MT 21
+#define IDFF_MOVIE_FFMPEG_DXVA 22
+#define IDFF_MOVIE_MAX     22 // should equal highest value of codecs above (see TglobalSettings.cpp)
+#define IDFF_OSDtype_accurDeblock        30
+#define IDFF_OSDtype_outputFOURCC      1540
+#define IDFF_OSDtype_inputFPS          1541
+#define IDFF_OSDtype_sourceFlnm        1542
+#define IDFF_OSDtype_inputFOURCC       1543
+#define IDFF_OSDtype_inCodecString     1544
+#define IDFF_OSDtype_outCodecString    1545
+#define IDFF_OSDtype_outSpeakersConfig 1549
+#define IDFF_frameType                   31
+#define IDFF_frameSize                   41
+#define IDFF_OSDtype_frameMD5          1548
+#define IDFF_OSDtype_frameTimestamps   1553
+#define IDFF_OSDtype_frameDuration     1554
+#define IDFF_OSDtype_h264_poc          3523
+#define IDFF_OSDtype_exeflnm           1556
+#define IDFF_OSDtype_activePresetName  3483
+#define IDFF_OSDtype_sourceFlnmWOpath  1557
+#define IDFF_OSDtype_sampleFrequency   1558
+#define IDFF_OSDtype_nchannels         1559
+#define IDFF_OSDtype_audioSampleFormat 1560
+#define IDFF_OSDtype_audioJitter       1561
+#define IDFF_OSDtype_idct              3370
+#ifdef OSDTIMETABALE
+#define IDFF_OSDtype_timetable        1562
+#endif
+#define IDFF_OSDtype_QueueCount        1563
+#define IDFF_OSDtype_Late              1564
+#define IDFF_OSDtype_AviSynth_Info     1566
 //#define IDFF_OSDuser               1511 //don't use these, use shortOSDmessageAbsolute(msg,duration,x,y) instead
 //#define IDFF_OSDuserPx             1512
 //#define IDFF_OSDuserPy             1513

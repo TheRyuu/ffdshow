@@ -25,16 +25,15 @@
 
 Tinifile::Tinifile(const char_t *Iflnm,int Iencoding):CurProfile(NULL)
 {
- ff_strncpy(filename, Iflnm, countof(filename));
- encoding=Iencoding==-1?(sizeof(char_t)==sizeof(char)?Tstream::ENC_ASCII:Tstream::ENC_LE16):Iencoding;
+    ff_strncpy(filename, Iflnm, countof(filename));
+    encoding=Iencoding==-1?(sizeof(char_t)==sizeof(char)?Tstream::ENC_ASCII:Tstream::ENC_LE16):Iencoding;
 }
 Tinifile::~Tinifile()
 {
- if (CurProfile)
-  {
-   PROFILE_ReleaseFile();
-   free(CurProfile);
-  }
+    if (CurProfile) {
+        PROFILE_ReleaseFile();
+        free(CurProfile);
+    }
 }
 
 
@@ -56,24 +55,27 @@ void Tinifile::PROFILE_Save( Tstream &hFile, const PROFILESECTION *section)
 
     PROFILE_WriteMarker(hFile);
 
-    for ( ; section; section = section->next)
-    {
+    for ( ; section; section = section->next) {
         size_t len = 0;
 
-        if (section->name[0]) len += strlen(section->name) + 6;
+        if (section->name[0]) {
+            len += strlen(section->name) + 6;
+        }
 
-        for (key = section->key; key; key = key->next)
-        {
+        for (key = section->key; key; key = key->next) {
             len += strlen(key->name) + 2;
-            if (key->value) len += strlen(key->value) + 1;
+            if (key->value) {
+                len += strlen(key->value) + 1;
+            }
         }
 
         buffer = (char_t*)alloca(len * sizeof(char_t));
-        if (!buffer) return;
+        if (!buffer) {
+            return;
+        }
 
         p = buffer;
-        if (section->name[0])
-        {
+        if (section->name[0]) {
             //*p++ = '\r';
             *p++ = '\n';
             *p++ = '[';
@@ -83,12 +85,10 @@ void Tinifile::PROFILE_Save( Tstream &hFile, const PROFILESECTION *section)
             //*p++ = '\r';
             *p++ = '\n';
         }
-        for (key = section->key; key; key = key->next)
-        {
+        for (key = section->key; key; key = key->next) {
             strcpy( p, key->name );
             p += strlen(p);
-            if (key->value)
-            {
+            if (key->value) {
                 *p++ = '=';
                 strcpy( p, key->value );
                 p += strlen(p);
@@ -106,21 +106,24 @@ BOOL Tinifile::PROFILE_FlushFile(void)
     HANDLE hFile = NULL;
     FILETIME LastWriteTime;
 
-    if(!CurProfile)
-    {
+    if(!CurProfile) {
         return FALSE;
     }
 
-    if (!CurProfile->changed) return TRUE;
+    if (!CurProfile->changed) {
+        return TRUE;
+    }
 
     TstreamFile *file=new TstreamFile(CurProfile->filename,false,true,(Tstream::ENCODING)encoding);
     PROFILE_Save( *file, CurProfile->section);
     delete file;
     hFile = CreateFile(CurProfile->filename, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-    if (hFile == INVALID_HANDLE_VALUE)
+    if (hFile == INVALID_HANDLE_VALUE) {
         return FALSE;
-    if(GetFileTime(hFile, NULL, NULL, &LastWriteTime))
-       CurProfile->LastWriteTime=LastWriteTime;
+    }
+    if(GetFileTime(hFile, NULL, NULL, &LastWriteTime)) {
+        CurProfile->LastWriteTime=LastWriteTime;
+    }
     CloseHandle( hFile );
     CurProfile->changed = FALSE;
     return TRUE;
@@ -131,12 +134,12 @@ void Tinifile::PROFILE_Free( PROFILESECTION *section )
     PROFILESECTION *next_section;
     PROFILEKEY *key, *next_key;
 
-    for ( ; section; section = next_section)
-    {
-        for (key = section->key; key; key = next_key)
-        {
+    for ( ; section; section = next_section) {
+        for (key = section->key; key; key = next_key) {
             next_key = key->next;
-            if (key->value) free(key->value );
+            if (key->value) {
+                free(key->value );
+            }
             free(key );
         }
         next_section = section->next;
@@ -148,7 +151,9 @@ void Tinifile::PROFILE_ReleaseFile(void)
 {
     PROFILE_FlushFile();
     PROFILE_Free( CurProfile->section );
-    if (CurProfile->filename) free(CurProfile->filename );
+    if (CurProfile->filename) {
+        free(CurProfile->filename );
+    }
     CurProfile->changed = FALSE;
     CurProfile->section = NULL;
     CurProfile->filename  = NULL;
@@ -162,18 +167,23 @@ const char_t* Tinifile::PROFILE_GetLine(const char_t * szStart, const char_t * s
 
 int Tinifile::PROFILE_isspace(char_t c)
 {
-    if (tchar_traits<char_t>::isspace((tchar_traits<char_t>::uchar_t)c)) return 1;
-    if (c=='\r' || c==0x1a) return 1;
+    if (tchar_traits<char_t>::isspace((tchar_traits<char_t>::uchar_t)c)) {
+        return 1;
+    }
+    if (c=='\r' || c==0x1a) {
+        return 1;
+    }
     /* CR and ^Z (DOS EOF) are spaces too  (found on CD-ROMs) */
     return 0;
 }
 
 const char_t* Tinifile::memrchr (const char_t *block, char_t c, size_t size)
 {
-  for (const char_t *p = block + size; p != block; p--)
-    if (*p == c)
-      return p;
-  return 0;
+    for (const char_t *p = block + size; p != block; p--)
+        if (*p == c) {
+            return p;
+        }
+    return 0;
 }
 void Tinifile::PROFILE_DetectTextEncoding(const void * buffer, size_t * len)
 {
@@ -186,27 +196,31 @@ Tinifile::PROFILESECTION* Tinifile::PROFILE_Load(HANDLE hFile0)
     //char_t * szFile;
     //const char_t *szLineStart, *szLineEnd;
     const char_t *szValueStart, *szNameEnd;//, *szEnd;
-    int line = 0; size_t len;
+    int line = 0;
+    size_t len;
     PROFILESECTION *section, *first_section;
     PROFILESECTION **next_section;
     PROFILEKEY *key, *prev_key, **next_key;
     DWORD dwFileSize;
 
     dwFileSize = GetFileSize(hFile0, NULL);
-    if (dwFileSize == INVALID_FILE_SIZE)
+    if (dwFileSize == INVALID_FILE_SIZE) {
         return NULL;
+    }
 
     pBuffer = (uint8_t*)malloc(dwFileSize);
-    if (!pBuffer) return NULL;
+    if (!pBuffer) {
+        return NULL;
+    }
 
-    if (!ReadFile(hFile0, pBuffer, dwFileSize, &dwFileSize, NULL))
-    {
+    if (!ReadFile(hFile0, pBuffer, dwFileSize, &dwFileSize, NULL)) {
         free(pBuffer);
         return NULL;
     }
     len = dwFileSize;
 
-    TstreamMem hFile(pBuffer,len,Tstream::ENC_AUTODETECT);hFile.stripEOLN(true);
+    TstreamMem hFile(pBuffer,len,Tstream::ENC_AUTODETECT);
+    hFile.stripEOLN(true);
     encoding=hFile.encoding;
 
     //PROFILE_DetectTextEncoding(pBuffer, &len);
@@ -215,14 +229,13 @@ Tinifile::PROFILESECTION* Tinifile::PROFILE_Load(HANDLE hFile0)
     //pBuffer = (char_t*)((char *)pBuffer + len);
     //dwFileSize -= (DWORD)len;
 
-        //szFile = (char_t *)pBuffer;
-        //szEnd = (char_t *)((char *)pBuffer + dwFileSize);
+    //szFile = (char_t *)pBuffer;
+    //szEnd = (char_t *)((char *)pBuffer + dwFileSize);
 
     first_section = (PROFILESECTION*)malloc(sizeof(*section) );
-    if(first_section == NULL)
-    {
+    if(first_section == NULL) {
         //if (szFile != pBuffer)
-            //free( szFile);
+        //free( szFile);
         free(pBuffer);
         return NULL;
     }
@@ -236,38 +249,40 @@ Tinifile::PROFILESECTION* Tinifile::PROFILE_Load(HANDLE hFile0)
 
     char_t *szLineStart0 = (char_t*)malloc((dwFileSize+30)*sizeof(char_t));
     char_t *szLineStart = szLineStart0;
-    if (!szLineStart) return NULL;
+    if (!szLineStart) {
+        return NULL;
+    }
 
-    while (hFile.fgets(szLineStart,dwFileSize))
-    {
+    while (hFile.fgets(szLineStart,dwFileSize)) {
         const char_t *szLineEnd=strchr(szLineStart,'\0');
         //szLineStart = szLineEnd + 1;
         //if (szLineStart >= szEnd)
-            //break;
+        //break;
         //szLineEnd = PROFILE_GetLine(szLineStart, szEnd);
         //if (!szLineEnd)
-            //szLineEnd = szEnd;
+        //szLineEnd = szEnd;
         //line++;
 
-        while (*szLineStart && PROFILE_isspace(*szLineStart)) szLineStart++;
+        while (*szLineStart && PROFILE_isspace(*szLineStart)) {
+            szLineStart++;
+        }
 
-        if (!*szLineStart /*>= szLineEnd*/) continue;
+        if (!*szLineStart /*>= szLineEnd*/) {
+            continue;
+        }
 
-        if (*szLineStart == '[')  /* section start */
-        {
+        if (*szLineStart == '[') { /* section start */
             const char_t * szSectionEnd;
-            if ((szSectionEnd = memrchr( szLineStart, _l(']'), szLineEnd - szLineStart ))==NULL)
-            {
+            if ((szSectionEnd = memrchr( szLineStart, _l(']'), szLineEnd - szLineStart ))==NULL) {
                 //WARN("Invalid section header at line %d: %s\n",line, debugstr_wn(szLineStart, (int)(szLineEnd - szLineStart)) );
-            }
-            else
-            {
+            } else {
                 szLineStart++;
                 len = (int)(szSectionEnd - szLineStart);
                 /* no need to allocate +1 for NULL terminating character as
                  * already included in structure */
-                if ((section = (PROFILESECTION*)malloc(sizeof(*section) + len * sizeof(char_t) ))==NULL)
+                if ((section = (PROFILESECTION*)malloc(sizeof(*section) + len * sizeof(char_t) ))==NULL) {
                     break;
+                }
                 memcpy(section->name, szLineStart, len * sizeof(char_t));
                 section->name[len] = '\0';
                 section->key  = NULL;
@@ -284,53 +299,60 @@ Tinifile::PROFILESECTION* Tinifile::PROFILE_Load(HANDLE hFile0)
         }
 
         /* get rid of white space at the end of the line */
-        while ((szLineEnd > szLineStart) && ((*szLineEnd == '\n') || PROFILE_isspace(*szLineEnd))) szLineEnd--;
+        while ((szLineEnd > szLineStart) && ((*szLineEnd == '\n') || PROFILE_isspace(*szLineEnd))) {
+            szLineEnd--;
+        }
 
         /* line end should be pointing to character *after* the last wanted character */
         szLineEnd++;
 
         /* get rid of white space after the name and before the start
          * of the value */
-        if ((szNameEnd = szValueStart = (const char_t*)memchr( szLineStart, _l('='), szLineEnd - szLineStart )) != NULL)
-        {
+        if ((szNameEnd = szValueStart = (const char_t*)memchr( szLineStart, _l('='), szLineEnd - szLineStart )) != NULL) {
             szNameEnd = szValueStart - 1;
-            while ((szNameEnd > szLineStart) && PROFILE_isspace(*szNameEnd)) szNameEnd--;
+            while ((szNameEnd > szLineStart) && PROFILE_isspace(*szNameEnd)) {
+                szNameEnd--;
+            }
             szValueStart++;
-            while (szValueStart < szLineEnd && PROFILE_isspace(*szValueStart)) szValueStart++;
+            while (szValueStart < szLineEnd && PROFILE_isspace(*szValueStart)) {
+                szValueStart++;
+            }
         }
-        if (!szNameEnd)
+        if (!szNameEnd) {
             szNameEnd = szLineEnd - 1;
+        }
         /* name end should be pointing to character *after* the last wanted character */
         szNameEnd++;
 
         len = (int)(szNameEnd - szLineStart);
 
-        if (len || !prev_key || *prev_key->name)
-        {
+        if (len || !prev_key || *prev_key->name) {
             /* no need to allocate +1 for NULL terminating character as
              * already included in structure */
-            if ((key = (PROFILEKEY*)malloc(sizeof(*key) + len * sizeof(char_t) ))==NULL) break;
+            if ((key = (PROFILEKEY*)malloc(sizeof(*key) + len * sizeof(char_t) ))==NULL) {
+                break;
+            }
             memcpy(key->name, szLineStart, len * sizeof(char_t));
             key->name[len] = '\0';
-            if (szValueStart)
-            {
+            if (szValueStart) {
                 len = (int)(szLineEnd - szValueStart);
                 key->value = (char_t*)malloc((len + 1) * sizeof(char_t) );
                 memcpy(key->value, szValueStart, len * sizeof(char_t));
                 key->value[len] = '\0';
+            } else {
+                key->value = NULL;
             }
-            else key->value = NULL;
 
-           key->next  = NULL;
-           *next_key  = key;
-           next_key   = &key->next;
-           prev_key   = key;
+            key->next  = NULL;
+            *next_key  = key;
+            next_key   = &key->next;
+            prev_key   = key;
 
-           //TRACE("New key: name=%s, value=%s\n", debugstr_w(key->name), key->value ? debugstr_w(key->value) : "(none)");
+            //TRACE("New key: name=%s, value=%s\n", debugstr_w(key->name), key->value ? debugstr_w(key->value) : "(none)");
         }
     }
     //if (szFile != pBuffer)
-        //free(szFile);
+    //free(szFile);
     free(pBuffer);
     free(szLineStart0);
     return first_section;
@@ -340,43 +362,54 @@ void Tinifile::PROFILE_CopyEntry( LPTSTR buffer, LPCTSTR value, size_t len, BOOL
 {
     char_t quote = '\0';
 
-    if(!buffer) return;
+    if(!buffer) {
+        return;
+    }
 
-    if (strip_quote && ((*value == '\'') || (*value == '\"')))
-    {
-        if (value[1] && (value[strlen(value)-1] == *value)) quote = *value++;
+    if (strip_quote && ((*value == '\'') || (*value == '\"'))) {
+        if (value[1] && (value[strlen(value)-1] == *value)) {
+            quote = *value++;
+        }
     }
 
     _tcsncpy( buffer, value, len );
-    if (quote && (len >= (int)strlen(value))) buffer[strlen(buffer)-1] = '\0';
+    if (quote && (len >= (int)strlen(value))) {
+        buffer[strlen(buffer)-1] = '\0';
+    }
 }
 
 INT Tinifile::PROFILE_GetSection( PROFILESECTION *section, LPCTSTR section_name, LPTSTR buffer, size_t len, BOOL return_values )
 {
     PROFILEKEY *key;
 
-    if(!buffer) return 0;
+    if(!buffer) {
+        return 0;
+    }
 
-    while (section)
-    {
-        if (section->name[0] && !strcmp( section->name, section_name ))
-        {
+    while (section) {
+        if (section->name[0] && !strcmp( section->name, section_name )) {
             size_t oldlen = len;
-            for (key = section->key; key; key = key->next)
-            {
-                if (len <= 2) break;
-                if (!*key->name) continue;  /* Skip empty lines */
-                if (key->name[0] == ';') continue;  /* Skip comments */
+            for (key = section->key; key; key = key->next) {
+                if (len <= 2) {
+                    break;
+                }
+                if (!*key->name) {
+                    continue;    /* Skip empty lines */
+                }
+                if (key->name[0] == ';') {
+                    continue;    /* Skip comments */
+                }
                 PROFILE_CopyEntry( buffer, key->name, len - 1, 0 );
                 len -= strlen(buffer) + 1;
                 buffer += strlen(buffer) + 1;
-        if (len < 2)
-            break;
-        if (return_values && key->value) {
-            buffer[-1] = '=';
-            PROFILE_CopyEntry ( buffer, key->value, len - 1, 0 );
-            len -= strlen(buffer) + 1;
-            buffer += strlen(buffer) + 1;
+                if (len < 2) {
+                    break;
+                }
+                if (return_values && key->value) {
+                    buffer[-1] = '=';
+                    PROFILE_CopyEntry ( buffer, key->value, len - 1, 0 );
+                    len -= strlen(buffer) + 1;
+                    buffer += strlen(buffer) + 1;
                 }
             }
             *buffer = '\0';
@@ -387,7 +420,7 @@ INT Tinifile::PROFILE_GetSection( PROFILESECTION *section, LPCTSTR section_name,
                   In this case, the return value is equal to cchReturnBuffer
                   minus two. */
             {
-        buffer[-1] = '\0';
+                buffer[-1] = '\0';
                 return INT(oldlen) - 2;
             }
             return INT(oldlen - len);
@@ -409,27 +442,28 @@ BOOL Tinifile::PROFILE_Open(void)
 
     /* First time around */
 
-    if(!CurProfile)
-       {
-          CurProfile=(PROFILE*)malloc(sizeof(PROFILE) );
-          if(CurProfile == NULL) return FALSE;
-          CurProfile->changed=FALSE;
-          CurProfile->section=NULL;
-          CurProfile->filename=NULL;
-          ZeroMemory(&CurProfile->LastWriteTime, sizeof(FILETIME));
-       }
+    if(!CurProfile) {
+        CurProfile=(PROFILE*)malloc(sizeof(PROFILE) );
+        if(CurProfile == NULL) {
+            return FALSE;
+        }
+        CurProfile->changed=FALSE;
+        CurProfile->section=NULL;
+        CurProfile->filename=NULL;
+        ZeroMemory(&CurProfile->LastWriteTime, sizeof(FILETIME));
+    }
 
     GetWindowsDirectory( windirW, MAX_PATH );
-/*
-    if ((RtlDetermineDosPathNameType_U(filename) == RELATIVE_PATH) &&
-        !strchrW(filename, '\\') && !strchrW(filename, '/'))
-    {
-        static const CHAR wszSeparator[] = {'\\', 0};
-        strcpy(buffer, windirW);
-        strcat(buffer, wszSeparator);
-        strcat(buffer, filename);
-    }
-    else*/
+    /*
+        if ((RtlDetermineDosPathNameType_U(filename) == RELATIVE_PATH) &&
+            !strchrW(filename, '\\') && !strchrW(filename, '/'))
+        {
+            static const CHAR wszSeparator[] = {'\\', 0};
+            strcpy(buffer, windirW);
+            strcat(buffer, wszSeparator);
+            strcat(buffer, filename);
+        }
+        else*/
     {
         LPTSTR dummy;
         GetFullPathName(filename, sizeof(buffer)/sizeof(buffer[0]), buffer, &dummy);
@@ -437,46 +471,42 @@ BOOL Tinifile::PROFILE_Open(void)
 
     hFile = CreateFile(buffer, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 
-    if ((hFile == INVALID_HANDLE_VALUE) && (GetLastError() != ERROR_FILE_NOT_FOUND))
-    {
+    if ((hFile == INVALID_HANDLE_VALUE) && (GetLastError() != ERROR_FILE_NOT_FOUND)) {
         return FALSE;
     }
-       if ((CurProfile->filename && !strcmp( buffer, CurProfile->filename )))
-       {
-          GetFileTime(hFile, NULL, NULL, &LastWriteTime);
-          if(memcmp(&CurProfile->LastWriteTime, &LastWriteTime, sizeof(FILETIME)))
-             ;//DPRINTF("(%s): already opened (mru=%d)\n", buffer,0);
-          else
-              ;//DPRINTF("(%s): already opened, needs refreshing (mru=%d)\n",buffer,0);
-          CloseHandle(hFile);
-          return TRUE;
+    if ((CurProfile->filename && !strcmp( buffer, CurProfile->filename ))) {
+        GetFileTime(hFile, NULL, NULL, &LastWriteTime);
+        if(memcmp(&CurProfile->LastWriteTime, &LastWriteTime, sizeof(FILETIME))) {
+            ;    //DPRINTF("(%s): already opened (mru=%d)\n", buffer,0);
+        } else {
+            ;    //DPRINTF("(%s): already opened, needs refreshing (mru=%d)\n",buffer,0);
         }
+        CloseHandle(hFile);
+        return TRUE;
+    }
     /* Flush the old current profile */
     PROFILE_FlushFile();
 
     /* Make the oldest profile the current one only in order to get rid of it */
-/*
-    if(i==N_CACHED_PROFILES)
-      {
-       tempProfile=MRUProfile[N_CACHED_PROFILES-1];
-       for(i=N_CACHED_PROFILES-1;i>0;i--)
-          MRUProfile[i]=MRUProfile[i-1];
-       CurProfile=tempProfile;
-      }
-    if(CurProfile->filename) PROFILE_ReleaseFile();
-*/
+    /*
+        if(i==N_CACHED_PROFILES)
+          {
+           tempProfile=MRUProfile[N_CACHED_PROFILES-1];
+           for(i=N_CACHED_PROFILES-1;i>0;i--)
+              MRUProfile[i]=MRUProfile[i-1];
+           CurProfile=tempProfile;
+          }
+        if(CurProfile->filename) PROFILE_ReleaseFile();
+    */
     /* OK, now that CurProfile is definitely free we assign it our new file */
     CurProfile->filename  = (char_t*)malloc((strlen(buffer)+1) * sizeof(char_t) );
     strcpy( CurProfile->filename, buffer );
 
-    if (hFile != INVALID_HANDLE_VALUE)
-    {
+    if (hFile != INVALID_HANDLE_VALUE) {
         CurProfile->section = PROFILE_Load(hFile);
         GetFileTime(hFile, NULL, NULL, &CurProfile->LastWriteTime);
         CloseHandle(hFile);
-    }
-    else
-    {
+    } else {
         /* Does not exist yet, we will create it in PROFILE_FlushFile */
     }
     return TRUE;
@@ -484,10 +514,8 @@ BOOL Tinifile::PROFILE_Open(void)
 
 BOOL Tinifile::PROFILE_DeleteSection( PROFILESECTION **section, LPCTSTR name )
 {
-    while (*section)
-    {
-        if ((*section)->name[0] && !strcmp( (*section)->name, name ))
-        {
+    while (*section) {
+        if ((*section)->name[0] && !strcmp( (*section)->name, name )) {
             PROFILESECTION *to_del = *section;
             *section = to_del->next;
             to_del->next = NULL;
@@ -500,18 +528,16 @@ BOOL Tinifile::PROFILE_DeleteSection( PROFILESECTION **section, LPCTSTR name )
 }
 BOOL Tinifile::PROFILE_DeleteKey( PROFILESECTION **section,LPCTSTR section_name, LPCTSTR key_name )
 {
-    while (*section)
-    {
-        if ((*section)->name[0] && !strcmp( (*section)->name, section_name ))
-        {
+    while (*section) {
+        if ((*section)->name[0] && !strcmp( (*section)->name, section_name )) {
             PROFILEKEY **key = &(*section)->key;
-            while (*key)
-            {
-                if (!strcmp( (*key)->name, key_name ))
-                {
+            while (*key) {
+                if (!strcmp( (*key)->name, key_name )) {
                     PROFILEKEY *to_del = *key;
                     *key = to_del->next;
-                    if (to_del->value) free(to_del->value);
+                    if (to_del->value) {
+                        free(to_del->value);
+                    }
                     free(to_del );
                     return TRUE;
                 }
@@ -528,42 +554,50 @@ Tinifile::PROFILEKEY* Tinifile::PROFILE_Find( PROFILESECTION **section, LPCTSTR 
     LPCTSTR p;
     size_t seclen, keylen;
 
-    while (PROFILE_isspace(*section_name)) section_name++;
+    while (PROFILE_isspace(*section_name)) {
+        section_name++;
+    }
     p = section_name + strlen(section_name) - 1;
-    while ((p > section_name) && PROFILE_isspace(*p)) p--;
+    while ((p > section_name) && PROFILE_isspace(*p)) {
+        p--;
+    }
     seclen = p - section_name + 1;
 
-    while (PROFILE_isspace(*key_name)) key_name++;
+    while (PROFILE_isspace(*key_name)) {
+        key_name++;
+    }
     p = key_name + strlen(key_name) - 1;
-    while ((p > key_name) && PROFILE_isspace(*p)) p--;
+    while ((p > key_name) && PROFILE_isspace(*p)) {
+        p--;
+    }
     keylen = p - key_name + 1;
 
-    while (*section)
-    {
+    while (*section) {
         if ( ((*section)->name[0])
-             && (!(strncmp( (*section)->name, section_name, seclen )))
-             && (((*section)->name)[seclen] == '\0') )
-        {
+                && (!(strncmp( (*section)->name, section_name, seclen )))
+                && (((*section)->name)[seclen] == '\0') ) {
             PROFILEKEY **key = &(*section)->key;
 
-            while (*key)
-            {
+            while (*key) {
                 /* If create_always is FALSE then we check if the keyname
                  * already exists. Otherwise we add it regardless of its
                  * existence, to allow keys to be added more than once in
                  * some cases.
                  */
-                if(!create_always)
-                {
+                if(!create_always) {
                     if ( (!(strncmp( (*key)->name, key_name, keylen )))
-                         && (((*key)->name)[keylen] == '\0') )
+                            && (((*key)->name)[keylen] == '\0') ) {
                         return *key;
+                    }
                 }
                 key = &(*key)->next;
             }
-            if (!create) return NULL;
-            if ((*key = (PROFILEKEY*)malloc(sizeof(PROFILEKEY) + strlen(key_name) * sizeof(char_t) ))==NULL)
+            if (!create) {
                 return NULL;
+            }
+            if ((*key = (PROFILEKEY*)malloc(sizeof(PROFILEKEY) + strlen(key_name) * sizeof(char_t) ))==NULL) {
+                return NULL;
+            }
             strcpy( (*key)->name, key_name );
             (*key)->value = NULL;
             (*key)->next  = NULL;
@@ -571,13 +605,16 @@ Tinifile::PROFILEKEY* Tinifile::PROFILE_Find( PROFILESECTION **section, LPCTSTR 
         }
         section = &(*section)->next;
     }
-    if (!create) return NULL;
+    if (!create) {
+        return NULL;
+    }
     *section = (PROFILESECTION*)malloc(sizeof(PROFILESECTION) + strlen(section_name) * sizeof(char_t) );
-    if(*section == NULL) return NULL;
+    if(*section == NULL) {
+        return NULL;
+    }
     strcpy( (*section)->name, section_name );
     (*section)->next = NULL;
-    if (((*section)->key  = (PROFILEKEY*)malloc(sizeof(PROFILEKEY) + strlen(key_name) * sizeof(char_t) ))==NULL)
-    {
+    if (((*section)->key  = (PROFILEKEY*)malloc(sizeof(PROFILEKEY) + strlen(key_name) * sizeof(char_t) ))==NULL) {
         free(*section);
         return NULL;
     }
@@ -589,40 +626,38 @@ Tinifile::PROFILEKEY* Tinifile::PROFILE_Find( PROFILESECTION **section, LPCTSTR 
 
 BOOL Tinifile::PROFILE_SetString( LPCTSTR section_name, LPCTSTR key_name, LPCTSTR value, BOOL create_always )
 {
-    if (!key_name)  /* Delete a whole section */
-    {
+    if (!key_name) { /* Delete a whole section */
         CurProfile->changed |= PROFILE_DeleteSection( &CurProfile->section,
-                                                      section_name );
+                               section_name );
         return TRUE;         /* Even if PROFILE_DeleteSection() has failed,
                                 this is not an error on application's level.*/
-    }
-    else if (!value)  /* Delete a key */
-    {
+    } else if (!value) { /* Delete a key */
         CurProfile->changed |= PROFILE_DeleteKey( &CurProfile->section,
-                                                  section_name, key_name );
+                               section_name, key_name );
         return TRUE;          /* same error handling as above */
-    }
-    else  /* Set the key value */
-    {
+    } else { /* Set the key value */
         PROFILEKEY *key = PROFILE_Find(&CurProfile->section, section_name,
-                                        key_name, TRUE, create_always );
-        if (!key) return FALSE;
+                                       key_name, TRUE, create_always );
+        if (!key) {
+            return FALSE;
+        }
 
         /* strip the leading spaces. We can safely strip \n\r and
          * friends too, they should not happen here anyway. */
-        while (PROFILE_isspace(*value)) value++;
+        while (PROFILE_isspace(*value)) {
+            value++;
+        }
 
-        if (key->value)
-        {
-            if (!strcmp( key->value, value ))
-            {
+        if (key->value) {
+            if (!strcmp( key->value, value )) {
                 //TRACE("  no change needed\n" );
                 return TRUE;  /* No change needed */
             }
             //TRACE("  replacing %s\n", debugstr_w(key->value) );
             free(key->value );
+        } else { /*TRACE("  creating key\n" )*/
+            ;
         }
-        else /*TRACE("  creating key\n" )*/;
         key->value = (char_t*)malloc((strlen(value)+1) * sizeof(char_t) );
         strcpy( key->value, value );
         CurProfile->changed = TRUE;
@@ -635,8 +670,9 @@ INT Tinifile::PROFILE_GetSectionNames( LPTSTR buffer, size_t len )
     size_t f,l;
     PROFILESECTION *section;
 
-    if (!buffer || !len)
+    if (!buffer || !len) {
         return 0;
+    }
     if (len==1) {
         *buffer='\0';
         return 0;
@@ -672,13 +708,15 @@ INT Tinifile::PROFILE_GetString( LPCTSTR section, LPCTSTR key_name, LPCTSTR def_
     PROFILEKEY *key = NULL;
     static const char_t empty_str[] = { 0 };
 
-    if(!buffer) return 0;
+    if(!buffer) {
+        return 0;
+    }
 
-    if (!def_val) def_val = empty_str;
-    if (key_name)
-    {
-    if (!key_name[0])
-        {
+    if (!def_val) {
+        def_val = empty_str;
+    }
+    if (key_name) {
+        if (!key_name[0]) {
             /* Win95 returns 0 on keyname "". Tested with Likse32 bon 000227 */
             return 0;
         }
@@ -688,11 +726,9 @@ INT Tinifile::PROFILE_GetString( LPCTSTR section, LPCTSTR key_name, LPCTSTR def_
         return (INT)strlen( buffer );
     }
     /* no "else" here ! */
-    if (section && section[0])
-    {
+    if (section && section[0]) {
         INT ret = PROFILE_GetSection(CurProfile->section, section, buffer, len, FALSE);
-        if (!buffer[0]) /* no luck -> def_val */
-        {
+        if (!buffer[0]) { /* no luck -> def_val */
             PROFILE_CopyEntry(buffer, def_val, len, TRUE);
             ret = (INT)strlen(buffer);
         }
@@ -707,47 +743,50 @@ int Tinifile::PROFILE_GetPrivateProfileString( LPCTSTR section, LPCTSTR entry,LP
     int        ret;
     LPCTSTR    pDefVal = NULL;
 
-    if (!filename)
+    if (!filename) {
         return 0;
+    }
 
     /* strip any trailing ' ' of def_val. */
-    if (def_val)
-    {
+    if (def_val) {
         LPCTSTR p = &def_val[strlen(def_val)]; /* even "" works ! */
 
-    while (p > def_val)
-    {
-        p--;
-        if ((*p) != ' ')
-        break;
-    }
-    if (*p == ' ') /* ouch, contained trailing ' ' */
-    {
-        int l = (int)(p - def_val);
+        while (p > def_val) {
+            p--;
+            if ((*p) != ' ') {
+                break;
+            }
+        }
+        if (*p == ' ') { /* ouch, contained trailing ' ' */
+            int l = (int)(p - def_val);
             LPTSTR pp;
 
-        pp = (LPTSTR)malloc((l + 1) * sizeof(char_t));
-        _tcsncpy(pp, def_val, l);
-        pp[l] = '\0';
+            pp = (LPTSTR)malloc((l + 1) * sizeof(char_t));
+            _tcsncpy(pp, def_val, l);
+            pp[l] = '\0';
             pDefVal = pp;
+        }
     }
+    if (!pDefVal) {
+        pDefVal = /*(LPCTSTR)*/def_val;
     }
-    if (!pDefVal)
-    pDefVal = /*(LPCTSTR)*/def_val;
 
     if (PROFILE_Open()) {
-    if ((allow_section_name_copy) && (section == NULL))
+        if ((allow_section_name_copy) && (section == NULL)) {
             ret = PROFILE_GetSectionNames(buffer, len);
-    else
-        /* PROFILE_GetString already handles the 'entry == NULL' case */
+        } else
+            /* PROFILE_GetString already handles the 'entry == NULL' case */
+        {
             ret = PROFILE_GetString( section, entry, pDefVal, buffer, len );
+        }
     } else {
-       _tcsncpy( buffer, pDefVal, len );
-       ret = (INT)strlen( buffer );
+        _tcsncpy( buffer, pDefVal, len );
+        ret = (INT)strlen( buffer );
     }
 
-    if (pDefVal != def_val) /* allocated */
-    free((void*)pDefVal);
+    if (pDefVal != def_val) { /* allocated */
+        free((void*)pDefVal);
+    }
 
 
     return ret;
@@ -756,29 +795,27 @@ int Tinifile::PROFILE_GetPrivateProfileString( LPCTSTR section, LPCTSTR entry,LP
 
 DWORD Tinifile::getPrivateProfileSection(const char_t *section, char_t *buffer,DWORD len)
 {
- DWORD  ret=0;
- if (PROFILE_Open())
-  ret=PROFILE_GetSection(CurProfile->section,section,buffer,len,TRUE);
- return ret;
+    DWORD  ret=0;
+    if (PROFILE_Open()) {
+        ret=PROFILE_GetSection(CurProfile->section,section,buffer,len,TRUE);
+    }
+    return ret;
 }
 BOOL Tinifile::writePrivateProfileString( const char_t * section, const char_t *entry, const char_t *string)
 {
     BOOL ret = FALSE;
 
-    if (PROFILE_Open( ))
-    {
-        if (!section && !entry && !string) /* documented "file flush" case */
-        {
+    if (PROFILE_Open( )) {
+        if (!section && !entry && !string) { /* documented "file flush" case */
             PROFILE_FlushFile();
             PROFILE_ReleaseFile();  /* always return FALSE in this case */
-        }
-    else {
-        if (!section) {
         } else {
-        ret = PROFILE_SetString( section, entry, string, FALSE);
-        PROFILE_FlushFile();
+            if (!section) {
+            } else {
+                ret = PROFILE_SetString( section, entry, string, FALSE);
+                PROFILE_FlushFile();
+            }
         }
-    }
     }
     return ret;
 }
@@ -787,8 +824,9 @@ DWORD Tinifile::getPrivateProfileSectionNames( char_t *buffer, DWORD size)
 {
     DWORD ret = 0;
 
-    if (PROFILE_Open( ))
+    if (PROFILE_Open( )) {
         ret = PROFILE_GetSectionNames(buffer, size);
+    }
     return ret;
 }
 
@@ -799,7 +837,7 @@ DWORD Tinifile::getPrivateProfileString( const char_t *section, const char_t * e
 }
 int Tinifile::getPrivateProfileInt(const char_t *section,const char_t *entry,int def_val)
 {
- char_t def_valS[60],retS[256];
- getPrivateProfileString(section,entry,_itoa(def_val,def_valS,10),retS,256);
- return atoi(retS);
+    char_t def_valS[60],retS[256];
+    getPrivateProfileString(section,entry,_itoa(def_val,def_valS,10),retS,256);
+    return atoi(retS);
 }

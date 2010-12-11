@@ -34,20 +34,20 @@
 //     dwPriority - If we create a thread set its priority to this
 //
 TffOutputQueue::TffOutputQueue(
-             TffdshowDecVideoOutputPin *pOut,
-             IPin         *pInputPin,          //  Pin to send stuff to
-             HRESULT      *phr,                //  'Return code'
-             BOOL          bAuto,              //  Ask pin if queue or not
-             BOOL          bQueue,             //  Send through queue
-             LONG          lBatchSize,         //  Batch
-             BOOL          bBatchExact,        //  Batch exactly to BatchSize
-             LONG          lListSize,
-             DWORD         dwPriority,
-             bool          bFlushingOpt        // flushing optimization
-            ) :  COutputQueue(pInputPin, phr, bAuto, bQueue, lBatchSize, bBatchExact, lListSize, dwPriority, bFlushingOpt),
-                 m_pOutputDecVideo(pOut)
+    TffdshowDecVideoOutputPin *pOut,
+    IPin         *pInputPin,          //  Pin to send stuff to
+    HRESULT      *phr,                //  'Return code'
+    BOOL          bAuto,              //  Ask pin if queue or not
+    BOOL          bQueue,             //  Send through queue
+    LONG          lBatchSize,         //  Batch
+    BOOL          bBatchExact,        //  Batch exactly to BatchSize
+    LONG          lListSize,
+    DWORD         dwPriority,
+    bool          bFlushingOpt        // flushing optimization
+) :  COutputQueue(pInputPin, phr, bAuto, bQueue, lBatchSize, bBatchExact, lListSize, dwPriority, bFlushingOpt),
+    m_pOutputDecVideo(pOut)
 {
- DPRINTF(_l("TffOutputQueue::Constructor"));
+    DPRINTF(_l("TffOutputQueue::Constructor"));
 }
 
 //
@@ -86,14 +86,14 @@ DWORD TffOutputQueue::ThreadProc()
                 //  Get a sample off the list
 
                 pSample = m_List->RemoveHead();
-        // inform derived class we took something off the queue
-        if (m_hEventPop) {
+                // inform derived class we took something off the queue
+                if (m_hEventPop) {
                     //DbgLog((LOG_TRACE,3,TEXT("Queue: Delivered  SET EVENT")));
-            SetEvent(m_hEventPop);
-        }
+                    SetEvent(m_hEventPop);
+                }
 
                 if (pSample != NULL &&
-                    !IsSpecialSample(pSample)) {
+                        !IsSpecialSample(pSample)) {
 
                     //  If its just a regular sample just add it to the batch
                     //  and exit the loop if the batch is full
@@ -109,7 +109,7 @@ DWORD TffOutputQueue::ThreadProc()
                     //  isn't full) then prepare to wait
 
                     if (pSample == NULL &&
-                        (m_bBatchExact || m_nBatched == 0)) {
+                            (m_bBatchExact || m_nBatched == 0)) {
 
                         //  Tell other thread to set the event when there's
                         //  something do to
@@ -130,11 +130,11 @@ DWORD TffOutputQueue::ThreadProc()
                             // now we need the parameters - we are
                             // guaranteed that the next packet contains them
                             ppacket = (NewSegmentPacket *) m_List->RemoveHead();
-                // we took something off the queue
-                if (m_hEventPop) {
+                            // we took something off the queue
+                            if (m_hEventPop) {
                                 //DbgLog((LOG_TRACE,3,TEXT("Queue: Delivered  SET EVENT")));
-                        SetEvent(m_hEventPop);
-                }
+                                SetEvent(m_hEventPop);
+                            }
 
                             ASSERT(ppacket);
                         }
@@ -173,8 +173,8 @@ DWORD TffOutputQueue::ThreadProc()
                 ASSERT(!m_bFlushed);
 
                 HRESULT hr = m_pInputPin->ReceiveMultiple(m_ppSamples,
-                                                          lNumberToSend,
-                                                          &nProcessed);
+                             lNumberToSend,
+                             &nProcessed);
                 //DPRINTF(_l("Receive Returned %d"),hr);
                 /*  Don't overwrite a flushing state HRESULT */
                 CAutoLock lck(this);
@@ -232,8 +232,9 @@ DWORD TffOutputQueue::ThreadProc()
 // leave flush mode - pass this downstream
 void TffOutputQueue::EndFlush()
 {
-    if(!m_bFlushing)
-     return;
+    if(!m_bFlushing) {
+        return;
+    }
     return COutputQueue::EndFlush();
 }
 
@@ -287,7 +288,7 @@ HRESULT TffOutputQueue::ReceiveMultiple (
     }
     *nSamplesProcessed = nSamples;
     if (!m_bBatchExact ||
-        m_nBatched + m_List->GetCount() >= m_lBatchSize) {
+            m_nBatched + m_List->GetCount() >= m_lBatchSize) {
         //DPRINTF(_l("COutputQueue queued a sample"));
         NotifyThread();
     }
@@ -316,11 +317,11 @@ void TffOutputQueue::FreeSamples()
     if (IsQueued()) {
         while (TRUE) {
             IMediaSample *pSample = m_List->RemoveHead();
-        // inform derived class we took something off the queue
-        if (m_hEventPop) {
+            // inform derived class we took something off the queue
+            if (m_hEventPop) {
                 //DbgLog((LOG_TRACE,3,TEXT("Queue: Delivered  SET EVENT")));
-            SetEvent(m_hEventPop);
-        }
+                SetEvent(m_hEventPop);
+            }
 
             if (pSample == NULL) {
                 break;
@@ -332,11 +333,11 @@ void TffOutputQueue::FreeSamples()
                     //  Free NEW_SEGMENT packet
                     NewSegmentPacket *ppacket =
                         (NewSegmentPacket *) m_List->RemoveHead();
-            // inform derived class we took something off the queue
-            if (m_hEventPop) {
+                    // inform derived class we took something off the queue
+                    if (m_hEventPop) {
                         //DbgLog((LOG_TRACE,3,TEXT("Queue: Delivered  SET EVENT")));
-                SetEvent(m_hEventPop);
-            }
+                        SetEvent(m_hEventPop);
+                    }
 
                     ASSERT(ppacket != NULL);
                     delete ppacket;
