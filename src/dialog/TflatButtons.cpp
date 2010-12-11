@@ -21,50 +21,48 @@
 
 VOID CALLBACK TflatButton::trackMouseTimerProc(HWND hwnd,UINT uMsg,UINT idEvent,DWORD dwTime)
 {
- RECT rect;
- POINT pt;
- GetClientRect(hwnd,&rect);
- MapWindowPoints(hwnd,NULL,(LPPOINT)&rect,2);
- GetCursorPos(&pt);
- if (!PtInRect(&rect,pt) || (WindowFromPoint(pt)!=hwnd))
-  {
-   KillTimer(hwnd,idEvent);
-   TflatButton *self=(TflatButton*)getDlgItem(hwnd);
-   self->isMouse=false;
-   InvalidateRect(hwnd,NULL,FALSE);
-  }
+    RECT rect;
+    POINT pt;
+    GetClientRect(hwnd,&rect);
+    MapWindowPoints(hwnd,NULL,(LPPOINT)&rect,2);
+    GetCursorPos(&pt);
+    if (!PtInRect(&rect,pt) || (WindowFromPoint(pt)!=hwnd)) {
+        KillTimer(hwnd,idEvent);
+        TflatButton *self=(TflatButton*)getDlgItem(hwnd);
+        self->isMouse=false;
+        InvalidateRect(hwnd,NULL,FALSE);
+    }
 }
 
 LRESULT TflatButton::onMouseMove(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam)
 {
- if (!isMouse)
-  {
-   RECT rect;
-   POINT pt;
-   GetClientRect(hwnd,&rect);
-   MapWindowPoints(hwnd,NULL,(LPPOINT)&rect,2);
-   GetCursorPos(&pt);
-   if (PtInRect(&rect,pt) && (WindowFromPoint(pt)==hwnd))
-    {
-     isMouse=true;
-     InvalidateRect(hwnd,NULL,FALSE);
-     SetTimer(hwnd,UINT_PTR(hwnd),100,(TIMERPROC)trackMouseTimerProc);
+    if (!isMouse) {
+        RECT rect;
+        POINT pt;
+        GetClientRect(hwnd,&rect);
+        MapWindowPoints(hwnd,NULL,(LPPOINT)&rect,2);
+        GetCursorPos(&pt);
+        if (PtInRect(&rect,pt) && (WindowFromPoint(pt)==hwnd)) {
+            isMouse=true;
+            InvalidateRect(hwnd,NULL,FALSE);
+            SetTimer(hwnd,UINT_PTR(hwnd),100,(TIMERPROC)trackMouseTimerProc);
+        }
     }
-  }
- return TwindowWidget::onMouseMove(hwnd,uMsg,wParam,lParam);
+    return TwindowWidget::onMouseMove(hwnd,uMsg,wParam,lParam);
 }
 void TflatButton::paint(DRAWITEMSTRUCT *dis)
 {
- RECT &r=dis->rcItem;
- FillRect(dis->hDC,&r,GetSysColorBrush(COLOR_BTNFACE));
- SetTextAlign(dis->hDC,TA_LEFT|TA_BASELINE);
- char_t pomS[256];
- GetWindowText(dis->hwndItem,pomS,255);
- SIZE sz;
- GetTextExtentPoint32(dis->hDC,pomS,(int)strlen(pomS),&sz);
- TextOut(dis->hDC,(r.right-sz.cx)/2,r.bottom-sz.cy/2,pomS,(int)strlen(pomS));
- if (isMouse)
-  DrawEdge(dis->hDC,&r,(dis->itemState&ODS_SELECTED)?EDGE_SUNKEN:EDGE_RAISED,BF_RECT);
- else
-  DrawEdge(dis->hDC,&r,EDGE_SUNKEN,BF_FLAT|BF_RECT);
+    RECT &r=dis->rcItem;
+    FillRect(dis->hDC,&r,GetSysColorBrush(COLOR_BTNFACE));
+    SetTextAlign(dis->hDC,TA_LEFT|TA_BASELINE);
+    char_t pomS[256];
+    GetWindowText(dis->hwndItem,pomS,255);
+    SIZE sz;
+    GetTextExtentPoint32(dis->hDC,pomS,(int)strlen(pomS),&sz);
+    TextOut(dis->hDC,(r.right-sz.cx)/2,r.bottom-sz.cy/2,pomS,(int)strlen(pomS));
+    if (isMouse) {
+        DrawEdge(dis->hDC,&r,(dis->itemState&ODS_SELECTED)?EDGE_SUNKEN:EDGE_RAISED,BF_RECT);
+    } else {
+        DrawEdge(dis->hDC,&r,EDGE_SUNKEN,BF_FLAT|BF_RECT);
+    }
 }

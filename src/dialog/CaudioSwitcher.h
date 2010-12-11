@@ -6,11 +6,11 @@
 class TaudioSwitcherPage :public TconfPageDecAudio
 {
 protected:
- virtual INT_PTR msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual INT_PTR msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 public:
- TaudioSwitcherPage(TffdshowPageDec *Iparent);
- virtual void init(void);
- virtual void cfg2dlg(void);
+    TaudioSwitcherPage(TffdshowPageDec *Iparent);
+    virtual void init(void);
+    virtual void cfg2dlg(void);
 };
 
 #endif

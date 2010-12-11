@@ -7,10 +7,12 @@
 class TgenericRAWpage :public TconfPageEnc
 {
 public:
- TgenericRAWpage(TffdshowPageEnc *Iparent);
- virtual bool forCodec(int codecId) {return raw_codec(codecId);}
- virtual void init(void);
- virtual void cfg2dlg(void);
+    TgenericRAWpage(TffdshowPageEnc *Iparent);
+    virtual bool forCodec(int codecId) {
+        return raw_codec(codecId);
+    }
+    virtual void init(void);
+    virtual void cfg2dlg(void);
 };
 
 #endif

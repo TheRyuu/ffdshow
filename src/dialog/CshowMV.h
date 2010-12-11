@@ -6,8 +6,8 @@
 class TshowMVpage :public TconfPageDecVideo
 {
 public:
- TshowMVpage(TffdshowPageDec *Iparent,const TfilterIDFF *idff);
- virtual void cfg2dlg(void);
+    TshowMVpage(TffdshowPageDec *Iparent,const TfilterIDFF *idff);
+    virtual void cfg2dlg(void);
 };
 
 #endif

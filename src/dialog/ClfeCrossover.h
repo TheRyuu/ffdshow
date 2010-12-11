@@ -6,9 +6,9 @@
 class TlfeCrossoverPage :public TconfPageDecAudio
 {
 public:
- TlfeCrossoverPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff);
- virtual void init(void);
- virtual void cfg2dlg(void);
+    TlfeCrossoverPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff);
+    virtual void init(void);
+    virtual void cfg2dlg(void);
 };
 
 #endif

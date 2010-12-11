@@ -1,4 +1,4 @@
-/* 
+/*
  * $Id: TDXVADecoder.h 1179 2009-07-22 15:01:57Z casimir666 $
  *
  * (C) 2006-2007 see AUTHORS
@@ -41,27 +41,23 @@
 
 #define CHECK_HR(x) hr = ##x; if (FAILED (hr)) { DPRINTF(_l("Error : 0x%08x\n"), hr); ASSERT (hr==VFW_E_NOT_COMMITTED); return hr; }
 
-typedef enum
-{
+typedef enum {
     ENGINE_DXVA1,
     ENGINE_DXVA2
 } DXVA_ENGINE;
 
-typedef enum
-{
+typedef enum {
     H264_VLD,
     VC1_VLD
 } DXVAMode;
 
-typedef enum
-{
+typedef enum {
     PICT_TOP_FIELD     = 1,
     PICT_BOTTOM_FIELD  = 2,
     PICT_FRAME         = 3
 } FF_FIELD_TYPE;
 
-typedef enum
-{
+typedef enum {
     I_TYPE  = 1, ///< Intra
     P_TYPE  = 2, ///< Predicted
     B_TYPE  = 3, ///< Bi-dir predicted
@@ -71,8 +67,7 @@ typedef enum
     BI_TYPE = 7
 } FF_SLICE_TYPE;
 
-typedef struct
-{
+typedef struct {
     bool                        bRefPicture;       // True if reference picture
     int                         bInUse;            // Slot in use
     bool                        bDisplayed;        // True if picture have been presented
@@ -97,10 +92,16 @@ class TDXVADecoder
 public :
     // === Public functions
     virtual                 ~TDXVADecoder();
-    DXVAMode                GetMode() { return m_nMode; };
-    DXVA_ENGINE             GetEngine() { return m_nEngine; };
+    DXVAMode                GetMode() {
+        return m_nMode;
+    };
+    DXVA_ENGINE             GetEngine() {
+        return m_nEngine;
+    };
     void                    AllocExecuteParams (int nSize);
-    void                    SetDirectXVideoDec (IDirectXVideoDecoder* pDirectXVideoDec)  { m_pDirectXVideoDec = pDirectXVideoDec; };
+    void                    SetDirectXVideoDec (IDirectXVideoDecoder* pDirectXVideoDec)  {
+        m_pDirectXVideoDec = pDirectXVideoDec;
+    };
 
     virtual HRESULT         DecodeFrame  (BYTE* pDataIn, UINT nSize, REFERENCE_TIME rtStart, REFERENCE_TIME rtStop) = NULL;
     virtual void            SetExtraData (BYTE* pDataIn, UINT nSize);
@@ -137,7 +138,9 @@ protected :
     HRESULT                        QueryStatus(PVOID LPDXVAStatus, UINT nSize);
     BYTE                           GetConfigIntraResidUnsigned();
     BYTE                           GetConfigResidDiffAccelerator();
-    DXVA_ConfigPictureDecode*      GetDXVA1Config() { return &m_DXVA1Config; };
+    DXVA_ConfigPictureDecode*      GetDXVA1Config() {
+        return &m_DXVA1Config;
+    };
 
     // === Picture store functions
     bool                           AddToStore (int nSurfaceIndex, IMediaSample* pSample, bool bRefPicture, REFERENCE_TIME rtStart, REFERENCE_TIME rtStop, bool bIsField, FF_FIELD_TYPE nFieldType, FF_SLICE_TYPE nSliceType, int nCodecSpecific);

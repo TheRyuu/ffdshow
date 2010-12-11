@@ -7,14 +7,14 @@ class TffProcVideo;
 class TinPage :public TconfPageEnc
 {
 private:
- TffProcVideo *ffproc;
- void in2dlg(void),incsp2dlg(void),interlaced2dlg(void),lavcnr2dlg(void);
- void onProcConfig(void);
+    TffProcVideo *ffproc;
+    void in2dlg(void),incsp2dlg(void),interlaced2dlg(void),lavcnr2dlg(void);
+    void onProcConfig(void);
 public:
- TinPage(TffdshowPageEnc *Iparent);
- virtual void init(void);
- virtual void cfg2dlg(void);
- virtual void translate(void);
+    TinPage(TffdshowPageEnc *Iparent);
+    virtual void init(void);
+    virtual void cfg2dlg(void);
+    virtual void translate(void);
 };
 
 #endif

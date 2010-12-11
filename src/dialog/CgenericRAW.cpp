@@ -21,25 +21,25 @@
 
 void TgenericRAWpage::init(void)
 {
- for (int i=0;cspFccs[i].name;i++)
-  if (cspFccs[i].supEnc)
-   cbxAdd(IDC_CBX_RAW_FOURCC,cspFccs[i].name,cspFccs[i].fcc);
+    for (int i=0; cspFccs[i].name; i++)
+        if (cspFccs[i].supEnc) {
+            cbxAdd(IDC_CBX_RAW_FOURCC,cspFccs[i].name,cspFccs[i].fcc);
+        }
 }
 
 void TgenericRAWpage::cfg2dlg(void)
 {
- cbxSetDataCurSel(IDC_CBX_RAW_FOURCC,cfgGet(IDFF_enc_raw_fourcc));
+    cbxSetDataCurSel(IDC_CBX_RAW_FOURCC,cfgGet(IDFF_enc_raw_fourcc));
 }
 
 TgenericRAWpage::TgenericRAWpage(TffdshowPageEnc *Iparent):TconfPageEnc(Iparent)
 {
- dialogId=IDD_GENERIC_RAW;
- static const int props[]={IDFF_enc_raw_fourcc,0};
- propsIDs=props;
- static const TbindCombobox<TgenericRAWpage> cbx[]=
-  {
-   IDC_CBX_RAW_FOURCC,IDFF_enc_raw_fourcc,BINDCBX_DATA,NULL,
-   0
-  };
- bindComboboxes(cbx);
+    dialogId=IDD_GENERIC_RAW;
+    static const int props[]= {IDFF_enc_raw_fourcc,0};
+    propsIDs=props;
+    static const TbindCombobox<TgenericRAWpage> cbx[]= {
+        IDC_CBX_RAW_FOURCC,IDFF_enc_raw_fourcc,BINDCBX_DATA,NULL,
+        0
+    };
+    bindComboboxes(cbx);
 }

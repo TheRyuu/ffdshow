@@ -1,4 +1,4 @@
-/* 
+/*
  * $Id: H264Nalu.h 1156 2009-06-07 14:10:39Z casimir666 $
  *
  * (C) 2006-2007 see AUTHORS
@@ -25,8 +25,7 @@
 #pragma once
 
 
-typedef enum
-{
+typedef enum {
     NALU_TYPE_SLICE    = 1,
     NALU_TYPE_DPA      = 2,
     NALU_TYPE_DPB      = 3,
@@ -47,7 +46,7 @@ class CH264Nalu
 private :
     int            forbidden_bit;         //! should be always FALSE
     int            nal_reference_idc;     //! NALU_PRIORITY_xxxx
-    NALU_TYPE      nal_unit_type;         //! NALU_TYPE_xxxx    
+    NALU_TYPE      nal_unit_type;         //! NALU_TYPE_xxxx
 
     int            m_nNALStartPos;        //! NALU start (including startcode / size)
     int            m_nNALDataPos;         //! Useful part
@@ -62,20 +61,33 @@ private :
     bool        MoveToNextStartcode();
 
 public :
-    NALU_TYPE    GetType() { return nal_unit_type; };
-    bool         IsRefFrame() { return (nal_reference_idc != 0); };
+    NALU_TYPE    GetType() {
+        return nal_unit_type;
+    };
+    bool         IsRefFrame() {
+        return (nal_reference_idc != 0);
+    };
 
-    int          GetDataLength() { return m_nCurPos - m_nNALDataPos; };
-    BYTE*        GetDataBuffer() { return m_pBuffer + m_nNALDataPos; };
-    int          GetRoundedDataLength()
-    {
+    int          GetDataLength() {
+        return m_nCurPos - m_nNALDataPos;
+    };
+    BYTE*        GetDataBuffer() {
+        return m_pBuffer + m_nNALDataPos;
+    };
+    int          GetRoundedDataLength() {
         int    nSize = m_nCurPos - m_nNALDataPos;
         return nSize + 128 - (nSize %128);
     }
 
-    int         GetLength() { return m_nCurPos - m_nNALStartPos; };
-    BYTE*       GetNALBuffer() { return m_pBuffer + m_nNALStartPos; };
-    bool        IsEOF() { return m_nCurPos >= m_nSize; };
+    int         GetLength() {
+        return m_nCurPos - m_nNALStartPos;
+    };
+    BYTE*       GetNALBuffer() {
+        return m_pBuffer + m_nNALStartPos;
+    };
+    bool        IsEOF() {
+        return m_nCurPos >= m_nSize;
+    };
 
     void        SetBuffer (BYTE* pBuffer, int nSize, int nNALSize);
     bool        ReadNext();

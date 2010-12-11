@@ -6,11 +6,11 @@
 class TonePassPage :public TconfPageEnc
 {
 private:
- void stats2dlg(void);
+    void stats2dlg(void);
 public:
- TonePassPage(TffdshowPageEnc *Iparent);
- virtual void cfg2dlg(void);
- virtual bool enabled(void);
+    TonePassPage(TffdshowPageEnc *Iparent);
+    virtual void cfg2dlg(void);
+    virtual bool enabled(void);
 };
 
 #endif

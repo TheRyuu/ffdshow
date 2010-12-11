@@ -21,20 +21,21 @@
 
 void TshowMVpage::cfg2dlg(void)
 {
- setCheck(IDC_CHB_VIS_MV,cfgGet(IDFF_visMV));enable((filterMode&IDFF_FILTERMODE_VIDEORAW)==0,IDC_CHB_VIS_MV);
- setCheck(IDC_CHB_VIS_QUANTS,cfgGet(IDFF_visQuants));enable((filterMode&IDFF_FILTERMODE_VIDEORAW)==0,IDC_CHB_VIS_QUANTS);
- setCheck(IDC_CHB_VIS_GRAPH,cfgGet(IDFF_visGraph));
+    setCheck(IDC_CHB_VIS_MV,cfgGet(IDFF_visMV));
+    enable((filterMode&IDFF_FILTERMODE_VIDEORAW)==0,IDC_CHB_VIS_MV);
+    setCheck(IDC_CHB_VIS_QUANTS,cfgGet(IDFF_visQuants));
+    enable((filterMode&IDFF_FILTERMODE_VIDEORAW)==0,IDC_CHB_VIS_QUANTS);
+    setCheck(IDC_CHB_VIS_GRAPH,cfgGet(IDFF_visGraph));
 }
 
 TshowMVpage::TshowMVpage(TffdshowPageDec *Iparent,const TfilterIDFF *idff):TconfPageDecVideo(Iparent,idff)
 {
- resInter=IDC_CHB_VISUALIZATIONS;
- static const TbindCheckbox<TshowMVpage> chb[]=
-  {
-   IDC_CHB_VIS_MV,IDFF_visMV,NULL,
-   IDC_CHB_VIS_QUANTS,IDFF_visQuants,NULL,
-   IDC_CHB_VIS_GRAPH,IDFF_visGraph,NULL,
-   0,NULL,NULL
-  };
- bindCheckboxes(chb);
+    resInter=IDC_CHB_VISUALIZATIONS;
+    static const TbindCheckbox<TshowMVpage> chb[]= {
+        IDC_CHB_VIS_MV,IDFF_visMV,NULL,
+        IDC_CHB_VIS_QUANTS,IDFF_visQuants,NULL,
+        IDC_CHB_VIS_GRAPH,IDFF_visGraph,NULL,
+        0,NULL,NULL
+    };
+    bindCheckboxes(chb);
 }

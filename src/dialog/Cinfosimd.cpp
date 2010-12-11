@@ -30,169 +30,188 @@
 //=================================== TinfoPageDec =======================================
 void TinfoPageDec::init(void)
 {
- setCheck(IDC_CHB_MMX     ,Tconfig::cpu_flags&FF_CPU_MMX     );
- setCheck(IDC_CHB_MMXEXT  ,Tconfig::cpu_flags&FF_CPU_MMXEXT  );
- setCheck(IDC_CHB_SSE     ,Tconfig::cpu_flags&FF_CPU_SSE     );
- setCheck(IDC_CHB_SSE2    ,Tconfig::cpu_flags&FF_CPU_SSE2    );
- setCheck(IDC_CHB_SSE3    ,Tconfig::cpu_flags&FF_CPU_SSE3    );
- setCheck(IDC_CHB_SSSE3   ,Tconfig::cpu_flags&FF_CPU_SSSE3   );
- setCheck(IDC_CHB_3DNOW   ,Tconfig::cpu_flags&FF_CPU_3DNOW   );
- setCheck(IDC_CHB_3DNOWEXT,Tconfig::cpu_flags&FF_CPU_3DNOWEXT);
- setCheck(IDC_CHB_SSE41   ,Tconfig::cpu_flags&FF_CPU_SSE41   );
- setCheck(IDC_CHB_SSE42   ,Tconfig::cpu_flags&FF_CPU_SSE42   );
- setCheck(IDC_CHB_SSE4A   ,Tconfig::cpu_flags&FF_CPU_SSE4A   );
- setCheck(IDC_CHB_SSE5    ,Tconfig::cpu_flags&FF_CPU_SSE5    );
- 
- hlv=GetDlgItem(m_hwnd,IDC_LV_INFO); 
- CRect r=getChildRect(IDC_LV_INFO);
- int ncol=0;
- ListView_AddCol(hlv,ncol,r.Width(),_l("Property"),false);
- ListView_SetExtendedListViewStyleEx(hlv,LVS_EX_FULLROWSELECT|LVS_EX_INFOTIP,LVS_EX_FULLROWSELECT|LVS_EX_INFOTIP);
- infoitems.clear(); 
- const int *infos=getInfos();
- for (int i=0;;i++)
-  {
-   Titem it;
-   if (!info->getInfo(i,&it.id,&it.name))
-    break;
-   for (int j=0;infos[j];j++) 
-    if (infos[j]==it.id)
-     {
-      it.index=j;
-      infoitems.push_back(it);
-     } 
-  }
- std::sort(infoitems.begin(),infoitems.end(),TsortItem(infos)); 
- ListView_SetItemCount(hlv,infoitems.size()); 
- SendMessage(hlv,LVM_SETBKCOLOR,0,GetSysColor(COLOR_BTNFACE));
- SendMessage(hlv,LVM_SETTEXTBKCOLOR,0,GetSysColor(COLOR_BTNFACE));
- setCheck(IDC_CHB_WRITEINFO2DBG, cfgGet(IDFF_allowDPRINTF));
+    setCheck(IDC_CHB_MMX     ,Tconfig::cpu_flags&FF_CPU_MMX     );
+    setCheck(IDC_CHB_MMXEXT  ,Tconfig::cpu_flags&FF_CPU_MMXEXT  );
+    setCheck(IDC_CHB_SSE     ,Tconfig::cpu_flags&FF_CPU_SSE     );
+    setCheck(IDC_CHB_SSE2    ,Tconfig::cpu_flags&FF_CPU_SSE2    );
+    setCheck(IDC_CHB_SSE3    ,Tconfig::cpu_flags&FF_CPU_SSE3    );
+    setCheck(IDC_CHB_SSSE3   ,Tconfig::cpu_flags&FF_CPU_SSSE3   );
+    setCheck(IDC_CHB_3DNOW   ,Tconfig::cpu_flags&FF_CPU_3DNOW   );
+    setCheck(IDC_CHB_3DNOWEXT,Tconfig::cpu_flags&FF_CPU_3DNOWEXT);
+    setCheck(IDC_CHB_SSE41   ,Tconfig::cpu_flags&FF_CPU_SSE41   );
+    setCheck(IDC_CHB_SSE42   ,Tconfig::cpu_flags&FF_CPU_SSE42   );
+    setCheck(IDC_CHB_SSE4A   ,Tconfig::cpu_flags&FF_CPU_SSE4A   );
+    setCheck(IDC_CHB_SSE5    ,Tconfig::cpu_flags&FF_CPU_SSE5    );
+
+    hlv=GetDlgItem(m_hwnd,IDC_LV_INFO);
+    CRect r=getChildRect(IDC_LV_INFO);
+    int ncol=0;
+    ListView_AddCol(hlv,ncol,r.Width(),_l("Property"),false);
+    ListView_SetExtendedListViewStyleEx(hlv,LVS_EX_FULLROWSELECT|LVS_EX_INFOTIP,LVS_EX_FULLROWSELECT|LVS_EX_INFOTIP);
+    infoitems.clear();
+    const int *infos=getInfos();
+    for (int i=0;; i++) {
+        Titem it;
+        if (!info->getInfo(i,&it.id,&it.name)) {
+            break;
+        }
+        for (int j=0; infos[j]; j++)
+            if (infos[j]==it.id) {
+                it.index=j;
+                infoitems.push_back(it);
+            }
+    }
+    std::sort(infoitems.begin(),infoitems.end(),TsortItem(infos));
+    ListView_SetItemCount(hlv,infoitems.size());
+    SendMessage(hlv,LVM_SETBKCOLOR,0,GetSysColor(COLOR_BTNFACE));
+    SendMessage(hlv,LVM_SETTEXTBKCOLOR,0,GetSysColor(COLOR_BTNFACE));
+    setCheck(IDC_CHB_WRITEINFO2DBG, cfgGet(IDFF_allowDPRINTF));
 }
 
 void TinfoPageDec::cfg2dlg(void)
 {
- int allow=cfgGet(IDFF_allowedCpuFlags);
- setCheck(IDC_CHB_ALLOW_MMX     ,allow&FF_CPU_MMX     );
- setCheck(IDC_CHB_ALLOW_MMXEXT  ,allow&FF_CPU_MMXEXT  );
- setCheck(IDC_CHB_ALLOW_SSE     ,allow&FF_CPU_SSE     );
- setCheck(IDC_CHB_ALLOW_SSE2    ,allow&FF_CPU_SSE2    );
- setCheck(IDC_CHB_ALLOW_SSE3    ,allow&FF_CPU_SSE3    );
- setCheck(IDC_CHB_ALLOW_SSSE3   ,allow&FF_CPU_SSSE3   );
- setCheck(IDC_CHB_ALLOW_3DNOW   ,allow&FF_CPU_3DNOW   );
- setCheck(IDC_CHB_ALLOW_3DNOWEXT,allow&FF_CPU_3DNOWEXT);
- setCheck(IDC_CHB_ALLOW_SSE41   ,allow&FF_CPU_SSE41   );
- setCheck(IDC_CHB_ALLOW_SSE42   ,allow&FF_CPU_SSE42   );
- setCheck(IDC_CHB_ALLOW_SSE4A   ,allow&FF_CPU_SSE4A   );
- setCheck(IDC_CHB_ALLOW_SSE5    ,allow&FF_CPU_SSE5    );
+    int allow=cfgGet(IDFF_allowedCpuFlags);
+    setCheck(IDC_CHB_ALLOW_MMX     ,allow&FF_CPU_MMX     );
+    setCheck(IDC_CHB_ALLOW_MMXEXT  ,allow&FF_CPU_MMXEXT  );
+    setCheck(IDC_CHB_ALLOW_SSE     ,allow&FF_CPU_SSE     );
+    setCheck(IDC_CHB_ALLOW_SSE2    ,allow&FF_CPU_SSE2    );
+    setCheck(IDC_CHB_ALLOW_SSE3    ,allow&FF_CPU_SSE3    );
+    setCheck(IDC_CHB_ALLOW_SSSE3   ,allow&FF_CPU_SSSE3   );
+    setCheck(IDC_CHB_ALLOW_3DNOW   ,allow&FF_CPU_3DNOW   );
+    setCheck(IDC_CHB_ALLOW_3DNOWEXT,allow&FF_CPU_3DNOWEXT);
+    setCheck(IDC_CHB_ALLOW_SSE41   ,allow&FF_CPU_SSE41   );
+    setCheck(IDC_CHB_ALLOW_SSE42   ,allow&FF_CPU_SSE42   );
+    setCheck(IDC_CHB_ALLOW_SSE4A   ,allow&FF_CPU_SSE4A   );
+    setCheck(IDC_CHB_ALLOW_SSE5    ,allow&FF_CPU_SSE5    );
 }
 
 INT_PTR TinfoPageDec::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
- switch (uMsg)
-  {
-   case WM_COMMAND:
-    switch (LOWORD(wParam))  
-     {
-      case IDC_CHB_ALLOW_MMX:
-      case IDC_CHB_ALLOW_MMXEXT:
-      case IDC_CHB_ALLOW_SSE:
-      case IDC_CHB_ALLOW_SSE2:
-      case IDC_CHB_ALLOW_SSE3:
-      case IDC_CHB_ALLOW_SSSE3:
-      case IDC_CHB_ALLOW_3DNOW:
-      case IDC_CHB_ALLOW_3DNOWEXT:
-      case IDC_CHB_ALLOW_SSE41:
-      case IDC_CHB_ALLOW_SSE42:
-      case IDC_CHB_ALLOW_SSE4A:
-      case IDC_CHB_ALLOW_SSE5:
-       {
-        int allow=0;
-        if (getCheck(IDC_CHB_ALLOW_MMX     )) allow|=FF_CPU_MMX;
-        if (getCheck(IDC_CHB_ALLOW_MMXEXT  )) allow|=FF_CPU_MMXEXT;
-        if (getCheck(IDC_CHB_ALLOW_SSE     )) allow|=FF_CPU_SSE;
-        if (getCheck(IDC_CHB_ALLOW_SSE2    )) allow|=FF_CPU_SSE2;
-        if (getCheck(IDC_CHB_ALLOW_SSE3    )) allow|=FF_CPU_SSE3;
-        if (getCheck(IDC_CHB_ALLOW_SSSE3   )) allow|=FF_CPU_SSSE3;
-        if (getCheck(IDC_CHB_ALLOW_3DNOW   )) allow|=FF_CPU_3DNOW;
-        if (getCheck(IDC_CHB_ALLOW_3DNOWEXT)) allow|=FF_CPU_3DNOWEXT;
-        if (getCheck(IDC_CHB_ALLOW_SSE41   )) allow|=FF_CPU_SSE41;
-        if (getCheck(IDC_CHB_ALLOW_SSE42   )) allow|=FF_CPU_SSE42;
-        if (getCheck(IDC_CHB_ALLOW_SSE4A   )) allow|=FF_CPU_SSE4A;
-        if (getCheck(IDC_CHB_ALLOW_SSE5    )) allow|=FF_CPU_SSE5;
-        cfgSet(IDFF_allowedCpuFlags,allow);
-        return TRUE;
-       }
-     }    
-    break;
-   case WM_NOTIFY:
-    {
-     NMHDR *nmhdr=LPNMHDR(lParam);
-     if (nmhdr->hwndFrom==hlv && nmhdr->idFrom==IDC_LV_INFO)
-      switch (nmhdr->code)
-       {
-        case LVN_GETDISPINFO:
-         {
-          NMLVDISPINFO *nmdi=(NMLVDISPINFO*)lParam;
-          int i=nmdi->item.iItem;
-          if (i==-1) break;
-          if (nmdi->item.mask&LVIF_TEXT)
-           switch (nmdi->item.iSubItem)
-            {
-             case 0:
-              {
-               nmdi->item.pszText = pszTextBuf;
-               tsnprintf_s(pszTextBuf,countof(pszTextBuf),_TRUNCATE,_l("%s: %s"),infoitems[i].translatedName,infoitems[i].val?infoitems[i].val:_l(""));
-               break;
-              }
+    switch (uMsg) {
+        case WM_COMMAND:
+            switch (LOWORD(wParam)) {
+                case IDC_CHB_ALLOW_MMX:
+                case IDC_CHB_ALLOW_MMXEXT:
+                case IDC_CHB_ALLOW_SSE:
+                case IDC_CHB_ALLOW_SSE2:
+                case IDC_CHB_ALLOW_SSE3:
+                case IDC_CHB_ALLOW_SSSE3:
+                case IDC_CHB_ALLOW_3DNOW:
+                case IDC_CHB_ALLOW_3DNOWEXT:
+                case IDC_CHB_ALLOW_SSE41:
+                case IDC_CHB_ALLOW_SSE42:
+                case IDC_CHB_ALLOW_SSE4A:
+                case IDC_CHB_ALLOW_SSE5: {
+                    int allow=0;
+                    if (getCheck(IDC_CHB_ALLOW_MMX     )) {
+                        allow|=FF_CPU_MMX;
+                    }
+                    if (getCheck(IDC_CHB_ALLOW_MMXEXT  )) {
+                        allow|=FF_CPU_MMXEXT;
+                    }
+                    if (getCheck(IDC_CHB_ALLOW_SSE     )) {
+                        allow|=FF_CPU_SSE;
+                    }
+                    if (getCheck(IDC_CHB_ALLOW_SSE2    )) {
+                        allow|=FF_CPU_SSE2;
+                    }
+                    if (getCheck(IDC_CHB_ALLOW_SSE3    )) {
+                        allow|=FF_CPU_SSE3;
+                    }
+                    if (getCheck(IDC_CHB_ALLOW_SSSE3   )) {
+                        allow|=FF_CPU_SSSE3;
+                    }
+                    if (getCheck(IDC_CHB_ALLOW_3DNOW   )) {
+                        allow|=FF_CPU_3DNOW;
+                    }
+                    if (getCheck(IDC_CHB_ALLOW_3DNOWEXT)) {
+                        allow|=FF_CPU_3DNOWEXT;
+                    }
+                    if (getCheck(IDC_CHB_ALLOW_SSE41   )) {
+                        allow|=FF_CPU_SSE41;
+                    }
+                    if (getCheck(IDC_CHB_ALLOW_SSE42   )) {
+                        allow|=FF_CPU_SSE42;
+                    }
+                    if (getCheck(IDC_CHB_ALLOW_SSE4A   )) {
+                        allow|=FF_CPU_SSE4A;
+                    }
+                    if (getCheck(IDC_CHB_ALLOW_SSE5    )) {
+                        allow|=FF_CPU_SSE5;
+                    }
+                    cfgSet(IDFF_allowedCpuFlags,allow);
+                    return TRUE;
+                }
             }
-          return TRUE;
-         }
-       }  
-     break;  
-    }  
-  }
- return TconfPageDec::msgProc(uMsg,wParam,lParam);
+            break;
+        case WM_NOTIFY: {
+            NMHDR *nmhdr=LPNMHDR(lParam);
+            if (nmhdr->hwndFrom==hlv && nmhdr->idFrom==IDC_LV_INFO)
+                switch (nmhdr->code) {
+                    case LVN_GETDISPINFO: {
+                        NMLVDISPINFO *nmdi=(NMLVDISPINFO*)lParam;
+                        int i=nmdi->item.iItem;
+                        if (i==-1) {
+                            break;
+                        }
+                        if (nmdi->item.mask&LVIF_TEXT)
+                            switch (nmdi->item.iSubItem) {
+                                case 0: {
+                                    nmdi->item.pszText = pszTextBuf;
+                                    tsnprintf_s(pszTextBuf,countof(pszTextBuf),_TRUNCATE,_l("%s: %s"),infoitems[i].translatedName,infoitems[i].val?infoitems[i].val:_l(""));
+                                    break;
+                                }
+                            }
+                        return TRUE;
+                    }
+                }
+            break;
+        }
+    }
+    return TconfPageDec::msgProc(uMsg,wParam,lParam);
 }
 
 void TinfoPageDec::onFrame(void)
 {
- if (!IsWindowVisible(m_hwnd)) return;
- for (Titems::iterator i=infoitems.begin();i!=infoitems.end();i++)
-  {
-   int wasChange;
-   i->val=info->getVal(i->id,&wasChange,NULL);
-   if (wasChange)
-    ListView_Update(hlv,i-infoitems.begin());
-  } 
+    if (!IsWindowVisible(m_hwnd)) {
+        return;
+    }
+    for (Titems::iterator i=infoitems.begin(); i!=infoitems.end(); i++) {
+        int wasChange;
+        i->val=info->getVal(i->id,&wasChange,NULL);
+        if (wasChange) {
+            ListView_Update(hlv,i-infoitems.begin());
+        }
+    }
 }
 
 void TinfoPageDec::onAllowDPRINTF(void)
 {
- cfgSet(IDFF_allowDPRINTFchanged,1);
+    cfgSet(IDFF_allowDPRINTFchanged,1);
 }
 
 void TinfoPageDec::translate(void)
 {
- TconfPageDec::translate();
+    TconfPageDec::translate();
 
- for (Titems::iterator i=infoitems.begin();i!=infoitems.end();i++)
-  i->translatedName=_(IDC_LV_INFO,i->name);
+    for (Titems::iterator i=infoitems.begin(); i!=infoitems.end(); i++) {
+        i->translatedName=_(IDC_LV_INFO,i->name);
+    }
 }
 
 TinfoPageDec::TinfoPageDec(TffdshowPageDec *Iparent,TinfoBase *Iinfo):TconfPageDec(Iparent,NULL,0),info(Iinfo)
 {
- dialogId=IDD_INFOSIMD;
+    dialogId=IDD_INFOSIMD;
 
- static const TbindCheckbox<TinfoPageDec> chb[]=
-  {
-   IDC_CHB_WRITEINFO2DBG,IDFF_allowDPRINTF,&TinfoPageDec::onAllowDPRINTF,
-   0,NULL,NULL
-  };
- bindCheckboxes(chb);
+    static const TbindCheckbox<TinfoPageDec> chb[]= {
+        IDC_CHB_WRITEINFO2DBG,IDFF_allowDPRINTF,&TinfoPageDec::onAllowDPRINTF,
+        0,NULL,NULL
+    };
+    bindCheckboxes(chb);
 }
 TinfoPageDec::~TinfoPageDec()
 {
- delete info;
+    delete info;
 }
 //================================= TinfoPageDecVideo ====================================
 TinfoPageDecVideo::TinfoPageDecVideo(TffdshowPageDec *Iparent):TinfoPageDec(Iparent,new TinfoDecVideo(Iparent->deci))

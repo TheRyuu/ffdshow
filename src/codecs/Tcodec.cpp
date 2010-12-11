@@ -25,7 +25,7 @@
 //=============================== Tcodec ===============================
 Tcodec::Tcodec(IffdshowBase *Ideci):deci(Ideci)
 {
- deci->getConfig(&config);
+    deci->getConfig(&config);
 }
 Tcodec::~Tcodec()
 {
@@ -33,31 +33,44 @@ Tcodec::~Tcodec()
 
 const char_t* Tcodec::getMovieSourceName(int source)
 {
- switch (source)
-  {
-   case IDFF_MOVIE_LAVC       :return _l("libavcodec");
-   case IDFF_MOVIE_FFMPEG_MT  :return _l("ffmpeg-mt");
-   case IDFF_MOVIE_RAW        :return _l("uncompressed");
-   case IDFF_MOVIE_LIBMPEG2   :return _l("libmpeg2");
-   case IDFF_MOVIE_LIBMAD     :return _l("libmad");
-   case IDFF_MOVIE_LIBFAAD    :return _l("libfaad2");
-   case IDFF_MOVIE_XVID4      :return _l("Xvid");
-   case IDFF_MOVIE_AVIS       :return _l("AviSynth");
-   case IDFF_MOVIE_WMV9       :return _l("wmv9");
-   case IDFF_MOVIE_X264       :return _l("x264");
-   case IDFF_MOVIE_LIBA52     :return _l("liba52");
-   case IDFF_MOVIE_LIBDTS     :return _l("libdts");
-   case IDFF_MOVIE_FFMPEG_DXVA:return _l("DXVA");
-   default:
-   case 0:return _l("disabled");
-  }
+    switch (source) {
+        case IDFF_MOVIE_LAVC       :
+            return _l("libavcodec");
+        case IDFF_MOVIE_FFMPEG_MT  :
+            return _l("ffmpeg-mt");
+        case IDFF_MOVIE_RAW        :
+            return _l("uncompressed");
+        case IDFF_MOVIE_LIBMPEG2   :
+            return _l("libmpeg2");
+        case IDFF_MOVIE_LIBMAD     :
+            return _l("libmad");
+        case IDFF_MOVIE_LIBFAAD    :
+            return _l("libfaad2");
+        case IDFF_MOVIE_XVID4      :
+            return _l("Xvid");
+        case IDFF_MOVIE_AVIS       :
+            return _l("AviSynth");
+        case IDFF_MOVIE_WMV9       :
+            return _l("wmv9");
+        case IDFF_MOVIE_X264       :
+            return _l("x264");
+        case IDFF_MOVIE_LIBA52     :
+            return _l("liba52");
+        case IDFF_MOVIE_LIBDTS     :
+            return _l("libdts");
+        case IDFF_MOVIE_FFMPEG_DXVA:
+            return _l("DXVA");
+        default:
+        case 0:
+            return _l("disabled");
+    }
 }
 
 //============================= TcodecDec ==============================
 TcodecDec::TcodecDec(IffdshowBase *Ideci,IdecSink *Isink):
- Tcodec(Ideci),
- deciD(Ideci),
- sink(Isink)
+    Tcodec(Ideci),
+    deciD(Ideci),
+    sink(Isink)
 {
 }
 TcodecDec::~TcodecDec()
@@ -66,6 +79,6 @@ TcodecDec::~TcodecDec()
 
 HRESULT TcodecDec::flush(void)
 {
- HRESULT hr=flushDec();
- return SUCCEEDED(hr) && sink?sink->flushDecodedSamples():hr;
+    HRESULT hr=flushDec();
+    return SUCCEEDED(hr) && sink?sink->flushDecodedSamples():hr;
 }

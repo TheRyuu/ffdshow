@@ -46,8 +46,12 @@ public:
     virtual ~TvideoCodecLibmpeg2();
 
     static const char_t *dllname;
-    virtual int getType(void) const {return IDFF_MOVIE_LIBMPEG2;}
-    virtual int caps(void) const {return CAPS::VIS_QUANTS;}
+    virtual int getType(void) const {
+        return IDFF_MOVIE_LIBMPEG2;
+    }
+    virtual int caps(void) const {
+        return CAPS::VIS_QUANTS;
+    }
 
     virtual void end(void);
     virtual HRESULT decompress(const unsigned char *src,size_t srcLen,IMediaSample *pIn);

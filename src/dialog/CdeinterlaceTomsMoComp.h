@@ -6,12 +6,12 @@
 class TdeinterlacePageTomsMoComp : public TdeinterlacePanel
 {
 public:
- static TdeinterlacePanel* create(Twindow *parent);
- TdeinterlacePageTomsMoComp(Twindow *Iparent);
- virtual ~TdeinterlacePageTomsMoComp();
- virtual void init(void);
- virtual void cfg2dlg(void);
- virtual void reset(void);
+    static TdeinterlacePanel* create(Twindow *parent);
+    TdeinterlacePageTomsMoComp(Twindow *Iparent);
+    virtual ~TdeinterlacePageTomsMoComp();
+    virtual void init(void);
+    virtual void cfg2dlg(void);
+    virtual void reset(void);
 };
 
 #endif

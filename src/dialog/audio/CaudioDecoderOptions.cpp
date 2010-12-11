@@ -20,64 +20,60 @@
 
 void TaudioDecoderOptionsPage::init(void)
 {
- tbrSetRange(IDC_TBR_DECODER_DRC_LEVEL,0,100);
+    tbrSetRange(IDC_TBR_DECODER_DRC_LEVEL,0,100);
 }
 
 void TaudioDecoderOptionsPage::cfg2dlg(void)
 {
- drc2dlg();
+    drc2dlg();
 }
 void TaudioDecoderOptionsPage::drc2dlg(void)
 {
- setCheck(IDC_CHB_AUDIO_DECODER_DRC,cfgGet(IDFF_audio_decoder_DRC));
- int level = cfgGet(IDFF_audio_decoder_DRC_Level);
- tbrSet(IDC_TBR_DECODER_DRC_LEVEL, level);
- setText(IDC_LBL_DECODER_DRC_LEVEL,_l("%i %%"),level);
- setCheck(IDC_CHB_AUDIO_DECODER_JITTER_CORRECTION,cfgGet(IDFF_audio_decoder_JitterCorrection));
+    setCheck(IDC_CHB_AUDIO_DECODER_DRC,cfgGet(IDFF_audio_decoder_DRC));
+    int level = cfgGet(IDFF_audio_decoder_DRC_Level);
+    tbrSet(IDC_TBR_DECODER_DRC_LEVEL, level);
+    setText(IDC_LBL_DECODER_DRC_LEVEL,_l("%i %%"),level);
+    setCheck(IDC_CHB_AUDIO_DECODER_JITTER_CORRECTION,cfgGet(IDFF_audio_decoder_JitterCorrection));
 }
 
 INT_PTR TaudioDecoderOptionsPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
- switch (uMsg)
-  {
-   case WM_HSCROLL:
-    switch (getId(HWND(lParam)))
-     {
-      case IDC_TBR_DECODER_DRC_LEVEL:
-       cfgSet(IDFF_audio_decoder_DRC_Level, tbrGet(IDC_TBR_DECODER_DRC_LEVEL));
-       drc2dlg();
-       return TRUE;
-     }
- }
- return TconfPageDecAudio::msgProc(uMsg,wParam,lParam);
+    switch (uMsg) {
+        case WM_HSCROLL:
+            switch (getId(HWND(lParam))) {
+                case IDC_TBR_DECODER_DRC_LEVEL:
+                    cfgSet(IDFF_audio_decoder_DRC_Level, tbrGet(IDC_TBR_DECODER_DRC_LEVEL));
+                    drc2dlg();
+                    return TRUE;
+            }
+    }
+    return TconfPageDecAudio::msgProc(uMsg,wParam,lParam);
 }
 
 bool TaudioDecoderOptionsPage::reset(bool testonly)
 {
- if (!testonly)
-  {
-   deci->resetParam(IDFF_audio_decoder_DRC);
-   deci->resetParam(IDFF_audio_decoder_DRC_Level);
-   deci->resetParam(IDFF_audio_decoder_JitterCorrection);
-  }
- return true;
+    if (!testonly) {
+        deci->resetParam(IDFF_audio_decoder_DRC);
+        deci->resetParam(IDFF_audio_decoder_DRC_Level);
+        deci->resetParam(IDFF_audio_decoder_JitterCorrection);
+    }
+    return true;
 }
 
 void TaudioDecoderOptionsPage::translate(void)
 {
- TconfPageDec::translate();
+    TconfPageDec::translate();
 }
 
 TaudioDecoderOptionsPage::TaudioDecoderOptionsPage(TffdshowPageDec *Iparent):TconfPageDecAudio(Iparent)
 {
- helpURL = _l("http://ffdshow-tryout.sourceforge.net/wiki/audio:decoder_options");
- dialogId=IDD_AUDIODECODEROPTIONS;
- inPreset=1;
- static const TbindCheckbox<TaudioDecoderOptionsPage> chb[]=
-  {
-   IDC_CHB_AUDIO_DECODER_DRC,IDFF_audio_decoder_DRC,NULL,
-   IDC_CHB_AUDIO_DECODER_JITTER_CORRECTION,IDFF_audio_decoder_JitterCorrection,NULL,
-   0,NULL,NULL
-  };
- bindCheckboxes(chb);
+    helpURL = _l("http://ffdshow-tryout.sourceforge.net/wiki/audio:decoder_options");
+    dialogId=IDD_AUDIODECODEROPTIONS;
+    inPreset=1;
+    static const TbindCheckbox<TaudioDecoderOptionsPage> chb[]= {
+        IDC_CHB_AUDIO_DECODER_DRC,IDFF_audio_decoder_DRC,NULL,
+        IDC_CHB_AUDIO_DECODER_JITTER_CORRECTION,IDFF_audio_decoder_JitterCorrection,NULL,
+        0,NULL,NULL
+    };
+    bindCheckboxes(chb);
 }

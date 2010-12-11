@@ -22,48 +22,48 @@
 
 void TgenericHuffyuvPage::init(void)
 {
- for (int i=0;TcoSettings::huffYUVcsps[i];i++)
-  cbxAdd(IDC_CBX_HUFFYUV_CSP,TcoSettings::huffYUVcsps[i]);
- addHint(IDC_CHB_HUFFYUV_CTX,_l("Better compression, incompatible with original HuffYUV codec"));
+    for (int i=0; TcoSettings::huffYUVcsps[i]; i++) {
+        cbxAdd(IDC_CBX_HUFFYUV_CSP,TcoSettings::huffYUVcsps[i]);
+    }
+    addHint(IDC_CHB_HUFFYUV_CTX,_l("Better compression, incompatible with original HuffYUV codec"));
 }
 
 bool TgenericHuffyuvPage::enabled(void)
 {
- return codecId==CODEC_ID_HUFFYUV;
+    return codecId==CODEC_ID_HUFFYUV;
 }
 
 void TgenericHuffyuvPage::cfg2dlg(void)
 {
- cbxSetCurSel(IDC_CBX_HUFFYUV_CSP,cfgGet(IDFF_enc_huffyuv_csp));
- cbxSetCurSel(IDC_CBX_HUFFYUV_PRED,cfgGet(IDFF_enc_huffyuv_pred));
- setCheck(IDC_CHB_HUFFYUV_CTX,cfgGet(IDFF_enc_huffyuv_ctx));
- setCheck(IDC_CHB_GRAY,cfgGet(IDFF_enc_gray));enable(0,IDC_CHB_GRAY); //maybe lavc will support grayscale huffyuv encoding some day (or should I try to modify it?)
+    cbxSetCurSel(IDC_CBX_HUFFYUV_CSP,cfgGet(IDFF_enc_huffyuv_csp));
+    cbxSetCurSel(IDC_CBX_HUFFYUV_PRED,cfgGet(IDFF_enc_huffyuv_pred));
+    setCheck(IDC_CHB_HUFFYUV_CTX,cfgGet(IDFF_enc_huffyuv_ctx));
+    setCheck(IDC_CHB_GRAY,cfgGet(IDFF_enc_gray));
+    enable(0,IDC_CHB_GRAY); //maybe lavc will support grayscale huffyuv encoding some day (or should I try to modify it?)
 }
 
 void TgenericHuffyuvPage::translate(void)
 {
- TconfPageEnc::translate();
+    TconfPageEnc::translate();
 
- cbxTranslate(IDC_CBX_HUFFYUV_PRED,TcoSettings::huffYUVpreds);
+    cbxTranslate(IDC_CBX_HUFFYUV_PRED,TcoSettings::huffYUVpreds);
 }
 
 TgenericHuffyuvPage::TgenericHuffyuvPage(TffdshowPageEnc *Iparent):TconfPageEnc(Iparent)
 {
- dialogId=IDD_GENERIC_HUFFYUV;
- static const int props[]={IDFF_enc_huffyuv_csp,IDFF_enc_huffyuv_pred,IDFF_enc_huffyuv_ctx,0};
- propsIDs=props;
- static const TbindCheckbox<TgenericHuffyuvPage> chb[]=
-  {
-   IDC_CHB_GRAY,IDFF_enc_gray,NULL,
-   IDC_CHB_HUFFYUV_CTX,IDFF_enc_huffyuv_ctx,NULL,
-   0,NULL,NULL
-  };
- bindCheckboxes(chb);
- static const TbindCombobox<TgenericHuffyuvPage> cbx[]=
-  {
-   IDC_CBX_HUFFYUV_CSP,IDFF_enc_huffyuv_csp,BINDCBX_SEL,NULL,
-   IDC_CBX_HUFFYUV_PRED,IDFF_enc_huffyuv_pred,BINDCBX_SEL,NULL,
-   0
-  };
- bindComboboxes(cbx);
+    dialogId=IDD_GENERIC_HUFFYUV;
+    static const int props[]= {IDFF_enc_huffyuv_csp,IDFF_enc_huffyuv_pred,IDFF_enc_huffyuv_ctx,0};
+    propsIDs=props;
+    static const TbindCheckbox<TgenericHuffyuvPage> chb[]= {
+        IDC_CHB_GRAY,IDFF_enc_gray,NULL,
+        IDC_CHB_HUFFYUV_CTX,IDFF_enc_huffyuv_ctx,NULL,
+        0,NULL,NULL
+    };
+    bindCheckboxes(chb);
+    static const TbindCombobox<TgenericHuffyuvPage> cbx[]= {
+        IDC_CBX_HUFFYUV_CSP,IDFF_enc_huffyuv_csp,BINDCBX_SEL,NULL,
+        IDC_CBX_HUFFYUV_PRED,IDFF_enc_huffyuv_pred,BINDCBX_SEL,NULL,
+        0
+    };
+    bindComboboxes(cbx);
 }

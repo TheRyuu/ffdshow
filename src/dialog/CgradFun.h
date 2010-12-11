@@ -6,9 +6,9 @@
 class TgradFunPage :public TconfPageDecVideo
 {
 public:
- TgradFunPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff);
- virtual void init(void);
- virtual void cfg2dlg(void);
+    TgradFunPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff);
+    virtual void init(void);
+    virtual void cfg2dlg(void);
 };
 
 #endif

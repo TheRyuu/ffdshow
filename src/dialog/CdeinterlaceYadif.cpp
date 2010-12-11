@@ -25,71 +25,68 @@
 
 TdeinterlacePanel* TdeinterlacePageYadif::create(Twindow *parent)
 {
- return new TdeinterlacePageYadif(parent);
+    return new TdeinterlacePageYadif(parent);
 }
 
 TdeinterlacePageYadif::TdeinterlacePageYadif(Twindow *parent):TdeinterlacePanel(IDD_DEINTERLACE_YADIF,parent)
 {
- static const TbindCombobox<TdeinterlacePageYadif> cbx[]=
-  {
-   IDC_CBX_YADIF_PARITY, IDFF_yadifFieldOrder, BINDCBX_DATA, &TdeinterlacePageYadif::cfg2dlg,
-   0
-  };
- bindComboboxes(cbx);
+    static const TbindCombobox<TdeinterlacePageYadif> cbx[]= {
+        IDC_CBX_YADIF_PARITY, IDFF_yadifFieldOrder, BINDCBX_DATA, &TdeinterlacePageYadif::cfg2dlg,
+        0
+    };
+    bindComboboxes(cbx);
 
- createDialog(dialogId,parent->m_hwnd);
+    createDialog(dialogId,parent->m_hwnd);
 }
 TdeinterlacePageYadif::~TdeinterlacePageYadif()
 {
- DestroyWindow(m_hwnd);
+    DestroyWindow(m_hwnd);
 }
 
 void TdeinterlacePageYadif::init(void)
 {
- translate();
+    translate();
 
- int sel=cbxGetCurSel(IDC_CBX_YADIF_PARITY);
- cbxClear(IDC_CBX_YADIF_PARITY);
- for (int i = 0 ; TdeinterlaceSettings::yadifParitySEs[i].name ; i++)
-  cbxAdd(IDC_CBX_YADIF_PARITY,
-         _(IDC_CBX_YADIF_PARITY,
-           TdeinterlaceSettings::yadifParitySEs[i].name),
-           TdeinterlaceSettings::yadifParitySEs[i].id);
- cbxSetCurSel(IDC_CBX_YADIF_PARITY,sel);
+    int sel=cbxGetCurSel(IDC_CBX_YADIF_PARITY);
+    cbxClear(IDC_CBX_YADIF_PARITY);
+    for (int i = 0 ; TdeinterlaceSettings::yadifParitySEs[i].name ; i++)
+        cbxAdd(IDC_CBX_YADIF_PARITY,
+               _(IDC_CBX_YADIF_PARITY,
+                 TdeinterlaceSettings::yadifParitySEs[i].name),
+               TdeinterlaceSettings::yadifParitySEs[i].id);
+    cbxSetCurSel(IDC_CBX_YADIF_PARITY,sel);
 }
 
 void TdeinterlacePageYadif::cfg2dlg(void)
 {
- setCheck(IDC_CHB_YADIF_SKIP_CHECK, !!(cfgGet(IDFF_yadifMode) & 2));
- setCheck(IDC_CHB_YADIF_DOUBLE_FRAMERATE, cfgGet(IDFF_yadifMode) & 1);
- int se=cfgGet(IDFF_yadifFieldOrder);
- cbxSetDataCurSel(IDC_CBX_YADIF_PARITY,se);
+    setCheck(IDC_CHB_YADIF_SKIP_CHECK, !!(cfgGet(IDFF_yadifMode) & 2));
+    setCheck(IDC_CHB_YADIF_DOUBLE_FRAMERATE, cfgGet(IDFF_yadifMode) & 1);
+    int se=cfgGet(IDFF_yadifFieldOrder);
+    cbxSetDataCurSel(IDC_CBX_YADIF_PARITY,se);
 }
 
 void TdeinterlacePageYadif::dlg2cfg(void)
 {
- int mode = getCheck(IDC_CHB_YADIF_SKIP_CHECK) * 2 + getCheck(IDC_CHB_YADIF_DOUBLE_FRAMERATE);
- cfgSet(IDFF_yadifMode, mode);
+    int mode = getCheck(IDC_CHB_YADIF_SKIP_CHECK) * 2 + getCheck(IDC_CHB_YADIF_DOUBLE_FRAMERATE);
+    cfgSet(IDFF_yadifMode, mode);
 }
 
 void TdeinterlacePageYadif::reset(void)
 {
- deci->resetParam(IDFF_yadifMode);
+    deci->resetParam(IDFF_yadifMode);
 }
 
 INT_PTR TdeinterlacePageYadif::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
- switch (uMsg)
-  {
-   case WM_COMMAND:
-    switch (LOWORD(wParam))  
-     {
-      case IDC_CHB_YADIF_SKIP_CHECK:
-      case IDC_CHB_YADIF_DOUBLE_FRAMERATE:
-       dlg2cfg();
-       return TRUE;
-     }    
-    break;
-  }
- return TdeinterlacePanel::msgProc(uMsg,wParam,lParam);
+    switch (uMsg) {
+        case WM_COMMAND:
+            switch (LOWORD(wParam)) {
+                case IDC_CHB_YADIF_SKIP_CHECK:
+                case IDC_CHB_YADIF_DOUBLE_FRAMERATE:
+                    dlg2cfg();
+                    return TRUE;
+            }
+            break;
+    }
+    return TdeinterlacePanel::msgProc(uMsg,wParam,lParam);
 }

@@ -6,14 +6,14 @@
 class TDXVAOptionsPage :public TconfPageDecVideo
 {
 private:
- bool islavc;
+    bool islavc;
 protected:
- virtual INT_PTR msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual INT_PTR msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 public:
- TDXVAOptionsPage(TffdshowPageDec *Iparent);
- virtual void init(void);
- virtual void cfg2dlg(void);
- virtual void translate(void);
+    TDXVAOptionsPage(TffdshowPageDec *Iparent);
+    virtual void init(void);
+    virtual void cfg2dlg(void);
+    virtual void translate(void);
 };
 
 #endif

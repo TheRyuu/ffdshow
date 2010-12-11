@@ -6,8 +6,8 @@
 class TdolbyDecoderPage :public TconfPageDecAudio
 {
 public:
- TdolbyDecoderPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff);
- virtual void cfg2dlg(void);
+    TdolbyDecoderPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff);
+    virtual void cfg2dlg(void);
 };
 
 #endif

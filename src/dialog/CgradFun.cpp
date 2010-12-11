@@ -21,21 +21,20 @@
 
 void TgradFunPage::init(void)
 {
- tbrSetRange(IDC_TBR_GRADFUN_THRESHOLD,101,2000);
+    tbrSetRange(IDC_TBR_GRADFUN_THRESHOLD,101,2000);
 }
 
 void TgradFunPage::cfg2dlg(void)
 {
- tbrSet(IDC_TBR_GRADFUN_THRESHOLD,cfgGet(IDFF_gradFunThreshold),IDC_LBL_GRADFUN_THRESHOLD,NULL,100.0f);
+    tbrSet(IDC_TBR_GRADFUN_THRESHOLD,cfgGet(IDFF_gradFunThreshold),IDC_LBL_GRADFUN_THRESHOLD,NULL,100.0f);
 }
 
 TgradFunPage::TgradFunPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff):TconfPageDecVideo(Iparent,idff)
 {
- resInter=IDC_CHB_GRADFUN;
- static const TbindTrackbar<TgradFunPage> htbr[]=
-  {
-   IDC_TBR_GRADFUN_THRESHOLD,IDFF_gradFunThreshold,&TgradFunPage::cfg2dlg,
-   0,0,NULL
-  };
- bindHtracks(htbr);
+    resInter=IDC_CHB_GRADFUN;
+    static const TbindTrackbar<TgradFunPage> htbr[]= {
+        IDC_TBR_GRADFUN_THRESHOLD,IDFF_gradFunThreshold,&TgradFunPage::cfg2dlg,
+        0,0,NULL
+    };
+    bindHtracks(htbr);
 }

@@ -7,13 +7,15 @@
 class TgenericLJPEGpage :public TconfPageEnc
 {
 private:
- static const TcspFcc cspFccs[];
+    static const TcspFcc cspFccs[];
 public:
- TgenericLJPEGpage(TffdshowPageEnc *Iparent);
- virtual void init(void);
- virtual void cfg2dlg(void);
- virtual bool forCodec(int codecId) {return codecId==CODEC_ID_LJPEG;}
- virtual bool enabled(void);
+    TgenericLJPEGpage(TffdshowPageEnc *Iparent);
+    virtual void init(void);
+    virtual void cfg2dlg(void);
+    virtual bool forCodec(int codecId) {
+        return codecId==CODEC_ID_LJPEG;
+    }
+    virtual bool enabled(void);
 };
 
 #endif

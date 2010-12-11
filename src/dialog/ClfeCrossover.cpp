@@ -21,33 +21,31 @@
 
 void TlfeCrossoverPage::init(void)
 {
- tbrSetRange(IDC_TBR_LFECROSSOVER_FREQ,1,300);
- tbrSetRange(IDC_TBR_LFECROSSOVER_GAIN,-1000,1000);
+    tbrSetRange(IDC_TBR_LFECROSSOVER_FREQ,1,300);
+    tbrSetRange(IDC_TBR_LFECROSSOVER_GAIN,-1000,1000);
 }
 
 void TlfeCrossoverPage::cfg2dlg(void)
 {
- tbrSet(IDC_TBR_LFECROSSOVER_FREQ,cfgGet(IDFF_LFEcrossoverFreq),IDC_LBL_LFECROSSOVER_FREQ);
- int db=cfgGet(IDFF_LFEcrossoverGain);
- tbrSet(IDC_TBR_LFECROSSOVER_GAIN,db);
- setText(IDC_LBL_LFECROSSOVER_GAIN,_l("%s %.2f dB"),_(IDC_LBL_LFECROSSOVER_GAIN),db/100.0f);
- setCheck(IDC_CHB_LFECROSSOVER_LRCUT,cfgGet(IDFF_LFEcutLR));
+    tbrSet(IDC_TBR_LFECROSSOVER_FREQ,cfgGet(IDFF_LFEcrossoverFreq),IDC_LBL_LFECROSSOVER_FREQ);
+    int db=cfgGet(IDFF_LFEcrossoverGain);
+    tbrSet(IDC_TBR_LFECROSSOVER_GAIN,db);
+    setText(IDC_LBL_LFECROSSOVER_GAIN,_l("%s %.2f dB"),_(IDC_LBL_LFECROSSOVER_GAIN),db/100.0f);
+    setCheck(IDC_CHB_LFECROSSOVER_LRCUT,cfgGet(IDFF_LFEcutLR));
 }
 
 TlfeCrossoverPage::TlfeCrossoverPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff):TconfPageDecAudio(Iparent,idff)
 {
- resInter=IDC_CHB_LFECROSSOVER;
- static const TbindCheckbox<TlfeCrossoverPage> chb[]=
-  {
-   IDC_CHB_LFECROSSOVER_LRCUT,IDFF_LFEcutLR,NULL,
-   0,NULL,NULL
-  };
- bindCheckboxes(chb);
- static const TbindTrackbar<TlfeCrossoverPage> htbr[]=
-  {
-   IDC_TBR_LFECROSSOVER_FREQ,IDFF_LFEcrossoverFreq,&TlfeCrossoverPage::cfg2dlg,
-   IDC_TBR_LFECROSSOVER_GAIN,IDFF_LFEcrossoverGain,&TlfeCrossoverPage::cfg2dlg,
-   0,0,NULL
-  };
- bindHtracks(htbr);
+    resInter=IDC_CHB_LFECROSSOVER;
+    static const TbindCheckbox<TlfeCrossoverPage> chb[]= {
+        IDC_CHB_LFECROSSOVER_LRCUT,IDFF_LFEcutLR,NULL,
+        0,NULL,NULL
+    };
+    bindCheckboxes(chb);
+    static const TbindTrackbar<TlfeCrossoverPage> htbr[]= {
+        IDC_TBR_LFECROSSOVER_FREQ,IDFF_LFEcrossoverFreq,&TlfeCrossoverPage::cfg2dlg,
+        IDC_TBR_LFECROSSOVER_GAIN,IDFF_LFEcrossoverGain,&TlfeCrossoverPage::cfg2dlg,
+        0,0,NULL
+    };
+    bindHtracks(htbr);
 }

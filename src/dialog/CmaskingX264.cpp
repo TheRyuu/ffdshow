@@ -21,29 +21,28 @@
 
 bool TmaskingPageX264::enabled(void)
 {
- return codecId==CODEC_ID_X264;
+    return codecId==CODEC_ID_X264;
 }
 
 void TmaskingPageX264::init(void)
 {
- tbrSetRange(IDC_TBR_X264_AQ_STRENGTH,1,100);
+    tbrSetRange(IDC_TBR_X264_AQ_STRENGTH,1,100);
 }
 
 void TmaskingPageX264::cfg2dlg(void)
 {
- tbrSet(IDC_TBR_X264_AQ_STRENGTH,cfgGet(IDFF_enc_x264_aq_strength100),IDC_LBL_X264_AQ_STRENGTH);
- static const int idAQ[]={IDC_TBR_X264_AQ_STRENGTH,IDC_LBL_X264_AQ_STRENGTH,0};
+    tbrSet(IDC_TBR_X264_AQ_STRENGTH,cfgGet(IDFF_enc_x264_aq_strength100),IDC_LBL_X264_AQ_STRENGTH);
+    static const int idAQ[]= {IDC_TBR_X264_AQ_STRENGTH,IDC_LBL_X264_AQ_STRENGTH,0};
 }
 
 TmaskingPageX264::TmaskingPageX264(TffdshowPageEnc *Iparent):TconfPageEnc(Iparent)
 {
- dialogId=IDD_MASKING_X264;
- static const int props[]={IDFF_enc_x264_aq_strength100,0};
- propsIDs=props;
- static const TbindTrackbar<TmaskingPageX264> htbr[]=
-  {
-   IDC_TBR_X264_AQ_STRENGTH,IDFF_enc_x264_aq_strength100,&TmaskingPageX264::cfg2dlg,
-   0,NULL,NULL
-  };
- bindHtracks(htbr);
+    dialogId=IDD_MASKING_X264;
+    static const int props[]= {IDFF_enc_x264_aq_strength100,0};
+    propsIDs=props;
+    static const TbindTrackbar<TmaskingPageX264> htbr[]= {
+        IDC_TBR_X264_AQ_STRENGTH,IDFF_enc_x264_aq_strength100,&TmaskingPageX264::cfg2dlg,
+        0,NULL,NULL
+    };
+    bindHtracks(htbr);
 }

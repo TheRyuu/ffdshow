@@ -25,27 +25,32 @@
 
 Tswscale::Tswscale(Tlibavcodec *Ilibavcodec):libavcodec(Ilibavcodec)
 {
- swsc=NULL;
+    swsc=NULL;
 }
 Tswscale::~Tswscale()
 {
- done();
+    done();
 }
 bool Tswscale::init(unsigned int Idx,unsigned int Idy,int incsp,int outcsp,const int yuv2rgbTable[6])
 {
- done();
- PixelFormat sw_incsp=csp_ffdshow2lavc(incsp),sw_outcsp=csp_ffdshow2lavc(outcsp);
- dx=Idx;dy=Idy;
- sws_flags = Tconfig::sws_cpu_flags | SWS_POINT; //Resize method
- SwsParams params;Tlibavcodec::swsInitParams(&params,SWS_POINT,sws_flags);
- swsc=libavcodec->sws_getContext(dx,dy,sw_incsp,dx,dy,sw_outcsp,sws_flags,&params,NULL,NULL,NULL);
- return !!swsc;
+    done();
+    PixelFormat sw_incsp=csp_ffdshow2lavc(incsp),sw_outcsp=csp_ffdshow2lavc(outcsp);
+    dx=Idx;
+    dy=Idy;
+    sws_flags = Tconfig::sws_cpu_flags | SWS_POINT; //Resize method
+    SwsParams params;
+    Tlibavcodec::swsInitParams(&params,SWS_POINT,sws_flags);
+    swsc=libavcodec->sws_getContext(dx,dy,sw_incsp,dx,dy,sw_outcsp,sws_flags,&params,NULL,NULL,NULL);
+    return !!swsc;
 }
 void Tswscale::done(void)
 {
- if (swsc) libavcodec->sws_freeContext(swsc);swsc=NULL;
+    if (swsc) {
+        libavcodec->sws_freeContext(swsc);
+    }
+    swsc=NULL;
 }
 bool Tswscale::convert(const uint8_t* src[], const stride_t srcStride[], uint8_t* dst[], stride_t dstStride[])
 {
- return swsc && libavcodec->sws_scale(swsc,src,srcStride,0,dy,dst,dstStride)>0;
+    return swsc && libavcodec->sws_scale(swsc,src,srcStride,0,dy,dst,dstStride)>0;
 }

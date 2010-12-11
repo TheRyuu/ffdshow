@@ -6,9 +6,9 @@
 class TcrystalityPage :public TconfPageDecAudio
 {
 public:
- TcrystalityPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff);
- virtual void init(void);
- virtual void cfg2dlg(void);
+    TcrystalityPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff);
+    virtual void init(void);
+    virtual void cfg2dlg(void);
 };
 
 #endif

@@ -21,38 +21,36 @@
 
 bool TcurveNormalPage::enabled(void)
 {
- int mode=cfgGet(IDFF_enc_mode);
- return sup_perFrameQuant(codecId) && (mode==ENC_MODE::PASS2_2_EXT || mode==ENC_MODE::PASS2_2_INT);
+    int mode=cfgGet(IDFF_enc_mode);
+    return sup_perFrameQuant(codecId) && (mode==ENC_MODE::PASS2_2_EXT || mode==ENC_MODE::PASS2_2_INT);
 }
 
 void TcurveNormalPage::cfg2dlg(void)
 {
- SetDlgItemInt(m_hwnd,IDC_ED_CURVENORMAL_HIGH,cfgGet(IDFF_enc_curve_compression_high),FALSE);
- SetDlgItemInt(m_hwnd,IDC_ED_CURVENORMAL_LOW ,cfgGet(IDFF_enc_curve_compression_low ),FALSE);
- SetDlgItemInt(m_hwnd,IDC_ED_CURVENORMAL_BITRATEPAYBACKDELAY,cfgGet(IDFF_enc_bitrate_payback_delay),FALSE);
- setCheck(IDC_RBT_CURVENORMAL_PAYBACKWITHBIAS,cfgGet(IDFF_enc_bitrate_payback_method)==0);
- setCheck(IDC_RBT_CURVENORMAL_PAYBACKPROPORTIONALLY,cfgGet(IDFF_enc_bitrate_payback_method)!=0);
+    SetDlgItemInt(m_hwnd,IDC_ED_CURVENORMAL_HIGH,cfgGet(IDFF_enc_curve_compression_high),FALSE);
+    SetDlgItemInt(m_hwnd,IDC_ED_CURVENORMAL_LOW ,cfgGet(IDFF_enc_curve_compression_low ),FALSE);
+    SetDlgItemInt(m_hwnd,IDC_ED_CURVENORMAL_BITRATEPAYBACKDELAY,cfgGet(IDFF_enc_bitrate_payback_delay),FALSE);
+    setCheck(IDC_RBT_CURVENORMAL_PAYBACKWITHBIAS,cfgGet(IDFF_enc_bitrate_payback_method)==0);
+    setCheck(IDC_RBT_CURVENORMAL_PAYBACKPROPORTIONALLY,cfgGet(IDFF_enc_bitrate_payback_method)!=0);
 }
 
 TcurveNormalPage::TcurveNormalPage(TffdshowPageEnc *Iparent):TconfPageEnc(Iparent)
 {
- dialogId=IDD_CURVENORMAL;
- static const int props[]={IDFF_enc_curve_compression_high,IDFF_enc_curve_compression_low,IDFF_enc_bitrate_payback_delay,IDFF_enc_bitrate_payback_method,0};
- propsIDs=props;
- static const TbindRadiobutton<TcurveNormalPage> rbt[]=
-  {
-   IDC_RBT_CURVENORMAL_PAYBACKWITHBIAS,IDFF_enc_bitrate_payback_method,0,NULL,
-   IDC_RBT_CURVENORMAL_PAYBACKPROPORTIONALLY,IDFF_enc_bitrate_payback_method,1,NULL,
-   0,0,0,NULL
-  };
- bindRadioButtons(rbt);
- static const TbindEditInt<TcurveNormalPage> edInt[]=
-  {
-   IDC_ED_CURVENORMAL_HIGH,0,100,IDFF_enc_curve_compression_high,NULL,
-   IDC_ED_CURVENORMAL_LOW ,0,100,IDFF_enc_curve_compression_low ,NULL,
-   IDC_ED_CURVENORMAL_BITRATEPAYBACKDELAY,1,10000000,IDFF_enc_bitrate_payback_delay,NULL,
-   0
-  };
- bindEditInts(edInt);
+    dialogId=IDD_CURVENORMAL;
+    static const int props[]= {IDFF_enc_curve_compression_high,IDFF_enc_curve_compression_low,IDFF_enc_bitrate_payback_delay,IDFF_enc_bitrate_payback_method,0};
+    propsIDs=props;
+    static const TbindRadiobutton<TcurveNormalPage> rbt[]= {
+        IDC_RBT_CURVENORMAL_PAYBACKWITHBIAS,IDFF_enc_bitrate_payback_method,0,NULL,
+        IDC_RBT_CURVENORMAL_PAYBACKPROPORTIONALLY,IDFF_enc_bitrate_payback_method,1,NULL,
+        0,0,0,NULL
+    };
+    bindRadioButtons(rbt);
+    static const TbindEditInt<TcurveNormalPage> edInt[]= {
+        IDC_ED_CURVENORMAL_HIGH,0,100,IDFF_enc_curve_compression_high,NULL,
+        IDC_ED_CURVENORMAL_LOW ,0,100,IDFF_enc_curve_compression_low ,NULL,
+        IDC_ED_CURVENORMAL_BITRATEPAYBACKDELAY,1,10000000,IDFF_enc_bitrate_payback_delay,NULL,
+        0
+    };
+    bindEditInts(edInt);
 }
 
