@@ -20,7 +20,7 @@ SLIB=../../../bin/libmpeg2_ff.dll
 DEF=libmpeg2_ff.def
 
 # enable SSE because compilation fails without it
-SSE=yes
+OPTFLAGS+=-msse -mfpmath=sse
 
 include ../../makefile_c.inc
 
