@@ -214,4 +214,3 @@ Root: HKLM; Subkey: "{#= ff_reg_base}_vfw";   ValueType: dword; ValueName: "dx50
 Root: HKLM; Subkey: "{#= ff_reg_base}_vfw";   ValueType: dword; ValueName: "xvid";       ValueData:  "1"; Components: ffdshow\vfw; Tasks: video\xvid;                Flags: createvalueifdoesntexist
 Root: HKLM; Subkey: "{#= ff_reg_base}_vfw";   ValueType: dword; ValueName: "mp4v";       ValueData:  "1"; Components: ffdshow\vfw; Tasks: video\mpeg4;               Flags: createvalueifdoesntexist
 #endif
-

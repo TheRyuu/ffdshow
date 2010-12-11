@@ -49,11 +49,9 @@
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
-				PrecompiledHeaderFile=".\DebugDLL/ffSpkCfg.pch"
 				WarningLevel="0"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="4"
-				CompileAs="2"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -74,11 +72,10 @@
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				IgnoreAllDefaultLibraries="true"
-				ModuleDefinitionFile=".\ffSpkCfg.def"
+				ModuleDefinitionFile="ffSpkCfg.def"
 				GenerateDebugInformation="true"
-				RandomizedBaseAddress="1"
-				DataExecutionPrevention="0"
-				ImportLibrary="$(OutDir)\$(TargetName).lib"
+				ImportLibrary=""
+				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -143,10 +140,8 @@
 				RuntimeLibrary="0"
 				BufferSecurityCheck="false"
 				EnableFunctionLevelLinking="true"
-				PrecompiledHeaderFile=".\ReleaseDLL/ffSpkCfg.pch"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
-				CompileAs="2"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -161,17 +156,16 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="libcmt.lib kernel32.lib Dsound.lib $(NOINHERIT)"
 				OutputFile="../../bin/ffSpkCfg.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
-				ModuleDefinitionFile=".\ffSpkCfg.def"
-				RandomizedBaseAddress="1"
-				DataExecutionPrevention="0"
-				ImportLibrary="$(OutDir)\$(TargetName).lib"
+				ModuleDefinitionFile="ffSpkCfg.def"
+				DelayLoadDLLs="$(NOINHERIT)"
+				ImportLibrary=""
+				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
