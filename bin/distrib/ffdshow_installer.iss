@@ -1,4 +1,5 @@
-; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
+; Requires Inno Setup QuickStart Pack Unicode: http://www.jrsoftware.org/isdl.php#qsp
+; (Make sure you choose to install Inno Setup Preprocessor)
 
 #define dummy Exec("update_version.bat","","",1,SW_HIDE)
 
@@ -178,26 +179,26 @@ Name: "zh_Hant"; MessagesFile:          "languages\ChineseTrad.isl"
 Name: "zh_Hans"; MessagesFile:          "languages\ChineseSimp.isl"
   #endif
 #elif include_gnu_license & !include_info_before
-Name: "en";      MessagesFile: "compiler:Default.isl";               LicenseFile: "gnu_license.txt"
+Name: "en";      MessagesFile: "compiler:Default.isl";               LicenseFile: "license\gnu_license.txt"
   #if localize
 Name: "ca";      MessagesFile: "compiler:Languages\Catalan.isl"
-Name: "cs";      MessagesFile: "compiler:Languages\Czech.isl";       LicenseFile: "../../../copying.cs.txt"
+Name: "cs";      MessagesFile: "compiler:Languages\Czech.isl";       LicenseFile: "license\copying.cs.txt"
 Name: "da";      MessagesFile: "compiler:Languages\Danish.isl"
-Name: "de";      MessagesFile: "compiler:Languages\German.isl";      LicenseFile: "../../../copying.de.txt"
+Name: "de";      MessagesFile: "compiler:Languages\German.isl";      LicenseFile: "license\copying.de.txt"
 Name: "es";      MessagesFile: "compiler:Languages\Spanish.isl"
 Name: "eu";      MessagesFile: "compiler:Languages\Basque.isl"
 Name: "fi";      MessagesFile: "compiler:Languages\Finnish.isl"
 Name: "fr";      MessagesFile: "compiler:Languages\French.isl"
 Name: "hu";      MessagesFile: "compiler:Languages\Hungarian.isl"
 Name: "it";      MessagesFile: "compiler:Languages\Italian.isl"
-Name: "ja";      MessagesFile:          "languages\Japanese.isl";    LicenseFile: "../../../copying.ja.txt"
+Name: "ja";      MessagesFile:          "languages\Japanese.isl";    LicenseFile: "license\copying.ja.txt"
 Name: "nl";      MessagesFile: "compiler:Languages\Dutch.isl"
 Name: "no";      MessagesFile: "compiler:Languages\Norwegian.isl"
-Name: "pl";      MessagesFile: "compiler:Languages\Polish.isl";      LicenseFile: "../../../copying.pl.txt"
+Name: "pl";      MessagesFile: "compiler:Languages\Polish.isl";      LicenseFile: "license\copying.pl.txt"
 Name: "pt_BR";   MessagesFile: "compiler:Languages\BrazilianPortuguese.isl"
 Name: "pt_PT";   MessagesFile: "compiler:Languages\Portuguese.isl"
-Name: "ru";      MessagesFile: "compiler:Languages\Russian.isl";     LicenseFile: "../../../copying.ru.txt"
-Name: "sk";      MessagesFile: "compiler:Languages\Slovak.isl";      LicenseFile: "../../../copying.sk.txt"
+Name: "ru";      MessagesFile: "compiler:Languages\Russian.isl";     LicenseFile: "license\copying.ru.txt"
+Name: "sk";      MessagesFile: "compiler:Languages\Slovak.isl";      LicenseFile: "license\copying.sk.txt"
 Name: "sl";      MessagesFile: "compiler:Languages\Slovenian.isl"
 Name: "zh_Hant"; MessagesFile:          "languages\ChineseTrad.isl"
 Name: "zh_Hans"; MessagesFile:          "languages\ChineseSimp.isl"
@@ -228,26 +229,26 @@ Name: "zh_Hant"; MessagesFile:          "languages\ChineseTrad.isl"
 Name: "zh_Hans"; MessagesFile:          "languages\ChineseSimp.isl"
   #endif
 #else
-Name: "en";      MessagesFile: "compiler:Default.isl";               LicenseFile: "gnu_license.txt";         InfoBeforeFile: "infobefore.rtf"
+Name: "en";      MessagesFile: "compiler:Default.isl";               LicenseFile: "license\gnu_license.txt";  InfoBeforeFile: "infobefore\infobefore.rtf"
   #if localize
 Name: "ca";      MessagesFile: "compiler:Languages\Catalan.isl"
-Name: "cs";      MessagesFile: "compiler:Languages\Czech.isl";       LicenseFile: "..\..\copying.cs.txt"
+Name: "cs";      MessagesFile: "compiler:Languages\Czech.isl";       LicenseFile: "license\copying.cs.txt"
 Name: "da";      MessagesFile: "compiler:Languages\Danish.isl"
-Name: "de";      MessagesFile: "compiler:Languages\German.isl";      LicenseFile: "..\..\copying.de.txt";   InfoBeforeFile: "infobefore\infobefore.de.rtf"
+Name: "de";      MessagesFile: "compiler:Languages\German.isl";      LicenseFile: "license\copying.de.txt";   InfoBeforeFile: "infobefore\infobefore.de.rtf"
 Name: "es";      MessagesFile: "compiler:Languages\Spanish.isl"
 Name: "eu";      MessagesFile: "compiler:Languages\Basque.isl"
 Name: "fi";      MessagesFile: "compiler:Languages\Finnish.isl"
 Name: "fr";      MessagesFile: "compiler:Languages\French.isl"
 Name: "hu";      MessagesFile: "compiler:Languages\Hungarian.isl"
 Name: "it";      MessagesFile: "compiler:Languages\Italian.isl"
-Name: "ja";      MessagesFile:          "languages\Japanese.isl";    LicenseFile: "..\..\copying.ja.txt"
+Name: "ja";      MessagesFile:          "languages\Japanese.isl";    LicenseFile: "license\copying.ja.txt"
 Name: "nl";      MessagesFile: "compiler:Languages\Dutch.isl"
 Name: "no";      MessagesFile: "compiler:Languages\Norwegian.isl"
-Name: "pl";      MessagesFile: "compiler:Languages\Polish.isl";      LicenseFile: "..\..\copying.pl.txt";   InfoBeforeFile: "infobefore\infobefore.pl.rtf"
+Name: "pl";      MessagesFile: "compiler:Languages\Polish.isl";      LicenseFile: "license\copying.pl.txt";   InfoBeforeFile: "infobefore\infobefore.pl.rtf"
 Name: "pt_BR";   MessagesFile: "compiler:Languages\BrazilianPortuguese.isl"
 Name: "pt_PT";   MessagesFile: "compiler:Languages\Portuguese.isl"
-Name: "ru";      MessagesFile: "compiler:Languages\Russian.isl";     LicenseFile: "..\..\copying.ru.txt"
-Name: "sk";      MessagesFile: "compiler:Languages\Slovak.isl";      LicenseFile: "..\..\copying.sk.txt"
+Name: "ru";      MessagesFile: "compiler:Languages\Russian.isl";     LicenseFile: "license\copying.ru.txt"
+Name: "sk";      MessagesFile: "compiler:Languages\Slovak.isl";      LicenseFile: "license\copying.sk.txt"
 Name: "sl";      MessagesFile: "compiler:Languages\Slovenian.isl"
 Name: "zh_Hant"; MessagesFile:          "languages\ChineseTrad.isl"
 Name: "zh_Hans"; MessagesFile:          "languages\ChineseSimp.isl"
@@ -434,8 +435,8 @@ Source: "{#= bindir}\ff_acm.acm";                 DestDir: "{sys}";             
 Source: "..\languages\*.*";                       DestDir: "{app}\languages";               Components: ffdshow;                    Flags: ignoreversion
 Source: "..\custom matrices\*.*";                 DestDir: "{app}\custom matrices";         Components: ffdshow\vfw;                Flags: ignoreversion
 Source: "..\openIE.js";                           DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
-Source: "gnu_license.txt";                        DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
-Source: "Boost_Software_License_1.0.txt";         DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
+Source: "license\gnu_license.txt";                DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
+Source: "license\Boost_Software_License_1.0.txt"; DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
 
 #if is64bit
   #define ff_manifest = '..\manifest64'
