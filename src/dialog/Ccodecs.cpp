@@ -547,9 +547,8 @@ void TcodecsPageAudio::fillCodecs(void)
    formats.push_back(Tformat(_l("DTS")         ,IDFF_dts        ,movie_dts,_l("DTS Coherent Acoustics stream decoder"),options_dts));
    static const int movie_aac[]={IDFF_MOVIE_LIBFAAD,IDFF_MOVIE_LAVC,0};
    formats.push_back(Tformat(_l("AAC")         ,IDFF_aac        ,movie_aac,_l("Advanced Audio Coding (AAC)")));
-   static const int movie_vorbis[]={IDFF_MOVIE_LAVC,IDFF_MOVIE_TREMOR,0};
    static const Tformat::Toption options_vorbis[]={{0,_l("VorbisGain"),IDFF_vorbisgain,1},{0,NULL,0}};
-   formats.push_back(Tformat(_l("Vorbis")      ,IDFF_vorbis     ,movie_vorbis,_l("High accuracy mode is enabled for Tremor."),options_vorbis));
+   formats.push_back(Tformat(_l("Vorbis")      ,IDFF_vorbis     ,IDFF_MOVIE_LAVC,_l("Vorbis audio decoder"),options_vorbis));
    formats.push_back(Tformat(_l("AMR")         ,IDFF_amr        ,IDFF_MOVIE_LAVC,_l("Adaptive Multi-Rate in 3gp files (AMR)")));
    Tformat lpcm(_l("LPCM"),IDFF_lpcm,_l("Linear Pulse Code Modulation"));
    lpcm.decoders.push_back(Tformat::Tdecoder::init(_l("enabled"),IDFF_MOVIE_RAW));

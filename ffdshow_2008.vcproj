@@ -4786,14 +4786,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\codecs\TaudioCodecTremor.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\codecs\TaudioCodecTremor.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\codecs\TaudioCodecUncompressed.cpp"
 				>
 			</File>

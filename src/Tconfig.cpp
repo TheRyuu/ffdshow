@@ -30,7 +30,6 @@
 #include "TvideoCodecX264.h"
 #include "TaudioCodecLiba52.h"
 #include "TaudioCodecLibDTS.h"
-#include "TaudioCodecTremor.h"
 #include "Tdll.h"
 #include <tlhelp32.h>
 #include <shlwapi.h>
@@ -121,8 +120,7 @@ void Tconfig::init1(HINSTANCE hi)
  isDecoder[IDFF_MOVIE_X264]=check(TvideoCodecX264::dllname);
  isDecoder[IDFF_MOVIE_LIBA52]=check(TaudioCodecLiba52::dllname);
  isDecoder[IDFF_MOVIE_LIBDTS]=check(TaudioCodecLibDTS::dllname);
- isDecoder[IDFF_MOVIE_TREMOR]=check(TaudioCodecTremor::dllname);
-
+ 
  is_WMEncEng = done_WMEncEng = false;
 }
 

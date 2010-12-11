@@ -136,7 +136,6 @@ Root: HKLM; Subkey: "{#= ff_reg_base}";       ValueType: dword; ValueName: "zmbv
 ; 12 = ff_wmv9.dll
 ; 15 = ff_liba52.dll
 ; 17 = ff_libdts.dll
-; 18 = ff_tremor.dll
 
 ; Audio formats to decode
 Root: HKCU; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "aac";        ValueData:  "8"; Components: ffdshow;     Tasks: audio\aac\libfaad2
@@ -166,7 +165,6 @@ Root: HKCU; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "qdm2
 Root: HKCU; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "rawa";       ValueData:  "4"; Components: ffdshow;     Tasks: audio\rawa
 Root: HKCU; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "truespeech"; ValueData:  "1"; Components: ffdshow;     Tasks: audio\truespeech
 Root: HKCU; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "tta";        ValueData:  "1"; Components: ffdshow;     Tasks: audio\tta
-Root: HKCU; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "vorbis";     ValueData: "18"; Components: ffdshow;     Tasks: audio\vorbis\tremor
 Root: HKCU; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "vorbis";     ValueData:  "1"; Components: ffdshow;     Tasks: audio\vorbis\libavcodec
 
 Root: HKLM; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "aac";        ValueData:  "8"; Components: ffdshow;     Tasks: audio\aac\libfaad2
@@ -196,7 +194,6 @@ Root: HKLM; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "qdm2
 Root: HKLM; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "rawa";       ValueData:  "4"; Components: ffdshow;     Tasks: audio\rawa
 Root: HKLM; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "truespeech"; ValueData:  "1"; Components: ffdshow;     Tasks: audio\truespeech
 Root: HKLM; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "tta";        ValueData:  "1"; Components: ffdshow;     Tasks: audio\tta
-Root: HKLM; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "vorbis";     ValueData: "18"; Components: ffdshow;     Tasks: audio\vorbis\tremor
 Root: HKLM; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "vorbis";     ValueData:  "1"; Components: ffdshow;     Tasks: audio\vorbis\libavcodec
 
 ; VFW decoding
@@ -217,3 +214,4 @@ Root: HKLM; Subkey: "{#= ff_reg_base}_vfw";   ValueType: dword; ValueName: "dx50
 Root: HKLM; Subkey: "{#= ff_reg_base}_vfw";   ValueType: dword; ValueName: "xvid";       ValueData:  "1"; Components: ffdshow\vfw; Tasks: video\xvid;                Flags: createvalueifdoesntexist
 Root: HKLM; Subkey: "{#= ff_reg_base}_vfw";   ValueType: dword; ValueName: "mp4v";       ValueData:  "1"; Components: ffdshow\vfw; Tasks: video\mpeg4;               Flags: createvalueifdoesntexist
 #endif
+

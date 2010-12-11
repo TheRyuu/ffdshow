@@ -1180,9 +1180,6 @@
     <ClCompile Include="src\codecs\TaudioCodecLibMAD.cpp">
       <Filter>codecs</Filter>
     </ClCompile>
-    <ClCompile Include="src\codecs\TaudioCodecTremor.cpp">
-      <Filter>codecs</Filter>
-    </ClCompile>
     <ClCompile Include="src\codecs\TaudioCodecUncompressed.cpp">
       <Filter>codecs</Filter>
     </ClCompile>
@@ -2466,9 +2463,6 @@
       <Filter>codecs</Filter>
     </ClInclude>
     <ClInclude Include="src\codecs\TaudioCodecLibMAD.h">
-      <Filter>codecs</Filter>
-    </ClInclude>
-    <ClInclude Include="src\codecs\TaudioCodecTremor.h">
       <Filter>codecs</Filter>
     </ClInclude>
     <ClInclude Include="src\codecs\TaudioCodecUncompressed.h">

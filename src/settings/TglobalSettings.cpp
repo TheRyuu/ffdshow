@@ -1148,7 +1148,7 @@ void TglobalSettingsDecAudio::load(void)
  fixMissing(qdm2      ,IDFF_MOVIE_LAVC);
  fixMissing(mace      ,IDFF_MOVIE_LAVC);
  fixMissing(truespeech,IDFF_MOVIE_LAVC);
- fixMissing(vorbis    ,IDFF_MOVIE_LAVC,IDFF_MOVIE_TREMOR);
+ fixMissing(vorbis    ,IDFF_MOVIE_LAVC);
  fixMissing(ra        ,IDFF_MOVIE_LAVC);
  fixMissing(imc       ,IDFF_MOVIE_LAVC);
  fixMissing(atrac3    ,IDFF_MOVIE_LAVC);
@@ -1214,12 +1214,6 @@ void TglobalSettingsDecAudio::load(void)
  FF_WAVE_FORMAT1_OP(WAVPACK,wavpack & rawmask,CODEC_ID_WAVPACK) \
  FF_WAVE_FORMAT_OP (VORBIS  ,vorbis & rawmask,c_vorbis) \
  FF_WAVE_FORMAT_OP (FFVORBIS,vorbis & rawmask,c_vorbis) \
- /*FF_WAVE_FORMAT1_OP(VORBIS1 ,vorbis& rawmask,CODEC_ID_TREMOR)*/ \
- /*FF_WAVE_FORMAT1_OP(VORBIS2 ,vorbis& rawmask,CODEC_ID_TREMOR)*/ \
- /*FF_WAVE_FORMAT1_OP(VORBIS3 ,vorbis& rawmask,CODEC_ID_TREMOR)*/ \
- /*FF_WAVE_FORMAT1_OP(VORBIS1P,vorbis& rawmask,CODEC_ID_TREMOR)*/ \
- /*FF_WAVE_FORMAT1_OP(VORBIS2P,vorbis& rawmask,CODEC_ID_TREMOR)*/ \
- /*FF_WAVE_FORMAT1_OP(VORBIS3P,vorbis& rawmask,CODEC_ID_TREMOR)*/ \
  FF_WAVE_FORMAT1_OP(COOK2  ,cook   & rawmask,CODEC_ID_COOK) \
  FF_WAVE_FORMAT1_OP(LPCM   ,lpcm   & rawmask,CODEC_ID_LPCM) \
  FF_WAVE_FORMAT1_OP(AVIS   ,avis   & rawmask,CODEC_ID_AVISYNTH) \
@@ -1341,7 +1335,6 @@ const CodecID TglobalSettingsDecAudio::c_vorbis[IDFF_MOVIE_MAX+1]=
  CODEC_ID_NONE,
  CODEC_ID_NONE,
  CODEC_ID_NONE,
- CODEC_ID_TREMOR
 };
 
 void TglobalSettingsDecAudio::getCodecsList(Tstrptrs &codecs) const

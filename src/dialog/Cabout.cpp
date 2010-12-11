@@ -31,7 +31,6 @@
 #include "TaudioCodecLibFAAD.h"
 #include "TaudioCodecLiba52.h"
 #include "TaudioCodecLibDTS.h"
-#include "TaudioCodecTremor.h"
 #include "TimgFilterTomsMoComp.h"
 #include "TimgFilterKernelDeint.h"
 #include "TaudioFilterResample.h"
@@ -188,7 +187,6 @@ const TversionsDlg::TversionInfo* TaboutPageDecAudio::fcsVersions(void)
    TaudioCodecLibFAAD::dllname,getVersion<TaudioCodecLibFAAD>,
    TaudioCodecLibMAD::dllname,getVersion<TaudioCodecLibMAD>,
    TaudioFilterResampleSRC::dllname,getVersion<TaudioFilterResampleSRC>,
-   TaudioCodecTremor::dllname,getVersion<TaudioCodecTremor>,
    Tavisynth_c::dllname,Tavisynth_c::getVersion,
    NULL
   };

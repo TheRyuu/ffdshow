@@ -14,8 +14,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ff_samplerate", "src\audioF
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ff_libdts", "src\codecs\libdts\ff_libdts_2008.vcproj", "{29432947-08F2-41AA-953F-47E45252DD57}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ff_tremor", "src\codecs\tremor\ff_tremor_2008.vcproj", "{E2FBCE81-39C0-4D44-B4C5-0D5348998BC4}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ff_unrar", "unrar\ff_unrar_2008.vcproj", "{82199D65-5E04-48FB-99B5-9396D55566AE}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ffavisynth", "ffavisynth\ffavisynth_2008.vcproj", "{9C87D880-7BB9-4F92-8AA6-B513298CDE82}"
@@ -105,14 +103,6 @@ Global
 		{29432947-08F2-41AA-953F-47E45252DD57}.Release|Win32.Build.0 = Release|Win32
 		{29432947-08F2-41AA-953F-47E45252DD57}.Release|x64.ActiveCfg = Release|x64
 		{29432947-08F2-41AA-953F-47E45252DD57}.Release|x64.Build.0 = Release|x64
-		{E2FBCE81-39C0-4D44-B4C5-0D5348998BC4}.Debug|Win32.ActiveCfg = Debug|Win32
-		{E2FBCE81-39C0-4D44-B4C5-0D5348998BC4}.Debug|Win32.Build.0 = Debug|Win32
-		{E2FBCE81-39C0-4D44-B4C5-0D5348998BC4}.Debug|x64.ActiveCfg = Debug|x64
-		{E2FBCE81-39C0-4D44-B4C5-0D5348998BC4}.Debug|x64.Build.0 = Debug|x64
-		{E2FBCE81-39C0-4D44-B4C5-0D5348998BC4}.Release|Win32.ActiveCfg = Release|Win32
-		{E2FBCE81-39C0-4D44-B4C5-0D5348998BC4}.Release|Win32.Build.0 = Release|Win32
-		{E2FBCE81-39C0-4D44-B4C5-0D5348998BC4}.Release|x64.ActiveCfg = Release|x64
-		{E2FBCE81-39C0-4D44-B4C5-0D5348998BC4}.Release|x64.Build.0 = Release|x64
 		{82199D65-5E04-48FB-99B5-9396D55566AE}.Debug|Win32.ActiveCfg = Debug|Win32
 		{82199D65-5E04-48FB-99B5-9396D55566AE}.Debug|Win32.Build.0 = Debug|Win32
 		{82199D65-5E04-48FB-99B5-9396D55566AE}.Debug|x64.ActiveCfg = Debug|x64

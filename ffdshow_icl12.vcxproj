@@ -1041,7 +1041,6 @@
     <ClCompile Include="src\codecs\TaudioCodecLibDTS.cpp" />
     <ClCompile Include="src\codecs\TaudioCodecLibFAAD.cpp" />
     <ClCompile Include="src\codecs\TaudioCodecLibMAD.cpp" />
-    <ClCompile Include="src\codecs\TaudioCodecTremor.cpp" />
     <ClCompile Include="src\codecs\TaudioCodecUncompressed.cpp" />
     <ClCompile Include="src\codecs\Tcodec.cpp" />
     <ClCompile Include="src\codecs\TrealAudioInfo.cpp" />
@@ -1515,7 +1514,6 @@
     <ClInclude Include="src\codecs\TaudioCodecLibDTS.h" />
     <ClInclude Include="src\codecs\TaudioCodecLibFAAD.h" />
     <ClInclude Include="src\codecs\TaudioCodecLibMAD.h" />
-    <ClInclude Include="src\codecs\TaudioCodecTremor.h" />
     <ClInclude Include="src\codecs\TaudioCodecUncompressed.h" />
     <ClInclude Include="src\codecs\Tcodec.h" />
     <ClInclude Include="src\codecs\TrealAudioInfo.h" />

@@ -36,7 +36,6 @@ projects/libraries that the tryouts depend resp. build upon:
           o libFAAD2
           o libmad
           o libmpeg2
-          o Tremor
     * msvidc and msrle decoders by Mike Melanson
     * Resizing and various audio/image filters from:
           o FFmpeg (libswscale)

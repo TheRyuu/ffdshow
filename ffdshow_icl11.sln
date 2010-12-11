@@ -10,8 +10,6 @@ Project("{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}") = "ff_samplerate", "src\audioF
 EndProject
 Project("{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}") = "ff_libdts", "src\codecs\libdts\ff_libdts_icl11.icproj", "{AF81C4D7-73A0-4547-A18A-D94222584CA5}"
 EndProject
-Project("{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}") = "ff_tremor", "src\codecs\tremor\ff_tremor_icl11.icproj", "{0B4D4596-3C85-46D0-BCDF-59AA6581CF41}"
-EndProject
 Project("{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}") = "ff_unrar", "unrar\ff_unrar_icl11.icproj", "{9C78112E-B79D-4AE6-859D-F71383126B4E}"
 EndProject
 Project("{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}") = "ff_libfaad2", "src\codecs\faad\ff_libfaad2_icl11.icproj", "{3DFCD606-291B-4765-9913-A6EC1D83F33F}"
@@ -87,14 +85,6 @@ Global
 		{AF81C4D7-73A0-4547-A18A-D94222584CA5}.Release|Win32.Build.0 = Release|Win32
 		{AF81C4D7-73A0-4547-A18A-D94222584CA5}.Release|x64.ActiveCfg = Release|x64
 		{AF81C4D7-73A0-4547-A18A-D94222584CA5}.Release|x64.Build.0 = Release|x64
-		{0B4D4596-3C85-46D0-BCDF-59AA6581CF41}.Debug|Win32.ActiveCfg = Debug|Win32
-		{0B4D4596-3C85-46D0-BCDF-59AA6581CF41}.Debug|Win32.Build.0 = Debug|Win32
-		{0B4D4596-3C85-46D0-BCDF-59AA6581CF41}.Debug|x64.ActiveCfg = Debug|x64
-		{0B4D4596-3C85-46D0-BCDF-59AA6581CF41}.Debug|x64.Build.0 = Debug|x64
-		{0B4D4596-3C85-46D0-BCDF-59AA6581CF41}.Release|Win32.ActiveCfg = Release|Win32
-		{0B4D4596-3C85-46D0-BCDF-59AA6581CF41}.Release|Win32.Build.0 = Release|Win32
-		{0B4D4596-3C85-46D0-BCDF-59AA6581CF41}.Release|x64.ActiveCfg = Release|x64
-		{0B4D4596-3C85-46D0-BCDF-59AA6581CF41}.Release|x64.Build.0 = Release|x64
 		{9C78112E-B79D-4AE6-859D-F71383126B4E}.Debug|Win32.ActiveCfg = Debug|Win32
 		{9C78112E-B79D-4AE6-859D-F71383126B4E}.Debug|Win32.Build.0 = Debug|Win32
 		{9C78112E-B79D-4AE6-859D-F71383126B4E}.Debug|x64.ActiveCfg = Debug|x64
@@ -210,10 +200,6 @@ Global
 		{29432947-08F2-41AA-953F-47E45252DD57}.Debug|x64.ActiveCfg = Debug|x64
 		{29432947-08F2-41AA-953F-47E45252DD57}.Release|Win32.ActiveCfg = Release|Win32
 		{29432947-08F2-41AA-953F-47E45252DD57}.Release|x64.ActiveCfg = Release|x64
-		{E2FBCE81-39C0-4D44-B4C5-0D5348998BC4}.Debug|Win32.ActiveCfg = Debug|Win32
-		{E2FBCE81-39C0-4D44-B4C5-0D5348998BC4}.Debug|x64.ActiveCfg = Debug|x64
-		{E2FBCE81-39C0-4D44-B4C5-0D5348998BC4}.Release|Win32.ActiveCfg = Release|Win32
-		{E2FBCE81-39C0-4D44-B4C5-0D5348998BC4}.Release|x64.ActiveCfg = Release|x64
 		{82199D65-5E04-48FB-99B5-9396D55566AE}.Debug|Win32.ActiveCfg = Debug|Win32
 		{82199D65-5E04-48FB-99B5-9396D55566AE}.Debug|x64.ActiveCfg = Debug|x64
 		{82199D65-5E04-48FB-99B5-9396D55566AE}.Release|Win32.ActiveCfg = Release|Win32

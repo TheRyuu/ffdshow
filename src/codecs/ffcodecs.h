@@ -201,8 +201,6 @@
  \
  CODEC_OP(CODEC_ID_LIBDTS        ,1500,"libdts") \
  \
- CODEC_OP(CODEC_ID_TREMOR        ,1600,"tremor") \
- \
  CODEC_OP(CODEC_ID_X264          ,1800,"x264") \
  CODEC_OP(CODEC_ID_X264_LOSSLESS ,1900,"x264 lossless") \
  \

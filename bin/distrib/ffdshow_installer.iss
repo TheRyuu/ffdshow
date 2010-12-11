@@ -342,7 +342,6 @@ Name: "audio\mp2\libmad";        Description: "libmad";                         
 Name: "audio\mp2\libavcodec";    Description: "libavcodec";                       Components: ffdshow; Flags: unchecked exclusive
 Name: "audio\vorbis";            Description: "Vorbis";                           Components: ffdshow
 Name: "audio\vorbis\libavcodec"; Description: "libavcodec";                       Components: ffdshow; Flags: exclusive
-Name: "audio\vorbis\tremor";     Description: "tremor";                           Components: ffdshow; Flags: unchecked exclusive
 Name: "audio\flac";              Description: "FLAC";                             Components: ffdshow
 Name: "audio\tta";               Description: "True Audio";                       Components: ffdshow
 Name: "audio\amr";               Description: "AMR";                              Components: ffdshow
@@ -392,7 +391,6 @@ Source: "{#= bindir}\ff_liba52.dll";              DestDir: "{app}";             
 Source: "{#= bindir}\ff_libdts.dll";              DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
 Source: "{#= bindir}\ff_libfaad2.dll";            DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
 Source: "{#= bindir}\ff_libmad.dll";              DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
-Source: "{#= bindir}\ff_tremor.dll";              DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
 Source: "{#= bindir}\ff_unrar.dll";               DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
 Source: "{#= bindir}\ff_samplerate.dll";          DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
 
@@ -477,6 +475,7 @@ Type: files; Name: "{app}\languages\ffdshow.1041.jp";              Components: f
 Type: files; Name: "{app}\languages\ffdshow.1053.se";              Components: ffdshow
 Type: files; Name: "{app}\libavcodec.dll";                         Components: ffdshow
 Type: files; Name: "{app}\libmplayer.dll";                         Components: ffdshow
+Type: files; Name: "{app}\ff_tremor.dll";                         Components: ffdshow
 
 [Registry]
 #if is64bit
@@ -1223,3 +1222,4 @@ begin
   end
 end;
 #endif
+
