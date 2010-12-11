@@ -31,85 +31,87 @@
 //========================================== TaudioFilters ================================================
 TaudioFilters::TaudioFilters(IffdshowBase *Ideci,IprocAudioSink *Isink):Tfilters(Ideci),sink(Isink)
 {
- deciA=deci;
- output=getFilter<TaudioFilterOutput>();
- postgainCfg=NULL;postgainVol=NULL;
+    deciA=deci;
+    output=getFilter<TaudioFilterOutput>();
+    postgainCfg=NULL;
+    postgainVol=NULL;
 }
 TaudioFilters::~TaudioFilters()
 {
- if (postgainCfg) delete postgainCfg;
- if (postgainVol)
-  {
-   postgainVol->done();
-   delete postgainVol;
-  }
+    if (postgainCfg) {
+        delete postgainCfg;
+    }
+    if (postgainVol) {
+        postgainVol->done();
+        delete postgainVol;
+    }
 }
 
 HRESULT TaudioFilters::process(const TsampleFormat &Ifmt,void *samples,size_t numsamples,const TpresetAudio *cfg,float postgain)
 {
- if (postgain!=1.0)
-  {
-   if (!postgainVol)
-    {
-     postgainVol=new TaudioFilterVolume(deci,this);
-     postgainCfg=new TvolumeSettings(new TintStrColl);
-     postgainCfg->reset();
-     postgainCfg->normalize=0;
-     postgainCfg->is=1;
+    if (postgain!=1.0) {
+        if (!postgainVol) {
+            postgainVol=new TaudioFilterVolume(deci,this);
+            postgainCfg=new TvolumeSettings(new TintStrColl);
+            postgainCfg->reset();
+            postgainCfg->normalize=0;
+            postgainCfg->is=1;
+        }
+        postgainCfg->vol=int(postgain*100);
     }
-   postgainCfg->vol=int(postgain*100);
-  }
 
- deci->lock(IDFF_lockPresetPtr);
- if (queueChanged)
-  {
-   makeQueue(cfg,queue);
-   if (postgainVol) queue.add(postgainVol,postgainCfg);
-   InterlockedDecrement((LONG*)&queueChanged);
-   deciD->sendOnNewFiltersMsg();
-  }
- queue.copyCfg(cfg);
- deci->unlock(IDFF_lockPresetPtr);
+    deci->lock(IDFF_lockPresetPtr);
+    if (queueChanged) {
+        makeQueue(cfg,queue);
+        if (postgainVol) {
+            queue.add(postgainVol,postgainCfg);
+        }
+        InterlockedDecrement((LONG*)&queueChanged);
+        deciD->sendOnNewFiltersMsg();
+    }
+    queue.copyCfg(cfg);
+    deci->unlock(IDFF_lockPresetPtr);
 
- preferredsfs=cfg->preferredsfs;
+    preferredsfs=cfg->preferredsfs;
 
- TsampleFormat fmt=Ifmt;
- return deliverSamples(queue.begin(),fmt,samples,numsamples);
+    TsampleFormat fmt=Ifmt;
+    return deliverSamples(queue.begin(),fmt,samples,numsamples);
 }
 
 HRESULT TaudioFilters::deliverSamples(TfilterQueue::iterator it,TsampleFormat &fmt,void *samples,size_t numsamples)
 {
- if (it==queue.end())
-  return sink->deliverProcessedSample(samples,numsamples,fmt);
- else
-  {
-   TaudioFilter *filter=(TaudioFilter*)it->filter;
-   const TfilterSettingsAudio *cfg=(const TfilterSettingsAudio*)it->getCfg();
-   if (samples && numsamples)
-    return filter->process(it,fmt,samples,numsamples,cfg);
-   else
-    return filter->flush(it,fmt,cfg);
-  }
+    if (it==queue.end()) {
+        return sink->deliverProcessedSample(samples,numsamples,fmt);
+    } else {
+        TaudioFilter *filter=(TaudioFilter*)it->filter;
+        const TfilterSettingsAudio *cfg=(const TfilterSettingsAudio*)it->getCfg();
+        if (samples && numsamples) {
+            return filter->process(it,fmt,samples,numsamples,cfg);
+        } else {
+            return filter->flush(it,fmt,cfg);
+        }
+    }
 }
 
 void TaudioFilters::getOutputFmt(TsampleFormat &fmt,const TpresetAudio *cfg)
 {
- TfilterQueue queue(true);
- makeQueue(cfg,queue);
- queue.copyCfg(cfg);
- preferredsfs=cfg->preferredsfs;
- for (TfilterQueue::iterator f=queue.begin();f!=queue.end();f++)
-  ((TaudioFilter*)f->filter)->getOutputFmt(fmt,(const TfilterSettingsAudio*)f->getCfg());
+    TfilterQueue queue(true);
+    makeQueue(cfg,queue);
+    queue.copyCfg(cfg);
+    preferredsfs=cfg->preferredsfs;
+    for (TfilterQueue::iterator f=queue.begin(); f!=queue.end(); f++) {
+        ((TaudioFilter*)f->filter)->getOutputFmt(fmt,(const TfilterSettingsAudio*)f->getCfg());
+    }
 }
 
 //========================================== TaudioFiltersPlayer ==========================================
 TaudioFiltersPlayer::TaudioFiltersPlayer(IffdshowBase *Ideci,IprocAudioSink *Isink,TpresetAudio *presetSettings):TaudioFilters(Ideci,Isink)
 {
- deci->getGlobalSettings((TglobalSettingsBase**)&globalCfg);
- outsfs=presetSettings->output->outsfs;
+    deci->getGlobalSettings((TglobalSettingsBase**)&globalCfg);
+    outsfs=presetSettings->output->outsfs;
 }
 
 void TaudioFiltersPlayer::makeQueue(const Tpreset *cfg,TfilterQueue &queue)
 {
- TaudioFilters::makeQueue(cfg,queue);
+    TaudioFilters::makeQueue(cfg,queue);
 }

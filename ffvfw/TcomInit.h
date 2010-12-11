@@ -24,32 +24,34 @@
 #include "boost/thread.hpp"
 #pragma warning (pop)
 
-class TcomInit {
+class TcomInit
+{
     std::map<DWORD,HRESULT> CoInitializedThreads;
     boost::mutex mutex;
 
 public:
-    void init()
-    {
+    void init() {
         DPRINTF(_l("TcomInit::init"));
         boost::unique_lock<boost::mutex> lock(mutex);
         DWORD currentthread= GetCurrentThreadId();
         std::map<DWORD,HRESULT>::iterator i= CoInitializedThreads.find(currentthread);
         if(i==CoInitializedThreads.end()
-          || FAILED(CoInitializedThreads[currentthread]))
+                || FAILED(CoInitializedThreads[currentthread])) {
             CoInitializedThreads[currentthread]= CoInitialize(NULL);
+        }
     }
 
-    void uninit()
-    {
+    void uninit() {
         DPRINTF(_l("TcomInit::init"));
         boost::unique_lock<boost::mutex> lock(mutex);
         DWORD currentthread= GetCurrentThreadId();
         std::map<DWORD,HRESULT>::iterator i= CoInitializedThreads.find(currentthread);
-        if(i == CoInitializedThreads.end())
+        if(i == CoInitializedThreads.end()) {
             return;
-        if (SUCCEEDED(CoInitializedThreads[currentthread]))
+        }
+        if (SUCCEEDED(CoInitializedThreads[currentthread])) {
             CoUninitialize();
+        }
         CoInitializedThreads.erase(i);
     }
 };

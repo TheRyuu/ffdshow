@@ -11,7 +11,7 @@
 #define VERSION_MSACM       MAKE_ACM_VERSION(3, 50, 0)
 
 //#if (WINVER >= 0x0400)
- #define VERSION_ACM_DRIVER  MAKE_ACM_VERSION(4,  0, 0)
+#define VERSION_ACM_DRIVER  MAKE_ACM_VERSION(4,  0, 0)
 //#else
 // #define VERSION_ACM_DRIVER  MAKE_ACM_VERSION(3, 51, 0)
 //#endif
@@ -58,8 +58,7 @@ typedef HACMSTREAM     FAR *LPHACMSTREAM;
 #define ACMDM_STREAM_PREPARE            (ACMDM_BASE + 81)
 #define ACMDM_STREAM_UNPREPARE          (ACMDM_BASE + 82)
 
-typedef struct tACMDRVFORMATSUGGEST
-{
+typedef struct tACMDRVFORMATSUGGEST {
     DWORD               cbStruct;           // sizeof(ACMDRVFORMATSUGGEST)
     DWORD               fdwSuggest;         // Suggest flags
     LPWAVEFORMATEX      pwfxSrc;            // Source Format
@@ -69,8 +68,7 @@ typedef struct tACMDRVFORMATSUGGEST
 
 } ACMDRVFORMATSUGGEST, *PACMDRVFORMATSUGGEST, FAR *LPACMDRVFORMATSUGGEST;
 
-typedef struct tACMDRVSTREAMINSTANCE
-{
+typedef struct tACMDRVSTREAMINSTANCE {
     DWORD               cbStruct;
     LPWAVEFORMATEX      pwfxSrc;
     LPWAVEFORMATEX      pwfxDst;
@@ -84,8 +82,7 @@ typedef struct tACMDRVSTREAMINSTANCE
 
 } ACMDRVSTREAMINSTANCE, *PACMDRVSTREAMINSTANCE, FAR *LPACMDRVSTREAMINSTANCE;
 
-typedef struct tACMDRVSTREAMSIZE
-{
+typedef struct tACMDRVSTREAMSIZE {
     DWORD               cbStruct;
     DWORD               fdwSize;
     DWORD               cbSrcLength;
@@ -94,8 +91,7 @@ typedef struct tACMDRVSTREAMSIZE
 } ACMDRVSTREAMSIZE, *PACMDRVSTREAMSIZE, FAR *LPACMDRVSTREAMSIZE;
 
 typedef struct tACMDRVSTREAMHEADER FAR *LPACMDRVSTREAMHEADER;
-typedef struct tACMDRVSTREAMHEADER
-{
+typedef struct tACMDRVSTREAMHEADER {
     DWORD                   cbStruct;
     DWORD                   fdwStatus;
     DWORD_PTR               dwUser;

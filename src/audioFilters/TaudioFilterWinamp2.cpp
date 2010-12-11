@@ -23,63 +23,62 @@
 
 TaudioFilterWinamp2::TaudioFilterWinamp2(IffdshowBase *Ideci,Tfilters *Iparent):TaudioFilter(Ideci,Iparent)
 {
- old.flnm[0]=old.modulename[0]='\0';
- winamp2=NULL;filter=NULL;
- old_nchannels=0;
+    old.flnm[0]=old.modulename[0]='\0';
+    winamp2=NULL;
+    filter=NULL;
+    old_nchannels=0;
 }
 void TaudioFilterWinamp2::done(void)
 {
- if (filter)
-  {
-   filter->done();
-   filter=NULL;
-  }
+    if (filter) {
+        filter->done();
+        filter=NULL;
+    }
 }
 
 bool TaudioFilterWinamp2::is(const TsampleFormat &fmt,const TfilterSettingsAudio *cfg)
 {
- return super::is(fmt,cfg);
+    return super::is(fmt,cfg);
 }
 
 HRESULT TaudioFilterWinamp2::process(TfilterQueue::iterator it,TsampleFormat &fmt,void *samples0,size_t numsamples,const TfilterSettingsAudio *cfg0)
 {
- if (!is(fmt,cfg0))
-  {
-   if (filter)
-    {
-     done();
-     old.flnm[0]=old.modulename[0]='\0';
+    if (!is(fmt,cfg0)) {
+        if (filter) {
+            done();
+            old.flnm[0]=old.modulename[0]='\0';
+        }
+        return parent->deliverSamples(++it,fmt,samples0,numsamples);
     }
-   return parent->deliverSamples(++it,fmt,samples0,numsamples);
-  }
 
- const Twinamp2settings *cfg=(const Twinamp2settings*)cfg0;
- if (!cfg->equal(old))
-  {
-   done();
-   old=*cfg;
-   deciA->getWinamp2(&winamp2);
-   filter=winamp2->getFilter(cfg,fmt.nchannels);
-   if (filter) filter->init();
-  }
-
- if (old_nchannels!=fmt.nchannels)
-  {
-   old_nchannels=fmt.nchannels;
-   if (filter && fmt.nchannels>2 && !filter->isMultichannelAllowed(cfg->allowMultichannelOnlyIn))
-    done();
-   if (!filter)
-    {
-     deciA->getWinamp2(&winamp2);
-     filter=winamp2->getFilter(cfg,fmt.nchannels);
-     if (filter) filter->init();
+    const Twinamp2settings *cfg=(const Twinamp2settings*)cfg0;
+    if (!cfg->equal(old)) {
+        done();
+        old=*cfg;
+        deciA->getWinamp2(&winamp2);
+        filter=winamp2->getFilter(cfg,fmt.nchannels);
+        if (filter) {
+            filter->init();
+        }
     }
-  }
 
- if (filter)
-  {
-   int16_t *samples1=(int16_t*)(samples0=init(cfg,fmt,samples0,numsamples,numsamples*2));
-   numsamples=filter->process(samples1,numsamples,16,fmt.nchannels,fmt.freq);
-  }
- return parent->deliverSamples(++it,fmt,samples0,numsamples);
+    if (old_nchannels!=fmt.nchannels) {
+        old_nchannels=fmt.nchannels;
+        if (filter && fmt.nchannels>2 && !filter->isMultichannelAllowed(cfg->allowMultichannelOnlyIn)) {
+            done();
+        }
+        if (!filter) {
+            deciA->getWinamp2(&winamp2);
+            filter=winamp2->getFilter(cfg,fmt.nchannels);
+            if (filter) {
+                filter->init();
+            }
+        }
+    }
+
+    if (filter) {
+        int16_t *samples1=(int16_t*)(samples0=init(cfg,fmt,samples0,numsamples,numsamples*2));
+        numsamples=filter->process(samples1,numsamples,16,fmt.nchannels,fmt.freq);
+    }
+    return parent->deliverSamples(++it,fmt,samples0,numsamples);
 }
