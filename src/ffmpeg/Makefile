@@ -321,8 +321,8 @@ else
     CFLAGS+=-DARCH_X86_32
 endif
 
-SLIB=../../bin/libavcodec.dll
-DEF=libavcodec.def
+SLIB=../../bin/ffmpeg.dll
+DEF=ffmpeg.def
 
 include ../makefile_c.inc
 

@@ -3,7 +3,7 @@ ALLDLLS=LIBMPEG2 LIBMAD LIBFAAD2 X264 XVIDCORE LIBDTS SAMPLERATE TREMOR \
 
 FFDLLS=FFMPEG FFMPEGMT X264 XVIDCORE
 
-ALLS=../bin/libavcodec.dll \
+ALLS=../bin/ffmpeg.dll \
      ../bin/ffmpegmt.dll \
      ../bin/libmpeg2_ff.dll \
      ../bin/ff_libmad.dll \
@@ -24,7 +24,7 @@ FF: $(FFDLLS)
 
 ALL: $(ALLDLLS)
 
-../bin/libavcodec.dll:
+../bin/ffmpeg.dll:
 	$(MAKE) -C ffmpeg
 FFMPEG:
 	$(MAKE) -C ffmpeg

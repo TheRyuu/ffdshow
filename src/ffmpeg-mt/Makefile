@@ -89,7 +89,7 @@ else
 endif
 
 SLIB=../../bin/ffmpegmt.dll
-DEF=libavcodec.def
+DEF=ffmpegmt.def
 
 include ../makefile_c.inc
 

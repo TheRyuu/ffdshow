@@ -75,7 +75,7 @@ Tlibavcodec::Tlibavcodec(const Tconfig *config):refcount(0)
  dll=new Tdll(_l("ffmpegmt.dll"),config);
  dec_only=false;
 #else
- dll=new Tdll(_l("libavcodec.dll"),config);
+ dll=new Tdll(_l("ffmpeg.dll"),config);
  if (!dll->ok)
   {
    delete dll;
@@ -336,7 +336,7 @@ bool Tlibavcodec::getVersion(const Tconfig *config,ffstring &vers,ffstring &lice
 #if COMPILE_AS_FFMPEG_MT
  Tdll *dl=new Tdll(_l("ffmpegmt.dll"),config);
 #else
- Tdll *dl=new Tdll(_l("libavcodec.dll"),config);
+ Tdll *dl=new Tdll(_l("ffmpeg.dll"),config);
  if (!dl->ok)
   {
    delete dl;
@@ -369,7 +369,7 @@ bool Tlibavcodec::check(const Tconfig *config)
 #if COMPILE_AS_FFMPEG_MT
  return Tdll::check(_l("ffmpegmt.dll"),config);
 #else
- return Tdll::check(_l("libavcodec.dll"),config) || Tdll::check(_l("libavcodec_dec.dll"),config);
+ return Tdll::check(_l("ffmpeg.dll"),config) || Tdll::check(_l("libavcodec_dec.dll"),config);
 #endif
 }
 

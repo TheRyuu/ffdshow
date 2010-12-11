@@ -37,13 +37,13 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
   {
    case DLL_PROCESS_ATTACH:
     count++;
-    //snprintf(pomS,40,"libavcodec: %i %i\n",count,hInstance);OutputDebugString(pomS);
+    //snprintf(pomS,40,"ffmpeg: %i %i\n",count,hInstance);OutputDebugString(pomS);
     DisableThreadLibraryCalls(hInstance);
     InitializeCriticalSection( &g_csStaticDataLock );
     break;
    case DLL_PROCESS_DETACH:
     count--;
-    //snprintf(pomS,40,"libavcodec: %i %i\n",count,hInstance);OutputDebugString(pomS);
+    //snprintf(pomS,40,"ffmpeg: %i %i\n",count,hInstance);OutputDebugString(pomS);
     if (count<=0)
      av_free_static();
     DeleteCriticalSection( &g_csStaticDataLock );
