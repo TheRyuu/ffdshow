@@ -475,7 +475,7 @@ Type: files; Name: "{app}\languages\ffdshow.1041.jp";              Components: f
 Type: files; Name: "{app}\languages\ffdshow.1053.se";              Components: ffdshow
 Type: files; Name: "{app}\libavcodec.dll";                         Components: ffdshow
 Type: files; Name: "{app}\libmplayer.dll";                         Components: ffdshow
-Type: files; Name: "{app}\ff_tremor.dll";                         Components: ffdshow
+Type: files; Name: "{app}\ff_tremor.dll";                          Components: ffdshow
 
 [Registry]
 #if is64bit
@@ -1222,4 +1222,3 @@ begin
   end
 end;
 #endif
-

@@ -2,7 +2,6 @@ ff_kernelDeint.dll
 TomsMoComp_ff.dll
 ff_unrar.dll
 ff_samplerate.dll
-ff_tremor.dll
 ff_wmv9.dll
 ff_x264.dll
 FLT_ffdshow.dll
