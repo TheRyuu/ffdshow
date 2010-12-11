@@ -9,90 +9,101 @@ struct Rational;
 class TfontManager;
 struct TprintPrefs;
 struct Ttransform {
-  // Create different t1 and t2 for every effect,
-  // as there can be multiple /t tags with different
-  // times and style overriders 
-  bool isTransform;
-  bool isAlpha;
-  int alpha;
-  REFERENCE_TIME alphaT1,alphaT2;
-  double accel;  
+    // Create different t1 and t2 for every effect,
+    // as there can be multiple /t tags with different
+    // times and style overriders
+    bool isTransform;
+    bool isAlpha;
+    int alpha;
+    REFERENCE_TIME alphaT1,alphaT2;
+    double accel;
 };
 
 #define DEFAULT_SECONDARY_COLOR 0x50FFFF // Yellow color for default
 
-struct TSubtitleProps
-{
- TSubtitleProps(void) {reset();}
- TSubtitleProps(unsigned int IrefResX,unsigned int IrefResY, int IwrapStyle, int IscaleBorderAndShadow) {reset();refResX=IrefResX;refResY=IrefResY;wrapStyle=IwrapStyle;scaleBorderAndShadow=IscaleBorderAndShadow;}
- TSubtitleProps(bool Iitalic, bool Iunderline) {reset();italic=Iitalic;underline=Iunderline;}
- int bold;
- bool italic,underline,strikeout,blur;
- bool isColor;COLORREF color,SecondaryColour, TertiaryColour, OutlineColour, ShadowColour;
- int colorA,SecondaryColourA, TertiaryColourA, OutlineColourA, ShadowColourA;
- unsigned int refResX,refResY;
- bool isPos,isMove,isOrg;
- Ttransform transform;
- unsigned int transformT1,transformT2;
- CPoint pos,pos2; // move from pos to pos2
- CPoint org;
- unsigned int moveT1,moveT2;
- int wrapStyle; // -1 = default
- int scaleBorderAndShadow;
- int size;
- int scaleX,scaleY; //in percents, -1 = default
- char_t fontname[LF_FACESIZE];
- int encoding; // -1 = default
- int version;  // -1 = default
- int extendedTags; // 1 = default
- double spacing;  //INT_MIN = default
- double x; // Calculated x position
- double y; // Calculated y position
- int lineID;
- void reset(void);
- void toLOGFONT(LOGFONT &lf, const TfontSettings &fontSettings, unsigned int dx, unsigned int dy, unsigned int clipdy, const Rational& sar, unsigned int gdi_font_scale) const;
+struct TSubtitleProps {
+    TSubtitleProps(void) {
+        reset();
+    }
+    TSubtitleProps(unsigned int IrefResX,unsigned int IrefResY, int IwrapStyle, int IscaleBorderAndShadow) {
+        reset();
+        refResX=IrefResX;
+        refResY=IrefResY;
+        wrapStyle=IwrapStyle;
+        scaleBorderAndShadow=IscaleBorderAndShadow;
+    }
+    TSubtitleProps(bool Iitalic, bool Iunderline) {
+        reset();
+        italic=Iitalic;
+        underline=Iunderline;
+    }
+    int bold;
+    bool italic,underline,strikeout,blur;
+    bool isColor;
+    COLORREF color,SecondaryColour, TertiaryColour, OutlineColour, ShadowColour;
+    int colorA,SecondaryColourA, TertiaryColourA, OutlineColourA, ShadowColourA;
+    unsigned int refResX,refResY;
+    bool isPos,isMove,isOrg;
+    Ttransform transform;
+    unsigned int transformT1,transformT2;
+    CPoint pos,pos2; // move from pos to pos2
+    CPoint org;
+    unsigned int moveT1,moveT2;
+    int wrapStyle; // -1 = default
+    int scaleBorderAndShadow;
+    int size;
+    int scaleX,scaleY; //in percents, -1 = default
+    char_t fontname[LF_FACESIZE];
+    int encoding; // -1 = default
+    int version;  // -1 = default
+    int extendedTags; // 1 = default
+    double spacing;  //INT_MIN = default
+    double x; // Calculated x position
+    double y; // Calculated y position
+    int lineID;
+    void reset(void);
+    void toLOGFONT(LOGFONT &lf, const TfontSettings &fontSettings, unsigned int dx, unsigned int dy, unsigned int clipdy, const Rational& sar, unsigned int gdi_font_scale) const;
 
- // Alignment. This sets how text is "justified" within the Left/Right onscreen margins,
- // and also the vertical placing. Values may be 1=Left, 2=Centered, 3=Right.
- // Add 4 to the value for a "Toptitle". Add 8 to the value for a "Midtitle".
- // eg. 5 = left-justified toptitle]
- // -1 = default(center)
- int alignment;
+    // Alignment. This sets how text is "justified" within the Left/Right onscreen margins,
+    // and also the vertical placing. Values may be 1=Left, 2=Centered, 3=Right.
+    // Add 4 to the value for a "Toptitle". Add 8 to the value for a "Midtitle".
+    // eg. 5 = left-justified toptitle]
+    // -1 = default(center)
+    int alignment;
 
- int marginR,marginL,marginV,marginTop,marginBottom; // -1 = default
- double angleX; // 0 = default
- double angleY; // 0 = default
- double angleZ; // 0 = default
- int borderStyle; // -1 = default
- double outlineWidth,shadowDepth; // -1 = default
- int layer; // 0 = default
- int get_spacing(unsigned int dy, unsigned int clipdy, unsigned int gdi_font_scale) const;
- int get_marginR(unsigned int screenWidth,unsigned int lineWidth=0) const;
- int get_marginL(unsigned int screenWidth,unsigned int lineWidth=0) const;
- int get_marginTop(unsigned int screenHeight) const;
- int get_marginBottom(unsigned int screenHeight) const;
- int get_xscale(int Ixscale,const Rational& sar,int aspectAuto,int fontSettingsOverride) const;
- int get_yscale(int Iyscale,const Rational& sar,int aspectAuto,int fontSettingsOverride) const;
- int get_movedistanceV(unsigned int screenHeight) const;
- int get_movedistanceH(unsigned int screenWidth) const;
- int get_maxWidth(unsigned int screenWidth, int textBorderLR, int subFormat, IffdshowBase *deci) const;
- REFERENCE_TIME get_moveStart(void) const;
- REFERENCE_TIME get_moveStop(void) const;
- static int alignASS2SSA(int align);
- int tmpFadT1,tmpFadT2;
- int isFad;
- int fadeA1,fadeA2,fadeA3;
- bool karaokeNewWord; // true if the word is top of karaoke sequence.
- REFERENCE_TIME tStart,tStop;
- REFERENCE_TIME fadeT1,fadeT2,fadeT3,fadeT4;
- REFERENCE_TIME karaokeDuration,karaokeStart;
- enum
-  {
-   KARAOKE_NONE,
-   KARAOKE_k,
-   KARAOKE_kf,
-   KARAOKE_ko
-  } karaokeMode;
+    int marginR,marginL,marginV,marginTop,marginBottom; // -1 = default
+    double angleX; // 0 = default
+    double angleY; // 0 = default
+    double angleZ; // 0 = default
+    int borderStyle; // -1 = default
+    double outlineWidth,shadowDepth; // -1 = default
+    int layer; // 0 = default
+    int get_spacing(unsigned int dy, unsigned int clipdy, unsigned int gdi_font_scale) const;
+    int get_marginR(unsigned int screenWidth,unsigned int lineWidth=0) const;
+    int get_marginL(unsigned int screenWidth,unsigned int lineWidth=0) const;
+    int get_marginTop(unsigned int screenHeight) const;
+    int get_marginBottom(unsigned int screenHeight) const;
+    int get_xscale(int Ixscale,const Rational& sar,int aspectAuto,int fontSettingsOverride) const;
+    int get_yscale(int Iyscale,const Rational& sar,int aspectAuto,int fontSettingsOverride) const;
+    int get_movedistanceV(unsigned int screenHeight) const;
+    int get_movedistanceH(unsigned int screenWidth) const;
+    int get_maxWidth(unsigned int screenWidth, int textBorderLR, int subFormat, IffdshowBase *deci) const;
+    REFERENCE_TIME get_moveStart(void) const;
+    REFERENCE_TIME get_moveStop(void) const;
+    static int alignASS2SSA(int align);
+    int tmpFadT1,tmpFadT2;
+    int isFad;
+    int fadeA1,fadeA2,fadeA3;
+    bool karaokeNewWord; // true if the word is top of karaoke sequence.
+    REFERENCE_TIME tStart,tStop;
+    REFERENCE_TIME fadeT1,fadeT2,fadeT3,fadeT4;
+    REFERENCE_TIME karaokeDuration,karaokeStart;
+    enum {
+        KARAOKE_NONE,
+        KARAOKE_k,
+        KARAOKE_kf,
+        KARAOKE_ko
+    } karaokeMode;
 };
 
 #endif

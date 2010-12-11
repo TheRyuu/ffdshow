@@ -29,57 +29,61 @@
 
 TsubreaderVobsub::TsubreaderVobsub(Tstream &f,const char_t *flnm,IffdshowBase *Ideci,Tspudec* *spuPtr):spu(NULL),deci(Ideci)
 {
- char_t flnm2[MAX_PATH];
- if (flnm)
-  {
-   char_t dsk[MAX_PATH],dir[MAX_PATH],name[MAX_PATH];
-   _splitpath_s(flnm,dsk,MAX_PATH,dir,MAX_PATH,name,MAX_PATH,NULL,0);
-   _makepath_s(flnm2,MAX_PATH,dsk,dir,name,NULL);
-  }
- else
-  flnm2[0]='\0';
- vobsub=new Tvobsub(f,flnm2,NULL,0,&spu,deci);
- if (spuPtr) *spuPtr=spu;
- if (deciV=deci)
-  {
-   const char_t **langs=(const char_t**)calloc(vobsub->spu_streams_size+1,sizeof(const char_t*));
-   for (unsigned int i=0;i<vobsub->spu_streams_size;i++)
-    langs[i]=vobsub->spu_streams[i].altid?vobsub->spu_streams[i].altid:(vobsub->spu_streams[i].id?TsubtitlesSettings::getLangDescr(vobsub->spu_streams[i].id):_l(""));
-   deciV->fillSubtitleLanguages(langs);
-   free(langs);
-  }
+    char_t flnm2[MAX_PATH];
+    if (flnm) {
+        char_t dsk[MAX_PATH],dir[MAX_PATH],name[MAX_PATH];
+        _splitpath_s(flnm,dsk,MAX_PATH,dir,MAX_PATH,name,MAX_PATH,NULL,0);
+        _makepath_s(flnm2,MAX_PATH,dsk,dir,name,NULL);
+    } else {
+        flnm2[0]='\0';
+    }
+    vobsub=new Tvobsub(f,flnm2,NULL,0,&spu,deci);
+    if (spuPtr) {
+        *spuPtr=spu;
+    }
+    if (deciV=deci) {
+        const char_t **langs=(const char_t**)calloc(vobsub->spu_streams_size+1,sizeof(const char_t*));
+        for (unsigned int i=0; i<vobsub->spu_streams_size; i++) {
+            langs[i]=vobsub->spu_streams[i].altid?vobsub->spu_streams[i].altid:(vobsub->spu_streams[i].id?TsubtitlesSettings::getLangDescr(vobsub->spu_streams[i].id):_l(""));
+        }
+        deciV->fillSubtitleLanguages(langs);
+        free(langs);
+    }
 }
 TsubreaderVobsub::~TsubreaderVobsub()
 {
- if (deciV)
-  {
-   static const char_t *langs[]={NULL};
-   deciV->fillSubtitleLanguages(langs);
-  }
- delete vobsub;
- if (spu) delete spu;
+    if (deciV) {
+        static const char_t *langs[]= {NULL};
+        deciV->fillSubtitleLanguages(langs);
+    }
+    delete vobsub;
+    if (spu) {
+        delete spu;
+    }
 }
 int TsubreaderVobsub::findlang(int langname)
 {
- if (vobsub->ok && spu && langname!=0)
-  {
-   char_t langS[3]=_l("  ");
-   _tcsncpy(langS, (const char_t *)text<char_t>((const char*)&langname),2);
-   for (unsigned int i=0;i<vobsub->spu_streams_size;i++)
-    if (vobsub->spu_streams[i].id && stricmp(langS,vobsub->spu_streams[i].id)==0)
-     return i;
-  }
- return 0;
+    if (vobsub->ok && spu && langname!=0) {
+        char_t langS[3]=_l("  ");
+        _tcsncpy(langS, (const char_t *)text<char_t>((const char*)&langname),2);
+        for (unsigned int i=0; i<vobsub->spu_streams_size; i++)
+            if (vobsub->spu_streams[i].id && stricmp(langS,vobsub->spu_streams[i].id)==0) {
+                return i;
+            }
+    }
+    return 0;
 }
 
 void TsubreaderVobsub::setLang(int newlang)
 {
- if (!vobsub->ok || !spu || newlang>=(int)vobsub->spu_streams_size) return;
- vobsub->vobsub_id=newlang;
- langid=newlang;
- clear();
- spu->spudec_reset();
- vobsub->vobsub_reset();
- push_back(new TsubtitleVobsub(spu,vobsub));
- deci->putParam(IDFF_subCurLang,vobsub->vobsub_id);
+    if (!vobsub->ok || !spu || newlang>=(int)vobsub->spu_streams_size) {
+        return;
+    }
+    vobsub->vobsub_id=newlang;
+    langid=newlang;
+    clear();
+    spu->spudec_reset();
+    vobsub->vobsub_reset();
+    push_back(new TsubtitleVobsub(spu,vobsub));
+    deci->putParam(IDFF_subCurLang,vobsub->vobsub_id);
 }

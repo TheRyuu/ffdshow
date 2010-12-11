@@ -10,12 +10,11 @@
 
 #define size_of_rgb32 4
 
-enum
-{
- ALIGN_FFDSHOW=0,
- ALIGN_LEFT=1,
- ALIGN_CENTER=2,
- ALIGN_RIGHT=3
+enum {
+    ALIGN_FFDSHOW=0,
+    ALIGN_LEFT=1,
+    ALIGN_CENTER=2,
+    ALIGN_RIGHT=3
 };
 
 class TrenderedSubtitleLine;
@@ -36,7 +35,7 @@ struct TprintPrefs {
     void operator = (const TprintPrefs &rt) {
         memcpy(this, &rt, sizeof(*this));
     }
-    
+
     unsigned int dx,dy,clipdy;
     bool isOSD;
     int xpos,ypos;
@@ -44,7 +43,8 @@ struct TprintPrefs {
     int linespacing;
     unsigned int sizeDx,sizeDy;
     int stereoScopicParallax;
-    bool vobchangeposition;int subimgscale,vobaamode,vobaagauss;
+    bool vobchangeposition;
+    int subimgscale,vobaamode,vobaagauss;
     bool fontchangesplit,fontsplit;
     int textBorderLR;
     int tabsize;
@@ -74,16 +74,17 @@ class TrenderedSubtitleLines: public std::vector<TrenderedSubtitleLine*>
 {
 public:
     TrenderedSubtitleLines() {}
-    TrenderedSubtitleLines(TrenderedSubtitleLine *ln) {push_back(ln);}
+    TrenderedSubtitleLines(TrenderedSubtitleLine *ln) {
+        push_back(ln);
+    }
 
     /**
      * reset
      *  just clear pointers, do not delete objects.
      */
-    void reset()
-     {
-      erase(begin(),end());
-     }
+    void reset() {
+        erase(begin(),end());
+    }
 
     /**
      * clear
@@ -94,19 +95,20 @@ public:
     using std::vector<value_type>::empty;
 
     void print(
-       const TprintPrefs &prefs,
-       unsigned char **dst,
-       const stride_t *stride);
+        const TprintPrefs &prefs,
+        unsigned char **dst,
+        const stride_t *stride);
 
     size_t getMemorySize() const;
 
 private:
     void printASS(
-       const TprintPrefs &prefs,
-       unsigned char **dst,
-       const stride_t *stride);
+        const TprintPrefs &prefs,
+        unsigned char **dst,
+        const stride_t *stride);
 
-    class ParagraphKey {
+    class ParagraphKey
+    {
     public:
         int alignment;
         int marginTop,marginBottom;
@@ -125,7 +127,8 @@ private:
         bool operator < (const ParagraphKey &rt) const;
     };
 
-    class ParagraphValue {
+    class ParagraphValue
+    {
     public:
         double topOverhang;
         double bottomOverhang;
@@ -147,9 +150,10 @@ private:
             xoffset(0),
             yoffset(0),
             firstuse(true)
-            {};
+        {};
     };
-    class TlayerSort {
+    class TlayerSort
+    {
     public:
         bool operator() (TrenderedSubtitleLine *lt, TrenderedSubtitleLine *rt) const;
     };
@@ -165,30 +169,51 @@ public:
     TrenderedSubtitleWordBase(bool Iown):
         own(Iown),
         dxChar(0),
-        dyChar(0) 
-    {
-        for (int i=0;i<3;i++) {
-            bmp[i]=NULL;msk[i]=NULL;
-            outline[i]=NULL;shadow[i]=NULL;
-            dx[i]=0;dy[i]=0;
+        dyChar(0) {
+        for (int i=0; i<3; i++) {
+            bmp[i]=NULL;
+            msk[i]=NULL;
+            outline[i]=NULL;
+            shadow[i]=NULL;
+            dx[i]=0;
+            dy[i]=0;
         }
     }
     virtual ~TrenderedSubtitleWordBase();
     unsigned int dx[3],dy[3];
     unsigned int dxChar,dyChar;
-    unsigned char *bmp[3],*msk[3];stride_t bmpmskstride[3];
+    unsigned char *bmp[3],*msk[3];
+    stride_t bmpmskstride[3];
     unsigned char *outline[3],*shadow[3];
     virtual void print(int startx, int starty, unsigned int dx[3],int dy[3],unsigned char *dstLn[3],const stride_t stride[3],const unsigned char *bmp[3],const unsigned char *msk[3],REFERENCE_TIME rtStart=REFTIME_INVALID) const =0;
     int csp;
-    virtual double get_ascent() const {return dy[0];}
-    virtual double get_descent() const {return 0;}
-    virtual double get_baseline() const {return dy[0];}
-    virtual double get_below_baseline() const {return 0;}
-    virtual double get_linegap() const {return 0;}
-    virtual CRect getOverhang() const {return CRect();}
-    virtual size_t getMemorySize() const {return 0;}
-    virtual int getPathOffsetX() const {return 0;}
-    virtual int getPathOffsetY() const {return 0;}
+    virtual double get_ascent() const {
+        return dy[0];
+    }
+    virtual double get_descent() const {
+        return 0;
+    }
+    virtual double get_baseline() const {
+        return dy[0];
+    }
+    virtual double get_below_baseline() const {
+        return 0;
+    }
+    virtual double get_linegap() const {
+        return 0;
+    }
+    virtual CRect getOverhang() const {
+        return CRect();
+    }
+    virtual size_t getMemorySize() const {
+        return 0;
+    }
+    virtual int getPathOffsetX() const {
+        return 0;
+    }
+    virtual int getPathOffsetY() const {
+        return 0;
+    }
 };
 
 class TrenderedVobsubWord : public TrenderedSubtitleWordBase
@@ -211,16 +236,31 @@ class TrenderedSubtitleLine : public std::vector<TrenderedSubtitleWordBase*>
     CRect printedRect;
 public:
 
-    TrenderedSubtitleLine():firstrun(true),hasPrintedRect(false) {props.reset();}
-    TrenderedSubtitleLine(TSubtitleProps p):firstrun(true),hasPrintedRect(false) {props=p;}
-    TrenderedSubtitleLine(TSubtitleProps p, double IemptyHeight):firstrun(true),emptyHeight(IemptyHeight),hasPrintedRect(false) {props=p;}
-    TrenderedSubtitleLine(TrenderedSubtitleWordBase *w):firstrun(true),hasPrintedRect(false) {push_back(w);props.reset();}
+    TrenderedSubtitleLine():firstrun(true),hasPrintedRect(false) {
+        props.reset();
+    }
+    TrenderedSubtitleLine(TSubtitleProps p):firstrun(true),hasPrintedRect(false) {
+        props=p;
+    }
+    TrenderedSubtitleLine(TSubtitleProps p, double IemptyHeight):firstrun(true),emptyHeight(IemptyHeight),hasPrintedRect(false) {
+        props=p;
+    }
+    TrenderedSubtitleLine(TrenderedSubtitleWordBase *w):firstrun(true),hasPrintedRect(false) {
+        push_back(w);
+        props.reset();
+    }
 
-    TSubtitleProps& getPropsOfThisObject() {return props;}
+    TSubtitleProps& getPropsOfThisObject() {
+        return props;
+    }
     const TSubtitleProps& getProps() const;
 
-    const CRect& getPrintedRect() const {return printedRect;}
-    bool getHasPrintedRect() const {return hasPrintedRect;}
+    const CRect& getPrintedRect() const {
+        return printedRect;
+    }
+    bool getHasPrintedRect() const {
+        return hasPrintedRect;
+    }
     bool checkCollision(const CRect &query, CRect &ans);
 
     unsigned int width() const;
@@ -238,13 +278,13 @@ public:
     using std::vector<value_type>::empty;
     void clear();
     void print(
-       int startx,
-       int starty,
-       const TprintPrefs &prefs,
-       unsigned int prefsdx,
-       unsigned int prefsdy,
-       unsigned char **dst,
-       const stride_t *stride);
+        int startx,
+        int starty,
+        const TprintPrefs &prefs,
+        unsigned int prefsdx,
+        unsigned int prefsdy,
+        unsigned char **dst,
+        const stride_t *stride);
     size_t getMemorySize() const;
 };
 
@@ -258,7 +298,8 @@ class Tfont
 private:
     IffdshowBase *deci;
     TfontManager *fontManager;
-    HDC hdc;HGDIOBJ oldFont;
+    HDC hdc;
+    HGDIOBJ oldFont;
     TrenderedSubtitleLines lines;
     unsigned int height;
     int oldCsp;
@@ -275,40 +316,39 @@ public:
      * @return height
      */
     int print(
-       TsubtitleText *sub,
-       bool forceChange,
-       const TprintPrefs &prefs,
-       unsigned char **dst,
-       const stride_t *stride);
+        TsubtitleText *sub,
+        bool forceChange,
+        const TprintPrefs &prefs,
+        unsigned char **dst,
+        const stride_t *stride);
     /**
      * printf(for subtitles)
      * lines must be filled before called
      */
     void print(
-       const TprintPrefs &prefs,
-       unsigned char **dst,
-       const stride_t *stride);
-    void reset()
-    {
+        const TprintPrefs &prefs,
+        unsigned char **dst,
+        const stride_t *stride);
+    void reset() {
         lines.reset();
     }
     void done();
 };
 
 extern "C" {
- void* (__cdecl TtextSubtitlePrintY_mmx)(const unsigned char* bmp,const unsigned char* outline,const unsigned char* shadow,const unsigned short* colortbl,const unsigned char* dst,const unsigned char* msk);
- void* (__cdecl TtextSubtitlePrintUV_mmx)(const unsigned char* bmp,const unsigned char* outline,const unsigned char* shadow,const unsigned short* colortbl,const unsigned char* dstU,const unsigned char* dstV);
- void* (__cdecl TtextSubtitlePrintY_sse2)(const unsigned char* bmp,const unsigned char* outline,const unsigned char* shadow,const unsigned short* colortbl,const unsigned char* dst,const unsigned char* msk);
- void* (__cdecl TtextSubtitlePrintUV_sse2)(const unsigned char* bmp,const unsigned char* outline,const unsigned char* shadow,const unsigned short* colortbl,const unsigned char* dstU,const unsigned char* dstV);
- void* (__cdecl YV12_lum2chr_min_mmx)(const unsigned char* lum0,const unsigned char* lum1,unsigned char* chr);
- void* (__cdecl YV12_lum2chr_max_mmx)(const unsigned char* lum0,const unsigned char* lum1,unsigned char* chr);
- void* (__cdecl YV12_lum2chr_min_mmx2)(const unsigned char* lum0,const unsigned char* lum1,unsigned char* chr);
- void* (__cdecl YV12_lum2chr_max_mmx2)(const unsigned char* lum0,const unsigned char* lum1,unsigned char* chr);
- void  __cdecl storeXmmRegs(unsigned char* buf);
- void  __cdecl restoreXmmRegs(unsigned char* buf);
- void __cdecl fontRGB32toBW_mmx(size_t count,unsigned char *ptr);
- unsigned int __cdecl fontPrepareOutline_sse2(const unsigned char *src,size_t srcStrideGap,const short *matrix,size_t matrixSizeH,size_t matrixSizeV);
- unsigned int __cdecl fontPrepareOutline_mmx (const unsigned char *src,size_t srcStrideGap,const short *matrix,size_t matrixSizeH,size_t matrixSizeV,size_t matrixGap);
+    void* (__cdecl TtextSubtitlePrintY_mmx)(const unsigned char* bmp,const unsigned char* outline,const unsigned char* shadow,const unsigned short* colortbl,const unsigned char* dst,const unsigned char* msk);
+    void* (__cdecl TtextSubtitlePrintUV_mmx)(const unsigned char* bmp,const unsigned char* outline,const unsigned char* shadow,const unsigned short* colortbl,const unsigned char* dstU,const unsigned char* dstV);
+    void* (__cdecl TtextSubtitlePrintY_sse2)(const unsigned char* bmp,const unsigned char* outline,const unsigned char* shadow,const unsigned short* colortbl,const unsigned char* dst,const unsigned char* msk);
+    void* (__cdecl TtextSubtitlePrintUV_sse2)(const unsigned char* bmp,const unsigned char* outline,const unsigned char* shadow,const unsigned short* colortbl,const unsigned char* dstU,const unsigned char* dstV);
+    void* (__cdecl YV12_lum2chr_min_mmx)(const unsigned char* lum0,const unsigned char* lum1,unsigned char* chr);
+    void* (__cdecl YV12_lum2chr_max_mmx)(const unsigned char* lum0,const unsigned char* lum1,unsigned char* chr);
+    void* (__cdecl YV12_lum2chr_min_mmx2)(const unsigned char* lum0,const unsigned char* lum1,unsigned char* chr);
+    void* (__cdecl YV12_lum2chr_max_mmx2)(const unsigned char* lum0,const unsigned char* lum1,unsigned char* chr);
+    void  __cdecl storeXmmRegs(unsigned char* buf);
+    void  __cdecl restoreXmmRegs(unsigned char* buf);
+    void __cdecl fontRGB32toBW_mmx(size_t count,unsigned char *ptr);
+    unsigned int __cdecl fontPrepareOutline_sse2(const unsigned char *src,size_t srcStrideGap,const short *matrix,size_t matrixSizeH,size_t matrixSizeV);
+    unsigned int __cdecl fontPrepareOutline_mmx (const unsigned char *src,size_t srcStrideGap,const short *matrix,size_t matrixSizeH,size_t matrixSizeV,size_t matrixGap);
 }
 
 #endif

@@ -10,11 +10,11 @@ class Tspudec;
 class TsubtitlesTextpinVobsub :public TsubtitlesTextpin, public TsubtitleDVDparent
 {
 private:
- Tspudec *spu;
+    Tspudec *spu;
 public:
- TsubtitlesTextpinVobsub(int Itype,IffdshowBase *Ideci,const unsigned char *vobsubdata,unsigned int vobsubdatalen);
- virtual void addSubtitle(REFERENCE_TIME start,REFERENCE_TIME stop,const unsigned char *data,unsigned int datalen,const TsubtitlesSettings *cfg,bool utf8);
- virtual void resetSubtitles(void);
+    TsubtitlesTextpinVobsub(int Itype,IffdshowBase *Ideci,const unsigned char *vobsubdata,unsigned int vobsubdatalen);
+    virtual void addSubtitle(REFERENCE_TIME start,REFERENCE_TIME stop,const unsigned char *data,unsigned int datalen,const TsubtitlesSettings *cfg,bool utf8);
+    virtual void resetSubtitles(void);
 };
 
 #endif

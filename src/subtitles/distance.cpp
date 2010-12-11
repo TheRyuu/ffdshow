@@ -60,30 +60,27 @@ int EditDistance::CalEditDistance(const char_t *s,const char_t *t, int limit)
 {
     int n=0,m=0,iLenDif,k,i,j,cost;
     // Remove leftmost matching portion of strings
-    while ( *s && (tolower(*s)==tolower(*t)) )
-    {
+    while ( *s && (tolower(*s)==tolower(*t)) ) {
         s++;
         t++;
     }
 
-    while (tolower(s[n]))
-    {
+    while (tolower(s[n])) {
         n++;
     }
-    while (tolower(t[m]))
-    {
+    while (tolower(t[m])) {
         m++;
     }
 
     // Remove rightmost matching portion of strings by decrement n and m.
-    while ( n && m && (tolower(*(s+n-1))==tolower(*(t+m-1))) )
-    {
-        n--;m--;
+    while ( n && m && (tolower(*(s+n-1))==tolower(*(t+m-1))) ) {
+        n--;
+        m--;
     }
-    if ( m==0 || n==0 || d.empty() )
+    if ( m==0 || n==0 || d.empty() ) {
         return (m+n);
-    if ( m < n )
-    {
+    }
+    if ( m < n ) {
         const char_t * temp = s;
         int itemp = n;
         s = t;
@@ -92,49 +89,50 @@ int EditDistance::CalEditDistance(const char_t *s,const char_t *t, int limit)
         m = itemp;
     }
     iLenDif = m - n;
-    if ( iLenDif >= limit )
+    if ( iLenDif >= limit ) {
         return iLenDif;
+    }
     // step 1
-    n++;m++;
-//    d=(int*)malloc(sizeof(int)*m*n);
-    if ( m*n > (int)d.size() )
-    {
+    n++;
+    m++;
+    //    d=(int*)malloc(sizeof(int)*m*n);
+    if ( m*n > (int)d.size() ) {
         d.resize(m*n*2);    // double the request
     }
     // step 2, init matrix
-    for (k=0;k<n;k++)
+    for (k=0; k<n; k++) {
         d[k] = k;
-    for (k=1;k<m;k++)
+    }
+    for (k=1; k<m; k++) {
         d[k*n] = k;
+    }
     // step 3
-    for (i=1;i<n;i++)
-    {
+    for (i=1; i<n; i++) {
         // first calculate column, d(i,j)
-        for ( j=1;j<iLenDif+i;j++ )
-        {
+        for ( j=1; j<iLenDif+i; j++ ) {
             cost = tolower(s[i-1])==tolower(t[j-1])?0:1;
             d[j*n+i] = minimum(d[(j-1)*n+i]+1,d[j*n+i-1]+1,d[(j-1)*n+i-1]+cost);
 #ifdef COVER_TRANSPOSITION
             if ( i>=2 && j>=2 && (d[j*n+i]-d[(j-2)*n+i-2]==2)
-                 && (tolower(s[i-2])==tolower(t[j-1])) && (tolower(s[i-1])==tolower(t[j-2])) )
+                    && (tolower(s[i-2])==tolower(t[j-1])) && (tolower(s[i-1])==tolower(t[j-2])) ) {
                 d[j*n+i]--;
+            }
 #endif
         }
         // second calculate row, d(k,j)
         // now j==iLenDif+i;
-        for ( k=1;k<=i;k++ )
-        {
+        for ( k=1; k<=i; k++ ) {
             cost = tolower(s[k-1])==tolower(t[j-1])?0:1;
             d[j*n+k] = minimum(d[(j-1)*n+k]+1,d[j*n+k-1]+1,d[(j-1)*n+k-1]+cost);
 #ifdef COVER_TRANSPOSITION
             if ( k>=2 && j>=2 && (d[j*n+k]-d[(j-2)*n+k-2]==2)
-                 && (tolower(s[k-2])==tolower(t[j-1])) && (tolower(s[k-1])==tolower(t[j-2])) )
+                    && (tolower(s[k-2])==tolower(t[j-1])) && (tolower(s[k-1])==tolower(t[j-2])) ) {
                 d[j*n+k]--;
+            }
 #endif
         }
         // test if d(i,j) limit gets equal or exceed
-        if ( d[j*n+i] >= limit )
-        {
+        if ( d[j*n+i] >= limit ) {
             return d[j*n+i];
         }
     }
@@ -148,41 +146,44 @@ int EditDistance::CalEditDistance(const char_t *s,const char_t *t,const int limi
     int k,i,j,n,m,cost;
     n=strlen(s);
     m=strlen(t);
-    if( n!=0 && m!=0 && d!=(int*)0 )
-    {
-        m++;n++;
-        if ( m*n > currentelements )
-        {
+    if( n!=0 && m!=0 && d!=(int*)0 ) {
+        m++;
+        n++;
+        if ( m*n > currentelements ) {
             currentelements = m*n*2;
             d = (int*)realloc(d,sizeof(int)*currentelements);
-            if ( (int*)0 == d )
+            if ( (int*)0 == d ) {
                 return (m+n);
+            }
         }
         //Step 2
-        for(k=0;k<n;k++)
+        for(k=0; k<n; k++) {
             d[k]=k;
-        for(k=0;k<m;k++)
+        }
+        for(k=0; k<m; k++) {
             d[k*n]=k;
+        }
         //Step 3 and 4
-        for(i=1;i<n;i++)
-            for(j=1;j<m;j++)
-            {
+        for(i=1; i<n; i++)
+            for(j=1; j<m; j++) {
                 //Step 5
-                if(s[i-1]==t[j-1])
+                if(s[i-1]==t[j-1]) {
                     cost=0;
-                else
+                } else {
                     cost=1;
+                }
                 //Step 6
                 d[j*n+i]=minimum(d[(j-1)*n+i]+1,d[j*n+i-1]+1,d[(j-1)*n+i-1]+cost);
 #ifdef COVER_TRANSPOSITION
                 if ( i>=2 && j>=2 && (d[j*n+i]-d[(j-2)*n+i-2]==2)
-                     && (s[i-2]==t[j-1]) && (s[i-1]==t[j-2]) )
+                        && (s[i-2]==t[j-1]) && (s[i-1]==t[j-2]) ) {
                     d[j*n+i]--;
+                }
 #endif
             }
         return d[n*m-1];
-    }
-    else
+    } else {
         return (n+m);
+    }
 }
 #endif

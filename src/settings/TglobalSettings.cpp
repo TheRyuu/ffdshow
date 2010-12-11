@@ -33,577 +33,598 @@
 //===================================== TglobalSettingsBase ======================================
 TglobalSettingsBase::TglobalSettingsBase(const Tconfig *Iconfig,int Imode,const char_t *Ireg_child,TintStrColl *Icoll):filtermode(Imode),config(Iconfig),reg_child(Ireg_child),Toptions(Icoll)
 {
- static const TintOptionT<TglobalSettingsBase> iopts[]=
-  {
-   IDFF_filterMode       ,&TglobalSettingsBase::filtermode       ,1,1,_l(""),0,
-     NULL,0,
-   IDFF_trayIcon         ,&TglobalSettingsBase::trayIcon         ,0,0,_l(""),0,
-     _l("trayIcon"),TintOption::DEF_DYN,
-   IDFF_trayIconType     ,&TglobalSettingsBase::trayIconType     ,0,2,_l(""),0,
-     NULL,1,
-   IDFF_trayIconChanged  ,&TglobalSettingsBase::trayIconChanged  ,0,0,_l(""),0,
-     NULL,0,
-   IDFF_trayIconExt      ,&TglobalSettingsBase::trayIconExt      ,0,0,_l(""),0,
-     _l("trayIconExt"),1,
-   IDFF_outputdebug      ,&TglobalSettingsBase::outputdebug      ,0,0,_l(""),0,
-     _l("outputdebug"),1,
-   IDFF_outputdebugfile  ,&TglobalSettingsBase::outputdebugfile  ,0,0,_l(""),0,
-     _l("outputdebugfile"),0,
-   IDFF_errorbox         ,&TglobalSettingsBase::errorbox         ,0,0,_l(""),0,
-     _l("errorbox1"),1,
-   IDFF_multipleInstances,&TglobalSettingsBase::multipleInstances,0,4,_l(""),0,
-     _l("multipleInstances"),TintOption::DEF_DYN,
-   IDFF_isBlacklist      ,&TglobalSettingsBase::isBlacklist      ,0,0,_l(""),0,
-     _l("isBlacklist"),1,
-   IDFF_isWhitelist      ,&TglobalSettingsBase::isWhitelist      ,0,0,_l(""),0,
-     _l("isWhitelist"),1,   
-   IDFF_compManagerMode  ,&TglobalSettingsBase::compOnLoadMode   ,1,4,_l(""),0,
-     NULL,1,
-   IDFF_isCompMgr        ,&TglobalSettingsBase::isCompMgr        ,0,0,_l(""),0,
-     _l("isCompMgr"),0,
-   IDFF_isCompMgrChanged ,&TglobalSettingsBase::isCompMgrChanged ,0,0,_l(""),0,
-     NULL,0,
-   IDFF_addToROT         ,&TglobalSettingsBase::addToROT         ,0,0,_l(""),0,
-     _l("addToROT"),0,
-   IDFF_allowedCpuFlags  ,&TglobalSettingsBase::allowedCPUflags  ,1,1,_l(""),0,
-     NULL,0,
-   IDFF_allowDPRINTF     ,&TglobalSettingsBase::allowDPRINTF     ,0,0,_l(""),0,
-     NULL,0,
-   IDFF_allowDPRINTFchanged,&TglobalSettingsBase::allowDPRINTFchanged,0,0,_l(""),0,
-     NULL,0,
-   0
-  };
- addOptions(iopts);
- static const TstrOption sopts[]=
-  {
-   IDFF_debugfile  ,(TstrVal)&TglobalSettingsBase::debugfile ,MAX_PATH,0,_l(""),0,
-     _l("debugfile"),_l("\\ffdebug.log"),
-   IDFF_dscalerPath,(TstrVal)&TglobalSettingsBase::dscalerPth,MAX_PATH,0,_l(""),0,
-     NULL,NULL,
-   IDFF_blacklist  ,(TstrVal)&TglobalSettingsBase::blacklist ,MAX_COMPATIBILITYLIST_LENGTH,0,_l(""),0,
-     _l("blacklist"),BLACKLIST_EXE_FILENAME,
-   IDFF_whitelist  ,(TstrVal)&TglobalSettingsBase::whitelist ,MAX_COMPATIBILITYLIST_LENGTH,0,_l(""),0,
-     _l("whitelist"),WHITELIST_EXE_FILENAME,
-   0
-  };
- addOptions(sopts);
- static const TcreateParamList3<TmultipleInstances> listMultipleInstances(::multipleInstances,&TmultipleInstances::id,&TmultipleInstances::name);setParamList(IDFF_multipleInstances,&listMultipleInstances);
+    static const TintOptionT<TglobalSettingsBase> iopts[]= {
+        IDFF_filterMode       ,&TglobalSettingsBase::filtermode       ,1,1,_l(""),0,
+        NULL,0,
+        IDFF_trayIcon         ,&TglobalSettingsBase::trayIcon         ,0,0,_l(""),0,
+        _l("trayIcon"),TintOption::DEF_DYN,
+        IDFF_trayIconType     ,&TglobalSettingsBase::trayIconType     ,0,2,_l(""),0,
+        NULL,1,
+        IDFF_trayIconChanged  ,&TglobalSettingsBase::trayIconChanged  ,0,0,_l(""),0,
+        NULL,0,
+        IDFF_trayIconExt      ,&TglobalSettingsBase::trayIconExt      ,0,0,_l(""),0,
+        _l("trayIconExt"),1,
+        IDFF_outputdebug      ,&TglobalSettingsBase::outputdebug      ,0,0,_l(""),0,
+        _l("outputdebug"),1,
+        IDFF_outputdebugfile  ,&TglobalSettingsBase::outputdebugfile  ,0,0,_l(""),0,
+        _l("outputdebugfile"),0,
+        IDFF_errorbox         ,&TglobalSettingsBase::errorbox         ,0,0,_l(""),0,
+        _l("errorbox1"),1,
+        IDFF_multipleInstances,&TglobalSettingsBase::multipleInstances,0,4,_l(""),0,
+        _l("multipleInstances"),TintOption::DEF_DYN,
+        IDFF_isBlacklist      ,&TglobalSettingsBase::isBlacklist      ,0,0,_l(""),0,
+        _l("isBlacklist"),1,
+        IDFF_isWhitelist      ,&TglobalSettingsBase::isWhitelist      ,0,0,_l(""),0,
+        _l("isWhitelist"),1,
+        IDFF_compManagerMode  ,&TglobalSettingsBase::compOnLoadMode   ,1,4,_l(""),0,
+        NULL,1,
+        IDFF_isCompMgr        ,&TglobalSettingsBase::isCompMgr        ,0,0,_l(""),0,
+        _l("isCompMgr"),0,
+        IDFF_isCompMgrChanged ,&TglobalSettingsBase::isCompMgrChanged ,0,0,_l(""),0,
+        NULL,0,
+        IDFF_addToROT         ,&TglobalSettingsBase::addToROT         ,0,0,_l(""),0,
+        _l("addToROT"),0,
+        IDFF_allowedCpuFlags  ,&TglobalSettingsBase::allowedCPUflags  ,1,1,_l(""),0,
+        NULL,0,
+        IDFF_allowDPRINTF     ,&TglobalSettingsBase::allowDPRINTF     ,0,0,_l(""),0,
+        NULL,0,
+        IDFF_allowDPRINTFchanged,&TglobalSettingsBase::allowDPRINTFchanged,0,0,_l(""),0,
+        NULL,0,
+        0
+    };
+    addOptions(iopts);
+    static const TstrOption sopts[]= {
+        IDFF_debugfile  ,(TstrVal)&TglobalSettingsBase::debugfile ,MAX_PATH,0,_l(""),0,
+        _l("debugfile"),_l("\\ffdebug.log"),
+        IDFF_dscalerPath,(TstrVal)&TglobalSettingsBase::dscalerPth,MAX_PATH,0,_l(""),0,
+        NULL,NULL,
+        IDFF_blacklist  ,(TstrVal)&TglobalSettingsBase::blacklist ,MAX_COMPATIBILITYLIST_LENGTH,0,_l(""),0,
+        _l("blacklist"),BLACKLIST_EXE_FILENAME,
+        IDFF_whitelist  ,(TstrVal)&TglobalSettingsBase::whitelist ,MAX_COMPATIBILITYLIST_LENGTH,0,_l(""),0,
+        _l("whitelist"),WHITELIST_EXE_FILENAME,
+        0
+    };
+    addOptions(sopts);
+    static const TcreateParamList3<TmultipleInstances> listMultipleInstances(::multipleInstances,&TmultipleInstances::id,&TmultipleInstances::name);
+    setParamList(IDFF_multipleInstances,&listMultipleInstances);
 
 }
 void TglobalSettingsBase::load(void)
 {
- char_t rkey[MAX_PATH];
- tsnprintf_s(rkey, countof(rkey), _TRUNCATE, FFDSHOW_REG_PARENT _l("\\%s"), reg_child);
- TregOpRegRead tHKCU(HKEY_CURRENT_USER,rkey);
- reg_op(tHKCU);
- TregOpRegRead tHKLM(HKEY_LOCAL_MACHINE,rkey);
- reg_op_codec(tHKCU,&tHKLM);
- TregOpRegRead tDScaler(HKEY_LOCAL_MACHINE,FFDSHOW_REG_PARENT _l("\\") FFDSHOW);
- tDScaler._REG_OP_S(IDFF_dscalerPath,_l("dscalerPth"),dscalerPth,MAX_PATH,_l(""));
- TregOpRegRead tCPU(HKEY_CURRENT_USER,FFDSHOW_REG_PARENT _l("\\") FFDSHOW);
- tCPU._REG_OP_N(IDFF_allowedCpuFlags,_l("allowedCPUflags"),allowedCPUflags,7935);
- firstBlacklist=firstWhitelist=true;
+    char_t rkey[MAX_PATH];
+    tsnprintf_s(rkey, countof(rkey), _TRUNCATE, FFDSHOW_REG_PARENT _l("\\%s"), reg_child);
+    TregOpRegRead tHKCU(HKEY_CURRENT_USER,rkey);
+    reg_op(tHKCU);
+    TregOpRegRead tHKLM(HKEY_LOCAL_MACHINE,rkey);
+    reg_op_codec(tHKCU,&tHKLM);
+    TregOpRegRead tDScaler(HKEY_LOCAL_MACHINE,FFDSHOW_REG_PARENT _l("\\") FFDSHOW);
+    tDScaler._REG_OP_S(IDFF_dscalerPath,_l("dscalerPth"),dscalerPth,MAX_PATH,_l(""));
+    TregOpRegRead tCPU(HKEY_CURRENT_USER,FFDSHOW_REG_PARENT _l("\\") FFDSHOW);
+    tCPU._REG_OP_N(IDFF_allowedCpuFlags,_l("allowedCPUflags"),allowedCPUflags,7935);
+    firstBlacklist=firstWhitelist=true;
 
- // Load Icon type : shared by video, audio and vfw.
- TregOpRegRead tHKCU_global(HKEY_CURRENT_USER,FFDSHOW_REG_PARENT _l("\\") FFDSHOW);
- tHKCU_global._REG_OP_N(IDFF_trayIconType,_l("trayIconType"),trayIconType,1);
+    // Load Icon type : shared by video, audio and vfw.
+    TregOpRegRead tHKCU_global(HKEY_CURRENT_USER,FFDSHOW_REG_PARENT _l("\\") FFDSHOW);
+    tHKCU_global._REG_OP_N(IDFF_trayIconType,_l("trayIconType"),trayIconType,1);
 
- // Load allowDPRINTF : shared by all.
- tHKCU_global._REG_OP_N(IDFF_allowDPRINTF,_l("allowDPRINTF"),allowDPRINTF,0);
+    // Load allowDPRINTF : shared by all.
+    tHKCU_global._REG_OP_N(IDFF_allowDPRINTF,_l("allowDPRINTF"),allowDPRINTF,0);
 }
 void TglobalSettingsBase::save(void)
 {
- char_t rkey[MAX_PATH];
- tsnprintf_s(rkey, countof(rkey), _TRUNCATE, FFDSHOW_REG_PARENT _l("\\%s"), reg_child);
- TregOpRegWrite tHKCU(HKEY_CURRENT_USER,rkey);
- reg_op(tHKCU);
- reg_op_codec(tHKCU,NULL);
- TregOpRegWrite tDScaler(HKEY_LOCAL_MACHINE,FFDSHOW_REG_PARENT _l("\\") FFDSHOW);
- tDScaler._REG_OP_S(IDFF_dscalerPath,_l("dscalerPth"),dscalerPth,MAX_PATH,_l(""));
- TregOpRegWrite tCPU(HKEY_CURRENT_USER,FFDSHOW_REG_PARENT _l("\\") FFDSHOW);
- tCPU._REG_OP_N(IDFF_allowedCpuFlags,_l("allowedCPUflags"),allowedCPUflags,7935);
+    char_t rkey[MAX_PATH];
+    tsnprintf_s(rkey, countof(rkey), _TRUNCATE, FFDSHOW_REG_PARENT _l("\\%s"), reg_child);
+    TregOpRegWrite tHKCU(HKEY_CURRENT_USER,rkey);
+    reg_op(tHKCU);
+    reg_op_codec(tHKCU,NULL);
+    TregOpRegWrite tDScaler(HKEY_LOCAL_MACHINE,FFDSHOW_REG_PARENT _l("\\") FFDSHOW);
+    tDScaler._REG_OP_S(IDFF_dscalerPath,_l("dscalerPth"),dscalerPth,MAX_PATH,_l(""));
+    TregOpRegWrite tCPU(HKEY_CURRENT_USER,FFDSHOW_REG_PARENT _l("\\") FFDSHOW);
+    tCPU._REG_OP_N(IDFF_allowedCpuFlags,_l("allowedCPUflags"),allowedCPUflags,7935);
 
- // Save Icon type : shared by video, audio and vfw.
- if (trayIconChanged)
-  {
-   TregOpRegWrite tHKCU_global(HKEY_CURRENT_USER,FFDSHOW_REG_PARENT _l("\\") FFDSHOW);
-   tHKCU_global._REG_OP_N(IDFF_trayIconType,_l("trayIconType"),trayIconType,0);
-   trayIconChanged=0;
-  }
- // Save allowDPRINTF : shared by all.
- if (allowDPRINTFchanged)
-  {
-   TregOpRegWrite tHKCU_global(HKEY_CURRENT_USER,FFDSHOW_REG_PARENT _l("\\") FFDSHOW);
-   tHKCU_global._REG_OP_N(IDFF_allowDPRINTF,_l("allowDPRINTF"),allowDPRINTF,0);
-   allowDPRINTFchanged=0;
-  }
+    // Save Icon type : shared by video, audio and vfw.
+    if (trayIconChanged) {
+        TregOpRegWrite tHKCU_global(HKEY_CURRENT_USER,FFDSHOW_REG_PARENT _l("\\") FFDSHOW);
+        tHKCU_global._REG_OP_N(IDFF_trayIconType,_l("trayIconType"),trayIconType,0);
+        trayIconChanged=0;
+    }
+    // Save allowDPRINTF : shared by all.
+    if (allowDPRINTFchanged) {
+        TregOpRegWrite tHKCU_global(HKEY_CURRENT_USER,FFDSHOW_REG_PARENT _l("\\") FFDSHOW);
+        tHKCU_global._REG_OP_N(IDFF_allowDPRINTF,_l("allowDPRINTF"),allowDPRINTF,0);
+        allowDPRINTFchanged=0;
+    }
 }
 bool TglobalSettingsBase::exportReg(bool all,const char_t *regflnm,bool unicode)
 {
- if (fileexists(regflnm) && DeleteFile(regflnm)==0)
-  return false;
- TstreamFile f(regflnm,false,true,unicode?Tstream::ENC_LE16:Tstream::ENC_ASCII);if (!f) return false;
- if (unicode)
-  f.printf(L"Windows Registry Editor Version 5.00\n\n");
- else
-  f.printf("REGEDIT4\n\n");
- regExport(f,HKEY_LOCAL_MACHINE,FFDSHOW_REG_PARENT _l("\\") FFDSHOW,unicode);
- if (all || strcmp(reg_child,FFDSHOWDECVIDEO)==0)
-  regExport(f,HKEY_CURRENT_USER ,FFDSHOW_REG_PARENT _l("\\") FFDSHOWDECVIDEO,unicode);
- if (all || strcmp(reg_child,FFDSHOWDECAUDIO)==0)
-  {
-   regExport(f,HKEY_CURRENT_USER ,FFDSHOW_REG_PARENT _l("\\") FFDSHOWDECAUDIO,unicode);
-   regExport(f,HKEY_LOCAL_MACHINE,FFDSHOW_REG_PARENT _l("\\") FFDSHOWDECAUDIO,unicode);
-  }
- if (all || strcmp(reg_child,FFDSHOWENC)==0)
-  {
-   regExport(f,HKEY_CURRENT_USER ,FFDSHOW_REG_PARENT _l("\\") FFDSHOWENC,unicode);
-   regExport(f,HKEY_LOCAL_MACHINE,FFDSHOW_REG_PARENT _l("\\") FFDSHOWENC,unicode);
-  }
- if (all || strcmp(reg_child,FFDSHOWDECVIDEOVFW)==0)
-  {
-   regExport(f,HKEY_CURRENT_USER ,FFDSHOW_REG_PARENT _l("\\") FFDSHOWDECVIDEOVFW,unicode);
-   regExport(f,HKEY_LOCAL_MACHINE,FFDSHOW_REG_PARENT _l("\\") FFDSHOWDECVIDEOVFW,unicode);
-  }
- if (all || strcmp(reg_child,FFDSHOWDECVIDEODXVA)==0)
-  regExport(f,HKEY_CURRENT_USER ,FFDSHOW_REG_PARENT _l("\\") FFDSHOWDECVIDEODXVA,unicode);
- if (all || strcmp(reg_child,FFDSHOWDECVIDEORAW)==0)
-  regExport(f,HKEY_CURRENT_USER ,FFDSHOW_REG_PARENT _l("\\") FFDSHOWDECVIDEORAW,unicode);
- if (all || strcmp(reg_child,FFDSHOWDECAUDIORAW)==0)
-  regExport(f,HKEY_CURRENT_USER ,FFDSHOW_REG_PARENT _l("\\") FFDSHOWDECAUDIORAW,unicode);
-  
- return true;
+    if (fileexists(regflnm) && DeleteFile(regflnm)==0) {
+        return false;
+    }
+    TstreamFile f(regflnm,false,true,unicode?Tstream::ENC_LE16:Tstream::ENC_ASCII);
+    if (!f) {
+        return false;
+    }
+    if (unicode) {
+        f.printf(L"Windows Registry Editor Version 5.00\n\n");
+    } else {
+        f.printf("REGEDIT4\n\n");
+    }
+    regExport(f,HKEY_LOCAL_MACHINE,FFDSHOW_REG_PARENT _l("\\") FFDSHOW,unicode);
+    if (all || strcmp(reg_child,FFDSHOWDECVIDEO)==0) {
+        regExport(f,HKEY_CURRENT_USER ,FFDSHOW_REG_PARENT _l("\\") FFDSHOWDECVIDEO,unicode);
+    }
+    if (all || strcmp(reg_child,FFDSHOWDECAUDIO)==0) {
+        regExport(f,HKEY_CURRENT_USER ,FFDSHOW_REG_PARENT _l("\\") FFDSHOWDECAUDIO,unicode);
+        regExport(f,HKEY_LOCAL_MACHINE,FFDSHOW_REG_PARENT _l("\\") FFDSHOWDECAUDIO,unicode);
+    }
+    if (all || strcmp(reg_child,FFDSHOWENC)==0) {
+        regExport(f,HKEY_CURRENT_USER ,FFDSHOW_REG_PARENT _l("\\") FFDSHOWENC,unicode);
+        regExport(f,HKEY_LOCAL_MACHINE,FFDSHOW_REG_PARENT _l("\\") FFDSHOWENC,unicode);
+    }
+    if (all || strcmp(reg_child,FFDSHOWDECVIDEOVFW)==0) {
+        regExport(f,HKEY_CURRENT_USER ,FFDSHOW_REG_PARENT _l("\\") FFDSHOWDECVIDEOVFW,unicode);
+        regExport(f,HKEY_LOCAL_MACHINE,FFDSHOW_REG_PARENT _l("\\") FFDSHOWDECVIDEOVFW,unicode);
+    }
+    if (all || strcmp(reg_child,FFDSHOWDECVIDEODXVA)==0) {
+        regExport(f,HKEY_CURRENT_USER ,FFDSHOW_REG_PARENT _l("\\") FFDSHOWDECVIDEODXVA,unicode);
+    }
+    if (all || strcmp(reg_child,FFDSHOWDECVIDEORAW)==0) {
+        regExport(f,HKEY_CURRENT_USER ,FFDSHOW_REG_PARENT _l("\\") FFDSHOWDECVIDEORAW,unicode);
+    }
+    if (all || strcmp(reg_child,FFDSHOWDECAUDIORAW)==0) {
+        regExport(f,HKEY_CURRENT_USER ,FFDSHOW_REG_PARENT _l("\\") FFDSHOWDECAUDIORAW,unicode);
+    }
+
+    return true;
 }
 void TglobalSettingsBase::_reg_op_codec(short id,TregOp &tHKCU,TregOp *tHKLM,const char_t *name,int &val,int def)
 {
- if (name == NULL)
-  {
-   val=def;
-   return;
-  }
- if (!tHKCU._REG_OP_N(id,name,val,def) && tHKLM)
-  tHKLM->_REG_OP_N(id,name,val,def);
+    if (name == NULL) {
+        val=def;
+        return;
+    }
+    if (!tHKCU._REG_OP_N(id,name,val,def) && tHKLM) {
+        tHKLM->_REG_OP_N(id,name,val,def);
+    }
 }
 
 bool TglobalSettingsBase::inBlacklist(const char_t *exe)
 {
- if (firstBlacklist)
-  {
-   firstBlacklist=false;
-   strtok(blacklist,_l(";"),blacklistList);
-  }
- for (strings::const_iterator b=blacklistList.begin();b!=blacklistList.end();b++)
-  if (DwStrcasecmp(*b,exe)==0)
-   return true;
- return false;
+    if (firstBlacklist) {
+        firstBlacklist=false;
+        strtok(blacklist,_l(";"),blacklistList);
+    }
+    for (strings::const_iterator b=blacklistList.begin(); b!=blacklistList.end(); b++)
+        if (DwStrcasecmp(*b,exe)==0) {
+            return true;
+        }
+    return false;
 }
 
 bool TglobalSettingsBase::inWhitelist(const char_t *exe,IffdshowBase *Ideci)
 {
- // MessageBox(NULL,exe,_l("ffdshow inWhitelist"),MB_OK);
- bool old_firstWhitelist=firstWhitelist;
- if (firstWhitelist)
-  {
-   firstWhitelist=false;
-   strtok(whitelist,_l(";"),whitelistList);
-  }
- for (strings::const_iterator b=whitelistList.begin();b!=whitelistList.end();b++)
-  if (DwStrcasecmp(*b,exe)==0)
-   return true;
- if (!isCompMgr)
-  return false;
- if (TcompatibilityManager::s_mode==0)
-  {
-   TcompatibilityManager::s_mode=-1;
-   TcompatibilityManager *dlg=new TcompatibilityManager(Ideci,NULL,exe);
-   dlg->show();
-   delete dlg;
-  }
- bool result=false;
- switch (TcompatibilityManager::s_mode)
-  {
-   case -1:
-   case 0:
-   case 1:
-    result=false;
-    break;
-   case 2:
-    if (old_firstWhitelist) addToCompatiblityList(blacklist,exe,_l(";"));
-    result=false;
-    break;
-   case 3:
-    result=true;
-    break;
-   case 4:
-    if (old_firstWhitelist) addToCompatiblityList(whitelist,exe,_l(";"));
-    result=true;
-    break;
-  }
- if (isCompMgrChanged)
-  save();
- return result;
-} 
+    // MessageBox(NULL,exe,_l("ffdshow inWhitelist"),MB_OK);
+    bool old_firstWhitelist=firstWhitelist;
+    if (firstWhitelist) {
+        firstWhitelist=false;
+        strtok(whitelist,_l(";"),whitelistList);
+    }
+    for (strings::const_iterator b=whitelistList.begin(); b!=whitelistList.end(); b++)
+        if (DwStrcasecmp(*b,exe)==0) {
+            return true;
+        }
+    if (!isCompMgr) {
+        return false;
+    }
+    if (TcompatibilityManager::s_mode==0) {
+        TcompatibilityManager::s_mode=-1;
+        TcompatibilityManager *dlg=new TcompatibilityManager(Ideci,NULL,exe);
+        dlg->show();
+        delete dlg;
+    }
+    bool result=false;
+    switch (TcompatibilityManager::s_mode) {
+        case -1:
+        case 0:
+        case 1:
+            result=false;
+            break;
+        case 2:
+            if (old_firstWhitelist) {
+                addToCompatiblityList(blacklist,exe,_l(";"));
+            }
+            result=false;
+            break;
+        case 3:
+            result=true;
+            break;
+        case 4:
+            if (old_firstWhitelist) {
+                addToCompatiblityList(whitelist,exe,_l(";"));
+            }
+            result=true;
+            break;
+    }
+    if (isCompMgrChanged) {
+        save();
+    }
+    return result;
+}
 
 void TglobalSettingsBase::addToCompatiblityList(char_t *list, const char_t *exe, const char_t *delimit)
 {
- strings listList;
- strtok(list,delimit,listList);
- listList.push_back(exe);
- ffstring result;
- for (strings::const_iterator b=listList.begin();b!=listList.end();b++)
-  result+=*b+delimit;
- ff_strncpy(list, result.c_str(), MAX_COMPATIBILITYLIST_LENGTH);
- save();
+    strings listList;
+    strtok(list,delimit,listList);
+    listList.push_back(exe);
+    ffstring result;
+    for (strings::const_iterator b=listList.begin(); b!=listList.end(); b++) {
+        result+=*b+delimit;
+    }
+    ff_strncpy(list, result.c_str(), MAX_COMPATIBILITYLIST_LENGTH);
+    save();
 }
 
 //===================================== TglobalSettingsDec ======================================
 TglobalSettingsDec::TglobalSettingsDec(const Tconfig *Iconfig,int Imode,const char_t *Ireg_child,TintStrColl *Icoll):TglobalSettingsBase(Iconfig,Imode,Ireg_child,Icoll)
 {
- static const TintOptionT<TglobalSettingsDec> iopts[]=
-  {
-   IDFF_autoPreset         ,&TglobalSettingsDec::autoPreset         ,0,0,_l(""),0,
-     _l("autoPresets"),0,
-   IDFF_autoPresetFileFirst,&TglobalSettingsDec::autoPresetFileFirst,0,0,_l(""),0,
-     _l("autoPresetFileFirst"),0,
-   IDFF_streamsOptionsMenu ,&TglobalSettingsDec::streamsMenu        ,0,0,_l(""),0,
-     _l("streamsOptionsMenu"),0,
-   IDFF_streamsSubFilesMode ,&TglobalSettingsDec::streamsSubFilesMode,0,3,_l(""),0,
-     _l("streamsSubFilesMode"),3,
-   0
-  };
- addOptions(iopts);
- static const TstrOption sopts[]=
-  {
-   IDFF_defaultPreset,(TstrVal)&TglobalSettingsDec::defaultPreset,MAX_PATH,0,_l(""),0,
-     _l("activePreset"),FFPRESET_DEFAULT,
-   0
-  };
- addOptions(sopts);
+    static const TintOptionT<TglobalSettingsDec> iopts[]= {
+        IDFF_autoPreset         ,&TglobalSettingsDec::autoPreset         ,0,0,_l(""),0,
+        _l("autoPresets"),0,
+        IDFF_autoPresetFileFirst,&TglobalSettingsDec::autoPresetFileFirst,0,0,_l(""),0,
+        _l("autoPresetFileFirst"),0,
+        IDFF_streamsOptionsMenu ,&TglobalSettingsDec::streamsMenu        ,0,0,_l(""),0,
+        _l("streamsOptionsMenu"),0,
+        IDFF_streamsSubFilesMode ,&TglobalSettingsDec::streamsSubFilesMode,0,3,_l(""),0,
+        _l("streamsSubFilesMode"),3,
+        0
+    };
+    addOptions(iopts);
+    static const TstrOption sopts[]= {
+        IDFF_defaultPreset,(TstrVal)&TglobalSettingsDec::defaultPreset,MAX_PATH,0,_l(""),0,
+        _l("activePreset"),FFPRESET_DEFAULT,
+        0
+    };
+    addOptions(sopts);
 }
 
 void TglobalSettingsDec::reg_op(TregOp &t)
 {
- TglobalSettingsBase::reg_op(t);
+    TglobalSettingsBase::reg_op(t);
 }
 
 void TglobalSettingsDec::load(void)
 {
- TglobalSettingsBase::load();
+    TglobalSettingsBase::load();
 }
 void TglobalSettingsDec::save(void)
 {
- TglobalSettingsBase::save();
+    TglobalSettingsBase::save();
 }
 
 void TglobalSettingsDec::fixMissing(int &codecId,int movie1,int movie2,int movie3)
 {
- fixMissing(codecId,movie1,movie2);
- fixMissing(codecId,movie2,movie3);
- fixMissing(codecId,movie1,movie3);
+    fixMissing(codecId,movie1,movie2);
+    fixMissing(codecId,movie2,movie3);
+    fixMissing(codecId,movie1,movie3);
 }
 void TglobalSettingsDec::fixMissing(int &codecId,int movie1,int movie2)
 {
- if (!config->isDecoder[movie1] && !config->isDecoder[movie2]) codecId=IDFF_MOVIE_NONE;
- else if (codecId==movie1 && !config->isDecoder[movie1]) codecId=movie2;
- else if (codecId==movie2 && !config->isDecoder[movie2]) codecId=movie1;
+    if (!config->isDecoder[movie1] && !config->isDecoder[movie2]) {
+        codecId=IDFF_MOVIE_NONE;
+    } else if (codecId==movie1 && !config->isDecoder[movie1]) {
+        codecId=movie2;
+    } else if (codecId==movie2 && !config->isDecoder[movie2]) {
+        codecId=movie1;
+    }
 }
 void TglobalSettingsDec::fixMissing(int &codecId,int movie)
 {
- if (!config->isDecoder[movie]) codecId=0;
+    if (!config->isDecoder[movie]) {
+        codecId=0;
+    }
 }
 int TglobalSettingsDec::getDefault(int id)
 {
- switch (id)
-  {
-   case IDFF_trayIcon:return 1;
-   default:return TglobalSettingsBase::getDefault(id);
-  }
+    switch (id) {
+        case IDFF_trayIcon:
+            return 1;
+        default:
+            return TglobalSettingsBase::getDefault(id);
+    }
 }
 
 static bool compStrPtrs(const char_t *s1,const char_t *s2)
 {
- return stricmp(s1,s2)<0;
+    return stricmp(s1,s2)<0;
 }
 
 void TglobalSettingsDec::cleanupCodecsList(std::vector<CodecID> &ids,Tstrptrs &codecs)
 {
- std::sort(ids.begin(),ids.end());
- std::vector<CodecID>::iterator idsend=std::unique(ids.begin(),ids.end());
- codecs.clear();
- for (std::vector<CodecID>::const_iterator id=ids.begin();id!=idsend;id++)
-  codecs.push_back(getCodecName(*id));
- std::sort(codecs.begin(),codecs.end());
- Tstrptrs::iterator codecsend=std::unique(codecs.begin(),codecs.end());
- codecs.erase(codecsend,codecs.end());
- std::sort(codecs.begin(),codecs.end(),compStrPtrs);
+    std::sort(ids.begin(),ids.end());
+    std::vector<CodecID>::iterator idsend=std::unique(ids.begin(),ids.end());
+    codecs.clear();
+    for (std::vector<CodecID>::const_iterator id=ids.begin(); id!=idsend; id++) {
+        codecs.push_back(getCodecName(*id));
+    }
+    std::sort(codecs.begin(),codecs.end());
+    Tstrptrs::iterator codecsend=std::unique(codecs.begin(),codecs.end());
+    codecs.erase(codecsend,codecs.end());
+    std::sort(codecs.begin(),codecs.end(),compStrPtrs);
 }
 
 //=================================== TglobalSettingsDecVideo ===================================
 TglobalSettingsDecVideo::TglobalSettingsDecVideo(const Tconfig *Iconfig,int Imode,TintStrColl *Icoll):TglobalSettingsDec(Iconfig,Imode,Imode&IDFF_FILTERMODE_VFW?FFDSHOWDECVIDEOVFW:(Imode&IDFF_FILTERMODE_VIDEODXVA?FFDSHOWDECVIDEODXVA:FFDSHOWDECVIDEO),Icoll),sub(Icoll)
 {
- static const TintOptionT<TglobalSettingsDecVideo> iopts[]=
-  {
-   IDFF_buildHistogram ,&TglobalSettingsDecVideo::buildHistogram ,0,0,_l(""),0,
-     _l("buildHistogram"),0,
-   IDFF_xvid           ,&TglobalSettingsDecVideo::xvid           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_div3           ,&TglobalSettingsDecVideo::div3           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_dx50           ,&TglobalSettingsDecVideo::dx50           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_mp4v           ,&TglobalSettingsDecVideo::mp4v           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_fvfw           ,&TglobalSettingsDecVideo::fvfw           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_mp43           ,&TglobalSettingsDecVideo::mp43           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_mp42           ,&TglobalSettingsDecVideo::mp42           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_mp41           ,&TglobalSettingsDecVideo::mp41           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_h263           ,&TglobalSettingsDecVideo::h263           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_h264           ,&TglobalSettingsDecVideo::h264           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_h261           ,&TglobalSettingsDecVideo::h261           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_wmv1           ,&TglobalSettingsDecVideo::wmv1           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_wmv2           ,&TglobalSettingsDecVideo::wmv2           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_wmv3           ,&TglobalSettingsDecVideo::wmv3           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_wvc1           ,&TglobalSettingsDecVideo::wvc1           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_mss2           ,&TglobalSettingsDecVideo::mss2           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_wvp2           ,&TglobalSettingsDecVideo::wvp2           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_vp5            ,&TglobalSettingsDecVideo::vp5            ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_vp6            ,&TglobalSettingsDecVideo::vp6            ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_vp6f           ,&TglobalSettingsDecVideo::vp6f           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_vp8            ,&TglobalSettingsDecVideo::vp8            ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_cavs           ,&TglobalSettingsDecVideo::cavs           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_mjpg           ,&TglobalSettingsDecVideo::mjpg           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_avrn           ,&TglobalSettingsDecVideo::avrn           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_dvsd           ,&TglobalSettingsDecVideo::dvsd           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_cdvc           ,&TglobalSettingsDecVideo::cdvc           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_hfyu           ,&TglobalSettingsDecVideo::hfyu           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_cyuv           ,&TglobalSettingsDecVideo::cyuv           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_asv1           ,&TglobalSettingsDecVideo::asv1           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_vcr1           ,&TglobalSettingsDecVideo::vcr1           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_mpg1           ,&TglobalSettingsDecVideo::mpg1           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_mpg2           ,&TglobalSettingsDecVideo::mpg2           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_mpegAVI        ,&TglobalSettingsDecVideo::mpegAVI        ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_em2v           ,&TglobalSettingsDecVideo::em2v           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_theo           ,&TglobalSettingsDecVideo::theo           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_svq1           ,&TglobalSettingsDecVideo::svq1           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_svq3           ,&TglobalSettingsDecVideo::svq3           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_qtrpza         ,&TglobalSettingsDecVideo::qtrpza         ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_cram           ,&TglobalSettingsDecVideo::cram           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_rt21           ,&TglobalSettingsDecVideo::rt21           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_iv32           ,&TglobalSettingsDecVideo::iv32           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_cvid           ,&TglobalSettingsDecVideo::cvid           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_rv10           ,&TglobalSettingsDecVideo::rv10           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_rv30           ,&TglobalSettingsDecVideo::rv30           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_rv40           ,&TglobalSettingsDecVideo::rv40           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_ffv1           ,&TglobalSettingsDecVideo::ffv1           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_vp3            ,&TglobalSettingsDecVideo::vp3            ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_rle            ,&TglobalSettingsDecVideo::rle            ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_mszh           ,&TglobalSettingsDecVideo::mszh           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_zlib           ,&TglobalSettingsDecVideo::zlib           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_flv1           ,&TglobalSettingsDecVideo::flv1           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_8bps           ,&TglobalSettingsDecVideo::_8bps          ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_png1           ,&TglobalSettingsDecVideo::png1           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_qtrle          ,&TglobalSettingsDecVideo::qtrle          ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_duck           ,&TglobalSettingsDecVideo::duck           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_tscc           ,&TglobalSettingsDecVideo::tscc           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_qpeg           ,&TglobalSettingsDecVideo::qpeg           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_loco           ,&TglobalSettingsDecVideo::loco           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_wnv1           ,&TglobalSettingsDecVideo::wnv1           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_cscd           ,&TglobalSettingsDecVideo::cscd           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_zmbv           ,&TglobalSettingsDecVideo::zmbv           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_ulti           ,&TglobalSettingsDecVideo::ulti           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_vixl           ,&TglobalSettingsDecVideo::vixl           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_aasc           ,&TglobalSettingsDecVideo::aasc           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_fps1           ,&TglobalSettingsDecVideo::fps1           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   //IDFF_snow           ,&TglobalSettingsDecVideo::snow           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_avisV          ,&TglobalSettingsDecVideo::avis           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_rawv           ,&TglobalSettingsDecVideo::rawv           ,0,0,_l(""),0,
-     NULL,0,
-   IDFF_supDVDdec      ,&TglobalSettingsDecVideo::supdvddec      ,0,0,_l(""),0,
-     _l("supDVDdec"),0,
-   IDFF_fastMpeg2      ,&TglobalSettingsDecVideo::fastMpeg2      ,0,0,_l(""),1,
-     _l("fastMpeg2"),0,
-   IDFF_fastH264       ,&TglobalSettingsDecVideo::fastH264       ,0,3,_l(""),1,
-     _l("fastH264"),0,
-   IDFF_alternateUncompressed,&TglobalSettingsDecVideo::alternateUncompressed,0,0,_l(""),1,
-     _l("alternateUncompressed"),0,
-   0
-  };
- addOptions(iopts);
+    static const TintOptionT<TglobalSettingsDecVideo> iopts[]= {
+        IDFF_buildHistogram ,&TglobalSettingsDecVideo::buildHistogram ,0,0,_l(""),0,
+        _l("buildHistogram"),0,
+        IDFF_xvid           ,&TglobalSettingsDecVideo::xvid           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_div3           ,&TglobalSettingsDecVideo::div3           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_dx50           ,&TglobalSettingsDecVideo::dx50           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_mp4v           ,&TglobalSettingsDecVideo::mp4v           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_fvfw           ,&TglobalSettingsDecVideo::fvfw           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_mp43           ,&TglobalSettingsDecVideo::mp43           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_mp42           ,&TglobalSettingsDecVideo::mp42           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_mp41           ,&TglobalSettingsDecVideo::mp41           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_h263           ,&TglobalSettingsDecVideo::h263           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_h264           ,&TglobalSettingsDecVideo::h264           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_h261           ,&TglobalSettingsDecVideo::h261           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_wmv1           ,&TglobalSettingsDecVideo::wmv1           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_wmv2           ,&TglobalSettingsDecVideo::wmv2           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_wmv3           ,&TglobalSettingsDecVideo::wmv3           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_wvc1           ,&TglobalSettingsDecVideo::wvc1           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_mss2           ,&TglobalSettingsDecVideo::mss2           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_wvp2           ,&TglobalSettingsDecVideo::wvp2           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_vp5            ,&TglobalSettingsDecVideo::vp5            ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_vp6            ,&TglobalSettingsDecVideo::vp6            ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_vp6f           ,&TglobalSettingsDecVideo::vp6f           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_vp8            ,&TglobalSettingsDecVideo::vp8            ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_cavs           ,&TglobalSettingsDecVideo::cavs           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_mjpg           ,&TglobalSettingsDecVideo::mjpg           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_avrn           ,&TglobalSettingsDecVideo::avrn           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_dvsd           ,&TglobalSettingsDecVideo::dvsd           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_cdvc           ,&TglobalSettingsDecVideo::cdvc           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_hfyu           ,&TglobalSettingsDecVideo::hfyu           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_cyuv           ,&TglobalSettingsDecVideo::cyuv           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_asv1           ,&TglobalSettingsDecVideo::asv1           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_vcr1           ,&TglobalSettingsDecVideo::vcr1           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_mpg1           ,&TglobalSettingsDecVideo::mpg1           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_mpg2           ,&TglobalSettingsDecVideo::mpg2           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_mpegAVI        ,&TglobalSettingsDecVideo::mpegAVI        ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_em2v           ,&TglobalSettingsDecVideo::em2v           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_theo           ,&TglobalSettingsDecVideo::theo           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_svq1           ,&TglobalSettingsDecVideo::svq1           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_svq3           ,&TglobalSettingsDecVideo::svq3           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_qtrpza         ,&TglobalSettingsDecVideo::qtrpza         ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_cram           ,&TglobalSettingsDecVideo::cram           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_rt21           ,&TglobalSettingsDecVideo::rt21           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_iv32           ,&TglobalSettingsDecVideo::iv32           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_cvid           ,&TglobalSettingsDecVideo::cvid           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_rv10           ,&TglobalSettingsDecVideo::rv10           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_rv30           ,&TglobalSettingsDecVideo::rv30           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_rv40           ,&TglobalSettingsDecVideo::rv40           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_ffv1           ,&TglobalSettingsDecVideo::ffv1           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_vp3            ,&TglobalSettingsDecVideo::vp3            ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_rle            ,&TglobalSettingsDecVideo::rle            ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_mszh           ,&TglobalSettingsDecVideo::mszh           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_zlib           ,&TglobalSettingsDecVideo::zlib           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_flv1           ,&TglobalSettingsDecVideo::flv1           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_8bps           ,&TglobalSettingsDecVideo::_8bps          ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_png1           ,&TglobalSettingsDecVideo::png1           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_qtrle          ,&TglobalSettingsDecVideo::qtrle          ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_duck           ,&TglobalSettingsDecVideo::duck           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_tscc           ,&TglobalSettingsDecVideo::tscc           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_qpeg           ,&TglobalSettingsDecVideo::qpeg           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_loco           ,&TglobalSettingsDecVideo::loco           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_wnv1           ,&TglobalSettingsDecVideo::wnv1           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_cscd           ,&TglobalSettingsDecVideo::cscd           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_zmbv           ,&TglobalSettingsDecVideo::zmbv           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_ulti           ,&TglobalSettingsDecVideo::ulti           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_vixl           ,&TglobalSettingsDecVideo::vixl           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_aasc           ,&TglobalSettingsDecVideo::aasc           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_fps1           ,&TglobalSettingsDecVideo::fps1           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        //IDFF_snow           ,&TglobalSettingsDecVideo::snow           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_avisV          ,&TglobalSettingsDecVideo::avis           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_rawv           ,&TglobalSettingsDecVideo::rawv           ,0,0,_l(""),0,
+        NULL,0,
+        IDFF_supDVDdec      ,&TglobalSettingsDecVideo::supdvddec      ,0,0,_l(""),0,
+        _l("supDVDdec"),0,
+        IDFF_fastMpeg2      ,&TglobalSettingsDecVideo::fastMpeg2      ,0,0,_l(""),1,
+        _l("fastMpeg2"),0,
+        IDFF_fastH264       ,&TglobalSettingsDecVideo::fastH264       ,0,3,_l(""),1,
+        _l("fastH264"),0,
+        IDFF_alternateUncompressed,&TglobalSettingsDecVideo::alternateUncompressed,0,0,_l(""),1,
+        _l("alternateUncompressed"),0,
+        0
+    };
+    addOptions(iopts);
 }
 
 void TglobalSettingsDecVideo::reg_op(TregOp &t)
 {
- TglobalSettingsDec::reg_op(t);
- sub.reg_op(t);
+    TglobalSettingsDec::reg_op(t);
+    sub.reg_op(t);
 }
 
 int TglobalSettingsDecVideo::getDefault(int id)
 {
- switch (id)
-  {
-   case IDFF_multipleInstances:return filtermode&IDFF_FILTERMODE_VIDEORAW?0:2;
-   default:return TglobalSettingsDec::getDefault(id);
-  }
+    switch (id) {
+        case IDFF_multipleInstances:
+            return filtermode&IDFF_FILTERMODE_VIDEORAW?0:2;
+        default:
+            return TglobalSettingsDec::getDefault(id);
+    }
 }
 
 void TglobalSettingsDecVideo::reg_op_codec(TregOp &t,TregOp *t2)
 {
- _reg_op_codec(IDFF_xvid,t,t2,_l("xvid"),xvid,0);
- _reg_op_codec(IDFF_div3,t,t2,_l("div3"),div3,0);
- _reg_op_codec(IDFF_dx50,t,t2,_l("dx50"),dx50,0);
- _reg_op_codec(IDFF_mp4v,t,t2,_l("mp4v"),mp4v,0);
- _reg_op_codec(IDFF_mp43,t,t2,_l("mp43"),mp43,0);
- _reg_op_codec(IDFF_mp42,t,t2,_l("mp42"),mp42,0);
- _reg_op_codec(IDFF_mp41,t,t2,_l("mp41"),mp41,0);
- _reg_op_codec(IDFF_h261,t,t2,_l("h261"),h261,0);
- _reg_op_codec(IDFF_h263,t,t2,_l("h263"),h263,0);
- _reg_op_codec(IDFF_h264,t,t2,_l("h264"),h264,0);
- _reg_op_codec(IDFF_wmv1,t,t2,_l("wmv1"),wmv1,0);
- _reg_op_codec(IDFF_wmv2,t,t2,_l("wmv2"),wmv2,0);
- _reg_op_codec(IDFF_wmv3,t,t2,_l("wmv3"),wmv3,0);
- _reg_op_codec(IDFF_wvc1,t,t2,_l("wvc1"),wvc1,0);
- _reg_op_codec(IDFF_mss2,t,t2,_l("mss2"),mss2,0);
- _reg_op_codec(IDFF_wvp2,t,t2,_l("wvp2"),wvp2,0);
- _reg_op_codec(IDFF_vp5 ,t,t2,_l("vp5") ,vp5,0);
- _reg_op_codec(IDFF_vp6 ,t,t2,_l("vp6") ,vp6,0);
- _reg_op_codec(IDFF_vp6f,t,t2,_l("vp6f"),vp6f,0);
- _reg_op_codec(IDFF_vp8 ,t,t2,_l("vp8") ,vp8,0);
- _reg_op_codec(IDFF_cavs,t,t2,_l("cavs"),cavs,0);
- _reg_op_codec(IDFF_rawv,t,t2,
-  filtermode & IDFF_FILTERMODE_VIDEOSUBTITLES ? NULL :
-   filtermode & IDFF_FILTERMODE_VIDEORAW ? _l("raw_rawv") : _l("rawv"),
-  rawv,
-  filtermode & IDFF_FILTERMODE_VIDEORAW ? 1 : 0);
- _reg_op_codec(IDFF_mpg1,t,t2,_l("mpg1"),mpg1,0);
- _reg_op_codec(IDFF_mpg2,t,t2,_l("mpg2"),mpg2,0);
- _reg_op_codec(IDFF_mpegAVI,t,t2,_l("mpegAVI"),mpegAVI,0);
- _reg_op_codec(IDFF_em2v,t,t2,_l("em2v"),em2v,0);
- _reg_op_codec(IDFF_avrn,t,t2,_l("avrn"),avrn,0);
- _reg_op_codec(IDFF_mjpg,t,t2,_l("mjpg"),mjpg,0);
- _reg_op_codec(IDFF_dvsd,t,t2,_l("dvsd"),dvsd,0);
- _reg_op_codec(IDFF_cdvc,t,t2,_l("cdvc"),cdvc,0);
- _reg_op_codec(IDFF_hfyu,t,t2,_l("hfyu"),hfyu,0);
- _reg_op_codec(IDFF_cyuv,t,t2,_l("cyuv"),cyuv,0);
- _reg_op_codec(IDFF_theo,t,t2,_l("theo"),theo,0);
- _reg_op_codec(IDFF_fvfw,t,t2,_l("fvfw"),fvfw,IDFF_MOVIE_LAVC);
- _reg_op_codec(IDFF_asv1,t,t2,_l("asv1"),asv1,0);
- _reg_op_codec(IDFF_vcr1,t,t2,_l("vcr1"),vcr1,0);
- _reg_op_codec(IDFF_svq1,t,t2,_l("svq1"),svq1,0);
- _reg_op_codec(IDFF_svq3,t,t2,_l("svq3"),svq3,0);
- _reg_op_codec(IDFF_qtrpza,t,t2,_l("qtrpza"),qtrpza,0);
- _reg_op_codec(IDFF_cram,t,t2,_l("cram"),cram,0);
- _reg_op_codec(IDFF_rt21,t,t2,_l("rt21"),rt21,0);
- _reg_op_codec(IDFF_iv32,t,t2,_l("iv32"),iv32,0);
- _reg_op_codec(IDFF_cvid,t,t2,_l("cvid"),cvid,0);
- _reg_op_codec(IDFF_rv10,t,t2,_l("rv10"),rv10,0);
- _reg_op_codec(IDFF_rv30,t,t2,_l("rv30"),rv30,0);
- _reg_op_codec(IDFF_rv40,t,t2,_l("rv40"),rv40,0);
- _reg_op_codec(IDFF_ffv1,t,t2,_l("ffv1"),ffv1,IDFF_MOVIE_LAVC);
- _reg_op_codec(IDFF_vp3 ,t,t2,_l("vp3") ,vp3 ,0);
- _reg_op_codec(IDFF_rle ,t,t2,_l("rle") ,rle ,0);
- _reg_op_codec(IDFF_avisV,t,t2,_l("avis"),avis,IDFF_MOVIE_AVIS);
- _reg_op_codec(IDFF_mszh,t,t2,_l("mszh"),mszh,0);
- _reg_op_codec(IDFF_zlib,t,t2,_l("zlib"),zlib,0);
- _reg_op_codec(IDFF_flv1,t,t2,_l("flv1"),flv1,0);
- _reg_op_codec(IDFF_8bps,t,t2,_l("8bps"),_8bps,0);
- _reg_op_codec(IDFF_png1,t,t2,_l("png1"),png1,0);
- _reg_op_codec(IDFF_qtrle,t,t2,_l("qtrle"),qtrle,0);
- _reg_op_codec(IDFF_duck,t,t2,_l("duck"),duck,0);
- _reg_op_codec(IDFF_tscc,t,t2,_l("tscc"),tscc,0);
- _reg_op_codec(IDFF_qpeg,t,t2,_l("qpeg"),qpeg,0);
- _reg_op_codec(IDFF_loco,t,t2,_l("loco"),loco,0);
- _reg_op_codec(IDFF_wnv1,t,t2,_l("wnv1"),wnv1,0);
- _reg_op_codec(IDFF_cscd,t,t2,_l("cscd"),cscd,0);
- _reg_op_codec(IDFF_zmbv,t,t2,_l("zmbv"),zmbv,0);
- _reg_op_codec(IDFF_ulti,t,t2,_l("ulti"),ulti,0);
- _reg_op_codec(IDFF_vixl,t,t2,_l("vixl"),vixl,0);
- _reg_op_codec(IDFF_aasc,t,t2,_l("aasc"),aasc,0);
- _reg_op_codec(IDFF_fps1,t,t2,_l("fps1"),fps1,0);
- //_reg_op_codec(IDFF_snow,t,t2,_l("snow"),snow,0);
- _reg_op_codec(0,t,t2,_l("needCodecFix"),needCodecFix,1);
+    _reg_op_codec(IDFF_xvid,t,t2,_l("xvid"),xvid,0);
+    _reg_op_codec(IDFF_div3,t,t2,_l("div3"),div3,0);
+    _reg_op_codec(IDFF_dx50,t,t2,_l("dx50"),dx50,0);
+    _reg_op_codec(IDFF_mp4v,t,t2,_l("mp4v"),mp4v,0);
+    _reg_op_codec(IDFF_mp43,t,t2,_l("mp43"),mp43,0);
+    _reg_op_codec(IDFF_mp42,t,t2,_l("mp42"),mp42,0);
+    _reg_op_codec(IDFF_mp41,t,t2,_l("mp41"),mp41,0);
+    _reg_op_codec(IDFF_h261,t,t2,_l("h261"),h261,0);
+    _reg_op_codec(IDFF_h263,t,t2,_l("h263"),h263,0);
+    _reg_op_codec(IDFF_h264,t,t2,_l("h264"),h264,0);
+    _reg_op_codec(IDFF_wmv1,t,t2,_l("wmv1"),wmv1,0);
+    _reg_op_codec(IDFF_wmv2,t,t2,_l("wmv2"),wmv2,0);
+    _reg_op_codec(IDFF_wmv3,t,t2,_l("wmv3"),wmv3,0);
+    _reg_op_codec(IDFF_wvc1,t,t2,_l("wvc1"),wvc1,0);
+    _reg_op_codec(IDFF_mss2,t,t2,_l("mss2"),mss2,0);
+    _reg_op_codec(IDFF_wvp2,t,t2,_l("wvp2"),wvp2,0);
+    _reg_op_codec(IDFF_vp5 ,t,t2,_l("vp5") ,vp5,0);
+    _reg_op_codec(IDFF_vp6 ,t,t2,_l("vp6") ,vp6,0);
+    _reg_op_codec(IDFF_vp6f,t,t2,_l("vp6f"),vp6f,0);
+    _reg_op_codec(IDFF_vp8 ,t,t2,_l("vp8") ,vp8,0);
+    _reg_op_codec(IDFF_cavs,t,t2,_l("cavs"),cavs,0);
+    _reg_op_codec(IDFF_rawv,t,t2,
+                  filtermode & IDFF_FILTERMODE_VIDEOSUBTITLES ? NULL :
+                  filtermode & IDFF_FILTERMODE_VIDEORAW ? _l("raw_rawv") : _l("rawv"),
+                  rawv,
+                  filtermode & IDFF_FILTERMODE_VIDEORAW ? 1 : 0);
+    _reg_op_codec(IDFF_mpg1,t,t2,_l("mpg1"),mpg1,0);
+    _reg_op_codec(IDFF_mpg2,t,t2,_l("mpg2"),mpg2,0);
+    _reg_op_codec(IDFF_mpegAVI,t,t2,_l("mpegAVI"),mpegAVI,0);
+    _reg_op_codec(IDFF_em2v,t,t2,_l("em2v"),em2v,0);
+    _reg_op_codec(IDFF_avrn,t,t2,_l("avrn"),avrn,0);
+    _reg_op_codec(IDFF_mjpg,t,t2,_l("mjpg"),mjpg,0);
+    _reg_op_codec(IDFF_dvsd,t,t2,_l("dvsd"),dvsd,0);
+    _reg_op_codec(IDFF_cdvc,t,t2,_l("cdvc"),cdvc,0);
+    _reg_op_codec(IDFF_hfyu,t,t2,_l("hfyu"),hfyu,0);
+    _reg_op_codec(IDFF_cyuv,t,t2,_l("cyuv"),cyuv,0);
+    _reg_op_codec(IDFF_theo,t,t2,_l("theo"),theo,0);
+    _reg_op_codec(IDFF_fvfw,t,t2,_l("fvfw"),fvfw,IDFF_MOVIE_LAVC);
+    _reg_op_codec(IDFF_asv1,t,t2,_l("asv1"),asv1,0);
+    _reg_op_codec(IDFF_vcr1,t,t2,_l("vcr1"),vcr1,0);
+    _reg_op_codec(IDFF_svq1,t,t2,_l("svq1"),svq1,0);
+    _reg_op_codec(IDFF_svq3,t,t2,_l("svq3"),svq3,0);
+    _reg_op_codec(IDFF_qtrpza,t,t2,_l("qtrpza"),qtrpza,0);
+    _reg_op_codec(IDFF_cram,t,t2,_l("cram"),cram,0);
+    _reg_op_codec(IDFF_rt21,t,t2,_l("rt21"),rt21,0);
+    _reg_op_codec(IDFF_iv32,t,t2,_l("iv32"),iv32,0);
+    _reg_op_codec(IDFF_cvid,t,t2,_l("cvid"),cvid,0);
+    _reg_op_codec(IDFF_rv10,t,t2,_l("rv10"),rv10,0);
+    _reg_op_codec(IDFF_rv30,t,t2,_l("rv30"),rv30,0);
+    _reg_op_codec(IDFF_rv40,t,t2,_l("rv40"),rv40,0);
+    _reg_op_codec(IDFF_ffv1,t,t2,_l("ffv1"),ffv1,IDFF_MOVIE_LAVC);
+    _reg_op_codec(IDFF_vp3 ,t,t2,_l("vp3") ,vp3 ,0);
+    _reg_op_codec(IDFF_rle ,t,t2,_l("rle") ,rle ,0);
+    _reg_op_codec(IDFF_avisV,t,t2,_l("avis"),avis,IDFF_MOVIE_AVIS);
+    _reg_op_codec(IDFF_mszh,t,t2,_l("mszh"),mszh,0);
+    _reg_op_codec(IDFF_zlib,t,t2,_l("zlib"),zlib,0);
+    _reg_op_codec(IDFF_flv1,t,t2,_l("flv1"),flv1,0);
+    _reg_op_codec(IDFF_8bps,t,t2,_l("8bps"),_8bps,0);
+    _reg_op_codec(IDFF_png1,t,t2,_l("png1"),png1,0);
+    _reg_op_codec(IDFF_qtrle,t,t2,_l("qtrle"),qtrle,0);
+    _reg_op_codec(IDFF_duck,t,t2,_l("duck"),duck,0);
+    _reg_op_codec(IDFF_tscc,t,t2,_l("tscc"),tscc,0);
+    _reg_op_codec(IDFF_qpeg,t,t2,_l("qpeg"),qpeg,0);
+    _reg_op_codec(IDFF_loco,t,t2,_l("loco"),loco,0);
+    _reg_op_codec(IDFF_wnv1,t,t2,_l("wnv1"),wnv1,0);
+    _reg_op_codec(IDFF_cscd,t,t2,_l("cscd"),cscd,0);
+    _reg_op_codec(IDFF_zmbv,t,t2,_l("zmbv"),zmbv,0);
+    _reg_op_codec(IDFF_ulti,t,t2,_l("ulti"),ulti,0);
+    _reg_op_codec(IDFF_vixl,t,t2,_l("vixl"),vixl,0);
+    _reg_op_codec(IDFF_aasc,t,t2,_l("aasc"),aasc,0);
+    _reg_op_codec(IDFF_fps1,t,t2,_l("fps1"),fps1,0);
+    //_reg_op_codec(IDFF_snow,t,t2,_l("snow"),snow,0);
+    _reg_op_codec(0,t,t2,_l("needCodecFix"),needCodecFix,1);
 }
 
 void TglobalSettingsDecVideo::fixNewCodecs(void)
 {
- if (mpg1==2) mpg1=IDFF_MOVIE_LIBMPEG2;
- if (mpg2==2) mpg2=IDFF_MOVIE_LIBMPEG2;
- if (em2v==2) em2v=IDFF_MOVIE_LIBMPEG2;
- if (mpegAVI==2) mpegAVI=IDFF_MOVIE_LIBMPEG2;
- //if (rawv==1 && forceInCSP!=0) rawv=forceInCSP;
+    if (mpg1==2) {
+        mpg1=IDFF_MOVIE_LIBMPEG2;
+    }
+    if (mpg2==2) {
+        mpg2=IDFF_MOVIE_LIBMPEG2;
+    }
+    if (em2v==2) {
+        em2v=IDFF_MOVIE_LIBMPEG2;
+    }
+    if (mpegAVI==2) {
+        mpegAVI=IDFF_MOVIE_LIBMPEG2;
+    }
+    //if (rawv==1 && forceInCSP!=0) rawv=forceInCSP;
 }
 
 void TglobalSettingsDecVideo::load(void)
 {
- TglobalSettingsDec::load();
- if (needCodecFix)
-  {
-   fixNewCodecs();
-   needCodecFix=0;
-  }
+    TglobalSettingsDec::load();
+    if (needCodecFix) {
+        fixNewCodecs();
+        needCodecFix=0;
+    }
 
- fixMissing(xvid,IDFF_MOVIE_LAVC,IDFF_MOVIE_XVID4);
- fixMissing(div3,IDFF_MOVIE_LAVC);
- fixMissing(dx50,IDFF_MOVIE_LAVC,IDFF_MOVIE_XVID4);
- fixMissing(mp4v,IDFF_MOVIE_LAVC,IDFF_MOVIE_XVID4);
- fixMissing(fvfw,IDFF_MOVIE_LAVC,IDFF_MOVIE_XVID4);
- fixMissing(mp43,IDFF_MOVIE_LAVC);
- fixMissing(mp42,IDFF_MOVIE_LAVC);
- fixMissing(mp41,IDFF_MOVIE_LAVC);
- fixMissing(h261,IDFF_MOVIE_LAVC);
- fixMissing(h263,IDFF_MOVIE_LAVC);
- fixMissing(h264,IDFF_MOVIE_LAVC,IDFF_MOVIE_FFMPEG_MT);
- fixMissing(wmv1,IDFF_MOVIE_LAVC,IDFF_MOVIE_WMV9);
- fixMissing(wmv2,IDFF_MOVIE_LAVC,IDFF_MOVIE_WMV9);
- fixMissing(wmv3,IDFF_MOVIE_LAVC,IDFF_MOVIE_WMV9);
- fixMissing(wvc1,IDFF_MOVIE_LAVC,IDFF_MOVIE_WMV9);
- fixMissing(mss2,IDFF_MOVIE_WMV9);
- fixMissing(wvp2,IDFF_MOVIE_WMV9);
- fixMissing(vp5 ,IDFF_MOVIE_LAVC);
- fixMissing(vp6 ,IDFF_MOVIE_LAVC);
- fixMissing(vp6f,IDFF_MOVIE_LAVC);
- fixMissing(vp8 ,IDFF_MOVIE_LAVC);
- fixMissing(cavs,IDFF_MOVIE_LAVC);
- fixMissing(avrn,IDFF_MOVIE_LAVC);
- fixMissing(mjpg,IDFF_MOVIE_LAVC);
- fixMissing(dvsd,IDFF_MOVIE_LAVC);
- fixMissing(cdvc,IDFF_MOVIE_LAVC);
- fixMissing(hfyu,IDFF_MOVIE_LAVC);
- fixMissing(cyuv,IDFF_MOVIE_LAVC);
- fixMissing(asv1,IDFF_MOVIE_LAVC);
- fixMissing(vcr1,IDFF_MOVIE_LAVC);
- fixMissing(svq1,IDFF_MOVIE_LAVC);
- fixMissing(svq3,IDFF_MOVIE_LAVC);
- fixMissing(qtrpza,IDFF_MOVIE_LAVC);
- fixMissing(mpg1,IDFF_MOVIE_LAVC,IDFF_MOVIE_LIBMPEG2);
- fixMissing(mpg2,IDFF_MOVIE_LAVC,IDFF_MOVIE_LIBMPEG2);
- fixMissing(mpegAVI,IDFF_MOVIE_LAVC,IDFF_MOVIE_LIBMPEG2);
- fixMissing(em2v,IDFF_MOVIE_LAVC,IDFF_MOVIE_LIBMPEG2);
- fixMissing(theo,IDFF_MOVIE_LAVC);
- fixMissing(cram,IDFF_MOVIE_LAVC);
- fixMissing(rt21,IDFF_MOVIE_LAVC);
- fixMissing(iv32,IDFF_MOVIE_LAVC);
- fixMissing(cvid,IDFF_MOVIE_LAVC);
- fixMissing(rv10,IDFF_MOVIE_LAVC);
- fixMissing(rv30,IDFF_MOVIE_LAVC);
- fixMissing(rv40,IDFF_MOVIE_LAVC);
- fixMissing(ffv1,IDFF_MOVIE_LAVC);
- fixMissing(vp3 ,IDFF_MOVIE_LAVC);
- fixMissing(rle ,IDFF_MOVIE_LAVC);
- fixMissing(mszh,IDFF_MOVIE_LAVC);
- fixMissing(zlib,IDFF_MOVIE_LAVC);
- fixMissing(flv1,IDFF_MOVIE_LAVC);
- fixMissing(_8bps,IDFF_MOVIE_LAVC);
- fixMissing(png1,IDFF_MOVIE_LAVC);
- fixMissing(qtrle,IDFF_MOVIE_LAVC);
- fixMissing(duck,IDFF_MOVIE_LAVC);
- fixMissing(tscc,IDFF_MOVIE_LAVC);
- fixMissing(qpeg,IDFF_MOVIE_LAVC);
- fixMissing(loco,IDFF_MOVIE_LAVC);
- fixMissing(wnv1,IDFF_MOVIE_LAVC);
- fixMissing(cscd,IDFF_MOVIE_LAVC);
- fixMissing(zmbv,IDFF_MOVIE_LAVC);
- fixMissing(ulti,IDFF_MOVIE_LAVC);
- fixMissing(vixl,IDFF_MOVIE_LAVC);
- fixMissing(aasc,IDFF_MOVIE_LAVC);
- fixMissing(fps1,IDFF_MOVIE_LAVC);
- fixMissing(avis,IDFF_MOVIE_AVIS);
- //fixMissing(snow,IDFF_MOVIE_LAVC);
+    fixMissing(xvid,IDFF_MOVIE_LAVC,IDFF_MOVIE_XVID4);
+    fixMissing(div3,IDFF_MOVIE_LAVC);
+    fixMissing(dx50,IDFF_MOVIE_LAVC,IDFF_MOVIE_XVID4);
+    fixMissing(mp4v,IDFF_MOVIE_LAVC,IDFF_MOVIE_XVID4);
+    fixMissing(fvfw,IDFF_MOVIE_LAVC,IDFF_MOVIE_XVID4);
+    fixMissing(mp43,IDFF_MOVIE_LAVC);
+    fixMissing(mp42,IDFF_MOVIE_LAVC);
+    fixMissing(mp41,IDFF_MOVIE_LAVC);
+    fixMissing(h261,IDFF_MOVIE_LAVC);
+    fixMissing(h263,IDFF_MOVIE_LAVC);
+    fixMissing(h264,IDFF_MOVIE_LAVC,IDFF_MOVIE_FFMPEG_MT);
+    fixMissing(wmv1,IDFF_MOVIE_LAVC,IDFF_MOVIE_WMV9);
+    fixMissing(wmv2,IDFF_MOVIE_LAVC,IDFF_MOVIE_WMV9);
+    fixMissing(wmv3,IDFF_MOVIE_LAVC,IDFF_MOVIE_WMV9);
+    fixMissing(wvc1,IDFF_MOVIE_LAVC,IDFF_MOVIE_WMV9);
+    fixMissing(mss2,IDFF_MOVIE_WMV9);
+    fixMissing(wvp2,IDFF_MOVIE_WMV9);
+    fixMissing(vp5 ,IDFF_MOVIE_LAVC);
+    fixMissing(vp6 ,IDFF_MOVIE_LAVC);
+    fixMissing(vp6f,IDFF_MOVIE_LAVC);
+    fixMissing(vp8 ,IDFF_MOVIE_LAVC);
+    fixMissing(cavs,IDFF_MOVIE_LAVC);
+    fixMissing(avrn,IDFF_MOVIE_LAVC);
+    fixMissing(mjpg,IDFF_MOVIE_LAVC);
+    fixMissing(dvsd,IDFF_MOVIE_LAVC);
+    fixMissing(cdvc,IDFF_MOVIE_LAVC);
+    fixMissing(hfyu,IDFF_MOVIE_LAVC);
+    fixMissing(cyuv,IDFF_MOVIE_LAVC);
+    fixMissing(asv1,IDFF_MOVIE_LAVC);
+    fixMissing(vcr1,IDFF_MOVIE_LAVC);
+    fixMissing(svq1,IDFF_MOVIE_LAVC);
+    fixMissing(svq3,IDFF_MOVIE_LAVC);
+    fixMissing(qtrpza,IDFF_MOVIE_LAVC);
+    fixMissing(mpg1,IDFF_MOVIE_LAVC,IDFF_MOVIE_LIBMPEG2);
+    fixMissing(mpg2,IDFF_MOVIE_LAVC,IDFF_MOVIE_LIBMPEG2);
+    fixMissing(mpegAVI,IDFF_MOVIE_LAVC,IDFF_MOVIE_LIBMPEG2);
+    fixMissing(em2v,IDFF_MOVIE_LAVC,IDFF_MOVIE_LIBMPEG2);
+    fixMissing(theo,IDFF_MOVIE_LAVC);
+    fixMissing(cram,IDFF_MOVIE_LAVC);
+    fixMissing(rt21,IDFF_MOVIE_LAVC);
+    fixMissing(iv32,IDFF_MOVIE_LAVC);
+    fixMissing(cvid,IDFF_MOVIE_LAVC);
+    fixMissing(rv10,IDFF_MOVIE_LAVC);
+    fixMissing(rv30,IDFF_MOVIE_LAVC);
+    fixMissing(rv40,IDFF_MOVIE_LAVC);
+    fixMissing(ffv1,IDFF_MOVIE_LAVC);
+    fixMissing(vp3 ,IDFF_MOVIE_LAVC);
+    fixMissing(rle ,IDFF_MOVIE_LAVC);
+    fixMissing(mszh,IDFF_MOVIE_LAVC);
+    fixMissing(zlib,IDFF_MOVIE_LAVC);
+    fixMissing(flv1,IDFF_MOVIE_LAVC);
+    fixMissing(_8bps,IDFF_MOVIE_LAVC);
+    fixMissing(png1,IDFF_MOVIE_LAVC);
+    fixMissing(qtrle,IDFF_MOVIE_LAVC);
+    fixMissing(duck,IDFF_MOVIE_LAVC);
+    fixMissing(tscc,IDFF_MOVIE_LAVC);
+    fixMissing(qpeg,IDFF_MOVIE_LAVC);
+    fixMissing(loco,IDFF_MOVIE_LAVC);
+    fixMissing(wnv1,IDFF_MOVIE_LAVC);
+    fixMissing(cscd,IDFF_MOVIE_LAVC);
+    fixMissing(zmbv,IDFF_MOVIE_LAVC);
+    fixMissing(ulti,IDFF_MOVIE_LAVC);
+    fixMissing(vixl,IDFF_MOVIE_LAVC);
+    fixMissing(aasc,IDFF_MOVIE_LAVC);
+    fixMissing(fps1,IDFF_MOVIE_LAVC);
+    fixMissing(avis,IDFF_MOVIE_AVIS);
+    //fixMissing(snow,IDFF_MOVIE_LAVC);
 }
 
 #define FF_FOURCC1_CODEC(fourCC1,decoder,codec)  \
@@ -789,372 +810,358 @@ void TglobalSettingsDecVideo::load(void)
  FF_FOURCC1_OP(MPG4,mp41 & rawmask & dxvamask,CODEC_ID_MSMPEG4V1) \
  FF_FOURCC1_OP(DIV1,mp41 & rawmask & dxvamask,CODEC_ID_MSMPEG4V1) \
  FF_FOURCC1_OP(MP41,mp41 & rawmask & dxvamask,CODEC_ID_MSMPEG4V1) \
-
+ 
 #define FF_FOURCC_LIST(fourCC,decoder,codec) _l(#fourCC),
 
-const char_t* TglobalSettingsDecVideo::fourccs[]=
-{
- #undef FF_FOURCC_OP
- #undef FF_FOURCC1_OP
- #define FF_FOURCC_OP  FF_FOURCC_LIST
- #define FF_FOURCC1_OP FF_FOURCC_LIST
- VIDEO_FOURCCS
- NULL
+const char_t* TglobalSettingsDecVideo::fourccs[]= {
+#undef FF_FOURCC_OP
+#undef FF_FOURCC1_OP
+#define FF_FOURCC_OP  FF_FOURCC_LIST
+#define FF_FOURCC1_OP FF_FOURCC_LIST
+    VIDEO_FOURCCS
+    NULL
 };
 const char_t** TglobalSettingsDecVideo::getFOURCClist(void) const
 {
- return fourccs;
+    return fourccs;
 }
-const CodecID TglobalSettingsDecVideo::c_h264[IDFF_MOVIE_MAX+1]=
-{
- CODEC_ID_NONE,
- CODEC_ID_H264,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_H264_MT,
- CODEC_ID_H264_DXVA
+const CodecID TglobalSettingsDecVideo::c_h264[IDFF_MOVIE_MAX+1]= {
+    CODEC_ID_NONE,
+    CODEC_ID_H264,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_H264_MT,
+    CODEC_ID_H264_DXVA
 };
-const CodecID TglobalSettingsDecVideo::c_mpeg4[IDFF_MOVIE_MAX+1]=
-{
- CODEC_ID_NONE,
- CODEC_ID_MPEG4,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_XVID4
+const CodecID TglobalSettingsDecVideo::c_mpeg4[IDFF_MOVIE_MAX+1]= {
+    CODEC_ID_NONE,
+    CODEC_ID_MPEG4,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_XVID4
 };
-const CodecID TglobalSettingsDecVideo::c_mpeg1[IDFF_MOVIE_MAX+1]=
-{
- CODEC_ID_NONE,
- CODEC_ID_MPEG1VIDEO,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_LIBMPEG2
+const CodecID TglobalSettingsDecVideo::c_mpeg1[IDFF_MOVIE_MAX+1]= {
+    CODEC_ID_NONE,
+    CODEC_ID_MPEG1VIDEO,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_LIBMPEG2
 };
-const CodecID TglobalSettingsDecVideo::c_mpeg2[IDFF_MOVIE_MAX+1]=
-{
- CODEC_ID_NONE,
- CODEC_ID_MPEG2VIDEO,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_LIBMPEG2
+const CodecID TglobalSettingsDecVideo::c_mpeg2[IDFF_MOVIE_MAX+1]= {
+    CODEC_ID_NONE,
+    CODEC_ID_MPEG2VIDEO,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_LIBMPEG2
 };
-const CodecID TglobalSettingsDecVideo::c_theora[IDFF_MOVIE_MAX+1]=
-{
- CODEC_ID_NONE,
- CODEC_ID_THEORA,
- CODEC_ID_NONE,
- CODEC_ID_NONE
+const CodecID TglobalSettingsDecVideo::c_theora[IDFF_MOVIE_MAX+1]= {
+    CODEC_ID_NONE,
+    CODEC_ID_THEORA,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE
 };
-const CodecID TglobalSettingsDecVideo::c_wvc1[IDFF_MOVIE_MAX+1]=
-{
- CODEC_ID_NONE,
- CODEC_ID_VC1,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_WMV9_LIB,
+const CodecID TglobalSettingsDecVideo::c_wvc1[IDFF_MOVIE_MAX+1]= {
+    CODEC_ID_NONE,
+    CODEC_ID_VC1,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_WMV9_LIB,
 };
-const CodecID TglobalSettingsDecVideo::c_wmv3[IDFF_MOVIE_MAX+1]=
-{
- CODEC_ID_NONE,
- CODEC_ID_WMV3,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_WMV9_LIB
+const CodecID TglobalSettingsDecVideo::c_wmv3[IDFF_MOVIE_MAX+1]= {
+    CODEC_ID_NONE,
+    CODEC_ID_WMV3,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_WMV9_LIB
 };
-const CodecID TglobalSettingsDecVideo::c_wmv2[IDFF_MOVIE_MAX+1]=
-{
- CODEC_ID_NONE,
- CODEC_ID_WMV2,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_WMV9_LIB
+const CodecID TglobalSettingsDecVideo::c_wmv2[IDFF_MOVIE_MAX+1]= {
+    CODEC_ID_NONE,
+    CODEC_ID_WMV2,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_WMV9_LIB
 };
-const CodecID TglobalSettingsDecVideo::c_wmv1[IDFF_MOVIE_MAX+1]=
-{
- CODEC_ID_NONE,
- CODEC_ID_WMV1,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_WMV9_LIB
+const CodecID TglobalSettingsDecVideo::c_wmv1[IDFF_MOVIE_MAX+1]= {
+    CODEC_ID_NONE,
+    CODEC_ID_WMV1,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_WMV9_LIB
 };
 
 void TglobalSettingsDecVideo::getCodecsList(Tstrptrs &codecs) const
 {
- std::vector<CodecID> ids;
- #undef FF_FOURCC_OP
- #undef FF_FOURCC1_OP
- #define FF_FOURCC_OP(format,decoder,codecs) for (int j=0;j<=IDFF_MOVIE_MAX;j++) if (codecs[j]!=CODEC_ID_NONE) ids.push_back(codecs[j]);
- #define FF_FOURCC1_OP(format,decoder,codec) ids.push_back(codec);
- VIDEO_FOURCCS
- cleanupCodecsList(ids,codecs);
+    std::vector<CodecID> ids;
+#undef FF_FOURCC_OP
+#undef FF_FOURCC1_OP
+#define FF_FOURCC_OP(format,decoder,codecs) for (int j=0;j<=IDFF_MOVIE_MAX;j++) if (codecs[j]!=CODEC_ID_NONE) ids.push_back(codecs[j]);
+#define FF_FOURCC1_OP(format,decoder,codec) ids.push_back(codec);
+    VIDEO_FOURCCS
+    cleanupCodecsList(ids,codecs);
 }
 
 CodecID TglobalSettingsDecVideo::getCodecId(DWORD fourCC,FOURCC *AVIfourCC) const
 {
- fourCC=FCCupper(fourCC);
- CodecID codecId=CODEC_ID_NONE;
- int rawmask=(filtermode&IDFF_FILTERMODE_VIDEORAW)?0:0xffff; // Disable all the codecs except RAW
- int dxvamask=(filtermode&IDFF_FILTERMODE_VIDEODXVA)?0:0xffff; // Disable all the codecs except DXVA supported codecs (H264,VC1 for now)
- switch(fourCC)
-  {
-   #undef FF_FOURCC_OP
-   #undef FF_FOURCC1_OP
-   #define FF_FOURCC_OP FF_FOURCC_CODEC
-   #define FF_FOURCC1_OP FF_FOURCC1_CODEC
-   VIDEO_FOURCCS
-   default:return CODEC_ID_NONE;
-  }
+    fourCC=FCCupper(fourCC);
+    CodecID codecId=CODEC_ID_NONE;
+    int rawmask=(filtermode&IDFF_FILTERMODE_VIDEORAW)?0:0xffff; // Disable all the codecs except RAW
+    int dxvamask=(filtermode&IDFF_FILTERMODE_VIDEODXVA)?0:0xffff; // Disable all the codecs except DXVA supported codecs (H264,VC1 for now)
+    switch(fourCC) {
+#undef FF_FOURCC_OP
+#undef FF_FOURCC1_OP
+#define FF_FOURCC_OP FF_FOURCC_CODEC
+#define FF_FOURCC1_OP FF_FOURCC1_CODEC
+            VIDEO_FOURCCS
+        default:
+            return CODEC_ID_NONE;
+    }
 
- if (codecId && AVIfourCC)
-  *AVIfourCC=fourCC;
- return codecId;
+    if (codecId && AVIfourCC) {
+        *AVIfourCC=fourCC;
+    }
+    return codecId;
 }
 
 //======================== TglobalSettingsDecVideo::TsubtitlesSettings ==========================
 TglobalSettingsDecVideo::TsubtitlesSettings::TsubtitlesSettings(TintStrColl *Icoll):Toptions(Icoll)
 {
- static const TintOptionT<TsubtitlesSettings> iopts[]=
-  {
-   IDFF_subTextpin          ,&TsubtitlesSettings::textpin          ,0,0,_l(""),1,
-     _l("subTextpin"),0,
-   IDFF_subSSA              ,&TsubtitlesSettings::subSSA           ,0,0,_l(""),1,
-     _l("subSSA"),1,
-   IDFF_subWatch            ,&TsubtitlesSettings::watch            ,0,0,_l(""),1,
-     _l("subWatch"),1,
-   IDFF_subEmbeddedPriority ,&TsubtitlesSettings::embeddedPriority ,0,0,_l(""),1,
-     _l("subEmbeddedPriority"),0,
-   IDFF_subSearchHeuristic  ,&TsubtitlesSettings::searchHeuristic  ,0,0,_l(""),1,
-     _l("subSearchHeuristic"),0,
-   0
-  };
- addOptions(iopts);
- static const TstrOption sopts[]=
-  {
-   IDFF_subSearchDir,(TstrVal)&TsubtitlesSettings::searchDir,2*MAX_PATH ,0 ,_l(""),0,
-     _l("subSearchDir"),NULL,
-   IDFF_subSearchExt,(TstrVal)&TsubtitlesSettings::searchExt,2*MAX_PATH ,0 ,_l(""),0,
-     _l("subSearchExt"),_l("utf;idx;sub;srt;smi;rt;txt;ass;ssa;aqt;mpl;usf;sup"),
-   0
-  };
- addOptions(sopts);
+    static const TintOptionT<TsubtitlesSettings> iopts[]= {
+        IDFF_subTextpin          ,&TsubtitlesSettings::textpin          ,0,0,_l(""),1,
+        _l("subTextpin"),0,
+        IDFF_subSSA              ,&TsubtitlesSettings::subSSA           ,0,0,_l(""),1,
+        _l("subSSA"),1,
+        IDFF_subWatch            ,&TsubtitlesSettings::watch            ,0,0,_l(""),1,
+        _l("subWatch"),1,
+        IDFF_subEmbeddedPriority ,&TsubtitlesSettings::embeddedPriority ,0,0,_l(""),1,
+        _l("subEmbeddedPriority"),0,
+        IDFF_subSearchHeuristic  ,&TsubtitlesSettings::searchHeuristic  ,0,0,_l(""),1,
+        _l("subSearchHeuristic"),0,
+        0
+    };
+    addOptions(iopts);
+    static const TstrOption sopts[]= {
+        IDFF_subSearchDir,(TstrVal)&TsubtitlesSettings::searchDir,2*MAX_PATH ,0 ,_l(""),0,
+        _l("subSearchDir"),NULL,
+        IDFF_subSearchExt,(TstrVal)&TsubtitlesSettings::searchExt,2*MAX_PATH ,0 ,_l(""),0,
+        _l("subSearchExt"),_l("utf;idx;sub;srt;smi;rt;txt;ass;ssa;aqt;mpl;usf;sup"),
+        0
+    };
+    addOptions(sopts);
 }
 
 
 void TglobalSettingsDecVideo::TsubtitlesSettings::getDefaultStr(int id,char_t *buf,size_t buflen)
 {
- if (id==IDFF_subSearchDir)
-  {
-   TregOpRegRead tt(HKEY_LOCAL_MACHINE,_l("SOFTWARE\\PRR\\DivXG400"));
-   tt._REG_OP_S(0,_l("SubPath"),buf,buflen,_l("."));
-  }
+    if (id==IDFF_subSearchDir) {
+        TregOpRegRead tt(HKEY_LOCAL_MACHINE,_l("SOFTWARE\\PRR\\DivXG400"));
+        tt._REG_OP_S(0,_l("SubPath"),buf,buflen,_l("."));
+    }
 }
 
 //=================================== TglobalSettingsDecAudio ===================================
 TglobalSettingsDecAudio::TglobalSettingsDecAudio(const Tconfig *Iconfig,int Imode,TintStrColl *Icoll,const char_t *Ireg_child):TglobalSettingsDec(Iconfig,Imode,Ireg_child,Icoll)
 {
- static const TintOptionT<TglobalSettingsDecAudio> iopts[]=
-  {
-   IDFF_wma7                   ,&TglobalSettingsDecAudio::wma1                   ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_wma8                   ,&TglobalSettingsDecAudio::wma2                   ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_mp3                    ,&TglobalSettingsDecAudio::mp3                    ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_mp2                    ,&TglobalSettingsDecAudio::mp2                    ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_ac3                    ,&TglobalSettingsDecAudio::ac3                    ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_truehd                 ,&TglobalSettingsDecAudio::truehd                 ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_mlp                    ,&TglobalSettingsDecAudio::mlp                    ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_eac3                   ,&TglobalSettingsDecAudio::eac3                   ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_dts                    ,&TglobalSettingsDecAudio::dts                    ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_aac                    ,&TglobalSettingsDecAudio::aac                    ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_amr                    ,&TglobalSettingsDecAudio::amr                    ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_iadpcm                 ,&TglobalSettingsDecAudio::iadpcm                 ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_msadpcm                ,&TglobalSettingsDecAudio::msadpcm                ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_otherAdpcm             ,&TglobalSettingsDecAudio::otherAdpcm             ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_law                    ,&TglobalSettingsDecAudio::law                    ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_gsm                    ,&TglobalSettingsDecAudio::gsm                    ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_lpcm                   ,&TglobalSettingsDecAudio::lpcm                   ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_flac                   ,&TglobalSettingsDecAudio::flac                   ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_tta                    ,&TglobalSettingsDecAudio::tta                    ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_qdm2                   ,&TglobalSettingsDecAudio::qdm2                   ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_mace                   ,&TglobalSettingsDecAudio::mace                   ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_truespeech             ,&TglobalSettingsDecAudio::truespeech             ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_vorbis                 ,&TglobalSettingsDecAudio::vorbis                 ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_ra                     ,&TglobalSettingsDecAudio::ra                     ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_imc                    ,&TglobalSettingsDecAudio::imc                    ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_atrac3                 ,&TglobalSettingsDecAudio::atrac3                 ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   //IDFF_cook                   ,&TglobalSettingsDecAudio::cook                   ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_nellymoser             ,&TglobalSettingsDecAudio::nellymoser             ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_wavpack                ,&TglobalSettingsDecAudio::wavpack                ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_avisA                  ,&TglobalSettingsDecAudio::avis                   ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_rawa                   ,&TglobalSettingsDecAudio::rawa                   ,0,0             ,_l(""),0,NULL,0,
-   IDFF_cook                   ,&TglobalSettingsDecAudio::cook                   ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_showCurrentVolume      ,&TglobalSettingsDecAudio::showCurrentVolume      ,0,0             ,_l(""),0,
-     _l("showCurrentVolume"),0,
-   IDFF_showCurrentFFT         ,&TglobalSettingsDecAudio::showCurrentFFT         ,0,0             ,_l(""),0,
-     _l("showCurrentFFT"),0,
-   IDFF_firIsUserDisplayMaxFreq,&TglobalSettingsDecAudio::firIsUserDisplayMaxFreq,0,0             ,_l(""),0,
-     _l("firIsUserDisplayMaxFreq"),0,
-   IDFF_firUserDisplayMaxFreq  ,&TglobalSettingsDecAudio::firUserDisplayMaxFreq  ,1,192000/2      ,_l(""),0,
-     _l("firUserDisplayMaxFreq"),48000,
-   IDFF_isAudioSwitcher        ,&TglobalSettingsDecAudio::isAudioSwitcher        ,0,0             ,_l(""),0,
-     _l("isAudioSwitcher"),0,
-   IDFF_alwaysextensible       ,&TglobalSettingsDecAudio::alwaysextensible       ,0,0             ,_l(""),0,
-     _l("alwaysextensible"),1,
-   IDFF_allowOutStream         ,&TglobalSettingsDecAudio::allowOutStream         ,0,0             ,_l(""),0,
-     _l("allowOutStream"),1,
-   IDFF_dtsinwav               ,&TglobalSettingsDecAudio::dtsinwav               ,0,0             ,_l(""),0,
-     _l("dtsinwav"),1,
-   IDFF_vorbisgain             ,&TglobalSettingsDecAudio::vorbisgain             ,0,0             ,_l(""),0,
-     _l("vorbisgain"),0,
-   0
-  };
- addOptions(iopts);
- static const TstrOption sopts[]=
-  {
-   IDFF_winamp2dir             ,(TstrVal)&TglobalSettingsDecAudio::winamp2dir    ,MAX_PATH - 21 ,0     ,_l(""),0,
-     _l("winamp2dir"),NULL,
-   0
-  };
- addOptions(sopts);
+    static const TintOptionT<TglobalSettingsDecAudio> iopts[]= {
+        IDFF_wma7                   ,&TglobalSettingsDecAudio::wma1                   ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_wma8                   ,&TglobalSettingsDecAudio::wma2                   ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_mp3                    ,&TglobalSettingsDecAudio::mp3                    ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_mp2                    ,&TglobalSettingsDecAudio::mp2                    ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_ac3                    ,&TglobalSettingsDecAudio::ac3                    ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_truehd                 ,&TglobalSettingsDecAudio::truehd                 ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_mlp                    ,&TglobalSettingsDecAudio::mlp                    ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_eac3                   ,&TglobalSettingsDecAudio::eac3                   ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_dts                    ,&TglobalSettingsDecAudio::dts                    ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_aac                    ,&TglobalSettingsDecAudio::aac                    ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_amr                    ,&TglobalSettingsDecAudio::amr                    ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_iadpcm                 ,&TglobalSettingsDecAudio::iadpcm                 ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_msadpcm                ,&TglobalSettingsDecAudio::msadpcm                ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_otherAdpcm             ,&TglobalSettingsDecAudio::otherAdpcm             ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_law                    ,&TglobalSettingsDecAudio::law                    ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_gsm                    ,&TglobalSettingsDecAudio::gsm                    ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_lpcm                   ,&TglobalSettingsDecAudio::lpcm                   ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_flac                   ,&TglobalSettingsDecAudio::flac                   ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_tta                    ,&TglobalSettingsDecAudio::tta                    ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_qdm2                   ,&TglobalSettingsDecAudio::qdm2                   ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_mace                   ,&TglobalSettingsDecAudio::mace                   ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_truespeech             ,&TglobalSettingsDecAudio::truespeech             ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_vorbis                 ,&TglobalSettingsDecAudio::vorbis                 ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_ra                     ,&TglobalSettingsDecAudio::ra                     ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_imc                    ,&TglobalSettingsDecAudio::imc                    ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_atrac3                 ,&TglobalSettingsDecAudio::atrac3                 ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        //IDFF_cook                   ,&TglobalSettingsDecAudio::cook                   ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_nellymoser             ,&TglobalSettingsDecAudio::nellymoser             ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_wavpack                ,&TglobalSettingsDecAudio::wavpack                ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_avisA                  ,&TglobalSettingsDecAudio::avis                   ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_rawa                   ,&TglobalSettingsDecAudio::rawa                   ,0,0             ,_l(""),0,NULL,0,
+        IDFF_cook                   ,&TglobalSettingsDecAudio::cook                   ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_showCurrentVolume      ,&TglobalSettingsDecAudio::showCurrentVolume      ,0,0             ,_l(""),0,
+        _l("showCurrentVolume"),0,
+        IDFF_showCurrentFFT         ,&TglobalSettingsDecAudio::showCurrentFFT         ,0,0             ,_l(""),0,
+        _l("showCurrentFFT"),0,
+        IDFF_firIsUserDisplayMaxFreq,&TglobalSettingsDecAudio::firIsUserDisplayMaxFreq,0,0             ,_l(""),0,
+        _l("firIsUserDisplayMaxFreq"),0,
+        IDFF_firUserDisplayMaxFreq  ,&TglobalSettingsDecAudio::firUserDisplayMaxFreq  ,1,192000/2      ,_l(""),0,
+        _l("firUserDisplayMaxFreq"),48000,
+        IDFF_isAudioSwitcher        ,&TglobalSettingsDecAudio::isAudioSwitcher        ,0,0             ,_l(""),0,
+        _l("isAudioSwitcher"),0,
+        IDFF_alwaysextensible       ,&TglobalSettingsDecAudio::alwaysextensible       ,0,0             ,_l(""),0,
+        _l("alwaysextensible"),1,
+        IDFF_allowOutStream         ,&TglobalSettingsDecAudio::allowOutStream         ,0,0             ,_l(""),0,
+        _l("allowOutStream"),1,
+        IDFF_dtsinwav               ,&TglobalSettingsDecAudio::dtsinwav               ,0,0             ,_l(""),0,
+        _l("dtsinwav"),1,
+        IDFF_vorbisgain             ,&TglobalSettingsDecAudio::vorbisgain             ,0,0             ,_l(""),0,
+        _l("vorbisgain"),0,
+        0
+    };
+    addOptions(iopts);
+    static const TstrOption sopts[]= {
+        IDFF_winamp2dir             ,(TstrVal)&TglobalSettingsDecAudio::winamp2dir    ,MAX_PATH - 21 ,0     ,_l(""),0,
+        _l("winamp2dir"),NULL,
+        0
+    };
+    addOptions(sopts);
 }
 int TglobalSettingsDecAudio::getDefault(int id)
 {
- switch (id)
-  {
-   case IDFF_multipleInstances:return filtermode&IDFF_FILTERMODE_AUDIORAW?0:1;
-   default:return TglobalSettingsDec::getDefault(id);
-  }
+    switch (id) {
+        case IDFF_multipleInstances:
+            return filtermode&IDFF_FILTERMODE_AUDIORAW?0:1;
+        default:
+            return TglobalSettingsDec::getDefault(id);
+    }
 }
 void TglobalSettingsDecAudio::getDefaultStr(int id,char_t *buf,size_t buflen)
 {
- if (id==IDFF_winamp2dir)
-  {
-   TregOpRegRead wt(HKEY_CURRENT_USER,_l("Software\\Winamp"));
-   wt._REG_OP_S(0,NULL,buf,buflen,_l(""));
-  }
- else
-  TglobalSettingsDec::getDefaultStr(id,buf,buflen);
+    if (id==IDFF_winamp2dir) {
+        TregOpRegRead wt(HKEY_CURRENT_USER,_l("Software\\Winamp"));
+        wt._REG_OP_S(0,NULL,buf,buflen,_l(""));
+    } else {
+        TglobalSettingsDec::getDefaultStr(id,buf,buflen);
+    }
 }
 
 void TglobalSettingsDecAudio::reg_op_codec(TregOp &t,TregOp *t2)
 {
- _reg_op_codec(IDFF_wma7      ,t,t2,_l("wma1")      ,wma1      ,0);
- _reg_op_codec(IDFF_wma8      ,t,t2,_l("wma2")      ,wma2      ,0);
- _reg_op_codec(IDFF_mp2       ,t,t2,_l("mp2")       ,mp2       ,0);
- _reg_op_codec(IDFF_mp3       ,t,t2,_l("mp3")       ,mp3       ,0);
- _reg_op_codec(IDFF_ac3       ,t,t2,_l("ac3")       ,ac3       ,0);
- _reg_op_codec(IDFF_truehd    ,t,t2,_l("truehd")    ,truehd    ,0);
- _reg_op_codec(IDFF_mlp       ,t,t2,_l("mlp")       ,mlp       ,0);
- _reg_op_codec(IDFF_eac3      ,t,t2,_l("eac3")      ,eac3      ,0);
- _reg_op_codec(IDFF_dts       ,t,t2,_l("dts")       ,dts       ,0);
- _reg_op_codec(IDFF_aac       ,t,t2,_l("aac")       ,aac       ,0);
- _reg_op_codec(IDFF_amr       ,t,t2,_l("amr")       ,amr       ,0);
- _reg_op_codec(IDFF_iadpcm    ,t,t2,_l("iadpcm")    ,iadpcm    ,0);
- _reg_op_codec(IDFF_msadpcm   ,t,t2,_l("msadpcm")   ,msadpcm   ,0);
- _reg_op_codec(IDFF_otherAdpcm,t,t2,_l("otherAdpcm"),otherAdpcm,0);
- _reg_op_codec(IDFF_law       ,t,t2,_l("law")       ,law       ,0);
- _reg_op_codec(IDFF_gsm       ,t,t2,_l("gsm")       ,gsm       ,0);
- _reg_op_codec(IDFF_lpcm      ,t,t2,_l("lpcm")      ,lpcm      ,0);
- _reg_op_codec(IDFF_flac      ,t,t2,_l("flac")      ,flac      ,0);
- _reg_op_codec(IDFF_tta       ,t,t2,_l("tta")       ,tta       ,0);
- _reg_op_codec(IDFF_qdm2      ,t,t2,_l("qdm2")      ,qdm2      ,0);
- _reg_op_codec(IDFF_mace      ,t,t2,_l("mace")      ,mace      ,0);
- _reg_op_codec(IDFF_truespeech,t,t2,_l("truespeech"),truespeech,0);
- _reg_op_codec(IDFF_vorbis    ,t,t2,_l("vorbis")    ,vorbis    ,0);
- _reg_op_codec(IDFF_ra        ,t,t2,_l("ra")        ,ra        ,0);
- _reg_op_codec(IDFF_imc       ,t,t2,_l("imc")       ,imc       ,0);
- _reg_op_codec(IDFF_atrac3    ,t,t2,_l("atrac3")    ,atrac3    ,0);
- _reg_op_codec(IDFF_cook      ,t,t2,_l("cook")      ,cook      ,0);
- _reg_op_codec(IDFF_nellymoser,t,t2,_l("nellymoser"),nellymoser,0);
- _reg_op_codec(IDFF_wavpack   ,t,t2,_l("wavpack")   ,wavpack   ,0);
- _reg_op_codec(IDFF_avisA     ,t,t2,_l("avis")      ,avis      ,IDFF_MOVIE_AVIS);
- _reg_op_codec(IDFF_rawa      ,t,t2,filtermode&IDFF_FILTERMODE_AUDIORAW?_l("raw_rawa"):_l("rawa"),rawa,filtermode&IDFF_FILTERMODE_AUDIORAW?IDFF_MOVIE_RAW:0);
+    _reg_op_codec(IDFF_wma7      ,t,t2,_l("wma1")      ,wma1      ,0);
+    _reg_op_codec(IDFF_wma8      ,t,t2,_l("wma2")      ,wma2      ,0);
+    _reg_op_codec(IDFF_mp2       ,t,t2,_l("mp2")       ,mp2       ,0);
+    _reg_op_codec(IDFF_mp3       ,t,t2,_l("mp3")       ,mp3       ,0);
+    _reg_op_codec(IDFF_ac3       ,t,t2,_l("ac3")       ,ac3       ,0);
+    _reg_op_codec(IDFF_truehd    ,t,t2,_l("truehd")    ,truehd    ,0);
+    _reg_op_codec(IDFF_mlp       ,t,t2,_l("mlp")       ,mlp       ,0);
+    _reg_op_codec(IDFF_eac3      ,t,t2,_l("eac3")      ,eac3      ,0);
+    _reg_op_codec(IDFF_dts       ,t,t2,_l("dts")       ,dts       ,0);
+    _reg_op_codec(IDFF_aac       ,t,t2,_l("aac")       ,aac       ,0);
+    _reg_op_codec(IDFF_amr       ,t,t2,_l("amr")       ,amr       ,0);
+    _reg_op_codec(IDFF_iadpcm    ,t,t2,_l("iadpcm")    ,iadpcm    ,0);
+    _reg_op_codec(IDFF_msadpcm   ,t,t2,_l("msadpcm")   ,msadpcm   ,0);
+    _reg_op_codec(IDFF_otherAdpcm,t,t2,_l("otherAdpcm"),otherAdpcm,0);
+    _reg_op_codec(IDFF_law       ,t,t2,_l("law")       ,law       ,0);
+    _reg_op_codec(IDFF_gsm       ,t,t2,_l("gsm")       ,gsm       ,0);
+    _reg_op_codec(IDFF_lpcm      ,t,t2,_l("lpcm")      ,lpcm      ,0);
+    _reg_op_codec(IDFF_flac      ,t,t2,_l("flac")      ,flac      ,0);
+    _reg_op_codec(IDFF_tta       ,t,t2,_l("tta")       ,tta       ,0);
+    _reg_op_codec(IDFF_qdm2      ,t,t2,_l("qdm2")      ,qdm2      ,0);
+    _reg_op_codec(IDFF_mace      ,t,t2,_l("mace")      ,mace      ,0);
+    _reg_op_codec(IDFF_truespeech,t,t2,_l("truespeech"),truespeech,0);
+    _reg_op_codec(IDFF_vorbis    ,t,t2,_l("vorbis")    ,vorbis    ,0);
+    _reg_op_codec(IDFF_ra        ,t,t2,_l("ra")        ,ra        ,0);
+    _reg_op_codec(IDFF_imc       ,t,t2,_l("imc")       ,imc       ,0);
+    _reg_op_codec(IDFF_atrac3    ,t,t2,_l("atrac3")    ,atrac3    ,0);
+    _reg_op_codec(IDFF_cook      ,t,t2,_l("cook")      ,cook      ,0);
+    _reg_op_codec(IDFF_nellymoser,t,t2,_l("nellymoser"),nellymoser,0);
+    _reg_op_codec(IDFF_wavpack   ,t,t2,_l("wavpack")   ,wavpack   ,0);
+    _reg_op_codec(IDFF_avisA     ,t,t2,_l("avis")      ,avis      ,IDFF_MOVIE_AVIS);
+    _reg_op_codec(IDFF_rawa      ,t,t2,filtermode&IDFF_FILTERMODE_AUDIORAW?_l("raw_rawa"):_l("rawa"),rawa,filtermode&IDFF_FILTERMODE_AUDIORAW?IDFF_MOVIE_RAW:0);
 }
 void TglobalSettingsDecAudio::load(void)
 {
- TglobalSettingsDec::load();
+    TglobalSettingsDec::load();
 
- fixMissing(wma1      ,IDFF_MOVIE_LAVC);
- fixMissing(wma2      ,IDFF_MOVIE_LAVC);
- fixMissing(amr       ,IDFF_MOVIE_LAVC);
- fixMissing(ac3       ,IDFF_MOVIE_LIBA52,IDFF_MOVIE_LAVC);
- fixMissing(eac3      ,IDFF_MOVIE_LAVC);
- fixMissing(dts       ,IDFF_MOVIE_LIBDTS,IDFF_MOVIE_LAVC);
- fixMissing(mp2       ,IDFF_MOVIE_LIBMAD,IDFF_MOVIE_LAVC);
- fixMissing(mp3       ,IDFF_MOVIE_LIBMAD,IDFF_MOVIE_LAVC);
- fixMissing(aac       ,IDFF_MOVIE_LIBFAAD,IDFF_MOVIE_LAVC);
- fixMissing(avis      ,IDFF_MOVIE_AVIS);
- fixMissing(iadpcm    ,IDFF_MOVIE_LAVC);
- fixMissing(msadpcm   ,IDFF_MOVIE_LAVC);
- fixMissing(otherAdpcm,IDFF_MOVIE_LAVC);
- fixMissing(law       ,IDFF_MOVIE_LAVC);
- fixMissing(gsm       ,IDFF_MOVIE_LAVC);
- fixMissing(flac      ,IDFF_MOVIE_LAVC);
- fixMissing(tta       ,IDFF_MOVIE_LAVC);
- fixMissing(qdm2      ,IDFF_MOVIE_LAVC);
- fixMissing(mace      ,IDFF_MOVIE_LAVC);
- fixMissing(truespeech,IDFF_MOVIE_LAVC);
- fixMissing(vorbis    ,IDFF_MOVIE_LAVC);
- fixMissing(ra        ,IDFF_MOVIE_LAVC);
- fixMissing(imc       ,IDFF_MOVIE_LAVC);
- fixMissing(atrac3    ,IDFF_MOVIE_LAVC);
- fixMissing(cook      ,IDFF_MOVIE_LAVC);
- fixMissing(nellymoser,IDFF_MOVIE_LAVC);
- fixMissing(wavpack   ,IDFF_MOVIE_LAVC);
+    fixMissing(wma1      ,IDFF_MOVIE_LAVC);
+    fixMissing(wma2      ,IDFF_MOVIE_LAVC);
+    fixMissing(amr       ,IDFF_MOVIE_LAVC);
+    fixMissing(ac3       ,IDFF_MOVIE_LIBA52,IDFF_MOVIE_LAVC);
+    fixMissing(eac3      ,IDFF_MOVIE_LAVC);
+    fixMissing(dts       ,IDFF_MOVIE_LIBDTS,IDFF_MOVIE_LAVC);
+    fixMissing(mp2       ,IDFF_MOVIE_LIBMAD,IDFF_MOVIE_LAVC);
+    fixMissing(mp3       ,IDFF_MOVIE_LIBMAD,IDFF_MOVIE_LAVC);
+    fixMissing(aac       ,IDFF_MOVIE_LIBFAAD,IDFF_MOVIE_LAVC);
+    fixMissing(avis      ,IDFF_MOVIE_AVIS);
+    fixMissing(iadpcm    ,IDFF_MOVIE_LAVC);
+    fixMissing(msadpcm   ,IDFF_MOVIE_LAVC);
+    fixMissing(otherAdpcm,IDFF_MOVIE_LAVC);
+    fixMissing(law       ,IDFF_MOVIE_LAVC);
+    fixMissing(gsm       ,IDFF_MOVIE_LAVC);
+    fixMissing(flac      ,IDFF_MOVIE_LAVC);
+    fixMissing(tta       ,IDFF_MOVIE_LAVC);
+    fixMissing(qdm2      ,IDFF_MOVIE_LAVC);
+    fixMissing(mace      ,IDFF_MOVIE_LAVC);
+    fixMissing(truespeech,IDFF_MOVIE_LAVC);
+    fixMissing(vorbis    ,IDFF_MOVIE_LAVC);
+    fixMissing(ra        ,IDFF_MOVIE_LAVC);
+    fixMissing(imc       ,IDFF_MOVIE_LAVC);
+    fixMissing(atrac3    ,IDFF_MOVIE_LAVC);
+    fixMissing(cook      ,IDFF_MOVIE_LAVC);
+    fixMissing(nellymoser,IDFF_MOVIE_LAVC);
+    fixMissing(wavpack   ,IDFF_MOVIE_LAVC);
 }
 
 #define FF_WAVE_FORMAT1_CODEC(format,decoder,codec) \
@@ -1226,165 +1233,160 @@ void TglobalSettingsDecAudio::load(void)
  FF_WAVE_FORMAT1_OP(MLP   ,mlp    & rawmask,CODEC_ID_MLP) \
  FF_WAVE_FORMAT1_OP(TRUEHD,truehd & rawmask,CODEC_ID_TRUEHD)
 
-const char_t *TglobalSettingsDecAudio::wave_formats[]=
-{
- #undef FF_WAVE_FORMAT_OP
- #undef FF_WAVE_FORMAT1_OP
- #define FF_WAVE_FORMAT_OP  FF_FOURCC_LIST
- #define FF_WAVE_FORMAT1_OP FF_FOURCC_LIST
- AUDIO_FOURCCS
- NULL
+const char_t *TglobalSettingsDecAudio::wave_formats[]= {
+#undef FF_WAVE_FORMAT_OP
+#undef FF_WAVE_FORMAT1_OP
+#define FF_WAVE_FORMAT_OP  FF_FOURCC_LIST
+#define FF_WAVE_FORMAT1_OP FF_FOURCC_LIST
+    AUDIO_FOURCCS
+    NULL
 };
 const char_t** TglobalSettingsDecAudio::getFOURCClist(void) const
 {
- return wave_formats;
+    return wave_formats;
 }
 
-const CodecID TglobalSettingsDecAudio::c_mp123[IDFF_MOVIE_MAX+1]=
-{
- CODEC_ID_NONE,
- CODEC_ID_MP3,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_LIBMAD
+const CodecID TglobalSettingsDecAudio::c_mp123[IDFF_MOVIE_MAX+1]= {
+    CODEC_ID_NONE,
+    CODEC_ID_MP3,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_LIBMAD
 };
-const CodecID TglobalSettingsDecAudio::c_ac3[IDFF_MOVIE_MAX+1]=
-{
- CODEC_ID_NONE,
- CODEC_ID_AC3,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_LIBA52,
- CODEC_ID_SPDIF_AC3
+const CodecID TglobalSettingsDecAudio::c_ac3[IDFF_MOVIE_MAX+1]= {
+    CODEC_ID_NONE,
+    CODEC_ID_AC3,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_LIBA52,
+    CODEC_ID_SPDIF_AC3
 };
-const CodecID TglobalSettingsDecAudio::c_dts[IDFF_MOVIE_MAX+1]=
-{
- CODEC_ID_NONE,
- CODEC_ID_DTS,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_SPDIF_DTS,
- CODEC_ID_LIBDTS
+const CodecID TglobalSettingsDecAudio::c_dts[IDFF_MOVIE_MAX+1]= {
+    CODEC_ID_NONE,
+    CODEC_ID_DTS,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_SPDIF_DTS,
+    CODEC_ID_LIBDTS
 };
-const CodecID TglobalSettingsDecAudio::c_aac[IDFF_MOVIE_MAX+1]=
-{
- CODEC_ID_NONE,
- CODEC_ID_AAC,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_LIBFAAD,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE
+const CodecID TglobalSettingsDecAudio::c_aac[IDFF_MOVIE_MAX+1]= {
+    CODEC_ID_NONE,
+    CODEC_ID_AAC,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_LIBFAAD,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE
 };
-const CodecID TglobalSettingsDecAudio::c_vorbis[IDFF_MOVIE_MAX+1]=
-{
- CODEC_ID_NONE,
- CODEC_ID_VORBIS,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
- CODEC_ID_NONE,
+const CodecID TglobalSettingsDecAudio::c_vorbis[IDFF_MOVIE_MAX+1]= {
+    CODEC_ID_NONE,
+    CODEC_ID_VORBIS,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
+    CODEC_ID_NONE,
 };
 
 void TglobalSettingsDecAudio::getCodecsList(Tstrptrs &codecs) const
 {
- std::vector<CodecID> ids;
- #undef FF_WAVE_FORMAT_OP
- #undef FF_WAVE_FORMAT1_OP
- #define FF_WAVE_FORMAT_OP(format,decoder,codecs) for (int j=0;j<=IDFF_MOVIE_MAX;j++) if (codecs[j]!=CODEC_ID_NONE) ids.push_back(codecs[j]);
- #define FF_WAVE_FORMAT1_OP(format,decoder,codec) ids.push_back(codec);
- AUDIO_FOURCCS
- cleanupCodecsList(ids,codecs);
+    std::vector<CodecID> ids;
+#undef FF_WAVE_FORMAT_OP
+#undef FF_WAVE_FORMAT1_OP
+#define FF_WAVE_FORMAT_OP(format,decoder,codecs) for (int j=0;j<=IDFF_MOVIE_MAX;j++) if (codecs[j]!=CODEC_ID_NONE) ids.push_back(codecs[j]);
+#define FF_WAVE_FORMAT1_OP(format,decoder,codec) ids.push_back(codec);
+    AUDIO_FOURCCS
+    cleanupCodecsList(ids,codecs);
 }
 
 CodecID TglobalSettingsDecAudio::getCodecId(DWORD fourCC,FOURCC*) const
 {
- CodecID codecId=CODEC_ID_NONE;
- int rawmask=filtermode&IDFF_FILTERMODE_AUDIORAW?0:0xffff;
- switch(fourCC)
-  {
-   #undef FF_WAVE_FORMAT_OP
-   #undef FF_WAVE_FORMAT1_OP
-   #define FF_WAVE_FORMAT_OP FF_WAVE_FORMAT_CODEC
-   #define FF_WAVE_FORMAT1_OP FF_WAVE_FORMAT1_CODEC
-   AUDIO_FOURCCS
-   default:return CODEC_ID_NONE;
-  }
- return codecId;
+    CodecID codecId=CODEC_ID_NONE;
+    int rawmask=filtermode&IDFF_FILTERMODE_AUDIORAW?0:0xffff;
+    switch(fourCC) {
+#undef FF_WAVE_FORMAT_OP
+#undef FF_WAVE_FORMAT1_OP
+#define FF_WAVE_FORMAT_OP FF_WAVE_FORMAT_CODEC
+#define FF_WAVE_FORMAT1_OP FF_WAVE_FORMAT1_CODEC
+            AUDIO_FOURCCS
+        default:
+            return CODEC_ID_NONE;
+    }
+    return codecId;
 }
 
 //==================================== TglobalSettingsEnc ====================================
 TglobalSettingsEnc::TglobalSettingsEnc(const Tconfig *Iconfig,int Imode,TintStrColl *Icoll):TglobalSettingsBase(Iconfig,Imode,FFDSHOWENC,Icoll)
 {
- static const TintOptionT<TglobalSettingsEnc> iopts[]=
-  {
-   IDFF_enc_psnr         ,&TglobalSettingsEnc::psnr             ,0,0,_l(""),0,
-     _l("psnr"),0,
-   IDFF_isDyInterlaced   ,&TglobalSettingsEnc::isDyInterlaced   ,0,0,_l(""),0,
-     _l("isDyInterlaced"),0,
-   IDFF_dyInterlaced     ,&TglobalSettingsEnc::dyInterlaced     ,0,4096,_l(""),0,
-     _l("dyInterlaced"),288,
-   0
-  };
- addOptions(iopts);
+    static const TintOptionT<TglobalSettingsEnc> iopts[]= {
+        IDFF_enc_psnr         ,&TglobalSettingsEnc::psnr             ,0,0,_l(""),0,
+        _l("psnr"),0,
+        IDFF_isDyInterlaced   ,&TglobalSettingsEnc::isDyInterlaced   ,0,0,_l(""),0,
+        _l("isDyInterlaced"),0,
+        IDFF_dyInterlaced     ,&TglobalSettingsEnc::dyInterlaced     ,0,4096,_l(""),0,
+        _l("dyInterlaced"),288,
+        0
+    };
+    addOptions(iopts);
 }
 int TglobalSettingsEnc::getDefault(int id)
 {
- switch (id)
-  {
-   case IDFF_trayIcon:return 0;
-   case IDFF_multipleInstances:return 0;
-   default:return TglobalSettingsBase::getDefault(id);
-  }
+    switch (id) {
+        case IDFF_trayIcon:
+            return 0;
+        case IDFF_multipleInstances:
+            return 0;
+        default:
+            return TglobalSettingsBase::getDefault(id);
+    }
 }

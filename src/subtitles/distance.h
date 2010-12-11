@@ -1,18 +1,20 @@
 #ifndef DISTANCE_H
 #define DISTANCE_H
 
-class EditDistance {
+class EditDistance
+{
 private:
     ints d;
     /*Gets the minimum of three values */
-    static inline int minimum( const int a, const int b, const int c )
-    {
+    static inline int minimum( const int a, const int b, const int c ) {
         int min = a;
-        if ( b < min )
-              min = b;
-        if ( c < min )
-              min = c;
-          return min;
+        if ( b < min ) {
+            min = b;
+        }
+        if ( c < min ) {
+            min = c;
+        }
+        return min;
     };
 public:
     EditDistance(  );

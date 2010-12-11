@@ -49,13 +49,13 @@ private:
     unsigned int getShadowSize(LONG fontHeight, unsigned int gdi_font_scale);
     CRect getOverhangPrivate();
 
-    class TexpandedGlyph {
+    class TexpandedGlyph
+    {
         unsigned char *expBmp;
     public:
         int dx;
         int dy;
-        TexpandedGlyph(const TrenderedTextSubtitleWord &word)
-        {
+        TexpandedGlyph(const TrenderedTextSubtitleWord &word) {
             dx = word.dx[0] + 2 * word.m_outlineWidth;
             dy = word.dy[0] + 2 * word.m_outlineWidth;
             expBmp = aligned_calloc3<uint8_t>(dx, dy, 16);
@@ -64,12 +64,13 @@ private:
             }
         }
 
-        ~TexpandedGlyph()
-        {
+        ~TexpandedGlyph() {
             _aligned_free(expBmp);
         }
 
-        operator unsigned char*() const {return expBmp;}
+        operator unsigned char*() const {
+            return expBmp;
+        }
     };
 
 public:
@@ -104,9 +105,15 @@ public:
     virtual double get_below_baseline() const;
     virtual double get_linegap() const;
     virtual double get_baseline() const;
-    virtual int getPathOffsetX() const {return mPathOffsetX >> 3;}
-    virtual int getPathOffsetY() const {return mPathOffsetY >> 3;}
-    virtual CRect getOverhang() const {return overhang;}
+    virtual int getPathOffsetX() const {
+        return mPathOffsetX >> 3;
+    }
+    virtual int getPathOffsetY() const {
+        return mPathOffsetY >> 3;
+    }
+    virtual CRect getOverhang() const {
+        return overhang;
+    }
     virtual size_t getMemorySize() const;
     friend class TexpandedGlyph;
 };

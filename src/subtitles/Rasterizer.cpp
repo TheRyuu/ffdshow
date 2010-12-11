@@ -1,4 +1,4 @@
-/* 
+/*
  *    Copyright (C) 2003-2006 Gabest
  *    http://www.gabest.org
  *
@@ -6,15 +6,15 @@
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation; either version 2, or (at your option)
  *  any later version.
- *   
+ *
  *  This Program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  *  GNU General Public License for more details.
- *   
+ *
  *  You should have received a copy of the GNU General Public License
  *  along with GNU Make; see the file COPYING.  If not, write to
- *  the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA. 
+ *  the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  *  http://www.gnu.org/copyleft/gpl.html
  *
  */
@@ -27,15 +27,15 @@
 #include "Rasterizer.h"
 //#include "SeparableFilter.h"
 
- #ifndef _MAX    /* avoid collision with common (nonconforming) macros */
-  #define _MAX    (max)
-  #define _MIN    (min)
-  #define _IMPL_MAX max
-  #define _IMPL_MIN min
- #else
-  #define _IMPL_MAX _MAX
-  #define _IMPL_MIN _MIN
- #endif
+#ifndef _MAX    /* avoid collision with common (nonconforming) macros */
+#define _MAX    (max)
+#define _MIN    (min)
+#define _IMPL_MAX max
+#define _IMPL_MIN min
+#else
+#define _IMPL_MAX _MAX
+#define _IMPL_MIN _MIN
+#endif
 
 Rasterizer::Rasterizer() : mpPathTypes(NULL), mpPathPoints(NULL), mPathPoints(0), TrenderedSubtitleWordBase(true)
 {
@@ -87,8 +87,7 @@ void Rasterizer::_EvaluateBezier(int ptbase, bool fBSpline)
 
     double cx3, cx2, cx1, cx0, cy3, cy2, cy1, cy0;
 
-    if(fBSpline)
-    {
+    if(fBSpline) {
         // 1   [-1 +3 -3 +1]
         // - * [+3 -6 +3  0]
         // 6   [-3  0 +3  0]
@@ -105,9 +104,7 @@ void Rasterizer::_EvaluateBezier(int ptbase, bool fBSpline)
         cy2 = _1div6*( 3*y0-6*y1+3*y2);
         cy1 = _1div6*(-3*y0     +3*y2);
         cy0 = _1div6*(   y0+4*y1+1*y2);
-    }
-    else // bezier
-    {
+    } else { // bezier
         // [-1 +3 -3 +1]
         // [+3 -6 +3  0]
         // [-3 +3  0  0]
@@ -146,12 +143,18 @@ void Rasterizer::_EvaluateBezier(int ptbase, bool fBSpline)
     double maxaccel = maxaccel1 > maxaccel2 ? maxaccel1 : maxaccel2;
     double h = 1.0;
 
-    if(maxaccel > 8.0) h = sqrt(8.0 / maxaccel);
+    if(maxaccel > 8.0) {
+        h = sqrt(8.0 / maxaccel);
+    }
 
-    if(!fFirstSet) {firstp.x = (LONG)cx0; firstp.y = (LONG)cy0; lastp = firstp; fFirstSet = true;}
+    if(!fFirstSet) {
+        firstp.x = (LONG)cx0;
+        firstp.y = (LONG)cy0;
+        lastp = firstp;
+        fFirstSet = true;
+    }
 
-    for(double t = 0; t < 1.0; t += h)
-    {
+    for(double t = 0; t < 1.0; t += h) {
         double x = cx0 + t*(cx1 + t*(cx2 + t*cx3));
         double y = cy0 + t*(cy1 + t*(cy2 + t*cy3));
         _EvaluateLine(lastp.x, lastp.y, (int)x, (int)y);
@@ -172,16 +175,19 @@ void Rasterizer::_EvaluateLine(int pt1idx, int pt2idx)
 
 void Rasterizer::_EvaluateLine(int x0, int y0, int x1, int y1)
 {
-    if(lastp.x != x0 || lastp.y != y0)
-    {
+    if(lastp.x != x0 || lastp.y != y0) {
         _EvaluateLine(lastp.x, lastp.y, x0, y0);
     }
 
-    if(!fFirstSet) {firstp.x = x0; firstp.y = y0; fFirstSet = true;}
-    lastp.x = x1; lastp.y = y1;
+    if(!fFirstSet) {
+        firstp.x = x0;
+        firstp.y = y0;
+        fFirstSet = true;
+    }
+    lastp.x = x1;
+    lastp.y = y1;
 
-    if(y1 > y0)    // down
-    {
+    if(y1 > y0) {  // down
         __int64 xacc = (__int64)x0 << 13;
 
         // prestep y0 down
@@ -192,17 +198,16 @@ void Rasterizer::_EvaluateLine(int x0, int y0, int x1, int y1)
 
         y1 = (y1 - 5) >> 3;
 
-        if(iy <= y1)
-        {
+        if(iy <= y1) {
             __int64 invslope = (__int64(x1 - x0) << 16) / dy;
 
-            while(mEdgeNext + y1 + 1 - iy > mEdgeHeapSize)
+            while(mEdgeNext + y1 + 1 - iy > mEdgeHeapSize) {
                 _ReallocEdgeBuffer(mEdgeHeapSize*2);
+            }
 
             xacc += (invslope * (y - y0)) >> 3;
 
-            while(iy <= y1)
-            {
+            while(iy <= y1) {
                 int ix = (int)((xacc + 32768) >> 16);
 
                 mpEdgeBuffer[mEdgeNext].next = mpScanBuffer[iy];
@@ -214,9 +219,7 @@ void Rasterizer::_EvaluateLine(int x0, int y0, int x1, int y1)
                 xacc += invslope;
             }
         }
-    }
-    else if(y1 < y0) // up
-    {
+    } else if(y1 < y0) { // up
         __int64 xacc = (__int64)x1 << 13;
 
         // prestep y1 down
@@ -227,17 +230,16 @@ void Rasterizer::_EvaluateLine(int x0, int y0, int x1, int y1)
 
         y0 = (y0 - 5) >> 3;
 
-        if(iy <= y0)
-        {
+        if(iy <= y0) {
             __int64 invslope = (__int64(x0 - x1) << 16) / dy;
 
-            while(mEdgeNext + y0 + 1 - iy > mEdgeHeapSize)
+            while(mEdgeNext + y0 + 1 - iy > mEdgeHeapSize) {
                 _ReallocEdgeBuffer(mEdgeHeapSize*2);
+            }
 
             xacc += (invslope * (y - y1)) >> 3;
 
-            while(iy <= y0)
-            {
+            while(iy <= y0) {
                 int ix = (int)((xacc + 32768) >> 16);
 
                 mpEdgeBuffer[mEdgeNext].next = mpScanBuffer[iy];
@@ -263,18 +265,19 @@ bool Rasterizer::EndPath(HDC hdc)
 {
     ::CloseFigure(hdc);
 
-    if(::EndPath(hdc))
-    {
+    if(::EndPath(hdc)) {
         mPathPoints = GetPath(hdc, NULL, NULL, 0);
 
-        if(!mPathPoints)
+        if(!mPathPoints) {
             return true;
+        }
 
         mpPathTypes = (BYTE*)malloc(sizeof(BYTE) * mPathPoints);
         mpPathPoints = (CPoint*)malloc(sizeof(CPoint) * mPathPoints);
 
-        if(mPathPoints == GetPath(hdc, mpPathPoints, mpPathTypes, mPathPoints))
+        if(mPathPoints == GetPath(hdc, mpPathPoints, mpPathTypes, mPathPoints)) {
             return true;
+        }
     }
 
     ::AbortPath(hdc);
@@ -284,8 +287,9 @@ bool Rasterizer::EndPath(HDC hdc)
 
 bool Rasterizer::PartialBeginPath(HDC hdc, bool bClearPath)
 {
-    if(bClearPath)
+    if(bClearPath) {
         _TrashPath();
+    }
 
     return !!::BeginPath(hdc);
 }
@@ -294,33 +298,33 @@ bool Rasterizer::PartialEndPath(HDC hdc, long dx, long dy)
 {
     ::CloseFigure(hdc);
 
-    if(::EndPath(hdc))
-    {
+    if(::EndPath(hdc)) {
         int nPoints;
         BYTE* pNewTypes;
         CPoint* pNewPoints;
 
         nPoints = GetPath(hdc, NULL, NULL, 0);
 
-        if(!nPoints)
+        if(!nPoints) {
             return true;
+        }
 
         pNewTypes = (BYTE*)realloc(mpPathTypes, (mPathPoints + nPoints) * sizeof(BYTE));
         pNewPoints = (CPoint*)realloc(mpPathPoints, (mPathPoints + nPoints) * sizeof(POINT));
 
-        if(pNewTypes)
+        if(pNewTypes) {
             mpPathTypes = pNewTypes;
+        }
 
-        if(pNewPoints)
+        if(pNewPoints) {
             mpPathPoints = pNewPoints;
+        }
 
         BYTE* pTypes = new BYTE[nPoints];
         POINT* pPoints = new POINT[nPoints];
 
-        if(pNewTypes && pNewPoints && nPoints == GetPath(hdc, pPoints, pTypes, nPoints))
-        {
-            for(int i = 0; i < nPoints; ++i)
-            {
+        if(pNewTypes && pNewPoints && nPoints == GetPath(hdc, pPoints, pTypes, nPoints)) {
+            for(int i = 0; i < nPoints; ++i) {
                 mpPathPoints[mPathPoints + i].x = pPoints[i].x + dx;
                 mpPathPoints[mPathPoints + i].y = pPoints[i].y + dy;
                 mpPathTypes[mPathPoints + i] = pTypes[i];
@@ -331,9 +335,9 @@ bool Rasterizer::PartialEndPath(HDC hdc, long dx, long dy)
             delete[] pTypes;
             delete[] pPoints;
             return true;
-        }
-        else
+        } else {
             DebugBreak();
+        }
 
         delete[] pTypes;
         delete[] pPoints;
@@ -357,8 +361,7 @@ bool Rasterizer::ScanConvert()
 
     // Determine bounding box
 
-    if(!mPathPoints)
-    {
+    if(!mPathPoints) {
         mPathOffsetX = mPathOffsetY = 0;
         mWidth = mHeight = 0;
         return 0;
@@ -369,15 +372,22 @@ bool Rasterizer::ScanConvert()
     int maxx = INT_MIN;
     int maxy = INT_MIN;
 
-    for(i=0; i<mPathPoints; ++i)
-    {
+    for(i=0; i<mPathPoints; ++i) {
         int ix = mpPathPoints[i].x;
         int iy = mpPathPoints[i].y;
 
-        if(ix < minx) minx = ix;
-        if(ix > maxx) maxx = ix;
-        if(iy < miny) miny = iy;
-        if(iy > maxy) maxy = iy;
+        if(ix < minx) {
+            minx = ix;
+        }
+        if(ix > maxx) {
+            maxx = ix;
+        }
+        if(iy < miny) {
+            miny = iy;
+        }
+        if(iy > maxy) {
+            maxy = iy;
+        }
     }
 
     minx = (minx >> 3) & ~7;
@@ -385,14 +395,12 @@ bool Rasterizer::ScanConvert()
     maxx = (maxx + 7) >> 3;
     maxy = (maxy + 7) >> 3;
 
-    for(i=0; i<mPathPoints; ++i)
-    {
+    for(i=0; i<mPathPoints; ++i) {
         mpPathPoints[i].x -= minx*8;
         mpPathPoints[i].y -= miny*8;
     }
 
-    if(minx > maxx || miny > maxy)
-    {
+    if(minx > maxx || miny > maxy) {
         mWidth = mHeight = 0;
         mPathOffsetX = mPathOffsetY = 0;
         _TrashPath();
@@ -426,40 +434,48 @@ bool Rasterizer::ScanConvert()
     firstp.x = firstp.y = 0;
     lastp.x = lastp.y = 0;
 
-    for(i=0; i<mPathPoints; ++i)
-    {
+    for(i=0; i<mPathPoints; ++i) {
         BYTE t = mpPathTypes[i] & ~PT_CLOSEFIGURE;
 
-        switch(t)
-        {
-        case PT_MOVETO:
-            if(lastmoveto >= 0 && firstp != lastp)
-                _EvaluateLine(lastp.x, lastp.y, firstp.x, firstp.y);
-            lastmoveto = i;
-            fFirstSet = false;
-            lastp = mpPathPoints[i];
-            break;
-        case PT_MOVETONC:
-            break;
-        case PT_LINETO:
-            if(mPathPoints - (i-1) >= 2) _EvaluateLine(i-1, i);
-            break;
-        case PT_BEZIERTO:
-            if(mPathPoints - (i-1) >= 4) _EvaluateBezier(i-1, false);
-            i += 2;
-            break;
-        case PT_BSPLINETO:
-            if(mPathPoints - (i-1) >= 4) _EvaluateBezier(i-1, true);
-            i += 2;
-            break;
-        case PT_BSPLINEPATCHTO:
-            if(mPathPoints - (i-3) >= 4) _EvaluateBezier(i-3, true);
-            break;
+        switch(t) {
+            case PT_MOVETO:
+                if(lastmoveto >= 0 && firstp != lastp) {
+                    _EvaluateLine(lastp.x, lastp.y, firstp.x, firstp.y);
+                }
+                lastmoveto = i;
+                fFirstSet = false;
+                lastp = mpPathPoints[i];
+                break;
+            case PT_MOVETONC:
+                break;
+            case PT_LINETO:
+                if(mPathPoints - (i-1) >= 2) {
+                    _EvaluateLine(i-1, i);
+                }
+                break;
+            case PT_BEZIERTO:
+                if(mPathPoints - (i-1) >= 4) {
+                    _EvaluateBezier(i-1, false);
+                }
+                i += 2;
+                break;
+            case PT_BSPLINETO:
+                if(mPathPoints - (i-1) >= 4) {
+                    _EvaluateBezier(i-1, true);
+                }
+                i += 2;
+                break;
+            case PT_BSPLINEPATCHTO:
+                if(mPathPoints - (i-3) >= 4) {
+                    _EvaluateBezier(i-3, true);
+                }
+                break;
         }
     }
 
-    if(lastmoveto >= 0 && firstp != lastp)
+    if(lastmoveto >= 0 && firstp != lastp) {
         _EvaluateLine(lastp.x, lastp.y, firstp.x, firstp.y);
+    }
 
     // Free the path since we don't need it anymore.
 
@@ -477,14 +493,12 @@ bool Rasterizer::ScanConvert()
 
     __int64 y = 0;
 
-    for(y=0; y<mHeight; ++y)
-    {
+    for(y=0; y<mHeight; ++y) {
         int count = 0;
 
         // Detangle scanline into edge heap.
 
-        for(unsigned ptr = (unsigned)(mpScanBuffer[y]&0xffffffff); ptr; ptr = mpEdgeBuffer[ptr].next)
-        {
+        for(unsigned ptr = (unsigned)(mpScanBuffer[y]&0xffffffff); ptr; ptr = mpEdgeBuffer[ptr].next) {
             heap.push_back(mpEdgeBuffer[ptr].posandflag);
         }
 
@@ -502,24 +516,25 @@ bool Rasterizer::ScanConvert()
 
         int x1 = 0, x2 = 0;
 
-        for(; itX1 != itX2; ++itX1)
-        {
+        for(; itX1 != itX2; ++itX1) {
             int x = *itX1;
 
-            if(!count) 
+            if(!count) {
                 x1 = (x>>1);
+            }
 
-            if(x&1) 
+            if(x&1) {
                 ++count;
-            else 
+            } else {
                 --count;
+            }
 
-            if(!count)
-            {
+            if(!count) {
                 x2 = (x>>1);
 
-                if(x2>x1)
-                    mOutline.push_back(std::pair<__int64,__int64>((y<<32)+x1+0x4000000040000000i64, (y<<32)+x2+0x4000000040000000i64)); // G: damn Avery, this is evil! :)
+                if(x2>x1) {
+                    mOutline.push_back(std::pair<__int64,__int64>((y<<32)+x1+0x4000000040000000i64, (y<<32)+x2+0x4000000040000000i64));    // G: damn Avery, this is evil! :)
+                }
             }
         }
 
@@ -556,10 +571,8 @@ void Rasterizer::_OverlapRegion(tSpanBuffer& dst, tSpanBuffer& src, int dx, int 
     unsigned __int64 offset1 = (((__int64)dy)<<32) - dx;
     unsigned __int64 offset2 = (((__int64)dy)<<32) + dx;
 
-    while(itA != itAE && itB != itBE)
-    {
-        if((*itB).first + offset1 < (*itA).first)
-        {
+    while(itA != itAE && itB != itBE) {
+        if((*itB).first + offset1 < (*itA).first) {
             // B span is earlier.  Use it.
 
             unsigned __int64 x1 = (*itB).first + offset1;
@@ -569,35 +582,36 @@ void Rasterizer::_OverlapRegion(tSpanBuffer& dst, tSpanBuffer& src, int dx, int 
 
             // B spans don't overlap, so begin merge loop with A first.
 
-            for(;;)
-            {
+            for(;;) {
                 // If we run out of A spans or the A span doesn't overlap,
                 // then the next B span can't either (because B spans don't
                 // overlap) and we exit.
 
-                if(itA == itAE || (*itA).first > x2)
+                if(itA == itAE || (*itA).first > x2) {
                     break;
+                }
 
-                do {x2 = _MAX(x2, (*itA++).second);}
-                while(itA != itAE && (*itA).first <= x2);
+                do {
+                    x2 = _MAX(x2, (*itA++).second);
+                } while(itA != itAE && (*itA).first <= x2);
 
                 // If we run out of B spans or the B span doesn't overlap,
                 // then the next A span can't either (because A spans don't
                 // overlap) and we exit.
 
-                if(itB == itBE || (*itB).first + offset1 > x2)
+                if(itB == itBE || (*itB).first + offset1 > x2) {
                     break;
+                }
 
-                do {x2 = _MAX(x2, (*itB++).second + offset2);}
-                while(itB != itBE && (*itB).first + offset1 <= x2);
+                do {
+                    x2 = _MAX(x2, (*itB++).second + offset2);
+                } while(itB != itBE && (*itB).first + offset1 <= x2);
             }
 
             // Flush span.
 
-            dst.push_back(tSpan(x1, x2));    
-        }
-        else
-        {
+            dst.push_back(tSpan(x1, x2));
+        } else {
             // A span is earlier.  Use it.
 
             unsigned __int64 x1 = (*itA).first;
@@ -607,67 +621,70 @@ void Rasterizer::_OverlapRegion(tSpanBuffer& dst, tSpanBuffer& src, int dx, int 
 
             // A spans don't overlap, so begin merge loop with B first.
 
-            for(;;)
-            {
+            for(;;) {
                 // If we run out of B spans or the B span doesn't overlap,
                 // then the next A span can't either (because A spans don't
                 // overlap) and we exit.
 
-                if(itB == itBE || (*itB).first + offset1 > x2)
+                if(itB == itBE || (*itB).first + offset1 > x2) {
                     break;
+                }
 
-                do {x2 = _MAX(x2, (*itB++).second + offset2);}
-                while(itB != itBE && (*itB).first + offset1 <= x2);
+                do {
+                    x2 = _MAX(x2, (*itB++).second + offset2);
+                } while(itB != itBE && (*itB).first + offset1 <= x2);
 
                 // If we run out of A spans or the A span doesn't overlap,
                 // then the next B span can't either (because B spans don't
                 // overlap) and we exit.
 
-                if(itA == itAE || (*itA).first > x2)
+                if(itA == itAE || (*itA).first > x2) {
                     break;
+                }
 
-                do {x2 = _MAX(x2, (*itA++).second);}
-                while(itA != itAE && (*itA).first <= x2);
+                do {
+                    x2 = _MAX(x2, (*itA++).second);
+                } while(itA != itAE && (*itA).first <= x2);
             }
 
             // Flush span.
 
-            dst.push_back(tSpan(x1, x2));    
+            dst.push_back(tSpan(x1, x2));
         }
     }
 
     // Copy over leftover spans.
 
-    while(itA != itAE)
+    while(itA != itAE) {
         dst.push_back(*itA++);
+    }
 
-    while(itB != itBE)
-    {
-        dst.push_back(tSpan((*itB).first + offset1, (*itB).second + offset2));    
+    while(itB != itBE) {
+        dst.push_back(tSpan((*itB).first + offset1, (*itB).second + offset2));
         ++itB;
     }
 }
 
 bool Rasterizer::CreateWidenedRegion(int rx, int ry)
 {
-    if(rx < 0) rx = 0;
-    if(ry < 0) ry = 0;
+    if(rx < 0) {
+        rx = 0;
+    }
+    if(ry < 0) {
+        ry = 0;
+    }
 
     mWideBorder = max(rx,ry);
 
-    if (ry > 0)
-    {
+    if (ry > 0) {
         // Do a half circle.
         // _OverlapRegion mirrors this so both halves are done.
-        for(int y = -ry; y <= ry; ++y)
-        {
+        for(int y = -ry; y <= ry; ++y) {
             int x = (int)(0.5 + sqrt(float(ry*ry - y*y)) * float(rx)/float(ry));
 
             _OverlapRegion(mWideOutline, mOutline, x, y);
         }
-    }
-    else if (ry == 0 && rx > 0)
-    {
+    } else if (ry == 0 && rx > 0) {
         // There are artifacts if we don't make at least two overlaps of the line, even at same Y coord
         _OverlapRegion(mWideOutline, mOutline, rx, 0);
         _OverlapRegion(mWideOutline, mOutline, rx, 0);
@@ -686,8 +703,7 @@ bool Rasterizer::Rasterize(int xsub, int ysub, CRect &overhang)
 {
     _TrashOverlay();
 
-    if(!mWidth || !mHeight)
-    {
+    if(!mWidth || !mHeight) {
         mGlyphBmpWidth = mGlyphBmpHeight = 1;
     }
 
@@ -709,35 +725,31 @@ bool Rasterizer::Rasterize(int xsub, int ysub, CRect &overhang)
 
     bmp[0] = aligned_calloc3<uint8_t>(mGlyphBmpWidth, mGlyphBmpHeight,16);
 
-        xsub += overhang.left * 8;
-        ysub += overhang.top * 8;
+    xsub += overhang.left * 8;
+    ysub += overhang.top * 8;
 
     // Are we doing a border?
 
     tSpanBuffer::iterator it = mOutline.begin();
     tSpanBuffer::iterator itEnd = mOutline.end();
 
-    for(; it!=itEnd; ++it)
-    {
+    for(; it!=itEnd; ++it) {
         int y = (int)(((*it).first >> 32) - 0x40000000 + ysub);
         int x1 = (int)(((*it).first & 0xffffffff) - 0x40000000 + xsub);
         int x2 = (int)(((*it).second & 0xffffffff) - 0x40000000 + xsub);
 
-        if(x2 > x1)
-        {
+        if(x2 > x1) {
             int first = x1>>3;
             int last = (x2-1)>>3;
             byte* dst = bmp[0] + (mGlyphBmpWidth*(y>>3) + first);
 
-            if(first == last)
+            if(first == last) {
                 *dst += x2-x1;
-            else
-            {
+            } else {
                 *dst += ((first+1)<<3) - x1;
                 dst ++;
 
-                while(++first < last)
-                {
+                while(++first < last) {
                     *dst += 0x08;
                     dst ++;
                 }

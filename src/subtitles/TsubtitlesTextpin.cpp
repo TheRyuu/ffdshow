@@ -27,30 +27,29 @@
 
 TsubtitlesTextpin::TsubtitlesTextpin(int Itype,IffdshowBase *Ideci):Tsubtitles(Ideci),type(Itype)
 {
- init();
+    init();
 }
 
 void TsubtitlesTextpin::resetSubtitles(void)
 {
- init();
+    init();
 }
 
 TsubtitlesTextpin* TsubtitlesTextpin::create(int type,const unsigned char *extradata,unsigned int extradatalen,IffdshowBase *Ideci)
 {
- DPRINTF(_l("TsubtitlesTextpin::create"));
- switch (type)
-  {
-   case Tsubreader::SUB_PGS:
-    return new TsubtitlesTextpinPGS(type,Ideci);
-   case Tsubreader::SUB_VOBSUB:
-    return new TsubtitlesTextpinVobsub(type,Ideci,extradata,extradatalen);
-   case Tsubreader::SUB_DVD:
-   case Tsubreader::SUB_CVD:
-   case Tsubreader::SUB_SVCD:
-    return new TsubtitlesTextpinDVD(type,Ideci);
-   case Tsubreader::SUB_USF:
-    return new TsubtitlesTextpinUSF(type,Ideci,extradata,extradatalen);
-   default:
-    return new TsubtitlesTextpinText(type,Ideci,extradata,extradatalen);
-  }
+    DPRINTF(_l("TsubtitlesTextpin::create"));
+    switch (type) {
+        case Tsubreader::SUB_PGS:
+            return new TsubtitlesTextpinPGS(type,Ideci);
+        case Tsubreader::SUB_VOBSUB:
+            return new TsubtitlesTextpinVobsub(type,Ideci,extradata,extradatalen);
+        case Tsubreader::SUB_DVD:
+        case Tsubreader::SUB_CVD:
+        case Tsubreader::SUB_SVCD:
+            return new TsubtitlesTextpinDVD(type,Ideci);
+        case Tsubreader::SUB_USF:
+            return new TsubtitlesTextpinUSF(type,Ideci,extradata,extradatalen);
+        default:
+            return new TsubtitlesTextpinText(type,Ideci,extradata,extradatalen);
+    }
 }

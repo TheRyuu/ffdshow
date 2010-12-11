@@ -22,64 +22,63 @@
 #include "Ccrystality.h"
 #include "TffdshowPageDec.h"
 
-const TfilterIDFF TcrystalitySettings::idffs=
-{
- /*name*/      _l("Crystality"),
- /*id*/        IDFF_filterCrystality,
- /*is*/        IDFF_isCrystality,
- /*order*/     IDFF_orderCrystality,
- /*show*/      IDFF_showCrystality,
- /*full*/      0,
- /*half*/      0,
- /*dlgId*/     IDD_CRYSTALITY,
+const TfilterIDFF TcrystalitySettings::idffs= {
+    /*name*/      _l("Crystality"),
+    /*id*/        IDFF_filterCrystality,
+    /*is*/        IDFF_isCrystality,
+    /*order*/     IDFF_orderCrystality,
+    /*show*/      IDFF_showCrystality,
+    /*full*/      0,
+    /*half*/      0,
+    /*dlgId*/     IDD_CRYSTALITY,
 };
 
 TcrystalitySettings::TcrystalitySettings(TintStrColl *Icoll,TfilterIDFFs *filters):TfilterSettingsAudio(sizeof(*this),Icoll,filters,&idffs)
 {
- static const TintOptionT<TcrystalitySettings> iopts[]=
-  {
-   IDFF_isCrystality              ,&TcrystalitySettings::is             ,0,0,_l(""),1,
-     _l("isCrystality"),0,
-   IDFF_showCrystality            ,&TcrystalitySettings::show           ,0,0,_l(""),1,
-     _l("showCrystality"),1,
-   IDFF_orderCrystality           ,&TcrystalitySettings::order          ,1,1,_l(""),1,
-     _l("orderCrystality"),0,
-   IDFF_crystality_bext_level     ,&TcrystalitySettings::bext_level     ,0,100,_l(""),1,
-     _l("bext_level"),28,
-   IDFF_crystality_echo_level     ,&TcrystalitySettings::echo_level     ,0,100,_l(""),1,
-     _l("echo_level"),11,
-   IDFF_crystality_stereo_level   ,&TcrystalitySettings::stereo_level   ,0,100,_l(""),1,
-     _l("stereo_level"),11,
-   IDFF_crystality_filter_level   ,&TcrystalitySettings::filter_level   ,1,  3,_l(""),1,
-     _l("filter_level"),3,
-   IDFF_crystality_feedback_level ,&TcrystalitySettings::feedback_level ,0,100,_l(""),1,
-     _l("feedback_level"),30,
-   IDFF_crystality_harmonics_level,&TcrystalitySettings::harmonics_level,0,100,_l(""),1,
-     _l("harmonics_level"),43,
-   0
-  };
- addOptions(iopts);
+    static const TintOptionT<TcrystalitySettings> iopts[]= {
+        IDFF_isCrystality              ,&TcrystalitySettings::is             ,0,0,_l(""),1,
+        _l("isCrystality"),0,
+        IDFF_showCrystality            ,&TcrystalitySettings::show           ,0,0,_l(""),1,
+        _l("showCrystality"),1,
+        IDFF_orderCrystality           ,&TcrystalitySettings::order          ,1,1,_l(""),1,
+        _l("orderCrystality"),0,
+        IDFF_crystality_bext_level     ,&TcrystalitySettings::bext_level     ,0,100,_l(""),1,
+        _l("bext_level"),28,
+        IDFF_crystality_echo_level     ,&TcrystalitySettings::echo_level     ,0,100,_l(""),1,
+        _l("echo_level"),11,
+        IDFF_crystality_stereo_level   ,&TcrystalitySettings::stereo_level   ,0,100,_l(""),1,
+        _l("stereo_level"),11,
+        IDFF_crystality_filter_level   ,&TcrystalitySettings::filter_level   ,1,  3,_l(""),1,
+        _l("filter_level"),3,
+        IDFF_crystality_feedback_level ,&TcrystalitySettings::feedback_level ,0,100,_l(""),1,
+        _l("feedback_level"),30,
+        IDFF_crystality_harmonics_level,&TcrystalitySettings::harmonics_level,0,100,_l(""),1,
+        _l("harmonics_level"),43,
+        0
+    };
+    addOptions(iopts);
 }
 
 void TcrystalitySettings::createFilters(size_t filtersorder,Tfilters *filters,TfilterQueue &queue) const
 {
- idffOnChange(idffs,filters,queue.temporary);
- if (is && show)
-  queueFilter<TaudioFilterCrystality>(filtersorder,filters,queue);
+    idffOnChange(idffs,filters,queue.temporary);
+    if (is && show) {
+        queueFilter<TaudioFilterCrystality>(filtersorder,filters,queue);
+    }
 }
 void TcrystalitySettings::createPages(TffdshowPageDec *parent) const
 {
- parent->addFilterPage<TcrystalityPage>(&idffs);
+    parent->addFilterPage<TcrystalityPage>(&idffs);
 }
 
 const int* TcrystalitySettings::getResets(unsigned int pageId)
 {
- static const int idResets[]={IDFF_crystality_bext_level,IDFF_crystality_echo_level,IDFF_crystality_stereo_level,IDFF_crystality_filter_level,IDFF_crystality_feedback_level,IDFF_crystality_harmonics_level,0};
- return idResets;
+    static const int idResets[]= {IDFF_crystality_bext_level,IDFF_crystality_echo_level,IDFF_crystality_stereo_level,IDFF_crystality_filter_level,IDFF_crystality_feedback_level,IDFF_crystality_harmonics_level,0};
+    return idResets;
 }
 
 bool TcrystalitySettings::getTip(unsigned int pageId,char_t *tipS,size_t len)
 {
- tsnprintf_s(tipS, len, _TRUNCATE, _l("Bandwidth extender: %i\nEcho level: %i\nExtra stereo: %i"), bext_level, echo_level, stereo_level);
- return true;
+    tsnprintf_s(tipS, len, _TRUNCATE, _l("Bandwidth extender: %i\nEcho level: %i\nExtra stereo: %i"), bext_level, echo_level, stereo_level);
+    return true;
 }

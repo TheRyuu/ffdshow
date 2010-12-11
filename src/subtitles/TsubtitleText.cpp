@@ -36,737 +36,800 @@
 //========================== TtextFixBase =========================
 strings TtextFixBase::getDicts(const Tconfig *cfg)
 {
- char_t msk[MAX_PATH];
- _makepath_s(msk, countof(msk), NULL, cfg->pth, _l("dict\\*"), _l("dic"));
- strings dicts;
- findFiles(msk,dicts,false);
- foreach (ffstring &dic, dicts)
-  dic.erase(dic.find('.'),MAX_PATH);
- return dicts;
+    char_t msk[MAX_PATH];
+    _makepath_s(msk, countof(msk), NULL, cfg->pth, _l("dict\\*"), _l("dic"));
+    strings dicts;
+    findFiles(msk,dicts,false);
+    foreach (ffstring &dic, dicts)
+    dic.erase(dic.find('.'),MAX_PATH);
+    return dicts;
 }
 
 //============================= TtextFix ==========================
 TtextFix::TtextFix(const TsubtitlesSettings *scfg,const Tconfig *ffcfg):
- EndOfPrevSentence(true),
- inHearing(false)
+    EndOfPrevSentence(true),
+    inHearing(false)
 {
- memcpy(&cfg,scfg,sizeof(TsubtitlesSettings));
- if (scfg->fix&fixOrtography)
-  {
-   char_t dictflnm[MAX_PATH];
-   _makepath_s(dictflnm, countof(dictflnm), NULL, ffcfg->pth, (::ffstring(_l("dict\\"))+scfg->fixDict).c_str(), _l("dic"));
-   TstreamFile fs(dictflnm,false,false);
-   if (fs)
-    {
-     wchar_t ln[1000];
-     while (fs.fgets(ln,1000))
-      {
-       wchar_t *eoln=strchr(ln,'\n');if (eoln) *eoln='\0';
-       odict.push_back(ln);
-      }
-     if (odd(odict.size()))
-      odict.erase(odict.end()-1);
-     if (!odict.empty())
-      for (strings::iterator s=odict.begin();s+1!=odict.end();s++)
-       if (strstr((s+1)->c_str(),s->c_str()))
-        {
-         s=odict.erase(s);
-         s=odict.erase(s);
+    memcpy(&cfg,scfg,sizeof(TsubtitlesSettings));
+    if (scfg->fix&fixOrtography) {
+        char_t dictflnm[MAX_PATH];
+        _makepath_s(dictflnm, countof(dictflnm), NULL, ffcfg->pth, (::ffstring(_l("dict\\"))+scfg->fixDict).c_str(), _l("dic"));
+        TstreamFile fs(dictflnm,false,false);
+        if (fs) {
+            wchar_t ln[1000];
+            while (fs.fgets(ln,1000)) {
+                wchar_t *eoln=strchr(ln,'\n');
+                if (eoln) {
+                    *eoln='\0';
+                }
+                odict.push_back(ln);
+            }
+            if (odd(odict.size())) {
+                odict.erase(odict.end()-1);
+            }
+            if (!odict.empty())
+                for (strings::iterator s=odict.begin(); s+1!=odict.end(); s++)
+                    if (strstr((s+1)->c_str(),s->c_str())) {
+                        s=odict.erase(s);
+                        s=odict.erase(s);
+                    }
         }
     }
-  }
 }
 
 bool TtextFix::process(ffstring &text,ffstring &fixed)
 {
- if (cfg.fix==0) return false;
- int W1;
- passtring<wchar_t> S1=text;
-
- if (cfg.fix&fixAP) //AP
-  {
-   S1=stringreplace(S1,L"`"   , L"'" ,rfReplaceAll);
-   S1=stringreplace(S1,L"\264", L"'" ,rfReplaceAll);
-   S1=stringreplace(S1,L"''"  , L"\"",rfReplaceAll);
-   S1=stringreplace(S1,L"\"\"", L"\"",rfReplaceAll);
-  }
-
- if (cfg.fix&fixIl) // Il
-  {
-   #define TrChar(n) St1[W1+(n)]
-   bool TakeI=false,Takel=false;
-   passtring<wchar_t> St1=L"  "+S1+L"  ";
-   for (W1=1 + 2;W1<=St1.size() - 2;W1++)
-    {
-     //small L --> big i
-     if (St1[W1] == 'l')
-      {
-       TakeI = false;
-       //_lll trio
-       if ((TrChar(-1)==' ' || TrChar(-1)=='#') && (TrChar(+1) == 'l') && (TrChar(+2) == 'l'))
-        {
-         //_lllx --> _Illx (Illinois, Illegal etc.) + _Ill-
-         if (in(TrChar(+3),L"-abehinopstuy")) TakeI = true;
-         //._Ill_ (=bedridden) + ._Ill. (Ill. = Illustriert, Illustration [German])
-         //other than BoL cases not reflected
-         if (in(TrChar(-2),L".[") && (in(TrChar(+3),L" ."))) TakeI = true;
-         //Godfather III / Godfather III.
-         if (!(in(TrChar(-2),L".[") && (in(TrChar(+3),L" .!?,"))))
-          {
-           TakeI = true;
-           St1[W1 + 1] = 'I';
-           St1[W1 + 2] = 'I';
-          }
-        }
-       //_lgelit _lglu _lgnition _lgrafpapier _lguana
-       if (in(TrChar(-1),L" [(#") && (TrChar(+1) == 'g') && in(TrChar(+2),L"elnru"))
-        TakeI = true;
-       //ME LOVES MAKARONl! (MY TO SLYSELl. (!?) [cz; no others affected])
-       if (in(TrChar(+1),L".!?") &&
-           (TrChar(-1) == toupper(TrChar(-1))) &&
-           (TrChar(-1) != '.') && //»př.n.l.« at EoL case
-           (TrChar(-2) == toupper(TrChar(-2))))
-        TakeI = true;
-       //UNlVERSAL, lnternet, lnspektion, lnternational;  not changed - lněný [cz; no others affected]
-       //contain  : _l_ case [no Fr!], XlX, Xl_, _lX
-       //           V.l. Lenin, l.V. Lenin (initials of names)
-       //safely   : -lx OR -_lx; [lx OR [_lx; "Ix OR "_Ix
-       //dangerous: .lxxx
-       if (((TrChar(-1) == toupper(TrChar(-1))) &&
-         (TrChar(-1) != '.') && //»př.n.l.« case [cz; no others affected]
-         (TrChar(+1) == toupper(TrChar(+1))))
-         ||
-         ((in(TrChar(-1),L" #")) && (TrChar(+1) == 'n') && (TrChar(+2) != '\354')))
-        TakeI = true;
-       //last sign at uniline OR space follows
-       if ((TrChar(+1) == ' ') &&
-         (TrChar(-1) == toupper(TrChar(-1))))
-        TakeI = true;
-       //._l | -l | -_l; contain: ._ll_ (italian: Il brutto, il nero)
-       if (((TrChar(-2) != '.') && (TrChar(-1) == '.')) ||
-           ((TrChar(-2) == ' ') && (TrChar(-1) == '-')) ||
-           ((in(TrChar(-2),L".-")) && (TrChar(-1) == ' ')) &&
-           (TrChar(+1) != 'i')) TakeI = true;
-       //_ll_ to _Il_ ...this is made only as prep for next
-       if ((in(TrChar(-1),L" #")) && (TrChar(+1) == 'l') &&
-         (in(TrChar(+2),L" .,?!:"))) TakeI = true;
-       //_Il_ to _II_ (-2 <> . or [) Godfather II & Ramses II
-       if ((TrChar(-3) != '.') && (TrChar(-3) != '[') && (TrChar(-3) != '\0') &&
-           (TrChar(-2) == ' ') && (TrChar(-1) == 'I') &&
-           (in(TrChar(+1),L" .,?!:"))) TakeI = true;
-       //"hey C.W. load the weapons" and "hey... load the weapons"
-       //      432101                        432101
-       if ((TrChar(-4) == '.') && (TrChar(-2) == '.') & (TrChar(-1) == ' ') &&
-           (in(TrChar(+1),L"aeiouy")))
-        TakeI = false;
-       //_Ital...
-       if ((in(TrChar(-1),L" #")) && (TrChar(+1) == 't') && (TrChar(+2) == 'a'))
-        TakeI = true;
-       //only for international abnormalities
-       switch (cfg.fixLang)
-        {
-         case 0:// StCorrectIl_En;
-          if (St1[W1] == 'l')
-           {
-            //so shity due the styles
-            if ((in(TrChar(-1),L" \"#")) && (TrChar(+1) == 't' ) && (TrChar(+2) == '\'') && (TrChar(+3) == 's')) TakeI = true; //_lt's
-            if ((in(TrChar(-1),L" \"#")) && (TrChar(+1) == '\'') && (TrChar(+2) == 'm' ) && (TrChar(+3) == ' ')) TakeI = true; //_l'm_
-            if ((in(TrChar(-1),L" \"#")) && (TrChar(+1) == '\'') && (TrChar(+2) == 'd' ) && (TrChar(+3) == ' ')) TakeI = true; //_l'd_
-            if ((in(TrChar(-1),L" \"#")) && (TrChar(+1) == '\'') && (TrChar(+2) == 'v' ) && (TrChar(+3) == 'e')) TakeI = true; //_l've
-            if ((in(TrChar(-1),L" \"#")) && (TrChar(+1) == '\'') && (TrChar(+2) == 'l' ) && (TrChar(+3) == 'l')) TakeI = true; //_l'll
-            if ((in(TrChar(-1),L" \"#")) && (in(TrChar(+1),L"fnst")) && (TrChar(+2) == ' ')) TakeI = true; //_lf_, _ln_, _ls_, _lt_
-            //no English word beginning with "lc", "ld", "lh", "ln", "lr", "ls"
-            if ((in(TrChar(-1),L" \"#")) && (in(TrChar(+1),L"cdhnrs"))) TakeI = true;
-           }
-          break;
-         case 1:// StCorrectIl_Fr;
-          //*unknown*: I think that for french neither "I" alone nor "l" alone can exist so we don't check this. So the only thing we can write is that before an apostrophe there must be an "l".
-          if (((in(TrChar(-1),L" \"#")) && (TrChar(+1) == ' ')) || //but Brain as Frenchman: lonesome I doesn't exist
-              (TrChar(+1) == '\''))//*unknown*: An I followed by an apostrophe cannot exist. Must be an l.
-           {
-            TakeI = false;
-            Takel = true;
-           }
-          break;
-
-         case 2:// StCorrectIl_Ge;
-          if (St1[W1] == 'l')
-           //no German word beginning with "lc", "ld", "lh", "ln", "lr", "ls"
-           if ((in(TrChar(-1),L" \"#")) && (in(TrChar(+1),L"cdhnrs"))) TakeI = true;
-          break;
-         case 3:// StCorrectIl_Cz;
-          if (St1[W1] == 'l')
-           //no Czech word beginning with "lc", "ld", "lr"
-           if ((in(TrChar(-1),L" \"#")) && (in(TrChar(+1),L"cdr"))) TakeI = true;
-          break;
-         case 4:// StCorrectIl_It;
-          //Hint: "i" alone CAN exist (even capital: after a full stop) while l alone can't, never
-          //l' processing
-          if ((TrChar(+1) == '\'')) //Ita always has l before apostrophe (if ' is not used as an accent for a capital letter! [rare, and followed by whitespace])
-           if ((in(TrChar(+2),L"aAeEiIloOuUhH\xe0\xe8\xe9\xef\xf2\xf9")))
-            {
-             Takel = true;
-             TakeI = false;
-            }
-           //else: unknown pattern!? Probably an English sentence within an Italian movie. We rely on the general algorithm.
-          break;
-         case 5:// StCorrectIl_Pl;
-          if (St1[W1] == 'l')
-           //no Czech word beginning with "lc", "ld", "lr"
-           if ((in(TrChar(-1),L"., \"#")) && (in(TrChar(+1),L"bcdfhjkrstz\346\263\361\237")))
-            {
-             Takel = false;
-             TakeI = true;
-            }
-          break;
-        }
-       if (TakeI)
-        {
-         St1[W1] = 'I';
-         //'-' for I-I-I...
-         if ((W1 > 4) && (St1[W1 - 2] == 'l') && (St1[W1 - 1] == '-'))
-          if (St1[W1 - 3] == ' ') St1[W1 - 2] = 'I';
-          else
-           if ((St1[W1 - 4] == 'l') && (St1[W1 - 3] == '-'))
-            {
-             St1[W1 - 2] = 'I';
-             St1[W1 - 4] = 'I';
-            }
-        }
-      }
-     //big i --> small L
-     if (St1[W1] == 'I')
-      {
-       Takel = false;
-       //_III to _Ill
-       if ((in(TrChar(-1),L" #")) && (TrChar(+1) == 'I') && (TrChar(+2) == 'I'))
-        {
-         //_IIIx --> _Illx (Illinois, Illegal etc.) + _Ill-
-         if ((in(TrChar(+3),L"-abehinopstuy"))
-          ||
-           //._Ill_ (=bedridden) + ._Ill. (Ill. = Illustriert, Illustration [German])
-           //other than BoL cases not reflected
-           ((in(TrChar(-2),L".[")) && (in(TrChar(+3),L" ."))))
-          {
-           St1[W1 + 1] = 'l';
-           St1[W1 + 2] = 'l';
-          }
-           //Godfather III / Godfather III. *PASS*
-        }
-       //All, English, German
-       if (TrChar(-1)>='a' && TrChar(-1)<='z' && in(TrChar(-1),L"\344\366\374")) Takel = true;
-       else
-        if (!((in(TrChar(+1),
-          //All, English, German; 'w' - Iwao (Japan name), 'v' - Ivan
-          L"ABCDEFGHIJKLMNOPQRSTUVWXYZ\304\326\334 bcdghklmnoprstvwz\'.,!?")) || //',' prevents PRCl, PRCl, PRCICKY
-          //+East Europe - Czech, Slovak, Polish
-          ((cfg.font.charset== EASTEUROPE_CHARSET) &&
-          (in(TrChar(+1),L"\301\311\314\315\323\332\331\335\310\317\322\330\212\215\216\324\305\274\243\217\257\323\245\312\214\306\321"))) ||
-          //+Scandinavian
-          ((cfg.font.charset== ANSI_CHARSET) &&
-          in(TrChar(+1),L"\xc6\xd8\xc5")
-          ) ||
-          //+Italian: _Ieri_
-          ((in(TrChar(-1),L" #")) && (TrChar(+1) == 'e') &&
-          (TrChar(+2) == 'r') && (cfg.fixLang == 4)
-          )))
-         Takel = true;
-       //+East Europe - Czech, Slovak, Polish
-       if ((cfg.font.charset== EASTEUROPE_CHARSET) &&
-           (in(TrChar(-1),L"\341\350\357\351\354\355\362\363\370\232\235\372\371\375\236\364\345\276\237\277\363\263\271\352\234\346\361")))
-        Takel = true;
-       //+Scandinavian
-       if ((cfg.font.charset== ANSI_CHARSET) &&
-           (in(TrChar(-1),L"\xe6\xf8\xe5")))
-        Takel = true;
-       //_AIways AIden BIb BIouznit CIaire ČIověk PIný SIožit UItra ZIost
-       if ((in(TrChar(-2),L" \"-c#")) && //'c' for Mac/Mc (McCIoy)
-           (in(TrChar(-1),L"ABCDEFGHIJKLMNOPQRSTUVWXYZ\310\212\216\217\214")) &&
-           (in(TrChar(+1),L"abcdefghijklmnopqrstuvwxyz\341\350\351\354\355\363\362\232\371\375")))
-        Takel = true;
-       //Ihned leave, but Ihostejný --> lhostejný [cz; no others affected]
-       if ((TrChar(+1) == 'h') && (TrChar(+2) != 'n')) Takel = true;
-       //_AI_ to _Al_ - name (Artificial Intelligence (AI) not awaited :-)
-       if ((in(TrChar(-2),L" \"#'")) &&
-           (TrChar(-1) == 'A') &&
-           (in(TrChar(+1),L" \".,!?'")))
-        Takel = true;
-       //._II_ to ._Il_ (Il nero on BoL italian)
-       if ((in(TrChar(-3),L".[-")) && (TrChar(-2) == ' ') &&
-          (TrChar(-1) == 'I') && (TrChar(+1) == ' '))
-        Takel = true;
-       //(repd. from l-->I procedure too)  "EI gringo" to "El g." (BoL Spain)
-       if ((TrChar(-1) == 'E') && (TrChar(+1) == ' ')) Takel = true;
-       //'II_ --> 'll_
-       if ((TrChar(-1) == '\'') && (TrChar(+1) == 'I') && (TrChar(+2) == ' '))
-        {
-         Takel = true;
-         St1[W1 + 1] = 'l';
-        }
-       //_Iodic, Iolanthe/Iolite, Ion, Iowa, *Ioya* (but loyalty and more), Iota
-       //vs Ioad Iocation Iook Iost Ioud Iove
-       //Ioch Iogický/Iogo Ioket Iomcovák Iopata Iovit
-       //. Io... (Italian)
-       if (!(in(TrChar(-2),L".!?")) &&
-            (in(TrChar(-1),L" \"#")) && (TrChar(+1) == 'o') &&
-            !(in(TrChar(+2),L"dlnwt .,!?")))
-        Takel = true;
-       //Iodní etc. vs Iodate Ioderma Iodic Iodoethanol [cz only, won't affect others]
-       if ((in(TrChar(-1),L" \"#")) && (TrChar(+1) == 'o') && (TrChar(+2) == 'd') &&
-            !(in(TrChar(+3),L"aeio") || TrChar(+3)=='\0'))
-        Takel = true;
-       //Iondýnský [cz only, won't affect others]
-       if ((in(TrChar(-1),L" \"#")) && (TrChar(+1) == 'o') && (TrChar(+2) == 'n') &&
-            (TrChar(+3) == 'd'))
-        Takel = true;
-       //_Iong
-       if ((in(TrChar(-1),L" \"#")) && (TrChar(+1) == 'o') &&
-            (TrChar(+2) == 'n') && (TrChar(+3) == 'g'))
-        Takel = true;
-       //_Ioni_ --> _loni_  [cz only, don't affect others]
-       if ((in(TrChar(-1),L" \"#")) && (TrChar(+1) == 'o') && (TrChar(+2) == 'n') &&
-            (TrChar(+3) == 'i') && (in(TrChar(+4),L" \".,!?:")))
-        Takel = true;
-       //Iot_ etc. vs Iota
-       if ((in(TrChar(-1),L" \"#")) && (TrChar(+1) == 'o') &&
-            (TrChar(+2) == 't') && (TrChar(+3) != 'a'))
-        Takel = true;
-       //Iow_ etc. vs Iowa
-       if ((in(TrChar(-1),L" \"#")) && (TrChar(+1) == 'o') &&
-            (TrChar(+2) == 'w') && (TrChar(+3) != 'a'))
-        Takel = true;
-       //_AII_ etc.
-       if ((in(TrChar(-2),L" \"-#")) &&
-            (in(TrChar(-1),L"AEU")) && (TrChar(+1) == 'I') &&
-            (in(TrChar(+2),L" '-abcdefghijklmnopqrstuvwxyz")))
-        {
-         Takel = true;
-         St1[W1 + 1] = 'l';
-        }
-       //Eng only, no others affected: _If_, _If-, Iffy, Ifle, Ifor
-       if ((in(TrChar(-1),L" \"#")) && (TrChar(+1) == 'f') &&
-          (in(TrChar(+2),L" -flo")))
-        Takel = false;
-       //"hey C.W. Ioad the weapons" and "hey... Ioad the weapons"
-       //      432101                        432101
-       if ((TrChar(-4) == '.') && (TrChar(-2) == '.') && (TrChar(-1) == ' ') &&
-            (in(TrChar(+1),L"aeiouy")))
-        Takel = true;
-       /* TODO
-       //only for international abnormalities
-       case RadioGroupCorrectIlLanguage.ItemIndex of
-         //0: StCorrectIl_En;
-         1: StCorrectIl_Fr;
-         //2: StCorrectIl_Ge;
-         //3: StCorrectIl_Cz;
-         4: StCorrectIl_It;
-       end;
-       */
-       if (Takel)
-        {
-         St1[W1] = 'l';
-         //'-' for 'Uh, l-ladies and gentleman...' / 'just as you l-left it'
-         if ((W1 > 4) && (St1[W1 - 2] == 'I') && (St1[W1 - 1] == '-'))
-          if (St1[W1 - 3] == ' ') St1[W1 - 2] = 'l';
-          else
-           if ((St1[W1 - 4] == 'I') && (St1[W1 - 3] == '-'))
-            {
-             St1[W1 - 2] = 'l';
-             St1[W1 - 4] = 'l';
-            }
-        }
-      }
+    if (cfg.fix==0) {
+        return false;
     }
-   #undef TrChar
-   S1=St1.copy(1 + 2, St1.size() - 4);
-  }
+    int W1;
+    passtring<wchar_t> S1=text;
 
- if (cfg.fix&fixPunctuation) //punctuation
-  {
-   static const wchar_t *punctinations[]=
-    {
-     L"?.",L"?",
-     L"?,",L"?",
-     L" )",L")",
-     L"( ",L"(",
-     L" ]",L"]",
-     L"[ ",L"[",
-     L"!.",L"!",
-     L"!,",L"!",
-     L". . .",L"...",
-     L". ..",L"...",
-     L".. .",L"...",
-     L"--",L"...",
-     L"....",L"...",
-     L" :",L":",
-     L" ;",L";",
-     L" %",L"%",
-     L" !",L"!",
-     L" ?",L"?",
-     L" .",L".",
-     L" ,",L",",
-     L".:",L":",
-     L":.",L":",
-     L"eVe",L"eve",
-     L"    }",L"  }",
-     L"  ",L" ",
-     NULL,NULL
-    };
-   int i=1;
-   //"--" at the beginning of dialogs (Spy Kids 2, Stolen Summer, Sweet Home Alabama)
-   if (S1[i]=='-' && S1[i+1]=='-' && S1[i+2]!='-')
-    S1.erase(i,1);
-
-   //dict
-   for (i=0;punctinations[2*i];i++)
-    S1=stringreplace(S1,punctinations[2*i],punctinations[2*i+1],rfReplaceAll);
-
-   //".." to "..."
-   W1=S1.find(L"..");
-   if (W1>0)
-    while (S1.size()>W1)
-     {
-      if (((W1== 1) || (S1[W1 - 1] != '.')) &&
-          (S1[W1] == '.') && (S1[W1 + 1] == '.') &&
-          ((S1.size() == W1 + 1) || (S1[W1 + 2] != '.'))
-         )
-       S1.insert(W1,L".");
-      W1++;
-     }
-
-   //"..."
-   do
-    {
-     W1 = S1.find(L"...");
-     if (W1 > 0)
-      //Example "It is ..." -> "It is..."
-      if ((W1 == S1.size() - 2) && (S1[W1 - 1] == ' '))
-         S1 = S1.copy(1, S1.size() - 4) + L"<><>";
-       else
-         //Example "... it is" -> "...it is"
-         if ((W1 == 1) && (S1[W1 + 3] == ' '))
-           S1 = L"<><>" + S1.copy(5, S1.size() - 3);
-         else
-          //Example "It...is" -> "It... is"
-          if ((W1 > 1) && (W1 < S1.size() - 2) &&
-              !(S1[W1 - 2]=='?' || S1[W1-2]=='!'))
-           S1 = S1.copy(1, W1 - 1) + L"<><> " + S1.copy(W1 + 3, S1.size() - (W1 + 2));
-          else
-           //Example "Who?... there..." -> "Who? ...there..."
-           if ((W1 > 1) && (W1 < S1.size() - 2) &&
-               (S1[W1 - 1] =='?' || S1[W1-1]=='!'))
-            S1 = S1.copy( 1, W1 - 1) + L" <><>" + S1.copy( W1 + 4, S1.size() - (W1 + 3));
-             else
-            S1 = S1.copy( 1, W1 - 1) + L"<><>" + S1.copy(W1 + 3, S1.size() - (W1 + 2));
-    } while (W1!=0);
-   S1 = stringreplace(S1, L"?<><> ", L"? <><>", rfReplaceAll);
-   S1 = stringreplace(S1, L"<><> ?", L"<><>?", rfReplaceAll);
-   S1 = stringreplace(S1, L"<><> !", L"<><>!", rfReplaceAll);
-   S1 = stringreplace(S1, L"!<><> ", L"! <><>", rfReplaceAll);
-   S1 = stringreplace(S1, L"\"<><> ", L"\"<><>", rfReplaceAll);
-   S1 = stringreplace(S1, L"<><> \"", L"<><>\"", rfReplaceAll);
-   S1 = stringreplace(S1, L"- <><> ", L"<><>", rfReplaceAll);
-   S1 = stringreplace(S1, L"- <><>", L"<><>", rfReplaceAll);
-   S1 = stringreplace(S1, L"-<><> ", L"<><>", rfReplaceAll);
-   S1 = stringreplace(S1, L"-<><>", L"<><>", rfReplaceAll);
-   S1 = stringreplace(S1, L" <><> ", L"<><> ", rfReplaceAll);
-   S1 = stringreplace(S1, L",<><>", L"<><>", rfReplaceAll);
-
-   //|"_| -> |"| or |_"| -> |"|  -  sometimes in safe cases
-   int QoutCnt = 0;
-   for (i=1;i<=S1.size();i++)
-    if (S1[i]=='"')
-     QoutCnt++;
-   if (QoutCnt > 0)
-    if (!odd(QoutCnt))
-     {
-      for (i=1;i<=S1.size();i++)
-       if (S1[i] == '"')
-        {
-         if (odd(QoutCnt))
-          {
-           if ((i > 1) && (S1[i - 1] == ' ')) S1.erase(i - 1, 1);
-          }
-         else
-          if ((i < S1.size()) && (S1[i + 1] == ' ')) S1.erase(i + 1, 1);
-         QoutCnt--;
-        }
-     }
-    else
-     {
-      //aftercheck 1: |"_| at position 1 (if only 1x " appear as beginning)
-      if (S1.find(L"\" ") == 1) S1.erase(2, 1);
-      //aftercheck 2: |_"| at last position (if only 1x " appear as end)
-      if (S1.find(L" \"") == S1.size() - 1) S1.erase(S1.size() - 1, 1);
-     }
-
-   //"-"
-   do
-    {
-     W1 = S1.find('-');
-     if (W1 > 0)
-      {
-       //Example "-It is" -> "- It is"
-       if ((W1 == 1) && (S1[W1 + 1] != ' '))
-        S1 = L"[][] " + S1.copy(2, S1.size() - 1);
-       else
-        //Example "Hi. -It is." -> "Hi. - It is." (works for styles: "<i>-It is")
-        if (((in(S1[W1 - 2],L".!?>")) || (S1[W1 - 1] == '>')) && (S1[W1 + 1] != ' '))
-         S1 = S1.copy(1, W1 - 1) + L"[][] " + S1.copy(W1 + 1, S1.size() - (W1));
-        else
-         S1 = S1.copy(1, W1 - 1) + L"[][]" + S1.copy(W1 + 1, S1.size() - (W1));
-      }
-    } while (W1 != 0);
-
-   static const wchar_t *chars1[]={L".",L",",L":",L";",L"%",L"$",L"!",L"?"};
-   //Spaces after "," "." ":" ";" "$" "%"
-   if ((S1.find(L"www.") == 0) && (S1.find(L".com ") == 0) &&
-       (S1.find('@') == 0) && (S1.find(L"tp://") == 0))
-    for (i=0;i<6;i++)
-     {
-      do
-       {
-        W1 = S1.find(chars1[i]);
-        if (W1 > 0)
-         if ((W1 != S1.size() && !(S1[W1 + 1]==' ' || S1[W1 + 1]=='"' || S1[W1 + 1]=='\'' || S1[W1 + 1]=='?' || S1[W1 + 1]=='!' || S1[W1 + 1]==',' || S1[W1 + 1]==']' || S1[W1 + 1]=='}' || S1[W1 + 1]==')' || S1[W1 + 1]=='<'))
-             && ((S1[W1 - 1] < '0') || (S1[W1 - 1] > '9')) && ((S1[W1 + 1] < '0') || (S1[W1 + 1] > '9'))
-             && (S1[W1 + 2] != '.'))
-          S1 = S1.copy(1, W1 - 1) + L"()() " + S1.copy(W1 + 1, S1.size() - (W1));
-         else
-          S1 = S1.copy(1, W1 - 1) + L"()()" + S1.copy(W1 + 1, S1.size() - W1);
-       } while (W1 != 0);
-      S1 = stringreplace(S1, L"()()", chars1[i], rfReplaceAll);
-     }
-   //Spaces after "!" "?"
-   for (i=6;i<=7;i++)
-    {
-     do
-      {
-       W1 = S1.find(chars1[i]);
-       if (W1 > 0)
-        if ((W1 != S1.size()) && (S1[W1 + 1] != ' ') && !(S1[W1 + 1]=='!' || S1[W1 + 1]=='?' || S1[W1 + 1]=='"' || S1[W1 + 1]==']' || S1[W1 + 1]=='}' || S1[W1 + 1]==')' || S1[W1 + 1]=='<')) //'<' styles)
-         S1 = S1.copy(1, W1 - 1) + L"()() " + S1.copy( W1 + 1, S1.size() - (W1));
-        else
-         S1 = S1.copy(1, W1 - 1) + L"()()" + S1.copy(W1 + 1, S1.size() - (W1));
-      } while (W1 != 0);
-     S1 = stringreplace(S1, L"()()", chars1[i], rfReplaceAll);
-    }
-   S1 = stringreplace(S1, L"[][]", L"-", rfReplaceAll);
-   S1 = stringreplace(S1, L"<><>", L"...", rfReplaceAll);
-  }
-
- if (cfg.fix&fixOrtography)
-  for (strings::const_iterator s=odict.begin();s!=odict.end();)
-   {
-    const ffstring &oldstr=*s;s++;
-    const ffstring &newstr=*s;s++;
-    S1=stringreplace(S1,oldstr,newstr,rfReplaceAll);
-   }
-
- if (cfg.fix&fixCapital)
-  {
-   if (cfg.fix&fixCapital2) S1.ConvertToLowerCase();
-
-   //Change "..." to "<><>"
-   S1 = stringreplace(S1, L"...", L"<><>", rfReplaceAll);
-
-   static const wchar_t *chars2[]={L"-",L".",L"!",L"?",L":"};
-
-   //Capital letters after ". " "? " "! " "- "
-   for (unsigned int i=0;i<countof(chars2);i++)
-    {
-     do
-      {
-       W1 = S1.find(chars2[i]+ffstring(L" "));
-       if (W1 > 1) //take Pos from 2 and higher ("- " elsewhere)
-        if (W1 != S1.size())
-         if (((i == 1) /*'.'*/ && (S1[W1 - 1]>='0' && S1[W1-1]<='9')) || //prevents: 28. srpna -> 28. Srpna
-             ((i == 0) /*'-'*/ && !(S1[W1 - 2]=='.' || S1[W1 - 2]=='!' || S1[W1 - 2]=='?')))  //UpperCase only after .!?
-          S1 = S1.copy(1, W1 - 1) + L"()()" + S1.copy(W1 + 1, S1.size() - W1);
-         else
-          {
-           wchar_t up[2];
-           up[0]=(wchar_t)toupper(S1[W1 + 2]);up[1]='\0';
-           S1 = S1.copy(1, W1 - 1) + L"()() " + passtring<wchar_t>(up) + S1.copy(W1 + 3, S1.size() - (W1 + 2));
-          }
-        else
-         S1 = S1.copy(1, W1 - 1) + L"()()" + S1.copy(W1 + 1, S1.size() - W1);
-      } while (W1 > 1);
-     S1 = stringreplace(S1, L"()()", chars2[i], rfReplaceAll);
+    if (cfg.fix&fixAP) { //AP
+        S1=stringreplace(S1,L"`"   , L"'" ,rfReplaceAll);
+        S1=stringreplace(S1,L"\264", L"'" ,rfReplaceAll);
+        S1=stringreplace(S1,L"''"  , L"\"",rfReplaceAll);
+        S1=stringreplace(S1,L"\"\"", L"\"",rfReplaceAll);
     }
 
-   //Change "<><>" back to "..."
-   S1 = stringreplace(S1, L"<><>", L"...", rfReplaceAll);
+    if (cfg.fix&fixIl) { // Il
+#define TrChar(n) St1[W1+(n)]
+        bool TakeI=false,Takel=false;
+        passtring<wchar_t> St1=L"  "+S1+L"  ";
+        for (W1=1 + 2; W1<=St1.size() - 2; W1++) {
+            //small L --> big i
+            if (St1[W1] == 'l') {
+                TakeI = false;
+                //_lll trio
+                if ((TrChar(-1)==' ' || TrChar(-1)=='#') && (TrChar(+1) == 'l') && (TrChar(+2) == 'l')) {
+                    //_lllx --> _Illx (Illinois, Illegal etc.) + _Ill-
+                    if (in(TrChar(+3),L"-abehinopstuy")) {
+                        TakeI = true;
+                    }
+                    //._Ill_ (=bedridden) + ._Ill. (Ill. = Illustriert, Illustration [German])
+                    //other than BoL cases not reflected
+                    if (in(TrChar(-2),L".[") && (in(TrChar(+3),L" ."))) {
+                        TakeI = true;
+                    }
+                    //Godfather III / Godfather III.
+                    if (!(in(TrChar(-2),L".[") && (in(TrChar(+3),L" .!?,")))) {
+                        TakeI = true;
+                        St1[W1 + 1] = 'I';
+                        St1[W1 + 2] = 'I';
+                    }
+                }
+                //_lgelit _lglu _lgnition _lgrafpapier _lguana
+                if (in(TrChar(-1),L" [(#") && (TrChar(+1) == 'g') && in(TrChar(+2),L"elnru")) {
+                    TakeI = true;
+                }
+                //ME LOVES MAKARONl! (MY TO SLYSELl. (!?) [cz; no others affected])
+                if (in(TrChar(+1),L".!?") &&
+                        (TrChar(-1) == toupper(TrChar(-1))) &&
+                        (TrChar(-1) != '.') && //»př.n.l.« at EoL case
+                        (TrChar(-2) == toupper(TrChar(-2)))) {
+                    TakeI = true;
+                }
+                //UNlVERSAL, lnternet, lnspektion, lnternational;  not changed - lněný [cz; no others affected]
+                //contain  : _l_ case [no Fr!], XlX, Xl_, _lX
+                //           V.l. Lenin, l.V. Lenin (initials of names)
+                //safely   : -lx OR -_lx; [lx OR [_lx; "Ix OR "_Ix
+                //dangerous: .lxxx
+                if (((TrChar(-1) == toupper(TrChar(-1))) &&
+                        (TrChar(-1) != '.') && //»př.n.l.« case [cz; no others affected]
+                        (TrChar(+1) == toupper(TrChar(+1))))
+                        ||
+                        ((in(TrChar(-1),L" #")) && (TrChar(+1) == 'n') && (TrChar(+2) != '\354'))) {
+                    TakeI = true;
+                }
+                //last sign at uniline OR space follows
+                if ((TrChar(+1) == ' ') &&
+                        (TrChar(-1) == toupper(TrChar(-1)))) {
+                    TakeI = true;
+                }
+                //._l | -l | -_l; contain: ._ll_ (italian: Il brutto, il nero)
+                if (((TrChar(-2) != '.') && (TrChar(-1) == '.')) ||
+                        ((TrChar(-2) == ' ') && (TrChar(-1) == '-')) ||
+                        ((in(TrChar(-2),L".-")) && (TrChar(-1) == ' ')) &&
+                        (TrChar(+1) != 'i')) {
+                    TakeI = true;
+                }
+                //_ll_ to _Il_ ...this is made only as prep for next
+                if ((in(TrChar(-1),L" #")) && (TrChar(+1) == 'l') &&
+                        (in(TrChar(+2),L" .,?!:"))) {
+                    TakeI = true;
+                }
+                //_Il_ to _II_ (-2 <> . or [) Godfather II & Ramses II
+                if ((TrChar(-3) != '.') && (TrChar(-3) != '[') && (TrChar(-3) != '\0') &&
+                        (TrChar(-2) == ' ') && (TrChar(-1) == 'I') &&
+                        (in(TrChar(+1),L" .,?!:"))) {
+                    TakeI = true;
+                }
+                //"hey C.W. load the weapons" and "hey... load the weapons"
+                //      432101                        432101
+                if ((TrChar(-4) == '.') && (TrChar(-2) == '.') & (TrChar(-1) == ' ') &&
+                        (in(TrChar(+1),L"aeiouy"))) {
+                    TakeI = false;
+                }
+                //_Ital...
+                if ((in(TrChar(-1),L" #")) && (TrChar(+1) == 't') && (TrChar(+2) == 'a')) {
+                    TakeI = true;
+                }
+                //only for international abnormalities
+                switch (cfg.fixLang) {
+                    case 0:// StCorrectIl_En;
+                        if (St1[W1] == 'l') {
+                            //so shity due the styles
+                            if ((in(TrChar(-1),L" \"#")) && (TrChar(+1) == 't' ) && (TrChar(+2) == '\'') && (TrChar(+3) == 's')) {
+                                TakeI = true;    //_lt's
+                            }
+                            if ((in(TrChar(-1),L" \"#")) && (TrChar(+1) == '\'') && (TrChar(+2) == 'm' ) && (TrChar(+3) == ' ')) {
+                                TakeI = true;    //_l'm_
+                            }
+                            if ((in(TrChar(-1),L" \"#")) && (TrChar(+1) == '\'') && (TrChar(+2) == 'd' ) && (TrChar(+3) == ' ')) {
+                                TakeI = true;    //_l'd_
+                            }
+                            if ((in(TrChar(-1),L" \"#")) && (TrChar(+1) == '\'') && (TrChar(+2) == 'v' ) && (TrChar(+3) == 'e')) {
+                                TakeI = true;    //_l've
+                            }
+                            if ((in(TrChar(-1),L" \"#")) && (TrChar(+1) == '\'') && (TrChar(+2) == 'l' ) && (TrChar(+3) == 'l')) {
+                                TakeI = true;    //_l'll
+                            }
+                            if ((in(TrChar(-1),L" \"#")) && (in(TrChar(+1),L"fnst")) && (TrChar(+2) == ' ')) {
+                                TakeI = true;    //_lf_, _ln_, _ls_, _lt_
+                            }
+                            //no English word beginning with "lc", "ld", "lh", "ln", "lr", "ls"
+                            if ((in(TrChar(-1),L" \"#")) && (in(TrChar(+1),L"cdhnrs"))) {
+                                TakeI = true;
+                            }
+                        }
+                        break;
+                    case 1:// StCorrectIl_Fr;
+                        //*unknown*: I think that for french neither "I" alone nor "l" alone can exist so we don't check this. So the only thing we can write is that before an apostrophe there must be an "l".
+                        if (((in(TrChar(-1),L" \"#")) && (TrChar(+1) == ' ')) || //but Brain as Frenchman: lonesome I doesn't exist
+                                (TrChar(+1) == '\'')) { //*unknown*: An I followed by an apostrophe cannot exist. Must be an l.
+                            TakeI = false;
+                            Takel = true;
+                        }
+                        break;
 
-   //change the 1st letter case according to previous subtitle line
-   if (EndOfPrevSentence && (S1[1] != '.')) //...bla
-    {
-     int J = 1;
-     //while ((S1[J] == '<') && (S1[J + 1]=='b' || S1[J + 1]=='i' || S1[J + 1]=='u')) && //styles
-     //       (S1[J + 2] == '>'))
-     // j+=, 3);
-     if (S1[J] != '.') //<i>...bla
-      while (J <= S1.size())
-       {
-        //Alex: (battle cries) --> (Battle cries)
-        //It's not expected behavior. It'll be much better to stay words in "()" intact.
-        if (!(S1[J]=='[' || S1[J]=='"' || S1[J]=='\'' || S1[J]=='#' || S1[J]=='-' || S1[J]==' '))
-         {
-          S1[J] = (wchar_t)toupper(S1[J]);
-          break;
-         }
-        J++;
-       }
-     }
-   //prepare for next line
-   passtring<wchar_t> Sstrip = S1; //styles
-   unsigned int J = Sstrip.size();
-   if (J==0) //in case of empty string (only styles)
-    EndOfPrevSentence = false;
-   else
-    {
-     while ((Sstrip[J]=='\'' || Sstrip[J]=='"' || Sstrip[J]==' ') && (J > 1))
-      J--;
-     EndOfPrevSentence = Sstrip[J]=='.' || Sstrip[J]=='!' || Sstrip[J]=='?' || Sstrip[J]==':' || Sstrip[J]==']' || Sstrip[J]==')';
-     if ((Sstrip[J] == '.') && (Sstrip[J - 1] == '.') && (Sstrip[J - 2] == '.'))
-      EndOfPrevSentence = false;
+                    case 2:// StCorrectIl_Ge;
+                        if (St1[W1] == 'l')
+                            //no German word beginning with "lc", "ld", "lh", "ln", "lr", "ls"
+                            if ((in(TrChar(-1),L" \"#")) && (in(TrChar(+1),L"cdhnrs"))) {
+                                TakeI = true;
+                            }
+                        break;
+                    case 3:// StCorrectIl_Cz;
+                        if (St1[W1] == 'l')
+                            //no Czech word beginning with "lc", "ld", "lr"
+                            if ((in(TrChar(-1),L" \"#")) && (in(TrChar(+1),L"cdr"))) {
+                                TakeI = true;
+                            }
+                        break;
+                    case 4:// StCorrectIl_It;
+                        //Hint: "i" alone CAN exist (even capital: after a full stop) while l alone can't, never
+                        //l' processing
+                        if ((TrChar(+1) == '\'')) //Ita always has l before apostrophe (if ' is not used as an accent for a capital letter! [rare, and followed by whitespace])
+                            if ((in(TrChar(+2),L"aAeEiIloOuUhH\xe0\xe8\xe9\xef\xf2\xf9"))) {
+                                Takel = true;
+                                TakeI = false;
+                            }
+                        //else: unknown pattern!? Probably an English sentence within an Italian movie. We rely on the general algorithm.
+                        break;
+                    case 5:// StCorrectIl_Pl;
+                        if (St1[W1] == 'l')
+                            //no Czech word beginning with "lc", "ld", "lr"
+                            if ((in(TrChar(-1),L"., \"#")) && (in(TrChar(+1),L"bcdfhjkrstz\346\263\361\237"))) {
+                                Takel = false;
+                                TakeI = true;
+                            }
+                        break;
+                }
+                if (TakeI) {
+                    St1[W1] = 'I';
+                    //'-' for I-I-I...
+                    if ((W1 > 4) && (St1[W1 - 2] == 'l') && (St1[W1 - 1] == '-'))
+                        if (St1[W1 - 3] == ' ') {
+                            St1[W1 - 2] = 'I';
+                        } else if ((St1[W1 - 4] == 'l') && (St1[W1 - 3] == '-')) {
+                            St1[W1 - 2] = 'I';
+                            St1[W1 - 4] = 'I';
+                        }
+                }
+            }
+            //big i --> small L
+            if (St1[W1] == 'I') {
+                Takel = false;
+                //_III to _Ill
+                if ((in(TrChar(-1),L" #")) && (TrChar(+1) == 'I') && (TrChar(+2) == 'I')) {
+                    //_IIIx --> _Illx (Illinois, Illegal etc.) + _Ill-
+                    if ((in(TrChar(+3),L"-abehinopstuy"))
+                            ||
+                            //._Ill_ (=bedridden) + ._Ill. (Ill. = Illustriert, Illustration [German])
+                            //other than BoL cases not reflected
+                            ((in(TrChar(-2),L".[")) && (in(TrChar(+3),L" .")))) {
+                        St1[W1 + 1] = 'l';
+                        St1[W1 + 2] = 'l';
+                    }
+                    //Godfather III / Godfather III. *PASS*
+                }
+                //All, English, German
+                if (TrChar(-1)>='a' && TrChar(-1)<='z' && in(TrChar(-1),L"\344\366\374")) {
+                    Takel = true;
+                } else if (!((in(TrChar(+1),
+                                 //All, English, German; 'w' - Iwao (Japan name), 'v' - Ivan
+                                 L"ABCDEFGHIJKLMNOPQRSTUVWXYZ\304\326\334 bcdghklmnoprstvwz\'.,!?")) || //',' prevents PRCl, PRCl, PRCICKY
+                             //+East Europe - Czech, Slovak, Polish
+                             ((cfg.font.charset== EASTEUROPE_CHARSET) &&
+                              (in(TrChar(+1),L"\301\311\314\315\323\332\331\335\310\317\322\330\212\215\216\324\305\274\243\217\257\323\245\312\214\306\321"))) ||
+                             //+Scandinavian
+                             ((cfg.font.charset== ANSI_CHARSET) &&
+                              in(TrChar(+1),L"\xc6\xd8\xc5")
+                             ) ||
+                             //+Italian: _Ieri_
+                             ((in(TrChar(-1),L" #")) && (TrChar(+1) == 'e') &&
+                              (TrChar(+2) == 'r') && (cfg.fixLang == 4)
+                             ))) {
+                    Takel = true;
+                }
+                //+East Europe - Czech, Slovak, Polish
+                if ((cfg.font.charset== EASTEUROPE_CHARSET) &&
+                        (in(TrChar(-1),L"\341\350\357\351\354\355\362\363\370\232\235\372\371\375\236\364\345\276\237\277\363\263\271\352\234\346\361"))) {
+                    Takel = true;
+                }
+                //+Scandinavian
+                if ((cfg.font.charset== ANSI_CHARSET) &&
+                        (in(TrChar(-1),L"\xe6\xf8\xe5"))) {
+                    Takel = true;
+                }
+                //_AIways AIden BIb BIouznit CIaire ČIověk PIný SIožit UItra ZIost
+                if ((in(TrChar(-2),L" \"-c#")) && //'c' for Mac/Mc (McCIoy)
+                        (in(TrChar(-1),L"ABCDEFGHIJKLMNOPQRSTUVWXYZ\310\212\216\217\214")) &&
+                        (in(TrChar(+1),L"abcdefghijklmnopqrstuvwxyz\341\350\351\354\355\363\362\232\371\375"))) {
+                    Takel = true;
+                }
+                //Ihned leave, but Ihostejný --> lhostejný [cz; no others affected]
+                if ((TrChar(+1) == 'h') && (TrChar(+2) != 'n')) {
+                    Takel = true;
+                }
+                //_AI_ to _Al_ - name (Artificial Intelligence (AI) not awaited :-)
+                if ((in(TrChar(-2),L" \"#'")) &&
+                        (TrChar(-1) == 'A') &&
+                        (in(TrChar(+1),L" \".,!?'"))) {
+                    Takel = true;
+                }
+                //._II_ to ._Il_ (Il nero on BoL italian)
+                if ((in(TrChar(-3),L".[-")) && (TrChar(-2) == ' ') &&
+                        (TrChar(-1) == 'I') && (TrChar(+1) == ' ')) {
+                    Takel = true;
+                }
+                //(repd. from l-->I procedure too)  "EI gringo" to "El g." (BoL Spain)
+                if ((TrChar(-1) == 'E') && (TrChar(+1) == ' ')) {
+                    Takel = true;
+                }
+                //'II_ --> 'll_
+                if ((TrChar(-1) == '\'') && (TrChar(+1) == 'I') && (TrChar(+2) == ' ')) {
+                    Takel = true;
+                    St1[W1 + 1] = 'l';
+                }
+                //_Iodic, Iolanthe/Iolite, Ion, Iowa, *Ioya* (but loyalty and more), Iota
+                //vs Ioad Iocation Iook Iost Ioud Iove
+                //Ioch Iogický/Iogo Ioket Iomcovák Iopata Iovit
+                //. Io... (Italian)
+                if (!(in(TrChar(-2),L".!?")) &&
+                        (in(TrChar(-1),L" \"#")) && (TrChar(+1) == 'o') &&
+                        !(in(TrChar(+2),L"dlnwt .,!?"))) {
+                    Takel = true;
+                }
+                //Iodní etc. vs Iodate Ioderma Iodic Iodoethanol [cz only, won't affect others]
+                if ((in(TrChar(-1),L" \"#")) && (TrChar(+1) == 'o') && (TrChar(+2) == 'd') &&
+                        !(in(TrChar(+3),L"aeio") || TrChar(+3)=='\0')) {
+                    Takel = true;
+                }
+                //Iondýnský [cz only, won't affect others]
+                if ((in(TrChar(-1),L" \"#")) && (TrChar(+1) == 'o') && (TrChar(+2) == 'n') &&
+                        (TrChar(+3) == 'd')) {
+                    Takel = true;
+                }
+                //_Iong
+                if ((in(TrChar(-1),L" \"#")) && (TrChar(+1) == 'o') &&
+                        (TrChar(+2) == 'n') && (TrChar(+3) == 'g')) {
+                    Takel = true;
+                }
+                //_Ioni_ --> _loni_  [cz only, don't affect others]
+                if ((in(TrChar(-1),L" \"#")) && (TrChar(+1) == 'o') && (TrChar(+2) == 'n') &&
+                        (TrChar(+3) == 'i') && (in(TrChar(+4),L" \".,!?:"))) {
+                    Takel = true;
+                }
+                //Iot_ etc. vs Iota
+                if ((in(TrChar(-1),L" \"#")) && (TrChar(+1) == 'o') &&
+                        (TrChar(+2) == 't') && (TrChar(+3) != 'a')) {
+                    Takel = true;
+                }
+                //Iow_ etc. vs Iowa
+                if ((in(TrChar(-1),L" \"#")) && (TrChar(+1) == 'o') &&
+                        (TrChar(+2) == 'w') && (TrChar(+3) != 'a')) {
+                    Takel = true;
+                }
+                //_AII_ etc.
+                if ((in(TrChar(-2),L" \"-#")) &&
+                        (in(TrChar(-1),L"AEU")) && (TrChar(+1) == 'I') &&
+                        (in(TrChar(+2),L" '-abcdefghijklmnopqrstuvwxyz"))) {
+                    Takel = true;
+                    St1[W1 + 1] = 'l';
+                }
+                //Eng only, no others affected: _If_, _If-, Iffy, Ifle, Ifor
+                if ((in(TrChar(-1),L" \"#")) && (TrChar(+1) == 'f') &&
+                        (in(TrChar(+2),L" -flo"))) {
+                    Takel = false;
+                }
+                //"hey C.W. Ioad the weapons" and "hey... Ioad the weapons"
+                //      432101                        432101
+                if ((TrChar(-4) == '.') && (TrChar(-2) == '.') && (TrChar(-1) == ' ') &&
+                        (in(TrChar(+1),L"aeiouy"))) {
+                    Takel = true;
+                }
+                /* TODO
+                //only for international abnormalities
+                case RadioGroupCorrectIlLanguage.ItemIndex of
+                  //0: StCorrectIl_En;
+                  1: StCorrectIl_Fr;
+                  //2: StCorrectIl_Ge;
+                  //3: StCorrectIl_Cz;
+                  4: StCorrectIl_It;
+                end;
+                */
+                if (Takel) {
+                    St1[W1] = 'l';
+                    //'-' for 'Uh, l-ladies and gentleman...' / 'just as you l-left it'
+                    if ((W1 > 4) && (St1[W1 - 2] == 'I') && (St1[W1 - 1] == '-'))
+                        if (St1[W1 - 3] == ' ') {
+                            St1[W1 - 2] = 'l';
+                        } else if ((St1[W1 - 4] == 'I') && (St1[W1 - 3] == '-')) {
+                            St1[W1 - 2] = 'l';
+                            St1[W1 - 4] = 'l';
+                        }
+                }
+            }
+        }
+#undef TrChar
+        S1=St1.copy(1 + 2, St1.size() - 4);
     }
-  }
 
- if (cfg.fix&fixNumbers) //1 993 --> 1993 etc.
-  for (int I=1;I<=S1.size()-2;I++)
-   if ((S1.size() >= I + 2) /*Delete!*/ &&
-       (S1[I]=='0' || S1[I]=='1' || S1[I]=='2' || S1[I]=='3' || S1[I]=='4' || S1[I]=='5' || S1[I]=='6' || S1[I]=='7' || S1[I]=='8' || S1[I]=='9' || S1[I]=='/') &&
-       (S1[I + 1] == ' '))
-    if ((S1[I + 2]=='0' || S1[I + 2]=='1' || S1[I + 2]=='2' || S1[I + 2]=='3' || S1[I + 2]=='4' || S1[I + 2]=='5' || S1[I + 2]=='6' || S1[I + 2]=='7' || S1[I + 2]=='8' || S1[I + 2]=='9' || S1[I + 2]==',' || S1[I + 2]=='.' || S1[I + 2]==':' || S1[I + 2]=='/') ||
-        //5 -1-5
-        ((S1[I + 2] == '-') &&
-         (S1.size() >= I + 3) /*Delete!*/ &&
-         (S1[I + 3]=='0' || S1[I + 3]=='1' || S1[I + 3]=='2' || S1[I + 3]=='3' || S1[I + 3]=='4' || S1[I + 3]=='5' || S1[I + 3]=='6' || S1[I + 3]=='7' || S1[I + 3]=='8' || S1[I + 3]=='9')))
-     S1.erase(I + 1, 1);
+    if (cfg.fix&fixPunctuation) { //punctuation
+        static const wchar_t *punctinations[]= {
+            L"?.",L"?",
+            L"?,",L"?",
+            L" )",L")",
+            L"( ",L"(",
+            L" ]",L"]",
+            L"[ ",L"[",
+            L"!.",L"!",
+            L"!,",L"!",
+            L". . .",L"...",
+            L". ..",L"...",
+            L".. .",L"...",
+            L"--",L"...",
+            L"....",L"...",
+            L" :",L":",
+            L" ;",L";",
+            L" %",L"%",
+            L" !",L"!",
+            L" ?",L"?",
+            L" .",L".",
+            L" ,",L",",
+            L".:",L":",
+            L":.",L":",
+            L"eVe",L"eve",
+            L"    }",L"  }",
+            L"  ",L" ",
+            NULL,NULL
+        };
+        int i=1;
+        //"--" at the beginning of dialogs (Spy Kids 2, Stolen Summer, Sweet Home Alabama)
+        if (S1[i]=='-' && S1[i+1]=='-' && S1[i+2]!='-') {
+            S1.erase(i,1);
+        }
 
- if (cfg.fix&fixHearingImpaired)
-  for (int I=1;I<=S1.size();I++)
-   {
-    if (inHearing)
-     {
-      W1=S1.find(']',I);
-      if (W1>0)
-       {
-        S1.erase(std::max(1,I-1),std::max(W1 - std::max(1,I-1) + 1, 0));
-        if (S1 == passtring<wchar_t>(L"- ") || S1 == passtring<wchar_t>(L"-"))
-         S1 = L"";
-       }
-      else
-       {
-        S1.erase(std::max(1,I-1),S1.size());
-        break;
-       }
-      inHearing=false;
-      I=W1+1;
-     }
-    else if (S1[I]=='[')
-     inHearing=true;
-   }
- bool useFixed=strcmp(text.c_str(),S1.c_str())!=0;
- if (useFixed)
-  fixed=S1.c_str();
- return useFixed;
+        //dict
+        for (i=0; punctinations[2*i]; i++) {
+            S1=stringreplace(S1,punctinations[2*i],punctinations[2*i+1],rfReplaceAll);
+        }
+
+        //".." to "..."
+        W1=S1.find(L"..");
+        if (W1>0)
+            while (S1.size()>W1) {
+                if (((W1== 1) || (S1[W1 - 1] != '.')) &&
+                        (S1[W1] == '.') && (S1[W1 + 1] == '.') &&
+                        ((S1.size() == W1 + 1) || (S1[W1 + 2] != '.'))
+                   ) {
+                    S1.insert(W1,L".");
+                }
+                W1++;
+            }
+
+        //"..."
+        do {
+            W1 = S1.find(L"...");
+            if (W1 > 0)
+                //Example "It is ..." -> "It is..."
+                if ((W1 == S1.size() - 2) && (S1[W1 - 1] == ' ')) {
+                    S1 = S1.copy(1, S1.size() - 4) + L"<><>";
+                } else
+                    //Example "... it is" -> "...it is"
+                    if ((W1 == 1) && (S1[W1 + 3] == ' ')) {
+                        S1 = L"<><>" + S1.copy(5, S1.size() - 3);
+                    } else
+                        //Example "It...is" -> "It... is"
+                        if ((W1 > 1) && (W1 < S1.size() - 2) &&
+                                !(S1[W1 - 2]=='?' || S1[W1-2]=='!')) {
+                            S1 = S1.copy(1, W1 - 1) + L"<><> " + S1.copy(W1 + 3, S1.size() - (W1 + 2));
+                        } else
+                            //Example "Who?... there..." -> "Who? ...there..."
+                            if ((W1 > 1) && (W1 < S1.size() - 2) &&
+                                    (S1[W1 - 1] =='?' || S1[W1-1]=='!')) {
+                                S1 = S1.copy( 1, W1 - 1) + L" <><>" + S1.copy( W1 + 4, S1.size() - (W1 + 3));
+                            } else {
+                                S1 = S1.copy( 1, W1 - 1) + L"<><>" + S1.copy(W1 + 3, S1.size() - (W1 + 2));
+                            }
+        } while (W1!=0);
+        S1 = stringreplace(S1, L"?<><> ", L"? <><>", rfReplaceAll);
+        S1 = stringreplace(S1, L"<><> ?", L"<><>?", rfReplaceAll);
+        S1 = stringreplace(S1, L"<><> !", L"<><>!", rfReplaceAll);
+        S1 = stringreplace(S1, L"!<><> ", L"! <><>", rfReplaceAll);
+        S1 = stringreplace(S1, L"\"<><> ", L"\"<><>", rfReplaceAll);
+        S1 = stringreplace(S1, L"<><> \"", L"<><>\"", rfReplaceAll);
+        S1 = stringreplace(S1, L"- <><> ", L"<><>", rfReplaceAll);
+        S1 = stringreplace(S1, L"- <><>", L"<><>", rfReplaceAll);
+        S1 = stringreplace(S1, L"-<><> ", L"<><>", rfReplaceAll);
+        S1 = stringreplace(S1, L"-<><>", L"<><>", rfReplaceAll);
+        S1 = stringreplace(S1, L" <><> ", L"<><> ", rfReplaceAll);
+        S1 = stringreplace(S1, L",<><>", L"<><>", rfReplaceAll);
+
+        //|"_| -> |"| or |_"| -> |"|  -  sometimes in safe cases
+        int QoutCnt = 0;
+        for (i=1; i<=S1.size(); i++)
+            if (S1[i]=='"') {
+                QoutCnt++;
+            }
+        if (QoutCnt > 0)
+            if (!odd(QoutCnt)) {
+                for (i=1; i<=S1.size(); i++)
+                    if (S1[i] == '"') {
+                        if (odd(QoutCnt)) {
+                            if ((i > 1) && (S1[i - 1] == ' ')) {
+                                S1.erase(i - 1, 1);
+                            }
+                        } else if ((i < S1.size()) && (S1[i + 1] == ' ')) {
+                            S1.erase(i + 1, 1);
+                        }
+                        QoutCnt--;
+                    }
+            } else {
+                //aftercheck 1: |"_| at position 1 (if only 1x " appear as beginning)
+                if (S1.find(L"\" ") == 1) {
+                    S1.erase(2, 1);
+                }
+                //aftercheck 2: |_"| at last position (if only 1x " appear as end)
+                if (S1.find(L" \"") == S1.size() - 1) {
+                    S1.erase(S1.size() - 1, 1);
+                }
+            }
+
+        //"-"
+        do {
+            W1 = S1.find('-');
+            if (W1 > 0) {
+                //Example "-It is" -> "- It is"
+                if ((W1 == 1) && (S1[W1 + 1] != ' ')) {
+                    S1 = L"[][] " + S1.copy(2, S1.size() - 1);
+                } else
+                    //Example "Hi. -It is." -> "Hi. - It is." (works for styles: "<i>-It is")
+                    if (((in(S1[W1 - 2],L".!?>")) || (S1[W1 - 1] == '>')) && (S1[W1 + 1] != ' ')) {
+                        S1 = S1.copy(1, W1 - 1) + L"[][] " + S1.copy(W1 + 1, S1.size() - (W1));
+                    } else {
+                        S1 = S1.copy(1, W1 - 1) + L"[][]" + S1.copy(W1 + 1, S1.size() - (W1));
+                    }
+            }
+        } while (W1 != 0);
+
+        static const wchar_t *chars1[]= {L".",L",",L":",L";",L"%",L"$",L"!",L"?"};
+        //Spaces after "," "." ":" ";" "$" "%"
+        if ((S1.find(L"www.") == 0) && (S1.find(L".com ") == 0) &&
+                (S1.find('@') == 0) && (S1.find(L"tp://") == 0))
+            for (i=0; i<6; i++) {
+                do {
+                    W1 = S1.find(chars1[i]);
+                    if (W1 > 0)
+                        if ((W1 != S1.size() && !(S1[W1 + 1]==' ' || S1[W1 + 1]=='"' || S1[W1 + 1]=='\'' || S1[W1 + 1]=='?' || S1[W1 + 1]=='!' || S1[W1 + 1]==',' || S1[W1 + 1]==']' || S1[W1 + 1]=='}' || S1[W1 + 1]==')' || S1[W1 + 1]=='<'))
+                                && ((S1[W1 - 1] < '0') || (S1[W1 - 1] > '9')) && ((S1[W1 + 1] < '0') || (S1[W1 + 1] > '9'))
+                                && (S1[W1 + 2] != '.')) {
+                            S1 = S1.copy(1, W1 - 1) + L"()() " + S1.copy(W1 + 1, S1.size() - (W1));
+                        } else {
+                            S1 = S1.copy(1, W1 - 1) + L"()()" + S1.copy(W1 + 1, S1.size() - W1);
+                        }
+                } while (W1 != 0);
+                S1 = stringreplace(S1, L"()()", chars1[i], rfReplaceAll);
+            }
+        //Spaces after "!" "?"
+        for (i=6; i<=7; i++) {
+            do {
+                W1 = S1.find(chars1[i]);
+                if (W1 > 0)
+                    if ((W1 != S1.size()) && (S1[W1 + 1] != ' ') && !(S1[W1 + 1]=='!' || S1[W1 + 1]=='?' || S1[W1 + 1]=='"' || S1[W1 + 1]==']' || S1[W1 + 1]=='}' || S1[W1 + 1]==')' || S1[W1 + 1]=='<')) { //'<' styles)
+                        S1 = S1.copy(1, W1 - 1) + L"()() " + S1.copy( W1 + 1, S1.size() - (W1));
+                    } else {
+                        S1 = S1.copy(1, W1 - 1) + L"()()" + S1.copy(W1 + 1, S1.size() - (W1));
+                    }
+            } while (W1 != 0);
+            S1 = stringreplace(S1, L"()()", chars1[i], rfReplaceAll);
+        }
+        S1 = stringreplace(S1, L"[][]", L"-", rfReplaceAll);
+        S1 = stringreplace(S1, L"<><>", L"...", rfReplaceAll);
+    }
+
+    if (cfg.fix&fixOrtography)
+        for (strings::const_iterator s=odict.begin(); s!=odict.end();) {
+            const ffstring &oldstr=*s;
+            s++;
+            const ffstring &newstr=*s;
+            s++;
+            S1=stringreplace(S1,oldstr,newstr,rfReplaceAll);
+        }
+
+    if (cfg.fix&fixCapital) {
+        if (cfg.fix&fixCapital2) {
+            S1.ConvertToLowerCase();
+        }
+
+        //Change "..." to "<><>"
+        S1 = stringreplace(S1, L"...", L"<><>", rfReplaceAll);
+
+        static const wchar_t *chars2[]= {L"-",L".",L"!",L"?",L":"};
+
+        //Capital letters after ". " "? " "! " "- "
+        for (unsigned int i=0; i<countof(chars2); i++) {
+            do {
+                W1 = S1.find(chars2[i]+ffstring(L" "));
+                if (W1 > 1) //take Pos from 2 and higher ("- " elsewhere)
+                    if (W1 != S1.size())
+                        if (((i == 1) /*'.'*/ && (S1[W1 - 1]>='0' && S1[W1-1]<='9')) || //prevents: 28. srpna -> 28. Srpna
+                                ((i == 0) /*'-'*/ && !(S1[W1 - 2]=='.' || S1[W1 - 2]=='!' || S1[W1 - 2]=='?'))) { //UpperCase only after .!?
+                            S1 = S1.copy(1, W1 - 1) + L"()()" + S1.copy(W1 + 1, S1.size() - W1);
+                        } else {
+                            wchar_t up[2];
+                            up[0]=(wchar_t)toupper(S1[W1 + 2]);
+                            up[1]='\0';
+                            S1 = S1.copy(1, W1 - 1) + L"()() " + passtring<wchar_t>(up) + S1.copy(W1 + 3, S1.size() - (W1 + 2));
+                        }
+                    else {
+                        S1 = S1.copy(1, W1 - 1) + L"()()" + S1.copy(W1 + 1, S1.size() - W1);
+                    }
+            } while (W1 > 1);
+            S1 = stringreplace(S1, L"()()", chars2[i], rfReplaceAll);
+        }
+
+        //Change "<><>" back to "..."
+        S1 = stringreplace(S1, L"<><>", L"...", rfReplaceAll);
+
+        //change the 1st letter case according to previous subtitle line
+        if (EndOfPrevSentence && (S1[1] != '.')) { //...bla
+            int J = 1;
+            //while ((S1[J] == '<') && (S1[J + 1]=='b' || S1[J + 1]=='i' || S1[J + 1]=='u')) && //styles
+            //       (S1[J + 2] == '>'))
+            // j+=, 3);
+            if (S1[J] != '.') //<i>...bla
+                while (J <= S1.size()) {
+                    //Alex: (battle cries) --> (Battle cries)
+                    //It's not expected behavior. It'll be much better to stay words in "()" intact.
+                    if (!(S1[J]=='[' || S1[J]=='"' || S1[J]=='\'' || S1[J]=='#' || S1[J]=='-' || S1[J]==' ')) {
+                        S1[J] = (wchar_t)toupper(S1[J]);
+                        break;
+                    }
+                    J++;
+                }
+        }
+        //prepare for next line
+        passtring<wchar_t> Sstrip = S1; //styles
+        unsigned int J = Sstrip.size();
+        if (J==0) { //in case of empty string (only styles)
+            EndOfPrevSentence = false;
+        } else {
+            while ((Sstrip[J]=='\'' || Sstrip[J]=='"' || Sstrip[J]==' ') && (J > 1)) {
+                J--;
+            }
+            EndOfPrevSentence = Sstrip[J]=='.' || Sstrip[J]=='!' || Sstrip[J]=='?' || Sstrip[J]==':' || Sstrip[J]==']' || Sstrip[J]==')';
+            if ((Sstrip[J] == '.') && (Sstrip[J - 1] == '.') && (Sstrip[J - 2] == '.')) {
+                EndOfPrevSentence = false;
+            }
+        }
+    }
+
+    if (cfg.fix&fixNumbers) //1 993 --> 1993 etc.
+        for (int I=1; I<=S1.size()-2; I++)
+            if ((S1.size() >= I + 2) /*Delete!*/ &&
+                    (S1[I]=='0' || S1[I]=='1' || S1[I]=='2' || S1[I]=='3' || S1[I]=='4' || S1[I]=='5' || S1[I]=='6' || S1[I]=='7' || S1[I]=='8' || S1[I]=='9' || S1[I]=='/') &&
+                    (S1[I + 1] == ' '))
+                if ((S1[I + 2]=='0' || S1[I + 2]=='1' || S1[I + 2]=='2' || S1[I + 2]=='3' || S1[I + 2]=='4' || S1[I + 2]=='5' || S1[I + 2]=='6' || S1[I + 2]=='7' || S1[I + 2]=='8' || S1[I + 2]=='9' || S1[I + 2]==',' || S1[I + 2]=='.' || S1[I + 2]==':' || S1[I + 2]=='/') ||
+                        //5 -1-5
+                        ((S1[I + 2] == '-') &&
+                         (S1.size() >= I + 3) /*Delete!*/ &&
+                         (S1[I + 3]=='0' || S1[I + 3]=='1' || S1[I + 3]=='2' || S1[I + 3]=='3' || S1[I + 3]=='4' || S1[I + 3]=='5' || S1[I + 3]=='6' || S1[I + 3]=='7' || S1[I + 3]=='8' || S1[I + 3]=='9'))) {
+                    S1.erase(I + 1, 1);
+                }
+
+    if (cfg.fix&fixHearingImpaired)
+        for (int I=1; I<=S1.size(); I++) {
+            if (inHearing) {
+                W1=S1.find(']',I);
+                if (W1>0) {
+                    S1.erase(std::max(1,I-1),std::max(W1 - std::max(1,I-1) + 1, 0));
+                    if (S1 == passtring<wchar_t>(L"- ") || S1 == passtring<wchar_t>(L"-")) {
+                        S1 = L"";
+                    }
+                } else {
+                    S1.erase(std::max(1,I-1),S1.size());
+                    break;
+                }
+                inHearing=false;
+                I=W1+1;
+            } else if (S1[I]=='[') {
+                inHearing=true;
+            }
+        }
+    bool useFixed=strcmp(text.c_str(),S1.c_str())!=0;
+    if (useFixed) {
+        fixed=S1.c_str();
+    }
+    return useFixed;
 }
 
 //============================ TsubtitleFormat =============================
 ffstring TsubtitleFormat::getAttribute(const wchar_t *start,const wchar_t *end,const wchar_t *attrname)
 {
- if (const wchar_t *attr=strnistr(start,end-start+1,attrname))
-  if (const wchar_t *eq=strnchr(attr,end-attr+1,'='))
-   {
-    eq++;
-    bool in=false;
-    for (int i=0;i<end-eq+1;i++)
-     if (eq[i]=='"')
-      in=!in;
-     else if (!in && (eq[i]==' ' || eq[i]=='>' || eq[i]=='\0'))
-      return stringreplace(ffstring(eq,i).Trim(),L"\"",L"",rfReplaceAll);
-   }
- return ffstring();
+    if (const wchar_t *attr=strnistr(start,end-start+1,attrname))
+        if (const wchar_t *eq=strnchr(attr,end-attr+1,'=')) {
+            eq++;
+            bool in=false;
+            for (int i=0; i<end-eq+1; i++)
+                if (eq[i]=='"') {
+                    in=!in;
+                } else if (!in && (eq[i]==' ' || eq[i]=='>' || eq[i]=='\0')) {
+                    return stringreplace(ffstring(eq,i).Trim(),L"\"",L"",rfReplaceAll);
+                }
+        }
+    return ffstring();
 }
 
 void TsubtitleFormat::processHTMLTags(Twords &words, const wchar_t* &l, const wchar_t* &l1, const wchar_t* &l2)
 {
-if (_strnicmp(l2,L"<i>",3)==0) {words.add(l,l1,l2,props,3);props.italic=true;}
-  else if (_strnicmp(l2,L"</i>",4)==0) {words.add(l,l1,l2,props,4);props.italic=false;}
-  else if (_strnicmp(l2,L"<u>",3)==0) {words.add(l,l1,l2,props,3);props.underline=true;}
-  else if (_strnicmp(l2,L"</u>",4)==0) {words.add(l,l1,l2,props,4);props.underline=false;}
-  else if (_strnicmp(l2,L"<b>",3)==0) {words.add(l,l1,l2,props,3);props.bold=true;}
-  else if (_strnicmp(l2,L"</b>",4)==0) {words.add(l,l1,l2,props,4);props.bold=false;}
-  else if (_strnicmp(l2,L"<font ",6)==0)
-   {
-    const wchar_t *end=strchr(l2,'>');
-    if (end)
-     {
-      const wchar_t *start=l2+6;
-      ffstring face=getAttribute(start,end,L"face");
-      ffstring color=getAttribute(start,end,L"color").ConvertToLowerCase();
-      ffstring size=getAttribute(start,end,L"size");
-      words.add(l,l1,l2,props,end-l2+1);
-      if (!face.empty()) ff_strncpy(props.fontname, (const char_t *)text<char_t>(face.c_str()),countof(props.fontname));
-      if (!color.empty() && ((color[0]=='#' && swscanf(color.c_str()+1,L"%x",&props.color)) || (htmlcolors->getColor(color,&props.color,0xffffff),true)))
-       {
-        std::swap(((uint8_t*)&props.color)[0],((uint8_t*)&props.color)[2]);
-        props.isColor=true;
-       }
-      if (!size.empty())
-       {
-        wchar_t *ll;
-        int s=strtol(size.c_str(),&ll,10);
-        if (*ll=='\0') props.size=s;
-       }
-     }
-   }
-  else if (_strnicmp(l2,L"</font>",7)==0)
-   {
-    words.add(l,l1,l2,props,7);props.isColor=false;props.size=0;props.fontname[0]='\0';
-   }
-   // Hacks for badly written HTML tags go here. Comment everything to only parse good HTML tags
-  else if (_strnicmp(l2,L"< i>",4)==0) {words.add(l,l1,l2,props,4);props.italic=true;}
-  else if (_strnicmp(l2,L"< /i>",5)==0) {words.add(l,l1,l2,props,5);props.italic=false;}
-  else if (_strnicmp(l2,L"< u>",4)==0) {words.add(l,l1,l2,props,4);props.underline=true;}
-  else if (_strnicmp(l2,L"< /u>",5)==0) {words.add(l,l1,l2,props,5);props.underline=false;}
-  else if (_strnicmp(l2,L"< b>",4)==0) {words.add(l,l1,l2,props,4);props.bold=true;}
-  else if (_strnicmp(l2,L"< /b>",5)==0) {words.add(l,l1,l2,props,5);props.bold=false;}
-  // End of hacks
-  else
-   l2++;
+    if (_strnicmp(l2,L"<i>",3)==0) {
+        words.add(l,l1,l2,props,3);
+        props.italic=true;
+    } else if (_strnicmp(l2,L"</i>",4)==0) {
+        words.add(l,l1,l2,props,4);
+        props.italic=false;
+    } else if (_strnicmp(l2,L"<u>",3)==0) {
+        words.add(l,l1,l2,props,3);
+        props.underline=true;
+    } else if (_strnicmp(l2,L"</u>",4)==0) {
+        words.add(l,l1,l2,props,4);
+        props.underline=false;
+    } else if (_strnicmp(l2,L"<b>",3)==0) {
+        words.add(l,l1,l2,props,3);
+        props.bold=true;
+    } else if (_strnicmp(l2,L"</b>",4)==0) {
+        words.add(l,l1,l2,props,4);
+        props.bold=false;
+    } else if (_strnicmp(l2,L"<font ",6)==0) {
+        const wchar_t *end=strchr(l2,'>');
+        if (end) {
+            const wchar_t *start=l2+6;
+            ffstring face=getAttribute(start,end,L"face");
+            ffstring color=getAttribute(start,end,L"color").ConvertToLowerCase();
+            ffstring size=getAttribute(start,end,L"size");
+            words.add(l,l1,l2,props,end-l2+1);
+            if (!face.empty()) {
+                ff_strncpy(props.fontname, (const char_t *)text<char_t>(face.c_str()),countof(props.fontname));
+            }
+            if (!color.empty() && ((color[0]=='#' && swscanf(color.c_str()+1,L"%x",&props.color)) || (htmlcolors->getColor(color,&props.color,0xffffff),true))) {
+                std::swap(((uint8_t*)&props.color)[0],((uint8_t*)&props.color)[2]);
+                props.isColor=true;
+            }
+            if (!size.empty()) {
+                wchar_t *ll;
+                int s=strtol(size.c_str(),&ll,10);
+                if (*ll=='\0') {
+                    props.size=s;
+                }
+            }
+        }
+    } else if (_strnicmp(l2,L"</font>",7)==0) {
+        words.add(l,l1,l2,props,7);
+        props.isColor=false;
+        props.size=0;
+        props.fontname[0]='\0';
+    }
+    // Hacks for badly written HTML tags go here. Comment everything to only parse good HTML tags
+    else if (_strnicmp(l2,L"< i>",4)==0) {
+        words.add(l,l1,l2,props,4);
+        props.italic=true;
+    } else if (_strnicmp(l2,L"< /i>",5)==0) {
+        words.add(l,l1,l2,props,5);
+        props.italic=false;
+    } else if (_strnicmp(l2,L"< u>",4)==0) {
+        words.add(l,l1,l2,props,4);
+        props.underline=true;
+    } else if (_strnicmp(l2,L"< /u>",5)==0) {
+        words.add(l,l1,l2,props,5);
+        props.underline=false;
+    } else if (_strnicmp(l2,L"< b>",4)==0) {
+        words.add(l,l1,l2,props,4);
+        props.bold=true;
+    } else if (_strnicmp(l2,L"< /b>",5)==0) {
+        words.add(l,l1,l2,props,5);
+        props.bold=false;
+    }
+    // End of hacks
+    else {
+        l2++;
+    }
 }
 
 TsubtitleFormat::Twords TsubtitleFormat::processHTML(const TsubtitleLine &line)
 {
- Twords words;
- if (line.empty()) return words;
- const wchar_t *l=line[0];
- const wchar_t *l1=l,*l2=l;
- while (*l2)
-   processHTMLTags(words, l, l1, l2);
- 
- words.add(l,l1,l2,props,0);
- return words;
+    Twords words;
+    if (line.empty()) {
+        return words;
+    }
+    const wchar_t *l=line[0];
+    const wchar_t *l1=l,*l2=l;
+    while (*l2) {
+        processHTMLTags(words, l, l1, l2);
+    }
+
+    words.add(l,l1,l2,props,0);
+    return words;
 }
 
 int TsubtitleFormat::Tssa::parse_parentheses(TparenthesesContents &contents, ffstring arg)
 {
     // (a1,a2, ... ,an) is expected.
     size_t first_paren = arg.find('(');
-    if (first_paren == ffstring::npos)
+    if (first_paren == ffstring::npos) {
         return -1;
+    }
     size_t second_paren = arg.find(')', first_paren + 1);
-    if (second_paren == ffstring::npos)
+    if (second_paren == ffstring::npos) {
         return -1;
+    }
     arg.erase(0,first_paren+1);
     arg.erase(second_paren - first_paren - 1);
     strings input_strings;
     strtok(arg.c_str(),L",",input_strings);
     foreach (ffstring &s, input_strings)
-        contents.push_back(TparenthesesContent(s));
+    contents.push_back(TparenthesesContent(s));
     return second_paren + 1;
 }
 
@@ -775,12 +838,12 @@ int TsubtitleFormat::Tssa::TstoreParams::writeProps(const TparenthesesContents &
     int count = 0;
     iterator store_i = begin();
     TparenthesesContents::const_iterator contents_i = contents.begin();
-    for ( ; store_i != end() ; store_i++){
+    for ( ; store_i != end() ; store_i++) {
         int64_t val;
         double doubleval;
         if (store_i->offset && store_i->isInteger) {
             if ( contents_i != contents.end()
-                && contents_i->ok) {
+                    && contents_i->ok) {
                 if (contents_i->doubleval < store_i->min) {
                     val = (int64_t)store_i->min;
                 } else if (contents_i->doubleval > store_i->max) {
@@ -797,14 +860,14 @@ int TsubtitleFormat::Tssa::TstoreParams::writeProps(const TparenthesesContents &
         }
         if (store_i->offset && !store_i->isInteger) {
             if ( contents_i != contents.end()
-                && contents_i->ok) {
+                    && contents_i->ok) {
                 if (contents_i->doubleval < store_i->min) {
-                   doubleval = store_i->min;
+                    doubleval = store_i->min;
                 } else if (contents_i->doubleval > store_i->max) {
-                   doubleval = store_i->max;
+                    doubleval = store_i->max;
                 } else {
-                   doubleval = contents_i->doubleval;
-                   count++;
+                    doubleval = contents_i->doubleval;
+                    count++;
                 }
             } else {
                 doubleval = store_i->default_value;
@@ -812,8 +875,9 @@ int TsubtitleFormat::Tssa::TstoreParams::writeProps(const TparenthesesContents &
             void *dst = (uint8_t *)props + store_i->offset;
             memcpy(dst, &doubleval, store_i->size);
         }
-        if (contents_i != contents.end())
+        if (contents_i != contents.end()) {
             contents_i++;
+        }
     }
     return count;
 }
@@ -823,50 +887,48 @@ void TsubtitleFormat::Tssa::fontName(ffstring &arg)
     if (arg.size()) {
         memset(props.fontname,0,sizeof(props.fontname));
         text<char_t>(arg.c_str(), arg.size(), (char_t*)props.fontname, countof(props.fontname));
-    } else
+    } else {
         ff_strncpy(props.fontname, defprops.fontname, countof(props.fontname));
+    }
 }
 
 template<int TSubtitleProps::*offset,int min,int max> void TsubtitleFormat::Tssa::intProp(ffstring &arg)
 {
-    if (props.transform.isTransform)
-    {
+    if (props.transform.isTransform) {
         // Don't do anything until transform is complete
-    }
-    else
-    {
+    } else {
         int enc;
-        if (arg2int(arg,min,max,enc))
+        if (arg2int(arg,min,max,enc)) {
             props.*offset=enc;
-        else
+        } else {
             props.*offset=defprops.*offset;
+        }
     }
 }
 
 template<int TSubtitleProps::*offset,int min,int max> void TsubtitleFormat::Tssa::intPropAn(ffstring &arg)
 {
     int enc;
-    if (arg2int(arg,min,max,enc))
+    if (arg2int(arg,min,max,enc)) {
         props.*offset=TSubtitleProps::alignASS2SSA(enc);
-    else
+    } else {
         props.*offset=defprops.*offset;
+    }
 }
 
 template<double TSubtitleProps::*offset,int min,int max> void TsubtitleFormat::Tssa::doubleProp(ffstring &arg)
 {
-    if (props.transform.isTransform)
-    {
+    if (props.transform.isTransform) {
         // Don't do anything until transform is complete
-    }
-    else
-    {
+    } else {
         const wchar_t* buf = arg.c_str();
         wchar_t *bufend;
         double enc=strtod(buf,&bufend);
-        if (buf!=bufend && *bufend=='\0' && isIn(enc,(double)min,(double)max))
+        if (buf!=bufend && *bufend=='\0' && isIn(enc,(double)min,(double)max)) {
             props.*offset=enc;
-        else
+        } else {
             props.*offset=defprops.*offset;
+        }
     }
 }
 
@@ -879,8 +941,9 @@ void TsubtitleFormat::Tssa::pos(ffstring &arg)
 
     TparenthesesContents contents;
     parse_parentheses(contents,arg);
-    if (store.writeProps(contents, &props) == 2)
+    if (store.writeProps(contents, &props) == 2) {
         props.isPos=true;
+    }
 }
 
 void TsubtitleFormat::Tssa::org(ffstring &arg)
@@ -892,25 +955,27 @@ void TsubtitleFormat::Tssa::org(ffstring &arg)
 
     TparenthesesContents contents;
     parse_parentheses(contents,arg);
-    if (store.writeProps(contents, &props) == 2)
+    if (store.writeProps(contents, &props) == 2) {
         props.isOrg=true;
+    }
 }
 
 void TsubtitleFormat::Tssa::move(ffstring &arg)
 {
-     // (x1,y1,x2,y2,[t1[,t2]]) is expected.
-     TstoreParams store;
-     store.push_back(TstoreParam(offsetof(TSubtitleProps, pos.x),  0, INT_MAX,  defprops.pos.x,  sizeof(props.pos.x),  true));
-     store.push_back(TstoreParam(offsetof(TSubtitleProps, pos.y),  0, INT_MAX,  defprops.pos.y,  sizeof(props.pos.y),  true));
-     store.push_back(TstoreParam(offsetof(TSubtitleProps, pos2.x), 0, INT_MAX,  defprops.pos2.x, sizeof(props.pos2.x), true));
-     store.push_back(TstoreParam(offsetof(TSubtitleProps, pos2.y), 0, INT_MAX,  defprops.pos2.y, sizeof(props.pos2.y), true));
-     store.push_back(TstoreParam(offsetof(TSubtitleProps, moveT1), 0, UINT_MAX, 0,               sizeof(props.moveT1), true));
-     store.push_back(TstoreParam(offsetof(TSubtitleProps, moveT2), 0, UINT_MAX, 0,               sizeof(props.moveT2), true));
+    // (x1,y1,x2,y2,[t1[,t2]]) is expected.
+    TstoreParams store;
+    store.push_back(TstoreParam(offsetof(TSubtitleProps, pos.x),  0, INT_MAX,  defprops.pos.x,  sizeof(props.pos.x),  true));
+    store.push_back(TstoreParam(offsetof(TSubtitleProps, pos.y),  0, INT_MAX,  defprops.pos.y,  sizeof(props.pos.y),  true));
+    store.push_back(TstoreParam(offsetof(TSubtitleProps, pos2.x), 0, INT_MAX,  defprops.pos2.x, sizeof(props.pos2.x), true));
+    store.push_back(TstoreParam(offsetof(TSubtitleProps, pos2.y), 0, INT_MAX,  defprops.pos2.y, sizeof(props.pos2.y), true));
+    store.push_back(TstoreParam(offsetof(TSubtitleProps, moveT1), 0, UINT_MAX, 0,               sizeof(props.moveT1), true));
+    store.push_back(TstoreParam(offsetof(TSubtitleProps, moveT2), 0, UINT_MAX, 0,               sizeof(props.moveT2), true));
 
     TparenthesesContents contents;
     parse_parentheses(contents,arg);
-    if (store.writeProps(contents, &props) >= 4)
+    if (store.writeProps(contents, &props) >= 4) {
         props.isMove=true;
+    }
 }
 
 void TsubtitleFormat::Tssa::transform(ffstring &arg)
@@ -919,37 +984,31 @@ void TsubtitleFormat::Tssa::transform(ffstring &arg)
     TparenthesesContents contents;
     parse_parentheses(contents,arg);
     TstoreParams store;
-    if (contents.size() != 2)
-    {
+    if (contents.size() != 2) {
         store.push_back(TstoreParam(offsetof(TSubtitleProps, transformT1),     0, UINT_MAX, 0, sizeof(props.transformT1),     true));
         store.push_back(TstoreParam(offsetof(TSubtitleProps, transformT2),     0, UINT_MAX, 0, sizeof(props.transformT2),     true));
         store.push_back(TstoreParam(offsetof(TSubtitleProps, transform.accel), 0, DBL_MAX,  1, sizeof(props.transform.accel), false));
-    }
-    else
-    {
+    } else {
         props.transformT1=props.transformT2=0;
         store.push_back(TstoreParam(offsetof(TSubtitleProps, transform.accel), 0, DBL_MAX,  1, sizeof(props.transform.accel), false));
     }
 
     store.writeProps(contents, &props);
-    if (contents.size() > 0)
-    {
-       props.transform.isTransform=true;
-       const wchar_t *s=L"{", *e=L"}", *temp=L"";
-       wchar_t tokensT[500] = {0};
-       unsigned int i;
-       for (i=0;i<contents.size();i++)
-       {
-          if (!contents[i].ok)
-          {
-             temp=contents[i].str.c_str();
-             wcscat(tokensT, s);
-             wcscat(tokensT, (wchar_t *)temp);
-             wcscat(tokensT, e);
-          }
-       }
-       const wchar_t *tokens=tokensT, *tokens1=tokens, *tokens2=tokens, *end=strchr(tokens+1,'}');
-       Tssa::processTokens(tokens,tokens1,tokens2,end);
+    if (contents.size() > 0) {
+        props.transform.isTransform=true;
+        const wchar_t *s=L"{", *e=L"}", *temp=L"";
+        wchar_t tokensT[500] = {0};
+        unsigned int i;
+        for (i=0; i<contents.size(); i++) {
+            if (!contents[i].ok) {
+                temp=contents[i].str.c_str();
+                wcscat(tokensT, s);
+                wcscat(tokensT, (wchar_t *)temp);
+                wcscat(tokensT, e);
+            }
+        }
+        const wchar_t *tokens=tokensT, *tokens1=tokens, *tokens2=tokens, *end=strchr(tokens+1,'}');
+        Tssa::processTokens(tokens,tokens1,tokens2,end);
     }
 }
 
@@ -975,15 +1034,14 @@ void TsubtitleFormat::Tssa::fad(ffstring &arg)
 
 void TsubtitleFormat::Tssa::karaoke_fixProperties()
 {
-  /* SRT subtitles do not define (most of the time) any secondary color
-      So we have to put the secondary color into the primary color and vice versa for the karaoke word
-      that will be added later */
-   if ((sfmt==Tsubreader::SUB_SUBVIEWER || sfmt==Tsubreader::SUB_SUBVIEWER2)
-    && props.karaokeMode != TSubtitleProps::KARAOKE_NONE && props.SecondaryColour == 0xffffff)
-   {
-    props.SecondaryColour = DEFAULT_SECONDARY_COLOR;
-    props.isColor=true;
-   }
+    /* SRT subtitles do not define (most of the time) any secondary color
+        So we have to put the secondary color into the primary color and vice versa for the karaoke word
+        that will be added later */
+    if ((sfmt==Tsubreader::SUB_SUBVIEWER || sfmt==Tsubreader::SUB_SUBVIEWER2)
+            && props.karaokeMode != TSubtitleProps::KARAOKE_NONE && props.SecondaryColour == 0xffffff) {
+        props.SecondaryColour = DEFAULT_SECONDARY_COLOR;
+        props.isColor=true;
+    }
 }
 
 void TsubtitleFormat::Tssa::karaoke_kf(ffstring &arg)
@@ -1018,8 +1076,7 @@ void TsubtitleFormat::Tssa::fade(ffstring &arg)
     TparenthesesContents contents;
     parse_parentheses(contents,arg);
 
-    if (contents.size() == 2)
-    {
+    if (contents.size() == 2) {
         // Workaround for \fade(<t1>, <t2>), found in some scripts,
         // meaning the same as \fad(<t1>, <t2>)
         Tssa::fad(arg);
@@ -1035,8 +1092,7 @@ void TsubtitleFormat::Tssa::fade(ffstring &arg)
     store.push_back(TstoreParam(offsetof(TSubtitleProps, fadeT3), 0, INT_MAX, 2000, sizeof(props.fadeT3),true));
     store.push_back(TstoreParam(offsetof(TSubtitleProps, fadeT4), 0, INT_MAX, 3000, sizeof(props.fadeT4),true));
 
-    if (store.writeProps(contents, &props) == 7)
-    {
+    if (store.writeProps(contents, &props) == 7) {
         props.fadeA1 = 256 - props.fadeA1;
         props.fadeA2 = 256 - props.fadeA2;
         props.fadeA3 = 256 - props.fadeA3;
@@ -1072,34 +1128,30 @@ bool TsubtitleFormat::Tssa::arg2int(const ffstring &arg, int min, int max, int &
 bool TsubtitleFormat::Tssa::color2int(ffstring arg, int &intval)
 {
     int radix;
-    if (!arg.empty())
-    {
-       if (arg.ConvertToLowerCase().compare(0,2,ffstring(_l("&h")))==0 || arg.ConvertToLowerCase().compare(0,1,ffstring(_l("&")))==0)
-       {
-          radix=16;
-          if (arg.ConvertToLowerCase().compare(0,2,ffstring(_l("&h")))==0)
-             arg.erase(0,2);
-          else
-             arg.erase(0,1);
-       }
-       else
-          radix=10;
-       wchar_t *endbuf;
-       intval=strtol(arg.c_str(),&endbuf,radix);
-       return (*endbuf=='&' || *endbuf==NULL);
+    if (!arg.empty()) {
+        if (arg.ConvertToLowerCase().compare(0,2,ffstring(_l("&h")))==0 || arg.ConvertToLowerCase().compare(0,1,ffstring(_l("&")))==0) {
+            radix=16;
+            if (arg.ConvertToLowerCase().compare(0,2,ffstring(_l("&h")))==0) {
+                arg.erase(0,2);
+            } else {
+                arg.erase(0,1);
+            }
+        } else {
+            radix=10;
+        }
+        wchar_t *endbuf;
+        intval=strtol(arg.c_str(),&endbuf,radix);
+        return (*endbuf=='&' || *endbuf==NULL);
+    } else {
+        return false;
     }
-    else
-       return false;
 }
 
 template<COLORREF TSubtitleProps::*offset> void TsubtitleFormat::Tssa::color(ffstring &arg)
 {
-    if (props.transform.isTransform)
-    {
+    if (props.transform.isTransform) {
         // Don't do anything until transform is complete
-    }
-    else
-    {
+    } else {
         int c;
         if (color2int(arg,c)) {
             props.*offset=c;
@@ -1113,12 +1165,9 @@ template<COLORREF TSubtitleProps::*offset> void TsubtitleFormat::Tssa::color(ffs
 
 template<int TSubtitleProps::*offset> void TsubtitleFormat::Tssa::alpha(ffstring &arg)
 {
-    if (props.transform.isTransform)
-    {
+    if (props.transform.isTransform) {
         // Don't do anything until transform is complete
-    }
-    else
-    {
+    } else {
         int a;
         if (color2int(arg,a)) {
             props.*offset=256-a;
@@ -1132,41 +1181,39 @@ template<int TSubtitleProps::*offset> void TsubtitleFormat::Tssa::alpha(ffstring
 void TsubtitleFormat::Tssa::alphaAll(ffstring &arg)
 {
     int a;
-    if (props.transform.isTransform && color2int(arg,a))
-    {
+    if (props.transform.isTransform && color2int(arg,a)) {
         props.transform.isAlpha=true;
         props.transform.alpha=a;
         props.transform.alphaT1= props.transformT1 ? props.tStart + (props.transformT1 * 10000) : props.tStart;
         props.transform.alphaT2= props.transformT2 ? props.tStart + (props.transformT2 * 10000) : props.tStop;
-    }
-    else
-    {
+    } else {
         if (color2int(arg,a)) {
-           props.colorA=256-a;
-           props.SecondaryColourA=256-a;
-           props.TertiaryColourA=256-a;
-           props.OutlineColourA=256-a;
-           props.ShadowColourA=256-a;
-           props.isColor=true;
+            props.colorA=256-a;
+            props.SecondaryColourA=256-a;
+            props.TertiaryColourA=256-a;
+            props.OutlineColourA=256-a;
+            props.ShadowColourA=256-a;
+            props.isColor=true;
         } else {
-           props.colorA=defprops.colorA;
-           props.SecondaryColourA=defprops.SecondaryColourA;
-           props.TertiaryColourA=defprops.TertiaryColourA;
-           props.OutlineColourA=defprops.OutlineColourA;
-           props.ShadowColourA=defprops.ShadowColourA;
-           props.isColor=defprops.isColor;
+            props.colorA=defprops.colorA;
+            props.SecondaryColourA=defprops.SecondaryColourA;
+            props.TertiaryColourA=defprops.TertiaryColourA;
+            props.OutlineColourA=defprops.OutlineColourA;
+            props.ShadowColourA=defprops.ShadowColourA;
+            props.isColor=defprops.isColor;
         }
     }
 }
 
 template<bool TSubtitleProps::*offset> void TsubtitleFormat::Tssa::boolProp(ffstring &arg)
 {
-    if (arg.size() && arg[0]=='1')
+    if (arg.size() && arg[0]=='1') {
         props.*offset=true;
-    else if (arg.size() && arg[0]=='0')
+    } else if (arg.size() && arg[0]=='0') {
         props.*offset=false;
-    else
+    } else {
         props.*offset=defprops.*offset;
+    }
 }
 
 void TsubtitleFormat::Tssa::reset(ffstring &arg)
@@ -1181,17 +1228,18 @@ bool TsubtitleFormat::Tssa::processTokenI(const wchar_t* &l2,const wchar_t *tok,
         const wchar_t *end1=((strchr(l2+2,'\\') > strchr(l2+2,'(')) && (strchr(l2+2,'\\') < strchr(l2+2,')'))) ? strchr(l2+2,')')+1 : strchr(l2+2,'\\');
         const wchar_t *end2=strchr(l2,'}');
         const wchar_t *end=(end1 && end1<end2)?end1:end2;
-        if (end)
-         {
-          const wchar_t *start=l2+toklen;
-          ffstring arg(start,end - start);
-          if (action)
-           (this->*action)(arg);
-          l2=(end1 && end1<end2)?end1:end2+1;
-         }
+        if (end) {
+            const wchar_t *start=l2+toklen;
+            ffstring arg(start,end - start);
+            if (action) {
+                (this->*action)(arg);
+            }
+            l2=(end1 && end1<end2)?end1:end2+1;
+        }
         return true;
-    } else
+    } else {
         return false;
+    }
 }
 
 // case sensitive version
@@ -1215,7 +1263,7 @@ void TsubtitleFormat::Tssa::processTokens(const wchar_t *l,const wchar_t* &l1,co
             !processToken(l3,L"\\2a",&Tssa::template alpha<&TSubtitleProps::SecondaryColourA>) &&
             !processToken(l3,L"\\3a",&Tssa::template alpha<&TSubtitleProps::OutlineColourA>) &&
             !processToken(l3,L"\\4a",&Tssa::template alpha<&TSubtitleProps::ShadowColourA>) &&
-            !processToken(l3,L"\\1c",&Tssa::template color<&TSubtitleProps::color>) && 
+            !processToken(l3,L"\\1c",&Tssa::template color<&TSubtitleProps::color>) &&
             !processToken(l3,L"\\2c",&Tssa::template color<&TSubtitleProps::SecondaryColour>) &&
             !processToken(l3,L"\\3c",&Tssa::template color<&TSubtitleProps::OutlineColour>) &&
             !processToken(l3,L"\\4c",&Tssa::template color<&TSubtitleProps::ShadowColour>) &&
@@ -1253,15 +1301,18 @@ void TsubtitleFormat::Tssa::processTokens(const wchar_t *l,const wchar_t* &l1,co
             !processToken(l3,L"\\ko",&Tssa::karaoke_ko) &&
             !processTokenC(l3,L"\\K",&Tssa::karaoke_kf) &&
             !processTokenC(l3,L"\\k",&Tssa::karaoke_k)
-        )
-        l3++;
+        ) {
+            l3++;
+        }
     }
 }
 
 TsubtitleFormat::Twords TsubtitleFormat::processSSA(const TsubtitleLine &line, int sfmt, TsubtitleText &parent)
 {
     Twords words;
-    if (line.empty()) return words;
+    if (line.empty()) {
+        return words;
+    }
     const wchar_t *l=line[0];
     props=parent.defProps;
     const wchar_t *l1=l,*l2=l;
@@ -1276,10 +1327,11 @@ TsubtitleFormat::Twords TsubtitleFormat::processSSA(const TsubtitleLine &line, i
             l2++;
         }
         // Process HTML tags in SSA subs when extended tags option is checked
-        else if (parent.defProps.extendedTags) // Add HTML support within SSA
+        else if (parent.defProps.extendedTags) { // Add HTML support within SSA
             processHTMLTags(words,l,l1,l2);
-        else
+        } else {
             l2++;
+        }
     }
 
     words.add(l,l1,l2,props,0);
@@ -1289,115 +1341,124 @@ TsubtitleFormat::Twords TsubtitleFormat::processSSA(const TsubtitleLine &line, i
 
 void TsubtitleFormat::processMicroDVD(TsubtitleText &parent, std::vector< TsubtitleLine >::iterator it)
 {
- if (it->empty()) return;
- const wchar_t *line0=(*it)[0],*line=line0;
- while (*line)
-  if (line[0]=='}' || line[0]==' ') line++;
-  else if (_strnicmp(line,L"{y:",3)==0)
-   {
-    const wchar_t *end=strchr(line+3,'}');
-    if (end==NULL) break;
-    bool all=!!iswupper(line[1]);
-    if (std::find_if(line+3,end,Tncasecmp<'i'>())!=end) parent.propagateProps(all?parent.begin():it,&TSubtitleProps::italic   ,true,all?parent.end():it+1);
-    if (std::find_if(line+3,end,Tncasecmp<'b'>())!=end) parent.propagateProps(all?parent.begin():it,&TSubtitleProps::bold     ,1,all?parent.end():it+1);
-    if (std::find_if(line+3,end,Tncasecmp<'u'>())!=end) parent.propagateProps(all?parent.begin():it,&TSubtitleProps::underline,true,all?parent.end():it+1);
-    if (std::find_if(line+3,end,Tncasecmp<'s'>())!=end) parent.propagateProps(all?parent.begin():it,&TSubtitleProps::strikeout,true,all?parent.end():it+1);
-    line=end+1;
-   }
-  else if (_strnicmp(line,L"{s:",3)==0)
-   {
-    int size;
-    if (swscanf(line,L"{s:%i}",&size) || swscanf(line,L"{S:%i}",&size))
-     {
-      parent.propagateProps(iswupper(line[1])?parent.begin():it,&TSubtitleProps::size,size,iswupper(line[1])?parent.end():it+1);
-      const wchar_t *r=strchr(line,'}');
-      if (r)
-       line=r+1;
-     }
-   }
-  else if (_strnicmp(line,L"{c:$",4)==0)
-   {
-    COLORREF color;
-    if (swscanf(line,L"{c:$%x}",&color) || swscanf(line,L"{C:$%x}",&color))
-     {
-      parent.propagateProps(iswupper(line[1])?parent.begin():it,&TSubtitleProps::color,color,iswupper(line[1])?parent.end():it+1);
-      const wchar_t *r=strchr(line,'}');
-      if (r)
-       {
-        parent.propagateProps(iswupper(line[1])?parent.begin():it,&TSubtitleProps::isColor,true,iswupper(line[1])?parent.end():it+1);
-        line=r+1;
-       }
-     }
-   }
-  else
-   break;
- (*it)[0].eraseLeft(line-line0);
+    if (it->empty()) {
+        return;
+    }
+    const wchar_t *line0=(*it)[0],*line=line0;
+    while (*line)
+        if (line[0]=='}' || line[0]==' ') {
+            line++;
+        } else if (_strnicmp(line,L"{y:",3)==0) {
+            const wchar_t *end=strchr(line+3,'}');
+            if (end==NULL) {
+                break;
+            }
+            bool all=!!iswupper(line[1]);
+            if (std::find_if(line+3,end,Tncasecmp<'i'>())!=end) {
+                parent.propagateProps(all?parent.begin():it,&TSubtitleProps::italic   ,true,all?parent.end():it+1);
+            }
+            if (std::find_if(line+3,end,Tncasecmp<'b'>())!=end) {
+                parent.propagateProps(all?parent.begin():it,&TSubtitleProps::bold     ,1,all?parent.end():it+1);
+            }
+            if (std::find_if(line+3,end,Tncasecmp<'u'>())!=end) {
+                parent.propagateProps(all?parent.begin():it,&TSubtitleProps::underline,true,all?parent.end():it+1);
+            }
+            if (std::find_if(line+3,end,Tncasecmp<'s'>())!=end) {
+                parent.propagateProps(all?parent.begin():it,&TSubtitleProps::strikeout,true,all?parent.end():it+1);
+            }
+            line=end+1;
+        } else if (_strnicmp(line,L"{s:",3)==0) {
+            int size;
+            if (swscanf(line,L"{s:%i}",&size) || swscanf(line,L"{S:%i}",&size)) {
+                parent.propagateProps(iswupper(line[1])?parent.begin():it,&TSubtitleProps::size,size,iswupper(line[1])?parent.end():it+1);
+                const wchar_t *r=strchr(line,'}');
+                if (r) {
+                    line=r+1;
+                }
+            }
+        } else if (_strnicmp(line,L"{c:$",4)==0) {
+            COLORREF color;
+            if (swscanf(line,L"{c:$%x}",&color) || swscanf(line,L"{C:$%x}",&color)) {
+                parent.propagateProps(iswupper(line[1])?parent.begin():it,&TSubtitleProps::color,color,iswupper(line[1])?parent.end():it+1);
+                const wchar_t *r=strchr(line,'}');
+                if (r) {
+                    parent.propagateProps(iswupper(line[1])?parent.begin():it,&TSubtitleProps::isColor,true,iswupper(line[1])?parent.end():it+1);
+                    line=r+1;
+                }
+            }
+        } else {
+            break;
+        }
+    (*it)[0].eraseLeft(line-line0);
 }
 
 void TsubtitleFormat::processMPL2(TsubtitleLine &line)
 {
- if (line.empty() || !line[0]) return;
- if (line[0][0]=='/')
-  {
-   foreach (TsubtitleWord &word,line)
-    word.props.italic=true;
-   line[0].eraseLeft(1);
-  }
+    if (line.empty() || !line[0]) {
+        return;
+    }
+    if (line[0][0]=='/') {
+        foreach (TsubtitleWord &word,line)
+        word.props.italic=true;
+        line[0].eraseLeft(1);
+    }
 }
 
 //================================= TsubtitleLine ==================================
 size_t TsubtitleLine::strlen(void) const
 {
- size_t len=0;
- for (Tbase::const_iterator w=this->begin();w!=this->end();w++)
-  len+=::strlen(*w);
- return len;
+    size_t len=0;
+    for (Tbase::const_iterator w=this->begin(); w!=this->end(); w++) {
+        len+=::strlen(*w);
+    }
+    return len;
 }
 
 // This method duplicate the words with karaoke settings
 void TsubtitleLine::applyWords(const TsubtitleFormat::Twords &words, int subFormat)
 {
- bool karaokeNewWord = false;
- for (TsubtitleFormat::Twords::const_iterator w=words.begin();w!=words.end();w++)
-  {
-   karaokeNewWord |= w->props.karaokeNewWord;
-   this->props=w->props;
-   if (w->i1==w->i2 && !w->i1 && !karaokeNewWord)
-    continue;
-   if (w->i1==0 && w->i2==this->front().size())
-    {
-     this->front().props=w->props;
-     return;
-    }
-   TsubtitleWord word(this->front()+w->i1,w->i2-w->i1);
-   word.props=w->props;
-   word.props.karaokeNewWord = karaokeNewWord;
+    bool karaokeNewWord = false;
+    for (TsubtitleFormat::Twords::const_iterator w=words.begin(); w!=words.end(); w++) {
+        karaokeNewWord |= w->props.karaokeNewWord;
+        this->props=w->props;
+        if (w->i1==w->i2 && !w->i1 && !karaokeNewWord) {
+            continue;
+        }
+        if (w->i1==0 && w->i2==this->front().size()) {
+            this->front().props=w->props;
+            return;
+        }
+        TsubtitleWord word(this->front()+w->i1,w->i2-w->i1);
+        word.props=w->props;
+        word.props.karaokeNewWord = karaokeNewWord;
 
-   /* With SRT subtitles the secondary color is (most of the time) not set
-       so we have to revert the primary (which is the overlay color of karaoke) with the secondary color */
-   if ((subFormat==Tsubreader::SUB_SUBVIEWER || subFormat==Tsubreader::SUB_SUBVIEWER2)
-    && word.props.karaokeMode != TSubtitleProps::KARAOKE_NONE)
-   {
-    word.props.SecondaryColour = w->props.color;
-    word.props.color = w->props.SecondaryColour;
-   }
-   
-   this->push_back(word);
-   karaokeNewWord = false;
-  }
- if (!this->empty())
-  this->erase(this->begin());
+        /* With SRT subtitles the secondary color is (most of the time) not set
+            so we have to revert the primary (which is the overlay color of karaoke) with the secondary color */
+        if ((subFormat==Tsubreader::SUB_SUBVIEWER || subFormat==Tsubreader::SUB_SUBVIEWER2)
+                && word.props.karaokeMode != TSubtitleProps::KARAOKE_NONE) {
+            word.props.SecondaryColour = w->props.color;
+            word.props.color = w->props.SecondaryColour;
+        }
+
+        this->push_back(word);
+        karaokeNewWord = false;
+    }
+    if (!this->empty()) {
+        this->erase(this->begin());
+    }
 }
 void TsubtitleLine::format(TsubtitleFormat &format,int sfmt, TsubtitleText &parent)
 {
- if (sfmt==Tsubreader::SUB_SSA || sfmt==Tsubreader::SUB_SUBVIEWER || sfmt==Tsubreader::SUB_SUBVIEWER2)
-  applyWords(format.processSSA(*this, sfmt, parent),sfmt);
- else
-  applyWords(format.processHTML(*this),sfmt);
-}void TsubtitleLine::fix(TtextFix &fix)
+    if (sfmt==Tsubreader::SUB_SSA || sfmt==Tsubreader::SUB_SUBVIEWER || sfmt==Tsubreader::SUB_SUBVIEWER2) {
+        applyWords(format.processSSA(*this, sfmt, parent),sfmt);
+    } else {
+        applyWords(format.processHTML(*this),sfmt);
+    }
+}
+void TsubtitleLine::fix(TtextFix &fix)
 {
- foreach (TsubtitleWord &word, *this)
-  word.fix(fix);
+    foreach (TsubtitleWord &word, *this)
+    word.fix(fix);
 }
 
 //================================= TsubtitleText ==================================
@@ -1418,10 +1479,12 @@ void TsubtitleText::fixFade(void)
 {
     int tempFadeA1,tempFadeA2,tempFadeA3;
     REFERENCE_TIME tempFadeT1,tempFadeT2,tempFadeT3,tempFadeT4;
-    tempFadeA1=0;tempFadeA2=255;tempFadeA3=0;
+    tempFadeA1=0;
+    tempFadeA2=255;
+    tempFadeA3=0;
     tempFadeT1=tempFadeT2=tempFadeT3=tempFadeT4=REFTIME_INVALID;
     bool lineHasFad = false;
-    
+
     foreach (TsubtitleLine &line, *this) {
         foreach (TsubtitleWord &word, line) {
             if (word.props.isFad) {
@@ -1438,8 +1501,9 @@ void TsubtitleText::fixFade(void)
         }
     }
 
-    if (!lineHasFad)
+    if (!lineHasFad) {
         return;
+    }
 
     foreach (TsubtitleLine &line, *this) {
         foreach (TsubtitleWord &word, line) {
@@ -1461,21 +1525,23 @@ void TsubtitleText::format(TsubtitleFormat &format)
 {
     int sfmt=subformat&Tsubreader::SUB_FORMATMASK;
     foreach (TsubtitleLine &line, *this)
-        line.format(format,sfmt,*this);
+    line.format(format,sfmt,*this);
 
-    for (Tbase::iterator l=this->begin();l!=this->end();l++)
+    for (Tbase::iterator l=this->begin(); l!=this->end(); l++) {
         format.processMicroDVD(*this,l);
+    }
 
     if ((sfmt==Tsubreader::SUB_MPL2)||(sfmt==Tsubreader::SUB_VPLAYER))
         foreach (TsubtitleLine &line, *this)
-            format.processMPL2(line);
+        format.processMPL2(line);
 }
 
 void TsubtitleText::prepareKaraoke(void)
 {
     int sfmt=subformat&Tsubreader::SUB_FORMATMASK;
-    if (sfmt != Tsubreader::SUB_SSA && sfmt != Tsubreader::SUB_SUBVIEWER && sfmt != Tsubreader::SUB_SUBVIEWER2)
+    if (sfmt != Tsubreader::SUB_SSA && sfmt != Tsubreader::SUB_SUBVIEWER && sfmt != Tsubreader::SUB_SUBVIEWER2) {
         return;
+    }
 
     TsubtitleText temp(subformat, defProps);
     TsubtitleLine tempLine;
@@ -1495,8 +1561,9 @@ void TsubtitleText::prepareKaraoke(void)
             tempLine.push_back(word);
         }
     }
-    if (!tempLine.empty())
+    if (!tempLine.empty()) {
         temp.push_back(tempLine);
+    }
 
     this->clear();
     this->insert(this->end(), temp.begin(),temp.end());
@@ -1504,22 +1571,24 @@ void TsubtitleText::prepareKaraoke(void)
     REFERENCE_TIME karaokeStart = REFTIME_INVALID;
     REFERENCE_TIME karaokeDuration = 0;
     foreach (TsubtitleLine &line, *this) {
-        if (karaokeStart != REFTIME_INVALID)
+        if (karaokeStart != REFTIME_INVALID) {
             karaokeStart += karaokeDuration;
+        }
 
         karaokeDuration = 0;
         foreach (TsubtitleWord &word, line) {
-          if (karaokeStart == REFTIME_INVALID)
-              karaokeStart = word.props.karaokeStart;
-          else
-              word.props.karaokeStart = karaokeStart;
-          
-          if (word.props.karaokeNewWord) {
-              karaokeStart += karaokeDuration;
-              karaokeDuration = word.props.karaokeDuration;
-          }
-          word.props.karaokeStart = karaokeStart;
-          word.props.karaokeDuration = karaokeDuration;
+            if (karaokeStart == REFTIME_INVALID) {
+                karaokeStart = word.props.karaokeStart;
+            } else {
+                word.props.karaokeStart = karaokeStart;
+            }
+
+            if (word.props.karaokeNewWord) {
+                karaokeStart += karaokeDuration;
+                karaokeDuration = word.props.karaokeDuration;
+            }
+            word.props.karaokeStart = karaokeStart;
+            word.props.karaokeDuration = karaokeDuration;
         }
     }
 }
@@ -1527,11 +1596,11 @@ void TsubtitleText::prepareKaraoke(void)
 void TsubtitleText::fix(TtextFix &fix)
 {
     foreach (TsubtitleLine &line, *this)
-        line.fix(fix);
+    line.fix(fix);
     if (stop == REFTIME_INVALID) {
         size_t len = 0;
         foreach (TsubtitleLine &line, *this)
-            len += line.strlen();
+        len += line.strlen();
         stop = start + len * 900000;
     }
 }
@@ -1568,8 +1637,9 @@ size_t TsubtitleText::prepareGlyph(const TprintPrefs &prefs, Tfont &font, bool f
         IffdshowBase *deci = font.deci;
 
         lines.clear();
-        if (!font.fontManager)
+        if (!font.fontManager) {
             comptrQ<IffdshowDecVideo>(deci)->getFontManager(&font.fontManager);
+        }
         TfontManager *fontManager = font.fontManager;
         bool nosplit=!prefs.fontSettings.split && !(prefs.fontchangesplit && prefs.fontsplit);
         int splitdx0=nosplit ? 0 : ((int)dx-prefs.textBorderLR<1 ? 1 : dx-prefs.textBorderLR) * gdi_font_scale;
@@ -1591,21 +1661,21 @@ size_t TsubtitleText::prepareGlyph(const TprintPrefs &prefs, Tfont &font, bool f
                 TrenderedSubtitleLine *line=new TrenderedSubtitleLine(l->props, gf.getHeight() / 2.0);
                 lines.push_back(line);
             }
-            for (TsubtitleLine::const_iterator w=l->begin();w!=l->end();w++) {
+            for (TsubtitleLine::const_iterator w=l->begin(); w!=l->end(); w++) {
                 LOGFONT lf;
                 TtoGdiFont gf(w->props, font.hdc, lf, prefs, dx, dy, fontManager);
                 SetTextCharacterExtra(font.hdc,(w->props.spacing==INT_MIN || prefs.fontSettings.fontSettingsOverride) ? prefs.fontSettings.spacing : w->props.get_spacing(dy, prefs.clipdy, gdi_font_scale));
                 const wchar_t *p=*w;
                 int xscale=w->props.get_xscale(
-                        prefs.fontSettings.xscale,
-                        prefs.sar,
-                        prefs.fontSettings.aspectAuto,
-                        prefs.fontSettings.fontSettingsOverride)
-                    * 100
-                    / w->props.get_yscale(
-                        prefs.fontSettings.yscale,prefs.sar,
-                        prefs.fontSettings.aspectAuto,
-                        prefs.fontSettings.fontSettingsOverride);
+                               prefs.fontSettings.xscale,
+                               prefs.sar,
+                               prefs.fontSettings.aspectAuto,
+                               prefs.fontSettings.fontSettingsOverride)
+                           * 100
+                           / w->props.get_yscale(
+                               prefs.fontSettings.yscale,prefs.sar,
+                               prefs.fontSettings.aspectAuto,
+                               prefs.fontSettings.fontSettingsOverride);
                 wordWrapMode=w->props.wrapStyle;
                 splitdxMax=get_splitdx_for_new_line(*w, splitdx0, dx, prefs, gdi_font_scale, deci);
                 allStr+=p;
@@ -1616,20 +1686,24 @@ size_t TsubtitleText::prepareGlyph(const TprintPrefs &prefs, Tfont &font, bool f
                 size_t strlenp=strlen(p);
                 int *ptempwidths=(int*)tempwidth.alloc((strlenp+1)*sizeof(int)*2); // *2 to work around Layer For Unicode on Windows 9x.
                 GetTextExtentExPointW(font.hdc,p,(int)strlenp,INT_MAX,&nfit,ptempwidths,&sz);
-                for (size_t x=0;x<strlenp;x++) {
+                for (size_t x=0; x<strlenp; x++) {
                     nextleft=(double)ptempwidths[x]*xscale/100+left;
                     pwidths[charCount]=int(nextleft);
                     charCount++;
                 }
             }
-            if (allStr.empty()) continue;
+            if (allStr.empty()) {
+                continue;
+            }
             if (wordWrapMode==-1) {
                 // non SSA/ASS/ASS2
-                if (nosplit)
+                if (nosplit) {
                     wordWrapMode=2;
-                else {
+                } else {
                     deci->getParam(IDFF_subWordWrap,&wordWrapMode);
-                    if (wordWrapMode>=2) wordWrapMode++;
+                    if (wordWrapMode>=2) {
+                        wordWrapMode++;
+                    }
                 }
             }
             TwordWrap wordWrap(wordWrapMode,allStr.c_str(),pwidths,splitdxMax,l->props.version != -1);
@@ -1638,31 +1712,30 @@ size_t TsubtitleText::prepareGlyph(const TprintPrefs &prefs, Tfont &font, bool f
             TrenderedSubtitleLine *line=NULL;
             int cx=0,cy=0;
             unsigned int refResX, refResY;
-            // Use 384x288 as default input dimensions like VSFilter, 
+            // Use 384x288 as default input dimensions like VSFilter,
             // unless IDFF_subSSAUseMovieDimensions is checked.
             if (deci->getParam2(IDFF_subSSAUseMovieDimensions)) {
-               refResX=prefs.xinput;
-               refResY=prefs.yinput;
-            }
-            else {
-               refResX=384;
-               refResY=288;
+                refResX=prefs.xinput;
+                refResY=prefs.yinput;
+            } else {
+                refResX=384;
+                refResY=288;
             }
 
             bool firstLine=true;
 
-            for (TsubtitleLine::const_iterator w0=l->begin();w0!=l->end();w0++) {
+            for (TsubtitleLine::const_iterator w0=l->begin(); w0!=l->end(); w0++) {
                 TsubtitleWord w(*w0);
                 LOGFONT lf;
                 TtoGdiFont gf(w.props, font.hdc, lf, prefs, dx, dy, fontManager);
                 SetTextCharacterExtra(font.hdc,(w.props.spacing==INT_MIN || prefs.fontSettings.fontSettingsOverride) ? prefs.fontSettings.spacing : w.props.get_spacing(dy, prefs.clipdy, gdi_font_scale));
                 if (!line) {
                     line=new TrenderedSubtitleLine(w.props);
-                    // Propagate input dimensions to the line properties 
-                    // (unless movie dimensions are filled in the script and parameter 
+                    // Propagate input dimensions to the line properties
+                    // (unless movie dimensions are filled in the script and parameter
                     // IDFF_subSSAUseMovieDimensions is not checked)
-                    if (line->getPropsOfThisObject().refResX && line->getPropsOfThisObject().refResY 
-                        && firstLine && !deci->getParam2(IDFF_subSSAUseMovieDimensions)) {
+                    if (line->getPropsOfThisObject().refResX && line->getPropsOfThisObject().refResY
+                            && firstLine && !deci->getParam2(IDFF_subSSAUseMovieDimensions)) {
                         refResX=line->getPropsOfThisObject().refResX;
                         refResY=line->getPropsOfThisObject().refResY;
                         firstLine=false;
@@ -1673,9 +1746,9 @@ size_t TsubtitleText::prepareGlyph(const TprintPrefs &prefs, Tfont &font, bool f
                 }
 
                 const wchar_t *p=w;
-                #ifdef DEBUG
-                  DPRINTF(L"%s",p);
-                #endif
+#ifdef DEBUG
+                DPRINTF(L"%s",p);
+#endif
                 int linesInWord=0;
                 do {
                     if (linesInWord>0) {
@@ -1685,14 +1758,16 @@ size_t TsubtitleText::prepareGlyph(const TprintPrefs &prefs, Tfont &font, bool f
                         }
                     }
                     int strlenp=(int)strlen(p);
-                    // If line goes out of screen, wraps it except if no wrap defined 
+                    // If line goes out of screen, wraps it except if no wrap defined
                     if (cx+strlenp-1<=wordWrap.getRightOfTheLine(cy)) {
                         // Propagate the input dimensions to the TsubtitleWord props
                         w.props.refResX=refResX;
                         w.props.refResY=refResY;
 
                         TrenderedTextSubtitleWord *rw = newWord(p, strlenp, prefs, &w, lf, font, w0+1==l->end());
-                        if (rw) line->push_back(rw);
+                        if (rw) {
+                            line->push_back(rw);
+                        }
                         cx+=strlenp;
                         break;
                     } else {
@@ -1705,8 +1780,9 @@ size_t TsubtitleText::prepareGlyph(const TprintPrefs &prefs, Tfont &font, bool f
                                 lines.push_back(line);
                                 line=new TrenderedSubtitleLine(w.props);
                             }
-                            if (cy>=wordWrap.getLineCount())
+                            if (cy>=wordWrap.getLineCount()) {
                                 break;
+                            }
                         }
                         // Propagate the input dimensions to the TsubtitleWord props
                         w.props.refResX=refResX;
@@ -1716,8 +1792,9 @@ size_t TsubtitleText::prepareGlyph(const TprintPrefs &prefs, Tfont &font, bool f
                         w.props.karaokeNewWord = false;
                         w.props.karaokeStart += w.props.karaokeDuration;
                         w.props.karaokeDuration = 0;
-                        if (rw)
+                        if (rw) {
                             line->push_back(rw);
+                        }
                         if (!line->empty()) {
                             lines.push_back(line);
                             line=new TrenderedSubtitleLine(w.props);
@@ -1757,28 +1834,25 @@ TrenderedTextSubtitleWord* TsubtitleText::newWord(
     TfontSettings &fontSettings = prefs.fontSettings;
     ffstring s1(s);
 
-    if (w->props.shadowDepth != -1) // SSA/ASS/ASS2 subtitles
-    {
+    if (w->props.shadowDepth != -1) { // SSA/ASS/ASS2 subtitles
         // Use the same settings as SRT if no shadow mode is defined or if shadow override is enabled
-        if (prefs.shadowMode == 0 || fontSettings.shadowOverride)
-        {
-         prefs.shadowMode=fontSettings.shadowMode;
-         prefs.shadowSize=fontSettings.shadowSize;
+        if (prefs.shadowMode == 0 || fontSettings.shadowOverride) {
+            prefs.shadowMode=fontSettings.shadowMode;
+            prefs.shadowSize=fontSettings.shadowSize;
+        } else {
+            prefs.shadowSize = -1 * w->props.shadowDepth;
         }
-        else
-         prefs.shadowSize = -1 * w->props.shadowDepth;
-    }
-    else // SRT subtitles
-    {
-     prefs.shadowMode=fontSettings.shadowMode;
-     prefs.shadowSize=fontSettings.shadowSize;
+    } else { // SRT subtitles
+        prefs.shadowMode=fontSettings.shadowMode;
+        prefs.shadowSize=fontSettings.shadowSize;
     }
 
     // Outline width
-    if (w->props.outlineWidth == -1 || fontSettings.outlineWidthOverride != 0)
-     prefs.outlineWidth = fontSettings.outlineWidth;
-    else
-     prefs.outlineWidth = w->props.outlineWidth;
+    if (w->props.outlineWidth == -1 || fontSettings.outlineWidthOverride != 0) {
+        prefs.outlineWidth = fontSettings.outlineWidth;
+    } else {
+        prefs.outlineWidth = w->props.outlineWidth;
+    }
 
     if (prefs.shadowMode==-1) {
         // OSD
@@ -1787,19 +1861,20 @@ TrenderedTextSubtitleWord* TsubtitleText::newWord(
     }
 
     YUVcolorA shadowYUV1;
-    if (!w->props.isColor || fontSettings.colorOverride != 0)
-    {
+    if (!w->props.isColor || fontSettings.colorOverride != 0) {
         shadowYUV1=prefs.shadowYUV;
-        if (prefs.shadowMode<=1)
+        if (prefs.shadowMode<=1) {
             shadowYUV1.A = uint32_t(256*sqrt((double)shadowYUV1.A/256.0));
+        }
     }
 
     prefs.outlineBlur=((w->props.blur && fontSettings.fontSettingsOverride == 0) || fontSettings.blur == 2) ? true : false;
 
-    if (fontSettings.blur == 1 && ((fontSettings.outlineWidth && w->props.outlineWidth == -1) || (fontSettings.outlineWidth && fontSettings.outlineWidthOverride) || (w->props.outlineWidth > 0 && fontSettings.outlineWidthOverride == 0)))
+    if (fontSettings.blur == 1 && ((fontSettings.outlineWidth && w->props.outlineWidth == -1) || (fontSettings.outlineWidth && fontSettings.outlineWidthOverride) || (w->props.outlineWidth > 0 && fontSettings.outlineWidthOverride == 0))) {
         prefs.blur=true;
-    else
+    } else {
         prefs.blur=false;
+    }
 
     if ((w->props.outlineWidth==-1 && fontSettings.opaqueBox) || (w->props.outlineWidth > 0 && fontSettings.opaqueBox && fontSettings.fontSettingsOverride) || (w->props.outlineWidth > 0 && w->props.borderStyle == 3 && !fontSettings.fontSettingsOverride)) {
         prefs.opaqueBox=true;
@@ -1807,16 +1882,16 @@ TrenderedTextSubtitleWord* TsubtitleText::newWord(
 
     double xscale=(double)w->props.get_xscale(fontSettings.xscale,prefs.sar,fontSettings.aspectAuto,fontSettings.fontSettingsOverride)*100.0/(double)w->props.get_yscale(fontSettings.yscale,prefs.sar,fontSettings.aspectAuto,fontSettings.fontSettingsOverride);
     return new TrenderedTextSubtitleWord(
-        font.hdc,
-        s1.c_str(),
-        slen,
-        (w->props.isColor && fontSettings.colorOverride == 0) ? YUVcolorA(w->props.color,w->props.colorA) : prefs.yuvcolor,
-        (w->props.isColor && fontSettings.colorOverride == 0) ? YUVcolorA(w->props.OutlineColour,w->props.OutlineColourA) : prefs.outlineYUV,
-        (w->props.isColor && fontSettings.colorOverride == 0) ? YUVcolorA(w->props.ShadowColour,w->props.ShadowColourA) : shadowYUV1,
-        prefs,
-        lf,
-        xscale,
-        w->props);
+               font.hdc,
+               s1.c_str(),
+               slen,
+               (w->props.isColor && fontSettings.colorOverride == 0) ? YUVcolorA(w->props.color,w->props.colorA) : prefs.yuvcolor,
+               (w->props.isColor && fontSettings.colorOverride == 0) ? YUVcolorA(w->props.OutlineColour,w->props.OutlineColourA) : prefs.outlineYUV,
+               (w->props.isColor && fontSettings.colorOverride == 0) ? YUVcolorA(w->props.ShadowColour,w->props.ShadowColourA) : shadowYUV1,
+               prefs,
+               lf,
+               xscale,
+               w->props);
 }
 
 size_t TsubtitleText::dropRenderedLines(void)
@@ -1844,8 +1919,8 @@ void TsubtitleTexts::print(
         if (!lock.owns_lock()) {
             // hustle glyphThread
             TthreadPriority pr(comptrQ<IffdshowDecVideo>(prefs.deci)->getGlyphThreadHandle(),
-                THREAD_PRIORITY_ABOVE_NORMAL,
-                THREAD_PRIORITY_BELOW_NORMAL);
+                               THREAD_PRIORITY_ABOVE_NORMAL,
+                               THREAD_PRIORITY_BELOW_NORMAL);
             lock.lock();
         }
         subtitleText->print(time,wasseek,f,forceChange,prefs,dst,stride);

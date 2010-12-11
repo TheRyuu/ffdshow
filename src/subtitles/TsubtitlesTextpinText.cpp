@@ -24,81 +24,84 @@
 #include "IffdshowDecVideo.h"
 
 TsubtitlesTextpinText::TsubtitlesTextpinText(int Itype,IffdshowBase *Ideci,const unsigned char *extradata,unsigned int extradatalen):
- TsubtitlesTextpin(Itype,Ideci),
- initdata(extradatalen)
+    TsubtitlesTextpin(Itype,Ideci),
+    initdata(extradatalen)
 {
- subs=new Tsubreader;
- if ((type&Tsubreader::SUB_FORMATMASK)==Tsubreader::SUB_SSA && extradata && extradatalen)
-  memcpy(initdata,extradata,extradatalen);
- parser=NULL;
- sub_format=type;
+    subs=new Tsubreader;
+    if ((type&Tsubreader::SUB_FORMATMASK)==Tsubreader::SUB_SSA && extradata && extradatalen) {
+        memcpy(initdata,extradata,extradatalen);
+    }
+    parser=NULL;
+    sub_format=type;
 }
 
 TsubtitlesTextpinText::~TsubtitlesTextpinText()
 {
- if (parser) delete parser;
+    if (parser) {
+        delete parser;
+    }
 }
 
 void TsubtitlesTextpinText::resetSubtitles(void)
 {
- subs->clear();
- if (parser) delete parser;parser=NULL;
- TsubtitlesTextpin::resetSubtitles();
+    subs->clear();
+    if (parser) {
+        delete parser;
+    }
+    parser=NULL;
+    TsubtitlesTextpin::resetSubtitles();
 }
 
 void TsubtitlesTextpinText::addSubtitle(REFERENCE_TIME start,REFERENCE_TIME stop,const unsigned char *data,unsigned int datalen,const TsubtitlesSettings *cfg,bool utf8)
 {
- if (memcmp(data,"GAB2",4)==0)
-  {
-   if (subs) delete subs;
-   const unsigned char *ptr=data+strlen("GAB2")+1;
-   const unsigned char *end=data+datalen;
-   while (data<end)
-    {
-     WORD tag = *((WORD*)(ptr)); ptr += 2;
-     DWORD size = *((DWORD*)(ptr)); ptr += 4;
-     if (tag==__GAB1_LANGUAGE_UNICODE__)
-      ;//pRTS->m_name = (WCHAR*)ptr;
-     else if(tag==__GAB1_RAWTEXTSUBTITLE__)
-      {
-       TstreamMem fs(ptr,end-ptr,Tstream::ENC_AUTODETECT,TfontSettings::GDI_charset_to_code_page(deci->getParam2(IDFF_fontCharset)));
-       sub_format=Tsubreader::sub_autodetect(fs,ffcfg);
-       fs.rewind();
-       if (sub_format!=Tsubreader::SUB_INVALID)
-        {
-         unsigned int fps1000=25000;
-         if (comptrQ<IffdshowDecVideo> deciV=deci)
-          deciV->getAVIfps(&fps1000);
-         subs=new TsubreaderMplayer(fs,sub_format,fps1000/1000.0,cfg,ffcfg,true);
+    if (memcmp(data,"GAB2",4)==0) {
+        if (subs) {
+            delete subs;
         }
-       else
-        subs=NULL;
-       break;
-      }
-     ptr+=size;
+        const unsigned char *ptr=data+strlen("GAB2")+1;
+        const unsigned char *end=data+datalen;
+        while (data<end) {
+            WORD tag = *((WORD*)(ptr));
+            ptr += 2;
+            DWORD size = *((DWORD*)(ptr));
+            ptr += 4;
+            if (tag==__GAB1_LANGUAGE_UNICODE__) {
+                ;    //pRTS->m_name = (WCHAR*)ptr;
+            } else if(tag==__GAB1_RAWTEXTSUBTITLE__) {
+                TstreamMem fs(ptr,end-ptr,Tstream::ENC_AUTODETECT,TfontSettings::GDI_charset_to_code_page(deci->getParam2(IDFF_fontCharset)));
+                sub_format=Tsubreader::sub_autodetect(fs,ffcfg);
+                fs.rewind();
+                if (sub_format!=Tsubreader::SUB_INVALID) {
+                    unsigned int fps1000=25000;
+                    if (comptrQ<IffdshowDecVideo> deciV=deci) {
+                        deciV->getAVIfps(&fps1000);
+                    }
+                    subs=new TsubreaderMplayer(fs,sub_format,fps1000/1000.0,cfg,ffcfg,true);
+                } else {
+                    subs=NULL;
+                }
+                break;
+            }
+            ptr+=size;
+        }
+    } else {
+        if (!parser) {
+            unsigned int fps1000=25000;
+            if (comptrQ<IffdshowDecVideo> deciV=deci) {
+                deciV->getAVIfps(&fps1000);
+            }
+            parser=TsubtitleParserBase::getParser(type,fps1000/1000.0,cfg,ffcfg,subs,utf8,true);
+            if (initdata.size()) {
+                TstreamMem fs(initdata,initdata.size(),utf8 ? Tstream::ENC_UTF8 : Tstream::ENC_ASCII,TfontSettings::GDI_charset_to_code_page(deci->getParam2(IDFF_fontCharset)));
+                parser->parse(fs, 0, start, stop);
+            }
+        }
+        TstreamMem fs(data,datalen,utf8 ? Tstream::ENC_UTF8 : Tsubreader::getSubEnc(type),TfontSettings::GDI_charset_to_code_page(deci->getParam2(IDFF_fontCharset)));
+        Tsubtitle *sub=parser->parse(fs, (type&Tsubreader::SUB_FORMATMASK)==Tsubreader::SUB_SSA ? TsubtitleParserBase::SSA_NODIALOGUE : 0, start, stop);
+        if (sub) {
+            sub->start=start;
+            sub->stop=stop;
+            init();
+        }
     }
-  }
- else
-  {
-   if (!parser)
-    {
-     unsigned int fps1000=25000;
-     if (comptrQ<IffdshowDecVideo> deciV=deci)
-      deciV->getAVIfps(&fps1000);
-     parser=TsubtitleParserBase::getParser(type,fps1000/1000.0,cfg,ffcfg,subs,utf8,true);
-     if (initdata.size())
-      {
-       TstreamMem fs(initdata,initdata.size(),utf8 ? Tstream::ENC_UTF8 : Tstream::ENC_ASCII,TfontSettings::GDI_charset_to_code_page(deci->getParam2(IDFF_fontCharset)));
-       parser->parse(fs, 0, start, stop);
-      }
-    }
-   TstreamMem fs(data,datalen,utf8 ? Tstream::ENC_UTF8 : Tsubreader::getSubEnc(type),TfontSettings::GDI_charset_to_code_page(deci->getParam2(IDFF_fontCharset)));
-   Tsubtitle *sub=parser->parse(fs, (type&Tsubreader::SUB_FORMATMASK)==Tsubreader::SUB_SSA ? TsubtitleParserBase::SSA_NODIALOGUE : 0, start, stop);
-   if (sub)
-    {
-     sub->start=start;
-     sub->stop=stop;
-     init();
-    }
-  }
 }

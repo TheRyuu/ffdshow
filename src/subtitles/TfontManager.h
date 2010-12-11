@@ -1,32 +1,32 @@
 #pragma once
 
-class TfontManager {
+class TfontManager
+{
 private:
     boost::mutex mutex;
     struct THFONT {
-      THFONT():
-          hf(NULL),
-          count(0)
-      {}
+        THFONT():
+            hf(NULL),
+            count(0)
+        {}
 
-      THFONT(const LOGFONT &Ilf):
-          lf(Ilf)
-      {
-          hf=CreateFontIndirect(&lf);
-          ASSERT(hf);
-      }
+        THFONT(const LOGFONT &Ilf):
+            lf(Ilf) {
+            hf=CreateFontIndirect(&lf);
+            ASSERT(hf);
+        }
 
-      LOGFONT lf;
-      HFONT hf;
-      unsigned int count;
+        LOGFONT lf;
+        HFONT hf;
+        unsigned int count;
 
-      bool operator ==(const LOGFONT &lf1) const {
-          return memcmp(&lf,&lf1,sizeof(LOGFONT))==0;
-      }
+        bool operator ==(const LOGFONT &lf1) const {
+            return memcmp(&lf,&lf1,sizeof(LOGFONT))==0;
+        }
 
-      bool operator <(const THFONT &f1) const {
-          return count<f1.count;
-      }
+        bool operator <(const THFONT &f1) const {
+            return count<f1.count;
+        }
     };
 
     typedef std::list<THFONT> THFONTs;
@@ -35,8 +35,9 @@ private:
 public:
     ~TfontManager() {
         boost::unique_lock<boost::mutex> lock(mutex);
-        for (THFONTs::iterator f=fonts.begin();f!=fonts.end();f++)
+        for (THFONTs::iterator f=fonts.begin(); f!=fonts.end(); f++) {
             DeleteObject(f->hf);
+        }
     }
 
     HFONT getFont(const LOGFONT &font) {
