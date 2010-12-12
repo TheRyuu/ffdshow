@@ -370,11 +370,9 @@
   <ItemGroup>
     <None Include="authors.txt" />
     <None Include="copying.txt" />
-    <None Include="readme.txt" />
-    <None Include="readmeAudio.txt" />
-    <None Include="readmeEnc.txt" />
-    <None Include="readmeMultiCPU.jp.txt" />
-    <None Include="readmeMultiCPU.txt" />
+    <None Include="src\readme.txt" />
+    <None Include="src\readmeAudio.txt" />
+    <None Include="src\readmeEnc.txt" />
     <None Include="todo.txt" />
     <None Include="src\helpChannelSwap.txt" />
     <None Include="src\helpCredits.txt" />

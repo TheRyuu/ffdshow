@@ -505,23 +505,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\readme.txt"
+				RelativePath=".\src\readme.txt"
 				>
 			</File>
 			<File
-				RelativePath=".\readmeAudio.txt"
+				RelativePath=".\src\readmeAudio.txt"
 				>
 			</File>
 			<File
-				RelativePath=".\readmeEnc.txt"
-				>
-			</File>
-			<File
-				RelativePath=".\readmeMultiCPU.jp.txt"
-				>
-			</File>
-			<File
-				RelativePath=".\readmeMultiCPU.txt"
+				RelativePath=".\src\readmeEnc.txt"
 				>
 			</File>
 			<File

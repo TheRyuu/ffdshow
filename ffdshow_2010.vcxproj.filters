@@ -126,19 +126,13 @@
     <None Include="copying.txt">
       <Filter>doc</Filter>
     </None>
-    <None Include="readme.txt">
+    <None Include="src\readme.txt">
       <Filter>doc</Filter>
     </None>
-    <None Include="readmeAudio.txt">
+    <None Include="src\readmeAudio.txt">
       <Filter>doc</Filter>
     </None>
-    <None Include="readmeEnc.txt">
-      <Filter>doc</Filter>
-    </None>
-    <None Include="readmeMultiCPU.jp.txt">
-      <Filter>doc</Filter>
-    </None>
-    <None Include="readmeMultiCPU.txt">
+    <None Include="src\readmeEnc.txt">
       <Filter>doc</Filter>
     </None>
     <None Include="todo.txt">

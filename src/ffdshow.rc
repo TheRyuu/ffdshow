@@ -16,12 +16,12 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// Slovak resources
+// Neutral resources
 
-#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_SKY)
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_NEU)
 #ifdef _WIN32
-LANGUAGE LANG_SLOVAK, SUBLANG_DEFAULT
-#pragma code_page(1250)
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+#pragma code_page(1253)
 #endif //_WIN32
 
 #ifdef APSTUDIO_INVOKED
@@ -52,18 +52,6 @@ END
 
 #endif    // APSTUDIO_INVOKED
 
-#endif    // Slovak resources
-/////////////////////////////////////////////////////////////////////////////
-
-
-/////////////////////////////////////////////////////////////////////////////
-// Neutral resources
-
-#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_NEU)
-#ifdef _WIN32
-LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
-#pragma code_page(1252)
-#endif //_WIN32
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -3001,14 +2989,16 @@ IDI_MODERN_4BIT_ICON_V  ICON                    "FFv4bit.ico"
 IDI_MODERN_4BIT_ICON_A  ICON                    "FFa4bit.ico"
 IDI_MODERN_4BIT_ICON_E  ICON                    "FFe4bit.ico"
 IDI_MODERN_ICON_D       ICON                    "FFd.ico"
+IDI_MODERN_ICON_VA      ICON                    "FFva.ico"
+IDI_MODERN_4BIT_ICON_VA ICON                    "FFva4bit.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // TEXT
 //
 
-IDD_ABOUT               TEXT                    "../readme.txt"
-IDD_ABOUTAUDIO          TEXT                    "../readmeAudio.txt"
+IDD_ABOUT               TEXT                    "readme.txt"
+IDD_ABOUTAUDIO          TEXT                    "readmeAudio.txt"
 IDD_PICTPROP            TEXT                    "helpPictprop.txt"
 IDD_CROP                TEXT                    "helpCrop.txt"
 IDD_SHARPEN             TEXT                    "helpSharpen.txt"
@@ -3029,7 +3019,7 @@ IDD_ONEPASS             TEXT                    "helpFF1.txt"
 IDD_GENERIC_THEO        TEXT                    "helpGeneric_THEO.txt"
 IDD_GENERIC_FFV1        TEXT                    "helpGeneric_FFV1.txt"
 IDD_OUT                 TEXT                    "helpOut.txt"
-IDD_ABOUTENC            TEXT                    "../readmeEnc.txt"
+IDD_ABOUTENC            TEXT                    "readmeEnc.txt"
 IDD_FIR                 TEXT                    "helpFIR.txt"
 IDD_OUTSFS              TEXT                    "helpOutsfs.txt"
 IDD_CHANNELSWAP         TEXT                    "helpChannelSwap.txt"
@@ -3450,28 +3440,6 @@ BEGIN
 END
 
 #endif    // Neutral resources
-/////////////////////////////////////////////////////////////////////////////
-
-
-/////////////////////////////////////////////////////////////////////////////
-// French (France) resources
-
-#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_FRA)
-#ifdef _WIN32
-LANGUAGE LANG_FRENCH, SUBLANG_FRENCH
-#pragma code_page(1252)
-#endif //_WIN32
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Icon
-//
-
-// Icon with lowest ID value placed first to ensure application icon
-// remains consistent on all systems.
-IDI_MODERN_ICON_VA      ICON                    "FFva.ico"
-IDI_MODERN_4BIT_ICON_VA ICON                    "FFva4bit.ico"
-#endif    // French (France) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
