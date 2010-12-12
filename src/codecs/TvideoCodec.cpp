@@ -311,9 +311,9 @@ bool TvideoCodecEnc::getExtradata(const void* *ptr,size_t *len)
 void TvideoCodecs::init(IffdshowBase *deci,IencVideoSink *sink)
 {
     push_back(new TvideoCodecLibavcodec(deci,sink));
-    push_back(new TvideoCodecXviD4(deci,sink));
-    push_back(new TvideoCodecX264(deci,sink));
-    push_back(new TvideoCodecWmv9(deci,sink));
+    //push_back(new TvideoCodecXviD4(deci,sink));
+    //push_back(new TvideoCodecX264(deci,sink));
+    //push_back(new TvideoCodecWmv9(deci,sink));
     push_back(new TvideoCodecUncompressed(deci,sink));
 }
 TvideoCodecEnc* TvideoCodecs::getEncLib(int codecId)

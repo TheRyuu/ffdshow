@@ -61,23 +61,22 @@ TvideoCodecLibavcodec::TvideoCodecLibavcodec(IffdshowBase *Ideci,IencVideoSink *
 {
     create();
     if (ok && !libavcodec->dec_only) {
-        encoders.push_back(new Tencoder(_l("MPEG-4"),CODEC_ID_MPEG4));
-        encoders.push_back(new Tencoder(_l("DivX 3"),CODEC_ID_MSMPEG4V3));
-        encoders.push_back(new Tencoder(_l("MS MPEG4 v2"),CODEC_ID_MSMPEG4V2));
-        encoders.push_back(new Tencoder(_l("MPEG-1"),CODEC_ID_MPEG1VIDEO,Tfourccs(FOURCC_MPEG,FOURCC_MPG1,0)));
-        encoders.push_back(new Tencoder(_l("MPEG-2"),CODEC_ID_MPEG2VIDEO,Tfourccs(FOURCC_MPEG,FOURCC_MPG2,0)));
-        encoders.push_back(new Tencoder(_l("H.263"),CODEC_ID_H263));
-        encoders.push_back(new Tencoder(_l("H.263+"),CODEC_ID_H263P));
-        encoders.push_back(new Tencoder(_l("H.261"),CODEC_ID_H261));
-        encoders.push_back(new Tencoder(_l("WMV 7"),CODEC_ID_WMV1));
-        encoders.push_back(new Tencoder(_l("WMV 8"),CODEC_ID_WMV2));
+        //encoders.push_back(new Tencoder(_l("MPEG-4"),CODEC_ID_MPEG4));
+        //encoders.push_back(new Tencoder(_l("DivX 3"),CODEC_ID_MSMPEG4V3));
+        //encoders.push_back(new Tencoder(_l("MS MPEG4 v2"),CODEC_ID_MSMPEG4V2));
+        //encoders.push_back(new Tencoder(_l("MPEG-1"),CODEC_ID_MPEG1VIDEO,Tfourccs(FOURCC_MPEG,FOURCC_MPG1,0)));
+        //encoders.push_back(new Tencoder(_l("MPEG-2"),CODEC_ID_MPEG2VIDEO,Tfourccs(FOURCC_MPEG,FOURCC_MPG2,0)));
+        //encoders.push_back(new Tencoder(_l("H.263"),CODEC_ID_H263));
+        //encoders.push_back(new Tencoder(_l("H.263+"),CODEC_ID_H263P));
+        //encoders.push_back(new Tencoder(_l("H.261"),CODEC_ID_H261));
+        //encoders.push_back(new Tencoder(_l("WMV 7"),CODEC_ID_WMV1));
+        //encoders.push_back(new Tencoder(_l("WMV 8"),CODEC_ID_WMV2));
         encoders.push_back(new Tencoder(_l("MJPEG"),CODEC_ID_MJPEG));
         encoders.push_back(new Tencoder(_l("Lossless JPEG"),CODEC_ID_LJPEG));
         encoders.push_back(new Tencoder(_l("HuffYUV"),CODEC_ID_HUFFYUV));
         encoders.push_back(new Tencoder(_l("FFV1"),CODEC_ID_FFV1));
         encoders.push_back(new Tencoder(_l("DV"),CODEC_ID_DVVIDEO));
-        //encoders.push_back(new Tencoder(_l("SNOW (experimental)"),CODEC_ID_SNOW));
-        encoders.push_back(new Tencoder(_l("FLV1"),CODEC_ID_FLV1));
+        //encoders.push_back(new Tencoder(_l("FLV1"),CODEC_ID_FLV1));
     }
 }
 void TvideoCodecLibavcodec::create(void)
