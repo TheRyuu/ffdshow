@@ -5,7 +5,7 @@
 	Name="ff_samplerate"
 	ProjectGUID="{9FDCBA21-EEFF-47D5-BD75-B7C93EED2338}"
 	VCNestedProjectGUID="{9687FAF7-4894-4D5A-A7B8-03EECF6E5F0B}"
-	VCNestedProjectCRC32="3162685221"
+	VCNestedProjectCRC32="3810792294"
 	VCNestedProjectFileName="ff_samplerate_2008_icl10.vcproj"
 	Keyword="Win32Proj">
 	<Platforms>
@@ -67,7 +67,7 @@
 				ModuleDefinitionFile="ff_samplerate.def "
 				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(IntDir)/ff_samplerate.pdb"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
@@ -140,8 +140,9 @@
 				ModuleDefinitionFile="ff_samplerate.def "
 				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(IntDir)/ff_samplerate.pdb"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
 				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"/>
 			<Tool 
@@ -169,7 +170,7 @@
 				UseOfMFC="1"
 				CharacterSet="0"
 				ManagedExtensions="0"
-				WholeProgramOptimization="1"/>
+				WholeProgramOptimization="0"/>
 			<Tool 
 				Name="PreBuildEventTool"/>
 			<Tool 
@@ -188,7 +189,6 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
-				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories=".;..;../..;../../..;"
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;NDEBUG;_WINDOWS;_USRDLL"
 				ExceptionHandling="0"
@@ -197,7 +197,6 @@
 				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="0"
 				BrowseInformation="0"
-				WarningLevel="3"
 				DebugInformationFormat="3"
 				CompileAs="1"
 				DisableSpecificWarnings="4996;4244"
@@ -218,7 +217,7 @@
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="ff_samplerate.def "
 				DelayLoadDLLs="$(NOINHERIT)"
-				ProgramDatabaseFile="$(IntDir)/ff_samplerate.pdb"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
@@ -251,7 +250,7 @@
 				UseOfMFC="1"
 				CharacterSet="0"
 				ManagedExtensions="0"
-				WholeProgramOptimization="1"/>
+				WholeProgramOptimization="0"/>
 			<Tool 
 				Name="PreBuildEventTool"/>
 			<Tool 
@@ -271,7 +270,6 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
-				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories=".;..;../..;../../..;"
 				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;NDEBUG;_WINDOWS;_USRDLL"
 				ExceptionHandling="0"
@@ -279,7 +277,6 @@
 				BufferSecurityCheck="false"
 				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="0"
-				WarningLevel="0"
 				DebugInformationFormat="3"
 				CompileAs="1"
 				DisableSpecificWarnings="4996,4244"
@@ -301,10 +298,11 @@
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="ff_samplerate.def "
 				DelayLoadDLLs="$(NOINHERIT)"
-				ProgramDatabaseFile="$(IntDir)/ff_samplerate.pdb"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
+				RandomizedBaseAddress="1"
 				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"/>
 			<Tool 

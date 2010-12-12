@@ -47,7 +47,7 @@
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_DEBUG;_WINDOWS;RARDLL;NOCRYPT;SILENT;NOVOLUME;SFX_MODULE;SHELL_EXT"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				ForceConformanceInForLoopScope="true"
 				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="2"
@@ -75,12 +75,13 @@
 				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="dll.def"
+				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(IntDir)/ff_unrar.pdb"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(IntDir)/ff_unrar.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -161,10 +162,12 @@
 				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="dll.def"
+				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(IntDir)/ff_unrar.pdb"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				SubSystem="2"
-				ImportLibrary="$(IntDir)/ff_unrar.lib"
+				RandomizedBaseAddress="1"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"
 			/>
 			<Tool
@@ -197,7 +200,7 @@
 			UseOfMFC="1"
 			CharacterSet="0"
 			ManagedExtensions="0"
-			WholeProgramOptimization="1"
+			WholeProgramOptimization="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -222,7 +225,6 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="2"
 				OmitFramePointers="true"
-				WholeProgramOptimization="true"
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;NDEBUG;_WINDOWS;RARDLL;NOCRYPT;SILENT;NOVOLUME;SFX_MODULE;SHELL_EXT"
 				RuntimeLibrary="0"
 				BufferSecurityCheck="false"
@@ -250,13 +252,14 @@
 				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="dll.def"
-				ProgramDatabaseFile="$(IntDir)/ff_unrar.pdb"
+				DelayLoadDLLs="$(NOINHERIT)"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(IntDir)/ff_unrar.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -289,7 +292,7 @@
 			UseOfMFC="1"
 			CharacterSet="0"
 			ManagedExtensions="0"
-			WholeProgramOptimization="1"
+			WholeProgramOptimization="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -315,14 +318,12 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="2"
 				OmitFramePointers="true"
-				WholeProgramOptimization="true"
 				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;NDEBUG;_WINDOWS;RARDLL;NOCRYPT;SILENT;NOVOLUME;SFX_MODULE;SHELL_EXT"
 				RuntimeLibrary="0"
 				BufferSecurityCheck="false"
 				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="rar.hpp"
-				WarningLevel="0"
 				DisableSpecificWarnings="4996"
 			/>
 			<Tool
@@ -343,11 +344,13 @@
 				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="dll.def"
-				ProgramDatabaseFile="$(IntDir)/ff_unrar.pdb"
+				DelayLoadDLLs="$(NOINHERIT)"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				ImportLibrary="$(IntDir)/ff_unrar.lib"
+				RandomizedBaseAddress="1"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"
 			/>
 			<Tool

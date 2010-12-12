@@ -43,7 +43,6 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions=""
 				Optimization="0"
 				AdditionalIncludeDirectories="."
 				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;FPM_DEFAULT,_LIB,HAVE_CONFIG_H,ASO_ZEROCHECK,WIN32,_DEBUG,DEBUG"
@@ -84,6 +83,7 @@
 				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="ff_libmad.def"
+				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(IntDir)/$(TargetName).pdb"
 				RandomizedBaseAddress="1"
@@ -139,7 +139,6 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions=""
 				Optimization="0"
 				AdditionalIncludeDirectories="."
 				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;FPM_DEFAULT,_LIB,HAVE_CONFIG_H,ASO_ZEROCHECK,WIN64,_DEBUG,DEBUG"
@@ -179,8 +178,10 @@
 				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="ff_libmad.def"
+				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(IntDir)/$(TargetName).pdb"
+				RandomizedBaseAddress="1"
 				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"
 			/>
@@ -215,7 +216,7 @@
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="0"
 			ManagedExtensions="0"
-			WholeProgramOptimization="1"
+			WholeProgramOptimization="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -240,7 +241,6 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
-				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="."
 				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;NDEBUG,FPM_INTEL,WIN32,_LIB,HAVE_CONFIG_H,ASO_ZEROCHECK"
 				StringPooling="true"
@@ -253,7 +253,6 @@
 				ObjectFile="$(IntDir)/"
 				ProgramDataBaseFileName="$(IntDir)\$(TargetName).pdb"
 				BrowseInformation="0"
-				WarningLevel="1"
 				SuppressStartupBanner="true"
 				CompileAs="1"
 				DisableSpecificWarnings="4996"
@@ -279,7 +278,8 @@
 				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="ff_libmad.def"
-				ProgramDatabaseFile="$(IntDir)/$(TargetName).pdb"
+				DelayLoadDLLs="$(NOINHERIT)"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				RandomizedBaseAddress="1"
@@ -317,7 +317,7 @@
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="0"
 			ManagedExtensions="0"
-			WholeProgramOptimization="1"
+			WholeProgramOptimization="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -343,7 +343,6 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
-				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="."
 				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;NDEBUG,FPM_INTEL,WIN64,_LIB,HAVE_CONFIG_H,ASO_ZEROCHECK"
 				StringPooling="true"
@@ -355,7 +354,6 @@
 				AssemblerListingLocation="$(IntDir)/"
 				ObjectFile="$(IntDir)/"
 				ProgramDataBaseFileName="$(IntDir)\$(TargetName).pdb"
-				WarningLevel="0"
 				SuppressStartupBanner="true"
 				CompileAs="1"
 				DisableSpecificWarnings="4996,4244"
@@ -381,9 +379,11 @@
 				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="ff_libmad.def"
+				DelayLoadDLLs="$(NOINHERIT)"
 				ProgramDatabaseFile="$(IntDir)/$(TargetName).pdb"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
+				RandomizedBaseAddress="1"
 				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"
 			/>

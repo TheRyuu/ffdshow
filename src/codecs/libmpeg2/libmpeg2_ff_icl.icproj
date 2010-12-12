@@ -5,7 +5,7 @@
 	Name="libmpeg2_ff"
 	ProjectGUID="{A0A5B5A7-8D65-425A-8FB1-18C7B015CB99}"
 	VCNestedProjectGUID="{A0116059-A93E-4A03-BA72-73E8C64B3C34}"
-	VCNestedProjectCRC32="2727006937"
+	VCNestedProjectCRC32="2718233056"
 	VCNestedProjectFileName="libmpeg2_ff_icl.vcproj">
 	<Platforms>
 		<Platform 
@@ -20,8 +20,7 @@
 				Name="GeneralTool"
 				ConfigurationType="2"
 				InheritedPropertySheets="..\..\..\common_icl10.vsprops"
-				UseOfMFC="0"
-				ATLMinimizesCRunTimeLibraryUsage="false"
+				UseOfMFC="1"
 				CharacterSet="0"/>
 			<Tool 
 				Name="PreBuildEventTool"/>
@@ -37,7 +36,6 @@
 				Name="MidlCmplrTool"/>
 			<Tool 
 				Name="CppCmplrTool"
-				AdditionalOptions=""
 				Optimization="0"
 				AdditionalIncludeDirectories=".;include;../.."
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_DEBUG;_WINDOWS"
@@ -50,7 +48,7 @@
 				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="0"
 				BrowseInformation="0"
-				WarningLevel="0"
+				WarningLevel="3"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="4"
 				CompileAs="2"
@@ -67,12 +65,12 @@
 				AdditionalDependencies="kernel32.lib libcmtd.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
 				OutputFile="../../../bin/libmpeg2_ff.dll"
 				SuppressStartupBanner="true"
-				GenerateManifest="false"
+				GenerateManifest="true"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="libmpeg2_ff.def"
 				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(IntDir)/libmpeg2_ff.pdb"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
@@ -82,7 +80,7 @@
 				Name="VCALinkTool"/>
 			<Tool 
 				Name="VCManifestTool"
-				EmbedManifest="false"/>
+				EmbedManifest="true"/>
 			<Tool 
 				Name="VCXDCMakeTool"/>
 			<Tool 
@@ -117,7 +115,6 @@
 				TargetEnvironment="3"/>
 			<Tool 
 				Name="CppCmplrTool"
-				AdditionalOptions=""
 				Optimization="0"
 				AdditionalIncludeDirectories=".;include;../.."
 				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_DEBUG;_WINDOWS"
@@ -129,7 +126,7 @@
 				BufferSecurityCheck="true"
 				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="0"
-				WarningLevel="0"
+				WarningLevel="3"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="3"
 				CompileAs="2"
@@ -146,12 +143,12 @@
 				AdditionalDependencies="kernel32.lib libcmtd.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
 				OutputFile="../../../bin/libmpeg2_ff.dll"
 				SuppressStartupBanner="true"
-				GenerateManifest="false"
+				GenerateManifest="true"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="libmpeg2_ff.def"
 				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(IntDir)/libmpeg2_ff.pdb"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
 				ImportLibrary="$(OutDir)/$(ProjectName).lib"
@@ -160,7 +157,7 @@
 				Name="VCALinkTool"/>
 			<Tool 
 				Name="VCManifestTool"
-				EmbedManifest="false"/>
+				EmbedManifest="true"/>
 			<Tool 
 				Name="VCXDCMakeTool"/>
 			<Tool 
@@ -213,7 +210,6 @@
 				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="0"
 				BrowseInformation="0"
-				WarningLevel="0"
 				CompileAs="2"
 				DisableSpecificWarnings="4996"
 				EnablePREfast="false"
@@ -231,12 +227,12 @@
 				OutputFile="../../../bin/libmpeg2_ff.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				GenerateManifest="false"
+				GenerateManifest="true"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="libmpeg2_ff.def"
 				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="false"
-				ProgramDatabaseFile="$(IntDir)/libmpeg2_ff.pdb"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
@@ -248,7 +244,7 @@
 				Name="VCALinkTool"/>
 			<Tool 
 				Name="VCManifestTool"
-				EmbedManifest="false"/>
+				EmbedManifest="true"/>
 			<Tool 
 				Name="VCXDCMakeTool"/>
 			<Tool 
@@ -291,7 +287,6 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
-				WholeProgramOptimization="false"
 				AdditionalIncludeDirectories=".;include;../.."
 				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;NDEBUG;_WINDOWS"
 				StringPooling="true"
@@ -301,7 +296,6 @@
 				EnableFunctionLevelLinking="false"
 				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="0"
-				WarningLevel="0"
 				CompileAs="2"
 				DisableSpecificWarnings="4996,4244"
 				EnablePREfast="false"
@@ -319,12 +313,12 @@
 				OutputFile="../../../bin/libmpeg2_ff.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				GenerateManifest="false"
+				GenerateManifest="true"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="libmpeg2_ff.def"
 				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="false"
-				ProgramDatabaseFile="$(IntDir)/libmpeg2_ff.pdb"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
@@ -335,7 +329,7 @@
 				Name="VCALinkTool"/>
 			<Tool 
 				Name="VCManifestTool"
-				EmbedManifest="false"/>
+				EmbedManifest="true"/>
 			<Tool 
 				Name="VCXDCMakeTool"/>
 			<Tool 

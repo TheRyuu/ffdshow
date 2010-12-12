@@ -5,7 +5,7 @@
 	Name="ff_libdts"
 	ProjectGUID="{AF81C4D7-73A0-4547-A18A-D94222584CA5}"
 	VCNestedProjectGUID="{29432947-08F2-41AA-953F-47E45252DD57}"
-	VCNestedProjectCRC32="686457396"
+	VCNestedProjectCRC32="1191079216"
 	VCNestedProjectFileName="ff_libdts_2008_icl10.vcproj">
 	<Platforms>
 		<Platform 
@@ -23,7 +23,7 @@
 				UseOfMFC="1"
 				ATLMinimizesCRunTimeLibraryUsage="false"
 				ManagedExtensions="0"
-				WholeProgramOptimization="1"/>
+				WholeProgramOptimization="0"/>
 			<Tool 
 				Name="PreBuildEventTool"/>
 			<Tool 
@@ -48,7 +48,6 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
-				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="../.."
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;NDEBUG;_WINDOWS"
 				StringPooling="true"
@@ -61,7 +60,6 @@
 				ObjectFile="$(IntDir)\"
 				ProgramDataBaseFileName="$(IntDir)\$(TargetName).pdb"
 				BrowseInformation="0"
-				WarningLevel="3"
 				SuppressStartupBanner="true"
 				CompileAs="1"
 				DisableSpecificWarnings="4996"
@@ -84,6 +82,8 @@
 				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile=".\ff_libdts.def"
+				DelayLoadDLLs="$(NOINHERIT)"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
@@ -116,7 +116,7 @@
 				UseOfMFC="1"
 				ATLMinimizesCRunTimeLibraryUsage="false"
 				ManagedExtensions="0"
-				WholeProgramOptimization="1"/>
+				WholeProgramOptimization="0"/>
 			<Tool 
 				Name="PreBuildEventTool"/>
 			<Tool 
@@ -141,7 +141,6 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
-				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="../.."
 				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;NDEBUG;_WINDOWS"
 				StringPooling="true"
@@ -153,7 +152,6 @@
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
 				ProgramDataBaseFileName="$(IntDir)\$(TargetName).pdb"
-				WarningLevel="0"
 				SuppressStartupBanner="true"
 				CompileAs="1"
 				DisableSpecificWarnings="4996,4244"
@@ -179,9 +177,12 @@
 				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile=".\ff_libdts.def"
+				DelayLoadDLLs="$(NOINHERIT)"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
+				RandomizedBaseAddress="1"
 				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"/>
 			<Tool 
@@ -261,8 +262,9 @@
 				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile=".\ff_libdts.def"
+				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(IntDir)/ff_libdts.pdb"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
@@ -344,9 +346,11 @@
 				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile=".\ff_libdts.def"
+				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(IntDir)/ff_libdts.pdb"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
 				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"/>
 			<Tool 

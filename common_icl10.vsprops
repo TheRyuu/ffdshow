@@ -6,4 +6,13 @@
 	OutputDirectory="$(SolutionDir)obj\$(ConfigurationName)_$(PlatformName)_ICL10"
 	IntermediateDirectory="$(SolutionDir)obj\$(ConfigurationName)_$(PlatformName)_ICL10\$(ProjectName)"
 	>
+	<Tool
+		Name="VCCLCompilerTool"
+		EnableFunctionLevelLinking="true"
+		WarningLevel="0"
+	/>
+	<Tool
+		Name="VCLibrarianTool"
+		OutputFile="$(OutDir)\$(ProjectName).lib"
+	/>
 </VisualStudioPropertySheet>

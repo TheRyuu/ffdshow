@@ -5,7 +5,7 @@
 	Name="ffdshow"
 	ProjectGUID="{0C1CDCBB-5886-42B4-A928-F4B82DD3FD17}"
 	VCNestedProjectGUID="{30A21C7F-035D-41E2-95BE-B4FFA5F5176B}"
-	VCNestedProjectCRC32="3925657118"
+	VCNestedProjectCRC32="2772850528"
 	VCNestedProjectFileName="ffdshow_2008_icl10.vcproj">
 	<Platforms>
 		<Platform 
@@ -109,7 +109,8 @@
 			<Tool 
 				Name="PostBuildEventTool"
 				Description="Registering output..."
-				CommandLine=""/>
+				CommandLine="bin/register.bat"
+				ExcludedFromBuild="true"/>
 		</Configuration>
 		<Configuration 
 			Name="Debug|x64">
@@ -221,7 +222,8 @@
 				ManagedExtensions="0"/>
 			<Tool 
 				Name="PreBuildEventTool"
-				CommandLine="update_version.bat"/>
+				CommandLine="update_version.bat"
+				ExcludedFromBuild="false"/>
 			<Tool 
 				Name="CustomTool"/>
 			<Tool 
@@ -261,7 +263,6 @@
 				ObjectFile="$(IntDir)\"
 				ProgramDataBaseFileName="$(IntDir)\$(TargetName).pdb"
 				BrowseInformation="0"
-				WarningLevel="0"
 				SuppressStartupBanner="true"
 				CompileAs="0"
 				DisableSpecificWarnings="4996,4250"
@@ -367,7 +368,6 @@
 				ObjectFile="$(IntDir)\"
 				ProgramDataBaseFileName="$(IntDir)\$(TargetName).pdb"
 				BrowseInformation="0"
-				WarningLevel="0"
 				SuppressStartupBanner="true"
 				CompileAs="0"
 				DisableSpecificWarnings="4996,4250"
@@ -473,6 +473,9 @@
 					RelativePath=".\src\helpDeinterlace.txt">
 				</File>
 				<File 
+					RelativePath=".\src\helpDXVAOptions.txt">
+				</File>
+				<File 
 					RelativePath=".\src\helpFF1.txt">
 				</File>
 				<File 
@@ -522,6 +525,9 @@
 				</File>
 				<File 
 					RelativePath=".\src\helpShowMV.txt">
+				</File>
+				<File 
+					RelativePath=".\src\helpSubIMGOptions.txt">
 				</File>
 				<File 
 					RelativePath=".\src\helpTray.txt">
@@ -3675,12 +3681,6 @@
 				RelativePath=".\src\codecs\TaudioCodecLibMAD.h">
 			</File>
 			<File 
-				RelativePath=".\src\codecs\TaudioCodecTremor.cpp">
-			</File>
-			<File 
-				RelativePath=".\src\codecs\TaudioCodecTremor.h">
-			</File>
-			<File 
 				RelativePath=".\src\codecs\TaudioCodecUncompressed.cpp">
 			</File>
 			<File 
@@ -4561,12 +4561,6 @@
 		</Filter>
 		<File 
 			RelativePath=".\src\ffdshow.def">
-		</File>
-		<File 
-			RelativePath=".\src\helpDXVAOptions.txt">
-		</File>
-		<File 
-			RelativePath=".\src\helpSubIMGOptions.txt">
 		</File>
 	</Files>
 </VisualStudioProject>

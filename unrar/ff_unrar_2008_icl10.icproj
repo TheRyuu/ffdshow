@@ -5,7 +5,7 @@
 	Name="ff_unrar"
 	ProjectGUID="{9C78112E-B79D-4AE6-859D-F71383126B4E}"
 	VCNestedProjectGUID="{82199D65-5E04-48FB-99B5-9396D55566AE}"
-	VCNestedProjectCRC32="2436224905"
+	VCNestedProjectCRC32="1349828495"
 	VCNestedProjectFileName="ff_unrar_2008_icl10.vcproj"
 	Keyword="Win32Proj">
 	<Platforms>
@@ -39,7 +39,7 @@
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_DEBUG;_WINDOWS;RARDLL;NOCRYPT;SILENT;NOVOLUME;SFX_MODULE;SHELL_EXT"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				ForceConformanceInForLoopScope="true"
 				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="2"
@@ -63,12 +63,13 @@
 				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="dll.def"
+				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(IntDir)/ff_unrar.pdb"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(IntDir)/ff_unrar.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="1"/>
 			<Tool 
 				Name="VCALinkTool"/>
@@ -133,10 +134,12 @@
 				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="dll.def"
+				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(IntDir)/ff_unrar.pdb"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				SubSystem="2"
-				ImportLibrary="$(IntDir)/ff_unrar.lib"
+				RandomizedBaseAddress="1"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"/>
 			<Tool 
 				Name="VCALinkTool"/>
@@ -163,7 +166,7 @@
 				UseOfMFC="1"
 				CharacterSet="0"
 				ManagedExtensions="0"
-				WholeProgramOptimization="1"/>
+				WholeProgramOptimization="0"/>
 			<Tool 
 				Name="PreBuildEventTool"/>
 			<Tool 
@@ -182,7 +185,6 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="2"
 				OmitFramePointers="true"
-				WholeProgramOptimization="true"
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;NDEBUG;_WINDOWS;RARDLL;NOCRYPT;SILENT;NOVOLUME;SFX_MODULE;SHELL_EXT"
 				RuntimeLibrary="0"
 				BufferSecurityCheck="false"
@@ -207,13 +209,14 @@
 				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="dll.def"
-				ProgramDatabaseFile="$(IntDir)/ff_unrar.pdb"
+				DelayLoadDLLs="$(NOINHERIT)"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(IntDir)/ff_unrar.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="1"/>
 			<Tool 
 				Name="VCALinkTool"/>
@@ -240,7 +243,7 @@
 				UseOfMFC="1"
 				CharacterSet="0"
 				ManagedExtensions="0"
-				WholeProgramOptimization="1"/>
+				WholeProgramOptimization="0"/>
 			<Tool 
 				Name="PreBuildEventTool"/>
 			<Tool 
@@ -260,14 +263,12 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="2"
 				OmitFramePointers="true"
-				WholeProgramOptimization="true"
 				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;NDEBUG;_WINDOWS;RARDLL;NOCRYPT;SILENT;NOVOLUME;SFX_MODULE;SHELL_EXT"
 				RuntimeLibrary="0"
 				BufferSecurityCheck="false"
 				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="rar.hpp"
-				WarningLevel="0"
 				DisableSpecificWarnings="4996"
 				GlobalOptimizations="1"
 				ImproveFloatingPointConsistency="0"
@@ -288,11 +289,13 @@
 				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="dll.def"
-				ProgramDatabaseFile="$(IntDir)/ff_unrar.pdb"
+				DelayLoadDLLs="$(NOINHERIT)"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				ImportLibrary="$(IntDir)/ff_unrar.lib"
+				RandomizedBaseAddress="1"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"/>
 			<Tool 
 				Name="VCALinkTool"/>
