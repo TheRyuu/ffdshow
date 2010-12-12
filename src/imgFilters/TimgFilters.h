@@ -7,7 +7,7 @@
 struct TffPict;
 DECLARE_INTERFACE(IprocVideoSink)
 {
- STDMETHOD (deliverProcessedSample)(TffPict &pict) PURE;
+    STDMETHOD (deliverProcessedSample)(TffPict &pict) PURE;
 };
 
 struct TglobalSettingsDecVideo;
@@ -22,51 +22,69 @@ struct IOSDprovider;
 class TimgFilters :public Tfilters
 {
 private:
- IprocVideoSink *sink;
- IimgFilterGrab *grab;
- TimgFilterOutput *output;
- bool firstprocess;
- bool stopAtSubtitles;
+    IprocVideoSink *sink;
+    IimgFilterGrab *grab;
+    TimgFilterOutput *output;
+    bool firstprocess;
+    bool stopAtSubtitles;
 protected:
- TimgFilters(IffdshowBase *Ideci,IprocVideoSink *Isink);
- comptrQ<IffdshowDecVideo> deciV;
- virtual void onFirstProcess(const TpresetVideo *cfg) {}
- TimgFilterSubtitles *subtitles;
+    TimgFilters(IffdshowBase *Ideci,IprocVideoSink *Isink);
+    comptrQ<IffdshowDecVideo> deciV;
+    virtual void onFirstProcess(const TpresetVideo *cfg) {}
+    TimgFilterSubtitles *subtitles;
 public:
- virtual ~TimgFilters();
+    virtual ~TimgFilters();
 
- virtual void getOutputFmt(TffPictBase &pict,const TpresetVideo *cfg);
- virtual HRESULT process(TffPict &pict,const TpresetVideo *cfg);
- HRESULT processSample(TfilterQueue::iterator it,TffPict &pict);
- HRESULT deliverSample(TffPict &pict);
- HRESULT processAndDeliverSample(TfilterQueue::iterator it,TffPict &pict);
- HRESULT convertOutputSample(const TffPict &pict,int dstcsp,unsigned char *dst[4],int dstStride[4],LONG &dstSize,const ToutputVideoSettings *cfg);
- bool isAnyActiveDownstreamFilter(TfilterQueue::iterator it);
- void adhocDVDsub(TfilterQueue::iterator it,TffPict &pict);
- virtual void onEndOfStream(void);
- bool pullImageFromSubtitlesFilter(TfilterQueue::iterator from);
+    virtual void getOutputFmt(TffPictBase &pict,const TpresetVideo *cfg);
+    virtual HRESULT process(TffPict &pict,const TpresetVideo *cfg);
+    HRESULT processSample(TfilterQueue::iterator it,TffPict &pict);
+    HRESULT deliverSample(TffPict &pict);
+    HRESULT processAndDeliverSample(TfilterQueue::iterator it,TffPict &pict);
+    HRESULT convertOutputSample(const TffPict &pict,int dstcsp,unsigned char *dst[4],int dstStride[4],LONG &dstSize,const ToutputVideoSettings *cfg);
+    bool isAnyActiveDownstreamFilter(TfilterQueue::iterator it);
+    void adhocDVDsub(TfilterQueue::iterator it,TffPict &pict);
+    virtual void onEndOfStream(void);
+    bool pullImageFromSubtitlesFilter(TfilterQueue::iterator from);
 
- int dirtyBorder;
- REFERENCE_TIME subtitleResetTime;
+    int dirtyBorder;
+    REFERENCE_TIME subtitleResetTime;
 
- bool initSubtitles(int id,int type,const unsigned char *extradata,unsigned int extradatalen);
- void addSubtitle(int id,REFERENCE_TIME start,REFERENCE_TIME stop,const unsigned char *data,unsigned int datalen,const TsubtitlesSettings *cfg,bool utf8);
- void resetSubtitles(int id);
- HANDLE getGlyphThreadHandle();
- bool ctlSubtitles(int id,int type,unsigned int ctl_id,const void *ctl_data,unsigned int ctl_datalen);
- const char_t *getCurrentSubFlnm(void) const;
+    bool initSubtitles(int id,int type,const unsigned char *extradata,unsigned int extradatalen);
+    void addSubtitle(int id,REFERENCE_TIME start,REFERENCE_TIME stop,const unsigned char *data,unsigned int datalen,const TsubtitlesSettings *cfg,bool utf8);
+    void resetSubtitles(int id);
+    HANDLE getGlyphThreadHandle();
+    bool ctlSubtitles(int id,int type,unsigned int ctl_id,const void *ctl_data,unsigned int ctl_datalen);
+    const char_t *getCurrentSubFlnm(void) const;
 
- virtual HRESULT addClosedCaption(const wchar_t* line) {return E_NOTIMPL;}
- virtual HRESULT hideClosedCaptions(void) {return E_NOTIMPL;}
- virtual bool shortOSDmessage(const char_t *msg,unsigned int duration) {return false;}
- virtual bool shortOSDmessageAbsolute(const char_t *msg,unsigned int duration,unsigned int posX,unsigned int posY) {return false;}
- virtual bool cleanShortOSDmessages(void) {return false;}
- virtual HRESULT registerOSDprovider(IOSDprovider *provider,const char *name) {return E_NOTIMPL;}
- virtual HRESULT unregisterOSDprovider(IOSDprovider *provider) {return E_NOTIMPL;}
- void setStopAtSubtitles(bool stop) {stopAtSubtitles = stop;}
- bool getStopAtSubtitles(void) {return stopAtSubtitles;}
+    virtual HRESULT addClosedCaption(const wchar_t* line) {
+        return E_NOTIMPL;
+    }
+    virtual HRESULT hideClosedCaptions(void) {
+        return E_NOTIMPL;
+    }
+    virtual bool shortOSDmessage(const char_t *msg,unsigned int duration) {
+        return false;
+    }
+    virtual bool shortOSDmessageAbsolute(const char_t *msg,unsigned int duration,unsigned int posX,unsigned int posY) {
+        return false;
+    }
+    virtual bool cleanShortOSDmessages(void) {
+        return false;
+    }
+    virtual HRESULT registerOSDprovider(IOSDprovider *provider,const char *name) {
+        return E_NOTIMPL;
+    }
+    virtual HRESULT unregisterOSDprovider(IOSDprovider *provider) {
+        return E_NOTIMPL;
+    }
+    void setStopAtSubtitles(bool stop) {
+        stopAtSubtitles = stop;
+    }
+    bool getStopAtSubtitles(void) {
+        return stopAtSubtitles;
+    }
 
- void grabNow(void);
+    void grabNow(void);
 };
 
 class TimgFilterOSD;
@@ -74,27 +92,29 @@ struct TresizeAspectSettings;
 class TimgFiltersPlayer :public TimgFilters
 {
 private:
- const TglobalSettingsDecVideo *globalCfg;
- TimgFilterOSD *osd;
- const bool &allowOutChange;
- TexpandSettings expandSettings;Tfilter *expand;
- TresizeAspectSettings *resizeSettingsDV;Tfilter *resizeDV;
+    const TglobalSettingsDecVideo *globalCfg;
+    TimgFilterOSD *osd;
+    const bool &allowOutChange;
+    TexpandSettings expandSettings;
+    Tfilter *expand;
+    TresizeAspectSettings *resizeSettingsDV;
+    Tfilter *resizeDV;
 protected:
- virtual void onFirstProcess(const TpresetVideo *cfg);
- virtual void makeQueue(const Tpreset *cfg,TfilterQueue &queue);
+    virtual void onFirstProcess(const TpresetVideo *cfg);
+    virtual void makeQueue(const Tpreset *cfg,TfilterQueue &queue);
 public:
- TimgFiltersPlayer(IffdshowBase *Ideci,IprocVideoSink *Isink,bool &IallowOutChange);
- virtual ~TimgFiltersPlayer();
+    TimgFiltersPlayer(IffdshowBase *Ideci,IprocVideoSink *Isink,bool &IallowOutChange);
+    virtual ~TimgFiltersPlayer();
 
- virtual void getOutputFmt(TffPictBase &pict,const TpresetVideo *cfg);
- virtual HRESULT process(TffPict &pict,const TpresetVideo *cfg);
+    virtual void getOutputFmt(TffPictBase &pict,const TpresetVideo *cfg);
+    virtual HRESULT process(TffPict &pict,const TpresetVideo *cfg);
 
- virtual bool shortOSDmessage(const char_t *msg,unsigned int duration);
- virtual bool shortOSDmessageAbsolute(const char_t *msg,unsigned int duration,unsigned int posX,unsigned int posY);
- virtual bool cleanShortOSDmessages(void);
- virtual HRESULT addClosedCaption(const wchar_t *line),hideClosedCaptions(void);
- virtual HRESULT registerOSDprovider(IOSDprovider *provider,const char *name);
- virtual HRESULT unregisterOSDprovider(IOSDprovider *provider);
+    virtual bool shortOSDmessage(const char_t *msg,unsigned int duration);
+    virtual bool shortOSDmessageAbsolute(const char_t *msg,unsigned int duration,unsigned int posX,unsigned int posY);
+    virtual bool cleanShortOSDmessages(void);
+    virtual HRESULT addClosedCaption(const wchar_t *line),hideClosedCaptions(void);
+    virtual HRESULT registerOSDprovider(IOSDprovider *provider,const char *name);
+    virtual HRESULT unregisterOSDprovider(IOSDprovider *provider);
 };
 
 #endif

@@ -25,73 +25,75 @@
 
 TimgFilterHWoverlay::TimgFilterHWoverlay(IffdshowBase *Ideci,Tfilters *Iparent):TimgFilter(Ideci,Iparent)
 {
- overlayControl=NULL;
- firsttimeOverlay=firsttimeDDCC=isddcc=true;
- old.brightness=INT_MIN;old.is=0;
- oldReset=0;
+    overlayControl=NULL;
+    firsttimeOverlay=firsttimeDDCC=isddcc=true;
+    old.brightness=INT_MIN;
+    old.is=0;
+    oldReset=0;
 }
 
 TimgFilterHWoverlay::~TimgFilterHWoverlay()
 {
- if (overlayControl)
-  overlayControl->Release();
+    if (overlayControl) {
+        overlayControl->Release();
+    }
 }
 
 HRESULT TimgFilterHWoverlay::process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)
 {
- const ThwOverlaySettings *cfg=(const ThwOverlaySettings*)cfg0;
- if (old.is!=cfg->is || !cfg->equal(old))
-  {
-   if (cfg->is && firsttimeOverlay)
-    {
-     if (SUCCEEDED(deciV->findOverlayControl2(&overlayControl)))
-      firsttimeOverlay=false;
-    }
-   if (overlayControl)
-    {
-     static const struct {int hwoc;int idff,def;int ThwOverlaySettings::*cfg;} hw[]={{HWOC_BRIGHTNESS,IDFF_overlayBrightness,  -1,&ThwOverlaySettings::brightness},
-                                                                                     {HWOC_CONTRAST  ,IDFF_overlayContrast  ,  -1,&ThwOverlaySettings::contrast  },
-                                                                                     {HWOC_HUE       ,IDFF_overlayHue       ,  -190,&ThwOverlaySettings::hue       },
-                                                                                     {HWOC_SATURATION,IDFF_overlaySaturation,  -1,&ThwOverlaySettings::saturation},
-                                                                                     {HWOC_SHARPNESS ,IDFF_overlaySharpness ,  -1,&ThwOverlaySettings::sharpness },
-                                                                                     {HWOC_GAMMA     ,IDFF_overlayGamma     ,  -1,&ThwOverlaySettings::gamma     }};
-     if (cfg->reset > oldReset)
-      {
-       oldReset = cfg->reset;
-       overlayControl->reset();
-       firsttimeDDCC=true;
-      }
-     if (firsttimeDDCC)
-      {
-       firsttimeDDCC=false;
-       memset(&ddcc,0,sizeof(ddcc));
-       isddcc=false;
-       for (int i=0;i<countof(hw);i++)
-        {
-         ddcc[i].first=overlayControl->supported(hw[i].hwoc);
-         if (ddcc[i].first)
-          overlayControl->get(hw[i].hwoc,&ddcc[i].second);
-         isddcc|=ddcc[i].first;
+    const ThwOverlaySettings *cfg=(const ThwOverlaySettings*)cfg0;
+    if (old.is!=cfg->is || !cfg->equal(old)) {
+        if (cfg->is && firsttimeOverlay) {
+            if (SUCCEEDED(deciV->findOverlayControl2(&overlayControl))) {
+                firsttimeOverlay=false;
+            }
         }
-       if (isddcc)
-        for (int i=0;i<countof(hw);i++)
-         if (deci->getParam2(hw[i].idff)==hw[i].def)
-          deci->putParam(hw[i].idff,ddcc[i].second);
-      }
-     if (isddcc)
-      if (cfg->is)
-       {
-        for (int i=0;i<6;i++)
-         if (old.is!=cfg->is || old.*(hw[i].cfg)!=cfg->*(hw[i].cfg))
-          overlayControl->set(hw[i].hwoc,cfg->*(hw[i].cfg));
-       }
-      else
-       {
-        overlayControl->reset();
-        firsttimeDDCC=true;
-       }
+        if (overlayControl) {
+            static const struct {
+                int hwoc;
+                int idff,def;
+                int ThwOverlaySettings::*cfg;
+            } hw[]= {{HWOC_BRIGHTNESS,IDFF_overlayBrightness,  -1,&ThwOverlaySettings::brightness},
+                {HWOC_CONTRAST  ,IDFF_overlayContrast  ,  -1,&ThwOverlaySettings::contrast  },
+                {HWOC_HUE       ,IDFF_overlayHue       ,  -190,&ThwOverlaySettings::hue       },
+                {HWOC_SATURATION,IDFF_overlaySaturation,  -1,&ThwOverlaySettings::saturation},
+                {HWOC_SHARPNESS ,IDFF_overlaySharpness ,  -1,&ThwOverlaySettings::sharpness },
+                {HWOC_GAMMA     ,IDFF_overlayGamma     ,  -1,&ThwOverlaySettings::gamma     }
+            };
+            if (cfg->reset > oldReset) {
+                oldReset = cfg->reset;
+                overlayControl->reset();
+                firsttimeDDCC=true;
+            }
+            if (firsttimeDDCC) {
+                firsttimeDDCC=false;
+                memset(&ddcc,0,sizeof(ddcc));
+                isddcc=false;
+                for (int i=0; i<countof(hw); i++) {
+                    ddcc[i].first=overlayControl->supported(hw[i].hwoc);
+                    if (ddcc[i].first) {
+                        overlayControl->get(hw[i].hwoc,&ddcc[i].second);
+                    }
+                    isddcc|=ddcc[i].first;
+                }
+                if (isddcc)
+                    for (int i=0; i<countof(hw); i++)
+                        if (deci->getParam2(hw[i].idff)==hw[i].def) {
+                            deci->putParam(hw[i].idff,ddcc[i].second);
+                        }
+            }
+            if (isddcc)
+                if (cfg->is) {
+                    for (int i=0; i<6; i++)
+                        if (old.is!=cfg->is || old.*(hw[i].cfg)!=cfg->*(hw[i].cfg)) {
+                            overlayControl->set(hw[i].hwoc,cfg->*(hw[i].cfg));
+                        }
+                } else {
+                    overlayControl->reset();
+                    firsttimeDDCC=true;
+                }
+        }
+        old=*cfg;
     }
-   old=*cfg;
-  }
- return parent->processSample(++it,pict);
+    return parent->processSample(++it,pict);
 }

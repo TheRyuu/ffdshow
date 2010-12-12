@@ -28,219 +28,258 @@
 //========================== TimgExportLibavcodec ===========================
 TimgFilterGrab::TimgExportLibavcodec::TimgExportLibavcodec(const Tconfig *config,IffdshowBase *deci,CodecID IcodecId):codecId(IcodecId)
 {
- deci->getLibavcodec(&dll);
- ok=(dll && dll->ok);
- avctx=NULL;picture=NULL;
+    deci->getLibavcodec(&dll);
+    ok=(dll && dll->ok);
+    avctx=NULL;
+    picture=NULL;
 }
 TimgFilterGrab::TimgExportLibavcodec::~TimgExportLibavcodec()
 {
- done();
- if (dll) dll->Release();
+    done();
+    if (dll) {
+        dll->Release();
+    }
 }
 void TimgFilterGrab::TimgExportLibavcodec::init(unsigned int dx,unsigned int dy)
 {
- avctxinited=false;
- if (dll->ok && !dll->dec_only)
-  {
-   AVCodec *avcodec=dll->avcodec_find_encoder(codecId);
-   avctx=dll->avcodec_alloc_context();
-   avctx->width=dx;
-   avctx->height=dy;
-   avctx->flags=CODEC_FLAG_QSCALE;
-   avctx->pix_fmt=csp_ffdshow2lavc(requiredCSP());
-   avctx->time_base.num=avctx->time_base.den=1;
-   if (dll->avcodec_open(avctx,avcodec)<0)
-    {
-     ok=false;
-     return;
+    avctxinited=false;
+    if (dll->ok && !dll->dec_only) {
+        AVCodec *avcodec=dll->avcodec_find_encoder(codecId);
+        avctx=dll->avcodec_alloc_context();
+        avctx->width=dx;
+        avctx->height=dy;
+        avctx->flags=CODEC_FLAG_QSCALE;
+        avctx->pix_fmt=csp_ffdshow2lavc(requiredCSP());
+        avctx->time_base.num=avctx->time_base.den=1;
+        if (dll->avcodec_open(avctx,avcodec)<0) {
+            ok=false;
+            return;
+        }
+        avctxinited=true;
+        picture=dll->avcodec_alloc_frame();
+        inited=true;
     }
-   avctxinited=true;
-   picture=dll->avcodec_alloc_frame();
-   inited=true;
-  }
 }
 int TimgFilterGrab::TimgExportLibavcodec::compress(const unsigned char *src[4],stride_t stride[4],unsigned char *dst,unsigned int dstlen,int qual)
 {
- if (!avctx) return 0;
- for (int i=0;i<4;i++)
-  {
-   picture->data[i]=(uint8_t*)src[i];
-   picture->linesize[i]=(int)stride[i];
-  }
- picture->quality=setQual(qual);
- int len=dll->avcodec_encode_video(avctx,dst,dstlen,picture);
- return len>0?len:0;
+    if (!avctx) {
+        return 0;
+    }
+    for (int i=0; i<4; i++) {
+        picture->data[i]=(uint8_t*)src[i];
+        picture->linesize[i]=(int)stride[i];
+    }
+    picture->quality=setQual(qual);
+    int len=dll->avcodec_encode_video(avctx,dst,dstlen,picture);
+    return len>0?len:0;
 }
 void TimgFilterGrab::TimgExportLibavcodec::done(void)
 {
- if (avctx)
-  {
-   if (avctxinited) dll->avcodec_close(avctx);avctxinited=false;
-   dll->av_free(avctx);avctx=NULL;
-   dll->av_free(picture);picture=NULL;
-  }
- inited=false;
+    if (avctx) {
+        if (avctxinited) {
+            dll->avcodec_close(avctx);
+        }
+        avctxinited=false;
+        dll->av_free(avctx);
+        avctx=NULL;
+        dll->av_free(picture);
+        picture=NULL;
+    }
+    inited=false;
 }
 
 //============================== TimgExportBMP =============================
 TimgFilterGrab::TimgExportBMP::TimgExportBMP(void)
 {
- memset(&bfh,0,sizeof(bfh));
- memcpy(&bfh.bfType,"BM",2);
- bfh.bfOffBits=sizeof(bch)+sizeof(bfh);
- memset(&bch,0,sizeof(bch));
- bch.bcSize=sizeof(bch);
- bch.bcPlanes=1;
- bch.bcBitCount=24;
- ok=true;
+    memset(&bfh,0,sizeof(bfh));
+    memcpy(&bfh.bfType,"BM",2);
+    bfh.bfOffBits=sizeof(bch)+sizeof(bfh);
+    memset(&bch,0,sizeof(bch));
+    bch.bcSize=sizeof(bch);
+    bch.bcPlanes=1;
+    bch.bcBitCount=24;
+    ok=true;
 }
 void TimgFilterGrab::TimgExportBMP::init(unsigned int dx,unsigned int dy)
 {
- bch.bcWidth=(WORD)dx;bch.bcHeight=(WORD)dy;
- inited=true;
+    bch.bcWidth=(WORD)dx;
+    bch.bcHeight=(WORD)dy;
+    inited=true;
 }
 int TimgFilterGrab::TimgExportBMP::compress(const unsigned char *src[4],stride_t stride[4],unsigned char *dst,unsigned int dstlen,int qual)
 {
- memcpy(dst,&bfh,sizeof(bfh));
- memcpy(dst+sizeof(bfh),&bch,sizeof(bch));
- TffPict::copy(dst+sizeof(bfh)+sizeof(bch),bch.bcWidth*3,src[0],stride[0],bch.bcWidth*3,bch.bcHeight);
- bfh.bfSize=sizeof(bfh)+sizeof(bch)+bch.bcWidth*bch.bcHeight*3;
- return bfh.bfSize;
+    memcpy(dst,&bfh,sizeof(bfh));
+    memcpy(dst+sizeof(bfh),&bch,sizeof(bch));
+    TffPict::copy(dst+sizeof(bfh)+sizeof(bch),bch.bcWidth*3,src[0],stride[0],bch.bcWidth*3,bch.bcHeight);
+    bfh.bfSize=sizeof(bfh)+sizeof(bch)+bch.bcWidth*bch.bcHeight*3;
+    return bfh.bfSize;
 }
 int TimgFilterGrab::TimgExportBMP::compressRGB32(const unsigned char *src[4],stride_t stride[4],unsigned char *dst,unsigned int dstlen,int qual)
 {
- bch.bcBitCount=32;
- memcpy(dst,&bfh,sizeof(bfh));
- memcpy(dst+sizeof(bfh),&bch,sizeof(bch));
- TffPict::copy(dst+sizeof(bfh)+sizeof(bch),bch.bcWidth*4,src[0],stride[0],bch.bcWidth*4,bch.bcHeight, true);
- bfh.bfSize=sizeof(bfh)+sizeof(bch)+bch.bcWidth*bch.bcHeight*4;
- return bfh.bfSize;
+    bch.bcBitCount=32;
+    memcpy(dst,&bfh,sizeof(bfh));
+    memcpy(dst+sizeof(bfh),&bch,sizeof(bch));
+    TffPict::copy(dst+sizeof(bfh)+sizeof(bch),bch.bcWidth*4,src[0],stride[0],bch.bcWidth*4,bch.bcHeight, true);
+    bfh.bfSize=sizeof(bfh)+sizeof(bch)+bch.bcWidth*bch.bcHeight*4;
+    return bfh.bfSize;
 }
 
 //============================== TimgFilterGrab =============================
 TimgFilterGrab::TimgFilterGrab(IffdshowBase *Ideci,Tfilters *Iparent):TimgFilter(Ideci,Iparent)
 {
- exp[0]=exp[1]=exp[2]=NULL;
- dstbuf=NULL;dstbuflen=0;
- now=0;
+    exp[0]=exp[1]=exp[2]=NULL;
+    dstbuf=NULL;
+    dstbuflen=0;
+    now=0;
 }
 TimgFilterGrab::~TimgFilterGrab()
 {
- if (exp[0]) delete exp[0];exp[0]=NULL;
- if (exp[1]) delete exp[1];exp[1]=NULL;
- if (exp[2]) delete exp[2];exp[2]=NULL;
+    if (exp[0]) {
+        delete exp[0];
+    }
+    exp[0]=NULL;
+    if (exp[1]) {
+        delete exp[1];
+    }
+    exp[1]=NULL;
+    if (exp[2]) {
+        delete exp[2];
+    }
+    exp[2]=NULL;
 }
 void TimgFilterGrab::done(void)
 {
- if (dstbuf) ::free(dstbuf);dstbuf=NULL;
+    if (dstbuf) {
+        ::free(dstbuf);
+    }
+    dstbuf=NULL;
 }
 void TimgFilterGrab::onSizeChange(void)
 {
- done();
- if (exp[0]) exp[0]->done();
- if (exp[1]) exp[1]->done();
- if (exp[2]) exp[2]->done();
+    done();
+    if (exp[0]) {
+        exp[0]->done();
+    }
+    if (exp[1]) {
+        exp[1]->done();
+    }
+    if (exp[2]) {
+        exp[2]->done();
+    }
 }
 
 bool TimgFilterGrab::is(const TffPictBase &pict,const TfilterSettingsVideo *cfg)
 {
- return true;
+    return true;
 }
 
 int TimgFilterGrab::getSupportedInputColorspaces(const TfilterSettingsVideo *cfg0) const
 {
- const TgrabSettings *cfg=(const TgrabSettings*)cfg0;
- return exp[cfg->format] && exp[cfg->format]->ok?exp[cfg->format]->requiredCSP():FF_CSPS_MASK;
+    const TgrabSettings *cfg=(const TgrabSettings*)cfg0;
+    return exp[cfg->format] && exp[cfg->format]->ok?exp[cfg->format]->requiredCSP():FF_CSPS_MASK;
 }
 
 // Helper static method to save a buffer to a BMP file
 HRESULT TimgFilterGrab::grabRGB32ToBMP(const unsigned char *src[4],stride_t stride[4], int dx, int dy, char_t *filename)
 {
- TimgExportBMP *exp=new TimgExportBMP;
- if (!exp || !exp->ok) return E_FAIL;
- exp->init(dx, dy);
- unsigned char *dstbuf;unsigned int dstbuflen;
- dstbuf=(unsigned char*)malloc(dstbuflen=dx*dy*4+1024);
- int len=exp->compressRGB32(src,stride,dstbuf,dstbuflen,0);
- if (len)
- {
-  FILE *f=fopen(filename,_l("wb"));
-  if (f)
-   {
-    fwrite(dstbuf,1,len,f);
-    fclose(f);
-   }
- }
- else return E_FAIL;
- if (dstbuf) ::free(dstbuf);dstbuf=NULL;
- SAFE_DELETE(exp);
- return S_OK;
+    TimgExportBMP *exp=new TimgExportBMP;
+    if (!exp || !exp->ok) {
+        return E_FAIL;
+    }
+    exp->init(dx, dy);
+    unsigned char *dstbuf;
+    unsigned int dstbuflen;
+    dstbuf=(unsigned char*)malloc(dstbuflen=dx*dy*4+1024);
+    int len=exp->compressRGB32(src,stride,dstbuf,dstbuflen,0);
+    if (len) {
+        FILE *f=fopen(filename,_l("wb"));
+        if (f) {
+            fwrite(dstbuf,1,len,f);
+            fclose(f);
+        }
+    } else {
+        return E_FAIL;
+    }
+    if (dstbuf) {
+        ::free(dstbuf);
+    }
+    dstbuf=NULL;
+    SAFE_DELETE(exp);
+    return S_OK;
 }
 
 HRESULT TimgFilterGrab::process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)
 {
- const TgrabSettings *cfg=(const TgrabSettings*)cfg0;
- LONG wasNow=now;
- if (cfg->is || wasNow)
-  {
-   int framenum=deci->getParam2(IDFF_currentFrame);
-   if (wasNow ||
-       (cfg->mode==0 && (framenum%cfg->step==0)) ||
-       (cfg->mode==1 && (framenum==cfg->frameNum)) ||
-       (cfg->mode==2 && isIn(framenum,cfg->frameNum1,cfg->frameNum2) && (framenum-cfg->frameNum1)%cfg->step==0))
-    {
-     if (!exp[cfg->format])
-      switch (cfg->format)
-       {
-        case 0:exp[0]=new TimgExportJPEG(parent->config,deci);break;
-        case 1:exp[1]=new TimgExportBMP;break;
-        case 2:exp[2]=new TimgExportPNG(parent->config,deci);break;
-       }
+    const TgrabSettings *cfg=(const TgrabSettings*)cfg0;
+    LONG wasNow=now;
+    if (cfg->is || wasNow) {
+        int framenum=deci->getParam2(IDFF_currentFrame);
+        if (wasNow ||
+                (cfg->mode==0 && (framenum%cfg->step==0)) ||
+                (cfg->mode==1 && (framenum==cfg->frameNum)) ||
+                (cfg->mode==2 && isIn(framenum,cfg->frameNum1,cfg->frameNum2) && (framenum-cfg->frameNum1)%cfg->step==0)) {
+            if (!exp[cfg->format])
+                switch (cfg->format) {
+                    case 0:
+                        exp[0]=new TimgExportJPEG(parent->config,deci);
+                        break;
+                    case 1:
+                        exp[1]=new TimgExportBMP;
+                        break;
+                    case 2:
+                        exp[2]=new TimgExportPNG(parent->config,deci);
+                        break;
+                }
 
-     if (exp[cfg->format]->ok)
-      {
-       init(pict,cfg->full,0);
+            if (exp[cfg->format]->ok) {
+                init(pict,cfg->full,0);
 
-       if (!exp[cfg->format]->inited)
-        exp[cfg->format]->init(pictRect.dx,pictRect.dy);
+                if (!exp[cfg->format]->inited) {
+                    exp[cfg->format]->init(pictRect.dx,pictRect.dy);
+                }
 
-       if (exp[cfg->format]->ok)
-        {
-         const unsigned char *src[4];
-         temp.copyFrom(pict, buffer);
-         getCur(exp[cfg->format]->requiredCSP(),temp,cfg->full,src);
+                if (exp[cfg->format]->ok) {
+                    const unsigned char *src[4];
+                    temp.copyFrom(pict, buffer);
+                    getCur(exp[cfg->format]->requiredCSP(),temp,cfg->full,src);
 
-         if (!dstbuf) dstbuf=(unsigned char*)malloc(dstbuflen=pictRect.dx*pictRect.dy*4+1024);
+                    if (!dstbuf) {
+                        dstbuf=(unsigned char*)malloc(dstbuflen=pictRect.dx*pictRect.dy*4+1024);
+                    }
 
-         int len=exp[cfg->format]->compress(src,stride1,dstbuf,dstbuflen,cfg->qual);
-         if (len)
-          {
-           char_t name[MAX_PATH];
-           tsnprintf_s(name, countof(name), _TRUNCATE, _l("%s%0*i.%s"),cfg->prefix,cfg->digits,framenum,TgrabSettings::formats[cfg->format].ext);
-           char_t flnm[MAX_PATH];
-           _makepath_s(flnm,MAX_PATH,NULL,cfg->path,name,NULL);
-           FILE *f=fopen(flnm,_l("wb"));
-           if (f)
-            {
-             fwrite(dstbuf,1,len,f);
-             fclose(f);
+                    int len=exp[cfg->format]->compress(src,stride1,dstbuf,dstbuflen,cfg->qual);
+                    if (len) {
+                        char_t name[MAX_PATH];
+                        tsnprintf_s(name, countof(name), _TRUNCATE, _l("%s%0*i.%s"),cfg->prefix,cfg->digits,framenum,TgrabSettings::formats[cfg->format].ext);
+                        char_t flnm[MAX_PATH];
+                        _makepath_s(flnm,MAX_PATH,NULL,cfg->path,name,NULL);
+                        FILE *f=fopen(flnm,_l("wb"));
+                        if (f) {
+                            fwrite(dstbuf,1,len,f);
+                            fclose(f);
+                        }
+                    }
+                }
             }
-          }
         }
-      }
     }
-  }
- if (wasNow) InterlockedDecrement((LONG*)&now);
- return parent->processSample(++it,pict);
+    if (wasNow) {
+        InterlockedDecrement((LONG*)&now);
+    }
+    return parent->processSample(++it,pict);
 }
 
 HRESULT TimgFilterGrab::queryInterface(const IID &iid,void **ptr) const
 {
- if (iid==IID_IimgFilterGrab) {*ptr=(IimgFilterGrab*)this;return S_OK;}
- else return E_NOTIMPL;
+    if (iid==IID_IimgFilterGrab) {
+        *ptr=(IimgFilterGrab*)this;
+        return S_OK;
+    } else {
+        return E_NOTIMPL;
+    }
 }
 STDMETHODIMP TimgFilterGrab::grabNow(void)
 {
- InterlockedIncrement((LONG*)&now);
- return S_OK;
+    InterlockedIncrement((LONG*)&now);
+    return S_OK;
 }

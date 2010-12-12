@@ -229,90 +229,97 @@ const char_t* TimgFilterKernelDeint2::dllname=_l("ff_kernelDeint.dll");
 
 TimgFilterKernelDeint2::TimgFilterKernelDeint2(IffdshowBase *Ideci,Tfilters *Iparent,bool Ibob):TimgFilter(Ideci,Iparent),bob(Ibob)
 {
- kernel=NULL;oldcfg.cfgId=-1;
- dll=new Tdll(dllname,parent->config);
- dll->loadFunction(createI,"createI");
+    kernel=NULL;
+    oldcfg.cfgId=-1;
+    dll=new Tdll(dllname,parent->config);
+    dll->loadFunction(createI,"createI");
 }
 TimgFilterKernelDeint2::~TimgFilterKernelDeint2()
 {
- done();
- delete dll;
+    done();
+    delete dll;
 }
 
 bool TimgFilterKernelDeint2::is(const TffPictBase &pict,const TfilterSettingsVideo *cfg)
 {
- return dll->ok && super::is(pict,cfg);
+    return dll->ok && super::is(pict,cfg);
 }
 
 void TimgFilterKernelDeint2::onSizeChange(void)
 {
- done();
+    done();
 }
 void TimgFilterKernelDeint2::done(void)
 {
- if (kernel) kernel->destroy();kernel=NULL;
+    if (kernel) {
+        kernel->destroy();
+    }
+    kernel=NULL;
 }
 
 HRESULT TimgFilterKernelDeint2::process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)
 {
- const TdeinterlaceSettings *cfg=(const TdeinterlaceSettings*)cfg0;
- if (((pict.fieldtype & FIELD_TYPE::PROGRESSIVE_FRAME) || pict.film) && !cfg->deinterlaceAlways)
- {
-  return parent->processSample(++it,pict);
- }
- if (dll->ok)
-  {
-   
-   if (!cfg->equal(oldcfg))
-    {
-     oldcfg=*cfg;
-     done();
+    const TdeinterlaceSettings *cfg=(const TdeinterlaceSettings*)cfg0;
+    if (((pict.fieldtype & FIELD_TYPE::PROGRESSIVE_FRAME) || pict.film) && !cfg->deinterlaceAlways) {
+        return parent->processSample(++it,pict);
     }
-   init(pict,cfg->full,cfg->half);
-   const unsigned char *src[4];
-   bool cspChanged=getCur(FF_CSP_420P|FF_CSP_YUY2,pict,cfg->full,src);
-   unsigned char *dst[4];
-   if (cfg->kernelMap)
-    cspChanged|=getCurNext(csp1,pict,cfg->full,COPYMODE_DEF,dst);
-   else
-    cspChanged|=getNext(csp1,pict,cfg->full,dst);
-   int order=pict.fieldtype&FIELD_TYPE::INT_BFF?0:1;if (cfg->swapfields) order=1-order;
+    if (dll->ok) {
 
-   if (cspChanged)
-    done();
+        if (!cfg->equal(oldcfg)) {
+            oldcfg=*cfg;
+            done();
+        }
+        init(pict,cfg->full,cfg->half);
+        const unsigned char *src[4];
+        bool cspChanged=getCur(FF_CSP_420P|FF_CSP_YUY2,pict,cfg->full,src);
+        unsigned char *dst[4];
+        if (cfg->kernelMap) {
+            cspChanged|=getCurNext(csp1,pict,cfg->full,COPYMODE_DEF,dst);
+        } else {
+            cspChanged|=getNext(csp1,pict,cfg->full,dst);
+        }
+        int order=pict.fieldtype&FIELD_TYPE::INT_BFF?0:1;
+        if (cfg->swapfields) {
+            order=1-order;
+        }
 
-   if (!kernel)
-    kernel=createI(csp1&FF_CSP_420P,dx1[0],dy1[0],dx1[0]*pict.cspInfo.Bpp,order,cfg->kernelThreshold,!!cfg->kernelSharp,!!cfg->kernelTwoway,!!cfg->kernelLinked,!!cfg->kernelMap,bob,parent->config->cpu_flags);
-   else if (oldOrder != order)
-    kernel->setOrder(order);
+        if (cspChanged) {
+            done();
+        }
 
-   oldOrder=order;
+        if (!kernel) {
+            kernel=createI(csp1&FF_CSP_420P,dx1[0],dy1[0],dx1[0]*pict.cspInfo.Bpp,order,cfg->kernelThreshold,!!cfg->kernelSharp,!!cfg->kernelTwoway,!!cfg->kernelLinked,!!cfg->kernelMap,bob,parent->config->cpu_flags);
+        } else if (oldOrder != order) {
+            kernel->setOrder(order);
+        }
 
-   pict.fieldtype=(pict.fieldtype & ~(FIELD_TYPE::MASK_INT_PROG)) | FIELD_TYPE::PROGRESSIVE_FRAME;
-   if (bob)
-    {
-     kernel->getFrame(src,stride1,dst,stride2,0);
-     TffPict pict0=pict;
-     REFERENCE_TIME rtDur=pict.rtStop-pict.rtStart;
-     pict0.rtStop=pict.rtStart+rtDur/2;
+        oldOrder=order;
 
-     pict0.csp &= ~FF_CSP_FLAGS_INTERLACED;
-     HRESULT hr = parent->processAndDeliverSample(++it,pict0); // we have to deliver the additional frame that has been created (pict will be taken care of by the caller method)
-     --it;
-     getNext(csp1,pict,cfg->full,dst);
-     pict.rtStart=pict.rtStart+rtDur/2;
+        pict.fieldtype=(pict.fieldtype & ~(FIELD_TYPE::MASK_INT_PROG)) | FIELD_TYPE::PROGRESSIVE_FRAME;
+        if (bob) {
+            kernel->getFrame(src,stride1,dst,stride2,0);
+            TffPict pict0=pict;
+            REFERENCE_TIME rtDur=pict.rtStop-pict.rtStart;
+            pict0.rtStop=pict.rtStart+rtDur/2;
+
+            pict0.csp &= ~FF_CSP_FLAGS_INTERLACED;
+            HRESULT hr = parent->processAndDeliverSample(++it,pict0); // we have to deliver the additional frame that has been created (pict will be taken care of by the caller method)
+            --it;
+            getNext(csp1,pict,cfg->full,dst);
+            pict.rtStart=pict.rtStart+rtDur/2;
+        }
+        kernel->getFrame(src,stride1,dst,stride2,bob?1:0);
     }
-   kernel->getFrame(src,stride1,dst,stride2,bob?1:0);
-  }
 
- if (pict.rectClip != pict.rectFull)
-  parent->dirtyBorder=1;
+    if (pict.rectClip != pict.rectFull) {
+        parent->dirtyBorder=1;
+    }
 
- pict.csp &= ~FF_CSP_FLAGS_INTERLACED;
- return parent->processSample(++it,pict);
+    pict.csp &= ~FF_CSP_FLAGS_INTERLACED;
+    return parent->processSample(++it,pict);
 }
 
 void TimgFilterKernelDeint2::onSeek(void)
 {
- done();
+    done();
 }

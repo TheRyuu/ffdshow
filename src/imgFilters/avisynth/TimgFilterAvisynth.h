@@ -7,211 +7,221 @@
 
 class Tdll;
 DECLARE_FILTER(TimgFilterAvisynth,public,TimgFilter)
- friend struct TavisynthSettings;
+friend struct TavisynthSettings;
 
 private:
- TavisynthSettings oldcfg;
+TavisynthSettings oldcfg;
 
 public:
- struct Tinput;
+struct Tinput;
 
- struct TframeBuffer
-  {
-   int frameNo;
-   int bytesPerPixel;
-   REFERENCE_TIME start;
-   REFERENCE_TIME stop;
-   int fieldType;
-   Tinput* input;
-   AVS_VideoFrame* frame;
+struct TframeBuffer {
+    int frameNo;
+    int bytesPerPixel;
+    REFERENCE_TIME start;
+    REFERENCE_TIME stop;
+    int fieldType;
+    Tinput* input;
+    AVS_VideoFrame* frame;
 
-   TframeBuffer() :
-    input(0),
-    frame(0)
-   {}
-
-   void CreateFrame(Tinput* input);
-   void CreateField(Tinput* input, bool topField);
-   void CombineFrame(Tinput* input, bool inTopField, bool outTopField, AVS_VideoFrame* otherField);
-
-   //void CopyFrame(TframeBuffer& frame);
-   void ReleaseFrame();
-   ~TframeBuffer();
-  };
-
- struct Tinput : Tavisynth_c
-  {
-   unsigned int dx,dy;
-   int fpsnum,fpsden;
-   int csp,cspBpp;
-   const unsigned char *src[4];
-   stride_t *stride1;
-
-   IScriptEnvironment* env;
-   PClip* clip;
-
-   int numBuffers;
-   TframeBuffer* buffers;
-
-   int curFrame;
-   volatile int minAccessedFrame;
-   volatile int maxAccessedFrame;
-   volatile int numAccessedFrames;
-   volatile int accessedFrames[100]; // relative to curFrame
-   int backLimit;
-
-   Rational outputDar;
-   Rational outputSar;
-
-   void InitVideoInfo(AVS_VideoInfo& vi)
-   {
-    memset(&vi,0,sizeof(VideoInfo));
-    vi.width=dx;
-    vi.height=dy;
-    vi.fps_numerator=fpsnum;
-    vi.fps_denominator=fpsden;
-    vi.num_frames=NUM_FRAMES;
-    // RGB values: avisynth refers to the write order, FF_CSP_ enum refers to the "memory byte order",
-    // which under x86 is reversed, see the comment above the FF_CSP_ enum definition.
-    if      (csp & FF_CSP_420P)  vi.pixel_type=AVS_CS_YV12;
-    else if (csp & FF_CSP_YUY2)  vi.pixel_type=AVS_CS_YUY2;
-    else if (csp & FF_CSP_RGB32) vi.pixel_type=AVS_CS_BGR32;
-    else if (csp & FF_CSP_RGB24) vi.pixel_type=AVS_CS_BGR24;
-   }
-
-   Tinput() : env(NULL),clip(NULL), buffers(NULL) {}
-
-   ~Tinput()
-    {
-     if (clip) delete clip;
-     if (env) delete env;
-    }
-  };
-
-private:
- class Tffdshow_source : Tavisynth_c
-  {
-  private:
-   VideoInfo &vi;
-   Tinput *input;
-
-   Tffdshow_source(Tinput *Iinput,VideoInfo &Ivi);
-
-   static AVS_VideoFrame* AVSC_CC get_frame(AVS_FilterInfo *, int n);
-   static int AVSC_CC get_parity(AVS_FilterInfo *, int n) {return 0;}
-   static int AVSC_CC set_cache_hints(AVS_FilterInfo *, int cachehints, int frame_range) {return 0;}
-   static void AVSC_CC free_filter(AVS_FilterInfo *);
-
-  public:
-   static AVS_Value AVSC_CC Create(AVS_ScriptEnvironment *env, AVS_Value args, void * user_data);
-  };
-
- class Tffdshow_setAR : Tavisynth_c
-  {
-  private:
-   Tinput *input;
-   bool setDAR;
-
-   static AVS_Value AVSC_CC Create(AVS_ScriptEnvironment *env, AVS_Value args, void * user_data, bool setDAR);
-
-  public:
-   static AVS_Value AVSC_CC Create_SetSAR(AVS_ScriptEnvironment *env, AVS_Value args, void * user_data);
-   static AVS_Value AVSC_CC Create_SetDAR(AVS_ScriptEnvironment *env, AVS_Value args, void * user_data);
-  };
-
- struct Tavisynth : public Tavisynth_c
-  {
-  public:
-   Tavisynth(): 
-    restart(true),
-    passFirstThrough(false),
-    passLastThrough(false),
-    buffers(NULL),
-    frameScaleDen(1),
-    frameScaleNum(1)
+    TframeBuffer() :
+        input(0),
+        frame(0)
     {}
 
-   ~Tavisynth() {done();}
+    void CreateFrame(Tinput* input);
+    void CreateField(Tinput* input, bool topField);
+    void CombineFrame(Tinput* input, bool inTopField, bool outTopField, AVS_VideoFrame* otherField);
 
-   void skipAhead(bool passFirstThrough, bool clearLastOutStopTime);
-   void done(void);
-   void clearInput(void);
-   bool createClip(const TavisynthSettings *cfg,Tinput *input,TffPictBase& pict);
-   void setOutFmt(const TavisynthSettings *cfg,Tinput *input,TffPictBase &pict);
-   void init(const TavisynthSettings &oldcfg,Tinput *input,int *outcsp,TffPictBase &pict);
-   HRESULT process(TimgFilterAvisynth *self,TfilterQueue::iterator& it,TffPict &pict,const TavisynthSettings *cfg);
-   char infoBuf[1000];
+    //void CopyFrame(TframeBuffer& frame);
+    void ReleaseFrame();
+    ~TframeBuffer();
+};
 
-  private:
-   int minAccessedFrame;
-   int maxAccessedFrame;
+struct Tinput : Tavisynth_c {
+    unsigned int dx,dy;
+    int fpsnum,fpsden;
+    int csp,cspBpp;
+    const unsigned char *src[4];
+    stride_t *stride1;
 
-   int curInFrameNo;
-   int curOutFrameNo;
-   int curOutScaledFrameNo;
+    IScriptEnvironment* env;
+    PClip* clip;
 
-   REFERENCE_TIME lastOutStopTime;
+    int numBuffers;
+    TframeBuffer* buffers;
 
-   REFERENCE_TIME frameScaleNum;
-   REFERENCE_TIME frameScaleDen;
+    int curFrame;
+    volatile int minAccessedFrame;
+    volatile int maxAccessedFrame;
+    volatile int numAccessedFrames;
+    volatile int accessedFrames[100]; // relative to curFrame
+    int backLimit;
 
-   Trect inputRect;
-   Rational inputDar;
-   Rational inputSar;
+    Rational outputDar;
+    Rational outputSar;
 
-   Trect outputRect;
+    void InitVideoInfo(AVS_VideoInfo& vi) {
+        memset(&vi,0,sizeof(VideoInfo));
+        vi.width=dx;
+        vi.height=dy;
+        vi.fps_numerator=fpsnum;
+        vi.fps_denominator=fpsden;
+        vi.num_frames=NUM_FRAMES;
+        // RGB values: avisynth refers to the write order, FF_CSP_ enum refers to the "memory byte order",
+        // which under x86 is reversed, see the comment above the FF_CSP_ enum definition.
+        if      (csp & FF_CSP_420P) {
+            vi.pixel_type=AVS_CS_YV12;
+        } else if (csp & FF_CSP_YUY2) {
+            vi.pixel_type=AVS_CS_YUY2;
+        } else if (csp & FF_CSP_RGB32) {
+            vi.pixel_type=AVS_CS_BGR32;
+        } else if (csp & FF_CSP_RGB24) {
+            vi.pixel_type=AVS_CS_BGR24;
+        }
+    }
 
-   bool enableBuffering;
-   int bufferAhead;
-   int bufferBack;
+    Tinput() : env(NULL),clip(NULL), buffers(NULL) {}
 
-   int applyPulldown;
-   bool hasPulldown;
+    ~Tinput() {
+        if (clip) {
+            delete clip;
+        }
+        if (env) {
+            delete env;
+        }
+    }
+};
 
-   int numBuffers;
+private:
+class Tffdshow_source : Tavisynth_c
+{
+private:
+    VideoInfo &vi;
+    Tinput *input;
 
-   int buffersFilled;
-   int buffersNeeded;
-   int curBufferNo;
-   int backLimit;
+    Tffdshow_source(Tinput *Iinput,VideoInfo &Ivi);
 
-   bool passFirstThrough;
-   bool passLastThrough;
-   bool restart;
-   bool deleteBuffers;
-   bool resetBuffers;
-   bool ignoreAheadValue;
-
-   TframeBuffer* buffers;
-  } *avisynth;
-
- int getWantedCsp(const TavisynthSettings *cfg) const;
- static const int NUM_FRAMES=10810800; // Divisible by everything up to 18, and by every even number up to 30, and then some.
- Tinput* input;
- Tinput* outFmtInput;
- static int findBuffer(TframeBuffer* buffers, int numBuffers, int n);
- int outcsp;
-
-protected:
- //virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
- virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const;
- virtual int getSupportedOutputColorspaces(const TfilterSettingsVideo *cfg) const;
- virtual void onSizeChange(void);
- virtual void onSeek(void);
- virtual void onStop(void);
- virtual void onFlush(void);
- void reset(void);
+    static AVS_VideoFrame* AVSC_CC get_frame(AVS_FilterInfo *, int n);
+    static int AVSC_CC get_parity(AVS_FilterInfo *, int n) {
+        return 0;
+    }
+    static int AVSC_CC set_cache_hints(AVS_FilterInfo *, int cachehints, int frame_range) {
+        return 0;
+    }
+    static void AVSC_CC free_filter(AVS_FilterInfo *);
 
 public:
- TimgFilterAvisynth(IffdshowBase *Ideci,Tfilters *Iparent);
- virtual ~TimgFilterAvisynth();
+    static AVS_Value AVSC_CC Create(AVS_ScriptEnvironment *env, AVS_Value args, void * user_data);
+};
 
- virtual void done(void);
- virtual bool getOutputFmt(TffPictBase &pict,const TfilterSettingsVideo *cfg0);
- const char* getInfoBuffer(void);
- virtual HRESULT process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0);
- static int getMaxBufferAhead(void);
- static int getMaxBufferBack(void);
+class Tffdshow_setAR : Tavisynth_c
+{
+private:
+    Tinput *input;
+    bool setDAR;
+
+    static AVS_Value AVSC_CC Create(AVS_ScriptEnvironment *env, AVS_Value args, void * user_data, bool setDAR);
+
+public:
+    static AVS_Value AVSC_CC Create_SetSAR(AVS_ScriptEnvironment *env, AVS_Value args, void * user_data);
+    static AVS_Value AVSC_CC Create_SetDAR(AVS_ScriptEnvironment *env, AVS_Value args, void * user_data);
+};
+
+struct Tavisynth : public Tavisynth_c {
+public:
+    Tavisynth():
+        restart(true),
+        passFirstThrough(false),
+        passLastThrough(false),
+        buffers(NULL),
+        frameScaleDen(1),
+        frameScaleNum(1)
+    {}
+
+    ~Tavisynth() {
+        done();
+    }
+
+    void skipAhead(bool passFirstThrough, bool clearLastOutStopTime);
+    void done(void);
+    void clearInput(void);
+    bool createClip(const TavisynthSettings *cfg,Tinput *input,TffPictBase& pict);
+    void setOutFmt(const TavisynthSettings *cfg,Tinput *input,TffPictBase &pict);
+    void init(const TavisynthSettings &oldcfg,Tinput *input,int *outcsp,TffPictBase &pict);
+    HRESULT process(TimgFilterAvisynth *self,TfilterQueue::iterator& it,TffPict &pict,const TavisynthSettings *cfg);
+    char infoBuf[1000];
+
+private:
+    int minAccessedFrame;
+    int maxAccessedFrame;
+
+    int curInFrameNo;
+    int curOutFrameNo;
+    int curOutScaledFrameNo;
+
+    REFERENCE_TIME lastOutStopTime;
+
+    REFERENCE_TIME frameScaleNum;
+    REFERENCE_TIME frameScaleDen;
+
+    Trect inputRect;
+    Rational inputDar;
+    Rational inputSar;
+
+    Trect outputRect;
+
+    bool enableBuffering;
+    int bufferAhead;
+    int bufferBack;
+
+    int applyPulldown;
+    bool hasPulldown;
+
+    int numBuffers;
+
+    int buffersFilled;
+    int buffersNeeded;
+    int curBufferNo;
+    int backLimit;
+
+    bool passFirstThrough;
+    bool passLastThrough;
+    bool restart;
+    bool deleteBuffers;
+    bool resetBuffers;
+    bool ignoreAheadValue;
+
+    TframeBuffer* buffers;
+} *avisynth;
+
+int getWantedCsp(const TavisynthSettings *cfg) const;
+static const int NUM_FRAMES=10810800; // Divisible by everything up to 18, and by every even number up to 30, and then some.
+Tinput* input;
+Tinput* outFmtInput;
+static int findBuffer(TframeBuffer* buffers, int numBuffers, int n);
+int outcsp;
+
+protected:
+//virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
+virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const;
+virtual int getSupportedOutputColorspaces(const TfilterSettingsVideo *cfg) const;
+virtual void onSizeChange(void);
+virtual void onSeek(void);
+virtual void onStop(void);
+virtual void onFlush(void);
+void reset(void);
+
+public:
+TimgFilterAvisynth(IffdshowBase *Ideci,Tfilters *Iparent);
+virtual ~TimgFilterAvisynth();
+
+virtual void done(void);
+virtual bool getOutputFmt(TffPictBase &pict,const TfilterSettingsVideo *cfg0);
+const char* getInfoBuffer(void);
+virtual HRESULT process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0);
+static int getMaxBufferAhead(void);
+static int getMaxBufferBack(void);
 };
 
 #endif
