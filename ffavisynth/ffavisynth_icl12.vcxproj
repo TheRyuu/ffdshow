@@ -136,19 +136,16 @@
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>libcmt.lib;kernel32.lib;libircmt.lib;ole32.lib</AdditionalDependencies>
-      <OutputFile>../bin/ffavisynth.dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
       <ModuleDefinitionFile>ffavisynth.def</ModuleDefinitionFile>
       <DelayLoadDLLs>
       </DelayLoadDLLs>
-      <ProgramDatabaseFile>$(IntDir)ffavisynth.pdb</ProgramDatabaseFile>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <EntryPointSymbol>_DllMainCRTStartup%4012</EntryPointSymbol>
       <RandomizedBaseAddress>true</RandomizedBaseAddress>
       <DataExecutionPrevention>true</DataExecutionPrevention>
-      <ImportLibrary>$(OutDir)$(ProjectName).lib</ImportLibrary>
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
   </ItemDefinitionGroup>
@@ -190,17 +187,14 @@
       <Culture>0x041b</Culture>
     </ResourceCompile>
     <Link>
-      <OutputFile>../bin/ffavisynth.dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
       <DelayLoadDLLs>
       </DelayLoadDLLs>
-      <ProgramDatabaseFile>$(IntDir)ffavisynth.pdb</ProgramDatabaseFile>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <RandomizedBaseAddress>true</RandomizedBaseAddress>
       <DataExecutionPrevention>true</DataExecutionPrevention>
-      <ImportLibrary>$(OutDir)$(ProjectName).lib</ImportLibrary>
       <TargetMachine>MachineX64</TargetMachine>
       <AdditionalDependencies>libcmt.lib;kernel32.lib;libircmt.lib;ole32.lib</AdditionalDependencies>
       <ModuleDefinitionFile>ffavisynth.def</ModuleDefinitionFile>
@@ -242,19 +236,16 @@
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>libcmtd.lib;kernel32.lib;libircmt.lib;ole32.lib</AdditionalDependencies>
-      <OutputFile>../bin/ffavisynth.dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
       <ModuleDefinitionFile>ffavisynth.def</ModuleDefinitionFile>
       <DelayLoadDLLs>
       </DelayLoadDLLs>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>$(IntDir)ffavisynth.pdb</ProgramDatabaseFile>
       <EntryPointSymbol>_DllMainCRTStartup%4012</EntryPointSymbol>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>
       </DataExecutionPrevention>
-      <ImportLibrary>$(OutDir)$(ProjectName).lib</ImportLibrary>
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
   </ItemDefinitionGroup>
@@ -291,15 +282,12 @@
       <Culture>0x041b</Culture>
     </ResourceCompile>
     <Link>
-      <OutputFile>../bin/ffavisynth.dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
       <DelayLoadDLLs>
       </DelayLoadDLLs>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>$(IntDir)ffavisynth.pdb</ProgramDatabaseFile>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
-      <ImportLibrary>$(OutDir)$(ProjectName).lib</ImportLibrary>
       <TargetMachine>MachineX64</TargetMachine>
       <AdditionalDependencies>libcmtd.lib;kernel32.lib;libircmt.lib;ole32.lib</AdditionalDependencies>
       <ModuleDefinitionFile>ffavisynth.def</ModuleDefinitionFile>

@@ -156,7 +156,6 @@
     </PreLinkEvent>
     <Link>
       <RegisterOutput>false</RegisterOutput>
-      <OutputFile>bin\ffdshow.ax</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>.\bin\lib_x86;$(DXSDK_DIR)Lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
@@ -164,13 +163,11 @@
       <DelayLoadDLLs>
       </DelayLoadDLLs>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>$(IntDir)$(TargetName).pdb</ProgramDatabaseFile>
       <EntryPointSymbol>_DllMainCRTStartup%4012</EntryPointSymbol>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>
       </DataExecutionPrevention>
-      <ImportLibrary>$(OutDir)$(ProjectName).lib</ImportLibrary>
-      <AdditionalDependencies>libcmtd.lib;kernel32.lib;libircmt.lib;libcpmtd.lib;libmmt.lib;user32.lib;gdi32.lib;ole32.lib;oleaut32.lib;comctl32.lib;comdlg32.lib;advapi32.lib;shell32.lib;shlwapi.lib;d3d9.lib;dinput.lib;uuid.lib;dxguid.lib;dxva2.lib;oldnames.lib;winmm.lib;amstrmid.lib;svml_dispmd.lib;libboost_thread-vc100-mt-sgd-1_45_66662.lib</AdditionalDependencies>
+      <AdditionalDependencies>libcmtd.lib;kernel32.lib;libircmt.lib;libcpmtd.lib;libmmds.lib;user32.lib;gdi32.lib;ole32.lib;oleaut32.lib;comctl32.lib;comdlg32.lib;advapi32.lib;shell32.lib;shlwapi.lib;d3d9.lib;dinput.lib;uuid.lib;dxguid.lib;dxva2.lib;oldnames.lib;winmm.lib;amstrmid.lib;svml_dispmt.lib;libboost_thread-vc100-mt-sgd-1_45_66662.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Message>Registering output...</Message>
@@ -223,7 +220,6 @@
       </Command>
     </PreLinkEvent>
     <Link>
-      <OutputFile>bin\ffdshow.ax</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>.\bin\lib_x64;$(DXSDK_DIR)Lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
@@ -231,12 +227,10 @@
       <DelayLoadDLLs>
       </DelayLoadDLLs>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>$(IntDir)$(TargetName).pdb</ProgramDatabaseFile>
       <EntryPointSymbol>_DllMainCRTStartup</EntryPointSymbol>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
-      <ImportLibrary>$(OutDir)$(ProjectName).lib</ImportLibrary>
       <TargetMachine>MachineX64</TargetMachine>
-      <AdditionalDependencies>libcmtd.lib;kernel32.lib;libircmt.lib;libcpmtd.lib;libmmt.lib;user32.lib;gdi32.lib;ole32.lib;oleaut32.lib;comctl32.lib;comdlg32.lib;advapi32.lib;shell32.lib;shlwapi.lib;d3d9.lib;dinput.lib;uuid.lib;dxguid.lib;dxva2.lib;oldnames.lib;winmm.lib;amstrmid.lib;svml_dispmd.lib;libboost_thread-vc100-mt-sgd-1_45_66662.lib</AdditionalDependencies>
+      <AdditionalDependencies>libcmtd.lib;kernel32.lib;libircmt.lib;libcpmtd.lib;libmmds.lib;user32.lib;gdi32.lib;ole32.lib;oleaut32.lib;comctl32.lib;comdlg32.lib;advapi32.lib;shell32.lib;shlwapi.lib;d3d9.lib;dinput.lib;uuid.lib;dxguid.lib;dxva2.lib;oldnames.lib;winmm.lib;amstrmid.lib;svml_dispmt.lib;libboost_thread-vc100-mt-sgd-1_45_66662.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Message>Registering output...</Message>
@@ -297,7 +291,6 @@
     <Link>
       <RegisterOutput>false</RegisterOutput>
       <AdditionalDependencies>libcmt.lib;kernel32.lib;libircmt.lib;libcpmt.lib;libmmt.lib;user32.lib;gdi32.lib;ole32.lib;oleaut32.lib;comctl32.lib;comdlg32.lib;advapi32.lib;shell32.lib;shlwapi.lib;d3d9.lib;dinput.lib;uuid.lib;dxguid.lib;dxva2.lib;oldnames.lib;winmm.lib;amstrmid.lib;svml_dispmt.lib;libboost_thread-vc100-mt-s-1_45_66662.lib</AdditionalDependencies>
-      <OutputFile>bin\ffdshow.ax</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>.\bin\lib_x86;$(DXSDK_DIR)Lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
@@ -305,13 +298,11 @@
       <DelayLoadDLLs>
       </DelayLoadDLLs>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>$(IntDir)$(TargetName).pdb</ProgramDatabaseFile>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <EntryPointSymbol>_DllMainCRTStartup%4012</EntryPointSymbol>
       <RandomizedBaseAddress>true</RandomizedBaseAddress>
       <DataExecutionPrevention>true</DataExecutionPrevention>
-      <ImportLibrary>$(OutDir)$(ProjectName).lib</ImportLibrary>
     </Link>
     <Manifest>
       <AdditionalManifestFiles>bin\manifest32\ffdshow.ax.manifest;%(AdditionalManifestFiles)</AdditionalManifestFiles>
@@ -375,20 +366,17 @@
     </PreLinkEvent>
     <Link>
       <AdditionalDependencies>libcmt.lib;kernel32.lib;libircmt.lib;libcpmt.lib;libmmt.lib;user32.lib;gdi32.lib;ole32.lib;oleaut32.lib;comctl32.lib;comdlg32.lib;advapi32.lib;shell32.lib;shlwapi.lib;d3d9.lib;dinput.lib;uuid.lib;dxguid.lib;dxva2.lib;oldnames.lib;winmm.lib;amstrmid.lib;svml_dispmt.lib;libboost_thread-vc100-mt-s-1_45_66662.lib</AdditionalDependencies>
-      <OutputFile>bin\ffdshow.ax</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>.\bin\lib_x64;$(DXSDK_DIR)Lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
       <ModuleDefinitionFile>.\src\ffdshow.def</ModuleDefinitionFile>
       <DelayLoadDLLs>
       </DelayLoadDLLs>
-      <ProgramDatabaseFile>$(IntDir)$(TargetName).pdb</ProgramDatabaseFile>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <EntryPointSymbol>_DllMainCRTStartup</EntryPointSymbol>
       <RandomizedBaseAddress>true</RandomizedBaseAddress>
       <DataExecutionPrevention>true</DataExecutionPrevention>
-      <ImportLibrary>$(OutDir)$(ProjectName).lib</ImportLibrary>
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <Manifest>

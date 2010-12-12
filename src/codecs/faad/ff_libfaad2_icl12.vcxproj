@@ -135,7 +135,6 @@
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>libcmt.lib;kernel32.lib;libircmt.lib;libmmt.lib;svml_dispmt.lib</AdditionalDependencies>
-      <OutputFile>../../../bin/ff_libfaad2.dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
       <ModuleDefinitionFile>.\ff_libfaad2.def</ModuleDefinitionFile>
@@ -145,7 +144,6 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <RandomizedBaseAddress>true</RandomizedBaseAddress>
       <DataExecutionPrevention>true</DataExecutionPrevention>
-      <ImportLibrary>$(OutDir)$(ProjectName).lib</ImportLibrary>
       <TargetMachine>NotSet</TargetMachine>
     </Link>
   </ItemDefinitionGroup>
@@ -187,7 +185,6 @@
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>libcmt.lib;kernel32.lib;libircmt.lib;libmmt.lib;svml_dispmt.lib</AdditionalDependencies>
-      <OutputFile>../../../bin/ff_libfaad2.dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
       <ModuleDefinitionFile>.\ff_libfaad2.def</ModuleDefinitionFile>
@@ -197,7 +194,6 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <RandomizedBaseAddress>true</RandomizedBaseAddress>
       <DataExecutionPrevention>true</DataExecutionPrevention>
-      <ImportLibrary>$(OutDir)$(ProjectName).lib</ImportLibrary>
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
   </ItemDefinitionGroup>
@@ -232,19 +228,16 @@
       <Culture>0x0407</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>libcmtd.lib;kernel32.lib;libircmt.lib;libmmt.lib;svml_dispmd.lib</AdditionalDependencies>
-      <OutputFile>../../../bin/ff_libfaad2.dll</OutputFile>
+      <AdditionalDependencies>libcmtd.lib;kernel32.lib;libircmt.lib;libmmds.lib;svml_dispmt.lib</AdditionalDependencies>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
       <ModuleDefinitionFile>.\ff_libfaad2.def</ModuleDefinitionFile>
       <DelayLoadDLLs>
       </DelayLoadDLLs>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>$(IntDir)$(TargetName).pdb</ProgramDatabaseFile>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>
       </DataExecutionPrevention>
-      <ImportLibrary>$(OutDir)$(ProjectName).lib</ImportLibrary>
       <TargetMachine>NotSet</TargetMachine>
     </Link>
   </ItemDefinitionGroup>
@@ -277,16 +270,13 @@
       <Culture>0x0407</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>libcmtd.lib;kernel32.lib;libircmt.lib;libmmt.lib;svml_dispmd.lib</AdditionalDependencies>
-      <OutputFile>../../../bin/ff_libfaad2.dll</OutputFile>
+      <AdditionalDependencies>libcmtd.lib;kernel32.lib;libircmt.lib;libmmds.lib;svml_dispmt.lib</AdditionalDependencies>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
       <ModuleDefinitionFile>.\ff_libfaad2.def</ModuleDefinitionFile>
       <DelayLoadDLLs>
       </DelayLoadDLLs>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>$(IntDir)$(TargetName).pdb</ProgramDatabaseFile>
-      <ImportLibrary>$(OutDir)$(ProjectName).lib</ImportLibrary>
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
   </ItemDefinitionGroup>
