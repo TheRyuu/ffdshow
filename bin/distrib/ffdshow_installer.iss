@@ -39,7 +39,6 @@
 #define bindir                    = '..\'
 
 ; Custom builder preferences (uncomment one to enable, or define it through a command line parameter)
-;#define PREF_XHMIKOSR_ICL        = True
 ;#define PREF_CLSID
 ;#define PREF_CLSID_ICL
 ;#define PREF_CLSID_X64
@@ -48,11 +47,8 @@
 ;#define PREF_XXL_X64
 ;#define PREF_ALBAIN
 ;#define PREF_ALBAIN_x64
+;#define PREF_XHMIKOSR_ICL
 
-#ifdef PREF_XHMIKOSR_ICL
-  #define sse2_required           = True
-  #define filename_suffix         = '_xhmikosr_icl12'
-#endif
 #ifdef PREF_CLSID
   #define filename_suffix        = '_clsid'
   #define bindir                 = '..\x86'
@@ -101,6 +97,10 @@
   #define include_plugin_dscaler = False
   #define include_xvidcore       = False
   #define filename_suffix        = '_dbt_x64'
+#endif
+#ifdef PREF_XHMIKOSR_ICL
+  #define sse2_required          = True
+  #define filename_suffix        = '_xhmikosr_icl12'
 #endif
 
 #if is64bit
@@ -171,7 +171,7 @@ Name: "fi";      MessagesFile: "compiler:Languages\Finnish.isl"
 Name: "fr";      MessagesFile: "compiler:Languages\French.isl"
 Name: "hu";      MessagesFile: "compiler:Languages\Hungarian.isl"
 Name: "it";      MessagesFile: "compiler:Languages\Italian.isl"
-Name: "ja";      MessagesFile:          "languages\Japanese.isl"
+Name: "ja";      MessagesFile: "compiler:Languages\Japanese.isl"
 Name: "nl";      MessagesFile: "compiler:Languages\Dutch.isl"
 Name: "no";      MessagesFile: "compiler:Languages\Norwegian.isl"
 Name: "pl";      MessagesFile: "compiler:Languages\Polish.isl"
@@ -196,7 +196,7 @@ Name: "fi";      MessagesFile: "compiler:Languages\Finnish.isl"
 Name: "fr";      MessagesFile: "compiler:Languages\French.isl"
 Name: "hu";      MessagesFile: "compiler:Languages\Hungarian.isl"
 Name: "it";      MessagesFile: "compiler:Languages\Italian.isl"
-Name: "ja";      MessagesFile:          "languages\Japanese.isl";    LicenseFile: "license\copying.ja.txt"
+Name: "ja";      MessagesFile: "compiler:Languages\Japanese.isl";    LicenseFile: "license\copying.ja.txt"
 Name: "nl";      MessagesFile: "compiler:Languages\Dutch.isl"
 Name: "no";      MessagesFile: "compiler:Languages\Norwegian.isl"
 Name: "pl";      MessagesFile: "compiler:Languages\Polish.isl";      LicenseFile: "license\copying.pl.txt"
@@ -221,7 +221,7 @@ Name: "fi";      MessagesFile: "compiler:Languages\Finnish.isl"
 Name: "fr";      MessagesFile: "compiler:Languages\French.isl"
 Name: "hu";      MessagesFile: "compiler:Languages\Hungarian.isl"
 Name: "it";      MessagesFile: "compiler:Languages\Italian.isl"
-Name: "ja";      MessagesFile:          "languages\Japanese.isl"
+Name: "ja";      MessagesFile: "compiler:Languages\Japanese.isl"
 Name: "nl";      MessagesFile: "compiler:Languages\Dutch.isl"
 Name: "no";      MessagesFile: "compiler:Languages\Norwegian.isl"
 Name: "pl";      MessagesFile: "compiler:Languages\Polish.isl";      InfoBeforeFile: "infobefore\infobefore.pl.rtf"
@@ -246,7 +246,7 @@ Name: "fi";      MessagesFile: "compiler:Languages\Finnish.isl"
 Name: "fr";      MessagesFile: "compiler:Languages\French.isl"
 Name: "hu";      MessagesFile: "compiler:Languages\Hungarian.isl"
 Name: "it";      MessagesFile: "compiler:Languages\Italian.isl"
-Name: "ja";      MessagesFile:          "languages\Japanese.isl";    LicenseFile: "license\copying.ja.txt"
+Name: "ja";      MessagesFile: "compiler:Languages\Japanese.isl";    LicenseFile: "license\copying.ja.txt"
 Name: "nl";      MessagesFile: "compiler:Languages\Dutch.isl"
 Name: "no";      MessagesFile: "compiler:Languages\Norwegian.isl"
 Name: "pl";      MessagesFile: "compiler:Languages\Polish.isl";      LicenseFile: "license\copying.pl.txt";   InfoBeforeFile: "infobefore\infobefore.pl.rtf"
