@@ -70,7 +70,6 @@ SRCS_C=\
     $(LAVC_DIR)/flacdata.c \
     $(LAVC_DIR)/flacdec.c \
     $(LAVC_DIR)/flvdec.c \
-    $(LAVC_DIR)/flvenc.c \
     $(LAVC_DIR)/fraps.c \
     $(LAVC_DIR)/g726.c \
     $(LAVC_DIR)/golomb.c \
@@ -78,7 +77,6 @@ SRCS_C=\
     $(LAVC_DIR)/gsmdec_data.c \
     $(LAVC_DIR)/h261.c \
     $(LAVC_DIR)/h261dec.c \
-    $(LAVC_DIR)/h261enc.c \
     $(LAVC_DIR)/h263.c \
     $(LAVC_DIR)/h263_parser.c \
     $(LAVC_DIR)/h263dec.c \
@@ -104,7 +102,6 @@ SRCS_C=\
     $(LAVC_DIR)/intrax8.c \
     $(LAVC_DIR)/intrax8dsp.c \
     $(LAVC_DIR)/ituh263dec.c \
-    $(LAVC_DIR)/ituh263enc.c \
     $(LAVC_DIR)/jfdctfst.c \
     $(LAVC_DIR)/jfdctint.c \
     $(LAVC_DIR)/jpegls.c \
@@ -128,12 +125,10 @@ SRCS_C=\
     $(LAVC_DIR)/motion_est.c \
     $(LAVC_DIR)/mpeg12.c \
     $(LAVC_DIR)/mpeg12data.c \
-    $(LAVC_DIR)/mpeg12enc.c \
     $(LAVC_DIR)/mpeg4audio.c \
     $(LAVC_DIR)/mpeg4video.c \
     $(LAVC_DIR)/mpeg4video_parser.c \
     $(LAVC_DIR)/mpeg4videodec.c \
-    $(LAVC_DIR)/mpeg4videoenc.c \
     $(LAVC_DIR)/mpegaudio.c \
     $(LAVC_DIR)/mpegaudiodata.c \
     $(LAVC_DIR)/mpegaudiodec.c \
@@ -211,7 +206,6 @@ SRCS_C=\
     $(LAVC_DIR)/wmadec.c \
     $(LAVC_DIR)/wmv2.c \
     $(LAVC_DIR)/wmv2dec.c \
-    $(LAVC_DIR)/wmv2enc.c \
     $(LAVC_DIR)/wnv1.c \
     $(LAVC_DIR)/xiph.c \
     $(LAVC_DIR)/xl.c \
