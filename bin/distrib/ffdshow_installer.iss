@@ -39,6 +39,7 @@
 #define bindir                    = '..\'
 
 ; Custom builder preferences (uncomment one to enable, or define it through a command line parameter)
+;#define PREF_XHMIKOSR_ICL        = True
 ;#define PREF_CLSID
 ;#define PREF_CLSID_ICL
 ;#define PREF_CLSID_X64
@@ -48,6 +49,10 @@
 ;#define PREF_ALBAIN
 ;#define PREF_ALBAIN_x64
 
+#ifdef PREF_XHMIKOSR_ICL
+  #define sse2_required           = True
+  #define filename_suffix         = '_xhmikosr_icl12'
+#endif
 #ifdef PREF_CLSID
   #define filename_suffix        = '_clsid'
   #define bindir                 = '..\x86'
