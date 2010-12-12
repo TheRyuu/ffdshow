@@ -322,7 +322,7 @@ HRESULT TtextInputPin::getInfo(const char_t* *namePtr,int *idPtr,int *foundPtr)
         *idPtr=id;
     }
     if (foundPtr) {
-        *foundPtr=found|IsConnected();
+        *foundPtr=found||IsConnected();
     }
     return S_OK;
 }
@@ -342,7 +342,7 @@ HRESULT TtextInputPin::getInfo(const char_t* *trackNamePtr, const char_t* *langN
         *langIdPtr = langId;
     }
     if (foundPtr) {
-        *foundPtr=found|IsConnected();
+        *foundPtr=found||IsConnected();
     }
     return S_OK;
 }

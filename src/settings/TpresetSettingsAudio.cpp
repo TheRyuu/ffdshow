@@ -144,21 +144,23 @@ TpresetAudio::TpresetAudio(const char_t *IpresetName,const char_t *Ireg_child,in
 
 Tpreset& TpresetAudio::operator=(const Tpreset &src0)
 {
-    try {
-        const TpresetAudio &src = dynamic_cast<const TpresetAudio &>(src0);
-        Tpreset::operator =(src0);
+    if(this!=&src0) {
+        try {
+            const TpresetAudio &src = dynamic_cast<const TpresetAudio &>(src0);
+            Tpreset::operator =(src0);
 
-        preferredsfs=src.preferredsfs;
-        dithering=src.dithering;
-        noiseShaping=src.noiseShaping;
-        decoderDRC = src.decoderDRC;
-        decoderDRCLevel = src.decoderDRCLevel;
-        jitterCorrection = src.jitterCorrection;
-        audioDelay = src.audioDelay;
-    } catch (const std::bad_cast&) {
-        DPRINTF(_l("In TpresetAudio::operator =, dynamic_cast failed. This must be a bug."));
-        ASSERT(0);
-    };
+            preferredsfs=src.preferredsfs;
+            dithering=src.dithering;
+            noiseShaping=src.noiseShaping;
+            decoderDRC = src.decoderDRC;
+            decoderDRCLevel = src.decoderDRCLevel;
+            jitterCorrection = src.jitterCorrection;
+            audioDelay = src.audioDelay;
+        } catch (const std::bad_cast&) {
+            DPRINTF(_l("In TpresetAudio::operator =, dynamic_cast failed. This must be a bug."));
+            ASSERT(0);
+        }
+    }
 
     return *this;
 }

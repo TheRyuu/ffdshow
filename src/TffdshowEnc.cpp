@@ -801,8 +801,9 @@ STDMETHODIMP_(LRESULT) TffdshowEnc::compress(const BITMAPINFOHEADER *inhdr,const
     if (src && coSettings->isProc && ffproc) {
         HRESULT hr = ffproc->processPict(params.framenum,pict,enccsp);
         if (hr == S_OK) {
-            src?enc->compress(pict,params):enc->flushEnc(pict,params);
+            hr = src?enc->compress(pict,params):enc->flushEnc(pict,params);
         }
+        return hr;
     } else {
         return src?enc->compress(pict,params):enc->flushEnc(pict,params);
     }

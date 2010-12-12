@@ -118,7 +118,7 @@ bool TaudioCodecLibavcodec::init(const CMediaType &mt)
                 p = (BYTE*)((TrealAudioInfo5*)fmt+1);
                 //DPRINTF(_l("TaudioCodecLibavcodec cook version 5"));
             } else {
-                return VFW_E_TYPE_NOT_ACCEPTED;
+                return false; //VFW_E_TYPE_NOT_ACCEPTED;
             }
 
             /* Cook specifications : after the end of TrealAudio4 or TrealAudio5 structure, we have this :

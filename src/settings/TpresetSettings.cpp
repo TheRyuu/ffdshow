@@ -341,23 +341,25 @@ Tpreset::~Tpreset()
 
 Tpreset& Tpreset::operator =(const Tpreset &src)
 {
-    min_order=src.min_order;
-    reg_child=src.reg_child;
+    if(this!=&src) {
+        min_order=src.min_order;
+        reg_child=src.reg_child;
 
-    ff_strncpy(presetName, src.presetName, countof(presetName));
-    autoLoadedFromFile=src.autoLoadedFromFile;
-    autoloadExtsNeedFix=src.autoloadExtsNeedFix;
-    autoPresetItems=src.autoPresetItems;
-    autoLoadLogic=src.autoLoadLogic;
+        ff_strncpy(presetName, src.presetName, countof(presetName));
+        autoLoadedFromFile=src.autoLoadedFromFile;
+        autoloadExtsNeedFix=src.autoloadExtsNeedFix;
+        autoPresetItems=src.autoPresetItems;
+        autoLoadLogic=src.autoLoadLogic;
 
-    autoloadScreenSize=src.autoloadScreenSize;
-    autoloadScreenSizeXmin=src.autoloadScreenSizeXmin;
-    autoloadScreenSizeXmax=src.autoloadScreenSizeXmax;
-    autoloadScreenSizeCond=src.autoloadScreenSizeCond;
-    autoloadScreenSizeYmin=src.autoloadScreenSizeYmin;
-    autoloadScreenSizeYmax=src.autoloadScreenSizeYmax;
+        autoloadScreenSize=src.autoloadScreenSize;
+        autoloadScreenSizeXmin=src.autoloadScreenSizeXmin;
+        autoloadScreenSizeXmax=src.autoloadScreenSizeXmax;
+        autoloadScreenSizeCond=src.autoloadScreenSizeCond;
+        autoloadScreenSizeYmin=src.autoloadScreenSizeYmin;
+        autoloadScreenSizeYmax=src.autoloadScreenSizeYmax;
 
-    filters->copy(src.filters);
+        filters->copy(src.filters);
+    }
     return *this;
 }
 
