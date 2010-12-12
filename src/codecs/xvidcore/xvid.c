@@ -876,7 +876,7 @@ xvid_encore(void *handle,
 	}
 }
 
-void __stdcall getVersion(char *ver,const char* *license)
+void getVersion(char *ver,const char* *license)
 {
  sprintf(ver,"%d.%d.%d, %s%s%s (%s %s)",XVID_VERSION_MAJOR(XVID_VERSION),XVID_VERSION_MINOR(XVID_VERSION),XVID_VERSION_PATCH(XVID_VERSION),COMPILER,COMPILER_X64,COMPILER_INFO,__DATE__,__TIME__);
  *license="";

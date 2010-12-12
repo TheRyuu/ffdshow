@@ -73,7 +73,7 @@ endif
 
 $(SLIB): $(OBJS) $(DEF)
 	$(FFDSHOW_PREFIX)dllwrap -mno-cygwin --target=$(TARGET_OS) \
-             -Wl,--enable-stdcall-fixup $(LDFLAGS) \
+             -Wl,--enable-stdcall-fixup -entry=_DllMainCRTStartup@12 $(LDFLAGS) \
              --def $(GCCDEF) $(GCCDLLENTRY) -o $@ $(OBJS) $(GCCLIBS)
 
 $(SEXE): $(OBJS)
