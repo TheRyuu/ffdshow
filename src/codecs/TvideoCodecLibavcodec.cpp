@@ -870,7 +870,7 @@ const char_t* TvideoCodecLibavcodec::getName(void) const
 void TvideoCodecLibavcodec::getEncoderInfo(char_t *buf,size_t buflen) const
 {
     int xvid_build,divx_version,divx_build,lavc_build;
-    if (avctx && (mpeg12_codec(codecId) || mpeg4_codec(codecId) || x264_codec(codecId) || codecId==CODEC_ID_FLV1)) {
+    if (avctx && (mpeg12_codec(codecId) || mpeg4_codec(codecId) || codecId==CODEC_ID_FLV1)) {
         libavcodec->avcodec_get_encoder_info(avctx,&xvid_build,&divx_version,&divx_build,&lavc_build);
         if (xvid_build) {
             tsnprintf_s(buf, buflen, _TRUNCATE, _l("XviD build %i"), xvid_build);
@@ -1614,7 +1614,7 @@ HRESULT TvideoCodecLibavcodec::compress(const TffPict &pict,TencFrameParams &par
 
 const char* TvideoCodecLibavcodec::get_current_idct(void)
 {
-    if (avctx && (mpeg12_codec(codecId) || mpeg4_codec(codecId) || x264_codec(codecId) || codecId==CODEC_ID_FLV1)) {
+    if (avctx && (mpeg12_codec(codecId) || mpeg4_codec(codecId) || codecId==CODEC_ID_FLV1)) {
         return libavcodec->avcodec_get_current_idct(avctx);
     } else {
         return NULL;

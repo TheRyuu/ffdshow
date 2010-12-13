@@ -96,9 +96,7 @@ const FOURCC* getCodecFOURCCs(CodecID codecId)
             return fccs;
         }
         case CODEC_ID_H264:
-        case CODEC_ID_H264_MT:
-        case CODEC_ID_X264:
-        case CODEC_ID_X264_LOSSLESS: {
+        case CODEC_ID_H264_MT: {
             static const FOURCC fccs[]= {FOURCC_H264,FOURCC_X264,FOURCC_AVC1,FOURCC_H264_HAALI,0};
             return fccs;
         }

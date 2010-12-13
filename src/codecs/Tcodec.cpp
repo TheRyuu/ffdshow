@@ -52,8 +52,6 @@ const char_t* Tcodec::getMovieSourceName(int source)
             return _l("AviSynth");
         case IDFF_MOVIE_WMV9       :
             return _l("wmv9");
-        case IDFF_MOVIE_X264       :
-            return _l("x264");
         case IDFF_MOVIE_LIBA52     :
             return _l("liba52");
         case IDFF_MOVIE_LIBDTS     :

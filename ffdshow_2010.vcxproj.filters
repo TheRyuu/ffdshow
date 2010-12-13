@@ -809,16 +809,10 @@
     <ClCompile Include="src\dialog\Cmasking.cpp">
       <Filter>dialog</Filter>
     </ClCompile>
-    <ClCompile Include="src\dialog\CmaskingX264.cpp">
-      <Filter>dialog</Filter>
-    </ClCompile>
     <ClCompile Include="src\dialog\CmaskingXVID.cpp">
       <Filter>dialog</Filter>
     </ClCompile>
     <ClCompile Include="src\dialog\Cme.cpp">
-      <Filter>dialog</Filter>
-    </ClCompile>
-    <ClCompile Include="src\dialog\CmeX264.cpp">
       <Filter>dialog</Filter>
     </ClCompile>
     <ClCompile Include="src\dialog\CmeXvid.cpp">
@@ -1209,9 +1203,6 @@
       <Filter>codecs</Filter>
     </ClCompile>
     <ClCompile Include="src\codecs\TvideoCodecWmv9.cpp">
-      <Filter>codecs</Filter>
-    </ClCompile>
-    <ClCompile Include="src\codecs\TvideoCodecX264.cpp">
       <Filter>codecs</Filter>
     </ClCompile>
     <ClCompile Include="src\codecs\TvideoCodecXviD4.cpp">
@@ -2079,16 +2070,10 @@
     <ClInclude Include="src\dialog\Cmasking.h">
       <Filter>dialog</Filter>
     </ClInclude>
-    <ClInclude Include="src\dialog\CmaskingX264.h">
-      <Filter>dialog</Filter>
-    </ClInclude>
     <ClInclude Include="src\dialog\CmaskingXVID.h">
       <Filter>dialog</Filter>
     </ClInclude>
     <ClInclude Include="src\dialog\Cme.h">
-      <Filter>dialog</Filter>
-    </ClInclude>
-    <ClInclude Include="src\dialog\CmeX264.h">
       <Filter>dialog</Filter>
     </ClInclude>
     <ClInclude Include="src\dialog\CmeXvid.h">
@@ -2500,9 +2485,6 @@
       <Filter>codecs</Filter>
     </ClInclude>
     <ClInclude Include="src\codecs\TvideoCodecWmv9.h">
-      <Filter>codecs</Filter>
-    </ClInclude>
-    <ClInclude Include="src\codecs\TvideoCodecX264.h">
       <Filter>codecs</Filter>
     </ClInclude>
     <ClInclude Include="src\codecs\TvideoCodecXviD4.h">

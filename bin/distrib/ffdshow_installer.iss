@@ -14,7 +14,6 @@
 ; Build specific options
 #define localize                  = True
 
-#define include_x264              = True
 #define include_xvidcore          = True
 #define include_makeavis          = True
 #define include_plugin_avisynth   = True
@@ -62,7 +61,6 @@
 #endif
 #ifdef PREF_CLSID_X64
   #define is64bit                = True
-  #define include_x264           = False
   #define include_xvidcore       = False
   #define include_plugin_dscaler = False
   #define filename_suffix        = '_clsid_x64'
@@ -81,7 +79,6 @@
 #endif
 #ifdef PREF_XXL_X64
   #define is64bit                = True
-  #define include_x264           = True
   #define include_plugin_dscaler = False
   #define include_info_before    = True
 ;  #define include_setup_icon     = True
@@ -93,7 +90,6 @@
 #endif
 #ifdef PREF_ALBAIN_X64
   #define is64bit                = True
-  #define include_x264           = False
   #define include_plugin_dscaler = False
   #define include_xvidcore       = False
   #define filename_suffix        = '_dbt_x64'
@@ -400,10 +396,6 @@ Source: "{#= bindir}\ff_libmad.dll";              DestDir: "{app}";             
 Source: "{#= bindir}\ff_unrar.dll";               DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
 Source: "{#= bindir}\ff_samplerate.dll";          DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
 
-#if include_x264
-Source: "{#= bindir}\ff_x264.dll";                DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
-#endif
-
 #if include_xvidcore
 Source: "{#= bindir}\xvidcore.dll";               DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
 #endif
@@ -469,9 +461,6 @@ Type: files; Name: "{group}\Homepage.url";                         Components: f
 Type: files; Name: "{group}\VFW configuration.lnk";                Components: ffdshow\vfw
 #endif
 ; Files not included in this build
-#if !include_x264
-Type: files; Name: "{app}\ff_x264.dll";                            Components: ffdshow
-#endif
 #if !include_xvidcore
 Type: files; Name: "{app}\xvidcore.dll";                           Components: ffdshow
 #endif
@@ -482,6 +471,7 @@ Type: files; Name: "{app}\languages\ffdshow.1053.se";              Components: f
 Type: files; Name: "{app}\libavcodec.dll";                         Components: ffdshow
 Type: files; Name: "{app}\libmplayer.dll";                         Components: ffdshow
 Type: files; Name: "{app}\ff_tremor.dll";                          Components: ffdshow
+Type: files; Name: "{app}\ff_x264.dll";                          Components: ffdshow
 
 [Registry]
 #if is64bit

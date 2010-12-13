@@ -57,7 +57,7 @@ void TinPage::interlaced2dlg(void)
 }
 void TinPage::lavcnr2dlg(void)
 {
-    int is=sup_lavcQuant(codecId) || codecId==CODEC_ID_X264;
+    int is=sup_lavcQuant(codecId);
     static const int idLavcNR[]= {IDC_LBL_LAVC_NR,IDC_ED_LAVC_NR,0};
     int is_lavc_nr=cfgGet(IDFF_enc_is_lavc_nr);
     setCheck(IDC_CHB_LAVC_NR,is_lavc_nr);

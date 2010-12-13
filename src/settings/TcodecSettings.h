@@ -93,12 +93,7 @@ public:
     int32_t qmatrix_intra4x4C_custom0,qmatrix_intra4x4C_custom4,qmatrix_intra4x4C_custom8,qmatrix_intra4x4C_custom12;
     int32_t qmatrix_inter4x4C_custom0,qmatrix_inter4x4C_custom4,qmatrix_inter4x4C_custom8,qmatrix_inter4x4C_custom12;
     static std::pair<int,int> getMinMaxQuant(int codecId) {
-        switch (codecId) {
-            case CODEC_ID_X264:
-                return std::make_pair(1,51);
-            default:
-                return std::make_pair(1,31);
-        }
+      return std::make_pair(1,31);
     }
     std::pair<int,int> getMinMaxQuant(void) const {
         return getMinMaxQuant(codecId);
@@ -207,22 +202,6 @@ public:
     int wmv9_aviout;
 
     int theo_hq,theo_sharpness,theo_noisesensitivity;
-
-    int x264_max_ref_frames;
-    int x264_cabac;
-    int x264_interlaced;
-    int x264_me_inter,x264_me_intra;
-    int x264_me_subpelrefine;
-    int x264_me_method,x264_me_range;
-    int x264_mv_range;
-    int x264_i_direct_mv_pred;
-    int x264_i_deblocking_filter_alphac0,x264_i_deblocking_filter_beta;
-    int x264_b_bframe_pyramid;
-    int x264_b_aud;
-    int x264_mixed_ref;
-    int x264_b_dct_decimate;
-    int x264_aq_strength100;
-    static const char_t *x264_me_methods[];
 
     FOURCC raw_fourcc;
 

@@ -27,7 +27,6 @@
 #include "TaudioCodecLibFAAD.h"
 #include "TvideoCodecXviD4.h"
 #include "TvideoCodecWmv9.h"
-#include "TvideoCodecX264.h"
 #include "TaudioCodecLiba52.h"
 #include "TaudioCodecLibDTS.h"
 #include "Tdll.h"
@@ -119,7 +118,6 @@ void Tconfig::init1(HINSTANCE hi)
     isDecoder[IDFF_MOVIE_XVID4]=check(TvideoCodecXviD4::dllname);
     isDecoder[IDFF_MOVIE_AVIS]=check(Tavisynth_c::dllname);
     isDecoder[IDFF_MOVIE_WMV9]=check(TvideoCodecWmv9::dllname);
-    isDecoder[IDFF_MOVIE_X264]=check(TvideoCodecX264::dllname);
     isDecoder[IDFF_MOVIE_LIBA52]=check(TaudioCodecLiba52::dllname);
     isDecoder[IDFF_MOVIE_LIBDTS]=check(TaudioCodecLibDTS::dllname);
 

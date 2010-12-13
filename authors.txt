@@ -66,7 +66,6 @@ projects/libraries that the tryouts depend resp. build upon:
     * zlib library by Jean-loup Gailly and Mark Adler
     * libpng by Glenn Randers-Pehrson
     * AMR audio decoding using 3GPP AMR Floating-point Speech Codec
-    * H.264 encoding using x264 library by Laurent Aimar
     * Using code from XMMS DSP plugins:
           o Crystality by Rafal Bosak
           o Dynamic noise filtering by Rowland

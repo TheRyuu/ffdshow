@@ -29,7 +29,7 @@ MPEG 1/2
 - B frames support: from one to eight consecutive B frames.
 - Support for MPEG-4 quarterpel and GMC.
 - Selectable interlaced encoding.
-- Libavcodec's MPEG4/MPEG2/MPEG1, xvidcore 1.2 and x264 encoders are multithreaded.
+- Libavcodec's MPEG4/MPEG2/MPEG1 and xvidcore 1.2 encoders are multithreaded.
 - Libavcodec encoders pop up error messages.
 - Decompression.
 

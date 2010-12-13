@@ -61,19 +61,7 @@ void TgenericPage::cfg2dlg(void)
         case CODEC_ID_MPEG2VIDEO:
             flags.push_back(std::make_tuple(_(IDC_LV_GENERIC,_l("Reserve space for SVCD scan offset user data")),IDFF_enc_svcd_scan_offset,1,false));
             break;
-        case CODEC_ID_X264:
-        case CODEC_ID_X264_LOSSLESS:
-            flags.push_back(std::make_tuple(_(IDC_LV_GENERIC,_l("Cabac")),IDFF_enc_x264_cabac,1,false));
-            flags.push_back(std::make_tuple(_(IDC_LV_GENERIC,_l("Generate access unit delimiters")),IDFF_enc_x264_b_aud,1,false));
-            flags.push_back(std::make_tuple(_(IDC_LV_GENERIC,_l("Each MB partition can independently select a reference frame")),IDFF_enc_x264_mixed_ref,1,false));
-            flags.push_back(std::make_tuple(_(IDC_LV_GENERIC,_l("Transform coefficient thresholding on P-frames")),IDFF_enc_x264_b_dct_decimate,1,false));
-            flags.push_back(std::make_tuple(_(IDC_LV_GENERIC,_l("Interlaced")),IDFF_enc_x264_interlaced,1,false));
-            break;
     }
-    if (codecId==CODEC_ID_X264) {
-        flags.push_back(std::make_tuple(_(IDC_LV_GENERIC,_l("Loop filter")),IDFF_enc_H263Pflags,CODEC_FLAG_LOOP_FILTER,true));
-    }
-
     if ((codecId==CODEC_ID_H263 || codecId==CODEC_ID_H263P) && cfgGet(IDFF_enc_me_hq)==FF_MB_DECISION_SIMPLE) {
         flags.push_back(std::make_tuple(_l("OBMC"),IDFF_enc_H263Pflags,CODEC_FLAG_OBMC,false));
     }
@@ -198,7 +186,7 @@ INT_PTR TgenericPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 TgenericPage::TgenericPage(TffdshowPageEnc *Iparent):TconfPageEnc(Iparent)
 {
     dialogId=IDD_GENERIC;
-    static const int props[]= {IDFF_enc_max_key_interval,IDFF_enc_min_key_interval,IDFF_enc_globalHeader,IDFF_enc_part,IDFF_enc_interlacing,IDFF_enc_interlacing_tff,IDFF_enc_gray,IDFF_enc_isBframes,IDFF_enc_max_b_frames,IDFF_enc_packedBitstream,IDFF_enc_dx50bvop,IDFF_enc_H263Pflags,IDFF_enc_b_dynamic,IDFF_enc_b_refine,IDFF_enc_svcd_scan_offset,IDFF_enc_x264_cabac,IDFF_enc_x264_interlaced,IDFF_numthreads,0};
+    static const int props[]= {IDFF_enc_max_key_interval,IDFF_enc_min_key_interval,IDFF_enc_globalHeader,IDFF_enc_part,IDFF_enc_interlacing,IDFF_enc_interlacing_tff,IDFF_enc_gray,IDFF_enc_isBframes,IDFF_enc_max_b_frames,IDFF_enc_packedBitstream,IDFF_enc_dx50bvop,IDFF_enc_H263Pflags,IDFF_enc_b_dynamic,IDFF_enc_b_refine,IDFF_enc_svcd_scan_offset,IDFF_numthreads,0};
     propsIDs=props;
     static const TbindCheckbox<TgenericPage> chb[]= {
         IDC_CHB_B,IDFF_enc_isBframes,&TgenericPage::b2dlg,
@@ -212,41 +200,6 @@ TgenericPage::TgenericPage(TffdshowPageEnc *Iparent):TconfPageEnc(Iparent)
     static const TbindEditInt<TgenericPage> edInt[]= {
         IDC_ED_B_MAX,1,8,IDFF_enc_max_b_frames,NULL,
         IDC_ED_NUMTHREADS,1,8,IDFF_numthreads,NULL,
-        0
-    };
-    bindEditInts(edInt);
-}
-
-void TgenericX264page::cfg2dlg(void)
-{
-    TgenericPage::cfg2dlg();
-    SetDlgItemInt(m_hwnd,IDC_ED_X264_DEBLOCK_ALPHA,cfgGet(IDFF_enc_x264_i_deblocking_filter_alphac0),TRUE);
-    SetDlgItemInt(m_hwnd,IDC_ED_X264_DEBLOCK_BETA ,cfgGet(IDFF_enc_x264_i_deblocking_filter_beta   ),TRUE);
-    static const int idDeblock[]= {IDC_LBL_X264_DEBLOCK_ALPHA,IDC_ED_X264_DEBLOCK_ALPHA,IDC_LBL_X264_DEBLOCK_BETA,IDC_ED_X264_DEBLOCK_BETA,0};
-    enable((cfgGet(IDFF_enc_H263Pflags)&CODEC_FLAG_LOOP_FILTER)!=0 && codecId!=CODEC_ID_X264_LOSSLESS,idDeblock);
-}
-void TgenericX264page::b2dlg(void)
-{
-    setCheck(IDC_CHB_B_PYRAMID,cfgGet(IDFF_enc_x264_b_bframe_pyramid));
-    TgenericPage::b2dlg();
-}
-TgenericX264page::TgenericX264page(TffdshowPageEnc *Iparent):TgenericPage(Iparent)
-{
-    dialogId=IDD_GENERIC_X264;
-    static const int props[]= {IDFF_enc_max_key_interval,IDFF_enc_min_key_interval,IDFF_enc_isBframes,IDFF_enc_max_b_frames,IDFF_enc_H263Pflags,IDFF_enc_b_dynamic,IDFF_enc_x264_i_deblocking_filter_alphac0,IDFF_enc_x264_i_deblocking_filter_beta,IDFF_enc_b_dynamic,IDFF_enc_x264_b_bframe_pyramid,IDFF_enc_x264_b_aud,IDFF_numthreads,0};
-    propsIDs=props;
-    static const TbindCheckbox<TgenericX264page> chb[]= {
-        IDC_CHB_B,IDFF_enc_isBframes,&TgenericX264page::b2dlg,
-        IDC_CHB_B_DYNAMIC,IDFF_enc_b_dynamic,NULL,
-        IDC_CHB_B_PYRAMID,IDFF_enc_x264_b_bframe_pyramid,NULL,
-        0,NULL,NULL
-    };
-    bindCheckboxes(chb);
-    static const TbindEditInt<TgenericX264page> edInt[]= {
-        IDC_ED_B_MAX,1,8,IDFF_enc_max_b_frames,NULL,
-        IDC_ED_NUMTHREADS,1,8,IDFF_numthreads,NULL,
-        IDC_ED_X264_DEBLOCK_ALPHA,-6,6,IDFF_enc_x264_i_deblocking_filter_alphac0,NULL,
-        IDC_ED_X264_DEBLOCK_BETA,-6,6,IDFF_enc_x264_i_deblocking_filter_beta,NULL,
         0
     };
     bindEditInts(edInt);

@@ -818,10 +818,8 @@
     <ClCompile Include="src\dialog\ClfeCrossover.cpp" />
     <ClCompile Include="src\dialog\Clogoaway.cpp" />
     <ClCompile Include="src\dialog\Cmasking.cpp" />
-    <ClCompile Include="src\dialog\CmaskingX264.cpp" />
     <ClCompile Include="src\dialog\CmaskingXVID.cpp" />
     <ClCompile Include="src\dialog\Cme.cpp" />
-    <ClCompile Include="src\dialog\CmeX264.cpp" />
     <ClCompile Include="src\dialog\CmeXvid.cpp" />
     <ClCompile Include="src\dialog\Cmixer.cpp" />
     <ClCompile Include="src\dialog\Cnoise.cpp">
@@ -1000,7 +998,6 @@
     <ClCompile Include="src\codecs\TvideoCodecLibmpeg2.cpp" />
     <ClCompile Include="src\codecs\TvideoCodecUncompressed.cpp" />
     <ClCompile Include="src\codecs\TvideoCodecWmv9.cpp" />
-    <ClCompile Include="src\codecs\TvideoCodecX264.cpp" />
     <ClCompile Include="src\codecs\TvideoCodecXviD4.cpp" />
     <ClCompile Include="src\ffmpeg\Tlibavcodec.cpp" />
     <ClCompile Include="src\ffmpeg-mt\Tlibavcodec_mt.cpp" />
@@ -1332,10 +1329,8 @@
     <ClInclude Include="src\dialog\ClfeCrossover.h" />
     <ClInclude Include="src\dialog\Clogoaway.h" />
     <ClInclude Include="src\dialog\Cmasking.h" />
-    <ClInclude Include="src\dialog\CmaskingX264.h" />
     <ClInclude Include="src\dialog\CmaskingXVID.h" />
     <ClInclude Include="src\dialog\Cme.h" />
-    <ClInclude Include="src\dialog\CmeX264.h" />
     <ClInclude Include="src\dialog\CmeXvid.h" />
     <ClInclude Include="src\dialog\Cmixer.h" />
     <ClInclude Include="src\dialog\Cnoise.h" />
@@ -1473,7 +1468,6 @@
     <ClInclude Include="src\codecs\TvideoCodecLibmpeg2.h" />
     <ClInclude Include="src\codecs\TvideoCodecUncompressed.h" />
     <ClInclude Include="src\codecs\TvideoCodecWmv9.h" />
-    <ClInclude Include="src\codecs\TvideoCodecX264.h" />
     <ClInclude Include="src\codecs\TvideoCodecXviD4.h" />
     <ClInclude Include="src\ffmpeg\libavcodec\avcodec.h" />
     <ClInclude Include="src\ffmpeg\Tlibavcodec.h" />
