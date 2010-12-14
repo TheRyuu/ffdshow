@@ -443,7 +443,7 @@ void TresizeAspectPage::onResizeManualArMenu(void)
         _l("1.78 (16:9)"),
         _l("1.85 (DVD)"),
         _l("2.35 (cinemascope)"),
-        _l("2.40 (cinemascope, HD discs)"),
+        _l("2.39 (cinemascope, HD discs)"),
         NULL
     };
     int cmd=selectFromMenu(aspects,IDC_BT_RESIZE_USER_ASPECT,true);
@@ -468,7 +468,7 @@ void TresizeAspectPage::onResizeManualArMenu(void)
             ar = 2.35;
             break;
         case 6:
-            ar = 2.40;
+            ar = 2.39;
             break;
         default:
             return;
