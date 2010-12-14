@@ -198,8 +198,8 @@ const TversionsDlg::TversionInfo* TaboutPageEnc::fcsVersions(void)
 {
     static const TversionsDlg::TversionInfo fcsEnc[]= {
         _l("ffmpeg.dll"),Tlibavcodec::getVersion,
-        TvideoCodecXviD4::dllname,getVersion<TvideoCodecXviD4>,
-        TvideoCodecWmv9::dllname,getVersion<TvideoCodecWmv9>,
+        //TvideoCodecXviD4::dllname,getVersion<TvideoCodecXviD4>,
+        //TvideoCodecWmv9::dllname,getVersion<TvideoCodecWmv9>,
         Tavisynth_c::dllname,Tavisynth_c::getVersion,
         NULL
     };
