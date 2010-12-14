@@ -15,6 +15,7 @@ The ffdshow tryouts project is maintained by the following Doom9 forum members:
     * LaughingMan aka Eragon4ever < eragon4ever at users dot sourceforge dot net > from Germany
     * MatMaul
     * pizza_phd
+    * sansnom05
     * STaRGaZeR
     * videomixer9
     * XhmikosR

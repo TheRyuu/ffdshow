@@ -7,7 +7,7 @@ ALLS=../bin/ffmpeg.dll \
      ../bin/libmpeg2_ff.dll \
      ../bin/ff_xvidcore.dll \
      ../bin/TomsMoComp_ff.dll \
-     ../bin/ff_kernelDeint.dll \
+     ../bin/ff_kernelDeint.dll
 
 .all: $(ALLDLLS)
 
