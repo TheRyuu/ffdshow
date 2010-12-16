@@ -701,6 +701,7 @@ void TglobalSettingsDecVideo::load(void)
  FF_FOURCC1_OP(SP55,avrn & rawmask & dxvamask,CODEC_ID_SP5X) \
  FF_FOURCC1_OP(SP56,avrn & rawmask & dxvamask,CODEC_ID_SP5X) \
  FF_FOURCC1_OP(SP57,avrn & rawmask & dxvamask,CODEC_ID_SP5X) \
+ /*FF_FOURCC1_OP(MJPB,avrn & rawmask & dxvamask,CODEC_ID_MJPEGB)*/ \
  FF_FOURCC1_OP(DVSD,dvsd & rawmask & dxvamask,CODEC_ID_DVVIDEO) \
  FF_FOURCC1_OP(DV25,dvsd & rawmask & dxvamask,CODEC_ID_DVVIDEO) \
  FF_FOURCC1_OP(DV50,dvsd & rawmask & dxvamask,CODEC_ID_DVVIDEO) \
@@ -1190,12 +1191,12 @@ void TglobalSettingsDecAudio::load(void)
  FF_WAVE_FORMAT_OP (AAC5   ,aac    & rawmask,c_aac) \
  FF_WAVE_FORMAT1_OP(AMR    ,amr    & rawmask,CODEC_ID_AMR_NB) \
  FF_WAVE_FORMAT1_OP(SAMR   ,amr    & rawmask,CODEC_ID_AMR_NB) \
- FF_WAVE_FORMAT1_OP(IMA_DK3,otherAdpcm & rawmask,CODEC_ID_ADPCM_IMA_DK3) \
- FF_WAVE_FORMAT1_OP(IMA_WAV,iadpcm & rawmask,CODEC_ID_ADPCM_IMA_WAV) \
- FF_WAVE_FORMAT1_OP(IMA_DK4,otherAdpcm & rawmask,CODEC_ID_ADPCM_IMA_DK4) \
- FF_WAVE_FORMAT1_OP(IMA4   ,iadpcm & rawmask,CODEC_ID_ADPCM_IMA_QT) \
- FF_WAVE_FORMAT1_OP(IMA_AMV,otherAdpcm & rawmask,CODEC_ID_ADPCM_IMA_AMV) \
  FF_WAVE_FORMAT1_OP(ADPCM  ,msadpcm& rawmask,CODEC_ID_ADPCM_MS) \
+ FF_WAVE_FORMAT1_OP(IMA_WAV,iadpcm & rawmask,CODEC_ID_ADPCM_IMA_WAV) \
+ FF_WAVE_FORMAT1_OP(IMA_DK3,otherAdpcm & rawmask,CODEC_ID_ADPCM_IMA_DK3) \
+ FF_WAVE_FORMAT1_OP(IMA_DK4,otherAdpcm & rawmask,CODEC_ID_ADPCM_IMA_DK4) \
+ FF_WAVE_FORMAT1_OP(IMA4   ,otherAdpcm & rawmask,CODEC_ID_ADPCM_IMA_QT) \
+ FF_WAVE_FORMAT1_OP(IMA_AMV,otherAdpcm & rawmask,CODEC_ID_ADPCM_IMA_AMV) \
  FF_WAVE_FORMAT1_OP(CREATIVE_ADPCM,otherAdpcm& rawmask,CODEC_ID_ADPCM_CT) \
  FF_WAVE_FORMAT1_OP(YAMAHA_ADPCM  ,otherAdpcm& rawmask,CODEC_ID_ADPCM_YAMAHA) \
  FF_WAVE_FORMAT1_OP(G726          ,otherAdpcm& rawmask,CODEC_ID_ADPCM_G726) \
@@ -1215,12 +1216,11 @@ void TglobalSettingsDecAudio::load(void)
  FF_WAVE_FORMAT1_OP(28_8   ,ra     & rawmask,CODEC_ID_RA_288) \
  FF_WAVE_FORMAT1_OP(IMC    ,imc    & rawmask,CODEC_ID_IMC) \
  FF_WAVE_FORMAT1_OP(ATRAC3 ,atrac3 & rawmask,CODEC_ID_ATRAC3) \
- /*FF_WAVE_FORMAT1_OP(COOK1  ,cook   & rawmask,CODEC_ID_COOK)*/ \
- /*FF_WAVE_FORMAT1_OP(COOK2  ,cook   & rawmask,CODEC_ID_COOK)*/ \
  FF_WAVE_FORMAT1_OP(NELLYMOSER,nellymoser & rawmask,CODEC_ID_NELLYMOSER) \
  FF_WAVE_FORMAT1_OP(WAVPACK,wavpack & rawmask,CODEC_ID_WAVPACK) \
  FF_WAVE_FORMAT_OP (VORBIS  ,vorbis & rawmask,c_vorbis) \
  FF_WAVE_FORMAT_OP (FFVORBIS,vorbis & rawmask,c_vorbis) \
+ /*FF_WAVE_FORMAT1_OP(COOK1  ,cook   & rawmask,CODEC_ID_COOK)*/ \
  FF_WAVE_FORMAT1_OP(COOK2  ,cook   & rawmask,CODEC_ID_COOK) \
  FF_WAVE_FORMAT1_OP(LPCM   ,lpcm   & rawmask,CODEC_ID_LPCM) \
  FF_WAVE_FORMAT1_OP(AVIS   ,avis   & rawmask,CODEC_ID_AVISYNTH) \

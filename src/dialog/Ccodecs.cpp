@@ -555,7 +555,7 @@ void TcodecsPageAudio::fillCodecs(void)
         formats.push_back(Tformat(_l("WMA 7")       ,IDFF_wma7       ,IDFF_MOVIE_LAVC,_l("Windows Media Audio compatible decoder"),NULL));
         formats.push_back(Tformat(_l("WMA 8/9")     ,IDFF_wma8       ,IDFF_MOVIE_LAVC,_l("not WMA9 pro, voice or lossless"),NULL));
         formats.push_back(Tformat(_l("MS ADPCM")    ,IDFF_msadpcm    ,IDFF_MOVIE_LAVC,_l("MS Adaptive DPCM")));
-        formats.push_back(Tformat(_l("IMA ADPCM")   ,IDFF_iadpcm     ,IDFF_MOVIE_LAVC,_l("IMA Adaptive DPCM")));
+        formats.push_back(Tformat(_l("MS IMA ADPCM"),IDFF_iadpcm     ,IDFF_MOVIE_LAVC,_l("MS IMA Adaptive DPCM")));
         formats.push_back(Tformat(_l("Other ADPCM") ,IDFF_otherAdpcm ,IDFF_MOVIE_LAVC,_l("Creative, Yamaha, G.726, DK3, DK4, AMV")));
         formats.push_back(Tformat(_l("Mulaw/Alaw")  ,IDFF_law        ,IDFF_MOVIE_LAVC,_l("Mu-law & A-law")));
         formats.push_back(Tformat(_l("MS GSM")      ,IDFF_gsm        ,IDFF_MOVIE_LAVC,_l("MS GSM Audio")));

@@ -115,7 +115,6 @@ SRCS_C=\
     $(LAVC_DIR)/mdct.c \
     $(LAVC_DIR)/mjpeg.c \
     $(LAVC_DIR)/mjpeg_parser.c \
-    $(LAVC_DIR)/mjpegbdec.c \
     $(LAVC_DIR)/mjpegdec.c \
     $(LAVC_DIR)/mjpegenc.c \
     $(LAVC_DIR)/mlp.c \

@@ -78,6 +78,7 @@ DEFINE_GUID(CLSID_DWSTRINGW, 0xa0606860, 0x51be, 0x4cf6, 0x99, 0xc0, 0x7c, 0xe5,
 #define FOURCC_mpg2 mmioFOURCC('m','p','g','2')
 #define FOURCC_mjpg mmioFOURCC('m','j','p','g')
 #define FOURCC_mjpa mmioFOURCC('m','j','p','a')
+//#define FOURCC_mjpb mmioFOURCC('m','j','p','b')
 #define FOURCC_dvsd mmioFOURCC('d','v','s','d')
 #define FOURCC_dv25 mmioFOURCC('d','v','2','5')
 #define FOURCC_dv50 mmioFOURCC('d','v','5','0')
@@ -161,6 +162,8 @@ DEFINE_GUID_FOURCC(MJPG)
 DEFINE_GUID_FOURCC(mjpg)
 DEFINE_GUID_FOURCC(MJPA)
 DEFINE_GUID_FOURCC(mjpa)
+//DEFINE_GUID_FOURCC(MJPB)
+//DEFINE_GUID_FOURCC(mjpb)
 DEFINE_GUID_FOURCC(DVSD)
 DEFINE_GUID_FOURCC(dvsd)
 DEFINE_GUID_FOURCC(DV25)
@@ -401,13 +404,13 @@ const AMOVIESETUP_MEDIATYPE TffdshowDecAudio::inputMediaTypes[]= {
     // { &MEDIATYPE_Audio , &MEDIASUBTYPE_DIVXWMA    },
     { &MEDIATYPE_Audio , &MEDIASUBTYPE_AMR        },
     { &MEDIATYPE_Audio , &MEDIASUBTYPE_SAMR       },
-    { &MEDIATYPE_Audio , &MEDIASUBTYPE_IMA_DK3    },
+    { &MEDIATYPE_Audio , &MEDIASUBTYPE_MSADPCM    },
     { &MEDIATYPE_Audio , &MEDIASUBTYPE_IMA_WAV    },
+	{ &MEDIATYPE_Audio , &MEDIASUBTYPE_IMA_DK3    },
     { &MEDIATYPE_Audio , &MEDIASUBTYPE_IMA_DK4    },
     { &MEDIATYPE_Audio , &MEDIASUBTYPE_IMA4       },
     { &MEDIATYPE_Audio , &MEDIASUBTYPE_IMA_AMV    },
     { &MEDIATYPE_Audio , &MEDIASUBTYPE_ADPCM_SWF  },
-    { &MEDIATYPE_Audio , &MEDIASUBTYPE_MSADPCM    },
     { &MEDIATYPE_Audio , &MEDIASUBTYPE_CREATIVE_ADPCM },
     { &MEDIATYPE_Audio , &MEDIASUBTYPE_YAMAHA_ADPCM },
     { &MEDIATYPE_Audio , &MEDIASUBTYPE_G726       },
@@ -446,7 +449,7 @@ const AMOVIESETUP_MEDIATYPE TffdshowDecAudio::inputMediaTypes[]= {
     { &MEDIATYPE_Audio , &MEDIASUBTYPE_28_8       },
     { &MEDIATYPE_Audio , &MEDIASUBTYPE_IMC        },
     { &MEDIATYPE_Audio , &MEDIASUBTYPE_ATRAC3     },
-    { &MEDIATYPE_Audio , &MEDIASUBTYPE_COOK      },
+    { &MEDIATYPE_Audio , &MEDIASUBTYPE_COOK       },
     { &MEDIATYPE_Audio , &MEDIASUBTYPE_COOK1      },
     { &MEDIATYPE_Audio , &MEDIASUBTYPE_COOK2      },
     { &MEDIATYPE_Audio , &MEDIASUBTYPE_NELLYMOSER },

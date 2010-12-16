@@ -64,6 +64,7 @@
 #define FOURCC_MJLS mmioFOURCC('M','J','L','S')
 #define FOURCC_AVRN mmioFOURCC('A','V','R','N')
 #define FOURCC_MJPA mmioFOURCC('M','J','P','A')
+//#define FOURCC_MJPB mmioFOURCC('M','J','P','B')
 #define FOURCC_DVSD mmioFOURCC('D','V','S','D')
 #define FOURCC_DV25 mmioFOURCC('D','V','2','5')
 #define FOURCC_DV50 mmioFOURCC('D','V','5','0')

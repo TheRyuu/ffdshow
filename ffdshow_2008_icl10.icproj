@@ -5,7 +5,7 @@
 	Name="ffdshow"
 	ProjectGUID="{0C1CDCBB-5886-42B4-A928-F4B82DD3FD17}"
 	VCNestedProjectGUID="{30A21C7F-035D-41E2-95BE-B4FFA5F5176B}"
-	VCNestedProjectCRC32="2772850528"
+	VCNestedProjectCRC32="3412898111"
 	VCNestedProjectFileName="ffdshow_2008_icl10.vcproj">
 	<Platforms>
 		<Platform 
@@ -435,19 +435,13 @@
 				RelativePath="copying.txt">
 			</File>
 			<File 
-				RelativePath=".\readme.txt">
+				RelativePath=".\src\readme.txt">
 			</File>
 			<File 
-				RelativePath=".\readmeAudio.txt">
+				RelativePath=".\src\readmeAudio.txt">
 			</File>
 			<File 
-				RelativePath=".\readmeEnc.txt">
-			</File>
-			<File 
-				RelativePath=".\readmeMultiCPU.jp.txt">
-			</File>
-			<File 
-				RelativePath=".\readmeMultiCPU.txt">
+				RelativePath=".\src\readmeEnc.txt">
 			</File>
 			<File 
 				RelativePath=".\todo.txt">
