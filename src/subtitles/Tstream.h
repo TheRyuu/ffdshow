@@ -170,7 +170,7 @@ public:
 struct Tconfig;
 struct TstreamRAR :TstreamMem {
 private:
-    static int CALLBACK callback(UINT msg,LONG_PTR UserData,LONG_PTR P1,LONG P2);
+    static int CALLBACK callback(UINT msg,LPARAM UserData,LPARAM P1,LONG P2);
     unsigned char *buf;
     size_t bufpos;
 public:

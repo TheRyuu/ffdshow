@@ -66,6 +66,7 @@ bool ErrorHandler::AskRepeatRead(const char *FileName)
 #if !defined(SILENT) && !defined(SFX_MODULE) && !defined(_WIN_CE)
   if (!Silent)
   {
+    SysErrMsg();
     mprintf("\n");
     Log(NULL,St(MErrRead),FileName);
     return(Ask(St(MRetryAbort))==1);
@@ -100,13 +101,14 @@ void ErrorHandler::WriteErrorFAT(const char *FileName)
 #endif
 
 
-bool ErrorHandler::AskRepeatWrite(const char *FileName)
+bool ErrorHandler::AskRepeatWrite(const char *FileName,bool DiskFull)
 {
 #if !defined(SILENT) && !defined(_WIN_CE)
   if (!Silent)
   {
+    SysErrMsg();
     mprintf("\n");
-    Log(NULL,St(MErrWrite),FileName);
+    Log(NULL,St(DiskFull ? MNotEnoughDisk:MErrWrite),FileName);
     return(Ask(St(MRetryAbort))==1);
   }
 #endif
@@ -125,6 +127,15 @@ void ErrorHandler::SeekError(const char *FileName)
 #endif
 #if !defined(SILENT) || defined(RARDLL)
   Throw(FATAL_ERROR);
+#endif
+}
+
+
+void ErrorHandler::GeneralErrMsg(const char *Msg)
+{
+#ifndef SILENT
+  Log(NULL,"%s",Msg);
+  SysErrMsg();
 #endif
 }
 
@@ -164,19 +175,19 @@ void ErrorHandler::CreateErrorMsg(const char *ArcName,const char *FileName)
 #ifndef SILENT
   Log(ArcName && *ArcName ? ArcName:NULL,St(MCannotCreate),FileName);
   Alarm();
-#if defined(_WIN_32) && !defined(_WIN_CE) && !defined(SFX_MODULE) && defined(MAXPATH)
+#if defined(_WIN_32) && !defined(_WIN_CE) && !defined(SFX_MODULE) && defined(MAX_PATH)
   if (GetLastError()==ERROR_PATH_NOT_FOUND)
   {
-    int NameLength=strlen(FileName);
+    size_t NameLength=strlen(FileName);
     if (!IsFullPath(FileName))
     {
       char CurDir[NM];
       GetCurrentDirectory(sizeof(CurDir),CurDir);
       NameLength+=strlen(CurDir)+1;
     }
-    if (NameLength>MAXPATH)
+    if (NameLength>MAX_PATH)
     {
-      Log(ArcName && *ArcName ? ArcName:NULL,St(MMaxPathLimit),MAXPATH);
+      Log(ArcName && *ArcName ? ArcName:NULL,St(MMaxPathLimit),MAX_PATH);
     }
   }
 #endif
@@ -271,11 +282,18 @@ void _stdfunction ProcessSignal(int SigType)
 #endif
   UserBreak=true;
   mprintf(St(MBreak));
-#if defined(USE_RC) && !defined(SFX_MODULE) && !defined(_WIN_CE)
+  for (int I=0;!File::RemoveCreated() && I<3;I++)
+  {
+#ifdef _WIN_32
+    Sleep(100);
+#endif
+  }
+#if defined(USE_RC) && !defined(SFX_MODULE) && !defined(_WIN_CE) && !defined(RARDLL)
   ExtRes.UnloadDLL();
 #endif
   exit(USER_BREAK);
-#ifdef _WIN_32
+#if defined(_WIN_32) && !defined(_MSC_VER)
+  // never reached, just to avoid a compiler warning
   return(TRUE);
 #endif
 }
@@ -313,7 +331,8 @@ void ErrorHandler::Throw(int Code)
 
 void ErrorHandler::SysErrMsg()
 {
-#if defined(_WIN_32) && !defined(SFX_MODULE) && !defined(SILENT)
+#if !defined(SFX_MODULE) && !defined(SILENT)
+#ifdef _WIN_32
     #define STRCHR strchr
     #define ERRCHAR char
   ERRCHAR  *lpMsgBuf=NULL;
@@ -343,4 +362,16 @@ void ErrorHandler::SysErrMsg()
   }
   LocalFree( lpMsgBuf );
 #endif
+
+#if defined(_UNIX) || defined(_EMX)
+  char *err=strerror(errno);
+  if (err!=NULL)
+    Log(NULL,"\n%s",err);
+#endif
+
+#endif
 }
+
+
+
+

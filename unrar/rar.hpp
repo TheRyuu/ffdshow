@@ -4,10 +4,10 @@
 #include "raros.hpp"
 #include "os.hpp"
 
-
 #ifdef RARDLL
 #include "dll.hpp"
 #endif
+
 
 #ifndef _WIN_CE
 #include "version.hpp"
@@ -15,21 +15,20 @@
 #include "rartypes.hpp"
 #include "rardefs.hpp"
 #include "rarlang.hpp"
-#include "int64.hpp"
 #include "unicode.hpp"
 #include "errhnd.hpp"
 #include "array.hpp"
 #include "timefn.hpp"
+#include "options.hpp"
 #include "headers.hpp"
-#include "rarfn.hpp"
 #include "pathfn.hpp"
 #include "strfn.hpp"
 #include "strlist.hpp"
 #include "file.hpp"
-//#include "sha1.hpp"
+#include "sha1.hpp"
 #include "crc.hpp"
-//#include "rijndael.hpp"
-//#include "crypt.hpp"
+#include "rijndael.hpp"
+#include "crypt.hpp"
 #include "filefn.hpp"
 #include "filestr.hpp"
 #include "find.hpp"
@@ -37,7 +36,6 @@
 #include "savepos.hpp"
 #include "getbits.hpp"
 #include "rdwrfn.hpp"
-#include "options.hpp"
 #include "archive.hpp"
 #include "match.hpp"
 #include "cmddata.hpp"
@@ -64,15 +62,14 @@
 
 
 
-//#include "list.hpp"
-
+#include "list.hpp"
 
 
 #include "rs.hpp"
 #include "recvol.hpp"
-//#include "volume.hpp"
+#include "volume.hpp"
 #include "smallfn.hpp"
-//#include "ulinks.hpp"
+#include "ulinks.hpp"
 
 #include "global.hpp"
 

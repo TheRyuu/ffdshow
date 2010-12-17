@@ -11,18 +11,18 @@ RawRead::RawRead(File *SrcFile)
 }
 
 
-void RawRead::Read(int Size)
+void RawRead::Read(size_t Size)
 {
 #if !defined(SHELL_EXT) && !defined(NOCRYPT)
   if (Crypt!=NULL)
   {
-    int CurSize=Data.Size();
-    int SizeToRead=Size-(CurSize-DataSize);
+    size_t CurSize=Data.Size();
+    size_t SizeToRead=Size-(CurSize-DataSize);
     if (SizeToRead>0)
     {
-      int AlignedReadSize=SizeToRead+((~SizeToRead+1)&0xf);
+      size_t AlignedReadSize=SizeToRead+((~SizeToRead+1)&0xf);
       Data.Add(AlignedReadSize);
-      int ReadSize=SrcFile->Read(&Data[CurSize],AlignedReadSize);
+      size_t ReadSize=SrcFile->Read(&Data[CurSize],AlignedReadSize);
       Crypt->DecryptBlock(&Data[CurSize],AlignedReadSize);
       DataSize+=ReadSize==0 ? 0:Size;
     }
@@ -39,7 +39,7 @@ void RawRead::Read(int Size)
 }
 
 
-void RawRead::Read(byte *SrcData,int Size)
+void RawRead::Read(byte *SrcData,size_t Size)
 {
   if (Size!=0)
   {
@@ -52,46 +52,71 @@ void RawRead::Read(byte *SrcData,int Size)
 
 void RawRead::Get(byte &Field)
 {
-  Field=Data[ReadPos];
-  ReadPos++;
+  if (ReadPos<DataSize)
+  {
+    Field=Data[ReadPos];
+    ReadPos++;
+  }
+  else
+    Field=0;
 }
 
 
 void RawRead::Get(ushort &Field)
 {
-  Field=Data[ReadPos]+(Data[ReadPos+1]<<8);
-  ReadPos+=2;
+  if (ReadPos+1<DataSize)
+  {
+    Field=Data[ReadPos]+(Data[ReadPos+1]<<8);
+    ReadPos+=2;
+  }
+  else
+    Field=0;
 }
 
 
 void RawRead::Get(uint &Field)
 {
-  Field=Data[ReadPos]+(Data[ReadPos+1]<<8)+(Data[ReadPos+2]<<16)+
-        (Data[ReadPos+3]<<24);
-  ReadPos+=4;
+  if (ReadPos+3<DataSize)
+  {
+    Field=Data[ReadPos]+(Data[ReadPos+1]<<8)+(Data[ReadPos+2]<<16)+
+          (Data[ReadPos+3]<<24);
+    ReadPos+=4;
+  }
+  else
+    Field=0;
 }
 
 
-void RawRead::Get8(Int64 &Field)
+void RawRead::Get8(int64 &Field)
 {
   uint Low,High;
   Get(Low);
   Get(High);
-  Field=int32to64(High,Low);
+  Field=INT32TO64(High,Low);
 }
 
 
-void RawRead::Get(byte *Field,int Size)
+void RawRead::Get(byte *Field,size_t Size)
 {
-  memcpy(Field,&Data[ReadPos],Size);
-  ReadPos+=Size;
+  if (ReadPos+Size-1<DataSize)
+  {
+    memcpy(Field,&Data[ReadPos],Size);
+    ReadPos+=Size;
+  }
+  else
+    memset(Field,0,Size);
 }
 
 
-void RawRead::Get(wchar *Field,int Size)
+void RawRead::Get(wchar *Field,size_t Size)
 {
-  RawToWide(&Data[ReadPos],Field,Size);
-  ReadPos+=2*Size;
+  if (ReadPos+2*Size-1<DataSize)
+  {
+    RawToWide(&Data[ReadPos],Field,Size);
+    ReadPos+=2*Size;
+  }
+  else
+    memset(Field,0,2*Size);
 }
 
 

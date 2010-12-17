@@ -1268,19 +1268,19 @@ const char_t *encQuantTypes[]= {
 };
 
 const Taspect displayAspects[]= {
-    _l("1:1")   , 1.0f,1.0f,
-    _l("4:3")   , 4.0f,3.0f,
-    _l("16:9")  ,16.0f,9.0f,
-    _l("2.21:1"),2.21f,1.0f,
-    NULL,0
+	{_l("1:1")   , 1.0f,1.0f},
+	{_l("4:3")   , 4.0f,3.0f},
+	{_l("16:9")  ,16.0f,9.0f},
+	{_l("2.21:1"),2.21f,1.0f},
+	{NULL,0,0},
 };
 const Taspect sampleAspects[]= {
-    _l("Square")   , 1.0f, 1.0f,
-    _l("4:3 PAL")  ,12.0f,11.0f,
-    _l("4:3 NTSC") ,10.0f,11.0f,
-    _l("16:9 PAL") ,16.0f,11.0f,
-    _l("16:9 NTSC"),40.0f,33.0f,
-    NULL,0
+	{_l("Square")   , 1.0f, 1.0f},
+	{_l("4:3 PAL")  ,12.0f,11.0f},
+	{_l("4:3 NTSC") ,10.0f,11.0f},
+	{_l("16:9 PAL") ,16.0f,11.0f},
+	{_l("16:9 NTSC"),40.0f,33.0f},
+	{NULL,0,0},
 };
 
 //======================== YUVcolor ==========================
@@ -1813,12 +1813,12 @@ void *getAlignedPtr(void *ptr)
 }
 
 const TmultipleInstances multipleInstances[]= {
-    0,_l("no limitations"),
-    1,_l("only one - check previous filter only"),
-    3,_l("only one - check all previous filters"),
-    2,_l("only one - check all filters in graph"),
-    4,_l("none - disabled"),
-    0,NULL
+    {0,_l("no limitations")},
+    {1,_l("only one - check previous filter only")},
+    {3,_l("only one - check all previous filters")},
+    {2,_l("only one - check all filters in graph")},
+    {4,_l("none - disabled")},
+    {0,NULL},
 };
 
 template const char* stristr(const char *haystack,const char *needle);

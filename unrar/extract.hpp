@@ -6,12 +6,15 @@ enum EXTRACT_ARC_CODE {EXTRACT_ARC_NEXT,EXTRACT_ARC_REPEAT};
 class CmdExtract
 {
   private:
+    EXTRACT_ARC_CODE ExtractArchive(CommandData *Cmd);
+    RarTime StartTime; // time when extraction started
+
     ComprDataIO DataIO;
     Unpack *Unp;
-    long TotalFileCount;
+    unsigned long TotalFileCount;
 
-    long FileCount;
-    long MatchedArgs;
+    unsigned long FileCount;
+    unsigned long MatchedArgs;
     bool FirstFile;
     bool AllMatchesExact;
     bool ReconstructDone;
@@ -22,18 +25,19 @@ class CmdExtract
     char Password[MAXPASSWORD];
     bool PasswordAll;
     bool PrevExtracted;
-    bool SignatureFound;
     char DestFileName[NM];
     wchar DestFileNameW[NM];
+    bool PasswordCancelled;
   public:
     CmdExtract();
     ~CmdExtract();
     void DoExtract(CommandData *Cmd);
     void ExtractArchiveInit(CommandData *Cmd,Archive &Arc);
-    EXTRACT_ARC_CODE ExtractArchive(CommandData *Cmd);
-    bool ExtractCurrentFile(CommandData *Cmd,Archive &Arc,int HeaderSize,
+    bool ExtractCurrentFile(CommandData *Cmd,Archive &Arc,size_t HeaderSize,
                             bool &Repeat);
-    static void UnstoreFile(ComprDataIO &DataIO,Int64 DestUnpSize);
+    static void UnstoreFile(ComprDataIO &DataIO,int64 DestUnpSize);
+
+    bool SignatureFound;
 };
 
 #endif

@@ -14,7 +14,7 @@ char* PointToName(const char *Path)
 
 wchar* PointToName(const wchar *Path)
 {
-  for (int I=strlenw(Path)-1;I>=0;I--)
+  for (int I=(int)strlenw(Path)-1;I>=0;I--)
     if (IsPathDiv(Path[I]))
       return (wchar*)&Path[I+1];
   return (wchar*)((*Path && IsDriveDiv(Path[1])) ? Path+2:Path);
@@ -29,23 +29,30 @@ char* PointToLastChar(const char *Path)
 }
 
 
+
+
 char* ConvertPath(const char *SrcPath,char *DestPath)
 {
   const char *DestPtr=SrcPath;
+
+  // Prevent \..\ in any part of path string.
   for (const char *s=DestPtr;*s!=0;s++)
     if (IsPathDiv(s[0]) && s[1]=='.' && s[2]=='.' && IsPathDiv(s[3]))
       DestPtr=s+4;
+
+  // Remove any sequence of . and \ in the beginning of path string.
   while (*DestPtr)
   {
     const char *s=DestPtr;
     if (s[0] && IsDriveDiv(s[1]))
       s+=2;
-    if (s[0]=='\\' && s[1]=='\\')
-    {
-      const char *Slash=strchr(s+2,'\\');
-      if (Slash!=NULL && (Slash=strchr(Slash+1,'\\'))!=NULL)
-        s=Slash+1;
-    }
+    else
+      if (s[0]=='\\' && s[1]=='\\')
+      {
+        const char *Slash=strchr(s+2,'\\');
+        if (Slash!=NULL && (Slash=strchr(Slash+1,'\\'))!=NULL)
+          s=Slash+1;
+      }
     for (const char *t=s;*t!=0;t++)
       if (IsPathDiv(*t))
         s=t+1;
@@ -56,10 +63,17 @@ char* ConvertPath(const char *SrcPath,char *DestPath)
       break;
     DestPtr=s;
   }
+
+  // Code above does not remove last "..", doing here.
+  if (DestPtr[0]=='.' && DestPtr[1]=='.' && DestPtr[2]==0)
+    DestPtr+=2;
+
   if (DestPath!=NULL)
   {
+    // SrcPath and DestPath can point to same memory area,
+    // so we use the temporary buffer for copying.
     char TmpStr[NM];
-    strncpy(TmpStr,DestPtr,sizeof(TmpStr)-1);
+    strncpyz(TmpStr,DestPtr,ASIZE(TmpStr));
     strcpy(DestPath,TmpStr);
   }
   return((char *)DestPtr);
@@ -226,7 +240,7 @@ bool IsDriveDiv(int Ch)
 int GetPathDisk(const char *Path)
 {
   if (IsDiskLetter(Path))
-    return(toupper(*Path)-'A');
+    return(etoupper(*Path)-'A');
   else
     return(-1);
 }
@@ -242,29 +256,32 @@ void AddEndSlash(char *Path)
 
 void AddEndSlash(wchar *Path)
 {
-  int Length=strlenw(Path);
+  size_t Length=strlenw(Path);
   if (Length>0 && Path[Length-1]!=CPATHDIVIDER)
     strcatw(Path,PATHDIVIDERW);
 }
 
 
-void GetFilePath(const char *FullName,char *Path)
+// Returns file path including the trailing path separator symbol.
+void GetFilePath(const char *FullName,char *Path,int MaxLength)
 {
-  int PathLength=PointToName(FullName)-FullName;
+  size_t PathLength=Min(MaxLength-1,PointToName(FullName)-FullName);
   strncpy(Path,FullName,PathLength);
   Path[PathLength]=0;
 }
 
 
-void GetFilePath(const wchar *FullName,wchar *Path)
+// Returns file path including the trailing path separator symbol.
+void GetFilePath(const wchar *FullName,wchar *Path,int MaxLength)
 {
-  const wchar *PathPtr=/*(*FullName && IsDriveDiv(FullName[1])) ? FullName+2:*/FullName;
-  int PathLength=PointToName(FullName)-FullName;
-  strncpyw(Path,PathPtr,PathLength);
+  size_t PathLength=Min(MaxLength-1,PointToName(FullName)-FullName);
+  strncpyw(Path,FullName,PathLength);
   Path[PathLength]=0;
 }
 
 
+// Removes name and returns file path without the trailing
+// path separator symbol.
 void RemoveNameFromPath(char *Path)
 {
   char *Name=PointToName(Path);
@@ -275,12 +292,59 @@ void RemoveNameFromPath(char *Path)
 
 
 #ifndef SFX_MODULE
+// Removes name and returns file path without the trailing
+// path separator symbol.
 void RemoveNameFromPath(wchar *Path)
 {
   wchar *Name=PointToName(Path);
   if (Name>=Path+2 && (!IsDriveDiv(Path[1]) || Name>=Path+4))
     Name--;
   *Name=0;
+}
+#endif
+
+
+#if defined(_WIN_32) && !defined(_WIN_CE) && !defined(SFX_MODULE)
+void GetAppDataPath(char *Path)
+{
+  LPMALLOC g_pMalloc;
+  SHGetMalloc(&g_pMalloc);
+  LPITEMIDLIST ppidl;
+  *Path=0;
+  bool Success=false;
+  if (SHGetSpecialFolderLocation(NULL,CSIDL_APPDATA,&ppidl)==NOERROR &&
+      SHGetPathFromIDList(ppidl,Path) && *Path!=0)
+  {
+    AddEndSlash(Path);
+    strcat(Path,"WinRAR");
+    Success=FileExist(Path) || MakeDir(Path,NULL,false,0)==MKDIR_SUCCESS;
+  }
+  if (!Success)
+  {
+    GetModuleFileName(NULL,Path,NM);
+    RemoveNameFromPath(Path);
+  }
+  g_pMalloc->Free(ppidl);
+}
+#endif
+
+
+#if defined(_WIN_32) && !defined(_WIN_CE) && !defined(SFX_MODULE)
+void GetRarDataPath(char *Path)
+{
+  *Path=0;
+
+  HKEY hKey;
+  if (RegOpenKeyEx(HKEY_CURRENT_USER,"Software\\WinRAR\\Paths",0,
+                   KEY_QUERY_VALUE,&hKey)==ERROR_SUCCESS)
+  {
+    DWORD DataSize=NM,Type;
+    RegQueryValueEx(hKey,"AppData",0,&Type,(BYTE *)Path,&DataSize);
+    RegCloseKey(hKey);
+  }
+
+  if (*Path==0 || !FileExist(Path))
+    GetAppDataPath(Path);
 }
 #endif
 
@@ -294,6 +358,7 @@ bool EnumConfigPaths(char *Path,int Number)
     strcpy(RARFileName,Path);
   if (Number!=0)
     return(false);
+#ifndef _DJGPP
   if (_osmode==OS2_MODE)
   {
     PTIB ptib;
@@ -302,32 +367,39 @@ bool EnumConfigPaths(char *Path,int Number)
     DosQueryModuleName(ppib->pib_hmte,NM,Path);
   }
   else
+#endif
     strcpy(Path,RARFileName);
   RemoveNameFromPath(Path);
   return(true);
 #elif defined(_UNIX)
+  static const char *AltPath[]={
+    "/etc","/etc/rar","/usr/lib","/usr/local/lib","/usr/local/etc"
+  };
   if (Number==0)
   {
     char *EnvStr=getenv("HOME");
-    if (EnvStr==NULL)
-      return(false);
-    strcpy(Path,EnvStr);
+    strncpy(Path, (EnvStr==NULL) ? AltPath[0] : EnvStr, NM-1);
+    Path[NM-1]=0;
     return(true);
   }
-  static char *AltPath[]={
-    "/etc","/usr/lib","/usr/local/lib","/usr/local/etc"
-  };
   Number--;
   if (Number<0 || Number>=sizeof(AltPath)/sizeof(AltPath[0]))
     return(false);
   strcpy(Path,AltPath[Number]);
   return(true);
 #elif defined(_WIN_32)
-  if (Number!=0)
+
+  if (Number<0 || Number>1)
     return(false);
-  GetModuleFileName(NULL,Path,NM);
-  RemoveNameFromPath(Path);
+  if (Number==0)
+    GetRarDataPath(Path);
+  else
+  {
+    GetModuleFileName(NULL,Path,NM);
+    RemoveNameFromPath(Path);
+  }
   return(true);
+
 #else
   return(false);
 #endif
@@ -338,6 +410,7 @@ bool EnumConfigPaths(char *Path,int Number)
 #ifndef SFX_MODULE
 void GetConfigName(const char *Name,char *FullName,bool CheckExist)
 {
+  *FullName=0;
   for (int I=0;EnumConfigPaths(FullName,I);I++)
   {
     AddEndSlash(FullName);
@@ -349,18 +422,29 @@ void GetConfigName(const char *Name,char *FullName,bool CheckExist)
 #endif
 
 
+// Returns a pointer to rightmost digit of volume number.
 char* GetVolNumPart(char *ArcName)
 {
+  // Pointing to last name character.
   char *ChPtr=ArcName+strlen(ArcName)-1;
-  while (!isdigit(*ChPtr) && ChPtr>ArcName)
+
+  // Skipping the archive extension.
+  while (!IsDigit(*ChPtr) && ChPtr>ArcName)
     ChPtr--;
+
+  // Skipping the numeric part of name.
   char *NumPtr=ChPtr;
-  while (isdigit(*NumPtr) && NumPtr>ArcName)
+  while (IsDigit(*NumPtr) && NumPtr>ArcName)
     NumPtr--;
+
+  // Searching for first numeric part in names like name.part##of##.rar.
+  // Stop search on the first dot.
   while (NumPtr>ArcName && *NumPtr!='.')
   {
-    if (isdigit(*NumPtr))
+    if (IsDigit(*NumPtr))
     {
+      // Validate the first numeric part only if it has a dot somwhere 
+      // before it.
       char *Dot=strchrd(PointToName(ArcName),'.');
       if (Dot!=NULL && Dot<NumPtr)
         ChPtr=NumPtr;
@@ -372,12 +456,90 @@ char* GetVolNumPart(char *ArcName)
 }
 
 
+void NextVolumeName(char *ArcName,wchar *ArcNameW,uint MaxLength,bool OldNumbering)
+{
+  char *ChPtr;
+  if ((ChPtr=GetExt(ArcName))==NULL)
+  {
+    strcat(ArcName,".rar");
+    ChPtr=GetExt(ArcName);
+  }
+  else
+    if (ChPtr[1]==0 || stricomp(ChPtr+1,"exe")==0 || stricomp(ChPtr+1,"sfx")==0)
+      strcpy(ChPtr+1,"rar");
+  if (!OldNumbering)
+  {
+    ChPtr=GetVolNumPart(ArcName);
+
+    while ((++(*ChPtr))=='9'+1)
+    {
+      *ChPtr='0';
+      ChPtr--;
+      if (ChPtr<ArcName || !IsDigit(*ChPtr))
+      {
+        for (char *EndPtr=ArcName+strlen(ArcName);EndPtr!=ChPtr;EndPtr--)
+          *(EndPtr+1)=*EndPtr;
+        *(ChPtr+1)='1';
+        break;
+      }
+    }
+  }
+  else
+    if (!IsDigit(*(ChPtr+2)) || !IsDigit(*(ChPtr+3)))
+      strcpy(ChPtr+2,"00");
+    else
+    {
+      ChPtr+=3;
+      while ((++(*ChPtr))=='9'+1)
+        if (*(ChPtr-1)=='.')
+        {
+          *ChPtr='A';
+          break;
+        }
+        else
+        {
+          *ChPtr='0';
+          ChPtr--;
+        }
+    }
+  if (ArcNameW!=NULL && *ArcNameW!=0)
+  {
+    // Copy incremented trailing low ASCII volume name part to Unicode name.
+    // It is simpler than implementing Unicode version of entire function.
+    char *NumPtr=GetVolNumPart(ArcName);
+
+    // moving to first digit in volume number
+    while (NumPtr>ArcName && IsDigit(*NumPtr) && IsDigit(*(NumPtr-1)))
+      NumPtr--;
+
+    // also copy the first character before volume number,
+    // because it can be changed when going from .r99 to .s00
+    if (NumPtr>ArcName)
+      NumPtr--;
+
+    int CharsToCopy=(int)(strlen(ArcName)-(NumPtr-ArcName));
+    int DestPos=(int)(strlenw(ArcNameW)-CharsToCopy);
+    if (DestPos>=0)
+    {
+      CharToWide(NumPtr,ArcNameW+DestPos,MaxLength-DestPos-1);
+      ArcNameW[MaxLength-1]=0;
+    }
+  }
+}
+
 
 bool IsNameUsable(const char *Name)
 {
 #ifndef _UNIX
   if (Name[0] && Name[1] && strchr(Name+2,':')!=NULL)
     return(false);
+  for (const char *s=Name;*s!=0;s=charnext(s))
+  {
+    if ((byte)*s<32)
+      return(false);
+    if (*s==' ' && IsPathDiv(s[1]))
+      return(false);
+  }
 #endif
   return(*Name!=0 && strpbrk(Name,"?*<>|\"")==NULL);
 }
@@ -387,7 +549,7 @@ void MakeNameUsable(char *Name,bool Extended)
 {
   for (char *s=Name;*s!=0;s=charnext(s))
   {
-    if (strchr(Extended ? "?*<>|\"":"?*",*s)!=NULL || Extended && *s<32)
+    if (strchr(Extended ? "?*<>|\"":"?*",*s)!=NULL || Extended && (byte)*s<32)
       *s='_';
 #ifdef _EMX
     if (*s=='=')
@@ -396,15 +558,23 @@ void MakeNameUsable(char *Name,bool Extended)
 #ifndef _UNIX
     if (s-Name>1 && *s==':')
       *s='_';
+    if (*s==' ' && IsPathDiv(s[1]))
+      *s='_';
 #endif
   }
 }
 
 
-char* UnixSlashToDos(char *SrcName,char *DestName)
+char* UnixSlashToDos(char *SrcName,char *DestName,uint MaxLength)
 {
   if (DestName!=NULL && DestName!=SrcName)
-    strcpy(DestName,SrcName);
+    if (strlen(SrcName)>=MaxLength)
+    {
+      *DestName=0;
+      return(DestName);
+    }
+    else
+      strcpy(DestName,SrcName);
   for (char *s=SrcName;*s!=0;s=charnext(s))
   {
     if (*s=='/')
@@ -417,10 +587,16 @@ char* UnixSlashToDos(char *SrcName,char *DestName)
 }
 
 
-char* DosSlashToUnix(char *SrcName,char *DestName)
+char* DosSlashToUnix(char *SrcName,char *DestName,uint MaxLength)
 {
   if (DestName!=NULL && DestName!=SrcName)
-    strcpy(DestName,SrcName);
+    if (strlen(SrcName)>=MaxLength)
+    {
+      *DestName=0;
+      return(DestName);
+    }
+    else
+      strcpy(DestName,SrcName);
   for (char *s=SrcName;*s!=0;s=charnext(s))
   {
     if (*s=='\\')
@@ -433,11 +609,48 @@ char* DosSlashToUnix(char *SrcName,char *DestName)
 }
 
 
+wchar* UnixSlashToDos(wchar *SrcName,wchar *DestName,uint MaxLength)
+{
+  if (DestName!=NULL && DestName!=SrcName)
+    if (strlenw(SrcName)>=MaxLength)
+    {
+      *DestName=0;
+      return(DestName);
+    }
+    else
+      strcpyw(DestName,SrcName);
+  for (wchar *s=SrcName;*s!=0;s++)
+  {
+    if (*s=='/')
+      if (DestName==NULL)
+        *s='\\';
+      else
+        DestName[s-SrcName]='\\';
+  }
+  return(DestName==NULL ? SrcName:DestName);
+}
+
+
 bool IsFullPath(const char *Path)
 {
   char PathOnly[NM];
-  GetFilePath(Path,PathOnly);
-  if (IsWildcard(PathOnly))
+  GetFilePath(Path,PathOnly,ASIZE(PathOnly));
+  if (IsWildcard(PathOnly,NULL))
+    return(true);
+#if defined(_WIN_32) || defined(_EMX)
+  return(Path[0]=='\\' && Path[1]=='\\' ||
+         IsDiskLetter(Path) && IsPathDiv(Path[2]));
+#else
+  return(IsPathDiv(Path[0]));
+#endif
+}
+
+
+bool IsFullPath(const wchar *Path)
+{
+  wchar PathOnly[NM];
+  GetFilePath(Path,PathOnly,ASIZE(PathOnly));
+  if (IsWildcard(NULL,PathOnly))
     return(true);
 #if defined(_WIN_32) || defined(_EMX)
   return(Path[0]=='\\' && Path[1]=='\\' ||
@@ -450,7 +663,14 @@ bool IsFullPath(const char *Path)
 
 bool IsDiskLetter(const char *Path)
 {
-  char Letter=toupper(Path[0]);
+  char Letter=etoupper(Path[0]);
+  return(Letter>='A' && Letter<='Z' && IsDriveDiv(Path[1]));
+}
+
+
+bool IsDiskLetter(const wchar *Path)
+{
+  wchar Letter=etoupperw(Path[0]);
   return(Letter>='A' && Letter<='Z' && IsDriveDiv(Path[1]));
 }
 
@@ -466,7 +686,7 @@ void GetPathRoot(const char *Path,char *Root)
       const char *Slash=strchr(Path+2,'\\');
       if (Slash!=NULL)
       {
-        int Length;
+        size_t Length;
         if ((Slash=strchr(Slash+1,'\\'))!=NULL)
           Length=Slash-Path+1;
         else
@@ -503,7 +723,54 @@ int ParseVersionFileName(char *Name,wchar *NameW,bool Truncate)
 }
 
 
-
+#if !defined(SFX_MODULE) && !defined(SETUP)
+char* VolNameToFirstName(const char *VolName,char *FirstName,bool NewNumbering)
+{
+  if (FirstName!=VolName)
+    strcpy(FirstName,VolName);
+  char *VolNumStart=FirstName;
+  if (NewNumbering)
+  {
+    int N='1';
+    for (char *ChPtr=GetVolNumPart(FirstName);ChPtr>FirstName;ChPtr--)
+      if (IsDigit(*ChPtr))
+      {
+        *ChPtr=N;
+        N='0';
+      }
+      else
+        if (N=='0')
+        {
+          VolNumStart=ChPtr+1;
+          break;
+        }
+  }
+  else
+  {
+    SetExt(FirstName,"rar");
+    VolNumStart=GetExt(FirstName);
+  }
+  if (!FileExist(FirstName))
+  {
+    char Mask[NM];
+    strcpy(Mask,FirstName);
+    SetExt(Mask,"*");
+    FindFile Find;
+    Find.SetMask(Mask);
+    struct FindData FD;
+    while (Find.Next(&FD))
+    {
+      Archive Arc;
+      if (Arc.Open(FD.Name,FD.NameW) && Arc.IsArchive(true) && !Arc.NotFirstVolume)
+      {
+        strcpy(FirstName,FD.Name);
+        break;
+      }
+    }
+  }
+  return(VolNumStart);
+}
+#endif
 
 
 
@@ -519,5 +786,7 @@ wchar* GetWideName(const char *Name,const wchar *NameW,wchar *DestW)
     CharToWide(Name,DestW);
   return(DestW);
 }
+
+
 
 

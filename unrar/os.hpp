@@ -8,6 +8,10 @@
   #define INCL_BASE
 #endif
 
+#if defined(RARDLL) && !defined(SILENT)
+#define SILENT
+#endif
+
 #if defined(_WIN_32) || defined(_EMX)
 #define ENABLE_BAD_ALLOC
 #endif
@@ -20,9 +24,12 @@
 
 #ifdef _WIN_32
 
-#define STRICT
-#define WINVER 0x0400
-#define _WIN32_WINNT 0x0300
+  #define STRICT
+  #undef WINVER
+  #undef _WIN32_WINNT
+  #define WINVER 0x0400
+  #define _WIN32_WINNT 0x0300
+
 
 #define WIN32_LEAN_AND_MEAN
 
@@ -30,35 +37,41 @@
 #include <prsht.h>
 
 #ifndef _WIN_CE
-#include <winioctl.h>
-#endif
+  #include <shellapi.h>
+  #include <shlobj.h>
+  #include <winioctl.h>
 
-#endif
+
+#endif // _WIN_CE
+
+
+#endif // _WIN_32
 
 #ifndef _WIN_CE
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <dos.h>
-#endif
+  #include <sys/types.h>
+  #include <sys/stat.h>
+  #include <dos.h>
+#endif // _WIN_CE
 
 #if !defined(_EMX) && !defined(_MSC_VER) && !defined(_WIN_CE)
-  #define ENABLE_MKTEMP
   #include <dir.h>
 #endif
 #ifdef _MSC_VER
-  #define for if (0) ; else for
-#ifndef _WIN_CE
-  #include <direct.h>
-#endif
+  #if _MSC_VER<1500
+    #define for if (0) ; else for
+  #endif
+  #ifndef _WIN_CE
+    #include <direct.h>
+  #endif
 #else
   #include <dirent.h>
-#endif
+#endif // _MSC_VER
 
 #ifndef _WIN_CE
-#include <share.h>
-#endif
+  #include <share.h>
+#endif // _WIN_CE
 
-#if defined(ENABLE_BAD_ALLOC) && !defined(_WIN_CE) && !defined(__GNUC__)
+#if defined(ENABLE_BAD_ALLOC) && !defined(_WIN_CE)
   #include <new.h>
 #endif
 
@@ -75,11 +88,11 @@
     #include <emx/syscalls.h>
   #endif
 #else
-//  #ifdef _MSC_VER
+  #if defined(_MSC_VER) || defined(__MINGW32__)
       #include <exception>
-//  #else
-//    #include <except.h>
-//  #endif
+  #else
+    #include <except.h>
+  #endif
 #endif
 
 #include <stdio.h>
@@ -98,7 +111,7 @@
 /*
 #ifdef _WIN_32
 #pragma hdrstop
-#endif
+#endif // _WIN_32
 */
 
 #define ENABLE_ACCESS
@@ -189,15 +202,17 @@
 #define CREATEBINARY "w+"
 #define APPENDTEXT   "a"
 
-#define _stdfunction
+#define _stdfunction 
 
 #ifdef _APPLE
-	#ifndef BIG_ENDIAN
-		#define BIG_ENDIAN
-	#endif
-	#ifdef LITTLE_ENDIAN
-		#undef LITTLE_ENDIAN
-	#endif
+  #if defined(__BIG_ENDIAN__) && !defined(BIG_ENDIAN)
+    #define BIG_ENDIAN
+    #undef LITTLE_ENDIAN
+  #endif
+  #if defined(__i386__) && !defined(LITTLE_ENDIAN)
+    #define LITTLE_ENDIAN
+    #undef BIG_ENDIAN
+  #endif
 #endif
 
 #if defined(__sparc) || defined(sparc) || defined(__hpux)
@@ -208,9 +223,21 @@
 
 #endif
 
-typedef const char* MSGID;
+  typedef const char* MSGID;
 
 #define safebuf static
+
+#if !defined(LITTLE_ENDIAN) && !defined(BIG_ENDIAN)
+  #if defined(__i386) || defined(i386) || defined(__i386__)
+    #define LITTLE_ENDIAN
+  #elif defined(BYTE_ORDER) && BYTE_ORDER == LITTLE_ENDIAN
+    #define LITTLE_ENDIAN
+  #elif defined(BYTE_ORDER) && BYTE_ORDER == BIG_ENDIAN
+    #define BIG_ENDIAN
+  #else
+    #error "Neither LITTLE_ENDIAN nor BIG_ENDIAN are defined. Define one of them."
+  #endif
+#endif
 
 #if defined(LITTLE_ENDIAN) && defined(BIG_ENDIAN)
   #if defined(BYTE_ORDER) && BYTE_ORDER == BIG_ENDIAN
@@ -218,12 +245,19 @@ typedef const char* MSGID;
   #elif defined(BYTE_ORDER) && BYTE_ORDER == LITTLE_ENDIAN
     #undef BIG_ENDIAN
   #else
-    #error "Both LITTLE_ENDIAN and BIG_ENDIAN are defined. Undef something one"
+    #error "Both LITTLE_ENDIAN and BIG_ENDIAN are defined. Undef one of them."
   #endif
 #endif
 
 #if !defined(BIG_ENDIAN) && !defined(_WIN_CE) && defined(_WIN_32)
+/* allow not aligned integer access, increases speed in some operations */
 #define ALLOW_NOT_ALIGNED_INT
+#endif
+
+#if defined(__sparc) || defined(sparc) || defined(__sparcv9)
+/* prohibit not aligned access to data structures in text comression
+   algorithm, increases memory requirements */
+#define STRICT_ALIGNMENT_REQUIRED
 #endif
 
 #endif // _RAR_OS_

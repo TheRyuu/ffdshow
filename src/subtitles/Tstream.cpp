@@ -458,7 +458,7 @@ char* TstreamMem::fgets0(char *buf,int len) const
 }
 
 //==================================== TstreamRAR =====================================
-int CALLBACK TstreamRAR::callback(UINT msg,LONG_PTR UserData,LONG_PTR P1,LONG P2)
+int CALLBACK TstreamRAR::callback(UINT msg,LPARAM UserData,LPARAM P1,LONG P2)
 {
     if (msg==UCM_PROCESSDATA) {
         TstreamRAR *self=(TstreamRAR*)UserData;
@@ -482,7 +482,7 @@ TstreamRAR::TstreamRAR(const char_t *rarflnm,const char_t *flnm,const Tconfig *c
     typedef int    (PASCAL* RARCloseArchive)(HANDLE hArcData);
     typedef int    (PASCAL* RARReadHeaderEx)(HANDLE hArcData,struct RARHeaderDataEx *HeaderData);
     typedef int    (PASCAL* RARProcessFile)(HANDLE hArcData,int Operation,char *DestPath,char *DestName);
-    typedef void   (PASCAL* RARSetCallback64)(HANDLE hArcData,UNRARCALLBACK64 Callback,LONG_PTR UserData);
+    typedef void   (PASCAL* RARSetCallback64)(HANDLE hArcData,UNRARCALLBACK Callback,LPARAM UserData);
     RAROpenArchiveEx OpenArchiveEx;
     unrar->loadFunction(OpenArchiveEx,"RAROpenArchiveEx");
     RARCloseArchive CloseArchive;
@@ -500,7 +500,7 @@ TstreamRAR::TstreamRAR(const char_t *rarflnm,const char_t *flnm,const Tconfig *c
     RAROpenArchiveDataEx ArchiveDataEx;
     memset(&ArchiveDataEx,0,sizeof(ArchiveDataEx));
 #ifdef UNICODE
-    ArchiveDataEx.ArcNameW=rarflnm;
+    ArchiveDataEx.ArcNameW=(wchar_t*)rarflnm;
 #else
     ArchiveDataEx.ArcName=rarflnm;
 #endif
@@ -511,7 +511,7 @@ TstreamRAR::TstreamRAR(const char_t *rarflnm,const char_t *flnm,const Tconfig *c
         delete unrar;
         return;
     }
-    SetCallback64(hrar,callback,LONG_PTR(this));
+    SetCallback64(hrar,callback,LPARAM(this));
     RARHeaderDataEx HeaderDataEx;
     HeaderDataEx.CmtBuf=NULL;
     char_t ext[MAX_PATH];

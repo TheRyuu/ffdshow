@@ -17,14 +17,14 @@ void SubAllocator::Clean()
 }
 
 
-inline void SubAllocator::InsertNode(void* p,int indx)
+inline void SubAllocator::InsertNode(void* p,int indx) 
 {
   ((RAR_NODE*) p)->next=FreeList[indx].next;
   FreeList[indx].next=(RAR_NODE*) p;
 }
 
 
-inline void* SubAllocator::RemoveNode(int indx)
+inline void* SubAllocator::RemoveNode(int indx) 
 {
   RAR_NODE* RetVal=FreeList[indx].next;
   FreeList[indx].next=RetVal->next;
@@ -32,9 +32,20 @@ inline void* SubAllocator::RemoveNode(int indx)
 }
 
 
-inline uint SubAllocator::U2B(int NU)
+inline uint SubAllocator::U2B(int NU) 
+{ 
+  // We calculate the size of units in bytes based on real UNIT_SIZE.
+  // In original implementation it was 8*NU+4*NU.
+  return UNIT_SIZE*NU;
+}
+
+
+
+// Calculate RAR_MEM_BLK+Items address. Real RAR_MEM_BLK size must be
+// equal to UNIT_SIZE, so we cannot just add Items to RAR_MEM_BLK address.
+inline RAR_MEM_BLK* SubAllocator::MBPtr(RAR_MEM_BLK *BasePtr,int Items)
 {
-  return /*8*NU+4*NU*/UNIT_SIZE*NU;
+  return((RAR_MEM_BLK*)( ((byte *)(BasePtr))+U2B(Items) ));
 }
 
 
@@ -42,7 +53,7 @@ inline void SubAllocator::SplitBlock(void* pv,int OldIndx,int NewIndx)
 {
   int i, UDiff=Indx2Units[OldIndx]-Indx2Units[NewIndx];
   byte* p=((byte*) pv)+U2B(Indx2Units[NewIndx]);
-  if (Indx2Units[i=Units2Indx[UDiff-1]] != UDiff)
+  if (Indx2Units[i=Units2Indx[UDiff-1]] != UDiff) 
   {
     InsertNode(p,--i);
     p += U2B(i=Indx2Units[i]);
@@ -56,7 +67,7 @@ inline void SubAllocator::SplitBlock(void* pv,int OldIndx,int NewIndx)
 
 void SubAllocator::StopSubAllocator()
 {
-  if ( SubAllocatorSize )
+  if ( SubAllocatorSize ) 
   {
     SubAllocatorSize=0;
     rarfree(HeapStart);
@@ -70,13 +81,22 @@ bool SubAllocator::StartSubAllocator(int SASize)
   if (SubAllocatorSize == t)
     return TRUE;
   StopSubAllocator();
-  uint AllocSize=t/FIXED_UNIT_SIZE*UNIT_SIZE+UNIT_SIZE;
+
+  // Original algorithm expects FIXED_UNIT_SIZE, but actual structure size
+  // can be larger. So let's recalculate the allocated size and add two more
+  // units: one as reserve for HeapEnd overflow checks and another
+  // to provide the space to correctly align UnitsStart.
+  uint AllocSize=t/FIXED_UNIT_SIZE*UNIT_SIZE+2*UNIT_SIZE;
   if ((HeapStart=(byte *)rarmalloc(AllocSize)) == NULL)
   {
     ErrHandler.MemoryError();
     return FALSE;
   }
+
+  // HeapEnd did not present in original algorithm. We added it to control
+  // invalid memory access attempts when processing corrupt archived data.
   HeapEnd=HeapStart+AllocSize-UNIT_SIZE;
+
   SubAllocatorSize=t;
   return TRUE;
 }
@@ -87,13 +107,46 @@ void SubAllocator::InitSubAllocator()
   int i, k;
   memset(FreeList,0,sizeof(FreeList));
   pText=HeapStart;
+
+  // Original algorithm operates with 12 byte FIXED_UNIT_SIZE, but actual
+  // size of RAR_MEM_BLK and PPM_CONTEXT structures can exceed this value
+  // because of alignment and larger pointer fields size.
+  // So we define UNIT_SIZE for this larger size and adjust memory
+  // pointers accordingly.
+
+  // Size2 is (HiUnit-LoUnit) memory area size to allocate as originally
+  // supposed by compression algorithm. It is 7/8 of total allocated size.
   uint Size2=FIXED_UNIT_SIZE*(SubAllocatorSize/8/FIXED_UNIT_SIZE*7);
+
+  // RealSize2 is the real adjusted size of (HiUnit-LoUnit) memory taking
+  // into account that our UNIT_SIZE can be larger than FIXED_UNIT_SIZE.
   uint RealSize2=Size2/FIXED_UNIT_SIZE*UNIT_SIZE;
+
+  // Size1 is the size of memory area from HeapStart to FakeUnitsStart
+  // as originally supposed by compression algorithm. This area can contain
+  // different data types, both single symbols and structures.
   uint Size1=SubAllocatorSize-Size2;
-  uint RealSize1=Size1/FIXED_UNIT_SIZE*UNIT_SIZE+Size1%FIXED_UNIT_SIZE;
-  HiUnit=HeapStart+SubAllocatorSize;
+
+  // Real size of this area. We correct it according to UNIT_SIZE vs
+  // FIXED_UNIT_SIZE difference. Also we add one more UNIT_SIZE
+  // to compensate a possible reminder from Size1/FIXED_UNIT_SIZE,
+  // which would be lost otherwise. We add UNIT_SIZE instead of 
+  // this Size1%FIXED_UNIT_SIZE reminder, because it allows to align
+  // UnitsStart easily and adding more than reminder is ok for algorithm.
+  uint RealSize1=Size1/FIXED_UNIT_SIZE*UNIT_SIZE+UNIT_SIZE;
+
+  // RealSize1 must be divided by UNIT_SIZE without a reminder, so UnitsStart
+  // is aligned to UNIT_SIZE. It is important for those architectures,
+  // where a proper memory alignment is mandatory. Since we produce RealSize1
+  // multiplying by UNIT_SIZE, this condition is always true. So LoUnit,
+  // UnitsStart, HeapStart are properly aligned,
   LoUnit=UnitsStart=HeapStart+RealSize1;
+
+  // When we reach FakeUnitsStart, we restart the model. It is where
+  // the original algorithm expected to see UnitsStart. Real UnitsStart
+  // can have a larger value.
   FakeUnitsStart=HeapStart+Size1;
+
   HiUnit=LoUnit+RealSize2;
   for (i=0,k=1;i < N1     ;i++,k += 1)
     Indx2Units[i]=k;
@@ -126,19 +179,19 @@ inline void SubAllocator::GlueFreeBlocks()
       p->NU=Indx2Units[i];
     }
   for (p=s0.next;p != &s0;p=p->next)
-    while ((p1=p+p->NU)->Stamp == 0xFFFF && int(p->NU)+p1->NU < 0x10000)
+    while ((p1=MBPtr(p,p->NU))->Stamp == 0xFFFF && int(p->NU)+p1->NU < 0x10000)
     {
       p1->remove();
       p->NU += p1->NU;
     }
   while ((p=s0.next) != &s0)
   {
-    for (p->remove(), sz=p->NU;sz > 128;sz -= 128, p += 128)
+    for (p->remove(), sz=p->NU;sz > 128;sz -= 128, p=MBPtr(p,128))
       InsertNode(p,N_INDEXES-1);
     if (Indx2Units[i=Units2Indx[sz-1]] != sz)
     {
       k=sz-Indx2Units[--i];
-      InsertNode(p+(sz-k),k-1);
+      InsertNode(MBPtr(p,sz-k),k-1);
     }
     InsertNode(p,i);
   }
@@ -160,7 +213,7 @@ void* SubAllocator::AllocUnitsRare(int indx)
     {
       GlueCount--;
       i=U2B(Indx2Units[indx]);
-      int j=12*Indx2Units[indx];
+      int j=FIXED_UNIT_SIZE*Indx2Units[indx];
       if (FakeUnitsStart-pText > j)
       {
         FakeUnitsStart-=j;
@@ -206,7 +259,7 @@ void* SubAllocator::ExpandUnits(void* OldPtr,int OldNU)
   if (i0 == i1)
     return OldPtr;
   void* ptr=AllocUnits(OldNU+1);
-  if ( ptr )
+  if ( ptr ) 
   {
     memcpy(ptr,OldPtr,U2B(OldNU));
     InsertNode(OldPtr,i0);
@@ -226,8 +279,8 @@ void* SubAllocator::ShrinkUnits(void* OldPtr,int OldNU,int NewNU)
     memcpy(ptr,OldPtr,U2B(NewNU));
     InsertNode(OldPtr,i0);
     return ptr;
-  }
-  else
+  } 
+  else 
   {
     SplitBlock(OldPtr,i0,i1);
     return OldPtr;

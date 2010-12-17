@@ -126,7 +126,7 @@ void Unpack::OldUnpWriteBuf()
     UnpSomeRead=true;
   if (UnpPtr<WrPtr)
   {
-    UnpIO->UnpWrite(&Window[WrPtr],-WrPtr & MAXWINMASK);
+    UnpIO->UnpWrite(&Window[WrPtr],-(int)WrPtr & MAXWINMASK);
     UnpIO->UnpWrite(Window,UnpPtr);
     UnpAllBuf=true;
   }
@@ -135,6 +135,9 @@ void Unpack::OldUnpWriteBuf()
   WrPtr=UnpPtr;
 }
 
+
+#define GetShortLen1(pos) ((pos)==1 ? Buf60+3:ShortLen1[pos])
+#define GetShortLen2(pos) ((pos)==3 ? Buf60+3:ShortLen2[pos])
 
 void Unpack::ShortLZ()
 {
@@ -167,21 +170,22 @@ void Unpack::ShortLZ()
 
   BitField>>=8;
 
-  ShortLen1[1]=ShortLen2[3]=Buf60+3;
+//  not thread safe, replaced by GetShortLen1 and GetShortLen2 macro
+//  ShortLen1[1]=ShortLen2[3]=Buf60+3;
 
   if (AvrLn1<37)
   {
     for (Length=0;;Length++)
-      if (((BitField^ShortXor1[Length]) & (~(0xff>>ShortLen1[Length])))==0)
+      if (((BitField^ShortXor1[Length]) & (~(0xff>>GetShortLen1(Length))))==0)
         break;
-    faddbits(ShortLen1[Length]);
+    faddbits(GetShortLen1(Length));
   }
   else
   {
     for (Length=0;;Length++)
-      if (((BitField^ShortXor2[Length]) & (~(0xff>>ShortLen2[Length])))==0)
+      if (((BitField^ShortXor2[Length]) & (~(0xff>>GetShortLen2(Length))))==0)
         break;
-    faddbits(ShortLen2[Length]);
+    faddbits(GetShortLen2(Length));
   }
 
   if (Length >= 9)
@@ -496,8 +500,7 @@ void Unpack::OldCopyString(unsigned int Distance,unsigned int Length)
 }
 
 
-unsigned int Unpack::DecodeNum(int Num,unsigned int StartPos,
-                               unsigned int *DecTab,unsigned int *PosTab)
+uint Unpack::DecodeNum(uint Num,uint StartPos,uint *DecTab,uint *PosTab)
 {
   int I;
   for (Num&=0xfff0,I=0;DecTab[I]<=Num;I++)

@@ -1,19 +1,28 @@
 #ifndef _RAR_FINDDATA_
 #define _RAR_FINDDATA_
 
+enum FINDDATA_FLAGS {
+  FDDF_SECONDDIR=1  // Second encounter of same directory in SCAN_GETDIRSTWICE ScanTree mode
+};
+
 struct FindData
 {
   char Name[NM];
   wchar NameW[NM];
-  Int64 Size;
+  int64 Size;
   uint FileAttr;
   uint FileTime;
   bool IsDir;
+  RarTime mtime;
+  RarTime ctime;
+  RarTime atime;
 #ifdef _WIN_32
-  FILETIME ftCreationTime;
-  FILETIME ftLastAccessTime;
-  FILETIME ftLastWriteTime;
+  char ShortName[NM];
+  FILETIME ftCreationTime; 
+  FILETIME ftLastAccessTime; 
+  FILETIME ftLastWriteTime; 
 #endif
+  uint Flags;
   bool Error;
 };
 
@@ -26,7 +35,7 @@ class FindFile
 
     char FindMask[NM];
     wchar FindMaskW[NM];
-    int FirstCall;
+    bool FirstCall;
 #ifdef _WIN_32
     HANDLE hFind;
 #else
