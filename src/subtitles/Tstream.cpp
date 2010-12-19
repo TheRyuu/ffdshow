@@ -458,7 +458,7 @@ char* TstreamMem::fgets0(char *buf,int len) const
 }
 
 //==================================== TstreamRAR =====================================
-int CALLBACK TstreamRAR::callback(UINT msg,LPARAM UserData,LPARAM P1,LONG P2)
+int CALLBACK TstreamRAR::callback(UINT msg,LPARAM UserData,LPARAM P1,LPARAM P2)
 {
     if (msg==UCM_PROCESSDATA) {
         TstreamRAR *self=(TstreamRAR*)UserData;
