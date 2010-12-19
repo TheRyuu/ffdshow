@@ -73,17 +73,8 @@ Tlibavcodec::Tlibavcodec(const Tconfig *config):refcount(0)
 {
 #if COMPILE_AS_FFMPEG_MT
  dll=new Tdll(_l("ffmpegmt.dll"),config);
- dec_only=false;
 #else
  dll=new Tdll(_l("ffmpeg.dll"),config);
- if (!dll->ok)
-  {
-   delete dll;
-   dll=new Tdll(_l("libavcodec_dec.dll"),config);
-   dec_only=true;
-  }
- else
-  dec_only=false;
 #endif
 
  dll->loadFunction(avcodec_init,"avcodec_init");
@@ -97,7 +88,6 @@ Tlibavcodec::Tlibavcodec(const Tconfig *config):refcount(0)
  dll->loadFunction(avcodec_decode_audio3,"avcodec_decode_audio3");
  dll->loadFunction(avcodec_flush_buffers,"avcodec_flush_buffers");
  dll->loadFunction(avcodec_close0,"avcodec_close");
- //dll->loadFunction(av_free_static,"av_free_static");
  dll->loadFunction(av_log_set_callback,"av_log_set_callback");
  dll->loadFunction(av_log_get_callback,"av_log_get_callback");
  dll->loadFunction(av_log_get_level,"av_log_get_level");
@@ -164,7 +154,6 @@ Tlibavcodec::Tlibavcodec(const Tconfig *config):refcount(0)
  dll->loadFunction(GetFFMpegPictureType,"GetFFMpegPictureType");
  dll->loadFunction(FFIsInterlaced,"FFIsInterlaced");
  dll->loadFunction(FFGetMBNumber,"FFGetMBNumber");
- //DXVA methods end
 
  //yadif methods
  dll->loadFunction(yadif_init,"yadif_init");
@@ -172,18 +161,15 @@ Tlibavcodec::Tlibavcodec(const Tconfig *config):refcount(0)
  dll->loadFunction(yadif_filter,"yadif_filter");
 #endif
 
- if (!dec_only)
-  {
-   dll->loadFunction(avcodec_find_encoder,"avcodec_find_encoder");
-   dll->loadFunction(avcodec_encode_video,"avcodec_encode_video");
-   dll->loadFunction(avcodec_encode_audio,"avcodec_encode_audio");
-  }
- else
-  {
-   avcodec_find_encoder=NULL;
-   avcodec_encode_video=NULL;
-   avcodec_encode_audio=NULL;
-  }
+#if !COMPILE_AS_FFMPEG_MT
+ dll->loadFunction(avcodec_find_encoder,"avcodec_find_encoder");
+ dll->loadFunction(avcodec_encode_video,"avcodec_encode_video");
+ dll->loadFunction(avcodec_encode_audio,"avcodec_encode_audio");
+#else
+ avcodec_find_encoder=NULL;
+ avcodec_encode_video=NULL;
+ avcodec_encode_audio=NULL;
+#endif
 
  ok=dll->ok;
 
@@ -196,7 +182,6 @@ Tlibavcodec::Tlibavcodec(const Tconfig *config):refcount(0)
 }
 Tlibavcodec::~Tlibavcodec()
 {
- //if (dll->ok) av_free_static();
  delete dll;
 }
 
@@ -337,11 +322,6 @@ bool Tlibavcodec::getVersion(const Tconfig *config,ffstring &vers,ffstring &lice
  Tdll *dl=new Tdll(_l("ffmpegmt.dll"),config);
 #else
  Tdll *dl=new Tdll(_l("ffmpeg.dll"),config);
- if (!dl->ok)
-  {
-   delete dl;
-   dl=new Tdll(_l("libavcodec_dec.dll"),config);
-  }
 #endif
 
  void (*av_getVersion)(char **version,char **build,char **datetime,const char* *license);
@@ -369,7 +349,7 @@ bool Tlibavcodec::check(const Tconfig *config)
 #if COMPILE_AS_FFMPEG_MT
  return Tdll::check(_l("ffmpegmt.dll"),config);
 #else
- return Tdll::check(_l("ffmpeg.dll"),config) || Tdll::check(_l("libavcodec_dec.dll"),config);
+ return Tdll::check(_l("ffmpeg.dll"),config);
 #endif
 }
 

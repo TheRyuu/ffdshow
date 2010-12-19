@@ -32,7 +32,7 @@ void ToutcspsPage::init(void)
     Tlibavcodec *lavc;
     deci->getLibavcodec(&lavc);
     static const int dvs[]= {IDC_CHB_OUT_DV,IDC_LBL_OUT_DV_PROFILE,IDC_CBX_OUT_DV_PROFILE,0};
-    enable(lavc && lavc->ok && !lavc->dec_only && (filterMode&IDFF_FILTERMODE_VFW)==0,dvs);
+    enable(lavc && lavc->ok && (filterMode&IDFF_FILTERMODE_VFW)==0,dvs);
     if (lavc) {
         lavc->Release();
     }

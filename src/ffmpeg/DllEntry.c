@@ -31,21 +31,19 @@ CRITICAL_SECTION g_csStaticDataLock;
 // --- standard WIN32 entrypoints --------------------------------------
 BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
 {
- static int count=0;
+ //static int count=0;
  char pomS[40];
  switch (dwReason)
   {
    case DLL_PROCESS_ATTACH:
-    count++;
+    //count++;
     //snprintf(pomS,40,"ffmpeg: %i %i\n",count,hInstance);OutputDebugString(pomS);
     DisableThreadLibraryCalls(hInstance);
     InitializeCriticalSection( &g_csStaticDataLock );
     break;
    case DLL_PROCESS_DETACH:
-    count--;
+    //count--;
     //snprintf(pomS,40,"ffmpeg: %i %i\n",count,hInstance);OutputDebugString(pomS);
-    if (count<=0)
-     av_free_static();
     DeleteCriticalSection( &g_csStaticDataLock );
     break;
   }

@@ -60,7 +60,7 @@ TvideoCodecLibavcodec::TvideoCodecLibavcodec(IffdshowBase *Ideci,IencVideoSink *
     h264RandomAccess(this)
 {
     create();
-    if (ok && !libavcodec->dec_only) {
+    if (ok) {
         //encoders.push_back(new Tencoder(_l("MPEG-4"),CODEC_ID_MPEG4));
         //encoders.push_back(new Tencoder(_l("DivX 3"),CODEC_ID_MSMPEG4V3));
         //encoders.push_back(new Tencoder(_l("MS MPEG4 v2"),CODEC_ID_MSMPEG4V2));

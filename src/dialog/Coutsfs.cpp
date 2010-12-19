@@ -44,7 +44,7 @@ void ToutsfsPage::init(void)
     Tlibavcodec *lavc;
     deci->getLibavcodec(&lavc);
     static const int ac3s[]= {IDC_CHB_OUT_AC3,IDC_LBL_OUT_AC3,IDC_CBX_OUT_AC3,IDC_CHB_AOUT_AC3ENCODE_MODE,0};
-    enable(lavc && lavc->ok && !lavc->dec_only,ac3s);
+    enable(lavc && lavc->ok,ac3s);
     if (lavc) {
         lavc->Release();
     }

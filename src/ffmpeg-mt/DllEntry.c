@@ -36,12 +36,10 @@ BOOL pthread_win32_thread_detach_np(void);
 // --- standard WIN32 entrypoints --------------------------------------
 BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
 {
-    static int count=0;
     char pomS[40];
     switch (dwReason)
     {
     case DLL_PROCESS_ATTACH:
-        count++;
         pthread_win32_process_attach_np();
         pthread_win32_thread_attach_np();
         DisableThreadLibraryCalls(hInstance);
@@ -49,7 +47,6 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
         break;
 
     case DLL_PROCESS_DETACH:
-        count--;
         pthread_win32_thread_detach_np();
         pthread_win32_process_detach_np();
         DeleteCriticalSection( &g_csStaticDataLock );

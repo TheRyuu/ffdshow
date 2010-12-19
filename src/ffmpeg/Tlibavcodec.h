@@ -55,7 +55,7 @@ public:
  static void swsInitParams(SwsParams *params,int resizeMethod);
  static void swsInitParams(SwsParams *params,int resizeMethod,int flags);
 
- bool ok,dec_only;
+ bool ok;
  AVCodecContext* avcodec_alloc_context(TlibavcodecExt *ext=NULL);
 
  void (*avcodec_init)(void);
@@ -78,7 +78,6 @@ public:
  void (*avcodec_flush_buffers)(AVCodecContext *avctx);
  int  (*avcodec_close0)(AVCodecContext *avctx);
  int  avcodec_close(AVCodecContext *avctx);
- //void (*av_free_static)(void);
 
  void (*av_log_set_callback)(void (*)(AVCodecContext*, int, const char*, va_list));
  void* (*av_log_get_callback)(void);
@@ -177,6 +176,7 @@ public:
  int      (*FFIsInterlaced) (struct AVCodecContext* pAVCtx, int nHeight);
  unsigned long (*FFGetMBNumber) (struct AVCodecContext* pAVCtx);
 
+ // yadif
  void (*yadif_init)(YADIFContext *yadctx);
  void (*yadif_uninit)(YADIFContext *yadctx);
  void (*yadif_filter)(YADIFContext *yadctx, uint8_t *dst[3], stride_t dst_stride[3], int width, int height, int parity, int tff);

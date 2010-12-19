@@ -36,7 +36,7 @@ void TgrabPage::init(void)
     deci->getLibavcodec(&lavc);
     for (int i=0; TgrabSettings::formats[i].name; i++) {
         int codec=TgrabSettings::formats[i].codec;
-        if (codec==0 || (codec==IDFF_MOVIE_LAVC && lavc && lavc->ok && !lavc->dec_only) || (codec!=IDFF_MOVIE_LAVC && config->isDecoder[codec])) {
+        if (codec==0 || (codec==IDFF_MOVIE_LAVC && lavc && lavc->ok) || (codec!=IDFF_MOVIE_LAVC && config->isDecoder[codec])) {
             cbxAdd(IDC_CBX_GRAB_FORMAT,TgrabSettings::formats[i].name,i);
         }
     }

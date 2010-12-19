@@ -85,3 +85,6 @@ EXPORTS
   yadif_init
   yadif_uninit
   yadif_filter
+  
+  avfilter_graph_alloc
+  
