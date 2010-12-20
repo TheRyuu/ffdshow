@@ -1839,13 +1839,6 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
             c->PFX ## _pixels_tab[IDX][14] = PFX ## SIZE ## _mc23_ ## CPU; \
             c->PFX ## _pixels_tab[IDX][15] = PFX ## SIZE ## _mc33_ ## CPU
 
-            SET_QPEL_FUNCS(put_qpel, 0, 16, mmx2);
-            SET_QPEL_FUNCS(put_qpel, 1, 8, mmx2);
-            SET_QPEL_FUNCS(put_no_rnd_qpel, 0, 16, mmx2);
-            SET_QPEL_FUNCS(put_no_rnd_qpel, 1, 8, mmx2);
-            SET_QPEL_FUNCS(avg_qpel, 0, 16, mmx2);
-            SET_QPEL_FUNCS(avg_qpel, 1, 8, mmx2);
-
             SET_QPEL_FUNCS(put_h264_qpel, 0, 16, mmx2);
             SET_QPEL_FUNCS(put_h264_qpel, 1, 8, mmx2);
             SET_QPEL_FUNCS(put_h264_qpel, 2, 4, mmx2);
@@ -1889,13 +1882,6 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
                 c->avg_pixels_tab[0][3] = avg_pixels16_xy2_3dnow;
                 c->avg_pixels_tab[1][3] = avg_pixels8_xy2_3dnow;
             }
-
-            SET_QPEL_FUNCS(put_qpel, 0, 16, 3dnow);
-            SET_QPEL_FUNCS(put_qpel, 1, 8, 3dnow);
-            SET_QPEL_FUNCS(put_no_rnd_qpel, 0, 16, 3dnow);
-            SET_QPEL_FUNCS(put_no_rnd_qpel, 1, 8, 3dnow);
-            SET_QPEL_FUNCS(avg_qpel, 0, 16, 3dnow);
-            SET_QPEL_FUNCS(avg_qpel, 1, 8, 3dnow);
 
             SET_QPEL_FUNCS(put_h264_qpel, 0, 16, 3dnow);
             SET_QPEL_FUNCS(put_h264_qpel, 1, 8, 3dnow);

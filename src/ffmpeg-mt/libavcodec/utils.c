@@ -542,56 +542,6 @@ free_and_end:
     goto end;
 }
 
-int attribute_align_arg avcodec_encode_audio(AVCodecContext *avctx, uint8_t *buf, int buf_size,
-                         const short *samples)
-{
-    if(buf_size < FF_MIN_BUFFER_SIZE && 0){
-        av_log(avctx, AV_LOG_ERROR, "buffer smaller than minimum size\n");
-        return -1;
-    }
-    if((avctx->codec->capabilities & CODEC_CAP_DELAY) || samples){
-        int ret = avctx->codec->encode(avctx, buf, buf_size, samples);
-        avctx->frame_number++;
-        return ret;
-    }else
-        return 0;
-}
-
-int attribute_align_arg avcodec_encode_video(AVCodecContext *avctx, uint8_t *buf, int buf_size,
-                         const AVFrame *pict)
-{
-    if(buf_size < FF_MIN_BUFFER_SIZE){
-        av_log(avctx, AV_LOG_ERROR, "buffer smaller than minimum size\n");
-        return -1;
-    }
-    if(av_image_check_size(avctx->width, avctx->height, 0, avctx))
-        return -1;
-    if((avctx->codec->capabilities & CODEC_CAP_DELAY) || pict){
-        int ret = avctx->codec->encode(avctx, buf, buf_size, pict);
-        avctx->frame_number++;
-        emms_c(); //needed to avoid an emms_c() call before every return;
-
-        return ret;
-    }else
-        return 0;
-}
-
-#if FF_API_VIDEO_OLD
-int attribute_align_arg avcodec_decode_video(AVCodecContext *avctx, AVFrame *picture,
-                         int *got_picture_ptr,
-                         const uint8_t *buf, int buf_size)
-{
-    AVPacket avpkt;
-    av_init_packet(&avpkt);
-    avpkt.data = buf;
-    avpkt.size = buf_size;
-    // HACK for CorePNG to decode as normal PNG by default
-    avpkt.flags = AV_PKT_FLAG_KEY;
-
-    return avcodec_decode_video2(avctx, picture, got_picture_ptr, &avpkt);
-}
-#endif
-
 int attribute_align_arg avcodec_decode_video2(AVCodecContext *avctx, AVFrame *picture,
                          int *got_picture_ptr,
                          AVPacket *avpkt)
@@ -615,47 +565,6 @@ int attribute_align_arg avcodec_decode_video2(AVCodecContext *avctx, AVFrame *pi
     }else
         ret= 0;
 
-    return ret;
-}
-
-#if FF_API_AUDIO_OLD
-int attribute_align_arg avcodec_decode_audio2(AVCodecContext *avctx, int16_t *samples,
-                         int *frame_size_ptr,
-                         const uint8_t *buf, int buf_size)
-{
-    AVPacket avpkt;
-    av_init_packet(&avpkt);
-    avpkt.data = buf;
-    avpkt.size = buf_size;
-
-    return avcodec_decode_audio3(avctx, samples, frame_size_ptr, &avpkt);
-}
-#endif
-
-int attribute_align_arg avcodec_decode_audio3(AVCodecContext *avctx, int16_t *samples,
-                         int *frame_size_ptr,
-                         AVPacket *avpkt)
-{
-    int ret;
-
-    if((avctx->codec->capabilities & CODEC_CAP_DELAY) || avpkt->size){
-        //FIXME remove the check below _after_ ensuring that all audio check that the available space is enough
-        if(*frame_size_ptr < AVCODEC_MAX_AUDIO_FRAME_SIZE){
-            av_log(avctx, AV_LOG_ERROR, "buffer smaller than AVCODEC_MAX_AUDIO_FRAME_SIZE\n");
-            return -1;
-        }
-        if(*frame_size_ptr < FF_MIN_BUFFER_SIZE ||
-        *frame_size_ptr < avctx->channels * avctx->frame_size * sizeof(int16_t)){
-            av_log(avctx, AV_LOG_ERROR, "buffer %d too small\n", *frame_size_ptr);
-            return -1;
-        }
-
-        ret = avctx->codec->decode(avctx, samples, frame_size_ptr, avpkt);
-        avctx->frame_number++;
-    }else{
-        ret= 0;
-        *frame_size_ptr=0;
-    }
     return ret;
 }
 
@@ -693,36 +602,6 @@ av_cold int avcodec_close(AVCodecContext *avctx)
         (*ff_lockmgr_cb)(&codec_mutex, AV_LOCK_RELEASE);
     }
     return 0;
-}
-
-AVCodec *avcodec_find_encoder(enum CodecID id)
-{
-    AVCodec *p, *experimental=NULL;
-    p = first_avcodec;
-    while (p) {
-        if (p->encode != NULL && p->id == id) {
-            if (p->capabilities & CODEC_CAP_EXPERIMENTAL && !experimental) {
-                experimental = p;
-            } else
-                return p;
-        }
-        p = p->next;
-    }
-    return experimental;
-}
-
-AVCodec *avcodec_find_encoder_by_name(const char *name)
-{
-    AVCodec *p;
-    if (!name)
-        return NULL;
-    p = first_avcodec;
-    while (p) {
-        if (p->encode != NULL && strcmp(name,p->name) == 0)
-            return p;
-        p = p->next;
-    }
-    return NULL;
 }
 
 AVCodec *avcodec_find_decoder(enum CodecID id)
@@ -824,52 +703,12 @@ char av_get_pict_type_char(int pict_type){
     }
 }
 
-int av_get_bits_per_sample(enum CodecID codec_id){
-    switch(codec_id){
-    case CODEC_ID_ADPCM_SBPRO_2:
-        return 2;
-    case CODEC_ID_ADPCM_SBPRO_3:
-        return 3;
-    case CODEC_ID_ADPCM_SBPRO_4:
-    case CODEC_ID_ADPCM_CT:
-    case CODEC_ID_ADPCM_IMA_WAV:
-    case CODEC_ID_ADPCM_MS:
-    case CODEC_ID_ADPCM_YAMAHA:
-        return 4;
-    case CODEC_ID_PCM_ALAW:
-    case CODEC_ID_PCM_MULAW:
-        return 8;
-    default:
-        return 0;
-    }
-}
-
-#if FF_API_OLD_SAMPLE_FMT
-int av_get_bits_per_sample_format(enum AVSampleFormat sample_fmt) {
-    return av_get_bits_per_sample_fmt(sample_fmt);
-}
-#endif
-
 #if !HAVE_THREADS
 int avcodec_thread_init(AVCodecContext *s, int thread_count){
     s->thread_count = thread_count;
     return -1;
 }
 #endif
-
-unsigned int av_xiphlacing(unsigned char *s, unsigned int v)
-{
-    unsigned int n = 0;
-
-    while(v >= 0xff) {
-        *s++ = 0xff;
-        v -= 0xff;
-        n++;
-    }
-    *s = v;
-    n++;
-    return n;
-}
 
 int ff_match_2uint16(const uint16_t (*tab)[2], int size, int a, int b){
     int i;

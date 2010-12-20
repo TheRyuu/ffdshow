@@ -64,16 +64,10 @@ void ff_h264_idct_add16intra_c(uint8_t *dst, const int *blockoffset, DCTELEM *bl
 void ff_h264_idct8_add4_c(uint8_t *dst, const int *blockoffset, DCTELEM *block, int stride, const uint8_t nnzc[6*8]);
 void ff_h264_idct_add8_c(uint8_t **dest, const int *blockoffset, DCTELEM *block, int stride, const uint8_t nnzc[6*8]);
 
-void ff_vector_fmul_window_c(float *dst, const float *src0, const float *src1,
-                             const float *win, float add_bias, int len);
-void ff_float_to_int16_c(int16_t *dst, const float *src, long len);
-void ff_float_to_int16_interleave_c(int16_t *dst, const float **src, long len, int channels);
-
 /* encoding scans */
 extern const uint8_t ff_alternate_horizontal_scan[64];
 extern const uint8_t ff_alternate_vertical_scan[64];
 extern const uint8_t ff_zigzag_direct[64];
-extern const uint8_t ff_zigzag248_direct[64];
 
 /* pixel operations */
 #define MAX_NEG_CROP 1024
@@ -105,10 +99,6 @@ attribute_deprecated
 void ff_img_copy_plane(uint8_t *dst, int dst_wrap, const uint8_t *src, int src_wrap, int width, int height);
 #endif
 
-void ff_shrink22(uint8_t *dst, int dst_wrap, const uint8_t *src, int src_wrap, int width, int height);
-void ff_shrink44(uint8_t *dst, int dst_wrap, const uint8_t *src, int src_wrap, int width, int height);
-void ff_shrink88(uint8_t *dst, int dst_wrap, const uint8_t *src, int src_wrap, int width, int height);
-
 void ff_gmc_c(uint8_t *dst, uint8_t *src, int stride, int h, int ox, int oy,
               int dxx, int dxy, int dyx, int dyy, int shift, int r, int width, int height);
 
@@ -123,14 +113,6 @@ I (Michael) did not check them, these are just the alignments which I think
 could be reached easily ...
 
 !future video codecs might need functions with less strict alignment
-*/
-
-/*
-void get_pixels_c(DCTELEM *block, const uint8_t *pixels, int line_size);
-void diff_pixels_c(DCTELEM *block, const uint8_t *s1, const uint8_t *s2, int stride);
-void put_pixels_clamped_c(const DCTELEM *block, uint8_t *pixels, int line_size);
-void add_pixels_clamped_c(const DCTELEM *block, uint8_t *pixels, int line_size);
-void clear_blocks_c(DCTELEM *blocks);
 */
 
 /* add and put pixel (decoding) */
@@ -196,14 +178,11 @@ void ff_emulated_edge_mc(uint8_t *buf, const uint8_t *src, int linesize,
  */
 typedef struct DSPContext {
     /* pixel ops : interface with DCT */
-    void (*get_pixels)(DCTELEM *block/*align 16*/, const uint8_t *pixels/*align 8*/, int line_size);
-    void (*diff_pixels)(DCTELEM *block/*align 16*/, const uint8_t *s1/*align 8*/, const uint8_t *s2/*align 8*/, int stride);
     void (*put_pixels_clamped)(const DCTELEM *block/*align 16*/, uint8_t *pixels/*align 8*/, int line_size);
     void (*put_signed_pixels_clamped)(const DCTELEM *block/*align 16*/, uint8_t *pixels/*align 8*/, int line_size);
     void (*add_pixels_clamped)(const DCTELEM *block/*align 16*/, uint8_t *pixels/*align 8*/, int line_size);
     void (*add_pixels8)(uint8_t *pixels, DCTELEM *block, int line_size);
     void (*add_pixels4)(uint8_t *pixels, DCTELEM *block, int line_size);
-    int (*sum_abs_dctelem)(DCTELEM *block/*align 16*/);
     /**
      * translational global motion compensation.
      */
@@ -215,34 +194,8 @@ typedef struct DSPContext {
                     int dxx, int dxy, int dyx, int dyy, int shift, int r, int width, int height);
     void (*clear_block)(DCTELEM *block/*align 16*/);
     void (*clear_blocks)(DCTELEM *blocks/*align 16*/);
-    int (*pix_sum)(uint8_t * pix, int line_size);
-    int (*pix_norm1)(uint8_t * pix, int line_size);
-// 16x16 8x8 4x4 2x2 16x8 8x4 4x2 8x16 4x8 2x4
 
     me_cmp_func sad[6]; /* identical to pix_absAxA except additional void * */
-    me_cmp_func sse[6];
-    me_cmp_func hadamard8_diff[6];
-    me_cmp_func dct_sad[6];
-    me_cmp_func quant_psnr[6];
-    me_cmp_func bit[6];
-    me_cmp_func rd[6];
-    me_cmp_func vsad[6];
-    me_cmp_func vsse[6];
-    me_cmp_func nsse[6];
-    me_cmp_func w53[6];
-    me_cmp_func w97[6];
-    me_cmp_func dct_max[6];
-    me_cmp_func dct264_sad[6];
-
-    me_cmp_func me_pre_cmp[6];
-    me_cmp_func me_cmp[6];
-    me_cmp_func me_sub_cmp[6];
-    me_cmp_func mb_cmp[6];
-    me_cmp_func ildct_cmp[6]; //only width 16 used
-    me_cmp_func frame_skip_cmp[6]; //only width 8 used
-
-    int (*ssd_int8_vs_int16)(const int8_t *pix1, const int16_t *pix2,
-                             int size);
 
     /**
      * Halfpel motion compensation with rounding (a+b+1)>>1.
@@ -292,28 +245,7 @@ typedef struct DSPContext {
      */
     op_pixels_func avg_no_rnd_pixels_tab[4][4];
 
-    void (*put_no_rnd_pixels_l2[2])(uint8_t *block/*align width (8 or 16)*/, const uint8_t *a/*align 1*/, const uint8_t *b/*align 1*/, int line_size, int h);
-
-    /**
-     * Thirdpel motion compensation with rounding (a+b+1)>>1.
-     * this is an array[12] of motion compensation functions for the 9 thirdpe
-     * positions<br>
-     * *pixels_tab[ xthirdpel + 4*ythirdpel ]
-     * @param block destination where the result is stored
-     * @param pixels source
-     * @param line_size number of bytes in a horizontal line of block
-     * @param h height
-     */
-    tpel_mc_func put_tpel_pixels_tab[11]; //FIXME individual func ptr per width?
-    tpel_mc_func avg_tpel_pixels_tab[11]; //FIXME individual func ptr per width?
-
-    qpel_mc_func put_qpel_pixels_tab[2][16];
-    qpel_mc_func avg_qpel_pixels_tab[2][16];
-    qpel_mc_func put_no_rnd_qpel_pixels_tab[2][16];
-    qpel_mc_func avg_no_rnd_qpel_pixels_tab[2][16];
-    qpel_mc_func put_mspel_pixels_tab[8];
-
-    /**
+     /**
      * h264 Chroma MC
      */
     h264_chroma_mc_func put_h264_chroma_pixels_tab[3];
@@ -324,12 +256,6 @@ typedef struct DSPContext {
 
     qpel_mc_func put_2tap_qpel_pixels_tab[4][16];
     qpel_mc_func avg_2tap_qpel_pixels_tab[4][16];
-
-    me_cmp_func pix_abs[2][4];
-
-    /* (I)DCT */
-    void (*fdct)(DCTELEM *block/* align 16*/);
-    void (*fdct248)(DCTELEM *block/* align 16*/);
 
     /* IDCT really*/
     void (*idct)(DCTELEM *block/* align 16*/);
@@ -368,33 +294,18 @@ typedef struct DSPContext {
 #define FF_PARTTRANS_IDCT_PERM 5
 #define FF_SSE2_IDCT_PERM 6
 
-    int (*try_8x8basis)(int16_t rem[64], int16_t weight[64], int16_t basis[64], int scale);
-    void (*add_8x8basis)(int16_t rem[64], int16_t basis[64], int scale);
-#define BASIS_SHIFT 16
-#define RECON_SHIFT 6
-
     void (*draw_edges)(uint8_t *buf, int wrap, int width, int height, int w, int sides);
 #define EDGE_WIDTH 16
 #define EDGE_TOP    1
 #define EDGE_BOTTOM 2
 
     void (*prefetch)(void *mem, int stride, int h);
-
-    void (*shrink[4])(uint8_t *dst, int dst_wrap, const uint8_t *src, int src_wrap, int width, int height);
 } DSPContext;
 
 void dsputil_static_init(void);
 void dsputil_init(DSPContext* p, AVCodecContext *avctx);
 
 int ff_check_alignment(void);
-
-/**
- * permute block according to permuatation.
- * @param last last non zero element in scantable order
- */
-void ff_block_permute(DCTELEM *block, uint8_t *permutation, const uint8_t *scantable, int last);
-
-void ff_set_cmp(DSPContext* c, me_cmp_func *cmp, int type);
 
 #define         BYTE_VEC32(c)   ((c)*0x01010101UL)
 
@@ -406,30 +317,6 @@ static inline uint32_t rnd_avg32(uint32_t a, uint32_t b)
 static inline uint32_t no_rnd_avg32(uint32_t a, uint32_t b)
 {
     return (a & b) + (((a ^ b) & ~BYTE_VEC32(0x01)) >> 1);
-}
-
-static inline int get_penalty_factor(int lambda, int lambda2, int type){
-    switch(type&0xFF){
-    default:
-    case FF_CMP_SAD:
-        return lambda>>FF_LAMBDA_SHIFT;
-    case FF_CMP_DCT:
-        return (3*lambda)>>(FF_LAMBDA_SHIFT+1);
-    case FF_CMP_W53:
-        return (4*lambda)>>(FF_LAMBDA_SHIFT);
-    case FF_CMP_W97:
-        return (2*lambda)>>(FF_LAMBDA_SHIFT);
-    case FF_CMP_SATD:
-    case FF_CMP_DCT264:
-        return (2*lambda)>>FF_LAMBDA_SHIFT;
-    case FF_CMP_RD:
-    case FF_CMP_PSNR:
-    case FF_CMP_SSE:
-    case FF_CMP_NSSE:
-        return lambda2>>FF_LAMBDA_SHIFT;
-    case FF_CMP_BIT:
-        return 1;
-    }
 }
 
 /**
@@ -464,20 +351,6 @@ static inline void emms(void)
 
 #define emms_c() emms()
 
-#elif ARCH_ARM
-
-#if HAVE_NEON
-#   define STRIDE_ALIGN 16
-#endif
-
-#elif ARCH_PPC
-
-#define STRIDE_ALIGN 16
-
-#elif HAVE_MMI
-
-#define STRIDE_ALIGN 16
-
 #endif
 
 #ifndef STRIDE_ALIGN
@@ -499,27 +372,6 @@ static inline void emms(void)
 #else
 #   define LOCAL_ALIGNED_16(t, v, s, ...) LOCAL_ALIGNED(16, t, v, s, __VA_ARGS__)
 #endif
-
-#define WRAPPER8_16(name8, name16)\
-static int name16(void /*MpegEncContext*/ *s, uint8_t *dst, uint8_t *src, int stride, int h){\
-    return name8(s, dst           , src           , stride, h)\
-          +name8(s, dst+8         , src+8         , stride, h);\
-}
-
-#define WRAPPER8_16_SQ(name8, name16)\
-static int name16(void /*MpegEncContext*/ *s, uint8_t *dst, uint8_t *src, int stride, int h){\
-    int score=0;\
-    score +=name8(s, dst           , src           , stride, 8);\
-    score +=name8(s, dst+8         , src+8         , stride, 8);\
-    if(h==16){\
-        dst += 8*stride;\
-        src += 8*stride;\
-        score +=name8(s, dst           , src           , stride, 8);\
-        score +=name8(s, dst+8         , src+8         , stride, 8);\
-    }\
-    return score;\
-}
-
 
 static inline void copy_block2(uint8_t *dst, const uint8_t *src, int dstStride, int srcStride, int h)
 {

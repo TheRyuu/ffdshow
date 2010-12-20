@@ -20,7 +20,6 @@ SRCS_C=\
     $(LAVC_DIR)/cabac.c \
     $(LAVC_DIR)/dsputil.c \
     $(LAVC_DIR)/error_resilience.c \
-    $(LAVC_DIR)/faanidct.c \
     $(LAVC_DIR)/golomb.c \
     $(LAVC_DIR)/h264.c \
     $(LAVC_DIR)/h264_cabac.c \
