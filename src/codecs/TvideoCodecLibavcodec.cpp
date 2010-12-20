@@ -168,6 +168,16 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
         codecId = CODEC_ID_H264;
         thread_type = FF_THREAD_FRAME;
     }
+	if (codecId == CODEC_ID_VP3_MT) {
+        // ffmpeg-mt
+        codecId = CODEC_ID_VP3;
+        thread_type = FF_THREAD_FRAME;
+    }
+	if (codecId == CODEC_ID_THEORA_MT) {
+        // ffmpeg-mt
+        codecId = CODEC_ID_THEORA;
+        thread_type = FF_THREAD_FRAME;
+    }
 
     avcodec=libavcodec->avcodec_find_decoder(codecId);
     if (!avcodec) {

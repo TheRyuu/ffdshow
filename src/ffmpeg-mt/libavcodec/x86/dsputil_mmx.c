@@ -1676,6 +1676,9 @@ void ff_vp3_idct_add_mmx(uint8_t *dest, int line_size, DCTELEM *block);
 
 void ff_vp3_idct_dc_add_mmx2(uint8_t *dest, int line_size, const DCTELEM *block);
 
+void ff_vp3_v_loop_filter_mmx2(uint8_t *src, int stride, int *bounding_values);
+void ff_vp3_h_loop_filter_mmx2(uint8_t *src, int stride, int *bounding_values);
+
 void ff_vp3_idct_sse2(int16_t *input_data);
 void ff_vp3_idct_put_sse2(uint8_t *dest, int line_size, DCTELEM *block);
 void ff_vp3_idct_add_sse2(uint8_t *dest, int line_size, DCTELEM *block);
@@ -1819,6 +1822,20 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
                 c->put_no_rnd_pixels_tab[1][2] = put_no_rnd_pixels8_y2_mmx2;
                 c->avg_pixels_tab[0][3] = avg_pixels16_xy2_mmx2;
                 c->avg_pixels_tab[1][3] = avg_pixels8_xy2_mmx2;
+
+                if (CONFIG_VP3_DECODER && HAVE_YASM) {
+                    c->vp3_v_loop_filter= ff_vp3_v_loop_filter_mmx2;
+                    c->vp3_h_loop_filter= ff_vp3_h_loop_filter_mmx2;
+                }
+            }
+            if (CONFIG_VP3_DECODER && HAVE_YASM) {
+                c->vp3_idct_dc_add = ff_vp3_idct_dc_add_mmx2;
+            }
+
+            if (CONFIG_VP3_DECODER
+                && (avctx->codec_id == CODEC_ID_VP3 || avctx->codec_id == CODEC_ID_THEORA)) {
+                c->put_no_rnd_pixels_tab[1][1] = put_no_rnd_pixels8_x2_exact_mmx2;
+                c->put_no_rnd_pixels_tab[1][2] = put_no_rnd_pixels8_y2_exact_mmx2;
             }
 
 #define SET_QPEL_FUNCS(PFX, IDX, SIZE, CPU) \
@@ -1881,6 +1898,12 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
                 c->put_no_rnd_pixels_tab[1][2] = put_no_rnd_pixels8_y2_3dnow;
                 c->avg_pixels_tab[0][3] = avg_pixels16_xy2_3dnow;
                 c->avg_pixels_tab[1][3] = avg_pixels8_xy2_3dnow;
+            }
+
+            if (CONFIG_VP3_DECODER
+                && (avctx->codec_id == CODEC_ID_VP3 || avctx->codec_id == CODEC_ID_THEORA)) {
+                c->put_no_rnd_pixels_tab[1][1] = put_no_rnd_pixels8_x2_exact_3dnow;
+                c->put_no_rnd_pixels_tab[1][2] = put_no_rnd_pixels8_y2_exact_3dnow;
             }
 
             SET_QPEL_FUNCS(put_h264_qpel, 0, 16, 3dnow);

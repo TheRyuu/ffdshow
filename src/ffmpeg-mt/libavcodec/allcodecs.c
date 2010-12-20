@@ -40,4 +40,6 @@ void avcodec_register_all(void)
 
     /* video codecs */
     REGISTER_DECODER (H264, h264);
+    REGISTER_DECODER (THEORA, theora);
+    REGISTER_DECODER (VP3, vp3);
 }

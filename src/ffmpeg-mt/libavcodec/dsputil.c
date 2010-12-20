@@ -2551,6 +2551,9 @@ av_cold void attribute_align_arg dsputil_init(DSPContext* c, AVCodecContext *avc
     dspfunc(avg, 3, 2);
 #undef dspfunc
 
+    c->put_no_rnd_pixels_l2[0]= put_no_rnd_pixels16_l2_c;
+    c->put_no_rnd_pixels_l2[1]= put_no_rnd_pixels8_l2_c;
+
 #define dspfunc(PFX, IDX, NUM) \
     c->PFX ## _pixels_tab[IDX][ 0] = PFX ## NUM ## _mc00_c; \
     c->PFX ## _pixels_tab[IDX][ 1] = PFX ## NUM ## _mc10_c; \
@@ -2593,6 +2596,12 @@ av_cold void attribute_align_arg dsputil_init(DSPContext* c, AVCodecContext *avc
 
     c->sad[0]= pix_abs16_c;
     c->sad[1]= pix_abs8_c;
+
+    if (CONFIG_VP3_DECODER) {
+        c->vp3_h_loop_filter= ff_vp3_h_loop_filter_c;
+        c->vp3_v_loop_filter= ff_vp3_v_loop_filter_c;
+        c->vp3_idct_dc_add= ff_vp3_idct_dc_add_c;
+    }
 
     c->prefetch= just_return;
 

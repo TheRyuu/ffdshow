@@ -41,7 +41,9 @@ SRCS_C=\
     $(LAVC_DIR)/pthread.c \
     $(LAVC_DIR)/simple_idct.c \
     $(LAVC_DIR)/utils.c \
+    $(LAVC_DIR)/vp3.c \
     $(LAVC_DIR)/vp3dsp.c \
+    $(LAVC_DIR)/xiph.c \
     \
     $(LAVC_DIR)/x86/dsputil_mmx.c \
     $(LAVC_DIR)/x86/fdct_mmx.c \

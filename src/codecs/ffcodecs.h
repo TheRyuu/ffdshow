@@ -202,12 +202,14 @@
  CODEC_OP(CODEC_ID_LIBDTS        ,1500,"libdts") \
  \
  CODEC_OP(CODEC_ID_H264_MT       ,2000,"h264 multithreaded") \
+ CODEC_OP(CODEC_ID_VP3_MT        ,2001,"vp3 multithreaded") \
+ CODEC_OP(CODEC_ID_THEORA_MT     ,2002,"theora multithreaded") \
  \
- CODEC_OP(CODEC_ID_H264_DXVA       ,2001,"h264 DXVA") \
+ CODEC_OP(CODEC_ID_H264_DXVA       ,2100,"h264 DXVA") \
  \
- CODEC_OP(CODEC_ID_VC1_DXVA       ,2002,"vc1 DXVA") \
+ CODEC_OP(CODEC_ID_VC1_DXVA       ,2101,"vc1 DXVA") \
  \
- CODEC_OP(CODEC_ID_HDMV_PGS_SUBTITLE, 2003, "PGS subtitles")
+ CODEC_OP(CODEC_ID_HDMV_PGS_SUBTITLE, 2200, "PGS subtitles")
 
 
 

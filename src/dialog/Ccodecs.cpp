@@ -414,7 +414,6 @@ void TcodecsPageVideo::fillCodecs(void)
 {
     if ((filterMode&IDFF_FILTERMODE_VIDEORAW)==0) {
         // Use preset setting instead
-        //static const int movies_h264[]={IDFF_MOVIE_LAVC,IDFF_MOVIE_FFMPEG_MT, IDFF_MOVIE_FFMPEG_DXVA, 0};
         static const int movies_h264[]= {IDFF_MOVIE_LAVC,IDFF_MOVIE_FFMPEG_MT, 0};
         static const Tformat::Toption options_h264[]= {{0,_l("skip deblocking when safe"),IDFF_fastH264,1},{0,_l("skip deblocking always"),IDFF_fastH264,2},{0,NULL,0,0}};
         formats.push_back(Tformat(_l("H.264/AVC")     ,IDFF_h264,movies_h264,_l("H264, AVC1, X264, VSSH (incomplete), DAVC, PAVC. ffmpeg-mt is multithreaded libavcodec (experimental)."),options_h264));
@@ -429,8 +428,9 @@ void TcodecsPageVideo::fillCodecs(void)
         formats.push_back(Tformat(_l("MP41")          ,IDFF_mp41,IDFF_MOVIE_LAVC,_l("MP41, MPG4, DIV1")));
         formats.push_back(Tformat(_l("H.263 (+)")     ,IDFF_h263,IDFF_MOVIE_LAVC,_l("H263, L263, M263, U263, X263, S263 (in 3gp files)")));
         formats.push_back(Tformat(_l("FLV1")          ,IDFF_flv1,IDFF_MOVIE_LAVC,_l("Flash Video (FLV1)")));
-        formats.push_back(Tformat(_l("Theora")        ,IDFF_theo,IDFF_MOVIE_LAVC,_l("Theora Video (THEO)")));
-        formats.push_back(Tformat(_l("VP3")           ,IDFF_vp3 ,IDFF_MOVIE_LAVC,_l("VP3 Video (VP31)")));
+		static const int movies_vp3[]= {IDFF_MOVIE_LAVC,IDFF_MOVIE_FFMPEG_MT, 0};
+        formats.push_back(Tformat(_l("Theora")        ,IDFF_theo,movies_vp3,_l("Theora Video (THEO)")));
+        formats.push_back(Tformat(_l("VP3")           ,IDFF_vp3 ,movies_vp3,_l("VP3 Video (VP31)")));
         formats.push_back(Tformat(_l("VP5")           ,IDFF_vp5 ,IDFF_MOVIE_LAVC,_l("VP5 Video (VP50)")));
         formats.push_back(Tformat(_l("VP6")           ,IDFF_vp6 ,IDFF_MOVIE_LAVC,_l("VP6 Video (VP60, VP61, VP62)")));
         formats.push_back(Tformat(_l("VP6F")          ,IDFF_vp6f,IDFF_MOVIE_LAVC,_l("Flash Video (VP6F, FLV4, VP6A)")));

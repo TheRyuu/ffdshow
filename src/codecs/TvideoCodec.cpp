@@ -71,21 +71,21 @@ TvideoCodecDec* TvideoCodecDec::initDec(IffdshowBase *deci,IdecVideoSink *sink,C
     }
 
     TvideoCodecDec *movie=NULL;
-    if      (lavc_codec    (codecId)) {
+    if      (lavc_codec(codecId)) {
         movie=new TvideoCodecLibavcodec(deci,sink);
-    } else if (raw_codec     (codecId)) {
+    } else if (raw_codec(codecId)) {
         movie=new TvideoCodecUncompressed(deci,sink);
-    } else if (wmv9_codec    (codecId)) {
+    } else if (wmv9_codec(codecId)) {
         movie=new TvideoCodecWmv9(deci,sink);
-    } else if (codecId==CODEC_ID_XVID4     ) {
+    } else if (codecId==CODEC_ID_XVID4) {
         movie=new TvideoCodecXviD4(deci,sink);
-    } else if (codecId==CODEC_ID_LIBMPEG2  ) {
+    } else if (codecId==CODEC_ID_LIBMPEG2) {
         movie=new TvideoCodecLibmpeg2(deci,sink);
-    } else if (codecId==CODEC_ID_AVISYNTH  ) {
+    } else if (codecId==CODEC_ID_AVISYNTH) {
         movie=new TvideoCodecAvisynth(deci,sink);
-    } else if (codecId==CODEC_ID_H264_MT   ) {
+    } else if (codecId==CODEC_ID_H264_MT || codecId==CODEC_ID_VP3_MT || codecId==CODEC_ID_THEORA_MT) {
         movie=new TvideoCodecLibavcodec_mt(deci,sink);
-    } else if (codecId==CODEC_ID_H264_DXVA ||codecId==CODEC_ID_VC1_DXVA) {
+    } else if (codecId==CODEC_ID_H264_DXVA || codecId==CODEC_ID_VC1_DXVA) {
         movie=new TvideoCodecLibavcodecDxva(deci,sink, codecId);
     } else {
         return NULL;

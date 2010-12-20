@@ -245,7 +245,9 @@ typedef struct DSPContext {
      */
     op_pixels_func avg_no_rnd_pixels_tab[4][4];
 
-     /**
+    void (*put_no_rnd_pixels_l2[2])(uint8_t *block/*align width (8 or 16)*/, const uint8_t *a/*align 1*/, const uint8_t *b/*align 1*/, int line_size, int h);
+
+    /**
      * h264 Chroma MC
      */
     h264_chroma_mc_func put_h264_chroma_pixels_tab[3];
@@ -256,6 +258,10 @@ typedef struct DSPContext {
 
     qpel_mc_func put_2tap_qpel_pixels_tab[4][16];
     qpel_mc_func avg_2tap_qpel_pixels_tab[4][16];
+
+    void (*vp3_idct_dc_add)(uint8_t *dest/*align 8*/, int line_size, const DCTELEM *block/*align 16*/);
+    void (*vp3_v_loop_filter)(uint8_t *src, int stride, int *bounding_values);
+    void (*vp3_h_loop_filter)(uint8_t *src, int stride, int *bounding_values);
 
     /* IDCT really*/
     void (*idct)(DCTELEM *block/* align 16*/);
