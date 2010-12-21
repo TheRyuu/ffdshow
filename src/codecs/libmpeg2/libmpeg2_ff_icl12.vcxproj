@@ -204,7 +204,6 @@
       <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <EnablePREfast>false</EnablePREfast>
       <OmitDefaultLibName>true</OmitDefaultLibName>
-      <GlobalOptimizations>true</GlobalOptimizations>
       <InterproceduralOptimization>SingleFile</InterproceduralOptimization>
     </ClCompile>
     <Link>
@@ -251,7 +250,6 @@
       <DisableSpecificWarnings>4996;4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <EnablePREfast>false</EnablePREfast>
       <OmitDefaultLibName>true</OmitDefaultLibName>
-      <GlobalOptimizations>true</GlobalOptimizations>
       <InterproceduralOptimization>SingleFile</InterproceduralOptimization>
     </ClCompile>
     <Link>

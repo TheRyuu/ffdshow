@@ -277,7 +277,6 @@
       <CompileAs>Default</CompileAs>
       <DisableSpecificWarnings>4250;4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <OmitDefaultLibName>true</OmitDefaultLibName>
-      <GlobalOptimizations>true</GlobalOptimizations>
       <InterproceduralOptimization>SingleFile</InterproceduralOptimization>
       <LoopUnrolling>4</LoopUnrolling>
     </ClCompile>
@@ -352,7 +351,6 @@
       <CompileAs>Default</CompileAs>
       <DisableSpecificWarnings>4250;4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <OmitDefaultLibName>true</OmitDefaultLibName>
-      <GlobalOptimizations>true</GlobalOptimizations>
       <InterproceduralOptimization>SingleFile</InterproceduralOptimization>
       <ImproveFloatingPointConsistency>None</ImproveFloatingPointConsistency>
       <LoopUnrolling>4</LoopUnrolling>

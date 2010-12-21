@@ -135,7 +135,6 @@
       </DebugInformationFormat>
       <CompileAs>CompileAsCpp</CompileAs>
       <DisableSpecificWarnings>4305;4244;4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-      <GlobalOptimizations>true</GlobalOptimizations>
       <InterproceduralOptimization>SingleFile</InterproceduralOptimization>
     </ClCompile>
     <ResourceCompile>
@@ -191,7 +190,6 @@
       </DebugInformationFormat>
       <CompileAs>CompileAsCpp</CompileAs>
       <DisableSpecificWarnings>4305;4244;4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-      <GlobalOptimizations>true</GlobalOptimizations>
       <InterproceduralOptimization>SingleFile</InterproceduralOptimization>
       <ImproveFloatingPointConsistency>None</ImproveFloatingPointConsistency>
     </ClCompile>
