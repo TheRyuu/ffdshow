@@ -72,7 +72,7 @@ TvideoCodecLibavcodec::TvideoCodecLibavcodec(IffdshowBase *Ideci,IencVideoSink *
         //encoders.push_back(new Tencoder(_l("WMV 7"),CODEC_ID_WMV1));
         //encoders.push_back(new Tencoder(_l("WMV 8"),CODEC_ID_WMV2));
         encoders.push_back(new Tencoder(_l("MJPEG"),CODEC_ID_MJPEG));
-        encoders.push_back(new Tencoder(_l("Lossless JPEG"),CODEC_ID_LJPEG));
+        //encoders.push_back(new Tencoder(_l("Lossless JPEG"),CODEC_ID_LJPEG));
         encoders.push_back(new Tencoder(_l("HuffYUV"),CODEC_ID_HUFFYUV));
         encoders.push_back(new Tencoder(_l("FFV1"),CODEC_ID_FFV1));
         encoders.push_back(new Tencoder(_l("DV"),CODEC_ID_DVVIDEO));
