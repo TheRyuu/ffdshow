@@ -3539,14 +3539,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\dialog\CmaskingX264.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\dialog\CmaskingX264.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\dialog\CmaskingXVID.cpp"
 				>
 			</File>
@@ -3560,14 +3552,6 @@
 			</File>
 			<File
 				RelativePath=".\src\dialog\Cme.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\dialog\CmeX264.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\dialog\CmeX264.h"
 				>
 			</File>
 			<File
@@ -4864,14 +4848,6 @@
 			</File>
 			<File
 				RelativePath=".\src\codecs\TvideoCodecWmv9.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\codecs\TvideoCodecX264.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\codecs\TvideoCodecX264.h"
 				>
 			</File>
 			<File

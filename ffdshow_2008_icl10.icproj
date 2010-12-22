@@ -5,7 +5,7 @@
 	Name="ffdshow"
 	ProjectGUID="{0C1CDCBB-5886-42B4-A928-F4B82DD3FD17}"
 	VCNestedProjectGUID="{30A21C7F-035D-41E2-95BE-B4FFA5F5176B}"
-	VCNestedProjectCRC32="3412898111"
+	VCNestedProjectCRC32="2959070890"
 	VCNestedProjectFileName="ffdshow_2008_icl10.vcproj">
 	<Platforms>
 		<Platform 
@@ -2743,12 +2743,6 @@
 				RelativePath=".\src\dialog\Cmasking.h">
 			</File>
 			<File 
-				RelativePath=".\src\dialog\CmaskingX264.cpp">
-			</File>
-			<File 
-				RelativePath=".\src\dialog\CmaskingX264.h">
-			</File>
-			<File 
 				RelativePath=".\src\dialog\CmaskingXVID.cpp">
 			</File>
 			<File 
@@ -2759,12 +2753,6 @@
 			</File>
 			<File 
 				RelativePath=".\src\dialog\Cme.h">
-			</File>
-			<File 
-				RelativePath=".\src\dialog\CmeX264.cpp">
-			</File>
-			<File 
-				RelativePath=".\src\dialog\CmeX264.h">
 			</File>
 			<File 
 				RelativePath=".\src\dialog\CmeXvid.cpp">
@@ -3739,12 +3727,6 @@
 			</File>
 			<File 
 				RelativePath=".\src\codecs\TvideoCodecWmv9.h">
-			</File>
-			<File 
-				RelativePath=".\src\codecs\TvideoCodecX264.cpp">
-			</File>
-			<File 
-				RelativePath=".\src\codecs\TvideoCodecX264.h">
 			</File>
 			<File 
 				RelativePath=".\src\codecs\TvideoCodecXviD4.cpp">
