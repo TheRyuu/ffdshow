@@ -1087,6 +1087,7 @@
 #define IDFF_winamp2filtername 2464
 #define IDFF_winamp2dir        2465
 #define IDFF_winamp2allowMultichannelOnlyIn 3380
+#define IDFF_winamp32bit       3562
 
 #define IDFF_filterFreeverb   2500
 #define IDFF_isFreeverb       2501
@@ -1569,6 +1570,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//next:3562
+//next:3563
 
 #endif

@@ -36,6 +36,16 @@ void TaudioFilterWinamp2::done(void)
     }
 }
 
+int TaudioFilterWinamp2::getSupportedFormats(const TfilterSettingsAudio *cfg,bool *honourPreferred,const TsampleFormat &sf) const
+{
+    const Twinamp2settings *cfg0=(Twinamp2settings*)cfg;
+    if (cfg0->winamp32bit) {
+        return TsampleFormat::SF_ALL_24;
+    } else {
+        return TsampleFormat::SF_PCM16;
+    }
+}
+
 bool TaudioFilterWinamp2::is(const TsampleFormat &fmt,const TfilterSettingsAudio *cfg)
 {
     return super::is(fmt,cfg);
@@ -78,7 +88,8 @@ HRESULT TaudioFilterWinamp2::process(TfilterQueue::iterator it,TsampleFormat &fm
 
     if (filter) {
         int16_t *samples1=(int16_t*)(samples0=init(cfg,fmt,samples0,numsamples,numsamples*2));
-        numsamples=filter->process(samples1,numsamples,16,fmt.nchannels,fmt.freq);
+        int bps=fmt.bitsPerSample();
+        numsamples=filter->process(samples1,numsamples,bps,fmt.nchannels,fmt.freq);
     }
     return parent->deliverSamples(++it,fmt,samples0,numsamples);
 }

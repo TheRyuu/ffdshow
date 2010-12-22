@@ -14,6 +14,7 @@ private:
     void selectFilter(const char_t *flnm,const char_t *filtername);
     void onDir(void),onConfig(void);
     void onChbMultichannel(void);
+    void onWinamp32bit(void);
 protected:
     virtual INT_PTR msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 public:

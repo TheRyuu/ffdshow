@@ -26,7 +26,8 @@ void Twinamp2page::init(void)
 {
     static const TanchorInfo ainfo[]= {
         IDC_GRP_WINAMP2,TanchorInfo::LEFT|TanchorInfo::RIGHT|TanchorInfo::TOP|TanchorInfo::BOTTOM,
-        IDC_BT_WINAMP2_DIR,TanchorInfo::LEFT|TanchorInfo::RIGHT|TanchorInfo::TOP,
+        IDC_BT_WINAMP2_DIR,TanchorInfo::LEFT|TanchorInfo::TOP,
+        IDC_WINAMP2_32BIT, TanchorInfo::RIGHT|TanchorInfo::TOP,
         IDC_LBX_WINAMP2_DSPS,TanchorInfo::LEFT|TanchorInfo::RIGHT|TanchorInfo::TOP|TanchorInfo::BOTTOM,
         IDC_CBX_WINAMP2_FILTERS,TanchorInfo::LEFT|TanchorInfo::RIGHT|TanchorInfo::BOTTOM,
         IDC_BT_WINAMP2_CONFIG,TanchorInfo::LEFT|TanchorInfo::BOTTOM,
@@ -40,6 +41,8 @@ void Twinamp2page::init(void)
     } else {
         addHint(IDC_BT_WINAMP2_DIR,_l("Winamp2 directory can not be changed during playback."));
     }
+    addHint(IDC_WINAMP2_32BIT, _l("This is a experimental feature, most plugins don't support it."));
+    setCheck(IDC_WINAMP2_32BIT, cfgGet(IDFF_winamp32bit));
 }
 
 void Twinamp2page::cfg2dlg(void)
@@ -186,6 +189,11 @@ void Twinamp2page::onChbMultichannel(void)
     filter2dlg();
 }
 
+void Twinamp2page::onWinamp32bit(void)
+{
+    cfgSet(IDFF_winamp32bit, getCheck(IDC_WINAMP2_32BIT));
+}
+
 Twinamp2page::Twinamp2page(TffdshowPageDec *Iparent,const TfilterIDFF *idff):TconfPageDecAudio(Iparent,idff)
 {
     resInter=IDC_CHB_WINAMP2;
@@ -206,6 +214,7 @@ Twinamp2page::Twinamp2page(TffdshowPageDec *Iparent,const TfilterIDFF *idff):Tco
     }
     static const TbindCheckbox<Twinamp2page> chb[]= {
         IDC_CHB_WINAMP_MULTICHANNEL,NULL,&Twinamp2page::onChbMultichannel,
+        IDC_WINAMP2_32BIT, NULL, &Twinamp2page::onWinamp32bit,
         0,NULL,NULL
     };
     bindCheckboxes(chb);

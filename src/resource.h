@@ -1986,6 +1986,7 @@
 #define IDC_CHB_BLURAY                  40015
 #define IDC_GRP_SUBFORMATS              40016
 #define IDC_GRP_SUBSOURCES              40021
+#define IDC_WINAMP2_32BIT               40022
 #define IDC_STATIC                      -1
 #define IDC_GRP_WINAMP2                 65535
 
@@ -1996,7 +1997,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        304
 #define _APS_NEXT_COMMAND_VALUE         40015
-#define _APS_NEXT_CONTROL_VALUE         40022
+#define _APS_NEXT_CONTROL_VALUE         40023
 #define _APS_NEXT_SYMED_VALUE           107
 #endif
 #endif

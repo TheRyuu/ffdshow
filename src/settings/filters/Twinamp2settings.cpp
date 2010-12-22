@@ -44,6 +44,8 @@ Twinamp2settings::Twinamp2settings(TintStrColl *Icoll,TfilterIDFFs *filters):Tfi
         _l("showWinamp2"),1,
         IDFF_orderWinamp2 ,&Twinamp2settings::order ,1,1,_l(""),1,
         _l("orderWinamp2"),0,
+        IDFF_winamp32bit  ,&Twinamp2settings::winamp32bit, 0,0,_l(""),1,
+        _l("winamp32bit"),0,
         0
     };
     addOptions(iopts);
