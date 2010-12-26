@@ -671,7 +671,7 @@ void TglobalSettingsDecVideo::load(void)
  FF_FOURCC_OP (MMES,em2v & rawmask & dxvamask,c_mpeg2) \
  FF_FOURCC_OP (MPEG,mpegAVI & rawmask & dxvamask,c_mpeg1) \
  FF_FOURCC1_OP(H263,h263 & rawmask & dxvamask,CODEC_ID_H263) \
- /*FF_FOURCC1_OP(I263,h263 & rawmask & dxvamask,CODEC_ID_H263I)*/ \
+ FF_FOURCC1_OP(I263,h263 & rawmask & dxvamask,CODEC_ID_H263I) \
  FF_FOURCC1_OP(S263,h263 & rawmask & dxvamask,CODEC_ID_H263) \
  FF_FOURCC1_OP(L263,h263 & rawmask & dxvamask,CODEC_ID_H263) \
  FF_FOURCC1_OP(M263,h263 & rawmask & dxvamask,CODEC_ID_H263) \

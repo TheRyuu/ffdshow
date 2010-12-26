@@ -426,7 +426,7 @@ void TcodecsPageVideo::fillCodecs(void)
         formats.push_back(Tformat(_l("MP43")          ,IDFF_mp43,IDFF_MOVIE_LAVC,_l("MP43")));
         formats.push_back(Tformat(_l("MP42")          ,IDFF_mp42,IDFF_MOVIE_LAVC,_l("MP42, DIV2")));
         formats.push_back(Tformat(_l("MP41")          ,IDFF_mp41,IDFF_MOVIE_LAVC,_l("MP41, MPG4, DIV1")));
-        formats.push_back(Tformat(_l("H.263 (+)")     ,IDFF_h263,IDFF_MOVIE_LAVC,_l("H263, L263, M263, U263, X263, S263 (in 3gp files)")));
+        formats.push_back(Tformat(_l("H.263 (+)")     ,IDFF_h263,IDFF_MOVIE_LAVC,_l("H263, L263, M263, U263, X263, I263, S263 (in 3gp files)")));
         formats.push_back(Tformat(_l("FLV1")          ,IDFF_flv1,IDFF_MOVIE_LAVC,_l("Flash Video (FLV1)")));
 		static const int movies_vp3[]= {IDFF_MOVIE_LAVC,IDFF_MOVIE_FFMPEG_MT, 0};
         formats.push_back(Tformat(_l("Theora")        ,IDFF_theo,movies_vp3,_l("Theora Video (THEO)")));
