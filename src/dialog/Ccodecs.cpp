@@ -416,7 +416,7 @@ void TcodecsPageVideo::fillCodecs(void)
         // Use preset setting instead
         static const int movies_h264[]= {IDFF_MOVIE_LAVC,IDFF_MOVIE_FFMPEG_MT, 0};
         static const Tformat::Toption options_h264[]= {{0,_l("skip deblocking when safe"),IDFF_fastH264,1},{0,_l("skip deblocking always"),IDFF_fastH264,2},{0,NULL,0,0}};
-        formats.push_back(Tformat(_l("H.264/AVC")     ,IDFF_h264,movies_h264,_l("H264, AVC1, X264, VSSH (incomplete), DAVC, PAVC. ffmpeg-mt is multithreaded libavcodec (experimental)."),options_h264));
+        formats.push_back(Tformat(_l("H.264/AVC")     ,IDFF_h264,movies_h264,_l("H264, AVC1, X264, VSSH (incomplete), DAVC, PAVC. ffmpeg-mt is multithreaded."),options_h264));
         static const int movies_mpeg4[]= {IDFF_MOVIE_LAVC,IDFF_MOVIE_XVID4,0};
         formats.push_back(Tformat(_l("Xvid")          ,IDFF_xvid,movies_mpeg4,_l("XVID, XVIX")));
         formats.push_back(Tformat(_l("DivX 4/5/6")    ,IDFF_dx50,movies_mpeg4,_l("DIVX, DX50")));
@@ -426,7 +426,7 @@ void TcodecsPageVideo::fillCodecs(void)
         formats.push_back(Tformat(_l("MP43")          ,IDFF_mp43,IDFF_MOVIE_LAVC,_l("MP43")));
         formats.push_back(Tformat(_l("MP42")          ,IDFF_mp42,IDFF_MOVIE_LAVC,_l("MP42, DIV2")));
         formats.push_back(Tformat(_l("MP41")          ,IDFF_mp41,IDFF_MOVIE_LAVC,_l("MP41, MPG4, DIV1")));
-        formats.push_back(Tformat(_l("H.263 (+)")     ,IDFF_h263,IDFF_MOVIE_LAVC,_l("H263, L263, M263, U263, X263, I263, S263 (in 3gp files)")));
+        formats.push_back(Tformat(_l("H.263 (+)")     ,IDFF_h263,IDFF_MOVIE_LAVC,_l("H263, L263, M263, U263, X263, S263 (in 3gp files)")));
         formats.push_back(Tformat(_l("FLV1")          ,IDFF_flv1,IDFF_MOVIE_LAVC,_l("Flash Video (FLV1)")));
 		static const int movies_vp3[]= {IDFF_MOVIE_LAVC,IDFF_MOVIE_FFMPEG_MT, 0};
         formats.push_back(Tformat(_l("Theora")        ,IDFF_theo,movies_vp3,_l("Theora Video (THEO)")));
@@ -454,7 +454,7 @@ void TcodecsPageVideo::fillCodecs(void)
         formats.push_back(Tformat(_l("VC-1")          ,IDFF_wvc1,movies_wvc1,_l("Windows Media Video 9 Advanced Profile (WVC1, WMVA)"),NULL,LAVC_UNSTABLE));
         formats.push_back(Tformat(_l("WMVP")          ,IDFF_wvp2,IDFF_MOVIE_WMV9,_l("Windows Media Video 9 Image (WMVP, WVP2)")));
         formats.push_back(Tformat(_l("MSS1/2")        ,IDFF_mss2,IDFF_MOVIE_WMV9,_l("Windows Screen Codecs (MSS1, MSS2)")));
-        formats.push_back(Tformat(_l("H.261")         ,IDFF_h261,IDFF_MOVIE_LAVC,_l("H261, M261")));
+		formats.push_back(Tformat(_l("H.261")         ,IDFF_h261,IDFF_MOVIE_LAVC,_l("H261, M261")));
         formats.push_back(Tformat(_l("Huffyuv")       ,IDFF_hfyu,IDFF_MOVIE_LAVC,_l("Huffyuv codec for libavcodec (HFYU, FFVH)")));
         formats.push_back(Tformat(_l("MJPEG")         ,IDFF_mjpg,IDFF_MOVIE_LAVC,_l("MJPG, LJPG, MJLS")));
         formats.push_back(Tformat(_l("Other MJPEG")   ,IDFF_avrn,IDFF_MOVIE_LAVC,_l("AVRN, MJPA, SP5X, AMVV")));
@@ -482,6 +482,7 @@ void TcodecsPageVideo::fillCodecs(void)
         formats.push_back(Tformat(_l("Indeo 2")       ,IDFF_rt21,IDFF_MOVIE_LAVC,_l("Intel Indeo 2 (RT21)")));
         formats.push_back(Tformat(_l("Indeo 3")       ,IDFF_iv32,IDFF_MOVIE_LAVC,_l("Intel Indeo 3 (IV31, IV32)")));
 		formats.push_back(Tformat(_l("Indeo 5")       ,IDFF_iv50,IDFF_MOVIE_LAVC,_l("Intel Indeo 5 (IV50)")));
+        formats.push_back(Tformat(_l("Intel H.263")   ,IDFF_i263,IDFF_MOVIE_LAVC,_l("I263 (incomplete)"),NULL,LAVC_UNSTABLE));
         formats.push_back(Tformat(_l("Fraps")         ,IDFF_fps1,IDFF_MOVIE_LAVC,_l("Fraps v0, v1, v2, v4 & v5 (FPS1)"),NULL,LAVC_UNSTABLE));
         formats.push_back(Tformat(_l("Miro VideoXL")  ,IDFF_vixl,IDFF_MOVIE_LAVC,_l("Miro VideoXL (VIXL)")));
         formats.push_back(Tformat(_l("MS Video 1")    ,IDFF_cram,IDFF_MOVIE_LAVC,_l("MS Video-1 (CRAM)")));
