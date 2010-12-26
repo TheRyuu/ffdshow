@@ -1571,11 +1571,11 @@ static unsigned int pow_poly(unsigned int a, unsigned int n, unsigned int poly)
  */
 static void output_frame_end(AC3EncodeContext *s)
 {
-    int frame_size, frame_size_58, pad_bytes, crc1, crc2, crc_inv;
+    const AVCRC *crc_ctx = av_crc_get_table(AV_CRC_16_ANSI);
+    int frame_size_58, pad_bytes, crc1, crc2_partial, crc2, crc_inv;
     uint8_t *frame;
 
-    frame_size    = s->frame_size;
-    frame_size_58 = ((frame_size >> 2) + (frame_size >> 4)) << 1;
+    frame_size_58 = ((s->frame_size >> 2) + (s->frame_size >> 4)) << 1;
 
     /* pad the remainder of the frame with zeros */
     flush_put_bits(&s->pb);
@@ -1587,17 +1587,22 @@ static void output_frame_end(AC3EncodeContext *s)
 
     /* compute crc1 */
     /* this is not so easy because it is at the beginning of the data... */
-    crc1 = av_bswap16(av_crc(av_crc_get_table(AV_CRC_16_ANSI), 0,
-                             frame + 4, frame_size_58 - 4));
+    crc1    = av_bswap16(av_crc(crc_ctx, 0, frame + 4, frame_size_58 - 4));
     crc_inv = s->crc_inv[s->frame_size > s->frame_size_min];
     crc1    = mul_poly(crc_inv, crc1, CRC16_POLY);
     AV_WB16(frame + 2, crc1);
 
     /* compute crc2 */
-    crc2 = av_bswap16(av_crc(av_crc_get_table(AV_CRC_16_ANSI), 0,
-                             frame + frame_size_58,
-                             frame_size - frame_size_58 - 2));
-    AV_WB16(frame + frame_size - 2, crc2);
+    crc2_partial = av_crc(crc_ctx, 0, frame + frame_size_58,
+                          s->frame_size - frame_size_58 - 3);
+    crc2 = av_crc(crc_ctx, crc2_partial, frame + s->frame_size - 3, 1);
+    /* ensure crc2 does not match sync word by flipping crcrsv bit if needed */
+    if (crc2 == 0x770B) {
+        frame[s->frame_size - 3] ^= 0x1;
+        crc2 = av_crc(crc_ctx, crc2_partial, frame + s->frame_size - 3, 1);
+    }
+    crc2 = av_bswap16(crc2);
+    AV_WB16(frame + s->frame_size - 2, crc2);
 }
 
 
