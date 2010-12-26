@@ -399,6 +399,7 @@ TglobalSettingsDecVideo::TglobalSettingsDecVideo(const Tconfig *Iconfig,int Imod
         IDFF_cram           ,&TglobalSettingsDecVideo::cram           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
         IDFF_rt21           ,&TglobalSettingsDecVideo::rt21           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
         IDFF_iv32           ,&TglobalSettingsDecVideo::iv32           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+		IDFF_iv50           ,&TglobalSettingsDecVideo::iv50           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
         IDFF_cvid           ,&TglobalSettingsDecVideo::cvid           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
         IDFF_rv10           ,&TglobalSettingsDecVideo::rv10           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
         IDFF_rv30           ,&TglobalSettingsDecVideo::rv30           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
@@ -504,6 +505,7 @@ void TglobalSettingsDecVideo::reg_op_codec(TregOp &t,TregOp *t2)
     _reg_op_codec(IDFF_cram,t,t2,_l("cram"),cram,0);
     _reg_op_codec(IDFF_rt21,t,t2,_l("rt21"),rt21,0);
     _reg_op_codec(IDFF_iv32,t,t2,_l("iv32"),iv32,0);
+	_reg_op_codec(IDFF_iv50,t,t2,_l("iv50"),iv50,0);
     _reg_op_codec(IDFF_cvid,t,t2,_l("cvid"),cvid,0);
     _reg_op_codec(IDFF_rv10,t,t2,_l("rv10"),rv10,0);
     _reg_op_codec(IDFF_rv30,t,t2,_l("rv30"),rv30,0);
@@ -599,6 +601,7 @@ void TglobalSettingsDecVideo::load(void)
     fixMissing(cram,IDFF_MOVIE_LAVC);
     fixMissing(rt21,IDFF_MOVIE_LAVC);
     fixMissing(iv32,IDFF_MOVIE_LAVC);
+	fixMissing(iv50,IDFF_MOVIE_LAVC);
     fixMissing(cvid,IDFF_MOVIE_LAVC);
     fixMissing(rv10,IDFF_MOVIE_LAVC);
     fixMissing(rv30,IDFF_MOVIE_LAVC);
@@ -732,6 +735,7 @@ void TglobalSettingsDecVideo::load(void)
  FF_FOURCC1_OP(RT21,rt21 & rawmask & dxvamask,CODEC_ID_INDEO2) \
  FF_FOURCC1_OP(IV32,iv32 & rawmask & dxvamask,CODEC_ID_INDEO3) \
  FF_FOURCC1_OP(IV31,iv32 & rawmask & dxvamask,CODEC_ID_INDEO3) \
+ FF_FOURCC1_OP(IV50,iv50 & rawmask & dxvamask,CODEC_ID_INDEO5) \
  FF_FOURCC1_OP(CVID,cvid & rawmask & dxvamask,CODEC_ID_CINEPAK) \
  FF_FOURCC1_OP(RV10,rv10 & rawmask & dxvamask,CODEC_ID_RV10) \
  FF_FOURCC1_OP(RV20,rv10 & rawmask & dxvamask,CODEC_ID_RV20) \

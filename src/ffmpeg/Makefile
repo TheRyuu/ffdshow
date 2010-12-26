@@ -98,10 +98,13 @@ SRCS_C=\
     $(LAVC_DIR)/imgconvert.c \
     $(LAVC_DIR)/indeo2.c \
     $(LAVC_DIR)/indeo3.c \
+    $(LAVC_DIR)/indeo5.c \
     $(LAVC_DIR)/intelh263dec.c \
     $(LAVC_DIR)/intrax8.c \
     $(LAVC_DIR)/intrax8dsp.c \
     $(LAVC_DIR)/ituh263dec.c \
+    $(LAVC_DIR)/ivi_common.c \
+    $(LAVC_DIR)/ivi_dsp.c \
     $(LAVC_DIR)/jfdctfst.c \
     $(LAVC_DIR)/jfdctint.c \
     $(LAVC_DIR)/jpegls.c \

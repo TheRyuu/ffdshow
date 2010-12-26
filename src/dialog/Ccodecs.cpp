@@ -481,6 +481,7 @@ void TcodecsPageVideo::fillCodecs(void)
         formats.push_back(Tformat(_l("Creative YUV")  ,IDFF_cyuv,IDFF_MOVIE_LAVC,_l("Creative YUV Video (CYUV)")));
         formats.push_back(Tformat(_l("Indeo 2")       ,IDFF_rt21,IDFF_MOVIE_LAVC,_l("Intel Indeo 2 (RT21)")));
         formats.push_back(Tformat(_l("Indeo 3")       ,IDFF_iv32,IDFF_MOVIE_LAVC,_l("Intel Indeo 3 (IV31, IV32)")));
+		formats.push_back(Tformat(_l("Indeo 5")       ,IDFF_iv50,IDFF_MOVIE_LAVC,_l("Intel Indeo 5 (IV50)")));
         formats.push_back(Tformat(_l("Fraps")         ,IDFF_fps1,IDFF_MOVIE_LAVC,_l("Fraps v0, v1, v2, v4 & v5 (FPS1)"),NULL,LAVC_UNSTABLE));
         formats.push_back(Tformat(_l("Miro VideoXL")  ,IDFF_vixl,IDFF_MOVIE_LAVC,_l("Miro VideoXL (VIXL)")));
         formats.push_back(Tformat(_l("MS Video 1")    ,IDFF_cram,IDFF_MOVIE_LAVC,_l("MS Video-1 (CRAM)")));

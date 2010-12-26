@@ -80,6 +80,7 @@
  CODEC_OP(CODEC_ID_RV40              ,70,"rv40") \
  CODEC_OP(CODEC_ID_AMV               ,71,"amv") \
  CODEC_OP(CODEC_ID_VP8               ,72,"vp8") \
+ CODEC_OP(CODEC_ID_INDEO5            ,73,"indeo5") \
  \
  /* Well-known audio codecs */ \
  CODEC_OP(CODEC_ID_MP2               ,100,"mp2") \

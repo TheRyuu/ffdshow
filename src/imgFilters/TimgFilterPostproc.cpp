@@ -62,6 +62,7 @@ bool TimgFilterPostprocBase::pp_codec(int CodecID)
         case CODEC_ID_FLV1:
         case CODEC_ID_INDEO2:
         case CODEC_ID_INDEO3:
+		case CODEC_ID_INDEO5:
         case CODEC_ID_XVID4:
         case CODEC_ID_MJPEG:
         case CODEC_ID_MJPEGB:
