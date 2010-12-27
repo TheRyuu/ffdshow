@@ -144,13 +144,17 @@ namespace FFDShowAPI
       /// <summary>
       /// File name without extension and without the directory path
       /// </summary>
-      FileNameWithoutExtension
+      FileNameWithoutExtension,
+      /// <summary>
+      /// File name without extension and without the directory path and with suffixe only
+      /// </summary>
+      FileNameLanguage
     }
 
     private const int FALSE = 0;
     private const int TRUE = 1;
 
-    public const int minRevision = 3452;
+    public const int minRevision = 3640;
     #endregion Constants
 
     #region Structures
@@ -200,6 +204,31 @@ namespace FFDShowAPI
 
     #endregion Variables
 
+    #region Helper methods
+    public static string getFileName(string fileName, FileNameMode mode)
+    {
+      FileInfo fileInfo = new FileInfo(fileName);
+      switch (mode)
+      {
+        case FileNameMode.FullPath: return fileInfo.FullName;
+        case FileNameMode.FileName: return fileInfo.Name;
+        case FileNameMode.FileNameWithoutExtension:
+          string formattedFileName = fileInfo.Name;
+          if (formattedFileName.LastIndexOf('.') != -1)
+            formattedFileName = formattedFileName.Substring(0, formattedFileName.LastIndexOf('.'));
+          return formattedFileName;
+        case FileNameMode.FileNameLanguage:
+          string formattedFileNameLanguage = fileInfo.Name;
+          //string[] words = formattedFileNameLanguage.Split(new char[] { '.', '-', '_' });
+          string[] words = formattedFileNameLanguage.Split(new char[] { '.', '_' });
+          if (formattedFileNameLanguage.LastIndexOf('.') != -1)
+            formattedFileNameLanguage = words[words.Length - 2];
+          //Log.Error("FFDSHOWAPI(getFileName): formattedFileNameLanguage \"{0}\"", formattedFileNameLanguage);
+          return formattedFileNameLanguage;
+      }
+      return null;
+    }
+    #endregion
 
     #region WIN32 Class
 
@@ -842,23 +871,56 @@ namespace FFDShowAPI
           if (streamsNb == 0) return subtitleStreams;
           for (int i = 0; i < streamsNb; i++)
           {
-            AMMediaType mediaType; AMStreamSelectInfoFlags flag; int group, langId;
-            string streamName; object pppunk, ppobject;
+            AMMediaType mediaType;
+            AMStreamSelectInfoFlags flag;
+            int group, langId;
+            string streamName;
+            object pppunk, ppobject;
             streamSelect.Info(i, out mediaType, out flag, out langId,
                        out group, out streamName, out pppunk, out ppobject);
-            if (group == 2)
+            if (group == 4 || group == 2 && streamName.LastIndexOf("No ") == -1)
             {
-              if ((streamName == null || streamName.Equals("")) && subtitleStreams.Count == 0) streamName = "No subtitles";
+              if ((streamName == null || streamName.Equals("")) && subtitleStreams.Count == 0)
+                streamName = "No subtitles";
+
               String langName = "";
 
-              String languageName = new String(' ', 256);
-              Win32.GetLocaleInfo(langId, 2, languageName, 255);
-              if (!languageName.Equals(new String(' ', 256)))
-                langName = languageName;
+              if (langId != 0)
+              {
+                int size = Win32.GetLocaleInfo(langId, 2, null, 0);
+                String languageName = new String(' ', size);
 
-              Stream stream = new Stream(streamName, langName,
-                  (flag & AMStreamSelectInfoFlags.Enabled) == AMStreamSelectInfoFlags.Enabled ? true : false, false);
-              subtitleStreams.Add(i, stream);
+                Win32.GetLocaleInfo(langId, 2, languageName, size);
+                if (!languageName.Equals(new String(' ', size)))
+                {
+                  if (languageName.Contains("\0"))
+                    langName = languageName.Substring(0, languageName.IndexOf("\0"));
+                  else
+                    langName = languageName;
+                  int ipos = langName.IndexOf("(");
+                  if (ipos > 0)
+                  {
+                    langName = langName.Substring(0, ipos);
+                    langName = langName.Trim();
+                  }
+                }
+              }
+              else
+              {
+                langName = streamName; // If some splitter doesn't give LCID but Language is here need a little hack for parsing in VideoPlayerVRM7.
+              }
+              if (group == 4)
+              {
+                Stream stream = new Stream(FFDShowAPI.getFileName(streamName, FFDShowAPI.FileNameMode.FileNameLanguage), FFDShowAPI.getFileName(langName, FFDShowAPI.FileNameMode.FileNameLanguage),
+                    (flag & AMStreamSelectInfoFlags.Enabled) == AMStreamSelectInfoFlags.Enabled ? true : false, true);
+                subtitleStreams.Add(i, stream);
+              }
+              else if (group == 2)
+              {
+                Stream stream = new Stream(streamName, langName,
+                    (flag & AMStreamSelectInfoFlags.Enabled) == AMStreamSelectInfoFlags.Enabled ? true : false, false);
+                subtitleStreams.Add(i, stream);
+              }
             }
           }
           return subtitleStreams;
@@ -869,8 +931,7 @@ namespace FFDShowAPI
         return subtitleStreams;
       }
     }
-
-
+  
     /// <summary>
     /// Gets the list of internal audio streams
     /// </summary>
@@ -892,9 +953,31 @@ namespace FFDShowAPI
                        out group, out streamName, out pppunk, out ppobject);
             if (group == 1)
             {
-              String languageName = new String(' ', 256);
-              Win32.GetLocaleInfo(langId, 2, languageName, 255);
-              Stream stream = new Stream(streamName, languageName,
+              String langName = "";
+              //Log.Error("FFDSHOWAPI(AudioStreams): streamName {0},langName {2}, langId {2}", streamName, langName, langId);
+              if (langId != 0)
+              {
+                int size = Win32.GetLocaleInfo(langId, 2, null, 0);
+                String languageName = new String(' ', size);
+
+                Win32.GetLocaleInfo(langId, 2, languageName, size);
+                if (!languageName.Equals(new String(' ', size)))
+                {
+                  if (languageName.Contains("\0"))
+                    langName = languageName.Substring(0, languageName.IndexOf("\0"));
+                  else
+                    langName = languageName;
+                  int ipos = langName.IndexOf("(");
+                  if (ipos > 0)
+                  {
+                    langName = langName.Substring(0, ipos);
+                    langName = langName.Trim();
+                  }
+                }
+              }
+              //Log.Error("FFDSHOWAPI(AudioStreams): langName {0}", langName);
+
+              Stream stream = new Stream(streamName, langName,
                   (flag & AMStreamSelectInfoFlags.Enabled) == AMStreamSelectInfoFlags.Enabled ? true : false);
               audioStreams.Add(i, stream);
             }

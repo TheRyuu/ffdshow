@@ -45,7 +45,7 @@ namespace FFDShowAPI.Interfaces
     int getConfig(IntPtr configPtr);
     int getInstance(IntPtr hi);
     IntPtr getInstance2();
-    //int getPostproc(IntPtr postprocPtr);
+    //int getPostproc(IntPtr postprocPtr); //Need to remove after r3603 change.
     int getTranslator(IntPtr trans);
 
     int initDialog();
