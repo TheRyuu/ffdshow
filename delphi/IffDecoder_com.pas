@@ -501,7 +501,7 @@ type
     function getCurrentFrameTime(sec:ppointer):HRESULT;stdcall;
     function getFrameTime(framenum:integer; sec:ppointer):HRESULT;stdcall;
     function getCurTime2:HRESULT;stdcall;
-    function getPostproc(postprocPtr:ppointer):HRESULT;stdcall;
+    //function getPostproc(postprocPtr:ppointer):HRESULT;stdcall;
     function stop:HRESULT;stdcall;
     function run:HRESULT;stdcall;
     function getState2:HRESULT;stdcall;
