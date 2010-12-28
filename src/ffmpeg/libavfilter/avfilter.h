@@ -27,8 +27,8 @@
 #include "libavcore/samplefmt.h"
 
 #define LIBAVFILTER_VERSION_MAJOR  1
-#define LIBAVFILTER_VERSION_MINOR 68
-#define LIBAVFILTER_VERSION_MICRO  1
+#define LIBAVFILTER_VERSION_MINOR 72
+#define LIBAVFILTER_VERSION_MICRO  0
 
 #define LIBAVFILTER_VERSION_INT AV_VERSION_INT(LIBAVFILTER_VERSION_MAJOR, \
                                                LIBAVFILTER_VERSION_MINOR, \
@@ -87,6 +87,7 @@ typedef struct AVFilterBuffer {
 #define AV_PERM_PRESERVE 0x04   ///< nobody else can overwrite the buffer
 #define AV_PERM_REUSE    0x08   ///< can output the buffer multiple times, with the same contents each time
 #define AV_PERM_REUSE2   0x10   ///< can output the buffer multiple times, modified each time
+#define AV_PERM_NEG_LINESIZES 0x20  ///< the buffer requested can have negative linesizes
 
 /**
  * Audio specific properties in a reference to an AVFilterBuffer. Since
