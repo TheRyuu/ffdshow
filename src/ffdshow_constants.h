@@ -906,7 +906,6 @@
 #define IDFF_vorbis             1058
 #define IDFF_lpcm               1056
 #define IDFF_fps1               1077
-#define IDFF_snow               1078
 #define IDFF_ra                 1079
 #define IDFF_imc                1080
 #define IDFF_mss2               1081

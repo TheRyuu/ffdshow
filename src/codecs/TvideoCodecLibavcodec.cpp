@@ -1129,7 +1129,7 @@ LRESULT TvideoCodecLibavcodec::beginCompress(int cfgcomode,int csp,const Trect &
     if (sup_part(coCfg->codecId) &&coCfg->part) {
         avctx->flags|=CODEC_FLAG_PART;
     }
-    if (coCfg->codecId!=CODEC_ID_SNOW && coCfg->codecId!=CODEC_ID_H261) {
+    if (coCfg->codecId!=CODEC_ID_H261) {
         avctx->mb_decision=coCfg->me_hq;
     }
     if (coCfg->me_4mv && sup_4mv(coCfg->codecId)) {
@@ -1320,13 +1320,6 @@ LRESULT TvideoCodecLibavcodec::beginCompress(int cfgcomode,int csp,const Trect &
         case CODEC_ID_MPEG2VIDEO:
             if (coCfg->svcd_scan_offset) {
                 avctx->flags|=CODEC_FLAG_SVCD_SCAN_OFFSET;
-            }
-            break;
-        case CODEC_ID_SNOW:
-            avctx->strict_std_compliance=FF_COMPLIANCE_EXPERIMENTAL;
-            avctx->prediction_method=1;//coCfg->huffyuv_pred;
-            if (coCfg->me_iterative) {
-                avctx->me_method=ME_ITER;
             }
             break;
     }

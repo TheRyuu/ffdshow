@@ -76,10 +76,10 @@ void TmePage::cfg2dlg(void)
     setCheck(IDC_CHB_MB_CMP_CHROMA,cfgGet(IDFF_enc_mb_cmp_chroma));
     cbxSetCurSel(IDC_CBX_DIA_SIZE,cfgGet(IDFF_enc_dia_size));
     static const int idDiaSize[]= {IDC_LBL_DIA_SIZE,IDC_CBX_DIA_SIZE,0};
-    enable(codecId!=CODEC_ID_SNOW,idDiaSize);
+    enable(1,idDiaSize);
     cbxSetCurSel(IDC_CBX_MB_DECISION,cfgGet(IDFF_enc_me_hq));
     static const int idMbDesision[]= {IDC_LBL_MB_DECISION,IDC_CBX_MB_DECISION,0};
-    enable(codecId!=CODEC_ID_SNOW && codecId!=CODEC_ID_H261,idMbDesision);
+    enable(codecId!=CODEC_ID_H261,idMbDesision);
 
     setCheck(IDC_CHB_4MV,cfgGet(IDFF_enc_me_4mv));
     enable(sup_4mv(codecId),IDC_CHB_4MV);
@@ -93,12 +93,12 @@ void TmePage::cfg2dlg(void)
 
     SetDlgItemInt(m_hwnd,IDC_ED_ME_LAST_PRED_COUNT,cfgGet(IDFF_enc_me_last_predictor_count),FALSE);
     static const int idLastPredCount[]= {IDC_LBL_ME_LAST_PRED_COUNT,IDC_ED_ME_LAST_PRED_COUNT,0};
-    enable(codecId!=CODEC_ID_SNOW,idLastPredCount);
+    enable(1,idLastPredCount);
     cbxSetCurSel(IDC_CBX_ME_PREPASS,cfgGet(IDFF_enc_me_prepass));
     static const int idNotGray[]= {IDC_CHB_ME_CMP_CHROMA,IDC_CHB_ME_SUBCMP_CHROMA,IDC_CHB_MB_CMP_CHROMA,0};
     enable(!sup_gray(codecId) || !cfgGet(IDFF_enc_gray),idNotGray);
     setCheck(IDC_CHB_ME_ITERATIVE,cfgGet(IDFF_enc_me_iterative));
-    enable(codecId==CODEC_ID_SNOW,IDC_CHB_ME_ITERATIVE);
+    enable(0,IDC_CHB_ME_ITERATIVE);
 }
 void TmePage::qpel2dlg(void)
 {
@@ -112,12 +112,12 @@ void TmePage::qpel2dlg(void)
 void TmePage::prepass2dlg(void)
 {
     static const int idPrepass0[]= {IDC_LBL_ME_PREPASS,IDC_CBX_ME_PREPASS,0};
-    enable(codecId!=CODEC_ID_SNOW,idPrepass0);
+    enable(1,idPrepass0);
     cbxSetCurSel(IDC_CBX_ME_PRECMP,cfgGet(IDFF_enc_me_precmp));
     setCheck(IDC_CHB_ME_PRECMP_CHROMA,cfgGet(IDFF_enc_me_precmp_chroma));
     cbxSetCurSel(IDC_CBX_DIA_SIZE_PRE,cfgGet(IDFF_enc_dia_size_pre));
     static const int idPrepass[]= {IDC_LBL_ME_PRECMP,IDC_CBX_ME_PRECMP,IDC_LBL_DIA_SIZE_PRE,IDC_CBX_DIA_SIZE_PRE,IDC_CHB_ME_PRECMP_CHROMA,0};
-    int is=cfgGet(IDFF_enc_me_prepass) && codecId!=CODEC_ID_SNOW;
+    int is=cfgGet(IDFF_enc_me_prepass);
     enable(is,idPrepass);
     enable(is && (!sup_gray(codecId) || !cfgGet(IDFF_enc_gray)),IDC_CHB_ME_PRECMP_CHROMA);
 }

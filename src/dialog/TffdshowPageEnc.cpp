@@ -50,12 +50,12 @@
 #include "ISpecifyPropertyPagesVE.h"
 
 const char_t* TffdshowPageEnc::encModeNames[]= {
-    _l("one pass - average bitrate"),
-    _l("one pass - quality"),
-    _l("one pass - quantizer"),
-    _l("two passes - 1st pass"),
-    _l("two passes - 2nd pass ext"),
-    _l("two passes - 2nd pass int")
+    _l("1 pass - Average bitrate"),
+    _l("1 pass - Quality"),
+    _l("1 pass - Quantizer"),
+    _l("2 passes - 1st pass"),
+    _l("2 passes - 2nd pass ext"),
+    _l("2 passes - 2nd pass int")
 };
 
 CUnknown* WINAPI TffdshowPageEncVFW::CreateInstance(LPUNKNOWN punk,HRESULT *phr)
@@ -343,7 +343,7 @@ void TffdshowPageEnc::codec2dlg(void)
                     fourcc2dlg();
                 }
                 SendDlgItemMessage(m_hwnd,IDC_CBX_MODES,CB_RESETCONTENT,0,0);
-                if (sup_CBR(codecId)) {
+                if (sup_CBR(codecId) && codecId != CODEC_ID_MJPEG) {
                     cbxAdd(IDC_CBX_MODES,_(IDC_CBX_MODES,encModeNames[ENC_MODE::CBR]),ENC_MODE::CBR);
                 }
                 if (sup_VBR_QUAL(codecId)) {
@@ -352,13 +352,13 @@ void TffdshowPageEnc::codec2dlg(void)
                 if (sup_VBR_QUANT(codecId)) {
                     cbxAdd(IDC_CBX_MODES,_(IDC_CBX_MODES,encModeNames[ENC_MODE::VBR_QUANT]),ENC_MODE::VBR_QUANT);
                 }
-                if (sup_XVID2PASS(codecId) && sup_perFrameQuant(codecId)) {
+                if (sup_XVID2PASS(codecId) && sup_perFrameQuant(codecId) && codecId != CODEC_ID_MJPEG) {
                     cbxAdd(IDC_CBX_MODES,_(IDC_CBX_MODES,encModeNames[ENC_MODE::PASS2_1]),ENC_MODE::PASS2_1);
                 }
-                if (sup_XVID2PASS(codecId) && sup_perFrameQuant(codecId)) {
+                if (sup_XVID2PASS(codecId) && sup_perFrameQuant(codecId) && codecId != CODEC_ID_MJPEG) {
                     cbxAdd(IDC_CBX_MODES,_(IDC_CBX_MODES,encModeNames[ENC_MODE::PASS2_2_INT]),ENC_MODE::PASS2_2_INT);
                 }
-                if (sup_XVID2PASS(codecId) && sup_perFrameQuant(codecId)) {
+                if (sup_XVID2PASS(codecId) && sup_perFrameQuant(codecId) && codecId != CODEC_ID_MJPEG) {
                     cbxAdd(IDC_CBX_MODES,_(IDC_CBX_MODES,encModeNames[ENC_MODE::PASS2_2_EXT]),ENC_MODE::PASS2_2_EXT);
                 }
                 static const int idModes[]= {IDC_LBL_MODES,IDC_CBX_MODES,0};
