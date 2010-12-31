@@ -43,6 +43,11 @@
 /** Scale a float value by 2^bits and convert to an integer. */
 #define SCALE_FLOAT(a, bits) lrintf((a) * (float)(1 << (bits)))
 
+typedef int16_t SampleType;
+typedef int32_t CoefType;
+
+#define SCALE_COEF(a) (a)
+
 /** Scale a float value by 2^15, convert to an integer, and clip to range -32767..32767. */
 #define FIX15(a) av_clip(SCALE_FLOAT(a, 15), -32767, 32767)
 
@@ -56,7 +61,7 @@ typedef struct IComplex {
 } IComplex;
 
 typedef struct AC3MDCTContext {
-    AVCodecContext *avctx;                  ///< parent context for av_log()
+    const int16_t *window;                  ///< MDCT window function
     int nbits;                              ///< log2(transform size)
     int16_t *costab;                        ///< FFT cos table
     int16_t *sintab;                        ///< FFT sin table
@@ -71,7 +76,7 @@ typedef struct AC3MDCTContext {
  */
 typedef struct AC3Block {
     uint8_t  **bap;                             ///< bit allocation pointers (bap)
-    int32_t  **mdct_coef;                       ///< MDCT coefficients
+    CoefType **mdct_coef;                       ///< MDCT coefficients
     uint8_t  **exp;                             ///< original exponents
     uint8_t  **grouped_exp;                     ///< grouped exponents
     int16_t  **psd;                             ///< psd per frequency bin
@@ -137,7 +142,7 @@ typedef struct AC3EncodeContext {
     int16_t **planar_samples;
     uint8_t *bap_buffer;
     uint8_t *bap1_buffer;
-    int32_t *mdct_coef_buffer;
+    CoefType *mdct_coef_buffer;
     uint8_t *exp_buffer;
     uint8_t *grouped_exp_buffer;
     int16_t *psd_buffer;
@@ -145,7 +150,7 @@ typedef struct AC3EncodeContext {
     int16_t *mask_buffer;
     uint16_t *qmant_buffer;
 
-    DECLARE_ALIGNED(16, int16_t, windowed_samples)[AC3_WINDOW_SIZE];
+    DECLARE_ALIGNED(16, SampleType, windowed_samples)[AC3_WINDOW_SIZE];
 } AC3EncodeContext;
 
 
@@ -153,7 +158,33 @@ typedef struct AC3EncodeContext {
  * LUT for number of exponent groups.
  * exponent_group_tab[exponent strategy-1][number of coefficients]
  */
-uint8_t exponent_group_tab[3][256];
+static uint8_t exponent_group_tab[3][256];
+
+
+/**
+ * List of supported channel layouts.
+ */
+static const int64_t ac3_channel_layouts[] = {
+     AV_CH_LAYOUT_MONO,
+     AV_CH_LAYOUT_STEREO,
+     AV_CH_LAYOUT_2_1,
+     AV_CH_LAYOUT_SURROUND,
+     AV_CH_LAYOUT_2_2,
+     AV_CH_LAYOUT_QUAD,
+     AV_CH_LAYOUT_4POINT0,
+     AV_CH_LAYOUT_5POINT0,
+     AV_CH_LAYOUT_5POINT0_BACK,
+    (AV_CH_LAYOUT_MONO     | AV_CH_LOW_FREQUENCY),
+    (AV_CH_LAYOUT_STEREO   | AV_CH_LOW_FREQUENCY),
+    (AV_CH_LAYOUT_2_1      | AV_CH_LOW_FREQUENCY),
+    (AV_CH_LAYOUT_SURROUND | AV_CH_LOW_FREQUENCY),
+    (AV_CH_LAYOUT_2_2      | AV_CH_LOW_FREQUENCY),
+    (AV_CH_LAYOUT_QUAD     | AV_CH_LOW_FREQUENCY),
+    (AV_CH_LAYOUT_4POINT0  | AV_CH_LOW_FREQUENCY),
+     AV_CH_LAYOUT_5POINT1,
+     AV_CH_LAYOUT_5POINT1_BACK,
+     0
+};
 
 
 /**
@@ -178,13 +209,13 @@ static void adjust_frame_size(AC3EncodeContext *s)
  * Channels are reordered from FFmpeg's default order to AC-3 order.
  */
 static void deinterleave_input_samples(AC3EncodeContext *s,
-                                       const int16_t *samples)
+                                       const SampleType *samples)
 {
     int ch, i;
 
     /* deinterleave and remap input samples */
     for (ch = 0; ch < s->channels; ch++) {
-        const int16_t *sptr;
+        const SampleType *sptr;
         int sinc;
 
         /* copy last 256 samples of previous frame to the start of the current frame */
@@ -217,12 +248,11 @@ static av_cold void mdct_end(AC3MDCTContext *mdct)
 }
 
 
-
 /**
  * Initialize FFT tables.
  * @param ln log2(FFT size)
  */
-static av_cold int fft_init(AC3MDCTContext *mdct, int ln)
+static av_cold int fft_init(AVCodecContext *avctx, AC3MDCTContext *mdct, int ln)
 {
     int i, n, n2;
     float alpha;
@@ -230,10 +260,8 @@ static av_cold int fft_init(AC3MDCTContext *mdct, int ln)
     n  = 1 << ln;
     n2 = n >> 1;
 
-    FF_ALLOC_OR_GOTO(mdct->avctx, mdct->costab, n2 * sizeof(*mdct->costab),
-                     fft_alloc_fail);
-    FF_ALLOC_OR_GOTO(mdct->avctx, mdct->sintab, n2 * sizeof(*mdct->sintab),
-                     fft_alloc_fail);
+    FF_ALLOC_OR_GOTO(avctx, mdct->costab, n2 * sizeof(*mdct->costab), fft_alloc_fail);
+    FF_ALLOC_OR_GOTO(avctx, mdct->sintab, n2 * sizeof(*mdct->sintab), fft_alloc_fail);
 
     for (i = 0; i < n2; i++) {
         alpha     = 2.0 * M_PI * i / n;
@@ -252,7 +280,8 @@ fft_alloc_fail:
  * Initialize MDCT tables.
  * @param nbits log2(MDCT size)
  */
-static av_cold int mdct_init(AC3MDCTContext *mdct, int nbits)
+static av_cold int mdct_init(AVCodecContext *avctx, AC3MDCTContext *mdct,
+                             int nbits)
 {
     int i, n, n4, ret;
 
@@ -261,18 +290,16 @@ static av_cold int mdct_init(AC3MDCTContext *mdct, int nbits)
 
     mdct->nbits = nbits;
 
-    ret = fft_init(mdct, nbits - 2);
+    ret = fft_init(avctx, mdct, nbits - 2);
     if (ret)
         return ret;
 
-    FF_ALLOC_OR_GOTO(mdct->avctx, mdct->xcos1,    n4 * sizeof(*mdct->xcos1),
-                     mdct_alloc_fail);
-    FF_ALLOC_OR_GOTO(mdct->avctx, mdct->xsin1 ,   n4 * sizeof(*mdct->xsin1),
-                     mdct_alloc_fail);
-    FF_ALLOC_OR_GOTO(mdct->avctx, mdct->rot_tmp,  n  * sizeof(*mdct->rot_tmp),
-                     mdct_alloc_fail);
-    FF_ALLOC_OR_GOTO(mdct->avctx, mdct->cplx_tmp, n4 * sizeof(*mdct->cplx_tmp),
-                     mdct_alloc_fail);
+    mdct->window = ff_ac3_window;
+
+    FF_ALLOC_OR_GOTO(avctx, mdct->xcos1,    n4 * sizeof(*mdct->xcos1),    mdct_alloc_fail);
+    FF_ALLOC_OR_GOTO(avctx, mdct->xsin1,    n4 * sizeof(*mdct->xsin1),    mdct_alloc_fail);
+    FF_ALLOC_OR_GOTO(avctx, mdct->rot_tmp,  n  * sizeof(*mdct->rot_tmp),  mdct_alloc_fail);
+    FF_ALLOC_OR_GOTO(avctx, mdct->cplx_tmp, n4 * sizeof(*mdct->cplx_tmp), mdct_alloc_fail);
 
     for (i = 0; i < n4; i++) {
         float alpha = 2.0 * M_PI * (i + 1.0 / 8.0) / n;
@@ -503,9 +530,9 @@ static void apply_mdct(AC3EncodeContext *s)
     for (ch = 0; ch < s->channels; ch++) {
         for (blk = 0; blk < AC3_MAX_BLOCKS; blk++) {
             AC3Block *block = &s->blocks[blk];
-            const int16_t *input_samples = &s->planar_samples[ch][blk * AC3_BLOCK_SIZE];
+            const SampleType *input_samples = &s->planar_samples[ch][blk * AC3_BLOCK_SIZE];
 
-            apply_window(s->windowed_samples, input_samples, ff_ac3_window, AC3_WINDOW_SIZE);
+            apply_window(s->windowed_samples, input_samples, s->mdct.window, AC3_WINDOW_SIZE);
 
             block->exp_shift[ch] = normalize_samples(s);
 
@@ -545,7 +572,7 @@ static void extract_exponents(AC3EncodeContext *s)
             AC3Block *block = &s->blocks[blk];
             for (i = 0; i < AC3_MAX_COEFS; i++) {
                 int e;
-                int v = abs(block->mdct_coef[ch][i]);
+                int v = abs(SCALE_COEF(block->mdct_coef[ch][i]));
                 if (v == 0)
                     e = 24;
                 else {
@@ -572,7 +599,8 @@ static void extract_exponents(AC3EncodeContext *s)
 /**
  * Calculate exponent strategies for all blocks in a single channel.
  */
-static void compute_exp_strategy_ch(AC3EncodeContext *s, uint8_t *exp_strategy, uint8_t **exp)
+static void compute_exp_strategy_ch(AC3EncodeContext *s, uint8_t *exp_strategy,
+                                    uint8_t **exp)
 {
     int blk, blk1;
     int exp_diff;
@@ -655,8 +683,7 @@ static void exponent_min(uint8_t *exp, uint8_t *exp1, int n)
 /**
  * Update the exponents so that they are the ones the decoder will decode.
  */
-static void encode_exponents_blk_ch(uint8_t *exp,
-                                    int nb_exps, int exp_strategy)
+static void encode_exponents_blk_ch(uint8_t *exp, int nb_exps, int exp_strategy)
 {
     int nb_groups, i, k;
 
@@ -899,7 +926,7 @@ static void bit_alloc_init(AC3EncodeContext *s)
     s->slow_decay_code = 2;
     s->fast_decay_code = 1;
     s->slow_gain_code  = 1;
-    s->db_per_bit_code = 2;
+    s->db_per_bit_code = 3;
     s->floor_code      = 4;
     for (ch = 0; ch < s->channels; ch++)
         s->fast_gain_code[ch] = 4;
@@ -1036,8 +1063,7 @@ static void reset_block_bap(AC3EncodeContext *s)
  * @return the number of bits needed for mantissas if the given SNR offset is
  *         is used.
  */
-static int bit_alloc(AC3EncodeContext *s,
-                     int snr_offset)
+static int bit_alloc(AC3EncodeContext *s, int snr_offset)
 {
     int blk, ch;
     int mantissa_bits;
@@ -1266,16 +1292,15 @@ static inline int asym_quant(int c, int e, int qbits)
 /**
  * Quantize a set of mantissas for a single channel in a single block.
  */
-static void quantize_mantissas_blk_ch(AC3EncodeContext *s,
-                                      int32_t *mdct_coef, int8_t exp_shift,
-                                      uint8_t *exp, uint8_t *bap,
-                                      uint16_t *qmant, int n)
+static void quantize_mantissas_blk_ch(AC3EncodeContext *s, CoefType *mdct_coef,
+                                      int8_t exp_shift, uint8_t *exp,
+                                      uint8_t *bap, uint16_t *qmant, int n)
 {
     int i;
 
     for (i = 0; i < n; i++) {
         int v;
-        int c = mdct_coef[i];
+        int c = SCALE_COEF(mdct_coef[i]);
         int e = exp[i] - exp_shift;
         int b = bap[i];
         switch (b) {
@@ -1414,8 +1439,7 @@ static void output_frame_header(AC3EncodeContext *s)
 /**
  * Write one audio block to the output bitstream.
  */
-static void output_audio_block(AC3EncodeContext *s,
-                               int block_num)
+static void output_audio_block(AC3EncodeContext *s, int block_num)
 {
     int ch, i, baie, rbnd;
     AC3Block *block = &s->blocks[block_num];
@@ -1609,8 +1633,7 @@ static void output_frame_end(AC3EncodeContext *s)
 /**
  * Write the frame to the output bitstream.
  */
-static void output_frame(AC3EncodeContext *s,
-                         unsigned char *frame)
+static void output_frame(AC3EncodeContext *s, unsigned char *frame)
 {
     int blk;
 
@@ -1628,11 +1651,11 @@ static void output_frame(AC3EncodeContext *s,
 /**
  * Encode a single AC-3 frame.
  */
-static int ac3_encode_frame(AVCodecContext *avctx,
-                            unsigned char *frame, int buf_size, void *data)
+static int ac3_encode_frame(AVCodecContext *avctx, unsigned char *frame,
+                            int buf_size, void *data)
 {
     AC3EncodeContext *s = avctx->priv_data;
-    const int16_t *samples = data;
+    const SampleType *samples = data;
     int ret;
 
     if (s->bit_alloc.sr_code == 1)
@@ -1946,8 +1969,7 @@ static av_cold int ac3_encode_init(AVCodecContext *avctx)
 
     bit_alloc_init(s);
 
-    s->mdct.avctx = avctx;
-    ret = mdct_init(&s->mdct, 9);
+    ret = mdct_init(avctx, &s->mdct, 9);
     if (ret)
         goto init_fail;
 
