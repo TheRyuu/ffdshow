@@ -74,6 +74,7 @@
  CODEC_OP(CODEC_ID_AASC              ,64,"aasc") \
  CODEC_OP(CODEC_ID_ULTI              ,65,"ulti") \
  CODEC_OP(CODEC_ID_CAVS              ,66,"cavs") \
+ CODEC_OP(CODEC_ID_SNOW              ,67,"snow") \
  CODEC_OP(CODEC_ID_VP6A              ,68,"vp6a") \
  CODEC_OP(CODEC_ID_RV30              ,69,"rv30") \
  CODEC_OP(CODEC_ID_RV40              ,70,"rv40") \
