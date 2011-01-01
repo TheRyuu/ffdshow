@@ -27,6 +27,7 @@
 #include "liba52/a52.h"
 #include "TffdshowDecAudioInputPin.h"
 #include "ffmpeg/libavcodec/avcodec.h"
+#include "ffmpeg/libavcore/audioconvert.h"
 
 TaudioFilterOutput::TaudioFilterOutput(IffdshowBase *Ideci,Tfilters *Iparent):TaudioFilter(Ideci,Iparent)
 {
@@ -143,34 +144,37 @@ HRESULT TaudioFilterOutput::process(TfilterQueue::iterator it,TsampleFormat &fmt
                 int mask;
             };
             static const Tac3channels ac3channels[]= {
-                A52_MONO   ,SPEAKER_FRONT_CENTER,0                   ,0                  ,0                  ,0                 ,0,SPEAKER_FRONT_CENTER,
-                A52_STEREO ,SPEAKER_FRONT_LEFT  ,SPEAKER_FRONT_RIGHT ,0                  ,0                  ,0                 ,0,SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT,
-                A52_3F     ,SPEAKER_FRONT_LEFT  ,SPEAKER_FRONT_CENTER,SPEAKER_FRONT_RIGHT,0                  ,0                 ,0,SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT|SPEAKER_FRONT_CENTER,
-                A52_2F1R   ,SPEAKER_FRONT_LEFT  ,SPEAKER_FRONT_RIGHT ,SPEAKER_BACK_CENTER,0                  ,0                 ,0,SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT|SPEAKER_BACK_CENTER,
-                A52_3F1R   ,SPEAKER_FRONT_LEFT  ,SPEAKER_FRONT_CENTER,SPEAKER_FRONT_RIGHT,SPEAKER_BACK_CENTER,0                 ,0,SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT|SPEAKER_FRONT_CENTER|SPEAKER_BACK_CENTER,
-                A52_2F2R   ,SPEAKER_FRONT_LEFT  ,SPEAKER_FRONT_RIGHT ,SPEAKER_BACK_LEFT  ,SPEAKER_BACK_RIGHT ,0                 ,0,SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT|SPEAKER_BACK_LEFT|SPEAKER_BACK_RIGHT,
-                A52_3F2R   ,SPEAKER_FRONT_LEFT  ,SPEAKER_FRONT_CENTER,SPEAKER_FRONT_RIGHT,SPEAKER_BACK_LEFT  ,SPEAKER_BACK_RIGHT,0,SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT|SPEAKER_FRONT_CENTER|SPEAKER_BACK_LEFT|SPEAKER_BACK_RIGHT,
+                AV_CH_LAYOUT_MONO        ,SPEAKER_FRONT_CENTER,0                   ,0                  ,0                  ,0                 ,0,SPEAKER_FRONT_CENTER,
+                AV_CH_LAYOUT_STEREO      ,SPEAKER_FRONT_LEFT  ,SPEAKER_FRONT_RIGHT ,0                  ,0                  ,0                 ,0,SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT,
+                AV_CH_LAYOUT_SURROUND    ,SPEAKER_FRONT_LEFT  ,SPEAKER_FRONT_CENTER,SPEAKER_FRONT_RIGHT,0                  ,0                 ,0,SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT|SPEAKER_FRONT_CENTER,
+                AV_CH_LAYOUT_2_1         ,SPEAKER_FRONT_LEFT  ,SPEAKER_FRONT_RIGHT ,SPEAKER_BACK_CENTER,0                  ,0                 ,0,SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT|SPEAKER_BACK_CENTER,
+                AV_CH_LAYOUT_4POINT0     ,SPEAKER_FRONT_LEFT  ,SPEAKER_FRONT_CENTER,SPEAKER_FRONT_RIGHT,SPEAKER_BACK_CENTER,0                 ,0,SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT|SPEAKER_FRONT_CENTER|SPEAKER_BACK_CENTER,
+                AV_CH_LAYOUT_QUAD        ,SPEAKER_FRONT_LEFT  ,SPEAKER_FRONT_RIGHT ,SPEAKER_BACK_LEFT  ,SPEAKER_BACK_RIGHT ,0                 ,0,SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT|SPEAKER_BACK_LEFT|SPEAKER_BACK_RIGHT,
+                AV_CH_LAYOUT_5POINT0_BACK,SPEAKER_FRONT_LEFT  ,SPEAKER_FRONT_CENTER,SPEAKER_FRONT_RIGHT,SPEAKER_BACK_LEFT  ,SPEAKER_BACK_RIGHT,0,SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT|SPEAKER_FRONT_CENTER|SPEAKER_BACK_LEFT|SPEAKER_BACK_RIGHT,
 
-                A52_MONO  |A52_LFE ,SPEAKER_FRONT_CENTER,SPEAKER_LOW_FREQUENCY,0                    ,0                    ,0                    ,0                    ,SPEAKER_FRONT_CENTER|SPEAKER_LOW_FREQUENCY,
-                A52_STEREO|A52_LFE ,SPEAKER_FRONT_LEFT  ,SPEAKER_FRONT_RIGHT  ,SPEAKER_LOW_FREQUENCY,0                    ,0                    ,0                    ,SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT|SPEAKER_LOW_FREQUENCY,
-                A52_3F    |A52_LFE ,SPEAKER_FRONT_LEFT  ,SPEAKER_FRONT_CENTER ,SPEAKER_FRONT_RIGHT  ,SPEAKER_LOW_FREQUENCY,0                    ,0                    ,SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT|SPEAKER_FRONT_CENTER|SPEAKER_LOW_FREQUENCY,
-                A52_2F1R  |A52_LFE ,SPEAKER_FRONT_LEFT  ,SPEAKER_FRONT_RIGHT  ,SPEAKER_BACK_CENTER  ,SPEAKER_LOW_FREQUENCY,0                    ,0                    ,SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT|SPEAKER_BACK_CENTER|SPEAKER_LOW_FREQUENCY,
-                A52_3F1R  |A52_LFE ,SPEAKER_FRONT_LEFT  ,SPEAKER_FRONT_CENTER ,SPEAKER_FRONT_RIGHT  ,SPEAKER_BACK_CENTER  ,SPEAKER_LOW_FREQUENCY,0                    ,SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT|SPEAKER_FRONT_CENTER|SPEAKER_BACK_CENTER|SPEAKER_LOW_FREQUENCY,
-                A52_2F2R  |A52_LFE ,SPEAKER_FRONT_LEFT  ,SPEAKER_FRONT_RIGHT  ,SPEAKER_BACK_LEFT    ,SPEAKER_BACK_RIGHT   ,SPEAKER_LOW_FREQUENCY,0                    ,SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT|SPEAKER_BACK_LEFT|SPEAKER_BACK_RIGHT|SPEAKER_LOW_FREQUENCY,
-                A52_3F2R  |A52_LFE ,SPEAKER_FRONT_LEFT  ,SPEAKER_FRONT_CENTER ,SPEAKER_FRONT_RIGHT  ,SPEAKER_BACK_LEFT    ,SPEAKER_BACK_RIGHT   ,SPEAKER_LOW_FREQUENCY,SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT|SPEAKER_FRONT_CENTER|SPEAKER_BACK_LEFT|SPEAKER_BACK_RIGHT|SPEAKER_LOW_FREQUENCY,
+                AV_CH_LAYOUT_MONO|AV_CH_LOW_FREQUENCY    ,SPEAKER_FRONT_CENTER,SPEAKER_LOW_FREQUENCY,0                    ,0                    ,0                    ,0                    ,SPEAKER_FRONT_CENTER|SPEAKER_LOW_FREQUENCY,
+                AV_CH_LAYOUT_STEREO|AV_CH_LOW_FREQUENCY  ,SPEAKER_FRONT_LEFT  ,SPEAKER_FRONT_RIGHT  ,SPEAKER_LOW_FREQUENCY,0                    ,0                    ,0                    ,SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT|SPEAKER_LOW_FREQUENCY,
+                AV_CH_LAYOUT_SURROUND|AV_CH_LOW_FREQUENCY,SPEAKER_FRONT_LEFT  ,SPEAKER_FRONT_CENTER ,SPEAKER_FRONT_RIGHT  ,SPEAKER_LOW_FREQUENCY,0                    ,0                    ,SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT|SPEAKER_FRONT_CENTER|SPEAKER_LOW_FREQUENCY,
+                AV_CH_LAYOUT_2_1|AV_CH_LOW_FREQUENCY     ,SPEAKER_FRONT_LEFT  ,SPEAKER_FRONT_RIGHT  ,SPEAKER_BACK_CENTER  ,SPEAKER_LOW_FREQUENCY,0                    ,0                    ,SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT|SPEAKER_BACK_CENTER|SPEAKER_LOW_FREQUENCY,
+                AV_CH_LAYOUT_4POINT0|AV_CH_LOW_FREQUENCY ,SPEAKER_FRONT_LEFT  ,SPEAKER_FRONT_CENTER ,SPEAKER_FRONT_RIGHT  ,SPEAKER_BACK_CENTER  ,SPEAKER_LOW_FREQUENCY,0                    ,SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT|SPEAKER_FRONT_CENTER|SPEAKER_BACK_CENTER|SPEAKER_LOW_FREQUENCY,
+                AV_CH_LAYOUT_QUAD|AV_CH_LOW_FREQUENCY    ,SPEAKER_FRONT_LEFT  ,SPEAKER_FRONT_RIGHT  ,SPEAKER_BACK_LEFT    ,SPEAKER_BACK_RIGHT   ,SPEAKER_LOW_FREQUENCY,0                    ,SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT|SPEAKER_BACK_LEFT|SPEAKER_BACK_RIGHT|SPEAKER_LOW_FREQUENCY,
+                AV_CH_LAYOUT_5POINT1_BACK                ,SPEAKER_FRONT_LEFT  ,SPEAKER_FRONT_CENTER ,SPEAKER_FRONT_RIGHT  ,SPEAKER_BACK_LEFT    ,SPEAKER_BACK_RIGHT   ,SPEAKER_LOW_FREQUENCY,SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT|SPEAKER_FRONT_CENTER|SPEAKER_BACK_LEFT|SPEAKER_BACK_RIGHT|SPEAKER_LOW_FREQUENCY,
             };
             for (int i=0; i<countof(ac3channels); i++)
                 if (channelmask==ac3channels[i].mask) {
-                    AVCodec *avcodec=libavcodec->avcodec_find_encoder(CODEC_ID_AC3);
-                    avctx=libavcodec->avcodec_alloc_context();
-                    avctx->sample_rate=fmt.freq;
-                    avctx->channels=fmt.nchannels;
-                    avctx->bit_rate=cfg->outAC3bitrate*1000;
-                    avctx->ac3mode=ac3channels[i].ac3mode&~A52_LFE;
-                    avctx->ac3lfe=ac3channels[i].ac3mode&A52_LFE?1:0;
+                    AVCodec *avcodec = libavcodec->avcodec_find_encoder(CODEC_ID_AC3);
+                    avctx = libavcodec->avcodec_alloc_context();
+                    
+                    avctx->sample_rate = fmt.freq;
+                    avctx->channels = fmt.nchannels;
+                    avctx->bit_rate = cfg->outAC3bitrate*1000;
+                    avctx->channel_layout = ac3channels[i].ac3mode;
+										
+                    /* custom channel mapping */
                     for (unsigned int j=0; j<fmt.nchannels; j++) {
-                        avctx->ac3channels[j]=fmt.findSpeaker(ac3channels[i].speakers[j]);
+                        avctx->ac3channels[j] = fmt.findSpeaker(ac3channels[i].speakers[j]);
                     }
+                    
                     ac3inited=libavcodec->avcodec_open(avctx,avcodec)>=0;
                     break;
                 }

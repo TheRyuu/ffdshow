@@ -2557,8 +2557,7 @@ typedef struct AVCodecContext {
     int qmin_b,qmax_b;
     
     float postgain;
-    int ac3mode,ac3lfe;
-    int ac3channels[6];
+    uint8_t ac3channels[6];
     int nal_length_size;
     int vorbis_header_size[3];
     int64_t granulepos;

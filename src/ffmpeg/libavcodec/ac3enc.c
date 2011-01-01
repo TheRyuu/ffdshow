@@ -139,7 +139,7 @@ typedef struct AC3EncodeContext {
     int mant1_cnt, mant2_cnt, mant4_cnt;    ///< mantissa counts for bap=1,2,4
     uint16_t *qmant1_ptr, *qmant2_ptr, *qmant4_ptr; ///< mantissa pointers for bap=1,2,4
 
-    int16_t **planar_samples;
+    SampleType **planar_samples;
     uint8_t *bap_buffer;
     uint8_t *bap1_buffer;
     CoefType *mdct_coef_buffer;
@@ -1116,6 +1116,13 @@ static int cbr_bit_allocation(AC3EncodeContext *s)
 
     snr_offset = s->coarse_snr_offset << 4;
 
+    /* if previous frame SNR offset was 1023, check if current frame can also
+       use SNR offset of 1023. if so, skip the search. */
+    if ((snr_offset | s->fine_snr_offset[0]) == 1023) {
+        if (bit_alloc(s, 1023) <= bits_left)
+            return 0;
+    }
+
     while (snr_offset >= 0 &&
            bit_alloc(s, snr_offset) > bits_left) {
         snr_offset -= 64;
@@ -1125,7 +1132,7 @@ static int cbr_bit_allocation(AC3EncodeContext *s)
 
     FFSWAP(uint8_t *, s->bap_buffer, s->bap1_buffer);
     for (snr_incr = 64; snr_incr > 0; snr_incr >>= 2) {
-        while (snr_offset + 64 <= 1023 &&
+        while (snr_offset + snr_incr <= 1023 &&
                bit_alloc(s, snr_offset + snr_incr) <= bits_left) {
             snr_offset += snr_incr;
             FFSWAP(uint8_t *, s->bap_buffer, s->bap1_buffer);
@@ -1772,7 +1779,6 @@ static av_cold int validate_options(AVCodecContext *avctx, AC3EncodeContext *s)
 {
     int i, ret;
 
-#if 0
     /* validate channel layout */
     if (!avctx->channel_layout) {
         av_log(avctx, AV_LOG_WARNING, "No channel layout specified. The "
@@ -1780,16 +1786,10 @@ static av_cold int validate_options(AVCodecContext *avctx, AC3EncodeContext *s)
                                       "might be incorrect.\n");
     }
     ret = set_channel_info(s, avctx->channels, &avctx->channel_layout);
-#else
-    if (avctx->channels < 1 || avctx->channels > 6)
-        ret = AVERROR(EINVAL);
-    s->channel_mode = avctx->ac3mode;
-    s->lfe_on = !!(avctx->ac3lfe);
-    s->channels = avctx->channels;
-    s->fbw_channels = s->channels - s->lfe_on;
-    s->lfe_channel = s->lfe_on ? s->fbw_channels : -1;
+    
+    /* ffdshow custom code */
     s->channel_map = avctx->ac3channels;
-#endif
+
     if (ret) {
         av_log(avctx, AV_LOG_ERROR, "invalid channel layout\n");
         return ret;
