@@ -31,6 +31,7 @@ SRCS_C=\
     $(LAVC_DIR)/ac3dec.c \
     $(LAVC_DIR)/ac3dec_data.c \
     $(LAVC_DIR)/ac3enc.c \
+    $(LAVC_DIR)/ac3enc_fixed.c \
     $(LAVC_DIR)/ac3tab.c \
     $(LAVC_DIR)/adpcm.c \
     $(LAVC_DIR)/allcodecs.c \
