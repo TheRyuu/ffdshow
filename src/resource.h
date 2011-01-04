@@ -1643,6 +1643,8 @@
 #define IDC_CHB_GRADFUN                 1940
 #define IDC_LBL_GRADFUN_THRESHOLD       1941
 #define IDC_TBR_GRADFUN_THRESHOLD       1942
+#define IDC_LBL_GRADFUN_RADIUS          40024
+#define IDC_TBR_GRADFUN_RADIUS          40023
 #define IDC_CHB_DROP_ON_DELAY           1943
 #define IDC_CHB_MULTITHREAD             1944
 #define IDC_CHB_DONT_QUEUE_IN_WMP       1945

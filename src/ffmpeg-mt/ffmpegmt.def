@@ -9,6 +9,7 @@ EXPORTS
   avcodec_flush_buffers
   avcodec_close
   getVersion
+  av_mallocz
   av_free
 
   dsputil_init

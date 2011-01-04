@@ -13,6 +13,7 @@ EXPORTS
   avcodec_flush_buffers
   avcodec_close
   getVersion
+  av_mallocz
   av_free
 
   dsputil_init
@@ -86,5 +87,5 @@ EXPORTS
   yadif_uninit
   yadif_filter
   
-  avfilter_graph_alloc
-  
+  gradfunInit
+  gradfunFilter

@@ -6,6 +6,7 @@
 #include "TpostprocSettings.h"
 #include "ffImgfmt.h"
 #include "libavfilter/vf_yadif.h"
+#include "libavfilter/gradfun.h"
 // Do not include avcodec.h in this file, ffmpeg and ffmpeg-mt may conflict.
 
 struct AVCodecContext;
@@ -93,6 +94,7 @@ public:
  const char* (*avcodec_get_current_idct)(AVCodecContext *avctx);
  void (*avcodec_get_encoder_info)(AVCodecContext *avctx,int *xvid_build,int *divx_version,int *divx_build,int *lavc_build);
 
+ void* (*av_mallocz)(size_t size);
  void (*av_free)(void *ptr);
  
  AVCodecParserContext* (*av_parser_init)(int codec_id);
@@ -180,6 +182,10 @@ public:
  void (*yadif_init)(YADIFContext *yadctx);
  void (*yadif_uninit)(YADIFContext *yadctx);
  void (*yadif_filter)(YADIFContext *yadctx, uint8_t *dst[3], stride_t dst_stride[3], int width, int height, int parity, int tff);
+
+ // gradfun
+ int (*gradfunInit) (GradFunContext *ctx, const char *args, void *opaque);
+ void (*gradfunFilter) (GradFunContext *ctx, uint8_t *dst, uint8_t *src, int width, int height, int dst_linesize, int src_linesize, int r);
 };
 
 #endif

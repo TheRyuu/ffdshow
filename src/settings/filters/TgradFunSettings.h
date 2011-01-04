@@ -11,6 +11,7 @@ protected:
 public:
     TgradFunSettings(TintStrColl *Icoll=NULL,TfilterIDFFs *filters=NULL);
     int threshold;
+    int radius;
 
     virtual void createFilters(size_t filtersorder,Tfilters *filters,TfilterQueue &queue) const;
     virtual void createPages(TffdshowPageDec *parent) const;

@@ -268,8 +268,11 @@ SRCS_C=\
     $(LAVFILTER_DIR)/avfiltergraph.c \
     $(LAVFILTER_DIR)/defaults.c \
     $(LAVFILTER_DIR)/formats.c \
+    $(LAVFILTER_DIR)/vf_gradfun.c \
     $(LAVFILTER_DIR)/vf_yadif.c \
     $(LAVFILTER_DIR)/yadif_thread.c \
+    \
+    $(LAVFILTER_DIR)/x86/gradfun.c \
     $(LAVFILTER_DIR)/x86/yadif.c \
     \
     $(LAVS_DIR)/rgb2rgb.c \

@@ -608,9 +608,8 @@
 #define IDFF_isGradFun         1151
 #define IDFF_showGradFun       1152
 #define IDFF_orderGradFun      1153
-#define IDFF_fullGradFun       1154
-#define IDFF_halfGradFun       1155
 #define IDFF_gradFunThreshold  1156
+#define IDFF_gradFunRadius     3563
 
 #define IDFF_filterVis          1200
 #define IDFF_isVis              1201
@@ -1571,6 +1570,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//next:3563
+//next:3564
 
 #endif

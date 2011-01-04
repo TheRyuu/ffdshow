@@ -93,6 +93,7 @@ Tlibavcodec::Tlibavcodec(const Tconfig *config):refcount(0)
  dll->loadFunction(av_log_set_level,"av_log_set_level");
  dll->loadFunction(avcodec_thread_init,"avcodec_thread_init");
  dll->loadFunction(avcodec_thread_free,"avcodec_thread_free");
+ dll->loadFunction(av_mallocz,"av_mallocz");
  dll->loadFunction(av_free,"av_free");
  dll->loadFunction(avcodec_default_get_buffer,"avcodec_default_get_buffer");
  dll->loadFunction(avcodec_default_release_buffer,"avcodec_default_release_buffer");
@@ -165,6 +166,10 @@ Tlibavcodec::Tlibavcodec(const Tconfig *config):refcount(0)
  dll->loadFunction(yadif_init,"yadif_init");
  dll->loadFunction(yadif_uninit,"yadif_uninit");
  dll->loadFunction(yadif_filter,"yadif_filter");
+
+ //gradfun
+ dll->loadFunction(gradfunInit,"gradfunInit");
+ dll->loadFunction(gradfunFilter,"gradfunFilter");
 #endif
 
  ok=dll->ok;
