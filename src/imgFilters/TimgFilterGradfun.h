@@ -18,18 +18,19 @@ unsigned int oldSizeY;
 int reconfigure;
 
 virtual GradFunContext *configure (float threshold, int radius, TffPict &pict);
-virtual void filter (GradFunContext *gradFunContext, TffPict &pict);
+virtual void filter (GradFunContext *gradFunContext, unsigned char *src[4], TffPict &pict);
 
 protected:
 virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
-    return FF_CSP_420P;
+    return FF_CSPS_MASK_YUV_PLANAR;
 }
 
 public:
 TimgFilterGradfun(IffdshowBase *Ideci,Tfilters *Iparent);
 TimgFilterGradfun::~TimgFilterGradfun();
 virtual HRESULT process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0);
+virtual void onDiscontinuity(void);
 virtual void onSizeChange(void);
 virtual void done(void);
 };

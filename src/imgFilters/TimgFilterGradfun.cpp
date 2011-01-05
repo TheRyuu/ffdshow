@@ -56,6 +56,11 @@ void TimgFilterGradfun::onSizeChange(void)
     done();
     reconfigure = 1;
 }
+void TimgFilterGradfun::onDiscontinuity(void)
+{
+    done();
+    reconfigure = 1;
+}
 GradFunContext* TimgFilterGradfun::configure(float threshold, int radius, TffPict &pict)
 {
     char gradfun_args[20];
@@ -80,9 +85,9 @@ GradFunContext* TimgFilterGradfun::configure(float threshold, int radius, TffPic
 
     return gradFunContext;
 }
-void TimgFilterGradfun::filter(GradFunContext *gradFunContext, TffPict &pict)
+void TimgFilterGradfun::filter(GradFunContext *gradFunContext, unsigned char *src[4], TffPict &pict)
 {
-    for (int p = 0; p < 3 && pict.data[p]; p++) {
+    for (int p = 0; p < 3 && src[p]; p++) {
         int w = pict.rectFull.dx;
         int h = pict.rectFull.dy;
         int r = gradFunContext->radius;
@@ -93,7 +98,7 @@ void TimgFilterGradfun::filter(GradFunContext *gradFunContext, TffPict &pict)
         }
 
         if (((w) > (h) ? (h) : (w)) > 2 * r)
-            ffmpeg->gradfunFilter(gradFunContext, pict.data[p], pict.data[p], w, h, pict.stride[p], pict.stride[p], r);
+            ffmpeg->gradfunFilter(gradFunContext, pict.data[p], src[p], w, h, pict.stride[p], pict.stride[p], r);
     }
 }
 HRESULT TimgFilterGradfun::process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)
@@ -102,6 +107,10 @@ HRESULT TimgFilterGradfun::process(TfilterQueue::iterator it,TffPict &pict,const
         return parent->processSample(++it,pict);
 
     const TgradFunSettings *cfg=(const TgradFunSettings*)cfg0;
+    init(pict,1,0);
+
+    unsigned char *src[4];
+    getCurNext(FF_CSPS_MASK_YUV_PLANAR, pict, 1, COPYMODE_FULL, src); 
 
     if (oldThreshold != cfg->threshold || oldRadius != cfg->radius || oldSizeX != pict.rectFull.dx || oldSizeY != pict.rectFull.dy) {
         oldThreshold = cfg->threshold;
@@ -122,7 +131,7 @@ HRESULT TimgFilterGradfun::process(TfilterQueue::iterator it,TffPict &pict,const
     }
 
     if (gradFunContext != NULL)
-        filter(gradFunContext, pict);
+        filter(gradFunContext, src, pict);
 
     return parent->processSample(++it,pict);
 }
