@@ -26,6 +26,7 @@
  * fixed-point AC-3 encoder.
  */
 
+#undef CONFIG_AC3ENC_FLOAT
 #include "ac3enc.c"
 
 
@@ -317,24 +318,28 @@ static int normalize_samples(AC3EncodeContext *s)
     return v - 8; // custom
 }
 
-AVCodec ac3_encoder = {
-    "ac3",
+
+/**
+ * Scale MDCT coefficients from float to fixed-point.
+ */
+static void scale_coefficients(AC3EncodeContext *s)
+{
+    /* scaling/conversion is obviously not needed for the fixed-point encoder
+       since the coefficients are already fixed-point. */
+    return;
+}
+
+
+AVCodec ac3_fixed_encoder = {
+    "ac3_fixed",
     AVMEDIA_TYPE_AUDIO,
     CODEC_ID_AC3,
     sizeof(AC3EncodeContext),
-    /*.init=*/ac3_encode_init,
-    /*.encode=*/ac3_encode_frame,
-    /*.close=*/ac3_encode_close,
-    /*.decode=*/NULL,
-    /*.capabilities = */0,
-    /*.next = */NULL,
-    /*.flush = */NULL,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("ATSC A/52A (AC-3)"),
-    #if __STDC_VERSION__ >= 199901L
-    .sample_fmts = (enum SampleFormat[]){AV_SAMPLE_FMT_S16,AV_SAMPLE_FMT_NONE},
-    #else
-    /*.sample_fmts = */NULL,
-    #endif
+    ac3_encode_init,
+    ac3_encode_frame,
+    ac3_encode_close,
+    NULL,
+    .sample_fmts = (const enum AVSampleFormat[]){AV_SAMPLE_FMT_S16,AV_SAMPLE_FMT_NONE},
+    .long_name = NULL_IF_CONFIG_SMALL("ATSC A/52A (AC-3)"),
+    .channel_layouts = ac3_channel_layouts,
 };

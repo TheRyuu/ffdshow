@@ -23,36 +23,22 @@
 
 /**
  * @file
- * fixed-point AC-3 encoder header.
+ * floating-point AC-3 encoder header.
  */
 
-#ifndef AVCODEC_AC3ENC_FIXED_H
-#define AVCODEC_AC3ENC_FIXED_H
+#ifndef AVCODEC_AC3ENC_FLOAT_H
+#define AVCODEC_AC3ENC_FLOAT_H
 
-#include <stdint.h>
-
-
-typedef int16_t SampleType;
-typedef int32_t CoefType;
+#include "fft.h"
 
 
-/**
- * Compex number.
- * Used in fixed-point MDCT calculation.
- */
-typedef struct IComplex {
-    int16_t re,im;
-} IComplex;
+typedef float SampleType;
+typedef float CoefType;
+
 
 typedef struct AC3MDCTContext {
-    const int16_t *window;                  ///< MDCT window function
-    int nbits;                              ///< log2(transform size)
-    int16_t *costab;                        ///< FFT cos table
-    int16_t *sintab;                        ///< FFT sin table
-    int16_t *xcos1;                         ///< MDCT cos table
-    int16_t *xsin1;                         ///< MDCT sin table
-    int16_t *rot_tmp;                       ///< temp buffer for pre-rotated samples
-    IComplex *cplx_tmp;                     ///< temp buffer for complex pre-rotated samples
+    const float *window;    ///< MDCT window function
+    FFTContext fft;         ///< FFT context for MDCT calculation
 } AC3MDCTContext;
 
-#endif /* AVCODEC_AC3ENC_FIXED_H */
+#endif /* AVCODEC_AC3ENC_FLOAT_H */

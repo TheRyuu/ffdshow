@@ -147,7 +147,7 @@ static av_cold int decode_init(AVCodecContext *avctx)
     case  8: avctx->pix_fmt = PIX_FMT_PAL8; break;
     case 16: avctx->pix_fmt = PIX_FMT_RGB555; break;
     case 24:
-             avctx->pix_fmt = PIX_FMT_RGB24; /* ffdshow custom code */
+             avctx->pix_fmt = PIX_FMT_BGR24;
              break;
     case 32: avctx->pix_fmt = PIX_FMT_RGB32; break;
     default: av_log(avctx, AV_LOG_ERROR, "Camtasia error: unknown depth %i bpp\n", avctx->bits_per_coded_sample);
@@ -206,11 +206,7 @@ AVCodec tscc_decoder = {
         NULL,
         decode_end,
         decode_frame,
-        /*.capabilities = */CODEC_CAP_DR1,
-        /*.next = */NULL,
-        /*.flush = */NULL,
-        /*.supported_framerates = */NULL,
-        /*.pix_fmts = */NULL,
-        /*.long_name = */NULL_IF_CONFIG_SMALL("TechSmith Screen Capture Codec"),
+        CODEC_CAP_DR1,
+        .long_name = NULL_IF_CONFIG_SMALL("TechSmith Screen Capture Codec"),
 };
 

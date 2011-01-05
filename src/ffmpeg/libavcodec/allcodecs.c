@@ -120,7 +120,7 @@ void avcodec_register_all(void)
 
     /* audio codecs */
     REGISTER_DECODER (AAC, aac);
-    REGISTER_ENCDEC  (AC3, ac3);
+    REGISTER_DECODER (AC3, ac3);
     REGISTER_DECODER (ATRAC3, atrac3);
     REGISTER_DECODER (COOK, cook);
     REGISTER_DECODER (DCA, dca);
@@ -132,11 +132,11 @@ void avcodec_register_all(void)
     REGISTER_DECODER (MACE3, mace3);
     REGISTER_DECODER (MACE6, mace6);
     REGISTER_DECODER (MLP, mlp);
-    //REGISTER_DECODER (MP1, mp1);
+    REGISTER_DECODER (MP1, mp1);
     REGISTER_DECODER (MP1FLOAT, mp1float);
-    //REGISTER_DECODER (MP2, mp2);
+    REGISTER_DECODER (MP2, mp2);
     REGISTER_DECODER (MP2FLOAT, mp2float);
-    //REGISTER_DECODER (MP3, mp3);
+    REGISTER_DECODER (MP3, mp3);
     REGISTER_DECODER (MP3FLOAT, mp3float);
     REGISTER_DECODER (NELLYMOSER, nellymoser);
     REGISTER_DECODER (QDM2, qdm2);
@@ -149,6 +149,9 @@ void avcodec_register_all(void)
     REGISTER_DECODER (WMAV1, wmav1);
     REGISTER_DECODER (WMAV2, wmav2);
     REGISTER_DECODER (WAVPACK, wavpack);
+    
+    REGISTER_ENCODER (AC3, ac3);
+    REGISTER_ENCODER (AC3_FIXED, ac3_fixed);
 
     /* PCM codecs */
     REGISTER_DECODER (PCM_ALAW, pcm_alaw);
@@ -178,7 +181,7 @@ void avcodec_register_all(void)
     REGISTER_DECODER (LIBAMR_NB, libamr_nb);
 
     /* parsers */
-    //REGISTER_PARSER  (AAC, aac);
+    REGISTER_PARSER  (AAC, aac);
     REGISTER_PARSER  (AC3, ac3);
     REGISTER_PARSER  (DCA, dca);
     REGISTER_PARSER  (MLP, mlp);

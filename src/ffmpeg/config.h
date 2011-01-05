@@ -140,6 +140,7 @@
 #define cbrtf(x) pow((float)x, (float)1.0/3)
 #endif
 
+#define CONFIG_AC3ENC_FLOAT 0
 #define CONFIG_DCT 1
 #define CONFIG_DWT 0
 #define CONFIG_GPL 1
@@ -322,7 +323,9 @@ Note: when adding a new codec, you have to:
 #define CONFIG_SNOW_ENCODER 0
 #define CONFIG_WMV1_ENCODER 0
 #define CONFIG_WMV2_ENCODER 0
-#define CONFIG_AC3_ENCODER 1
+
+#define CONFIG_AC3_ENCODER 0
+#define CONFIG_AC3_FIXED_ENCODER 1
 
 #define CONFIG_AAC_PARSER 0
 #define CONFIG_AC3_PARSER 1
