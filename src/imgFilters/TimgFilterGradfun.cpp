@@ -69,9 +69,9 @@ GradFunContext* TimgFilterGradfun::configure(float threshold, int radius, TffPic
     if (gradFunContext == NULL)
         return NULL;
     ffmpeg->gradfunInit(gradFunContext, gradfun_args, NULL);
-    gradFunContext->chroma_w = pict.rectFull.dx / 2;
-    gradFunContext->chroma_h = pict.rectFull.dy / 2;
-    gradFunContext->chroma_r = ((((gradFunContext->radius / 4) + (gradFunContext->radius / 4)) / 2 ) + 1) & ~1;
+    gradFunContext->chroma_w = pict.rectFull.dx >> pict.cspInfo.shiftX[1];
+    gradFunContext->chroma_h = pict.rectFull.dy >> pict.cspInfo.shiftY[1];
+    gradFunContext->chroma_r = ((((gradFunContext->radius >> pict.cspInfo.shiftX[1]) + (gradFunContext->radius >> pict.cspInfo.shiftY[1])) / 2 ) + 1) & ~1;
     if (gradFunContext->chroma_r < 4)
         gradFunContext->chroma_r = 4;
     else if (gradFunContext->chroma_r > 32)
@@ -87,7 +87,7 @@ GradFunContext* TimgFilterGradfun::configure(float threshold, int radius, TffPic
 }
 void TimgFilterGradfun::filter(GradFunContext *gradFunContext, unsigned char *src[4], TffPict &pict)
 {
-    for (int p = 0; p < 3 && src[p]; p++) {
+    for (unsigned int p = 0; p < pict.cspInfo.numPlanes; p++) {
         int w = pict.rectFull.dx;
         int h = pict.rectFull.dy;
         int r = gradFunContext->radius;
@@ -103,16 +103,16 @@ void TimgFilterGradfun::filter(GradFunContext *gradFunContext, unsigned char *sr
 }
 HRESULT TimgFilterGradfun::process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)
 {
-    if (pict.cspInfo.id != FF_CSP_420P || !dllok)
+    if (!dllok)
         return parent->processSample(++it,pict);
 
     const TgradFunSettings *cfg=(const TgradFunSettings*)cfg0;
     init(pict,1,0);
 
     unsigned char *src[4];
-    getCurNext(FF_CSPS_MASK_YUV_PLANAR, pict, 1, COPYMODE_FULL, src); 
+    bool cspChange = getCurNext(FF_CSPS_MASK_YUV_PLANAR, pict, 1, COPYMODE_FULL, src); 
 
-    if (oldThreshold != cfg->threshold || oldRadius != cfg->radius || oldSizeX != pict.rectFull.dx || oldSizeY != pict.rectFull.dy) {
+    if (cspChange || oldThreshold != cfg->threshold || oldRadius != cfg->radius || oldSizeX != pict.rectFull.dx || oldSizeY != pict.rectFull.dy) {
         oldThreshold = cfg->threshold;
         oldRadius = cfg->radius;
         oldSizeX = pict.rectFull.dx;
