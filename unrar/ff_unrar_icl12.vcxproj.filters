@@ -9,6 +9,9 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{129e8a82-3778-44ff-a8ac-37849c53bcbb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="archive.cpp">
@@ -135,8 +138,11 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="dll.def">
-      <Filter>Source Files</Filter>
-    </None>
+    <ResourceCompile Include="dll.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="dll.def" />
   </ItemGroup>
 </Project>

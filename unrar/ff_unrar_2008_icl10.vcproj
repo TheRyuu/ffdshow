@@ -616,6 +616,14 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="Resource Files"
+			>
+			<File
+				RelativePath=".\dll.rc"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath=".\dll.def"
 			>
