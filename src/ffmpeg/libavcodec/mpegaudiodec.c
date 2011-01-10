@@ -28,6 +28,8 @@
 #include "get_bits.h"
 #include "dsputil.h"
 
+#define ID3v1_TAG_SIZE 128
+
 /*
  * TODO:
  *  - in low precision mode, use more 16 bit multiplies in synth filter
@@ -1986,6 +1988,13 @@ static int decode_frame(AVCodecContext * avctx,
 
     header = AV_RB32(buf);
     if(ff_mpa_check_header(header) < 0){
+
+        if (buf_size == ID3v1_TAG_SIZE
+            && buf[0] == 'T' && buf[1] == 'A' && buf[2] == 'G') {
+            *data_size = 0;
+            return ID3v1_TAG_SIZE;
+        }
+
         av_log(avctx, AV_LOG_ERROR, "Header missing\n");
         return -1;
     }
@@ -2038,16 +2047,13 @@ AVCodec mp1_decoder =
     AVMEDIA_TYPE_AUDIO,
     CODEC_ID_MP1,
     sizeof(MPADecodeContext),
-    /*.init = */decode_init,
-    /*.encode = */NULL,
-    /*.close = */NULL,
-    /*.decode = */decode_frame,
-    /*.capabilities = */CODEC_CAP_PARSE_ONLY,
-    /*.next = */NULL,
-    /*.flush = */flush,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("MP1 (MPEG audio layer 1)"),
+    decode_init,
+    NULL,
+    NULL,
+    decode_frame,
+    CODEC_CAP_PARSE_ONLY,
+    .flush= flush,
+    .long_name= NULL_IF_CONFIG_SMALL("MP1 (MPEG audio layer 1)"),
 };
 #endif
 #if CONFIG_MP2_DECODER
@@ -2057,16 +2063,13 @@ AVCodec mp2_decoder =
     AVMEDIA_TYPE_AUDIO,
     CODEC_ID_MP2,
     sizeof(MPADecodeContext),
-    /*.init = */decode_init,
-    /*.encode = */NULL,
-    /*.close = */NULL,
-    /*.decode = */decode_frame,
-    /*.capabilities = */CODEC_CAP_PARSE_ONLY,
-    /*.next = */NULL,
-    /*.flush = */flush,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("MP2 (MPEG audio layer 2)"),
+    decode_init,
+    NULL,
+    NULL,
+    decode_frame,
+    CODEC_CAP_PARSE_ONLY,
+    .flush= flush,
+    .long_name= NULL_IF_CONFIG_SMALL("MP2 (MPEG audio layer 2)"),
 };
 #endif
 #if CONFIG_MP3_DECODER
@@ -2076,16 +2079,13 @@ AVCodec mp3_decoder =
     AVMEDIA_TYPE_AUDIO,
     CODEC_ID_MP3,
     sizeof(MPADecodeContext),
-    /*.init = */decode_init,
-    /*.encode = */NULL,
-    /*.close = */NULL,
-    /*.decode = */decode_frame,
-    /*.capabilities = */CODEC_CAP_PARSE_ONLY,
-    /*.next = */NULL,
-    /*.flush = */flush,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("MP3 (MPEG audio layer 3)"),
+    decode_init,
+    NULL,
+    NULL,
+    decode_frame,
+    CODEC_CAP_PARSE_ONLY,
+    .flush= flush,
+    .long_name= NULL_IF_CONFIG_SMALL("MP3 (MPEG audio layer 3)"),
 };
 #endif
 #endif

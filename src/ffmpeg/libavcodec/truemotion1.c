@@ -387,7 +387,7 @@ static int truemotion1_decode_header(TrueMotion1Context *s)
     if ((header.compression & 1) && header.header_type)
         sel_vector_table = pc_tbl2;
     else {
-        if (header.vectable < 4)
+        if (header.vectable > 0 && header.vectable < 4)
             sel_vector_table = tables[header.vectable - 1];
         else {
             av_log(s->avctx, AV_LOG_ERROR, "invalid vector table id (%d)\n", header.vectable);
@@ -409,7 +409,7 @@ static int truemotion1_decode_header(TrueMotion1Context *s)
         new_pix_fmt != s->avctx->pix_fmt) {
         if (s->frame.data[0])
             s->avctx->release_buffer(s->avctx, &s->frame);
-        s->avctx->sample_aspect_ratio.num = 1 << width_shift; s->avctx->sample_aspect_ratio.den = 1; //s->avctx->sample_aspect_ratio = (AVRational){ 1 << width_shift, 1 };
+        s->avctx->sample_aspect_ratio = (AVRational){ 1 << width_shift, 1 };
         s->avctx->pix_fmt = new_pix_fmt;
         avcodec_set_dimensions(s->avctx, s->w, s->h);
         av_fast_malloc(&s->vert_pred, &s->vert_pred_size, s->avctx->width * sizeof(unsigned int));
@@ -900,10 +900,6 @@ AVCodec truemotion1_decoder = {
     NULL,
     truemotion1_decode_end,
     truemotion1_decode_frame,
-    /*.capabilities = */CODEC_CAP_DR1,
-    /*.next = */NULL,
-    /*.flush = */NULL,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("Duck TrueMotion 1.0"),
+    CODEC_CAP_DR1,
+    .long_name = NULL_IF_CONFIG_SMALL("Duck TrueMotion 1.0"),
 };

@@ -5,7 +5,7 @@
 	Name="ff_unrar"
 	ProjectGUID="{9C78112E-B79D-4AE6-859D-F71383126B4E}"
 	VCNestedProjectGUID="{82199D65-5E04-48FB-99B5-9396D55566AE}"
-	VCNestedProjectCRC32="1349828495"
+	VCNestedProjectCRC32="1590005089"
 	VCNestedProjectFileName="ff_unrar_2008_icl10.vcproj"
 	Keyword="Win32Proj">
 	<Platforms>
@@ -491,6 +491,12 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
 			<File 
 				RelativePath=".\rar.hpp">
+			</File>
+		</Filter>
+		<Filter 
+			Name="Resource Files">
+			<File 
+				RelativePath=".\dll.rc">
 			</File>
 		</Filter>
 		<File 
