@@ -77,7 +77,7 @@ From the Readme_TomsMoComp.txt file:
 
 #pragma warning(disable: 4305 4309 4799 4127 4701)
 
-static const __int64 ShiftMask=0xfefffefffefffeffULL;	// to avoid shifting chroma to luma
+static const __int64 ShiftMask=0xfefffefffefffeffULL;    // to avoid shifting chroma to luma
 static const __int64 YMask =0x00ff00ff00ff00ffULL;
 static const __int64 UVMask=0xff00ff00ff00ff00ULL;
 static const __int64 Max_Mov=0x0404040404040404LL;
@@ -96,50 +96,50 @@ private:
   {
    static __forceinline void merge4PIXavg(const unsigned char *PADDR1,const unsigned char *PADDR2,__m64 &mm0,__m64 &mm1,__m64 &mm2,__m64 &mm3,__m64 &mm5,__m64 &mm7)
     {
-     movq (mm0, PADDR1); /* our 4 pixels */
-     movq (mm1, PADDR2); /* our pixel2 value */
-     movq (mm2, mm0);                        /* another copy of our pixel1 value */
-     movq (mm3, mm1);                        /* another copy of our pixel1 value */
+     movq (mm0, PADDR1);                       /* our 4 pixels */
+     movq (mm1, PADDR2);                       /* our pixel2 value */
+     movq (mm2, mm0);                          /* another copy of our pixel1 value */
+     movq (mm3, mm1);                          /* another copy of our pixel1 value */
      psubusb (mm2, mm1 );
      psubusb (mm3, mm0 );
      por (mm2,mm3   );
      Tsimd::v_pavgb(mm0, mm1, mm3, ShiftMask); /* avg of 2 pixels */
-     movq (mm3, mm2 );                       /* another copy of our our weights */
+     movq (mm3, mm2 );                         /* another copy of our our weights */
      pxor  (mm1, mm1);
-     psubusb (mm3, mm7);                     /* nonzero where old weights lower, else 0 */
-     pcmpeqb (mm3, mm1);                     /* now ff where new better, else 00     */
-     pcmpeqb (mm1, mm3);             /* here ff where old better, else 00 */
-     pand (mm0, mm3   );                     /* keep only better new pixels */
-     pand ( mm2, mm3  );                     /* and weights */
-     pand (mm5, mm1   );                     /* keep only better old pixels */
+     psubusb (mm3, mm7);                       /* nonzero where old weights lower, else 0 */
+     pcmpeqb (mm3, mm1);                       /* now ff where new better, else 00     */
+     pcmpeqb (mm1, mm3);                       /* here ff where old better, else 00 */
+     pand (mm0, mm3   );                       /* keep only better new pixels */
+     pand ( mm2, mm3  );                       /* and weights */
+     pand (mm5, mm1   );                       /* keep only better old pixels */
      pand ( mm7, mm1  );
-     por  (mm5, mm0   );                     /* and merge new & old vals */
+     por  (mm5, mm0   );                       /* and merge new & old vals */
      por  (mm7, mm2   );
     }
    static __forceinline void merge4PIXavgH(const unsigned char *PADDR1A, const unsigned char *PADDR1B, const unsigned char *PADDR2A, const unsigned char *PADDR2B,__m64 &mm0,__m64 &mm1,__m64 &mm2,__m64 &mm3,__m64 &mm5,__m64 &mm7)
     {
-     movq (mm0, PADDR1A); /* our 4 pixels */
-     movq (mm1, PADDR2A); /* our pixel2 value */
-     movq (mm2, PADDR1B); /* our 4 pixels */
-     movq (mm3, PADDR2B); /* our pixel2 value */
+     movq (mm0, PADDR1A);                      /* our 4 pixels */
+     movq (mm1, PADDR2A);                      /* our pixel2 value */
+     movq (mm2, PADDR1B);                      /* our 4 pixels */
+     movq (mm3, PADDR2B);                      /* our pixel2 value */
      Tsimd::v_pavgb(mm0, mm2, mm2, ShiftMask);
      Tsimd::v_pavgb(mm1, mm3, mm3, ShiftMask);
-     movq (mm2, mm0);                        /* another copy of our pixel1 value */
-     movq (mm3, mm1);                        /* another copy of our pixel1 value */
+     movq (mm2, mm0);                          /* another copy of our pixel1 value */
+     movq (mm3, mm1);                          /* another copy of our pixel1 value */
      psubusb (mm2, mm1);
      psubusb (mm3, mm0);
      por (mm2,mm3);
      Tsimd::v_pavgb(mm0, mm1, mm3, ShiftMask);    /* avg of 2 pixels */
-     movq (mm3, mm2  );                      /* another copy of our our weights */
+     movq (mm3, mm2  );                        /* another copy of our our weights */
      pxor  (mm1, mm1 );
-     psubusb (mm3, mm7);                     /* nonzero where old weights lower, else 0 */
-     pcmpeqb (mm3, mm1);                     /* now ff where new better, else 00     */
-     pcmpeqb (mm1, mm3);             /* here ff where old better, else 00 */
-     pand (mm0, mm3   );                     /* keep only better new pixels */
-     pand  (mm2, mm3  );                     /* and weights */
-     pand (mm5, mm1   );                     /* keep only better old pixels */
+     psubusb (mm3, mm7);                       /* nonzero where old weights lower, else 0 */
+     pcmpeqb (mm3, mm1);                       /* now ff where new better, else 00     */
+     pcmpeqb (mm1, mm3);                       /* here ff where old better, else 00 */
+     pand (mm0, mm3   );                       /* keep only better new pixels */
+     pand  (mm2, mm3  );                       /* and weights */
+     pand (mm5, mm1   );                       /* keep only better old pixels */
      pand ( mm7, mm1  );
-     por  (mm5, mm0   );                     /* and merge new & old vals */
+     por  (mm5, mm0   );                       /* and merge new & old vals */
      por  (mm7, mm2   );
     }
    template<int r> static __forceinline void search(stride_t &ecx,const unsigned char* const esi,const unsigned char* const edi,__m64 &mm0,__m64 &mm1,__m64 &mm2,__m64 &mm3,__m64 &mm5,__m64 &mm7)
@@ -156,17 +156,17 @@ private:
       }
      if (r==21 || r==99)
       {
-       merge4PIXavg(edi-6, esi+2*ecx+6,mm0,mm1,mm2,mm3,mm5,mm7);  // up left, down right
-       merge4PIXavg(edi+6, esi+2*ecx-6,mm0,mm1,mm2,mm3,mm5,mm7);  // up right, down left
-       merge4PIXavg(edi+ecx-6, esi+ecx+6,mm0,mm1,mm2,mm3,mm5,mm7); // left, right
-       merge4PIXavg(edi+ecx+6, esi+ecx-6,mm0,mm1,mm2,mm3,mm5,mm7); // right, left
-       merge4PIXavg(edi+2*ecx-6, esi+6,mm0,mm1,mm2,mm3,mm5,mm7);   // down left, up right
-       merge4PIXavg(edi+2*ecx+6, esi-6,mm0,mm1,mm2,mm3,mm5,mm7);   // down right, up left
+       merge4PIXavg(edi-6, esi+2*ecx+6,mm0,mm1,mm2,mm3,mm5,mm7);       // up left, down right
+       merge4PIXavg(edi+6, esi+2*ecx-6,mm0,mm1,mm2,mm3,mm5,mm7);       // up right, down left
+       merge4PIXavg(edi+ecx-6, esi+ecx+6,mm0,mm1,mm2,mm3,mm5,mm7);     // left, right
+       merge4PIXavg(edi+ecx+6, esi+ecx-6,mm0,mm1,mm2,mm3,mm5,mm7);     // right, left
+       merge4PIXavg(edi+2*ecx-6, esi+6,mm0,mm1,mm2,mm3,mm5,mm7);       // down left, up right
+       merge4PIXavg(edi+2*ecx+6, esi-6,mm0,mm1,mm2,mm3,mm5,mm7);       // down right, up left
       }
      if (r==9 || r==11 || r==13 || r==15 || r==19 || r==21 || r==99)
       {
-       merge4PIXavg(edi-BPP, esi+2*ecx+BPP,mm0,mm1,mm2,mm3,mm5,mm7);  // up left, down right
-       merge4PIXavg(edi+BPP, esi+2*ecx-BPP,mm0,mm1,mm2,mm3,mm5,mm7);  // up right, down left
+       merge4PIXavg(edi-BPP, esi+2*ecx+BPP,mm0,mm1,mm2,mm3,mm5,mm7);   // up left, down right
+       merge4PIXavg(edi+BPP, esi+2*ecx-BPP,mm0,mm1,mm2,mm3,mm5,mm7);   // up right, down left
        merge4PIXavg(edi+2*ecx-BPP, esi+BPP,mm0,mm1,mm2,mm3,mm5,mm7);   // down left, up right
        merge4PIXavg(edi+2*ecx+BPP, esi-BPP,mm0,mm1,mm2,mm3,mm5,mm7);   // down right, up left
        merge4PIXavg(edi+ecx-BPP, esi+ecx+BPP,mm0,mm1,mm2,mm3,mm5,mm7); // left, right
@@ -184,22 +184,22 @@ private:
 
      if (r==13)
       {
-       merge4PIXavgH(edi+2*ecx, edi+ecx, esi+ecx, esi,mm0,mm1,mm2,mm3,mm5,mm7);	// down, up
-       merge4PIXavgH(edi, edi+ecx, esi+ecx, esi+2*ecx,mm0,mm1,mm2,mm3,mm5,mm7);	// up, down
+       merge4PIXavgH(edi+2*ecx, edi+ecx, esi+ecx, esi,mm0,mm1,mm2,mm3,mm5,mm7);  // down, up
+       merge4PIXavgH(edi, edi+ecx, esi+ecx, esi+2*ecx,mm0,mm1,mm2,mm3,mm5,mm7);  // up, down
       }
      if (r==99)
       {
-       merge4PIXavg(edi-8, esi+2*ecx+8,mm0,mm1,mm2,mm3,mm5,mm7);  // up left, down right
-       merge4PIXavg(edi+8, esi+2*ecx-8,mm0,mm1,mm2,mm3,mm5,mm7);  // up right, down left
-       merge4PIXavg(edi+ecx-8, esi+ecx+8,mm0,mm1,mm2,mm3,mm5,mm7); // left, right
-       merge4PIXavg(edi+ecx+8, esi+ecx-8,mm0,mm1,mm2,mm3,mm5,mm7); // right, left
-       merge4PIXavg(edi+2*ecx-8, esi+8,mm0,mm1,mm2,mm3,mm5,mm7);   // down left, up right
-       merge4PIXavg(edi+2*ecx+8, esi-8,mm0,mm1,mm2,mm3,mm5,mm7);   // down right, up left
+       merge4PIXavg(edi-8, esi+2*ecx+8,mm0,mm1,mm2,mm3,mm5,mm7);        // up left, down right
+       merge4PIXavg(edi+8, esi+2*ecx-8,mm0,mm1,mm2,mm3,mm5,mm7);        // up right, down left
+       merge4PIXavg(edi+ecx-8, esi+ecx+8,mm0,mm1,mm2,mm3,mm5,mm7);      // left, right
+       merge4PIXavg(edi+ecx+8, esi+ecx-8,mm0,mm1,mm2,mm3,mm5,mm7);      // right, left
+       merge4PIXavg(edi+2*ecx-8, esi+8,mm0,mm1,mm2,mm3,mm5,mm7);        // down left, up right
+       merge4PIXavg(edi+2*ecx+8, esi-8,mm0,mm1,mm2,mm3,mm5,mm7);        // down right, up left
       }
      if (r==15 || r==19 || r==21 || r==99)
       {
-       merge4PIXavg(edi-2*BPP, esi+2*ecx+2*BPP,mm0,mm1,mm2,mm3,mm5,mm7);  // up left, down right
-       merge4PIXavg(edi+2*BPP, esi+2*ecx-2*BPP,mm0,mm1,mm2,mm3,mm5,mm7);  // up right, down left
+       merge4PIXavg(edi-2*BPP, esi+2*ecx+2*BPP,mm0,mm1,mm2,mm3,mm5,mm7);   // up left, down right
+       merge4PIXavg(edi+2*BPP, esi+2*ecx-2*BPP,mm0,mm1,mm2,mm3,mm5,mm7);   // up right, down left
        merge4PIXavg(edi+ecx-2*BPP, esi+ecx+2*BPP,mm0,mm1,mm2,mm3,mm5,mm7); // left, right
        merge4PIXavg(edi+ecx+2*BPP, esi+ecx-2*BPP,mm0,mm1,mm2,mm3,mm5,mm7); // right, left
        merge4PIXavg(edi+2*ecx-2*BPP, esi+2*BPP,mm0,mm1,mm2,mm3,mm5,mm7);   // down left, up right
@@ -207,19 +207,19 @@ private:
       }
      if (r==19)
       {
-       merge4PIXavgH(edi+2*ecx, edi+ecx, esi+ecx, esi,mm0,mm1,mm2,mm3,mm5,mm7);	// down, up
-       merge4PIXavgH(edi, edi+ecx, esi+ecx, esi+2*ecx,mm0,mm1,mm2,mm3,mm5,mm7);	// up, down
+       merge4PIXavgH(edi+2*ecx, edi+ecx, esi+ecx, esi,mm0,mm1,mm2,mm3,mm5,mm7);  // down, up
+       merge4PIXavgH(edi, edi+ecx, esi+ecx, esi+2*ecx,mm0,mm1,mm2,mm3,mm5,mm7);  // up, down
       }
      if (r==9 || r==11 || r==13 || r==15 || r==19 || r==21 || r==99)
       {
-       merge4PIXavg(edi+2*ecx, esi,mm0,mm1,mm2,mm3,mm5,mm7);	// down, up
-       merge4PIXavg(edi, esi+2*ecx,mm0,mm1,mm2,mm3,mm5,mm7);	// up, down
+       merge4PIXavg(edi+2*ecx, esi,mm0,mm1,mm2,mm3,mm5,mm7);       // down, up
+       merge4PIXavg(edi, esi+2*ecx,mm0,mm1,mm2,mm3,mm5,mm7);       // up, down
       }
 
      if (r!=0)
       {
-       paddusb (mm7, ONES);   // bias toward no motion
-       merge4PIXavg(edi+ecx,esi+ecx,mm0,mm1,mm2,mm3,mm5,mm7);  // center, in old and new
+       paddusb (mm7, ONES);                                        // bias toward no motion
+       merge4PIXavg(edi+ecx,esi+ecx,mm0,mm1,mm2,mm3,mm5,mm7);      // center, in old and new
       }
     }
    static void SearchLoop( stride_t src_pitch, stride_t dst_pitch,
@@ -236,26 +236,26 @@ private:
 
      stride_t src_pitch2;
      if (DBL_RESIZE)
-      src_pitch2 = src_pitch;                     // even & odd lines are not interleaved in DScaler
+      src_pitch2 = src_pitch;             // even & odd lines are not interleaved in DScaler
      else
       src_pitch2 = 2 * src_pitch;         // even & odd lines are interleaved in Avisynth
 
      stride_t dst_pitch2 = 2 * dst_pitch;
      int y;
-     int Last8 = (rowsize-8);                    // ofs to last 8 bytes in row
+     int Last8 = (rowsize-8);             // ofs to last 8 bytes in row
 
-     stride_t dst_pitchw = dst_pitch; // local stor so asm can ref
-     pSrc  = pWeaveSrc;                      // points 1 weave line above
-     pSrcP = pWeaveSrcP;                     // "
+     stride_t dst_pitchw = dst_pitch;     // local stor so asm can ref
+     pSrc  = pWeaveSrc;                   // points 1 weave line above
+     pSrcP = pWeaveSrcP;                  // "
 
      if (DBL_RESIZE)
       {
        if (USE_VERTICAL_FILTER)
-        pDest = pWeaveDest;                     //  but will appear 1 line lower than with not VF
+        pDest = pWeaveDest;               //  but will appear 1 line lower than with not VF
        else
         pDest = pWeaveDest;
        pBob =  pCopySrc;
-       pBobP =  pCopySrcP;                     // not used
+       pBobP =  pCopySrcP;                // not used
        LineCt = FldHeight-1;
       }
      else
@@ -305,7 +305,7 @@ private:
            movq    (mm0, ebx);
            movq    (mm1, ebx+ecx);
            movq    (mm2, mm0);
-           Tsimd::v_pavgb(mm2, mm1, mm3, ShiftMask);             // halfway between
+           Tsimd::v_pavgb(mm2, mm1, mm3, ShiftMask);              // halfway between
            Tsimd::v_pavgb(mm0, mm2, mm3, ShiftMask);              // 1/4 way
            Tsimd::v_pavgb(mm1, mm2, mm3, ShiftMask);              // 3/4 way
            edi= pDest;
@@ -319,10 +319,10 @@ private:
            movq    (mm0, esi);
            movq    (mm1, esi+ecx);
            movq    (mm2, mm0);
-           Tsimd::v_pavgb (mm2, mm1, mm3, ShiftMask);              // halfway between
-           Tsimd::v_pavgb (mm0, mm2, mm3, ShiftMask);              // 1/4 way
-           Tsimd::v_pavgb (mm1, mm2, mm3, ShiftMask);              // 3/4 way
-           edi+= edx;                                                // last 8 bytes of dest
+           Tsimd::v_pavgb (mm2, mm1, mm3, ShiftMask);             // halfway between
+           Tsimd::v_pavgb (mm0, mm2, mm3, ShiftMask);             // 1/4 way
+           Tsimd::v_pavgb (mm1, mm2, mm3, ShiftMask);             // 3/4 way
+           edi+= edx;                                             // last 8 bytes of dest
            Tsimd::movntq(edi, mm0);
            Tsimd::movntq(edi+eaxx, mm1);
           }
@@ -358,7 +358,7 @@ private:
          // Assume our pixels are layed out as follows with x the calc'd bob value
          // and the other pixels are from the current field
          //
-         //                j a b c k             current field
+         //        j a b c k             current field
          //            x                 calculated line
          //        m d e f n             current field
          //
@@ -372,24 +372,24 @@ private:
          movq    (mm0, ebx-BPP);         // value a from top left
          movq    (mm1, ebx+ecx+BPP);     // value f from bottom right
          movq    (mm6, mm0);
-         //pavgb   mm6, mm1                                        // avg(a,f), also best so far
-         Tsimd::v_pavgb(mm6, mm1, mm7, ShiftMask);      // avg(a,f), also best so far
+         //pavgb   mm6, mm1                         // avg(a,f), also best so far
+         Tsimd::v_pavgb(mm6, mm1, mm7, ShiftMask);  // avg(a,f), also best so far
          movq    (mm7, mm0);
          psubusb (mm7, mm1);
          psubusb (mm1, mm0);
-         por     (mm7, mm1);                                        // abs diff, also best so far
+         por     (mm7, mm1);                        // abs diff, also best so far
 
          // c,d
-         movq    (mm0, ebx+BPP);         // value a from top left
-         movq    (mm1, ebx+ecx-BPP);     // value f from bottom right
+         movq    (mm0, ebx+BPP);                    // value a from top left
+         movq    (mm1, ebx+ecx-BPP);                // value f from bottom right
          movq    (mm2, mm0);
-         //pavgb   mm2, mm1                                        // avg(c,d)
-         Tsimd::v_pavgb(mm2, mm1, mm3, ShiftMask);      // avg(c,d)
+         //pavgb   mm2, mm1                         // avg(c,d)
+         Tsimd::v_pavgb(mm2, mm1, mm3, ShiftMask);  // avg(c,d)
          movq    (mm3, mm0);
          psubusb (mm3, mm1);
          psubusb (mm1, mm0);
-         por     (mm3, mm1);                                        // abs(c,d)
-         movq    (mm1, mm3);                                        // keep copy
+         por     (mm3, mm1);                        // abs(c,d)
+         movq    (mm1, mm3);                        // keep copy
 
          psubusb (mm3, mm7);                        // nonzero where new weights bigger, else 0
          pxor    (mm4, mm4);
@@ -407,21 +407,21 @@ private:
 
          if (!USE_YV12)
           {
-           por     (mm7, UVMask);                     // but we know YUY2 chroma is worthless so far
-           pand    (mm5, YMask);                      // mask out chroma from here also
+           por     (mm7, UVMask);                   // but we know YUY2 chroma is worthless so far
+           pand    (mm5, YMask);                    // mask out chroma from here also
           }
 
          // j,n
-         movq    (mm0, ebx-2*BPP);               // value j from top left
-         movq    (mm1, ebx+ecx+2*BPP);   // value n from bottom right
+         movq    (mm0, ebx-2*BPP);                  // value j from top left
+         movq    (mm1, ebx+ecx+2*BPP);              // value n from bottom right
          movq    (mm2, mm0);
-         // pavgb   mm2, mm1                                        // avg(j,n)
-         Tsimd::v_pavgb(mm2, mm1, mm3, ShiftMask);      // avg(j,n)
+         // pavgb   mm2, mm1                        // avg(j,n)
+         Tsimd::v_pavgb(mm2, mm1, mm3, ShiftMask);  // avg(j,n)
          movq    (mm3, mm0);
          psubusb (mm3, mm1);
          psubusb (mm1, mm0);
-         por     (mm3, mm1);                                        // abs(j-n)
-         movq    (mm1, mm3);                                        // keep copy
+         por     (mm3, mm1);                        // abs(j-n)
+         movq    (mm1, mm3);                        // keep copy
 
          psubusb (mm3, mm7);                        // nonzero where new weights bigger, else 0
          pxor    (mm4, mm4);
@@ -438,16 +438,16 @@ private:
          por     (mm7, mm1);                        // "
 
          // k, m
-         movq    (mm0, ebx+2*BPP);               // value k from top right
-         movq    (mm1, ebx+ecx-2*BPP);   // value n from bottom left
+         movq    (mm0, ebx+2*BPP);                  // value k from top right
+         movq    (mm1, ebx+ecx-2*BPP);              // value n from bottom left
          movq    (mm4, mm0);
-         //pavgb   mm4, mm1                                        // avg(k,m)
-         Tsimd::v_pavgb(mm4, mm1, mm3, ShiftMask);      // avg(k,m)
+         //pavgb   mm4, mm1                         // avg(k,m)
+         Tsimd::v_pavgb(mm4, mm1, mm3, ShiftMask);  // avg(k,m)
          movq    (mm3, mm0);
          psubusb (mm3, mm1);
          psubusb (mm1, mm0);
-         por     (mm3, mm1);                                        // abs(k,m)
-         movq    (mm1, mm3);                                        // keep copy
+         por     (mm3, mm1);                        // abs(k,m)
+         movq    (mm1, mm3);                        // keep copy
 
          movq    (mm2, mm4);                        // avg(k,m)
 
@@ -466,8 +466,8 @@ private:
          por     (mm7, mm1);                        // "
 
          // b,e
-         movq    (mm0,ebx);             // value b from top
-         movq    (mm1,ebx+ecx); // value e from bottom
+         movq    (mm0,ebx);                         // value b from top
+         movq    (mm1,ebx+ecx);                     // value e from bottom
 
          // We will also calc here the max/min values to later limit comb
          // so the max excursion will not exceed the Max_Comb constant
@@ -476,11 +476,11 @@ private:
            movq    (mm2, mm0);
            //pminub  mm2, mm1
            Tsimd::v_pminub(mm2, mm1, mm4);
-           //pmaxub  mm6, mm2                        // clip our current results so far to be above this
+           //pmaxub  mm6, mm2                       // clip our current results so far to be above this
            Tsimd::pmaxub(mm6, mm2);
            movq    (mm2, mm0);
            Tsimd::pmaxub (mm2, mm1);
-           // pminub  mm6, mm2                        // clip our current results so far to be below this
+           // pminub  mm6, mm2                      // clip our current results so far to be below this
            Tsimd::v_pminub(mm6, mm2, mm4);
           }
          else
@@ -489,38 +489,38 @@ private:
            movq    (mm4, eax);
            psubusb (mm2, mm4);
            psubusb (mm4, mm0);
-           por     (mm4, mm2);                        // abs diff
+           por     (mm4, mm2);                      // abs diff
 
            movq    (mm2, mm1);
            movq    (mm3, eax+ecx);
            psubusb (mm2, mm3);
            psubusb (mm3, mm1);
-           por     (mm3, mm2);                        // abs diff
-           //pmaxub  mm3, mm4                        // top or bottom pixel moved most
-           Tsimd::pmaxub(mm3, mm4);                     // top or bottom pixel moved most
-           psubusb (mm3, Max_Mov);            // moved more than allowed? or goes to 0?
+           por     (mm3, mm2);                      // abs diff
+           //pmaxub  mm3, mm4                       // top or bottom pixel moved most
+           Tsimd::pmaxub(mm3, mm4);                 // top or bottom pixel moved most
+           psubusb (mm3, Max_Mov);                  // moved more than allowed? or goes to 0?
            pxor    (mm4, mm4);
-           pcmpeqb (mm3, mm4);                        // now ff where low motion, else high motion
+           pcmpeqb (mm3, mm4);                      // now ff where low motion, else high motion
            movq    (mm2, mm0);
            // pminub  mm2, mm1
            Tsimd::v_pminub(mm2, mm1, mm4);
-           // pmaxub  mm6, mm2                        // clip our current results so far to be above this
+           // pmaxub  mm6, mm2                      // clip our current results so far to be above this
            Tsimd::pmaxub(mm6, mm2);
 
-           psubusb (mm2, mm3);                        // maybe decrease it to 0000.. if no surround motion
+           psubusb (mm2, mm3);                      // maybe decrease it to 0000.. if no surround motion
            movq    (Min_Vals, mm2);
 
            movq    (mm2, mm0);
            Tsimd::pmaxub (mm2, mm1);
-           //  pminub  mm6, mm2                        // clip our current results so far to be below this
+           //  pminub  mm6, mm2                     // clip our current results so far to be below this
            Tsimd::v_pminub (mm6, mm2, mm4);
-           paddusb (mm2, mm3);                        // maybe increase it to ffffff if no surround motion
+           paddusb (mm2, mm3);                      // maybe increase it to ffffff if no surround motion
            movq    (Max_Vals, mm2);
           }
 
          movq    (mm2, mm0);
-         //pavgb   mm2, mm1                                        // avg(b,e)
-         Tsimd::v_pavgb(mm2, mm1, mm3, ShiftMask);      // avg(b,e)
+         //pavgb   mm2, mm1                         // avg(b,e)
+         Tsimd::v_pavgb(mm2, mm1, mm3, ShiftMask);  // avg(b,e)
 
          movq    (mm3, mm0);
          psubusb (mm3, mm1);
@@ -547,14 +547,14 @@ private:
          // through out most of the rest of this loop we will maintain
          //      mm4             our min bob value
          //      mm5             best weave pixels so far
-         //  mm6         our max Bob value
+         //      mm6             our max Bob value
          //      mm7             best weighted pixel ratings so far
 
          // We will keep a slight bias to using the weave pixels
          // from the current location, by rating them by the min distance
          // from the Bob value instead of the avg distance from that value.
          // our best and only rating so far
-         pcmpeqb(mm7, mm7);                        // ffff, say we didn't find anything good yet
+         pcmpeqb(mm7, mm7);                         // ffff, say we didn't find anything good yet
         }
        // end of top
        search<SearchRange>(ecx,esi,edi,mm0,mm1,mm2,mm3,mm5,mm7);
@@ -565,23 +565,23 @@ private:
         {
          // Version for non-SSE2
          if (SKIP_SEARCH)
-          movq    (mm0, mm6);                        // just use the results of our wierd bob
+          movq    (mm0, mm6);                       // just use the results of our wierd bob
          else
           {
            // Use the better of bob or weave
-           //pminub  mm4, TENS                       // the most we care about
-           Tsimd::v_pminub (mm4, TENS, mm0);       // the most we care about
+           //pminub  mm4, TENS                      // the most we care about
+           Tsimd::v_pminub (mm4, TENS, mm0);        // the most we care about
 
-           psubusb (mm7, mm4  );                      // foregive that much from weave est?
-           psubusb (mm7, FOURS);                      // bias it a bit toward weave
+           psubusb (mm7, mm4  );                    // foregive that much from weave est?
+           psubusb (mm7, FOURS);                    // bias it a bit toward weave
            pxor    (mm0, mm0);
-           pcmpeqb (mm7, mm0);                        // all ff where weave better, else 00
-           pcmpeqb (mm0, mm7);                        // all ff where bob better, else 00
-           pand    (mm0, mm6);                        // use bob for these pixel values
-           pand    (mm7, mm5);                        // use weave for these
-           por     (mm0, mm7);                        // combine both
-           //pminub  mm0, Max_Vals           // but clip to catch the stray error
-           Tsimd::v_pminub(mm0, Max_Vals, mm1); // but clip to catch the stray error
+           pcmpeqb (mm7, mm0);                      // all ff where weave better, else 00
+           pcmpeqb (mm0, mm7);                      // all ff where bob better, else 00
+           pand    (mm0, mm6);                      // use bob for these pixel values
+           pand    (mm7, mm5);                      // use weave for these
+           por     (mm0, mm7);                      // combine both
+           //pminub  mm0, Max_Vals                  // but clip to catch the stray error
+           Tsimd::v_pminub(mm0, Max_Vals, mm1);     // but clip to catch the stray error
            //pmaxub  mm0, Min_Vals
            Tsimd::pmaxub (mm0, Min_Vals);
           }
@@ -605,9 +605,9 @@ private:
            movq    (mm1, esi+ecx);
            Tsimd::movntq(eax+edx, mm0);
           }
-         edx=edx+8;            // bump offset pointer
-         if (edx<Last8)                     // done with line?
-          goto LoopQ;                           // y
+         edx=edx+8;                                 // bump offset pointer
+         if (edx<Last8)                             // done with line?
+          goto LoopQ;                               // y
         }
        // adjust for next line
        pSrc  += src_pitch2;
@@ -670,62 +670,62 @@ template<class Tsimd> struct TdblResize
    for (int ecx=ct;ecx>0;ecx--,esi+=8,edi+=16)
     {
      // just use the current line, first luma
-     movq (mm0, esi);  // orig luma, in register as VYUYVYUY
-     movq (mm2, mm0);    // keep a copy while we got it
-     movq (mm6, esi+2); // luma 2 bytes to right
+     movq (mm0, esi);              // orig luma, in register as VYUYVYUY
+     movq (mm2, mm0);              // keep a copy while we got it
+     movq (mm6, esi+2);            // luma 2 bytes to right
      Tsimd::pavgb   (mm6, mm0);    // 3 pixels of valid new luma averag, plus garbage
-     pand (mm0, YMask);    // keep only old luma, 0Y0Y0Y0Y
-     psllw (mm6, 8);     // now only new luma as y0y0y0y0
-     por  (mm6, mm0);    // all luma yYyYyYyY
+     pand (mm0, YMask);            // keep only old luma, 0Y0Y0Y0Y
+     psllw (mm6, 8);               // now only new luma as y0y0y0y0
+     por  (mm6, mm0);              // all luma yYyYyYyY
 
      // now  chroma bytes
      movq (mm1, mm2);
-     Tsimd::pavgb (mm1, esi+4); // chroma 4 bytes to right
-     psrlw (mm2, 8);     // only orig chroma as 0V0U0V0U
-     packuswb (mm2, mm2);    // now xxxxVUVU
-     psrlw (mm1, 8);     // only new chroma as 0?0?0v0u
-     packuswb (mm1, mm1);    // now new chroma bytes xxxx??vu
-     punpcklwd (mm2,mm1);    // ??VUvuVU, merged old and new chroma
+     Tsimd::pavgb (mm1, esi+4);    // chroma 4 bytes to right
+     psrlw (mm2, 8);               // only orig chroma as 0V0U0V0U
+     packuswb (mm2, mm2);          // now xxxxVUVU
+     psrlw (mm1, 8);               // only new chroma as 0?0?0v0u
+     packuswb (mm1, mm1);          // now new chroma bytes xxxx??vu
+     punpcklwd (mm2,mm1);          // ??VUvuVU, merged old and new chroma
 
      // merge final luma & chroma bytes
 
-     movq (mm7, mm6);    // copy of luma, ?YyYyYyY
-     punpcklbw (mm6, mm2);    // low bytes vyuYVyUY
-     punpckhbw (mm7, mm2);    // hi bytes ???YVyUY
+     movq (mm7, mm6);              // copy of luma, ?YyYyYyY
+     punpcklbw (mm6, mm2);         // low bytes vyuYVyUY
+     punpckhbw (mm7, mm2);         // hi bytes ???YVyUY
 
-     Tsimd::movntq(edi, mm6); // store low qword
-     Tsimd::movntq(edi+8, mm7); // store high qword
+     Tsimd::movntq(edi, mm6);      // store low qword
+     Tsimd::movntq(edi+8, mm7);    // store high qword
     }
 
    // now expand the last 8 into 16 bytes
-   movq (mm0, esi);  // orig luma, in register as VYUYVYUY
-   movq (mm2, mm0);    // keep a copy while we got it
-   movq (mm6, mm0);    // and another to work on now
+   movq (mm0, esi);                // orig luma, in register as VYUYVYUY
+   movq (mm2, mm0);                // keep a copy while we got it
+   movq (mm6, mm0);                // and another to work on now
 
-   psrlq (mm6, 16);     // pretend most of it came from +2 offs (remem revers order)
-   Tsimd::pavgb (  mm6, mm0);    // 3 pixels of valid new luma averag, plus garbage
-   pand (mm0, YMask);    // keep only old luma, 0Y0Y0Y0Y
-   psllw (mm6, 8);     // now only new luma as ?0y0y0y0
-   por  (mm6, mm0);    // all luma ?YyYyYyY
+   psrlq (mm6, 16);                // pretend most of it came from +2 offs (remem revers order)
+   Tsimd::pavgb (  mm6, mm0);      // 3 pixels of valid new luma averag, plus garbage
+   pand (mm0, YMask);              // keep only old luma, 0Y0Y0Y0Y
+   psllw (mm6, 8);                 // now only new luma as ?0y0y0y0
+   por  (mm6, mm0);                // all luma ?YyYyYyY
 
    // now final chroma bytes
    movq (mm1, mm2);
-   psrlq (mm1, 32);     // pretend most of it came from +4 offs (remem revers order)
-   Tsimd::pavgb   (mm1, mm2);    // 2 pixels of valid new chroma averag, plus garbage
-   psrlw (mm2, 8);     // only orig chroma as 0V0U0V0U
-   packuswb (mm2, mm2);    // now xxxxVUVU
-   psrlw (mm1, 8);     // only new chroma as 0?0?0v0u
-   packuswb (mm1, mm1);    // now new chroma bytes xxxx??vu
-   punpcklwd (mm2,mm1);    // ??VUvuVU, merged old and new chroma
+   psrlq (mm1, 32);                // pretend most of it came from +4 offs (remem revers order)
+   Tsimd::pavgb   (mm1, mm2);      // 2 pixels of valid new chroma averag, plus garbage
+   psrlw (mm2, 8);                 // only orig chroma as 0V0U0V0U
+   packuswb (mm2, mm2);            // now xxxxVUVU
+   psrlw (mm1, 8);                 // only new chroma as 0?0?0v0u
+   packuswb (mm1, mm1);            // now new chroma bytes xxxx??vu
+   punpcklwd (mm2,mm1);            // ??VUvuVU, merged old and new chroma
 
    // merge final luma & chroma bytes
 
-   movq( mm7, mm6);    // copy of luma, ?YyYyYyY
-   punpcklbw (mm6, mm2);    // low bytes vyuYVyUY
-   punpckhbw (mm7, mm2);    // hi bytes ???YVyUY
+   movq( mm7, mm6);                // copy of luma, ?YyYyYyY
+   punpcklbw (mm6, mm2);           // low bytes vyuYVyUY
+   punpckhbw (mm7, mm2);           // hi bytes ???YVyUY
 
-   movq (edi, mm6);    // store low qword
-   movq (edi+8, mm7);     // store high qword
+   movq (edi, mm6);                // store low qword
+   movq (edi+8, mm7);              // store high qword
 
    *(edi+13)=*(esi+5);
    *(short*)(edi+14)=*(short*)(esi+6);
@@ -737,17 +737,17 @@ template<class Tsimd> struct TdblResize
    movq   (mm3, mm0 );
    psubusb(mm3, mm1 );
    psubusb(mm1, mm0 );
-   por    (mm3, mm1 );       /* abs diff */
-   movq   (mm1, mm3 );       /* keep copy */
-   psubusb(mm3, mm7 );       /* nonzero where new weights bigger, else 0 */
+   por    (mm3, mm1 );             /* abs diff */
+   movq   (mm1, mm3 );             /* keep copy */
+   psubusb(mm3, mm7 );             /* nonzero where new weights bigger, else 0 */
    pxor   (mm4, mm4 );
-   pcmpeqb(mm3, mm4 );       /* now ff where new better, else 00     */
-   pcmpeqb(mm4, mm3 );       /* here ff where old better, else 00 */
-   pand   (mm1, mm3 );       /* keep only better new avg and abs */
+   pcmpeqb(mm3, mm4 );             /* now ff where new better, else 00 */
+   pcmpeqb(mm4, mm3 );             /* here ff where old better, else 00 */
+   pand   (mm1, mm3 );             /* keep only better new avg and abs */
    pand   (mm2, mm3 );
    pand   (mm6, mm4 );
    pand   (mm7, mm4 );
-   por    (mm6, mm2 );       /* and merge new & old vals keeping best */
+   por    (mm6, mm2 );             /* and merge new & old vals keeping best */
    por    (mm7, mm1 );
   }
 
@@ -758,9 +758,9 @@ template<class Tsimd> struct TdblResize
    int y;
    int ct = (rowsize-8) >> 3;
 
-   DblResizeH_1(rowsize, srcp, dstp);  // expand top line
+   DblResizeH_1(rowsize, srcp, dstp);                      // expand top line
    DblResizeH_1(rowsize, srcp + src_pit, dstp + dst_pit);  // expand 2nd line
-   DblResizeH_1(rowsize, srcp+(FldHeight-2) * src_pit,dstp + (FldHeight-2) * dst_pit);  // expand next to last line
+   DblResizeH_1(rowsize, srcp+(FldHeight-2) * src_pit,dstp + (FldHeight-2) * dst_pit);   // expand next to last line
    DblResizeH_1(rowsize, srcp+(FldHeight-1) * src_pit, dstp + (FldHeight-1) * dst_pit);  // expand last line
 
    for (y=1; y <= FldHeight-4; y++, pSrc+=src_pit,pDest+=dst_pit)
@@ -801,147 +801,147 @@ template<class Tsimd> struct TdblResize
        const unsigned char *esi=ebx+edx;
 
        // i,n
-       movq (mm0, ebx);   // value i from top left
-       movq (mm1, ebx+4*edx+2); // value n from bottom right
+       movq (mm0, ebx);            // value i from top left
+       movq (mm1, ebx+4*edx+2);    // value n from bottom right
        movq (mm6, mm0);
-       //  pavgb mm6, mm1     // avg(i,n), also best so far
+       //  pavgb mm6, mm1          // avg(i,n), also best so far
        Tsimd::v_pavgb(mm6, mm1, mm7, ShiftMask); // avg(i,n), also best so far
        movq (mm7, mm0);
        psubusb (mm7, mm1);
        psubusb (mm1, mm0);
-       por  (mm7, mm1);     // abs diff (SAD), also best so far
+       por  (mm7, mm1);            // abs diff (SAD), also best so far
 
        // m,j
-       movq    (mm0, ebx+2);  // value j from top right
-       movq    (mm1, ebx+4*edx); // value m from bottom left
+       movq    (mm0, ebx+2);       // value j from top right
+       movq    (mm1, ebx+4*edx);   // value m from bottom left
        isBobBetter(mm0,mm1,mm2,mm3,mm4,mm6,mm7);
 
        // a,f
-       movq    (mm0, esi);   // value a from top left
-       movq    (mm1, esi+2*edx+2); // value f from bottom right
+       movq    (mm0, esi);           // value a from top left
+       movq    (mm1, esi+2*edx+2);   // value f from bottom right
        isBobBetter(mm0,mm1,mm2,mm3,mm4,mm6,mm7);
 
 
        // e,b
-       movq    (mm0, esi+2);  // value b from top right
-       movq    (mm1, esi+2*edx); // value e from bottom left
+       movq    (mm0, esi+2);       // value b from top right
+       movq    (mm1, esi+2*edx);   // value e from bottom left
        isBobBetter(mm0,mm1,mm2,mm3,mm4,mm6,mm7);
 
        // c,d
-       movq    (mm0, esi+edx); // value c from left
-       movq    (mm1, esi+edx+2); // value d from right
+       movq    (mm0, esi+edx);     // value c from left
+       movq    (mm1, esi+edx+2);   // value d from right
 
        // We will also clip what we've got so far to avoid artifacts
 
        movq (mm2, mm0);
        //  pminub mm2, mm1
        Tsimd::v_pminub(mm2, mm1, mm4);
-       //  pmaxub mm6, mm2   // clip our current results so far to be above this
+       //  pmaxub mm6, mm2         // clip our current results so far to be above this
        Tsimd::pmaxub (mm6, mm2);
        movq (mm2, mm0);
        Tsimd::pmaxub (mm2, mm1);
-       //  pminub mm6, mm2   // clip our current results so far to be below this
+       //  pminub mm6, mm2         // clip our current results so far to be below this
        Tsimd::v_pminub (mm6, mm2, mm4);
 
        isBobBetter(mm0,mm1,mm2,mm3,mm4,mm6,mm7);
 
        // we have now create 4 new luma values for pixel offsets 1,3,5,7. But we need to merge these
        // with luma values for offsets 0,2,4,6 and some chroma info. First the other luma.
-       movq (mm0, esi+edx); // orig luma, in register as VYUYVYUY
-       movq (mm2, mm0);    // keep a copy while we got it
-       pand (mm0, YMask);    // keep only old luma, 0Y0Y0Y0Y
-       psllw( mm6, 8);     // now only new luma as y0y0y0y0
-       por  (mm6, mm0);    // all luma yYyYyYyY
+       movq (mm0, esi+edx);        // orig luma, in register as VYUYVYUY
+       movq (mm2, mm0);            // keep a copy while we got it
+       pand (mm0, YMask);          // keep only old luma, 0Y0Y0Y0Y
+       psllw( mm6, 8);             // now only new luma as y0y0y0y0
+       por  (mm6, mm0);            // all luma yYyYyYyY
        __m64 SaveLuma;
-       movq (SaveLuma, mm6);   // and save it for later
+       movq (SaveLuma, mm6);       // and save it for later
 
        // get chroma, but we only use 3 lines for chroma instead of 5
 
 
        // a,f - Chroma
-       movq (mm0, esi);   // value a from top left
-       movq (mm1, esi+2*edx+4); // value f from bottom right
+       movq (mm0, esi);            // value a from top left
+       movq (mm1, esi+2*edx+4);    // value f from bottom right
        movq (mm6, mm0 );
-       //  pavgb mm6, mm1     // avg(a,f), also best so far
+       //  pavgb mm6, mm1          // avg(a,f), also best so far
        Tsimd::v_pavgb(mm6, mm1, mm7, ShiftMask);
        movq (mm7, mm0);
        psubusb (mm7, mm1);
        psubusb (mm1, mm0);
-       por  (mm7, mm1);     // abs diff (SAD), also best so far
+       por  (mm7, mm1);            // abs diff (SAD), also best so far
 
        // e,b - Chroma
-       movq    (mm0, esi+4);  // value b from top right
-       movq    (mm1, esi+2*edx); // value e from bottom left
+       movq    (mm0, esi+4);       // value b from top right
+       movq    (mm1, esi+2*edx);   // value e from bottom left
        isBobBetter(mm0,mm1,mm2,mm3,mm4,mm6,mm7);
 
        // c,d - Chroma
-       movq    (mm0, esi+edx); // value c from left
-       movq    (mm1, esi+edx+4); // value d from right
+       movq    (mm0, esi+edx);     // value c from left
+       movq    (mm1, esi+edx+4);   // value d from right
 
        // We will also clip what we've got so far to avoid artifacts
        movq (mm2, mm0);
        //  pminub mm2, mm1
        Tsimd::v_pminub (mm2, mm1, mm4);
-       //  pmaxub mm6, mm2   // clip our current results so far to be above this
+       //  pmaxub mm6, mm2         // clip our current results so far to be above this
        Tsimd::pmaxub (mm6, mm2);
        movq (mm2, mm0);
        Tsimd::pmaxub (mm2, mm1);
-       //  pminub mm6, mm2   // clip our current results so far to be below this
+       //  pminub mm6, mm2         // clip our current results so far to be below this
        Tsimd::v_pminub (mm6, mm2, mm4);
 
        isBobBetter(mm0,mm1,mm2,mm3,mm4,mm6,mm7);
 
-       movq  (mm2, esi+edx); // another copy of orig Chroma from c
-       psrlw (mm2, 8);     // only orig chroma as 0V0U0V0U
-       packuswb (mm2, mm2);    // now xxxxVUVU
-       psrlw (mm6, 8);     // only new chroma as 0v0u0v0u
-       packuswb (mm6, mm6);    // now new chroma bytes xxxxvuvu
-       punpcklwd (mm2,mm6);    // vuVUvuVU, merged old and new chroma
+       movq  (mm2, esi+edx);       // another copy of orig Chroma from c
+       psrlw (mm2, 8);             // only orig chroma as 0V0U0V0U
+       packuswb (mm2, mm2);        // now xxxxVUVU
+       psrlw (mm6, 8);             // only new chroma as 0v0u0v0u
+       packuswb (mm6, mm6);        // now new chroma bytes xxxxvuvu
+       punpcklwd (mm2,mm6);        // vuVUvuVU, merged old and new chroma
 
        // merge luma & chroma
-       movq (mm6, SaveLuma);   // get luma again
-       movq (mm7, mm6);    // copy of luma
-       punpcklbw (mm6, mm2);    // low bytes vyuYVyUY
-       punpckhbw (mm7, mm2);    // hi bytes vyuYVyUY
+       movq (mm6, SaveLuma);       // get luma again
+       movq (mm7, mm6);            // copy of luma
+       punpcklbw (mm6, mm2);       // low bytes vyuYVyUY
+       punpckhbw (mm7, mm2);       // hi bytes vyuYVyUY
 
        //  movntq qword ptr[eax+edx], mm0
-       Tsimd::movntq (edi, mm6); // store low qword
+       Tsimd::movntq (edi, mm6);   // store low qword
        Tsimd::movntq (edi+8, mm7); // store high qword
       }
 
      // done with our horizontal loop but we have 8 more bytes of input to process
      // we will be fairly lazy with this and for now just use the current line, first luma
      const unsigned char *esi= ebx+edx;
-     movq (mm0, esi+edx); // orig luma, in register as VYUYVYUY
-     movq (mm2, mm0);    // keep a copy while we got it
-     movq (mm6, mm0);    // and another to work on now
+     movq (mm0, esi+edx);          // orig luma, in register as VYUYVYUY
+     movq (mm2, mm0);              // keep a copy while we got it
+     movq (mm6, mm0);              // and another to work on now
 
-     psrlq( mm6, 16  );   // pretend most of it came from +2 offs (remem revers order)
+     psrlq( mm6, 16  );            // pretend most of it came from +2 offs (remem revers order)
      Tsimd::pavgb(   mm6, mm0);    // 3 pixels of valid new luma averag, plus garbage
-     pand (mm0, YMask );  // keep only old luma, 0Y0Y0Y0Y
-     psllw( mm6, 8    ); // now only new luma as ?0y0y0y0
-     por  (mm6, mm0   ); // all luma ?YyYyYyY
+     pand (mm0, YMask );           // keep only old luma, 0Y0Y0Y0Y
+     psllw( mm6, 8    );           // now only new luma as ?0y0y0y0
+     por  (mm6, mm0   );           // all luma ?YyYyYyY
 
    // now final chroma bytes
      movq (mm1, mm2);
-     psrlq (mm1, 32);     // pretend most of it came from +4 offs (remem revers order)
+     psrlq (mm1, 32);              // pretend most of it came from +4 offs (remem revers order)
      Tsimd::pavgb   (mm1, mm2);    // 2 pixels of valid new chroma averag, plus garbage
-     psrlw (mm2, 8);     // only orig chroma as 0V0U0V0U
-     packuswb (mm2, mm2);    // now xxxxVUVU
-     psrlw (mm1, 8);     // only new chroma as 0?0?0v0u
-     packuswb (mm1, mm1);    // now new chroma bytes xxxx??vu
-     punpcklwd (mm2,mm1);    // ??VUvuVU, merged old and new chroma
+     psrlw (mm2, 8);               // only orig chroma as 0V0U0V0U
+     packuswb (mm2, mm2);          // now xxxxVUVU
+     psrlw (mm1, 8);               // only new chroma as 0?0?0v0u
+     packuswb (mm1, mm1);          // now new chroma bytes xxxx??vu
+     punpcklwd (mm2,mm1);          // ??VUvuVU, merged old and new chroma
 
    // merge final luma & chroma bytes
 
-     movq (mm7, mm6);    // copy of luma, ?YyYyYyY
-     punpcklbw (mm6, mm2);    // low bytes vyuYVyUY
-     punpckhbw (mm7, mm2);    // hi bytes ???YVyUY
+     movq (mm7, mm6);              // copy of luma, ?YyYyYyY
+     punpcklbw (mm6, mm2);         // low bytes vyuYVyUY
+     punpckhbw (mm7, mm2);         // hi bytes ???YVyUY
 
-     movq (edi, mm6);    // store low qword
-     movq (edi+8, mm7);     // store high qword
+     movq (edi, mm6);              // store low qword
+     movq (edi+8, mm7);            // store high qword
 
-     *(edi+13)=*(esi+edx+5);    // last U source byte
+     *(edi+13)=*(esi+edx+5);       // last U source byte
      *(short*)(edi+14)=*(short*)(esi+edx+6);    // last 2 YV source bytes
     }
   }
@@ -1002,11 +1002,11 @@ private:
   {
    unsigned char *pWeaveDest;const unsigned char *pWeaveSrc;
    unsigned char *pCopyDest;const unsigned char *pCopySrc;
-   if (SearchEffort==-2)    // note - DBL_Resize carried ast TopFirst == 0 hrtrtr
+   if (SearchEffort==-2)           // note - DBL_Resize carried ast TopFirst == 0 hrtrtr
     {
-     SearchEffort = -1;    // pretend it is -1 after this
-     pWeaveDest = dstp+dst_pitch; // odd dest lines
-     pCopyDest = dstp;    // even dest lines
+     SearchEffort = -1;            // pretend it is -1 after this
+     pWeaveDest = dstp+dst_pitch;  // odd dest lines
+     pCopyDest = dstp;             // even dest lines
      if (Use_Vertical_Filter)
       {
        if (SSEMMXenabled)
@@ -1015,9 +1015,9 @@ private:
        // TdblResize<T3dnow>::Avisynth_DblResizeH(src_pitch, rowsize,rowsize/2, srcp, pWorkArea,FldHeight);// go H expand lines into even output lines
        else
         TdblResize<Tmmx>::Avisynth_DblResizeH(src_pitch, rowsize,rowsize/2, srcp, pWorkArea,FldHeight);// go H expand lines into even output lines
-       src_pitch = rowsize;   // pretend it is wider now, and in out buffer
+       src_pitch = rowsize;     // pretend it is wider now, and in out buffer
        pWeaveSrc = pWorkArea;   // pretend source is here now
-       pCopySrc = pWorkArea;   // "
+       pCopySrc = pWorkArea;    // "
        Fieldcopy(pCopyDest, pCopySrc, rowsize, 1, dst_pitch, src_pitch); // copy top EVEN line
       }
      else
@@ -1028,9 +1028,9 @@ private:
        // TdblResize<T3dnow>::Avisynth_DblResizeH(src_pitch, 2*dst_pitch, rowsize/2, srcp, dstp, FldHeight);     // go H expand lines into even output lines
        else
         TdblResize<Tmmx>::Avisynth_DblResizeH(src_pitch, 2*dst_pitch, rowsize/2, srcp, dstp, FldHeight);     // go H expand lines into even output lines
-       src_pitch = 2*dst_pitch;  // pretend it is wider now, and in out buffer
-       pWeaveSrc = dstp;    // pretend source is here now
-       pCopySrc = dstp;    // "
+       src_pitch = 2*dst_pitch;    // pretend it is wider now, and in out buffer
+       pWeaveSrc = dstp;           // pretend source is here now
+       pCopySrc = dstp;            // "
        //   Fieldcopy(pWeaveDest, pCopySrc, rowsize, 1, dst_pitch, src_pitch);   // copy top ODD line
       }
 
@@ -1038,12 +1038,12 @@ private:
     }
    else if (SearchEffort == -1)    // note - DBL_Resize carried ast TopFirst == 0 hrtrtr
     {
-     pCopySrc = srcp;      // even src lines, 0,2,4..
-     pWeaveSrc = srcp;      // odd src lines, 1,3,5..
-     pCopyDest = dstp;      // even dest
-     pWeaveDest = dstp+dst_pitch;   // odd dest
+     pCopySrc = srcp;              // even src lines, 0,2,4..
+     pWeaveSrc = srcp;             // odd src lines, 1,3,5..
+     pCopyDest = dstp;             // even dest
+     pWeaveDest = dstp+dst_pitch;  // odd dest
      if (Use_Vertical_Filter)
-      Fieldcopy(pCopyDest, pCopySrc, rowsize, 1, dst_pitch, src_pitch); // copy top EVEN line
+      Fieldcopy(pCopyDest, pCopySrc, rowsize, 1, dst_pitch, src_pitch);  // copy top EVEN line
      else
       Fieldcopy(pCopyDest, pCopySrc, rowsize,  FldHeight, dst_pitch*2, src_pitch);  // copy all EVEN lines (base 0) I don't remember why???
      Fieldcopy(pWeaveDest + (height-2)*dst_pitch, pCopySrc+(FldHeight-1)*src_pitch, rowsize, 1, dst_pitch, src_pitch); // copy bottom Odd line
@@ -1054,7 +1054,7 @@ private:
      pCopySrc = srcp;
      pWeaveDest = dstp+dst_pitch;
      pCopyDest = dstp;
-     Fieldcopy(pWeaveDest, pCopySrc, rowsize, 1, dst_pitch*2, src_pitch*2); // bob this later?
+     Fieldcopy(pWeaveDest, pCopySrc, rowsize, 1, dst_pitch*2, src_pitch*2);  // bob this later?
      Fieldcopy(pWeaveDest+(FldHeight-1)*dst_pitch*2, pCopySrc+(FldHeight-1)*src_pitch*2, rowsize, 1, dst_pitch*2, src_pitch*2);
      if (Use_Vertical_Filter)
       {
@@ -1076,7 +1076,7 @@ private:
       {
        Fieldcopy(pCopyDest, pCopySrc, rowsize, 1, dst_pitch*2, src_pitch*2); // copy first bob line
        Fieldcopy(pCopyDest+(FldHeight-1)*dst_pitch*2, pCopySrc+(FldHeight-1)*src_pitch*2, rowsize, 1, dst_pitch*2, src_pitch*2); // copy last bob line
-       pWeaveDest += dst_pitch;                // bug, adj for poor planning
+       pWeaveDest += dst_pitch;                     // bug, adj for poor planning
       }
      else
       Fieldcopy(pCopyDest, pCopySrc, rowsize, FldHeight, dst_pitch*2, src_pitch*2);
@@ -1090,15 +1090,15 @@ private:
   {
    unsigned char *pWeaveDest;const unsigned char *pWeaveSrc;
    unsigned char *pCopyDest;const unsigned char *pCopySrc;
-   if (SearchEffort < -1) SearchEffort = -1;  //>>>>> temp
-   if (SearchEffort == -1)                         // note - DBL_Resize carried ast TopFirst == 0 hrtrtr
+   if (SearchEffort < -1) SearchEffort = -1;        //>>>>> temp
+   if (SearchEffort == -1)                          // note - DBL_Resize carried ast TopFirst == 0 hrtrtr
     {
-     pCopySrc = srcp;                                                // even src lines, 0,2,4..
-     pWeaveSrc = srcp;                                               // odd src lines, 1,3,5..
-     pCopyDest = dstp;                                               // even dest
-     pWeaveDest = dstp+dst_pitch;                    // odd dest
+     pCopySrc = srcp;                               // even src lines, 0,2,4..
+     pWeaveSrc = srcp;                              // odd src lines, 1,3,5..
+     pCopyDest = dstp;                              // even dest
+     pWeaveDest = dstp+dst_pitch;                   // odd dest
      if (Use_Vertical_Filter)
-      Fieldcopy(pCopyDest, pCopySrc, rowsize, 1, dst_pitch, src_pitch);// copy top EVEN line
+      Fieldcopy(pCopyDest, pCopySrc, rowsize, 1, dst_pitch, src_pitch);  // copy top EVEN line
      else
       Fieldcopy(pCopyDest, pCopySrc, rowsize, FldHeight, dst_pitch*2, src_pitch); // copy all EVEN lines (base 0) I don't remember why???
      Fieldcopy(pWeaveDest + (height-2)*dst_pitch, pCopySrc+(FldHeight-1)*src_pitch, rowsize, 1, dst_pitch, src_pitch); // copy bottom Odd line
@@ -1110,7 +1110,7 @@ private:
      pCopySrc = srcp;
      pWeaveDest = dstp+dst_pitch;
      pCopyDest = dstp;
-     Fieldcopy(pWeaveDest, pCopySrc, rowsize,1, dst_pitch*2, src_pitch*2);// bob this later?
+     Fieldcopy(pWeaveDest, pCopySrc, rowsize,1, dst_pitch*2, src_pitch*2);  // bob this later?
      Fieldcopy(pWeaveDest+(FldHeight-1)*dst_pitch*2,pCopySrc+(FldHeight-1)*src_pitch*2, rowsize, 1, dst_pitch*2, src_pitch*2);
      if (Use_Vertical_Filter)
       {
@@ -1130,7 +1130,7 @@ private:
      Fieldcopy(pWeaveDest+(FldHeight-1)*dst_pitch*2,pCopySrc+(FldHeight-1)*src_pitch*2, rowsize, 1, dst_pitch*2, src_pitch*2);   // bob this later
      if (Use_Vertical_Filter)
       {
-       Fieldcopy(pCopyDest, pCopySrc, rowsize, 1, dst_pitch*2, src_pitch*2);   // copy first bob line
+       Fieldcopy(pCopyDest, pCopySrc, rowsize, 1, dst_pitch*2, src_pitch*2);  // copy first bob line
        Fieldcopy(pCopyDest+(FldHeight-1)*dst_pitch*2,pCopySrc+(FldHeight-1)*src_pitch*2, rowsize, 1, dst_pitch*2, src_pitch*2); // copy last bob line
        pWeaveDest += dst_pitch;  // bug, adj for poor planning
       }
@@ -1296,7 +1296,7 @@ public:
      unsigned char *dstp = dst->GetWritePtr(PLANAR_Y);
      src_pitch = src->GetPitch(PLANAR_Y);
      stride_t dst_pitch = dst->GetPitch(PLANAR_Y);
-     int rowsize = dst->GetRowSize(PLANAR_Y);   // Could also be PLANAR_Y_ALIGNED which would return a mod16 row_size
+     int rowsize = dst->GetRowSize(PLANAR_Y);    // Could also be PLANAR_Y_ALIGNED which would return a mod16 row_size
      int height = dst->GetHeight(PLANAR_Y);
      int FldHeight = height / 2;
      if (useFrame)
@@ -1311,7 +1311,7 @@ public:
      dstp = dst->GetWritePtr(PLANAR_U);
      src_pitch = src->GetPitch(PLANAR_U);
      dst_pitch = dst->GetPitch(PLANAR_U);
-     rowsize = dst->GetRowSize(PLANAR_U);  // Could also be PLANAR_U_ALIGNED which would return a mod8 row_size
+     rowsize = dst->GetRowSize(PLANAR_U);        // Could also be PLANAR_U_ALIGNED which would return a mod8 row_size
      height = dst->GetHeight(PLANAR_U);
      FldHeight = height / 2;
      if (useFrame)
@@ -1337,6 +1337,8 @@ public:
    _mm_empty();
   }
 };
+
+
 //======================================== version ========================================
 extern "C" ItomsMoComp* createI(void)
 {

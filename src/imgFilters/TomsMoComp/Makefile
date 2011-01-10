@@ -8,7 +8,7 @@ DEF=TomsMoComp_ff.def
 GCCLIBS=-lstdc++
 
 # enable SSE because compilation fails without it
-SSE=yes
+OPTFLAGS+=-msse -mfpmath=sse
 
 include ../../makefile_c.inc
 
