@@ -285,7 +285,7 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
             && cfg->expandCode
             && !isdvdproc
             && adhocMode != ADHOC_ADHOC_DRAW_DVD_SUB_ONLY) {
-        Trect newExpandRect=pict.rectFull;
+        Trect newExpandRect=pict.rectClip;
         if (expandSizeChanged || oldExpandCode!=cfg->expandCode || oldExpandRect!=newExpandRect || pict.rectClip!=oldRectClip) {
             oldExpandCode=cfg->expandCode;
             oldExpandRect=newExpandRect;
@@ -399,8 +399,8 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
                 sizeDx=r.Width();
                 sizeDy=r.Height();
             } else {
-                sizeDx=pict.rectFull.dx;
-                sizeDy=pict.rectFull.dy;
+                sizeDx=pict.rectClip.dx;
+                sizeDy=pict.rectClip.dy;
             }
             forceChange|=oldSizeDx!=sizeDx || oldSizeDy!=sizeDy;
             oldSizeDx=sizeDx;
@@ -446,7 +446,7 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
                 fontSizeChanged=false;
 
                 unsigned char *dst[4];
-                getCurNext(outcsp, pict, 1, COPYMODE_FULL, dst);
+                getCurNext(outcsp, pict, 0, COPYMODE_DEF, dst);
                 if (outcsp == FF_CSP_RGB32) {
                     everRGB = true;
                 }
@@ -490,7 +490,7 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
             } else {
                 outcsp = FF_CSP_420P;
             }
-            getCurNext3(outcsp, pict, 1, COPYMODE_FULL, dst);
+            getCurNext3(outcsp, pict, 0, COPYMODE_DEF, dst);
             const TsubtitlesSettings &cfg2(*cfg);
             TsubPrintPrefs printprefs(dx1,dy1,deci,&cfg2,pict,clipdy,parent->config,!!isdvdproc,&cfg->font);
             printprefs.csp=pict.csp & FF_CSPS_MASK;
@@ -516,7 +516,7 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
             && (pict.csp & FF_CSPS_MASK) != FF_CSP_RGB32
             && rgb32_if_possible) {
         unsigned char *dst[4];
-        getCurNext3(FF_CSP_RGB32, pict, 1, COPYMODE_FULL, dst);
+        getCurNext3(FF_CSP_RGB32, pict, 0, COPYMODE_DEF, dst);
     }
 
     if (adhocMode == ADHOC_ADHOC_DRAW_DVD_SUB_ONLY) {
