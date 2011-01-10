@@ -72,7 +72,7 @@ const TfilterIDFF TresizeAspectSettings::idffs= {
     /*is*/        IDFF_isResize,
     /*order*/     IDFF_orderResize,
     /*show*/      IDFF_showResize,
-    /*full*/      IDFF_fullResize,
+    /*full*/      0,
     /*half*/      0,
     /*dlgId*/     IDD_RESIZEASPECT,
 };
@@ -87,8 +87,6 @@ TresizeAspectSettings::TresizeAspectSettings(TintStrColl *Icoll,TfilterIDFFs *fi
         _l("showResize"),1,
         IDFF_orderResize        ,&TresizeAspectSettings::order          ,1,1,_l(""),1,
         _l("orderResize"),0,
-        IDFF_fullResize         ,&TresizeAspectSettings::full           ,0,0,_l(""),1,
-        _l("fullResize"),0,
         IDFF_resizeMode         ,&TresizeAspectSettings::mode           ,0,5,_l(""),1,
         _l("resizeMode"),0,
         IDFF_resizeDx           ,(TintVal)&TresizeAspectSettings::dx    ,64,16384,_l(""),1,

@@ -28,7 +28,7 @@ const TfilterIDFF TavisynthSettings::idffs= {
     /*is*/        IDFF_isAvisynth,
     /*order*/     IDFF_orderAvisynth,
     /*show*/      IDFF_showAvisynth,
-    /*full*/      IDFF_fullAvisynth,
+    /*full*/      0,
     /*half*/      0,
     /*dlgId*/     IDD_AVISYNTH,
 };
@@ -45,8 +45,6 @@ TavisynthSettings::TavisynthSettings(TintStrColl *Icoll,TfilterIDFFs *filters):T
         _l("showAvisynth"),1,
         IDFF_orderAvisynth            ,&TavisynthSettings::order           ,1,1,_l(""),1,
         _l("orderAvisynth"),0,
-        IDFF_fullAvisynth             ,&TavisynthSettings::full            ,0,0,_l(""),1,
-        _l("fullAvisynth"),0,
         IDFF_avisynthFfdshowSource    ,&TavisynthSettings::ffdshowSource   ,0,0,_l(""),1,
         _l("avisynthFfdshowSource"),1,
         IDFF_avisynthApplyPulldown    ,&TavisynthSettings::applyPulldown   ,0,2,_l(""),1,

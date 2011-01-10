@@ -701,7 +701,7 @@ bool TimgFilterLogoaway::is(const TffPictBase &pict,const TfilterSettingsVideo *
 {
     const TlogoawaySettings *cfg=(const TlogoawaySettings*)cfg0;
     if (super::is(pict,cfg) && cfg->dx>=4 && cfg->dy>=4) {
-        Trect pictRect=pict.getRect(cfg->full,cfg->half);
+        Trect pictRect=pict.getRect(1,0);
         return (unsigned int)cfg->x<=pictRect.dx-1 && (unsigned int)cfg->y<=pictRect.dy-1 &&
                (unsigned int)cfg->x+cfg->dx<=pictRect.dx && (unsigned int)cfg->y+cfg->dy<=pictRect.dy;
     } else {
@@ -713,12 +713,12 @@ HRESULT TimgFilterLogoaway::process(TfilterQueue::iterator it,TffPict &pict,cons
 {
     if (is(pict,cfg0)) {
         const TlogoawaySettings *cfg=(const TlogoawaySettings*)cfg0;
-        init(pict,cfg->full,cfg->half);
+        init(pict,1,0);
         bool cspChanged;
         if (cfg->lumaonly) {
-            cspChanged=getCurNext(FF_CSPS_MASK_YUV_PLANAR,pict,cfg->full,COPYMODE_DEF,&plane[0].dst,NULL,NULL,NULL);
+            cspChanged=getCurNext(FF_CSPS_MASK_YUV_PLANAR,pict,1,COPYMODE_FULL,&plane[0].dst,NULL,NULL,NULL);
         } else {
-            cspChanged=getCurNext(FF_CSPS_MASK_YUV_PLANAR,pict,cfg->full,COPYMODE_DEF,&plane[0].dst,&plane[1].dst,&plane[2].dst,NULL);
+            cspChanged=getCurNext(FF_CSPS_MASK_YUV_PLANAR,pict,1,COPYMODE_FULL,&plane[0].dst,&plane[1].dst,&plane[2].dst,NULL);
         }
 
         if (cspChanged || logotemp.rectFull.dx!=(unsigned int)cfg->dx || logotemp.rectFull.dy!=(unsigned int)cfg->dy || !plane[0] || oldLumaOnly!=cfg->lumaonly || oldBlur!=cfg->blur || oldMode!=cfg->mode || stricmp(oldparambitmap,cfg->parambitmap)!=0) {
