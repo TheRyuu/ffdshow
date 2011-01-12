@@ -69,7 +69,7 @@ const TfilterIDFF TlogoawaySettings::idffs= {
     /*is*/        IDFF_isLogoaway,
     /*order*/     IDFF_orderLogoaway,
     /*show*/      IDFF_showLogoaway,
-    /*full*/      0,
+    /*full*/      IDFF_fullLogoaway,
     /*half*/      0,
     /*dlgId*/     IDD_LOGOAWAY,
 };
@@ -85,6 +85,8 @@ TlogoawaySettings::TlogoawaySettings(TintStrColl *Icoll,TfilterIDFFs *filters):T
         _l("showLogoaway"),1,
         IDFF_orderLogoaway        ,&TlogoawaySettings::order         ,1,1,_l(""),1,
         _l("orderLogoaway"),0,
+        IDFF_fullLogoaway         ,&TlogoawaySettings::full          ,0,0,_l(""),1,
+        _l("fullLogoaway"),0,
         IDFF_logoawayX            ,&TlogoawaySettings::x             ,0,16384,_l(""),1,
         _l("logoawayX"),100,
         IDFF_logoawayY            ,&TlogoawaySettings::y             ,0,16384,_l(""),1,

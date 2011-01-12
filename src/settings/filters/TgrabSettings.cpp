@@ -35,7 +35,7 @@ const TfilterIDFF TgrabSettings::idffs= {
     /*is*/        IDFF_isGrab,
     /*order*/     IDFF_orderGrab,
     /*show*/      IDFF_showGrab,
-    /*full*/      0,
+    /*full*/      IDFF_fullGrab,
     /*half*/      0,
     /*dlgId*/     IDD_GRAB,
 };
@@ -52,6 +52,8 @@ TgrabSettings::TgrabSettings(TintStrColl *Icoll,TfilterIDFFs *filters):TfilterSe
         _l("showGrab"),1,
         IDFF_orderGrab        ,&TgrabSettings::order     ,1,1,_l(""),1,
         _l("orderGrab"),0,
+        IDFF_fullGrab         ,&TgrabSettings::full      ,0,0,_l(""),1,
+        _l("fullGrab"),0,
         IDFF_grabDigits       ,&TgrabSettings::digits    ,0,6,_l(""),1,
         _l("grabDigits"),5,
         IDFF_grabFormat       ,&TgrabSettings::format    ,0,3,_l(""),1,

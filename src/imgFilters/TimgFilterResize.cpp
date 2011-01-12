@@ -140,9 +140,9 @@ bool TimgFilterResize::getOutputFmt(TffPictBase &pict,const TfilterSettingsVideo
 HRESULT TimgFilterResize::process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)
 {
     const TresizeAspectSettings *cfg=(const TresizeAspectSettings*)cfg0;
-    init(pict,1,0);
+    init(pict,cfg->full,0);
     int flags = Tconfig::sws_cpu_flags;
-    if (sizeChanged || !cfg->equal(oldSettings) || oldSettings.is!=cfg->is || oldcsp != pict.csp) {
+    if (sizeChanged || !cfg->equal(oldSettings) || oldSettings.is!=cfg->is || oldSettings.full!=cfg->full || oldcsp != pict.csp) {
         sizeChanged=false;
         oldSettings=*cfg;
         oldcsp=pict.csp;
@@ -248,7 +248,7 @@ HRESULT TimgFilterResize::process(TfilterQueue::iterator it,TffPict &pict,const 
                 }
                 bool cspChanged=false;
                 const unsigned char *src[4];
-                cspChanged|=getCur(SWS_IN_CSPS,pict,1,src);
+                cspChanged|=getCur(SWS_IN_CSPS,pict,cfg->full,src);
                 unsigned char *dst[4];
                 cspChanged|=getNext(SWS_OUT_CSPS,pict,newpict.rectClip,dst,&newpict.rectFull);
                 if (cspChanged || !swsc || oldinterlace!=interlace) {
@@ -297,7 +297,7 @@ HRESULT TimgFilterResize::process(TfilterQueue::iterator it,TffPict &pict,const 
             }
             case TresizeAspectSettings::LIB_NONE: {
                 const unsigned char *src[4];
-                getCur(pict.csp,pict,1,src);
+                getCur(pict.csp,pict,cfg->full,src);
                 unsigned char *dst[4];
                 getNext(pict.csp,pict,newpict.rectClip,dst,&newpict.rectFull);
                 for (unsigned int i=0; i<pict.cspInfo.numPlanes; i++) {
@@ -321,7 +321,7 @@ HRESULT TimgFilterResize::process(TfilterQueue::iterator it,TffPict &pict,const 
                 }
                 if (simple->ok) {
                     SimpleResize::PVideoFrame srcFrame;
-                    getCur(warped?FF_CSP_YUY2:FF_CSP_420P,pict,1,(const unsigned char**)srcFrame.ptr);
+                    getCur(warped?FF_CSP_YUY2:FF_CSP_420P,pict,cfg->full,(const unsigned char**)srcFrame.ptr);
                     for (unsigned int i=0; i<pict.cspInfo.numPlanes; i++) {
                         srcFrame.pitch[i]=stride1[i];
                         srcFrame.rowSize[i]=dx1[i]*pict.cspInfo.Bpp;
@@ -357,7 +357,7 @@ HRESULT TimgFilterResize::process(TfilterQueue::iterator it,TffPict &pict,const 
                 switch (TresizeAspectSettings::methodsProps[oldSettings.methodLuma].flags) {
                     case 0: {
                         const unsigned char *src;
-                        getCur(FF_CSP_RGB32,pict,1,&src,NULL,NULL,NULL);
+                        getCur(FF_CSP_RGB32,pict,cfg->full,&src,NULL,NULL,NULL);
                         unsigned char *dst;
                         getNext(FF_CSP_RGB32,pict,newpict.rectClip,&dst,NULL,NULL,NULL,&newpict.rectFull);
                         T2xSaI::super(src,stride1[0],dst,stride2[0],dx1[0],dy1[0]);
@@ -365,7 +365,7 @@ HRESULT TimgFilterResize::process(TfilterQueue::iterator it,TffPict &pict,const 
                     }
                     case 1: {
                         const unsigned char *src;
-                        getCur(FF_CSP_RGB16,pict,1,&src,NULL,NULL,NULL);
+                        getCur(FF_CSP_RGB16,pict,cfg->full,&src,NULL,NULL,NULL);
                         unsigned char *dst;
                         getNext(FF_CSP_RGB16,pict,newpict.rectClip,&dst,NULL,NULL,NULL,&newpict.rectFull);
                         T2xSaI::_2xSaI(src,stride1[0],dst,dx1[0],dy1[0],stride2[0]);
@@ -373,7 +373,7 @@ HRESULT TimgFilterResize::process(TfilterQueue::iterator it,TffPict &pict,const 
                     }
                     case 2: {
                         const unsigned char *src;
-                        getCur(FF_CSP_RGB16,pict,1,&src,NULL,NULL,NULL);
+                        getCur(FF_CSP_RGB16,pict,cfg->full,&src,NULL,NULL,NULL);
                         unsigned char *dst;
                         getNext(FF_CSP_RGB32,pict,newpict.rectClip,&dst,NULL,NULL,NULL,&newpict.rectFull);
                         Thq2x::hq2x_32(src,dst,dx1[0],dy1[0],stride1[0],stride2[0]);

@@ -141,9 +141,9 @@ HRESULT TimgFilterDScalerDI::process(TfilterQueue::iterator it,TffPict &pict0,co
     HRESULT hr = S_OK;
     for (int f=0; f<2; f++,fieldnum=1-fieldnum) {
         TffPict pict=pict0;
-        init(pict,1,0);
+        init(pict,cfg->full,cfg->half);
         const unsigned char *srcYUY2;
-        getCur(FF_CSP_YUY2,pict,1,&srcYUY2,NULL,NULL,NULL);
+        getCur(FF_CSP_YUY2,pict,cfg->full,&srcYUY2,NULL,NULL,NULL);
         if (di.PictureHistory[0]==NULL) {
             //generic
             di.FrameWidth=dx1[0];
@@ -177,7 +177,7 @@ HRESULT TimgFilterDScalerDI::process(TfilterQueue::iterator it,TffPict &pict0,co
         TffPict::copy(di.PictureHistory[0]->pData,pict.stride[0],srcYUY2,2*pict.stride[0],di.LineLength,di.FieldHeight);
 
         unsigned char *dstYUV;
-        getNext(FF_CSP_YUY2,pict,1,&dstYUV,NULL,NULL,NULL);
+        getNext(FF_CSP_YUY2,pict,cfg->full,&dstYUV,NULL,NULL,NULL);
         di.Overlay=dstYUV;
         di.OverlayPitch=(DWORD)stride2[0];
 

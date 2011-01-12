@@ -61,7 +61,7 @@ void TimgFilterTomsMoComp::onSizeChange(void)
 bool TimgFilterTomsMoComp::is(const TffPictBase &pict,const TfilterSettingsVideo *cfg)
 {
     if (dll->ok && super::is(pict,cfg)) {
-        Trect pictRect=pict.getRect(1,0);
+        Trect pictRect=pict.getRect(cfg->full,cfg->half);
         return (pictRect.dx&3)==0;
     } else {
         return false;
@@ -75,11 +75,11 @@ HRESULT TimgFilterTomsMoComp::process(TfilterQueue::iterator it,TffPict &pict,co
         if (((pict.fieldtype & FIELD_TYPE::PROGRESSIVE_FRAME) || pict.film)&& !cfg->deinterlaceAlways) {
             return parent->processSample(++it,pict);
         }
-        init(pict,1,0);
+        init(pict,cfg->full,cfg->half);
         const unsigned char *src[4];
-        bool cspChanged=getCur(FF_CSP_420P|FF_CSP_YUY2,pict,1,src);
+        bool cspChanged=getCur(FF_CSP_420P|FF_CSP_YUY2,pict,cfg->full,src);
         unsigned char *dst[4];
-        cspChanged|=getNext(csp1,pict,1,dst);
+        cspChanged|=getNext(csp1,pict,cfg->full,dst);
 
         if (cspChanged || se!=cfg->tomsmocompSE || vf!=cfg->tomsmocompVF || oldstride10!=stride1[0]) {
             oldstride10=stride1[0];

@@ -25,7 +25,7 @@ virtual void onSizeChange(void);
 HRESULT onDiscontinuity(const TffPict &pict);
 
 YADIFContext* getContext(int mode, int parity);
-HRESULT put_image(TffPict &pict, const unsigned char *src[4]);
+HRESULT put_image(TffPict &pict, const unsigned char *src[4], int full);
 void store_ref(const uint8_t *src[3], stride_t src_stride[3], int width, int height);
 int config(TffPict &pict);
 

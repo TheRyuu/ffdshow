@@ -151,7 +151,7 @@ Trect TimgFilterCrop::calcCrop(const Trect &pictRect,TcropSettings *cfg, TffPict
                     }
                     lastFrameMS=msec;
                     nextFrameMS=0;
-                    init(*ppict,1,0);
+                    init(*ppict,cfg->full,cfg->half);
                     getCur(FF_CSPS_MASK_YUV_PLANAR,*ppict,COPYMODE_FULL,&src,NULL,NULL,NULL);
                     TautoCrop newAutoCrop=TautoCrop();;
                     if (cfg->mode==3 || cfg->mode ==5) {

@@ -231,9 +231,9 @@ HRESULT TimgFilterBitmap::process(TfilterQueue::iterator it,TffPict &pict,const 
 {
     if (is(pict,cfg0)) {
         const TbitmapSettings *cfg=(const TbitmapSettings*)cfg0;
-        init(pict,1,0);
+        init(pict,cfg->full,cfg->half);
         unsigned char *dst[4];
-        bool cspChanged=getCurNext(FF_CSPS_MASK_YUV_PLANAR,pict,1,COPYMODE_FULL,dst);
+        bool cspChanged=getCurNext(FF_CSPS_MASK_YUV_PLANAR,pict,cfg->full,COPYMODE_DEF,dst);
 
         if (!bitmap || cspChanged || stricmp(oldflnm,cfg->flnm)!=0) {
             ff_strncpy(oldflnm, cfg->flnm, countof(oldflnm));

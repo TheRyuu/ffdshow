@@ -232,7 +232,7 @@ HRESULT TimgFilterGrab::process(TfilterQueue::iterator it,TffPict &pict,const Tf
                 }
 
             if (exp[cfg->format]->ok) {
-                init(pict,1,0);
+                init(pict,cfg->full,0);
 
                 if (!exp[cfg->format]->inited) {
                     exp[cfg->format]->init(pictRect.dx,pictRect.dy);
@@ -241,7 +241,7 @@ HRESULT TimgFilterGrab::process(TfilterQueue::iterator it,TffPict &pict,const Tf
                 if (exp[cfg->format]->ok) {
                     const unsigned char *src[4];
                     temp.copyFrom(pict, buffer);
-                    getCur(exp[cfg->format]->requiredCSP(),temp,1,src);
+                    getCur(exp[cfg->format]->requiredCSP(),temp,cfg->full,src);
 
                     if (!dstbuf) {
                         dstbuf=(unsigned char*)malloc(dstbuflen=pictRect.dx*pictRect.dy*4+1024);

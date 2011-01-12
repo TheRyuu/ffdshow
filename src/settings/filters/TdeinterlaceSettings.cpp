@@ -78,7 +78,7 @@ const TfilterIDFF TdeinterlaceSettings::idffs= {
     /*is*/        IDFF_isDeinterlace,
     /*order*/     IDFF_orderDeinterlace,
     /*show*/      IDFF_showDeinterlace,
-    /*full*/      0,
+    /*full*/      IDFF_fullDeinterlace,
     /*half*/      0,
     /*dlgId*/     IDD_DEINTERLACE,
 };
@@ -95,6 +95,8 @@ TdeinterlaceSettings::TdeinterlaceSettings(TintStrColl *Icoll,TfilterIDFFs *filt
         _l("showDeinterlace"),1,
         IDFF_orderDeinterlace         ,&TdeinterlaceSettings::order                    ,1,1,_l(""),1,
         _l("orderDeinterlace"),0,
+        IDFF_fullDeinterlace          ,&TdeinterlaceSettings::full                     ,0,0,_l(""),1,
+        _l("fullDeinterlace"),0,
         IDFF_deinterlaceAlways        ,&TdeinterlaceSettings::deinterlaceAlways        ,0,0,_l(""),1,
         _l("deinterlaceAlways"),0,
         IDFF_swapFields               ,&TdeinterlaceSettings::swapfields               ,0,0,_l(""),1,

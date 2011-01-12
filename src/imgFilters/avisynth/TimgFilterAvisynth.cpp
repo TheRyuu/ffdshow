@@ -938,9 +938,9 @@ HRESULT TimgFilterAvisynth::Tavisynth::process(TimgFilterAvisynth *self,TfilterQ
                 unsigned char *data[4];
 
                 if (outputRect==self->pictRect) {
-                    self->getNext(self->outcsp,pict,1,data);
+                    self->getNext(self->outcsp,pict,cfg->full,data);
                 } else {
-                    self->getNext(self->outcsp,pict,1,data,&outputRect);
+                    self->getNext(self->outcsp,pict,cfg->full,data,&outputRect);
                 }
 
                 if (outputRect != pict.rectFull) {
@@ -1196,7 +1196,7 @@ bool TimgFilterAvisynth::getOutputFmt(TffPictBase &pict,const TfilterSettingsVid
         const TavisynthSettings *cfg=(const TavisynthSettings*)cfg0;
 
         try {
-            Trect r=pict.getRect(1,0);
+            Trect r=pict.getRect(cfg->full,cfg->half);
 
             if (!outFmtInput) {
                 outFmtInput=new Tinput();
@@ -1249,7 +1249,7 @@ HRESULT TimgFilterAvisynth::process(TfilterQueue::iterator it,TffPict &pict,cons
     if (is(pict,cfg0)) {
         const TavisynthSettings *cfg=(const TavisynthSettings*)cfg0;
 
-        init(pict,1,0);
+        init(pict,cfg->full,cfg->half);
 
         int wantedcsp=getWantedCsp(cfg);
 
@@ -1264,7 +1264,7 @@ HRESULT TimgFilterAvisynth::process(TfilterQueue::iterator it,TffPict &pict,cons
                 input=new Tinput();
             }
 
-            getCur(wantedcsp,pict,1,input->src);
+            getCur(wantedcsp,pict,cfg->full,input->src);
 
             input->stride1=stride1;
 

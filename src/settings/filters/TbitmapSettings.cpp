@@ -39,7 +39,7 @@ const TfilterIDFF TbitmapSettings::idffs= {
     /*is*/        IDFF_isBitmap,
     /*order*/     IDFF_orderBitmap,
     /*show*/      IDFF_showBitmap,
-    /*full*/      0,
+    /*full*/      IDFF_fullBitmap,
     /*half*/      0,
     /*dlgId*/     IDD_BITMAP,
 };
@@ -55,6 +55,8 @@ TbitmapSettings::TbitmapSettings(TintStrColl *Icoll,TfilterIDFFs *filters):Tfilt
         _l("showBitmap"),1,
         IDFF_orderBitmap    ,&TbitmapSettings::order     ,1,1,_l(""),1,
         _l("orderBitmap"),0,
+        IDFF_fullBitmap     ,&TbitmapSettings::full      ,0,0,_l(""),1,
+        _l("fullBitmap"),0,
         IDFF_bitmapPosx     ,&TbitmapSettings::posx      ,-4096,4096,_l(""),1,
         _l("bitmapPosX"),50,
         IDFF_bitmapPosy     ,&TbitmapSettings::posy      ,-4096,4096,_l(""),1,

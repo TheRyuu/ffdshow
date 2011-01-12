@@ -185,6 +185,7 @@
 #define IDFF_isDeinterlace             1401
 #define IDFF_showDeinterlace           1418
 #define IDFF_orderDeinterlace          1424
+#define IDFF_fullDeinterlace           1402
 #define IDFF_deinterlaceAlways         3493
 #define IDFF_swapFields                1409
 #define IDFF_deinterlaceMethod         1403
@@ -378,6 +379,7 @@
 #define IDFF_showResize          751
 #define IDFF_isResize            701 //is resizing active (or will be resizing active)
 #define IDFF_orderResize         722
+#define IDFF_fullResize          723
 #define IDFF_resizeMode          728 //0 - exact size, 1 - aspect ratio , 2 - multiply of , 3 - multiply
 #define IDFF_resizeDx            702 //new width
 #define IDFF_resizeSpecifyHorizontalSizeOnly 703
@@ -442,6 +444,7 @@
 #define IDFF_isCropNzoom         712
 #define IDFF_showCropNzoom       752
 #define IDFF_orderCropNzoom      754
+#define IDFF_fullCropNzoom       765
 #define IDFF_cropNzoomMode       713 //0 - zoom, 1 - crop, 2 - pan&scan, 3 - autocrop vert, 4 - auto crop horiz, 5 - autocrop vert & horiz
 #define IDFF_magnificationX      714
 #define IDFF_cropLeft            715
@@ -465,6 +468,7 @@
 #define IDFF_isSubtitles             801
 #define IDFF_showSubtitles           828
 #define IDFF_orderSubtitles          815
+#define IDFF_fullSubtitles           817
 #define IDFF_subFilename             821
 #define IDFF_subTempFilename        3402
 #define IDFF_subPosX                 810
@@ -619,6 +623,7 @@
 #define IDFF_isAvisynth              1251
 #define IDFF_showAvisynth            1260
 #define IDFF_orderAvisynth           1252
+#define IDFF_fullAvisynth            1253
 #define IDFF_avisynthFfdshowSource   1259
 #define IDFF_avisynthApplyPulldown   1261
 #define IDFF_avisynthInYV12          1255
@@ -737,6 +742,7 @@
 #define IDFF_isGrab        2001
 #define IDFF_showGrab      2013
 #define IDFF_orderGrab     2002
+#define IDFF_fullGrab      2003
 #define IDFF_grabPath      2004
 #define IDFF_grabPrefix    2005
 #define IDFF_grabDigits    2006
@@ -753,6 +759,7 @@
 #define IDFF_isLogoaway              1451
 #define IDFF_showLogoaway            1452
 #define IDFF_orderLogoaway           1453
+#define IDFF_fullLogoaway            1454
 #define IDFF_logoawayX               1455
 #define IDFF_logoawayY               1456
 #define IDFF_logoawayDx              1457
@@ -776,6 +783,7 @@
 #define IDFF_isBitmap       1651
 #define IDFF_showBitmap     1652
 #define IDFF_orderBitmap    1653
+#define IDFF_fullBitmap     1654
 #define IDFF_bitmapFlnm     1655
 #define IDFF_bitmapPosx     1656
 #define IDFF_bitmapPosy     1657

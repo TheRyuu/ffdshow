@@ -72,7 +72,7 @@ void TimgFilterYadif::store_ref(const uint8_t *src[3], stride_t src_stride[3], i
     }
 }
 
-HRESULT TimgFilterYadif::put_image(TffPict &pict, const unsigned char *src[4])
+HRESULT TimgFilterYadif::put_image(TffPict &pict, const unsigned char *src[4], int full)
 {
     int tff = 0;
     int frame_start_pos = 0;
@@ -87,8 +87,13 @@ HRESULT TimgFilterYadif::put_image(TffPict &pict, const unsigned char *src[4])
     }
 
     int dx,dy;
-    dx = pict.rectFull.dx;
-    dy = pict.rectFull.dy;
+    if (full) {
+        dx = pict.rectFull.dx;
+        dy = pict.rectFull.dy;
+    } else {
+        dx = pict.rectClip.dx;
+        dy = pict.rectClip.dy;
+    }
 
     store_ref(src, pict.stride, dx, dy);
 
@@ -143,7 +148,7 @@ HRESULT TimgFilterYadif::put_image(TffPict &pict, const unsigned char *src[4])
 
     for(int frame_pos = frame_start_pos ; frame_pos <= double_frame_rate ; frame_pos++) {
         unsigned char *dst[4];
-        bool cspChanged = getNext(csp1, pict, 1, dst);
+        bool cspChanged = getNext(csp1, pict, full, dst);
 
         libavcodec->yadif_filter(yadctx,
                                  dst,
@@ -325,7 +330,7 @@ HRESULT TimgFilterYadif::onEndOfStream(void)
     pict1.rtStop += yadctx->frame_duration;
     const unsigned char *src[4];
     src[0] = src[1] = src[2] = src[3] = NULL;
-    return put_image(pict1, src);
+    return put_image(pict1, src, oldcfg.full);
 }
 
 HRESULT TimgFilterYadif::onDiscontinuity(const TffPict &pict)
@@ -339,7 +344,7 @@ HRESULT TimgFilterYadif::onDiscontinuity(const TffPict &pict)
     pict1.rtStop = pict.rtStop;
     const unsigned char *src[4];
     src[0] = src[1] = src[2] = src[3] = NULL;
-    return put_image(pict1, src);
+    return put_image(pict1, src, oldcfg.full);
 }
 
 HRESULT TimgFilterYadif::process(TfilterQueue::iterator it0,TffPict &pict,const TfilterSettingsVideo *cfg0)
@@ -360,7 +365,11 @@ HRESULT TimgFilterYadif::process(TfilterQueue::iterator it0,TffPict &pict,const 
         return parent->processSample(++it,pict);
     }
 
-    init(pict,1,0);
+    if (pict.rectClip != pict.rectFull && !cfg->full) {
+        parent->dirtyBorder=1;
+    }
+
+    init(pict,cfg->full,cfg->half);
     if (  pict.discontinuity
             || (fieldtype & FIELD_TYPE::SEQ_START)) {
         // flush the last picture, if any.
@@ -381,7 +390,7 @@ HRESULT TimgFilterYadif::process(TfilterQueue::iterator it0,TffPict &pict,const 
     }
 
     const unsigned char *src[4];
-    bool cspChanged = getCur(FF_CSP_420P | FF_CSP_422P | FF_CSP_FLAGS_INTERLACED,pict,1,src);
+    bool cspChanged = getCur(FF_CSP_420P | FF_CSP_422P | FF_CSP_FLAGS_INTERLACED, pict, cfg->full,src);
 
     if (!yadctx) {
         yadctx = getContext(cfg->yadifMode, cfg->yadifFieldOrder);
@@ -398,13 +407,13 @@ HRESULT TimgFilterYadif::process(TfilterQueue::iterator it0,TffPict &pict,const 
     if (yadctx->do_deinterlace == 1) {
         // duplicate the first image to avoid black screen in case second image does not exist.
         REFERENCE_TIME rtStart = pict.rtStart,rtStop = pict.rtStop;
-        put_image(pict, src);
+        put_image(pict, src, cfg->full);
         pict.rtStart = rtStart;
         pict.rtStop = rtStop;
     }
 
     hasImageInBuffer = true;
-    HRESULT hr = put_image(pict, src);
+    HRESULT hr = put_image(pict, src, cfg->full);
 
     if (old_do_deinterlace >= 2 && (fieldtype & FIELD_TYPE::SEQ_END)) {
         onEndOfStream();

@@ -28,7 +28,7 @@ const TfilterIDFF TcropSettings::idffs= {
     /*is*/        IDFF_isCropNzoom,
     /*order*/     IDFF_orderCropNzoom,
     /*show*/      IDFF_showCropNzoom,
-    /*full*/      0,
+    /*full*/      IDFF_fullCropNzoom,
     /*half*/      0,
     /*dlgId*/     IDD_CROP,
 };
@@ -43,6 +43,8 @@ TcropSettings::TcropSettings(TintStrColl *Icoll,TfilterIDFFs *filters):TfilterSe
         _l("showCropNzoom"),1,
         IDFF_orderCropNzoom     ,&TcropSettings::order              ,1,1,_l(""),1,
         _l("orderCropNzoom"),0,
+        IDFF_fullCropNzoom      ,&TcropSettings::full               ,1,1,_l(""),1,
+        _l("fullCropNzoom"),1,
         IDFF_cropNzoomMode      ,&TcropSettings::mode               ,0,5,_l(""),1,
         _l("isZoom"),0,
         IDFF_magnificationX     ,&TcropSettings::magnificationX     ,0,100,_l(""),1,
@@ -81,7 +83,7 @@ void TcropSettings::createFilters(size_t filtersorder,Tfilters *filters,TfilterQ
     idffOnChange(idffs,filters,queue.temporary);
     if (is && show) {
         if (!queue.temporary) {
-            setOnChange(1,filters,&Tfilters::onQueueChange);
+            setOnChange(IDFF_fullCropNzoom,filters,&Tfilters::onQueueChange);
         }
         if (full && (mode < 3 || mode > 5)) { // Do expand only if not in AutoCrop (autocrop code is located in TimgFilterCrop class)
             queueFilter<TimgFilterCropExpand>(filtersorder,filters,queue);

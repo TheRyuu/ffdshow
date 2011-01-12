@@ -58,9 +58,9 @@ HRESULT TimgFilterDGbob::process(TfilterQueue::iterator it,TffPict &pict0,const 
         done();
         return parent->processSample(++it,pict0);
     }
-    init(pict0,1,0);
+    init(pict0,cfg->full,0);
     const unsigned char *src_[4];
-    bool cspChanged=getCur(FF_CSP_420P|FF_CSP_YUY2|FF_CSP_RGB32,pict0,1,src_);
+    bool cspChanged=getCur(FF_CSP_420P|FF_CSP_YUY2|FF_CSP_RGB32,pict0,cfg->full,src_);
     if (cspChanged) {
         done();
     }
@@ -76,7 +76,7 @@ HRESULT TimgFilterDGbob::process(TfilterQueue::iterator it,TffPict &pict0,const 
         TffPict pict=pict0;
         picts[NXTNXT]->p.copyFrom(pict,picts[NXTNXT]->buf);
         unsigned char *dst[4];
-        cspChanged|=getNext(csp1,pict,1,dst);
+        cspChanged|=getNext(csp1,pict,cfg->full,dst);
         if (picts[SRC]->buf.size()) {
             int n=this->n-2;
             int frame=n;

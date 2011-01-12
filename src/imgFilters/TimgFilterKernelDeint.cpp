@@ -43,7 +43,7 @@ void TimgFilterKernelDeint::done(void)
 HRESULT TimgFilterKernelDeint::process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)
 {
  const TdeinterlaceSettings *cfg=(const TdeinterlaceSettings*)cfg0;
- init(pict,1,0);
+ init(pict,cfg->full,cfg->half);
  const unsigned char *src[4];
  bool cspChanged=getCur(FF_CSP_420P|FF_CSP_YUY2|FF_CSP_RGB32,pict,cfg->full,src);
  unsigned char *dst[4];
@@ -269,7 +269,7 @@ HRESULT TimgFilterKernelDeint2::process(TfilterQueue::iterator it,TffPict &pict,
             oldcfg=*cfg;
             done();
         }
-        init(pict,1,0);
+        init(pict,cfg->full,cfg->half);
         const unsigned char *src[4];
         bool cspChanged=getCur(FF_CSP_420P|FF_CSP_YUY2,pict,cfg->full,src);
         unsigned char *dst[4];

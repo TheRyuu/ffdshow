@@ -188,7 +188,7 @@ HRESULT TimgFilterFramerateDoubler::process(TfilterQueue::iterator it,TffPict &p
         done();
         return parent->processSample(++it,pict);
     }
-    init(pict,1,0);
+    init(pict,true,cfg->half);
     const unsigned char *src[4];
     bool cspChanged=getCur(FF_CSPS_MASK_YUV_PLANAR,pict,true,src);
     if (cspChanged) {
@@ -261,12 +261,12 @@ HRESULT TimgFilterAvcodecDeinterlace::process(TfilterQueue::iterator it,TffPict 
     if (((pict.fieldtype & FIELD_TYPE::PROGRESSIVE_FRAME) || pict.film) && !cfg->deinterlaceAlways) {
         return parent->processSample(++it,pict);
     }
-    init(pict,1,0);
+    init(pict,cfg->full,cfg->half);
     bool cspChanged=false;
     const unsigned char *tempPict1[4];
-    cspChanged|=getCur(FF_CSPS_MASK_YUV_PLANAR,pict,1,tempPict1);
+    cspChanged|=getCur(FF_CSPS_MASK_YUV_PLANAR,pict,cfg->full,tempPict1);
     unsigned char *tempPict2[4];
-    cspChanged|=getNext(csp1,pict,1,tempPict2);
+    cspChanged|=getNext(csp1,pict,cfg->full,tempPict2);
     if (cspChanged) {
         done();
     }
