@@ -514,6 +514,11 @@ HRESULT TvideoCodecLibavcodecDxva::configureDXVA2(IPin *pPin)
             if (FAILED(hr)) {
                 break;
             }
+
+            // Patch for the Sandy Bridge (prevent crash on Mode_E, fixme later)
+            if (nPCIVendor == PCIV_Intel && guidDecoder == DXVA2_ModeH264_E)
+                continue;
+
             if (bFoundDXVA2Configuration) { // Found a good configuration. Save the GUID.
                 guidDecoder = pDecoderGuids[iGuid];
             }

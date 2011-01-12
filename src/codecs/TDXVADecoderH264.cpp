@@ -367,7 +367,7 @@ int TDXVADecoderH264::FindOldestFrame()
         }
         m_pPictureStore[nPos].rtStart = m_rtOutStart;
         m_pPictureStore[nPos].rtStop  = m_rtOutStart + m_pCodec->getAvrTimePerFrame();
-        m_rtLastFrameDisplayed        = m_rtOutStart + m_pCodec->getAvrTimePerFrame();
+        m_rtLastFrameDisplayed        = m_pPictureStore[nPos].rtStop;
         m_pCodec->reorderBFrames(m_pPictureStore[nPos].rtStart, m_pPictureStore[nPos].rtStop);
     }
 
