@@ -120,10 +120,22 @@
 /* Required by Unix 98 */
 #  include <time.h>
 # else
-  typedef int pid_t;
+#  define __PTW_DEFINE_PID_T
 # endif
 #else
-typedef int pid_t;
+# define  __PTW_DEFINE_PID_T
+#endif
+
+#if defined(__PTW_DEFINE_PID_T)
+# ifndef _PID_T_
+#  ifndef _WIN64
+   typedef int pid_t;
+#  else
+   typedef long long pid_t;
+#  endif
+#  define _PID_T_
+# endif
+# undef __PTW_DEFINE_PID_T
 #endif
 
 /* Thread scheduling policies */

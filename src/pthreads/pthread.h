@@ -112,7 +112,7 @@
 #ifdef _UWIN
 #   define HAVE_STRUCT_TIMESPEC 1
 #   define HAVE_SIGNAL_H        1
-#   undef HAVE_CONFIG_H
+#   undef 1
 #   pragma comment(lib, "pthread")
 #endif
 
@@ -210,14 +210,27 @@ typedef unsigned long DWORD_PTR;
  * -----------------
  */
 
-#if HAVE_CONFIG_H
-#include "config.h"
-#endif /* HAVE_CONFIG_H */
+#if 1
+#include "pthreads_win32_config.h"
+#endif /* 1 */
+
+#ifdef __MINGW32__
+# include <_mingw.h>
+#endif
+
+#ifdef __MINGW64_VERSION_MAJOR
+/* MinGW-w64 already has struct timespec */
+#  define HAVE_STRUCT_TIMESPEC 1
+/* define _POSIX for time.h *time_r macros */
+#  ifndef _POSIX
+#    define _POSIX 1
+#  endif
+#include <time.h>
+#endif  /* MinGW-w64 */
 
 #ifndef NEED_FTIME
 #include <time.h>
 #else /* NEED_FTIME */
-#include <time.h>
 /* use native WIN32 time API */
 #endif /* NEED_FTIME */
 
@@ -237,7 +250,7 @@ enum {
 };
 
 /*
- * This is a duplicate of what is in the autoconf config.h,
+ * This is a duplicate of what is in the autoconf pthreads_win32_config.h,
  * which is only used when building the pthread-win32 libraries.
  */
 
@@ -271,7 +284,7 @@ enum {
 #endif
 
 #ifndef ETIMEDOUT
-#  define ETIMEDOUT (WSABASEERR+60)     /* This is the value in winsock2.h. */
+#  define ETIMEDOUT 10060     /* This is the value in winsock.h. */
 #endif
 
 #ifndef ENOSYS
@@ -286,7 +299,7 @@ enum {
 #  endif
 #endif
 
-#include "sched.h"
+#include <sched.h>
 
 /*
  * To avoid including windows.h we define only those things that we
@@ -305,13 +318,10 @@ enum {
 
 #ifndef HAVE_STRUCT_TIMESPEC
 #define HAVE_STRUCT_TIMESPEC 1
-#ifndef _TIMESPEC_DEFINED
-#define _TIMESPEC_DEFINED
 struct timespec {
         time_t tv_sec;
         long tv_nsec;
 };
-#endif
 #endif /* HAVE_STRUCT_TIMESPEC */
 
 #ifndef SIG_BLOCK
@@ -1245,30 +1255,40 @@ PTW32_DLLPORT int PTW32_CDECL pthreadCancelableTimedWait (HANDLE waitHandle,
         ( *(_lasts) = strtok( (_s), (_sep) ) )
 #endif /* !__MINGW32__ */
 
+#if !defined(asctime_r)
 #define asctime_r( _tm, _buf ) \
         ( strcpy( (_buf), asctime( (_tm) ) ), \
           (_buf) )
+#endif  /* asctime_r */
 
+#if !defined(ctime_r)
 #define ctime_r( _clock, _buf ) \
         ( strcpy( (_buf), ctime( (_clock) ) ),  \
           (_buf) )
+#endif  /* ctime_r */
 
 /*
  * gmtime(tm) and localtime(tm) return 0 if tm represents
  * a time prior to 1/1/1970.
  */
+#if !defined(gmtime_r)
 #define gmtime_r( _clock, _result ) \
         ( gmtime( (_clock) ) \
              ? (*(_result) = *gmtime( (_clock) ), (_result) ) \
              : (0) )
+#endif  /* gmtime_r */
 
+#if !defined(localtime_r)
 #define localtime_r( _clock, _result ) \
         ( localtime( (_clock) ) \
              ? (*(_result) = *localtime( (_clock) ), (_result) ) \
              : (0) )
+#endif  /* localtime_r */
 
+#if !defined(rand_r)
 #define rand_r( _seed ) \
         ( _seed == _seed? rand() : rand() )
+#endif  /* rand_r */
 
 
 /*
