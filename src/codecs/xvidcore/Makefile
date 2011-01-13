@@ -1,6 +1,7 @@
-CFLAGS+= -I.
+### FILES and DIRECTORIES ###
 
-SRCS_C=decoder.c \
+SRCS_C=\
+    decoder.c \
 		encoder.c \
 		xvid.c \
 		bitstream/bitstream.c \
@@ -79,6 +80,41 @@ SRCS_YASM=bitstream/x86_asm/cbp_mmx.asm \
 		utils/x86_asm/cpuid.asm \
 		plugins/x86_asm/plugin_ssim-a.asm
 
+ifeq ($(64BIT),yes)
+    OBJ_DIR=../../../obj/MinGW64/xvidcore/
+    TARGET_LIB_DIR=../../../bin/
+else
+    OBJ_DIR=../../../obj/MinGW32/xvidcore/
+    TARGET_LIB_DIR=../../../bin/
+endif
+
+OBJ_DIRS=\
+    $(OBJ_DIR) \
+    $(OBJ_DIR)/bitstream \
+    $(OBJ_DIR)/bitstream/x86_asm \
+    $(OBJ_DIR)/dct \
+    $(OBJ_DIR)/dct/x86_asm \
+    $(OBJ_DIR)/image \
+    $(OBJ_DIR)/image/x86_asm \
+    $(OBJ_DIR)/motion \
+    $(OBJ_DIR)/motion/x86_asm \
+    $(OBJ_DIR)/plugins \
+    $(OBJ_DIR)/plugins/x86_asm \
+    $(OBJ_DIR)/prediction \
+    $(OBJ_DIR)/quant \
+    $(OBJ_DIR)/quant/x86_asm \
+    $(OBJ_DIR)/utils \
+    $(OBJ_DIR)/utils/x86_asm
+
+TARGET_LIB=$(TARGET_LIB_DIR)xvidcore.dll
+
+DEF=xvid.def
+
+
+### SETTINGS ###
+
+CFLAGS+= -I.
+
 ifneq ($(64BIT),yes)
 	CFLAGS+=-DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS
 	YASMFLAGS+=-DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS
@@ -87,15 +123,23 @@ else
 	YASMFLAGS+=-DARCH_IS_X86_64 -DARCH_IS_64BIT
 endif
 
-SLIB=../../../bin/xvidcore.dll
-DEF=xvid.def
+
+### INCLUDES ###
 
 include ../../makefile_c.inc
 
-.all: $(SLIB)
 
+### TARGETS ###
+
+.all: outdirs $(TARGET_LIB)
+
+.PHONY: outdirs $(OBJ_DIRS)
+outdirs: $(OBJ_DIRS)
+$(OBJ_DIRS):
+	$(shell test -d $(@) || mkdir -p $(@))
+
+
+.PHONY: clean
 clean:
-	rm -f *.o bitstream/*.o bitstream/x86_asm/*.o dct/*.o dct/x86_asm/*.o \
-		image/*.o image/x86_asm/*.o motion/*.o motion/x86_asm/*.o plugins/*.o plugins/x86_asm/*.o \
-		prediction/*.o quant/*.o quant/x86_asm/*.o utils/*.o utils/x86_asm/*.o \
-		*.d bitstream/*.d dct/*.d image/*.d motion/*.d plugins/*.d prediction/*.d quant/*.d utils/*.d *~ $(SLIB) 
+	rm -f $(TARGET_LIB)
+	rm -r -f $(OBJ_DIR)

@@ -1,85 +1,105 @@
-LAVC_DIR=libavcodec
-LAVU_DIR=libavutil
-LAVCORE_DIR=libavcore
-ZLIB_DIR=../zlib
+### FILES and DIRECTORIES ###
+
+SRCS_C=\
+    DllEntry.c \
+    libavcodec/allcodecs.c \
+    libavcodec/avpacket.c \
+    libavcodec/bitstream.c \
+    libavcodec/cabac.c \
+    libavcodec/dsputil.c \
+    libavcodec/error_resilience.c \
+    libavcodec/golomb.c \
+    libavcodec/h264.c \
+    libavcodec/h264_cabac.c \
+    libavcodec/h264_cavlc.c \
+    libavcodec/h264_direct.c \
+    libavcodec/h264_loopfilter.c \
+    libavcodec/h264_parser.c \
+    libavcodec/h264_ps.c \
+    libavcodec/h264_refs.c \
+    libavcodec/h264_sei.c \
+    libavcodec/h264dsp.c \
+    libavcodec/h264idct.c \
+    libavcodec/h264pred.c \
+    libavcodec/imgconvert.c \
+    libavcodec/jrevdct.c \
+    libavcodec/mpegvideo.c \
+    libavcodec/options.c \
+    libavcodec/parser.c \
+    libavcodec/pthread.c \
+    libavcodec/simple_idct.c \
+    libavcodec/utils.c \
+    libavcodec/vp3.c \
+    libavcodec/vp3dsp.c \
+    libavcodec/xiph.c \
+    \
+    libavcodec/x86/dsputil_mmx.c \
+    libavcodec/x86/fdct_mmx.c \
+    libavcodec/x86/h264_intrapred_init.c \
+    libavcodec/x86/h264dsp_mmx.c \
+    libavcodec/x86/idct_mmx.c \
+    libavcodec/x86/idct_mmx_xvid.c \
+    libavcodec/x86/idct_sse2_xvid.c \
+    libavcodec/x86/mpegvideo_mmx.c \
+    libavcodec/x86/simple_idct_mmx.c \
+    \
+    libavutil/cpu.c \
+    libavutil/intfloat_readwrite.c \
+    libavutil/inverse.c \
+    libavutil/log.c \
+    libavutil/mathematics.c \
+    libavutil/mem.c \
+    libavutil/pixdesc.c \
+    libavutil/rational.c \
+    \
+    libavutil/x86/cpu.c \
+    \
+    libavcore/imgutils.c \
+    libavcore/samplefmt.c \
+    libavcore/utils.c
+
+
+SRCS_YASM=\
+    libavcodec/x86/dsputil_yasm.asm \
+    libavcodec/x86/h264_chromamc.asm \
+    libavcodec/x86/h264_deblock.asm \
+    libavcodec/x86/h264_idct.asm \
+    libavcodec/x86/h264_intrapred.asm \
+    libavcodec/x86/h264_weight.asm \
+    libavcodec/x86/vp3dsp.asm \
+    libavcodec/x86/x86util.asm
+
+ifeq ($(64BIT),yes)
+    OBJ_DIR=../../obj/MinGW64/ffmpegmt/
+    TARGET_LIB_DIR=../../bin/
+else
+    OBJ_DIR=../../obj/MinGW32/ffmpegmt/
+    TARGET_LIB_DIR=../../bin/
+endif
+
+OBJ_DIRS=\
+    $(OBJ_DIR) \
+    $(OBJ_DIR)libavcodec \
+    $(OBJ_DIR)libavcodec/x86 \
+    $(OBJ_DIR)libavcore \
+    $(OBJ_DIR)libavutil \
+    $(OBJ_DIR)libavutil/x86
+
+TARGET_LIB=$(TARGET_LIB_DIR)ffmpegmt.dll
+
+DEF=ffmpegmt.def
+
+
+### SETTINGS ###
 
 CFLAGS+=\
-    -I. -I$(LAVC_DIR) -I$(LAVU_DIR) -I$(LAVCORE_DIR) -I../pthreads -I../imgFilters -I$(ZLIB_DIR) \
+    -I. -Ilibavcodec -Ilibavutil -Ilibavcore -I../pthreads -I../imgFilters \
     -DHAVE_AV_CONFIG_H -D_ISOC99_SOURCE -std=gnu99
 
 #CFLAGS+= -save-temps
 #CFLAGS+= -fverbose-asm
 
 YASMFLAGS+= -Pconfig.asm
-
-SRCS_C=\
-    DllEntry.c \
-    $(LAVC_DIR)/allcodecs.c \
-    $(LAVC_DIR)/avpacket.c \
-    $(LAVC_DIR)/bitstream.c \
-    $(LAVC_DIR)/cabac.c \
-    $(LAVC_DIR)/dsputil.c \
-    $(LAVC_DIR)/error_resilience.c \
-    $(LAVC_DIR)/golomb.c \
-    $(LAVC_DIR)/h264.c \
-    $(LAVC_DIR)/h264_cabac.c \
-    $(LAVC_DIR)/h264_cavlc.c \
-    $(LAVC_DIR)/h264_direct.c \
-    $(LAVC_DIR)/h264_loopfilter.c \
-    $(LAVC_DIR)/h264_parser.c \
-    $(LAVC_DIR)/h264_ps.c \
-    $(LAVC_DIR)/h264_refs.c \
-    $(LAVC_DIR)/h264_sei.c \
-    $(LAVC_DIR)/h264dsp.c \
-    $(LAVC_DIR)/h264idct.c \
-    $(LAVC_DIR)/h264pred.c \
-    $(LAVC_DIR)/imgconvert.c \
-    $(LAVC_DIR)/jrevdct.c \
-    $(LAVC_DIR)/mpegvideo.c \
-    $(LAVC_DIR)/options.c \
-    $(LAVC_DIR)/parser.c \
-    $(LAVC_DIR)/pthread.c \
-    $(LAVC_DIR)/simple_idct.c \
-    $(LAVC_DIR)/utils.c \
-    $(LAVC_DIR)/vp3.c \
-    $(LAVC_DIR)/vp3dsp.c \
-    $(LAVC_DIR)/xiph.c \
-    \
-    $(LAVC_DIR)/x86/dsputil_mmx.c \
-    $(LAVC_DIR)/x86/fdct_mmx.c \
-    $(LAVC_DIR)/x86/h264_intrapred_init.c \
-    $(LAVC_DIR)/x86/h264dsp_mmx.c \
-    $(LAVC_DIR)/x86/idct_mmx.c \
-    $(LAVC_DIR)/x86/idct_mmx_xvid.c \
-    $(LAVC_DIR)/x86/idct_sse2_xvid.c \
-    $(LAVC_DIR)/x86/mpegvideo_mmx.c \
-    $(LAVC_DIR)/x86/simple_idct_mmx.c \
-    \
-    $(LAVU_DIR)/cpu.c \
-    $(LAVU_DIR)/intfloat_readwrite.c \
-    $(LAVU_DIR)/inverse.c \
-    $(LAVU_DIR)/log.c \
-    $(LAVU_DIR)/mathematics.c \
-    $(LAVU_DIR)/mem.c \
-    $(LAVU_DIR)/pixdesc.c \
-    $(LAVU_DIR)/rational.c \
-    \
-    $(LAVU_DIR)/x86/cpu.c \
-    \
-    $(LAVCORE_DIR)/imgutils.c \
-    $(LAVCORE_DIR)/samplefmt.c \
-    $(LAVCORE_DIR)/utils.c
-
-
-SRCS_YASM=\
-    $(LAVC_DIR)/x86/dsputil_yasm.asm \
-    $(LAVC_DIR)/x86/h264_chromamc.asm \
-    $(LAVC_DIR)/x86/h264_deblock.asm \
-    $(LAVC_DIR)/x86/h264_idct.asm \
-    $(LAVC_DIR)/x86/h264_intrapred.asm \
-    $(LAVC_DIR)/x86/h264_weight.asm \
-    $(LAVC_DIR)/x86/vp3dsp.asm \
-    $(LAVC_DIR)/x86/x86util.asm
 
 ifeq ($(64BIT),yes)
     CFLAGS+=-DARCH_X86_64
@@ -89,14 +109,23 @@ else
     GCCLIBS=../../bin/lib_x86/libpthreadGC2.a -lws2_32
 endif
 
-SLIB=../../bin/ffmpegmt.dll
-DEF=ffmpegmt.def
+
+### INCLUDES ###
 
 include ../makefile_c.inc
 
-.all: $(SLIB)
 
+### TARGETS ###
+
+.all: outdirs $(TARGET_LIB)
+
+.PHONY: outdirs $(OBJ_DIRS)
+outdirs: $(OBJ_DIRS)
+$(OBJ_DIRS):
+	$(shell test -d $(@) || mkdir -p $(@))
+
+
+.PHONY: clean
 clean:
-	rm -f *.o *.d $(LAVC_DIR)/*.o $(LAVC_DIR)/*.d $(LAVC_DIR)/x86/*.o $(LAVC_DIR)/x86/*.d \
-	$(LAVCORE_DIR)/*.o $(LAVCORE_DIR)/*.d $(LAVU_DIR)/*.o $(LAVU_DIR)/*.d \
-	$(LAVU_DIR)/x86/*.o $(LAVU_DIR)/x86/*.d $(ZLIB_DIR)/*.o $(ZLIB_DIR)/*.d $(SLIB)
+	rm -f $(TARGET_LIB)
+	rm -r -f $(OBJ_DIR)

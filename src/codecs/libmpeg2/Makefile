@@ -1,9 +1,7 @@
-CFLAGS+= -I. -Iinclude
-FORCECPP=1
+### FILES and DIRECTORIES ###
 
-#CFLAGS+=-fverbose-asm -save-temps
-
-SRCS_C=libmpeg2/alloc.c \
+SRCS_C=\
+    libmpeg2/alloc.c \
 		libmpeg2/decode.c \
 		libmpeg2/header.c \
 		libmpeg2/idct.c \
@@ -16,15 +14,50 @@ SRCS_C=libmpeg2/alloc.c \
 		libmpeg2/cpu_accel.c \
 		version.c
 
-SLIB=../../../bin/libmpeg2_ff.dll
+ifeq ($(64BIT),yes)
+    OBJ_DIR=../../../obj/MinGW64/libmpeg2/
+    TARGET_LIB_DIR=../../../bin/
+else
+    OBJ_DIR=../../../obj/MinGW32/libmpeg2/
+    TARGET_LIB_DIR=../../../bin/
+endif
+
+OBJ_DIRS=\
+    $(OBJ_DIR) \
+    $(OBJ_DIR)/libmpeg2
+
+TARGET_LIB=$(TARGET_LIB_DIR)libmpeg2_ff.dll
+
 DEF=libmpeg2_ff.def
+
+
+### SETTINGS ###
+
+CFLAGS+= -I. -Iinclude
+FORCECPP=1
+
+#CFLAGS+=-fverbose-asm -save-temps
 
 # enable SSE because compilation fails without it
 OPTFLAGS+=-msse -mfpmath=sse
 
+
+### INCLUDES ###
+
 include ../../makefile_c.inc
 
-.all: $(SLIB)
 
+### TARGETS ###
+
+.all: outdirs $(TARGET_LIB)
+
+.PHONY: outdirs $(OBJ_DIRS)
+outdirs: $(OBJ_DIRS)
+$(OBJ_DIRS):
+	$(shell test -d $(@) || mkdir -p $(@))
+
+
+.PHONY: clean
 clean:
-	rm -f *.o libmpeg2/*.o *~ $(SLIB) *.d libmpeg2/*.d
+	rm -f $(TARGET_LIB)
+	rm -r -f $(OBJ_DIR)

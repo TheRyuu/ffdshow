@@ -1,319 +1,339 @@
-LAVC_DIR=libavcodec
-LAVU_DIR=libavutil
-LAVCORE_DIR=libavcore
-LAVFILTER_DIR=libavfilter
-LAVS_DIR=libswscale
-LAVP_DIR=libpostproc
-ZLIB_DIR=../zlib
-
-CFLAGS+=\
-    -I. -I$(LAVC_DIR) -I$(LAVU_DIR) -I$(LAVCORE_DIR) -I../imgFilters -I$(ZLIB_DIR) \
-    -DHAVE_AV_CONFIG_H -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -std=gnu99
-
-#CFLAGS+= -save-temps
-#CFLAGS+= -fverbose-asm
-
-YASMFLAGS+= -Pconfig.asm
+### FILES and DIRECTORIES ###
 
 SRCS_C=\
     DllEntry.c \
-    $(LAVC_DIR)/8bps.c \
-    $(LAVC_DIR)/aac_ac3_parser.c \
-    $(LAVC_DIR)/aacadtsdec.c \
-    $(LAVC_DIR)/aacdec.c \
-    $(LAVC_DIR)/aacps.c \
-    $(LAVC_DIR)/aacsbr.c \
-    $(LAVC_DIR)/aactab.c \
-    $(LAVC_DIR)/aandcttab.c \
-    $(LAVC_DIR)/aasc.c \
-    $(LAVC_DIR)/ac3.c \
-    $(LAVC_DIR)/ac3_parser.c \
-    $(LAVC_DIR)/ac3dec.c \
-    $(LAVC_DIR)/ac3dec_data.c \
-    $(LAVC_DIR)/ac3enc.c \
-    $(LAVC_DIR)/ac3enc_fixed.c \
-    $(LAVC_DIR)/ac3tab.c \
-    $(LAVC_DIR)/adpcm.c \
-    $(LAVC_DIR)/allcodecs.c \
-    $(LAVC_DIR)/asv1.c \
-    $(LAVC_DIR)/atrac.c \
-    $(LAVC_DIR)/atrac3.c \
-    $(LAVC_DIR)/audioconvert.c \
-    $(LAVC_DIR)/avfft.c \
-    $(LAVC_DIR)/avpacket.c \
-    $(LAVC_DIR)/avs.c \
-    $(LAVC_DIR)/bitstream.c \
-    $(LAVC_DIR)/cabac.c \
-    $(LAVC_DIR)/cavs.c \
-    $(LAVC_DIR)/cavsdec.c \
-    $(LAVC_DIR)/cavsdsp.c \
-    $(LAVC_DIR)/celp_filters.c \
-    $(LAVC_DIR)/celp_math.c \
-    $(LAVC_DIR)/cinepak.c \
-    $(LAVC_DIR)/cook.c \
-    $(LAVC_DIR)/cscd.c \
-    $(LAVC_DIR)/cyuv.c \
-    $(LAVC_DIR)/dca.c \
-    $(LAVC_DIR)/dcadsp.c \
-    $(LAVC_DIR)/dca_parser.c \
-    $(LAVC_DIR)/dct.c \
-    $(LAVC_DIR)/dsputil.c \
-    $(LAVC_DIR)/dv.c \
-    $(LAVC_DIR)/eac3dec.c \
-    $(LAVC_DIR)/eac3dec_data.c \
-    $(LAVC_DIR)/error_resilience.c \
-    $(LAVC_DIR)/faandct.c \
-    $(LAVC_DIR)/faanidct.c \
-    $(LAVC_DIR)/ffmpegContext.c \
-    $(LAVC_DIR)/fft.c \
-    $(LAVC_DIR)/ffv1.c \
-    $(LAVC_DIR)/flac.c \
-    $(LAVC_DIR)/flacdata.c \
-    $(LAVC_DIR)/flacdec.c \
-    $(LAVC_DIR)/flvdec.c \
-    $(LAVC_DIR)/fraps.c \
-    $(LAVC_DIR)/g726.c \
-    $(LAVC_DIR)/golomb.c \
-    $(LAVC_DIR)/gsmdec.c \
-    $(LAVC_DIR)/gsmdec_data.c \
-    $(LAVC_DIR)/h261.c \
-    $(LAVC_DIR)/h261dec.c \
-    $(LAVC_DIR)/h263.c \
-    $(LAVC_DIR)/h263_parser.c \
-    $(LAVC_DIR)/h263dec.c \
-    $(LAVC_DIR)/h264.c \
-    $(LAVC_DIR)/h264_cabac.c \
-    $(LAVC_DIR)/h264_cavlc.c \
-    $(LAVC_DIR)/h264_direct.c \
-    $(LAVC_DIR)/h264_loopfilter.c \
-    $(LAVC_DIR)/h264_parser.c \
-    $(LAVC_DIR)/h264_ps.c \
-    $(LAVC_DIR)/h264_refs.c \
-    $(LAVC_DIR)/h264_sei.c \
-    $(LAVC_DIR)/h264dsp.c \
-    $(LAVC_DIR)/h264idct.c \
-    $(LAVC_DIR)/h264pred.c \
-    $(LAVC_DIR)/huffman.c \
-    $(LAVC_DIR)/huffyuv.c \
-    $(LAVC_DIR)/imc.c \
-    $(LAVC_DIR)/imgconvert.c \
-    $(LAVC_DIR)/indeo2.c \
-    $(LAVC_DIR)/indeo3.c \
-    $(LAVC_DIR)/indeo5.c \
-    $(LAVC_DIR)/intelh263dec.c \
-    $(LAVC_DIR)/intrax8.c \
-    $(LAVC_DIR)/intrax8dsp.c \
-    $(LAVC_DIR)/ituh263dec.c \
-    $(LAVC_DIR)/ivi_common.c \
-    $(LAVC_DIR)/ivi_dsp.c \
-    $(LAVC_DIR)/jfdctfst.c \
-    $(LAVC_DIR)/jfdctint.c \
-    $(LAVC_DIR)/jpegls.c \
-    $(LAVC_DIR)/jpeglsdec.c \
-    $(LAVC_DIR)/jrevdct.c \
-    $(LAVC_DIR)/lcldec.c \
-    $(LAVC_DIR)/libamr.c \
-    $(LAVC_DIR)/ljpegenc.c \
-    $(LAVC_DIR)/loco.c \
-    $(LAVC_DIR)/mace.c \
-    $(LAVC_DIR)/mdct.c \
-    $(LAVC_DIR)/mjpeg.c \
-    $(LAVC_DIR)/mjpeg_parser.c \
-    $(LAVC_DIR)/mjpegdec.c \
-    $(LAVC_DIR)/mjpegenc.c \
-    $(LAVC_DIR)/mlp.c \
-    $(LAVC_DIR)/mlp_parser.c \
-    $(LAVC_DIR)/mlpdec.c \
-    $(LAVC_DIR)/mlpdsp.c \
-    $(LAVC_DIR)/motion_est.c \
-    $(LAVC_DIR)/mpeg12.c \
-    $(LAVC_DIR)/mpeg12data.c \
-    $(LAVC_DIR)/mpeg4audio.c \
-    $(LAVC_DIR)/mpeg4video.c \
-    $(LAVC_DIR)/mpeg4video_parser.c \
-    $(LAVC_DIR)/mpeg4videodec.c \
-    $(LAVC_DIR)/mpegaudio.c \
-    $(LAVC_DIR)/mpegaudiodata.c \
-    $(LAVC_DIR)/mpegaudiodec.c \
-    $(LAVC_DIR)/mpegaudiodec_float.c \
-    $(LAVC_DIR)/mpegaudiodecheader.c \
-    $(LAVC_DIR)/mpegaudio_parser.c \
-    $(LAVC_DIR)/mpegvideo.c \
-    $(LAVC_DIR)/mpegvideo_enc.c \
-    $(LAVC_DIR)/msgsmdec.c \
-    $(LAVC_DIR)/msmpeg4.c \
-    $(LAVC_DIR)/msmpeg4data.c \
-    $(LAVC_DIR)/msrle.c \
-    $(LAVC_DIR)/msrledec.c \
-    $(LAVC_DIR)/msvideo1.c \
-    $(LAVC_DIR)/nellymoser.c \
-    $(LAVC_DIR)/nellymoserdec.c \
-    $(LAVC_DIR)/options.c \
-    $(LAVC_DIR)/parser.c \
-    $(LAVC_DIR)/pcm.c \
-    $(LAVC_DIR)/png.c \
-    $(LAVC_DIR)/pngdec.c \
-    $(LAVC_DIR)/pngenc.c \
-    $(LAVC_DIR)/qdm2.c \
-    $(LAVC_DIR)/qpeg.c \
-    $(LAVC_DIR)/qtrle.c \
-    $(LAVC_DIR)/ra144.c \
-    $(LAVC_DIR)/ra144dec.c \
-    $(LAVC_DIR)/ra288.c \
-    $(LAVC_DIR)/rangecoder.c \
-    $(LAVC_DIR)/ratecontrol.c \
-    $(LAVC_DIR)/rdft.c \
-    $(LAVC_DIR)/rpza.c \
-    $(LAVC_DIR)/rtjpeg.c \
-    $(LAVC_DIR)/rv10.c \
-    $(LAVC_DIR)/rv30.c \
-    $(LAVC_DIR)/rv30dsp.c \
-    $(LAVC_DIR)/rv34.c \
-    $(LAVC_DIR)/rv40.c \
-    $(LAVC_DIR)/rv40dsp.c \
-    $(LAVC_DIR)/simple_idct.c \
-    $(LAVC_DIR)/sp5xdec.c \
-    $(LAVC_DIR)/svq1.c \
-    $(LAVC_DIR)/svq1dec.c \
-    $(LAVC_DIR)/svq3.c \
-    $(LAVC_DIR)/synth_filter.c \
-    $(LAVC_DIR)/truemotion1.c \
-    $(LAVC_DIR)/truemotion2.c \
-    $(LAVC_DIR)/truespeech.c \
-    $(LAVC_DIR)/tscc.c \
-    $(LAVC_DIR)/tta.c \
-    $(LAVC_DIR)/ulti.c \
-    $(LAVC_DIR)/utils.c \
-    $(LAVC_DIR)/vc1.c \
-    $(LAVC_DIR)/vc1data.c \
-    $(LAVC_DIR)/vc1dec.c \
-    $(LAVC_DIR)/vc1dsp.c \
-    $(LAVC_DIR)/vcr1.c \
-    $(LAVC_DIR)/vorbis.c \
-    $(LAVC_DIR)/vorbis_data.c \
-    $(LAVC_DIR)/vorbis_dec.c \
-    $(LAVC_DIR)/vp3.c \
-    $(LAVC_DIR)/vp3dsp.c \
-    $(LAVC_DIR)/vp5.c \
-    $(LAVC_DIR)/vp56.c \
-    $(LAVC_DIR)/vp56data.c \
-    $(LAVC_DIR)/vp56dsp.c \
-    $(LAVC_DIR)/vp56rac.c \
-    $(LAVC_DIR)/vp6.c \
-    $(LAVC_DIR)/vp6dsp.c \
-    $(LAVC_DIR)/vp8.c \
-    $(LAVC_DIR)/vp8dsp.c \
-    $(LAVC_DIR)/w32thread.c \
-    $(LAVC_DIR)/wavpack.c \
-    $(LAVC_DIR)/wma.c \
-    $(LAVC_DIR)/wmadec.c \
-    $(LAVC_DIR)/wmv2.c \
-    $(LAVC_DIR)/wmv2dec.c \
-    $(LAVC_DIR)/wnv1.c \
-    $(LAVC_DIR)/xiph.c \
-    $(LAVC_DIR)/xl.c \
-    $(LAVC_DIR)/zmbv.c \
-    $(LAVC_DIR)/amr_float/interf_dec.c \
-    $(LAVC_DIR)/amr_float/sp_dec.c \
+    libavcodec/8bps.c \
+    libavcodec/aac_ac3_parser.c \
+    libavcodec/aacadtsdec.c \
+    libavcodec/aacdec.c \
+    libavcodec/aacps.c \
+    libavcodec/aacsbr.c \
+    libavcodec/aactab.c \
+    libavcodec/aandcttab.c \
+    libavcodec/aasc.c \
+    libavcodec/ac3.c \
+    libavcodec/ac3_parser.c \
+    libavcodec/ac3dec.c \
+    libavcodec/ac3dec_data.c \
+    libavcodec/ac3enc.c \
+    libavcodec/ac3enc_fixed.c \
+    libavcodec/ac3tab.c \
+    libavcodec/adpcm.c \
+    libavcodec/allcodecs.c \
+    libavcodec/asv1.c \
+    libavcodec/atrac.c \
+    libavcodec/atrac3.c \
+    libavcodec/audioconvert.c \
+    libavcodec/avfft.c \
+    libavcodec/avpacket.c \
+    libavcodec/avs.c \
+    libavcodec/bitstream.c \
+    libavcodec/cabac.c \
+    libavcodec/cavs.c \
+    libavcodec/cavsdec.c \
+    libavcodec/cavsdsp.c \
+    libavcodec/celp_filters.c \
+    libavcodec/celp_math.c \
+    libavcodec/cinepak.c \
+    libavcodec/cook.c \
+    libavcodec/cscd.c \
+    libavcodec/cyuv.c \
+    libavcodec/dca.c \
+    libavcodec/dcadsp.c \
+    libavcodec/dca_parser.c \
+    libavcodec/dct.c \
+    libavcodec/dsputil.c \
+    libavcodec/dv.c \
+    libavcodec/eac3dec.c \
+    libavcodec/eac3dec_data.c \
+    libavcodec/error_resilience.c \
+    libavcodec/faandct.c \
+    libavcodec/faanidct.c \
+    libavcodec/ffmpegContext.c \
+    libavcodec/fft.c \
+    libavcodec/ffv1.c \
+    libavcodec/flac.c \
+    libavcodec/flacdata.c \
+    libavcodec/flacdec.c \
+    libavcodec/flvdec.c \
+    libavcodec/fraps.c \
+    libavcodec/g726.c \
+    libavcodec/golomb.c \
+    libavcodec/gsmdec.c \
+    libavcodec/gsmdec_data.c \
+    libavcodec/h261.c \
+    libavcodec/h261dec.c \
+    libavcodec/h263.c \
+    libavcodec/h263_parser.c \
+    libavcodec/h263dec.c \
+    libavcodec/h264.c \
+    libavcodec/h264_cabac.c \
+    libavcodec/h264_cavlc.c \
+    libavcodec/h264_direct.c \
+    libavcodec/h264_loopfilter.c \
+    libavcodec/h264_parser.c \
+    libavcodec/h264_ps.c \
+    libavcodec/h264_refs.c \
+    libavcodec/h264_sei.c \
+    libavcodec/h264dsp.c \
+    libavcodec/h264idct.c \
+    libavcodec/h264pred.c \
+    libavcodec/huffman.c \
+    libavcodec/huffyuv.c \
+    libavcodec/imc.c \
+    libavcodec/imgconvert.c \
+    libavcodec/indeo2.c \
+    libavcodec/indeo3.c \
+    libavcodec/indeo5.c \
+    libavcodec/intelh263dec.c \
+    libavcodec/intrax8.c \
+    libavcodec/intrax8dsp.c \
+    libavcodec/ituh263dec.c \
+    libavcodec/ivi_common.c \
+    libavcodec/ivi_dsp.c \
+    libavcodec/jfdctfst.c \
+    libavcodec/jfdctint.c \
+    libavcodec/jpegls.c \
+    libavcodec/jpeglsdec.c \
+    libavcodec/jrevdct.c \
+    libavcodec/lcldec.c \
+    libavcodec/libamr.c \
+    libavcodec/ljpegenc.c \
+    libavcodec/loco.c \
+    libavcodec/mace.c \
+    libavcodec/mdct.c \
+    libavcodec/mjpeg.c \
+    libavcodec/mjpeg_parser.c \
+    libavcodec/mjpegdec.c \
+    libavcodec/mjpegenc.c \
+    libavcodec/mlp.c \
+    libavcodec/mlp_parser.c \
+    libavcodec/mlpdec.c \
+    libavcodec/mlpdsp.c \
+    libavcodec/motion_est.c \
+    libavcodec/mpeg12.c \
+    libavcodec/mpeg12data.c \
+    libavcodec/mpeg4audio.c \
+    libavcodec/mpeg4video.c \
+    libavcodec/mpeg4video_parser.c \
+    libavcodec/mpeg4videodec.c \
+    libavcodec/mpegaudio.c \
+    libavcodec/mpegaudiodata.c \
+    libavcodec/mpegaudiodec.c \
+    libavcodec/mpegaudiodec_float.c \
+    libavcodec/mpegaudiodecheader.c \
+    libavcodec/mpegaudio_parser.c \
+    libavcodec/mpegvideo.c \
+    libavcodec/mpegvideo_enc.c \
+    libavcodec/msgsmdec.c \
+    libavcodec/msmpeg4.c \
+    libavcodec/msmpeg4data.c \
+    libavcodec/msrle.c \
+    libavcodec/msrledec.c \
+    libavcodec/msvideo1.c \
+    libavcodec/nellymoser.c \
+    libavcodec/nellymoserdec.c \
+    libavcodec/options.c \
+    libavcodec/parser.c \
+    libavcodec/pcm.c \
+    libavcodec/png.c \
+    libavcodec/pngdec.c \
+    libavcodec/pngenc.c \
+    libavcodec/qdm2.c \
+    libavcodec/qpeg.c \
+    libavcodec/qtrle.c \
+    libavcodec/ra144.c \
+    libavcodec/ra144dec.c \
+    libavcodec/ra288.c \
+    libavcodec/rangecoder.c \
+    libavcodec/ratecontrol.c \
+    libavcodec/rdft.c \
+    libavcodec/rpza.c \
+    libavcodec/rtjpeg.c \
+    libavcodec/rv10.c \
+    libavcodec/rv30.c \
+    libavcodec/rv30dsp.c \
+    libavcodec/rv34.c \
+    libavcodec/rv40.c \
+    libavcodec/rv40dsp.c \
+    libavcodec/simple_idct.c \
+    libavcodec/sp5xdec.c \
+    libavcodec/svq1.c \
+    libavcodec/svq1dec.c \
+    libavcodec/svq3.c \
+    libavcodec/synth_filter.c \
+    libavcodec/truemotion1.c \
+    libavcodec/truemotion2.c \
+    libavcodec/truespeech.c \
+    libavcodec/tscc.c \
+    libavcodec/tta.c \
+    libavcodec/ulti.c \
+    libavcodec/utils.c \
+    libavcodec/vc1.c \
+    libavcodec/vc1data.c \
+    libavcodec/vc1dec.c \
+    libavcodec/vc1dsp.c \
+    libavcodec/vcr1.c \
+    libavcodec/vorbis.c \
+    libavcodec/vorbis_data.c \
+    libavcodec/vorbis_dec.c \
+    libavcodec/vp3.c \
+    libavcodec/vp3dsp.c \
+    libavcodec/vp5.c \
+    libavcodec/vp56.c \
+    libavcodec/vp56data.c \
+    libavcodec/vp56dsp.c \
+    libavcodec/vp56rac.c \
+    libavcodec/vp6.c \
+    libavcodec/vp6dsp.c \
+    libavcodec/vp8.c \
+    libavcodec/vp8dsp.c \
+    libavcodec/w32thread.c \
+    libavcodec/wavpack.c \
+    libavcodec/wma.c \
+    libavcodec/wmadec.c \
+    libavcodec/wmv2.c \
+    libavcodec/wmv2dec.c \
+    libavcodec/wnv1.c \
+    libavcodec/xiph.c \
+    libavcodec/xl.c \
+    libavcodec/zmbv.c \
+    libavcodec/amr_float/interf_dec.c \
+    libavcodec/amr_float/sp_dec.c \
     \
-    $(LAVC_DIR)/x86/cavsdsp_mmx.c \
-    $(LAVC_DIR)/x86/dct32_sse.c \
-    $(LAVC_DIR)/x86/dsputil_mmx.c \
-    $(LAVC_DIR)/x86/dsputilenc_mmx.c \
-    $(LAVC_DIR)/x86/fdct_mmx.c \
-    $(LAVC_DIR)/x86/fft.c \
-    $(LAVC_DIR)/x86/fft_3dn.c \
-    $(LAVC_DIR)/x86/fft_3dn2.c \
-    $(LAVC_DIR)/x86/fft_sse.c \
-    $(LAVC_DIR)/x86/h264_intrapred_init.c \
-    $(LAVC_DIR)/x86/h264dsp_mmx.c \
-    $(LAVC_DIR)/x86/idct_mmx.c \
-    $(LAVC_DIR)/x86/idct_mmx_xvid.c \
-    $(LAVC_DIR)/x86/idct_sse2_xvid.c \
-    $(LAVC_DIR)/x86/mlpdsp.c \
-    $(LAVC_DIR)/x86/motion_est_mmx.c \
-    $(LAVC_DIR)/x86/mpegaudiodec_mmx.c \
-    $(LAVC_DIR)/x86/mpegvideo_mmx.c \
-    $(LAVC_DIR)/x86/simple_idct_mmx.c \
-    $(LAVC_DIR)/x86/vc1dsp_mmx.c \
-    $(LAVC_DIR)/x86/vp56dsp_init.c \
-    $(LAVC_DIR)/x86/vp8dsp-init.c \
+    libavcodec/x86/cavsdsp_mmx.c \
+    libavcodec/x86/dct32_sse.c \
+    libavcodec/x86/dsputil_mmx.c \
+    libavcodec/x86/dsputilenc_mmx.c \
+    libavcodec/x86/fdct_mmx.c \
+    libavcodec/x86/fft.c \
+    libavcodec/x86/fft_3dn.c \
+    libavcodec/x86/fft_3dn2.c \
+    libavcodec/x86/fft_sse.c \
+    libavcodec/x86/h264_intrapred_init.c \
+    libavcodec/x86/h264dsp_mmx.c \
+    libavcodec/x86/idct_mmx.c \
+    libavcodec/x86/idct_mmx_xvid.c \
+    libavcodec/x86/idct_sse2_xvid.c \
+    libavcodec/x86/mlpdsp.c \
+    libavcodec/x86/motion_est_mmx.c \
+    libavcodec/x86/mpegaudiodec_mmx.c \
+    libavcodec/x86/mpegvideo_mmx.c \
+    libavcodec/x86/simple_idct_mmx.c \
+    libavcodec/x86/vc1dsp_mmx.c \
+    libavcodec/x86/vp56dsp_init.c \
+    libavcodec/x86/vp8dsp-init.c \
     \
-    $(LAVU_DIR)/avstring.c \
-    $(LAVU_DIR)/cpu.c \
-    $(LAVU_DIR)/crc.c \
-    $(LAVU_DIR)/eval.c \
-    $(LAVU_DIR)/intfloat_readwrite.c \
-    $(LAVU_DIR)/inverse.c \
-    $(LAVU_DIR)/lfg.c \
-    $(LAVU_DIR)/lls.c \
-    $(LAVU_DIR)/log.c \
-    $(LAVU_DIR)/lzo.c \
-    $(LAVU_DIR)/mathematics.c \
-    $(LAVU_DIR)/md5.c \
-    $(LAVU_DIR)/mem.c \
-    $(LAVU_DIR)/pixdesc.c \
-    $(LAVU_DIR)/random_seed.c \
-    $(LAVU_DIR)/rational.c \
+    libavutil/avstring.c \
+    libavutil/cpu.c \
+    libavutil/crc.c \
+    libavutil/eval.c \
+    libavutil/intfloat_readwrite.c \
+    libavutil/inverse.c \
+    libavutil/lfg.c \
+    libavutil/lls.c \
+    libavutil/log.c \
+    libavutil/lzo.c \
+    libavutil/mathematics.c \
+    libavutil/md5.c \
+    libavutil/mem.c \
+    libavutil/pixdesc.c \
+    libavutil/random_seed.c \
+    libavutil/rational.c \
     \
-    $(LAVU_DIR)/x86/cpu.c \
+    libavutil/x86/cpu.c \
     \
-    $(LAVCORE_DIR)/audioconvert.c \
-    $(LAVCORE_DIR)/imgutils.c \
-    $(LAVCORE_DIR)/samplefmt.c \
-    $(LAVCORE_DIR)/utils.c \
+    libavcore/audioconvert.c \
+    libavcore/imgutils.c \
+    libavcore/samplefmt.c \
+    libavcore/utils.c \
     \
-    $(LAVFILTER_DIR)/asrc_anullsrc.c \
-    $(LAVFILTER_DIR)/avfilter.c \
-    $(LAVFILTER_DIR)/avfiltergraph.c \
-    $(LAVFILTER_DIR)/defaults.c \
-    $(LAVFILTER_DIR)/formats.c \
-    $(LAVFILTER_DIR)/vf_gradfun.c \
-    $(LAVFILTER_DIR)/vf_yadif.c \
-    $(LAVFILTER_DIR)/yadif_thread.c \
+    libavfilter/asrc_anullsrc.c \
+    libavfilter/avfilter.c \
+    libavfilter/avfiltergraph.c \
+    libavfilter/defaults.c \
+    libavfilter/formats.c \
+    libavfilter/vf_gradfun.c \
+    libavfilter/vf_yadif.c \
+    libavfilter/yadif_thread.c \
     \
-    $(LAVFILTER_DIR)/x86/gradfun.c \
-    $(LAVFILTER_DIR)/x86/yadif.c \
+    libavfilter/x86/gradfun.c \
+    libavfilter/x86/yadif.c \
     \
-    $(LAVS_DIR)/rgb2rgb.c \
-    $(LAVS_DIR)/swscale.c \
-    $(LAVS_DIR)/swutils.c \
-    $(LAVS_DIR)/yuv2rgb.c \
-    $(LAVS_DIR)/sww32thread.c \
-    $(LAVS_DIR)/x86/yuv2rgb_mmx.c \
+    libswscale/rgb2rgb.c \
+    libswscale/swscale.c \
+    libswscale/swutils.c \
+    libswscale/yuv2rgb.c \
+    libswscale/sww32thread.c \
+    libswscale/x86/yuv2rgb_mmx.c \
     \
-    $(LAVP_DIR)/postprocess.c \
+    libpostproc/postprocess.c \
     \
-    $(ZLIB_DIR)/adler32.c \
-    $(ZLIB_DIR)/compress.c \
-    $(ZLIB_DIR)/crc32.c \
-    $(ZLIB_DIR)/deflate.c \
-    $(ZLIB_DIR)/gzclose.c \
-    $(ZLIB_DIR)/gzlib.c \
-    $(ZLIB_DIR)/gzread.c \
-    $(ZLIB_DIR)/gzwrite.c \
-    $(ZLIB_DIR)/infback.c \
-    $(ZLIB_DIR)/inffast.c \
-    $(ZLIB_DIR)/inflate.c \
-    $(ZLIB_DIR)/inftrees.c \
-    $(ZLIB_DIR)/trees.c \
-    $(ZLIB_DIR)/uncompr.c \
-    $(ZLIB_DIR)/zutil.c
+    ../zlib/adler32.c \
+    ../zlib/compress.c \
+    ../zlib/crc32.c \
+    ../zlib/deflate.c \
+    ../zlib/gzclose.c \
+    ../zlib/gzlib.c \
+    ../zlib/gzread.c \
+    ../zlib/gzwrite.c \
+    ../zlib/infback.c \
+    ../zlib/inffast.c \
+    ../zlib/inflate.c \
+    ../zlib/inftrees.c \
+    ../zlib/trees.c \
+    ../zlib/uncompr.c \
+    ../zlib/zutil.c
 
 SRCS_YASM=\
-    $(LAVC_DIR)/x86/dsputil_yasm.asm \
-    $(LAVC_DIR)/x86/dsputilenc_yasm.asm \
-    $(LAVC_DIR)/x86/fft_mmx.asm \
-    $(LAVC_DIR)/x86/h264_chromamc.asm \
-    $(LAVC_DIR)/x86/h264_deblock.asm \
-    $(LAVC_DIR)/x86/h264_idct.asm \
-    $(LAVC_DIR)/x86/h264_intrapred.asm \
-    $(LAVC_DIR)/x86/h264_weight.asm \
-    $(LAVC_DIR)/x86/vc1dsp_yasm.asm \
-    $(LAVC_DIR)/x86/vp3dsp.asm \
-    $(LAVC_DIR)/x86/vp56dsp.asm \
-    $(LAVC_DIR)/x86/vp8dsp.asm \
-    $(LAVC_DIR)/x86/x86util.asm
+    libavcodec/x86/dsputil_yasm.asm \
+    libavcodec/x86/dsputilenc_yasm.asm \
+    libavcodec/x86/fft_mmx.asm \
+    libavcodec/x86/h264_chromamc.asm \
+    libavcodec/x86/h264_deblock.asm \
+    libavcodec/x86/h264_idct.asm \
+    libavcodec/x86/h264_intrapred.asm \
+    libavcodec/x86/h264_weight.asm \
+    libavcodec/x86/vc1dsp_yasm.asm \
+    libavcodec/x86/vp3dsp.asm \
+    libavcodec/x86/vp56dsp.asm \
+    libavcodec/x86/vp8dsp.asm \
+    libavcodec/x86/x86util.asm
+
+
+ifeq ($(64BIT),yes)
+    OBJ_DIR=../../obj/MinGW64/ffmpeg/
+    ZLIB_OBJ_DIR=../../obj/MinGW64/zlib/
+    TARGET_LIB_DIR=../../bin/
+else
+    OBJ_DIR=../../obj/MinGW32/ffmpeg/
+    ZLIB_OBJ_DIR=../../obj/MinGW32/zlib/
+    TARGET_LIB_DIR=../../bin/
+endif
+
+OBJ_DIRS=\
+    $(OBJ_DIR) \
+    $(OBJ_DIR)libavcodec \
+    $(OBJ_DIR)libavcodec/amr_float \
+    $(OBJ_DIR)libavcodec/x86 \
+    $(OBJ_DIR)libavcore \
+    $(OBJ_DIR)libavutil \
+    $(OBJ_DIR)libavutil/x86 \
+    $(OBJ_DIR)libavfilter \
+    $(OBJ_DIR)libavfilter/x86 \
+    $(OBJ_DIR)libswscale \
+    $(OBJ_DIR)libswscale/x86 \
+    $(OBJ_DIR)libpostproc \
+    $(ZLIB_OBJ_DIR)
+
+TARGET_LIB=$(TARGET_LIB_DIR)ffmpeg.dll
+
+DEF=ffmpeg.def
+
+
+### SETTINGS ###
+
+CFLAGS=-I. -Ilibavcodec -Ilibavutil -Ilibavcore -I../imgFilters -I../zlib -DHAVE_AV_CONFIG_H -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -std=gnu99
 
 ifeq ($(64BIT),yes)
     CFLAGS+=-DARCH_X86_64
@@ -321,17 +341,29 @@ else
     CFLAGS+=-DARCH_X86_32
 endif
 
-SLIB=../../bin/ffmpeg.dll
-DEF=ffmpeg.def
+#CFLAGS+=-save-temps
+#CFLAGS+=-fverbose-asm
+
+YASMFLAGS+=-Pconfig.asm
+
+
+### INCLUDES ###
 
 include ../makefile_c.inc
 
-.all: $(SLIB)
 
+### TARGETS ###
+
+.all: outdirs $(TARGET_LIB)
+
+.PHONY: outdirs $(OBJ_DIRS)
+outdirs: $(OBJ_DIRS)
+$(OBJ_DIRS):
+	$(shell test -d $(@) || mkdir -p $(@))
+
+
+.PHONY: clean
 clean:
-	rm -f *.o *.d $(LAVC_DIR)/*.o $(LAVC_DIR)/*.d $(LAVC_DIR)/x86/*.o $(LAVC_DIR)/x86/*.d \
-	$(LAVC_DIR)/amr_float/*.o $(LAVC_DIR)/amr_float/*.d $(LAVU_DIR)/*.o $(LAVU_DIR)/*.d \
-	$(LAVU_DIR)/x86/*.o $(LAVU_DIR)/x86/*.d $(LAVCORE_DIR)/*.o $(LAVCORE_DIR)/*.d \
-	$(LAVFILTER_DIR)/*.o $(LAVFILTER_DIR)/*.d $(LAVFILTER_DIR)/x86/*.o $(LAVFILTER_DIR)/x86/*.d \
-	$(LAVS_DIR)/*.o $(LAVS_DIR)/*.d $(LAVS_DIR)/x86/*.o $(LAVS_DIR)/x86/*.d $(LAVP_DIR)/*.o \
-	$(LAVP_DIR)/*.d $(ZLIB_DIR)/*.o $(ZLIB_DIR)/*.d $(SLIB)
+	rm -f $(TARGET_LIB)
+	rm -r -f $(OBJ_DIR)
+	rm -r -f $(ZLIB_OBJ_DIR)
