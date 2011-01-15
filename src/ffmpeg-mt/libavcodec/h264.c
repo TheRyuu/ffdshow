@@ -37,8 +37,8 @@
 #include "golomb.h"
 #include "mathops.h"
 #include "rectangle.h"
-#include "libavutil/avassert.h"
 #include "thread.h"
+#include "libavutil/avassert.h"
 
 #include "cabac.h"
 
@@ -244,70 +244,6 @@ int ff_h264_decode_rbsp_trailing(H264Context *h, const uint8_t *src){
         v>>=1;
     }
     return 0;
-}
-
-/**
- * IDCT transforms the 16 dc values and dequantizes them.
- * @param qp quantization parameter
- */
-static void h264_luma_dc_dequant_idct_c(DCTELEM *block, int qp, int qmul){
-#define stride 16
-    int i;
-    int temp[16]; //FIXME check if this is a good idea
-    static const int x_offset[4]={0, 1*stride, 4* stride,  5*stride};
-    static const int y_offset[4]={0, 2*stride, 8* stride, 10*stride};
-
-//memset(block, 64, 2*256);
-//return;
-    for(i=0; i<4; i++){
-        const int offset= y_offset[i];
-        const int z0= block[offset+stride*0] + block[offset+stride*4];
-        const int z1= block[offset+stride*0] - block[offset+stride*4];
-        const int z2= block[offset+stride*1] - block[offset+stride*5];
-        const int z3= block[offset+stride*1] + block[offset+stride*5];
-
-        temp[4*i+0]= z0+z3;
-        temp[4*i+1]= z1+z2;
-        temp[4*i+2]= z1-z2;
-        temp[4*i+3]= z0-z3;
-    }
-
-    for(i=0; i<4; i++){
-        const int offset= x_offset[i];
-        const int z0= temp[4*0+i] + temp[4*2+i];
-        const int z1= temp[4*0+i] - temp[4*2+i];
-        const int z2= temp[4*1+i] - temp[4*3+i];
-        const int z3= temp[4*1+i] + temp[4*3+i];
-
-        block[stride*0 +offset]= ((((z0 + z3)*qmul + 128 ) >> 8)); //FIXME think about merging this into decode_residual
-        block[stride*2 +offset]= ((((z1 + z2)*qmul + 128 ) >> 8));
-        block[stride*8 +offset]= ((((z1 - z2)*qmul + 128 ) >> 8));
-        block[stride*10+offset]= ((((z0 - z3)*qmul + 128 ) >> 8));
-    }
-}
-
-#undef xStride
-#undef stride
-
-static void chroma_dc_dequant_idct_c(DCTELEM *block, int qp, int qmul){
-    const int stride= 16*2;
-    const int xStride= 16;
-    int a,b,c,d,e;
-
-    a= block[stride*0 + xStride*0];
-    b= block[stride*0 + xStride*1];
-    c= block[stride*1 + xStride*0];
-    d= block[stride*1 + xStride*1];
-
-    e= a-b;
-    a= a+b;
-    b= c-d;
-    c= c+d;
-
-    block[stride*0 + xStride*0]= ((a+c)*qmul) >> 7;
-    block[stride*0 + xStride*1]= ((e+b)*qmul) >> 7;
-    block[stride*1 + xStride*0]= ((a-c)*qmul) >> 7;
-    block[stride*1 + xStride*1]= ((e-b)*qmul) >> 7;
 }
 
 static inline int get_lowest_part_list_y(H264Context *h, Picture *pic, int n, int height,
@@ -1567,10 +1503,18 @@ static av_always_inline void hl_decode_mb_internal(H264Context *h, int simple){
             }else{
                 h->hpc.pred16x16[ h->intra16x16_pred_mode ](dest_y , linesize);
                 if(is_h264){
-                    if(!transform_bypass)
-                        h264_luma_dc_dequant_idct_c(h->mb, s->qscale, h->dequant4_coeff[0][s->qscale][0]);
+                    if(h->non_zero_count_cache[ scan8[LUMA_DC_BLOCK_INDEX] ]){
+                        if(!transform_bypass)
+                            h->h264dsp.h264_luma_dc_dequant_idct(h->mb, h->mb_luma_dc, h->dequant4_coeff[0][s->qscale][0]);
+                        else{
+                            static const uint8_t dc_mapping[16] = { 0*16, 1*16, 4*16, 5*16, 2*16, 3*16, 6*16, 7*16,
+                                                                    8*16, 9*16,12*16,13*16,10*16,11*16,14*16,15*16};
+                            for(i = 0; i < 16; i++)
+                                h->mb[dc_mapping[i]] = h->mb_luma_dc[i];
+                        }
+                    }
                 }else
-                    ff_svq3_luma_dc_dequant_idct_c(h->mb, s->qscale);
+                    ff_svq3_luma_dc_dequant_idct_c(h->mb, h->mb_luma_dc, s->qscale);
             }
             if(h->deblocking_filter)
                 xchg_mb_border(h, dest_y, dest_cb, dest_cr, linesize, uvlinesize, 0, simple);
@@ -1638,13 +1582,19 @@ static av_always_inline void hl_decode_mb_internal(H264Context *h, int simple){
                     }
                 }
             }else{
-                chroma_dc_dequant_idct_c(h->mb + 16*16, h->chroma_qp[0], h->dequant4_coeff[IS_INTRA(mb_type) ? 1:4][h->chroma_qp[0]][0]);
-                chroma_dc_dequant_idct_c(h->mb + 16*16+4*16, h->chroma_qp[1], h->dequant4_coeff[IS_INTRA(mb_type) ? 2:5][h->chroma_qp[1]][0]);
+                int chroma_qpu = h->dequant4_coeff[IS_INTRA(mb_type) ? 1:4][h->chroma_qp[0]][0];
+                int chroma_qpv = h->dequant4_coeff[IS_INTRA(mb_type) ? 2:5][h->chroma_qp[1]][0];
                 if(is_h264){
+                    if(h->non_zero_count_cache[ scan8[CHROMA_DC_BLOCK_INDEX+0] ])
+                        h->h264dsp.h264_chroma_dc_dequant_idct(h->mb + 16*16+0*16, &h->mb_chroma_dc[0], chroma_qpu );
+                    if(h->non_zero_count_cache[ scan8[CHROMA_DC_BLOCK_INDEX+1] ])
+                        h->h264dsp.h264_chroma_dc_dequant_idct(h->mb + 16*16+4*16, &h->mb_chroma_dc[1], chroma_qpv );
                     h->h264dsp.h264_idct_add8(dest, block_offset,
                                               h->mb, uvlinesize,
                                               h->non_zero_count_cache);
                 }else{
+                    h->h264dsp.h264_chroma_dc_dequant_idct(h->mb + 16*16+0*16, &h->mb_chroma_dc[0], chroma_qpu );
+                    h->h264dsp.h264_chroma_dc_dequant_idct(h->mb + 16*16+4*16, &h->mb_chroma_dc[1], chroma_qpv );
                     for(i=16; i<16+8; i++){
                         if(h->non_zero_count_cache[ scan8[i] ] || h->mb[i*16]){
                             uint8_t * const ptr= dest[(i&4)>>2] + block_offset[i];
@@ -2118,7 +2068,7 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
 
     if (s->context_initialized
         && (   s->width != s->avctx->width || s->height != s->avctx->height
-            || (s->avctx->sample_aspect_ratio.num && av_cmp_q(h->sps.sar, s->avctx->sample_aspect_ratio)))) { //workaround to avoid crash with linked Matroska files, see fixme in line 2198
+            || (s->avctx->sample_aspect_ratio.num && av_cmp_q(h->sps.sar, s->avctx->sample_aspect_ratio)))) { //workaround to avoid crash with linked Matroska files, see fixme in line 2135
         if(h != h0) {
             av_log_missing_feature(s->avctx, "Width/height changing with threads is", 0);
             return -1;   // width / height changed during parallelized decoding
@@ -3494,27 +3444,15 @@ AVCodec h264_decoder = {
     AVMEDIA_TYPE_VIDEO,
     CODEC_ID_H264,
     sizeof(H264Context),
-    /*.init = */ff_h264_decode_init,
-    /*.encode = */NULL,
-    /*.close = */ff_h264_decode_end,
-    /*.decode = */decode_frame,
-    /*.capabilities = *//*CODEC_CAP_DRAW_HORIZ_BAND |*/ CODEC_CAP_DR1 | CODEC_CAP_DELAY | CODEC_CAP_FRAME_THREADS,
-    /*.next = */NULL,
-    /*.flush = */flush_dpb,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10"),
-    /*.supported_samplerates = */NULL,
-    /*.sample_fmts = */NULL,
-    /*.channel_layouts = */NULL,
-    /*.max_lowres = */0,
-    /*.init_thread_copy = */ONLY_IF_THREADS_ENABLED(decode_init_thread_copy),
-    /*.update_context = */ONLY_IF_THREADS_ENABLED(decode_update_thread_context),
+    ff_h264_decode_init,
+    NULL,
+    ff_h264_decode_end,
+    decode_frame,
+    /*CODEC_CAP_DRAW_HORIZ_BAND |*/ CODEC_CAP_DR1 | CODEC_CAP_DELAY | CODEC_CAP_FRAME_THREADS,
+    .flush= flush_dpb,
+    .long_name = NULL_IF_CONFIG_SMALL("H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10"),
+    .init_thread_copy      = ONLY_IF_THREADS_ENABLED(decode_init_thread_copy),
+    .update_thread_context = ONLY_IF_THREADS_ENABLED(decode_update_thread_context)
 };
 
 #include "h264_recov.c"
-
-#if !CONFIG_SVQ3_DECODER
-void ff_svq3_luma_dc_dequant_idct_c(DCTELEM *block, int qp) {};
-void ff_svq3_add_idct_c(uint8_t *dst, DCTELEM *block, int stride, int qp, int dc) {};
-#endif

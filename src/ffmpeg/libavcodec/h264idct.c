@@ -216,3 +216,60 @@ void ff_h264_idct_add8_c(uint8_t **dest, const int *block_offset, DCTELEM *block
             ff_h264_idct_dc_add_c(dest[(i&4)>>2] + block_offset[i], block + i*16, stride);
     }
 }
+/**
+ * IDCT transforms the 16 dc values and dequantizes them.
+ * @param qp quantization parameter
+ */
+void ff_h264_luma_dc_dequant_idct_c(DCTELEM *output, DCTELEM *input, int qmul){
+#define stride 16
+    int i;
+    int temp[16];
+    static const uint8_t x_offset[4]={0, 2*stride, 8*stride, 10*stride};
+
+    for(i=0; i<4; i++){
+        const int z0= input[4*i+0] + input[4*i+1];
+        const int z1= input[4*i+0] - input[4*i+1];
+        const int z2= input[4*i+2] - input[4*i+3];
+        const int z3= input[4*i+2] + input[4*i+3];
+
+        temp[4*i+0]= z0+z3;
+        temp[4*i+1]= z0-z3;
+        temp[4*i+2]= z1-z2;
+        temp[4*i+3]= z1+z2;
+    }
+
+    for(i=0; i<4; i++){
+        const int offset= x_offset[i];
+        const int z0= temp[4*0+i] + temp[4*2+i];
+        const int z1= temp[4*0+i] - temp[4*2+i];
+        const int z2= temp[4*1+i] - temp[4*3+i];
+        const int z3= temp[4*1+i] + temp[4*3+i];
+
+        output[stride* 0+offset]= ((((z0 + z3)*qmul + 128 ) >> 8));
+        output[stride* 1+offset]= ((((z1 + z2)*qmul + 128 ) >> 8));
+        output[stride* 4+offset]= ((((z1 - z2)*qmul + 128 ) >> 8));
+        output[stride* 5+offset]= ((((z0 - z3)*qmul + 128 ) >> 8));
+    }
+#undef stride
+}
+
+void ff_chroma_dc_dequant_idct_c(DCTELEM *output, DCTELEM *input, int qmul){
+    const int stride= 16*2;
+    const int xStride= 16;
+    int a,b,c,d,e;
+
+    a= input[0];
+    b= input[1];
+    c= input[2];
+    d= input[3];
+
+    e= a-b;
+    a= a+b;
+    b= c-d;
+    c= c+d;
+
+    output[stride*0 + xStride*0]= ((a+c)*qmul) >> 7;
+    output[stride*0 + xStride*1]= ((e+b)*qmul) >> 7;
+    output[stride*1 + xStride*0]= ((a-c)*qmul) >> 7;
+    output[stride*1 + xStride*1]= ((e-b)*qmul) >> 7;
+}
