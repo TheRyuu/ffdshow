@@ -30,13 +30,8 @@ static const char * const channel_names[] = {
     "FL", "FR", "FC", "LFE", "BL",  "BR",  "FLC", "FRC",
     "BC", "SL", "SR", "TC",  "TFL", "TFC", "TFR", "TBL",
     "TBC", "TBR",
-#if __STDC_VERSION__ >= 199901L
     [29] = "DL",
     [30] = "DR",
-#else
-	"","","","","","","","","","","",
-	"DL","DR",
-#endif
 };
 
 static const char *get_channel_name(int channel_id)
@@ -82,6 +77,9 @@ void av_get_channel_layout_string(char *buf, int buf_size,
                                   int nb_channels, int64_t channel_layout)
 {
     int i;
+
+    if (nb_channels <= 0)
+        nb_channels = av_get_channel_layout_nb_channels(channel_layout);
 
     for (i = 0; channel_layout_map[i].name; i++)
         if (nb_channels    == channel_layout_map[i].nb_channels &&

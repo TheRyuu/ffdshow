@@ -23,6 +23,7 @@
 
 #include "libavutil/pixdesc.h"
 #include "libavutil/rational.h"
+#include "libavcore/audioconvert.h"
 #include "libavcore/imgutils.h"
 #include "avfilter.h"
 #include "internal.h"
@@ -70,6 +71,8 @@ AVFilterBufferRef *avfilter_ref_buffer(AVFilterBufferRef *ref, int pmask)
 
 void avfilter_unref_buffer(AVFilterBufferRef *ref)
 {
+    if (!ref)
+        return;
     if (!(--ref->buf->refcount))
         ref->buf->free(ref->buf);
     av_free(ref->video);
@@ -106,6 +109,13 @@ int avfilter_link(AVFilterContext *src, unsigned srcpad,
     if (src->output_count <= srcpad || dst->input_count <= dstpad ||
         src->outputs[srcpad]        || dst->inputs[dstpad])
         return -1;
+
+    if (src->output_pads[srcpad].type != dst->input_pads[dstpad].type) {
+        av_log(src, AV_LOG_ERROR,
+               "Media type mismatch between the '%s' filter output pad %d and the '%s' filter input pad %d\n",
+               src->name, srcpad, dst->name, dstpad);
+        return AVERROR(EINVAL);
+    }
 
     src->outputs[srcpad] =
     dst-> inputs[dstpad] = link = av_mallocz(sizeof(AVFilterLink));
@@ -226,7 +236,7 @@ void ff_dprintf_ref(void *ctx, AVFilterBufferRef *ref, int end)
     if (ref->audio) {
         dprintf(ctx, " cl:%"PRId64"d sn:%d s:%d sr:%d p:%d",
                 ref->audio->channel_layout,
-                ref->audio->samples_nb,
+                ref->audio->nb_samples,
                 ref->audio->size,
                 ref->audio->sample_rate,
                 ref->audio->planar);
@@ -237,13 +247,26 @@ void ff_dprintf_ref(void *ctx, AVFilterBufferRef *ref, int end)
 
 void ff_dprintf_link(void *ctx, AVFilterLink *link, int end)
 {
-    dprintf(ctx,
-            "link[%p s:%dx%d fmt:%-16s %-16s->%-16s]%s",
-            link, link->w, link->h,
-            av_pix_fmt_descriptors[link->format].name,
-            link->src ? link->src->filter->name : "",
-            link->dst ? link->dst->filter->name : "",
-            end ? "\n" : "");
+    if (link->type == AVMEDIA_TYPE_VIDEO) {
+        dprintf(ctx,
+                "link[%p s:%dx%d fmt:%-16s %-16s->%-16s]%s",
+                link, link->w, link->h,
+                av_pix_fmt_descriptors[link->format].name,
+                link->src ? link->src->filter->name : "",
+                link->dst ? link->dst->filter->name : "",
+                end ? "\n" : "");
+    } else {
+        char buf[128];
+        av_get_channel_layout_string(buf, sizeof(buf), -1, link->channel_layout);
+
+        dprintf(ctx,
+                "link[%p r:%"PRId64" cl:%s fmt:%-16s %-16s->%-16s]%s",
+                link, link->sample_rate, buf,
+                av_get_sample_fmt_name(link->format),
+                link->src ? link->src->filter->name : "",
+                link->dst ? link->dst->filter->name : "",
+                end ? "\n" : "");
+    }
 }
 
 AVFilterBufferRef *avfilter_get_video_buffer(AVFilterLink *link, int perms, int w, int h)

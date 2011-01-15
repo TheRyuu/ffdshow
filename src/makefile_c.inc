@@ -10,7 +10,7 @@ ifeq ($(64BIT),yes)
     TARGET_OS=x86_64-w64-mingw32
     CFLAGS+=-DWIN64 -D_WIN64 -D__MINGW64__
     #CFLAGS+=-fno-leading-underscore
-    #LDLAGS+=-fno-leading-underscore
+    #LDFLAGS+=-fno-leading-underscore
     OPTFLAGS+=-O2 -m64
     YASMFLAGS+=-f win64 -m amd64 -DWIN64 -DARCH_X86_64 -DPREFIX
 else
