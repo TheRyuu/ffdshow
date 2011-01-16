@@ -64,7 +64,7 @@ $(OBJ_DIR)%.res.o: %.rc
 $(TARGET_LIB): $(OBJS) $(DEF)
 	@echo $@
 	@$(FFDSHOW_PREFIX)dllwrap -mno-cygwin --target=$(TARGET_OS) \
-             -Wl,--enable-stdcall-fixup $(LDFLAGS) \
+             -Wl,--enable-stdcall-fixup --entry=_DllMainCRTStartup@12 $(LDFLAGS) \
              --def $(DEF) $(GCCDLLENTRY) -o $@ $(OBJS) $(GCCLIBS)
 
 $(TARGET_EXE): $(OBJS)
