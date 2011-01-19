@@ -257,7 +257,7 @@ static inline int get_lowest_part_list_y(H264Context *h, Picture *pic, int n, in
 }
 
 static inline void get_lowest_part_y(H264Context *h, int refs[2][48], int n, int height,
-                               int y_offset, int list0, int list1){
+                               int y_offset, int list0, int list1, int *nrefs){
     MpegEncContext * const s = &h->s;
     int my;
 
@@ -273,6 +273,7 @@ static inline void get_lowest_part_y(H264Context *h, int refs[2][48], int n, int
         if(ref->thread_opaque != s->current_picture.thread_opaque ||
            (ref->reference&3) != s->picture_structure) {
             my = get_lowest_part_list_y(h, ref, n, height, y_offset, 0);
+            if (refs[0][ref_n] < 0) nrefs[0] += 1;
             refs[0][ref_n] = FFMAX(refs[0][ref_n], my);
         }
     }
@@ -284,6 +285,7 @@ static inline void get_lowest_part_y(H264Context *h, int refs[2][48], int n, int
         if(ref->thread_opaque != s->current_picture.thread_opaque ||
            (ref->reference&3) != s->picture_structure) {
             my = get_lowest_part_list_y(h, ref, n, height, y_offset, 1);
+            if (refs[1][ref_n] < 0) nrefs[1] += 1;
             refs[1][ref_n] = FFMAX(refs[1][ref_n], my);
         }
     }
@@ -299,23 +301,24 @@ static void await_references(H264Context *h){
     const int mb_xy= h->mb_xy;
     const int mb_type= s->current_picture.mb_type[mb_xy];
     int refs[2][48];
+    int nrefs[2] = {0};
     int ref, list;
 
     memset(refs, -1, sizeof(refs));
 
     if(IS_16X16(mb_type)){
         get_lowest_part_y(h, refs, 0, 16, 0,
-                  IS_DIR(mb_type, 0, 0), IS_DIR(mb_type, 0, 1));
+                  IS_DIR(mb_type, 0, 0), IS_DIR(mb_type, 0, 1), nrefs);
     }else if(IS_16X8(mb_type)){
         get_lowest_part_y(h, refs, 0, 8, 0,
-                  IS_DIR(mb_type, 0, 0), IS_DIR(mb_type, 0, 1));
+                  IS_DIR(mb_type, 0, 0), IS_DIR(mb_type, 0, 1), nrefs);
         get_lowest_part_y(h, refs, 8, 8, 8,
-                  IS_DIR(mb_type, 1, 0), IS_DIR(mb_type, 1, 1));
+                  IS_DIR(mb_type, 1, 0), IS_DIR(mb_type, 1, 1), nrefs);
     }else if(IS_8X16(mb_type)){
         get_lowest_part_y(h, refs, 0, 16, 0,
-                  IS_DIR(mb_type, 0, 0), IS_DIR(mb_type, 0, 1));
+                  IS_DIR(mb_type, 0, 0), IS_DIR(mb_type, 0, 1), nrefs);
         get_lowest_part_y(h, refs, 4, 16, 0,
-                  IS_DIR(mb_type, 1, 0), IS_DIR(mb_type, 1, 1));
+                  IS_DIR(mb_type, 1, 0), IS_DIR(mb_type, 1, 1), nrefs);
     }else{
         int i;
 
@@ -328,31 +331,31 @@ static void await_references(H264Context *h){
 
             if(IS_SUB_8X8(sub_mb_type)){
                 get_lowest_part_y(h, refs, n  , 8, y_offset,
-                          IS_DIR(sub_mb_type, 0, 0), IS_DIR(sub_mb_type, 0, 1));
+                          IS_DIR(sub_mb_type, 0, 0), IS_DIR(sub_mb_type, 0, 1), nrefs);
             }else if(IS_SUB_8X4(sub_mb_type)){
                 get_lowest_part_y(h, refs, n  , 4, y_offset,
-                          IS_DIR(sub_mb_type, 0, 0), IS_DIR(sub_mb_type, 0, 1));
+                          IS_DIR(sub_mb_type, 0, 0), IS_DIR(sub_mb_type, 0, 1), nrefs);
                 get_lowest_part_y(h, refs, n+2, 4, y_offset+4,
-                          IS_DIR(sub_mb_type, 0, 0), IS_DIR(sub_mb_type, 0, 1));
+                          IS_DIR(sub_mb_type, 0, 0), IS_DIR(sub_mb_type, 0, 1), nrefs);
             }else if(IS_SUB_4X8(sub_mb_type)){
                 get_lowest_part_y(h, refs, n  , 8, y_offset,
-                          IS_DIR(sub_mb_type, 0, 0), IS_DIR(sub_mb_type, 0, 1));
+                          IS_DIR(sub_mb_type, 0, 0), IS_DIR(sub_mb_type, 0, 1), nrefs);
                 get_lowest_part_y(h, refs, n+1, 8, y_offset,
-                          IS_DIR(sub_mb_type, 0, 0), IS_DIR(sub_mb_type, 0, 1));
+                          IS_DIR(sub_mb_type, 0, 0), IS_DIR(sub_mb_type, 0, 1), nrefs);
             }else{
                 int j;
                 assert(IS_SUB_4X4(sub_mb_type));
                 for(j=0; j<4; j++){
                     int sub_y_offset= y_offset + 2*(j&2);
                     get_lowest_part_y(h, refs, n+j, 4, sub_y_offset,
-                              IS_DIR(sub_mb_type, 0, 0), IS_DIR(sub_mb_type, 0, 1));
+                              IS_DIR(sub_mb_type, 0, 0), IS_DIR(sub_mb_type, 0, 1), nrefs);
                 }
             }
         }
     }
 
     for(list=h->list_count-1; list>=0; list--){
-        for(ref=0; ref<48; ref++){
+        for(ref=0; ref<48 && nrefs[list]; ref++){
             int row = refs[list][ref];
             if(row >= 0){
                 Picture *ref_pic = &h->ref_list[list][ref];
@@ -361,6 +364,7 @@ static void await_references(H264Context *h){
                 int pic_height = 16*s->mb_height >> ref_field_picture;
 
                 row <<= MB_MBAFF;
+                nrefs[list]--;
 
                 if(!FIELD_PICTURE && ref_field_picture){ // frame referencing two fields
                     ff_thread_await_progress((AVFrame*)ref_pic, FFMIN((row >> 1) - !(row&1), pic_height-1), 1);
@@ -2068,7 +2072,7 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
 
     if (s->context_initialized
         && (   s->width != s->avctx->width || s->height != s->avctx->height
-            || (s->avctx->sample_aspect_ratio.num && av_cmp_q(h->sps.sar, s->avctx->sample_aspect_ratio)))) { //workaround to avoid crash with linked Matroska files, see fixme in line 2135
+            || (s->avctx->sample_aspect_ratio.num && av_cmp_q(h->sps.sar, s->avctx->sample_aspect_ratio)))) { //workaround to avoid crash with linked Matroska files, see fixme in line 2139
         if(h != h0) {
             av_log_missing_feature(s->avctx, "Width/height changing with threads is", 0);
             return -1;   // width / height changed during parallelized decoding

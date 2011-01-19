@@ -82,6 +82,10 @@ typedef struct PerThreadContext {
     enum {
         STATE_INPUT_READY,          ///< Set when the thread is awaiting a frame.
         STATE_SETTING_UP,           ///< Set before the codec has called ff_thread_finish_setup().
+        STATE_GET_BUFFER,           /**
+                                     * Set when the codec calls get_buffer().
+                                     * State is returned to STATE_SETTING_UP afterwards.
+                                     */
         STATE_SETUP_FINISHED        ///< Set after the codec has called ff_thread_finish_setup().
     } state;
 
@@ -97,6 +101,8 @@ typedef struct PerThreadContext {
      */
     int     progress[MAX_BUFFERS][2];
     uint8_t progress_used[MAX_BUFFERS];
+
+    AVFrame *requested_frame;       ///< AVFrame the codec passed to get_buffer()
 } PerThreadContext;
 
 /**
@@ -290,6 +296,8 @@ static attribute_align_arg void *frame_worker_thread(void *arg)
         if (!codec->update_thread_context) ff_thread_finish_setup(avctx);
 
         pthread_mutex_lock(&p->mutex);
+        avcodec_get_frame_defaults(&p->picture);
+        p->got_picture = 0;
         p->result = codec->decode(avctx, &p->picture, &p->got_picture, &p->avpkt);
 
         if (p->state == STATE_SETTING_UP) ff_thread_finish_setup(avctx);
@@ -453,6 +461,28 @@ static int submit_frame(PerThreadContext *p, AVPacket *avpkt)
     pthread_cond_signal(&p->input_cond);
     pthread_mutex_unlock(&p->mutex);
 
+    /*
+     * If the client doesn't have a thread-safe get_buffer(),
+     * then decoding threads call back to the main thread,
+     * and it calls back to the client here.
+     */
+
+    if (!p->avctx->thread_safe_callbacks &&
+         p->avctx->get_buffer != avcodec_default_get_buffer) {
+        while (p->state != STATE_SETUP_FINISHED && p->state != STATE_INPUT_READY) {
+            pthread_mutex_lock(&p->progress_mutex);
+            while (p->state == STATE_SETTING_UP)
+                pthread_cond_wait(&p->progress_cond, &p->progress_mutex);
+
+            if (p->state == STATE_GET_BUFFER) {
+                p->result = p->avctx->get_buffer(p->avctx, p->requested_frame);
+                p->state  = STATE_SETTING_UP;
+                pthread_cond_signal(&p->progress_cond);
+            }
+            pthread_mutex_unlock(&p->progress_mutex);
+        }
+    }
+
     fctx->prev_thread = p;
 
     return 0;
@@ -508,8 +538,14 @@ int ff_thread_decode_frame(AVCodecContext *avctx,
 
         *picture = p->picture;
         *got_picture_ptr = p->got_picture;
+        picture->pkt_dts = p->avpkt.dts;
 
-        avcodec_get_frame_defaults(&p->picture);
+        /*
+         * A later call with avkpt->size == 0 may loop over all threads,
+         * including this one, searching for a frame to return before being
+         * stopped by the "finished != fctx->next_finished" condition.
+         * Make sure we don't mistakenly return the same frame again.
+         */
         p->got_picture = 0;
 
         if (finished >= avctx->thread_count) finished = 0;
@@ -669,6 +705,7 @@ static int frame_thread_init(AVCodecContext *avctx)
 
         *copy = *src;
         copy->thread_opaque = p;
+        copy->pkt = &p->avpkt;
 
         if (!i) {
             src = copy;
@@ -744,6 +781,11 @@ int ff_thread_get_buffer(AVCodecContext *avctx, AVFrame *f)
         return avctx->get_buffer(avctx, f);
     }
 
+    if (p->state != STATE_SETTING_UP) {
+        av_log(avctx, AV_LOG_ERROR, "get_buffer() cannot be called after ff_thread_finish_setup()\n");
+        return -1;
+    }
+
     pthread_mutex_lock(&p->parent->buffer_mutex);
     f->thread_opaque = progress = allocate_progress(p);
 
@@ -755,7 +797,23 @@ int ff_thread_get_buffer(AVCodecContext *avctx, AVFrame *f)
     progress[0] =
     progress[1] = -1;
 
-    err = avctx->get_buffer(avctx, f);
+    if (avctx->thread_safe_callbacks ||
+        avctx->get_buffer == avcodec_default_get_buffer) {
+        err = avctx->get_buffer(avctx, f);
+    } else {
+        p->requested_frame = f;
+        p->state = STATE_GET_BUFFER;
+        pthread_mutex_lock(&p->progress_mutex);
+        pthread_cond_signal(&p->progress_cond);
+
+        while (p->state != STATE_SETTING_UP)
+            pthread_cond_wait(&p->progress_cond, &p->progress_mutex);
+
+        err = p->result;
+
+        pthread_mutex_unlock(&p->progress_mutex);
+    }
+
     pthread_mutex_unlock(&p->parent->buffer_mutex);
 
     /*

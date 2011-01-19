@@ -73,4 +73,4 @@ $(TARGET_EXE): $(OBJS)
              -Wl,--enable-stdcall-fixup -o $@ $(OBJS) $(GCCLIBS)
 	@$(FFDSHOW_PREFIX)strip $@
 
--include $(SRCS:.cpp=.d) $(SRCS_C:.c=.d)
+-include $(SRCS:%.cpp=$(OBJ_DIR)%.d) $(SRCS_C:%.c=$(OBJ_DIR)%.d)
