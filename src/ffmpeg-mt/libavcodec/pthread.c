@@ -309,7 +309,7 @@ static attribute_align_arg void *frame_worker_thread(void *arg)
         pthread_mutex_unlock(&p->progress_mutex);
 
         pthread_mutex_unlock(&p->mutex);
-    };
+    }
 
     return NULL;
 }
@@ -408,6 +408,7 @@ static void free_progress(AVFrame *f)
     p->progress_used[(progress - p->progress[0]) / 2] = 0;
 }
 
+/// Releases the buffers that this decoding thread was the last user of.
 static void release_delayed_buffers(PerThreadContext *p)
 {
     FrameThreadContext *fctx = p->parent;
@@ -447,8 +448,10 @@ static int submit_frame(PerThreadContext *p, AVPacket *avpkt)
         }
 
         err = update_context_from_thread(p->avctx, prev_thread->avctx, 0);
-        if (err)
+        if (err) {
+            pthread_mutex_unlock(&p->mutex);
             return err;
+        }
     }
 
     av_fast_malloc(&buf, &p->allocated_buf_size, avpkt->size + FF_INPUT_BUFFER_PADDING_SIZE);
