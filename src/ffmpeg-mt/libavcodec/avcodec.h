@@ -988,8 +988,11 @@ typedef struct AVCodecContext {
      * If non NULL, 'draw_horiz_band' is called by the libavcodec
      * decoder to draw a horizontal band. It improves cache usage. Not
      * all codecs can do that. You must check the codec capabilities
-     * beforehand. May be called by different threads at the same time,
-     * so implementations must be reentrant.
+     * beforehand.
+     * When multithreading is used, it may be called from multiple threads
+     * at the same time; threads might draw different parts of the same AVFrame,
+     * or multiple AVFrame, and there is no guarantee that slices will be drawn
+     * in order.
      * The function is also used by hardware acceleration APIs.
      * It is called at least once during frame decoding to pass
      * the data needed for hardware render.
@@ -1243,9 +1246,9 @@ typedef struct AVCodecContext {
      * if CODEC_CAP_DR1 is not set then get_buffer() must call
      * avcodec_default_get_buffer() instead of providing buffers allocated by
      * some other means.
-     * May be called from a different thread if thread_type==FF_THREAD_FRAME
-     * is set, but not by more than one thread at once, so does not need to be
-     * reentrant.
+     * If frame multithreading is used and thread_safe_callbacks is set,
+     * it may be called from a different thread, but not from more than at once.
+     * Does not need to be reentrant.
      * - encoding: unused
      * - decoding: Set by libavcodec, user can override.
      */
@@ -2681,7 +2684,7 @@ typedef struct AVCodec {
      *
      * dst and src will (rarely) point to the same context, in which case memcpy should be skipped.
      */
-    int (*update_thread_context)(AVCodecContext *dst, AVCodecContext *src);
+    int (*update_thread_context)(AVCodecContext *dst, const AVCodecContext *src);
     /** @} */
 
     AVClass *priv_class;                    ///< AVClass for the private context

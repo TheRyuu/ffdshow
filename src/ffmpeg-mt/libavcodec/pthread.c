@@ -653,6 +653,8 @@ static void frame_thread_free(AVCodecContext *avctx, int thread_count)
         if (codec->close)
             codec->close(p->avctx);
 
+        avctx->codec = NULL;
+
         release_delayed_buffers(p);
     }
 
@@ -681,11 +683,11 @@ static void frame_thread_free(AVCodecContext *avctx, int thread_count)
 
 static int frame_thread_init(AVCodecContext *avctx)
 {
-    int thread_count = avctx->thread_count, err = 0;
+    int thread_count = avctx->thread_count;
     AVCodec *codec = avctx->codec;
     AVCodecContext *src = avctx;
     FrameThreadContext *fctx;
-    int i;
+    int i, err = 0;
 
     avctx->thread_opaque = fctx = av_mallocz(sizeof(FrameThreadContext));
 
@@ -856,7 +858,7 @@ void ff_thread_release_buffer(AVCodecContext *avctx, AVFrame *f)
  *
  * Threading requires more than one thread.
  * Frame threading requires entire frames to be passed to the codec,
- * and is incompatible with low_delay.
+ * and introduces extra decoding delay, so is incompatible with low_delay.
  *
  * @param avctx The context.
  */
@@ -866,12 +868,13 @@ static void validate_thread_parameters(AVCodecContext *avctx)
                                 && !(avctx->flags & CODEC_FLAG_TRUNCATED)
                                 && !(avctx->flags & CODEC_FLAG_LOW_DELAY)
                                 && !(avctx->flags2 & CODEC_FLAG2_CHUNKS);
-    if (avctx->thread_count == 1)
+    if (avctx->thread_count == 1) {
         avctx->active_thread_type = 0;
-    else if (frame_threading_supported && (avctx->thread_type & FF_THREAD_FRAME))
+    } else if (frame_threading_supported && (avctx->thread_type & FF_THREAD_FRAME)) {
         avctx->active_thread_type = FF_THREAD_FRAME;
-    else
+    } else {
         avctx->active_thread_type = FF_THREAD_SLICE;
+    }
 }
 
 int avcodec_thread_init(AVCodecContext *avctx, int thread_count)

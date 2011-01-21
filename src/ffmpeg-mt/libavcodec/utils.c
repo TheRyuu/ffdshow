@@ -524,11 +524,9 @@ int attribute_align_arg avcodec_open(AVCodecContext *avctx, AVCodec *codec)
     }
 
     if(avctx->codec->init && !(avctx->active_thread_type&FF_THREAD_FRAME)){
-        if(avctx->codec->init){
-            ret = avctx->codec->init(avctx);
-            if (ret < 0) {
-                goto free_and_end;
-            }
+        ret = avctx->codec->init(avctx);
+        if (ret < 0) {
+            goto free_and_end;
         }
     }
     ret=0;
@@ -596,7 +594,7 @@ av_cold int avcodec_close(AVCodecContext *avctx)
 
     if (HAVE_THREADS && avctx->thread_opaque)
         avcodec_thread_free(avctx);
-    if (avctx->codec && avctx->codec->close && !(avctx->active_thread_type&FF_THREAD_FRAME))
+    if (avctx->codec && avctx->codec->close)
         avctx->codec->close(avctx);
     avcodec_default_free_buffers(avctx);
     avctx->coded_frame = NULL;

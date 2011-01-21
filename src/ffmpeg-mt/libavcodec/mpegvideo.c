@@ -445,7 +445,7 @@ void ff_update_duplicate_context(MpegEncContext *dst, MpegEncContext *src){
 //STOP_TIMER("update_duplicate_context") //about 10k cycles / 0.01 sec for 1000frames on 1ghz with 2 threads
 }
 
-int ff_mpeg_update_thread_context(AVCodecContext *dst, AVCodecContext *src)
+int ff_mpeg_update_thread_context(AVCodecContext *dst, const AVCodecContext *src)
 {
     MpegEncContext *s = dst->priv_data, *s1 = src->priv_data;
 

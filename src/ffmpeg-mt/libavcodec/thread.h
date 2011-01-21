@@ -49,16 +49,18 @@ int ff_thread_decode_frame(AVCodecContext *avctx, AVFrame *picture,
                            int *got_picture_ptr, AVPacket *avpkt);
 
 /**
- * Codecs which define update_thread_context should call this
+ * If the codec defines update_thread_context(), call this
  * when they are ready for the next thread to start decoding
  * the next frame. After calling it, do not change any variables
- * read by the update_thread_context method.
+ * read by the update_thread_context() method, or call ff_thread_get_buffer().
  *
  * @param avctx The context.
  */
 void ff_thread_finish_setup(AVCodecContext *avctx);
 
 /**
+ * Notifies later decoding threads when part of their reference picture
+ * is ready.
  * Call this when some part of the picture is finished decoding.
  * Later calls with lower values of progress have no effect.
  *
@@ -70,7 +72,11 @@ void ff_thread_finish_setup(AVCodecContext *avctx);
 void ff_thread_report_progress(AVFrame *f, int progress, int field);
 
 /**
- * Call this before accessing some part of a picture.
+ * Waits for earlier decoding threads to finish reference pictures
+ * Call this before accessing some part of a picture, with a given
+ * value for progress, and it will return after the responsible decoding
+ * thread calls ff_thread_report_progress() with the same or
+ * higher value for progress.
  *
  * @param f The picture being referenced.
  * @param progress Value, in arbitrary units, to wait for.
@@ -80,7 +86,9 @@ void ff_thread_report_progress(AVFrame *f, int progress, int field);
 void ff_thread_await_progress(AVFrame *f, int progress, int field);
 
 /**
+ * Wrapper around get_buffer() for frame-multithreaded codecs.
  * Call this function instead of avctx->get_buffer(f).
+ * Cannot be called after the codec has called ff_thread_finish_setup().
  *
  * @param avctx The current context.
  * @param f The frame to write into.
@@ -88,7 +96,12 @@ void ff_thread_await_progress(AVFrame *f, int progress, int field);
 int ff_thread_get_buffer(AVCodecContext *avctx, AVFrame *f);
 
 /**
+ * Wrapper around release_buffer() frame-for multithreaded codecs.
  * Call this function instead of avctx->release_buffer(f).
+ * The AVFrame will be copied and the actual release_buffer() call
+ * will be performed later. The contents of data pointed to by the
+ * AVFrame should not be changed until ff_thread_get_buffer() is called
+ * on it.
  *
  * @param avctx The current context.
  * @param f The picture being released.

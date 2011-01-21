@@ -1787,7 +1787,7 @@ static void update_frames(AVCodecContext *avctx)
     s->current_frame.data[0]= NULL; /* ensure that we catch any access to this released frame */
 }
 
-static int vp3_update_thread_context(AVCodecContext *dst, AVCodecContext *src)
+static int vp3_update_thread_context(AVCodecContext *dst, const AVCodecContext *src)
 {
     Vp3DecodeContext *s = dst->priv_data, *s1 = src->priv_data;
     int qps_changed = 0, i, err;
@@ -2378,22 +2378,14 @@ AVCodec theora_decoder = {
     AVMEDIA_TYPE_VIDEO,
     CODEC_ID_THEORA,
     sizeof(Vp3DecodeContext),
-    /*.init = */theora_decode_init,
-    /*.encode = */NULL,
-    /*.close = */vp3_decode_end,
-    /*.decode = */vp3_decode_frame,
-    /*.capabilities = */CODEC_CAP_DR1 | CODEC_CAP_DRAW_HORIZ_BAND | CODEC_CAP_FRAME_THREADS,
-    /*.next = */NULL,
-    /*.flush = */NULL,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("Theora"),
-    /*.supported_samplerates = */NULL,
-    /*.sample_fmts = */NULL,
-    /*.channel_layouts = */NULL,
-    /*.max_lowres = */0,
-    /*.init_thread_copy = */NULL,
-    /*.update_context = */ONLY_IF_THREADS_ENABLED(vp3_update_thread_context),
+    theora_decode_init,
+    NULL,
+    vp3_decode_end,
+    vp3_decode_frame,
+    CODEC_CAP_DR1 | CODEC_CAP_DRAW_HORIZ_BAND | CODEC_CAP_FRAME_THREADS,
+    NULL,
+    .long_name = NULL_IF_CONFIG_SMALL("Theora"),
+    .update_thread_context = ONLY_IF_THREADS_ENABLED(vp3_update_thread_context)
 };
 #endif
 
@@ -2402,20 +2394,12 @@ AVCodec vp3_decoder = {
     AVMEDIA_TYPE_VIDEO,
     CODEC_ID_VP3,
     sizeof(Vp3DecodeContext),
-    /*.init = */vp3_decode_init,
-    /*.encode = */NULL,
-    /*.close = */vp3_decode_end,
-    /*.decode = */vp3_decode_frame,
-    /*.capabilities = */CODEC_CAP_DR1 | CODEC_CAP_DRAW_HORIZ_BAND | CODEC_CAP_FRAME_THREADS,
-    /*.next = */NULL,
-    /*.flush = */NULL,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("On2 VP3"),
-    /*.supported_samplerates = */NULL,
-    /*.sample_fmts = */NULL,
-    /*.channel_layouts = */NULL,
-    /*.max_lowres = */0,
-    /*.init_thread_copy = */NULL,
-    /*.update_context = */ONLY_IF_THREADS_ENABLED(vp3_update_thread_context),
+    vp3_decode_init,
+    NULL,
+    vp3_decode_end,
+    vp3_decode_frame,
+    CODEC_CAP_DR1 | CODEC_CAP_DRAW_HORIZ_BAND | CODEC_CAP_FRAME_THREADS,
+    NULL,
+    .long_name = NULL_IF_CONFIG_SMALL("On2 VP3"),
+    .update_thread_context = ONLY_IF_THREADS_ENABLED(vp3_update_thread_context)
 };
