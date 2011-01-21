@@ -13,12 +13,12 @@ GradFunContext *gradFunContext;
 bool dllok;
 int oldThreshold;
 int oldRadius;
-unsigned int oldSizeX;
-unsigned int oldSizeY;
+unsigned int oldWidth;
+unsigned int oldHeight;
 int reconfigure;
 
 virtual GradFunContext *configure (float threshold, int radius, TffPict &pict);
-virtual void filter (GradFunContext *gradFunContext, unsigned char *src[4], TffPict &pict);
+virtual void filter (GradFunContext *gradFunContext, uint8_t *src[4], TffPict &pict);
 
 protected:
 virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const

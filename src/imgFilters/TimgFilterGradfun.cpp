@@ -29,8 +29,8 @@ TimgFilterGradfun::TimgFilterGradfun(IffdshowBase *Ideci,Tfilters *Iparent):Timg
     dllok = ffmpeg->ok;
     oldThreshold = -1;
     oldRadius = -1;
-    oldSizeX = 0;
-    oldSizeY = 0;
+    oldWidth = 0;
+    oldHeight = 0;
     gradFunContext = NULL;
     reconfigure = 1;
 }
@@ -85,7 +85,7 @@ GradFunContext* TimgFilterGradfun::configure(float threshold, int radius, TffPic
 
     return gradFunContext;
 }
-void TimgFilterGradfun::filter(GradFunContext *gradFunContext, unsigned char *src[4], TffPict &pict)
+void TimgFilterGradfun::filter(GradFunContext *gradFunContext, uint8_t *src[4], TffPict &pict)
 {
     for (unsigned int p = 0; p < pict.cspInfo.numPlanes; p++) {
         int w = pict.rectFull.dx;
@@ -109,14 +109,18 @@ HRESULT TimgFilterGradfun::process(TfilterQueue::iterator it,TffPict &pict,const
     const TgradFunSettings *cfg=(const TgradFunSettings*)cfg0;
     init(pict,1,0);
 
-    unsigned char *src[4];
-    bool cspChange = getCurNext(FF_CSPS_MASK_YUV_PLANAR, pict, 1, COPYMODE_FULL, src); 
+    uint8_t *src[4];
+    bool cspChange = getCurNext(FF_CSPS_MASK_YUV_PLANAR, pict, 1, COPYMODE_FULL, src);
+    
+    // mod2 only
+    if((pict.rectFull.dx % 2) != 0 || (pict.rectFull.dy % 2) != 0 || ((pict.rectFull.dx >> pict.cspInfo.shiftX[1]) % 2 != 0) || ((pict.rectFull.dy >> pict.cspInfo.shiftY[1]) % 2 != 0))
+        return parent->processSample(++it,pict);
 
-    if (cspChange || oldThreshold != cfg->threshold || oldRadius != cfg->radius || oldSizeX != pict.rectFull.dx || oldSizeY != pict.rectFull.dy) {
+    if (cspChange || oldThreshold != cfg->threshold || oldRadius != cfg->radius || oldWidth != pict.rectFull.dx || oldHeight != pict.rectFull.dy) {
         oldThreshold = cfg->threshold;
         oldRadius = cfg->radius;
-        oldSizeX = pict.rectFull.dx;
-        oldSizeY = pict.rectFull.dy;
+        oldWidth = pict.rectFull.dx;
+        oldHeight = pict.rectFull.dy;
         reconfigure = 1;
     }
 
