@@ -198,14 +198,14 @@ int decode_slice_header_noexecute(H264Context *h){
     if(h->sps.frame_mbs_only_flag)
         s->height= 16*s->mb_height - 2*FFMIN(h->sps.crop_bottom, 7);
     else
-        s->height= 16*s->mb_height - 4*FFMIN(h->sps.crop_bottom, 3);
+        s->height= 16*s->mb_height - 4*FFMIN(h->sps.crop_bottom, 7);
 
     if (s->context_initialized
         && (   s->width != s->avctx->width || s->height != s->avctx->height
             || av_cmp_q(h->sps.sar, s->avctx->sample_aspect_ratio))) {
         if(h != h0)
             return -1;   // width / height changed during parallelized decoding
-        free_tables(h);
+        free_tables(h, 0);
         flush_dpb(s->avctx);
         MPV_common_end(s);
     }
@@ -215,8 +215,7 @@ int decode_slice_header_noexecute(H264Context *h){
 
         avcodec_set_dimensions(s->avctx, s->width, s->height);
         s->avctx->sample_aspect_ratio= h->sps.sar;
-        if(!s->avctx->sample_aspect_ratio.den)
-            s->avctx->sample_aspect_ratio.den = 1;
+        av_assert0(s->avctx->sample_aspect_ratio.den);
 
         if(h->sps.video_signal_type_present_flag){
             s->avctx->color_range = h->sps.full_range ? AVCOL_RANGE_JPEG : AVCOL_RANGE_MPEG;
@@ -674,14 +673,9 @@ static int decode_nal_units_noexecute(H264Context *h, const uint8_t *buf, int bu
             nalsize = 0;
             for(i = 0; i < h->nal_length_size; i++)
                 nalsize = (nalsize << 8) | buf[buf_index++];
-            if(nalsize <= 1 || nalsize > buf_size - buf_index){
-                if(nalsize == 1){
-                    buf_index++;
-                    continue;
-                }else{
-                    av_log(h->s.avctx, AV_LOG_ERROR, "AVC: nal size %d\n", nalsize);
-                    break;
-                }
+            if(nalsize <= 0 || nalsize > buf_size - buf_index){
+                av_log(h->s.avctx, AV_LOG_ERROR, "AVC: nal size %d\n", nalsize);
+                break;
             }
             next_avc= buf_index + nalsize;
         } else {
@@ -858,6 +852,7 @@ int av_h264_decode_frame(struct AVCodecContext* avctx, int* nOutPOC, int64_t* rt
     s->flags2= avctx->flags2;
 
    /* end of stream, output what is still in the buffers */
+ out:
     if (buf_size == 0) {
         Picture *out;
         int i, out_idx;
@@ -891,6 +886,11 @@ int av_h264_decode_frame(struct AVCodecContext* avctx, int* nOutPOC, int64_t* rt
     // <== End patch MPC DXVA
     if(buf_index < 0)
         return -1;
+
+    if (!s->current_picture_ptr && h->nal_unit_type == NAL_END_SEQUENCE) {
+        buf_size = 0;
+        goto out;
+    }
 
     if(!(s->flags2 & CODEC_FLAG2_CHUNKS) && !s->current_picture_ptr){
         if (avctx->skip_frame >= AVDISCARD_NONREF || s->hurry_up) return 0;

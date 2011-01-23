@@ -613,7 +613,7 @@ static void hl_motion(H264Context *h, uint8_t *dest_y, uint8_t *dest_cb, uint8_t
 }
 
 
-static void free_tables(H264Context *h){
+static void free_tables(H264Context *h, int free_rbsp){
     int i;
     H264Context *hx;
     av_freep(&h->intra4x4_pred_mode);
@@ -636,10 +636,12 @@ static void free_tables(H264Context *h){
         av_freep(&hx->top_borders[1]);
         av_freep(&hx->top_borders[0]);
         av_freep(&hx->s.obmc_scratchpad);
-        av_freep(&hx->rbsp_buffer[1]);
-        av_freep(&hx->rbsp_buffer[0]);
-        hx->rbsp_buffer_size[0] = 0;
-        hx->rbsp_buffer_size[1] = 0;
+        if (free_rbsp){
+            av_freep(&hx->rbsp_buffer[1]);
+            av_freep(&hx->rbsp_buffer[0]);
+            hx->rbsp_buffer_size[0] = 0;
+            hx->rbsp_buffer_size[1] = 0;
+        }
         if (i) av_freep(&h->thread_context[i]);
     }
 }
@@ -747,7 +749,7 @@ int ff_h264_alloc_tables(H264Context *h){
 
     return 0;
 fail:
-    free_tables(h);
+    free_tables(h, 1);
     return -1;
 }
 
@@ -1763,10 +1765,10 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
 
     if (s->context_initialized
         && (   s->width != s->avctx->width || s->height != s->avctx->height
-            || (s->avctx->sample_aspect_ratio.num && av_cmp_q(h->sps.sar, s->avctx->sample_aspect_ratio)))) { //workaround to avoid crash with linked Matroska files, see fixme in line 1823
+            || av_cmp_q(h->sps.sar, s->avctx->sample_aspect_ratio))) {
         if(h != h0)
             return -1;   // width / height changed during parallelized decoding
-        free_tables(h);
+        free_tables(h, 0);
         flush_dpb(s->avctx);
         MPV_common_end(s);
     }
@@ -1820,7 +1822,7 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
                 return -1;
     }
 
-    h->frame_num= get_bits(&s->gb, h->sps.log2_max_frame_num); // fixme: a crash occurs here with certain linked Matroska files if context is reset above
+    h->frame_num= get_bits(&s->gb, h->sps.log2_max_frame_num);
 
     h->mb_mbaff = 0;
     h->mb_aff_frame = 0;
@@ -3140,7 +3142,7 @@ av_cold void ff_h264_free_context(H264Context *h)
 {
     int i;
 
-    free_tables(h); //FIXME cleanup init stuff perhaps
+    free_tables(h, 1); //FIXME cleanup init stuff perhaps
 
     for(i = 0; i < MAX_SPS_COUNT; i++)
         av_freep(h->sps_buffers + i);

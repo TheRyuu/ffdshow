@@ -1501,12 +1501,9 @@ static int dca_exss_parse_asset_header(DCAContext *s)
 
     if (extensions_mask & DCA_EXT_EXSS_XLL)
         s->profile = FF_PROFILE_DTS_HD_MA;
-    else if (extensions_mask & DCA_EXT_EXSS_XBR)
+    else if (extensions_mask & (DCA_EXT_EXSS_XBR | DCA_EXT_EXSS_X96 |
+                                DCA_EXT_EXSS_XXCH))
         s->profile = FF_PROFILE_DTS_HD_HRA;
-    else if (extensions_mask & DCA_EXT_EXSS_X96)
-        s->profile = FF_PROFILE_DTS_96_24;
-    else if (extensions_mask & DCA_EXT_EXSS_XXCH)
-        s->profile = FFMAX(s->profile, FF_PROFILE_DTS_ES);
 
     if (!(extensions_mask & DCA_EXT_CORE))
         av_log(s->avctx, AV_LOG_WARNING, "DTS core detection mismatch.\n");
@@ -1869,6 +1866,15 @@ static av_cold int dca_decode_end(AVCodecContext * avctx)
     return 0;
 }
 
+static const AVProfile profiles[] = {
+    { FF_PROFILE_DTS,        "DTS"        },
+    { FF_PROFILE_DTS_ES,     "DTS-ES"     },
+    { FF_PROFILE_DTS_96_24,  "DTS 96/24"  },
+    { FF_PROFILE_DTS_HD_HRA, "DTS-HD HRA" },
+    { FF_PROFILE_DTS_HD_MA,  "DTS-HD MA"  },
+    { FF_PROFILE_UNKNOWN },
+};
+
 AVCodec dca_decoder = {
     .name = "dca",
     .type = AVMEDIA_TYPE_AUDIO,
@@ -1879,4 +1885,5 @@ AVCodec dca_decoder = {
     .close = dca_decode_end,
     .long_name = NULL_IF_CONFIG_SMALL("DCA (DTS Coherent Acoustics)"),
     .capabilities = CODEC_CAP_CHANNEL_CONF,
+    .profiles = NULL_IF_CONFIG_SMALL(profiles),
 };
