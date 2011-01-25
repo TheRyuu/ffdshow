@@ -696,9 +696,6 @@ static inline int mpeg1_decode_block_inter(MpegEncContext *s,
             if(((int32_t)GET_CACHE(re, &s->gb)) <= (int32_t)0xBFFFFFFF)
                 goto end;
         }
-#if MIN_CACHE_BITS < 19
-        UPDATE_CACHE(re, &s->gb);
-#endif
         /* now quantify & encode AC coefficients */
         for(;;) {
             GET_RL_VLC(level, run, re, &s->gb, rl->rl_vlc[0], TEX_VLC_BITS, 2, 0);
@@ -738,14 +735,9 @@ static inline int mpeg1_decode_block_inter(MpegEncContext *s,
             }
 
             block[j] = level;
-#if MIN_CACHE_BITS < 19
-            UPDATE_CACHE(re, &s->gb);
-#endif
             if(((int32_t)GET_CACHE(re, &s->gb)) <= (int32_t)0xBFFFFFFF)
                 break;
-#if MIN_CACHE_BITS >= 19
             UPDATE_CACHE(re, &s->gb);
-#endif
         }
 end:
         LAST_SKIP_BITS(re, &s->gb, 2);
@@ -778,9 +770,6 @@ static inline int mpeg1_fast_decode_block_inter(MpegEncContext *s, DCTELEM *bloc
             if(((int32_t)GET_CACHE(re, &s->gb)) <= (int32_t)0xBFFFFFFF)
                 goto end;
         }
-#if MIN_CACHE_BITS < 19
-        UPDATE_CACHE(re, &s->gb);
-#endif
 
         /* now quantify & encode AC coefficients */
         for(;;) {
@@ -817,14 +806,9 @@ static inline int mpeg1_fast_decode_block_inter(MpegEncContext *s, DCTELEM *bloc
             }
 
             block[j] = level;
-#if MIN_CACHE_BITS < 19
-            UPDATE_CACHE(re, &s->gb);
-#endif
             if(((int32_t)GET_CACHE(re, &s->gb)) <= (int32_t)0xBFFFFFFF)
                 break;
-#if MIN_CACHE_BITS >= 19
             UPDATE_CACHE(re, &s->gb);
-#endif
         }
 end:
         LAST_SKIP_BITS(re, &s->gb, 2);
@@ -869,9 +853,6 @@ static inline int mpeg2_decode_block_non_intra(MpegEncContext *s,
             if(((int32_t)GET_CACHE(re, &s->gb)) <= (int32_t)0xBFFFFFFF)
                 goto end;
         }
-#if MIN_CACHE_BITS < 19
-        UPDATE_CACHE(re, &s->gb);
-#endif
 
         /* now quantify & encode AC coefficients */
         for(;;) {
@@ -905,14 +886,9 @@ static inline int mpeg2_decode_block_non_intra(MpegEncContext *s,
 
             mismatch ^= level;
             block[j] = level;
-#if MIN_CACHE_BITS < 19
-            UPDATE_CACHE(re, &s->gb);
-#endif
             if(((int32_t)GET_CACHE(re, &s->gb)) <= (int32_t)0xBFFFFFFF)
                 break;
-#if MIN_CACHE_BITS >= 19
             UPDATE_CACHE(re, &s->gb);
-#endif
         }
 end:
         LAST_SKIP_BITS(re, &s->gb, 2);
@@ -947,9 +923,6 @@ static inline int mpeg2_fast_decode_block_non_intra(MpegEncContext *s,
         if(((int32_t)GET_CACHE(re, &s->gb)) <= (int32_t)0xBFFFFFFF)
             goto end;
     }
-#if MIN_CACHE_BITS < 19
-    UPDATE_CACHE(re, &s->gb);
-#endif
 
     /* now quantify & encode AC coefficients */
     for(;;) {
@@ -978,14 +951,9 @@ static inline int mpeg2_fast_decode_block_non_intra(MpegEncContext *s,
         }
 
         block[j] = level;
-#if MIN_CACHE_BITS < 19
-        UPDATE_CACHE(re, &s->gb);
-#endif
         if(((int32_t)GET_CACHE(re, &s->gb)) <= (int32_t)0xBFFFFFFF)
             break;
-#if MIN_CACHE_BITS >=19
         UPDATE_CACHE(re, &s->gb);
-#endif
     }
 end:
     LAST_SKIP_BITS(re, &s->gb, 2);
@@ -2471,20 +2439,14 @@ AVCodec mpeg1video_decoder = {
     AVMEDIA_TYPE_VIDEO,
     CODEC_ID_MPEG1VIDEO,
     sizeof(Mpeg1Context),
-    /*.init=*/mpeg_decode_init,
-    /*.encode=*/NULL,
-    /*.close=*/mpeg_decode_end,
-    /*.decode=*/mpeg_decode_frame,
-    /*.capabilities=*/CODEC_CAP_DRAW_HORIZ_BAND | CODEC_CAP_DR1 | CODEC_CAP_TRUNCATED | CODEC_CAP_DELAY,
-    /*.next=*/NULL,
-    /*.flush=*/flush,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name= */NULL_IF_CONFIG_SMALL("MPEG-1 video"),
-    /*.supported_samplerates = */NULL,
-    /*.sample_fmts = */NULL,
-    /*.channel_layouts = */NULL,
-    /*.max_lowres = */3,
+    mpeg_decode_init,
+    NULL,
+    mpeg_decode_end,
+    mpeg_decode_frame,
+    CODEC_CAP_DRAW_HORIZ_BAND | CODEC_CAP_DR1 | CODEC_CAP_TRUNCATED | CODEC_CAP_DELAY,
+    .flush= flush,
+    .max_lowres= 3,
+    .long_name= NULL_IF_CONFIG_SMALL("MPEG-1 video"),
 };
 
 AVCodec mpeg2video_decoder = {
@@ -2492,20 +2454,14 @@ AVCodec mpeg2video_decoder = {
     AVMEDIA_TYPE_VIDEO,
     CODEC_ID_MPEG2VIDEO,
     sizeof(Mpeg1Context),
-    /*.init=*/mpeg_decode_init,
-    /*.encode=*/NULL,
-    /*.close=*/mpeg_decode_end,
-    /*.decode=*/mpeg_decode_frame,
-    /*.capabilities=*/CODEC_CAP_DRAW_HORIZ_BAND | CODEC_CAP_DR1 | CODEC_CAP_TRUNCATED | CODEC_CAP_DELAY,
-    /*.next=*/NULL,
-    /*.flush=*/flush,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name= */NULL_IF_CONFIG_SMALL("MPEG-2 video"),
-    /*.supported_samplerates = */NULL,
-    /*.sample_fmts = */NULL,
-    /*.channel_layouts = */NULL,
-    /*.max_lowres = */3,
+    mpeg_decode_init,
+    NULL,
+    mpeg_decode_end,
+    mpeg_decode_frame,
+    CODEC_CAP_DRAW_HORIZ_BAND | CODEC_CAP_DR1 | CODEC_CAP_TRUNCATED | CODEC_CAP_DELAY,
+    .flush= flush,
+    .max_lowres= 3,
+    .long_name= NULL_IF_CONFIG_SMALL("MPEG-2 video"),
 };
 
 //legacy decoder
@@ -2514,18 +2470,12 @@ AVCodec mpegvideo_decoder = {
     AVMEDIA_TYPE_VIDEO,
     CODEC_ID_MPEG2VIDEO,
     sizeof(Mpeg1Context),
-    /*.init=*/mpeg_decode_init,
-    /*.encode=*/NULL,
-    /*.close=*/mpeg_decode_end,
-    /*.decode=*/mpeg_decode_frame,
-    /*.capabilities=*/CODEC_CAP_DRAW_HORIZ_BAND | CODEC_CAP_DR1 | CODEC_CAP_TRUNCATED | CODEC_CAP_DELAY,
-    /*.next=*/NULL,
-    /*.flush=*/flush,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name= */NULL_IF_CONFIG_SMALL("MPEG-1 video"),
-    /*.supported_samplerates = */NULL,
-    /*.sample_fmts = */NULL,
-    /*.channel_layouts = */NULL,
-    /*.max_lowres = */3,
+    mpeg_decode_init,
+    NULL,
+    mpeg_decode_end,
+    mpeg_decode_frame,
+    CODEC_CAP_DRAW_HORIZ_BAND | CODEC_CAP_DR1 | CODEC_CAP_TRUNCATED | CODEC_CAP_DELAY,
+    .flush= flush,
+    .max_lowres= 3,
+    .long_name= NULL_IF_CONFIG_SMALL("MPEG-1 video"),
 };
