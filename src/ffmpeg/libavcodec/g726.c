@@ -325,10 +325,8 @@ static av_cold int g726_init(AVCodecContext * avctx)
 
     /* select a frame size that will end on a byte boundary and have a size of
        approximately 1024 bytes */
-#ifdef __GNUC__
     if (avctx->codec->encode)
         avctx->frame_size = ((int[]){ 4096, 2736, 2048, 1640 })[index];
-#endif
 
     return 0;
 }
@@ -361,19 +359,14 @@ static int g726_decode_frame(AVCodecContext *avctx,
     return buf_size;
 }
 
-AVCodec adpcm_g726_decoder = {
+AVCodec ff_adpcm_g726_decoder = {
     "g726",
     AVMEDIA_TYPE_AUDIO,
     CODEC_ID_ADPCM_G726,
     sizeof(G726Context),
-    /*.init = */g726_init,
-    /*.encode = */NULL,
-    /*.close = */g726_close,
-    /*.decode = */g726_decode_frame,
-    /*.capabilities = */0,
-    /*.next = */NULL,
-    /*.flush = */NULL,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("G.726 ADPCM"),
+    g726_init,
+    NULL,
+    g726_close,
+    g726_decode_frame,
+    .long_name = NULL_IF_CONFIG_SMALL("G.726 ADPCM"),
 };

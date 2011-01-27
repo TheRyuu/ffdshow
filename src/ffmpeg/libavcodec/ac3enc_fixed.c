@@ -330,7 +330,7 @@ static void scale_coefficients(AC3EncodeContext *s)
 }
 
 
-AVCodec ac3_fixed_encoder = {
+AVCodec ff_ac3_fixed_encoder = {
     "ac3_fixed",
     AVMEDIA_TYPE_AUDIO,
     CODEC_ID_AC3,

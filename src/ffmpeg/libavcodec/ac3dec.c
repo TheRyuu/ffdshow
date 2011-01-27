@@ -187,7 +187,7 @@ static av_cold int ac3_decode_init(AVCodecContext *avctx)
     AC3DecodeContext *s = avctx->priv_data;
     s->avctx = avctx;
 
-    ac3_common_init();
+    ff_ac3_common_init();
     ac3_tables_init();
     ff_mdct_init(&s->imdct_256, 8, 1, 1.0);
     ff_mdct_init(&s->imdct_512, 9, 1, 1.0);
@@ -1437,38 +1437,26 @@ static av_cold int ac3_decode_end(AVCodecContext *avctx)
     return 0;
 }
 
-AVCodec ac3_decoder = {
-    /*.name = */"ac3",
-    /*.type = */AVMEDIA_TYPE_AUDIO,
-    /*.id = */CODEC_ID_AC3,
-    /*.priv_data_size = */sizeof (AC3DecodeContext),
-    /*.init = */ac3_decode_init,
-    /*.encode = */NULL,
-    /*.close = */ac3_decode_end,
-    /*.decode = */ac3_decode_frame,
-    /*.capabilities = */0,
-    /*.next = */NULL,
-    /*.flush = */NULL,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("ATSC A/52A (AC-3)"),
+AVCodec ff_ac3_decoder = {
+    .name = "ac3",
+    .type = AVMEDIA_TYPE_AUDIO,
+    .id = CODEC_ID_AC3,
+    .priv_data_size = sizeof (AC3DecodeContext),
+    .init = ac3_decode_init,
+    .close = ac3_decode_end,
+    .decode = ac3_decode_frame,
+    .long_name = NULL_IF_CONFIG_SMALL("ATSC A/52A (AC-3)"),
 };
 
 #if CONFIG_EAC3_DECODER
-AVCodec eac3_decoder = {
-    /*.name = */"eac3",
-    /*.type = */AVMEDIA_TYPE_AUDIO,
-    /*.id = */CODEC_ID_EAC3,
-    /*.priv_data_size = */sizeof (AC3DecodeContext),
-    /*.init = */ac3_decode_init,
-    /*.encode = */NULL,
-    /*.close = */ac3_decode_end,
-    /*.decode = */ac3_decode_frame,
-    /*.capabilities = */0,
-    /*.next = */NULL,
-    /*.flush = */NULL,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("ATSC A/52B (AC-3, E-AC-3)"),
+AVCodec ff_eac3_decoder = {
+    .name = "eac3",
+    .type = AVMEDIA_TYPE_AUDIO,
+    .id = CODEC_ID_EAC3,
+    .priv_data_size = sizeof (AC3DecodeContext),
+    .init = ac3_decode_init,
+    .close = ac3_decode_end,
+    .decode = ac3_decode_frame,
+    .long_name = NULL_IF_CONFIG_SMALL("ATSC A/52B (AC-3, E-AC-3)"),
 };
 #endif

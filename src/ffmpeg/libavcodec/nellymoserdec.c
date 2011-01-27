@@ -196,7 +196,7 @@ static av_cold int decode_end(AVCodecContext * avctx) {
     return 0;
 }
 
-AVCodec nellymoser_decoder = {
+AVCodec ff_nellymoser_decoder = {
     "nellymoser",
     AVMEDIA_TYPE_AUDIO,
     CODEC_ID_NELLYMOSER,
@@ -205,11 +205,6 @@ AVCodec nellymoser_decoder = {
     NULL,
     decode_end,
     decode_tag,
-    /*.capabilities = */0,
-    /*.next = */NULL,
-    /*.flush = */NULL,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("Nellymoser Asao"),
+    .long_name = NULL_IF_CONFIG_SMALL("Nellymoser Asao"),
 };
 

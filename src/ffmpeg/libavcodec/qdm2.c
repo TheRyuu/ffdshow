@@ -1974,20 +1974,14 @@ static int qdm2_decode_frame(AVCodecContext *avctx,
     return s->checksum_size;
 }
 
-AVCodec qdm2_decoder =
+AVCodec ff_qdm2_decoder =
 {
-    /*.name = */"qdm2",
-    /*.type = */AVMEDIA_TYPE_AUDIO,
-    /*.id = */CODEC_ID_QDM2,
-    /*.priv_data_size = */sizeof(QDM2Context),
-    /*.init = */qdm2_decode_init,
-    /*.encode */NULL,
-    /*.close = */qdm2_decode_close,
-    /*.decode = */qdm2_decode_frame,
-    /*.capabilities = */0,
-    /*.next = */NULL,
-    /*.flush = */NULL,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("QDesign Music Codec 2"),
+    .name = "qdm2",
+    .type = AVMEDIA_TYPE_AUDIO,
+    .id = CODEC_ID_QDM2,
+    .priv_data_size = sizeof(QDM2Context),
+    .init = qdm2_decode_init,
+    .close = qdm2_decode_close,
+    .decode = qdm2_decode_frame,
+    .long_name = NULL_IF_CONFIG_SMALL("QDesign Music Codec 2"),
 };

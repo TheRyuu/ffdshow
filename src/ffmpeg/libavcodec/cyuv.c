@@ -174,7 +174,7 @@ static av_cold int cyuv_decode_end(AVCodecContext *avctx)
 }
 
 #if CONFIG_CYUV_DECODER
-AVCodec cyuv_decoder = {
+AVCodec ff_cyuv_decoder = {
     "cyuv",
     AVMEDIA_TYPE_VIDEO,
     CODEC_ID_CYUV,
@@ -183,11 +183,8 @@ AVCodec cyuv_decoder = {
     NULL,
     cyuv_decode_end,
     cyuv_decode_frame,
-    /*.capabilities = */CODEC_CAP_DR1,
-    /*.next = */NULL,
-    /*.flush = */NULL,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("Creative YUV (CYUV)"),
+    CODEC_CAP_DR1,
+    NULL,
+    .long_name = NULL_IF_CONFIG_SMALL("Creative YUV (CYUV)"),
 };
 #endif

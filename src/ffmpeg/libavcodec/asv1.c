@@ -441,7 +441,7 @@ static av_cold int decode_end(AVCodecContext *avctx){
     return 0;
 }
 
-AVCodec asv1_decoder = {
+AVCodec ff_asv1_decoder = {
     "asv1",
     AVMEDIA_TYPE_VIDEO,
     CODEC_ID_ASV1,
@@ -450,15 +450,11 @@ AVCodec asv1_decoder = {
     NULL,
     decode_end,
     decode_frame,
-    /*.capabilities=*/CODEC_CAP_DR1,
-    /*.next = */NULL,
-    /*.flush = */NULL,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name= */NULL_IF_CONFIG_SMALL("ASUS V1"),
+    CODEC_CAP_DR1,
+    .long_name= NULL_IF_CONFIG_SMALL("ASUS V1"),
 };
 
-AVCodec asv2_decoder = {
+AVCodec ff_asv2_decoder = {
     "asv2",
     AVMEDIA_TYPE_VIDEO,
     CODEC_ID_ASV2,
@@ -467,11 +463,7 @@ AVCodec asv2_decoder = {
     NULL,
     decode_end,
     decode_frame,
-    /*.capabilities=*/CODEC_CAP_DR1,
-    /*.next = */NULL,
-    /*.flush = */NULL,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name= */NULL_IF_CONFIG_SMALL("ASUS V2"),
+    CODEC_CAP_DR1,
+    .long_name= NULL_IF_CONFIG_SMALL("ASUS V2"),
 };
 

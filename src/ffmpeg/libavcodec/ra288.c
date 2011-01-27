@@ -203,7 +203,7 @@ static int ra288_decode_frame(AVCodecContext * avctx, void *data,
     return avctx->block_align;
 }
 
-AVCodec ra_288_decoder =
+AVCodec ff_ra_288_decoder =
 {
     "real_288",
     AVMEDIA_TYPE_AUDIO,
@@ -213,10 +213,5 @@ AVCodec ra_288_decoder =
     NULL,
     NULL,
     ra288_decode_frame,
-    /*.capabilities = */0,
-    /*.next = */NULL,
-    /*.flush = */NULL,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("RealAudio 2.0 (28.8K)"),
+    .long_name = NULL_IF_CONFIG_SMALL("RealAudio 2.0 (28.8K)"),
 };

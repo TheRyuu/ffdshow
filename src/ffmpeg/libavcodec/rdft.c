@@ -24,7 +24,7 @@
 #include "fft.h"
 
 /**
- * @file libavcodec/rdft.c
+ * @file
  * (Inverse) Real Discrete Fourier Transforms.
  */
 
@@ -44,7 +44,7 @@ SINTABLE(16384);
 SINTABLE(32768);
 SINTABLE(65536);
 #endif
-SINTABLE_CONST FFTSample * const ff_sin_tabs[] = {
+static SINTABLE_CONST FFTSample * const ff_sin_tabs[] = {
     NULL, NULL, NULL, NULL,
     ff_sin_16, ff_sin_32, ff_sin_64, ff_sin_128, ff_sin_256, ff_sin_512, ff_sin_1024,
     ff_sin_2048, ff_sin_4096, ff_sin_8192, ff_sin_16384, ff_sin_32768, ff_sin_65536,
@@ -121,6 +121,9 @@ av_cold int ff_rdft_init(RDFTContext *s, int nbits, enum RDFTransformType trans)
     }
 #endif
     s->rdft_calc   = ff_rdft_calc_c;
+
+    if (ARCH_ARM) ff_rdft_init_arm(s);
+
     return 0;
 }
 

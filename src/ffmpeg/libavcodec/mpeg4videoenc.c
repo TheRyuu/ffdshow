@@ -1338,7 +1338,7 @@ void ff_mpeg4_encode_video_packet_header(MpegEncContext *s)
     put_bits(&s->pb, 1, 0); /* no HEC */
 }
 
-AVCodec mpeg4_encoder = {
+AVCodec ff_mpeg4_encoder = {
     "mpeg4",
     AVMEDIA_TYPE_VIDEO,
     CODEC_ID_MPEG4,
@@ -1346,16 +1346,7 @@ AVCodec mpeg4_encoder = {
     encode_init,
     MPV_encode_picture,
     MPV_encode_end,
-	/*.close = */NULL,
-    /*.decode = */NULL,
-	/*.capabilities = */CODEC_CAP_DELAY,
-	/*.next = */NULL,
-	/*.flush = */NULL,
-	/*.supported_framerates = */NULL,
-#if __STDC_VERSION__ >= 199901L
     .pix_fmts= (const enum PixelFormat[]){PIX_FMT_YUV420P, PIX_FMT_NONE},
-#else
-	/*.pix_fmts = */NULL,
-#endif
-    /*.long_name = */NULL_IF_CONFIG_SMALL("MPEG-4 part 2"),
+    .capabilities= CODEC_CAP_DELAY,
+    .long_name= NULL_IF_CONFIG_SMALL("MPEG-4 part 2"),
 };

@@ -647,23 +647,17 @@ static av_cold int png_dec_end(AVCodecContext *avctx)
     return 0;
 }
 
-AVCodec png_decoder = {
+AVCodec ff_png_decoder = {
     "png",
     AVMEDIA_TYPE_VIDEO,
     CODEC_ID_PNG,
     sizeof(PNGDecContext),
-    /*.init = */png_dec_init,
-    /*.encode = */NULL,
-    /*.close = */png_dec_end,
-    /*.decode = */decode_frame,
-    /*.capabilities = */CODEC_CAP_DR1 /*| CODEC_CAP_DRAW_HORIZ_BAND*/,
-    /*.next = */NULL,
-    /*.flush = */NULL,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("PNG image"),
-    /*.supported_samplerates = */NULL,
-    /*.sample_fmts = */NULL,
-    /*.channel_layouts = */NULL,
-    /*.max_lowres = */5,
+    png_dec_init,
+    NULL,
+    png_dec_end,
+    decode_frame,
+    CODEC_CAP_DR1 /*| CODEC_CAP_DRAW_HORIZ_BAND*/,
+    NULL,
+    .max_lowres = 5,
+    .long_name = NULL_IF_CONFIG_SMALL("PNG image"),
 };

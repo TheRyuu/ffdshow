@@ -27,8 +27,8 @@
 #include "avcodec.h"
 
 #define REGISTER_DECODER(X,x) { \
-          extern AVCodec x##_decoder; \
-          if(CONFIG_##X##_DECODER)  avcodec_register(&x##_decoder); }
+          extern AVCodec ff_##x##_decoder; \
+          if(CONFIG_##X##_DECODER)  avcodec_register(&ff_##x##_decoder); }
 
 void avcodec_register_all(void)
 {

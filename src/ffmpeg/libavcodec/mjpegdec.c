@@ -1483,7 +1483,7 @@ av_cold int ff_mjpeg_decode_end(AVCodecContext *avctx)
     return 0;
 }
 
-AVCodec mjpeg_decoder = {
+AVCodec ff_mjpeg_decoder = {
     "mjpeg",
     AVMEDIA_TYPE_VIDEO,
     CODEC_ID_MJPEG,

@@ -537,7 +537,7 @@ static av_cold int qtrle_decode_end(AVCodecContext *avctx)
     return 0;
 }
 
-AVCodec qtrle_decoder = {
+AVCodec ff_qtrle_decoder = {
     "qtrle",
     AVMEDIA_TYPE_VIDEO,
     CODEC_ID_QTRLE,
@@ -546,11 +546,7 @@ AVCodec qtrle_decoder = {
     NULL,
     qtrle_decode_end,
     qtrle_decode_frame,
-    /*.capabilities = */CODEC_CAP_DR1,
-    /*.next = */NULL,
-    /*.flush = */NULL,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("QuickTime Animation (RLE) video"),
+    CODEC_CAP_DR1,
+    .long_name = NULL_IF_CONFIG_SMALL("QuickTime Animation (RLE) video"),
 };
 

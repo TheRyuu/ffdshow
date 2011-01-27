@@ -331,7 +331,7 @@ static av_cold int msvideo1_decode_end(AVCodecContext *avctx)
     return 0;
 }
 
-AVCodec msvideo1_decoder = {
+AVCodec ff_msvideo1_decoder = {
     "msvideo1",
     AVMEDIA_TYPE_VIDEO,
     CODEC_ID_MSVIDEO1,
@@ -340,10 +340,6 @@ AVCodec msvideo1_decoder = {
     NULL,
     msvideo1_decode_end,
     msvideo1_decode_frame,
-    /*.capabilities = */CODEC_CAP_DR1,
-    /*.next = */NULL,
-    /*.flush = */NULL,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name= */NULL_IF_CONFIG_SMALL("Microsoft Video 1"),
+    CODEC_CAP_DR1,
+    .long_name= NULL_IF_CONFIG_SMALL("Microsoft Video 1"),
 };

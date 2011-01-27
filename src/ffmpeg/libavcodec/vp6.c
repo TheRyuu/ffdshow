@@ -305,7 +305,7 @@ static void vp6_parse_vector_adjustment(VP56Context *s, VP56mv *vect)
     VP56Model *model = s->modelp;
     int comp;
 
-    vect->x=0;vect->y=0;
+    *vect = (VP56mv) {0,0};
     if (s->vector_candidate_pos < 2)
         *vect = s->vector_candidate[0];
 
@@ -606,7 +606,7 @@ static av_cold int vp6_decode_free(AVCodecContext *avctx)
     return 0;
 }
 
-AVCodec vp6_decoder = {
+AVCodec ff_vp6_decoder = {
     "vp6",
     AVMEDIA_TYPE_VIDEO,
     CODEC_ID_VP6,
@@ -615,16 +615,12 @@ AVCodec vp6_decoder = {
     NULL,
     vp6_decode_free,
     ff_vp56_decode_frame,
-    /*.capabilities = */CODEC_CAP_DR1,
-    /*.next = */NULL,
-    /*.flush = */NULL,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("On2 VP6"),
+    CODEC_CAP_DR1,
+    .long_name = NULL_IF_CONFIG_SMALL("On2 VP6"),
 };
 
 /* flash version, not flipped upside-down */
-AVCodec vp6f_decoder = {
+AVCodec ff_vp6f_decoder = {
     "vp6f",
     AVMEDIA_TYPE_VIDEO,
     CODEC_ID_VP6F,
@@ -633,16 +629,12 @@ AVCodec vp6f_decoder = {
     NULL,
     vp6_decode_free,
     ff_vp56_decode_frame,
-    /*.capabilities = */CODEC_CAP_DR1,
-    /*.next = */NULL,
-    /*.flush = */NULL,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("On2 VP6 (Flash version)"),
+    CODEC_CAP_DR1,
+    .long_name = NULL_IF_CONFIG_SMALL("On2 VP6 (Flash version)"),
 };
 
 /* flash version, not flipped upside-down, with alpha channel */
-AVCodec vp6a_decoder = {
+AVCodec ff_vp6a_decoder = {
     "vp6a",
     AVMEDIA_TYPE_VIDEO,
     CODEC_ID_VP6A,
@@ -651,10 +643,6 @@ AVCodec vp6a_decoder = {
     NULL,
     vp6_decode_free,
     ff_vp56_decode_frame,
-    /*.capabilities = */CODEC_CAP_DR1,
-    /*.next = */NULL,
-    /*.flush = */NULL,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("On2 VP6 (Flash version, with alpha channel)"),
+    CODEC_CAP_DR1,
+    .long_name = NULL_IF_CONFIG_SMALL("On2 VP6 (Flash version, with alpha channel)"),
 };

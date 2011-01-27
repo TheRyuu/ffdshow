@@ -18,7 +18,6 @@
 
 #include "h264.h"
 #include "h264data.h"
-#include "h264_parser.h"
 #include "golomb.h"
 
 #include <windows.h>

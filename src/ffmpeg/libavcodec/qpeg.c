@@ -311,7 +311,7 @@ static av_cold int decode_end(AVCodecContext *avctx){
     return 0;
 }
 
-AVCodec qpeg_decoder = {
+AVCodec ff_qpeg_decoder = {
     "qpeg",
     AVMEDIA_TYPE_VIDEO,
     CODEC_ID_QPEG,
@@ -320,10 +320,6 @@ AVCodec qpeg_decoder = {
     NULL,
     decode_end,
     decode_frame,
-    /*.capabilities = */CODEC_CAP_DR1,
-    /*.next = */NULL,
-    /*.flush = */NULL,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("Q-team QPEG"),
+    CODEC_CAP_DR1,
+    .long_name = NULL_IF_CONFIG_SMALL("Q-team QPEG"),
 };

@@ -145,23 +145,17 @@ read_header:
     return buf_ptr - buf;
 }
 
-AVCodec mjpegb_decoder = {
+AVCodec ff_mjpegb_decoder = {
     "mjpegb",
     AVMEDIA_TYPE_VIDEO,
     CODEC_ID_MJPEGB,
     sizeof(MJpegDecodeContext),
-    /*.init=*/ff_mjpeg_decode_init,
-    /*.encode=*/NULL,
-    /*.close=*/ff_mjpeg_decode_end,
-    /*.decode=*/mjpegb_decode_frame,
-    /*.capabilities=*/CODEC_CAP_DR1,
-    /*.next = */NULL,
-    /*.flush = */NULL,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("Apple MJPEG-B"),
-    /*.supported_samplerates = */NULL,
-    /*.sample_fmts = */NULL,
-    /*.channel_layouts = */NULL,
-    /*.max_lowres = */3,
+    ff_mjpeg_decode_init,
+    NULL,
+    ff_mjpeg_decode_end,
+    mjpegb_decode_frame,
+    CODEC_CAP_DR1,
+    NULL,
+    .max_lowres = 3,
+    .long_name = NULL_IF_CONFIG_SMALL("Apple MJPEG-B"),
 };

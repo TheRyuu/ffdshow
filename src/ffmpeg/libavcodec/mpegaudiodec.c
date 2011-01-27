@@ -2032,7 +2032,7 @@ static void flush(AVCodecContext *avctx){
 
 #if !CONFIG_FLOAT
 #if CONFIG_MP1_DECODER
-AVCodec mp1_decoder =
+AVCodec ff_mp1_decoder =
 {
     "mp1",
     AVMEDIA_TYPE_AUDIO,
@@ -2048,7 +2048,7 @@ AVCodec mp1_decoder =
 };
 #endif
 #if CONFIG_MP2_DECODER
-AVCodec mp2_decoder =
+AVCodec ff_mp2_decoder =
 {
     "mp2",
     AVMEDIA_TYPE_AUDIO,
@@ -2064,7 +2064,7 @@ AVCodec mp2_decoder =
 };
 #endif
 #if CONFIG_MP3_DECODER
-AVCodec mp3_decoder =
+AVCodec ff_mp3_decoder =
 {
     "mp3",
     AVMEDIA_TYPE_AUDIO,

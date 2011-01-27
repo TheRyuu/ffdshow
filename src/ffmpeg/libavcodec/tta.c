@@ -532,7 +532,7 @@ static void tta_flush(AVCodecContext *avctx)
     set_position(s,0);
 }
 
-AVCodec tta_decoder = {
+AVCodec ff_tta_decoder = {
     "tta",
     AVMEDIA_TYPE_AUDIO,
     CODEC_ID_TTA,

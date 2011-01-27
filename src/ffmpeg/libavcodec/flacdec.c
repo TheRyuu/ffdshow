@@ -653,19 +653,14 @@ static av_cold int flac_decode_close(AVCodecContext *avctx)
     return 0;
 }
 
-AVCodec flac_decoder = {
+AVCodec ff_flac_decoder = {
     "flac",
     AVMEDIA_TYPE_AUDIO,
     CODEC_ID_FLAC,
     sizeof(FLACContext),
-    /*.init = */flac_decode_init,
-    /*.encode = */NULL,
-    /*.close = */flac_decode_close,
-    /*.decode = */flac_decode_frame,
-    /*.capabilities = */0,
-    /*.next = */NULL,
-    /*.flush = */NULL,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name= */NULL_IF_CONFIG_SMALL("FLAC (Free Lossless Audio Codec)"),
+    flac_decode_init,
+    NULL,
+    flac_decode_close,
+    flac_decode_frame,
+    .long_name= NULL_IF_CONFIG_SMALL("FLAC (Free Lossless Audio Codec)"),
 };

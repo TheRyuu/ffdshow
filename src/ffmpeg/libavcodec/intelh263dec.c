@@ -125,7 +125,7 @@ int ff_intel_h263_decode_picture_header(MpegEncContext *s)
     return 0;
 }
 
-AVCodec h263i_decoder = {
+AVCodec ff_h263i_decoder = {
     "h263i",
     AVMEDIA_TYPE_VIDEO,
     CODEC_ID_H263I,
@@ -135,10 +135,7 @@ AVCodec h263i_decoder = {
     ff_h263_decode_end,
     ff_h263_decode_frame,
     CODEC_CAP_DRAW_HORIZ_BAND | CODEC_CAP_DR1,
-    /*.next = */NULL,
-    /*.flush = */NULL,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("Intel H.263"),
+    .long_name = NULL_IF_CONFIG_SMALL("Intel H.263"),
+    .pix_fmts= ff_pixfmt_list_420,
 };
 

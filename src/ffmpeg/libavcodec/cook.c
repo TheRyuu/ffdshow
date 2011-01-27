@@ -1221,20 +1221,14 @@ static av_cold int cook_decode_init(AVCodecContext *avctx)
 }
 
 
-AVCodec cook_decoder =
+AVCodec ff_cook_decoder =
 {
-    /*.name = */"cook",
-    /*.type = */AVMEDIA_TYPE_AUDIO,
-    /*.id = */CODEC_ID_COOK,
-    /*.priv_data_size = */sizeof(COOKContext),
-    /*.init =*/ cook_decode_init,
-    /*.encode = */ NULL,
-    /*.close = */cook_decode_close,
-    /*.decode = */cook_decode_frame,
-    /*.capabilities = */0,
-    /*.next = */NULL,
-    /*.flush = */NULL,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("COOK"),
+    .name = "cook",
+    .type = AVMEDIA_TYPE_AUDIO,
+    .id = CODEC_ID_COOK,
+    .priv_data_size = sizeof(COOKContext),
+    .init = cook_decode_init,
+    .close = cook_decode_close,
+    .decode = cook_decode_frame,
+    .long_name = NULL_IF_CONFIG_SMALL("COOK"),
 };

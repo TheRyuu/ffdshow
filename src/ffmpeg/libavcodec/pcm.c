@@ -25,54 +25,9 @@
  */
 
 #include "avcodec.h"
+#include "pcm_tablegen.h"
 
 #define MAX_CHANNELS 64
-
-/* from g711.c by SUN microsystems (unrestricted use) */
-
-#define         SIGN_BIT        (0x80)      /* Sign bit for a A-law byte. */
-#define         QUANT_MASK      (0xf)       /* Quantization field mask. */
-#define         NSEGS           (8)         /* Number of A-law segments. */
-#define         SEG_SHIFT       (4)         /* Left shift for segment number. */
-#define         SEG_MASK        (0x70)      /* Segment field mask. */
-
-#define         BIAS            (0x84)      /* Bias for linear code. */
-
-/*
- * alaw2linear() - Convert an A-law value to 16-bit linear PCM
- *
- */
-static av_cold int alaw2linear(unsigned char a_val)
-{
-        int t;
-        int seg;
-
-        a_val ^= 0x55;
-
-        t = a_val & QUANT_MASK;
-        seg = ((unsigned)a_val & SEG_MASK) >> SEG_SHIFT;
-        if(seg) t= (t + t + 1 + 32) << (seg + 2);
-        else    t= (t + t + 1     ) << 3;
-
-        return (a_val & SIGN_BIT) ? t : -t;
-}
-
-static av_cold int ulaw2linear(unsigned char u_val)
-{
-        int t;
-
-        /* Complement to obtain normal u-law value. */
-        u_val = ~u_val;
-
-        /*
-         * Extract and bias the quantization bits. Then
-         * shift up by the segment number and subtract out the bias.
-         */
-        t = ((u_val & QUANT_MASK) << 3) + BIAS;
-        t <<= ((unsigned)u_val & SEG_MASK) >> SEG_SHIFT;
-
-        return (u_val & SIGN_BIT) ? (BIAS - t) : (t - BIAS);
-}
 
 typedef struct PCMDecode {
     short table[256];
@@ -96,8 +51,7 @@ static av_cold int pcm_decode_init(AVCodecContext * avctx)
         break;
     }
 
-    /* ffdshow custom code */
-    avctx->sample_fmt = AV_SAMPLE_FMT_S16;
+    avctx->sample_fmt = avctx->codec->sample_fmts[0];
 
     if (avctx->sample_fmt == AV_SAMPLE_FMT_S32)
         avctx->bits_per_raw_sample = av_get_bits_per_sample(avctx->codec->id);
@@ -118,6 +72,11 @@ static int pcm_decode_frame(AVCodecContext *avctx,
 
     samples = data;
     src = buf;
+
+    if (avctx->sample_fmt!=avctx->codec->sample_fmts[0]) {
+        av_log(avctx, AV_LOG_ERROR, "invalid sample_fmt\n");
+        return -1;
+    }
 
     if(avctx->channels <= 0 || avctx->channels > MAX_CHANNELS){
         av_log(avctx, AV_LOG_ERROR, "PCM channels out of bounds\n");
@@ -161,45 +120,17 @@ static int pcm_decode_frame(AVCodecContext *avctx,
 }
 
 #if CONFIG_DECODERS
-#if __STDC_VERSION__ >= 199901L
-#define PCM_DECODER(id,sample_fmt_,name,long_name_)         \
-AVCodec name ## _decoder = {                    \
-    #name,                                      \
-    AVMEDIA_TYPE_AUDIO,                         \
-    id,                                         \
-    sizeof(PCMDecode),                          \
-    pcm_decode_init,                            \
-    NULL,                                       \
-    NULL,                                       \
-    pcm_decode_frame,                           \
-    /*.capabilities = */0,                      \
-    /*.next = */NULL,                           \
-    /*.flush = */NULL,                          \
-    /*.supported_framerates = */NULL,           \
-    /*.pix_fmts = */NULL,                       \
-    /*.long_name = */NULL_IF_CONFIG_SMALL(long_name_), \
-    /*.sample_fmts = */(enum SampleFormat[]){sample_fmt_,AV_SAMPLE_FMT_NONE}, \
-}
-#else
-#define PCM_DECODER(id,sample_fmt_,name,long_name_)         \
-AVCodec name ## _decoder = {                    \
-    #name,                                      \
-    AVMEDIA_TYPE_AUDIO,                         \
-    id,                                         \
-    sizeof(PCMDecode),                          \
-    pcm_decode_init,                            \
-    NULL,                                       \
-    NULL,                                       \
-    pcm_decode_frame,                           \
-    /*.capabilities = */0,                      \
-    /*.next = */NULL,                           \
-    /*.flush = */NULL,                          \
-    /*.supported_framerates = */NULL,           \
-    /*.pix_fmts = */NULL,                       \
-    /*.long_name = */NULL_IF_CONFIG_SMALL(long_name_), \
-    /*.sample_fmts = */NULL, \
-}
-#endif /* __STDC_VERSION__ >= 199901L */
+#define PCM_DECODER(id_,sample_fmt_,name_,long_name_)         \
+AVCodec ff_ ## name_ ## _decoder = {            \
+    .name           = #name_,                   \
+    .type           = AVMEDIA_TYPE_AUDIO,       \
+    .id             = id_,                      \
+    .priv_data_size = sizeof(PCMDecode),        \
+    .init           = pcm_decode_init,          \
+    .decode         = pcm_decode_frame,         \
+    .sample_fmts = (const enum AVSampleFormat[]){sample_fmt_,AV_SAMPLE_FMT_NONE}, \
+    .long_name = NULL_IF_CONFIG_SMALL(long_name_), \
+};
 #else
 #define PCM_DECODER(id,sample_fmt_,name,long_name_)
 #endif

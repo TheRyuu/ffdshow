@@ -1786,7 +1786,7 @@ static int decode_frame(AVCodecContext *avctx, void *data, int *data_size, AVPac
     return buf_size;
 }
 
-AVCodec ffv1_decoder = {
+AVCodec ff_ffv1_decoder = {
     "ffv1",
     AVMEDIA_TYPE_VIDEO,
     CODEC_ID_FFV1,
@@ -1796,15 +1796,12 @@ AVCodec ffv1_decoder = {
     common_end,
     decode_frame,
     CODEC_CAP_DR1 /*| CODEC_CAP_DRAW_HORIZ_BAND*/,
-    /*.next = */NULL,
-    /*.flush = */NULL,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name= */NULL_IF_CONFIG_SMALL("FFmpeg video codec #1"),
+    NULL,
+    .long_name= NULL_IF_CONFIG_SMALL("FFmpeg video codec #1"),
 };
 
 #if CONFIG_FFV1_ENCODER
-AVCodec ffv1_encoder = {
+AVCodec ff_ffv1_encoder = {
     "ffv1",
     AVMEDIA_TYPE_VIDEO,
     CODEC_ID_FFV1,
@@ -1812,16 +1809,7 @@ AVCodec ffv1_encoder = {
     encode_init,
     encode_frame,
     common_end,
-    /*.decode = */NULL,
-    /*.capabilities = */0,
-    /*.next = */NULL,
-    /*.flush = */NULL,
-    /*.supported_framerates = */NULL,
-#if __STDC_VERSION__ >= 199901L
     .pix_fmts= (const enum PixelFormat[]){PIX_FMT_YUV420P, PIX_FMT_YUV444P, PIX_FMT_YUV422P, PIX_FMT_YUV411P, PIX_FMT_YUV410P, PIX_FMT_RGB32, PIX_FMT_YUV420P16, PIX_FMT_YUV422P16, PIX_FMT_YUV444P16, PIX_FMT_NONE},
-#else
-    /*.pix_fmts = */NULL,
-#endif
-    /*.long_name= */NULL_IF_CONFIG_SMALL("FFmpeg video codec #1"),
+    .long_name= NULL_IF_CONFIG_SMALL("FFmpeg video codec #1"),
 };
 #endif

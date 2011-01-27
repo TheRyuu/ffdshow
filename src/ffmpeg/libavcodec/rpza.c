@@ -275,7 +275,7 @@ static av_cold int rpza_decode_end(AVCodecContext *avctx)
     return 0;
 }
 
-AVCodec rpza_decoder = {
+AVCodec ff_rpza_decoder = {
     "rpza",
     AVMEDIA_TYPE_VIDEO,
     CODEC_ID_RPZA,
@@ -284,10 +284,6 @@ AVCodec rpza_decoder = {
     NULL,
     rpza_decode_end,
     rpza_decode_frame,
-    /*.capabilities = */CODEC_CAP_DR1,
-    /*.next = */NULL,
-    /*.flush = */NULL,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("QuickTime video (RPZA)"),
+    CODEC_CAP_DR1,
+    .long_name = NULL_IF_CONFIG_SMALL("QuickTime video (RPZA)"),
 };

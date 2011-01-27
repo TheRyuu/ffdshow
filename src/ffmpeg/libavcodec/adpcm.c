@@ -865,7 +865,7 @@ static int adpcm_decode_frame(AVCodecContext *avctx,
 
 #if CONFIG_DECODERS
 #define ADPCM_DECODER(id,name,long_name_)       \
-AVCodec name ## _decoder = {                    \
+AVCodec ff_ ## name ## _decoder = {             \
     #name,                                      \
     AVMEDIA_TYPE_AUDIO,                         \
     id,                                         \
@@ -874,12 +874,7 @@ AVCodec name ## _decoder = {                    \
     NULL,                                       \
     NULL,                                       \
     adpcm_decode_frame,                         \
-    /*.capabilities = */0,                      \
-    /*.next = */NULL,                           \
-    /*.flush = */NULL,                          \
-    /*.supported_framerates = */NULL,           \
-    /*.pix_fmts = */NULL,                       \
-    /*.long_name = */NULL_IF_CONFIG_SMALL(long_name_), \
+    .long_name = NULL_IF_CONFIG_SMALL(long_name_), \
 };
 #else
 #define ADPCM_DECODER(id,name,long_name_)

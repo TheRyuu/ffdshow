@@ -939,7 +939,7 @@ static av_cold void flush(AVCodecContext *avctx)
     s->last_superframe_len= 0;
 }
 
-AVCodec wmav1_decoder =
+AVCodec ff_wmav1_decoder =
 {
     "wmav1",
     AVMEDIA_TYPE_AUDIO,
@@ -949,15 +949,11 @@ AVCodec wmav1_decoder =
     NULL,
     ff_wma_end,
     wma_decode_superframe,
-    /*.capabilities = */0,
-    /*.next = */NULL,
-    /*.flush = */flush,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("Windows Media Audio 1"),
+    .flush=flush,
+    .long_name = NULL_IF_CONFIG_SMALL("Windows Media Audio 1"),
 };
 
-AVCodec wmav2_decoder =
+AVCodec ff_wmav2_decoder =
 {
     "wmav2",
     AVMEDIA_TYPE_AUDIO,
@@ -967,10 +963,6 @@ AVCodec wmav2_decoder =
     NULL,
     ff_wma_end,
     wma_decode_superframe,
-    /*.capabilities = */0,
-    /*.next = */NULL,
-    /*.flush = */flush,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("Windows Media Audio 2"),
+    .flush=flush,
+    .long_name = NULL_IF_CONFIG_SMALL("Windows Media Audio 2"),
 };

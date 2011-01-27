@@ -109,7 +109,7 @@ static av_cold int aasc_decode_end(AVCodecContext *avctx)
     return 0;
 }
 
-AVCodec aasc_decoder = {
+AVCodec ff_aasc_decoder = {
     "aasc",
     AVMEDIA_TYPE_VIDEO,
     CODEC_ID_AASC,
@@ -118,10 +118,6 @@ AVCodec aasc_decoder = {
     NULL,
     aasc_decode_end,
     aasc_decode_frame,
-    /*.capabilities = */CODEC_CAP_DR1,
-    /*.next = */NULL,
-    /*.flush = */NULL,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("Autodesk RLE"),
+    CODEC_CAP_DR1,
+    .long_name = NULL_IF_CONFIG_SMALL("Autodesk RLE"),
 };

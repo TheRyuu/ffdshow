@@ -930,44 +930,30 @@ static void mpeg1_encode_block(MpegEncContext *s,
     put_bits(&s->pb, table_vlc[112][1], table_vlc[112][0]);
 }
 
-AVCodec mpeg1video_encoder = {
+AVCodec ff_mpeg1video_encoder = {
     "mpeg1video",
     AVMEDIA_TYPE_VIDEO,
     CODEC_ID_MPEG1VIDEO,
     sizeof(MpegEncContext),
-    /*.init=*/encode_init,
-    /*.encode=*/MPV_encode_picture,
-    /*.close=*/MPV_encode_end,
-    /*.decode=*/NULL,
-    /*.capabilities=*/CODEC_CAP_DELAY,
-    /*.next=*/NULL,
-    /*.flush=*/NULL,
-    /*.supported_framerates=*/ff_frame_rate_tab+1,
-#if __STDC_VERSION__ >= 199901L
+    encode_init,
+    MPV_encode_picture,
+    MPV_encode_end,
+    .supported_framerates= ff_frame_rate_tab+1,
     .pix_fmts= (const enum PixelFormat[]){PIX_FMT_YUV420P, PIX_FMT_NONE},
-#else
-    /*.pix_fmts = */NULL,
-#endif
-    /*.long_name= */NULL_IF_CONFIG_SMALL("MPEG-1 video"),
+    .capabilities= CODEC_CAP_DELAY,
+    .long_name= NULL_IF_CONFIG_SMALL("MPEG-1 video"),
 };
 
-AVCodec mpeg2video_encoder = {
+AVCodec ff_mpeg2video_encoder = {
     "mpeg2video",
     AVMEDIA_TYPE_VIDEO,
     CODEC_ID_MPEG2VIDEO,
     sizeof(MpegEncContext),
-    /*.init=*/encode_init,
-    /*.encode=*/MPV_encode_picture,
-    /*.close=*/MPV_encode_end,
-    /*.decode=*/NULL,
-    /*.capabilities=*/CODEC_CAP_DELAY,
-    /*.next=*/NULL,
-    /*.flush=*/NULL,
-    /*.supported_framerates=*/ff_frame_rate_tab+1,
-#if __STDC_VERSION__ >= 199901L
+    encode_init,
+    MPV_encode_picture,
+    MPV_encode_end,
+    .supported_framerates= ff_frame_rate_tab+1,
     .pix_fmts= (const enum PixelFormat[]){PIX_FMT_YUV420P, PIX_FMT_YUV422P, PIX_FMT_NONE},
-#else
-    /*.pix_fmts = */NULL,
-#endif
-    /*.long_name= */NULL_IF_CONFIG_SMALL("MPEG-1 video"),
+    .capabilities= CODEC_CAP_DELAY,
+    .long_name= NULL_IF_CONFIG_SMALL("MPEG-2 video"),
 };

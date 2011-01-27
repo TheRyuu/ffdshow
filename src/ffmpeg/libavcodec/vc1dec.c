@@ -3320,7 +3320,7 @@ static av_cold int vc1_decode_end(AVCodecContext *avctx)
 }
 
 
-AVCodec vc1_decoder = {
+AVCodec ff_vc1_decoder = {
     "vc1",
     AVMEDIA_TYPE_VIDEO,
     CODEC_ID_VC1,
@@ -3330,15 +3330,13 @@ AVCodec vc1_decoder = {
     vc1_decode_end,
     vc1_decode_frame,
     CODEC_CAP_DR1 | CODEC_CAP_DELAY,
-    /*.next = */NULL,
-    /*.flush = */NULL,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("SMPTE VC-1"),
+    NULL,
+    .long_name = NULL_IF_CONFIG_SMALL("SMPTE VC-1"),
+    .pix_fmts = ff_hwaccel_pixfmt_list_420
 };
 
 #if CONFIG_WMV3_DECODER
-AVCodec wmv3_decoder = {
+AVCodec ff_wmv3_decoder = {
     "wmv3",
     AVMEDIA_TYPE_VIDEO,
     CODEC_ID_WMV3,
@@ -3348,11 +3346,9 @@ AVCodec wmv3_decoder = {
     vc1_decode_end,
     vc1_decode_frame,
     CODEC_CAP_DR1 | CODEC_CAP_DELAY,
-    /*.next = */NULL,
-    /*.flush = */NULL,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("Windows Media Video 9"),
+    NULL,
+    .long_name = NULL_IF_CONFIG_SMALL("Windows Media Video 9"),
+    .pix_fmts = ff_hwaccel_pixfmt_list_420
 };
 #endif
 

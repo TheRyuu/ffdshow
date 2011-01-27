@@ -26,7 +26,7 @@
  */
 
 /**
- * @file libavcodec/ljpegenc.c
+ * @file
  * lossless JPEG encoder.
  */
 
@@ -186,19 +186,13 @@ static int encode_picture_lossless(AVCodecContext *avctx, unsigned char *buf, in
 }
 
 
-AVCodec ljpeg_encoder = { //FIXME avoid MPV_* lossless JPEG should not need them
+AVCodec ff_ljpeg_encoder = { //FIXME avoid MPV_* lossless JPEG should not need them
     "ljpeg",
-    CODEC_TYPE_VIDEO,
+    AVMEDIA_TYPE_VIDEO,
     CODEC_ID_LJPEG,
     sizeof(MpegEncContext),
     MPV_encode_init,
     encode_picture_lossless,
     MPV_encode_end,
-    /*.decode = */NULL,
-    /*.capabilities = */0,
-    /*.next = */NULL,
-    /*.flush = */NULL,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("Lossless JPEG"),
+    .long_name = NULL_IF_CONFIG_SMALL("Lossless JPEG"),
 };

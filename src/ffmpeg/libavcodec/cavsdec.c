@@ -709,19 +709,16 @@ static int cavs_decode_frame(AVCodecContext * avctx,void *data, int *data_size,
     }
 }
 
-AVCodec cavs_decoder = {
+AVCodec ff_cavs_decoder = {
     "cavs",
     AVMEDIA_TYPE_VIDEO,
     CODEC_ID_CAVS,
     sizeof(AVSContext),
-    /*.init=*/ff_cavs_init,
-    /*.encode=*/NULL,
-    /*.close=*/ff_cavs_end,
-    /*.decode=*/cavs_decode_frame,
-    /*.capabilities=*/CODEC_CAP_DR1 | CODEC_CAP_DELAY,
-    /*.next=*/NULL,
-    /*.flush=*/cavs_flush,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name= */NULL_IF_CONFIG_SMALL("Chinese AVS video (AVS1-P2, JiZhun profile)"),
+    ff_cavs_init,
+    NULL,
+    ff_cavs_end,
+    cavs_decode_frame,
+    CODEC_CAP_DR1 | CODEC_CAP_DELAY,
+    .flush= cavs_flush,
+    .long_name= NULL_IF_CONFIG_SMALL("Chinese AVS video (AVS1-P2, JiZhun profile)"),
 };

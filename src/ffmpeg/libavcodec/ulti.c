@@ -404,7 +404,7 @@ static int ulti_decode_frame(AVCodecContext *avctx,
     return buf_size;
 }
 
-AVCodec ulti_decoder = {
+AVCodec ff_ulti_decoder = {
     "ultimotion",
     AVMEDIA_TYPE_VIDEO,
     CODEC_ID_ULTI,
@@ -413,11 +413,8 @@ AVCodec ulti_decoder = {
     NULL,
     ulti_decode_end,
     ulti_decode_frame,
-    /*.capabilities = */CODEC_CAP_DR1,
-    /*.next = */NULL,
-    /*.flush = */NULL,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("IBM UltiMotion"),
+    CODEC_CAP_DR1,
+    NULL,
+    .long_name = NULL_IF_CONFIG_SMALL("IBM UltiMotion"),
 };
 

@@ -84,7 +84,7 @@ static int gsm_decode_frame(AVCodecContext *avctx, void *data,
     return avctx->block_align;
 }
 
-AVCodec gsm_decoder = {
+AVCodec ff_gsm_decoder = {
     "gsm",
     AVMEDIA_TYPE_AUDIO,
     CODEC_ID_GSM,
@@ -93,15 +93,10 @@ AVCodec gsm_decoder = {
     NULL,
     NULL,
     gsm_decode_frame,
-    /*.capabilities = */0,
-    /*.next = */NULL,
-    /*.flush = */NULL,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("GSM"),
+    .long_name = NULL_IF_CONFIG_SMALL("GSM"),
 };
 
-AVCodec gsm_ms_decoder = {
+AVCodec ff_gsm_ms_decoder = {
     "gsm_ms",
     AVMEDIA_TYPE_AUDIO,
     CODEC_ID_GSM_MS,
@@ -110,10 +105,5 @@ AVCodec gsm_ms_decoder = {
     NULL,
     NULL,
     gsm_decode_frame,
-    /*.capabilities = */0,
-    /*.next = */NULL,
-    /*.flush = */NULL,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("GSM Microsoft variant"),
+    .long_name = NULL_IF_CONFIG_SMALL("GSM Microsoft variant"),
 };

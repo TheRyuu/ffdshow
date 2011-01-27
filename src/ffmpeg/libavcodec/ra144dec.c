@@ -114,7 +114,7 @@ static int ra144_decode_frame(AVCodecContext * avctx, void *vdata,
     return 20;
 }
 
-AVCodec ra_144_decoder =
+AVCodec ff_ra_144_decoder =
 {
     "real_144",
     AVMEDIA_TYPE_AUDIO,
@@ -124,10 +124,5 @@ AVCodec ra_144_decoder =
     NULL,
     NULL,
     ra144_decode_frame,
-    /*.capabilities = */0,
-    /*.next = */NULL,
-    /*.flush = */NULL,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("RealAudio 1.0 (14.4K)"),
+    .long_name = NULL_IF_CONFIG_SMALL("RealAudio 1.0 (14.4K)"),
 };

@@ -26,7 +26,7 @@
  */
 
 /**
- * @file libavcodec/mjpegenc.c
+ * @file
  * MJPEG encoder.
  */
 
@@ -441,25 +441,18 @@ void ff_mjpeg_encode_mb(MpegEncContext *s, DCTELEM block[6][64])
         encode_block(s, block[5], 5);
         encode_block(s, block[7], 7);
     }
+
+    s->i_tex_bits += get_bits_diff(s);
 }
 
-AVCodec mjpeg_encoder = {
+AVCodec ff_mjpeg_encoder = {
     "mjpeg",
-    CODEC_TYPE_VIDEO,
+    AVMEDIA_TYPE_VIDEO,
     CODEC_ID_MJPEG,
     sizeof(MpegEncContext),
-    /*.init=*/MPV_encode_init,
-    /*.encode=*/MPV_encode_picture,
-    /*.close=*/MPV_encode_end,
-    /*.decode=*/NULL,
-    /*.capabilities=*/0,
-    /*.next=*/NULL,
-    /*.flush=*/NULL,
-    /*.supported_framerates=*/NULL,
-#if __STDC_VERSION__ >= 199901L
+    MPV_encode_init,
+    MPV_encode_picture,
+    MPV_encode_end,
     .pix_fmts= (const enum PixelFormat[]){PIX_FMT_YUVJ420P, PIX_FMT_YUVJ422P, PIX_FMT_NONE},
-#else
-    /*.pix_fmts = */NULL,
-#endif
-    /*.long_name= */NULL_IF_CONFIG_SMALL("MJPEG (Motion JPEG)"),
+    .long_name= NULL_IF_CONFIG_SMALL("MJPEG (Motion JPEG)"),
 };

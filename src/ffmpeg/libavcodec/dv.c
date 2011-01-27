@@ -1292,47 +1292,31 @@ static int dvvideo_close(AVCodecContext *c)
 
 
 #if CONFIG_DVVIDEO_ENCODER
-AVCodec dvvideo_encoder = {
+AVCodec ff_dvvideo_encoder = {
     "dvvideo",
     AVMEDIA_TYPE_VIDEO,
     CODEC_ID_DVVIDEO,
     sizeof(DVVideoContext),
-    /*.init=*/dvvideo_init_encoder,
-    /*.encode=*/dvvideo_encode_frame,
-    /*.close=*/NULL,
-    /*.decode=*/NULL,
-    /*.capabilities=*/0,
-    /*.next=*/NULL,
-    /*.flush=*/NULL,
-    /*.supported_framerates=*/NULL,
-#if __STDC_VERSION__ >= 199901L
-    .pix_fmts = (const enum PixelFormat[]) {PIX_FMT_YUV411P, PIX_FMT_YUV422P, PIX_FMT_YUV420P, PIX_FMT_NONE},
-#else
-    /*.pix_fmts = */NULL,
-#endif
-    /*.long_name = */NULL_IF_CONFIG_SMALL("DV (Digital Video)"),
+    dvvideo_init_encoder,
+    dvvideo_encode_frame,
+    .pix_fmts  = (const enum PixelFormat[]) {PIX_FMT_YUV411P, PIX_FMT_YUV422P, PIX_FMT_YUV420P, PIX_FMT_NONE},
+    .long_name = NULL_IF_CONFIG_SMALL("DV (Digital Video)"),
 };
 #endif // CONFIG_DVVIDEO_ENCODER
 
 #if CONFIG_DVVIDEO_DECODER
-AVCodec dvvideo_decoder = {
+AVCodec ff_dvvideo_decoder = {
     "dvvideo",
     AVMEDIA_TYPE_VIDEO,
     CODEC_ID_DVVIDEO,
     sizeof(DVVideoContext),
-    /*.init=*/dvvideo_init,
-    /*.encode=*/NULL,
-    /*.close=*/dvvideo_close,
-    /*.decode=*/dvvideo_decode_frame,
-    /*.capabilities=*/CODEC_CAP_DR1,
-    /*.next=*/NULL,
-    /*.flush=*/NULL,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("DV (Digital Video)"),
-    /*.supported_samplerates = */NULL,
-    /*.sample_fmts = */NULL,
-    /*.channel_layouts = */NULL,
-    /*.max_lowres = */3,
+    dvvideo_init,
+    NULL,
+    dvvideo_close,
+    dvvideo_decode_frame,
+    CODEC_CAP_DR1,
+    NULL,
+    .max_lowres = 3,
+    .long_name = NULL_IF_CONFIG_SMALL("DV (Digital Video)"),
 };
 #endif

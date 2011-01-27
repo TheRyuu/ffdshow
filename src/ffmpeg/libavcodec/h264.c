@@ -1,5 +1,5 @@
 /*
- * H.26L/H.264/AVC/JVT/14496-10/... encoder/decoder
+ * H.26L/H.264/AVC/JVT/14496-10/... decoder
  * Copyright (c) 2003 Michael Niedermayer <michaelni@gmx.at>
  *
  * This file is part of FFmpeg.
@@ -33,7 +33,6 @@
 #include "h264.h"
 #include "h264data.h"
 #include "h264_mvpred.h"
-#include "h264_parser.h"
 #include "golomb.h"
 #include "mathops.h"
 #include "rectangle.h"
@@ -232,7 +231,11 @@ nsc:
     return dst;
 }
 
-int ff_h264_decode_rbsp_trailing(H264Context *h, const uint8_t *src){
+/**
+ * Identify the exact end of the bitstream
+ * @return the length of the trailing, or 0 if damaged
+ */
+static int ff_h264_decode_rbsp_trailing(H264Context *h, const uint8_t *src){
     int v= *src;
     int r;
 
@@ -3166,7 +3169,7 @@ av_cold int ff_h264_decode_end(AVCodecContext *avctx)
 }
 
 
-AVCodec h264_decoder = {
+AVCodec ff_h264_decoder = {
     "h264",
     AVMEDIA_TYPE_VIDEO,
     CODEC_ID_H264,

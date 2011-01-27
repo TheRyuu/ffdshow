@@ -668,19 +668,17 @@ static av_cold int rv40_decode_init(AVCodecContext *avctx)
     return 0;
 }
 
-AVCodec rv40_decoder = {
+AVCodec ff_rv40_decoder = {
     "rv40",
     AVMEDIA_TYPE_VIDEO,
     CODEC_ID_RV40,
     sizeof(RV34DecContext),
-    /*.init = */rv40_decode_init,
-    /*.encode = */NULL,
-    /*.decode = */ff_rv34_decode_end,
-    /*.close = */ff_rv34_decode_frame,
-    /*.capabilities = */CODEC_CAP_DR1 | CODEC_CAP_DELAY,
-    /*.next = */NULL,
-    /*.flush = */ff_mpeg_flush,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("RealVideo 4.0"),
+    rv40_decode_init,
+    NULL,
+    ff_rv34_decode_end,
+    ff_rv34_decode_frame,
+    CODEC_CAP_DR1 | CODEC_CAP_DELAY,
+    .flush = ff_mpeg_flush,
+    .long_name = NULL_IF_CONFIG_SMALL("RealVideo 4.0"),
+    .pix_fmts= ff_pixfmt_list_420,
 };

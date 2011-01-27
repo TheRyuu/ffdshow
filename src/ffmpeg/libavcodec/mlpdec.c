@@ -1139,38 +1139,28 @@ error:
     return -1;
 }
 
-AVCodec mlp_decoder = {
+AVCodec ff_mlp_decoder = {
     "mlp",
     AVMEDIA_TYPE_AUDIO,
     CODEC_ID_MLP,
     sizeof(MLPDecodeContext),
-    /*.init = */mlp_decode_init,
-    /*.encode = */NULL,
-    /*.close = */NULL,
-    /*.decode = */read_access_unit,
-    /*.capabilities = */0,
-    /*.next = */NULL,
-    /*.flush = */NULL,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("MLP (Meridian Lossless Packing)"),
+    mlp_decode_init,
+    NULL,
+    NULL,
+    read_access_unit,
+    .long_name = NULL_IF_CONFIG_SMALL("MLP (Meridian Lossless Packing)"),
 };
 
 #if CONFIG_TRUEHD_DECODER
-AVCodec truehd_decoder = {
+AVCodec ff_truehd_decoder = {
     "truehd",
     AVMEDIA_TYPE_AUDIO,
     CODEC_ID_TRUEHD,
     sizeof(MLPDecodeContext),
-    /*.init = */mlp_decode_init,
-    /*.encode = */NULL,
-    /*.close = */NULL,
-    /*.decode = */read_access_unit,
-    /*.capabilities = */0,
-    /*.next = */NULL,
-    /*.flush = */NULL,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("TrueHD"),
+    mlp_decode_init,
+    NULL,
+    NULL,
+    read_access_unit,
+    .long_name = NULL_IF_CONFIG_SMALL("TrueHD"),
 };
 #endif /* CONFIG_TRUEHD_DECODER */

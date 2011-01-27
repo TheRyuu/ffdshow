@@ -211,23 +211,14 @@ void ff_wmv2_encode_mb(MpegEncContext * s,
     }
 }
 
-AVCodec wmv2_encoder = {
+AVCodec ff_wmv2_encoder = {
     "wmv2",
     AVMEDIA_TYPE_VIDEO,
     CODEC_ID_WMV2,
     sizeof(Wmv2Context),
-    /*.init = */wmv2_encode_init,
-    /*.encode = */MPV_encode_picture,
-    /*.close = */MPV_encode_end,
-	/*.decode = */NULL,
-    /*.capabilities = */0,
-    /*.next = */NULL,
-    /*.flush = */NULL,
-    /*.supported_framerates = */NULL,
-#if __STDC_VERSION__ >= 199901L
+    wmv2_encode_init,
+    MPV_encode_picture,
+    MPV_encode_end,
     .pix_fmts= (const enum PixelFormat[]){PIX_FMT_YUV420P, PIX_FMT_NONE},
-#else
-    /*.pix_fmts = */NULL,
-#endif
-    /*.long_name= */NULL_IF_CONFIG_SMALL("Windows Media Video 8"),
+    .long_name= NULL_IF_CONFIG_SMALL("Windows Media Video 8"),
 };

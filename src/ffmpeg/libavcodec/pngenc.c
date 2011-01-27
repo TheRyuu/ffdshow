@@ -282,7 +282,7 @@ static int encode_frame(AVCodecContext *avctx, unsigned char *buf, int buf_size,
     s->zstream.zalloc = ff_png_zalloc;
     s->zstream.zfree = ff_png_zfree;
     s->zstream.opaque = NULL;
-    compression_level = p->quality;
+    compression_level = p->quality; /* ffdshow custom code */
     ret = deflateInit2(&s->zstream, compression_level,
                        Z_DEFLATED, 15, 8, Z_DEFAULT_STRATEGY);
     if (ret != Z_OK)
@@ -435,23 +435,14 @@ static av_cold int png_enc_init(AVCodecContext *avctx){
     return 0;
 }
 
-AVCodec png_encoder = {
+AVCodec ff_png_encoder = {
     "png",
     AVMEDIA_TYPE_VIDEO,
     CODEC_ID_PNG,
     sizeof(PNGEncContext),
-    /*.init=*/png_enc_init,
-    /*.encode=*/encode_frame,
-    /*.close=*/NULL, //encode_end
-    /*.decode=*/NULL,
-    /*.capabilities=*/0,
-    /*.next=*/NULL,
-    /*.flush=*/NULL,
-    /*.supported_framerates=*/NULL,
-#if __STDC_VERSION__ >= 199901L
+    png_enc_init,
+    encode_frame,
+    NULL, //encode_end,
     .pix_fmts= (const enum PixelFormat[]){PIX_FMT_RGB24, PIX_FMT_RGB32, PIX_FMT_PAL8, PIX_FMT_GRAY8, PIX_FMT_MONOBLACK, PIX_FMT_NONE},
-#else
-    /*.pix_fmts = */NULL,
-#endif
-    /*.long_name= */NULL_IF_CONFIG_SMALL("PNG image"),
+    .long_name= NULL_IF_CONFIG_SMALL("PNG image"),
 };

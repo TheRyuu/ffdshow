@@ -154,7 +154,7 @@ static av_cold int decode_end(AVCodecContext *avctx){
     return 0;
 }
 
-AVCodec wnv1_decoder = {
+AVCodec ff_wnv1_decoder = {
     "wnv1",
     AVMEDIA_TYPE_VIDEO,
     CODEC_ID_WNV1,
@@ -163,10 +163,6 @@ AVCodec wnv1_decoder = {
     NULL,
     decode_end,
     decode_frame,
-    /*.capabilities = */CODEC_CAP_DR1,
-    /*.next = */NULL,
-    /*.flush = */NULL,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("Winnov WNV1"),
+    CODEC_CAP_DR1,
+    .long_name = NULL_IF_CONFIG_SMALL("Winnov WNV1"),
 };

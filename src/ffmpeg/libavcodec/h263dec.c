@@ -711,7 +711,7 @@ av_log(avctx, AV_LOG_DEBUG, "%"PRId64"\n", rdtsc()-time);
     return get_consumed_bytes(s, buf_size);
 }
 
-AVCodec h263_decoder = {
+AVCodec ff_h263_decoder = {
     "h263",
     AVMEDIA_TYPE_VIDEO,
     CODEC_ID_H263,
@@ -721,13 +721,8 @@ AVCodec h263_decoder = {
     ff_h263_decode_end,
     ff_h263_decode_frame,
     CODEC_CAP_DRAW_HORIZ_BAND | CODEC_CAP_DR1 | CODEC_CAP_TRUNCATED | CODEC_CAP_DELAY,
-    /*.next = */NULL,
-    /*.flush = */ff_mpeg_flush,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("H.263 / H.263-1996, H.263+ / H.263-1998 / H.263 version 2"),
-    /*.supported_samplerates = */NULL,
-    /*.sample_fmts = */NULL,
-    /*.channel_layouts = */NULL,
-    /*.max_lowres = */3,
+    .flush= ff_mpeg_flush,
+    .max_lowres= 3,
+    .long_name= NULL_IF_CONFIG_SMALL("H.263 / H.263-1996, H.263+ / H.263-1998 / H.263 version 2"),
+    .pix_fmts= ff_hwaccel_pixfmt_list_420,
 };
