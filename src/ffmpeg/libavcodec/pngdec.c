@@ -431,6 +431,11 @@ static int decode_frame(AVCodecContext *avctx,
             goto fail;
         tag32 = bytestream_get_be32(&s->bytestream);
         tag = av_bswap32(tag32);
+        av_dlog(avctx, "png: tag=%c%c%c%c length=%u\n",
+                (tag & 0xff),
+                ((tag >> 8) & 0xff),
+                ((tag >> 16) & 0xff),
+                ((tag >> 24) & 0xff), length);
         switch(tag) {
         case MKTAG('I', 'H', 'D', 'R'):
             if (length != 13)
@@ -448,6 +453,9 @@ static int decode_frame(AVCodecContext *avctx,
             s->interlace_type = *s->bytestream++;
             crc = bytestream_get_be32(&s->bytestream);
             s->state |= PNG_IHDR;
+            av_dlog(avctx, "width=%d height=%d depth=%d color_type=%d compression_type=%d filter_type=%d interlace_type=%d\n",
+                    s->width, s->height, s->bit_depth, s->color_type,
+                    s->compression_type, s->filter_type, s->interlace_type);
             break;
         case MKTAG('I', 'D', 'A', 'T'):
             if (!(s->state & PNG_IHDR))
@@ -509,6 +517,8 @@ static int decode_frame(AVCodecContext *avctx,
                                                          s->width);
                     s->crow_size = s->pass_row_size + 1;
                 }
+                av_dlog(avctx, "row_size=%d crow_size =%d\n",
+                        s->row_size, s->crow_size);
                 s->image_buf = p->data[0];
                 s->image_linesize = p->linesize[0];
                 /* copy the palette if needed */

@@ -214,9 +214,7 @@ av_cold int ff_dct_init(DCTContext *s, int nbits, enum DCTTransformType inverse)
         s->dct_calc = dct32_func;
 
     s->dct32 = dct32;
-#if HAVE_MMX
-    ff_dct_init_mmx(s);
-#endif
+    if (HAVE_MMX)     ff_dct_init_mmx(s);
 
     return 0;
 }

@@ -59,4 +59,6 @@ static void synth_filter_float(FFTContext *imdct,
 av_cold void ff_synth_filter_init(SynthFilterContext *c)
 {
     c->synth_filter_float = synth_filter_float;
+
+    if (ARCH_ARM) ff_synth_filter_init_arm(c);
 }

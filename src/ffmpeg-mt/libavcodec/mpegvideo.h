@@ -225,9 +225,6 @@ typedef struct MpegEncContext {
     int stream_codec_tag;      ///< internal stream_codec_tag upper case converted from avctx stream_codec_tag
     /* the following fields are managed internally by the encoder */
 
-    /** bit output */
-    PutBitContext pb;
-
     /* sequence parameters */
     int context_initialized;
     int input_picture_number;  ///< used to set pic->display_picture_number, should not be used for/by anything else
@@ -247,6 +244,23 @@ typedef struct MpegEncContext {
     Picture *picture;          ///< main picture buffer
     Picture **input_picture;   ///< next pictures on display order for encoding
     Picture **reordered_input_picture; ///< pointer to the next pictures in codedorder for encoding
+
+    int y_dc_scale, c_dc_scale;
+    int ac_pred;
+    int block_last_index[12];  ///< last non zero coefficient in block
+    int h263_aic;              ///< Advanded INTRA Coding (AIC)
+
+    /* scantables */
+    ScanTable inter_scantable; ///< if inter == intra then intra should be used to reduce tha cache usage
+    ScanTable intra_scantable;
+    ScanTable intra_h_scantable;
+    ScanTable intra_v_scantable;
+
+    /* WARNING: changes above this line require updates to hardcoded
+     *          offsets used in asm. */
+
+    /** bit output */
+    PutBitContext pb;
 
     int picture_count;         ///< number of allocated pictures (MAX_PICTURE_COUNT * avctx->thread_count)
     int picture_range_start, picture_range_end; ///< the part of picture that this context can allocate in
@@ -287,7 +301,6 @@ typedef struct MpegEncContext {
     int16_t *dc_val_base;
     int16_t *dc_val[3];            ///< used for mpeg4 DC prediction, all 3 arrays must be continuous
     int16_t dc_cache[4*5];
-    int y_dc_scale, c_dc_scale;
     const uint8_t *y_dc_scale_table;     ///< qscale -> y_dc_scale table
     const uint8_t *c_dc_scale_table;     ///< qscale -> c_dc_scale table
     const uint8_t *chroma_qscale_table;  ///< qscale -> chroma_qscale (h263)
@@ -295,7 +308,6 @@ typedef struct MpegEncContext {
     uint8_t *coded_block;          ///< used for coded block pattern prediction (msmpeg4v3, wmv1)
     int16_t (*ac_val_base)[16];
     int16_t (*ac_val[3])[16];      ///< used for for mpeg4 AC prediction, all 3 arrays must be continuous
-    int ac_pred;
     uint8_t *prev_pict_types;     ///< previous picture types in bitstream order, used for mb skip
 #define PREV_PICT_TYPES_BUFFER_SIZE 256
     int mb_skipped;                ///< MUST BE SET only during DECODING
@@ -438,12 +450,6 @@ typedef struct MpegEncContext {
     /** identical to the above but for MMX & these are not permutated, second 64 entries are bias*/
     uint16_t (*q_intra_matrix16)[2][64];
     uint16_t (*q_inter_matrix16)[2][64];
-    int block_last_index[12];  ///< last non zero coefficient in block
-    /* scantables */
-    ScanTable intra_scantable;
-    ScanTable intra_h_scantable;
-    ScanTable intra_v_scantable;
-    ScanTable inter_scantable; ///< if inter == intra then intra should be used to reduce tha cache usage
 
     /* noise reduction */
     int (*dct_error_sum)[64];
@@ -499,7 +505,6 @@ typedef struct MpegEncContext {
 
     /* H.263+ specific */
     int umvplus;                    ///< == H263+ && unrestricted_mv
-    int h263_aic;                   ///< Advanded INTRA Coding (AIC)
     int h263_aic_dir;               ///< AIC direction: 0 = left, 1 = top
     int h263_slice_structured;
     int alt_inter_vlc;              ///< alternative inter vlc

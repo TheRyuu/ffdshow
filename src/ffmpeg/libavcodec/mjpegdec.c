@@ -1042,11 +1042,9 @@ static int mjpeg_decode_app(MJpegDecodeContext *s)
     if (id == AV_RL32("AVI1"))
     {
             s->buggy_avid = 1;
-
         i = get_bits(&s->gb, 8);
         if     (i==2) s->bottom_field= 1;
         else if(i==1) s->bottom_field= 0;
-
         goto out;
     }
 
@@ -1202,7 +1200,7 @@ static int find_marker(const uint8_t **pbuf_ptr, const uint8_t *buf_end)
     }
     val = -1;
 found:
-    dprintf(NULL, "find_marker skipped %d bytes\n", skipped);
+    av_dlog(NULL, "find_marker skipped %d bytes\n", skipped);
     *pbuf_ptr = buf_ptr;
     return val;
 }
@@ -1252,7 +1250,7 @@ int ff_mjpeg_decode_frame(AVCodecContext *avctx,
 
                         *(dst++) = x;
                         //if (avctx->codec_id != CODEC_ID_THP)
-                       	//{
+                        {
                             if (x == 0xff) {
                                 while (src < buf_end && x == 0xff)
                                     x = *(src++);
@@ -1262,7 +1260,7 @@ int ff_mjpeg_decode_frame(AVCodecContext *avctx,
                                 else if (x)
                                     break;
                             }
-                        //}
+                        }
                     }
                     init_get_bits(&s->gb, s->buffer, (dst - s->buffer)*8);
 

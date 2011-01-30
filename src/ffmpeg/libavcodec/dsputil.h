@@ -70,8 +70,6 @@ void ff_svq3_add_idct_c(uint8_t *dst, DCTELEM *block, int stride, int qp, int dc
 
 void ff_vector_fmul_window_c(float *dst, const float *src0, const float *src1,
                              const float *win, float add_bias, int len);
-void ff_float_to_int16_c(int16_t *dst, const float *src, long len);
-void ff_float_to_int16_interleave_c(int16_t *dst, const float **src, long len, int channels);
 
 /* encoding scans */
 extern const uint8_t ff_alternate_horizontal_scan[64];
@@ -209,6 +207,21 @@ typedef struct DSPContext {
     void (*add_pixels8)(uint8_t *pixels, DCTELEM *block, int line_size);
     void (*add_pixels4)(uint8_t *pixels, DCTELEM *block, int line_size);
     int (*sum_abs_dctelem)(DCTELEM *block/*align 16*/);
+    /**
+     * Motion estimation with emulated edge values.
+     * @param buf pointer to destination buffer (unaligned)
+     * @param src pointer to pixel source (unaligned)
+     * @param linesize width (in pixels) for src/buf
+     * @param block_w number of pixels (per row) to copy to buf
+     * @param block_h nummber of pixel rows to copy to buf
+     * @param src_x offset of src to start of row - this may be negative
+     * @param src_y offset of src to top of image - this may be negative
+     * @param w width of src in pixels
+     * @param h height of src in pixels
+     */
+    void (*emulated_edge_mc)(uint8_t *buf, const uint8_t *src, int linesize,
+                             int block_w, int block_h,
+                             int src_x, int src_y, int w, int h);
     /**
      * translational global motion compensation.
      */
@@ -427,8 +440,7 @@ typedef struct DSPContext {
      */
     void (*butterflies_float)(float *restrict v1, float *restrict v2, int len);
 
-    /* C version: convert floats from the range [384.0,386.0] to ints in [-32768,32767]
-     * simd versions: convert floats from [-32768.0,32767.0] without rescaling and arrays are 16byte aligned */
+    /* convert floats from [-32768.0,32767.0] without rescaling and arrays are 16byte aligned */
     void (*float_to_int16)(int16_t *dst, const float *src, long len);
     void (*float_to_int16_interleave)(int16_t *dst, const float **src, long len, int channels);
 

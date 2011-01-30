@@ -1132,9 +1132,9 @@ void intra_predict(VP8Context *s, uint8_t *dst[3], VP8Macroblock *mb,
                         linesize = 8;
                         if (!(mb_y + y)) {
                             copy_dst[3] = 127U;
-                            * (uint32_t *) (copy_dst + 4) = 127U * 0x01010101U;
+                            AV_WN32A(copy_dst+4, 127U * 0x01010101U);
                         } else {
-                            * (uint32_t *) (copy_dst + 4) = * (uint32_t *) (ptr+4*x-s->linesize);
+                            AV_COPY32(copy_dst+4, ptr+4*x-s->linesize);
                             if (!(mb_x + x)) {
                                 copy_dst[3] = 129U;
                             } else {
@@ -1158,10 +1158,10 @@ void intra_predict(VP8Context *s, uint8_t *dst[3], VP8Macroblock *mb,
                 }
                 s->hpc.pred4x4[mode](dst, topright, linesize);
                 if (copy) {
-                    * (uint32_t *) (ptr+4*x)               = * (uint32_t *) (copy_dst + 12);
-                    * (uint32_t *) (ptr+4*x+s->linesize)   = * (uint32_t *) (copy_dst + 20);
-                    * (uint32_t *) (ptr+4*x+s->linesize*2) = * (uint32_t *) (copy_dst + 28);
-                    * (uint32_t *) (ptr+4*x+s->linesize*3) = * (uint32_t *) (copy_dst + 36);
+                    AV_COPY32(ptr+4*x              , copy_dst+12);
+                    AV_COPY32(ptr+4*x+s->linesize  , copy_dst+20);
+                    AV_COPY32(ptr+4*x+s->linesize*2, copy_dst+28);
+                    AV_COPY32(ptr+4*x+s->linesize*3, copy_dst+36);
                 }
 
                 nnz = s->non_zero_count_cache[y][x];
@@ -1234,7 +1234,7 @@ void vp8_mc(VP8Context *s, int luma,
         src += y_off * linesize + x_off;
         if (x_off < mx_idx || x_off >= width  - block_w - idx[2][mx] ||
             y_off < my_idx || y_off >= height - block_h - idx[2][my]) {
-            ff_emulated_edge_mc(s->edge_emu_buffer, src - my_idx * linesize - mx_idx, linesize,
+            s->dsp.emulated_edge_mc(s->edge_emu_buffer, src - my_idx * linesize - mx_idx, linesize,
                                 block_w + idx[1][mx], block_h + idx[1][my],
                                 x_off - mx_idx, y_off - my_idx, width, height);
             src = s->edge_emu_buffer + mx_idx + linesize * my_idx;

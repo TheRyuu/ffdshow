@@ -17,12 +17,11 @@
  */
 
 /**
- * @file aandcttab.c
+ * @file
  * AAN (Arai Agui Aakajima) (I)DCT tables
  */
 
 #include <stdint.h>
-#include "libavutil/common.h"
 
 const uint16_t ff_aanscales[64] = {
     /* precomputed values scaled up by 14 bits */
