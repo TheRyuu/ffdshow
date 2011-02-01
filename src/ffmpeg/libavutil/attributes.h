@@ -36,7 +36,7 @@
 #if AV_GCC_VERSION_AT_LEAST(3,1)
 #    define av_always_inline __attribute__((always_inline)) inline
 #else
-#    define av_always_inline __inline
+#    define av_always_inline inline
 #endif
 #endif
 
@@ -93,6 +93,19 @@
 #    define av_unused __attribute__((unused))
 #else
 #    define av_unused
+#endif
+#endif
+
+/**
+ * Mark a variable as used and prevent the compiler from optimizing it
+ * away.  This is useful for variables accessed only from inline
+ * assembler without the compiler being aware.
+ */
+#ifndef av_used
+#if AV_GCC_VERSION_AT_LEAST(3,1)
+#    define av_used __attribute__((used))
+#else
+#    define av_used
 #endif
 #endif
 

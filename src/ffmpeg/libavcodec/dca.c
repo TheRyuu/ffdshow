@@ -896,7 +896,7 @@ static void qmf_32_subbands(DCAContext * s, int chans,
         s->synth.synth_filter_float(&s->imdct,
                               s->subband_fir_hist[chans], &s->hist_index[chans],
                               s->subband_fir_noidea[chans], prCoeff,
-                              samples_out, s->raXin, scale, 0);
+                              samples_out, s->raXin, scale);
         samples_out+= 32;
 
     }
@@ -929,7 +929,7 @@ static void lfe_interpolation_fir(DCAContext *s, int decimation_select,
     /* Interpolation */
     for (deciindex = 0; deciindex < num_deci_sample; deciindex++) {
         s->dcadsp.lfe_fir(samples_out, samples_in, prCoeff, decifactor,
-                          scale, 0);
+                          scale);
         samples_in++;
         samples_out += 2 * decifactor;
     }
@@ -1354,7 +1354,9 @@ static int dca_exss_mask2count(int mask)
  */
 static void dca_exss_skip_mix_coeffs(GetBitContext *gb, int channels, int out_ch)
 {
-    for (int i = 0; i < channels; i++) {
+    int i;
+
+    for (i = 0; i < channels; i++) {
         int mix_map_mask = get_bits(gb, out_ch);
         int num_coeffs = av_popcount(mix_map_mask);
         skip_bits_long(gb, num_coeffs * 6);

@@ -41,7 +41,7 @@
         static const t __attribute__((aligned(n))) v
 #elif defined(__GNUC__)
     #define DECLARE_ALIGNED(n,t,v)      t __attribute__ ((aligned (n))) v
-    #define DECLARE_ASM_CONST(n,t,v)    static const t attribute_used __attribute__ ((aligned (n))) v
+    #define DECLARE_ASM_CONST(n,t,v)    static const t av_used __attribute__ ((aligned (n))) v
 #elif defined(_MSC_VER)
     #define DECLARE_ALIGNED(n,t,v)      __declspec(align(n)) t v
     #define DECLARE_ASM_CONST(n,t,v)    __declspec(align(n)) static const t v
@@ -64,8 +64,10 @@
 
 #if LIBAVUTIL_VERSION_MAJOR < 51
 #   define FF_INTERNAL_MEM_TYPE unsigned int
+#   define FF_INTERNAL_MEM_TYPE_MAX_VALUE UINT_MAX
 #else
 #   define FF_INTERNAL_MEM_TYPE size_t
+#   define FF_INTERNAL_MEM_TYPE_MAX_VALUE SIZE_MAX
 #endif
 
 /**

@@ -23,21 +23,8 @@
 	#define PTW32_STATIC_LIB 1
 	#define restrict restrict
 #else
-	#define HAVE_INLINE_ASM 0
 	#define HAVE_MMX 0
-	#define HAVE_MMX2 0
-	#define HAVE_SSE 0
-	#define HAVE_SSSE3 0
-	#define HAVE_AMD3DNOW 0
-	#define HAVE_AMD3DNOWEXT 0
 	#define ARCH_X86 0
-	#define ARCH_X86_32 0
-	#define ARCH_X86_64 0
-	#define HAVE_FAST_64BIT 0
-
-	#define restrict
-	#define __asm__ __asm
-	#define inline __inline
 #endif
 
 // Use DPRINTF instead of av_log. To be used for debug purpose because DPRINTF will be always called (the
@@ -115,29 +102,29 @@
 #endif
 
 #ifdef __GNUC__
-#define HAVE_EXP2 1
-#define HAVE_EXP2F 1
-#define HAVE_LLRINT 1
-#define HAVE_LOG2 1
-#define HAVE_LOG2F 1
-#define HAVE_LRINT 1
-#define HAVE_LRINTF 1
-#define HAVE_ROUND 1
-#define HAVE_ROUNDF 1
-#define HAVE_TRUNCF 1
+  #define HAVE_EXP2 1
+  #define HAVE_EXP2F 1
+  #define HAVE_LLRINT 1
+  #define HAVE_LOG2 1
+  #define HAVE_LOG2F 1
+  #define HAVE_LRINT 1
+  #define HAVE_LRINTF 1
+  #define HAVE_ROUND 1
+  #define HAVE_ROUNDF 1
+  #define HAVE_TRUNCF 1
 #else
-#define HAVE_EXP2 1
-#define HAVE_EXP2F 1
-#define HAVE_LLRINT 0
-#define HAVE_LOG2 1
-#define HAVE_LOG2F 1
-#define HAVE_LRINT 0
-#define HAVE_LRINTF 0
-#define HAVE_ROUND 0
-#define HAVE_ROUNDF 1
-#define HAVE_TRUNCF 1
-#define rint(x) (int)(x+0.5)
-#define cbrtf(x) pow((float)x, (float)1.0/3)
+  #define HAVE_EXP2 1
+  #define HAVE_EXP2F 1
+  #define HAVE_LLRINT 0
+  #define HAVE_LOG2 1
+  #define HAVE_LOG2F 1
+  #define HAVE_LRINT 0
+  #define HAVE_LRINTF 0
+  #define HAVE_ROUND 0
+  #define HAVE_ROUNDF 1
+  #define HAVE_TRUNCF 1
+  #define rint(x) (int)(x+0.5)
+  #define cbrtf(x) pow((float)x, (float)1.0/3)
 #endif
 
 #define CONFIG_AC3ENC_FLOAT 0

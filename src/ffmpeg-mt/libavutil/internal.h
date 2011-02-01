@@ -46,20 +46,6 @@
 #endif
 #endif
 
-
-/**
- * Mark a variable as used and prevent the compiler from optimizing it away.
- * This is useful for asm that accesses varibles in ways that the compiler does not
- * understand
- */
-#ifndef attribute_used
-#if AV_GCC_VERSION_AT_LEAST(3,1)
-#    define attribute_used __attribute__((used))
-#else
-#    define attribute_used
-#endif
-#endif
-
 #ifndef INT16_MIN
 #define INT16_MIN       (-0x7fff - 1)
 #endif
@@ -98,19 +84,6 @@
 
 #ifndef offsetof
 #    define offsetof(T, F) ((unsigned int)((char *)&((T *)0)->F))
-#endif
-
-/* ffdshow custom code */
-#if ( defined(__PIC__) || defined(__pic__) ) && ! defined(PIC)
-#    define PIC
-#endif
-
-/* ffdshow custom code */
-#ifndef snprintf
-#define snprintf _snprintf
-#endif
-#ifndef vsnprintf
-#define vsnprintf _vsnprintf
 #endif
 
 /* Use to export labels from asm. */
