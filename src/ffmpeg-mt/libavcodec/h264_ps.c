@@ -267,16 +267,16 @@ static void decode_scaling_matrices(H264Context *h, SPS *sps, PPS *pps, int is_s
 
 int ff_h264_decode_seq_parameter_set(H264Context *h){
     MpegEncContext * const s = &h->s;
-    int profile_idc, level_idc;
+    int profile_idc, level_idc, constraint_set_flags = 0;
     unsigned int sps_id;
     int i;
     SPS *sps;
 
     profile_idc= get_bits(&s->gb, 8);
-    get_bits1(&s->gb);   //constraint_set0_flag
-    get_bits1(&s->gb);   //constraint_set1_flag
-    get_bits1(&s->gb);   //constraint_set2_flag
-    get_bits1(&s->gb);   //constraint_set3_flag
+    constraint_set_flags |= get_bits1(&s->gb) << 0;   //constraint_set0_flag
+    constraint_set_flags |= get_bits1(&s->gb) << 1;   //constraint_set1_flag
+    constraint_set_flags |= get_bits1(&s->gb) << 2;   //constraint_set2_flag
+    constraint_set_flags |= get_bits1(&s->gb) << 3;   //constraint_set3_flag
     get_bits(&s->gb, 4); // reserved
     level_idc= get_bits(&s->gb, 8);
     sps_id= get_ue_golomb_31(&s->gb);
@@ -291,6 +291,7 @@ int ff_h264_decode_seq_parameter_set(H264Context *h){
 
     sps->time_offset_length = 24;
     sps->profile_idc= profile_idc;
+    sps->constraint_set_flags = constraint_set_flags;
     sps->level_idc= level_idc;
     sps->full_range = VIDEO_FULL_RANGE_INVALID; /* ffdshow custom code */
 
@@ -404,11 +405,7 @@ int ff_h264_decode_seq_parameter_set(H264Context *h){
                sps->crop_left, sps->crop_right,
                sps->crop_top, sps->crop_bottom,
                sps->vui_parameters_present_flag ? "VUI" : "",
-               #if __STDC_VERSION__ >= 199901L
                ((const char*[]){"Gray","420","422","444"})[sps->chroma_format_idc],
-               #else
-               "",
-               #endif
                sps->timing_info_present_flag ? sps->num_units_in_tick : 0,
                sps->timing_info_present_flag ? sps->time_scale : 0
                );

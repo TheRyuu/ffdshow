@@ -999,7 +999,7 @@ av_cold int ff_h264_decode_init(AVCodecContext *avctx){
     ff_h264_decode_init_vlc();
 
     h->thread_context[0] = h;
-    h->outputed_poc = INT_MIN;
+    h->outputed_poc = h->next_outputed_poc = INT_MIN;
     h->prev_poc_msb= 1<<16;
     h->x264_build = -1;
     ff_h264_reset_sei(h);
@@ -2062,6 +2062,33 @@ static void clone_slice(H264Context *dst, H264Context *src)
 }
 
 /**
+ * computes profile from profile_idc and constraint_set?_flags
+ *
+ * @param sps SPS
+ *
+ * @return profile as defined by FF_PROFILE_H264_*
+ */
+int ff_h264_get_profile(SPS *sps)
+{
+    int profile = sps->profile_idc;
+
+    switch(sps->profile_idc) {
+    case FF_PROFILE_H264_BASELINE:
+        // constraint_set1_flag set to 1
+        profile |= (sps->constraint_set_flags & 1<<1) ? FF_PROFILE_H264_CONSTRAINED : 0;
+        break;
+    case FF_PROFILE_H264_HIGH_10:
+    case FF_PROFILE_H264_HIGH_422:
+    case FF_PROFILE_H264_HIGH_444_PREDICTIVE:
+        // constraint_set3_flag set to 1
+        profile |= (sps->constraint_set_flags & 1<<3) ? FF_PROFILE_H264_INTRA : 0;
+        break;
+    }
+
+    return profile;
+}
+
+/**
  * decodes a slice header.
  * This will also call MPV_common_init() and frame_start() as needed.
  *
@@ -2140,7 +2167,7 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
     }
     h->sps = *h0->sps_buffers[h->pps.sps_id];
 
-    s->avctx->profile = h->sps.profile_idc;
+    s->avctx->profile = ff_h264_get_profile(&h->sps);
     s->avctx->level   = h->sps.level_idc;
     s->avctx->refs    = h->sps.ref_frame_count;
 
@@ -3532,6 +3559,21 @@ av_cold int ff_h264_decode_end(AVCodecContext *avctx)
     return 0;
 }
 
+static const AVProfile profiles[] = {
+    { FF_PROFILE_H264_BASELINE,             "Baseline"              },
+    { FF_PROFILE_H264_CONSTRAINED_BASELINE, "Constrained Baseline"  },
+    { FF_PROFILE_H264_MAIN,                 "Main"                  },
+    { FF_PROFILE_H264_EXTENDED,             "Extended"              },
+    { FF_PROFILE_H264_HIGH,                 "High"                  },
+    { FF_PROFILE_H264_HIGH_10,              "High 10"               },
+    { FF_PROFILE_H264_HIGH_10_INTRA,        "High 10 Intra"         },
+    { FF_PROFILE_H264_HIGH_422,             "High 4:2:2"            },
+    { FF_PROFILE_H264_HIGH_422_INTRA,       "High 4:2:2 Intra"      },
+    { FF_PROFILE_H264_HIGH_444_PREDICTIVE,  "High 4:4:4 Predictive" },
+    { FF_PROFILE_H264_HIGH_444_INTRA,       "High 4:4:4 Intra"      },
+    { FF_PROFILE_H264_CAVLC_444,            "CAVLC 4:4:4"           },
+    { FF_PROFILE_UNKNOWN },
+};
 
 AVCodec ff_h264_decoder = {
     "h264",
@@ -3545,6 +3587,7 @@ AVCodec ff_h264_decoder = {
     /*CODEC_CAP_DRAW_HORIZ_BAND |*/ CODEC_CAP_DR1 | CODEC_CAP_DELAY | CODEC_CAP_FRAME_THREADS,
     .flush= flush_dpb,
     .long_name = NULL_IF_CONFIG_SMALL("H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10"),
+    .profiles = NULL_IF_CONFIG_SMALL(profiles),
     .init_thread_copy      = ONLY_IF_THREADS_ENABLED(decode_init_thread_copy),
     .update_thread_context = ONLY_IF_THREADS_ENABLED(decode_update_thread_context)
 };

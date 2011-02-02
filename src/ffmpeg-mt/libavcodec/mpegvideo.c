@@ -499,7 +499,8 @@ int ff_mpeg_update_thread_context(AVCodecContext *dst, const AVCodecContext *src
     s->divx_packed          = s1->divx_packed;
 
     if(s1->bitstream_buffer){
-        s->bitstream_buffer       = av_fast_realloc(s->bitstream_buffer, &s->allocated_bitstream_buffer_size, s1->allocated_bitstream_buffer_size+FF_INPUT_BUFFER_PADDING_SIZE);
+        if (s1->bitstream_buffer_size + FF_INPUT_BUFFER_PADDING_SIZE > s->allocated_bitstream_buffer_size)
+            av_fast_malloc(&s->bitstream_buffer, &s->allocated_bitstream_buffer_size, s1->allocated_bitstream_buffer_size);
         s->bitstream_buffer_size  = s1->bitstream_buffer_size;
         memcpy(s->bitstream_buffer, s1->bitstream_buffer, s1->bitstream_buffer_size);
         memset(s->bitstream_buffer+s->bitstream_buffer_size, 0, FF_INPUT_BUFFER_PADDING_SIZE);

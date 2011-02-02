@@ -26,7 +26,7 @@
 /* ffdshow custom code */
 #pragma GCC target ("sse")
 
-DECLARE_ALIGNED(16, static const int, m1m1m1m1)[4] =
+DECLARE_ASM_CONST(16, int, ff_m1m1m1m1)[4] =
     { 1 << 31, 1 << 31, 1 << 31, 1 << 31 };
 
 void ff_fft_dispatch_sse(FFTComplex *z, int nbits);
@@ -85,7 +85,7 @@ void ff_imdct_calc_sse(FFTContext *s, FFTSample *output, const FFTSample *input)
     j = -n;
     k = n-16;
     __asm__ volatile(
-        "movaps %4, %%xmm7 \n"
+        "movaps "MANGLE(ff_m1m1m1m1)", %%xmm7 \n"
         "1: \n"
         "movaps       (%2,%1), %%xmm0 \n"
         "movaps       (%3,%0), %%xmm1 \n"
@@ -98,8 +98,7 @@ void ff_imdct_calc_sse(FFTContext *s, FFTSample *output, const FFTSample *input)
         "add $16, %0 \n"
         "jl 1b \n"
         :"+r"(j), "+r"(k)
-        :"r"(output+n4), "r"(output+n4*3),
-         "m"(*m1m1m1m1)
+        :"r"(output+n4), "r"(output+n4*3)
         XMM_CLOBBERS_ONLY("%xmm0", "%xmm1", "%xmm7")
     );
 }

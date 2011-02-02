@@ -56,6 +56,7 @@ SRCS_C=\
     libavcodec/flacdata.c \
     libavcodec/flacdec.c \
     libavcodec/flvdec.c \
+    libavcodec/fmtconvert.c \
     libavcodec/fraps.c \
     libavcodec/g726.c \
     libavcodec/golomb.c \
@@ -210,6 +211,7 @@ SRCS_C=\
     libavcodec/x86/fft_3dn.c \
     libavcodec/x86/fft_3dn2.c \
     libavcodec/x86/fft_sse.c \
+    libavcodec/x86/fmtconvert_mmx.c \
     libavcodec/x86/h264_intrapred_init.c \
     libavcodec/x86/h264dsp_mmx.c \
     libavcodec/x86/idct_mmx.c \
@@ -289,6 +291,7 @@ SRCS_YASM=\
     libavcodec/x86/dsputil_yasm.asm \
     libavcodec/x86/dsputilenc_yasm.asm \
     libavcodec/x86/fft_mmx.asm \
+    libavcodec/x86/fmtconvert.asm \
     libavcodec/x86/h264_chromamc.asm \
     libavcodec/x86/h264_deblock.asm \
     libavcodec/x86/h264_idct.asm \
