@@ -162,13 +162,14 @@ typedef struct {
 
         /**
          * filter strength adjustment for the following macroblock modes:
-         * [0] - i4x4
-         * [1] - zero mv
-         * [2] - inter modes except for zero or split mv
-         * [3] - split mv
+         * [0-3] - i16x16 (always zero)
+         * [4]   - i4x4
+         * [5]   - zero mv
+         * [6]   - inter modes except for zero or split mv
+         * [7]   - split mv
          *  i16x16 modes never have any adjustment
          */
-        int8_t mode[4];
+        int8_t mode[VP8_MVMODE_SPLIT+1];
 
         /**
          * filter strength adjustment for macroblocks that reference:
@@ -278,7 +279,7 @@ static void update_lf_deltas(VP8Context *s)
     for (i = 0; i < 4; i++)
         s->lf_delta.ref[i]  = vp8_rac_get_sint(c, 6);
 
-    for (i = 0; i < 4; i++)
+    for (i = MODE_I4x4; i <= VP8_MVMODE_SPLIT; i++)
         s->lf_delta.mode[i] = vp8_rac_get_sint(c, 6);
 }
 
@@ -762,6 +763,7 @@ void decode_mb_mode(VP8Context *s, VP8Macroblock *mb, int mb_x, int mb_y, uint8_
         // motion vectors, 16.3
         find_near_mvs(s, mb, near, &best, cnt);
         if (vp56_rac_get_prob_branchy(c, vp8_mode_contexts[cnt[0]][0])) {
+            mb->mode = VP8_MVMODE_MV;
             if (vp56_rac_get_prob_branchy(c, vp8_mode_contexts[cnt[1]][1])) {
                 if (vp56_rac_get_prob_branchy(c, vp8_mode_contexts[cnt[2]][2])) {
                     if (vp56_rac_get_prob_branchy(c, vp8_mode_contexts[cnt[3]][3])) {
@@ -769,19 +771,14 @@ void decode_mb_mode(VP8Context *s, VP8Macroblock *mb, int mb_x, int mb_y, uint8_
                         clamp_mv(s, &mb->mv, &mb->mv, mb_x, mb_y);
                         mb->mv = mb->bmv[decode_splitmvs(s, c, mb) - 1];
                     } else {
-                        mb->mode = VP8_MVMODE_NEW;
                         clamp_mv(s, &mb->mv, &mb->mv, mb_x, mb_y);
                         mb->mv.y += read_mv_component(c, s->prob->mvc[0]);
                         mb->mv.x += read_mv_component(c, s->prob->mvc[1]);
                     }
-                } else {
-                    mb->mode = VP8_MVMODE_NEAR;
+                } else
                     clamp_mv(s, &mb->mv, &near[1], mb_x, mb_y);
-                }
-            } else {
-                mb->mode = VP8_MVMODE_NEAREST;
+            } else
                 clamp_mv(s, &mb->mv, &near[0], mb_x, mb_y);
-            }
         } else {
             mb->mode = VP8_MVMODE_ZERO;
             AV_ZERO32(&mb->mv);
@@ -1481,24 +1478,16 @@ static av_always_inline void filter_level_for_mb(VP8Context *s, VP8Macroblock *m
 
     if (s->lf_delta.enabled) {
         filter_level += s->lf_delta.ref[mb->ref_frame];
-
-        if (mb->ref_frame == VP56_FRAME_CURRENT) {
-            if (mb->mode == MODE_I4x4)
-                filter_level += s->lf_delta.mode[0];
-        } else {
-            if (mb->mode == VP8_MVMODE_ZERO)
-                filter_level += s->lf_delta.mode[1];
-            else if (mb->mode == VP8_MVMODE_SPLIT)
-                filter_level += s->lf_delta.mode[3];
-            else
-                filter_level += s->lf_delta.mode[2];
-        }
+        filter_level += s->lf_delta.mode[mb->mode];
     }
-    filter_level = av_clip(filter_level, 0, 63);
+
+/* Like av_clip for inputs 0 and max, where max is equal to (2^n-1) */
+#define POW2CLIP(x,max) (((x) & ~max) ? (-(x))>>31 & max : (x));
+    filter_level = POW2CLIP(filter_level, 63);
 
     interior_limit = filter_level;
     if (s->filter.sharpness) {
-        interior_limit >>= s->filter.sharpness > 4 ? 2 : 1;
+        interior_limit >>= (s->filter.sharpness + 3) >> 2;
         interior_limit = FFMIN(interior_limit, 9 - s->filter.sharpness);
     }
     interior_limit = FFMAX(interior_limit, 1);
@@ -1516,23 +1505,24 @@ static av_always_inline void filter_mb(VP8Context *s, uint8_t *dst[3], VP8Filter
     int inner_filter = f->inner_filter;
     int linesize = s->linesize;
     int uvlinesize = s->uvlinesize;
+    static const uint8_t hev_thresh_lut[2][64] = {
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1,
+          2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+          3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+          3, 3, 3, 3 },
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1,
+          1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+          2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+          2, 2, 2, 2 }
+    };
 
     if (!filter_level)
         return;
 
-    mbedge_lim = 2*(filter_level+2) + inner_limit;
-     bedge_lim = 2* filter_level    + inner_limit;
-    hev_thresh = filter_level >= 15;
+     bedge_lim = 2*filter_level + inner_limit;
+    mbedge_lim = bedge_lim + 4;
 
-    if (s->keyframe) {
-        if (filter_level >= 40)
-            hev_thresh = 2;
-    } else {
-        if (filter_level >= 40)
-            hev_thresh = 3;
-        else if (filter_level >= 20)
-            hev_thresh = 2;
-    }
+    hev_thresh = hev_thresh_lut[s->keyframe][filter_level];
 
     if (mb_x) {
         s->vp8dsp.vp8_h_loop_filter16y(dst[0],     linesize,
@@ -1588,8 +1578,8 @@ static av_always_inline void filter_mb_simple(VP8Context *s, uint8_t *dst, VP8Fi
     if (!filter_level)
         return;
 
-    mbedge_lim = 2*(filter_level+2) + inner_limit;
-     bedge_lim = 2* filter_level    + inner_limit;
+     bedge_lim = 2*filter_level + inner_limit;
+    mbedge_lim = bedge_lim + 4;
 
     if (mb_x)
         s->vp8dsp.vp8_h_loop_filter_simple(dst, linesize, mbedge_lim);

@@ -53,6 +53,7 @@
 #include "dsputil.h"
 #include "bytestream.h"
 #include "fft.h"
+#include "libavcore/audioconvert.h"
 
 #include "cookdata.h"
 
@@ -64,6 +65,7 @@
 
 #define SUBBAND_SIZE    20
 #define MAX_SUBPACKETS   5
+//#define COOKDEBUG
 
 typedef struct {
     int *now;
@@ -162,6 +164,38 @@ typedef struct cook {
 
 static float     pow2tab[127];
 static float rootpow2tab[127];
+
+/* debug functions */
+
+#ifdef COOKDEBUG
+static void dump_float_table(float* table, int size, int delimiter) {
+    int i=0;
+    av_log(NULL,AV_LOG_ERROR,"\n[%d]: ",i);
+    for (i=0 ; i<size ; i++) {
+        av_log(NULL, AV_LOG_ERROR, "%5.1f, ", table[i]);
+        if ((i+1)%delimiter == 0) av_log(NULL,AV_LOG_ERROR,"\n[%d]: ",i+1);
+    }
+}
+
+static void dump_int_table(int* table, int size, int delimiter) {
+    int i=0;
+    av_log(NULL,AV_LOG_ERROR,"\n[%d]: ",i);
+    for (i=0 ; i<size ; i++) {
+        av_log(NULL, AV_LOG_ERROR, "%d, ", table[i]);
+        if ((i+1)%delimiter == 0) av_log(NULL,AV_LOG_ERROR,"\n[%d]: ",i+1);
+    }
+}
+
+static void dump_short_table(short* table, int size, int delimiter) {
+    int i=0;
+    av_log(NULL,AV_LOG_ERROR,"\n[%d]: ",i);
+    for (i=0 ; i<size ; i++) {
+        av_log(NULL, AV_LOG_ERROR, "%d, ", table[i]);
+        if ((i+1)%delimiter == 0) av_log(NULL,AV_LOG_ERROR,"\n[%d]: ",i+1);
+    }
+}
+
+#endif
 
 /*************** init functions ***************/
 
@@ -1002,6 +1036,32 @@ static int cook_decode_frame(AVCodecContext *avctx,
     return avctx->block_align;
 }
 
+#ifdef COOKDEBUG
+static void dump_cook_context(COOKContext *q)
+{
+    //int i=0;
+#define PRINT(a,b) av_log(q->avctx,AV_LOG_ERROR," %s = %d\n", a, b);
+    av_log(q->avctx,AV_LOG_ERROR,"COOKextradata\n");
+    av_log(q->avctx,AV_LOG_ERROR,"cookversion=%x\n",q->subpacket[0].cookversion);
+    if (q->subpacket[0].cookversion > STEREO) {
+        PRINT("js_subband_start",q->subpacket[0].js_subband_start);
+        PRINT("js_vlc_bits",q->subpacket[0].js_vlc_bits);
+    }
+    av_log(q->avctx,AV_LOG_ERROR,"COOKContext\n");
+    PRINT("nb_channels",q->nb_channels);
+    PRINT("bit_rate",q->bit_rate);
+    PRINT("sample_rate",q->sample_rate);
+    PRINT("samples_per_channel",q->subpacket[0].samples_per_channel);
+    PRINT("samples_per_frame",q->subpacket[0].samples_per_frame);
+    PRINT("subbands",q->subpacket[0].subbands);
+    PRINT("random_state",q->random_state);
+    PRINT("js_subband_start",q->subpacket[0].js_subband_start);
+    PRINT("log2_numvector_size",q->subpacket[0].log2_numvector_size);
+    PRINT("numvector_size",q->subpacket[0].numvector_size);
+    PRINT("total_subbands",q->subpacket[0].total_subbands);
+}
+#endif
+
 static av_cold int cook_count_channels(unsigned int mask){
     int i;
     int channels = 0;
@@ -1215,8 +1275,11 @@ static av_cold int cook_decode_init(AVCodecContext *avctx)
     if (channel_mask)
         avctx->channel_layout = channel_mask;
     else
-        avctx->channel_layout = (avctx->channels==2) ? CH_LAYOUT_STEREO : CH_LAYOUT_MONO;
+        avctx->channel_layout = (avctx->channels==2) ? AV_CH_LAYOUT_STEREO : AV_CH_LAYOUT_MONO;
 
+#ifdef COOKDEBUG
+    dump_cook_context(q);
+#endif
     return 0;
 }
 
