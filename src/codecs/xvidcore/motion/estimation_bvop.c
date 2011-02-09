@@ -4,7 +4,7 @@
  *  - Motion Estimation for B-VOPs  -
  *
  *  Copyright(C) 2002 Christoph Lampert <gruel@web.de>
- *               2002 Michael Militzer <michael@xvid.org>
+ *               2002-2010 Michael Militzer <michael@xvid.org>
  *               2002-2003 Radoslaw Czyz <xvid@syskin.cjb.net>
  *
  *  This program is free software ; you can redistribute it and/or modify
@@ -21,7 +21,7 @@
  *  along with this program ; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
  *
- * $Id: estimation_bvop.c,v 1.25 2006/02/25 01:20:41 syskin Exp $
+ * $Id: estimation_bvop.c,v 1.29 2010/12/29 22:39:28 Isibaar Exp $
  *
  ****************************************************************************/
 
@@ -396,28 +396,45 @@ PreparePredictionsBF(VECTOR * const pmv, const int x, const int y,
 							const uint32_t iWcount,
 							const MACROBLOCK * const pMB,
 							const uint32_t mode_curr,
-							const VECTOR hint)
+							const VECTOR hint, const int bound)
 {
+	int lx, ly;		/* left */
+	int tx, ty;		/* top */
+	int rtx, rty;	/* top-right */
+	int ltx, lty;	/* top-left */
+	int lpos, tpos, rtpos, ltpos;
+
+	lx  = x - 1;	ly  = y;
+	tx  = x;		ty  = y - 1;
+	rtx = x + 1;	rty = y - 1;
+	ltx = x - 1;	lty = y - 1;
+
+	lpos  =  lx +  ly * iWcount;
+	rtpos = rtx + rty * iWcount;
+	tpos  =  tx +  ty * iWcount;
+	ltpos = ltx + lty * iWcount;
+
+
 	/* [0] is prediction */
 	/* [1] is zero */
 	pmv[1].x = pmv[1].y = 0; 
 
 	pmv[2].x = hint.x; pmv[2].y = hint.y;
 
-	if ((y != 0)&&(x != (int)(iWcount+1))) {			/* [3] top-right neighbour */
+	if (rtpos >= bound && rtx < (int)iWcount) {			/* [3] top-right neighbour */
 		pmv[3] = ChoosePred(pMB+1-iWcount, mode_curr);
 	} else pmv[3].x = pmv[3].y = 0;
 
-	if (y != 0) {
-		pmv[4] = ChoosePred(pMB-iWcount, mode_curr);
+ 	if (tpos >= bound) {
+		pmv[4] = ChoosePred(pMB-iWcount, mode_curr);	/* [4] top */
 	} else pmv[4].x = pmv[4].y = 0;
 
-	if (x != 0) {
-		pmv[5] = ChoosePred(pMB-1, mode_curr);
+	if (lpos >= bound && lx >= 0) {
+		pmv[5] = ChoosePred(pMB-1, mode_curr);			/* [5] left */
 	} else pmv[5].x = pmv[5].y = 0;
 
-	if (x != 0 && y != 0) {
-		pmv[6] = ChoosePred(pMB-1-iWcount, mode_curr);
+	if (ltpos >= bound && ltx >= 0) {
+		pmv[6] = ChoosePred(pMB-1-iWcount, mode_curr);	/* [6] top-left */
 	} else pmv[6].x = pmv[6].y = 0;
 }
 
@@ -432,7 +449,7 @@ SearchBF_initial(const int x, const int y,
 			int32_t * const best_sad,
 			const int32_t mode_current,
 			SearchData * const Data,
-			VECTOR hint)
+			VECTOR hint, const int bound)
 {
 
 	int i;
@@ -451,7 +468,7 @@ SearchBF_initial(const int x, const int y,
 		hint.x /= 2; hint.y /= 2;
 	}
 
-	PreparePredictionsBF(pmv, x, y, pParam->mb_width, pMB, mode_current, hint);
+	PreparePredictionsBF(pmv, x, y, pParam->mb_width, pMB, mode_current, hint, bound);
 
 	Data->currentMV->x = Data->currentMV->y = 0;
 
@@ -800,7 +817,8 @@ ModeDecision_BVOP_SAD(const SearchData * const Data_d,
 					  MACROBLOCK * const pMB,
 					  const MACROBLOCK * const b_mb,
 					  VECTOR * f_predMV,
-					  VECTOR * b_predMV)
+					  VECTOR * b_predMV, 
+					  int force_direct)
 {
 	int mode = MODE_DIRECT, k;
 	int best_sad, f_sad, b_sad, i_sad;
@@ -811,6 +829,9 @@ ModeDecision_BVOP_SAD(const SearchData * const Data_d,
 	b_sad = Data_b->iMinSAD[0] + 3*Data_d->lambda16;
 	f_sad = Data_f->iMinSAD[0] + 4*Data_d->lambda16;
 	i_sad = Data_i->iMinSAD[0] + 2*Data_d->lambda16;
+
+	if (force_direct)
+		goto set_mode; /* bypass checks for non-direct modes */
 
 	if (b_sad < best_sad) {
 		mode = MODE_BACKWARD;
@@ -827,6 +848,7 @@ ModeDecision_BVOP_SAD(const SearchData * const Data_d,
 		best_sad = i_sad;
 	}
 
+set_mode:
 	pMB->sad16 = best_sad;
 	pMB->mode = mode;
 	pMB->cbp = 63;
@@ -961,7 +983,8 @@ MotionEstimationBVOP(MBParam * const pParam,
 					 const IMAGE * const b_ref,
 					 const IMAGE * const b_refH,
 					 const IMAGE * const b_refV,
-					 const IMAGE * const b_refHV)
+					 const IMAGE * const b_refHV,
+					 const int num_slices)
 {
 	uint32_t i, j;
 	int32_t best_sad = 256*4096;
@@ -971,6 +994,8 @@ MotionEstimationBVOP(MBParam * const pParam,
 
 	VECTOR f_predMV, b_predMV;
 
+	int mb_width = pParam->mb_width;
+	int mb_height = pParam->mb_height;
 	int MVmaxF = 0, MVmaxB = 0;
 	const int32_t TRB = time_pp - time_bp;
 	const int32_t TRD = time_pp;
@@ -1000,12 +1025,16 @@ MotionEstimationBVOP(MBParam * const pParam,
 	Data_b.iFcode = Data_i.bFcode = frame->bcode = b_reference->fcode;
 
 	for (j = 0; j < pParam->mb_height; j++) {
+		int new_bound = mb_width * ((((j*num_slices) / mb_height) * mb_height + (num_slices-1)) / num_slices);
 
 		f_predMV = b_predMV = zeroMV;	/* prediction is reset at left boundary */
 
 		for (i = 0; i < pParam->mb_width; i++) {
 			MACROBLOCK * const pMB = frame->mbs + i + j * pParam->mb_width;
 			const MACROBLOCK * const b_mb = b_mbs + i + j * pParam->mb_width;
+			int force_direct = (((j*mb_width+i)==new_bound) && (j > 0)) ? 1 : 0; /* MTK decoder chipsets do NOT reset predMVs upon resync marker in BVOPs. We workaround this problem 
+																				    by placing the slice border on second MB in a row and then force the first MB to be direct mode */
+
 			pMB->mode = -1;
 
 			initialize_searchData(&Data_d, &Data_f, &Data_b, &Data_i,
@@ -1034,10 +1063,10 @@ MotionEstimationBVOP(MBParam * const pParam,
 			}
 
 			SearchBF_initial(i, j, frame->motion_flags, frame->fcode, pParam, pMB,
-						&f_predMV, &best_sad, MODE_FORWARD, &Data_f, Data_d.currentMV[1]);
+						&f_predMV, &best_sad, MODE_FORWARD, &Data_f, Data_d.currentMV[1], new_bound);
 
 			SearchBF_initial(i, j, frame->motion_flags, frame->bcode, pParam, pMB,
-						&b_predMV, &best_sad, MODE_BACKWARD, &Data_b, Data_d.currentMV[2]);
+						&b_predMV, &best_sad, MODE_BACKWARD, &Data_b, Data_d.currentMV[2], new_bound);
 
 			if (frame->motion_flags&XVID_ME_BFRAME_EARLYSTOP)
 				fb_thresh = best_sad;
@@ -1081,9 +1110,9 @@ MotionEstimationBVOP(MBParam * const pParam,
 
 			if (frame->vop_flags & XVID_VOP_RD_BVOP) 
 				ModeDecision_BVOP_RD(&Data_d, &Data_b, &Data_f, &Data_i, 
-					pMB, b_mb, &f_predMV, &b_predMV, frame->motion_flags, pParam, i, j, best_sad);
+					pMB, b_mb, &f_predMV, &b_predMV, frame->motion_flags, frame->vop_flags, pParam, i, j, best_sad, force_direct);
 			else
-				ModeDecision_BVOP_SAD(&Data_d, &Data_b, &Data_f, &Data_i, pMB, b_mb, &f_predMV, &b_predMV);
+				ModeDecision_BVOP_SAD(&Data_d, &Data_b, &Data_f, &Data_i, pMB, b_mb, &f_predMV, &b_predMV, force_direct);
 
 			maxMotionBVOP(&MVmaxF, &MVmaxB, pMB, Data_d.qpel);
 
@@ -1097,27 +1126,33 @@ MotionEstimationBVOP(MBParam * const pParam,
 
 
 void
-SMPMotionEstimationBVOP(SMPmotionData * h)
+SMPMotionEstimationBVOP(SMPData * h)
 {
-	const MBParam * const pParam = h->pParam;
-	const FRAMEINFO * const frame = h->current;
-	const int32_t time_bp = h->time_bp;
-	const int32_t time_pp = h->time_pp;
-	/* forward (past) reference */
-	const MACROBLOCK * const f_mbs = h->f_mbs;
-	const IMAGE * const f_ref = h->fRef;
-	const IMAGE * const f_refH = h->fRefH;
-	const IMAGE * const f_refV = h->fRefV;
-	const IMAGE * const f_refHV = h->fRefHV;
-	/* backward (future) reference */
-	const FRAMEINFO * const b_reference = h->reference;
-	const IMAGE * const b_ref = h->pRef;
-	const IMAGE * const b_refH = h->pRefH;
-	const IMAGE * const b_refV = h->pRefV;
-	const IMAGE * const b_refHV = h->pRefHV;
+	Encoder *pEnc = (Encoder *) h->pEnc;
 
+	const MBParam * const pParam = &pEnc->mbParam;
+	const FRAMEINFO * const frame = h->current;
+	const int32_t time_bp = (int32_t)(pEnc->current->stamp - frame->stamp);
+	const int32_t time_pp = (int32_t)(pEnc->current->stamp - pEnc->reference->stamp);
+	/* forward (past) reference */
+	const IMAGE * const f_ref = &pEnc->reference->image;
+	const IMAGE * const f_refH = &pEnc->f_refh;
+	const IMAGE * const f_refV = &pEnc->f_refv;
+	const IMAGE * const f_refHV = &pEnc->f_refhv;
+	/* backward (future) reference */
+	const FRAMEINFO * const b_reference = pEnc->current;
+	const IMAGE * const b_ref = &pEnc->current->image;
+	const IMAGE * const b_refH = &pEnc->vInterH;
+	const IMAGE * const b_refV = &pEnc->vInterV;
+	const IMAGE * const b_refHV = &pEnc->vInterHV;
+
+	int mb_width = pParam->mb_width;
+	int mb_height = pParam->mb_height;
+	int num_slices = pEnc->num_slices;
+	int y_row = h->y_row;
 	int y_step = h->y_step;
 	int start_y = h->start_y;
+	int stop_y = h->stop_y;
 	int * complete_count_self = h->complete_count_self;
 	const int * complete_count_above = h->complete_count_above;
 	int max_mbs;
@@ -1161,14 +1196,18 @@ SMPMotionEstimationBVOP(SMPmotionData * h)
 
 	max_mbs = 0;
 
-	for (j = start_y; j < pParam->mb_height; j += y_step) {
-		if (j == 0) max_mbs = pParam->mb_width; /* we can process all blocks of the first row */
+	for (j = (start_y+y_row); j < stop_y; j += y_step) {
+		int new_bound = mb_width * ((((j*num_slices) / mb_height) * mb_height + (num_slices-1)) / num_slices);
+
+		if (j == start_y) max_mbs = pParam->mb_width; /* we can process all blocks of the first row */
 
 		f_predMV = b_predMV = zeroMV;	/* prediction is reset at left boundary */
 
-		for (i = 0; i < pParam->mb_width; i++) {
+		for (i = 0; i < (int) pParam->mb_width; i++) {
 			MACROBLOCK * const pMB = frame->mbs + i + j * pParam->mb_width;
 			const MACROBLOCK * const b_mb = b_mbs + i + j * pParam->mb_width;
+			int force_direct = (((j*mb_width+i)==new_bound) && (j > 0)) ? 1 : 0; /* MTK decoder chipsets do NOT reset predMVs upon resync marker in BVOPs. We workaround this problem 
+																				    by placing the slice border on second MB in a row and then force the first MB to be direct mode */
 			pMB->mode = -1;
 
 			initialize_searchData(&Data_d, &Data_f, &Data_b, &Data_i,
@@ -1182,7 +1221,7 @@ SMPMotionEstimationBVOP(SMPmotionData * h)
 				if (above_count == pParam->mb_width) {
 					/* full line above is ready */
 					above_count = pParam->mb_width+1;
-					if (j < pParam->mb_height-y_step) {
+					if (j < stop_y-y_step) {
 						/* this is not last line, grab a portion of MBs from the next line too */
 						above_count += MAX(0, complete_count_above[1] - 1);
 					}
@@ -1223,10 +1262,10 @@ SMPMotionEstimationBVOP(SMPmotionData * h)
 			}
 
 			SearchBF_initial(i, j, frame->motion_flags, frame->fcode, pParam, pMB,
-						&f_predMV, &best_sad, MODE_FORWARD, &Data_f, Data_d.currentMV[1]);
+						&f_predMV, &best_sad, MODE_FORWARD, &Data_f, Data_d.currentMV[1], new_bound);
 
 			SearchBF_initial(i, j, frame->motion_flags, frame->bcode, pParam, pMB,
-						&b_predMV, &best_sad, MODE_BACKWARD, &Data_b, Data_d.currentMV[2]);
+						&b_predMV, &best_sad, MODE_BACKWARD, &Data_b, Data_d.currentMV[2], new_bound);
 
 			if (frame->motion_flags&XVID_ME_BFRAME_EARLYSTOP)
 				fb_thresh = best_sad;
@@ -1272,9 +1311,9 @@ SMPMotionEstimationBVOP(SMPmotionData * h)
 
 			if (frame->vop_flags & XVID_VOP_RD_BVOP) 
 				ModeDecision_BVOP_RD(&Data_d, &Data_b, &Data_f, &Data_i, 
-					pMB, b_mb, &f_predMV, &b_predMV, frame->motion_flags, pParam, i, j, best_sad);
+					pMB, b_mb, &f_predMV, &b_predMV, frame->motion_flags, frame->vop_flags, pParam, i, j, best_sad, force_direct);
 			else
-				ModeDecision_BVOP_SAD(&Data_d, &Data_b, &Data_f, &Data_i, pMB, b_mb, &f_predMV, &b_predMV);
+				ModeDecision_BVOP_SAD(&Data_d, &Data_b, &Data_f, &Data_i, pMB, b_mb, &f_predMV, &b_predMV, force_direct);
 
 			*complete_count_self = i+1;
 			current_mb++;

@@ -20,7 +20,7 @@
  *  along with this program ; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
  *
- * $Id: xvid.c,v 1.83 2010/03/09 10:00:14 Isibaar Exp $
+ * $Id: xvid.c,v 1.86 2010/12/31 11:30:38 Isibaar Exp $
  *
  ****************************************************************************/
 
@@ -330,15 +330,19 @@ int xvid_gbl_init(xvid_gbl_init_t * init)
 	yv12_to_uyvyi   = yv12_to_uyvyi_c;
 
 	/* Functions used in motion estimation algorithms */
-	calc_cbp   = calc_cbp_c;
-	sad16      = sad16_c;
-	sad8       = sad8_c;
-	sad16bi    = sad16bi_c;
-	sad8bi     = sad8bi_c;
-	dev16      = dev16_c;
-	sad16v	   = sad16v_c;
-	sse8_16bit = sse8_16bit_c;
-	sse8_8bit  = sse8_8bit_c;
+	calc_cbp      = calc_cbp_c;
+	sad16         = sad16_c;
+	sad8          = sad8_c;
+	sad16bi       = sad16bi_c;
+	sad8bi        = sad8bi_c;
+	dev16         = dev16_c;
+	sad16v        = sad16v_c;
+	sse8_16bit    = sse8_16bit_c;
+	sse8_8bit     = sse8_8bit_c;
+
+	sseh8_16bit   = sseh8_16bit_c;
+	coeff8_energy = coeff8_energy_c;
+	blocksum8     = blocksum8_c;
 
 	init_GMC(cpu_flags);
 
@@ -568,8 +572,13 @@ int xvid_gbl_init(xvid_gbl_init_t * init)
 		dequant_h263_inter = dequant_h263_inter_sse2;
 
 		/* SAD operators */
-		sad16    = sad16_sse2;
-		dev16    = dev16_sse2;
+		sad16       = sad16_sse2;
+		dev16       = dev16_sse2;
+
+		/* PSNR-HVS-M distortion metric */
+		sseh8_16bit   = sseh8_16bit_sse2;
+		coeff8_energy = coeff8_energy_sse2;
+		blocksum8     = blocksum8_sse2;
 
 		/* DCT operators */
 		fdct = fdct_sse2_skal;
@@ -692,7 +701,7 @@ xvid_gbl_info(xvid_gbl_info_t * info)
 		return XVID_ERR_VERSION;
 
 	info->actual_version = XVID_VERSION;
-	info->build = "xvid-1.3.0-dev";
+	info->build = "xvid-1.4.0-dev";
 	info->cpu_flags = detect_cpu_flags();
 	info->num_threads = 0; /* single-thread */
 
@@ -764,6 +773,15 @@ xvid_gbl_convert(xvid_gbl_convert_t* convert)
 			img.v = (uint8_t*)convert->input.plane[0] + convert->input.stride[0]*height;
 			img.u = (uint8_t*)convert->input.plane[0] + convert->input.stride[0]*height + (convert->input.stride[0]/2)*height2;
 			image_output(&img, width, height, width,
+						(uint8_t**)convert->output.plane, convert->output.stride,
+						convert->output.csp, convert->interlacing);
+			break;
+		
+		case XVID_CSP_INTERNAL :
+			img.y = (uint8_t*)convert->input.plane[0];
+			img.u = (uint8_t*)convert->input.plane[1];
+			img.v = (uint8_t*)convert->input.plane[2];
+			image_output(&img, width, height, convert->input.stride[0],
 						(uint8_t**)convert->output.plane, convert->output.stride,
 						convert->output.csp, convert->interlacing);
 			break;

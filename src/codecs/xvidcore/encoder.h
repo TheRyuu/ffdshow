@@ -3,7 +3,7 @@
  *  XVID MPEG-4 VIDEO CODEC
  *  - Encoder related header  -
  *
- *  Copyright(C) 2002-2003 Michael Militzer <isibaar@xvid.org>
+ *  Copyright(C) 2002-2010 Michael Militzer <isibaar@xvid.org>
  *               2002-2003 Peter Ross <pross@xvid.org>
  *
  *  This program is free software ; you can redistribute it and/or modify
@@ -20,7 +20,7 @@
  *  along with this program ; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
  *
- * $Id: encoder.h,v 1.32 2006/07/10 08:09:59 syskin Exp $
+ * $Id: encoder.h,v 1.34 2010/12/18 16:02:00 Isibaar Exp $
  *
  ****************************************************************************/
 
@@ -99,7 +99,6 @@ typedef struct
 	uint32_t last_quant_initialized_intra; /* needed for mpeg matrices initialization */
 } MBParam;
 
-
 typedef struct
 {
 	int iTextBits;
@@ -112,7 +111,6 @@ typedef struct
 	int iMVBits;
 } Statistics;
 
-
 /* encoding queue */
 typedef struct
 {
@@ -121,7 +119,6 @@ typedef struct
 	unsigned char quant_inter_matrix[64];
 	IMAGE image;
 } QUEUEINFO;
-
 
 typedef struct
 {
@@ -154,7 +151,6 @@ typedef struct
 	Statistics sStat;
 	int is_edged, is_interpolated;
 } FRAMEINFO;
-
 
 #include "motion/motion_smp.h"
 
@@ -217,12 +213,14 @@ typedef struct
     QUEUEINFO closed_qframe;	/* qFrame, only valid when >= 0 */
 
 	/* multithreaded stuff */
-	int num_threads;			/* number of additional threads */
-	SMPmotionData * motionData;	/* data structures used to pass all thread-specific data */
+	int num_threads;			/* number of encoder threads */
+	SMPData * smpData;			/* data structures used to pass all thread-specific data */
 
 	int m_framenum; /* debug frame num counter; unlike iFrameNum, does not reset at ivop */
 
 	float fMvPrevSigma;
+
+	int num_slices;			/* number of slices to code */
 } Encoder;
 
 /*****************************************************************************
@@ -256,7 +254,6 @@ get_fcode(uint16_t sr)
 	else
 		return 0;
 }
-
 
 /*****************************************************************************
  * Prototypes

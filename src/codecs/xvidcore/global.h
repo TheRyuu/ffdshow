@@ -3,7 +3,7 @@
  *  XVID MPEG-4 VIDEO CODEC
  *  - Global definitions  -
  *
- *  Copyright(C) 2002 Michael Militzer <isibaar@xvid.org>
+ *  Copyright(C) 2002-2010 Michael Militzer <michael@xvid.org>
  *
  *  This program is free software ; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
  *  along with this program ; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
  *
- * $Id: global.h,v 1.25 2005/12/09 04:45:35 syskin Exp $
+ * $Id: global.h,v 1.27 2010/11/28 15:18:21 Isibaar Exp $
  *
  ****************************************************************************/
 
@@ -48,7 +48,6 @@
 #define MODE_DIRECT_NONE_MV	4
 #define MODE_DIRECT_NO4V	5
 
-
 /*
  * vop coding types
  * intra, prediction, backward, sprite, not_coded
@@ -73,15 +72,12 @@ type2coding(int xvid_type)
 	return xvid_type - 1;
 }
 
-
 typedef struct
 {
 	int x;
 	int y;
 }
 VECTOR;
-
-
 
 typedef struct
 {
@@ -168,7 +164,6 @@ typedef struct
 }
 IMAGE;
 
-
 typedef struct
 {
 	uint32_t bufa;
@@ -182,9 +177,7 @@ typedef struct
 }
 Bitstream;
 
-
 #define MBPRED_SIZE  15
-
 
 typedef struct
 {
@@ -209,6 +202,9 @@ typedef struct
 
 	int32_t sad8[4];			/* SAD values for inter4v-VECTORs */
 	int32_t sad16;				/* SAD value for inter-VECTOR */
+
+	int32_t var16;				/* Variance of the 16x16 luma block */
+	int32_t rel_var8[6];		/* Relative variances of the 8x8 sub-blocks */
 
 	int dquant;
 	int cbp;
@@ -263,5 +259,20 @@ get_dc_scaler(uint32_t quant,
 #define DIV_DIV(a,b)    (((a)>0) ? ((a)+((b)>>1))/(b) : ((a)-((b)>>1))/(b))
 #define SWAP(_T_,A,B)    { _T_ tmp = A; A = B; B = tmp; }
 
+static __inline uint32_t 
+isqrt(unsigned long n)
+{
+    uint32_t c = 0x8000;
+    uint32_t g = 0x8000;
+
+    for(;;) {
+        if(g*g > n)
+            g ^= c;
+        c >>= 1;
+        if(c == 0)
+            return g;
+        g |= c;
+    }
+}
 
 #endif							/* _GLOBAL_H_ */
