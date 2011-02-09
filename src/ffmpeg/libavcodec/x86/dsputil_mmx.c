@@ -2789,7 +2789,7 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
         if(mm_flags & AV_CPU_FLAG_3DNOW)
             c->vector_fmul_add = vector_fmul_add_3dnow; // faster than sse
         if(mm_flags & AV_CPU_FLAG_SSE2){
-#if HAVE_YASM && ARCH_X86_32
+#if HAVE_YASM
             c->emulated_edge_mc = emulated_edge_mc_sse;
             c->gmc= gmc_sse;
 #endif

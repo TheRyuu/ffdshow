@@ -293,7 +293,7 @@ int vc1_decode_sequence_header(AVCodecContext *avctx, VC1Context *v, GetBitConte
     v->profile = get_bits(gb, 2);
     if (v->profile == PROFILE_COMPLEX)
     {
-        av_log(avctx, AV_LOG_ERROR, "WMV3 Complex Profile is not fully supported\n");
+        av_log(avctx, AV_LOG_WARNING, "WMV3 Complex Profile is not fully supported\n");
     }
 
     if (v->profile == PROFILE_ADVANCED)
@@ -487,7 +487,7 @@ static int decode_sequence_header_adv(VC1Context *v, GetBitContext *gb)
         }else if(ar == 15){
             w = get_bits(gb, 8);
             h = get_bits(gb, 8);
-            v->s.avctx->sample_aspect_ratio.num = w; v->s.avctx->sample_aspect_ratio.den = h;
+            v->s.avctx->sample_aspect_ratio = (AVRational){w, h};
         }
         av_log(v->s.avctx, AV_LOG_DEBUG, "Aspect: %i:%i\n", v->s.avctx->sample_aspect_ratio.num, v->s.avctx->sample_aspect_ratio.den);
 

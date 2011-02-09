@@ -36,7 +36,7 @@
 #include "libavutil/cpu.h"
 
 #define LIBAVCODEC_VERSION_MAJOR 52
-#define LIBAVCODEC_VERSION_MINOR 108
+#define LIBAVCODEC_VERSION_MINOR 110
 #define LIBAVCODEC_VERSION_MICRO  0
 
 #define LIBAVCODEC_VERSION_INT  AV_VERSION_INT(LIBAVCODEC_VERSION_MAJOR, \
@@ -991,7 +991,7 @@ typedef struct AVCodecContext {
      * beforehand.
      * When multithreading is used, it may be called from multiple threads
      * at the same time; threads might draw different parts of the same AVFrame,
-     * or multiple AVFrame, and there is no guarantee that slices will be drawn
+     * or multiple AVFrames, and there is no guarantee that slices will be drawn
      * in order.
      * The function is also used by hardware acceleration APIs.
      * It is called at least once during frame decoding to pass
@@ -1247,7 +1247,7 @@ typedef struct AVCodecContext {
      * avcodec_default_get_buffer() instead of providing buffers allocated by
      * some other means.
      * If frame multithreading is used and thread_safe_callbacks is set,
-     * it may be called from a different thread, but not from more than at once.
+     * it may be called from a different thread, but not from more than one at once.
      * Does not need to be reentrant.
      * - encoding: unused
      * - decoding: Set by libavcodec, user can override.
@@ -1258,9 +1258,8 @@ typedef struct AVCodecContext {
      * Called to release buffers which were allocated with get_buffer.
      * A released buffer can be reused in get_buffer().
      * pic.data[*] must be set to NULL.
-     * May be called from a different thread if thread_type==FF_THREAD_FRAME
-     * is set, but not by more than one thread at once, so does not need to be
-     * reentrant.
+     * May be called from a different thread if frame multithreading is used,
+     * but not by more than one thread at once, so does not need to be reentrant.
      * - encoding: unused
      * - decoding: Set by libavcodec, user can override.
      */
@@ -2027,6 +2026,7 @@ typedef struct AVCodecContext {
 #define FF_PROFILE_H264_HIGH_10_INTRA        (110|FF_PROFILE_H264_INTRA)
 #define FF_PROFILE_H264_HIGH_422             122
 #define FF_PROFILE_H264_HIGH_422_INTRA       (122|FF_PROFILE_H264_INTRA)
+#define FF_PROFILE_H264_HIGH_444             144
 #define FF_PROFILE_H264_HIGH_444_PREDICTIVE  244
 #define FF_PROFILE_H264_HIGH_444_INTRA       (244|FF_PROFILE_H264_INTRA)
 #define FF_PROFILE_H264_CAVLC_444            44

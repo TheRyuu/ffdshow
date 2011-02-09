@@ -63,26 +63,26 @@ typedef struct PerThreadContext {
     struct FrameThreadContext *parent;
 
     pthread_t      thread;
-    pthread_cond_t input_cond;      ///< Used to wait for a new frame from the main thread.
+    pthread_cond_t input_cond;      ///< Used to wait for a new packet from the main thread.
     pthread_cond_t progress_cond;   ///< Used by child threads to wait for progress to change.
     pthread_cond_t output_cond;     ///< Used by the main thread to wait for frames to finish.
 
     pthread_mutex_t mutex;          ///< Mutex used to protect the contents of the PerThreadContext.
     pthread_mutex_t progress_mutex; ///< Mutex used to protect frame progress values and progress_cond.
 
-    AVCodecContext *avctx;          ///< Context used to decode frames passed to this thread.
+    AVCodecContext *avctx;          ///< Context used to decode packets passed to this thread.
 
-    AVPacket       avpkt;           ///< Input frame (for decoding) or output (for encoding).
+    AVPacket       avpkt;           ///< Input packet (for decoding) or output (for encoding).
     int            allocated_buf_size; ///< Size allocated for avpkt.data
 
-    AVFrame picture;                ///< Output picture (for decoding) or input (for encoding).
-    int     got_picture;            ///< The output of got_picture_ptr from the last avcodec_decode_video() call.
+    AVFrame frame;                  ///< Output frame (for decoding) or input (for encoding).
+    int     got_frame;              ///< The output of got_picture_ptr from the last avcodec_decode_video() call.
     int     result;                 ///< The result of the last codec decode/encode() call.
 
     enum {
-        STATE_INPUT_READY,          ///< Set when the thread is awaiting a frame.
+        STATE_INPUT_READY,          ///< Set when the thread is awaiting a packet.
         STATE_SETTING_UP,           ///< Set before the codec has called ff_thread_finish_setup().
-        STATE_GET_BUFFER,           /**
+        STATE_GET_BUFFER,           /**<
                                      * Set when the codec calls get_buffer().
                                      * State is returned to STATE_SETTING_UP afterwards.
                                      */
@@ -110,16 +110,16 @@ typedef struct PerThreadContext {
  */
 typedef struct FrameThreadContext {
     PerThreadContext *threads;     ///< The contexts for each thread.
-    PerThreadContext *prev_thread; ///< The last thread submit_frame() was called on.
+    PerThreadContext *prev_thread; ///< The last thread submit_packet() was called on.
 
     pthread_mutex_t buffer_mutex;  ///< Mutex used to protect get/release_buffer().
 
-    int next_decoding;             ///< The next context to submit a frame to.
+    int next_decoding;             ///< The next context to submit a packet to.
     int next_finished;             ///< The next context to return output from.
 
-    int delaying;                  /**
-                                    * Set for the first N frames, where N is the number of threads.
-                                    * While it is set, ff_en/decode_frame_threaded won't return any results.
+    int delaying;                  /**<
+                                    * Set for the first N packets, where N is the number of threads.
+                                    * While it is set, ff_thread_en/decode_frame won't return any results.
                                     */
 
     int die;                       ///< Set when threads should exit.
@@ -229,8 +229,6 @@ static int thread_init(AVCodecContext *avctx)
     ThreadContext *c;
     int thread_count = avctx->thread_count;
 
-    avctx->thread_count = thread_count;
-
     if (thread_count <= 1)
         return 0;
 
@@ -296,9 +294,9 @@ static attribute_align_arg void *frame_worker_thread(void *arg)
         if (!codec->update_thread_context) ff_thread_finish_setup(avctx);
 
         pthread_mutex_lock(&p->mutex);
-        avcodec_get_frame_defaults(&p->picture);
-        p->got_picture = 0;
-        p->result = codec->decode(avctx, &p->picture, &p->got_picture, &p->avpkt);
+        avcodec_get_frame_defaults(&p->frame);
+        p->got_frame = 0;
+        p->result = codec->decode(avctx, &p->frame, &p->got_frame, &p->avpkt);
 
         if (p->state == STATE_SETTING_UP) ff_thread_finish_setup(avctx);
 
@@ -425,7 +423,7 @@ static void release_delayed_buffers(PerThreadContext *p)
     }
 }
 
-static int submit_frame(PerThreadContext *p, AVPacket *avpkt)
+static int submit_packet(PerThreadContext *p, AVPacket *avpkt)
 {
     FrameThreadContext *fctx = p->parent;
     PerThreadContext *prev_thread = fctx->prev_thread;
@@ -501,18 +499,18 @@ int ff_thread_decode_frame(AVCodecContext *avctx,
     int err;
 
     /*
-     * Submit a frame to the next decoding thread.
+     * Submit a packet to the next decoding thread.
      */
 
     p = &fctx->threads[fctx->next_decoding];
     update_context_from_user(p->avctx, avctx);
-    err = submit_frame(p, avpkt);
+    err = submit_packet(p, avpkt);
     if (err) return err;
 
     fctx->next_decoding++;
 
     /*
-     * If we're still receiving the initial frames, don't return a picture.
+     * If we're still receiving the initial packets, don't return a frame.
      */
 
     if (fctx->delaying && avpkt->size) {
@@ -523,9 +521,9 @@ int ff_thread_decode_frame(AVCodecContext *avctx,
     }
 
     /*
-     * Return the next available picture from the oldest thread.
+     * Return the next available frame from the oldest thread.
      * If we're at the end of the stream, then we have to skip threads that
-     * didn't output a picture, because we don't want to accidentally signal
+     * didn't output a frame, because we don't want to accidentally signal
      * EOF (avpkt->size == 0 && *got_picture_ptr == 0).
      */
 
@@ -539,8 +537,8 @@ int ff_thread_decode_frame(AVCodecContext *avctx,
             pthread_mutex_unlock(&p->progress_mutex);
         }
 
-        *picture = p->picture;
-        *got_picture_ptr = p->got_picture;
+        *picture = p->frame;
+        *got_picture_ptr = p->got_frame;
         picture->pkt_dts = p->avpkt.dts;
 
         /*
@@ -549,7 +547,7 @@ int ff_thread_decode_frame(AVCodecContext *avctx,
          * stopped by the "finished != fctx->next_finished" condition.
          * Make sure we don't mistakenly return the same frame again.
          */
-        p->got_picture = 0;
+        p->got_frame = 0;
 
         if (finished >= avctx->thread_count) finished = 0;
     } while (!avpkt->size && !*got_picture_ptr && finished != fctx->next_finished);

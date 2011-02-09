@@ -2076,7 +2076,7 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
         }
 #endif
         if(mm_flags & AV_CPU_FLAG_SSE2){
-#if HAVE_YASM && ARCH_X86_32
+#if HAVE_YASM
             c->emulated_edge_mc = emulated_edge_mc_sse;
             c->gmc= gmc_sse;
 #endif
