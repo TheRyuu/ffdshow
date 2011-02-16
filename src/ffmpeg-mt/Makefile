@@ -44,6 +44,7 @@ SRCS_C=\
     libavcodec/x86/simple_idct_mmx.c \
     \
     libavutil/cpu.c \
+    libavutil/imgutils.c \
     libavutil/intfloat_readwrite.c \
     libavutil/inverse.c \
     libavutil/log.c \
@@ -53,10 +54,6 @@ SRCS_C=\
     libavutil/rational.c \
     \
     libavutil/x86/cpu.c \
-    \
-    libavcore/imgutils.c \
-    libavcore/samplefmt.c \
-    libavcore/utils.c
 
 
 SRCS_YASM=\

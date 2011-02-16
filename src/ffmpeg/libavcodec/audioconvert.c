@@ -27,7 +27,7 @@
 
 #include "libavutil/avstring.h"
 #include "libavutil/libm.h"
-#include "libavcore/samplefmt.h"
+#include "libavutil/samplefmt.h"
 #include "avcodec.h"
 #include "audioconvert.h"
 
@@ -110,11 +110,6 @@ int av_audio_convert(AVAudioConvert *ctx,
                      const void * const  in[6], const int  in_stride[6], int len)
 {
     int ch;
-
-    /* ffdshow custom code */
-    #if __STDC_VERSION__ < 199901L
-    sample_fmt_info_init();
-    #endif
 
     //FIXME optimize common cases
 

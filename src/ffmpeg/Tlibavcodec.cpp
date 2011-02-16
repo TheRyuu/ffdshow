@@ -91,8 +91,6 @@ Tlibavcodec::Tlibavcodec(const Tconfig *config):refcount(0)
  dll->loadFunction(av_log_get_callback,"av_log_get_callback");
  dll->loadFunction(av_log_get_level,"av_log_get_level");
  dll->loadFunction(av_log_set_level,"av_log_set_level");
- dll->loadFunction(avcodec_thread_init,"avcodec_thread_init");
- dll->loadFunction(avcodec_thread_free,"avcodec_thread_free");
  dll->loadFunction(av_mallocz,"av_mallocz");
  dll->loadFunction(av_free,"av_free");
  dll->loadFunction(avcodec_default_get_buffer,"avcodec_default_get_buffer");

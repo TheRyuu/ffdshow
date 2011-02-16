@@ -15,6 +15,7 @@ SRCS_C=\
     libavcodec/ac3_parser.c \
     libavcodec/ac3dec.c \
     libavcodec/ac3dec_data.c \
+    libavcodec/ac3dsp.c \
     libavcodec/ac3enc.c \
     libavcodec/ac3enc_fixed.c \
     libavcodec/ac3tab.c \
@@ -202,6 +203,7 @@ SRCS_C=\
     libavcodec/amr_float/interf_dec.c \
     libavcodec/amr_float/sp_dec.c \
     \
+    libavcodec/x86/ac3dsp_mmx.c \
     libavcodec/x86/cavsdsp_mmx.c \
     libavcodec/x86/dct32_sse.c \
     libavcodec/x86/dsputil_mmx.c \
@@ -226,10 +228,12 @@ SRCS_C=\
     libavcodec/x86/vp56dsp_init.c \
     libavcodec/x86/vp8dsp-init.c \
     \
+    libavutil/audioconvert.c \
     libavutil/avstring.c \
     libavutil/cpu.c \
     libavutil/crc.c \
     libavutil/eval.c \
+    libavutil/imgutils.c \
     libavutil/intfloat_readwrite.c \
     libavutil/inverse.c \
     libavutil/lfg.c \
@@ -242,13 +246,9 @@ SRCS_C=\
     libavutil/pixdesc.c \
     libavutil/random_seed.c \
     libavutil/rational.c \
+    libavutil/samplefmt.c \
     \
     libavutil/x86/cpu.c \
-    \
-    libavcore/audioconvert.c \
-    libavcore/imgutils.c \
-    libavcore/samplefmt.c \
-    libavcore/utils.c \
     \
     libavfilter/asrc_anullsrc.c \
     libavfilter/avfilter.c \
@@ -288,6 +288,7 @@ SRCS_C=\
     ../zlib/zutil.c
 
 SRCS_YASM=\
+    libavcodec/x86/ac3dsp.asm \
     libavcodec/x86/dsputil_yasm.asm \
     libavcodec/x86/dsputilenc_yasm.asm \
     libavcodec/x86/fft_mmx.asm \

@@ -27,7 +27,7 @@
 #include "liba52/a52.h"
 #include "TffdshowDecAudioInputPin.h"
 #include "ffmpeg/libavcodec/avcodec.h"
-#include "ffmpeg/libavcore/audioconvert.h"
+#include "ffmpeg/libavutil/audioconvert.h"
 
 TaudioFilterOutput::TaudioFilterOutput(IffdshowBase *Ideci,Tfilters *Iparent):TaudioFilter(Ideci,Iparent)
 {

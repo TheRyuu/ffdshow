@@ -130,7 +130,7 @@ AVCodec ff_ ## name_ ## _decoder = {            \
     .decode         = pcm_decode_frame,         \
     .sample_fmts = (const enum AVSampleFormat[]){sample_fmt_,AV_SAMPLE_FMT_NONE}, \
     .long_name = NULL_IF_CONFIG_SMALL(long_name_), \
-};
+}
 #else
 #define PCM_DECODER(id,sample_fmt_,name,long_name_)
 #endif

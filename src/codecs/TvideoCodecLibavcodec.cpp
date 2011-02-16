@@ -168,12 +168,12 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
         codecId = CODEC_ID_H264;
         thread_type = FF_THREAD_FRAME;
     }
-	if (codecId == CODEC_ID_VP3_MT) {
+    if (codecId == CODEC_ID_VP3_MT) {
         // ffmpeg-mt
         codecId = CODEC_ID_VP3;
         thread_type = FF_THREAD_FRAME;
     }
-	if (codecId == CODEC_ID_THEORA_MT) {
+    if (codecId == CODEC_ID_THEORA_MT) {
         // ffmpeg-mt
         codecId = CODEC_ID_THEORA;
         thread_type = FF_THREAD_FRAME;
@@ -192,10 +192,11 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
 
     int numthreads=deci->getParam2(IDFF_numLAVCdecThreads);
     if (numthreads>1 && (COMPILE_AS_FFMPEG_MT || sup_threads_dec(codecId)) ) {
-        libavcodec->avcodec_thread_init(avctx,threadcount=numthreads);
+        threadcount=numthreads;
     } else {
-        threadcount=0;
+        threadcount=1;        
     }
+    avctx->thread_count=threadcount;
 
     frame=libavcodec->avcodec_alloc_frame();
     avctx->width =pict.rectFull.dx;
@@ -1097,10 +1098,11 @@ LRESULT TvideoCodecLibavcodec::beginCompress(int cfgcomode,int csp,const Trect &
     this->cfgcomode=cfgcomode;
 
     if (coCfg->numthreads>1 && sup_threads(coCfg->codecId)) {
-        libavcodec->avcodec_thread_init(avctx,threadcount=coCfg->numthreads);
+    		threadcount=coCfg->numthreads;
     } else {
-        threadcount=0;
+        threadcount=1;
     }
+    avctx->thread_count=threadcount;
 
     avctx->width=r.dx;
     avctx->height=r.dy;

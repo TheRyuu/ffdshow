@@ -14,9 +14,6 @@ EXPORTS
 
   dsputil_init
 
-  avcodec_thread_init
-  avcodec_thread_free
-
   av_log_set_callback
   av_log_get_callback
   av_log_get_level

@@ -516,7 +516,7 @@ HRESULT TvideoCodecLibavcodecDxva::configureDXVA2(IPin *pPin)
             }
 
             // Patch for the Sandy Bridge (prevent crash on Mode_E, fixme later)
-            if (nPCIVendor == PCIV_Intel && guidDecoder == DXVA2_ModeH264_E)
+            if (nPCIVendor == PCIV_Intel && pDecoderGuids[iGuid] == DXVA2_ModeH264_E)
                 continue;
 
             if (bFoundDXVA2Configuration) { // Found a good configuration. Save the GUID.
@@ -839,7 +839,8 @@ bool TvideoCodecLibavcodecDxva::beginDecompress(TffPictBase &pict,FOURCC fcc,con
     }
     // One thread for DXVA mode
     int numthreads=1;
-    libavcodec->avcodec_thread_init(avctx,threadcount=numthreads);
+    threadcount=numthreads;
+    avctx->thread_count=threadcount;
     avctx->active_thread_type = FF_THREAD_SLICE;
     avctx->debug_mv=0;
 

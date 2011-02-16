@@ -31,13 +31,13 @@
 #include "../ffmpeg/libavcodec/AVPaletteControl.h"
 
 #include <errno.h>
-#include "libavcore/samplefmt.h"
+#include "libavutil/samplefmt.h"
 #include "libavutil/avutil.h"
 #include "libavutil/cpu.h"
 
 #define LIBAVCODEC_VERSION_MAJOR 52
-#define LIBAVCODEC_VERSION_MINOR 110
-#define LIBAVCODEC_VERSION_MICRO  0
+#define LIBAVCODEC_VERSION_MINOR 113
+#define LIBAVCODEC_VERSION_MICRO  1
 
 #define LIBAVCODEC_VERSION_INT  AV_VERSION_INT(LIBAVCODEC_VERSION_MAJOR, \
                                                LIBAVCODEC_VERSION_MINOR, \
@@ -118,7 +118,7 @@
 #endif
 
 #if FF_API_OLD_AUDIOCONVERT
-#include "libavcore/audioconvert.h"
+#include "libavutil/audioconvert.h"
 
 /* Audio channel masks */
 #define CH_FRONT_LEFT            AV_CH_FRONT_LEFT
@@ -431,10 +431,9 @@ typedef struct RcOverride{
  */
 #define CODEC_CAP_NEG_LINESIZES    0x0800
 /**
-* Codec supports frame-level multithreading.
-*/
+ * Codec supports frame-level multithreading.
+ */
 #define CODEC_CAP_FRAME_THREADS    0x1000
-
 
 //The following defines may change, don't expect compatibility if you use them.
 #define MB_TYPE_INTRA4x4   0x0001
@@ -2552,7 +2551,6 @@ typedef struct AVCodecContext {
      */
     AVPacket *pkt;
 
-    /* ffdshow custom stuff (begin) */
     /**
      * Whether this is a copy of the context which had init() called on it.
      * This is used by multithreading - shared tables and picture pointers
@@ -2592,6 +2590,15 @@ typedef struct AVCodecContext {
     int thread_safe_callbacks;
 
     /**
+     * VBV delay coded in the last frame (in periods of a 27 MHz clock).
+     * Used for compliant TS muxing.
+     * - encoding: Set by libavcodec.
+     * - decoding: unused.
+     */
+    uint64_t vbv_delay;
+
+    /* ffdshow custom stuff (begin) */
+    /**
      * minimum and maxminum quantizer for I frames. If 0, derived from qmin, i_quant_factor, i_quant_offset
      * - encoding: set by user.
      * - decoding: unused
@@ -2617,7 +2624,7 @@ typedef struct AVCodecContext {
      /**
      * Force 4:3 or 16:9 as DAR (MPEG-2 only)
      * - encoding: unused.
-     * - decoding: unused in ffmpeg-mt.
+     * - decoding: Set by user.
      */
     int isDVD;
 
@@ -2673,7 +2680,6 @@ typedef struct AVCodec {
     const int64_t *channel_layouts;         ///< array of support channel layouts, or NULL if unknown. array is terminated by 0
     uint8_t max_lowres;                     ///< maximum value for lowres supported by the decoder
 
-    /* ffmpeg-mt */
     /**
      * @defgroup framethreading Frame-level threading support functions.
      * @{
@@ -2868,8 +2874,14 @@ int avcodec_check_dimensions(void *av_log_ctx, unsigned int w, unsigned int h);
 
 enum PixelFormat avcodec_default_get_format(struct AVCodecContext *s, const enum PixelFormat * fmt);
 
+#if LIBAVCODEC_VERSION_MAJOR < 53
+/**
+ * @deprecated Set s->thread_count before calling avcodec_open() instead of calling this.
+ */
+attribute_deprecated
 int avcodec_thread_init(AVCodecContext *s, int thread_count);
 void avcodec_thread_free(AVCodecContext *s);
+#endif
 int avcodec_default_execute(AVCodecContext *c, int (*func)(AVCodecContext *c2, void *arg2),void *arg, int *ret, int count, int size);
 int avcodec_default_execute2(AVCodecContext *c, int (*func)(AVCodecContext *c2, void *arg2, int, int),void *arg, int *ret, int count);
 const char* avcodec_get_current_idct(AVCodecContext *avctx);

@@ -85,9 +85,6 @@ public:
  int (*av_log_get_level)(void);
  void (*av_log_set_level)(int);
 
- int (*avcodec_thread_init)(AVCodecContext *s, int thread_count);
- void (*avcodec_thread_free)(AVCodecContext *s);
-
  int (*avcodec_default_get_buffer)(AVCodecContext *s, AVFrame *pic);
  void (*avcodec_default_release_buffer)(AVCodecContext *s, AVFrame *pic);
  int (*avcodec_default_reget_buffer)(AVCodecContext *s, AVFrame *pic);

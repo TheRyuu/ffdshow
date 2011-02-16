@@ -35,8 +35,7 @@
 #include "internal.h"
 #include "imgconvert.h"
 #include "libavutil/pixdesc.h"
-#include "libavcore/imgutils.h"
-#include "libavcore/internal.h"
+#include "libavutil/imgutils.h"
 
 #if HAVE_MMX && HAVE_YASM
 #include "x86/dsputil_mmx.h"
