@@ -897,6 +897,12 @@ av_cold int ff_h264_decode_init(AVCodecContext *avctx){
     h->prev_poc_msb= 1<<16;
     h->x264_build = -1;
     ff_h264_reset_sei(h);
+    if(avctx->codec_id == CODEC_ID_H264){
+        if(avctx->ticks_per_frame == 1){
+            s->avctx->time_base.den *=2;
+        }
+        avctx->ticks_per_frame = 2;
+    }
 
     if(avctx->extradata_size > 0 && avctx->extradata &&
         ff_h264_decode_extradata(h))
@@ -1824,7 +1830,7 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
             if(h->x264_build < 44U)
                 den *= 2;
             av_reduce(&s->avctx->time_base.num, &s->avctx->time_base.den,
-                      h->sps.num_units_in_tick * 2, den, 1<<30);
+                      h->sps.num_units_in_tick, den, 1<<30);
         }
 
         if (MPV_common_init(s) < 0)
