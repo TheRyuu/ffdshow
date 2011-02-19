@@ -323,28 +323,21 @@ Name: "video\other3";            Description: "8BPS, ASV1/2, CYUV, LOCO, QPEG, V
 Name: "video\other4";            Description: "AASC, Ultimotion, VIXL, ZMBV";     Components: ffdshow; Flags: unchecked
 Name: "video\rawv";              Description: "{cm:tsk_rawVideo}";                Components: ffdshow; Flags: unchecked dontinheritcheck
 Name: "audio";                   Description: "{cm:tsk_audioFormatsSelect}";      Components: ffdshow; Flags: unchecked;                  Check: NOT IsUpdate; GroupDescription: "{cm:tsk_audioFormats}"
+Name: "audio\mp2";               Description: "MP1, MP2";                         Components: ffdshow;
 Name: "audio\mp3";               Description: "MP3";                              Components: ffdshow
-Name: "audio\mp3\libmad";        Description: "libmad";                           Components: ffdshow; Flags:           exclusive
-Name: "audio\mp3\libavcodec";    Description: "libavcodec";                       Components: ffdshow; Flags: unchecked exclusive
 Name: "audio\aac";               Description: "AAC";                              Components: ffdshow
-Name: "audio\aac\libfaad2";      Description: "libfaad2";                         Components: ffdshow; Flags:           exclusive
-Name: "audio\aac\libavcodec";    Description: "libavcodec";                       Components: ffdshow; Flags: unchecked exclusive
 Name: "audio\ac3";               Description: "AC3";                              Components: ffdshow
 Name: "audio\ac3\liba52";        Description: "liba52";                           Components: ffdshow; Flags:           exclusive
 Name: "audio\ac3\libavcodec";    Description: "libavcodec";                       Components: ffdshow; Flags: unchecked exclusive
-Name: "audio\eac3";              Description: "E-AC3 (Dolby Digital Plus)";       Components: ffdshow
-Name: "audio\truehd";            Description: "Dolby TrueHD";                     Components: ffdshow
-Name: "audio\mlp";               Description: "MLP";                              Components: ffdshow
 Name: "audio\dts";               Description: "DTS";                              Components: ffdshow
 Name: "audio\dts\libdts";        Description: "libdts";                           Components: ffdshow; Flags:           exclusive
 Name: "audio\dts\libavcodec";    Description: "libavcodec";                       Components: ffdshow; Flags: unchecked exclusive
-Name: "audio\lpcm";              Description: "LPCM";                             Components: ffdshow
-Name: "audio\mp2";               Description: "MP1, MP2";                         Components: ffdshow; Flags: unchecked
-Name: "audio\mp2\libmad";        Description: "libmad";                           Components: ffdshow; Flags:           exclusive
-Name: "audio\mp2\libavcodec";    Description: "libavcodec";                       Components: ffdshow; Flags: unchecked exclusive
+Name: "audio\eac3";              Description: "E-AC3 (Dolby Digital Plus)";       Components: ffdshow
+Name: "audio\truehd";            Description: "Dolby TrueHD";                     Components: ffdshow
 Name: "audio\vorbis";            Description: "Vorbis";                           Components: ffdshow
-Name: "audio\vorbis\libavcodec"; Description: "libavcodec";                       Components: ffdshow; Flags: exclusive
 Name: "audio\flac";              Description: "FLAC";                             Components: ffdshow
+Name: "audio\mlp";               Description: "MLP";                              Components: ffdshow
+Name: "audio\lpcm";              Description: "LPCM";                             Components: ffdshow
 Name: "audio\tta";               Description: "True Audio";                       Components: ffdshow
 Name: "audio\amr";               Description: "AMR";                              Components: ffdshow
 Name: "audio\qt";                Description: "QDM2, MACE";                       Components: ffdshow

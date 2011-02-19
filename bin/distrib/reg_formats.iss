@@ -138,7 +138,7 @@ Root: HKLM; Subkey: "{#= ff_reg_base}";       ValueType: dword; ValueName: "zmbv
 ; 17 = ff_libdts.dll
 
 ; Audio formats to decode
-Root: HKCU; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "aac";        ValueData:  "8"; Components: ffdshow;     Tasks: audio\aac\libfaad2
+Root: HKCU; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "aac";        ValueData:  "1"; Components: ffdshow;     Tasks: audio\aac
 Root: HKCU; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "ac3";        ValueData: "15"; Components: ffdshow;     Tasks: audio\ac3\liba52
 Root: HKCU; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "ac3";        ValueData:  "1"; Components: ffdshow;     Tasks: audio\ac3\libavcodec
 ;Root: HKCU; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "ac3";        ValueData: "16"; Components: ffdshow;     Tasks: audio\ac3\spdif
@@ -155,19 +155,17 @@ Root: HKCU; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "lpcm
 Root: HKCU; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "mace";       ValueData:  "1"; Components: ffdshow;     Tasks: audio\qt
 Root: HKCU; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "truehd";     ValueData:  "1"; Components: ffdshow;     Tasks: audio\truehd
 Root: HKCU; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "mlp";        ValueData:  "1"; Components: ffdshow;     Tasks: audio\mlp
-Root: HKCU; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "mp2";        ValueData:  "7"; Components: ffdshow;     Tasks: audio\mp2\libmad
-Root: HKCU; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "mp2";        ValueData:  "1"; Components: ffdshow;     Tasks: audio\mp2\libavcodec
-Root: HKCU; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "mp3";        ValueData:  "7"; Components: ffdshow;     Tasks: audio\mp3\libmad
-Root: HKCU; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "mp3";        ValueData:  "1"; Components: ffdshow;     Tasks: audio\mp3\libavcodec
+Root: HKCU; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "mp2";        ValueData:  "1"; Components: ffdshow;     Tasks: audio\mp2
+Root: HKCU; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "mp3";        ValueData:  "1"; Components: ffdshow;     Tasks: audio\mp3
 Root: HKCU; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "msadpcm";    ValueData:  "1"; Components: ffdshow;     Tasks: audio\msadpcm
 Root: HKCU; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "otherAdpcm"; ValueData:  "1"; Components: ffdshow;     Tasks: audio\imaadpcm
 Root: HKCU; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "qdm2";       ValueData:  "1"; Components: ffdshow;     Tasks: audio\qt
 Root: HKCU; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "rawa";       ValueData:  "4"; Components: ffdshow;     Tasks: audio\rawa
 Root: HKCU; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "truespeech"; ValueData:  "1"; Components: ffdshow;     Tasks: audio\truespeech
 Root: HKCU; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "tta";        ValueData:  "1"; Components: ffdshow;     Tasks: audio\tta
-Root: HKCU; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "vorbis";     ValueData:  "1"; Components: ffdshow;     Tasks: audio\vorbis\libavcodec
+Root: HKCU; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "vorbis";     ValueData:  "1"; Components: ffdshow;     Tasks: audio\vorbis
 
-Root: HKLM; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "aac";        ValueData:  "8"; Components: ffdshow;     Tasks: audio\aac\libfaad2
+Root: HKLM; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "aac";        ValueData:  "1"; Components: ffdshow;     Tasks: audio\aac
 Root: HKLM; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "ac3";        ValueData: "15"; Components: ffdshow;     Tasks: audio\ac3\liba52
 Root: HKLM; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "ac3";        ValueData:  "1"; Components: ffdshow;     Tasks: audio\ac3\libavcodec
 ;Root: HKLM; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "ac3";        ValueData: "16"; Components: ffdshow;     Tasks: audio\ac3\spdif
@@ -184,17 +182,15 @@ Root: HKLM; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "lpcm
 Root: HKLM; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "mace";       ValueData:  "1"; Components: ffdshow;     Tasks: audio\qt
 Root: HKCU; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "truehd";     ValueData:  "1"; Components: ffdshow;     Tasks: audio\truehd
 Root: HKLM; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "mlp";        ValueData:  "1"; Components: ffdshow;     Tasks: audio\mlp
-Root: HKLM; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "mp2";        ValueData:  "7"; Components: ffdshow;     Tasks: audio\mp2\libmad
-Root: HKLM; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "mp2";        ValueData:  "1"; Components: ffdshow;     Tasks: audio\mp2\libavcodec
-Root: HKLM; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "mp3";        ValueData:  "7"; Components: ffdshow;     Tasks: audio\mp3\libmad
-Root: HKLM; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "mp3";        ValueData:  "1"; Components: ffdshow;     Tasks: audio\mp3\libavcodec
+Root: HKLM; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "mp2";        ValueData:  "1"; Components: ffdshow;     Tasks: audio\mp2
+Root: HKLM; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "mp3";        ValueData:  "1"; Components: ffdshow;     Tasks: audio\mp3
 Root: HKLM; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "msadpcm";    ValueData:  "1"; Components: ffdshow;     Tasks: audio\msadpcm
 Root: HKLM; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "otherAdpcm"; ValueData:  "1"; Components: ffdshow;     Tasks: audio\imaadpcm
 Root: HKLM; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "qdm2";       ValueData:  "1"; Components: ffdshow;     Tasks: audio\qt
 Root: HKLM; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "rawa";       ValueData:  "4"; Components: ffdshow;     Tasks: audio\rawa
 Root: HKLM; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "truespeech"; ValueData:  "1"; Components: ffdshow;     Tasks: audio\truespeech
 Root: HKLM; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "tta";        ValueData:  "1"; Components: ffdshow;     Tasks: audio\tta
-Root: HKLM; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "vorbis";     ValueData:  "1"; Components: ffdshow;     Tasks: audio\vorbis\libavcodec
+Root: HKLM; Subkey: "{#= ff_reg_base}_audio"; ValueType: dword; ValueName: "vorbis";     ValueData:  "1"; Components: ffdshow;     Tasks: audio\vorbis
 
 ; VFW decoding
 Root: HKLM; Subkey: "{#= ff_reg_base}_vfw";   ValueType: dword; ValueName: "ffv1";       ValueData:  "1"; Components: ffdshow\vfw

@@ -18,7 +18,6 @@
 
 #include "stdafx.h"
 #include "TimgFilterGradfun.h"
-#include "simd.h"
 #include "TgradFunSettings.h"
 #include "IffdshowBase.h"
 
