@@ -232,10 +232,10 @@ const char_t *getCodecName(CodecID codecId)
      case  CODEC_ID_AAC               : return _l("aac");
      case  CODEC_ID_DTS               : return _l("dts");
      case  CODEC_ID_IMC               : return _l("imc");
-     case  CODEC_ID_PCM_U16LE         : return _l("");
-     case  CODEC_ID_PCM_U16BE         : return _l("");
-     case  CODEC_ID_PCM_S8            : return _l("");
-     case  CODEC_ID_PCM_U8            : return _l("");
+     case  CODEC_ID_PCM_U16LE         : return _l("pcm u16le");
+     case  CODEC_ID_PCM_U16BE         : return _l("pcm u16be");
+     case  CODEC_ID_PCM_S8            : return _l("pcm s8");
+     case  CODEC_ID_PCM_U8            : return _l("pcm u8");
      case  CODEC_ID_PCM_MULAW         : return _l("mulaw");
      case  CODEC_ID_PCM_ALAW          : return _l("alaw");
      case  CODEC_ID_ADPCM_IMA_QT      : return _l("adpcm ima qt");
@@ -252,9 +252,9 @@ const char_t *getCodecName(CodecID codecId)
      case  CODEC_ID_ADPCM_CT          : return _l("adpcm ct");
      case  CODEC_ID_ADPCM_SWF         : return _l("adpcm swf");
      case  CODEC_ID_ADPCM_YAMAHA      : return _l("adpcm yamaha");
-     case  CODEC_ID_ADPCM_SBPRO_2     : return _l("");
-     case  CODEC_ID_ADPCM_SBPRO_3     : return _l("");
-     case  CODEC_ID_ADPCM_SBPRO_4     : return _l("");
+     case  CODEC_ID_ADPCM_SBPRO_2     : return _l("adpcm sbpro2");
+     case  CODEC_ID_ADPCM_SBPRO_3     : return _l("adpcm sbpro3");
+     case  CODEC_ID_ADPCM_SBPRO_4     : return _l("adpcm sbpro4");
      case  CODEC_ID_ADPCM_IMA_AMV     : return _l("adpcm ima amv");
      case  CODEC_ID_FLAC              : return _l("flac");
      case  CODEC_ID_AMR_NB            : return _l("amr nb");
@@ -276,6 +276,7 @@ const char_t *getCodecName(CodecID codecId)
      case  CODEC_ID_TRUEHD            : return _l("truehd");
      case  CODEC_ID_WAVPACK           : return _l("wavpack");
      case  CODEC_ID_GSM               : return _l("gsm");
+     case  CODEC_ID_AAC_LATM          : return _l("aac latm");
 
      /* Raw formats */
      case  CODEC_ID_RAW               : return _l("raw");

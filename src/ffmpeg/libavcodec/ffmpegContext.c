@@ -20,18 +20,16 @@
  *
  */
 
-
 #define H264_MERGE_TESTING
 
 #include <windows.h>
 #include <winnt.h>
-//#include <vfwmsgs.h>
+
 #include "ffmpegContext.h"
 #include "dsputil.h"
 #include "avcodec.h"
 #include "mpegvideo.h"
 #include "golomb.h"
-
 #include "h264.h"
 #include "h264data.h"
 #include "vc1.h"

@@ -20,16 +20,14 @@
  */
 
 /**
- * @file mpegaudiodectab.h
+ * @file
  * mpeg audio layer decoder tables.
  */
 
 #ifndef AVCODEC_MPEGAUDIODECTAB_H
 #define AVCODEC_MPEGAUDIODECTAB_H
 
-#ifdef __GNUC__
 #include <stdint.h>
-#endif
 #include "mpegaudio.h"
 
 /*******************************************************/

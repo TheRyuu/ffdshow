@@ -20,7 +20,7 @@
  */
 
 /**
- * @file mpegaudiodecheader.c
+ * @file
  * MPEG Audio header decoder.
  */
 

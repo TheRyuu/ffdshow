@@ -75,7 +75,18 @@ static const uint8_t lps_state[64]= {
  33,33,34,34,35,35,35,36,
  36,36,37,37,37,38,38,63,
 };
-
+#if 0
+const uint8_t ff_h264_norm_shift_old[128]= {
+ 7,6,5,5,4,4,4,4,3,3,3,3,3,3,3,3,
+ 2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
+ 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+ 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+};
+#endif
 const uint8_t ff_h264_norm_shift[512]= {
  9,8,7,7,6,6,6,6,5,5,5,5,5,5,5,5,
  4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,
@@ -166,3 +177,92 @@ void ff_init_cabac_states(CABACContext *c){
         }
     }
 }
+
+#ifdef TEST
+#define SIZE 10240
+
+#include "libavutil/lfg.h"
+#include "avcodec.h"
+#include "cabac.h"
+
+int main(void){
+    CABACContext c;
+    uint8_t b[9*SIZE];
+    uint8_t r[9*SIZE];
+    int i;
+    uint8_t state[10]= {0};
+    AVLFG prng;
+
+    av_lfg_init(&prng, 1);
+    ff_init_cabac_encoder(&c, b, SIZE);
+    ff_init_cabac_states(&c);
+
+    for(i=0; i<SIZE; i++){
+        r[i] = av_lfg_get(&prng) % 7;
+    }
+
+    for(i=0; i<SIZE; i++){
+START_TIMER
+        put_cabac_bypass(&c, r[i]&1);
+STOP_TIMER("put_cabac_bypass")
+    }
+
+    for(i=0; i<SIZE; i++){
+START_TIMER
+        put_cabac(&c, state, r[i]&1);
+STOP_TIMER("put_cabac")
+    }
+
+    for(i=0; i<SIZE; i++){
+START_TIMER
+        put_cabac_u(&c, state, r[i], 6, 3, i&1);
+STOP_TIMER("put_cabac_u")
+    }
+
+    for(i=0; i<SIZE; i++){
+START_TIMER
+        put_cabac_ueg(&c, state, r[i], 3, 0, 1, 2);
+STOP_TIMER("put_cabac_ueg")
+    }
+
+    put_cabac_terminate(&c, 1);
+
+    ff_init_cabac_decoder(&c, b, SIZE);
+
+    memset(state, 0, sizeof(state));
+
+    for(i=0; i<SIZE; i++){
+START_TIMER
+        if( (r[i]&1) != get_cabac_bypass(&c) )
+            av_log(NULL, AV_LOG_ERROR, "CABAC bypass failure at %d\n", i);
+STOP_TIMER("get_cabac_bypass")
+    }
+
+    for(i=0; i<SIZE; i++){
+START_TIMER
+        if( (r[i]&1) != get_cabac(&c, state) )
+            av_log(NULL, AV_LOG_ERROR, "CABAC failure at %d\n", i);
+STOP_TIMER("get_cabac")
+    }
+#if 0
+    for(i=0; i<SIZE; i++){
+START_TIMER
+        if( r[i] != get_cabac_u(&c, state, (i&1) ? 6 : 7, 3, i&1) )
+            av_log(NULL, AV_LOG_ERROR, "CABAC unary (truncated) binarization failure at %d\n", i);
+STOP_TIMER("get_cabac_u")
+    }
+
+    for(i=0; i<SIZE; i++){
+START_TIMER
+        if( r[i] != get_cabac_ueg(&c, state, 3, 0, 1, 2))
+            av_log(NULL, AV_LOG_ERROR, "CABAC unary (truncated) binarization failure at %d\n", i);
+STOP_TIMER("get_cabac_ueg")
+    }
+#endif
+    if(!get_cabac_terminate(&c))
+        av_log(NULL, AV_LOG_ERROR, "where's the Terminator?\n");
+
+    return 0;
+}
+
+#endif /* TEST */

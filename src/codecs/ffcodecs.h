@@ -139,6 +139,7 @@ enum CodecID {
  CODEC_ID_TRUEHD            = 150,
  CODEC_ID_WAVPACK           = 151,
  CODEC_ID_GSM               = 152,
+ CODEC_ID_AAC_LATM          = 153,
 
  /* Raw formats */
  CODEC_ID_RAW               = 300,
