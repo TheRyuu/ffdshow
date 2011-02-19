@@ -239,8 +239,7 @@ typedef struct Vp3DecodeContext {
      * is coded. */
     unsigned char *macroblock_coding;
 
-    uint8_t edge_emu_buffer[9*2048]; //FIXME dynamic alloc
-    int8_t qscale_table[2048]; //FIXME dynamic alloc (width+15)/16
+    uint8_t *edge_emu_buffer;
 
     /* Huffman decode */
     int hti;
@@ -332,8 +331,6 @@ static void init_dequantizer(Vp3DecodeContext *s, int qpi)
             s->qmat[qpi][inter][plane][0] = s->qmat[0][inter][plane][0];
         }
     }
-
-    memset(s->qscale_table, (FFMAX(s->qmat[0][0][0][1], s->qmat[0][0][1][1])+8)/16, 512); //FIXME finetune
 }
 
 /*
@@ -1416,10 +1413,6 @@ static void render_slice(Vp3DecodeContext *s, int slice)
         if (CONFIG_GRAY && plane && (s->avctx->flags & CODEC_FLAG_GRAY))
             continue;
 
-
-        if(FFABS(stride) > 2048)
-            return; //various tables are fixed size
-
         /* for each superblock row in the slice (both of them)... */
         for (; sb_y < slice_height; sb_y++) {
 
@@ -1473,8 +1466,7 @@ static void render_slice(Vp3DecodeContext *s, int slice)
 
                         if(src_x<0 || src_y<0 || src_x + 9 >= plane_width || src_y + 9 >= plane_height){
                             uint8_t *temp= s->edge_emu_buffer;
-                            if(stride<0) temp -= 9*stride;
-                            else temp += 9*stride;
+                            if(stride<0) temp -= 8*stride;
 
                             s->dsp.emulated_edge_mc(temp, motion_source, stride, 9, 9, src_x, src_y, plane_width, plane_height);
                             motion_source= temp;
@@ -1824,10 +1816,8 @@ static int vp3_update_thread_context(AVCodecContext *dst, const AVCodecContext *
             }
         }
 
-        if (s->qps[0] != s1->qps[0]) {
-            memcpy(&s->qscale_table, &s1->qscale_table, sizeof(s->qscale_table));
+        if (s->qps[0] != s1->qps[0])
             memcpy(&s->bounding_values_array, &s1->bounding_values_array, sizeof(s->bounding_values_array));
-        }
 
         if (qps_changed)
             copy_fields(s, s1, qps, superblock_count);
@@ -1912,6 +1902,9 @@ static int vp3_decode_frame(AVCodecContext *avctx,
         goto error;
     }
 
+    if (!s->edge_emu_buffer)
+        s->edge_emu_buffer = av_malloc(9*FFABS(s->current_frame.linesize[0]));
+
     if (s->keyframe) {
         if (!s->theora)
         {
@@ -1944,9 +1937,6 @@ static int vp3_decode_frame(AVCodecContext *avctx,
             s->last_frame.type = FF_BUFFER_TYPE_COPY;
         }
     }
-
-    s->current_frame.qscale_table= s->qscale_table; //FIXME allocate individual tables per AVFrame
-    s->current_frame.qstride= 0;
 
     memset(s->all_fragments, 0, s->fragment_count * sizeof(Vp3Fragment));
     ff_thread_finish_setup(avctx);
@@ -2049,6 +2039,7 @@ static av_cold int vp3_decode_end(AVCodecContext *avctx)
     av_free(s->macroblock_coding);
     av_free(s->motion_val[0]);
     av_free(s->motion_val[1]);
+    av_free(s->edge_emu_buffer);
 
     if (avctx->is_copy) return 0;
 

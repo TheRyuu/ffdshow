@@ -320,7 +320,6 @@ OBJ_DIRS=\
     $(OBJ_DIR)libavcodec \
     $(OBJ_DIR)libavcodec/amr_float \
     $(OBJ_DIR)libavcodec/x86 \
-    $(OBJ_DIR)libavcore \
     $(OBJ_DIR)libavutil \
     $(OBJ_DIR)libavutil/x86 \
     $(OBJ_DIR)libavfilter \
@@ -337,7 +336,7 @@ DEF=ffmpeg.def
 
 ### SETTINGS ###
 
-CFLAGS=-I. -Ilibavcodec -Ilibavutil -Ilibavcore -I../imgFilters -I../zlib -DHAVE_AV_CONFIG_H -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -std=gnu99
+CFLAGS=-I. -Ilibavcodec -Ilibavutil -I../imgFilters -I../zlib -DHAVE_AV_CONFIG_H -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -std=gnu99
 
 ifeq ($(64BIT),yes)
     CFLAGS+=-DARCH_X86_64

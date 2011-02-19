@@ -78,7 +78,6 @@ OBJ_DIRS=\
     $(OBJ_DIR) \
     $(OBJ_DIR)libavcodec \
     $(OBJ_DIR)libavcodec/x86 \
-    $(OBJ_DIR)libavcore \
     $(OBJ_DIR)libavutil \
     $(OBJ_DIR)libavutil/x86
 
@@ -90,7 +89,7 @@ DEF=ffmpegmt.def
 ### SETTINGS ###
 
 CFLAGS+=\
-    -I. -Ilibavcodec -Ilibavutil -Ilibavcore -I../pthreads -I../imgFilters \
+    -I. -Ilibavcodec -Ilibavutil -I../pthreads -I../imgFilters \
     -DHAVE_AV_CONFIG_H -D_ISOC99_SOURCE -std=gnu99
 
 #CFLAGS+= -save-temps
