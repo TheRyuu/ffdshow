@@ -66,6 +66,7 @@
 #define HAVE_ARMV6 0
 #define HAVE_ARMV6T2 0
 #define HAVE_ARMVFP 0
+#define HAVE_AVX 0
 #define HAVE_IWMMXT 0
 #define HAVE_MMI 0
 #define HAVE_NEON 0
@@ -235,6 +236,7 @@ Note: when adding a new codec, you have to:
 #define CONFIG_ZMBV_DECODER 0
 
 #define CONFIG_AAC_DECODER 0
+#define CONFIG_AAC_LATM_DECODER 0
 #define CONFIG_AC3_DECODER 0
 #define CONFIG_ATRAC3_DECODER 0
 #define CONFIG_COOK_DECODER 0

@@ -66,6 +66,7 @@
 #define HAVE_ARMV6 0
 #define HAVE_ARMV6T2 0
 #define HAVE_ARMVFP 0
+#define HAVE_AVX 0
 #define HAVE_IWMMXT 0
 #define HAVE_MMI 0
 #define HAVE_NEON 0

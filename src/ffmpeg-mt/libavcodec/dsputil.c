@@ -246,8 +246,8 @@ void ff_emulated_edge_mc(uint8_t *buf, const uint8_t *src, int linesize, int blo
     }
 }
 
-static void put_pixels_clamped_c(const DCTELEM *block, uint8_t *restrict pixels,
-                                 int line_size)
+void ff_put_pixels_clamped_c(const DCTELEM *block, uint8_t *restrict pixels,
+                             int line_size)
 {
     int i;
     uint8_t *cm = ff_cropTbl + MAX_NEG_CROP;
@@ -302,9 +302,9 @@ static void put_pixels_clamped2_c(const DCTELEM *block, uint8_t *restrict pixels
     }
 }
 
-static void put_signed_pixels_clamped_c(const DCTELEM *block,
-                                        uint8_t *restrict pixels,
-                                        int line_size)
+void ff_put_signed_pixels_clamped_c(const DCTELEM *block,
+                                    uint8_t *restrict pixels,
+                                    int line_size)
 {
     int i, j;
 
@@ -323,8 +323,8 @@ static void put_signed_pixels_clamped_c(const DCTELEM *block,
     }
 }
 
-static void add_pixels_clamped_c(const DCTELEM *block, uint8_t *restrict pixels,
-                          int line_size)
+void ff_add_pixels_clamped_c(const DCTELEM *block, uint8_t *restrict pixels,
+                             int line_size)
 {
     int i;
     uint8_t *cm = ff_cropTbl + MAX_NEG_CROP;
@@ -2398,12 +2398,12 @@ static void diff_bytes_c(uint8_t *dst, uint8_t *src1, uint8_t *src2, int w){
 static void ff_jref_idct_put(uint8_t *dest, int line_size, DCTELEM *block)
 {
     j_rev_dct (block);
-    put_pixels_clamped_c(block, dest, line_size);
+    ff_put_pixels_clamped_c(block, dest, line_size);
 }
 static void ff_jref_idct_add(uint8_t *dest, int line_size, DCTELEM *block)
 {
     j_rev_dct (block);
-    add_pixels_clamped_c(block, dest, line_size);
+    ff_add_pixels_clamped_c(block, dest, line_size);
 }
 
 static void ff_jref_idct4_put(uint8_t *dest, int line_size, DCTELEM *block)
@@ -2527,9 +2527,9 @@ av_cold void attribute_align_arg dsputil_init(DSPContext* c, AVCodecContext *avc
         }
     }
 
-    c->put_pixels_clamped = put_pixels_clamped_c;
-    c->put_signed_pixels_clamped = put_signed_pixels_clamped_c;
-    c->add_pixels_clamped = add_pixels_clamped_c;
+    c->put_pixels_clamped = ff_put_pixels_clamped_c;
+    c->put_signed_pixels_clamped = ff_put_signed_pixels_clamped_c;
+    c->add_pixels_clamped = ff_add_pixels_clamped_c;
     c->add_pixels8 = add_pixels8_c;
     c->add_pixels4 = add_pixels4_c;
     c->gmc1 = gmc1_c;
