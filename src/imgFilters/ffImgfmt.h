@@ -14,35 +14,35 @@
 // destination byte order for the file.
 // (e.g. PNG images uses RGB order, so select BGR order
 // BMP image uses BGR order, so select RGB order)
-enum {
+enum ffdshow_colorspaces {
     FF_CSP_NULL       =     0,
 
-    FF_CSP_420P       =1U<< 0,
-    FF_CSP_422P       =1U<< 1,
-    FF_CSP_444P       =1U<< 2,
-    FF_CSP_411P       =1U<< 3,
-    FF_CSP_410P       =1U<< 4,
+    FF_CSP_420P       = 1U<< 0,
+    FF_CSP_422P       = 1U<< 1,
+    FF_CSP_444P       = 1U<< 2,
+    FF_CSP_411P       = 1U<< 3,
+    FF_CSP_410P       = 1U<< 4,
 
-    FF_CSP_YUY2       =1U<< 5,
-    FF_CSP_UYVY       =1U<< 6,
-    FF_CSP_YVYU       =1U<< 7,
-    FF_CSP_VYUY       =1U<< 8,
+    FF_CSP_YUY2       = 1U<< 5,
+    FF_CSP_UYVY       = 1U<< 6,
+    FF_CSP_YVYU       = 1U<< 7,
+    FF_CSP_VYUY       = 1U<< 8,
 
-    FF_CSP_ABGR       =1U<< 9,  // [a|b|g|r]
-    FF_CSP_RGBA       =1U<<10,  // [r|g|b|a]
-    FF_CSP_BGR32      =1U<<11,
-    FF_CSP_BGR24      =1U<<12,
-    FF_CSP_BGR15      =1U<<13,
-    FF_CSP_BGR16      =1U<<14,
-    FF_CSP_RGB32      =1U<<15,
-    FF_CSP_RGB24      =1U<<16,
-    FF_CSP_RGB15      =1U<<17,
-    FF_CSP_RGB16      =1U<<18,
+    FF_CSP_ABGR       = 1U<< 9,  // [a|b|g|r]
+    FF_CSP_RGBA       = 1U<<10,  // [r|g|b|a]
+    FF_CSP_BGR32      = 1U<<11,
+    FF_CSP_BGR24      = 1U<<12,
+    FF_CSP_BGR15      = 1U<<13,
+    FF_CSP_BGR16      = 1U<<14,
+    FF_CSP_RGB32      = 1U<<15,
+    FF_CSP_RGB24      = 1U<<16,
+    FF_CSP_RGB15      = 1U<<17,
+    FF_CSP_RGB16      = 1U<<18,
 
-    FF_CSP_PAL8       =1U<<19,
-    FF_CSP_CLJR       =1U<<20,
-    FF_CSP_Y800       =1U<<21,
-    FF_CSP_NV12       =1U<<22
+    FF_CSP_PAL8       = 1U<<19,
+    FF_CSP_CLJR       = 1U<<20,
+    FF_CSP_Y800       = 1U<<21,
+    FF_CSP_NV12       = 1U<<22
 };
 
 #define FF_CSPS_NUM 24
@@ -269,11 +269,11 @@ struct TcspInfo {
     const char_t *name;
     int Bpp,bpp;
     unsigned int numPlanes;
-    unsigned int shiftX[4],shiftY[4];
+    unsigned int shiftX[4], shiftY[4];
     unsigned int black[4];
-    FOURCC fcc,fcccsp;
+    FOURCC fcc, fcccsp;
     const GUID *subtype;
-    int packedLumaOffset,packedChromaOffset;
+    int packedLumaOffset, packedChromaOffset;
 };
 extern const TcspInfo cspInfos[];
 struct TcspInfos :std::vector<const TcspInfo*,array_allocator<const TcspInfo*,FF_CSPS_NUM*2> > {

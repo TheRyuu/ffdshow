@@ -290,11 +290,11 @@ char_t* csp_getName2(const TcspInfo *cspInfo,int csp,char_t *buf,size_t len)
                 _TRUNCATE,
                 _l("%s%s%s%s%s%s"),
                 colorspaceName,
-                csp & FF_CSP_FLAGS_VFLIP ? _l(",flipped") : _l(""),
-                csp & FF_CSP_FLAGS_INTERLACED ? _l(",interlaced") : _l(""),
-                csp & FF_CSP_FLAGS_YUV_ADJ ? _l(",adj") : _l(""),
-                csp & FF_CSP_FLAGS_YUV_ORDER ? _l(",VU") : _l(""),
-                csp & FF_CSP_FLAGS_YUV_JPEG ? _l(",JPEG") : _l(""));
+                csp & FF_CSP_FLAGS_VFLIP ? _l(", flipped vertically") : _l(""),
+                csp & FF_CSP_FLAGS_INTERLACED ? _l(", interlaced") : _l(""),
+                /*csp & FF_CSP_FLAGS_YUV_ADJ ? _l(", adj") : */_l(""), // These 3 flags are irrelevant to the end user, can raise questions about them
+                /*csp & FF_CSP_FLAGS_YUV_ORDER ? _l(", VU") : */_l(""),
+                /*csp & FF_CSP_FLAGS_YUV_JPEG ? _l(", JPEG") : */_l(""));
     return buf;
 }
 
@@ -325,14 +325,7 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
     switch (inCSP&FF_CSPS_MASK) {
         case FF_CSP_420P: {
             static const int best[FF_CSPS_NUM]= {
-                FF_CSP_422P ,
-                FF_CSP_444P ,
-                FF_CSP_411P ,
-                FF_CSP_410P ,
-                FF_CSP_YUY2 ,
-                FF_CSP_UYVY ,
-                FF_CSP_YVYU ,
-                FF_CSP_VYUY ,
+                FF_CSP_NV12 ,
                 FF_CSP_ABGR ,
                 FF_CSP_RGBA ,
                 FF_CSP_BGR32,
@@ -343,6 +336,14 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
                 FF_CSP_RGB16,
                 FF_CSP_BGR15,
                 FF_CSP_RGB15,
+                FF_CSP_YUY2 ,
+                FF_CSP_UYVY ,
+                FF_CSP_YVYU ,
+                FF_CSP_VYUY ,
+                FF_CSP_422P ,
+                FF_CSP_444P ,
+                FF_CSP_411P ,
+                FF_CSP_410P ,
                 FF_CSP_NULL
             };
             bestcsps=best;
@@ -351,10 +352,6 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
         case FF_CSP_422P: {
             static const int best[FF_CSPS_NUM]= {
                 FF_CSP_YUY2 ,
-                FF_CSP_420P ,
-                FF_CSP_444P ,
-                FF_CSP_411P ,
-                FF_CSP_410P ,
                 FF_CSP_UYVY ,
                 FF_CSP_YVYU ,
                 FF_CSP_VYUY ,
@@ -368,6 +365,11 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
                 FF_CSP_RGB16,
                 FF_CSP_BGR15,
                 FF_CSP_RGB15,
+                FF_CSP_444P ,
+                FF_CSP_420P ,
+                FF_CSP_411P ,
+                FF_CSP_410P ,
+                FF_CSP_NV12 ,
                 FF_CSP_NULL
             };
             bestcsps=best;
@@ -375,14 +377,6 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
         }
         case FF_CSP_444P: {
             static const int best[FF_CSPS_NUM]= {
-                FF_CSP_422P ,
-                FF_CSP_420P ,
-                FF_CSP_411P ,
-                FF_CSP_410P ,
-                FF_CSP_YUY2 ,
-                FF_CSP_UYVY ,
-                FF_CSP_YVYU ,
-                FF_CSP_VYUY ,
                 FF_CSP_ABGR ,
                 FF_CSP_RGBA ,
                 FF_CSP_BGR32,
@@ -393,6 +387,15 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
                 FF_CSP_RGB16,
                 FF_CSP_BGR15,
                 FF_CSP_RGB15,
+                FF_CSP_YUY2 ,
+                FF_CSP_UYVY ,
+                FF_CSP_YVYU ,
+                FF_CSP_VYUY ,
+                FF_CSP_422P ,
+                FF_CSP_420P ,
+                FF_CSP_411P ,
+                FF_CSP_410P ,
+                FF_CSP_NV12 ,
                 FF_CSP_NULL
             };
             bestcsps=best;
@@ -400,14 +403,6 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
         }
         case FF_CSP_411P: {
             static const int best[FF_CSPS_NUM]= {
-                FF_CSP_420P ,
-                FF_CSP_422P ,
-                FF_CSP_444P ,
-                FF_CSP_410P ,
-                FF_CSP_YUY2 ,
-                FF_CSP_UYVY ,
-                FF_CSP_YVYU ,
-                FF_CSP_VYUY ,
                 FF_CSP_ABGR ,
                 FF_CSP_RGBA ,
                 FF_CSP_BGR32,
@@ -418,6 +413,15 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
                 FF_CSP_RGB16,
                 FF_CSP_BGR15,
                 FF_CSP_RGB15,
+                FF_CSP_YUY2 ,
+                FF_CSP_UYVY ,
+                FF_CSP_YVYU ,
+                FF_CSP_VYUY ,
+                FF_CSP_422P ,
+                FF_CSP_444P ,
+                FF_CSP_420P ,
+                FF_CSP_410P ,
+                FF_CSP_NV12 ,
                 FF_CSP_NULL
             };
             bestcsps=best;
@@ -425,14 +429,6 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
         }
         case FF_CSP_410P: {
             static const int best[FF_CSPS_NUM]= {
-                FF_CSP_420P ,
-                FF_CSP_422P ,
-                FF_CSP_444P ,
-                FF_CSP_411P ,
-                FF_CSP_YUY2 ,
-                FF_CSP_UYVY ,
-                FF_CSP_YVYU ,
-                FF_CSP_VYUY ,
                 FF_CSP_ABGR ,
                 FF_CSP_RGBA ,
                 FF_CSP_BGR32,
@@ -443,6 +439,15 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
                 FF_CSP_RGB16,
                 FF_CSP_BGR15,
                 FF_CSP_RGB15,
+                FF_CSP_420P ,
+                FF_CSP_422P ,
+                FF_CSP_444P ,
+                FF_CSP_411P ,
+                FF_CSP_NV12 ,
+                FF_CSP_YUY2 ,
+                FF_CSP_UYVY ,
+                FF_CSP_YVYU ,
+                FF_CSP_VYUY ,
                 FF_CSP_NULL
             };
             bestcsps=best;
@@ -454,11 +459,6 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
                 FF_CSP_UYVY ,
                 FF_CSP_YVYU ,
                 FF_CSP_VYUY ,
-                FF_CSP_420P ,
-                FF_CSP_422P ,
-                FF_CSP_444P ,
-                FF_CSP_411P ,
-                FF_CSP_410P ,
                 FF_CSP_ABGR ,
                 FF_CSP_RGBA ,
                 FF_CSP_BGR32,
@@ -469,6 +469,12 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
                 FF_CSP_RGB16,
                 FF_CSP_BGR15,
                 FF_CSP_RGB15,
+                FF_CSP_422P ,
+                FF_CSP_444P ,
+                FF_CSP_420P ,
+                FF_CSP_411P ,
+                FF_CSP_410P ,
+                FF_CSP_NV12 ,
                 FF_CSP_NULL
             };
             bestcsps=best;
@@ -479,11 +485,6 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
                 FF_CSP_YUY2 ,
                 FF_CSP_YVYU ,
                 FF_CSP_VYUY ,
-                FF_CSP_420P ,
-                FF_CSP_422P ,
-                FF_CSP_444P ,
-                FF_CSP_411P ,
-                FF_CSP_410P ,
                 FF_CSP_ABGR ,
                 FF_CSP_RGBA ,
                 FF_CSP_BGR32,
@@ -494,6 +495,12 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
                 FF_CSP_RGB16,
                 FF_CSP_BGR15,
                 FF_CSP_RGB15,
+                FF_CSP_422P ,
+                FF_CSP_444P ,
+                FF_CSP_420P ,
+                FF_CSP_411P ,
+                FF_CSP_410P ,
+                FF_CSP_NV12 ,
                 FF_CSP_NULL
             };
             bestcsps=best;
@@ -504,11 +511,6 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
                 FF_CSP_YUY2 ,
                 FF_CSP_UYVY ,
                 FF_CSP_VYUY ,
-                FF_CSP_420P ,
-                FF_CSP_422P ,
-                FF_CSP_444P ,
-                FF_CSP_411P ,
-                FF_CSP_410P ,
                 FF_CSP_ABGR ,
                 FF_CSP_RGBA ,
                 FF_CSP_BGR32,
@@ -519,6 +521,12 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
                 FF_CSP_RGB16,
                 FF_CSP_BGR15,
                 FF_CSP_RGB15,
+                FF_CSP_422P ,
+                FF_CSP_444P ,
+                FF_CSP_420P ,
+                FF_CSP_411P ,
+                FF_CSP_410P ,
+                FF_CSP_NV12 ,
                 FF_CSP_NULL
             };
             bestcsps=best;
@@ -529,11 +537,6 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
                 FF_CSP_YUY2 ,
                 FF_CSP_UYVY ,
                 FF_CSP_YVYU ,
-                FF_CSP_420P ,
-                FF_CSP_422P ,
-                FF_CSP_444P ,
-                FF_CSP_411P ,
-                FF_CSP_410P ,
                 FF_CSP_ABGR ,
                 FF_CSP_RGBA ,
                 FF_CSP_BGR32,
@@ -544,6 +547,12 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
                 FF_CSP_RGB16,
                 FF_CSP_BGR15,
                 FF_CSP_RGB15,
+                FF_CSP_422P ,
+                FF_CSP_444P ,
+                FF_CSP_420P ,
+                FF_CSP_411P ,
+                FF_CSP_410P ,
+                FF_CSP_NV12 ,
                 FF_CSP_NULL
             };
             bestcsps=best;
@@ -561,15 +570,16 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
                 FF_CSP_RGB16,
                 FF_CSP_BGR15,
                 FF_CSP_RGB15,
-                FF_CSP_420P ,
-                FF_CSP_422P ,
-                FF_CSP_444P ,
-                FF_CSP_411P ,
-                FF_CSP_410P ,
                 FF_CSP_YUY2 ,
                 FF_CSP_UYVY ,
                 FF_CSP_YVYU ,
                 FF_CSP_VYUY ,
+                FF_CSP_444P ,
+                FF_CSP_422P ,
+                FF_CSP_420P ,
+                FF_CSP_411P ,
+                FF_CSP_410P ,
+                FF_CSP_NV12 ,
                 FF_CSP_NULL
             };
             bestcsps=best;
@@ -586,15 +596,16 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
                 FF_CSP_RGB16,
                 FF_CSP_BGR15,
                 FF_CSP_RGB15,
-                FF_CSP_420P ,
-                FF_CSP_422P ,
-                FF_CSP_444P ,
-                FF_CSP_411P ,
-                FF_CSP_410P ,
                 FF_CSP_YUY2 ,
                 FF_CSP_UYVY ,
                 FF_CSP_YVYU ,
                 FF_CSP_VYUY ,
+                FF_CSP_444P ,
+                FF_CSP_422P ,
+                FF_CSP_420P ,
+                FF_CSP_411P ,
+                FF_CSP_410P ,
+                FF_CSP_NV12 ,
                 FF_CSP_NULL
             };
             bestcsps=best;
@@ -611,15 +622,16 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
                 FF_CSP_RGB16,
                 FF_CSP_BGR15,
                 FF_CSP_RGB15,
-                FF_CSP_420P ,
-                FF_CSP_422P ,
-                FF_CSP_444P ,
-                FF_CSP_411P ,
-                FF_CSP_410P ,
                 FF_CSP_YUY2 ,
                 FF_CSP_UYVY ,
                 FF_CSP_YVYU ,
                 FF_CSP_VYUY ,
+                FF_CSP_444P ,
+                FF_CSP_422P ,
+                FF_CSP_420P ,
+                FF_CSP_411P ,
+                FF_CSP_410P ,
+                FF_CSP_NV12 ,
                 FF_CSP_NULL
             };
             bestcsps=best;
@@ -636,15 +648,16 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
                 FF_CSP_RGB16,
                 FF_CSP_BGR15,
                 FF_CSP_RGB15,
-                FF_CSP_420P ,
-                FF_CSP_422P ,
-                FF_CSP_444P ,
-                FF_CSP_411P ,
-                FF_CSP_410P ,
                 FF_CSP_YUY2 ,
                 FF_CSP_UYVY ,
                 FF_CSP_YVYU ,
                 FF_CSP_VYUY ,
+                FF_CSP_444P ,
+                FF_CSP_422P ,
+                FF_CSP_420P ,
+                FF_CSP_411P ,
+                FF_CSP_410P ,
+                FF_CSP_NV12 ,
                 FF_CSP_NULL
             };
             bestcsps=best;
@@ -661,15 +674,16 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
                 FF_CSP_RGB24,
                 FF_CSP_RGB15,
                 FF_CSP_RGB16,
-                FF_CSP_420P ,
-                FF_CSP_422P ,
-                FF_CSP_444P ,
-                FF_CSP_411P ,
-                FF_CSP_410P ,
                 FF_CSP_YUY2 ,
                 FF_CSP_UYVY ,
                 FF_CSP_YVYU ,
                 FF_CSP_VYUY ,
+                FF_CSP_444P ,
+                FF_CSP_422P ,
+                FF_CSP_420P ,
+                FF_CSP_411P ,
+                FF_CSP_410P ,
+                FF_CSP_NV12 ,
                 FF_CSP_NULL
             };
             bestcsps=best;
@@ -686,15 +700,16 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
                 FF_CSP_RGB24,
                 FF_CSP_RGB15,
                 FF_CSP_RGB16,
-                FF_CSP_420P ,
-                FF_CSP_422P ,
-                FF_CSP_444P ,
-                FF_CSP_411P ,
-                FF_CSP_410P ,
                 FF_CSP_YUY2 ,
                 FF_CSP_UYVY ,
                 FF_CSP_YVYU ,
                 FF_CSP_VYUY ,
+                FF_CSP_444P ,
+                FF_CSP_422P ,
+                FF_CSP_420P ,
+                FF_CSP_411P ,
+                FF_CSP_410P ,
+                FF_CSP_NV12 ,
                 FF_CSP_NULL
             };
             bestcsps=best;
@@ -711,15 +726,16 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
                 FF_CSP_BGR16,
                 FF_CSP_RGB15,
                 FF_CSP_RGB16,
-                FF_CSP_420P ,
-                FF_CSP_422P ,
-                FF_CSP_444P ,
-                FF_CSP_411P ,
-                FF_CSP_410P ,
                 FF_CSP_YUY2 ,
                 FF_CSP_UYVY ,
                 FF_CSP_YVYU ,
                 FF_CSP_VYUY ,
+                FF_CSP_444P ,
+                FF_CSP_422P ,
+                FF_CSP_420P ,
+                FF_CSP_411P ,
+                FF_CSP_410P ,
+                FF_CSP_NV12 ,
                 FF_CSP_NULL
             };
             bestcsps=best;
@@ -736,15 +752,16 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
                 FF_CSP_BGR16,
                 FF_CSP_RGB15,
                 FF_CSP_RGB16,
-                FF_CSP_420P ,
-                FF_CSP_422P ,
-                FF_CSP_444P ,
-                FF_CSP_411P ,
-                FF_CSP_410P ,
                 FF_CSP_YUY2 ,
                 FF_CSP_UYVY ,
                 FF_CSP_YVYU ,
                 FF_CSP_VYUY ,
+                FF_CSP_444P ,
+                FF_CSP_422P ,
+                FF_CSP_420P ,
+                FF_CSP_411P ,
+                FF_CSP_410P ,
+                FF_CSP_NV12 ,
                 FF_CSP_NULL
             };
             bestcsps=best;
@@ -761,15 +778,16 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
                 FF_CSP_BGR32,
                 FF_CSP_BGR24,
                 FF_CSP_BGR16,
-                FF_CSP_420P ,
-                FF_CSP_422P ,
-                FF_CSP_444P ,
-                FF_CSP_411P ,
-                FF_CSP_410P ,
                 FF_CSP_YUY2 ,
                 FF_CSP_UYVY ,
                 FF_CSP_YVYU ,
                 FF_CSP_VYUY ,
+                FF_CSP_444P ,
+                FF_CSP_422P ,
+                FF_CSP_420P ,
+                FF_CSP_411P ,
+                FF_CSP_410P ,
+                FF_CSP_NV12 ,
                 FF_CSP_NULL
             };
             bestcsps=best;
@@ -786,15 +804,16 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
                 FF_CSP_BGR24,
                 FF_CSP_BGR15,
                 FF_CSP_BGR16,
-                FF_CSP_420P ,
-                FF_CSP_422P ,
-                FF_CSP_444P ,
-                FF_CSP_411P ,
-                FF_CSP_410P ,
                 FF_CSP_YUY2 ,
                 FF_CSP_UYVY ,
                 FF_CSP_YVYU ,
                 FF_CSP_VYUY ,
+                FF_CSP_444P ,
+                FF_CSP_422P ,
+                FF_CSP_420P ,
+                FF_CSP_411P ,
+                FF_CSP_410P ,
+                FF_CSP_NV12 ,
                 FF_CSP_NULL
             };
             bestcsps=best;
@@ -810,15 +829,16 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
                 FF_CSP_BGR15,
                 FF_CSP_RGB16,
                 FF_CSP_BGR16,
-                FF_CSP_420P ,
-                FF_CSP_422P ,
-                FF_CSP_444P ,
-                FF_CSP_411P ,
-                FF_CSP_410P ,
                 FF_CSP_YUY2 ,
                 FF_CSP_UYVY ,
                 FF_CSP_YVYU ,
                 FF_CSP_VYUY ,
+                FF_CSP_444P ,
+                FF_CSP_422P ,
+                FF_CSP_420P ,
+                FF_CSP_411P ,
+                FF_CSP_410P ,
+                FF_CSP_NV12 ,
                 FF_CSP_NULL
             };
             bestcsps=best;
@@ -826,15 +846,6 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
         }
         case FF_CSP_CLJR: {
             static const int best[FF_CSPS_NUM]= {
-                FF_CSP_420P ,
-                FF_CSP_422P ,
-                FF_CSP_444P ,
-                FF_CSP_411P ,
-                FF_CSP_410P ,
-                FF_CSP_YUY2 ,
-                FF_CSP_UYVY ,
-                FF_CSP_YVYU ,
-                FF_CSP_VYUY ,
                 FF_CSP_ABGR ,
                 FF_CSP_RGBA ,
                 FF_CSP_BGR32,
@@ -845,6 +856,16 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
                 FF_CSP_RGB16,
                 FF_CSP_BGR15,
                 FF_CSP_RGB15,
+                FF_CSP_420P ,
+                FF_CSP_422P ,
+                FF_CSP_444P ,
+                FF_CSP_411P ,
+                FF_CSP_410P ,
+                FF_CSP_NV12 ,
+                FF_CSP_YUY2 ,
+                FF_CSP_UYVY ,
+                FF_CSP_YVYU ,
+                FF_CSP_VYUY ,
                 FF_CSP_NULL
             };
             bestcsps=best;
@@ -852,15 +873,6 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
         }
         case FF_CSP_Y800: {
             static const int best[FF_CSPS_NUM]= {
-                FF_CSP_420P ,
-                FF_CSP_422P ,
-                FF_CSP_444P ,
-                FF_CSP_411P ,
-                FF_CSP_410P ,
-                FF_CSP_YUY2 ,
-                FF_CSP_UYVY ,
-                FF_CSP_YVYU ,
-                FF_CSP_VYUY ,
                 FF_CSP_ABGR ,
                 FF_CSP_RGBA ,
                 FF_CSP_BGR32,
@@ -871,6 +883,16 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
                 FF_CSP_RGB16,
                 FF_CSP_BGR15,
                 FF_CSP_RGB15,
+                FF_CSP_420P ,
+                FF_CSP_422P ,
+                FF_CSP_444P ,
+                FF_CSP_411P ,
+                FF_CSP_410P ,
+                FF_CSP_NV12 ,
+                FF_CSP_YUY2 ,
+                FF_CSP_UYVY ,
+                FF_CSP_YVYU ,
+                FF_CSP_VYUY ,
                 FF_CSP_NULL
             };
             bestcsps=best;
@@ -879,14 +901,6 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
         case FF_CSP_NV12: {
             static const int best[FF_CSPS_NUM]= {
                 FF_CSP_420P ,
-                FF_CSP_422P ,
-                FF_CSP_444P ,
-                FF_CSP_411P ,
-                FF_CSP_410P ,
-                FF_CSP_YUY2 ,
-                FF_CSP_UYVY ,
-                FF_CSP_YVYU ,
-                FF_CSP_VYUY ,
                 FF_CSP_ABGR ,
                 FF_CSP_RGBA ,
                 FF_CSP_BGR32,
@@ -897,6 +911,14 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
                 FF_CSP_RGB16,
                 FF_CSP_BGR15,
                 FF_CSP_RGB15,
+                FF_CSP_YUY2 ,
+                FF_CSP_UYVY ,
+                FF_CSP_YVYU ,
+                FF_CSP_VYUY ,
+                FF_CSP_422P ,
+                FF_CSP_444P ,
+                FF_CSP_411P ,
+                FF_CSP_410P ,
                 FF_CSP_NULL
             };
             bestcsps=best;

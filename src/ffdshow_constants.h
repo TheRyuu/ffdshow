@@ -928,27 +928,14 @@
 #define IDFF_i263               1337
 
 #define IDFF_filterOutputVideo   1357
-#define IDFF_hwOverlayOld        1317
-#define IDFF_setSARinOutSample   1350 // 0 - VIDEOINFOHEADER, 1 - VIDEOINFOHEADER2, 2 - first try VIDEOINFOHEADER2, then VIDEOINFOHEADER
-#define IDFF_hwOverlay           1350 // deprecated.
-#define IDFF_outI420             1309
 #define IDFF_outYV12             1301
 #define IDFF_outYUY2             1302
-#define IDFF_outYVYU             1303
 #define IDFF_outUYVY             1304
 #define IDFF_outNV12             1360
 #define IDFF_outRGB32            1305
-#define IDFF_outRGB24            1306
-#define IDFF_outRGB555           1307
-#define IDFF_outRGB565           1308
-#define IDFF_outClosest          1356
 #define IDFF_outDV               1358
 #define IDFF_outDVnorm           1359
-#define IDFF_allowOutChange      1352
-#define IDFF_outChangeCompatOnly 1354
-#define IDFF_hwDeinterlaceOld    1318
 #define IDFF_setDeintInOutSample 1353
-#define IDFF_hwDeinterlace       1353 // deprecated.
 #define IDFF_hwDeintMethod       1361
 #define IDFF_hwDeintFieldOrder   3500
 #define IDFF_avisynthYV12_RGB    1355 // deprecated. Use IDFF_highQualityRGB instead.

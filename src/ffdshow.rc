@@ -19,10 +19,8 @@
 // Neutral resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_NEU)
-#ifdef _WIN32
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 #pragma code_page(1252)
-#endif //_WIN32
 
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
@@ -1951,40 +1949,27 @@ STYLE DS_SETFONT | DS_FIXEDSYS | DS_CONTROL | DS_CENTER | WS_CHILD
 EXSTYLE WS_EX_CONTROLPARENT
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
-    GROUPBOX        "Supported output colorspaces",IDC_GRP_CSP_OUT,0,0,266,230
-    LTEXT           "Planar YUV:",IDC_LBL_OUT_PLANAR_YUV,6,10,66,8
-    CONTROL         "I420/IYUV",IDC_CHB_OUT_I420,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,77,10,45,9
-    CONTROL         "YV12",IDC_CHB_OUT_YV12,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,126,9,55,9
-    LTEXT           "Packed YUV:",IDC_LBL_OUT_PACKED_YUV,6,25,68,8
-    CONTROL         "YUY2",IDC_CHB_OUT_YUY2,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,77,25,42,9
-    CONTROL         "YVYU",IDC_CHB_OUT_YVYU,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,126,25,39,9
-    CONTROL         "UYVY",IDC_CHB_OUT_UYVY,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,171,25,40,9
-    CONTROL         "NV12",IDC_CHB_OUT_NV12,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,218,25,36,9
-    LTEXT           "RGB:",IDC_LBL_OUT_RGB,6,40,66,8
-    CONTROL         "RGB32",IDC_CHB_OUT_RGB32,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,77,40,43,9
-    CONTROL         "RGB24",IDC_CHB_OUT_RGB24,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,126,40,65,9
-    CONTROL         "RGB16",IDC_CHB_OUT_RGB16,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,77,52,42,9
-    CONTROL         "RGB15",IDC_CHB_OUT_RGB15,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,126,52,78,9
-    CONTROL         "High quality YV12 to RGB conversion",IDC_CHB_HIGH_QUALITY_RGB,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,77,65,171,9
-    CONTROL         "Select closest matching colorspace",IDC_CHB_OUT_CLOSESTMATCH,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,79,166,9
-    CONTROL         "Set pixel aspect ratio in output media type",IDC_CHB_HWOVERLAY,
-                    "Button",BS_AUTO3STATE | WS_TABSTOP,5,96,254,10
-    CONTROL         "Set interlace flag in output media type",IDC_CHB_HWDEINTERLACE,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,114,256,10
-    CONTROL         "Allow output format changes during playback",IDC_CHB_ALLOWOUTCHANGE,
-                    "Button",BS_AUTO3STATE | WS_TABSTOP,5,143,217,11
-    CONTROL         "Connect to compatible filters only",IDC_CHB_OUTCHANGECOMPATONLY,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,20,157,206,10
-    CONTROL         "DV",IDC_CHB_OUT_DV,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,175,46,10
-    LTEXT           "Profile:",IDC_LBL_OUT_DV_PROFILE,64,175,37,8
-    COMBOBOX        IDC_CBX_OUT_DV_PROFILE,98,174,78,75,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
-    CONTROL         "Flip video",IDC_CHB_FLIP,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,192,117,10
-    LTEXT           "Method:",IDC_TXT_OUT_DEINT_METHOD,16,128,31,8
-    COMBOBOX        IDC_CBX_OUT_HWDEINT_METHOD,49,126,68,50,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
-    LTEXT           "Field order:",IDC_TXT_OUT_DEINT_FIELDORDER,123,128,53,8
-    COMBOBOX        IDC_CBX_OUT_HWDEINT_FIELDORDER,179,126,77,50,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    GROUPBOX        "Supported colorspaces",IDC_GRP_CSP_OUT,0,0,267,56
+    GROUPBOX        "Stream settings",IDC_GRP_CSP_OUT_SETTINGS,0,58,267,65
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDVERT,156,11,1,41
+    LTEXT           "Planar YUV:",IDC_LBL_OUT_PLANAR_YUV,6,11,66,8
+    CONTROL         "YV12",IDC_CHB_OUT_YV12,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,68,11,42,9
+    CONTROL         "NV12",IDC_CHB_OUT_NV12,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,115,11,36,9
+    LTEXT           "Packed YUV:",IDC_LBL_OUT_PACKED_YUV,6,26,68,8
+    CONTROL         "YUY2",IDC_CHB_OUT_YUY2,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,68,26,42,9
+    CONTROL         "UYVY",IDC_CHB_OUT_UYVY,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,115,26,40,9
+    LTEXT           "RGB:",IDC_LBL_OUT_RGB,6,41,66,8
+    CONTROL         "RGB32",IDC_CHB_OUT_RGB32,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,68,41,43,9
+    CONTROL         "DV",IDC_CHB_OUT_DV,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,168,11,46,10
+    LTEXT           "Profile:",IDC_LBL_OUT_DV_PROFILE,168,26,31,8
+    COMBOBOX        IDC_CBX_OUT_DV_PROFILE,202,24,57,75,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "Set interlaced flag in output media type",IDC_CHB_HWDEINTERLACE,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,6,71,256,10
+    LTEXT           "Method:",IDC_TXT_OUT_DEINT_METHOD,16,89,31,8
+    COMBOBOX        IDC_CBX_OUT_HWDEINT_METHOD,49,87,77,50,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Field order:",IDC_TXT_OUT_DEINT_FIELDORDER,138,89,39,8
+    COMBOBOX        IDC_CBX_OUT_HWDEINT_FIELDORDER,182,87,77,50,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "Flip video vertically",IDC_CHB_FLIP,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,6,108,117,10
 END
 
 IDD_CSP_OPTIONS DIALOGEX 0, 0, 267, 230
@@ -2007,7 +1992,7 @@ BEGIN
     CONTROL         "Custom",IDC_RBT_CUSTOM_YUV,"Button",BS_AUTORADIOBUTTON,6,144,246,10
     GROUPBOX        "Method",IDC_GRP_CSP_OPT3,0,50,267,42
     COMBOBOX        IDC_CBX_RGB_INTERLACE_METHOD,121,59,124,30,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
-    LTEXT           "Interlace or progressive:",IDC_TXT_CSP_OPTIONS_INTERLACE_OR_PROGRESSIVE,8,61,108,8
+    LTEXT           "Interlaced or progressive:",IDC_TXT_CSP_OPTIONS_INTERLACE_OR_PROGRESSIVE,8,61,108,8
     CONTROL         "High quality YV12 to RGB conversion",IDC_CHB_HIGH_QUALITY_RGB,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,76,165,9
     CONTROL         "Auto",IDC_RBT_BT_AUTO,"Button",BS_AUTORADIOBUTTON,6,10,256,10
@@ -2976,7 +2961,7 @@ IDB_CLASSIC_ICON_XP     BITMAP                  "classic_icon_xp.bmp"
 // Menu
 //
 
-IDR_MENU_PRESET MENU 
+IDR_MENU_PRESET MENU
 BEGIN
     POPUP "New"
     BEGIN
@@ -2992,7 +2977,7 @@ BEGIN
     END
 END
 
-IDR_MENU_TRANSLATE MENU 
+IDR_MENU_TRANSLATE MENU
 BEGIN
     POPUP "Translate"
     BEGIN
@@ -3008,7 +2993,7 @@ END
 //
 
 #ifdef APSTUDIO_INVOKED
-GUIDELINES DESIGNINFO 
+GUIDELINES DESIGNINFO
 BEGIN
     IDD_FFDSHOW, DIALOG
     BEGIN
@@ -3098,7 +3083,6 @@ BEGIN
 
     IDD_OUTCSPS, DIALOG
     BEGIN
-        VERTGUIDE, 5
     END
 
     IDD_DEINTERLACE_KERNEL, DIALOG
@@ -3181,7 +3165,7 @@ END
 // String Table
 //
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDS_FFDSHOWDECVIDEO     "ffdshow video decoder"
     IDS_FFDSHOWDECAUDIO     "ffdshow audio decoder"
@@ -3192,7 +3176,7 @@ BEGIN
     IDS_FFDSHOWDECVIDEORAW  "ffdshow raw video decoder"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDS_FFDSHOWDECAUDIORAW  "ffdshow audio processor"
     IDS_FFDSHOWDEC          "ffdshow decoder"
@@ -3200,12 +3184,12 @@ BEGIN
     IDS_FFDSHOWDECVIDEOSUBTITLES "ffdshow subtitles filter"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDD_ABOUT               "About"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDD_BLUR                "Blur & NR"
     IDD_FONT                "Font"
@@ -3221,7 +3205,7 @@ BEGIN
     IDD_KEYS                "Keys & remote"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDD_SUBTITLES           "Subtitles"
     IDD_CODECS              "Codecs"
@@ -3235,29 +3219,29 @@ BEGIN
     IDD_SHARPEN             "Sharpen"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDD_AUDIODECODEROPTIONS "Decoder options"
     IDD_DXVAOPTIONS         "Hardware acceleration (DXVA)"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDD_CSP_OPTIONS         "   RGB conversion"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDD_INFOSIMD            "Info & CPU"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDD_GRAB                "Grab"
     IDD_OVERLAY             "Overlay"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDD_DSCALER             "DScaler filter"
     IDD_PERSPECTIVE         "Perspective corr."
@@ -3272,7 +3256,7 @@ BEGIN
     IDD_MIXER               "Mixer"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDD_GENERIC             "Generic"
     IDD_CREDITS             "Credits"
@@ -3282,7 +3266,7 @@ BEGIN
     IDD_GENERIC_FFV1        "Generic"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDD_GENERIC_RAW         "Generic"
     IDD_GENERIC_THEO        "Generic"
@@ -3299,7 +3283,7 @@ BEGIN
     IDD_QUANT               "Quantization"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDD_MASKING_THEO        "Masking"
     IDD_PROCSFS             "Processing"
@@ -3310,7 +3294,7 @@ BEGIN
     IDD_QUEUEMSG_1          "off"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDD_SECONDPASS          "Two passes - 2nd pass"
     IDD_GENERIC_WMV9        "Generic"
@@ -3321,7 +3305,7 @@ BEGIN
     IDD_RESAMPLE            "Resample"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDD_LOGOAWAY            "Logoaway"
     IDD_OUTSFS              "Output"
@@ -3338,12 +3322,12 @@ BEGIN
     IDD_BITMAP              "Bitmap overlay"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDD_SUBTITLES_POS       "Placement"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDD_QUEUEMSG_2          "off: Old video renderer does not support queue."
     IDD_QUEUEMSG_3          "off: The application is not listed in 'Use queue only in:'"
@@ -3351,7 +3335,7 @@ BEGIN
     IDD_QUEUEMSG_5          "off: The video renderer in use is not supported."
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDD_QUEUEMSG_6          "off: In Windows Media Player, queueing is not suported."
     IDD_QUEUEMSG_7          "off: Some video driver cannot work with YV12 + VMR9 + queue."

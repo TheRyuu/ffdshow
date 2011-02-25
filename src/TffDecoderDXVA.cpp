@@ -73,23 +73,19 @@ HRESULT TffdshowDecVideoDXVA::GetMediaType(int iPosition, CMediaType *mtOut)
         initPreset();
     }
 
-    int hwOverlay0,hwOverlay;
-    hwOverlay0=hwOverlay=presetSettings->output->hwOverlay;
-    if (hwOverlay==0 && presetSettings->output->hwDeinterlace) {
-        hwOverlay=2;
-    }
-    if (hwOverlay==2 && m_pOutput->IsConnected()) {
+    bool isVIH2;
+
+    if (m_pOutput->IsConnected()) {
         const CLSID &ref=GetCLSID(m_pOutput->GetConnected());
         if (ref==CLSID_VideoMixingRenderer || ref==CLSID_VideoMixingRenderer9) {
-            hwOverlay=1;
+            isVIH2=true;
         }
     }
 
-    bool isVIH2=!outdv && (hwOverlay==1 || (hwOverlay==2 && (iPosition&1)==0));
+    isVIH2=!outdv && (iPosition&1)==0;
 
-    if (hwOverlay==2) {
-        iPosition/=2;
-    }
+    iPosition/=2;
+
     if (iPosition<0) {
         return E_INVALIDARG;
     }
@@ -131,7 +127,7 @@ HRESULT TffdshowDecVideoDXVA::GetMediaType(int iPosition, CMediaType *mtOut)
     }
 
     // Not sure about DXVA
-    if (false && presetSettings->output->closest && !outdv && pictOut.csp != 0) {
+    if (false && !outdv && pictOut.csp != 0) {
         ocsps.sort(pictOut.csp);
     }
 
@@ -177,7 +173,7 @@ HRESULT TffdshowDecVideoDXVA::GetMediaType(int iPosition, CMediaType *mtOut)
             return E_OUTOFMEMORY;
         }
         ZeroMemory(vih2,sizeof(VIDEOINFOHEADER2));
-        if((presetSettings->resize && presetSettings->resize->is && presetSettings->resize->SARinternally && presetSettings->resize->mode==0) || hwOverlay0==0) {
+        if((presetSettings->resize && presetSettings->resize->is && presetSettings->resize->SARinternally && presetSettings->resize->mode==0)) {
             pictOut.rectFull.sar.num= 1;//pictOut.rectFull.dx; // VMR9 behaves better when this is set to 1(SAR). But in reconnectOutput, it is different(DAR) in my system.
             pictOut.rectFull.sar.den= 1;//pictOut.rectFull.dy;
         }

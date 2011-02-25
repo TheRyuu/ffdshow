@@ -372,7 +372,7 @@ TpresetVideo::TpresetVideo(const char_t *Ireg_child, const char_t *IpresetName, 
 
     if (!(filtermode & IDFF_FILTERMODE_VIDEOSUBTITLES) && !(filtermode & IDFF_FILTERMODE_VIDEODXVA)) {
         new TcropSettings(options,filters);
-        new TdeinterlaceSettings(options,filters);
+        deinterlace=new TdeinterlaceSettings(options,filters);
         new TlogoawaySettings(options,filters);
         postproc=new TpostprocSettings(options,filters);
         new TpictPropSettings(options,filters);

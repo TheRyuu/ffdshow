@@ -32,6 +32,7 @@ struct TvisSettings;
 struct TgrabSettings;
 struct ToutputVideoSettings;
 struct TresizeAspectSettings;
+struct TdeinterlaceSettings;
 struct TpresetVideo :public Tpreset {
 private:
     int needOutcspsFix,needGlobalFix;
@@ -78,6 +79,7 @@ public:
     TlevelsSettings *levels;
     TresizeAspectSettings *resize;
     TvisSettings *vis;
+    TdeinterlaceSettings *deinterlace;
     TgrabSettings *grab;
     ToutputVideoSettings *output;
 };

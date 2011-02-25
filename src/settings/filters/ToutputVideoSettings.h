@@ -13,8 +13,7 @@ protected:
 public:
     ToutputVideoSettings(TintStrColl *Icoll=NULL,TfilterIDFFs *filters=NULL);
 
-    int i420,yv12,yuy2,yvyu,uyvy,nv12,rgb32,rgb24,rgb555,rgb565;
-    int closest;
+    int yv12,yuy2,uyvy,nv12,rgb32;
     int dv,dvNorm;
     void getDVsize(unsigned int *dx,unsigned int *dy) const;
     int get_cspOptionsBlackCutoff(int video_full_range_flag) const;
@@ -35,9 +34,7 @@ public:
         WORD biBitCount,biPlanes;
     };
     void getOutputColorspaces(ints &ocsps),getOutputColorspaces(TcspInfos &ocsps);
-    int hwOverlay,hwOverlayAspect;
-    int hwOverlayOld,hwDeinterlaceOld;
-    int allowOutChange3, outChangeCompatOnly;
+    int hwOverlayAspect;
     int hwDeinterlace,hwDeintMethod, hwDeintFieldOrder;
     int highQualityRGB,dithering;
     int cspOptionsIturBt, cspOptionsInputLevelsMode;

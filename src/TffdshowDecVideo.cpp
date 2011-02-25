@@ -30,6 +30,7 @@
 #include "TpresetSettingsVideo.h"
 #include "ToutputVideoSettings.h"
 #include "TresizeAspectSettings.h"
+#include "TdeinterlaceSettings.h"
 #include "TdialogSettings.h"
 #include "ffdshow_mediaguids.h"
 #include "ffcodecs.h"
@@ -238,35 +239,14 @@ HRESULT TffdshowDecVideo::checkAllowOutChange(IPin *pPin)
 {
     HRESULT hr;
     CLSID clsid=GetCLSID(pPin);
-    outOldRenderer=!!(clsid==CLSID_VideoRenderer);
-    if (presetSettings->output->allowOutChange3 || dvdproc) {
-        bool filterOk=clsid==CLSID_OverlayMixer ||
-                      clsid==CLSID_VideoMixingRenderer ||
-                      clsid==CLSID_VideoMixingRenderer9 ||
-                      clsid==CLSID_EnhancedVideoRenderer ||
-                      clsid==CLSID_DirectVobSubFilter ||
-                      clsid==CLSID_DirectVobSubFilter2 ||
-                      clsid==CLSID_HaaliVideoRenderer ||
-                      clsid==CLSID_MADVideoRenderer ||
-                      clsid==CLSID_FFDSHOW ||
-                      clsid==CLSID_FFDSHOWRAW ||
-                      clsid==CLSID_FFDSHOWSUBTITLES ||
-                      clsid==CLSID_FFDSHOWDXVA;
-        allowOutChange=dvdproc ||
-                       presetSettings->output->allowOutChange3==1 ||
-                       (presetSettings->output->allowOutChange3==2 && filterOk);
 
-        if (presetSettings->output->allowOutChange3==1 && presetSettings->output->outChangeCompatOnly) {
-            hr=filterOk ? S_OK : E_FAIL;
-        } else {
-            hr=S_OK;
-        }
-    } else {
-        allowOutChange=false;
-        hr=S_OK;
+    allowOutChange = true;
+    if (outOldRenderer = !!(clsid == CLSID_VideoRenderer)) {
+        allowOutChange = false;
     }
-    if (clsid==CLSID_DecklinkVideoRenderFilter || clsid==CLSID_InfTee || clsid==CLSID_SmartT || clsid==CLSID_WMP_VIDEODSP_DMO) {
-        allowOutChange=false;
+    hr = S_OK;
+    if (clsid == CLSID_DecklinkVideoRenderFilter || clsid == CLSID_InfTee || clsid == CLSID_SmartT || clsid == CLSID_WMP_VIDEODSP_DMO) {
+        allowOutChange = false;
     }
     return hr;
 }
@@ -290,23 +270,19 @@ HRESULT TffdshowDecVideo::GetMediaType(int iPosition, CMediaType *mtOut)
         initPreset();
     }
 
-    int hwOverlay0,hwOverlay;
-    hwOverlay0=hwOverlay=presetSettings->output->hwOverlay;
-    if (hwOverlay==0 && presetSettings->output->hwDeinterlace) {
-        hwOverlay=2;
-    }
-    if (hwOverlay==2 && m_pOutput->IsConnected()) {
+    bool isVIH2;
+
+    if (m_pOutput->IsConnected()) {
         const CLSID &ref=GetCLSID(m_pOutput->GetConnected());
         if (ref==CLSID_VideoMixingRenderer || ref==CLSID_VideoMixingRenderer9) {
-            hwOverlay=1;
+            isVIH2=true;
         }
     }
 
-    bool isVIH2=!outdv && (hwOverlay==1 || (hwOverlay==2 && (iPosition&1)==0));
+    isVIH2=!outdv && (iPosition&1)==0;
 
-    if (hwOverlay==2) {
-        iPosition/=2;
-    }
+    iPosition/=2;
+
     if (iPosition<0) {
         return E_INVALIDARG;
     }
@@ -342,7 +318,7 @@ HRESULT TffdshowDecVideo::GetMediaType(int iPosition, CMediaType *mtOut)
         pictOut.rectFull.dy = 160;
     }
 
-    if (presetSettings->output->closest && !outdv && pictOut.csp != 0) {
+    if (!outdv && pictOut.csp != 0) {
         ocsps.sort(pictOut.csp);
     }
 
@@ -397,7 +373,7 @@ HRESULT TffdshowDecVideo::GetMediaType(int iPosition, CMediaType *mtOut)
             return E_OUTOFMEMORY;
         }
         ZeroMemory(vih2,sizeof(VIDEOINFOHEADER2));
-        if((presetSettings->resize && presetSettings->resize->is && presetSettings->resize->SARinternally && presetSettings->resize->mode==0) || hwOverlay0==0) {
+        if((presetSettings->resize && presetSettings->resize->is && presetSettings->resize->SARinternally && presetSettings->resize->mode==0)) {
             pictOut.rectFull.sar.num= 1;//pictOut.rectFull.dx; // VMR9 behaves better when this is set to 1(SAR). But in reconnectOutput, it is different(DAR) in my system.
             pictOut.rectFull.sar.den= 1;//pictOut.rectFull.dy;
         }
@@ -444,9 +420,6 @@ HRESULT TffdshowDecVideo::setOutputMediaType(const CMediaType &mt)
             continue;
         }
         m_frame.dstColorspace=cspFccs[i].csp;
-        if (m_frame.dstColorspace==FF_CSP_NV12) {
-            m_frame.dstColorspace=FF_CSP_NV12|FF_CSP_FLAGS_YUV_ORDER;    // HACK
-        }
 
         int biWidth,outDy;
         BITMAPINFOHEADER *bih;
@@ -1361,7 +1334,8 @@ STDMETHODIMP TffdshowDecVideo::deliverProcessedSample(TffPict &pict)
                 outProp2.dwTypeSpecificFlags=AM_VIDEO_FLAG_INTERLEAVED_FRAME;
 
                 // Force weave
-                if (presetSettings->output->hwDeintMethod == 1) {
+                // If ffdshow's internal deinterlacing filter is being used, disable hardware deinterlacing by flagging frames as weave
+                if (presetSettings->output->hwDeintMethod == 1 || presetSettings->deinterlace->is) {
                     outProp2.dwTypeSpecificFlags|=AM_VIDEO_FLAG_WEAVE;
                 }
                 // Force bob
@@ -1752,12 +1726,6 @@ HRESULT TffdshowDecVideo::reconnectOutput(const TffPict &newpict)
 {
     HRESULT hr=S_OK;
     if ((newpict.rectFull==oldRect && newpict.rectFull.sar!=oldRect.sar)
-            && presetSettings->output->hwOverlay==0) {
-        // Only aspect ratio is different and "Set pixel aspect ratio in output media type" is unchecked.
-        oldRect=newpict.rectFull;
-        return S_OK;
-    }
-    if ((newpict.rectFull==oldRect && newpict.rectFull.sar!=oldRect.sar)
             && _strnicmp(_l("wmplayer.exe"),getExeflnm(),13)!=0
             && (downstreamID == OVERLAY_MIXER || (dvdproc &&  (downstreamID ==  VMR7 || downstreamID == VMR9 || downstreamID == VMR9RENDERLESS_MPC)))) {
         m_NeedToAttachFormat = true;
@@ -1800,11 +1768,6 @@ HRESULT TffdshowDecVideo::reconnectOutput(const TffPict &newpict)
 
             //vih->dwControlFlags=AMCONTROL_USED | AMCONTROL_COLORINFO_PRESENT | (DXVA_NominalRange_Wide << DXVA_NominalRangeShift);
             setVIH2aspect(vih,newpict.rectFull,presetSettings->output->hwOverlayAspect);
-            if (presetSettings->output->hwOverlay==0) {
-                vih->dwPictAspectRatioX=newpict.rectFull.dx;
-                vih->dwPictAspectRatioY=newdy;
-                vih->dwControlFlags=0;
-            }
             if(presetSettings->resize && presetSettings->resize->is && presetSettings->resize->SARinternally && presetSettings->resize->mode==0) {
                 vih->dwPictAspectRatioX= newpict.rectFull.dx;
                 vih->dwPictAspectRatioY= newpict.rectFull.dy;

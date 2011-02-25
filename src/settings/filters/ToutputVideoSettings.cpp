@@ -68,55 +68,33 @@ ToutputVideoSettings::ToutputVideoSettings(TintStrColl *Icoll,TfilterIDFFs *filt
         IDFF_flip               ,&ToutputVideoSettings::flip               ,0,0,_l(""),1,
         _l("flip"),0,
 
-        IDFF_hwOverlayOld       ,&ToutputVideoSettings::hwOverlayOld       ,0,2,_l(""),1,
-        _l("hwOverlay"),2,
-        IDFF_setSARinOutSample  ,&ToutputVideoSettings::hwOverlay          ,0,2,_l(""),1,
-        _l("setSARinOutSample"),TintOption::DEF_DYN,
         IDFF_hwOverlayAspect    ,&ToutputVideoSettings::hwOverlayAspect    ,1,1,_l(""),1,
         _l("hwOverlayAspect"),0,
-        IDFF_hwDeinterlaceOld   ,&ToutputVideoSettings::hwDeinterlaceOld   ,0,0,_l(""),1,
-        _l("hwDeinterlace"),0,
         IDFF_setDeintInOutSample,&ToutputVideoSettings::hwDeinterlace      ,0,0,_l(""),1,
-        _l("setDeintInOutSample"),TintOption::DEF_DYN,
+        _l("setDeintInOutSample"),1,
         IDFF_hwDeintMethod      ,&ToutputVideoSettings::hwDeintMethod      ,0,2,_l(""),1,
         _l("hwDeintMethod"),0,
         IDFF_hwDeintFieldOrder  ,&ToutputVideoSettings::hwDeintFieldOrder  ,0,2,_l(""),1,
         _l("hwDeintFieldOrder"),0,
 
-        IDFF_outI420            ,&ToutputVideoSettings::i420               ,0,0,_l(""),0,
-        _l("outI420"),0,
         IDFF_outYV12            ,&ToutputVideoSettings::yv12               ,0,0,_l(""),0,
         _l("outYV12"),1,
         IDFF_outYUY2            ,&ToutputVideoSettings::yuy2               ,0,0,_l(""),0,
         _l("outYUY2"),1,
-        IDFF_outYVYU            ,&ToutputVideoSettings::yvyu               ,0,0,_l(""),0,
-        _l("outYVYU"),1,
         IDFF_outUYVY            ,&ToutputVideoSettings::uyvy               ,0,0,_l(""),0,
         _l("outUYVY"),1,
         IDFF_outNV12            ,&ToutputVideoSettings::nv12               ,0,0,_l(""),0,
-        _l("outNV12"),0,
+        _l("outNV12"),1,
         IDFF_outRGB32           ,&ToutputVideoSettings::rgb32              ,0,0,_l(""),0,
         _l("outRGB32"),1,
-        IDFF_outRGB24           ,&ToutputVideoSettings::rgb24              ,0,0,_l(""),0,
-        _l("outRGB24"),1,
-        IDFF_outRGB555          ,&ToutputVideoSettings::rgb555             ,0,0,_l(""),0,
-        _l("outRGB555"),1,
-        IDFF_outRGB565          ,&ToutputVideoSettings::rgb565             ,0,0,_l(""),0,
-        _l("outRGB565"),1,
-        IDFF_outClosest         ,&ToutputVideoSettings::closest            ,0,0,_l(""),1,
-        _l("outClosest"),1,
         IDFF_outDV              ,&ToutputVideoSettings::dv                 ,0,0,_l(""),0,
         _l("outDV"),0,
         IDFF_outDVnorm          ,&ToutputVideoSettings::dvNorm             ,0,2,_l(""),0,
         _l("outDVnorm"),2,
-        IDFF_allowOutChange     ,&ToutputVideoSettings::allowOutChange3    ,0,2,_l(""),1,
-        _l("allowOutChange"),2,
-        IDFF_outChangeCompatOnly,&ToutputVideoSettings::outChangeCompatOnly,0,0,_l(""),1,
-        _l("outChangeCompatOnly"),1,
         IDFF_highQualityRGB     ,&ToutputVideoSettings::highQualityRGB     ,0,0,_l(""),1,
-        _l("highQualityRGB"),TintOption::DEF_DYN,
+        _l("highQualityRGB"),1,
         IDFF_RGB_dithering      ,&ToutputVideoSettings::dithering          ,0,0,_l(""),1,
-        _l("dithering"),0,
+        _l("dithering"),1,
         IDFF_cspOptionsIturBt                ,&ToutputVideoSettings::cspOptionsIturBt           ,0,TrgbPrimaries::ITUR_BT_MAX - 1,_l(""),1,
         _l("cspOptionsIturBt2"),TrgbPrimaries::ITUR_BT_AUTO,
         IDFF_cspOptionsInputLevelsMode       ,&ToutputVideoSettings::cspOptionsInputLevelsMode  ,0,3,_l(""),1,
@@ -147,19 +125,8 @@ ToutputVideoSettings::ToutputVideoSettings(TintStrColl *Icoll,TfilterIDFFs *filt
 int ToutputVideoSettings::getDefault(int id)
 {
     switch (id) { // for upgrade. IDFF_setDeintInOutSample is now independent from IDFF_setSARinOutSample.
-        case IDFF_setSARinOutSample:
-            return hwOverlayOld;
         case IDFF_setDeintInOutSample:
-            return hwOverlayOld?hwDeinterlaceOld:0;
-        case IDFF_highQualityRGB:
-            if (Tconfig::getCPUcount() >= 2 && Tconfig::cpu_flags&FF_CPU_SSSE3)
-                // enable high quality RGB conversion on Core2 Duo or higher by default.
-                // SSSE3 is not required in ffdshow converter.
-            {
-                return 1;
-            } else {
-                return 0;
-            }
+            return 1;
         default:
             return TfilterSettingsVideo::getDefault(id);
     }
@@ -167,59 +134,37 @@ int ToutputVideoSettings::getDefault(int id)
 
 void ToutputVideoSettings::reg_op_outcsps(TregOp &t)
 {
-    t._REG_OP_N(IDFF_outI420  ,_l("outI420")  ,i420  ,0);
     t._REG_OP_N(IDFF_outYV12  ,_l("outYV12")  ,yv12  ,1);
     t._REG_OP_N(IDFF_outYUY2  ,_l("outYUY2")  ,yuy2  ,1);
-    t._REG_OP_N(IDFF_outYVYU  ,_l("outYVYU")  ,yvyu  ,1);
     t._REG_OP_N(IDFF_outUYVY  ,_l("outUYVY")  ,uyvy  ,1);
-    t._REG_OP_N(IDFF_outNV12  ,_l("outNV12")  ,nv12  ,0);
+    t._REG_OP_N(IDFF_outNV12  ,_l("outNV12")  ,nv12  ,1);
     t._REG_OP_N(IDFF_outRGB32 ,_l("outRGB32") ,rgb32 ,1);
-    t._REG_OP_N(IDFF_outRGB24 ,_l("outRGB24") ,rgb24 ,1);
-    t._REG_OP_N(IDFF_outRGB555,_l("outRGB555"),rgb555,1);
-    t._REG_OP_N(IDFF_outRGB565,_l("outRGB565"),rgb565,1);
-    t._REG_OP_N(IDFF_outClosest,_l("outClosest"),closest,1);
-    t._REG_OP_N(IDFF_setSARinOutSample,_l("setSARinOutSample"),hwOverlay,2);
     t._REG_OP_N(IDFF_hwOverlayAspect,_l("hwOverlayAspect"),hwOverlayAspect,0);
 }
 
 const int* ToutputVideoSettings::getResets(unsigned int pageId)
 {
-    static const int idResets[]= {IDFF_flip,IDFF_outI420,IDFF_outYV12,IDFF_outYUY2,IDFF_outYVYU,IDFF_outUYVY,IDFF_outNV12,IDFF_outRGB32,IDFF_outRGB24,IDFF_outRGB555,IDFF_outDV,IDFF_outRGB565,IDFF_outClosest,IDFF_hwOverlay,IDFF_hwDeinterlace,IDFF_highQualityRGB,/*IDFF_PC_YUV,*/IDFF_allowOutChange,IDFF_outChangeCompatOnly,0};
+    static const int idResets[]= {IDFF_flip,IDFF_outYV12,IDFF_outYUY2,IDFF_outUYVY,IDFF_outNV12,IDFF_outRGB32,IDFF_outDV,IDFF_highQualityRGB,IDFF_setDeintInOutSample,IDFF_hwDeintMethod,IDFF_hwDeintFieldOrder,0};
     return idResets;
 }
 
 void ToutputVideoSettings::getOutputColorspaces(ints &ocsps)
 {
     ocsps.clear();
-    if (i420  && !(hwDeinterlace)) {
-        ocsps.push_back(FF_CSP_420P|FF_CSP_FLAGS_YUV_ORDER);
-    }
-    if (yv12  && !(hwDeinterlace)) {
+    if (yv12) {
         ocsps.push_back(FF_CSP_420P);
     }
-    if (yuy2  ) {
-        ocsps.push_back(FF_CSP_YUY2);
-    }
-    if (yvyu  ) {
-        ocsps.push_back(FF_CSP_YVYU);
-    }
-    if (uyvy  ) {
-        ocsps.push_back(FF_CSP_UYVY);
-    }
-    if (nv12  ) {
+    if (nv12) {
         ocsps.push_back(FF_CSP_NV12);
     }
-    if (rgb32 ) {
+    if (rgb32) {
         ocsps.push_back(FF_CSP_RGB32);
     }
-    if (rgb24 ) {
-        ocsps.push_back(FF_CSP_RGB24);
+    if (yuy2) {
+        ocsps.push_back(FF_CSP_YUY2);
     }
-    if (rgb555) {
-        ocsps.push_back(FF_CSP_RGB15);
-    }
-    if (rgb565) {
-        ocsps.push_back(FF_CSP_RGB16);
+    if (uyvy) {
+        ocsps.push_back(FF_CSP_UYVY);
     }
 }
 
