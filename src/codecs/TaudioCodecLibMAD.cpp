@@ -128,7 +128,7 @@ HRESULT TaudioCodecLibMAD::decode(TbyteBuffer &src)
             for (int i=0; i<decoded; i++) {
                 *output++=scale(*left_ch++);
             }
-        HRESULT hr=sinkA->deliverDecodedSample(output0,decoded,fmt,1);
+        HRESULT hr=sinkA->deliverDecodedSample(output0,decoded,fmt);
         if (hr!=S_OK) {
             return hr;
         }

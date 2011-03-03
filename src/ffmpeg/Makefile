@@ -4,6 +4,7 @@ SRCS_C=\
     DllEntry.c \
     libavcodec/8bps.c \
     libavcodec/aac_ac3_parser.c \
+    libavcodec/aac_parser.c \
     libavcodec/aacadtsdec.c \
     libavcodec/aacdec.c \
     libavcodec/aacps.c \

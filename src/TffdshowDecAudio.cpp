@@ -104,7 +104,6 @@ TffdshowDecAudio::TffdshowDecAudio(CLSID Iclsid,const char_t *className,const CL
         defaultMerit),
     decAudio_char(punk,this),
     isTmpgEnc(false),
-    prevpostgain(1),
     priorFrameMsgTime(0)
 {
     setThreadName(DWORD(-1),"decAudio");
@@ -622,23 +621,23 @@ HRESULT TffdshowDecAudio::onGraphRemove(void)
     return TffdshowDec::onGraphRemove();
 }
 
-STDMETHODIMP TffdshowDecAudio::deliverDecodedSample(const TffdshowDecAudioInputPin *pin,void *buf,size_t numsamples,const TsampleFormat &fmt,float postgain)
+STDMETHODIMP TffdshowDecAudio::deliverDecodedSample(const TffdshowDecAudioInputPin *pin,void *buf,size_t numsamples,const TsampleFormat &fmt)
 {
     REFERENCE_TIME rtDurDec=REF_SECOND_MULT*numsamples/fmt.freq;
     m_rtStartDec+=rtDurDec;
     if (!audioFilters) {
         audioFilters=new TaudioFiltersPlayer(this,this,presetSettings);
     }
-    HRESULT res=audioFilters->process(fmt,buf,numsamples,presetSettings,prevpostgain=postgain);
+    HRESULT res=audioFilters->process(fmt,buf,numsamples,presetSettings);
     return res;
 }
 
-HRESULT TffdshowDecAudio::flushDecodedSamples(const TffdshowDecAudioInputPin *pin,float postgain)
+HRESULT TffdshowDecAudio::flushDecodedSamples(const TffdshowDecAudioInputPin *pin)
 {
     if (!audioFilters) {
         audioFilters=new TaudioFiltersPlayer(this,this,presetSettings);
     }
-    return audioFilters->process(TsampleFormat(),NULL,0,presetSettings,prevpostgain);
+    return audioFilters->process(TsampleFormat(),NULL,0,presetSettings);
 }
 
 STDMETHODIMP TffdshowDecAudio::deliverProcessedSample(const void *buf,size_t numsamples,const TsampleFormat &outsf0)

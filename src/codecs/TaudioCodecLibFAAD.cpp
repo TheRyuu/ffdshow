@@ -149,7 +149,7 @@ HRESULT TaudioCodecLibFAAD::decode(TbyteBuffer &src)
                 dst[chmap[i]]=*outsamples++;
             }
 
-        return sinkA->deliverDecodedSample(dst0,frameInfo.samples/frameInfo.channels,fmt,1);
+        return sinkA->deliverDecodedSample(dst0,frameInfo.samples/frameInfo.channels,fmt);
     } else {
         return S_OK;
     }

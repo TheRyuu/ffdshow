@@ -148,7 +148,7 @@ HRESULT TaudioCodecLiba52::decode(TbyteBuffer &src)
                             fmt.sf=TsampleFormat::SF_FLOAT32;
                             fmt.freq=sample_rate;
                             fmt.setChannels(scmap.nchannels,scmap.channelMask);
-                            HRESULT hr=sinkA->deliverDecodedSample(dst0,6*256,fmt,1);
+                            HRESULT hr=sinkA->deliverDecodedSample(dst0,6*256,fmt);
                             if (hr!=S_OK) {
                                 return hr;
                             }

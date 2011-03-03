@@ -59,5 +59,5 @@ HRESULT TaudioCodecAvisynth::decode(TbyteBuffer &src)
     int16_t *dst=(int16_t*)getDst(dstLength);
     (*avisynth->clip)->GetAudio(dst,s1,s2-s1+1);
     src.clear();
-    return sinkA->deliverDecodedSample(dst,(unsigned int)(s2-s1+1),fmt,1);
+    return sinkA->deliverDecodedSample(dst,(unsigned int)(s2-s1+1),fmt);
 }

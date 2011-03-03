@@ -1007,7 +1007,6 @@
 #define IDFF_preferredsfs         2399
 #define IDFF_alwaysextensible     2398
 #define IDFF_allowOutStream       2397
-#define IDFF_vorbisgain           2396
 
 #define IDFF_filterVolume         2400
 #define IDFF_isVolume             2401

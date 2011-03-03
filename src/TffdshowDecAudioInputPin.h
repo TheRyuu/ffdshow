@@ -14,7 +14,6 @@ private:
     CCritSec m_csReceive;
     TbyteBuffer buf,newSrcBuffer;
     int jitter;
-    float prevpostgain;
     TaudioParser *audioParser;
     CMediaType outmt;
     HANDLE m_hNotifyEvent;
@@ -60,7 +59,7 @@ public:
     STDMETHODIMP DynamicDisconnect();
 
     // IdecAudioSink
-    STDMETHODIMP deliverDecodedSample(void *buf,size_t numsamples,const TsampleFormat &fmt,float postgain);
+    STDMETHODIMP deliverDecodedSample(void *buf,size_t numsamples,const TsampleFormat &fmt);
     STDMETHODIMP flushDecodedSamples(void);
     STDMETHODIMP setCodecId(CodecID codecId);
     STDMETHODIMP getCodecId(CodecID *pCodecId);

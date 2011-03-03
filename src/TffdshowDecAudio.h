@@ -47,7 +47,7 @@ public:
     STDMETHODIMP_(int) getVersion2(void);
     STDMETHODIMP getMovieSource(const TaudioCodec* *moviePtr);
     STDMETHODIMP inputSampleFormatDescription(char_t *buf,size_t buflen);
-    STDMETHODIMP deliverSample_(void *buf,size_t numsamples,const TsampleFormat &fmt,float postgain) {
+    STDMETHODIMP deliverSample_(void *buf,size_t numsamples,const TsampleFormat &fmt) {
         return E_NOTIMPL;
     }
     STDMETHODIMP getWinamp2(Twinamp2* *winamp2ptr);
@@ -144,8 +144,8 @@ private:
         STDMETHODIMP getWinamp2(Twinamp2* *winamp2ptr) {
             return deciA->getWinamp2(winamp2ptr);
         }
-        STDMETHODIMP deliverSample_(void *buf,size_t numsamples,const TsampleFormat &fmt,float postgain) {
-            return deciA->deliverSample_(buf,numsamples,fmt,postgain);
+        STDMETHODIMP deliverSample_(void *buf,size_t numsamples,const TsampleFormat &fmt) {
+            return deciA->deliverSample_(buf,numsamples,fmt);
         }
         STDMETHODIMP storeMixerMatrixData_(const double matrix[6][6]) {
             return deciA->storeMixerMatrixData_(matrix);
@@ -268,8 +268,8 @@ private:
     HRESULT ReconnectOutput(size_t numsamples, CMediaType& mt);
     REFERENCE_TIME m_rtStartDec,m_rtStartProc;
     HRESULT getMediaType(CMediaType *mtOut);
-    STDMETHODIMP deliverDecodedSample(const TffdshowDecAudioInputPin *pin,void *buf,size_t numsamples,const TsampleFormat &fmt,float postgain);
-    HRESULT flushDecodedSamples(const TffdshowDecAudioInputPin *pin,float postgain);
+    STDMETHODIMP deliverDecodedSample(const TffdshowDecAudioInputPin *pin,void *buf,size_t numsamples,const TsampleFormat &fmt);
+    HRESULT flushDecodedSamples(const TffdshowDecAudioInputPin *pin);
     ALLOCATOR_PROPERTIES actual;
 
     bool isAudioSwitcher;
@@ -280,7 +280,6 @@ private:
     bool fileout;
     bool isTmpgEnc;
     REFERENCE_TIME ft1,ft2;
-    float prevpostgain;
     REFERENCE_TIME priorFrameMsgTime;
 };
 

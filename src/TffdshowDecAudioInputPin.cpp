@@ -32,7 +32,6 @@ TffdshowDecAudioInputPin::TffdshowDecAudioInputPin(const char_t* pObjectName, Tf
      number(Inumber),
      audio(NULL),
      jitter(0),
-     prevpostgain(1.0f),
      insample_rtStart(REFTIME_INVALID),
      insample_rtStop(REFTIME_INVALID),
      audioParser(NULL),
@@ -391,12 +390,12 @@ STDMETHODIMP TffdshowDecAudioInputPin::Receive(IMediaSample* pIn)
     return hr;
 }
 
-STDMETHODIMP TffdshowDecAudioInputPin::deliverDecodedSample(void *buf,size_t numsamples,const TsampleFormat &fmt,float postgain)
+STDMETHODIMP TffdshowDecAudioInputPin::deliverDecodedSample(void *buf,size_t numsamples,const TsampleFormat &fmt)
 {
     if (numsamples==0) {
         return S_OK;
     }
-    return filter->deliverDecodedSample(this,buf,numsamples,fmt,prevpostgain=postgain);
+    return filter->deliverDecodedSample(this,buf,numsamples,fmt);
 }
 
 STDMETHODIMP TffdshowDecAudioInputPin::deliverProcessedSample(const void *buf,size_t numsamples,const TsampleFormat &fmt)
@@ -409,7 +408,7 @@ STDMETHODIMP TffdshowDecAudioInputPin::deliverProcessedSample(const void *buf,si
 
 STDMETHODIMP TffdshowDecAudioInputPin::flushDecodedSamples(void)
 {
-    return filter->flushDecodedSamples(this,prevpostgain);
+    return filter->flushDecodedSamples(this);
 }
 
 STDMETHODIMP TffdshowDecAudioInputPin::setCodecId(CodecID codecId)

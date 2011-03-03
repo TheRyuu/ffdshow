@@ -104,7 +104,7 @@ STDMETHODIMP TffProcAudio::processEx(const WAVEFORMATEXTENSIBLE *wfIn,size_t inn
     if (innumsamples==0) {
         return S_FALSE;
     }
-    HRESULT hr=audioFilters->process(*wfIn,*samples0,innumsamples,presetSettings,1);
+    HRESULT hr=audioFilters->process(*wfIn,*samples0,innumsamples,presetSettings);
     if (hr==S_OK) {
         WAVEFORMATEXTENSIBLE wfex = sfOut.toWAVEFORMATEXTENSIBLE(true);
         *wfOut=wfex;

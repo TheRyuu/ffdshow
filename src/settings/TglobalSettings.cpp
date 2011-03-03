@@ -1112,8 +1112,6 @@ TglobalSettingsDecAudio::TglobalSettingsDecAudio(const Tconfig *Iconfig,int Imod
         _l("allowOutStream"),1,
         IDFF_dtsinwav               ,&TglobalSettingsDecAudio::dtsinwav               ,0,0             ,_l(""),0,
         _l("dtsinwav"),1,
-        IDFF_vorbisgain             ,&TglobalSettingsDecAudio::vorbisgain             ,0,0             ,_l(""),0,
-        _l("vorbisgain"),0,
         0
     };
     addOptions(iopts);

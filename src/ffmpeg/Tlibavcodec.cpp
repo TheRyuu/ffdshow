@@ -299,7 +299,6 @@ AVCodecContext* Tlibavcodec::avcodec_alloc_context(TlibavcodecExt *ext)
  ctx->dsp_mask=Tconfig::lavc_cpu_flags;
  if (ext)
   ext->connectTo(ctx,this);
- ctx->postgain=1.0f;
  ctx->scenechange_factor=1;
  return ctx;
 }

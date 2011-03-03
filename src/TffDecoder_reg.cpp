@@ -406,7 +406,7 @@ const AMOVIESETUP_MEDIATYPE TffdshowDecAudio::inputMediaTypes[]= {
     { &MEDIATYPE_Audio , &MEDIASUBTYPE_SAMR       },
     { &MEDIATYPE_Audio , &MEDIASUBTYPE_MSADPCM    },
     { &MEDIATYPE_Audio , &MEDIASUBTYPE_IMA_WAV    },
-	{ &MEDIATYPE_Audio , &MEDIASUBTYPE_IMA_DK3    },
+    { &MEDIATYPE_Audio , &MEDIASUBTYPE_IMA_DK3    },
     { &MEDIATYPE_Audio , &MEDIASUBTYPE_IMA_DK4    },
     { &MEDIATYPE_Audio , &MEDIASUBTYPE_IMA4       },
     { &MEDIATYPE_Audio , &MEDIASUBTYPE_IMA_AMV    },

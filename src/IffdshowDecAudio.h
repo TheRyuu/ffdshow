@@ -16,7 +16,7 @@ template<class tchar> DECLARE_INTERFACE_(IffdshowDecAudioT,IUnknown)
     STDMETHOD (getMovieSource)(const TaudioCodec* *moviePtr) PURE;
     STDMETHOD (inputSampleFormatDescription)(tchar *buf,size_t buflen) PURE;
     STDMETHOD (getWinamp2)(Twinamp2* *winamp2ptr) PURE;
-    STDMETHOD (deliverSample_)(void *buf,size_t numsamples,const TsampleFormat &fmt,float postgain) PURE;
+    STDMETHOD (deliverSample_)(void *buf,size_t numsamples,const TsampleFormat &fmt) PURE;
     STDMETHOD (storeMixerMatrixData_)(const double matrix[6][6]) PURE;
     STDMETHOD (getMixerMatrixData_)(double matrix[6][6]) PURE;
     STDMETHOD (deliverSampleSPDIF)(void *buf,size_t bufsize,int bit_rate,unsigned int sample_rate,int incRtDec) PURE;

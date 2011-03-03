@@ -9,7 +9,7 @@ class TaudioParser;
 
 DECLARE_INTERFACE_(IdecAudioSink,IdecSink)
 {
-    STDMETHOD (deliverDecodedSample)(void *buf,size_t numsamples,const TsampleFormat &fmt,float postgain) PURE;
+    STDMETHOD (deliverDecodedSample)(void *buf,size_t numsamples,const TsampleFormat &fmt) PURE;
     STDMETHOD (setCodecId)(CodecID codecId) PURE;
     STDMETHOD (getCodecId)(CodecID *pCodecId) PURE;
     STDMETHOD (getAudioParser)(TaudioParser **ppAudioParser) PURE;

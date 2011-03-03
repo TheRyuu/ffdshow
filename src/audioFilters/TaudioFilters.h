@@ -17,14 +17,12 @@ class TaudioFilters :public Tfilters
 private:
     comptrQ<IffdshowDecAudio> deciA;
     IprocAudioSink *sink;
-    TvolumeSettings *postgainCfg;
-    TaudioFilterVolume *postgainVol;
     Tfilter *output;
 public:
     TaudioFilters(IffdshowBase *Ideci,IprocAudioSink *Isink);
     virtual ~TaudioFilters();
     void getOutputFmt(TsampleFormat &fmt,const TpresetAudio *cfg);
-    HRESULT process(const TsampleFormat &fmt,void *samples,size_t numsamples,const TpresetAudio *cfg,float postgain);
+    HRESULT process(const TsampleFormat &fmt,void *samples,size_t numsamples,const TpresetAudio *cfg);
     HRESULT deliverSamples(TfilterQueue::iterator it,TsampleFormat &fmt,void *samples,size_t numsamples);
     int preferredsfs;
 };

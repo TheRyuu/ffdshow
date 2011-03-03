@@ -163,7 +163,6 @@ public:
     int isAudioSwitcher;
     int alwaysextensible;
     int allowOutStream;
-    int vorbisgain;
     char_t winamp2dir[MAX_PATH];
     virtual void load(void);
     virtual CodecID getCodecId(DWORD fourCC,FOURCC *AVIfourCC) const;

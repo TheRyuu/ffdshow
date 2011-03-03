@@ -174,7 +174,7 @@ HRESULT TaudioCodecUncompressed::decode(TbyteBuffer &src)
         numsamples/=2;
     }
 
-    HRESULT hr = sinkA->deliverDecodedSample(samples,numsamples,fmt,1);
+    HRESULT hr = sinkA->deliverDecodedSample(samples,numsamples,fmt);
     src.clear();
     return hr;
 }
