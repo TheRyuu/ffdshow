@@ -512,7 +512,7 @@ int attribute_align_arg avcodec_open(AVCodecContext *avctx, AVCodec *codec)
     avctx->frame_number = 0;
 
     if (HAVE_THREADS && !avctx->thread_opaque) {
-        ret = avcodec_thread_init(avctx, avctx->thread_count);
+        ret = ff_thread_init(avctx, avctx->thread_count);
         if (ret < 0) {
             goto free_and_end;
         }
@@ -550,7 +550,6 @@ int attribute_align_arg avcodec_decode_video2(AVCodecContext *avctx, AVFrame *pi
                          AVPacket *avpkt)
 {
     int ret;
-    int threaded = avctx->active_thread_type&FF_THREAD_FRAME;
 
     *got_picture_ptr= 0;
     if((avctx->coded_width||avctx->coded_height) && av_image_check_size(avctx->coded_width, avctx->coded_height, 0, avctx))
@@ -558,9 +557,10 @@ int attribute_align_arg avcodec_decode_video2(AVCodecContext *avctx, AVFrame *pi
 
     avctx->pkt = avpkt;
 
-    if((avctx->codec->capabilities & CODEC_CAP_DELAY) || avpkt->size || threaded){
-        if (HAVE_PTHREADS && threaded) ret = ff_thread_decode_frame(avctx, picture,
-                                got_picture_ptr, avpkt);
+    if((avctx->codec->capabilities & CODEC_CAP_DELAY) || avpkt->size || (avctx->active_thread_type&FF_THREAD_FRAME)){
+        if (HAVE_PTHREADS && avctx->active_thread_type&FF_THREAD_FRAME)
+             ret = ff_thread_decode_frame(avctx, picture, got_picture_ptr,
+                                          avpkt);
         else {
             ret = avctx->codec->decode(avctx, picture, got_picture_ptr,
                               avpkt);
@@ -594,7 +594,7 @@ av_cold int avcodec_close(AVCodecContext *avctx)
     //}
 
     if (HAVE_THREADS && avctx->thread_opaque)
-        avcodec_thread_free(avctx);
+        ff_thread_free(avctx);
     if (avctx->codec && avctx->codec->close)
         avctx->codec->close(avctx);
     avcodec_default_free_buffers(avctx);
@@ -713,7 +713,7 @@ char av_get_pict_type_char(int pict_type){
 }
 
 #if !HAVE_THREADS
-int avcodec_thread_init(AVCodecContext *s, int thread_count){
+int ff_thread_init(AVCodecContext *s, int thread_count){
     s->thread_count = thread_count;
     return -1;
 }
@@ -793,6 +793,22 @@ void ff_thread_report_progress(AVFrame *f, int progress, int field)
 
 void ff_thread_await_progress(AVFrame *f, int progress, int field)
 {
+}
+
+#endif
+
+#if LIBAVCODEC_VERSION_MAJOR < 53
+
+int avcodec_thread_init(AVCodecContext *s, int thread_count)
+{
+    return ff_thread_init(s, thread_count);
+}
+
+void avcodec_thread_free(AVCodecContext *s)
+{
+#if HAVE_THREADS
+    ff_thread_free(s);
+#endif
 }
 
 #endif

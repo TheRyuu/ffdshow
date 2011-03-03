@@ -3146,7 +3146,7 @@ static int vc1_decode_frame(AVCodecContext *avctx,
     uint8_t *buf2 = NULL;
 
     /* no supplementary picture */
-    if (buf_size == 0) {
+    if (buf_size == 0 || (buf_size == 4 && AV_RB32(buf) == VC1_CODE_ENDOFSEQ)) {
         /* special case for last picture */
         if (s->low_delay==0 && s->next_picture_ptr) {
             *pict= *(AVFrame*)s->next_picture_ptr;
