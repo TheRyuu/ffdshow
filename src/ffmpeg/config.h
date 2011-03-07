@@ -130,6 +130,7 @@
 #endif
 
 #define CONFIG_AC3ENC_FLOAT 0
+#define CONFIG_AUDIO_FLOAT 1
 #define CONFIG_DCT 1
 #define CONFIG_DWT 0
 #define CONFIG_GPL 1
