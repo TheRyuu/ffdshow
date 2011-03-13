@@ -388,7 +388,8 @@ static int RarErrorToDll(int ErrCode)
 // FFDshow custom code begin
 extern "C" void __stdcall getVersion(char *ver,const char* *license)
 {
- sprintf(ver,"%d.%d beta %d, %s%s%s (%s %s)",RARVER_MAJOR,RARVER_MINOR,RARVER_BETA,COMPILER,COMPILER_X64,COMPILER_INFO,__DATE__,__TIME__);
+ sprintf(ver,"%d.%d, %s%s%s (%s %s)",RARVER_MAJOR,RARVER_MINOR,COMPILER,COMPILER_X64,COMPILER_INFO,__DATE__,__TIME__);
+ //sprintf(ver,"%d.%d beta %d, %s%s%s (%s %s)",RARVER_MAJOR,RARVER_MINOR,RARVER_BETA,COMPILER,COMPILER_X64,COMPILER_INFO,__DATE__,__TIME__);
  *license="Alexander L. Roshal";
 }
 // FFDshow custom code end
