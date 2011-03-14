@@ -59,7 +59,7 @@ $(OBJ_DIR)%.o: %.asm
 
 $(OBJ_DIR)%.res.o: %.rc
 	@echo $<
-  @$(FFDSHOW_PREFIX)windres $< -o $@ -D_WIN32_IE=0x0500 -DIDCLOSE=8
+	@$(FFDSHOW_PREFIX)windres $< -o $@ -D_WIN32_IE=0x0500 -DIDCLOSE=8
 
 $(TARGET_LIB): $(OBJS) $(DEF)
 	@echo $@
