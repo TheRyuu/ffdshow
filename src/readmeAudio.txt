@@ -11,7 +11,7 @@ It has the ability to manipulate audio with effects like an equalizer, volume co
 - Dolby decoder.
 - Audio filters: equalizer, volume, reverb, mixer and convolver.
 - Multichannel audio processing by Winamp plugins.
-- Support for SPDIF output.
+- Support for S/PDIF output.
 
 ### 3. ffdshow-tryouts ###
 
@@ -26,15 +26,12 @@ ffdshow was originally developed by Milan Cutka. Since Milan Cutka stopped updat
 ffdshow:
 http://sourceforge.net/projects/ffdshow-tryout/
 
-ffdshow (old):
-http://sourceforge.net/projects/ffdshow/
-
-FFmpeg:
-http://ffmpeg.org/
+Libav:
+http://www.libav.org/
 
 Doom9:
 http://forum.doom9.org/showthread.php?t=120465
 
 ### 6. Copying ###
 
-All used sources (except of cpu utilization detection routine) and ffdshow itself are distributed under GPL. See copying.txt
+All used sources (except of cpu utilization detection routine) and ffdshow itself are distributed under GPLv2. See copying.txt

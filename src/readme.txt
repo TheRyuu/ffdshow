@@ -29,14 +29,11 @@ ffdshow was originally developed by Milan Cutka. Since Milan Cutka stopped updat
 ffdshow:
 http://sourceforge.net/projects/ffdshow-tryout/
 
-ffdshow (old):
-http://sourceforge.net/projects/ffdshow/
-
 Xvid:
 http://www.xvid.org/
 
-FFmpeg:
-http://ffmpeg.org/
+Libav:
+http://www.libav.org/
 
 libmpeg2:
 http://libmpeg2.sourceforge.net/
@@ -52,4 +49,4 @@ http://en.wikipedia.org/wiki/Ffdshow
 
 ### 5. Copying ###
 
-ffdshow tryouts is distributed under GPL. Boost C++ Libraries and threadpool are distributed under Boost Software License. Other used sources except of CPU utilization detection routine are distributed under GPL or LGPL.
+ffdshow tryouts is distributed under GPLv2. Boost C++ Libraries and threadpool are distributed under Boost Software License. Other used sources except of CPU utilization detection routine are distributed under GPL or LGPL.
