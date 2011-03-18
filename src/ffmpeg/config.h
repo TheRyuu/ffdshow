@@ -31,8 +31,8 @@
 // registry switch is not read)
 //#define USE_DPRINTF 1
 
-#define FFMPEG_CONFIGURATION "ffdshow custom"
-#define FFMPEG_LICENSE "GPL version 2 or later"
+#define LIBAV_CONFIGURATION "ffdshow custom"
+#define LIBAV_LICENSE "GPL version 2 or later"
 
 #define CC_TYPE "gcc"
 #define CC_VERSION __VERSION__
