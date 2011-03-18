@@ -41,6 +41,10 @@ else
   CPPFLAGS+=-fno-exceptions
 endif
 
+ifeq ($(findstring /,$(SHELL)),/)
+  POSIX_COMPATIBLE_SHELL=yes
+endif
+
 
 ### COMMANDS ###
 

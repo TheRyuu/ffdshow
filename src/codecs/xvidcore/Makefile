@@ -136,10 +136,19 @@ include ../../makefile_c.inc
 .PHONY: outdirs $(OBJ_DIRS)
 outdirs: $(OBJ_DIRS)
 $(OBJ_DIRS):
+ifdef POSIX_COMPATIBLE_SHELL
 	$(shell test -d $(@) || mkdir -p $(@))
+else
+	@IF NOT EXIST "$(@)" mkdir "$(@)"
+endif
 
 
 .PHONY: clean
 clean:
+ifdef POSIX_COMPATIBLE_SHELL
 	rm -f $(TARGET_LIB)
 	rm -r -f $(OBJ_DIR)
+else
+	IF EXIST "$(TARGET_LIB)" del "$(subst /,\,$(TARGET_LIB))"
+	IF EXIST "$(OBJ_DIR)" rd /s /q "$(OBJ_DIR)"
+endif
