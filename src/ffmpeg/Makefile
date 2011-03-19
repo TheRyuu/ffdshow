@@ -99,6 +99,7 @@ SRCS_C=\
     libavcodec/jpegls.c \
     libavcodec/jpeglsdec.c \
     libavcodec/jrevdct.c \
+    libavcodec/kbdwin.c \
     libavcodec/lcldec.c \
     libavcodec/libamr.c \
     libavcodec/ljpegenc.c \

@@ -7,20 +7,20 @@
  * Copyright (c) 2007-2008 Bartlomiej Wolowiec <bartek.wolowiec@gmail.com>
  * Copyright (c) 2007 Justin Ruggles <justin.ruggles@gmail.com>
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -35,6 +35,7 @@
 #include "ac3_parser.h"
 #include "ac3dec.h"
 #include "ac3dec_data.h"
+#include "kbdwin.h"
 
 /** Large enough for maximum possible frame size when the specification limit is ignored */
 #define AC3_FRAME_BUFFER_SIZE 32768
@@ -221,9 +222,9 @@ static av_cold int ac3_decode_init(AVCodecContext *avctx)
 
     /* ffdshow custom code */
     #if CONFIG_AUDIO_FLOAT
-    avctx->sample_fmt = SAMPLE_FMT_FLT;
+    avctx->sample_fmt = AV_SAMPLE_FMT_FLT;
     #else
-    avctx->sample_fmt = SAMPLE_FMT_S16;
+    avctx->sample_fmt = AV_SAMPLE_FMT_S16;
     #endif
     return 0;
 }
@@ -638,13 +639,13 @@ static inline void do_imdct(AC3DecodeContext *s, int channels)
             float *x = s->tmp_output+128;
             for(i=0; i<128; i++)
                 x[i] = s->transform_coeffs[ch][2*i];
-            ff_imdct_half(&s->imdct_256, s->tmp_output, x);
+            s->imdct_256.imdct_half(&s->imdct_256, s->tmp_output, x);
             s->dsp.vector_fmul_window(s->output[ch-1], s->delay[ch-1], s->tmp_output, s->window, 128);
             for(i=0; i<128; i++)
                 x[i] = s->transform_coeffs[ch][2*i+1];
-            ff_imdct_half(&s->imdct_256, s->delay[ch-1], x);
+            s->imdct_256.imdct_half(&s->imdct_256, s->delay[ch-1], x);
         } else {
-            ff_imdct_half(&s->imdct_512, s->tmp_output, s->transform_coeffs[ch]);
+            s->imdct_512.imdct_half(&s->imdct_512, s->tmp_output, s->transform_coeffs[ch]);
             s->dsp.vector_fmul_window(s->output[ch-1], s->delay[ch-1], s->tmp_output, s->window, 128);
             memcpy(s->delay[ch-1], s->tmp_output+128, 128*sizeof(float));
         }

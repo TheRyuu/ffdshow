@@ -7,20 +7,20 @@
  * Copyright (c) 2008-2010 Paul Kendall <paul@kcbbs.gen.nz>
  * Copyright (c) 2010      Janne Grunau <janne-ffmpeg@jannau.net>
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -87,6 +87,7 @@
 #include "fft.h"
 #include "fmtconvert.h"
 #include "lpc.h"
+#include "kbdwin.h"
 
 #include "aac.h"
 #include "aactab.h"
@@ -168,7 +169,7 @@ static ChannelElement *get_che(AACContext *ac, int type, int elem_id)
 /**
  * Check for the channel element in the current channel position configuration.
  * If it exists, make sure the appropriate element is allocated and map the
- * channel order to match the internal FFmpeg channel layout.
+ * channel order to match the internal Libav channel layout.
  *
  * @param   che_pos current channel position configuration
  * @param   type channel element type
@@ -1755,7 +1756,7 @@ static void windowing_and_mdct_ltp(AACContext *ac, float *out,
         ac->dsp.vector_fmul_reverse(in + 1024 + 448, in + 1024 + 448, swindow, 128);
         memset(in + 1024 + 576, 0, 448 * sizeof(float));
     }
-    ff_mdct_calc(&ac->mdct_ltp, out, in);
+    ac->mdct_ltp.mdct_calc(&ac->mdct_ltp, out, in);
 }
 
 /**
@@ -1844,9 +1845,9 @@ static void imdct_and_windowing(AACContext *ac, SingleChannelElement *sce)
     // imdct
     if (ics->window_sequence[0] == EIGHT_SHORT_SEQUENCE) {
         for (i = 0; i < 1024; i += 128)
-            ff_imdct_half(&ac->mdct_small, buf + i, in + i);
+            ac->mdct_small.imdct_half(&ac->mdct_small, buf + i, in + i);
     } else
-        ff_imdct_half(&ac->mdct, buf, in);
+        ac->mdct.imdct_half(&ac->mdct, buf, in);
 
     /* window overlapping
      * NOTE: To simplify the overlapping code, all 'meaningless' short to long
