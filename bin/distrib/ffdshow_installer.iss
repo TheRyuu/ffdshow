@@ -260,7 +260,7 @@ Name: "zh_Hans"; MessagesFile:          "languages\ChineseSimp.isl"
 Name: "Normal"; Description: "Normal"; Flags: iscustom
 
 [Components]
-Name: "ffdshow";                    Description: "{cm:comp_ffdshowds}";    Types: Normal
+Name: "ffdshow";                    Description: "{cm:comp_ffdshowds}";    Types: Normal; Flags: fixed
 Name: "ffdshow\vfw";                Description: "{cm:comp_vfwInterface}"; Types: Normal
 #if include_makeavis
 Name: "ffdshow\makeavis";           Description: "{cm:comp_makeAvis}";         Flags: dontinheritcheck
@@ -444,15 +444,7 @@ Source: "{#= ff_manifest}\makeAVIS.exe.manifest"; DestDir: "{app}";             
 ; Private assemblies
 Type: files; Name: "{app}\msvcr80.dll";                            Components: ffdshow
 Type: files; Name: "{app}\microsoft.vc80.crt.manifest";            Components: ffdshow
-; Localized shortcuts
-#if localize
-Type: files; Name: "{group}\Video decoder configuration.lnk";      Components: ffdshow
-Type: files; Name: "{group}\DXVA Video decoder configuration.lnk"; Components: ffdshow
-Type: files; Name: "{group}\Audio decoder configuration.lnk";      Components: ffdshow
-Type: files; Name: "{group}\Uninstall ffdshow.lnk";                Components: ffdshow
-Type: files; Name: "{group}\Homepage.url";                         Components: ffdshow
-Type: files; Name: "{group}\VFW configuration.lnk";                Components: ffdshow\vfw
-#endif
+Type: files; Name: "{group}\*.*";                                  Components: ffdshow
 ; Files not included in this build
 #if !include_xvidcore
 Type: files; Name: "{app}\xvidcore.dll";                           Components: ffdshow
