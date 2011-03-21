@@ -3,20 +3,20 @@
  * Copyright (c) 2006-2007 Konstantin Shishkov
  * Partly based on vc9.c (c) 2005 Anonymous, Alex Beregszaszi, Michael Niedermayer
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -2685,7 +2685,7 @@ static void vc1_decode_i_blocks(VC1Context *v)
 
 /** Decode blocks of I-frame for advanced profile
  */
-static void vc1_decode_i_blocks_adv(VC1Context *v)
+static void vc1_decode_i_blocks_adv(VC1Context *v, int mby_start, int mby_end)
 {
     int k;
     MpegEncContext *s = &v->s;
@@ -2727,8 +2727,15 @@ static void vc1_decode_i_blocks_adv(VC1Context *v)
     s->mb_x = s->mb_y = 0;
     s->mb_intra = 1;
     s->first_slice_line = 1;
+    s->mb_y = mby_start;
+    if (mby_start) {
+        s->mb_x = 0;
+        ff_init_block_index(s);
+        memset(&s->coded_block[s->block_index[0]-s->b8_stride], 0,
+               s->b8_stride * sizeof(*s->coded_block));
+    }
     idct8x8_fn = v->vc1dsp.vc1_inv_trans_8x8_put_signed[0];
-    for(s->mb_y = 0; s->mb_y < s->mb_height; s->mb_y++) {
+    for(; s->mb_y < mby_end; s->mb_y++) {
         s->mb_x = 0;
         ff_init_block_index(s);
         for(;s->mb_x < s->mb_width; s->mb_x++) {
@@ -2814,7 +2821,7 @@ static void vc1_decode_i_blocks_adv(VC1Context *v)
             if(v->s.loop_filter) vc1_loop_filter_iblk(v, v->pq);
 
             if(get_bits_count(&s->gb) > v->bits) {
-                ff_er_add_slice(s, 0, 0, s->mb_x, s->mb_y, (AC_END|DC_END|MV_END));
+                ff_er_add_slice(s, 0, mby_start, s->mb_x, s->mb_y, (AC_END|DC_END|MV_END));
                 av_log(s->avctx, AV_LOG_ERROR, "Bits overconsumption: %i > %i\n", get_bits_count(&s->gb), v->bits);
                 return;
             }
@@ -2827,10 +2834,10 @@ static void vc1_decode_i_blocks_adv(VC1Context *v)
     }
     if (v->s.loop_filter)
         ff_draw_horiz_band(s, (s->mb_height-1)*16, 16);
-    ff_er_add_slice(s, 0, 0, s->mb_width - 1, s->mb_height - 1, (AC_END|DC_END|MV_END));
+    ff_er_add_slice(s, 0, mby_start, s->mb_width - 1, mby_end - 1, (AC_END|DC_END|MV_END));
 }
 
-static void vc1_decode_p_blocks(VC1Context *v)
+static void vc1_decode_p_blocks(VC1Context *v, int mby_start, int mby_end)
 {
     MpegEncContext *s = &v->s;
 
@@ -2861,7 +2868,7 @@ static void vc1_decode_p_blocks(VC1Context *v)
 
     s->first_slice_line = 1;
     memset(v->cbp_base, 0, sizeof(v->cbp_base[0])*2*s->mb_stride);
-    for(s->mb_y = 0; s->mb_y < s->mb_height; s->mb_y++) {
+    for(s->mb_y = mby_start; s->mb_y < mby_end; s->mb_y++) {
         s->mb_x = 0;
         ff_init_block_index(s);
         for(; s->mb_x < s->mb_width; s->mb_x++) {
@@ -2869,7 +2876,7 @@ static void vc1_decode_p_blocks(VC1Context *v)
 
             vc1_decode_p_mb(v);
             if(get_bits_count(&s->gb) > v->bits || get_bits_count(&s->gb) < 0) {
-                ff_er_add_slice(s, 0, 0, s->mb_x, s->mb_y, (AC_END|DC_END|MV_END));
+                ff_er_add_slice(s, 0, mby_start, s->mb_x, s->mb_y, (AC_END|DC_END|MV_END));
                 av_log(s->avctx, AV_LOG_ERROR, "Bits overconsumption: %i > %i at %ix%i\n", get_bits_count(&s->gb), v->bits,s->mb_x,s->mb_y);
                 return;
             }
@@ -2878,10 +2885,10 @@ static void vc1_decode_p_blocks(VC1Context *v)
         ff_draw_horiz_band(s, s->mb_y * 16, 16);
         s->first_slice_line = 0;
     }
-    ff_er_add_slice(s, 0, 0, s->mb_width - 1, s->mb_height - 1, (AC_END|DC_END|MV_END));
+    ff_er_add_slice(s, 0, mby_start, s->mb_width - 1, mby_end - 1, (AC_END|DC_END|MV_END));
 }
 
-static void vc1_decode_b_blocks(VC1Context *v)
+static void vc1_decode_b_blocks(VC1Context *v, int mby_start, int mby_end)
 {
     MpegEncContext *s = &v->s;
 
@@ -2911,7 +2918,7 @@ static void vc1_decode_b_blocks(VC1Context *v)
     }
 
     s->first_slice_line = 1;
-    for(s->mb_y = 0; s->mb_y < s->mb_height; s->mb_y++) {
+    for(s->mb_y = mby_start; s->mb_y < mby_end; s->mb_y++) {
         s->mb_x = 0;
         ff_init_block_index(s);
         for(; s->mb_x < s->mb_width; s->mb_x++) {
@@ -2919,7 +2926,7 @@ static void vc1_decode_b_blocks(VC1Context *v)
 
             vc1_decode_b_mb(v);
             if(get_bits_count(&s->gb) > v->bits || get_bits_count(&s->gb) < 0) {
-                ff_er_add_slice(s, 0, 0, s->mb_x, s->mb_y, (AC_END|DC_END|MV_END));
+                ff_er_add_slice(s, 0, mby_start, s->mb_x, s->mb_y, (AC_END|DC_END|MV_END));
                 av_log(s->avctx, AV_LOG_ERROR, "Bits overconsumption: %i > %i at %ix%i\n", get_bits_count(&s->gb), v->bits,s->mb_x,s->mb_y);
                 return;
             }
@@ -2933,7 +2940,7 @@ static void vc1_decode_b_blocks(VC1Context *v)
     }
     if (v->s.loop_filter)
         ff_draw_horiz_band(s, (s->mb_height-1)*16, 16);
-    ff_er_add_slice(s, 0, 0, s->mb_width - 1, s->mb_height - 1, (AC_END|DC_END|MV_END));
+    ff_er_add_slice(s, 0, mby_start, s->mb_width - 1, mby_end - 1, (AC_END|DC_END|MV_END));
 }
 
 static void vc1_decode_skip_blocks(VC1Context *v)
@@ -2955,18 +2962,17 @@ static void vc1_decode_skip_blocks(VC1Context *v)
     s->pict_type = FF_P_TYPE;
 }
 
-static void vc1_decode_blocks(VC1Context *v)
+static void vc1_decode_blocks(VC1Context *v, int mby_start, int mby_end)
 {
 
     v->s.esc3_level_length = 0;
     if(v->x8_type){
         ff_intrax8_decode_picture(&v->x8, 2*v->pq+v->halfpq, v->pq*(!v->pquantizer) );
     }else{
-
         switch(v->s.pict_type) {
         case FF_I_TYPE:
             if(v->profile == PROFILE_ADVANCED)
-                vc1_decode_i_blocks_adv(v);
+                vc1_decode_i_blocks_adv(v, mby_start, mby_end);
             else
                 vc1_decode_i_blocks(v);
             break;
@@ -2974,16 +2980,16 @@ static void vc1_decode_blocks(VC1Context *v)
             if(v->p_frame_skipped)
                 vc1_decode_skip_blocks(v);
             else
-                vc1_decode_p_blocks(v);
+                vc1_decode_p_blocks(v, mby_start, mby_end);
             break;
         case FF_B_TYPE:
             if(v->bi_type){
                 if(v->profile == PROFILE_ADVANCED)
-                    vc1_decode_i_blocks_adv(v);
+                    vc1_decode_i_blocks_adv(v, mby_start, mby_end);
                 else
                     vc1_decode_i_blocks(v);
             }else
-                vc1_decode_b_blocks(v);
+                vc1_decode_b_blocks(v, mby_start, mby_end);
             break;
         }
     }
@@ -3143,11 +3149,17 @@ static int vc1_decode_frame(AVCodecContext *avctx,
                             AVPacket *avpkt)
 {
     const uint8_t *buf = avpkt->data;
-    int buf_size = avpkt->size;
+    int buf_size = avpkt->size, n_slices = 0, i;
     VC1Context *v = avctx->priv_data;
     MpegEncContext *s = &v->s;
     AVFrame *pict = data;
     uint8_t *buf2 = NULL;
+    const uint8_t *buf_start = buf;
+    struct {
+        uint8_t *buf;
+        GetBitContext gb;
+        int mby_start;
+    } *slices = NULL;
 
     /* no supplementary picture */
     if (buf_size == 0 || (buf_size == 4 && AV_RB32(buf) == VC1_CODE_ENDOFSEQ)) {
@@ -3192,10 +3204,20 @@ static int vc1_decode_frame(AVCodecContext *avctx,
                     init_get_bits(&s->gb, buf2, buf_size2*8);
                     vc1_decode_entry_point(avctx, v, &s->gb);
                     break;
-                case VC1_CODE_SLICE:
-                    av_log(avctx, AV_LOG_ERROR, "Sliced decoding is not implemented (yet)\n");
-                    av_free(buf2);
-                    return -1;
+                case VC1_CODE_SLICE: {
+                    int buf_size3;
+                    slices = av_realloc(slices, sizeof(*slices) * (n_slices+1));
+                    if (!slices) goto err;
+                    slices[n_slices].buf = av_mallocz(buf_size + FF_INPUT_BUFFER_PADDING_SIZE);
+                    if (!slices[n_slices].buf) goto err;
+                    buf_size3 = vc1_unescape_buffer(start + 4, size,
+                                                    slices[n_slices].buf);
+                    init_get_bits(&slices[n_slices].gb, slices[n_slices].buf,
+                                  buf_size3 << 3);
+                    slices[n_slices].mby_start = get_bits(&slices[n_slices].gb, 9);
+                    n_slices++;
+                    break;
+                }
                 }
             }
         }else if(v->interlace && ((buf[0] & 0xC0) == 0xC0)){ /* WVC1 interlaced stores both fields divided by marker */
@@ -3204,15 +3226,14 @@ static int vc1_decode_frame(AVCodecContext *avctx,
             divider = find_next_marker(buf, buf + buf_size);
             if((divider == (buf + buf_size)) || AV_RB32(divider) != VC1_CODE_FIELD){
                 av_log(avctx, AV_LOG_ERROR, "Error in WVC1 interlaced frame\n");
-                av_free(buf2);
-                return -1;
+                goto err;
             }
 
             buf_size2 = vc1_unescape_buffer(buf, divider - buf, buf2);
             // TODO
             if(!v->warn_interlaced++)
                 av_log(v->s.avctx, AV_LOG_ERROR, "Interlaced WVC1 support is not implemented\n");
-            av_free(buf2);return -1;
+            goto err;
         }else{
             buf_size2 = vc1_unescape_buffer(buf, buf_size, buf2);
         }
@@ -3222,19 +3243,16 @@ static int vc1_decode_frame(AVCodecContext *avctx,
     // do parse frame header
     if(v->profile < PROFILE_ADVANCED) {
         if(vc1_parse_frame_header(v, &s->gb) == -1) {
-            av_free(buf2);
-            return -1;
+            goto err;
         }
     } else {
         if(vc1_parse_frame_header_adv(v, &s->gb) == -1) {
-            av_free(buf2);
-            return -1;
+            goto err;
         }
     }
 
     if(v->res_sprite && (s->pict_type!=FF_I_TYPE)){
-        av_free(buf2);
-        return -1;
+        goto err;
     }
 
     // for hurry_up==5
@@ -3243,33 +3261,29 @@ static int vc1_decode_frame(AVCodecContext *avctx,
 
     /* skip B-frames if we don't have reference frames */
     if(s->last_picture_ptr==NULL && (s->pict_type==FF_B_TYPE || s->dropable)){
-        av_free(buf2);
-        return -1;//buf_size;
+        goto err;
     }
     /* skip b frames if we are in a hurry */
     if(avctx->hurry_up && s->pict_type==FF_B_TYPE) return -1;//buf_size;
     if(   (avctx->skip_frame >= AVDISCARD_NONREF && s->pict_type==FF_B_TYPE)
        || (avctx->skip_frame >= AVDISCARD_NONKEY && s->pict_type!=FF_I_TYPE)
        ||  avctx->skip_frame >= AVDISCARD_ALL) {
-        av_free(buf2);
-        return buf_size;
+        goto end;
     }
     /* skip everything if we are in a hurry>=5 */
     if(avctx->hurry_up>=5) {
-        av_free(buf2);
-        return -1;//buf_size;
+        goto err;
     }
 
     if(s->next_p_frame_damaged){
         if(s->pict_type==FF_B_TYPE)
-            return buf_size;
+            goto end;
         else
             s->next_p_frame_damaged=0;
     }
 
     if(MPV_frame_start(s, avctx) < 0) {
-        av_free(buf2);
-        return -1;
+        goto err;
     }
 
     s->me.qpel_put= s->dsp.put_qpel_pixels_tab;
@@ -3278,8 +3292,14 @@ static int vc1_decode_frame(AVCodecContext *avctx,
         ff_er_frame_start(s);
 
         v->bits = buf_size * 8;
-        vc1_decode_blocks(v);
-//av_log(s->avctx, AV_LOG_INFO, "Consumed %i/%i bits\n", get_bits_count(&s->gb), buf_size*8);
+        for (i = 0; i <= n_slices; i++) {
+            if (i && get_bits1(&s->gb))
+                vc1_parse_frame_header_adv(v, &s->gb);
+            vc1_decode_blocks(v, i == 0 ? 0 : FFMAX(0, slices[i-1].mby_start),
+                i == n_slices ? s->mb_height : FFMIN(s->mb_height, slices[i].mby_start));
+            if (i != n_slices) s->gb = slices[i].gb;
+        }
+//av_log(s->avctx, AV_LOG_INFO, "Consumed %i/%i bits\n", get_bits_count(&s->gb), s->gb.size_in_bits);
 //  if(get_bits_count(&s->gb) > buf_size * 8)
 //      return -1;
         ff_er_frame_end(s);
@@ -3299,8 +3319,19 @@ assert(s->current_picture.pict_type == s->pict_type);
         ff_print_debug_info(s, pict);
     }
 
+end:
     av_free(buf2);
+    for (i = 0; i < n_slices; i++)
+        av_free(slices[i].buf);
+    av_free(slices);
     return buf_size;
+
+err:
+    av_free(buf2);
+    for (i = 0; i < n_slices; i++)
+        av_free(slices[i].buf);
+    av_free(slices);
+    return -1;
 }
 
 

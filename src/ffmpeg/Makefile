@@ -161,6 +161,7 @@ SRCS_C=\
     libavcodec/rv40.c \
     libavcodec/rv40dsp.c \
     libavcodec/simple_idct.c \
+    libavcodec/sinewin.c \
     libavcodec/sp5xdec.c \
     libavcodec/svq1.c \
     libavcodec/svq1dec.c \

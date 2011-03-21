@@ -29,8 +29,7 @@
 
 #include <math.h>
 #include "libavutil/mathematics.h"
-#include "fft.h"
-#include "x86/fft.h"
+#include "dct.h"
 
 #define DCT32_FLOAT
 #include "dct32.c"
