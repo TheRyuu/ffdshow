@@ -39,7 +39,7 @@
 #include "timer.h"
 
 #ifndef attribute_align_arg
-#if ARCH_X86_32 && (!defined(__ICC) || __ICC > 1200) && AV_GCC_VERSION_AT_LEAST(4,2)
+#if ARCH_X86_32 && (!defined(__INTEL_COMPILER) || __INTEL_COMPILER > 1200) && AV_GCC_VERSION_AT_LEAST(4,2)
 #    define attribute_align_arg __attribute__((force_align_arg_pointer))
 #else
 #    define attribute_align_arg
@@ -180,7 +180,6 @@
 #else
 #   define NULL_IF_CONFIG_SMALL(x) x
 #endif
-
 
 /**
  * Define a function with only the non-default version specified.

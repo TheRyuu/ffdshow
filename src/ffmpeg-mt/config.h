@@ -90,6 +90,7 @@
 #define HAVE_PTHREADS 1
 #define HAVE_TEN_OPERANDS 1
 #define HAVE_THREADS 1
+#define HAVE_W32THREADS 0
 #define HAVE_XMM_CLOBBERS 1
 #define HAVE_YASM 1
 
@@ -129,6 +130,7 @@
 #endif
 
 #define CONFIG_AC3ENC_FLOAT 0
+#define CONFIG_AUDIO_FLOAT 1
 #define CONFIG_DCT 0
 #define CONFIG_DWT 0
 #define CONFIG_GPL 1

@@ -314,7 +314,7 @@ LRESULT TvideoCodecXviD4::beginCompress(int cfgcomode,int csp,const Trect &r)
     cr.version=XVID_VERSION;
     std::vector<xvid_enc_plugin_t> plugins;
     xvid_enc_zone_t zoneQual;
-    if (coCfg->numthreads>1 && sup_threads(coCfg->codecId)) {
+    if (coCfg->numthreads>1 && sup_threads_enc(coCfg->codecId)) {
         cr.num_threads=deci->getParam2(IDFF_numthreads);
     } else {
         cr.num_threads=0;

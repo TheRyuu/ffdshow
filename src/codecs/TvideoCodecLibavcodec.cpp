@@ -163,39 +163,35 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
     h264_on_MPEG2_system = false;
 
     int thread_type = FF_THREAD_SLICE;
-    if (codecId == CODEC_ID_H264_MT) {
-        // ffmpeg-mt
-        codecId = CODEC_ID_H264;
+    int numthreads=deci->getParam2(IDFF_numLAVCdecThreads);
+
+    if (numthreads>1 && (COMPILE_AS_FFMPEG_MT || sup_threads_dec_frame(codecId))) {
         thread_type = FF_THREAD_FRAME;
+    }
+    #if COMPILE_AS_FFMPEG_MT
+    if (codecId == CODEC_ID_H264_MT) {
+        codecId = CODEC_ID_H264;
     }
     if (codecId == CODEC_ID_VP3_MT) {
-        // ffmpeg-mt
         codecId = CODEC_ID_VP3;
-        thread_type = FF_THREAD_FRAME;
     }
     if (codecId == CODEC_ID_THEORA_MT) {
-        // ffmpeg-mt
         codecId = CODEC_ID_THEORA;
-        thread_type = FF_THREAD_FRAME;
     }
+    #endif
 
-    avcodec=libavcodec->avcodec_find_decoder(codecId);
-    if (!avcodec) {
-        return false;
-    }
-
-    avctx=libavcodec->avcodec_alloc_context(this);
-    avctx->thread_type = thread_type;
-    if (thread_type != FF_THREAD_FRAME) {
-        avctx->active_thread_type = FF_THREAD_SLICE;
-    }
-
-    int numthreads=deci->getParam2(IDFF_numLAVCdecThreads);
-    if (numthreads>1 && (COMPILE_AS_FFMPEG_MT || sup_threads_dec(codecId)) ) {
+    if (numthreads>1 && (COMPILE_AS_FFMPEG_MT || sup_threads_dec_frame(codecId) || sup_threads_dec_slice(codecId)) ) {
         threadcount=numthreads;
     } else {
         threadcount=1;        
     }
+	
+    avcodec=libavcodec->avcodec_find_decoder(codecId);
+    if (!avcodec) {
+        return false;
+    }
+    avctx=libavcodec->avcodec_alloc_context(this);
+    avctx->thread_type = thread_type;
     avctx->thread_count=threadcount;
 
     frame=libavcodec->avcodec_alloc_frame();
@@ -1097,7 +1093,7 @@ LRESULT TvideoCodecLibavcodec::beginCompress(int cfgcomode,int csp,const Trect &
 
     this->cfgcomode=cfgcomode;
 
-    if (coCfg->numthreads>1 && sup_threads(coCfg->codecId)) {
+    if (coCfg->numthreads>1 && sup_threads_enc(coCfg->codecId)) {
     		threadcount=coCfg->numthreads;
     } else {
         threadcount=1;

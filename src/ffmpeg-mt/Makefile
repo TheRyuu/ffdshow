@@ -88,14 +88,7 @@ DEF=ffmpegmt.def
 
 ### SETTINGS ###
 
-CFLAGS+=\
-    -I. -Ilibavcodec -Ilibavutil -I../pthreads -I../imgFilters \
-    -DHAVE_AV_CONFIG_H -D_ISOC99_SOURCE -std=gnu99
-
-#CFLAGS+= -save-temps
-#CFLAGS+= -fverbose-asm
-
-YASMFLAGS+= -Pconfig.asm
+CFLAGS=-I. -Ilibavcodec -Ilibavutil -I../pthreads -I../imgFilters -DHAVE_AV_CONFIG_H -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -std=gnu99
 
 ifeq ($(64BIT),yes)
     CFLAGS+=-DARCH_X86_64
@@ -104,6 +97,11 @@ else
     CFLAGS+=-DARCH_X86_32
     GCCLIBS=../../bin/lib_x86/libpthreadGC2.a -lws2_32
 endif
+
+#CFLAGS+=-save-temps
+#CFLAGS+=-fverbose-asm
+
+YASMFLAGS+=-Pconfig.asm
 
 
 ### INCLUDES ###

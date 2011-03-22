@@ -405,13 +405,17 @@ static __inline bool sup_qns(int x)
 {
     return lavc_codec(x) && sup_quantProps(x) && x!=CODEC_ID_MSMPEG4V3 && x!=CODEC_ID_MSMPEG4V2 && x!=CODEC_ID_MSMPEG4V1 && x!=CODEC_ID_WMV1 && x!=CODEC_ID_WMV2 && x!=CODEC_ID_MJPEG;
 }
-static __inline bool sup_threads(int x)
+static __inline bool sup_threads_enc(int x)
 {
     return x==CODEC_ID_MPEG1VIDEO || x==CODEC_ID_MPEG2VIDEO || x==CODEC_ID_XVID4;
 }
-static __inline bool sup_threads_dec(int x)
+static __inline bool sup_threads_dec_slice(int x)
 {
-    return x==CODEC_ID_MPEG1VIDEO || x==CODEC_ID_MPEG2VIDEO;
+    return x==CODEC_ID_MPEG1VIDEO || x==CODEC_ID_MPEG2VIDEO; /* only works with w32threads, not with pthreads */
+}
+static __inline bool sup_threads_dec_frame(int x)
+{
+    return 0;
 }
 static __inline bool sup_palette(int x)
 {

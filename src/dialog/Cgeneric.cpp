@@ -95,7 +95,7 @@ void TgenericPage::cfg2dlg(void)
 
     static const int idThreads[]= {IDC_LBL_NUMTHREADS,IDC_ED_NUMTHREADS,0};
     SetDlgItemInt(m_hwnd,IDC_ED_NUMTHREADS,cfgGet(IDFF_numthreads),FALSE);
-    enable(sup_threads(codecId),idThreads);
+    enable(sup_threads_enc(codecId),idThreads);
 }
 void TgenericPage::kf2dlg(void)
 {

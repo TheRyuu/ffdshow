@@ -391,6 +391,11 @@ static void update_context_from_user(AVCodecContext *dst, AVCodecContext *src)
 
     dst->frame_number     = src->frame_number;
     dst->reordered_opaque = src->reordered_opaque;
+    /* ffdshow custom code (begin) */
+    dst->reordered_opaque2 = src->reordered_opaque2;
+    dst->reordered_opaque3 = src->reordered_opaque3;
+    dst->h264_has_to_drop_first_non_ref = src->h264_has_to_drop_first_non_ref;
+    /* ffdshow custom code (end) */
 #undef copy_fields
 }
 
@@ -641,7 +646,8 @@ static void frame_thread_free(AVCodecContext *avctx, int thread_count)
         pthread_cond_signal(&p->input_cond);
         pthread_mutex_unlock(&p->mutex);
 
-        pthread_join(p->thread, NULL);
+        if (p->thread.p) /* ffdshow custom code */
+            pthread_join(p->thread, NULL);
 
         if (codec->close)
             codec->close(p->avctx);

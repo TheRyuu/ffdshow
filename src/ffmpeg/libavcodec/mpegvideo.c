@@ -1047,10 +1047,14 @@ void MPV_frame_end(MpegEncContext *s)
        && s->current_picture.reference
        && !s->intra_only
        && !(s->flags&CODEC_FLAG_EMU_EDGE)) {
-            s->dsp.draw_edges(s->current_picture.data[0], s->linesize  , s->h_edge_pos   , s->v_edge_pos   , EDGE_WIDTH  );
-            s->dsp.draw_edges(s->current_picture.data[1], s->uvlinesize, s->h_edge_pos>>1, s->v_edge_pos>>1, EDGE_WIDTH/2);
-            s->dsp.draw_edges(s->current_picture.data[2], s->uvlinesize, s->h_edge_pos>>1, s->v_edge_pos>>1, EDGE_WIDTH/2);
+        int edges = EDGE_BOTTOM | EDGE_TOP, h = s->v_edge_pos;
+
+            s->dsp.draw_edges(s->current_picture_ptr->data[0], s->linesize  , s->h_edge_pos   , h   , EDGE_WIDTH  , edges);
+            s->dsp.draw_edges(s->current_picture_ptr->data[1], s->uvlinesize, s->h_edge_pos>>1, h>>1, EDGE_WIDTH/2, edges);
+            s->dsp.draw_edges(s->current_picture_ptr->data[2], s->uvlinesize, s->h_edge_pos>>1, h>>1, EDGE_WIDTH/2, edges);
+
     }
+
     emms_c();
 
     s->last_pict_type    = s->pict_type;
@@ -1506,9 +1510,14 @@ void MPV_decode_mb_internal(MpegEncContext *s, DCTELEM block[12][64],
        /* save DCT coefficients */
        int i,j;
        DCTELEM *dct = &s->current_picture.dct_coeff[mb_xy*64*6];
-       for(i=0; i<6; i++)
-           for(j=0; j<64; j++)
+       av_log(s->avctx, AV_LOG_DEBUG, "DCT coeffs of MB at %dx%d:\n", s->mb_x, s->mb_y);
+       for(i=0; i<6; i++){
+           for(j=0; j<64; j++){
                *dct++ = block[i][s->dsp.idct_permutation[j]];
+               av_log(s->avctx, AV_LOG_DEBUG, "%5d", dct[-1]);
+           }
+           av_log(s->avctx, AV_LOG_DEBUG, "\n");
+       }
     }
 
     s->current_picture.qscale_table[mb_xy]= s->qscale;
