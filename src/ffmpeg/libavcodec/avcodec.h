@@ -735,11 +735,6 @@ typedef struct AVPanScan{
      */\
     int64_t pkt_dts;\
 \
-    /* ffdshow custom code (begin) */\
-    int mb_width,mb_height,mb_stride,b8_stride;\
-    int num_sprite_warping_points,real_sprite_warping_points;\
-    int play_flags;\
-\
     /**\
      * the AVCodecContext which ff_thread_get_buffer() was last called on\
      * - encoding: Set by libavcodec.\
@@ -753,6 +748,18 @@ typedef struct AVPanScan{
      * - decoding: Set by libavcodec.\
      */\
     void *thread_opaque;\
+\
+    /**\
+     * frame timestamp estimated using various heuristics, in stream time base\
+     * - encoding: unused\
+     * - decoding: set by libavcodec, read by user.\
+     */\
+    int64_t best_effort_timestamp;\
+\
+    /* ffdshow custom code (begin) */\
+    int mb_width,mb_height,mb_stride,b8_stride;\
+    int num_sprite_warping_points,real_sprite_warping_points;\
+    int play_flags;\
 \
     int h264_poc_decoded;\
     int h264_poc_outputed;\
@@ -2608,6 +2615,16 @@ typedef struct AVCodecContext {
      * - decoding: unused.
      */
     uint64_t vbv_delay;
+
+    /**
+     * Current statistics for PTS correction.
+     * - decoding: maintained and used by libavcodec, not intended to be used by user apps
+     * - encoding: unused
+     */
+    int64_t pts_correction_num_faulty_pts; /// Number of incorrect PTS values so far
+    int64_t pts_correction_num_faulty_dts; /// Number of incorrect DTS values so far
+    int64_t pts_correction_last_pts;       /// PTS of the last frame
+    int64_t pts_correction_last_dts;       /// DTS of the last frame
 
     /* ffdshow custom stuff (begin) */
     /**

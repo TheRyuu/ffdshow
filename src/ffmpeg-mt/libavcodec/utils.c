@@ -441,7 +441,7 @@ enum PixelFormat avcodec_default_get_format(struct AVCodecContext *s, const enum
 void avcodec_get_frame_defaults(AVFrame *pic){
     memset(pic, 0, sizeof(AVFrame));
 
-    pic->pts= AV_NOPTS_VALUE;
+    pic->pts = pic->best_effort_timestamp = AV_NOPTS_VALUE;
     pic->key_frame= 1;
     pic->YCbCr_RGB_matrix_coefficients = YCbCr_RGB_coeff_Unspecified; // ffdshow custom code
     pic->video_full_range_flag = VIDEO_FULL_RANGE_INVALID; // ffdshow custom code
@@ -524,6 +524,11 @@ int attribute_align_arg avcodec_open(AVCodecContext *avctx, AVCodec *codec)
         goto free_and_end;
     }
 
+    avctx->pts_correction_num_faulty_pts =
+    avctx->pts_correction_num_faulty_dts = 0;
+    avctx->pts_correction_last_pts =
+    avctx->pts_correction_last_dts = INT64_MIN;
+
     if(avctx->codec->init && !(avctx->active_thread_type&FF_THREAD_FRAME)){
         ret = avctx->codec->init(avctx);
         if (ret < 0) {
@@ -543,6 +548,38 @@ free_and_end:
     av_freep(&avctx->priv_data);
     avctx->codec= NULL;
     goto end;
+}
+
+/**
+ * Attempt to guess proper monotonic timestamps for decoded video frames
+ * which might have incorrect times. Input timestamps may wrap around, in
+ * which case the output will as well.
+ *
+ * @param pts the pts field of the decoded AVPacket, as passed through
+ * AVFrame.pkt_pts
+ * @param dts the dts field of the decoded AVPacket
+ * @return one of the input values, may be AV_NOPTS_VALUE
+ */
+static int64_t guess_correct_pts(AVCodecContext *ctx,
+                                 int64_t reordered_pts, int64_t dts)
+{
+    int64_t pts = AV_NOPTS_VALUE;
+
+    if (dts != AV_NOPTS_VALUE) {
+        ctx->pts_correction_num_faulty_dts += dts <= ctx->pts_correction_last_dts;
+        ctx->pts_correction_last_dts = dts;
+    }
+    if (reordered_pts != AV_NOPTS_VALUE) {
+        ctx->pts_correction_num_faulty_pts += reordered_pts <= ctx->pts_correction_last_pts;
+        ctx->pts_correction_last_pts = reordered_pts;
+    }
+    if ((ctx->pts_correction_num_faulty_pts<=ctx->pts_correction_num_faulty_dts || dts == AV_NOPTS_VALUE)
+       && reordered_pts != AV_NOPTS_VALUE)
+        pts = reordered_pts;
+    else
+        pts = dts;
+
+    return pts;
 }
 
 int attribute_align_arg avcodec_decode_video2(AVCodecContext *avctx, AVFrame *picture,
@@ -569,8 +606,13 @@ int attribute_align_arg avcodec_decode_video2(AVCodecContext *avctx, AVFrame *pi
 
         emms_c(); //needed to avoid an emms_c() call before every return;
 
-        if (*got_picture_ptr)
+
+        if (*got_picture_ptr){
             avctx->frame_number++;
+            picture->best_effort_timestamp = guess_correct_pts(avctx,
+                                                            picture->pkt_pts,
+                                                            picture->pkt_dts);
+        }
     }else
         ret= 0;
 

@@ -2532,6 +2532,7 @@ av_cold void attribute_align_arg dsputil_init(DSPContext* c, AVCodecContext *avc
     c->add_pixels_clamped = ff_add_pixels_clamped_c;
     c->add_pixels8 = add_pixels8_c;
     c->add_pixels4 = add_pixels4_c;
+    c->emulated_edge_mc = ff_emulated_edge_mc;
     c->gmc1 = gmc1_c;
     c->gmc = ff_gmc_c;
     c->clear_block = clear_block_c;
