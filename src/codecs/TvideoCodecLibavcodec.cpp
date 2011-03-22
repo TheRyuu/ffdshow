@@ -74,6 +74,7 @@ TvideoCodecLibavcodec::TvideoCodecLibavcodec(IffdshowBase *Ideci,IencVideoSink *
         encoders.push_back(new Tencoder(_l("MJPEG"),CODEC_ID_MJPEG));
         //encoders.push_back(new Tencoder(_l("Lossless JPEG"),CODEC_ID_LJPEG));
         encoders.push_back(new Tencoder(_l("HuffYUV"),CODEC_ID_HUFFYUV));
+		encoders.push_back(new Tencoder(_l("HuffYUV (FFmpeg variant)"),CODEC_ID_FFVHUFF));
         encoders.push_back(new Tencoder(_l("FFV1"),CODEC_ID_FFV1));
         encoders.push_back(new Tencoder(_l("DV"),CODEC_ID_DVVIDEO));
         //encoders.push_back(new Tencoder(_l("FLV1"),CODEC_ID_FLV1));
@@ -177,6 +178,15 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
     }
     if (codecId == CODEC_ID_THEORA_MT) {
         codecId = CODEC_ID_THEORA;
+    }
+	if (codecId == CODEC_ID_HUFFYUV_MT) {
+        codecId = CODEC_ID_HUFFYUV;
+    }
+	if (codecId == CODEC_ID_FFVHUFF_MT) {
+        codecId = CODEC_ID_FFVHUFF;
+    }
+	if (codecId == CODEC_ID_MPEG4_MT) {
+        codecId = CODEC_ID_MPEG4;
     }
     #endif
 
@@ -1006,6 +1016,7 @@ void TvideoCodecLibavcodec::getCompressColorspaces(Tcsps &csps,unsigned int outD
 {
     switch (coCfg->codecId) {
         case CODEC_ID_HUFFYUV:
+		case CODEC_ID_FFVHUFF:
             if (coCfg->huffyuv_csp==0) {
                 csps.add(FF_CSP_422P);
             } else {
@@ -1066,7 +1077,7 @@ void TvideoCodecLibavcodec::getCompressColorspaces(Tcsps &csps,unsigned int outD
 
 bool TvideoCodecLibavcodec::supExtradata(void)
 {
-    return coCfg->codecId==CODEC_ID_HUFFYUV || (sup_globalheader(coCfg->codecId) && coCfg->globalHeader);
+    return coCfg->codecId==CODEC_ID_HUFFYUV || coCfg->codecId==CODEC_ID_FFVHUFF || (sup_globalheader(coCfg->codecId) && coCfg->globalHeader);
 }
 bool TvideoCodecLibavcodec::getExtradata(const void* *ptr,size_t *len)
 {
@@ -1226,7 +1237,8 @@ LRESULT TvideoCodecLibavcodec::beginCompress(int cfgcomode,int csp,const Trect &
 
     avctx->pix_fmt=PIX_FMT_YUV420P;
     switch (coCfg->codecId) {
-        case CODEC_ID_HUFFYUV: {
+		case CODEC_ID_HUFFYUV:
+        case CODEC_ID_FFVHUFF: {
             avctx->strict_std_compliance=FF_COMPLIANCE_EXPERIMENTAL;
             avctx->prediction_method=coCfg->huffyuv_pred;
             switch (coCfg->huffyuv_csp) {

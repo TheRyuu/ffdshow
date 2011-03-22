@@ -39,7 +39,10 @@ void avcodec_register_all(void)
     initialized = 1;
 
     /* video codecs */
+    REGISTER_DECODER (FFVHUFF, ffvhuff);
     REGISTER_DECODER (H264, h264);
+    REGISTER_DECODER (HUFFYUV, huffyuv);
+    REGISTER_DECODER (MPEG4, mpeg4);
     REGISTER_DECODER (THEORA, theora);
     REGISTER_DECODER (VP3, vp3);
 }

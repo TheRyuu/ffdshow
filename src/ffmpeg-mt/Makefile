@@ -9,6 +9,8 @@ SRCS_C=\
     libavcodec/dsputil.c \
     libavcodec/error_resilience.c \
     libavcodec/golomb.c \
+    libavcodec/h263.c \
+    libavcodec/h263dec.c \
     libavcodec/h264.c \
     libavcodec/h264_cabac.c \
     libavcodec/h264_cavlc.c \
@@ -21,8 +23,13 @@ SRCS_C=\
     libavcodec/h264dsp.c \
     libavcodec/h264idct.c \
     libavcodec/h264pred.c \
+    libavcodec/huffyuv.c \
     libavcodec/imgconvert.c \
+    libavcodec/ituh263dec.c \
     libavcodec/jrevdct.c \
+    libavcodec/mpeg4video_parser.c \
+    libavcodec/mpeg4video.c \
+    libavcodec/mpeg4videodec.c \
     libavcodec/mpegvideo.c \
     libavcodec/options.c \
     libavcodec/parser.c \

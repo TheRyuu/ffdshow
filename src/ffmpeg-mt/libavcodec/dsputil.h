@@ -282,6 +282,27 @@ typedef struct DSPContext {
     qpel_mc_func put_2tap_qpel_pixels_tab[4][16];
     qpel_mc_func avg_2tap_qpel_pixels_tab[4][16];
 
+    qpel_mc_func put_qpel_pixels_tab[2][16];
+    qpel_mc_func avg_qpel_pixels_tab[2][16];
+    qpel_mc_func put_no_rnd_qpel_pixels_tab[2][16];
+
+    /* huffyuv specific */
+    void (*add_bytes)(uint8_t *dst/*align 16*/, uint8_t *src/*align 16*/, int w);
+    void (*add_bytes_l2)(uint8_t *dst/*align 16*/, uint8_t *src1/*align 16*/, uint8_t *src2/*align 16*/, int w);
+    void (*diff_bytes)(uint8_t *dst/*align 16*/, uint8_t *src1/*align 16*/, uint8_t *src2/*align 1*/,int w);
+    /**
+     * subtract huffyuv's variant of median prediction
+     * note, this might read from src1[-1], src2[-1]
+     */
+    void (*sub_hfyu_median_prediction)(uint8_t *dst, const uint8_t *src1, const uint8_t *src2, int w, int *left, int *left_top);
+    void (*add_hfyu_median_prediction)(uint8_t *dst, const uint8_t *top, const uint8_t *diff, int w, int *left, int *left_top);
+    int  (*add_hfyu_left_prediction)(uint8_t *dst, const uint8_t *src, int w, int left);
+    void (*add_hfyu_left_prediction_bgr32)(uint8_t *dst, const uint8_t *src, int w, int *red, int *green, int *blue, int *alpha);
+    void (*bswap_buf)(uint32_t *dst, const uint32_t *src, int w);
+
+    void (*h263_v_loop_filter)(uint8_t *src, int stride, int qscale);
+    void (*h263_h_loop_filter)(uint8_t *src, int stride, int qscale);
+
     void (*vp3_idct_dc_add)(uint8_t *dest/*align 8*/, int line_size, const DCTELEM *block/*align 16*/);
     void (*vp3_v_loop_filter)(uint8_t *src, int stride, int *bounding_values);
     void (*vp3_h_loop_filter)(uint8_t *src, int stride, int *bounding_values);

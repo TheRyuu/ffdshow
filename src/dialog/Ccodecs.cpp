@@ -417,7 +417,7 @@ void TcodecsPageVideo::fillCodecs(void)
         static const int movies_h264[]= {IDFF_MOVIE_LAVC,IDFF_MOVIE_FFMPEG_MT, 0};
         static const Tformat::Toption options_h264[]= {{0,_l("skip deblocking when safe"),IDFF_fastH264,1},{0,_l("skip deblocking always"),IDFF_fastH264,2},{0,NULL,0,0}};
         formats.push_back(Tformat(_l("H.264/AVC")     ,IDFF_h264,movies_h264,_l("H264, AVC1, X264, VSSH (incomplete), DAVC, PAVC. ffmpeg-mt is multithreaded."),options_h264));
-        static const int movies_mpeg4[]= {IDFF_MOVIE_LAVC,IDFF_MOVIE_XVID4,0};
+        static const int movies_mpeg4[]= {IDFF_MOVIE_LAVC,IDFF_MOVIE_XVID4,IDFF_MOVIE_FFMPEG_MT,0};
         formats.push_back(Tformat(_l("Xvid")          ,IDFF_xvid,movies_mpeg4,_l("XVID, XVIX")));
         formats.push_back(Tformat(_l("DivX 4/5/6")    ,IDFF_dx50,movies_mpeg4,_l("DIVX, DX50")));
         formats.push_back(Tformat(_l("Other MPEG4")   ,IDFF_mp4v,movies_mpeg4,_l("MP4V, 3IVX, 3IV1, 3IV2, MP4S, M4S2, RMP4, DM4V, WV1F, FMP4, HDX4, SMP4, LMP4, NDIG, SEDG, BLZ0, DXGM")));
@@ -455,7 +455,8 @@ void TcodecsPageVideo::fillCodecs(void)
         formats.push_back(Tformat(_l("WMVP")          ,IDFF_wvp2,IDFF_MOVIE_WMV9,_l("Windows Media Video 9 Image (WMVP, WVP2)")));
         formats.push_back(Tformat(_l("MSS1/2")        ,IDFF_mss2,IDFF_MOVIE_WMV9,_l("Windows Screen Codecs (MSS1, MSS2)")));
 		formats.push_back(Tformat(_l("H.261")         ,IDFF_h261,IDFF_MOVIE_LAVC,_l("H261, M261")));
-        formats.push_back(Tformat(_l("Huffyuv")       ,IDFF_hfyu,IDFF_MOVIE_LAVC,_l("Huffyuv codec for libavcodec (HFYU, FFVH)")));
+        static const int movies_huffyuv[]= {IDFF_MOVIE_LAVC,IDFF_MOVIE_FFMPEG_MT, 0};
+		formats.push_back(Tformat(_l("Huffyuv")       ,IDFF_hfyu,movies_huffyuv,_l("Huffyuv (HFYU) and FFmpeg HuffYUV variant (FFVH)")));
         formats.push_back(Tformat(_l("MJPEG")         ,IDFF_mjpg,IDFF_MOVIE_LAVC,_l("MJPG, LJPG, MJLS")));
         formats.push_back(Tformat(_l("Other MJPEG")   ,IDFF_avrn,IDFF_MOVIE_LAVC,_l("AVRN, MJPA, SP5X, AMVV")));
         formats.push_back(Tformat(_l("SVQ1")          ,IDFF_svq1,IDFF_MOVIE_LAVC,_l("Sorenson Video (SVQ1)")));

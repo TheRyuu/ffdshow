@@ -2283,6 +2283,80 @@ void ff_avg_pixels16x16_c(uint8_t *dst, uint8_t *src, int stride) {
     avg_pixels16_c(dst, src, stride, 16);
 }
 
+static void h263_v_loop_filter_c(uint8_t *src, int stride, int qscale){
+    if(CONFIG_H263_DECODER || CONFIG_H263_ENCODER) {
+    int x;
+    const int strength= ff_h263_loop_filter_strength[qscale];
+
+    for(x=0; x<8; x++){
+        int d1, d2, ad1;
+        int p0= src[x-2*stride];
+        int p1= src[x-1*stride];
+        int p2= src[x+0*stride];
+        int p3= src[x+1*stride];
+        int d = (p0 - p3 + 4*(p2 - p1)) / 8;
+
+        if     (d<-2*strength) d1= 0;
+        else if(d<-  strength) d1=-2*strength - d;
+        else if(d<   strength) d1= d;
+        else if(d< 2*strength) d1= 2*strength - d;
+        else                   d1= 0;
+
+        p1 += d1;
+        p2 -= d1;
+        if(p1&256) p1= ~(p1>>31);
+        if(p2&256) p2= ~(p2>>31);
+
+        src[x-1*stride] = p1;
+        src[x+0*stride] = p2;
+
+        ad1= FFABS(d1)>>1;
+
+        d2= av_clip((p0-p3)/4, -ad1, ad1);
+
+        src[x-2*stride] = p0 - d2;
+        src[x+  stride] = p3 + d2;
+    }
+    }
+}
+
+static void h263_h_loop_filter_c(uint8_t *src, int stride, int qscale){
+    if(CONFIG_H263_DECODER || CONFIG_H263_ENCODER) {
+    int y;
+    const int strength= ff_h263_loop_filter_strength[qscale];
+
+    for(y=0; y<8; y++){
+        int d1, d2, ad1;
+        int p0= src[y*stride-2];
+        int p1= src[y*stride-1];
+        int p2= src[y*stride+0];
+        int p3= src[y*stride+1];
+        int d = (p0 - p3 + 4*(p2 - p1)) / 8;
+
+        if     (d<-2*strength) d1= 0;
+        else if(d<-  strength) d1=-2*strength - d;
+        else if(d<   strength) d1= d;
+        else if(d< 2*strength) d1= 2*strength - d;
+        else                   d1= 0;
+
+        p1 += d1;
+        p2 -= d1;
+        if(p1&256) p1= ~(p1>>31);
+        if(p2&256) p2= ~(p2>>31);
+
+        src[y*stride-1] = p1;
+        src[y*stride+0] = p2;
+
+        ad1= FFABS(d1)>>1;
+
+        d2= av_clip((p0-p3)/4, -ad1, ad1);
+
+        src[y*stride-2] = p0 - d2;
+        src[y*stride+1] = p3 + d2;
+    }
+    }
+}
+
 static inline int pix_abs16_c(void *v, uint8_t *pix1, uint8_t *pix2, int line_size, int h)
 {
     int s, i;
@@ -2394,6 +2468,101 @@ static void diff_bytes_c(uint8_t *dst, uint8_t *src1, uint8_t *src2, int w){
     for(; i<w; i++)
         dst[i+0] = src1[i+0]-src2[i+0];
 }
+
+static void add_hfyu_median_prediction_c(uint8_t *dst, const uint8_t *src1, const uint8_t *diff, int w, int *left, int *left_top){
+    int i;
+    uint8_t l, lt;
+
+    l= *left;
+    lt= *left_top;
+
+    for(i=0; i<w; i++){
+        l= mid_pred(l, src1[i], (l + src1[i] - lt)&0xFF) + diff[i];
+        lt= src1[i];
+        dst[i]= l;
+    }
+
+    *left= l;
+    *left_top= lt;
+}
+
+static void sub_hfyu_median_prediction_c(uint8_t *dst, const uint8_t *src1, const uint8_t *src2, int w, int *left, int *left_top){
+    int i;
+    uint8_t l, lt;
+
+    l= *left;
+    lt= *left_top;
+
+    for(i=0; i<w; i++){
+        const int pred= mid_pred(l, src1[i], (l + src1[i] - lt)&0xFF);
+        lt= src1[i];
+        l= src2[i];
+        dst[i]= l - pred;
+    }
+
+    *left= l;
+    *left_top= lt;
+}
+
+static int add_hfyu_left_prediction_c(uint8_t *dst, const uint8_t *src, int w, int acc){
+    int i;
+
+    for(i=0; i<w-1; i++){
+        acc+= src[i];
+        dst[i]= acc;
+        i++;
+        acc+= src[i];
+        dst[i]= acc;
+    }
+
+    for(; i<w; i++){
+        acc+= src[i];
+        dst[i]= acc;
+    }
+
+    return acc;
+}
+
+#if HAVE_BIGENDIAN
+#define B 3
+#define G 2
+#define R 1
+#define A 0
+#else
+#define B 0
+#define G 1
+#define R 2
+#define A 3
+#endif
+static void add_hfyu_left_prediction_bgr32_c(uint8_t *dst, const uint8_t *src, int w, int *red, int *green, int *blue, int *alpha){
+    int i;
+    int r,g,b,a;
+    r= *red;
+    g= *green;
+    b= *blue;
+    a= *alpha;
+
+    for(i=0; i<w; i++){
+        b+= src[4*i+B];
+        g+= src[4*i+G];
+        r+= src[4*i+R];
+        a+= src[4*i+A];
+
+        dst[4*i+B]= b;
+        dst[4*i+G]= g;
+        dst[4*i+R]= r;
+        dst[4*i+A]= a;
+    }
+
+    *red= r;
+    *green= g;
+    *blue= b;
+    *alpha= a;
+}
+#undef B
+#undef G
+#undef R
+#undef A
 
 static void ff_jref_idct_put(uint8_t *dest, int line_size, DCTELEM *block)
 {
@@ -2580,6 +2749,18 @@ av_cold void attribute_align_arg dsputil_init(DSPContext* c, AVCodecContext *avc
     c->PFX ## _pixels_tab[IDX][14] = PFX ## NUM ## _mc23_c; \
     c->PFX ## _pixels_tab[IDX][15] = PFX ## NUM ## _mc33_c
 
+    dspfunc(put_qpel, 0, 16);
+    dspfunc(put_no_rnd_qpel, 0, 16);
+
+    dspfunc(avg_qpel, 0, 16);
+    /* dspfunc(avg_no_rnd_qpel, 0, 16); */
+
+    dspfunc(put_qpel, 1, 8);
+    dspfunc(put_no_rnd_qpel, 1, 8);
+
+    dspfunc(avg_qpel, 1, 8);
+    /* dspfunc(avg_no_rnd_qpel, 1, 8); */
+
     dspfunc(put_h264_qpel, 0, 16);
     dspfunc(put_h264_qpel, 1, 8);
     dspfunc(put_h264_qpel, 2, 4);
@@ -2604,6 +2785,15 @@ av_cold void attribute_align_arg dsputil_init(DSPContext* c, AVCodecContext *avc
 
     c->sad[0]= pix_abs16_c;
     c->sad[1]= pix_abs8_c;
+
+    c->add_bytes= add_bytes_c;
+    c->add_bytes_l2= add_bytes_l2_c;
+    c->diff_bytes= diff_bytes_c;
+    c->add_hfyu_median_prediction= add_hfyu_median_prediction_c;
+    c->sub_hfyu_median_prediction= sub_hfyu_median_prediction_c;
+    c->add_hfyu_left_prediction  = add_hfyu_left_prediction_c;
+    c->add_hfyu_left_prediction_bgr32 = add_hfyu_left_prediction_bgr32_c;
+    c->bswap_buf= bswap_buf;
 
     if (CONFIG_VP3_DECODER) {
         c->vp3_h_loop_filter= ff_vp3_h_loop_filter_c;

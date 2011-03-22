@@ -554,6 +554,87 @@ static void clear_blocks_sse(DCTELEM *blocks)
     );
 }
 
+static void add_bytes_mmx(uint8_t *dst, uint8_t *src, int w){
+    x86_reg i=0;
+    __asm__ volatile(
+        "jmp 2f                         \n\t"
+        "1:                             \n\t"
+        "movq  (%1, %0), %%mm0          \n\t"
+        "movq  (%2, %0), %%mm1          \n\t"
+        "paddb %%mm0, %%mm1             \n\t"
+        "movq %%mm1, (%2, %0)           \n\t"
+        "movq 8(%1, %0), %%mm0          \n\t"
+        "movq 8(%2, %0), %%mm1          \n\t"
+        "paddb %%mm0, %%mm1             \n\t"
+        "movq %%mm1, 8(%2, %0)          \n\t"
+        "add $16, %0                    \n\t"
+        "2:                             \n\t"
+        "cmp %3, %0                     \n\t"
+        " js 1b                         \n\t"
+        : "+r" (i)
+        : "r"(src), "r"(dst), "r"((x86_reg)w-15)
+    );
+    for(; i<w; i++)
+        dst[i+0] += src[i+0];
+}
+
+static void add_bytes_l2_mmx(uint8_t *dst, uint8_t *src1, uint8_t *src2, int w){
+    x86_reg i=0;
+    __asm__ volatile(
+        "jmp 2f                         \n\t"
+        "1:                             \n\t"
+        "movq   (%2, %0), %%mm0         \n\t"
+        "movq  8(%2, %0), %%mm1         \n\t"
+        "paddb  (%3, %0), %%mm0         \n\t"
+        "paddb 8(%3, %0), %%mm1         \n\t"
+        "movq %%mm0,  (%1, %0)          \n\t"
+        "movq %%mm1, 8(%1, %0)          \n\t"
+        "add $16, %0                    \n\t"
+        "2:                             \n\t"
+        "cmp %4, %0                     \n\t"
+        " js 1b                         \n\t"
+        : "+r" (i)
+        : "r"(dst), "r"(src1), "r"(src2), "r"((x86_reg)w-15)
+    );
+    for(; i<w; i++)
+        dst[i] = src1[i] + src2[i];
+}
+
+#if HAVE_7REGS && HAVE_TEN_OPERANDS
+static void add_hfyu_median_prediction_cmov(uint8_t *dst, const uint8_t *top, const uint8_t *diff, int w, int *left, int *left_top) {
+    x86_reg w2 = -w;
+    x86_reg x;
+    int l = *left & 0xff;
+    int tl = *left_top & 0xff;
+    int t;
+    __asm__ volatile(
+        "mov    %7, %3 \n"
+        "1: \n"
+        "movzbl (%3,%4), %2 \n"
+        "mov    %2, %k3 \n"
+        "sub   %b1, %b3 \n"
+        "add   %b0, %b3 \n"
+        "mov    %2, %1 \n"
+        "cmp    %0, %2 \n"
+        "cmovg  %0, %2 \n"
+        "cmovg  %1, %0 \n"
+        "cmp   %k3, %0 \n"
+        "cmovg %k3, %0 \n"
+        "mov    %7, %3 \n"
+        "cmp    %2, %0 \n"
+        "cmovl  %2, %0 \n"
+        "add (%6,%4), %b0 \n"
+        "mov   %b0, (%5,%4) \n"
+        "inc    %4 \n"
+        "jl 1b \n"
+        :"+&q"(l), "+&q"(tl), "=&r"(t), "=&q"(x), "+&r"(w2)
+        :"r"(dst+w), "r"(diff+w), "rm"(top+w)
+    );
+    *left = l;
+    *left_top = tl;
+}
+#endif
+
 /* draw the edges of width 'w' of an image of size width, height
    this mmx version can only handle w==8 || w==16 */
 static void draw_edges_mmx(uint8_t *buf, int wrap, int width, int height, int w, int sides)
@@ -1777,6 +1858,10 @@ void ff_vp3_idct_sse2(int16_t *input_data);
 void ff_vp3_idct_put_sse2(uint8_t *dest, int line_size, DCTELEM *block);
 void ff_vp3_idct_add_sse2(uint8_t *dest, int line_size, DCTELEM *block);
 
+void ff_add_hfyu_median_prediction_mmx2(uint8_t *dst, const uint8_t *top, const uint8_t *diff, int w, int *left, int *left_top);
+int  ff_add_hfyu_left_prediction_ssse3(uint8_t *dst, const uint8_t *src, int w, int left);
+int  ff_add_hfyu_left_prediction_sse4(uint8_t *dst, const uint8_t *src, int w, int left);
+
 void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
 {
     int mm_flags = av_get_cpu_flags();
@@ -1890,6 +1975,9 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
         c->emulated_edge_mc = emulated_edge_mc_mmx;
 #endif
 
+        c->add_bytes= add_bytes_mmx;
+        c->add_bytes_l2= add_bytes_l2_mmx;
+
         c->draw_edges = draw_edges_mmx;
 
 #if HAVE_YASM
@@ -1955,6 +2043,13 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
             c->PFX ## _pixels_tab[IDX][14] = PFX ## SIZE ## _mc23_ ## CPU; \
             c->PFX ## _pixels_tab[IDX][15] = PFX ## SIZE ## _mc33_ ## CPU
 
+            SET_QPEL_FUNCS(put_qpel, 0, 16, mmx2);
+            SET_QPEL_FUNCS(put_qpel, 1, 8, mmx2);
+            SET_QPEL_FUNCS(put_no_rnd_qpel, 0, 16, mmx2);
+            SET_QPEL_FUNCS(put_no_rnd_qpel, 1, 8, mmx2);
+            SET_QPEL_FUNCS(avg_qpel, 0, 16, mmx2);
+            SET_QPEL_FUNCS(avg_qpel, 1, 8, mmx2);
+
             SET_QPEL_FUNCS(put_h264_qpel, 0, 16, mmx2);
             SET_QPEL_FUNCS(put_h264_qpel, 1, 8, mmx2);
             SET_QPEL_FUNCS(put_h264_qpel, 2, 4, mmx2);
@@ -1972,7 +2067,14 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
             c->avg_h264_chroma_pixels_tab[1]= ff_avg_h264_chroma_mc4_mmx2;
             c->avg_h264_chroma_pixels_tab[2]= ff_avg_h264_chroma_mc2_mmx2;
             c->put_h264_chroma_pixels_tab[2]= ff_put_h264_chroma_mc2_mmx2;
+
+            c->add_hfyu_median_prediction = ff_add_hfyu_median_prediction_mmx2;
 #endif
+#if HAVE_7REGS && HAVE_TEN_OPERANDS
+            if( mm_flags&AV_CPU_FLAG_3DNOW )
+                c->add_hfyu_median_prediction = add_hfyu_median_prediction_cmov;
+#endif
+
         } else if (mm_flags & AV_CPU_FLAG_3DNOW) {
             c->prefetch = prefetch_3dnow;
 
@@ -2004,6 +2106,13 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
                 c->put_no_rnd_pixels_tab[1][1] = put_no_rnd_pixels8_x2_exact_3dnow;
                 c->put_no_rnd_pixels_tab[1][2] = put_no_rnd_pixels8_y2_exact_3dnow;
             }
+
+            SET_QPEL_FUNCS(put_qpel, 0, 16, 3dnow);
+            SET_QPEL_FUNCS(put_qpel, 1, 8, 3dnow);
+            SET_QPEL_FUNCS(put_no_rnd_qpel, 0, 16, 3dnow);
+            SET_QPEL_FUNCS(put_no_rnd_qpel, 1, 8, 3dnow);
+            SET_QPEL_FUNCS(avg_qpel, 0, 16, 3dnow);
+            SET_QPEL_FUNCS(avg_qpel, 1, 8, 3dnow);
 
             SET_QPEL_FUNCS(put_h264_qpel, 0, 16, 3dnow);
             SET_QPEL_FUNCS(put_h264_qpel, 1, 8, 3dnow);
@@ -2069,6 +2178,9 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
             c->avg_h264_chroma_pixels_tab[0]= ff_avg_h264_chroma_mc8_ssse3_rnd;
             c->put_h264_chroma_pixels_tab[1]= ff_put_h264_chroma_mc4_ssse3;
             c->avg_h264_chroma_pixels_tab[1]= ff_avg_h264_chroma_mc4_ssse3;
+            c->add_hfyu_left_prediction = ff_add_hfyu_left_prediction_ssse3;
+            if (mm_flags & AV_CPU_FLAG_SSE4) // not really sse4, just slow on Conroe
+                c->add_hfyu_left_prediction = ff_add_hfyu_left_prediction_sse4;
 #endif
         }
 #endif
