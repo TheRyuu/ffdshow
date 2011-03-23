@@ -4,20 +4,20 @@
  * Copyright (c) 2006-2010 Justin Ruggles <justin.ruggles@gmail.com>
  * Copyright (c) 2006-2010 Prakash Punnoor <prakash@punnoor.de>
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -252,15 +252,9 @@ static void mdct512(AC3MDCTContext *mdct, int32_t *out, int16_t *in)
  * Apply KBD window to input samples prior to MDCT.
  */
 static void apply_window(DSPContext *dsp, int16_t *output, const int16_t *input,
-                         const int16_t *window, int n)
+                         const int16_t *window, unsigned int len)
 {
-    int i;
-    int n2 = n >> 1;
-
-    for (i = 0; i < n2; i++) {
-        output[i]     = MUL16(input[i],     window[i]) >> 15;
-        output[n-i-1] = MUL16(input[n-i-1], window[i]) >> 15;
-    }
+    dsp->apply_window_int16(output, input, window, len);
 }
 
 

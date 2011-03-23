@@ -214,11 +214,9 @@ static av_cold int ac3_decode_init(AVCodecContext *avctx)
     s->downmixed = 1;
 
     /* allocate context input buffer */
-    if (avctx->error_recognition >= FF_ER_CAREFUL) {
         s->input_buffer = av_mallocz(AC3_FRAME_BUFFER_SIZE + FF_INPUT_BUFFER_PADDING_SIZE);
         if (!s->input_buffer)
             return AVERROR(ENOMEM);
-    }
 
     /* ffdshow custom code */
     #if CONFIG_AUDIO_FLOAT
@@ -1329,15 +1327,17 @@ static int ac3_decode_frame(AVCodecContext * avctx, void *data, int *data_size,
     const uint8_t *channel_map;
     const float *output[AC3_MAX_CHANNELS];
 
-    /* initialize the GetBitContext with the start of valid AC-3 Frame */
-    if (s->input_buffer) {
-        /* copy input buffer to decoder context to avoid reading past the end
-           of the buffer, which can be caused by a damaged input stream. */
+    /* copy input buffer to decoder context to avoid reading past the end
+       of the buffer, which can be caused by a damaged input stream. */
+    if (buf_size >= 2 && AV_RB16(buf) == 0x770B) {
+        // seems to be byte-swapped AC-3
+        int cnt = FFMIN(buf_size, AC3_FRAME_BUFFER_SIZE) >> 1;
+        s->dsp.bswap16_buf((uint16_t *)s->input_buffer, (const uint16_t *)buf, cnt);
+    } else
         memcpy(s->input_buffer, buf, FFMIN(buf_size, AC3_FRAME_BUFFER_SIZE));
-        init_get_bits(&s->gbc, s->input_buffer, buf_size * 8);
-    } else {
-        init_get_bits(&s->gbc, buf, buf_size * 8);
-    }
+    buf = s->input_buffer;
+    /* initialize the GetBitContext with the start of valid AC-3 Frame */
+    init_get_bits(&s->gbc, buf, buf_size * 8);
 
     /* parse the syncinfo */
     *data_size = 0;

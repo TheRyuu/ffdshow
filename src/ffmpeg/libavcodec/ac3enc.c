@@ -4,20 +4,20 @@
  * Copyright (c) 2006-2010 Justin Ruggles <justin.ruggles@gmail.com>
  * Copyright (c) 2006-2010 Prakash Punnoor <prakash@punnoor.de>
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -167,7 +167,7 @@ static av_cold int mdct_init(AVCodecContext *avctx, AC3MDCTContext *mdct,
 static void mdct512(AC3MDCTContext *mdct, CoefType *out, SampleType *in);
 
 static void apply_window(DSPContext *dsp, SampleType *output, const SampleType *input,
-                         const SampleType *window, int n);
+                         const SampleType *window, unsigned int len);
 
 static int normalize_samples(AC3EncodeContext *s);
 
@@ -226,7 +226,7 @@ static void adjust_frame_size(AC3EncodeContext *s)
 
 /**
  * Deinterleave input samples.
- * Channels are reordered from FFmpeg's default order to AC-3 order.
+ * Channels are reordered from Libav's default order to AC-3 order.
  */
 static void deinterleave_input_samples(AC3EncodeContext *s,
                                        const SampleType *samples)
@@ -1096,17 +1096,7 @@ static int compute_bit_allocation(AC3EncodeContext *s)
  */
 static inline int sym_quant(int c, int e, int levels)
 {
-    int v;
-
-    if (c >= 0) {
-        v = (levels * (c << e)) >> 24;
-        v = (v + 1) >> 1;
-        v = (levels >> 1) + v;
-    } else {
-        v = (levels * ((-c) << e)) >> 24;
-        v = (v + 1) >> 1;
-        v = (levels >> 1) - v;
-    }
+    int v = ((((levels * c) >> (24 - e)) + 1) >> 1) + (levels >> 1);
     av_assert2(v >= 0 && v < levels);
     return v;
 }

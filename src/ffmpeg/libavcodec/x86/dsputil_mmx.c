@@ -3,20 +3,20 @@
  * Copyright (c) 2000, 2001 Fabrice Bellard
  * Copyright (c) 2002-2004 Michael Niedermayer <michaelni@gmx.at>
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  *
  * MMX optimization by Nick Kurshev <nickols_k@mail.ru>
@@ -2400,6 +2400,20 @@ int32_t ff_scalarproduct_int16_sse2(const int16_t *v1, const int16_t *v2, int or
 int32_t ff_scalarproduct_and_madd_int16_mmx2(int16_t *v1, const int16_t *v2, const int16_t *v3, int order, int mul);
 int32_t ff_scalarproduct_and_madd_int16_sse2(int16_t *v1, const int16_t *v2, const int16_t *v3, int order, int mul);
 int32_t ff_scalarproduct_and_madd_int16_ssse3(int16_t *v1, const int16_t *v2, const int16_t *v3, int order, int mul);
+
+void ff_apply_window_int16_mmxext    (int16_t *output, const int16_t *input,
+                                      const int16_t *window, unsigned int len);
+void ff_apply_window_int16_mmxext_ba (int16_t *output, const int16_t *input,
+                                      const int16_t *window, unsigned int len);
+void ff_apply_window_int16_sse2      (int16_t *output, const int16_t *input,
+                                      const int16_t *window, unsigned int len);
+void ff_apply_window_int16_sse2_ba   (int16_t *output, const int16_t *input,
+                                      const int16_t *window, unsigned int len);
+void ff_apply_window_int16_ssse3     (int16_t *output, const int16_t *input,
+                                      const int16_t *window, unsigned int len);
+void ff_apply_window_int16_ssse3_atom(int16_t *output, const int16_t *input,
+                                      const int16_t *window, unsigned int len);
+
 void ff_add_hfyu_median_prediction_mmx2(uint8_t *dst, const uint8_t *top, const uint8_t *diff, int w, int *left, int *left_top);
 int  ff_add_hfyu_left_prediction_ssse3(uint8_t *dst, const uint8_t *src, int w, int left);
 int  ff_add_hfyu_left_prediction_sse4(uint8_t *dst, const uint8_t *src, int w, int left);
@@ -2755,6 +2769,15 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
             c->vector_fmul_window = vector_fmul_window_3dnow2;
 #endif
         }
+        if(mm_flags & AV_CPU_FLAG_MMX2){
+#if HAVE_YASM
+            if (avctx->flags & CODEC_FLAG_BITEXACT) {
+                c->apply_window_int16 = ff_apply_window_int16_mmxext_ba;
+            } else {
+                c->apply_window_int16 = ff_apply_window_int16_mmxext;
+            }
+#endif
+        }
         if(mm_flags & AV_CPU_FLAG_SSE){
             c->vorbis_inverse_coupling = vorbis_inverse_coupling_sse;
             c->ac3_downmix = ac3_downmix_sse;
@@ -2772,8 +2795,25 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
             c->vector_fmul_add = vector_fmul_add_3dnow; // faster than sse
         if(mm_flags & AV_CPU_FLAG_SSE2){
 #if HAVE_YASM
+            if (avctx->flags & CODEC_FLAG_BITEXACT) {
+                c->apply_window_int16 = ff_apply_window_int16_sse2_ba;
+            } else {
+                if (!(mm_flags & AV_CPU_FLAG_SSE2SLOW)) {
+                    c->apply_window_int16 = ff_apply_window_int16_sse2;
+                }
+            }
+
             c->emulated_edge_mc = emulated_edge_mc_sse;
             c->gmc= gmc_sse;
+#endif
+        }
+        if (mm_flags & AV_CPU_FLAG_SSSE3) {
+#if HAVE_YASM
+            if (mm_flags & AV_CPU_FLAG_ATOM) {
+                c->apply_window_int16 = ff_apply_window_int16_ssse3_atom;
+            } else {
+                c->apply_window_int16 = ff_apply_window_int16_ssse3;
+            }
 #endif
         }
     }

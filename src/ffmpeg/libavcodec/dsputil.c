@@ -5,20 +5,20 @@
  *
  * gmc & q-pel & 32/64 bit based MC by Michael Niedermayer <michaelni@gmx.at>
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -3895,6 +3895,19 @@ static int32_t scalarproduct_and_madd_int16_c(int16_t *v1, const int16_t *v2, co
     return res;
 }
 
+static void apply_window_int16_c(int16_t *output, const int16_t *input,
+                                 const int16_t *window, unsigned int len)
+{
+    int i;
+    int len2 = len >> 1;
+
+    for (i = 0; i < len2; i++) {
+        int16_t w       = window[i];
+        output[i]       = (MUL16(input[i],       w) + (1 << 14)) >> 15;
+        output[len-i-1] = (MUL16(input[len-i-1], w) + (1 << 14)) >> 15;
+    }
+}
+
 #define W0 2048
 #define W1 2841 /* 2048*sqrt (2)*cos (1*pi/16) */
 #define W2 2676 /* 2048*sqrt (2)*cos (2*pi/16) */
@@ -4361,6 +4374,7 @@ av_cold void attribute_align_arg dsputil_init(DSPContext* c, AVCodecContext *avc
 //    c->vector_clipf = vector_clipf_c;
 //    c->scalarproduct_int16 = scalarproduct_int16_c;
 //    c->scalarproduct_and_madd_int16 = scalarproduct_and_madd_int16_c;
+    c->apply_window_int16 = apply_window_int16_c;
     c->scalarproduct_float = scalarproduct_float_c;
     c->butterflies_float = butterflies_float_c;
     c->vector_fmul_scalar = vector_fmul_scalar_c;
