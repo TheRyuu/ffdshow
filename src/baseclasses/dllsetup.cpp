@@ -7,6 +7,8 @@
 //------------------------------------------------------------------------------
 
 #include "stdafx.h"
+#include "IffdshowDecVideo.h"
+#include "reg.h"
 
 //---------------------------------------------------------------------------
 // defines
@@ -92,6 +94,36 @@ EliminateSubKey( HKEY hkey, LPTSTR strSubKey )
   return NOERROR;
 }
 
+DWORD GetDWORDValue( HKEY hkey, LPTSTR strKey, LPTSTR strValueName, DWORD defaultValue )
+{
+  HKEY hk;
+  LONG lreturn = RegOpenKeyEx( hkey
+                             , strKey
+                             , 0
+                             , KEY_READ
+                             , &hk );
+
+  if (lreturn != ERROR_SUCCESS)
+    return defaultValue;
+
+  DWORD result;
+  DWORD dwBufLen = sizeof(DWORD);
+  lreturn = RegQueryValueEx( hk, strValueName, NULL, NULL, (LPBYTE)&result, &dwBufLen );
+  if (lreturn != ERROR_SUCCESS)
+		return defaultValue;
+
+  lreturn = RegCloseKey(hk);
+  if (lreturn != ERROR_SUCCESS)
+    return defaultValue;
+
+  return result;
+}
+
+int IsRegisterDxva()
+{
+ DWORD noDxvaDecoder = GetDWORDValue( HKEY_LOCAL_MACHINE, FFDSHOW_REG_PARENT _l("\\") FFDSHOW, _l("noDxvaDecoder"), 0);
+ return !noDxvaDecoder;
+}
 
 //---------------------------------------------------------------------------
 //
@@ -309,12 +341,16 @@ STDAPI
 RegisterAllServers( LPCWSTR szFileName, BOOL bRegister )
 {
   HRESULT hr = NOERROR;
+  int isRegisterDxva = IsRegisterDxva();
 
   for( int i = 0; i < g_cTemplates; i++ )
   {
     // get i'th template
     //
     const CFactoryTemplate *pT = &g_Templates[i];
+
+    if ((*(pT->m_ClsID) == CLSID_FFDSHOWDXVA || *(pT->m_ClsID) == CLSID_TFFDSHOWPAGEDXVA) && !isRegisterDxva)
+      continue;
 
     DbgLog((LOG_TRACE, 2, TEXT("- - register %ls"),
            (LPCWSTR)pT->m_Name ));
@@ -450,11 +486,15 @@ AMovieDllRegisterServer2( BOOL bRegister )
       // registering servers and filters.
       //
       DbgLog((LOG_TRACE, 2, TEXT("- register Filters")));
+      int isRegisterDxva = IsRegisterDxva();
       for( int i = 0; i < g_cTemplates; i++ )
       {
         // get i'th template
         //
         const CFactoryTemplate *pT = &g_Templates[i];
+
+        if ((*(pT->m_ClsID) == CLSID_FFDSHOWDXVA || *(pT->m_ClsID) == CLSID_TFFDSHOWPAGEDXVA) && !isRegisterDxva)
+          continue;
 
         if( NULL != pT->m_pAMovieSetup_Filter )
         {
@@ -557,6 +597,7 @@ AMovieDllRegisterServer( void )
                        , NUMELMS(achFileName) );
   }
 
+  int isRegisterDxva = IsRegisterDxva();
   // scan through array of CFactoryTemplates
   // registering servers and filters.
   //
@@ -565,6 +606,9 @@ AMovieDllRegisterServer( void )
     // get i'th template
     //
     const CFactoryTemplate *pT = &g_Templates[i];
+
+    if ((*(pT->m_ClsID) == CLSID_FFDSHOWDXVA || *(pT->m_ClsID) == CLSID_TFFDSHOWPAGEDXVA) && !isRegisterDxva)
+      continue;
 
     // register CLSID and InprocServer32
     //

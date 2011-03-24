@@ -261,6 +261,7 @@ Name: "Normal"; Description: "Normal"; Flags: iscustom
 
 [Components]
 Name: "ffdshow";                    Description: "{cm:comp_ffdshowds}";    Types: Normal; Flags: fixed
+Name: "ffdshow\dxva";               Description: "{cm:comp_dxvaDecoder}"
 Name: "ffdshow\vfw";                Description: "{cm:comp_vfwInterface}"; Types: Normal
 #if include_makeavis
 Name: "ffdshow\makeavis";           Description: "{cm:comp_makeAvis}";         Flags: dontinheritcheck
@@ -362,12 +363,12 @@ Name: "whitelist\prompt";        Description: "{cm:tsk_whitelistPrompt}";       
 #if is64bit
 Name: {group}\{cm:shrt_audioConfig} x64; Filename: {#= ff_sys}\rundll32.exe; Parameters: """{app}\ffdshow.ax"",configureAudio"; WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 4; Components: ffdshow
 Name: {group}\{cm:shrt_videoConfig} x64; Filename: {#= ff_sys}\rundll32.exe; Parameters: """{app}\ffdshow.ax"",configure"; WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 3; Components: ffdshow
-Name: {group}\{cm:shrt_videoDXVAConfig} x64; Filename: {#= ff_sys}\rundll32.exe; Parameters: """{app}\ffdshow.ax"",configureDXVA"; WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 10; Components: ffdshow
+Name: {group}\{cm:shrt_videoDXVAConfig} x64; Filename: {#= ff_sys}\rundll32.exe; Parameters: """{app}\ffdshow.ax"",configureDXVA"; WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 10; Components: ffdshow\dxva
 Name: {group}\{cm:shrt_vfwConfig} x64; Filename: {#= ff_sys}\rundll32.exe; Parameters: """{#= ff_sys}\ff_vfw.dll"",configureVFW"; WorkingDir: {#= ff_sys}; IconFilename: {app}\ffdshow.ax; IconIndex: 5; Components: ffdshow\vfw
 #else
 Name: {group}\{cm:shrt_audioConfig}; Filename: {#= ff_sys}\rundll32.exe; Parameters: """{app}\ffdshow.ax"",configureAudio"; WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 4; Components: ffdshow
 Name: {group}\{cm:shrt_videoConfig}; Filename: {#= ff_sys}\rundll32.exe; Parameters: """{app}\ffdshow.ax"",configure"; WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 3; Components: ffdshow
-Name: {group}\{cm:shrt_videoDXVAConfig}; Filename: {#= ff_sys}\rundll32.exe; Parameters: """{app}\ffdshow.ax"",configureDXVA"; WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 10; Components: ffdshow
+Name: {group}\{cm:shrt_videoDXVAConfig}; Filename: {#= ff_sys}\rundll32.exe; Parameters: """{app}\ffdshow.ax"",configureDXVA"; WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 10; Components: ffdshow\dxva
 Name: {group}\{cm:shrt_vfwConfig}; Filename: {#= ff_sys}\rundll32.exe; Parameters: """{#= ff_sys}\ff_vfw.dll"",configureVFW"; WorkingDir: {#= ff_sys}; IconFilename: {app}\ffdshow.ax; IconIndex: 5; Components: ffdshow\vfw
 #endif
 #if include_makeavis
@@ -470,7 +471,7 @@ Root: HKCU; Subkey: "Software\GNU";               Components: ffdshow;     Flags
 Root: HKCU; Subkey: "{#= ff_reg_base}";           Components: ffdshow;     Flags: uninsdeletekey
 Root: HKCU; Subkey: "{#= ff_reg_base}_audio";     Components: ffdshow;     Flags: uninsdeletekey
 Root: HKCU; Subkey: "{#= ff_reg_base}_audio_raw"; Components: ffdshow;     Flags: dontcreatekey uninsdeletekey
-Root: HKCU; Subkey: "{#= ff_reg_base}_dxva";      Components: ffdshow;     Flags: uninsdeletekey
+Root: HKCU; Subkey: "{#= ff_reg_base}_dxva";      Components: ffdshow\dxva; Flags: uninsdeletekey
 Root: HKCU; Subkey: "{#= ff_reg_base}_enc";       Components: ffdshow;     Flags: dontcreatekey uninsdeletekey
 Root: HKCU; Subkey: "{#= ff_reg_base}_raw";       Components: ffdshow;     Flags: dontcreatekey uninsdeletekey
 Root: HKCU; Subkey: "{#= ff_reg_base}_vfw";       Components: ffdshow\vfw; Flags: uninsdeletekey
@@ -483,7 +484,7 @@ Root: HKLM; Subkey: "{#= ff_reg_base}_vfw";       Components: ffdshow\vfw; Flags
 Root: HKCU; Subkey: "{#= ff_reg_base}";           Components: ffdshow;     Flags: deletekey; Tasks: resetsettings
 Root: HKCU; Subkey: "{#= ff_reg_base}_audio";     Components: ffdshow;     Flags: deletekey; Tasks: resetsettings
 Root: HKCU; Subkey: "{#= ff_reg_base}_audio_raw"; Components: ffdshow;     Flags: deletekey; Tasks: resetsettings
-Root: HKCU; Subkey: "{#= ff_reg_base}_dxva";      Components: ffdshow;     Flags: deletekey; Tasks: resetsettings
+Root: HKCU; Subkey: "{#= ff_reg_base}_dxva";      Components: ffdshow\dxva; Flags: deletekey; Tasks: resetsettings
 Root: HKCU; Subkey: "{#= ff_reg_base}_enc";       Components: ffdshow;     Flags: deletekey; Tasks: resetsettings
 Root: HKCU; Subkey: "{#= ff_reg_base}_raw";       Components: ffdshow;     Flags: deletekey; Tasks: resetsettings
 Root: HKCU; Subkey: "{#= ff_reg_base}_vfw";       Components: ffdshow\vfw; Flags: deletekey; Tasks: resetsettings
@@ -568,11 +569,15 @@ Root: HKCU; Subkey: "{#= ff_reg_base}";               ValueType: dword;  ValueNa
 Root: HKCU; Subkey: "{#= ff_reg_base}_audio";         ValueType: dword;  ValueName: "isCompMgr";            ValueData: "1";                  Components: ffdshow; Tasks: whitelist AND     whitelist\prompt
 Root: HKCU; Subkey: "{#= ff_reg_base}_audio";         ValueType: dword;  ValueName: "isCompMgr";            ValueData: "0";                  Components: ffdshow; Tasks: whitelist AND NOT whitelist\prompt
 
+; DXVA registration flag
+Root: HKLM; Subkey: "{#= ff_reg_base}";               ValueType: dword;  ValueName: "noDxvaDecoder";        ValueData: "0";                  Components: ffdshow\dxva
+Root: HKLM; Subkey: "{#= ff_reg_base}";               ValueType: dword;  ValueName: "noDxvaDecoder";        ValueData: "1";                  Components: NOT ffdshow\dxva
+
 ; DXVA Compatibility list
-Root: HKCU; Subkey: "{#= ff_reg_base}_DXVA";          ValueType: dword;  ValueName: "isCompMgr";            ValueData: "0";                  Components: ffdshow;     Flags: createvalueifdoesntexist
-Root: HKCU; Subkey: "{#= ff_reg_base}_DXVA";          ValueType: dword;  ValueName: "isBlacklist";          ValueData: "0";                  Components: ffdshow;     Flags: createvalueifdoesntexist
-Root: HKCU; Subkey: "{#= ff_reg_base}_DXVA";          ValueType: dword;  ValueName: "isWhitelist";          ValueData: "1";                  Components: ffdshow;     Flags: createvalueifdoesntexist
-Root: HKCU; Subkey: "{#= ff_reg_base}_DXVA";          ValueType: string;  ValueName: "Whitelist";           ValueData: "bsplayer.exe;coreplayer.exe;ehshell.exe;gom.exe;graphedit.exe;graphedt.exe;graphstudio.exe;graphstudio64.exe;kmplayer.exe;mpc-hc.exe;mpc-hc64.exe;mplayerc.exe;wmplayer.exe;zplayer.exe;";                  Components: ffdshow;     Flags: createvalueifdoesntexist
+Root: HKCU; Subkey: "{#= ff_reg_base}_dxva";          ValueType: dword;  ValueName: "isCompMgr";            ValueData: "0";                  Components: ffdshow\dxva; Flags: createvalueifdoesntexist
+Root: HKCU; Subkey: "{#= ff_reg_base}_dxva";          ValueType: dword;  ValueName: "isBlacklist";          ValueData: "0";                  Components: ffdshow\dxva; Flags: createvalueifdoesntexist
+Root: HKCU; Subkey: "{#= ff_reg_base}_dxva";          ValueType: dword;  ValueName: "isWhitelist";          ValueData: "1";                  Components: ffdshow\dxva; Flags: createvalueifdoesntexist
+Root: HKCU; Subkey: "{#= ff_reg_base}_dxva";          ValueType: string;  ValueName: "Whitelist";           ValueData: "bsplayer.exe;coreplayer.exe;ehshell.exe;gom.exe;graphedit.exe;graphedt.exe;graphstudio.exe;graphstudio64.exe;kmplayer.exe;mpc-hc.exe;mpc-hc64.exe;mplayerc.exe;wmplayer.exe;zplayer.exe;";                  Components: ffdshow\dxva; Flags: createvalueifdoesntexist
 
 ; Registry keys for the audio/video formats:
 #include "reg_formats.iss"
@@ -601,7 +606,7 @@ Root: HKCU; Subkey: "{#= ff_reg_base}_audio\";                           ValueNa
 [Run]
 Description: "{cm:run_audioConfig}";     Filename: "{#= ff_sys}\rundll32.exe"; Parameters: """{app}\ffdshow.ax"",configureAudio";     WorkingDir: "{app}";       Components: ffdshow;     Flags: postinstall nowait unchecked
 Description: "{cm:run_videoConfig}";     Filename: "{#= ff_sys}\rundll32.exe"; Parameters: """{app}\ffdshow.ax"",configure";          WorkingDir: "{app}";       Components: ffdshow;     Flags: postinstall nowait unchecked
-Description: "{cm:run_videoDXVAConfig}"; Filename: "{#= ff_sys}\rundll32.exe"; Parameters: """{app}\ffdshow.ax"",configureDXVA";      WorkingDir: "{app}";       Components: ffdshow;     Flags: postinstall nowait unchecked
+Description: "{cm:run_videoDXVAConfig}"; Filename: "{#= ff_sys}\rundll32.exe"; Parameters: """{app}\ffdshow.ax"",configureDXVA";      WorkingDir: "{app}";       Components: ffdshow\dxva; Flags: postinstall nowait unchecked
 Description: "{cm:run_vfwConfig}";       Filename: "{#= ff_sys}\rundll32.exe"; Parameters: """{#= ff_sys}\ff_vfw.dll"",configureVFW"; WorkingDir: "{#= ff_sys}"; Components: ffdshow\vfw; Flags: postinstall nowait unchecked
 
 ; All custom strings in the installer:

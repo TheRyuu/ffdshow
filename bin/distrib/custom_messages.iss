@@ -77,6 +77,7 @@ en.simd_msg_sse2=This build of ffdshow requires a CPU with SSE2 extension suppor
 en.unsupported_cpu=This build of ffdshow requires a CPU of type i686 or newer. Your CPU is not supported. Revision 1940 of ffdshow is the last one that works on old CPUs.
 
 en.comp_ffdshowds=ffdshow DirectShow filter
+en.comp_dxvaDecoder=DXVA video decoder
 en.comp_vfwInterface=VFW interface
 en.comp_makeAvis=AviSynth scripts serving
 en.comp_appPlugins=Application plugins:
@@ -154,6 +155,7 @@ cs.simd_msg_sse2=Toto sestavení ffdshow vyžaduje procesor s podporou rozšíř
 cs.unsupported_cpu=Toto sestavení ffdshow vyžaduje procesor i686 nebo novější. Váš procesor není podporován. ffdshow revize 1940 je poslední verze funkční na starých procesorech.
 
 cs.comp_ffdshowds=ffdshow DirectShow filtr
+cs.comp_dxvaDecoder=DXVA video dekodéru
 cs.comp_vfwInterface=VFW rozhraní
 cs.comp_makeAvis=Podpora pro AviSynth
 cs.comp_appPlugins=Pluginy:
@@ -230,6 +232,7 @@ de.simd_msg_sse2=Dieses ffdshow-Build benötigt einen Prozessor mit SSE2-Unterst
 de.unsupported_cpu=Dieses ffdshow-Build benötigt einen Prozessor vom Typ i686 der neuer. Ihr Prozessor wird nicht unterstützt. ffdshow-Revision 1940 ist die letzte, die auf alten Prozessoren funktioniert.
 
 de.comp_ffdshowds=ffdshow-DirectShow-Filter
+de.comp_dxvaDecoder=DXVA-Videodekoder
 de.comp_vfwInterface=VFW-Interface
 de.comp_makeAvis=Hilfe für AviSynth-Skripte
 de.comp_appPlugins=Anwendungsplugins:
@@ -306,8 +309,9 @@ es.simd_msg_sse2=Esta versión de ffdshow requiere una CPU con soporte de extens
 es.unsupported_cpu=Esta versión de ffdshow requiere una CPU i686 o posterior. Su CPU no es compatible. La versión 1940 de ffdshow es la última que funciona en CPUs anteriores.
 
 es.comp_ffdshowds=Filtro DirectShow ffdshow
-es.comp_vfwInterface=Interfaz VFW 
-es.comp_makeAvis=Servidor de scripts AviSynth 
+es.comp_dxvaDecoder=decodificador de vídeo DXVA
+es.comp_vfwInterface=Interfaz VFW
+es.comp_makeAvis=Servidor de scripts AviSynth
 es.comp_appPlugins=Plugins de aplicaciones:
 es.comp_msg_selectOneComp=Debe seleccionar al menos un componente.
 
@@ -382,6 +386,7 @@ fr.simd_msg_sse2=Cette version de ffdshow nécessite un CPU avec support des ins
 fr.unsupported_cpu=Cette version de ffdshow nécessite un CPU de type i686 ou plus récent. Votre CPU n'est plus supporté. La révision 1940 de ffdshow est la dernière compatible avec les anciens CPU.
 
 fr.comp_ffdshowds=Filtre ffdshow DirectShow
+fr.comp_dxvaDecoder=décodeur vidéo DXVA
 fr.comp_vfwInterface=Interface VFW
 fr.comp_makeAvis=Service de scripts AviSynth
 fr.comp_appPlugins=Plugins d'applications :
@@ -458,6 +463,7 @@ ja.simd_msg_sse2=このバージョンのffdshowはCPUのSSE2サポートが必�
 ja.unsupported_cpu=このバージョンのffdshowはi686以降のCPUが必要です。リビジョン1940がこの古いCPUで動作する最後のビルドです。
 
 ja.comp_ffdshowds=ffdshow DirectShow フィルター
+;ja.comp_dxvaDecoder=DXVA video decoder
 ja.comp_vfwInterface=VFW インターフェース
 ja.comp_makeAvis=AviSynth スクリプトサービング
 ja.comp_appPlugins=アプリケーションプラグイン
@@ -534,6 +540,7 @@ pl.simd_msg_sse2=Ta kompilacja ffdshow wymaga procesora z obsługą zestawu inst
 pl.unsupported_cpu=Ta kompilacja ffdshow wymaga procesora o architekturze i686 lub nowszej. Twój procesor nie jest obsługiwany. Wersja 1940 jest ostatnią, która działa ze starymi procesorami.
 
 pl.comp_ffdshowds=Filtr ffdshow (DirectShow)
+;pl.comp_dxvaDecoder=DXVA video decoder
 pl.comp_vfwInterface=Koder obrazu ffdshow (VFW)
 pl.comp_makeAvis=Obsługa skryptów AviSynth
 pl.comp_appPlugins=Komponenty innych aplikacji
@@ -610,6 +617,7 @@ ru.simd_msg_sse2=Этот билд ffdshow требует ЦПУ с поддер
 ru.unsupported_cpu=Этот билд ffdshow требует ЦПУ с архитектурой i686 или новее. Ваш ЦПУ не поддерживается. Билд 1940 ffdshow является последним для использования со старыми ЦПУ.
 
 ru.comp_ffdshowds=ffdshow DirectShow-фильтр
+ru.comp_dxvaDecoder=DXVA видеодекодера
 ru.comp_vfwInterface=VFW интерфейс
 ru.comp_makeAvis=Обслуживание скриптов AviSynth
 ru.comp_appPlugins=Плагины приложений:
@@ -686,6 +694,7 @@ zh_Hant.simd_msg_sse2=此版的 ffdshow 須要有支援 SSE2 指令集的 CPU. �
 zh_Hant.unsupported_cpu=此版的 ffdshow 需要 i686 或更新種類的 CPU. 您的 CPU 並不支援. 1940 版的 ffdshow 是能在舊式 CPU 運作的最後一版.
 
 zh_Hant.comp_ffdshowds=ffdshow DirectShow 篩選器
+;zh.comp_dxvaDecoder=DXVA video decoder
 zh_Hant.comp_vfwInterface=VFW 介面
 zh_Hant.comp_makeAvis=AviSynth 腳本 serving
 zh_Hant.comp_appPlugins=應用程式外掛:
@@ -763,6 +772,7 @@ zh_Hans.unsupported_cpu=这个编译版的 ffdshow 需要 i686 或更新的 CPU�
 ;[The message above is only a partial translation:]  zh_Hans.unsupported_cpu=This build of ffdshow requires a CPU of type i686 or newer. Your CPU is not supported. Revision 1940 of ffdshow is the last one that works on old CPUs.
 
 zh_Hans.comp_ffdshowds=ffdshow DirectShow 滤镜
+;zh_Hans.comp_dxvaDecoder=DXVA video decoder
 zh_Hans.comp_vfwInterface=VFW 接口
 zh_Hans.comp_makeAvis=AviSynth 脚本服务
 zh_Hans.comp_appPlugins=应用程序插件：
