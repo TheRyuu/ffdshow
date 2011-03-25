@@ -67,6 +67,8 @@ void TsubtitlesPosPage::expand2dlg(void)
 {
     int isExpand=cfgGet(IDFF_subIsExpand);
     setCheck(IDC_CHB_SUBTITLES_EXPAND,isExpand);
+    // disable option to expand video output size for subtitles when configuring DXVA (we can't change output resolution when decoding using DXVA)
+    enable(!(cfgGet(IDFF_filterMode) & IDFF_FILTERMODE_VIDEODXVA),IDC_CHB_SUBTITLES_EXPAND);
     static const int idExpand[]= {IDC_ED_SUBTITLES_EXPAND_X,IDC_LBL_SUBTITLES_EXPAND2,IDC_ED_SUBTITLES_EXPAND_Y,IDC_BT_SUBTITLES_EXPAND,0};
     enable(isExpand,idExpand);
     int e1,e2;

@@ -408,7 +408,6 @@ TpresetVideo::TpresetVideo(const char_t *Ireg_child, const char_t *IpresetName, 
         resize=NULL;
         vis=NULL;
         grab=NULL;
-        subtitles=NULL;
         subtitles=new TsubtitlesSettings(options,filters,filtermode);
         new TOSDsettingsVideo(options,filters);
         output=new ToutputVideoSettings(options,filters);
