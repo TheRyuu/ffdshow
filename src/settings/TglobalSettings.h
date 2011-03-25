@@ -134,7 +134,7 @@ public:
         int searchHeuristic;
         int watch;
         int embeddedPriority;
-        int textpin,subSSA;
+        int textpin;
     } sub;
 
     TglobalSettingsDecVideo(const Tconfig *Iconfig,int Imode,TintStrColl *Icoll);

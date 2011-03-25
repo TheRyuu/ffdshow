@@ -53,6 +53,7 @@ public:
     int cc;
     int filtermode;
     int extendedTags;
+    int subSSA;
     int SSAOverridePlacement;
     int SSAMaintainInside;
     int SSAUseMovieDimensions;

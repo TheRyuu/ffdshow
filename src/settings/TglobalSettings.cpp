@@ -1090,8 +1090,6 @@ TglobalSettingsDecVideo::TsubtitlesSettings::TsubtitlesSettings(TintStrColl *Ico
     static const TintOptionT<TsubtitlesSettings> iopts[]= {
         IDFF_subTextpin          ,&TsubtitlesSettings::textpin          ,0,0,_l(""),1,
         _l("subTextpin"),0,
-        IDFF_subSSA              ,&TsubtitlesSettings::subSSA           ,0,0,_l(""),1,
-        _l("subSSA"),1,
         IDFF_subWatch            ,&TsubtitlesSettings::watch            ,0,0,_l(""),1,
         _l("subWatch"),1,
         IDFF_subEmbeddedPriority ,&TsubtitlesSettings::embeddedPriority ,0,0,_l(""),1,
