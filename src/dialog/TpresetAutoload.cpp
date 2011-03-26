@@ -299,8 +299,11 @@ INT_PTR TpresetAutoloadDlgBase::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 //================================= TpresetAutoloadDlgVideo =================================
 TpresetAutoloadDlgVideo::TpresetAutoloadDlgVideo(IffdshowBase *Ideci,HWND parent,int x,int y):TpresetAutoloadDlgBase(Ideci,parent,x,y)
 {
+    // Note that we're adding checkboxes from TpresetAutoloadDlgBase to the list of checkboxes to be bound,
+    // this is because bindCheckboxes() will override the previous bind, same goes for bindEditInts()
     static const TbindCheckbox<TpresetAutoloadDlgVideo> chb[]= {
         IDC_CHB_PRESETAUTOLOAD_SIZE,IDFF_presetAutoloadSize,NULL,
+        IDC_CHB_PRESETAUTOLOAD_SCREEN_SIZE,IDFF_presetAutoloadScreenSize,NULL,
         0,NULL,NULL
     };
     bindCheckboxes(chb);
