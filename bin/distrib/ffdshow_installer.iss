@@ -1,9 +1,9 @@
-; Requires Inno Setup QuickStart Pack Unicode: http://www.jrsoftware.org/isdl.php#qsp
+; Requires Inno Setup Unicode: http://www.jrsoftware.org/isdl.php
 ; (Make sure you choose to install Inno Setup Preprocessor)
 
 #define dummy Exec("update_version.bat","","",1,SW_HIDE)
 
-#include "languages\..\..\..\src\svn_version.h"
+#include "..\..\src\svn_version.h"
 
 ; Build revision and date
 #define tryout_revision           = SVN_REVISION
