@@ -617,7 +617,7 @@ ru.simd_msg_sse2=Этот билд ffdshow требует ЦПУ с поддер
 ru.unsupported_cpu=Этот билд ffdshow требует ЦПУ с архитектурой i686 или новее. Ваш ЦПУ не поддерживается. Билд 1940 ffdshow является последним для использования со старыми ЦПУ.
 
 ru.comp_ffdshowds=ffdshow DirectShow-фильтр
-ru.comp_dxvaDecoder=DXVA видеодекодера
+ru.comp_dxvaDecoder=DXVA видеодекодер
 ru.comp_vfwInterface=VFW интерфейс
 ru.comp_makeAvis=Обслуживание скриптов AviSynth
 ru.comp_appPlugins=Плагины приложений:
