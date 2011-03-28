@@ -239,16 +239,27 @@ HRESULT TffdshowDecVideo::checkAllowOutChange(IPin *pPin)
 {
     HRESULT hr;
     CLSID clsid=GetCLSID(pPin);
-
-    allowOutChange = true;
-    if (outOldRenderer = !!(clsid == CLSID_VideoRenderer)) {
+    outOldRenderer = !!(clsid == CLSID_VideoRenderer);
+    
+    /* next filter in graph must support changes */
+    bool compatibleFilter=clsid==CLSID_OverlayMixer ||	 
+            clsid==CLSID_VideoMixingRenderer ||	 
+            clsid==CLSID_VideoMixingRenderer9 ||	 
+            clsid==CLSID_EnhancedVideoRenderer ||	 
+            clsid==CLSID_DirectVobSubFilter ||	 
+            clsid==CLSID_DirectVobSubFilter2 ||	 
+            clsid==CLSID_HaaliVideoRenderer ||	 
+            clsid==CLSID_MADVideoRenderer ||	 
+            clsid==CLSID_FFDSHOW ||	 
+            clsid==CLSID_FFDSHOWRAW ||	 
+            clsid==CLSID_FFDSHOWSUBTITLES;	 
+   
+    if (outOldRenderer || clsid == CLSID_DecklinkVideoRenderFilter || clsid == CLSID_InfTee || clsid == CLSID_SmartT || clsid == CLSID_WMP_VIDEODSP_DMO) {
         allowOutChange = false;
+    } else {
+        allowOutChange = dvdproc || compatibleFilter;
     }
-    hr = S_OK;
-    if (clsid == CLSID_DecklinkVideoRenderFilter || clsid == CLSID_InfTee || clsid == CLSID_SmartT || clsid == CLSID_WMP_VIDEODSP_DMO) {
-        allowOutChange = false;
-    }
-    return hr;
+    return S_OK;
 }
 
 HRESULT TffdshowDecVideo::CheckInputType(const CMediaType *mtIn)
