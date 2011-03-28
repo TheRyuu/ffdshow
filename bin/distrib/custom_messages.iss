@@ -155,7 +155,7 @@ cs.simd_msg_sse2=Toto sestavení ffdshow vyžaduje procesor s podporou rozšíř
 cs.unsupported_cpu=Toto sestavení ffdshow vyžaduje procesor i686 nebo novější. Váš procesor není podporován. ffdshow revize 1940 je poslední verze funkční na starých procesorech.
 
 cs.comp_ffdshowds=ffdshow DirectShow filtr
-cs.comp_dxvaDecoder=DXVA video dekodéru
+cs.comp_dxvaDecoder=DXVA video dekodér
 cs.comp_vfwInterface=VFW rozhraní
 cs.comp_makeAvis=Podpora pro AviSynth
 cs.comp_appPlugins=Pluginy:
