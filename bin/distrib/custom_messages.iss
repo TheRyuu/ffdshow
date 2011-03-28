@@ -35,9 +35,9 @@ fr.WinVersionTooLowError=Cette version de ffdshow nécessite Windows 2000 ou plu
 
 ; Japanese
 ja.WelcomeLabel2=このプログラムはご使用のコンピュータへ ffdshow をインストールします。%n%n続行する前に他のアプリケーションをすべて終了してください。
-ja.FileAbortRetryIgnore=ffdshowを使用中のアプリケーションを終了して「再試行」をクリックしてください。解決しない場合は「中止」をクリックしてコンピュータを再起動後、もう一度セットアップを実行してください。
-ja.FinishedRestartLabel=ffdshow のインストールを完了するためには、コンピュータを再起動する必要があります。%n%nすぐに再起動しますか？%n%nヒント：ビデオデコーダー設定の「情報とデバッグ」の「Don't use ffdshow in:」「explorer.exe」を有効にしておくと次回から再起動が不要になるかもしれません。
-ja.WinVersionTooLowError=このバージョンのffdshowはWindows 2000以降が必要です。リビジョン2352より前のバージョンを御使用ください。
+ja.FileAbortRetryIgnore=ffdshow を使用中のアプリケーションを終了して「再試行」をクリックしてください。解決しない場合は「中止」をクリックしてコンピュータを再起動後、もう一度セットアップを実行してください。
+ja.FinishedRestartLabel=ffdshow のインストールを完了するためには、コンピュータを再起動する必要があります。%n%nすぐに再起動しますか？%n%nヒント：ビデオデコーダー設定の「DirectShow のコントロール」の「ffdshow を使用しない」で「explorer.exe」を有効にしておくと次回から再起動が不要になるかもしれません。
+ja.WinVersionTooLowError=このバージョンの ffdshow は Windows 2000 以降が必要です。リビジョン 2352 より前のバージョンを御使用ください。
 
 ; Polish
 pl.WelcomeLabel2=Instalator zainstaluje ffdshow na twoim komputerze.%n%nZaleca się zamknięcie wszystkich innych aplikacji przed kontynuowaniem procesu instalacji.
@@ -457,41 +457,41 @@ fr.shrt_homepage=Page d'accueil
 
 ; Japanese
 ja.langid=1041
-ja.msg_uninstallFirst=古いバージョンのffdshowをアンインストールしてからインストールして下さい。
-ja.simd_msg_sse=このバージョンのffdshowはCPUのSSEサポートが必要です。お使いのCPUはこの条件を満たしません。
-ja.simd_msg_sse2=このバージョンのffdshowはCPUのSSE2サポートが必要です。お使いのCPUはこの条件を満たしません。
-ja.unsupported_cpu=このバージョンのffdshowはi686以降のCPUが必要です。リビジョン1940がこの古いCPUで動作する最後のビルドです。
+ja.msg_uninstallFirst=古いバージョンの ffdshow をアンインストールしてからインストールしてください。
+ja.simd_msg_sse=このバージョンの ffdshow は CPU の SSE サポートが必要です。お使いの CPU はこの条件を満たしていません。
+ja.simd_msg_sse2=このバージョンの ffdshow は CPU の SSE2 サポートが必要です。お使いの CPU はこの条件を満たしていません。
+ja.unsupported_cpu=このバージョンの ffdshow は i686 以降の CPU が必要です。リビジョン 1940 がこの古い CPU で動作する最後のビルドです。
 
 ja.comp_ffdshowds=ffdshow DirectShow フィルター
-;ja.comp_dxvaDecoder=DXVA video decoder
+ja.comp_dxvaDecoder=DXVA ビデオデコーダー
 ja.comp_vfwInterface=VFW インターフェース
 ja.comp_makeAvis=AviSynth スクリプトサービング
 ja.comp_appPlugins=アプリケーションプラグイン
 ja.comp_msg_selectOneComp=少なくとも一つのコンポーネントを選択してください。
 
 ja.tsk_settings=設定
-ja.tsk_resetSettings=ffdshowのすべての設定を初期値に戻す
-ja.tsk_videoFormats=ビデオ・フォーマット
-ja.tsk_videoFormatsSelect=以下のすべてのビデオフォーマットをffdshowでデコードする
+ja.tsk_resetSettings=ffdshow のすべての設定を初期値に戻す
+ja.tsk_videoFormats=ビデオフォーマット
+ja.tsk_videoFormatsSelect=以下のすべてのビデオフォーマットを ffdshow でデコードする
 ja.tsk_genericMpeg4=Generic MPEG-4
 ja.tsk_rawVideo=Raw Video
-ja.tsk_audioFormats=オーディオ・フォーマット
-ja.tsk_audioFormatsSelect=以下のすべてのオーディオフォーマットをffdshowでデコードする
+ja.tsk_audioFormats=オーディオフォーマット
+ja.tsk_audioFormatsSelect=以下のすべてのオーディオフォーマットを ffdshow でデコードする
 ja.tsk_rawAudio=Raw Audio
 ja.tsk_filters=フィルターの設定
 ja.tsk_filtersSelect=以下のフィルターを有効にする
-ja.tsk_passthroughac3=AC3をパス・スルーする(S/PDIF, HDMI)
-ja.tsk_passthroughdts=DTSをパス・スルーする(S/PDIF, HDMI)
-ja.tsk_volumeNorm=ボリューム ノーマライズ
+ja.tsk_passthroughac3=AC3 をパススルーする (S/PDIF, HDMI)
+ja.tsk_passthroughdts=DTS をパススルーする (S/PDIF, HDMI)
+ja.tsk_volumeNorm=ボリュームノーマライズ
 ja.tsk_subtitles=字幕
-ja.tsk_tweaks=調整・小技
-ja.tsk_skipInloop=常にH.264のデブロッキングをスキップする
-ja.tsk_compatibilityManager=互換性管理プログラム
-ja.tsk_whitelist=ffdshowを確認された互換プログラムのみで用いる
-ja.tsk_whitelistPrompt=未知のアプリケーションがffdshowをロードしようとした時ダイアログを表示する
+ja.tsk_tweaks=微調整
+ja.tsk_skipInloop=常に H.264 のデブロッキングをスキップする
+ja.tsk_compatibilityManager=互換性マネージャー
+ja.tsk_whitelist=ffdshow を確認された互換プログラムのみで用いる
+ja.tsk_whitelistPrompt=未知のアプリケーションが ffdshow をロードしようとする場合はダイアログを表示する
 
 ja.spk_Label1=スピーカーの設定
-ja.spk_Label2=現在のコンピュータ構成に最も近いスピーカーの種類を選んでください。%nインストール後に「ミキサー」の設定から変更することも出来ます。
+ja.spk_Label2=現在のコンピュータ構成に最も近いスピーカーの種類を選んでください。%nインストール後に「ミキサー」の設定から変更することもできます。
 ja.spk_Label3=スピーカーの種類
 ja.spk_mono=モノラル
 ja.spk_stereo=ステレオ
@@ -506,29 +506,29 @@ ja.spk_7ch=フロント 3ch ＋ サイド 2ch ＋ リア 2ch
 ja.spk_headPhone=ヘッドフォン
 ja.spk_surround=サラウンド
 ja.spk_subwoofer=サブウーファー
-ja.spk_dolby1=ドルビーサラウンド/プロロジック
-ja.spk_dolby2=ドルビープロロジックII
+ja.spk_dolby1=ドルビーサラウンド / プロロジック
+ja.spk_dolby2=ドルビープロロジック II
 ja.spk_hrtf=頭部伝達関数 (HRTF)
 ja.spk_sameAsInput=入力と同じ
 ja.spk_disableMixer=ミキサーを無効にする
-ja.spk_voiceControl=ボイスコントロール （ボリューム）
-ja.spk_expandStereo=ステレオを拡張する（サラウンド）
-ja.spk_unknownSpk=Unknown speaker configuration
+ja.spk_voiceControl=ボイスコントロール (ボリューム)
+ja.spk_expandStereo=ステレオを拡張する（サラウンド)
+ja.spk_unknownSpk=不明なスピーカー設定
 
 ja.plg_Label1=%1 プラグインインストール先の指定
-ja.plg_Label2=%1のインストール先を指定してください。
+ja.plg_Label2=%1 のインストール先を指定してください。
 ja.plg_Label3=%1 プラグインをインストールするフォルダを指定して、「次へ」をクリックしてください。
 
 ja.run_videoConfig=ビデオデコーダーの設定を行う
-;ja.run_videoDXVAConfig=Run DXVA video decoder configuration
+ja.run_videoDXVAConfig=DXVA ビデオデコーダーの設定を行う
 ja.run_audioConfig=オーディオデコーダーの設定を行う
-ja.run_vfwConfig=VFWの設定を行う
+ja.run_vfwConfig=VFW の設定を行う
 
 ja.shrt_videoConfig=ビデオデコーダーの設定
-;ja.shrt_videoDXVAConfig=DXVA Video decoder configuration
+ja.shrt_videoDXVAConfig=DXVA ビデオデコーダーの設定
 ja.shrt_audioConfig=オーディオデコーダーの設定
-ja.shrt_vfwConfig=VFWの設定
-ja.shrt_uninstall=ffdshowのアンインストール
+ja.shrt_vfwConfig=VFW の設定
+ja.shrt_uninstall=ffdshow のアンインストール
 ja.shrt_homepage=ホームページ
 
 
