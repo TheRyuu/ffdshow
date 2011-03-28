@@ -5,20 +5,20 @@
  *
  * gmc & q-pel & 32/64 bit based MC by Michael Niedermayer <michaelni@gmx.at>
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -141,12 +141,6 @@ static void draw_edges_c(uint8_t *buf, int wrap, int width, int height, int w, i
     uint8_t *ptr, *last_line;
     int i;
 
-    last_line = buf + (height - 1) * wrap;
-    for(i=0;i<w;i++) {
-        /* top and bottom */
-        if (sides&EDGE_TOP)    memcpy(buf - (i + 1) * wrap, buf, width);
-        if (sides&EDGE_BOTTOM) memcpy(last_line + (i + 1) * wrap, last_line, width);
-    }
     /* left and right */
     ptr = buf;
     for(i=0;i<height;i++) {
@@ -154,18 +148,16 @@ static void draw_edges_c(uint8_t *buf, int wrap, int width, int height, int w, i
         memset(ptr + width, ptr[width-1], w);
         ptr += wrap;
     }
-    /* corners */
-    for(i=0;i<w;i++) {
-        if (sides&EDGE_TOP) {
-            memset(buf - (i + 1) * wrap - w, buf[0], w); /* top left */
-            memset(buf - (i + 1) * wrap + width, buf[width-1], w); /* top right */
-        }
 
-        if (sides&EDGE_BOTTOM) {
-            memset(last_line + (i + 1) * wrap - w, last_line[0], w); /* top left */
-            memset(last_line + (i + 1) * wrap + width, last_line[width-1], w); /* top right */
-        }
-    }
+    /* top and bottom + corners */
+    buf -= w;
+    last_line = buf + (height - 1) * wrap;
+    if (sides & EDGE_TOP)
+        for(i = 0; i < w; i++)
+            memcpy(buf - (i + 1) * wrap, buf, width + w + w); // top
+    if (sides & EDGE_BOTTOM)
+        for (i = 0; i < w; i++)
+            memcpy(last_line + (i + 1) * wrap, last_line, width + w + w); // bottom
 }
 
 /**

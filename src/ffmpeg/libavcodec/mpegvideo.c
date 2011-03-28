@@ -5,20 +5,20 @@
  *
  * 4MV & hq & B-frame encoding stuff by Michael Niedermayer <michaelni@gmx.at>
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -1047,14 +1047,16 @@ void MPV_frame_end(MpegEncContext *s)
        && s->current_picture.reference
        && !s->intra_only
        && !(s->flags&CODEC_FLAG_EMU_EDGE)) {
-        int edges = EDGE_BOTTOM | EDGE_TOP, h = s->v_edge_pos;
-
-            s->dsp.draw_edges(s->current_picture_ptr->data[0], s->linesize  , s->h_edge_pos   , h   , EDGE_WIDTH  , edges);
-            s->dsp.draw_edges(s->current_picture_ptr->data[1], s->uvlinesize, s->h_edge_pos>>1, h>>1, EDGE_WIDTH/2, edges);
-            s->dsp.draw_edges(s->current_picture_ptr->data[2], s->uvlinesize, s->h_edge_pos>>1, h>>1, EDGE_WIDTH/2, edges);
-
+            s->dsp.draw_edges(s->current_picture.data[0], s->linesize  ,
+                              s->h_edge_pos   , s->v_edge_pos   ,
+                              EDGE_WIDTH  , EDGE_TOP | EDGE_BOTTOM);
+            s->dsp.draw_edges(s->current_picture.data[1], s->uvlinesize,
+                              s->h_edge_pos>>1, s->v_edge_pos>>1,
+                              EDGE_WIDTH/2, EDGE_TOP | EDGE_BOTTOM);
+            s->dsp.draw_edges(s->current_picture.data[2], s->uvlinesize,
+                              s->h_edge_pos>>1, s->v_edge_pos>>1,
+                              EDGE_WIDTH/2, EDGE_TOP | EDGE_BOTTOM);
     }
-
     emms_c();
 
     s->last_pict_type    = s->pict_type;
@@ -1510,14 +1512,9 @@ void MPV_decode_mb_internal(MpegEncContext *s, DCTELEM block[12][64],
        /* save DCT coefficients */
        int i,j;
        DCTELEM *dct = &s->current_picture.dct_coeff[mb_xy*64*6];
-       av_log(s->avctx, AV_LOG_DEBUG, "DCT coeffs of MB at %dx%d:\n", s->mb_x, s->mb_y);
-       for(i=0; i<6; i++){
-           for(j=0; j<64; j++){
+       for(i=0; i<6; i++)
+           for(j=0; j<64; j++)
                *dct++ = block[i][s->dsp.idct_permutation[j]];
-               av_log(s->avctx, AV_LOG_DEBUG, "%5d", dct[-1]);
-           }
-           av_log(s->avctx, AV_LOG_DEBUG, "\n");
-       }
     }
 
     s->current_picture.qscale_table[mb_xy]= s->qscale;
