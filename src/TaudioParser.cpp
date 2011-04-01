@@ -533,9 +533,11 @@ HRESULT TaudioParser::parseDTS(unsigned char *src, int size, TbyteBuffer *newsrc
             bitdata.bitsleft=backupBitsLeft;
             bitdata.bitindex=0;
 
+            if (useDTSHDPassthrough) {
             audioParserData.sample_rate=96000;
             audioParserData.channels=8;
             audioParserData.sample_format=TsampleFormat::SF_PCM24;
+            }
 
 
             if (frame_size>(uint32_t)bitdata.bitsleft/8) {
