@@ -944,13 +944,15 @@ typedef struct AVCodecContext {
      */
     enum PixelFormat pix_fmt;
 
+#if FF_API_RATE_EMU
     /**
      * Frame rate emulation. If not zero, the lower layer (i.e. format handler)
      * has to read frames at native frame rate.
      * - encoding: Set by user.
      * - decoding: unused
      */
-    int rate_emu;
+    attribute_deprecated int rate_emu;
+#endif
 
     /**
      * If non NULL, 'draw_horiz_band' is called by the libavcodec
@@ -1056,13 +1058,15 @@ typedef struct AVCodecContext {
 
     int b_frame_strategy;
 
+#if FF_API_HURRY_UP
     /**
      * hurry up amount
      * - encoding: unused
      * - decoding: Set by user. 1-> Skip B-frames, 2-> Skip IDCT/dequant too, 5-> Skip everything except header
      * @deprecated Deprecated in favor of skip_idct and skip_frame.
      */
-    int hurry_up;
+    attribute_deprecated int hurry_up;
+#endif
 
     struct AVCodec *codec;
 
@@ -1549,19 +1553,21 @@ typedef struct AVCodecContext {
      */
     uint64_t error[4];
 
+#if FF_API_MB_Q
     /**
      * minimum MB quantizer
      * - encoding: unused
      * - decoding: unused
      */
-    int mb_qmin;
+    attribute_deprecated int mb_qmin;
 
     /**
      * maximum MB quantizer
      * - encoding: unused
      * - decoding: unused
      */
-    int mb_qmax;
+    attribute_deprecated int mb_qmax;
+#endif
 
     /**
      * motion estimation comparison function
@@ -1764,6 +1770,13 @@ typedef struct AVCodecContext {
 #define SLICE_FLAG_ALLOW_PLANE    0x0004 ///< allow draw_horiz_band() with 1 component at a time (SVQ1)
 
     /**
+     * XVideo Motion Acceleration
+     * - encoding: forbidden
+     * - decoding: set by decoder
+     */
+    int xvmc_acceleration;
+
+    /**
      * macroblock decision mode
      * - encoding: Set by user.
      * - decoding: unused
@@ -1875,16 +1888,19 @@ typedef struct AVCodecContext {
      */
     int error_rate;
 
+#if FF_API_ANTIALIAS_ALGO
     /**
      * MP3 antialias algorithm, see FF_AA_* below.
      * - encoding: unused
      * - decoding: Set by user.
      */
-    int antialias_algo;
+    attribute_deprecated int antialias_algo;
 #define FF_AA_AUTO    0
 #define FF_AA_FASTINT 1 //not implemented yet
 #define FF_AA_INT     2
 #define FF_AA_FLOAT   3
+#endif
+
     /**
      * quantizer noise shaping
      * - encoding: Set by user.
@@ -2523,6 +2539,17 @@ typedef struct AVCodecContext {
      * - decoding: unused
      */
     int slices;
+
+    /**
+     * Header containing style information for text subtitles.
+     * For SUBTITLE_ASS subtitle type, it should contain the whole ASS
+     * [Script Info] and [V4+ Styles] section, plus the [Events] line and
+     * the Format line following. It shouldn't include any Dialogue line.
+     * - encoding: Set/allocated/freed by user (before avcodec_open())
+     * - decoding: Set/allocated/freed by libavcodec (by avcodec_open())
+     */
+    uint8_t *subtitle_header;
+    int subtitle_header_size;
 
     /**
      * Current packet as passed into the decoder, to avoid having

@@ -137,7 +137,7 @@ void avcodec_align_dimensions2(AVCodecContext *s, int *width, int *height, int l
     case PIX_FMT_YUVA420P:
         w_align= 16; //FIXME check for non mpeg style codecs and use less alignment
         h_align= 16;
-        if(s->codec_id == CODEC_ID_MPEG2VIDEO || s->codec_id == CODEC_ID_MJPEG || s->codec_id == CODEC_ID_AMV || s->codec_id == CODEC_ID_H264)
+        if(s->codec_id == CODEC_ID_MPEG2VIDEO || s->codec_id == CODEC_ID_MJPEG || s->codec_id == CODEC_ID_AMV || s->codec_id == CODEC_ID_THP || s->codec_id == CODEC_ID_H264)
             h_align= 32; // interlaced is rounded up to 2 MBs
         break;
     case PIX_FMT_YUV411P:
@@ -353,6 +353,7 @@ void avcodec_default_release_buffer(AVCodecContext *s, AVFrame *pic){
     assert(pic->type==FF_BUFFER_TYPE_INTERNAL);
     assert(s->internal_buffer_count);
 
+    // FFmpeg patch
     if(s->internal_buffer){
     buf = NULL; /* avoids warning */
     for(i=0; i<s->internal_buffer_count; i++){ //just 3-5 checks so is not worth to optimize
@@ -442,10 +443,11 @@ enum PixelFormat avcodec_default_get_format(struct AVCodecContext *s, const enum
 void avcodec_get_frame_defaults(AVFrame *pic){
     memset(pic, 0, sizeof(AVFrame));
 
-    pic->pts = pic->best_effort_timestamp = AV_NOPTS_VALUE;
+    pic->pts = pic->best_effort_timestamp = AV_NOPTS_VALUE; // FFmpeg patch
     pic->key_frame= 1;
-    pic->YCbCr_RGB_matrix_coefficients = YCbCr_RGB_coeff_Unspecified; // ffdshow custom code
-    pic->video_full_range_flag = VIDEO_FULL_RANGE_INVALID; // ffdshow custom code
+    /* ffdshow custom code */
+    pic->YCbCr_RGB_matrix_coefficients = YCbCr_RGB_coeff_Unspecified;
+    pic->video_full_range_flag = VIDEO_FULL_RANGE_INVALID;
 }
 
 AVFrame *avcodec_alloc_frame(void){
@@ -484,6 +486,10 @@ int attribute_align_arg avcodec_open(AVCodecContext *avctx, AVCodec *codec)
         if (!avctx->priv_data) {
             ret = AVERROR(ENOMEM);
             goto end;
+        }
+        if(codec->priv_class){ //this can be droped once all user apps use   avcodec_get_context_defaults3()
+            *(AVClass**)avctx->priv_data= codec->priv_class;
+            av_opt_set_defaults(avctx->priv_data);
         }
       }
     } else {
@@ -544,6 +550,7 @@ int attribute_align_arg avcodec_open(AVCodecContext *avctx, AVCodec *codec)
         }
     }
 
+    // FFmpeg patch
     avctx->pts_correction_num_faulty_pts =
     avctx->pts_correction_num_faulty_dts = 0;
     avctx->pts_correction_last_pts =
@@ -626,7 +633,7 @@ int attribute_align_arg avcodec_decode_video2(AVCodecContext *avctx, AVFrame *pi
 
         emms_c(); //needed to avoid an emms_c() call before every return;
 
-
+        // FFmpeg patch
         if (*got_picture_ptr){
             avctx->frame_number++;
             picture->best_effort_timestamp = guess_correct_pts(avctx,
