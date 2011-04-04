@@ -52,7 +52,8 @@ SRCS_C=\
     libavcodec/faandct.c \
     libavcodec/faanidct.c \
     libavcodec/ffmpegContext.c \
-    libavcodec/fft.c \
+    libavcodec/fft_fixed.c \
+    libavcodec/fft_float.c \
     libavcodec/ffv1.c \
     libavcodec/flac.c \
     libavcodec/flacdata.c \
@@ -105,7 +106,8 @@ SRCS_C=\
     libavcodec/ljpegenc.c \
     libavcodec/loco.c \
     libavcodec/mace.c \
-    libavcodec/mdct.c \
+    libavcodec/mdct_fixed.c \
+    libavcodec/mdct_float.c \
     libavcodec/mjpeg.c \
     libavcodec/mjpeg_parser.c \
     libavcodec/mjpegdec.c \

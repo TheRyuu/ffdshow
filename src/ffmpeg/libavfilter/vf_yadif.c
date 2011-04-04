@@ -1,26 +1,22 @@
 /*
  * Copyright (C) 2006-2010 Michael Niedermayer <michaelni@gmx.at>
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or modify
+ * Libav is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License along
- * with FFmpeg; if not, write to the Free Software Foundation, Inc.,
+ * with Libav; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-
-//============================ ffdshow custom code start ===========================================//
-#include "vf_yadif.h"
-//============================= ffdshow custom code end ============================================//
 
 #include "libavutil/cpu.h"
 #include "libavutil/common.h"
@@ -30,36 +26,8 @@
 #undef NDEBUG
 #include <assert.h>
 
-//============================ ffdshow custom code start ===========================================//
-#if 0 // ffdshow uses a custom YADIFContext
-typedef struct {
-    /**
-     * 0: send 1 frame for each frame
-     * 1: send 1 frame for each field
-     * 2: like 0 but skips spatial interlacing check
-     * 3: like 1 but skips spatial interlacing check
-     */
-    int mode;
-
-    /**
-     *  0: bottom field first
-     *  1: top field first
-     * -1: auto-detection
-     */
-    int parity;
-
-    int frame_pending;
-
-    AVFilterBufferRef *cur;
-    AVFilterBufferRef *next;
-    AVFilterBufferRef *prev;
-    AVFilterBufferRef *out;
-    void (*filter_line)(uint8_t *dst,
-                        uint8_t *prev, uint8_t *cur, uint8_t *next,
-                        int w, int refs, int parity, int mode);
-} YADIFContext;
-#endif
-//============================= ffdshow custom code end ============================================//
+/* ffdshow custom code */
+#include "vf_yadif.h"
 
 static void filter_line_c(uint8_t *dst,
                           uint8_t *prev, uint8_t *cur, uint8_t *next,
@@ -281,7 +249,7 @@ static int poll_frame(AVFilterLink *link)
             return ret;
         val = avfilter_poll_frame(link->src->inputs[0]);
     }
-    assert(yadif->next);
+    assert(yadif->next || !val);
 
     return val * ((yadif->mode&1)+1);
 }
@@ -442,11 +410,7 @@ attribute_align_arg void yadif_filter(YADIFContext *yadctx, uint8_t *dst[3], str
     int w[3],h[3];
     int y_start,plane_start;
     int thread_count = yadctx->thread_count;
-#if __STDC_VERSION__ >= 199901L
     YadifThreadContext threads[thread_count];
-#else
-    YadifThreadContext *threads=_alloca(sizeof(YadifThreadContext) * thread_count);
-#endif
 
 #if HAVE_FAST_64BIT
     DECLARE_ALIGNED(16, uint8_t, regbuf[16*16]);

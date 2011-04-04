@@ -184,16 +184,12 @@ static av_cold int ac3_decode_init(AVCodecContext *avctx)
     ff_mdct_init(&s->imdct_512, 9, 1, 1.0);
     ff_kbd_window_init(s->window, 5.0, 256);
     dsputil_init(&s->dsp, avctx);
+    ff_ac3dsp_init(&s->ac3dsp, avctx->flags & CODEC_FLAG_BITEXACT);
     ff_fmt_convert_init(&s->fmt_conv, avctx);
     av_lfg_init(&s->dith_state, 0);
 
-    /* ffdshow custom code */
-    #if CONFIG_AUDIO_FLOAT
-    s->mul_bias = 1.0f;
-    #else
     /* set scale value for float to int16 conversion */
     s->mul_bias = 32767.0f;
-    #endif
 
     /* allow downmixing to stereo or mono */
     if (avctx->channels > 0 && avctx->request_channels > 0 &&
@@ -1223,7 +1219,7 @@ static int decode_audio_block(AC3DecodeContext *s, int blk)
             /* Compute bit allocation */
             const uint8_t *bap_tab = s->channel_uses_aht[ch] ?
                                      ff_eac3_hebap_tab : ff_ac3_bap_tab;
-            ff_ac3_bit_alloc_calc_bap(s->mask[ch], s->psd[ch],
+            s->ac3dsp.bit_alloc_calc_bap(s->mask[ch], s->psd[ch],
                                       s->start_freq[ch], s->end_freq[ch],
                                       s->snr_offset[ch],
                                       s->bit_alloc_params.floor,
@@ -1421,7 +1417,7 @@ static int ac3_decode_frame(AVCodecContext * avctx, void *data, int *data_size,
         }
         /* ffdshow custom code */
         #if CONFIG_AUDIO_FLOAT
-        float_interleave_noscale(out_samples, output, 256, s->out_channels);
+        float_interleave(out_samples, output, 256, s->out_channels);
         #else
         s->fmt_conv.float_to_int16_interleave(out_samples, output, 256, s->out_channels);
         #endif

@@ -1,25 +1,25 @@
 /*
- * Copyright (C) 2006 Michael Niedermayer <michaelni@gmx.at>
+ * Copyright (C) 2006-2010 Michael Niedermayer <michaelni@gmx.at>
  *
- * This file is part of MPlayer.
+ * This file is part of Libav.
  *
- * MPlayer is free software; you can redistribute it and/or modify
+ * Libav is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * MPlayer is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License along
- * with MPlayer; if not, write to the Free Software Foundation, Inc.,
+ * with Libav; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef _VF_YADIF_H_
-#define _VF_YADIF_H_
+#ifndef AVFILTER_VF_YADIF_H_
+#define AVFILTER_VF_YADIF_H_
 
 #include "../../imgFilters/ffImgfmt.h"
 #include "avfilter.h"
@@ -36,7 +36,6 @@ typedef struct YadifThreadContext{
  * YADIFContext
  */
 typedef struct YADIFContext {
-    int mode;
     int field_order_mode;
     int64_t buffered_rtStart;
     int64_t buffered_rtStop;
@@ -71,8 +70,22 @@ typedef struct YADIFContext {
     stride_t *dst_stride;
     int width;
     int height;
-    int parity;
     int tff;
+
+    /**
+     * 0: send 1 frame for each frame
+     * 1: send 1 frame for each field
+     * 2: like 0 but skips spatial interlacing check
+     * 3: like 1 but skips spatial interlacing check
+     */
+    int mode;
+
+    /**
+     *  0: bottom field first
+     *  1: top field first
+     * -1: auto-detection
+     */
+    int parity;
 
     int frame_pending;
 
@@ -89,4 +102,4 @@ void yadif_filter(YADIFContext *p, uint8_t *dst[3], stride_t dst_stride[3], int 
 void yadif_init(YADIFContext *yadctx);
 void yadif_uninit(YADIFContext *yadctx);
 
-#endif // _VF_YADIF_H_
+#endif // AVFILTER_VF_YADIF_H_

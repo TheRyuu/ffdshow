@@ -82,18 +82,3 @@ void float_interleave(float *dst, const float **src, long len, int channels)
                 dst[j] = src[c][i] / 32768.0f;
     }
 }
-
-void float_interleave_noscale(float *dst, const float **src, long len, int channels)
-{
-    int i,j,c;
-    if(channels==2){
-        for(i=0; i<len; i++){
-            dst[2*i]   = src[0][i];
-            dst[2*i+1] = src[1][i];
-        }
-    }else{
-        for(c=0; c<channels; c++)
-            for(i=0, j=c; i<len; i++, j+=channels)
-                dst[j] = src[c][i];
-    }
-}
