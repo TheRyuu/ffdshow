@@ -137,6 +137,7 @@ SRCS_C=\
     libavcodec/msvideo1.c \
     libavcodec/nellymoser.c \
     libavcodec/nellymoserdec.c \
+    libavcodec/opt.c \
     libavcodec/options.c \
     libavcodec/parser.c \
     libavcodec/pcm.c \
@@ -246,6 +247,7 @@ SRCS_C=\
     libavutil/mathematics.c \
     libavutil/md5.c \
     libavutil/mem.c \
+    libavutil/opt.c \
     libavutil/pixdesc.c \
     libavutil/random_seed.c \
     libavutil/rational.c \

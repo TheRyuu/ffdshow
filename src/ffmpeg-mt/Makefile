@@ -31,6 +31,7 @@ SRCS_C=\
     libavcodec/mpeg4video.c \
     libavcodec/mpeg4videodec.c \
     libavcodec/mpegvideo.c \
+    libavcodec/opt.c \
     libavcodec/options.c \
     libavcodec/parser.c \
     libavcodec/pthread.c \
@@ -50,13 +51,16 @@ SRCS_C=\
     libavcodec/x86/mpegvideo_mmx.c \
     libavcodec/x86/simple_idct_mmx.c \
     \
+    libavutil/avstring.c \
     libavutil/cpu.c \
+    libavutil/eval.c \
     libavutil/imgutils.c \
     libavutil/intfloat_readwrite.c \
     libavutil/inverse.c \
     libavutil/log.c \
     libavutil/mathematics.c \
     libavutil/mem.c \
+    libavutil/opt.c \
     libavutil/pixdesc.c \
     libavutil/rational.c \
     \

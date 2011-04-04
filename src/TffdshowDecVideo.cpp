@@ -237,7 +237,6 @@ HRESULT TffdshowDecVideo::CheckConnect(PIN_DIRECTION dir,IPin *pPin)
 
 HRESULT TffdshowDecVideo::checkAllowOutChange(IPin *pPin)
 {
-    HRESULT hr;
     CLSID clsid=GetCLSID(pPin);
     outOldRenderer = !!(clsid == CLSID_VideoRenderer);
     
