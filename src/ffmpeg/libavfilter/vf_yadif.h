@@ -22,6 +22,7 @@
 #define AVFILTER_VF_YADIF_H_
 
 #include "../../imgFilters/ffImgfmt.h"
+#include "libavutil/pixdesc.h"
 #include "avfilter.h"
 
 typedef struct YadifThreadContext{
@@ -95,7 +96,9 @@ typedef struct YADIFContext {
     AVFilterBufferRef *out;
     void (*filter_line)(uint8_t *dst,
                         uint8_t *prev, uint8_t *cur, uint8_t *next,
-                        int w, int refs, int parity, int mode);
+                        int w, int prefs, int mrefs, int parity, int mode);
+
+    const AVPixFmtDescriptor *csp;
 } YADIFContext;
 
 void yadif_filter(YADIFContext *p, uint8_t *dst[3], stride_t dst_stride[3], int width, int height, int parity, int tff);
