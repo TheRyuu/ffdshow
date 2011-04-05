@@ -52,7 +52,6 @@ bool TaudioCodecLibavcodec::init(const CMediaType &mt)
         avctx = ffmpeg->avcodec_alloc_context();
         avctx->sample_rate = fmt.freq;
         avctx->channels = fmt.nchannels;
-        avctx->codec_id = codecId;
 
         if (parser) {
             ffmpeg->av_parser_close(parser);
