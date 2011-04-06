@@ -262,9 +262,6 @@ typedef struct MpegEncContext {
     /** bit output */
     PutBitContext pb;
 
-    int picture_count;         ///< number of allocated pictures (MAX_PICTURE_COUNT * avctx->thread_count)
-    int picture_range_start, picture_range_end; ///< the part of picture that this context can allocate in
-
     int start_mb_y;            ///< start mb_y of this thread (so current thread should process start_mb_y <= row < end_mb_y)
     int end_mb_y;              ///< end   mb_y of this thread (so current thread should process start_mb_y <= row < end_mb_y)
     struct MpegEncContext *thread_context[MAX_THREADS];
@@ -296,6 +293,8 @@ typedef struct MpegEncContext {
     Picture *last_picture_ptr;     ///< pointer to the previous picture.
     Picture *next_picture_ptr;     ///< pointer to the next picture (for bidir pred)
     Picture *current_picture_ptr;  ///< pointer to the current picture
+    int picture_count;             ///< number of allocated pictures (MAX_PICTURE_COUNT * avctx->thread_count)
+    int picture_range_start, picture_range_end; ///< the part of picture that this context can allocate in
     uint8_t *visualization_buffer[3]; //< temporary buffer vor MV visualization
     int last_dc[3];                ///< last DC values for MPEG1
     int16_t *dc_val_base;
@@ -687,7 +686,10 @@ typedef struct MpegEncContext {
     void (*denoise_dct)(struct MpegEncContext *s, DCTELEM *block);
 } MpegEncContext;
 
-#define REBASE_PICTURE(pic, new_ctx, old_ctx) (pic ? &new_ctx->picture[pic - old_ctx->picture] : NULL)
+#define REBASE_PICTURE(pic, new_ctx, old_ctx) (pic ? \
+    (pic >= old_ctx->picture && pic < old_ctx->picture+old_ctx->picture_count ?\
+        &new_ctx->picture[pic - old_ctx->picture] : pic - (Picture*)old_ctx + (Picture*)new_ctx)\
+    : NULL)
 
 void MPV_decode_defaults(MpegEncContext *s);
 int MPV_common_init(MpegEncContext *s);

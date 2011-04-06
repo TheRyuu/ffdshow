@@ -1107,7 +1107,9 @@ int MPV_frame_start(MpegEncContext *s, AVCodecContext *avctx)
         }
     }
 
+#if FF_API_HURRY_UP
     s->hurry_up= s->avctx->hurry_up;
+#endif
     s->error_recognition= avctx->error_recognition;
 
     /* set dequantizer, we can't do it during init as it might change for mpeg4
@@ -1137,7 +1139,7 @@ void MPV_frame_end(MpegEncContext *s)
 {
     int i;
     /* redraw edges for the frame if decoding didn't complete */
-    if((s->error_count || s->encoding) /* ffdshow custom code */
+    if((s->error_count || s->encoding || !(s->avctx->codec->capabilities&CODEC_CAP_DRAW_HORIZ_BAND)) // FFmpeg patch
        && s->unrestricted_mv
        && s->current_picture.reference
        && !s->intra_only
@@ -1761,7 +1763,9 @@ void MPV_decode_mb_internal(MpegEncContext *s, DCTELEM block[12][64],
             }
 
             /* skip dequant / idct if we are really late ;) */
+#if FF_API_HURRY_UP
             if(s->hurry_up>1) goto skip_idct;
+#endif
             if(s->avctx->skip_idct){
                 if(  (s->avctx->skip_idct >= AVDISCARD_NONREF && s->pict_type == FF_B_TYPE)
                    ||(s->avctx->skip_idct >= AVDISCARD_NONKEY && s->pict_type != FF_I_TYPE)
@@ -1896,7 +1900,7 @@ void MPV_decode_mb(MpegEncContext *s, DCTELEM block[12][64]){
  * @param h is the normal height, this will be reduced automatically if needed for the last row
  */
 void ff_draw_horiz_band(MpegEncContext *s, int y, int h){
-	const int field_pic= s->picture_structure != PICT_FRAME;
+    const int field_pic= s->picture_structure != PICT_FRAME;
     if(field_pic){
         h <<= 1;
         y <<= 1;
