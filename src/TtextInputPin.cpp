@@ -168,7 +168,8 @@ STDMETHODIMP TtextInputPin::ReceiveConnection(IPin* pConnector, const AM_MEDIA_T
     if ( searchPrevNextFilter(PINDIR_INPUT,pConnector,CLSID_HaaliMediaSplitter)
             || searchPrevNextFilter(PINDIR_INPUT,pConnector,CLSID_MPC_MatroskaSplitter)
             || searchPrevNextFilter(PINDIR_INPUT,pConnector,CLSID_GabestMatroskaSplitter)
-            || searchPrevNextFilter(PINDIR_INPUT,pConnector,CLSID_LAVFSplitter)) {
+            || searchPrevNextFilter(PINDIR_INPUT,pConnector,CLSID_LAVFSplitter)
+            || searchPrevNextFilter(PINDIR_INPUT,pConnector,CLSID_LAVFSplitterSource)) {
         ismatroska=true;
     }
 #if 0
