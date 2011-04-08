@@ -1042,8 +1042,9 @@ int MPV_frame_start(MpegEncContext *s, AVCodecContext *avctx)
 void MPV_frame_end(MpegEncContext *s)
 {
     int i;
-    /* redraw edges for the frame if decoding didn't complete */
-    if((s->error_count || s->encoding || !(s->avctx->codec->capabilities&CODEC_CAP_DRAW_HORIZ_BAND)) // FFmpeg patch
+    /* draw edge for correct motion prediction if outside */
+    //just to make sure that all data is rendered.
+    if(1
        && s->unrestricted_mv
        && s->current_picture.reference
        && !s->intra_only
