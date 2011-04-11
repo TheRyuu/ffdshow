@@ -2,20 +2,20 @@
  * Copyright (c) 2002-2006 Michael Niedermayer <michaelni@gmx.at>
  * Copyright (c) 2006 Oded Shimon <ods15@ods15.dyndns.org>
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -48,8 +48,7 @@ typedef struct Parser {
 
 static const AVClass class = { "Eval", av_default_item_name, NULL, LIBAVUTIL_VERSION_INT, offsetof(Parser,log_offset), offsetof(Parser,log_ctx) };
 
-#ifdef __GNUC__
-static const int8_t si_prefixes['z' - 'E' + 1]={
+static const int8_t si_prefixes['z' - 'E' + 1] = {
     ['y'-'E']= -24,
     ['z'-'E']= -21,
     ['a'-'E']= -18,
@@ -71,9 +70,6 @@ static const int8_t si_prefixes['z' - 'E' + 1]={
     ['Z'-'E']=  21,
     ['Y'-'E']=  24,
 };
-#else
-static const int8_t si_prefixes['z' - 'E' + 1];
-#endif
 
 double av_strtod(const char *numstr, char **tail)
 {
@@ -125,7 +121,7 @@ struct AVExpr {
         e_squish, e_gauss, e_ld, e_isnan,
         e_mod, e_max, e_min, e_eq, e_gt, e_gte,
         e_pow, e_mul, e_div, e_add,
-        e_last, e_st, e_while,
+        e_last, e_st, e_while, e_floor, e_ceil, e_trunc,
     } type;
     double value; // is sign in other types
     union {
@@ -149,6 +145,9 @@ static double eval_expr(Parser *p, AVExpr *e)
         case e_gauss: { double d = eval_expr(p, e->param[0]); return exp(-d*d/2)/sqrt(2*M_PI); }
         case e_ld:     return e->value * p->var[av_clip(eval_expr(p, e->param[0]), 0, VARS-1)];
         case e_isnan:  return e->value * !!isnan(eval_expr(p, e->param[0]));
+        case e_floor:  return e->value * floor(eval_expr(p, e->param[0]));
+        case e_ceil :  return e->value * ceil (eval_expr(p, e->param[0]));
+        case e_trunc:  return e->value * trunc(eval_expr(p, e->param[0]));
         case e_while: {
             double d = NAN;
             while (eval_expr(p, e->param[0]))
@@ -280,6 +279,9 @@ static int parse_primary(AVExpr **e, Parser *p)
     else if (strmatch(next, "isnan" )) d->type = e_isnan;
     else if (strmatch(next, "st"    )) d->type = e_st;
     else if (strmatch(next, "while" )) d->type = e_while;
+    else if (strmatch(next, "floor" )) d->type = e_floor;
+    else if (strmatch(next, "ceil"  )) d->type = e_ceil;
+    else if (strmatch(next, "trunc" )) d->type = e_trunc;
     else {
         for (i=0; p->func1_names && p->func1_names[i]; i++) {
             if (strmatch(next, p->func1_names[i])) {
@@ -443,7 +445,11 @@ static int verify_expr(AVExpr *e)
         case e_squish:
         case e_ld:
         case e_gauss:
-        case e_isnan: return verify_expr(e->param[0]);
+        case e_isnan:
+        case e_floor:
+        case e_ceil:
+        case e_trunc:
+            return verify_expr(e->param[0]);
         default: return verify_expr(e->param[0]) && verify_expr(e->param[1]);
     }
 }
@@ -521,9 +527,134 @@ int av_expr_parse_and_eval(double *d, const char *s,
     }
     *d = av_expr_eval(e, const_values, opaque);
     av_expr_free(e);
-#ifdef __GNUC__
     return isnan(*d) ? AVERROR(EINVAL) : 0;
-#else
-    return 0;
-#endif
 }
+
+#if FF_API_OLD_EVAL_NAMES
+int av_parse_expr(AVExpr **expr, const char *s,
+                  const char * const *const_names,
+                  const char * const *func1_names, double (* const *funcs1)(void *, double),
+                  const char * const *func2_names, double (* const *funcs2)(void *, double, double),
+                  int log_offset, void *log_ctx)
+{
+    return av_expr_parse(expr, s, const_names, func1_names, funcs1, func2_names, funcs2,
+                      log_offset, log_ctx);
+}
+
+double av_eval_expr(AVExpr *e, const double *const_values, void *opaque)
+{
+    return av_expr_eval(e, const_values, opaque);
+}
+
+int av_parse_and_eval_expr(double *res, const char *s,
+                           const char * const *const_names, const double *const_values,
+                           const char * const *func1_names, double (* const *funcs1)(void *, double),
+                           const char * const *func2_names, double (* const *funcs2)(void *, double, double),
+                           void *opaque, int log_offset, void *log_ctx)
+{
+    return av_expr_parse_and_eval(res, s, const_names, const_values, func1_names, funcs1, func2_names, funcs2,
+                                  opaque, log_offset, log_ctx);
+}
+
+void av_free_expr(AVExpr *e)
+{
+    av_expr_free(e);
+}
+#endif /* FF_API_OLD_EVAL_NAMES */
+
+#ifdef TEST
+#undef printf
+static double const_values[] = {
+    M_PI,
+    M_E,
+    0
+};
+
+static const char *const_names[] = {
+    "PI",
+    "E",
+    0
+};
+
+int main(void)
+{
+    int i;
+    double d;
+    const char **expr, *exprs[] = {
+        "",
+        "1;2",
+        "-20",
+        "-PI",
+        "+PI",
+        "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",
+        "80G/80Gi"
+        "1k",
+        "1Gi",
+        "1gi",
+        "1GiFoo",
+        "1k+1k",
+        "1Gi*3foo",
+        "foo",
+        "foo(",
+        "foo()",
+        "foo)",
+        "sin",
+        "sin(",
+        "sin()",
+        "sin)",
+        "sin 10",
+        "sin(1,2,3)",
+        "sin(1 )",
+        "1",
+        "1foo",
+        "bar + PI + E + 100f*2 + foo",
+        "13k + 12f - foo(1, 2)",
+        "1gi",
+        "1Gi",
+        "st(0, 123)",
+        "st(1, 123); ld(1)",
+        /* compute 1+2+...+N */
+        "st(0, 1); while(lte(ld(0), 100), st(1, ld(1)+ld(0));st(0, ld(0)+1)); ld(1)",
+        /* compute Fib(N) */
+        "st(1, 1); st(2, 2); st(0, 1); while(lte(ld(0),10), st(3, ld(1)+ld(2)); st(1, ld(2)); st(2, ld(3)); st(0, ld(0)+1)); ld(3)",
+        "while(0, 10)",
+        "st(0, 1); while(lte(ld(0),100), st(1, ld(1)+ld(0)); st(0, ld(0)+1))",
+        "isnan(1)",
+        "isnan(NAN)",
+        "floor(NAN)",
+        "floor(123.123)",
+        "floor(-123.123)",
+        "trunc(123.123)",
+        "trunc(-123.123)",
+        "ceil(123.123)",
+        "ceil(-123.123)",
+        NULL
+    };
+
+    for (expr = exprs; *expr; expr++) {
+        printf("Evaluating '%s'\n", *expr);
+        av_expr_parse_and_eval(&d, *expr,
+                               const_names, const_values,
+                               NULL, NULL, NULL, NULL, NULL, 0, NULL);
+        printf("'%s' -> %f\n\n", *expr, d);
+    }
+
+    av_expr_parse_and_eval(&d, "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",
+                           const_names, const_values,
+                           NULL, NULL, NULL, NULL, NULL, 0, NULL);
+    printf("%f == 12.7\n", d);
+    av_expr_parse_and_eval(&d, "80G/80Gi",
+                           const_names, const_values,
+                           NULL, NULL, NULL, NULL, NULL, 0, NULL);
+    printf("%f == 0.931322575\n", d);
+
+    for (i=0; i<1050; i++) {
+        START_TIMER
+            av_expr_parse_and_eval(&d, "1+(5-2)^(3-1)+1/2+sin(PI)-max(-2.2,-3.1)",
+                                   const_names, const_values,
+                                   NULL, NULL, NULL, NULL, NULL, 0, NULL);
+        STOP_TIMER("av_expr_parse_and_eval")
+    }
+    return 0;
+}
+#endif

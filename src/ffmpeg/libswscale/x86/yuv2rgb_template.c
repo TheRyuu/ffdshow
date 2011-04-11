@@ -4,20 +4,20 @@
  * Copyright (C) 2001-2007 Michael Niedermayer
  *           (c) 2010 Konstantin Shishkov
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -406,6 +406,8 @@ static inline int RENAME(yuva420_rgb32)(SwsContext *c, const uint8_t *src[],
     YUV2RGB_ENDLOOP(4)
     YUV2RGB_OPERANDS_ALPHA
     YUV2RGB_ENDFUNC
+#else
+    return 0;
 #endif
 }
 
@@ -449,5 +451,7 @@ static inline int RENAME(yuva420_bgr32)(SwsContext *c, const uint8_t *src[],
     YUV2RGB_ENDLOOP(4)
     YUV2RGB_OPERANDS_ALPHA
     YUV2RGB_ENDFUNC
+#else
+    return 0;
 #endif
 }
