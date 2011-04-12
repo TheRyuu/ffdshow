@@ -14,7 +14,7 @@
 ; Build specific options
 #define localize                  = True
 
-#define include_xvidcore          = True
+#define include_xvidcore          = False
 #define include_makeavis          = True
 #define include_plugin_avisynth   = True
 #define include_plugin_virtualdub = True
@@ -61,14 +61,12 @@
 #endif
 #ifdef PREF_CLSID_X64
   #define is64bit                = True
-  #define include_xvidcore       = False
   #define include_plugin_dscaler = False
   #define filename_suffix        = '_clsid_x64'
   #define bindir                 = '..\x64'
   #define outputdir              = '..\..\..\'
 #endif
 #ifdef PREF_YAMAGATA
-  #define include_xvidcore       = False
   #define filename_suffix        = '_Q'
 #endif
 #ifdef PREF_XXL
@@ -91,7 +89,6 @@
 #ifdef PREF_ALBAIN_X64
   #define is64bit                = True
   #define include_plugin_dscaler = False
-  #define include_xvidcore       = False
   #define filename_suffix        = '_dbt_x64'
 #endif
 #ifdef PREF_XHMIKOSR_ICL
