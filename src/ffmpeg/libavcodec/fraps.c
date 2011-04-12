@@ -3,20 +3,20 @@
  * Copyright (c) 2005 Roine Gustafsson
  * Copyright (c) 2006 Konstantin Shishkov
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -180,7 +180,7 @@ static int decode_frame(AVCodecContext *avctx,
             return -1;
         }
         /* bit 31 means same as previous pic */
-        f->pict_type = (header & (1<<31))? FF_P_TYPE : FF_I_TYPE;
+        f->pict_type = (header & (1U<<31))? FF_P_TYPE : FF_I_TYPE;
         f->key_frame = f->pict_type == FF_I_TYPE;
 
         if (f->pict_type == FF_I_TYPE) {
@@ -223,7 +223,7 @@ static int decode_frame(AVCodecContext *avctx,
             return -1;
         }
         /* bit 31 means same as previous pic */
-        f->pict_type = (header & (1<<31))? FF_P_TYPE : FF_I_TYPE;
+        f->pict_type = (header & (1U<<31))? FF_P_TYPE : FF_I_TYPE;
         f->key_frame = f->pict_type == FF_I_TYPE;
 
         if (f->pict_type == FF_I_TYPE) {
