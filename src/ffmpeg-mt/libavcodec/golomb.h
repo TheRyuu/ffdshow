@@ -37,7 +37,9 @@ extern "C" {
 #include <stdint.h>
 #include "get_bits.h"
 #include "put_bits.h"
+#ifdef HAVE_AV_CONFIG_H
 #include "libavutil/common.h"
+#endif
 
 #define FFMIN(a,b) ((a) > (b) ? (b) : (a))
 
@@ -63,16 +65,16 @@ static inline int get_ue_golomb(GetBitContext *gb){
 
     OPEN_READER(re, gb);
     /* ffdshow custom code */
-    #if defined(__INTEL_COMPILER) || defined(DEBUG)
-        #ifdef ALT_BITSTREAM_READER_LE
+#if defined(__INTEL_COMPILER) || defined(_MSC_VER)
+    #ifdef ALT_BITSTREAM_READER_LE
     re_cache= AV_RL32( ((const uint8_t *)(gb)->buffer)+(re_index>>3) ) >> (re_index&0x07);
-        #else
-    re_cache= AV_RB32( ((const uint8_t *)(gb)->buffer)+(re_index>>3) ) >> (re_index&0x07);
-        #endif
     #else
-    // ICL9.1-Release and MSVC8-DEBUG build can't process this macro properly.
-    UPDATE_CACHE(re, gb);
+    re_cache= AV_RB32( ((const uint8_t *)(gb)->buffer)+(re_index>>3) ) >> (re_index&0x07);
     #endif
+#else
+    // ICL and MSVC compilers sometimes mess up this macro
+	UPDATE_CACHE(re, gb);
+#endif
     buf=GET_CACHE(re, gb);
 
     if(buf >= (1<<27)){
