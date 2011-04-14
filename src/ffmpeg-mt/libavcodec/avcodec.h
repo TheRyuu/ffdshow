@@ -2326,7 +2326,7 @@ typedef struct AVCodecContext {
      */
     int64_t timecode_frame_start;
 
-#if LIBAVCODEC_VERSION_MAJOR < 53
+#if FF_API_REQUEST_CHANNELS
     /**
      * Decoder should decode to this many channels if it can (0 for default)
      * - encoding: unused
@@ -2726,7 +2726,7 @@ typedef struct AVCodec {
     int (*update_thread_context)(AVCodecContext *dst, const AVCodecContext *src);
     /** @} */
 
-    AVClass *priv_class;                    ///< AVClass for the private context
+    const AVClass *priv_class;              ///< AVClass for the private context
     const AVProfile *profiles;              ///< array of recognized profiles, or NULL if unknown, array is terminated by {FF_PROFILE_UNKNOWN}
 } AVCodec;
 

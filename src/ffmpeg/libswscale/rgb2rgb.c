@@ -6,20 +6,20 @@
  * Written by Nick Kurshev.
  * palette & YUV & runtime CPU stuff by Michael (michaelni@gmx.at)
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 #include <inttypes.h>
@@ -30,8 +30,6 @@
 #include "rgb2rgb.h"
 #include "swscale.h"
 #include "swscale_internal.h"
-
-#define FAST_BGR2YV12 // use 7-bit instead of 15-bit coefficients
 
 void (*rgb24tobgr32)(const uint8_t *src, uint8_t *dst, long src_size);
 void (*rgb24tobgr16)(const uint8_t *src, uint8_t *dst, long src_size);
