@@ -274,6 +274,7 @@ SRCS_C=\
     libswscale/swutils.c \
     libswscale/yuv2rgb.c \
     libswscale/sww32thread.c \
+    libswscale/x86/rgb2rgb.c \
     libswscale/x86/yuv2rgb_mmx.c \
     \
     libpostproc/postprocess.c \
