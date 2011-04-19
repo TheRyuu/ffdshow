@@ -1,18 +1,18 @@
 /*
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -266,32 +266,3 @@ void av_image_copy(uint8_t *dst_data[4], int dst_linesizes[4],
         }
     }
 }
-
-#if FF_API_OLD_IMAGE_NAMES
-void av_fill_image_max_pixsteps(int max_pixsteps[4], int max_pixstep_comps[4],
-                                const AVPixFmtDescriptor *pixdesc)
-{
-    av_image_fill_max_pixsteps(max_pixsteps, max_pixstep_comps, pixdesc);
-}
-
-int av_get_image_linesize(enum PixelFormat pix_fmt, int width, int plane)
-{
-    return av_image_get_linesize(pix_fmt, width, plane);
-}
-
-int av_fill_image_linesizes(int linesizes[4], enum PixelFormat pix_fmt, int width)
-{
-    return av_image_fill_linesizes(linesizes, pix_fmt, width);
-}
-
-int av_fill_image_pointers(uint8_t *data[4], enum PixelFormat pix_fmt, int height,
-                           uint8_t *ptr, const int linesizes[4])
-{
-    return av_image_fill_pointers(data, pix_fmt, height, ptr, linesizes);
-}
-
-int av_check_image_size(unsigned int w, unsigned int h, int log_offset, void *log_ctx)
-{
-    return av_image_check_size(w, h, log_offset, log_ctx);
-}
-#endif

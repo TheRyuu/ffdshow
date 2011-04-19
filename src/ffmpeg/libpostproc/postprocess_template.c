@@ -1,25 +1,25 @@
 /*
  * Copyright (C) 2001-2002 Michael Niedermayer (michaelni@gmx.at)
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or modify
+ * Libav is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with FFmpeg; if not, write to the Free Software
+ * along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 /**
- * @file libpostproc/postprocess_template.c
+ * @file
  * mmx/mmx2/3dnow postprocess code.
  */
 
@@ -1390,7 +1390,7 @@ DERING_CORE((%0, %1, 8)    ,(%%REGd, %1, 4),%%mm2,%%mm4,%%mm0,%%mm3,%%mm5,%%mm1,
 #endif //HAVE_ALTIVEC
 
 /**
- * Deinterlaces the given block by linearly interpolating every second line.
+ * Deinterlace the given block by linearly interpolating every second line.
  * will be called for every 8x8 block and can read & write from line 4-15
  * lines 0-3 have been passed through the deblock / dering filters already, but can be read, too.
  * lines 4-12 will be read into the deblocking filter and should be deinterlaced
@@ -1442,7 +1442,7 @@ static inline void RENAME(deInterlaceInterpolateLinear)(uint8_t src[], stride_t 
 }
 
 /**
- * Deinterlaces the given block by cubic interpolating every second line.
+ * Deinterlace the given block by cubic interpolating every second line.
  * will be called for every 8x8 block and can read & write from line 4-15
  * lines 0-3 have been passed through the deblock / dering filters already, but can be read, too.
  * lines 4-12 will be read into the deblocking filter and should be deinterlaced
@@ -1506,7 +1506,7 @@ DEINT_CUBIC((%%REGd, %1), (%0, %1, 8) , (%%REGd, %1, 4), (%%REGc)    , (%%REGc, 
 }
 
 /**
- * Deinterlaces the given block by filtering every second line with a (-1 4 2 4 -1) filter.
+ * Deinterlace the given block by filtering every second line with a (-1 4 2 4 -1) filter.
  * will be called for every 8x8 block and can read & write from line 4-15
  * lines 0-3 have been passed through the deblock / dering filters already, but can be read, too.
  * lines 4-12 will be read into the deblocking filter and should be deinterlaced
@@ -1585,7 +1585,7 @@ DEINT_FF((%%REGd, %1), (%%REGd, %1, 2), (%0, %1, 8) , (%%REGd, %1, 4))
 }
 
 /**
- * Deinterlaces the given block by filtering every line with a (-1 2 6 2 -1) filter.
+ * Deinterlace the given block by filtering every line with a (-1 2 6 2 -1) filter.
  * will be called for every 8x8 block and can read & write from line 4-15
  * lines 0-3 have been passed through the deblock / dering filters already, but can be read, too.
  * lines 4-12 will be read into the deblocking filter and should be deinterlaced
@@ -1686,7 +1686,7 @@ DEINT_L5(%%mm1, %%mm0, (%%REGd, %1, 2), (%0, %1, 8)    , (%%REGd, %1, 4))
 }
 
 /**
- * Deinterlaces the given block by filtering all lines with a (1 2 1) filter.
+ * Deinterlace the given block by filtering all lines with a (1 2 1) filter.
  * will be called for every 8x8 block and can read & write from line 4-15
  * lines 0-3 have been passed through the deblock / dering filters already, but can be read, too.
  * lines 4-12 will be read into the deblocking filter and should be deinterlaced
@@ -1788,7 +1788,7 @@ static inline void RENAME(deInterlaceBlendLinear)(uint8_t src[], stride_t stride
 }
 
 /**
- * Deinterlaces the given block by applying a median filter to every second line.
+ * Deinterlace the given block by applying a median filter to every second line.
  * will be called for every 8x8 block and can read & write from line 4-15,
  * lines 0-3 have been passed through the deblock / dering filters already, but can be read, too.
  * lines 4-12 will be read into the deblocking filter and should be deinterlaced
@@ -3006,7 +3006,7 @@ static void RENAME(postProcess)(const uint8_t src[], stride_t srcStride, uint8_t
                                 const QP_STORE_T QPs[], int QPStride, int isColor, PPContext *c);
 
 /**
- * Copies a block from src to dst and fixes the blacklevel.
+ * Copy a block from src to dst and fixes the blacklevel.
  * levelFix == 0 -> do not touch the brighness & contrast
  */
 #undef REAL_SCALED_CPY
@@ -3138,7 +3138,7 @@ SIMPLE_CPY((%%REGa, %2), (%%REGa, %2, 2), (%%REGd, %3), (%%REGd, %3, 2))
 }
 
 /**
- * Duplicates the given 8 src pixels ? times upward
+ * Duplicate the given 8 src pixels ? times upward
  */
 static inline void RENAME(duplicate)(uint8_t src[], stride_t stride)
 {
@@ -3163,7 +3163,7 @@ static inline void RENAME(duplicate)(uint8_t src[], stride_t stride)
 }
 
 /**
- * Filters array of bytes (Y or U or V values)
+ * Filter array of bytes (Y or U or V values)
  */
 static void RENAME(postProcess)(const uint8_t src[], stride_t srcStride, uint8_t dst[], stride_t dstStride, int width, int height,
                                 const QP_STORE_T QPs[], int QPStride, int isColor, PPContext *c2)

@@ -1,18 +1,18 @@
 /*
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -126,24 +126,5 @@ void av_image_copy(uint8_t *dst_data[4], int dst_linesizes[4],
 int av_image_check_size(unsigned int w, unsigned int h, int log_offset, void *log_ctx);
 
 int ff_set_systematic_pal2(uint32_t pal[256], enum PixelFormat pix_fmt);
-
-#if FF_API_OLD_IMAGE_NAMES
-attribute_deprecated
-void av_fill_image_max_pixsteps(int max_pixsteps[4], int max_pixstep_comps[4],
-                                const AVPixFmtDescriptor *pixdesc);
-
-attribute_deprecated
-int av_get_image_linesize(enum PixelFormat pix_fmt, int width, int plane);
-
-attribute_deprecated
-int av_fill_image_linesizes(int linesizes[4], enum PixelFormat pix_fmt, int width);
-
-attribute_deprecated
-int av_fill_image_pointers(uint8_t *data[4], enum PixelFormat pix_fmt, int height,
-                           uint8_t *ptr, const int linesizes[4]);
-
-attribute_deprecated
-int av_check_image_size(unsigned int w, unsigned int h, int log_offset, void *log_ctx);
-#endif
 
 #endif /* AVUTIL_IMGUTILS_H */

@@ -2,20 +2,20 @@
  * log functions
  * Copyright (c) 2003 Michel Bardiaux
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -29,10 +29,8 @@
 #include "log.h"
 #include "../../ffdebug.c"
 
-#if LIBAVUTIL_VERSION_MAJOR > 50
-static
-#endif
-int av_log_level = AV_LOG_WARNING;
+static int av_log_level = AV_LOG_INFO;
+static int flags;
 
 const char* av_default_item_name(void* ptr){
     return (*(AVClass**)ptr)->class_name;
@@ -43,7 +41,7 @@ void av_log_default_callback(void* ptr, int level, const char* fmt, va_list vl)
     static int print_prefix=1;
     static int count;
     static char line[1024], prev[1024];
-    static int detect_repeats;
+    static int is_atty;
     AVClass* avc= ptr ? *(AVClass**)ptr : NULL;
     if(level>av_log_level)
         return;
@@ -64,12 +62,13 @@ void av_log_default_callback(void* ptr, int level, const char* fmt, va_list vl)
     print_prefix= line[strlen(line)-1] == '\n';
 
 #if HAVE_ISATTY
-    if(!detect_repeats) detect_repeats= isatty(2) ? 1 : -1;
+    if(!is_atty) is_atty= isatty(2) ? 1 : -1;
 #endif
 
-    if(print_prefix && detect_repeats==1 && !strcmp(line, prev)){
+    if(print_prefix && (flags & AV_LOG_SKIP_REPEATED) && !strcmp(line, prev)){
         count++;
-        fprintf(stderr, "    Last message repeated %d times\r", count);
+        if(is_atty==1)
+            fprintf(stderr, "    Last message repeated %d times\r", count);
         return;
     }
     if(count>0){
@@ -111,6 +110,11 @@ int av_log_get_level(void)
 void av_log_set_level(int level)
 {
     av_log_level = level;
+}
+
+void av_log_set_flags(int arg)
+{
+    flags= arg;
 }
 
 void av_log_set_callback(void (*callback)(void*, int, const char*, va_list))

@@ -1,20 +1,20 @@
 /*
  * Copyright (C) 2001-2003 Michael Niedermayer (michaelni@gmx.at)
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or modify
+ * Libav is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with FFmpeg; if not, write to the Free Software
+ * along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -22,7 +22,7 @@
 #define POSTPROC_POSTPROCESS_H
 
 /**
- * @file libpostproc/postprocess.h
+ * @file
  * @brief
  *     external postprocessing API
  */
@@ -34,8 +34,8 @@ extern "C" {
 #include "libavutil/avutil.h"
 #include "ffImgfmt.h"
 
-#define LIBPOSTPROC_VERSION_MAJOR 51
-#define LIBPOSTPROC_VERSION_MINOR  2
+#define LIBPOSTPROC_VERSION_MAJOR 52
+#define LIBPOSTPROC_VERSION_MINOR  0
 #define LIBPOSTPROC_VERSION_MICRO  0
 
 #define LIBPOSTPROC_VERSION_INT AV_VERSION_INT(LIBPOSTPROC_VERSION_MAJOR, \
@@ -49,17 +49,17 @@ extern "C" {
 #define LIBPOSTPROC_IDENT       "postproc" AV_STRINGIFY(LIBPOSTPROC_VERSION)
 
 /**
- * Returns the LIBPOSTPROC_VERSION_INT constant.
+ * Return the LIBPOSTPROC_VERSION_INT constant.
  */
 unsigned postproc_version(void);
 
 /**
- * Returns the libpostproc build-time configuration.
+ * Return the libpostproc build-time configuration.
  */
 const char *postproc_configuration(void);
 
 /**
- * Returns the libpostproc license.
+ * Return the libpostproc license.
  */
 const char *postproc_license(void);
 

@@ -37,7 +37,7 @@
  *
  * You will know you have these parameters passed correctly when the decoder
  * correctly decodes this file:
- *  http://samples.mplayerhq.hu/V-codecs/SVQ3/Vertical400kbit.sorenson3.mov
+ *  http://samples.libav.org/V-codecs/SVQ3/Vertical400kbit.sorenson3.mov
  */
 #include "internal.h"
 #include "dsputil.h"
@@ -50,6 +50,7 @@
 #include "h264_mvpred.h"
 #include "golomb.h"
 #include "rectangle.h"
+#include "vdpau_internal.h"
 
 #if CONFIG_ZLIB
 #include <zlib.h>

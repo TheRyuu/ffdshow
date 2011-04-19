@@ -124,7 +124,7 @@ void sws_rgb2rgb_init(int flags)
 #endif /* HAVE_MMX2 || HAVE_AMD3DNOW || HAVE_MMX */
 }
 
-#if LIBSWSCALE_VERSION_MAJOR < 1
+#if LIBSWSCALE_VERSION_MAJOR < 2
 void palette8topacked32(const uint8_t *src, uint8_t *dst, long num_pixels, const uint8_t *palette)
 {
     sws_convertPalette8ToPacked32(src, dst, num_pixels, palette);
