@@ -79,7 +79,6 @@ void TinPage::translate(void)
     cbxClear(IDC_CBX_INCSP);
     cbxAdd(IDC_CBX_INCSP,_(IDC_CBX_INCSP,_l("all YUV")),FOURCC_MASK_YUV);
     cbxAdd(IDC_CBX_INCSP,_(IDC_CBX_INCSP,_l("all RGB")),FOURCC_MASK_RGB);
-    cbxAdd(IDC_CBX_INCSP,_(IDC_CBX_INCSP,_l("8-bit palletized")),FOURCC_MASK_PAL);
     for (int i=0; cspFccs[i].name; i++) {
         cbxAdd(IDC_CBX_INCSP,cspFccs[i].name,cspFccs[i].fcc);
     }

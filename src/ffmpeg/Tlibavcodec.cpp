@@ -119,16 +119,6 @@ Tlibavcodec::Tlibavcodec(const Tconfig *config):refcount(0)
  dll->loadFunction(sws_freeFilter, "sws_freeFilter");
  dll->loadFunction(sws_scale, "sws_scale");
 
- dll->loadFunction(sws_convertPalette8ToPacked32, "sws_convertPalette8ToPacked32");
- dll->loadFunction(sws_convertPalette8ToPacked24, "sws_convertPalette8ToPacked24");
- dll->loadFunction(palette8torgb32, "palette8torgb32");
- dll->loadFunction(palette8tobgr32, "palette8tobgr32");
- dll->loadFunction(palette8torgb24, "palette8torgb24");
- dll->loadFunction(palette8tobgr24, "palette8tobgr24");
- dll->loadFunction(palette8torgb16, "palette8torgb16");
- dll->loadFunction(palette8tobgr16, "palette8tobgr16");
- dll->loadFunction(palette8torgb15, "palette8torgb15");
- dll->loadFunction(palette8tobgr15, "palette8tobgr15");
  dll->loadFunction(GetCPUCount, "GetCPUCount");
  dll->loadFunction(sws_getConstVec, "sws_getConstVec");
  dll->loadFunction(sws_getGaussianVec, "sws_getGaussianVec");

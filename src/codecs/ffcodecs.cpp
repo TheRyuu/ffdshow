@@ -306,9 +306,6 @@ const char_t *getCodecName(CodecID codecId)
      case  CODEC_ID_410P              : return _l("raw");
      case  CODEC_ID_NV12              : return _l("raw");
      case  CODEC_ID_NV21              : return _l("raw");
-     case  CODEC_ID_PAL1              : return _l("raw");
-     case  CODEC_ID_PAL4              : return _l("raw");
-     case  CODEC_ID_PAL8              : return _l("raw");
      case  CODEC_ID_YV16              : return _l("raw");
      case  CODEC_ID_LPCM              : return _l("raw LPCM");
      case  CODEC_ID_PCM               : return _l("raw PCM");

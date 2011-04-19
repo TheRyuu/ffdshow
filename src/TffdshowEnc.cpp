@@ -764,10 +764,6 @@ STDMETHODIMP_(LRESULT) TffdshowEnc::compress(const BITMAPINFOHEADER *inhdr,const
         csp_yuv_order(pict.csp,pict.data,pict.stride);
         csp_vflip(pict.csp,&pict.cspInfo,pict.data,pict.stride,dy);
     }
-    if (csp_isPAL(pict.csp)) {
-        pict.palette.pal=(unsigned char*)(inhdr+1);
-        pict.palette.numcolors=inhdr->biClrUsed;
-    }
 
     if (!coSettings->isProc || !ffproc) {
         bool directYV12=false;

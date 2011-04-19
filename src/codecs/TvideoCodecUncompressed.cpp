@@ -122,11 +122,6 @@ bool TvideoCodecUncompressed::beginDecompress(TffPictBase &pict,FOURCC infcc,con
         case CODEC_ID_YV16:
             csp=FF_CSP_422P|FF_CSP_FLAGS_YUV_ADJ;
             break;
-            //case CODEC_ID_PAL1:csp=FF_CSP_PAL1;break;
-            //case CODEC_ID_PAL4:csp=FF_CSP_PAL4;break;
-        case CODEC_ID_PAL8:
-            csp=FF_CSP_PAL8|FF_CSP_FLAGS_VFLIP;
-            break;
         default:
             return false;
     }
@@ -138,15 +133,6 @@ bool TvideoCodecUncompressed::beginDecompress(TffPictBase &pict,FOURCC infcc,con
         if (bih.biHeight < 0) {
             csp &= ~FF_CSP_FLAGS_VFLIP;
         }
-    } else if (csp_isPAL(csp)) {
-        BITMAPINFOHEADER bih;
-        ExtractBIH(mt,&bih);
-        memset(palette,0,sizeof(palette));
-        Textradata extradata(mt);
-        if (extradata.data && extradata.size) {
-            memcpy(palette,extradata.data,std::min(extradata.size,sizeof(RGBQUAD)*size_t(1<<bih.biBitCount)));
-        }
-        stride[0]=(((pict.rectFull.dx*cspInfo->Bpp<<3)+31)&~31)>>3;
     } else {
         stride[0]=cspInfo->Bpp*pict.rectFull.dx;
     }

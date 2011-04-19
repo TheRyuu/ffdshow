@@ -507,7 +507,6 @@ void TcodecsPageVideo::fillCodecs(void)
         {_l("all supported")   ,FOURCC_MASK_ALL},
         {_l("all YUV")         ,FOURCC_MASK_YUV},
         {_l("all RGB")         ,FOURCC_MASK_RGB},
-        {_l("8-bit palletized"),FOURCC_MASK_PAL},
         NULL,0
     };
 

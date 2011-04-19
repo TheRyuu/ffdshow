@@ -110,8 +110,6 @@ const char_t* Tconvert::getModeName(int mode)
             return _l("mmx_ConvertUYVYtoRGB24");
         case MODE_ffdshow_converters:
             return _l("ffdshow converters");
-        case MODE_palette8torgb:
-            return _l("palette8torgb");
         case MODE_CLJR:
             return _l("CLJR");
         case MODE_xvidImage_input:
@@ -365,44 +363,6 @@ int Tconvert::convert(int incsp0,
                     mode = MODE_ffdshow_converters;
                 }
                 break;
-            case FF_CSP_PAL8:
-                switch (outcsp1) {
-                        // libmplayer refers to the write order, FF_CSP_ enum refers to the "memory byte order",
-                        // which under x86 is reversed, see the comment above the FF_CSP_ enum definition.
-                        //TODO : check if the write order concerns libmplayer only or libavcodec (which is what I suspect)
-                        // So I kept the same behaviour as before
-                    case FF_CSP_RGB32:
-                        palette8torgb=libavcodec->palette8tobgr32;
-                        break;
-                    case FF_CSP_BGR32:
-                        palette8torgb=libavcodec->palette8torgb32;
-                        break;
-                    case FF_CSP_RGB24:
-                        palette8torgb=libavcodec->palette8tobgr24;
-                        break;
-                    case FF_CSP_BGR24:
-                        palette8torgb=libavcodec->palette8torgb24;
-                        break;
-                    case FF_CSP_RGB16:
-                        palette8torgb=libavcodec->palette8tobgr16;
-                        break;
-                    case FF_CSP_BGR16:
-                        palette8torgb=libavcodec->palette8torgb16;
-                        break;
-                    case FF_CSP_RGB15:
-                        palette8torgb=libavcodec->palette8tobgr15;
-                        break;
-                    case FF_CSP_BGR15:
-                        palette8torgb=libavcodec->palette8torgb15;
-                        break;
-                    default:
-                        palette8torgb=NULL;
-                        break;
-                }
-                if (palette8torgb) {
-                    mode=MODE_palette8torgb;
-                }
-                break;
             case FF_CSP_CLJR:
                 if (outcsp1==FF_CSP_420P) {
                     mode=MODE_CLJR;
@@ -423,7 +383,6 @@ int Tconvert::convert(int incsp0,
                     mode=MODE_swscale;
                 } else {
                     mode=MODE_fallback;
-                    tmpcsp=(incsp1==FF_CSP_PAL8)?FF_CSP_RGB32:FF_CSP_420P;
                     if (tmpcsp==FF_CSP_RGB32) {
                         tmpStride[0]=4*(dx/16+2)*16;
                         tmp[0]=(unsigned char*)aligned_malloc(tmpStride[0]*dy);
@@ -565,13 +524,6 @@ int Tconvert::convert(int incsp0,
             } else {
                 Tmmx_ConvertYUY2toRGB<1,1,PcRGB>::mmx_ConvertYUY2toRGB(src[0],dst[0],src[0]+dy*srcStride[0],srcStride[0],dstStride[0],dx*2,matrix);
             }
-            return dy;
-        }
-        case MODE_palette8torgb: {
-            if (srcpal && srcpal->pal)
-                for (unsigned int y=0; y<dy; y++) {
-                    palette8torgb(src[0]+srcStride[0]*y,dst[0]+dstStride[0]*y,dx,srcpal->pal);
-                }
             return dy;
         }
         case MODE_CLJR: {

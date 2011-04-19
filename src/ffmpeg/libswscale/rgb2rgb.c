@@ -124,7 +124,7 @@ void sws_rgb2rgb_init(int flags)
 #endif /* HAVE_MMX2 || HAVE_AMD3DNOW || HAVE_MMX */
 }
 
-#if LIBSWSCALE_VERSION_MAJOR < 2
+#if LIBSWSCALE_VERSION_MAJOR < 1
 void palette8topacked32(const uint8_t *src, uint8_t *dst, long num_pixels, const uint8_t *palette)
 {
     sws_convertPalette8ToPacked32(src, dst, num_pixels, palette);
@@ -136,108 +136,6 @@ void palette8topacked24(const uint8_t *src, uint8_t *dst, long num_pixels, const
 }
 
 /**
- * Pallete is assumed to contain bgr32
- */
-void palette8torgb32(const uint8_t *src, uint8_t *dst, long num_pixels, const uint8_t *palette)
-{
-	long i;
-
-/*
-        for(i=0; i<num_pixels; i++)
-                ((unsigned *)dst)[i] = ((unsigned *)palette)[ src[i] ];
-*/
-
-	for(i=0; i<num_pixels; i++)
-	{
-		#ifdef WORDS_BIGENDIAN
-		dst[3]= palette[ src[i]*4+2 ];
-		dst[2]= palette[ src[i]*4+1 ];
-		dst[1]= palette[ src[i]*4+0 ];
-		#else
-		//FIXME slow?
-		dst[0]= palette[ src[i]*4+2 ];
-		dst[1]= palette[ src[i]*4+1 ];
-		dst[2]= palette[ src[i]*4+0 ];
-//		dst[3]= 0; /* do we need this cleansing? */
-		#endif
-		dst+= 4;
-	}
-}
-
-/**
- * Pallete is assumed to contain rgb32
- * FFDShow method added
- */
-void palette8tobgr32(const uint8_t *src, uint8_t *dst, long num_pixels, const uint8_t *palette)
-{
-	long i;
-
-/*
-        for(i=0; i<num_pixels; i++)
-                ((unsigned *)dst)[i] = ((unsigned *)palette)[ src[i] ];
-*/
-
-	for(i=0; i<num_pixels; i++)
-	{
-		#ifdef WORDS_BIGENDIAN
-		dst[3]= palette[ src[i]*4+0 ];
-		dst[2]= palette[ src[i]*4+1 ];
-		dst[1]= palette[ src[i]*4+2 ];
-		#else
-		//FIXME slow?
-		dst[0]= palette[ src[i]*4+0 ];
-		dst[1]= palette[ src[i]*4+1 ];
-		dst[2]= palette[ src[i]*4+2 ];
-//		dst[3]= 0; /* do we need this cleansing? */
-		#endif
-		dst+= 4;
-	}
-}
-
-/**
- * Pallete is assumed to contain bgr32
- */
-void palette8torgb24(const uint8_t *src, uint8_t *dst, long num_pixels, const uint8_t *palette)
-{
-	long i;
-/*
-        writes 1 byte o much and might cause alignment issues on some architectures?
-        for(i=0; i<num_pixels; i++)
-                ((unsigned *)(&dst[i*3])) = ((unsigned *)palette)[ src[i] ];
-*/
-        for(i=0; i<num_pixels; i++)
-        {
-                //FIXME slow?
-		dst[0]= palette[ src[i]*4+2 ];
-		dst[1]= palette[ src[i]*4+1 ];
-		dst[2]= palette[ src[i]*4+0 ];
-		dst+= 3;
-	}
-}
-
-/**
- * Pallete is assumed to contain rgb32
- */
-void palette8tobgr24(const uint8_t *src, uint8_t *dst, long num_pixels, const uint8_t *palette)
-{
-	long i;
-/*
-        writes 1 byte o much and might cause alignment issues on some architectures?
-        for(i=0; i<num_pixels; i++)
-                ((unsigned *)(&dst[i*3])) = ((unsigned *)palette)[ src[i] ];
-*/
-        for(i=0; i<num_pixels; i++)
-        {
-                //FIXME slow?
-		dst[0]= palette[ src[i]*4+0 ];
-		dst[1]= palette[ src[i]*4+1 ];
-		dst[2]= palette[ src[i]*4+2 ];
-		dst+= 3;
-	}
-}
-
-
-/**
  * Palette is assumed to contain BGR16, see rgb32to16 to convert the palette.
  */
 void palette8torgb16(const uint8_t *src, uint8_t *dst, long num_pixels, const uint8_t *palette)
@@ -247,22 +145,6 @@ void palette8torgb16(const uint8_t *src, uint8_t *dst, long num_pixels, const ui
         ((uint16_t *)dst)[i] = ((const uint16_t *)palette)[src[i]];
 }
 void palette8tobgr16(const uint8_t *src, uint8_t *dst, long num_pixels, const uint8_t *palette)
-{
-    long i;
-    for (i=0; i<num_pixels; i++)
-        ((uint16_t *)dst)[i] = av_bswap16(((const uint16_t *)palette)[src[i]]);
-}
-
-/**
- * Palette is assumed to contain BGR15, see rgb32to15 to convert the palette.
- */
-void palette8torgb15(const uint8_t *src, uint8_t *dst, long num_pixels, const uint8_t *palette)
-{
-    long i;
-    for (i=0; i<num_pixels; i++)
-        ((uint16_t *)dst)[i] = ((const uint16_t *)palette)[src[i]];
-}
-void palette8tobgr15(const uint8_t *src, uint8_t *dst, long num_pixels, const uint8_t *palette)
 {
     long i;
     for (i=0; i<num_pixels; i++)

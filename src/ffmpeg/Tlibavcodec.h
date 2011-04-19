@@ -129,16 +129,6 @@ public:
  SwsVector *(*sws_getGaussianVec)(double variance, double quality);
  void (*sws_normalizeVec)(SwsVector *a, double height);
  void (*sws_freeVec)(SwsVector *a);
- void (*sws_convertPalette8ToPacked32)(const uint8_t *src, uint8_t *dst, long num_pixels, const uint8_t *palette);
- void (*sws_convertPalette8ToPacked24)(const uint8_t *src, uint8_t *dst, long num_pixels, const uint8_t *palette);
- void (*palette8torgb32)(const uint8_t *src, uint8_t *dst, long num_pixels, const uint8_t *palette);
- void (*palette8tobgr32)(const uint8_t *src, uint8_t *dst, long num_pixels, const uint8_t *palette);
- void (*palette8torgb24)(const uint8_t *src, uint8_t *dst, long num_pixels, const uint8_t *palette);
- void (*palette8tobgr24)(const uint8_t *src, uint8_t *dst, long num_pixels, const uint8_t *palette);
- void (*palette8torgb16)(const uint8_t *src, uint8_t *dst, long num_pixels, const uint8_t *palette);
- void (*palette8tobgr16)(const uint8_t *src, uint8_t *dst, long num_pixels, const uint8_t *palette);
- void (*palette8torgb15)(const uint8_t *src, uint8_t *dst, long num_pixels, const uint8_t *palette);
- void (*palette8tobgr15)(const uint8_t *src, uint8_t *dst, long num_pixels, const uint8_t *palette);
  int (*GetCPUCount)(void);
 
  //libpostproc imports

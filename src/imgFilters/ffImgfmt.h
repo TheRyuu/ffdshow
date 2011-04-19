@@ -39,10 +39,9 @@ enum ffdshow_colorspaces {
     FF_CSP_RGB15      = 1U<<17,
     FF_CSP_RGB16      = 1U<<18,
 
-    FF_CSP_PAL8       = 1U<<19,
-    FF_CSP_CLJR       = 1U<<20,
-    FF_CSP_Y800       = 1U<<21,
-    FF_CSP_NV12       = 1U<<22
+    FF_CSP_CLJR       = 1U<<19,
+    FF_CSP_Y800       = 1U<<20,
+    FF_CSP_NV12       = 1U<<21
 };
 
 #define FF_CSPS_NUM 24
@@ -148,8 +147,6 @@ static __inline int csp_lavc2ffdshow(enum PixelFormat pix_fmt)
             return FF_CSP_RGB15;
         case PIX_FMT_RGB565  :
             return FF_CSP_RGB16;
-        case PIX_FMT_PAL8    :
-            return FF_CSP_PAL8;
         case PIX_FMT_GRAY8   :
             return FF_CSP_Y800;
         case PIX_FMT_NV12    :
@@ -185,8 +182,6 @@ static __inline enum PixelFormat csp_ffdshow2lavc(int pix_fmt)
             return PIX_FMT_RGB555;
         case FF_CSP_RGB16:
             return PIX_FMT_RGB565;
-        case FF_CSP_PAL8:
-            return PIX_FMT_PAL8;
         case FF_CSP_Y800:
             return PIX_FMT_GRAY8;
         case FF_CSP_NV12:
@@ -345,10 +340,6 @@ static __inline int csp_isRGB_BGR(int x)
 static __inline int csp_isRGB(int x)
 {
     return csp_isRGB_RGB(x)|csp_isRGB_BGR(x);
-}
-static __inline int csp_isPAL(int x)
-{
-    return x&FF_CSPS_MASK&FF_CSP_PAL8;
 }
 static __inline int csp_supXvid(int x)
 {

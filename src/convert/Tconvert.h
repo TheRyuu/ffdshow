@@ -50,7 +50,6 @@ private:
         MODE_mmx_ConvertYUY2toRGB24,
         MODE_mmx_ConvertUYVYtoRGB32,
         MODE_mmx_ConvertUYVYtoRGB24,
-        MODE_palette8torgb,
         MODE_CLJR,
         MODE_xvidImage_input,
         MODE_swscale,
