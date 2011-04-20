@@ -179,7 +179,7 @@ int decode_slice_header_noexecute(H264Context *h){
     }
     h->sps = *h0->sps_buffers[h->pps.sps_id];
 
-    s->avctx->profile = h->sps.profile_idc;
+    s->avctx->profile = ff_h264_get_profile(&h->sps);
     s->avctx->level   = h->sps.level_idc;
     s->avctx->refs    = h->sps.ref_frame_count;
 
@@ -233,8 +233,10 @@ int decode_slice_header_noexecute(H264Context *h){
                       h->sps.num_units_in_tick * 2, den, 1<<30);
         }
 
-        if (MPV_common_init(s) < 0)
+        if (MPV_common_init(s) < 0){
+            av_log(h->s.avctx, AV_LOG_ERROR, "MPV_common_init() failed\n");
             return -1;
+        }
         s->first_field = 0;
         h->prev_interlaced_frame = 1;
 
@@ -552,8 +554,10 @@ int decode_slice_header_noexecute(H264Context *h){
                 av_log(s->avctx, AV_LOG_INFO, "Cannot parallelize deblocking type 1, decoding such frames in sequential order\n");
                 h0->single_decode_warning = 1;
             }
-            if(h != h0)
-                return 1; // deblocking switched inside frame
+            if(h != h0){
+                av_log(h->s.avctx, AV_LOG_ERROR, "deblocking switched inside frame\n");
+                return 1;
+            }
         }
     }
     h->qp_thresh= 15 + 52 - FFMIN(h->slice_alpha_c0_offset, h->slice_beta_offset) - FFMAX3(0, h->pps.chroma_qp_index_offset[0], h->pps.chroma_qp_index_offset[1]);
@@ -712,8 +716,8 @@ static int decode_nal_units_noexecute(H264Context *h, const uint8_t *buf, int bu
         buf_index += consumed;
 
         /* ffdshow custom code */
-        if(  (s->hurry_up == 1 && hx->nal_ref_idc  == 0) //FIXME do not discard SEI id
-           ||(avctx->skip_frame >= AVDISCARD_NONREF && hx->nal_ref_idc  == 0))
+        //FIXME do not discard SEI id
+        if((avctx->skip_frame >= AVDISCARD_NONREF && hx->nal_ref_idc  == 0))
             continue;
 
       again:
@@ -740,7 +744,7 @@ static int decode_nal_units_noexecute(H264Context *h, const uint8_t *buf, int bu
             s->current_picture_ptr->key_frame |=
                     (hx->nal_unit_type == NAL_IDR_SLICE) ||
                     (h->sei_recovery_frame_cnt >= 0);
-            if(hx->redundant_pic_count==0 && hx->s.hurry_up < 5
+            if(hx->redundant_pic_count==0
                && (avctx->skip_frame < AVDISCARD_NONREF || hx->nal_ref_idc)
                && (avctx->skip_frame < AVDISCARD_BIDIR  || hx->slice_type_nos!=FF_B_TYPE)
                && (avctx->skip_frame < AVDISCARD_NONKEY || hx->slice_type_nos==FF_I_TYPE)
@@ -770,7 +774,6 @@ static int decode_nal_units_noexecute(H264Context *h, const uint8_t *buf, int bu
 
             if(hx->redundant_pic_count==0 && hx->intra_gb_ptr && hx->s.data_partitioning
                && s->context_initialized
-               && s->hurry_up < 5
                && (avctx->skip_frame < AVDISCARD_NONREF || hx->nal_ref_idc)
                && (avctx->skip_frame < AVDISCARD_BIDIR  || hx->slice_type_nos!=FF_B_TYPE)
                && (avctx->skip_frame < AVDISCARD_NONKEY || hx->slice_type_nos==FF_I_TYPE)
@@ -892,7 +895,7 @@ int av_h264_decode_frame(struct AVCodecContext* avctx, int* nOutPOC, int64_t* rt
     }
 
     if(!(s->flags2 & CODEC_FLAG2_CHUNKS) && !s->current_picture_ptr){
-        if (avctx->skip_frame >= AVDISCARD_NONREF || s->hurry_up) return 0;
+        if (avctx->skip_frame >= AVDISCARD_NONREF) return 0;
         av_log(avctx, AV_LOG_ERROR, "no frame!\n");
         return -1;
     }

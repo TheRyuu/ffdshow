@@ -2,20 +2,20 @@
  * Misc image conversion routines
  * Copyright (c) 2001, 2002, 2003 Fabrice Bellard
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -420,23 +420,6 @@ int ff_is_hwaccel_pix_fmt(enum PixelFormat pix_fmt)
 {
     return av_pix_fmt_descriptors[pix_fmt].flags & PIX_FMT_HWACCEL;
 }
-
-#if LIBAVCODEC_VERSION_MAJOR < 53
-int ff_set_systematic_pal(uint32_t pal[256], enum PixelFormat pix_fmt){
-    return ff_set_systematic_pal2(pal, pix_fmt);
-}
-
-int ff_fill_linesize(AVPicture *picture, enum PixelFormat pix_fmt, int width)
-{
-    return av_image_fill_linesizes(picture->linesize, pix_fmt, width);
-}
-
-int ff_fill_pointer(AVPicture *picture, uint8_t *ptr, enum PixelFormat pix_fmt,
-                    int height)
-{
-    return av_image_fill_pointers(picture->data, pix_fmt, height, ptr, picture->linesize);
-}
-#endif
 
 static int avg_bits_per_pixel(enum PixelFormat pix_fmt)
 {

@@ -3,20 +3,20 @@
  * Copyright (c) 2000, 2001, 2002 Fabrice Bellard
  * Copyright (c) 2002-2004 Michael Niedermayer <michaelni@gmx.at>
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -94,22 +94,13 @@ void ff_vp3_idct_dc_add_c(uint8_t *dest/*align 8*/, int line_size, const DCTELEM
 void ff_vp3_v_loop_filter_c(uint8_t *src, int stride, int *bounding_values);
 void ff_vp3_h_loop_filter_c(uint8_t *src, int stride, int *bounding_values);
 
-/* 1/2^n downscaling functions from imgconvert.c */
-#if LIBAVCODEC_VERSION_MAJOR < 53
-/**
- * @deprecated Use av_image_copy_plane() instead.
- */
-attribute_deprecated
-void ff_img_copy_plane(uint8_t *dst, int dst_wrap, const uint8_t *src, int src_wrap, int width, int height);
-#endif
-
 void ff_gmc_c(uint8_t *dst, uint8_t *src, int stride, int h, int ox, int oy,
               int dxx, int dxy, int dyx, int dyy, int shift, int r, int width, int height);
 
 /* minimum alignment rules ;)
 If you notice errors in the align stuff, need more alignment for some ASM code
 for some CPU or need to use a function with less aligned data then send a mail
-to the ffmpeg-devel mailing list, ...
+to the libav-devel mailing list, ...
 
 !warning These alignments might not match reality, (missing attribute((align))
 stuff somewhere possible).
@@ -392,11 +383,7 @@ void dsputil_init_vis(DSPContext* c, AVCodecContext *avctx);
 
 static inline void emms(void)
 {
- #if defined(__INTEL_COMPILER) || defined(_MSC_VER)
-    __asm emms;
- #else
     __asm__ volatile ("emms;":::"memory");
- #endif
 }
 
 #define emms_c() emms()
@@ -502,6 +489,8 @@ static inline void copy_block17(uint8_t *dst, const uint8_t *src, int dstStride,
         src+=srcStride;
     }
 }
+
+/* ffdshow custom code begin */
 
 const char* avcodec_get_current_idct_mmx(AVCodecContext *avctx,DSPContext *c);
 
