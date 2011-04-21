@@ -226,14 +226,6 @@ struct SwsContext *sws_getContextEx(int srcW, int srcH, enum PixelFormat srcForm
  */
 int sws_scale(struct SwsContext *context, const uint8_t* const srcSlice[], const stride_t srcStride[],
               int srcSliceY, int srcSliceH, uint8_t* const dst[], const stride_t dstStride[]);
-#if LIBSWSCALE_VERSION_MAJOR < 1
-/**
- * @deprecated Use sws_scale() instead.
- */
-int sws_scale_ordered(struct SwsContext *context, const uint8_t* const src[],
-		stride_t srcStride[], int srcSliceY, int srcSliceH,
-        uint8_t* dst[], stride_t dstStride[]) attribute_deprecated;
-#endif
 
 /**
  * @param inv_table the yuv2rgb coefficients, normally ff_yuv2rgb_coeffs[x]
@@ -293,13 +285,6 @@ void sws_shiftVec(SwsVector *a, int shift);
  * with the same coefficients as a.
  */
 SwsVector *sws_cloneVec(SwsVector *a);
-
-#if LIBSWSCALE_VERSION_MAJOR < 1
-/**
- * @deprecated Use sws_printVec2() instead.
- */
-attribute_deprecated void sws_printVec(SwsVector *a);
-#endif
 
 /**
  * Prints with av_log() a textual representation of the vector a

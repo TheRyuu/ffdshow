@@ -113,6 +113,7 @@
   #define HAVE_LRINTF 1
   #define HAVE_ROUND 1
   #define HAVE_ROUNDF 1
+  #define HAVE_TRUNC 1
   #define HAVE_TRUNCF 1
 #else
   #define HAVE_EXP2 1
@@ -124,6 +125,7 @@
   #define HAVE_LRINTF 0
   #define HAVE_ROUND 0
   #define HAVE_ROUNDF 1
+  #define HAVE_TRUNC 1
   #define HAVE_TRUNCF 1
   #define rint(x) (int)(x+0.5)
   #define cbrtf(x) pow((float)x, (float)1.0/3)

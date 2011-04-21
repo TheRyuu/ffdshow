@@ -1977,14 +1977,6 @@ int sws_scale(SwsContext *c, const uint8_t* const src[], const stride_t srcStrid
     }
 }
 
-#if LIBSWSCALE_VERSION_MAJOR < 1
-int sws_scale_ordered(SwsContext *c, const uint8_t* const src[], stride_t srcStride[], int srcSliceY,
-                      int srcSliceH, uint8_t* dst[], stride_t dstStride[])
-{
-    return sws_scale(c, src, srcStride, srcSliceY, srcSliceH, dst, dstStride);
-}
-#endif
-
 /* Convert the palette to the same packed 32-bit format as the palette */
 void sws_convertPalette8ToPacked32(const uint8_t *src, uint8_t *dst, long num_pixels, const uint8_t *palette)
 {

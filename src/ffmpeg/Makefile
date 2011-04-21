@@ -139,7 +139,6 @@ SRCS_C=\
     libavcodec/msvideo1.c \
     libavcodec/nellymoser.c \
     libavcodec/nellymoserdec.c \
-    libavcodec/opt.c \
     libavcodec/options.c \
     libavcodec/parser.c \
     libavcodec/pcm.c \

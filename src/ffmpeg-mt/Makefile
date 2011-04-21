@@ -31,7 +31,6 @@ SRCS_C=\
     libavcodec/mpeg4video.c \
     libavcodec/mpeg4videodec.c \
     libavcodec/mpegvideo.c \
-    libavcodec/opt.c \
     libavcodec/options.c \
     libavcodec/parser.c \
     libavcodec/pthread.c \
