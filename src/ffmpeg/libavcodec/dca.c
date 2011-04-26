@@ -5,20 +5,20 @@
  * Copyright (C) 2006 Benjamin Larsson
  * Copyright (C) 2007 Konstantin Shishkov
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -1803,7 +1803,7 @@ static int dca_decode_frame(AVCodecContext * avctx,
 
 
     /* There is nothing that prevents a dts frame to change channel configuration
-       but FFmpeg doesn't support that so only set the channels if it is previously
+       but Libav doesn't support that so only set the channels if it is previously
        unset. Ideally during the first probe for channels the crc should be checked
        and only set avctx->channels when the crc is ok. Right now the decoder could
        set the channels based on a broken first frame.*/

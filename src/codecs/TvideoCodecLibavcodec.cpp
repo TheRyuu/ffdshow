@@ -163,12 +163,14 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
     oldpict.rtStop = 0;
     h264_on_MPEG2_system = false;
 
-    int thread_type = FF_THREAD_SLICE;
     int numthreads=deci->getParam2(IDFF_numLAVCdecThreads);
-
+    int thread_type = 0;
     if (numthreads>1 && (COMPILE_AS_FFMPEG_MT || sup_threads_dec_frame(codecId))) {
         thread_type = FF_THREAD_FRAME;
+    } else if (numthreads>1 && sup_threads_dec_slice(codecId)) {
+        thread_type = FF_THREAD_SLICE;	
     }
+    
     #if COMPILE_AS_FFMPEG_MT
     if (codecId == CODEC_ID_H264_MT) {
         codecId = CODEC_ID_H264;
@@ -179,21 +181,21 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
     if (codecId == CODEC_ID_THEORA_MT) {
         codecId = CODEC_ID_THEORA;
     }
-	if (codecId == CODEC_ID_HUFFYUV_MT) {
+    if (codecId == CODEC_ID_HUFFYUV_MT) {
         codecId = CODEC_ID_HUFFYUV;
     }
-	if (codecId == CODEC_ID_FFVHUFF_MT) {
+    if (codecId == CODEC_ID_FFVHUFF_MT) {
         codecId = CODEC_ID_FFVHUFF;
     }
-	if (codecId == CODEC_ID_MPEG4_MT) {
+    if (codecId == CODEC_ID_MPEG4_MT) {
         codecId = CODEC_ID_MPEG4;
     }
     #endif
 
-    if (numthreads>1 && (COMPILE_AS_FFMPEG_MT || sup_threads_dec_frame(codecId) || sup_threads_dec_slice(codecId)) ) {
-        threadcount=numthreads;
+    if (numthreads>1 && thread_type!=0) {
+        threadcount = numthreads;
     } else {
-        threadcount=1;        
+        threadcount = 1;        
     }
 	
     avcodec=libavcodec->avcodec_find_decoder(codecId);
@@ -1537,16 +1539,16 @@ HRESULT TvideoCodecLibavcodec::compress(const TffPict &pict,TencFrameParams &par
 
     switch (params.frametype) {
         case FRAME_TYPE::I:
-            frame->pict_type=FF_I_TYPE;
+            frame->pict_type=AV_PICTURE_TYPE_I;
             break;
         case FRAME_TYPE::P:
-            frame->pict_type=FF_P_TYPE;
+            frame->pict_type=AV_PICTURE_TYPE_P;
             break;
         case FRAME_TYPE::B:
-            frame->pict_type=FF_B_TYPE;
+            frame->pict_type=AV_PICTURE_TYPE_B;
             break;
         default:
-            frame->pict_type=0;
+            //frame->pict_type=0;
             break;
     }
     bool flushing=!pict.data[0];

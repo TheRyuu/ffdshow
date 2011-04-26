@@ -62,6 +62,7 @@ SRCS_C=\
     libavutil/opt.c \
     libavutil/pixdesc.c \
     libavutil/rational.c \
+    libavutil/utils.c \
     \
     libavutil/x86/cpu.c \
 

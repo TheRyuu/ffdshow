@@ -859,18 +859,11 @@ void avcodec_default_free_buffers(AVCodecContext *s){
     s->internal_buffer_count=0;
 }
 
+#if FF_API_OLD_FF_PICT_TYPES
 char av_get_pict_type_char(int pict_type){
-    switch(pict_type){
-    case FF_I_TYPE: return 'I';
-    case FF_P_TYPE: return 'P';
-    case FF_B_TYPE: return 'B';
-    case FF_S_TYPE: return 'S';
-    case FF_SI_TYPE:return 'i';
-    case FF_SP_TYPE:return 'p';
-    case FF_BI_TYPE:return 'b';
-    default:        return '?';
-    }
+    return av_get_picture_type_char(pict_type);
 }
+#endif
 
 int av_get_bits_per_sample(enum CodecID codec_id){
     switch(codec_id){
@@ -936,13 +929,19 @@ void av_log_missing_feature(void *avc, const char *feature, int want_sample)
         av_log(avc, AV_LOG_WARNING, "\n");
 }
 
-void av_log_ask_for_sample(void *avc, const char *msg)
+void av_log_ask_for_sample(void *avc, const char *msg, ...)
 {
+    va_list argument_list;
+
+    va_start(argument_list, msg);
+
     if (msg)
-        av_log(avc, AV_LOG_WARNING, "%s ", msg);
+        av_vlog(avc, AV_LOG_WARNING, msg, argument_list);
     av_log(avc, AV_LOG_WARNING, "If you want to help, upload a sample "
             "of this file to ftp://upload.libav.org/incoming/ "
             "and contact the libav-devel mailing list.\n");
+
+    va_end(argument_list);
 }
 
 int av_lockmgr_register(int (*cb)(void **mutex, enum AVLockOp op))

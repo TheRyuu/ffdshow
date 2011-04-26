@@ -412,7 +412,7 @@ static __inline bool sup_threads_enc(int x)
 }
 static __inline bool sup_threads_dec_slice(int x)
 {
-    return x==CODEC_ID_MPEG1VIDEO || x==CODEC_ID_MPEG2VIDEO; /* only works with w32threads, not with pthreads */
+    return x==CODEC_ID_MPEG1VIDEO || x==CODEC_ID_MPEG2VIDEO || x==CODEC_ID_FFV1 || x==CODEC_ID_DVVIDEO; /* only works with w32threads? */
 }
 static __inline bool sup_threads_dec_frame(int x)
 {

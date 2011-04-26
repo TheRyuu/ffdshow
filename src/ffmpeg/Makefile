@@ -253,6 +253,7 @@ SRCS_C=\
     libavutil/random_seed.c \
     libavutil/rational.c \
     libavutil/samplefmt.c \
+    libavutil/utils.c \
     \
     libavutil/x86/cpu.c \
     \
