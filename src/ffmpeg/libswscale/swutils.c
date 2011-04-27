@@ -50,6 +50,7 @@ static char THIS_FILE[] = __FILE__;
 #include "rgb2rgb.h"
 #include "libavutil/intreadwrite.h"
 #include "libavutil/x86_cpu.h"
+#include "libavutil/cpu.h"
 #include "libavutil/avutil.h"
 #include "libavutil/bswap.h"
 #include "libavutil/opt.h"
@@ -760,6 +761,13 @@ static int update_flags_cpu(int flags)
                |SWS_CPU_CAPS_ALTIVEC
                |SWS_CPU_CAPS_BFIN);
     flags |= ff_hardcodedcpuflags();
+#else /* !CONFIG_RUNTIME_CPUDETECT */
+    int cpuflags = av_get_cpu_flags();
+
+    flags |= (cpuflags & AV_CPU_FLAG_SSE2 ? SWS_CPU_CAPS_SSE2 : 0);
+    flags |= (cpuflags & AV_CPU_FLAG_MMX ? SWS_CPU_CAPS_MMX : 0);
+    flags |= (cpuflags & AV_CPU_FLAG_MMX2 ? SWS_CPU_CAPS_MMX2 : 0);
+    flags |= (cpuflags & AV_CPU_FLAG_3DNOW ? SWS_CPU_CAPS_3DNOW : 0);
 #endif /* CONFIG_RUNTIME_CPUDETECT */
     return flags;
 }
@@ -785,12 +793,13 @@ SwsContext *sws_getContextEx(int srcW, int srcH, enum PixelFormat srcFormat,
     int unscaled;
     int srcRange, dstRange;
     SwsFilter dummyFilter= {NULL, NULL, NULL, NULL};
+
+    flags = update_flags_cpu(flags);
 #if ARCH_X86
     if (flags & SWS_CPU_CAPS_MMX)
         __asm__ volatile("emms\n\t"::: "memory");
 #endif
 
-    flags = update_flags_cpu(flags);
     if (!rgb15to16) sws_rgb2rgb_init(flags);
 
     unscaled = (srcW == dstW && srcH == dstH);
@@ -1083,7 +1092,7 @@ SwsContext *sws_getContextEx(int srcW, int srcH, enum PixelFormat srcFormat,
     c->vLumBufSize= c->vLumFilterSize;
     c->vChrBufSize= c->vChrFilterSize;
     for (i=0; i<dstH; i++) {
-        int chrI= i*c->chrDstH / dstH;
+        int chrI= (int64_t)i*c->chrDstH / dstH;
         int nextSlice= FFMAX(c->vLumFilterPos[i   ] + c->vLumFilterSize - 1,
                            ((c->vChrFilterPos[chrI] + c->vChrFilterSize - 1)<<c->chrSrcVSubSample));
 

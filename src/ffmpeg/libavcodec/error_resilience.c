@@ -3,20 +3,20 @@
  *
  * Copyright (c) 2002-2004 Michael Niedermayer <michaelni@gmx.at>
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -777,7 +777,6 @@ void ff_er_frame_end(MpegEncContext *s){
         }
     }
 
-#if 1
     /* handle overlapping slices */
     for(error_type=1; error_type<=3; error_type++){
         int end_ok=0;
@@ -798,8 +797,7 @@ void ff_er_frame_end(MpegEncContext *s){
                 end_ok=0;
         }
     }
-#endif
-#if 1
+
     /* handle slices with partitions of different length */
     if(s->partitioned_frame){
         int end_ok=0;
@@ -820,7 +818,7 @@ void ff_er_frame_end(MpegEncContext *s){
                 end_ok=0;
         }
     }
-#endif
+
     /* handle missing slices */
     if(s->error_recognition>=4){
         int end_ok=1;
@@ -844,7 +842,6 @@ void ff_er_frame_end(MpegEncContext *s){
         }
     }
 
-#if 1
     /* backward mark errors */
     distance=9999999;
     for(error_type=1; error_type<=3; error_type++){
@@ -869,7 +866,6 @@ void ff_er_frame_end(MpegEncContext *s){
                 distance= 9999999;
         }
     }
-#endif
 
     /* forward mark errors */
     error=0;
@@ -884,7 +880,7 @@ void ff_er_frame_end(MpegEncContext *s){
             s->error_status_table[mb_xy]|= error;
         }
     }
-#if 1
+
     /* handle not partitioned case */
     if(!s->partitioned_frame){
         for(i=0; i<s->mb_num; i++){
@@ -895,7 +891,6 @@ void ff_er_frame_end(MpegEncContext *s){
             s->error_status_table[mb_xy]= error;
         }
     }
-#endif
 
     dc_error= ac_error= mv_error=0;
     for(i=0; i<s->mb_num; i++){
@@ -1053,16 +1048,15 @@ void ff_er_frame_end(MpegEncContext *s){
             s->dc_val[2][mb_x + mb_y*s->mb_stride]= (dcv+4)>>3;
         }
     }
-#if 1
+
     /* guess DC for damaged blocks */
     guess_dc(s, s->dc_val[0], s->mb_width*2, s->mb_height*2, s->b8_stride, 1);
     guess_dc(s, s->dc_val[1], s->mb_width  , s->mb_height  , s->mb_stride, 0);
     guess_dc(s, s->dc_val[2], s->mb_width  , s->mb_height  , s->mb_stride, 0);
-#endif
+
     /* filter luma DC */
     filter181(s->dc_val[0], s->mb_width*2, s->mb_height*2, s->b8_stride);
 
-#if 1
     /* render DC only intra */
     for(mb_y=0; mb_y<s->mb_height; mb_y++){
         for(mb_x=0; mb_x<s->mb_width; mb_x++){
@@ -1082,7 +1076,6 @@ void ff_er_frame_end(MpegEncContext *s){
             put_dc(s, dest_y, dest_cb, dest_cr, mb_x, mb_y);
         }
     }
-#endif
 
     if(s->avctx->error_concealment&FF_EC_DEBLOCK){
         /* filter horizontal block boundaries */

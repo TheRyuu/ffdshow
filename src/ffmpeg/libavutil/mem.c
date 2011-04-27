@@ -66,10 +66,10 @@ void *av_malloc(size_t size)
     void *ptr = NULL;
 
     /* let's disallow possible ambiguous cases */
-    if(size > (INT_MAX-16) )
+    if(size > (INT_MAX-32) )
         return NULL;
 
-    ptr = __mingw_aligned_malloc(size,16);
+    ptr = __mingw_aligned_malloc(size,32);
 
     /* Why 64?
        Indeed, we should align it:
@@ -80,10 +80,8 @@ void *av_malloc(size_t size)
        Because L1 and L2 caches are aligned on those values.
        But I don't want to code such logic here!
      */
-     /* Why 16?
-        Because some CPUs need alignment, for example SSE2 on P4, & most RISC CPUs
-        it will just trigger an exception and the unaligned load will be done in the
-        exception handler or it will just segfault (SSE2 on P4).
+     /* Why 32?
+        For AVX ASM. SSE / NEON needs only 16.
         Why not larger? Because I did not see a difference in benchmarks ...
      */
      /* benchmarks with P3
