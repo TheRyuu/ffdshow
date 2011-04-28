@@ -3,20 +3,20 @@
  * Copyright (c) 2005-2006 Oded Shimon ( ods15 ods15 dyndns org )
  * Copyright (c) 2006-2007 Maxim Gavrilov ( maxim.gavrilov gmail com )
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -36,11 +36,11 @@
 #include <stdint.h>
 
 /* @name ltp_coef
- * Table of the LTP coefficient (multiplied by 2)
+ * Table of the LTP coefficients
  */
 static const float ltp_coef[8] = {
-     1.141658,    1.393232,    1.626008,    1.822608,
-     1.969800,    2.135788,    2.2389202,   2.739066,
+    0.570829, 0.696616, 0.813004, 0.911304,
+    0.984900, 1.067894, 1.194601, 1.369533,
 };
 
 /* @name tns_tmp2_map

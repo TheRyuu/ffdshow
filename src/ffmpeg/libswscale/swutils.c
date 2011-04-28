@@ -83,6 +83,8 @@ const char *swscale_license(void)
         || (x)==PIX_FMT_RGB48LE     \
         || (x)==PIX_FMT_RGB32       \
         || (x)==PIX_FMT_RGB32_1     \
+        || (x)==PIX_FMT_BGR48BE     \
+        || (x)==PIX_FMT_BGR48LE     \
         || (x)==PIX_FMT_BGR24       \
         || (x)==PIX_FMT_BGR565      \
         || (x)==PIX_FMT_BGR555      \
@@ -772,26 +774,29 @@ static int update_flags_cpu(int flags)
     return flags;
 }
 
-//FFDShow modification for multithreading
+#if 0
+SwsContext *sws_alloc_context(void)
+{
+    SwsContext *c= av_mallocz(sizeof(SwsContext));
+
+    c->av_class = &sws_context_class;
+    av_opt_set_defaults(c);
+
+    return c;
+}
+#endif
+
 SwsContext *sws_getContext(int srcW, int srcH, enum PixelFormat srcFormat,
                            int dstW, int dstH, enum PixelFormat dstFormat, int flags,
-			   SwsParams *params, //FFDShow structure
+                           SwsParams *params, //FFDShow structure
                            SwsFilter *srcFilter, SwsFilter *dstFilter, const double *param)
-{
-	return sws_getContextEx(srcW, srcH, srcFormat, dstW, dstH, dstFormat, flags, params,
-            srcFilter, dstFilter, param, GetCPUCount());
-}
-
-SwsContext *sws_getContextEx(int srcW, int srcH, enum PixelFormat srcFormat,
-                           int dstW, int dstH, enum PixelFormat dstFormat, int flags,
-			   SwsParams *params, //FFDShow structure
-                           SwsFilter *srcFilter, SwsFilter *dstFilter, const double *param,int threadCount)
 {
     SwsContext *c;
     int i;
     int usesVFilter, usesHFilter;
     int unscaled;
     int srcRange, dstRange;
+    int threadCount = GetCPUCount();
     SwsFilter dummyFilter= {NULL, NULL, NULL, NULL};
 
     flags = update_flags_cpu(flags);
@@ -812,7 +817,7 @@ SwsContext *sws_getContextEx(int srcW, int srcH, enum PixelFormat srcFormat,
         return AVERROR(EINVAL);
     }
     if (!isSupportedOut(dstFormat)) {
-        av_log(NULL, AV_LOG_ERROR, "swScaler: %s (%d) is not supported as output pixel format\n", sws_format_name(dstFormat), dstFormat);
+        av_log(NULL, AV_LOG_ERROR, "swScaler: %s is not supported as output pixel format\n", sws_format_name(dstFormat));
         return AVERROR(EINVAL);
     }
 

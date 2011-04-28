@@ -2,20 +2,20 @@
  * QPEG codec
  * Copyright (c) 2004 Konstantin Shishkov
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -257,12 +257,9 @@ static int decode_frame(AVCodecContext *avctx,
     uint8_t* outdata;
     int delta;
 
-    if(p->data[0])
-        avctx->release_buffer(avctx, p);
-
-    p->reference= 0;
-    if(avctx->get_buffer(avctx, p) < 0){
-        av_log(avctx, AV_LOG_ERROR, "get_buffer() failed\n");
+    p->reference = 3;
+    if (avctx->reget_buffer(avctx, p) < 0) {
+        av_log(avctx, AV_LOG_ERROR, "reget_buffer() failed\n");
         return -1;
     }
     outdata = a->pic.data[0];

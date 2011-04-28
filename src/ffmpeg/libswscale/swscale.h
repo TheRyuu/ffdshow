@@ -35,7 +35,7 @@ extern "C" {
 #include "ffImgfmt.h"
 
 #define LIBSWSCALE_VERSION_MAJOR 1
-#define LIBSWSCALE_VERSION_MINOR 0
+#define LIBSWSCALE_VERSION_MINOR 1
 #define LIBSWSCALE_VERSION_MICRO 0
 
 #define LIBSWSCALE_VERSION_INT  AV_VERSION_INT(LIBSWSCALE_VERSION_MAJOR, \
@@ -50,16 +50,21 @@ extern "C" {
 
 //FFDShow structures
 typedef struct SwsMethodParams {
-		int method;
-	double param[2];
+    int method;
+    double param[2];
 } SwsMethodParams;
+
 typedef struct SwsParams {
-	        //int cpu;
-	        //int debug;
-	        //int subsampling;
-	        //int v_chr_drop;
-	        SwsMethodParams methodLuma,methodChroma;
+    SwsMethodParams methodLuma,methodChroma;
 } SwsParams;
+
+/**
+ * Those FF_API_* defines are not part of public API.
+ * They may change, break or disappear at any time.
+ */
+#ifndef FF_API_SWS_GETCONTEXT
+#define FF_API_SWS_GETCONTEXT  (LIBSWSCALE_VERSION_MAJOR < 2)
+#endif
 
 /**
  * Returns the LIBSWSCALE_VERSION_INT constant.
@@ -164,14 +169,27 @@ int sws_isSupportedInput(enum PixelFormat pix_fmt);
 int sws_isSupportedOutput(enum PixelFormat pix_fmt);
 
 /**
+ * Allocates an empty SwsContext. This must be filled and passed to
+ * sws_init_context(). For filling see AVOptions, options.c and
+ * sws_setColorspaceDetails().
+ */
+struct SwsContext *sws_alloc_context(void);
+
+/**
+ * Initializes the swscaler context sws_context.
+ *
+ * @return zero or positive value on success, a negative value on
+ * error
+ */
+int sws_init_context(struct SwsContext *sws_context, SwsFilter *srcFilter, SwsFilter *dstFilter);
+
+/**
  * Frees the swscaler context swsContext.
  * If swsContext is NULL, then does nothing.
  */
 void sws_freeContext(struct SwsContext *swsContext);
 
-
-//FFDShow Wrapper of sws_getContextEx
-
+#if FF_API_SWS_GETCONTEXT
 /**
  * Allocates and returns a SwsContext. You need it to perform
  * scaling/conversion operations using sws_scale().
@@ -189,14 +207,10 @@ void sws_freeContext(struct SwsContext *swsContext);
  *       written
  */
 struct SwsContext *sws_getContext(int srcW, int srcH, enum PixelFormat srcFormat,
-                           int dstW, int dstH, enum PixelFormat dstFormat, int flags,
-                           SwsParams *params, //FFDShow
-                           SwsFilter *srcFilter, SwsFilter *dstFilter, const double *param);
-
-struct SwsContext *sws_getContextEx(int srcW, int srcH, enum PixelFormat srcFormat,
-                           int dstW, int dstH, enum PixelFormat dstFormat, int flags,
-                           SwsParams *params, //FFDShow
-                           SwsFilter *srcFilter, SwsFilter *dstFilter, const double *param,int threadCount);
+                                  int dstW, int dstH, enum PixelFormat dstFormat,
+                                  int flags, SwsParams *params, SwsFilter *srcFilter,
+                                  SwsFilter *dstFilter, const double *param);
+#endif
 
 /**
  * Scales the image slice in srcSlice and puts the resulting scaled
