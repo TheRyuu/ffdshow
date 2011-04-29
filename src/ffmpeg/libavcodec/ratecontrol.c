@@ -3,20 +3,20 @@
  *
  * Copyright (c) 2002-2004 Michael Niedermayer <michaelni@gmx.at>
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -354,12 +354,10 @@ static double get_qscale(MpegEncContext *s, RateControlEntry *rce, double rate_f
     };
 
     bits = av_expr_eval(rcc->rc_eq_eval, const_values, rce);
-    #ifdef __GNUC__
     if (isnan(bits)) {
         av_log(s->avctx, AV_LOG_ERROR, "Error evaluating rc_eq \"%s\"\n", s->avctx->rc_eq);
         return -1;
     }
-    #endif
 
     rcc->pass1_rc_eq_output_sum+= bits;
     bits*=rate_factor;
@@ -582,13 +580,8 @@ float ff_adaptive_quantization(MpegEncContext *s, double q){
     const float border_masking = s->avctx->border_masking;
     float bits_sum= 0.0;
     float cplx_sum= 0.0;
-#if __STDC_VERSION__ >= 199901L
     float cplx_tab[s->mb_num];
     float bits_tab[s->mb_num];
-#else
-    float *cplx_tab=_alloca(sizeof(float)*s->mb_num);
-    float *bits_tab=_alloca(sizeof(float)*s->mb_num);
-#endif
     const int qmin= s->avctx->mb_lmin;
     const int qmax= s->avctx->mb_lmax;
     Picture * const pic= &s->current_picture;
@@ -859,14 +852,6 @@ float ff_rate_estimate_qscale(MpegEncContext *s, int dry_run)
         rcc->last_mc_mb_var_sum= pic->mc_mb_var_sum;
         rcc->last_mb_var_sum= pic->mb_var_sum;
     }
-#if 0
-{
-    static int mvsum=0, texsum=0;
-    mvsum += s->mv_bits;
-    texsum += s->i_tex_bits + s->p_tex_bits;
-    printf("%d %d//\n\n", mvsum, texsum);
-}
-#endif
     return q;
 }
 

@@ -5,20 +5,20 @@
  *
  * new motion estimation (X1/EPZS) by Michael Niedermayer <michaelni@gmx.at>
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -1119,10 +1119,8 @@ void ff_estimate_p_frame_motion(MpegEncContext * s,
 //    pic->mb_cmp_score[s->mb_stride * mb_y + mb_x] = dmin;
     c->mc_mb_var_sum_temp += (vard+128)>>8;
 
-#if 0
-    printf("varc=%4d avg_var=%4d (sum=%4d) vard=%4d mx=%2d my=%2d\n",
-           varc, s->avg_mb_var, sum, vard, mx - xx, my - yy);
-#endif
+    av_dlog(s, "varc=%4d avg_var=%4d (sum=%4d) vard=%4d mx=%2d my=%2d\n",
+            varc, s->avg_mb_var, sum, vard, mx - xx, my - yy);
     if(mb_type){
         int p_score= FFMIN(vard, varc-500+(s->lambda2>>FF_LAMBDA_SHIFT)*100);
         int i_score= varc-500+(s->lambda2>>FF_LAMBDA_SHIFT)*20;

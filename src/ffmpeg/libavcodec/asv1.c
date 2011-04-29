@@ -2,20 +2,20 @@
  * ASUS V1/V2 codec
  * Copyright (c) 2003 Michael Niedermayer
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -360,17 +360,6 @@ static int decode_frame(AVCodecContext *avctx,
             idct_put(a, mb_x, mb_y);
         }
     }
-#if 0
-int i;
-printf("%d %d\n", 8*buf_size, get_bits_count(&a->gb));
-for(i=get_bits_count(&a->gb); i<8*buf_size; i++){
-    printf("%d", get_bits1(&a->gb));
-}
-
-for(i=0; i<s->avctx->extradata_size; i++){
-    printf("%c\n", ((uint8_t*)s->avctx->extradata)[i]);
-}
-#endif
 
     *picture= *(AVFrame*)&a->picture;
     *data_size = sizeof(AVPicture);

@@ -1,20 +1,20 @@
 /*
- * Copyright (c) 2002 The FFmpeg Project
+ * Copyright (c) 2002 The Libav Project
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -116,16 +116,6 @@ int ff_wmv2_decode_picture_header(MpegEncContext * s)
     Wmv2Context * const w= (Wmv2Context*)s;
     int code;
 
-#if 0
-{
-int i;
-for(i=0; i<s->gb.size*8; i++)
-    printf("%d", get_bits1(&s->gb));
-//    get_bits1(&s->gb);
-printf("END\n");
-return -1;
-}
-#endif
     if(s->picture_number==0)
         decode_ext_header(w);
 
@@ -316,10 +306,6 @@ static inline int wmv2_decode_inter_block(Wmv2Context *w, DCTELEM *block, int n,
 
     if(w->per_block_abt)
         w->abt_type= decode012(&s->gb);
-#if 0
-    if(w->per_block_abt)
-        printf("B%d", w->abt_type);
-#endif
     w->abt_type_table[n]= w->abt_type;
 
     if(w->abt_type){

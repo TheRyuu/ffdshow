@@ -763,13 +763,6 @@ static int update_flags_cpu(int flags)
                |SWS_CPU_CAPS_ALTIVEC
                |SWS_CPU_CAPS_BFIN);
     flags |= ff_hardcodedcpuflags();
-#else /* !CONFIG_RUNTIME_CPUDETECT */
-    int cpuflags = av_get_cpu_flags();
-
-    flags |= (cpuflags & AV_CPU_FLAG_SSE2 ? SWS_CPU_CAPS_SSE2 : 0);
-    flags |= (cpuflags & AV_CPU_FLAG_MMX ? SWS_CPU_CAPS_MMX : 0);
-    flags |= (cpuflags & AV_CPU_FLAG_MMX2 ? SWS_CPU_CAPS_MMX2 : 0);
-    flags |= (cpuflags & AV_CPU_FLAG_3DNOW ? SWS_CPU_CAPS_3DNOW : 0);
 #endif /* CONFIG_RUNTIME_CPUDETECT */
     return flags;
 }

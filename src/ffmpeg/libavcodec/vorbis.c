@@ -3,20 +3,20 @@
  * Common code for Vorbis I encoder and decoder
  * @author Denes Balatoni  ( dbalatoni programozo hu )
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -51,14 +51,13 @@ unsigned int ff_vorbis_nth_root(unsigned int x, unsigned int n)
 // the two bits[p] > 32 checks should be redundant, all calling code should
 // already ensure that, but since it allows overwriting the stack it seems
 // reasonable to check redundantly.
-int ff_vorbis_len2vlc(uint8_t *bits, uint32_t *codes, uint_fast32_t num)
+int ff_vorbis_len2vlc(uint8_t *bits, uint32_t *codes, unsigned num)
 {
     uint_fast32_t exit_at_level[33] = {
         404, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
           0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
-    uint_fast8_t i, j;
-    uint_fast32_t code, p;
+    unsigned i, j, p, code;
 
 #ifdef V_DEBUG
     GetBitContext gb;
@@ -78,8 +77,8 @@ int ff_vorbis_len2vlc(uint8_t *bits, uint32_t *codes, uint_fast32_t num)
         exit_at_level[i+1] = 1 << i;
 
 #ifdef V_DEBUG
-    av_log(NULL, AV_LOG_INFO, " %d. of %d code len %d code %d - ", p, num, bits[p], codes[p]);
-    init_get_bits(&gb, (uint_fast8_t *)&codes[p], bits[p]);
+    av_log(NULL, AV_LOG_INFO, " %u. of %u code len %d code %d - ", p, num, bits[p], codes[p]);
+    init_get_bits(&gb, (uint8_t *)&codes[p], bits[p]);
     for (i = 0; i < bits[p]; ++i)
         av_log(NULL, AV_LOG_INFO, "%s", get_bits1(&gb) ? "1" : "0");
     av_log(NULL, AV_LOG_INFO, "\n");
