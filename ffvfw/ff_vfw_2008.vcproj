@@ -80,7 +80,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="kernel32.lib ole32.lib libcmtd.lib libcpmtd.lib winmm.lib comctl32.lib ..\bin\lib_x86\libboost_thread-vc90-mt-sgd-1_45_66662.lib"
+				AdditionalDependencies="kernel32.lib ole32.lib libcmtd.lib libcpmtd.lib winmm.lib comctl32.lib ..\bin\lib_x86\libboost_thread-vc90-mt-sgd-1_46_1.lib"
 				OutputFile="../bin/ff_vfw.dll"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"
@@ -181,7 +181,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="kernel32.lib ole32.lib libcmtd.lib libcpmtd.lib winmm.lib comctl32.lib ..\bin\lib_x64\libboost_thread-vc90-mt-sgd-1_45_66662.lib $(NOINHERIT)"
+				AdditionalDependencies="kernel32.lib ole32.lib libcmtd.lib libcpmtd.lib winmm.lib comctl32.lib ..\bin\lib_x64\libboost_thread-vc90-mt-sgd-1_46_1.lib $(NOINHERIT)"
 				OutputFile="../bin/ff_vfw.dll"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"
@@ -286,7 +286,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="kernel32.lib ole32.lib libcmt.lib libcpmt.lib winmm.lib comctl32.lib ..\bin\lib_x86\libboost_thread-vc90-mt-s-1_45_66662.lib $(NOINHERIT)"
+				AdditionalDependencies="kernel32.lib ole32.lib libcmt.lib libcpmt.lib winmm.lib comctl32.lib ..\bin\lib_x86\libboost_thread-vc90-mt-s-1_46_1.lib $(NOINHERIT)"
 				OutputFile="../bin/ff_vfw.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
@@ -394,7 +394,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="kernel32.lib ole32.lib libcmt.lib libcpmt.lib winmm.lib comctl32.lib ..\bin\lib_x64\libboost_thread-vc90-mt-s-1_45_66662.lib $(NOINHERIT)"
+				AdditionalDependencies="kernel32.lib ole32.lib libcmt.lib libcpmt.lib winmm.lib comctl32.lib ..\bin\lib_x64\libboost_thread-vc90-mt-s-1_46_1.lib $(NOINHERIT)"
 				OutputFile="../bin/ff_vfw.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"

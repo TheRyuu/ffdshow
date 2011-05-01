@@ -133,7 +133,7 @@
       <Culture>0x041b</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>libcmtd.lib;kernel32.lib;libircmt.lib;libcpmtd.lib;winmm.lib;ole32.lib;comctl32.lib;..\bin\lib_x86\libboost_thread-vc100-mt-sgd-1_45_66662.lib</AdditionalDependencies>
+      <AdditionalDependencies>libcmtd.lib;kernel32.lib;libircmt.lib;libcpmtd.lib;winmm.lib;ole32.lib;comctl32.lib;..\bin\lib_x86\libboost_thread-vc100-mt-sgd-1_46_1.lib</AdditionalDependencies>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
       <ModuleDefinitionFile>.\ff_vfw.def</ModuleDefinitionFile>
@@ -191,7 +191,7 @@
       <SubSystem>Windows</SubSystem>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <TargetMachine>MachineX64</TargetMachine>
-      <AdditionalDependencies>libcmtd.lib;kernel32.lib;libircmt.lib;libcpmtd.lib;winmm.lib;ole32.lib;comctl32.lib;..\bin\lib_x64\libboost_thread-vc100-mt-sgd-1_45_66662.lib</AdditionalDependencies>
+      <AdditionalDependencies>libcmtd.lib;kernel32.lib;libircmt.lib;libcpmtd.lib;winmm.lib;ole32.lib;comctl32.lib;..\bin\lib_x64\libboost_thread-vc100-mt-sgd-1_46_1.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy ..\bin\ff_vfw.dll "$(SystemRoot)"\System32</Command>
@@ -248,7 +248,7 @@
       <RandomizedBaseAddress>true</RandomizedBaseAddress>
       <DataExecutionPrevention>true</DataExecutionPrevention>
       <TargetMachine>MachineX86</TargetMachine>
-      <AdditionalDependencies>libcmt.lib;kernel32.lib;libircmt.lib;libcpmt.lib;winmm.lib;ole32.lib;comctl32.lib;..\bin\lib_x86\libboost_thread-vc100-mt-s-1_45_66662.lib</AdditionalDependencies>
+      <AdditionalDependencies>libcmt.lib;kernel32.lib;libircmt.lib;libcpmt.lib;winmm.lib;ole32.lib;comctl32.lib;..\bin\lib_x86\libboost_thread-vc100-mt-s-1_46_1.lib</AdditionalDependencies>
     </Link>
     <Manifest>
       <AdditionalManifestFiles>..\bin\manifest32\ff_vfw.dll.manifest;%(AdditionalManifestFiles)</AdditionalManifestFiles>
@@ -306,7 +306,7 @@
       <RandomizedBaseAddress>true</RandomizedBaseAddress>
       <DataExecutionPrevention>true</DataExecutionPrevention>
       <TargetMachine>MachineX64</TargetMachine>
-      <AdditionalDependencies>libcmt.lib;kernel32.lib;libircmt.lib;libcpmt.lib;winmm.lib;ole32.lib;comctl32.lib;..\bin\lib_x64\libboost_thread-vc100-mt-s-1_45_66662.lib</AdditionalDependencies>
+      <AdditionalDependencies>libcmt.lib;kernel32.lib;libircmt.lib;libcpmt.lib;winmm.lib;ole32.lib;comctl32.lib;..\bin\lib_x64\libboost_thread-vc100-mt-s-1_46_1.lib</AdditionalDependencies>
     </Link>
     <Manifest>
       <AdditionalManifestFiles>..\bin\manifest64\ff_vfw.dll.manifest;%(AdditionalManifestFiles)</AdditionalManifestFiles>
