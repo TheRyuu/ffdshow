@@ -782,6 +782,10 @@ STDMETHODIMP TffdshowDecAudio::deliverSampleBistream(void *buf,size_t size,int b
             }
         }
     }
+    else {
+        length=size;
+    }
+
     if (length==0) {
         length=repetition_burst;
     }
