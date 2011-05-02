@@ -1,20 +1,20 @@
 /*
  * Copyright (C) 2003-2004 the ffmpeg project
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -1896,7 +1896,7 @@ static int vp3_decode_frame(AVCodecContext *avctx,
         return buf_size;
 
     s->current_frame.reference = 3;
-    s->current_frame.pict_type = s->keyframe ? FF_I_TYPE : FF_P_TYPE;
+    s->current_frame.pict_type = s->keyframe ? AV_PICTURE_TYPE_I : AV_PICTURE_TYPE_P;
     if (ff_thread_get_buffer(avctx, &s->current_frame) < 0) {
         av_log(s->avctx, AV_LOG_ERROR, "get_buffer() failed\n");
         goto error;
@@ -1928,7 +1928,7 @@ static int vp3_decode_frame(AVCodecContext *avctx,
             av_log(s->avctx, AV_LOG_WARNING, "vp3: first frame not a keyframe\n");
 
             s->golden_frame.reference = 3;
-            s->golden_frame.pict_type = FF_I_TYPE;
+            s->golden_frame.pict_type = AV_PICTURE_TYPE_I;
             if (ff_thread_get_buffer(avctx, &s->golden_frame) < 0) {
                 av_log(s->avctx, AV_LOG_ERROR, "get_buffer() failed\n");
                 goto error;

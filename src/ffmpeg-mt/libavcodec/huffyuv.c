@@ -6,20 +6,20 @@
  * see http://www.pcisys.net/~melanson/codecs/huffyuv.txt for a description of
  * the algorithm used
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -352,11 +352,6 @@ static int read_huffman_tables(HYuvContext *s, const uint8_t *src, int length){
         if(generate_bits_table(s->bits[i], s->len[i])<0){
             return -1;
         }
-#if 0
-for(j=0; j<256; j++){
-printf("%6X, %2d,  %3d\n", s->bits[i][j], s->len[i][j], j);
-}
-#endif
         free_vlc(&s->vlc[i]);
         init_vlc(&s->vlc[i], VLC_BITS, 256, s->len[i], 1, 1, s->bits[i], 4, 4, 0);
     }
@@ -1243,7 +1238,7 @@ static int encode_frame(AVCodecContext *avctx, unsigned char *buf, int buf_size,
     int i, j, size=0;
 
     *p = *pict;
-    p->pict_type= FF_I_TYPE;
+    p->pict_type= AV_PICTURE_TYPE_I;
     p->key_frame= 1;
 
     if(s->context){

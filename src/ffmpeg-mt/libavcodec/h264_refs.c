@@ -2,20 +2,20 @@
  * H.26L/H.264/AVC/JVT/14496-10/... reference picture handling
  * Copyright (c) 2003 Michael Niedermayer <michaelni@gmx.at>
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -25,6 +25,7 @@
  * @author Michael Niedermayer <michaelni@gmx.at>
  */
 
+#include "libavutil/avassert.h"
 #include "internal.h"
 #include "dsputil.h"
 #include "avcodec.h"
@@ -109,7 +110,7 @@ int ff_h264_fill_default_ref_list(H264Context *h){
     MpegEncContext * const s = &h->s;
     int i, len;
 
-    if(h->slice_type_nos==FF_B_TYPE){
+    if(h->slice_type_nos==AV_PICTURE_TYPE_B){
         Picture *sorted[32];
         int cur_poc, list;
         int lens[2];
@@ -148,7 +149,7 @@ int ff_h264_fill_default_ref_list(H264Context *h){
     for (i=0; i<h->ref_count[0]; i++) {
         tprintf(h->s.avctx, "List0: %s fn:%d 0x%p\n", (h->default_ref_list[0][i].long_ref ? "LT" : "ST"), h->default_ref_list[0][i].pic_id, h->default_ref_list[0][i].data[0]);
     }
-    if(h->slice_type_nos==FF_B_TYPE){
+    if(h->slice_type_nos==AV_PICTURE_TYPE_B){
         for (i=0; i<h->ref_count[1]; i++) {
             tprintf(h->s.avctx, "List1: %s fn:%d 0x%p\n", (h->default_ref_list[1][i].long_ref ? "LT" : "ST"), h->default_ref_list[1][i].pic_id, h->default_ref_list[1][i].data[0]);
         }
@@ -476,7 +477,8 @@ static void print_long_term(H264Context *h) {
 
 void ff_generate_sliding_window_mmcos(H264Context *h) {
     MpegEncContext * const s = &h->s;
-    assert(h->long_ref_count + h->short_ref_count <= h->sps.ref_frame_count);
+    // FFmpeg patch
+    av_assert0(h->long_ref_count + h->short_ref_count <= h->sps.ref_frame_count);
 
     h->mmco_index= 0;
     if(h->short_ref_count && h->long_ref_count + h->short_ref_count == h->sps.ref_frame_count &&
@@ -621,7 +623,8 @@ int ff_h264_execute_ref_pic_marking(H264Context *h, MMCO *mmco, int mmco_count){
         }
     }
 
-    if (h->long_ref_count + h->short_ref_count > h->sps.ref_frame_count){
+    // FFmpeg patch
+    if (h->long_ref_count + h->short_ref_count > FFMAX(h->sps.ref_frame_count, 1)){
 
         /* We have too many reference frames, probably due to corrupted
          * stream. Need to discard one frame. Prevents overrun of the
@@ -629,7 +632,7 @@ int ff_h264_execute_ref_pic_marking(H264Context *h, MMCO *mmco, int mmco_count){
          */
         av_log(h->s.avctx, AV_LOG_ERROR,
                "number of reference frames exceeds max (probably "
-               "corrupt input), discarding one\n");
+               "corrupt input), discarding one long:%d short:%d max:%d\n", h->long_ref_count, h->short_ref_count, h->sps.ref_frame_count); // FFmpeg patch
 
         if (h->long_ref_count && !h->short_ref_count) {
             for (i = 0; i < 16; ++i)

@@ -5,20 +5,20 @@
  *
  * 4MV & hq & B-frame encoding stuff by Michael Niedermayer <michaelni@gmx.at>
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -649,7 +649,7 @@ static av_always_inline void MPV_motion_internal(MpegEncContext *s,
 
     prefetch_motion(s, ref_picture, dir);
 
-    if(!is_mpeg12 && s->obmc && s->pict_type != FF_B_TYPE){
+    if(!is_mpeg12 && s->obmc && s->pict_type != AV_PICTURE_TYPE_B){
         int16_t mv_cache[4][4][2];
         const int xy= s->mb_x + s->mb_y*s->mb_stride;
         const int mot_stride= s->b8_stride;
@@ -816,7 +816,7 @@ static av_always_inline void MPV_motion_internal(MpegEncContext *s,
                             s->mv[dir][1][0], s->mv[dir][1][1], 8, mb_y);
             }
         } else {
-            if(s->picture_structure != s->field_select[dir][0] + 1 && s->pict_type != FF_B_TYPE && !s->first_field){
+            if(s->picture_structure != s->field_select[dir][0] + 1 && s->pict_type != AV_PICTURE_TYPE_B && !s->first_field){
                 ref_picture= s->current_picture_ptr->data;
             }
 
@@ -831,7 +831,7 @@ static av_always_inline void MPV_motion_internal(MpegEncContext *s,
             uint8_t ** ref2picture;
 
             if(s->picture_structure == s->field_select[dir][i] + 1
-               || s->pict_type == FF_B_TYPE || s->first_field){
+               || s->pict_type == AV_PICTURE_TYPE_B || s->first_field){
                 ref2picture= ref_picture;
             }else{
                 ref2picture= s->current_picture_ptr->data;

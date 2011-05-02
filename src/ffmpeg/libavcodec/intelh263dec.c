@@ -1,20 +1,20 @@
 /*
  * H.263i decoder
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -46,13 +46,13 @@ int ff_intel_h263_decode_picture_header(MpegEncContext *s)
     skip_bits1(&s->gb);         /* freeze picture release off */
 
     format = get_bits(&s->gb, 3);
-    if (format == 0 || format == 6) {
+    if (format == 0 || format == 6) { // FFmpeg patch
         av_log(s->avctx, AV_LOG_ERROR, "Intel H263 free format not supported\n");
         return -1;
     }
     s->h263_plus = 0;
 
-    s->pict_type = FF_I_TYPE + get_bits1(&s->gb);
+    s->pict_type = AV_PICTURE_TYPE_I + get_bits1(&s->gb);
 
     s->unrestricted_mv = get_bits1(&s->gb);
     s->h263_long_vectors = s->unrestricted_mv;
@@ -64,6 +64,7 @@ int ff_intel_h263_decode_picture_header(MpegEncContext *s)
     s->obmc= get_bits1(&s->gb);
     s->pb_frame = get_bits1(&s->gb);
 
+    // FFmpeg patch
     if (format < 6) {
         s->width = h263_format[format][0];
         s->height = h263_format[format][1];
@@ -93,6 +94,7 @@ int ff_intel_h263_decode_picture_header(MpegEncContext *s)
         skip_bits1(&s->gb);
         skip_bits(&s->gb, 9); // display height
         if(ar == 15){
+            // FFmpeg patch
             s->avctx->sample_aspect_ratio.num = get_bits(&s->gb, 8); // aspect ratio - width
             s->avctx->sample_aspect_ratio.den = get_bits(&s->gb, 8); // aspect ratio - height
         }

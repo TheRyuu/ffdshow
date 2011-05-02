@@ -5,20 +5,20 @@
  * Copyright (c) 2001 Juan J. Sierralta P
  * Copyright (c) 2002-2004 Michael Niedermayer <michaelni@gmx.at>
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -91,7 +91,7 @@ static const uint8_t wrong_run[102] = {
 av_const int ff_h263_aspect_to_info(AVRational aspect){
     int i;
 
-    if(aspect.num==0) aspect.num=aspect.den=1;//= (AVRational){1,1};
+    if(aspect.num==0) aspect= (AVRational){1,1};
 
     for(i=1; i<6; i++){
         if(av_cmp_q(ff_h263_pixel_aspect[i], aspect) == 0){
@@ -145,7 +145,7 @@ void h263_encode_picture_header(MpegEncContext * s, int picture_number)
     if (!s->h263_plus) {
         /* H.263v1 */
         put_bits(&s->pb, 3, format);
-        put_bits(&s->pb, 1, (s->pict_type == FF_P_TYPE));
+        put_bits(&s->pb, 1, (s->pict_type == AV_PICTURE_TYPE_P));
         /* By now UMV IS DISABLED ON H.263v1, since the restrictions
         of H.263v1 UMV implies to check the predicted MV after
         calculation of the current MB to see if we're on the limits */
@@ -162,7 +162,7 @@ void h263_encode_picture_header(MpegEncContext * s, int picture_number)
 
         put_bits(&s->pb, 3, 7);
         put_bits(&s->pb,3,ufep); /* Update Full Extended PTYPE */
-        if (format == 7)
+        if (format == 8)
             put_bits(&s->pb,3,6); /* Custom Source Format */
         else
             put_bits(&s->pb, 3, format);
@@ -181,7 +181,7 @@ void h263_encode_picture_header(MpegEncContext * s, int picture_number)
         put_bits(&s->pb,1,1); /* "1" to prevent start code emulation */
         put_bits(&s->pb,3,0); /* Reserved */
 
-        put_bits(&s->pb, 3, s->pict_type == FF_P_TYPE);
+        put_bits(&s->pb, 3, s->pict_type == AV_PICTURE_TYPE_P);
 
         put_bits(&s->pb,1,0); /* Reference Picture Resampling: off */
         put_bits(&s->pb,1,0); /* Reduced-Resolution Update: off */
@@ -192,7 +192,7 @@ void h263_encode_picture_header(MpegEncContext * s, int picture_number)
         /* This should be here if PLUSPTYPE */
         put_bits(&s->pb, 1, 0); /* Continuous Presence Multipoint mode: off */
 
-                if (format == 7) {
+        if (format == 8) {
             /* Custom Picture Format (CPFMT) */
             s->aspect_ratio_info= ff_h263_aspect_to_info(s->avctx->sample_aspect_ratio);
 
@@ -260,12 +260,12 @@ void h263_encode_gob_header(MpegEncContext * s, int mb_line)
             put_bits(&s->pb, 1, 1);
         put_bits(&s->pb, 5, s->qscale); /* GQUANT */
         put_bits(&s->pb, 1, 1);
-        put_bits(&s->pb, 2, s->pict_type == FF_I_TYPE); /* GFID */
+        put_bits(&s->pb, 2, s->pict_type == AV_PICTURE_TYPE_I); /* GFID */
     }else{
         int gob_number= mb_line / s->gob_index;
 
         put_bits(&s->pb, 5, gob_number); /* GN */
-        put_bits(&s->pb, 2, s->pict_type == FF_I_TYPE); /* GFID */
+        put_bits(&s->pb, 2, s->pict_type == AV_PICTURE_TYPE_I); /* GFID */
         put_bits(&s->pb, 5, s->qscale); /* GQUANT */
     }
 }
@@ -607,7 +607,7 @@ void h263_encode_mb(MpegEncContext * s,
         }
 
         cbpc = cbp & 3;
-        if (s->pict_type == FF_I_TYPE) {
+        if (s->pict_type == AV_PICTURE_TYPE_I) {
             if(s->dquant) cbpc+=4;
             put_bits(&s->pb,
                 ff_h263_intra_MCBPC_bits[cbpc],

@@ -1097,7 +1097,7 @@ static int dvvideo_decode_frame(AVCodecContext *avctx,
 
     s->picture.reference = 0;
     s->picture.key_frame = 1;
-    s->picture.pict_type = FF_I_TYPE;
+    s->picture.pict_type = AV_PICTURE_TYPE_I;
     avctx->pix_fmt   = s->sys->pix_fmt;
     avctx->time_base = s->sys->time_base;
     avcodec_set_dimensions(avctx, s->sys->width, s->sys->height);
@@ -1266,7 +1266,7 @@ static int attribute_align_arg dvvideo_encode_frame(AVCodecContext *c, uint8_t *
     c->pix_fmt           = s->sys->pix_fmt;
     s->picture           = *((AVFrame *)data);
     s->picture.key_frame = 1;
-    s->picture.pict_type = FF_I_TYPE;
+    s->picture.pict_type = AV_PICTURE_TYPE_I;
 
     s->buf = buf;
     c->execute(c, dv_encode_video_segment, s->sys->work_chunks, NULL,

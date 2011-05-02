@@ -4,20 +4,20 @@
  *
  * Copyright (C) 2006  Aurelien Jacobs <aurel@gnuage.org>
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -526,12 +526,12 @@ int ff_vp56_decode_frame(AVCodecContext *avctx, void *data, int *data_size,
         }
 
         if (p->key_frame) {
-            p->pict_type = FF_I_TYPE;
+            p->pict_type = AV_PICTURE_TYPE_I;
             s->default_models_init(s);
             for (block=0; block<s->mb_height*s->mb_width; block++)
                 s->macroblocks[block].type = VP56_MB_INTRA;
         } else {
-            p->pict_type = FF_P_TYPE;
+            p->pict_type = AV_PICTURE_TYPE_P;
             vp56_parse_mb_type_models(s);
             s->parse_vector_models(s);
             s->mb_type = VP56_MB_INTER_NOVEC_PF;
