@@ -25,6 +25,7 @@
  */
 
 #include <stdlib.h>
+#include "avstring.h"
 #include "avutil.h"
 #include "log.h"
 #include "../../ffdebug.c"
@@ -77,7 +78,7 @@ void av_log_default_callback(void* ptr, int level, const char* fmt, va_list vl)
         count=0;
     }
     fputs(line, stderr);
-    strncpy(prev, line, sizeof line);
+    av_strlcpy(prev, line, sizeof line);
 }
 
 static void (*av_log_callback)(void*, int, const char*, va_list) = av_log_default_callback;

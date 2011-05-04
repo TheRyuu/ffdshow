@@ -2,20 +2,20 @@
  * VC-1 and WMV3 decoder - DSP functions
  * Copyright (c) 2006 Konstantin Shishkov
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -75,6 +75,58 @@ static void vc1_h_overlap_c(uint8_t* src, int stride)
         src[1] = d + d1;
         src += stride;
         rnd = !rnd;
+    }
+}
+
+static void vc1_v_s_overlap_c(DCTELEM *top,  DCTELEM *bottom)
+{
+    int i;
+    int a, b, c, d;
+    int d1, d2;
+    int rnd1 = 4, rnd2 = 3;
+    for(i = 0; i < 8; i++) {
+        a = top[48];
+        b = top[56];
+        c = bottom[0];
+        d = bottom[8];
+        d1 = a - d;
+        d2 = a - d + b - c;
+
+        top[48]   = ((a << 3) - d1 + rnd1) >> 3;
+        top[56]   = ((b << 3) - d2 + rnd2) >> 3;
+        bottom[0] = ((c << 3) + d2 + rnd1) >> 3;
+        bottom[8] = ((d << 3) + d1 + rnd2) >> 3;
+
+        bottom++;
+        top++;
+        rnd2 = 7 - rnd2;
+        rnd1 = 7 - rnd1;
+    }
+}
+
+static void vc1_h_s_overlap_c(DCTELEM *left, DCTELEM *right)
+{
+    int i;
+    int a, b, c, d;
+    int d1, d2;
+    int rnd1 = 4, rnd2 = 3;
+    for(i = 0; i < 8; i++) {
+        a = left[6];
+        b = left[7];
+        c = right[0];
+        d = right[1];
+        d1 = a - d;
+        d2 = a - d + b - c;
+
+        left[6]  = ((a << 3) - d1 + rnd1) >> 3;
+        left[7]  = ((b << 3) - d2 + rnd2) >> 3;
+        right[0] = ((c << 3) + d2 + rnd1) >> 3;
+        right[1] = ((d << 3) + d1 + rnd2) >> 3;
+
+        right += 8;
+        left += 8;
+        rnd2 = 7 - rnd2;
+        rnd1 = 7 - rnd1;
     }
 }
 
@@ -199,7 +251,7 @@ static void vc1_inv_trans_8x8_dc_c(uint8_t *dest, int linesize, DCTELEM *block)
     }
 }
 
-static av_always_inline void vc1_inv_trans_8x8_c(DCTELEM block[64], int shl, int sub)
+static void vc1_inv_trans_8x8_c(DCTELEM block[64])
 {
     int i;
     register int t1,t2,t3,t4,t5,t6,t7,t8;
@@ -254,48 +306,18 @@ static av_always_inline void vc1_inv_trans_8x8_c(DCTELEM block[64], int shl, int
         t3 =  9 * src[ 8] - 16 * src[24] +  4 * src[40] + 15 * src[56];
         t4 =  4 * src[ 8] -  9 * src[24] + 15 * src[40] - 16 * src[56];
 
-        dst[ 0] = (((t5 + t1    ) >> 7) - sub) << shl;
-        dst[ 8] = (((t6 + t2    ) >> 7) - sub) << shl;
-        dst[16] = (((t7 + t3    ) >> 7) - sub) << shl;
-        dst[24] = (((t8 + t4    ) >> 7) - sub) << shl;
-        dst[32] = (((t8 - t4 + 1) >> 7) - sub) << shl;
-        dst[40] = (((t7 - t3 + 1) >> 7) - sub) << shl;
-        dst[48] = (((t6 - t2 + 1) >> 7) - sub) << shl;
-        dst[56] = (((t5 - t1 + 1) >> 7) - sub) << shl;
+        dst[ 0] = (t5 + t1) >> 7;
+        dst[ 8] = (t6 + t2) >> 7;
+        dst[16] = (t7 + t3) >> 7;
+        dst[24] = (t8 + t4) >> 7;
+        dst[32] = (t8 - t4 + 1) >> 7;
+        dst[40] = (t7 - t3 + 1) >> 7;
+        dst[48] = (t6 - t2 + 1) >> 7;
+        dst[56] = (t5 - t1 + 1) >> 7;
 
         src++;
         dst++;
     }
-}
-
-static void vc1_inv_trans_8x8_add_c(uint8_t *dest, int linesize, DCTELEM *block)
-{
-    vc1_inv_trans_8x8_c(block, 0, 0);
-    ff_add_pixels_clamped_c(block, dest, linesize);
-}
-
-static void vc1_inv_trans_8x8_put_signed_c(uint8_t *dest, int linesize, DCTELEM *block)
-{
-    vc1_inv_trans_8x8_c(block, 0, 0);
-    ff_put_signed_pixels_clamped_c(block, dest, linesize);
-}
-
-static void vc1_inv_trans_8x8_put_signed_rangered_c(uint8_t *dest, int linesize, DCTELEM *block)
-{
-    vc1_inv_trans_8x8_c(block, 1, 0);
-    ff_put_signed_pixels_clamped_c(block, dest, linesize);
-}
-
-static void vc1_inv_trans_8x8_put_c(uint8_t *dest, int linesize, DCTELEM *block)
-{
-    vc1_inv_trans_8x8_c(block, 0, 0);
-    ff_put_pixels_clamped_c(block, dest, linesize);
-}
-
-static void vc1_inv_trans_8x8_put_rangered_c(uint8_t *dest, int linesize, DCTELEM *block)
-{
-    vc1_inv_trans_8x8_c(block, 1, 64);
-    ff_put_pixels_clamped_c(block, dest, linesize);
 }
 
 /** Do inverse transform on 8x4 part of block
@@ -692,11 +714,7 @@ static void avg_no_rnd_vc1_chroma_mc8_c(uint8_t *dst/*align 8*/, uint8_t *src/*a
 }
 
 av_cold void ff_vc1dsp_init(VC1DSPContext* dsp) {
-    dsp->vc1_inv_trans_8x8_add = vc1_inv_trans_8x8_add_c;
-    dsp->vc1_inv_trans_8x8_put_signed[0] = vc1_inv_trans_8x8_put_signed_c;
-    dsp->vc1_inv_trans_8x8_put_signed[1] = vc1_inv_trans_8x8_put_signed_rangered_c;
-    dsp->vc1_inv_trans_8x8_put[0] = vc1_inv_trans_8x8_put_c;
-    dsp->vc1_inv_trans_8x8_put[1] = vc1_inv_trans_8x8_put_rangered_c;
+    dsp->vc1_inv_trans_8x8 = vc1_inv_trans_8x8_c;
     dsp->vc1_inv_trans_4x8 = vc1_inv_trans_4x8_c;
     dsp->vc1_inv_trans_8x4 = vc1_inv_trans_8x4_c;
     dsp->vc1_inv_trans_4x4 = vc1_inv_trans_4x4_c;
@@ -706,6 +724,8 @@ av_cold void ff_vc1dsp_init(VC1DSPContext* dsp) {
     dsp->vc1_inv_trans_4x4_dc = vc1_inv_trans_4x4_dc_c;
     dsp->vc1_h_overlap = vc1_h_overlap_c;
     dsp->vc1_v_overlap = vc1_v_overlap_c;
+    dsp->vc1_h_s_overlap = vc1_h_s_overlap_c;
+    dsp->vc1_v_s_overlap = vc1_v_s_overlap_c;
     dsp->vc1_v_loop_filter4 = vc1_v_loop_filter4_c;
     dsp->vc1_h_loop_filter4 = vc1_h_loop_filter4_c;
     dsp->vc1_v_loop_filter8 = vc1_v_loop_filter8_c;

@@ -2,20 +2,20 @@
  * Intel Indeo 3 (IV31, IV32, etc.) video decoder for ffmpeg
  * written, produced, and directed by Alan Smithee
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -149,13 +149,13 @@ static av_cold void iv_free_func(Indeo3DecodeContext *s)
 }
 
 struct ustr {
-    long xpos;
-    long ypos;
-    long width;
-    long height;
-    long split_flag;
-    long split_direction;
-    long usl7;
+    int xpos;
+    int ypos;
+    int width;
+    int height;
+    int split_flag;
+    int split_direction;
+    int usl7;
 };
 
 
@@ -203,12 +203,12 @@ struct ustr {
 
 static void iv_Decode_Chunk(Indeo3DecodeContext *s,
         uint8_t *cur, uint8_t *ref, int width, int height,
-        const uint8_t *buf1, long cb_offset, const uint8_t *hdr,
+        const uint8_t *buf1, int cb_offset, const uint8_t *hdr,
         const uint8_t *buf2, int min_width_160)
 {
     uint8_t bit_buf;
-    unsigned long bit_pos, lv, lv1, lv2;
-    long *width_tbl, width_tbl_arr[10];
+    unsigned int bit_pos, lv, lv1, lv2;
+    int *width_tbl, width_tbl_arr[10];
     const signed char *ref_vectors;
     uint8_t *cur_frm_pos, *ref_frm_pos, *cp, *cp2;
     uint32_t *cur_lp, *ref_lp;
@@ -982,7 +982,7 @@ static int iv_decode_frame(AVCodecContext *avctx,
     Indeo3DecodeContext *s = avctx->priv_data;
     unsigned int image_width, image_height,
                  chroma_width, chroma_height;
-    unsigned long flags, cb_offset, data_size,
+    unsigned int flags, cb_offset, data_size,
                   y_offset, v_offset, u_offset, mc_vector_count;
     const uint8_t *hdr_pos, *buf_pos;
 

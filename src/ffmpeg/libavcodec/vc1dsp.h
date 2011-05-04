@@ -2,20 +2,20 @@
  * VC-1 and WMV3 decoder - DSP functions
  * Copyright (c) 2006 Konstantin Shishkov
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -30,13 +30,9 @@
 
 #include "dsputil.h"
 
-typedef void (*vc1_idct_func)(uint8_t *dest, int line_size, DCTELEM *block);
-
 typedef struct VC1DSPContext {
     /* vc1 functions */
-    vc1_idct_func vc1_inv_trans_8x8_add;
-    vc1_idct_func vc1_inv_trans_8x8_put_signed[2];
-    vc1_idct_func vc1_inv_trans_8x8_put[2];
+    void (*vc1_inv_trans_8x8)(DCTELEM *b);
     void (*vc1_inv_trans_8x4)(uint8_t *dest, int line_size, DCTELEM *block);
     void (*vc1_inv_trans_4x8)(uint8_t *dest, int line_size, DCTELEM *block);
     void (*vc1_inv_trans_4x4)(uint8_t *dest, int line_size, DCTELEM *block);
@@ -44,8 +40,10 @@ typedef struct VC1DSPContext {
     void (*vc1_inv_trans_8x4_dc)(uint8_t *dest, int line_size, DCTELEM *block);
     void (*vc1_inv_trans_4x8_dc)(uint8_t *dest, int line_size, DCTELEM *block);
     void (*vc1_inv_trans_4x4_dc)(uint8_t *dest, int line_size, DCTELEM *block);
-    void (*vc1_v_overlap)(uint8_t* src, int stride);
-    void (*vc1_h_overlap)(uint8_t* src, int stride);
+    void (*vc1_v_overlap)(uint8_t *src, int stride);
+    void (*vc1_h_overlap)(uint8_t *src, int stride);
+    void (*vc1_v_s_overlap)(DCTELEM *top,  DCTELEM *bottom);
+    void (*vc1_h_s_overlap)(DCTELEM *left, DCTELEM *right);
     void (*vc1_v_loop_filter4)(uint8_t *src, int stride, int pq);
     void (*vc1_h_loop_filter4)(uint8_t *src, int stride, int pq);
     void (*vc1_v_loop_filter8)(uint8_t *src, int stride, int pq);
