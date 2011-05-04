@@ -1,3 +1,5 @@
+CC=gcc.exe
+
 all:.all
 distclean: clean
 
@@ -21,7 +23,7 @@ else
   YASMFLAGS+=-f win32 -m x86 -DWIN32 -DARCH_X86_32 -DPREFIX
 endif
 
-CFLAGS+=-mno-cygwin -mdll -mthreads -pipe
+CFLAGS+=-mdll -mthreads -pipe
 OPTFLAGS+=-fno-common -fno-tree-vectorize
 CPPFLAGS+=-fno-rtti
 OUTPUTFLAG=-MMD -o\
@@ -32,7 +34,7 @@ ifeq ($(DEBUG),yes)
 else
   CFLAGS+=-DNDEBUG -UDEBUG
   OPTFLAGS+=-fomit-frame-pointer
-  LDFLAGS+=--strip-all
+  LDFLAGS+=-s
 endif
 
 ifeq ($(EXCEPTIONS),1)
@@ -64,13 +66,13 @@ $(OBJ_DIR)%.o: %.asm
 
 $(TARGET_LIB): $(OBJS) $(DEF)
 	@echo $@
-	@$(FFDSHOW_PREFIX)dllwrap -mno-cygwin --target=$(TARGET_OS) \
+	@$(FFDSHOW_PREFIX)dllwrap --target=$(TARGET_OS) \
 					-Wl,--enable-stdcall-fixup $(LDFLAGS) \
 					--def $(DEF) $(GCCDLLENTRY) -o $@ $(OBJS) $(GCCLIBS)
 
 $(TARGET_EXE): $(OBJS)
 	@echo $@
-	@$(FFDSHOW_PREFIX)$(CC) -mno-cygwin --target=$(TARGET_OS) \
+	@$(FFDSHOW_PREFIX)$(CC) --target=$(TARGET_OS) \
 					-Wl,--enable-stdcall-fixup -o $@ $(OBJS) $(GCCLIBS)
 	@$(FFDSHOW_PREFIX)strip $@
 
