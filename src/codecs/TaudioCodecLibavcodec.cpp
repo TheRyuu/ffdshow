@@ -49,6 +49,11 @@ bool TaudioCodecLibavcodec::init(const CMediaType &mt)
             return false;
         }
 
+		if (codecId==CODEC_ID_AMR_NB) {
+            fmt.setChannels(1);
+            fmt.freq = 8000;
+        }
+
         avctx = ffmpeg->avcodec_alloc_context();
         avctx->sample_rate = fmt.freq;
         avctx->channels = fmt.nchannels;
