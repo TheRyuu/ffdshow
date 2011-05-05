@@ -594,13 +594,6 @@ typedef struct H264Context{
     int sei_buffering_period_present;  ///< Buffering period SEI flag
     int initial_cpb_removal_delay[32]; ///< Initial timestamps for CPBs
 
-    //SVQ3 specific fields
-    int halfpel_flag;
-    int thirdpel_flag;
-    int unknown_svq3_flag;
-    int next_slice_index;
-    uint32_t svq3_watermark_key;
-
     /* ffdshow custom stuff */
     int has_to_drop_first_non_ref;    // Workaround Haali's media splitter (http://forum.doom9.org/showthread.php?p=1226434#post1226434)
 }H264Context;

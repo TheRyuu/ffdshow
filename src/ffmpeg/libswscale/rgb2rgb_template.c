@@ -686,6 +686,10 @@ static inline void rgb24toyv12_c(const uint8_t *src, uint8_t *ydst,
         ydst += lumStride;
         src  += srcStride;
 
+        // FFmpeg patch
+        if(y+1 == height)
+            break;
+
         for (i=0; i<chromWidth; i++) {
             unsigned int b = src[6*i+0];
             unsigned int g = src[6*i+1];

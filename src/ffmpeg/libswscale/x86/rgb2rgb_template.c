@@ -2000,6 +2000,10 @@ static inline void RENAME(rgb24toyv12)(const uint8_t *src, uint8_t *ydst, uint8_
         }
         ydst += lumStride;
         src  += srcStride;
+        
+        // FFmpeg patch
+        if(y+1 == height)
+            break;
 
         for (i=0; i<chromWidth; i++) {
             unsigned int b = src[6*i+0];
