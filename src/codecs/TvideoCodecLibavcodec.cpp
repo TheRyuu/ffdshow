@@ -860,6 +860,7 @@ bool TvideoCodecLibavcodec::onSeek(REFERENCE_TIME segmentStart)
     }
     return false;
 }
+
 bool TvideoCodecLibavcodec::onDiscontinuity(void)
 {
     wasKey=false;
@@ -1793,7 +1794,7 @@ void TvideoCodecLibavcodec::Th264RandomAccess::judgeUsability(int *got_picture_p
 
     AVFrame *frame = parent->frame;
 
-    if (--thread_delay > 0 || frame->h264_max_frame_num == 0) {
+    if (thread_delay > 1 && --thread_delay > 0 || frame->h264_max_frame_num == 0) {
         return;
     }
 
