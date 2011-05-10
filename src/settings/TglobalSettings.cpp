@@ -560,11 +560,11 @@ void TglobalSettingsDecVideo::load(void)
         needCodecFix=0;
     }
 
-    fixMissing(xvid,IDFF_MOVIE_LAVC,IDFF_MOVIE_XVID4,IDFF_MOVIE_FFMPEG_MT);
+    fixMissing(xvid,IDFF_MOVIE_LAVC,IDFF_MOVIE_XVID4/*,IDFF_MOVIE_FFMPEG_MT*/);
     fixMissing(div3,IDFF_MOVIE_LAVC);
-    fixMissing(dx50,IDFF_MOVIE_LAVC,IDFF_MOVIE_XVID4,IDFF_MOVIE_FFMPEG_MT);
-    fixMissing(mp4v,IDFF_MOVIE_LAVC,IDFF_MOVIE_XVID4,IDFF_MOVIE_FFMPEG_MT);
-    fixMissing(fvfw,IDFF_MOVIE_LAVC,IDFF_MOVIE_XVID4,IDFF_MOVIE_FFMPEG_MT);
+    fixMissing(dx50,IDFF_MOVIE_LAVC,IDFF_MOVIE_XVID4/*,IDFF_MOVIE_FFMPEG_MT*/);
+    fixMissing(mp4v,IDFF_MOVIE_LAVC,IDFF_MOVIE_XVID4/*,IDFF_MOVIE_FFMPEG_MT*/);
+    fixMissing(fvfw,IDFF_MOVIE_LAVC,IDFF_MOVIE_XVID4/*,IDFF_MOVIE_FFMPEG_MT*/);
     fixMissing(mp43,IDFF_MOVIE_LAVC);
     fixMissing(mp42,IDFF_MOVIE_LAVC);
     fixMissing(mp41,IDFF_MOVIE_LAVC);
@@ -586,7 +586,7 @@ void TglobalSettingsDecVideo::load(void)
     fixMissing(mjpg,IDFF_MOVIE_LAVC);
     fixMissing(dvsd,IDFF_MOVIE_LAVC);
     fixMissing(cdvc,IDFF_MOVIE_LAVC);
-    fixMissing(hfyu,IDFF_MOVIE_LAVC,IDFF_MOVIE_FFMPEG_MT);
+    fixMissing(hfyu,IDFF_MOVIE_LAVC/*,IDFF_MOVIE_FFMPEG_MT*/);
     fixMissing(cyuv,IDFF_MOVIE_LAVC);
     fixMissing(asv1,IDFF_MOVIE_LAVC);
     fixMissing(vcr1,IDFF_MOVIE_LAVC);
@@ -597,7 +597,7 @@ void TglobalSettingsDecVideo::load(void)
     fixMissing(mpg2,IDFF_MOVIE_LAVC,IDFF_MOVIE_LIBMPEG2);
     fixMissing(mpegAVI,IDFF_MOVIE_LAVC,IDFF_MOVIE_LIBMPEG2);
     fixMissing(em2v,IDFF_MOVIE_LAVC,IDFF_MOVIE_LIBMPEG2);
-    fixMissing(theo,IDFF_MOVIE_LAVC,IDFF_MOVIE_FFMPEG_MT);
+    fixMissing(theo,IDFF_MOVIE_LAVC/*,IDFF_MOVIE_FFMPEG_MT*/);
     fixMissing(cram,IDFF_MOVIE_LAVC);
     fixMissing(rt21,IDFF_MOVIE_LAVC);
     fixMissing(iv32,IDFF_MOVIE_LAVC);
@@ -608,7 +608,7 @@ void TglobalSettingsDecVideo::load(void)
     fixMissing(rv30,IDFF_MOVIE_LAVC);
     fixMissing(rv40,IDFF_MOVIE_LAVC);
     fixMissing(ffv1,IDFF_MOVIE_LAVC);
-    fixMissing(vp3 ,IDFF_MOVIE_LAVC,IDFF_MOVIE_FFMPEG_MT);
+    fixMissing(vp3 ,IDFF_MOVIE_LAVC/*,IDFF_MOVIE_FFMPEG_MT*/);
     fixMissing(rle ,IDFF_MOVIE_LAVC);
     fixMissing(mszh,IDFF_MOVIE_LAVC);
     fixMissing(zlib,IDFF_MOVIE_LAVC);

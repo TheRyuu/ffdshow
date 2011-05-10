@@ -2854,8 +2854,10 @@ const char* avcodec_get_current_idct(AVCodecContext *avctx)
         return "Integer (ff_jref_idct4)";
     if (c->idct_put==ff_h264_lowres_idct_put_c)
         return "H.264 (ff_h264_lowres_idct_c)";
+#if CONFIG_VP3_DECODER || CONFIG_VP5_DECODER || CONFIG_VP6_DECODER
     if (c->idct_put==ff_vp3_idct_put_c)
         return "VP3 (ff_vp3_idct_c)";
+#endif
     if (c->idct_put==ff_simple_idct_put)
         return "Simple IDCT (simple_idct)";
 #if HAVE_MMX
