@@ -623,16 +623,17 @@ int ff_h264_execute_ref_pic_marking(H264Context *h, MMCO *mmco, int mmco_count){
         }
     }
 
-    // FFmpeg patch
-    if (h->long_ref_count + h->short_ref_count > FFMAX(h->sps.ref_frame_count, 1)){
+    if (h->long_ref_count + h->short_ref_count -
+            (h->short_ref[0] == s->current_picture_ptr) > h->sps.ref_frame_count){
 
         /* We have too many reference frames, probably due to corrupted
          * stream. Need to discard one frame. Prevents overrun of the
          * short_ref and long_ref buffers.
          */
         av_log(h->s.avctx, AV_LOG_ERROR,
-               "number of reference frames exceeds max (probably "
-               "corrupt input), discarding one long:%d short:%d max:%d\n", h->long_ref_count, h->short_ref_count, h->sps.ref_frame_count); // FFmpeg patch
+               "number of reference frames (%d+%d) exceeds max (%d; probably "
+               "corrupt input), discarding one\n",
+               h->long_ref_count, h->short_ref_count, h->sps.ref_frame_count);
 
         if (h->long_ref_count && !h->short_ref_count) {
             for (i = 0; i < 16; ++i)

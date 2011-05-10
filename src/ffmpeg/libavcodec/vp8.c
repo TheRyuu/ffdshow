@@ -1530,7 +1530,7 @@ static int vp8_decode_frame(AVCodecContext *avctx, void *data, int *data_size,
     if (s->keyframe)
         memset(s->intra4x4_pred_mode_top, DC_PRED, s->mb_width*4);
 
-    #define MARGIN (16 << 2)
+#define MARGIN (16 << 2)
     s->mv_min.y = -MARGIN;
     s->mv_max.y = ((s->mb_height - 1) << 6) + MARGIN;
 
@@ -1659,7 +1659,7 @@ static av_cold int vp8_decode_init(AVCodecContext *avctx)
     avctx->pix_fmt = PIX_FMT_YUV420P;
 
     dsputil_init(&s->dsp, avctx);
-    ff_h264_pred_init(&s->hpc, CODEC_ID_VP8);
+    ff_h264_pred_init(&s->hpc, CODEC_ID_VP8, 8);
     ff_vp8dsp_init(&s->vp8dsp);
 
     return 0;

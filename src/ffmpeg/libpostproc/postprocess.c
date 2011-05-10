@@ -1100,4 +1100,3 @@ void  pp_postprocess(const uint8_t * src[3], const stride_t srcStride[3],
         }
     }
 }
-

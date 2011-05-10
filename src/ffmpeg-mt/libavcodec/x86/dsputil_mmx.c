@@ -3,20 +3,20 @@
  * Copyright (c) 2000, 2001 Fabrice Bellard
  * Copyright (c) 2002-2004 Michael Niedermayer <michaelni@gmx.at>
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  *
  * MMX optimization by Nick Kurshev <nickols_k@mail.ru>
@@ -1865,6 +1865,7 @@ int  ff_add_hfyu_left_prediction_sse4(uint8_t *dst, const uint8_t *src, int w, i
 void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
 {
     int mm_flags = av_get_cpu_flags();
+    const int high_bit_depth = avctx->codec_id == CODEC_ID_H264 && avctx->bits_per_raw_sample > 8;
 
     if (avctx->dsp_mask) {
         if (avctx->dsp_mask & AV_CPU_FLAG_FORCE)
@@ -1946,11 +1947,13 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
         c->put_pixels_clamped = ff_put_pixels_clamped_mmx;
         c->put_signed_pixels_clamped = ff_put_signed_pixels_clamped_mmx;
         c->add_pixels_clamped = ff_add_pixels_clamped_mmx;
+        if (!high_bit_depth) {
         c->clear_block  = clear_block_mmx;
         c->clear_blocks = clear_blocks_mmx;
         if (mm_flags & AV_CPU_FLAG_SSE){
             c->clear_block  = clear_block_sse;
             c->clear_blocks = clear_blocks_sse;
+        }
         }
 
 #define SET_HPEL_FUNCS(PFX, IDX, SIZE, CPU) \
@@ -1959,6 +1962,7 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
         c->PFX ## _pixels_tab[IDX][2] = PFX ## _pixels ## SIZE ## _y2_ ## CPU; \
         c->PFX ## _pixels_tab[IDX][3] = PFX ## _pixels ## SIZE ## _xy2_ ## CPU
 
+        if (!high_bit_depth) {
         SET_HPEL_FUNCS(put, 0, 16, mmx);
         SET_HPEL_FUNCS(put_no_rnd, 0, 16, mmx);
         SET_HPEL_FUNCS(avg, 0, 16, mmx);
@@ -1967,27 +1971,33 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
         SET_HPEL_FUNCS(put_no_rnd, 1, 8, mmx);
         SET_HPEL_FUNCS(avg, 1, 8, mmx);
         SET_HPEL_FUNCS(avg_no_rnd, 1, 8, mmx);
+        }
 
 #if ARCH_X86_32 || !HAVE_YASM
         c->gmc= gmc_mmx;
 #endif
 #if ARCH_X86_32 && HAVE_YASM
+        if (!high_bit_depth)
         c->emulated_edge_mc = emulated_edge_mc_mmx;
 #endif
 
         c->add_bytes= add_bytes_mmx;
         c->add_bytes_l2= add_bytes_l2_mmx;
 
+        if (!high_bit_depth)
         c->draw_edges = draw_edges_mmx;
 
 #if HAVE_YASM
+        if (!high_bit_depth) {
         c->put_h264_chroma_pixels_tab[0]= ff_put_h264_chroma_mc8_mmx_rnd;
         c->put_h264_chroma_pixels_tab[1]= ff_put_h264_chroma_mc4_mmx;
+        }
 #endif
 
         if (mm_flags & AV_CPU_FLAG_MMX2) {
             c->prefetch = prefetch_mmx2;
 
+            if (!high_bit_depth) {
             c->put_pixels_tab[0][1] = put_pixels16_x2_mmx2;
             c->put_pixels_tab[0][2] = put_pixels16_y2_mmx2;
 
@@ -2001,14 +2011,17 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
             c->avg_pixels_tab[1][0] = avg_pixels8_mmx2;
             c->avg_pixels_tab[1][1] = avg_pixels8_x2_mmx2;
             c->avg_pixels_tab[1][2] = avg_pixels8_y2_mmx2;
+            }
 
             if(!(avctx->flags & CODEC_FLAG_BITEXACT)){
+                if (!high_bit_depth) {
                 c->put_no_rnd_pixels_tab[0][1] = put_no_rnd_pixels16_x2_mmx2;
                 c->put_no_rnd_pixels_tab[0][2] = put_no_rnd_pixels16_y2_mmx2;
                 c->put_no_rnd_pixels_tab[1][1] = put_no_rnd_pixels8_x2_mmx2;
                 c->put_no_rnd_pixels_tab[1][2] = put_no_rnd_pixels8_y2_mmx2;
                 c->avg_pixels_tab[0][3] = avg_pixels16_xy2_mmx2;
                 c->avg_pixels_tab[1][3] = avg_pixels8_xy2_mmx2;
+                }
 
                 if (CONFIG_VP3_DECODER && HAVE_YASM) {
                     c->vp3_v_loop_filter= ff_vp3_v_loop_filter_mmx2;
@@ -2050,12 +2063,14 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
             SET_QPEL_FUNCS(avg_qpel, 0, 16, mmx2);
             SET_QPEL_FUNCS(avg_qpel, 1, 8, mmx2);
 
+            if (!high_bit_depth) {
             SET_QPEL_FUNCS(put_h264_qpel, 0, 16, mmx2);
             SET_QPEL_FUNCS(put_h264_qpel, 1, 8, mmx2);
             SET_QPEL_FUNCS(put_h264_qpel, 2, 4, mmx2);
             SET_QPEL_FUNCS(avg_h264_qpel, 0, 16, mmx2);
             SET_QPEL_FUNCS(avg_h264_qpel, 1, 8, mmx2);
             SET_QPEL_FUNCS(avg_h264_qpel, 2, 4, mmx2);
+            }
 
             SET_QPEL_FUNCS(put_2tap_qpel, 0, 16, mmx2);
             SET_QPEL_FUNCS(put_2tap_qpel, 1, 8, mmx2);
@@ -2063,10 +2078,12 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
             SET_QPEL_FUNCS(avg_2tap_qpel, 1, 8, mmx2);
 
 #if HAVE_YASM
+            if (!high_bit_depth) {
             c->avg_h264_chroma_pixels_tab[0]= ff_avg_h264_chroma_mc8_mmx2_rnd;
             c->avg_h264_chroma_pixels_tab[1]= ff_avg_h264_chroma_mc4_mmx2;
             c->avg_h264_chroma_pixels_tab[2]= ff_avg_h264_chroma_mc2_mmx2;
             c->put_h264_chroma_pixels_tab[2]= ff_put_h264_chroma_mc2_mmx2;
+            }
 
             c->add_hfyu_median_prediction = ff_add_hfyu_median_prediction_mmx2;
 #endif
@@ -2078,6 +2095,7 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
         } else if (mm_flags & AV_CPU_FLAG_3DNOW) {
             c->prefetch = prefetch_3dnow;
 
+            if (!high_bit_depth) {
             c->put_pixels_tab[0][1] = put_pixels16_x2_3dnow;
             c->put_pixels_tab[0][2] = put_pixels16_y2_3dnow;
 
@@ -2100,6 +2118,7 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
                 c->avg_pixels_tab[0][3] = avg_pixels16_xy2_3dnow;
                 c->avg_pixels_tab[1][3] = avg_pixels8_xy2_3dnow;
             }
+            }
 
             if (CONFIG_VP3_DECODER
                 && (avctx->codec_id == CODEC_ID_VP3 || avctx->codec_id == CODEC_ID_THEORA)) {
@@ -2114,12 +2133,14 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
             SET_QPEL_FUNCS(avg_qpel, 0, 16, 3dnow);
             SET_QPEL_FUNCS(avg_qpel, 1, 8, 3dnow);
 
+            if (!high_bit_depth) {
             SET_QPEL_FUNCS(put_h264_qpel, 0, 16, 3dnow);
             SET_QPEL_FUNCS(put_h264_qpel, 1, 8, 3dnow);
             SET_QPEL_FUNCS(put_h264_qpel, 2, 4, 3dnow);
             SET_QPEL_FUNCS(avg_h264_qpel, 0, 16, 3dnow);
             SET_QPEL_FUNCS(avg_h264_qpel, 1, 8, 3dnow);
             SET_QPEL_FUNCS(avg_h264_qpel, 2, 4, 3dnow);
+            }
 
             SET_QPEL_FUNCS(put_2tap_qpel, 0, 16, 3dnow);
             SET_QPEL_FUNCS(put_2tap_qpel, 1, 8, 3dnow);
@@ -2127,8 +2148,10 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
             SET_QPEL_FUNCS(avg_2tap_qpel, 1, 8, 3dnow);
 
 #if HAVE_YASM
+            if (!high_bit_depth) {
             c->avg_h264_chroma_pixels_tab[0]= ff_avg_h264_chroma_mc8_3dnow_rnd;
             c->avg_h264_chroma_pixels_tab[1]= ff_avg_h264_chroma_mc4_3dnow;
+            }
 #endif
         }
 
@@ -2140,12 +2163,15 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
             c->avg_h264_qpel_pixels_tab[1][x+y*4] = avg_h264_qpel8_mc##x##y##_##CPU;
         if((mm_flags & AV_CPU_FLAG_SSE2) && !(mm_flags & AV_CPU_FLAG_3DNOW)){
             // these functions are slower than mmx on AMD, but faster on Intel
+            if (!high_bit_depth) {
             c->put_pixels_tab[0][0] = put_pixels16_sse2;
             c->put_no_rnd_pixels_tab[0][0] = put_pixels16_sse2;
             c->avg_pixels_tab[0][0] = avg_pixels16_sse2;
             H264_QPEL_FUNCS(0, 0, sse2);
+            }
         }
         if(mm_flags & AV_CPU_FLAG_SSE2){
+            if (!high_bit_depth) {
             H264_QPEL_FUNCS(0, 1, sse2);
             H264_QPEL_FUNCS(0, 2, sse2);
             H264_QPEL_FUNCS(0, 3, sse2);
@@ -2158,9 +2184,11 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
             H264_QPEL_FUNCS(3, 1, sse2);
             H264_QPEL_FUNCS(3, 2, sse2);
             H264_QPEL_FUNCS(3, 3, sse2);
+            }
         }
 #if HAVE_SSSE3
         if(mm_flags & AV_CPU_FLAG_SSSE3){
+            if (!high_bit_depth) {
             H264_QPEL_FUNCS(1, 0, ssse3);
             H264_QPEL_FUNCS(1, 1, ssse3);
             H264_QPEL_FUNCS(1, 2, ssse3);
@@ -2173,11 +2201,14 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
             H264_QPEL_FUNCS(3, 1, ssse3);
             H264_QPEL_FUNCS(3, 2, ssse3);
             H264_QPEL_FUNCS(3, 3, ssse3);
+            }
 #if HAVE_YASM
+            if (!high_bit_depth) {
             c->put_h264_chroma_pixels_tab[0]= ff_put_h264_chroma_mc8_ssse3_rnd;
             c->avg_h264_chroma_pixels_tab[0]= ff_avg_h264_chroma_mc8_ssse3_rnd;
             c->put_h264_chroma_pixels_tab[1]= ff_put_h264_chroma_mc4_ssse3;
             c->avg_h264_chroma_pixels_tab[1]= ff_avg_h264_chroma_mc4_ssse3;
+            }
             c->add_hfyu_left_prediction = ff_add_hfyu_left_prediction_ssse3;
             if (mm_flags & AV_CPU_FLAG_SSE4) // not really sse4, just slow on Conroe
                 c->add_hfyu_left_prediction = ff_add_hfyu_left_prediction_sse4;
@@ -2186,6 +2217,7 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
 #endif
         if(mm_flags & AV_CPU_FLAG_SSE2){
 #if HAVE_YASM
+            if (!high_bit_depth)
             c->emulated_edge_mc = emulated_edge_mc_sse;
             c->gmc= gmc_sse;
 #endif
