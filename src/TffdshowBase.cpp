@@ -36,6 +36,7 @@
 #include "TinputPin.h"
 #include "Tinfo.h"
 #include "TtrayIcon.h"
+#include <StrSafe.h>
 
 STDMETHODIMP_(int) TffdshowBase::getVersion2(void)
 {
@@ -607,6 +608,48 @@ HRESULT TffdshowBase::onJoinFilterGraph(IFilterGraph *pGraph,LPCWSTR pName)
     return res;
 }
 
+HRESULT AddToRot(IUnknown *pUnkGraph, DWORD *pdwRegister) 
+{
+    IMoniker * pMoniker = NULL;
+    IRunningObjectTable *pROT = NULL;
+
+    if (FAILED(GetRunningObjectTable(0, &pROT))) 
+    {
+        return E_FAIL;
+    }
+    
+    const size_t STRING_LENGTH = 256;
+
+    WCHAR wsz[STRING_LENGTH];
+ 
+	StringCchPrintfW(
+        wsz, STRING_LENGTH, 
+        L"FilterGraph %08x pid %08x (ffdshow)", 
+        (DWORD_PTR)pUnkGraph, 
+        GetCurrentProcessId()
+        );
+    
+    HRESULT hr = CreateItemMoniker(L"!", wsz, &pMoniker);
+    if (SUCCEEDED(hr)) 
+    {
+        hr = pROT->Register(ROTFLAGS_REGISTRATIONKEEPSALIVE, pUnkGraph,
+            pMoniker, pdwRegister);
+        pMoniker->Release();
+    }
+    pROT->Release();
+    
+    return hr;
+}
+
+void RemoveFromRot(DWORD pdwRegister)
+{
+    IRunningObjectTable *pROT;
+    if (SUCCEEDED(GetRunningObjectTable(0, &pROT))) {
+        pROT->Revoke(pdwRegister);
+        pROT->Release();
+    }
+}
+
 HRESULT TffdshowBase::onGraphJoin(IFilterGraph *pGraph)
 {
     DPRINTF(_l("Join filter graph"));
@@ -620,18 +663,11 @@ HRESULT TffdshowBase::onGraphJoin(IFilterGraph *pGraph)
         }
     }
     if (globalSettings->addToROT && !pdwROT) {
-        comptr<IRunningObjectTable> pROT;
-        if (SUCCEEDED(GetRunningObjectTable(0,&pROT))) {
-            WCHAR wsz[256];
-            wsprintfW(wsz, L"FilterGraph %08p pid %08x (ffdshow)", (DWORD_PTR)pGraph,GetCurrentProcessId());
-            comptr<IMoniker> pMoniker;
-            if (SUCCEEDED(CreateItemMoniker(L"!",wsz,&pMoniker))) {
-                pROT->Register(ROTFLAGS_REGISTRATIONKEEPSALIVE,(IUnknown*)pGraph,pMoniker,&pdwROT);
-            }
-        }
+		AddToRot(pGraph, &pdwROT);
     }
     return S_OK;
 }
+
 HRESULT TffdshowBase::onGraphRemove(void)
 {
     DPRINTF(_l("Removed from filter graph"));
@@ -639,10 +675,7 @@ HRESULT TffdshowBase::onGraphRemove(void)
         SendMessage(cfgDlgHwnd,WM_CLOSE,0,0);
     }
     if (pdwROT) {
-        comptr<IRunningObjectTable> pROT;
-        if (SUCCEEDED(GetRunningObjectTable(0,&pROT))) {
-            pROT->Revoke(pdwROT);
-        }
+		RemoveFromRot(pdwROT);
         pdwROT=0;
     }
     hideTrayIcon();
