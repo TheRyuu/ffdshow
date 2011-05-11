@@ -2063,7 +2063,7 @@ static inline void RENAME(hScale)(int16_t *dst, int dstW, const uint8_t *src, in
 
 //FIXME all pal and rgb srcFormats could do this convertion as well
 //FIXME all scalers more complex than bilinear could do half of this transform
-static void RENAME(chrRangeToJpeg)(uint16_t *dst, int width)
+static void RENAME(chrRangeToJpeg)(int16_t *dst, int width)
 {
     int i;
     for (i = 0; i < width; i++) {
@@ -2221,7 +2221,7 @@ static inline void RENAME(hyscale)(SwsContext *c, uint16_t *dst, long dstWidth, 
                                    uint32_t *pal, int isAlpha)
 {
     void (*toYV12)(uint8_t *, const uint8_t *, long, uint32_t *) = isAlpha ? c->alpToYV12 : c->lumToYV12;
-    void (*convertRange)(uint16_t *, int) = isAlpha ? NULL : c->lumConvertRange;
+    void (*convertRange)(int16_t *, int) = isAlpha ? NULL : c->lumConvertRange;
 
     src += isAlpha ? c->alpSrcOffset : c->lumSrcOffset;
 
@@ -2625,7 +2625,7 @@ static int RENAME(swScaleI)(SwsContext *c, const uint8_t* src[], stride_t srcStr
             } else if (isPlanarYUV(dstFormat) || dstFormat==PIX_FMT_GRAY8) { //YV12 like
                 const int chrSkipMask= (1<<c->chrDstVSubSample)-1;
                 if ((dstY&chrSkipMask) || isGray(dstFormat)) uDest=vDest= NULL; //FIXME split functions in lumi / chromi
-                if (is16BPS(dstFormat)) {
+                if (is16BPS(dstFormat) || isNBPS(dstFormat)) {
                     yuv2yuvX16inC(
                                   vLumFilter+dstY*vLumFilterSize   , lumSrcPtr, vLumFilterSize,
                                   vChrFilter+chrDstY*vChrFilterSize, chrSrcPtr, vChrFilterSize,
@@ -2702,7 +2702,7 @@ static int RENAME(swScaleI)(SwsContext *c, const uint8_t* src[], stride_t srcStr
             } else if (isPlanarYUV(dstFormat) || dstFormat==PIX_FMT_GRAY8) { //YV12
                 const int chrSkipMask= (1<<c->chrDstVSubSample)-1;
                 if ((dstY&chrSkipMask) || isGray(dstFormat)) uDest=vDest= NULL; //FIXME split functions in lumi / chromi
-                if (is16BPS(dstFormat)) {
+                if (is16BPS(dstFormat) || isNBPS(dstFormat)) {
                     yuv2yuvX16inC(
                                   vLumFilter+dstY*vLumFilterSize   , lumSrcPtr, vLumFilterSize,
                                   vChrFilter+chrDstY*vChrFilterSize, chrSrcPtr, vChrFilterSize,
@@ -2768,43 +2768,78 @@ static void RENAME(sws_init_swScale)(SwsContext *c)
         c->hyscale_fast = RENAME(hyscale_fast);
         c->hcscale_fast = RENAME(hcscale_fast);
     } else {
-        c->hyscale_fast = NULL;
-        c->hcscale_fast = NULL;
+        c->hyscale_fast = hyscale_fast_c;
+        c->hcscale_fast = hcscale_fast_c;
     }
 
+    c->chrToYV12 = NULL;
     switch(srcFormat) {
         case PIX_FMT_YUYV422  : c->chrToYV12 = RENAME(yuy2ToUV); break;
         case PIX_FMT_UYVY422  : c->chrToYV12 = RENAME(uyvyToUV); break;
         case PIX_FMT_NV12     : c->chrToYV12 = RENAME(nv12ToUV); break;
         case PIX_FMT_NV21     : c->chrToYV12 = RENAME(nv21ToUV); break;
+        case PIX_FMT_RGB8     :
+        case PIX_FMT_BGR8     :
+        case PIX_FMT_PAL8     :
+        case PIX_FMT_BGR4_BYTE:
+        case PIX_FMT_RGB4_BYTE: c->chrToYV12 = palToUV; break;
+        case PIX_FMT_YUV420P9: c->chrToYV12 = yuv9ToUV_c; break;
+        case PIX_FMT_YUV422P10:
+        case PIX_FMT_YUV420P10: c->chrToYV12 = yuv10ToUV_c; break;
         case PIX_FMT_YUV420P16BE:
         case PIX_FMT_YUV422P16BE:
         case PIX_FMT_YUV444P16BE: c->chrToYV12 = RENAME(BEToUV); break;
         case PIX_FMT_YUV420P16LE:
         case PIX_FMT_YUV422P16LE:
         case PIX_FMT_YUV444P16LE: c->chrToYV12 = RENAME(LEToUV); break;
-        default: break;
     }
     if (c->chrSrcHSubSample) {
         switch(srcFormat) {
+        case PIX_FMT_RGB48BE:
+        case PIX_FMT_RGB48LE: c->chrToYV12 = rgb48ToUV_half; break;
+        case PIX_FMT_BGR48BE:
+        case PIX_FMT_BGR48LE: c->chrToYV12 = bgr48ToUV_half; break;
+        case PIX_FMT_RGB32  : c->chrToYV12 = bgr32ToUV_half;  break;
+        case PIX_FMT_RGB32_1: c->chrToYV12 = bgr321ToUV_half; break;
         case PIX_FMT_BGR24  : c->chrToYV12 = RENAME(bgr24ToUV_half); break;
+        case PIX_FMT_BGR565 : c->chrToYV12 = bgr16ToUV_half; break;
+        case PIX_FMT_BGR555 : c->chrToYV12 = bgr15ToUV_half; break;
+        case PIX_FMT_BGR32  : c->chrToYV12 = rgb32ToUV_half;  break;
+        case PIX_FMT_BGR32_1: c->chrToYV12 = rgb321ToUV_half; break;
         case PIX_FMT_RGB24  : c->chrToYV12 = RENAME(rgb24ToUV_half); break;
-        default: break;
+        case PIX_FMT_RGB565 : c->chrToYV12 = rgb16ToUV_half; break;
+        case PIX_FMT_RGB555 : c->chrToYV12 = rgb15ToUV_half; break;
         }
     } else {
         switch(srcFormat) {
+        case PIX_FMT_RGB48BE:
+        case PIX_FMT_RGB48LE: c->chrToYV12 = rgb48ToUV; break;
+        case PIX_FMT_BGR48BE:
+        case PIX_FMT_BGR48LE: c->chrToYV12 = bgr48ToUV; break;
+        case PIX_FMT_RGB32  : c->chrToYV12 = bgr32ToUV;  break;
+        case PIX_FMT_RGB32_1: c->chrToYV12 = bgr321ToUV; break;
         case PIX_FMT_BGR24  : c->chrToYV12 = RENAME(bgr24ToUV); break;
+        case PIX_FMT_BGR565 : c->chrToYV12 = bgr16ToUV; break;
+        case PIX_FMT_BGR555 : c->chrToYV12 = bgr15ToUV; break;
+        case PIX_FMT_BGR32  : c->chrToYV12 = rgb32ToUV;  break;
+        case PIX_FMT_BGR32_1: c->chrToYV12 = rgb321ToUV; break;
         case PIX_FMT_RGB24  : c->chrToYV12 = RENAME(rgb24ToUV); break;
-        default: break;
+        case PIX_FMT_RGB565 : c->chrToYV12 = rgb16ToUV; break;
+        case PIX_FMT_RGB555 : c->chrToYV12 = rgb15ToUV; break;
         }
     }
 
+    c->lumToYV12 = NULL;
+    c->alpToYV12 = NULL;
     switch (srcFormat) {
+    case PIX_FMT_YUV420P9: c->lumToYV12 = yuv9ToY_c; break;
+    case PIX_FMT_YUV422P10:
+    case PIX_FMT_YUV420P10: c->lumToYV12 = yuv10ToY_c; break;
     case PIX_FMT_YUYV422  :
     case PIX_FMT_YUV420P16BE:
     case PIX_FMT_YUV422P16BE:
     case PIX_FMT_YUV444P16BE:
-    case PIX_FMT_Y400A    :
+    case PIX_FMT_GRAY8A   :
     case PIX_FMT_GRAY16BE : c->lumToYV12 = RENAME(yuy2ToY); break;
     case PIX_FMT_UYVY422  :
     case PIX_FMT_YUV420P16LE:
@@ -2812,14 +2847,52 @@ static void RENAME(sws_init_swScale)(SwsContext *c)
     case PIX_FMT_YUV444P16LE:
     case PIX_FMT_GRAY16LE : c->lumToYV12 = RENAME(uyvyToY); break;
     case PIX_FMT_BGR24    : c->lumToYV12 = RENAME(bgr24ToY); break;
+    case PIX_FMT_BGR565   : c->lumToYV12 = bgr16ToY; break;
+    case PIX_FMT_BGR555   : c->lumToYV12 = bgr15ToY; break;
     case PIX_FMT_RGB24    : c->lumToYV12 = RENAME(rgb24ToY); break;
-    default: break;
+    case PIX_FMT_RGB565   : c->lumToYV12 = rgb16ToY; break;
+    case PIX_FMT_RGB555   : c->lumToYV12 = rgb15ToY; break;
+    case PIX_FMT_RGB8     :
+    case PIX_FMT_BGR8     :
+    case PIX_FMT_PAL8     :
+    case PIX_FMT_BGR4_BYTE:
+    case PIX_FMT_RGB4_BYTE: c->lumToYV12 = palToY; break;
+    case PIX_FMT_MONOBLACK: c->lumToYV12 = monoblack2Y; break;
+    case PIX_FMT_MONOWHITE: c->lumToYV12 = monowhite2Y; break;
+    case PIX_FMT_RGB32  : c->lumToYV12 = bgr32ToY;  break;
+    case PIX_FMT_RGB32_1: c->lumToYV12 = bgr321ToY; break;
+    case PIX_FMT_BGR32  : c->lumToYV12 = rgb32ToY;  break;
+    case PIX_FMT_BGR32_1: c->lumToYV12 = rgb321ToY; break;
+    case PIX_FMT_RGB48BE:
+    case PIX_FMT_RGB48LE: c->lumToYV12 = rgb48ToY; break;
+    case PIX_FMT_BGR48BE:
+    case PIX_FMT_BGR48LE: c->lumToYV12 = bgr48ToY; break;
     }
     if (c->alpPixBuf) {
         switch (srcFormat) {
-        case PIX_FMT_Y400A  : c->alpToYV12 = RENAME(yuy2ToY); break;
-        default: break;
+        case PIX_FMT_RGB32  :
+        case PIX_FMT_RGB32_1:
+        case PIX_FMT_BGR32  :
+        case PIX_FMT_BGR32_1: c->alpToYV12 = abgrToA; break;
+        case PIX_FMT_GRAY8A : c->alpToYV12 = RENAME(yuy2ToY); break;
+        case PIX_FMT_PAL8   : c->alpToYV12 = palToA; break;
         }
+    }
+
+    switch (srcFormat) {
+    case PIX_FMT_GRAY8A :
+        c->alpSrcOffset = 1;
+        break;
+    case PIX_FMT_RGB32  :
+    case PIX_FMT_BGR32  :
+        c->alpSrcOffset = 3;
+        break;
+    case PIX_FMT_RGB48LE:
+    case PIX_FMT_BGR48LE:
+        c->lumSrcOffset = 1;
+        c->chrSrcOffset = 1;
+        c->alpSrcOffset = 1;
+        break;
     }
 
     if (c->srcRange != c->dstRange && !isAnyRGB(c->dstFormat)) {
@@ -2831,6 +2904,10 @@ static void RENAME(sws_init_swScale)(SwsContext *c)
             c->chrConvertRange = RENAME(chrRangeToJpeg);
         }
     }
+
+    if (!(isGray(srcFormat) || isGray(c->dstFormat) ||
+          srcFormat == PIX_FMT_MONOBLACK || srcFormat == PIX_FMT_MONOWHITE))
+        c->needs_hcscale = 1;
 }
 
 int RENAME(sws_thread_work)(SwsContext *c)		// Thread func

@@ -809,6 +809,29 @@ const AVPixFmtDescriptor av_pix_fmt_descriptors[PIX_FMT_NB] = {
         },
         .flags = PIX_FMT_BE,
     },
+    [PIX_FMT_YUV422P10LE] = {
+        .name = "yuv422p10le",
+        .nb_components= 3,
+        .log2_chroma_w= 1,
+        .log2_chroma_h= 0,
+        .comp = {
+            {0,1,1,0,9},        /* Y */
+            {1,1,1,0,9},        /* U */
+            {2,1,1,0,9},        /* V */
+        },
+    },
+    [PIX_FMT_YUV422P10BE] = {
+        .name = "yuv422p10be",
+        .nb_components= 3,
+        .log2_chroma_w= 1,
+        .log2_chroma_h= 0,
+        .comp = {
+            {0,1,1,0,9},        /* Y */
+            {1,1,1,0,9},        /* U */
+            {2,1,1,0,9},        /* V */
+        },
+        .flags = PIX_FMT_BE,
+    },
     [PIX_FMT_YUV422P16LE] = {
         .name = "yuv422p16le",
         .nb_components= 3,
@@ -861,8 +884,8 @@ const AVPixFmtDescriptor av_pix_fmt_descriptors[PIX_FMT_NB] = {
         .log2_chroma_h = 1,
         .flags = PIX_FMT_HWACCEL,
     },
-    [PIX_FMT_Y400A] = {
-        .name = "y400a",
+    [PIX_FMT_GRAY8A] = {
+        .name = "gray8a",
         .nb_components= 2,
         .comp = {
             {0,1,1,0,7},        /* Y */

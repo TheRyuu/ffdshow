@@ -228,22 +228,19 @@ static inline void nv21ToUV_c(uint8_t *dstU, uint8_t *dstV,
 // FIXME Maybe dither instead.
 #define YUV_NBPS(depth) \
 static inline void yuv ## depth ## ToUV_c(uint8_t *dstU, uint8_t *dstV, \
-                                          const uint8_t *_srcU, const uint8_t *_srcV, \
+                                          const uint16_t *srcU, const uint16_t *srcV, \
                                           long width, uint32_t *unused) \
 { \
     int i; \
-    const uint16_t *srcU = (const uint16_t*)_srcU; \
-    const uint16_t *srcV = (const uint16_t*)_srcV; \
     for (i = 0; i < width; i++) { \
         dstU[i] = srcU[i]>>(depth-8); \
         dstV[i] = srcV[i]>>(depth-8); \
     } \
 } \
 \
-static inline void yuv ## depth ## ToY_c(uint8_t *dstY, const uint8_t *_srcY, long width, uint32_t *unused) \
+static inline void yuv ## depth ## ToY_c(uint8_t *dstY, const uint16_t *srcY, long width, uint32_t *unused) \
 { \
     int i; \
-    const uint16_t *srcY = (const uint16_t*)_srcY; \
     for (i = 0; i < width; i++) \
         dstY[i] = srcY[i]>>(depth-8); \
 } \
@@ -362,7 +359,7 @@ static inline void hScale_c(int16_t *dst, int dstW, const uint8_t *src,
 
 //FIXME all pal and rgb srcFormats could do this convertion as well
 //FIXME all scalers more complex than bilinear could do half of this transform
-static void chrRangeToJpeg_c(uint16_t *dst, int width)
+static void chrRangeToJpeg_c(int16_t *dst, int width)
 {
     int i;
     for (i = 0; i < width; i++) {
@@ -414,7 +411,7 @@ static inline void hyscale_c(SwsContext *c, uint16_t *dst, long dstWidth,
                              uint32_t *pal, int isAlpha)
 {
     void (*toYV12)(uint8_t *, const uint8_t *, long, uint32_t *) = isAlpha ? c->alpToYV12 : c->lumToYV12;
-    void (*convertRange)(uint16_t *, int) = isAlpha ? NULL : c->lumConvertRange;
+    void (*convertRange)(int16_t *, int) = isAlpha ? NULL : c->lumConvertRange;
 
     src += isAlpha ? c->alpSrcOffset : c->lumSrcOffset;
 
@@ -681,7 +678,7 @@ static int swScaleI_c(SwsContext *c, const uint8_t* src[], stride_t srcStride[],
             } else if (isPlanarYUV(dstFormat) || dstFormat==PIX_FMT_GRAY8) { //YV12 like
                 const int chrSkipMask= (1<<c->chrDstVSubSample)-1;
                 if ((dstY&chrSkipMask) || isGray(dstFormat)) uDest=vDest= NULL; //FIXME split functions in lumi / chromi
-                if (is16BPS(dstFormat)) {
+                if (is16BPS(dstFormat) || isNBPS(dstFormat)) {
                     yuv2yuvX16inC(
                                   vLumFilter+dstY*vLumFilterSize   , lumSrcPtr, vLumFilterSize,
                                   vChrFilter+chrDstY*vChrFilterSize, chrSrcPtr, vChrFilterSize,
@@ -758,7 +755,7 @@ static int swScaleI_c(SwsContext *c, const uint8_t* src[], stride_t srcStride[],
             } else if (isPlanarYUV(dstFormat) || dstFormat==PIX_FMT_GRAY8) { //YV12
                 const int chrSkipMask= (1<<c->chrDstVSubSample)-1;
                 if ((dstY&chrSkipMask) || isGray(dstFormat)) uDest=vDest= NULL; //FIXME split functions in lumi / chromi
-                if (is16BPS(dstFormat)) {
+                if (is16BPS(dstFormat) || isNBPS(dstFormat)) {
                     yuv2yuvX16inC(
                                   vLumFilter+dstY*vLumFilterSize   , lumSrcPtr, vLumFilterSize,
                                   vChrFilter+chrDstY*vChrFilterSize, chrSrcPtr, vChrFilterSize,
@@ -801,7 +798,7 @@ static int swScaleI_c(SwsContext *c, const uint8_t* src[], stride_t srcStride[],
     return dstY - lastDstY;
 }
 
-static void sws_init_swScale_c(SwsContext *c)
+static void sws_init_swScale_C(SwsContext *c)
 {
     enum PixelFormat srcFormat = c->srcFormat;
 
@@ -831,10 +828,9 @@ static void sws_init_swScale_c(SwsContext *c)
         case PIX_FMT_PAL8     :
         case PIX_FMT_BGR4_BYTE:
         case PIX_FMT_RGB4_BYTE: c->chrToYV12 = palToUV; break;
-        case PIX_FMT_YUV420P9BE:
-        case PIX_FMT_YUV420P9LE: c->chrToYV12 = yuv9ToUV_c; break;
-        case PIX_FMT_YUV420P10BE:
-        case PIX_FMT_YUV420P10LE: c->chrToYV12 = yuv10ToUV_c; break;
+        case PIX_FMT_YUV420P9: c->chrToYV12 = yuv9ToUV_c; break;
+        case PIX_FMT_YUV422P10:
+        case PIX_FMT_YUV420P10: c->chrToYV12 = yuv10ToUV_c; break;
         case PIX_FMT_YUV420P16BE:
         case PIX_FMT_YUV422P16BE:
         case PIX_FMT_YUV444P16BE: c->chrToYV12 = BEToUV_c; break;
@@ -881,15 +877,14 @@ static void sws_init_swScale_c(SwsContext *c)
     c->lumToYV12 = NULL;
     c->alpToYV12 = NULL;
     switch (srcFormat) {
-    case PIX_FMT_YUV420P9BE:
-    case PIX_FMT_YUV420P9LE: c->lumToYV12 = yuv9ToY_c; break;
-    case PIX_FMT_YUV420P10BE:
-    case PIX_FMT_YUV420P10LE: c->lumToYV12 = yuv10ToY_c; break;
+    case PIX_FMT_YUV420P9: c->lumToYV12 = yuv9ToY_c; break;
+    case PIX_FMT_YUV422P10:
+    case PIX_FMT_YUV420P10: c->lumToYV12 = yuv10ToY_c; break;
     case PIX_FMT_YUYV422  :
     case PIX_FMT_YUV420P16BE:
     case PIX_FMT_YUV422P16BE:
     case PIX_FMT_YUV444P16BE:
-    case PIX_FMT_Y400A    :
+    case PIX_FMT_GRAY8A   :
     case PIX_FMT_GRAY16BE : c->lumToYV12 = yuy2ToY_c; break;
     case PIX_FMT_UYVY422  :
     case PIX_FMT_YUV420P16LE:
@@ -924,12 +919,13 @@ static void sws_init_swScale_c(SwsContext *c)
         case PIX_FMT_RGB32_1:
         case PIX_FMT_BGR32  :
         case PIX_FMT_BGR32_1: c->alpToYV12 = abgrToA; break;
-        case PIX_FMT_Y400A  : c->alpToYV12 = yuy2ToY_c; break;
+        case PIX_FMT_GRAY8A : c->alpToYV12 = yuy2ToY_c; break;
+        case PIX_FMT_PAL8   : c->alpToYV12 = palToA; break;
         }
     }
 
     switch (srcFormat) {
-    case PIX_FMT_Y400A  :
+    case PIX_FMT_GRAY8A :
         c->alpSrcOffset = 1;
         break;
     case PIX_FMT_RGB32  :
@@ -967,7 +963,7 @@ int sws_thread_work_c(SwsContext *c)		// Thread func
 			stp->srcSliceH, stp->dst, stp->dstStride, stp->dstYstart, stp->dstYend);
 }
 
-static int swScale_c(SwsContext *c, const uint8_t* src[], stride_t srcStride[], int srcSliceY,
+static int swScale_C(SwsContext *c, const uint8_t* src[], stride_t srcStride[], int srcSliceY,
              int srcSliceH, uint8_t* dst[], stride_t dstStride[])
 {
 	int dstLines;

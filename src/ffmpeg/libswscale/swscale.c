@@ -89,7 +89,7 @@ untested special converters
            (x)==PIX_FMT_PAL8        \
         || (x)==PIX_FMT_YUYV422     \
         || (x)==PIX_FMT_UYVY422     \
-        || (x)==PIX_FMT_Y400A       \
+        || (x)==PIX_FMT_GRAY8A       \
         || isAnyRGB(x)              \
     )
 
@@ -218,6 +218,98 @@ DECLARE_ALIGNED(8, const uint8_t, dither_8x8_220)[8][8]={
 };
 #endif
 
+DECLARE_ALIGNED(8, const uint8_t, dithers)[8][8][8]={
+{
+  {   0,  1,  0,  1,  0,  1,  0,  1,},
+  {   1,  0,  1,  0,  1,  0,  1,  0,},
+  {   0,  1,  0,  1,  0,  1,  0,  1,},
+  {   1,  0,  1,  0,  1,  0,  1,  0,},
+  {   0,  1,  0,  1,  0,  1,  0,  1,},
+  {   1,  0,  1,  0,  1,  0,  1,  0,},
+  {   0,  1,  0,  1,  0,  1,  0,  1,},
+  {   1,  0,  1,  0,  1,  0,  1,  0,},
+},{
+  {   1,  2,  1,  2,  1,  2,  1,  2,},
+  {   3,  0,  3,  0,  3,  0,  3,  0,},
+  {   1,  2,  1,  2,  1,  2,  1,  2,},
+  {   3,  0,  3,  0,  3,  0,  3,  0,},
+  {   1,  2,  1,  2,  1,  2,  1,  2,},
+  {   3,  0,  3,  0,  3,  0,  3,  0,},
+  {   1,  2,  1,  2,  1,  2,  1,  2,},
+  {   3,  0,  3,  0,  3,  0,  3,  0,},
+},{
+  {   2,  4,  3,  5,  2,  4,  3,  5,},
+  {   6,  0,  7,  1,  6,  0,  7,  1,},
+  {   3,  5,  2,  4,  3,  5,  2,  4,},
+  {   7,  1,  6,  0,  7,  1,  6,  0,},
+  {   2,  4,  3,  5,  2,  4,  3,  5,},
+  {   6,  0,  7,  1,  6,  0,  7,  1,},
+  {   3,  5,  2,  4,  3,  5,  2,  4,},
+  {   7,  1,  6,  0,  7,  1,  6,  0,},
+},{
+  {   4,  8,  7, 11,  4,  8,  7, 11,},
+  {  12,  0, 15,  3, 12,  0, 15,  3,},
+  {   6, 10,  5,  9,  6, 10,  5,  9,},
+  {  14,  2, 13,  1, 14,  2, 13,  1,},
+  {   4,  8,  7, 11,  4,  8,  7, 11,},
+  {  12,  0, 15,  3, 12,  0, 15,  3,},
+  {   6, 10,  5,  9,  6, 10,  5,  9,},
+  {  14,  2, 13,  1, 14,  2, 13,  1,},
+},{
+  {   9, 17, 15, 23,  8, 16, 14, 22,},
+  {  25,  1, 31,  7, 24,  0, 30,  6,},
+  {  13, 21, 11, 19, 12, 20, 10, 18,},
+  {  29,  5, 27,  3, 28,  4, 26,  2,},
+  {   8, 16, 14, 22,  9, 17, 15, 23,},
+  {  24,  0, 30,  6, 25,  1, 31,  7,},
+  {  12, 20, 10, 18, 13, 21, 11, 19,},
+  {  28,  4, 26,  2, 29,  5, 27,  3,},
+},{
+  {  18, 34, 30, 46, 17, 33, 29, 45,},
+  {  50,  2, 62, 14, 49,  1, 61, 13,},
+  {  26, 42, 22, 38, 25, 41, 21, 37,},
+  {  58, 10, 54,  6, 57,  9, 53,  5,},
+  {  16, 32, 28, 44, 19, 35, 31, 47,},
+  {  48,  0, 60, 12, 51,  3, 63, 15,},
+  {  24, 40, 20, 36, 27, 43, 23, 39,},
+  {  56,  8, 52,  4, 59, 11, 55,  7,},
+},{
+  {  18, 34, 30, 46, 17, 33, 29, 45,},
+  {  50,  2, 62, 14, 49,  1, 61, 13,},
+  {  26, 42, 22, 38, 25, 41, 21, 37,},
+  {  58, 10, 54,  6, 57,  9, 53,  5,},
+  {  16, 32, 28, 44, 19, 35, 31, 47,},
+  {  48,  0, 60, 12, 51,  3, 63, 15,},
+  {  24, 40, 20, 36, 27, 43, 23, 39,},
+  {  56,  8, 52,  4, 59, 11, 55,  7,},
+},{
+  {  36, 68, 60, 92, 34, 66, 58, 90,},
+  { 100,  4,124, 28, 98,  2,122, 26,},
+  {  52, 84, 44, 76, 50, 82, 42, 74,},
+  { 116, 20,108, 12,114, 18,106, 10,},
+  {  32, 64, 56, 88, 38, 70, 62, 94,},
+  {  96,  0,120, 24,102,  6,126, 30,},
+  {  48, 80, 40, 72, 54, 86, 46, 78,},
+  { 112, 16,104,  8,118, 22,110, 14,},
+}};
+
+uint16_t dither_scale[15][16]={
+{    2,    3,    3,    5,    5,    5,    5,    5,    5,    5,    5,    5,    5,    5,    5,    5,},
+{    2,    3,    7,    7,   13,   13,   25,   25,   25,   25,   25,   25,   25,   25,   25,   25,},
+{    3,    3,    4,   15,   15,   29,   57,   57,   57,  113,  113,  113,  113,  113,  113,  113,},
+{    3,    4,    4,    5,   31,   31,   61,  121,  241,  241,  241,  241,  481,  481,  481,  481,},
+{    3,    4,    5,    5,    6,   63,   63,  125,  249,  497,  993,  993,  993,  993,  993, 1985,},
+{    3,    5,    6,    6,    6,    7,  127,  127,  253,  505, 1009, 2017, 4033, 4033, 4033, 4033,},
+{    3,    5,    6,    7,    7,    7,    8,  255,  255,  509, 1017, 2033, 4065, 8129,16257,16257,},
+{    3,    5,    6,    8,    8,    8,    8,    9,  511,  511, 1021, 2041, 4081, 8161,16321,32641,},
+{    3,    5,    7,    8,    9,    9,    9,    9,   10, 1023, 1023, 2045, 4089, 8177,16353,32705,},
+{    3,    5,    7,    8,   10,   10,   10,   10,   10,   11, 2047, 2047, 4093, 8185,16369,32737,},
+{    3,    5,    7,    8,   10,   11,   11,   11,   11,   11,   12, 4095, 4095, 8189,16377,32753,},
+{    3,    5,    7,    9,   10,   12,   12,   12,   12,   12,   12,   13, 8191, 8191,16381,32761,},
+{    3,    5,    7,    9,   10,   12,   13,   13,   13,   13,   13,   13,   14,16383,16383,32765,},
+{    3,    5,    7,    9,   10,   12,   14,   14,   14,   14,   14,   14,   14,   15,32767,32767,},
+{    3,    5,    7,    9,   11,   12,   14,   15,   15,   15,   15,   15,   15,   15,   16,65535,},
+};
 
 int sws_default_execute(SwsContext *c, int (*func)(SwsContext *c2), int *ret, int count){
     int i;
@@ -289,23 +381,76 @@ static av_always_inline void yuv2yuvX16inC_template(const int16_t *lumFilter, co
     }
 }
 
+static av_always_inline void yuv2yuvXNinC_template(const int16_t *lumFilter, const int16_t **lumSrc, int lumFilterSize,
+                                                   const int16_t *chrFilter, const int16_t **chrSrc, int chrFilterSize,
+                                                   const int16_t **alpSrc, uint16_t *dest, uint16_t *uDest, uint16_t *vDest, uint16_t *aDest,
+                                                   int dstW, int chrDstW, int big_endian, int depth)
+{
+    //FIXME Optimize (just quickly written not optimized..)
+    int i;
+
+    for (i = 0; i < dstW; i++) {
+        int val = 1 << (26-depth);
+        int j;
+
+        for (j = 0; j < lumFilterSize; j++)
+            val += lumSrc[j][i] * lumFilter[j];
+
+        if (big_endian) {
+            AV_WB16(&dest[i], av_clip(val >> (27-depth), 0, (1<<depth)-1));
+        } else {
+            AV_WL16(&dest[i], av_clip(val >> (27-depth), 0, (1<<depth)-1));
+        }
+    }
+
+    if (uDest) {
+        for (i = 0; i < chrDstW; i++) {
+            int u = 1 << (26-depth);
+            int v = 1 << (26-depth);
+            int j;
+
+            for (j = 0; j < chrFilterSize; j++) {
+                u += chrSrc[j][i       ] * chrFilter[j];
+                v += chrSrc[j][i + VOFW] * chrFilter[j];
+            }
+
+            if (big_endian) {
+                AV_WB16(&uDest[i], av_clip(u >> (27-depth), 0, (1<<depth)-1));
+                AV_WB16(&vDest[i], av_clip(v >> (27-depth), 0, (1<<depth)-1));
+            } else {
+                AV_WL16(&uDest[i], av_clip(u >> (27-depth), 0, (1<<depth)-1));
+                AV_WL16(&vDest[i], av_clip(v >> (27-depth), 0, (1<<depth)-1));
+            }
+        }
+    }
+}
+
 static inline void yuv2yuvX16inC(const int16_t *lumFilter, const int16_t **lumSrc, int lumFilterSize,
                                  const int16_t *chrFilter, const int16_t **chrSrc, int chrFilterSize,
                                  const int16_t **alpSrc, uint16_t *dest, uint16_t *uDest, uint16_t *vDest, uint16_t *aDest, int dstW, int chrDstW,
                                  enum PixelFormat dstFormat)
 {
-    if (isBE(dstFormat)) {
-        yuv2yuvX16inC_template(lumFilter, lumSrc, lumFilterSize,
-                               chrFilter, chrSrc, chrFilterSize,
-                               alpSrc,
-                               dest, uDest, vDest, aDest,
-                               dstW, chrDstW, 1);
+    if (isNBPS(dstFormat)) {
+        const int depth = av_pix_fmt_descriptors[dstFormat].comp[0].depth_minus1+1;
+        yuv2yuvXNinC_template(lumFilter, lumSrc, lumFilterSize,
+                              chrFilter, chrSrc, chrFilterSize,
+                              alpSrc,
+                              dest, uDest, vDest, aDest,
+                              dstW, chrDstW, isBE(dstFormat), depth);
     } else {
-        yuv2yuvX16inC_template(lumFilter, lumSrc, lumFilterSize,
-                               chrFilter, chrSrc, chrFilterSize,
-                               alpSrc,
-                               dest, uDest, vDest, aDest,
-                               dstW, chrDstW, 0);
+        if (isBE(dstFormat)) {
+            yuv2yuvX16inC_template(lumFilter, lumSrc, lumFilterSize,
+                                   chrFilter, chrSrc, chrFilterSize,
+                                   alpSrc,
+                                   dest, uDest, vDest, aDest,
+                                   dstW, chrDstW, 1);
+        } else {
+            yuv2yuvX16inC_template(lumFilter, lumSrc, lumFilterSize,
+                                   chrFilter, chrSrc, chrFilterSize,
+                                   alpSrc,
+                                   dest, uDest, vDest, aDest,
+                                   dstW, chrDstW, 0);
+        }
     }
 }
 
@@ -1121,6 +1266,16 @@ BGR2UV(uint16_t, bgr15ToUV, 0, 0, 0, 0,   0x001F, 0x03E0,   0x7C00, RU<<10, GU<<
 BGR2UV(uint16_t, rgb16ToUV, 0, 0, 0, 0,   0xF800, 0x07E0,   0x001F, RU    , GU<<5, BU<<11, RV    , GV<<5, BV<<11, RGB2YUV_SHIFT+8)
 BGR2UV(uint16_t, rgb15ToUV, 0, 0, 0, 0,   0x7C00, 0x03E0,   0x001F, RU    , GU<<5, BU<<10, RV    , GV<<5, BV<<10, RGB2YUV_SHIFT+7)
 
+static inline void palToA(uint8_t *dst, const uint8_t *src, long width, uint32_t *pal)
+{
+    int i;
+    for (i=0; i<width; i++) {
+        int d= src[i];
+
+        dst[i]= pal[d] >> 24;
+    }
+}
+
 static inline void palToY(uint8_t *dst, const uint8_t *src, long width, uint32_t *pal)
 {
     int i;
@@ -1270,8 +1425,6 @@ static inline void monoblack2Y(uint8_t *dst, const uint8_t *src, long width, uin
 
 SwsFunc ff_getSwsFunc(SwsContext *c)
 {
-    sws_init_swScale_c(c);
-
 #if CONFIG_RUNTIME_CPUDETECT
 #if ARCH_X86
     // ordered per speed fastest first
@@ -1284,6 +1437,9 @@ SwsFunc ff_getSwsFunc(SwsContext *c)
     } else if (c->flags & SWS_CPU_CAPS_MMX) {
         sws_init_swScale_MMX(c);
         return swScale_MMX;
+    } else {
+        sws_init_swScale_C(c);
+        return swScale_C;
     }
 
 #else
@@ -1291,8 +1447,13 @@ SwsFunc ff_getSwsFunc(SwsContext *c)
     if (c->flags & SWS_CPU_CAPS_ALTIVEC) {
         sws_init_swScale_altivec(c);
         return swScale_altivec;
+    } else {
+        sws_init_swScale_C(c);
+        return swScale_C;
     }
 #endif
+    sws_init_swScale_C(c);
+    return swScale_C;
 #endif /* ARCH_X86 */
 #else //CONFIG_RUNTIME_CPUDETECT
 #if   COMPILE_TEMPLATE_MMX2
@@ -1307,10 +1468,11 @@ SwsFunc ff_getSwsFunc(SwsContext *c)
 #elif COMPILE_TEMPLATE_ALTIVEC
     sws_init_swScale_altivec(c);
     return swScale_altivec;
+#else
+    sws_init_swScale_C(c);
+    return swScale_C;
 #endif
 #endif //!CONFIG_RUNTIME_CPUDETECT
-
-    return swScale_c;
 }
 
 static void copyPlane(const uint8_t *src, stride_t srcStride,
@@ -1480,7 +1642,7 @@ static int palToRgbWrapper(SwsContext *c, const uint8_t* src[], stride_t srcStri
     uint8_t *dstPtr= dst[0] + dstStride[0]*srcSliceY;
     const uint8_t *srcPtr= src[0];
 
-    if (srcFormat == PIX_FMT_Y400A) {
+    if (srcFormat == PIX_FMT_GRAY8A) {
         switch (dstFormat) {
         case PIX_FMT_RGB32  : conv = gray8aToPacked32; break;
         case PIX_FMT_BGR32  : conv = gray8aToPacked32; break;
@@ -1599,7 +1761,7 @@ static int rgbToRgbWrapper(SwsContext *c, const uint8_t* src[], stride_t srcStri
         if ((dstFormat == PIX_FMT_RGB32_1 || dstFormat == PIX_FMT_BGR32_1) && !isRGBA32(srcFormat))
             dstPtr += ALT32_CORR;
 
-        if (dstStride[0]*srcBpp == srcStride[0]*dstBpp && srcStride[0] > 0)
+        if (dstStride[0]*srcBpp == srcStride[0]*dstBpp && srcStride[0] > 0 && !(srcStride[0]%srcBpp))
             conv(srcPtr, dstPtr + dstStride[0]*srcSliceY, srcSliceH*srcStride[0]);
         else {
             int i;
@@ -1671,6 +1833,28 @@ static int packedCopyWrapper(SwsContext *c, const uint8_t* src[], stride_t srcSt
     return srcSliceH;
 }
 
+#define DITHER_COPY(dst, dstStride, src, srcStride, bswap)\
+    uint16_t scale= dither_scale[dst_depth-1][src_depth-1];\
+    int shift= src_depth-dst_depth + dither_scale[src_depth-2][dst_depth-1];\
+    for (i = 0; i < height; i++) {\
+        uint8_t *dither= dithers[src_depth-9][i&7];\
+        for (j = 0; j < length-7; j+=8){\
+            dst[j+0] = (bswap(src[j+0]) + dither[0])*scale>>shift;\
+            dst[j+1] = (bswap(src[j+1]) + dither[1])*scale>>shift;\
+            dst[j+2] = (bswap(src[j+2]) + dither[2])*scale>>shift;\
+            dst[j+3] = (bswap(src[j+3]) + dither[3])*scale>>shift;\
+            dst[j+4] = (bswap(src[j+4]) + dither[4])*scale>>shift;\
+            dst[j+5] = (bswap(src[j+5]) + dither[5])*scale>>shift;\
+            dst[j+6] = (bswap(src[j+6]) + dither[6])*scale>>shift;\
+            dst[j+7] = (bswap(src[j+7]) + dither[7])*scale>>shift;\
+        }\
+        for (; j < length; j++)\
+            dst[j] = (bswap(src[j]) + dither[j&7])*scale>>shift;\
+        dst += dstStride;\
+        src += srcStride;\
+    }
+
+
 static int planarCopyWrapper(SwsContext *c, const uint8_t* src[], stride_t srcStride[], int srcSliceY,
                              int srcSliceH, uint8_t* dst[], stride_t dstStride[])
 {
@@ -1690,42 +1874,48 @@ static int planarCopyWrapper(SwsContext *c, const uint8_t* src[], stride_t srcSt
                 length*=2;
             fillPlane(dst[plane], dstStride[plane], length, height, y, (plane==3) ? 255 : 128);
         } else {
-            if(isNBPS(c->srcFormat)) {
-                const int depth = av_pix_fmt_descriptors[c->srcFormat].comp[plane].depth_minus1+1;
+            if(isNBPS(c->srcFormat) || isNBPS(c->dstFormat)
+               || (is16BPS(c->srcFormat) != is16BPS(c->dstFormat))
+            ) {
+                const int src_depth = av_pix_fmt_descriptors[c->srcFormat].comp[plane].depth_minus1+1;
+                const int dst_depth = av_pix_fmt_descriptors[c->dstFormat].comp[plane].depth_minus1+1;
                 uint16_t *srcPtr2 = (uint16_t*)srcPtr;
+                uint16_t *dstPtr2 = (uint16_t*)dstPtr;
 
-                if (is16BPS(c->dstFormat)) {
-                    uint16_t *dstPtr2 = (uint16_t*)dstPtr;
+                if (dst_depth == 8) {
+                    if(isBE(c->srcFormat) == HAVE_BIGENDIAN){
+                        DITHER_COPY(dstPtr, dstStride[plane], srcPtr2, srcStride[plane]/2, )
+                    } else {
+                        DITHER_COPY(dstPtr, dstStride[plane], srcPtr2, srcStride[plane]/2, av_bswap16)
+                    }
+                } else if (src_depth == 8) {
                     for (i = 0; i < height; i++) {
                         for (j = 0; j < length; j++)
-                            dstPtr2[j] = (srcPtr2[j]<<(16-depth)) | (srcPtr2[j]>>(2*depth-16));
+                            dstPtr2[j] = (srcPtr[j]<<(dst_depth-8)) |
+                                (srcPtr[j]>>(2*8-dst_depth));
+                        dstPtr2 += dstStride[plane]/2;
+                        srcPtr  += srcStride[plane];
+                    }
+                } else if (src_depth <= dst_depth) {
+                    for (i = 0; i < height; i++) {
+                        if(isBE(c->dstFormat)){
+                            for (j = 0; j < length; j++)
+                                AV_WB16(&dstPtr2[j], (srcPtr2[j]<<(dst_depth-src_depth)) |
+                                                     (srcPtr2[j]>>(2*src_depth-dst_depth)));
+                        }else{
+                            for (j = 0; j < length; j++)
+                                AV_WL16(&dstPtr2[j], (srcPtr2[j]<<(dst_depth-src_depth)) |
+                                                     (srcPtr2[j]>>(2*src_depth-dst_depth)));
+                        }
                         dstPtr2 += dstStride[plane]/2;
                         srcPtr2 += srcStride[plane]/2;
                     }
                 } else {
-                    // FIXME Maybe dither instead.
-                    for (i = 0; i < height; i++) {
-                        for (j = 0; j < length; j++)
-                            dstPtr[j] = srcPtr2[j]>>(depth-8);
-                        dstPtr  += dstStride[plane];
-                        srcPtr2 += srcStride[plane]/2;
+                    if(isBE(c->srcFormat) == HAVE_BIGENDIAN){
+                        DITHER_COPY(dstPtr2, dstStride[plane]/2, srcPtr2, srcStride[plane]/2, )
+                    }else{
+                        DITHER_COPY(dstPtr2, dstStride[plane]/2, srcPtr2, srcStride[plane]/2, av_bswap16)
                     }
-                }
-            } else if(is16BPS(c->srcFormat) && !is16BPS(c->dstFormat)) {
-                if (!isBE(c->srcFormat)) srcPtr++;
-                for (i=0; i<height; i++) {
-                    for (j=0; j<length; j++) dstPtr[j] = srcPtr[j<<1];
-                    srcPtr+= srcStride[plane];
-                    dstPtr+= dstStride[plane];
-                }
-            } else if(!is16BPS(c->srcFormat) && is16BPS(c->dstFormat)) {
-                for (i=0; i<height; i++) {
-                    for (j=0; j<length; j++) {
-                        dstPtr[ j<<1   ] = srcPtr[j];
-                        dstPtr[(j<<1)+1] = srcPtr[j];
-                    }
-                    srcPtr+= srcStride[plane];
-                    dstPtr+= dstStride[plane];
                 }
             } else if(is16BPS(c->srcFormat) && is16BPS(c->dstFormat)
                   && isBE(c->srcFormat) != isBE(c->dstFormat)) {
@@ -1955,9 +2145,10 @@ int sws_scale(SwsContext *c, const uint8_t* const src[], const stride_t srcStrid
 
     if (usePal(c->srcFormat)) {
         for (i=0; i<256; i++) {
-            int p, r, g, b,y,u,v;
+            int p, r, g, b, y, u, v, a = 0xff;
             if(c->srcFormat == PIX_FMT_PAL8) {
                 p=((const uint32_t*)(src[1]))[i];
+                a= (p>>24)&0xFF;
                 r= (p>>16)&0xFF;
                 g= (p>> 8)&0xFF;
                 b=  p     &0xFF;
@@ -1973,7 +2164,7 @@ int sws_scale(SwsContext *c, const uint8_t* const src[], const stride_t srcStrid
                 r= (i>>3    )*255;
                 g= ((i>>1)&3)*85;
                 b= (i&1     )*255;
-            } else if(c->srcFormat == PIX_FMT_GRAY8 || c->srcFormat == PIX_FMT_Y400A) {
+            } else if(c->srcFormat == PIX_FMT_GRAY8 || c->srcFormat == PIX_FMT_GRAY8A) {
                 r = g = b = i;
             } else {
                 assert(c->srcFormat == PIX_FMT_BGR4_BYTE);
@@ -1984,33 +2175,33 @@ int sws_scale(SwsContext *c, const uint8_t* const src[], const stride_t srcStrid
             y= av_clip_uint8((RY*r + GY*g + BY*b + ( 33<<(RGB2YUV_SHIFT-1)))>>RGB2YUV_SHIFT);
             u= av_clip_uint8((RU*r + GU*g + BU*b + (257<<(RGB2YUV_SHIFT-1)))>>RGB2YUV_SHIFT);
             v= av_clip_uint8((RV*r + GV*g + BV*b + (257<<(RGB2YUV_SHIFT-1)))>>RGB2YUV_SHIFT);
-            c->pal_yuv[i]= y + (u<<8) + (v<<16);
+            c->pal_yuv[i]= y + (u<<8) + (v<<16) + (a<<24);
 
             switch(c->dstFormat) {
             case PIX_FMT_BGR32:
 #if !HAVE_BIGENDIAN
             case PIX_FMT_RGB24:
 #endif
-                c->pal_rgb[i]=  r + (g<<8) + (b<<16);
+                c->pal_rgb[i]=  r + (g<<8) + (b<<16) + (a<<24);
                 break;
             case PIX_FMT_BGR32_1:
 #if HAVE_BIGENDIAN
             case PIX_FMT_BGR24:
 #endif
-                c->pal_rgb[i]= (r + (g<<8) + (b<<16)) << 8;
+                c->pal_rgb[i]= a + (r<<8) + (g<<16) + (b<<24);
                 break;
             case PIX_FMT_RGB32_1:
 #if HAVE_BIGENDIAN
             case PIX_FMT_RGB24:
 #endif
-                c->pal_rgb[i]= (b + (g<<8) + (r<<16)) << 8;
+                c->pal_rgb[i]= a + (b<<8) + (g<<16) + (r<<24);
                 break;
             case PIX_FMT_RGB32:
 #if !HAVE_BIGENDIAN
             case PIX_FMT_BGR24:
 #endif
             default:
-                c->pal_rgb[i]=  b + (g<<8) + (r<<16);
+                c->pal_rgb[i]=  b + (g<<8) + (r<<16) + (a<<24);
             }
         }
     }
