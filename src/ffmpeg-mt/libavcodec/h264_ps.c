@@ -454,7 +454,11 @@ int ff_h264_decode_picture_parameter_set(H264Context *h, int bit_length){
     MpegEncContext * const s = &h->s;
     unsigned int pps_id= get_ue_golomb(&s->gb);
     PPS *pps;
+    #if ENABLE_HIGH_BIT
     const int qp_bd_offset = 6*(h->sps.bit_depth_luma-8);
+    #else
+    const int qp_bd_offset = 0;
+    #endif
 
     if(pps_id >= MAX_PPS_COUNT) {
         av_log(h->s.avctx, AV_LOG_ERROR, "pps_id (%d) out of range\n", pps_id);
@@ -539,8 +543,13 @@ int ff_h264_decode_picture_parameter_set(H264Context *h, int bit_length){
         pps->chroma_qp_index_offset[1]= pps->chroma_qp_index_offset[0];
     }
 
+    #if ENABLE_HIGH_BIT
     build_qp_table(pps, 0, pps->chroma_qp_index_offset[0], h->sps.bit_depth_luma);
     build_qp_table(pps, 1, pps->chroma_qp_index_offset[1], h->sps.bit_depth_luma);
+    #else
+    build_qp_table(pps, 0, pps->chroma_qp_index_offset[0], 8);
+    build_qp_table(pps, 1, pps->chroma_qp_index_offset[1], 8);
+    #endif
     if(pps->chroma_qp_index_offset[0] != pps->chroma_qp_index_offset[1])
         pps->chroma_qp_diff= 1;
 

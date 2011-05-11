@@ -28,6 +28,9 @@
 #ifndef AVCODEC_H264_H
 #define AVCODEC_H264_H
 
+// Hack to disable 9/10-bit decoding
+#define ENABLE_HIGH_BIT 0
+
 #include "libavutil/intreadwrite.h"
 #include "dsputil.h"
 #include "cabac.h"

@@ -922,7 +922,11 @@ decode_intra_mb:
         int dquant;
         GetBitContext *gb= IS_INTRA(mb_type) ? h->intra_gb_ptr : h->inter_gb_ptr;
         const uint8_t *scan, *scan8x8;
+        #if ENABLE_HIGH_BIT
         const int max_qp = 51 + 6*(h->sps.bit_depth_luma-8);
+        #else
+        const int max_qp = 51;
+        #endif
 
         if(IS_INTERLACED(mb_type)){
             scan8x8= s->qscale ? h->field_scan8x8_cavlc : h->field_scan8x8_cavlc_q0;

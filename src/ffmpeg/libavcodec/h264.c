@@ -1951,6 +1951,9 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
                   //}
                 }
         }
+        #if !ENABLE_HIGH_BIT
+        s->avctx->pix_fmt = PIX_FMT_YUV420P;
+        #endif
 
         if (MPV_common_init(s) < 0){
             av_log(h->s.avctx, AV_LOG_ERROR, "MPV_common_init() failed\n");
@@ -3031,6 +3034,7 @@ static int decode_nal_units(H264Context *h, const uint8_t *buf, int buf_size){
             if(avctx->has_b_frames < 2)
                 avctx->has_b_frames= !s->low_delay;
 
+            #if ENABLE_HIGH_BIT
             if (avctx->bits_per_raw_sample != h->sps.bit_depth_luma) {
                 if (h->sps.bit_depth_luma >= 8 && h->sps.bit_depth_luma <= 10) {
                     avctx->bits_per_raw_sample = h->sps.bit_depth_luma;
@@ -3044,6 +3048,7 @@ static int decode_nal_units(H264Context *h, const uint8_t *buf, int buf_size){
                     return -1;
                 }
             }
+            #endif
             break;
         case NAL_PPS:
             init_get_bits(&s->gb, ptr, bit_length);
