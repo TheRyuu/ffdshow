@@ -1017,7 +1017,7 @@ av_cold int ff_h264_decode_init(AVCodecContext *avctx){
         s->avctx->has_b_frames = h->sps.num_reorder_frames;
         s->low_delay = 0;
     }
-
+    
     return 0;
 }
 
@@ -3494,7 +3494,7 @@ static int decode_nal_units(H264Context *h, const uint8_t *buf, int buf_size){
             if(avctx->has_b_frames < 2)
                 avctx->has_b_frames= !s->low_delay;
 
-            if (avctx->bits_per_raw_sample != h->sps.bit_depth_luma) {
+            if (avctx->bits_per_raw_sample != h->sps.bit_depth_luma) {           		
                 if (h->sps.bit_depth_luma >= 8 && h->sps.bit_depth_luma <= 10) {
                     avctx->bits_per_raw_sample = h->sps.bit_depth_luma;
                     h->pixel_shift = h->sps.bit_depth_luma > 8;
