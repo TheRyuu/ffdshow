@@ -293,7 +293,7 @@ HRESULT FFH264BuildPicParams (DXVA_PicParams_H264* pDXVAPicParams, DXVA_Qmatrix_
 		pDXVAPicParams->frame_mbs_only_flag						= cur_sps->frame_mbs_only_flag;
 		pDXVAPicParams->transform_8x8_mode_flag					= cur_pps->transform_8x8_mode;
 		pDXVAPicParams->MinLumaBipredSize8x8Flag				= h->sps.level_idc >= 31;
-		pDXVAPicParams->IntraPicFlag							= (h->slice_type == FF_I_TYPE );
+		pDXVAPicParams->IntraPicFlag							= (h->slice_type == AV_PICTURE_TYPE_I );
 
 		pDXVAPicParams->bit_depth_luma_minus8					= cur_sps->bit_depth_luma   - 8;	// bit_depth_luma_minus8
 		pDXVAPicParams->bit_depth_chroma_minus8					= cur_sps->bit_depth_chroma - 8;	// bit_depth_chroma_minus8
@@ -311,8 +311,10 @@ HRESULT FFH264BuildPicParams (DXVA_PicParams_H264* pDXVAPicParams, DXVA_Qmatrix_
 
 		pDXVAPicParams->log2_max_frame_num_minus4				= cur_sps->log2_max_frame_num - 4;					// log2_max_frame_num_minus4;
 		pDXVAPicParams->pic_order_cnt_type						= cur_sps->poc_type;								// pic_order_cnt_type;
-		pDXVAPicParams->log2_max_pic_order_cnt_lsb_minus4		= cur_sps->log2_max_poc_lsb - 4;					// log2_max_pic_order_cnt_lsb_minus4;
-		pDXVAPicParams->delta_pic_order_always_zero_flag		= cur_sps->delta_pic_order_always_zero_flag;
+		if(cur_sps->poc_type == 0)
+			pDXVAPicParams->log2_max_pic_order_cnt_lsb_minus4		= cur_sps->log2_max_poc_lsb - 4;					// log2_max_pic_order_cnt_lsb_minus4;
+		else if(cur_sps->poc_type == 1)
+			pDXVAPicParams->delta_pic_order_always_zero_flag		= cur_sps->delta_pic_order_always_zero_flag;
 		pDXVAPicParams->direct_8x8_inference_flag				= cur_sps->direct_8x8_inference_flag;
 		pDXVAPicParams->entropy_coding_mode_flag				= cur_pps->cabac;									// entropy_coding_mode_flag;
 		pDXVAPicParams->pic_order_present_flag					= cur_pps->pic_order_present;						// pic_order_present_flag;
@@ -462,7 +464,7 @@ void FF264UpdateRefFrameSliceLong(DXVA_PicParams_H264* pDXVAPicParams, DXVA_Slic
 	H264Context*			h			= (H264Context*) pAVCtx->priv_data;
 	MpegEncContext* const	s = &h->s;
 	HRESULT					hr = E_FAIL;
-	unsigned int			i,j,k;
+	unsigned int			i;
 
 	for(i=0; i<32; i++)
 	{	pSlice->RefPicList[0][i].AssociatedFlag = 1;
@@ -473,7 +475,7 @@ void FF264UpdateRefFrameSliceLong(DXVA_PicParams_H264* pDXVAPicParams, DXVA_Slic
 		pSlice->RefPicList[1][i].Index7Bits = 127;
 	}
 
-	if(h->slice_type != FF_I_TYPE && h->slice_type != FF_SI_TYPE)
+	if(h->slice_type != AV_PICTURE_TYPE_I && h->slice_type != AV_PICTURE_TYPE_SI)
 	{
 		if(h->ref_count[0] > 0) {
 			for(i=0; i < h->ref_count[0]; i++) {
@@ -492,7 +494,7 @@ void FF264UpdateRefFrameSliceLong(DXVA_PicParams_H264* pDXVAPicParams, DXVA_Slic
 	else
 		pSlice->num_ref_idx_l0_active_minus1 = 0;
 
-	if(h->slice_type == FF_B_TYPE || h->slice_type == FF_S_TYPE || h->slice_type == FF_BI_TYPE)
+	if(h->slice_type == AV_PICTURE_TYPE_B || h->slice_type == FF_S_TYPE || h->slice_type == FF_BI_TYPE)
 	{
 		if(h->ref_count[1] > 0) {
 			for(i=0; i < h->ref_count[1]; i++) {
@@ -512,14 +514,14 @@ void FF264UpdateRefFrameSliceLong(DXVA_PicParams_H264* pDXVAPicParams, DXVA_Slic
 		pSlice->num_ref_idx_l1_active_minus1 = 0;
 
 
-	if(h->slice_type == FF_I_TYPE || h->slice_type == FF_SI_TYPE)
+	if(h->slice_type == AV_PICTURE_TYPE_I || h->slice_type == AV_PICTURE_TYPE_SI)
 	{
 		for(i = 0; i<16; i++)
 			pSlice->RefPicList[0][i].bPicEntry = 0xff;
 	}
 
-	if(h->slice_type == FF_P_TYPE || h->slice_type == FF_I_TYPE ||
-		h->slice_type ==FF_SP_TYPE  || h->slice_type == FF_SI_TYPE)
+	if(h->slice_type == AV_PICTURE_TYPE_P || h->slice_type == AV_PICTURE_TYPE_I ||
+		h->slice_type ==AV_PICTURE_TYPE_SP  || h->slice_type == AV_PICTURE_TYPE_SI)
 	{
 		for(i = 0; i < 16; i++)
 		pSlice->RefPicList[1][i].bPicEntry = 0xff;
@@ -547,8 +549,8 @@ HRESULT FFVC1UpdatePictureParam (DXVA_PictureParameters* pPicParams, struct AVCo
 	else	// fcm : 2 or 3 frame or field interlaced
 		*nFieldType = (vc1->tff ? PICT_TOP_FIELD : PICT_BOTTOM_FIELD);
 
-	pPicParams->bPicIntra				= (vc1->s.pict_type == FF_I_TYPE);
-	pPicParams->bPicBackwardPrediction	= (vc1->s.pict_type == FF_B_TYPE);
+	pPicParams->bPicIntra				= (vc1->s.pict_type == AV_PICTURE_TYPE_I);
+	pPicParams->bPicBackwardPrediction	= (vc1->s.pict_type == AV_PICTURE_TYPE_B);
 
 	// Init    Init    Init    Todo
 	// iWMV9 - i9IRU - iOHIT - iINSO - iWMVA - 0 - 0 - 0		| Section 3.2.5
