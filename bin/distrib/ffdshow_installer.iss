@@ -576,6 +576,9 @@ Root: HKCU; Subkey: "{#= ff_reg_base}_dxva";          ValueType: dword;  ValueNa
 Root: HKCU; Subkey: "{#= ff_reg_base}_dxva";          ValueType: dword;  ValueName: "isWhitelist";          ValueData: "1";                  Components: ffdshow\dxva; Flags: createvalueifdoesntexist
 Root: HKCU; Subkey: "{#= ff_reg_base}_dxva";          ValueType: string;  ValueName: "Whitelist";           ValueData: "bsplayer.exe;coreplayer.exe;ehshell.exe;gom.exe;graphedit.exe;graphedt.exe;graphstudio.exe;graphstudio64.exe;kmplayer.exe;mpc-hc.exe;mpc-hc64.exe;mplayerc.exe;wmplayer.exe;zplayer.exe;";                  Components: ffdshow\dxva; Flags: createvalueifdoesntexist
 
+; Fix invalid codec settings
+Root: HKCU; Subkey: "{#= ff_reg_base}";               ValueType: dword;  ValueName: "needCodecFix";         ValueData: "1";                  Components: ffdshow;                                   Check: IsUpdate
+
 ; Registry keys for the audio/video formats:
 #include "reg_formats.iss"
 

@@ -549,6 +549,27 @@ void TglobalSettingsDecVideo::fixNewCodecs(void)
     if (mpegAVI==2) {
         mpegAVI=IDFF_MOVIE_LIBMPEG2;
     }
+	if (dx50==21) {
+        dx50=IDFF_MOVIE_LAVC;
+    }
+	if (fvfw==21) {
+        fvfw=IDFF_MOVIE_LAVC;
+    }
+	if (mp4v==21) {
+        mp4v=IDFF_MOVIE_LAVC;
+    }
+	if (xvid==21) {
+        xvid=IDFF_MOVIE_LAVC;
+    }
+	if (vp3==21) {
+        vp3=IDFF_MOVIE_LAVC;
+    }
+	if (theo==21) {
+        theo=IDFF_MOVIE_LAVC;
+    }
+	if (hfyu==21) {
+        hfyu=IDFF_MOVIE_LAVC;
+    }
     //if (rawv==1 && forceInCSP!=0) rawv=forceInCSP;
 }
 
