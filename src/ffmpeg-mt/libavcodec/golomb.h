@@ -3,25 +3,25 @@
  * Copyright (c) 2003 Michael Niedermayer <michaelni@gmx.at>
  * Copyright (c) 2004 Alex Beregszaszi
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 /**
- * @file libavcodec/golomb.h
+ * @file
  * @brief
  *     exp golomb vlc stuff
  * @author Michael Niedermayer <michaelni@gmx.at> and Alex Beregszaszi
@@ -30,18 +30,9 @@
 #ifndef AVCODEC_GOLOMB_H
 #define AVCODEC_GOLOMB_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include <stdint.h>
 #include "get_bits.h"
 #include "put_bits.h"
-#ifdef HAVE_AV_CONFIG_H
-#include "libavutil/common.h"
-#endif
-
-#define FFMIN(a,b) ((a) > (b) ? (b) : (a))
 
 #define INVALID_VLC           0x80000000
 
@@ -64,17 +55,7 @@ static inline int get_ue_golomb(GetBitContext *gb){
     int log;
 
     OPEN_READER(re, gb);
-    /* ffdshow custom code */
-#if defined(__INTEL_COMPILER) || defined(_MSC_VER)
-    #ifdef ALT_BITSTREAM_READER_LE
-    re_cache= AV_RL32( ((const uint8_t *)(gb)->buffer)+(re_index>>3) ) >> (re_index&0x07);
-    #else
-    re_cache= AV_RB32( ((const uint8_t *)(gb)->buffer)+(re_index>>3) ) >> (re_index&0x07);
-    #endif
-#else
-    // ICL and MSVC compilers sometimes mess up this macro
-	UPDATE_CACHE(re, gb);
-#endif
+    UPDATE_CACHE(re, gb);
     buf=GET_CACHE(re, gb);
 
     if(buf >= (1<<27)){
@@ -102,17 +83,7 @@ static inline int get_ue_golomb_31(GetBitContext *gb){
     unsigned int buf;
 
     OPEN_READER(re, gb);
-    /* ffdshow custom code */
-    #if defined(__INTEL_COMPILER) || defined(DEBUG)
-        #ifdef ALT_BITSTREAM_READER_LE
-    re_cache= AV_RL32( ((const uint8_t *)(gb)->buffer)+(re_index>>3) ) >> (re_index&0x07);
-        #else
-    re_cache= AV_RB32( ((const uint8_t *)(gb)->buffer)+(re_index>>3) ) >> (re_index&0x07);
-        #endif
-    #else
-    // ICL9.1-Release and MSVC8-DEBUG build can't process this macro properly.
     UPDATE_CACHE(re, gb);
-    #endif
     buf=GET_CACHE(re, gb);
 
     buf >>= 32 - 9;
@@ -537,8 +508,5 @@ static inline void set_sr_golomb_flac(PutBitContext *pb, int i, int k, int limit
 
     set_ur_golomb_jpegls(pb, v, k, limit, esc_len);
 }
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* AVCODEC_GOLOMB_H */
