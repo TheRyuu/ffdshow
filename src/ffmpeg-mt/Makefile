@@ -91,7 +91,11 @@ DEF=ffmpegmt.def
 
 ### SETTINGS ###
 
-CFLAGS=-I. -Ilibavcodec -Ilibavutil -I../pthreads -I../imgFilters -DHAVE_AV_CONFIG_H -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -std=gnu99
+CFLAGS=-I. -Ilibavcodec -Ilibavutil -I../pthreads -I../imgFilters -DHAVE_AV_CONFIG_H -D_ISOC99_SOURCE -std=c99 \
+       -fomit-frame-pointer -fno-math-errno -fno-signed-zeros -Wdeclaration-after-statement -Wno-parentheses -Wno-switch \
+       -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wno-pointer-sign -Wcast-qual -Wwrite-strings -Wtype-limits
+       
+#CFLAGS+=-Wall -Wundef
 
 ifeq ($(64BIT),yes)
     CFLAGS+=-DARCH_X86_64

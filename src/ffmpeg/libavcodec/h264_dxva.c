@@ -21,8 +21,7 @@
 
 
 static void fill_dxva_slice_long(H264Context *h){
-    MpegEncContext* const	s = &h->s;
-    AVCodecContext* const	avctx= s->avctx;
+	MpegEncContext* const	s = &h->s;
 	DXVA_Slice_H264_Long*	pSlice = &((DXVA_Slice_H264_Long*) h->dxva_slice_long)[h->current_slice-1];
 	int						field_pic_flag;
 	unsigned int			i,j,k;
@@ -77,7 +76,6 @@ static void fill_dxva_slice_long(H264Context *h){
 
 static void field_end_noexecute(H264Context *h){
     MpegEncContext * const s = &h->s;
-    AVCodecContext * const avctx= s->avctx;
     s->mb_y= 0;
 
     s->current_picture_ptr->qscale_type= FF_QSCALE_TYPE_H264;

@@ -10,7 +10,7 @@
 #ifndef __DIRECTX_VA__
 #define __DIRECTX_VA__
 
-#if _MSC_VER >= 1200
+#if defined(_MSC_VER) && (_MSC_VER >= 1200)
 #pragma warning(push)
 #endif
 
@@ -1203,7 +1203,7 @@ DEFINE_GUID(DXVA_DeinterlaceContainerDevice,
     0x0e85cb93,0x3046,0x4ff0,0xae,0xcc,0xd5,0x8c,0xb5,0xf0,0x35,0xfd);
 
 
-#if (DIRECT3D_VERSION < 0x0800) || !defined(DIRECT3D_VERSION)
+#if !defined(DIRECT3D_VERSION) || (DIRECT3D_VERSION < 0x0800)
 typedef DWORD D3DFORMAT;
 enum {
     D3DPOOL_DEFAULT                 = 0,
@@ -1956,7 +1956,7 @@ DECLARE_INTERFACE_(IDirect3DDXVADevice9, IUnknown)
 
 #endif /* __DXVA1_DEPRECATED_INTERFACES__ */
 
-#if _MSC_VER >= 1200
+#if defined(_MSC_VER) && (_MSC_VER >= 1200)
 #pragma warning(pop)
 #endif
 

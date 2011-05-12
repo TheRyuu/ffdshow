@@ -345,7 +345,11 @@ DEF=ffmpeg.def
 
 ### SETTINGS ###
 
-CFLAGS=-I. -Ilibavcodec -Ilibavutil -I../imgFilters -I../zlib -DHAVE_AV_CONFIG_H -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -std=gnu99
+CFLAGS=-I. -Ilibavcodec -Ilibavutil -I../imgFilters -I../zlib -DHAVE_AV_CONFIG_H -D_ISOC99_SOURCE -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -std=gnu99 \
+       -fomit-frame-pointer -fno-math-errno -fno-signed-zeros -Wdeclaration-after-statement -Wno-parentheses -Wno-switch \
+       -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wno-pointer-sign -Wcast-qual -Wwrite-strings -Wtype-limits
+
+#CFLAGS+=-Wall -Wundef
 
 ifeq ($(64BIT),yes)
     CFLAGS+=-DARCH_X86_64

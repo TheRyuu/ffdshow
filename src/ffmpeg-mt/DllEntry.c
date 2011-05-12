@@ -36,7 +36,6 @@ BOOL pthread_win32_thread_detach_np(void);
 // --- standard WIN32 entrypoints --------------------------------------
 BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
 {
-    char pomS[40];
     switch (dwReason)
     {
     case DLL_PROCESS_ATTACH:

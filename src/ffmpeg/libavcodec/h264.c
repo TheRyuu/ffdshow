@@ -883,6 +883,9 @@ av_cold int ff_h264_decode_init(AVCodecContext *avctx){
     s->quarter_sample = 1;
     if(!avctx->has_b_frames)
     s->low_delay= 1;
+    
+    /* ffdshow custom code */
+    s->avctx->pix_fmt = PIX_FMT_YUV420P;
 
     avctx->chroma_sample_location = AVCHROMA_LOC_LEFT;
 

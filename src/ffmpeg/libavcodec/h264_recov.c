@@ -22,7 +22,6 @@ int avcodec_h264_search_recovery_point(AVCodecContext *avctx,
         int bit_length;
         const uint8_t *ptr;
         int i, nalsize = 0;
-        int err;
 
         if(h->is_avc) {
             if(buf_index >= buf_size) break;

@@ -24,11 +24,6 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-
-// FFDShow : renamed from utils.c because it enters in conflict during linking with libavcodec/utils.c (when using MSVC to compile)
-
-#define _SVID_SOURCE //needed for MAP_ANONYMOUS
-#define _DARWIN_C_SOURCE // needed for MAP_ANON
 #include <inttypes.h>
 #include <string.h>
 #include <math.h>

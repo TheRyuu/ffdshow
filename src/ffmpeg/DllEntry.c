@@ -32,7 +32,7 @@ CRITICAL_SECTION g_csStaticDataLock;
 BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
 {
  //static int count=0;
- char pomS[40];
+ //char pomS[40];
  switch (dwReason)
   {
    case DLL_PROCESS_ATTACH:

@@ -97,8 +97,8 @@ void av_log(void* avcl, int level, const char *fmt, ...)
 void av_vlog(void* avcl, int level, const char *fmt, va_list vl)
 {
 #if USE_DPRINTF
-	allowDPRINTF=1;
-	DPRINTFA(fmt, vl);
+    allowDPRINTF=1;
+    DPRINTFA(fmt, vl);
 #else
     av_log_callback(avcl, level, fmt, vl);
 #endif

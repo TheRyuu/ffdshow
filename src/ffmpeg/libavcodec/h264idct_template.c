@@ -42,12 +42,12 @@ static const uint8_t scan8[16 + 2*4]={
 };
 #endif
 
-static av_always_inline void FUNCC(idct_internal)(uint8_t *_dst, DCTELEM *_block, int stride, int block_stride, int shift, int add){
+static av_always_inline void FUNCC(idct_internal)(uint8_t *p_dst, DCTELEM *p_block, int stride, int block_stride, int shift, int add){
     int i;
     INIT_CLIP
-    pixel *dst = (pixel*)_dst;
-    dctcoef *block = (dctcoef*)_block;
-    stride /= sizeof(pixel);
+    pixel *dst = (pixel*)p_dst;
+    dctcoef *block = (dctcoef*)p_block;
+    stride >>= sizeof(pixel)-1;
 
     block[0] += 1<<(shift-1);
 
@@ -88,12 +88,12 @@ void FUNCC(ff_h264_lowres_idct_put)(uint8_t *dst, int stride, DCTELEM *block){
     FUNCC(idct_internal)(dst, block, stride, 8, 3, 0);
 }
 
-void FUNCC(ff_h264_idct8_add)(uint8_t *_dst, DCTELEM *_block, int stride){
+void FUNCC(ff_h264_idct8_add)(uint8_t *p_dst, DCTELEM *p_block, int stride){
     int i;
     INIT_CLIP
-    pixel *dst = (pixel*)_dst;
-    dctcoef *block = (dctcoef*)_block;
-    stride /= sizeof(pixel);
+    pixel *dst = (pixel*)p_dst;
+    dctcoef *block = (dctcoef*)p_block;
+    stride >>= sizeof(pixel)-1;
 
     block[0] += 32;
 
@@ -162,12 +162,12 @@ void FUNCC(ff_h264_idct8_add)(uint8_t *_dst, DCTELEM *_block, int stride){
 }
 
 // assumes all AC coefs are 0
-void FUNCC(ff_h264_idct_dc_add)(uint8_t *_dst, DCTELEM *block, int stride){
+void FUNCC(ff_h264_idct_dc_add)(uint8_t *p_dst, DCTELEM *block, int stride){
     int i, j;
     int dc = (((dctcoef*)block)[0] + 32) >> 6;
     INIT_CLIP
-    pixel *dst = (pixel*)_dst;
-    stride /= sizeof(pixel);
+    pixel *dst = (pixel*)p_dst;
+    stride >>= sizeof(pixel)-1;
     for( j = 0; j < 4; j++ )
     {
         for( i = 0; i < 4; i++ )
@@ -176,12 +176,12 @@ void FUNCC(ff_h264_idct_dc_add)(uint8_t *_dst, DCTELEM *block, int stride){
     }
 }
 
-void FUNCC(ff_h264_idct8_dc_add)(uint8_t *_dst, DCTELEM *block, int stride){
+void FUNCC(ff_h264_idct8_dc_add)(uint8_t *p_dst, DCTELEM *block, int stride){
     int i, j;
     int dc = (((dctcoef*)block)[0] + 32) >> 6;
     INIT_CLIP
-    pixel *dst = (pixel*)_dst;
-    stride /= sizeof(pixel);
+    pixel *dst = (pixel*)p_dst;
+    stride >>= sizeof(pixel)-1;
     for( j = 0; j < 8; j++ )
     {
         for( i = 0; i < 8; i++ )
@@ -233,13 +233,13 @@ void FUNCC(ff_h264_idct_add8)(uint8_t **dest, const int *block_offset, DCTELEM *
  * IDCT transforms the 16 dc values and dequantizes them.
  * @param qp quantization parameter
  */
-void FUNCC(ff_h264_luma_dc_dequant_idct)(DCTELEM *_output, DCTELEM *_input, int qmul){
+void FUNCC(ff_h264_luma_dc_dequant_idct)(DCTELEM *p_output, DCTELEM *p_input, int qmul){
 #define stride 16
     int i;
     int temp[16];
     static const uint8_t x_offset[4]={0, 2*stride, 8*stride, 10*stride};
-    dctcoef *input = (dctcoef*)_input;
-    dctcoef *output = (dctcoef*)_output;
+    dctcoef *input = (dctcoef*)p_input;
+    dctcoef *output = (dctcoef*)p_output;
 
     for(i=0; i<4; i++){
         const int z0= input[4*i+0] + input[4*i+1];
@@ -268,11 +268,11 @@ void FUNCC(ff_h264_luma_dc_dequant_idct)(DCTELEM *_output, DCTELEM *_input, int 
 #undef stride
 }
 
-void FUNCC(ff_h264_chroma_dc_dequant_idct)(DCTELEM *_block, int qmul){
+void FUNCC(ff_h264_chroma_dc_dequant_idct)(DCTELEM *p_block, int qmul){
     const int stride= 16*2;
     const int xStride= 16;
     int a,b,c,d,e;
-    dctcoef *block = (dctcoef*)_block;
+    dctcoef *block = (dctcoef*)p_block;
 
     a= block[stride*0 + xStride*0];
     b= block[stride*0 + xStride*1];

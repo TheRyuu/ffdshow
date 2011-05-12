@@ -3566,7 +3566,7 @@ static int vc1_decode_frame(AVCodecContext *avctx,
     MpegEncContext *s = &v->s;
     AVFrame *pict = data;
     uint8_t *buf2 = NULL;
-    const uint8_t *buf_start = buf;
+    //const uint8_t *buf_start = buf;
     struct {
         uint8_t *buf;
         GetBitContext gb;

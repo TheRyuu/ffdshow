@@ -13,11 +13,14 @@
 	#define ARCH_X86 1
 
 	#ifdef ARCH_X86_64
+		#define ARCH_X86_32 0
+		#define ARCH_X86_64 1
 		#define HAVE_FAST_64BIT 1
 		#define HAVE_STRUCT_TIMESPEC 1
 	#else
 		#define ARCH_X86_32 1
 		#define ARCH_X86_64 0
+		#define HAVE_FAST_64BIT 0
 	#endif
 
 	#define PTW32_STATIC_LIB 1
@@ -29,7 +32,7 @@
 
 // Use DPRINTF instead of av_log. To be used for debug purpose because DPRINTF will be always called (the
 // registry switch is not read)
-//#define USE_DPRINTF 1
+#define USE_DPRINTF 0
 
 #define LIBAV_CONFIGURATION "ffdshow custom"
 #define LIBAV_LICENSE "GPL version 2 or later"
@@ -83,13 +86,18 @@
 #define HAVE_FAST_CLZ 0
 #define HAVE_FAST_CMOV 1
 #define HAVE_FAST_UNALIGNED 1
+#define HAVE_ISATTY 0
 #define HAVE_LOCAL_ALIGNED_16 1
 #define HAVE_LOCAL_ALIGNED_8 1
 #define HAVE_MALLOC_H 1
 #define HAVE_MEMALIGN 1
 #define HAVE_PTHREADS 1
+#define HAVE_SYMVER 1
+#define HAVE_SYMVER_GNU_ASM 0
+#define HAVE_SYMVER_ASM_LABEL 1
 #define HAVE_TEN_OPERANDS 1
 #define HAVE_THREADS 1
+#define HAVE_VIRTUALALLOC 1
 #define HAVE_W32THREADS 0
 #define HAVE_XMM_CLOBBERS 1
 #define HAVE_YASM 1
@@ -107,6 +115,7 @@
   #define HAVE_EXP2 1
   #define HAVE_EXP2F 1
   #define HAVE_LLRINT 1
+  #define HAVE_LLRINTF 1
   #define HAVE_LOG2 1
   #define HAVE_LOG2F 1
   #define HAVE_LRINT 1
@@ -119,6 +128,7 @@
   #define HAVE_EXP2 1
   #define HAVE_EXP2F 1
   #define HAVE_LLRINT 0
+  #define HAVE_LLRINTF 0
   #define HAVE_LOG2 1
   #define HAVE_LOG2F 1
   #define HAVE_LRINT 0
@@ -147,6 +157,7 @@
 #define CONFIG_MDCT 1
 #define CONFIG_MLIB 0
 #define CONFIG_MPEGAUDIO_HP 1
+#define CONFIG_RDFT 0
 #define CONFIG_RUNTIME_CPUDETECT 1
 #define CONFIG_SMALL 0
 #define CONFIG_ZLIB 1
