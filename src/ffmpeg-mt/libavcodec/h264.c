@@ -3626,7 +3626,7 @@ static int decode_frame(AVCodecContext *avctx,
             nalsize = AV_RB16(p) + 2;
             if(decode_nal_units(h, p, nalsize)  != nalsize) {
                 av_log(avctx, AV_LOG_ERROR, "Decoding pps %d from avcC failed\n", i);
-                return -1;
+                //return -1;
             }
             p += nalsize;
         }
