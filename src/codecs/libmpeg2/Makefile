@@ -34,7 +34,6 @@ DEF=libmpeg2_ff.def
 ### SETTINGS ###
 
 CFLAGS+= -I. -Iinclude
-FORCECPP=1
 
 #CFLAGS+=-fverbose-asm -save-temps
 
@@ -46,6 +45,7 @@ OPTFLAGS+=-msse -mfpmath=sse
 
 include ../../makefile_c.inc
 
+CC=g++.exe
 
 ### TARGETS ###
 

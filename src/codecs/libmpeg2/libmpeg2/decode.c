@@ -31,7 +31,7 @@
 #include "attributes.h"
 #include "mpeg2_internal.h"
 
-static int mpeg2_accels = 0;
+static uint32_t mpeg2_accels = 0;
 
 #define BUFFER_SIZE (1194 * 1024)
 
@@ -407,10 +407,11 @@ void mpeg2_reset (mpeg2dec_t * mpeg2dec, int full_reset)
 
 }
 
-static int ffdshow_accels=0;
-extern "C" void mpeg2_set_accel(int accel)
+static uint32_t ffdshow_accels=0;
+
+uint32_t mpeg2_set_accel(uint32_t accel)
 {
- ffdshow_accels=accel;
+    return ffdshow_accels=accel;
 }
 
 mpeg2dec_t * mpeg2_init (void)

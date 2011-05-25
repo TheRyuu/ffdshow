@@ -38,7 +38,6 @@ TvideoCodecLibmpeg2::TvideoCodecLibmpeg2(IffdshowBase *Ideci,IdecVideoSink *Isin
 {
     dll=new Tdll(dllname,config);
     dll->loadFunction(mpeg2_set_accel,"mpeg2_set_accel");
-    dll->loadFunction(mpeg2_accel,"mpeg2_accel");
     dll->loadFunction(mpeg2_init,"mpeg2_init");
     dll->loadFunction(mpeg2_info,"mpeg2_info");
     dll->loadFunction(mpeg2_parse,"mpeg2_parse");

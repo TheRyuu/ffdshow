@@ -11,10 +11,9 @@ class TvideoCodecLibmpeg2 :public TvideoCodecDec
 {
 private:
     Tdll *dll;
-    uint32_t (*mpeg2_accel)(uint32_t accel);
+    uint32_t (*mpeg2_set_accel)(uint32_t accel);
     mpeg2dec_t* (*mpeg2_init)(void);
     const mpeg2_info_t* (*mpeg2_info)(mpeg2dec_t *mpeg2dec);
-    void (*mpeg2_set_accel)(int accel);
     mpeg2_state_t (*mpeg2_parse )(mpeg2dec_t *mpeg2dec);
     void (*mpeg2_buffer)(mpeg2dec_t *mpeg2dec, const uint8_t *start, const uint8_t *end);
     void (*mpeg2_close)(mpeg2dec_t *mpeg2dec);

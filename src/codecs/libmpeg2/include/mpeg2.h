@@ -168,32 +168,6 @@ int mpeg2_stride (mpeg2dec_t * mpeg2dec, int stride);
 void mpeg2_set_buf (mpeg2dec_t * mpeg2dec, uint8_t * buf[3], void * id);
 void mpeg2_custom_fbuf (mpeg2dec_t * mpeg2dec, int custom_fbuf);
 
-#define MPEG2_ACCEL_X86_MMX 1
-#define MPEG2_ACCEL_X86_3DNOW 2
-#define MPEG2_ACCEL_X86_MMXEXT 4
-#define MPEG2_ACCEL_X86_SSE2 8
-#define MPEG2_ACCEL_X86_SSE3 16
-#define MPEG2_ACCEL_DETECT 0x80000000
-
-extern "C" uint32_t mpeg2_accel (uint32_t accel);
-extern "C" mpeg2dec_t * mpeg2_init (void);
-extern "C" const mpeg2_info_t * mpeg2_info (mpeg2dec_t * mpeg2dec);
-extern "C" void mpeg2_close (mpeg2dec_t * mpeg2dec);
-
-extern "C" void mpeg2_buffer (mpeg2dec_t * mpeg2dec, uint8_t * start, uint8_t * end);
-int mpeg2_getpos (mpeg2dec_t * mpeg2dec);
-extern "C" mpeg2_state_t mpeg2_parse (mpeg2dec_t * mpeg2dec);
-
-extern "C" void mpeg2_reset (mpeg2dec_t * mpeg2dec, int full_reset);
-void mpeg2_skip (mpeg2dec_t * mpeg2dec, int skip);
-void mpeg2_slice_region (mpeg2dec_t * mpeg2dec, int start, int end);
-
-void mpeg2_tag_picture (mpeg2dec_t * mpeg2dec, uint32_t tag, uint32_t tag2);
-
-int mpeg2_guess_aspect (const mpeg2_sequence_t * sequence,
-            unsigned int * pixel_width,
-            unsigned int * pixel_height);
-
 typedef enum {
     MPEG2_ALLOC_MPEG2DEC = 0,
     MPEG2_ALLOC_CHUNK = 1,
@@ -202,7 +176,37 @@ typedef enum {
     MPEG2_ALLOC_CONVERTED = 4
 } mpeg2_alloc_t;
 
+#define MPEG2_ACCEL_X86_MMX 1
+#define MPEG2_ACCEL_X86_3DNOW 2
+#define MPEG2_ACCEL_X86_MMXEXT 4
+#define MPEG2_ACCEL_X86_SSE2 8
+#define MPEG2_ACCEL_X86_SSE3 16
+#define MPEG2_ACCEL_DETECT 0x80000000
+
+int mpeg2_getpos (mpeg2dec_t * mpeg2dec);
+void mpeg2_skip (mpeg2dec_t * mpeg2dec, int skip);
+void mpeg2_slice_region (mpeg2dec_t * mpeg2dec, int start, int end);
+void mpeg2_tag_picture (mpeg2dec_t * mpeg2dec, uint32_t tag, uint32_t tag2);
+int mpeg2_guess_aspect (const mpeg2_sequence_t * sequence, unsigned int * pixel_width, unsigned int * pixel_height);
 void * mpeg2_malloc (size_t size, mpeg2_alloc_t reason);
 void mpeg2_free (void * buf);
-extern "C" void mpeg2_set_rtStart(mpeg2dec_t *mpeg2dec,int64_t rtStart);
+
+#ifdef __cplusplus
+extern "C" {
+#endif 
+
+uint32_t mpeg2_set_accel(uint32_t accel);
+uint32_t mpeg2_accel(uint32_t accel);
+mpeg2dec_t * mpeg2_init(void);
+const mpeg2_info_t * mpeg2_info(mpeg2dec_t * mpeg2dec);
+void mpeg2_close(mpeg2dec_t * mpeg2dec);
+void mpeg2_buffer(mpeg2dec_t * mpeg2dec, uint8_t * start, uint8_t * end);
+mpeg2_state_t mpeg2_parse(mpeg2dec_t * mpeg2dec);
+void mpeg2_reset(mpeg2dec_t * mpeg2dec, int full_reset);
+void mpeg2_set_rtStart(mpeg2dec_t *mpeg2dec,int64_t rtStart);
+
+#ifdef __cplusplus
+}
+#endif 
+
 #endif /* LIBMPEG2_MPEG2_H */
