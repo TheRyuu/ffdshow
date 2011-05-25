@@ -280,18 +280,21 @@ HRESULT TffdshowDecVideo::GetMediaType(int iPosition, CMediaType *mtOut)
         initPreset();
     }
 
-    bool isVIH2;
-
-    if (m_pOutput->IsConnected()) {
+    bool use_workaround = (_strnicmp(_l("powerpnt.exe"),getExeflnm(),13)==0);
+    int hwOverlay = use_workaround ? 0 : 2;
+    
+    if (hwOverlay==2 && m_pOutput->IsConnected()) {
         const CLSID &ref=GetCLSID(m_pOutput->GetConnected());
         if (ref==CLSID_VideoMixingRenderer || ref==CLSID_VideoMixingRenderer9) {
-            isVIH2=true;
+            hwOverlay = 1;
         }
     }
 
-    isVIH2=!outdv && (iPosition&1)==0;
+    bool isVIH2=!outdv && (hwOverlay==1 || (hwOverlay==2 && (iPosition&1)==0));
 
-    iPosition/=2;
+    if(hwOverlay==2) {
+        iPosition/=2;
+    }
 
     if (iPosition<0) {
         return E_INVALIDARG;
@@ -383,7 +386,7 @@ HRESULT TffdshowDecVideo::GetMediaType(int iPosition, CMediaType *mtOut)
             return E_OUTOFMEMORY;
         }
         ZeroMemory(vih2,sizeof(VIDEOINFOHEADER2));
-        if((presetSettings->resize && presetSettings->resize->is && presetSettings->resize->SARinternally && presetSettings->resize->mode==0)) {
+        if((presetSettings->resize && presetSettings->resize->is && presetSettings->resize->SARinternally && presetSettings->resize->mode==0) || use_workaround) {
             pictOut.rectFull.sar.num= 1;//pictOut.rectFull.dx; // VMR9 behaves better when this is set to 1(SAR). But in reconnectOutput, it is different(DAR) in my system.
             pictOut.rectFull.sar.den= 1;//pictOut.rectFull.dy;
         }
@@ -1735,6 +1738,14 @@ STDMETHODIMP TffdshowDecVideo::FindPin(LPCWSTR Id,IPin **ppPin)
 HRESULT TffdshowDecVideo::reconnectOutput(const TffPict &newpict)
 {
     HRESULT hr=S_OK;
+    bool use_workaround = (_strnicmp(_l("powerpnt.exe"),getExeflnm(),13)==0);
+    
+    if ((newpict.rectFull==oldRect && newpict.rectFull.sar!=oldRect.sar)
+            && use_workaround) {
+        // Do not set PAR in output media type.
+        oldRect=newpict.rectFull;
+        return S_OK;
+    }
     if ((newpict.rectFull==oldRect && newpict.rectFull.sar!=oldRect.sar)
             && _strnicmp(_l("wmplayer.exe"),getExeflnm(),13)!=0
             && (downstreamID == OVERLAY_MIXER || (dvdproc &&  (downstreamID ==  VMR7 || downstreamID == VMR9 || downstreamID == VMR9RENDERLESS_MPC)))) {
@@ -1778,6 +1789,11 @@ HRESULT TffdshowDecVideo::reconnectOutput(const TffPict &newpict)
 
             //vih->dwControlFlags=AMCONTROL_USED | AMCONTROL_COLORINFO_PRESENT | (DXVA_NominalRange_Wide << DXVA_NominalRangeShift);
             setVIH2aspect(vih,newpict.rectFull,presetSettings->output->hwOverlayAspect);
+            if (use_workaround) {
+                vih->dwPictAspectRatioX=newpict.rectFull.dx;
+                vih->dwPictAspectRatioY=newdy;
+                vih->dwControlFlags=0;
+            }
             if(presetSettings->resize && presetSettings->resize->is && presetSettings->resize->SARinternally && presetSettings->resize->mode==0) {
                 vih->dwPictAspectRatioX= newpict.rectFull.dx;
                 vih->dwPictAspectRatioY= newpict.rectFull.dy;
