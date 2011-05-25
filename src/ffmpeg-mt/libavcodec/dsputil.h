@@ -394,13 +394,6 @@ static inline uint64_t no_rnd_avg64(uint64_t a, uint64_t b)
     return (a & b) + (((a ^ b) & ~BYTE_VEC64(0x01)) >> 1);
 }
 
-/**
- * Empty mmx state.
- * this must be called between any dsp function and float/double code.
- * for example sin(); dsp->idct_put(); emms_c(); cos()
- */
-#define emms_c()
-
 void dsputil_init_alpha(DSPContext* c, AVCodecContext *avctx);
 void dsputil_init_arm(DSPContext* c, AVCodecContext *avctx);
 void dsputil_init_bfin(DSPContext* c, AVCodecContext *avctx);
@@ -410,19 +403,6 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx);
 void dsputil_init_ppc(DSPContext* c, AVCodecContext *avctx);
 void dsputil_init_sh4(DSPContext* c, AVCodecContext *avctx);
 void dsputil_init_vis(DSPContext* c, AVCodecContext *avctx);
-
-#if HAVE_MMX
-
-#undef emms_c
-
-static inline void emms(void)
-{
-    __asm__ volatile ("emms;":::"memory");
-}
-
-#define emms_c() emms()
-
-#endif
 
 #ifndef STRIDE_ALIGN
 #   define STRIDE_ALIGN 8

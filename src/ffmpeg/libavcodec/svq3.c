@@ -819,20 +819,11 @@ static av_cold int svq3_decode_init(AVCodecContext *avctx)
     avctx->pix_fmt = avctx->codec->pix_fmts[0];
 
     if (!s->context_initialized) {
-        s->width  = avctx->width;
-        s->height = avctx->height;
         h->chroma_qp[0] = h->chroma_qp[1] = 4;
 
         svq3->halfpel_flag = 1;
         svq3->thirdpel_flag = 1;
         svq3->unknown_flag = 0;
-
-        if (MPV_common_init(s) < 0)
-            return -1;
-
-        h->b_stride = 4*s->mb_width;
-
-        ff_h264_alloc_tables(h);
 
         /* prowl for the "SEQH" marker in the extradata */
         extradata = (unsigned char *)avctx->extradata;
@@ -920,6 +911,16 @@ static av_cold int svq3_decode_init(AVCodecContext *avctx)
 #endif
             }
         }
+
+        s->width  = avctx->width;
+        s->height = avctx->height;
+
+        if (MPV_common_init(s) < 0)
+            return -1;
+
+        h->b_stride = 4*s->mb_width;
+
+        ff_h264_alloc_tables(h);
     }
 
     return 0;
@@ -949,8 +950,8 @@ static int svq3_decode_frame(AVCodecContext *avctx,
     s->mb_x = s->mb_y = h->mb_xy = 0;
 
     if (svq3->watermark_key) {
-        svq3->buf = av_fast_realloc(svq3->buf, &svq3->buf_size,
-                                    buf_size+FF_INPUT_BUFFER_PADDING_SIZE);
+        av_fast_malloc(&svq3->buf, &svq3->buf_size,
+                       buf_size+FF_INPUT_BUFFER_PADDING_SIZE);
         if (!svq3->buf)
             return AVERROR(ENOMEM);
         memcpy(svq3->buf, avpkt->data, buf_size);
@@ -1049,7 +1050,7 @@ static int svq3_decode_frame(AVCodecContext *avctx,
             } else if (s->pict_type == AV_PICTURE_TYPE_B && mb_type >= 4) {
                 mb_type += 4;
             }
-            if (mb_type > 33 || svq3_decode_mb(svq3, mb_type)) {
+            if ((unsigned)mb_type > 33 || svq3_decode_mb(svq3, mb_type)) {
                 av_log(h->s.avctx, AV_LOG_ERROR, "error while decoding MB %d %d\n", s->mb_x, s->mb_y);
                 return -1;
             }

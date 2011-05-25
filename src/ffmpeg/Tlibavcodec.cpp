@@ -193,18 +193,9 @@ int Tlibavcodec::lavcCpuFlags(void)
 }
 
 //Used by libswscale start
-int Tlibavcodec::swsCpuCaps(void)
-{
- int cpu=0;
- if (Tconfig::cpu_flags&FF_CPU_MMX)    cpu|=SWS_CPU_CAPS_MMX;
- if (Tconfig::cpu_flags&FF_CPU_MMXEXT) cpu|=SWS_CPU_CAPS_MMX2;
- if (Tconfig::cpu_flags&FF_CPU_3DNOW)  cpu|=SWS_CPU_CAPS_3DNOW;
- return cpu;
-}
 void Tlibavcodec::swsInitParams(SwsParams *params,int resizeMethod)
 {
  memset(params,0,sizeof(*params));
- //params->cpu=Tconfig::sws_cpu_flags;
  params->methodLuma.method=params->methodChroma.method=resizeMethod;
  params->methodLuma.param[0]=params->methodChroma.param[0]=SWS_PARAM_DEFAULT;
  params->methodLuma.param[1]=params->methodChroma.param[1]=SWS_PARAM_DEFAULT;

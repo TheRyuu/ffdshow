@@ -44,6 +44,8 @@ SRCS_C=\
     libavcodec/dcadsp.c \
     libavcodec/dca_parser.c \
     libavcodec/dct.c \
+    libavcodec/dct32_fixed.c \
+    libavcodec/dct32_float.c \
     libavcodec/dsputil.c \
     libavcodec/dv.c \
     libavcodec/eac3dec.c \
@@ -128,6 +130,9 @@ SRCS_C=\
     libavcodec/mpegaudiodec.c \
     libavcodec/mpegaudiodec_float.c \
     libavcodec/mpegaudiodecheader.c \
+    libavcodec/mpegaudiodsp.c \
+    libavcodec/mpegaudiodsp_fixed.c \
+    libavcodec/mpegaudiodsp_float.c \
     libavcodec/mpegaudio_parser.c \
     libavcodec/mpegvideo.c \
     libavcodec/mpegvideo_enc.c \
@@ -210,7 +215,6 @@ SRCS_C=\
     \
     libavcodec/x86/ac3dsp_mmx.c \
     libavcodec/x86/cavsdsp_mmx.c \
-    libavcodec/x86/dct32_sse.c \
     libavcodec/x86/dsputil_mmx.c \
     libavcodec/x86/dsputilenc_mmx.c \
     libavcodec/x86/fdct_mmx.c \
@@ -297,6 +301,7 @@ SRCS_C=\
 
 SRCS_YASM=\
     libavcodec/x86/ac3dsp.asm \
+    libavcodec/x86/dct32_sse.asm \
     libavcodec/x86/dsputil_yasm.asm \
     libavcodec/x86/dsputilenc_yasm.asm \
     libavcodec/x86/fft_mmx.asm \

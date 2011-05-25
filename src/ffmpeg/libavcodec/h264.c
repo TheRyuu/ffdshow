@@ -1031,7 +1031,7 @@ static inline void xchg_mb_border(H264Context *h, uint8_t *src_y,
                                   int linesize, int uvlinesize,
                                   int xchg, int simple, int pixel_shift){
     MpegEncContext * const s = &h->s;
-    int deblock_left;
+    int deblock_topleft;
     int deblock_top;
     int top_idx = 1;
     uint8_t *top_border_m1;
@@ -1047,11 +1047,11 @@ static inline void xchg_mb_border(H264Context *h, uint8_t *src_y,
     }
 
     if(h->deblocking_filter == 2) {
-        deblock_left = h->left_type[0];
-        deblock_top  = h->top_type;
+        deblock_topleft = h->slice_table[h->mb_xy - 1 - s->mb_stride] == h->slice_num;
+        deblock_top     = h->top_type;
     } else {
-        deblock_left = (s->mb_x > 0);
-        deblock_top =  (s->mb_y > !!MB_FIELD);
+        deblock_topleft = (s->mb_x > 0);
+        deblock_top     = (s->mb_y > !!MB_FIELD);
     }
 
     src_y  -=   linesize + 1 + pixel_shift;
@@ -1074,7 +1074,7 @@ if (xchg) AV_SWAP64(b,a);\
 else      AV_COPY64(b,a);
 
     if(deblock_top){
-        if(deblock_left){
+        if(deblock_topleft){
             XCHG(top_border_m1 + (8 << pixel_shift), src_y - (7 << pixel_shift), 1);
         }
         XCHG(top_border + (0 << pixel_shift), src_y + (1 << pixel_shift), xchg);
@@ -1085,7 +1085,7 @@ else      AV_COPY64(b,a);
     }
     if(simple || !CONFIG_GRAY || !(s->flags&CODEC_FLAG_GRAY)){
         if(deblock_top){
-            if(deblock_left){
+            if(deblock_topleft){
                 XCHG(top_border_m1 + (16 << pixel_shift), src_cb - (7 << pixel_shift), 1);
                 XCHG(top_border_m1 + (24 << pixel_shift), src_cr - (7 << pixel_shift), 1);
             }
@@ -1917,6 +1917,9 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
         s->avctx->sample_aspect_ratio= h->sps.sar;
         av_assert0(s->avctx->sample_aspect_ratio.den);
 
+        h->s.avctx->coded_width = 16*s->mb_width;
+        h->s.avctx->coded_height = 16*s->mb_height;
+
         if(h->sps.video_signal_type_present_flag){
             s->avctx->color_range = h->sps.full_range ? AVCOL_RANGE_JPEG : AVCOL_RANGE_MPEG;
             if(h->sps.colour_description_present_flag){
@@ -1976,6 +1979,7 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
             c->h264dsp = h->h264dsp;
             c->sps = h->sps;
             c->pps = h->pps;
+            c->pixel_shift = h->pixel_shift;
             init_scan_tables(c);
             clone_tables(c, h, i);
         }
@@ -2599,7 +2603,7 @@ static int fill_filter_caches(H264Context *h, int mb_type){
     return 0;
 }
 
-static void loop_filter(H264Context *h){
+static void loop_filter(H264Context *h, int start_x, int end_x){
     MpegEncContext * const s = &h->s;
     uint8_t  *dest_y, *dest_cb, *dest_cr;
     int linesize, uvlinesize, mb_x, mb_y;
@@ -2608,7 +2612,7 @@ static void loop_filter(H264Context *h){
     const int pixel_shift = h->pixel_shift;
 
     if(h->deblocking_filter) {
-        for(mb_x= 0; mb_x<s->mb_width; mb_x++){
+        for(mb_x= start_x; mb_x<end_x; mb_x++){
             for(mb_y=end_mb_y - FRAME_MBAFF; mb_y<= end_mb_y; mb_y++){
                 int mb_xy, mb_type;
                 mb_xy = h->mb_xy = mb_x + mb_y*s->mb_stride;
@@ -2653,7 +2657,7 @@ static void loop_filter(H264Context *h){
         }
     }
     h->slice_type= old_slice_type;
-    s->mb_x= 0;
+    s->mb_x= end_x;
     s->mb_y= end_mb_y - FRAME_MBAFF;
     h->chroma_qp[0] = get_chroma_qp(h, 0, s->qscale);
     h->chroma_qp[1] = get_chroma_qp(h, 1, s->qscale);
@@ -2674,6 +2678,7 @@ static int decode_slice(struct AVCodecContext *avctx, void *arg){
     H264Context *h = *(void**)arg;
     MpegEncContext * const s = &h->s;
     const int part_mask= s->partitioned_frame ? (AC_END|AC_ERROR) : 0x7F;
+    int lf_x_start = s->mb_x;
 
     s->mb_skip_run= -1;
 
@@ -2712,6 +2717,7 @@ static int decode_slice(struct AVCodecContext *avctx, void *arg){
 
             if((s->workaround_bugs & FF_BUG_TRUNCATED) && h->cabac.bytestream > h->cabac.bytestream_end + 2){
                 ff_er_add_slice(s, s->resync_mb_x, s->resync_mb_y, s->mb_x-1, s->mb_y, (AC_END|DC_END|MV_END)&part_mask);
+                if (s->mb_x >= lf_x_start) loop_filter(h, lf_x_start, s->mb_x + 1);
                 return 0;
             }
             if( ret < 0 || h->cabac.bytestream > h->cabac.bytestream_end + 2) {
@@ -2721,8 +2727,8 @@ static int decode_slice(struct AVCodecContext *avctx, void *arg){
             }
 
             if( ++s->mb_x >= s->mb_width ) {
-                s->mb_x = 0;
-                loop_filter(h);
+                loop_filter(h, lf_x_start, s->mb_x);
+                s->mb_x = lf_x_start = 0;
                 ff_draw_horiz_band(s, 16*s->mb_y, 16);
                 ++s->mb_y;
                 if(FIELD_OR_MBAFF_PICTURE) {
@@ -2735,6 +2741,7 @@ static int decode_slice(struct AVCodecContext *avctx, void *arg){
             if( eos || s->mb_y >= s->mb_height ) {
                 tprintf(s->avctx, "slice end %d %d\n", get_bits_count(&s->gb), s->gb.size_in_bits);
                 ff_er_add_slice(s, s->resync_mb_x, s->resync_mb_y, s->mb_x-1, s->mb_y, (AC_END|DC_END|MV_END)&part_mask);
+                if (s->mb_x > lf_x_start) loop_filter(h, lf_x_start, s->mb_x);
                 return 0;
             }
         }
@@ -2756,13 +2763,12 @@ static int decode_slice(struct AVCodecContext *avctx, void *arg){
             if(ret<0){
                 av_log(h->s.avctx, AV_LOG_ERROR, "error while decoding MB %d %d\n", s->mb_x, s->mb_y);
                 ff_er_add_slice(s, s->resync_mb_x, s->resync_mb_y, s->mb_x, s->mb_y, (AC_ERROR|DC_ERROR|MV_ERROR)&part_mask);
-
                 return -1;
             }
 
             if(++s->mb_x >= s->mb_width){
-                s->mb_x=0;
-                loop_filter(h);
+                loop_filter(h, lf_x_start, s->mb_x);
+                s->mb_x = lf_x_start = 0;
                 ff_draw_horiz_band(s, 16*s->mb_y, 16);
                 ++s->mb_y;
                 if(FIELD_OR_MBAFF_PICTURE) {
@@ -2790,6 +2796,7 @@ static int decode_slice(struct AVCodecContext *avctx, void *arg){
                 tprintf(s->avctx, "slice end %d %d\n", get_bits_count(&s->gb), s->gb.size_in_bits);
                 if(get_bits_count(&s->gb) == s->gb.size_in_bits ){
                     ff_er_add_slice(s, s->resync_mb_x, s->resync_mb_y, s->mb_x-1, s->mb_y, (AC_END|DC_END|MV_END)&part_mask);
+                    if (s->mb_x > lf_x_start) loop_filter(h, lf_x_start, s->mb_x);
 
                     return 0;
                 }else{
@@ -2894,7 +2901,7 @@ static int decode_nal_units(H264Context *h, const uint8_t *buf, int buf_size){
     int context_count = 0;
     int next_avc= h->is_avc ? 0 : buf_size;
 
-    h->max_contexts = avctx->thread_count;
+    h->max_contexts = (HAVE_THREADS && (s->avctx->active_thread_type&FF_THREAD_SLICE)) ? avctx->thread_count : 1;
     if(!(s->flags2 & CODEC_FLAG2_CHUNKS)){
         h->current_slice = 0;
         if (!s->first_field)

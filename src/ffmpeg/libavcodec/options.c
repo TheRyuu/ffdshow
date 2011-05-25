@@ -441,6 +441,12 @@ static const AVOption options[]={
 {"em", "Emergency",          0, FF_OPT_TYPE_CONST, {.dbl = AV_AUDIO_SERVICE_TYPE_EMERGENCY },         INT_MIN, INT_MAX, A|E, "audio_service_type"},
 {"vo", "Voice Over",         0, FF_OPT_TYPE_CONST, {.dbl = AV_AUDIO_SERVICE_TYPE_VOICE_OVER },        INT_MIN, INT_MAX, A|E, "audio_service_type"},
 {"ka", "Karaoke",            0, FF_OPT_TYPE_CONST, {.dbl = AV_AUDIO_SERVICE_TYPE_KARAOKE },           INT_MIN, INT_MAX, A|E, "audio_service_type"},
+{"request_sample_fmt", NULL, OFFSET(request_sample_fmt), FF_OPT_TYPE_INT, {.dbl = AV_SAMPLE_FMT_NONE }, AV_SAMPLE_FMT_NONE, AV_SAMPLE_FMT_NB-1, A|D, "request_sample_fmt"},
+{"u8" , "8-bit unsigned integer", 0, FF_OPT_TYPE_CONST, {.dbl = AV_SAMPLE_FMT_U8  }, INT_MIN, INT_MAX, A|D, "request_sample_fmt"},
+{"s16", "16-bit signed integer",  0, FF_OPT_TYPE_CONST, {.dbl = AV_SAMPLE_FMT_S16 }, INT_MIN, INT_MAX, A|D, "request_sample_fmt"},
+{"s32", "32-bit signed integer",  0, FF_OPT_TYPE_CONST, {.dbl = AV_SAMPLE_FMT_S32 }, INT_MIN, INT_MAX, A|D, "request_sample_fmt"},
+{"flt", "32-bit float",           0, FF_OPT_TYPE_CONST, {.dbl = AV_SAMPLE_FMT_FLT }, INT_MIN, INT_MAX, A|D, "request_sample_fmt"},
+{"dbl", "64-bit double",          0, FF_OPT_TYPE_CONST, {.dbl = AV_SAMPLE_FMT_DBL }, INT_MIN, INT_MAX, A|D, "request_sample_fmt"},
 {NULL},
 };
 
@@ -477,6 +483,7 @@ void avcodec_get_context_defaults2(AVCodecContext *s, enum AVMediaType codec_typ
     s->sample_aspect_ratio= (AVRational){0,1};
     s->pix_fmt= PIX_FMT_NONE;
     s->sample_fmt= SAMPLE_FMT_S16; // fixme, ac3 encoder crashes if set to none
+    s->request_sample_fmt= SAMPLE_FMT_FLT; // todo: set this value in ffdshow
 
     s->palctrl = NULL;
     s->reget_buffer= avcodec_default_reget_buffer;

@@ -979,7 +979,13 @@ static av_cold int vorbis_decode_init(AVCodecContext *avccontext)
     dsputil_init(&vc->dsp, avccontext);
     ff_fmt_convert_init(&vc->fmt_conv, avccontext);
 
-    vc->scale_bias = 32768.0f;
+    if (avccontext->request_sample_fmt == AV_SAMPLE_FMT_FLT) {
+        avccontext->sample_fmt = AV_SAMPLE_FMT_FLT;
+        vc->scale_bias = 1.0f;
+    } else {
+        avccontext->sample_fmt = AV_SAMPLE_FMT_S16;
+        vc->scale_bias = 32768.0f;
+    }
 
     if (!headers_len) {
         av_log(avccontext, AV_LOG_ERROR, "Extradata missing.\n");
@@ -1050,12 +1056,6 @@ static av_cold int vorbis_decode_init(AVCodecContext *avccontext)
     avccontext->channels    = vc->audio_channels;
     avccontext->sample_rate = vc->audio_samplerate;
     avccontext->frame_size  = FFMIN(vc->blocksize[0], vc->blocksize[1]) >> 2;
-    /* ffdshow custom code */
-    #if CONFIG_AUDIO_FLOAT
-    avccontext->sample_fmt  = AV_SAMPLE_FMT_FLT;
-    #else
-    avccontext->sample_fmt  = AV_SAMPLE_FMT_S16;
-    #endif
 
     return 0 ;
 }
@@ -1665,15 +1665,14 @@ static int vorbis_decode_frame(AVCodecContext *avccontext,
                               len * ff_vorbis_channel_layout_offsets[vc->audio_channels - 1][i];
     }
 
-    /* ffdshow custom code */
-    #if CONFIG_AUDIO_FLOAT
-    float_interleave(data, channel_ptrs, len, vc->audio_channels);
-    *data_size = len * sizeof(float) * vc->audio_channels;
-    #else
-    vc->fmt_conv.float_to_int16_interleave(data, channel_ptrs, len,
-                                           vc->audio_channels);
-    *data_size = len * 2 * vc->audio_channels;
-    #endif
+    if (avccontext->sample_fmt == AV_SAMPLE_FMT_FLT)
+        vc->fmt_conv.float_interleave(data, channel_ptrs, len, vc->audio_channels);
+    else
+        vc->fmt_conv.float_to_int16_interleave(data, channel_ptrs, len,
+                                               vc->audio_channels);
+
+    *data_size = len * vc->audio_channels *
+                 (av_get_bits_per_sample_fmt(avccontext->sample_fmt) / 8);
 
     return buf_size ;
 }
@@ -1700,5 +1699,8 @@ AVCodec ff_vorbis_decoder = {
     vorbis_decode_frame,
     .long_name = NULL_IF_CONFIG_SMALL("Vorbis"),
     .channel_layouts = ff_vorbis_channel_layouts,
+    .sample_fmts = (const enum AVSampleFormat[]) {
+        AV_SAMPLE_FMT_FLT, AV_SAMPLE_FMT_S16, AV_SAMPLE_FMT_NONE
+    },
 };
 

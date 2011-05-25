@@ -3,25 +3,25 @@
  *
  * Copyright (c) 2010 Reimar Döffinger <Reimar.Doeffinger@gmx.de>
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef CBRT_TABLEGEN_H
-#define CBRT_TABLEGEN_H
+#ifndef AVCODEC_CBRT_TABLEGEN_H
+#define AVCODEC_CBRT_TABLEGEN_H
 
 #include <stdint.h>
 #include <math.h>
@@ -48,4 +48,4 @@ static void cbrt_tableinit(void)
 }
 #endif /* CONFIG_HARDCODED_TABLES */
 
-#endif /* CBRT_TABLEGEN_H */
+#endif /* AVCODEC_CBRT_TABLEGEN_H */

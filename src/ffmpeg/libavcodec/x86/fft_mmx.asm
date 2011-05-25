@@ -20,7 +20,7 @@
 ;*
 ;* You should have received a copy of the GNU Lesser General Public
 ;* License along with Libav; if not, write to the Free Software
-;* 51, Inc., Foundation Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+;* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 ;******************************************************************************
 
 ; These functions are not individually interchangeable with the C versions.
@@ -85,7 +85,7 @@ cextern cos_ %+ i
     %1
 %endmacro
 
-section .text align=16
+SECTION_TEXT
 
 %macro T2_3DN 4 ; z0, z1, mem0, mem1
     mova     %1, %3

@@ -2544,6 +2544,13 @@ typedef struct AVCodecContext {
     enum AVAudioServiceType audio_service_type;
 
     /**
+     * Used to request a sample format from the decoder.
+     * - encoding: unused.
+     * - decoding: Set by user.
+     */
+    enum AVSampleFormat request_sample_fmt;
+
+    /**
      * Current statistics for PTS correction.
      * - decoding: maintained and used by libavcodec, not intended to be used by user apps
      * - encoding: unused

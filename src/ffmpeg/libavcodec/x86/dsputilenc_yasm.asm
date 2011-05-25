@@ -4,21 +4,21 @@
 ;* Copyright (c) 2000, 2001 Fabrice Bellard
 ;* Copyright (c) 2002-2004 Michael Niedermayer <michaelni@gmx.at>
 ;*
-;* This file is part of FFmpeg.
+;* This file is part of Libav.
 ;*
-;* FFmpeg is free software; you can redistribute it and/or
+;* Libav is free software; you can redistribute it and/or
 ;* modify it under the terms of the GNU Lesser General Public
 ;* License as published by the Free Software Foundation; either
 ;* version 2.1 of the License, or (at your option) any later version.
 ;*
-;* FFmpeg is distributed in the hope that it will be useful,
+;* Libav is distributed in the hope that it will be useful,
 ;* but WITHOUT ANY WARRANTY; without even the implied warranty of
 ;* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 ;* Lesser General Public License for more details.
 ;*
 ;* You should have received a copy of the GNU Lesser General Public
-;* License along with FFmpeg; if not, write to the Free Software
-;* 51, Inc., Foundation Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+;* License along with Libav; if not, write to the Free Software
+;* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 ;*****************************************************************************
 
 %include "x86inc.asm"
@@ -59,12 +59,12 @@ SECTION .text
 %endmacro
 
 %macro HADAMARD8 0
-    SUMSUB_BADC       m0, m1, m2, m3
-    SUMSUB_BADC       m4, m5, m6, m7
-    SUMSUB_BADC       m0, m2, m1, m3
-    SUMSUB_BADC       m4, m6, m5, m7
-    SUMSUB_BADC       m0, m4, m1, m5
-    SUMSUB_BADC       m2, m6, m3, m7
+    SUMSUB_BADC       w, 0, 1, 2, 3
+    SUMSUB_BADC       w, 4, 5, 6, 7
+    SUMSUB_BADC       w, 0, 2, 1, 3
+    SUMSUB_BADC       w, 4, 6, 5, 7
+    SUMSUB_BADC       w, 0, 4, 1, 5
+    SUMSUB_BADC       w, 2, 6, 3, 7
 %endmacro
 
 %macro ABS1_SUM 3

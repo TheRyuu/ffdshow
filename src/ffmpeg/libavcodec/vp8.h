@@ -5,20 +5,20 @@
  * Copyright (C) 2010 Ronald S. Bultje
  * Copyright (C) 2010 Jason Garrett-Glaser
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -86,6 +86,7 @@ typedef struct {
 typedef struct {
     AVCodecContext *avctx;
     AVFrame *framep[4];
+    AVFrame *next_framep[4];
     uint8_t *edge_emu_buffer;
 
     uint16_t mb_width;   /* number of horizontal MB */
@@ -235,7 +236,7 @@ typedef struct {
     VP8DSPContext vp8dsp;
     H264PredContext hpc;
     vp8_mc_func put_pixels_tab[3][3][3];
-    AVFrame frames[4];
+    AVFrame frames[5];
 } VP8Context;
 
-#endif
+#endif /* AVCODEC_VP8_H */

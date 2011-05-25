@@ -9,21 +9,21 @@
 ;*          Holger Lubitz <hal@duncan.ol.sub.de>
 ;*          Min Chen <chenm001.163.com>
 ;*
-;* This file is part of FFmpeg.
+;* This file is part of Libav.
 ;*
-;* FFmpeg is free software; you can redistribute it and/or
+;* Libav is free software; you can redistribute it and/or
 ;* modify it under the terms of the GNU Lesser General Public
 ;* License as published by the Free Software Foundation; either
 ;* version 2.1 of the License, or (at your option) any later version.
 ;*
-;* FFmpeg is distributed in the hope that it will be useful,
+;* Libav is distributed in the hope that it will be useful,
 ;* but WITHOUT ANY WARRANTY; without even the implied warranty of
 ;* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 ;* Lesser General Public License for more details.
 ;*
 ;* You should have received a copy of the GNU Lesser General Public
-;* License along with FFmpeg; if not, write to the Free Software
-;* 51, Inc., Foundation Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+;* License along with Libav; if not, write to the Free Software
+;* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 ;*****************************************************************************
 
 %include "x86inc.asm"
@@ -59,11 +59,11 @@ SECTION .text
     movq         m2, [%2+16]
     movq         m3, [%2+24]
 
-    IDCT4_1D      0, 1, 2, 3, 4, 5
+    IDCT4_1D      w, 0, 1, 2, 3, 4, 5
     mova         m6, [pw_32]
     TRANSPOSE4x4W 0, 1, 2, 3, 4
     paddw        m0, m6
-    IDCT4_1D      0, 1, 2, 3, 4, 5
+    IDCT4_1D      w, 0, 1, 2, 3, 4, 5
     pxor         m7, m7
 
     STORE_DIFFx2 m0, m1, m4, m5, m7, 6, %1, %3
@@ -118,13 +118,13 @@ cglobal h264_idct_add_mmx, 3, 3, 0
 
     mova         m2, %1
     mova         m5, %2
-    SUMSUB_BA    m5, m2
-    SUMSUB_BA    m6, m5
-    SUMSUB_BA    m4, m2
-    SUMSUB_BA    m7, m6
-    SUMSUB_BA    m0, m4
-    SUMSUB_BA    m3, m2
-    SUMSUB_BA    m1, m5
+    SUMSUB_BA    w, 5, 2
+    SUMSUB_BA    w, 6, 5
+    SUMSUB_BA    w, 4, 2
+    SUMSUB_BA    w, 7, 6
+    SUMSUB_BA    w, 0, 4
+    SUMSUB_BA    w, 3, 2
+    SUMSUB_BA    w, 1, 5
     SWAP          7, 6, 4, 5, 2, 3, 1, 0 ; 70315246 -> 01234567
 %endmacro
 
@@ -715,10 +715,10 @@ x264_add8x4_idct_sse2:
     movhps m1, [r2+40]
     movhps m2, [r2+48]
     movhps m3, [r2+56]
-    IDCT4_1D 0,1,2,3,4,5
+    IDCT4_1D w,0,1,2,3,4,5
     TRANSPOSE2x4x4W 0,1,2,3,4
     paddw m0, [pw_32]
-    IDCT4_1D 0,1,2,3,4,5
+    IDCT4_1D w,0,1,2,3,4,5
     pxor  m7, m7
     STORE_DIFFx2 m0, m1, m4, m5, m7, 6, r0, r3
     lea   r0, [r0+r3*2]
@@ -859,8 +859,8 @@ cglobal h264_idct_add8_sse2, 5, 7, 8
 ;void ff_h264_luma_dc_dequant_idct_mmx(DCTELEM *output, DCTELEM *input, int qmul)
 
 %macro WALSH4_1D 5
-    SUMSUB_BADC m%4, m%3, m%2, m%1, m%5
-    SUMSUB_BADC m%4, m%2, m%3, m%1, m%5
+    SUMSUB_BADC w, %4, %3, %2, %1, %5
+    SUMSUB_BADC w, %4, %2, %3, %1, %5
     SWAP %1, %4, %3
 %endmacro
 

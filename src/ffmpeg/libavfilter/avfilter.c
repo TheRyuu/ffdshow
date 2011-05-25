@@ -2,20 +2,20 @@
  * filter layer
  * Copyright (c) 2007 Bobby Bingham
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -237,11 +237,13 @@ static void ff_dlog_ref(void *ctx, AVFilterBufferRef *ref, int end)
             ref->pts, ref->pos);
 
     if (ref->video) {
-        av_dlog(ctx, " a:%d/%d s:%dx%d i:%c",
+        av_dlog(ctx, " a:%d/%d s:%dx%d i:%c iskey:%d type:%c",
                 ref->video->pixel_aspect.num, ref->video->pixel_aspect.den,
                 ref->video->w, ref->video->h,
                 !ref->video->interlaced     ? 'P' :         /* Progressive  */
-                ref->video->top_field_first ? 'T' : 'B');   /* Top / Bottom */
+                ref->video->top_field_first ? 'T' : 'B',    /* Top / Bottom */
+                ref->video->key_frame,
+                av_get_picture_type_char(ref->video->pict_type));
     }
     if (ref->audio) {
         av_dlog(ctx, " cl:%"PRId64"d sn:%d s:%d sr:%d p:%d",
@@ -583,28 +585,53 @@ int avfilter_open(AVFilterContext **filter_ctx, AVFilter *filter, const char *in
         return AVERROR(EINVAL);
 
     ret = av_mallocz(sizeof(AVFilterContext));
+    if (!ret)
+        return AVERROR(ENOMEM);
 
     ret->av_class = &avfilter_class;
     ret->filter   = filter;
     ret->name     = inst_name ? av_strdup(inst_name) : NULL;
-    ret->priv     = av_mallocz(filter->priv_size);
+    if (filter->priv_size) {
+        ret->priv     = av_mallocz(filter->priv_size);
+        if (!ret->priv)
+            goto err;
+    }
 
     ret->input_count  = pad_count(filter->inputs);
     if (ret->input_count) {
         ret->input_pads   = av_malloc(sizeof(AVFilterPad) * ret->input_count);
+        if (!ret->input_pads)
+            goto err;
         memcpy(ret->input_pads, filter->inputs, sizeof(AVFilterPad) * ret->input_count);
         ret->inputs       = av_mallocz(sizeof(AVFilterLink*) * ret->input_count);
+        if (!ret->inputs)
+            goto err;
     }
 
     ret->output_count = pad_count(filter->outputs);
     if (ret->output_count) {
         ret->output_pads  = av_malloc(sizeof(AVFilterPad) * ret->output_count);
+        if (!ret->output_pads)
+            goto err;
         memcpy(ret->output_pads, filter->outputs, sizeof(AVFilterPad) * ret->output_count);
         ret->outputs      = av_mallocz(sizeof(AVFilterLink*) * ret->output_count);
+        if (!ret->outputs)
+            goto err;
     }
 
     *filter_ctx = ret;
     return 0;
+
+err:
+    av_freep(&ret->inputs);
+    av_freep(&ret->input_pads);
+    ret->input_count = 0;
+    av_freep(&ret->outputs);
+    av_freep(&ret->output_pads);
+    ret->output_count = 0;
+    av_freep(&ret->priv);
+    av_free(ret);
+    return AVERROR(ENOMEM);
 }
 
 void avfilter_free(AVFilterContext *filter)

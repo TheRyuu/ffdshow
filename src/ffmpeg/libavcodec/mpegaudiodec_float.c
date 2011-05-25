@@ -2,44 +2,25 @@
  * Float MPEG Audio decoder
  * Copyright (c) 2010 Michael Niedermayer
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #define CONFIG_FLOAT 1
 #include "mpegaudiodec.c"
-
-void ff_mpa_synth_filter_float(MPADecodeContext *s, float *synth_buf_ptr,
-                               int *synth_buf_offset,
-                               float *window, int *dither_state,
-                               float *samples, int incr,
-                               float sb_samples[SBLIMIT])
-{
-    float *synth_buf;
-    int offset;
-
-    offset = *synth_buf_offset;
-    synth_buf = synth_buf_ptr + offset;
-
-    s->dct.dct32(synth_buf, sb_samples);
-    s->apply_window_mp3(synth_buf, window, dither_state, samples, incr);
-
-    offset = (offset - 32) & 511;
-    *synth_buf_offset = offset;
-}
 
 static void compute_antialias_float(MPADecodeContext *s,
                               GranuleDef *g)
@@ -80,13 +61,6 @@ static void compute_antialias_float(MPADecodeContext *s,
     }
 }
 
-static av_cold int decode_end(AVCodecContext * avctx)
-{
-    MPADecodeContext *s = avctx->priv_data;
-    ff_dct_end(&s->dct);
-    return 0;
-}
-
 #if CONFIG_MP1FLOAT_DECODER
 AVCodec ff_mp1float_decoder =
 {
@@ -96,7 +70,7 @@ AVCodec ff_mp1float_decoder =
     sizeof(MPADecodeContext),
     decode_init,
     NULL,
-    decode_end,
+    .close = NULL,
     decode_frame,
     CODEC_CAP_PARSE_ONLY,
     .flush= flush,
@@ -112,7 +86,7 @@ AVCodec ff_mp2float_decoder =
     sizeof(MPADecodeContext),
     decode_init,
     NULL,
-    decode_end,
+    .close = NULL,
     decode_frame,
     CODEC_CAP_PARSE_ONLY,
     .flush= flush,
@@ -128,7 +102,7 @@ AVCodec ff_mp3float_decoder =
     sizeof(MPADecodeContext),
     decode_init,
     NULL,
-    decode_end,
+    .close = NULL,
     decode_frame,
     CODEC_CAP_PARSE_ONLY,
     .flush= flush,
@@ -144,7 +118,7 @@ AVCodec ff_mp3adufloat_decoder =
     sizeof(MPADecodeContext),
     decode_init,
     NULL,
-    decode_end,
+    .close = NULL,
     decode_frame_adu,
     CODEC_CAP_PARSE_ONLY,
     .flush= flush,

@@ -50,7 +50,6 @@ public:
  static bool check(const Tconfig *config);
  static int lavcCpuFlags(void);
  static int ppCpuCaps(int csp);
- static int swsCpuCaps(void);
  static void pp_mode_defaults(PPMode &ppMode);
  static int getPPmode(const TpostprocSettings *cfg,int currentq);
  static void swsInitParams(SwsParams *params,int resizeMethod);

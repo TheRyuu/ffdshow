@@ -2242,7 +2242,7 @@ static int decode_chunks(AVCodecContext *avctx,
         buf_ptr = ff_find_start_code(buf_ptr,buf_end, &start_code);
         if (start_code > 0x1ff){
             if(s2->pict_type != AV_PICTURE_TYPE_B || avctx->skip_frame <= AVDISCARD_DEFAULT){
-                if(avctx->thread_count > 1){
+                if((avctx->active_thread_type & FF_THREAD_SLICE) && avctx->thread_count > 1){
                     int i;
 
                     avctx->execute(avctx, slice_decode_thread,  &s2->thread_context[0], NULL, s->slice_count, sizeof(void*));
@@ -2402,7 +2402,7 @@ static int decode_chunks(AVCodecContext *avctx,
                     return -1;
                 }
 
-                if(avctx->thread_count > 1){
+                if((avctx->active_thread_type & FF_THREAD_SLICE) && avctx->thread_count > 1){
                     int threshold= (s2->mb_height*s->slice_count + avctx->thread_count/2) / avctx->thread_count;
                     if(threshold <= mb_y){
                         MpegEncContext *thread_context= s2->thread_context[s->slice_count];
