@@ -375,7 +375,7 @@ const char *sws_format_name(enum PixelFormat format);
         || (x)==PIX_FMT_YUV422P16BE \
         || (x)==PIX_FMT_YUV444P16BE \
     )
-#define is9_OR_10BPS(x) (           \
+#define isNBPS(x)       (           \
            (x)==PIX_FMT_YUV420P9LE  \
         || (x)==PIX_FMT_YUV420P9BE  \
         || (x)==PIX_FMT_YUV420P10LE \
@@ -501,6 +501,11 @@ extern const uint64_t ff_dither8[2];
  * source and destination formats, bit depths, flags, etc.
  */
 void ff_get_unscaled_swscale(SwsContext *c);
+
+/**
+ * Returns the SWS_CPU_CAPS for the optimized code compiled into swscale.
+ */
+int ff_hardcodedcpuflags(void);
 
 /**
  * Returns function pointer to fastest main scaler path function depending

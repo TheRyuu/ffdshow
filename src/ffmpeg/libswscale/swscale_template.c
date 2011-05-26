@@ -164,8 +164,6 @@ static inline void LEToUV_c(uint8_t *dstU, uint8_t *dstV, const uint8_t *src1,
                             const uint8_t *src2, long width, uint32_t *unused)
 {
     int i;
-    // FIXME I don't think this code is right for YUV444/422, since then h is not subsampled so
-    // we need to skip each second pixel. Same for BEToUV.
     for (i=0; i<width; i++) {
         dstU[i]= src1[2*i + 1];
         dstV[i]= src2[2*i + 1];
@@ -228,32 +226,27 @@ static inline void nv21ToUV_c(uint8_t *dstU, uint8_t *dstV,
 }
 
 // FIXME Maybe dither instead.
-#define YUV_NBPS(depth, endianness, rfunc) \
-static inline void endianness ## depth ## ToUV_c(uint8_t *dstU, uint8_t *dstV, \
-                                          const uint8_t *_srcU, const uint8_t *_srcV, \
+#define YUV_NBPS(depth) \
+static inline void yuv ## depth ## ToUV_c(uint8_t *dstU, uint8_t *dstV, \
+                                          const uint16_t *srcU, const uint16_t *srcV, \
                                           long width, uint32_t *unused) \
 { \
     int i; \
-    const uint16_t *srcU = (const uint16_t*)_srcU; \
-    const uint16_t *srcV = (const uint16_t*)_srcV; \
     for (i = 0; i < width; i++) { \
-        dstU[i] = rfunc(&srcU[i])>>(depth-8); \
-        dstV[i] = rfunc(&srcV[i])>>(depth-8); \
+        dstU[i] = srcU[i]>>(depth-8); \
+        dstV[i] = srcV[i]>>(depth-8); \
     } \
 } \
 \
-static inline void endianness ## depth ## ToY_c(uint8_t *dstY, const uint8_t *_srcY, long width, uint32_t *unused) \
+static inline void yuv ## depth ## ToY_c(uint8_t *dstY, const uint16_t *srcY, long width, uint32_t *unused) \
 { \
     int i; \
-    const uint16_t *srcY = (const uint16_t*)_srcY; \
     for (i = 0; i < width; i++) \
-        dstY[i] = rfunc(&srcY[i])>>(depth-8); \
+        dstY[i] = srcY[i]>>(depth-8); \
 } \
 
-YUV_NBPS( 9, LE, AV_RL16)
-YUV_NBPS( 9, BE, AV_RB16)
-YUV_NBPS(10, LE, AV_RL16)
-YUV_NBPS(10, BE, AV_RB16)
+YUV_NBPS( 9)
+YUV_NBPS(10)
 
 static inline void bgr24ToY_c(uint8_t *dst, const uint8_t *src,
                               long width, uint32_t *unused)
@@ -488,11 +481,6 @@ inline static void hcscale_c(SwsContext *c, uint16_t *dst, long dstWidth,
 #define DEBUG_SWSCALE_BUFFERS 0
 #define DEBUG_BUFFERS(...) if (DEBUG_SWSCALE_BUFFERS) av_log(c, AV_LOG_DEBUG, __VA_ARGS__)
 
-#if HAVE_MMX
-static void updateMMXDitherTables(SwsContext *c, int dstY, int lumBufIndex, int chrBufIndex,
-                                  int lastInLumBuf, int lastInChrBuf);
-#endif
-
 static int swScaleI_c(SwsContext *c, const uint8_t* src[], stride_t srcStride[],
                      int srcSliceY, int srcSliceH, uint8_t* dst[], stride_t dstStride[], int dstYstart, int dstYend)
 {
@@ -676,9 +664,6 @@ static int swScaleI_c(SwsContext *c, const uint8_t* src[], stride_t srcStride[],
         if (!enough_lines)
             break; //we can't output a dstY line so let's try with the next slice
 
-#if HAVE_MMX
-        updateMMXDitherTables(c, dstY, lumBufIndex, chrBufIndex, lastInLumBuf, lastInChrBuf);
-#endif
         if (dstY < dstH-2) {
             const int16_t **lumSrcPtr= (const int16_t **) lumPixBuf + lumBufIndex + firstLumSrcY - lastInLumBuf + vLumBufSize;
             const int16_t **chrSrcPtr= (const int16_t **) chrPixBuf + chrBufIndex + firstChrSrcY - lastInChrBuf + vChrBufSize;
@@ -693,7 +678,7 @@ static int swScaleI_c(SwsContext *c, const uint8_t* src[], stride_t srcStride[],
             } else if (isPlanarYUV(dstFormat) || dstFormat==PIX_FMT_GRAY8) { //YV12 like
                 const int chrSkipMask= (1<<c->chrDstVSubSample)-1;
                 if ((dstY&chrSkipMask) || isGray(dstFormat)) uDest=vDest= NULL; //FIXME split functions in lumi / chromi
-                if (is16BPS(dstFormat) || is9_OR_10BPS(dstFormat)) {
+                if (is16BPS(dstFormat) || isNBPS(dstFormat)) {
                     yuv2yuvX16inC(
                                   vLumFilter+dstY*vLumFilterSize   , lumSrcPtr, vLumFilterSize,
                                   vChrFilter+chrDstY*vChrFilterSize, chrSrcPtr, vChrFilterSize,
@@ -770,7 +755,7 @@ static int swScaleI_c(SwsContext *c, const uint8_t* src[], stride_t srcStride[],
             } else if (isPlanarYUV(dstFormat) || dstFormat==PIX_FMT_GRAY8) { //YV12
                 const int chrSkipMask= (1<<c->chrDstVSubSample)-1;
                 if ((dstY&chrSkipMask) || isGray(dstFormat)) uDest=vDest= NULL; //FIXME split functions in lumi / chromi
-                if (is16BPS(dstFormat) || is9_OR_10BPS(dstFormat)) {
+                if (is16BPS(dstFormat) || isNBPS(dstFormat)) {
                     yuv2yuvX16inC(
                                   vLumFilter+dstY*vLumFilterSize   , lumSrcPtr, vLumFilterSize,
                                   vChrFilter+chrDstY*vChrFilterSize, chrSrcPtr, vChrFilterSize,
@@ -803,12 +788,6 @@ static int swScaleI_c(SwsContext *c, const uint8_t* src[], stride_t srcStride[],
     if ((dstFormat == PIX_FMT_YUVA420P) && !alpPixBuf)
         fillPlane(dst[3], dstStride[3], dstW, dstY-lastDstY, lastDstY, 255);
 
-#if HAVE_MMX2
-    if (av_get_cpu_flags() & AV_CPU_FLAG_MMX2)
-        __asm__ volatile("sfence":::"memory");
-#endif
-    emms_c();
-
     /* store changed local vars back in the context */
     c->dstY= dstY;
     c->lumBufIndex= lumBufIndex;
@@ -819,7 +798,7 @@ static int swScaleI_c(SwsContext *c, const uint8_t* src[], stride_t srcStride[],
     return dstY - lastDstY;
 }
 
-static void sws_init_swScale_c(SwsContext *c)
+static void sws_init_swScale_C(SwsContext *c)
 {
     enum PixelFormat srcFormat = c->srcFormat;
 
@@ -849,10 +828,9 @@ static void sws_init_swScale_c(SwsContext *c)
         case PIX_FMT_PAL8     :
         case PIX_FMT_BGR4_BYTE:
         case PIX_FMT_RGB4_BYTE: c->chrToYV12 = palToUV; break;
-        case PIX_FMT_YUV420P9BE: c->chrToYV12 = BE9ToUV_c; break;
-        case PIX_FMT_YUV420P9LE: c->chrToYV12 = LE9ToUV_c; break;
-        case PIX_FMT_YUV420P10BE: c->chrToYV12 = BE10ToUV_c; break;
-        case PIX_FMT_YUV420P10LE: c->chrToYV12 = LE10ToUV_c; break;
+        case PIX_FMT_YUV420P9: c->chrToYV12 = yuv9ToUV_c; break;
+        case PIX_FMT_YUV422P10:
+        case PIX_FMT_YUV420P10: c->chrToYV12 = yuv10ToUV_c; break;
         case PIX_FMT_YUV420P16BE:
         case PIX_FMT_YUV422P16BE:
         case PIX_FMT_YUV444P16BE: c->chrToYV12 = BEToUV_c; break;
@@ -899,10 +877,9 @@ static void sws_init_swScale_c(SwsContext *c)
     c->lumToYV12 = NULL;
     c->alpToYV12 = NULL;
     switch (srcFormat) {
-    case PIX_FMT_YUV420P9BE: c->lumToYV12 = BE9ToY_c; break;
-    case PIX_FMT_YUV420P9LE: c->lumToYV12 = LE9ToY_c; break;
-    case PIX_FMT_YUV420P10BE: c->lumToYV12 = BE10ToY_c; break;
-    case PIX_FMT_YUV420P10LE: c->lumToYV12 = LE10ToY_c; break;
+    case PIX_FMT_YUV420P9: c->lumToYV12 = yuv9ToY_c; break;
+    case PIX_FMT_YUV422P10:
+    case PIX_FMT_YUV420P10: c->lumToYV12 = yuv10ToY_c; break;
     case PIX_FMT_YUYV422  :
     case PIX_FMT_YUV420P16BE:
     case PIX_FMT_YUV422P16BE:
@@ -986,7 +963,7 @@ int sws_thread_work_c(SwsContext *c)		// Thread func
 			stp->srcSliceH, stp->dst, stp->dstStride, stp->dstYstart, stp->dstYend);
 }
 
-static int swScale_c(SwsContext *c, const uint8_t* src[], stride_t srcStride[], int srcSliceY,
+static int swScale_C(SwsContext *c, const uint8_t* src[], stride_t srcStride[], int srcSliceY,
              int srcSliceH, uint8_t* dst[], stride_t dstStride[])
 {
 	int dstLines;

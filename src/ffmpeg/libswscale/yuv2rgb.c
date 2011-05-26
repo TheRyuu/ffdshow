@@ -32,8 +32,9 @@
 #include "rgb2rgb.h"
 #include "swscale.h"
 #include "swscale_internal.h"
-#include "libavutil/cpu.h"
+#include "libavutil/x86_cpu.h"
 #include "libavutil/bswap.h"
+#include "ffImgfmt.h"
 
 extern const uint8_t dither_4x4_16[4][8];
 extern const uint8_t dither_8x8_32[8][8];
@@ -579,18 +580,24 @@ CLOSEYUV2RGBFUNC(1)
 SwsFunc ff_yuv2rgb_get_func_ptr(SwsContext *c)
 {
     SwsFunc t = NULL;
-
-    if (HAVE_MMX) {
-        t = ff_yuv2rgb_init_mmx(c);
-    } else if (HAVE_VIS) {
-        t = ff_yuv2rgb_init_vis(c);
-    } else if (CONFIG_MLIB) {
-        t = ff_yuv2rgb_init_mlib(c);
-    } else if (HAVE_ALTIVEC) {
+#if HAVE_MMX
+     t = ff_yuv2rgb_init_mmx(c);
+#endif
+#if HAVE_VIS
+    t = ff_yuv2rgb_init_vis(c);
+#endif
+#if CONFIG_MLIB
+    t = ff_yuv2rgb_init_mlib(c);
+#endif
+#if HAVE_ALTIVEC
+    if (c->flags & SWS_CPU_CAPS_ALTIVEC)
         t = ff_yuv2rgb_init_altivec(c);
-    } else if (ARCH_BFIN) {
+#endif
+
+#if ARCH_BFIN
+    if (c->flags & SWS_CPU_CAPS_BFIN)
         t = ff_yuv2rgb_get_func_ptr_bfin(c);
-    }
+#endif
 
     if (t)
         return t;

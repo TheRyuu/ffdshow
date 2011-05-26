@@ -116,11 +116,12 @@ void (*yuyvtoyuv422)(uint8_t *ydst, uint8_t *udst, uint8_t *vdst, const uint8_t 
  32-bit C version, and and&add trick by Michael Niedermayer
 */
 
-void sws_rgb2rgb_init(void)
+void sws_rgb2rgb_init(int flags)
 {
     rgb2rgb_init_c();
-    if (HAVE_MMX)
-        rgb2rgb_init_x86();
+#if HAVE_MMX2 || HAVE_AMD3DNOW || HAVE_MMX
+    rgb2rgb_init_x86(flags);
+#endif /* HAVE_MMX2 || HAVE_AMD3DNOW || HAVE_MMX */
 }
 
 void rgb32to24(const uint8_t *src, uint8_t *dst, long src_size)
