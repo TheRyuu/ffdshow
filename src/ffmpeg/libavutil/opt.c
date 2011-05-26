@@ -291,7 +291,7 @@ double av_get_double(void *obj, const char *name, const AVOption **o_out)
     int den=1;
 
     if (av_get_number(obj, name, o_out, &num, &den, &intnum) < 0)
-        return -1;
+        return NAN;
     return num*intnum/den;
 }
 
@@ -302,7 +302,7 @@ AVRational av_get_q(void *obj, const char *name, const AVOption **o_out)
     int den=1;
 
     if (av_get_number(obj, name, o_out, &num, &den, &intnum) < 0)
-        return (AVRational){-1, 0};
+        return (AVRational){0, 0};
     if (num == 1.0 && (int)intnum == intnum)
         return (AVRational){intnum, den};
     else
@@ -443,8 +443,10 @@ void av_opt_set_defaults2(void *s, int mask, int flags)
             }
             break;
             case FF_OPT_TYPE_STRING:
+                av_set_string3(s, opt->name, opt->default_val.str, 1, NULL);
+                break;
             case FF_OPT_TYPE_BINARY:
-                /* Cannot set default for string as default_val is of type * double */
+                /* Cannot set default for binary */
             break;
             default:
                 av_log(s, AV_LOG_DEBUG, "AVOption type %d of option %s not implemented yet\n", opt->type, opt->name);

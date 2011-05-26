@@ -1179,7 +1179,7 @@ static av_always_inline void mpeg_motion_lowres(MpegEncContext *s,
     uint8_t *ptr_y, *ptr_cb, *ptr_cr;
     int mx, my, src_x, src_y, uvsrc_x, uvsrc_y, uvlinesize, linesize, sx, sy, uvsx, uvsy;
     const int lowres= s->avctx->lowres;
-    const int op_index= FFMIN(lowres-1+s->chroma_x_shift, 2);
+    const int op_index= FFMIN(lowres-1+s->chroma_x_shift, 2); // FFmpeg patch
     const int block_s= 8>>lowres;
     const int s_mask= (2<<lowres)-1;
     const int h_edge_pos = s->h_edge_pos >> lowres;
@@ -1214,6 +1214,7 @@ static av_always_inline void mpeg_motion_lowres(MpegEncContext *s,
         uvsrc_x = s->mb_x*block_s               + (mx >> lowres);
         uvsrc_y =    mb_y*block_s               + (my >> lowres);
     } else {
+        // FFmpeg patch
         if(s->chroma_y_shift){
             mx = motion_x / 2;
             my = motion_y / 2;
@@ -1653,7 +1654,7 @@ void MPV_decode_mb_internal(MpegEncContext *s, DCTELEM block[12][64],
             }
 
             /* add dct residue */
-            if(s->encoding || !(   s->h263_msmpeg4 || s->codec_id==CODEC_ID_MPEG1VIDEO || s->codec_id==CODEC_ID_MPEG2VIDEO
+            if(s->encoding || !(   s->msmpeg4_version || s->codec_id==CODEC_ID_MPEG1VIDEO || s->codec_id==CODEC_ID_MPEG2VIDEO
                                 || (s->codec_id==CODEC_ID_MPEG4 && !s->mpeg_quant))){
                 add_dequant_dct(s, block[0], 0, dest_y                          , dct_linesize, s->qscale);
                 add_dequant_dct(s, block[1], 1, dest_y              + block_size, dct_linesize, s->qscale);
