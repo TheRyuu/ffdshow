@@ -36,7 +36,7 @@
 #include "TdialogSettings.h"
 
 bool Tconfig::winNT;
-int Tconfig::cpu_flags=0,Tconfig::available_cpu_flags=0,Tconfig::lavc_cpu_flags=0,Tconfig::sws_cpu_flags=0;
+int Tconfig::cpu_flags=0,Tconfig::available_cpu_flags=0,Tconfig::lavc_cpu_flags=0;
 int Tconfig::cache_line=32;
 
 extern "C"

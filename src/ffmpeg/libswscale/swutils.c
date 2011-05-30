@@ -782,8 +782,7 @@ SwsContext *sws_alloc_context(void)
 
 SwsContext *sws_getContext(int srcW, int srcH, enum PixelFormat srcFormat,
                            int dstW, int dstH, enum PixelFormat dstFormat, int flags,
-                           SwsParams *params, //FFDShow structure
-                           SwsFilter *srcFilter, SwsFilter *dstFilter, const double *param)
+                           SwsFilter *srcFilter, SwsFilter *dstFilter, const double *param, SwsParams *ffdshow_params)
 {
     SwsContext *c;
     int i;
@@ -903,8 +902,8 @@ SwsContext *sws_getContext(int srcW, int srcH, enum PixelFormat srcFormat,
         c->param[1] = SWS_PARAM_DEFAULT;
     }
     */
-    c->param[0] = params->methodLuma.param[0];
-    c->param[1] = params->methodLuma.param[1];
+    c->param[0] = ffdshow_params->methodLuma.param[0];
+    c->param[1] = ffdshow_params->methodLuma.param[1];
 
 
     // Note the -((-x)>>y) is so that we always round toward +inf.
@@ -963,7 +962,7 @@ SwsContext *sws_getContext(int srcW, int srcH, enum PixelFormat srcFormat,
     }
     */
 
-    if(params->methodLuma.method&SWS_FAST_BILINEAR)
+    if(ffdshow_params->methodLuma.method&SWS_FAST_BILINEAR)
     {
 	    if(c->canMMX2BeUsed)
 	    {
@@ -978,7 +977,7 @@ SwsContext *sws_getContext(int srcW, int srcH, enum PixelFormat srcFormat,
 		    c->lumXInc = ((srcW-2)<<16)/(dstW);
     }
 
-    if(params->methodChroma.method&SWS_FAST_BILINEAR)
+    if(ffdshow_params->methodChroma.method&SWS_FAST_BILINEAR)
     {
         if(c->canMMX2BeUsed)
         {
@@ -1037,13 +1036,13 @@ SwsContext *sws_getContext(int srcW, int srcH, enum PixelFormat srcFormat,
             //FFDShow modifications to handle multiple scaling modes at a time
             if (initFilter(&c->hLumFilter, &c->hLumFilterPos, &c->hLumFilterSize, c->lumXInc,
                            srcW      ,       dstW, filterAlign, 1<<14,
-                           /*(flags&SWS_BICUBLIN) ? (flags|SWS_BICUBIC)  : flags*/params->methodLuma.method|flags,
-                           srcFilter->lumH, dstFilter->lumH, /*c->param*/params->methodLuma.param) < 0)
+                           /*(flags&SWS_BICUBLIN) ? (flags|SWS_BICUBIC)  : flags*/ffdshow_params->methodLuma.method|flags,
+                           srcFilter->lumH, dstFilter->lumH, /*c->param*/ffdshow_params->methodLuma.param) < 0)
                 goto fail;
             if (initFilter(&c->hChrFilter, &c->hChrFilterPos, &c->hChrFilterSize, c->chrXInc,
                            c->chrSrcW, c->chrDstW, filterAlign, 1<<14,
-                           /*(flags&SWS_BICUBLIN) ? (flags|SWS_BILINEAR) : flags*/params->methodChroma.method|flags,
-                           srcFilter->chrH, dstFilter->chrH, /*c->param*/params->methodChroma.param) < 0)
+                           /*(flags&SWS_BICUBLIN) ? (flags|SWS_BILINEAR) : flags*/ffdshow_params->methodChroma.method|flags,
+                           srcFilter->chrH, dstFilter->chrH, /*c->param*/ffdshow_params->methodChroma.param) < 0)
                 goto fail;
         }
     } // initialize horizontal stuff
@@ -1057,13 +1056,13 @@ SwsContext *sws_getContext(int srcW, int srcH, enum PixelFormat srcFormat,
 
         if (initFilter(&c->vLumFilter, &c->vLumFilterPos, &c->vLumFilterSize, c->lumYInc,
                        srcH      ,        dstH, filterAlign, (1<<12),
-                       /*(flags&SWS_BICUBLIN) ? (flags|SWS_BICUBIC)  : flags*/params->methodLuma.method|flags,
-                       srcFilter->lumV, dstFilter->lumV, /*c->param*/params->methodLuma.param) < 0)
+                       /*(flags&SWS_BICUBLIN) ? (flags|SWS_BICUBIC)  : flags*/ffdshow_params->methodLuma.method|flags,
+                       srcFilter->lumV, dstFilter->lumV, /*c->param*/ffdshow_params->methodLuma.param) < 0)
             goto fail;
         if (initFilter(&c->vChrFilter, &c->vChrFilterPos, &c->vChrFilterSize, c->chrYInc,
                        c->chrSrcH, c->chrDstH, filterAlign, (1<<12),
-                       /*(flags&SWS_BICUBLIN) ? (flags|SWS_BILINEAR) : flags*/params->methodChroma.method|flags,
-                       srcFilter->chrV, dstFilter->chrV, /*c->param*/params->methodChroma.param) < 0)
+                       /*(flags&SWS_BICUBLIN) ? (flags|SWS_BILINEAR) : flags*/ffdshow_params->methodChroma.method|flags,
+                       srcFilter->chrV, dstFilter->chrV, /*c->param*/ffdshow_params->methodChroma.param) < 0)
             goto fail;
 
 #if HAVE_ALTIVEC
@@ -1706,8 +1705,7 @@ void sws_freeContext(SwsContext *c)
 struct SwsContext *sws_getCachedContext(struct SwsContext *context,
                                         int srcW, int srcH, enum PixelFormat srcFormat,
                                         int dstW, int dstH, enum PixelFormat dstFormat, int flags,
-                                        SwsParams *params,
-                                        SwsFilter *srcFilter, SwsFilter *dstFilter, const double *param)
+                                        SwsFilter *srcFilter, SwsFilter *dstFilter, const double *param, SwsParams *ffdshow_params)
 {
     static const double default_param[2] = {SWS_PARAM_DEFAULT, SWS_PARAM_DEFAULT};
 
@@ -1731,8 +1729,7 @@ struct SwsContext *sws_getCachedContext(struct SwsContext *context,
     if (!context) {
         return sws_getContext(srcW, srcH, srcFormat,
                               dstW, dstH, dstFormat, flags,
-                              params,
-                              srcFilter, dstFilter, param);
+                              srcFilter, dstFilter, param, ffdshow_params);
     }
     return context;
 }

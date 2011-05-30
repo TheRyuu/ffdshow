@@ -1,20 +1,20 @@
 /*
  * Copyright (C) 2001-2003 Michael Niedermayer <michaelni@gmx.at>
  *
- * This file is part of Libav.
+ * This file is part of FFmpeg.
  *
- * Libav is free software; you can redistribute it and/or
+ * FFmpeg is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * Libav is distributed in the hope that it will be useful,
+ * FFmpeg is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with Libav; if not, write to the Free Software
+ * License along with FFmpeg; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -346,9 +346,7 @@ static inline void hScale_c(int16_t *dst, int dstW, const uint8_t *src,
         int j;
         int srcPos= filterPos[i];
         int val=0;
-        //printf("filterPos: %d\n", filterPos[i]);
         for (j=0; j<filterSize; j++) {
-            //printf("filter: %d, src: %d\n", filter[i], src[srcPos + j]);
             val += ((int)src[srcPos + j])*filter[filterSize*i + j];
         }
         //filter += hFilterSize;
@@ -404,7 +402,6 @@ static inline void hyscale_fast_c(SwsContext *c, int16_t *dst, long dstWidth,
       // *** horizontal scale Y line to temp buffer
 static inline void hyscale_c(SwsContext *c, uint16_t *dst, long dstWidth,
                              const uint8_t *src, int srcW, int xInc,
-                             int flags, //FFDShow custom code
                              const int16_t *hLumFilter,
                              const int16_t *hLumFilterPos, int hLumFilterSize,
                              uint8_t *formatConvBuffer,
@@ -566,7 +563,7 @@ static int swScaleI_c(SwsContext *c, const uint8_t* src[], stride_t srcStride[],
     if (srcSliceY ==0) {
         lumBufIndex=-1;
         chrBufIndex=-1;
-        //FFDShow modification : moved to RENAME(swScale)
+        //FFDShow modification : moved to swScale_c()
         //dstY=0;
         lastInLumBuf= -1;
         lastInChrBuf= -1;
@@ -622,15 +619,12 @@ static int swScaleI_c(SwsContext *c, const uint8_t* src[], stride_t srcStride[],
             assert(lastInLumBuf + 1 - srcSliceY < srcSliceH);
             assert(lastInLumBuf + 1 - srcSliceY >= 0);
             hyscale_c(c, lumPixBuf[ lumBufIndex ], dstW, src1, srcW, lumXInc,
-                      params.methodLuma.method, //FFDShow : flags for luma
                       hLumFilter, hLumFilterPos, hLumFilterSize,
                       formatConvBuffer,
                       pal, 0);
             if (CONFIG_SWSCALE_ALPHA && alpPixBuf)
                 hyscale_c(c, alpPixBuf[ lumBufIndex ], dstW, src2, srcW,
-                          lumXInc, 
-                          params.methodLuma.method, //FFDShow : flags for luma
-                          hLumFilter, hLumFilterPos, hLumFilterSize,
+                          lumXInc, hLumFilter, hLumFilterPos, hLumFilterSize,
                           formatConvBuffer,
                           pal, 1);
             lastInLumBuf++;
@@ -798,7 +792,7 @@ static int swScaleI_c(SwsContext *c, const uint8_t* src[], stride_t srcStride[],
     return dstY - lastDstY;
 }
 
-static void sws_init_swScale_C(SwsContext *c)
+static void sws_init_swScale_c(SwsContext *c)
 {
     enum PixelFormat srcFormat = c->srcFormat;
 
@@ -963,7 +957,7 @@ int sws_thread_work_c(SwsContext *c)		// Thread func
 			stp->srcSliceH, stp->dst, stp->dstStride, stp->dstYstart, stp->dstYend);
 }
 
-static int swScale_C(SwsContext *c, const uint8_t* src[], stride_t srcStride[], int srcSliceY,
+static int swScale_c(SwsContext *c, const uint8_t* src[], stride_t srcStride[], int srcSliceY,
              int srcSliceH, uint8_t* dst[], stride_t dstStride[])
 {
 	int dstLines;

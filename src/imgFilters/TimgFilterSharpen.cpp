@@ -163,10 +163,10 @@ HRESULT TimgFilterLibavcodecSharp::process(TfilterQueue::iterator it,TffPict &pi
             }
             done();
             swsf=libavcodec->sws_getDefaultFilter(0,0,oldavcodecsharpenluma/100.0f,oldavcodecsharpenchroma/100.0f,0,0,0);
-            int swsflags = Tconfig::sws_cpu_flags;
+            int swsflags = 0;
             SwsParams params;
             Tlibavcodec::swsInitParams(&params,0,swsflags);
-            swsc=libavcodec->sws_getContext(dx1[0],dy1[0],csp_ffdshow2lavc(csp1),dx1[0],dy1[0],csp_ffdshow2lavc(csp2),swsflags,&params,swsf,NULL,NULL);
+            swsc=libavcodec->sws_getContext(dx1[0],dy1[0],csp_ffdshow2lavc(csp1),dx1[0],dy1[0],csp_ffdshow2lavc(csp2),swsflags,swsf,NULL,NULL,&params);
         }
 
         if (swsc) {

@@ -113,8 +113,7 @@ public:
  //libswscale imports
  SwsContext* (*sws_getContext)(int srcW, int srcH, enum PixelFormat srcFormat,
                            int dstW, int dstH, enum PixelFormat dstFormat, int flags,
-                           SwsParams *params, //FFDShow structure
-                           SwsFilter *srcFilter, SwsFilter *dstFilter, const double *param);
+                           SwsFilter *srcFilter, SwsFilter *dstFilter, const double *param, SwsParams *ffdshow_params);
 
  void (*sws_freeContext)(SwsContext *c);
  SwsFilter* (*sws_getDefaultFilter)(float lumaGBlur, float chromaGBlur,

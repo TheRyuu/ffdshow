@@ -1,20 +1,20 @@
 /*
  * Copyright (C) 2001-2003 Michael Niedermayer <michaelni@gmx.at>
  *
- * This file is part of Libav.
+ * This file is part of FFmpeg.
  *
- * Libav is free software; you can redistribute it and/or
+ * FFmpeg is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * Libav is distributed in the hope that it will be useful,
+ * FFmpeg is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with Libav; if not, write to the Free Software
+ * License along with FFmpeg; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -109,15 +109,6 @@ typedef struct SwsContext {
 
     uint32_t pal_yuv[256];
     uint32_t pal_rgb[256];
-
-    //FFDShow custom variables begin
-    void *thread_opaque;
-    int thread_count;
-    int (*execute)(struct SwsContext *c, int (*func)(struct SwsContext *c), int *ret, int count);
-    int *ret;
-    SwsThreadParam stp;
-    SwsParams params;
-    //FFDShow custom variables end
 
     /**
      * @name Scaled horizontal lines ring buffer.
@@ -336,6 +327,15 @@ typedef struct SwsContext {
     int alpSrcOffset; ///< Offset given to alpha src pointers passed to horizontal input functions.
 
     int needs_hcscale; ///< Set if there are chroma planes to be converted.
+    
+    //FFDShow custom variables begin
+    void *thread_opaque;
+    int thread_count;
+    int (*execute)(struct SwsContext *c, int (*func)(struct SwsContext *c), int *ret, int count);
+    int *ret;
+    SwsThreadParam stp;
+    SwsParams params;
+    //FFDShow custom variables end
 
 } SwsContext;
 //FIXME check init (where 0)
@@ -501,11 +501,6 @@ extern const uint64_t ff_dither8[2];
  * source and destination formats, bit depths, flags, etc.
  */
 void ff_get_unscaled_swscale(SwsContext *c);
-
-/**
- * Returns the SWS_CPU_CAPS for the optimized code compiled into swscale.
- */
-int ff_hardcodedcpuflags(void);
 
 /**
  * Returns function pointer to fastest main scaler path function depending

@@ -31,10 +31,10 @@ T3x3blurSWS::T3x3blurSWS(IffdshowBase *deci,unsigned int Idx,unsigned int Idy):d
     SwsFilter swsf;
     swsf.lumV=swsf.lumH=libavcodec->sws_getConstVec(1/3.0,3);
     swsf.chrH=swsf.chrV=NULL;
-    int sws_flags = Tconfig::sws_cpu_flags;
+    int sws_flags = 0;
     SwsParams params;
     Tlibavcodec::swsInitParams(&params,0,sws_flags);
-    swsc=libavcodec->sws_getContext(dx,dy,PIX_FMT_GRAY8,dx,dy,PIX_FMT_GRAY8,sws_flags,&params,&swsf,NULL,NULL);
+    swsc=libavcodec->sws_getContext(dx,dy,PIX_FMT_GRAY8,dx,dy,PIX_FMT_GRAY8,sws_flags,&swsf,NULL,NULL,&params);
     libavcodec->sws_freeVec(swsf.lumH);
 }
 T3x3blurSWS::~T3x3blurSWS()

@@ -1,20 +1,20 @@
 /*
  * Copyright (C) 2001-2003 Michael Niedermayer <michaelni@gmx.at>
  *
- * This file is part of Libav.
+ * This file is part of FFmpeg.
  *
- * Libav is free software; you can redistribute it and/or
+ * FFmpeg is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * Libav is distributed in the hope that it will be useful,
+ * FFmpeg is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with Libav; if not, write to the Free Software
+ * License along with FFmpeg; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -71,6 +71,7 @@ untested special converters
 #include "rgb2rgb.h"
 #include "libavutil/intreadwrite.h"
 #include "libavutil/x86_cpu.h"
+#include "libavutil/cpu.h"
 #include "libavutil/avutil.h"
 #include "libavutil/mathematics.h"
 #include "libavutil/bswap.h"
@@ -79,10 +80,6 @@ untested special converters
 #undef MOVNTQ
 #undef PAVGB
 
-//#undef HAVE_MMX2
-//#define HAVE_AMD3DNOW
-//#undef HAVE_MMX
-//#undef ARCH_X86
 #define DITHER1XBPP
 
 #define isPacked(x)         (       \
@@ -310,16 +307,6 @@ uint16_t dither_scale[15][16]={
 {    3,    5,    7,    9,   10,   12,   14,   14,   14,   14,   14,   14,   14,   15,32767,32767,},
 {    3,    5,    7,    9,   11,   12,   14,   15,   15,   15,   15,   15,   15,   15,   16,65535,},
 };
-
-int sws_default_execute(SwsContext *c, int (*func)(SwsContext *c2), int *ret, int count){
-    int i;
-
-    for(i=0; i<count; i++){
-        int r= func(&c[i]);
-        if(ret) ret[i]= r;
-    }
-    return 0;
-}
 
 static av_always_inline void yuv2yuvX16inC_template(const int16_t *lumFilter, const int16_t **lumSrc, int lumFilterSize,
                                                     const int16_t *chrFilter, const int16_t **chrSrc, int chrFilterSize,
@@ -1438,8 +1425,8 @@ SwsFunc ff_getSwsFunc(SwsContext *c)
         sws_init_swScale_MMX(c);
         return swScale_MMX;
     } else {
-        sws_init_swScale_C(c);
-        return swScale_C;
+        sws_init_swScale_c(c);
+        return swScale_c;
     }
 
 #else
@@ -1448,11 +1435,11 @@ SwsFunc ff_getSwsFunc(SwsContext *c)
         sws_init_swScale_altivec(c);
         return swScale_altivec;
     } else {
-        sws_init_swScale_C(c);
-        return swScale_C;
+        sws_init_swScale_c(c);
+        return swScale_c;
     }
 #endif
-    sws_init_swScale_C(c);
+    sws_init_swScale_c(c);
     return swScale_C;
 #endif /* ARCH_X86 */
 #else //CONFIG_RUNTIME_CPUDETECT
@@ -1469,8 +1456,8 @@ SwsFunc ff_getSwsFunc(SwsContext *c)
     sws_init_swScale_altivec(c);
     return swScale_altivec;
 #else
-    sws_init_swScale_C(c);
-    return swScale_C;
+    sws_init_swScale_c(c);
+    return swScale_c;
 #endif
 #endif //!CONFIG_RUNTIME_CPUDETECT
 }
@@ -1664,7 +1651,7 @@ static int palToRgbWrapper(SwsContext *c, const uint8_t* src[], stride_t srcStri
 
     if (!conv)
         av_log(c, AV_LOG_ERROR, "internal error %s -> %s converter\n",
-               sws_format_name(srcFormat), sws_format_name(dstFormat));
+               av_get_pix_fmt_name(srcFormat), av_get_pix_fmt_name(dstFormat));
     else {
         for (i=0; i<srcSliceH; i++) {
             conv(srcPtr, dstPtr, c->srcW, (uint8_t *) c->pal_rgb);
@@ -1751,7 +1738,7 @@ static int rgbToRgbWrapper(SwsContext *c, const uint8_t* src[], stride_t srcStri
 
     if (!conv) {
         av_log(c, AV_LOG_ERROR, "internal error %s -> %s converter\n",
-               sws_format_name(srcFormat), sws_format_name(dstFormat));
+               av_get_pix_fmt_name(srcFormat), av_get_pix_fmt_name(dstFormat));
     } else {
         const uint8_t *srcPtr= src[0];
               uint8_t *dstPtr= dst[0];
@@ -1944,23 +1931,6 @@ static int planarCopyWrapper(SwsContext *c, const uint8_t* src[], stride_t srcSt
     return srcSliceH;
 }
 
-int ff_hardcodedcpuflags(void)
-{
-    int flags = 0;
-#if   COMPILE_TEMPLATE_MMX2
-    flags |= SWS_CPU_CAPS_MMX|SWS_CPU_CAPS_MMX2;
-#elif COMPILE_TEMPLATE_AMD3DNOW
-    flags |= SWS_CPU_CAPS_MMX|SWS_CPU_CAPS_3DNOW;
-#elif COMPILE_TEMPLATE_MMX
-    flags |= SWS_CPU_CAPS_MMX;
-#elif COMPILE_TEMPLATE_ALTIVEC
-    flags |= SWS_CPU_CAPS_ALTIVEC;
-#elif ARCH_BFIN
-    flags |= SWS_CPU_CAPS_BFIN;
-#endif
-    return flags;
-}
-
 void ff_get_unscaled_swscale(SwsContext *c)
 {
     const enum PixelFormat srcFormat = c->srcFormat;
@@ -2044,8 +2014,8 @@ void ff_get_unscaled_swscale(SwsContext *c)
     if(srcFormat == PIX_FMT_UYVY422 && dstFormat == PIX_FMT_YUV422P)
         c->swScale= uyvyToYuv422Wrapper;
 
-#if COMPILE_ALTIVEC
-    if ((c->flags & SWS_CPU_CAPS_ALTIVEC) &&
+#if HAVE_ALTIVEC
+    if ((av_get_cpu_flags() & AV_CPU_FLAG_ALTIVEC) &&
         !(c->flags & SWS_BITEXACT) &&
         srcFormat == PIX_FMT_YUV420P) {
         // unscaled YV12 -> packed YUV, we want speed
@@ -2075,8 +2045,7 @@ void ff_get_unscaled_swscale(SwsContext *c)
             c->swScale= planarCopyWrapper;
     }
 #if ARCH_BFIN
-    if (flags & SWS_CPU_CAPS_BFIN)
-        ff_bfin_get_unscaled_swscale (c);
+    ff_bfin_get_unscaled_swscale (c);
 #endif
 }
 
@@ -2267,4 +2236,14 @@ void sws_convertPalette8ToPacked24(const uint8_t *src, uint8_t *dst, long num_pi
         dst[2]= palette[src[i]*4+2];
         dst+= 3;
     }
+}
+
+int sws_default_execute(SwsContext *c, int (*func)(SwsContext *c2), int *ret, int count){
+    int i;
+
+    for(i=0; i<count; i++){
+        int r= func(&c[i]);
+        if(ret) ret[i]= r;
+    }
+    return 0;
 }

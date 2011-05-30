@@ -124,10 +124,10 @@ void TimgFilterWarpsharp::warpsharp(const unsigned char *src,unsigned char *dst,
         swsf.lumV->coeff[4]=1;
         libavcodec->sws_normalizeVec(swsf.lumV,1);
         swsf.chrH=swsf.chrV=NULL;
-        int swsflags = Tconfig::sws_cpu_flags;
+        int swsflags = 0;
         SwsParams params;
         Tlibavcodec::swsInitParams(&params,0,swsflags);
-        swsblur=libavcodec->sws_getContext(dx1[0],dy1[0],PIX_FMT_GRAY8,dx1[0],dy1[0],PIX_FMT_GRAY8,swsflags,&params,&swsf,NULL,NULL);
+        swsblur=libavcodec->sws_getContext(dx1[0],dy1[0],PIX_FMT_GRAY8,dx1[0],dy1[0],PIX_FMT_GRAY8,swsflags,&swsf,NULL,NULL,&params);
         libavcodec->sws_freeVec(swsf.lumV);
     }
     warpsharpblur(dst,stride2[0],blur,blurworkStride,dx1[0],dy1[0]);

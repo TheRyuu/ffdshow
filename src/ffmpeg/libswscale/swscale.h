@@ -1,20 +1,20 @@
 /*
  * Copyright (C) 2001-2003 Michael Niedermayer <michaelni@gmx.at>
  *
- * This file is part of Libav.
+ * This file is part of FFmpeg.
  *
- * Libav is free software; you can redistribute it and/or
+ * FFmpeg is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * Libav is distributed in the hope that it will be useful,
+ * FFmpeg is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with Libav; if not, write to the Free Software
+ * License along with FFmpeg; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -65,6 +65,9 @@ typedef struct SwsParams {
 #ifndef FF_API_SWS_GETCONTEXT
 #define FF_API_SWS_GETCONTEXT  (LIBSWSCALE_VERSION_MAJOR < 2)
 #endif
+#ifndef FF_API_SWS_CPU_CAPS
+#define FF_API_SWS_CPU_CAPS    (LIBSWSCALE_VERSION_MAJOR < 2)
+#endif
 
 /**
  * Returns the LIBSWSCALE_VERSION_INT constant.
@@ -112,12 +115,18 @@ const char *swscale_license(void);
 #define SWS_ACCURATE_RND      0x40000
 #define SWS_BITEXACT          0x80000
 
+#if FF_API_SWS_CPU_CAPS
+/**
+ * CPU caps are autodetected now, those flags
+ * are only provided for API compatibility.
+ */
 #define SWS_CPU_CAPS_MMX      0x80000000
 #define SWS_CPU_CAPS_MMX2     0x20000000
 #define SWS_CPU_CAPS_3DNOW    0x40000000
 #define SWS_CPU_CAPS_ALTIVEC  0x10000000
 #define SWS_CPU_CAPS_BFIN     0x01000000
 #define SWS_CPU_CAPS_SSE2     0x02000000
+#endif
 
 #define SWS_MAX_REDUCE_CUTOFF 0.002
 
@@ -201,15 +210,14 @@ void sws_freeContext(struct SwsContext *swsContext);
  * @param dstH the height of the destination image
  * @param dstFormat the destination image format
  * @param flags specify which algorithm and options to use for rescaling
- * @param params added by FFDShow
  * @return a pointer to an allocated context, or NULL in case of error
  * @note this function is to be removed after a saner alternative is
  *       written
  */
 struct SwsContext *sws_getContext(int srcW, int srcH, enum PixelFormat srcFormat,
                                   int dstW, int dstH, enum PixelFormat dstFormat,
-                                  int flags, SwsParams *params, SwsFilter *srcFilter,
-                                  SwsFilter *dstFilter, const double *param);
+                                  int flags, SwsFilter *srcFilter,
+                                  SwsFilter *dstFilter, const double *param, SwsParams *ffdshow_params);
 #endif
 
 /**
@@ -330,10 +338,8 @@ void sws_freeFilter(SwsFilter *filter);
 struct SwsContext *sws_getCachedContext(struct SwsContext *context,
                                         int srcW, int srcH, enum PixelFormat srcFormat,
                                         int dstW, int dstH, enum PixelFormat dstFormat,
-                                        int flags,
-                                        SwsParams *params, //FFDShow. Not used
-                                        SwsFilter *srcFilter,
-                                        SwsFilter *dstFilter, const double *param);
+                                        int flags, SwsFilter *srcFilter,
+                                        SwsFilter *dstFilter, const double *param, SwsParams *ffdshow_params);
 
 /**
  * Converts an 8bit paletted frame into a frame with a color depth of 32-bits.

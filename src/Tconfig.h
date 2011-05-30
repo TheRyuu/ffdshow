@@ -41,7 +41,7 @@ public:
     bool savePth;
     const char_t *getExeflnm(void) const;
     static bool winNT;
-    static int available_cpu_flags,cpu_flags,lavc_cpu_flags,sws_cpu_flags; //suppose that CPU capabilities won't change per instance
+    static int available_cpu_flags,cpu_flags,lavc_cpu_flags; //suppose that CPU capabilities won't change per instance
     static void initCPU(int allowedCpuFlags);
     static DWORD getCPUcount(void);
     static int get_trayIconFullColorOS(void);

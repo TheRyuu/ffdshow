@@ -625,11 +625,11 @@ TspuImage::TscalerSw::TscalerSw(const TprintPrefs &prefs,int srcdx,int srcdy,int
     PixelFormat avcodeccsp=csp_ffdshow2lavc(csp);
     filter.lumH=filter.lumV=filter.chrH=filter.chrV=libavcodec->sws_getGaussianVec(prefs.vobaagauss/1000.0, 3.0);
     libavcodec->sws_normalizeVec(filter.lumH,1.0);
-    int swsflags = Tconfig::cpu_flags | SWS_GAUSS;
+    int swsflags = SWS_GAUSS;
     SwsParams params;
-    Tlibavcodec::swsInitParams(&params,SWS_GAUSS,Tconfig::sws_cpu_flags);
-    ctx=libavcodec->sws_getContext(srcdx,srcdy,avcodeccsp,dstdx,dstdy,avcodeccsp,swsflags,&params,&filter,NULL,NULL);
-    alphactx=libavcodec->sws_getContext(srcdx,srcdy,avcodeccsp,dstdx,dstdy,avcodeccsp,swsflags,&params,&filter,NULL,NULL);
+    Tlibavcodec::swsInitParams(&params,SWS_GAUSS,swsflags);
+    ctx=libavcodec->sws_getContext(srcdx,srcdy,avcodeccsp,dstdx,dstdy,avcodeccsp,swsflags,&filter,NULL,NULL,&params);
+    alphactx=libavcodec->sws_getContext(srcdx,srcdy,avcodeccsp,dstdx,dstdy,avcodeccsp,swsflags,&filter,NULL,NULL,&params);
     //convert = new Tconvert(prefs.deci,dstdx,dstdy);
 }
 TspuImage::TscalerSw::~TscalerSw()

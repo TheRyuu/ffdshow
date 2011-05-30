@@ -141,7 +141,7 @@ HRESULT TimgFilterResize::process(TfilterQueue::iterator it,TffPict &pict,const 
 {
     const TresizeAspectSettings *cfg=(const TresizeAspectSettings*)cfg0;
     init(pict,cfg->full,0);
-    int flags = Tconfig::sws_cpu_flags;
+    int swsflags = 0;
     if (sizeChanged || !cfg->equal(oldSettings) || oldSettings.is!=cfg->is || oldSettings.full!=cfg->full || oldcsp != pict.csp) {
         sizeChanged=false;
         oldSettings=*cfg;
@@ -265,20 +265,20 @@ HRESULT TimgFilterResize::process(TfilterQueue::iterator it,TffPict &pict,const 
                     swsf=NULL;
                     oldinterlace=interlace;
                     if(cfg->accurateRounding) {
-                        flags|=SWS_ACCURATE_RND;
+                        swsflags|=SWS_ACCURATE_RND;
                     }
 
                     // Add the CPU flags and others (SWS_ACCURATE_RND if set) to the chroma & luma flags
                     SwsParams mixedparams;
                     memcpy(&mixedparams, swsparams, sizeof(SwsParams));
-                    mixedparams.methodChroma.method|=flags;
-                    mixedparams.methodLuma.method|=flags;
+                    mixedparams.methodChroma.method|=swsflags;
+                    mixedparams.methodLuma.method|=swsflags;
 
                     swsf=libavcodec->sws_getDefaultFilter(oldSettings.GblurLum/100.0f,oldSettings.GblurChrom/100.0f,oldSettings.sharpenLum/100.0f,oldSettings.sharpenChrom/100.0f,0,0,0);
                     if (!oldinterlace) {
-                        swsc=libavcodec->sws_getContext(pictRect.dx,pictRect.dy,csp_ffdshow2lavc(csp1),newpict.rectClip.dx,newpict.rectClip.dy,csp_ffdshow2lavc(csp2),flags,&mixedparams,swsf,NULL,NULL);
+                        swsc=libavcodec->sws_getContext(pictRect.dx,pictRect.dy,csp_ffdshow2lavc(csp1),newpict.rectClip.dx,newpict.rectClip.dy,csp_ffdshow2lavc(csp2),swsflags,swsf,NULL,NULL,&mixedparams);
                     } else {
-                        swsc=libavcodec->sws_getContext(pictRect.dx,pictRect.dy/2,csp_ffdshow2lavc(csp1),newpict.rectClip.dx,newpict.rectClip.dy/2,csp_ffdshow2lavc(csp2),flags,&mixedparams,swsf,NULL,NULL);
+                        swsc=libavcodec->sws_getContext(pictRect.dx,pictRect.dy/2,csp_ffdshow2lavc(csp1),newpict.rectClip.dx,newpict.rectClip.dy/2,csp_ffdshow2lavc(csp2),swsflags,swsf,NULL,NULL,&mixedparams);
                     }
                 }
                 if (!oldinterlace) {
