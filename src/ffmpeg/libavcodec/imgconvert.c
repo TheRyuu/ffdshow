@@ -408,13 +408,12 @@ void avcodec_get_chroma_sub_sample(enum PixelFormat pix_fmt, int *h_shift, int *
     *v_shift = av_pix_fmt_descriptors[pix_fmt].log2_chroma_h;
 }
 
+#if FF_API_GET_PIX_FMT_NAME
 const char *avcodec_get_pix_fmt_name(enum PixelFormat pix_fmt)
 {
-    if ((unsigned)pix_fmt >= PIX_FMT_NB)
-        return NULL;
-    else
-        return av_pix_fmt_descriptors[pix_fmt].name;
+    return av_get_pix_fmt_name(pix_fmt);
 }
+#endif
 
 int ff_is_hwaccel_pix_fmt(enum PixelFormat pix_fmt)
 {
@@ -472,28 +471,6 @@ static int avg_bits_per_pixel(enum PixelFormat pix_fmt)
     }
     return bits;
 }
-
-#if LIBAVCODEC_VERSION_MAJOR < 53
-void ff_img_copy_plane(uint8_t *dst, int dst_wrap,
-                           const uint8_t *src, int src_wrap,
-                           int width, int height)
-{
-    av_image_copy_plane(dst, dst_wrap, src, src_wrap, width, height);
-}
-
-int ff_get_plane_bytewidth(enum PixelFormat pix_fmt, int width, int plane)
-{
-    return av_image_get_linesize(pix_fmt, width, plane);
-}
-
-void av_picture_data_copy(uint8_t *dst_data[4], int dst_linesize[4],
-                          uint8_t *src_data[4], int src_linesize[4],
-                          enum PixelFormat pix_fmt, int width, int height)
-{
-    av_image_copy(dst_data, dst_linesize, src_data, src_linesize,
-                  pix_fmt, width, height);
-}
-#endif
 
 void av_picture_copy(AVPicture *dst, const AVPicture *src,
                      enum PixelFormat pix_fmt, int width, int height)

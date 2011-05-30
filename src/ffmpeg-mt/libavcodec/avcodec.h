@@ -2676,7 +2676,15 @@ typedef struct AVPicture {
 } AVPicture;
 
 void avcodec_get_chroma_sub_sample(enum PixelFormat pix_fmt, int *h_shift, int *v_shift);
+
+#if FF_API_GET_PIX_FMT_NAME
+/**
+ * @deprecated Deprecated in favor of av_get_pix_fmt_name().
+ */
+attribute_deprecated
 const char *avcodec_get_pix_fmt_name(enum PixelFormat pix_fmt);
+#endif
+
 void avcodec_set_dimensions(AVCodecContext *s, int width, int height);
 
 /* external high level API */
