@@ -6,20 +6,20 @@
  * 1,4,8bpp support and context / deglobalize stuff
  * by Michael Niedermayer (michaelni@gmx.at)
  *
- * This file is part of Libav.
+ * This file is part of FFmpeg.
  *
- * Libav is free software; you can redistribute it and/or
+ * FFmpeg is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * Libav is distributed in the hope that it will be useful,
+ * FFmpeg is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with Libav; if not, write to the Free Software
+ * License along with FFmpeg; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -32,9 +32,9 @@
 #include "rgb2rgb.h"
 #include "swscale.h"
 #include "swscale_internal.h"
-#include "libavutil/x86_cpu.h"
+#include "libavutil/cpu.h"
 #include "libavutil/bswap.h"
-#include "ffImgfmt.h"
+#include "libavutil/pixdesc.h"
 
 extern const uint8_t dither_4x4_16[4][8];
 extern const uint8_t dither_8x8_32[8][8];
@@ -367,28 +367,6 @@ YUV2RGBFUNC(yuv2rgb_c_16, uint16_t, 0)
     PUTRGB(dst_1,py_1,3);
 CLOSEYUV2RGBFUNC(8)
 
-#if 0 // Currently unused
-// This is exactly the same code as yuv2rgb_c_32 except for the types of
-// r, g, b, dst_1, dst_2
-YUV2RGBFUNC(yuv2rgb_c_8, uint8_t, 0)
-    LOADCHROMA(0);
-    PUTRGB(dst_1,py_1,0);
-    PUTRGB(dst_2,py_2,0);
-
-    LOADCHROMA(1);
-    PUTRGB(dst_2,py_2,1);
-    PUTRGB(dst_1,py_1,1);
-
-    LOADCHROMA(2);
-    PUTRGB(dst_1,py_1,2);
-    PUTRGB(dst_2,py_2,2);
-
-    LOADCHROMA(3);
-    PUTRGB(dst_2,py_2,3);
-    PUTRGB(dst_1,py_1,3);
-CLOSEYUV2RGBFUNC(8)
-#endif
-
 // r, g, b, dst_1, dst_2
 YUV2RGBFUNC(yuv2rgb_c_12_ordered_dither, uint16_t, 0)
     const uint8_t *d16 = dither_4x4_16[y&3];
@@ -442,36 +420,6 @@ YUV2RGBFUNC(yuv2rgb_c_8_ordered_dither, uint8_t, 0)
     PUTRGB8(dst_1,py_1,3,6);
 CLOSEYUV2RGBFUNC(8)
 
-#if 0 // Currently unused
-// This is exactly the same code as yuv2rgb_c_32 except for the types of
-// r, g, b, dst_1, dst_2
-YUV2RGBFUNC(yuv2rgb_c_4, uint8_t, 0)
-    int acc;
-#define PUTRGB4(dst,src,i)          \
-    Y = src[2*i];                   \
-    acc = r[Y] + g[Y] + b[Y];       \
-    Y = src[2*i+1];                 \
-    acc |= (r[Y] + g[Y] + b[Y])<<4; \
-    dst[i] = acc;
-
-    LOADCHROMA(0);
-    PUTRGB4(dst_1,py_1,0);
-    PUTRGB4(dst_2,py_2,0);
-
-    LOADCHROMA(1);
-    PUTRGB4(dst_2,py_2,1);
-    PUTRGB4(dst_1,py_1,1);
-
-    LOADCHROMA(2);
-    PUTRGB4(dst_1,py_1,2);
-    PUTRGB4(dst_2,py_2,2);
-
-    LOADCHROMA(3);
-    PUTRGB4(dst_2,py_2,3);
-    PUTRGB4(dst_1,py_1,3);
-CLOSEYUV2RGBFUNC(4)
-#endif
-
 YUV2RGBFUNC(yuv2rgb_c_4_ordered_dither, uint8_t, 0)
     const uint8_t *d64 =  dither_8x8_73[y&7];
     const uint8_t *d128 = dither_8x8_220[y&7];
@@ -500,28 +448,6 @@ YUV2RGBFUNC(yuv2rgb_c_4_ordered_dither, uint8_t, 0)
     PUTRGB4D(dst_2,py_2,3,6+8);
     PUTRGB4D(dst_1,py_1,3,6);
 CLOSEYUV2RGBFUNC(4)
-
-#if 0 // Currently unused
-// This is exactly the same code as yuv2rgb_c_32 except for the types of
-// r, g, b, dst_1, dst_2
-YUV2RGBFUNC(yuv2rgb_c_4b, uint8_t, 0)
-    LOADCHROMA(0);
-    PUTRGB(dst_1,py_1,0);
-    PUTRGB(dst_2,py_2,0);
-
-    LOADCHROMA(1);
-    PUTRGB(dst_2,py_2,1);
-    PUTRGB(dst_1,py_1,1);
-
-    LOADCHROMA(2);
-    PUTRGB(dst_1,py_1,2);
-    PUTRGB(dst_2,py_2,2);
-
-    LOADCHROMA(3);
-    PUTRGB(dst_2,py_2,3);
-    PUTRGB(dst_1,py_1,3);
-CLOSEYUV2RGBFUNC(8)
-#endif
 
 YUV2RGBFUNC(yuv2rgb_c_4b_ordered_dither, uint8_t, 0)
     const uint8_t *d64 =  dither_8x8_73[y&7];
@@ -580,29 +506,24 @@ CLOSEYUV2RGBFUNC(1)
 SwsFunc ff_yuv2rgb_get_func_ptr(SwsContext *c)
 {
     SwsFunc t = NULL;
-#if HAVE_MMX
-     t = ff_yuv2rgb_init_mmx(c);
-#endif
-#if HAVE_VIS
-    t = ff_yuv2rgb_init_vis(c);
-#endif
-#if CONFIG_MLIB
-    t = ff_yuv2rgb_init_mlib(c);
-#endif
-#if HAVE_ALTIVEC
-    if (c->flags & SWS_CPU_CAPS_ALTIVEC)
-        t = ff_yuv2rgb_init_altivec(c);
-#endif
 
-#if ARCH_BFIN
-    if (c->flags & SWS_CPU_CAPS_BFIN)
+    if (HAVE_MMX) {
+        t = ff_yuv2rgb_init_mmx(c);
+    } else if (HAVE_VIS) {
+        t = ff_yuv2rgb_init_vis(c);
+    } else if (CONFIG_MLIB) {
+        t = ff_yuv2rgb_init_mlib(c);
+    } else if (HAVE_ALTIVEC) {
+        t = ff_yuv2rgb_init_altivec(c);
+    } else if (ARCH_BFIN) {
         t = ff_yuv2rgb_get_func_ptr_bfin(c);
-#endif
+    }
 
     if (t)
         return t;
 
-    av_log(c, AV_LOG_WARNING, "No accelerated colorspace conversion found from %s to %s.\n", sws_format_name(c->srcFormat), sws_format_name(c->dstFormat));
+    av_log(c, AV_LOG_WARNING, "No accelerated colorspace conversion found from %s to %s.\n",
+           av_get_pix_fmt_name(c->srcFormat), av_get_pix_fmt_name(c->dstFormat));
 
     switch (c->dstFormat) {
     case PIX_FMT_BGR48BE:

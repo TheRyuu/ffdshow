@@ -797,7 +797,7 @@ SwsContext *sws_getContext(int srcW, int srcH, enum PixelFormat srcFormat,
     if (flags & SWS_CPU_CAPS_MMX)
         __asm__ volatile("emms\n\t"::: "memory");
 #endif
-    if (!rgb15to16) sws_rgb2rgb_init(flags);
+    if (!rgb15to16) sws_rgb2rgb_init();
 
     unscaled = (srcW == dstW && srcH == dstH);
 

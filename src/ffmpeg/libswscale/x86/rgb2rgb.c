@@ -6,20 +6,20 @@
  * Written by Nick Kurshev.
  * palette & YUV & runtime CPU stuff by Michael (michaelni@gmx.at)
  *
- * This file is part of Libav.
+ * This file is part of FFmpeg.
  *
- * Libav is free software; you can redistribute it and/or
+ * FFmpeg is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * Libav is distributed in the hope that it will be useful,
+ * FFmpeg is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with Libav; if not, write to the Free Software
+ * License along with FFmpeg; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -27,6 +27,7 @@
 
 #include "config.h"
 #include "libavutil/x86_cpu.h"
+#include "libavutil/cpu.h"
 #include "libavutil/bswap.h"
 #include "libswscale/rgb2rgb.h"
 #include "libswscale/swscale.h"
@@ -110,7 +111,7 @@ DECLARE_ASM_CONST(8, uint64_t, blue_15mask)  = 0x0000001f0000001fULL;
 #undef COMPILE_TEMPLATE_SSE2
 #undef COMPILE_TEMPLATE_AMD3DNOW
 #define COMPILE_TEMPLATE_MMX2 0
-#define COMPILE_TEMPLATE_SSE2 1
+#define COMPILE_TEMPLATE_SSE2 0
 #define COMPILE_TEMPLATE_AMD3DNOW 1
 #define RENAME(a) a ## _3DNOW
 #include "rgb2rgb_template.c"
@@ -122,16 +123,16 @@ DECLARE_ASM_CONST(8, uint64_t, blue_15mask)  = 0x0000001f0000001fULL;
  32-bit C version, and and&add trick by Michael Niedermayer
 */
 
-void rgb2rgb_init_x86(int flags)
+void rgb2rgb_init_x86(void)
 {
-#if HAVE_MMX2 || HAVE_AMD3DNOW || HAVE_MMX
-    if (flags & SWS_CPU_CAPS_SSE2)
-        rgb2rgb_init_SSE2();
-    else if (flags & SWS_CPU_CAPS_MMX2)
-        rgb2rgb_init_MMX2();
-    else if (flags & SWS_CPU_CAPS_3DNOW)
-        rgb2rgb_init_3DNOW();
-    else if (flags & SWS_CPU_CAPS_MMX)
+    int cpu_flags = av_get_cpu_flags();
+
+    if (HAVE_MMX      && cpu_flags & AV_CPU_FLAG_MMX)
         rgb2rgb_init_MMX();
-#endif /* HAVE_MMX2 || HAVE_AMD3DNOW || HAVE_MMX */
+    if (HAVE_AMD3DNOW && cpu_flags & AV_CPU_FLAG_3DNOW)
+        rgb2rgb_init_3DNOW();
+    if (HAVE_MMX2     && cpu_flags & AV_CPU_FLAG_MMX2)
+        rgb2rgb_init_MMX2();
+    if (HAVE_SSE      && cpu_flags & AV_CPU_FLAG_SSE2)
+        rgb2rgb_init_SSE2();
 }

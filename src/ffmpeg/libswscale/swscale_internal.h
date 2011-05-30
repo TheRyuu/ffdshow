@@ -170,9 +170,6 @@ typedef struct SwsContext {
 
     int dstY;                     ///< Last destination vertical line output from last slice.
     int flags;                    ///< Flags passed by the user to select scaler algorithm, optimizations, subsampling, etc...
-    
-    //SwsParams params; //Old FFDShow custom code
-    
     void * yuvTable;            // pointer to the yuv->rgb table start so it can be freed()
     uint8_t * table_rV[256];
     uint8_t * table_gU[256];
@@ -274,14 +271,14 @@ typedef struct SwsContext {
                         const int16_t *lumSrc, const int16_t *chrSrc, const int16_t *alpSrc,
                         uint8_t *dest,
                         uint8_t *uDest, uint8_t *vDest, uint8_t *aDest,
-                        long dstW, long chrDstW);
+                        int dstW, int chrDstW);
     void (*yuv2yuvX   )(struct SwsContext *c,
                         const int16_t *lumFilter, const int16_t **lumSrc, int lumFilterSize,
                         const int16_t *chrFilter, const int16_t **chrSrc, int chrFilterSize,
                         const int16_t **alpSrc,
                         uint8_t *dest,
                         uint8_t *uDest, uint8_t *vDest, uint8_t *aDest,
-                        long dstW, long chrDstW);
+                        int dstW, int chrDstW);
     void (*yuv2packed1)(struct SwsContext *c,
                         const uint16_t *buf0,
                         const uint16_t *uvbuf0, const uint16_t *uvbuf1,
@@ -298,17 +295,17 @@ typedef struct SwsContext {
                         const int16_t *lumFilter, const int16_t **lumSrc, int lumFilterSize,
                         const int16_t *chrFilter, const int16_t **chrSrc, int chrFilterSize,
                         const int16_t **alpSrc, uint8_t *dest,
-                        long dstW, long dstY);
+                        int dstW, int dstY);
 
     void (*lumToYV12)(uint8_t *dst, const uint8_t *src,
-                      long width, uint32_t *pal); ///< Unscaled conversion of luma plane to YV12 for horizontal scaler.
+                      int width, uint32_t *pal); ///< Unscaled conversion of luma plane to YV12 for horizontal scaler.
     void (*alpToYV12)(uint8_t *dst, const uint8_t *src,
-                      long width, uint32_t *pal); ///< Unscaled conversion of alpha plane to YV12 for horizontal scaler.
+                      int width, uint32_t *pal); ///< Unscaled conversion of alpha plane to YV12 for horizontal scaler.
     void (*chrToYV12)(uint8_t *dstU, uint8_t *dstV,
                       const uint8_t *src1, const uint8_t *src2,
-                      long width, uint32_t *pal); ///< Unscaled conversion of chroma planes to YV12 for horizontal scaler.
+                      int width, uint32_t *pal); ///< Unscaled conversion of chroma planes to YV12 for horizontal scaler.
     void (*hyscale_fast)(struct SwsContext *c,
-                         int16_t *dst, long dstWidth,
+                         int16_t *dst, int dstWidth,
                          const uint8_t *src, int srcW, int xInc);
     void (*hcscale_fast)(struct SwsContext *c,
                          int16_t *dst, long dstWidth,
@@ -317,7 +314,7 @@ typedef struct SwsContext {
 
     void (*hScale)(int16_t *dst, int dstW, const uint8_t *src, int srcW,
                    int xInc, const int16_t *filter, const int16_t *filterPos,
-                   long filterSize);
+                   int filterSize);
 
     void (*lumConvertRange)(int16_t *dst, int width); ///< Color range conversion function for luma plane if needed.
     void (*chrConvertRange)(int16_t *dst, int width); ///< Color range conversion function for chroma planes if needed.
@@ -357,8 +354,6 @@ void ff_yuv2packedX_altivec(SwsContext *c,
                             const int16_t *lumFilter, const int16_t **lumSrc, int lumFilterSize,
                             const int16_t *chrFilter, const int16_t **chrSrc, int chrFilterSize,
                             uint8_t *dest, int dstW, int dstY);
-
-const char *sws_format_name(enum PixelFormat format);
 
 //FIXME replace this with something faster
 #define is16BPS(x)      (           \
