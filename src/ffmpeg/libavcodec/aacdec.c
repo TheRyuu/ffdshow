@@ -315,6 +315,10 @@ static int decode_pce(AVCodecContext *avctx, MPEG4AudioConfig *m4ac,
     if (get_bits1(gb))
         skip_bits(gb, 3); // mixdown_coeff_index and pseudo_surround
 
+    if (get_bits_left(gb) < 4 * (num_front + num_side + num_back + num_lfe + num_assoc_data + num_cc)) {
+        av_log(avctx, AV_LOG_ERROR, overread_err);
+        return -1;
+    }
     decode_channel_map(new_che_pos[TYPE_CPE], new_che_pos[TYPE_SCE], AAC_CHANNEL_FRONT, gb, num_front);
     decode_channel_map(new_che_pos[TYPE_CPE], new_che_pos[TYPE_SCE], AAC_CHANNEL_SIDE,  gb, num_side );
     decode_channel_map(new_che_pos[TYPE_CPE], new_che_pos[TYPE_SCE], AAC_CHANNEL_BACK,  gb, num_back );
@@ -560,7 +564,7 @@ static av_cold int aac_decode_init(AVCodecContext *avctx)
 
     if (avctx->request_sample_fmt == AV_SAMPLE_FMT_FLT) {
         avctx->sample_fmt = AV_SAMPLE_FMT_FLT;
-        output_scale_factor = 1.0 / 32768.0;
+        output_scale_factor = 1.0; // / 32768.0;
     } else {
         avctx->sample_fmt = AV_SAMPLE_FMT_S16;
         output_scale_factor = 1.0;
@@ -2069,6 +2073,22 @@ static int parse_adts_frame_header(AACContext *ac, GetBitContext *gb)
     return size;
 }
 
+/* ffdshow custom code */ 	 
+void float_interleave(float *dst, const float **src, long len, int channels) 	 
+{ 	 
+   int i,j,c; 	 
+   if(channels==2){ 	 
+       for(i=0; i<len; i++){ 	 
+           dst[2*i]   = src[0][i] / 32768.0f; 	 
+           dst[2*i+1] = src[1][i] / 32768.0f; 	 
+       } 	 
+   }else{ 	 
+       for(c=0; c<channels; c++) 	 
+           for(i=0, j=c; i<len; i++, j+=channels) 	 
+               dst[j] = src[c][i] / 32768.0f; 	 
+   } 	 
+}
+
 static int aac_decode_frame_int(AVCodecContext *avctx, void *data,
                                 int *data_size, GetBitContext *gb)
 {
@@ -2188,7 +2208,7 @@ static int aac_decode_frame_int(AVCodecContext *avctx, void *data,
 
     if (samples) {
         if (avctx->sample_fmt == AV_SAMPLE_FMT_FLT)
-            ac->fmt_conv.float_interleave(data, (const float **)ac->output_data,
+            /*ac->fmt_conv.*/float_interleave(data, (const float **)ac->output_data,
                                           samples, avctx->channels);
         else
             ac->fmt_conv.float_to_int16_interleave(data, (const float **)ac->output_data,
