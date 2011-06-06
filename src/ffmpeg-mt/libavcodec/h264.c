@@ -246,72 +246,6 @@ static int ff_h264_decode_rbsp_trailing(H264Context *h, const uint8_t *src){
     return 0;
 }
 
-#if 0
-/**
- * DCT transforms the 16 dc values.
- * @param qp quantization parameter ??? FIXME
- */
-static void h264_luma_dc_dct_c(DCTELEM *block/*, int qp*/){
-//    const int qmul= dequant_coeff[qp][0];
-    int i;
-    int temp[16]; //FIXME check if this is a good idea
-    static const int x_offset[4]={0, 1*stride, 4* stride,  5*stride};
-    static const int y_offset[4]={0, 2*stride, 8* stride, 10*stride};
-
-    for(i=0; i<4; i++){
-        const int offset= y_offset[i];
-        const int z0= block[offset+stride*0] + block[offset+stride*4];
-        const int z1= block[offset+stride*0] - block[offset+stride*4];
-        const int z2= block[offset+stride*1] - block[offset+stride*5];
-        const int z3= block[offset+stride*1] + block[offset+stride*5];
-
-        temp[4*i+0]= z0+z3;
-        temp[4*i+1]= z1+z2;
-        temp[4*i+2]= z1-z2;
-        temp[4*i+3]= z0-z3;
-    }
-
-    for(i=0; i<4; i++){
-        const int offset= x_offset[i];
-        const int z0= temp[4*0+i] + temp[4*2+i];
-        const int z1= temp[4*0+i] - temp[4*2+i];
-        const int z2= temp[4*1+i] - temp[4*3+i];
-        const int z3= temp[4*1+i] + temp[4*3+i];
-
-        block[stride*0 +offset]= (z0 + z3)>>1;
-        block[stride*2 +offset]= (z1 + z2)>>1;
-        block[stride*8 +offset]= (z1 - z2)>>1;
-        block[stride*10+offset]= (z0 - z3)>>1;
-    }
-}
-#endif
-
-#undef xStride
-#undef stride
-
-#if 0
-static void chroma_dc_dct_c(DCTELEM *block){
-    const int stride= 16*2;
-    const int xStride= 16;
-    int a,b,c,d,e;
-
-    a= block[stride*0 + xStride*0];
-    b= block[stride*0 + xStride*1];
-    c= block[stride*1 + xStride*0];
-    d= block[stride*1 + xStride*1];
-
-    e= a-b;
-    a= a+b;
-    b= c-d;
-    c= c+d;
-
-    block[stride*0 + xStride*0]= (a+c);
-    block[stride*0 + xStride*1]= (e+b);
-    block[stride*1 + xStride*0]= (a-c);
-    block[stride*1 + xStride*1]= (e-b);
-}
-#endif
-
 static inline int get_lowest_part_list_y(H264Context *h, Picture *pic, int n, int height,
                                  int y_offset, int list){
     int raw_my= h->mv_cache[list][ scan8[n] ][1];
@@ -446,6 +380,72 @@ static void await_references(H264Context *h){
         }
     }
 }
+
+#if 0
+/**
+ * DCT transforms the 16 dc values.
+ * @param qp quantization parameter ??? FIXME
+ */
+static void h264_luma_dc_dct_c(DCTELEM *block/*, int qp*/){
+//    const int qmul= dequant_coeff[qp][0];
+    int i;
+    int temp[16]; //FIXME check if this is a good idea
+    static const int x_offset[4]={0, 1*stride, 4* stride,  5*stride};
+    static const int y_offset[4]={0, 2*stride, 8* stride, 10*stride};
+
+    for(i=0; i<4; i++){
+        const int offset= y_offset[i];
+        const int z0= block[offset+stride*0] + block[offset+stride*4];
+        const int z1= block[offset+stride*0] - block[offset+stride*4];
+        const int z2= block[offset+stride*1] - block[offset+stride*5];
+        const int z3= block[offset+stride*1] + block[offset+stride*5];
+
+        temp[4*i+0]= z0+z3;
+        temp[4*i+1]= z1+z2;
+        temp[4*i+2]= z1-z2;
+        temp[4*i+3]= z0-z3;
+    }
+
+    for(i=0; i<4; i++){
+        const int offset= x_offset[i];
+        const int z0= temp[4*0+i] + temp[4*2+i];
+        const int z1= temp[4*0+i] - temp[4*2+i];
+        const int z2= temp[4*1+i] - temp[4*3+i];
+        const int z3= temp[4*1+i] + temp[4*3+i];
+
+        block[stride*0 +offset]= (z0 + z3)>>1;
+        block[stride*2 +offset]= (z1 + z2)>>1;
+        block[stride*8 +offset]= (z1 - z2)>>1;
+        block[stride*10+offset]= (z0 - z3)>>1;
+    }
+}
+#endif
+
+#undef xStride
+#undef stride
+
+#if 0
+static void chroma_dc_dct_c(DCTELEM *block){
+    const int stride= 16*2;
+    const int xStride= 16;
+    int a,b,c,d,e;
+
+    a= block[stride*0 + xStride*0];
+    b= block[stride*0 + xStride*1];
+    c= block[stride*1 + xStride*0];
+    d= block[stride*1 + xStride*1];
+
+    e= a-b;
+    a= a+b;
+    b= c-d;
+    c= c+d;
+
+    block[stride*0 + xStride*0]= (a+c);
+    block[stride*0 + xStride*1]= (e+b);
+    block[stride*1 + xStride*0]= (a-c);
+    block[stride*1 + xStride*1]= (e-b);
+}
+#endif
 
 static inline void mc_dir_part(H264Context *h, Picture *pic, int n, int square, int chroma_height, int delta, int list,
                            uint8_t *dest_y, uint8_t *dest_cb, uint8_t *dest_cr,
@@ -654,7 +654,7 @@ static av_always_inline void hl_motion(H264Context *h, uint8_t *dest_y, uint8_t 
 
     assert(IS_INTER(mb_type));
 
-    if(HAVE_PTHREADS && s->avctx->active_thread_type&FF_THREAD_FRAME)
+    if(HAVE_PTHREADS && (s->avctx->active_thread_type & FF_THREAD_FRAME))
         await_references(h);
     prefetch_motion(h, 0, pixel_shift);
 
@@ -764,6 +764,7 @@ hl_motion_fn(1, 16);
 static void free_tables(H264Context *h, int free_rbsp){
     int i;
     H264Context *hx;
+
     av_freep(&h->intra4x4_pred_mode);
     av_freep(&h->chroma_pred_mode_table);
     av_freep(&h->cbp_table);
@@ -988,7 +989,7 @@ av_cold int ff_h264_decode_init(AVCodecContext *avctx){
 //    s->decode_mb= ff_h263_decode_mb;
     s->quarter_sample = 1;
     if(!avctx->has_b_frames)
-    s->low_delay= 1; 
+    s->low_delay= 1;
 
     avctx->chroma_sample_location = AVCHROMA_LOC_LEFT;
 
@@ -1124,7 +1125,8 @@ static int decode_update_thread_context(AVCodecContext *dst, const AVCodecContex
     copy_fields(h, h1, poc_lsb, redundant_pic_count);
 
     //reference lists
-    copy_fields(h, h1, ref_count, intra_gb);
+    copy_fields(h, h1, ref_count, list_count);
+    copy_fields(h, h1, ref_list,  intra_gb);
     copy_fields(h, h1, short_ref, cabac_init_idc);
 
     copy_picture_range(h->short_ref,   h1->short_ref,   32, s, s1);
@@ -1154,6 +1156,7 @@ int ff_h264_frame_start(H264Context *h){
     MpegEncContext * const s = &h->s;
     int i;
     const int pixel_shift = h->pixel_shift;
+    int thread_count = (s->avctx->active_thread_type & FF_THREAD_SLICE) ? s->avctx->thread_count : 1;
 
     if(MPV_frame_start(s, s->avctx) < 0)
         return -1;
@@ -1182,7 +1185,7 @@ int ff_h264_frame_start(H264Context *h){
 
     /* can't be in alloc_tables because linesize isn't known there.
      * FIXME: redo bipred weight to not require extra buffer? */
-    for(i = 0; i < s->avctx->thread_count; i++)
+    for(i = 0; i < thread_count; i++)
         if(h->thread_context[i] && !h->thread_context[i]->s.obmc_scratchpad)
             h->thread_context[i]->s.obmc_scratchpad = av_malloc(16*2*s->linesize + 8*2*s->uvlinesize);
 
@@ -1243,6 +1246,7 @@ static void decode_postinit(H264Context *h, int setup_finished){
 
     /* Signal interlacing information externally. */
     /* Prioritize picture timing SEI information over used decoding process if it exists. */
+
     if(h->sps.pic_struct_present_flag){
         switch (h->sei_pic_struct)
         {
@@ -1290,7 +1294,7 @@ static void decode_postinit(H264Context *h, int setup_finished){
         if(cur->interlaced_frame || h->sps.pic_struct_present_flag){
             /* Use picture timing SEI information. Even if it is a information of a past frame, better than nothing. */
             if(h->sei_pic_struct == SEI_PIC_STRUCT_TOP_BOTTOM
-               || h->sei_pic_struct == SEI_PIC_STRUCT_TOP_BOTTOM_TOP)
+              || h->sei_pic_struct == SEI_PIC_STRUCT_TOP_BOTTOM_TOP)
                 cur->top_field_first = 1;
             else
                 cur->top_field_first = 0;
@@ -3417,7 +3421,7 @@ static int decode_nal_units(H264Context *h, const uint8_t *buf, int buf_size){
         bit_length= !dst_length ? 0 : (8*dst_length - ff_h264_decode_rbsp_trailing(h, ptr + dst_length - 1));
 
         if(s->avctx->debug&FF_DEBUG_STARTCODE){
-            av_log(h->s.avctx, AV_LOG_DEBUG, "NAL %d/%d at %d/%d length %d\n", hx->nal_unit_type, hx->nal_ref_idc, buf_index, buf_size, dst_length);
+            av_log(h->s.avctx, AV_LOG_DEBUG, "NAL %d at %d/%d length %d\n", hx->nal_unit_type, buf_index, buf_size, dst_length);
         }
 
         if (h->is_avc && (nalsize != consumed) && nalsize){
@@ -3772,8 +3776,7 @@ AVCodec ff_h264_decoder = {
     ff_h264_decode_end,
     decode_frame,
     /*CODEC_CAP_DRAW_HORIZ_BAND |*/ CODEC_CAP_DR1 | CODEC_CAP_DELAY |
-        CODEC_CAP_FRAME_THREADS |
-        CODEC_CAP_SLICE_THREADS,
+        CODEC_CAP_SLICE_THREADS | CODEC_CAP_FRAME_THREADS,
     .flush= flush_dpb,
     .long_name = NULL_IF_CONFIG_SMALL("H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10"),
     .init_thread_copy      = ONLY_IF_THREADS_ENABLED(decode_init_thread_copy),

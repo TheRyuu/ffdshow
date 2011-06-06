@@ -3,20 +3,20 @@
  * Copyright (c) 2000,2001 Fabrice Bellard
  * Copyright (c) 2002-2010 Michael Niedermayer <michaelni@gmx.at>
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -397,14 +397,13 @@ int mpeg4_decode_video_packet_header(MpegEncContext *s)
         header_extension= get_bits1(&s->gb);
     }
     if(header_extension){
-        int time_increment;
         int time_incr=0;
 
         while (get_bits1(&s->gb) != 0)
             time_incr++;
 
         check_marker(&s->gb, "before time_increment in video packed header");
-        time_increment= get_bits(&s->gb, s->time_increment_bits);
+        skip_bits(&s->gb, s->time_increment_bits); /* time_increment */
         check_marker(&s->gb, "before vop_coding_type in video packed header");
 
         skip_bits(&s->gb, 2); /* vop coding type */
@@ -1492,7 +1491,7 @@ end:
         if(mpeg4_is_resync(s)){
             const int delta= s->mb_x + 1 == s->mb_width ? 2 : 1;
 
-            if(s->pict_type==AV_PICTURE_TYPE_B){
+            if(s->pict_type==AV_PICTURE_TYPE_B && s->next_picture.mbskip_table[xy + delta]){
                 ff_thread_await_progress((AVFrame*)s->next_picture_ptr,
                                         (s->mb_x + delta >= s->mb_width) ? FFMIN(s->mb_y+1, s->mb_height-1) : s->mb_y, 0);
             }
@@ -1811,16 +1810,14 @@ no_cplx_est:
 
         if (s->scalability) {
             GetBitContext bak= *gb;
-            int ref_layer_id;
-            int ref_layer_sampling_dir;
             int h_sampling_factor_n;
             int h_sampling_factor_m;
             int v_sampling_factor_n;
             int v_sampling_factor_m;
 
             s->hierachy_type= get_bits1(gb);
-            ref_layer_id= get_bits(gb, 4);
-            ref_layer_sampling_dir= get_bits1(gb);
+            skip_bits(gb, 4);  /* ref_layer_id */
+            skip_bits1(gb);    /* ref_layer_sampling_dir */
             h_sampling_factor_n= get_bits(gb, 5);
             h_sampling_factor_m= get_bits(gb, 5);
             v_sampling_factor_n= get_bits(gb, 5);
@@ -1999,15 +1996,13 @@ static int decode_vop_header(MpegEncContext *s, GetBitContext *gb){
 
      if (s->shape != RECT_SHAPE) {
          if (s->vol_sprite_usage != 1 || s->pict_type != AV_PICTURE_TYPE_I) {
-             int width, height, hor_spat_ref, ver_spat_ref;
-
-             width = get_bits(gb, 13);
+             skip_bits(gb, 13); /* width */
              skip_bits1(gb);   /* marker */
-             height = get_bits(gb, 13);
+             skip_bits(gb, 13); /* height */
              skip_bits1(gb);   /* marker */
-             hor_spat_ref = get_bits(gb, 13); /* hor_spat_ref */
+             skip_bits(gb, 13); /* hor_spat_ref */
              skip_bits1(gb);   /* marker */
-             ver_spat_ref = get_bits(gb, 13); /* ver_spat_ref */
+             skip_bits(gb, 13); /* ver_spat_ref */
          }
          skip_bits1(gb); /* change_CR_disable */
 
