@@ -35,6 +35,8 @@
 
 #define MAX_FILTER_SIZE 256
 
+#define DITHER1XBPP
+
 #if HAVE_BIGENDIAN
 #define ALT32_CORR (-1)
 #else
@@ -208,6 +210,8 @@ typedef struct SwsContext {
 #define ALP_MMX_FILTER_OFFSET "11*8+4*4*256*2+48"
 #define UV_OFF                "11*8+4*4*256*3+48"
 #define UV_OFFx2              "11*8+4*4*256*3+56"
+#define DITHER16              "11*8+4*4*256*3+64"
+#define DITHER32              "11*8+4*4*256*3+64+16"
 
     DECLARE_ALIGNED(8, uint64_t, redDither);
     DECLARE_ALIGNED(8, uint64_t, greenDither);
@@ -232,6 +236,8 @@ typedef struct SwsContext {
     int32_t  alpMmxFilter[4*MAX_FILTER_SIZE];
     DECLARE_ALIGNED(8, ptrdiff_t, uv_off); ///< offset (in pixels) between u and v planes
     DECLARE_ALIGNED(8, ptrdiff_t, uv_offx2); ///< offset (in bytes) between u and v planes
+    uint16_t dither16[8];
+    uint32_t dither32[8];
 
 #if HAVE_ALTIVEC
     vector signed short   CY;
@@ -268,13 +274,13 @@ typedef struct SwsContext {
                         const int16_t *chrFilter, const int16_t **chrUSrc,
                         const int16_t **chrVSrc, int chrFilterSize,
                         uint8_t *dest, uint8_t *uDest,
-                        int dstW, int chrDstW, int dstFormat);
+                        int dstW, int chrDstW, int dstFormat, const uint8_t *lumDither, const uint8_t *chrDither);
     void (*yuv2yuv1   )(struct SwsContext *c,
                         const int16_t *lumSrc, const int16_t *chrUSrc,
                         const int16_t *chrVSrc, const int16_t *alpSrc,
                         uint8_t *dest,
                         uint8_t *uDest, uint8_t *vDest, uint8_t *aDest,
-                        int dstW, int chrDstW);
+                        int dstW, int chrDstW, const uint8_t *lumDither, const uint8_t *chrDither);
     void (*yuv2yuvX   )(struct SwsContext *c,
                         const int16_t *lumFilter, const int16_t **lumSrc, int lumFilterSize,
                         const int16_t *chrFilter, const int16_t **chrUSrc,
@@ -282,7 +288,7 @@ typedef struct SwsContext {
                         const int16_t **alpSrc,
                         uint8_t *dest,
                         uint8_t *uDest, uint8_t *vDest, uint8_t *aDest,
-                        int dstW, int chrDstW);
+                        int dstW, int chrDstW, const uint8_t *lumDither, const uint8_t *chrDither);
     void (*yuv2packed1)(struct SwsContext *c,
                         const uint16_t *buf0,
                         const uint16_t *ubuf0, const uint16_t *ubuf1,
@@ -355,17 +361,23 @@ int ff_yuv2rgb_c_init_tables(SwsContext *c, const int inv_table[4],
 
 void ff_yuv2rgb_init_tables_altivec(SwsContext *c, const int inv_table[4],
                                     int brightness, int contrast, int saturation);
+void updateMMXDitherTables(SwsContext *c, int dstY, int lumBufIndex, int chrBufIndex,
+                           int lastInLumBuf, int lastInChrBuf);
+
 SwsFunc ff_yuv2rgb_init_mmx(SwsContext *c);
 SwsFunc ff_yuv2rgb_init_vis(SwsContext *c);
 SwsFunc ff_yuv2rgb_init_mlib(SwsContext *c);
 SwsFunc ff_yuv2rgb_init_altivec(SwsContext *c);
 SwsFunc ff_yuv2rgb_get_func_ptr_bfin(SwsContext *c);
 void ff_bfin_get_unscaled_swscale(SwsContext *c);
-void ff_yuv2packedX_altivec(SwsContext *c, const int16_t *lumFilter,
-                            const int16_t **lumSrc, int lumFilterSize,
-                            const int16_t *chrFilter, const int16_t **chrUSrc,
-                            const int16_t **chrVSrc, int chrFilterSize,
-                            uint8_t *dest, int dstW, int dstY);
+
+#if FF_API_SWS_FORMAT_NAME
+/**
+ * @deprecated Use av_get_pix_fmt_name() instead.
+ */
+attribute_deprecated
+const char *sws_format_name(enum PixelFormat format);
+#endif
 
 //FIXME replace this with something faster
 #define is16BPS(x)      (           \
@@ -496,10 +508,20 @@ void ff_yuv2packedX_altivec(SwsContext *c, const int16_t *lumFilter,
         || (x)==PIX_FMT_GRAY8A      \
         || (x)==PIX_FMT_YUVA420P    \
     )
+#define isPacked(x)         (       \
+           (x)==PIX_FMT_PAL8        \
+        || (x)==PIX_FMT_YUYV422     \
+        || (x)==PIX_FMT_UYVY422     \
+        || (x)==PIX_FMT_Y400A       \
+        || isAnyRGB(x)              \
+    )
 #define usePal(x) ((av_pix_fmt_descriptors[x].flags & PIX_FMT_PAL) || (x) == PIX_FMT_GRAY8A)
 
 extern const uint64_t ff_dither4[2];
 extern const uint64_t ff_dither8[2];
+extern const uint8_t dithers[8][8][8];
+extern uint16_t dither_scale[15][16];
+
 
 //FFDShow  modification
 //extern const AVClass sws_context_class;
@@ -510,10 +532,15 @@ extern const uint64_t ff_dither8[2];
  */
 void ff_get_unscaled_swscale(SwsContext *c);
 
+void ff_swscale_get_unscaled_altivec(SwsContext *c);
+
 /**
  * Returns function pointer to fastest main scaler path function depending
  * on architecture and available optimizations.
  */
 SwsFunc ff_getSwsFunc(SwsContext *c);
+
+void ff_sws_init_swScale_altivec(SwsContext *c);
+void ff_sws_init_swScale_mmx(SwsContext *c);
 
 #endif /* SWSCALE_SWSCALE_INTERNAL_H */
