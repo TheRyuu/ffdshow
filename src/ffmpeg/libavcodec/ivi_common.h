@@ -3,20 +3,20 @@
  *
  * Copyright (c) 2009 Maxim Poliakovski
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -32,8 +32,6 @@
 #include "avcodec.h"
 #include "get_bits.h"
 #include <stdint.h>
-
-#define IVI_DEBUG 0
 
 #define IVI_VLC_BITS 13 ///< max number of bits of the ivi's huffman codes
 
@@ -221,7 +219,7 @@ static inline int ivi_scale_mv(int mv, int mv_scale)
 
 /**
  *  Generate a huffman codebook from the given descriptor
- *  and convert it into the FFmpeg VLC table.
+ *  and convert it into the Libav VLC table.
  *
  *  @param[in]   cb    pointer to codebook descriptor
  *  @param[out]  vlc   where to place the generated VLC table
@@ -340,7 +338,6 @@ void ff_ivi_process_empty_tile(AVCodecContext *avctx, IVIBandDesc *band,
  */
 void ff_ivi_output_plane(IVIPlaneDesc *plane, uint8_t *dst, int dst_pitch);
 
-#if IVI_DEBUG
 /**
  *  Calculate band checksum from band data.
  */
@@ -350,6 +347,5 @@ uint16_t ivi_calc_band_checksum (IVIBandDesc *band);
  *  Verify that band data lies in range.
  */
 int ivi_check_band (IVIBandDesc *band, const uint8_t *ref, int pitch);
-#endif
 
 #endif /* AVCODEC_IVI_COMMON_H */

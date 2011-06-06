@@ -23,6 +23,7 @@
 #include "mpegvideo.h"
 #include "mpeg4video.h"
 #include "h263.h"
+#include "thread.h"
 
 // The defines below define the number of bits that are read at once for
 // reading vlc values. Changing these may improve speed and data cache needs
@@ -373,7 +374,13 @@ int mpeg4_decode_video_packet_header(MpegEncContext *s)
         return -1;
     }
     if(s->pict_type == AV_PICTURE_TYPE_B){
-        while(s->next_picture.mbskip_table[ s->mb_index2xy[ mb_num ] ]) mb_num++;
+        int mb_x = 0, mb_y = 0;
+
+        while(s->next_picture.mbskip_table[ s->mb_index2xy[ mb_num ] ]) {
+            if (!mb_x) ff_thread_await_progress((AVFrame*)s->next_picture_ptr, mb_y++, 0);
+            mb_num++;
+            if (++mb_x == s->mb_width) mb_x = 0;
+        }
         if(mb_num >= s->mb_num) return -1; // slice contains just skipped MBs which where already decoded
     }
 
@@ -390,14 +397,13 @@ int mpeg4_decode_video_packet_header(MpegEncContext *s)
         header_extension= get_bits1(&s->gb);
     }
     if(header_extension){
-        int time_increment;
         int time_incr=0;
 
         while (get_bits1(&s->gb) != 0)
             time_incr++;
 
         check_marker(&s->gb, "before time_increment in video packed header");
-        time_increment= get_bits(&s->gb, s->time_increment_bits);
+        skip_bits(&s->gb, s->time_increment_bits); /* time_increment */
         check_marker(&s->gb, "before vop_coding_type in video packed header");
 
         skip_bits(&s->gb, 2); /* vop coding type */
@@ -1303,6 +1309,8 @@ static int mpeg4_decode_mb(MpegEncContext *s,
                 s->last_mv[i][1][0]=
                 s->last_mv[i][1][1]= 0;
             }
+
+            ff_thread_await_progress((AVFrame*)s->next_picture_ptr, s->mb_y, 0);
         }
 
         /* if we skipped it in the future P Frame than skip it now too */
@@ -1482,6 +1490,12 @@ end:
     if(s->codec_id==CODEC_ID_MPEG4){
         if(mpeg4_is_resync(s)){
             const int delta= s->mb_x + 1 == s->mb_width ? 2 : 1;
+
+            if(s->pict_type==AV_PICTURE_TYPE_B && s->next_picture.mbskip_table[xy + delta]){
+                ff_thread_await_progress((AVFrame*)s->next_picture_ptr,
+                                        (s->mb_x + delta >= s->mb_width) ? FFMIN(s->mb_y+1, s->mb_height-1) : s->mb_y, 0);
+            }
+
             if(s->pict_type==AV_PICTURE_TYPE_B && s->next_picture.mbskip_table[xy + delta])
                 return SLICE_OK;
             return SLICE_END;
@@ -1796,16 +1810,14 @@ no_cplx_est:
 
         if (s->scalability) {
             GetBitContext bak= *gb;
-            int ref_layer_id;
-            int ref_layer_sampling_dir;
             int h_sampling_factor_n;
             int h_sampling_factor_m;
             int v_sampling_factor_n;
             int v_sampling_factor_m;
 
             s->hierachy_type= get_bits1(gb);
-            ref_layer_id= get_bits(gb, 4);
-            ref_layer_sampling_dir= get_bits1(gb);
+            skip_bits(gb, 4);  /* ref_layer_id */
+            skip_bits1(gb);    /* ref_layer_sampling_dir */
             h_sampling_factor_n= get_bits(gb, 5);
             h_sampling_factor_m= get_bits(gb, 5);
             v_sampling_factor_n= get_bits(gb, 5);
@@ -1984,15 +1996,13 @@ static int decode_vop_header(MpegEncContext *s, GetBitContext *gb){
 
      if (s->shape != RECT_SHAPE) {
          if (s->vol_sprite_usage != 1 || s->pict_type != AV_PICTURE_TYPE_I) {
-             int width, height, hor_spat_ref, ver_spat_ref;
-
-             width = get_bits(gb, 13);
+             skip_bits(gb, 13); /* width */
              skip_bits1(gb);   /* marker */
-             height = get_bits(gb, 13);
+             skip_bits(gb, 13); /* height */
              skip_bits1(gb);   /* marker */
-             hor_spat_ref = get_bits(gb, 13); /* hor_spat_ref */
+             skip_bits(gb, 13); /* hor_spat_ref */
              skip_bits1(gb);   /* marker */
-             ver_spat_ref = get_bits(gb, 13); /* ver_spat_ref */
+             skip_bits(gb, 13); /* ver_spat_ref */
          }
          skip_bits1(gb); /* change_CR_disable */
 
@@ -2245,9 +2255,10 @@ AVCodec ff_mpeg4_decoder = {
     NULL,
     ff_h263_decode_end,
     ff_h263_decode_frame,
-    CODEC_CAP_DRAW_HORIZ_BAND | CODEC_CAP_DR1 | CODEC_CAP_TRUNCATED | CODEC_CAP_DELAY,
+    CODEC_CAP_DRAW_HORIZ_BAND | CODEC_CAP_DR1 | CODEC_CAP_TRUNCATED | CODEC_CAP_DELAY | CODEC_CAP_FRAME_THREADS,
     .flush= ff_mpeg_flush,
     .max_lowres= 3,
     .long_name= NULL_IF_CONFIG_SMALL("MPEG-4 part 2"),
     .pix_fmts= ff_hwaccel_pixfmt_list_420,
+    .update_thread_context= ONLY_IF_THREADS_ENABLED(ff_mpeg_update_thread_context)
 };

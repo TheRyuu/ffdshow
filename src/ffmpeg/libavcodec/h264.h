@@ -474,6 +474,7 @@ typedef struct H264Context{
      * Used to parse AVC variant of h264
      */
     int is_avc; ///< this flag is != 0 if codec is avc1
+    int got_avcC; ///< flag used to parse avcC data only once
     int nal_length_size; ///< Number of bytes used for nal length (1, 2 or 4)
     int got_first; ///< this flag is != 0 if we've parsed a frame
 
@@ -513,7 +514,9 @@ typedef struct H264Context{
     Picture *long_ref[32];
     Picture default_ref_list[2][32]; ///< base reference list for all slices of a coded picture
     Picture *delayed_pic[MAX_DELAYED_PIC_COUNT+2]; //FIXME size?
+    Picture *next_output_pic;
     int outputed_poc;
+    int next_outputed_poc;
 
     /**
      * memory management control operations buffer.

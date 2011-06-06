@@ -275,9 +275,11 @@ SRCS_C=\
     \
     libswscale/rgb2rgb.c \
     libswscale/swscale.c \
+    libswscale/swscale_unscaled.c \
     libswscale/swutils.c \
     libswscale/yuv2rgb.c \
     libswscale/sww32thread.c \
+    libswscale/x86/swscale_mmx.c \
     libswscale/x86/rgb2rgb.c \
     libswscale/x86/yuv2rgb_mmx.c \
     \
@@ -310,6 +312,7 @@ SRCS_YASM=\
     libavcodec/x86/h264_deblock.asm \
     libavcodec/x86/h264_deblock_10bit.asm \
     libavcodec/x86/h264_idct.asm \
+    libavcodec/x86/h264_idct_10bit.asm \
     libavcodec/x86/h264_intrapred.asm \
     libavcodec/x86/h264_weight.asm \
     libavcodec/x86/vc1dsp_yasm.asm \

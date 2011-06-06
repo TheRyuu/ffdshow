@@ -3,20 +3,20 @@
  *
  * Copyright (c) 2008 Vladimir Voroshilov
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -109,7 +109,7 @@ void ff_celp_lp_synthesis_filterf(float *out, const float *filter_coeffs,
     old_out2 = out[-2];
     old_out3 = out[-1];
     for (n = 0; n <= buffer_length - 4; n+=4) {
-        float tmp0,tmp1,tmp2,tmp3;
+        float tmp0,tmp1,tmp2;
         float val;
 
         out0 = in[0];
@@ -160,7 +160,6 @@ void ff_celp_lp_synthesis_filterf(float *out, const float *filter_coeffs,
         tmp0 = out0;
         tmp1 = out1;
         tmp2 = out2;
-        tmp3 = out3;
 
         out3 -= a * tmp2;
         out2 -= a * tmp1;
