@@ -280,7 +280,7 @@ DECLARE_ALIGNED(8, const uint8_t, dithers)[8][8][8]={
 
 static const uint8_t flat64[8]={64,64,64,64,64,64,64,64};
 
-uint16_t dither_scale[15][16]={
+const uint16_t dither_scale[15][16]={
 {    2,    3,    3,    5,    5,    5,    5,    5,    5,    5,    5,    5,    5,    5,    5,    5,},
 {    2,    3,    7,    7,   13,   13,   25,   25,   25,   25,   25,   25,   25,   25,   25,   25,},
 {    3,    3,    4,   15,   15,   29,   57,   57,   57,  113,  113,  113,  113,  113,  113,  113,},
@@ -1699,9 +1699,9 @@ static inline void hcscale(SwsContext *c, uint16_t *dst1, uint16_t *dst2, int ds
 #define DEBUG_SWSCALE_BUFFERS 0
 #define DEBUG_BUFFERS(...) if (DEBUG_SWSCALE_BUFFERS) av_log(c, AV_LOG_DEBUG, __VA_ARGS__)
 
-static int swScale(SwsContext *c, const uint8_t* src[],
-                   int srcStride[], int srcSliceY,
-                   int srcSliceH, uint8_t* dst[], int dstStride[])
+static int swScaleMod(SwsContext *c, const uint8_t* src[],
+                   stride_t srcStride[], int srcSliceY,
+                   int srcSliceH, uint8_t* dst[], stride_t dstStride[], int dstYstart, int dstYend)
 {
     /* load a few things into local vars to make the code more readable? and faster */
     const int srcW= c->srcW;
@@ -1713,6 +1713,7 @@ static int swScale(SwsContext *c, const uint8_t* src[],
     const int chrXInc= c->chrXInc;
     const enum PixelFormat dstFormat= c->dstFormat;
     const int flags= c->flags;
+    const SwsParams params= c->params; //FFDShow custom code
     int16_t *vLumFilterPos= c->vLumFilterPos;
     int16_t *vChrFilterPos= c->vChrFilterPos;
     int16_t *hLumFilterPos= c->hLumFilterPos;
@@ -1742,7 +1743,9 @@ static int swScale(SwsContext *c, const uint8_t* src[],
     int should_dither= isNBPS(c->srcFormat) || is16BPS(c->srcFormat);
 
     /* vars which will change and which we need to store back in the context */
-    int dstY= c->dstY;
+    //FFDShow modification for multithreading
+    //int dstY= c->dstY;
+    int dstY= dstYstart;
     int lumBufIndex= c->lumBufIndex;
     int chrBufIndex= c->chrBufIndex;
     int lastInLumBuf= c->lastInLumBuf;
@@ -1784,14 +1787,17 @@ static int swScale(SwsContext *c, const uint8_t* src[],
     if (srcSliceY ==0) {
         lumBufIndex=-1;
         chrBufIndex=-1;
-        dstY=0;
+        //FFDShow modification : moved to swScale()
+        //dstY=0;
         lastInLumBuf= -1;
         lastInChrBuf= -1;
     }
 
     lastDstY= dstY;
 
-    for (;dstY < dstH; dstY++) {
+    //FFDShow modification
+    //for (;dstY < dstH; dstY++) {
+    for (;dstY < dstYend; dstY++) {
         unsigned char *dest =dst[0]+dstStride[0]*dstY;
         const int chrDstY= dstY>>c->chrDstVSubSample;
         unsigned char *uDest=dst[1]+dstStride[1]*chrDstY;
@@ -1851,6 +1857,8 @@ static int swScale(SwsContext *c, const uint8_t* src[],
             DEBUG_BUFFERS("\t\tlumBufIndex %d: lastInLumBuf: %d\n",
                                lumBufIndex,    lastInLumBuf);
         }
+        //FIXME : FFDShow modification
+        if (src[1] != NULL)
         while(lastInChrBuf < lastChrSrcY) {
             const uint8_t *src1= src[1]+(lastInChrBuf + 1 - chrSrcSliceY)*srcStride[1];
             const uint8_t *src2= src[2]+(lastInChrBuf + 1 - chrSrcSliceY)*srcStride[2];
@@ -1889,7 +1897,7 @@ static int swScale(SwsContext *c, const uint8_t* src[],
                 c->yuv2nv12X(c,
                              vLumFilter+dstY*vLumFilterSize   , lumSrcPtr, vLumFilterSize,
                              vChrFilter+chrDstY*vChrFilterSize, chrUSrcPtr, chrVSrcPtr, vChrFilterSize,
-                             dest, uDest, dstW, chrDstW, dstFormat, lumDither, chrDither);
+                             dest, /*uDest*/dstY&chrSkipMask?NULL:dst[1]+dstStride[1]*chrDstY, dstW, chrDstW, dstFormat, lumDither, chrDither); //FFDShow modification replaced uDest
             } else if (isPlanarYUV(dstFormat) || dstFormat==PIX_FMT_GRAY8) { //YV12 like
                 const int chrSkipMask= (1<<c->chrDstVSubSample)-1;
                 if ((dstY&chrSkipMask) || isGray(dstFormat)) uDest=vDest= NULL; //FIXME split functions in lumi / chromi
@@ -1975,7 +1983,7 @@ static int swScale(SwsContext *c, const uint8_t* src[],
                             lumSrcPtr, vLumFilterSize,
                             vChrFilter+chrDstY*vChrFilterSize,
                             chrUSrcPtr, chrVSrcPtr, vChrFilterSize,
-                            dest, uDest, dstW, chrDstW, dstFormat, lumDither, chrDither);
+                            dest, /*uDest*/dstY&chrSkipMask?NULL:dst[1]+dstStride[1]*chrDstY, dstW, chrDstW, dstFormat, lumDither, chrDither); //FFDShow modification replaced uDest
             } else if (isPlanarYUV(dstFormat) || dstFormat==PIX_FMT_GRAY8) { //YV12
                 const int chrSkipMask= (1<<c->chrDstVSubSample)-1;
                 if ((dstY&chrSkipMask) || isGray(dstFormat)) uDest=vDest= NULL; //FIXME split functions in lumi / chromi
@@ -2027,6 +2035,55 @@ static int swScale(SwsContext *c, const uint8_t* src[],
     c->lastInChrBuf= lastInChrBuf;
 
     return dstY - lastDstY;
+}
+
+int sws_thread_work_c(SwsContext *c)		// Thread func
+{
+	SwsThreadParam *stp= &c->stp;
+	return swScaleMod(c, stp->src, stp->srcStride, stp->srcSliceY,
+			stp->srcSliceH, stp->dst, stp->dstStride, stp->dstYstart, stp->dstYend);
+}
+
+static int swScale(SwsContext *c, const uint8_t* src[], stride_t srcStride[], int srcSliceY,
+             int srcSliceH, uint8_t* dst[], stride_t dstStride[])
+{
+	int dstLines;
+	int i;
+	int lastDstY;
+	int processedLines=0;
+
+	if(srcSliceY==0) c->dstY= 0;
+
+	if (c->thread_count==1)
+	{
+		return swScaleMod(c,src,srcStride,srcSliceY,
+			srcSliceH,dst,dstStride,c->dstY,c->dstH);
+	}
+	else
+	{
+		lastDstY= c->dstY;
+		c[0].stp.dstYstart= c->dstY;
+		dstLines= (c->dstH-c->dstY)/c->thread_count;
+		c[0].stp.dstYend= c->dstY + dstLines;
+		for (i=0; i<c->thread_count; i++){
+			c[i].stp.c= &c[i];
+			c[i].stp.src= src;
+			c[i].stp.srcStride= srcStride;
+			c[i].stp.srcSliceY= srcSliceY;
+			c[i].stp.srcSliceH= srcSliceH;
+			c[i].stp.dst= dst;
+			c[i].stp.dstStride= dstStride;
+			c[i].stp.dstYstart= c[0].stp.dstYstart+dstLines*i;// +2*i; //(+2*i makes green or black line in the middle of screen; test item to see multihreading)
+			c[i].stp.dstYend  = c[0].stp.dstYend+  dstLines*i;
+		}
+		c[c->thread_count-1].stp.dstYend= c->dstH;
+		c->execute(c, sws_thread_work_c, c->ret, c->thread_count);
+		for (i=0; i<c->thread_count; i++){
+			processedLines +=c->ret[i];
+		}
+		c->dstY= lastDstY+processedLines;
+		return processedLines;
+	}
 }
 
 static void sws_init_swScale_c(SwsContext *c)
