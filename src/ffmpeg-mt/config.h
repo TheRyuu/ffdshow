@@ -13,7 +13,7 @@
 	#define ARCH_X86 1
 
 	#ifdef ARCH_X86_64
-		#define ARCH_X86_32 0
+	  #define ARCH_X86_32 0
 		#define ARCH_X86_64 1
 		#define HAVE_FAST_64BIT 1
 		#define HAVE_STRUCT_TIMESPEC 1
@@ -130,7 +130,7 @@
   #define HAVE_LLRINT 0
   #define HAVE_LLRINTF 0
   #define HAVE_LOG2 1
-  #define HAVE_LOG2F 1
+  #define HAVE_LOG2F 1  
   #define HAVE_LRINT 0
   #define HAVE_LRINTF 0
   #define HAVE_ROUND 0
@@ -331,6 +331,7 @@ Note: when adding a new codec, you have to:
 
 #define CONFIG_AC3_ENCODER 0
 #define CONFIG_AC3_FIXED_ENCODER 0
+#define CONFIG_EAC3_ENCODER 0
 
 #define CONFIG_AAC_PARSER 0
 #define CONFIG_AC3_PARSER 0
