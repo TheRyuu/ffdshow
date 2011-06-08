@@ -75,8 +75,7 @@ static void copyPlane(const uint8_t *src, stride_t srcStride,
 static int planarToNv12Wrapper(SwsContext *c, const uint8_t* src[], stride_t srcStride[], int srcSliceY,
                                int srcSliceH, uint8_t* dstParam[], stride_t dstStride[])
 {
-    //FFDShow modification
-    uint8_t *dst = dstParam[1];// + dstStride[1]*srcSliceY/2;
+    uint8_t *dst = dstParam[1]; // FFDShow custom code (r972)
 
     copyPlane(src[0], srcStride[0], srcSliceY, srcSliceH, c->srcW,
               dstParam[0], dstStride[0]);
