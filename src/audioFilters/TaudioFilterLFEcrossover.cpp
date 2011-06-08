@@ -152,7 +152,7 @@ HRESULT TaudioFilterLFEcrossover::process(TfilterQueue::iterator it,TsampleForma
             } else {
                 break;
             }
-            out[lfei]=out[lfei]+gain*TfirFilter::firfilter(LFE_buf,lfe_pos,lenLFE,lenLFE,filter_coefs_lfe);
+			out[lfei]=(out[lfei]+gain*TfirFilter::firfilter(LFE_buf,lfe_pos,lenLFE,lenLFE,filter_coefs_lfe)) * 0.7071067811865476; // sqrt(1/2)
             if (cfg->cutLR) {
                 if (li != -1) {
                     LFE_bufL[lfe_posL]=in[li];
