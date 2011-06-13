@@ -3452,9 +3452,8 @@ static int decode_nal_units(H264Context *h, const uint8_t *buf, int buf_size){
             continue;
         }
 
-        /* ffdshow custom code */
         //FIXME do not discard SEI id
-        if(avctx->skip_frame >= AVDISCARD_NONREF && hx->nal_ref_idc  == 0)
+        if(avctx->skip_frame >= AVDISCARD_NONREF && h->nal_ref_idc  == 0)
             continue;
 
       again:
