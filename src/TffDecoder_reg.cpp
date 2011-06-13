@@ -47,7 +47,7 @@ DEFINE_GUID(CLSID_DWSTRINGA, 0x8e9922f0, 0xb775, 0x45b8, 0xb6, 0x50, 0x94, 0x1b,
 // {A0606860-51BE-4cf6-99C0-7CE5F78AC2D8}
 DEFINE_GUID(CLSID_DWSTRINGW, 0xa0606860, 0x51be, 0x4cf6, 0x99, 0xc0, 0x7c, 0xe5, 0xf7, 0x8a, 0xc2, 0xd8);
 
-
+// These lowercase FourCCs are used only for the mediatype registration below
 #define FOURCC_xvid mmioFOURCC('x','v','i','d')
 #define FOURCC_divx mmioFOURCC('d','i','v','x')
 #define FOURCC_dx50 mmioFOURCC('d','x','5','0')
@@ -58,7 +58,6 @@ DEFINE_GUID(CLSID_DWSTRINGW, 0xa0606860, 0x51be, 0x4cf6, 0x99, 0xc0, 0x7c, 0xe5,
 #define FOURCC_mp41 mmioFOURCC('m','p','4','1')
 #define FOURCC_mp4v mmioFOURCC('m','p','4','v')
 #define FOURCC_mp4s mmioFOURCC('m','p','4','s')
-#define FOURCC_sedg mmioFOURCC('s','e','d','g')
 #define FOURCC_wmv1 mmioFOURCC('w','m','v','1')
 #define FOURCC_wmv2 mmioFOURCC('w','m','v','2')
 #define FOURCC_wmv3 mmioFOURCC('w','m','v','3')
@@ -78,22 +77,13 @@ DEFINE_GUID(CLSID_DWSTRINGW, 0xa0606860, 0x51be, 0x4cf6, 0x99, 0xc0, 0x7c, 0xe5,
 #define FOURCC_mpg2 mmioFOURCC('m','p','g','2')
 #define FOURCC_mjpg mmioFOURCC('m','j','p','g')
 #define FOURCC_mjpa mmioFOURCC('m','j','p','a')
-//#define FOURCC_mjpb mmioFOURCC('m','j','p','b')
 #define FOURCC_dvsd mmioFOURCC('d','v','s','d')
 #define FOURCC_dv25 mmioFOURCC('d','v','2','5')
 #define FOURCC_dv50 mmioFOURCC('d','v','5','0')
-#define FOURCC_cdvc mmioFOURCC('c','d','v','c')
-#define FOURCC_cdv5 mmioFOURCC('c','d','v','5')
-#define FOURCC_dvis mmioFOURCC('d','v','i','s')
-#define FOURCC_pdvc mmioFOURCC('p','d','v','c')
 #define FOURCC_vp31 mmioFOURCC('v','p','3','1')
 #define FOURCC_tscc mmioFOURCC('t','s','c','c')
 #define FOURCC_cram mmioFOURCC('c','r','a','m')
-#define FOURCC_avrn mmioFOURCC('a','v','r','n')
-#define FOURCC_cavs mmioFOURCC('c','a','v','s')
-#define FOURCC_em2v mmioFOURCC('e','m','2','v')
 #define FOURCC_fps1 mmioFOURCC('f','p','s','1')
-#define FOURCC_mmes mmioFOURCC('m','m','e','s')
 #define FOURCC_wmvp mmioFOURCC('w','m','v','p')
 #define FOURCC_wvp2 mmioFOURCC('w','v','p','2')
 
@@ -103,10 +93,6 @@ DEFINE_GUID_FOURCC(DIVX)
 DEFINE_GUID_FOURCC(divx)
 DEFINE_GUID_FOURCC(DX50)
 DEFINE_GUID_FOURCC(dx50)
-//DEFINE_GUID_FOURCC(H264) moved to ffdshow_mediaguids.h to be used outside of this file.
-//DEFINE_GUID_FOURCC(h264)
-//DEFINE_GUID_FOURCC(AVC1)
-//DEFINE_GUID_FOURCC(avc1)
 DEFINE_GUID_FOURCC(H263)
 DEFINE_GUID_FOURCC(h263)
 DEFINE_GUID_FOURCC(DIV3)
@@ -121,8 +107,6 @@ DEFINE_GUID_FOURCC(MP4V)
 DEFINE_GUID_FOURCC(mp4v)
 DEFINE_GUID_FOURCC(MP4S)
 DEFINE_GUID_FOURCC(mp4s)
-DEFINE_GUID_FOURCC(SEDG)
-DEFINE_GUID_FOURCC(sedg)
 DEFINE_GUID_FOURCC(WMV1)
 DEFINE_GUID_FOURCC(wmv1)
 DEFINE_GUID_FOURCC(WMV2)
@@ -162,38 +146,20 @@ DEFINE_GUID_FOURCC(MJPG)
 DEFINE_GUID_FOURCC(mjpg)
 DEFINE_GUID_FOURCC(MJPA)
 DEFINE_GUID_FOURCC(mjpa)
-//DEFINE_GUID_FOURCC(MJPB)
-//DEFINE_GUID_FOURCC(mjpb)
 DEFINE_GUID_FOURCC(DVSD)
 DEFINE_GUID_FOURCC(dvsd)
 DEFINE_GUID_FOURCC(DV25)
 DEFINE_GUID_FOURCC(dv25)
 DEFINE_GUID_FOURCC(DV50)
 DEFINE_GUID_FOURCC(dv50)
-DEFINE_GUID_FOURCC(CDVC)
-DEFINE_GUID_FOURCC(cdvc)
-DEFINE_GUID_FOURCC(CDV5)
-DEFINE_GUID_FOURCC(cdv5)
-DEFINE_GUID_FOURCC(DVIS)
-DEFINE_GUID_FOURCC(dvis)
-DEFINE_GUID_FOURCC(PDVC)
-DEFINE_GUID_FOURCC(pdvc)
 DEFINE_GUID_FOURCC(VP31)
 DEFINE_GUID_FOURCC(vp31)
 DEFINE_GUID_FOURCC(TSCC)
 DEFINE_GUID_FOURCC(tscc)
 DEFINE_GUID_FOURCC(CRAM)
 DEFINE_GUID_FOURCC(cram)
-DEFINE_GUID_FOURCC(AVRN)
-DEFINE_GUID_FOURCC(avrn)
-DEFINE_GUID_FOURCC(CAVS)
-DEFINE_GUID_FOURCC(cavs)
-DEFINE_GUID_FOURCC(EM2V)
-DEFINE_GUID_FOURCC(em2v)
 DEFINE_GUID_FOURCC(FPS1)
 DEFINE_GUID_FOURCC(fps1)
-DEFINE_GUID_FOURCC(MMES)
-DEFINE_GUID_FOURCC(mmes)
 DEFINE_GUID_FOURCC(WMVP)
 DEFINE_GUID_FOURCC(wmvp)
 DEFINE_GUID_FOURCC(WVP2)
@@ -203,12 +169,13 @@ DEFINE_GUID_FOURCC(SP5X)
 
 /* the number of mediatypes should not exceed 115 */
 const AMOVIESETUP_MEDIATYPE TffdshowDecVideo::inputMediaTypes[]= {
+	/* This is a 'catch-all' mediatype for all video subtypes. Other subtypes are included purely for enumeration purposes. They are not essential for the operation of ffdshow. */
     { &MEDIATYPE_Video,              &MEDIASUBTYPE_NULL   },
     { &MEDIATYPE_DVD_ENCRYPTED_PACK, &MEDIASUBTYPE_NULL   },
     { &MEDIATYPE_DVD_ENCRYPTED_PACK, &MEDIASUBTYPE_MPEG2_VIDEO   },
     { &MEDIATYPE_DVD_ENCRYPTED_PACK, &MEDIASUBTYPE_AVC1   },
     { &MEDIATYPE_DVD_ENCRYPTED_PACK, &MEDIASUBTYPE_WVC1   },
-    // Few most used FourCCs
+    // FourCCs for common formats
     { &MEDIATYPE_Video, &MEDIASUBTYPE_XVID   },
     { &MEDIATYPE_Video, &MEDIASUBTYPE_xvid   },
     { &MEDIATYPE_Video, &MEDIASUBTYPE_DIVX   },
@@ -234,8 +201,6 @@ const AMOVIESETUP_MEDIATYPE TffdshowDecVideo::inputMediaTypes[]= {
     { &MEDIATYPE_Video, &MEDIASUBTYPE_mp4v   },
     { &MEDIATYPE_Video, &MEDIASUBTYPE_MP4S   },
     { &MEDIATYPE_Video, &MEDIASUBTYPE_mp4s   },
-    { &MEDIATYPE_Video, &MEDIASUBTYPE_SEDG   },
-    { &MEDIATYPE_Video, &MEDIASUBTYPE_sedg   },
     { &MEDIATYPE_Video, &MEDIASUBTYPE_WMV1   },
     { &MEDIATYPE_Video, &MEDIASUBTYPE_wmv1   },
     { &MEDIATYPE_Video, &MEDIASUBTYPE_WMV2   },
@@ -262,17 +227,12 @@ const AMOVIESETUP_MEDIATYPE TffdshowDecVideo::inputMediaTypes[]= {
     { &MEDIATYPE_Video, &MEDIASUBTYPE_3iv2   },
     { &MEDIATYPE_Video, &MEDIASUBTYPE_3IVX   },
     { &MEDIATYPE_Video, &MEDIASUBTYPE_3ivx   },
-    // MPEG1 & 2 Video MediaSubType & FourCCs
+    // MPEG-1/2
     { &MEDIATYPE_Video, &MEDIASUBTYPE_MPEG1Packet   },
     { &MEDIATYPE_Video, &MEDIASUBTYPE_MPEG1Payload   },
     { &MEDIATYPE_Video, &MEDIASUBTYPE_MPEG2_VIDEO   },
     { &MEDIATYPE_Video, &MEDIASUBTYPE_MPG2   },
     { &MEDIATYPE_Video, &MEDIASUBTYPE_mpg2   },
-    // Other MPEG2
-    { &MEDIATYPE_Video, &MEDIASUBTYPE_EM2V   },
-    { &MEDIATYPE_Video, &MEDIASUBTYPE_em2v   },
-    { &MEDIATYPE_Video, &MEDIASUBTYPE_MMES   },
-    { &MEDIATYPE_Video, &MEDIASUBTYPE_mmes   },
     // Some less common FourCCs
     { &MEDIATYPE_Video, &MEDIASUBTYPE_VP31   },
     { &MEDIATYPE_Video, &MEDIASUBTYPE_vp31   },
@@ -280,36 +240,26 @@ const AMOVIESETUP_MEDIATYPE TffdshowDecVideo::inputMediaTypes[]= {
     { &MEDIATYPE_Video, &MEDIASUBTYPE_tscc   },
     { &MEDIATYPE_Video, &MEDIASUBTYPE_CRAM   },
     { &MEDIATYPE_Video, &MEDIASUBTYPE_cram   },
-    { &MEDIATYPE_Video, &MEDIASUBTYPE_AVRN   },
-    { &MEDIATYPE_Video, &MEDIASUBTYPE_avrn   },
     { &MEDIATYPE_Video, &MEDIASUBTYPE_FPS1   },
     { &MEDIATYPE_Video, &MEDIASUBTYPE_fps1   },
     { &MEDIATYPE_Video, &MEDIASUBTYPE_WMVP   },
     { &MEDIATYPE_Video, &MEDIASUBTYPE_wmvp   },
     { &MEDIATYPE_Video, &MEDIASUBTYPE_WVP2   },
     { &MEDIATYPE_Video, &MEDIASUBTYPE_wvp2   },
-    // MJPEG Video MediaSubType & FourCCs
+    // MJPEG
     { &MEDIATYPE_Video, &MEDIASUBTYPE_MJPG   },
     { &MEDIATYPE_Video, &MEDIASUBTYPE_mjpg   },
     { &MEDIATYPE_Video, &MEDIASUBTYPE_MJPA   },
     { &MEDIATYPE_Video, &MEDIASUBTYPE_mjpa   },
     { &MEDIATYPE_Video, &MEDIASUBTYPE_AMVV   },
     { &MEDIATYPE_Video, &MEDIASUBTYPE_SP5X   },
-    // DVSD Video MediaSubType & FourCCs
+    // DV
     { &MEDIATYPE_Video, &MEDIASUBTYPE_DVSD   },
     { &MEDIATYPE_Video, &MEDIASUBTYPE_dvsd   },
     { &MEDIATYPE_Video, &MEDIASUBTYPE_DV25   },
     { &MEDIATYPE_Video, &MEDIASUBTYPE_dv25   },
     { &MEDIATYPE_Video, &MEDIASUBTYPE_DV50   },
     { &MEDIATYPE_Video, &MEDIASUBTYPE_dv50   },
-    { &MEDIATYPE_Video, &MEDIASUBTYPE_CDVC   },
-    { &MEDIATYPE_Video, &MEDIASUBTYPE_cdvc   },
-    { &MEDIATYPE_Video, &MEDIASUBTYPE_CDV5   },
-    { &MEDIATYPE_Video, &MEDIASUBTYPE_cdv5   },
-    { &MEDIATYPE_Video, &MEDIASUBTYPE_DVIS   },
-    { &MEDIATYPE_Video, &MEDIASUBTYPE_dvis   },
-    { &MEDIATYPE_Video, &MEDIASUBTYPE_PDVC   },
-    { &MEDIATYPE_Video, &MEDIASUBTYPE_pdvc   },
     // explicitly register for raw video types for easier enumeration
     { &MEDIATYPE_Video, &MEDIASUBTYPE_YV12   },
     { &MEDIATYPE_Video, &MEDIASUBTYPE_IYUV   },
@@ -324,7 +274,7 @@ const AMOVIESETUP_MEDIATYPE TffdshowDecVideo::inputMediaTypes[]= {
 };
 
 const AMOVIESETUP_MEDIATYPE TffdshowDecVideoRaw::inputMediaTypes[]= {
-    { &MEDIATYPE_Video,              &MEDIASUBTYPE_NULL   },
+    { &MEDIATYPE_Video, &MEDIASUBTYPE_NULL   },
     // explicitly register for raw video types for easier enumeration
     { &MEDIATYPE_Video, &MEDIASUBTYPE_YV12   },
     { &MEDIATYPE_Video, &MEDIASUBTYPE_IYUV   },
@@ -339,7 +289,7 @@ const AMOVIESETUP_MEDIATYPE TffdshowDecVideoRaw::inputMediaTypes[]= {
 };
 
 const AMOVIESETUP_MEDIATYPE TffdshowDecVideoSubtitles::inputMediaTypes[]= {
-    { &MEDIATYPE_Video,              &MEDIASUBTYPE_NULL   },
+    { &MEDIATYPE_Video, &MEDIASUBTYPE_NULL   },
     // explicitly register for raw video types for easier enumeration
     { &MEDIATYPE_Video, &MEDIASUBTYPE_YV12   },
     { &MEDIATYPE_Video, &MEDIASUBTYPE_IYUV   },

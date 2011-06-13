@@ -733,6 +733,7 @@ void TglobalSettingsDecVideo::load(void)
  FF_FOURCC1_OP(CDV5,cdvc & rawmask & dxvamask,CODEC_ID_DVVIDEO) \
  FF_FOURCC1_OP(DVIS,cdvc & rawmask & dxvamask,CODEC_ID_DVVIDEO) \
  FF_FOURCC1_OP(PDVC,cdvc & rawmask & dxvamask,CODEC_ID_DVVIDEO) \
+ /*FF_FOURCC1_OP(DVCP,cdvc & rawmask & dxvamask,CODEC_ID_DVVIDEO)*/ \
  FF_FOURCC_OP(HFYU,hfyu & rawmask & dxvamask,c_huffyuv) \
  FF_FOURCC_OP(FFVH,hfyu & rawmask & dxvamask,c_ffvhuff) \
  FF_FOURCC1_OP(CYUV,cyuv & rawmask & dxvamask,CODEC_ID_CYUV) \

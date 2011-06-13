@@ -72,6 +72,7 @@
 #define FOURCC_CDV5 mmioFOURCC('C','D','V','5')
 #define FOURCC_DVIS mmioFOURCC('D','V','I','S')
 #define FOURCC_PDVC mmioFOURCC('P','D','V','C')
+//#define FOURCC_DVCP mmioFOURCC('D','V','C','P')
 #define FOURCC_HFYU mmioFOURCC('H','F','Y','U')
 #define FOURCC_FFVH mmioFOURCC('F','F','V','H')
 #define FOURCC_CYUV mmioFOURCC('C','Y','U','V')
