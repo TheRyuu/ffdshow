@@ -1065,8 +1065,7 @@ static int decode_update_thread_context(AVCodecContext *dst, const AVCodecContex
     int inited = s->context_initialized, err;
     int i;
 
-    /* ffdshow custom code */
-    if(/*dst == src ||*/ !s1->context_initialized) return 0;
+    if(dst == src || !s1->context_initialized) return 0;
 
     err = ff_mpeg_update_thread_context(dst, src);
     if(err) return err;

@@ -451,8 +451,7 @@ int ff_mpeg_update_thread_context(AVCodecContext *dst, const AVCodecContext *src
 {
     MpegEncContext *s = dst->priv_data, *s1 = src->priv_data;
 
-    /* ffdshow custom code */
-    if(/*dst == src ||*/ !s1->context_initialized) return 0;
+    if(dst == src || !s1->context_initialized) return 0;
 
     //FIXME can parameters change on I-frames? in that case dst may need a reinit
     if(!s->context_initialized){
