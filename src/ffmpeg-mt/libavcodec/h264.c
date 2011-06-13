@@ -2445,9 +2445,20 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
     /* ffdshow custom code end */
 
     if(h0->current_slice == 0){
-        if(h->frame_num != h->prev_frame_num &&
-          (h->prev_frame_num+1)%(1<<h->sps.log2_max_frame_num) < (h->frame_num - h->sps.ref_frame_count))
-            h->prev_frame_num = h->frame_num - h->sps.ref_frame_count - 1;
+        // Shorten frame num gaps so we don't have to allocate reference frames just to throw them away
+        if(h->frame_num != h->prev_frame_num) {
+            int unwrap_prev_frame_num = h->prev_frame_num, max_frame_num = 1<<h->sps.log2_max_frame_num;
+
+            if (unwrap_prev_frame_num > h->frame_num) unwrap_prev_frame_num -= max_frame_num;
+
+            if ((h->frame_num - unwrap_prev_frame_num) > h->sps.ref_frame_count) {
+                unwrap_prev_frame_num = (h->frame_num - h->sps.ref_frame_count) - 1;
+                if (unwrap_prev_frame_num < 0)
+                    unwrap_prev_frame_num += max_frame_num;
+
+                h->prev_frame_num = unwrap_prev_frame_num;
+            }
+        }
 
         while(h->frame_num !=  h->prev_frame_num &&
               h->frame_num != (h->prev_frame_num+1)%(1<<h->sps.log2_max_frame_num)){
@@ -2878,11 +2889,10 @@ static int fill_filter_caches(H264Context *h, int mb_type){
     if(IS_INTRA(mb_type))
         return 0;
 
-    AV_COPY64(&h->non_zero_count_cache[0+8*1], &h->non_zero_count[mb_xy][ 0]);
-    AV_COPY64(&h->non_zero_count_cache[0+8*2], &h->non_zero_count[mb_xy][ 8]);
-    AV_COPY32(&h->non_zero_count_cache[0+8*5], &h->non_zero_count[mb_xy][16]);
+    AV_COPY32(&h->non_zero_count_cache[4+8*1], &h->non_zero_count[mb_xy][ 4]);
+    AV_COPY32(&h->non_zero_count_cache[4+8*2], &h->non_zero_count[mb_xy][12]);
     AV_COPY32(&h->non_zero_count_cache[4+8*3], &h->non_zero_count[mb_xy][20]);
-    AV_COPY64(&h->non_zero_count_cache[0+8*4], &h->non_zero_count[mb_xy][24]);
+    AV_COPY32(&h->non_zero_count_cache[4+8*4], &h->non_zero_count[mb_xy][28]);
 
     h->cbp= h->cbp_table[mb_xy];
 
