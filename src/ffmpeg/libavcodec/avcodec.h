@@ -2712,16 +2712,19 @@ const char *avcodec_license(void);
 
 /**
  * Initialize libavcodec.
+ * If called more than once, does nothing.
  *
  * @warning This function must be called before any other libavcodec
  * function.
+ *
+ * @warning This function is not thread-safe.
  */
 void avcodec_init(void);
 
 /**
  * Register the codec codec and initialize libavcodec.
  *
- * @see avcodec_init()
+ * @see avcodec_init(), avcodec_register_all()
  */
 void avcodec_register(AVCodec *codec);
 

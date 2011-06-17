@@ -43,6 +43,7 @@ SRCS_C=\
     \
     libavutil/avstring.c \
     libavutil/cpu.c \
+    libavutil/dict.c \
     libavutil/eval.c \
     libavutil/imgutils.c \
     libavutil/intfloat_readwrite.c \

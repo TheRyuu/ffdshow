@@ -2,20 +2,20 @@
  * H.26L/H.264/AVC/JVT/14496-10/... encoder/decoder
  * Copyright (c) 2003 Michael Niedermayer <michaelni@gmx.at>
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -36,7 +36,7 @@
 #if ARCH_X86 && HAVE_7REGS && HAVE_EBX_AVAILABLE && !defined(BROKEN_RELOCATIONS)
 static int decode_significance_x86(CABACContext *c, int max_coeff,
                                    uint8_t *significant_coeff_ctx_base,
-                                   int *index){
+                                   int *index, x86_reg last_off){
     void *end= significant_coeff_ctx_base + max_coeff - 1;
     int minusstart= -(int)significant_coeff_ctx_base;
     int minusindex= 4-(int)index;
@@ -52,10 +52,12 @@ static int decode_significance_x86(CABACContext *c, int max_coeff,
 
         "test $1, %%edx                         \n\t"
         " jz 3f                                 \n\t"
+        "add  %7, %1                            \n\t"
 
-        BRANCHLESS_GET_CABAC("%%edx", "%3", "61(%1)", "%%ebx",
+        BRANCHLESS_GET_CABAC("%%edx", "%3", "(%1)", "%%ebx",
                              "%%bx", "%%esi", "%%eax", "%%al")
 
+        "sub  %7, %1                            \n\t"
         "mov  %2, %%"REG_a"                     \n\t"
         "movl %4, %%ecx                         \n\t"
         "add  %1, %%"REG_c"                     \n\t"
@@ -82,7 +84,7 @@ static int decode_significance_x86(CABACContext *c, int max_coeff,
         "movl %%esi, "RANGE    "(%3)            \n\t"
         "movl %%ebx, "LOW      "(%3)            \n\t"
         :"=&a"(coeff_count), "+r"(significant_coeff_ctx_base), "+m"(index)
-        :"r"(c), "m"(minusstart), "m"(end), "m"(minusindex)
+        :"r"(c), "m"(minusstart), "m"(end), "m"(minusindex), "m"(last_off)
         : "%"REG_c, "%ebx", "%edx", "%esi", "memory"
     );
     return coeff_count;
@@ -90,7 +92,7 @@ static int decode_significance_x86(CABACContext *c, int max_coeff,
 
 static int decode_significance_8x8_x86(CABACContext *c,
                                        uint8_t *significant_coeff_ctx_base,
-                                       int *index, const uint8_t *sig_off){
+                                       int *index, x86_reg last_off, const uint8_t *sig_off){
     int minusindex= 4-(int)index;
     int coeff_count;
     x86_reg last=0;
@@ -114,8 +116,9 @@ static int decode_significance_8x8_x86(CABACContext *c,
 
         "movzbl "MANGLE(last_coeff_flag_offset_8x8)"(%%edi), %%edi\n\t"
         "add %5, %%"REG_D"                      \n\t"
+        "add %7, %%"REG_D"                      \n\t"
 
-        BRANCHLESS_GET_CABAC("%%edx", "%3", "15(%%"REG_D")", "%%ebx",
+        BRANCHLESS_GET_CABAC("%%edx", "%3", "(%%"REG_D")", "%%ebx",
                              "%%bx", "%%esi", "%%eax", "%%al")
 
         "mov %2, %%"REG_a"                      \n\t"
@@ -142,7 +145,7 @@ static int decode_significance_8x8_x86(CABACContext *c,
         "movl %%esi, "RANGE    "(%3)            \n\t"
         "movl %%ebx, "LOW      "(%3)            \n\t"
         :"=&a"(coeff_count),"+m"(last), "+m"(index)
-        :"r"(c), "m"(minusindex), "m"(significant_coeff_ctx_base), "m"(sig_off)
+        :"r"(c), "m"(minusindex), "m"(significant_coeff_ctx_base), "m"(sig_off), "m"(last_off)
         : "%"REG_c, "%ebx", "%edx", "%esi", "%"REG_D, "memory"
     );
     return coeff_count;

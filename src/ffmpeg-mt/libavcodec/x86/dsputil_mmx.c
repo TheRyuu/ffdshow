@@ -638,7 +638,7 @@ static void add_hfyu_median_prediction_cmov(uint8_t *dst, const uint8_t *top, co
 
 /* draw the edges of width 'w' of an image of size width, height
    this mmx version can only handle w==8 || w==16 */
-static void draw_edges_mmx(uint8_t *buf, int wrap, int width, int height, int w, int sides)
+static void draw_edges_mmx(uint8_t *buf, int wrap, int width, int height, int w, int h, int sides)
 {
     uint8_t *ptr, *last_line;
     int i;
@@ -691,9 +691,9 @@ static void draw_edges_mmx(uint8_t *buf, int wrap, int width, int height, int w,
         );
     }
 
-    for(i=0;i<w;i+=4) {
-        /* top and bottom (and hopefully also the corners) */
-        if (sides&EDGE_TOP) {
+    /* top and bottom (and hopefully also the corners) */
+    if (sides&EDGE_TOP) {
+        for(i = 0; i < h; i += 4) {
             ptr= buf - (i + 1) * wrap - w;
             __asm__ volatile(
                     "1:                             \n\t"
@@ -709,8 +709,10 @@ static void draw_edges_mmx(uint8_t *buf, int wrap, int width, int height, int w,
                     : "r" ((x86_reg)buf - (x86_reg)ptr - w), "r" ((x86_reg)-wrap), "r" ((x86_reg)-wrap*3), "r" (ptr+width+2*w)
             );
         }
+    }
 
-        if (sides&EDGE_BOTTOM) {
+    if (sides&EDGE_BOTTOM) {
+        for(i = 0; i < w; i += 4) {
             ptr= last_line + (i + 1) * wrap - w;
             __asm__ volatile(
                     "1:                             \n\t"

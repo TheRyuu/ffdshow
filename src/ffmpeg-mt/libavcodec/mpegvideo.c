@@ -1164,15 +1164,17 @@ void MPV_frame_end(MpegEncContext *s)
        && s->current_picture.reference
        && !s->intra_only
        && !(s->flags&CODEC_FLAG_EMU_EDGE)) {
+            int hshift = av_pix_fmt_descriptors[s->avctx->pix_fmt].log2_chroma_w;
+            int vshift = av_pix_fmt_descriptors[s->avctx->pix_fmt].log2_chroma_h;
             s->dsp.draw_edges(s->current_picture.data[0], s->linesize  ,
-                              s->h_edge_pos   , s->v_edge_pos   ,
-                              EDGE_WIDTH  , EDGE_TOP | EDGE_BOTTOM);
+                              s->h_edge_pos             , s->v_edge_pos,
+                              EDGE_WIDTH        , EDGE_WIDTH        , EDGE_TOP | EDGE_BOTTOM);
             s->dsp.draw_edges(s->current_picture.data[1], s->uvlinesize,
-                              s->h_edge_pos>>1, s->v_edge_pos>>1,
-                              EDGE_WIDTH/2, EDGE_TOP | EDGE_BOTTOM);
+                              s->h_edge_pos>>hshift, s->v_edge_pos>>vshift,
+                              EDGE_WIDTH>>hshift, EDGE_WIDTH>>vshift, EDGE_TOP | EDGE_BOTTOM);
             s->dsp.draw_edges(s->current_picture.data[2], s->uvlinesize,
-                              s->h_edge_pos>>1, s->v_edge_pos>>1,
-                              EDGE_WIDTH/2, EDGE_TOP | EDGE_BOTTOM);
+                              s->h_edge_pos>>hshift, s->v_edge_pos>>vshift,
+                              EDGE_WIDTH>>hshift, EDGE_WIDTH>>vshift, EDGE_TOP | EDGE_BOTTOM);
     }
 
     emms_c();
@@ -1389,7 +1391,7 @@ static av_always_inline void mpeg_motion_lowres(MpegEncContext *s,
     if(!CONFIG_GRAY || !(s->flags&CODEC_FLAG_GRAY)){
         uvsx= (uvsx << 2) >> lowres;
         uvsy= (uvsy << 2) >> lowres;
-        if(h >> s->chroma_y_shift){
+        if(h >> s->chroma_y_shift){ // FFmpeg patch
             pix_op[op_index](dest_cb, ptr_cb, uvlinesize, h >> s->chroma_y_shift, uvsx, uvsy);
             pix_op[op_index](dest_cr, ptr_cr, uvlinesize, h >> s->chroma_y_shift, uvsx, uvsy);
         }
@@ -1851,14 +1853,14 @@ void MPV_decode_mb_internal(MpegEncContext *s, DCTELEM block[12][64],
                     }else{
                         //chroma422
                         dct_linesize = uvlinesize << s->interlaced_dct;
-                        dct_offset =(s->interlaced_dct)? uvlinesize : uvlinesize*block_size;
+                        dct_offset =(s->interlaced_dct)? uvlinesize : uvlinesize*block_size;  // FFmpeg patch
 
                         add_dct(s, block[4], 4, dest_cb, dct_linesize);
                         add_dct(s, block[5], 5, dest_cr, dct_linesize);
                         add_dct(s, block[6], 6, dest_cb+dct_offset, dct_linesize);
                         add_dct(s, block[7], 7, dest_cr+dct_offset, dct_linesize);
                         if(!s->chroma_x_shift){//Chroma444
-                            add_dct(s, block[8], 8, dest_cb+block_size, dct_linesize);
+                            add_dct(s, block[8], 8, dest_cb+block_size, dct_linesize);  // FFmpeg patch
                             add_dct(s, block[9], 9, dest_cr+block_size, dct_linesize);
                             add_dct(s, block[10], 10, dest_cb+block_size+dct_offset, dct_linesize);
                             add_dct(s, block[11], 11, dest_cr+block_size+dct_offset, dct_linesize);
@@ -1903,14 +1905,14 @@ void MPV_decode_mb_internal(MpegEncContext *s, DCTELEM block[12][64],
                     }else{
 
                         dct_linesize = uvlinesize << s->interlaced_dct;
-                        dct_offset =(s->interlaced_dct)? uvlinesize : uvlinesize*block_size;
+                        dct_offset =(s->interlaced_dct)? uvlinesize : uvlinesize*block_size;  // FFmpeg patch
 
                         s->dsp.idct_put(dest_cb,              dct_linesize, block[4]);
                         s->dsp.idct_put(dest_cr,              dct_linesize, block[5]);
                         s->dsp.idct_put(dest_cb + dct_offset, dct_linesize, block[6]);
                         s->dsp.idct_put(dest_cr + dct_offset, dct_linesize, block[7]);
                         if(!s->chroma_x_shift){//Chroma444
-                            s->dsp.idct_put(dest_cb + block_size,              dct_linesize, block[8]);
+                            s->dsp.idct_put(dest_cb + block_size,              dct_linesize, block[8]);  // FFmpeg patch
                             s->dsp.idct_put(dest_cr + block_size,              dct_linesize, block[9]);
                             s->dsp.idct_put(dest_cb + block_size + dct_offset, dct_linesize, block[10]);
                             s->dsp.idct_put(dest_cr + block_size + dct_offset, dct_linesize, block[11]);
@@ -1956,14 +1958,19 @@ void ff_draw_horiz_band(MpegEncContext *s, int y, int h){
        && !s->intra_only
        && !(s->flags&CODEC_FLAG_EMU_EDGE)) {
         int sides = 0, edge_h;
+        int hshift = av_pix_fmt_descriptors[s->avctx->pix_fmt].log2_chroma_w;
+        int vshift = av_pix_fmt_descriptors[s->avctx->pix_fmt].log2_chroma_h;
         if (y==0) sides |= EDGE_TOP;
         if (y + h >= s->v_edge_pos) sides |= EDGE_BOTTOM;
 
         edge_h= FFMIN(h, s->v_edge_pos - y);
 
-        s->dsp.draw_edges(s->current_picture_ptr->data[0] +  y    *s->linesize  , s->linesize  , s->h_edge_pos   , edge_h   , EDGE_WIDTH  , sides);
-        s->dsp.draw_edges(s->current_picture_ptr->data[1] + (y>>1)*s->uvlinesize, s->uvlinesize, s->h_edge_pos>>1, edge_h>>1, EDGE_WIDTH/2, sides);
-        s->dsp.draw_edges(s->current_picture_ptr->data[2] + (y>>1)*s->uvlinesize, s->uvlinesize, s->h_edge_pos>>1, edge_h>>1, EDGE_WIDTH/2, sides);
+        s->dsp.draw_edges(s->current_picture_ptr->data[0] +  y         *s->linesize  , s->linesize,
+                          s->h_edge_pos        , edge_h        , EDGE_WIDTH        , EDGE_WIDTH        , sides);
+        s->dsp.draw_edges(s->current_picture_ptr->data[1] + (y>>vshift)*s->uvlinesize, s->uvlinesize,
+                          s->h_edge_pos>>hshift, edge_h>>hshift, EDGE_WIDTH>>hshift, EDGE_WIDTH>>vshift, sides);
+        s->dsp.draw_edges(s->current_picture_ptr->data[2] + (y>>vshift)*s->uvlinesize, s->uvlinesize,
+                          s->h_edge_pos>>hshift, edge_h>>hshift, EDGE_WIDTH>>hshift, EDGE_WIDTH>>vshift, sides);
     }
 
     h= FFMIN(h, s->avctx->height - y);

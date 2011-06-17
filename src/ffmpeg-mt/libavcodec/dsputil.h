@@ -358,7 +358,7 @@ typedef struct DSPContext {
 #define FF_PARTTRANS_IDCT_PERM 5
 #define FF_SSE2_IDCT_PERM 6
 
-    void (*draw_edges)(uint8_t *buf, int wrap, int width, int height, int w, int sides);
+    void (*draw_edges)(uint8_t *buf, int wrap, int width, int height, int w, int h, int sides);
 #define EDGE_WIDTH 16
 #define EDGE_TOP    1
 #define EDGE_BOTTOM 2
