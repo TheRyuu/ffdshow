@@ -911,3 +911,18 @@ void ff_thread_free(AVCodecContext *avctx)
     else
         thread_free(avctx);
 }
+
+// ffdshow custom code
+AVCodecContext* get_thread0_avctx(AVCodecContext *avctx)
+{
+    FrameThreadContext *fctx;
+    PerThreadContext *p;
+
+    if (avctx->active_thread_type&FF_THREAD_FRAME && avctx->thread_opaque){
+        fctx = avctx->thread_opaque;
+        p = &fctx->threads[0];
+        return p->avctx;
+    } else {
+        return avctx;
+    }
+}

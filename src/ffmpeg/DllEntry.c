@@ -28,33 +28,37 @@
 
 CRITICAL_SECTION g_csStaticDataLock;
 
+BOOL pthread_win32_process_attach_np(void);
+BOOL pthread_win32_process_detach_np(void);
+BOOL pthread_win32_thread_attach_np(void);
+BOOL pthread_win32_thread_detach_np(void);
+
 // --- standard WIN32 entrypoints --------------------------------------
 BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
 {
- //static int count=0;
- //char pomS[40];
- switch (dwReason)
-  {
-   case DLL_PROCESS_ATTACH:
-    //count++;
-    //snprintf(pomS,40,"ffmpeg: %i %i\n",count,hInstance);OutputDebugString(pomS);
-    DisableThreadLibraryCalls(hInstance);
-    InitializeCriticalSection( &g_csStaticDataLock );
-    break;
-   case DLL_PROCESS_DETACH:
-    //count--;
-    //snprintf(pomS,40,"ffmpeg: %i %i\n",count,hInstance);OutputDebugString(pomS);
-    DeleteCriticalSection( &g_csStaticDataLock );
-    break;
-  }
- return TRUE;
+    switch (dwReason)
+    {
+    case DLL_PROCESS_ATTACH:
+        pthread_win32_process_attach_np();
+        pthread_win32_thread_attach_np();
+        DisableThreadLibraryCalls(hInstance);
+        InitializeCriticalSection( &g_csStaticDataLock );
+        break;
+
+    case DLL_PROCESS_DETACH:
+        pthread_win32_thread_detach_np();
+        pthread_win32_process_detach_np();
+        DeleteCriticalSection( &g_csStaticDataLock );
+        break;
+    }
+    return TRUE;
 }
 
 static char av_datetime[]=__DATE__" "__TIME__;
 void getVersion(char **version,char **build,char **datetime,const char* *license)
 {
- if (version) *version=AV_STRINGIFY(LIBAVCODEC_VERSION)", "COMPILER COMPILER_X64 COMPILER_INFO;
- if (build) *build=AV_STRINGIFY(LIBAVCODEC_BUILD);
- if (datetime) *datetime=av_datetime;
- if (license) *license="";
+    if (version) *version=AV_STRINGIFY(LIBAVCODEC_VERSION)", "COMPILER COMPILER_X64 COMPILER_INFO;
+    if (build) *build=AV_STRINGIFY(LIBAVCODEC_BUILD);
+    if (datetime) *datetime=av_datetime;
+    if (license) *license="";
 }
