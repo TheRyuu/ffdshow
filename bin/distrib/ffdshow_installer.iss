@@ -280,9 +280,6 @@ Name: "ffdshow\plugins\dscaler";    Description: "DScaler"
 Name: "resetsettings";           Description: "{cm:tsk_resetSettings}";           Components: ffdshow;                                    Check: NOT IsUpdate; GroupDescription: "{cm:tsk_settings}"
 Name: "video";                   Description: "{cm:tsk_videoFormatsSelect}";      Components: ffdshow; Flags: unchecked;                  Check: NOT IsUpdate; GroupDescription: "{cm:tsk_videoFormats}"
 Name: "video\h264";              Description: "H.264 / AVC";                      Components: ffdshow
-Name: "video\h264\libavcodec";   Description: "libavcodec";                       Components: ffdshow; Flags:           exclusive;        Check: NOT HasMultipleCores;
-Name: "video\h264\libavcodec";   Description: "libavcodec";                       Components: ffdshow; Flags: unchecked exclusive;        Check: HasMultipleCores;
-Name: "video\h264\ffmpegmt";     Description: "ffmpeg-mt";                        Components: ffdshow; Flags:           exclusive;        Check: HasMultipleCores;
 Name: "video\divx";              Description: "DivX";                             Components: ffdshow
 Name: "video\xvid";              Description: "Xvid";                             Components: ffdshow
 Name: "video\mpeg4";             Description: "{cm:tsk_genericMpeg4}";            Components: ffdshow
@@ -379,7 +376,6 @@ Name: {group}\{cm:shrt_homepage}; Filename: http://ffdshow-tryout.sourceforge.ne
 Source: "ffSpkCfg.dll"; Flags: dontcopy
 
 Source: "{#= bindir}\ffmpeg.dll";                 DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
-Source: "{#= bindir}\ffmpegmt.dll";               DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
 Source: "{#= bindir}\ff_liba52.dll";              DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
 Source: "{#= bindir}\ff_libdts.dll";              DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
 Source: "{#= bindir}\ff_libfaad2.dll";            DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion

@@ -570,16 +570,21 @@ void TglobalSettingsDecVideo::fixNewCodecs(void)
 	if (hfyu==21) {
         hfyu=IDFF_MOVIE_LAVC;
     }
-    //if (rawv==1 && forceInCSP!=0) rawv=forceInCSP;
+	if (h264==21) {
+        h264=IDFF_MOVIE_LAVC;
+    }
 }
 
 void TglobalSettingsDecVideo::load(void)
 {
     TglobalSettingsDec::load();
+	fixNewCodecs();
+	/*
     if (needCodecFix) {
         fixNewCodecs();
         needCodecFix=0;
     }
+	*/
 
     fixMissing(xvid,IDFF_MOVIE_LAVC,IDFF_MOVIE_XVID4/*,IDFF_MOVIE_FFMPEG_MT*/);
     fixMissing(div3,IDFF_MOVIE_LAVC);
