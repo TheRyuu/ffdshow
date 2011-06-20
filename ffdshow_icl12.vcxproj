@@ -1027,7 +1027,6 @@
     <ClCompile Include="src\codecs\Tcodec.cpp" />
     <ClCompile Include="src\codecs\TrealAudioInfo.cpp" />
     <ClCompile Include="src\codecs\TvideoCodec.cpp" />
-    <ClCompile Include="src\codecs\TvideoCodec_ffmpeg-mt.cpp" />
     <ClCompile Include="src\codecs\TvideoCodecAvisynth.cpp" />
     <ClCompile Include="src\codecs\TvideoCodecLibavcodec.cpp" />
     <ClCompile Include="src\codecs\TvideoCodecLibavcodecDxva.cpp" />
@@ -1036,7 +1035,6 @@
     <ClCompile Include="src\codecs\TvideoCodecWmv9.cpp" />
     <ClCompile Include="src\codecs\TvideoCodecXviD4.cpp" />
     <ClCompile Include="src\ffmpeg\Tlibavcodec.cpp" />
-    <ClCompile Include="src\ffmpeg-mt\Tlibavcodec_mt.cpp" />
     <ClCompile Include="src\codecs\H264Nalu.cpp" />
     <ClCompile Include="src\codecs\TDXVADecoder.cpp" />
     <ClCompile Include="src\codecs\TDXVADecoderH264.cpp" />
@@ -1506,7 +1504,6 @@
     <ClInclude Include="src\codecs\TvideoCodecXviD4.h" />
     <ClInclude Include="src\ffmpeg\libavcodec\avcodec.h" />
     <ClInclude Include="src\ffmpeg\Tlibavcodec.h" />
-    <ClInclude Include="src\ffmpeg-mt\Tlibavcodec_mt.h" />
     <ClInclude Include="src\codecs\libmpeg2\include\mpeg2.h" />
     <ClInclude Include="src\codecs\xvidcore\xvid.h" />
     <ClInclude Include="src\codecs\H264Nalu.h" />

@@ -4,7 +4,6 @@
 #include "TvideoCodec.h"
 #include "ffmpeg/libavcodec/AVPaletteControl.h"
 #include "ffmpeg/Tlibavcodec.h"
-// Do not include avcodec.h in this file, ffmpeg and ffmpeg-mt may conflict.
 
 #define MAX_THREADS 8 // FIXME: This is defined in mpegvideo.h.
 
@@ -85,16 +84,9 @@ public:
     TvideoCodecLibavcodec(IffdshowBase *Ideci,IdecVideoSink *IsinkD);
     TvideoCodecLibavcodec(IffdshowBase *Ideci,IencVideoSink *IsinkE);
     virtual ~TvideoCodecLibavcodec();
-
-#if COMPILE_AS_FFMPEG_MT
-    virtual int getType(void) const {
-        return IDFF_MOVIE_FFMPEG_MT;
-    }
-#else
     virtual int getType(void) const {
         return IDFF_MOVIE_LAVC;
     }
-#endif
     virtual const char_t* getName(void) const;
     virtual int caps(void) const {
         return CAPS::VIS_MV|CAPS::VIS_QUANTS;

@@ -47,7 +47,6 @@ TvideoCodecDec* TvideoCodecDec::initDec(IffdshowBase *deci,IdecVideoSink *sink,C
     // DXVA mode is a preset setting
     switch (codecId) {
         case CODEC_ID_H264:
-        case CODEC_ID_H264_MT:
             if (deci->getParam2(IDFF_filterMode) & IDFF_FILTERMODE_VIDEODXVA) {
                 if (deci->getParam2(IDFF_dec_DXVA_H264)) {
                     codecId=CODEC_ID_H264_DXVA;
@@ -83,8 +82,6 @@ TvideoCodecDec* TvideoCodecDec::initDec(IffdshowBase *deci,IdecVideoSink *sink,C
         movie=new TvideoCodecLibmpeg2(deci,sink);
     } else if (codecId==CODEC_ID_AVISYNTH) {
         movie=new TvideoCodecAvisynth(deci,sink);
-    } else if (codecId==CODEC_ID_H264_MT || codecId==CODEC_ID_VP3_MT || codecId==CODEC_ID_THEORA_MT || codecId==CODEC_ID_HUFFYUV_MT || codecId==CODEC_ID_FFVHUFF_MT || codecId==CODEC_ID_MPEG4_MT) {
-        movie=new TvideoCodecLibavcodec_mt(deci,sink);
     } else if (codecId==CODEC_ID_H264_DXVA || codecId==CODEC_ID_VC1_DXVA) {
         movie=new TvideoCodecLibavcodecDxva(deci,sink, codecId);
     } else {

@@ -4798,10 +4798,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\codecs\TvideoCodec_ffmpeg-mt.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\src\codecs\TvideoCodecAvisynth.cpp"
 				>
 			</File>
@@ -4870,14 +4866,6 @@
 				</File>
 				<File
 					RelativePath=".\src\ffmpeg\Tlibavcodec.h"
-					>
-				</File>
-				<File
-					RelativePath=".\src\ffmpeg-mt\Tlibavcodec_mt.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\src\ffmpeg-mt\Tlibavcodec_mt.h"
 					>
 				</File>
 			</Filter>

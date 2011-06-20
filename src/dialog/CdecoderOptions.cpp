@@ -43,7 +43,7 @@ void TdecoderOptionsPage::init(void)
     const TvideoCodecDec *movie;
     deciV->getMovieSource(&movie);
     int source=movie?movie->getType():0;
-    islavc=((filterMode&IDFF_FILTERMODE_PLAYER) && (source==IDFF_MOVIE_LAVC || source==IDFF_MOVIE_FFMPEG_MT ||source==IDFF_MOVIE_FFMPEG_DXVA)) || (filterMode&(IDFF_FILTERMODE_CONFIG|IDFF_FILTERMODE_VFW));
+    islavc=((filterMode&IDFF_FILTERMODE_PLAYER) && (source==IDFF_MOVIE_LAVC || source==IDFF_MOVIE_FFMPEG_DXVA)) || (filterMode&(IDFF_FILTERMODE_CONFIG|IDFF_FILTERMODE_VFW));
     for (int i=0; workarounds[i].ff_bug; i++) {
         enable(islavc,workarounds[i].idc_chb);
     }

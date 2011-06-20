@@ -18,10 +18,6 @@
 
 #include "stdafx.h"
 
-#ifndef COMPILE_AS_FFMPEG_MT
-#define COMPILE_AS_FFMPEG_MT 0
-#endif
-
 #include "ffmpeg/libavcodec/avcodec.h"
 #include "ffmpeg/Tlibavcodec.h"
 #include "ffmpeg/libavcodec/dvdata.h"
@@ -83,11 +79,7 @@ TvideoCodecLibavcodec::TvideoCodecLibavcodec(IffdshowBase *Ideci,IencVideoSink *
 void TvideoCodecLibavcodec::create(void)
 {
     ownmatrices=false;
-#if COMPILE_AS_FFMPEG_MT
-    libavcodec = new Tlibavcodec_mt(config);
-#else
     deci->getLibavcodec(&libavcodec);
-#endif
     ok=libavcodec?libavcodec->ok:false;
     avctx=NULL;
     avcodec=NULL;
@@ -165,33 +157,12 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
 
     int numthreads=deci->getParam2(IDFF_numLAVCdecThreads);
     int thread_type = 0;
-    if (numthreads>1 && (COMPILE_AS_FFMPEG_MT || sup_threads_dec_frame(codecId))) {
+    if (numthreads>1 && sup_threads_dec_frame(codecId)) {
         thread_type = FF_THREAD_FRAME;
     } else if (numthreads>1 && sup_threads_dec_slice(codecId)) {
         thread_type = FF_THREAD_SLICE;	
     }
     
-    #if COMPILE_AS_FFMPEG_MT
-    if (codecId == CODEC_ID_H264_MT) {
-        codecId = CODEC_ID_H264;
-    }
-    if (codecId == CODEC_ID_VP3_MT) {
-        codecId = CODEC_ID_VP3;
-    }
-    if (codecId == CODEC_ID_THEORA_MT) {
-        codecId = CODEC_ID_THEORA;
-    }
-    if (codecId == CODEC_ID_HUFFYUV_MT) {
-        codecId = CODEC_ID_HUFFYUV;
-    }
-    if (codecId == CODEC_ID_FFVHUFF_MT) {
-        codecId = CODEC_ID_FFVHUFF;
-    }
-    if (codecId == CODEC_ID_MPEG4_MT) {
-        codecId = CODEC_ID_MPEG4;
-    }
-    #endif
-
     if (numthreads>1 && thread_type!=0) {
         threadcount = numthreads;
     } else {
@@ -668,11 +639,9 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
                 }
 
                 // Correct impossible sar for DVD
-#if !COMPILE_AS_FFMPEG_MT
                 if (codecId == CODEC_ID_MPEG2VIDEO) {
                     r.sar = guessMPEG2sar(r, avctx->sample_aspect_ratio2, containerSar);
                 }
-#endif
 
                 quants=frame->qscale_table;
                 quantsStride=frame->qstride;
@@ -875,11 +844,7 @@ bool TvideoCodecLibavcodec::onDiscontinuity(void)
 const char_t* TvideoCodecLibavcodec::getName(void) const
 {
     if (avcodec) {
-#if COMPILE_AS_FFMPEG_MT
-        static const char_t *libname = _l("ffmpeg-mt");
-#else
         static const char_t *libname = _l("libavcodec");
-#endif
         tsnprintf_s(codecName, countof(codecName), _TRUNCATE, _l("%s %s"), libname, (const char_t*)text<char_t>(avcodec->name));
         return codecName;
     } else {

@@ -109,7 +109,6 @@ void Tconfig::init1(HINSTANCE hi)
 
     memset(isDecoder,0,sizeof(isDecoder));
     isDecoder[IDFF_MOVIE_LAVC]=Tlibavcodec::check(this);
-    isDecoder[IDFF_MOVIE_FFMPEG_MT]=Tdll::check(_l("ffmpegmt.dll"),this);
     isDecoder[IDFF_MOVIE_FFMPEG_DXVA]=Tlibavcodec::check(this);
     isDecoder[IDFF_MOVIE_LIBMPEG2]=check(TvideoCodecLibmpeg2::dllname);
     isDecoder[IDFF_MOVIE_RAW]=1;

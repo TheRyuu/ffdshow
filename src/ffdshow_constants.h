@@ -682,7 +682,6 @@
 #define IDFF_OSD_userformat             3491
 #define IDFF_MOVIE_NONE     0
 #define IDFF_MOVIE_LAVC     1
-//#define IDFF_MOVIE_XVID   2
 #define IDFF_MOVIE_RAW      4
 #define IDFF_MOVIE_LIBMPEG2 5
 #define IDFF_MOVIE_LIBMAD   7
@@ -693,7 +692,6 @@
 #define IDFF_MOVIE_LIBA52  15
 //#define IDFF_MOVIE_SPDIF   16
 #define IDFF_MOVIE_LIBDTS  17
-#define IDFF_MOVIE_FFMPEG_MT 21
 #define IDFF_MOVIE_FFMPEG_DXVA 22
 #define IDFF_MOVIE_MAX     22 // should equal highest value of codecs above (see TglobalSettings.cpp)
 #define IDFF_OSDtype_accurDeblock        30

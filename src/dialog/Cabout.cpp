@@ -21,7 +21,6 @@
 #include "TffdshowPageBase.h"
 #include "ffImgfmt.h"
 #include "Tlibavcodec.h"
-#include "ffmpeg-mt/Tlibavcodec_mt.h"
 #include "avisynth/Tavisynth.h"
 #include "TvideoCodecXviD4.h"
 #include "TvideoCodecLibmpeg2.h"
@@ -38,7 +37,6 @@
 
 void TaboutPage::init(void)
 {
-    //addHint(IDC_BT_DONATE,"Thank you!");
     if (!lic) {
         lic=loadText(IDD_LICENSE);
         if (lic) {
@@ -154,7 +152,6 @@ const TversionsDlg::TversionInfo* TaboutPageDecVideo::fcsVersions(void)
 {
     static const TversionsDlg::TversionInfo fcsDecVideo[]= {
         _l("ffmpeg.dll"),Tlibavcodec::getVersion,
-        _l("ffmpegmt.dll"),Tlibavcodec_mt::getVersion,
         TvideoCodecXviD4::dllname,getVersion<TvideoCodecXviD4>,
         TvideoCodecWmv9::dllname,getVersion<TvideoCodecWmv9>,
         TimgFilterKernelDeint2::dllname,getVersion<TimgFilterKernelDeint2>,

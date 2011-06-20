@@ -195,12 +195,6 @@ enum CodecID {
  CODEC_ID_BITSTREAM_DTSHD   = 1403,
  CODEC_ID_BITSTREAM_EAC3    = 1404,
  CODEC_ID_LIBDTS            = 1500,
- CODEC_ID_H264_MT           = 2000,
- CODEC_ID_VP3_MT            = 2001,
- CODEC_ID_THEORA_MT         = 2002,
- CODEC_ID_HUFFYUV_MT        = 2003,
- CODEC_ID_FFVHUFF_MT        = 2004,
- CODEC_ID_MPEG4_MT          = 2005,
  CODEC_ID_H264_DXVA         = 2100,
  CODEC_ID_VC1_DXVA          = 2101,
  CODEC_ID_HDMV_PGS_SUBTITLE = 2200
@@ -261,7 +255,7 @@ static __inline bool lossless_codec(int x)
 }
 static __inline bool h264_codec(int x)
 {
-    return x == CODEC_ID_H264 || x == CODEC_ID_H264_MT;
+    return x == CODEC_ID_H264;
 }
 static __inline bool vc1_codec(int x)
 {

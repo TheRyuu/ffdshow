@@ -99,8 +99,7 @@ const FOURCC* getCodecFOURCCs(CodecID codecId)
             static const FOURCC fccs[]= {FOURCC_THEO,0};
             return fccs;
         }
-        case CODEC_ID_H264:
-        case CODEC_ID_H264_MT: {
+        case CODEC_ID_H264: {
             static const FOURCC fccs[]= {FOURCC_H264,FOURCC_X264,FOURCC_AVC1,FOURCC_H264_HAALI,0};
             return fccs;
         }
@@ -335,12 +334,6 @@ const char_t *getCodecName(CodecID codecId)
      case  CODEC_ID_BITSTREAM_DTSHD   : return _l("bitstream DTS-HD");
      case  CODEC_ID_BITSTREAM_EAC3    : return _l("bitstream EAC3");
      case  CODEC_ID_LIBDTS            : return _l("libdts");
-     case  CODEC_ID_H264_MT           : return _l("h264 multi-threaded");
-     case  CODEC_ID_VP3_MT            : return _l("vp3 multi-threaded");
-     case  CODEC_ID_THEORA_MT         : return _l("theora multi-threaded");
-	 case  CODEC_ID_HUFFYUV_MT        : return _l("huffyuv multi-threaded");
-	 case  CODEC_ID_FFVHUFF_MT        : return _l("ffvhuff multi-threaded");
-	 case  CODEC_ID_MPEG4_MT          : return _l("mpeg4 multi-threaded");
      case  CODEC_ID_H264_DXVA         : return _l("h264 DXVA");
      case  CODEC_ID_VC1_DXVA          : return _l("vc1 DXVA");
      case  CODEC_ID_HDMV_PGS_SUBTITLE : return _l("PGS subtitles");

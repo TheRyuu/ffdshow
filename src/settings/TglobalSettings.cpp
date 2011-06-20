@@ -578,25 +578,26 @@ void TglobalSettingsDecVideo::fixNewCodecs(void)
 void TglobalSettingsDecVideo::load(void)
 {
     TglobalSettingsDec::load();
+#if 1
 	fixNewCodecs();
-	/*
+#else
     if (needCodecFix) {
         fixNewCodecs();
         needCodecFix=0;
     }
-	*/
+#endif
 
-    fixMissing(xvid,IDFF_MOVIE_LAVC,IDFF_MOVIE_XVID4/*,IDFF_MOVIE_FFMPEG_MT*/);
+    fixMissing(xvid,IDFF_MOVIE_LAVC,IDFF_MOVIE_XVID4);
     fixMissing(div3,IDFF_MOVIE_LAVC);
-    fixMissing(dx50,IDFF_MOVIE_LAVC,IDFF_MOVIE_XVID4/*,IDFF_MOVIE_FFMPEG_MT*/);
-    fixMissing(mp4v,IDFF_MOVIE_LAVC,IDFF_MOVIE_XVID4/*,IDFF_MOVIE_FFMPEG_MT*/);
-    fixMissing(fvfw,IDFF_MOVIE_LAVC,IDFF_MOVIE_XVID4/*,IDFF_MOVIE_FFMPEG_MT*/);
+    fixMissing(dx50,IDFF_MOVIE_LAVC,IDFF_MOVIE_XVID4);
+    fixMissing(mp4v,IDFF_MOVIE_LAVC,IDFF_MOVIE_XVID4);
+    fixMissing(fvfw,IDFF_MOVIE_LAVC,IDFF_MOVIE_XVID4);
     fixMissing(mp43,IDFF_MOVIE_LAVC);
     fixMissing(mp42,IDFF_MOVIE_LAVC);
     fixMissing(mp41,IDFF_MOVIE_LAVC);
     fixMissing(h261,IDFF_MOVIE_LAVC);
     fixMissing(h263,IDFF_MOVIE_LAVC);
-    fixMissing(h264,IDFF_MOVIE_LAVC,IDFF_MOVIE_FFMPEG_MT);
+    fixMissing(h264,IDFF_MOVIE_LAVC);
     fixMissing(wmv1,IDFF_MOVIE_LAVC,IDFF_MOVIE_WMV9);
     fixMissing(wmv2,IDFF_MOVIE_LAVC,IDFF_MOVIE_WMV9);
     fixMissing(wmv3,IDFF_MOVIE_LAVC,IDFF_MOVIE_WMV9);
@@ -612,7 +613,7 @@ void TglobalSettingsDecVideo::load(void)
     fixMissing(mjpg,IDFF_MOVIE_LAVC);
     fixMissing(dvsd,IDFF_MOVIE_LAVC);
     fixMissing(cdvc,IDFF_MOVIE_LAVC);
-    fixMissing(hfyu,IDFF_MOVIE_LAVC/*,IDFF_MOVIE_FFMPEG_MT*/);
+    fixMissing(hfyu,IDFF_MOVIE_LAVC);
     fixMissing(cyuv,IDFF_MOVIE_LAVC);
     fixMissing(asv1,IDFF_MOVIE_LAVC);
     fixMissing(vcr1,IDFF_MOVIE_LAVC);
@@ -623,7 +624,7 @@ void TglobalSettingsDecVideo::load(void)
     fixMissing(mpg2,IDFF_MOVIE_LAVC,IDFF_MOVIE_LIBMPEG2);
     fixMissing(mpegAVI,IDFF_MOVIE_LAVC,IDFF_MOVIE_LIBMPEG2);
     fixMissing(em2v,IDFF_MOVIE_LAVC,IDFF_MOVIE_LIBMPEG2);
-    fixMissing(theo,IDFF_MOVIE_LAVC/*,IDFF_MOVIE_FFMPEG_MT*/);
+    fixMissing(theo,IDFF_MOVIE_LAVC);
     fixMissing(cram,IDFF_MOVIE_LAVC);
     fixMissing(rt21,IDFF_MOVIE_LAVC);
     fixMissing(iv32,IDFF_MOVIE_LAVC);
@@ -634,7 +635,7 @@ void TglobalSettingsDecVideo::load(void)
     fixMissing(rv30,IDFF_MOVIE_LAVC);
     fixMissing(rv40,IDFF_MOVIE_LAVC);
     fixMissing(ffv1,IDFF_MOVIE_LAVC);
-    fixMissing(vp3 ,IDFF_MOVIE_LAVC/*,IDFF_MOVIE_FFMPEG_MT*/);
+    fixMissing(vp3 ,IDFF_MOVIE_LAVC);
     fixMissing(rle ,IDFF_MOVIE_LAVC);
     fixMissing(mszh,IDFF_MOVIE_LAVC);
     fixMissing(zlib,IDFF_MOVIE_LAVC);
@@ -739,18 +740,18 @@ void TglobalSettingsDecVideo::load(void)
  FF_FOURCC1_OP(DVIS,cdvc & rawmask & dxvamask,CODEC_ID_DVVIDEO) \
  FF_FOURCC1_OP(PDVC,cdvc & rawmask & dxvamask,CODEC_ID_DVVIDEO) \
  /*FF_FOURCC1_OP(DVCP,cdvc & rawmask & dxvamask,CODEC_ID_DVVIDEO)*/ \
- FF_FOURCC_OP(HFYU,hfyu & rawmask & dxvamask,c_huffyuv) \
- FF_FOURCC_OP(FFVH,hfyu & rawmask & dxvamask,c_ffvhuff) \
+ FF_FOURCC1_OP(HFYU,hfyu & rawmask & dxvamask,CODEC_ID_HUFFYUV) \
+ FF_FOURCC1_OP(FFVH,hfyu & rawmask & dxvamask,CODEC_ID_FFVHUFF) \
  FF_FOURCC1_OP(CYUV,cyuv & rawmask & dxvamask,CODEC_ID_CYUV) \
  FF_FOURCC1_OP(ASV1,asv1 & rawmask & dxvamask,CODEC_ID_ASV1) \
  FF_FOURCC1_OP(ASV2,asv1 & rawmask & dxvamask,CODEC_ID_ASV2) \
  FF_FOURCC1_OP(VCR1,vcr1 & rawmask & dxvamask,CODEC_ID_VCR1) \
- FF_FOURCC_OP(THEO,theo & rawmask & dxvamask,c_theora) \
+ FF_FOURCC1_OP(THEO,theo & rawmask & dxvamask,CODEC_ID_THEORA) \
  FF_FOURCC1_OP(SVQ1,svq1 & rawmask & dxvamask,CODEC_ID_SVQ1) \
  FF_FOURCC1_OP(SVQ3,svq3 & rawmask & dxvamask,CODEC_ID_SVQ3) \
  FF_FOURCC1_OP(RPZA,qtrpza & rawmask & dxvamask,CODEC_ID_RPZA) \
  FF_FOURCC1_OP(FFV1,ffv1 & rawmask & dxvamask,CODEC_ID_FFV1) \
- FF_FOURCC_OP(VP31,vp3  & rawmask & dxvamask,c_vp3) \
+ FF_FOURCC1_OP(VP31,vp3  & rawmask & dxvamask,CODEC_ID_VP3) \
  FF_FOURCC1_OP(RLE8,rle  & rawmask & dxvamask,CODEC_ID_MSRLE) \
  FF_FOURCC1_OP(MSZH,mszh & rawmask & dxvamask,CODEC_ID_MSZH) \
  FF_FOURCC1_OP(ZLIB,zlib & rawmask & dxvamask,CODEC_ID_ZLIB) \
@@ -875,104 +876,8 @@ const CodecID TglobalSettingsDecVideo::c_h264[IDFF_MOVIE_MAX+1]= {
     CODEC_ID_NONE,
     CODEC_ID_NONE,
     CODEC_ID_NONE,
-    CODEC_ID_H264_MT,
+    CODEC_ID_NONE,
     CODEC_ID_H264_DXVA
-};
-const CodecID TglobalSettingsDecVideo::c_vp3[IDFF_MOVIE_MAX+1]= {
-    CODEC_ID_NONE,
-    CODEC_ID_VP3,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_VP3_MT
-};
-const CodecID TglobalSettingsDecVideo::c_theora[IDFF_MOVIE_MAX+1]= {
-    CODEC_ID_NONE,
-    CODEC_ID_THEORA,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_THEORA_MT
-};
-const CodecID TglobalSettingsDecVideo::c_huffyuv[IDFF_MOVIE_MAX+1]= {
-    CODEC_ID_NONE,
-    CODEC_ID_HUFFYUV,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_HUFFYUV_MT
-};
-const CodecID TglobalSettingsDecVideo::c_ffvhuff[IDFF_MOVIE_MAX+1]= {
-    CODEC_ID_NONE,
-    CODEC_ID_FFVHUFF,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_FFVHUFF_MT
 };
 const CodecID TglobalSettingsDecVideo::c_mpeg4[IDFF_MOVIE_MAX+1]= {
     CODEC_ID_NONE,
@@ -984,19 +889,7 @@ const CodecID TglobalSettingsDecVideo::c_mpeg4[IDFF_MOVIE_MAX+1]= {
     CODEC_ID_NONE,
     CODEC_ID_NONE,
     CODEC_ID_NONE,
-    CODEC_ID_XVID4,
-	CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_NONE,
-    CODEC_ID_MPEG4_MT
+    CODEC_ID_XVID4
 };
 const CodecID TglobalSettingsDecVideo::c_mpeg1[IDFF_MOVIE_MAX+1]= {
     CODEC_ID_NONE,

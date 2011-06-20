@@ -36,8 +36,6 @@ const char_t* Tcodec::getMovieSourceName(int source)
     switch (source) {
         case IDFF_MOVIE_LAVC       :
             return _l("libavcodec");
-        case IDFF_MOVIE_FFMPEG_MT  :
-            return _l("ffmpeg-mt");
         case IDFF_MOVIE_RAW        :
             return _l("uncompressed");
         case IDFF_MOVIE_LIBMPEG2   :
