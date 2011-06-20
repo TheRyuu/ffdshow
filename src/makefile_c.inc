@@ -11,13 +11,10 @@ ifeq ($(64BIT),yes)
   FFDSHOW_PREFIX=x86_64-w64-mingw32-
   TARGET_OS=x86_64-w64-mingw32
   CFLAGS+=-DWIN64 -D_WIN64 -D__MINGW64__
-  LDFLAGS+=--entry=_DllMainCRTStartup@12
-  #CFLAGS+=-fno-leading-underscore
-  #LDFLAGS+=-fno-leading-underscore
   OPTFLAGS+=-O2 -m64
-  YASMFLAGS+=-f win64 -m amd64 -DWIN64 -DARCH_X86_64 -DPREFIX
+  YASMFLAGS+=-f win64 -m amd64 -DWIN64 -DARCH_X86_64
 else
-  TARGET_OS=i686-pc-mingw32
+  TARGET_OS=i686-w32-mingw32
   CFLAGS+=-DWIN32 -D_WIN32 -D__MINGW32__
   OPTFLAGS+=-O2 -march=i686 -mmmx
   YASMFLAGS+=-f win32 -m x86 -DWIN32 -DARCH_X86_32 -DPREFIX

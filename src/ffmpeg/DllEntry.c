@@ -28,26 +28,17 @@
 
 CRITICAL_SECTION g_csStaticDataLock;
 
-BOOL pthread_win32_process_attach_np(void);
-BOOL pthread_win32_process_detach_np(void);
-BOOL pthread_win32_thread_attach_np(void);
-BOOL pthread_win32_thread_detach_np(void);
-
 // --- standard WIN32 entrypoints --------------------------------------
 BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
 {
     switch (dwReason)
     {
     case DLL_PROCESS_ATTACH:
-        pthread_win32_process_attach_np();
-        pthread_win32_thread_attach_np();
         DisableThreadLibraryCalls(hInstance);
         InitializeCriticalSection( &g_csStaticDataLock );
         break;
 
     case DLL_PROCESS_DETACH:
-        pthread_win32_thread_detach_np();
-        pthread_win32_process_detach_np();
         DeleteCriticalSection( &g_csStaticDataLock );
         break;
     }

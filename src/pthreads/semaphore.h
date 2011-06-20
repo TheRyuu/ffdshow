@@ -75,7 +75,7 @@
  * do NOT define PTW32_BUILD, and then the variables/functions will
  * be imported correctly.
  */
-#ifndef PTW32_STATIC_LIB
+#if !defined(PTW32_STATIC_LIB) && !defined(__MINGW32__)
 #  ifdef PTW32_BUILD
 #    define PTW32_DLLPORT __declspec (dllexport)
 #  else
