@@ -1182,7 +1182,6 @@ static int decode_update_thread_context(AVCodecContext *dst, const AVCodecContex
 
     //extradata/NAL handling
     h->is_avc          = h1->is_avc;
-    h->got_avcC   = h1->got_avcC;
 
     //SPS/PPS
     copy_parameter_set((void**)h->sps_buffers, (void**)h1->sps_buffers, MAX_SPS_COUNT, sizeof(SPS));
