@@ -1,9 +1,8 @@
-ALLDLLS=LIBMPEG2 XVIDCORE TOMSMOCOMP KDINT FFMPEG FFMPEGMT
+ALLDLLS=LIBMPEG2 XVIDCORE TOMSMOCOMP KDINT FFMPEG
 
-FFDLLS=FFMPEG FFMPEGMT XVIDCORE
+FFDLLS=FFMPEG XVIDCORE
 
 ALLS=../bin/ffmpeg.dll \
-     ../bin/ffmpegmt.dll \
      ../bin/libmpeg2_ff.dll \
      ../bin/ff_xvidcore.dll \
      ../bin/TomsMoComp_ff.dll \
@@ -19,11 +18,6 @@ ALL: $(ALLDLLS)
 	$(MAKE) -C ffmpeg
 FFMPEG:
 	$(MAKE) -C ffmpeg
-
-../bin/ffmpegmt.dll:
-	$(MAKE) -C ffmpeg-mt
-FFMPEGMT:
-	$(MAKE) -C ffmpeg-mt
 
 ../bin/libmpeg2_ff.dll:
 	$(MAKE) -C codecs/libmpeg2
@@ -47,7 +41,6 @@ KDINT:
 
 clean:	
 	$(MAKE) -C ffmpeg clean
-	$(MAKE) -C ffmpeg-mt clean
 	$(MAKE) -C codecs/libmpeg2 clean
 	$(MAKE) -C codecs/xvidcore clean
 	$(MAKE) -C imgFilters/TomsMoComp clean
@@ -55,7 +48,6 @@ clean:
 
 distclean:
 	$(MAKE) -C ffmpeg distclean
-	$(MAKE) -C ffmpeg-mt distclean
 	$(MAKE) -C codecs/libmpeg2 distclean
 	$(MAKE) -C codecs/xvidcore distclean
 	$(MAKE) -C imgFilters/TomsMoComp distclean

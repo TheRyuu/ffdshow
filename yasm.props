@@ -11,9 +11,9 @@
   </PropertyGroup>
   <ItemDefinitionGroup>
     <yasm>
-      <CommandLineTemplate>.\yasm.cmd $(Platform) "%(RootDir)%(Directory)." "$(IntDir)%(Filename).obj" "%(FullPath)"</CommandLineTemplate>
+      <CommandLineTemplate>yasm.cmd $(Platform) "%(RootDir)%(Directory)." "$(IntDir)%(Filename).obj" "%(FullPath)"</CommandLineTemplate>
       <Outputs>$(IntDir)%(Filename).obj</Outputs>
-      <ExecutionDescription>yasm assembling %(FullPath)</ExecutionDescription>
+      <ExecutionDescription>YASM: Assembling %(FullPath)</ExecutionDescription>
     </yasm>
   </ItemDefinitionGroup>
 </Project>
