@@ -428,10 +428,10 @@ Source: "license\Boost_Software_License_1.0.txt"; DestDir: "{app}";             
   #define ff_manifest = '..\manifest32'
 #endif
 
-Source: "{#= ff_manifest}\ffdshow.ax.manifest";   DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.03
-Source: "{#= ff_manifest}\ff_vfw.dll.manifest";   DestDir: "{sys}";                         Components: ffdshow\vfw;                Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.03
+Source: "{#= ff_manifest}\ffdshow.ax.manifest";   DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01
+Source: "{#= ff_manifest}\ff_vfw.dll.manifest";   DestDir: "{sys}";                         Components: ffdshow\vfw;                Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01
 #if include_makeavis
-Source: "{#= ff_manifest}\makeAVIS.exe.manifest"; DestDir: "{app}";                         Components: ffdshow\makeavis;           Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.03
+Source: "{#= ff_manifest}\makeAVIS.exe.manifest"; DestDir: "{app}";                         Components: ffdshow\makeavis;           Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01
 #endif
 
 [InstallDelete]
@@ -451,6 +451,7 @@ Type: files; Name: "{app}\libavcodec.dll";                         Components: f
 Type: files; Name: "{app}\libmplayer.dll";                         Components: ffdshow
 Type: files; Name: "{app}\ff_tremor.dll";                          Components: ffdshow
 Type: files; Name: "{app}\ff_x264.dll";                            Components: ffdshow
+Type: files; Name: "{app}\ffmpegmt.dll";                           Components: ffdshow
 
 [Registry]
 #if is64bit

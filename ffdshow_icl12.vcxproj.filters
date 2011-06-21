@@ -1184,9 +1184,6 @@
     <ClCompile Include="src\codecs\TvideoCodec.cpp">
       <Filter>codecs</Filter>
     </ClCompile>
-    <ClCompile Include="src\codecs\TvideoCodec_ffmpeg-mt.cpp">
-      <Filter>codecs</Filter>
-    </ClCompile>
     <ClCompile Include="src\codecs\TvideoCodecAvisynth.cpp">
       <Filter>codecs</Filter>
     </ClCompile>
@@ -1209,9 +1206,6 @@
       <Filter>codecs</Filter>
     </ClCompile>
     <ClCompile Include="src\ffmpeg\Tlibavcodec.cpp">
-      <Filter>codecs\libavcodec</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ffmpeg-mt\Tlibavcodec_mt.cpp">
       <Filter>codecs\libavcodec</Filter>
     </ClCompile>
     <ClCompile Include="src\codecs\H264Nalu.cpp">
@@ -2485,9 +2479,6 @@
       <Filter>codecs\libavcodec</Filter>
     </ClInclude>
     <ClInclude Include="src\ffmpeg\Tlibavcodec.h">
-      <Filter>codecs\libavcodec</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ffmpeg-mt\Tlibavcodec_mt.h">
       <Filter>codecs\libavcodec</Filter>
     </ClInclude>
     <ClInclude Include="src\codecs\libmpeg2\include\mpeg2.h">
