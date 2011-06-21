@@ -394,6 +394,8 @@ int avcodec_default_reget_buffer(AVCodecContext *s, AVFrame *pic){
         if(s->pkt) pic->pkt_pts= s->pkt->pts;
         else       pic->pkt_pts= AV_NOPTS_VALUE;
         pic->reordered_opaque= s->reordered_opaque;
+        pic->reordered_opaque2= s->reordered_opaque2; /* ffdshow custom code */
+        pic->reordered_opaque3= s->reordered_opaque3; /* ffdshow custom code */
         return 0;
     }
 

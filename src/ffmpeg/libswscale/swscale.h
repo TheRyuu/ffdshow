@@ -34,8 +34,8 @@ extern "C" {
 #include "libavutil/avutil.h"
 #include "ffImgfmt.h"
 
-#define LIBSWSCALE_VERSION_MAJOR 1
-#define LIBSWSCALE_VERSION_MINOR 1
+#define LIBSWSCALE_VERSION_MAJOR 2
+#define LIBSWSCALE_VERSION_MINOR 0
 #define LIBSWSCALE_VERSION_MICRO 0
 
 #define LIBSWSCALE_VERSION_INT  AV_VERSION_INT(LIBSWSCALE_VERSION_MAJOR, \
@@ -63,10 +63,13 @@ typedef struct SwsParams {
  * They may change, break or disappear at any time.
  */
 #ifndef FF_API_SWS_GETCONTEXT
-#define FF_API_SWS_GETCONTEXT  (LIBSWSCALE_VERSION_MAJOR < 2)
+#define FF_API_SWS_GETCONTEXT  (LIBSWSCALE_VERSION_MAJOR < 3)
 #endif
 #ifndef FF_API_SWS_CPU_CAPS
-#define FF_API_SWS_CPU_CAPS    (LIBSWSCALE_VERSION_MAJOR < 2)
+#define FF_API_SWS_CPU_CAPS    (LIBSWSCALE_VERSION_MAJOR < 3)
+#endif
+#ifndef FF_API_SWS_FORMAT_NAME
+#define FF_API_SWS_FORMAT_NAME  (LIBSWSCALE_VERSION_MAJOR < 3)
 #endif
 
 /**

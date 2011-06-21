@@ -102,6 +102,13 @@ static int wma_decode_init(AVCodecContext * avctx)
     s->use_bit_reservoir = flags2 & 0x0002;
     s->use_variable_block_len = flags2 & 0x0004;
 
+    if(avctx->codec->id == CODEC_ID_WMAV2 && avctx->extradata_size >= 8){
+        if(AV_RL16(extradata+4)==0xd && s->use_variable_block_len){
+            av_log(avctx, AV_LOG_WARNING, "Disabling use_variable_block_len, if this fails contact the ffmpeg developers and send us the file\n");
+            s->use_variable_block_len= 0; // this fixes issue1503
+        }
+    }
+
     if(ff_wma_init(avctx, flags2)<0)
         return -1;
 
@@ -480,6 +487,11 @@ static int wma_decode_block(WMACodecContext *s)
         s->block_len_bits = s->frame_len_bits;
     }
 
+    if (s->frame_len_bits - s->block_len_bits >= s->nb_block_sizes){
+        av_log(s->avctx, AV_LOG_ERROR, "block_len_bits not initialized to a valid value\n");
+        return -1;
+    }
+
     /* now check if the block length is coherent with the frame length */
     s->block_len = 1 << s->block_len_bits;
     if ((s->block_pos + s->block_len) > s->frame_len){
@@ -815,8 +827,9 @@ static int wma_decode_superframe(AVCodecContext *avctx,
         return 0;
     }
     if (buf_size < s->block_align)
-        return 0;
-    buf_size = s->block_align;
+        return AVERROR(EINVAL);
+    if(s->block_align)
+        buf_size = s->block_align;
 
     samples = data;
 
@@ -899,9 +912,8 @@ static int wma_decode_superframe(AVCodecContext *avctx,
     }
 
 //av_log(NULL, AV_LOG_ERROR, "%d %d %d %d outbytes:%d eaten:%d\n", s->frame_len_bits, s->block_len_bits, s->frame_len, s->block_len,        (int8_t *)samples - (int8_t *)data, s->block_align);
-
     *data_size = (int8_t *)samples - (int8_t *)data;
-    return s->block_align;
+    return buf_size;
  fail:
     /* when error, we reset the bit reservoir */
     s->last_superframe_len = 0;
