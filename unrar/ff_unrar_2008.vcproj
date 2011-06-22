@@ -72,7 +72,6 @@
 				IgnoreImportLibrary="true"
 				AdditionalDependencies="kernel32.lib libcmtd.lib user32.lib oldnames.lib advapi32.lib shell32.lib "
 				OutputFile="../bin/ff_unrar.dll"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="dll.def"
 				DelayLoadDLLs="$(NOINHERIT)"
@@ -89,7 +88,6 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				EmbedManifest="true"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -159,7 +157,6 @@
 				IgnoreImportLibrary="true"
 				AdditionalDependencies="libcmtd.lib kernel32.lib user32.lib oldnames.lib advapi32.lib shell32.lib  $(NOINHERIT)"
 				OutputFile="../bin/ff_unrar.dll"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="dll.def"
 				DelayLoadDLLs="$(NOINHERIT)"
@@ -175,7 +172,6 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				EmbedManifest="true"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -249,7 +245,6 @@
 				AdditionalDependencies="libcmt.lib kernel32.lib user32.lib oldnames.lib advapi32.lib shell32.lib $(NOINHERIT)"
 				OutputFile="../bin/ff_unrar.dll"
 				LinkIncremental="1"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="dll.def"
 				DelayLoadDLLs="$(NOINHERIT)"
@@ -267,7 +262,6 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				EmbedManifest="true"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -341,7 +335,6 @@
 				AdditionalDependencies="libcmt.lib kernel32.lib user32.lib oldnames.lib advapi32.lib shell32.lib  $(NOINHERIT)"
 				OutputFile="../bin/ff_unrar.dll"
 				LinkIncremental="1"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="dll.def"
 				DelayLoadDLLs="$(NOINHERIT)"
@@ -358,7 +351,6 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				EmbedManifest="true"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"

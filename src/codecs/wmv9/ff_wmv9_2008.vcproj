@@ -76,7 +76,6 @@
 				AdditionalDependencies="kernel32.lib libcmtd.lib libcpmtd.lib uuid.lib oleaut32.lib ole32.lib oldnames.lib"
 				OutputFile="../../../bin/ff_wmv9.dll"
 				SuppressStartupBanner="true"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="ff_wmv9.def"
 				DelayLoadDLLs="$(NOINHERIT)"
@@ -93,7 +92,6 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				EmbedManifest="true"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -168,7 +166,6 @@
 				AdditionalDependencies="libcmtd.lib libcpmtd.lib kernel32.lib uuid.lib oleaut32.lib ole32.lib oldnames.lib $(NOINHERIT)"
 				OutputFile="../../../bin/ff_wmv9.dll"
 				SuppressStartupBanner="true"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="ff_wmv9.def"
 				DelayLoadDLLs="$(NOINHERIT)"
@@ -184,7 +181,6 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				EmbedManifest="true"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -262,7 +258,6 @@
 				OutputFile="../../../bin/ff_wmv9.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="ff_wmv9.def"
 				DelayLoadDLLs="$(NOINHERIT)"
@@ -280,7 +275,6 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				EmbedManifest="true"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -358,7 +352,6 @@
 				OutputFile="../../../bin/ff_wmv9.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="ff_wmv9.def"
 				DelayLoadDLLs="$(NOINHERIT)"
@@ -375,7 +368,6 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				EmbedManifest="true"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"

@@ -88,7 +88,6 @@
 				OutputFile="../bin/ffavisynth.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="ffavisynth.def"
 				DelayLoadDLLs="$(NOINHERIT)"
@@ -106,7 +105,6 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				EmbedManifest="true"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -193,7 +191,6 @@
 				OutputFile="../bin/ffavisynth.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				DelayLoadDLLs="$(NOINHERIT)"
 				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
@@ -208,7 +205,6 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				EmbedManifest="true"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -292,7 +288,6 @@
 				AdditionalDependencies="kernel32.lib libcmtd.lib ole32.lib"
 				OutputFile="../bin/ffavisynth.dll"
 				SuppressStartupBanner="true"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="ffavisynth.def"
 				DelayLoadDLLs="$(NOINHERIT)"
@@ -309,7 +304,6 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				EmbedManifest="true"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -392,7 +386,6 @@
 				AdditionalDependencies="kernel32.lib libcmtd.lib ole32.lib $(NOINHERIT)"
 				OutputFile="../bin/ffavisynth.dll"
 				SuppressStartupBanner="true"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
@@ -406,7 +399,6 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				EmbedManifest="true"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"

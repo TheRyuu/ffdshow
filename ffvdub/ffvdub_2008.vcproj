@@ -75,7 +75,6 @@
 				AdditionalDependencies="kernel32.lib libcmtd.lib user32.lib ole32.lib uuid.lib advapi32.lib oleaut32.lib winmm.lib"
 				OutputFile="../bin/ffvdub.vdf"
 				SuppressStartupBanner="true"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
@@ -91,7 +90,6 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				EmbedManifest="true"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -165,7 +163,6 @@
 				AdditionalDependencies="libcmtd.lib kernel32.lib user32.lib ole32.lib uuid.lib advapi32.lib oleaut32.lib winmm.lib $(NOINHERIT)"
 				OutputFile="../bin/ffvdub.vdf"
 				SuppressStartupBanner="true"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
@@ -180,7 +177,6 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				EmbedManifest="true"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -262,7 +258,6 @@
 				OutputFile="../bin/ffvdub.vdf"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				DelayLoadDLLs="$(NOINHERIT)"
 				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
@@ -279,7 +274,6 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				EmbedManifest="true"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -360,7 +354,6 @@
 				OutputFile="../bin/ffvdub.vdf"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				DelayLoadDLLs="$(NOINHERIT)"
 				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
@@ -376,7 +369,6 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				EmbedManifest="true"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"

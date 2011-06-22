@@ -73,7 +73,6 @@
 				AdditionalDependencies="libcmtd.lib oldnames.lib kernel32.lib user32.lib gdi32.lib vfw32.lib advapi32.lib Comdlg32.lib $(NOINHERIT)"
 				OutputFile="../bin/makeAVIS.exe"
 				SuppressStartupBanner="true"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
@@ -88,8 +87,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				AdditionalManifestFiles="..\bin\manifest32\makeAVIS.exe.manifest"
-				EmbedManifest="true"
+				AdditionalManifestFiles="..\bin\manifest\makeAVIS.exe.manifest"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -162,7 +160,6 @@
 				AdditionalDependencies="libcmtd.lib oldnames.lib kernel32.lib user32.lib gdi32.lib vfw32.lib advapi32.lib Comdlg32.lib $(NOINHERIT)"
 				OutputFile="../bin/makeAVIS.exe"
 				SuppressStartupBanner="true"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
@@ -176,8 +173,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				AdditionalManifestFiles="..\bin\manifest64\makeAVIS.exe.manifest"
-				EmbedManifest="true"
+				AdditionalManifestFiles="..\bin\manifest\makeAVIS.exe.manifest"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -257,7 +253,6 @@
 				OutputFile="../bin/makeAVIS.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				DelayLoadDLLs="$(NOINHERIT)"
 				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
@@ -273,8 +268,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				AdditionalManifestFiles="..\bin\manifest32\makeAVIS.exe.manifest"
-				EmbedManifest="true"
+				AdditionalManifestFiles="..\bin\manifest\makeAVIS.exe.manifest"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -353,7 +347,6 @@
 				OutputFile="../bin/makeAVIS.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				DelayLoadDLLs="$(NOINHERIT)"
 				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
@@ -368,8 +361,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				AdditionalManifestFiles="..\bin\manifest64\makeAVIS.exe.manifest"
-				EmbedManifest="true"
+				AdditionalManifestFiles="..\bin\manifest\makeAVIS.exe.manifest"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"

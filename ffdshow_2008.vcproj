@@ -98,7 +98,6 @@
 				OutputFile="bin\ffdshow.ax"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories=".\bin\lib_x86;&quot;$(DXSDK_DIR)Lib\x86&quot;"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile=".\src\ffdshow.def"
 				DelayLoadDLLs="$(NOINHERIT)"
@@ -114,7 +113,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				EmbedManifest="true"
+				AdditionalManifestFiles="bin\manifest\ffdshow.ax.manifest"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -212,7 +211,6 @@
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories=".\bin\lib_x64;&quot;$(DXSDK_DIR)Lib\x64&quot;"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile=".\src\ffdshow.def"
 				DelayLoadDLLs="$(NOINHERIT)"
@@ -228,7 +226,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				EmbedManifest="true"
+				AdditionalManifestFiles="bin\manifest\ffdshow.ax.manifest"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -331,7 +329,6 @@
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories=".\bin\lib_x86;&quot;$(DXSDK_DIR)Lib\x86&quot;"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile=".\src\ffdshow.def"
 				DelayLoadDLLs="$(NOINHERIT)"
@@ -348,8 +345,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				AdditionalManifestFiles="bin\manifest32\ffdshow.ax.manifest"
-				EmbedManifest="true"
+				AdditionalManifestFiles="bin\manifest\ffdshow.ax.manifest"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -450,7 +446,6 @@
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories=".\bin\lib_x64;&quot;$(DXSDK_DIR)Lib\x64&quot;"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile=".\src\ffdshow.def"
 				DelayLoadDLLs="$(NOINHERIT)"
@@ -467,8 +462,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				AdditionalManifestFiles="bin\manifest64\ffdshow.ax.manifest"
-				EmbedManifest="true"
+				AdditionalManifestFiles="bin\manifest\ffdshow.ax.manifest"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"

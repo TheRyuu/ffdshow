@@ -422,18 +422,6 @@ Source: "..\openIE.js";                           DestDir: "{app}";             
 Source: "license\gnu_license.txt";                DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
 Source: "license\Boost_Software_License_1.0.txt"; DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
 
-#if is64bit
-  #define ff_manifest = '..\manifest64'
-#else
-  #define ff_manifest = '..\manifest32'
-#endif
-
-Source: "{#= ff_manifest}\ffdshow.ax.manifest";   DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01
-Source: "{#= ff_manifest}\ff_vfw.dll.manifest";   DestDir: "{sys}";                         Components: ffdshow\vfw;                Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01
-#if include_makeavis
-Source: "{#= ff_manifest}\makeAVIS.exe.manifest"; DestDir: "{app}";                         Components: ffdshow\makeavis;           Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01
-#endif
-
 [InstallDelete]
 ; Private assemblies
 Type: files; Name: "{app}\msvcr80.dll";                            Components: ffdshow
@@ -452,6 +440,12 @@ Type: files; Name: "{app}\libmplayer.dll";                         Components: f
 Type: files; Name: "{app}\ff_tremor.dll";                          Components: ffdshow
 Type: files; Name: "{app}\ff_x264.dll";                            Components: ffdshow
 Type: files; Name: "{app}\ffmpegmt.dll";                           Components: ffdshow
+
+Type: files; Name: "{app}\ffdshow.ax.manifest";                    Components: ffdshow
+Type: files; Name: "{sys}\ff_vfw.dll.manifest";                    Components: ffdshow\vfw
+#if include_makeavis
+Type: files; Name: "{app}\makeAVIS.exe.manifest";                  Components: ffdshow\makeavis
+#endif
 
 [Registry]
 #if is64bit

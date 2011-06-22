@@ -83,7 +83,6 @@
 				AdditionalDependencies="kernel32.lib ole32.lib libcmtd.lib libcpmtd.lib winmm.lib comctl32.lib ..\bin\lib_x86\libboost_thread-vc90-mt-sgd-1_46_1.lib"
 				OutputFile="../bin/ff_vfw.dll"
 				SuppressStartupBanner="true"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile=".\ff_vfw.def"
 				DelayLoadDLLs="$(NOINHERIT)"
@@ -100,7 +99,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				EmbedManifest="true"
+				AdditionalManifestFiles="..\bin\manifest\ff_vfw.dll.manifest"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -184,7 +183,6 @@
 				AdditionalDependencies="kernel32.lib ole32.lib libcmtd.lib libcpmtd.lib winmm.lib comctl32.lib ..\bin\lib_x64\libboost_thread-vc90-mt-sgd-1_46_1.lib $(NOINHERIT)"
 				OutputFile="../bin/ff_vfw.dll"
 				SuppressStartupBanner="true"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile=".\ff_vfw.def"
 				DelayLoadDLLs="$(NOINHERIT)"
@@ -200,7 +198,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				EmbedManifest="true"
+				AdditionalManifestFiles="..\bin\manifest\ff_vfw.dll.manifest"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -290,7 +288,6 @@
 				OutputFile="../bin/ff_vfw.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile=".\ff_vfw.def"
 				DelayLoadDLLs="$(NOINHERIT)"
@@ -308,8 +305,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				AdditionalManifestFiles="..\bin\manifest32\ff_vfw.dll.manifest"
-				EmbedManifest="true"
+				AdditionalManifestFiles="..\bin\manifest\ff_vfw.dll.manifest"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -398,7 +394,6 @@
 				OutputFile="../bin/ff_vfw.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile=".\ff_vfw.def"
 				DelayLoadDLLs="$(NOINHERIT)"
@@ -415,8 +410,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				AdditionalManifestFiles="..\bin\manifest64\ff_vfw.dll.manifest"
-				EmbedManifest="true"
+				AdditionalManifestFiles="..\bin\manifest\ff_vfw.dll.manifest"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"

@@ -89,7 +89,6 @@
 				OutputFile="../bin/ff_acm.acm"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile=".\ff_acm.def"
 				DelayLoadDLLs="$(NOINHERIT)"
@@ -107,7 +106,6 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				EmbedManifest="false"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -196,7 +194,6 @@
 				OutputFile="../bin/ff_acm.acm"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile=".\ff_acm.def"
 				DelayLoadDLLs="$(NOINHERIT)"
@@ -213,7 +210,6 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				EmbedManifest="false"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -296,7 +292,6 @@
 				AdditionalDependencies="libcmtd.lib winmm.lib comctl32.lib ole32.lib kernel32.lib advapi32.lib Secur32.lib $(NOINHERIT)"
 				OutputFile="../bin/ff_acm.acm"
 				SuppressStartupBanner="true"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile=".\ff_acm.def"
 				DelayLoadDLLs="$(NOINHERIT)"
@@ -313,7 +308,6 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				EmbedManifest="true"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -396,7 +390,6 @@
 				AdditionalDependencies="libcmtd.lib winmm.lib comctl32.lib ole32.lib kernel32.lib advapi32.lib $(NOINHERIT)"
 				OutputFile="../bin/ff_acm.acm"
 				SuppressStartupBanner="true"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile=".\ff_acm.def"
 				DelayLoadDLLs="$(NOINHERIT)"
@@ -412,7 +405,6 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				EmbedManifest="true"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"

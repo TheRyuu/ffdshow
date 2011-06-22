@@ -80,7 +80,6 @@
 				AdditionalDependencies="kernel32.lib libcmtd.lib"
 				OutputFile="../../../bin/ff_libmad.dll"
 				SuppressStartupBanner="true"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="ff_libmad.def"
 				DelayLoadDLLs="$(NOINHERIT)"
@@ -95,7 +94,6 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				EmbedManifest="true"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -175,7 +173,6 @@
 				AdditionalDependencies="libcmtd.lib kernel32.lib $(NOINHERIT)"
 				OutputFile="../../../bin/ff_libmad.dll"
 				SuppressStartupBanner="true"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="ff_libmad.def"
 				DelayLoadDLLs="$(NOINHERIT)"
@@ -190,7 +187,6 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				EmbedManifest="true"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -275,7 +271,6 @@
 				AdditionalDependencies="libcmt.lib kernel32.lib $(NOINHERIT)"
 				OutputFile="../../../bin/ff_libmad.dll"
 				SuppressStartupBanner="true"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="ff_libmad.def"
 				DelayLoadDLLs="$(NOINHERIT)"
@@ -291,7 +286,6 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				EmbedManifest="true"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -376,7 +370,6 @@
 				AdditionalDependencies="libcmt.lib kernel32.lib $(NOINHERIT)"
 				OutputFile="../../../bin/ff_libmad.dll"
 				SuppressStartupBanner="true"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="ff_libmad.def"
 				DelayLoadDLLs="$(NOINHERIT)"
@@ -392,7 +385,6 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				EmbedManifest="true"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"

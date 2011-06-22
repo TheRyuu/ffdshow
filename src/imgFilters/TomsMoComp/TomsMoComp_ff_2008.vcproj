@@ -87,7 +87,6 @@
 				OutputFile="../../../bin/TomsMoComp_ff.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile=".\TomsMoComp_ff.def"
 				DelayLoadDLLs="$(NOINHERIT)"
@@ -103,7 +102,6 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				EmbedManifest="true"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -189,7 +187,6 @@
 				OutputFile="../../../bin/TomsMoComp_ff.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile=".\TomsMoComp_ff.def"
 				DelayLoadDLLs="$(NOINHERIT)"
@@ -206,7 +203,6 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				EmbedManifest="true"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -288,7 +284,6 @@
 				AdditionalDependencies="libcmtd.lib kernel32.lib $(NOINHERIT)"
 				OutputFile="../../../bin/TomsMoComp_ff.dll"
 				SuppressStartupBanner="true"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile=".\TomsMoComp_ff.def"
 				DelayLoadDLLs="$(NOINHERIT)"
@@ -305,7 +300,6 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				EmbedManifest="true"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -387,7 +381,6 @@
 				AdditionalDependencies="libcmtd.lib kernel32.lib $(NOINHERIT)"
 				OutputFile="../../../bin/TomsMoComp_ff.dll"
 				SuppressStartupBanner="true"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile=".\TomsMoComp_ff.def"
 				DelayLoadDLLs="$(NOINHERIT)"
@@ -405,7 +398,6 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				EmbedManifest="true"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"

@@ -84,7 +84,6 @@
 				OutputFile="../../../bin/ff_libfaad2.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile=".\ff_libfaad2.def"
 				DelayLoadDLLs="$(NOINHERIT)"
@@ -101,7 +100,6 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				EmbedManifest="true"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -184,7 +182,6 @@
 				OutputFile="../../../bin/ff_libfaad2.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile=".\ff_libfaad2.def"
 				DelayLoadDLLs="$(NOINHERIT)"
@@ -200,7 +197,6 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				EmbedManifest="true"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -278,7 +274,6 @@
 				AdditionalDependencies="kernel32.lib libcmtd.lib"
 				OutputFile="../../../bin/ff_libfaad2.dll"
 				SuppressStartupBanner="true"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile=".\ff_libfaad2.def"
 				DelayLoadDLLs="$(NOINHERIT)"
@@ -294,7 +289,6 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				EmbedManifest="true"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -371,7 +365,6 @@
 				AdditionalDependencies="libcmtd.lib kernel32.lib"
 				OutputFile="../../../bin/ff_libfaad2.dll"
 				SuppressStartupBanner="true"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile=".\ff_libfaad2.def"
 				DelayLoadDLLs="$(NOINHERIT)"
@@ -386,7 +379,6 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				EmbedManifest="true"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"

@@ -70,7 +70,6 @@
 				IgnoreImportLibrary="true"
 				AdditionalDependencies="libcmtd.lib kernel32.lib"
 				OutputFile="../../../bin/ff_kernelDeint.dll"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="ff_kernelDeint.def"
 				DelayLoadDLLs="$(NOINHERIT)"
@@ -87,7 +86,6 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				EmbedManifest="true"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -156,7 +154,6 @@
 				IgnoreImportLibrary="true"
 				AdditionalDependencies="libcmtd.lib kernel32.lib"
 				OutputFile="../../../bin/ff_kernelDeint.dll"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="ff_kernelDeint.def"
 				DelayLoadDLLs="$(NOINHERIT)"
@@ -173,7 +170,6 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				EmbedManifest="true"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -246,7 +242,6 @@
 				AdditionalDependencies="libcmt.lib kernel32.lib"
 				OutputFile="../../../bin/ff_kernelDeint.dll"
 				LinkIncremental="1"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="ff_kernelDeint.def"
 				DelayLoadDLLs="$(NOINHERIT)"
@@ -264,7 +259,6 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				EmbedManifest="true"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -337,7 +331,6 @@
 				AdditionalDependencies="libcmt.lib kernel32.lib"
 				OutputFile="../../../bin/ff_kernelDeint.dll"
 				LinkIncremental="1"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="ff_kernelDeint.def"
 				DelayLoadDLLs="$(NOINHERIT)"
@@ -355,7 +348,6 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				EmbedManifest="true"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
