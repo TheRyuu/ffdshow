@@ -1,108 +1,78 @@
-@IF "%PROGRAMFILES(x86)%zzz"=="zzz" (
-  SET FF_PROG_FILES=%PROGRAMFILES%
+@ECHO OFF
+
+IF "%PROGRAMFILES(x86)%zzz"=="zzz" (
+  SET FF_PROGRAMFILES=%PROGRAMFILES%
 ) ELSE (
-  SET FF_PROG_FILES=%PROGRAMFILES(x86)%
+  SET FF_PROGRAMFILES=%PROGRAMFILES(x86)%
 )
 
-@SET ISCC="%FF_PROG_FILES%\Inno Setup 5\ISCC.exe"
-@SET MSVC9="%FF_PROG_FILES%\Microsoft Visual Studio 9.0\Common7\IDE\devenv.exe"
-
-@echo [Removing files]
-@cd bin
-@del /Q *.dll *.exe
-@cd ..\
-
-@echo [Compiling with MSVC]
-%MSVC9% %SOLUTIONFILE1% %BUILDTYPE% %BUILDTARGET1% /project rebase
-@IF %ERRORLEVEL% NEQ 0 GOTO :GotError
-%MSVC9% %SOLUTIONFILE1% %BUILDTYPE% %BUILDTARGET1% /project makeAVIS
-@IF %ERRORLEVEL% NEQ 0 GOTO :GotError
-%MSVC9% %SOLUTIONFILE1% %BUILDTYPE% %BUILDTARGET1% /project ffavisynth
-@IF %ERRORLEVEL% NEQ 0 GOTO :GotError
-%MSVC9% %SOLUTIONFILE1% %BUILDTYPE% %BUILDTARGET1% /project ffvdub
-@IF %ERRORLEVEL% NEQ 0 GOTO :GotError
-%MSVC9% %SOLUTIONFILE1% %BUILDTYPE% %BUILDTARGET1% /project FLT_ffdshow
-@IF %ERRORLEVEL% NEQ 0 GOTO :GotError
-%MSVC9% %SOLUTIONFILE1% %BUILDTYPE% %BUILDTARGET1% /project ff_vfw
-@IF %ERRORLEVEL% NEQ 0 GOTO :GotError
-%MSVC9% %SOLUTIONFILE1% %BUILDTYPE% %BUILDTARGET1% /project ff_acm
-@IF %ERRORLEVEL% NEQ 0 GOTO :GotError
-%MSVC9% %SOLUTIONFILE1% %BUILDTYPE% %BUILDTARGET1% /project ff_wmv9
-@IF %ERRORLEVEL% NEQ 0 GOTO :GotError
-%MSVC9% %SOLUTIONFILE1% %BUILDTYPE% %BUILDTARGET1% /project TomsMoComp_ff
-@IF %ERRORLEVEL% NEQ 0 GOTO :GotError
-%MSVC9% %SOLUTIONFILE1% %BUILDTYPE% %BUILDTARGET1% /project ff_kernelDeint
-IF %ERRORLEVEL% NEQ 0 GOTO :GotError
-
-%MSVC9% %SOLUTIONFILE2% %BUILDTYPE% %BUILDTARGET2% /project ff_unrar
-@IF %ERRORLEVEL% NEQ 0 GOTO :GotError
-%MSVC9% %SOLUTIONFILE2% %BUILDTYPE% %BUILDTARGET2% /project ff_libmad
-@IF %ERRORLEVEL% NEQ 0 GOTO :GotError
-%MSVC9% %SOLUTIONFILE2% %BUILDTYPE% %BUILDTARGET2% /project ff_liba52
-@IF %ERRORLEVEL% NEQ 0 GOTO :GotError
-%MSVC9% %SOLUTIONFILE2% %BUILDTYPE% %BUILDTARGET2% /project ff_samplerate
-@IF %ERRORLEVEL% NEQ 0 GOTO :GotError
-%MSVC9% %SOLUTIONFILE2% %BUILDTYPE% %BUILDTARGET2% /project ff_tremor
-@IF %ERRORLEVEL% NEQ 0 GOTO :GotError
-%MSVC9% %SOLUTIONFILE2% %BUILDTYPE% %BUILDTARGET2% /project ff_libdts
-@IF %ERRORLEVEL% NEQ 0 GOTO :GotError
-%MSVC9% %SOLUTIONFILE2% %BUILDTYPE% %BUILDTARGET2% /project ff_libfaad2
-@IF %ERRORLEVEL% NEQ 0 GOTO :GotError
-%MSVC9% %SOLUTIONFILE2% %BUILDTYPE% %BUILDTARGET2% /project libmpeg2_ff
-@IF %ERRORLEVEL% NEQ 0 GOTO :GotError
-%MSVC9% %SOLUTIONFILE2% %BUILDTYPE% %BUILDTARGET2% /project ffdshow
-@IF %ERRORLEVEL% NEQ 0 GOTO :GotError
-
-@echo [make clean]
-@cd src\ffmpeg
-@make clean
-@IF %ERRORLEVEL% NEQ 0 GOTO :GotError
-@cd ..\..
-@cd src\ffmpeg-mt
-@make clean
-@IF %ERRORLEVEL% NEQ 0 GOTO :GotError
-@cd ..\..
-@cd src\codecs\x264
-@make clean
-@IF %ERRORLEVEL% NEQ 0 GOTO :GotError
-@cd ..\..\..
-@cd src\codecs\xvidcore
-@make clean
-@IF %ERRORLEVEL% NEQ 0 GOTO :GotError
-@cd ..\..\..
-
-@IF "%FF_BUILD_NAME%"=="x64" (
+IF "%FF_TARGET%"=="x64" (
   SET FF_MAKE_PARAM=64BIT=yes
+  SET ISCC_PARAM=/dis64bit=yes
 ) ELSE (
   SET FF_MAKE_PARAM=
+  SET ISCC_PARAM=
 )
 
-@echo [Compiling with GCC]
-@cd src\ffmpeg
-@make %FF_MAKE_PARAM%
-@IF %ERRORLEVEL% NEQ 0 GOTO :GotError
-@cd ..\..
-@cd src\ffmpeg-mt
-@make %FF_MAKE_PARAM%
-@IF %ERRORLEVEL% NEQ 0 GOTO :GotError
-@cd ..\..
-@cd src\codecs\x264
-@make %FF_MAKE_PARAM%
-@IF %ERRORLEVEL% NEQ 0 GOTO :GotError
-@cd ..\..\..
-@cd src\codecs\xvidcore
-@make %FF_MAKE_PARAM%
-@IF %ERRORLEVEL% NEQ 0 GOTO :GotError
-@cd ..\..\..
+SET ISCC="%FF_PROGRAMFILES%\Inno Setup 5\ISCC.exe"
 
-@echo [Building installer]
-@cd bin\distrib
-@%ISCC% ffdshow_installer.iss
-@IF %ERRORLEVEL% NEQ 0 GOTO :GotError
-@cd ..\..\..
 
-@goto :EOF
+echo [Removing files]
+cd bin
+REM del /Q *.dll *.exe
+cd ..\
+
+
+echo [Compiling with MSVC]
+
+call "%VS100COMNTOOLS%vsvars32.bat"
+devenv %SOLUTIONFILE% %BUILDTYPE% %BUILDTARGET%
+IF %ERRORLEVEL% NEQ 0 GOTO :GotError
+
+
+echo [Compiling with GCC]
+
+cd src\ffmpeg
+IF NOT "%BUILDTYPE%"=="/build" (
+  make clean
+  IF %ERRORLEVEL% NEQ 0 GOTO :GotError
+)
+IF NOT "%BUILDTYPE%"=="/clean" (
+  make %FF_MAKE_PARAM%
+  IF %ERRORLEVEL% NEQ 0 GOTO :GotError
+)
+cd ..\..
+
+IF "%FF_TARGET%"=="x86" (
+  cd src\imgFilters\KernelDeint
+  IF NOT "%BUILDTYPE%"=="/build" (
+    make clean
+    IF %ERRORLEVEL% NEQ 0 GOTO :GotError
+  )
+  IF NOT "%BUILDTYPE%"=="/clean" (
+    make %FF_MAKE_PARAM%
+    IF %ERRORLEVEL% NEQ 0 GOTO :GotError
+  )
+  cd ..\..\..
+)
+
+
+echo [Building installer]
+
+IF EXIST %ISCC% (
+  cd bin\distrib
+  %ISCC% ffdshow_installer.iss %FF_MAKE_PARAM%
+  IF %ERRORLEVEL% NEQ 0 GOTO :GotError
+  cd ..\..
+) else (
+  echo InnoSetup not found
+  pause
+)
+
+
+goto :EOF
+
 
 :GotError
-@echo There was an error!
-@pause
+echo There was an error!
+pause

@@ -1,8 +1,6 @@
-@SET FF_BUILD_NAME=x64
+@SET FF_TARGET=x64
 @SET BUILDTYPE=/rebuild
-@SET SOLUTIONFILE1=ffdshow_2008.sln
-@SET SOLUTIONFILE2=ffdshow_2008.sln
-@SET BUILDTARGET1="Release|Win32"
-@SET BUILDTARGET2="Release|Win32"
+@SET SOLUTIONFILE=ffdshow_2010.sln
+@SET BUILDTARGET="Release|x64"
 
 @build_script.bat

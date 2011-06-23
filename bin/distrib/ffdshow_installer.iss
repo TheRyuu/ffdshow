@@ -25,7 +25,9 @@
 #define include_setup_icon        = False
 
 ; Compiler settings
+#ifndef is64bit
 #define is64bit                   = False
+#endif
 
 #define sse_required              = False
 #define sse2_required             = False
