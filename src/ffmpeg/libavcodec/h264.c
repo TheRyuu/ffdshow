@@ -1069,9 +1069,6 @@ av_cold int ff_h264_decode_init(AVCodecContext *avctx){
     s->quarter_sample = 1;
     if(!avctx->has_b_frames)
     s->low_delay= 1;
-    
-    /* ffdshow custom code */
-    s->avctx->pix_fmt = PIX_FMT_YUV420P;
 
     avctx->chroma_sample_location = AVCHROMA_LOC_LEFT;
 
@@ -2599,27 +2596,25 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
         }
 
         switch (h->sps.bit_depth_luma) {
+#if ENABLE_HIGH_BIT
             case 9 :
                 s->avctx->pix_fmt = CHROMA444 ? PIX_FMT_YUV444P9 : PIX_FMT_YUV420P9;
                 break;
             case 10 :
                 s->avctx->pix_fmt = CHROMA444 ? PIX_FMT_YUV444P10 : PIX_FMT_YUV420P10;
                 break;
+#endif
             default:
                 if (CHROMA444){
-                    s->avctx->pix_fmt = s->avctx->color_range == AVCOL_RANGE_JPEG ? PIX_FMT_YUVJ444P : PIX_FMT_YUV444P;
+                    s->avctx->pix_fmt = /*s->avctx->color_range == AVCOL_RANGE_JPEG ? PIX_FMT_YUVJ444P : */PIX_FMT_YUV444P;
                 }else{
-                    /* ffdshow custom code */
                     if(s->avctx->codec_id == CODEC_ID_SVQ3) {
                         s->avctx->pix_fmt = PIX_FMT_YUVJ420P;
                     } else {
-                        s->avctx->pix_fmt = /*s->avctx->color_range == AVCOL_RANGE_JPEG ? PIX_FMT_YUVJ420P : */PIX_FMT_YUVJ420P;
+                        s->avctx->pix_fmt = /*s->avctx->color_range == AVCOL_RANGE_JPEG ? PIX_FMT_YUVJ420P : */PIX_FMT_YUV420P;
                     }
                 }
         }
-        #if !ENABLE_HIGH_BIT
-        s->avctx->pix_fmt = PIX_FMT_YUV420P;
-        #endif
 
         if (MPV_common_init(s) < 0) {
             av_log(h->s.avctx, AV_LOG_ERROR, "MPV_common_init() failed.\n");
