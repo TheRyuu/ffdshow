@@ -74,12 +74,159 @@ static void fill_dxva_slice_long(H264Context *h){
 	}
 }
 
+static void decode_postinit_dxva(H264Context *h, int* nOutPOC, int64_t* rtStartTime){
+    MpegEncContext * const s = &h->s;
+    Picture *out = s->current_picture_ptr;
+    Picture *cur = s->current_picture_ptr;
+    int i, pics, out_of_order, out_idx;
+    
+    s->current_picture_ptr->qscale_type= FF_QSCALE_TYPE_H264;
+    s->current_picture_ptr->pict_type= s->pict_type;
+
+    if (cur->field_poc[0]==INT_MAX || cur->field_poc[1]==INT_MAX) {
+        return;
+    }
+
+    cur->interlaced_frame = 0;
+    cur->repeat_pict = 0;
+
+    /* Signal interlacing information externally. */
+    /* Prioritize picture timing SEI information over used decoding process if it exists. */
+
+    if(h->sps.pic_struct_present_flag){
+        switch (h->sei_pic_struct)
+        {
+        case SEI_PIC_STRUCT_FRAME:
+            break;
+        case SEI_PIC_STRUCT_TOP_FIELD:
+        case SEI_PIC_STRUCT_BOTTOM_FIELD:
+            cur->interlaced_frame = 1;
+            break;
+        case SEI_PIC_STRUCT_TOP_BOTTOM:
+        case SEI_PIC_STRUCT_BOTTOM_TOP:
+            if (FIELD_OR_MBAFF_PICTURE)
+                cur->interlaced_frame = 1;
+            else
+                // try to flag soft telecine progressive
+                cur->interlaced_frame = h->prev_interlaced_frame;
+            break;
+        case SEI_PIC_STRUCT_TOP_BOTTOM_TOP:
+        case SEI_PIC_STRUCT_BOTTOM_TOP_BOTTOM:
+            // Signal the possibility of telecined film externally (pic_struct 5,6)
+            // From these hints, let the applications decide if they apply deinterlacing.
+            cur->repeat_pict = 1;
+            break;
+        case SEI_PIC_STRUCT_FRAME_DOUBLING:
+            // Force progressive here, as doubling interlaced frame is a bad idea.
+            cur->repeat_pict = 2;
+            break;
+        case SEI_PIC_STRUCT_FRAME_TRIPLING:
+            cur->repeat_pict = 4;
+            break;
+        }
+
+        if ((h->sei_ct_type & 3) && h->sei_pic_struct <= SEI_PIC_STRUCT_BOTTOM_TOP)
+            cur->interlaced_frame = (h->sei_ct_type & (1<<1)) != 0;
+    }else{
+        /* Derive interlacing flag from used decoding process. */
+        cur->interlaced_frame = FIELD_OR_MBAFF_PICTURE;
+    }
+    h->prev_interlaced_frame = cur->interlaced_frame;
+
+    if (cur->field_poc[0] != cur->field_poc[1]){
+        /* Derive top_field_first from field pocs. */
+        cur->top_field_first = cur->field_poc[0] < cur->field_poc[1];
+    }else{
+        if(cur->interlaced_frame || h->sps.pic_struct_present_flag){
+            /* Use picture timing SEI information. Even if it is a information of a past frame, better than nothing. */
+            if(h->sei_pic_struct == SEI_PIC_STRUCT_TOP_BOTTOM
+              || h->sei_pic_struct == SEI_PIC_STRUCT_TOP_BOTTOM_TOP)
+                cur->top_field_first = 1;
+            else
+                cur->top_field_first = 0;
+        }else{
+            /* Most likely progressive */
+            cur->top_field_first = 0;
+        }
+    }
+
+    /* ffdshow custom code */
+    cur->video_full_range_flag = h->sps.full_range;
+    cur->YCbCr_RGB_matrix_coefficients = h->sps.colorspace;
+
+    //FIXME do something with unavailable reference frames
+
+    /* Sort B-frames into display order */
+
+    if(h->sps.bitstream_restriction_flag
+       && s->avctx->has_b_frames < h->sps.num_reorder_frames){
+        s->avctx->has_b_frames = h->sps.num_reorder_frames;
+        s->low_delay = 0;
+    }
+
+    if(   s->avctx->strict_std_compliance >= FF_COMPLIANCE_STRICT
+       && !h->sps.bitstream_restriction_flag){
+        s->avctx->has_b_frames= MAX_DELAYED_PIC_COUNT;
+        s->low_delay= 0;
+    }
+
+    pics = 0;
+    while(h->delayed_pic[pics]) pics++;
+
+    assert(pics <= MAX_DELAYED_PIC_COUNT);
+
+    h->delayed_pic[pics++] = cur;
+    if(cur->reference == 0)
+        cur->reference = DELAYED_PIC_REF;
+
+    out = h->delayed_pic[0];
+    out_idx = 0;
+    for(i=1; h->delayed_pic[i] && !h->delayed_pic[i]->key_frame && !h->delayed_pic[i]->mmco_reset; i++)
+        if(h->delayed_pic[i]->poc < out->poc){
+            out = h->delayed_pic[i];
+            out_idx = i;
+        }
+    if(s->avctx->has_b_frames == 0 && (h->delayed_pic[0]->key_frame || h->delayed_pic[0]->mmco_reset))
+        h->outputed_poc= INT_MIN;
+    out_of_order = out->poc < h->outputed_poc;
+
+    if(h->sps.bitstream_restriction_flag && s->avctx->has_b_frames >= h->sps.num_reorder_frames)
+        { }
+    else if((out_of_order && pics-1 == s->avctx->has_b_frames && s->avctx->has_b_frames < MAX_DELAYED_PIC_COUNT)
+       || (s->low_delay &&
+        ((h->outputed_poc != INT_MIN && out->poc > h->outputed_poc + 2)
+         || cur->pict_type == AV_PICTURE_TYPE_B)))
+    {
+        s->low_delay = 0;
+        s->avctx->has_b_frames++;
+    }
+
+    if(out_of_order || pics > s->avctx->has_b_frames){
+        out->reference &= ~DELAYED_PIC_REF;
+        for(i=out_idx; h->delayed_pic[i]; i++)
+            h->delayed_pic[i] = h->delayed_pic[i+1];
+    }
+    // ==> Start patch MPC DXVA
+    if(!out_of_order && pics > s->avctx->has_b_frames){
+        //*data_size = sizeof(AVFrame);
+
+        if(out_idx==0 && h->delayed_pic[0] && (h->delayed_pic[0]->key_frame || h->delayed_pic[0]->mmco_reset)) {
+            h->outputed_poc = INT_MIN;
+        } else
+            h->outputed_poc = out->poc;
+        //*pict= *(AVFrame*)out;
+        if (nOutPOC)     *nOutPOC		= out->poc;
+        if (rtStartTime) *rtStartTime	= out->reordered_opaque;
+        
+    }else{
+        av_log(s->avctx, AV_LOG_DEBUG, "no picture\n");
+    }
+    // <== End patch MPC DXVA
+}
+
 static void field_end_noexecute(H264Context *h){
     MpegEncContext * const s = &h->s;
     s->mb_y= 0;
-
-    s->current_picture_ptr->qscale_type= FF_QSCALE_TYPE_H264;
-    s->current_picture_ptr->pict_type= s->pict_type;
 
     if(!s->dropable) {
         ff_h264_execute_ref_pic_marking(h, h->mmco, h->mmco_index);
@@ -804,6 +951,7 @@ static int decode_nal_units_noexecute(H264Context *h, const uint8_t *buf, int bu
         case NAL_PPS:
             init_get_bits(&s->gb, ptr, bit_length);
 
+            h->using_dxva = 1;
             ff_h264_decode_picture_parameter_set(h, bit_length);
 
             break;
@@ -909,157 +1057,11 @@ int av_h264_decode_frame(struct AVCodecContext* avctx, int* nOutPOC, int64_t* rt
     }
 
     if(!(s->flags2 & CODEC_FLAG2_CHUNKS) || (s->mb_y >= s->mb_height && s->mb_height)){
-        Picture *out = s->current_picture_ptr;
-        Picture *cur = s->current_picture_ptr;
-        int i, pics, out_of_order, out_idx;
-
+        decode_postinit_dxva(h, nOutPOC, rtStartTime);
+        
         // ==> Start patch MPC DXVA
         field_end_noexecute(h);
         // <== End patch MPC DXVA
-
-        if (cur->field_poc[0]==INT_MAX || cur->field_poc[1]==INT_MAX) {
-            /* Wait for second field. */
-            // ==> Start patch MPC DXVA
-            //*data_size = 0;
-            // <== End patch MPC DXVA
-
-        } else {
-            cur->interlaced_frame = 0;
-            cur->repeat_pict = 0;
-
-            /* Signal interlacing information externally. */
-            /* Prioritize picture timing SEI information over used decoding process if it exists. */
-
-            if(h->sps.pic_struct_present_flag){
-                switch (h->sei_pic_struct)
-                {
-                case SEI_PIC_STRUCT_FRAME:
-                    break;
-                case SEI_PIC_STRUCT_TOP_FIELD:
-                case SEI_PIC_STRUCT_BOTTOM_FIELD:
-                    cur->interlaced_frame = 1;
-                    break;
-                case SEI_PIC_STRUCT_TOP_BOTTOM:
-                case SEI_PIC_STRUCT_BOTTOM_TOP:
-                    if (FIELD_OR_MBAFF_PICTURE)
-                        cur->interlaced_frame = 1;
-                    else
-                        // try to flag soft telecine progressive
-                        cur->interlaced_frame = h->prev_interlaced_frame;
-                    break;
-                case SEI_PIC_STRUCT_TOP_BOTTOM_TOP:
-                case SEI_PIC_STRUCT_BOTTOM_TOP_BOTTOM:
-                    // Signal the possibility of telecined film externally (pic_struct 5,6)
-                    // From these hints, let the applications decide if they apply deinterlacing.
-                    cur->repeat_pict = 1;
-                    break;
-                case SEI_PIC_STRUCT_FRAME_DOUBLING:
-                    // Force progressive here, as doubling interlaced frame is a bad idea.
-                    cur->repeat_pict = 2;
-                    break;
-                case SEI_PIC_STRUCT_FRAME_TRIPLING:
-                    cur->repeat_pict = 4;
-                    break;
-                }
-
-                if ((h->sei_ct_type & 3) && h->sei_pic_struct <= SEI_PIC_STRUCT_BOTTOM_TOP)
-                    cur->interlaced_frame = (h->sei_ct_type & (1<<1)) != 0;
-            }else{
-                /* Derive interlacing flag from used decoding process. */
-                cur->interlaced_frame = FIELD_OR_MBAFF_PICTURE;
-            }
-            h->prev_interlaced_frame = cur->interlaced_frame;
-
-            if (cur->field_poc[0] != cur->field_poc[1]){
-                /* Derive top_field_first from field pocs. */
-                cur->top_field_first = cur->field_poc[0] < cur->field_poc[1];
-            }else{
-                if(cur->interlaced_frame || h->sps.pic_struct_present_flag){
-                    /* Use picture timing SEI information. Even if it is a information of a past frame, better than nothing. */
-                    if(h->sei_pic_struct == SEI_PIC_STRUCT_TOP_BOTTOM
-                      || h->sei_pic_struct == SEI_PIC_STRUCT_TOP_BOTTOM_TOP)
-                        cur->top_field_first = 1;
-                    else
-                        cur->top_field_first = 0;
-                }else{
-                    /* Most likely progressive */
-                    cur->top_field_first = 0;
-                }
-            }
-
-            /* ffdshow custom code */
-            cur->video_full_range_flag = h->sps.full_range;
-            cur->YCbCr_RGB_matrix_coefficients = h->sps.colorspace;
-
-        //FIXME do something with unavailable reference frames
-
-            /* Sort B-frames into display order */
-
-            if(h->sps.bitstream_restriction_flag
-               && s->avctx->has_b_frames < h->sps.num_reorder_frames){
-                s->avctx->has_b_frames = h->sps.num_reorder_frames;
-                s->low_delay = 0;
-            }
-
-            if(   s->avctx->strict_std_compliance >= FF_COMPLIANCE_STRICT
-               && !h->sps.bitstream_restriction_flag){
-                s->avctx->has_b_frames= MAX_DELAYED_PIC_COUNT;
-                s->low_delay= 0;
-            }
-
-            pics = 0;
-            while(h->delayed_pic[pics]) pics++;
-
-            assert(pics <= MAX_DELAYED_PIC_COUNT);
-
-            h->delayed_pic[pics++] = cur;
-            if(cur->reference == 0)
-                cur->reference = DELAYED_PIC_REF;
-
-            out = h->delayed_pic[0];
-            out_idx = 0;
-            for(i=1; h->delayed_pic[i] && !h->delayed_pic[i]->key_frame && !h->delayed_pic[i]->mmco_reset; i++)
-                if(h->delayed_pic[i]->poc < out->poc){
-                    out = h->delayed_pic[i];
-                    out_idx = i;
-                }
-            if(s->avctx->has_b_frames == 0 && (h->delayed_pic[0]->key_frame || h->delayed_pic[0]->mmco_reset))
-                h->outputed_poc= INT_MIN;
-            out_of_order = out->poc < h->outputed_poc;
-
-            if(h->sps.bitstream_restriction_flag && s->avctx->has_b_frames >= h->sps.num_reorder_frames)
-                { }
-            else if((out_of_order && pics-1 == s->avctx->has_b_frames && s->avctx->has_b_frames < MAX_DELAYED_PIC_COUNT)
-               || (s->low_delay &&
-                ((h->outputed_poc != INT_MIN && out->poc > h->outputed_poc + 2)
-                 || cur->pict_type == AV_PICTURE_TYPE_B)))
-            {
-                s->low_delay = 0;
-                s->avctx->has_b_frames++;
-            }
-
-            if(out_of_order || pics > s->avctx->has_b_frames){
-                out->reference &= ~DELAYED_PIC_REF;
-                for(i=out_idx; h->delayed_pic[i]; i++)
-                    h->delayed_pic[i] = h->delayed_pic[i+1];
-            }
-            // ==> Start patch MPC DXVA
-            if(!out_of_order && pics > s->avctx->has_b_frames){
-                //*data_size = sizeof(AVFrame);
-
-                if(out_idx==0 && h->delayed_pic[0] && (h->delayed_pic[0]->key_frame || h->delayed_pic[0]->mmco_reset)) {
-                    h->outputed_poc = INT_MIN;
-                } else
-                    h->outputed_poc = out->poc;
-                //*pict= *(AVFrame*)out;
-                if (nOutPOC)     *nOutPOC		= out->poc;
-                if (rtStartTime) *rtStartTime	= out->reordered_opaque;
-                
-            }else{
-                av_log(avctx, AV_LOG_DEBUG, "no picture\n");
-            }
-            // <== End patch MPC DXVA
-        }
     }
 
     // ==> Start patch MPC DXVA
