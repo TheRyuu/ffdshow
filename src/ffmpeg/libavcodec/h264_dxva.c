@@ -83,11 +83,11 @@ static void field_end_noexecute(H264Context *h){
 
     if(!s->dropable) {
         ff_h264_execute_ref_pic_marking(h, h->mmco, h->mmco_index);
-        h->prev_poc_msb= h->poc_msb;
-        h->prev_poc_lsb= h->poc_lsb;
+        h->prev_poc_msb     = h->poc_msb;
+        h->prev_poc_lsb     = h->poc_lsb;
     }
     h->prev_frame_num_offset= h->frame_num_offset;
-    h->prev_frame_num= h->frame_num;
+    h->prev_frame_num       = h->frame_num;
 
     MPV_frame_end(s);
 
@@ -187,11 +187,11 @@ int decode_slice_header_noexecute(H264Context *h){
 
     h->b_stride=  s->mb_width*4;
 
-    s->width = 16*s->mb_width - 2*FFMIN(h->sps.crop_right, 7);
+    s->width = 16*s->mb_width - (2>>CHROMA444)*FFMIN(h->sps.crop_right, (8<<CHROMA444)-1);
     if(h->sps.frame_mbs_only_flag)
-        s->height= 16*s->mb_height - 2*FFMIN(h->sps.crop_bottom, 7);
+        s->height= 16*s->mb_height - (2>>CHROMA444)*FFMIN(h->sps.crop_bottom, (8<<CHROMA444)-1);
     else
-        s->height= 16*s->mb_height - 4*FFMIN(h->sps.crop_bottom, 7);
+        s->height= 16*s->mb_height - (4>>CHROMA444)*FFMIN(h->sps.crop_bottom, (8<<CHROMA444)-1);
 
     if (s->context_initialized
         && (   s->width != s->avctx->width || s->height != s->avctx->height
@@ -205,14 +205,17 @@ int decode_slice_header_noexecute(H264Context *h){
         MPV_common_end(s);
     }
     if (!s->context_initialized) {
-        if(h != h0){
-            av_log(h->s.avctx, AV_LOG_ERROR, "we cant (re-)initialize context during parallel decoding\n");
+        if (h != h0) {
+            av_log(h->s.avctx, AV_LOG_ERROR, "Cannot (re-)initialize context during parallel decoding.\n");
             return -1;
         }
 
         avcodec_set_dimensions(s->avctx, s->width, s->height);
         s->avctx->sample_aspect_ratio= h->sps.sar;
         av_assert0(s->avctx->sample_aspect_ratio.den);
+
+        h->s.avctx->coded_width = 16*s->mb_width;
+        h->s.avctx->coded_height = 16*s->mb_height;
 
         if(h->sps.video_signal_type_present_flag){
             s->avctx->color_range = h->sps.full_range ? AVCOL_RANGE_JPEG : AVCOL_RANGE_MPEG;
@@ -230,9 +233,11 @@ int decode_slice_header_noexecute(H264Context *h){
             av_reduce(&s->avctx->time_base.num, &s->avctx->time_base.den,
                       h->sps.num_units_in_tick * 2, den, 1<<30);
         }
+        
+        s->avctx->pix_fmt = PIX_FMT_YUV420P;
 
-        if (MPV_common_init(s) < 0){
-            av_log(h->s.avctx, AV_LOG_ERROR, "MPV_common_init() failed\n");
+        if (MPV_common_init(s) < 0) {
+            av_log(h->s.avctx, AV_LOG_ERROR, "MPV_common_init() failed.\n");
             return -1;
         }
         s->first_field = 0;
@@ -241,21 +246,31 @@ int decode_slice_header_noexecute(H264Context *h){
         init_scan_tables(h);
         ff_h264_alloc_tables(h);
 
-        for(i = 1; i < s->avctx->thread_count; i++) {
-            H264Context *c;
-            c = h->thread_context[i] = av_malloc(sizeof(H264Context));
-            memcpy(c, h->s.thread_context[i], sizeof(MpegEncContext));
-            memset(&c->s + 1, 0, sizeof(H264Context) - sizeof(MpegEncContext));
-            c->h264dsp = h->h264dsp;
-            c->sps = h->sps;
-            c->pps = h->pps;
-            init_scan_tables(c);
-            clone_tables(c, h, i);
-        }
-
-        for(i = 0; i < s->avctx->thread_count; i++)
-            if(context_init(h->thread_context[i]) < 0)
+        if (!HAVE_THREADS || !(s->avctx->active_thread_type&FF_THREAD_SLICE)) {
+            if (context_init(h) < 0) {
+                av_log(h->s.avctx, AV_LOG_ERROR, "context_init() failed.\n");
                 return -1;
+            }
+        } else {
+            for(i = 1; i < s->avctx->thread_count; i++) {
+                H264Context *c;
+                c = h->thread_context[i] = av_malloc(sizeof(H264Context));
+                memcpy(c, h->s.thread_context[i], sizeof(MpegEncContext));
+                memset(&c->s + 1, 0, sizeof(H264Context) - sizeof(MpegEncContext));
+                c->h264dsp = h->h264dsp;
+                c->sps = h->sps;
+                c->pps = h->pps;
+                c->pixel_shift = h->pixel_shift;
+                init_scan_tables(c);
+                clone_tables(c, h, i);
+            }
+
+            for(i = 0; i < s->avctx->thread_count; i++)
+                if (context_init(h->thread_context[i]) < 0) {
+                    av_log(h->s.avctx, AV_LOG_ERROR, "context_init() failed.\n");
+                    return -1;
+                }
+        }
     }
 
     h->frame_num= get_bits(&s->gb, h->sps.log2_max_frame_num);
@@ -494,7 +509,7 @@ int decode_slice_header_noexecute(H264Context *h){
     h->slice_qp_delta = get_se_golomb(&s->gb);
     tmp = h->pps.init_qp + h->slice_qp_delta;
     // <== End patch MPC
-    if(tmp>51){
+    if(tmp>51+6*(h->sps.bit_depth_luma-8)){
         av_log(s->avctx, AV_LOG_ERROR, "QP %u out of range\n", tmp);
         return -1;
     }
@@ -552,8 +567,8 @@ int decode_slice_header_noexecute(H264Context *h){
                 av_log(s->avctx, AV_LOG_INFO, "Cannot parallelize deblocking type 1, decoding such frames in sequential order\n");
                 h0->single_decode_warning = 1;
             }
-            if(h != h0){
-                av_log(h->s.avctx, AV_LOG_ERROR, "deblocking switched inside frame\n");
+            if (h != h0) {
+                av_log(h->s.avctx, AV_LOG_ERROR, "Deblocking switched inside frame.\n");
                 return 1;
             }
         }
@@ -575,7 +590,7 @@ int decode_slice_header_noexecute(H264Context *h){
     h0->last_slice_type = slice_type;
     h->slice_num = ++h0->current_slice;
     if(h->slice_num >= MAX_SLICES){
-        av_log(s->avctx, AV_LOG_ERROR, "Too many slices, increase MAX_SLICES and recompile\n");
+        av_log(s->avctx, AV_LOG_ERROR, "Too many slices (%d >= %d), increase MAX_SLICES and recompile\n", h->slice_num, MAX_SLICES);
     }
 
     for(j=0; j<2; j++){
@@ -647,7 +662,7 @@ static int decode_nal_units_noexecute(H264Context *h, const uint8_t *buf, int bu
     int context_count = 0;
     int next_avc= h->is_avc ? 0 : buf_size;
 
-    h->max_contexts = avctx->thread_count;
+    h->max_contexts = (HAVE_THREADS && (s->avctx->active_thread_type&FF_THREAD_SLICE)) ? avctx->thread_count : 1;
     if(!(s->flags2 & CODEC_FLAG2_CHUNKS)){
         h->current_slice = 0;
         if (!s->first_field)
@@ -707,9 +722,8 @@ static int decode_nal_units_noexecute(H264Context *h, const uint8_t *buf, int bu
 
         buf_index += consumed;
 
-        /* ffdshow custom code */
         //FIXME do not discard SEI id
-        if(avctx->skip_frame >= AVDISCARD_NONREF && hx->nal_ref_idc  == 0)
+        if(avctx->skip_frame >= AVDISCARD_NONREF && h->nal_ref_idc  == 0)
             continue;
 
       again:
@@ -780,8 +794,8 @@ static int decode_nal_units_noexecute(H264Context *h, const uint8_t *buf, int bu
             init_get_bits(&s->gb, ptr, bit_length);
             ff_h264_decode_seq_parameter_set(h);
 
-            if(s->flags& CODEC_FLAG_LOW_DELAY ||
-              (h->sps.bitstream_restriction_flag && !h->sps.num_reorder_frames)) // FFmpeg patch
+            if (s->flags& CODEC_FLAG_LOW_DELAY ||
+                (h->sps.bitstream_restriction_flag && !h->sps.num_reorder_frames))
                 s->low_delay=1;
 
             if(avctx->has_b_frames < 2)
