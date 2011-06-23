@@ -30,6 +30,8 @@
 
 // Hack to disable 9/10-bit decoding
 #define ENABLE_HIGH_BIT 0
+// Hack to prevent crash with 4:4:4
+#define ENABLE_CHROMA444 0
 
 #include "libavutil/intreadwrite.h"
 #include "dsputil.h"
@@ -87,7 +89,11 @@
 #define CABAC h->pps.cabac
 #endif
 
+#if ENABLE_CHROMA444
 #define CHROMA444 (h->sps.chroma_format_idc == 3)
+#else
+#define CHROMA444 0
+#endif
 
 #define EXTENDED_SAR          255
 
