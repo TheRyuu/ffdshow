@@ -1432,6 +1432,9 @@
     <yasm Include="src\convert\colorspace_rgb_mmx.asm">
       <Filter>convert</Filter>
     </yasm>
+    <yasm Include="src\convert\colorspace_rgb_win64_sse2.asm">
+      <Filter>convert</Filter>
+    </yasm>
     <yasm Include="src\audioFilters\dotproduct.asm">
       <Filter>audioFilters</Filter>
     </yasm>
@@ -1486,6 +1489,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\ffmpeg\libavcodec\golomb.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IDSMPropertyBag.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\IffDecoder.h">
@@ -2448,6 +2454,9 @@
     <ClInclude Include="src\codecs\Tcodec.h">
       <Filter>codecs</Filter>
     </ClInclude>
+    <ClInclude Include="src\codecs\theora.h">
+      <Filter>codecs</Filter>
+    </ClInclude>
     <ClInclude Include="src\codecs\TrealAudioInfo.h">
       <Filter>codecs</Filter>
     </ClInclude>
@@ -2780,9 +2789,6 @@
   </ItemGroup>
   <ItemGroup>
     <CustomBuildStep Include="src\convert\colorspace_mmx.inc">
-      <Filter>convert</Filter>
-    </CustomBuildStep>
-    <CustomBuildStep Include="src\convert\colorspace_rgb_win64_sse2.asm">
       <Filter>convert</Filter>
     </CustomBuildStep>
     <CustomBuildStep Include="src\convert\colorspace_win64_sse2.inc">

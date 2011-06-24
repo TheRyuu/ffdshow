@@ -61,7 +61,7 @@
     <ClInclude Include="stdafx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Tdll.h">
+    <ClInclude Include="Twmv9dll.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="videoenc.h">
