@@ -77,7 +77,6 @@
       <Culture>0x041b</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>ole32.lib;kernel32.lib</AdditionalDependencies>
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
   </ItemDefinitionGroup>
@@ -99,7 +98,6 @@
       <Culture>0x041b</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>ole32.lib;kernel32.lib</AdditionalDependencies>
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
   </ItemDefinitionGroup>
@@ -120,7 +118,6 @@
       <Culture>0x041b</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>kernel32.lib;ole32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
   </ItemDefinitionGroup>
@@ -142,7 +139,6 @@
       <Culture>0x041b</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>kernel32.lib;ole32.lib</AdditionalDependencies>
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
   </ItemDefinitionGroup>

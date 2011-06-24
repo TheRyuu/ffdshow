@@ -1432,14 +1432,14 @@
     <yasm Include="src\convert\colorspace_rgb_mmx.asm">
       <Filter>convert</Filter>
     </yasm>
+    <yasm Include="src\convert\colorspace_rgb_win64_sse2.asm">
+      <Filter>convert</Filter>
+    </yasm>
     <yasm Include="src\audioFilters\dotproduct.asm">
       <Filter>audioFilters</Filter>
     </yasm>
     <yasm Include="src\audioFilters\TaudioFilterConvert.asm">
       <Filter>audioFilters</Filter>
-    </yasm>
-    <yasm Include="src\convert\colorspace_rgb_win64_sse2.asm">
-      <Filter>convert</Filter>
     </yasm>
   </ItemGroup>
   <ItemGroup>

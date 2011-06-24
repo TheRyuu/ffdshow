@@ -76,7 +76,6 @@
       <Culture>0x0407</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>kernel32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>ff_libfaad2.def</ModuleDefinitionFile>
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
@@ -98,7 +97,6 @@
       <Culture>0x0407</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>kernel32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>ff_libfaad2.def</ModuleDefinitionFile>
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
@@ -118,7 +116,6 @@
       <Culture>0x0407</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>kernel32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>ff_libfaad2.def</ModuleDefinitionFile>
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
@@ -139,11 +136,13 @@
       <Culture>0x0407</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>kernel32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>ff_libfaad2.def</ModuleDefinitionFile>
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <None Include="ff_libfaad2.def" />
+  </ItemGroup>
   <ItemGroup>
     <ClCompile Include="bits.c" />
     <ClCompile Include="cfft.c" />
@@ -191,25 +190,11 @@
     <ClInclude Include="cfft.h" />
     <ClInclude Include="cfft_tab.h" />
     <ClInclude Include="common.h" />
-    <ClInclude Include="decoder.h" />
     <ClInclude Include="drc.h" />
     <ClInclude Include="drm_dec.h" />
     <ClInclude Include="error.h" />
     <ClInclude Include="filtbank.h" />
     <ClInclude Include="fixed.h" />
-    <ClInclude Include="codebook\hcb.h" />
-    <ClInclude Include="codebook\hcb_1.h" />
-    <ClInclude Include="codebook\hcb_10.h" />
-    <ClInclude Include="codebook\hcb_11.h" />
-    <ClInclude Include="codebook\hcb_2.h" />
-    <ClInclude Include="codebook\hcb_3.h" />
-    <ClInclude Include="codebook\hcb_4.h" />
-    <ClInclude Include="codebook\hcb_5.h" />
-    <ClInclude Include="codebook\hcb_6.h" />
-    <ClInclude Include="codebook\hcb_7.h" />
-    <ClInclude Include="codebook\hcb_8.h" />
-    <ClInclude Include="codebook\hcb_9.h" />
-    <ClInclude Include="codebook\hcb_sf.h" />
     <ClInclude Include="huffman.h" />
     <ClInclude Include="ic_predict.h" />
     <ClInclude Include="iq_table.h" />
@@ -247,10 +232,7 @@
     <ClInclude Include="ssr_win.h" />
     <ClInclude Include="structs.h" />
     <ClInclude Include="syntax.h" />
-    <ClInclude Include="Tns.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ff_libfaad2.def" />
+    <ClInclude Include="tns.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

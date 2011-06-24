@@ -69,10 +69,8 @@
       <AdditionalIncludeDirectories>include;../..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_DEPRECATE;_DEBUG;_WINDOWS;DEBUG;SUPPORT_INTERLACE;FFDEBUG=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <WarningLevel>TurnOffAllWarnings</WarningLevel>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>kernel32.lib;uuid.lib;oleaut32.lib;ole32.lib;oldnames.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>ff_wmv9.def</ModuleDefinitionFile>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
@@ -86,11 +84,9 @@
       <AdditionalIncludeDirectories>include;../..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN64;_CRT_SECURE_NO_DEPRECATE;_DEBUG;_WINDOWS;DEBUG;SUPPORT_INTERLACE;FFDEBUG=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <WarningLevel>TurnOffAllWarnings</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>kernel32.lib;uuid.lib;oleaut32.lib;ole32.lib;oldnames.lib</AdditionalDependencies>
       <ModuleDefinitionFile>ff_wmv9.def</ModuleDefinitionFile>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX64</TargetMachine>
@@ -105,7 +101,6 @@
       <DisableSpecificWarnings>4996;4100;4127;4201;4005;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>kernel32.lib;uuid.lib;oleaut32.lib;ole32.lib;oldnames.lib</AdditionalDependencies>
       <ModuleDefinitionFile>ff_wmv9.def</ModuleDefinitionFile>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
@@ -123,7 +118,6 @@
       <DisableSpecificWarnings>4996;4100;4127;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>kernel32.lib;uuid.lib;oleaut32.lib;ole32.lib;oldnames.lib</AdditionalDependencies>
       <ModuleDefinitionFile>ff_wmv9.def</ModuleDefinitionFile>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX64</TargetMachine>
@@ -153,7 +147,7 @@
     <ClInclude Include="GenProfile_lib.h" />
     <ClInclude Include="nssBuffer.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="Tdll.h" />
+    <ClInclude Include="Twmv9dll.h" />
     <ClInclude Include="videoenc.h" />
     <ClInclude Include="writerSink.h" />
   </ItemGroup>

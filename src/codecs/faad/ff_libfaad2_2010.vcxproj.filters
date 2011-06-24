@@ -9,6 +9,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <None Include="ff_libfaad2.def" />
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="bits.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -143,9 +146,6 @@
     <ClInclude Include="common.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="decoder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="drc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -159,45 +159,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="fixed.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="codebook\hcb.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="codebook\hcb_1.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="codebook\hcb_10.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="codebook\hcb_11.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="codebook\hcb_2.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="codebook\hcb_3.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="codebook\hcb_4.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="codebook\hcb_5.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="codebook\hcb_6.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="codebook\hcb_7.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="codebook\hcb_8.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="codebook\hcb_9.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="codebook\hcb_sf.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="huffman.h">
@@ -311,11 +272,8 @@
     <ClInclude Include="syntax.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Tns.h">
+    <ClInclude Include="tns.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ff_libfaad2.def" />
   </ItemGroup>
 </Project>

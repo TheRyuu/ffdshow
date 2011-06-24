@@ -17,9 +17,6 @@
     <ClCompile Include="ff_wmv9.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\imgFilters\ffImgfmt.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GenProfile_lib.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -27,9 +24,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="stdafx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\baseclasses\strmiids.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="videoenc.cpp">
@@ -61,7 +55,7 @@
     <ClInclude Include="stdafx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Tdll.h">
+    <ClInclude Include="Twmv9dll.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="videoenc.h">
@@ -70,10 +64,5 @@
     <ClInclude Include="writerSink.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ff_wmv9.def">
-      <Filter>Source Files</Filter>
-    </None>
   </ItemGroup>
 </Project>

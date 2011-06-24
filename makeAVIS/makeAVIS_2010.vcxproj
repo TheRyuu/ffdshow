@@ -71,9 +71,9 @@
       <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>oldnames.lib;kernel32.lib;user32.lib;gdi32.lib;vfw32.lib;advapi32.lib;Comdlg32.lib</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalDependencies>vfw32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Manifest>
       <AdditionalManifestFiles>..\bin\manifest\makeAVIS.exe.manifest;%(AdditionalManifestFiles)</AdditionalManifestFiles>
@@ -90,9 +90,9 @@
       <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>oldnames.lib;kernel32.lib;user32.lib;gdi32.lib;vfw32.lib;advapi32.lib;Comdlg32.lib</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
       <TargetMachine>MachineX64</TargetMachine>
+      <AdditionalDependencies>vfw32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Manifest>
       <AdditionalManifestFiles>..\bin\manifest\makeAVIS.exe.manifest;%(AdditionalManifestFiles)</AdditionalManifestFiles>
@@ -105,9 +105,9 @@
       <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>oldnames.lib;kernel32.lib;user32.lib;gdi32.lib;vfw32.lib;advapi32.lib;Comdlg32.lib</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalDependencies>vfw32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Manifest>
       <AdditionalManifestFiles>..\bin\manifest\makeAVIS.exe.manifest;%(AdditionalManifestFiles)</AdditionalManifestFiles>
@@ -123,9 +123,9 @@
       <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>oldnames.lib;kernel32.lib;user32.lib;gdi32.lib;vfw32.lib;advapi32.lib;Comdlg32.lib</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
       <TargetMachine>MachineX64</TargetMachine>
+      <AdditionalDependencies>vfw32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Manifest>
       <AdditionalManifestFiles>..\bin\manifest\makeAVIS.exe.manifest;%(AdditionalManifestFiles)</AdditionalManifestFiles>
@@ -135,7 +135,7 @@
     <ClCompile Include="makeAVIS.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="avisynth.h" />
+    <ClInclude Include="..\src\imgFilters\avisynth\avisynth_c.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>

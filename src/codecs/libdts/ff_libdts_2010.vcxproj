@@ -76,7 +76,6 @@
       <Culture>0x041b</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>kernel32.lib</AdditionalDependencies>
       <ModuleDefinitionFile>ff_libdts.def</ModuleDefinitionFile>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
@@ -99,7 +98,6 @@
       <Culture>0x041b</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>kernel32.lib</AdditionalDependencies>
       <ModuleDefinitionFile>ff_libdts.def</ModuleDefinitionFile>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX64</TargetMachine>
@@ -122,7 +120,6 @@
       <Culture>0x041b</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>kernel32.lib</AdditionalDependencies>
       <ModuleDefinitionFile>ff_libdts.def</ModuleDefinitionFile>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
@@ -146,7 +143,6 @@
       <Culture>0x041b</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>kernel32.lib</AdditionalDependencies>
       <ModuleDefinitionFile>ff_libdts.def</ModuleDefinitionFile>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX64</TargetMachine>

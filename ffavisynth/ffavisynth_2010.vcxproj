@@ -76,7 +76,6 @@
       <Culture>0x041b</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>kernel32.lib;ole32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>ffavisynth.def</ModuleDefinitionFile>
       <EntryPointSymbol>_DllMainCRTStartup%4012</EntryPointSymbol>
       <TargetMachine>MachineX86</TargetMachine>
@@ -99,7 +98,6 @@
       <Culture>0x041b</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>kernel32.lib;ole32.lib</AdditionalDependencies>
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
   </ItemDefinitionGroup>
@@ -119,7 +117,6 @@
       <Culture>0x041b</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>kernel32.lib;ole32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>ffavisynth.def</ModuleDefinitionFile>
       <EntryPointSymbol>_DllMainCRTStartup%4012</EntryPointSymbol>
       <TargetMachine>MachineX86</TargetMachine>
@@ -142,7 +139,6 @@
       <Culture>0x041b</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>kernel32.lib;ole32.lib</AdditionalDependencies>
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
   </ItemDefinitionGroup>
