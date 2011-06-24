@@ -23,6 +23,7 @@
 
 #include <stdarg.h>
 #include "avutil.h"
+#include "attributes.h"
 
 /**
  * Describe the class of an AVClass context structure. That is an
@@ -130,7 +131,7 @@ typedef struct {
  * @see av_vlog
  */
 #ifdef __GNUC__
-void av_log(void *avcl, int level, const char *fmt, ...) __attribute__ ((__format__ (__printf__, 3, 4)));
+void av_log(void *avcl, int level, const char *fmt, ...) av_printf_format(3, 4);
 #else
 void av_log(void *avcl, int level, const char *fmt, ...);
 #endif

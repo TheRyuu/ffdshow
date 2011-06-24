@@ -19,7 +19,7 @@ SET ISCC="%FF_PROGRAMFILES%\Inno Setup 5\ISCC.exe"
 
 echo [Removing files]
 cd bin
-REM del /Q *.dll *.exe
+del /Q *.dll *.exe
 cd ..\
 
 
