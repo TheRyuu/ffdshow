@@ -39,7 +39,7 @@ TOMSMOCOMP:
 KDINT:
 	$(MAKE) -C imgFilters/KernelDeint
 
-clean:	
+clean:
 	$(MAKE) -C ffmpeg clean
 	$(MAKE) -C codecs/libmpeg2 clean
 	$(MAKE) -C codecs/xvidcore clean

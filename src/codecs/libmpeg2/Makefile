@@ -2,17 +2,17 @@
 
 SRCS_C=\
     libmpeg2/alloc.c \
-		libmpeg2/decode.c \
-		libmpeg2/header.c \
-		libmpeg2/idct.c \
-		libmpeg2/idct_mmx.c \
-		libmpeg2/idct_sse2.c \
-		libmpeg2/motion_comp.c \
-		libmpeg2/motion_comp_mmx.c \
-		libmpeg2/mc_sse2.c \
-		libmpeg2/slice.c \
-		libmpeg2/cpu_accel.c \
-		version.c
+    libmpeg2/decode.c \
+    libmpeg2/header.c \
+    libmpeg2/idct.c \
+    libmpeg2/idct_mmx.c \
+    libmpeg2/idct_sse2.c \
+    libmpeg2/motion_comp.c \
+    libmpeg2/motion_comp_mmx.c \
+    libmpeg2/mc_sse2.c \
+    libmpeg2/slice.c \
+    libmpeg2/cpu_accel.c \
+    version.c
 
 ifeq ($(64BIT),yes)
     OBJ_DIR=../../../obj/MinGW64/libmpeg2/
