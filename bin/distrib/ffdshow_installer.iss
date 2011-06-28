@@ -131,6 +131,7 @@ InternalCompressLevel           = ultra
 SolidCompression                = True
 DefaultDirName                  = {code:GetDefaultInstallDir|}
 DirExistsWarning                = no
+MinVersion                      = 0,5.01SP2
 OutputBaseFilename              = ffdshow_rev{#= tryout_revision}_{#= buildyear}{#= buildmonth}{#= buildday}{#= filename_suffix}
 OutputDir                       = {#= outputdir}
 PrivilegesRequired              = admin
@@ -397,10 +398,12 @@ Source: "{#= bindir}\ffdshow_icl.ax";             DestDir: "{app}"; DestName: "f
 #else
 Source: "{#= bindir}\ffdshow.ax";                 DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion restartreplace uninsrestartdelete regserver noregerror
 #endif
+Source: "..\manifest\ffdshow.ax.manifest";        DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion restartreplace uninsrestartdelete; OnlyBelowVersion: 0,6;
 
 Source: "{#= bindir}\ff_wmv9.dll";                DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
 
 Source: "{#= bindir}\ff_vfw.dll";                 DestDir: "{sys}";                         Components: ffdshow\vfw;                Flags: ignoreversion restartreplace uninsrestartdelete
+Source: "..\manifest\ff_vfw.dll.manifest";        DestDir: "{sys}";                         Components: ffdshow\vfw;                Flags: ignoreversion restartreplace uninsrestartdelete; OnlyBelowVersion: 0,6;
 
 #if include_plugin_avisynth
 Source: "..\ffavisynth.avsi";                     DestDir: "{code:GetAviSynthPluginDir}";   Components: ffdshow\plugins\avisynth;   Flags: ignoreversion restartreplace uninsrestartdelete
@@ -415,6 +418,7 @@ Source: "{#= bindir}\FLT_ffdshow.dll";            DestDir: "{code:GetDScalerDir|
 
 #if include_makeavis
 Source: "{#= bindir}\makeAVIS.exe";               DestDir: "{app}";                         Components: ffdshow\makeavis;           Flags: ignoreversion restartreplace uninsrestartdelete
+Source: "..\manifest\makeAVIS.exe.manifest";      DestDir: "{app}";                         Components: ffdshow\makeavis;           Flags: ignoreversion restartreplace uninsrestartdelete; OnlyBelowVersion: 0,6;
 Source: "{#= bindir}\ff_acm.acm";                 DestDir: "{sys}";                         Components: ffdshow\makeavis;           Flags: ignoreversion restartreplace uninsrestartdelete
 #endif
 
@@ -442,12 +446,6 @@ Type: files; Name: "{app}\libmplayer.dll";                         Components: f
 Type: files; Name: "{app}\ff_tremor.dll";                          Components: ffdshow
 Type: files; Name: "{app}\ff_x264.dll";                            Components: ffdshow
 Type: files; Name: "{app}\ffmpegmt.dll";                           Components: ffdshow
-
-Type: files; Name: "{app}\ffdshow.ax.manifest";                    Components: ffdshow
-Type: files; Name: "{sys}\ff_vfw.dll.manifest";                    Components: ffdshow\vfw
-#if include_makeavis
-Type: files; Name: "{app}\makeAVIS.exe.manifest";                  Components: ffdshow\makeavis
-#endif
 
 [Registry]
 #if is64bit
