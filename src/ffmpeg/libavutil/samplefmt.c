@@ -79,3 +79,52 @@ int av_get_bits_per_sample_fmt(enum AVSampleFormat sample_fmt)
         0 : sample_fmt_info[sample_fmt].bits;
 }
 #endif
+
+int av_samples_fill_arrays(uint8_t *pointers[8], int linesizes[8],
+                           uint8_t *buf, int nb_channels, int nb_samples,
+                           enum AVSampleFormat sample_fmt, int planar, int align)
+{
+    int i, linesize;
+    int sample_size = av_get_bytes_per_sample(sample_fmt);
+
+    if (nb_channels * (uint64_t)nb_samples * sample_size >= INT_MAX - align*(uint64_t)nb_channels)
+        return AVERROR(EINVAL);
+    linesize = planar ? FFALIGN(nb_samples*sample_size,             align) :
+                        FFALIGN(nb_samples*sample_size*nb_channels, align);
+
+    if (pointers) {
+        pointers[0] = buf;
+        for (i = 1; planar && i < nb_channels; i++) {
+            pointers[i] = pointers[i-1] + linesize;
+        }
+        memset(&pointers[i], 0, (8-i) * sizeof(pointers[0]));
+    }
+
+    if (linesizes) {
+        linesizes[0] = linesize;
+        for (i = 1; planar && i < nb_channels; i++)
+            linesizes[i] = linesizes[0];
+        memset(&linesizes[i], 0, (8-i) * sizeof(linesizes[0]));
+    }
+
+    return planar ? linesize * nb_channels : linesize;
+}
+
+int av_samples_alloc(uint8_t *pointers[8], int linesizes[8],
+                     int nb_channels, int nb_samples,
+                     enum AVSampleFormat sample_fmt, int planar,
+                     int align)
+{
+    uint8_t *buf;
+    int size = av_samples_fill_arrays(NULL, NULL,
+                                      NULL, nb_channels, nb_samples,
+                                      sample_fmt, planar, align);
+
+    buf = av_mallocz(size);
+    if (!buf)
+        return AVERROR(ENOMEM);
+
+    return av_samples_fill_arrays(pointers, linesizes,
+                                  buf, nb_channels, nb_samples,
+                                  sample_fmt, planar, align);
+}

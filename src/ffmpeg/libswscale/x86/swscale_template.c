@@ -75,11 +75,13 @@ static void RENAME(yuv2yuvX)(SwsContext *c, const int16_t *lumFilter,
                              const int16_t *chrFilter, const int16_t **chrUSrc,
                              const int16_t **chrVSrc,
                              int chrFilterSize, const int16_t **alpSrc,
-                             uint8_t *dest, uint8_t *uDest, uint8_t *vDest,
-                             uint8_t *aDest, int dstW, int chrDstW,
+                             uint8_t *dest[4], int dstW, int chrDstW,
                              const uint8_t *lumDither, const uint8_t *chrDither)
 {
     int i;
+    uint8_t *yDest = dest[0], *uDest = dest[1], *vDest = dest[2],
+            *aDest = CONFIG_SWSCALE_ALPHA ? dest[3] : NULL;
+
     if (uDest) {
         x86_reg uv_off = c->uv_off;
         for(i=0; i<8; i++) c->dither16[i] = chrDither[i]>>4;
@@ -92,7 +94,7 @@ static void RENAME(yuv2yuvX)(SwsContext *c, const int16_t *lumFilter,
         YSCALEYUV2YV12X(ALP_MMX_FILTER_OFFSET, aDest, dstW, 0)
     }
 
-    YSCALEYUV2YV12X(LUM_MMX_FILTER_OFFSET, dest, dstW, 0)
+    YSCALEYUV2YV12X(LUM_MMX_FILTER_OFFSET, yDest, dstW, 0)
 }
 
 // The latest FFmpeg code for this macro has a bug
@@ -162,11 +164,13 @@ static void RENAME(yuv2yuvX_ar)(SwsContext *c, const int16_t *lumFilter,
                                 const int16_t *chrFilter, const int16_t **chrUSrc,
                                 const int16_t **chrVSrc,
                                 int chrFilterSize, const int16_t **alpSrc,
-                                uint8_t *dest, uint8_t *uDest, uint8_t *vDest,
-                                uint8_t *aDest, int dstW, int chrDstW,
+                                uint8_t *dest[4], int dstW, int chrDstW,
                                 const uint8_t *lumDither, const uint8_t *chrDither)
 {
     int i;
+    uint8_t *yDest = dest[0], *uDest = dest[1], *vDest = dest[2],
+            *aDest = CONFIG_SWSCALE_ALPHA ? dest[3] : NULL;
+
     if (uDest) {
         x86_reg uv_off = c->uv_off;
         for(i=0; i<8; i++) c->dither32[i] = chrDither[i]<<12;
@@ -179,20 +183,21 @@ static void RENAME(yuv2yuvX_ar)(SwsContext *c, const int16_t *lumFilter,
         YSCALEYUV2YV12X_ACCURATE(ALP_MMX_FILTER_OFFSET, aDest, dstW, 0)
     }
 
-    YSCALEYUV2YV12X_ACCURATE(LUM_MMX_FILTER_OFFSET, dest, dstW, 0)
+    YSCALEYUV2YV12X_ACCURATE(LUM_MMX_FILTER_OFFSET, yDest, dstW, 0)
 }
 
 static void RENAME(yuv2yuv1)(SwsContext *c, const int16_t *lumSrc,
                              const int16_t *chrUSrc, const int16_t *chrVSrc,
                              const int16_t *alpSrc,
-                             uint8_t *dest, uint8_t *uDest, uint8_t *vDest,
-                             uint8_t *aDest, int dstW, int chrDstW,
+                             uint8_t *dst[4], int dstW, int chrDstW,
                              const uint8_t *lumDither, const uint8_t *chrDither)
 {
     int p= 4;
-    const int16_t *src[4]= { alpSrc + dstW, lumSrc + dstW, chrUSrc + chrDstW, chrVSrc + chrDstW };
-    uint8_t *dst[4]= { aDest, dest, uDest, vDest };
-    x86_reg counter[4]= { dstW, dstW, chrDstW, chrDstW };
+    const int16_t *src[4]= {
+        lumSrc + dstW,     chrUSrc + chrDstW,
+        chrVSrc + chrDstW, alpSrc + dstW
+    };
+    x86_reg counter[4]= { dstW, chrDstW, chrDstW, dstW };
 
     while (p--) {
         if (dst[p]) {
@@ -219,14 +224,15 @@ static void RENAME(yuv2yuv1)(SwsContext *c, const int16_t *lumSrc,
 static void RENAME(yuv2yuv1_ar)(SwsContext *c, const int16_t *lumSrc,
                                 const int16_t *chrUSrc, const int16_t *chrVSrc,
                                 const int16_t *alpSrc,
-                                uint8_t *dest, uint8_t *uDest, uint8_t *vDest,
-                                uint8_t *aDest, int dstW, int chrDstW,
+                                uint8_t *dst[4], int dstW, int chrDstW,
                                 const uint8_t *lumDither, const uint8_t *chrDither)
 {
     int p= 4;
-    const int16_t *src[4]= { alpSrc + dstW, lumSrc + dstW, chrUSrc + chrDstW, chrVSrc + chrDstW };
-    uint8_t *dst[4]= { aDest, dest, uDest, vDest };
-    x86_reg counter[4]= { dstW, dstW, chrDstW, chrDstW };
+    const int16_t *src[4]= {
+        lumSrc + dstW,     chrUSrc + chrDstW,
+        chrVSrc + chrDstW, alpSrc + dstW
+    };
+    x86_reg counter[4]= { dstW, chrDstW, chrDstW, dstW };
 
     while (p--) {
         if (dst[p]) {
@@ -983,14 +989,16 @@ static void RENAME(yuv2yuyv422_X)(SwsContext *c, const int16_t *lumFilter,
 /**
  * vertical bilinear scale YV12 to RGB
  */
-static void RENAME(yuv2rgb32_2)(SwsContext *c, const uint16_t *buf0,
-                                const uint16_t *buf1, const uint16_t *ubuf0,
-                                const uint16_t *ubuf1, const uint16_t *vbuf0,
-                                const uint16_t *vbuf1, const uint16_t *abuf0,
-                                const uint16_t *abuf1, uint8_t *dest,
+static void RENAME(yuv2rgb32_2)(SwsContext *c, const int16_t *buf[2],
+                                const int16_t *ubuf[2], const int16_t *vbuf[2],
+                                const int16_t *abuf[2], uint8_t *dest,
                                 int dstW, int yalpha, int uvalpha, int y)
 {
+    const int16_t *buf0  = buf[0],  *buf1  = buf[1],
+                  *ubuf0 = ubuf[0], *ubuf1 = ubuf[1];
+
     if (CONFIG_SWSCALE_ALPHA && c->alpPixBuf) {
+        const int16_t *abuf0 = abuf[0], *abuf1 = abuf[1];
 #if ARCH_X86_64
         __asm__ volatile(
             YSCALEYUV2RGB(%%r8, %5)
@@ -1045,13 +1053,14 @@ static void RENAME(yuv2rgb32_2)(SwsContext *c, const uint16_t *buf0,
     }
 }
 
-static void RENAME(yuv2bgr24_2)(SwsContext *c, const uint16_t *buf0,
-                                const uint16_t *buf1, const uint16_t *ubuf0,
-                                const uint16_t *ubuf1, const uint16_t *vbuf0,
-                                const uint16_t *vbuf1, const uint16_t *abuf0,
-                                const uint16_t *abuf1, uint8_t *dest,
+static void RENAME(yuv2bgr24_2)(SwsContext *c, const int16_t *buf[2],
+                                const int16_t *ubuf[2], const int16_t *vbuf[2],
+                                const int16_t *abuf[2], uint8_t *dest,
                                 int dstW, int yalpha, int uvalpha, int y)
 {
+    const int16_t *buf0  = buf[0],  *buf1  = buf[1],
+                  *ubuf0 = ubuf[0], *ubuf1 = ubuf[1];
+
     //Note 8280 == DSTW_OFFSET but the preprocessor can't handle that there :(
     __asm__ volatile(
         "mov %%"REG_b", "ESP_OFFSET"(%5)        \n\t"
@@ -1067,13 +1076,14 @@ static void RENAME(yuv2bgr24_2)(SwsContext *c, const uint16_t *buf0,
     );
 }
 
-static void RENAME(yuv2rgb555_2)(SwsContext *c, const uint16_t *buf0,
-                                 const uint16_t *buf1, const uint16_t *ubuf0,
-                                 const uint16_t *ubuf1, const uint16_t *vbuf0,
-                                 const uint16_t *vbuf1, const uint16_t *abuf0,
-                                 const uint16_t *abuf1, uint8_t *dest,
+static void RENAME(yuv2rgb555_2)(SwsContext *c, const int16_t *buf[2],
+                                 const int16_t *ubuf[2], const int16_t *vbuf[2],
+                                 const int16_t *abuf[2], uint8_t *dest,
                                  int dstW, int yalpha, int uvalpha, int y)
 {
+    const int16_t *buf0  = buf[0],  *buf1  = buf[1],
+                  *ubuf0 = ubuf[0], *ubuf1 = ubuf[1];
+
     //Note 8280 == DSTW_OFFSET but the preprocessor can't handle that there :(
     __asm__ volatile(
         "mov %%"REG_b", "ESP_OFFSET"(%5)        \n\t"
@@ -1095,13 +1105,14 @@ static void RENAME(yuv2rgb555_2)(SwsContext *c, const uint16_t *buf0,
     );
 }
 
-static void RENAME(yuv2rgb565_2)(SwsContext *c, const uint16_t *buf0,
-                                 const uint16_t *buf1, const uint16_t *ubuf0,
-                                 const uint16_t *ubuf1, const uint16_t *vbuf0,
-                                 const uint16_t *vbuf1, const uint16_t *abuf0,
-                                 const uint16_t *abuf1, uint8_t *dest,
+static void RENAME(yuv2rgb565_2)(SwsContext *c, const int16_t *buf[2],
+                                 const int16_t *ubuf[2], const int16_t *vbuf[2],
+                                 const int16_t *abuf[2], uint8_t *dest,
                                  int dstW, int yalpha, int uvalpha, int y)
 {
+    const int16_t *buf0  = buf[0],  *buf1  = buf[1],
+                  *ubuf0 = ubuf[0], *ubuf1 = ubuf[1];
+
     //Note 8280 == DSTW_OFFSET but the preprocessor can't handle that there :(
     __asm__ volatile(
         "mov %%"REG_b", "ESP_OFFSET"(%5)        \n\t"
@@ -1163,13 +1174,14 @@ static void RENAME(yuv2rgb565_2)(SwsContext *c, const uint16_t *buf0,
 
 #define YSCALEYUV2PACKED(index, c)  REAL_YSCALEYUV2PACKED(index, c)
 
-static void RENAME(yuv2yuyv422_2)(SwsContext *c, const uint16_t *buf0,
-                                  const uint16_t *buf1, const uint16_t *ubuf0,
-                                  const uint16_t *ubuf1, const uint16_t *vbuf0,
-                                  const uint16_t *vbuf1, const uint16_t *abuf0,
-                                  const uint16_t *abuf1, uint8_t *dest,
+static void RENAME(yuv2yuyv422_2)(SwsContext *c, const int16_t *buf[2],
+                                  const int16_t *ubuf[2], const int16_t *vbuf[2],
+                                  const int16_t *abuf[2], uint8_t *dest,
                                   int dstW, int yalpha, int uvalpha, int y)
 {
+    const int16_t *buf0  = buf[0],  *buf1  = buf[1],
+                  *ubuf0 = ubuf[0], *ubuf1 = ubuf[1];
+
     //Note 8280 == DSTW_OFFSET but the preprocessor can't handle that there :(
     __asm__ volatile(
         "mov %%"REG_b", "ESP_OFFSET"(%5)        \n\t"
@@ -1302,14 +1314,13 @@ static void RENAME(yuv2yuyv422_2)(SwsContext *c, const uint16_t *buf0,
 /**
  * YV12 to RGB without scaling or interpolating
  */
-static void RENAME(yuv2rgb32_1)(SwsContext *c, const uint16_t *buf0,
-                                const uint16_t *ubuf0, const uint16_t *ubuf1,
-                                const uint16_t *vbuf0, const uint16_t *vbuf1,
-                                const uint16_t *abuf0, uint8_t *dest,
-                                int dstW, int uvalpha, enum PixelFormat dstFormat,
-                                int flags, int y)
+static void RENAME(yuv2rgb32_1)(SwsContext *c, const int16_t *buf0,
+                                const int16_t *ubuf[2], const int16_t *bguf[2],
+                                const int16_t *abuf0, uint8_t *dest,
+                                int dstW, int uvalpha, int y)
 {
-    const uint16_t *buf1= buf0; //FIXME needed for RGB1/BGR1
+    const int16_t *ubuf0 = ubuf[0], *ubuf1 = ubuf[1];
+    const int16_t *buf1= buf0; //FIXME needed for RGB1/BGR1
 
     if (uvalpha < 2048) { // note this is not correct (shifts chrominance by 0.5 pixels) but it is a bit faster
         if (CONFIG_SWSCALE_ALPHA && c->alpPixBuf) {
@@ -1370,14 +1381,13 @@ static void RENAME(yuv2rgb32_1)(SwsContext *c, const uint16_t *buf0,
     }
 }
 
-static void RENAME(yuv2bgr24_1)(SwsContext *c, const uint16_t *buf0,
-                                const uint16_t *ubuf0, const uint16_t *ubuf1,
-                                const uint16_t *vbuf0, const uint16_t *vbuf1,
-                                const uint16_t *abuf0, uint8_t *dest,
-                                int dstW, int uvalpha, enum PixelFormat dstFormat,
-                                int flags, int y)
+static void RENAME(yuv2bgr24_1)(SwsContext *c, const int16_t *buf0,
+                                const int16_t *ubuf[2], const int16_t *bguf[2],
+                                const int16_t *abuf0, uint8_t *dest,
+                                int dstW, int uvalpha, int y)
 {
-    const uint16_t *buf1= buf0; //FIXME needed for RGB1/BGR1
+    const int16_t *ubuf0 = ubuf[0], *ubuf1 = ubuf[1];
+    const int16_t *buf1= buf0; //FIXME needed for RGB1/BGR1
 
     if (uvalpha < 2048) { // note this is not correct (shifts chrominance by 0.5 pixels) but it is a bit faster
         __asm__ volatile(
@@ -1408,14 +1418,13 @@ static void RENAME(yuv2bgr24_1)(SwsContext *c, const uint16_t *buf0,
     }
 }
 
-static void RENAME(yuv2rgb555_1)(SwsContext *c, const uint16_t *buf0,
-                                 const uint16_t *ubuf0, const uint16_t *ubuf1,
-                                 const uint16_t *vbuf0, const uint16_t *vbuf1,
-                                 const uint16_t *abuf0, uint8_t *dest,
-                                 int dstW, int uvalpha, enum PixelFormat dstFormat,
-                                 int flags, int y)
+static void RENAME(yuv2rgb555_1)(SwsContext *c, const int16_t *buf0,
+                                 const int16_t *ubuf[2], const int16_t *bguf[2],
+                                 const int16_t *abuf0, uint8_t *dest,
+                                 int dstW, int uvalpha, int y)
 {
-    const uint16_t *buf1= buf0; //FIXME needed for RGB1/BGR1
+    const int16_t *ubuf0 = ubuf[0], *ubuf1 = ubuf[1];
+    const int16_t *buf1= buf0; //FIXME needed for RGB1/BGR1
 
     if (uvalpha < 2048) { // note this is not correct (shifts chrominance by 0.5 pixels) but it is a bit faster
         __asm__ volatile(
@@ -1458,14 +1467,13 @@ static void RENAME(yuv2rgb555_1)(SwsContext *c, const uint16_t *buf0,
     }
 }
 
-static void RENAME(yuv2rgb565_1)(SwsContext *c, const uint16_t *buf0,
-                                 const uint16_t *ubuf0, const uint16_t *ubuf1,
-                                 const uint16_t *vbuf0, const uint16_t *vbuf1,
-                                 const uint16_t *abuf0, uint8_t *dest,
-                                 int dstW, int uvalpha, enum PixelFormat dstFormat,
-                                 int flags, int y)
+static void RENAME(yuv2rgb565_1)(SwsContext *c, const int16_t *buf0,
+                                 const int16_t *ubuf[2], const int16_t *bguf[2],
+                                 const int16_t *abuf0, uint8_t *dest,
+                                 int dstW, int uvalpha, int y)
 {
-    const uint16_t *buf1= buf0; //FIXME needed for RGB1/BGR1
+    const int16_t *ubuf0 = ubuf[0], *ubuf1 = ubuf[1];
+    const int16_t *buf1= buf0; //FIXME needed for RGB1/BGR1
 
     if (uvalpha < 2048) { // note this is not correct (shifts chrominance by 0.5 pixels) but it is a bit faster
         __asm__ volatile(
@@ -1545,14 +1553,13 @@ static void RENAME(yuv2rgb565_1)(SwsContext *c, const uint16_t *buf0,
     "psraw                $7, %%mm7     \n\t"
 #define YSCALEYUV2PACKED1b(index, c)  REAL_YSCALEYUV2PACKED1b(index, c)
 
-static void RENAME(yuv2yuyv422_1)(SwsContext *c, const uint16_t *buf0,
-                                  const uint16_t *ubuf0, const uint16_t *ubuf1,
-                                  const uint16_t *vbuf0, const uint16_t *vbuf1,
-                                  const uint16_t *abuf0, uint8_t *dest,
-                                  int dstW, int uvalpha, enum PixelFormat dstFormat,
-                                  int flags, int y)
+static void RENAME(yuv2yuyv422_1)(SwsContext *c, const int16_t *buf0,
+                                  const int16_t *ubuf[2], const int16_t *bguf[2],
+                                  const int16_t *abuf0, uint8_t *dest,
+                                  int dstW, int uvalpha, int y)
 {
-    const uint16_t *buf1= buf0; //FIXME needed for RGB1/BGR1
+    const int16_t *ubuf0 = ubuf[0], *ubuf1 = ubuf[1];
+    const int16_t *buf1= buf0; //FIXME needed for RGB1/BGR1
 
     if (uvalpha < 2048) { // note this is not correct (shifts chrominance by 0.5 pixels) but it is a bit faster
         __asm__ volatile(
