@@ -44,7 +44,7 @@ enum ffdshow_colorspaces {
     FF_CSP_NV12       = 1U<<21
 };
 
-#define FF_CSPS_NUM 24
+#define FF_CSPS_NUM 23
 
 #define FF_CSPS_MASK            ((2<<FF_CSPS_NUM)-1)
 #define FF_CSPS_MASK_YUV_PLANAR (FF_CSP_420P|FF_CSP_422P|FF_CSP_444P|FF_CSP_411P|FF_CSP_410P)

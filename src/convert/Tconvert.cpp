@@ -327,11 +327,13 @@ int Tconvert::convert(int incsp0,
                     break;
                 }
                 break;
-            case FF_CSP_RGB24:
-                if (outcsp1==FF_CSP_YUY2) { // RGB24 -> YUY2
-                    mode=MODE_mmx_ConvertRGB24toYUY2;
-                    break;
+            case FF_CSP_BGR24:
+                if (outcsp1==FF_CSP_RGB24) {
+                    // workaround to get correct colors when grabbing to BMP
+                    incsp=incsp0=FF_CSP_RGB24;
                 }
+                break;
+            case FF_CSP_RGB24:
                 if (outcsp1==FF_CSP_NV12) { // RGB24 -> YV12 -> NV12
                     mode=MODE_fallback;
                     tmpcsp=FF_CSP_420P;
@@ -371,7 +373,7 @@ int Tconvert::convert(int incsp0,
         }
 #endif
             if (mode==MODE_none)
-                if (incsp1!=FF_CSP_420P && csp_supXvid(incsp1)/* && incsp1!=FF_CSP_RGB24 */&& outcsp1==FF_CSP_420P) { // x -> YV12
+                if (incsp1!=FF_CSP_420P && outcsp1==FF_CSP_420P && csp_supXvid(incsp1) && incsp1!=FF_CSP_RGB24 && incsp1!=FF_CSP_BGR24) { // x -> YV12
                     mode=MODE_xvidImage_input;
                 } else if (csp_supSWSin(incsp1) && csp_supSWSout(outcsp1)) {
                     if (!swscale) {
