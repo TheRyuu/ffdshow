@@ -1086,7 +1086,7 @@ typedef struct AVCodecContext {
      * A demuxer should set this to what is stored in the field used to identify the codec.
      * If there are multiple such fields in a container then the demuxer should choose the one
      * which maximizes the information about the used codec.
-     * If the codec tag field in a container is larger then 32 bits then the demuxer should
+     * If the codec tag field in a container is larger than 32 bits then the demuxer should
      * remap the longer ID to 32 bits with a table or other structure. Alternatively a new
      * extra_codec_tag + size could be added but for this a clear advantage must be demonstrated
      * first.
@@ -2210,7 +2210,7 @@ typedef struct AVCodecContext {
 
 #if FF_API_FLAC_GLOBAL_OPTS
     /**
-     * @defgroup flac_opts FLAC options
+     * @name FLAC options
      * @deprecated Use FLAC encoder private options instead.
      * @{
      */
@@ -2642,7 +2642,7 @@ typedef struct AVCodec {
     uint8_t max_lowres;                     ///< maximum value for lowres supported by the decoder
 
     /**
-     * @defgroup framethreading Frame-level threading support functions.
+     * @name Frame-level threading support functions
      * @{
      */
     /**

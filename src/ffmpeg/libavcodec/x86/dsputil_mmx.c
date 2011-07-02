@@ -2436,6 +2436,15 @@ int  ff_add_hfyu_left_prediction_sse4(uint8_t *dst, const uint8_t *src, int w, i
 
 float ff_scalarproduct_float_sse(const float *v1, const float *v2, int order);
 
+void ff_vector_clip_int32_mmx     (int32_t *dst, const int32_t *src, int32_t min,
+                                   int32_t max, unsigned int len);
+void ff_vector_clip_int32_sse2    (int32_t *dst, const int32_t *src, int32_t min,
+                                   int32_t max, unsigned int len);
+void ff_vector_clip_int32_sse2_int(int32_t *dst, const int32_t *src, int32_t min,
+                                   int32_t max, unsigned int len);
+void ff_vector_clip_int32_sse41   (int32_t *dst, const int32_t *src, int32_t min,
+                                   int32_t max, unsigned int len);
+
 void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
 {
     int mm_flags = av_get_cpu_flags();
@@ -2575,6 +2584,8 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
 
         c->put_rv40_chroma_pixels_tab[0]= ff_put_rv40_chroma_mc8_mmx;
         c->put_rv40_chroma_pixels_tab[1]= ff_put_rv40_chroma_mc4_mmx;
+
+        c->vector_clip_int32 = ff_vector_clip_int32_mmx;
 #endif
 
         if (mm_flags & AV_CPU_FLAG_MMX2) {
@@ -2847,6 +2858,7 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
 #if HAVE_6REGS
             c->vector_fmul_window = vector_fmul_window_sse;
 #endif
+            c->vector_clipf = vector_clipf_sse;
 #if HAVE_YASM
             c->scalarproduct_float = ff_scalarproduct_float_sse;
 #endif
@@ -2855,6 +2867,11 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
             c->vector_fmul_add = vector_fmul_add_3dnow; // faster than sse
         if(mm_flags & AV_CPU_FLAG_SSE2){
 #if HAVE_YASM
+            if (mm_flags & AV_CPU_FLAG_ATOM) {
+                c->vector_clip_int32 = ff_vector_clip_int32_sse2_int;
+            } else {
+                c->vector_clip_int32 = ff_vector_clip_int32_sse2;
+            }
             if (avctx->flags & CODEC_FLAG_BITEXACT) {
                 c->apply_window_int16 = ff_apply_window_int16_sse2_ba;
             } else {
@@ -2877,6 +2894,13 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
             }
 #endif
         }
+
+        if (mm_flags & AV_CPU_FLAG_SSE4 && HAVE_SSE) {
+#if HAVE_YASM
+            c->vector_clip_int32 = ff_vector_clip_int32_sse41;
+#endif
+        }
+
 #if HAVE_AVX && HAVE_YASM
         if (mm_flags & AV_CPU_FLAG_AVX) {
             if (bit_depth == 10) {
