@@ -43,8 +43,8 @@
 #define ASMALIGN(ZEROBITS) ".p2align " #ZEROBITS "\n\t"
 
 #if ARCH_X86_64
-  #define EXTERN_PREFIX ""
-  #define EXTERN_ASM 
+  #define EXTERN_PREFIX "_"
+  #define EXTERN_ASM _
 #else
   #define EXTERN_PREFIX "_"
   #define EXTERN_ASM _

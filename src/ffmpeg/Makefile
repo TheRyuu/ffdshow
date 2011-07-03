@@ -365,10 +365,10 @@ CFLAGS=-I. -Ilibavcodec -Ilibavutil -I../imgFilters -I../pthreads -I../zlib -DHA
 
 ifeq ($(64BIT),yes)
     CFLAGS+=-DARCH_X86_64
-    GCCLIBS=../../bin/lib_x64/libpthread.a
+    GCCLIBS=../../bin/lib_x64/libpthreadGC2.a -lws2_32
 else
     CFLAGS+=-DARCH_X86_32
-    GCCLIBS=../../bin/lib_x86/libpthread.a
+    GCCLIBS=../../bin/lib_x86/libpthreadGC2.a -lws2_32
 endif
 
 #CFLAGS+=-save-temps
