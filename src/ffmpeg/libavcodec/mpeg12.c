@@ -1891,8 +1891,6 @@ static int slice_decode_thread(AVCodecContext *c, void *arg){
         if(mb_y < 0 || mb_y >= s->end_mb_y)
             return -1;
     }
-
-    return 0; //not reached
 }
 
 /**

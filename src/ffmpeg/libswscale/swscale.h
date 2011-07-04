@@ -32,6 +32,8 @@ extern "C" {
 #endif
 
 #include "libavutil/avutil.h"
+#include "libavutil/log.h"
+#include "libavutil/pixfmt.h"
 #include "ffImgfmt.h"
 
 #define LIBSWSCALE_VERSION_MAJOR 2
@@ -254,7 +256,6 @@ int sws_scale(struct SwsContext *context, const uint8_t* const srcSlice[], const
 
 /**
  * @param inv_table the yuv2rgb coefficients, normally ff_yuv2rgb_coeffs[x]
- * @param fullRange if 1 then the luma range is 0..255 if 0 it is 16..235
  * @return -1 if not supported
  */
 int sws_setColorspaceDetails(struct SwsContext *c, const int inv_table[4],
