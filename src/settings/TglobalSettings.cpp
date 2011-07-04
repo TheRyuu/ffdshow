@@ -1065,13 +1065,13 @@ TglobalSettingsDecAudio::TglobalSettingsDecAudio(const Tconfig *Iconfig,int Imod
         IDFF_ra                     ,&TglobalSettingsDecAudio::ra                     ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
         IDFF_imc                    ,&TglobalSettingsDecAudio::imc                    ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
         IDFF_atrac3                 ,&TglobalSettingsDecAudio::atrac3                 ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-        //IDFF_cook                   ,&TglobalSettingsDecAudio::cook                   ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
         IDFF_nellymoser             ,&TglobalSettingsDecAudio::nellymoser             ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
         IDFF_wavpack                ,&TglobalSettingsDecAudio::wavpack                ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
         IDFF_avisA                  ,&TglobalSettingsDecAudio::avis                   ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
         IDFF_rawa                   ,&TglobalSettingsDecAudio::rawa                   ,0,0             ,_l(""),0,NULL,0,
         IDFF_cook                   ,&TglobalSettingsDecAudio::cook                   ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-        IDFF_showCurrentVolume      ,&TglobalSettingsDecAudio::showCurrentVolume      ,0,0             ,_l(""),0,
+		IDFF_qtpcm                  ,&TglobalSettingsDecAudio::qtpcm                  ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+		IDFF_showCurrentVolume      ,&TglobalSettingsDecAudio::showCurrentVolume      ,0,0             ,_l(""),0,
         _l("showCurrentVolume"),0,
         IDFF_showCurrentFFT         ,&TglobalSettingsDecAudio::showCurrentFFT         ,0,0             ,_l(""),0,
         _l("showCurrentFFT"),0,
@@ -1147,6 +1147,7 @@ void TglobalSettingsDecAudio::reg_op_codec(TregOp &t,TregOp *t2)
     _reg_op_codec(IDFF_cook      ,t,t2,_l("cook")      ,cook      ,0);
     _reg_op_codec(IDFF_nellymoser,t,t2,_l("nellymoser"),nellymoser,0);
     _reg_op_codec(IDFF_wavpack   ,t,t2,_l("wavpack")   ,wavpack   ,0);
+	_reg_op_codec(IDFF_qtpcm     ,t,t2,_l("qtpcm")     ,qtpcm     ,0);
     _reg_op_codec(IDFF_avisA     ,t,t2,_l("avis")      ,avis      ,IDFF_MOVIE_AVIS);
     _reg_op_codec(IDFF_rawa      ,t,t2,filtermode&IDFF_FILTERMODE_AUDIORAW?_l("raw_rawa"):_l("rawa"),rawa,filtermode&IDFF_FILTERMODE_AUDIORAW?IDFF_MOVIE_RAW:0);
 }
@@ -1181,6 +1182,7 @@ void TglobalSettingsDecAudio::load(void)
     fixMissing(cook      ,IDFF_MOVIE_LAVC);
     fixMissing(nellymoser,IDFF_MOVIE_LAVC);
     fixMissing(wavpack   ,IDFF_MOVIE_LAVC);
+	fixMissing(qtpcm     ,IDFF_MOVIE_RAW);
 }
 
 #define FF_WAVE_FORMAT1_CODEC(format,decoder,codec) \
@@ -1242,6 +1244,11 @@ void TglobalSettingsDecAudio::load(void)
  FF_WAVE_FORMAT1_OP(COOK2  ,cook   & rawmask,CODEC_ID_COOK) \
  FF_WAVE_FORMAT1_OP(LPCM   ,lpcm   & rawmask,CODEC_ID_LPCM) \
  FF_WAVE_FORMAT1_OP(AVIS   ,avis   & rawmask,CODEC_ID_AVISYNTH) \
+ FF_WAVE_FORMAT1_OP(TWOS   ,qtpcm  & rawmask,CODEC_ID_PCM) \
+ FF_WAVE_FORMAT1_OP(IN24   ,qtpcm  & rawmask,CODEC_ID_PCM) \
+ FF_WAVE_FORMAT1_OP(IN32   ,qtpcm  & rawmask,CODEC_ID_PCM) \
+ FF_WAVE_FORMAT1_OP(FL32   ,qtpcm  & rawmask,CODEC_ID_PCM) \
+ FF_WAVE_FORMAT1_OP(FL64   ,qtpcm  & rawmask,CODEC_ID_PCM) \
  FF_WAVE_FORMAT1_OP(PCM8   ,rawa==IDFF_MOVIE_RAW || rawa==(TsampleFormat::SF_ALLINT<<8) || rawa==(TsampleFormat::SF_PCM8 <<8),CODEC_ID_PCM) \
  FF_WAVE_FORMAT1_OP(PCM16  ,rawa==IDFF_MOVIE_RAW || rawa==(TsampleFormat::SF_ALLINT<<8) || rawa==(TsampleFormat::SF_PCM16<<8),CODEC_ID_PCM) \
  FF_WAVE_FORMAT1_OP(PCM24  ,rawa==IDFF_MOVIE_RAW || rawa==(TsampleFormat::SF_ALLINT<<8) || rawa==(TsampleFormat::SF_PCM24<<8),CODEC_ID_PCM) \

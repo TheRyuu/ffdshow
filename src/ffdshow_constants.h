@@ -924,6 +924,7 @@
 #define IDFF_vp8                1335
 #define IDFF_iv50               1336
 #define IDFF_i263               1337
+#define IDFF_qtpcm              1338
 
 #define IDFF_filterOutputVideo   1357
 #define IDFF_outYV12             1301

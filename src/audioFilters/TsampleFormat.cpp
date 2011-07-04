@@ -67,7 +67,7 @@ TsampleFormat::TsampleFormat(const WAVEFORMATEX &wfex,bool wfextcheck,const GUID
 }
 void TsampleFormat::init(const WAVEFORMATEX &wfex,bool wfextcheck,const GUID *subtype)
 {
-    alternateSF=-1;; // Used for audio renderers that do not accept official bitstream media types
+    alternateSF=-1; // Used for audio renderers that do not accept official bitstream media types
     if (wfextcheck && wfex.wFormatTag==WAVE_FORMAT_EXTENSIBLE) {
         init(*(const WAVEFORMATEXTENSIBLE*)&wfex,subtype);
     } else {
@@ -77,27 +77,25 @@ void TsampleFormat::init(const WAVEFORMATEX &wfex,bool wfextcheck,const GUID *su
             sf=SF_FLOAT32;
         } else if (wfex.wFormatTag==WAVE_FORMAT_DOLBY_AC3_SPDIF) {
             sf=SF_AC3;
-        } else if (subtype && (*subtype==MEDIASUBTYPE_IN32 || *subtype==MEDIASUBTYPE_in32 || *subtype==MEDIASUBTYPE_IN24 || *subtype==MEDIASUBTYPE_in24 || *subtype==MEDIASUBTYPE_FL32 || *subtype==MEDIASUBTYPE_fl32 || *subtype==MEDIASUBTYPE_FL64 || *subtype==MEDIASUBTYPE_fl64 || *subtype==MEDIASUBTYPE_twos || *subtype==MEDIASUBTYPE_TWOS)) {
-            if (*subtype==MEDIASUBTYPE_IN32 || *subtype==MEDIASUBTYPE_in32 || *subtype==MEDIASUBTYPE_IN24 || *subtype==MEDIASUBTYPE_in24 || *subtype==MEDIASUBTYPE_FL32 || *subtype==MEDIASUBTYPE_fl32 || *subtype==MEDIASUBTYPE_FL64 || *subtype==MEDIASUBTYPE_fl64) {
-                if (*subtype==MEDIASUBTYPE_IN32 || *subtype==MEDIASUBTYPE_in32) {
-                    sf=SF_PCM32;
-                } else if (*subtype==MEDIASUBTYPE_IN24 || *subtype==MEDIASUBTYPE_in24) {
-                    sf=SF_PCM24;
-                } else if (*subtype==MEDIASUBTYPE_FL32 || *subtype==MEDIASUBTYPE_fl32) {
-                    sf=SF_FLOAT32;
-                } else if (*subtype==MEDIASUBTYPE_FL64 || *subtype==MEDIASUBTYPE_fl64) {
-                    sf=SF_FLOAT64;
+		} else if (subtype && (*subtype==MEDIASUBTYPE_twos || *subtype==MEDIASUBTYPE_TWOS)) {
+			sf=SF_PCM16;
+            pcm_be=true;
+        } else if (subtype && (*subtype==MEDIASUBTYPE_IN32 || *subtype==MEDIASUBTYPE_in32 || *subtype==MEDIASUBTYPE_IN24 || *subtype==MEDIASUBTYPE_in24 || *subtype==MEDIASUBTYPE_FL32 || *subtype==MEDIASUBTYPE_fl32 || *subtype==MEDIASUBTYPE_FL64 || *subtype==MEDIASUBTYPE_fl64)) {
+            if (*subtype==MEDIASUBTYPE_IN32 || *subtype==MEDIASUBTYPE_in32) {
+                sf=SF_PCM32;
+            } else if (*subtype==MEDIASUBTYPE_IN24 || *subtype==MEDIASUBTYPE_in24) {
+                sf=SF_PCM24;
+            } else if (*subtype==MEDIASUBTYPE_FL32 || *subtype==MEDIASUBTYPE_fl32) {
+                sf=SF_FLOAT32;
+            } else if (*subtype==MEDIASUBTYPE_FL64 || *subtype==MEDIASUBTYPE_fl64) {
+                sf=SF_FLOAT64;
+            }
+            Textradata extradata(wfex);
+            if (extradata.data) {
+                const uint8_t *enda=(const uint8_t*)memnstr(extradata.data,extradata.size,"enda"); //TODO: properly parse headers
+                if (enda && *(uint16_t*)(enda+4)==0) {
+                    pcm_be=true;
                 }
-                Textradata extradata(wfex);
-                if (extradata.data) {
-                    const uint8_t *enda=(const uint8_t*)memnstr(extradata.data,extradata.size,"enda"); //TODO: properly parse headers
-                    if (enda && *(uint16_t*)(enda+4)==0) {
-                        pcm_be=true;
-                    }
-                }
-            } else if (*subtype==MEDIASUBTYPE_twos || *subtype==MEDIASUBTYPE_TWOS) {
-                sf=SF_PCM16;
-                pcm_be=true;
             }
         } else
             switch (wfex.wBitsPerSample) {

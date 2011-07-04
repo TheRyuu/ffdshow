@@ -292,15 +292,15 @@ CodecID TffdshowDecAudio::getCodecId(const CMediaType &mt)
         } else if (mt.subtype==MEDIASUBTYPE_ALAW || mt.subtype==MEDIASUBTYPE_alaw) {
             wFormatTag=WAVE_FORMAT_ALAW;
         } else if (mt.subtype==MEDIASUBTYPE_SOWT || mt.subtype==MEDIASUBTYPE_sowt || mt.subtype==MEDIASUBTYPE_TWOS || mt.subtype==MEDIASUBTYPE_twos) {
-            wFormatTag=WAVE_FORMAT_PCM16;
+            wFormatTag=WAVE_FORMAT_TWOS;
         } else if (mt.subtype==MEDIASUBTYPE_IN32 || mt.subtype==MEDIASUBTYPE_in32) {
-            wFormatTag=WAVE_FORMAT_PCM32;
+            wFormatTag=WAVE_FORMAT_IN32;
         } else if (mt.subtype==MEDIASUBTYPE_IN24 || mt.subtype==MEDIASUBTYPE_in24) {
-            wFormatTag=WAVE_FORMAT_PCM24;
+            wFormatTag=WAVE_FORMAT_IN24;
         } else if (mt.subtype==MEDIASUBTYPE_FL32 || mt.subtype==MEDIASUBTYPE_fl32) {
-            wFormatTag=WAVE_FORMAT_FLOAT32;
+            wFormatTag=WAVE_FORMAT_FL32;
         } else if (mt.subtype==MEDIASUBTYPE_FL64 || mt.subtype==MEDIASUBTYPE_fl64) {
-            wFormatTag=WAVE_FORMAT_FLOAT64;
+            wFormatTag=WAVE_FORMAT_FL64;
         }
         if (wFormatTag==0) {
             wFormatTag=wfex->wFormatTag;

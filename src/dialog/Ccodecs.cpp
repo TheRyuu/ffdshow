@@ -569,11 +569,16 @@ void TcodecsPageAudio::fillCodecs(void)
         formats.push_back(Tformat(_l("WAVPACK")     ,IDFF_wavpack    ,IDFF_MOVIE_LAVC,_l("Wavpack decoder")));
         formats.push_back(Tformat(_l("AVIS")        ,IDFF_avisA      ,IDFF_MOVIE_AVIS,_l("AVIS (AviSynth AVI files)")));
     }
-    //Tformat::Tdecoder movie_raw[]={{"any",IDFF_MOVIE_RAW},{NULL,0)};
     for (Tformats::iterator f=formats.begin(); f!=formats.end(); f++) {
         f->decoderCheck(config);
         f->decoders.insert(f->decoders.begin(),Tformat::Tdecoder::init(_l("disabled"),0));
     }
+	static const Tformat::Tdecoder movie_qtpcm[]= {
+		{_l("disabled"),0},
+		{_l("enabled") ,IDFF_MOVIE_RAW},
+		{NULL,0}
+	};
+	formats.push_back(Tformat(_l("QT PCM"),IDFF_qtpcm,movie_qtpcm,_l("twos, sowt, fl32, fl64, in24, in32")));
     static const Tformat::Tdecoder movie_raw[]= {
         {_l("disabled"),0},
         {_l("all supported") ,IDFF_MOVIE_RAW},
@@ -587,5 +592,5 @@ void TcodecsPageAudio::fillCodecs(void)
         {_l("64-bit float")  ,TsampleFormat::SF_FLOAT64<<8},
         {NULL,0}
     };
-    formats.push_back(Tformat(_l("Uncompressed"),IDFF_rawa,movie_raw,_l("raw,twos,sowt,fl32,fl64,in24,in32")));
+    formats.push_back(Tformat(_l("Uncompressed"),IDFF_rawa,movie_raw,_l("raw")));
 }
