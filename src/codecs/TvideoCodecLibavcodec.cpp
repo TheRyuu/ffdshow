@@ -165,6 +165,17 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
     
     if (numthreads>1 && thread_type!=0) {
         threadcount = numthreads;
+#if 0
+        /* hack to reduce sync issues for H.264 in AVI */
+        if (threadcount > 2 && codecId == CODEC_ID_H264) {
+            ffstring sourceExt;
+            extractfileext(deci->getSourceName(),sourceExt);
+            sourceExt.ConvertToLowerCase();
+            if (sourceExt == L"avi") {
+                threadcount = 2;
+            }
+        }
+#endif
     } else {
         threadcount = 1;        
     }

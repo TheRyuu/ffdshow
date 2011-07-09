@@ -80,6 +80,8 @@ void TsampleFormat::init(const WAVEFORMATEX &wfex,bool wfextcheck,const GUID *su
 		} else if (subtype && (*subtype==MEDIASUBTYPE_twos || *subtype==MEDIASUBTYPE_TWOS)) {
 			sf=SF_PCM16;
             pcm_be=true;
+		} else if (subtype && (*subtype==MEDIASUBTYPE_sowt || *subtype==MEDIASUBTYPE_sowt)) {
+			sf=SF_PCM16;
         } else if (subtype && (*subtype==MEDIASUBTYPE_IN32 || *subtype==MEDIASUBTYPE_in32 || *subtype==MEDIASUBTYPE_IN24 || *subtype==MEDIASUBTYPE_in24 || *subtype==MEDIASUBTYPE_FL32 || *subtype==MEDIASUBTYPE_fl32 || *subtype==MEDIASUBTYPE_FL64 || *subtype==MEDIASUBTYPE_fl64)) {
             if (*subtype==MEDIASUBTYPE_IN32 || *subtype==MEDIASUBTYPE_in32) {
                 sf=SF_PCM32;
