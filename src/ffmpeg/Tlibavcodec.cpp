@@ -81,8 +81,8 @@ Tlibavcodec::Tlibavcodec(const Tconfig *config):refcount(0)
  dll->loadFunction(dsputil_init,"dsputil_init");
  dll->loadFunction(avcodec_register_all,"avcodec_register_all");
  dll->loadFunction(avcodec_find_decoder,"avcodec_find_decoder");
- dll->loadFunction(avcodec_open0,"avcodec_open");
- dll->loadFunction(avcodec_alloc_context0,"avcodec_alloc_context");
+ dll->loadFunction(avcodec_open0,"avcodec_open2");
+ dll->loadFunction(avcodec_alloc_context0,"avcodec_alloc_context3");
  dll->loadFunction(avcodec_alloc_frame,"avcodec_alloc_frame");
  dll->loadFunction(avcodec_decode_video2,"avcodec_decode_video2");
  dll->loadFunction(avcodec_flush_buffers,"avcodec_flush_buffers");
@@ -276,7 +276,7 @@ int Tlibavcodec::getPPmode(const TpostprocSettings *cfg,int currentq)
 
 AVCodecContext* Tlibavcodec::avcodec_alloc_context(TlibavcodecExt *ext)
 {
- AVCodecContext *ctx=avcodec_alloc_context0();
+ AVCodecContext *ctx=avcodec_alloc_context0(NULL);
  ctx->dsp_mask=Tconfig::lavc_cpu_flags;
  if (ext)
   ext->connectTo(ctx,this);
@@ -286,7 +286,7 @@ AVCodecContext* Tlibavcodec::avcodec_alloc_context(TlibavcodecExt *ext)
 int Tlibavcodec::avcodec_open(AVCodecContext *avctx, AVCodec *codec)
 {
  CAutoLock l(&csOpenClose);
- return avcodec_open0(avctx,codec);
+ return avcodec_open0(avctx,codec,NULL);
 }
 int Tlibavcodec::avcodec_close(AVCodecContext *avctx)
 {

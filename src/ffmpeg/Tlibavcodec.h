@@ -7,7 +7,6 @@
 #include "ffImgfmt.h"
 #include "libavfilter/vf_yadif.h"
 #include "libavfilter/gradfun.h"
-// Do not include avcodec.h in this file, ffmpeg and ffmpeg-mt may conflict.
 
 struct AVCodecContext;
 struct AVCodec;
@@ -20,6 +19,7 @@ struct SwsFilter;
 struct SwsVector;
 struct SwsParams;
 struct PPMode;
+struct AVDictionary;
 
 struct Tconfig;
 class Tdll;
@@ -60,11 +60,11 @@ public:
 
  void (*avcodec_init)(void);
  void (*avcodec_register_all)(void);
- AVCodecContext* (*avcodec_alloc_context0)(void);
+ AVCodecContext* (*avcodec_alloc_context0)(AVCodec *codec);
  void (*dsputil_init)(DSPContext* p, AVCodecContext *avctx);
  AVCodec* (*avcodec_find_decoder)(CodecID codecId);
  AVCodec* (*avcodec_find_encoder)(CodecID id);
- int  (*avcodec_open0)(AVCodecContext *avctx, AVCodec *codec);
+ int  (*avcodec_open0)(AVCodecContext *avctx, AVCodec *codec, AVDictionary **options);
  int  avcodec_open(AVCodecContext *avctx, AVCodec *codec);
  AVFrame* (*avcodec_alloc_frame)(void);
  int (*avcodec_decode_video2)(AVCodecContext *avctx, AVFrame *picture,
