@@ -2319,6 +2319,13 @@ typedef struct AVCodecContext {
     float rc_min_vbv_overflow_use;
 
     /**
+     * Hardware accelerator in use
+     * - encoding: unused.
+     * - decoding: Set by libavcodec
+     */
+    struct AVHWAccel *hwaccel;
+
+    /**
      * For some codecs, the time base is closer to the field rate than the frame rate.
      * Most notably, H.264 and MPEG-2 specify time_base as half of frame duration
      * if no telecine is used ...
@@ -2326,6 +2333,18 @@ typedef struct AVCodecContext {
      * Set to time_base ticks per frame. Default 1, e.g., H.264/MPEG-2 set it to 2.
      */
     int ticks_per_frame;
+
+    /**
+     * Hardware accelerator context.
+     * For some hardware accelerators, a global context needs to be
+     * provided by the user. In that case, this holds display-dependent
+     * data Libav cannot instantiate itself. Please refer to the
+     * Libav HW accelerator documentation to know how to fill this
+     * is. e.g. for VA API, this is a struct vaapi_context.
+     * - encoding: unused
+     * - decoding: Set by user
+     */
+    void *hwaccel_context;
 
     /**
      * Chromaticity coordinates of the source primaries.
@@ -2643,6 +2662,8 @@ typedef struct AVCodec {
     const enum AVSampleFormat *sample_fmts; ///< array of supported sample formats, or NULL if unknown, array is terminated by -1
     const int64_t *channel_layouts;         ///< array of support channel layouts, or NULL if unknown. array is terminated by 0
     uint8_t max_lowres;                     ///< maximum value for lowres supported by the decoder
+    const AVClass *priv_class;              ///< AVClass for the private context
+    const AVProfile *profiles;              ///< array of recognized profiles, or NULL if unknown, array is terminated by {FF_PROFILE_UNKNOWN}
 
     /**
      * @name Frame-level threading support functions
@@ -2664,14 +2685,101 @@ typedef struct AVCodec {
     int (*update_thread_context)(AVCodecContext *dst, const AVCodecContext *src);
     /** @} */
 
-    const AVClass *priv_class;              ///< AVClass for the private context
-    const AVProfile *profiles;              ///< array of recognized profiles, or NULL if unknown, array is terminated by {FF_PROFILE_UNKNOWN}
-
     /**
      * Private codec-specific defaults.
      */
     const AVCodecDefault *defaults;
 } AVCodec;
+
+/**
+ * AVHWAccel.
+ */
+typedef struct AVHWAccel {
+    /**
+     * Name of the hardware accelerated codec.
+     * The name is globally unique among encoders and among decoders (but an
+     * encoder and a decoder can share the same name).
+     */
+    const char *name;
+
+    /**
+     * Type of codec implemented by the hardware accelerator.
+     *
+     * See AVMEDIA_TYPE_xxx
+     */
+    enum AVMediaType type;
+
+    /**
+     * Codec implemented by the hardware accelerator.
+     *
+     * See CODEC_ID_xxx
+     */
+    enum CodecID id;
+
+    /**
+     * Supported pixel format.
+     *
+     * Only hardware accelerated formats are supported here.
+     */
+    enum PixelFormat pix_fmt;
+
+    /**
+     * Hardware accelerated codec capabilities.
+     * see FF_HWACCEL_CODEC_CAP_*
+     */
+    int capabilities;
+
+    struct AVHWAccel *next;
+
+    /**
+     * Called at the beginning of each frame or field picture.
+     *
+     * Meaningful frame information (codec specific) is guaranteed to
+     * be parsed at this point. This function is mandatory.
+     *
+     * Note that buf can be NULL along with buf_size set to 0.
+     * Otherwise, this means the whole frame is available at this point.
+     *
+     * @param avctx the codec context
+     * @param buf the frame data buffer base
+     * @param buf_size the size of the frame in bytes
+     * @return zero if successful, a negative value otherwise
+     */
+    int (*start_frame)(AVCodecContext *avctx, const uint8_t *buf, uint32_t buf_size);
+
+    /**
+     * Callback for each slice.
+     *
+     * Meaningful slice information (codec specific) is guaranteed to
+     * be parsed at this point. This function is mandatory.
+     *
+     * @param avctx the codec context
+     * @param buf the slice data buffer base
+     * @param buf_size the size of the slice in bytes
+     * @return zero if successful, a negative value otherwise
+     */
+    int (*decode_slice)(AVCodecContext *avctx, const uint8_t *buf, uint32_t buf_size);
+
+    /**
+     * Called at the end of each frame or field picture.
+     *
+     * The whole picture is parsed at this point and can now be sent
+     * to the hardware accelerator. This function is mandatory.
+     *
+     * @param avctx the codec context
+     * @return zero if successful, a negative value otherwise
+     */
+    int (*end_frame)(AVCodecContext *avctx);
+
+    /**
+     * Size of HW accelerator private data.
+     *
+     * Private data is allocated with av_mallocz() before
+     * AVCodecContext.get_buffer() and deallocated after
+     * AVCodecContext.release_buffer().
+     */
+    int priv_data_size;
+} AVHWAccel;
 
 /**
  * four components are given, that's all.
