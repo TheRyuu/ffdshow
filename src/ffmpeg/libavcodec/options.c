@@ -25,6 +25,8 @@
  */
 
 #include "avcodec.h"
+#include "internal.h"
+#include "libavutil/avassert.h"
 #include "libavutil/opt.h"
 #include <float.h>              /* FLT_MIN, FLT_MAX */
 
@@ -413,7 +415,9 @@ static const AVOption options[]={
 #if FF_API_REQUEST_CHANNELS
 {"request_channels", "set desired number of audio channels", OFFSET(request_channels), FF_OPT_TYPE_INT, {.dbl = DEFAULT }, 0, INT_MAX, A|D},
 #endif
+#if FF_API_DRC_SCALE
 {"drc_scale", "percentage of dynamic range compression to apply", OFFSET(drc_scale), FF_OPT_TYPE_FLOAT, {.dbl = 1.0 }, 0.0, 1.0, A|D},
+#endif
 {"reservoir", "use bit reservoir", 0, FF_OPT_TYPE_CONST, {.dbl = CODEC_FLAG2_BIT_RESERVOIR }, INT_MIN, INT_MAX, A|E, "flags2"},
 {"mbtree", "use macroblock tree ratecontrol (x264 only)", 0, FF_OPT_TYPE_CONST, {.dbl = CODEC_FLAG2_MBTREE }, INT_MIN, INT_MAX, V|E, "flags2"},
 {"bits_per_raw_sample", NULL, OFFSET(bits_per_raw_sample), FF_OPT_TYPE_INT, {.dbl = DEFAULT }, INT_MIN, INT_MAX},
@@ -523,6 +527,15 @@ int avcodec_get_context_defaults3(AVCodecContext *s, AVCodec *codec){
             av_opt_set_defaults(s->priv_data);
         }
     }
+    if (codec && codec->defaults) {
+        int ret;
+        AVCodecDefault *d = codec->defaults;
+        while (d->key) {
+            ret = av_set_string3(s, d->key, d->value, 0, NULL);
+            av_assert0(ret >= 0);
+            d++;
+        }
+    }
     return 0;
 }
 
@@ -539,6 +552,7 @@ AVCodecContext *avcodec_alloc_context3(AVCodec *codec){
     return avctx;
 }
 
+#if FF_API_ALLOC_CONTEXT
 AVCodecContext *avcodec_alloc_context2(enum AVMediaType codec_type){
     AVCodecContext *avctx= av_malloc(sizeof(AVCodecContext));
 
@@ -548,14 +562,17 @@ AVCodecContext *avcodec_alloc_context2(enum AVMediaType codec_type){
 
     return avctx;
 }
+#endif
 
 void avcodec_get_context_defaults(AVCodecContext *s){
     avcodec_get_context_defaults2(s, AVMEDIA_TYPE_UNKNOWN);
 }
 
+#if FF_API_ALLOC_CONTEXT
 AVCodecContext *avcodec_alloc_context(void){
     return avcodec_alloc_context2(AVMEDIA_TYPE_UNKNOWN);
 }
+#endif
 
 int avcodec_copy_context(AVCodecContext *dest, const AVCodecContext *src)
 {
