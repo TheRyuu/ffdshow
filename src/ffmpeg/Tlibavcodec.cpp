@@ -71,11 +71,7 @@ const Tlibavcodec::Tdia_size Tlibavcodec::dia_sizes[]=
 //===================================== Tlibavcodec ====================================
 Tlibavcodec::Tlibavcodec(const Tconfig *config):refcount(0)
 {
-#if COMPILE_AS_FFMPEG_MT
- dll=new Tdll(_l("ffmpegmt.dll"),config);
-#else
  dll=new Tdll(_l("ffmpeg.dll"),config);
-#endif
 
  dll->loadFunction(avcodec_init,"avcodec_init");
  dll->loadFunction(dsputil_init,"dsputil_init");
@@ -296,12 +292,7 @@ int Tlibavcodec::avcodec_close(AVCodecContext *avctx)
 
 bool Tlibavcodec::getVersion(const Tconfig *config,ffstring &vers,ffstring &license)
 {
- const char *x=text<char>("aaa");
-#if COMPILE_AS_FFMPEG_MT
- Tdll *dl=new Tdll(_l("ffmpegmt.dll"),config);
-#else
  Tdll *dl=new Tdll(_l("ffmpeg.dll"),config);
-#endif
 
  void (*av_getVersion)(char **version,char **build,char **datetime,const char* *license);
  dl->loadFunction(av_getVersion,"getVersion");
@@ -311,7 +302,7 @@ bool Tlibavcodec::getVersion(const Tconfig *config,ffstring &vers,ffstring &lice
    res=true;
    char *version,*build,*datetime;const char *lic;
    av_getVersion(&version,&build,&datetime,&lic);
-   vers=(const char_t*)text<char_t>(version)+/*ffstring(", build ")+build+*/ffstring(_l(" ("))+(const char_t*)text<char_t>(datetime)+_l(")");
+   vers=(const char_t*)text<char_t>(version)+ffstring(_l(" ("))+(const char_t*)text<char_t>(datetime)+_l(")");
    license=text<char_t>(lic);
   }
  else
@@ -325,11 +316,7 @@ bool Tlibavcodec::getVersion(const Tconfig *config,ffstring &vers,ffstring &lice
 }
 bool Tlibavcodec::check(const Tconfig *config)
 {
-#if COMPILE_AS_FFMPEG_MT
- return Tdll::check(_l("ffmpegmt.dll"),config);
-#else
  return Tdll::check(_l("ffmpeg.dll"),config);
-#endif
 }
 
 void Tlibavcodec::avlog(AVCodecContext *avctx,int level,const char *fmt,va_list valist)

@@ -22,7 +22,6 @@
 #include "IffdshowEnc.h"
 #include "TvideoCodec.h"
 #include "TvideoCodecLibavcodec.h"
-#include "TvideoCodec_ffmpeg-mt.h"
 #include "TvideoCodecLibavcodecDxva.h"
 #include "TvideoCodecUncompressed.h"
 #include "TvideoCodecXviD4.h"
