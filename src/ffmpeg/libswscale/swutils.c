@@ -50,6 +50,7 @@ static char THIS_FILE[] = __FILE__;
 #include "libavutil/bswap.h"
 #include "libavutil/opt.h"
 #include "libavutil/pixdesc.h"
+#include "libavutil/avassert.h"
 
 unsigned swscale_version(void)
 {
@@ -123,7 +124,6 @@ const char *swscale_license(void)
         || (x)==PIX_FMT_YUV420P16LE   \
         || (x)==PIX_FMT_YUV422P16LE   \
         || (x)==PIX_FMT_YUV444P16LE   \
-        || (x)==PIX_FMT_YUV422P10LE   \
         || (x)==PIX_FMT_YUV420P9BE    \
         || (x)==PIX_FMT_YUV444P9BE    \
         || (x)==PIX_FMT_YUV420P10BE   \
@@ -786,13 +786,13 @@ SwsContext *sws_getContext(int srcW, int srcH, enum PixelFormat srcFormat,
                            SwsFilter *srcFilter, SwsFilter *dstFilter, const double *param, SwsParams *ffdshow_params)
 {
     SwsContext *c;
-    int i;
+    int i, j;
     int usesVFilter, usesHFilter;
     int unscaled;
     int srcRange, dstRange;
     int threadCount = GetCPUCount();
     SwsFilter dummyFilter= {NULL, NULL, NULL, NULL};
-    int dst_stride = FFALIGN(dstW * sizeof(int16_t)+66, 16), dst_stride_px = dst_stride >> 1;
+    int dst_stride = FFALIGN(dstW * sizeof(int16_t)+66, 16);
     int cpu_flags;
     
     // sanity check scaling settings
@@ -928,7 +928,15 @@ SwsContext *sws_getContext(int srcW, int srcH, enum PixelFormat srcFormat,
         }
     }
 
-    if (HAVE_MMX2 && cpu_flags & AV_CPU_FLAG_MMX2) {
+
+    c->scalingBpp = FFMAX(av_pix_fmt_descriptors[srcFormat].comp[0].depth_minus1,
+                          av_pix_fmt_descriptors[dstFormat].comp[0].depth_minus1) >= 15 ? 16 : 8;
+
+    if (c->scalingBpp == 16)
+        dst_stride <<= 1;
+    av_assert0(c->scalingBpp<=16);
+
+    if (HAVE_MMX2 && cpu_flags & AV_CPU_FLAG_MMX2 && c->scalingBpp == 8) {
         c->canMMX2BeUsed= (dstW >=srcW && (dstW&31)==0 && (srcW&15)==0) ? 1 : 0;
         if (!c->canMMX2BeUsed && dstW >=srcW && (srcW&15)==0 && (flags&SWS_FAST_BILINEAR)) {
             if (flags&SWS_PRINT_INFO)
@@ -957,7 +965,7 @@ SwsContext *sws_getContext(int srcW, int srcH, enum PixelFormat srcFormat,
             c->chrXInc+= 20;
         }
         //we don't use the x86 asm scaler if MMX is available
-        else if (HAVE_MMX && cpu_flags & AV_CPU_FLAG_MMX) {
+        else if (HAVE_MMX && cpu_flags & AV_CPU_FLAG_MMX && c->scalingBpp == 8) {
             c->lumXInc = ((srcW-2)<<16)/(dstW-2) - 20;
             c->chrXInc = ((c->chrSrcW-2)<<16)/(c->chrDstW-2) - 20;
         }
@@ -1127,12 +1135,12 @@ SwsContext *sws_getContext(int srcW, int srcH, enum PixelFormat srcFormat,
         FF_ALLOCZ_OR_GOTO(c, c->lumPixBuf[i+c->vLumBufSize], dst_stride+1, fail);
         c->lumPixBuf[i] = c->lumPixBuf[i+c->vLumBufSize];
     }
-    c->uv_off = dst_stride_px;
+    c->uv_off = dst_stride>>1;
     c->uv_offx2 = dst_stride;
     for (i=0; i<c->vChrBufSize; i++) {
         FF_ALLOC_OR_GOTO(c, c->chrUPixBuf[i+c->vChrBufSize], dst_stride*2+1, fail);
         c->chrUPixBuf[i] = c->chrUPixBuf[i+c->vChrBufSize];
-        c->chrVPixBuf[i] = c->chrVPixBuf[i+c->vChrBufSize] = c->chrUPixBuf[i] + dst_stride_px;
+        c->chrVPixBuf[i] = c->chrVPixBuf[i+c->vChrBufSize] = c->chrUPixBuf[i] + (dst_stride >> 1);
     }
     if (CONFIG_SWSCALE_ALPHA && c->alpPixBuf)
         for (i=0; i<c->vLumBufSize; i++) {
@@ -1142,7 +1150,13 @@ SwsContext *sws_getContext(int srcW, int srcH, enum PixelFormat srcFormat,
 
     //try to avoid drawing green stuff between the right end and the stride end
     for (i=0; i<c->vChrBufSize; i++)
-        memset(c->chrUPixBuf[i], 64, dst_stride*2+1);
+        if(av_pix_fmt_descriptors[c->dstFormat].comp[0].depth_minus1 == 15){
+            av_assert0(c->scalingBpp == 16);
+            for(j=0; j<dst_stride/2+1; j++)
+                ((int32_t*)(c->chrUPixBuf[i]))[j] = 1<<18;
+        } else
+            for(j=0; j<dst_stride+1; j++)
+                ((int16_t*)(c->chrUPixBuf[i]))[j] = 1<<14;
 
     assert(c->chrDstH <= dstH);
 #endif
@@ -1272,40 +1286,46 @@ SwsContext *sws_getContext(int srcW, int srcH, enum PixelFormat srcFormat,
         memcpy(&(c[j]), c,sizeof(SwsContext));
     }
     
-    for (int j=0; j<threadCount; j++) {
-        FF_ALLOC_OR_GOTO(&c[j], c[j].formatConvBuffer, FFALIGN(srcW*2+78, 16) * 2, fail);
+    for (int k=0; k<threadCount; k++) {
+        FF_ALLOC_OR_GOTO(&c[k], c[k].formatConvBuffer, FFALIGN(srcW*2+78, 16) * 2, fail);
 
         // allocate pixbufs (we use dynamic allocation because otherwise we would need to
         // allocate several megabytes to handle all possible cases)
-        FF_ALLOC_OR_GOTO(&c[j], c[j].lumPixBuf, c[j].vLumBufSize*2*sizeof(int16_t*), fail);
-        FF_ALLOC_OR_GOTO(&c[j], c[j].chrUPixBuf, c[j].vChrBufSize*2*sizeof(int16_t*), fail);
-        FF_ALLOC_OR_GOTO(&c[j], c[j].chrVPixBuf, c[j].vChrBufSize*2*sizeof(int16_t*), fail);
-        if (CONFIG_SWSCALE_ALPHA && isALPHA(c[j].srcFormat) && isALPHA(c[j].dstFormat))
-            FF_ALLOCZ_OR_GOTO(&c[j], c[j].alpPixBuf, c[j].vLumBufSize*2*sizeof(int16_t*), fail);
+        FF_ALLOC_OR_GOTO(&c[k], c[k].lumPixBuf, c[k].vLumBufSize*2*sizeof(int16_t*), fail);
+        FF_ALLOC_OR_GOTO(&c[k], c[k].chrUPixBuf, c[k].vChrBufSize*2*sizeof(int16_t*), fail);
+        FF_ALLOC_OR_GOTO(&c[k], c[k].chrVPixBuf, c[k].vChrBufSize*2*sizeof(int16_t*), fail);
+        if (CONFIG_SWSCALE_ALPHA && isALPHA(c[k].srcFormat) && isALPHA(c[k].dstFormat))
+            FF_ALLOCZ_OR_GOTO(&c[k], c[k].alpPixBuf, c[k].vLumBufSize*2*sizeof(int16_t*), fail);
         //Note we need at least one pixel more at the end because of the MMX code (just in case someone wanna replace the 4000/8000)
         /* align at 16 bytes for AltiVec */
-        for (i=0; i<c[j].vLumBufSize; i++) {
-            FF_ALLOCZ_OR_GOTO(&c[j], c[j].lumPixBuf[i+c[j].vLumBufSize], dst_stride+1, fail);
-            c[j].lumPixBuf[i] = c[j].lumPixBuf[i+c[j].vLumBufSize];
+        for (i=0; i<c[k].vLumBufSize; i++) {
+            FF_ALLOCZ_OR_GOTO(&c[k], c[k].lumPixBuf[i+c[k].vLumBufSize], dst_stride+1, fail);
+            c[k].lumPixBuf[i] = c[k].lumPixBuf[i+c[k].vLumBufSize];
         }
-        c[j].uv_off = dst_stride_px;
-        c[j].uv_offx2 = dst_stride;
-        for (i=0; i<c[j].vChrBufSize; i++) {
-            FF_ALLOC_OR_GOTO(&c[j], c[j].chrUPixBuf[i+c[j].vChrBufSize], dst_stride*2+1, fail);
-            c[j].chrUPixBuf[i] = c[j].chrUPixBuf[i+c[j].vChrBufSize];
-            c[j].chrVPixBuf[i] = c[j].chrVPixBuf[i+c[j].vChrBufSize] = c[j].chrUPixBuf[i] + dst_stride_px;
+        c[k].uv_off = dst_stride>>1;
+        c[k].uv_offx2 = dst_stride;
+        for (i=0; i<c[k].vChrBufSize; i++) {
+            FF_ALLOC_OR_GOTO(&c[k], c[k].chrUPixBuf[i+c[k].vChrBufSize], dst_stride*2+1, fail);
+            c[k].chrUPixBuf[i] = c[k].chrUPixBuf[i+c[k].vChrBufSize];
+            c[k].chrVPixBuf[i] = c[k].chrVPixBuf[i+c[k].vChrBufSize] = c[k].chrUPixBuf[i] + (dst_stride>>1);
         }
-        if (CONFIG_SWSCALE_ALPHA && c[j].alpPixBuf)
-            for (i=0; i<c[j].vLumBufSize; i++) {
-                FF_ALLOCZ_OR_GOTO(&c[j], c[j].alpPixBuf[i+c[j].vLumBufSize], dst_stride+1, fail);
-                c[j].alpPixBuf[i] = c[j].alpPixBuf[i+c[j].vLumBufSize];
+        if (CONFIG_SWSCALE_ALPHA && c[k].alpPixBuf)
+            for (i=0; i<c[k].vLumBufSize; i++) {
+                FF_ALLOCZ_OR_GOTO(&c[k], c[k].alpPixBuf[i+c[k].vLumBufSize], dst_stride+1, fail);
+                c[k].alpPixBuf[i] = c[k].alpPixBuf[i+c[k].vLumBufSize];
             }
 
         //try to avoid drawing green stuff between the right end and the stride end
-        for (i=0; i<c[j].vChrBufSize; i++) 
-            memset(c[j].chrUPixBuf[i], 64, dst_stride*2+1);
+        for (i=0; i<c[k].vChrBufSize; i++) 
+            if(av_pix_fmt_descriptors[c[k].dstFormat].comp[0].depth_minus1 == 15){
+                av_assert0(c[k].scalingBpp == 16);
+                for(j=0; j<dst_stride/2+1; j++)
+                    ((int32_t*)(c[k].chrUPixBuf[i]))[j] = 1<<18;
+            } else
+                for(j=0; j<dst_stride+1; j++)
+                    ((int16_t*)(c[k].chrUPixBuf[i]))[j] = 1<<14;
 
-        assert(c[j].chrDstH <= dstH);
+        assert(c[k].chrDstH <= dstH);
     }
     //FFDShow custom code end
     return c;
