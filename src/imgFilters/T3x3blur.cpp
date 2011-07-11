@@ -34,7 +34,7 @@ T3x3blurSWS::T3x3blurSWS(IffdshowBase *deci,unsigned int Idx,unsigned int Idy):d
     int sws_flags = 0;
     SwsParams params;
     Tlibavcodec::swsInitParams(&params,0,sws_flags);
-    swsc=libavcodec->sws_getContext(dx,dy,PIX_FMT_GRAY8,dx,dy,PIX_FMT_GRAY8,sws_flags,&swsf,NULL,NULL,&params);
+    swsc=libavcodec->sws_getCachedContext(NULL,dx,dy,PIX_FMT_GRAY8,dx,dy,PIX_FMT_GRAY8,sws_flags,&swsf,NULL,NULL,&params);
     libavcodec->sws_freeVec(swsf.lumH);
 }
 T3x3blurSWS::~T3x3blurSWS()

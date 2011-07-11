@@ -172,7 +172,7 @@ HRESULT TimgFilterAvcodecBlur::process(TfilterQueue::iterator it,TffPict &pict,c
             int swsflags = 0;
             SwsParams params;
             Tlibavcodec::swsInitParams(&params,0,swsflags);
-            swsc=libavcodec->sws_getContext(dx1[0],dy1[0],csp_ffdshow2lavc(csp1),dx1[0],dy1[0],csp_ffdshow2lavc(csp2),swsflags,&swsf,NULL,NULL,&params);
+            swsc=libavcodec->sws_getCachedContext(NULL,dx1[0],dy1[0],csp_ffdshow2lavc(csp1),dx1[0],dy1[0],csp_ffdshow2lavc(csp2),swsflags,&swsf,NULL,NULL,&params);
             if (oldluma) {
                 libavcodec->sws_freeVec(swsf.lumH);
                 libavcodec->sws_freeVec(swsf.lumV);

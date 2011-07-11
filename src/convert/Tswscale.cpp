@@ -40,7 +40,7 @@ bool Tswscale::init(unsigned int Idx,unsigned int Idy,int incsp,int outcsp,const
     sws_flags = SWS_POINT; //Resize method
     SwsParams params;
     Tlibavcodec::swsInitParams(&params,SWS_POINT,sws_flags);
-    swsc=libavcodec->sws_getContext(dx,dy,sw_incsp,dx,dy,sw_outcsp,sws_flags,NULL,NULL,NULL,&params);
+    swsc=libavcodec->sws_getCachedContext(NULL,dx,dy,sw_incsp,dx,dy,sw_outcsp,sws_flags,NULL,NULL,NULL,&params);
     return !!swsc;
 }
 void Tswscale::done(void)

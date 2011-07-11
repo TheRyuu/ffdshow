@@ -628,8 +628,8 @@ TspuImage::TscalerSw::TscalerSw(const TprintPrefs &prefs,int srcdx,int srcdy,int
     int swsflags = SWS_GAUSS;
     SwsParams params;
     Tlibavcodec::swsInitParams(&params,SWS_GAUSS,swsflags);
-    ctx=libavcodec->sws_getContext(srcdx,srcdy,avcodeccsp,dstdx,dstdy,avcodeccsp,swsflags,&filter,NULL,NULL,&params);
-    alphactx=libavcodec->sws_getContext(srcdx,srcdy,avcodeccsp,dstdx,dstdy,avcodeccsp,swsflags,&filter,NULL,NULL,&params);
+    ctx=libavcodec->sws_getCachedContext(NULL,srcdx,srcdy,avcodeccsp,dstdx,dstdy,avcodeccsp,swsflags,&filter,NULL,NULL,&params);
+    alphactx=libavcodec->sws_getCachedContext(NULL,srcdx,srcdy,avcodeccsp,dstdx,dstdy,avcodeccsp,swsflags,&filter,NULL,NULL,&params);
     //convert = new Tconvert(prefs.deci,dstdx,dstdy);
 }
 TspuImage::TscalerSw::~TscalerSw()

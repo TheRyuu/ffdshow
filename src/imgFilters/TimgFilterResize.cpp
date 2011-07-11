@@ -276,9 +276,9 @@ HRESULT TimgFilterResize::process(TfilterQueue::iterator it,TffPict &pict,const 
 
                     swsf=libavcodec->sws_getDefaultFilter(oldSettings.GblurLum/100.0f,oldSettings.GblurChrom/100.0f,oldSettings.sharpenLum/100.0f,oldSettings.sharpenChrom/100.0f,0,0,0);
                     if (!oldinterlace) {
-                        swsc=libavcodec->sws_getContext(pictRect.dx,pictRect.dy,csp_ffdshow2lavc(csp1),newpict.rectClip.dx,newpict.rectClip.dy,csp_ffdshow2lavc(csp2),swsflags,swsf,NULL,NULL,&mixedparams);
+                        swsc=libavcodec->sws_getCachedContext(NULL,pictRect.dx,pictRect.dy,csp_ffdshow2lavc(csp1),newpict.rectClip.dx,newpict.rectClip.dy,csp_ffdshow2lavc(csp2),swsflags,swsf,NULL,NULL,&mixedparams);
                     } else {
-                        swsc=libavcodec->sws_getContext(pictRect.dx,pictRect.dy/2,csp_ffdshow2lavc(csp1),newpict.rectClip.dx,newpict.rectClip.dy/2,csp_ffdshow2lavc(csp2),swsflags,swsf,NULL,NULL,&mixedparams);
+                        swsc=libavcodec->sws_getCachedContext(NULL,pictRect.dx,pictRect.dy/2,csp_ffdshow2lavc(csp1),newpict.rectClip.dx,newpict.rectClip.dy/2,csp_ffdshow2lavc(csp2),swsflags,swsf,NULL,NULL,&mixedparams);
                     }
                 }
                 if (!oldinterlace) {

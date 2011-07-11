@@ -97,7 +97,6 @@ Tlibavcodec::Tlibavcodec(const Tconfig *config):refcount(0)
  dll->loadFunction(av_init_packet,"av_init_packet"); 
  dll->loadFunction(avcodec_h264_search_recovery_point,"avcodec_h264_search_recovery_point");
 
-#if !COMPILE_AS_FFMPEG_MT
  dll->loadFunction(avcodec_decode_audio3,"avcodec_decode_audio3");
 
  dll->loadFunction(avcodec_find_encoder,"avcodec_find_encoder");
@@ -109,7 +108,7 @@ Tlibavcodec::Tlibavcodec(const Tconfig *config):refcount(0)
  dll->loadFunction(av_parser_close,"av_parser_close");
 
  //libswscale methods
- dll->loadFunction(sws_getContext, "sws_getContext");
+ dll->loadFunction(sws_getCachedContext, "sws_getCachedContext");
  dll->loadFunction(sws_freeContext, "sws_freeContext");
  dll->loadFunction(sws_getDefaultFilter, "sws_getDefaultFilter");
  dll->loadFunction(sws_freeFilter, "sws_freeFilter");
@@ -154,7 +153,6 @@ Tlibavcodec::Tlibavcodec(const Tconfig *config):refcount(0)
  //gradfun
  dll->loadFunction(gradfunInit,"gradfunInit");
  dll->loadFunction(gradfunFilter,"gradfunFilter");
-#endif
 
  ok=dll->ok;
 

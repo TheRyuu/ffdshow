@@ -111,7 +111,7 @@ public:
  static const Tdia_size dia_sizes[];
 
  //libswscale imports
- SwsContext* (*sws_getContext)(int srcW, int srcH, enum PixelFormat srcFormat,
+ SwsContext* (*sws_getCachedContext)(struct SwsContext *context, int srcW, int srcH, enum PixelFormat srcFormat,
                            int dstW, int dstH, enum PixelFormat dstFormat, int flags,
                            SwsFilter *srcFilter, SwsFilter *dstFilter, const double *param, SwsParams *ffdshow_params);
 

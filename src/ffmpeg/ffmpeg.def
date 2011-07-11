@@ -39,7 +39,7 @@ EXPORTS
 
   av_init_packet
 
-  sws_getContext
+  sws_getCachedContext
   sws_freeContext
   sws_scale
   sws_getDefaultFilter
