@@ -45,7 +45,7 @@ void TimgFilterGrab::TimgExportLibavcodec::init(unsigned int dx,unsigned int dy)
     avctxinited=false;
     if (dll->ok) {
         AVCodec *avcodec=dll->avcodec_find_encoder(codecId);
-        avctx=dll->avcodec_alloc_context();
+        avctx=dll->avcodec_alloc_context(avcodec);
         avctx->width=dx;
         avctx->height=dy;
         avctx->flags=CODEC_FLAG_QSCALE;

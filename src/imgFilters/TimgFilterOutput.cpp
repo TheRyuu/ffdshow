@@ -60,7 +60,7 @@ HRESULT TimgFilterOutput::process(const TffPict &pict,int dstcsp,unsigned char *
         firsttime=false;
         if (cfg->dv && deci->getLibavcodec(&libavcodec)==S_OK)
             if (AVCodec *codec=libavcodec->avcodec_find_encoder(CODEC_ID_DVVIDEO)) {
-                avctx=libavcodec->avcodec_alloc_context();
+                avctx=libavcodec->avcodec_alloc_context(codec);
                 avctx->width=pict.rectFull.dx;
                 avctx->height=pict.rectFull.dy;
                 avctx->pix_fmt=PIX_FMT_YUV420P;

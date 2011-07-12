@@ -184,7 +184,7 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
     if (!avcodec) {
         return false;
     }
-    avctx=libavcodec->avcodec_alloc_context(this);
+    avctx=libavcodec->avcodec_alloc_context(avcodec, this);
     avctx->thread_type = thread_type;
     avctx->thread_count=threadcount;
 
@@ -1073,13 +1073,14 @@ bool TvideoCodecLibavcodec::getExtradata(const void* *ptr,size_t *len)
 LRESULT TvideoCodecLibavcodec::beginCompress(int cfgcomode,int csp,const Trect &r)
 {
     _mm_empty();
-    avctx=libavcodec->avcodec_alloc_context();
-    frame=libavcodec->avcodec_alloc_frame();
 
     avcodec=libavcodec->avcodec_find_encoder((CodecID)coCfg->codecId);
     if (!avcodec) {
         return ICERR_ERROR;
     }
+
+	avctx=libavcodec->avcodec_alloc_context(avcodec);
+    frame=libavcodec->avcodec_alloc_frame();
 
     this->cfgcomode=cfgcomode;
 

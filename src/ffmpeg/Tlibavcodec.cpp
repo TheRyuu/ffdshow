@@ -268,9 +268,9 @@ int Tlibavcodec::getPPmode(const TpostprocSettings *cfg,int currentq)
 }
 //Used by libpostproc end
 
-AVCodecContext* Tlibavcodec::avcodec_alloc_context(TlibavcodecExt *ext)
+AVCodecContext* Tlibavcodec::avcodec_alloc_context(AVCodec *codec, TlibavcodecExt *ext)
 {
- AVCodecContext *ctx=avcodec_alloc_context0(NULL);
+ AVCodecContext *ctx=avcodec_alloc_context0(codec);
  ctx->dsp_mask=Tconfig::lavc_cpu_flags;
  if (ext)
   ext->connectTo(ctx,this);

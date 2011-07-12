@@ -185,7 +185,7 @@ void TffPict::readLibavcodec(int Icsp,const char_t *flnm,const char_t *ext,Tbuff
     if (!avcodec) {
         return;
     }
-    AVCodecContext *avctx=libavcodec->avcodec_alloc_context();
+    AVCodecContext *avctx=libavcodec->avcodec_alloc_context(avcodec);
     avctx->flags|=CODEC_FLAG_TRUNCATED;
     if (libavcodec->avcodec_open(avctx,avcodec)>=0) {
         FILE *f=fopen(flnm,_l("rb"));
