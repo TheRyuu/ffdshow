@@ -820,16 +820,8 @@ void TvideoCodecLibavcodecDxva::OverlayYV12OnUSWCFrame(unsigned char * pSrc, uns
 //------------------------- TvideoCodecLibavcodec overloaded methods -----------------------------
 bool TvideoCodecLibavcodecDxva::beginDecompress(TffPictBase &pict,FOURCC fcc,const CMediaType &mt,int sourceFlags)
 {
-    dxvaCodecId=codecId;
-    // Is DXVA supported ?
-    switch(dxvaCodecId) {
-        case CODEC_ID_H264_DXVA:
-            codecId=CODEC_ID_H264;
-            break;
-        case CODEC_ID_VC1_DXVA:
-            codecId=CODEC_ID_VC1;
-            break;
-    }
+    dxvaCodecId = codecId;
+
     bool result = TvideoCodecLibavcodec::beginDecompress(pict,fcc,mt,sourceFlags);
     if (!result) {
         return false;
@@ -837,22 +829,12 @@ bool TvideoCodecLibavcodecDxva::beginDecompress(TffPictBase &pict,FOURCC fcc,con
     if (codecId == CODEC_ID_VC1) {
         bReorderBFrame = true;
     }
-    // One thread for DXVA mode
-    int numthreads=1;
-    threadcount=numthreads;
-    avctx->thread_count=threadcount;
-    avctx->active_thread_type = FF_THREAD_SLICE;
-    avctx->debug_mv=0;
 
     isDXVACompatible=isDXVASupported();
-    /*avctx->workaround_bugs=FF_BUG_AUTODETECT;
-    avctx->error_concealment=FF_EC_DEBLOCK | FF_EC_GUESS_MVS;
-    avctx->idct_algo=FF_IDCT_AUTO;
-       avctx->skip_loop_filter=AVDISCARD_DEFAULT;
-       avctx->dsp_mask= FF_MM_FORCE; //TODO | m_pCpuId->GetFeatures();*/
-    mb_height=avctx->height;
-    mb_width=avctx->width;
-    sar=avctx->sample_aspect_ratio;
+
+	mb_height = avctx->height;
+    mb_width = avctx->width;
+    sar = avctx->sample_aspect_ratio;
     return true;
 }
 

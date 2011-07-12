@@ -951,7 +951,6 @@ static int decode_nal_units_noexecute(H264Context *h, const uint8_t *buf, int bu
         case NAL_PPS:
             init_get_bits(&s->gb, ptr, bit_length);
 
-            h->using_dxva = 1;
             ff_h264_decode_picture_parameter_set(h, bit_length);
 
             break;

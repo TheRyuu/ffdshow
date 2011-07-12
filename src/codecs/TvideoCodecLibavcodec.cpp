@@ -155,7 +155,9 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
     oldpict.rtStop = 0;
     h264_on_MPEG2_system = false;
 
-    int numthreads=deci->getParam2(IDFF_numLAVCdecThreads);
+	int using_dxva = 0;
+
+    int numthreads = deci->getParam2(IDFF_numLAVCdecThreads);
     int thread_type = 0;
     if (numthreads>1 && sup_threads_dec_frame(codecId)) {
         thread_type = FF_THREAD_FRAME;
@@ -179,6 +181,14 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
     } else {
         threadcount = 1;        
     }
+
+	if(codecId == CODEC_ID_H264_DXVA) {
+		codecId = CODEC_ID_H264;
+		using_dxva = 1;
+	} else if(codecId == CODEC_ID_VC1_DXVA) {
+		codecId = CODEC_ID_VC1;
+		using_dxva = 1;
+	}
 	
     avcodec=libavcodec->avcodec_find_decoder(codecId);
     if (!avcodec) {
@@ -186,7 +196,8 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
     }
     avctx=libavcodec->avcodec_alloc_context(avcodec, this);
     avctx->thread_type = thread_type;
-    avctx->thread_count=threadcount;
+    avctx->thread_count = threadcount;
+	avctx->h264_using_dxva = using_dxva;
 
     frame=libavcodec->avcodec_alloc_frame();
     avctx->width =pict.rectFull.dx;
@@ -221,7 +232,7 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
         }
     initialSkipLoopFilter= avctx->skip_loop_filter;
 
-    avctx->debug_mv=1;//(deci->getParam2(IDFF_isVis) & deci->getParam2(IDFF_visMV));
+    avctx->debug_mv = !using_dxva; //(deci->getParam2(IDFF_isVis) & deci->getParam2(IDFF_visMV));
 
     avctx->idct_algo=limit(deci->getParam2(IDFF_idct),0,6);
     if (extradata) {

@@ -1029,6 +1029,11 @@ av_cold int ff_h264_decode_init(AVCodecContext *avctx){
     H264Context *h= avctx->priv_data;
     MpegEncContext * const s = &h->s;
 
+    /* ffdshow cusotm code */
+    if(avctx->h264_using_dxva) {
+        h->using_dxva = 1;
+    }
+
     MPV_decode_defaults(s);
 
     s->avctx = avctx;
