@@ -781,44 +781,46 @@ static int handle_jpeg(enum PixelFormat *format)
     }
 }
 
-SwsContext *sws_getContext(int srcW, int srcH, enum PixelFormat srcFormat,
-                           int dstW, int dstH, enum PixelFormat dstFormat, int flags,
-                           SwsFilter *srcFilter, SwsFilter *dstFilter, const double *param, SwsParams *ffdshow_params)
+SwsContext *sws_alloc_context(int threadCount)
 {
-    SwsContext *c;
+    SwsContext *c= av_mallocz(sizeof(SwsContext) * threadCount); // ffdshow custom code: array support up to c[threadCount-1], "c->" is identical to "c[0]."
+
+    //c->av_class = &sws_context_class;
+    //av_opt_set_defaults(c);
+
+    return c;
+}
+
+int sws_init_context(SwsContext *c, SwsFilter *srcFilter, SwsFilter *dstFilter, SwsParams *ffdshow_params)
+{
     int i, j;
     int usesVFilter, usesHFilter;
     int unscaled;
-    int srcRange, dstRange;
-    int threadCount = GetCPUCount();
     SwsFilter dummyFilter= {NULL, NULL, NULL, NULL};
+    int srcW= c->srcW;
+    int srcH= c->srcH;
+    int dstW= c->dstW;
+    int dstH= c->dstH;
     int dst_stride = FFALIGN(dstW * sizeof(int16_t)+66, 16);
-    int cpu_flags;
-    
-    // sanity check scaling settings
-    if(!flags) {
-        av_log(NULL, AV_LOG_INFO, "swScaler: no scaling algo was set\n");
-        flags = ffdshow_params->methodLuma.method ? ffdshow_params->methodLuma.method : SWS_BICUBIC;
-    }
-    
-    //flags |= SWS_PRINT_INFO; // log more details
-    
+    int flags, cpu_flags;
+    enum PixelFormat srcFormat= c->srcFormat;
+    enum PixelFormat dstFormat= c->dstFormat;
+
     cpu_flags = av_get_cpu_flags();
+    flags     = c->flags;
+    //flags |= SWS_PRINT_INFO; // log more details
     emms_c();
     if (!rgb15to16) sws_rgb2rgb_init();
 
     unscaled = (srcW == dstW && srcH == dstH);
 
-    srcRange = handle_jpeg(&srcFormat);
-    dstRange = handle_jpeg(&dstFormat);
-
     if (!isSupportedIn(srcFormat)) {
-        av_log(NULL, AV_LOG_ERROR, "swScaler: %s is not supported as input pixel format\n", av_get_pix_fmt_name(srcFormat));
-        goto fail;
+        av_log(c, AV_LOG_ERROR, "%s is not supported as input pixel format\n", av_get_pix_fmt_name(srcFormat));
+        return AVERROR(EINVAL);
     }
     if (!isSupportedOut(dstFormat)) {
-        av_log(NULL, AV_LOG_ERROR, "swScaler: %s is not supported as output pixel format\n", av_get_pix_fmt_name(dstFormat));
-        goto fail;
+        av_log(c, AV_LOG_ERROR, "%s is not supported as output pixel format\n", av_get_pix_fmt_name(dstFormat));
+        return AVERROR(EINVAL);
     }
 
     //FFDShow modification
@@ -835,35 +837,22 @@ SwsContext *sws_getContext(int srcW, int srcH, enum PixelFormat srcFormat,
                 |SWS_SPLINE
                 |SWS_BICUBLIN);
     if(!i || (i & (i-1))) {
-        av_log(NULL, AV_LOG_ERROR, "swScaler: Exactly one scaler algorithm must be chosen\n");
-        goto fail;
+        av_log(c, AV_LOG_ERROR, "Exactly one scaler algorithm must be chosen\n");
+        return AVERROR(EINVAL);
     }
 #endif
-
     /* sanity check */
     if (srcW<4 || srcH<1 || dstW<8 || dstH<1) { //FIXME check if these are enough and try to lowwer them after fixing the relevant parts of the code
-        av_log(NULL, AV_LOG_ERROR, "swScaler: %dx%d -> %dx%d is invalid scaling dimension\n",
+        av_log(c, AV_LOG_ERROR, "%dx%d -> %dx%d is invalid scaling dimension\n",
                srcW, srcH, dstW, dstH);
-        goto fail;
+        return AVERROR(EINVAL);
     }
 
     if (!dstFilter) dstFilter= &dummyFilter;
     if (!srcFilter) srcFilter= &dummyFilter;
 
-    //FFDShow custom code for multithreading
-    c= av_malloc(sizeof(SwsContext)*threadCount);   // array support up to c[threadCount-1]. "c->" is identical to "c[0]."
-    memset(c, 0, sizeof(SwsContext));
-      
-    //FFDShow modification
-    c->srcW= srcW;
-    c->srcH= srcH;
-    c->dstW= dstW;
-    c->dstH= dstH;
     c->lumXInc= ((srcW<<16) + (dstW>>1))/dstW;
     c->lumYInc= ((srcH<<16) + (dstH>>1))/dstH;
-    c->flags= flags;
-    c->dstFormat= dstFormat;
-    c->srcFormat= srcFormat;
     c->dstFormatBpp = av_get_bits_per_pixel(&av_pix_fmt_descriptors[dstFormat]);
     c->srcFormatBpp = av_get_bits_per_pixel(&av_pix_fmt_descriptors[srcFormat]);
     c->vRounder= 4* 0x0001000100010001ULL;
@@ -895,39 +884,23 @@ SwsContext *sws_getContext(int srcW, int srcH, enum PixelFormat srcFormat,
       && ((dstW>>c->chrDstHSubSample) <= (srcW>>1) || (flags&SWS_FAST_BILINEAR)))
         c->chrSrcHSubSample=1;
 
-    /* ffdshow modification
-    if (param) {
-        c->param[0] = param[0];
-        c->param[1] = param[1];
-    } else {
-        c->param[0] =
-        c->param[1] = SWS_PARAM_DEFAULT;
-    }
-    */
-    c->param[0] = ffdshow_params->methodLuma.param[0];
-    c->param[1] = ffdshow_params->methodLuma.param[1];
-
-
     // Note the -((-x)>>y) is so that we always round toward +inf.
     c->chrSrcW= -((-srcW) >> c->chrSrcHSubSample);
     c->chrSrcH= -((-srcH) >> c->chrSrcVSubSample);
     c->chrDstW= -((-dstW) >> c->chrDstHSubSample);
     c->chrDstH= -((-dstH) >> c->chrDstVSubSample);
 
-    sws_setColorspaceDetails(c, ff_yuv2rgb_coeffs[SWS_CS_DEFAULT], srcRange, ff_yuv2rgb_coeffs[SWS_CS_DEFAULT] /* FIXME*/, dstRange, 0, 1<<16, 1<<16);
-
     /* unscaled special cases */
-    if (unscaled && !usesHFilter && !usesVFilter && (srcRange == dstRange || isAnyRGB(dstFormat))) {
+    if (unscaled && !usesHFilter && !usesVFilter && (c->srcRange == c->dstRange || isAnyRGB(dstFormat))) {
         ff_get_unscaled_swscale(c);
 
         if (c->swScale) {
             if (flags&SWS_PRINT_INFO)
                 av_log(c, AV_LOG_INFO, "using unscaled %s -> %s special converter\n",
                        av_get_pix_fmt_name(srcFormat), av_get_pix_fmt_name(dstFormat));
-            return c;
+            return 0;
         }
     }
-
 
     c->scalingBpp = FFMAX(av_pix_fmt_descriptors[srcFormat].comp[0].depth_minus1,
                           av_pix_fmt_descriptors[dstFormat].comp[0].depth_minus1) >= 15 ? 16 : 8;
@@ -935,7 +908,9 @@ SwsContext *sws_getContext(int srcW, int srcH, enum PixelFormat srcFormat,
     if (c->scalingBpp == 16)
         dst_stride <<= 1;
     av_assert0(c->scalingBpp<=16);
-
+#if 0 // this allocation is performed later, once for each context element in the array
+    FF_ALLOC_OR_GOTO(c, c->formatConvBuffer, FFALIGN(srcW*2+78, 16) * 2, fail);
+#endif
     if (HAVE_MMX2 && cpu_flags & AV_CPU_FLAG_MMX2 && c->scalingBpp == 8) {
         c->canMMX2BeUsed= (dstW >=srcW && (dstW&31)==0 && (srcW&15)==0) ? 1 : 0;
         if (!c->canMMX2BeUsed && dstW >=srcW && (srcW&15)==0 && (flags&SWS_FAST_BILINEAR)) {
@@ -957,8 +932,8 @@ SwsContext *sws_getContext(int srcW, int srcH, enum PixelFormat srcFormat,
     // would be like the vertical one, but that would require some special code for the
     // first and last pixel
 
-    //FFShow custom code : we have two resize methods for chroma and luma
-    /*
+    //FFShow custom code : we have separate resize methods for chroma and luma
+#if 0
     if (flags&SWS_FAST_BILINEAR) {
         if (c->canMMX2BeUsed) {
             c->lumXInc+= 20;
@@ -970,8 +945,7 @@ SwsContext *sws_getContext(int srcW, int srcH, enum PixelFormat srcFormat,
             c->chrXInc = ((c->chrSrcW-2)<<16)/(c->chrDstW-2) - 20;
         }
     }
-    */
-
+#else
     if(ffdshow_params->methodLuma.method&SWS_FAST_BILINEAR)
     {
         if(c->canMMX2BeUsed)
@@ -979,14 +953,13 @@ SwsContext *sws_getContext(int srcW, int srcH, enum PixelFormat srcFormat,
             c->lumXInc = ((srcW-2)<<16)/(dstW);
         }
         //we don't use the x86asm scaler if mmx is available
-        else if(HAVE_MMX && cpu_flags & AV_CPU_FLAG_MMX)
+        else if(HAVE_MMX && cpu_flags & AV_CPU_FLAG_MMX && c->scalingBpp == 8)
         {
             c->lumXInc = ((srcW-2)<<16)/(dstW-2) - 20;
         }
         else
             c->lumXInc = ((srcW-2)<<16)/(dstW);
     }
-
     if(ffdshow_params->methodChroma.method&SWS_FAST_BILINEAR)
     {
         if(c->canMMX2BeUsed)
@@ -994,14 +967,14 @@ SwsContext *sws_getContext(int srcW, int srcH, enum PixelFormat srcFormat,
            c->chrXInc = ((c->chrSrcW-2)<<16)/(c->chrDstW);
         }
         //we don't use the x86asm scaler if mmx is available
-        else if(HAVE_MMX && cpu_flags & AV_CPU_FLAG_MMX)
+        else if(HAVE_MMX && cpu_flags & AV_CPU_FLAG_MMX && c->scalingBpp == 8)
         {
            c->chrXInc = ((c->chrSrcW-2)<<16)/(c->chrDstW-2) - 20;
         }
         else
            c->chrXInc = ((c->chrSrcW-2)<<16)/(c->chrDstW);
     }
-    //FFDShow custom code end
+#endif
 
     /* precalculate horizontal scaler filter coefficients */
     {
@@ -1027,7 +1000,7 @@ SwsContext *sws_getContext(int srcW, int srcH, enum PixelFormat srcFormat,
 #else
             if (!c->lumMmx2FilterCode || !c->chrMmx2FilterCode)
 #endif
-                goto fail;
+                return AVERROR(ENOMEM);
             FF_ALLOCZ_OR_GOTO(c, c->hLumFilter   , (dstW        /8+8)*sizeof(int16_t), fail);
             FF_ALLOCZ_OR_GOTO(c, c->hChrFilter   , (c->chrDstW  /4+8)*sizeof(int16_t), fail);
             FF_ALLOCZ_OR_GOTO(c, c->hLumFilterPos, (dstW      /2/8+8)*sizeof(int32_t), fail);
@@ -1047,16 +1020,16 @@ SwsContext *sws_getContext(int srcW, int srcH, enum PixelFormat srcFormat,
                 (HAVE_MMX     && cpu_flags & AV_CPU_FLAG_MMX) ? 4 :
                 (HAVE_ALTIVEC && cpu_flags & AV_CPU_FLAG_ALTIVEC) ? 8 :
                 1;
-            //FFDShow modifications to handle multiple scaling modes at a time
+            // ffdshow custom code
             if (initFilter(&c->hLumFilter, &c->hLumFilterPos, &c->hLumFilterSize, c->lumXInc,
                            srcW      ,       dstW, filterAlign, 1<<14,
-                           /*(flags&SWS_BICUBLIN) ? (flags|SWS_BICUBIC)  : flags*/ffdshow_params->methodLuma.method|flags, cpu_flags,
-                           srcFilter->lumH, dstFilter->lumH, /*c->param*/ffdshow_params->methodLuma.param) < 0)
+                           ffdshow_params->methodLuma.method|flags, cpu_flags,
+                           srcFilter->lumH, dstFilter->lumH, ffdshow_params->methodLuma.param) < 0)
                 goto fail;
             if (initFilter(&c->hChrFilter, &c->hChrFilterPos, &c->hChrFilterSize, c->chrXInc,
                            c->chrSrcW, c->chrDstW, filterAlign, 1<<14,
-                           /*(flags&SWS_BICUBLIN) ? (flags|SWS_BILINEAR) : flags*/ffdshow_params->methodChroma.method|flags, cpu_flags,
-                           srcFilter->chrH, dstFilter->chrH, /*c->param*/ffdshow_params->methodChroma.param) < 0)
+                           ffdshow_params->methodChroma.method|flags, cpu_flags,
+                           srcFilter->chrH, dstFilter->chrH, ffdshow_params->methodChroma.param) < 0)
                 goto fail;
         }
     } // initialize horizontal stuff
@@ -1070,13 +1043,13 @@ SwsContext *sws_getContext(int srcW, int srcH, enum PixelFormat srcFormat,
 
         if (initFilter(&c->vLumFilter, &c->vLumFilterPos, &c->vLumFilterSize, c->lumYInc,
                        srcH      ,        dstH, filterAlign, (1<<12),
-                       /*(flags&SWS_BICUBLIN) ? (flags|SWS_BICUBIC)  : flags*/ffdshow_params->methodLuma.method|flags, cpu_flags,
-                       srcFilter->lumV, dstFilter->lumV, /*c->param*/ffdshow_params->methodLuma.param) < 0)
+                       ffdshow_params->methodLuma.method|flags, cpu_flags,
+                       srcFilter->lumV, dstFilter->lumV, ffdshow_params->methodLuma.param) < 0)
             goto fail;
         if (initFilter(&c->vChrFilter, &c->vChrFilterPos, &c->vChrFilterSize, c->chrYInc,
                        c->chrSrcH, c->chrDstH, filterAlign, (1<<12),
-                       /*(flags&SWS_BICUBLIN) ? (flags|SWS_BILINEAR) : flags*/ffdshow_params->methodChroma.method|flags, cpu_flags,
-                       srcFilter->chrV, dstFilter->chrV, /*c->param*/ffdshow_params->methodChroma.param) < 0)
+                       ffdshow_params->methodChroma.method|flags, cpu_flags,
+                       srcFilter->chrV, dstFilter->chrV, ffdshow_params->methodChroma.param) < 0)
             goto fail;
 
 #if HAVE_ALTIVEC
@@ -1115,13 +1088,11 @@ SwsContext *sws_getContext(int srcW, int srcH, enum PixelFormat srcFormat,
             c->vChrBufSize= (nextSlice>>c->chrSrcVSubSample) - c->vChrFilterPos[chrI];
     }
 
-    /* FFDShow modification : this allocation/initialization code is moved a few lines after, once all the variables
-     * of the context have been initialized because we are going to copy the context (fully filled) after that
-     * into the next elements of the context array (one per thread)
+    /* FFDShow modification: this allocation code is postponed until the primary context has been fully initialized.
+     * That context will then be copied to the remaining elements in the context array. There is one context element for each thread.
+     * Once all contexts are initialized, the allocation is then performed for each context.
      */
 #if 0
-    FF_ALLOC_OR_GOTO(c, c->formatConvBuffer, FFALIGN(srcW*2+78, 16) * 2, fail);
-
     // allocate pixbufs (we use dynamic allocation because otherwise we would need to
     // allocate several megabytes to handle all possible cases)
     FF_ALLOC_OR_GOTO(c, c->lumPixBuf, c->vLumBufSize*2*sizeof(int16_t*), fail);
@@ -1268,25 +1239,22 @@ SwsContext *sws_getContext(int srcW, int srcH, enum PixelFormat srcFormat,
     c->swScale= ff_getSwsFunc(c);
 
     //FFDShow custom code
-    c->ret=av_malloc(threadCount*sizeof(int));
-    memset(c->ret,0,threadCount*sizeof(int));
-    c->thread_count= threadCount;
-    c->execute= sws_default_execute;
-    if (threadCount>=2) {
-        if(sws_thread_init(c, threadCount)==-1)
+    c->ret = av_mallocz(c->thread_count * sizeof(int));
+    c->execute = sws_default_execute;
+    if (c->thread_count >= 2) {
+        if(sws_thread_init(c) == -1)
         {
-            threadCount=1;
-            c->thread_count= threadCount;
-            c->execute= sws_default_execute;
+            c->thread_count = 1;
+            c->execute = sws_default_execute;
         }
     }
 
-    if(threadCount>=2) {
-        for (int j=1; j<threadCount; j++)
-        memcpy(&(c[j]), c,sizeof(SwsContext));
+    if(c->thread_count >= 2) {
+        for (int j=1; j < c->thread_count; j++)
+        memcpy(&(c[j]), c, sizeof(SwsContext));
     }
-    
-    for (int k=0; k<threadCount; k++) {
+
+    for (int k=0; k < c->thread_count; k++) {
         FF_ALLOC_OR_GOTO(&c[k], c[k].formatConvBuffer, FFALIGN(srcW*2+78, 16) * 2, fail);
 
         // allocate pixbufs (we use dynamic allocation because otherwise we would need to
@@ -1328,12 +1296,46 @@ SwsContext *sws_getContext(int srcW, int srcH, enum PixelFormat srcFormat,
         assert(c[k].chrDstH <= dstH);
     }
     //FFDShow custom code end
-    return c;
 
-fail:
-    sws_freeContext(c);
-    return NULL;
+    return 0;
+fail: //FIXME replace things by appropriate error codes
+    return -1;
 }
+
+#if FF_API_SWS_GETCONTEXT
+SwsContext *sws_getContext(int srcW, int srcH, enum PixelFormat srcFormat,
+                           int dstW, int dstH, enum PixelFormat dstFormat, int flags,
+                           SwsFilter *srcFilter, SwsFilter *dstFilter, const double *param, SwsParams *ffdshow_params)
+{
+    SwsContext *c;
+
+    // ffdshow custom code
+    int threadCount = GetCPUCount();
+    if(!(c=sws_alloc_context(threadCount)))
+        return NULL;
+
+    c->flags= flags;
+    c->srcW= srcW;
+    c->srcH= srcH;
+    c->dstW= dstW;
+    c->dstH= dstH;
+    c->srcRange = handle_jpeg(&srcFormat);
+    c->dstRange = handle_jpeg(&dstFormat);
+    c->srcFormat= srcFormat;
+    c->dstFormat= dstFormat;
+    c->param[0] = ffdshow_params->methodLuma.param[0];
+    c->param[1] = ffdshow_params->methodLuma.param[1];
+    c->thread_count = threadCount;
+    sws_setColorspaceDetails(c, ff_yuv2rgb_coeffs[SWS_CS_DEFAULT], c->srcRange, ff_yuv2rgb_coeffs[SWS_CS_DEFAULT] /* FIXME*/, c->dstRange, 0, 1<<16, 1<<16);
+
+    if(sws_init_context(c, srcFilter, dstFilter, ffdshow_params) < 0){
+        sws_freeContext(c);
+        return NULL;
+    }
+
+    return c;
+}
+#endif
 
 SwsFilter *sws_getDefaultFilter(float lumaGBlur, float chromaGBlur,
                                 float lumaSharpen, float chromaSharpen,
@@ -1360,49 +1362,48 @@ SwsFilter *sws_getDefaultFilter(float lumaGBlur, float chromaGBlur,
         filter->chrV= sws_getIdentityVec();
     }
 
-    //FFDShow custom code begin
+    // FFDShow custom code
+#if 1
     if(chromaSharpen!=0.0){
-		  SwsVector *g= sws_getConstVec(-1.0, 3);
-		  SwsVector *id= sws_getConstVec(10.0/chromaSharpen, 1);
-		  g->coeff[1]=2.0;
-		  sws_addVec(id, g);
-		  sws_convVec(filter->chrH, id);
-		  sws_convVec(filter->chrV, id);
-		  sws_freeVec(g);
-		  sws_freeVec(id);
-	  }
+        SwsVector *g= sws_getConstVec(-1.0, 3);
+        SwsVector *id= sws_getConstVec(10.0/chromaSharpen, 1);
+        g->coeff[1]=2.0;
+        sws_addVec(id, g);
+        sws_convVec(filter->chrH, id);
+        sws_convVec(filter->chrV, id);
+        sws_freeVec(g);
+        sws_freeVec(id);
+    }
 
-	  if(lumaSharpen!=0.0){
-		  SwsVector *g= sws_getConstVec(-1.0, 3);
-		  SwsVector *id= sws_getConstVec(10.0/lumaSharpen, 1);
-		  g->coeff[1]=2.0;
-		  sws_addVec(id, g);
-		  sws_convVec(filter->lumH, id);
-		  sws_convVec(filter->lumV, id);
-		  sws_freeVec(g);
-		  sws_freeVec(id);
-	  }
-	  /*
-	  if(chromaSharpen!=0.0){
-		  SwsVector *id= sws_getIdentityVec();
-			sws_scaleVec(filter->chrH, -chromaSharpen);
-			sws_scaleVec(filter->chrV, -chromaSharpen);
-		  sws_addVec(filter->chrH, id);
-		  sws_addVec(filter->chrV, id);
-		  sws_freeVec(id);
-	  }
+    if(lumaSharpen!=0.0){
+        SwsVector *g= sws_getConstVec(-1.0, 3);
+        SwsVector *id= sws_getConstVec(10.0/lumaSharpen, 1);
+        g->coeff[1]=2.0;
+        sws_addVec(id, g);
+        sws_convVec(filter->lumH, id);
+        sws_convVec(filter->lumV, id);
+        sws_freeVec(g);
+        sws_freeVec(id);
+    }
+#else
+    if (chromaSharpen!=0.0) {
+        SwsVector *id= sws_getIdentityVec();
+        sws_scaleVec(filter->chrH, -chromaSharpen);
+        sws_scaleVec(filter->chrV, -chromaSharpen);
+        sws_addVec(filter->chrH, id);
+        sws_addVec(filter->chrV, id);
+        sws_freeVec(id);
+    }
 
-	  if(lumaSharpen!=0.0){
-		  SwsVector *id= sws_getIdentityVec();
-			sws_scaleVec(filter->lumH, -lumaSharpen);
-			sws_scaleVec(filter->lumV, -lumaSharpen);
-		  sws_addVec(filter->lumH, id);
-		  sws_addVec(filter->lumV, id);
-		  sws_freeVec(id);
-	  }
-	  */
-	  //FFDShow custom code end
-
+    if (lumaSharpen!=0.0) {
+        SwsVector *id= sws_getIdentityVec();
+        sws_scaleVec(filter->lumH, -lumaSharpen);
+        sws_scaleVec(filter->lumV, -lumaSharpen);
+        sws_addVec(filter->lumH, id);
+        sws_addVec(filter->lumV, id);
+        sws_freeVec(id);
+    }
+#endif
 
     if (chromaHShift != 0.0)
         sws_shiftVec(filter->chrH, (int)(chromaHShift+0.5));
@@ -1657,11 +1658,13 @@ void sws_freeContext(SwsContext *c)
     int i;
     if (!c) return;
 
-    //FFDShow custom code
-    if (c->thread_count>1)
+    // FFDShow custom code
+#if 1
+    if (c->thread_count > 1) {
         sws_thread_free(c);
+    }
 
-    for(i=0; i<c->thread_count; i++)
+    for(i=0; i < c->thread_count; i++)
     {
         int j;
         if (c[i].lumPixBuf)
@@ -1694,8 +1697,7 @@ void sws_freeContext(SwsContext *c)
 
         av_freep(&c[i].formatConvBuffer);
     }
-
-    /*
+#else
     if (c->lumPixBuf) {
         for (i=0; i<c->vLumBufSize; i++)
             av_freep(&c->lumPixBuf[i]);
@@ -1714,7 +1716,7 @@ void sws_freeContext(SwsContext *c)
             av_freep(&c->alpPixBuf[i]);
         av_freep(&c->alpPixBuf);
     }
-    */
+#endif
 
     av_freep(&c->vLumFilter);
     av_freep(&c->vChrFilter);
@@ -1746,6 +1748,7 @@ void sws_freeContext(SwsContext *c)
 #endif /* HAVE_MMX */
 
     av_freep(&c->yuvTable);
+    //av_freep(&c->formatConvBuffer);
 
     av_free(c);
 }
@@ -1775,9 +1778,27 @@ struct SwsContext *sws_getCachedContext(struct SwsContext *context,
     }
 
     if (!context) {
-        return sws_getContext(srcW, srcH, srcFormat,
-                              dstW, dstH, dstFormat, flags,
-                              srcFilter, dstFilter, param, ffdshow_params);
+        // ffdshow custom code
+        int threadCount = GetCPUCount();
+        if (!(context = sws_alloc_context(threadCount)))
+            return NULL;
+        context->srcW      = srcW;
+        context->srcH      = srcH;
+        context->srcRange  = handle_jpeg(&srcFormat);
+        context->srcFormat = srcFormat;
+        context->dstW      = dstW;
+        context->dstH      = dstH;
+        context->dstRange  = handle_jpeg(&dstFormat);
+        context->dstFormat = dstFormat;
+        context->flags     = flags;
+        context->param[0]  = ffdshow_params->methodLuma.param[0];
+        context->param[1]  = ffdshow_params->methodLuma.param[1];
+        context->thread_count = threadCount;
+        sws_setColorspaceDetails(context, ff_yuv2rgb_coeffs[SWS_CS_DEFAULT], context->srcRange, ff_yuv2rgb_coeffs[SWS_CS_DEFAULT] /* FIXME*/, context->dstRange, 0, 1<<16, 1<<16);
+        if (sws_init_context(context, srcFilter, dstFilter, ffdshow_params) < 0) {
+            sws_freeContext(context);
+            return NULL;
+        }
     }
     return context;
 }

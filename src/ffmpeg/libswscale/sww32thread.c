@@ -47,18 +47,18 @@ typedef struct SwsThreadContext{
 
 
 static unsigned __stdcall sws_thread_func(void *v){
-    SwsThreadContext *c= v;
+    SwsThreadContext *tc = v;
 
     for(;;){
 //printf("sws_thread_func %X enter wait\n", (int)v); fflush(stdout);
-        WaitForSingleObject(c->work_sem, INFINITE);
+        WaitForSingleObject(tc->work_sem, INFINITE);
 //printf("sws_thread_func %X after wait (func=%X)\n", (int)v, (int)c->func); fflush(stdout);
-        if(c->func)
-            c->ret= c->func(c->swsctx);
+        if(tc->func)
+            tc->ret = tc->func(tc->swsctx);
         else
             return 0;
 //printf("sws_thread_func %X signal complete\n", (int)v); fflush(stdout);
-        ReleaseSemaphore(c->done_sem, 1, 0);
+        ReleaseSemaphore(tc->done_sem, 1, 0);
     }
 
     return 0;
@@ -68,78 +68,76 @@ static unsigned __stdcall sws_thread_func(void *v){
  * Free what has been allocated by sws_thread_init().
  * Must be called after decoding has finished, especially do not call while sws_thread_execute() is running
  */
-void sws_thread_free(SwsContext *s){
-    SwsThreadContext *c= s->thread_opaque;
+void sws_thread_free(SwsContext *c){
+    SwsThreadContext *tc = c->thread_opaque;
     int i;
 
-    for(i=0; i<s->thread_count; i++){
+    for(i=0; i<c->thread_count; i++){
 
-        c[i].func= NULL;
-        ReleaseSemaphore(c[i].work_sem, 1, 0);
-        WaitForSingleObject(c[i].thread, INFINITE);
-        if(c[i].work_sem) CloseHandle(c[i].work_sem);
-        if(c[i].done_sem) CloseHandle(c[i].done_sem);
-        if(c[i].thread)   CloseHandle(c[i].thread); 
+        tc[i].func = NULL;
+        ReleaseSemaphore(tc[i].work_sem, 1, 0);
+        WaitForSingleObject(tc[i].thread, INFINITE);
+        if(tc[i].work_sem) CloseHandle(tc[i].work_sem);
+        if(tc[i].done_sem) CloseHandle(tc[i].done_sem);
+        if(tc[i].thread)   CloseHandle(tc[i].thread); 
     }
 
-    av_freep(&s->thread_opaque);
+    av_freep(&c->thread_opaque);
 }
 
-int sws_thread_execute(SwsContext *s, int (*func)(SwsContext *c2), int *ret, int count){ //CUSTOMIZED no void **arg
-    SwsThreadContext *c= s->thread_opaque;
+int sws_thread_execute(SwsContext *c, int (*func)(SwsContext *c2), int *ret, int count){ //CUSTOMIZED no void **arg
+    SwsThreadContext *tc= c->thread_opaque;
     int i;
 
-    assert(s == c->swsctx);
-    assert(count <= s->thread_count);
+    assert(c == tc->swsctx);
+    assert(count <= c->thread_count);
 
     /* note, we can be certain that this is not called with the same SwsContext by different threads at the same time */
 
     for(i=0; i<count; i++){
-        c[i].arg = &s[i].stp;//CUSTOMIZED
-        c[i].func= func;
-        c[i].ret = 12345;
+        tc[i].arg = &c[i].stp;//CUSTOMIZED
+        tc[i].func= func;
+        tc[i].ret = 12345;
 
-        ReleaseSemaphore(c[i].work_sem, 1, 0);
+        ReleaseSemaphore(tc[i].work_sem, 1, 0);
     }
     for(i=0; i<count; i++){
-        WaitForSingleObject(c[i].done_sem, INFINITE);
+        WaitForSingleObject(tc[i].done_sem, INFINITE);
 
-        c[i].func= NULL;
-        if(ret) ret[i]= c[i].ret;
+        tc[i].func= NULL;
+        if(ret) ret[i]= tc[i].ret;
     }
     return 0;
 }
 
-int sws_thread_init(SwsContext *s, int thread_count){
+int sws_thread_init(SwsContext *c){
     int i;
-    SwsThreadContext *c;
+    SwsThreadContext *tc;
     uint32_t threadid;
 
-    s->thread_count= thread_count;
+    assert(!c->thread_opaque);
+    tc = av_mallocz(sizeof(SwsThreadContext) * c->thread_count);
+    c->thread_opaque = tc;
 
-    assert(!s->thread_opaque);
-    c= av_mallocz(sizeof(SwsThreadContext)*thread_count);
-    s->thread_opaque= c;
-
-    for(i=0; i<thread_count; i++){
+    for(i=0; i<c->thread_count; i++){
 //printf("init semaphors %d\n", i); fflush(stdout);
-        c[i].swsctx= &s[i]; //CUSTOMIZED
+        tc[i].swsctx= &c[i]; //CUSTOMIZED
 
-        if(!(c[i].work_sem = CreateSemaphore(NULL, 0, s->thread_count, NULL)))
+        if(!(tc[i].work_sem = CreateSemaphore(NULL, 0, c->thread_count, NULL)))
             goto fail;
-        if(!(c[i].done_sem = CreateSemaphore(NULL, 0, s->thread_count, NULL)))
+        if(!(tc[i].done_sem = CreateSemaphore(NULL, 0, c->thread_count, NULL)))
             goto fail;
 
 //printf("create thread %d\n", i); fflush(stdout);
-        c[i].thread = (HANDLE)_beginthreadex(NULL, 0, sws_thread_func, &c[i], 0, &threadid );
-        if( !c[i].thread ) goto fail;
+        tc[i].thread = (HANDLE)_beginthreadex(NULL, 0, sws_thread_func, &tc[i], 0, &threadid );
+        if( !tc[i].thread ) goto fail;
     }
 //printf("init done\n"); fflush(stdout);
 
-    s->execute= sws_thread_execute;
+    c->execute= sws_thread_execute;
 
     return 0;
 fail:
-    sws_thread_free(s);
+    sws_thread_free(c);
     return -1;
 }

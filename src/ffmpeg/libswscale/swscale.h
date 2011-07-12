@@ -187,7 +187,7 @@ int sws_isSupportedOutput(enum PixelFormat pix_fmt);
  * sws_init_context(). For filling see AVOptions, options.c and
  * sws_setColorspaceDetails().
  */
-struct SwsContext *sws_alloc_context(void);
+struct SwsContext *sws_alloc_context(int threadCount);
 
 /**
  * Initializes the swscaler context sws_context.
@@ -195,7 +195,7 @@ struct SwsContext *sws_alloc_context(void);
  * @return zero or positive value on success, a negative value on
  * error
  */
-int sws_init_context(struct SwsContext *sws_context, SwsFilter *srcFilter, SwsFilter *dstFilter);
+int sws_init_context(struct SwsContext *context, SwsFilter *srcFilter, SwsFilter *dstFilter, SwsParams *ffdshow_params);
 
 /**
  * Frees the swscaler context swsContext.
@@ -218,6 +218,7 @@ void sws_freeContext(struct SwsContext *swsContext);
  * @return a pointer to an allocated context, or NULL in case of error
  * @note this function is to be removed after a saner alternative is
  *       written
+ * @deprecated Use sws_getCachedContext() instead.
  */
 struct SwsContext *sws_getContext(int srcW, int srcH, enum PixelFormat srcFormat,
                                   int dstW, int dstH, enum PixelFormat dstFormat,
@@ -369,10 +370,10 @@ void sws_convertPalette8ToPacked32(const uint8_t *src, uint8_t *dst, int num_pix
  */
 void sws_convertPalette8ToPacked24(const uint8_t *src, uint8_t *dst, int num_pixels, const uint8_t *palette);
 
-int sws_thread_init(struct SwsContext *s, int thread_count);
-void sws_thread_free(struct SwsContext *s);
-int sws_thread_execute(struct SwsContext *s, int (*func)(struct SwsContext *c2), int *ret, int count);
-int sws_default_execute(struct SwsContext *c, int (*func)(struct SwsContext *c2), int *ret, int count);
+int sws_thread_init(struct SwsContext *context);
+void sws_thread_free(struct SwsContext *context);
+int sws_thread_execute(struct SwsContext *ccontext, int (*func)(struct SwsContext *c2), int *ret, int count);
+int sws_default_execute(struct SwsContext *context, int (*func)(struct SwsContext *c2), int *ret, int count);
 int GetCPUCount(void);
 
 #ifdef __cplusplus
