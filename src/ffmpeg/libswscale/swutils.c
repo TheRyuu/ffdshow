@@ -898,6 +898,7 @@ int sws_init_context(SwsContext *c, SwsFilter *srcFilter, SwsFilter *dstFilter, 
             if (flags&SWS_PRINT_INFO)
                 av_log(c, AV_LOG_INFO, "using unscaled %s -> %s special converter\n",
                        av_get_pix_fmt_name(srcFormat), av_get_pix_fmt_name(dstFormat));
+            c->thread_count = 1; // ffdshow custom code, only resizing is multi-threaded
             return 0;
         }
     }
