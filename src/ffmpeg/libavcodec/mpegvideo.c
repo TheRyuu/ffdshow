@@ -254,7 +254,7 @@ int ff_alloc_picture(MpegEncContext *s, Picture *pic, int shared){
 
     if(shared){
         assert(pic->f.data[0]);
-        assert(pic->type == 0 || pic->type == FF_BUFFER_TYPE_SHARED);
+        assert(pic->f.type == 0 || pic->f.type == FF_BUFFER_TYPE_SHARED);
         pic->f.type = FF_BUFFER_TYPE_SHARED;
     }else{
         assert(!pic->f.data[0]);

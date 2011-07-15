@@ -195,7 +195,7 @@ struct SwsContext *sws_alloc_context(int threadCount);
  * @return zero or positive value on success, a negative value on
  * error
  */
-int sws_init_context(struct SwsContext *context, SwsFilter *srcFilter, SwsFilter *dstFilter, SwsParams *ffdshow_params);
+int sws_init_context(struct SwsContext *sws_context, SwsFilter *srcFilter, SwsFilter *dstFilter, SwsParams *ffdshow_params);
 
 /**
  * Frees the swscaler context swsContext.
@@ -235,7 +235,7 @@ struct SwsContext *sws_getContext(int srcW, int srcH, enum PixelFormat srcFormat
  * top-bottom or bottom-top order. If slices are provided in
  * non-sequential order the behavior of the function is undefined.
  *
- * @param context   the scaling context previously created with
+ * @param c         the scaling context previously created with
  *                  sws_getContext()
  * @param srcSlice  the array containing the pointers to the planes of
  *                  the source slice
@@ -252,8 +252,9 @@ struct SwsContext *sws_getContext(int srcW, int srcH, enum PixelFormat srcFormat
  *                  the destination image
  * @return          the height of the output slice
  */
-int sws_scale(struct SwsContext *context, const uint8_t* const srcSlice[], const stride_t srcStride[],
-              int srcSliceY, int srcSliceH, uint8_t* const dst[], const stride_t dstStride[]);
+int sws_scale(struct SwsContext *c, const uint8_t* const srcSlice[],
+              const stride_t srcStride[], int srcSliceY, int srcSliceH,
+              uint8_t* const dst[], const stride_t dstStride[]);
 
 /**
  * @param inv_table the yuv2rgb coefficients, normally ff_yuv2rgb_coeffs[x]
@@ -370,6 +371,7 @@ void sws_convertPalette8ToPacked32(const uint8_t *src, uint8_t *dst, int num_pix
  */
 void sws_convertPalette8ToPacked24(const uint8_t *src, uint8_t *dst, int num_pixels, const uint8_t *palette);
 
+// ffdshow custom code
 int sws_thread_init(struct SwsContext *context);
 void sws_thread_free(struct SwsContext *context);
 int sws_thread_execute(struct SwsContext *ccontext, int (*func)(struct SwsContext *c2), int *ret, int count);
