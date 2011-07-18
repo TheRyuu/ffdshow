@@ -1108,19 +1108,20 @@ int sws_init_context(SwsContext *c, SwsFilter *srcFilter, SwsFilter *dstFilter, 
     //Note we need at least one pixel more at the end because of the MMX code (just in case someone wanna replace the 4000/8000)
     /* align at 16 bytes for AltiVec */
     for (i=0; i<c->vLumBufSize; i++) {
-        FF_ALLOCZ_OR_GOTO(c, c->lumPixBuf[i+c->vLumBufSize], dst_stride+1, fail);
+        FF_ALLOCZ_OR_GOTO(c, c->lumPixBuf[i+c->vLumBufSize], dst_stride+16, fail);
         c->lumPixBuf[i] = c->lumPixBuf[i+c->vLumBufSize];
     }
-    c->uv_off = dst_stride>>1;
-    c->uv_offx2 = dst_stride;
+    // 64 / c->scalingBpp is the same as 16 / sizeof(scaling_intermediate)
+    c->uv_off   = (dst_stride>>1) + 64 / c->scalingBpp;
+    c->uv_offx2 = dst_stride + 16;
     for (i=0; i<c->vChrBufSize; i++) {
-        FF_ALLOC_OR_GOTO(c, c->chrUPixBuf[i+c->vChrBufSize], dst_stride*2+1, fail);
+        FF_ALLOC_OR_GOTO(c, c->chrUPixBuf[i+c->vChrBufSize], dst_stride*2+32, fail);
         c->chrUPixBuf[i] = c->chrUPixBuf[i+c->vChrBufSize];
-        c->chrVPixBuf[i] = c->chrVPixBuf[i+c->vChrBufSize] = c->chrUPixBuf[i] + (dst_stride >> 1);
+        c->chrVPixBuf[i] = c->chrVPixBuf[i+c->vChrBufSize] = c->chrUPixBuf[i] + (dst_stride >> 1) + 8;
     }
     if (CONFIG_SWSCALE_ALPHA && c->alpPixBuf)
         for (i=0; i<c->vLumBufSize; i++) {
-            FF_ALLOCZ_OR_GOTO(c, c->alpPixBuf[i+c->vLumBufSize], dst_stride+1, fail);
+            FF_ALLOCZ_OR_GOTO(c, c->alpPixBuf[i+c->vLumBufSize], dst_stride+16, fail);
             c->alpPixBuf[i] = c->alpPixBuf[i+c->vLumBufSize];
         }
 
@@ -1272,19 +1273,20 @@ int sws_init_context(SwsContext *c, SwsFilter *srcFilter, SwsFilter *dstFilter, 
         //Note we need at least one pixel more at the end because of the MMX code (just in case someone wanna replace the 4000/8000)
         /* align at 16 bytes for AltiVec */
         for (i=0; i<c[k].vLumBufSize; i++) {
-            FF_ALLOCZ_OR_GOTO(&c[k], c[k].lumPixBuf[i+c[k].vLumBufSize], dst_stride+1, fail);
+            FF_ALLOCZ_OR_GOTO(&c[k], c[k].lumPixBuf[i+c[k].vLumBufSize], dst_stride+16, fail);
             c[k].lumPixBuf[i] = c[k].lumPixBuf[i+c[k].vLumBufSize];
         }
-        c[k].uv_off = dst_stride>>1;
-        c[k].uv_offx2 = dst_stride;
+        // 64 / c->scalingBpp is the same as 16 / sizeof(scaling_intermediate)
+        c[k].uv_off = (dst_stride>>1) + 64 / c->scalingBpp;
+        c[k].uv_offx2 = dst_stride + 16;
         for (i=0; i<c[k].vChrBufSize; i++) {
-            FF_ALLOC_OR_GOTO(&c[k], c[k].chrUPixBuf[i+c[k].vChrBufSize], dst_stride*2+1, fail);
+            FF_ALLOC_OR_GOTO(&c[k], c[k].chrUPixBuf[i+c[k].vChrBufSize], dst_stride*2+32, fail);
             c[k].chrUPixBuf[i] = c[k].chrUPixBuf[i+c[k].vChrBufSize];
-            c[k].chrVPixBuf[i] = c[k].chrVPixBuf[i+c[k].vChrBufSize] = c[k].chrUPixBuf[i] + (dst_stride>>1);
+            c[k].chrVPixBuf[i] = c[k].chrVPixBuf[i+c[k].vChrBufSize] = c[k].chrUPixBuf[i] + (dst_stride>>1) + 8;
         }
         if (CONFIG_SWSCALE_ALPHA && c[k].alpPixBuf)
             for (i=0; i<c[k].vLumBufSize; i++) {
-                FF_ALLOCZ_OR_GOTO(&c[k], c[k].alpPixBuf[i+c[k].vLumBufSize], dst_stride+1, fail);
+                FF_ALLOCZ_OR_GOTO(&c[k], c[k].alpPixBuf[i+c[k].vLumBufSize], dst_stride+16, fail);
                 c[k].alpPixBuf[i] = c[k].alpPixBuf[i+c[k].vLumBufSize];
             }
 

@@ -1665,10 +1665,6 @@ QPEL_2TAP(put_,  8, 3dnow)
 QPEL_2TAP(avg_,  8, 3dnow)
 
 
-#if 0
-static void just_return(void) { return; }
-#endif
-
 #if HAVE_YASM
 typedef void emu_edge_core_func (uint8_t *buf, const uint8_t *src,
                                  x86_reg linesize, x86_reg start_y,
