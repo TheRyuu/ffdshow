@@ -53,7 +53,7 @@ struct TprintPrefs {
     double shadowSize;
     bool blur,outlineBlur;
     int blurMode;
-    int csp;
+    uint64_t csp;
     double outlineWidth;
     Rational sar;
     bool opaqueBox;
@@ -186,7 +186,7 @@ public:
     stride_t bmpmskstride[3];
     unsigned char *outline[3],*shadow[3];
     virtual void print(int startx, int starty, unsigned int dx[3],int dy[3],unsigned char *dstLn[3],const stride_t stride[3],const unsigned char *bmp[3],const unsigned char *msk[3],REFERENCE_TIME rtStart=REFTIME_INVALID) const =0;
-    int csp;
+    uint64_t csp;
     virtual double get_ascent() const {
         return dy[0];
     }
@@ -302,7 +302,7 @@ private:
     HGDIOBJ oldFont;
     TrenderedSubtitleLines lines;
     unsigned int height;
-    int oldCsp;
+    uint64_t oldCsp;
     short matrix[5][5];
     void prepareC(TsubtitleText *sub,const TprintPrefs &prefs,bool forceChange);
 public:

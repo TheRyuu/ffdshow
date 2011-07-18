@@ -10,13 +10,13 @@ class TvideoCodecAvisynth :public TvideoCodecDec
 private:
     struct Tavisynth : public Tavisynth_c {
     public:
-        Tavisynth(const Textradata &extradata,TffPictBase &pict,Trect &r,int &csp,IffdshowBase *deci);
+        Tavisynth(const Textradata &extradata,TffPictBase &pict,Trect &r,uint64_t &csp,IffdshowBase *deci);
         ~Tavisynth();
         IScriptEnvironment *env;
         const char *script;
         PClip *clip;
     } *avisynth;
-    int csp;
+    uint64_t csp;
     Trect r;
 protected:
     virtual bool beginDecompress(TffPictBase &pict,FOURCC infcc,const CMediaType &mt,int sourceFlags);

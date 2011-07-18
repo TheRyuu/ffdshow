@@ -82,7 +82,7 @@ struct TffPictBase {
         csp=0;
     }
     TffPictBase(unsigned int Idx,unsigned int Idy);
-    int csp;
+    uint64_t csp;
     Trect rectFull,rectClip;
     stride_t diff[4];
     Trect getRect(int full,int half) const;
@@ -99,17 +99,17 @@ private:
     void copyRect(const TffPict &src,const Trect &r,unsigned int plane);
     void common_init(void);
     void init(void);
-    void init(int Icsp,unsigned char *Idata[4],const stride_t Istride[4],const Trect &r,bool Iro,int Iframetype,int Ifieldtype,size_t IsrcSize,const Tpalette &Ipalette);
+    void init(uint64_t Icsp,unsigned char *Idata[4],const stride_t Istride[4],const Trect &r,bool Iro,int Iframetype,int Ifieldtype,size_t IsrcSize,const Tpalette &Ipalette);
     static void calcDiff(const TcspInfo &cspInfo,const Trect &rectClip,const stride_t stride[4],stride_t diff[4]);
-    void readLibavcodec(int Icsp,const char_t *flnm,const char_t *ext,Tbuffer &buf,IffdshowBase *deci);
-    void readOle(int Icsp,const char_t *flnm,const char_t *ext,Tbuffer &buf,IffdshowBase *deci);
+    void readLibavcodec(uint64_t Icsp,const char_t *flnm,const char_t *ext,Tbuffer &buf,IffdshowBase *deci);
+    void readOle(uint64_t Icsp,const char_t *flnm,const char_t *ext,Tbuffer &buf,IffdshowBase *deci);
     unsigned int edge;
     static void draw_edges(uint8_t *buf, stride_t wrap, int width, int height, int w);
 public:
     TffPict(void);
-    TffPict(int Icsp,unsigned char *data[4],const stride_t stride[4],const Trect &r,bool ro,int Iframetype,int Ifieldtype,size_t IsrcSize,IMediaSample *pIn,const Tpalette &Ipalette=Tpalette());
-    TffPict(int Icsp,unsigned char *data[4],const stride_t stride[4],const Trect &r,bool ro,IMediaSample *pIn,const Tpalette &Ipalette=Tpalette(),bool isInterlacedRawVideo=false);
-    TffPict(int Icsp,const char_t *flnm,Tbuffer &buf,IffdshowBase *deci);
+    TffPict(uint64_t Icsp,unsigned char *data[4],const stride_t stride[4],const Trect &r,bool ro,int Iframetype,int Ifieldtype,size_t IsrcSize,IMediaSample *pIn,const Tpalette &Ipalette=Tpalette());
+    TffPict(uint64_t Icsp,unsigned char *data[4],const stride_t stride[4],const Trect &r,bool ro,IMediaSample *pIn,const Tpalette &Ipalette=Tpalette(),bool isInterlacedRawVideo=false);
+    TffPict(uint64_t Icsp,const char_t *flnm,Tbuffer &buf,IffdshowBase *deci);
     void setTimestamps(IMediaSample *pIn);
     void setDiscontinuity(IMediaSample *pIn);
     ~TffPict() {}
@@ -146,10 +146,10 @@ public:
     void histogram(unsigned int histogram[256],int full,int half) const;
     void copyFrom(const TffPict &p,Tbuffer &buf,const Trect *rectCopy=NULL);
     static void copy(unsigned char *dst, stride_t dstStride, const unsigned char *src, stride_t srcStride, int bytesPerLine, int height, bool flip=false);
-    void convertCSP(int Icsp,Tbuffer &buf,Tconvert *convert,int edge=0);
-    void convertCSP(int Icsp,Tbuffer &buf,int edge=0);
-    void setCSP(int Icsp);
-    void alloc(unsigned int dx,unsigned int dy,int Icsp,Tbuffer &buf,int edge=0);
+    void convertCSP(uint64_t Icsp,Tbuffer &buf,Tconvert *convert,int edge=0);
+    void convertCSP(uint64_t Icsp,Tbuffer &buf,int edge=0);
+    void setCSP(uint64_t Icsp);
+    void alloc(unsigned int dx,unsigned int dy,uint64_t Icsp,Tbuffer &buf,int edge=0);
     void createEdge(unsigned int edge,Tbuffer &buf);
     void md5sum(uint8_t sum[16]) const;
 };

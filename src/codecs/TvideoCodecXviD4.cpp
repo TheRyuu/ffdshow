@@ -307,7 +307,7 @@ repeat:
 }
 
 //-------------------------- compression ----------------------------
-LRESULT TvideoCodecXviD4::beginCompress(int cfgcomode,int csp,const Trect &r)
+LRESULT TvideoCodecXviD4::beginCompress(int cfgcomode,uint64_t csp,const Trect &r)
 {
     xvid_enc_create_t cr;
     memset(&cr,0,sizeof(cr));

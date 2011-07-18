@@ -268,7 +268,7 @@ HRESULT TimgFilterNoiseMplayer::process(TfilterQueue::iterator it,TffPict &pict,
             y.done();
             uv.done();
         }
-        int csp=0;
+        uint64_t csp=0;
         if (cfg->strength) {
             const unsigned char *srcY;
             getCur(FF_CSPS_MASK_YUV_PLANAR,pict,cfg->full,&srcY,NULL,NULL,NULL);
@@ -549,7 +549,7 @@ HRESULT TimgFilterNoise::process(TfilterQueue::iterator it,TffPict &pict,const T
             oldPattern=cfg->pattern;
             noiseAvihStrength=noiseAvihStrengthChroma=-1;
         }
-        int csp=0;
+        uint64_t csp=0;
         if (cfg->strength) {
             const unsigned char *srcY;
             getCur(FF_CSPS_MASK_YUV_PLANAR,pict,cfg->full,&srcY,NULL,NULL,NULL);

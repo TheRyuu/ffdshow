@@ -31,7 +31,7 @@ Tswscale::~Tswscale()
 {
     done();
 }
-bool Tswscale::init(unsigned int Idx,unsigned int Idy,int incsp,int outcsp,const int yuv2rgbTable[6])
+bool Tswscale::init(unsigned int Idx,unsigned int Idy,uint64_t incsp,uint64_t outcsp,const int yuv2rgbTable[6])
 {
     done();
     PixelFormat sw_incsp=csp_ffdshow2lavc(incsp),sw_outcsp=csp_ffdshow2lavc(outcsp);

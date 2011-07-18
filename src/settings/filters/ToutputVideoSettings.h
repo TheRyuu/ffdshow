@@ -52,7 +52,7 @@ public:
 struct ToutputVideoConvertSettings :TfilterSettingsVideo {
     ToutputVideoConvertSettings(TintStrColl *Icoll=NULL,TfilterIDFFs *filters=NULL):TfilterSettingsVideo(sizeof(*this),Icoll,filters,NULL,false) {}
 
-    int csp;
+    uint64_t csp;
 
     virtual void createFilters(size_t filtersorder,Tfilters *filters,TfilterQueue &queue) const {}
     virtual void createPages(TffdshowPageDec *parent) const {}

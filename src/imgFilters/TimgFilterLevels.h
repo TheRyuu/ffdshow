@@ -30,7 +30,7 @@ template<int lumaoffset,int chromaoffset,int onlyLuma> void processPacked(const 
 protected:
 virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
 static const int supportedcsps=FF_CSPS_MASK_YUV_PLANAR|FF_CSPS_MASK_YUV_PACKED;
-virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
+virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
     return supportedcsps;
 }

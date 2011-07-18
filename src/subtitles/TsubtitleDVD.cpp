@@ -45,7 +45,7 @@ TsubtitleDVDparent::TsubtitleDVDparent(void)
     tridx=0;
 }
 
-TspuPlane* TsubtitleDVDparent::allocPlanes(const CRect &r, int csp)
+TspuPlane* TsubtitleDVDparent::allocPlanes(const CRect &r, uint64_t csp)
 {
     planes[0].alloc(r.Size(),1,csp);
     if ((csp & FF_CSPS_MASK) == FF_CSP_420P) {

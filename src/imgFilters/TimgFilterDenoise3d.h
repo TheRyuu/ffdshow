@@ -12,7 +12,7 @@ TimgFilterDenoise3d(IffdshowBase *Ideci,Tfilters *Iparent);
 virtual void precalcCoefs(int nCt, double Dist25)=0;
 virtual void deNoise(TffPict &pict,unsigned int dx,unsigned int dy,const unsigned char *src[4],stride_t stride1[4],unsigned char *dst[4],stride_t stride2[4])=0;
 virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
-virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
+virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
     return FF_CSPS_MASK_YUV_PLANAR;
 }

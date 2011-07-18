@@ -149,10 +149,10 @@ void Tconvert::freeTmpConvert(void)
     tmpConvert2=NULL;
 }
 
-int Tconvert::convert(int incsp0,
+int Tconvert::convert(uint64_t incsp0,
                       const uint8_t*const src0[],
                       const stride_t srcStride0[],
-                      int outcsp0,uint8_t* dst0[],
+                      uint64_t outcsp0,uint8_t* dst0[],
                       stride_t dstStride0[],
                       const Tpalette *srcpal,
                       int video_full_range_flag,
@@ -161,7 +161,7 @@ int Tconvert::convert(int incsp0,
 {
     bool wasChange;
     m_wasChange = false;
-    int incsp=incsp0,outcsp=outcsp0;
+    uint64_t incsp=incsp0,outcsp=outcsp0;
     if (rgbInterlaceMode == 1) { // Force Interlace
         incsp |= FF_CSP_FLAGS_INTERLACED;
         outcsp0 |= FF_CSP_FLAGS_INTERLACED;
@@ -569,7 +569,7 @@ int Tconvert::convert(int incsp0,
             return 0;
     }
 }
-int Tconvert::convert(const TffPict &pict,int outcsp,uint8_t* dst[],stride_t dstStride[],bool vram_indirect)
+int Tconvert::convert(const TffPict &pict,uint64_t outcsp,uint8_t* dst[],stride_t dstStride[],bool vram_indirect)
 {
     return convert(pict.csp | ( (!pict.film && (pict.fieldtype & FIELD_TYPE::MASK_INT)) ? FF_CSP_FLAGS_INTERLACED : 0),
                    pict.data,
@@ -619,7 +619,7 @@ TffColorspaceConvert::~TffColorspaceConvert()
     delete config;
 }
 
-STDMETHODIMP TffColorspaceConvert::allocPicture(int csp,unsigned int dx,unsigned int dy,uint8_t *data[],stride_t stride[])
+STDMETHODIMP TffColorspaceConvert::allocPicture(uint64_t csp,unsigned int dx,unsigned int dy,uint8_t *data[],stride_t stride[])
 {
     if (!dx || !dy || csp==FF_CSP_NULL) {
         return E_INVALIDARG;
@@ -648,11 +648,11 @@ STDMETHODIMP TffColorspaceConvert::freePicture(uint8_t *data[])
     return S_OK;
 }
 
-STDMETHODIMP TffColorspaceConvert::convert(unsigned int dx,unsigned int dy,int incsp,uint8_t *src[],const stride_t srcStride[],int outcsp,uint8_t *dst[],stride_t dstStride[])
+STDMETHODIMP TffColorspaceConvert::convert(unsigned int dx,unsigned int dy,uint64_t incsp,uint8_t *src[],const stride_t srcStride[],uint64_t outcsp,uint8_t *dst[],stride_t dstStride[])
 {
     return convertPalette(dx,dy,incsp,src,srcStride,outcsp,dst,dstStride,NULL,0);
 }
-STDMETHODIMP TffColorspaceConvert::convertPalette(unsigned int dx,unsigned int dy,int incsp,uint8_t *src[],const stride_t srcStride[],int outcsp,uint8_t *dst[],stride_t dstStride[],const unsigned char *pal,unsigned int numcolors)
+STDMETHODIMP TffColorspaceConvert::convertPalette(unsigned int dx,unsigned int dy,uint64_t incsp,uint8_t *src[],const stride_t srcStride[],uint64_t outcsp,uint8_t *dst[],stride_t dstStride[],const unsigned char *pal,unsigned int numcolors)
 {
     if (!c || c->dx!=dx || c->dy!=dy) {
         if (c) {

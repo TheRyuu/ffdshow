@@ -14,7 +14,7 @@ bool firsttimeDDCC,isddcc;
 ThwOverlaySettings old;
 int oldReset;
 protected:
-virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
+virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
     return FF_CSPS_MASK;
 }

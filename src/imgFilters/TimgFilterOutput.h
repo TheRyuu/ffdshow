@@ -14,12 +14,12 @@ Tlibavcodec *libavcodec;
 bool firsttime,dv;
 AVCodecContext *avctx;
 AVFrame *frame;
-int dvcsp;
+uint64_t dvcsp;
 TffPict *dvpict;
 Tbuffer dvpictbuf;
 protected:
 int old_cspOptionsRgbInterlaceMode, old_highQualityRGB, old_outputLevelsMode, old_inputLevelsMode, old_IturBt,old_dithering;
-virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
+virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
     return FF_CSPS_MASK;
 }
@@ -30,7 +30,7 @@ virtual HRESULT process(TfilterQueue::iterator it,TffPict &pict,const TfilterSet
 {
     return E_NOTIMPL;
 }
-HRESULT process(const TffPict &pict,int dstcsp,unsigned char *dst[4],int dstStride[4],LONG &dstSize,const ToutputVideoSettings *cfg); //S_FALSE = dv
+HRESULT process(const TffPict &pict,uint64_t dstcsp,unsigned char *dst[4],int dstStride[4],LONG &dstSize,const ToutputVideoSettings *cfg); //S_FALSE = dv
 
 protected:
 class TvramBenchmark
@@ -61,7 +61,7 @@ public:
 
 DECLARE_FILTER(TimgFilterOutputConvert,public,TimgFilter)
 protected:
-virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
+virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
     return FF_CSPS_MASK;
 }

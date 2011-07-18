@@ -54,7 +54,7 @@ TimgFilterOutput::~TimgFilterOutput()
     }
 }
 
-HRESULT TimgFilterOutput::process(const TffPict &pict,int dstcsp,unsigned char *dst[4],int dstStride[4],LONG &dstSize,const ToutputVideoSettings *cfg)
+HRESULT TimgFilterOutput::process(const TffPict &pict,uint64_t dstcsp,unsigned char *dst[4],int dstStride[4],LONG &dstSize,const ToutputVideoSettings *cfg)
 {
     if (firsttime) {
         firsttime=false;
@@ -113,7 +113,7 @@ HRESULT TimgFilterOutput::process(const TffPict &pict,int dstcsp,unsigned char *
         if (convert->m_wasChange) {
             vramBenchmark.onChange();
         }
-        int cspret=convert->convert(pict,
+        uint64_t cspret=convert->convert(pict,
                                     ((dv ? dvcsp : dstcsp) ^ (cfg->flip ? FF_CSP_FLAGS_VFLIP : 0)) | ((!pict.film && (pict.fieldtype & FIELD_TYPE::MASK_INT)) ? FF_CSP_FLAGS_INTERLACED : 0),
                                     dv ? dvpict->data : cspdst,
                                     dv ? dvpict->stride : cspstride,

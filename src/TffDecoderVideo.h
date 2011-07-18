@@ -1019,7 +1019,7 @@ protected:
     bool IsVMR9Renderless(IPin *downstream_input_pin);
     virtual HRESULT setOutputMediaType(const CMediaType &mt);
     struct {
-        int dstColorspace;
+        uint64_t dstColorspace;
         int dstStride;
         LONG dstSize;
     } m_frame;
@@ -1034,7 +1034,8 @@ protected:
     REFERENCE_TIME vc1rtStart;
     int vc1frameCnt;
     int currentFrame;
-    int decodingFps,decodingCsp;
+    int decodingFps;
+	uint64_t decodingCsp;
 
     clock_t lastTime;
     int waitForKeyframe;

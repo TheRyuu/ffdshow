@@ -25,7 +25,7 @@ public:
     TencStats(void) {
         init(0,0,FF_CSP_420P);
     }
-    void init(unsigned int Idx,unsigned int Idy,int csp);
+    void init(unsigned int Idx,unsigned int Idy,uint64_t csp);
     void add(const TencFrameParams &frame);
     unsigned int dx,dy;
     unsigned int count;

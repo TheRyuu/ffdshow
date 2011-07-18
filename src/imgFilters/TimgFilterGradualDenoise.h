@@ -11,7 +11,7 @@ void (TimgFilterGradualDenoise::*denoiseFc)(int gradualStrength,unsigned int dx1
 template<class _mm> void denoise(int gradualStrength,unsigned int dx1,unsigned int dy1,const unsigned char *srcY,stride_t stride1,unsigned char *dstY,stride_t stride2);
 protected:
 virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
-virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
+virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
     return FF_CSPS_MASK_YUV_PLANAR;
 }

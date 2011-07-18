@@ -74,11 +74,11 @@ public:
 } plane[3];
 protected:
 virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
-virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
+virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
     return FF_CSPS_MASK_YUV_PLANAR;
 }
-virtual int getSupportedOutputColorspaces(const TfilterSettingsVideo *cfg) const
+virtual uint64_t getSupportedOutputColorspaces(const TfilterSettingsVideo *cfg) const
 {
     return FF_CSPS_MASK_YUV_PLANAR;
 }

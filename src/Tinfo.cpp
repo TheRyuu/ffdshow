@@ -104,9 +104,9 @@ const char_t* TinfoBase::TinfoValueBase::getVal0(bool &wasChange,bool &splitline
                     case IDFF_decodingFps:
                         tsprintf(s,_l("%5.2f"),float(val/1000.0));
                         break;
-                    case IDFF_AVIcolorspace:
-                        csp_getName(val,s,countof(s));
-                        break;
+//                    case IDFF_AVIcolorspace:
+//                        csp_getName(val,s,countof(s));
+//                        break;
                     default:
                         tsnprintf_s(s, countof(s), _TRUNCATE, _l("%i"), val);
                 }
@@ -266,7 +266,7 @@ TinfoDecVideo::TinfoDecVideo(IffdshowBase *Ideci):
         IDFF_OSDtype_remainingFrameTime,_l("Remaining time"),_l("rtime"),
         IDFF_OSDtype_accurDeblock,_l("Accurate deblocking"),_l("ad"),
         IDFF_OSDtype_inputFOURCC,_l("Input FOURCC"),_l("ifcc"),
-        IDFF_AVIcolorspace,_l("Input colorspace"),_l("icsp"),
+        //IDFF_AVIcolorspace,_l("Input colorspace"),_l("icsp"),
         IDFF_OSDtype_outputFOURCC,_l("Output colorspace"),_l("ocsp"),
         IDFF_currentFrame,_l("Current frame"),_l("fnum"),
         IDFF_subDelay,_l("Subtitles delay"),_l("subd"),
@@ -453,8 +453,8 @@ const char_t* TinfoDecVideo::TinfoValueDecVideo::getVal0(bool &wasChange,bool &s
             } else {
                 tsprintf(s,_l("unknown"));
             }
+            return s;
         }
-        return s;
         case IDFF_OSDtype_AviSynth_Info: {
             const char *info0=deciV->getAviSynthInfo();
             if (info0) {

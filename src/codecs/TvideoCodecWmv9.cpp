@@ -101,7 +101,7 @@ void TvideoCodecWmv9::getCompressColorspaces(Tcsps &csps,unsigned int outDx,unsi
     csps.add(FF_CSP_420P|FF_CSP_FLAGS_YUV_ADJ);
 }
 
-LRESULT TvideoCodecWmv9::beginCompress(int cfgcomode,int csp,const Trect &r)
+LRESULT TvideoCodecWmv9::beginCompress(int cfgcomode,uint64_t csp,const Trect &r)
 {
     if (!wmv9) {
         return ICERR_ERROR;

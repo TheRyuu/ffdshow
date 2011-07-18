@@ -13,7 +13,7 @@ TcropSettings oldSettings;
 long lastFrameMS,nextFrameMS;
 long autoCropAnalysisDuration;
 protected:
-virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
+virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
     return FF_CSPS_MASK&~(FF_CSP_NV12|FF_CSP_CLJR);
 }

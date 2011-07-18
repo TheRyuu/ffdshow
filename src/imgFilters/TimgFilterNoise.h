@@ -11,7 +11,7 @@ static const int patt[4];
 private:
 int noiseAvihStrength,noiseAvihStrengthChroma;
 int oldPattern;
-int oldcsp;
+uint64_t oldcsp;
 void doneChroma(void);
 short *noiseMask[3];
 stride_t noiseMaskStride[3];
@@ -33,7 +33,7 @@ void (TimgFilterNoise::*processChromaFc)(const TnoiseSettings *cfg,const unsigne
 template<class _mm> void processChroma(const TnoiseSettings *cfg,const unsigned char *srcU,const unsigned char *srcV,unsigned char *dstU,unsigned char *dstV);
 protected:
 virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
-virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
+virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
     return FF_CSPS_MASK_YUV_PLANAR;
 }
@@ -80,11 +80,11 @@ public:
     }
 } y,uv;
 TnoiseSettings oldnoise;
-int oldcsp;
+uint64_t oldcsp;
 void doneChroma(void);
 protected:
 virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
-virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
+virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
     return FF_CSPS_MASK_YUV_PLANAR;
 }
@@ -107,7 +107,7 @@ TpictPropSettings lumaSettings;
 int lumaT;
 protected:
 virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
-virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
+virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
     return FF_CSPS_MASK_YUV_PLANAR;
 }
@@ -127,7 +127,7 @@ ToffsetSettings offsetSettings;
 int offsetTX,offsetTY;
 protected:
 virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
-virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
+virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
     return FF_CSPS_MASK_YUV_PLANAR;
 }
@@ -159,7 +159,7 @@ Tlines lines;
 int linesT;
 protected:
 virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
-virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
+virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
     return FF_CSPS_MASK_YUV_PLANAR;
 }
@@ -176,7 +176,7 @@ private:
 int scratchesT;
 protected:
 virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
-virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
+virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
     return FF_CSPS_MASK_YUV_PLANAR;
 }

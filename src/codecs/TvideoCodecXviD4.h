@@ -31,7 +31,7 @@ private:
     Textradata *extradata;
     REFERENCE_TIME rtStart,rtStop;
 protected:
-    virtual LRESULT beginCompress(int cfgcomode,int csp,const Trect &r);
+    virtual LRESULT beginCompress(int cfgcomode,uint64_t csp,const Trect &r);
     virtual bool beginDecompress(TffPictBase &pict,FOURCC infcc,const CMediaType &mt,int sourceFlags);
     virtual HRESULT flushDec(void);
 public:

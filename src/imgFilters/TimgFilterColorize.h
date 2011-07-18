@@ -10,7 +10,7 @@ void (TimgFilterColorize::*colorizeFc)(TffPict &pict,const TpictPropSettings *cf
 template<class _mm> void colorize(TffPict &pict,const TpictPropSettings *cfg,const YUVcolor &c0,const int c[3]);
 protected:
 virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
-virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
+virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
     return FF_CSPS_MASK_YUV_PLANAR;
 }

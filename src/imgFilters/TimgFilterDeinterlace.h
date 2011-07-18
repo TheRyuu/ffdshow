@@ -7,7 +7,7 @@
 
 DECLARE_FILTER(TimgFilterDeinterlace,public,TimgFilter)
 protected:
-virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
+virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
     return FF_CSPS_MASK;
 }
@@ -23,7 +23,7 @@ Tlibavcodec *libavcodec;
 void *pp_ctx;
 PPMode pp_mode;
 protected:
-virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
+virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
     return FF_CSPS_MASK_YUV_PLANAR;
 }
@@ -50,7 +50,7 @@ template<class Tsimd> struct Tinterpolate {
 void (*interpolateMotion)(stride_t src_pit, stride_t dst_pit, stride_t prev_pit, unsigned int rowsize, const BYTE* srcp, BYTE* dstp, const BYTE* _pPrev, int FldHeight,int Search_Effort,int thresh);
 void (*pictInterpolate)(unsigned char *dst,stride_t dstStride,const unsigned char *src1,stride_t src1stride,const unsigned char *src2,stride_t src2stride,unsigned int dx,unsigned int dy);
 protected:
-virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
+virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
     return FF_CSPS_MASK_YUV_PLANAR;
 }

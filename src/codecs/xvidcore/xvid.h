@@ -119,7 +119,7 @@ extern "C" {
 	for non-planar colorspaces use only plane[0] and stride[0]
 	four plane reserved for alpha*/
 typedef struct {
-	int csp;				/* [in] colorspace; or with XVID_CSP_VFLIP to perform vertical flip */
+	uint64_t csp;				/* [in] colorspace; or with XVID_CSP_VFLIP to perform vertical flip */
 	void * plane[4];		/* [in] image plane ptrs */
 	int stride[4];			/* [in] image stride; "bytes per row"*/
 } xvid_image_t;

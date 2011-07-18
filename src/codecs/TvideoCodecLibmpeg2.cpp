@@ -247,7 +247,7 @@ HRESULT TvideoCodecLibmpeg2::decompressI(const unsigned char *src,size_t srcLen,
 
                         unsigned char *data[4]= {info->display_fbuf->buf[0],info->display_fbuf->buf[1],info->display_fbuf->buf[2],NULL};
                         stride_t stride[4]= {info->sequence->width,info->sequence->chroma_width,info->sequence->chroma_width,0};
-                        int csp;
+                        uint64_t csp;
                         switch ((info->sequence->chroma_width==info->sequence->width)+(info->sequence->chroma_height==info->sequence->height)) {
                             case 1:
                                 csp=FF_CSP_422P;

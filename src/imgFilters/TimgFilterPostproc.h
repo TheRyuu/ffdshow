@@ -33,7 +33,7 @@ void *pp_ctx;
 PPMode pp_mode;
 protected:
 virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
-virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
+virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
     return FF_CSPS_MASK_YUV_PLANAR;
 }
@@ -80,7 +80,7 @@ static __forceinline void store(int pos,const int16_t *src,int x,int y,int dst_s
 static void ff_fdct_mmx2(int16_t *block);
 protected:
 virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
-virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
+virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
     return FF_CSPS_MASK_YUV_PLANAR;
 }
@@ -96,7 +96,7 @@ private:
 Tnic_deringFc nic_dering;
 protected:
 virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
-virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
+virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
     return FF_CSP_420P;
 }
@@ -131,7 +131,7 @@ static const int qp=0;
                                             static const __int64 MM_FIX_0_382683433,MM_FIX_0_541196100,MM_FIX_0_707106781,MM_FIX_1_306562965,MM_FIX_1_414213562_A,MM_FIX_1_847759065,MM_FIX_2_613125930,MM_FIX_1_414213562,MM_FIX_1_082392200,MM_FIX_0_847759065,MM_FIX_0_566454497,MM_FIX_0_198912367,MM_DESCALE_RND,MM_2;
                                             protected:
                                             virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
-                                            virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
+                                            virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
     return FF_CSPS_MASK_YUV_PLANAR;
 }

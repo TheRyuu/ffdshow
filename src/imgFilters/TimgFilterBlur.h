@@ -16,7 +16,7 @@ void (TimgFilterBlur::*mergeFc)(const TblurSettings *cfg,const unsigned char *sr
 template<class _mm> void merge(const TblurSettings *cfg,const unsigned char *srcY,unsigned char *dstY);
 protected:
 virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
-virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
+virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
     return FF_CSPS_MASK_YUV_PLANAR;
 }
@@ -35,11 +35,11 @@ int oldradius,oldluma,oldchroma;
 Tlibavcodec *libavcodec;
 protected:
 virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
-virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
+virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
     return SWS_IN_CSPS;
 }
-virtual int getSupportedOutputColorspaces(const TfilterSettingsVideo *cfg) const
+virtual uint64_t getSupportedOutputColorspaces(const TfilterSettingsVideo *cfg) const
 {
     return SWS_OUT_CSPS;
 }
@@ -58,7 +58,7 @@ PPMode pp_mode;
 Tlibavcodec *libavcodec;
 protected:
 virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
-virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
+virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
     return FF_CSPS_MASK_YUV_PLANAR;
 }

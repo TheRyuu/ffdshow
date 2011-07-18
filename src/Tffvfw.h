@@ -36,7 +36,7 @@ private:
     int autoforcedilace;
     TvideoCodecDec *dec;
 
-    int colorspace;
+    uint64_t colorspace;
     ICDECOMPRESS *icd;
     // IdecVideoSink
     STDMETHODIMP deliverDecodedSample(TffPict &pict);

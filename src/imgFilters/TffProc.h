@@ -66,14 +66,14 @@ public:
 
     STDMETHODIMP getNewSize(unsigned int srcDx,unsigned int srcDy,unsigned int *outDx,unsigned int *outDy);
     STDMETHODIMP begin(unsigned int srcDx,unsigned int srcDy,int FpsNum,int FpsDen);
-    STDMETHODIMP process(unsigned int framenum,int incsp,const unsigned char *src[4],stride_t srcStride[4],int ro,int outcsp,unsigned char *dst[4],stride_t dstStride[4]) ;
-    STDMETHODIMP processTime(unsigned int framenum,int64_t ref_start,int64_t ref_stop,int incsp,const unsigned char *src[4],stride_t srcStride[4],int ro,int outcsp,unsigned char *dst[4],stride_t dstStride[4]);
+    STDMETHODIMP process(unsigned int framenum,uint64_t incsp,const unsigned char *src[4],stride_t srcStride[4],int ro,uint64_t outcsp,unsigned char *dst[4],stride_t dstStride[4]) ;
+    STDMETHODIMP processTime(unsigned int framenum,int64_t ref_start,int64_t ref_stop,uint64_t incsp,const unsigned char *src[4],stride_t srcStride[4],int ro,uint64_t outcsp,unsigned char *dst[4],stride_t dstStride[4]);
     STDMETHODIMP end(void);
-    STDMETHODIMP_(const TcspInfo*) getCspInfo(int csp);
+    STDMETHODIMP_(const TcspInfo*) getCspInfo(uint64_t csp);
     // IprocVideoSink
     STDMETHODIMP deliverProcessedSample(TffPict &pict);
 
-    HRESULT processPict(unsigned int framenum,TffPict &pict,int outcsp);
+    HRESULT processPict(unsigned int framenum,TffPict &pict,uint64_t outcsp);
 private:
     Trect srcR;
     unsigned int srcDx,srcDy;
@@ -82,7 +82,7 @@ private:
     const TcspInfo *outcspInfo;
     Tconvert *convert;
     Tbuffer dstbuf;
-    int outcsp;
+    uint64_t outcsp;
     unsigned char **dst;
     stride_t *dstStride;
 };

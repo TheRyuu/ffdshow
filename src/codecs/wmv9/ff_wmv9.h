@@ -17,7 +17,7 @@ struct Tff_wmv9cfg
  unsigned int codecIndex;
  int bitrate;
  int width,height;
- int csp;
+ uint64_t csp;
  double fps;
  int crisp;
  int quality;
@@ -48,10 +48,10 @@ struct Iff_wmv9
  virtual bool __stdcall getCodecInfo(size_t i,const Tff_wmv9codecInfo* *info)=0;
  virtual bool __stdcall start(const Tff_wmv9cfg &cfg)=0;
  virtual void __stdcall getExtradata(const void* *ptr,size_t *len)=0;
- virtual int  __stdcall write(unsigned int framenum,int incsp,const unsigned char * const src[4],const stride_t srcStride[4],void *dst)=0;
+ virtual int  __stdcall write(unsigned int framenum,uint64_t incsp,const unsigned char * const src[4],const stride_t srcStride[4],void *dst)=0;
  virtual void __stdcall end(void)=0;
  virtual const Tff_wmv9codecInfo* __stdcall findCodec(FOURCC fcc)=0;
- virtual bool __stdcall decStart(FOURCC fcc,double fps,unsigned int dx,unsigned int dy,const void *extradata,size_t extradata_len,int *csp)=0;
+ virtual bool __stdcall decStart(FOURCC fcc,double fps,unsigned int dx,unsigned int dy,const void *extradata,size_t extradata_len,uint64_t *csp)=0;
  virtual size_t __stdcall decompress(const unsigned char *src,size_t srcLen,unsigned char* *dst,stride_t *dstStride)=0;
 };
 

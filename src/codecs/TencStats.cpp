@@ -19,7 +19,7 @@
 #include "stdafx.h"
 #include "TencStats.h"
 
-void TencStats::init(unsigned int Idx,unsigned int Idy,int csp)
+void TencStats::init(unsigned int Idx,unsigned int Idy,uint64_t csp)
 {
     dx=Idx;
     dy=Idy;

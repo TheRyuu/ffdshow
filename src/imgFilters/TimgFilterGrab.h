@@ -23,7 +23,7 @@ public:
         TimgExport(void):ok(false),inited(false) {}
         virtual ~TimgExport() {}
         virtual void init(unsigned int dx,unsigned int dy)=0;
-        virtual int requiredCSP()=0;
+        virtual uint64_t requiredCSP()=0;
         virtual int compress(const unsigned char *src[4],stride_t stride[4],unsigned char *dst,unsigned int dstlen,int qual)=0;
         virtual void done(void) {
             inited=false;
@@ -52,7 +52,7 @@ protected:
     }
 public:
     TimgExportJPEG(const Tconfig *config,IffdshowBase *deci):TimgExportLibavcodec(config,deci,CODEC_ID_MJPEG) {}
-    virtual int requiredCSP() {
+    virtual uint64_t requiredCSP() {
         return FF_CSP_420P|FF_CSP_FLAGS_YUV_JPEG;
     }
 };
@@ -68,7 +68,7 @@ public:
     // We are interesting in writing RGB24 (as required by PNG), so we have to select FF_CSP_BGR24.
     // see the comment above the FF_CSP_ enum definition.
     TimgExportPNG(const Tconfig *config,IffdshowBase *deci):TimgExportLibavcodec(config,deci,CODEC_ID_PNG) {}
-    virtual int requiredCSP() {
+    virtual uint64_t requiredCSP() {
         return FF_CSP_BGR24;
     }
 };
@@ -81,7 +81,7 @@ public:
     virtual void init(unsigned int dx,unsigned int dy);
     // We are interesting in writing BGR24 (as required for BMP), so we have to select FF_CSP_RGB24.
     // see the comment above the FF_CSP_ enum definition.
-    virtual int requiredCSP() {
+    virtual uint64_t requiredCSP() {
         return FF_CSP_RGB24|FF_CSP_FLAGS_VFLIP;
     }
     virtual int compress(const unsigned char *src[4],stride_t stride[4],unsigned char *dst,unsigned int dstlen,int qual);
@@ -95,7 +95,7 @@ TffPict temp;
 Tbuffer buffer;
 protected:
 virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
-virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const;
+virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const;
 virtual void onSizeChange(void);
 public:
 TimgFilterGrab(IffdshowBase *Ideci,Tfilters *Iparent);

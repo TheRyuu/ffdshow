@@ -25,7 +25,7 @@ static void dequant_h263_inter(int16_t * data,const uint32_t quant,const uint16_
 static void quant_mpeg_inter(int16_t * coeff,const uint32_t quant,const uint16_t * mpeg_quant_matrices);
 static void dequant_mpeg_inter(int16_t * data,const uint32_t quant,const uint16_t * mpeg_quant_matrices);
 protected:
-virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
+virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
     return FF_CSPS_MASK_YUV_PLANAR;
 }

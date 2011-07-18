@@ -173,7 +173,7 @@ bool TimgFilterGrab::is(const TffPictBase &pict,const TfilterSettingsVideo *cfg)
     return true;
 }
 
-int TimgFilterGrab::getSupportedInputColorspaces(const TfilterSettingsVideo *cfg0) const
+uint64_t TimgFilterGrab::getSupportedInputColorspaces(const TfilterSettingsVideo *cfg0) const
 {
     const TgrabSettings *cfg=(const TgrabSettings*)cfg0;
     return exp[cfg->format] && exp[cfg->format]->ok?exp[cfg->format]->requiredCSP():FF_CSPS_MASK;

@@ -26,7 +26,7 @@
 #include "TimgFilterGrab.h"
 
 //=================================================== TspuPlane ===================================================
-void TspuPlane::alloc(const CSize &sz, int div, int csp)
+void TspuPlane::alloc(const CSize &sz, int div, uint64_t csp)
 {
     size_t needed;
     if ((csp & FF_CSPS_MASK) == FF_CSP_420P) {
@@ -50,7 +50,7 @@ void TspuPlane::setZero()
     memset(r, 0, allocated);
 }
 //=================================================== TspuImage ===================================================
-TspuImage::TspuImage(const TspuPlane src[3],const CRect &rcclip,const CRect &rectReal,const CRect &rectOrig,const CRect &IfinalRect, const TprintPrefs &prefs, int Icsp):TrenderedSubtitleWordBase(false)
+TspuImage::TspuImage(const TspuPlane src[3],const CRect &rcclip,const CRect &rectReal,const CRect &rectOrig,const CRect &IfinalRect, const TprintPrefs &prefs, uint64_t Icsp):TrenderedSubtitleWordBase(false)
 {
     csp = prefs.csp & FF_CSPS_MASK;
     const TcspInfo *cspInfo = csp_getInfo(prefs.csp);
@@ -130,7 +130,7 @@ TspuImage::TspuImage(const TspuPlane src[3],const CRect &rcclip,const CRect &rec
 }
 
 //=============================================== TspuImage::Tscaler ==============================================
-TspuImage::Tscaler* TspuImage::Tscaler::create(const TprintPrefs &prefs,int srcdx,int srcdy,int dstdx,int dstdy, int csp)
+TspuImage::Tscaler* TspuImage::Tscaler::create(const TprintPrefs &prefs,int srcdx,int srcdy,int dstdx,int dstdy, uint64_t csp)
 {
     switch (prefs.dvd?0:prefs.vobaamode) {
         case 1:
@@ -617,7 +617,7 @@ void TspuImage::TscalerBilin::scale(const unsigned char *srci,const unsigned cha
 }
 
 //============================================== TspuImage::TscalerSw ==============================================
-TspuImage::TscalerSw::TscalerSw(const TprintPrefs &prefs,int srcdx,int srcdy,int dstdx,int dstdy, int csp):
+TspuImage::TscalerSw::TscalerSw(const TprintPrefs &prefs,int srcdx,int srcdy,int dstdx,int dstdy, uint64_t csp):
     Tscaler(prefs,srcdx,srcdy,dstdx,dstdy),
     approx(prefs,srcdx,srcdy,dstdx,dstdy)
 {

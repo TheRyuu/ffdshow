@@ -473,7 +473,7 @@ void TimgFilterAvisynth::Tavisynth::done(void)
     buffers=0;
 }
 
-void TimgFilterAvisynth::Tavisynth::init(const TavisynthSettings &oldcfg, Tinput* input,int *outcsp, TffPictBase& pict)
+void TimgFilterAvisynth::Tavisynth::init(const TavisynthSettings &oldcfg, Tinput* input,uint64_t *outcsp, TffPictBase& pict)
 {
     infoBuf[0]=0;
 
@@ -1162,18 +1162,18 @@ bool TimgFilterAvisynth::is(const TffPictBase &pict,const TfilterSettingsVideo *
 }
 */
 
-int TimgFilterAvisynth::getWantedCsp(const TavisynthSettings *cfg) const
+uint64_t TimgFilterAvisynth::getWantedCsp(const TavisynthSettings *cfg) const
 {
     return (cfg->inYV12?FF_CSP_420P:0)|(cfg->inYUY2?FF_CSP_YUY2:0)|(cfg->inRGB24?FF_CSP_RGB24:0)|(cfg->inRGB32?FF_CSP_RGB32:0);
 }
 
-int TimgFilterAvisynth::getSupportedInputColorspaces(const TfilterSettingsVideo *cfg0) const
+uint64_t TimgFilterAvisynth::getSupportedInputColorspaces(const TfilterSettingsVideo *cfg0) const
 {
     const TavisynthSettings *cfg=(const TavisynthSettings*)cfg0;
     return getWantedCsp(cfg);
 }
 
-int TimgFilterAvisynth::getSupportedOutputColorspaces(const TfilterSettingsVideo *cfg) const
+uint64_t TimgFilterAvisynth::getSupportedOutputColorspaces(const TfilterSettingsVideo *cfg) const
 {
     return outcsp?outcsp:FF_CSP_420P|FF_CSP_YUY2|FF_CSP_RGB24|FF_CSP_RGB32;
 }
@@ -1239,7 +1239,7 @@ HRESULT TimgFilterAvisynth::process(TfilterQueue::iterator it,TffPict &pict,cons
 
         init(pict,cfg->full,cfg->half);
 
-        int wantedcsp=getWantedCsp(cfg);
+        uint64_t wantedcsp=getWantedCsp(cfg);
 
         if (wantedcsp!=0) {
             bool reset=!cfg->equal(oldcfg);

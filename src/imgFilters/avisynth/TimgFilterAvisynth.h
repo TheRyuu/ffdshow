@@ -41,7 +41,8 @@ struct TframeBuffer {
 struct Tinput : Tavisynth_c {
     unsigned int dx,dy;
     int fpsnum,fpsden;
-    int csp,cspBpp;
+    uint64_t csp;
+    int cspBpp;
     const unsigned char *src[4];
     stride_t *stride1;
 
@@ -146,7 +147,7 @@ public:
     void done(void);
     bool createClip(const TavisynthSettings *cfg,Tinput *input,TffPictBase& pict);
     void setOutFmt(const TavisynthSettings *cfg,Tinput *input,TffPictBase &pict);
-    void init(const TavisynthSettings &oldcfg,Tinput *input,int *outcsp,TffPictBase &pict);
+    void init(const TavisynthSettings &oldcfg,Tinput *input,uint64_t *outcsp,TffPictBase &pict);
     HRESULT process(TimgFilterAvisynth *self,TfilterQueue::iterator& it,TffPict &pict,const TavisynthSettings *cfg);
     char infoBuf[1000];
 
@@ -193,17 +194,17 @@ private:
     TframeBuffer* buffers;
 } *avisynth;
 
-int getWantedCsp(const TavisynthSettings *cfg) const;
+uint64_t getWantedCsp(const TavisynthSettings *cfg) const;
 static const int NUM_FRAMES=10810800; // Divisible by everything up to 18, and by every even number up to 30, and then some.
 Tinput* input;
 Tinput* outFmtInput;
 static int findBuffer(TframeBuffer* buffers, int numBuffers, int n);
-int outcsp;
+uint64_t outcsp;
 
 protected:
 //virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
-virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const;
-virtual int getSupportedOutputColorspaces(const TfilterSettingsVideo *cfg) const;
+virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const;
+virtual uint64_t getSupportedOutputColorspaces(const TfilterSettingsVideo *cfg) const;
 virtual void onSizeChange(void);
 virtual void onSeek(void);
 virtual void onStop(void);

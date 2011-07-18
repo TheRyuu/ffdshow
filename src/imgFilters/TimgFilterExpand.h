@@ -12,10 +12,10 @@ unsigned int dxnone,xdif1none,xdif2none;
 unsigned int dynone,ydif1none,ydif2none;
 TffPict newpict;
 bool sizeChanged;
-int oldcsp;
+uint64_t oldcsp;
 virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
 virtual void onSizeChange(void);
-virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
+virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
     return FF_CSPS_MASK&~(FF_CSP_NV12|FF_CSP_CLJR);
 }

@@ -387,7 +387,7 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
 
             bool stereoScopic = cfg->stereoscopic && !isdvdproc && subformat != Tsubreader::SUB_SSA;
 
-            int outcsp = FF_CSP_420P;
+            uint64_t outcsp = FF_CSP_420P;
             if (rgb32_if_possible && (isText || isBitmapsub)) {
                 outcsp = FF_CSP_RGB32;
             }
@@ -483,7 +483,7 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
                 init(pict,cfg->full,cfg->half);
             }
             unsigned char *dst[4];
-            int outcsp;
+            uint64_t outcsp;
             if (rgb32_if_possible) {
                 outcsp = FF_CSP_RGB32;
                 everRGB = true;

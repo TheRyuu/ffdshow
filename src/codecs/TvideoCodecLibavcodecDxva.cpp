@@ -754,7 +754,7 @@ void TvideoCodecLibavcodecDxva::PostProcessUSWCFrame(void * pDXVABuffer, UINT pi
 void TvideoCodecLibavcodecDxva::GetProcessedFrame(Tbuffer &processedFrame, UINT width, UINT height)
 {
     int size = width * height * 3 / 2;
-    int csp = FF_CSP_420P|FF_CSP_FLAGS_YUV_ADJ; // we use YV12. there is no native FF_CSP_NV12 processing
+    uint64_t csp = FF_CSP_420P|FF_CSP_FLAGS_YUV_ADJ; // we use YV12. there is no native FF_CSP_NV12 processing
     processedFrame.free = false;
     // process frame over black background:
     TffPict pict;

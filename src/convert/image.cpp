@@ -1654,9 +1654,9 @@ int image_input(IMAGE * image,
                 stride_t edged_width,stride_t edged_width2,
                 const uint8_t * src,
                 stride_t src_stride,
-                int csp,
-                int interlacing,
-                int jpeg,
+                uint64_t csp,
+                uint64_t interlacing,
+                uint64_t jpeg,
                 int rgb_add)
 {
 
@@ -1796,9 +1796,9 @@ int image_output(IMAGE * image,
                  stride_t edged_width[4],
                  uint8_t * dst[4],
                  stride_t dst_stride[4],
-                 int csp,
-                 int interlacing,
-                 int jpeg,
+                 uint64_t csp,
+                 uint64_t interlacing,
+                 uint64_t jpeg,
                  int rgb_add,
                  bool vram_indirect)
 {

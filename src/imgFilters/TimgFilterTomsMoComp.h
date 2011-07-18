@@ -20,7 +20,7 @@ unsigned char *psrc[3];
 stride_t pstride[3];
 protected:
 virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
-virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
+virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
     return FF_CSP_420P|FF_CSP_YUY2;
 }

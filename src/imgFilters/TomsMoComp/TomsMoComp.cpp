@@ -70,8 +70,8 @@ From the Readme_TomsMoComp.txt file:
 #include <malloc.h>
 #include <string.h>
 #include <unknwn.h>
-#include "TomsMoComp_ff.h"
 #include <inttypes.h>
+#include "TomsMoComp_ff.h"
 #include "../../simd.h"
 #include "../../compiler.h"
 

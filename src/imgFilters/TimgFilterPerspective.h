@@ -20,7 +20,7 @@ void resampleLinear(uint8_t *dst, stride_t dstStride, const uint8_t *src, stride
 void resampleCubic (uint8_t *dst, stride_t dstStride, const uint8_t *src, stride_t srcStride, int w, int h, int chromaX,int chromaY,unsigned char black);
 TcubicTable cubic;
 protected:
-virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
+virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
     return FF_CSPS_MASK_YUV_PLANAR;
 }

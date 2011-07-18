@@ -636,7 +636,7 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
                     frametype|=FRAME_TYPE::QPEL;
                 }
 
-                int csp=csp_lavc2ffdshow(avctx->pix_fmt);
+                uint64_t csp=csp_lavc2ffdshow(avctx->pix_fmt);
 
                 if (grayscale) {
                     // workaround for green picture when decoding mpeg with CODEC_FLAG_GRAY, the problem is probably somewhere else
@@ -1081,7 +1081,7 @@ bool TvideoCodecLibavcodec::getExtradata(const void* *ptr,size_t *len)
     return true;
 }
 
-LRESULT TvideoCodecLibavcodec::beginCompress(int cfgcomode,int csp,const Trect &r)
+LRESULT TvideoCodecLibavcodec::beginCompress(int cfgcomode,uint64_t csp,const Trect &r)
 {
     _mm_empty();
 

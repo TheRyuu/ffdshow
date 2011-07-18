@@ -42,7 +42,7 @@ protected:
 public:
     TimgFiltersProc(IffdshowBase *Ideci,IprocVideoSink *Isink):TimgFilters(Ideci,Isink),outputConvert(Ideci,this) {
     }
-    HRESULT processConvert(TffPict &pict,const TpresetVideo *cfg,int outcsp) {
+    HRESULT processConvert(TffPict &pict,const TpresetVideo *cfg,uint64_t outcsp) {
         outputConvertCfg.csp=outcsp;
         return TimgFilters::process(pict,cfg);
     }
@@ -75,7 +75,7 @@ public:
         }
     }
 
-    HRESULT processPict(TffPict &pict,int outcsp) {
+    HRESULT processPict(TffPict &pict,uint64_t outcsp) {
         if (!imgFilters) {
             imgFilters=createImgFilters();
         }
@@ -142,11 +142,11 @@ STDMETHODIMP TffProcVideo::end(void)
     return S_OK;
 }
 
-STDMETHODIMP TffProcVideo::process(unsigned int framenum,int incsp,const unsigned char *src[4],stride_t srcStride[4],int ro,int outcsp,unsigned char *dst[4],stride_t dstStride[4])
+STDMETHODIMP TffProcVideo::process(unsigned int framenum,uint64_t incsp,const unsigned char *src[4],stride_t srcStride[4],int ro,uint64_t outcsp,unsigned char *dst[4],stride_t dstStride[4])
 {
     return processTime(framenum,REF_SECOND_MULT*fpsDen*framenum/fpsNum,REF_SECOND_MULT*fpsDen*(framenum+1)/fpsNum,incsp,src,srcStride,ro,outcsp,dst,dstStride);
 }
-STDMETHODIMP TffProcVideo::processTime(unsigned int framenum,int64_t ref_start,int64_t ref_stop,int incsp,const unsigned char *src[4],stride_t srcStride[4],int ro,int Ioutcsp,unsigned char *Idst[4],stride_t IdstStride[4])
+STDMETHODIMP TffProcVideo::processTime(unsigned int framenum,int64_t ref_start,int64_t ref_stop,uint64_t incsp,const unsigned char *src[4],stride_t srcStride[4],int ro,uint64_t Ioutcsp,unsigned char *Idst[4],stride_t IdstStride[4])
 {
     if (!Idst || !IdstStride) {
         return S_FALSE;
@@ -168,7 +168,7 @@ STDMETHODIMP TffProcVideo::processTime(unsigned int framenum,int64_t ref_start,i
     }
     return hr;
 }
-HRESULT TffProcVideo::processPict(unsigned int framenum,TffPict &pict,int outcsp)
+HRESULT TffProcVideo::processPict(unsigned int framenum,TffPict &pict,uint64_t outcsp)
 {
     deci->putParam(IDFF_currentFrame,framenum);
     return proc->processPict(pict,outcsp);
@@ -204,7 +204,7 @@ STDMETHODIMP TffProcVideo::deliverProcessedSample(TffPict &pict)
     return S_OK;
 }
 
-STDMETHODIMP_(const TcspInfo*) TffProcVideo::getCspInfo(int csp)
+STDMETHODIMP_(const TcspInfo*) TffProcVideo::getCspInfo(uint64_t csp)
 {
     return csp_getInfo(csp);
 }

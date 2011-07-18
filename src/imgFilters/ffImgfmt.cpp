@@ -268,11 +268,11 @@ const TcspFcc cspFccs[]= {
     NULL,0
 };
 
-char_t* csp_getName(int csp,char_t *buf,size_t len)
+char_t* csp_getName(uint64_t csp,char_t *buf,size_t len)
 {
     return csp_getName2(csp_getInfo(csp),csp,buf,len);
 }
-char_t* csp_getName2(const TcspInfo *cspInfo,int csp,char_t *buf,size_t len)
+char_t* csp_getName2(const TcspInfo *cspInfo,uint64_t csp,char_t *buf,size_t len)
 {
     const char_t *colorspaceName=cspInfo?cspInfo->name:_l("unknown");
     tsnprintf_s(buf,
@@ -301,9 +301,9 @@ const TcspInfo* csp_getInfoFcc(FOURCC fcccsp)
     }
 }
 
-int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
+uint64_t csp_bestMatch(uint64_t inCSP,uint64_t wantedCSPS,int *rank)
 {
-    int outCSP=inCSP&wantedCSPS&FF_CSPS_MASK;
+    uint64_t outCSP=inCSP&wantedCSPS&FF_CSPS_MASK;
     if (outCSP) {
         if (rank) {
             *rank=100;
@@ -311,10 +311,10 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
         return outCSP|(inCSP&~FF_CSPS_MASK);
     }
 
-    const int *bestcsps=NULL;
+    const uint64_t *bestcsps=NULL;
     switch (inCSP&FF_CSPS_MASK) {
         case FF_CSP_420P: {
-            static const int best[FF_CSPS_NUM]= {
+            static const uint64_t best[FF_CSPS_NUM]= {
                 FF_CSP_NV12 ,
                 FF_CSP_ABGR ,
                 FF_CSP_RGBA ,
@@ -340,7 +340,7 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
             break;
         }
         case FF_CSP_422P: {
-            static const int best[FF_CSPS_NUM]= {
+            static const uint64_t best[FF_CSPS_NUM]= {
                 FF_CSP_YUY2 ,
                 FF_CSP_UYVY ,
                 FF_CSP_YVYU ,
@@ -366,7 +366,7 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
             break;
         }
         case FF_CSP_444P: {
-            static const int best[FF_CSPS_NUM]= {
+            static const uint64_t best[FF_CSPS_NUM]= {
                 FF_CSP_ABGR ,
                 FF_CSP_RGBA ,
                 FF_CSP_BGR32,
@@ -392,7 +392,7 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
             break;
         }
         case FF_CSP_411P: {
-            static const int best[FF_CSPS_NUM]= {
+            static const uint64_t best[FF_CSPS_NUM]= {
                 FF_CSP_ABGR ,
                 FF_CSP_RGBA ,
                 FF_CSP_BGR32,
@@ -418,7 +418,7 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
             break;
         }
         case FF_CSP_410P: {
-            static const int best[FF_CSPS_NUM]= {
+            static const uint64_t best[FF_CSPS_NUM]= {
                 FF_CSP_ABGR ,
                 FF_CSP_RGBA ,
                 FF_CSP_BGR32,
@@ -445,7 +445,7 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
         }
 
         case FF_CSP_YUY2: {
-            static const int best[FF_CSPS_NUM]= {
+            static const uint64_t best[FF_CSPS_NUM]= {
                 FF_CSP_UYVY ,
                 FF_CSP_YVYU ,
                 FF_CSP_VYUY ,
@@ -471,7 +471,7 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
             break;
         }
         case FF_CSP_UYVY: {
-            static const int best[FF_CSPS_NUM]= {
+            static const uint64_t best[FF_CSPS_NUM]= {
                 FF_CSP_YUY2 ,
                 FF_CSP_YVYU ,
                 FF_CSP_VYUY ,
@@ -497,7 +497,7 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
             break;
         }
         case FF_CSP_YVYU: {
-            static const int best[FF_CSPS_NUM]= {
+            static const uint64_t best[FF_CSPS_NUM]= {
                 FF_CSP_YUY2 ,
                 FF_CSP_UYVY ,
                 FF_CSP_VYUY ,
@@ -523,7 +523,7 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
             break;
         }
         case FF_CSP_VYUY: {
-            static const int best[FF_CSPS_NUM]= {
+            static const uint64_t best[FF_CSPS_NUM]= {
                 FF_CSP_YUY2 ,
                 FF_CSP_UYVY ,
                 FF_CSP_YVYU ,
@@ -550,7 +550,7 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
         }
 
         case FF_CSP_ABGR: {
-            static const int best[FF_CSPS_NUM]= {
+            static const uint64_t best[FF_CSPS_NUM]= {
                 FF_CSP_RGBA ,
                 FF_CSP_BGR32,
                 FF_CSP_RGB32,
@@ -576,7 +576,7 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
             break;
         }
         case FF_CSP_RGBA: {
-            static const int best[FF_CSPS_NUM]= {
+            static const uint64_t best[FF_CSPS_NUM]= {
                 FF_CSP_ABGR ,
                 FF_CSP_BGR32,
                 FF_CSP_RGB32,
@@ -602,7 +602,7 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
             break;
         }
         case FF_CSP_BGR32: {
-            static const int best[FF_CSPS_NUM]= {
+            static const uint64_t best[FF_CSPS_NUM]= {
                 FF_CSP_ABGR ,
                 FF_CSP_RGBA ,
                 FF_CSP_RGB32,
@@ -628,7 +628,7 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
             break;
         }
         case FF_CSP_BGR24: {
-            static const int best[FF_CSPS_NUM]= {
+            static const uint64_t best[FF_CSPS_NUM]= {
                 FF_CSP_RGB24,
                 FF_CSP_BGR32,
                 FF_CSP_ABGR ,
@@ -654,7 +654,7 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
             break;
         }
         case FF_CSP_BGR15: {
-            static const int best[FF_CSPS_NUM]= {
+            static const uint64_t best[FF_CSPS_NUM]= {
                 FF_CSP_BGR32,
                 FF_CSP_ABGR ,
                 FF_CSP_RGBA ,
@@ -680,7 +680,7 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
             break;
         }
         case FF_CSP_BGR16: {
-            static const int best[FF_CSPS_NUM]= {
+            static const uint64_t best[FF_CSPS_NUM]= {
                 FF_CSP_BGR32,
                 FF_CSP_BGR24,
                 FF_CSP_BGR15,
@@ -706,7 +706,7 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
             break;
         }
         case FF_CSP_RGB32: {
-            static const int best[FF_CSPS_NUM]= {
+            static const uint64_t best[FF_CSPS_NUM]= {
                 FF_CSP_ABGR ,
                 FF_CSP_RGBA ,
                 FF_CSP_BGR32,
@@ -732,7 +732,7 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
             break;
         }
         case FF_CSP_RGB24: {
-            static const int best[FF_CSPS_NUM]= {
+            static const uint64_t best[FF_CSPS_NUM]= {
                 FF_CSP_BGR24,
                 FF_CSP_ABGR ,
                 FF_CSP_RGBA ,
@@ -758,7 +758,7 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
             break;
         }
         case FF_CSP_RGB15: {
-            static const int best[FF_CSPS_NUM]= {
+            static const uint64_t best[FF_CSPS_NUM]= {
                 FF_CSP_BGR15,
                 FF_CSP_RGB32,
                 FF_CSP_RGB24,
@@ -784,7 +784,7 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
             break;
         }
         case FF_CSP_RGB16: {
-            static const int best[FF_CSPS_NUM]= {
+            static const uint64_t best[FF_CSPS_NUM]= {
                 FF_CSP_RGB15,
                 FF_CSP_RGB32,
                 FF_CSP_RGB24,
@@ -810,7 +810,7 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
             break;
         }
         case FF_CSP_CLJR: {
-            static const int best[FF_CSPS_NUM]= {
+            static const uint64_t best[FF_CSPS_NUM]= {
                 FF_CSP_ABGR ,
                 FF_CSP_RGBA ,
                 FF_CSP_BGR32,
@@ -837,7 +837,7 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
             break;
         }
         case FF_CSP_Y800: {
-            static const int best[FF_CSPS_NUM]= {
+            static const uint64_t best[FF_CSPS_NUM]= {
                 FF_CSP_ABGR ,
                 FF_CSP_RGBA ,
                 FF_CSP_BGR32,
@@ -864,7 +864,7 @@ int csp_bestMatch(int inCSP,int wantedCSPS,int *rank)
             break;
         }
         case FF_CSP_NV12: {
-            static const int best[FF_CSPS_NUM]= {
+            static const uint64_t best[FF_CSPS_NUM]= {
                 FF_CSP_420P ,
                 FF_CSP_ABGR ,
                 FF_CSP_RGBA ,
@@ -927,14 +927,14 @@ bool TcspInfos::TsortFc::operator ()(const TcspInfo* &csp1,const TcspInfo* &csp2
     csp_bestMatch(csp,csp2->id,&rank2);
     return rank1>rank2;
 }
-void TcspInfos::sort(int csp)
+void TcspInfos::sort(uint64_t csp)
 {
     std::sort(begin(),end(),TsortFc(csp&FF_CSPS_MASK));
 }
 
-int getBMPcolorspace(const BITMAPINFOHEADER *hdr,const TcspInfos &forcedCsps)
+uint64_t getBMPcolorspace(const BITMAPINFOHEADER *hdr,const TcspInfos &forcedCsps)
 {
-    int csp;
+    uint64_t csp;
     switch(hdr->biCompression) {
         case BI_RGB:
             switch (hdr->biBitCount) {

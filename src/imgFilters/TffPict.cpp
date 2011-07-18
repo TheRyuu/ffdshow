@@ -118,7 +118,7 @@ void TffPict::init(void)
     fieldtype=FIELD_TYPE::PROGRESSIVE_FRAME;
     common_init();
 }
-void TffPict::init(int Icsp,unsigned char *Idata[4],const stride_t Istride[4],const Trect &r,bool Iro,int Iframetype,int Ifieldtype,size_t IsrcSize,const Tpalette &Ipalette)
+void TffPict::init(uint64_t Icsp,unsigned char *Idata[4],const stride_t Istride[4],const Trect &r,bool Iro,int Iframetype,int Ifieldtype,size_t IsrcSize,const Tpalette &Ipalette)
 {
     cspInfo=*csp_getInfo(csp=Icsp);
     frametype=Iframetype;
@@ -140,7 +140,7 @@ void TffPict::init(int Icsp,unsigned char *Idata[4],const stride_t Istride[4],co
     srcSize=IsrcSize;
     common_init();
 }
-TffPict::TffPict(int Icsp,unsigned char *Idata[4],const stride_t Istride[4],const Trect &r,bool Iro,int Iframetype,int Ifieldtype,size_t IsrcSize,IMediaSample *pIn,const Tpalette &Ipalette)
+TffPict::TffPict(uint64_t Icsp,unsigned char *Idata[4],const stride_t Istride[4],const Trect &r,bool Iro,int Iframetype,int Ifieldtype,size_t IsrcSize,IMediaSample *pIn,const Tpalette &Ipalette)
 {
     init(Icsp,Idata,Istride,r,Iro,Iframetype,Ifieldtype,IsrcSize,Ipalette);
     if (pIn) {
@@ -148,7 +148,7 @@ TffPict::TffPict(int Icsp,unsigned char *Idata[4],const stride_t Istride[4],cons
         setDiscontinuity(pIn);
     }
 }
-TffPict::TffPict(int Icsp,unsigned char *data[4],const stride_t stride[4],const Trect &r,bool ro,IMediaSample *pIn,const Tpalette &Ipalette,bool isInterlacedRawVideo)
+TffPict::TffPict(uint64_t Icsp,unsigned char *data[4],const stride_t stride[4],const Trect &r,bool ro,IMediaSample *pIn,const Tpalette &Ipalette,bool isInterlacedRawVideo)
 {
     init(Icsp,data,stride,r,ro,FRAME_TYPE::fromSample(pIn),FIELD_TYPE::fromSample(pIn,isInterlacedRawVideo),pIn?pIn->GetSize():0,Ipalette);
     if (pIn) {
@@ -175,7 +175,7 @@ void TffPict::setDiscontinuity(IMediaSample *pIn)
         discontinuity = true;
     }
 }
-void TffPict::readLibavcodec(int Icsp,const char_t *flnm,const char_t *ext,Tbuffer &buf,IffdshowBase *deci)
+void TffPict::readLibavcodec(uint64_t Icsp,const char_t *flnm,const char_t *ext,Tbuffer &buf,IffdshowBase *deci)
 {
     Tlibavcodec *libavcodec;
     if (FAILED(deci->getLibavcodec(&libavcodec))) {
@@ -221,7 +221,7 @@ void TffPict::readLibavcodec(int Icsp,const char_t *flnm,const char_t *ext,Tbuff
     libavcodec->av_free(avctx);
     libavcodec->Release();
 }
-void TffPict::readOle(int Icsp,const char_t *flnm,const char_t *ext,Tbuffer &buf,IffdshowBase *deci)
+void TffPict::readOle(uint64_t Icsp,const char_t *flnm,const char_t *ext,Tbuffer &buf,IffdshowBase *deci)
 {
     //wchar_t flnmL[MAX_PATH];memset(flnmL,0,sizeof(flnmL));nCopyAnsiToWideChar(flnmL,flnm);
     comptr<IPicture> ip;
@@ -266,7 +266,7 @@ void TffPict::readOle(int Icsp,const char_t *flnm,const char_t *ext,Tbuffer &buf
     }
 }
 
-TffPict::TffPict(int Icsp,const char_t *flnm,Tbuffer &buf,IffdshowBase *deci)
+TffPict::TffPict(uint64_t Icsp,const char_t *flnm,Tbuffer &buf,IffdshowBase *deci)
 {
     init();
     if (!fileexists(flnm)) {
@@ -392,7 +392,7 @@ void TffPict::copyFrom(const TffPict &p,Tbuffer &buf,const Trect *rectCopy)
             copy(data[i],stride[i],p.data[i]+p.stride[i]*(rectCopy->y>>p.cspInfo.shiftY[i])+(rectCopy->x>>p.cspInfo.shiftX[i]),p.stride[i],cspInfo.Bpp*(rectFull.dx>>cspInfo.shiftX[i]),rectFull.dy>>cspInfo.shiftY[i]);
         }
 }
-void TffPict::setCSP(int Icsp)
+void TffPict::setCSP(uint64_t Icsp)
 {
     cspInfo=*csp_getInfo(csp=Icsp);
 }
@@ -400,7 +400,7 @@ void TffPict::setCSP(int Icsp)
 /**
  * Prepare picture buffer for new image and fill it with converted image.
  */
-void TffPict::convertCSP(int Icsp,Tbuffer &buf,Tconvert *convert,int edge)
+void TffPict::convertCSP(uint64_t Icsp,Tbuffer &buf,Tconvert *convert,int edge)
 {
     if (csp&FF_CSP_FLAGS_YUV_ADJ) {
         csp_yuv_adj_to_plane(csp,&cspInfo,rectFull.dy,data,stride);
@@ -409,12 +409,12 @@ void TffPict::convertCSP(int Icsp,Tbuffer &buf,Tconvert *convert,int edge)
     if (csp&FF_CSP_FLAGS_YUV_ORDER) {
         csp_yuv_order(csp,data,stride);
     }
-    int csp0=csp;
+    uint64_t csp0=csp;
     const unsigned char *data0[4]= {data[0],data[1],data[2],data[3]};
     stride_t stride0[4]= {stride[0],stride[1],stride[2],stride[3]};
     Tpalette palette0=palette;
     convertCSP(Icsp,buf,edge);
-    int csp2=csp0;
+    uint64_t csp2=csp0;
     if (!(fieldtype & FIELD_TYPE::PROGRESSIVE_FRAME) && (fieldtype & FIELD_TYPE::MASK_INT)) {
         csp2 |= FF_CSP_FLAGS_INTERLACED;
     }
@@ -427,7 +427,7 @@ void TffPict::convertCSP(int Icsp,Tbuffer &buf,Tconvert *convert,int edge)
  * No real color space conversion here.
  * Note: the original implementer decided that if the buffer is already big enough to contain the new picture, existing data will not be overwritten (by an empty picture) (this applies to the TBuffer class as well)
  */
-void TffPict::convertCSP(int Icsp,Tbuffer &buf,int edge)
+void TffPict::convertCSP(uint64_t Icsp,Tbuffer &buf,int edge)
 {
     cspInfo=*csp_getInfo(csp=Icsp);
     if (csp_isYUVplanar(csp)) {
@@ -480,7 +480,7 @@ void TffPict::convertCSP(int Icsp,Tbuffer &buf,int edge)
     }
     calcDiff();
 }
-void TffPict::alloc(unsigned int dx,unsigned int dy,int Icsp,Tbuffer &buf,int edge)
+void TffPict::alloc(unsigned int dx,unsigned int dy,uint64_t Icsp,Tbuffer &buf,int edge)
 {
     rectFull=rectClip=Trect(0,0,dx,dy);
     convertCSP(Icsp,buf,edge);

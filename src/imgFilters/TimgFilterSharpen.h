@@ -13,7 +13,7 @@ unsigned char *aline;
 asharp_run_fct *asharp_run;
 protected:
 virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
-virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
+virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
     return FF_CSPS_MASK_YUV_PLANAR;
 }
@@ -38,11 +38,11 @@ SwsFilter *swsf;
 int oldavcodecsharpenluma,oldavcodecsharpenchroma;
 protected:
 virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
-virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
+virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
     return SWS_IN_CSPS;
 }
-virtual int getSupportedOutputColorspaces(const TfilterSettingsVideo *cfg) const
+virtual uint64_t getSupportedOutputColorspaces(const TfilterSettingsVideo *cfg) const
 {
     return SWS_OUT_CSPS;
 }
@@ -66,7 +66,7 @@ void (TimgFilterUnsharp::*unsharpFc)(const TsharpenSettings *cfg,const unsigned 
 template<class _mm> void unsharp(const TsharpenSettings *cfg,const unsigned char *src,unsigned char *dst,unsigned short *sum);
 protected:
 virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
-virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
+virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
     return FF_CSPS_MASK_YUV_PLANAR;
 }
@@ -88,7 +88,7 @@ void (TimgFilterXsharp::*xsharpenFc)(unsigned int dx1,unsigned int dy1,const Tsh
 template<class _mm> void xsharpen(unsigned int dx1,unsigned int dy1,const TsharpenSettings *cfg,const unsigned char *srcY,stride_t stride1,unsigned char *dstY,stride_t stride2);
 protected:
 virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
-virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
+virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
     return FF_CSPS_MASK_YUV_PLANAR;
 }
@@ -110,7 +110,7 @@ unsigned char *blur,*work;
 T3x3blurSWS *blur3x3;
 protected:
 virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
-virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
+virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
     return FF_CSPS_MASK_YUV_PLANAR;
 }

@@ -211,7 +211,7 @@ int TimgFilterYadif::config(TffPict &pict)
     for(i = 0 ; i < 3 ; i++) {
         yadctx->shiftX[i] = pict.cspInfo.shiftX[i];
         yadctx->shiftY[i] = pict.cspInfo.shiftY[i];
-        stride_t ffdshow_w = ((pict.rectFull.dx >> yadctx->shiftX[i])/16 + 2) * 16; // from void TffPict::convertCSP(int Icsp,Tbuffer &buf,int edge)
+        stride_t ffdshow_w = ((pict.rectFull.dx >> yadctx->shiftX[i])/16 + 2) * 16; // from void TffPict::convertCSP(uint64_t Icsp,Tbuffer &buf,int edge)
         stride_t w = std::max(pict.stride[i], ffdshow_w);
         int h = ((pict.rectFull.dy + (6 << yadctx->shiftY[i]) + 31) & (~31)) >> yadctx->shiftY[i];
 

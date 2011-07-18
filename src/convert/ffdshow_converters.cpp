@@ -26,8 +26,8 @@
 #pragma warning (disable: 4799) // EMMS
 #endif
 
-void TffdshowConverters::init(int incsp,   // FF_CSP_420P, FF_CSP_NV12, FF_CSP_YUY2 or FF_CSP_420P (progressive only)
-                              int outcsp,                     // FF_CSP_RGB32 or FF_CSP_RGB24
+void TffdshowConverters::init(uint64_t incsp,                 // FF_CSP_420P, FF_CSP_NV12, FF_CSP_YUY2 or FF_CSP_420P (progressive only)
+                              uint64_t outcsp,                // FF_CSP_RGB32 or FF_CSP_RGB24
                               ffYCbCr_RGB_MatrixCoefficientsType cspOptionsIturBt,  // ffYCbCr_RGB_coeff_ITUR_BT601, ffYCbCr_RGB_coeff_ITUR_BT709 or ffYCbCr_RGB_coeff_SMPTE240M
                               int input_Y_white_level,        // input Y level (TV:235, PC:255)
                               int input_Y_black_level,        // input Y level (TV:16, PC:0)
@@ -96,7 +96,7 @@ void TffdshowConverters::convert(const uint8_t* srcY,
 #endif
 }
 
-template<int incsp, int outcsp, int left_edge, int right_edge, int rgb_limit, int aligned, bool dithering> __forceinline
+template<uint64_t incsp, uint64_t outcsp, int left_edge, int right_edge, int rgb_limit, int aligned, bool dithering> __forceinline
 void TffdshowConverters::convert_a_unit(const unsigned char* &srcY,
                                         const unsigned char* &srcCb,
                                         const unsigned char* &srcCr,
@@ -519,7 +519,7 @@ template <int rgb_limit> void TffdshowConverters::convert_translate_incsp(
     }
 }
 
-template <int incsp, int rgb_limit> void TffdshowConverters::convert_translate_outcsp(
+template <uint64_t incsp, int rgb_limit> void TffdshowConverters::convert_translate_outcsp(
     const uint8_t* srcY,
     const uint8_t* srcCb,
     const uint8_t* srcCr,
@@ -546,7 +546,7 @@ template <int incsp, int rgb_limit> void TffdshowConverters::convert_translate_o
     }
 }
 
-template <int incsp, int outcsp, int rgb_limit> void TffdshowConverters::convert_translate_align(
+template <uint64_t incsp, uint64_t outcsp, int rgb_limit> void TffdshowConverters::convert_translate_align(
     const uint8_t* srcY,
     const uint8_t* srcCb,
     const uint8_t* srcCr,
@@ -564,7 +564,7 @@ template <int incsp, int outcsp, int rgb_limit> void TffdshowConverters::convert
     }
 }
 
-template <int incsp, int outcsp, int rgb_limit, int aligned> void TffdshowConverters::convert_translate_dithering(
+template <uint64_t incsp, uint64_t outcsp, int rgb_limit, int aligned> void TffdshowConverters::convert_translate_dithering(
     const uint8_t* srcY,
     const uint8_t* srcCb,
     const uint8_t* srcCr,
@@ -582,7 +582,7 @@ template <int incsp, int outcsp, int rgb_limit, int aligned> void TffdshowConver
     }
 }
 
-template <int incsp, int outcsp, int rgb_limit, int aligned, bool dithering> void TffdshowConverters::convert_main(
+template <uint64_t incsp, uint64_t outcsp, int rgb_limit, int aligned, bool dithering> void TffdshowConverters::convert_main(
     const uint8_t* srcY,
     const uint8_t* srcCb,
     const uint8_t* srcCr,
@@ -639,7 +639,7 @@ template <bool dithering> __forceinline const uint16_t* get_dither_ptr(uint16_t 
     }
 }
 
-template <int incsp, int outcsp, int rgb_limit, int aligned, bool dithering> void TffdshowConverters::convert_main_loop(
+template <uint64_t incsp, uint64_t outcsp, int rgb_limit, int aligned, bool dithering> void TffdshowConverters::convert_main_loop(
     const uint8_t* srcY,
     const uint8_t* srcCb,
     const uint8_t* srcCr,

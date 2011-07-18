@@ -127,7 +127,7 @@ public:
     };
 };
 
-typedef vectorEx<int,array_allocator<int,FF_CSPS_NUM> > Tcsps;
+typedef vectorEx<uint64_t,array_allocator<uint64_t,FF_CSPS_NUM> > Tcsps;
 typedef vectorEx<FOURCC> Tfourccs;
 
 struct Tencoder {
@@ -210,7 +210,7 @@ public:
     virtual bool prepareHeader(BITMAPINFOHEADER *outhdr) {
         return false;
     }
-    virtual LRESULT beginCompress(int cfgcomode,int csp,const Trect &r)=0;
+    virtual LRESULT beginCompress(int cfgcomode,uint64_t csp,const Trect &r)=0;
     virtual bool supExtradata(void) {
         return false;
     }

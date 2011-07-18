@@ -14,49 +14,53 @@
 // destination byte order for the file.
 // (e.g. PNG images uses RGB order, so select BGR order
 // BMP image uses BGR order, so select RGB order)
-enum ffdshow_colorspaces {
-    FF_CSP_NULL       =     0,
 
-    FF_CSP_420P       = 1U<< 0,
-    FF_CSP_422P       = 1U<< 1,
-    FF_CSP_444P       = 1U<< 2,
-    FF_CSP_411P       = 1U<< 3,
-    FF_CSP_410P       = 1U<< 4,
+/* ffdshow colorspace ids, values should be unique including flag values, and must fit inside a uint64_t
+ * (an enum should be used instead of defines, but GCC does not support an enum with type uint64_t ?)
+ */
+#define FF_CSP_NULL  (0ULL)
 
-    FF_CSP_YUY2       = 1U<< 5,
-    FF_CSP_UYVY       = 1U<< 6,
-    FF_CSP_YVYU       = 1U<< 7,
-    FF_CSP_VYUY       = 1U<< 8,
+#define FF_CSP_420P  (1ULL << 0)
+#define FF_CSP_422P  (1ULL << 1)
+#define FF_CSP_444P  (1ULL << 2)
+#define FF_CSP_411P  (1ULL << 3)
+#define FF_CSP_410P  (1ULL << 4)
 
-    FF_CSP_ABGR       = 1U<< 9,  // [a|b|g|r]
-    FF_CSP_RGBA       = 1U<<10,  // [r|g|b|a]
-    FF_CSP_BGR32      = 1U<<11,
-    FF_CSP_BGR24      = 1U<<12,
-    FF_CSP_BGR15      = 1U<<13,
-    FF_CSP_BGR16      = 1U<<14,
-    FF_CSP_RGB32      = 1U<<15,
-    FF_CSP_RGB24      = 1U<<16,
-    FF_CSP_RGB15      = 1U<<17,
-    FF_CSP_RGB16      = 1U<<18,
+#define FF_CSP_YUY2  (1ULL << 5)
+#define FF_CSP_UYVY  (1ULL << 6)
+#define FF_CSP_YVYU  (1ULL << 7)
+#define FF_CSP_VYUY  (1ULL << 8)
 
-    FF_CSP_CLJR       = 1U<<19,
-    FF_CSP_Y800       = 1U<<20,
-    FF_CSP_NV12       = 1U<<21
-};
+#define FF_CSP_ABGR  (1ULL << 9)  // [a|b|g|r]
+#define FF_CSP_RGBA  (1ULL << 10) // [r|g|b|a]
+#define FF_CSP_BGR32 (1ULL << 11)
+#define FF_CSP_BGR24 (1ULL << 12)
+#define FF_CSP_BGR15 (1ULL << 13)
+#define FF_CSP_BGR16 (1ULL << 14)
+#define FF_CSP_RGB32 (1ULL << 15)
+#define FF_CSP_RGB24 (1ULL << 16)
+#define FF_CSP_RGB15 (1ULL << 17)
+#define FF_CSP_RGB16 (1ULL << 18)
 
-#define FF_CSPS_NUM 23
+#define FF_CSP_CLJR  (1ULL << 19)
+#define FF_CSP_Y800  (1ULL << 20)
+#define FF_CSP_NV12  (1ULL << 21)
 
-#define FF_CSPS_MASK            ((2<<FF_CSPS_NUM)-1)
+// Flags
+#define FF_CSP_FLAGS_YUV_JPEG   (1ULL << 59)
+#define FF_CSP_FLAGS_YUV_ORDER  (1ULL << 60) // UV ordered chroma planes (not VU as default)
+#define FF_CSP_FLAGS_YUV_ADJ    (1ULL << 61) // YUV planes are stored consecutively in one memory block
+#define FF_CSP_FLAGS_INTERLACED (1ULL << 62)
+#define FF_CSP_FLAGS_VFLIP      (1ULL << 63) // flip mask
+
+
+#define FF_CSPS_NUM 22
+
+#define FF_CSPS_MASK            ((1ULL << FF_CSPS_NUM)-1)
 #define FF_CSPS_MASK_YUV_PLANAR (FF_CSP_420P|FF_CSP_422P|FF_CSP_444P|FF_CSP_411P|FF_CSP_410P)
 #define FF_CSPS_MASK_YUV_PACKED (FF_CSP_YUY2|FF_CSP_UYVY|FF_CSP_YVYU|FF_CSP_VYUY)
 #define FF_CSPS_MASK_RGB        (FF_CSP_RGBA|FF_CSP_RGB32|FF_CSP_RGB24|FF_CSP_RGB15|FF_CSP_RGB16)
 #define FF_CSPS_MASK_BGR        (FF_CSP_ABGR|FF_CSP_BGR32|FF_CSP_BGR24|FF_CSP_BGR15|FF_CSP_BGR16)
-
-#define FF_CSP_FLAGS_VFLIP      (1U<<31)   // flip mask
-#define FF_CSP_FLAGS_INTERLACED (1U<<30)
-#define FF_CSP_FLAGS_YUV_ADJ    (1U<<29)   // YUV planes are stored consecutively in one memory block
-#define FF_CSP_FLAGS_YUV_ORDER  (1U<<28)   // UV ordered chroma planes (not VU as default)
-#define FF_CSP_FLAGS_YUV_JPEG   (1U<<27)
 
 #include <stddef.h>
 typedef ptrdiff_t stride_t;
@@ -80,7 +84,7 @@ typedef ptrdiff_t stride_t;
 #define XVID4_CSP_NULL     (1<<14) /* decoder only: dont output anything */
 #define XVID4_CSP_VFLIP    (1<<31) /* vertical flip mask */
 
-static __inline int csp_xvid4_2ffdshow(int csp)
+static __inline uint64_t csp_xvid4_2ffdshow(uint64_t csp)
 {
     switch (csp) {
         case XVID4_CSP_BGR   :
@@ -113,7 +117,7 @@ static __inline int csp_xvid4_2ffdshow(int csp)
 }
 
 //================================= ffmpeg ===================================
-static __inline int csp_lavc2ffdshow(enum PixelFormat pix_fmt)
+static __inline uint64_t csp_lavc2ffdshow(enum PixelFormat pix_fmt)
 {
     switch (pix_fmt) {
         case PIX_FMT_YUV420P :
@@ -155,7 +159,7 @@ static __inline int csp_lavc2ffdshow(enum PixelFormat pix_fmt)
             return FF_CSP_NULL;
     }
 }
-static __inline enum PixelFormat csp_ffdshow2lavc(int pix_fmt)
+static __inline enum PixelFormat csp_ffdshow2lavc(uint64_t pix_fmt)
 {
     switch (pix_fmt&FF_CSPS_MASK) {
         case FF_CSP_420P:
@@ -240,11 +244,11 @@ static __inline enum PixelFormat csp_ffdshow2lavc(int pix_fmt)
   FF_CSP_Y800        \
  )
 
-static __inline int csp_supSWSin(int x)
+static __inline uint64_t csp_supSWSin(uint64_t x)
 {
     return (x&FF_CSPS_MASK)&SWS_IN_CSPS;
 }
-static __inline int csp_supSWSout(int x)
+static __inline uint64_t csp_supSWSout(uint64_t x)
 {
     return (x&FF_CSPS_MASK)&SWS_OUT_CSPS;
 }
@@ -275,16 +279,16 @@ struct TcspInfos :std::vector<const TcspInfo*,array_allocator<const TcspInfo*,FF
 private:
     struct TsortFc {
     private:
-        int csp;
+        uint64_t csp;
     public:
-        TsortFc(int Icsp):csp(Icsp) {}
+        TsortFc(uint64_t Icsp):csp(Icsp) {}
         bool operator ()(const TcspInfo* &csp1,const TcspInfo* &csp2);
     };
 public:
-    void sort(int csp);
+    void sort(uint64_t csp);
 };
 
-static __inline const TcspInfo* csp_getInfo(int csp)
+static __inline const TcspInfo* csp_getInfo(uint64_t csp)
 {
     switch (csp&(FF_CSPS_MASK|FF_CSP_FLAGS_YUV_ORDER)) {
         case FF_CSP_420P|FF_CSP_FLAGS_YUV_ORDER: {
@@ -313,46 +317,46 @@ static __inline const TcspInfo* csp_getInfo(int csp)
 }
 const TcspInfo* csp_getInfoFcc(FOURCC fcc);
 
-static __inline int csp_isYUVplanar(int x)
+static __inline uint64_t csp_isYUVplanar(uint64_t x)
 {
     return x&FF_CSPS_MASK&FF_CSPS_MASK_YUV_PLANAR;
 }
-static __inline int csp_isYUVpacked(int x)
+static __inline uint64_t csp_isYUVpacked(uint64_t x)
 {
     return x&FF_CSPS_MASK&FF_CSPS_MASK_YUV_PACKED;
 }
-static __inline int csp_isYUV(int x)
+static __inline uint64_t csp_isYUV(uint64_t x)
 {
     return csp_isYUVpacked(x)|csp_isYUVplanar(x);
 }
-static __inline int csp_isYUV_NV(int x)
+static __inline uint64_t csp_isYUV_NV(uint64_t x)
 {
     return csp_isYUVpacked(x)|csp_isYUVplanar(x)|(x & FF_CSP_NV12);
 }
-static __inline int csp_isRGB_RGB(int x)
+static __inline uint64_t csp_isRGB_RGB(uint64_t x)
 {
     return x&FF_CSPS_MASK&FF_CSPS_MASK_RGB;
 }
-static __inline int csp_isRGB_BGR(int x)
+static __inline uint64_t csp_isRGB_BGR(uint64_t x)
 {
     return x&FF_CSPS_MASK&FF_CSPS_MASK_BGR;
 }
-static __inline int csp_isRGB(int x)
+static __inline uint64_t csp_isRGB(uint64_t x)
 {
     return csp_isRGB_RGB(x)|csp_isRGB_BGR(x);
 }
-static __inline int csp_supXvid(int x)
+static __inline uint64_t csp_supXvid(uint64_t x)
 {
     return (x&FF_CSPS_MASK)&(FF_CSP_RGB24|FF_CSP_420P|FF_CSP_YUY2|FF_CSP_UYVY|FF_CSP_YVYU|FF_CSP_VYUY|FF_CSP_RGB15|FF_CSP_RGB16|FF_CSP_RGB32|FF_CSP_ABGR|FF_CSP_RGBA|FF_CSP_BGR24);
 }
 
 bool csp_inFOURCCmask(int x,FOURCC fcc);
 
-extern char_t* csp_getName2(const TcspInfo *cspInfo,int csp,char_t *buf,size_t len);
-extern char_t* csp_getName(int csp,char_t *buf,size_t len);
-extern int csp_bestMatch(int inCSP,int wantedCSPS,int *rank=NULL);
+extern char_t* csp_getName2(const TcspInfo *cspInfo,uint64_t csp,char_t *buf,size_t len);
+extern char_t* csp_getName(uint64_t csp,char_t *buf,size_t len);
+extern uint64_t csp_bestMatch(uint64_t inCSP,uint64_t wantedCSPS,int *rank=NULL);
 
-static __inline void csp_yuv_adj_to_plane(int &csp,const TcspInfo *cspInfo,unsigned int dy,unsigned char *data[4],stride_t stride[4])
+static __inline void csp_yuv_adj_to_plane(uint64_t &csp,const TcspInfo *cspInfo,unsigned int dy,unsigned char *data[4],stride_t stride[4])
 {
     if (csp_isYUVplanar(csp) && (csp & FF_CSP_FLAGS_YUV_ADJ)) {
         csp&=~FF_CSP_FLAGS_YUV_ADJ;
@@ -367,7 +371,7 @@ static __inline void csp_yuv_adj_to_plane(int &csp,const TcspInfo *cspInfo,unsig
     }
 
 }
-static __inline void csp_yuv_order(int &csp,unsigned char *data[4],stride_t stride[4])
+static __inline void csp_yuv_order(uint64_t &csp,unsigned char *data[4],stride_t stride[4])
 {
     if (csp_isYUVplanar(csp) && (csp&FF_CSP_FLAGS_YUV_ORDER)) {
         csp&=~FF_CSP_FLAGS_YUV_ORDER;
@@ -375,7 +379,7 @@ static __inline void csp_yuv_order(int &csp,unsigned char *data[4],stride_t stri
         std::swap(stride[1],stride[2]);
     }
 }
-static __inline void csp_vflip(int &csp,const TcspInfo *cspInfo,unsigned char *data[],stride_t stride[],unsigned int dy)
+static __inline void csp_vflip(uint64_t &csp,const TcspInfo *cspInfo,unsigned char *data[],stride_t stride[],unsigned int dy)
 {
     if (csp&FF_CSP_FLAGS_VFLIP) {
         csp&=~FF_CSP_FLAGS_VFLIP;
@@ -386,12 +390,12 @@ static __inline void csp_vflip(int &csp,const TcspInfo *cspInfo,unsigned char *d
     }
 }
 
-int getBMPcolorspace(const BITMAPINFOHEADER *hdr,const TcspInfos &forcedCsps);
+uint64_t getBMPcolorspace(const BITMAPINFOHEADER *hdr,const TcspInfos &forcedCsps);
 
 struct TcspFcc {
     const char_t *name;
     FOURCC fcc;
-    int csp;
+    uint64_t csp;
     bool flip;
     bool supEnc;
 };

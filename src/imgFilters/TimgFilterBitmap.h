@@ -34,7 +34,7 @@ template<class _mm> static void exclusion(const TcspInfo &cspInfo,const unsigned
 template<class _mm> static Tblendplane getBlend(int mode);
 protected:
 virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
-virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
+virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
     return FF_CSPS_MASK_YUV_PLANAR;
 }

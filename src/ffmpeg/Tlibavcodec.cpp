@@ -204,7 +204,7 @@ void Tlibavcodec::swsInitParams(SwsParams *params,int resizeMethod,int flags)
 //Used by libswscale end
 
 //Used by libpostproc start
-int Tlibavcodec::ppCpuCaps(int csp)
+int Tlibavcodec::ppCpuCaps(uint64_t csp)
 {
  int cpu=0;
  if (Tconfig::cpu_flags&FF_CPU_MMX)    cpu|=PP_CPU_CAPS_MMX;

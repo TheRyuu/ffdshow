@@ -8,14 +8,14 @@ struct Textradata;
 class TvideoCodecUncompressed :public TvideoCodecDec,public TvideoCodecEnc
 {
 private:
-    int csp;
+    uint64_t csp;
     const TcspInfo *cspInfo;
     RGBQUAD palette[256];
     unsigned int palcolors;
     stride_t stride[4];
     Trect rd;
 protected:
-    virtual LRESULT beginCompress(int cfgcomode,int csp,const Trect &r);
+    virtual LRESULT beginCompress(int cfgcomode,uint64_t csp,const Trect &r);
     virtual bool beginDecompress(TffPictBase &pict,FOURCC infcc,const CMediaType &mt,int sourceFlags);
 public:
     TvideoCodecUncompressed(IffdshowBase *Ideci,IdecVideoSink *IsinkD);

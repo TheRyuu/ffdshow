@@ -89,11 +89,11 @@ bool TimgFilter::getOutputFmt(TffPictBase &pict,const TfilterSettingsVideo *cfg)
     if (!is(pict,cfg)) {
         return false;
     }
-    int supcsp1=getSupportedInputColorspaces(cfg);
+    uint64_t supcsp1=getSupportedInputColorspaces(cfg);
     if (((pict.csp&FF_CSPS_MASK)&(supcsp1&FF_CSPS_MASK))==0) {
         pict.csp=csp_bestMatch(pict.csp,supcsp1&FF_CSPS_MASK)|(supcsp1&FF_CSP_FLAGS_VFLIP);
     }
-    int supcsp2=getSupportedOutputColorspaces(cfg);
+    uint64_t supcsp2=getSupportedOutputColorspaces(cfg);
     if (((pict.csp&FF_CSPS_MASK)&(supcsp2&FF_CSPS_MASK))==0) {
         pict.csp=csp_bestMatch(pict.csp,supcsp2&FF_CSPS_MASK)|(supcsp2&FF_CSP_FLAGS_VFLIP);
     }
@@ -112,9 +112,9 @@ bool TimgFilter::getOutputFmt(TffPictBase &pict,const TfilterSettingsVideo *cfg)
  * *return true if color space is changed.
  * stride will be set to TimgFilter::stride1
  */
-bool TimgFilter::getCur(int csp,TffPict &pict,int full,const unsigned char **src[4])
+bool TimgFilter::getCur(uint64_t csp,TffPict &pict,int full,const unsigned char **src[4])
 {
-    int wasAdj=pict.csp&FF_CSP_FLAGS_YUV_ADJ;
+    uint64_t wasAdj=pict.csp&FF_CSP_FLAGS_YUV_ADJ;
     csp_yuv_adj_to_plane(pict.csp,&pict.cspInfo,pict.rectFull.dy,pict.data,pict.stride);
     csp_yuv_order(pict.csp,pict.data,pict.stride);
 
@@ -155,7 +155,7 @@ bool TimgFilter::getCur(int csp,TffPict &pict,int full,const unsigned char **src
  * *return true if color space is changed.
  * stride will be set to TimgFilter::stride2
  */
-bool TimgFilter::getNext(int csp,TffPict &pict,int full,unsigned char **dst[4],const Trect *rect2)
+bool TimgFilter::getNext(uint64_t csp,TffPict &pict,int full,unsigned char **dst[4],const Trect *rect2)
 {
     if (rect2) {
         pict.rectFull=pict.rectClip=*rect2;
@@ -197,7 +197,7 @@ bool TimgFilter::getNext(int csp,TffPict &pict,int full,unsigned char **dst[4],c
     return cspChanged;
 }
 
-bool TimgFilter::getNext(int csp,TffPict &pict,const Trect &clipRect,unsigned char **dst[4],const Trect *rect2)
+bool TimgFilter::getNext(uint64_t csp,TffPict &pict,const Trect &clipRect,unsigned char **dst[4],const Trect *rect2)
 {
     bool cspChanged=getNext(csp,pict,true,dst,rect2);
     pict.rectClip=clipRect;
@@ -230,7 +230,7 @@ bool TimgFilter::getNext(int csp,TffPict &pict,const Trect &clipRect,unsigned ch
  * *return true if color space is changed.
  * stride will be set to TimgFilter::stride2
  */
-bool TimgFilter::getCurNext(int csp,TffPict &pict,int full,int copy,unsigned char **dst[4],Tbuffer &buf)
+bool TimgFilter::getCurNext(uint64_t csp,TffPict &pict,int full,int copy,unsigned char **dst[4],Tbuffer &buf)
 {
     bool flip=false;
     csp_yuv_adj_to_plane(pict.csp,&pict.cspInfo,pict.rectFull.dy,pict.data,pict.stride);

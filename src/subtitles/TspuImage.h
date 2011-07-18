@@ -22,24 +22,24 @@ public:
             aligned_free(r);
         }
     }
-    void alloc(const CSize &sz, int div, int csp);
+    void alloc(const CSize &sz, int div, uint64_t csp);
     void setZero();
 };
 
 struct Tlibavcodec;
 struct TspuImage : TrenderedSubtitleWordBase {
 protected:
-    int csp;
+    uint64_t csp;
     TspuPlane plane[3];
     CRect rect[3];
     CRect originalRect[3];
     class Tscaler
     {
     protected:
-        int csp;
+        uint64_t csp;
     public:
         int srcdx,srcdy,dstdx,dstdy;
-        static Tscaler *create(const TprintPrefs &prefs,int srcdx,int srcdy,int dstdx,int dstdy, int csp=FF_CSP_Y800);
+        static Tscaler *create(const TprintPrefs &prefs,int srcdx,int srcdy,int dstdx,int dstdy, uint64_t csp=FF_CSP_Y800);
         Tscaler(const TprintPrefs &prefs,int Isrcdx,int Isrcdy,int Idstdx,int Idstdy):srcdx(Isrcdx),srcdy(Isrcdy),dstdx(Idstdx),dstdy(Idstdy),csp(prefs.csp & FF_CSPS_MASK) {}
         virtual ~Tscaler() {}
         virtual void scale(const unsigned char *srci,const unsigned char *srca,stride_t srcStride,unsigned char *dsti,unsigned char *dsta,stride_t dstStride)=0;
@@ -93,12 +93,12 @@ protected:
         Tlibavcodec *libavcodec;
         TscalerApprox approx;
     public:
-        TscalerSw(const TprintPrefs &prefs,int srcdx,int srcdy,int dstdx,int dstdy, int csp);
+        TscalerSw(const TprintPrefs &prefs,int srcdx,int srcdy,int dstdx,int dstdy, uint64_t csp);
         virtual ~TscalerSw();
         virtual void scale(const unsigned char *srci,const unsigned char *srca,stride_t srcStride,unsigned char *dsti,unsigned char *dsta,stride_t dstStride);
     };
 public:
-    TspuImage(const TspuPlane src[3],const CRect &rcclip,const CRect &rectReal,const CRect &rectOrig,const CRect &IfinalRect, const TprintPrefs &prefs, int Icsp=FF_CSP_Y800);
+    TspuImage(const TspuPlane src[3],const CRect &rcclip,const CRect &rectReal,const CRect &rectOrig,const CRect &IfinalRect, const TprintPrefs &prefs, uint64_t Icsp=FF_CSP_Y800);
     virtual void ownprint(
         const TprintPrefs &prefs,
         unsigned char **dst,
@@ -107,8 +107,8 @@ public:
 
 template<class _mm> struct TspuImageSimd : public TspuImage {
 public:
-    TspuImageSimd(const TspuPlane src[3],const CRect &rcclip,const CRect &rectReal,const CRect &rectOrig,const TprintPrefs &prefs, int csp):TspuImage(src,rcclip,rectReal,rectOrig,CRect(),prefs,csp) {}
-    TspuImageSimd(const TspuPlane src[3],const CRect &rcclip,const CRect &rectReal,const CRect &rectOrig,const CRect &finalRect, const TprintPrefs &prefs, int csp):TspuImage(src,rcclip,rectReal,rectOrig,finalRect,prefs,csp) {}
+    TspuImageSimd(const TspuPlane src[3],const CRect &rcclip,const CRect &rectReal,const CRect &rectOrig,const TprintPrefs &prefs, uint64_t csp):TspuImage(src,rcclip,rectReal,rectOrig,CRect(),prefs,csp) {}
+    TspuImageSimd(const TspuPlane src[3],const CRect &rcclip,const CRect &rectReal,const CRect &rectOrig,const CRect &finalRect, const TprintPrefs &prefs, uint64_t csp):TspuImage(src,rcclip,rectReal,rectOrig,finalRect,prefs,csp) {}
     virtual void ownprint(
         const TprintPrefs &prefs,
         unsigned char **dst,

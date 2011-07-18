@@ -29,10 +29,10 @@ extern "C" {
         STDMETHOD (getIffDecoder_)(/*IffdshowBase*/void* *deciPtr) PURE;
         STDMETHOD (getNewSize)(unsigned int srcDx,unsigned int srcDy,unsigned int *outDx,unsigned int *outDy) PURE;
         STDMETHOD (begin)(unsigned int srcDx,unsigned int srcDy,int FpsNum,int FpsDen) PURE;
-        STDMETHOD (process)(unsigned int framenum,int incsp,const unsigned char *src[4],ptrdiff_t srcStride[4],int ro,int outcsp,unsigned char *dst[4],ptrdiff_t dstStride[4]) PURE;
-        STDMETHOD (processTime)(unsigned int framenum,int64_t ref_start,int64_t ref_stop,int incsp,const unsigned char *src[4],ptrdiff_t srcStride[4],int ro,int outcsp,unsigned char *dst[4],ptrdiff_t dstStride[4]) PURE;
+        STDMETHOD (process)(unsigned int framenum,uint64_t incsp,const unsigned char *src[4],ptrdiff_t srcStride[4],int ro,uint64_t outcsp,unsigned char *dst[4],ptrdiff_t dstStride[4]) PURE;
+        STDMETHOD (processTime)(unsigned int framenum,int64_t ref_start,int64_t ref_stop,uint64_t incsp,const unsigned char *src[4],ptrdiff_t srcStride[4],int ro,uint64_t outcsp,unsigned char *dst[4],ptrdiff_t dstStride[4]) PURE;
         STDMETHOD (end)(void) PURE;
-        STDMETHOD_(const TcspInfo*,getCspInfo)(int csp) PURE;
+        STDMETHOD_(const TcspInfo*,getCspInfo)(uint64_t csp) PURE;
         STDMETHOD (putStringParam)(const char *param,char sep) PURE;
         STDMETHOD (getParamsEnum)(IffdshowParamsEnum* *enumPtr) PURE;
         STDMETHOD (notifyParamsChanged)(void) PURE;

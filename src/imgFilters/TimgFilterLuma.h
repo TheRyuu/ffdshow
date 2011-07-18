@@ -14,7 +14,7 @@ void (TimgFilterLuma::*processLumaFc)(const TpictPropSettings *cfg,const unsigne
 template<class _mm> void processLuma(const TpictPropSettings *cfg,const unsigned char *srcY,unsigned char *dstY,int ystep);
 protected:
 virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
-virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
+virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
     return FF_CSPS_MASK_YUV_PLANAR;
 }
@@ -32,7 +32,7 @@ void processGammaRGB32(const unsigned char *src,unsigned char *dst,const TpictPr
 void processGammaYUV(TffPict &pict,const unsigned char *src[4],unsigned char *dst[4],const TpictPropSettings *cfg);
 protected:
 virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
-virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
+virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
     return FF_CSPS_MASK_YUV_PLANAR|FF_CSP_RGB32;
 }
@@ -49,7 +49,7 @@ void *pp_ctx;
 PPMode pp_mode;
 protected:
 virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
-virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
+virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
     return FF_CSPS_MASK_YUV_PLANAR;
 }

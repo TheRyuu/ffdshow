@@ -84,7 +84,7 @@ bool TimgFilterResize::is(const TffPictBase &pict,const TfilterSettingsVideo *cf
     }
 }
 
-int TimgFilterResize::getSupportedInputColorspaces(const TfilterSettingsVideo *cfg0) const
+uint64_t TimgFilterResize::getSupportedInputColorspaces(const TfilterSettingsVideo *cfg0) const
 {
     const TresizeAspectSettings *cfg=(const TresizeAspectSettings*)cfg0;
     switch (TresizeAspectSettings::methodsProps[cfg->methodLuma].library) {
@@ -106,7 +106,7 @@ int TimgFilterResize::getSupportedInputColorspaces(const TfilterSettingsVideo *c
             return FF_CSPS_MASK;
     }
 }
-int TimgFilterResize::getSupportedOutputColorspaces(const TfilterSettingsVideo *cfg0) const
+uint64_t TimgFilterResize::getSupportedOutputColorspaces(const TfilterSettingsVideo *cfg0) const
 {
     const TresizeAspectSettings *cfg=(const TresizeAspectSettings*)cfg0;
     switch (TresizeAspectSettings::methodsProps[cfg->methodLuma].library) {

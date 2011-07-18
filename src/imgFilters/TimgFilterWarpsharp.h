@@ -22,7 +22,7 @@ void warpsharpblur(const unsigned char *src,stride_t srcstride,unsigned char *ds
 void warpsharp(const unsigned char *src,unsigned char *dst,const TwarpsharpSettings *cfg);
 protected:
 virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
-virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
+virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
     return FF_CSPS_MASK_YUV_PLANAR;
 }
@@ -42,7 +42,7 @@ private:
 awsapi_settings aws;
 protected:
 virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
-virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
+virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
     return FF_CSP_420P|FF_CSP_FLAGS_YUV_ADJ;
 }

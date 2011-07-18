@@ -26,12 +26,12 @@ private:
     Iff_wmv9 *wmv9;
     Iff_wmv9* (__stdcall *createWmv9)(void);
     void (__stdcall *destroyWmv9)(Iff_wmv9 *self);
-    int csp;
+    uint64_t csp;
     Trect rd;
     int codecIndex;
     mutable char_t codecName[100];
 protected:
-    virtual LRESULT beginCompress(int cfgcomode,int csp,const Trect &r);
+    virtual LRESULT beginCompress(int cfgcomode,uint64_t csp,const Trect &r);
     virtual bool beginDecompress(TffPictBase &pict,FOURCC infcc,const CMediaType &mt,int sourceFlags);
 public:
     virtual int getType(void) const {

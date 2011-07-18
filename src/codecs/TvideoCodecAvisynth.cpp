@@ -22,7 +22,7 @@
 #include "IffdshowBase.h"
 #include "dsutil.h"
 
-TvideoCodecAvisynth::Tavisynth::Tavisynth(const Textradata &extradata,TffPictBase &pict,Trect &r,int &csp,IffdshowBase *deci):
+TvideoCodecAvisynth::Tavisynth::Tavisynth(const Textradata &extradata,TffPictBase &pict,Trect &r,uint64_t &csp,IffdshowBase *deci):
     script(NULL),
     env(NULL),clip(NULL)
 {

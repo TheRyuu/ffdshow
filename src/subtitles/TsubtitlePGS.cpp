@@ -99,7 +99,7 @@ void TsubtitlePGS::print(
             videoHeight=prefs.dy;
         }
 
-        int scale100=(int)100*((float)prefs.dx/videoWidth);
+        int scale100=(int)(100*((float)prefs.dx/videoWidth));
         scale100=(int)((float)scale100*prefs.subimgscale/256);
 
         // size : original size, newSize : size after scaling

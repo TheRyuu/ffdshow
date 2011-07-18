@@ -125,7 +125,7 @@ protected:
     unsigned int dx,dy;
     unsigned int outDx,outDy;
     Tcsps enccsps;
-    int enccsp;
+    uint64_t enccsp;
     Tconvert *convert;
     int keyspacing;
     int getQuantQuant(void);
@@ -137,7 +137,7 @@ protected:
     bool firstrun;
 
     HWND h_graph;
-    int inColorspace;
+    uint64_t inColorspace;
     BITMAPINFO biOutput;
     TencStats encStats;
 

@@ -149,7 +149,7 @@ HRESULT TvideoCodecUncompressed::decompress(const unsigned char *src,size_t srcL
       stride[0]=srcLen/dy;
     */
     unsigned char *data[4]= {(unsigned char*)src,NULL,NULL,NULL};
-    int csp1=csp;
+    uint64_t csp1=csp;
     csp_yuv_adj_to_plane(csp1,csp_getInfo(csp1),rd.dy,(unsigned char**)data,stride);
     TffPict pict(csp1,data,stride,rd,true,pIn,Tpalette(palette,palcolors),isInterlacedRawVideo);
     pict.frametype=FRAME_TYPE::I;
@@ -176,7 +176,7 @@ bool TvideoCodecUncompressed::prepareHeader(BITMAPINFOHEADER *outhdr)
     outhdr->biSizeImage=cspInfo->bpp*outhdr->biWidth*outhdr->biHeight/8;
     return true;
 }
-LRESULT TvideoCodecUncompressed::beginCompress(int cfgcomode,int csp,const Trect &r)
+LRESULT TvideoCodecUncompressed::beginCompress(int cfgcomode,uint64_t csp,const Trect &r)
 {
     cspInfo=csp_getInfo(csp);
     stride[0]=cspInfo->Bpp*r.dx;

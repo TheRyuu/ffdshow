@@ -129,7 +129,7 @@ TffdshowDecVideo::TffdshowDecVideo(CLSID Iclsid,const char_t *className,const CL
     static const TintOptionT<TffdshowDecVideo> iopts[]= {
         IDFF_currentFrame       ,&TffdshowDecVideo::currentFrame      , 1, 1,_l("Current frame"),0,NULL,0,
         IDFF_decodingFps        ,&TffdshowDecVideo::decodingFps       ,-1,-1,_l("Decoding Fps"),0,NULL,0,
-        IDFF_AVIcolorspace      ,&TffdshowDecVideo::decodingCsp       ,-1,-1,_l("Input colorspace"),0,NULL,0,
+        //IDFF_AVIcolorspace      ,&TffdshowDecVideo::decodingCsp       ,-1,-1,_l("Input colorspace"),0,NULL,0,
         IDFF_dvdproc            ,&TffdshowDecVideo::dvdproc           ,-1,-1,_l(""),0,NULL,0,
 
         IDFF_currentq           ,&TffdshowDecVideo::currentq          ,0,6,_l(""),0,NULL,0,

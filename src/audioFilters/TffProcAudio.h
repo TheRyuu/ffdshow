@@ -55,7 +55,7 @@ public:
     STDMETHODIMP begin(const WAVEFORMATEX *wfIn,WAVEFORMATEX *wfOut);
     STDMETHODIMP process(const WAVEFORMATEX *wfIn,size_t innumsamples,WAVEFORMATEX *wfOut,size_t *outnumsamples,void* *samples);
     STDMETHODIMP processEx(const WAVEFORMATEXTENSIBLE *wfIn,size_t innumsamples,WAVEFORMATEXTENSIBLE *wfOut,size_t *outnumsamples,void* *samples);
-    //STDMETHODIMP processTime(unsigned int framenum,int64_t ref_start,int64_t ref_stop,int incsp,const unsigned char *src[4],int srcStride[4],int ro,int outcsp,unsigned char *dst[4],int dstStride[4]);
+    //STDMETHODIMP processTime(unsigned int framenum,int64_t ref_start,int64_t ref_stop,uint64_t incsp,const unsigned char *src[4],int srcStride[4],int ro,uint64_t outcsp,unsigned char *dst[4],int dstStride[4]);
     STDMETHODIMP end(void);
     // IprocAudioSink
     STDMETHODIMP deliverProcessedSample(const void *buf,size_t numsamples,const TsampleFormat &outsf);
