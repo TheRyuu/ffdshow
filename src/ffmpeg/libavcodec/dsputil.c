@@ -175,6 +175,16 @@ static int pix_norm1_c(uint8_t * pix, int line_size)
     s = 0;
     for (i = 0; i < 16; i++) {
         for (j = 0; j < 16; j += 8) {
+#if 0
+            s += sq[pix[0]];
+            s += sq[pix[1]];
+            s += sq[pix[2]];
+            s += sq[pix[3]];
+            s += sq[pix[4]];
+            s += sq[pix[5]];
+            s += sq[pix[6]];
+            s += sq[pix[7]];
+#else
 #if LONG_MAX > 2147483647
             register uint64_t x=*(uint64_t*)pix;
             s += sq[x&0xff];
@@ -196,6 +206,7 @@ static int pix_norm1_c(uint8_t * pix, int line_size)
             s += sq[(x>>8)&0xff];
             s += sq[(x>>16)&0xff];
             s += sq[(x>>24)&0xff];
+#endif
 #endif
             pix += 8;
         }
@@ -2812,9 +2823,9 @@ av_cold void dsputil_static_init(void)
 
 int ff_check_alignment(void){
     static int did_fail=0;
-    LOCAL_ALIGNED_16(int, aligned);
+    LOCAL_ALIGNED_16(int, aligned, [4]);
 
-    if((intptr_t)&aligned & 15){
+    if((intptr_t)aligned & 15){
         if(!did_fail){
 #if HAVE_MMX || HAVE_ALTIVEC
             av_log(NULL, AV_LOG_ERROR,
