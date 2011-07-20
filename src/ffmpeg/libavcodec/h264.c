@@ -3485,52 +3485,6 @@ static int decode_slice(struct AVCodecContext *avctx, void *arg){
             }
         }
     }
-
-#if 0
-    for(;s->mb_y < s->mb_height; s->mb_y++){
-        for(;s->mb_x < s->mb_width; s->mb_x++){
-            int ret= decode_mb(h);
-
-            ff_h264_hl_decode_mb(h);
-
-            if(ret<0){
-                av_log(s->avctx, AV_LOG_ERROR, "error while decoding MB %d %d\n", s->mb_x, s->mb_y);
-                ff_er_add_slice(s, s->resync_mb_x, s->resync_mb_y, s->mb_x, s->mb_y, (AC_ERROR|DC_ERROR|MV_ERROR)&part_mask);
-
-                return -1;
-            }
-
-            if(++s->mb_x >= s->mb_width){
-                s->mb_x=0;
-                if(++s->mb_y >= s->mb_height){
-                    if(get_bits_count(s->gb) == s->gb.size_in_bits){
-                        ff_er_add_slice(s, s->resync_mb_x, s->resync_mb_y, s->mb_x-1, s->mb_y, (AC_END|DC_END|MV_END)&part_mask);
-
-                        return 0;
-                    }else{
-                        ff_er_add_slice(s, s->resync_mb_x, s->resync_mb_y, s->mb_x, s->mb_y, (AC_END|DC_END|MV_END)&part_mask);
-
-                        return -1;
-                    }
-                }
-            }
-
-            if(get_bits_count(s->?gb) >= s->gb?.size_in_bits){
-                if(get_bits_count(s->gb) == s->gb.size_in_bits){
-                    ff_er_add_slice(s, s->resync_mb_x, s->resync_mb_y, s->mb_x-1, s->mb_y, (AC_END|DC_END|MV_END)&part_mask);
-
-                    return 0;
-                }else{
-                    ff_er_add_slice(s, s->resync_mb_x, s->resync_mb_y, s->mb_x, s->mb_y, (AC_ERROR|DC_ERROR|MV_ERROR)&part_mask);
-
-                    return -1;
-                }
-            }
-        }
-        s->mb_x=0;
-        ff_draw_horiz_band(s, 16*s->mb_y, 16);
-    }
-#endif
 }
 
 /**

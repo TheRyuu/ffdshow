@@ -185,7 +185,7 @@ static int pix_norm1_c(uint8_t * pix, int line_size)
             s += sq[pix[6]];
             s += sq[pix[7]];
 #else
-#if LONG_MAX > 2147483647
+#if HAVE_FAST_64BIT
             register uint64_t x=*(uint64_t*)pix;
             s += sq[x&0xff];
             s += sq[(x>>8)&0xff];
@@ -2237,7 +2237,7 @@ static int quant_psnr8x8_c(/*MpegEncContext*/ void *c, uint8_t *src1, uint8_t *s
 
     s->block_last_index[0/*FIXME*/]= s->fast_dct_quantize(s, temp, 0/*FIXME*/, s->qscale, &i);
     s->dct_unquantize_inter(s, temp, 0, s->qscale);
-    ff_simple_idct(temp); //FIXME
+    ff_simple_idct_8(temp); //FIXME
 
     for(i=0; i<64; i++)
         sum+= (temp[i]-bak[i])*(temp[i]-bak[i]);
@@ -2863,29 +2863,8 @@ av_cold void attribute_align_arg dsputil_init(DSPContext* c, AVCodecContext *avc
 #endif //CONFIG_ENCODERS
 
     if(avctx->lowres==1){
-        if(avctx->idct_algo==FF_IDCT_INT || avctx->idct_algo==FF_IDCT_AUTO || !CONFIG_H264_DECODER){
-            c->idct_put= ff_jref_idct4_put;
-            c->idct_add= ff_jref_idct4_add;
-        }else{
-            if (avctx->codec_id != CODEC_ID_H264) {
-                c->idct_put= ff_h264_lowres_idct_put_8_c;
-                c->idct_add= ff_h264_lowres_idct_add_8_c;
-            } else {
-                switch (avctx->bits_per_raw_sample) {
-                    case 9:
-                        c->idct_put= ff_h264_lowres_idct_put_9_c;
-                        c->idct_add= ff_h264_lowres_idct_add_9_c;
-                        break;
-                    case 10:
-                        c->idct_put= ff_h264_lowres_idct_put_10_c;
-                        c->idct_add= ff_h264_lowres_idct_add_10_c;
-                        break;
-                    default:
-                        c->idct_put= ff_h264_lowres_idct_put_8_c;
-                        c->idct_add= ff_h264_lowres_idct_add_8_c;
-                }
-            }
-        }
+        c->idct_put= ff_jref_idct4_put;
+        c->idct_add= ff_jref_idct4_add;
         c->idct    = j_rev_dct4;
         c->idct_permutation_type= FF_NO_IDCT_PERM;
     }else if(avctx->lowres==2){
@@ -2899,6 +2878,12 @@ av_cold void attribute_align_arg dsputil_init(DSPContext* c, AVCodecContext *avc
         c->idct    = j_rev_dct1;
         c->idct_permutation_type= FF_NO_IDCT_PERM;
     }else{
+        if (avctx->bits_per_raw_sample == 10) {
+            c->idct_put              = ff_simple_idct_put_10;
+            c->idct_add              = ff_simple_idct_add_10;
+            c->idct                  = ff_simple_idct_10;
+            c->idct_permutation_type = FF_NO_IDCT_PERM;
+        } else {
         if(avctx->idct_algo==FF_IDCT_INT){
             c->idct_put= ff_jref_idct_put;
             c->idct_add= ff_jref_idct_add;
@@ -2921,10 +2906,11 @@ av_cold void attribute_align_arg dsputil_init(DSPContext* c, AVCodecContext *avc
             c->idct    = ff_faanidct;
             c->idct_permutation_type= FF_NO_IDCT_PERM;
         }else{ //accurate/default
-            c->idct_put= ff_simple_idct_put;
-            c->idct_add= ff_simple_idct_add;
-            c->idct    = ff_simple_idct;
+            c->idct_put = ff_simple_idct_put_8;
+            c->idct_add = ff_simple_idct_add_8;
+            c->idct     = ff_simple_idct_8;
             c->idct_permutation_type= FF_NO_IDCT_PERM;
+        }
         }
     }
 
@@ -3288,13 +3274,11 @@ const char* avcodec_get_current_idct(AVCodecContext *avctx)
         return "Integer (ff_jref_idct2)";
     if (c->idct_put==ff_jref_idct4_put)
         return "Integer (ff_jref_idct4)";
-    if (c->idct_put==ff_h264_lowres_idct_put_8_c)
-        return "H.264 (ff_h264_lowres_idct_put_8_c)";
     if (c->idct_put==ff_vp3_idct_put_c)
         return "VP3 (ff_vp3_idct_c)";
     if (c->idct_put==ff_faanidct_put)
         return "FAAN (ff_faanidct_put)";
-    if (c->idct_put==ff_simple_idct_put)
+    if (c->idct_put==ff_simple_idct_put_8)
         return "Simple IDCT (simple_idct)";
 #if HAVE_MMX
     return avcodec_get_current_idct_mmx(avctx,c);

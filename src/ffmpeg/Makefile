@@ -49,7 +49,7 @@ SRCS_C=\
     libavcodec/dsputil.c \
     libavcodec/dv.c \
     libavcodec/eac3dec.c \
-    libavcodec/eac3dec_data.c \
+    libavcodec/eac3_data.c \
     libavcodec/error_resilience.c \
     libavcodec/faandct.c \
     libavcodec/faanidct.c \
@@ -277,7 +277,7 @@ SRCS_C=\
     libswscale/rgb2rgb.c \
     libswscale/swscale.c \
     libswscale/swscale_unscaled.c \
-    libswscale/swutils.c \
+    libswscale/utils.c \
     libswscale/yuv2rgb.c \
     libswscale/sww32thread.c \
     libswscale/x86/swscale_mmx.c \
