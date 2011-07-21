@@ -3,20 +3,20 @@
  * Copyright (c) 2000, 2001 Fabrice Bellard
  * Copyright (c) 2002-2004 Michael Niedermayer <michaelni@gmx.at>
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  *
  * MMX optimization by Nick Kurshev <nickols_k@mail.ru>
@@ -1067,10 +1067,12 @@ DCT_SAD_FUNC(ssse3)
 void dsputilenc_init_mmx(DSPContext* c, AVCodecContext *avctx)
 {
     int mm_flags = av_get_cpu_flags();
+    int bit_depth = avctx->bits_per_raw_sample;
 
     if (mm_flags & AV_CPU_FLAG_MMX) {
         const int dct_algo = avctx->dct_algo;
-        if(dct_algo==FF_DCT_AUTO || dct_algo==FF_DCT_MMX){
+        if (avctx->bits_per_raw_sample <= 8 &&
+            (dct_algo==FF_DCT_AUTO || dct_algo==FF_DCT_MMX)) {
             if(mm_flags & AV_CPU_FLAG_SSE2){
                 c->fdct = ff_fdct_sse2;
             }else if(mm_flags & AV_CPU_FLAG_MMX2){
@@ -1080,7 +1082,8 @@ void dsputilenc_init_mmx(DSPContext* c, AVCodecContext *avctx)
             }
         }
 
-        c->get_pixels = get_pixels_mmx;
+        if (bit_depth <= 8)
+            c->get_pixels = get_pixels_mmx;
         c->diff_pixels = diff_pixels_mmx;
         c->pix_sum = pix_sum16_mmx;
 
@@ -1124,7 +1127,8 @@ void dsputilenc_init_mmx(DSPContext* c, AVCodecContext *avctx)
         }
 
         if(mm_flags & AV_CPU_FLAG_SSE2){
-            c->get_pixels = get_pixels_sse2;
+            if (bit_depth <= 8)
+                c->get_pixels = get_pixels_sse2;
             c->sum_abs_dctelem= sum_abs_dctelem_sse2;
 #if HAVE_YASM && HAVE_ALIGNED_STACK
             c->hadamard8_diff[0]= ff_hadamard8_diff16_sse2;
