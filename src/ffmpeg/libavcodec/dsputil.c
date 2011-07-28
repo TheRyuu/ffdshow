@@ -405,27 +405,6 @@ void ff_put_signed_pixels_clamped_c(const DCTELEM *block,
     }
 }
 
-static void put_pixels_nonclamped_c(const DCTELEM *block, uint8_t *restrict pixels,
-                                    int line_size)
-{
-    int i;
-
-    /* read the pixels */
-    for(i=0;i<8;i++) {
-        pixels[0] = block[0];
-        pixels[1] = block[1];
-        pixels[2] = block[2];
-        pixels[3] = block[3];
-        pixels[4] = block[4];
-        pixels[5] = block[5];
-        pixels[6] = block[6];
-        pixels[7] = block[7];
-
-        pixels += line_size;
-        block += 8;
-    }
-}
-
 void ff_add_pixels_clamped_c(const DCTELEM *block, uint8_t *restrict pixels,
                              int line_size)
 {
@@ -504,22 +483,6 @@ static void fill_block8_c(uint8_t *block, uint8_t value, int line_size, int h)
     for (i = 0; i < h; i++) {
         memset(block, value, 8);
         block += line_size;
-    }
-}
-
-static void scale_block_c(const uint8_t src[64]/*align 8*/, uint8_t *dst/*align 8*/, int linesize)
-{
-    int i, j;
-    uint16_t *dst1 = (uint16_t *) dst;
-    uint16_t *dst2 = (uint16_t *)(dst + linesize);
-
-    for (j = 0; j < 8; j++) {
-        for (i = 0; i < 8; i++) {
-            dst1[i] = dst2[i] = src[i] * 0x0101;
-        }
-        src  += 8;
-        dst1 += linesize;
-        dst2 += linesize;
     }
 }
 
@@ -2492,50 +2455,6 @@ static void vector_fmul_scalar_c(float *dst, const float *src, float mul,
         dst[i] = src[i] * mul;
 }
 
-static void vector_fmul_sv_scalar_2_c(float *dst, const float *src,
-                                      const float **sv, float mul, int len)
-{
-    int i;
-    for (i = 0; i < len; i += 2, sv++) {
-        dst[i  ] = src[i  ] * sv[0][0] * mul;
-        dst[i+1] = src[i+1] * sv[0][1] * mul;
-    }
-}
-
-static void vector_fmul_sv_scalar_4_c(float *dst, const float *src,
-                                      const float **sv, float mul, int len)
-{
-    int i;
-    for (i = 0; i < len; i += 4, sv++) {
-        dst[i  ] = src[i  ] * sv[0][0] * mul;
-        dst[i+1] = src[i+1] * sv[0][1] * mul;
-        dst[i+2] = src[i+2] * sv[0][2] * mul;
-        dst[i+3] = src[i+3] * sv[0][3] * mul;
-    }
-}
-
-static void sv_fmul_scalar_2_c(float *dst, const float **sv, float mul,
-                               int len)
-{
-    int i;
-    for (i = 0; i < len; i += 2, sv++) {
-        dst[i  ] = sv[0][0] * mul;
-        dst[i+1] = sv[0][1] * mul;
-    }
-}
-
-static void sv_fmul_scalar_4_c(float *dst, const float **sv, float mul,
-                               int len)
-{
-    int i;
-    for (i = 0; i < len; i += 4, sv++) {
-        dst[i  ] = sv[0][0] * mul;
-        dst[i+1] = sv[0][1] * mul;
-        dst[i+2] = sv[0][2] * mul;
-        dst[i+3] = sv[0][3] * mul;
-    }
-}
-
 static void butterflies_float_c(float *restrict v1, float *restrict v2,
                                 int len)
 {
@@ -2903,7 +2822,6 @@ av_cold void attribute_align_arg dsputil_init(DSPContext* c, AVCodecContext *avc
     c->diff_pixels = diff_pixels_c;
     c->put_pixels_clamped = ff_put_pixels_clamped_c;
     c->put_signed_pixels_clamped = ff_put_signed_pixels_clamped_c;
-//    c->put_pixels_nonclamped = put_pixels_nonclamped_c;
     c->add_pixels_clamped = ff_add_pixels_clamped_c;
     c->sum_abs_dctelem = sum_abs_dctelem_c;
     c->gmc1 = gmc1_c;
@@ -2913,7 +2831,6 @@ av_cold void attribute_align_arg dsputil_init(DSPContext* c, AVCodecContext *avc
 
 //    c->fill_block_tab[0] = fill_block16_c;
 //    c->fill_block_tab[1] = fill_block8_c;
-//    c->scale_block = scale_block_c;
 
     /* TODO [0] 16  [1] 8 */
     c->pix_abs[0][0] = pix_abs16_c;
@@ -3084,12 +3001,6 @@ av_cold void attribute_align_arg dsputil_init(DSPContext* c, AVCodecContext *avc
     c->scalarproduct_float = scalarproduct_float_c;
     c->butterflies_float = butterflies_float_c;
     c->vector_fmul_scalar = vector_fmul_scalar_c;
-
-    c->vector_fmul_sv_scalar[0] = vector_fmul_sv_scalar_2_c;
-    c->vector_fmul_sv_scalar[1] = vector_fmul_sv_scalar_4_c;
-
-    c->sv_fmul_scalar[0] = sv_fmul_scalar_2_c;
-    c->sv_fmul_scalar[1] = sv_fmul_scalar_4_c;
 
     c->shrink[0]= av_image_copy_plane;
     c->shrink[1]= ff_shrink22;
