@@ -161,6 +161,7 @@ TffdshowEnc::TffdshowEnc(LPUNKNOWN punk, HRESULT *phr,TintStrColl *Ioptions,cons
     oldCodecId=CODEC_ID_NONE;
     options=Ioptions;
 }
+
 TffdshowEnc::~TffdshowEnc()
 {
     _release();
@@ -209,14 +210,17 @@ STDMETHODIMP TffdshowEnc::GetPages(CAUUID * pPages)
 
     return S_OK;
 }
+
 STDMETHODIMP TffdshowEnc::GetClassID(CLSID *pClsid)
 {
     return CBaseFilter::GetClassID(pClsid);
 }
+
 int TffdshowEnc::SizeMax(void)
 {
     return 4096;
 }
+
 HRESULT TffdshowEnc::WriteToStream(IStream *pStream)
 {
     int32_t len=saveEncodingSettingsMem(NULL,0);
@@ -227,6 +231,7 @@ HRESULT TffdshowEnc::WriteToStream(IStream *pStream)
     free(buf);
     return S_OK;
 }
+
 HRESULT TffdshowEnc::ReadFromStream(IStream *pStream)
 {
     int32_t len;
@@ -243,6 +248,7 @@ HRESULT TffdshowEnc::CheckInputType(const CMediaType * mtIn)
 {
     return S_OK;
 }
+
 int TffdshowEnc::getVideoCodecId(const BITMAPINFOHEADER *hdr,const GUID *subtype,FOURCC *AVIfourcc)
 {
     initCo();
@@ -266,12 +272,14 @@ HRESULT TffdshowEnc::SetMediaType(PIN_DIRECTION direction, const CMediaType *pmt
     }
     return S_OK;
 }
+
 HRESULT TffdshowEnc::CheckTransform(const CMediaType *mtIn, const CMediaType *mtOut)
 {
     DPRINTF(_l("TffdshowEnc::CheckTransform"));
     fileout=!!(*mtOut->Type()==MEDIATYPE_Stream);
     return S_OK;
 }
+
 HRESULT TffdshowEnc::DecideBufferSize(IMemAllocator *pAlloc, ALLOCATOR_PROPERTIES *ppropInputRequest)
 {
     DPRINTF(_l("TffdshowEnc::DecideBufferSize"));
@@ -414,6 +422,7 @@ int TffdshowEnc::getQuantFirst(void)
         return 2;
     }
 }
+
 int TffdshowEnc::getQuantQuant(void)
 {
     if (coSettings->isInCredits(params.framenum))
@@ -438,6 +447,7 @@ TvideoCodecEnc* TffdshowEnc::findEncLib(void)
     }
     return enc;
 }
+
 void TffdshowEnc::getOut(unsigned int AVIdx,unsigned int AVIdy,unsigned int *outDx,unsigned int *outDy)
 {
     initCo();
@@ -637,11 +647,13 @@ STDMETHODIMP_(LRESULT) TffdshowEnc::begin(const BITMAPINFOHEADER *inhdr)
     firstrun=true;
     return ICERR_OK;
 }
+
 HRESULT TffdshowEnc::EndOfStream(void)
 {
     HRESULT hr=compress(&inpin->biIn.bmiHeader,NULL,0,_I64_MIN,_I64_MIN);
     return FAILED(hr)?hr:CTransformFilter::EndOfStream();
 }
+
 STDMETHODIMP_(LRESULT) TffdshowEnc::end(void)
 {
     if (working && (outputdebug || outputdebugfile) && encStats.count>0) {
@@ -879,6 +891,7 @@ STDMETHODIMP TffdshowEnc::setCoSettingsPtr(TcoSettings *coSettingsPtr)
     notifyParamsChanged();
     return S_OK;
 }
+
 STDMETHODIMP TffdshowEnc::getCoSettingsPtr(const TcoSettings* *coSettingsPtr)
 {
     if (!coSettingsPtr) {
@@ -893,6 +906,7 @@ STDMETHODIMP TffdshowEnc::loadEncodingSettings(void)
     initCo();
     return S_OK;
 }
+
 STDMETHODIMP TffdshowEnc::saveEncodingSettings(void)
 {
     initCo();
@@ -958,10 +972,12 @@ STDMETHODIMP TffdshowEnc::isLAVCadaptiveQuant(void)
 {
     return coSettings->isLAVCadaptiveQuant();
 }
+
 STDMETHODIMP TffdshowEnc::isQuantControlActive(void)
 {
     return coSettings->isQuantControlActive();
 }
+
 STDMETHODIMP_(int) TffdshowEnc::getQuantType2(int quant)
 {
     return coSettings->getQuantType(quant);
@@ -998,6 +1014,7 @@ STDMETHODIMP TffdshowEnc::getEncoder(int codecId,const Tencoder* *encPtr)
     *encPtr=enclibs.getEncoder(codecId);
     return S_OK;
 }
+
 STDMETHODIMP TffdshowEnc::getVideoCodecs(const TvideoCodecs* *codecs)
 {
     if (!codecs) {
@@ -1016,6 +1033,7 @@ void TffdshowEnc::getFFproc(void)
         ffproc->loadPreset("ffdshowenc");
     }
 }
+
 STDMETHODIMP TffdshowEnc::getFFproc(TffProcVideo* *procPtr)
 {
     if (!procPtr) {
@@ -1048,6 +1066,7 @@ STDMETHODIMP_(int) TffdshowEnc::loadEncodingSettingsMem(const void *buf,int len)
     coSettings->fillIncsps();
     return len;
 }
+
 STDMETHODIMP_(int) TffdshowEnc::saveEncodingSettingsMem(void *buf,int len)
 {
     initCo();
@@ -1080,6 +1099,7 @@ STDMETHODIMP TffdshowEnc::getInCodecString(char_t *buf,size_t buflen)
     }
     return S_OK;
 }
+
 STDMETHODIMP TffdshowEnc::getOutCodecString(char_t *buf,size_t buflen)
 {
     if (!buf) {
@@ -1164,10 +1184,12 @@ STDMETHODIMP TffdshowEncDshow::getDstBuffer(IMediaSample* *pOut,const TffPict &p
     }
     return S_OK;
 }
+
 STDMETHODIMP TffdshowEncDshow::deliverError(void)
 {
     return E_FAIL;
 }
+
 STDMETHODIMP TffdshowEncDshow::deliverEncodedSample(const TmediaSample &sample,TencFrameParams &params)
 {
     REFERENCE_TIME rtStart,rtStop;
