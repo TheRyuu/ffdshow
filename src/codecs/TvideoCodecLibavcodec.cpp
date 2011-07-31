@@ -354,6 +354,10 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
         bswap(avctx->sub_id);
     }
 
+    if (pict.csp == FF_CSP_UNSUPPORTED) {
+        return false;
+    }
+
     if (libavcodec->avcodec_open(avctx,avcodec)<0) {
         return false;
     }
@@ -378,7 +382,8 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
     }
 
 
-    pict.csp=avctx->pix_fmt!=PIX_FMT_NONE?csp_lavc2ffdshow(avctx->pix_fmt):FF_CSP_420P;
+    if (avctx->pix_fmt != PIX_FMT_NONE) pict.csp = csp_lavc2ffdshow(avctx->pix_fmt);
+    if (pict.csp == FF_CSP_NULL) pict.csp = FF_CSP_420P;
     if (avctx->sample_aspect_ratio.num && avctx->sample_aspect_ratio.den) {
         pict.setSar(avctx->sample_aspect_ratio);
     }

@@ -473,10 +473,16 @@ void TffPict::convertCSP(uint64_t Icsp,Tbuffer &buf,int edge)
             memset(data[1],128,stride[1]*(odd2even(rectFull.dy)>>1));
         }
     } else {
-        stride[0]=rectFull.dx*cspInfo.Bpp;
-        size_t bufsize0=stride[0]*rectFull.dy;
-        buf.alloc(bufsize0);
+        size_t size=0;
+        for (unsigned int i=0; i<cspInfo.numPlanes; i++) {
+            stride[i]=(rectFull.dx>>cspInfo.shiftX[i])*cspInfo.Bpp;
+            size+=stride[i]*(rectFull.dy>>cspInfo.shiftY[i]);
+        }
+        buf.alloc(size);
         data[0]=buf;
+        for (unsigned int i=1; i<cspInfo.numPlanes; i++) {
+            data[i]=data[i-1]+stride[i-1]*(rectFull.dy>>cspInfo.shiftY[i-1]);
+        }
     }
     calcDiff();
 }

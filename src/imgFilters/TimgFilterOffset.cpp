@@ -175,6 +175,7 @@ HRESULT TimgFilterMirror::process(TfilterQueue::iterator it,TffPict &pict,const 
                     break;
                 case 2:
                     mirrorFc=&TimgFilterMirror::mirror<int16_t>;
+                    break;
                 case 3:
                     mirrorFc=&TimgFilterMirror::mirror<int24_t>;
                     break;

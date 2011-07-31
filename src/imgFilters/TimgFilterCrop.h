@@ -15,7 +15,7 @@ long autoCropAnalysisDuration;
 protected:
 virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
-    return FF_CSPS_MASK&~(FF_CSP_NV12|FF_CSP_CLJR);
+    return FF_CSPS_MASK&~(FF_CSP_NV12|FF_CSP_CLJR|FF_CSPS_MASK_HIGH_BIT);
 }
 virtual void onSizeChange(void);
 virtual bool computeAutoCropChange(long oldValue, long *highWaterp, long max, long *newValuep);

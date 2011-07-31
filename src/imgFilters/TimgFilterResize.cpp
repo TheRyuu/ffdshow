@@ -301,9 +301,9 @@ HRESULT TimgFilterResize::process(TfilterQueue::iterator it,TffPict &pict,const 
                 unsigned char *dst[4];
                 getNext(pict.csp,pict,newpict.rectClip,dst,&newpict.rectFull);
                 for (unsigned int i=0; i<pict.cspInfo.numPlanes; i++) {
-                    const unsigned char *src0=src[i]+(ydif2none>>pict.cspInfo.shiftY[i])*stride1[i]+(xdif2none>>pict.cspInfo.shiftX[i]);
-                    unsigned char       *dst0=dst[i]+(ydif1none>>pict.cspInfo.shiftY[i])*stride2[i]+(xdif1none>>pict.cspInfo.shiftX[i]);
-                    TffPict::copy(dst0,stride2[i],src0,stride1[i],pict.cspInfo.Bpp*dxnone>>pict.cspInfo.shiftX[i],dynone>>pict.cspInfo.shiftY[i]);
+                    const unsigned char *src0=src[i]+(ydif2none>>pict.cspInfo.shiftY[i])*stride1[i]+pict.cspInfo.Bpp*(xdif2none>>pict.cspInfo.shiftX[i]);
+                    unsigned char       *dst0=dst[i]+(ydif1none>>pict.cspInfo.shiftY[i])*stride2[i]+pict.cspInfo.Bpp*(xdif1none>>pict.cspInfo.shiftX[i]);
+                    TffPict::copy(dst0,stride2[i],src0,stride1[i],pict.cspInfo.Bpp*(dxnone>>pict.cspInfo.shiftX[i]),dynone>>pict.cspInfo.shiftY[i]);
                 }
                 break;
             }

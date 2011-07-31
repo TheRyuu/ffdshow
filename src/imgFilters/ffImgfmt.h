@@ -46,6 +46,9 @@
 #define FF_CSP_Y800  (1ULL << 20)
 #define FF_CSP_NV12  (1ULL << 21)
 
+#define FF_CSP_420P10 (1ULL << 22)
+#define FF_CSP_444P10 (1ULL << 23)
+
 // Flags
 #define FF_CSP_FLAGS_YUV_JPEG   (1ULL << 59)
 #define FF_CSP_FLAGS_YUV_ORDER  (1ULL << 60) // UV ordered chroma planes (not VU as default)
@@ -53,10 +56,12 @@
 #define FF_CSP_FLAGS_INTERLACED (1ULL << 62)
 #define FF_CSP_FLAGS_VFLIP      (1ULL << 63) // flip mask
 
+#define FF_CSPS_NUM 24
 
-#define FF_CSPS_NUM 22
+#define FF_CSP_UNSUPPORTED      (1U<<FF_CSPS_NUM)
 
 #define FF_CSPS_MASK            ((1ULL << FF_CSPS_NUM)-1)
+#define FF_CSPS_MASK_HIGH_BIT   (FF_CSP_420P10|FF_CSP_444P10)
 #define FF_CSPS_MASK_YUV_PLANAR (FF_CSP_420P|FF_CSP_422P|FF_CSP_444P|FF_CSP_411P|FF_CSP_410P)
 #define FF_CSPS_MASK_YUV_PACKED (FF_CSP_YUY2|FF_CSP_UYVY|FF_CSP_YVYU|FF_CSP_VYUY)
 #define FF_CSPS_MASK_RGB        (FF_CSP_RGBA|FF_CSP_RGB32|FF_CSP_RGB24|FF_CSP_RGB15|FF_CSP_RGB16)
@@ -140,9 +145,13 @@ static __inline uint64_t csp_lavc2ffdshow(enum PixelFormat pix_fmt)
             return FF_CSP_YUY2;
         case PIX_FMT_UYVY422 :
             return FF_CSP_UYVY;
-        case PIX_FMT_RGB24   :
-            return FF_CSP_RGB24;
+        case PIX_FMT_YUV420P10:
+            return FF_CSP_420P10;
+        case PIX_FMT_YUV444P10:
+            return FF_CSP_444P10;
         case PIX_FMT_BGR24   :
+            return FF_CSP_RGB24;
+        case PIX_FMT_RGB24   :
             return FF_CSP_BGR24;
         case PIX_FMT_RGB32   :
         case PIX_FMT_ARGB:
@@ -176,10 +185,14 @@ static __inline enum PixelFormat csp_ffdshow2lavc(uint64_t pix_fmt)
             return PIX_FMT_YUYV422;
         case FF_CSP_UYVY:
             return PIX_FMT_UYVY422;
+        case FF_CSP_420P10:
+            return PIX_FMT_YUV420P10;
+        case FF_CSP_444P10:
+            return PIX_FMT_YUV444P10;
         case FF_CSP_RGB24:
-            return PIX_FMT_RGB24;
-        case FF_CSP_BGR24:
             return PIX_FMT_BGR24;
+        case FF_CSP_BGR24:
+            return PIX_FMT_RGB24;
         case FF_CSP_RGB32:
             return PIX_FMT_RGB32;
         case FF_CSP_RGB15:
@@ -246,7 +259,7 @@ static __inline enum PixelFormat csp_ffdshow2lavc(uint64_t pix_fmt)
 
 static __inline uint64_t csp_supSWSin(uint64_t x)
 {
-    return (x&FF_CSPS_MASK)&SWS_IN_CSPS;
+    return (x&FF_CSPS_MASK)&(SWS_IN_CSPS|FF_CSPS_MASK_HIGH_BIT);
 }
 static __inline uint64_t csp_supSWSout(uint64_t x)
 {
