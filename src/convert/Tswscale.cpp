@@ -37,9 +37,9 @@ bool Tswscale::init(unsigned int Idx,unsigned int Idy,uint64_t incsp,uint64_t ou
     PixelFormat sw_incsp=csp_ffdshow2lavc(incsp),sw_outcsp=csp_ffdshow2lavc(outcsp);
     dx=Idx;
     dy=Idy;
-    sws_flags = SWS_POINT; //Resize method
+    sws_flags = SWS_BILINEAR | SWS_FULL_CHR_H_INT | SWS_FULL_CHR_H_INP; //Resize method
     SwsParams params;
-    Tlibavcodec::swsInitParams(&params,SWS_POINT,sws_flags);
+    Tlibavcodec::swsInitParams(&params,SWS_BILINEAR,sws_flags);
     swsc=libavcodec->sws_getCachedContext(NULL,dx,dy,sw_incsp,dx,dy,sw_outcsp,sws_flags,NULL,NULL,NULL,&params);
     return !!swsc;
 }
