@@ -30,6 +30,10 @@
 //#undef NDEBUG
 //#include <assert.h>
 
+/* Disable the encoder. */
+#undef CONFIG_VCR1_ENCODER
+#define CONFIG_VCR1_ENCODER 0
+
 typedef struct VCR1Context{
     AVCodecContext *avctx;
     AVFrame picture;
@@ -115,6 +119,29 @@ static int decode_frame(AVCodecContext *avctx,
     return buf_size;
 }
 
+#if CONFIG_VCR1_ENCODER
+static int encode_frame(AVCodecContext *avctx, unsigned char *buf, int buf_size, void *data){
+    VCR1Context * const a = avctx->priv_data;
+    AVFrame *pict = data;
+    AVFrame * const p= (AVFrame*)&a->picture;
+    int size;
+
+    *p = *pict;
+    p->pict_type= AV_PICTURE_TYPE_I;
+    p->key_frame= 1;
+
+    emms_c();
+
+    align_put_bits(&a->pb);
+    while(get_bit_count(&a->pb)&31)
+        put_bits(&a->pb, 8, 0);
+
+    size= get_bit_count(&a->pb)/32;
+
+    return size*4;
+}
+#endif
+
 static av_cold void common_init(AVCodecContext *avctx){
     VCR1Context * const a = avctx->priv_data;
 
@@ -140,15 +167,36 @@ static av_cold int decode_end(AVCodecContext *avctx){
     return 0;
 }
 
+#if CONFIG_VCR1_ENCODER
+static av_cold int encode_init(AVCodecContext *avctx){
+
+    common_init(avctx);
+
+    return 0;
+}
+#endif
+
 AVCodec ff_vcr1_decoder = {
-    "vcr1",
-    AVMEDIA_TYPE_VIDEO,
-    CODEC_ID_VCR1,
-    sizeof(VCR1Context),
-    decode_init,
-    NULL,
-    decode_end,
-    decode_frame,
-    CODEC_CAP_DR1,
+    .name           = "vcr1",
+    .type           = AVMEDIA_TYPE_VIDEO,
+    .id             = CODEC_ID_VCR1,
+    .priv_data_size = sizeof(VCR1Context),
+    .init           = decode_init,
+    .close          = decode_end,
+    .decode         = decode_frame,
+    .capabilities   = CODEC_CAP_DR1,
     .long_name = NULL_IF_CONFIG_SMALL("ATI VCR1"),
 };
+
+#if CONFIG_VCR1_ENCODER
+AVCodec ff_vcr1_encoder = {
+    .name           = "vcr1",
+    .type           = AVMEDIA_TYPE_VIDEO,
+    .id             = CODEC_ID_VCR1,
+    .priv_data_size = sizeof(VCR1Context),
+    .init           = encode_init,
+    .encode         = encode_frame,
+    //encode_end,
+    .long_name = NULL_IF_CONFIG_SMALL("ATI VCR1"),
+};
+#endif
