@@ -751,6 +751,7 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
                         pict.rtStop=pict.rtStart+avgTimePerFrame+frame->repeat_pict*avgTimePerFrame/2;
                     } else if (avctx->time_base.num && avctx->time_base.den) {
                         REFERENCE_TIME duration = REF_SECOND_MULT * avctx->time_base.num / avctx->time_base.den;
+                        if (duration <= 0) duration = 1;
                         pict.rtStop = pict.rtStart + duration;
                         if (frame->repeat_pict) {
                             pict.rtStop += (duration >> 1) * frame->repeat_pict;
