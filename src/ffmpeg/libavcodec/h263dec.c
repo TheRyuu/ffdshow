@@ -632,7 +632,7 @@ retry:
     s->mb_x=0;
     s->mb_y=0;
 
-    decode_slice(s);
+    ret = decode_slice(s);
     while(s->mb_y<s->mb_height){
         if(s->msmpeg4_version){
             if(s->slice_height==0 || s->mb_x!=0 || (s->mb_y%s->slice_height)!=0 || get_bits_count(&s->gb) > s->gb.size_in_bits)
@@ -648,7 +648,7 @@ retry:
         if(s->msmpeg4_version<4 && s->h263_pred)
             ff_mpeg4_clean_buffers(s);
 
-        decode_slice(s);
+        if (decode_slice(s) < 0) ret = AVERROR_INVALIDDATA;
     }
 
     if (s->msmpeg4_version && s->msmpeg4_version<4 && s->pict_type==AV_PICTURE_TYPE_I)
@@ -711,19 +711,18 @@ assert(s->current_picture.pict_type == s->pict_type);
 av_log(avctx, AV_LOG_DEBUG, "%"PRId64"\n", rdtsc()-time);
 #endif
 
-    return get_consumed_bytes(s, buf_size);
+    return (ret && avctx->error_recognition >= FF_ER_EXPLODE)?ret:get_consumed_bytes(s, buf_size);
 }
 
 AVCodec ff_h263_decoder = {
-    "h263",
-    AVMEDIA_TYPE_VIDEO,
-    CODEC_ID_H263,
-    sizeof(MpegEncContext),
-    ff_h263_decode_init,
-    NULL,
-    ff_h263_decode_end,
-    ff_h263_decode_frame,
-    CODEC_CAP_DRAW_HORIZ_BAND | CODEC_CAP_DR1 | CODEC_CAP_TRUNCATED | CODEC_CAP_DELAY,
+    .name           = "h263",
+    .type           = AVMEDIA_TYPE_VIDEO,
+    .id             = CODEC_ID_H263,
+    .priv_data_size = sizeof(MpegEncContext),
+    .init           = ff_h263_decode_init,
+    .close          = ff_h263_decode_end,
+    .decode         = ff_h263_decode_frame,
+    .capabilities   = CODEC_CAP_DRAW_HORIZ_BAND | CODEC_CAP_DR1 | CODEC_CAP_TRUNCATED | CODEC_CAP_DELAY,
     .flush= ff_mpeg_flush,
     .max_lowres= 3,
     .long_name= NULL_IF_CONFIG_SMALL("H.263 / H.263-1996, H.263+ / H.263-1998 / H.263 version 2"),

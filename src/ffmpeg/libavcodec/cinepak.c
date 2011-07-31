@@ -2,20 +2,20 @@
  * Cinepak Video Decoder
  * Copyright (C) 2003 the ffmpeg project
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -456,14 +456,13 @@ static av_cold int cinepak_decode_end(AVCodecContext *avctx)
 }
 
 AVCodec ff_cinepak_decoder = {
-    "cinepak",
-    AVMEDIA_TYPE_VIDEO,
-    CODEC_ID_CINEPAK,
-    sizeof(CinepakContext),
-    cinepak_decode_init,
-    NULL,
-    cinepak_decode_end,
-    cinepak_decode_frame,
-    CODEC_CAP_DR1,
+    .name           = "cinepak",
+    .type           = AVMEDIA_TYPE_VIDEO,
+    .id             = CODEC_ID_CINEPAK,
+    .priv_data_size = sizeof(CinepakContext),
+    .init           = cinepak_decode_init,
+    .close          = cinepak_decode_end,
+    .decode         = cinepak_decode_frame,
+    .capabilities   = CODEC_CAP_DR1,
     .long_name = NULL_IF_CONFIG_SMALL("Cinepak"),
 };

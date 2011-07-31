@@ -879,7 +879,7 @@ static int mjpeg_decode_scan(MJpegDecodeContext *s, int nb_components, int Ah, i
                 }
             }
 
-            if (s->restart_interval && show_bits(&s->gb, 8) == 0xFF){/* skip RSTn */
+            if (s->restart_interval && show_bits(&s->gb, 8) == 0xFF){ /* skip RSTn */
                 --s->restart_count;
                 align_get_bits(&s->gb);
                 while(show_bits(&s->gb, 8) == 0xFF)
@@ -1599,31 +1599,27 @@ av_cold int ff_mjpeg_decode_end(AVCodecContext *avctx)
 }
 
 AVCodec ff_mjpeg_decoder = {
-    "mjpeg",
-    AVMEDIA_TYPE_VIDEO,
-    CODEC_ID_MJPEG,
-    sizeof(MJpegDecodeContext),
-    ff_mjpeg_decode_init,
-    NULL,
-    ff_mjpeg_decode_end,
-    ff_mjpeg_decode_frame,
-    CODEC_CAP_DR1,
-    NULL,
+    .name           = "mjpeg",
+    .type           = AVMEDIA_TYPE_VIDEO,
+    .id             = CODEC_ID_MJPEG,
+    .priv_data_size = sizeof(MJpegDecodeContext),
+    .init           = ff_mjpeg_decode_init,
+    .close          = ff_mjpeg_decode_end,
+    .decode         = ff_mjpeg_decode_frame,
+    .capabilities   = CODEC_CAP_DR1,
     .max_lowres = 3,
     .long_name = NULL_IF_CONFIG_SMALL("MJPEG (Motion JPEG)"),
 };
 
 AVCodec ff_thp_decoder = {
-    "thp",
-    AVMEDIA_TYPE_VIDEO,
-    CODEC_ID_THP,
-    sizeof(MJpegDecodeContext),
-    ff_mjpeg_decode_init,
-    NULL,
-    ff_mjpeg_decode_end,
-    ff_mjpeg_decode_frame,
-    CODEC_CAP_DR1,
-    NULL,
+    .name           = "thp",
+    .type           = AVMEDIA_TYPE_VIDEO,
+    .id             = CODEC_ID_THP,
+    .priv_data_size = sizeof(MJpegDecodeContext),
+    .init           = ff_mjpeg_decode_init,
+    .close          = ff_mjpeg_decode_end,
+    .decode         = ff_mjpeg_decode_frame,
+    .capabilities   = CODEC_CAP_DR1,
     .max_lowres = 3,
     .long_name = NULL_IF_CONFIG_SMALL("Nintendo Gamecube THP video"),
 };

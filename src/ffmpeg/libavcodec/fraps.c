@@ -61,6 +61,7 @@ static av_cold int decode_init(AVCodecContext *avctx)
     FrapsContext * const s = avctx->priv_data;
 
     avctx->coded_frame = (AVFrame*)&s->frame;
+    avctx->pix_fmt= PIX_FMT_NONE; /* set in decode_frame */
 
     s->avctx = avctx;
     s->tmpbuf = NULL;
@@ -360,14 +361,13 @@ static av_cold int decode_end(AVCodecContext *avctx)
 
 
 AVCodec ff_fraps_decoder = {
-    "fraps",
-    AVMEDIA_TYPE_VIDEO,
-    CODEC_ID_FRAPS,
-    sizeof(FrapsContext),
-    decode_init,
-    NULL,
-    decode_end,
-    decode_frame,
-    CODEC_CAP_DR1,
+    .name           = "fraps",
+    .type           = AVMEDIA_TYPE_VIDEO,
+    .id             = CODEC_ID_FRAPS,
+    .priv_data_size = sizeof(FrapsContext),
+    .init           = decode_init,
+    .close          = decode_end,
+    .decode         = decode_frame,
+    .capabilities   = CODEC_CAP_DR1,
     .long_name = NULL_IF_CONFIG_SMALL("Fraps"),
 };

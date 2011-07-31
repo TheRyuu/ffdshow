@@ -5,20 +5,20 @@
  * This is a very straightforward rendition of the G.726
  * Section 4 "Computational Details".
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 #include <limits.h>
@@ -286,6 +286,17 @@ static av_cold int g726_reset(G726Context* c, int index)
     return 0;
 }
 
+#if CONFIG_ADPCM_G726_ENCODER
+static int16_t g726_encode(G726Context* c, int16_t sig)
+{
+    uint8_t i;
+
+    i = quant(c, sig/4 - c->se) & ((1<<c->code_size) - 1);
+    g726_decode(c, i);
+    return i;
+}
+#endif
+
 /* Interfacing to the libavcodec */
 
 static av_cold int g726_init(AVCodecContext * avctx)
@@ -337,6 +348,26 @@ static av_cold int g726_close(AVCodecContext *avctx)
     return 0;
 }
 
+#if CONFIG_ADPCM_G726_ENCODER
+static int g726_encode_frame(AVCodecContext *avctx,
+                            uint8_t *dst, int buf_size, void *data)
+{
+    G726Context *c = avctx->priv_data;
+    const short *samples = data;
+    PutBitContext pb;
+    int i;
+
+    init_put_bits(&pb, dst, 1024*1024);
+
+    for (i = 0; i < avctx->frame_size; i++)
+        put_bits(&pb, c->code_size, g726_encode(c, *samples++));
+
+    flush_put_bits(&pb);
+
+    return put_bits_count(&pb)>>3;
+}
+#endif
+
 static int g726_decode_frame(AVCodecContext *avctx,
                              void *data, int *data_size,
                              AVPacket *avpkt)
@@ -359,14 +390,28 @@ static int g726_decode_frame(AVCodecContext *avctx,
     return buf_size;
 }
 
+#if CONFIG_ADPCM_G726_ENCODER
+AVCodec ff_adpcm_g726_encoder = {
+    .name           = "g726",
+    .type           = AVMEDIA_TYPE_AUDIO,
+    .id             = CODEC_ID_ADPCM_G726,
+    .priv_data_size = sizeof(G726Context),
+    .init           = g726_init,
+    .encode         = g726_encode_frame,
+    .close          = g726_close,
+    .capabilities = CODEC_CAP_SMALL_LAST_FRAME,
+    .sample_fmts = (const enum AVSampleFormat[]){AV_SAMPLE_FMT_S16,AV_SAMPLE_FMT_NONE},
+    .long_name = NULL_IF_CONFIG_SMALL("G.726 ADPCM"),
+};
+#endif
+
 AVCodec ff_adpcm_g726_decoder = {
-    "g726",
-    AVMEDIA_TYPE_AUDIO,
-    CODEC_ID_ADPCM_G726,
-    sizeof(G726Context),
-    g726_init,
-    NULL,
-    g726_close,
-    g726_decode_frame,
+    .name           = "g726",
+    .type           = AVMEDIA_TYPE_AUDIO,
+    .id             = CODEC_ID_ADPCM_G726,
+    .priv_data_size = sizeof(G726Context),
+    .init           = g726_init,
+    .close          = g726_close,
+    .decode         = g726_decode_frame,
     .long_name = NULL_IF_CONFIG_SMALL("G.726 ADPCM"),
 };
