@@ -4,6 +4,8 @@
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
     <OutDir>$(SolutionDir)obj\$(Configuration)_$(PlatformName)_VC2010\</OutDir>
     <IntDir>$(SolutionDir)obj\$(Configuration)_$(PlatformName)_VC2010\$(ProjectName)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)'=='Debug' Or '$(Configuration)'=='Debug Filter'">true</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)'=='Release' Or '$(Configuration)'=='Release Filter'">false</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
@@ -35,7 +37,6 @@
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <LargeAddressAware>true</LargeAddressAware>
-      <LinkIncremental>false</LinkIncremental>
       <SetChecksum>true</SetChecksum>
     </Link>
   </ItemDefinitionGroup>
