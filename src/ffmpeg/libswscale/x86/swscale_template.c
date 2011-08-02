@@ -133,14 +133,13 @@ static void RENAME(yuv2yuvX)(SwsContext *c, const int16_t *lumFilter,
     YSCALEYUV2YV12X(LUM_MMX_FILTER_OFFSET, yDest, dstW, 0)
 }
 
-// The latest FFmpeg code for this macro has a bug
 #define YSCALEYUV2YV12X_ACCURATE(offset, dest, end, pos) \
     __asm__ volatile(\
         "lea                     " offset "(%0), %%"REG_d"  \n\t"\
-        "pxor                             %%mm4, %%mm4      \n\t"\
-        "pxor                             %%mm5, %%mm5      \n\t"\
-        "pxor                             %%mm6, %%mm6      \n\t"\
-        "pxor                             %%mm7, %%mm7      \n\t"\
+        "movq                  "DITHER32"+0(%0), %%mm4      \n\t"\
+        "movq                  "DITHER32"+8(%0), %%mm5      \n\t"\
+        "movq                 "DITHER32"+16(%0), %%mm6      \n\t"\
+        "movq                 "DITHER32"+24(%0), %%mm7      \n\t"\
         "mov                        (%%"REG_d"), %%"REG_S"  \n\t"\
         ".p2align                             4             \n\t"\
         "1:                                                 \n\t"\
@@ -168,26 +167,21 @@ static void RENAME(yuv2yuvX)(SwsContext *c, const int16_t *lumFilter,
         "paddd                            %%mm2, %%mm6      \n\t"\
         "paddd                            %%mm0, %%mm7      \n\t"\
         " jnz                                1b             \n\t"\
-        "psrad                              $16, %%mm4      \n\t"\
-        "psrad                              $16, %%mm5      \n\t"\
-        "psrad                              $16, %%mm6      \n\t"\
-        "psrad                              $16, %%mm7      \n\t"\
-        "movq             "VROUNDER_OFFSET"(%0), %%mm0      \n\t"\
+        "psrad                              $19, %%mm4      \n\t"\
+        "psrad                              $19, %%mm5      \n\t"\
+        "psrad                              $19, %%mm6      \n\t"\
+        "psrad                              $19, %%mm7      \n\t"\
         "packssdw                         %%mm5, %%mm4      \n\t"\
         "packssdw                         %%mm7, %%mm6      \n\t"\
-        "paddw                            %%mm0, %%mm4      \n\t"\
-        "paddw                            %%mm0, %%mm6      \n\t"\
-        "psraw                               $3, %%mm4      \n\t"\
-        "psraw                               $3, %%mm6      \n\t"\
         "packuswb                         %%mm6, %%mm4      \n\t"\
         MOVNTQ(%%mm4, (%1, %3))\
         "add                                 $8, %3         \n\t"\
         "cmp                                 %2, %3         \n\t"\
         "lea                     " offset "(%0), %%"REG_d"  \n\t"\
-        "pxor                             %%mm4, %%mm4      \n\t"\
-        "pxor                             %%mm5, %%mm5      \n\t"\
-        "pxor                             %%mm6, %%mm6      \n\t"\
-        "pxor                             %%mm7, %%mm7      \n\t"\
+        "movq                  "DITHER32"+0(%0), %%mm4      \n\t"\
+        "movq                  "DITHER32"+8(%0), %%mm5      \n\t"\
+        "movq                 "DITHER32"+16(%0), %%mm6      \n\t"\
+        "movq                 "DITHER32"+24(%0), %%mm7      \n\t"\
         "mov                        (%%"REG_d"), %%"REG_S"  \n\t"\
         "jb                                  1b             \n\t"\
         :: "r" (&c->redDither),\
