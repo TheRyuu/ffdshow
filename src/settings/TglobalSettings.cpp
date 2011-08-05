@@ -1240,8 +1240,7 @@ void TglobalSettingsDecAudio::load(void)
  FF_WAVE_FORMAT1_OP(WAVPACK,wavpack & rawmask,CODEC_ID_WAVPACK) \
  FF_WAVE_FORMAT_OP (VORBIS  ,vorbis & rawmask,c_vorbis) \
  FF_WAVE_FORMAT_OP (FFVORBIS,vorbis & rawmask,c_vorbis) \
- /*FF_WAVE_FORMAT1_OP(COOK1  ,cook   & rawmask,CODEC_ID_COOK)*/ \
- FF_WAVE_FORMAT1_OP(COOK2  ,cook   & rawmask,CODEC_ID_COOK) \
+ FF_WAVE_FORMAT1_OP(COOK   ,cook   & rawmask,CODEC_ID_COOK) \
  FF_WAVE_FORMAT1_OP(LPCM   ,lpcm   & rawmask,CODEC_ID_LPCM) \
  FF_WAVE_FORMAT1_OP(AVIS   ,avis   & rawmask,CODEC_ID_AVISYNTH) \
  FF_WAVE_FORMAT1_OP(TWOS   ,qtpcm  & rawmask,CODEC_ID_PCM) \
