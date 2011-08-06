@@ -819,7 +819,16 @@ bool decodeH264SPS(const unsigned char *hdr,size_t len,TffPictBase &pict)
         if (chroma_format_idc == 1 && bit_depth_luma == 10) pict.csp = FF_CSP_420P10;
         if (chroma_format_idc == 3 && bit_depth_luma == 8) pict.csp = FF_CSP_444P;
         if (chroma_format_idc == 3 && bit_depth_luma == 10) pict.csp = FF_CSP_444P10;
-        if (bit_depth_chroma != bit_depth_luma) pict.csp = FF_CSP_UNSUPPORTED;
+        if (bit_depth_chroma != bit_depth_luma) {
+            pict.csp = FF_CSP_UNSUPPORTED;
+            return false;
+        }
+#ifdef _WIN64
+        if (bit_depth_luma > 8) {
+            pict.csp = FF_CSP_UNSUPPORTED;
+            return false;
+        }
+#endif
         sps->transform_bypass = get_bits1(&gb);
         if(get_bits1(&gb)) { //seq_scaling_matrix_present_flag
             //decode_scaling_matrices(h, sps, NULL, 1, sps->scaling_matrix4, sps->scaling_matrix8);//av_log(h->s.avctx, AV_LOG_ERROR, "custom scaling matrix not implemented\n");
