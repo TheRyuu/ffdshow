@@ -242,8 +242,8 @@ CodecID TffdshowDecAudio::getCodecId(const CMediaType &mt)
         wFormatTag=WAVE_FORMAT_ADPCM_SWF;
     } else if (mt.subtype==MEDIASUBTYPE_NELLYMOSER) {
         wFormatTag=WAVE_FORMAT_NELLYMOSER;
-    } else if (mt.subtype==MEDIASUBTYPE_COOK || mt.subtype==MEDIASUBTYPE_COOK1 || mt.subtype==MEDIASUBTYPE_COOK2) {
-        wFormatTag=WAVE_FORMAT_COOK2;
+    } else if (mt.subtype==MEDIASUBTYPE_COOK || mt.subtype==MEDIASUBTYPE_cook || mt.subtype==MEDIASUBTYPE_COOK2) {
+        wFormatTag=WAVE_FORMAT_COOK;
     } else if (mt.subtype==MEDIASUBTYPE_DOLBY_TRUEHD || mt.subtype==MEDIASUBTYPE_NERO_MLP
                || mt.subtype==MEDIASUBTYPE_ARCSOFT_MLP || mt.subtype==MEDIASUBTYPE_SONIC_MLP
                || mt.subtype==KSDATAFORMAT_SUBTYPE_IEC61937_DOLBY_MLP) {
@@ -283,7 +283,7 @@ CodecID TffdshowDecAudio::getCodecId(const CMediaType &mt)
             wFormatTag=WAVE_FORMAT_28_8;
         } else if (mt.subtype==MEDIASUBTYPE_IMC) {
             wFormatTag=WAVE_FORMAT_IMC;
-        } else if (mt.subtype==MEDIASUBTYPE_ATRAC3) {
+        } else if (mt.subtype==MEDIASUBTYPE_ATRAC3 || mt.subtype==MEDIASUBTYPE_ATRC) {
             wFormatTag=WAVE_FORMAT_ATRAC3;
         } else if (mt.subtype==MEDIASUBTYPE_WAVPACK) {
             wFormatTag=WAVE_FORMAT_WAVPACK;
