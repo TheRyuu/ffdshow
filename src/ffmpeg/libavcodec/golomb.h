@@ -112,17 +112,6 @@ static inline int get_ue_golomb(GetBitContext *gb){
 static inline int get_ue_golomb_31(GetBitContext *gb){
     unsigned int buf;
 
-    /* ffdshow custom code */
-#if defined(_MSC_VER) && (_MSC_VER == 1500) && defined(WIN64)
-    unsigned int re_index = (gb)->index;
-    unsigned int re_cache = 0;
-    re_cache= av_bswap32( ((((const uint8_t*)( ((const uint8_t *)(gb)->buffer)+(re_index>>3) ))[3] << 24) | (((const uint8_t*)( ((const uint8_t *)(gb)->buffer)+(re_index>>3) ))[2] << 16) | (((const uint8_t*)( ((const uint8_t *)(gb)->buffer)+(re_index>>3) ))[1] <<  8) | ((const uint8_t*)( ((const uint8_t *)(gb)->buffer)+(re_index>>3) ))[0]) ) >> (re_index&0x07);
-    buf=(uint32_t)re_cache;
-    
-    buf >>= 32 - 9;
-    re_index += ff_golomb_vlc_len[buf];
-    (gb)->index = re_index;
-#else
     OPEN_READER(re, gb);
     UPDATE_CACHE(re, gb);
     buf=GET_CACHE(re, gb);
@@ -130,7 +119,6 @@ static inline int get_ue_golomb_31(GetBitContext *gb){
     buf >>= 32 - 9;
     LAST_SKIP_BITS(re, gb, ff_golomb_vlc_len[buf]);
     CLOSE_READER(re, gb);
-#endif
 
     return ff_ue_golomb_vlc_code[buf];
 }
