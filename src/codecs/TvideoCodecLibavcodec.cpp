@@ -182,13 +182,13 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
         threadcount = 1;        
     }
 
-	if(codecId == CODEC_ID_H264_DXVA) {
-		codecId = CODEC_ID_H264;
-		using_dxva = 1;
-	} else if(codecId == CODEC_ID_VC1_DXVA) {
-		codecId = CODEC_ID_VC1;
-		using_dxva = 1;
-	}
+    if(codecId == CODEC_ID_H264_DXVA) {
+        codecId = CODEC_ID_H264;
+        using_dxva = 1;
+    } else if(codecId == CODEC_ID_VC1_DXVA) {
+        codecId = CODEC_ID_VC1;
+        using_dxva = 1;
+    }
 	
     avcodec=libavcodec->avcodec_find_decoder(codecId);
     if (!avcodec) {
@@ -197,7 +197,7 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
     avctx=libavcodec->avcodec_alloc_context(avcodec, this);
     avctx->thread_type = thread_type;
     avctx->thread_count = threadcount;
-	avctx->h264_using_dxva = using_dxva;
+    avctx->h264_using_dxva = using_dxva;
 
     frame=libavcodec->avcodec_alloc_frame();
     avctx->width =pict.rectFull.dx;
@@ -212,7 +212,7 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
     }
 
     // Fix for new Haali custom media type and fourcc. ffmpeg does not understand it, we have to change it to FOURCC_AVC1
-    if (fcc==FOURCC_H264_HAALI) {
+    if (fcc==FOURCC_CCV1) {
         fcc=FOURCC_AVC1;
     }
 
@@ -239,11 +239,11 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
         delete extradata;
     }
     extradata=new Textradata(mt,FF_INPUT_BUFFER_PADDING_SIZE);
-    if (extradata->size>0 && (codecId!=CODEC_ID_H264 || fcc==FOURCC_AVC1 || fcc==FOURCC_H264_HAALI)) {
+    if (extradata->size>0 && (codecId!=CODEC_ID_H264 || fcc==FOURCC_AVC1)) {
         avctx->extradata_size=(int)extradata->size;
         avctx->extradata=extradata->data;
         sendextradata=mpeg12_codec(codecId);
-        if ((fcc==FOURCC_AVC1 || fcc==FOURCC_H264_HAALI) && mt.formattype==FORMAT_MPEG2Video) {
+        if ((fcc==FOURCC_AVC1) && mt.formattype==FORMAT_MPEG2Video) {
             const MPEG2VIDEOINFO *mpeg2info=(const MPEG2VIDEOINFO*)mt.pbFormat;
             avctx->nal_length_size=mpeg2info->dwFlags;
             bReorderBFrame=false;
@@ -363,7 +363,7 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
     }
 
     if (codecId == CODEC_ID_H264
-            && !(mt.subtype == MEDIASUBTYPE_AVC1 || mt.subtype == MEDIASUBTYPE_avc1)) {
+            && !(mt.subtype == MEDIASUBTYPE_AVC1 || mt.subtype == MEDIASUBTYPE_avc1 || mt.subtype == MEDIASUBTYPE_CCV1)) {
         ffstring sourceExt;
         extractfileext(deci->getSourceName(),sourceExt);
         sourceExt.ConvertToLowerCase();

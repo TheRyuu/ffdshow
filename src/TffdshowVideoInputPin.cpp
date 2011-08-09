@@ -77,7 +77,7 @@ HRESULT TffdshowVideoInputPin::CheckMediaType(const CMediaType* mt)
         if (hdr->biCompression==0 || hdr->biCompression == 0x0038002d) {
             if (mt->subtype == MEDIASUBTYPE_H264_TRANSPORT) {
                 hdr->biCompression=FOURCC_H264;
-            } else if (mt->subtype == MEDIASUBTYPE_AVC1 || mt->subtype == MEDIASUBTYPE_avc1 || mt->subtype == MEDIASUBTYPE_H264 || mt->subtype == MEDIASUBTYPE_h264 || mt->subtype == MEDIASUBTYPE_H264_HAALI) {
+            } else if (mt->subtype == MEDIASUBTYPE_AVC1 || mt->subtype == MEDIASUBTYPE_avc1 || mt->subtype == MEDIASUBTYPE_H264 || mt->subtype == MEDIASUBTYPE_h264 || mt->subtype == MEDIASUBTYPE_CCV1) {
                 hdr->biCompression = FOURCC_H264;
             } else {
                 hdr->biCompression=FOURCC_MPG2;
@@ -338,7 +338,7 @@ bool TffdshowVideoInputPin::init(const CMediaType &mt)
         if (biIn.bmiHeader.biCompression==0 || biIn.bmiHeader.biCompression == 0x0038002d) {
             if (mt.subtype == MEDIASUBTYPE_H264_TRANSPORT) {
                 biIn.bmiHeader.biCompression = FOURCC_H264;
-            } else if (mt.subtype == MEDIASUBTYPE_AVC1 || mt.subtype == MEDIASUBTYPE_avc1 || mt.subtype == MEDIASUBTYPE_H264 || mt.subtype == MEDIASUBTYPE_h264 || mt.subtype == MEDIASUBTYPE_H264_HAALI) {
+            } else if (mt.subtype == MEDIASUBTYPE_AVC1 || mt.subtype == MEDIASUBTYPE_avc1 || mt.subtype == MEDIASUBTYPE_H264 || mt.subtype == MEDIASUBTYPE_h264 || mt.subtype == MEDIASUBTYPE_CCV1) {
                 biIn.bmiHeader.biCompression = FOURCC_H264;
             } else {
                 biIn.bmiHeader.biCompression=FOURCC_MPG2;
@@ -468,8 +468,8 @@ again:
             return false;
         } else {
             static const GUID CLSID_NeroDigitalParser= {0xE206E4DE,0xA7EE,0x4A62,0xB3,0xE9,0x4F,0xBC,0x8F,0xE8,0x4C,0x73};
-            static const GUID CLSID_HalliMatroskaFile= {0x55DA30FC,0xF16B,0x49FC,0xBA,0xA5,0xAE,0x59,0xFC,0x65,0xF8,0x2D};
-            //dont_use_rtStop_from_upper_stream=biIn.bmiHeader.biCompression==FOURCC_AVC1 && (searchPreviousFilter(this,CLSID_NeroDigitalParser) || searchPreviousFilter(this,CLSID_HalliMatroskaFile));
+            static const GUID CLSID_HaaliMatroskaFile= {0x55DA30FC,0xF16B,0x49FC,0xBA,0xA5,0xAE,0x59,0xFC,0x65,0xF8,0x2D};
+            //dont_use_rtStop_from_upper_stream=biIn.bmiHeader.biCompression==FOURCC_AVC1 && (searchPreviousFilter(this,CLSID_NeroDigitalParser) || searchPreviousFilter(this,CLSID_HaaliMatroskaFile));
             video->connectedSplitter = connectedSplitter;
             video->isInterlacedRawVideo=isInterlacedRawVideo;
             video->containerSar=pictIn.rectFull.sar;

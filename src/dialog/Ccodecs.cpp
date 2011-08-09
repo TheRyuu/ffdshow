@@ -415,7 +415,7 @@ void TcodecsPageVideo::fillCodecs(void)
     if ((filterMode&IDFF_FILTERMODE_VIDEORAW)==0) {
         // Use preset setting instead
         static const Tformat::Toption options_h264[]= {{0,_l("skip deblocking when safe"),IDFF_fastH264,1},{0,_l("skip deblocking always"),IDFF_fastH264,2},{0,NULL,0,0}};
-        formats.push_back(Tformat(_l("H.264/AVC")     ,IDFF_h264,IDFF_MOVIE_LAVC,_l("H264, AVC1, X264, VSSH (incomplete), DAVC, PAVC."),options_h264));
+        formats.push_back(Tformat(_l("H.264/AVC")     ,IDFF_h264,IDFF_MOVIE_LAVC,_l("H264, AVC1, X264, VSSH (incomplete), DAVC, PAVC, CCV1."),options_h264));
         static const int movies_mpeg4[]= {IDFF_MOVIE_LAVC,IDFF_MOVIE_XVID4,0};
         formats.push_back(Tformat(_l("Xvid")          ,IDFF_xvid,movies_mpeg4,_l("XVID, XVIX")));
         formats.push_back(Tformat(_l("DivX 4/5/6")    ,IDFF_dx50,movies_mpeg4,_l("DIVX, DX50")));

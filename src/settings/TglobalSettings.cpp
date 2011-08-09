@@ -714,7 +714,7 @@ void TglobalSettingsDecVideo::load(void)
  FF_FOURCC_OP(DAVC,(dxvamask!=0) ? (h264 & rawmask) : IDFF_MOVIE_LAVC,c_h264) \
  FF_FOURCC_OP(PAVC,(dxvamask!=0) ? (h264 & rawmask) : IDFF_MOVIE_LAVC,c_h264) \
  FF_FOURCC_OP(AVC1,(dxvamask!=0) ? (h264 & rawmask) : IDFF_MOVIE_LAVC,c_h264) \
- FF_FOURCC_OP(H264_HAALI,(dxvamask!=0) ? (h264 & rawmask) : IDFF_MOVIE_LAVC,c_h264) \
+ FF_FOURCC_OP(CCV1,(dxvamask!=0) ? (h264 & rawmask) : IDFF_MOVIE_LAVC,c_h264) \
  /*FF_FOURCC_OP(SVM2,h264 & rawmask,c_h264)*/ \
  FF_FOURCC1_OP(MJPG,mjpg & rawmask & dxvamask,CODEC_ID_MJPEG) \
  FF_FOURCC1_OP(LJPG,mjpg & rawmask & dxvamask,CODEC_ID_MJPEG) \

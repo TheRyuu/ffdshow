@@ -186,7 +186,7 @@ const AMOVIESETUP_MEDIATYPE TffdshowDecVideo::inputMediaTypes[]= {
     { &MEDIATYPE_Video, &MEDIASUBTYPE_h264   },
     { &MEDIATYPE_Video, &MEDIASUBTYPE_AVC1   },
     { &MEDIATYPE_Video, &MEDIASUBTYPE_avc1   },
-    { &MEDIATYPE_Video, &MEDIASUBTYPE_H264_HAALI},
+    { &MEDIATYPE_Video, &MEDIASUBTYPE_CCV1   },
     { &MEDIATYPE_Video, &MEDIASUBTYPE_H263   },
     { &MEDIATYPE_Video, &MEDIASUBTYPE_h263   },
     { &MEDIATYPE_Video, &MEDIASUBTYPE_DIV3   },
@@ -310,7 +310,7 @@ const AMOVIESETUP_MEDIATYPE TffdshowDecVideoDXVA::inputMediaTypes[]= {
     { &MEDIATYPE_Video, &MEDIASUBTYPE_h264   },
     { &MEDIATYPE_Video, &MEDIASUBTYPE_AVC1   },
     { &MEDIATYPE_Video, &MEDIASUBTYPE_avc1   },
-    { &MEDIATYPE_Video, &MEDIASUBTYPE_H264_HAALI},
+    { &MEDIATYPE_Video, &MEDIASUBTYPE_CCV1   },
     { &MEDIATYPE_Video, &MEDIASUBTYPE_WVC1   },
     { &MEDIATYPE_Video, &MEDIASUBTYPE_wvc1   },
 };
