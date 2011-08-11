@@ -514,7 +514,7 @@ int attribute_align_arg avcodec_open2(AVCodecContext *avctx, AVCodec *codec, AVD
             av_opt_set_defaults(avctx->priv_data);
         }
       }
-      if (codec->priv_class && (ret = av_opt_set_dict(avctx->priv_data, &tmp) < 0))
+      if (codec->priv_class && (ret = av_opt_set_dict(avctx->priv_data, &tmp)) < 0)
           goto free_and_end;
     } else {
         avctx->priv_data = NULL;
@@ -896,6 +896,9 @@ const char *avcodec_license(void)
     return LICENSE_PREFIX LIBAV_LICENSE + sizeof(LICENSE_PREFIX) - 1;
 }
 
+#if !FF_API_AVCODEC_INIT
+static
+#endif
 void avcodec_init(void)
 {
     static int initialized = 0;
