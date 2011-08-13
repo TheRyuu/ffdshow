@@ -232,6 +232,7 @@ SRCS_C=\
     libavcodec/x86/motion_est_mmx.c \
     libavcodec/x86/mpegaudiodec_mmx.c \
     libavcodec/x86/mpegvideo_mmx.c \
+    libavcodec/x86/rv40dsp.c \
     libavcodec/x86/simple_idct_mmx.c \
     libavcodec/x86/vc1dsp_mmx.c \
     libavcodec/x86/vp56dsp_init.c \
@@ -323,8 +324,7 @@ SRCS_YASM=\
     libavcodec/x86/vc1dsp_yasm.asm \
     libavcodec/x86/vp3dsp.asm \
     libavcodec/x86/vp56dsp.asm \
-    libavcodec/x86/vp8dsp.asm \
-    libavcodec/x86/x86util.asm
+    libavcodec/x86/vp8dsp.asm
 
 
 ifeq ($(64BIT),yes)
@@ -375,7 +375,7 @@ endif
 #CFLAGS+=-save-temps
 #CFLAGS+=-fverbose-asm
 
-YASMFLAGS+=-Pconfig.asm
+YASMFLAGS+=-Pconfig.asm -I.
 
 
 ### INCLUDES ###

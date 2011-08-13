@@ -28,7 +28,7 @@
 ; in blocks as conventient to the vector size.
 ; i.e. {4x real, 4x imaginary, 4x real, ...} (or 2x respectively)
 
-%include "x86inc.asm"
+%include "libavutil/x86/x86inc.asm"
 
 %ifdef ARCH_X86_64
 %define pointer resq
@@ -300,7 +300,6 @@ IF%1 mova  Z(1), m5
 INIT_YMM
 
 %ifdef HAVE_AVX
-
 align 16
 fft8_avx:
     mova      m0, Z(0)
@@ -389,7 +388,6 @@ fft32_interleave_avx:
     sub r2d, mmsize/4
     jg .deint_loop
     ret
-
 %endif
 
 INIT_XMM
@@ -536,6 +534,7 @@ DEFINE_ARGS z, w, n, o1, o3
 
 INIT_YMM
 
+%ifdef HAVE_AVX
 %macro INTERL_AVX 5
     vunpckhps      %3, %2, %1
     vunpcklps      %2, %2, %1
@@ -547,7 +546,6 @@ INIT_YMM
 
 %define INTERL INTERL_AVX
 
-%ifdef HAVE_AVX
 DECL_PASS pass_avx, PASS_BIG 1
 DECL_PASS pass_interleave_avx, PASS_BIG 0
 %endif

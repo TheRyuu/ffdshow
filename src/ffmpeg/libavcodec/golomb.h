@@ -32,13 +32,12 @@
 
 #ifdef __cplusplus
 extern "C" {
+#define FFMIN(a,b) ((a) > (b) ? (b) : (a))
 #endif
 
 #include <stdint.h>
 #include "get_bits.h"
 #include "put_bits.h"
-
-#define FFMIN(a,b) ((a) > (b) ? (b) : (a))
 
 #define INVALID_VLC           0x80000000
 
@@ -538,6 +537,7 @@ static inline void set_sr_golomb_flac(PutBitContext *pb, int i, int k, int limit
 
     set_ur_golomb_jpegls(pb, v, k, limit, esc_len);
 }
+
 #ifdef __cplusplus
 }
 #endif
