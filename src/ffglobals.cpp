@@ -19,16 +19,14 @@
 #include "stdafx.h"
 #include "ffglobals.h"
 #include <shlobj.h>
-#include "libavcodec/golomb.h"
 #include "ffdshow_mediaguids.h"
-#include "rational.h"
-#include "libavcodec/avcodec.h"
 #include "TffPict.h"
 #include "autoptr.h"
 #include "reg.h"
 #include "Tstream.h"
 #include "compiler.h"
-//
+#include "libavcodec/golomb.h"
+
 const char_t *FFDSHOW_VER=_l(__DATE__) _l(" ") _l(__TIME__) _l(" (") _l(COMPILER) _l(COMPILER_X64) _l(", ") _l(UNICODE_BUILD) _l(COMPILER_INFO) _l(")");
 #undef COMPILER
 #undef COMPILER_SSE
@@ -740,10 +738,11 @@ static void decode_scaling_list(GetBitContext &gb, uint8_t *factors, int size/*,
         }
 }
 
+// FIXME: the golomb code often gets miscompiled (specially x64 and debug builds). replace it with something better
 bool decodeH264SPS(const unsigned char *hdr,size_t len,TffPictBase &pict)
 {
+    int i, sps_id;
     int sync=sync_video_packet(hdr,len);
-    unsigned int tmp;
     if((sync&~0x60) == 0x107 && sync != 0x107) { // H.264
         hdr+=2;
         len-=2;
@@ -753,11 +752,11 @@ bool decodeH264SPS(const unsigned char *hdr,size_t len,TffPictBase &pict)
     if ((hdr[2]&0x1F)!=NAL_SPS) {
         return false;
     }
-    int profile_idc, level_idc;
-    int sps_id, i;
+
     struct {
         int profile_idc;
         int level_idc;
+        int chroma_format_idc;
         int transform_bypass;              ///< qpprime_y_zero_transform_bypass_flag
         int log2_max_frame_num;            ///< log2_max_frame_num_minus4 + 4
         int poc_type;                      ///< pic_order_cnt_type
@@ -773,13 +772,16 @@ bool decodeH264SPS(const unsigned char *hdr,size_t len,TffPictBase &pict)
         int frame_mbs_only_flag;
         int mb_aff;                        ///<mb_adaptive_frame_field_flag
         int direct_8x8_inference_flag;
-        int crop;                   ///< frame_cropping_flag
-        int crop_left;              ///< frame_cropping_rect_left_offset
-        int crop_right;             ///< frame_cropping_rect_right_offset
-        int crop_top;               ///< frame_cropping_rect_top_offset
-        int crop_bottom;            ///< frame_cropping_rect_bottom_offset
+        int crop;                          ///< frame_cropping_flag
+        unsigned int crop_left;            ///< frame_cropping_rect_left_offset
+        unsigned int crop_right;           ///< frame_cropping_rect_right_offset
+        unsigned int crop_top;             ///< frame_cropping_rect_top_offset
+        unsigned int crop_bottom;          ///< frame_cropping_rect_bottom_offset
         int vui_parameters_present_flag;
         AVRational sar;
+        int video_signal_type_present_flag;
+        int full_range;
+        int colour_description_present_flag;
         int timing_info_present_flag;
         uint32_t num_units_in_tick;
         uint32_t time_scale;
@@ -789,53 +791,63 @@ bool decodeH264SPS(const unsigned char *hdr,size_t len,TffPictBase &pict)
         int num_reorder_frames;
         int scaling_matrix_present;
         uint8_t scaling_matrix4[6][16];
-        uint8_t scaling_matrix8[2][64];
+        uint8_t scaling_matrix8[6][64];
+        int nal_hrd_parameters_present_flag;
+        int vcl_hrd_parameters_present_flag;
+        int pic_struct_present_flag;
+        int time_offset_length;
+        int cpb_cnt;                       ///< See H.264 E.1.2
+        int initial_cpb_removal_delay_length; ///< initial_cpb_removal_delay_length_minus1 +1
+        int cpb_removal_delay_length;      ///< cpb_removal_delay_length_minus1 + 1
+        int dpb_output_delay_length;       ///< dpb_output_delay_length_minus1 + 1
+        int bit_depth_luma;                ///< bit_depth_luma_minus8 + 8
+        int bit_depth_chroma;              ///< bit_depth_chroma_minus8 + 8
+        int residual_color_transform_flag; ///< residual_colour_transform_flag
+        int constraint_set_flags;          ///< constraint_set[0-3]_flag
     } _sps,*sps=&_sps;
+
     GetBitContext gb;
     init_get_bits(&gb,hdr,(int)len*8);
     skip_bits(&gb,24);
 
-    profile_idc= get_bits(&gb, 8);
+    sps->profile_idc= get_bits(&gb, 8);
     get_bits1(&gb);   //constraint_set0_flag
     get_bits1(&gb);   //constraint_set1_flag
     get_bits1(&gb);   //constraint_set2_flag
     get_bits1(&gb);   //constraint_set3_flag
     get_bits(&gb, 4); // reserved
-    level_idc= get_bits(&gb, 8);
-    sps_id= get_ue_golomb(&gb);
-
-    sps->profile_idc= profile_idc;
-    sps->level_idc= level_idc;
+    sps->level_idc= get_bits(&gb, 8);
+    sps_id= get_ue_golomb_31(&gb);
 
     if(sps->profile_idc >= 100) { //high profile
-        int chroma_format_idc = get_ue_golomb(&gb);
-        if(chroma_format_idc == 3) { //chroma_format_idc
+        sps->chroma_format_idc = get_ue_golomb_31(&gb);
+        if(sps->chroma_format_idc == 3) { //chroma_format_idc
             get_bits1(&gb);    //residual_color_transform_flag
         }
-        int bit_depth_luma = get_ue_golomb(&gb) + 8;  //bit_depth_luma_minus8
-        int bit_depth_chroma = get_ue_golomb(&gb) + 8;  //bit_depth_chroma_minus8
+        sps->bit_depth_luma = get_ue_golomb(&gb) + 8;  //bit_depth_luma_minus8
+        sps->bit_depth_chroma = get_ue_golomb(&gb) + 8;  //bit_depth_chroma_minus8
         pict.csp = FF_CSP_UNSUPPORTED;
-        if (chroma_format_idc == 1 && bit_depth_luma == 8) pict.csp = FF_CSP_420P;
-        if (chroma_format_idc == 1 && bit_depth_luma == 10) pict.csp = FF_CSP_420P10;
-        if (chroma_format_idc == 3 && bit_depth_luma == 8) pict.csp = FF_CSP_444P;
-        if (chroma_format_idc == 3 && bit_depth_luma == 10) pict.csp = FF_CSP_444P10;
-        if (bit_depth_chroma != bit_depth_luma) {
+        if (sps->chroma_format_idc == 1 && sps->bit_depth_luma == 8) pict.csp = FF_CSP_420P;
+        if (sps->chroma_format_idc == 1 && sps->bit_depth_luma == 10) pict.csp = FF_CSP_420P10;
+        if (sps->chroma_format_idc == 3 && sps->bit_depth_luma == 8) pict.csp = FF_CSP_444P;
+        if (sps->chroma_format_idc == 3 && sps->bit_depth_luma == 10) pict.csp = FF_CSP_444P10;
+        if (sps->bit_depth_chroma != sps->bit_depth_luma) {
             pict.csp = FF_CSP_UNSUPPORTED;
             return false;
         }
-#ifdef _WIN64
-        if (bit_depth_luma > 8) {
+#if defined(WIN64)
+        if (sps->bit_depth_luma > 8) {
             pict.csp = FF_CSP_UNSUPPORTED;
             return false;
         }
 #endif
         sps->transform_bypass = get_bits1(&gb);
         if(get_bits1(&gb)) { //seq_scaling_matrix_present_flag
-            //decode_scaling_matrices(h, sps, NULL, 1, sps->scaling_matrix4, sps->scaling_matrix8);//av_log(h->s.avctx, AV_LOG_ERROR, "custom scaling matrix not implemented\n");
+            //decode_scaling_matrices(h, sps, NULL, 1, sps->scaling_matrix4, sps->scaling_matrix8);
             if(get_bits1(&gb)) {
                 sps->scaling_matrix_present = 1;
                 uint8_t scaling_matrix4[6][16];
-                uint8_t scaling_matrix8[2][64];
+                uint8_t scaling_matrix8[6][64];
                 decode_scaling_list(gb,scaling_matrix4[0],16); // Intra, Y
                 decode_scaling_list(gb,scaling_matrix4[1],16); // Intra, Cr
                 decode_scaling_list(gb,scaling_matrix4[2],16); // Intra, Cb
@@ -844,16 +856,27 @@ bool decodeH264SPS(const unsigned char *hdr,size_t len,TffPictBase &pict)
                 decode_scaling_list(gb,scaling_matrix4[5],16); // Inter, Cb
                 if(/*is_sps*/1) {
                     decode_scaling_list(gb,scaling_matrix8[0],64);  // Intra, Y
-                    decode_scaling_list(gb,scaling_matrix8[1],64);  // Inter, Y
+                    if(sps->chroma_format_idc == 3){
+                        decode_scaling_list(gb,scaling_matrix8[1],64);  // Intra, Cr
+                        decode_scaling_list(gb,scaling_matrix8[2],64);  // Intra, Cb
+                    }
+                    decode_scaling_list(gb,scaling_matrix8[3],64);  // Inter, Y
+                    if(sps->chroma_format_idc == 3){
+                        decode_scaling_list(gb,scaling_matrix8[4],64);  // Intra, Cr
+                        decode_scaling_list(gb,scaling_matrix8[5],64);  // Intra, Cb
+                    }
                 }
             }
         }
     } else {
-        sps->scaling_matrix_present=0;
+        sps->chroma_format_idc = 1;
+        sps->bit_depth_luma = 8;
+        sps->bit_depth_chroma = 8;
+        sps->scaling_matrix_present = 0;
     }
 
     sps->log2_max_frame_num= get_ue_golomb(&gb) + 4;
-    sps->poc_type= get_ue_golomb(&gb);
+    sps->poc_type= get_ue_golomb_31(&gb);
 
     if(sps->poc_type == 0) { //FIXME #define
         sps->log2_max_poc_lsb= get_ue_golomb(&gb) + 4;
@@ -861,28 +884,26 @@ bool decodeH264SPS(const unsigned char *hdr,size_t len,TffPictBase &pict)
         sps->delta_pic_order_always_zero_flag= get_bits1(&gb);
         sps->offset_for_non_ref_pic= get_se_golomb(&gb);
         sps->offset_for_top_to_bottom_field= get_se_golomb(&gb);
-        tmp= get_ue_golomb(&gb);
+        sps->poc_cycle_length= get_ue_golomb(&gb);
 
-        if(tmp >= sizeof(sps->offset_for_ref_frame) / sizeof(sps->offset_for_ref_frame[0])) {
-            //DPRINTF(_l("poc_cycle_length overflow %u\n"), tmp);
+        if(sps->poc_cycle_length >= sizeof(sps->offset_for_ref_frame) / sizeof(sps->offset_for_ref_frame[0])) {
+            DPRINTF(_l("poc_cycle_length overflow %u\n"), sps->poc_cycle_length);
             return false;
         }
-        sps->poc_cycle_length= tmp;
 
         for(i=0; i<sps->poc_cycle_length; i++) {
             sps->offset_for_ref_frame[i]= short(get_se_golomb(&gb));
         }
     } else if(sps->poc_type != 2) {
-        //DPRINTF(_l("illegal POC type %d\n"), sps->poc_type);
+        DPRINTF(_l("illegal POC type %d\n"), sps->poc_type);
         return false;
     }
 
     static const int MAX_PICTURE_COUNT=32;
-    tmp= get_ue_golomb(&gb);
-    if(tmp > MAX_PICTURE_COUNT-2) {
-        //DPRINTF(_l("too many reference frames\n"));
+    sps->ref_frame_count= get_ue_golomb_31(&gb);
+    if(sps->ref_frame_count > MAX_PICTURE_COUNT-2) {
+        DPRINTF(_l("too many reference frames\n"));
     }
-    sps->ref_frame_count= tmp;
     sps->gaps_in_frame_num_allowed_flag= get_bits1(&gb);
     sps->mb_width= get_ue_golomb(&gb) + 1;
     sps->mb_height= get_ue_golomb(&gb) + 1;
@@ -900,9 +921,6 @@ bool decodeH264SPS(const unsigned char *hdr,size_t len,TffPictBase &pict)
 
     sps->direct_8x8_inference_flag= get_bits1(&gb);
 
-    //if(!sps->direct_8x8_inference_flag && sps->mb_aff)
-    //    DPRINTF(_l("MBAFF + !direct_8x8_inference is not implemented\n"));
-
     sps->crop= get_bits1(&gb);
     if(sps->crop) {
         sps->crop_left  = get_ue_golomb(&gb);
@@ -913,10 +931,7 @@ bool decodeH264SPS(const unsigned char *hdr,size_t len,TffPictBase &pict)
             //DPRINTF(_l("insane cropping not completely supported, this could look slightly wrong ...\n"));
         }
     } else {
-        sps->crop_left  =
-            sps->crop_right =
-                sps->crop_top   =
-                    sps->crop_bottom= 0;
+        sps->crop_left = sps->crop_right = sps->crop_top = sps->crop_bottom = 0;
     }
 
     sps->vui_parameters_present_flag= get_bits1(&gb);
@@ -958,11 +973,8 @@ bool decodeH264SPS(const unsigned char *hdr,size_t len,TffPictBase &pict)
                 pict.setSar(sps->sar);
             }
         } else {
-            sps->sar.num=
-                sps->sar.den= 0;
+            sps->sar.num= sps->sar.den= 0;
         }
-
-
 
         if(get_bits1(&gb)) {     /* overscan_info_present_flag */
             get_bits1(&gb);      /* overscan_appropriate_flag */
@@ -1014,70 +1026,10 @@ bool decodeH264SPS(const unsigned char *hdr,size_t len,TffPictBase &pict)
             get_ue_golomb(&gb); /* max_dec_frame_buffering */
         }
     }
-    /*
-    //=============== PPS ================
-        skip_bits(&gb,24);
-        struct
-         {
-          int sps_id,pic_order_present,slice_group_count,mb_slice_group_map_type,ref_count[2],cabac,weighted_pred,weighted_bipred_idc,init_qp,init_qs,chroma_qp_index_offset,deblocking_filter_parameters_present,constrained_intra_pred,redundant_pic_cnt_present;
-         } _pps, *pps=&_pps;
-        pps->sps_id= get_ue_golomb(&gb);
-        pps->cabac= get_bits1(&gb);
-        pps->pic_order_present= get_bits1(&gb);
-        pps->slice_group_count= get_ue_golomb(&gb) + 1;
-        if(pps->slice_group_count > 1 ){
-            pps->mb_slice_group_map_type= get_ue_golomb(&gb);
-            //DPRINTF("FMO not supported\n");
-            switch(pps->mb_slice_group_map_type){
-            case 0:
-    #if 0
-    |   for( i = 0; i <= num_slice_groups_minus1; i++ ) |   |        |
-    |    run_length[ i ]                                |1  |ue(v)   |
-    #endif
-                break;
-            case 2:
-    #if 0
-    |   for( i = 0; i < num_slice_groups_minus1; i++ )  |   |        |
-    |{                                                  |   |        |
-    |    top_left_mb[ i ]                               |1  |ue(v)   |
-    |    bottom_right_mb[ i ]                           |1  |ue(v)   |
-    |   }                                               |   |        |
-    #endif
-                break;
-            case 3:
-            case 4:
-            case 5:
-    #if 0
-    |   slice_group_change_direction_flag               |1  |u(1)    |
-    |   slice_group_change_rate_minus1                  |1  |ue(v)   |
-    #endif
-                break;
-            case 6:
-    #if 0
-    |   slice_group_id_cnt_minus1                       |1  |ue(v)   |
-    |   for( i = 0; i <= slice_group_id_cnt_minus1; i++ |   |        |
-    |)                                                  |   |        |
-    |    slice_group_id[ i ]                            |1  |u(v)    |
-    #endif
-                break;
-            }
-        }
-        pps->ref_count[0]= get_ue_golomb(&gb) + 1;
-        pps->ref_count[1]= get_ue_golomb(&gb) + 1;
-        if(pps->ref_count[0] > 32 || pps->ref_count[1] > 32){
-            //DPRINTF("reference overflow (pps)\n");
-            return false;
-        }
 
-        pps->weighted_pred= get_bits1(&gb);
-        pps->weighted_bipred_idc= get_bits(&gb, 2);
-        pps->init_qp= get_se_golomb(&gb) + 26;
-        pps->init_qs= get_se_golomb(&gb) + 26;
-        pps->chroma_qp_index_offset= get_se_golomb(&gb);
-        pps->deblocking_filter_parameters_present= get_bits1(&gb);
-        pps->constrained_intra_pred= get_bits1(&gb);
-        pps->redundant_pic_cnt_present = get_bits1(&gb);
-    */
+    if(!sps->sar.den)
+        sps->sar.den= 1;
+
     return true;
 }
 void* memsetd(void *dest,uint32_t c,size_t bytes)
@@ -1175,6 +1127,7 @@ struct MPEG4context {
     int aspect_ratio_info;
     int aspected_width,aspected_height;
 };
+
 static const uint16_t pixel_aspect[16][2]= {
     {0, 0},
     {1, 1},
@@ -1193,6 +1146,8 @@ static const uint16_t pixel_aspect[16][2]= {
     {0, 0},
     {0, 0},
 };
+
+#define FF_ASPECT_EXTENDED 15
 
 static int decode_vol_header(MPEG4context *s, GetBitContext *gb)
 {
