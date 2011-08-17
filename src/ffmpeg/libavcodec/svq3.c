@@ -70,8 +70,6 @@ typedef struct {
     int unknown_flag;
     int next_slice_index;
     uint32_t watermark_key;
-    uint8_t *buf;
-    int buf_size;
 } SVQ3Context;
 
 #define FULLPEL_MODE  1
@@ -926,7 +924,10 @@ static av_cold int svq3_decode_init(AVCodecContext *avctx)
 
         h->b_stride = 4*s->mb_width;
 
-        ff_h264_alloc_tables(h);
+        if (ff_h264_alloc_tables(h) < 0) {
+            av_log(avctx, AV_LOG_ERROR, "svq3 memory allocation failed\n");
+            return AVERROR(ENOMEM);
+        }
     }
 
     return 0;
@@ -936,12 +937,12 @@ static int svq3_decode_frame(AVCodecContext *avctx,
                              void *data, int *data_size,
                              AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
     SVQ3Context *svq3 = avctx->priv_data;
     H264Context *h = &svq3->h;
     MpegEncContext *s = &h->s;
     int buf_size = avpkt->size;
     int m, mb_type, left;
-    uint8_t *buf;
 
     /* special case for last picture */
     if (buf_size == 0) {
@@ -953,20 +954,9 @@ static int svq3_decode_frame(AVCodecContext *avctx,
         return 0;
     }
 
+    init_get_bits (&s->gb, buf, 8*buf_size);
+
     s->mb_x = s->mb_y = h->mb_xy = 0;
-
-    if (svq3->watermark_key) {
-        av_fast_malloc(&svq3->buf, &svq3->buf_size,
-                       buf_size+FF_INPUT_BUFFER_PADDING_SIZE);
-        if (!svq3->buf)
-            return AVERROR(ENOMEM);
-        memcpy(svq3->buf, avpkt->data, buf_size);
-        buf = svq3->buf;
-    } else {
-        buf = avpkt->data;
-    }
-
-    init_get_bits(&s->gb, buf, 8*buf_size);
 
     if (svq3_decode_slice_header(avctx))
         return -1;
@@ -1111,9 +1101,6 @@ static int svq3_decode_end(AVCodecContext *avctx)
     ff_h264_free_context(h);
 
     MPV_common_end(s);
-
-    av_freep(&svq3->buf);
-    svq3->buf_size = 0;
 
     return 0;
 }
