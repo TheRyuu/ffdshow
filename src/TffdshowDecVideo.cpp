@@ -249,6 +249,7 @@ HRESULT TffdshowDecVideo::checkAllowOutChange(IPin *pPin)
             clsid==CLSID_DirectVobSubFilter2 ||	 
             clsid==CLSID_HaaliVideoRenderer ||	 
             clsid==CLSID_MADVideoRenderer ||	 
+            clsid==CLSID_JREncoderFilter ||
             clsid==CLSID_FFDSHOW ||	 
             clsid==CLSID_FFDSHOWRAW ||	 
             clsid==CLSID_FFDSHOWSUBTITLES;	 
