@@ -375,7 +375,7 @@ endif
 #CFLAGS+=-save-temps
 #CFLAGS+=-fverbose-asm
 
-YASMFLAGS+=-Pconfig.asm -I.
+YASMFLAGS+=-Pconfig.asm -I. -Ilibavutil/x86
 
 
 ### INCLUDES ###
