@@ -29,8 +29,9 @@
  * @see doc/multithreading.txt
  */
 
+#include <pthread.h>
+
 #include "avcodec.h"
-#include "../../pthreads/pthread.h"
 #include "thread.h"
 
 typedef int (action_func)(AVCodecContext *c, void *arg);

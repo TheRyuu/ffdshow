@@ -358,22 +358,21 @@ DEF=ffmpeg.def
 
 ### SETTINGS ###
 
-CFLAGS=-I. -Ilibavcodec -Ilibavutil -I../imgFilters -I../pthreads -I../zlib -DHAVE_AV_CONFIG_H -D_ISOC99_SOURCE -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -std=gnu99 \
+CFLAGS=-I. -Ilibavcodec -Ilibavutil -I../imgFilters -I../pthreads -I../zlib -DHAVE_AV_CONFIG_H -D_ISOC99_SOURCE -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPTW32_STATIC_LIB -std=gnu99 \
        -fomit-frame-pointer -fno-math-errno -fno-signed-zeros -Wdeclaration-after-statement -Wno-parentheses -Wno-switch \
        -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wno-pointer-sign -Wcast-qual -Wwrite-strings -Wtype-limits
 
-#CFLAGS+=-Wall -Wundef
-
 ifeq ($(64BIT),yes)
     CFLAGS+=-DARCH_X86_64
-    GCCLIBS=../../bin/lib_x64/libpthreadGC2.a -lws2_32
 else
     CFLAGS+=-DARCH_X86_32
-    GCCLIBS=../../bin/lib_x86/libpthreadGC2.a -lws2_32
 endif
 
+#CFLAGS+=-Wall -Wundef
 #CFLAGS+=-save-temps
 #CFLAGS+=-fverbose-asm
+
+GCCLIBS=-lpthread -lws2_32
 
 YASMFLAGS+=-Pconfig.asm -I. -Ilibavutil/x86
 
