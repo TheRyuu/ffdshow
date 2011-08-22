@@ -1818,8 +1818,8 @@ static av_always_inline void hl_decode_mb_internal(H264Context *h, int simple, i
     }
 
     if (!simple && IS_INTRA_PCM(mb_type)) {
-        const int bit_depth = h->sps.bit_depth_luma;
         if (pixel_shift) {
+            const int bit_depth = h->sps.bit_depth_luma;
             int j;
             GetBitContext gb;
             init_get_bits(&gb, (uint8_t*)h->mb, 384*bit_depth);
@@ -1833,22 +1833,27 @@ static av_always_inline void hl_decode_mb_internal(H264Context *h, int simple, i
                 if (!h->sps.chroma_format_idc) {
                     for (i = 0; i < 8; i++) {
                         uint16_t *tmp_cb = (uint16_t*)(dest_cb + i*uvlinesize);
+                        for (j = 0; j < 8; j++) {
+                            tmp_cb[j] = 1 << (bit_depth - 1);
+                        }
+                    }
+                    for (i = 0; i < 8; i++) {
                         uint16_t *tmp_cr = (uint16_t*)(dest_cr + i*uvlinesize);
                         for (j = 0; j < 8; j++) {
-                            tmp_cb[j] = tmp_cr[j] = 1 << (bit_depth - 1);
+                            tmp_cr[j] = 1 << (bit_depth - 1);
                         }
                     }
                 } else {
-                for (i = 0; i < 8; i++) {
-                    uint16_t *tmp_cb = (uint16_t*)(dest_cb + i*uvlinesize);
-                    for (j = 0; j < 8; j++)
-                        tmp_cb[j] = get_bits(&gb, bit_depth);
-                }
-                for (i = 0; i < 8; i++) {
-                    uint16_t *tmp_cr = (uint16_t*)(dest_cr + i*uvlinesize);
-                    for (j = 0; j < 8; j++)
-                        tmp_cr[j] = get_bits(&gb, bit_depth);
-                }
+                    for (i = 0; i < 8; i++) {
+                        uint16_t *tmp_cb = (uint16_t*)(dest_cb + i*uvlinesize);
+                        for (j = 0; j < 8; j++)
+                            tmp_cb[j] = get_bits(&gb, bit_depth);
+                    }
+                    for (i = 0; i < 8; i++) {
+                        uint16_t *tmp_cr = (uint16_t*)(dest_cr + i*uvlinesize);
+                        for (j = 0; j < 8; j++)
+                            tmp_cr[j] = get_bits(&gb, bit_depth);
+                    }
                 }
             }
         } else {
@@ -1857,15 +1862,15 @@ static av_always_inline void hl_decode_mb_internal(H264Context *h, int simple, i
             }
             if(simple || !CONFIG_GRAY || !(s->flags&CODEC_FLAG_GRAY)){
                 if (!h->sps.chroma_format_idc) {
-                    for (i=0; i<8; i++) {
-                        memset(dest_cb+ i*uvlinesize, 1 << (bit_depth - 1), 8);
-                        memset(dest_cr+ i*uvlinesize, 1 << (bit_depth - 1), 8);
+                    for (i = 0; i < 8; i++) {
+                        memset(dest_cb + i*uvlinesize, 128, 8);
+                        memset(dest_cr + i*uvlinesize, 128, 8);
                     }
                 } else {
-                for (i=0; i<8; i++) {
-                    memcpy(dest_cb+ i*uvlinesize, h->mb + 128 + i*4,  8);
-                    memcpy(dest_cr+ i*uvlinesize, h->mb + 160 + i*4,  8);
-                }
+                    for (i = 0; i < 8; i++) {
+                        memcpy(dest_cb + i*uvlinesize, h->mb + 128 + i*4,  8);
+                        memcpy(dest_cr + i*uvlinesize, h->mb + 160 + i*4,  8);
+                    }
                 }
             }
         }
@@ -2180,17 +2185,17 @@ static void implicit_weight_table(H264Context *h, int field){
     for(ref0=ref_start; ref0 < ref_count0; ref0++){
         int poc0 = h->ref_list[0][ref0].poc;
         for(ref1=ref_start; ref1 < ref_count1; ref1++){
-            int w= 32;
-            if (!h->ref_list[0][ref0].long_ref && !h->ref_list[1][ref1].long_ref){
-            int poc1 = h->ref_list[1][ref1].poc;
-            int td = av_clip(poc1 - poc0, -128, 127);
-            if(td){
-                int tb = av_clip(cur_poc - poc0, -128, 127);
-                int tx = (16384 + (FFABS(td) >> 1)) / td;
-                int dist_scale_factor = (tb*tx + 32) >> 8;
-                if(dist_scale_factor >= -64 && dist_scale_factor <= 128)
-                    w = 64 - dist_scale_factor;
-            }
+            int w = 32;
+            if (!h->ref_list[0][ref0].long_ref && !h->ref_list[1][ref1].long_ref) {
+                int poc1 = h->ref_list[1][ref1].poc;
+                int td = av_clip(poc1 - poc0, -128, 127);
+                if(td){
+                    int tb = av_clip(cur_poc - poc0, -128, 127);
+                    int tx = (16384 + (FFABS(td) >> 1)) / td;
+                    int dist_scale_factor = (tb*tx + 32) >> 8;
+                    if(dist_scale_factor >= -64 && dist_scale_factor <= 128)
+                        w = 64 - dist_scale_factor;
+                }
             }
             if(field<0){
                 h->implicit_weight[ref0][ref1][0]=
@@ -2586,14 +2591,12 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
         }
 
         switch (h->sps.bit_depth_luma) {
-#if ENABLE_HIGH_BIT
             case 9 :
                 s->avctx->pix_fmt = CHROMA444 ? PIX_FMT_YUV444P9 : PIX_FMT_YUV420P9;
                 break;
             case 10 :
                 s->avctx->pix_fmt = CHROMA444 ? PIX_FMT_YUV444P10 : PIX_FMT_YUV420P10;
                 break;
-#endif
             default:
                 if (CHROMA444){
                     s->avctx->pix_fmt = /*s->avctx->color_range == AVCOL_RANGE_JPEG ? PIX_FMT_YUVJ444P : */PIX_FMT_YUV444P;
@@ -2614,7 +2617,10 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
         h->prev_interlaced_frame = 1;
 
         init_scan_tables(h);
-        ff_h264_alloc_tables(h);
+        if (ff_h264_alloc_tables(h) < 0) {
+            av_log(h->s.avctx, AV_LOG_ERROR, "Could not allocate memory for h264\n");
+            return AVERROR(ENOMEM);
+        }
 
         if (!HAVE_THREADS || !(s->avctx->active_thread_type&FF_THREAD_SLICE)) {
             if (context_init(h) < 0) {
@@ -3736,7 +3742,6 @@ static int decode_nal_units(H264Context *h, const uint8_t *buf, int buf_size){
             if(avctx->has_b_frames < 2)
                 avctx->has_b_frames= !s->low_delay;
 
-            #if ENABLE_HIGH_BIT
             if (avctx->bits_per_raw_sample != h->sps.bit_depth_luma) {
                 if (h->sps.bit_depth_luma >= 8 && h->sps.bit_depth_luma <= 10) {
                     avctx->bits_per_raw_sample = h->sps.bit_depth_luma;
@@ -3751,7 +3756,6 @@ static int decode_nal_units(H264Context *h, const uint8_t *buf, int buf_size){
                     return -1;
                 }
             }
-            #endif
             break;
         case NAL_PPS:
             init_get_bits(&s->gb, ptr, bit_length);
