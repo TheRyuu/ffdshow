@@ -208,7 +208,12 @@ void ff_copy_picture(Picture *dst, Picture *src){
  */
 static void free_frame_buffer(MpegEncContext *s, Picture *pic)
 {
-    ff_thread_release_buffer(s->avctx, (AVFrame*)pic);
+    /* Windows Media Image codecs allocate internal buffers with different
+       dimensions; ignore user defined callbacks for these */
+    if (s->codec_id != CODEC_ID_WMV3IMAGE && s->codec_id != CODEC_ID_VC1IMAGE)
+        ff_thread_release_buffer(s->avctx, (AVFrame*)pic);
+    else
+        avcodec_default_release_buffer(s->avctx, (AVFrame*)pic);
 }
 
 /**
@@ -218,7 +223,10 @@ static int alloc_frame_buffer(MpegEncContext *s, Picture *pic)
 {
     int r;
 
-    r = ff_thread_get_buffer(s->avctx, (AVFrame*)pic);
+    if (s->codec_id != CODEC_ID_WMV3IMAGE && s->codec_id != CODEC_ID_VC1IMAGE)
+        r = ff_thread_get_buffer(s->avctx, (AVFrame*)pic);
+    else
+        r = avcodec_default_get_buffer(s->avctx, (AVFrame*)pic);
 
     if (r < 0 || !pic->f.age || !pic->f.type || !pic->f.data[0]) {
         av_log(s->avctx, AV_LOG_ERROR, "get_buffer() failed (%d %d %d %p)\n",

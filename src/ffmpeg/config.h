@@ -240,6 +240,7 @@ Note: when adding a new codec, you have to:
 #define CONFIG_TSCC_DECODER 1
 #define CONFIG_ULTI_DECODER 1
 #define CONFIG_VC1_DECODER 1
+#define CONFIG_VC1IMAGE_DECODER 1
 #define CONFIG_VCR1_DECODER 1
 #define CONFIG_VP3_DECODER 1
 #define CONFIG_VP5_DECODER 1
@@ -250,6 +251,7 @@ Note: when adding a new codec, you have to:
 #define CONFIG_WMV1_DECODER 1
 #define CONFIG_WMV2_DECODER 1
 #define CONFIG_WMV3_DECODER 1
+#define CONFIG_WMV3IMAGE_DECODER 1
 #define CONFIG_WNV1_DECODER 1
 #define CONFIG_XL_DECODER 1
 #define CONFIG_ZLIB_DECODER 1
