@@ -3019,7 +3019,7 @@ static void vc1_decode_i_blocks_adv(VC1Context *v)
         s->mb_x = 0;
         ff_init_block_index(s);
         memset(&s->coded_block[s->block_index[0]-s->b8_stride], 0,
-               s->b8_stride * sizeof(*s->coded_block));
+               (1 + s->b8_stride) * sizeof(*s->coded_block));
     }
     for(; s->mb_y < s->end_mb_y; s->mb_y++) {
         s->mb_x = 0;
@@ -3584,8 +3584,8 @@ static av_cold int vc1_decode_init(AVCodecContext *avctx)
     if (vc1_init_common(v) < 0) return -1;
     ff_vc1dsp_init(&v->vc1dsp);
 
-    cur_width = avctx->coded_width = avctx->width;
-    cur_height = avctx->coded_height = avctx->height;
+    cur_width = avctx->coded_width;
+    cur_height = avctx->coded_height;
     if (avctx->codec_id == CODEC_ID_WMV3 || avctx->codec_id == CODEC_ID_WMV3IMAGE)
     {
         int count = 0;
