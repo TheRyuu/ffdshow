@@ -475,7 +475,7 @@ again:
             video->containerSar=pictIn.rectFull.sar;
             if (!video->beginDecompress(pictIn,
                                         biIn.bmiHeader.biCompression,mt,
-                                        (dont_use_rtStop_from_upper_stream ? TvideoCodecDec::SOURCE_NEROAVC : 0) | (truncated ? TvideoCodecDec::SOURCE_TRUNCATED : 0))) {
+                                        (dont_use_rtStop_from_upper_stream ? TvideoCodecDec::SOURCE_REORDER : 0) | (truncated ? TvideoCodecDec::SOURCE_TRUNCATED : 0))) {
                 delete video;
                 codec=video=NULL;
                 return false;

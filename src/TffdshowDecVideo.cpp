@@ -1125,7 +1125,7 @@ STDMETHODIMP TffdshowDecVideo::setFrameTime(TffPict &pict, bool &frameTimeRecons
     int codecId = inpin->getInCodecId2();
     if (mpeg12_codec(codecId) && inpin->biIn.bmiHeader.biCompression!=FOURCC_MPEG) {
         frameTimeOk=S_OK;
-    } else if (inpin->sourceFlags&TvideoCodecDec::SOURCE_NEROAVC && pict.rtStart!=REFTIME_INVALID && pict.rtStop==REFTIME_INVALID) {
+    } else if (inpin->sourceFlags&TvideoCodecDec::SOURCE_REORDER && pict.rtStart!=REFTIME_INVALID && pict.rtStop==REFTIME_INVALID) {
         pict.rtStop=pict.rtStart+inpin->avgTimePerFrame;
         frameTimeOk=S_OK;
     }

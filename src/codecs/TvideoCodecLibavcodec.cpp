@@ -362,11 +362,12 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
         return false;
     }
 
+    ffstring sourceExt;
+    extractfileext(deci->getSourceName(),sourceExt);
+    sourceExt.ConvertToLowerCase();
+
     if (codecId == CODEC_ID_H264
             && !(mt.subtype == MEDIASUBTYPE_AVC1 || mt.subtype == MEDIASUBTYPE_avc1 || mt.subtype == MEDIASUBTYPE_CCV1)) {
-        ffstring sourceExt;
-        extractfileext(deci->getSourceName(),sourceExt);
-        sourceExt.ConvertToLowerCase();
         // avi and ogm files do not have access unit delimiter
         // Neuview Source is an AVI splitter that does not implement IFileSourceFilter.
         if ( sourceExt != L"avi"
@@ -388,7 +389,7 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
         pict.setSar(avctx->sample_aspect_ratio);
     }
     containerSar=pict.rectFull.sar;
-    dont_use_rtStop_from_upper_stream = (sourceFlags&SOURCE_NEROAVC || avctx->codec_tag==FOURCC_MPG1 || avctx->codec_tag==FOURCC_MPG2) && avctx->codec_tag!=FOURCC_THEO;
+    dont_use_rtStop_from_upper_stream = (sourceFlags&SOURCE_REORDER && sourceExt != L"avi" && avctx->codec_tag!=FOURCC_THEO) || avctx->codec_tag==FOURCC_MPG1 || avctx->codec_tag==FOURCC_MPG2;
     avgTimePerFrame=-1;
     codecinited=true;
     wasKey=false;
