@@ -5,7 +5,7 @@ WelcomeLabel1=[name/ver]
 en.WelcomeLabel2=This will install ffdshow on your computer.%n%nIt is recommended that you close all other applications before continuing.
 en.FileAbortRetryIgnore=Quit the application using ffdshow and click Retry. If the problem persists, click Abort, restart your computer and setup again.
 en.FinishedRestartLabel=To complete the installation of ffdshow, Setup must restart your computer. Would you like to restart now?%n%nHint: To avoid restarting computer from the next time, it may be effective to enable "DirectShow control" -> "Don't use ffdshow in:" -> "explorer.exe" in video decoder configuration.
-en.WinVersionTooLowError=This build of ffdshow requires Windows 2000 or newer. Revision 2352 of ffdshow is the last one that works on Windows 98/ME.
+en.WinVersionTooLowError=This build of ffdshow requires Windows XP SP2 or newer.
 
 #if localize
 
@@ -13,55 +13,55 @@ en.WinVersionTooLowError=This build of ffdshow requires Windows 2000 or newer. R
 cs.WelcomeLabel2=Tento instalátor nainstaluje na váš počítač ffdshow.%n%nPředtím než spustíte instalaci je doporučeno ukončit všechny ostatní aplikace.
 cs.FileAbortRetryIgnore=Ukončete aplikaci používající ffdshow a klikněte na Opakovat. Pokud problém přetrvává, ukončete instalaci tlačítkem Přerušit, restartujte počítač a znovu spusťte instalci.
 cs.FinishedRestartLabel=Aby mohla být instalace ffdshow dokončena, musí instalátor restartovat počítač. Chcete počítač restartovat nyní?%n%nTip: Potřebě restartování se pro příště můžete vyhnout pokud v nastavení video dekodéru nastavíte "DirectShow"-"ffdshow nepoužívat v:"-"explorer.exe".
-cs.WinVersionTooLowError=Tato verze ffdshow vyžaduje Windows 2000 nebo novější. Revize 2352 ffdshow je poslední, která funguje ve Windows 98/ME.
+cs.WinVersionTooLowError=Tato verze ffdshow vyžaduje Windows XP SP2 nebo novější.
 
 ; German
 de.WelcomeLabel2=Dieser Assistent wird jetzt ffdshow auf Ihrem Computer installieren.%n%nSie sollten alle anderen Anwendungen beenden, bevor Sie mit dem Setup fortfahren.
 de.FileAbortRetryIgnore=Beenden Sie das Programm, das ffdshow verwendet und klicken Sie auf "Wiederholen". Sollte das Problem weiterhin bestehen, klicken Sie auf "Abbrechen", starten Sie Ihren Computer neu und führen Sie das Setup erneut aus.
 de.FinishedRestartLabel=Um die Installation von ffdshow zu fertig zu stellen, muss das Setup Ihren Computer neu starten. Soll jetzt neu gestartet werden?%n%nHinweis: Um ihren Computer beim nächsten Mal nicht neu starten zu müssen, kann es helfen, in der Videodekoder-Konfiguration unter "DirectShow-Optionen" -> "ffdshow nicht verwenden in:" zu aktivieren.
-de.WinVersionTooLowError=Dieses ffdshow-Build benötigt Windows 2000 oder neuer. ffdshow-Revision 2352 ist die letzte, die auf Windows 98/ME funktioniert.
+de.WinVersionTooLowError=Dieses ffdshow-Build benötigt Windows XP SP2 oder neuer.
 
 ; Spanish
 es.WelcomeLabel2=Esto instalará ffdshow en su ordenador.%n%nSe recomienda cerrar las demás aplicaciones antes de continuar.
 es.FileAbortRetryIgnore=Cierre la aplicacion que está usando ffdshow y haga clic en Reintentar. Si el problema persiste, haga clic en Abortar, reinicie su ordenador y vuelva a ejecutar el programa de instalación.
 es.FinishedRestartLabel=Para completar la instalación de ffdshow es necesario reiniciar su ordenador. ¿Quiere reiniciar ahora?%n%nConsejo: Para evitar tener que reiniciar el ordenador la próxima vez, puede ser útil activar la opción "Control DirectShow" -> "No usar ffdshow con:" -> "explorer.exe" en el panel de configuración del decodificador de Vídeo.
-es.WinVersionTooLowError=Esta versión de ffdshow requiere Windows 2000 o posterior. La versión 2352 de ffdshow es la última que funciona en Windows 98/ME.
+es.WinVersionTooLowError=Esta versión de ffdshow requiere Windows XP SP2 o posterior.
 
 ; French
 fr.WelcomeLabel2=Ceci installera ffdshow sur votre ordinateur.%n%nIl est recommandé de fermer toutes les autres applications avant de continuer.
 fr.FileAbortRetryIgnore=Quitter l'application qui utilise ffdshow et cliquer sur Ressayer. Si le problème persiste, cliquer sur Annuler, redémarrer l'ordinateur et réinstaller de nouveau.
 fr.FinishedRestartLabel=Pour compléter l'installation de ffdshow, l'installation doit redémarrer votre ordinateur. Voulez-vous le redémarrer maintenant ?%n%nHint : Pour éviter de redémarrer votre ordinateur la prochaine fois, il est conseiller d'activer l'option "ne pas utiliser ffdshow dans :"-"explorer.exe" dans « Infos & Debogage » du panneau configuration du décodeur vidéo ffdshow.
-fr.WinVersionTooLowError=Cette version de ffdshow nécessite Windows 2000 ou plus récent. La révision 2352 de ffdshow est la dernière compatible avec Windows 98/ME.
+fr.WinVersionTooLowError=Cette version de ffdshow nécessite Windows XP SP2 ou plus récent.
 
 ; Japanese
 ja.WelcomeLabel2=このプログラムはご使用のコンピュータへ ffdshow をインストールします。%n%n続行する前に他のアプリケーションをすべて終了してください。
 ja.FileAbortRetryIgnore=ffdshow を使用中のアプリケーションを終了して「再試行」をクリックしてください。解決しない場合は「中止」をクリックしてコンピュータを再起動後、もう一度セットアップを実行してください。
 ja.FinishedRestartLabel=ffdshow のインストールを完了するためには、コンピュータを再起動する必要があります。%n%nすぐに再起動しますか？%n%nヒント：ビデオデコーダー設定の「DirectShow のコントロール」の「ffdshow を使用しない」で「explorer.exe」を有効にしておくと次回から再起動が不要になるかもしれません。
-ja.WinVersionTooLowError=このバージョンの ffdshow は Windows 2000 以降が必要です。リビジョン 2352 より前のバージョンを御使用ください。
+ja.WinVersionTooLowError=このバージョンの ffdshow は Windows XP SP2 以降が必要です。
 
 ; Polish
 pl.WelcomeLabel2=Instalator zainstaluje ffdshow na twoim komputerze.%n%nZaleca się zamknięcie wszystkich innych aplikacji przed kontynuowaniem procesu instalacji.
 pl.FileAbortRetryIgnore=Zamknij aplikację używającą ffdshow i wciśnij Ponów. Jeśli problem nie ustępuje, wciśnij Przerwij, zrestartuj komputer i ponownie uruchom instalację.
 pl.FinishedRestartLabel=By zakończyć instalację ffdshow, instalator musi zrestartować twój komputer. Czy chciałbyś zrestartować go teraz?%n%nPodpowiedź: By uniknąć restartowania komputera następnym razem, zaznacz w zakładce "Informacje" - "Nie używaj ffdshow w:" - "explorer.exe" w konfiguracji dekodera obrazu.
-pl.WinVersionTooLowError=Ta kompilacja ffdshow wymaga Windows 2000 lub nowszego. Wersja 2352 jest ostatnią działającą na Windows 98/ME.
+pl.WinVersionTooLowError=Ta kompilacja ffdshow wymaga Windows XP SP2 lub nowszego.
 
 ; Russian
 ru.WelcomeLabel2=Программа установит ffdshow на Ваш компьютер.%n%nРекомендуется закрыть все прочие приложения перед тем, как продолжить.
 ru.FileAbortRetryIgnore=Закройте все приложения, использующие ffdshow, и нажмите "Повтор". Если ситуация повторится, нажмите "Отказ", перезагрузите Ваш компьютер и попробуйте ещё раз.
 ru.FinishedRestartLabel=Для завершения установки ffdshow требуется перезагрузить компьютер. Произвести перезагрузку сейчас?%n%nПодсказка: избежать перезагрузки компьютера в следующий раз может помочь включение "Отладка"-"Не использовать в"-"explorer.exe" в конфигурации видеодекодера.
-ru.WinVersionTooLowError=Для этого билда ffdshow необходимо использование Windows 2000 или новее. Билд 2352 ffdshow является последним для использования в ОС Windows 98/ME.
+ru.WinVersionTooLowError=Для этого билда ffdshow необходимо использование Windows XP SP2 или новее.
 
 ; Chinese (Simplified)
 zh_Hans.WelcomeLabel2=即将安装 ffdshow 到您的电脑中。%n%n建议您在继续安装前关闭所有其他应用程序。
 zh_Hans.FileAbortRetryIgnore=退出正在使用 ffdshow 的应用程序然后重试。如果问题仍然出现，单击“中止”按钮，并重新启动计算机然后再运行安装程序。
 zh_Hans.FinishedRestartLabel=安装程序需要重新启动计算机来完成 ffdshow 的安装过程。你想现在重新启动吗？%n%n提示：如果下次安装不想重新启动计算机，可以勾选“不要在下列程序中使用ffdshow：”复选框（位于“ffdshow视频解码器配置”->“DirectShow控制”），并把“explorer.exe”加入后面的列表。
-;zh_Hans.WinVersionTooLowError=This build of ffdshow requires Windows 2000 or newer. Revision 2352 of ffdshow is the last one that works on Windows 98/ME.
+;zh_Hans.WinVersionTooLowError=This build of ffdshow requires Windows XP SP2 or newer.
 
 ; Chinese (Traditional)
 zh_Hant.WelcomeLabel2=這會安裝 ffdshow 到您的電腦.%n%n建議您在繼續之前關閉其它所有的應用程式.
 zh_Hant.FileAbortRetryIgnore=退出使用 ffdshow 的應用程式並點擊 Retry. 如果問題還是持續, 請點擊 Abort, 重新啟動您的電腦並再次執行安裝程式.
 zh_Hant.FinishedRestartLabel=要完成 ffdshow 的安裝, 安裝程式必須重新啟動您的電腦. 您想要現在重新啟動嗎?%n%n提示: 為了避免下次重新啟動電腦, 可以於視訊解碼器組態內的 "DirectShow 控制" -> "不使用 ffdshow 於:" 中加入 "explorer.exe".
-zh_Hant.WinVersionTooLowError=此版的 ffdshow 需要 Windows 2000 或更新的版本. 2352 版的 ffdshow 是在 Windows 98/ME 上運行的最後一版.
+zh_Hant.WinVersionTooLowError=此版的 ffdshow 需要 Windows XP SP2 或更新的版本.
 
 ; Add other languages here
 
