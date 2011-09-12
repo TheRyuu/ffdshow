@@ -113,7 +113,6 @@ static void RENAME(yuv2yuvX)(SwsContext *c, const int16_t *lumFilter,
                              int chrFilterSize, const int16_t **alpSrc,
                              uint8_t *dest[4], int dstW, int chrDstW)
 {
-    int i;
     uint8_t *yDest = dest[0], *uDest = dest[1], *vDest = dest[2],
             *aDest = CONFIG_SWSCALE_ALPHA ? dest[3] : NULL;
     const uint8_t *lumDither = c->lumDither8, *chrDither = c->chrDither8;
@@ -193,11 +192,6 @@ static void RENAME(yuv2yuvX)(SwsContext *c, const int16_t *lumFilter,
 static av_always_inline void
 dither_8to32(SwsContext *c, const uint8_t *srcDither, int rot)
 {
-int i;
-if(rot) for(i=0; i<8; i++) c->dither32[i] = srcDither[(i+3)&7]<<12;
-else    for(i=0; i<8; i++) c->dither32[i] = srcDither[i&7]<<12;
-return;
-
     if (rot) {
         __asm__ volatile("pxor      %%mm0, %%mm0\n\t"
                          "movq       (%0), %%mm4\n\t"
@@ -214,10 +208,10 @@ return;
                          "punpckhwd %%mm0, %%mm5\n\t"
                          "punpcklwd %%mm0, %%mm6\n\t"
                          "punpckhwd %%mm0, %%mm7\n\t"
-                         "psllw       $12, %%mm4\n\t"
-                         "psllw       $12, %%mm5\n\t"
-                         "psllw       $12, %%mm6\n\t"
-                         "psllw       $12, %%mm7\n\t"
+                         "pslld       $12, %%mm4\n\t"
+                         "pslld       $12, %%mm5\n\t"
+                         "pslld       $12, %%mm6\n\t"
+                         "pslld       $12, %%mm7\n\t"
                          "movq      %%mm4, "DITHER32"+0(%1)\n\t"
                          "movq      %%mm5, "DITHER32"+8(%1)\n\t"
                          "movq      %%mm6, "DITHER32"+16(%1)\n\t"
@@ -236,10 +230,10 @@ return;
                          "punpckhwd %%mm0, %%mm5\n\t"
                          "punpcklwd %%mm0, %%mm6\n\t"
                          "punpckhwd %%mm0, %%mm7\n\t"
-                         "psllw       $12, %%mm4\n\t"
-                         "psllw       $12, %%mm5\n\t"
-                         "psllw       $12, %%mm6\n\t"
-                         "psllw       $12, %%mm7\n\t"
+                         "pslld       $12, %%mm4\n\t"
+                         "pslld       $12, %%mm5\n\t"
+                         "pslld       $12, %%mm6\n\t"
+                         "pslld       $12, %%mm7\n\t"
                          "movq      %%mm4, "DITHER32"+0(%1)\n\t"
                          "movq      %%mm5, "DITHER32"+8(%1)\n\t"
                          "movq      %%mm6, "DITHER32"+16(%1)\n\t"
@@ -257,7 +251,6 @@ static void RENAME(yuv2yuvX_ar)(SwsContext *c, const int16_t *lumFilter,
                                 int chrFilterSize, const int16_t **alpSrc,
                                 uint8_t *dest[4], int dstW, int chrDstW)
 {
-    int i;
     uint8_t *yDest = dest[0], *uDest = dest[1], *vDest = dest[2],
             *aDest = CONFIG_SWSCALE_ALPHA ? dest[3] : NULL;
     const uint8_t *lumDither = c->lumDither8, *chrDither = c->chrDither8;

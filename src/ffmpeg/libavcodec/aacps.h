@@ -2,20 +2,20 @@
  * MPEG-4 Parametric Stereo definitions and declarations
  * Copyright (c) 2010 Alex Converse <alex.converse@gmail.com>
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -52,11 +52,11 @@ typedef struct {
     int    num_env;
     int    enable_ipdopd;
     int    border_position[PS_MAX_NUM_ENV+1];
-    int8_t iid_par[PS_MAX_NUM_ENV][PS_MAX_NR_IIDICC]; //<Inter-channel Intensity Difference Parameters
-    int8_t icc_par[PS_MAX_NUM_ENV][PS_MAX_NR_IIDICC]; //<Inter-Channel Coherence Parameters
+    int8_t iid_par[PS_MAX_NUM_ENV][PS_MAX_NR_IIDICC]; ///< Inter-channel Intensity Difference Parameters
+    int8_t icc_par[PS_MAX_NUM_ENV][PS_MAX_NR_IIDICC]; ///< Inter-Channel Coherence Parameters
     /* ipd/opd is iid/icc sized so that the same functions can handle both */
-    int8_t ipd_par[PS_MAX_NUM_ENV][PS_MAX_NR_IIDICC]; //<Inter-channel Phase Difference Parameters
-    int8_t opd_par[PS_MAX_NUM_ENV][PS_MAX_NR_IIDICC]; //<Overall Phase Difference Parameters
+    int8_t ipd_par[PS_MAX_NUM_ENV][PS_MAX_NR_IIDICC]; ///< Inter-channel Phase Difference Parameters
+    int8_t opd_par[PS_MAX_NUM_ENV][PS_MAX_NR_IIDICC]; ///< Overall Phase Difference Parameters
     int    is34bands;
     int    is34bands_old;
 

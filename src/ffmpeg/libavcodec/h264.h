@@ -28,9 +28,6 @@
 #ifndef AVCODEC_H264_H
 #define AVCODEC_H264_H
 
-// Hack to disable 9/10-bit decoding
-#define ENABLE_HIGH_BIT 1
-
 #include "libavutil/intreadwrite.h"
 #include "dsputil.h"
 #include "cabac.h"
@@ -55,6 +52,8 @@
 #define MAX_MMCO_COUNT 66
 
 #define MAX_DELAYED_PIC_COUNT 16
+
+#define MAX_MBPAIR_SIZE (256*1024) // a tighter bound could be calculated if someone cares about a few bytes
 
 /* Compiling in interlaced support reduces the speed
  * of progressive decoding by about 2%. */
@@ -589,6 +588,8 @@ typedef struct H264Context{
     // Timestamp stuff
     int sei_buffering_period_present;  ///< Buffering period SEI flag
     int initial_cpb_removal_delay[32]; ///< Initial timestamps for CPBs
+
+    int16_t slice_row[MAX_SLICES]; ///< to detect when MAX_SLICES is too low
 
     /* ffdshow custom stuff */
     int has_to_drop_first_non_ref;    // Workaround Haali's media splitter (http://forum.doom9.org/showthread.php?p=1226434#post1226434)

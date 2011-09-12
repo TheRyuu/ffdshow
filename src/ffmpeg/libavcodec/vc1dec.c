@@ -242,7 +242,7 @@ static void vc1_loop_filter_iblk(VC1Context *v, int pq)
     }
     v->vc1dsp.vc1_v_loop_filter16(s->dest[0] + 8*s->linesize, s->linesize, pq);
 
-    if (s->mb_y == s->mb_height-1) {
+    if (s->mb_y == s->end_mb_y-1) {
         if (s->mb_x) {
             v->vc1dsp.vc1_h_loop_filter16(s->dest[0], s->linesize, pq);
             v->vc1dsp.vc1_h_loop_filter8(s->dest[1], s->uvlinesize, pq);
@@ -294,7 +294,7 @@ static void vc1_loop_filter_iblk_delayed(VC1Context *v, int pq)
             v->vc1dsp.vc1_v_loop_filter16(s->dest[0] - 8 * s->linesize, s->linesize, pq);
         }
 
-        if (s->mb_y == s->mb_height) {
+        if (s->mb_y == s->end_mb_y) {
             if (s->mb_x) {
                 if (s->mb_x >= 2)
                     v->vc1dsp.vc1_h_loop_filter16(s->dest[0] - 16 * s->linesize - 16, s->linesize, pq);
@@ -2329,7 +2329,7 @@ static av_always_inline void vc1_apply_p_v_loop_filter(VC1Context *v, int block_
     } else {
         dst      = s->dest[0] + (block_num & 1) * 8 + ((block_num & 2) * 4 - 8) * linesize;
     }
-    if (s->mb_y != s->mb_height || block_num < 2) {
+    if (s->mb_y != s->end_mb_y || block_num < 2) {
         int16_t (*mv)[2];
         int mv_stride;
 
@@ -3095,7 +3095,7 @@ static void vc1_decode_i_blocks_adv(VC1Context *v)
         if(v->s.loop_filter) vc1_loop_filter_iblk_delayed(v, v->pq);
     }
     if (v->s.loop_filter)
-        ff_draw_horiz_band(s, (s->mb_height-1)*16, 16);
+        ff_draw_horiz_band(s, (s->end_mb_y-1)*16, 16);
     ff_er_add_slice(s, 0, s->start_mb_y, s->mb_width - 1, s->end_mb_y - 1, (AC_END|DC_END|MV_END));
 }
 
@@ -3218,7 +3218,7 @@ static void vc1_decode_b_blocks(VC1Context *v)
         s->first_slice_line = 0;
     }
     if (v->s.loop_filter)
-        ff_draw_horiz_band(s, (s->mb_height-1)*16, 16);
+        ff_draw_horiz_band(s, (s->end_mb_y-1)*16, 16);
     ff_er_add_slice(s, 0, s->start_mb_y, s->mb_width - 1, s->end_mb_y - 1, (AC_END|DC_END|MV_END));
 }
 
@@ -3226,9 +3226,9 @@ static void vc1_decode_skip_blocks(VC1Context *v)
 {
     MpegEncContext *s = &v->s;
 
-    ff_er_add_slice(s, 0, 0, s->mb_width - 1, s->mb_height - 1, (AC_END|DC_END|MV_END));
+    ff_er_add_slice(s, 0, s->start_mb_y, s->mb_width - 1, s->end_mb_y - 1, (AC_END|DC_END|MV_END));
     s->first_slice_line = 1;
-    for(s->mb_y = 0; s->mb_y < s->mb_height; s->mb_y++) {
+    for(s->mb_y = s->start_mb_y; s->mb_y < s->end_mb_y; s->mb_y++) {
         s->mb_x = 0;
         ff_init_block_index(s);
         ff_update_block_index(s);
@@ -3551,6 +3551,58 @@ static void vc1_sprite_flush(AVCodecContext *avctx)
 
 #endif
 
+static av_cold int vc1_decode_init_alloc_tables(VC1Context *v)
+{
+    MpegEncContext *s = &v->s;
+    int i;
+
+    /* Allocate mb bitplanes */
+    v->mv_type_mb_plane = av_malloc(s->mb_stride * s->mb_height);
+    v->direct_mb_plane = av_malloc(s->mb_stride * s->mb_height);
+    v->acpred_plane = av_malloc(s->mb_stride * s->mb_height);
+    v->over_flags_plane = av_malloc(s->mb_stride * s->mb_height);
+
+    v->n_allocated_blks = s->mb_width + 2;
+    v->block = av_malloc(sizeof(*v->block) * v->n_allocated_blks);
+    v->cbp_base = av_malloc(sizeof(v->cbp_base[0]) * 2 * s->mb_stride);
+    v->cbp = v->cbp_base + s->mb_stride;
+    v->ttblk_base = av_malloc(sizeof(v->ttblk_base[0]) * 2 * s->mb_stride);
+    v->ttblk = v->ttblk_base + s->mb_stride;
+    v->is_intra_base = av_malloc(sizeof(v->is_intra_base[0]) * 2 * s->mb_stride);
+    v->is_intra = v->is_intra_base + s->mb_stride;
+    v->luma_mv_base = av_malloc(sizeof(v->luma_mv_base[0]) * 2 * s->mb_stride);
+    v->luma_mv = v->luma_mv_base + s->mb_stride;
+
+    /* allocate block type info in that way so it could be used with s->block_index[] */
+    v->mb_type_base = av_malloc(s->b8_stride * (s->mb_height * 2 + 1) + s->mb_stride * (s->mb_height + 1) * 2);
+    v->mb_type[0] = v->mb_type_base + s->b8_stride + 1;
+    v->mb_type[1] = v->mb_type_base + s->b8_stride * (s->mb_height * 2 + 1) + s->mb_stride + 1;
+    v->mb_type[2] = v->mb_type[1] + s->mb_stride * (s->mb_height + 1);
+
+    /* Init coded blocks info */
+    if (v->profile == PROFILE_ADVANCED)
+    {
+//        if (alloc_bitplane(&v->over_flags_plane, s->mb_width, s->mb_height) < 0)
+//            return -1;
+//        if (alloc_bitplane(&v->ac_pred_plane, s->mb_width, s->mb_height) < 0)
+//            return -1;
+    }
+
+    ff_intrax8_common_init(&v->x8,s);
+
+    if (s->avctx->codec_id == CODEC_ID_WMV3IMAGE || s->avctx->codec_id == CODEC_ID_VC1IMAGE) {
+        for (i = 0; i < 4; i++)
+            if (!(v->sr_rows[i>>1][i%2] = av_malloc(v->output_width))) return -1;
+    }
+
+    if (!v->mv_type_mb_plane || !v->direct_mb_plane || !v->acpred_plane || !v->over_flags_plane ||
+        !v->block || !v->cbp_base || !v->ttblk_base || !v->is_intra_base || !v->luma_mv_base ||
+        !v->mb_type_base)
+            return -1;
+
+    return 0;
+}
+
 /** Initialize a VC1/WMV3 decoder
  * @todo TODO: Handle VC-1 IDUs (Transport level?)
  * @todo TODO: Decypher remaining bits in extra_data
@@ -3560,7 +3612,7 @@ static av_cold int vc1_decode_init(AVCodecContext *avctx)
     VC1Context *v = avctx->priv_data;
     MpegEncContext *s = &v->s;
     GetBitContext gb;
-    int i, cur_width, cur_height;
+    int i;
 
     /* save the container output size for WMImage */
     v->output_width  = avctx->width;
@@ -3579,13 +3631,9 @@ static av_cold int vc1_decode_init(AVCodecContext *avctx)
         avctx->idct_algo=FF_IDCT_WMV2;
     }
 
-    if(ff_msmpeg4_decode_init(avctx) < 0)
-        return -1;
     if (vc1_init_common(v) < 0) return -1;
     ff_vc1dsp_init(&v->vc1dsp);
 
-    cur_width = avctx->coded_width;
-    cur_height = avctx->coded_height;
     if (avctx->codec_id == CODEC_ID_WMV3 || avctx->codec_id == CODEC_ID_WMV3IMAGE)
     {
         int count = 0;
@@ -3656,23 +3704,12 @@ static av_cold int vc1_decode_init(AVCodecContext *avctx)
         }
         v->res_sprite = (avctx->codec_tag == MKTAG('W','V','P','2'));
     }
-    // Sequence header information may not have been parsed
-    // yet when ff_msmpeg4_decode_init was called the fist time
-    // above.  If sequence information changes, we need to call
-    // it again.
-    if (cur_width != avctx->coded_width ||
-        cur_height != avctx->coded_height) {
-        MPV_common_end(s);
-        if(ff_msmpeg4_decode_init(avctx) < 0)
-            return -1;
-    }
 
     avctx->profile = v->profile;
     if (v->profile == PROFILE_ADVANCED)
         avctx->level = v->level;
 
     avctx->has_b_frames= !!(avctx->max_b_frames);
-    s->low_delay = !avctx->has_b_frames;
 
     s->mb_width = (avctx->coded_width+15)>>4;
     s->mb_height = (avctx->coded_height+15)>>4;
@@ -3693,46 +3730,7 @@ static av_cold int vc1_decode_init(AVCodecContext *avctx)
         v->top_blk_sh  = 0;
     }
 
-    /* Allocate mb bitplanes */
-    v->mv_type_mb_plane = av_malloc(s->mb_stride * s->mb_height);
-    v->direct_mb_plane = av_malloc(s->mb_stride * s->mb_height);
-    v->acpred_plane = av_malloc(s->mb_stride * s->mb_height);
-    v->over_flags_plane = av_malloc(s->mb_stride * s->mb_height);
-
-    v->n_allocated_blks = s->mb_width + 2;
-    v->block = av_malloc(sizeof(*v->block) * v->n_allocated_blks);
-    v->cbp_base = av_malloc(sizeof(v->cbp_base[0]) * 2 * s->mb_stride);
-    v->cbp = v->cbp_base + s->mb_stride;
-    v->ttblk_base = av_malloc(sizeof(v->ttblk_base[0]) * 2 * s->mb_stride);
-    v->ttblk = v->ttblk_base + s->mb_stride;
-    v->is_intra_base = av_malloc(sizeof(v->is_intra_base[0]) * 2 * s->mb_stride);
-    v->is_intra = v->is_intra_base + s->mb_stride;
-    v->luma_mv_base = av_malloc(sizeof(v->luma_mv_base[0]) * 2 * s->mb_stride);
-    v->luma_mv = v->luma_mv_base + s->mb_stride;
-
-    /* allocate block type info in that way so it could be used with s->block_index[] */
-    v->mb_type_base = av_malloc(s->b8_stride * (s->mb_height * 2 + 1) + s->mb_stride * (s->mb_height + 1) * 2);
-    v->mb_type[0] = v->mb_type_base + s->b8_stride + 1;
-    v->mb_type[1] = v->mb_type_base + s->b8_stride * (s->mb_height * 2 + 1) + s->mb_stride + 1;
-    v->mb_type[2] = v->mb_type[1] + s->mb_stride * (s->mb_height + 1);
-
-    /* Init coded blocks info */
-    if (v->profile == PROFILE_ADVANCED)
-    {
-//        if (alloc_bitplane(&v->over_flags_plane, s->mb_width, s->mb_height) < 0)
-//            return -1;
-//        if (alloc_bitplane(&v->ac_pred_plane, s->mb_width, s->mb_height) < 0)
-//            return -1;
-    }
-
-    ff_intrax8_common_init(&v->x8,s);
-
     if (avctx->codec_id == CODEC_ID_WMV3IMAGE || avctx->codec_id == CODEC_ID_VC1IMAGE) {
-        for (i = 0; i < 4; i++)
-            if (!(v->sr_rows[i>>1][i%2] = av_malloc(v->output_width))) return -1;
-
-        s->low_delay = 1;
-
         v->sprite_width  = avctx->coded_width;
         v->sprite_height = avctx->coded_height;
 
@@ -3745,6 +3743,36 @@ static av_cold int vc1_decode_init(AVCodecContext *avctx)
             v->output_width  > 1<<14 ||
             v->output_height > 1<<14) return -1;
     }
+    return 0;
+}
+
+/** Close a VC1/WMV3 decoder
+ * @warning Initial try at using MpegEncContext stuff
+ */
+static av_cold int vc1_decode_end(AVCodecContext *avctx)
+{
+    VC1Context *v = avctx->priv_data;
+    int i;
+
+    if ((avctx->codec_id == CODEC_ID_WMV3IMAGE || avctx->codec_id == CODEC_ID_VC1IMAGE)
+        && v->sprite_output_frame.data[0])
+        avctx->release_buffer(avctx, &v->sprite_output_frame);
+    for (i = 0; i < 4; i++)
+        av_freep(&v->sr_rows[i>>1][i%2]);
+    av_freep(&v->hrd_rate);
+    av_freep(&v->hrd_buffer);
+    MPV_common_end(&v->s);
+    av_freep(&v->mv_type_mb_plane);
+    av_freep(&v->direct_mb_plane);
+    av_freep(&v->acpred_plane);
+    av_freep(&v->over_flags_plane);
+    av_freep(&v->mb_type_base);
+    av_freep(&v->block);
+    av_freep(&v->cbp_base);
+    av_freep(&v->ttblk_base);
+    av_freep(&v->is_intra_base); // FIXME use v->mb_type[]
+    av_freep(&v->luma_mv_base);
+    ff_intrax8_common_end(&v->x8);
     return 0;
 }
 
@@ -3780,13 +3808,6 @@ static int vc1_decode_frame(AVCodecContext *avctx,
         }
 
         return 0;
-    }
-
-    /* We need to set current_picture_ptr before reading the header,
-     * otherwise we cannot store anything in there. */
-    if (s->current_picture_ptr == NULL || s->current_picture_ptr->f.data[0]) {
-        int i= ff_find_unused_picture(s, 0);
-        s->current_picture_ptr= &s->picture[i];
     }
 
     //for advanced profile we may need to parse and unescape data
@@ -3867,6 +3888,31 @@ static int vc1_decode_frame(AVCodecContext *avctx,
         }
     }
 
+    if (s->context_initialized &&
+        (s->width  != avctx->coded_width ||
+         s->height != avctx->coded_height)) {
+        vc1_decode_end(avctx);
+    }
+
+    if (!s->context_initialized) {
+        if (ff_msmpeg4_decode_init(avctx) < 0 || vc1_decode_init_alloc_tables(v) < 0)
+            return -1;
+
+        s->low_delay = !avctx->has_b_frames || v->res_sprite;
+
+        if (v->profile == PROFILE_ADVANCED) {
+            s->h_edge_pos = avctx->coded_width;
+            s->v_edge_pos = avctx->coded_height;
+        }
+    }
+
+    /* We need to set current_picture_ptr before reading the header,
+     * otherwise we cannot store anything in there. */
+    if (s->current_picture_ptr == NULL || s->current_picture_ptr->f.data[0]) {
+        int i= ff_find_unused_picture(s, 0);
+        s->current_picture_ptr= &s->picture[i];
+    }
+
     // do parse frame header
     if(v->profile < PROFILE_ADVANCED) {
         if(vc1_parse_frame_header(v, &s->gb) == -1) {
@@ -3884,15 +3930,17 @@ static int vc1_decode_frame(AVCodecContext *avctx,
         goto err;
     }
 
-    // FFmpeg patch
+    // process pulldown flags
     s->current_picture_ptr->f.repeat_pict = 0;
+    // Pulldown flags are only valid when 'broadcast' has been set.
+    // So ticks_per_frame will be 2
     if (v->rff){
+        // repeat field
         s->current_picture_ptr->f.repeat_pict = 1;
     }else if (v->rptfrm){
+        // repeat frames
         s->current_picture_ptr->f.repeat_pict = v->rptfrm * 2;
     }
-
-    s->current_picture_ptr->f.top_field_first = v->tff;
 
     // for skipping the frame
     s->current_picture.f.pict_type = s->pict_type;
@@ -3983,36 +4031,6 @@ err:
     return -1;
 }
 
-
-/** Close a VC1/WMV3 decoder
- * @warning Initial try at using MpegEncContext stuff
- */
-static av_cold int vc1_decode_end(AVCodecContext *avctx)
-{
-    VC1Context *v = avctx->priv_data;
-    int i;
-
-    if ((avctx->codec_id == CODEC_ID_WMV3IMAGE || avctx->codec_id == CODEC_ID_VC1IMAGE)
-        && v->sprite_output_frame.data[0])
-        avctx->release_buffer(avctx, &v->sprite_output_frame);
-    for (i = 0; i < 4; i++)
-        av_freep(&v->sr_rows[i>>1][i%2]);
-    av_freep(&v->hrd_rate);
-    av_freep(&v->hrd_buffer);
-    MPV_common_end(&v->s);
-    av_freep(&v->mv_type_mb_plane);
-    av_freep(&v->direct_mb_plane);
-    av_freep(&v->acpred_plane);
-    av_freep(&v->over_flags_plane);
-    av_freep(&v->mb_type_base);
-    av_freep(&v->block);
-    av_freep(&v->cbp_base);
-    av_freep(&v->ttblk_base);
-    av_freep(&v->is_intra_base); // FIXME use v->mb_type[]
-    av_freep(&v->luma_mv_base);
-    ff_intrax8_common_end(&v->x8);
-    return 0;
-}
 
 static const AVProfile profiles[] = {
     { FF_PROFILE_VC1_SIMPLE,   "Simple"   },
