@@ -1,31 +1,32 @@
 /*
- * ADPCM codecs
  * Copyright (c) 2001-2003 The ffmpeg Project
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 #include "avcodec.h"
 #include "get_bits.h"
 #include "put_bits.h"
 #include "bytestream.h"
+#include "adpcm.h"
+#include "adpcm_data.h"
 
 /**
  * @file
- * ADPCM codecs.
+ * ADPCM decoders
  * First version by Francois Revol (revol@free.fr)
  * Fringe ADPCM codecs (e.g., DK3, DK4, Westwood)
  *   by Mike Melanson (melanson@pcisys.net)
@@ -47,48 +48,6 @@
  * vagpack & depack http://homepages.compuserve.de/bITmASTER32/psx-index.html
  * readstr http://www.geocities.co.jp/Playtown/2004/
  */
-
-#define BLKSIZE 1024
-
-/* step_table[] and index_table[] are from the ADPCM reference source */
-/* This is the index table: */
-static const int index_table[16] = {
-    -1, -1, -1, -1, 2, 4, 6, 8,
-    -1, -1, -1, -1, 2, 4, 6, 8,
-};
-
-/**
- * This is the step table. Note that many programs use slight deviations from
- * this table, but such deviations are negligible:
- */
-static const int step_table[89] = {
-    7, 8, 9, 10, 11, 12, 13, 14, 16, 17,
-    19, 21, 23, 25, 28, 31, 34, 37, 41, 45,
-    50, 55, 60, 66, 73, 80, 88, 97, 107, 118,
-    130, 143, 157, 173, 190, 209, 230, 253, 279, 307,
-    337, 371, 408, 449, 494, 544, 598, 658, 724, 796,
-    876, 963, 1060, 1166, 1282, 1411, 1552, 1707, 1878, 2066,
-    2272, 2499, 2749, 3024, 3327, 3660, 4026, 4428, 4871, 5358,
-    5894, 6484, 7132, 7845, 8630, 9493, 10442, 11487, 12635, 13899,
-    15289, 16818, 18500, 20350, 22385, 24623, 27086, 29794, 32767
-};
-
-/* These are for MS-ADPCM */
-/* AdaptationTable[], AdaptCoeff1[], and AdaptCoeff2[] are from libsndfile */
-static const int AdaptationTable[] = {
-        230, 230, 230, 230, 307, 409, 512, 614,
-        768, 614, 512, 409, 307, 230, 230, 230
-};
-
-/** Divided by 4 to fit in 8-bit integers */
-static const uint8_t AdaptCoeff1[] = {
-        64, 128, 0, 48, 60, 115, 98
-};
-
-/** Divided by 4 to fit in 8-bit integers */
-static const int8_t AdaptCoeff2[] = {
-        0, -64, 0, 16, 0, -52, -58
-};
 
 /* These are for CD-ROM XA ADPCM */
 static const int xa_adpcm_table[5][2] = {
@@ -112,56 +71,15 @@ static const int swf_index_tables[4][16] = {
     /*5*/ { -1, -1, -1, -1, -1, -1, -1, -1, 1, 2, 4, 6, 8, 10, 13, 16 }
 };
 
-static const int yamaha_indexscale[] = {
-    230, 230, 230, 230, 307, 409, 512, 614,
-    230, 230, 230, 230, 307, 409, 512, 614
-};
-
-static const int yamaha_difflookup[] = {
-    1, 3, 5, 7, 9, 11, 13, 15,
-    -1, -3, -5, -7, -9, -11, -13, -15
-};
-
 /* end of tables */
 
-typedef struct ADPCMChannelStatus {
-    int predictor;
-    short int step_index;
-    int step;
-    /* for encoding */
-    int prev_sample;
-
-    /* MS version */
-    short sample1;
-    short sample2;
-    int coeff1;
-    int coeff2;
-    int idelta;
-} ADPCMChannelStatus;
-
-typedef struct TrellisPath {
-    int nibble;
-    int prev;
-} TrellisPath;
-
-typedef struct TrellisNode {
-    uint32_t ssd;
-    int path;
-    int sample1;
-    int sample2;
-    int step;
-} TrellisNode;
-
-typedef struct ADPCMContext {
+typedef struct ADPCMDecodeContext {
     ADPCMChannelStatus status[6];
-    TrellisPath *paths;
-    TrellisNode *node_buf;
-    TrellisNode **nodep_buf;
-} ADPCMContext;
+} ADPCMDecodeContext;
 
 static av_cold int adpcm_decode_init(AVCodecContext * avctx)
 {
-    ADPCMContext *c = avctx->priv_data;
+    ADPCMDecodeContext *c = avctx->priv_data;
     unsigned int max_channels = 2;
 
     if(avctx->channels > max_channels){
@@ -197,8 +115,8 @@ static inline short adpcm_ima_expand_nibble(ADPCMChannelStatus *c, char nibble, 
     int predictor;
     int sign, delta, diff, step;
 
-    step = step_table[c->step_index];
-    step_index = c->step_index + index_table[(unsigned)nibble];
+    step = ff_adpcm_step_table[c->step_index];
+    step_index = c->step_index + ff_adpcm_index_table[(unsigned)nibble];
     if (step_index < 0) step_index = 0;
     else if (step_index > 88) step_index = 88;
 
@@ -227,7 +145,7 @@ static inline short adpcm_ms_expand_nibble(ADPCMChannelStatus *c, char nibble)
 
     c->sample2 = c->sample1;
     c->sample1 = av_clip_int16(predictor);
-    c->idelta = (AdaptationTable[(int)nibble] * c->idelta) >> 8;
+    c->idelta = (ff_adpcm_AdaptationTable[(int)nibble] * c->idelta) >> 8;
     if (c->idelta < 16) c->idelta = 16;
 
     return c->sample1;
@@ -248,7 +166,7 @@ static inline short adpcm_ct_expand_nibble(ADPCMChannelStatus *c, char nibble)
     c->predictor = ((c->predictor * 254) >> 8) + (sign ? -diff : diff);
     c->predictor = av_clip_int16(c->predictor);
     /* calculate new step and clamp it to range 511..32767 */
-    new_step = (AdaptationTable[nibble & 7] * c->step) >> 8;
+    new_step = (ff_adpcm_AdaptationTable[nibble & 7] * c->step) >> 8;
     c->step = av_clip(new_step, 511, 32767);
 
     return (short)c->predictor;
@@ -281,9 +199,9 @@ static inline short adpcm_yamaha_expand_nibble(ADPCMChannelStatus *c, unsigned c
         c->step = 127;
     }
 
-    c->predictor += (c->step * yamaha_difflookup[nibble]) / 8;
+    c->predictor += (c->step * ff_adpcm_yamaha_difflookup[nibble]) / 8;
     c->predictor = av_clip_int16(c->predictor);
-    c->step = (c->step * yamaha_indexscale[nibble]) >> 8;
+    c->step = (c->step * ff_adpcm_yamaha_indexscale[nibble]) >> 8;
     c->step = av_clip(c->step, 127, 24567);
     return c->predictor;
 }
@@ -375,7 +293,7 @@ static int adpcm_decode_frame(AVCodecContext *avctx,
 {
     const uint8_t *buf = avpkt->data;
     int buf_size = avpkt->size;
-    ADPCMContext *c = avctx->priv_data;
+    ADPCMDecodeContext *c = avctx->priv_data;
     ADPCMChannelStatus *cs;
     int n, m, channel, i;
     int block_predictor[2];
@@ -440,7 +358,7 @@ static int adpcm_decode_frame(AVCodecContext *avctx,
                 cs->step_index = 88;
             }
 
-            cs->step = step_table[cs->step_index];
+            cs->step = ff_adpcm_step_table[cs->step_index];
 
             samples = (short*)data + channel;
 
@@ -524,10 +442,10 @@ static int adpcm_decode_frame(AVCodecContext *avctx,
         if (st){
             c->status[1].idelta = (int16_t)bytestream_get_le16(&src);
         }
-        c->status[0].coeff1 = AdaptCoeff1[block_predictor[0]];
-        c->status[0].coeff2 = AdaptCoeff2[block_predictor[0]];
-        c->status[1].coeff1 = AdaptCoeff1[block_predictor[1]];
-        c->status[1].coeff2 = AdaptCoeff2[block_predictor[1]];
+        c->status[0].coeff1 = ff_adpcm_AdaptCoeff1[block_predictor[0]];
+        c->status[0].coeff2 = ff_adpcm_AdaptCoeff2[block_predictor[0]];
+        c->status[1].coeff1 = ff_adpcm_AdaptCoeff1[block_predictor[1]];
+        c->status[1].coeff2 = ff_adpcm_AdaptCoeff2[block_predictor[1]];
 
         c->status[0].sample1 = bytestream_get_le16(&src);
         if (st) c->status[1].sample1 = bytestream_get_le16(&src);
@@ -806,7 +724,7 @@ static int adpcm_decode_frame(AVCodecContext *avctx,
                 for (i = 0; i < avctx->channels; i++) {
                     // similar to IMA adpcm
                     int delta = get_bits(&gb, nb_bits);
-                    int step = step_table[c->status[i].step_index];
+                    int step = ff_adpcm_step_table[c->status[i].step_index];
                     long vpdiff = 0; // vpdiff = (delta+0.5)*step/4
                     int k = k0;
 
@@ -863,22 +781,19 @@ static int adpcm_decode_frame(AVCodecContext *avctx,
     return src - buf;
 }
 
-#if CONFIG_DECODERS
+
 #define ADPCM_DECODER(id,name,long_name_)       \
 AVCodec ff_ ## name ## _decoder = {             \
     #name,                                      \
     AVMEDIA_TYPE_AUDIO,                         \
     id,                                         \
-    sizeof(ADPCMContext),                       \
+    sizeof(ADPCMDecodeContext),                 \
     adpcm_decode_init,                          \
     NULL,                                       \
     NULL,                                       \
     adpcm_decode_frame,                         \
     .long_name = NULL_IF_CONFIG_SMALL(long_name_), \
 }
-#else
-#define ADPCM_DECODER(id,name,long_name_)
-#endif
 
 /* Note: Do not forget to add new entries to the Makefile as well. */
 ADPCM_DECODER(CODEC_ID_ADPCM_4XM, adpcm_4xm, "ADPCM 4X Movie");

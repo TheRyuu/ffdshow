@@ -217,11 +217,7 @@ static void av_always_inline h264_filter_mb_fast_internal( H264Context *h, int m
     int left_type= h->left_type[LTOP];
     int top_type= h->top_type;
 
-#if ENABLE_HIGH_BIT
     int qp_bd_offset = 6 * (h->sps.bit_depth_luma - 8);
-#else
-    int qp_bd_offset = 0;
-#endif
     int a = h->slice_alpha_c0_offset - qp_bd_offset;
     int b = h->slice_beta_offset - qp_bd_offset;
 
@@ -653,11 +649,7 @@ void ff_h264_filter_mb( H264Context *h, int mb_x, int mb_y, uint8_t *img_y, uint
     int first_vertical_edge_done = 0;
     av_unused int dir;
     int chroma = !(CONFIG_GRAY && (s->flags&CODEC_FLAG_GRAY));
-#if ENABLE_HIGH_BIT
     int qp_bd_offset = 6 * (h->sps.bit_depth_luma - 8);
-#else
-    int qp_bd_offset = 0;
-#endif
     int a = h->slice_alpha_c0_offset - qp_bd_offset;
     int b = h->slice_beta_offset - qp_bd_offset;
 

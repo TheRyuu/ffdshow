@@ -21,6 +21,7 @@ SRCS_C=\
     libavcodec/ac3enc_fixed.c \
     libavcodec/ac3tab.c \
     libavcodec/adpcm.c \
+    libavcodec/adpcm_data.c \
     libavcodec/allcodecs.c \
     libavcodec/asv1.c \
     libavcodec/atrac.c \

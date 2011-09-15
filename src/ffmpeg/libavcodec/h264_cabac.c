@@ -1261,11 +1261,7 @@ void ff_h264_init_cabac_states(H264Context *h) {
     MpegEncContext * const s = &h->s;
     int i;
     const int8_t (*tab)[2];
-    #if ENABLE_HIGH_BIT
     const int slice_qp = av_clip(s->qscale - 6*(h->sps.bit_depth_luma-8), 0, 51);
-    #else
-    const int slice_qp = s->qscale;
-    #endif
 
     if( h->slice_type_nos == AV_PICTURE_TYPE_I ) tab = cabac_context_init_I;
     else                                 tab = cabac_context_init_PB[h->cabac_init_idc];
@@ -1948,11 +1944,7 @@ decode_intra_mb:
 
     if(IS_INTRA_PCM(mb_type)) {
         static const uint16_t mb_sizes[4] = {256,384,512,768};
-        #if ENABLE_HIGH_BIT
         const int mb_size = mb_sizes[h->sps.chroma_format_idc]*h->sps.bit_depth_luma >> 3;
-        #else
-        const int mb_size = 384;
-        #endif
         const uint8_t *ptr;
 
         // We assume these blocks are very rare so we do not optimize it.
@@ -2291,11 +2283,7 @@ decode_intra_mb:
         if(get_cabac_noinline( &h->cabac, &h->cabac_state[60 + (h->last_qscale_diff != 0)])){
             int val = 1;
             int ctx= 2;
-            #if ENABLE_HIGH_BIT
             const int max_qp = 51 + 6*(h->sps.bit_depth_luma-8);
-            #else
-            const int max_qp = 51;
-            #endif
 
             while( get_cabac_noinline( &h->cabac, &h->cabac_state[60 + ctx] ) ) {
                 ctx= 3;
