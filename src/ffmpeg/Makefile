@@ -325,7 +325,8 @@ SRCS_YASM=\
     libavcodec/x86/vc1dsp_yasm.asm \
     libavcodec/x86/vp3dsp.asm \
     libavcodec/x86/vp56dsp.asm \
-    libavcodec/x86/vp8dsp.asm
+    libavcodec/x86/vp8dsp.asm \
+    libswscale/x86/scale.asm
 
 
 ifeq ($(64BIT),yes)
