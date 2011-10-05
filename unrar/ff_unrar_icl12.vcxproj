@@ -72,7 +72,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_DEPRECATE;_DEBUG;_WINDOWS;RARDLL;NOCRYPT;SILENT;NOVOLUME;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_DEPRECATE;_DEBUG;_WINDOWS;RARDLL;RAR_NOCRYPT;SILENT;NOVOLUME;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>rar.hpp</PrecompiledHeaderFile>
       <WarningLevel>TurnOffAllWarnings</WarningLevel>
@@ -88,7 +88,7 @@
       <TargetEnvironment>X64</TargetEnvironment>
     </Midl>
     <ClCompile>
-      <PreprocessorDefinitions>WIN64;_CRT_SECURE_NO_DEPRECATE;_DEBUG;_WINDOWS;RARDLL;NOCRYPT;SILENT;NOVOLUME;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN64;_CRT_SECURE_NO_DEPRECATE;_DEBUG;_WINDOWS;RARDLL;RAR_NOCRYPT;SILENT;NOVOLUME;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>rar.hpp</PrecompiledHeaderFile>
       <WarningLevel>TurnOffAllWarnings</WarningLevel>
@@ -102,7 +102,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_DEPRECATE;NDEBUG;_WINDOWS;RARDLL;NOCRYPT;SILENT;NOVOLUME;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_DEPRECATE;NDEBUG;_WINDOWS;RARDLL;RAR_NOCRYPT;SILENT;NOVOLUME;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>rar.hpp</PrecompiledHeaderFile>
       <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
@@ -118,7 +118,7 @@
       <TargetEnvironment>X64</TargetEnvironment>
     </Midl>
     <ClCompile>
-      <PreprocessorDefinitions>WIN64;_CRT_SECURE_NO_DEPRECATE;NDEBUG;_WINDOWS;RARDLL;NOCRYPT;SILENT;NOVOLUME;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN64;_CRT_SECURE_NO_DEPRECATE;NDEBUG;_WINDOWS;RARDLL;RAR_NOCRYPT;SILENT;NOVOLUME;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>rar.hpp</PrecompiledHeaderFile>
       <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
