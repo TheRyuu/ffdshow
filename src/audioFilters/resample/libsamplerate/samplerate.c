@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2002-2008 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2002-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 */
 
 /*
-** This code is part of Secret Rabibt Code aka libsamplerate. A commercial
+** This code is part of Secret Rabbit Code aka libsamplerate. A commercial
 ** use license for this code is available, please see:
 **		http://www.mega-nerd.com/SRC/procedure.html
 */
@@ -31,6 +31,7 @@
 #include	"samplerate.h"
 #include	"float_cast.h"
 #include	"common.h"
+// FFDshow custom code for the version info
 #include "../../../compiler.h"
 static int psrc_set_converter (SRC_PRIVATE	*psrc, int converter_type) ;
 
@@ -543,8 +544,10 @@ psrc_set_converter (SRC_PRIVATE	*psrc, int converter_type)
 	return SRC_ERR_BAD_CONVERTER ;
 } /* psrc_set_converter */
 
+// FFDshow custom code begin
 void __stdcall getVersion(char *ver,const char* *license)
 {
  strcpy(ver,VERSION", "COMPILER COMPILER_X64 COMPILER_INFO" ("__DATE__" "__TIME__")");
- *license="(C) 2002-2008 Erik de Castro Lopo <erikd@mega-nerd.com>";
+ *license="(C) 2002-2011 Erik de Castro Lopo <erikd@mega-nerd.com>";
 }
+// FFDshow custom code end

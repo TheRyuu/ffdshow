@@ -1,3 +1,127 @@
+2011-08-15  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * configure.ac
+    Add symbol support for kfreebsd-*-gnu-*.
+
+    * configure.ac doc/Makefile.am
+    Improve installation of html docs.
+
+    * examples/audio_out.c tests/callback_hang_test.c
+    Fix compiler warnings.
+
+    * NEWS README Win32/config.h doc/*.html
+    Updates for 0.1.8 release.
+
+    * configure.ac
+    Release 0.1.8.
+
+2011-02-22  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * tests/util.[ch]
+    Rename function print_cpu_name() to get_cpu_name(). Add code for Mac OSX and
+    FreeBSD.
+
+    * tests/multichan_throughput_test.c tests/throughput_test.c
+    Update to use get_cpu_name().
+
+2010-11-04  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/*.[ch]
+    Fix typo in comments.
+
+2010-10-16  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/fastest_coeffs.h src/high_qual_coeffs.h src/mid_qual_coeffs.h
+    Fix typo in comments.
+
+    * configure.ac
+    Add AM_SILENT_RULES.
+
+    * doc/download.html
+    Add a GPG signature.
+
+2010-09-27  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/float_cast.h
+    Add lrint/lrintf version for Win64. Thanks to Dmitry Baikov.
+
+2010-01-10  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * examples/sndfile-resample.c
+    Prevent creation of double length output files when conversion is restarted
+    due to clipping of the output when the format is FLAC. This problem arises
+    due to libsndfile's in ability to seek in a FLAC file during write.
+
+    * src/samplerate.h tests/termination_test.c
+    Revert change that moved the src_ratio field to the start of SRC_DATA
+    struct. This change does have some merit, but is not worth it considering
+    that its an API change. This idea will be reconsidered when the API does
+    change.
+
+2009-12-01  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * doc/win32.html
+    Update instructions.
+
+    * Win32/Makefile.msvc
+    Add /Zm200 to CFLAGS.
+
+2009-11-29  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/common.h
+    Add macro UNUSED for marking function parameters as unused.
+
+2009-10-07  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * tests/misc_test.c
+    Add zero_input_test() from debian bug #506722.
+
+    * src/src_linear.c src/src_zoh.c
+    Fix for bug in zero_input_test(). Both these converters crashed if the
+    input_frames field of SRC_DATA was zero.
+
+2009-09-16  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * M4/endian.m4
+    Fix detection of CPU endian-ness when cross compiling.
+
+2009-08-24  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * tests/termination_test.c
+    Add test to detect a particular kind of termination error.
+
+    * src/src_sinc.c
+    Fix a termination condition bug.
+
+2009-06-25  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/samplerate.h
+    Change definition of SRC_STATE to be kinder to some slightly broken
+    compilers. Thanks to Rob Brown for suggesting this fix.
+
+2009-04-11  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * M4/check_signal.m4 M4/clip_mode.m4 M4/lrint.m4 M4/lrintf.m4
+    New files used instead of acinclude.m4.
+
+2009-04-03  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/samplerate.h
+    Move src_ratio field to the start of the SRC_DATA struct to ensure it gets
+    aligned correctly when either the library or client code gets compiled with
+    -malign-double.
+
+    * configure.ac
+    Bump version to 1.0.0 due to API change.
+
+2009-02-26  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * Win32/Makefile.msvc
+    Add /Zm1000 to the CFLAGS as suggested by Kun Niu.
+
+    * doc/api_full.html doc/api_callback.html
+    Improve explanation of use of src_set_ratio() function.
+
 2009-02-14  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
 
     * src/common.h src/samplerate.c
@@ -11,7 +135,7 @@
     This bug has zero security implications beyond the ability to cause a
     program hitting this bug to exit immediately with a segfault.
     See : http://www.mega-nerd.com/erikd/Blog/2009/Feb/14/index.html
-    Thanks to David Cournapeau for the bug report.
+    Thanks to David Cournapeau and Lev Givon for the bug report.
 
     * doc/win32.html Makefile.am configure.ac
     Reinstate Win32/MSVC compile instructions.

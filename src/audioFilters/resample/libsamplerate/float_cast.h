@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2001-2008 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2001-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -16,7 +16,7 @@
 ** Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 */
 
-/* Version 1.4 */
+/* Version 1.5 */
 
 #ifndef FLOAT_CAST_HEADER
 #define FLOAT_CAST_HEADER
@@ -72,21 +72,6 @@
 	#define	__USE_ISOC99	1
 
 	#include	<math.h>
-#elif (defined(_MSC_VER) || defined(__INTEL_COMPILER)) && defined(WIN64)
-        //TODO : lrintf
-	__inline long int
-	lrint (double flt)
-	{
-
-         return (int)(flt + (flt < 0 ? -0.5 : 0.5));
-    	}
-
-	__inline long int
-	lrintf (float flt)
-	{
-
-         return (int)(flt + (flt < 0 ? -0.5f : 0.5f));
-    	}
 
 #elif (defined (__CYGWIN__))
 
@@ -136,6 +121,32 @@
 		return retval ;
 	} /* float2int */
 
+#elif (defined (WIN64) || defined(_WIN64))
+
+	/*	Win64 section should be places before Win32 one, because
+	**	most likely both WIN32 and WIN64 will be defined in 64-bit case.
+	*/
+
+	#include	<math.h>
+
+	/*	Win64 doesn't seem to have these functions, nor inline assembly.
+	**	Therefore implement inline versions of these functions here.
+	*/
+	#include    <emmintrin.h>
+	#include    <mmintrin.h>
+
+	__inline long int
+	lrint(double flt)
+	{
+		return _mm_cvtsd_si32(_mm_load_sd(&flt));
+	}
+
+	__inline long int
+	lrintf(float flt)
+	{
+		return _mm_cvtss_si32(_mm_load_ss(&flt));
+	}
+
 #elif (defined (WIN32) || defined (_WIN32))
 
 	#undef		HAVE_LRINT_REPLACEMENT
@@ -147,7 +158,7 @@
 	**	Win32 doesn't seem to have these functions.
 	**	Therefore implement inline versions of these functions here.
 	*/
-	#ifndef __GNUC__
+
 	__inline long int
 	lrint (double flt)
 	{	int intgr ;
@@ -171,7 +182,7 @@
 
 		return intgr ;
 	}
-	#endif
+
 #elif (defined (__MWERKS__) && defined (macintosh))
 
 	/* This MacOS 9 solution was provided by Stephane Letz */
