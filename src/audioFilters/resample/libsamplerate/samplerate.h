@@ -39,7 +39,7 @@ extern "C" {
 typedef struct SRC_STATE_tag SRC_STATE ;
 
 /* SRC_DATA is used to pass data to src_simple() and src_process(). */
-typedef struct
+typedef struct SRC_DATA // Ffdshow custom (SRC_DATA)
 {	float	*data_in, *data_out ;
 
 	long	input_frames, output_frames ;
