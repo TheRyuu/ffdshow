@@ -58,9 +58,9 @@
 
 #define FF_CSPS_NUM 24
 
-#define FF_CSP_UNSUPPORTED      (1U<<FF_CSPS_NUM)
+#define FF_CSP_UNSUPPORTED      (1ULL<<FF_CSPS_NUM)
 
-#define FF_CSPS_MASK            ((1ULL << FF_CSPS_NUM)-1)
+#define FF_CSPS_MASK            (FF_CSP_UNSUPPORTED-1)
 #define FF_CSPS_MASK_HIGH_BIT   (FF_CSP_420P10|FF_CSP_444P10)
 #define FF_CSPS_MASK_YUV_PLANAR (FF_CSP_420P|FF_CSP_422P|FF_CSP_444P|FF_CSP_411P|FF_CSP_410P)
 #define FF_CSPS_MASK_YUV_PACKED (FF_CSP_YUY2|FF_CSP_UYVY|FF_CSP_YVYU|FF_CSP_VYUY)
@@ -363,7 +363,7 @@ static __inline uint64_t csp_supXvid(uint64_t x)
     return (x&FF_CSPS_MASK)&(FF_CSP_RGB24|FF_CSP_420P|FF_CSP_YUY2|FF_CSP_UYVY|FF_CSP_YVYU|FF_CSP_VYUY|FF_CSP_RGB15|FF_CSP_RGB16|FF_CSP_RGB32|FF_CSP_ABGR|FF_CSP_RGBA|FF_CSP_BGR24);
 }
 
-bool csp_inFOURCCmask(int x,FOURCC fcc);
+bool csp_inFOURCCmask(uint64_t x,FOURCC fcc);
 
 extern char_t* csp_getName2(const TcspInfo *cspInfo,uint64_t csp,char_t *buf,size_t len);
 extern char_t* csp_getName(uint64_t csp,char_t *buf,size_t len);

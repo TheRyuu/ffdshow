@@ -155,9 +155,11 @@ HRESULT TimgFilterResize::process(TfilterQueue::iterator it,TffPict &pict,const 
         enum TffdshowDecVideo::DOWNSTREAM_FILTER_TYPE downstream=(TffdshowDecVideo::DOWNSTREAM_FILTER_TYPE)deciV->get_downstreamID();
         char_t outputfourcc[20];
         deciV->getOutputFourcc(outputfourcc,20);
+#if 0
         if (downstream==TffdshowDecVideo::DVOBSUB && strncmp(outputfourcc,_l("YV12"),4)==0) { // vsfilter accepts only multiple of 8 on YV12.
             newpict.rectFull.dx=(newpict.rectFull.dx+7)&~7;
         }
+#endif
         if ((pict.rectClip!=newpict.rectClip || pict.rectFull!=newpict.rectFull)
                 &&!(   pict.cspInfo.id==FF_CSP_420P       // I want to avoid resizing here. YV12 odd number lines.
                        && pict.rectFull==newpict.rectFull

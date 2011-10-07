@@ -979,7 +979,7 @@ uint64_t csp_bestMatch(uint64_t inCSP,uint64_t wantedCSPS,int *rank)
     return FF_CSP_NULL;
 }
 
-bool csp_inFOURCCmask(int x,FOURCC fcc)
+bool csp_inFOURCCmask(uint64_t x,FOURCC fcc)
 {
     switch (fcc) {
         case FOURCC_MASK_YUV:

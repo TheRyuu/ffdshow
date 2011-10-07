@@ -648,7 +648,7 @@ void TcoSettings::fillIncsps(void)
     if (forceIncsp)
         if (incspFourcc<10) {
             for (int i=0; i<FF_CSPS_NUM; i++)
-                if (csp_inFOURCCmask(1<<i,incspFourcc)) {
+                if (csp_inFOURCCmask(1ULL<<i,incspFourcc)) {
                     incsps.push_back(cspInfos+i);
                 }
         } else {
