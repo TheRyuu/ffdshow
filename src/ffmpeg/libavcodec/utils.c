@@ -107,6 +107,9 @@ void avcodec_register(AVCodec *codec)
     while (*p != NULL) p = &(*p)->next;
     *p = codec;
     codec->next = NULL;
+
+    if (codec->init_static_data)
+        codec->init_static_data(codec);
 }
 
 unsigned avcodec_get_edge_width(void)
@@ -778,6 +781,11 @@ int attribute_align_arg avcodec_decode_audio3(AVCodecContext *avctx, int16_t *sa
 
     avctx->pkt = avpkt;
 
+    if (!avpkt->data && avpkt->size) {
+        av_log(avctx, AV_LOG_ERROR, "invalid packet: NULL data, size != 0\n");
+        return AVERROR(EINVAL);
+    }
+
     if((avctx->codec->capabilities & CODEC_CAP_DELAY) || avpkt->size){
         //FIXME remove the check below _after_ ensuring that all audio check that the available space is enough
         if(*frame_size_ptr < AVCODEC_MAX_AUDIO_FRAME_SIZE){
@@ -952,6 +960,8 @@ int av_get_bits_per_sample(enum CodecID codec_id){
     case CODEC_ID_ADPCM_SBPRO_4:
     case CODEC_ID_ADPCM_CT:
     case CODEC_ID_ADPCM_IMA_WAV:
+    case CODEC_ID_ADPCM_IMA_QT:
+    case CODEC_ID_ADPCM_SWF:
     case CODEC_ID_ADPCM_MS:
     case CODEC_ID_ADPCM_YAMAHA:
         return 4;
