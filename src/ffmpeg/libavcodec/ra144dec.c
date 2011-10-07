@@ -5,20 +5,20 @@
  * Copyright (c) 2003 Nick Kurshev
  *     Based on public domain decoder at http://www.honeypot.net/audio
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -114,15 +114,12 @@ static int ra144_decode_frame(AVCodecContext * avctx, void *vdata,
     return 20;
 }
 
-AVCodec ff_ra_144_decoder =
-{
-    "real_144",
-    AVMEDIA_TYPE_AUDIO,
-    CODEC_ID_RA_144,
-    sizeof(RA144Context),
-    ra144_decode_init,
-    NULL,
-    NULL,
-    ra144_decode_frame,
-    .long_name = NULL_IF_CONFIG_SMALL("RealAudio 1.0 (14.4K)"),
+AVCodec ff_ra_144_decoder = {
+    .name           = "real_144",
+    .type           = AVMEDIA_TYPE_AUDIO,
+    .id             = CODEC_ID_RA_144,
+    .priv_data_size = sizeof(RA144Context),
+    .init           = ra144_decode_init,
+    .decode         = ra144_decode_frame,
+    .long_name      = NULL_IF_CONFIG_SMALL("RealAudio 1.0 (14.4K)"),
 };

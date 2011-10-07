@@ -22,12 +22,13 @@
 #include "libavutil/x86_cpu.h"
 #include "libavcodec/dsputil.h"
 #include "fft.h"
+#include "config.h"
 
 /* ffdshow custom code */
 #pragma GCC target ("sse")
 
-DECLARE_ASM_CONST(16, int, ff_m1m1m1m1)[4] =
-    { 1 << 31, 1 << 31, 1 << 31, 1 << 31 };
+DECLARE_ASM_CONST(16, unsigned int, ff_m1m1m1m1)[4] =
+    { 1U << 31, 1U << 31, 1U << 31, 1U << 31 };
 
 void ff_fft_dispatch_sse(FFTComplex *z, int nbits);
 void ff_fft_dispatch_interleave_sse(FFTComplex *z, int nbits);

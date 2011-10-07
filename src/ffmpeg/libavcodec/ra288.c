@@ -2,20 +2,20 @@
  * RealAudio 2.0 (28.8K)
  * Copyright (c) 2003 the ffmpeg project
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -203,15 +203,12 @@ static int ra288_decode_frame(AVCodecContext * avctx, void *data,
     return avctx->block_align;
 }
 
-AVCodec ff_ra_288_decoder =
-{
-    "real_288",
-    AVMEDIA_TYPE_AUDIO,
-    CODEC_ID_RA_288,
-    sizeof(RA288Context),
-    ra288_decode_init,
-    NULL,
-    NULL,
-    ra288_decode_frame,
-    .long_name = NULL_IF_CONFIG_SMALL("RealAudio 2.0 (28.8K)"),
+AVCodec ff_ra_288_decoder = {
+    .name           = "real_288",
+    .type           = AVMEDIA_TYPE_AUDIO,
+    .id             = CODEC_ID_RA_288,
+    .priv_data_size = sizeof(RA288Context),
+    .init           = ra288_decode_init,
+    .decode         = ra288_decode_frame,
+    .long_name      = NULL_IF_CONFIG_SMALL("RealAudio 2.0 (28.8K)"),
 };
