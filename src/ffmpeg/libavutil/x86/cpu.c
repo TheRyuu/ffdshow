@@ -113,7 +113,7 @@ int ff_get_cpu_flags_x86(void)
 
     if(max_ext_level >= 0x80000001){
         cpuid(0x80000001, eax, ebx, ecx, ext_caps);
-        if (ext_caps & (1<<31))
+        if (ext_caps & (1U<<31))
             rval |= AV_CPU_FLAG_3DNOW;
         if (ext_caps & (1<<30))
             rval |= AV_CPU_FLAG_3DNOWEXT;
@@ -132,6 +132,15 @@ int ff_get_cpu_flags_x86(void)
         if (!strncmp(vendor.c, "AuthenticAMD", 12) &&
             rval & AV_CPU_FLAG_SSE2 && !(ecx & 0x00000040)) {
             rval |= AV_CPU_FLAG_SSE2SLOW;
+        }
+
+        /* XOP and FMA4 use the AVX instruction coding scheme, so they can't be
+         * used unless the OS has AVX support. */
+        if (rval & AV_CPU_FLAG_AVX) {
+            if (ecx & 0x00000800)
+                rval |= AV_CPU_FLAG_XOP;
+            if (ecx & 0x00010000)
+                rval |= AV_CPU_FLAG_FMA4;
         }
     }
 

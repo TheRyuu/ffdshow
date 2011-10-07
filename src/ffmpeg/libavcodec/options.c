@@ -320,7 +320,7 @@ static const AVOption options[]={
 {"pbias", "inter quant bias", OFFSET(inter_quant_bias), FF_OPT_TYPE_INT, {.dbl = FF_DEFAULT_QUANT_BIAS }, INT_MIN, INT_MAX, V|E},
 {"color_table_id", NULL, OFFSET(color_table_id), FF_OPT_TYPE_INT, {.dbl = DEFAULT }, INT_MIN, INT_MAX},
 {"internal_buffer_count", NULL, OFFSET(internal_buffer_count), FF_OPT_TYPE_INT, {.dbl = DEFAULT }, INT_MIN, INT_MAX},
-{"global_quality", NULL, OFFSET(global_quality), FF_OPT_TYPE_INT, {.dbl = DEFAULT }, INT_MIN, INT_MAX},
+{"global_quality", NULL, OFFSET(global_quality), FF_OPT_TYPE_INT, {.dbl = DEFAULT }, INT_MIN, INT_MAX, V|A|E},
 {"coder", NULL, OFFSET(coder_type), FF_OPT_TYPE_INT, {.dbl = DEFAULT }, INT_MIN, INT_MAX, V|E, "coder"},
 {"vlc", "variable length coder / huffman coder", 0, FF_OPT_TYPE_CONST, {.dbl = FF_CODER_TYPE_VLC }, INT_MIN, INT_MAX, V|E, "coder"},
 {"ac", "arithmetic coder", 0, FF_OPT_TYPE_CONST, {.dbl = FF_CODER_TYPE_AC }, INT_MIN, INT_MAX, V|E, "coder"},
@@ -516,7 +516,14 @@ static const AVOption options[]={
 #undef D
 #undef DEFAULT
 
-static const AVClass av_codec_context_class = { "AVCodecContext", context_to_name, options, LIBAVUTIL_VERSION_INT, OFFSET(log_level_offset), .opt_find = opt_find};
+static const AVClass av_codec_context_class = {
+    .class_name              = "AVCodecContext",
+    .item_name               = context_to_name,
+    .option                  = options,
+    .version                 = LIBAVUTIL_VERSION_INT,
+    .log_level_offset_offset = OFFSET(log_level_offset),
+    .opt_find                = opt_find,
+};
 
 void avcodec_get_context_defaults2(AVCodecContext *s, enum AVMediaType codec_type){
     memset(s, 0, sizeof(AVCodecContext));
