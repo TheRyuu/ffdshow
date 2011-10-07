@@ -251,8 +251,6 @@ static av_cold int output_configure(AACContext *ac,
         }
 
         memcpy(ac->tag_che_map, ac->che, 4 * MAX_ELEM_ID * sizeof(ac->che[0][0]));
-
-        avctx->channel_layout = 0;
     }
 
     avctx->channels = channels;
@@ -462,7 +460,7 @@ static int decode_ga_specific_config(AACContext *ac, AVCodecContext *avctx,
 static int decode_audio_specific_config(AACContext *ac,
                                         AVCodecContext *avctx,
                                         MPEG4AudioConfig *m4ac,
-                                        const uint8_t *data, int data_size)
+                                        const uint8_t *data, int data_size, int asclen)
 {
     GetBitContext gb;
     int i;
@@ -474,7 +472,7 @@ static int decode_audio_specific_config(AACContext *ac,
 
     init_get_bits(&gb, data, data_size * 8);
 
-    if ((i = ff_mpeg4audio_get_config(m4ac, data, data_size)) < 0)
+    if ((i = ff_mpeg4audio_get_config(m4ac, data, asclen/8)) < 0)
         return -1;
     if (m4ac->sampling_index > 12) {
         av_log(avctx, AV_LOG_ERROR, "invalid sampling rate index %d\n", m4ac->sampling_index);
@@ -574,7 +572,7 @@ static av_cold int aac_decode_init(AVCodecContext *avctx)
     if (avctx->extradata_size > 0) {
         if (decode_audio_specific_config(ac, ac->avctx, &ac->m4ac,
                                          avctx->extradata,
-                                         avctx->extradata_size) < 0)
+                                         avctx->extradata_size, 8*avctx->extradata_size) < 0)
             return -1;
     } else {
         int sr, i;
@@ -2081,7 +2079,7 @@ static int parse_adts_frame_header(AACContext *ac, GetBitContext *gb)
 
     size = ff_aac_parse_header(gb, &hdr_info);
     if (size > 0) {
-        if (ac->output_configured != OC_LOCKED && hdr_info.chan_config) {
+        if (hdr_info.chan_config) {
             enum ChannelPosition new_che_pos[4][MAX_ELEM_ID];
             memset(new_che_pos, 0, 4 * MAX_ELEM_ID * sizeof(new_che_pos[0][0]));
             ac->m4ac.chan_config = hdr_info.chan_config;
@@ -2327,10 +2325,11 @@ static inline uint32_t latm_get_value(GetBitContext *b)
 }
 
 static int latm_decode_audio_specific_config(struct LATMContext *latmctx,
-                                             GetBitContext *gb)
+                                             GetBitContext *gb, int asclen)
 {
     AVCodecContext *avctx = latmctx->aac_ctx.avctx;
     MPEG4AudioConfig m4ac;
+    AACContext *ac= &latmctx->aac_ctx;
     int  config_start_bit = get_bits_count(gb);
     int     bits_consumed, esize;
 
@@ -2340,12 +2339,13 @@ static int latm_decode_audio_specific_config(struct LATMContext *latmctx,
         return AVERROR_INVALIDDATA;
     } else {
         bits_consumed =
-            decode_audio_specific_config(NULL, avctx, &m4ac,
+            decode_audio_specific_config(ac, avctx, &m4ac,
                                          gb->buffer + (config_start_bit / 8),
-                                         get_bits_left(gb) / 8);
+                                         get_bits_left(gb) / 8, asclen);
 
         if (bits_consumed < 0)
             return AVERROR_INVALIDDATA;
+        ac->m4ac= m4ac;
 
         esize = (bits_consumed+7) / 8;
 
@@ -2400,11 +2400,11 @@ static int read_stream_mux_config(struct LATMContext *latmctx,
 
         // for all but first stream: use_same_config = get_bits(gb, 1);
         if (!audio_mux_version) {
-            if ((ret = latm_decode_audio_specific_config(latmctx, gb)) < 0)
+            if ((ret = latm_decode_audio_specific_config(latmctx, gb, 0)) < 0)
                 return ret;
         } else {
             int ascLen = latm_get_value(gb);
-            if ((ret = latm_decode_audio_specific_config(latmctx, gb)) < 0)
+            if ((ret = latm_decode_audio_specific_config(latmctx, gb, ascLen)) < 0)
                 return ret;
             ascLen -= ret;
             skip_bits_long(gb, ascLen);
