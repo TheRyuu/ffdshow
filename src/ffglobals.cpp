@@ -684,8 +684,8 @@ static inline void decode_hrd_parameters(GetBitContext &gb)
     get_bits(&gb, 4); /* bit_rate_scale */
     get_bits(&gb, 4); /* cpb_size_scale */
     for(i=0; i<cpb_count; i++) {
-        get_ue_golomb(&gb); /* bit_rate_value_minus1 */
-        get_ue_golomb(&gb); /* cpb_size_value_minus1 */
+        get_ue_golomb_long(&gb); /* bit_rate_value_minus1 */
+        get_ue_golomb_long(&gb); /* cpb_size_value_minus1 */
         get_bits1(&gb);     /* cbr_flag */
     }
     get_bits(&gb, 5); /* initial_cpb_removal_delay_length_minus1 */

@@ -1678,7 +1678,7 @@ static av_always_inline void hl_decode_mb_predict_luma(H264Context *h, int mb_ty
                                     tr_high= ((uint16_t*)ptr)[3 - linesize/2]*0x0001000100010001ULL;
                                     topright= (uint8_t*) &tr_high;
                                 } else {
-                                    tr= ptr[3 - linesize]*0x01010101;
+                                    tr= ptr[3 - linesize]*0x01010101u;
                                     topright= (uint8_t*) &tr;
                                 }
                             }else
@@ -2879,8 +2879,10 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
         ff_h264_fill_default_ref_list(h);
     }
 
-    if(h->slice_type_nos!=AV_PICTURE_TYPE_I && ff_h264_decode_ref_pic_list_reordering(h) < 0)
+    if(h->slice_type_nos!=AV_PICTURE_TYPE_I && ff_h264_decode_ref_pic_list_reordering(h) < 0) {
+        h->ref_count[1]= h->ref_count[0]= 0;
         return -1;
+    }
 
     if(h->slice_type_nos!=AV_PICTURE_TYPE_I){
         s->last_picture_ptr= &h->ref_list[0][0];
