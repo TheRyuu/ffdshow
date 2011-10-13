@@ -19,7 +19,7 @@
  *  along with this program ; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
  *
- * $Id: emms.c,v 1.11 2005/11/22 10:23:01 suxen_drol Exp $
+ * $Id: emms.c 1988 2011-05-18 09:10:05Z Isibaar $
  *
  ****************************************************************************/
 

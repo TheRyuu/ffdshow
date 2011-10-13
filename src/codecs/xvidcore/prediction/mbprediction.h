@@ -19,7 +19,7 @@
  *  along with this program ; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
  *
- * $Id: mbprediction.h,v 1.26 2010/12/18 16:02:00 Isibaar Exp $
+ * $Id: mbprediction.h 1988 2011-05-18 09:10:05Z Isibaar $
  *
  ****************************************************************************/
 

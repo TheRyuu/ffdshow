@@ -19,7 +19,7 @@
  *  along with this program ; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
  *
- * $Id: vlc_codes.h,v 1.18 2004/03/22 22:36:23 edgomez Exp $
+ * $Id: vlc_codes.h 1988 2011-05-18 09:10:05Z Isibaar $
  *
  ****************************************************************************/
 #ifndef _VLC_CODES_H_

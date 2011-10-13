@@ -31,6 +31,7 @@ SRCS_C=\
     plugins/plugin_single.c \
     plugins/plugin_2pass1.c \
     plugins/plugin_2pass2.c \
+    plugins/plugin_psnrhvsm.c \
     plugins/plugin_lumimasking.c \
     plugins/plugin_dump.c \
     plugins/plugin_psnr.c \
@@ -116,10 +117,10 @@ DEF=xvid.def
 CFLAGS+= -I.
 
 ifneq ($(64BIT),yes)
-	CFLAGS+=-DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS
+	CFLAGS+=-DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -DHAVE_PTHREAD
 	YASMFLAGS+=-DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS
 else
-	CFLAGS+=-DARCH_IS_X86_64 -DARCH_IS_64BIT
+	CFLAGS+=-DARCH_IS_X86_64 -DARCH_IS_64BIT -DHAVE_PTHREAD
 	YASMFLAGS+=-DARCH_IS_X86_64 -DARCH_IS_64BIT
 endif
 

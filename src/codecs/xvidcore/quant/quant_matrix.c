@@ -20,7 +20,7 @@
  *  along with this program ; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
  *
- * $Id: quant_matrix.c,v 1.17 2010/12/28 19:19:43 Isibaar Exp $
+ * $Id: quant_matrix.c 1988 2011-05-18 09:10:05Z Isibaar $
  *
  ****************************************************************************/
 

@@ -19,7 +19,7 @@
 ; *  along with this program ; if not, write to the Free Software
 ; *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 ; *
-; * $Id: nasm.inc,v 1.8 2011/01/09 13:21:00 Isibaar Exp $
+; * $Id: nasm.inc,v 1.9 2011-02-25 12:38:37 Isibaar Exp $
 ; *
 ; ***************************************************************************/
 
@@ -210,6 +210,9 @@ BITS 32
 
 %macro NON_EXEC_STACK 0
 %ifidn __OUTPUT_FORMAT__,elf
+section .note.GNU-stack noalloc noexec nowrite progbits
+%endif
+%ifidn __OUTPUT_FORMAT__,elf32
 section .note.GNU-stack noalloc noexec nowrite progbits
 %endif
 %ifidn __OUTPUT_FORMAT__,elf64

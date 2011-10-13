@@ -21,7 +21,7 @@
 ; *  along with this program; if not, write to the Free Software
 ; *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 ; *
-; * $Id: sad_sse2.asm,v 1.21 2010/11/28 15:18:21 Isibaar Exp $
+; * $Id: sad_sse2.asm,v 1.21 2010-11-28 15:18:21 Isibaar Exp $
 ; *
 ; ***************************************************************************/
 
