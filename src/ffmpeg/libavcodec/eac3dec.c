@@ -3,29 +3,25 @@
  * Copyright (c) 2007 Bartlomiej Wolowiec <bartek.wolowiec@gmail.com>
  * Copyright (c) 2008 Justin Ruggles
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 /*
  * There are several features of E-AC-3 that this decoder does not yet support.
- *
- * Spectral Extension
- *     There is a patch to get this working for the two samples we have that
- *     use it, but it needs some minor changes in order to be accepted.
  *
  * Enhanced Coupling
  *     No known samples exist.  If any ever surface, this feature should not be
@@ -55,6 +51,7 @@
 #include "ac3_parser.h"
 #include "ac3dec.h"
 #include "ac3dec_data.h"
+#include "eac3_data.h"
 
 /** gain adaptive quantization mode */
 typedef enum {
@@ -66,80 +63,73 @@ typedef enum {
 
 #define EAC3_SR_CODE_REDUCED  3
 
-
 void ff_eac3_apply_spectral_extension(AC3DecodeContext *s)
 {
     int bin, bnd, ch, i;
-    int wrapflag[SPX_MAX_BANDS]={0,}, num_copy_sections, copy_sizes[SPX_MAX_BANDS];
-    int rms_energy[SPX_MAX_BANDS];
+    uint8_t wrapflag[SPX_MAX_BANDS]={1,0,}, num_copy_sections, copy_sizes[SPX_MAX_BANDS];
+    float rms_energy[SPX_MAX_BANDS];
 
     /* Set copy index mapping table. Set wrap flags to apply a notch filter at
        wrap points later on. */
-    bin = s->spx_copy_start_freq;
+    bin = s->spx_dst_start_freq;
     num_copy_sections = 0;
     for (bnd = 0; bnd < s->num_spx_bands; bnd++) {
+        int copysize;
         int bandsize = s->spx_band_sizes[bnd];
-        if ((bin + bandsize) > s->spx_start_freq) {
-            copy_sizes[num_copy_sections++] = bin - s->spx_copy_start_freq;
-            bin = s->spx_copy_start_freq;
+        if (bin + bandsize > s->spx_src_start_freq) {
+            copy_sizes[num_copy_sections++] = bin - s->spx_dst_start_freq;
+            bin = s->spx_dst_start_freq;
             wrapflag[bnd] = 1;
         }
-        for (i = 0; i < bandsize; i++) {
-            if (bin == s->spx_start_freq) {
-                copy_sizes[num_copy_sections++] = bin - s->spx_copy_start_freq;
-                bin = s->spx_copy_start_freq;
+        for (i = 0; i < bandsize; i += copysize) {
+            if (bin == s->spx_src_start_freq) {
+                copy_sizes[num_copy_sections++] = bin - s->spx_dst_start_freq;
+                bin = s->spx_dst_start_freq;
             }
-            bin++;
+            copysize = FFMIN(bandsize - i, s->spx_src_start_freq - bin);
+            bin += copysize;
         }
     }
-    copy_sizes[num_copy_sections++] = bin - s->spx_copy_start_freq;
+    copy_sizes[num_copy_sections++] = bin - s->spx_dst_start_freq;
 
     for (ch = 1; ch <= s->fbw_channels; ch++) {
-        if (!s->channel_in_spx[ch])
+        if (!s->channel_uses_spx[ch])
             continue;
 
         /* Copy coeffs from normal bands to extension bands */
-        bin = s->spx_start_freq;
-        for (bnd = 0; bnd < num_copy_sections; bnd++) {
-            memcpy(&s->fixed_coeffs[ch][bin],
-                   &s->fixed_coeffs[ch][s->spx_copy_start_freq],
-                   copy_sizes[bnd]*sizeof(int));
-            bin += copy_sizes[bnd];
+        bin = s->spx_src_start_freq;
+        for (i = 0; i < num_copy_sections; i++) {
+            memcpy(&s->transform_coeffs[ch][bin],
+                   &s->transform_coeffs[ch][s->spx_dst_start_freq],
+                   copy_sizes[i]*sizeof(float));
+            bin += copy_sizes[i];
         }
 
         /* Calculate RMS energy for each SPX band. */
-        bin = s->spx_start_freq;
+        bin = s->spx_src_start_freq;
         for (bnd = 0; bnd < s->num_spx_bands; bnd++) {
             int bandsize = s->spx_band_sizes[bnd];
-            int64_t accum = 0;
+            float accum = 0.0f;
             for (i = 0; i < bandsize; i++) {
-                int64_t coeff = s->fixed_coeffs[ch][bin++];
+                float coeff = s->transform_coeffs[ch][bin++];
                 accum += coeff * coeff;
             }
-            rms_energy[bnd] = ff_sqrt((accum >> 15) / bandsize) * M_SQRT_POW2_15;
+            rms_energy[bnd] = sqrtf(accum / bandsize);
         }
 
         /* Apply a notch filter at transitions between normal and extension
            bands and at all wrap points. */
         if (s->spx_atten_code[ch] >= 0) {
-            const int32_t *atten_tab = ff_eac3_spx_atten_tab[s->spx_atten_code[ch]];
-            /* apply notch filter at baseband / extension region border */
-            bin = s->spx_start_freq - 2;
-            for (i = 0; i < 5; i++) {
-                s->fixed_coeffs[ch][bin] = ((int64_t)atten_tab[2-abs(i-2)] *
-                        (int64_t)s->fixed_coeffs[ch][bin]) >> 23;
-                bin++;
-            }
-            /* apply notch at all other wrap points */
-            bin += s->spx_band_sizes[0];
-            for (bnd = 1; bnd < s->num_spx_bands; bnd++) {
+            const float *atten_tab = ff_eac3_spx_atten_tab[s->spx_atten_code[ch]];
+            bin = s->spx_src_start_freq - 2;
+            for (bnd = 0; bnd < s->num_spx_bands; bnd++) {
                 if (wrapflag[bnd]) {
-                    bin -= 5;
-                    for (i = 0; i < 5; i++) {
-                        s->fixed_coeffs[ch][bin] = (atten_tab[2-abs(i-2)] *
-                                (int64_t)s->fixed_coeffs[ch][bin]) >> 23;
-                        bin++;
-                    }
+                    float *coeffs = &s->transform_coeffs[ch][bin];
+                    coeffs[0] *= atten_tab[0];
+                    coeffs[1] *= atten_tab[1];
+                    coeffs[2] *= atten_tab[2];
+                    coeffs[3] *= atten_tab[1];
+                    coeffs[4] *= atten_tab[0];
                 }
                 bin += s->spx_band_sizes[bnd];
             }
@@ -148,21 +138,19 @@ void ff_eac3_apply_spectral_extension(AC3DecodeContext *s)
         /* Apply noise-blended coefficient scaling based on previously
            calculated RMS energy, blending factors, and SPX coordinates for
            each band. */
-        bin = s->spx_start_freq;
+        bin = s->spx_src_start_freq;
         for (bnd = 0; bnd < s->num_spx_bands; bnd++) {
-            int64_t nscale, sscale, spxco;
-            nscale = (s->spx_noise_blend [ch][bnd] * rms_energy[bnd]) >> 23;
-            nscale = (nscale * 14529495) >> 23;
-            sscale = s->spx_signal_blend[ch][bnd];
-            spxco  = s->spx_coords[ch][bnd];
+            float nscale = s->spx_noise_blend[ch][bnd] * rms_energy[bnd] * (1.0f/(1<<31));
+            float sscale = s->spx_signal_blend[ch][bnd];
             for (i = 0; i < s->spx_band_sizes[bnd]; i++) {
-                int64_t noise  = (nscale * (((int)av_lfg_get(&s->dith_state))>>8)) >> 23;
-                int64_t signal = (sscale * s->fixed_coeffs[ch][bin]) >> 23;
-                s->fixed_coeffs[ch][bin++] = ((noise + signal) * spxco) >> 23;
+                float noise  = nscale * (int32_t)av_lfg_get(&s->dith_state);
+                s->transform_coeffs[ch][bin]   *= sscale;
+                s->transform_coeffs[ch][bin++] += noise;
             }
         }
     }
 }
+
 
 /** lrint(M_SQRT2*cos(2*M_PI/12)*(1<<23)) */
 #define COEFF_0 10273905LL
@@ -273,22 +261,24 @@ void ff_eac3_decode_transform_coeffs_aht_ch(AC3DecodeContext *s, int ch)
 
             for (blk = 0; blk < 6; blk++) {
                 int mant = get_sbits(gbc, gbits);
-                if (mant == -(1 << (gbits-1))) {
+                if (log_gain && mant == -(1 << (gbits-1))) {
                     /* large mantissa */
                     int b;
-                    mant = get_sbits(gbc, bits-2+log_gain) << (26-log_gain-bits);
+                    int mbits = bits - (2 - log_gain);
+                    mant = get_sbits(gbc, mbits);
+                    mant <<= (23 - (mbits - 1));
                     /* remap mantissa value to correct for asymmetric quantization */
                     if (mant >= 0)
-                        b = 32768 >> (log_gain+8);
+                        b = 1 << (23 - log_gain);
                     else
-                        b = ff_eac3_gaq_remap_2_4_b[hebap-8][log_gain-1];
-                    mant += (ff_eac3_gaq_remap_2_4_a[hebap-8][log_gain-1] * (mant>>8) + b) >> 7;
+                        b = ff_eac3_gaq_remap_2_4_b[hebap-8][log_gain-1] << 8;
+                    mant += ((ff_eac3_gaq_remap_2_4_a[hebap-8][log_gain-1] * (int64_t)mant) >> 15) + b;
                 } else {
                     /* small mantissa, no GAQ, or Gk=1 */
                     mant <<= 24 - bits;
                     if (!log_gain) {
                         /* remap mantissa value for no GAQ or Gk=1 */
-                        mant += (ff_eac3_gaq_remap_1[hebap-8] * (mant>>8)) >> 7;
+                        mant += (ff_eac3_gaq_remap_1[hebap-8] * (int64_t)mant) >> 15;
                     }
                 }
                 s->pre_mantissa[ch][bin][blk] = mant;
@@ -310,7 +300,7 @@ int ff_eac3_parse_header(AC3DecodeContext *s)
        application can select from. each independent stream can also contain
        dependent streams which are used to add or replace channels. */
     if (s->frame_type == EAC3_FRAME_TYPE_DEPENDENT) {
-        ff_log_missing_feature(s->avctx, "Dependent substream decoding", 1);
+        av_log_missing_feature(s->avctx, "Dependent substream decoding", 1);
         return AAC_AC3_PARSE_ERROR_FRAME_TYPE;
     } else if (s->frame_type == EAC3_FRAME_TYPE_RESERVED) {
         av_log(s->avctx, AV_LOG_ERROR, "Reserved frame type\n");
@@ -322,7 +312,7 @@ int ff_eac3_parse_header(AC3DecodeContext *s)
        associated to an independent stream have matching substream id's. */
     if (s->substreamid) {
         /* only decode substream with id=0. skip any additional substreams. */
-        ff_log_missing_feature(s->avctx, "Additional substreams", 1);
+        av_log_missing_feature(s->avctx, "Additional substreams", 1);
         return AAC_AC3_PARSE_ERROR_FRAME_TYPE;
     }
 
@@ -331,7 +321,7 @@ int ff_eac3_parse_header(AC3DecodeContext *s)
            rates in bit allocation.  The best assumption would be that it is
            handled like AC-3 DolbyNet, but we cannot be sure until we have a
            sample which utilizes this feature. */
-        ff_log_missing_feature(s->avctx, "Reduced sampling rates", 1);
+        av_log_missing_feature(s->avctx, "Reduced sampling rates", 1);
         return -1;
     }
     skip_bits(gbc, 5); // skip bitstream id
@@ -420,7 +410,7 @@ int ff_eac3_parse_header(AC3DecodeContext *s)
 
     /* informational metadata */
     if (get_bits1(gbc)) {
-        skip_bits(gbc, 3); // skip bit stream mode
+        s->bitstream_mode = get_bits(gbc, 3);
         skip_bits(gbc, 2); // skip copyright bit and original bitstream bit
         if (s->channel_mode == AC3_CHMODE_STEREO) {
             skip_bits(gbc, 4); // skip Dolby surround and headphone mode
@@ -588,11 +578,12 @@ int ff_eac3_parse_header(AC3DecodeContext *s)
 
     /* spectral extension attenuation data */
     for (ch = 1; ch <= s->fbw_channels; ch++) {
-        if (parse_spx_atten_data && get_bits1(gbc))
+        if (parse_spx_atten_data && get_bits1(gbc)) {
             s->spx_atten_code[ch] = get_bits(gbc, 5);
-        else
+        } else {
             s->spx_atten_code[ch] = -1;
-     }
+        }
+    }
 
     /* block start information */
     if (s->num_blocks > 1 && get_bits1(gbc)) {
@@ -602,7 +593,7 @@ int ff_eac3_parse_header(AC3DecodeContext *s)
            It is likely the offset of each block within the frame. */
         int block_start_bits = (s->num_blocks-1) * (4 + av_log2(s->frame_size-2));
         skip_bits_long(gbc, block_start_bits);
-        ff_log_missing_feature(s->avctx, "Block start info", 1);
+        av_log_missing_feature(s->avctx, "Block start info", 1);
     }
 
     /* syntax state initialization */

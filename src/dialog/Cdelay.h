@@ -6,8 +6,8 @@
 class TdelayPage :public TconfPageDecAudio
 {
 public:
- TdelayPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff);
- virtual void cfg2dlg(void);
+    TdelayPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff);
+    virtual void cfg2dlg(void);
 };
 
 #endif

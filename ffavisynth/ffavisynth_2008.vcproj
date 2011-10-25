@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="windows-1250"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9.00"
+	Version="9,00"
 	Name="ffavisynth"
 	ProjectGUID="{9C87D880-7BB9-4F92-8AA6-B513298CDE82}"
 	RootNamespace="ffavisynth"
@@ -20,13 +20,12 @@
 	<Configurations>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(ConfigurationName)_$(PlatformName)_2008"
-			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\common.vsprops"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			ManagedExtensions="0"
-			WholeProgramOptimization="1"
+			WholeProgramOptimization="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -51,6 +50,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/MP"
 				Optimization="1"
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="true"
@@ -65,9 +65,8 @@
 				RuntimeTypeInfo="false"
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
-				ProgramDataBaseFileName="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\$(TargetName).pdb"
 				BrowseInformation="0"
-				WarningLevel="4"
 				SuppressStartupBanner="true"
 				DisableSpecificWarnings="4996"
 			/>
@@ -89,16 +88,16 @@
 				OutputFile="../bin/ffavisynth.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="ffavisynth.def"
-				ProgramDatabaseFile="$(IntDir)/ffavisynth.pdb"
+				DelayLoadDLLs="$(NOINHERIT)"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				EntryPointSymbol="_DllMainCRTStartup@12"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(IntDir)/ffavisynth.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -106,7 +105,6 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				EmbedManifest="true"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -126,13 +124,12 @@
 		</Configuration>
 		<Configuration
 			Name="Release|x64"
-			OutputDirectory="$(ConfigurationName)_$(PlatformName)_2008"
-			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\common.vsprops"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			ManagedExtensions="0"
-			WholeProgramOptimization="1"
+			WholeProgramOptimization="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -157,6 +154,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/MP"
 				Optimization="1"
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="true"
@@ -171,8 +169,7 @@
 				RuntimeTypeInfo="false"
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
-				ProgramDataBaseFileName="$(IntDir)\"
-				WarningLevel="4"
+				ProgramDataBaseFileName="$(IntDir)\$(TargetName).pdb"
 				SuppressStartupBanner="true"
 				DisableSpecificWarnings="4996"
 			/>
@@ -194,12 +191,13 @@
 				OutputFile="../bin/ffavisynth.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
-				ProgramDatabaseFile="$(IntDir)/ffavisynth.pdb"
+				DelayLoadDLLs="$(NOINHERIT)"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				ImportLibrary="$(IntDir)/ffavisynth.lib"
+				RandomizedBaseAddress="1"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"
 			/>
 			<Tool
@@ -207,7 +205,6 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				EmbedManifest="true"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -227,9 +224,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(ConfigurationName)_$(PlatformName)_2008"
-			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\common.vsprops"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			>
@@ -256,6 +252,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/MP"
 				Optimization="0"
 				AdditionalIncludeDirectories="../src"
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_DEBUG;_WINDOWS"
@@ -266,7 +263,7 @@
 				RuntimeTypeInfo="false"
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
-				ProgramDataBaseFileName="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\$(TargetName).pdb"
 				BrowseInformation="0"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
@@ -291,15 +288,15 @@
 				AdditionalDependencies="kernel32.lib libcmtd.lib ole32.lib"
 				OutputFile="../bin/ffavisynth.dll"
 				SuppressStartupBanner="true"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="ffavisynth.def"
+				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(IntDir)/ffavisynth.pdb"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				EntryPointSymbol="_DllMainCRTStartup@12"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(IntDir)/ffavisynth.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -307,7 +304,6 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				EmbedManifest="true"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -327,9 +323,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|x64"
-			OutputDirectory="$(ConfigurationName)_$(PlatformName)_2008"
-			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\common.vsprops"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			>
@@ -356,6 +351,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/MP"
 				Optimization="0"
 				AdditionalIncludeDirectories="../src"
 				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_DEBUG;_WINDOWS"
@@ -366,7 +362,7 @@
 				RuntimeTypeInfo="false"
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
-				ProgramDataBaseFileName="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\$(TargetName).pdb"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 				Detect64BitPortabilityProblems="false"
@@ -390,11 +386,12 @@
 				AdditionalDependencies="kernel32.lib libcmtd.lib ole32.lib $(NOINHERIT)"
 				OutputFile="../bin/ffavisynth.dll"
 				SuppressStartupBanner="true"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
+				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(IntDir)/ffavisynth.pdb"
-				ImportLibrary="$(IntDir)/ffavisynth.lib"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
+				RandomizedBaseAddress="1"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"
 			/>
 			<Tool
@@ -402,7 +399,6 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				EmbedManifest="true"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"

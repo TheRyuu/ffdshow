@@ -11,15 +11,14 @@ struct IffdshowEnc;
 class TconfPageEnc :public TconfPageBase
 {
 protected:
- comptrQ<IffdshowEnc> deciE;
- TffdshowPageEnc *parent;
- CodecID &codecId;
+    comptrQ<IffdshowEnc> deciE;
+    TffdshowPageEnc *parent;
+    CodecID &codecId;
 public:
- TconfPageEnc(TffdshowPageEnc *Iparent):TconfPageBase(Iparent),codecId(Iparent->codecId)
-  {
-   parent=Iparent;
-   deciE=deci;
-  }
+    TconfPageEnc(TffdshowPageEnc *Iparent):TconfPageBase(Iparent),codecId(Iparent->codecId) {
+        parent=Iparent;
+        deciE=deci;
+    }
 };
 
 #endif

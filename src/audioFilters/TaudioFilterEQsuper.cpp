@@ -23,54 +23,58 @@
 
 TaudioFilterEQsuper::TaudioFilterEQsuper(IffdshowBase *Ideci,Tfilters *Iparent):TaudioFilter(Ideci,Iparent)
 {
- old.eq0=INT_MAX;oldnchannels=0;
- memset(eqs,0,sizeof(eqs));
+    old.eq0=INT_MAX;
+    oldnchannels=0;
+    memset(eqs,0,sizeof(eqs));
 }
 TaudioFilterEQsuper::~TaudioFilterEQsuper()
 {
- for (int i=0;i<8;i++) if (eqs[i]) delete eqs[i];
+    for (int i=0; i<8; i++) if (eqs[i]) {
+            delete eqs[i];
+        }
 }
 
 HRESULT TaudioFilterEQsuper::process(TfilterQueue::iterator it,TsampleFormat &fmt,void *samples,size_t numsamples,const TfilterSettingsAudio *cfg0)
 {
- const TeqSettings *cfg=(const TeqSettings*)cfg0;
+    const TeqSettings *cfg=(const TeqSettings*)cfg0;
 
- if (!eqs[0] || oldnchannels!=fmt.nchannels || !cfg->equal(old))
-  {
-   old=*cfg;oldnchannels=fmt.nchannels;
-   float bands[supereq::NBANDS+1];
-   for (unsigned int b=0;b<=supereq::NBANDS;b++)
-    {
-     float db=(cfg->highdb-cfg->lowdb)*(&cfg->eq0)[b]/200.0f+cfg->lowdb;
-     bands[b]=db2value(db,100);// pow(10.0,db/(100*20.0));
+    if (!eqs[0] || oldnchannels!=fmt.nchannels || !cfg->equal(old)) {
+        old=*cfg;
+        oldnchannels=fmt.nchannels;
+        float bands[supereq::NBANDS+1];
+        for (unsigned int b=0; b<=supereq::NBANDS; b++) {
+            float db=(cfg->highdb-cfg->lowdb)*(&cfg->eq0)[b]/200.0f+cfg->lowdb;
+            bands[b]=db2value(db,100);// pow(10.0,db/(100*20.0));
+        }
+        for(unsigned int ch=0; ch<fmt.nchannels; ch++) {
+            if (eqs[ch]) {
+                delete eqs[ch];
+            }
+            eqs[ch]=new supereq;
+            eqs[ch]->equ_makeTable(bands,(float)fmt.freq,&cfg->f0);
+        }
     }
-   for(unsigned int ch=0;ch<fmt.nchannels;ch++)
-    {
-     if (eqs[ch]) delete eqs[ch];
-     eqs[ch]=new supereq;
-     eqs[ch]->equ_makeTable(bands,(float)fmt.freq,&cfg->f0);
-    }
-  }
 
- float *in=(float*)init(cfg,fmt,samples,numsamples),*out=NULL;
- int samples_out=0;
- for (unsigned int ch=0;ch<fmt.nchannels;ch++)
-  {
-   eqs[ch]->write_samples(in+ch,(int)numsamples,fmt.nchannels);
-   const float *eqout=eqs[ch]->get_output(&samples_out);
-   if (!out) out=(float*)alloc_buffer(fmt,samples_out,buf);
-   for (int i=0;i<samples_out;i++)
-    out[ch+i*fmt.nchannels]=eqout[i];
-  }
- return parent->deliverSamples(++it,fmt,out,samples_out);
+    float *in=(float*)init(cfg,fmt,samples,numsamples),*out=NULL;
+    int samples_out=0;
+    for (unsigned int ch=0; ch<fmt.nchannels; ch++) {
+        eqs[ch]->write_samples(in+ch,(int)numsamples,fmt.nchannels);
+        const float *eqout=eqs[ch]->get_output(&samples_out);
+        if (!out) {
+            out=(float*)alloc_buffer(fmt,samples_out,buf);
+        }
+        for (int i=0; i<samples_out; i++) {
+            out[ch+i*fmt.nchannels]=eqout[i];
+        }
+    }
+    return parent->deliverSamples(++it,fmt,out,samples_out);
 }
 
 void TaudioFilterEQsuper::onSeek(void)
 {
- for (int i=0;i<8;i++)
-  if (eqs[i])
-   {
-    delete eqs[i];
-    eqs[i]=NULL;
-   }
+    for (int i=0; i<8; i++)
+        if (eqs[i]) {
+            delete eqs[i];
+            eqs[i]=NULL;
+        }
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9.00"
+	Version="9,00"
 	Name="makeAVIS"
 	ProjectGUID="{5A4518FA-F2D9-4632-ACD3-85A7FCF91CE4}"
 	RootNamespace="makeAVIS"
@@ -21,9 +21,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(ConfigurationName)_$(PlatformName)_2008"
-			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			ConfigurationType="1"
+			InheritedPropertySheets="..\common.vsprops"
 			CharacterSet="0"
 			>
 			<Tool
@@ -43,7 +42,6 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions=""
 				Optimization="0"
 				AdditionalIncludeDirectories="../src,../src/imgFilters"
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_DEBUG;_CONSOLE"
@@ -75,10 +73,10 @@
 				AdditionalDependencies="libcmtd.lib oldnames.lib kernel32.lib user32.lib gdi32.lib vfw32.lib advapi32.lib Comdlg32.lib $(NOINHERIT)"
 				OutputFile="../bin/makeAVIS.exe"
 				SuppressStartupBanner="true"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
+				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(IntDir)/makeAVIS.pdb"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				SubSystem="1"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
@@ -89,8 +87,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				AdditionalManifestFiles="..\bin\manifest32\makeAVIS.exe.manifest"
-				EmbedManifest="true"
+				AdditionalManifestFiles="..\bin\manifest\makeAVIS.exe.manifest"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -110,9 +107,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|x64"
-			OutputDirectory="$(ConfigurationName)_$(PlatformName)_2008"
-			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			ConfigurationType="1"
+			InheritedPropertySheets="..\common.vsprops"
 			CharacterSet="0"
 			>
 			<Tool
@@ -164,11 +160,12 @@
 				AdditionalDependencies="libcmtd.lib oldnames.lib kernel32.lib user32.lib gdi32.lib vfw32.lib advapi32.lib Comdlg32.lib $(NOINHERIT)"
 				OutputFile="../bin/makeAVIS.exe"
 				SuppressStartupBanner="true"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
+				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(IntDir)/makeAVIS.pdb"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				SubSystem="1"
+				RandomizedBaseAddress="1"
 				TargetMachine="17"
 			/>
 			<Tool
@@ -176,8 +173,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				AdditionalManifestFiles="..\bin\manifest64\makeAVIS.exe.manifest"
-				EmbedManifest="true"
+				AdditionalManifestFiles="..\bin\manifest\makeAVIS.exe.manifest"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -197,9 +193,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(ConfigurationName)_$(PlatformName)_2008"
-			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			ConfigurationType="1"
+			InheritedPropertySheets="..\common.vsprops"
 			UseOfMFC="1"
 			CharacterSet="0"
 			ManagedExtensions="0"
@@ -221,7 +216,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions=""
+				AdditionalOptions="/MP"
 				Optimization="1"
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="false"
@@ -236,8 +231,8 @@
 				ForceConformanceInForLoopScope="true"
 				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="0"
+				ProgramDataBaseFileName="$(IntDir)\$(TargetName).pdb"
 				BrowseInformation="0"
-				WarningLevel="3"
 				DebugInformationFormat="0"
 				DisableSpecificWarnings="4996"
 			/>
@@ -258,9 +253,9 @@
 				OutputFile="../bin/makeAVIS.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
-				ProgramDatabaseFile="$(IntDir)/makeAVIS.pdb"
+				DelayLoadDLLs="$(NOINHERIT)"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
@@ -273,8 +268,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				AdditionalManifestFiles="..\bin\manifest32\makeAVIS.exe.manifest"
-				EmbedManifest="true"
+				AdditionalManifestFiles="..\bin\manifest\makeAVIS.exe.manifest"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -294,9 +288,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|x64"
-			OutputDirectory="$(ConfigurationName)_$(PlatformName)_2008"
-			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			ConfigurationType="1"
+			InheritedPropertySheets="..\common.vsprops"
 			UseOfMFC="1"
 			CharacterSet="0"
 			ManagedExtensions="0"
@@ -319,7 +312,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions=""
+				AdditionalOptions="/MP"
 				Optimization="1"
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="false"
@@ -334,7 +327,6 @@
 				ForceConformanceInForLoopScope="true"
 				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="0"
-				WarningLevel="3"
 				DebugInformationFormat="0"
 				DisableSpecificWarnings="4996"
 			/>
@@ -355,12 +347,13 @@
 				OutputFile="../bin/makeAVIS.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
-				ProgramDatabaseFile="$(IntDir)/makeAVIS.pdb"
+				DelayLoadDLLs="$(NOINHERIT)"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
+				RandomizedBaseAddress="1"
 				TargetMachine="17"
 			/>
 			<Tool
@@ -368,8 +361,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				AdditionalManifestFiles="..\bin\manifest64\makeAVIS.exe.manifest"
-				EmbedManifest="true"
+				AdditionalManifestFiles="..\bin\manifest\makeAVIS.exe.manifest"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"

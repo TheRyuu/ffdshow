@@ -24,15 +24,13 @@
 #define AVCODEC_RATECONTROL_H
 
 /**
- * @file ratecontrol.h
+ * @file
  * ratecontrol header.
  */
 
-#ifdef __GNUC__
 #include <stdio.h>
 #include <stdint.h>
-#endif
-#include "eval.h"
+#include "libavutil/eval.h"
 
 typedef struct Predictor{
     double coeff;
@@ -41,7 +39,7 @@ typedef struct Predictor{
 } Predictor;
 
 typedef struct RateControlEntry{
-    int rcOverrideIndex1,rcOverrideQscale; //Milan Cutka - don't obey qmin/qmax in RcOverride sections
+    int rcOverrideIndex1,rcOverrideQscale; //ffdshow custom code: Milan Cutka - don't obey qmin/qmax in RcOverride sections
     int pict_type;
     float qscale;
     int mv_bits;
@@ -87,7 +85,7 @@ typedef struct RateControlContext{
     void *non_lavc_opaque;        ///< context for non lavc rc code (for example xvid)
     float dry_run_qscale;         ///< for xvid rc
     int last_picture_number;      ///< for xvid rc
-    AVEvalExpr * rc_eq_eval;
+    AVExpr * rc_eq_eval;
 }RateControlContext;
 
 struct MpegEncContext;

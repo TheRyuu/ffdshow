@@ -22,7 +22,7 @@
 #define FOURCC_H261 mmioFOURCC('H','2','6','1')
 #define FOURCC_M261 mmioFOURCC('M','2','6','1')
 #define FOURCC_H263 mmioFOURCC('H','2','6','3')
-//#define FOURCC_I263 mmioFOURCC('I','2','6','3')
+#define FOURCC_I263 mmioFOURCC('I','2','6','3')
 #define FOURCC_S263 mmioFOURCC('S','2','6','3')
 #define FOURCC_L263 mmioFOURCC('L','2','6','3')
 #define FOURCC_M263 mmioFOURCC('M','2','6','3')
@@ -37,6 +37,7 @@
 #define FOURCC_DAVC mmioFOURCC('D','A','V','C')
 #define FOURCC_PAVC mmioFOURCC('P','A','V','C')
 #define FOURCC_AVC1 mmioFOURCC('A','V','C','1')
+#define FOURCC_CCV1 mmioFOURCC('C','C','V','1')
 //#define FOURCC_SVM2 mmioFOURCC('S','V','M','2')
 #define FOURCC_BLZ0 mmioFOURCC('B','L','Z','0')
 #define FOURCC_SMP4 mmioFOURCC('S','M','P','4')
@@ -55,6 +56,7 @@
 #define FOURCC_VP6F mmioFOURCC('V','P','6','F')
 #define FOURCC_VP6A mmioFOURCC('V','P','6','A')
 #define FOURCC_FLV4 mmioFOURCC('F','L','V','4')
+#define FOURCC_VP80 mmioFOURCC('V','P','8','0')
 #define FOURCC_CAVS mmioFOURCC('C','A','V','S')
 #define FOURCC_MSS1 mmioFOURCC('M','S','S','1')
 #define FOURCC_MSS2 mmioFOURCC('M','S','S','2')
@@ -63,6 +65,7 @@
 #define FOURCC_MJLS mmioFOURCC('M','J','L','S')
 #define FOURCC_AVRN mmioFOURCC('A','V','R','N')
 #define FOURCC_MJPA mmioFOURCC('M','J','P','A')
+//#define FOURCC_MJPB mmioFOURCC('M','J','P','B')
 #define FOURCC_DVSD mmioFOURCC('D','V','S','D')
 #define FOURCC_DV25 mmioFOURCC('D','V','2','5')
 #define FOURCC_DV50 mmioFOURCC('D','V','5','0')
@@ -70,6 +73,7 @@
 #define FOURCC_CDV5 mmioFOURCC('C','D','V','5')
 #define FOURCC_DVIS mmioFOURCC('D','V','I','S')
 #define FOURCC_PDVC mmioFOURCC('P','D','V','C')
+//#define FOURCC_DVCP mmioFOURCC('D','V','C','P')
 #define FOURCC_HFYU mmioFOURCC('H','F','Y','U')
 #define FOURCC_FFVH mmioFOURCC('F','F','V','H')
 #define FOURCC_CYUV mmioFOURCC('C','Y','U','V')
@@ -111,6 +115,7 @@
 #define FOURCC_RT21 mmioFOURCC('R','T','2','1')
 #define FOURCC_IV32 mmioFOURCC('I','V','3','2')
 #define FOURCC_IV31 mmioFOURCC('I','V','3','1')
+#define FOURCC_IV50 mmioFOURCC('I','V','5','0')
 #define FOURCC_CVID mmioFOURCC('C','V','I','D')
 #define FOURCC_MSZH mmioFOURCC('M','S','Z','H')
 #define FOURCC_ZLIB mmioFOURCC('Z','L','I','B')
@@ -121,7 +126,6 @@
 #define FOURCC_DUCK mmioFOURCC('D','U','C','K')
 #define FOURCC_TM20 mmioFOURCC('T','M','2','0')
 #define FOURCC_TSCC mmioFOURCC('T','S','C','C')
-//#define FOURCC_SNOW mmioFOURCC('S','N','O','W')
 #define FOURCC_QPEG mmioFOURCC('Q','P','E','G')
 #define FOURCC_Q1_0 mmioFOURCC('Q','1','.','0')
 #define FOURCC_Q1_1 mmioFOURCC('Q','1','.','1')
@@ -152,6 +156,7 @@ DEFINE_GUID_FOURCC(H264)
 DEFINE_GUID_FOURCC(h264)
 DEFINE_GUID_FOURCC(AVC1)
 DEFINE_GUID_FOURCC(avc1)
+DEFINE_GUID_FOURCC(CCV1)
 
 //theora
 #define FOURCC_THEO mmioFOURCC('T','H','E','O')
@@ -166,6 +171,8 @@ DEFINE_GUID(FORMAT_RLTheora , 0xe69b30d1, 0x7d65, 0x4166, 0xb9, 0x90, 0x10, 0x3d
 #define FOURCC_SVQ3 mmioFOURCC('S','V','Q','3')
 #define FOURCC_QRLE mmioFOURCC('Q','R','L','E')
 #define FOURCC_RPZA mmioFOURCC('R','P','Z','A')
+#define FOURCC_AZPR 0x72707A61
+DEFINE_GUID_FOURCC(AZPR)
 
 //real
 #define FOURCC_RV10 mmioFOURCC('R','V','1','0')
@@ -201,11 +208,8 @@ DEFINE_GUID(FORMAT_RLTheora , 0xe69b30d1, 0x7d65, 0x4166, 0xb9, 0x90, 0x10, 0x3d
 #define FOURCC_Y800 mmioFOURCC('Y','8','0','0')
 #define FOURCC_NV12 mmioFOURCC('N','V','1','2')
 #define FOURCC_NV21 mmioFOURCC('N','V','2','1')
-//mencoder's raw formats
-#define FOURCC_RGB32MPLAYER IMGFMT_RGB32
-#define FOURCC_RGB24MPLAYER IMGFMT_RGB24
-#define FOURCC_RGB16MPLAYER IMGFMT_RGB16
-#define FOURCC_RGB15MPLAYER IMGFMT_RGB15
+#define FOURCC_420R mmioFOURCC('4','2','0','R')
+#define FOURCC_444R mmioFOURCC('4','4','4','R')
 
 DEFINE_GUID_FOURCC(I420)
 DEFINE_GUID_FOURCC(422P)
@@ -217,11 +221,12 @@ DEFINE_GUID_FOURCC(Y800)
 DEFINE_GUID_FOURCC(NV12)
 DEFINE_GUID_FOURCC(NV21)
 DEFINE_GUID_FOURCC(YV16)
+DEFINE_GUID_FOURCC(420R)
+DEFINE_GUID_FOURCC(444R)
 
 #define FOURCC_MASK_ALL 1
 #define FOURCC_MASK_YUV 2
 #define FOURCC_MASK_RGB 3
-#define FOURCC_MASK_PAL 4
 
 //audio
 #define WAVE_FORMAT_WMA7    0x160
@@ -244,12 +249,12 @@ DEFINE_GUID_FOURCC(YV16)
 #define WAVE_FORMAT_G726    0x45
 #define WAVE_FORMAT_FLAC    0xf1ac
 #define WAVE_FORMAT_TTA     0x77a1
-#define WAVE_FORMAT_VORBIS1  ((WORD)'O'+((WORD)'g'<<8))	// 0x674f("Og") ... Original stream compatible
-#define WAVE_FORMAT_VORBIS2  ((WORD)'P'+((WORD)'g'<<8))	// 0x6750("Pg") ... Have independent header
-#define WAVE_FORMAT_VORBIS3  ((WORD)'Q'+((WORD)'g'<<8))	// 0x6751("Qg") ... Have no codebook header
-#define WAVE_FORMAT_VORBIS1P ((WORD)'o'+((WORD)'g'<<8))	// 0x676f("og") ... Original stream compatible
-#define WAVE_FORMAT_VORBIS2P ((WORD)'p'+((WORD)'g'<<8))	// 0x6770("pg") ... Have independent header
-#define WAVE_FORMAT_VORBIS3P ((WORD)'q'+((WORD)'g'<<8))	// 0x6771("qg") ... Have no codebook header
+#define WAVE_FORMAT_VORBIS1  ((WORD)'O'+((WORD)'g'<<8)) // 0x674f("Og") ... Original stream compatible
+#define WAVE_FORMAT_VORBIS2  ((WORD)'P'+((WORD)'g'<<8)) // 0x6750("Pg") ... Have independent header
+#define WAVE_FORMAT_VORBIS3  ((WORD)'Q'+((WORD)'g'<<8)) // 0x6751("Qg") ... Have no codebook header
+#define WAVE_FORMAT_VORBIS1P ((WORD)'o'+((WORD)'g'<<8)) // 0x676f("og") ... Original stream compatible
+#define WAVE_FORMAT_VORBIS2P ((WORD)'p'+((WORD)'g'<<8)) // 0x6770("pg") ... Have independent header
+#define WAVE_FORMAT_VORBIS3P ((WORD)'q'+((WORD)'g'<<8)) // 0x6771("qg") ... Have no codebook header
 #define WAVE_FORMAT_FFVORBIS (('V'<<8)+'o')
 #define WAVE_FORMAT_QT_ULAW 0x6c75
 #define WAVE_FORMAT_alaw    mmioFOURCC('a','l','a','w')
@@ -274,24 +279,32 @@ DEFINE_GUID_FOURCC(YV16)
 #define WAVE_FORMAT_MAC3    mmioFOURCC('M','A','C','3')
 #define WAVE_FORMAT_MAC6    mmioFOURCC('M','A','C','6')
 #define WAVE_FORMAT_QT_GSM  0x6761
-#define WAVE_FORMAT_COOK1   0x2004
-#define WAVE_FORMAT_COOK2   mmioFOURCC('C','O','O','K')
+#define WAVE_FORMAT_COOK    mmioFOURCC('C','O','O','K')
+#define WAVE_FORMAT_cook    mmioFOURCC('c','o','o','k')
+#define WAVE_FORMAT_COOK2   0x2004
 #define WAVE_FORMAT_14_4    0x345F3431
 #define WAVE_FORMAT_28_8    0x385F3832
 #define WAVE_FORMAT_IMC     0x401
 #define WAVE_FORMAT_ATRAC3  0x270
-#define WAVE_FORMAT_NELLYMOSER	mmioFOURCC('N','E','L','L')
+#define WAVE_FORMAT_ATRC    mmioFOURCC('A','T','R','C')
+#define WAVE_FORMAT_NELLYMOSER  mmioFOURCC('N','E','L','L')
+#define WAVE_FORMAT_WAVPACK 0x5756
 #define WAVE_FORMAT_PCM8    0x9a120008
 #define WAVE_FORMAT_PCM16   0x9a120016
 #define WAVE_FORMAT_PCM24   0x9a120024
 #define WAVE_FORMAT_PCM32   0x9a120032
 #define WAVE_FORMAT_FLOAT32 0x9a120132
 #define WAVE_FORMAT_FLOAT64 0x9a120164
-#define WAVE_FORMAT_IMA_AMV mmioFOURCC('A','M','V','A')
+#define WAVE_FORMAT_IMA_AMV   mmioFOURCC('A','M','V','A')
 #define WAVE_FORMAT_ADPCM_SWF mmioFOURCC('A','S','W','F')
-#define WAVE_FORMAT_EAC3		mmioFOURCC('E','A','C','3')
-#define WAVE_FORMAT_MLP    mmioFOURCC('M','L','P', ' ')
-#define WAVE_FORMAT_DTS_HD mmioFOURCC('D','T','S', 'H')
+#define WAVE_FORMAT_EAC3      mmioFOURCC('E','A','C','3')
+#define WAVE_FORMAT_MLP       mmioFOURCC('M','L','P',' ')
+#define WAVE_FORMAT_DTS_HD    mmioFOURCC('D','T','S','H')
+#define WAVE_FORMAT_TRUEHD    mmioFOURCC('T','R','U','E')
+#define WAVE_FORMAT_CYBERLINK_TRUEHD 49155
+#define WAVE_FORMAT_CYBERLINK_DTS_HD 49156
+#define WAVE_FORMAT_NONE    0x454E4F4E
+
 
 DEFINE_GUID_WAVE(WMA7)
 DEFINE_GUID_WAVE(WMA8)
@@ -355,15 +368,19 @@ DEFINE_GUID_WAVE(14_4)
 DEFINE_GUID_WAVE(28_8)
 DEFINE_GUID_WAVE(IMC)
 DEFINE_GUID_WAVE(ATRAC3)
+DEFINE_GUID_WAVE(ATRC)
 DEFINE_GUID_WAVE(IMA_AMV)
 DEFINE_GUID_WAVE(NELLYMOSER)
+DEFINE_GUID_WAVE(WAVPACK)
 DEFINE_GUID_WAVE(ADPCM_SWF)
 DEFINE_GUID_WAVE(MLP)
 DEFINE_GUID_WAVE(EAC3)
-DEFINE_GUID_WAVE(COOK1)
+DEFINE_GUID_WAVE(COOK)
+DEFINE_GUID_WAVE(cook)
 DEFINE_GUID_WAVE(COOK2)
+DEFINE_GUID_WAVE(NONE)
 
-// vorbis/tremor/illiminable
+// vorbis/illiminable
 #define WAVE_FORMAT_VORBIS 0xcddca2d5
 DEFINE_GUID(FORMAT_VorbisFormat         ,0x6bddfa7e, 0x9f22, 0x46a9, 0xab, 0x5e, 0x88, 0x4e, 0xff, 0x29, 0x4d, 0x9f);
 DEFINE_GUID(FORMAT_VorbisFormat2        ,0xb36e107f, 0xa938, 0x4387, 0x93, 0xc7, 0x55, 0xe9, 0x66, 0x75, 0x74, 0x73);
@@ -386,8 +403,16 @@ DEFINE_GUID(MEDIASUBTYPE_CVD_SUBPICTURE ,0x7b57308f, 0x5154, 0x4c36, 0xb9, 0x03,
 DEFINE_GUID(CLSID_MPC_MatroskaSplitter  ,0x0a68c3b5, 0x9164, 0x4a54, 0xaf, 0xaf, 0x99, 0x5b, 0x2f, 0xf0, 0xe0, 0xd4);
 DEFINE_GUID(CLSID_MPC_MpegSourceFilter  ,0x1365be7a ,0xc86a, 0x473c, 0x9a, 0x41, 0xc0, 0xa6, 0xe8, 0x2c, 0x9f, 0xa3);
 DEFINE_GUID(CLSID_MPC_MpegSplitterFilter,0xdc257063, 0x045f, 0x4be2 ,0xbd ,0x5b ,0xe1 ,0x22 ,0x79 ,0xc4 ,0x64 ,0xf0);
+DEFINE_GUID(CLSID_MPC_AC3DTSSourceFilter,0xB4A7BE85, 0x551D, 0x4594, 0xBD, 0xC7, 0x83, 0x2B, 0x09, 0x18, 0x50, 0x41);
+DEFINE_GUID(CLSID_MPC_OggSplitter       ,0x6D3688CE, 0x3E9D, 0x42F4, 0x92, 0xCA, 0x8A, 0x11, 0x11, 0x9D, 0x25, 0xCD);
 DEFINE_GUID(CLSID_GabestMatroskaSplitter,0x149d2e01, 0xc32e, 0x4939, 0x80, 0xf6, 0xc0, 0x7b, 0x81, 0x01, 0x5a, 0x7a);
 DEFINE_GUID(CLSID_DVBSourceFilter       ,0xd8c561de, 0x1a6c, 0x4f15, 0xbe, 0x71, 0x29, 0x47, 0xdb, 0xe2, 0x64, 0x19);
+DEFINE_GUID(CLSID_NeuviewSource         ,0xe69f911e, 0x571d, 0x4d54, 0xb4, 0x7b, 0xf2, 0x4c, 0x67, 0xb3, 0x78, 0x97);
+DEFINE_GUID(CLSID_MADVideoRenderer      ,0xE1A8B82A, 0x32CE, 0x4B0D, 0xBE, 0x0D, 0xAA, 0x68, 0xC7, 0x72, 0xE4, 0x23);
+DEFINE_GUID(CLSID_LAVFSplitter          ,0x171252A0, 0x8820, 0x4AFE, 0x9D, 0xF8, 0x5C, 0x92, 0xB2, 0xD6, 0x6B, 0x04);
+DEFINE_GUID(CLSID_LAVFSplitterSource    ,0xB98D13E7, 0x55DB, 0x4385, 0xA3, 0x3D, 0x09, 0xFD, 0x1B, 0xA2, 0x63, 0x38);
+DEFINE_GUID(CLSID_JREncoderFilter       ,0xe3eabdee, 0x2a0e, 0x4b3f, 0xa7, 0x59, 0x58, 0x5a, 0x1b, 0x62, 0xbe, 0x8a);
+
 DEFINE_GUID(CLSID_InfTee                ,0xf8388a40, 0xd5bb, 0x11d0, 0xbe, 0x5a, 0x00, 0x80, 0xc7, 0x06, 0x56, 0x8e);
 DEFINE_GUID(CLSID_SmartT                ,0xCC58E280, 0x8AA1, 0x11D1, 0xB3, 0xF1, 0x00, 0xAA, 0x00, 0x37, 0x61, 0xC5);
 DEFINE_GUID(CLSID_DecklinkVideoRenderFilter ,0xCEB13CC8,0x3591,0x45a5,0xBA,0x0F, 0x20, 0xE9, 0xA1, 0xD7, 0x2F, 0x76);
@@ -399,11 +424,103 @@ DEFINE_GUID(MEDIASUBTYPE_ARCSOFT_MLP    ,0x4288b843, 0x610b, 0x4e15, 0xa5, 0x3b,
 DEFINE_GUID(MEDIASUBTYPE_SONIC_MLP      ,0x4094a857, 0x7891, 0x44ac, 0x92, 0xb5, 0xc1, 0xcf, 0xf3, 0x7a, 0xf2, 0xe7);
 DEFINE_GUID(MEDIASUBTYPE_ARCSOFT_DDPLUS ,0x71cfa727, 0x37e4, 0x404a, 0xae, 0xc0, 0x34, 0x84, 0x25, 0x32, 0xef, 0xf7);
 DEFINE_GUID(MEDIASUBTYPE_ARCSOFT_DTSHD  ,0xf6498f57, 0xb399, 0x4a43, 0xa6, 0xfa, 0xf6, 0x94, 0xad, 0x42, 0xb9, 0xbe);
+DEFINE_GUID(MEDIASUBTYPE_CYBERLINK_BITSTREAM,0x6AD2A952, 0x9979, 0x4DC4, 0xB6, 0xE1, 0x6F, 0x3C, 0x31, 0x37, 0xB3, 0x42);
 DEFINE_GUID(MEDIASUBTYPE_DOLBY_DDPLUS   ,0xa7fb87af, 0x2d02, 0x42fb, 0xa4, 0xd4, 0x5,  0xcd, 0x93, 0x84, 0x3b, 0xdd);
 DEFINE_GUID(MEDIASUBTYPE_DOLBY_TRUEHD   ,0xeb27cec4, 0x163e, 0x4ca3, 0x8b, 0x74, 0x8e, 0x25, 0xf9, 0x1b, 0x51, 0x7e);
-DEFINE_GUID(MEDIASUBTYPE_DTS_HD         ,0xa2e58eb7, 0xfa9,  0x48bb, 0xa4, 0xc,  0xfa, 0xe,  0x15, 0x6d, 0x6, 0x45);
-DEFINE_GUID(MEDIASUBTYPE_HDMV_LPCM_AUDIO,0x949f97fd, 0x56f6, 0x4527, 0xb4, 0xae, 0xdd, 0xeb, 0x37, 0x5a, 0xb8, 0xf);
+DEFINE_GUID(MEDIASUBTYPE_DTS_HD         ,0xa2e58eb7, 0xfa9,  0x48bb, 0xa4, 0xc,  0xfa, 0xe,  0x15, 0x6d, 0x06, 0x45);
+DEFINE_GUID(MEDIASUBTYPE_HDMV_LPCM_AUDIO,0x949f97fd, 0x56f6, 0x4527, 0xb4, 0xae, 0xdd, 0xeb, 0x37, 0x5a, 0xb8, 0x0f);
+DEFINE_GUID(AM_KSPROPSETID_TSRateChange ,0xa503c5c0, 0x1d1d, 0x11d1, 0xad, 0x80, 0x44, 0x45, 0x53, 0x54, 0x00, 0x00);
+
+DEFINE_GUID(MEDIASUBTYPE_DOLBY_AC3_SPDIF, 0x00000092, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71);
+
+// Define the GUIDS for Windows SDK < V7.0
+#ifndef KSDATAFORMAT_SUBTYPE_IEC61937_DOLBY_MLP
+// Windows 7 GUIDs for WAVEFORMATEXTENSIBLE IEC61937 structure
+
+// Dolby digital
+#define KSDATAFORMAT_SUBTYPE_IEC61937_DOLBY_DIGITAL MEDIASUBTYPE_DOLBY_AC3_SPDIF
+//Advanced Audio Coding (MPEG-2/4 AAC in ADTS)
+DEFINE_GUID(KSDATAFORMAT_SUBTYPE_IEC61937_AAC, 0x00000006, 0x0cea, 0x0010, 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71);
+//DTS
+DEFINE_GUID(KSDATAFORMAT_SUBTYPE_IEC61937_DTS, 0x00000008, 0x0cea, 0x0010, 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71);
+//Dolby Digital Plus (EAC3)
+DEFINE_GUID(KSDATAFORMAT_SUBTYPE_IEC61937_DOLBY_DIGITAL_PLUS, 0x0000000a, 0x0cea, 0x0010, 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71);
+//DTS-HD (24-bit, 96Khz)
+DEFINE_GUID(KSDATAFORMAT_SUBTYPE_IEC61937_DTS_HD, 0x0000000b, 0x0cea, 0x0010, 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71);
+//MAT(MLP)– Meridian Lossless Packing (Dolby Digital True HD – 24-bit 196KHz/up to 18M bps, 8 channels)
+DEFINE_GUID(KSDATAFORMAT_SUBTYPE_IEC61937_DOLBY_MLP, 0x0000000c, 0x0cea, 0x0010, 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71);
+//Windows Media Audio (WMA) Pro
+DEFINE_GUID(KSDATAFORMAT_SUBTYPE_IEC61937_WMA_PRO, 0x00000164, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71);
+
+#if !defined( STATIC_KSDATAFORMAT_SUBTYPE_WAVEFORMATEX )
+DEFINE_GUID(KSDATAFORMAT_SUBTYPE_WAVEFORMATEX, 0x00000000, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71);
+#endif
+
+#define SPEAKER_FRONT_LEFT              0x1
+#define SPEAKER_FRONT_RIGHT             0x2
+#define SPEAKER_FRONT_CENTER            0x4
+#define SPEAKER_LOW_FREQUENCY           0x8
+#define SPEAKER_BACK_LEFT               0x10
+#define SPEAKER_BACK_RIGHT              0x20
+#define SPEAKER_FRONT_LEFT_OF_CENTER    0x40
+#define SPEAKER_FRONT_RIGHT_OF_CENTER   0x80
+#define SPEAKER_BACK_CENTER             0x100
+#define SPEAKER_SIDE_LEFT               0x200
+#define SPEAKER_SIDE_RIGHT              0x400
+#define SPEAKER_TOP_CENTER              0x800
+#define SPEAKER_TOP_FRONT_LEFT          0x1000
+#define SPEAKER_TOP_FRONT_CENTER        0x2000
+#define SPEAKER_TOP_FRONT_RIGHT         0x4000
+#define SPEAKER_TOP_BACK_LEFT           0x8000
+#define SPEAKER_TOP_BACK_CENTER         0x10000
+#define SPEAKER_TOP_BACK_RIGHT          0x20000
 
 
+#define KSAUDIO_SPEAKER_5POINT1         (SPEAKER_FRONT_LEFT | SPEAKER_FRONT_RIGHT | \
+                                         SPEAKER_FRONT_CENTER | SPEAKER_LOW_FREQUENCY | \
+                                         SPEAKER_BACK_LEFT  | SPEAKER_BACK_RIGHT)
+#define KSAUDIO_SPEAKER_7POINT1         (SPEAKER_FRONT_LEFT | SPEAKER_FRONT_RIGHT | \
+                                         SPEAKER_FRONT_CENTER | SPEAKER_LOW_FREQUENCY | \
+                                         SPEAKER_BACK_LEFT | SPEAKER_BACK_RIGHT | \
+                                         SPEAKER_FRONT_LEFT_OF_CENTER | SPEAKER_FRONT_RIGHT_OF_CENTER)
+#endif
+
+// Additionnal DXVA GUIDs
+// Intel ClearVideo VC1 bitstream decoder
+DEFINE_GUID(DXVA_Intel_VC1_ClearVideo, 0xBCC5DB6D, 0xA2B6,0x4AF0,0xAC,0xE4,0xAD,0xB1,0xF7,0x87,0xBC,0x89);
+
+// Intel ClearVideo H264 bitstream decoder
+DEFINE_GUID(DXVA_Intel_H264_ClearVideo, 0x604F8E68, 0x4951,0x4C54,0x88,0xFE,0xAB,0xD2,0x5C,0x15,0xB3,0xD6);
+
+//AE7EC2A2-1913-4a80-8DD6-DF1497ABA494
+DEFINE_GUID(IID_IFFDSDXVA2Sample, 0xAE7EC2A2, 0x1913, 0x4a80, 0x8D, 0xD6, 0xDF, 0x14, 0x97, 0xAB, 0xA4, 0x94);
+DEFINE_GUID(IID_IDirect3DDeviceManager9,          0xa0cade0f,0x06d5,0x4cf4,0xa1,0xc7,0xf3,0xcd,0xd7,0x25,0xaa,0x75);
+DEFINE_GUID(IID_IDirectXVideoAccelerationService, 0xfc51a550,0xd5e7,0x11d9,0xaf,0x55,0x00,0x05,0x4e,0x43,0xff,0x02);
+
+DEFINE_GUID(DXVA_ModeMPEG2_A, 0x1b81be0A, 0xa0c7,0x11d3,0xb9,0x84,0x00,0xc0,0x4f,0x2e,0x73,0xc5);
+DEFINE_GUID(DXVA_ModeMPEG2_B, 0x1b81be0B, 0xa0c7,0x11d3,0xb9,0x84,0x00,0xc0,0x4f,0x2e,0x73,0xc5);
+DEFINE_GUID(DXVA_ModeMPEG2_C, 0x1b81be0C, 0xa0c7,0x11d3,0xb9,0x84,0x00,0xc0,0x4f,0x2e,0x73,0xc5);
+DEFINE_GUID(DXVA_ModeMPEG2_D, 0x1b81be0D, 0xa0c7,0x11d3,0xb9,0x84,0x00,0xc0,0x4f,0x2e,0x73,0xc5);
+
+DEFINE_GUID(DXVA_ModeH264_A,  0x1b81be64, 0xa0c7,0x11d3,0xb9,0x84,0x00,0xc0,0x4f,0x2e,0x73,0xc5);
+DEFINE_GUID(DXVA_ModeH264_B,  0x1b81be65, 0xa0c7,0x11d3,0xb9,0x84,0x00,0xc0,0x4f,0x2e,0x73,0xc5);
+DEFINE_GUID(DXVA_ModeH264_C,  0x1b81be66, 0xa0c7,0x11d3,0xb9,0x84,0x00,0xc0,0x4f,0x2e,0x73,0xc5);
+DEFINE_GUID(DXVA_ModeH264_D,  0x1b81be67, 0xa0c7,0x11d3,0xb9,0x84,0x00,0xc0,0x4f,0x2e,0x73,0xc5);
+DEFINE_GUID(DXVA_ModeH264_E,  0x1b81be68, 0xa0c7,0x11d3,0xb9,0x84,0x00,0xc0,0x4f,0x2e,0x73,0xc5);
+DEFINE_GUID(DXVA_ModeH264_F,  0x1b81be69, 0xa0c7,0x11d3,0xb9,0x84,0x00,0xc0,0x4f,0x2e,0x73,0xc5);
+
+DEFINE_GUID(DXVA2_ModeH264_A,  0x1b81be64, 0xa0c7,0x11d3,0xb9,0x84,0x00,0xc0,0x4f,0x2e,0x73,0xc5);
+DEFINE_GUID(DXVA2_ModeH264_B,  0x1b81be65, 0xa0c7,0x11d3,0xb9,0x84,0x00,0xc0,0x4f,0x2e,0x73,0xc5);
+DEFINE_GUID(DXVA2_ModeH264_C,  0x1b81be66, 0xa0c7,0x11d3,0xb9,0x84,0x00,0xc0,0x4f,0x2e,0x73,0xc5);
+DEFINE_GUID(DXVA2_ModeH264_D,  0x1b81be67, 0xa0c7,0x11d3,0xb9,0x84,0x00,0xc0,0x4f,0x2e,0x73,0xc5);
+DEFINE_GUID(DXVA2_ModeH264_E,  0x1b81be68, 0xa0c7,0x11d3,0xb9,0x84,0x00,0xc0,0x4f,0x2e,0x73,0xc5);
+DEFINE_GUID(DXVA2_ModeH264_F,  0x1b81be69, 0xa0c7,0x11d3,0xb9,0x84,0x00,0xc0,0x4f,0x2e,0x73,0xc5);
+
+DEFINE_GUID(DXVA2_ModeVC1_A,   0x1b81beA0, 0xa0c7,0x11d3,0xb9,0x84,0x00,0xc0,0x4f,0x2e,0x73,0xc5);
+DEFINE_GUID(DXVA2_ModeVC1_B,   0x1b81beA1, 0xa0c7,0x11d3,0xb9,0x84,0x00,0xc0,0x4f,0x2e,0x73,0xc5);
+DEFINE_GUID(DXVA2_ModeVC1_C,   0x1b81beA2, 0xa0c7,0x11d3,0xb9,0x84,0x00,0xc0,0x4f,0x2e,0x73,0xc5);
+DEFINE_GUID(DXVA2_ModeVC1_D,   0x1b81beA3, 0xa0c7,0x11d3,0xb9,0x84,0x00,0xc0,0x4f,0x2e,0x73,0xc5);
+
+DEFINE_GUID(DXVA_NoEncrypt,   0x1b81beD0, 0xa0c7,0x11d3,0xb9,0x84,0x00,0xc0,0x4f,0x2e,0x73,0xc5);
 
 #endif

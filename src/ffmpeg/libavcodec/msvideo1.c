@@ -2,25 +2,25 @@
  * Microsoft Video-1 Decoder
  * Copyright (C) 2003 the ffmpeg project
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 /**
- * @file msvideo1.c
+ * @file
  * Microsoft Video-1 Decoder by Mike Melanson (melanson@pcisys.net)
  * For more information about the MS Video-1 format, visit:
  *   http://www.pcisys.net/~melanson/codecs/
@@ -33,7 +33,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 
 #include "libavutil/intreadwrite.h"
 #include "avcodec.h"
@@ -294,8 +293,10 @@ static void msvideo1_decode_16bit(Msvideo1Context *s)
 
 static int msvideo1_decode_frame(AVCodecContext *avctx,
                                 void *data, int *data_size,
-                                const uint8_t *buf, int buf_size)
+                                AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     Msvideo1Context *s = avctx->priv_data;
 
     s->buf = buf;
@@ -330,19 +331,14 @@ static av_cold int msvideo1_decode_end(AVCodecContext *avctx)
     return 0;
 }
 
-AVCodec msvideo1_decoder = {
-    "msvideo1",
-    CODEC_TYPE_VIDEO,
-    CODEC_ID_MSVIDEO1,
-    sizeof(Msvideo1Context),
-    msvideo1_decode_init,
-    NULL,
-    msvideo1_decode_end,
-    msvideo1_decode_frame,
-    /*.capabilities = */CODEC_CAP_DR1,
-    /*.next = */NULL,
-    /*.flush = */NULL,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name= */NULL_IF_CONFIG_SMALL("Microsoft Video 1"),
+AVCodec ff_msvideo1_decoder = {
+    .name           = "msvideo1",
+    .type           = AVMEDIA_TYPE_VIDEO,
+    .id             = CODEC_ID_MSVIDEO1,
+    .priv_data_size = sizeof(Msvideo1Context),
+    .init           = msvideo1_decode_init,
+    .close          = msvideo1_decode_end,
+    .decode         = msvideo1_decode_frame,
+    .capabilities   = CODEC_CAP_DR1,
+    .long_name= NULL_IF_CONFIG_SMALL("Microsoft Video 1"),
 };

@@ -22,9 +22,7 @@
 #ifndef AVCODEC_RTJPEG_H
 #define AVCODEC_RTJPEG_H
 
-#ifdef __GNUC__
 #include <stdint.h>
-#endif
 #include "dsputil.h"
 
 typedef struct {
@@ -33,6 +31,7 @@ typedef struct {
     uint8_t scan[64];
     uint32_t lquant[64];
     uint32_t cquant[64];
+    DECLARE_ALIGNED(16, DCTELEM, block)[64];
 } RTJpegContext;
 
 void rtjpeg_decode_init(RTJpegContext *c, DSPContext *dsp,

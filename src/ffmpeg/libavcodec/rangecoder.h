@@ -20,17 +20,15 @@
  */
 
 /**
- * @file rangecoder.h
+ * @file
  * Range coder.
  */
 
 #ifndef AVCODEC_RANGECODER_H
 #define AVCODEC_RANGECODER_H
 
-#ifdef __GNUC__
 #include <stdint.h>
 #include <assert.h>
-#endif
 #include "libavutil/common.h"
 
 typedef struct RangeCoder{

@@ -20,17 +20,15 @@
  */
 
 /**
- * @file rl.h
+ * @file
  * rl header.
  */
 
 #ifndef AVCODEC_RL_H
 #define AVCODEC_RL_H
 
-#ifdef __GNUC__
 #include <stdint.h>
-#endif
-#include "bitstream.h"
+#include "get_bits.h"
 
 /* run length table */
 #define MAX_RUN    64

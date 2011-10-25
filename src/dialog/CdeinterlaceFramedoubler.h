@@ -6,13 +6,13 @@
 class TdeinterlacePageFramedoubler : public TdeinterlacePanel
 {
 public:
- static TdeinterlacePanel* create(Twindow *parent);
- TdeinterlacePageFramedoubler(Twindow *Iparent);
- virtual ~TdeinterlacePageFramedoubler();
- virtual void init(void);
- virtual void cfg2dlg(void);
- virtual void reset(void);
- virtual void translate(void);
+    static TdeinterlacePanel* create(Twindow *parent);
+    TdeinterlacePageFramedoubler(Twindow *Iparent);
+    virtual ~TdeinterlacePageFramedoubler();
+    virtual void init(void);
+    virtual void cfg2dlg(void);
+    virtual void reset(void);
+    virtual void translate(void);
 };
 
 #endif

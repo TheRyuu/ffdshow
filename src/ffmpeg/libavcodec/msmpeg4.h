@@ -2,25 +2,21 @@
  * MSMPEG4 backend for ffmpeg encoder and decoder
  * copyright (c) 2007 Aurelien Jacobs <aurel@gnuage.org>
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
- */
-
-/**
- * @file msmpeg4.h
  */
 
 #ifndef AVCODEC_MSMPEG4_H
@@ -53,15 +49,9 @@ int ff_wmv2_decode_mb(MpegEncContext *s, DCTELEM block[6][64]);
                                 CONFIG_MSMPEG4V2_DECODER || \
                                 CONFIG_MSMPEG4V3_DECODER || \
                                 CONFIG_WMV2_DECODER      || \
-                                CONFIG_VC1_DECODER       || \
-                                CONFIG_WMV3_DECODER)
-#define CONFIG_MSMPEG4_ENCODER (CONFIG_MSMPEG4V1_ENCODER || \
-                                CONFIG_MSMPEG4V2_ENCODER || \
+                                CONFIG_VC1_DECODER)
+#define CONFIG_MSMPEG4_ENCODER (CONFIG_MSMPEG4V2_ENCODER || \
                                 CONFIG_MSMPEG4V3_ENCODER || \
                                 CONFIG_WMV2_ENCODER)
-#define CONFIG_MSMPEG4 (CONFIG_MSMPEG4_DECODER || CONFIG_MSMPEG4_ENCODER)
-#define CONFIG_WMV2 (CONFIG_WMV2_DECODER || CONFIG_WMV2_ENCODER)
-#define CONFIG_WMV_DECODER (CONFIG_WMV1_DECODER || CONFIG_WMV2_DECODER)
-#define CONFIG_WMV_ENCODER (CONFIG_WMV1_ENCODER || CONFIG_WMV2_ENCODER)
 
 #endif /* AVCODEC_MSMPEG4_H */

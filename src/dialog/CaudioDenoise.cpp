@@ -21,22 +21,21 @@
 
 void TaudioDenoisePage::init(void)
 {
- tbrSetRange(IDC_TBR_AUDIODENOISE_THRESHOLD,1,5000);
+    tbrSetRange(IDC_TBR_AUDIODENOISE_THRESHOLD,1,5000);
 }
 
 void TaudioDenoisePage::cfg2dlg(void)
 {
- tbrSet(IDC_TBR_AUDIODENOISE_THRESHOLD,cfgGet(IDFF_audioDenoiseThreshold),IDC_LBL_AUDIODENOISE_THRESHOLD);
+    tbrSet(IDC_TBR_AUDIODENOISE_THRESHOLD,cfgGet(IDFF_audioDenoiseThreshold),IDC_LBL_AUDIODENOISE_THRESHOLD);
 }
 
 TaudioDenoisePage::TaudioDenoisePage(TffdshowPageDec *Iparent,const TfilterIDFF *idff):TconfPageDecAudio(Iparent,idff)
 {
- resInter=IDC_CHB_AUDIODENOISE;
- static const TbindTrackbar<TaudioDenoisePage> htbr[]=
-  {
-   IDC_TBR_AUDIODENOISE_THRESHOLD,IDFF_audioDenoiseThreshold,&TaudioDenoisePage::cfg2dlg,
-   0,0,NULL
-  };
- bindHtracks(htbr);
+    resInter=IDC_CHB_AUDIODENOISE;
+    static const TbindTrackbar<TaudioDenoisePage> htbr[]= {
+        IDC_TBR_AUDIODENOISE_THRESHOLD,IDFF_audioDenoiseThreshold,&TaudioDenoisePage::cfg2dlg,
+        0,0,NULL
+    };
+    bindHtracks(htbr);
 }
 

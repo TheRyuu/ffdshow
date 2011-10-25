@@ -20,7 +20,7 @@
  *  along with this program ; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
  *
- * $Id: cbp.h,v 1.11 2004/04/05 20:36:36 edgomez Exp $
+ * $Id: cbp.h 1988 2011-05-18 09:10:05Z Isibaar $
  *
  ****************************************************************************/
 
@@ -38,9 +38,8 @@ extern cbpFuncPtr calc_cbp;
 extern cbpFunc calc_cbp_c;
 extern cbpFunc calc_cbp_plain;
 
-#ifdef ARCH_IS_IA32
+#if defined(ARCH_IS_IA32) || defined(ARCH_IS_X86_64)
 extern cbpFunc calc_cbp_mmx;
-extern cbpFunc calc_cbp_3dne;
 extern cbpFunc calc_cbp_sse2;
 #endif
 

@@ -4,48 +4,69 @@
  * Copyright (c) 2002 Fabrice Bellard
  * Partly based on libdjbfft by D. J. Bernstein
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 /**
- * @file libavcodec/fft.c
+ * @file
  * FFT/IFFT transforms.
  */
 
-#include "dsputil.h"
+#include <stdlib.h>
+#include <string.h>
+#include "libavutil/mathematics.h"
+#include "fft.h"
+#include "fft-internal.h"
 
 /* cos(2*pi*x/n) for 0<=x<=n/4, followed by its reverse */
-DECLARE_ALIGNED_16(FFTSample, ff_cos_16[8]);
-DECLARE_ALIGNED_16(FFTSample, ff_cos_32[16]);
-DECLARE_ALIGNED_16(FFTSample, ff_cos_64[32]);
-DECLARE_ALIGNED_16(FFTSample, ff_cos_128[64]);
-DECLARE_ALIGNED_16(FFTSample, ff_cos_256[128]);
-DECLARE_ALIGNED_16(FFTSample, ff_cos_512[256]);
-DECLARE_ALIGNED_16(FFTSample, ff_cos_1024[512]);
-DECLARE_ALIGNED_16(FFTSample, ff_cos_2048[1024]);
-DECLARE_ALIGNED_16(FFTSample, ff_cos_4096[2048]);
-DECLARE_ALIGNED_16(FFTSample, ff_cos_8192[4096]);
-DECLARE_ALIGNED_16(FFTSample, ff_cos_16384[8192]);
-DECLARE_ALIGNED_16(FFTSample, ff_cos_32768[16384]);
-DECLARE_ALIGNED_16(FFTSample, ff_cos_65536[32768]);
-FFTSample *ff_cos_tabs[] = {
-    ff_cos_16, ff_cos_32, ff_cos_64, ff_cos_128, ff_cos_256, ff_cos_512, ff_cos_1024,
-    ff_cos_2048, ff_cos_4096, ff_cos_8192, ff_cos_16384, ff_cos_32768, ff_cos_65536,
+#if !CONFIG_HARDCODED_TABLES
+COSTABLE(16);
+COSTABLE(32);
+COSTABLE(64);
+COSTABLE(128);
+COSTABLE(256);
+COSTABLE(512);
+COSTABLE(1024);
+COSTABLE(2048);
+COSTABLE(4096);
+COSTABLE(8192);
+COSTABLE(16384);
+COSTABLE(32768);
+COSTABLE(65536);
+#endif
+COSTABLE_CONST FFTSample * const FFT_NAME(ff_cos_tabs)[] = {
+    NULL, NULL, NULL, NULL,
+    FFT_NAME(ff_cos_16),
+    FFT_NAME(ff_cos_32),
+    FFT_NAME(ff_cos_64),
+    FFT_NAME(ff_cos_128),
+    FFT_NAME(ff_cos_256),
+    FFT_NAME(ff_cos_512),
+    FFT_NAME(ff_cos_1024),
+    FFT_NAME(ff_cos_2048),
+    FFT_NAME(ff_cos_4096),
+    FFT_NAME(ff_cos_8192),
+    FFT_NAME(ff_cos_16384),
+    FFT_NAME(ff_cos_32768),
+    FFT_NAME(ff_cos_65536),
 };
+
+static void ff_fft_permute_c(FFTContext *s, FFTComplex *z);
+static void ff_fft_calc_c(FFTContext *s, FFTComplex *z);
 
 static int split_radix_permutation(int i, int n, int inverse)
 {
@@ -58,163 +79,130 @@ static int split_radix_permutation(int i, int n, int inverse)
     else                  return split_radix_permutation(i, m, inverse)*4 - 1;
 }
 
+av_cold void ff_init_ff_cos_tabs(int index)
+{
+#if !CONFIG_HARDCODED_TABLES
+    int i;
+    int m = 1<<index;
+    double freq = 2*M_PI/m;
+    FFTSample *tab = FFT_NAME(ff_cos_tabs)[index];
+    for(i=0; i<=m/4; i++)
+        tab[i] = FIX15(cos(i*freq));
+    for(i=1; i<m/4; i++)
+        tab[m/2-i] = tab[i];
+#endif
+}
+
+static const int avx_tab[] = {
+    0, 4, 1, 5, 8, 12, 9, 13, 2, 6, 3, 7, 10, 14, 11, 15
+};
+
+static int is_second_half_of_fft32(int i, int n)
+{
+    if (n <= 32)
+        return i >= 16;
+    else if (i < n/2)
+        return is_second_half_of_fft32(i, n/2);
+    else if (i < 3*n/4)
+        return is_second_half_of_fft32(i - n/2, n/4);
+    else
+        return is_second_half_of_fft32(i - 3*n/4, n/4);
+}
+
+static av_cold void fft_perm_avx(FFTContext *s)
+{
+    int i;
+    int n = 1 << s->nbits;
+
+    for (i = 0; i < n; i += 16) {
+        int k;
+        if (is_second_half_of_fft32(i, n)) {
+            for (k = 0; k < 16; k++)
+                s->revtab[-split_radix_permutation(i + k, n, s->inverse) & (n - 1)] =
+                    i + avx_tab[k];
+
+        } else {
+            for (k = 0; k < 16; k++) {
+                int j = i + k;
+                j = (j & ~7) | ((j >> 1) & 3) | ((j << 2) & 4);
+                s->revtab[-split_radix_permutation(i + k, n, s->inverse) & (n - 1)] = j;
+            }
+        }
+    }
+}
+
 av_cold int ff_fft_init(FFTContext *s, int nbits, int inverse)
 {
-    int i, j, m, n;
-    float alpha, c1, s1, s2;
-    int split_radix = 1;
-    int av_unused has_vectors;
+    int i, j, n;
 
     if (nbits < 2 || nbits > 16)
         goto fail;
     s->nbits = nbits;
     n = 1 << nbits;
 
-    s->tmp_buf = NULL;
-    s->exptab  = av_malloc((n / 2) * sizeof(FFTComplex));
-    if (!s->exptab)
-        goto fail;
     s->revtab = av_malloc(n * sizeof(uint16_t));
     if (!s->revtab)
         goto fail;
+    s->tmp_buf = av_malloc(n * sizeof(FFTComplex));
+    if (!s->tmp_buf)
+        goto fail;
     s->inverse = inverse;
-
-    s2 = inverse ? 1.0 : -1.0;
+    s->fft_permutation = FF_FFT_PERM_DEFAULT;
 
     s->fft_permute = ff_fft_permute_c;
     s->fft_calc    = ff_fft_calc_c;
+#if CONFIG_MDCT
     s->imdct_calc  = ff_imdct_calc_c;
     s->imdct_half  = ff_imdct_half_c;
-    s->exptab1     = NULL;
-
-#if HAVE_MMX && HAVE_YASM && ARCH_X86_32
-/* causes crashes on 64-bit Windows */	
-    has_vectors = mm_support();
-    if (has_vectors & FF_MM_SSE && HAVE_SSE) {
-        /* SSE for P3/P4/K8 */
-        s->imdct_calc  = ff_imdct_calc_sse;
-        /* crashes DTS decoder */
-        //s->imdct_half = ff_imdct_half_sse;
-        s->fft_permute = ff_fft_permute_sse;
-        s->fft_calc    = ff_fft_calc_sse;
-    } else if (has_vectors & FF_MM_3DNOWEXT && HAVE_AMD3DNOWEXT) {
-        /* 3DNowEx for K7 */
-        s->imdct_calc = ff_imdct_calc_3dn2;
-        s->imdct_half = ff_imdct_half_3dn2;
-        s->fft_calc   = ff_fft_calc_3dn2;
-    } else if (has_vectors & FF_MM_3DNOW && HAVE_AMD3DNOW) {
-        /* 3DNow! for K6-2/3 */
-        s->imdct_calc = ff_imdct_calc_3dn;
-        s->imdct_half = ff_imdct_half_3dn;
-        s->fft_calc   = ff_fft_calc_3dn;
-    }
+    s->mdct_calc   = ff_mdct_calc_c;
 #endif
 
-    if (split_radix) {
-        for(j=4; j<=nbits; j++) {
-            int m = 1<<j;
-            double freq = 2*M_PI/m;
-            FFTSample *tab = ff_cos_tabs[j-4];
-            for(i=0; i<=m/4; i++)
-                tab[i] = cos(i*freq);
-            for(i=1; i<m/4; i++)
-                tab[m/2-i] = tab[i];
-        }
-        for(i=0; i<n; i++)
-            s->revtab[-split_radix_permutation(i, n, s->inverse) & (n-1)] = i;
-        s->tmp_buf = av_malloc(n * sizeof(FFTComplex));
+#if CONFIG_FFT_FLOAT
+    if (ARCH_ARM)     ff_fft_init_arm(s);
+    if (HAVE_ALTIVEC) ff_fft_init_altivec(s);
+    if (HAVE_MMX)     ff_fft_init_mmx(s);
+    if (CONFIG_MDCT)  s->mdct_calcw = s->mdct_calc;
+#else
+    if (CONFIG_MDCT)  s->mdct_calcw = ff_mdct_calcw_c;
+    if (ARCH_ARM)     ff_fft_fixed_init_arm(s);
+#endif
+
+    for(j=4; j<=nbits; j++) {
+        ff_init_ff_cos_tabs(j);
+    }
+
+    if (s->fft_permutation == FF_FFT_PERM_AVX) {
+        fft_perm_avx(s);
     } else {
-        int np, nblocks, np2, l;
-        FFTComplex *q;
-
-        for(i=0; i<(n/2); i++) {
-            alpha = 2 * M_PI * (float)i / (float)n;
-            c1 = cos(alpha);
-            s1 = sin(alpha) * s2;
-            s->exptab[i].re = c1;
-            s->exptab[i].im = s1;
-        }
-
-        np = 1 << nbits;
-        nblocks = np >> 3;
-        np2 = np >> 1;
-        s->exptab1 = av_malloc(np * 2 * sizeof(FFTComplex));
-        if (!s->exptab1)
-            goto fail;
-        q = s->exptab1;
-        do {
-            for(l = 0; l < np2; l += 2 * nblocks) {
-                *q++ = s->exptab[l];
-                *q++ = s->exptab[l + nblocks];
-
-                q->re = -s->exptab[l].im;
-                q->im = s->exptab[l].re;
-                q++;
-                q->re = -s->exptab[l + nblocks].im;
-                q->im = s->exptab[l + nblocks].re;
-                q++;
-            }
-            nblocks = nblocks >> 1;
-        } while (nblocks != 0);
-        av_freep(&s->exptab);
-
-        /* compute bit reverse table */
-        for(i=0;i<n;i++) {
-            m=0;
-            for(j=0;j<nbits;j++) {
-                m |= ((i >> j) & 1) << (nbits-j-1);
-            }
-            s->revtab[i]=m;
+        for(i=0; i<n; i++) {
+            int j = i;
+            if (s->fft_permutation == FF_FFT_PERM_SWAP_LSBS)
+                j = (j&~3) | ((j>>1)&1) | ((j<<1)&2);
+            s->revtab[-split_radix_permutation(i, n, s->inverse) & (n-1)] = j;
         }
     }
 
     return 0;
  fail:
     av_freep(&s->revtab);
-    av_freep(&s->exptab);
-    av_freep(&s->exptab1);
     av_freep(&s->tmp_buf);
     return -1;
 }
 
-void ff_fft_permute_c(FFTContext *s, FFTComplex *z)
+static void ff_fft_permute_c(FFTContext *s, FFTComplex *z)
 {
-    int j, k, np;
-    FFTComplex tmp;
+    int j, np;
     const uint16_t *revtab = s->revtab;
     np = 1 << s->nbits;
-
-    if (s->tmp_buf) {
-        /* TODO: handle split-radix permute in a more optimal way, probably in-place */
-        for(j=0;j<np;j++) s->tmp_buf[revtab[j]] = z[j];
-        memcpy(z, s->tmp_buf, np * sizeof(FFTComplex));
-        return;
-    }
-
-    /* reverse */
-    for(j=0;j<np;j++) {
-        k = revtab[j];
-        if (k < j) {
-            tmp = z[k];
-            z[k] = z[j];
-            z[j] = tmp;
-        }
-    }
+    /* TODO: handle split-radix permute in a more optimal way, probably in-place */
+    for(j=0;j<np;j++) s->tmp_buf[revtab[j]] = z[j];
+    memcpy(z, s->tmp_buf, np * sizeof(FFTComplex));
 }
 
 av_cold void ff_fft_end(FFTContext *s)
 {
     av_freep(&s->revtab);
-    av_freep(&s->exptab);
-    av_freep(&s->exptab1);
     av_freep(&s->tmp_buf);
-}
-
-#define sqrthalf (float)M_SQRT1_2
-
-#define BF(x,y,a,b) {\
-    x = a - b;\
-    y = a + b;\
 }
 
 #define BUTTERFLIES(a0,a1,a2,a3) {\
@@ -240,10 +228,8 @@ av_cold void ff_fft_end(FFTContext *s)
 }
 
 #define TRANSFORM(a0,a1,a2,a3,wre,wim) {\
-    t1 = a2.re * wre + a2.im * wim;\
-    t2 = a2.im * wre - a2.re * wim;\
-    t5 = a3.re * wre - a3.im * wim;\
-    t6 = a3.im * wre + a3.re * wim;\
+    CMUL(t1, t2, a2.re, a2.im, wre, -wim);\
+    CMUL(t5, t6, a3.re, a3.im, wre,  wim);\
     BUTTERFLIES(a0,a1,a2,a3)\
 }
 
@@ -259,7 +245,7 @@ av_cold void ff_fft_end(FFTContext *s)
 #define PASS(name)\
 static void name(FFTComplex *z, const FFTSample *wre, unsigned int n)\
 {\
-    FFTSample t1, t2, t3, t4, t5, t6;\
+    FFTDouble t1, t2, t3, t4, t5, t6;\
     int o1 = 2*n;\
     int o2 = 4*n;\
     int o3 = 6*n;\
@@ -288,12 +274,12 @@ static void fft##n(FFTComplex *z)\
     fft##n2(z);\
     fft##n4(z+n4*2);\
     fft##n4(z+n4*3);\
-    pass(z,ff_cos_##n,n4/2);\
+    pass(z,FFT_NAME(ff_cos_##n),n4/2);\
 }
 
 static void fft4(FFTComplex *z)
 {
-    FFTSample t1, t2, t3, t4, t5, t6, t7, t8;
+    FFTDouble t1, t2, t3, t4, t5, t6, t7, t8;
 
     BF(t3, t1, z[0].re, z[1].re);
     BF(t8, t6, z[3].re, z[2].re);
@@ -307,28 +293,25 @@ static void fft4(FFTComplex *z)
 
 static void fft8(FFTComplex *z)
 {
-    FFTSample t1, t2, t3, t4, t5, t6, t7, t8;
+    FFTDouble t1, t2, t3, t4, t5, t6;
 
     fft4(z);
 
     BF(t1, z[5].re, z[4].re, -z[5].re);
     BF(t2, z[5].im, z[4].im, -z[5].im);
-    BF(t3, z[7].re, z[6].re, -z[7].re);
-    BF(t4, z[7].im, z[6].im, -z[7].im);
-    BF(t8, t1, t3, t1);
-    BF(t7, t2, t2, t4);
-    BF(z[4].re, z[0].re, z[0].re, t1);
-    BF(z[4].im, z[0].im, z[0].im, t2);
-    BF(z[6].re, z[2].re, z[2].re, t7);
-    BF(z[6].im, z[2].im, z[2].im, t8);
+    BF(t5, z[7].re, z[6].re, -z[7].re);
+    BF(t6, z[7].im, z[6].im, -z[7].im);
 
+    BUTTERFLIES(z[0],z[2],z[4],z[6]);
     TRANSFORM(z[1],z[3],z[5],z[7],sqrthalf,sqrthalf);
 }
 
 #if !CONFIG_SMALL
 static void fft16(FFTComplex *z)
 {
-    FFTSample t1, t2, t3, t4, t5, t6;
+    FFTDouble t1, t2, t3, t4, t5, t6;
+    FFTSample cos_16_1 = FFT_NAME(ff_cos_16)[1];
+    FFTSample cos_16_3 = FFT_NAME(ff_cos_16)[3];
 
     fft8(z);
     fft4(z+8);
@@ -336,8 +319,8 @@ static void fft16(FFTComplex *z)
 
     TRANSFORM_ZERO(z[0],z[4],z[8],z[12]);
     TRANSFORM(z[2],z[6],z[10],z[14],sqrthalf,sqrthalf);
-    TRANSFORM(z[1],z[5],z[9],z[13],ff_cos_16[1],ff_cos_16[3]);
-    TRANSFORM(z[3],z[7],z[11],z[15],ff_cos_16[3],ff_cos_16[1]);
+    TRANSFORM(z[1],z[5],z[9],z[13],cos_16_1,cos_16_3);
+    TRANSFORM(z[3],z[7],z[11],z[15],cos_16_3,cos_16_1);
 }
 #else
 DECL_FFT(16,8,4)
@@ -358,12 +341,12 @@ DECL_FFT(16384,8192,4096)
 DECL_FFT(32768,16384,8192)
 DECL_FFT(65536,32768,16384)
 
-static void (*fft_dispatch[])(FFTComplex*) = {
+static void (* const fft_dispatch[])(FFTComplex*) = {
     fft4, fft8, fft16, fft32, fft64, fft128, fft256, fft512, fft1024,
     fft2048, fft4096, fft8192, fft16384, fft32768, fft65536,
 };
 
-void ff_fft_calc_c(FFTContext *s, FFTComplex *z)
+static void ff_fft_calc_c(FFTContext *s, FFTComplex *z)
 {
     fft_dispatch[s->nbits-2](z);
 }

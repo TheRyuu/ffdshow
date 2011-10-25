@@ -2,32 +2,31 @@
  * IBM Ultimotion Video Decoder
  * Copyright (C) 2004 Konstantin Shishkov
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 /**
- * @file ulti.c
+ * @file
  * IBM Ultimotion Video Decoder.
  */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 
 #include "avcodec.h"
 #include "bytestream.h"
@@ -52,6 +51,16 @@ static av_cold int ulti_decode_init(AVCodecContext *avctx)
     avctx->pix_fmt = PIX_FMT_YUV410P;
     avctx->coded_frame = (AVFrame*) &s->frame;
     s->ulti_codebook = ulti_codebook;
+
+    return 0;
+}
+
+static av_cold int ulti_decode_end(AVCodecContext *avctx){
+    UltimotionDecodeContext *s = avctx->priv_data;
+    AVFrame *pic = &s->frame;
+
+    if (pic->data[0])
+        avctx->release_buffer(avctx, pic);
 
     return 0;
 }
@@ -200,8 +209,10 @@ static void ulti_grad(AVFrame *frame, int x, int y, uint8_t *Y, int chroma, int 
 
 static int ulti_decode_frame(AVCodecContext *avctx,
                              void *data, int *data_size,
-                             const uint8_t *buf, int buf_size)
+                             AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     UltimotionDecodeContext *s=avctx->priv_data;
     int modifier = 0;
     int uniq = 0;
@@ -213,13 +224,10 @@ static int ulti_decode_frame(AVCodecContext *avctx,
     int skip;
     int tmp;
 
-    if(s->frame.data[0])
-        avctx->release_buffer(avctx, &s->frame);
-
     s->frame.reference = 1;
     s->frame.buffer_hints = FF_BUFFER_HINTS_VALID | FF_BUFFER_HINTS_PRESERVE | FF_BUFFER_HINTS_REUSABLE;
-    if(avctx->get_buffer(avctx, &s->frame) < 0) {
-        av_log(avctx, AV_LOG_ERROR, "get_buffer() failed\n");
+    if (avctx->reget_buffer(avctx, &s->frame) < 0) {
+        av_log(avctx, AV_LOG_ERROR, "reget_buffer() failed\n");
         return -1;
     }
 
@@ -393,27 +401,15 @@ static int ulti_decode_frame(AVCodecContext *avctx,
     return buf_size;
 }
 
-static av_cold int ulti_decode_end(AVCodecContext *avctx)
-{
-/*    UltimotionDecodeContext *s = avctx->priv_data;*/
-
-    return 0;
-}
-
-AVCodec ulti_decoder = {
-    "ultimotion",
-    CODEC_TYPE_VIDEO,
-    CODEC_ID_ULTI,
-    sizeof(UltimotionDecodeContext),
-    ulti_decode_init,
-    NULL,
-    ulti_decode_end,
-    ulti_decode_frame,
-    /*.capabilities = */CODEC_CAP_DR1,
-    /*.next = */NULL,
-    /*.flush = */NULL,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("IBM UltiMotion"),
+AVCodec ff_ulti_decoder = {
+    .name           = "ultimotion",
+    .type           = AVMEDIA_TYPE_VIDEO,
+    .id             = CODEC_ID_ULTI,
+    .priv_data_size = sizeof(UltimotionDecodeContext),
+    .init           = ulti_decode_init,
+    .close          = ulti_decode_end,
+    .decode         = ulti_decode_frame,
+    .capabilities   = CODEC_CAP_DR1,
+    .long_name = NULL_IF_CONFIG_SMALL("IBM UltiMotion"),
 };
 

@@ -4,38 +4,41 @@
  * Copyright (c) 2003 Alex Beregszaszi
  * Copyright (c) 2003-2004 Michael Niedermayer
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 /**
- * @file mjpegdec.h
+ * @file
  * MJPEG decoder.
  */
 
 #ifndef AVCODEC_MJPEGDEC_H
 #define AVCODEC_MJPEGDEC_H
 
+#include "libavutil/log.h"
+
 #include "avcodec.h"
-#include "bitstream.h"
+#include "get_bits.h"
 #include "dsputil.h"
 
 #define MAX_COMPONENTS 4
 
 typedef struct MJpegDecodeContext {
+    AVClass *class;
     AVCodecContext *avctx;
     GetBitContext gb;
 
@@ -44,7 +47,7 @@ typedef struct MJpegDecodeContext {
     uint8_t *buffer;
 
     int16_t quant_matrixes[4][64];
-    VLC vlcs[2][4];
+    VLC vlcs[3][4];
     int qscale[4];      ///< quantizer scale calculated from quant_matrixes
 
     int org_height;  /* size given at codec init */
@@ -81,9 +84,11 @@ typedef struct MJpegDecodeContext {
     int quant_index[4];   /* quant table index for each component */
     int last_dc[MAX_COMPONENTS]; /* last DEQUANTIZED dc (XXX: am I right to do that ?) */
     AVFrame picture; /* picture structure */
+    AVFrame *picture_ptr; /* pointer to picture structure */
+    int got_picture;                                ///< we found a SOF and picture is valid, too.
     int linesize[MAX_COMPONENTS];                   ///< linesize << interlaced
     int8_t *qscale_table;
-    DECLARE_ALIGNED_16(DCTELEM, block[64]);
+    DECLARE_ALIGNED(16, DCTELEM, block)[64];
     DCTELEM (*blocks[MAX_COMPONENTS])[64]; ///< intermediate sums (progressive mode)
     uint8_t *last_nnz[MAX_COMPONENTS];
     uint64_t coefs_finished[MAX_COMPONENTS]; ///< bitmask of which coefs have been completely decoded (progressive mode)
@@ -99,18 +104,27 @@ typedef struct MJpegDecodeContext {
 
     int mjpb_skiptosod;
 
-	uint16_t RGBbuffer[32768][4];
     int cur_scan; /* current scan, used by JPEG-LS */
+    int flipped; /* true if picture is flipped */
+
+    uint16_t (*ljpeg_buffer)[4];
+    unsigned int ljpeg_buffer_size;
+
+    int extern_huff;
 } MJpegDecodeContext;
 
 int ff_mjpeg_decode_init(AVCodecContext *avctx);
 int ff_mjpeg_decode_end(AVCodecContext *avctx);
 int ff_mjpeg_decode_frame(AVCodecContext *avctx,
                           void *data, int *data_size,
-                          const uint8_t *buf, int buf_size);
+                          AVPacket *avpkt);
 int ff_mjpeg_decode_dqt(MJpegDecodeContext *s);
 int ff_mjpeg_decode_dht(MJpegDecodeContext *s);
 int ff_mjpeg_decode_sof(MJpegDecodeContext *s);
-int ff_mjpeg_decode_sos(MJpegDecodeContext *s);
+int ff_mjpeg_decode_sos(MJpegDecodeContext *s,
+                        const uint8_t *mb_bitmask, const AVFrame *reference);
+int ff_mjpeg_find_marker(MJpegDecodeContext *s,
+                         const uint8_t **buf_ptr, const uint8_t *buf_end,
+                         const uint8_t **unescaped_buf_ptr, int *unescaped_buf_size);
 
 #endif /* AVCODEC_MJPEGDEC_H */

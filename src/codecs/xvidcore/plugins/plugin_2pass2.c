@@ -1,15 +1,15 @@
 /******************************************************************************
  *
- *  XviD Bit Rate Controller Library
+ *  Xvid Bit Rate Controller Library
  *  - VBR 2 pass bitrate controller implementation -
  *
- *  Copyright (C)      2002 Foxer <email?>
+ *  Copyright (C)      2002 Benjamin Lambert <foxer@hotmail.com>
  *                     2002 Dirk Knop <dknop@gwdg.de>
  *                2002-2003 Edouard Gomez <ed.gomez@free.fr>
  *                     2003 Pete Ross <pross@xvid.org>
  *
  *  This curve treatment algorithm is the one originally implemented by Foxer
- *  and tuned by Dirk Knop for the XviD vfw frontend.
+ *  and tuned by Dirk Knop for the Xvid vfw frontend.
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- * $Id: plugin_2pass2.c,v 1.7 2005/03/27 03:59:42 suxen_drol Exp $
+ * $Id: plugin_2pass2.c 1988 2011-05-18 09:10:05Z Isibaar $
  *
  *****************************************************************************/
 
@@ -219,6 +219,8 @@ typedef struct
 	 *--------------------------------*/
 	double desired_total;
 	double real_total;
+	
+	int scaled_frames;
 } rc_2pass2_t;
 
 
@@ -344,6 +346,7 @@ rc_2pass2_create(xvid_plg_create_t * create, rc_2pass2_t **handle)
 
 	rc->fq_error = 0;
 	rc->min_quant = 1;
+	rc->scaled_frames = 0;
 
 	/* Count frames (and intra frames) in the stats file, store the result into
 	 * the rc structure */
@@ -464,7 +467,7 @@ rc_2pass2_create(xvid_plg_create_t * create, rc_2pass2_t **handle)
 
 	/* vbv_size==0 switches VBV check off */
 	if (rc->param.vbv_size > 0)  {
-		const double fps = (double)create->fbase/(double)create->fincr;
+		const float fps = (float) ((double)create->fbase/(double)create->fincr);
 		int status = check_curve_for_vbv_compliancy(rc, fps);
 
 		if (status) {
@@ -794,8 +797,10 @@ rc_2pass2_before(rc_2pass2_t * rc, xvid_plg_data_t * data)
 		rc->last_quant[s->type-1] = data->quant;
 
 	/* Don't forget to force 1st pass frame type ;-) */
-	data->type = s->type;
+	if (rc->scaled_frames)
+		data->type = s->type;
 
+	rc->scaled_frames++;
 	return 0;
 }
 
@@ -954,7 +959,8 @@ statsfile_count_frames(rc_2pass2_t * rc, char * filename)
 	/* We are done with the file */
 	fclose(f);
 
-	return(0);
+	if (!rc->num_keyframes) return (-1); /* No keyframes? Then something is wrong */
+	else return(0);
 }
 
 /* open stats file(s) and read into rc->stats array */
@@ -1355,7 +1361,7 @@ scaled_curve_apply_advanced_parameters(rc_2pass2_t * rc)
 		if (rc->count[i] == 0 || rc->pb_iboost_tax_ratio == 0) {
 			rc->avg_length[i] = 1;
 		} else {
-			rc->avg_length[i] = rc->tot_scaled_length[i];
+			rc->avg_length[i] = (double) rc->tot_scaled_length[i];
 
 			if (i == (XVID_TYPE_IVOP-1)) {
 				/* I Frames total has to be added the boost total */
@@ -1440,17 +1446,17 @@ scaled_curve_apply_advanced_parameters(rc_2pass2_t * rc)
  * aren't...)
  *
  * DivX profiles have 2 criteria: VBV as in MPEG standard
- *                                a limit on peak bitrate for any 3 seconds
+ *                                a limit on peak bitrate for any 1 second
  *
  * But if VBV is fulfilled, peakrate is automatically fulfilled in any profile
- * define so far, so we check for it (for completeness) but correct only VBV
+ * defined so far, so we check for it (for completeness) but correct only VBV
  *
  *****************************************************************************/
 
 #define VBV_COMPLIANT 0
-#define VBV_UNDERFLOW 1 /* video buffer runs empty */
-#define VBV_OVERFLOW 2  /* doesn't exist for VBR encoding */
-#define VBV_PEAKRATE 4  /* peak bitrate (within 3s) violated */
+#define VBV_UNDERFLOW 1  /* video buffer runs empty */
+#define VBV_OVERFLOW  2  /* doesn't exist for VBR encoding */
+#define VBV_PEAKRATE  4  /* peak bitrate (within 1s) violated */
 
 static int
 check_curve_for_vbv_compliancy(rc_2pass2_t * rc, const float fps)
@@ -1458,14 +1464,14 @@ check_curve_for_vbv_compliancy(rc_2pass2_t * rc, const float fps)
 	/* We do all calculations in float, for higher accuracy,
 	 * and in bytes for convenience.
 	 *
-	 * typical values from DivX Home Theater profile:
+	 * typical values from e.g. Home profile:
 	 *  vbv_size= 384*1024 (384kB)
 	 *  vbv_initial= 288*1024 (75% fill)
 	 *  maxrate= 4854000 (4.854MBps)
 	 *  peakrate= 8000000 (8MBps)
 	 *
-	 *  PAL: offset3s = 75 (3 seconds of 25fps)
-	 *  NTSC: offset3s = 90 (3 seconds of 29.97fps) or 72 (3 seconds of 23.976fps)
+	 *  PAL: offset1s = 25 (1 second of 25fps)
+	 *  NTSC: offset1s = 30 (1 second of 29.97fps) or 24 (1 second of 23.976fps)
 	 */
 
 	const float vbv_size = (float)rc->param.vbv_size/8.f;
@@ -1476,8 +1482,8 @@ check_curve_for_vbv_compliancy(rc_2pass2_t * rc, const float fps)
 	const float peakrate = (float)rc->param.vbv_peakrate;
 	const float r0 = (int)(maxrate/fps+0.5)/8.f;
 
-	int bytes3s = 0;
-	int offset3s = (int)(3.f*fps+0.5);
+	int bytes1s = 0;
+	int offset1s = (int)(1.f*fps+0.5);
 	int i;
 
 	/* 1Gbit should be enough to inuitialize the vbvmin
@@ -1485,13 +1491,13 @@ check_curve_for_vbv_compliancy(rc_2pass2_t * rc, const float fps)
 	vbvmin = 1000*1000*1000;
 
 	for (i=0; i<rc->num_frames; i++) {
-		/* DivX 3s peak bitrate check  */
-		bytes3s += rc->stats[i].scaled_length;
-		if (i>=offset3s)
-			bytes3s -= rc->stats[i-offset3s].scaled_length;
+		/* DivX 1s peak bitrate check  */
+		bytes1s += rc->stats[i].scaled_length;
+		if (i>=offset1s)
+			bytes1s -= rc->stats[i-offset1s].scaled_length;
 
     /* ignore peakrate constraint if peakrate is <= 0.f */
-		if (peakrate>0.f && 8.f*bytes3s > 3*peakrate)
+		if (peakrate>0.f && 8.f*bytes1s > peakrate)
 			return(VBV_PEAKRATE);
 
 		/* update vbv fill level */
@@ -1538,7 +1544,7 @@ scale_curve_for_vbv_compliancy(rc_2pass2_t * rc, const float fps)
 	const float vbv_size = (float)rc->param.vbv_size/8.f;
 	const float vbv_initial = (float)rc->param.vbv_initial/8.f;
 
-	const float maxrate = 0.9*rc->param.vbv_maxrate;
+	const float maxrate = 0.9f*rc->param.vbv_maxrate;
 	const float vbv_low = 0.10f*vbv_size;
 	const float r0 = (int)(maxrate/fps+0.5)/8.f;
 

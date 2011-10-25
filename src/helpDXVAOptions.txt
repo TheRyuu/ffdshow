@@ -1,0 +1,3 @@
+Enable these options if you want to enable hardware acceleration (or called DirectX Video Acceleration) if your graphic adapter supports it. This may be useful if your CPU is not powerful enough and you get stuttering.
+
+Internal filters (subtitles, OSD) require that post processing will be enabled.

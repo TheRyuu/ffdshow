@@ -20,16 +20,14 @@
  */
 
 /**
- * @file rv34vlc.h
+ * @file
  * RV30/40 VLC tables
  */
 
 #ifndef AVCODEC_RV34VLC_H
 #define AVCODEC_RV34VLC_H
 
-#ifdef __GNUC__
 #include <stdint.h>
-#endif
 
 #define NUM_INTRA_TABLES 5
 #define NUM_INTER_TABLES 7
@@ -39,6 +37,7 @@
 #define FIRSTBLK_VLC_SIZE  864
 #define OTHERBLK_VLC_SIZE  108
 #define COEFF_VLC_SIZE      32
+#define MAX_VLC_SIZE      1296
 
 static const uint8_t rv34_table_intra_cbppat[NUM_INTRA_TABLES][2][CBPPAT_VLC_SIZE] = {
   {

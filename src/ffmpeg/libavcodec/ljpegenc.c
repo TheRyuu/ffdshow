@@ -8,25 +8,25 @@
  * aspecting, new decode_frame mechanism and apple mjpeg-b support
  *                                  by Alex Beregszaszi
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 /**
- * @file ljpegenc.c
+ * @file
  * lossless JPEG encoder.
  */
 
@@ -49,14 +49,14 @@ static int encode_picture_lossless(AVCodecContext *avctx, unsigned char *buf, in
     init_put_bits(&s->pb, buf, buf_size);
 
     *p = *pict;
-    p->pict_type= FF_I_TYPE;
+    p->pict_type= AV_PICTURE_TYPE_I;
     p->key_frame= 1;
 
     ff_mjpeg_encode_picture_header(s);
 
     s->header_bits= put_bits_count(&s->pb);
 
-    if(avctx->pix_fmt == PIX_FMT_RGB32){
+    if(avctx->pix_fmt == PIX_FMT_BGRA){
         int x, y, i;
         const int linesize= p->linesize[0];
         uint16_t (*buffer)[4]= (void *) s->rd_scratchpad;
@@ -181,24 +181,18 @@ static int encode_picture_lossless(AVCodecContext *avctx, unsigned char *buf, in
     s->picture_number++;
 
     flush_put_bits(&s->pb);
-    return pbBufPtr(&s->pb) - s->pb.buf;
+    return put_bits_ptr(&s->pb) - s->pb.buf;
 //    return (put_bits_count(&f->pb)+7)/8;
 }
 
 
-AVCodec ljpeg_encoder = { //FIXME avoid MPV_* lossless JPEG should not need them
+AVCodec ff_ljpeg_encoder = { //FIXME avoid MPV_* lossless JPEG should not need them
     "ljpeg",
-    CODEC_TYPE_VIDEO,
+    AVMEDIA_TYPE_VIDEO,
     CODEC_ID_LJPEG,
     sizeof(MpegEncContext),
     MPV_encode_init,
     encode_picture_lossless,
     MPV_encode_end,
-    /*.decode = */NULL,
-    /*.capabilities = */0,
-    /*.next = */NULL,
-    /*.flush = */NULL,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("Lossless JPEG"),
+    .long_name = NULL_IF_CONFIG_SMALL("Lossless JPEG"),
 };

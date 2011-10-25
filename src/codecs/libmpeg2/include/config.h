@@ -5,9 +5,10 @@
 //#define ACCEL_DETECT
 
 /* x86 architecture */
+#define ARCH_X86 1
 
-#ifdef __GNUC__
 /* Define if you have the `__builtin_expect' function. */
+#ifdef __GNUC__
 #define HAVE_BUILTIN_EXPECT
 #endif
 
@@ -24,7 +25,7 @@
 #define HAVE_GETTIMEOFDAY 1
 
 /* Define to 1 if you have the <inttypes.h> header file. */
-/* #undef HAVE_INTTYPES_H */
+#define HAVE_INTTYPES_H 1
 
 /* Define to 1 if you have the <io.h> header file. */
 #define HAVE_IO_H 1
@@ -33,13 +34,13 @@
 #define HAVE_MEMORY_H 1
 
 /* Define to 1 if you have the <stdint.h> header file. */
-/* #undef HAVE_STDINT_H */
+#define HAVE_STDINT_H 1
 
 /* Define to 1 if you have the <stdlib.h> header file. */
 #define HAVE_STDLIB_H 1
 
 /* Define to 1 if you have the <strings.h> header file. */
-#define HAVE_STRINGS_H 1
+/* #undef HAVE_STRINGS_H */
 
 /* Define to 1 if you have the <string.h> header file. */
 #define HAVE_STRING_H 1
@@ -146,7 +147,7 @@
 #ifdef __GNUC__
 #define inline __attribute__ ((__always_inline__)) __inline
 #else
-#define inline __inline
+#define inline __forceinline
 #endif
 
 /* Define as `__restrict' if that's what the C compiler calls it, or to

@@ -20,7 +20,7 @@
  *  along with this program ; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
  *
- * $Id: quant_matrix.c,v 1.15 2006/07/10 08:09:59 syskin Exp $
+ * $Id: quant_matrix.c 1988 2011-05-18 09:10:05Z Isibaar $
  *
  ****************************************************************************/
 
@@ -127,7 +127,7 @@ init_intra_matrix(uint16_t * mpeg_quant_matrices, uint32_t quant)
 
 	for (i = 0; i < 64; i++) {
 		uint32_t div = intra_matrix[i]*quant;
-		intra_matrix_rec[i] = ((1<<SCALEBITS) + (div>>1))/div;
+		intra_matrix_rec[i] = ((uint32_t)((1<<SCALEBITS) + (div>>1)))/div;
 	}
 }
 
@@ -143,8 +143,8 @@ set_inter_matrix(uint16_t * mpeg_quant_matrices, const uint8_t * matrix)
 	for (i = 0; i < 64; i++) {
 		inter_matrix1[i] = ((inter_matrix[i] = (int16_t) matrix[i])>>1);
 		inter_matrix1[i] += ((inter_matrix[i] == 1) ? 1: 0);
-		inter_matrix_fix[i] = FIX(inter_matrix[i]);
-		inter_matrix_fixl[i] = FIXL(inter_matrix[i]);
+		inter_matrix_fix[i] = (uint16_t) FIX(inter_matrix[i]);
+		inter_matrix_fixl[i] = (uint16_t) FIXL(inter_matrix[i]);
 	}
 }
 

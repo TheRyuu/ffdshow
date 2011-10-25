@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2002-2004 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2002-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@
 ** following #pragma disables the warning.
 */
 
-//#pragma warning(disable: 4305)
+#pragma warning(disable: 4305)
 
 /*----------------------------------------------------------------------------
 ** Normal #defines follow.
@@ -53,11 +53,20 @@
 /* Target processor clips on positive float to int conversion. */
 #define CPU_CLIPS_POSITIVE 0
 
+/* Target processor is big endian. */
+#define CPU_IS_BIG_ENDIAN 0
+
+/* Target processor is little endian. */
+#define CPU_IS_LITTLE_ENDIAN 1
+
 /* Set to 1 to enable debugging. */
 #define ENABLE_DEBUG 0
 
 /* Major version of GCC or 3 otherwise. */
 /* #undef GCC_MAJOR_VERSION */
+
+/* Define to 1 if you have the `alarm' function. */
+/* #undef HAVE_ALARM */
 
 /* Define to 1 if you have the `calloc' function. */
 #define HAVE_CALLOC 1
@@ -81,10 +90,7 @@
 #define HAVE_FREE 1
 
 /* Define to 1 if you have the <inttypes.h> header file. */
-/* #undef HAVE_INTTYPES_H */
-
-/* Define to 1 if you have the `efence' library (-lefence). */
-/* #undef HAVE_LIBEFENCE */
+#define HAVE_INTTYPES_H 1
 
 /* Define to 1 if you have the `m' library (-lm). */
 /* #undef HAVE_LIBM */
@@ -107,17 +113,23 @@
 /* Define to 1 if you have the <memory.h> header file. */
 #define HAVE_MEMORY_H 1
 
+/* Define if you have signal SIGALRM. */
+/* #undef HAVE_SIGALRM */
+
+/* Define to 1 if you have the `signal' function. */
+/* #undef HAVE_SIGNAL */
+
 /* Set to 1 if you have libsndfile. */
 #define HAVE_SNDFILE 1
 
 /* Define to 1 if you have the <stdint.h> header file. */
-/* #undef HAVE_STDINT_H */
+#define HAVE_STDINT_H 1
 
 /* Define to 1 if you have the <stdlib.h> header file. */
 #define HAVE_STDLIB_H 1
 
 /* Define to 1 if you have the <strings.h> header file. */
-#define HAVE_STRINGS_H 1
+/* #undef HAVE_STRINGS_H */
 
 /* Define to 1 if you have the <string.h> header file. */
 #define HAVE_STRING_H 1
@@ -125,11 +137,21 @@
 /* Define to 1 if you have the <sys/stat.h> header file. */
 #define HAVE_SYS_STAT_H 1
 
+/* Define to 1 if you have the <sys/times.h> header file. */
+/* #undef HAVE_SYS_TIMES_H */
+
 /* Define to 1 if you have the <sys/types.h> header file. */
 #define HAVE_SYS_TYPES_H 1
 
 /* Define to 1 if you have the <unistd.h> header file. */
 #define HAVE_UNISTD_H 1
+
+/* Define to the sub-directory in which libtool stores uninstalled libraries.
+   */
+#define LT_OBJDIR ".libs/"
+
+/* Define to 1 if your C compiler doesn't accept -c and -o together. */
+/* #undef NO_MINUS_C_MINUS_O */
 
 /* Set to 1 if compiling for Win32 */
 #define OS_IS_WIN32 1
@@ -138,42 +160,48 @@
 #define PACKAGE "libsamplerate"
 
 /* Define to the address where bug reports for this package should be sent. */
-#define PACKAGE_BUGREPORT ""
+#define PACKAGE_BUGREPORT "erikd@mega-nerd.com"
 
 /* Define to the full name of this package. */
-#define PACKAGE_NAME ""
+#define PACKAGE_NAME "libsamplerate"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING ""
+#define PACKAGE_STRING "libsamplerate 0.1.8"
 
 /* Define to the one symbol short name of this package. */
-#define PACKAGE_TARNAME ""
+#define PACKAGE_TARNAME "libsamplerate"
+
+/* Define to the home page for this package. */
+#define PACKAGE_URL "http://www.mega-nerd.com/libsamplerate/"
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION ""
+#define PACKAGE_VERSION "0.1.8"
 
-/* The size of a `double', as computed by sizeof. */
+/* The size of `double', as computed by sizeof. */
 #define SIZEOF_DOUBLE 8
 
-/* The size of a `float', as computed by sizeof. */
+/* The size of `float', as computed by sizeof. */
 #define SIZEOF_FLOAT 4
 
-/* The size of a `int', as computed by sizeof. */
+/* The size of `int', as computed by sizeof. */
 #define SIZEOF_INT 4
 
-/* The size of a `long', as computed by sizeof. */
+/* The size of `long', as computed by sizeof. */
 #define SIZEOF_LONG 4
 
 /* Define to 1 if you have the ANSI C header files. */
 #define STDC_HEADERS 1
 
 /* Version number of package */
-#define VERSION "0.1.2"
+#define VERSION "0.1.8"
+
+
+
+/* Extra Win32 hacks. */
 
 /*
-** Do not edit or modify anything in this comment block.
-** The arch-tag line is a file identity tag for the GNU Arch
-** revision control system.
-**
-** arch-tag: 7c5a8910-8149-4e89-98ce-be92835e435b
+**	Microsoft's compiler still does not support the 1999 ISO C Standard
+**	which includes 'inline'.
 */
+
+#define inline __inline

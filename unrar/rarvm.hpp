@@ -33,7 +33,7 @@ enum VM_Commands
 };
 
 enum VM_StandardFilters {
-  VMSF_NONE, VMSF_E8, VMSF_E8E9, VMSF_ITANIUM, VMSF_RGB, VMSF_AUDIO,
+  VMSF_NONE, VMSF_E8, VMSF_E8E9, VMSF_ITANIUM, VMSF_RGB, VMSF_AUDIO, 
   VMSF_DELTA, VMSF_UPCASE
 };
 
@@ -59,38 +59,41 @@ struct VM_PreparedCommand
 
 struct VM_PreparedProgram
 {
-  VM_PreparedProgram() {AltCmd=NULL;}
+  VM_PreparedProgram() 
+  {
+    AltCmd=NULL;
+    FilteredDataSize=0;
+    CmdCount=0;
+  }
 
   Array<VM_PreparedCommand> Cmd;
   VM_PreparedCommand *AltCmd;
   int CmdCount;
 
   Array<byte> GlobalData;
-  Array<byte> StaticData;
+  Array<byte> StaticData; // static data contained in DB operators
   uint InitR[7];
 
   byte *FilteredData;
-  unsigned int FilteredDataSize;
+  uint FilteredDataSize;
 };
 
-class RarVM:BitInput
+class RarVM:private BitInput
 {
   private:
     inline uint GetValue(bool ByteMode,uint *Addr);
     inline void SetValue(bool ByteMode,uint *Addr,uint Value);
     inline uint* GetOperand(VM_PreparedOperand *CmdOp);
-    void PrintState(uint IP);
     void DecodeArg(VM_PreparedOperand &Op,bool ByteMode);
 #ifdef VM_OPTIMIZE
     void Optimize(VM_PreparedProgram *Prg);
 #endif
-    bool ExecuteCode(VM_PreparedCommand *PreparedCode,int CodeSize);
+    bool ExecuteCode(VM_PreparedCommand *PreparedCode,uint CodeSize);
 #ifdef VM_STANDARDFILTERS
-    VM_StandardFilters IsStandardFilter(byte *Code,int CodeSize);
+    VM_StandardFilters IsStandardFilter(byte *Code,uint CodeSize);
     void ExecuteStandardFilter(VM_StandardFilters FilterType);
-    unsigned int FilterItanium_GetBits(byte *Data,int BitPos,int BitCount);
-    void FilterItanium_SetBits(byte *Data,unsigned int BitField,int BitPos,
-      int BitCount);
+    uint FilterItanium_GetBits(byte *Data,int BitPos,int BitCount);
+    void FilterItanium_SetBits(byte *Data,uint BitField,int BitPos,int BitCount);
 #endif
 
     byte *Mem;
@@ -100,10 +103,10 @@ class RarVM:BitInput
     RarVM();
     ~RarVM();
     void Init();
-    void Prepare(byte *Code,int CodeSize,VM_PreparedProgram *Prg);
+    void Prepare(byte *Code,uint CodeSize,VM_PreparedProgram *Prg);
     void Execute(VM_PreparedProgram *Prg);
-    void SetValue(uint *Addr,uint Value);
-    void SetMemory(unsigned int Pos,byte *Data,unsigned int DataSize);
+    void SetLowEndianValue(uint *Addr,uint Value);
+    void SetMemory(uint Pos,byte *Data,uint DataSize);
     static uint ReadData(BitInput &Inp);
 };
 

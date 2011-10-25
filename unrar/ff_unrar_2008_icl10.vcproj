@@ -21,9 +21,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="debug_2008_icl10"
-			IntermediateDirectory="debug_2008_icl10"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\common_icl10.vsprops"
 			UseOfMFC="0"
 			CharacterSet="0"
 			>
@@ -45,10 +44,10 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_DEBUG;_WINDOWS;RARDLL;NOCRYPT;SILENT;NOVOLUME;SFX_MODULE;SHELL_EXT"
+				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_DEBUG;_WINDOWS;RARDLL;RAR_NOCRYPT;SILENT;NOVOLUME"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				ForceConformanceInForLoopScope="true"
 				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="2"
@@ -71,17 +70,18 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="libcmtd.lib kernel32.lib user32.lib oldnames.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
+				AdditionalDependencies="libcmtd.lib kernel32.lib user32.lib oldnames.lib libircmt.lib libmmt.lib svml_dispmt.lib advapi32.lib shell32.lib $(NOINHERIT)"
 				OutputFile="../bin/ff_unrar.dll"
 				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="dll.def"
+				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(IntDir)/ff_unrar.pdb"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(IntDir)/ff_unrar.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -109,9 +109,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|x64"
-			OutputDirectory="debug_2008_x64_icl10"
-			IntermediateDirectory="debug_2008_x64_icl10"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\common_icl10.vsprops"
 			CharacterSet="0"
 			>
 			<Tool
@@ -133,7 +132,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;_DEBUG;_WINDOWS;RARDLL;NOCRYPT;SILENT;NOVOLUME;SFX_MODULE;SHELL_EXT"
+				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;_DEBUG;_WINDOWS;RARDLL;RAR_NOCRYPT;SILENT;NOVOLUME"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -158,15 +157,17 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="libcmtd.lib kernel32.lib user32.lib oldnames.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
+				AdditionalDependencies="libcmtd.lib kernel32.lib user32.lib oldnames.lib libircmt.lib libmmt.lib svml_dispmt.lib advapi32.lib shell32.lib $(NOINHERIT)"
 				OutputFile="../bin/ff_unrar.dll"
 				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="dll.def"
+				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(IntDir)/ff_unrar.pdb"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				SubSystem="2"
-				ImportLibrary="$(IntDir)/ff_unrar.lib"
+				RandomizedBaseAddress="1"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"
 			/>
 			<Tool
@@ -194,13 +195,12 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="release_2008_icl10"
-			IntermediateDirectory="release_2008_icl10"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\common_icl10.vsprops"
 			UseOfMFC="1"
 			CharacterSet="0"
 			ManagedExtensions="0"
-			WholeProgramOptimization="1"
+			WholeProgramOptimization="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -225,8 +225,7 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="2"
 				OmitFramePointers="true"
-				WholeProgramOptimization="true"
-				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;NDEBUG;_WINDOWS;RARDLL;NOCRYPT;SILENT;NOVOLUME;SFX_MODULE;SHELL_EXT"
+				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;NDEBUG;_WINDOWS;RARDLL;RAR_NOCRYPT;SILENT;NOVOLUME"
 				RuntimeLibrary="0"
 				BufferSecurityCheck="false"
 				RuntimeTypeInfo="false"
@@ -247,19 +246,20 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="kernel32.lib user32.lib oldnames.lib libircmt.lib libmmt.lib svml_dispmt.lib libcmt.lib"
+				AdditionalDependencies="kernel32.lib user32.lib oldnames.lib libircmt.lib libmmt.lib svml_dispmt.lib libcmt.lib advapi32.lib shell32.lib "
 				OutputFile="../bin/ff_unrar.dll"
 				LinkIncremental="1"
 				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="dll.def"
-				ProgramDatabaseFile="$(IntDir)/ff_unrar.pdb"
+				DelayLoadDLLs="$(NOINHERIT)"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(IntDir)/ff_unrar.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -287,13 +287,12 @@
 		</Configuration>
 		<Configuration
 			Name="Release|x64"
-			OutputDirectory="release_2008_x64_icl10"
-			IntermediateDirectory="release_2008_x64_icl10"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\common_icl10.vsprops"
 			UseOfMFC="1"
 			CharacterSet="0"
 			ManagedExtensions="0"
-			WholeProgramOptimization="1"
+			WholeProgramOptimization="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -319,14 +318,12 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="2"
 				OmitFramePointers="true"
-				WholeProgramOptimization="true"
-				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;NDEBUG;_WINDOWS;RARDLL;NOCRYPT;SILENT;NOVOLUME;SFX_MODULE;SHELL_EXT"
+				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;NDEBUG;_WINDOWS;RARDLL;RAR_NOCRYPT;SILENT;NOVOLUME"
 				RuntimeLibrary="0"
 				BufferSecurityCheck="false"
 				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="rar.hpp"
-				WarningLevel="0"
 				DisableSpecificWarnings="4996"
 			/>
 			<Tool
@@ -341,17 +338,19 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="kernel32.lib user32.lib oldnames.lib libircmt.lib libmmt.lib svml_dispmt.lib libcmt.lib"
+				AdditionalDependencies="kernel32.lib user32.lib oldnames.lib libircmt.lib libmmt.lib svml_dispmt.lib libcmt.lib advapi32.lib shell32.lib "
 				OutputFile="../bin/ff_unrar.dll"
 				LinkIncremental="1"
 				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="dll.def"
-				ProgramDatabaseFile="$(IntDir)/ff_unrar.pdb"
+				DelayLoadDLLs="$(NOINHERIT)"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				ImportLibrary="$(IntDir)/ff_unrar.lib"
+				RandomizedBaseAddress="1"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"
 			/>
 			<Tool
@@ -399,44 +398,16 @@
 				>
 			</File>
 			<File
+				RelativePath=".\consio.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\crc.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\dll.cpp"
 				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\encname.cpp"
@@ -479,8 +450,40 @@
 				>
 			</File>
 			<File
-				RelativePath=".\int64.cpp"
+				RelativePath=".\global.cpp"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\isnt.cpp"
@@ -501,6 +504,42 @@
 			<File
 				RelativePath=".\rar.cpp"
 				>
+			</File>
+			<File
+				RelativePath=".\rarpch.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\rarvm.cpp"
@@ -531,6 +570,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\smallfn.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\strfn.cpp"
 				>
 			</File>
@@ -547,11 +590,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ulinks.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\unicode.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\unpack.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\volume.cpp"
 				>
 			</File>
 		</Filter>
@@ -561,211 +612,15 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\archive.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\array.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\cmddata.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\coder.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\compress.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\consio.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\crc.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\dll.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\encname.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\errhnd.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\extinfo.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\extract.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\filcreat.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\file.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\filefn.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\filestr.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\find.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\getbits.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\global.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\headers.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\int64.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\isnt.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\loclang.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\log.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\match.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\model.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\options.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\os.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\pathfn.hpp"
-				>
-			</File>
-			<File
 				RelativePath=".\rar.hpp"
 				>
 			</File>
+		</Filter>
+		<Filter
+			Name="Resource Files"
+			>
 			<File
-				RelativePath=".\rardefs.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\rarfn.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\rarlang.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\raros.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\rartypes.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\rarvm.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\rawread.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\rdwrfn.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\recvol.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\resource.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\rs.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\savepos.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\scantree.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\smallfn.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\strfn.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\strlist.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\suballoc.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\system.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\timefn.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\unicode.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\unpack.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\version.hpp"
+				RelativePath=".\dll.rc"
 				>
 			</File>
 		</Filter>

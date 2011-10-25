@@ -24,60 +24,57 @@
 
 TdeinterlacePanel* TdeinterlacePageDGbob::create(Twindow *parent)
 {
- return new TdeinterlacePageDGbob(parent);
+    return new TdeinterlacePageDGbob(parent);
 }
 
 TdeinterlacePageDGbob::TdeinterlacePageDGbob(Twindow *parent):TdeinterlacePanel(IDD_DEINTERLACE_DGBOB,parent)
 {
- static const TbindCheckbox<TdeinterlacePageDGbob> chb[]=
-  {
-   IDC_CHB_DGBOB_AP,IDFF_dgbobAP,NULL,
-   0
-  };
- bindCheckboxes(chb);
- static const TbindTrackbar<TdeinterlacePageDGbob> htbr[]=
-  {
-   IDC_TBR_DGBOB_THRESHOLD,IDFF_dgbobThreshold,&TdeinterlacePageDGbob::cfg2dlg,
-   0
-  };
- bindHtracks(htbr);
- static const TbindCombobox<TdeinterlacePageDGbob> cbx[]=
-  {
-   IDC_CBX_DGBOB_MODE,IDFF_dgbobMode,BINDCBX_SEL,&TdeinterlacePageDGbob::cfg2dlg,
-   0
-  };
- bindComboboxes(cbx);
+    static const TbindCheckbox<TdeinterlacePageDGbob> chb[]= {
+        IDC_CHB_DGBOB_AP,IDFF_dgbobAP,NULL,
+        0
+    };
+    bindCheckboxes(chb);
+    static const TbindTrackbar<TdeinterlacePageDGbob> htbr[]= {
+        IDC_TBR_DGBOB_THRESHOLD,IDFF_dgbobThreshold,&TdeinterlacePageDGbob::cfg2dlg,
+        0
+    };
+    bindHtracks(htbr);
+    static const TbindCombobox<TdeinterlacePageDGbob> cbx[]= {
+        IDC_CBX_DGBOB_MODE,IDFF_dgbobMode,BINDCBX_SEL,&TdeinterlacePageDGbob::cfg2dlg,
+        0
+    };
+    bindComboboxes(cbx);
 
- createDialog(dialogId,parent->m_hwnd);
+    createDialog(dialogId,parent->m_hwnd);
 }
 TdeinterlacePageDGbob::~TdeinterlacePageDGbob()
 {
- DestroyWindow(m_hwnd);
+    DestroyWindow(m_hwnd);
 }
 
 void TdeinterlacePageDGbob::init(void)
 {
- translate();
- tbrSetRange(IDC_TBR_DGBOB_THRESHOLD,0,60);
+    translate();
+    tbrSetRange(IDC_TBR_DGBOB_THRESHOLD,0,60);
 }
 
 void TdeinterlacePageDGbob::cfg2dlg(void)
 {
- tbrSet(IDC_TBR_DGBOB_THRESHOLD,cfgGet(IDFF_dgbobThreshold),IDC_LBL_DGBOB_THRESHOLD);
- cbxSetCurSel(IDC_CBX_DGBOB_MODE,cfgGet(IDFF_dgbobMode));
- setCheck(IDC_CHB_DGBOB_AP,cfgGet(IDFF_dgbobAP));
+    tbrSet(IDC_TBR_DGBOB_THRESHOLD,cfgGet(IDFF_dgbobThreshold),IDC_LBL_DGBOB_THRESHOLD);
+    cbxSetCurSel(IDC_CBX_DGBOB_MODE,cfgGet(IDFF_dgbobMode));
+    setCheck(IDC_CHB_DGBOB_AP,cfgGet(IDFF_dgbobAP));
 }
 
 void TdeinterlacePageDGbob::translate(void)
 {
- TdeinterlacePanel::translate();
+    TdeinterlacePanel::translate();
 
- cbxTranslate(IDC_CBX_DGBOB_MODE,TdeinterlaceSettings::dgbobModes);
+    cbxTranslate(IDC_CBX_DGBOB_MODE,TdeinterlaceSettings::dgbobModes);
 }
 
 void TdeinterlacePageDGbob::reset(void)
 {
- deci->resetParam(IDFF_dgbobMode);
- deci->resetParam(IDFF_dgbobThreshold);
- deci->resetParam(IDFF_dgbobAP);
+    deci->resetParam(IDFF_dgbobMode);
+    deci->resetParam(IDFF_dgbobThreshold);
+    deci->resetParam(IDFF_dgbobAP);
 }

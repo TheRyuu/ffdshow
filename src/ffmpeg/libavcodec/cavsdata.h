@@ -2,20 +2,20 @@
  * Chinese AVS video (AVS1-P2, JiZhun profile) decoder.
  * Copyright (c) 2006  Stefan Gehrer <stefan.gehrer@gmx.de>
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -88,15 +88,15 @@ const uint16_t ff_cavs_dequant_mul[64] = {
   32771,35734,38965,42497,46341,50535,55109,60099
 };
 
-/** marks block as unavailable, i.e. out of picture
+/** mark block as unavailable, i.e. out of picture
     or not yet decoded */
 const cavs_vector ff_cavs_un_mv    = {0,0,1,NOT_AVAIL};
 
-/** marks block as "no prediction from this direction"
+/** mark block as "no prediction from this direction"
     e.g. forward motion vector in BWD partition */
 const cavs_vector ff_cavs_dir_mv   = {0,0,1,REF_DIR};
 
-/** marks block as using intra prediction */
+/** mark block as using intra prediction */
 const cavs_vector ff_cavs_intra_mv = {0,0,1,REF_INTRA};
 
 #define EOB 0,0,0
@@ -497,9 +497,9 @@ static const uint8_t tc_tab[64] = {
   5, 5, 5, 6, 6, 6, 7, 7, 7, 7, 8, 8, 8, 9, 9, 9
 };
 
-const int_fast8_t ff_left_modifier_l[8] = { 0,-1, 6,-1,-1, 7, 6, 7};
-const int_fast8_t ff_top_modifier_l[8]  = {-1, 1, 5,-1,-1, 5, 7, 7};
-const int_fast8_t ff_left_modifier_c[7] = { 5,-1, 2,-1, 6, 5, 6};
-const int_fast8_t ff_top_modifier_c[7]  = { 4, 1,-1,-1, 4, 6, 6};
+const int8_t ff_left_modifier_l[8] = {  0, -1,  6, -1, -1, 7, 6, 7 };
+const int8_t ff_top_modifier_l[8]  = { -1,  1,  5, -1, -1, 5, 7, 7 };
+const int8_t ff_left_modifier_c[7] = {  5, -1,  2, -1,  6, 5, 6 };
+const int8_t ff_top_modifier_c[7]  = {  4,  1, -1, -1,  4, 6, 6 };
 
 #endif /* AVCODEC_CAVSDATA_H */

@@ -9,7 +9,9 @@ const int MAX_O=64;                   /* maximum allowed model order */
 const int INT_BITS=7, PERIOD_BITS=7, TOT_BITS=INT_BITS+PERIOD_BITS,
           INTERVAL=1 << INT_BITS, BIN_SCALE=1 << TOT_BITS, MAX_FREQ=124;
 
+#ifndef STRICT_ALIGNMENT_REQUIRED
 #pragma pack(1)
+#endif
 
 struct SEE2_CONTEXT
 { // SEE-contexts for PPM-contexts with masked symbols
@@ -53,7 +55,7 @@ struct FreqData
   STATE _PACK_ATTR * Stats;
 };
 
-struct PPM_CONTEXT
+struct PPM_CONTEXT 
 {
     ushort NumStats;
     union
@@ -75,9 +77,16 @@ struct PPM_CONTEXT
     inline PPM_CONTEXT* createChild(ModelPPM *Model,STATE* pStats,STATE& FirstState);
     inline SEE2_CONTEXT* makeEscFreq2(ModelPPM *Model,int Diff);
 };
-#pragma pack()
 
-const uint UNIT_SIZE=sizeof(PPM_CONTEXT);
+#ifndef STRICT_ALIGNMENT_REQUIRED
+#ifdef _AIX
+#pragma pack(pop)
+#else
+#pragma pack()
+#endif
+#endif
+
+const uint UNIT_SIZE=Max(sizeof(PPM_CONTEXT),sizeof(RAR_MEM_BLK));
 const uint FIXED_UNIT_SIZE=12;
 
 /*
@@ -94,9 +103,9 @@ class ModelPPM
 {
   private:
     friend struct PPM_CONTEXT;
-
-    _PACK_ATTR SEE2_CONTEXT SEE2Cont[25][16], DummySEE2Cont;
-
+    
+    SEE2_CONTEXT SEE2Cont[25][16], DummySEE2Cont;
+    
     struct PPM_CONTEXT *MinContext, *MedContext, *MaxContext;
     STATE* FoundState;      // found next state transition
     int NumMasked, InitEsc, OrderFall, MaxOrder, RunLength, InitRL;
@@ -115,6 +124,7 @@ class ModelPPM
     inline void ClearMask();
   public:
     ModelPPM();
+    void CleanUp(); // reset PPM variables after data error
     bool DecodeInit(Unpack *UnpackRead,int &EscChar);
     int DecodeChar();
 };

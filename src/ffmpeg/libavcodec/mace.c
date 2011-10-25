@@ -2,25 +2,25 @@
  * MACE decoder
  * Copyright (c) 2002 Laszlo Torok <torokl@alpha.dfmk.hu>
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 /**
- * @file mace.c
+ * @file
  * MACE decoder.
  */
 
@@ -230,14 +230,16 @@ static av_cold int mace_decode_init(AVCodecContext * avctx)
 {
     if (avctx->channels > 2)
         return -1;
-    avctx->sample_fmt = SAMPLE_FMT_S16;
+    avctx->sample_fmt = AV_SAMPLE_FMT_S16;
     return 0;
 }
 
 static int mace_decode_frame(AVCodecContext *avctx,
                               void *data, int *data_size,
-                              const uint8_t *buf, int buf_size)
+                              AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     int16_t *samples = data;
     MACEContext *ctx = avctx->priv_data;
     int i, j, k, l;
@@ -277,37 +279,23 @@ static int mace_decode_frame(AVCodecContext *avctx,
     return buf_size;
 }
 
-AVCodec mace3_decoder = {
-    "mace3",
-    CODEC_TYPE_AUDIO,
-    CODEC_ID_MACE3,
-    sizeof(MACEContext),
-    mace_decode_init,
-    NULL,
-    NULL,
-    mace_decode_frame,
-    /*.capabilities = */0,
-    /*.next = */NULL,
-    /*.flush = */NULL,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("MACE (Macintosh Audio Compression/Expansion) 3:1"),
+AVCodec ff_mace3_decoder = {
+    .name           = "mace3",
+    .type           = AVMEDIA_TYPE_AUDIO,
+    .id             = CODEC_ID_MACE3,
+    .priv_data_size = sizeof(MACEContext),
+    .init           = mace_decode_init,
+    .decode         = mace_decode_frame,
+    .long_name = NULL_IF_CONFIG_SMALL("MACE (Macintosh Audio Compression/Expansion) 3:1"),
 };
 
-AVCodec mace6_decoder = {
-    "mace6",
-    CODEC_TYPE_AUDIO,
-    CODEC_ID_MACE6,
-    sizeof(MACEContext),
-    mace_decode_init,
-    NULL,
-    NULL,
-    mace_decode_frame,
-    /*.capabilities = */0,
-    /*.next = */NULL,
-    /*.flush = */NULL,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("MACE (Macintosh Audio Compression/Expansion) 6:1"),
+AVCodec ff_mace6_decoder = {
+    .name           = "mace6",
+    .type           = AVMEDIA_TYPE_AUDIO,
+    .id             = CODEC_ID_MACE6,
+    .priv_data_size = sizeof(MACEContext),
+    .init           = mace_decode_init,
+    .decode         = mace_decode_frame,
+    .long_name = NULL_IF_CONFIG_SMALL("MACE (Macintosh Audio Compression/Expansion) 6:1"),
 };
 

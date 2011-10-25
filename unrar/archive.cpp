@@ -17,8 +17,10 @@ Archive::Archive(RAROptions *InitCmd)
   Signed=false;
   NotFirstVolume=false;
   SFXSize=0;
+  LatestTime.Reset();
   Protected=false;
   Encrypted=false;
+  FailedHeaderDecryption=false;
   BrokenFileHeader=false;
   LastReadBlock=0;
 
@@ -35,7 +37,7 @@ Archive::Archive(RAROptions *InitCmd)
   VolWrite=0;
   AddingFilesSize=0;
   AddingHeadersSize=0;
-#if !defined(SHELL_EXT) && !defined(NOCRYPT)
+#if !defined(SHELL_EXT) && !defined(RAR_NOCRYPT)
   *HeadersSalt=0;
   *SubDataSalt=0;
 #endif
@@ -46,6 +48,7 @@ Archive::Archive(RAROptions *InitCmd)
   NewArchive=false;
 
   SilentOpen=false;
+
 }
 
 
@@ -62,7 +65,7 @@ void Archive::CheckArc(bool EnableBroken)
 
 
 #if !defined(SHELL_EXT) && !defined(SFX_MODULE)
-void Archive::CheckOpen(char *Name,wchar *NameW)
+void Archive::CheckOpen(const char *Name,const wchar *NameW)
 {
   TOpen(Name,NameW);
   CheckArc(false);
@@ -70,7 +73,7 @@ void Archive::CheckOpen(char *Name,wchar *NameW)
 #endif
 
 
-bool Archive::WCheckOpen(char *Name,wchar *NameW)
+bool Archive::WCheckOpen(const char *Name,const wchar *NameW)
 {
   if (!WOpen(Name,NameW))
     return(false);
@@ -129,12 +132,18 @@ bool Archive::IsArchive(bool EnableBroken)
   }
   else
   {
-    Array<char> Buffer(0x40000);
-    long CurPos=int64to32(Tell());
+    Array<char> Buffer(MAXSFXSIZE);
+    long CurPos=(long)Tell();
     int ReadSize=Read(&Buffer[0],Buffer.Size()-16);
     for (int I=0;I<ReadSize;I++)
       if (Buffer[I]==0x52 && IsSignature((byte *)&Buffer[I]))
       {
+        if (OldFormat && I>0 && CurPos<28 && ReadSize>31)
+        {
+          char *D=&Buffer[28-CurPos];
+          if (D[0]!=0x52 || D[1]!=0x53 || D[2]!=0x46 || D[3]!=0x58)
+            continue;
+        }
         SFXSize=CurPos+I;
         Seek(SFXSize,SEEK_SET);
         if (!OldFormat)
@@ -173,16 +182,38 @@ bool Archive::IsArchive(bool EnableBroken)
   Protected=(NewMhd.Flags & MHD_PROTECT)!=0;
   Encrypted=(NewMhd.Flags & MHD_PASSWORD)!=0;
 
+  if (NewMhd.EncryptVer>UNP_VER)
+  {
 #ifdef RARDLL
-  SilentOpen=true;
+    Cmd->DllError=ERAR_UNKNOWN_FORMAT;
+#else
+    ErrHandler.SetErrorCode(WARNING);
+  #if !defined(SILENT) && !defined(SFX_MODULE)
+      Log(FileName,St(MUnknownMeth),FileName);
+      Log(FileName,St(MVerRequired),NewMhd.EncryptVer/10,NewMhd.EncryptVer%10);
+  #endif
 #endif
+    return(false);
+  }
+#ifdef RARDLL
+  // If callback function is not set, we cannot get the password,
+  // so we skip the initial header processing for encrypted header archive.
+  // It leads to skipped archive comment, but the rest of archive data
+  // is processed correctly.
+  if (Cmd->Callback==NULL)
+    SilentOpen=true;
+#endif
+
+  // If not encrypted, we'll check it below.
+  NotFirstVolume=Encrypted && (NewMhd.Flags & MHD_FIRSTVOLUME)==0;
+
   if (!SilentOpen || !Encrypted)
   {
     SaveFilePos SavePos(*this);
-    Int64 SaveCurBlockPos=CurBlockPos,SaveNextBlockPos=NextBlockPos;
+    int64 SaveCurBlockPos=CurBlockPos,SaveNextBlockPos=NextBlockPos;
 
     NotFirstVolume=false;
-    while (ReadHeader())
+    while (ReadHeader()!=0)
     {
       int HeaderType=GetHeaderType();
       if (HeaderType==NEWSUB_HEAD)
@@ -205,6 +236,12 @@ bool Archive::IsArchive(bool EnableBroken)
     CurBlockPos=SaveCurBlockPos;
     NextBlockPos=SaveNextBlockPos;
   }
+  if (!Volume || !NotFirstVolume)
+  {
+    strcpy(FirstVolumeName,FileName);
+    wcscpy(FirstVolumeNameW,FileNameW);
+  }
+
   return(true);
 }
 
@@ -230,5 +267,7 @@ int Archive::GetRecoverySize(bool Required)
   return(RecoverySectors);
 }
 #endif
+
+
 
 

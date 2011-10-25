@@ -1,0 +1,4 @@
+In this section you can enable Blu-ray and DVD subtitles.
+The options are applicable to both subtitles formats (PGS and VOBSUB).
+
+Bilinear scaling does not work (yet) on Blu-ray subtitles

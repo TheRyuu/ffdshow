@@ -1,28 +1,28 @@
 /*
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 /**
- * @file libavcodec/intrax8.c
+ * @file
  * @brief IntraX8 (J-Frame) subdecoder, used by WMV2 and VC-1
  */
 
 #include "avcodec.h"
-#include "bitstream.h"
+#include "get_bits.h"
 #include "mpegvideo.h"
 #include "msmpeg4data.h"
 #include "intrax8huf.h"
@@ -44,13 +44,30 @@ static VLC j_orient_vlc[2][4]; //[quant], [select]
 
 static av_cold void x8_vlc_init(void){
     int i;
+    int offset = 0;
+    int sizeidx = 0;
+    static const uint16_t sizes[8*4 + 8*2 + 2 + 4] = {
+        576, 548, 582, 618, 546, 616, 560, 642,
+        584, 582, 704, 664, 512, 544, 656, 640,
+        512, 648, 582, 566, 532, 614, 596, 648,
+        586, 552, 584, 590, 544, 578, 584, 624,
+
+        528, 528, 526, 528, 536, 528, 526, 544,
+        544, 512, 512, 528, 528, 544, 512, 544,
+
+        128, 128, 128, 128, 128, 128};
+
+    static VLC_TYPE table[28150][2];
 
 #define  init_ac_vlc(dst,src) \
+    dst.table = &table[offset]; \
+    dst.table_allocated = sizes[sizeidx]; \
+    offset += sizes[sizeidx++]; \
        init_vlc(&dst, \
               AC_VLC_BITS,77, \
               &src[1],4,2, \
               &src[0],4,2, \
-              1)
+              INIT_VLC_USE_NEW_STATIC)
 //set ac tables
     for(i=0;i<8;i++){
         init_ac_vlc( j_ac_vlc[0][0][i], x8_ac0_highquant_table[i][0] );
@@ -62,11 +79,14 @@ static av_cold void x8_vlc_init(void){
 
 //set dc tables
 #define init_dc_vlc(dst,src) \
+    dst.table = &table[offset]; \
+    dst.table_allocated = sizes[sizeidx]; \
+    offset += sizes[sizeidx++]; \
         init_vlc(&dst, \
         DC_VLC_BITS,34, \
         &src[1],4,2, \
         &src[0],4,2, \
-        1);
+        INIT_VLC_USE_NEW_STATIC);
     for(i=0;i<8;i++){
         init_dc_vlc( j_dc_vlc[0][i], x8_dc_highquant_table[i][0]);
         init_dc_vlc( j_dc_vlc[1][i], x8_dc_lowquant_table [i][0]);
@@ -75,17 +95,22 @@ static av_cold void x8_vlc_init(void){
 
 //set orient tables
 #define init_or_vlc(dst,src) \
+    dst.table = &table[offset]; \
+    dst.table_allocated = sizes[sizeidx]; \
+    offset += sizes[sizeidx++]; \
     init_vlc(&dst, \
     OR_VLC_BITS,12, \
     &src[1],4,2, \
     &src[0],4,2, \
-    1);
+    INIT_VLC_USE_NEW_STATIC);
     for(i=0;i<2;i++){
         init_or_vlc( j_orient_vlc[0][i], x8_orient_highquant_table[i][0]);
     }
     for(i=0;i<4;i++){
         init_or_vlc( j_orient_vlc[1][i], x8_orient_lowquant_table [i][0])
     }
+    if (offset != sizeof(table)/sizeof(VLC_TYPE)/2)
+        av_log(NULL, AV_LOG_ERROR, "table size %i does not match needed %i\n", (int)(sizeof(table)/sizeof(VLC_TYPE)/2), offset);
 }
 #undef init_or_vlc
 
@@ -279,7 +304,7 @@ static int x8_setup_spatial_predictor(IntraX8Context * const w, const int chroma
     int quant;
 
     s->dsp.x8_setup_spatial_compensation(s->dest[chroma], s->edge_emu_buffer,
-                                          s->current_picture.linesize[chroma>0],
+                                          s->current_picture.f.linesize[chroma>0],
                                           &range, &sum, w->edges);
     if(chroma){
         w->orient=w->chroma_orient;
@@ -588,7 +613,7 @@ static int x8_decode_intra_mb(IntraX8Context* const w, const int chroma){
             dc_level+= (w->predicted_dc*divide_quant + (1<<12) )>>13;
 
             dsp_x8_put_solidcolor( av_clip_uint8((dc_level*dc_quant+4)>>3),
-                                   s->dest[chroma], s->current_picture.linesize[!!chroma]);
+                                   s->dest[chroma], s->current_picture.f.linesize[!!chroma]);
 
             goto block_placed;
         }
@@ -612,15 +637,15 @@ static int x8_decode_intra_mb(IntraX8Context* const w, const int chroma){
     }
 
     if(w->flat_dc){
-        dsp_x8_put_solidcolor(w->predicted_dc, s->dest[chroma], s->current_picture.linesize[!!chroma]);
+        dsp_x8_put_solidcolor(w->predicted_dc, s->dest[chroma], s->current_picture.f.linesize[!!chroma]);
     }else{
         s->dsp.x8_spatial_compensation[w->orient]( s->edge_emu_buffer,
                                             s->dest[chroma],
-                                            s->current_picture.linesize[!!chroma] );
+                                            s->current_picture.f.linesize[!!chroma] );
     }
     if(!zeros_only)
         s->dsp.idct_add ( s->dest[chroma],
-                          s->current_picture.linesize[!!chroma],
+                          s->current_picture.f.linesize[!!chroma],
                           s->block[0] );
 
 block_placed:
@@ -631,7 +656,7 @@ block_placed:
 
     if(s->loop_filter){
         uint8_t* ptr = s->dest[chroma];
-        int linesize = s->current_picture.linesize[!!chroma];
+        int linesize = s->current_picture.f.linesize[!!chroma];
 
         if(!( (w->edges&2) || ( zeros_only && (w->orient|4)==4 ) )){
             s->dsp.x8_h_loop_filter(ptr, linesize, w->quant);
@@ -646,12 +671,12 @@ block_placed:
 static void x8_init_block_index(MpegEncContext *s){ //FIXME maybe merge with ff_*
 //not s->linesize as this would be wrong for field pics
 //not that IntraX8 has interlacing support ;)
-    const int linesize  = s->current_picture.linesize[0];
-    const int uvlinesize= s->current_picture.linesize[1];
+    const int linesize   = s->current_picture.f.linesize[0];
+    const int uvlinesize = s->current_picture.f.linesize[1];
 
-    s->dest[0] = s->current_picture.data[0];
-    s->dest[1] = s->current_picture.data[1];
-    s->dest[2] = s->current_picture.data[2];
+    s->dest[0] = s->current_picture.f.data[0];
+    s->dest[1] = s->current_picture.f.data[1];
+    s->dest[2] = s->current_picture.f.data[2];
 
     s->dest[0] +=   s->mb_y        *   linesize << 3;
     s->dest[1] += ( s->mb_y&(~1) ) * uvlinesize << 2;//chroma blocks are on add rows
@@ -746,7 +771,7 @@ int ff_intrax8_decode_picture(IntraX8Context * const w, int dquant, int quant_of
                 /*emulate MB info in the relevant tables*/
                 s->mbskip_table [mb_xy]=0;
                 s->mbintra_table[mb_xy]=1;
-                s->current_picture.qscale_table[mb_xy]=w->quant;
+                s->current_picture.f.qscale_table[mb_xy] = w->quant;
                 mb_xy++;
             }
             s->dest[0]+= 8;

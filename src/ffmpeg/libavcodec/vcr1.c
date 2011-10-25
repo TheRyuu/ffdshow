@@ -2,25 +2,25 @@
  * ATI VCR1 codec
  * Copyright (c) 2003 Michael Niedermayer
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 /**
- * @file vcr1.c
+ * @file
  * ati vcr1 codec.
  */
 
@@ -29,6 +29,10 @@
 
 //#undef NDEBUG
 //#include <assert.h>
+
+/* Disable the encoder. */
+#undef CONFIG_VCR1_ENCODER
+#define CONFIG_VCR1_ENCODER 0
 
 typedef struct VCR1Context{
     AVCodecContext *avctx;
@@ -39,8 +43,10 @@ typedef struct VCR1Context{
 
 static int decode_frame(AVCodecContext *avctx,
                         void *data, int *data_size,
-                        const uint8_t *buf, int buf_size)
+                        AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     VCR1Context * const a = avctx->priv_data;
     AVFrame *picture = data;
     AVFrame * const p= (AVFrame*)&a->picture;
@@ -55,7 +61,7 @@ static int decode_frame(AVCodecContext *avctx,
         av_log(avctx, AV_LOG_ERROR, "get_buffer() failed\n");
         return -1;
     }
-    p->pict_type= FF_I_TYPE;
+    p->pict_type= AV_PICTURE_TYPE_I;
     p->key_frame= 1;
 
     for(i=0; i<16; i++){
@@ -113,6 +119,29 @@ static int decode_frame(AVCodecContext *avctx,
     return buf_size;
 }
 
+#if CONFIG_VCR1_ENCODER
+static int encode_frame(AVCodecContext *avctx, unsigned char *buf, int buf_size, void *data){
+    VCR1Context * const a = avctx->priv_data;
+    AVFrame *pict = data;
+    AVFrame * const p= (AVFrame*)&a->picture;
+    int size;
+
+    *p = *pict;
+    p->pict_type= AV_PICTURE_TYPE_I;
+    p->key_frame= 1;
+
+    emms_c();
+
+    align_put_bits(&a->pb);
+    while(get_bit_count(&a->pb)&31)
+        put_bits(&a->pb, 8, 0);
+
+    size= get_bit_count(&a->pb)/32;
+
+    return size*4;
+}
+#endif
+
 static av_cold void common_init(AVCodecContext *avctx){
     VCR1Context * const a = avctx->priv_data;
 
@@ -129,19 +158,44 @@ static av_cold int decode_init(AVCodecContext *avctx){
     return 0;
 }
 
-AVCodec vcr1_decoder = {
-    "vcr1",
-    CODEC_TYPE_VIDEO,
-    CODEC_ID_VCR1,
-    sizeof(VCR1Context),
-    decode_init,
-    NULL,
-    NULL,
-    decode_frame,
-    /*.capabilities = */CODEC_CAP_DR1,
-    /*.next = */NULL,
-    /*.flush = */NULL,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("ATI VCR1"),
+static av_cold int decode_end(AVCodecContext *avctx){
+    VCR1Context *s = avctx->priv_data;
+
+    if (s->picture.data[0])
+        avctx->release_buffer(avctx, &s->picture);
+
+    return 0;
+}
+
+#if CONFIG_VCR1_ENCODER
+static av_cold int encode_init(AVCodecContext *avctx){
+
+    common_init(avctx);
+
+    return 0;
+}
+#endif
+
+AVCodec ff_vcr1_decoder = {
+    .name           = "vcr1",
+    .type           = AVMEDIA_TYPE_VIDEO,
+    .id             = CODEC_ID_VCR1,
+    .priv_data_size = sizeof(VCR1Context),
+    .init           = decode_init,
+    .close          = decode_end,
+    .decode         = decode_frame,
+    .capabilities   = CODEC_CAP_DR1,
+    .long_name = NULL_IF_CONFIG_SMALL("ATI VCR1"),
 };
+
+#if CONFIG_VCR1_ENCODER
+AVCodec ff_vcr1_encoder = {
+    .name           = "vcr1",
+    .type           = AVMEDIA_TYPE_VIDEO,
+    .id             = CODEC_ID_VCR1,
+    .priv_data_size = sizeof(VCR1Context),
+    .init           = encode_init,
+    .encode         = encode_frame,
+    .long_name = NULL_IF_CONFIG_SMALL("ATI VCR1"),
+};
+#endif

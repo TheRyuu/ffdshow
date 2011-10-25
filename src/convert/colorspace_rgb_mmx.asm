@@ -25,21 +25,21 @@
 BITS 32
 
 %macro cglobal 1
-	%ifdef PREFIX
-		%ifdef MARK_FUNCS
-			global _%1:function %1.endfunc-%1
-			%define %1 _%1:function %1.endfunc-%1
-		%else
-			global _%1
-			%define %1 _%1
-		%endif
-	%else
-		%ifdef MARK_FUNCS
-			global %1:function %1.endfunc-%1
-		%else
-			global %1
-		%endif
-	%endif
+    %ifdef PREFIX
+        %ifdef MARK_FUNCS
+            global _%1:function %1.endfunc-%1
+            %define %1 _%1:function %1.endfunc-%1
+        %else
+            global _%1
+            %define %1 _%1
+        %endif
+    %else
+        %ifdef MARK_FUNCS
+            global %1:function %1.endfunc-%1
+        %else
+            global %1
+        %endif
+    %endif
 %endmacro
 
 ;=============================================================================
@@ -50,20 +50,20 @@ BITS 32
 ; RGB->YV12 yuv constants
 ;-----------------------------------------------------------------------------
 
-%define Y_R		0.257
-%define Y_G		0.504
-%define Y_B		0.098
-%define Y_ADD	16
+%define Y_R      0.257
+%define Y_G      0.504
+%define Y_B      0.098
+%define Y_ADD    16
 
-%define U_R		0.148
-%define U_G		0.291
-%define U_B		0.439
-%define U_ADD	128
+%define U_R      0.148
+%define U_G      0.291
+%define U_B      0.439
+%define U_ADD    128
 
-%define V_R		0.439
-%define V_G		0.368
-%define V_B		0.071
-%define V_ADD	128
+%define V_R      0.439
+%define V_G      0.368
+%define V_B      0.071
+%define V_ADD    128
 
 ; Scaling used during conversion
 %define SCALEBITS 6
@@ -85,7 +85,7 @@ ALIGN 16
 cglobal bgr_to_yv12_mmx_data
 bgr_to_yv12_mmx_data:
 
-;         FIX(Y_B)	FIX(Y_G)	FIX(Y_R) Ignored
+;         FIX(Y_B)  FIX(Y_G)  FIX(Y_R) Ignored
 y_mul: dw    25,      129,        66,      0,        25,      129,        66,      0
 u_mul: dw   112,      -74,       -38,      0,       112,      -74,       -38,      0
 v_mul: dw   -18,      -94,       112,      0,       -18,      -94,       112,      0
@@ -125,17 +125,17 @@ RGB_ADD: dd 0x00101010,0x00101010,0x00101010,0x00101010
 ;------------------------------------------------------------------------------
 ; BGR_TO_YV12( BYTES )
 ;
-; BYTES		3=bgr(24bit), 4=bgra(32-bit)
+; BYTES        3=bgr(24bit), 4=bgra(32-bit)
 ;
 ; bytes=3/4, pixels = 2, vpixels=2
 ;------------------------------------------------------------------------------
 
-%macro BGR_TO_YV12_INIT		2
+%macro BGR_TO_YV12_INIT       2
   movq mm7, [y_mul]
 %endmacro
 
 
-%macro BGR_TO_YV12			3
+%macro BGR_TO_YV12            3
     ; y_out
   pxor mm4, mm4
   pxor mm5, mm5
@@ -220,16 +220,16 @@ RGB_ADD: dd 0x00101010,0x00101010,0x00101010,0x00101010
 ;------------------------------------------------------------------------------
 ; YV12_TO_BGR( BYTES )
 ;
-; BYTES		3=bgr(24-bit), 4=bgra(32-bit)
+; BYTES        3=bgr(24-bit), 4=bgra(32-bit)
 ;
 ; bytes=3/4, pixels = 8, vpixels=2
 ;------------------------------------------------------------------------------
 
-%macro YV12_TO_BGR_INIT		2
-  pxor mm7, mm7			; clear mm7
+%macro YV12_TO_BGR_INIT       2
+  pxor mm7, mm7            ; clear mm7
 %endmacro
 
-%macro YV12_TO_BGR			3
+%macro YV12_TO_BGR            3
 %define TEMP_Y1  esp
 %define TEMP_Y2  esp + 8
 %define TEMP_G1  esp + 16

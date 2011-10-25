@@ -64,7 +64,7 @@
  */
 
 /**
- * @file jfdctfst.c
+ * @file
  * Independent JPEG Group's fast AAN dct.
  */
 
@@ -76,7 +76,6 @@
 #define DCTSIZE 8
 #define GLOBAL(x) x
 #define RIGHT_SHIFT(x, n) ((x) >> (n))
-#define SHIFT_TEMPS
 
 /*
  * This module is specialized to the case DCTSIZE = 8.
@@ -146,12 +145,11 @@
 #define MULTIPLY(var,const)  ((DCTELEM) DESCALE((var) * (const), CONST_BITS))
 
 static av_always_inline void row_fdct(DCTELEM * data){
-  int_fast16_t tmp0, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7;
-  int_fast16_t tmp10, tmp11, tmp12, tmp13;
-  int_fast16_t z1, z2, z3, z4, z5, z11, z13;
+  int tmp0, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7;
+  int tmp10, tmp11, tmp12, tmp13;
+  int z1, z2, z3, z4, z5, z11, z13;
   DCTELEM *dataptr;
   int ctr;
-  SHIFT_TEMPS
 
   /* Pass 1: process rows. */
 
@@ -211,12 +209,11 @@ static av_always_inline void row_fdct(DCTELEM * data){
 GLOBAL(void)
 fdct_ifast (DCTELEM * data)
 {
-  int_fast16_t tmp0, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7;
-  int_fast16_t tmp10, tmp11, tmp12, tmp13;
-  int_fast16_t z1, z2, z3, z4, z5, z11, z13;
+  int tmp0, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7;
+  int tmp10, tmp11, tmp12, tmp13;
+  int z1, z2, z3, z4, z5, z11, z13;
   DCTELEM *dataptr;
   int ctr;
-  SHIFT_TEMPS
 
   row_fdct(data);
 
@@ -278,12 +275,11 @@ fdct_ifast (DCTELEM * data)
 GLOBAL(void)
 fdct_ifast248 (DCTELEM * data)
 {
-  int_fast16_t tmp0, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7;
-  int_fast16_t tmp10, tmp11, tmp12, tmp13;
-  int_fast16_t z1;
+  int tmp0, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7;
+  int tmp10, tmp11, tmp12, tmp13;
+  int z1;
   DCTELEM *dataptr;
   int ctr;
-  SHIFT_TEMPS
 
   row_fdct(data);
 

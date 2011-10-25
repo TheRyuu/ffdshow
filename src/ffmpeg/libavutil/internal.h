@@ -1,25 +1,25 @@
 /*
  * copyright (c) 2006 Michael Niedermayer <michaelni@gmx.at>
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 /**
- * @file libavutil/internal.h
+ * @file
  * common internal API header
  */
 
@@ -31,34 +31,29 @@
 #endif
 
 #include <limits.h>
-#ifdef __GNUC__
 #include <stdint.h>
-#endif
 #include <stddef.h>
 #include <assert.h>
 #include "config.h"
-#include "common.h"
-#include "mem.h"
+#include "attributes.h"
 #include "timer.h"
+#include "dict.h"
+
+struct AVDictionary {
+    int count;
+    AVDictionaryEntry *elems;
+};
 
 #ifndef attribute_align_arg
-#if (!defined(__ICC) || __ICC > 1100) && AV_GCC_VERSION_AT_LEAST(4,2)
+#if ARCH_X86_32 && AV_GCC_VERSION_AT_LEAST(4,2)
 #    define attribute_align_arg __attribute__((force_align_arg_pointer))
 #else
 #    define attribute_align_arg
 #endif
 #endif
 
-#ifndef attribute_used
-#if AV_GCC_VERSION_AT_LEAST(3,1)
-#    define attribute_used __attribute__((used))
-#else
-#    define attribute_used
-#endif
-#endif
-
 #ifndef INT16_MIN
-#define INT16_MIN       (-0x7fff-1)
+#define INT16_MIN       (-0x7fff - 1)
 #endif
 
 #ifndef INT16_MAX
@@ -66,7 +61,7 @@
 #endif
 
 #ifndef INT32_MIN
-#define INT32_MIN       (-0x7fffffff-1)
+#define INT32_MIN       (-0x7fffffff - 1)
 #endif
 
 #ifndef INT32_MAX
@@ -78,7 +73,7 @@
 #endif
 
 #ifndef INT64_MIN
-#define INT64_MIN       (-0x7fffffffffffffffLL-1)
+#define INT64_MIN       (-0x7fffffffffffffffLL - 1)
 #endif
 
 #ifndef INT64_MAX
@@ -93,20 +88,12 @@
 #    define INT_BIT (CHAR_BIT * sizeof(int))
 #endif
 
-#if ( defined(__PIC__) || defined(__pic__) ) && ! defined(PIC)
-#    define PIC
-#endif
-
 #ifndef offsetof
-#    define offsetof(T,F) ((unsigned int)((char *)&((T *)0)->F))
+#    define offsetof(T, F) ((unsigned int)((char *)&((T *)0)->F))
 #endif
 
-#define snprintf _snprintf
-#define vsnprintf _vsnprintf
-
-#if defined(__MINGW32__) || defined(__CYGWIN__)
-#define EXTERN_PREFIX "_"
-#endif
+/* Use to export labels from asm. */
+#define LABEL_MANGLE(a) EXTERN_PREFIX #a
 
 // Use rip-relative addressing if compiling PIC code on x86-64.
 #if ARCH_X86_64 && defined(PIC)
@@ -119,61 +106,9 @@
 
 /* debug stuff */
 
-/* dprintf macros */
-#if defined(__GNUC__)
-#   ifdef DEBUG
-#       define dprintf(pctx, ...) av_log(pctx, AV_LOG_DEBUG, __VA_ARGS__)
-#   else
-#       define dprintf(pctx, ...)
-#   endif
-#else
-#   define dprintf(pctx)
-#endif
-
 #define av_abort()      do { av_log(NULL, AV_LOG_ERROR, "Abort at %s:%d\n", __FILE__, __LINE__); abort(); } while (0)
 
 /* math */
-
-extern const uint32_t ff_inverse[256];
-
-#if ARCH_X86
-#    define FASTDIV(a,b) \
-    ({\
-        int ret,dmy;\
-        __asm__ volatile(\
-            "mull %3"\
-            :"=d"(ret),"=a"(dmy)\
-            :"1"(a),"g"(ff_inverse[b])\
-            );\
-        ret;\
-    })
-#elif CONFIG_FASTDIV
-#    define FASTDIV(a,b)   ((uint32_t)((((uint64_t)a)*ff_inverse[b])>>32))
-#else
-#    define FASTDIV(a,b)   ((a)/(b))
-#endif
-
-extern const uint8_t ff_sqrt_tab[256];
-
-static inline av_const unsigned int ff_sqrt(unsigned int a)
-{
-    unsigned int b;
-
-    if(a<255) return (ff_sqrt_tab[a+1]-1)>>4;
-    else if(a<(1<<12)) b= ff_sqrt_tab[a>>4 ]>>2;
-#if !CONFIG_SMALL
-    else if(a<(1<<14)) b= ff_sqrt_tab[a>>6 ]>>1;
-    else if(a<(1<<16)) b= ff_sqrt_tab[a>>8 ]   ;
-#endif
-    else{
-        int s= av_log2_16bit(a>>16)>>1;
-        unsigned int c= a>>(s+2);
-        b= ff_sqrt_tab[c>>(s+8)];
-        b= FASTDIV(c,b) + (b<<s);
-    }
-
-    return b - (a<b*b);
-}
 
 #if ARCH_X86
 #define MASK_ABS(mask, level)\
@@ -185,27 +120,8 @@ static inline av_const unsigned int ff_sqrt(unsigned int a)
             );
 #else
 #define MASK_ABS(mask, level)\
-            mask= level>>31;\
-            level= (level^mask)-mask;
-#endif
-
-#if HAVE_CMOV
-#define COPY3_IF_LT(x,y,a,b,c,d)\
-__asm__ volatile (\
-    "cmpl %0, %3        \n\t"\
-    "cmovl %3, %0       \n\t"\
-    "cmovl %4, %1       \n\t"\
-    "cmovl %5, %2       \n\t"\
-    : "+&r" (x), "+&r" (a), "+r" (c)\
-    : "r" (y), "r" (b), "r" (d)\
-);
-#else
-#define COPY3_IF_LT(x,y,a,b,c,d)\
-if((y)<(x)){\
-     (x)=(y);\
-     (a)=(b);\
-     (c)=(d);\
-}
+            mask  = level >> 31;\
+            level = (level ^ mask) - mask;
 #endif
 
 /* avoid usage of dangerous/inappropriate system functions */
@@ -227,6 +143,8 @@ if((y)<(x)){\
 #define sprintf sprintf_is_forbidden_due_to_security_issues_use_snprintf
 #undef  strcat
 #define strcat strcat_is_forbidden_due_to_security_issues_use_av_strlcat
+#undef  strncpy
+#define strncpy strncpy_is_forbidden_due_to_security_issues_use_av_strlcpy
 #undef  exit
 #define exit exit_is_forbidden
 #undef  printf
@@ -238,84 +156,28 @@ if((y)<(x)){\
 #undef  perror
 #define perror please_use_av_log_instead_of_perror
 
-#define CHECKED_ALLOCZ(p, size)\
+#define FF_ALLOC_OR_GOTO(ctx, p, size, label)\
 {\
-    p= av_mallocz(size);\
-    if(p==NULL && (size)!=0){\
-        av_log(NULL, AV_LOG_ERROR, "Cannot allocate memory.");\
-        goto fail;\
+    p = av_malloc(size);\
+    if (p == NULL && (size) != 0) {\
+        av_log(ctx, AV_LOG_ERROR, "Cannot allocate memory.\n");\
+        goto label;\
     }\
 }
 
-#if defined(__ICC) || defined(__SUNPRO_C)
-    #define DECLARE_ALIGNED(n,t,v)      t v __attribute__ ((aligned (n)))
-    #define DECLARE_ASM_CONST(n,t,v)    const t __attribute__ ((aligned (n))) v
-#elif defined(__GNUC__)
-    #define DECLARE_ALIGNED(n,t,v)      t v __attribute__ ((aligned (n)))
-    #define DECLARE_ASM_CONST(n,t,v)    static const t v attribute_used __attribute__ ((aligned (n)))
-#elif defined(_MSC_VER)
-    #define DECLARE_ALIGNED(n,t,v)      __declspec(align(n)) t v
-    #define DECLARE_ASM_CONST(n,t,v)    __declspec(align(n)) static const t v
-#elif HAVE_INLINE_ASM
-    #error The asm code needs alignment, but we do not know how to do it for this compiler.
-#else
-    #define DECLARE_ALIGNED(n,t,v)      t v
-    #define DECLARE_ASM_CONST(n,t,v)    static const t v
-#endif
-
-
-#ifndef __GNUC__
-
-#ifndef rint
-#define rint(x) (int)(x+0.5)
-#endif
-
-#ifndef llrint
-static av_always_inline av_const long long llrint(double x)
-{
-    return rint(x);
+#define FF_ALLOCZ_OR_GOTO(ctx, p, size, label)\
+{\
+    p = av_mallocz(size);\
+    if (p == NULL && (size) != 0) {\
+        av_log(ctx, AV_LOG_ERROR, "Cannot allocate memory.\n");\
+        goto label;\
+    }\
 }
-#endif
 
-#ifndef lrint
-static av_always_inline av_const long int lrint(double x)
-{
-    return rint(x);
-}
-#endif
-
-#ifndef lrintf
-static av_always_inline av_const long int lrintf(float x)
-{
-    return (int)(rint(x));
-}
-#endif
-
-#ifndef round
-static av_always_inline av_const double round(double x)
-{
-    return (x > 0) ? floor(x + 0.5) : ceil(x - 0.5);
-}
-#endif
-
-#ifndef roundf
-static av_always_inline av_const float roundf(float x)
-{
-    return (x > 0) ? floor(x + 0.5) : ceil(x - 0.5);
-}
-#endif
-
-#ifndef truncf
-static av_always_inline av_const float truncf(float x)
-{
-    return (x > 0) ? floor(x) : ceil(x);
-}
-#endif
-
-#endif /* __GNUC__ */
+#include "libm.h"
 
 /**
- * Returns NULL if CONFIG_SMALL is true, otherwise the argument
+ * Return NULL if CONFIG_SMALL is true, otherwise the argument
  * without modification. Used to disable the definition of strings
  * (for example AVCodec long_names).
  */
@@ -324,5 +186,59 @@ static av_always_inline av_const float truncf(float x)
 #else
 #   define NULL_IF_CONFIG_SMALL(x) x
 #endif
+
+
+/**
+ * Define a function with only the non-default version specified.
+ *
+ * On systems with ELF shared libraries, all symbols exported from
+ * Libav libraries are tagged with the name and major version of the
+ * library to which they belong.  If a function is moved from one
+ * library to another, a wrapper must be retained in the original
+ * location to preserve binary compatibility.
+ *
+ * Functions defined with this macro will never be used to resolve
+ * symbols by the build-time linker.
+ *
+ * @param type return type of function
+ * @param name name of function
+ * @param args argument list of function
+ * @param ver  version tag to assign function
+ */
+#if HAVE_SYMVER_ASM_LABEL
+#   define FF_SYMVER(type, name, args, ver)                     \
+    type ff_##name args __asm__ (EXTERN_PREFIX #name "@" ver);  \
+    type ff_##name args
+#elif HAVE_SYMVER_GNU_ASM
+#   define FF_SYMVER(type, name, args, ver)                             \
+    __asm__ (".symver ff_" #name "," EXTERN_PREFIX #name "@" ver);      \
+    type ff_##name args;                                                \
+    type ff_##name args
+#endif
+
+/**
+ * Returns NULL if a threading library has not been enabled.
+ * Used to disable threading functions in AVCodec definitions
+ * when not needed.
+ */
+#if HAVE_THREADS
+#   define ONLY_IF_THREADS_ENABLED(x) x
+#else
+#   define ONLY_IF_THREADS_ENABLED(x) NULL
+#endif
+
+#if HAVE_MMX
+/**
+ * Empty mmx state.
+ * this must be called between any dsp function and float/double code.
+ * for example sin(); dsp->idct_put(); emms_c(); cos()
+ */
+static av_always_inline void emms_c(void)
+{
+    __asm__ volatile ("emms" ::: "memory");
+}
+#else /* HAVE_MMX */
+#define emms_c()
+#endif /* HAVE_MMX */
 
 #endif /* AVUTIL_INTERNAL_H */

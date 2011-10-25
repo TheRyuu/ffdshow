@@ -20,7 +20,7 @@
 #include "Tffvdub.h"
 #include <initguid.h>
 #define FF_CSP_ONLY
-#include "../../src/inttypes.h"
+#include "../../src/inttypes.h" // ISO C9x  compliant inttypes.h for Microsoft Visual Studio
 #include "../../src/imgFilters/IffProc.h"
 #include "../../src/imgFilters/ffImgfmt.h"
 #include "../../src/IffdshowBase.h"

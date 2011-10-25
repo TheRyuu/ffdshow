@@ -760,14 +760,14 @@ Top field first=Górnego pola
 Bottom field first=Dolnego pola
 Unchecked: one-pass normalization will be performed.\n(this mode is used to reach the highest possible loudness\nwith minimum of possible artifacts)\n\nChecked: dynamic range compression will be performed.\n(quieter parts will be amplified more than louder parts,\nalso known as night mode)=Odznaczone: jedno pasmo normalizacji bêdzie przeprowadzone.\n(Ta metoda jest u¿ywana by uzyskaæ mo¿liwie najwiêksz¹ mo¿liw¹ g³oœnoœæ\nz minimaln¹ iloœci¹ artefaktów)\n\nZaznaczone: dynamiczne pasmo kompresji bêdzie przeprowadzone.\n(Cichsze czêœci bêd¹ wzmacniane mocniej ni¿ g³oœniejsze czêœci,\nznany jako "tryb nocny")
 Enter logical expression with 'freq' variable and comparison and arithmetic operators,\nfor example "44100<=freq AND 48000<=freq".=WprowadŸ logiczne wyra¿enie z 'freq' (czêstotliwoœci¹) oraz w³aœciwym operatorem,\nna przyk³ad "44100<=freq AND 48000<=freq".
-AC3 encoder currently supports the following sample rates: 32kHz and 48kHz.\nother sample rates should be resampled to one of the supported sample rates,\nthis can be done using the "Resample" filter.=Kodek AC3 aktualnie wspiera nastêpuj¹ce rodzaje sampli: 32kHz oraz 48kHz.\ninne rodzaje sampli powinny byæ resamplowane do jednych z obs³ugiwanych formatów,\nmo¿e to byæ wykonane u¿ywaj¹c filtra "Resampler".
+AC3 encoder currently supports the following sample rates: 32kHz and 48kHz.\nother sample rates should be resampled to one of the supported sample rates,\nthis can be done using the "Resample" filter.=Kodek AC3 aktualnie wspiera nastêpuj¹ce rodzaje sampli: 32kHz oraz 48kHz.\ninne rodzaje sampli powinny byæ resamplowane do jednych z obs³ugiwanych formatów,\nmo¿e to byæ wykonane z u¿yciem filtra "Resampler".
 Force progressive=Wymuœ progresywnie
 Force interlace=Wymuœ z przeplotem
 Blu-ray and HD-TV use this.=Blu-ray oraz HD-TV u¿ywaj¹ tego.
 Use the information from the stream (H.264 only).\nIf it isn't available,\n  width > 1024 or height >=600: BT.709\n  width <=1024 and height < 600: BT.601=U¿yj informacji ze strumienia (tylko H.264).\nJeœli nie jest dostêpne,\n  szerokoœæ > 1024 or wysokoœæ >=600: BT.709\n  szerokoœæ <=1024 and wysokoœæ < 600: BT.601
-This setting also applies to YV12 <-> YUY2 conversion.=Ta opcja dodatkowo stosuje konwersje YV12 <-> YUY2.
+This setting also applies to YV12 <-> YUY2 conversion.=Ta opcja dodatkowo stosuje konwersjê YV12 <-> YUY2.
 Use the information from the stream (H.264 only).\nIf it isn't available,\n  width > 1024 or height >=600: BT.709\n  width <=1024 and height < 600: BT.601=U¿yj informacji ze strumienia (tylko H.264).\nJeœli nie jest dostêpna,\n  width > 1024 or height >=600: BT.709\n  width <=1024 and height < 600: BT.601
-DVD, NTSC, PAL and SD-TV/videos use this.=DVD, NTSC, PAL oraz SD-TV/videos u¿ywaja tego.
+DVD, NTSC, PAL and SD-TV/videos use this.=DVD, NTSC, PAL oraz SD-TV/videos u¿ywaj¹ tego.
 Same as standard except H.264.\nH.264 has flag that indicates the range. Some people say the flag is sometimes wrong.=Taki sam jak "Standardowy" oprócz H.264.\nH.264 bêdzie posiadaæ zmniejszony zakres.
 Nearly all videos use this.\nFor JPEG, MJPEG and Fraps, ffdshow automatically uses full range.=Prawie wszystkie pliki u¿ywaj¹ tego.\n Dla JPEG, MJPEG oraz Fraps, ffdshow automatycznie u¿ywa pe³nego zakresu.
 JPEG, MJPEG and Fraps sources usually use this=Zród³a JPEG, MJPEG and Fraps zwykle u¿ywaj¹ tego
@@ -781,6 +781,7 @@ Experimental, may give garbled subtitles.=Opcja eksperymentalna, mo¿e powodowaæ 
 Number of frames to buffer ahead=Iloœæ klatek do wczeœniejszego zbuforowania
 Number of used frames to keep in buffer=Iloœæ u¿ytych klatek do przetrzymania w buforze
 original=Orginalny
+simple MMX=Prosty MMX
 curve=Krzywej
 Solid fill=Sta³e wype³nienie
 Shape XY=Kszta³towanie XY

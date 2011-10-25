@@ -4,24 +4,44 @@
 #include "unios2.cpp"
 #endif
 
-void WideToChar(const wchar *Src,char *Dest,int DestSize)
+bool WideToChar(const wchar *Src,char *Dest,size_t DestSize)
 {
-#ifdef _WIN_32
-  WideCharToMultiByte(CP_ACP,0,Src,-1,Dest,DestSize,NULL,NULL);
-#else
-#ifdef _APPLE
+  bool RetCode=true;
+  *Dest=0; // Set 'Dest' to zero just in case the conversion will fail.
+
+#ifdef _WIN_ALL
+  if (WideCharToMultiByte(CP_ACP,0,Src,-1,Dest,(int)DestSize,NULL,NULL)==0)
+    RetCode=false;
+
+#elif defined(_APPLE)
   WideToUtf(Src,Dest,DestSize);
-#else
-#ifdef MBFUNCTIONS
-  if (wcstombs(Dest,Src,DestSize)==-1)
-    *Dest=0;
+
+#elif defined(MBFUNCTIONS)
+  size_t ResultingSize=wcstombs(Dest,Src,DestSize);
+  if (ResultingSize==(size_t)-1)
+    RetCode=false;
+  if (ResultingSize==0 && *Src!=0)
+    RetCode=false;
+
+  if ((!RetCode || *Dest==0 && *Src!=0) && DestSize>NM && wcslen(Src)<NM)
+  {
+    /* Workaround for strange Linux Unicode functions bug.
+       Some of wcstombs and mbstowcs implementations in some situations
+       (we are yet to find out what it depends on) can return an empty
+       string and success code if buffer size value is too large.
+    */
+    return(WideToChar(Src,Dest,NM));
+  }
+
 #else
   if (UnicodeEnabled())
   {
 #if defined(_EMX) && !defined(_DJGPP)
-    int len=Min(strlenw(Src),DestSize-1);
-    uni_fromucs((UniChar*)Src,len,Dest,(size_t*)&DestSize);
-    Dest[len]=0;
+    int len=Min(wcslen(Src)+1,DestSize-1);
+    if (uni_fromucs((UniChar*)Src,len,Dest,(size_t*)&DestSize)==-1 ||
+        DestSize>len*2)
+      RetCode=false;
+    Dest[DestSize]=0;
 #endif
   }
   else
@@ -32,28 +52,55 @@ void WideToChar(const wchar *Src,char *Dest,int DestSize)
         break;
     }
 #endif
-#endif
-#endif
+
+  // We tried to return the zero terminated string if conversion is failed,
+  // but it does not work well. WideCharToMultiByte returns 'failed' code
+  // and partially converted string even if we wanted to convert only a part
+  // of string and passed DestSize smaller than required for fully converted
+  // string. Such call is the valid behavior in RAR code and we do not expect
+  // the empty string in this case.
+
+  return(RetCode);
 }
 
 
-void CharToWide(const char *Src,wchar *Dest,int DestSize)
+bool CharToWide(const char *Src,wchar *Dest,size_t DestSize)
 {
-#ifdef _WIN_32
-  MultiByteToWideChar(CP_ACP,0,Src,-1,Dest,DestSize);
-#else
-#ifdef _APPLE
+  bool RetCode=true;
+  *Dest=0; // Set 'Dest' to zero just in case the conversion will fail.
+
+#ifdef _WIN_ALL
+  if (MultiByteToWideChar(CP_ACP,0,Src,-1,Dest,(int)DestSize)==0)
+    RetCode=false;
+
+#elif defined(_APPLE)
   UtfToWide(Src,Dest,DestSize);
-#else
-#ifdef MBFUNCTIONS
-  mbstowcs(Dest,Src,DestSize);
+
+#elif defined(MBFUNCTIONS)
+  size_t ResultingSize=mbstowcs(Dest,Src,DestSize);
+  if (ResultingSize==(size_t)-1)
+    RetCode=false;
+  if (ResultingSize==0 && *Src!=0)
+    RetCode=false;
+
+  if ((!RetCode || *Dest==0 && *Src!=0) && DestSize>NM && strlen(Src)<NM)
+  {
+    /* Workaround for strange Linux Unicode functions bug.
+       Some of wcstombs and mbstowcs implementations in some situations
+       (we are yet to find out what it depends on) can return an empty
+       string and success code if buffer size value is too large.
+    */
+    return(CharToWide(Src,Dest,NM));
+  }
 #else
   if (UnicodeEnabled())
   {
 #if defined(_EMX) && !defined(_DJGPP)
-    int len=Min(strlen(Src),DestSize-1);
-    uni_toucs((char*)Src,len,(UniChar*)Dest,(size_t*)&DestSize);
-    Dest[len]=0;
+    int len=Min(strlen(Src)+1,DestSize-1);
+    if (uni_toucs((char*)Src,len,(UniChar*)Dest,(size_t*)&DestSize)==-1 ||
+        DestSize>len)
+      DestSize=0;
+    RetCode=false;
 #endif
   }
   else
@@ -64,14 +111,21 @@ void CharToWide(const char *Src,wchar *Dest,int DestSize)
         break;
     }
 #endif
-#endif
-#endif
+
+  // We tried to return the zero terminated string if conversion is failed,
+  // but it does not work well. MultiByteToWideChar returns 'failed' code
+  // even if we wanted to convert only a part of string and passed DestSize
+  // smaller than required for fully converted string. Such call is the valid
+  // behavior in RAR code and we do not expect the empty string in this case.
+
+  return(RetCode);
 }
 
 
-byte* WideToRaw(const wchar *Src,byte *Dest,int DestSize)
+// SrcSize is in wide characters, not in bytes.
+byte* WideToRaw(const wchar *Src,byte *Dest,size_t SrcSize)
 {
-  for (int I=0;I<DestSize;I++,Src++)
+  for (size_t I=0;I<SrcSize;I++,Src++)
   {
     Dest[I*2]=(byte)*Src;
     Dest[I*2+1]=(byte)(*Src>>8);
@@ -82,47 +136,54 @@ byte* WideToRaw(const wchar *Src,byte *Dest,int DestSize)
 }
 
 
-wchar* RawToWide(const byte *Src,wchar *Dest,int DestSize)
+wchar* RawToWide(const byte *Src,wchar *Dest,size_t DestSize)
 {
-  for (int I=0;I<DestSize;I++)
+  for (size_t I=0;I<DestSize;I++)
     if ((Dest[I]=Src[I*2]+(Src[I*2+1]<<8))==0)
       break;
   return(Dest);
 }
 
 
-#ifdef _APPLE
-void WideToUtf(const wchar *Src,char *Dest,int DestSize)
+void WideToUtf(const wchar *Src,char *Dest,size_t DestSize)
 {
-  DestSize--;
-  while (*Src!=0 && --DestSize>=0)
+  long dsize=(long)DestSize;
+  dsize--;
+  while (*Src!=0 && --dsize>=0)
   {
     uint c=*(Src++);
     if (c<0x80)
       *(Dest++)=c;
     else
-      if (c<0x800 && --DestSize>=0)
+      if (c<0x800 && --dsize>=0)
       {
         *(Dest++)=(0xc0|(c>>6));
         *(Dest++)=(0x80|(c&0x3f));
       }
       else
-        if (c<0x10000 && (DestSize-=2)>=0)
+        if (c<0x10000 && (dsize-=2)>=0)
         {
           *(Dest++)=(0xe0|(c>>12));
           *(Dest++)=(0x80|((c>>6)&0x3f));
           *(Dest++)=(0x80|(c&0x3f));
         }
+        else
+          if (c < 0x200000 && (dsize-=3)>=0)
+          {
+            *(Dest++)=(0xf0|(c>>18));
+            *(Dest++)=(0x80|((c>>12)&0x3f));
+            *(Dest++)=(0x80|((c>>6)&0x3f));
+            *(Dest++)=(0x80|(c&0x3f));
+          }
   }
   *Dest=0;
 }
-#endif
 
 
-#ifdef _APPLE
-void UtfToWide(const char *Src,wchar *Dest,int DestSize)
+void UtfToWide(const char *Src,wchar *Dest,size_t DestSize)
 {
-  DestSize--;
+  long dsize=(long)DestSize;
+  dsize--;
   while (*Src!=0)
   {
     uint c=(byte)*(Src++),d;
@@ -145,14 +206,29 @@ void UtfToWide(const char *Src,wchar *Dest,int DestSize)
           Src+=2;
         }
         else
-          break;
-    if (--DestSize<0)
+          if ((c>>3)==30)
+          {
+            if ((Src[0]&0xc0)!=0x80 || (Src[1]&0xc0)!=0x80 || (Src[2]&0xc0)!=0x80)
+              break;
+            d=((c&7)<<18)|((Src[0]&0x3f)<<12)|((Src[1]&0x3f)<<6)|(Src[2]&0x3f);
+            Src+=3;
+          }
+          else
+            break;
+    if (--dsize<0)
       break;
-    *(Dest++)=d;
+    if (d>0xffff)
+    {
+      if (--dsize<0 || d>0x10ffff)
+        break;
+      *(Dest++)=((d-0x10000)>>10)+0xd800;
+      *(Dest++)=(d&0x3ff)+0xdc00;
+    }
+    else
+      *(Dest++)=d;
   }
   *Dest=0;
 }
-#endif
 
 
 bool UnicodeEnabled()
@@ -169,183 +245,66 @@ bool UnicodeEnabled()
 }
 
 
-int strlenw(const wchar *str)
-{
-  int length=0;
-  while (*(str++)!=0)
-    length++;
-  return(length);
-}
-
-
-wchar* strcpyw(wchar *dest,const wchar *src)
-{
-  do {
-    *(dest++)=*src;
-  } while (*(src++)!=0);
-  return(dest);
-}
-
-
-wchar* strncpyw(wchar *dest,const wchar *src,int n)
-{
-  do {
-    *(dest++)=*src;
-  } while (*(src++)!=0 && --n > 0);
-  return(dest);
-}
-
-
-wchar* strcatw(wchar *dest,const wchar *src)
-{
-  return(strcpyw(dest+strlenw(dest),src));
-}
-
-
-#ifndef SFX_MODULE
-wchar* strncatw(wchar *dest,const wchar *src,int n)
-{
-  dest+=strlenw(dest);
-  while (true)
-    if (--n<0)
-    {
-      *dest=0;
-      break;
-    }
-    else
-      if ((*(dest++)=*(src++))==0)
-        break;
-  return(dest);
-}
-#endif
-
-
-int strcmpw(const wchar *s1,const wchar *s2)
-{
-  while (*s1==*s2)
-  {
-    if (*s1==0)
-      return(0);
-    s1++;
-    s2++;
-  }
-  return(*s1<*s2 ? -1:1);
-}
-
-
-int strncmpw(const wchar *s1,const wchar *s2,int n)
-{
-  while (n-->0)
-  {
-    if (*s1<*s2)
-      return(-1);
-    if (*s1>*s2)
-      return(-1);
-    if (*s1==0)
-      break;
-    s1++;
-    s2++;
-  }
-  return(0);
-}
-
-
-#ifndef SFX_MODULE
-int stricmpw(const wchar *s1,const wchar *s2)
+int wcsicomp(const wchar *s1,const wchar *s2)
 {
   char Ansi1[NM*sizeof(wchar)],Ansi2[NM*sizeof(wchar)];
   WideToChar(s1,Ansi1,sizeof(Ansi1));
   WideToChar(s2,Ansi2,sizeof(Ansi2));
   return(stricomp(Ansi1,Ansi2));
 }
-#endif
 
 
-#if !defined(SFX_MODULE) && !defined(_WIN_CE)
-inline int strnicmpw_w2c(const wchar *s1,const wchar *s2,int n)
+static int wcsnicomp_w2c(const wchar *s1,const wchar *s2,size_t n)
 {
-  wchar Wide1[NM*2],Wide2[NM*2];
-  strncpyw(Wide1,s1,sizeof(Wide1)/sizeof(Wide1[0])-1);
-  strncpyw(Wide2,s2,sizeof(Wide2)/sizeof(Wide2[0])-1);
-  Wide1[Min(sizeof(Wide1)/sizeof(Wide1[0])-1,n)]=0;
-  Wide2[Min(sizeof(Wide2)/sizeof(Wide2[0])-1,n)]=0;
   char Ansi1[NM*2],Ansi2[NM*2];
-  WideToChar(Wide1,Ansi1,sizeof(Ansi1));
-  WideToChar(Wide2,Ansi2,sizeof(Ansi2));
+  GetAsciiName(s1,Ansi1,ASIZE(Ansi1));
+  GetAsciiName(s2,Ansi2,ASIZE(Ansi2));
   return(stricomp(Ansi1,Ansi2));
 }
-#endif
 
 
-#ifndef SFX_MODULE
-int strnicmpw(const wchar *s1,const wchar *s2,int n)
+int wcsnicomp(const wchar *s1,const wchar *s2,size_t n)
 {
-  return(strnicmpw_w2c(s1,s2,n));
-}
-#endif
-
-
-wchar* strchrw(const wchar *s,int c)
-{
-  while (*s)
-  {
-    if (*s==c)
-      return((wchar *)s);
-    s++;
-  }
-  return(NULL);
-}
-
-
-wchar* strrchrw(const wchar *s,int c)
-{
-  for (int I=strlenw(s)-1;I>=0;I--)
-    if (s[I]==c)
-      return((wchar *)(s+I));
-  return(NULL);
-}
-
-
-wchar* strpbrkw(const wchar *s1,const wchar *s2)
-{
-  while (*s1)
-  {
-    if (strchrw(s2,*s1)!=NULL)
-      return((wchar *)s1);
-    s1++;
-  }
-  return(NULL);
+  return(wcsnicomp_w2c(s1,s2,n));
 }
 
 
 #ifndef SFX_MODULE
-wchar* strlowerw(wchar *Str)
+wchar* wcslower(wchar *Str)
 {
   for (wchar *ChPtr=Str;*ChPtr;ChPtr++)
     if (*ChPtr<128)
-      *ChPtr=loctolower(*ChPtr);
+      *ChPtr=loctolower((byte)*ChPtr);
   return(Str);
 }
 #endif
 
 
 #ifndef SFX_MODULE
-wchar* strupperw(wchar *Str)
+wchar* wcsupper(wchar *Str)
 {
   for (wchar *ChPtr=Str;*ChPtr;ChPtr++)
     if (*ChPtr<128)
-      *ChPtr=loctoupper(*ChPtr);
+      *ChPtr=loctoupper((byte)*ChPtr);
   return(Str);
 }
 #endif
 
 
-#ifndef SFX_MODULE
 int toupperw(int ch)
 {
   return((ch<128) ? loctoupper(ch):ch);
 }
+
+
+int tolowerw(int ch)
+{
+#ifdef _WIN_ALL
+  return((int)(LPARAM)CharLowerW((wchar *)(uint)ch));
+#else
+  return((ch<128) ? loctolower(ch):ch);
 #endif
+}
 
 
 int atoiw(const wchar *s)
@@ -374,23 +333,26 @@ void SupportDBCS::Init()
   CPINFO CPInfo;
   GetCPInfo(CP_ACP,&CPInfo);
   DBCSMode=CPInfo.MaxCharSize > 1;
-  for (int I=0;I<sizeof(IsLeadByte)/sizeof(IsLeadByte[0]);I++)
-    IsLeadByte[I]=IsDBCSLeadByte(I);
+  for (uint I=0;I<ASIZE(IsLeadByte);I++)
+    IsLeadByte[I]=IsDBCSLeadByte(I)!=0;
 }
 
 
 char* SupportDBCS::charnext(const char *s)
 {
-  return (char *)(IsLeadByte[*s] ? s+2:s+1);
+  // Zero cannot be the trail byte. So if next byte after the lead byte
+  // is 0, the string is corrupt and we'll better return the pointer to 0,
+  // to break string processing loops.
+  return (char *)(IsLeadByte[(byte)*s] && s[1]!=0 ? s+2:s+1);
 }
 
 
-uint SupportDBCS::strlend(const char *s)
+size_t SupportDBCS::strlend(const char *s)
 {
-  uint Length=0;
+  size_t Length=0;
   while (*s!=0)
   {
-    if (IsLeadByte[*s])
+    if (IsLeadByte[(byte)*s])
       s+=2;
     else
       s++;
@@ -403,7 +365,7 @@ uint SupportDBCS::strlend(const char *s)
 char* SupportDBCS::strchrd(const char *s, int c)
 {
   while (*s!=0)
-    if (IsLeadByte[*s])
+    if (IsLeadByte[(byte)*s])
       s+=2;
     else
       if (*s==c)
@@ -417,7 +379,7 @@ char* SupportDBCS::strchrd(const char *s, int c)
 void SupportDBCS::copychrd(char *dest,const char *src)
 {
   dest[0]=src[0];
-  if (IsLeadByte[src[0]])
+  if (IsLeadByte[(byte)src[0]])
     dest[1]=src[1];
 }
 
@@ -426,7 +388,7 @@ char* SupportDBCS::strrchrd(const char *s, int c)
 {
   const char *found=NULL;
   while (*s!=0)
-    if (IsLeadByte[*s])
+    if (IsLeadByte[(byte)*s])
       s+=2;
     else
     {

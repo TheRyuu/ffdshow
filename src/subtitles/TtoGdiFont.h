@@ -19,7 +19,8 @@
 #pragma once
 
 #include "TfontManager.h"
-class TtoGdiFont {
+class TtoGdiFont
+{
     HGDIOBJ old;
     HDC hdc;
     int gdi_font_scale;
@@ -27,22 +28,22 @@ public:
     TtoGdiFont(const TSubtitleProps &props, HDC Ihdc, LOGFONT &lf, const TprintPrefs &prefs, unsigned int dx, unsigned int dy, TfontManager *fontManager):
         old(NULL),
         hdc(Ihdc),
-        gdi_font_scale(prefs.fontSettings.gdi_font_scale)
-    {
-        if (!hdc || !fontManager) return;
+        gdi_font_scale(prefs.fontSettings.gdi_font_scale) {
+        if (!hdc || !fontManager) {
+            return;
+        }
         props.toLOGFONT(lf, prefs.fontSettings, dx, dy, prefs.clipdy, prefs.sar, gdi_font_scale);
         HFONT font=fontManager->getFont(lf);
         old=SelectObject(hdc, font);
     }
 
-    ~TtoGdiFont()
-    {
-        if (hdc && old)
+    ~TtoGdiFont() {
+        if (hdc && old) {
             SelectObject(hdc, old);
+        }
     }
 
-    double getHeight()
-    {
+    double getHeight() {
         TEXTMETRIC tm;
         GetTextMetrics(hdc,&tm);
         return (double)(tm.tmAscent + tm.tmDescent) / gdi_font_scale;

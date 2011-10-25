@@ -23,51 +23,58 @@
 
 Tperfect::Tperfect(void)
 {
- framesCount=NULL;
- init();
+    framesCount=NULL;
+    init();
 }
 void Tperfect::init(void)
 {
- ready=false;
- avg=0;
- avgmin=avgmax=0;
- Psize=0;Pnum=0;
- if (framesCount) free(framesCount);framesCount=NULL;
- framesCountCount=0;
+    ready=false;
+    avg=0;
+    avgmin=avgmax=0;
+    Psize=0;
+    Pnum=0;
+    if (framesCount) {
+        free(framesCount);
+    }
+    framesCount=NULL;
+    framesCountCount=0;
 }
 
 void Tperfect::analyze(const TxvidStats *stats)
 {
- init();
- if (!stats->ok) return;
- unsigned int Pmax=0,Pmin=INT_MAX;
- for (size_t i=0;i<stats->size();i++)
-  {
-   DWORD bytes=(*stats)[i]->bytes;
-   if (((*stats)[i]->quant&Txvid_2pass::NNSTATS_KEYFRAME)==0 || bytes==0)
-    {
-     Pnum++;
-     Psize+=bytes;
-     if (bytes<Pmin) Pmin=bytes;
-     else if (bytes>Pmax) Pmax=bytes;
+    init();
+    if (!stats->ok) {
+        return;
     }
-  }
- if (Pnum)
-  {
-   avg=float(Psize)/Pnum;
-   avgmax=100*Pmax/avg;
-   avgmin=100*Pmin/avg;
+    unsigned int Pmax=0,Pmin=INT_MAX;
+    for (size_t i=0; i<stats->size(); i++) {
+        DWORD bytes=(*stats)[i]->bytes;
+        if (((*stats)[i]->quant&Txvid_2pass::NNSTATS_KEYFRAME)==0 || bytes==0) {
+            Pnum++;
+            Psize+=bytes;
+            if (bytes<Pmin) {
+                Pmin=bytes;
+            } else if (bytes>Pmax) {
+                Pmax=bytes;
+            }
+        }
+    }
+    if (Pnum) {
+        avg=float(Psize)/Pnum;
+        avgmax=100*Pmax/avg;
+        avgmin=100*Pmin/avg;
 
-   framesCount=(unsigned int*)calloc(framesCountCount=Pmax+1,sizeof(unsigned int));
-   for (size_t i=0;i<stats->size();i++)
-    if (((*stats)[i]->quant&Txvid_2pass::NNSTATS_KEYFRAME)==0 || (*stats)[i]->bytes==0)
-     framesCount[(*stats)[i]->bytes]++;
+        framesCount=(unsigned int*)calloc(framesCountCount=Pmax+1,sizeof(unsigned int));
+        for (size_t i=0; i<stats->size(); i++)
+            if (((*stats)[i]->quant&Txvid_2pass::NNSTATS_KEYFRAME)==0 || (*stats)[i]->bytes==0) {
+                framesCount[(*stats)[i]->bytes]++;
+            }
 
-   ready=true;
-  }
+        ready=true;
+    }
 }
 
 unsigned int Tperfect::getFramesCount(unsigned int size)
 {
- return (size>=framesCountCount)?0:framesCount[size];
+    return (size>=framesCountCount)?0:framesCount[size];
 }

@@ -19,6 +19,9 @@
 #define TUPLE_HPP
 
 // ---------------------------------------------------
+#if defined(_MSC_VER) && (_MSC_VER == 1600)
+#include <tuple>
+#else
 
 #define LL_TLAST T10
 #define LL_ULAST U10
@@ -599,5 +602,7 @@ tuple<T1&, T2&, T3&, T4&, T5&, T6&, T7&, T8&, T9&, T10&> inline tie(T1& t1, T2& 
 #undef LL_REPEAT1
 #undef LL_REPEAT2
 #undef LL_REPEAT3
+
+#endif
 
 #endif

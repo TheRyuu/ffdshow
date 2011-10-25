@@ -20,14 +20,14 @@
  */
 
 /**
- * @file mlp_parser.h
+ * @file
  * MLP parser prototypes
  */
 
 #ifndef AVCODEC_MLP_PARSER_H
 #define AVCODEC_MLP_PARSER_H
 
-#include "bitstream.h"
+#include "get_bits.h"
 
 typedef struct MLPHeaderInfo
 {
@@ -54,6 +54,9 @@ typedef struct MLPHeaderInfo
 
 
 int ff_mlp_read_major_sync(void *log, MLPHeaderInfo *mh, GetBitContext *gb);
+int64_t ff_truehd_layout(int chanmap);
+
+extern const uint64_t ff_mlp_layout[32];
 
 #endif /* AVCODEC_MLP_PARSER_H */
 

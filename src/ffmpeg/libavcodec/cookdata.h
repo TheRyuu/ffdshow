@@ -21,16 +21,14 @@
  */
 
 /**
- * @file cookdata.h
+ * @file
  * Cook AKA RealAudio G2 compatible decoderdata
  */
 
 #ifndef AVCODEC_COOKDATA_H
 #define AVCODEC_COOKDATA_H
 
-#ifdef __GNUC__
 #include <stdint.h>
-#endif
 
 /* various data tables */
 

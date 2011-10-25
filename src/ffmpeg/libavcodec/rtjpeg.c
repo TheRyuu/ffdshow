@@ -2,24 +2,24 @@
  * RTJpeg decoding functions
  * Copyright (c) 2006 Reimar Doeffinger
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 #include "libavutil/common.h"
-#include "bitstream.h"
+#include "get_bits.h"
 #include "dsputil.h"
 #include "rtjpeg.h"
 
@@ -33,11 +33,12 @@
     if (n) {skip_bits(gb, n);}
 
 /**
- * \brief read one block from stream
- * \param gb contains stream data
- * \param block where data is written to
- * \param scan array containing the mapping stream address -> block position
- * \param quant quantization factors
+ * @brief read one block from stream
+ * @param gb contains stream data
+ * @param block where data is written to
+ * @param scan array containing the mapping stream address -> block position
+ * @param quant quantization factors
+ * @return 0 means the block is not coded, < 0 means an error occurred.
  *
  * Note: GetBitContext is used to make the code simpler, since all data is
  * aligned this could be done faster in a different way, e.g. as it is done
@@ -55,6 +56,9 @@ static inline int get_block(GetBitContext *gb, DCTELEM *block, const uint8_t *sc
 
     // number of non-zero coefficients
     coeff = get_bits(gb, 6);
+    if (get_bits_count(gb) + (coeff << 1) >= gb->size_in_bits)
+        return -1;
+
     // normally we would only need to clear the (63 - coeff) last values,
     // but since we do not know where they are we just clear the whole block
     memset(block, 0, 64 * sizeof(DCTELEM));
@@ -69,6 +73,8 @@ static inline int get_block(GetBitContext *gb, DCTELEM *block, const uint8_t *sc
 
     // 4 bits per coefficient
     ALIGN(4);
+    if (get_bits_count(gb) + (coeff << 2) >= gb->size_in_bits)
+        return -1;
     while (coeff) {
         ac = get_sbits(gb, 4);
         if (ac == -8)
@@ -78,6 +84,8 @@ static inline int get_block(GetBitContext *gb, DCTELEM *block, const uint8_t *sc
 
     // 8 bits per coefficient
     ALIGN(8);
+    if (get_bits_count(gb) + (coeff << 3) >= gb->size_in_bits)
+        return -1;
     while (coeff) {
         ac = get_sbits(gb, 8);
         PUT_COEFF(ac);
@@ -88,17 +96,16 @@ static inline int get_block(GetBitContext *gb, DCTELEM *block, const uint8_t *sc
 }
 
 /**
- * \brief decode one rtjpeg YUV420 frame
- * \param c context, must be initialized via rtjpeg_decode_init
- * \param f AVFrame to place decoded frame into. If parts of the frame
+ * @brief decode one rtjpeg YUV420 frame
+ * @param c context, must be initialized via rtjpeg_decode_init
+ * @param f AVFrame to place decoded frame into. If parts of the frame
  *          are not coded they are left unchanged, so consider initializing it
- * \param buf buffer containing input data
- * \param buf_size length of input data in bytes
- * \return number of bytes consumed from the input buffer
+ * @param buf buffer containing input data
+ * @param buf_size length of input data in bytes
+ * @return number of bytes consumed from the input buffer
  */
 int rtjpeg_decode_frame_yuv420(RTJpegContext *c, AVFrame *f,
                                const uint8_t *buf, int buf_size) {
-    DECLARE_ALIGNED_16(DCTELEM, block[64]);
     GetBitContext gb;
     int w = c->w / 16, h = c->h / 16;
     int x, y;
@@ -107,22 +114,23 @@ int rtjpeg_decode_frame_yuv420(RTJpegContext *c, AVFrame *f,
     init_get_bits(&gb, buf, buf_size * 8);
     for (y = 0; y < h; y++) {
         for (x = 0; x < w; x++) {
-            if (get_block(&gb, block, c->scan, c->lquant))
+            DCTELEM *block = c->block;
+            if (get_block(&gb, block, c->scan, c->lquant) > 0)
                 c->dsp->idct_put(y1, f->linesize[0], block);
             y1 += 8;
-            if (get_block(&gb, block, c->scan, c->lquant))
+            if (get_block(&gb, block, c->scan, c->lquant) > 0)
                 c->dsp->idct_put(y1, f->linesize[0], block);
             y1 += 8;
-            if (get_block(&gb, block, c->scan, c->lquant))
+            if (get_block(&gb, block, c->scan, c->lquant) > 0)
                 c->dsp->idct_put(y2, f->linesize[0], block);
             y2 += 8;
-            if (get_block(&gb, block, c->scan, c->lquant))
+            if (get_block(&gb, block, c->scan, c->lquant) > 0)
                 c->dsp->idct_put(y2, f->linesize[0], block);
             y2 += 8;
-            if (get_block(&gb, block, c->scan, c->cquant))
+            if (get_block(&gb, block, c->scan, c->cquant) > 0)
                 c->dsp->idct_put(u, f->linesize[1], block);
             u += 8;
-            if (get_block(&gb, block, c->scan, c->cquant))
+            if (get_block(&gb, block, c->scan, c->cquant) > 0)
                 c->dsp->idct_put(v, f->linesize[2], block);
             v += 8;
         }
@@ -135,15 +143,15 @@ int rtjpeg_decode_frame_yuv420(RTJpegContext *c, AVFrame *f,
 }
 
 /**
- * \brief initialize an RTJpegContext, may be called multiple times
- * \param c context to initialize
- * \param dsp specifies the idct to use for decoding
- * \param width width of image, will be rounded down to the nearest multiple
+ * @brief initialize an RTJpegContext, may be called multiple times
+ * @param c context to initialize
+ * @param dsp specifies the idct to use for decoding
+ * @param width width of image, will be rounded down to the nearest multiple
  *              of 16 for decoding
- * \param height height of image, will be rounded down to the nearest multiple
+ * @param height height of image, will be rounded down to the nearest multiple
  *              of 16 for decoding
- * \param lquant luma quantization table to use
- * \param cquant chroma quantization table to use
+ * @param lquant luma quantization table to use
+ * @param cquant chroma quantization table to use
  */
 void rtjpeg_decode_init(RTJpegContext *c, DSPContext *dsp,
                         int width, int height,

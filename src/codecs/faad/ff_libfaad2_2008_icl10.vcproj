@@ -20,9 +20,8 @@
 	<Configurations>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="release_2008_icl10"
-			IntermediateDirectory="release_2008_icl10"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\..\..\common_icl10.vsprops"
 			UseOfMFC="1"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			WholeProgramOptimization="0"
@@ -56,7 +55,6 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
-				WholeProgramOptimization="false"
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;NDEBUG;_WINDOWS;_USRDLL"
 				StringPooling="true"
 				ExceptionHandling="0"
@@ -64,7 +62,6 @@
 				BufferSecurityCheck="false"
 				EnableFunctionLevelLinking="true"
 				BrowseInformation="0"
-				WarningLevel="1"
 				SuppressStartupBanner="true"
 				CompileAs="1"
 				DisableSpecificWarnings="4244;4100"
@@ -90,11 +87,13 @@
 				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile=".\ff_libfaad2.def"
+				DelayLoadDLLs="$(NOINHERIT)"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(IntDir)/ff_libfaad2.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="0"
 			/>
 			<Tool
@@ -122,9 +121,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|x64"
-			OutputDirectory="release_2008_x64_icl10"
-			IntermediateDirectory="release_2008_x64_icl10"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\..\..\common_icl10.vsprops"
 			UseOfMFC="1"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			WholeProgramOptimization="0"
@@ -164,7 +162,6 @@
 				RuntimeLibrary="0"
 				BufferSecurityCheck="false"
 				EnableFunctionLevelLinking="true"
-				WarningLevel="0"
 				SuppressStartupBanner="true"
 				CompileAs="1"
 				DisableSpecificWarnings="4244"
@@ -190,9 +187,12 @@
 				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile=".\ff_libfaad2.def"
+				DelayLoadDLLs="$(NOINHERIT)"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				ImportLibrary="$(IntDir)/$(ProjectName).lib"
+				RandomizedBaseAddress="1"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"
 			/>
 			<Tool
@@ -220,9 +220,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="debug_2008_icl10"
-			IntermediateDirectory="debug_2008_icl10"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\..\..\common_icl10.vsprops"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			>
@@ -282,11 +281,12 @@
 				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile=".\ff_libfaad2.def"
+				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(IntDir)/ff_libfaad2.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="0"
 			/>
 			<Tool
@@ -314,9 +314,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|x64"
-			OutputDirectory="debug_2008_x64_icl10"
-			IntermediateDirectory="debug_2008_x64_icl10"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\..\..\common_icl10.vsprops"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			>
@@ -348,7 +347,7 @@
 				MinimalRebuild="true"
 				ExceptionHandling="0"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				ForceConformanceInForLoopScope="true"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
@@ -375,9 +374,11 @@
 				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile=".\ff_libfaad2.def"
+				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
-				ImportLibrary="$(IntDir)/$(ProjectName).lib"
+				RandomizedBaseAddress="1"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"
 			/>
 			<Tool

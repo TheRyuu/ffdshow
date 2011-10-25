@@ -22,9 +22,7 @@
 #ifndef AVCODEC_INDEO3DATA_H
 #define AVCODEC_INDEO3DATA_H
 
-#ifdef __GNUC__
 #include <stdint.h>
-#endif
 
 static const uint32_t correction[] = {
         0x00000000, 0x00000202, 0xfffffdfe, 0x000002ff, 0xfffffd01, 0xffffff03, 0x000000fd, 0x00000404,

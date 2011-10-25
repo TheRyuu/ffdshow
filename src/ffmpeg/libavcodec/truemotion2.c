@@ -2,30 +2,30 @@
  * Duck/ON2 TrueMotion 2 Decoder
  * Copyright (c) 2005 Konstantin Shishkov
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 /**
- * @file libavcodec/truemotion2.c
+ * @file
  * Duck TrueMotion2 decoder.
  */
 
 #include "avcodec.h"
-#include "bitstream.h"
+#include "get_bits.h"
 #include "dsputil.h"
 
 #define TM2_ESCAPE 0x80000000
@@ -64,7 +64,7 @@ typedef struct TM2Context{
 * Huffman codes for each of streams
 */
 typedef struct TM2Codes{
-    VLC vlc; ///< table for FFmpeg bitstream reader
+    VLC vlc; ///< table for Libav bitstream reader
     int bits;
     int *recode; ///< table for converting from code indexes to values
     int length;
@@ -185,8 +185,7 @@ static int tm2_build_huff_table(TM2Context *ctx, TM2Codes *code)
 
 static void tm2_free_codes(TM2Codes *code)
 {
-    if(code->recode)
-        av_free(code->recode);
+    av_free(code->recode);
     if(code->vlc.table)
         free_vlc(&code->vlc);
 }
@@ -202,7 +201,6 @@ static inline int tm2_read_header(TM2Context *ctx, const uint8_t *buf)
 {
     uint32_t magic;
     const uint8_t *obuf;
-    int length;
 
     obuf = buf;
 
@@ -213,19 +211,6 @@ static inline int tm2_read_header(TM2Context *ctx, const uint8_t *buf)
 /*      av_log (ctx->avctx, AV_LOG_ERROR, "TM2 old header: not implemented (yet)\n"); */
         return 40;
     } else if(magic == 0x00000101) { /* new header */
-        int w, h, size, flags, xr, yr;
-
-        length = AV_RL32(buf);
-        buf += 4;
-
-        init_get_bits(&ctx->gb, buf, 32 * 8);
-        size = get_bits_long(&ctx->gb, 31);
-        h = get_bits(&ctx->gb, 15);
-        w = get_bits(&ctx->gb, 15);
-        flags = get_bits_long(&ctx->gb, 31);
-        yr = get_bits(&ctx->gb, 9);
-        xr = get_bits(&ctx->gb, 9);
-
         return 40;
     } else {
         av_log (ctx->avctx, AV_LOG_ERROR, "Not a TM2 header: 0x%08X\n", magic);
@@ -260,7 +245,8 @@ static int tm2_read_deltas(TM2Context *ctx, int stream_id) {
     return 0;
 }
 
-static int tm2_read_stream(TM2Context *ctx, const uint8_t *buf, int stream_id) {
+static int tm2_read_stream(TM2Context *ctx, const uint8_t *buf, int stream_id, int buf_size)
+{
     int i;
     int cur = 0;
     int skip = 0;
@@ -273,6 +259,11 @@ static int tm2_read_stream(TM2Context *ctx, const uint8_t *buf, int stream_id) {
 
     if(len == 0)
         return 4;
+
+    if (len >= INT_MAX/4-1 || len < 0 || len > buf_size) {
+        av_log(ctx->avctx, AV_LOG_ERROR, "Error, invalid stream size.\n");
+        return -1;
+    }
 
     toks = AV_RB32(buf); buf += 4; cur += 4;
     if(toks & 1) {
@@ -313,8 +304,13 @@ static int tm2_read_stream(TM2Context *ctx, const uint8_t *buf, int stream_id) {
     len = AV_RB32(buf); buf += 4; cur += 4;
     if(len > 0) {
         init_get_bits(&ctx->gb, buf, (skip - cur) * 8);
-        for(i = 0; i < toks; i++)
+        for(i = 0; i < toks; i++) {
+            if (get_bits_left(&ctx->gb) <= 0) {
+                av_log(ctx->avctx, AV_LOG_ERROR, "Incorrect number of tokens: %i\n", toks);
+                return -1;
+            }
             ctx->tokens[stream_id][i] = tm2_get_token(&ctx->gb, &codes);
+        }
     } else {
         for(i = 0; i < toks; i++)
             ctx->tokens[stream_id][i] = codes.recode[0];
@@ -365,10 +361,10 @@ static inline int GET_TOK(TM2Context *ctx,int type) {
 
 /* recalculate last and delta values for next blocks */
 #define TM2_RECALC_BLOCK(CHR, stride, last, CD) {\
-    CD[0] = (CHR[1] - 128) - last[1];\
+    CD[0] = CHR[1] - last[1];\
     CD[1] = (int)CHR[stride + 1] - (int)CHR[1];\
-    last[0] = (int)CHR[stride + 0] - 128;\
-    last[1] = (int)CHR[stride + 1] - 128;}
+    last[0] = (int)CHR[stride + 0];\
+    last[1] = (int)CHR[stride + 1];}
 
 /* common operations - add deltas to 4x4 block of luma or 2x2 blocks of chroma */
 static inline void tm2_apply_deltas(TM2Context *ctx, int* Y, int stride, int *deltas, int *last)
@@ -396,7 +392,7 @@ static inline void tm2_high_chroma(int *data, int stride, int *last, int *CD, in
         for(i = 0; i < 2; i++){
             CD[j] += deltas[i + j * 2];
             last[i] += CD[j];
-            data[i] = last[i] + 128;
+            data[i] = last[i];
         }
         data += stride;
     }
@@ -675,8 +671,8 @@ static int tm2_decode_blocks(TM2Context *ctx, AVFrame *p)
     int bw, bh;
     int type;
     int keyframe = 1;
-    uint8_t *Y, *U, *V;
-    int *src;
+    int *Y, *U, *V;
+    uint8_t *dst;
 
     bw = ctx->avctx->width >> 2;
     bh = ctx->avctx->height >> 2;
@@ -729,29 +725,23 @@ static int tm2_decode_blocks(TM2Context *ctx, AVFrame *p)
     }
 
     /* copy data from our buffer to AVFrame */
-    Y = p->data[0];
-    src = (ctx->cur?ctx->Y2:ctx->Y1);
+    Y = (ctx->cur?ctx->Y2:ctx->Y1);
+    U = (ctx->cur?ctx->U2:ctx->U1);
+    V = (ctx->cur?ctx->V2:ctx->V1);
+    dst = p->data[0];
     for(j = 0; j < ctx->avctx->height; j++){
         for(i = 0; i < ctx->avctx->width; i++){
-            Y[i] = av_clip_uint8(*src++);
+            int y = Y[i], u = U[i >> 1], v = V[i >> 1];
+            dst[3*i+0] = av_clip_uint8(y + v);
+            dst[3*i+1] = av_clip_uint8(y);
+            dst[3*i+2] = av_clip_uint8(y + u);
         }
-        Y += p->linesize[0];
-    }
-    U = p->data[2];
-    src = (ctx->cur?ctx->U2:ctx->U1);
-    for(j = 0; j < (ctx->avctx->height + 1) >> 1; j++){
-        for(i = 0; i < (ctx->avctx->width + 1) >> 1; i++){
-            U[i] = av_clip_uint8(*src++);
+        Y += ctx->avctx->width;
+        if (j & 1) {
+            U += ctx->avctx->width >> 1;
+            V += ctx->avctx->width >> 1;
         }
-        U += p->linesize[2];
-    }
-    V = p->data[1];
-    src = (ctx->cur?ctx->V2:ctx->V1);
-    for(j = 0; j < (ctx->avctx->height + 1) >> 1; j++){
-        for(i = 0; i < (ctx->avctx->width + 1) >> 1; i++){
-            V[i] = av_clip_uint8(*src++);
-        }
-        V += p->linesize[1];
+        dst += p->linesize[0];
     }
 
     return keyframe;
@@ -763,8 +753,10 @@ static const int tm2_stream_order[TM2_NUM_STREAMS] = {
 
 static int decode_frame(AVCodecContext *avctx,
                         void *data, int *data_size,
-                        const uint8_t *buf, int buf_size)
+                        AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     TM2Context * const l = avctx->priv_data;
     AVFrame * const p= (AVFrame*)&l->pic;
     int i, skip, t;
@@ -792,7 +784,7 @@ static int decode_frame(AVCodecContext *avctx,
     }
 
     for(i = 0; i < TM2_NUM_STREAMS; i++){
-        t = tm2_read_stream(l, swbuf + skip, tm2_stream_order[i]);
+        t = tm2_read_stream(l, swbuf + skip, tm2_stream_order[i], buf_size);
         if(t == -1){
             av_free(swbuf);
             return -1;
@@ -801,9 +793,9 @@ static int decode_frame(AVCodecContext *avctx,
     }
     p->key_frame = tm2_decode_blocks(l, p);
     if(p->key_frame)
-        p->pict_type = FF_I_TYPE;
+        p->pict_type = AV_PICTURE_TYPE_I;
     else
-        p->pict_type = FF_P_TYPE;
+        p->pict_type = AV_PICTURE_TYPE_P;
 
     l->cur = !l->cur;
     *data_size = sizeof(AVFrame);
@@ -817,9 +809,6 @@ static av_cold int decode_init(AVCodecContext *avctx){
     TM2Context * const l = avctx->priv_data;
     int i;
 
-    if (avcodec_check_dimensions(avctx, avctx->width, avctx->height) < 0) {
-        return -1;
-    }
     if((avctx->width & 3) || (avctx->height & 3)){
         av_log(avctx, AV_LOG_ERROR, "Width and height must be multiple of 4\n");
         return -1;
@@ -827,7 +816,7 @@ static av_cold int decode_init(AVCodecContext *avctx){
 
     l->avctx = avctx;
     l->pic.data[0]=NULL;
-    avctx->pix_fmt = PIX_FMT_YUV420P;
+    avctx->pix_fmt = PIX_FMT_BGR24;
 
     dsputil_init(&l->dsp, avctx);
 
@@ -852,15 +841,13 @@ static av_cold int decode_init(AVCodecContext *avctx){
 
 static av_cold int decode_end(AVCodecContext *avctx){
     TM2Context * const l = avctx->priv_data;
+    AVFrame *pic = &l->pic;
     int i;
 
-    if(l->last)
-        av_free(l->last);
-    if(l->clast)
-        av_free(l->clast);
+    av_free(l->last);
+    av_free(l->clast);
     for(i = 0; i < TM2_NUM_STREAMS; i++)
-        if(l->tokens[i])
-            av_free(l->tokens[i]);
+        av_free(l->tokens[i]);
     if(l->Y1){
         av_free(l->Y1);
         av_free(l->U1);
@@ -869,22 +856,21 @@ static av_cold int decode_end(AVCodecContext *avctx){
         av_free(l->U2);
         av_free(l->V2);
     }
+
+    if (pic->data[0])
+        avctx->release_buffer(avctx, pic);
+
     return 0;
 }
 
-AVCodec truemotion2_decoder = {
-    "truemotion2",
-    CODEC_TYPE_VIDEO,
-    CODEC_ID_TRUEMOTION2,
-    sizeof(TM2Context),
-    decode_init,
-    NULL,
-    decode_end,
-    decode_frame,
-    /*.capabilities = */CODEC_CAP_DR1,
-    /*.next = */NULL,
-    /*.flush = */NULL,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name = */"Duck TrueMotion 2.0",
+AVCodec ff_truemotion2_decoder = {
+    .name           = "truemotion2",
+    .type           = AVMEDIA_TYPE_VIDEO,
+    .id             = CODEC_ID_TRUEMOTION2,
+    .priv_data_size = sizeof(TM2Context),
+    .init           = decode_init,
+    .close          = decode_end,
+    .decode         = decode_frame,
+    .capabilities   = CODEC_CAP_DR1,
+    .long_name = NULL_IF_CONFIG_SMALL("Duck TrueMotion 2.0"),
 };

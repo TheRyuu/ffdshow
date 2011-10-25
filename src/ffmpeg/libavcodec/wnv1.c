@@ -2,30 +2,31 @@
  * Winnov WNV1 codec
  * Copyright (c) 2005 Konstantin Shishkov
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 /**
- * @file libavcodec/wnv1.c
+ * @file
  * Winnov WNV1 codec.
  */
 
 #include "avcodec.h"
-#include "bitstream.h"
+#include "get_bits.h"
+#include "libavutil/common.h"
 
 
 typedef struct WNV1Context{
@@ -51,15 +52,17 @@ static inline int wnv1_get_code(WNV1Context *w, int base_value)
     int v = get_vlc2(&w->gb, code_vlc.table, CODE_VLC_BITS, 1);
 
     if(v==15)
-        return ff_reverse[ get_bits(&w->gb, 8 - w->shift) ];
+        return av_reverse[ get_bits(&w->gb, 8 - w->shift) ];
     else
         return base_value + ((v - 7)<<w->shift);
 }
 
 static int decode_frame(AVCodecContext *avctx,
                         void *data, int *data_size,
-                        const uint8_t *buf, int buf_size)
+                        AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     WNV1Context * const l = avctx->priv_data;
     AVFrame * const p= (AVFrame*)&l->pic;
     unsigned char *Y,*U,*V;
@@ -85,7 +88,7 @@ static int decode_frame(AVCodecContext *avctx,
     p->key_frame = 1;
 
     for(i=8; i<buf_size; i++)
-        rbuf[i]= ff_reverse[ buf[i] ];
+        rbuf[i]= av_reverse[ buf[i] ];
     init_get_bits(&l->gb, rbuf+8, (buf_size-8)*8);
 
     if (buf[2] >> 4 == 6)
@@ -93,11 +96,13 @@ static int decode_frame(AVCodecContext *avctx,
     else {
         l->shift = 8 - (buf[2] >> 4);
         if (l->shift > 4) {
-            av_log(avctx, AV_LOG_ERROR, "Unknown WNV1 frame header value %i, please upload file for study\n", buf[2] >> 4);
+            av_log_ask_for_sample(avctx, "Unknown WNV1 frame header value %i\n",
+                                  buf[2] >> 4);
             l->shift = 4;
         }
         if (l->shift < 1) {
-            av_log(avctx, AV_LOG_ERROR, "Unknown WNV1 frame header value %i, please upload file for study\n", buf[2] >> 4);
+            av_log_ask_for_sample(avctx, "Unknown WNV1 frame header value %i\n",
+                                  buf[2] >> 4);
             l->shift = 1;
         }
     }
@@ -127,32 +132,38 @@ static int decode_frame(AVCodecContext *avctx,
 
 static av_cold int decode_init(AVCodecContext *avctx){
     WNV1Context * const l = avctx->priv_data;
+    static VLC_TYPE code_table[1 << CODE_VLC_BITS][2];
 
     l->avctx = avctx;
     avctx->pix_fmt = PIX_FMT_YUV422P;
 
-    if(!code_vlc.table){
-        init_vlc(&code_vlc, CODE_VLC_BITS, 16,
-                    &code_tab[0][1], 4, 2,
-                    &code_tab[0][0], 4, 2, 1);
-    }
+    code_vlc.table = code_table;
+    code_vlc.table_allocated = 1 << CODE_VLC_BITS;
+    init_vlc(&code_vlc, CODE_VLC_BITS, 16,
+             &code_tab[0][1], 4, 2,
+             &code_tab[0][0], 4, 2, INIT_VLC_USE_NEW_STATIC);
 
     return 0;
 }
 
-AVCodec wnv1_decoder = {
-    "wnv1",
-    CODEC_TYPE_VIDEO,
-    CODEC_ID_WNV1,
-    sizeof(WNV1Context),
-    decode_init,
-    NULL,
-    NULL,
-    decode_frame,
-    /*.capabilities = */CODEC_CAP_DR1,
-    /*.next = */NULL,
-    /*.flush = */NULL,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("Winnov WNV1"),
+static av_cold int decode_end(AVCodecContext *avctx){
+    WNV1Context * const l = avctx->priv_data;
+    AVFrame *pic = &l->pic;
+
+    if (pic->data[0])
+        avctx->release_buffer(avctx, pic);
+
+    return 0;
+}
+
+AVCodec ff_wnv1_decoder = {
+    .name           = "wnv1",
+    .type           = AVMEDIA_TYPE_VIDEO,
+    .id             = CODEC_ID_WNV1,
+    .priv_data_size = sizeof(WNV1Context),
+    .init           = decode_init,
+    .close          = decode_end,
+    .decode         = decode_frame,
+    .capabilities   = CODEC_CAP_DR1,
+    .long_name = NULL_IF_CONFIG_SMALL("Winnov WNV1"),
 };

@@ -3,20 +3,20 @@
  * Copyright (c) 2006-2007 Konstantin Shishkov
  * Partly based on vc9.c (c) 2005 Anonymous, Alex Beregszaszi, Michael Niedermayer
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -26,6 +26,7 @@
 #include "avcodec.h"
 #include "mpegvideo.h"
 #include "intrax8.h"
+#include "vc1dsp.h"
 
 /** Markers used in VC-1 AP frame data */
 //@{
@@ -155,12 +156,14 @@ enum COTypes {
 typedef struct VC1Context{
     MpegEncContext s;
     IntraX8Context x8;
+    VC1DSPContext vc1dsp;
 
     int bits;
 
     /** Simple/Main Profile sequence header */
     //@{
-    int res_sm;           ///< reserved, 2b
+    int res_sprite;       ///< reserved, sprite mode
+    int res_y411;         ///< reserved, old interlaced mode
     int res_x8;           ///< reserved
     int multires;         ///< frame-level RESPIC syntax element present
     int res_fasttx;       ///< reserved, always 1
@@ -214,6 +217,8 @@ typedef struct VC1Context{
     int k_y;              ///< Number of bits for MVs (depends on MV range)
     int range_x, range_y; ///< MV range
     uint8_t pq, altpq;    ///< Current/alternate frame quantizer scale
+    uint8_t zz_8x8[4][64];///< Zigzag table for TT_8x8, permuted for IDCT
+    int left_blk_sh, top_blk_sh; ///< Either 3 or 0, positions of l/t in blk[]
     const uint8_t* zz_8x4;///< Zigzag scan table for TT_8x4 coding mode
     const uint8_t* zz_4x8;///< Zigzag scan table for TT_4x8 coding mode
     /** pquant parameters */
@@ -232,7 +237,7 @@ typedef struct VC1Context{
     //@}
     int ttfrm;            ///< Transform type info present at frame level
     uint8_t ttmbf;        ///< Transform type flag
-    uint8_t ttblk4x4;     ///< Value of ttblk which indicates a 4x4 transform
+    int *ttblk_base, *ttblk; ///< Transform type at the block level
     int codingset;        ///< index of current table set from 11.8 to use for luma block decoding
     int codingset2;       ///< index of current table set from 11.8 to use for chroma block decoding
     int pqindex;          ///< raw pqindex used in coding set selection
@@ -302,14 +307,84 @@ typedef struct VC1Context{
     uint8_t range_mapuv;
     //@}
 
+    /** Frame decoding info for sprite modes */
+    //@{
+    int new_sprite;
+    int two_sprites;
+    AVFrame sprite_output_frame;
+    int output_width, output_height, sprite_width, sprite_height;
+    uint8_t* sr_rows[2][2];      ///< Sprite resizer line cache
+    //@}
+
     int p_frame_skipped;
     int bi_type;
     int x8_type;
 
+    DCTELEM (*block)[6][64];
+    int n_allocated_blks, cur_blk_idx, left_blk_idx, topleft_blk_idx, top_blk_idx;
     uint32_t *cbp_base, *cbp;
+    uint8_t *is_intra_base, *is_intra;
+    int16_t (*luma_mv_base)[2], (*luma_mv)[2];
     uint8_t bfraction_lut_index;///< Index for BFRACTION value (see Table 40, reproduced into ff_vc1_bfraction_lut[])
     uint8_t broken_link;        ///< Broken link flag (BROKEN_LINK syntax element)
     uint8_t closed_entry;       ///< Closed entry point flag (CLOSED_ENTRY syntax element)
+
+    int parse_only;             ///< Context is used within parser
+
+    int warn_interlaced;
+
+    // ==> Start patch MPC
+    int allow_interlaced;
+    // <== End patch MPC
 } VC1Context;
+
+/** Find VC-1 marker in buffer
+ * @return position where next marker starts or end of buffer if no marker found
+ */
+static av_always_inline const uint8_t* find_next_marker(const uint8_t *src, const uint8_t *end)
+{
+    uint32_t mrk = 0xFFFFFFFF;
+
+    if(end-src < 4) return end;
+    while(src < end){
+        mrk = (mrk << 8) | *src++;
+        if(IS_MARKER(mrk))
+            return src-4;
+    }
+    return end;
+}
+
+static av_always_inline int vc1_unescape_buffer(const uint8_t *src, int size, uint8_t *dst)
+{
+    int dsize = 0, i;
+
+    if(size < 4){
+        for(dsize = 0; dsize < size; dsize++) *dst++ = *src++;
+        return size;
+    }
+    for(i = 0; i < size; i++, src++) {
+        if(src[0] == 3 && i >= 2 && !src[-1] && !src[-2] && i < size-1 && src[1] < 4) {
+            dst[dsize++] = src[1];
+            src++;
+            i++;
+        } else
+            dst[dsize++] = *src;
+    }
+    return dsize;
+}
+
+/**
+ * Decode Simple/Main Profiles sequence header
+ * @see Figure 7-8, p16-17
+ * @param avctx Codec context
+ * @param gb GetBit context initialized from Codec context extra_data
+ * @return Status
+ */
+int vc1_decode_sequence_header(AVCodecContext *avctx, VC1Context *v, GetBitContext *gb);
+
+int vc1_decode_entry_point(AVCodecContext *avctx, VC1Context *v, GetBitContext *gb);
+
+int vc1_parse_frame_header    (VC1Context *v, GetBitContext *gb);
+int vc1_parse_frame_header_adv(VC1Context *v, GetBitContext *gb);
 
 #endif /* AVCODEC_VC1_H */

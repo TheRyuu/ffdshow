@@ -60,7 +60,7 @@ DWORD m_dwObjectCount;                      // Active object count
 BOOL m_bInit = FALSE;                       // Have we been initialised
 HANDLE m_hOutput = INVALID_HANDLE_VALUE;    // Optional output written here
 DWORD dwWaitTimeout = INFINITE;             // Default timeout value
-DWORD dwTimeOffset;			    // Time of first DbgLog call
+DWORD dwTimeOffset;                // Time of first DbgLog call
 bool g_fUseKASSERT = false;                 // don't create messagebox
 bool g_fDbgInDllEntryPoint = false;
 bool g_fAutoRefreshLevels = false;
@@ -384,7 +384,7 @@ struct MsgBoxMsg
 // create a thread to call MessageBox(). calling MessageBox() on
 // random threads at bad times can confuse the host (eg IE).
 //
-DWORD WINAPI MsgBoxThread(
+unsigned int WINAPI MsgBoxThread(
   LPVOID lpParameter   // thread data
   )
 {
@@ -415,14 +415,15 @@ INT MessageBoxOtherThread(
     else
     {
         MsgBoxMsg msg = {hwnd, szTitle, szMessage, dwFlags, 0};
-        DWORD dwid;
-        HANDLE hThread = CreateThread(
-            0,                      // security
-            0,                      // stack size
-            MsgBoxThread,
-            (void *)&msg,           // arg
-            0,                      // flags
-            &dwid);
+
+        HANDLE hThread = (HANDLE)_beginthreadex( NULL,              /* Security */
+                                                0,                  /* Stack Size */
+                                                MsgBoxThread,       /* Thread process */
+                                                (LPVOID)&msg,       /* Arguments */
+                                                0,                  /* 0 = Start Immediately */
+                                                NULL                /* Thread Address */
+                                                );
+
         if(hThread)
         {
             WaitForSingleObject(hThread, INFINITE);
@@ -579,9 +580,9 @@ BOOL WINAPI DbgCheckModuleLevel(DWORD Type,DWORD Level)
     // If no valid bits are set return FALSE
     if ((Type & ((1<<iMAXLEVELS)-1))) {
 
-	// speed up unconditional output.
-	if (0==Level)
-	    return(TRUE);
+    // speed up unconditional output.
+    if (0==Level)
+        return(TRUE);
 
         for (LONG lKeyPos = 0;lKeyPos < iMAXLEVELS;lKeyPos++) {
             if (Type & Mask) {

@@ -6,10 +6,12 @@
 class TmaskingPageXvid :public TconfPageEnc
 {
 public:
- TmaskingPageXvid(TffdshowPageEnc *Iparent);
- virtual bool enabled(void);
- virtual bool forCodec(int codecId) {return xvid_codec(codecId);}
- virtual void cfg2dlg(void);
+    TmaskingPageXvid(TffdshowPageEnc *Iparent);
+    virtual bool enabled(void);
+    virtual bool forCodec(int codecId) {
+        return xvid_codec(codecId);
+    }
+    virtual void cfg2dlg(void);
 };
 
 #endif

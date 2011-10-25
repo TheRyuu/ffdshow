@@ -27,33 +27,35 @@
 
 TsubtitlesTextpinVobsub::TsubtitlesTextpinVobsub(int Itype,IffdshowBase *Ideci,const unsigned char *data,unsigned int datalen):TsubtitlesTextpin(Itype,Ideci)
 {
- sub_format=Tsubreader::SUB_VOBSUB;
- TstreamMem fs(data,datalen);
+    sub_format=Tsubreader::SUB_VOBSUB;
+    TstreamMem fs(data,datalen);
 #ifndef DVDSUB
- spu=NULL;
- subs=new TsubreaderVobsub(fs,NULL,deci,&spu);
- subs->push_back(new TsubtitleVobsub(spu,NULL));
+    spu=NULL;
+    subs=new TsubreaderVobsub(fs,NULL,deci,&spu);
+    subs->push_back(new TsubtitleVobsub(spu,NULL));
 #else
- subs=new Tsubreader;
- idx_parse(fs);
+    subs=new Tsubreader;
+    idx_parse(fs);
 #endif
 }
 
 void TsubtitlesTextpinVobsub::resetSubtitles(void)
 {
 #ifndef DVDSUB
- if (spu) spu->spudec_reset();
+    if (spu) {
+        spu->spudec_reset();
+    }
 #endif
- TsubtitlesTextpin::resetSubtitles();
+    TsubtitlesTextpin::resetSubtitles();
 }
 
 void TsubtitlesTextpinVobsub::addSubtitle(REFERENCE_TIME start,REFERENCE_TIME stop,const unsigned char *data,unsigned int datalen,const TsubtitlesSettings *cfg,bool utf8)
 {
 #ifndef DVDSUB
- int timer=(int)(90*start/10000LL);
- spu->spudec_assemble(data,datalen,timer);
+    int timer=(int)(90*start/10000LL);
+    spu->spudec_assemble(data,datalen,timer);
 #else
- Tsubtitle *sub=new TsubtitleDVD(start,data,datalen,this);
- subs->push_back(sub);
+    Tsubtitle *sub=new TsubtitleDVD(start,data,datalen,this);
+    subs->push_back(sub);
 #endif
 }

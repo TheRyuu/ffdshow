@@ -23,53 +23,51 @@
 
 TdeinterlacePanel* TdeinterlacePageKernel::create(Twindow *parent)
 {
- return new TdeinterlacePageKernel(parent);
+    return new TdeinterlacePageKernel(parent);
 }
 
 TdeinterlacePageKernel::TdeinterlacePageKernel(Twindow *parent):TdeinterlacePanel(IDD_DEINTERLACE_KERNEL,parent)
 {
- static const TbindCheckbox<TdeinterlacePageKernel> chb[]=
-  {
-   IDC_CHB_KERNELDEINT_SHARP,IDFF_kernelDeintSharp,NULL,
-   IDC_CHB_KERNELDEINT_TWOWAY,IDFF_kernelDeintTwoway,NULL,
-   IDC_CHB_KERNELDEINT_LINKED,IDFF_kernelDeintLinked,NULL,
-   IDC_CHB_KERNELDEINT_MAP,IDFF_kernelDeintMap,NULL,
-   0
-  };
- bindCheckboxes(chb);
- static const TbindTrackbar<TdeinterlacePageKernel> htbr[]=
-  {
-   IDC_TBR_KERNELDEINT_THRESHOLD,IDFF_kernelDeintThreshold,&TdeinterlacePageKernel::cfg2dlg,
-   0
-  };
- bindHtracks(htbr);
- createDialog(dialogId,parent->m_hwnd);
+    static const TbindCheckbox<TdeinterlacePageKernel> chb[]= {
+        IDC_CHB_KERNELDEINT_SHARP,IDFF_kernelDeintSharp,NULL,
+        IDC_CHB_KERNELDEINT_TWOWAY,IDFF_kernelDeintTwoway,NULL,
+        IDC_CHB_KERNELDEINT_LINKED,IDFF_kernelDeintLinked,NULL,
+        IDC_CHB_KERNELDEINT_MAP,IDFF_kernelDeintMap,NULL,
+        0
+    };
+    bindCheckboxes(chb);
+    static const TbindTrackbar<TdeinterlacePageKernel> htbr[]= {
+        IDC_TBR_KERNELDEINT_THRESHOLD,IDFF_kernelDeintThreshold,&TdeinterlacePageKernel::cfg2dlg,
+        0
+    };
+    bindHtracks(htbr);
+    createDialog(dialogId,parent->m_hwnd);
 }
 TdeinterlacePageKernel::~TdeinterlacePageKernel()
 {
- DestroyWindow(m_hwnd);
+    DestroyWindow(m_hwnd);
 }
 
 void TdeinterlacePageKernel::init(void)
 {
- translate();
- tbrSetRange(IDC_TBR_KERNELDEINT_THRESHOLD,0,255,10);
+    translate();
+    tbrSetRange(IDC_TBR_KERNELDEINT_THRESHOLD,0,255,10);
 }
 
 void TdeinterlacePageKernel::cfg2dlg(void)
 {
- tbrSet(IDC_TBR_KERNELDEINT_THRESHOLD,cfgGet(IDFF_kernelDeintThreshold),IDC_LBL_KERNELDEINT_THRESHOLD);
- setCheck(IDC_CHB_KERNELDEINT_SHARP,cfgGet(IDFF_kernelDeintSharp));
- setCheck(IDC_CHB_KERNELDEINT_TWOWAY,cfgGet(IDFF_kernelDeintTwoway));
- setCheck(IDC_CHB_KERNELDEINT_LINKED,cfgGet(IDFF_kernelDeintLinked));
- setCheck(IDC_CHB_KERNELDEINT_MAP,cfgGet(IDFF_kernelDeintMap));
+    tbrSet(IDC_TBR_KERNELDEINT_THRESHOLD,cfgGet(IDFF_kernelDeintThreshold),IDC_LBL_KERNELDEINT_THRESHOLD);
+    setCheck(IDC_CHB_KERNELDEINT_SHARP,cfgGet(IDFF_kernelDeintSharp));
+    setCheck(IDC_CHB_KERNELDEINT_TWOWAY,cfgGet(IDFF_kernelDeintTwoway));
+    setCheck(IDC_CHB_KERNELDEINT_LINKED,cfgGet(IDFF_kernelDeintLinked));
+    setCheck(IDC_CHB_KERNELDEINT_MAP,cfgGet(IDFF_kernelDeintMap));
 }
 
 void TdeinterlacePageKernel::reset(void)
 {
- deci->resetParam(IDFF_kernelDeintThreshold);
- deci->resetParam(IDFF_kernelDeintSharp);
- deci->resetParam(IDFF_kernelDeintTwoway);
- deci->resetParam(IDFF_kernelDeintMap);
- deci->resetParam(IDFF_kernelDeintLinked);
+    deci->resetParam(IDFF_kernelDeintThreshold);
+    deci->resetParam(IDFF_kernelDeintSharp);
+    deci->resetParam(IDFF_kernelDeintTwoway);
+    deci->resetParam(IDFF_kernelDeintMap);
+    deci->resetParam(IDFF_kernelDeintLinked);
 }

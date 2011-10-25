@@ -3,7 +3,7 @@
  *  XVID MPEG-4 VIDEO CODEC
  *  - Decoder related header -
  *
- *  Copyright(C) 2002-2003 Peter Ross <pross@xvid.org>
+ *  Copyright(C) 2002-2010 Peter Ross <pross@xvid.org>
  *
  *  This program is free software ; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
  *  along with this program ; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
  *
- * $Id: decoder.h,v 1.18 2006/03/27 11:21:48 Skal Exp $
+ * $Id: decoder.h 1988 2011-05-18 09:10:05Z Isibaar $
  *
  ****************************************************************************/
 
@@ -105,7 +105,7 @@ typedef struct
 	int newpred_enable;
 	int reduced_resolution_enable;
 
-	/* The bitstream version if it's a XviD stream */
+	/* The bitstream version if it's a Xvid stream */
 	int bs_version;
 
 	/* image */
@@ -163,6 +163,8 @@ typedef struct
 
 	/* Tells if the reference image is edged or not */
 	int is_edged[2];
+
+	int num_threads;
 }
 DECODER;
 

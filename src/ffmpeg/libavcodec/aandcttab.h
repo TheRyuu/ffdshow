@@ -17,16 +17,14 @@
  */
 
 /**
- * @file aandcttab.h
+ * @file
  * AAN (Arai Agui Nakajima) (I)DCT tables
  */
 
 #ifndef AVCODEC_AANDCTTAB_H
 #define AVCODEC_AANDCTTAB_H
 
-#ifdef __GNUC__
 #include <stdint.h>
-#endif
 
 extern const uint16_t ff_aanscales[64];
 extern const uint16_t ff_inv_aanscales[64];

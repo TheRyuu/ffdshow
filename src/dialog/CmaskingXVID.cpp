@@ -21,25 +21,25 @@
 
 bool TmaskingPageXvid::enabled(void)
 {
- return xvid_codec(codecId);
+    return xvid_codec(codecId);
 }
 
 void TmaskingPageXvid::cfg2dlg(void)
 {
- setCheck(IDC_CHB_XVID_MASKING,cfgGet(IDFF_enc_xvid_lum_masking));
- setCheck(IDC_CHB_XVID_CHROMAOPT,cfgGet(IDFF_enc_xvid_chromaopt));enable(!cfgGet(IDFF_enc_gray),IDC_CHB_XVID_CHROMAOPT);
+    setCheck(IDC_CHB_XVID_MASKING,cfgGet(IDFF_enc_xvid_lum_masking));
+    setCheck(IDC_CHB_XVID_CHROMAOPT,cfgGet(IDFF_enc_xvid_chromaopt));
+    enable(!cfgGet(IDFF_enc_gray),IDC_CHB_XVID_CHROMAOPT);
 }
 
 TmaskingPageXvid::TmaskingPageXvid(TffdshowPageEnc *Iparent):TconfPageEnc(Iparent)
 {
- dialogId=IDD_MASKING_XVID;
- static const int props[]={IDFF_enc_xvid_lum_masking,IDFF_enc_xvid_chromaopt,0};
- propsIDs=props;
- static const TbindCheckbox<TmaskingPageXvid> chb[]=
-  {
-   IDC_CHB_XVID_MASKING,IDFF_enc_xvid_lum_masking,NULL,
-   IDC_CHB_XVID_CHROMAOPT,IDFF_enc_xvid_chromaopt,NULL,
-   0,NULL,NULL
-  };
- bindCheckboxes(chb);
+    dialogId=IDD_MASKING_XVID;
+    static const int props[]= {IDFF_enc_xvid_lum_masking,IDFF_enc_xvid_chromaopt,0};
+    propsIDs=props;
+    static const TbindCheckbox<TmaskingPageXvid> chb[]= {
+        IDC_CHB_XVID_MASKING,IDFF_enc_xvid_lum_masking,NULL,
+        IDC_CHB_XVID_CHROMAOPT,IDFF_enc_xvid_chromaopt,NULL,
+        0,NULL,NULL
+    };
+    bindCheckboxes(chb);
 }

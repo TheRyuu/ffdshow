@@ -1,9 +1,9 @@
 /*****************************************************************************
  *
  * XVID MPEG-4 VIDEO CODEC
- * - XviD Main header file -
+ * - Xvid Main header file -
  *
- *  Copyright(C) 2001-2004 Peter Ross <pross@xvid.org>
+ *  Copyright(C) 2001-2011 Peter Ross <pross@xvid.org>
  *
  *  This program is free software ; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
  *  along with this program ; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
  *
- * $Id: xvid.h,v 1.60 2006/12/06 19:55:07 Isibaar Exp $
+ * $Id: xvid.h 1988 2011-05-18 09:10:05Z Isibaar $
  *
  ****************************************************************************/
 
@@ -57,8 +57,8 @@ extern "C" {
 #define XVID_API_MAJOR(a)        (((a)>>16) & 0xff)
 #define XVID_API_MINOR(a)        (((a)>> 0) & 0xff)
 
-#define XVID_VERSION             XVID_MAKE_VERSION(1,2,-127)
-#define XVID_API                 XVID_MAKE_API(4, 1)
+#define XVID_VERSION             XVID_MAKE_VERSION(1,4,-127)
+#define XVID_API                 XVID_MAKE_API(4, 4)
 
 #define XVID_UNSTABLE
 
@@ -73,7 +73,7 @@ extern "C" {
  * doesnt hurt but not increasing it could cause difficulty for decoders in the
  * future
  */
-#define XVID_BS_VERSION 47
+#define XVID_BS_VERSION 72 
 
 /*****************************************************************************
  * error codes
@@ -129,6 +129,9 @@ typedef struct {
 #define XVID_PROFILE_S_L1    0x01
 #define XVID_PROFILE_S_L2    0x02
 #define XVID_PROFILE_S_L3    0x03
+#define XVID_PROFILE_S_L4a   0x04
+#define XVID_PROFILE_S_L5    0x05
+#define XVID_PROFILE_S_L6    0x06
 #define XVID_PROFILE_ARTS_L1 0x91 /* advanced realtime simple */
 #define XVID_PROFILE_ARTS_L2 0x92
 #define XVID_PROFILE_ARTS_L3 0x93
@@ -171,6 +174,7 @@ typedef struct {
 #define XVID_CPU_SSE      (1<< 2) /*       sse : pentium3, athlonXP */
 #define XVID_CPU_SSE2     (1<< 3) /*      sse2 : pentium4, athlon64 */
 #define XVID_CPU_SSE3     (1<< 8) /*      sse3 : pentium4, athlon64 */
+#define XVID_CPU_SSE41    (1<< 9) /*      sse41: penryn */
 #define XVID_CPU_3DNOW    (1<< 4) /*     3dnow : k6-2 */
 #define XVID_CPU_3DNOWEXT (1<< 5) /* 3dnow-ext : athlon */
 #define XVID_CPU_TSC      (1<< 6) /*       tsc : Pentium */
@@ -235,13 +239,16 @@ extern int xvid_global(void *handle, int opt, void *param1, void *param2);
 extern int xvid_decore(void *handle, int opt, void *param1, void *param2);
 
 /* XVID_DEC_CREATE param 1
-	image width & height may be specified here when the dimensions are
-	known in advance. */
+	image width & height as well as FourCC code may be specified 
+	here when known in advance (e.g. being read from container) */
 typedef struct {
 	int version;
-	int width;     /* [in:opt] image width */
-	int height;    /* [in:opt] image width */
-	void * handle; /* [out]	   decore context handle */
+	int width;      /* [in:opt] image width */
+	int height;     /* [in:opt] image width */
+	void * handle;  /* [out]    decore context handle */
+/* ------- v1.3.x ------- */
+	int fourcc;     /* [in:opt] fourcc of the input video */
+	int num_threads;/* [in:opt] number of threads to use in decoder */
 } xvid_dec_create_t;
 
 
@@ -365,7 +372,6 @@ typedef struct {
 #define XVID_REQDQUANTS  (1<<2) /* plugin requires access to the dquant table */
 #define XVID_REQLAMBDA   (1<<3) /* plugin requires access to the lambda table */
 
-
 typedef struct
 {
 	int version;
@@ -487,7 +493,8 @@ extern xvid_plugin_func xvid_plugin_lumimasking;  /* lumimasking */
 extern xvid_plugin_func xvid_plugin_psnr;	/* write psnr values to stdout */
 extern xvid_plugin_func xvid_plugin_dump;	/* dump before and after yuvpgms */
 
-extern xvid_plugin_func xvid_plugin_ssim;	/*write ssim values to stdout*/
+extern xvid_plugin_func xvid_plugin_ssim;	    /*write ssim values to stdout*/
+extern xvid_plugin_func xvid_plugin_psnrhvsm;	/*write psnrhvsm values to stdout*/
 
 
 /* single pass rate control
@@ -535,11 +542,13 @@ typedef struct {
 	int container_frame_overhead; /* [in] How many bytes the controller has to compensate per frame due to container format overhead */
 
 /* ------- v1.1.x ------- */
-	int vbv_size;                 /* [in] buffer size (bits) */
+	int vbv_size;                 /* [in] buffer size (bits) If this is zero, VBV check is disabled.*/
 	int vbv_initial;              /* [in] initial buffer occupancy (bits) */
 	int vbv_maxrate;              /* [in] max processing bitrate (bits per second) */
-	int vbv_peakrate;             /* [in:opt] max average bitrate over 3 seconds (bits per second) */
-
+	int vbv_peakrate;             /* [in:opt] max average bitrate over 1 second (bits per second).
+								   *          This is used for diagnostics only and won't affect the actual peak bitrate.
+								   *          This is not a problem as long as vbv_peakrate > vbv_size + vbv_maxrate which
+								   *          guarantees that vbv_peakrate won't be exceeded. */
 }xvid_plugin_2pass2_t;
 
 
@@ -554,7 +563,15 @@ typedef struct{
 	/*accuracy 0 very accurate 4 very fast*/
 	int acc; 
 
+    int cpu_flags; /* XVID_CPU_XXX flags */
+
 } xvid_plugin_ssim_t;
+
+typedef struct {
+        int version;
+
+        int method;      /* [in] masking method to apply. 0 for luminance masking, 1 for variance masking */
+} xvid_plugin_lumimasking_t;
 
 /*****************************************************************************
  *                             ENCODER API
@@ -653,6 +670,7 @@ extern int xvid_encore(void *handle, int opt, void *param1, void *param2);
 #define XVID_VOP_MODEDECISION_RD      (1<< 8) /* enable DCT-ME and use it for mode decision */
 #define XVID_VOP_FAST_MODEDECISION_RD (1<<12) /* use simplified R-D mode decision */
 #define XVID_VOP_RD_BVOP              (1<<13) /* enable rate-distortion mode decision in b-frames */
+#define XVID_VOP_RD_PSNRHVSM          (1<<14) /* use PSNR-HVS-M as metric for rate-distortion optimizations */
 
 /* Only valid for vol_flags|=XVID_VOL_INTERLACING */
 #define XVID_VOP_TOPFIELDFIRST        (1<< 9) /* set top-field-first flag  */
@@ -730,7 +748,7 @@ typedef struct {
 	int num_plugins;             /* [in:opt] number of plugins */
 	xvid_enc_plugin_t * plugins; /*          ^^ plugin array */
 
-	int num_threads;             /* [in:opt] number of threads */
+	int num_threads;             /* [in:opt] number of threads to use in encoder */
 	int max_bframes;             /* [in:opt] max sequential bframes (0=disable bframes) */
 
 	int global;                  /* [in:opt] global flags; controls encoding behavior */
@@ -753,6 +771,10 @@ typedef struct {
 	/* ---------------------------------------------- */
 
 	void *handle;                /* [out] encoder instance handle */
+
+	/* ------- v1.3.x ------- */
+	int start_frame_num;         /* [in:opt] frame number of start frame relative to zones definitions. allows to encode sub-sequences */
+	int num_slices;              /* [in:opt] number of slices to code for each frame */
 } xvid_enc_create_t;
 
 

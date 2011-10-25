@@ -25,13 +25,13 @@
 
 #include <string.h>	/* memcmp/memset, try to remove */
 #include <stdlib.h>
-#include "../../../inttypes.h"
+#include <inttypes.h>
 
 #include "mpeg2.h"
 #include "attributes.h"
 #include "mpeg2_internal.h"
 
-static int mpeg2_accels = 0;
+static uint32_t mpeg2_accels = 0;
 
 #define BUFFER_SIZE (1194 * 1024)
 
@@ -380,7 +380,6 @@ uint32_t mpeg2_accel (uint32_t accel)
 {
     if (!mpeg2_accels) {
 	mpeg2_accels = mpeg2_detect_accel (accel) | MPEG2_ACCEL_DETECT;
-	mpeg2_cpu_state_init (mpeg2_accels);
 	mpeg2_idct_init (mpeg2_accels);
 	mpeg2_mc_init (mpeg2_accels);
     }
@@ -408,10 +407,11 @@ void mpeg2_reset (mpeg2dec_t * mpeg2dec, int full_reset)
 
 }
 
-static int ffdshow_accels=0;
-void mpeg2_set_accel(int accel)
+static uint32_t ffdshow_accels=0;
+
+uint32_t mpeg2_set_accel(uint32_t accel)
 {
- ffdshow_accels=accel;
+    return ffdshow_accels=accel;
 }
 
 mpeg2dec_t * mpeg2_init (void)

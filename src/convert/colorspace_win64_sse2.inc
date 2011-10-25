@@ -3,22 +3,22 @@
 ; MAKE_COLORSPACE(NAME,STACK, BYTES,PIXELS,ROWS, FUNC, ARG1)
 ;
 ; This macro provides a assembler width/height scroll loop
-; NAME		function name
-; STACK		additional stack bytes required by FUNC
-; BYTES		bytes-per-pixel for the given colorspace
-; PIXELS	pixels (columns) operated on per FUNC call
-; VPIXELS	vpixels (rows) operated on per FUNC call
-; FUNC		conversion macro name; we expect to find FUNC_INIT and FUNC macros
-; ARG1		argument passed to FUNC
+; NAME      function name
+; STACK     additional stack bytes required by FUNC
+; BYTES     bytes-per-pixel for the given colorspace
+; PIXELS    pixels (columns) operated on per FUNC call
+; VPIXELS   vpixels (rows) operated on per FUNC call
+; FUNC      conversion macro name; we expect to find FUNC_INIT and FUNC macros
+; ARG1      argument passed to FUNC
 ; 
 ; throughout the FUNC the registers mean:
-; rax		y_stride
-; rbx		u_ptr
-; rcx		v_ptr
-; rdx		x_stride
-; rsi		y_ptr
-; rdi		x_ptr
-; rbp		height (loop counter)
+; rax       y_stride
+; rbx       u_ptr
+; rcx       v_ptr
+; rdx       x_stride
+; rsi       y_ptr
+; rdi       x_ptr
+; rbp       height (loop counter)
 ; r8        width  (loop counter)
 ; r9        fixedwidth
 ; r10       x_dif
@@ -41,24 +41,24 @@
 
 ; sse2 version for WIN64 (ported by h.yamagata)
 
-%macro		MAKE_COLORSPACE			9
-%define NAME		%1
-%define STACK		%2 ; must be multiple of 16.
-%define BYTES		%3
-%define PIXELS		%4
-%define VPIXELS		%5
-%define FUNC		%6
-%define ARG1		%7
-%define ARG2		%8
-%define ARG3		%9
-	; --- define function global/symbol
+%macro        MAKE_COLORSPACE            9
+%define NAME        %1
+%define STACK       %2 ; must be multiple of 16.
+%define BYTES       %3
+%define PIXELS      %4
+%define VPIXELS     %5
+%define FUNC        %6
+%define ARG1        %7
+%define ARG2        %8
+%define ARG3        %9
+    ; --- define function global/symbol
 ALIGN 16
 cglobal NAME
 NAME:
-	; --- init stack ---
+    ; --- init stack ---
 
-%define pushsize	56
-%define localsize	160 + STACK
+%define pushsize    56
+%define localsize   160 + STACK
 
 %define vflip           rsp + localsize + pushsize + 80
 %define height          rsp + localsize + pushsize + 72

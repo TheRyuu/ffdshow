@@ -2,20 +2,20 @@
  * DSP Group TrueSpeech compatible decoder
  * Copyright (c) 2005 Konstantin Shishkov
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -24,7 +24,7 @@
 
 #include "truespeech_data.h"
 /**
- * @file truespeech.c
+ * @file
  * TrueSpeech decoder.
  */
 
@@ -33,13 +33,13 @@
  */
 typedef struct {
     /* input data */
-    int16_t vector[8];  //< input vector: 5/5/4/4/4/3/3/3
-    int offset1[2];     //< 8-bit value, used in one copying offset
-    int offset2[4];     //< 7-bit value, encodes offsets for copying and for two-point filter
-    int pulseoff[4];    //< 4-bit offset of pulse values block
-    int pulsepos[4];    //< 27-bit variable, encodes 7 pulse positions
-    int pulseval[4];    //< 7x2-bit pulse values
-    int flag;           //< 1-bit flag, shows how to choose filters
+    int16_t vector[8];  ///< input vector: 5/5/4/4/4/3/3/3
+    int offset1[2];     ///< 8-bit value, used in one copying offset
+    int offset2[4];     ///< 7-bit value, encodes offsets for copying and for two-point filter
+    int pulseoff[4];    ///< 4-bit offset of pulse values block
+    int pulsepos[4];    ///< 27-bit variable, encodes 7 pulse positions
+    int pulseval[4];    ///< 7x2-bit pulse values
+    int flag;           ///< 1-bit flag, shows how to choose filters
     /* temporary data */
     int filtbuf[146];   // some big vector used for storing filters
     int prevfilt[8];    // filter from previous frame
@@ -56,7 +56,7 @@ static av_cold int truespeech_decode_init(AVCodecContext * avctx)
 {
 //    TSContext *c = avctx->priv_data;
 
-    avctx->sample_fmt = SAMPLE_FMT_S16;
+    avctx->sample_fmt = AV_SAMPLE_FMT_S16;
     return 0;
 }
 
@@ -165,7 +165,7 @@ static void truespeech_correlate_filter(TSContext *dec)
         dec->cvector[i] = (8 - dec->vector[i]) >> 3;
     }
     for(i = 0; i < 8; i++)
-        dec->cvector[i] = (dec->cvector[i] * ts_230[i]) >> 15;
+        dec->cvector[i] = (dec->cvector[i] * ts_decay_994_1000[i]) >> 15;
 
     dec->filtval = dec->vector[0];
 }
@@ -207,7 +207,7 @@ static void truespeech_apply_twopoint_filter(TSContext *dec, int quart)
     off = (t / 25) + dec->offset1[quart >> 1] + 18;
     ptr0 = tmp + 145 - off;
     ptr1 = tmp + 146;
-    filter = (const int16_t*)ts_240 + (t % 25) * 2;
+    filter = (const int16_t*)ts_order2_coeffs + (t % 25) * 2;
     for(i = 0; i < 60; i++){
         t = (ptr0[0] * filter[0] + ptr0[1] * filter[1] + 0x2000) >> 14;
         ptr0++;
@@ -228,11 +228,11 @@ static void truespeech_place_pulses(TSContext *dec, int16_t *out, int quart)
     for(i = 0; i < 7; i++) {
         t = dec->pulseval[quart] & 3;
         dec->pulseval[quart] >>= 2;
-        tmp[6 - i] = ts_562[dec->pulseoff[quart] * 4 + t];
+        tmp[6 - i] = ts_pulse_scales[dec->pulseoff[quart] * 4 + t];
     }
 
     coef = dec->pulsepos[quart] >> 15;
-    ptr1 = (const int16_t*)ts_140 + 30;
+    ptr1 = (const int16_t*)ts_pulse_values + 30;
     ptr2 = tmp;
     for(i = 0, j = 3; (i < 30) && (j > 0); i++){
         t = *ptr1++;
@@ -245,7 +245,7 @@ static void truespeech_place_pulses(TSContext *dec, int16_t *out, int quart)
         }
     }
     coef = dec->pulsepos[quart] & 0x7FFF;
-    ptr1 = (const int16_t*)ts_140;
+    ptr1 = (const int16_t*)ts_pulse_values;
     for(i = 30, j = 4; (i < 60) && (j > 0); i++){
         t = *ptr1++;
         if(coef >= t)
@@ -291,7 +291,7 @@ static void truespeech_synth(TSContext *dec, int16_t *out, int quart)
     }
 
     for(i = 0; i < 8; i++)
-        t[i] = (ts_5E2[i] * ptr1[i]) >> 15;
+        t[i] = (ts_decay_35_64[i] * ptr1[i]) >> 15;
 
     ptr0 = dec->tmp2;
     for(i = 0; i < 60; i++){
@@ -305,7 +305,7 @@ static void truespeech_synth(TSContext *dec, int16_t *out, int quart)
     }
 
     for(i = 0; i < 8; i++)
-        t[i] = (ts_5F2[i] * ptr1[i]) >> 15;
+        t[i] = (ts_decay_3_4[i] * ptr1[i]) >> 15;
 
     ptr0 = dec->tmp3;
     for(i = 0; i < 60; i++){
@@ -332,8 +332,10 @@ static void truespeech_save_prevvec(TSContext *c)
 
 static int truespeech_decode_frame(AVCodecContext *avctx,
                 void *data, int *data_size,
-                const uint8_t *buf, int buf_size)
+                AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     TSContext *c = avctx->priv_data;
 
     int i, j;
@@ -345,6 +347,11 @@ static int truespeech_decode_frame(AVCodecContext *avctx,
     if (!buf_size)
         return 0;
 
+    if (buf_size < 32) {
+        av_log(avctx, AV_LOG_ERROR,
+               "Too small input buffer (%d bytes), need at least 32 bytes\n", buf_size);
+        return -1;
+    }
     iterations = FFMIN(buf_size / 32, *data_size / 480);
     for(j = 0; j < iterations; j++) {
         truespeech_read_frame(c, buf + consumed);
@@ -374,19 +381,12 @@ static int truespeech_decode_frame(AVCodecContext *avctx,
     return consumed;
 }
 
-AVCodec truespeech_decoder = {
-    "truespeech",
-    CODEC_TYPE_AUDIO,
-    CODEC_ID_TRUESPEECH,
-    sizeof(TSContext),
-    truespeech_decode_init,
-    NULL,
-    NULL,
-    truespeech_decode_frame,
-    /*.capabilities = */0,
-    /*.next = */NULL,
-    /*.flush = */NULL,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("DSP Group TrueSpeech"),
+AVCodec ff_truespeech_decoder = {
+    .name           = "truespeech",
+    .type           = AVMEDIA_TYPE_AUDIO,
+    .id             = CODEC_ID_TRUESPEECH,
+    .priv_data_size = sizeof(TSContext),
+    .init           = truespeech_decode_init,
+    .decode         = truespeech_decode_frame,
+    .long_name = NULL_IF_CONFIG_SMALL("DSP Group TrueSpeech"),
 };

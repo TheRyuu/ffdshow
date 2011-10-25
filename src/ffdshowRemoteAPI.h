@@ -55,10 +55,12 @@
 #define WPRM_CAPTUREIMAGE 18
 #define WPRM_SET_OSDX 19 // Set OSD Position
 #define WPRM_SET_OSDY 20 // Set OSD Position
+#define WPRM_SET_OSDDuration 28 // Set OSD Duration (in frames)
 #define WPRM_GET_FRAMERATE 24 // Get frame rate
 #define WPRM_SET_AUDIO_STREAM 25 // Set active audio stream
 #define WPRM_SET_SUBTITLE_STREAM 26 // Set active audio stream
 #define WPRM_SET_FFRW_NO_OSD 27 // No OSD when FF/RW
+#define WPRM_SET_OSD_CLEAN 29 // Clean all the OSD messages queue
 
 /* Following values : if MSG != ID of the remoteAPI */
 
@@ -80,11 +82,11 @@
 #define COPY_AVAILABLESUBTITLE_FIRST 11 // lpData points to buffer where first file name will be stored  - if no subtitle file is available, lpData will contain empty string
 #define COPY_AVAILABLESUBTITLE_NEXT  12 // lpData points to buffer where next file name will be stored  - if no subtitle file is available, lpData will contain empty string
 #define COPY_GETPARAMSTR       13 // lpData points to buffer where param value will be stored
-#define COPY_GET_PRESETLIST		14 //Get the list of presets (array of strings)
-#define COPY_GET_SOURCEFILE		15 //Get the filename currently played
-#define COPY_CURRENT_SUBTITLES	16 //Get the subtitle filename currently read
+#define COPY_GET_PRESETLIST    14 //Get the list of presets (array of strings)
+#define COPY_GET_SOURCEFILE    15 //Get the filename currently played
+#define COPY_CURRENT_SUBTITLES 16 //Get the subtitle filename currently read
 #define COPY_GET_SUBTITLEFILESLIST 17 //Get the list of available subtitle files
-#define COPY_SET_SHORTOSD_MSG 18 //Display a short OSD message
-#define COPY_SET_OSD_MSG 19 //Display a short OSD message
+#define COPY_SET_SHORTOSD_MSG 18 //Display a short OSD message, below the last message drawn
+#define COPY_SET_OSD_MSG 19 //Display absolutely positioned short OSD message, based on input coordinates
 
 #endif

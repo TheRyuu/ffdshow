@@ -3,20 +3,20 @@
  * Copyright (c) 2003 Fabrice Bellard
  * Copyright (c) 2003 Michael Niedermayer
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -71,23 +71,33 @@ get_next:
     *poutbuf_size = buf_size;
 
     /* update codec info */
-    avctx->sample_rate = s->sample_rate;
     if(s->codec_id)
         avctx->codec_id = s->codec_id;
 
-    /* allow downmixing to stereo (or mono for AC-3) */
-    if(avctx->request_channels > 0 &&
-            avctx->request_channels < s->channels &&
-            (avctx->request_channels <= 2 ||
-            (avctx->request_channels == 1 &&
-            (avctx->codec_id == CODEC_ID_AC3 ||
-             avctx->codec_id == CODEC_ID_EAC3)))) {
-        avctx->channels = avctx->request_channels;
-    } else {
-        avctx->channels = s->channels;
+    /* Due to backwards compatible HE-AAC the sample rate, channel count,
+       and total number of samples found in an AAC ADTS header are not
+       reliable. Bit rate is still accurate because the total frame duration in
+       seconds is still correct (as is the number of bits in the frame). */
+    if (avctx->codec_id != CODEC_ID_AAC) {
+        avctx->sample_rate = s->sample_rate;
+
+        /* allow downmixing to stereo (or mono for AC-3) */
+        if(avctx->request_channels > 0 &&
+                avctx->request_channels < s->channels &&
+                (avctx->request_channels <= 2 ||
+                (avctx->request_channels == 1 &&
+                (avctx->codec_id == CODEC_ID_AC3 ||
+                 avctx->codec_id == CODEC_ID_EAC3)))) {
+            avctx->channels = avctx->request_channels;
+        } else {
+            avctx->channels = s->channels;
+            avctx->channel_layout = s->channel_layout;
+        }
+        avctx->frame_size = s->samples;
+        avctx->audio_service_type = s->service_type;
     }
+
     avctx->bit_rate = s->bit_rate;
-    avctx->frame_size = s->samples;
 
     return i;
 }

@@ -3,7 +3,7 @@
 ; *  XVID MPEG-4 VIDEO CODEC
 ; *  - CPUID check processors capabilities -
 ; *
-; *  Copyright (C) 2001 Michael Militzer <isibaar@xvid.org>
+; *  Copyright (C) 2001-2008 Michael Militzer <michael@xvid.org>
 ; *
 ; *  This program is free software ; you can redistribute it and/or modify
 ; *  it under the terms of the GNU General Public License as published by
@@ -19,18 +19,11 @@
 ; *  along with this program ; if not, write to the Free Software
 ; *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 ; *
+; * $Id: cpuid.asm,v 1.18 2008/12/04 14:41:50 Isibaar Exp $
+; *
 ; ***************************************************************************/
 
-BITS 32
-
-%macro cglobal 1
-    %ifdef PREFIX
-        global _%1
-        %define %1 _%1
-    %else
-        global %1
-    %endif
-%endmacro
+%include "cpuid.inc"
 
 ;=============================================================================
 ; Constants
@@ -42,6 +35,10 @@ BITS 32
 %define CPUID_SSE2              0x04000000
 %define CPUID_SSE3              0x00000001
 %define CPUID_SSSE3             0x00000200
+%define CPUID_SSE41             0x00080000
+%define CPUID_SSE42             0x00100000
+%define CPUID_SSE4A             0x00000040
+%define CPUID_SSE5              0x00000800
 
 %define EXT_CPUID_3DNOW         0x80000000
 %define EXT_CPUID_AMD_3DNOWEXT  0x40000000
@@ -56,20 +53,21 @@ BITS 32
 %define FF_CPU_3DNOW            0x00000040
 %define FF_CPU_3DNOWEXT         0x00000080
 %define FF_CPU_TSC              0x00000100
+%define FF_CPU_SSE41            0x00000200
+%define FF_CPU_SSE42            0x00000400
+%define FF_CPU_SSE4A            0x00000800
+%define FF_CPU_SSE5             0x00001000
 
 ;=============================================================================
 ; Read only data
 ;=============================================================================
 
-ALIGN 32
-%ifdef FORMAT_COFF
-SECTION .rodata data
-%else
-SECTION .rodata data align=16
-%endif
+ALIGN SECTION_ALIGN
+
+DATA
 
 vendorAMD:
-  db "AuthenticAMD"
+db "AuthenticAMD"
 
 ;=============================================================================
 ; Macros
@@ -88,42 +86,36 @@ vendorAMD:
 ; Code
 ;=============================================================================
 
-SECTION .text
+%ifdef WIN64
+%define FF_PUSHFD pushfq
+%define FF_POPFD  popfq
+%else
+%define FF_PUSHFD pushfd
+%define FF_POPFD  popfd
+%endif
+
+TEXT
 
 ; int check_cpu_feature(void)
 
 cglobal check_cpu_features
 check_cpu_features:
 
-  push ebx
-  push esi
-  push edi
-  push ebp
+  push _EBX
+  push _ESI
+  push _EDI
+  push _EBP
 
-  sub esp, 12             ; Stack space for vendor name
+  sub _ESP, 12             ; Stack space for vendor name
   
   xor ebp, ebp
-
-; CPUID command ?
-  pushfd
-  pop eax
-  mov ecx, eax
-  xor eax, 0x200000
-  push eax
-  popfd
-  pushfd
-  pop eax
-  cmp eax, ecx
-
-  jz near .cpu_quit		; no CPUID command -> exit
-
 
 ; get vendor string, used later
   xor eax, eax
   cpuid
-  mov [esp], ebx       ; vendor string
-  mov [esp+4], edx
-  mov [esp+8], ecx
+  mov [_ESP], ebx        ; vendor string
+  mov [_ESP+4], edx
+  mov [_ESP+8], ecx
   test eax, eax
 
   jz near .cpu_quit
@@ -149,6 +141,12 @@ check_cpu_features:
 ; SSSE3 support?
   CHECK_FEATURE CPUID_SSSE3, FF_CPU_SSSE3, ebp, ecx
 
+; SSE41 support?
+  CHECK_FEATURE CPUID_SSE41, FF_CPU_SSE41, ebp, ecx
+
+; SSE42 support?
+  CHECK_FEATURE CPUID_SSE42, FF_CPU_SSE42, ebp, ecx
+
 ; extended functions?
   mov eax, 0x80000000
   cpuid
@@ -159,8 +157,8 @@ check_cpu_features:
   cpuid
 
 ; AMD cpu ?
-  lea esi, [vendorAMD]
-  lea edi, [esp]
+  lea _ESI, [vendorAMD]
+  lea _EDI, [_ESP]
   mov ecx, 12
   cld
   repe cmpsb
@@ -175,64 +173,59 @@ check_cpu_features:
 ; extended MMX ?
   CHECK_FEATURE EXT_CPUID_AMD_MMXEXT, FF_CPU_MMXEXT, ebp, edx
 
+; SSE4A support?
+  CHECK_FEATURE CPUID_SSE4A, FF_CPU_SSE4A, ebp, ecx
+
+; SSE5 support?
+  CHECK_FEATURE CPUID_SSE5, FF_CPU_SSE5, ebp, ecx
+
 .cpu_quit:
 
   mov eax, ebp
 
-  add esp, 12
+  add _ESP, 12
 
-  pop ebp
-  pop edi
-  pop esi
-  pop ebx
+  pop _EBP
+  pop _EDI
+  pop _ESI
+  pop _EBX
 
   ret
-.endfunc
-
-; sse/sse2/sse3/ssse3 operating support detection routines
-; these will trigger an invalid instruction signal if not supported.
-ALIGN 16
-cglobal sse_os_trigger
-sse_os_trigger:
-  xorps xmm0, xmm0
-  ret
-.endfunc
-
-ALIGN 16
-cglobal sse2_os_trigger
-sse2_os_trigger:
-  xorpd xmm0, xmm0
-  ret
-.endfunc
-
-ALIGN 16
-cglobal sse3_os_trigger
-sse3_os_trigger:
-  haddps xmm0, xmm0
-  ret
-.endfunc
-
-ALIGN 16
-cglobal ssse3_os_trigger
-ssse3_os_trigger:
-  pabsw xmm0, xmm0
-  ret
-.endfunc
+ENDFUNC
 
 ; enter/exit mmx state
-ALIGN 16
+ALIGN SECTION_ALIGN
 cglobal emms_mmx
 emms_mmx:
   emms
   ret
-.endfunc
+ENDFUNC
 
 ; faster enter/exit mmx state
-ALIGN 16
+ALIGN SECTION_ALIGN
 cglobal emms_3dn
 emms_3dn:
   femms
   ret
-.endfunc
+ENDFUNC
 
+%ifdef WIN64
+cglobal prime_xmm
+prime_xmm:
+  movdqa xmm6, [prm1]
+  movdqa xmm7, [prm1+16]
+  ret
+ENDFUNC
+
+cglobal get_xmm
+get_xmm:
+  movdqa [prm1], xmm6
+  movdqa [prm1+16], xmm7
+  ret
+ENDFUNC
+%endif
+
+%ifidn __OUTPUT_FORMAT__,elf
+section ".note.GNU-stack" noalloc noexec nowrite progbits
+%endif
 

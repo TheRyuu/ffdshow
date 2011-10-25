@@ -22,7 +22,7 @@
  */
 
 /**
- * @file mjpeg_parser.c
+ * @file
  * MJPEG parser.
  */
 

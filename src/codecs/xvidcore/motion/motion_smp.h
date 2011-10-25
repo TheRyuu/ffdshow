@@ -22,74 +22,38 @@
  *  along with this program ; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
  *
- * $Id: motion_smp.h,v 1.4 2006/02/27 12:16:04 suxen_drol Exp $
+ * $Id: motion_smp.h 1988 2011-05-18 09:10:05Z Isibaar $
  *
  ****************************************************************************/
 
 #ifndef SMP_MOTION_H
 #define SMP_MOTION_H
 
-#if defined(WIN32) || defined(WIN64)
-
-# include <windows.h>
-# define pthread_t				HANDLE
-# define pthread_create(t,u,f,d) *(t)=CreateThread(NULL,0,f,d,0,NULL)
-# define pthread_join(t,s)		{ WaitForSingleObject(t,INFINITE); \
-									CloseHandle(t); }
-# define sched_yield()			Sleep(0);
-static __inline int pthread_num_processors_np()
-{
-	DWORD p_aff, s_aff, r = 0;
-	GetProcessAffinityMask(GetCurrentProcess(), &p_aff, &s_aff);
-	for(; p_aff != 0; p_aff>>=1) r += p_aff&1;
-	return r;
-}
-
-#elif defined(SYS_BEOS)
-
-# include <kernel/OS.h>
-# define pthread_t				thread_id
-# define pthread_create(t,u,f,d) { *(t)=spawn_thread(f,"",10,d); \
-								resume_thread(*(t)); }
-# define pthread_join(t,s)		wait_for_thread(t,(long*)s)
-# define sched_yield()			snooze(0) /* is this correct? */
-
-#else
-# include <pthread.h>
-#endif
-
 typedef struct
 {
 	pthread_t handle;		/* thread's handle */
-	const MBParam * pParam;
-	const FRAMEINFO * current;
-	const FRAMEINFO * reference;
-	const IMAGE * pRefH;
-	const IMAGE * pRefV;
-	const IMAGE * pRefHV;
-	const IMAGE * pGMC;
+	const FRAMEINFO *current;
 	uint8_t * RefQ;
+	int y_row;
 	int y_step;
 	int start_y;
+	int stop_y;
 	int * complete_count_self;
 	int * complete_count_above;
 	
-	/* bvop stuff */
-	int time_bp, time_pp;
-	const MACROBLOCK * f_mbs;
-	const IMAGE * pRef;
-	const IMAGE * fRef;
-	const IMAGE * fRefH;
-	const IMAGE * fRefV;
-	const IMAGE * fRefHV;
-
 	int MVmax, mvSum, mvCount;		/* out */
 
-	int minfcode, minbcode;
-} SMPmotionData;
+	uint32_t minfcode, minbcode;
+
+	uint8_t *tmp_buffer;
+	Bitstream *bs;
+
+	Statistics *sStat;
+	void *pEnc;
+} SMPData;
 
 
-void MotionEstimateSMP(SMPmotionData * h);
-void SMPMotionEstimationBVOP(SMPmotionData * h);
+void MotionEstimateSMP(SMPData * h);
+void SMPMotionEstimationBVOP(SMPData * h);
 
 #endif /* SMP_MOTION_H */

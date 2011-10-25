@@ -63,7 +63,7 @@ public:
     void SetPopEvent(HANDLE hEvent);
 
 protected:
-    static DWORD WINAPI InitialThreadProc(LPVOID pv);
+    static unsigned int WINAPI InitialThreadProc(LPVOID pv);
     virtual DWORD ThreadProc();
     BOOL  IsQueued()
     {

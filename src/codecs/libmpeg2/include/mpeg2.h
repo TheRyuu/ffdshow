@@ -24,8 +24,14 @@
 #ifndef LIBMPEG2_MPEG2_H
 #define LIBMPEG2_MPEG2_H
 
+#ifdef HAVE_STDINT
+#  include <stdint.h>
+#else
+#  include <inttypes.h>
+#endif
+
 #define MPEG2_VERSION(a,b,c) (((a)<<16)|((b)<<8)|(c))
-#define MPEG2_RELEASE MPEG2_VERSION (0, 5, 1)	/* 0.5.1 */
+#define MPEG2_RELEASE MPEG2_VERSION (0, 5, 1)    /* 0.5.1 */
 
 #define SEQ_FLAG_MPEG2 1
 #define SEQ_FLAG_CONSTRAINED_PARAMETERS 2
@@ -57,6 +63,15 @@ typedef struct mpeg2_sequence_s {
     uint8_t colour_primaries;
     uint8_t transfer_characteristics;
     uint8_t matrix_coefficients;
+    // ffdshow custom code begin
+    /* Regarding MPEG-2, currently there are two ways of encoding SAR.
+     * Of course one is wrong. However, considerable number of videos are encoded in a wrong way.
+     * We set the spec compliant value in pixel_width/pixel_height and
+     * wrong spec-value in pixel_width2/pixel_height2.
+     */
+    uint32_t display_extension_present_flag;
+    unsigned int pixel_width2, pixel_height2;
+    // ffdshow custom code end
 } mpeg2_sequence_t;
 
 #define GOP_FLAG_DROP_FRAME 1
@@ -92,7 +107,7 @@ typedef struct mpeg2_picture_s {
     uint32_t tag, tag2;
     uint32_t flags;
     struct {
-	int x, y;
+    int x, y;
     } display_offset[3];
 } mpeg2_picture_t;
 
@@ -136,7 +151,7 @@ typedef struct mpeg2_convert_init_s {
     unsigned int id_size;
     unsigned int buf_size[3];
     void (* start) (void * id, const mpeg2_fbuf_t * fbuf,
-		    const mpeg2_picture_t * picture, const mpeg2_gop_t * gop);
+            const mpeg2_picture_t * picture, const mpeg2_gop_t * gop);
     void (* copy) (void * id, uint8_t * const * src, unsigned int v_offset);
 } mpeg2_convert_init_t;
 typedef enum {
@@ -145,39 +160,13 @@ typedef enum {
     MPEG2_CONVERT_START = 2
 } mpeg2_convert_stage_t;
 typedef int mpeg2_convert_t (int stage, void * id,
-			     const mpeg2_sequence_t * sequence, int stride,
-			     uint32_t accel, void * arg,
-			     mpeg2_convert_init_t * result);
+                 const mpeg2_sequence_t * sequence, int stride,
+                 uint32_t accel, void * arg,
+                 mpeg2_convert_init_t * result);
 int mpeg2_convert (mpeg2dec_t * mpeg2dec, mpeg2_convert_t convert, void * arg);
 int mpeg2_stride (mpeg2dec_t * mpeg2dec, int stride);
 void mpeg2_set_buf (mpeg2dec_t * mpeg2dec, uint8_t * buf[3], void * id);
 void mpeg2_custom_fbuf (mpeg2dec_t * mpeg2dec, int custom_fbuf);
-
-#define MPEG2_ACCEL_X86_MMX 1
-#define MPEG2_ACCEL_X86_3DNOW 2
-#define MPEG2_ACCEL_X86_MMXEXT 4
-#define MPEG2_ACCEL_X86_SSE2 8
-#define MPEG2_ACCEL_X86_SSE3 16
-#define MPEG2_ACCEL_DETECT 0x80000000
-
-uint32_t mpeg2_accel (uint32_t accel);
-mpeg2dec_t * mpeg2_init (void);
-const mpeg2_info_t * mpeg2_info (mpeg2dec_t * mpeg2dec);
-void mpeg2_close (mpeg2dec_t * mpeg2dec);
-
-void mpeg2_buffer (mpeg2dec_t * mpeg2dec, uint8_t * start, uint8_t * end);
-int mpeg2_getpos (mpeg2dec_t * mpeg2dec);
-mpeg2_state_t mpeg2_parse (mpeg2dec_t * mpeg2dec);
-
-void mpeg2_reset (mpeg2dec_t * mpeg2dec, int full_reset);
-void mpeg2_skip (mpeg2dec_t * mpeg2dec, int skip);
-void mpeg2_slice_region (mpeg2dec_t * mpeg2dec, int start, int end);
-
-void mpeg2_tag_picture (mpeg2dec_t * mpeg2dec, uint32_t tag, uint32_t tag2);
-
-int mpeg2_guess_aspect (const mpeg2_sequence_t * sequence,
-			unsigned int * pixel_width,
-			unsigned int * pixel_height);
 
 typedef enum {
     MPEG2_ALLOC_MPEG2DEC = 0,
@@ -187,9 +176,37 @@ typedef enum {
     MPEG2_ALLOC_CONVERTED = 4
 } mpeg2_alloc_t;
 
-void * mpeg2_malloc (unsigned size, mpeg2_alloc_t reason);
+#define MPEG2_ACCEL_X86_MMX 1
+#define MPEG2_ACCEL_X86_3DNOW 2
+#define MPEG2_ACCEL_X86_MMXEXT 4
+#define MPEG2_ACCEL_X86_SSE2 8
+#define MPEG2_ACCEL_X86_SSE3 16
+#define MPEG2_ACCEL_DETECT 0x80000000
+
+int mpeg2_getpos (mpeg2dec_t * mpeg2dec);
+void mpeg2_skip (mpeg2dec_t * mpeg2dec, int skip);
+void mpeg2_slice_region (mpeg2dec_t * mpeg2dec, int start, int end);
+void mpeg2_tag_picture (mpeg2dec_t * mpeg2dec, uint32_t tag, uint32_t tag2);
+int mpeg2_guess_aspect (const mpeg2_sequence_t * sequence, unsigned int * pixel_width, unsigned int * pixel_height);
+void * mpeg2_malloc (size_t size, mpeg2_alloc_t reason);
 void mpeg2_free (void * buf);
-void mpeg2_malloc_hooks (void * malloc (unsigned, mpeg2_alloc_t),
-			 int free (void *));
+
+#ifdef __cplusplus
+extern "C" {
+#endif 
+
+uint32_t mpeg2_set_accel(uint32_t accel);
+uint32_t mpeg2_accel(uint32_t accel);
+mpeg2dec_t * mpeg2_init(void);
+const mpeg2_info_t * mpeg2_info(mpeg2dec_t * mpeg2dec);
+void mpeg2_close(mpeg2dec_t * mpeg2dec);
+void mpeg2_buffer(mpeg2dec_t * mpeg2dec, uint8_t * start, uint8_t * end);
+mpeg2_state_t mpeg2_parse(mpeg2dec_t * mpeg2dec);
+void mpeg2_reset(mpeg2dec_t * mpeg2dec, int full_reset);
 void mpeg2_set_rtStart(mpeg2dec_t *mpeg2dec,int64_t rtStart);
+
+#ifdef __cplusplus
+}
+#endif 
+
 #endif /* LIBMPEG2_MPEG2_H */

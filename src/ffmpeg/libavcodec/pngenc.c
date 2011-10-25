@@ -2,20 +2,20 @@
  * PNG image format
  * Copyright (c) 2003 Fabrice Bellard
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 #include "avcodec.h"
@@ -199,7 +199,7 @@ static void png_write_chunk(uint8_t **f, uint32_t tag,
     crc = crc32(0, Z_NULL, 0);
     AV_WL32(tagbuf, tag);
     crc = crc32(crc, tagbuf, 4);
-    bytestream_put_be32(f, bswap_32(tag));
+    bytestream_put_be32(f, av_bswap32(tag));
     if (length > 0) {
         crc = crc32(crc, buf, length);
         memcpy(*f, buf, length);
@@ -243,7 +243,7 @@ static int encode_frame(AVCodecContext *avctx, unsigned char *buf, int buf_size,
     uint8_t *top_buf = NULL;
 
     *p = *pict;
-    p->pict_type= FF_I_TYPE;
+    p->pict_type= AV_PICTURE_TYPE_I;
     p->key_frame= 1;
 
     s->bytestream_start=
@@ -282,7 +282,7 @@ static int encode_frame(AVCodecContext *avctx, unsigned char *buf, int buf_size,
     s->zstream.zalloc = ff_png_zalloc;
     s->zstream.zfree = ff_png_zfree;
     s->zstream.opaque = NULL;
-    compression_level = p->quality;
+    compression_level = p->quality; /* ffdshow custom code */
     ret = deflateInit2(&s->zstream, compression_level,
                        Z_DEFLATED, 15, 8, Z_DEFAULT_STRATEGY);
     if (ret != Z_OK)
@@ -435,23 +435,13 @@ static av_cold int png_enc_init(AVCodecContext *avctx){
     return 0;
 }
 
-AVCodec png_encoder = {
-    "png",
-    CODEC_TYPE_VIDEO,
-    CODEC_ID_PNG,
-    sizeof(PNGEncContext),
-    /*.init=*/png_enc_init,
-    /*.encode=*/encode_frame,
-    /*.close=*/NULL, //encode_end
-    /*.decode=*/NULL,
-    /*.capabilities=*/0,
-    /*.next=*/NULL,
-    /*.flush=*/NULL,
-    /*.supported_framerates=*/NULL,
-#if __STDC_VERSION__ >= 199901L
-    .pix_fmts= (enum PixelFormat[]){PIX_FMT_RGB24, PIX_FMT_RGB32, PIX_FMT_PAL8, PIX_FMT_GRAY8, PIX_FMT_MONOBLACK, PIX_FMT_NONE},
-#else
-    /*.pix_fmts = */NULL,
-#endif
-    /*.long_name= */NULL_IF_CONFIG_SMALL("PNG image"),
+AVCodec ff_png_encoder = {
+    .name           = "png",
+    .type           = AVMEDIA_TYPE_VIDEO,
+    .id             = CODEC_ID_PNG,
+    .priv_data_size = sizeof(PNGEncContext),
+    .init           = png_enc_init,
+    .encode         = encode_frame,
+    .pix_fmts= (const enum PixelFormat[]){PIX_FMT_RGB24, PIX_FMT_RGB32, PIX_FMT_PAL8, PIX_FMT_GRAY8, PIX_FMT_MONOBLACK, PIX_FMT_NONE},
+    .long_name= NULL_IF_CONFIG_SMALL("PNG image"),
 };

@@ -19,7 +19,7 @@
  *  along with this program ; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
  *
- * $Id: mbcoding.c,v 1.56 2007/06/28 14:55:11 Skal Exp $
+ * $Id: mbcoding.c 1988 2011-05-18 09:10:05Z Isibaar $
  *
  ****************************************************************************/
 
@@ -588,7 +588,7 @@ CodeBlockInter(const FRAMEINFO * const frame,
 			CodeVector(bs, pMB->pmvs[i].x, frame->fcode);
 			CodeVector(bs, pMB->pmvs[i].y, frame->fcode);
 
-#ifdef _DEBUG
+#if 0 /* #ifdef _DEBUG */
 			if (i == 0) /* for simplicity */ {
 				int coded_length = BitstreamPos(bs) - bits;
 				int estimated_length = d_mv_bits(pMB->pmvs[i].x, pMB->pmvs[i].y, zeroMV, frame->fcode, 0);
@@ -1087,7 +1087,7 @@ get_intra_block(Bitstream * bs,
 {
 
 	const uint16_t *scan = scan_tables[direction];
-	int level, run, last;
+	int level, run, last = 0;
 
 	do {
 		level = get_coeff(bs, &run, &last, 1, 0);
@@ -1127,7 +1127,7 @@ get_inter_block_h263(
 	int p;
 	int level;
 	int run;
-	int last;
+	int last = 0;
 
 	p = 0;
 	do {
@@ -1162,7 +1162,7 @@ get_inter_block_mpeg(
 	int p;
 	int level;
 	int run;
-	int last;
+	int last = 0;
 
 	p = 0;
 	do {
@@ -1972,7 +1972,7 @@ short const dc_threshold[] = {
 	26708, 29545, 29472, 26223, 30580, 29281,  8293, 29545,
 	25632, 29285, 30313, 25701, 26144, 28530,  8301, 26740,
 	 8293, 20039,  8277, 20551,  8268, 30296, 17513, 25376,
-	25711, 25445, 10272, 11825, 11825, 10544,  2606, 28505,
+	25711, 25445, 10272, 11825, 11828, 10544,  2606, 28505,
 	29301, 29472, 26223, 30580, 29281,  8293, 26980, 29811,
 	26994, 30050, 28532,  8306, 24936,  8307, 28532, 26400,
 	30313,  8293, 25441, 25955, 29555, 29728,  8303, 29801,

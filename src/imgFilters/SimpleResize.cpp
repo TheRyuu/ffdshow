@@ -161,9 +161,7 @@ void SimpleResize::GetFrame_YV12(const PVideoFrame *src, PVideoFrame *dst, int P
                 : vWeightsUV;
 
         // Just in case things are not aligned right, maybe turn off sse2
-        #ifdef __SSE2__
         __m128i xmm0,xmm5,xmm6,xmm7,xmm1,xmm2,xmm3,xmm4;
-        #endif
         __m64 mm5,mm6,mm0,mm7,mm1,mm2,mm3,mm4;
         for (int y = 0; y < height; y++)
         {
@@ -198,7 +196,6 @@ void SimpleResize::GetFrame_YV12(const PVideoFrame *src, PVideoFrame *dst, int P
 // Let's check here to see if we are on a P4 or higher and can use SSE2 instructions.
 // This first loop is not the performance bottleneck anyway but it is trivial to tune
 // using SSE2 if we have proper alignment.
-#ifdef __SSE2__
                         if (SSE2enabled==0)                  // is SSE2 supported?
                          goto vMaybeSSEMMX;                            // n, can't do anyway
 
@@ -263,7 +260,6 @@ void SimpleResize::GetFrame_YV12(const PVideoFrame *src, PVideoFrame *dst, int P
                         movq    (mm0, FPround1);                   // useful rounding constant
                         ecx>>=3;                                  // 8 bytes at a time, any?
                         if (ecx==0) goto MoreSpareChange;                 // n, did them all
-#endif
 // Let's check here to see if we are on a P2 or Athlon and can use SSEMMX instructions.
 // This first loop is not the performance bottleneck anyway but it is trivial to tune
 // using SSE if we have proper alignment.
@@ -535,9 +531,7 @@ void SimpleResize::GetFrame_YUY2(const PVideoFrame *src, PVideoFrame *dst, int P
         int* vWorkYW = vWorkY;
         int* vWorkUVW = vWorkUV;
         int EndOffset = src_row_size / 2;
-        #ifdef __SSE2__
          __m128i xmm0,xmm5,xmm6,xmm7,xmm1,xmm2,xmm3,xmm4;
-        #endif
         __m64 mm5,mm6,mm0,mm7,mm1,mm2,mm3,mm4;
         for (int y = 0; y < height; y++)
         {
@@ -573,7 +567,6 @@ void SimpleResize::GetFrame_YUY2(const PVideoFrame *src, PVideoFrame *dst, int P
 // Let's check here to see if we are on a P4 or higher and can use SSE2 instructions.
 // This first loop is not the performance bottleneck anyway but it is trivial to tune
 // using SSE2 if we have proper alignment.
-#ifdef __SSE2__
                         if (SSE2enabled==0)                  // is SSE2 supported?
                          goto vMaybeSSEMMX;                            // n, can't do anyway
                         if (ecx< 2)                                  // we have at least 16 byts, 2 qwords?
@@ -633,7 +626,6 @@ void SimpleResize::GetFrame_YUY2(const PVideoFrame *src, PVideoFrame *dst, int P
                         movq    (mm0, FPround1);                   // useful rounding constant
                         ecx>>= 3;                                  // 8 bytes at a time, any?
                         if (ecx==0) goto MoreSpareChange;                 // n, did them all
-#endif
 // Let's check here to see if we are on a P2 or Athlon and can use SSEMMX instructions.
 // This first loop is not the performance bottleneck anyway but it is trivial to tune
 // using SSE if we have proper alignment.

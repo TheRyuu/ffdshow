@@ -3,31 +3,32 @@
  * Copyright (c) 2002-2004 Michael Niedermayer <michaelni@gmx.at>
  * Copyright (c) 2004 Maarten Daniels
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 /**
- * @file h261dec.c
+ * @file
  * H.261 decoder.
  */
 
 #include "dsputil.h"
 #include "avcodec.h"
 #include "mpegvideo.h"
+#include "h263.h"
 #include "h261.h"
 #include "h261data.h"
 
@@ -53,18 +54,18 @@ static av_cold void h261_decode_init_vlc(H261Context *h){
 
     if(!done){
         done = 1;
-        init_vlc(&h261_mba_vlc, H261_MBA_VLC_BITS, 35,
+        INIT_VLC_STATIC(&h261_mba_vlc, H261_MBA_VLC_BITS, 35,
                  h261_mba_bits, 1, 1,
-                 h261_mba_code, 1, 1, 1);
-        init_vlc(&h261_mtype_vlc, H261_MTYPE_VLC_BITS, 10,
+                 h261_mba_code, 1, 1, 662);
+        INIT_VLC_STATIC(&h261_mtype_vlc, H261_MTYPE_VLC_BITS, 10,
                  h261_mtype_bits, 1, 1,
-                 h261_mtype_code, 1, 1, 1);
-        init_vlc(&h261_mv_vlc, H261_MV_VLC_BITS, 17,
+                 h261_mtype_code, 1, 1, 80);
+        INIT_VLC_STATIC(&h261_mv_vlc, H261_MV_VLC_BITS, 17,
                  &h261_mv_tab[0][1], 2, 1,
-                 &h261_mv_tab[0][0], 2, 1, 1);
-        init_vlc(&h261_cbp_vlc, H261_CBP_VLC_BITS, 63,
+                 &h261_mv_tab[0][0], 2, 1, 144);
+        INIT_VLC_STATIC(&h261_cbp_vlc, H261_CBP_VLC_BITS, 63,
                  &h261_cbp_tab[0][1], 2, 1,
-                 &h261_cbp_tab[0][0], 2, 1, 1);
+                 &h261_cbp_tab[0][0], 2, 1, 512);
         init_rl(&h261_rl_tcoeff, ff_h261_rl_table_store);
         INIT_VLC_RL(h261_rl_tcoeff, 552);
     }
@@ -170,7 +171,7 @@ static int ff_h261_resync(H261Context *h){
         //OK, it is not where it is supposed to be ...
         s->gb= s->last_resync_gb;
         align_get_bits(&s->gb);
-        left= s->gb.size_in_bits - get_bits_count(&s->gb);
+        left= get_bits_left(&s->gb);
 
         for(;left>15+1+4+5; left-=8){
             if(show_bits(&s->gb, 15)==0){
@@ -214,7 +215,7 @@ static int h261_decode_mb_skipped(H261Context *h, int mba1, int mba2 )
 
         s->mv_dir = MV_DIR_FORWARD;
         s->mv_type = MV_TYPE_16X16;
-        s->current_picture.mb_type[xy]= MB_TYPE_SKIP | MB_TYPE_16x16 | MB_TYPE_L0;
+        s->current_picture.f.mb_type[xy] = MB_TYPE_SKIP | MB_TYPE_16x16 | MB_TYPE_L0;
         s->mv[0][0][0] = 0;
         s->mv[0][0][1] = 0;
         s->mb_skipped = 1;
@@ -322,14 +323,14 @@ static int h261_decode_mb(H261Context *h){
     }
 
     if(s->mb_intra){
-        s->current_picture.mb_type[xy]= MB_TYPE_INTRA;
+        s->current_picture.f.mb_type[xy] = MB_TYPE_INTRA;
         goto intra;
     }
 
     //set motion vectors
     s->mv_dir = MV_DIR_FORWARD;
     s->mv_type = MV_TYPE_16X16;
-    s->current_picture.mb_type[xy]= MB_TYPE_16x16 | MB_TYPE_L0;
+    s->current_picture.f.mb_type[xy] = MB_TYPE_16x16 | MB_TYPE_L0;
     s->mv[0][0][0] = h->current_mv_x * 2;//gets divided by 2 in motion compensation
     s->mv[0][0][1] = h->current_mv_y * 2;
 
@@ -444,7 +445,7 @@ static int h261_decode_picture_header(H261Context *h){
     int format, i;
     uint32_t startcode= 0;
 
-    for(i= s->gb.size_in_bits - get_bits_count(&s->gb); i>24; i-=1){
+    for(i= get_bits_left(&s->gb); i>24; i-=1){
         startcode = ((startcode << 1) | get_bits(&s->gb, 1)) & 0x000FFFFF;
 
         if(startcode == 0x10)
@@ -462,8 +463,8 @@ static int h261_decode_picture_header(H261Context *h){
         i += 32;
     s->picture_number = (s->picture_number&~31) + i;
 
-    s->avctx->time_base.num = 1001; s->avctx->time_base.den = 30000;
-    s->current_picture.pts= s->picture_number;
+    s->avctx->time_base= (AVRational){1001, 30000};
+    s->current_picture.f.pts = s->picture_number;
 
 
     /* PTYPE starts here */
@@ -496,9 +497,9 @@ static int h261_decode_picture_header(H261Context *h){
         skip_bits(&s->gb, 8);
     }
 
-    // h261 has no I-FRAMES, but if we pass FF_I_TYPE for the first frame, the codec crashes if it does
+    // h261 has no I-FRAMES, but if we pass AV_PICTURE_TYPE_I for the first frame, the codec crashes if it does
     // not contain all I-blocks (e.g. when a packet is lost)
-    s->pict_type = FF_P_TYPE;
+    s->pict_type = AV_PICTURE_TYPE_P;
 
     h->gob_number = 0;
     return 0;
@@ -543,17 +544,17 @@ static int get_consumed_bytes(MpegEncContext *s, int buf_size){
 
 static int h261_decode_frame(AVCodecContext *avctx,
                              void *data, int *data_size,
-                             const uint8_t *buf, int buf_size)
+                             AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     H261Context *h= avctx->priv_data;
     MpegEncContext *s = &h->s;
     int ret;
     AVFrame *pict = data;
 
-#ifdef DEBUG
-    av_log(avctx, AV_LOG_DEBUG, "*****frame %d size=%d\n", avctx->frame_number, buf_size);
-    av_log(avctx, AV_LOG_DEBUG, "bytes=%x %x %x %x\n", buf[0], buf[1], buf[2], buf[3]);
-#endif
+    av_dlog(avctx, "*****frame %d size=%d\n", avctx->frame_number, buf_size);
+    av_dlog(avctx, "bytes=%x %x %x %x\n", buf[0], buf[1], buf[2], buf[3]);
     s->flags= avctx->flags;
     s->flags2= avctx->flags2;
 
@@ -569,7 +570,7 @@ retry:
     }
 
     //we need to set current_picture_ptr before reading the header, otherwise we cannot store anyting im there
-    if(s->current_picture_ptr==NULL || s->current_picture_ptr->data[0]){
+    if (s->current_picture_ptr == NULL || s->current_picture_ptr->f.data[0]) {
         int i= ff_find_unused_picture(s, 0);
         s->current_picture_ptr= &s->picture[i];
     }
@@ -594,14 +595,12 @@ retry:
         goto retry;
     }
 
-    // for hurry_up==5
-    s->current_picture.pict_type= s->pict_type;
-    s->current_picture.key_frame= s->pict_type == FF_I_TYPE;
+    // for skipping the frame
+    s->current_picture.f.pict_type = s->pict_type;
+    s->current_picture.f.key_frame = s->pict_type == AV_PICTURE_TYPE_I;
 
-    /* skip everything if we are in a hurry>=5 */
-    if(avctx->hurry_up>=5) return get_consumed_bytes(s, buf_size);
-    if(  (avctx->skip_frame >= AVDISCARD_NONREF && s->pict_type==FF_B_TYPE)
-       ||(avctx->skip_frame >= AVDISCARD_NONKEY && s->pict_type!=FF_I_TYPE)
+    if(  (avctx->skip_frame >= AVDISCARD_NONREF && s->pict_type==AV_PICTURE_TYPE_B)
+       ||(avctx->skip_frame >= AVDISCARD_NONKEY && s->pict_type!=AV_PICTURE_TYPE_I)
        || avctx->skip_frame >= AVDISCARD_ALL)
         return get_consumed_bytes(s, buf_size);
 
@@ -621,8 +620,8 @@ retry:
     }
     MPV_frame_end(s);
 
-assert(s->current_picture.pict_type == s->current_picture_ptr->pict_type);
-assert(s->current_picture.pict_type == s->pict_type);
+assert(s->current_picture.f.pict_type == s->current_picture_ptr->f.pict_type);
+assert(s->current_picture.f.pict_type == s->pict_type);
     *pict= *(AVFrame*)s->current_picture_ptr;
     ff_print_debug_info(s, pict);
 
@@ -640,19 +639,15 @@ static av_cold int h261_decode_end(AVCodecContext *avctx)
     return 0;
 }
 
-AVCodec h261_decoder = {
-    "h261",
-    CODEC_TYPE_VIDEO,
-    CODEC_ID_H261,
-    sizeof(H261Context),
-    /*.init = */h261_decode_init,
-    /*.encode = */NULL,
-    /*.close = */h261_decode_end,
-    /*.decode = */h261_decode_frame,
-    /*.capabilities = */CODEC_CAP_DR1,
-    /*.next = */NULL,
-    /*.flush = */NULL,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("H.261"),
+AVCodec ff_h261_decoder = {
+    .name           = "h261",
+    .type           = AVMEDIA_TYPE_VIDEO,
+    .id             = CODEC_ID_H261,
+    .priv_data_size = sizeof(H261Context),
+    .init           = h261_decode_init,
+    .close          = h261_decode_end,
+    .decode         = h261_decode_frame,
+    .capabilities   = CODEC_CAP_DR1,
+    .max_lowres = 3,
+    .long_name = NULL_IF_CONFIG_SMALL("H.261"),
 };

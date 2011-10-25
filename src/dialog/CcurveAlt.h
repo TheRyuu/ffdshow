@@ -6,12 +6,12 @@
 class TcurveAltPage :public TconfPageEnc
 {
 private:
- static const char_t *aggressions[];
+    static const char_t *aggressions[];
 public:
- TcurveAltPage(TffdshowPageEnc *Iparent);
- virtual void cfg2dlg(void);
- virtual bool enabled(void);
- virtual void translate(void);
+    TcurveAltPage(TffdshowPageEnc *Iparent);
+    virtual void cfg2dlg(void);
+    virtual bool enabled(void);
+    virtual void translate(void);
 };
 
 #endif

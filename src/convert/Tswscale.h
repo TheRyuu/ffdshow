@@ -3,21 +3,21 @@
 
 #include "ffImgfmt.h"
 
-struct Tlibmplayer;
+struct Tlibavcodec;
 struct SwsContext;
-struct Tswscale
-{
+struct Tswscale {
 private:
- Tlibmplayer *libmplayer;
- unsigned int dx,dy;
+    Tlibavcodec *libavcodec;
+    unsigned int dx,dy;
+    int sws_flags;
 public:
- Tswscale(Tlibmplayer *Ilibmplayer);
- ~Tswscale();
- SwsContext *swsc;
- static bool getVersion(char *ver);
- bool init(unsigned int dx, unsigned int dy, int incsp, int outcsp, const int32_t yuv2rgbTable[6]);
- bool convert(const uint8_t* src[], const stride_t srcStride[], uint8_t* dst[], stride_t dstStride[]);
- void done(void);
+    Tswscale(Tlibavcodec *Ilibavcodec);
+    ~Tswscale();
+    SwsContext *swsc;
+    static bool getVersion(char *ver);
+    bool init(unsigned int dx, unsigned int dy, uint64_t incsp, uint64_t outcsp, const int32_t yuv2rgbTable[6]);
+    bool convert(const uint8_t* src[], const stride_t srcStride[], uint8_t* dst[], stride_t dstStride[]);
+    void done(void);
 };
 
 #endif

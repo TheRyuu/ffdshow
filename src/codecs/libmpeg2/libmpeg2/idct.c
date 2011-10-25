@@ -24,11 +24,12 @@
 #include "config.h"
 
 #include <stdlib.h>
-#include "../../../inttypes.h"
+#include <inttypes.h>
 
 #include "mpeg2.h"
 #include "attributes.h"
 #include "mpeg2_internal.h"
+#include "../../simd.h"
 
 #define W1 2841 /* 2048 * sqrt (2) * cos (1 * pi / 16) */
 #define W2 2676 /* 2048 * sqrt (2) * cos (2 * pi / 16) */
@@ -38,8 +39,8 @@
 #define W7 565  /* 2048 * sqrt (2) * cos (7 * pi / 16) */
 
 /* idct main entry point  */
-void attribute_align_arg (* mpeg2_idct_copy) (int16_t * block, uint8_t * dest, int stride);
-void attribute_align_arg (* mpeg2_idct_add) (int last, int16_t * block,
+void (* mpeg2_idct_copy) (int16_t * block, uint8_t * dest, int stride);
+void (* mpeg2_idct_add) (int last, int16_t * block,
 			 uint8_t * dest, int stride);
 
 /*
@@ -236,11 +237,14 @@ static void mpeg2_idct_add_c (const int last, int16_t * block,
 void mpeg2_idct_init (uint32_t accel)
 {
 #ifdef ARCH_X86
+  #ifdef __SSE2__
     if (accel & MPEG2_ACCEL_X86_SSE2) {
 	mpeg2_idct_copy = mpeg2_idct_copy_sse2;
 	mpeg2_idct_add = mpeg2_idct_add_sse2;
-	mpeg2_idct_mmx_init ();
-    } else if (accel & MPEG2_ACCEL_X86_MMXEXT) {
+    }
+    else
+  #endif
+    if (accel & MPEG2_ACCEL_X86_MMXEXT) {
 	mpeg2_idct_copy = mpeg2_idct_copy_mmxext;
 	mpeg2_idct_add = mpeg2_idct_add_mmxext;
 	mpeg2_idct_mmx_init ();
@@ -251,6 +255,8 @@ void mpeg2_idct_init (uint32_t accel)
     } else
 #endif
     {
+	extern __align16(uint8_t,mpeg2_scan_norm[64]);
+	extern __align16(uint8_t,mpeg2_scan_alt[64]);
 	int i, j;
 
 	mpeg2_idct_copy = mpeg2_idct_copy_c;

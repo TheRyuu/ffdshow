@@ -6,12 +6,12 @@
 class TdeinterlacePageKernel : public TdeinterlacePanel
 {
 public:
- static TdeinterlacePanel* create(Twindow *parent);
- TdeinterlacePageKernel(Twindow *Iparent);
- virtual ~TdeinterlacePageKernel();
- virtual void init(void);
- virtual void cfg2dlg(void);
- virtual void reset(void);
+    static TdeinterlacePanel* create(Twindow *parent);
+    TdeinterlacePageKernel(Twindow *Iparent);
+    virtual ~TdeinterlacePageKernel();
+    virtual void init(void);
+    virtual void cfg2dlg(void);
+    virtual void reset(void);
 };
 
 #endif

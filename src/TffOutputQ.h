@@ -10,24 +10,24 @@ class TffOutputQueue : public COutputQueue
 public:
     //  Constructor
     TffOutputQueue(TffdshowDecVideoOutputPin *pOut,
-                 IPin      *pInputPin,          //  Pin to send stuff to
-                 HRESULT   *phr,                //  'Return code'
-                 BOOL       bAuto = TRUE,       //  Ask pin if blocks
-                 BOOL       bQueue = TRUE,      //  Send through queue (ignored if
-                                                //  bAuto set)
-                 LONG       lBatchSize = 1,     //  Batch
-                 BOOL       bBatchExact = FALSE,//  Batch exactly to BatchSize
-                 LONG       lListSize =         //  Likely number in the list
-                                DEFAULTCACHE,
-                 DWORD      dwPriority =        //  Priority of thread to create
-                                THREAD_PRIORITY_NORMAL,
-                 bool       bFlushingOpt = false // flushing optimization
-                );
-    virtual ~TffOutputQueue(){};
+                   IPin      *pInputPin,          //  Pin to send stuff to
+                   HRESULT   *phr,                //  'Return code'
+                   BOOL       bAuto = TRUE,       //  Ask pin if blocks
+                   BOOL       bQueue = TRUE,      //  Send through queue (ignored if
+                   //  bAuto set)
+                   LONG       lBatchSize = 1,     //  Batch
+                   BOOL       bBatchExact = FALSE,//  Batch exactly to BatchSize
+                   LONG       lListSize =         //  Likely number in the list
+                       DEFAULTCACHE,
+                   DWORD      dwPriority =        //  Priority of thread to create
+                       THREAD_PRIORITY_NORMAL,
+                   bool       bFlushingOpt = false // flushing optimization
+                  );
+    virtual ~TffOutputQueue() {};
 
     // re-enable receives (pass this downstream)
     virtual void EndFlush();        // Complete flush of samples - downstream
-                            // pin guaranteed not to block at this stage
+    // pin guaranteed not to block at this stage
 
     // do something with these media samples
     virtual HRESULT ReceiveMultiple (
@@ -38,10 +38,14 @@ public:
     virtual void Reset();           // Reset m_hr ready for more data
 
     // Return handle of the worker thread
-    HANDLE GetWorkerThread(void){return m_hThread;}
+    HANDLE GetWorkerThread(void) {
+        return m_hThread;
+    }
 
     // Return the numbers of objects in the list
-    int GetCount(void){return m_List->GetCount();}
+    int GetCount(void) {
+        return m_List->GetCount();
+    }
 
 protected:
     virtual DWORD ThreadProc();

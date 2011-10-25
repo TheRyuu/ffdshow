@@ -5,7 +5,8 @@ interface
 uses windows;
 
 const
-  IID_IffDecoder:TGUID='{00F99063-70D5-4bcc-9D88-3801F3E3881B}';
+  IID_IffDecoder:TGUID ='{00F99063-70D5-4bcc-9D88-3801F3E3881B}';
+  IID_IffDecoder2:TGUID='{5dd3a966-7365-46d0-b79f-d4973bd88e8d}';
   CLSID_FFDSHOW :TGUID='{04FE9017-F873-410e-871E-AB91661A4EF7}';
 
   IDFF_autoPreset           =1; //automatic preset loading enabled
@@ -305,7 +306,10 @@ const
   IDFF_avisynthScript       =1254;
   IDFF_avisynthInCsp        =1255;
 
+  IDFF_filterOSD            =3527;
   IDFF_isOSD                =1501;
+  IDFF_orderOSD             =3528;
+  IDFF_showOSD              =3529;
   IDFF_OSDfontName          =1509;
   IDFF_OSDfontCharset       =1502;
   IDFF_OSDfontSize          =1503;
@@ -320,9 +324,10 @@ const
    IDFF_OSDtype_cpuUsage  =1522;
    IDFF_OSDtype_systemTime=1523;
    IDFF_OSDtype_meanQuant =1524;
-  IDFF_OSDuser              =1511; //don't use these, use drawOSD() instead
-  IDFF_OSDuserPx            =1512;
-  IDFF_OSDuserPy            =1513;
+//IDFF_OSDuser              =1511; //don't use these, use shortOSDmessageAbsolute() instead
+//IDFF_OSDuserPx            =1512;
+//IDFF_OSDuserPy            =1513;
+  IDFF_OSDformat          =3530;
 
   IDFF_filterGrab   =2000;
   IDFF_isGrab       =2001;
@@ -478,7 +483,6 @@ type
     function getParamName(i:Integer;buf:PChar;len:integer):HRESULT;stdcall;
     function getTranslator(trans:ppointer):HRESULT;stdcall;
     function getIffDecoderVersion2:HRESULT;stdcall;
-    function drawOSD(px:Integer;py:Integer;const Text:pchar):HRESULT;stdcall; //accepts max. lines separated by \n
     function lock(lockId:integer):HRESULT;stdcall;
     function unlock(lockId:integer):HRESULT;stdcall;
     function getInstance2:HRESULT;stdcall;
@@ -488,6 +492,43 @@ type
     function initPresets:HRESULT;stdcall;
     function calcMeanQuant(quant:psingle):HRESULT;stdcall;
     function initKeys:HRESULT;stdcall;
+    function savePresetMem(buf:ppointer;len:integer):HRESULT;stdcall; //if len=0, then buf should point to int variable which will be filled with required buffer length
+    function loadPresetMem(buf:ppointer;len:integer):HRESULT;stdcall;
+    function getGlobalSettings(globalSettingsPtr:ppointer):HRESULT;stdcall;
+    function createTempPreset(presetName:ppointer):HRESULT;stdcall;
+    function getParamStr2(paramID:integer):HRESULT;stdcall; //returns const pointer to string, NULL if fail
+    function findAutoSubflnm2:HRESULT;stdcall;
+    function getCurrentFrameTime(sec:ppointer):HRESULT;stdcall;
+    function getFrameTime(framenum:integer; sec:ppointer):HRESULT;stdcall;
+    function getCurTime2:HRESULT;stdcall;
+    //function getPostproc(postprocPtr:ppointer):HRESULT;stdcall;
+    function stop:HRESULT;stdcall;
+    function run:HRESULT;stdcall;
+    function getState2:HRESULT;stdcall;
+    function resetFilter(filterID:integer):HRESULT;stdcall;
+    function resetFilterEx(filterID:integer; filterPageId:integer):HRESULT;stdcall;
+    function getFilterTip(filterID:integer; buf:ppointer; buflen:integer):HRESULT;stdcall;
+    function getFilterTipEx(filterID:integer; filterPageId:integer;buf:ppointer;buflen:integer):HRESULT;stdcall;
+    function filterHasReset(filterID:integer):HRESULT;stdcall;
+    function filterHasResetEx(filterID:integer;filterPageId:integer):HRESULT;stdcall;
+    function shortOSDmessage(msg:ppointer; duration:integer):HRESULT;stdcall; //duration is in frames
+    function shortOSDmessageAbsolute(msg:ppointer; duration:integer; posX:integer; posY:integer;):HRESULT;stdcall; //duration is in frames
+    function cleanShortOSDmessages:HRESULT;stdcall;
+    function setImgFilters(imgFiltersPtr:ppointer):HRESULT;stdcall;
+    function registerSelectedMediaTypes:HRESULT;stdcall;
+    function getFrameTimes(start:ppointer; stop:ppointer):HRESULT;stdcall;
+    function getSubtitleTimes(start:ppointer; stop:ppointer):HRESULT;stdcall;
+    function resetSubtitleTimes:HRESULT;stdcall;
+    function setFrameTimes(start:Int64; stop:Int64):HRESULT;stdcall;
+    function cpuSupportsSSE41:HRESULT;stdcall;
+    function cpuSupportsSSE42:HRESULT;stdcall;
+    function cpuSupportsSSE4A:HRESULT;stdcall;
+    function cpuSupportsSSE5:HRESULT;stdcall;
+    function cpuSupportsSSE3:HRESULT;stdcall;
+    function cpuSupportsSSSE3:HRESULT;stdcall;
+    function getIffDecoder2Version:HRESULT;stdcall;
+    function getParamStrW(paramID:integer; buf:ppointer; buflen:integer):HRESULT;stdcall;
+    function putParamStrW(paramID:integer; buf:ppointer):HRESULT;stdcall;
   end;
 
 implementation

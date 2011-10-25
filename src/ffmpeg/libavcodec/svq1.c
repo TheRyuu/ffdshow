@@ -6,6 +6,8 @@
  * Copyright (C) 2002 the xine project
  * Copyright (C) 2002 the ffmpeg project
  *
+ * SVQ1 Encoder (c) 2004 Mike Melanson <melanson@pcisys.net>
+ *
  * This file is part of FFmpeg.
  *
  * FFmpeg is free software; you can redistribute it and/or
@@ -24,21 +26,18 @@
  */
 
 /**
- * @file svq1.c
+ * @file
  * Sorenson Vector Quantizer #1 (SVQ1) video codec.
  * For more information of the SVQ1 algorithm, visit:
  *   http://www.pcisys.net/~melanson/codecs/
  */
-#ifdef _MSC_VER
-#include "libavutil/common.h"
-#endif
 
 #include "svq1.h"
 #include "svq1_cb.h"
 #include "svq1_vlc.h"
 
 /* standard video sizes */
-const struct svq1_frame_size ff_svq1_frame_size_table[8] = {
+const struct svq1_frame_size ff_svq1_frame_size_table[7] = {
   { 160, 120 }, { 128,  96 }, { 176, 144 }, { 352, 288 },
-  { 704, 576 }, { 240, 180 }, { 320, 240 }, {  -1,  -1 }
+  { 704, 576 }, { 240, 180 }, { 320, 240 }
 };

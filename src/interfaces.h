@@ -14,20 +14,18 @@ struct IffdshowDecAudioW;
 
 template<class tchar> struct interfaces;
 
-template<> struct interfaces<char>
-{
- typedef IffdshowBaseA IffdshowBase;
- typedef IffdshowDecA IffdshowDec;
- typedef IffdshowDecVideoA IffdshowDecVideo;
- typedef IffdshowDecAudioA IffdshowDecAudio;
+template<> struct interfaces<char> {
+    typedef IffdshowBaseA IffdshowBase;
+    typedef IffdshowDecA IffdshowDec;
+    typedef IffdshowDecVideoA IffdshowDecVideo;
+    typedef IffdshowDecAudioA IffdshowDecAudio;
 };
 
-template<> struct interfaces<wchar_t>
-{
- typedef IffdshowBaseW IffdshowBase;
- typedef IffdshowDecW IffdshowDec;
- typedef IffdshowDecVideoW IffdshowDecVideo;
- typedef IffdshowDecAudioW IffdshowDecAudio;
+template<> struct interfaces<wchar_t> {
+    typedef IffdshowBaseW IffdshowBase;
+    typedef IffdshowDecW IffdshowDec;
+    typedef IffdshowDecVideoW IffdshowDecVideo;
+    typedef IffdshowDecAudioW IffdshowDecAudio;
 };
 
 typedef interfaces<char_t>::IffdshowBase IffdshowBase;

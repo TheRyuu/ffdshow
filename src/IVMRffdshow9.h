@@ -8,10 +8,10 @@
 // We can use this to check MPC version.
 
 MIDL_INTERFACE("A273C7F6-25D4-46b0-B2C8-4F7FADC44E37")
-IVMRffdshow9 : public IUnknown
-{
+IVMRffdshow9 :
+public IUnknown {
 public:
-	virtual STDMETHODIMP support_ffdshow(void) = 0;
+    virtual STDMETHODIMP support_ffdshow(void) = 0;
 };
 
 #endif

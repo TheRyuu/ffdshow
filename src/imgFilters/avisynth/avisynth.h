@@ -54,12 +54,12 @@ enum { AVISYNTH_INTERFACE_VERSION = 2 };
 
 // Raster types used by VirtualDub & Avisynth
 #define in64 (__int64)(unsigned short)
-typedef unsigned long	Pixel;    // this will break on 64-bit machines!
-typedef unsigned long	Pixel32;
-typedef unsigned char	Pixel8;
-typedef long			PixCoord;
-typedef long			PixDim;
-typedef long			PixOffset;
+typedef unsigned long   Pixel;    // this will break on 64-bit machines!
+typedef unsigned long   Pixel32;
+typedef unsigned char   Pixel8;
+typedef long            PixCoord;
+typedef long            PixDim;
+typedef long            PixOffset;
 
 
 /* Compiler-specific crap */
@@ -319,47 +319,47 @@ struct VideoInfo {
 
   // useful mutator
   void SetFPS(unsigned numerator, unsigned denominator) {
-	if ((numerator == 0) || (denominator == 0)) {
-	  fps_numerator = 0;
-	  fps_denominator = 1;
-	}
-	else {
-	  unsigned x=numerator, y=denominator;
-	  while (y) {   // find gcd
-		unsigned t = x%y; x = y; y = t;
-	  }
-	  fps_numerator = numerator/x;
-	  fps_denominator = denominator/x;
-	}
+    if ((numerator == 0) || (denominator == 0)) {
+      fps_numerator = 0;
+      fps_denominator = 1;
+    }
+    else {
+      unsigned x=numerator, y=denominator;
+      while (y) {   // find gcd
+        unsigned t = x%y; x = y; y = t;
+      }
+      fps_numerator = numerator/x;
+      fps_denominator = denominator/x;
+    }
   }
 
   // Range protected multiply-divide of FPS
   void MulDivFPS(unsigned multiplier, unsigned divisor) {
-	unsigned __int64 numerator   = UInt32x32To64(fps_numerator,   multiplier);
-	unsigned __int64 denominator = UInt32x32To64(fps_denominator, divisor);
+    unsigned __int64 numerator   = UInt32x32To64(fps_numerator,   multiplier);
+    unsigned __int64 denominator = UInt32x32To64(fps_denominator, divisor);
 
-	unsigned __int64 x=numerator, y=denominator;
-	while (y) {   // find gcd
-	  unsigned __int64 t = x%y; x = y; y = t;
-	}
-	numerator   /= x; // normalize
-	denominator /= x;
+    unsigned __int64 x=numerator, y=denominator;
+    while (y) {   // find gcd
+      unsigned __int64 t = x%y; x = y; y = t;
+    }
+    numerator   /= x; // normalize
+    denominator /= x;
 
-	unsigned __int64 temp = numerator | denominator; // Just looking top bit
-	unsigned u = 0;
-	while (temp & 0xffffffff80000000ULL) { // or perhaps > 16777216*2
-	  temp = Int64ShrlMod32(temp, 1);
-	  u++;
-	}
-	if (u) { // Scale to fit
-	  const unsigned round = 1 << (u-1);
-	  SetFPS( (unsigned)Int64ShrlMod32(numerator   + round, u),
-	          (unsigned)Int64ShrlMod32(denominator + round, u) );
-	}
-	else {
-	  fps_numerator   = (unsigned)numerator;
-	  fps_denominator = (unsigned)denominator;
-	}
+    unsigned __int64 temp = numerator | denominator; // Just looking top bit
+    unsigned u = 0;
+    while (temp & 0xffffffff80000000ULL) { // or perhaps > 16777216*2
+      temp = Int64ShrlMod32(temp, 1);
+      u++;
+    }
+    if (u) { // Scale to fit
+      const unsigned round = 1 << (u-1);
+      SetFPS( (unsigned)Int64ShrlMod32(numerator   + round, u),
+              (unsigned)Int64ShrlMod32(denominator + round, u) );
+    }
+    else {
+      fps_numerator   = (unsigned)numerator;
+      fps_denominator = (unsigned)denominator;
+    }
   }
 
   // Test for same colorspace
@@ -847,9 +847,9 @@ public:
   virtual void* __stdcall ManageCache(int key, void* data) = 0;
 
   enum PlanarChromaAlignmentMode {
-			PlanarChromaAlignmentOff,
-			PlanarChromaAlignmentOn,
-			PlanarChromaAlignmentTest };
+            PlanarChromaAlignmentOff,
+            PlanarChromaAlignmentOn,
+            PlanarChromaAlignmentTest };
 
   virtual bool __stdcall PlanarChromaAlignment(PlanarChromaAlignmentMode key) = 0;
 

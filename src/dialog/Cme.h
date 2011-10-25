@@ -6,14 +6,14 @@
 class TmePage :public TconfPageEnc
 {
 private:
- void qpel2dlg(void),prepass2dlg(void);
- static const char_t *mb_decisions[],*me_cmps[],*me_prepasses[];
+    void qpel2dlg(void),prepass2dlg(void);
+    static const char_t *mb_decisions[],*me_cmps[],*me_prepasses[];
 public:
- TmePage(TffdshowPageEnc *Iparent);
- virtual void init(void);
- virtual void cfg2dlg(void);
- virtual bool enabled(void);
- virtual void translate(void);
+    TmePage(TffdshowPageEnc *Iparent);
+    virtual void init(void);
+    virtual void cfg2dlg(void);
+    virtual bool enabled(void);
+    virtual void translate(void);
 };
 
 #endif

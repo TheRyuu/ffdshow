@@ -344,7 +344,7 @@ char *strchr(), *strrchr();
   #endif
 
 
-  #ifdef __ICL /* only Intel C compiler has fmath ??? */
+  #ifdef _ICL /* only Intel C compiler has fmath ??? */
 
     #include <mathf.h>
 

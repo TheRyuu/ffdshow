@@ -1,20 +1,20 @@
 /*
- * Copyright (c) 2002 The FFmpeg Project
+ * Copyright (c) 2002 The Libav Project
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -23,6 +23,7 @@
 #include "mpegvideo.h"
 #include "msmpeg4.h"
 #include "msmpeg4data.h"
+#include "h263.h"
 #include "wmv2.h"
 
 
@@ -71,14 +72,13 @@ int ff_wmv2_encode_picture_header(MpegEncContext * s, int picture_number)
     Wmv2Context * const w= (Wmv2Context*)s;
 
     put_bits(&s->pb, 1, s->pict_type - 1);
-    if(s->pict_type == FF_I_TYPE){
+    if(s->pict_type == AV_PICTURE_TYPE_I){
         put_bits(&s->pb, 7, 0);
     }
     put_bits(&s->pb, 5, s->qscale);
 
     s->dc_table_index = 1;
     s->mv_table_index = 1; /* only if P frame */
-//    s->use_skip_mb_code = 1; /* only if P frame */
     s->per_mb_rl_table = 0;
     s->mspel= 0;
     w->per_mb_abt=0;
@@ -87,7 +87,7 @@ int ff_wmv2_encode_picture_header(MpegEncContext * s, int picture_number)
 
     assert(s->flipflop_rounding);
 
-    if (s->pict_type == FF_I_TYPE) {
+    if (s->pict_type == AV_PICTURE_TYPE_I) {
         assert(s->no_rounding==1);
         if(w->j_type_bit) put_bits(&s->pb, 1, w->j_type);
 
@@ -190,12 +190,8 @@ void ff_wmv2_encode_mb(MpegEncContext * s,
             }
             coded_cbp |= val << (5 - i);
         }
-#if 0
-        if (coded_cbp)
-            printf("cbp=%x %x\n", cbp, coded_cbp);
-#endif
 
-        if (s->pict_type == FF_I_TYPE) {
+        if (s->pict_type == AV_PICTURE_TYPE_I) {
             put_bits(&s->pb,
                      ff_msmp4_mb_i_table[coded_cbp][1], ff_msmp4_mb_i_table[coded_cbp][0]);
         } else {
@@ -215,23 +211,14 @@ void ff_wmv2_encode_mb(MpegEncContext * s,
     }
 }
 
-AVCodec wmv2_encoder = {
+AVCodec ff_wmv2_encoder = {
     "wmv2",
-    CODEC_TYPE_VIDEO,
+    AVMEDIA_TYPE_VIDEO,
     CODEC_ID_WMV2,
     sizeof(Wmv2Context),
-    /*.init = */wmv2_encode_init,
-    /*.encode = */MPV_encode_picture,
-    /*.close = */MPV_encode_end,
-	/*.decode = */NULL,
-    /*.capabilities = */0,
-    /*.next = */NULL,
-    /*.flush = */NULL,
-    /*.supported_framerates = */NULL,
-#if __STDC_VERSION__ >= 199901L
-    .pix_fmts= (enum PixelFormat[]){PIX_FMT_YUV420P, PIX_FMT_NONE},
-#else
-    /*.pix_fmts = */NULL,
-#endif
-    /*.long_name= */NULL_IF_CONFIG_SMALL("Windows Media Video 8"),
+    wmv2_encode_init,
+    MPV_encode_picture,
+    MPV_encode_end,
+    .pix_fmts= (const enum PixelFormat[]){PIX_FMT_YUV420P, PIX_FMT_NONE},
+    .long_name= NULL_IF_CONFIG_SMALL("Windows Media Video 8"),
 };

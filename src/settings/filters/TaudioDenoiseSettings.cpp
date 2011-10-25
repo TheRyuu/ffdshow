@@ -22,53 +22,52 @@
 #include "CaudioDenoise.h"
 #include "TffdshowPageDec.h"
 
-const TfilterIDFF TaudioDenoiseSettings::idffs=
-{
- /*name*/      _l("Noise reduction"),
- /*id*/        IDFF_filterAudioDenoise,
- /*is*/        IDFF_isAudioDenoise,
- /*order*/     IDFF_orderAudioDenoise,
- /*show*/      IDFF_showAudioDenoise,
- /*full*/      0,
- /*half*/      0,
- /*dlgId*/     IDD_AUDIODENOISE,
+const TfilterIDFF TaudioDenoiseSettings::idffs= {
+    /*name*/      _l("Noise reduction"),
+    /*id*/        IDFF_filterAudioDenoise,
+    /*is*/        IDFF_isAudioDenoise,
+    /*order*/     IDFF_orderAudioDenoise,
+    /*show*/      IDFF_showAudioDenoise,
+    /*full*/      0,
+    /*half*/      0,
+    /*dlgId*/     IDD_AUDIODENOISE,
 };
 
 TaudioDenoiseSettings::TaudioDenoiseSettings(TintStrColl *Icoll,TfilterIDFFs *filters):TfilterSettingsAudio(sizeof(*this),Icoll,filters,&idffs)
 {
- static const TintOptionT<TaudioDenoiseSettings> iopts[]=
-  {
-   IDFF_isAudioDenoise       ,&TaudioDenoiseSettings::is       ,0,0,_l(""),1,
-     _l("isAudioDenoise"), 0,
-   IDFF_showAudioDenoise     ,&TaudioDenoiseSettings::show     ,0,0,_l(""),1,
-     _l("showAudioDenoise"), 1,
-   IDFF_orderAudioDenoise    ,&TaudioDenoiseSettings::order    ,1,1,_l(""),1,
-     _l("orderAudioDenoise"), 0,
-   IDFF_audioDenoiseThreshold,&TaudioDenoiseSettings::threshold,1,5000,_l(""),1,
-     _l("audioDenoiseThreshold"), 100,
-   0
-  };
- addOptions(iopts);
+    static const TintOptionT<TaudioDenoiseSettings> iopts[]= {
+        IDFF_isAudioDenoise       ,&TaudioDenoiseSettings::is       ,0,0,_l(""),1,
+        _l("isAudioDenoise"), 0,
+        IDFF_showAudioDenoise     ,&TaudioDenoiseSettings::show     ,0,0,_l(""),1,
+        _l("showAudioDenoise"), 1,
+        IDFF_orderAudioDenoise    ,&TaudioDenoiseSettings::order    ,1,1,_l(""),1,
+        _l("orderAudioDenoise"), 0,
+        IDFF_audioDenoiseThreshold,&TaudioDenoiseSettings::threshold,1,5000,_l(""),1,
+        _l("audioDenoiseThreshold"), 100,
+        0
+    };
+    addOptions(iopts);
 }
 
 void TaudioDenoiseSettings::createFilters(size_t filtersorder,Tfilters *filters,TfilterQueue &queue) const
 {
- idffOnChange(idffs,filters,queue.temporary);
- if (is && show)
-  queueFilter<TaudioFilterDenoise>(filtersorder,filters,queue);
+    idffOnChange(idffs,filters,queue.temporary);
+    if (is && show) {
+        queueFilter<TaudioFilterDenoise>(filtersorder,filters,queue);
+    }
 }
 void TaudioDenoiseSettings::createPages(TffdshowPageDec *parent) const
 {
- parent->addFilterPage<TaudioDenoisePage>(&idffs);
+    parent->addFilterPage<TaudioDenoisePage>(&idffs);
 }
 
 const int* TaudioDenoiseSettings::getResets(unsigned int pageId)
 {
- static const int idResets[]={IDFF_audioDenoiseThreshold,0};
- return idResets;
+    static const int idResets[]= {IDFF_audioDenoiseThreshold,0};
+    return idResets;
 }
 bool TaudioDenoiseSettings::getTip(unsigned int pageId,char_t *tipS,size_t len)
 {
- tsnprintf_s(tipS, len, _TRUNCATE, _l("threshold: %i"), threshold);
- return true;
+    tsnprintf_s(tipS, len, _TRUNCATE, _l("threshold: %i"), threshold);
+    return true;
 }

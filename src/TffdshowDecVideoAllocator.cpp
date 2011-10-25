@@ -22,56 +22,63 @@
 #include "dsutil.h"
 
 TffdshowDecVideoAllocator::TffdshowDecVideoAllocator(CBaseFilter* Ifilter,HRESULT* phr):
- CMemAllocator(NAME("TffdshowDecVideoAllocator"),NULL,phr),
- filter(Ifilter),
- mtChanged(false)
+    CMemAllocator(NAME("TffdshowDecVideoAllocator"),NULL,phr),
+    filter(Ifilter),
+    mtChanged(false)
 {
 }
 
 STDMETHODIMP TffdshowDecVideoAllocator::GetBuffer(IMediaSample** ppBuffer,REFERENCE_TIME *pStartTime,REFERENCE_TIME *pEndTime,DWORD dwFlags)
 {
- if (!m_bCommitted)
-  return VFW_E_NOT_COMMITTED;
-
- if (mtChanged)
-  {
-   BITMAPINFOHEADER bih;
-   ExtractBIH(mt,&bih);
-
-   ALLOCATOR_PROPERTIES Properties, Actual;
-   if (FAILED(GetProperties(&Properties))) return E_FAIL;
-
-   unsigned int biSizeImage=(bih.biWidth*abs(bih.biHeight)*bih.biBitCount)>>3;
-
-   if (bih.biSizeImage<biSizeImage)
-    {
-     // bugus intervideo mpeg2 decoder doesn't seem to adjust biSizeImage to the really needed buffer size
-     bih.biSizeImage=biSizeImage;
+    if (!m_bCommitted) {
+        return VFW_E_NOT_COMMITTED;
     }
 
-   if ((DWORD)Properties.cbBuffer<bih.biSizeImage || !m_bCommitted)
-    {
-     Properties.cbBuffer=bih.biSizeImage;
-     if (FAILED(Decommit())) return E_FAIL;
-     if (FAILED(SetProperties(&Properties,&Actual))) return E_FAIL;
-     if (FAILED(Commit())) return E_FAIL;
-     ASSERT(Actual.cbBuffer>=Properties.cbBuffer);
-     if (Actual.cbBuffer<Properties.cbBuffer) return E_FAIL;
+    if (mtChanged) {
+        BITMAPINFOHEADER bih;
+        ExtractBIH(mt,&bih);
+
+        ALLOCATOR_PROPERTIES Properties, Actual;
+        if (FAILED(GetProperties(&Properties))) {
+            return E_FAIL;
+        }
+
+        unsigned int biSizeImage=(bih.biWidth*abs(bih.biHeight)*bih.biBitCount)>>3;
+
+        if (bih.biSizeImage<biSizeImage) {
+            // bugus intervideo mpeg2 decoder doesn't seem to adjust biSizeImage to the really needed buffer size
+            bih.biSizeImage=biSizeImage;
+        }
+
+        if ((DWORD)Properties.cbBuffer<bih.biSizeImage || !m_bCommitted) {
+            Properties.cbBuffer=bih.biSizeImage;
+            if (FAILED(Decommit())) {
+                return E_FAIL;
+            }
+            if (FAILED(SetProperties(&Properties,&Actual))) {
+                return E_FAIL;
+            }
+            if (FAILED(Commit())) {
+                return E_FAIL;
+            }
+            ASSERT(Actual.cbBuffer>=Properties.cbBuffer);
+            if (Actual.cbBuffer<Properties.cbBuffer) {
+                return E_FAIL;
+            }
+        }
     }
-  }
 
- HRESULT hr=CMemAllocator::GetBuffer(ppBuffer,pStartTime,pEndTime,dwFlags);
+    HRESULT hr=CMemAllocator::GetBuffer(ppBuffer,pStartTime,pEndTime,dwFlags);
 
- if (mtChanged && SUCCEEDED(hr))
-  {
-   (*ppBuffer)->SetMediaType(&mt);
-   mtChanged=false;
-  }
- return hr;
+    if (mtChanged && SUCCEEDED(hr)) {
+        (*ppBuffer)->SetMediaType(&mt);
+        mtChanged=false;
+    }
+    return hr;
 }
 
 void TffdshowDecVideoAllocator::NotifyMediaType(const CMediaType &Imt)
 {
- mt=Imt;
- mtChanged=true;
+    mt=Imt;
+    mtChanged=true;
 }

@@ -4,7 +4,7 @@
  *  - Decoder Module -
  *
  *  Copyright(C) 2002      MinChen <chenm001@163.com>
- *               2002-2004 Peter Ross <pross@xvid.org>
+ *               2002-2010 Peter Ross <pross@xvid.org>
  *
  *  This program is free software ; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *  along with this program ; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
  *
- * $Id: decoder.c,v 1.80 2007/04/16 19:01:28 Skal Exp $
+ * $Id: decoder.c 1988 2011-05-18 09:10:05Z Isibaar $
  *
  ****************************************************************************/
 
@@ -172,6 +172,8 @@ decoder_create(xvid_dec_create_t * create)
   dec->width = create->width;
   dec->height = create->height;
 
+  dec->num_threads = MAX(0, create->num_threads);
+
   image_null(&dec->cur);
   image_null(&dec->refn[0]);
   image_null(&dec->refn[1]);
@@ -197,12 +199,21 @@ decoder_create(xvid_dec_create_t * create)
   dec->time_inc_resolution = 1; /* until VOL header says otherwise */
   dec->ver_id = 1;
 
-  dec->bs_version = 0xffff; /* Initialize to very high value -> assume bugfree stream */
+  if (create->fourcc == ((int)('X')|((int)('V')<<8)| 
+                         ((int)('I')<<16)|((int)('D')<<24))) { /* XVID */
+    dec->bs_version = 0; /* Initially assume oldest xvid version */ 
+  }
+  else {
+	dec->bs_version = 0xffff; /* Initialize to very high value -> assume bugfree stream */
+  }
 
   dec->fixed_dimensions = (dec->width > 0 && dec->height > 0);
 
-  if (dec->fixed_dimensions)
-    return decoder_resize(dec);
+  if (dec->fixed_dimensions) {
+    int ret = decoder_resize(dec);
+    if (ret == XVID_ERR_MEMORY) create->handle = NULL;
+    return ret;
+  }
   else
     return 0;
 }
@@ -748,7 +759,7 @@ decoder_iframe(DECODER * dec,
         bound = read_video_packet_header(bs, dec, 0,
               &quant, NULL, NULL, &intra_dc_threshold);
         x = bound % mb_width;
-        y = bound / mb_width;
+        y = MIN((bound / mb_width), (mb_height-1));
       }
       mb = &dec->mbs[y * dec->mb_width + x];
 
@@ -975,7 +986,7 @@ decoder_pframe(DECODER * dec,
         bound = read_video_packet_header(bs, dec, fcode - 1,
           &quant, &fcode, NULL, &intra_dc_threshold);
         x = bound % mb_width;
-        y = bound / mb_width;
+        y = MIN((bound / mb_width), (mb_height-1));
       }
       mb = &dec->mbs[y * dec->mb_width + x];
 
@@ -1380,17 +1391,6 @@ decoder_bframe(DECODER * dec,
       MACROBLOCK *last_mb = &dec->last_mbs[y * dec->mb_width + x];
       int intra_dc_threshold; /* fake variable */
 
-      if (check_resync_marker(bs, resync_len)) {
-        int bound = read_video_packet_header(bs, dec, resync_len, &quant,
-                           &fcode_forward, &fcode_backward, &intra_dc_threshold);
-        x = bound % dec->mb_width;
-        y = bound / dec->mb_width;
-        /* reset predicted macroblocks */
-        dec->p_fmv = dec->p_bmv = zeromv;
-        /* update resync len with new fcodes */
-        resync_len = get_resync_len_b(fcode_backward, fcode_forward);
-      }
-
       mv =
       mb->b_mvs[0] = mb->b_mvs[1] = mb->b_mvs[2] = mb->b_mvs[3] =
       mb->mvs[0] = mb->mvs[1] = mb->mvs[2] = mb->mvs[3] = zeromv;
@@ -1408,6 +1408,20 @@ decoder_bframe(DECODER * dec,
         decoder_mbinter(dec, mb, x, y, mb->cbp, bs, 0, 1, 1);
         continue;
       }
+
+      if (check_resync_marker(bs, resync_len)) {
+        int bound = read_video_packet_header(bs, dec, resync_len, &quant,
+                           &fcode_forward, &fcode_backward, &intra_dc_threshold);
+
+		bound = MAX(0, bound-1); /* valid bound must always be >0 */
+        x = bound % dec->mb_width;
+        y = MIN((bound / dec->mb_width), (dec->mb_height-1));
+        /* reset predicted macroblocks */
+        dec->p_fmv = dec->p_bmv = zeromv;
+        /* update resync len with new fcodes */
+        resync_len = get_resync_len_b(fcode_backward, fcode_forward);
+		continue; /* re-init loop */
+	  }
 
       if (!BitstreamGetBit(bs)) { /* modb=='0' */
         const uint8_t modb2 = BitstreamGetBit(bs);
@@ -1522,7 +1536,7 @@ static void decoder_output(DECODER * dec, IMAGE * img, MACROBLOCK * mbs,
     image_copy(&dec->tmp, img, dec->edged_width, dec->height);
     image_postproc(&dec->postproc, &dec->tmp, dec->edged_width,
              mbs, dec->mb_width, dec->mb_height, dec->mb_width,
-             frame->general, brightness, dec->frames, (coding_type == B_VOP));
+             frame->general, brightness, dec->frames, (coding_type == B_VOP), dec->num_threads);
     img = &dec->tmp;
   }
 
@@ -1651,7 +1665,7 @@ repeat:
     goto repeat;
   }
 
-  dec->p_bmv.x = dec->p_bmv.y = dec->p_fmv.y = dec->p_fmv.y = 0;  /* init pred vector to 0 */
+  dec->p_bmv.x = dec->p_bmv.y = dec->p_fmv.x = dec->p_fmv.y = 0;  /* init pred vector to 0 */
 
   /* packed_mode: special-N_VOP treament */
   if (dec->packed_mode && coding_type == N_VOP) {

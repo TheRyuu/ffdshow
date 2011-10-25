@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="windows-1250"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="xvidcore"
 	ProjectGUID="{340D7FC0-5EF2-4C3E-9F8B-01C0923F268F}"
-	RootNamespace="xvidcore_2005"
+	RootNamespace="xvidcore"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="0"
 	>
@@ -21,9 +21,9 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(ConfigurationName)$(PlatformName)"
-			IntermediateDirectory="$(ConfigurationName)$(PlatformName)"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\..\..\common.vsprops"
+			UseOfMFC="1"
 			CharacterSet="0"
 			>
 			<Tool
@@ -49,7 +49,7 @@
 				MinimalRebuild="true"
 				ExceptionHandling="0"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				BufferSecurityCheck="true"
 				UsePrecompiledHeader="0"
 				WarningLevel="0"
@@ -68,14 +68,17 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="kernel32.lib msvcrtd.lib oldnames.lib ws2_32.lib $(NOINHERIT)"
+				AdditionalDependencies="kernel32.lib libcmtd.lib oldnames.lib ws2_32.lib $(NOINHERIT)"
 				OutputFile="../../../bin/xvidcore.dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories=""
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="xvid.def"
+				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="1"
 			/>
@@ -103,9 +106,9 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|x64"
-			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
-			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\..\..\common.vsprops"
+			UseOfMFC="1"
 			CharacterSet="0"
 			>
 			<Tool
@@ -128,11 +131,11 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../..;.;"
-				PreprocessorDefinitions="WIN64;_WIN64;_DEBUG;_WINDOWS;ARCH_IS_GENERIC;ARCH_IS_64BIT"
+				PreprocessorDefinitions="WIN64;_WIN64;_DEBUG;_WINDOWS;ARCH_IS_X86_64;ARCH_IS_64BIT"
 				MinimalRebuild="true"
 				ExceptionHandling="0"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				BufferSecurityCheck="true"
 				UsePrecompiledHeader="0"
 				WarningLevel="0"
@@ -151,14 +154,17 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="kernel32.lib msvcrtd.lib oldnames.lib ws2_32.lib $(NOINHERIT)"
+				AdditionalDependencies="kernel32.lib libcmtd.lib oldnames.lib ws2_32.lib $(NOINHERIT)"
 				OutputFile="../../../bin/xvidcore.dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories=""
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="xvid.def"
+				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"
 			/>
@@ -186,11 +192,11 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(ConfigurationName)$(PlatformName)"
-			IntermediateDirectory="$(ConfigurationName)$(PlatformName)"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\..\..\common.vsprops"
+			UseOfMFC="1"
 			CharacterSet="0"
-			WholeProgramOptimization="1"
+			WholeProgramOptimization="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -209,15 +215,17 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/MP"
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
+				WholeProgramOptimization="false"
 				AdditionalIncludeDirectories="../..;.;"
-				PreprocessorDefinitions="WIN32;_WIN32;NDEBUG;_WINDOWS;ARCH_IS_IA32;ARCH_IS_32BIT"
+				PreprocessorDefinitions="WIN32;_WIN32;NDEBUG;_WINDOWS;ARCH_IS_IA32;ARCH_IS_32BIT;_CRT_SECURE_NO_WARNINGS"
 				StringPooling="true"
 				ExceptionHandling="0"
-				RuntimeLibrary="2"
+				RuntimeLibrary="0"
 				BufferSecurityCheck="false"
 				ForceConformanceInForLoopScope="true"
 				UsePrecompiledHeader="0"
@@ -238,16 +246,19 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="kernel32.lib msvcrt.lib oldnames.lib ws2_32.lib $(NOINHERIT)"
+				AdditionalDependencies="kernel32.lib libcmt.lib oldnames.lib ws2_32.lib $(NOINHERIT)"
 				OutputFile="../../../bin/xvidcore.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories=""
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="xvid.def"
+				DelayLoadDLLs="$(NOINHERIT)"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				ImportLibrary="$(OutDir)/xvidcore.lib"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -274,11 +285,11 @@
 		</Configuration>
 		<Configuration
 			Name="Release|x64"
-			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
-			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\..\..\common.vsprops"
+			UseOfMFC="1"
 			CharacterSet="0"
-			WholeProgramOptimization="1"
+			WholeProgramOptimization="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -298,15 +309,16 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/MP"
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
 				AdditionalIncludeDirectories="../..;.;"
-				PreprocessorDefinitions="WIN64;_WIN64;NDEBUG;_WINDOWS;ARCH_IS_GENERIC;ARCH_IS_64BIT"
+				PreprocessorDefinitions="WIN64;_WIN64;NDEBUG;_WINDOWS;ARCH_IS_X86_64;ARCH_IS_64BIT;_CRT_SECURE_NO_WARNINGS"
 				StringPooling="true"
 				ExceptionHandling="0"
-				RuntimeLibrary="2"
+				RuntimeLibrary="0"
 				BufferSecurityCheck="false"
 				ForceConformanceInForLoopScope="true"
 				UsePrecompiledHeader="0"
@@ -327,16 +339,19 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="kernel32.lib msvcrt.lib oldnames.lib ws2_32.lib $(NOINHERIT)"
+				AdditionalDependencies="kernel32.lib libcmt.lib oldnames.lib ws2_32.lib $(NOINHERIT)"
 				OutputFile="../../../bin/xvidcore.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories=""
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="xvid.def"
+				DelayLoadDLLs="$(NOINHERIT)"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				ImportLibrary="$(OutDir)/xvidcore.lib"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"
 			/>
 			<Tool
@@ -577,6 +592,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\plugins\plugin_psnrhvsm.c"
+				>
+			</File>
+			<File
 				RelativePath=".\plugins\plugin_single.c"
 				>
 			</File>
@@ -673,52 +692,6 @@
 			Name="asm_x86"
 			>
 			<File
-				RelativePath=".\bitstream\x86_asm\cbp_3dne.asm"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
-						Outputs="$(IntDir)\$(InputName).obj"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
-						Outputs="$(IntDir)\$(InputName).obj"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
-						Outputs="$(IntDir)\$(InputName).obj"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
-						Outputs="$(IntDir)\$(InputName).obj"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath=".\bitstream\x86_asm\cbp_mmx.asm"
 				>
 				<FileConfiguration
@@ -727,18 +700,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -748,18 +720,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -773,18 +744,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -794,18 +764,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -819,18 +788,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -840,18 +808,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -865,18 +832,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -886,18 +852,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -911,18 +876,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -932,18 +896,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -957,18 +920,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -978,18 +940,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -1003,18 +964,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -1024,18 +984,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -1049,18 +1008,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -1070,18 +1028,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -1095,18 +1052,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -1116,18 +1072,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -1141,18 +1096,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -1162,18 +1116,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -1187,18 +1140,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -1208,18 +1160,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -1233,18 +1184,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -1254,18 +1204,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -1279,18 +1228,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -1300,18 +1248,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -1325,18 +1272,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -1346,18 +1292,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -1371,18 +1316,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -1392,18 +1336,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -1417,18 +1360,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -1438,18 +1380,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -1463,18 +1404,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -1484,18 +1424,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -1509,18 +1448,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -1530,18 +1468,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -1555,18 +1492,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -1576,18 +1512,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -1601,18 +1536,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -1622,18 +1556,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -1647,18 +1580,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -1668,18 +1600,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -1693,18 +1624,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -1714,19 +1644,36 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\nasm.inc"
+				>
+				<FileConfiguration
+					Name="Debug|x64"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
 					/>
 				</FileConfiguration>
 			</File>
@@ -1739,18 +1686,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -1760,18 +1706,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -1785,18 +1730,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -1806,18 +1750,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -1831,18 +1774,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -1852,18 +1794,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -1877,18 +1818,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -1898,18 +1838,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -1923,18 +1862,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -1944,18 +1882,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -1969,18 +1906,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -1990,18 +1926,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -2015,18 +1950,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -2036,18 +1970,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -2061,18 +1994,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -2082,18 +2014,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -2107,18 +2038,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -2128,18 +2058,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -2153,18 +2082,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -2174,18 +2102,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -2199,18 +2126,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -2220,18 +2146,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -2245,18 +2170,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -2266,18 +2190,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -2291,18 +2214,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -2312,18 +2234,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -2337,18 +2258,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -2358,380 +2278,17 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|x64"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
-						Outputs="$(IntDir)\$(InputName).obj"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\dct\x86_asm\simple_idct_mmx.asm"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
-						Outputs="$(IntDir)\$(InputName).obj"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
-						Outputs="$(IntDir)\$(InputName).obj"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
-						Outputs="$(IntDir)\$(InputName).obj"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
-						Outputs="$(IntDir)\$(InputName).obj"
-					/>
-				</FileConfiguration>
-			</File>
-		</Filter>
-		<Filter
-			Name="x64"
-			>
-			<File
-				RelativePath=".\utils\x86_64_asm\cpuid.asm"
-				>
-				<FileConfiguration
-					Name="Debug|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="yasm assembling $(InputPath)"
-						CommandLine="yasm -w -f win64 -m amd64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
-						Outputs="$(IntDir)\$(InputName).obj"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="yasm assembling $(InputPath)"
-						CommandLine="yasm -w -f win64 -m amd64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
-						Outputs="$(IntDir)\$(InputName).obj"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\dct\x86_64_asm\fdct_mmx_skal.asm"
-				>
-				<FileConfiguration
-					Name="Debug|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="yasm assembling $(InputPath)"
-						CommandLine="yasm -w -f win64 -m amd64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
-						Outputs="$(IntDir)\$(InputName).obj"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="yasm assembling $(InputPath)"
-						CommandLine="yasm -w -f win64 -m amd64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
-						Outputs="$(IntDir)\$(InputName).obj"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\dct\x86_64_asm\idct_mmx.asm"
-				>
-				<FileConfiguration
-					Name="Debug|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="yasm assembling $(InputPath)"
-						CommandLine="yasm -w -f win64 -m amd64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
-						Outputs="$(IntDir)\$(InputName).obj"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="yasm assembling $(InputPath)"
-						CommandLine="yasm -w -f win64 -m amd64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
-						Outputs="$(IntDir)\$(InputName).obj"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\utils\x86_64_asm\interlacing_mmx.asm"
-				>
-				<FileConfiguration
-					Name="Debug|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="yasm assembling $(InputPath)"
-						CommandLine="yasm -w -f win64 -m amd64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
-						Outputs="$(IntDir)\$(InputName).obj"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="yasm assembling $(InputPath)"
-						CommandLine="yasm -w -f win64 -m amd64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
-						Outputs="$(IntDir)\$(InputName).obj"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\image\x86_64_asm\interpolate8x8_mmx.asm"
-				>
-				<FileConfiguration
-					Name="Debug|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="yasm assembling $(InputPath)"
-						CommandLine="yasm -w -f win64 -m amd64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
-						Outputs="$(IntDir)\$(InputName).obj"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="yasm assembling $(InputPath)"
-						CommandLine="yasm -w -f win64 -m amd64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
-						Outputs="$(IntDir)\$(InputName).obj"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\image\x86_64_asm\interpolate8x8_xmm.asm"
-				>
-				<FileConfiguration
-					Name="Debug|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="yasm assembling $(InputPath)"
-						CommandLine="yasm -w -f win64 -m amd64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
-						Outputs="$(IntDir)\$(InputName).obj"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="yasm assembling $(InputPath)"
-						CommandLine="yasm -w -f win64 -m amd64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
-						Outputs="$(IntDir)\$(InputName).obj"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\utils\x86_64_asm\mem_transfer_mmx.asm"
-				>
-				<FileConfiguration
-					Name="Debug|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="yasm assembling $(InputPath)"
-						CommandLine="yasm -w -f win64 -m amd64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
-						Outputs="$(IntDir)\$(InputName).obj"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="yasm assembling $(InputPath)"
-						CommandLine="yasm -w -f win64 -m amd64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
-						Outputs="$(IntDir)\$(InputName).obj"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\image\x86_64_asm\qpel_mmx.asm"
-				>
-				<FileConfiguration
-					Name="Debug|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="yasm assembling $(InputPath)"
-						CommandLine="yasm -w -f win64 -m amd64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
-						Outputs="$(IntDir)\$(InputName).obj"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="yasm assembling $(InputPath)"
-						CommandLine="yasm -w -f win64 -m amd64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
-						Outputs="$(IntDir)\$(InputName).obj"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\quant\x86_64_asm\quantize_h263_mmx.asm"
-				>
-				<FileConfiguration
-					Name="Debug|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="yasm assembling $(InputPath)"
-						CommandLine="yasm -w -f win64 -m amd64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
-						Outputs="$(IntDir)\$(InputName).obj"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="yasm assembling $(InputPath)"
-						CommandLine="yasm -w -f win64 -m amd64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
-						Outputs="$(IntDir)\$(InputName).obj"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\quant\x86_64_asm\quantize_mpeg_xmm.asm"
-				>
-				<FileConfiguration
-					Name="Debug|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="yasm assembling $(InputPath)"
-						CommandLine="yasm -w -f win64 -m amd64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
-						Outputs="$(IntDir)\$(InputName).obj"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="yasm assembling $(InputPath)"
-						CommandLine="yasm -w -f win64 -m amd64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
-						Outputs="$(IntDir)\$(InputName).obj"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\motion\x86_64_asm\sad_mmx.asm"
-				>
-				<FileConfiguration
-					Name="Debug|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="yasm assembling $(InputPath)"
-						CommandLine="yasm -w -f win64 -m amd64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
-						Outputs="$(IntDir)\$(InputName).obj"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="yasm assembling $(InputPath)"
-						CommandLine="yasm -w -f win64 -m amd64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
-						Outputs="$(IntDir)\$(InputName).obj"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\motion\x86_64_asm\sad_xmm.asm"
-				>
-				<FileConfiguration
-					Name="Debug|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="yasm assembling $(InputPath)"
-						CommandLine="yasm -w -f win64 -m amd64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
-						Outputs="$(IntDir)\$(InputName).obj"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="yasm assembling $(InputPath)"
-						CommandLine="yasm -w -f win64 -m amd64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I &quot;$(InputDir).&quot; -o &quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>

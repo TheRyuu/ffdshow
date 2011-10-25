@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{c99dfc15-1575-48b5-8994-d21928d610f7}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{039400a4-e987-48cd-b0e0-76cc1b950844}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="libmpeg2\alloc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="libmpeg2\cpu_accel.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="libmpeg2\decode.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="libmpeg2\header.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="libmpeg2\idct.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="libmpeg2\idct_mmx.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="libmpeg2\idct_sse2.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="libmpeg2\mc_sse2.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\mmintrin64.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="libmpeg2\motion_comp.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="libmpeg2\motion_comp_mmx.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="libmpeg2\slice.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="version.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\attributes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\config.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mmx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mpeg2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="libmpeg2\mpeg2_internal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="libmpeg2\vlc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="libmpeg2_ff.def">
+      <Filter>Source Files</Filter>
+    </None>
+  </ItemGroup>
+</Project>

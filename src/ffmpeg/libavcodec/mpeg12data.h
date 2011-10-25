@@ -21,16 +21,14 @@
  */
 
 /**
- * @file mpeg12data.h
+ * @file
  * MPEG1/2 tables.
  */
 
 #ifndef AVCODEC_MPEG12DATA_H
 #define AVCODEC_MPEG12DATA_H
 
-#ifdef __GNUC__
 #include <stdint.h>
-#endif
 #include "libavutil/rational.h"
 #include "rl.h"
 

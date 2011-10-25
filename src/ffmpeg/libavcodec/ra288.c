@@ -2,34 +2,37 @@
  * RealAudio 2.0 (28.8K)
  * Copyright (c) 2003 the ffmpeg project
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #include "avcodec.h"
 #define ALT_BITSTREAM_READER_LE
-#include "bitstream.h"
+#include "get_bits.h"
 #include "ra288.h"
 #include "lpc.h"
 #include "celp_math.h"
 #include "celp_filters.h"
 
-#ifndef __GNUC__
-#include <malloc.h>
-#endif
+#define MAX_BACKWARD_FILTER_ORDER  36
+#define MAX_BACKWARD_FILTER_LEN    40
+#define MAX_BACKWARD_FILTER_NONREC 35
+
+#define RA288_BLOCK_SIZE        5
+#define RA288_BLOCKS_PER_FRAME 32
 
 typedef struct {
     float sp_lpc[36];      ///< LPC coefficients for speech data (spec: A)
@@ -54,7 +57,7 @@ typedef struct {
 
 static av_cold int ra288_decode_init(AVCodecContext *avctx)
 {
-    avctx->sample_fmt = SAMPLE_FMT_FLT;
+    avctx->sample_fmt = AV_SAMPLE_FMT_FLT;
     return 0;
 }
 
@@ -106,10 +109,6 @@ static void decode(RA288Context *ractx, float gain, int cb_coef)
     gain_block[9] = 10 * log10(sum) - 32;
 
     ff_celp_lp_synthesis_filterf(block, ractx->sp_lpc, buffer, 5, 36);
-
-    /* output */
-    for (i=0; i < 5; i++)
-        block[i] = av_clipf(block[i], -4095./4096., 4095./4096.);
 }
 
 /**
@@ -128,15 +127,9 @@ static void do_hybrid_window(int order, int n, int non_rec, float *out,
                              float *hist, float *out2, const float *window)
 {
     int i;
-    #if __STDC_VERSION__ >= 199901L
-    float buffer1[order + 1];
-    float buffer2[order + 1];
-    float work[order + n + non_rec];
-    #else
-    float *buffer1=(float *)alloca((order + 1)*sizeof(float));
-    float *buffer2=(float *)alloca((order + 1)*sizeof(float));
-    float *work=(float *)alloca((order + n + non_rec)*sizeof(float));
-    #endif
+    float buffer1[MAX_BACKWARD_FILTER_ORDER + 1];
+    float buffer2[MAX_BACKWARD_FILTER_ORDER + 1];
+    float work[MAX_BACKWARD_FILTER_ORDER + MAX_BACKWARD_FILTER_LEN + MAX_BACKWARD_FILTER_NONREC];
 
     apply_window(work, window, hist, order + n + non_rec);
 
@@ -159,11 +152,7 @@ static void backward_filter(float *hist, float *rec, const float *window,
                             float *lpc, const float *tab,
                             int order, int n, int non_rec, int move_size)
 {
-    #if __STDC_VERSION__ >= 199901L
-    float temp[order+1];
-    #else
-    float *temp = _alloca((order + 1) * sizeof(float));
-    #endif
+    float temp[MAX_BACKWARD_FILTER_ORDER+1];
 
     do_hybrid_window(order, n, non_rec, temp, hist, rec, window);
 
@@ -174,11 +163,12 @@ static void backward_filter(float *hist, float *rec, const float *window,
 }
 
 static int ra288_decode_frame(AVCodecContext * avctx, void *data,
-                              int *data_size, const uint8_t * buf,
-                              int buf_size)
+                              int *data_size, AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     float *out = data;
-    int i, j;
+    int i, j, out_size;
     RA288Context *ractx = avctx->priv_data;
     GetBitContext gb;
 
@@ -189,18 +179,22 @@ static int ra288_decode_frame(AVCodecContext * avctx, void *data,
         return 0;
     }
 
-    if (*data_size < 32*5*4)
-        return -1;
+    out_size = RA288_BLOCK_SIZE * RA288_BLOCKS_PER_FRAME *
+               av_get_bytes_per_sample(avctx->sample_fmt);
+    if (*data_size < out_size) {
+        av_log(avctx, AV_LOG_ERROR, "Output buffer is too small\n");
+        return AVERROR(EINVAL);
+    }
 
     init_get_bits(&gb, buf, avctx->block_align * 8);
 
-    for (i=0; i < 32; i++) {
+    for (i=0; i < RA288_BLOCKS_PER_FRAME; i++) {
         float gain = amptable[get_bits(&gb, 3)];
         int cb_coef = get_bits(&gb, 6 + (i&1));
 
         decode(ractx, gain, cb_coef);
 
-        for (j=0; j < 5; j++)
+        for (j=0; j < RA288_BLOCK_SIZE; j++)
             *(out++) = ractx->sp_hist[70 + 36 + j];
 
         if ((i & 7) == 3) {
@@ -212,24 +206,16 @@ static int ra288_decode_frame(AVCodecContext * avctx, void *data,
         }
     }
 
-    *data_size = (char *)out - (char *)data;
+    *data_size = out_size;
     return avctx->block_align;
 }
 
-AVCodec ra_288_decoder =
-{
-    "real_288",
-    CODEC_TYPE_AUDIO,
-    CODEC_ID_RA_288,
-    sizeof(RA288Context),
-    ra288_decode_init,
-    NULL,
-    NULL,
-    ra288_decode_frame,
-    /*.capabilities = */0,
-    /*.next = */NULL,
-    /*.flush = */NULL,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("RealAudio 2.0 (28.8K)"),
+AVCodec ff_ra_288_decoder = {
+    .name           = "real_288",
+    .type           = AVMEDIA_TYPE_AUDIO,
+    .id             = CODEC_ID_RA_288,
+    .priv_data_size = sizeof(RA288Context),
+    .init           = ra288_decode_init,
+    .decode         = ra288_decode_frame,
+    .long_name      = NULL_IF_CONFIG_SMALL("RealAudio 2.0 (28.8K)"),
 };

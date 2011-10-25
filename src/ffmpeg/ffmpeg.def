@@ -1,0 +1,78 @@
+EXPORTS
+  avcodec_init
+  avcodec_register_all
+  avcodec_find_decoder
+  avcodec_find_encoder
+  avcodec_open2
+  avcodec_alloc_context3
+  avcodec_alloc_frame
+  avcodec_decode_video2
+  avcodec_encode_video
+  avcodec_decode_audio3
+  avcodec_encode_audio
+  avcodec_flush_buffers
+  avcodec_close
+  getVersion
+  av_mallocz
+  av_free
+
+  dsputil_init
+
+  av_log_set_callback
+  av_log_get_callback
+  av_log_get_level
+  av_log_set_level
+
+  avcodec_default_get_buffer
+  avcodec_default_reget_buffer
+  avcodec_default_release_buffer
+
+  avcodec_get_current_idct
+  avcodec_get_encoder_info
+  avcodec_h264_search_recovery_point
+  av_h264_decode_frame
+  av_vc1_decode_frame
+
+  av_parser_init
+  av_parser_parse2
+  av_parser_close
+
+  av_init_packet
+
+  sws_getCachedContext
+  sws_freeContext
+  sws_scale
+  sws_getDefaultFilter
+  sws_freeFilter
+  sws_getConstVec
+  sws_getGaussianVec
+  sws_normalizeVec
+  sws_freeVec
+  GetCPUCount
+
+  pp_postprocess
+  pp_get_context
+  pp_free_context
+
+  FFH264DecodeBuffer
+  FFH264BuildPicParams
+  FFH264CheckCompatibility
+  FFH264SetCurrentPicture
+  FFH264UpdateRefFramesList
+  FFH264IsRefFrameInUse
+  FF264UpdateRefFrameSliceLong
+  FFH264SetDxvaSliceLong
+
+  FFVC1UpdatePictureParam
+  FFIsSkipped
+
+  GetFFMpegPictureType
+  FFIsInterlaced
+  FFGetMBNumber
+
+  yadif_init
+  yadif_uninit
+  yadif_filter
+  
+  gradfunInit
+  gradfunFilter

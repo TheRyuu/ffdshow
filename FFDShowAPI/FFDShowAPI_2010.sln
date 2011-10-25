@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FFDShowAPI", "FFDShowAPI\FFDShowAPI_2010.csproj", "{69CF2FFC-CB08-42F8-8DE9-E5C32F3FE8BA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FFDShowAPITest", "FFDShowAPITest\FFDShowAPITest_2010.csproj", "{5275302D-1E52-49FB-ABB9-E23735BE8538}"
+	ProjectSection(ProjectDependencies) = postProject
+		{69CF2FFC-CB08-42F8-8DE9-E5C32F3FE8BA} = {69CF2FFC-CB08-42F8-8DE9-E5C32F3FE8BA}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug ASCII|Any CPU = Debug ASCII|Any CPU
+		Debug ASCII|x64 = Debug ASCII|x64
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Release ASCII|Any CPU = Release ASCII|Any CPU
+		Release ASCII|x64 = Release ASCII|x64
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{69CF2FFC-CB08-42F8-8DE9-E5C32F3FE8BA}.Debug ASCII|Any CPU.ActiveCfg = Debug ASCII|Any CPU
+		{69CF2FFC-CB08-42F8-8DE9-E5C32F3FE8BA}.Debug ASCII|Any CPU.Build.0 = Debug ASCII|Any CPU
+		{69CF2FFC-CB08-42F8-8DE9-E5C32F3FE8BA}.Debug ASCII|x64.ActiveCfg = Debug ASCII|x64
+		{69CF2FFC-CB08-42F8-8DE9-E5C32F3FE8BA}.Debug ASCII|x64.Build.0 = Debug ASCII|x64
+		{69CF2FFC-CB08-42F8-8DE9-E5C32F3FE8BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69CF2FFC-CB08-42F8-8DE9-E5C32F3FE8BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69CF2FFC-CB08-42F8-8DE9-E5C32F3FE8BA}.Debug|x64.ActiveCfg = Debug|x64
+		{69CF2FFC-CB08-42F8-8DE9-E5C32F3FE8BA}.Debug|x64.Build.0 = Debug|x64
+		{69CF2FFC-CB08-42F8-8DE9-E5C32F3FE8BA}.Release ASCII|Any CPU.ActiveCfg = Release ASCII|Any CPU
+		{69CF2FFC-CB08-42F8-8DE9-E5C32F3FE8BA}.Release ASCII|Any CPU.Build.0 = Release ASCII|Any CPU
+		{69CF2FFC-CB08-42F8-8DE9-E5C32F3FE8BA}.Release ASCII|x64.ActiveCfg = Release ASCII|x64
+		{69CF2FFC-CB08-42F8-8DE9-E5C32F3FE8BA}.Release ASCII|x64.Build.0 = Release ASCII|x64
+		{69CF2FFC-CB08-42F8-8DE9-E5C32F3FE8BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69CF2FFC-CB08-42F8-8DE9-E5C32F3FE8BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69CF2FFC-CB08-42F8-8DE9-E5C32F3FE8BA}.Release|x64.ActiveCfg = Release|x64
+		{69CF2FFC-CB08-42F8-8DE9-E5C32F3FE8BA}.Release|x64.Build.0 = Release|x64
+		{5275302D-1E52-49FB-ABB9-E23735BE8538}.Debug ASCII|Any CPU.ActiveCfg = Debug|Any CPU
+		{5275302D-1E52-49FB-ABB9-E23735BE8538}.Debug ASCII|Any CPU.Build.0 = Debug|Any CPU
+		{5275302D-1E52-49FB-ABB9-E23735BE8538}.Debug ASCII|x64.ActiveCfg = Debug|Any CPU
+		{5275302D-1E52-49FB-ABB9-E23735BE8538}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5275302D-1E52-49FB-ABB9-E23735BE8538}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5275302D-1E52-49FB-ABB9-E23735BE8538}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5275302D-1E52-49FB-ABB9-E23735BE8538}.Release ASCII|Any CPU.ActiveCfg = Release|Any CPU
+		{5275302D-1E52-49FB-ABB9-E23735BE8538}.Release ASCII|Any CPU.Build.0 = Release|Any CPU
+		{5275302D-1E52-49FB-ABB9-E23735BE8538}.Release ASCII|x64.ActiveCfg = Release|Any CPU
+		{5275302D-1E52-49FB-ABB9-E23735BE8538}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5275302D-1E52-49FB-ABB9-E23735BE8538}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5275302D-1E52-49FB-ABB9-E23735BE8538}.Release|x64.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

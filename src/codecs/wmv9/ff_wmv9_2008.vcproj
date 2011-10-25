@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9.00"
+	Version="9,00"
 	Name="ff_wmv9"
 	ProjectGUID="{22DA8FA3-50B3-49A9-AFD0-19CAAC924C23}"
 	RootNamespace="ff_wmv9"
@@ -20,10 +20,9 @@
 	</ToolFiles>
 	<Configurations>
 		<Configuration
-			Name="Debug Unicode|Win32"
-			OutputDirectory="Debug_Unicode_$(PlatformName)_2008"
-			IntermediateDirectory="Debug_Unicode_$(PlatformName)_2008"
+			Name="Debug|Win32"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\..\..\common.vsprops"
 			UseOfMFC="0"
 			CharacterSet="1"
 			>
@@ -77,15 +76,15 @@
 				AdditionalDependencies="kernel32.lib libcmtd.lib libcpmtd.lib uuid.lib oleaut32.lib ole32.lib oldnames.lib"
 				OutputFile="../../../bin/ff_wmv9.dll"
 				SuppressStartupBanner="true"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="ff_wmv9.def"
+				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(IntDir)/ff_wmv9.pdb"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(IntDir)/ff_wmv9.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -93,7 +92,6 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				EmbedManifest="true"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -112,10 +110,9 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="Debug Unicode|x64"
-			OutputDirectory="Debug_Unicode_$(PlatformName)_2008"
-			IntermediateDirectory="Debug_Unicode_$(PlatformName)_2008"
+			Name="Debug|x64"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\..\..\common.vsprops"
 			CharacterSet="1"
 			>
 			<Tool
@@ -169,13 +166,14 @@
 				AdditionalDependencies="libcmtd.lib libcpmtd.lib kernel32.lib uuid.lib oleaut32.lib ole32.lib oldnames.lib $(NOINHERIT)"
 				OutputFile="../../../bin/ff_wmv9.dll"
 				SuppressStartupBanner="true"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="ff_wmv9.def"
+				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(IntDir)/ff_wmv9.pdb"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				SubSystem="2"
-				ImportLibrary="$(IntDir)/ff_wmv9.lib"
+				RandomizedBaseAddress="1"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"
 			/>
 			<Tool
@@ -183,7 +181,6 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				EmbedManifest="true"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -202,13 +199,12 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="Release Unicode|Win32"
-			OutputDirectory="Release_Unicode_$(PlatformName)_2008"
-			IntermediateDirectory="Release_Unicode_$(PlatformName)_2008"
+			Name="Release|Win32"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\..\..\common.vsprops"
 			CharacterSet="1"
 			ManagedExtensions="0"
-			WholeProgramOptimization="1"
+			WholeProgramOptimization="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -227,7 +223,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions=""
+				AdditionalOptions="/MP"
 				Optimization="1"
 				InlineFunctionExpansion="1"
 				EnableIntrinsicFunctions="true"
@@ -242,7 +238,6 @@
 				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="2"
 				BrowseInformation="0"
-				WarningLevel="4"
 				DebugInformationFormat="3"
 				DisableSpecificWarnings="4996;4100;4127;4201;4005"
 			/>
@@ -263,15 +258,16 @@
 				OutputFile="../../../bin/ff_wmv9.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="ff_wmv9.def"
+				DelayLoadDLLs="$(NOINHERIT)"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(OutDir)/ff_wmv9.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -279,7 +275,6 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				EmbedManifest="true"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -298,13 +293,12 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="Release Unicode|x64"
-			OutputDirectory="Release_Unicode_$(PlatformName)_2008"
-			IntermediateDirectory="Release_Unicode_$(PlatformName)_2008"
+			Name="Release|x64"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\..\..\common.vsprops"
 			CharacterSet="1"
 			ManagedExtensions="0"
-			WholeProgramOptimization="1"
+			WholeProgramOptimization="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -324,7 +318,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions=""
+				AdditionalOptions="/MP"
 				Optimization="1"
 				InlineFunctionExpansion="1"
 				EnableIntrinsicFunctions="true"
@@ -338,7 +332,6 @@
 				EnableFunctionLevelLinking="false"
 				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="2"
-				WarningLevel="4"
 				DebugInformationFormat="3"
 				DisableSpecificWarnings="4996;4100;4127"
 			/>
@@ -359,13 +352,15 @@
 				OutputFile="../../../bin/ff_wmv9.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="ff_wmv9.def"
+				DelayLoadDLLs="$(NOINHERIT)"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				ImportLibrary="$(IntDir)/$(ProjectName).lib"
+				RandomizedBaseAddress="1"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"
 			/>
 			<Tool
@@ -373,7 +368,6 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				EmbedManifest="true"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -422,42 +416,6 @@
 			<File
 				RelativePath="stdafx.cpp"
 				>
-				<FileConfiguration
-					Name="Debug Unicode|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions=""
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug Unicode|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions=""
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release Unicode|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions=""
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release Unicode|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions=""
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug|Win32"
 					>

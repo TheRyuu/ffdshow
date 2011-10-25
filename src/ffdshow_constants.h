@@ -5,6 +5,8 @@
 #define FFDSHOWRAW_NAME_L  L"ffdshow raw video filter"
 #define FFDSHOWVFW_NAME_L  L"ffdshow VFW decoder helper"
 #define FFDSHOWSUBTITLES_NAME_L  L"ffdshow subtitles filter"
+#define FFDSHOWDXVA_NAME_L  L"ffdshow DXVA Video Decoder"
+#define IS_FFDSHOW_VIDEO(filtername) (filtername!=NULL && (!strcmp(filtername, FFDSHOW_NAME_L) || !strcmp(filtername, FFDSHOWDXVA_NAME_L) || !strcmp(filtername, FFDSHOWRAW_NAME_L) || !strcmp(filtername, FFDSHOWSUBTITLES_NAME_L)))
 
 #define IDFF_autoPreset            1  //automatic preset loading enabled
 #define IDFF_trayIcon              3  //is tray icon visible
@@ -16,16 +18,17 @@
 #define IDFF_autoPresetFileFirst   5  //try to load preset from file
 #define IDFF_autoLoadedFromFile    6
 #define IDFF_filterMode            7
- #define IDFF_FILTERMODE_PLAYER        1
- #define IDFF_FILTERMODE_CONFIG        2
- #define IDFF_FILTERMODE_PROC          4
- #define IDFF_FILTERMODE_VFW           8
- #define IDFF_FILTERMODE_VIDEO       256
- #define IDFF_FILTERMODE_VIDEORAW    512
- #define IDFF_FILTERMODE_AUDIO      1024
- #define IDFF_FILTERMODE_ENC        2048
- #define IDFF_FILTERMODE_AUDIORAW   4096
- #define IDFF_FILTERMODE_VIDEOSUBTITLES  8192
+#define IDFF_FILTERMODE_PLAYER        1
+#define IDFF_FILTERMODE_CONFIG        2
+#define IDFF_FILTERMODE_PROC          4
+#define IDFF_FILTERMODE_VFW           8
+#define IDFF_FILTERMODE_VIDEO       256
+#define IDFF_FILTERMODE_VIDEORAW    512
+#define IDFF_FILTERMODE_AUDIO      1024
+#define IDFF_FILTERMODE_ENC        2048
+#define IDFF_FILTERMODE_AUDIORAW   4096
+#define IDFF_FILTERMODE_VIDEOSUBTITLES  8192
+#define IDFF_FILTERMODE_VIDEODXVA  16384
 #define IDFF_currentFrame         14
 #define IDFF_decodingFps          15
 #define IDFF_buildHistogram       16
@@ -40,7 +43,6 @@
 #define IDFF_fastMpeg2            90
 #define IDFF_fastH264             91
 //#define IDFF_autodetect24P       3490
-#define IDFF_libtheoraPostproc    92
 //#define IDFF_subCurrentFlnm       29
 //#define IDFF_lastFrameLength      41
 #define IDFF_movieDuration        38
@@ -64,6 +66,7 @@
 #define IDFF_subCurLang           73
 #define IDFF_addToROT             74
 #define IDFF_streamsOptionsMenu   75
+#define IDFF_streamsSubFilesMode 3549
 #define IDFF_dvdproc              76
 //#define IDFF_ac3drc               79
 //#define IDFF_ac3SPDIF             3386
@@ -136,6 +139,14 @@
 #define IDFF_presetAutoloadSizeYmin      1906
 #define IDFF_presetAutoloadSizeYmax      1907
 #define IDFF_presetAutoloadLogic         3485
+
+#define IDFF_presetAutoloadScreenSize          3517 //should preset be autoloaded depending on movie dimensions
+#define IDFF_presetAutoloadScreenSizeXmin      3518
+#define IDFF_presetAutoloadScreenSizeXmax      3519
+#define IDFF_presetAutoloadScreenSizeCond      3520 //0 - and, 1 - or
+#define IDFF_presetAutoloadScreenSizeYmin      3521
+#define IDFF_presetAutoloadScreenSizeYmax      3522
+
 /*
 #define IDFF_presetAutoloadFlnm          1901 //should preset be autoloaded depending on filename
 #define IDFF_presetAutoloadExt           1908 //should preset be autoloaded depending on file ext
@@ -161,7 +172,7 @@
 #define IDFF_ppIsCustom             103 //custom postprocessing settings are enabled
 #define IDFF_ppcustom               104 //custom postprocessing settings
 #define IDFF_currentq               105
-#define IDFF_deblockMplayerAccurate 123
+#define IDFF_deblockAvcodecAccurate 123
 #define IDFF_deblockStrength        110
 #define IDFF_levelFixLum            107
 //#define IDFF_levelFixChrom          108
@@ -233,9 +244,9 @@
 #define IDFF_levelsOutMax       1608
 #define IDFF_levelsOnlyLuma     1609
 #define IDFF_levelsFullY        1610
-#define IDFF_levelsYmaxDelta	1637
-#define IDFF_levelsYthreshold 	1638
-#define IDFF_levelsYtemporal 	1639
+#define IDFF_levelsYmaxDelta    1637
+#define IDFF_levelsYthreshold   1638
+#define IDFF_levelsYtemporal    1639
 #define IDFF_levelsPosterize    1614
 #define IDFF_levelsInAuto       1615
 #define IDFF_levelsNumPoints    1616
@@ -288,8 +299,8 @@
 #define IDFF_asharpD               424
 #define IDFF_asharpB               425
 #define IDFF_asharpHQBF            426
-#define IDFF_mplayerSharpLuma      440
-#define IDFF_mplayerSharpChroma    441
+#define IDFF_avcodecSharpLuma      440
+#define IDFF_avcodecSharpChroma    441
 
 #define IDFF_filterWarpsharp       430
 #define IDFF_isWarpsharp           431
@@ -473,6 +484,7 @@
 #define IDFF_subSearchExt            862
 #define IDFF_subSearchHeuristic      856
 #define IDFF_subWatch                826
+#define IDFF_subEmbeddedPriority     3559
 #define IDFF_subStereoscopic         833
 #define IDFF_subStereoscopicPar      834 // stereoscopic parallax <-10%,10%> of picture width
 #define IDFF_subDefLang              836
@@ -481,16 +493,20 @@
 #define IDFF_subVobsubAA             837
 #define IDFF_subVobsubAAswgauss      851
 #define IDFF_subVobsubChangePosition 849
-#define IDFF_subVobsubScale          850
+#define IDFF_subImgScale             850
 #define IDFF_subLinespacing          838
-#define IDFF_subTimeOverlap          839
+//#define IDFF_subTimeOverlap          839
 #define IDFF_subIsMinDuration        840
 #define IDFF_subMinDurationType      841 //0 - subtitle, 1 - line, 2 - character
 #define IDFF_subMinDurationSub       842
 #define IDFF_subMinDurationLine      843
 #define IDFF_subMinDurationChar      844
 #define IDFF_subTextpin              845
-#define IDFF_subTextpinSSA           861
+#define IDFF_subSSA                  861
+#define IDFF_subPGS                  3545 // Enable bluray subtitles
+#define IDFF_subFiles                3546 // Enable subtitle files
+#define IDFF_subText                 3547 // Enable text subtitles
+
 #define IDFF_subShowEmbedded         857 //id of displayed embedded subtitle, 0 if none
 //#define IDFF_subFoundEmbedded        859
 #define IDFF_subFix                  846
@@ -505,32 +521,42 @@
 #define IDFF_subSSAMaintainInside    3497
 #define IDFF_subSSAUseMovieDimensions 3498
 
-#define IDFF_fontName                820
-#define IDFF_fontCharset             802
-#define IDFF_fontAutosize            823
-#define IDFF_fontAutosizeVideoWindow 829
-#define IDFF_fontSizeP               803
-//#define IDFF_fontSize            803
-#define IDFF_fontSizeA               824
-#define IDFF_fontWeight              804
-#define IDFF_fontOutlineWidth        3387
-#define IDFF_fontOpaqueBox           3400
-#define IDFF_fontSpacing             808
-#define IDFF_fontColor               809
-#define IDFF_fontOutlineColor        3391
-#define IDFF_fontShadowColor         3392
-#define IDFF_fontSplitting           831
-#define IDFF_fontXscale              832 // *100, multiplier of character width
-#define IDFF_fontYscale              3411
-#define IDFF_fontOverrideScale       3414
-#define IDFF_fontAspectAuto          3415
-#define IDFF_fontFast                854
-#define IDFF_fontShadowMode          3374 // 0 - Glowing, 1 - classic gradient, 2 - classic
-#define IDFF_fontShadowSize          3375
-#define IDFF_fontBodyAlpha           3389
-#define IDFF_fontOutlineAlpha        3390
-#define IDFF_fontShadowAlpha         3376
-#define IDFF_fontBlur                3406
+#define IDFF_fontName                 820
+#define IDFF_fontCharset              802
+#define IDFF_fontAutosize             823
+#define IDFF_fontAutosizeVideoWindow  829
+#define IDFF_fontSizeP                803
+//#define IDFF_fontSize               803
+#define IDFF_fontSizeA                824
+#define IDFF_fontWeight               804
+#define IDFF_fontOutlineWidth         3387
+#define IDFF_fontOpaqueBox            3400
+#define IDFF_fontSpacing              808
+#define IDFF_fontColor                809
+#define IDFF_fontOutlineColor         3391
+#define IDFF_fontShadowColor          3392
+#define IDFF_fontSplitting            831
+#define IDFF_fontXscale               832 // *100, multiplier of character width
+#define IDFF_fontYscale               3411
+#define IDFF_fontAspectAuto           3415
+#define IDFF_fontFast                 854
+#define IDFF_fontShadowMode           3374 // 0 - Glowing, 1 - classic gradient, 2 - classic
+#define IDFF_fontBlurMode             3560
+#define IDFF_fontShadowSize           3375
+#define IDFF_fontBodyAlpha            3389
+#define IDFF_fontOutlineAlpha         3390
+#define IDFF_fontShadowAlpha          3376
+#define IDFF_fontBlur                 3406 // 0 - disabled, 1 - enabled, 2 - enabled for border only
+#define IDFF_fontShadowOverride       3548
+#define IDFF_fontOutlineWidthOverride 3550
+#define IDFF_fontSizeOverride         3551
+#define IDFF_fontSettingsOverride     3552
+#define IDFF_fontColorOverride        3553
+#define IDFF_scaleBorderAndShadowOverride 3554
+#define IDFF_fontItalic               3555
+#define IDFF_OSDfontItalic            3556
+#define IDFF_fontUnderline            3557
+#define IDFF_OSDfontUnderline         3558
 
 #define IDFF_filterBlur              900
 #define IDFF_isBlur                  901
@@ -549,14 +575,14 @@
 #define IDFF_smoothStrengthChroma    909
 #define IDFF_blurIsGradual           924
 #define IDFF_gradualStrength         913
-#define IDFF_blurIsMplayerTNR        925
-#define IDFF_mplayerTNR1             915
-#define IDFF_mplayerTNR2             916
-#define IDFF_mplayerTNR3             917
-#define IDFF_blurIsMplayer           927
-#define IDFF_mplayerBlurRadius       928
-#define IDFF_mplayerBlurLuma         929
-#define IDFF_mplayerBlurChroma       930
+#define IDFF_blurIsAvcodecTNR        925
+#define IDFF_avcodecTNR1             915
+#define IDFF_avcodecTNR2             916
+#define IDFF_avcodecTNR3             917
+#define IDFF_blurIsAvcodec           927
+#define IDFF_avcodecBlurRadius       928
+#define IDFF_avcodecBlurLuma         929
+#define IDFF_avcodecBlurChroma       930
 #define IDFF_blurIsDenoise3d         931
 #define IDFF_denoise3Dluma           932
 #define IDFF_denoise3Dchroma         933
@@ -582,9 +608,8 @@
 #define IDFF_isGradFun         1151
 #define IDFF_showGradFun       1152
 #define IDFF_orderGradFun      1153
-#define IDFF_fullGradFun       1154
-#define IDFF_halfGradFun       1155
 #define IDFF_gradFunThreshold  1156
+#define IDFF_gradFunRadius     3563
 
 #define IDFF_filterVis          1200
 #define IDFF_isVis              1201
@@ -611,7 +636,10 @@
 #define IDFF_avisynthScript          1254 // Use this if you want to manipulate the setting through external API.
 #define IDFF_avisynthScriptMULTI_SZ  1265 // Used to save data. If both IDFF_avisynthScript and IDFF_avisynthScriptMULTI_SZ exist, IDFF_avisynthScriptMULTI_SZ is used. If only one of these exists, the exsiting one is used.
 
+#define IDFF_filterOSD             3527
 #define IDFF_isOSD                 1501
+#define IDFF_orderOSD              3528
+#define IDFF_showOSD               3529
 #define IDFF_OSDfontName           1509
 #define IDFF_OSDfontCharset        1502
 #define IDFF_OSDfontSize           1503
@@ -627,89 +655,86 @@
 #define IDFF_OSDfontShadowAlpha    3397
 #define IDFF_OSDfontShadowSize     3398
 #define IDFF_OSDfontShadowMode     3399
+#define IDFF_OSDfontBlurMode       3561
 #define IDFF_OSDfontBlur           3407
 #define IDFF_OSDfontXscale         1532
 #define IDFF_OSDfontYscale         3412
 #define IDFF_OSDfontAspectAuto     3413
 //#define IDFF_OSDfontFast           1535
-  #define IDFF_OSDtype_inputSize          1520
-  #define IDFF_OSDtype_inputAspect        1550
-  #define IDFF_OSDtype_inputSizeAspect    1552
-  #define IDFF_OSDtype_outputSize         1521
-  #define IDFF_OSDtype_outputAspect       1551
-  #define IDFF_OSDtype_cpuUsage           1522
-  #define IDFF_OSDtype_TimeOnffdshow      1565
-  #define IDFF_OSDtype_systemTime         1523
-  #define IDFF_OSDtype_meanQuant          1524
-  #define IDFF_OSDtype_currentFrameTime   1525
-  #define IDFF_OSDtype_remainingFrameTime 1526
-  #define IDFF_OSDtype_movieTime          1527
-  #define IDFF_OSDtype_bps                1529
-  #define IDFF_OSDtype_encoderInfo        1531
-  #define IDFF_OSDtype_shortMsg           1528
-  #define IDFF_OSDtype_shortInfo          1536
-  #define IDFF_OSDtype_gmcWarpPoints      1539
-  #define IDFF_OSDtype_movieSource        33
-  #define IDFF_OSD_userformat             3491
-   #define IDFF_MOVIE_NONE     0
-   #define IDFF_MOVIE_LAVC     1
-   //#define IDFF_MOVIE_XVID   2
-   #define IDFF_MOVIE_THEO     3
-   #define IDFF_MOVIE_RAW      4
-   #define IDFF_MOVIE_LIBMPEG2 5
-   #define IDFF_MOVIE_MPLAYER  6
-   #define IDFF_MOVIE_LIBMAD   7
-   #define IDFF_MOVIE_LIBFAAD  8
-   #define IDFF_MOVIE_XVID4    9
-   #define IDFF_MOVIE_AVIS    10
-   #define IDFF_MOVIE_WMV9    12
-   #define IDFF_MOVIE_SKAL    13
-   #define IDFF_MOVIE_X264    14
-   #define IDFF_MOVIE_LIBA52  15
-   //#define IDFF_MOVIE_SPDIF   16
-   #define IDFF_MOVIE_LIBDTS  17
-   #define IDFF_MOVIE_TREMOR  18
-   #define IDFF_MOVIE_REALAAC 19
-   #define IDFF_MOVIE_FFMPEG_MT 21
-   #define IDFF_MOVIE_MAX     21 // should equal highest value of codecs above (see TglobalSettings.cpp)
-  #define IDFF_OSDtype_accurDeblock        30
-  #define IDFF_OSDtype_outputFOURCC      1540
-  #define IDFF_OSDtype_inputFPS          1541
-  #define IDFF_OSDtype_sourceFlnm        1542
-  #define IDFF_OSDtype_inputFOURCC       1543
-  #define IDFF_OSDtype_inCodecString     1544
-  #define IDFF_OSDtype_outCodecString    1545
-  #define IDFF_OSDtype_outSpeakersConfig 1549
-  #define IDFF_frameType                   31
-  #define IDFF_frameSize                   41
-  #define IDFF_OSDtype_frameMD5          1548
-  #define IDFF_OSDtype_frameTimestamps   1553
-  #define IDFF_OSDtype_frameDuration     1554
-  #define IDFF_OSDtype_exeflnm           1556
-  #define IDFF_OSDtype_activePresetName  3483
-  #define IDFF_OSDtype_sourceFlnmWOpath  1557
-  #define IDFF_OSDtype_sampleFrequency   1558
-  #define IDFF_OSDtype_nchannels         1559
-  #define IDFF_OSDtype_audioSampleFormat 1560
-  #define IDFF_OSDtype_audioJitter       1561
-  #define IDFF_OSDtype_idct              3370
-  #ifdef OSDTIMETABALE
-   #define IDFF_OSDtype_timetable        1562
-  #endif
-  #define IDFF_OSDtype_QueueCount        1563
-  #define IDFF_OSDtype_Late              1564
-  #define IDFF_OSDtype_AviSynth_Info     1566
-#define IDFF_OSDuser               1511 //don't use these, use drawOSD() instead
-#define IDFF_OSDuserPx             1512
-#define IDFF_OSDuserPy             1513
-#define IDFF_OSDcurPreset          1530
+#define IDFF_OSDtype_inputSize          1520
+#define IDFF_OSDtype_inputAspect        1550
+#define IDFF_OSDtype_inputSizeAspect    1552
+#define IDFF_OSDtype_outputSize         1521
+#define IDFF_OSDtype_outputAspect       1551
+#define IDFF_OSDtype_cpuUsage           1522
+#define IDFF_OSDtype_TimeOnffdshow      1565
+#define IDFF_OSDtype_systemTime         1523
+#define IDFF_OSDtype_meanQuant          1524
+#define IDFF_OSDtype_currentFrameTime   1525
+#define IDFF_OSDtype_remainingFrameTime 1526
+#define IDFF_OSDtype_movieTime          1527
+#define IDFF_OSDtype_bps                1529
+#define IDFF_OSDtype_encoderInfo        1531
+#define IDFF_OSDtype_shortMsg           1528
+#define IDFF_OSDtype_shortInfo          1536
+#define IDFF_OSDtype_gmcWarpPoints      1539
+#define IDFF_OSDtype_movieSource        33
+#define IDFF_OSD_userformat             3491
+#define IDFF_MOVIE_NONE     0
+#define IDFF_MOVIE_LAVC     1
+#define IDFF_MOVIE_RAW      4
+#define IDFF_MOVIE_LIBMPEG2 5
+#define IDFF_MOVIE_LIBMAD   7
+#define IDFF_MOVIE_LIBFAAD  8
+#define IDFF_MOVIE_XVID4    9
+#define IDFF_MOVIE_AVIS    10
+#define IDFF_MOVIE_WMV9    12
+#define IDFF_MOVIE_LIBA52  15
+//#define IDFF_MOVIE_SPDIF   16
+#define IDFF_MOVIE_LIBDTS  17
+#define IDFF_MOVIE_FFMPEG_DXVA 22
+#define IDFF_MOVIE_MAX     22 // should equal highest value of codecs above (see TglobalSettings.cpp)
+#define IDFF_OSDtype_accurDeblock        30
+#define IDFF_OSDtype_outputFOURCC      1540
+#define IDFF_OSDtype_inputFPS          1541
+#define IDFF_OSDtype_sourceFlnm        1542
+#define IDFF_OSDtype_inputFOURCC       1543
+#define IDFF_OSDtype_inCodecString     1544
+#define IDFF_OSDtype_outCodecString    1545
+#define IDFF_OSDtype_outSpeakersConfig 1549
+#define IDFF_frameType                   31
+#define IDFF_frameSize                   41
+#define IDFF_OSDtype_frameMD5          1548
+#define IDFF_OSDtype_frameTimestamps   1553
+#define IDFF_OSDtype_frameDuration     1554
+#define IDFF_OSDtype_h264_poc          3523
+#define IDFF_OSDtype_exeflnm           1556
+#define IDFF_OSDtype_activePresetName  3483
+#define IDFF_OSDtype_sourceFlnmWOpath  1557
+#define IDFF_OSDtype_sampleFrequency   1558
+#define IDFF_OSDtype_nchannels         1559
+#define IDFF_OSDtype_audioSampleFormat 1560
+#define IDFF_OSDtype_audioJitter       1561
+#define IDFF_OSDtype_idct              3370
+#ifdef OSDTIMETABALE
+#define IDFF_OSDtype_timetable        1562
+#endif
+#define IDFF_OSDtype_QueueCount        1563
+#define IDFF_OSDtype_Late              1564
+#define IDFF_OSDtype_AviSynth_Info     1566
+//#define IDFF_OSDuser               1511 //don't use these, use shortOSDmessageAbsolute(msg,duration,x,y) instead
+//#define IDFF_OSDuserPx             1512
+//#define IDFF_OSDuserPy             1513
+//#define IDFF_OSDcurPreset          1530
 #define IDFF_OSDposX               1533
 #define IDFF_OSDposY               1534
-#define IDFF_OSDstartPreset        1537
-#define IDFF_OSDstartDuration      1538 //in frames
+//#define IDFF_OSDstartPreset        1537
+#define IDFF_OSDdurationVisible    1538 //in frames
 #define IDFF_OSDisSave             1546
 #define IDFF_OSDsaveFlnm           1547
 #define IDFF_OSDsaveOnly           1555
+#define IDFF_OSDformat             3530
+#define IDFF_OSDisAutoHide         3531
 
 #define IDFF_filterGrab    2000
 #define IDFF_isGrab        2001
@@ -787,6 +812,10 @@
 #define IDFF_remoteMessageMode  1751 // 0 - use RegisterWindowMessage, 1 - let user specify message number (default WM_APP+18)
 #define IDFF_remoteMessageUser  1752
 #define IDFF_remoteAcceptKeys   1753 // remote API window accepts keyboard messages
+#define IDFF_remoteSubStream    3541
+#define IDFF_remoteAudioStream  3542
+#define IDFF_remoteFastForward  3543
+#define IDFF_remoteFastForwardMode  3544
 
 #define IDFF_isMouse            1770
 #define IDFF_mouseAlways        1771
@@ -805,15 +834,15 @@
 #define IDFF_wmv1               1011
 #define IDFF_wmv2               1017
 #define IDFF_wmv3               1042
-#define IDFF_wvc1                1090
-#define IDFF_cavs                1091
+#define IDFF_wvc1               1090
+#define IDFF_cavs               1091
 #define IDFF_vp5                1093
 #define IDFF_vp6                1094
-#define IDFF_vp6f                1095
-#define IDFF_rt21                1096
-#define IDFF_vixl                1097
-#define IDFF_aasc                1098
-#define IDFF_qtrpza              1099
+#define IDFF_vp6f               1095
+#define IDFF_rt21               1096
+#define IDFF_vixl               1097
+#define IDFF_aasc               1098
+#define IDFF_qtrpza             1099
 #define IDFF_mjpg               1014
 #define IDFF_dvsd               1015
 #define IDFF_hfyu               1016
@@ -874,7 +903,6 @@
 #define IDFF_vorbis             1058
 #define IDFF_lpcm               1056
 #define IDFF_fps1               1077
-#define IDFF_snow               1078
 #define IDFF_ra                 1079
 #define IDFF_imc                1080
 #define IDFF_mss2               1081
@@ -884,39 +912,34 @@
 #define IDFF_cdvc               1085
 #define IDFF_atrac3             1086
 #define IDFF_nellymoser         1087
+#define IDFF_wavpack            1089 //1088 is eac3
 #define IDFF_rawa               1036
 #define IDFF_avisV              1043
 #define IDFF_avisA              1048
 #define IDFF_mlp                1097
+#define IDFF_truehd             3515
 #define IDFF_rv40               1332
 #define IDFF_rv30               1333
 #define IDFF_cook               1334
+#define IDFF_vp8                1335
+#define IDFF_iv50               1336
+#define IDFF_i263               1337
+#define IDFF_qtpcm              1338
 
 #define IDFF_filterOutputVideo   1357
-#define IDFF_hwOverlayOld        1317
-#define IDFF_setSARinOutSample   1350 // 0 - VIDEOINFOHEADER, 1 - VIDEOINFOHEADER2, 2 - first try VIDEOINFOHEADER2, then VIDEOINFOHEADER
-#define IDFF_hwOverlay           1350 // deprecated.
-#define IDFF_outI420             1309
 #define IDFF_outYV12             1301
 #define IDFF_outYUY2             1302
-#define IDFF_outYVYU             1303
 #define IDFF_outUYVY             1304
 #define IDFF_outNV12             1360
 #define IDFF_outRGB32            1305
-#define IDFF_outRGB24            1306
-#define IDFF_outRGB555           1307
-#define IDFF_outRGB565           1308
-#define IDFF_outClosest          1356
 #define IDFF_outDV               1358
 #define IDFF_outDVnorm           1359
-#define IDFF_allowOutChange      1352
-#define IDFF_outChangeCompatOnly 1354
-#define IDFF_hwDeinterlaceOld    1318
 #define IDFF_setDeintInOutSample 1353
-#define IDFF_hwDeinterlace       1353 // deprecated.
 #define IDFF_hwDeintMethod       1361
 #define IDFF_hwDeintFieldOrder   3500
-#define IDFF_avisynthYV12_RGB    1355
+#define IDFF_avisynthYV12_RGB    1355 // deprecated. Use IDFF_highQualityRGB instead.
+#define IDFF_highQualityRGB      1355
+#define IDFF_RGB_dithering       3516
 #define IDFF_cspOptionsIturBt            1362 // 0: 601, 1:709
 #define IDFF_cspOptionsBlackCutoff       3424
 #define IDFF_cspOptionsWhiteCutoff       3425
@@ -938,11 +961,19 @@
 #define IDFF_aoutAC3EncodeMode      3379
 #define IDFF_aoutpassthroughAC3     3501
 #define IDFF_aoutpassthroughDTS     3502
+#define IDFF_aoutpassthroughTRUEHD  3524
+#define IDFF_aoutpassthroughDTSHD   3525
+#define IDFF_aoutpassthroughEAC3    3526
+#define IDFF_aoutpassthroughPCMConnection 3533
+#define IDFF_aoutUseIEC61937        3532
+#define IDFF_aoutpassthroughDeviceId 3534
 
 #define IDFF_dithering          1311
 #define IDFF_noiseShaping       1312
 #define IDFF_audio_decoder_DRC  3509
 #define IDFF_audio_decoder_DRC_Level 3510
+#define IDFF_audio_decoder_JitterCorrection 3535
+#define IDFF_audio_decoder_delay  3540
 
 #define IDFF_filterDScaler        2200
 #define IDFF_isDScaler            2201
@@ -975,7 +1006,6 @@
 #define IDFF_preferredsfs         2399
 #define IDFF_alwaysextensible     2398
 #define IDFF_allowOutStream       2397
-#define IDFF_vorbisgain           2396
 
 #define IDFF_filterVolume         2400
 #define IDFF_isVolume             2401
@@ -1042,6 +1072,7 @@
 #define IDFF_winamp2filtername 2464
 #define IDFF_winamp2dir        2465
 #define IDFF_winamp2allowMultichannelOnlyIn 3380
+#define IDFF_winamp32bit       3562
 
 #define IDFF_filterFreeverb   2500
 #define IDFF_isFreeverb       2501
@@ -1252,6 +1283,12 @@
 #define IDFF_convolverLevelAdjustDB   2856 // *10
 #define IDFF_convolverLevelAdjustAuto 2857
 
+// DXVA
+#define IDFF_dec_DXVA_H264             3536
+#define IDFF_dec_DXVA_VC1              3537
+#define IDFF_dec_DXVA_CompatibilityMode 3538
+#define IDFF_dec_DXVA_PostProcessingMode 3539
+
 //----------------------- encoding -------------------------
 #define IDFF_numthreads      3322
 #define IDFF_enc_mode        3000
@@ -1350,7 +1387,6 @@
 #define IDFF_enc_is_xvid_vhq_custom        3068
 #define IDFF_enc_xvid_vhq_custom           3069
 
-#define IDFF_enc_skalSearchMetric          3310
 
 #define IDFF_enc_quant_type                3070
 #define IDFF_enc_qmatrix_intra_custom0     3272
@@ -1498,32 +1534,12 @@
 #define IDFF_enc_is_ff_border_masking         3334
 #define IDFF_enc_ff_border_masking1000        3335
 #define IDFF_enc_ff_naq                       3182
-#define IDFF_enc_isSkalMasking                3308
-#define IDFF_enc_skalMaskingAmp               3309
 
 #define IDFF_enc_theo_hq               3196
 #define IDFF_enc_theo_sharpness        3329
 #define IDFF_enc_theo_noisesensitivity 3330
 
 #define IDFF_enc_raw_fourcc  3197
-
-#define IDFF_enc_x264_max_ref_frames              3316
-#define IDFF_enc_x264_cabac                       3317
-#define IDFF_enc_x264_me_inter                    3319
-#define IDFF_enc_x264_me_intra                    3320
-#define IDFF_enc_x264_me_subpelrefine             3323
-#define IDFF_enc_x264_interlaced                  3224
-#define IDFF_enc_x264_i_deblocking_filter_alphac0 3325
-#define IDFF_enc_x264_i_deblocking_filter_beta    3326
-#define IDFF_enc_x264_i_direct_mv_pred            3333
-#define IDFF_enc_x264_mv_range                    3337
-#define IDFF_enc_x264_b_bframe_pyramid            3338
-#define IDFF_enc_x264_b_aud                       3339
-#define IDFF_enc_x264_me_method                   3340
-#define IDFF_enc_x264_me_range                    3341
-#define IDFF_enc_x264_mixed_ref                   3359
-#define IDFF_enc_x264_aq_strength100              3360
-#define IDFF_enc_x264_b_dct_decimate              3361
 
 #define IDFF_enc_working               3198
 #define IDFF_enc_fpsRate               3206
@@ -1539,6 +1555,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//next:3515
+//next:3564
 
 #endif

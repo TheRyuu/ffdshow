@@ -18,33 +18,39 @@
 
 #include "stdafx.h"
 #include "Tswscale.h"
-#include "Tlibmplayer.h"
+#include "Tlibavcodec.h"
+#include "libswscale/swscale.h"
 #include "ffImgfmt.h"
 #include "Tconfig.h"
-#include "postproc/swscale.h"
 
-Tswscale::Tswscale(Tlibmplayer *Ilibmplayer):libmplayer(Ilibmplayer)
+Tswscale::Tswscale(Tlibavcodec *Ilibavcodec):libavcodec(Ilibavcodec)
 {
- swsc=NULL;
+    swsc=NULL;
 }
 Tswscale::~Tswscale()
 {
- done();
+    done();
 }
-bool Tswscale::init(unsigned int Idx,unsigned int Idy,int incsp,int outcsp,const int yuv2rgbTable[6])
+bool Tswscale::init(unsigned int Idx,unsigned int Idy,uint64_t incsp,uint64_t outcsp,const int yuv2rgbTable[6])
 {
- done();
- int sw_incsp=csp_ffdshow2mplayer(incsp),sw_outcsp=csp_ffdshow2mplayer(outcsp);
- dx=Idx;dy=Idy;
- SwsParams params;Tlibmplayer::swsInitParams(&params,SWS_POINT);
- swsc=libmplayer->sws_getContext(dx,dy,sw_incsp,dx,dy,sw_outcsp,&params,NULL,NULL,yuv2rgbTable);
- return !!swsc;
+    done();
+    PixelFormat sw_incsp=csp_ffdshow2lavc(incsp),sw_outcsp=csp_ffdshow2lavc(outcsp);
+    dx=Idx;
+    dy=Idy;
+    sws_flags = SWS_BILINEAR | SWS_FULL_CHR_H_INT | SWS_FULL_CHR_H_INP; //Resize method
+    SwsParams params;
+    Tlibavcodec::swsInitParams(&params,SWS_BILINEAR,sws_flags);
+    swsc=libavcodec->sws_getCachedContext(NULL,dx,dy,sw_incsp,dx,dy,sw_outcsp,sws_flags,NULL,NULL,NULL,&params);
+    return !!swsc;
 }
 void Tswscale::done(void)
 {
- if (swsc) libmplayer->sws_freeContext(swsc);swsc=NULL;
+    if (swsc) {
+        libavcodec->sws_freeContext(swsc);
+    }
+    swsc=NULL;
 }
 bool Tswscale::convert(const uint8_t* src[], const stride_t srcStride[], uint8_t* dst[], stride_t dstStride[])
 {
- return swsc && libmplayer->sws_scale_ordered(swsc,src,srcStride,0,dy,dst,dstStride)>0;
+    return swsc && libavcodec->sws_scale(swsc,src,srcStride,0,dy,dst,dstStride)>0;
 }

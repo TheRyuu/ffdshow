@@ -1,42 +1,42 @@
 /*
- * Provides registration of all codecs, parsers and bitstream filters for libavcodec.
+ * Provide registration of all codecs, parsers and bitstream filters for libavcodec.
  * Copyright (c) 2002 Fabrice Bellard
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 /**
- * @file libavcodec/allcodecs.c
- * Provides registration of all codecs, parsers and bitstream filters for libavcodec.
+ * @file
+ * Provide registration of all codecs, parsers and bitstream filters for libavcodec.
  */
 
 #include "avcodec.h"
 
 #define REGISTER_ENCODER(X,x) { \
-          extern AVCodec x##_encoder; \
-          if(CONFIG_##X##_ENCODER)  avcodec_register(&x##_encoder); }
+          extern AVCodec ff_##x##_encoder; \
+          if(CONFIG_##X##_ENCODER)  avcodec_register(&ff_##x##_encoder); }
 #define REGISTER_DECODER(X,x) { \
-          extern AVCodec x##_decoder; \
-          if(CONFIG_##X##_DECODER)  avcodec_register(&x##_decoder); }
+          extern AVCodec ff_##x##_decoder; \
+          if(CONFIG_##X##_DECODER)  avcodec_register(&ff_##x##_decoder); }
 #define REGISTER_ENCDEC(X,x)  REGISTER_ENCODER(X,x); REGISTER_DECODER(X,x)
 
 #define REGISTER_PARSER(X,x) { \
-          extern AVCodecParser x##_parser; \
-          if(CONFIG_##X##_PARSER)  av_register_codec_parser(&x##_parser); }
+          extern AVCodecParser ff_##x##_parser; \
+          if(CONFIG_##X##_PARSER)  av_register_codec_parser(&ff_##x##_parser); }
 
 void avcodec_register_all(void)
 {
@@ -54,7 +54,6 @@ void avcodec_register_all(void)
     REGISTER_DECODER (AVS, avs);
     REGISTER_DECODER (CAVS, cavs);
     REGISTER_DECODER (CINEPAK, cinepak);
-    REGISTER_DECODER (COREPNG, corepng);
     REGISTER_DECODER (CSCD, cscd);
     REGISTER_DECODER (CYUV, cyuv);
     REGISTER_ENCDEC  (DVVIDEO, dvvideo);
@@ -71,6 +70,7 @@ void avcodec_register_all(void)
     REGISTER_ENCDEC  (HUFFYUV, huffyuv);
     REGISTER_DECODER (INDEO2, indeo2);
     REGISTER_DECODER (INDEO3, indeo3);
+    REGISTER_DECODER (INDEO5, indeo5);
     REGISTER_DECODER (JPEGLS, jpegls);
     REGISTER_ENCODER (LJPEG, ljpeg);
     REGISTER_DECODER (LOCO, loco);
@@ -103,36 +103,44 @@ void avcodec_register_all(void)
     REGISTER_DECODER (TSCC, tscc);
     REGISTER_DECODER (ULTI, ulti);
     REGISTER_DECODER (VC1, vc1);
+    REGISTER_DECODER (VC1IMAGE, vc1image);
     REGISTER_DECODER (VCR1, vcr1);
     REGISTER_DECODER (VP3, vp3);
     REGISTER_DECODER (VP5, vp5);
     REGISTER_DECODER (VP6, vp6);
     REGISTER_DECODER (VP6A, vp6a);
     REGISTER_DECODER (VP6F, vp6f);
+    REGISTER_DECODER (VP8, vp8);
     REGISTER_ENCDEC  (WMV1, wmv1);
     REGISTER_ENCDEC  (WMV2, wmv2);
     REGISTER_DECODER (WMV3, wmv3);
+    REGISTER_DECODER (WMV3IMAGE, wmv3image);
     REGISTER_DECODER (WNV1, wnv1);
     REGISTER_DECODER (XL, xl);
     REGISTER_DECODER (ZLIB, zlib);
     REGISTER_DECODER (ZMBV, zmbv);
 
     /* audio codecs */
-    //REGISTER_DECODER (AAC, aac);
-    REGISTER_ENCDEC  (AC3, ac3);
+    REGISTER_DECODER (AAC, aac);
+    REGISTER_DECODER (AAC_LATM, aac_latm);
+    REGISTER_DECODER (AC3, ac3);
     REGISTER_DECODER (ATRAC3, atrac3);
     REGISTER_DECODER (COOK, cook);
     REGISTER_DECODER (DCA, dca);
     REGISTER_DECODER (EAC3, eac3);
     REGISTER_DECODER (FLAC, flac);
+    REGISTER_DECODER (GSM, gsm);
+    REGISTER_DECODER (GSM_MS, gsm_ms);
     REGISTER_DECODER (IMC, imc);
     REGISTER_DECODER (MACE3, mace3);
     REGISTER_DECODER (MACE6, mace6);
     REGISTER_DECODER (MLP, mlp);
     REGISTER_DECODER (MP1, mp1);
+    REGISTER_DECODER (MP1FLOAT, mp1float);
     REGISTER_DECODER (MP2, mp2);
+    REGISTER_DECODER (MP2FLOAT, mp2float);
     REGISTER_DECODER (MP3, mp3);
-    REGISTER_DECODER (MSGSM, msgsm);
+    REGISTER_DECODER (MP3FLOAT, mp3float);
     REGISTER_DECODER (NELLYMOSER, nellymoser);
     REGISTER_DECODER (QDM2, qdm2);
     REGISTER_DECODER (RA_144, ra_144);
@@ -143,8 +151,12 @@ void avcodec_register_all(void)
     REGISTER_DECODER (VORBIS, vorbis);
     REGISTER_DECODER (WMAV1, wmav1);
     REGISTER_DECODER (WMAV2, wmav2);
+    REGISTER_DECODER (WAVPACK, wavpack);
+    
+    REGISTER_ENCODER (AC3, ac3);
+    REGISTER_ENCODER (AC3_FIXED, ac3_fixed);
 
-    /* pcm codecs */
+    /* PCM codecs */
     REGISTER_DECODER (PCM_ALAW, pcm_alaw);
     REGISTER_DECODER (PCM_MULAW,pcm_mulaw);
 
@@ -167,15 +179,14 @@ void avcodec_register_all(void)
     REGISTER_DECODER (ADPCM_SWF, adpcm_swf);
     REGISTER_DECODER (ADPCM_XA, adpcm_xa);
     REGISTER_DECODER (ADPCM_YAMAHA, adpcm_yamaha);
-    
+
     /* external libraries */
     REGISTER_DECODER (LIBAMR_NB, libamr_nb);
 
     /* parsers */
-    //REGISTER_PARSER  (AAC, aac);
+    REGISTER_PARSER  (AAC, aac);
     REGISTER_PARSER  (AC3, ac3);
     REGISTER_PARSER  (DCA, dca);
     REGISTER_PARSER  (MLP, mlp);
-    REGISTER_PARSER  (MPEGAUDIO, mpegaudio);    
+    REGISTER_PARSER  (MPEGAUDIO, mpegaudio);
 }
-

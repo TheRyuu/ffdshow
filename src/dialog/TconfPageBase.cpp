@@ -24,89 +24,95 @@
 
 TconfPageBase::TconfPageBase(TffdshowPageBase *Iparent,int IfilterPageId):Twindow(Iparent->deci)
 {
- m_hwnd=NULL;
- parent=Iparent;
- hwndParent=parent->m_hwnd;
- helpStr=NULL;
- dialogId=0;
- inPreset=0;
- filterID=0;filterPageID=IfilterPageId;
- helpURL=NULL;
- static const int props[]={0};
- propsIDs=props;
+    m_hwnd=NULL;
+    parent=Iparent;
+    hwndParent=parent->m_hwnd;
+    helpStr=NULL;
+    dialogId=0;
+    inPreset=0;
+    filterID=0;
+    filterPageID=IfilterPageId;
+    helpURL=NULL;
+    static const int props[]= {0};
+    propsIDs=props;
 }
 TconfPageBase::~TconfPageBase()
 {
- if (helpStr) free(helpStr);
+    if (helpStr) {
+        free(helpStr);
+    }
 }
 
 const char_t* TconfPageBase::dialogName(void)
 {
- const char_t *name=tr->translate(dialogId);
- ff_strncpy(dialogNameRes, name, countof(dialogNameRes));
- return dialogNameRes;
+    const char_t *name=tr->translate(dialogId);
+    ff_strncpy(dialogNameRes, name, countof(dialogNameRes));
+    return dialogNameRes;
 }
 
 void TconfPageBase::createWindow(void)
 {
- m_hwnd=createDialog(dialogId,hwndParent);
- assert(m_hwnd);
- ShowWindow(m_hwnd,SW_HIDE);
- setWindowText(m_hwnd,dialogName());
- translate();
- if (tr->translateMode && dialogId!=IDD_ABOUT)
-  {
-   HWND hed=GetDlgItem(m_hwnd,IDC_ED_HELP);
-   if (hed)
-    {
-     SendMessage(hed,EM_SETREADONLY,FALSE,0);
-     SetWindowLong(hed,GWL_STYLE,GetWindowLong(hed,GWL_STYLE)|ES_WANTRETURN);
+    m_hwnd=createDialog(dialogId,hwndParent);
+    assert(m_hwnd);
+    ShowWindow(m_hwnd,SW_HIDE);
+    setWindowText(m_hwnd,dialogName());
+    translate();
+    if (tr->translateMode && dialogId!=IDD_ABOUT) {
+        HWND hed=GetDlgItem(m_hwnd,IDC_ED_HELP);
+        if (hed) {
+            SendMessage(hed,EM_SETREADONLY,FALSE,0);
+            SetWindowLong(hed,GWL_STYLE,GetWindowLong(hed,GWL_STYLE)|ES_WANTRETURN);
+        }
     }
-  }
 }
 void TconfPageBase::destroyWindow(void)
 {
- DestroyWindow(m_hwnd);
- m_hwnd=NULL;
- wndEnabled=true;
+    DestroyWindow(m_hwnd);
+    m_hwnd=NULL;
+    wndEnabled=true;
 }
 
 char_t* TconfPageBase::loadText(int resId)
 {
- HRSRC rsrc=FindResource(hi,MAKEINTRESOURCE(resId),_l("TEXT"));
- if (!rsrc) return NULL;
- HGLOBAL hglb=LoadResource(hi,rsrc);
- int len=SizeofResource(hi,rsrc);
- TstreamMem ms((const unsigned char*)LockResource(hglb),len,Tstream::ENC_AUTODETECT);
- ms.stripEOLN(false);
- ms.convertUtoD(true);
- len=len*2+3;
- char_t *helpStr0=(char_t*)calloc(len,sizeof(char_t)),*helpStr=helpStr0;
- while (ms.fgets(helpStr,len*sizeof(char_t)))
-  helpStr=strchr(helpStr,'\0');
- return helpStr0;
+    HRSRC rsrc=FindResource(hi,MAKEINTRESOURCE(resId),_l("TEXT"));
+    if (!rsrc) {
+        return NULL;
+    }
+    HGLOBAL hglb=LoadResource(hi,rsrc);
+    int len=SizeofResource(hi,rsrc);
+    TstreamMem ms((const unsigned char*)LockResource(hglb),len,Tstream::ENC_AUTODETECT);
+    ms.stripEOLN(false);
+    ms.convertUtoD(true);
+    len=len*2+3;
+    char_t *helpStr0=(char_t*)calloc(len,sizeof(char_t)),*helpStr=helpStr0;
+    while (ms.fgets(helpStr,len*sizeof(char_t))) {
+        helpStr=strchr(helpStr,'\0');
+    }
+    return helpStr0;
 }
 void TconfPageBase::loadHelpStr(int dialogId)
 {
- if (helpStr) free(helpStr);
- helpStr=loadText(dialogId);
- if (helpStr)
-  {
-   setDlgItemText(m_hwnd,IDC_ED_HELP,helpStr);
-   SendDlgItemMessage(m_hwnd,IDC_ED_HELP,EM_SETSEL,0,-1);
-  }
+    if (helpStr) {
+        free(helpStr);
+    }
+    helpStr=loadText(dialogId);
+    if (helpStr) {
+        setDlgItemText(m_hwnd,IDC_ED_HELP,helpStr);
+        SendDlgItemMessage(m_hwnd,IDC_ED_HELP,EM_SETSEL,0,-1);
+    }
 }
 void TconfPageBase::translate(void)
 {
- HWND hed=GetDlgItem(m_hwnd,IDC_ED_HELP);
- if (hed) setWindowText(hed,_l(""));
- Twindow::translate();
+    HWND hed=GetDlgItem(m_hwnd,IDC_ED_HELP);
+    if (hed) {
+        setWindowText(hed,_l(""));
+    }
+    Twindow::translate();
 
- if (hed && GetWindowTextLength(hed)==0)
-  {
-   loadHelpStr(dialogId);
-   SendMessage(hed,EM_SETMODIFY,0,0);
-  }
+    if (hed && GetWindowTextLength(hed)==0) {
+        loadHelpStr(dialogId);
+        SendMessage(hed,EM_SETMODIFY,0,0);
+    }
 }
 
 /*
@@ -187,11 +193,11 @@ LRESULT CALLBACK TconfPageBase::btWndProc(HWND hwnd,UINT uMsg,WPARAM wParam,LPAR
 
 void TconfPageBase::onEditChange(void)
 {
- parent->setChange();
+    parent->setChange();
 }
 
 void TconfPageBase::resize(const CRect &newrect)
 {
- setSize(newrect.Width(),newrect.Height());
- anchors.resize(*this,newrect);
+    setSize(newrect.Width(),newrect.Height());
+    anchors.resize(*this,newrect);
 }

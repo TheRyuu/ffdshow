@@ -1,32 +1,27 @@
-/**************************************************************************
+/*****************************************************************************
  *
  *  XVID MPEG-4 VIDEO CODEC
- *  -  Motion header  -
+ *  - Motion module header -
  *
- *  This program is an implementation of a part of one or more MPEG-4
- *  Video tools as specified in ISO/IEC 14496-2 standard.  Those intending
- *  to use this software module in hardware or software products are
- *  advised that its use may infringe existing patents or copyrights, and
- *  any such use would be at such party's own risk.  The original
- *  developer of this software module and his/her company, and subsequent
- *  editors and their companies, will have no liability for use of this
- *  software or modifications or derivatives thereof.
+ *  Copyright(C) 2002-2003 Radoslaw Czyz <xvid@syskin.cjb.net>
+ *               2002 Michael Militzer <michael@xvid.org>
+ *               
  *
- *  This program is free software; you can redistribute it and/or modify
+ *  This program is free software ; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
+ *  the Free Software Foundation ; either version 2 of the License, or
  *  (at your option) any later version.
  *
  *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  but WITHOUT ANY WARRANTY ; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
+ *  along with this program ; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
  *
- *  $Id: motion.h,v 1.24 2005/12/18 06:52:12 syskin Exp $
+ *  $Id: motion.h 1988 2011-05-18 09:10:05Z Isibaar $
  *
  ***************************************************************************/
 
@@ -59,7 +54,8 @@ void MotionEstimation(MBParam * const pParam,
 					const IMAGE * const pRefV,
 					const IMAGE * const pRefHV,
 					const IMAGE * const pGMC,
-					const uint32_t iLimit);
+					const uint32_t iLimit,
+					const int num_slices);
 
 void
 MotionEstimationBVOP(MBParam * const pParam,
@@ -75,7 +71,8 @@ MotionEstimationBVOP(MBParam * const pParam,
 						const IMAGE * const b_ref,
 						const IMAGE * const b_refH,
 						const IMAGE * const b_refV,
-						const IMAGE * const b_refHV);
+						const IMAGE * const b_refHV,
+						const int num_slices);
 
 void
 GMEanalysis(const MBParam * const pParam,
@@ -83,7 +80,8 @@ GMEanalysis(const MBParam * const pParam,
 			const FRAMEINFO * const reference,
 			const IMAGE * const pRefH,
 			const IMAGE * const pRefV,
-			const IMAGE * const pRefHV);
+			const IMAGE * const pRefHV,
+			const int num_slices);
 
 WARPPOINTS
 GlobalMotionEst(MACROBLOCK * const pMBs,
@@ -92,7 +90,8 @@ GlobalMotionEst(MACROBLOCK * const pMBs,
 				const FRAMEINFO * const reference,
 				const IMAGE * const pRefH,
 				const IMAGE * const pRefV,
-				const IMAGE * const pRefHV);
+				const IMAGE * const pRefHV,
+				const int num_slices);
 
 int
 GlobalMotionEstRefine(
@@ -144,7 +143,8 @@ MBMotionCompensation(MACROBLOCK * const mb,
 					const uint32_t height,
 					const uint32_t edged_width,
 					const int32_t quarterpel,
-					const int32_t rounding);
+					const int32_t rounding,
+					uint8_t * const tmp);
 
 void
 MBMotionCompensationBVOP(MBParam * pParam,
@@ -160,6 +160,7 @@ MBMotionCompensationBVOP(MBParam * pParam,
 							const IMAGE * const b_refh,
 							const IMAGE * const b_refv,
 							const IMAGE * const b_refhv,
-							int16_t * dct_codes);
+							int16_t * dct_codes,
+							uint8_t * const tmp);
 
 #endif							/* _MOTION_H_ */

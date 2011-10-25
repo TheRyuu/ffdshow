@@ -25,35 +25,45 @@
 
 TdeinterlacePageDScaler::TdeinterlacePageDScaler(Twindow *parent,const char_t *flnm):TdeinterlacePanel(0,parent)
 {
- di=new Tdscaler_DI(flnm,parent->deci);
- m_hwnd=NULL;
- if (!di->settings) return;
- di->settings->str2cfg(deci->getParamStr2(IDFF_dscalerDIcfg));
- HWND place=GetDlgItem(parent->m_hwnd,IDC_PLC_DEINT);
- RECT placer,parentr;
- GetWindowRect(parent->m_hwnd,&parentr);
- GetWindowRect(place,&placer);
- OffsetRect(&placer,-parentr.left,-parentr.top);
- m_hwnd=di->settings->createWindow(hi,parent,placer,WM_DSCALERPAGE_CHANGE,NULL);
- if (m_hwnd) SetWindowPos(m_hwnd,place,placer.left,placer.top,placer.right-placer.left,placer.bottom-placer.top,SWP_SHOWWINDOW);
+    di=new Tdscaler_DI(flnm,parent->deci);
+    m_hwnd=NULL;
+    if (!di->settings) {
+        return;
+    }
+    di->settings->str2cfg(deci->getParamStr2(IDFF_dscalerDIcfg));
+    HWND place=GetDlgItem(parent->m_hwnd,IDC_PLC_DEINT);
+    RECT placer,parentr;
+    GetWindowRect(parent->m_hwnd,&parentr);
+    GetWindowRect(place,&placer);
+    OffsetRect(&placer,-parentr.left,-parentr.top);
+    m_hwnd=di->settings->createWindow(hi,parent,placer,WM_DSCALERPAGE_CHANGE,NULL);
+    if (m_hwnd) {
+        SetWindowPos(m_hwnd,place,placer.left,placer.top,placer.right-placer.left,placer.bottom-placer.top,SWP_SHOWWINDOW);
+    }
 }
 
 TdeinterlacePageDScaler::~TdeinterlacePageDScaler()
 {
- //DestroyWindow(m_hwnd);
- delete di;
+    //DestroyWindow(m_hwnd);
+    delete di;
 }
 
 void TdeinterlacePageDScaler::storeCfg(void)
 {
- if (!di->settings) return;
- ffstring s;
- di->settings->cfg2str(s);
- if (s.empty() || s.size()==0) return;
- cfgSet(IDFF_dscalerDIcfg,s.c_str());
+    if (!di->settings) {
+        return;
+    }
+    ffstring s;
+    di->settings->cfg2str(s);
+    if (s.empty() || s.size()==0) {
+        return;
+    }
+    cfgSet(IDFF_dscalerDIcfg,s.c_str());
 }
 
 void TdeinterlacePageDScaler::reset(void)
 {
- if (di->settings) di->settings->reset();
+    if (di->settings) {
+        di->settings->reset();
+    }
 }

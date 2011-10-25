@@ -2,31 +2,31 @@
  * Chinese AVS video (AVS1-P2, JiZhun profile) decoder.
  * Copyright (c) 2006  Stefan Gehrer <stefan.gehrer@gmx.de>
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 /**
- * @file libavcodec/cavs.c
+ * @file
  * Chinese AVS video (AVS1-P2, JiZhun profile) decoder
  * @author Stefan Gehrer <stefan.gehrer@gmx.de>
  */
 
 #include "avcodec.h"
-#include "bitstream.h"
+#include "get_bits.h"
 #include "golomb.h"
 #include "mathops.h"
 #include "cavs.h"
@@ -73,7 +73,7 @@ static inline int get_bs(cavs_vector *mvP, cavs_vector *mvQ, int b) {
  *
  */
 void ff_cavs_filter(AVSContext *h, enum cavs_mb mb_type) {
-    DECLARE_ALIGNED_8(uint8_t, bs[8]);
+    uint8_t bs[8];
     int qp_avg, alpha, beta, tc;
     int i;
 
@@ -93,9 +93,9 @@ void ff_cavs_filter(AVSContext *h, enum cavs_mb mb_type) {
     if(!h->loop_filter_disable) {
         /* determine bs */
         if(mb_type == I_8X8)
-            *((uint64_t *)bs) = 0x0202020202020202ULL;
+            memset(bs,2,8);
         else{
-            *((uint64_t *)bs) = 0;
+            memset(bs,0,8);
             if(ff_cavs_partition_flags[mb_type] & SPLITV){
                 bs[2] = get_bs(&h->mv[MV_FWD_X0], &h->mv[MV_FWD_X1], mb_type > P_8X8);
                 bs[3] = get_bs(&h->mv[MV_FWD_X2], &h->mv[MV_FWD_X3], mb_type > P_8X8);
@@ -109,26 +109,26 @@ void ff_cavs_filter(AVSContext *h, enum cavs_mb mb_type) {
             bs[4] = get_bs(&h->mv[MV_FWD_B2], &h->mv[MV_FWD_X0], mb_type > P_8X8);
             bs[5] = get_bs(&h->mv[MV_FWD_B3], &h->mv[MV_FWD_X1], mb_type > P_8X8);
         }
-        if( *((uint64_t *)bs) ) {
+        if(AV_RN64(bs)) {
             if(h->flags & A_AVAIL) {
                 qp_avg = (h->qp + h->left_qp + 1) >> 1;
                 SET_PARAMS;
-                h->s.dsp.cavs_filter_lv(h->cy,h->l_stride,alpha,beta,tc,bs[0],bs[1]);
-                h->s.dsp.cavs_filter_cv(h->cu,h->c_stride,alpha,beta,tc,bs[0],bs[1]);
-                h->s.dsp.cavs_filter_cv(h->cv,h->c_stride,alpha,beta,tc,bs[0],bs[1]);
+                h->cdsp.cavs_filter_lv(h->cy,h->l_stride,alpha,beta,tc,bs[0],bs[1]);
+                h->cdsp.cavs_filter_cv(h->cu,h->c_stride,alpha,beta,tc,bs[0],bs[1]);
+                h->cdsp.cavs_filter_cv(h->cv,h->c_stride,alpha,beta,tc,bs[0],bs[1]);
             }
             qp_avg = h->qp;
             SET_PARAMS;
-            h->s.dsp.cavs_filter_lv(h->cy + 8,h->l_stride,alpha,beta,tc,bs[2],bs[3]);
-            h->s.dsp.cavs_filter_lh(h->cy + 8*h->l_stride,h->l_stride,alpha,beta,tc,
+            h->cdsp.cavs_filter_lv(h->cy + 8,h->l_stride,alpha,beta,tc,bs[2],bs[3]);
+            h->cdsp.cavs_filter_lh(h->cy + 8*h->l_stride,h->l_stride,alpha,beta,tc,
                            bs[6],bs[7]);
 
             if(h->flags & B_AVAIL) {
                 qp_avg = (h->qp + h->top_qp[h->mbx] + 1) >> 1;
                 SET_PARAMS;
-                h->s.dsp.cavs_filter_lh(h->cy,h->l_stride,alpha,beta,tc,bs[4],bs[5]);
-                h->s.dsp.cavs_filter_ch(h->cu,h->c_stride,alpha,beta,tc,bs[4],bs[5]);
-                h->s.dsp.cavs_filter_ch(h->cv,h->c_stride,alpha,beta,tc,bs[4],bs[5]);
+                h->cdsp.cavs_filter_lh(h->cy,h->l_stride,alpha,beta,tc,bs[4],bs[5]);
+                h->cdsp.cavs_filter_ch(h->cu,h->c_stride,alpha,beta,tc,bs[4],bs[5]);
+                h->cdsp.cavs_filter_ch(h->cv,h->c_stride,alpha,beta,tc,bs[4],bs[5]);
             }
         }
     }
@@ -333,9 +333,9 @@ static inline void mc_dir_part(AVSContext *h,Picture *pic,int square,
     const int mx= mv->x + src_x_offset*8;
     const int my= mv->y + src_y_offset*8;
     const int luma_xy= (mx&3) + ((my&3)<<2);
-    uint8_t * src_y = pic->data[0] + (mx>>2) + (my>>2)*h->l_stride;
-    uint8_t * src_cb= pic->data[1] + (mx>>3) + (my>>3)*h->c_stride;
-    uint8_t * src_cr= pic->data[2] + (mx>>3) + (my>>3)*h->c_stride;
+    uint8_t * src_y  = pic->f.data[0] + (mx >> 2) + (my >> 2) * h->l_stride;
+    uint8_t * src_cb = pic->f.data[1] + (mx >> 3) + (my >> 3) * h->c_stride;
+    uint8_t * src_cr = pic->f.data[2] + (mx >> 3) + (my >> 3) * h->c_stride;
     int extra_width= 0; //(s->flags&CODEC_FLAG_EMU_EDGE) ? 0 : 16;
     int extra_height= extra_width;
     int emu=0;
@@ -344,7 +344,7 @@ static inline void mc_dir_part(AVSContext *h,Picture *pic,int square,
     const int pic_width  = 16*h->mb_width;
     const int pic_height = 16*h->mb_height;
 
-    if(!pic->data[0])
+    if(!pic->f.data[0])
         return;
     if(mx&7) extra_width -= 3;
     if(my&7) extra_height -= 3;
@@ -353,7 +353,7 @@ static inline void mc_dir_part(AVSContext *h,Picture *pic,int square,
           || full_my < 0-extra_height
           || full_mx + 16/*FIXME*/ > pic_width + extra_width
           || full_my + 16/*FIXME*/ > pic_height + extra_height){
-        ff_emulated_edge_mc(s->edge_emu_buffer, src_y - 2 - 2*h->l_stride, h->l_stride,
+        s->dsp.emulated_edge_mc(s->edge_emu_buffer, src_y - 2 - 2*h->l_stride, h->l_stride,
                             16+5, 16+5/*FIXME*/, full_mx-2, full_my-2, pic_width, pic_height);
         src_y= s->edge_emu_buffer + 2 + 2*h->l_stride;
         emu=1;
@@ -365,14 +365,14 @@ static inline void mc_dir_part(AVSContext *h,Picture *pic,int square,
     }
 
     if(emu){
-        ff_emulated_edge_mc(s->edge_emu_buffer, src_cb, h->c_stride,
+        s->dsp.emulated_edge_mc(s->edge_emu_buffer, src_cb, h->c_stride,
                             9, 9/*FIXME*/, (mx>>3), (my>>3), pic_width>>1, pic_height>>1);
         src_cb= s->edge_emu_buffer;
     }
     chroma_op(dest_cb, src_cb, h->c_stride, chroma_height, mx&7, my&7);
 
     if(emu){
-        ff_emulated_edge_mc(s->edge_emu_buffer, src_cr, h->c_stride,
+        s->dsp.emulated_edge_mc(s->edge_emu_buffer, src_cr, h->c_stride,
                             9, 9/*FIXME*/, (mx>>3), (my>>3), pic_width>>1, pic_height>>1);
         src_cr= s->edge_emu_buffer;
     }
@@ -414,30 +414,30 @@ static inline void mc_part_std(AVSContext *h,int square,int chroma_height,int de
 void ff_cavs_inter(AVSContext *h, enum cavs_mb mb_type) {
     if(ff_cavs_partition_flags[mb_type] == 0){ // 16x16
         mc_part_std(h, 1, 8, 0, h->cy, h->cu, h->cv, 0, 0,
-                h->s.dsp.put_cavs_qpel_pixels_tab[0],
+                h->cdsp.put_cavs_qpel_pixels_tab[0],
                 h->s.dsp.put_h264_chroma_pixels_tab[0],
-                h->s.dsp.avg_cavs_qpel_pixels_tab[0],
+                h->cdsp.avg_cavs_qpel_pixels_tab[0],
                 h->s.dsp.avg_h264_chroma_pixels_tab[0],&h->mv[MV_FWD_X0]);
     }else{
         mc_part_std(h, 1, 4, 0, h->cy, h->cu, h->cv, 0, 0,
-                h->s.dsp.put_cavs_qpel_pixels_tab[1],
+                h->cdsp.put_cavs_qpel_pixels_tab[1],
                 h->s.dsp.put_h264_chroma_pixels_tab[1],
-                h->s.dsp.avg_cavs_qpel_pixels_tab[1],
+                h->cdsp.avg_cavs_qpel_pixels_tab[1],
                 h->s.dsp.avg_h264_chroma_pixels_tab[1],&h->mv[MV_FWD_X0]);
         mc_part_std(h, 1, 4, 0, h->cy, h->cu, h->cv, 4, 0,
-                h->s.dsp.put_cavs_qpel_pixels_tab[1],
+                h->cdsp.put_cavs_qpel_pixels_tab[1],
                 h->s.dsp.put_h264_chroma_pixels_tab[1],
-                h->s.dsp.avg_cavs_qpel_pixels_tab[1],
+                h->cdsp.avg_cavs_qpel_pixels_tab[1],
                 h->s.dsp.avg_h264_chroma_pixels_tab[1],&h->mv[MV_FWD_X1]);
         mc_part_std(h, 1, 4, 0, h->cy, h->cu, h->cv, 0, 4,
-                h->s.dsp.put_cavs_qpel_pixels_tab[1],
+                h->cdsp.put_cavs_qpel_pixels_tab[1],
                 h->s.dsp.put_h264_chroma_pixels_tab[1],
-                h->s.dsp.avg_cavs_qpel_pixels_tab[1],
+                h->cdsp.avg_cavs_qpel_pixels_tab[1],
                 h->s.dsp.avg_h264_chroma_pixels_tab[1],&h->mv[MV_FWD_X2]);
         mc_part_std(h, 1, 4, 0, h->cy, h->cu, h->cv, 4, 4,
-                h->s.dsp.put_cavs_qpel_pixels_tab[1],
+                h->cdsp.put_cavs_qpel_pixels_tab[1],
                 h->s.dsp.put_h264_chroma_pixels_tab[1],
-                h->s.dsp.avg_cavs_qpel_pixels_tab[1],
+                h->cdsp.avg_cavs_qpel_pixels_tab[1],
                 h->s.dsp.avg_h264_chroma_pixels_tab[1],&h->mv[MV_FWD_X3]);
     }
 }
@@ -572,7 +572,7 @@ void ff_cavs_init_mb(AVSContext *h) {
 /**
  * save predictors for later macroblocks and increase
  * macroblock address
- * @returns 0 if end of frame is reached, 1 otherwise
+ * @return 0 if end of frame is reached, 1 otherwise
  */
 int ff_cavs_next_mb(AVSContext *h) {
     int i;
@@ -602,9 +602,9 @@ int ff_cavs_next_mb(AVSContext *h) {
         h->mbx = 0;
         h->mby++;
         /* re-calculate sample pointers */
-        h->cy = h->picture.data[0] + h->mby*16*h->l_stride;
-        h->cu = h->picture.data[1] + h->mby*8*h->c_stride;
-        h->cv = h->picture.data[2] + h->mby*8*h->c_stride;
+        h->cy = h->picture.f.data[0] + h->mby * 16 * h->l_stride;
+        h->cu = h->picture.f.data[1] + h->mby *  8 * h->c_stride;
+        h->cv = h->picture.f.data[2] + h->mby *  8 * h->c_stride;
         if(h->mby == h->mb_height) { //frame end
             return 0;
         }
@@ -629,11 +629,11 @@ void ff_cavs_init_pic(AVSContext *h) {
     h->mv[MV_FWD_X0] = ff_cavs_dir_mv;
     set_mvs(&h->mv[MV_FWD_X0], BLK_16X16);
     h->pred_mode_Y[3] = h->pred_mode_Y[6] = NOT_AVAIL;
-    h->cy = h->picture.data[0];
-    h->cu = h->picture.data[1];
-    h->cv = h->picture.data[2];
-    h->l_stride = h->picture.linesize[0];
-    h->c_stride = h->picture.linesize[1];
+    h->cy           = h->picture.f.data[0];
+    h->cu           = h->picture.f.data[1];
+    h->cv           = h->picture.f.data[2];
+    h->l_stride     = h->picture.f.linesize[0];
+    h->c_stride     = h->picture.f.linesize[1];
     h->luma_scan[2] = 8*h->l_stride;
     h->luma_scan[3] = 8*h->l_stride+8;
     h->mbx = h->mby = h->mbidx = 0;
@@ -672,6 +672,7 @@ av_cold int ff_cavs_init(AVCodecContext *avctx) {
     MpegEncContext * const s = &h->s;
 
     MPV_decode_defaults(s);
+    ff_cavsdsp_init(&h->cdsp, avctx);
     s->avctx = avctx;
 
     avctx->pix_fmt= PIX_FMT_YUV420P;

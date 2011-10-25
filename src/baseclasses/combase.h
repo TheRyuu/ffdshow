@@ -302,7 +302,7 @@ public:
 
 
 
-HINSTANCE	LoadOLEAut32();
+HINSTANCE    LoadOLEAut32();
 
 
 #endif /* __COMBASE__ */

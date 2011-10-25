@@ -20,16 +20,14 @@
  */
 
 /**
- * @file rv34data.h
+ * @file
  * miscellaneous RV30/40 tables
  */
 
 #ifndef AVCODEC_RV34DATA_H
 #define AVCODEC_RV34DATA_H
 
-#ifdef __GNUC__
 #include <stdint.h>
-#endif
 
 /**
  * number of ones in nibble minus one

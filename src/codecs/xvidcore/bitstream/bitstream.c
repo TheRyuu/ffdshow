@@ -20,7 +20,7 @@
  *  along with this program ; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
  *
- * $Id: bitstream.c,v 1.57 2007/04/16 19:01:28 Skal Exp $
+ * $Id: bitstream.c 1988 2011-05-18 09:10:05Z Isibaar $
  *
  ****************************************************************************/
 
@@ -815,12 +815,12 @@ BitstreamReadHeaders(Bitstream * bs,
 				dec->time_base += time_incr;
 				dec->time = dec->time_base*dec->time_inc_resolution + time_increment;
 				dec->time_pp = (int32_t)(dec->time - dec->last_non_b_time);
-				dec->last_non_b_time = dec->time;
+                dec->last_non_b_time = dec->time;
 			} else {
-				dec->time = (dec->last_time_base + time_incr)*dec->time_inc_resolution + time_increment;
+                dec->time = (dec->last_time_base + time_incr)*dec->time_inc_resolution + time_increment;
 				dec->time_bp = dec->time_pp - (int32_t)(dec->last_non_b_time - dec->time);
 			}
-			if (dec->time_pp <= 0) dec->time_pp = 1;
+            if (dec->time_pp <= 0) dec->time_pp = 1;
 			DPRINTF(XVID_DEBUG_HEADER,"time_pp=%i\n", dec->time_pp);
 			DPRINTF(XVID_DEBUG_HEADER,"time_bp=%i\n", dec->time_bp);
 
@@ -1024,6 +1024,11 @@ BitstreamReadHeaders(Bitstream * bs,
 						version, build, dec->packed_mode);
 			}
 
+			if ((dec->bs_version == 0) && (build > 0) &&
+				(build != 1393)) { /* non-xvid stream with xvid fourcc */
+				dec->bs_version = 0xffff;
+			}
+
 		} else					/* start_code == ? */
 		{
 			if (BitstreamShowBits(bs, 24) == 0x000001) {
@@ -1067,7 +1072,8 @@ bs_put_matrix(Bitstream * bs,
 void
 BitstreamWriteVolHeader(Bitstream * const bs,
 						const MBParam * pParam,
-						const FRAMEINFO * const frame)
+						const FRAMEINFO * const frame,
+						const int num_slices)
 {
 	static const unsigned int vo_id = 0;
 	static const unsigned int vol_id = 0;
@@ -1232,7 +1238,12 @@ BitstreamWriteVolHeader(Bitstream * const bs,
 	}
 
 	BitstreamPutBit(bs, 1);		/* complexity_estimation_disable */
-	BitstreamPutBit(bs, 1);		/* resync_marker_disable */
+
+	if (num_slices > 1)
+		BitstreamPutBit(bs, 0);		/* resync_marker_enabled */
+	else
+		BitstreamPutBit(bs, 1);		/* resync_marker_disabled */
+
 	BitstreamPutBit(bs, 0);		/* data_partitioned */
 
 	if (vol_ver_id != 1) {
@@ -1247,7 +1258,7 @@ BitstreamWriteVolHeader(Bitstream * const bs,
 	/* divx5 userdata string */
 #define DIVX5_ID ((char *)"DivX503b1393")
   if ((pParam->global_flags & XVID_GLOBAL_DIVX5_USERDATA)) {
-    BitstreamWriteUserData(bs, DIVX5_ID, strlen(DIVX5_ID));
+    BitstreamWriteUserData(bs, DIVX5_ID, (uint32_t)strlen(DIVX5_ID));
   	if (pParam->max_bframes > 0 && (pParam->global_flags & XVID_GLOBAL_PACKED))
       BitstreamPutBits(bs, 'p', 8);
 	}
@@ -1260,7 +1271,7 @@ BitstreamWriteVolHeader(Bitstream * const bs,
 				xvid_user_format,
 				XVID_BS_VERSION,
 				(frame->vop_flags & XVID_VOP_CARTOON)?'C':'\0');
-		BitstreamWriteUserData(bs, xvid_user_data, strlen(xvid_user_data));
+		BitstreamWriteUserData(bs, xvid_user_data, (uint32_t)strlen(xvid_user_data));
 	}
 }
 
@@ -1381,7 +1392,7 @@ BitstreamWriteUserData(Bitstream * const bs,
 						const char *data,
 						const unsigned int length)
 {
-	int i;
+	unsigned int i;
 
 	BitstreamPad(bs);
 	BitstreamPutBits(bs, USERDATA_START_CODE, 32);
@@ -1441,12 +1452,11 @@ void write_video_packet_header(Bitstream * const bs,
 
     if (frame->coding_type == I_VOP)
       nbitsresyncmarker = NUMBITS_VP_RESYNC_MARKER;  /* 16 zeros followed by a 1. */
-    else if (frame->coding_type == P_VOP)
-      nbitsresyncmarker = NUMBITS_VP_RESYNC_MARKER-1 + frame->fcode;
-    else /* B_VOP */
-      nbitsresyncmarker = MAX(NUMBITS_VP_RESYNC_MARKER+1, NUMBITS_VP_RESYNC_MARKER-1 + MAX(frame->fcode, frame->bcode));
+    else if (frame->coding_type == B_VOP) /* B_VOP */
+      nbitsresyncmarker = MAX(NUMBITS_VP_RESYNC_MARKER+1, NUMBITS_VP_RESYNC_MARKER + MAX(frame->fcode, frame->bcode) - 1);
+    else /*(frame->coding_type == P_VOP)*/
+		nbitsresyncmarker = NUMBITS_VP_RESYNC_MARKER + frame->fcode - 1;
 
-    BitstreamPadAlways(bs);
     BitstreamPutBits(bs, RESYNC_MARKER, nbitsresyncmarker);
     BitstreamPutBits(bs, mbnum, mbnum_bits);
     BitstreamPutBits(bs, frame->quant, 5);

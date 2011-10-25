@@ -257,7 +257,7 @@ public:
    writing=true;
    return true;
   }
- virtual int __stdcall write(unsigned int framenum,int csp,const unsigned char * const src[4],const stride_t srcStride[4],void *dst)
+ virtual int __stdcall write(unsigned int framenum,uint64_t csp,const unsigned char * const src[4],const stride_t srcStride[4],void *dst)
   {
    if (!writing) return 0;
    if (cfg.avioutput) return writeAVI(framenum,csp,src,srcStride,dst);
@@ -269,7 +269,7 @@ public:
      DWORD buflen=3*cfg.width*cfg.height/2;
      memcpy(bufptr,src[0],buflen); //always XVID_CSP_YV12
      buf->SetLength(buflen);
-     HRESULT res=pWMWriter->WriteSample(wrinputnum,QWORD(framenum*int64_t(10000000)/cfg.fps),0,buf);
+     pWMWriter->WriteSample(wrinputnum,QWORD(framenum*int64_t(10000000)/cfg.fps),0,buf);
      buf->Release();
      return 1;
     }
@@ -570,7 +570,7 @@ private:
 
    return ( hr );
   }
- int writeAVI(unsigned int framenum,int csp,const unsigned char * const src[4],const stride_t srcStride[4],void *dst)
+ int writeAVI(unsigned int framenum,uint64_t csp,const unsigned char * const src[4],const stride_t srcStride[4],void *dst)
   {
    if (csp&FF_CSP_FLAGS_YUV_ADJ)
     memcpy(pContext.input,src[0],(csp&FF_CSP_420P)?3*cfg.width*cfg.height/2:srcStride[0]*cfg.height);
@@ -656,7 +656,7 @@ public:
      return &*c;
    return NULL;
   }
- virtual bool __stdcall decStart(FOURCC fcc,double fps,unsigned int dx,unsigned int dy,const void *extradata,size_t extradata_len,int *csp)
+ virtual bool __stdcall decStart(FOURCC fcc,double fps,unsigned int dx,unsigned int dy,const void *extradata,size_t extradata_len,uint64_t *csp)
   {
    cfg.avioutput=true;
    cfg.width=dx;cfg.height=dy;cfg.fps=fps;
@@ -810,6 +810,6 @@ extern "C" void __stdcall destroyWmv9(Iff_wmv9 *self)
 }
 extern "C" void __stdcall getVersion(char *ver,const char* *license)
 {
- strcpy(ver,"2.7a, build date "__DATE__" "__TIME__" ("COMPILER COMPILER_X64 COMPILER_INFO")");
+ strcpy(ver,"2.7a, "COMPILER COMPILER_X64 COMPILER_INFO" ("__DATE__" "__TIME__")");
  *license="";
 }

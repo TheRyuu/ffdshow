@@ -17,10 +17,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="debug"
-			IntermediateDirectory="debug"
 			ConfigurationType="2"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+			InheritedPropertySheets="..\..\common.vsprops"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			>
@@ -51,11 +49,9 @@
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
-				PrecompiledHeaderFile=".\DebugDLL/ffSpkCfg.pch"
 				WarningLevel="0"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="4"
-				CompileAs="2"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -76,11 +72,10 @@
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				IgnoreAllDefaultLibraries="true"
-				ModuleDefinitionFile=".\ffSpkCfg.def"
+				ModuleDefinitionFile="ffSpkCfg.def"
 				GenerateDebugInformation="true"
-				RandomizedBaseAddress="1"
-				DataExecutionPrevention="0"
-				ImportLibrary="debug/$(TargetName).lib"
+				ImportLibrary=""
+				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -106,10 +101,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="release"
-			IntermediateDirectory="release"
 			ConfigurationType="2"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+			InheritedPropertySheets="..\..\common.vsprops"
 			UseOfMFC="1"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			WholeProgramOptimization="1"
@@ -147,10 +140,8 @@
 				RuntimeLibrary="0"
 				BufferSecurityCheck="false"
 				EnableFunctionLevelLinking="true"
-				PrecompiledHeaderFile=".\ReleaseDLL/ffSpkCfg.pch"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
-				CompileAs="2"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -165,24 +156,21 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="libcmt.lib kernel32.lib Dsound.lib $(NOINHERIT)"
 				OutputFile="../../bin/ffSpkCfg.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
-				ModuleDefinitionFile=".\ffSpkCfg.def"
-				RandomizedBaseAddress="1"
-				DataExecutionPrevention="0"
-				ImportLibrary="release/$(TargetName).lib"
+				ModuleDefinitionFile="ffSpkCfg.def"
+				DelayLoadDLLs="$(NOINHERIT)"
+				ImportLibrary=""
+				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
 			/>
 			<Tool
 				Name="VCManifestTool"
-				EmbedManifest="false"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"

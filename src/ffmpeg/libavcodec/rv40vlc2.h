@@ -20,16 +20,14 @@
  */
 
 /**
- * @file rv40vlc2.h
+ * @file
  * RV40 VLC tables used for macroblock information decoding
  */
 
 #ifndef AVCODEC_RV40VLC2_H
 #define AVCODEC_RV40VLC2_H
 
-#ifdef __GNUC__
 #include <stdint.h>
-#endif
 
 /**
  * codes used for the first four block types

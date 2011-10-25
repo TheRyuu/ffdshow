@@ -8,25 +8,25 @@
  * aspecting, new decode_frame mechanism and apple mjpeg-b support
  *                                  by Alex Beregszaszi
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 /**
- * @file mjpegenc.c
+ * @file
  * MJPEG encoder.
  */
 
@@ -135,7 +135,7 @@ static void jpeg_table_header(MpegEncContext *s)
     /* huffman table */
     put_marker(p, DHT);
     flush_put_bits(p);
-    ptr = pbBufPtr(p);
+    ptr = put_bits_ptr(p);
     put_bits(p, 16, 0); /* patched later */
     size = 2;
     size += put_huffman_table(s, 0, 0, ff_mjpeg_bits_dc_luminance,
@@ -174,7 +174,7 @@ static void jpeg_put_comments(MpegEncContext *s)
     if(!(s->flags & CODEC_FLAG_BITEXACT)){
         put_marker(p, COM);
         flush_put_bits(p);
-        ptr = pbBufPtr(p);
+        ptr = put_bits_ptr(p);
         put_bits(p, 16, 0); /* patched later */
         ff_put_string(p, LIBAVCODEC_IDENT, 1);
         size = strlen(LIBAVCODEC_IDENT)+3;
@@ -186,7 +186,7 @@ static void jpeg_put_comments(MpegEncContext *s)
        ||s->avctx->pix_fmt == PIX_FMT_YUV444P){
         put_marker(p, COM);
         flush_put_bits(p);
-        ptr = pbBufPtr(p);
+        ptr = put_bits_ptr(p);
         put_bits(p, 16, 0); /* patched later */
         ff_put_string(p, "CS=ITU601", 1);
         size = strlen("CS=ITU601")+3;
@@ -211,7 +211,7 @@ void ff_mjpeg_encode_picture_header(MpegEncContext *s)
     }
 
     put_bits(&s->pb, 16, 17);
-    if(lossless && s->avctx->pix_fmt == PIX_FMT_RGB32)
+    if(lossless && s->avctx->pix_fmt == PIX_FMT_BGRA)
         put_bits(&s->pb, 8, 9); /* 9 bits/component RCT */
     else
         put_bits(&s->pb, 8, 8); /* 8 bits/component */
@@ -313,11 +313,8 @@ static void escape_FF(MpegEncContext *s, int start)
 
     if(ff_count==0) return;
 
-    /* skip put bits */
-    for(i=0; i<ff_count-3; i+=4)
-        put_bits(&s->pb, 32, 0);
-    put_bits(&s->pb, (ff_count-i)*8, 0);
     flush_put_bits(&s->pb);
+    skip_put_bytes(&s->pb, ff_count);
 
     for(i=size-1; ff_count; i--){
         int v= buf[i];
@@ -444,25 +441,18 @@ void ff_mjpeg_encode_mb(MpegEncContext *s, DCTELEM block[6][64])
         encode_block(s, block[5], 5);
         encode_block(s, block[7], 7);
     }
+
+    s->i_tex_bits += get_bits_diff(s);
 }
 
-AVCodec mjpeg_encoder = {
-    "mjpeg",
-    CODEC_TYPE_VIDEO,
-    CODEC_ID_MJPEG,
-    sizeof(MpegEncContext),
-    /*.init=*/MPV_encode_init,
-    /*.encode=*/MPV_encode_picture,
-    /*.close=*/MPV_encode_end,
-    /*.decode=*/NULL,
-    /*.capabilities=*/0,
-    /*.next=*/NULL,
-    /*.flush=*/NULL,
-    /*.supported_framerates=*/NULL,
-#if __STDC_VERSION__ >= 199901L
-    .pix_fmts= (enum PixelFormat[]){PIX_FMT_YUVJ420P, PIX_FMT_YUVJ422P, PIX_FMT_NONE},
-#else
-    /*.pix_fmts = */NULL,
-#endif
-    /*.long_name= */NULL_IF_CONFIG_SMALL("MJPEG (Motion JPEG)"),
+AVCodec ff_mjpeg_encoder = {
+    .name           = "mjpeg",
+    .type           = AVMEDIA_TYPE_VIDEO,
+    .id             = CODEC_ID_MJPEG,
+    .priv_data_size = sizeof(MpegEncContext),
+    .init           = MPV_encode_init,
+    .encode         = MPV_encode_picture,
+    .close          = MPV_encode_end,
+    .pix_fmts= (const enum PixelFormat[]){PIX_FMT_YUVJ420P, PIX_FMT_YUVJ422P, PIX_FMT_NONE},
+    .long_name= NULL_IF_CONFIG_SMALL("MJPEG (Motion JPEG)"),
 };

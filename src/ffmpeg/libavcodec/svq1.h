@@ -6,6 +6,8 @@
  * Copyright (C) 2002 the xine project
  * Copyright (C) 2002 the ffmpeg project
  *
+ * SVQ1 Encoder (c) 2004 Mike Melanson <melanson@pcisys.net>
+ *
  * This file is part of FFmpeg.
  *
  * FFmpeg is free software; you can redistribute it and/or
@@ -24,7 +26,7 @@
  */
 
 /**
- * @file svq1.h
+ * @file
  * Sorenson Vector Quantizer #1 (SVQ1) video codec.
  * For more information of the SVQ1 algorithm, visit:
  *   http://www.pcisys.net/~melanson/codecs/
@@ -33,9 +35,7 @@
 #ifndef AVCODEC_SVQ1_H
 #define AVCODEC_SVQ1_H
 
-#ifdef __GNUC__
 #include <stdint.h>
-#endif
 
 #define SVQ1_BLOCK_SKIP         0
 #define SVQ1_BLOCK_INTER        1
@@ -43,8 +43,8 @@
 #define SVQ1_BLOCK_INTRA        3
 
 struct svq1_frame_size {
-    int width;
-    int height;
+    uint16_t width;
+    uint16_t height;
 };
 
 uint16_t ff_svq1_packet_checksum (const uint8_t *data, const int length,
@@ -59,6 +59,6 @@ extern const uint8_t ff_svq1_inter_multistage_vlc[6][8][2];
 extern const uint16_t ff_svq1_intra_mean_vlc[256][2];
 extern const uint16_t ff_svq1_inter_mean_vlc[512][2];
 
-extern const struct svq1_frame_size ff_svq1_frame_size_table[8];
+extern const struct svq1_frame_size ff_svq1_frame_size_table[7];
 
 #endif /* AVCODEC_SVQ1_H */

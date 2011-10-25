@@ -105,7 +105,7 @@ struct mpeg2_decoder_s {
     int16_t dc_dct_pred[3];
 
     /* DCT coefficients */
-    DECLARE_ALIGNED(64, int16_t, DCTblock[64]);
+    __align16(int16_t, DCTblock[64]);
 
     uint8_t * picture_dest[3];
     void (* convert) (void * convert_id, uint8_t * const * src,
@@ -241,15 +241,9 @@ struct mpeg2dec_s {
     uint8_t new_quantizer_matrix[4][64];
 };
 
-typedef struct {
-    int dummy;
-} cpu_state_t;
 
 /* cpu_accel.c */
 uint32_t mpeg2_detect_accel (uint32_t accel);
-
-/* cpu_state.c */
-void mpeg2_cpu_state_init (uint32_t accel);
 
 /* decode.c */
 mpeg2_state_t mpeg2_seek_header (mpeg2dec_t * mpeg2dec);
@@ -273,8 +267,8 @@ void mpeg2_set_fbuf (mpeg2dec_t * mpeg2dec, int b_type);
 
 /* idct.c */
 extern void mpeg2_idct_init (uint32_t accel);
-extern uint8_t mpeg2_scan_norm[64];
-extern uint8_t mpeg2_scan_alt[64];
+extern __align16(uint8_t,mpeg2_scan_norm[64]);
+extern __align16(uint8_t,mpeg2_scan_alt[64]);
 
 /* idct_mmx.c */
 void mpeg2_idct_copy_sse2 (int16_t * block, uint8_t * dest, int stride);
@@ -313,6 +307,6 @@ typedef struct {
 extern mpeg2_mc_t mpeg2_mc_c;
 extern mpeg2_mc_t mpeg2_mc_mmx;
 extern mpeg2_mc_t mpeg2_mc_mmxext;
-extern mpeg2_mc_t mpeg2_mc_3dnow;
+extern mpeg2_mc_t mpeg2_mc_sse2;
 
 #endif /* LIBMPEG2_MPEG2_INTERNAL_H */

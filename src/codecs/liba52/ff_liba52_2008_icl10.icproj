@@ -5,7 +5,7 @@
 	Name="ff_liba52"
 	ProjectGUID="{7043607F-0E04-457D-AC6E-AA0E1F886250}"
 	VCNestedProjectGUID="{7C4F2A8F-C1A6-4E75-AF26-285A1B70A066}"
-	VCNestedProjectCRC32="2153171321"
+	VCNestedProjectCRC32="3357901610"
 	VCNestedProjectFileName="ff_liba52_2008_icl10.vcproj">
 	<Platforms>
 		<Platform 
@@ -18,13 +18,12 @@
 			Name="Release|Win32">
 			<Tool 
 				Name="GeneralTool"
-				OutputDirectory="release_2008_icl10"
-				IntermediateDirectory="release_2008_icl10"
 				ConfigurationType="2"
+				InheritedPropertySheets="..\..\..\common_icl10.vsprops"
 				UseOfMFC="1"
 				ATLMinimizesCRunTimeLibraryUsage="false"
 				ManagedExtensions="0"
-				WholeProgramOptimization="1"/>
+				WholeProgramOptimization="0"/>
 			<Tool 
 				Name="PreBuildEventTool"/>
 			<Tool 
@@ -49,7 +48,6 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
-				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="../.."
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;NDEBUG;_WINDOWS;ALT_BITSTREAM_READER"
 				StringPooling="true"
@@ -60,7 +58,6 @@
 				RuntimeTypeInfo="false"
 				AssemblerListingLocation="$(IntDir)\"
 				BrowseInformation="0"
-				WarningLevel="1"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="0"
 				CompileAs="2"
@@ -84,12 +81,14 @@
 				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile=".\ff_liba52.def"
+				DelayLoadDLLs="$(NOINHERIT)"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(IntDir)/ff_liba52.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="1"/>
 			<Tool 
 				Name="VCALinkTool"/>
@@ -111,13 +110,12 @@
 			Name="Release|x64">
 			<Tool 
 				Name="GeneralTool"
-				OutputDirectory="release_2008_x64_icl10"
-				IntermediateDirectory="release_2008_x64_icl10"
 				ConfigurationType="2"
+				InheritedPropertySheets="..\..\..\common_icl10.vsprops"
 				UseOfMFC="1"
 				ATLMinimizesCRunTimeLibraryUsage="false"
 				ManagedExtensions="0"
-				WholeProgramOptimization="1"/>
+				WholeProgramOptimization="0"/>
 			<Tool 
 				Name="PreBuildEventTool"/>
 			<Tool 
@@ -142,7 +140,6 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
-				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="../.."
 				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;NDEBUG;_WINDOWS;ALT_BITSTREAM_READER"
 				StringPooling="true"
@@ -152,7 +149,6 @@
 				EnableFunctionLevelLinking="true"
 				RuntimeTypeInfo="false"
 				AssemblerListingLocation="$(IntDir)\"
-				WarningLevel="0"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="0"
 				CompileAs="2"
@@ -179,10 +175,13 @@
 				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile=".\ff_liba52.def"
+				DelayLoadDLLs="$(NOINHERIT)"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				ImportLibrary="$(IntDir)/ff_liba52.lib"
+				RandomizedBaseAddress="1"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"/>
 			<Tool 
 				Name="VCALinkTool"/>
@@ -204,9 +203,8 @@
 			Name="Debug|Win32">
 			<Tool 
 				Name="GeneralTool"
-				OutputDirectory="debug_2008_icl10"
-				IntermediateDirectory="debug_2008_icl10"
 				ConfigurationType="2"
+				InheritedPropertySheets="..\..\..\common_icl10.vsprops"
 				UseOfMFC="0"
 				ATLMinimizesCRunTimeLibraryUsage="false"/>
 			<Tool 
@@ -260,12 +258,13 @@
 				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile=".\ff_liba52.def"
+				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(IntDir)/ff_liba52.pdb"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(IntDir)/ff_liba52.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="1"/>
 			<Tool 
 				Name="VCALinkTool"/>
@@ -287,9 +286,8 @@
 			Name="Debug|x64">
 			<Tool 
 				Name="GeneralTool"
-				OutputDirectory="debug_2008_x64_icl10"
-				IntermediateDirectory="debug_2008_x64_icl10"
 				ConfigurationType="2"
+				InheritedPropertySheets="..\..\..\common_icl10.vsprops"
 				UseOfMFC="0"
 				ATLMinimizesCRunTimeLibraryUsage="false"/>
 			<Tool 
@@ -342,10 +340,12 @@
 				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile=".\ff_liba52.def"
+				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(IntDir)/ff_liba52.pdb"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				SubSystem="2"
-				ImportLibrary="$(IntDir)/ff_liba52.lib"
+				RandomizedBaseAddress="1"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"/>
 			<Tool 
 				Name="VCALinkTool"/>

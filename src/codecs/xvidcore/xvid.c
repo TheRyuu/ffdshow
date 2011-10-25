@@ -3,7 +3,8 @@
  *  XVID MPEG-4 VIDEO CODEC
  *  - Native API implementation  -
  *
- *  Copyright(C) 2001-2004 Peter Ross <pross@xvid.org>
+ *  Copyright(C) 2001-2011 Peter Ross <pross@xvid.org>
+ *               2002-2011 Michael Militzer <isibaar@xvid.org>
  *
  *  This program is free software ; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -19,7 +20,7 @@
  *  along with this program ; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
  *
- * $Id: xvid.c,v 1.73 2006/12/06 19:55:07 Isibaar Exp $
+ * $Id: xvid.c 1988 2011-05-18 09:10:05Z Isibaar $
  *
  ****************************************************************************/
 
@@ -27,6 +28,27 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "../../compiler.h"
+
+#if !defined(_WIN32)
+#include <unistd.h>
+#endif
+
+#if defined(__APPLE__) && defined(__MACH__) && !defined(_SC_NPROCESSORS_CONF)
+#include <sys/types.h>
+#include <sys/sysctl.h>
+#ifdef MAX
+#undef MAX
+#endif
+#ifdef MIN
+#undef MIN
+#endif
+#endif
+
+#if defined(__amigaos4__)
+#include <exec/exec.h>
+#include <proto/exec.h>
+#endif
 
 #include "xvid.h"
 #include "decoder.h"
@@ -54,7 +76,7 @@ unsigned int xvid_debug = 0; /* xvid debug mask */
 
 #if (defined(ARCH_IS_IA32) || defined(ARCH_IS_X86_64)) && defined(_MSC_VER)
 #	include <windows.h>
-#elif defined(ARCH_IS_IA32) || defined(ARCH_IS_X86_64) || defined(ARCH_IS_PPC)
+#elif defined(ARCH_IS_IA32) || defined(ARCH_IS_X86_64) || (defined(ARCH_IS_PPC) && !defined(__amigaos4__))
 #	include <signal.h>
 #	include <setjmp.h>
 
@@ -66,7 +88,6 @@ unsigned int xvid_debug = 0; /* xvid debug mask */
 	   longjmp(mark, 1);
 	}
 #endif
-
 
 /*
  * Calls the funcptr, and returns whether SIGILL (illegal instruction) was
@@ -90,7 +111,7 @@ sigill_check(void (*func)())
 	}
 	return(0);
 }
-#elif defined(ARCH_IS_IA32) || defined(ARCH_IS_X86_64) || defined(ARCH_IS_PPC)
+#elif defined(ARCH_IS_IA32) || defined(ARCH_IS_X86_64) || (defined(ARCH_IS_PPC) && !defined(__amigaos4__))
 static int
 sigill_check(void (*func)())
 {
@@ -137,13 +158,23 @@ detect_cpu_flags(void)
 	if ((cpu_flags & XVID_CPU_SSE) && sigill_check(sse_os_trigger))
 		cpu_flags &= ~XVID_CPU_SSE;
 
-	if ((cpu_flags & (XVID_CPU_SSE2|XVID_CPU_SSE3)) && sigill_check(sse2_os_trigger))
-		cpu_flags &= ~(XVID_CPU_SSE2|XVID_CPU_SSE3);
+	if ((cpu_flags & (XVID_CPU_SSE2|XVID_CPU_SSE3|XVID_CPU_SSE41)) && sigill_check(sse2_os_trigger))
+		cpu_flags &= ~(XVID_CPU_SSE2|XVID_CPU_SSE3|XVID_CPU_SSE41);
 #endif
 
 #if defined(ARCH_IS_PPC)
+#if defined(__amigaos4__)
+        {
+                uint32_t vector_unit = VECTORTYPE_NONE;
+                IExec->GetCPUInfoTags(GCIT_VectorUnit, &vector_unit, TAG_END);
+                if (vector_unit == VECTORTYPE_ALTIVEC) {
+                        cpu_flags |= XVID_CPU_ALTIVEC;
+                }
+        }
+#else
 	if (!sigill_check(altivec_trigger))
 		cpu_flags |= XVID_CPU_ALTIVEC;
+#endif
 #endif
 
 	return cpu_flags;
@@ -151,7 +182,7 @@ detect_cpu_flags(void)
 
 
 /*****************************************************************************
- * XviD Init Entry point
+ * Xvid Init Entry point
  *
  * Well this function initialize all internal function pointers according
  * to the CPU features forced by the library client or autodetected (depending
@@ -176,7 +207,6 @@ int xvid_gbl_init(xvid_gbl_init_t * init)
 	cpu_flags = (init->cpu_flags & XVID_CPU_FORCE) ? init->cpu_flags : detect_cpu_flags();
 
 	/* Initialize the function pointers */
-	idct_int32_init();
 	init_vlc_tables();
 
 	/* Fixed Point Forward/Inverse DCT transformations */
@@ -299,23 +329,28 @@ int xvid_gbl_init(xvid_gbl_init_t * init)
 	yv12_to_uyvyi   = yv12_to_uyvyi_c;
 
 	/* Functions used in motion estimation algorithms */
-	calc_cbp   = calc_cbp_c;
-	sad16      = sad16_c;
-	sad8       = sad8_c;
-	sad16bi    = sad16bi_c;
-	sad8bi     = sad8bi_c;
-	dev16      = dev16_c;
-	sad16v	   = sad16v_c;
-	sse8_16bit = sse8_16bit_c;
-	sse8_8bit  = sse8_8bit_c;
+	calc_cbp      = calc_cbp_c;
+	sad16         = sad16_c;
+	sad8          = sad8_c;
+	sad16bi       = sad16bi_c;
+	sad8bi        = sad8bi_c;
+	dev16         = dev16_c;
+	sad16v        = sad16v_c;
+	sse8_16bit    = sse8_16bit_c;
+	sse8_8bit     = sse8_8bit_c;
+
+	sseh8_16bit   = sseh8_16bit_c;
+	coeff8_energy = coeff8_energy_c;
+	blocksum8     = blocksum8_c;
 
 	init_GMC(cpu_flags);
 
-#if defined(ARCH_IS_IA32)
+#if defined(ARCH_IS_IA32) || defined(ARCH_IS_X86_64)
 
 	if ((cpu_flags & XVID_CPU_MMX) || (cpu_flags & XVID_CPU_MMXEXT) ||
 		(cpu_flags & XVID_CPU_3DNOW) || (cpu_flags & XVID_CPU_3DNOWEXT) ||
-		(cpu_flags & XVID_CPU_SSE) || (cpu_flags & XVID_CPU_SSE2))
+		(cpu_flags & XVID_CPU_SSE) || (cpu_flags & XVID_CPU_SSE2) ||
+        (cpu_flags & XVID_CPU_SSE3) || (cpu_flags & XVID_CPU_SSE41))
 	{
 		/* Restore FPU context : emms_c is a nop functions */
 		emms = emms_mmx;
@@ -333,14 +368,14 @@ int xvid_gbl_init(xvid_gbl_init_t * init)
 
 		/* Quantization related functions */
 		quant_h263_intra   = quant_h263_intra_mmx;
-		quant_h263_inter   = quant_h263_inter_mmx;
+                quant_h263_inter   = quant_h263_inter_mmx;
 		dequant_h263_intra = dequant_h263_intra_mmx;
 		dequant_h263_inter = dequant_h263_inter_mmx;
-
 		quant_mpeg_intra   = quant_mpeg_intra_mmx;
 		quant_mpeg_inter   = quant_mpeg_inter_mmx;
 		dequant_mpeg_intra = dequant_mpeg_intra_mmx;
 		dequant_mpeg_inter = dequant_mpeg_inter_mmx;
+
 
 		/* Block related functions */
 		transfer_8to16copy = transfer_8to16copy_mmx;
@@ -379,7 +414,9 @@ int xvid_gbl_init(xvid_gbl_init_t * init)
 		image_brightness = image_brightness_mmx;
 
 		/* image input xxx_to_yv12 related functions */
+
 		yv12_to_yv12  = yv12_to_yv12_mmx;
+
 		bgr_to_yv12   = bgr_to_yv12_mmx;
 		rgb_to_yv12   = rgb_to_yv12_mmx;
 		bgra_to_yv12  = bgra_to_yv12_mmx;
@@ -419,6 +456,7 @@ int xvid_gbl_init(xvid_gbl_init_t * init)
 
 		yuyv_to_yv12  = yuyv_to_yv12_3dn;
 		uyvy_to_yv12  = uyvy_to_yv12_3dn;
+
 	}
 
 
@@ -442,18 +480,18 @@ int xvid_gbl_init(xvid_gbl_init_t * init)
 		interpolate8x8_halfpel_v_add = interpolate8x8_halfpel_v_add_xmm;
 		interpolate8x8_halfpel_hv_add = interpolate8x8_halfpel_hv_add_xmm;
 
-		/* Quantization */
+        /* Quantization */
 		quant_mpeg_inter = quant_mpeg_inter_xmm;
 
 		dequant_h263_intra = dequant_h263_intra_xmm;
 		dequant_h263_inter = dequant_h263_inter_xmm;
 
-		/* Buffer transfer */
+        /* Buffer transfer */
 		transfer_8to16sub2 = transfer_8to16sub2_xmm;
 		transfer_8to16sub2ro = transfer_8to16sub2ro_xmm;
 
 		/* Colorspace transformation */
-		yv12_to_yv12  = yv12_to_yv12_xmm;
+		/* yv12_to_yv12  = yv12_to_yv12_xmm; */ /* appears to be slow on many machines */
 		yuyv_to_yv12  = yuyv_to_yv12_xmm;
 		uyvy_to_yv12  = uyvy_to_yv12_xmm;
 
@@ -505,7 +543,7 @@ int xvid_gbl_init(xvid_gbl_init_t * init)
 			interpolate8x4_halfpel_v = interpolate8x4_halfpel_v_3dne;
 			interpolate8x4_halfpel_hv = interpolate8x4_halfpel_hv_3dne;
 
-			/* Quantization */
+            /* Quantization */
 			quant_h263_intra = quant_h263_intra_3dne;		/* cmov only */
 			quant_h263_inter = quant_h263_inter_3dne;
 			dequant_mpeg_intra = dequant_mpeg_intra_3dne;	/* cmov only */
@@ -513,9 +551,7 @@ int xvid_gbl_init(xvid_gbl_init_t * init)
 			dequant_h263_intra = dequant_h263_intra_3dne;
 			dequant_h263_inter = dequant_h263_inter_3dne;
 
-			/* ME functions */
-			calc_cbp = calc_cbp_3dne;
-
+            /* ME functions */
 			sad16 = sad16_3dne;
 			sad8 = sad8_3dne;
 			sad16bi = sad16bi_3dne;
@@ -523,7 +559,7 @@ int xvid_gbl_init(xvid_gbl_init_t * init)
 			dev16 = dev16_3dne;
 		}
 	}
-
+ 
 	if ((cpu_flags & XVID_CPU_SSE2)) {
 
 		calc_cbp = calc_cbp_sse2;
@@ -535,25 +571,30 @@ int xvid_gbl_init(xvid_gbl_init_t * init)
 		dequant_h263_inter = dequant_h263_inter_sse2;
 
 		/* SAD operators */
-		sad16    = sad16_sse2;
-		dev16    = dev16_sse2;
+		sad16       = sad16_sse2;
+		dev16       = dev16_sse2;
+
+		/* PSNR-HVS-M distortion metric */
+		sseh8_16bit   = sseh8_16bit_sse2;
+		coeff8_energy = coeff8_energy_sse2;
+		blocksum8     = blocksum8_sse2;
 
 		/* DCT operators */
 		fdct = fdct_sse2_skal;
-    /* idct = idct_sse2_skal; */   /* Is now IEEE1180 and Walken compliant. Disabled until fully tested. */
+		idct = idct_sse2_skal;   /* Is now IEEE1180 and Walken compliant. */
 
 		/* postprocessing */
 		image_brightness = image_brightness_sse2;
+
 	}
 
-#if 0 // TODO: test...
 	if ((cpu_flags & XVID_CPU_SSE3)) {
 
 		/* SAD operators */
 		sad16    = sad16_sse3;
 		dev16    = dev16_sse3;
 	}
-#endif
+
 #endif /* ARCH_IS_IA32 */
 
 #if defined(ARCH_IS_IA64)
@@ -644,74 +685,6 @@ int xvid_gbl_init(xvid_gbl_init_t * init)
         }
 #endif
 
-#if defined(ARCH_IS_X86_64)
-	/* For now, only XVID_CPU_ASM is looked for, so user can still
-	 * disable asm usage the usual way. When Intel EMT64 cpus will
-	 * be out, maybe we'll have to check more precisely what cpu
-	 * features there really are. */
-	if (cpu_flags & XVID_CPU_ASM) {
-		/* SIMD state flusher */
-		emms = emms_mmx;
-
-		/* DCT operators */
-		fdct = fdct_skal_x86_64;
-		idct = idct_x86_64;
-
-		/* SAD operators */
-		sad16      = sad16_x86_64;
-		sad8       = sad8_x86_64;
-		sad16bi    = sad16bi_x86_64;
-		sad8bi     = sad8bi_x86_64;
-		dev16      = dev16_x86_64;
-		sad16v	   = sad16v_x86_64;
-		sse8_16bit = sse8_16bit_x86_64;
-		sse8_8bit  = sse8_8bit_x86_64;
-
-		/* Interpolation operators */
-		interpolate8x8_halfpel_h  = interpolate8x8_halfpel_h_x86_64;
-		interpolate8x8_halfpel_v  = interpolate8x8_halfpel_v_x86_64;
-		interpolate8x8_halfpel_hv = interpolate8x8_halfpel_hv_x86_64;
-
-		interpolate8x8_halfpel_add = interpolate8x8_halfpel_add_x86_64;
-		interpolate8x8_halfpel_h_add = interpolate8x8_halfpel_h_add_x86_64;
-		interpolate8x8_halfpel_v_add = interpolate8x8_halfpel_v_add_x86_64;
-		interpolate8x8_halfpel_hv_add = interpolate8x8_halfpel_hv_add_x86_64;
-
-		interpolate8x8_6tap_lowpass_h = interpolate8x8_6tap_lowpass_h_x86_64;
-		interpolate8x8_6tap_lowpass_v = interpolate8x8_6tap_lowpass_v_x86_64;
-
-		interpolate8x8_avg2 = interpolate8x8_avg2_x86_64;
-		interpolate8x8_avg4 = interpolate8x8_avg4_x86_64;
-
-		/* Quantization related functions */
-		quant_h263_intra   = quant_h263_intra_x86_64;
-		quant_h263_inter   = quant_h263_inter_x86_64;
-		dequant_h263_intra = dequant_h263_intra_x86_64;
-		dequant_h263_inter = dequant_h263_inter_x86_64;
-		/*quant_mpeg_intra   = quant_mpeg_intra_x86_64; fix me! */
-		quant_mpeg_inter   = quant_mpeg_inter_x86_64;
-		dequant_mpeg_intra   = dequant_mpeg_intra_x86_64;
-		dequant_mpeg_inter   = dequant_mpeg_inter_x86_64;
-
-		/* Block related functions */
-		transfer_8to16copy  = transfer_8to16copy_x86_64;
-		transfer_16to8copy  = transfer_16to8copy_x86_64;
-		transfer_8to16sub   = transfer_8to16sub_x86_64;
-		transfer_8to16subro = transfer_8to16subro_x86_64;
-		transfer_8to16sub2  = transfer_8to16sub2_x86_64;
-		transfer_8to16sub2ro= transfer_8to16sub2ro_x86_64;
-		transfer_16to8add   = transfer_16to8add_x86_64;
-		transfer8x8_copy    = transfer8x8_copy_x86_64;
-
-		/* Qpel stuff */
-		xvid_QP_Funcs = &xvid_QP_Funcs_x86_64;
-		xvid_QP_Add_Funcs = &xvid_QP_Add_Funcs_x86_64;
-
-		/* Interlacing Functions */
-		MBFieldTest = MBFieldTest_x86_64;
-	}
-#endif
-
 #if defined(_DEBUG)
     xvid_debug = init->debug;
 #endif
@@ -727,21 +700,45 @@ xvid_gbl_info(xvid_gbl_info_t * info)
 		return XVID_ERR_VERSION;
 
 	info->actual_version = XVID_VERSION;
-	info->build = "xvid-1.2.0-dev";
+	info->build = "xvid-1.4.0-dev";
 	info->cpu_flags = detect_cpu_flags();
-  info->num_threads = 0;
+	info->num_threads = 0; /* single-thread */
 
-#if defined(WIN32)
+#if defined(_WIN32)
+
   {
-    DWORD dwProcessAffinityMask, dwSystemAffinityMask;
-    if (GetProcessAffinityMask(GetCurrentProcess(), &dwProcessAffinityMask, &dwSystemAffinityMask)) {
-      int i;      
-      for(i=0; i<32; i++) {
-        if ((dwProcessAffinityMask & (1<<i)))
-          info->num_threads++;
-      }
-    }
+	SYSTEM_INFO siSysInfo;
+	GetSystemInfo(&siSysInfo);
+	info->num_threads = siSysInfo.dwNumberOfProcessors; /* number of _logical_ cores */
   }
+
+#elif defined(_SC_NPROCESSORS_CONF) /* should be available on Apple too actually */
+
+  info->num_threads = sysconf(_SC_NPROCESSORS_CONF);	
+
+#elif defined(__APPLE__) && defined(__MACH__)
+
+  {
+    size_t len;
+    int    mib[2], ncpu;
+
+    mib[0] = CTL_HW;
+    mib[1] = HW_NCPU;
+    len    = sizeof(ncpu);
+    if (sysctl(mib, 2, &ncpu, &len, NULL, 0) == 0)
+      info -> num_threads = ncpu;
+    else
+      info -> num_threads = 1;
+  }
+
+#elif defined(__amigaos4__)
+
+  {
+    uint32_t num_threads = 1;
+    IExec->GetCPUInfoTags(GCIT_NumberOfCPUs, &num_threads, TAG_END);
+    info->num_threads = num_threads;
+  }
+
 #endif
 
 	return 0;
@@ -778,6 +775,15 @@ xvid_gbl_convert(xvid_gbl_convert_t* convert)
 						(uint8_t**)convert->output.plane, convert->output.stride,
 						convert->output.csp, convert->interlacing);
 			break;
+		
+		case XVID_CSP_INTERNAL :
+			img.y = (uint8_t*)convert->input.plane[0];
+			img.u = (uint8_t*)convert->input.plane[1];
+			img.v = (uint8_t*)convert->input.plane[2];
+			image_output(&img, width, height, convert->input.stride[0],
+						(uint8_t**)convert->output.plane, convert->output.stride,
+						convert->output.csp, convert->interlacing);
+			break;
 
 		default :
 			return XVID_ERR_FORMAT;
@@ -789,7 +795,7 @@ xvid_gbl_convert(xvid_gbl_convert_t* convert)
 }
 
 /*****************************************************************************
- * XviD Global Entry point
+ * Xvid Global Entry point
  *
  * Well this function initialize all internal function pointers according
  * to the CPU features forced by the library client or autodetected (depending
@@ -822,7 +828,7 @@ xvid_global(void *handle,
 }
 
 /*****************************************************************************
- * XviD Native decoder entry point
+ * Xvid Native decoder entry point
  *
  * This function is just a wrapper to all the option cases.
  *
@@ -854,7 +860,7 @@ xvid_decore(void *handle,
 
 
 /*****************************************************************************
- * XviD Native encoder entry point
+ * Xvid Native encoder entry point
  *
  * This function is just a wrapper to all the option cases.
  *
@@ -885,4 +891,10 @@ xvid_encore(void *handle,
 	default:
 		return XVID_ERR_FAIL;
 	}
+}
+
+void __stdcall getVersion(char *ver,const char* *license)
+{
+ sprintf(ver,"%d.%d.%d, %s%s%s (%s %s)",XVID_VERSION_MAJOR(XVID_VERSION),XVID_VERSION_MINOR(XVID_VERSION),XVID_VERSION_PATCH(XVID_VERSION),COMPILER,COMPILER_X64,COMPILER_INFO,__DATE__,__TIME__);
+ *license="";
 }

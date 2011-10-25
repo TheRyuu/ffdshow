@@ -19,7 +19,7 @@
  *  along with this program ; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
  *
- * $Id: emms.h,v 1.16 2005/01/05 23:02:15 edgomez Exp $
+ * $Id: emms.h 1988 2011-05-18 09:10:05Z Isibaar $
  *
  ****************************************************************************/
 
@@ -55,6 +55,11 @@ emmsFunc emms_3dn;
 extern int check_cpu_features(void);
 extern void sse_os_trigger(void);
 extern void sse2_os_trigger(void);
+#endif
+
+#if defined(ARCH_IS_X86_64) && defined(WIN32)
+extern void prime_xmm(void *);
+extern void get_xmm(void *);
 #endif
 
 #ifdef ARCH_IS_PPC

@@ -5,7 +5,7 @@
 	Name="ff_libfaad2"
 	ProjectGUID="{3DFCD606-291B-4765-9913-A6EC1D83F33F}"
 	VCNestedProjectGUID="{BF29FAFC-7E71-4671-A2F8-D510EF5C0685}"
-	VCNestedProjectCRC32="3956079228"
+	VCNestedProjectCRC32="2315162728"
 	VCNestedProjectFileName="ff_libfaad2_2008_icl10.vcproj">
 	<Platforms>
 		<Platform 
@@ -18,9 +18,8 @@
 			Name="Release|Win32">
 			<Tool 
 				Name="GeneralTool"
-				OutputDirectory="release_2008_icl10"
-				IntermediateDirectory="release_2008_icl10"
 				ConfigurationType="2"
+				InheritedPropertySheets="..\..\..\common_icl10.vsprops"
 				UseOfMFC="1"
 				ATLMinimizesCRunTimeLibraryUsage="false"
 				WholeProgramOptimization="0"/>
@@ -48,7 +47,6 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
-				WholeProgramOptimization="false"
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;NDEBUG;_WINDOWS;_USRDLL"
 				StringPooling="true"
 				ExceptionHandling="0"
@@ -56,7 +54,6 @@
 				BufferSecurityCheck="false"
 				EnableFunctionLevelLinking="true"
 				BrowseInformation="0"
-				WarningLevel="1"
 				SuppressStartupBanner="true"
 				CompileAs="1"
 				DisableSpecificWarnings="4244;4100"
@@ -79,11 +76,13 @@
 				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile=".\ff_libfaad2.def"
+				DelayLoadDLLs="$(NOINHERIT)"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(IntDir)/ff_libfaad2.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="0"/>
 			<Tool 
 				Name="VCALinkTool"/>
@@ -105,9 +104,8 @@
 			Name="Release|x64">
 			<Tool 
 				Name="GeneralTool"
-				OutputDirectory="release_2008_x64_icl10"
-				IntermediateDirectory="release_2008_x64_icl10"
 				ConfigurationType="2"
+				InheritedPropertySheets="..\..\..\common_icl10.vsprops"
 				UseOfMFC="1"
 				ATLMinimizesCRunTimeLibraryUsage="false"
 				WholeProgramOptimization="0"/>
@@ -141,7 +139,6 @@
 				RuntimeLibrary="0"
 				BufferSecurityCheck="false"
 				EnableFunctionLevelLinking="true"
-				WarningLevel="0"
 				SuppressStartupBanner="true"
 				CompileAs="1"
 				DisableSpecificWarnings="4244"
@@ -167,9 +164,12 @@
 				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile=".\ff_libfaad2.def"
+				DelayLoadDLLs="$(NOINHERIT)"
+				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				ImportLibrary="$(IntDir)/$(ProjectName).lib"
+				RandomizedBaseAddress="1"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"/>
 			<Tool 
 				Name="VCALinkTool"/>
@@ -191,9 +191,8 @@
 			Name="Debug|Win32">
 			<Tool 
 				Name="GeneralTool"
-				OutputDirectory="debug_2008_icl10"
-				IntermediateDirectory="debug_2008_icl10"
 				ConfigurationType="2"
+				InheritedPropertySheets="..\..\..\common_icl10.vsprops"
 				UseOfMFC="0"
 				ATLMinimizesCRunTimeLibraryUsage="false"/>
 			<Tool 
@@ -243,11 +242,12 @@
 				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile=".\ff_libfaad2.def"
+				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(IntDir)/ff_libfaad2.lib"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="0"/>
 			<Tool 
 				Name="VCALinkTool"/>
@@ -269,9 +269,8 @@
 			Name="Debug|x64">
 			<Tool 
 				Name="GeneralTool"
-				OutputDirectory="debug_2008_x64_icl10"
-				IntermediateDirectory="debug_2008_x64_icl10"
 				ConfigurationType="2"
+				InheritedPropertySheets="..\..\..\common_icl10.vsprops"
 				UseOfMFC="0"
 				ATLMinimizesCRunTimeLibraryUsage="false"/>
 			<Tool 
@@ -297,7 +296,7 @@
 				MinimalRebuild="true"
 				ExceptionHandling="0"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				ForceConformanceInForLoopScope="true"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
@@ -320,9 +319,11 @@
 				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile=".\ff_libfaad2.def"
+				DelayLoadDLLs="$(NOINHERIT)"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
-				ImportLibrary="$(IntDir)/$(ProjectName).lib"
+				RandomizedBaseAddress="1"
+				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="17"/>
 			<Tool 
 				Name="VCALinkTool"/>

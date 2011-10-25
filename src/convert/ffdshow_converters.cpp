@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009 h.yamagata, based on the ideas of AviSynth's color converters 
+ * Copyright (c) 2009 h.yamagata, based on the ideas of AviSynth's color converters
  *  Avisynth v2.5.  Copyright 2002 Ben Rudiak-Gould et al.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,28 +22,30 @@
 #include "simd_common.h" // __align16(t,v)
 
 #if defined(_MSC_VER) || defined(__INTEL_COMPILER)
- #pragma warning (push)
- #pragma warning (disable: 4799) // EMMS
+#pragma warning (push)
+#pragma warning (disable: 4799) // EMMS
 #endif
 
-void TffdshowConverters::init(int incsp,   // FF_CSP_420P, FF_CSP_NV12, FF_CSP_YUY2 or FF_CSP_420P (progressive only)
-           int outcsp,                     // FF_CSP_RGB32 or FF_CSP_RGB24
-           ffYCbCr_RGB_MatrixCoefficientsType cspOptionsIturBt,  // ffYCbCr_RGB_coeff_ITUR_BT601, ffYCbCr_RGB_coeff_ITUR_BT709 or ffYCbCr_RGB_coeff_SMPTE240M
-           int input_Y_white_level,        // input Y level (TV:235, PC:255)
-           int input_Y_black_level,        // input Y level (TV:16, PC:0)
-           int input_Cb_bluest_level,      // input chroma level (TV:16, PC:1)
-           double output_RGB_white_level,  // output RGB level (TV:235, PC:255)
-           double output_RGB_black_level)  // output RGB level (TV:16, PC:0)
+void TffdshowConverters::init(uint64_t incsp,                 // FF_CSP_420P, FF_CSP_NV12, FF_CSP_YUY2 or FF_CSP_420P (progressive only)
+                              uint64_t outcsp,                // FF_CSP_RGB32 or FF_CSP_RGB24
+                              ffYCbCr_RGB_MatrixCoefficientsType cspOptionsIturBt,  // ffYCbCr_RGB_coeff_ITUR_BT601, ffYCbCr_RGB_coeff_ITUR_BT709 or ffYCbCr_RGB_coeff_SMPTE240M
+                              int input_Y_white_level,        // input Y level (TV:235, PC:255)
+                              int input_Y_black_level,        // input Y level (TV:16, PC:0)
+                              int input_Cb_bluest_level,      // input chroma level (TV:16, PC:1)
+                              double output_RGB_white_level,  // output RGB level (TV:235, PC:255)
+                              double output_RGB_black_level,  // output RGB level (TV:16, PC:0)
+                              bool dithering)                 // dithering (On:1, Off:0)
 {
     m_incsp = incsp;
     m_outcsp = outcsp;
-    if (output_RGB_white_level != 255 || output_RGB_black_level != 0)
+    if (output_RGB_white_level != 255 || output_RGB_black_level != 0) {
         m_rgb_limit = true;
-    else
+    } else {
         m_rgb_limit = false;
+    }
 
     TYCbCr2RGB_coeffs YCbCr2RGB_coeffs(cspOptionsIturBt,input_Y_white_level,input_Y_black_level,input_Cb_bluest_level,output_RGB_white_level,output_RGB_black_level);
-    
+
     short cy =short(YCbCr2RGB_coeffs.y_mul * 16384 + 0.5);
     short crv=short(YCbCr2RGB_coeffs.vr_mul * 8192 + 0.5);
     short cgu=short(-YCbCr2RGB_coeffs.ug_mul * 8192 - 0.5);
@@ -58,7 +60,7 @@ void TffdshowConverters::init(int incsp,   // FF_CSP_420P, FF_CSP_NV12, FF_CSP_Y
     m_coeffs->cG_Cb_cG_Cr = _mm_set1_epi32((cgv << 16) + cgu); // G
     m_coeffs->cB_Cb = _mm_set1_epi32(cbu);                     // B
 
-    m_coeffs->rgb_add = _mm_set1_epi16((YCbCr2RGB_coeffs.RGB_add1 << 2) + 2);
+    m_coeffs->rgb_add = _mm_set1_epi16((YCbCr2RGB_coeffs.RGB_add1 << 4) + (dithering ? 0 : 8));
 
     uint32_t rgb_white = uint32_t(output_RGB_white_level);
     rgb_white = 0xff000000 + (rgb_white << 16) + (rgb_white << 8) + rgb_white;
@@ -67,40 +69,43 @@ void TffdshowConverters::init(int incsp,   // FF_CSP_420P, FF_CSP_NV12, FF_CSP_Y
     uint32_t rgb_black = uint32_t(output_RGB_black_level);
     rgb_black = 0xff000000 + (rgb_black << 16) + (rgb_black << 8) + rgb_black;
     m_coeffs->rgb_limit_low = _mm_set1_epi32(rgb_black);
+    m_dithering = dithering;
 }
 
- // note YV12 and YV16 is YCrCb order. Make sure Cr and Cb is swapped.
- // NV12: srcCr not used.
- // YUY2: srcCb,srcCr,stride_CbCr not used.
+// note YV12 and YV16 is YCrCb order. Make sure Cr and Cb is swapped.
+// NV12: srcCr not used.
+// YUY2: srcCb,srcCr,stride_CbCr not used.
 void TffdshowConverters::convert(const uint8_t* srcY,
-              const uint8_t* srcCb,
-              const uint8_t* srcCr,
-              uint8_t* dst,         // 16 bytes alignment is prefered for RGB32 (6% faster).
-              int dx,
-              int dy,
-              stride_t stride_Y,
-              stride_t stride_CbCr,
-              stride_t stride_dst)
+                                 const uint8_t* srcCb,
+                                 const uint8_t* srcCr,
+                                 uint8_t* dst,         // 16 bytes alignment is prefered for RGB32 (6% faster).
+                                 int dx,
+                                 int dy,
+                                 stride_t stride_Y,
+                                 stride_t stride_CbCr,
+                                 stride_t stride_dst)
 {
-    if (m_rgb_limit)
+    if (m_rgb_limit) {
         convert_translate_incsp<1>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
-    else
+    } else {
         convert_translate_incsp<0>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
+    }
 
 #ifndef WIN64
     _mm_empty();
 #endif
 }
 
-template<int incsp, int outcsp, int left_edge, int right_edge, int rgb_limit, int aligned> __forceinline
-  void TffdshowConverters::convert_a_unit(const unsigned char* &srcY,
-                      const unsigned char* &srcCb,
-                      const unsigned char* &srcCr,
-                      unsigned char* &dst,
-                      const stride_t stride_Y,
-                      const stride_t stride_CbCr,
-                      const stride_t stride_dst,
-                      const Tcoeffs *coeffs)
+template<uint64_t incsp, uint64_t outcsp, int left_edge, int right_edge, int rgb_limit, int aligned, bool dithering> __forceinline
+void TffdshowConverters::convert_a_unit(const unsigned char* &srcY,
+                                        const unsigned char* &srcCb,
+                                        const unsigned char* &srcCr,
+                                        unsigned char* &dst,
+                                        const stride_t stride_Y,
+                                        const stride_t stride_CbCr,
+                                        const stride_t stride_dst,
+                                        const Tcoeffs *coeffs,
+                                        const uint16_t* dither_ptr)
 {
     // output 4x2 RGB pixels.
     __m128i xmm0,xmm1,xmm2,xmm3,xmm4,xmm5,xmm6,xmm7;
@@ -148,7 +153,7 @@ template<int incsp, int outcsp, int left_edge, int right_edge, int rgb_limit, in
             xmm2 = _mm_unpacklo_epi8(xmm3,xmm2);                                   // xmm2 = Cr12,Cb12,Cr11,Cb11,Cr00,Cb00,Cr-11,Cb1-1
             xmm0 = _mm_unpacklo_epi8(xmm0,xmm7);                                   // xmm0 = 0,Cr02,0,Cb02,0,Cr01,0,Cb01,0,Cr00,0,Cb00,0,Cr-01,0,Cb0-1
             xmm2 = _mm_unpacklo_epi8(xmm2,xmm7);                                   // xmm2 = 0,Cr12,0,Cb12,0,Cr11,0,Cb11,0,Cr10,0,Cb10,0,Cr-11,0,Cb1-1
-        } else /*NV12*/ {
+        } else { /*NV12*/
             if (left_edge) {
                 xmm0 = _mm_loadl_epi64((const __m128i*)srcCb);                     // xmm0 = Cb03,Cr03,Cb02,Cr02,Cb01,Cr01,Cb00,Cr00
                 xmm2 = _mm_loadl_epi64((const __m128i*)(srcCb + stride_CbCr));     // xmm2 = Cb13,Cr13,Cb12,Cr12,Cb11,Cr11,Cb10,Cr10
@@ -343,47 +348,65 @@ template<int incsp, int outcsp, int left_edge, int right_edge, int rgb_limit, in
     xmm0 = _mm_unpacklo_epi64(xmm0,xmm5);                                          // 0,Y03,0,Y02,0,Y01,0,Y00,0,Y13,0,Y12,0,Y11,0,Y10
 
     xmm0 = _mm_subs_epu16(xmm0,coeffs->Ysub);                                      // Y-16, unsigned saturate
-    xmm0 = _mm_slli_epi16(xmm0,4);
-    xmm0 = _mm_mulhi_epi16(xmm0,coeffs->cy);                                       // Y*cy (10bit)
+    xmm0 = _mm_slli_epi16(xmm0,6);
+    xmm0 = _mm_mulhi_epi16(xmm0,coeffs->cy);                                       // Y*cy (12bit)
     xmm0 = _mm_add_epi16(xmm0,coeffs->rgb_add);
     xmm6 = xmm1;
     xmm4 = xmm3;
     xmm6 = _mm_madd_epi16(xmm6,coeffs->cR_Cr);
     xmm4 = _mm_madd_epi16(xmm4,coeffs->cR_Cr);
-    xmm6 = _mm_srai_epi32(xmm6,15);
-    xmm4 = _mm_srai_epi32(xmm4,15);
+    xmm6 = _mm_srai_epi32(xmm6,13);
+    xmm4 = _mm_srai_epi32(xmm4,13);
     xmm6 = _mm_packs_epi32(xmm6,xmm7);
     xmm4 = _mm_packs_epi32(xmm4,xmm7);
     xmm6 = _mm_unpacklo_epi64(xmm4,xmm6);
-    xmm6 = _mm_add_epi16(xmm6,xmm0);                                               // R (10bit)
+    xmm6 = _mm_add_epi16(xmm6,xmm0);                                               // R (12bit)
     xmm5 = xmm1;
     xmm4 = xmm3;
     xmm5 = _mm_madd_epi16(xmm5,coeffs->cG_Cb_cG_Cr);
     xmm4 = _mm_madd_epi16(xmm4,coeffs->cG_Cb_cG_Cr);
-    xmm5 = _mm_srai_epi32(xmm5,15);
-    xmm4 = _mm_srai_epi32(xmm4,15);
+    xmm5 = _mm_srai_epi32(xmm5,13);
+    xmm4 = _mm_srai_epi32(xmm4,13);
     xmm5 = _mm_packs_epi32(xmm5,xmm7);
     xmm4 = _mm_packs_epi32(xmm4,xmm7);
     xmm5 = _mm_unpacklo_epi64(xmm4,xmm5);
-    xmm5 = _mm_add_epi16(xmm5,xmm0);                                               // G (10bit)
+    xmm5 = _mm_add_epi16(xmm5,xmm0);                                               // G (12bit)
     xmm1 = _mm_madd_epi16(xmm1,coeffs->cB_Cb);
     xmm3 = _mm_madd_epi16(xmm3,coeffs->cB_Cb);
-    xmm1 = _mm_srai_epi32(xmm1,15);
-    xmm3 = _mm_srai_epi32(xmm3,15);
+    xmm1 = _mm_srai_epi32(xmm1,13);
+    xmm3 = _mm_srai_epi32(xmm3,13);
     xmm1 = _mm_packs_epi32(xmm1,xmm7);
     xmm3 = _mm_packs_epi32(xmm3,xmm7);
     xmm1 = _mm_unpacklo_epi64(xmm3,xmm1);
-    xmm1 = _mm_add_epi16(xmm1,xmm0);                                               // B (10bit)
-    xmm6 = _mm_srai_epi16(xmm6,2);
-    xmm5 = _mm_srai_epi16(xmm5,2);
-    xmm1 = _mm_srai_epi16(xmm1,2);
+    xmm1 = _mm_add_epi16(xmm1,xmm0);                                               // B (12bit)
+
+    if (dithering) {
+        xmm6 = _mm_add_epi16(xmm6,*(const __m128i *)(dither_ptr));
+        xmm5 = _mm_add_epi16(xmm5,*(const __m128i *)(dither_ptr + 16));
+        xmm1 = _mm_add_epi16(xmm1,*(const __m128i *)(dither_ptr + 32));
+    }
+    xmm6 = _mm_srai_epi16(xmm6,4);
+    xmm5 = _mm_srai_epi16(xmm5,4);
+    xmm1 = _mm_srai_epi16(xmm1,4);
+
     xmm2 = _mm_cmpeq_epi8(xmm2,xmm2);                                              // 0xffffffff,0xffffffff,0xffffffff,0xffffffff
     xmm6 = _mm_packus_epi16(xmm6,xmm7);                                            // R (lower 8bytes,8bit) * 8
     xmm5 = _mm_packus_epi16(xmm5,xmm7);                                            // G (lower 8bytes,8bit) * 8
     xmm1 = _mm_packus_epi16(xmm1,xmm7);                                            // B (lower 8bytes,8bit) * 8
-    xmm6 = _mm_unpacklo_epi8(xmm6,xmm2);                                           // 0xff,R
-    xmm1 = _mm_unpacklo_epi8(xmm1,xmm5);                                           // G,B
-    xmm2 = xmm1;
+    if (outcsp == FF_CSP_RGB32 || outcsp == FF_CSP_RGB24) {
+        // RGB
+        xmm6 = _mm_unpacklo_epi8(xmm6,xmm2);                                       // 0xff,R
+        xmm1 = _mm_unpacklo_epi8(xmm1,xmm5);                                       // G,B
+        xmm2 = xmm1;
+    } else {
+        // BGR
+        xmm6 = _mm_unpacklo_epi8(xmm6,xmm5);                                       // G,R
+        xmm1 = _mm_unpacklo_epi8(xmm1,xmm2);                                       // 0xff,B
+        xmm2 = xmm6;
+        xmm6 = xmm1;
+        xmm1 = xmm2;
+    }
+
     xmm1 = _mm_unpackhi_epi16(xmm1,xmm6);                                          // 0xff,RGB * 4 (line 0)
     xmm2 = _mm_unpacklo_epi16(xmm2,xmm6);                                          // 0xff,RGB * 4 (line 1)
 
@@ -396,7 +419,7 @@ template<int incsp, int outcsp, int left_edge, int right_edge, int rgb_limit, in
         xmm2 = _mm_min_epu8(xmm2,xmm4);
     }
 
-    if (outcsp == FF_CSP_RGB32) {
+    if (outcsp == FF_CSP_RGB32 || outcsp == FF_CSP_BGR32) {
         if (aligned) {
             // 6% faster
             _mm_stream_si128((__m128i *)(dst),xmm1);
@@ -424,7 +447,7 @@ template<int incsp, int outcsp, int left_edge, int right_edge, int rgb_limit, in
 #endif
         }
         dst += 16;
-    } else { // RGB24
+    } else { // RGB24,BGR24
         uint32_t eax;
         __align16(uint8_t, rgbbuf[32]);
         *(int *)(rgbbuf) = _mm_cvtsi128_si32 (xmm1);
@@ -470,129 +493,164 @@ template<int incsp, int outcsp, int left_edge, int right_edge, int rgb_limit, in
 
 // translate stack arguments to template arguments.
 template <int rgb_limit> void TffdshowConverters::convert_translate_incsp(
-              const uint8_t* srcY,
-              const uint8_t* srcCb,
-              const uint8_t* srcCr,
-              uint8_t* dst,
-              int dx,
-              int dy,
-              stride_t stride_Y,
-              stride_t stride_CbCr,
-              stride_t stride_dst)
+    const uint8_t* srcY,
+    const uint8_t* srcCb,
+    const uint8_t* srcCr,
+    uint8_t* dst,
+    int dx,
+    int dy,
+    stride_t stride_Y,
+    stride_t stride_CbCr,
+    stride_t stride_dst)
 {
     switch (m_incsp) {
-    case FF_CSP_420P:
-        convert_translate_outcsp<FF_CSP_420P, rgb_limit>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
-        return;
-    case FF_CSP_NV12:
-        convert_translate_outcsp<FF_CSP_NV12, rgb_limit>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
-        return;
-    case FF_CSP_YUY2:
-        convert_translate_outcsp<FF_CSP_YUY2, rgb_limit>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
-        return;
-    case FF_CSP_422P:
-        convert_translate_outcsp<FF_CSP_422P, rgb_limit>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
-        return;
+        case FF_CSP_420P:
+            convert_translate_outcsp<FF_CSP_420P, rgb_limit>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
+            return;
+        case FF_CSP_NV12:
+            convert_translate_outcsp<FF_CSP_NV12, rgb_limit>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
+            return;
+        case FF_CSP_YUY2:
+            convert_translate_outcsp<FF_CSP_YUY2, rgb_limit>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
+            return;
+        case FF_CSP_422P:
+            convert_translate_outcsp<FF_CSP_422P, rgb_limit>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
+            return;
     }
 }
 
-template <int incsp, int rgb_limit> void TffdshowConverters::convert_translate_outcsp(
-              const uint8_t* srcY,
-              const uint8_t* srcCb,
-              const uint8_t* srcCr,
-              uint8_t* dst,
-              int dx,
-              int dy,
-              stride_t stride_Y,
-              stride_t stride_CbCr,
-              stride_t stride_dst)
+template <uint64_t incsp, int rgb_limit> void TffdshowConverters::convert_translate_outcsp(
+    const uint8_t* srcY,
+    const uint8_t* srcCb,
+    const uint8_t* srcCr,
+    uint8_t* dst,
+    int dx,
+    int dy,
+    stride_t stride_Y,
+    stride_t stride_CbCr,
+    stride_t stride_dst)
 {
     switch (m_outcsp) {
-    case FF_CSP_RGB32:
-        convert_translate_align<incsp, FF_CSP_RGB32, rgb_limit>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
-        return;
-    case FF_CSP_RGB24:
-        convert_translate_align<incsp, FF_CSP_RGB24, rgb_limit>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
-        return;
+        case FF_CSP_RGB32:
+            convert_translate_align<incsp, FF_CSP_RGB32, rgb_limit>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
+            return;
+        case FF_CSP_RGB24:
+            convert_translate_align<incsp, FF_CSP_RGB24, rgb_limit>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
+            return;
+        case FF_CSP_BGR32:
+            convert_translate_align<incsp, FF_CSP_BGR32, rgb_limit>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
+            return;
+        case FF_CSP_BGR24:
+            convert_translate_align<incsp, FF_CSP_BGR24, rgb_limit>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
+            return;
     }
 }
 
-template <int incsp, int outcsp, int rgb_limit> void TffdshowConverters::convert_translate_align(
-              const uint8_t* srcY,
-              const uint8_t* srcCb,
-              const uint8_t* srcCr,
-              uint8_t* dst,
-              int dx,
-              int dy,
-              stride_t stride_Y,
-              stride_t stride_CbCr,
-              stride_t stride_dst)
+template <uint64_t incsp, uint64_t outcsp, int rgb_limit> void TffdshowConverters::convert_translate_align(
+    const uint8_t* srcY,
+    const uint8_t* srcCb,
+    const uint8_t* srcCr,
+    uint8_t* dst,
+    int dx,
+    int dy,
+    stride_t stride_Y,
+    stride_t stride_CbCr,
+    stride_t stride_dst)
 {
-    if ((stride_dst & 0xf) || (stride_t(dst) & 0xf))
-        convert_main<incsp, outcsp, rgb_limit, 0>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
-    else
-        convert_main<incsp, outcsp, rgb_limit, 1>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
+    if ((stride_dst & 0xf) || (stride_t(dst) & 0xf)) {
+        convert_translate_dithering<incsp, outcsp, rgb_limit, 0>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
+    } else {
+        convert_translate_dithering<incsp, outcsp, rgb_limit, 1>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
+    }
 }
 
-template <int incsp, int outcsp, int rgb_limit, int aligned> void TffdshowConverters::convert_main(
-              const uint8_t* srcY,
-              const uint8_t* srcCb,
-              const uint8_t* srcCr,
-              uint8_t* dst,
-              int dx,
-              int dy,
-              stride_t stride_Y,
-              stride_t stride_CbCr,
-              stride_t stride_dst)
+template <uint64_t incsp, uint64_t outcsp, int rgb_limit, int aligned> void TffdshowConverters::convert_translate_dithering(
+    const uint8_t* srcY,
+    const uint8_t* srcCb,
+    const uint8_t* srcCr,
+    uint8_t* dst,
+    int dx,
+    int dy,
+    stride_t stride_Y,
+    stride_t stride_CbCr,
+    stride_t stride_dst)
 {
+    if (m_dithering) {
+        convert_main<incsp, outcsp, rgb_limit, aligned, 1>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
+    } else {
+        convert_main<incsp, outcsp, rgb_limit, aligned, 0>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
+    }
+}
+
+template <uint64_t incsp, uint64_t outcsp, int rgb_limit, int aligned, bool dithering> void TffdshowConverters::convert_main(
+    const uint8_t* srcY,
+    const uint8_t* srcCb,
+    const uint8_t* srcCr,
+    uint8_t* dst,
+    int dx,
+    int dy,
+    stride_t stride_Y,
+    stride_t stride_CbCr,
+    stride_t stride_dst)
+{
+    init_dither(dx);
     if (m_thread_count == 1) {
-        convert_main_loop<incsp,outcsp,rgb_limit,aligned>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst, 0, dy, m_coeffs);
+        convert_main_loop<incsp,outcsp,rgb_limit,aligned,dithering>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst, 0, dy);
     } else {
         int is_odd;
         int starty = 0;
         int lines_per_thread = (dy / m_thread_count)&~1;
 
-        if (incsp == FF_CSP_420P || incsp == FF_CSP_NV12)
+        if (incsp == FF_CSP_420P || incsp == FF_CSP_NV12) {
             is_odd = 1;
-        else
+        } else {
             is_odd = 0;
+        }
 
         for (int i = 0 ; i < m_thread_count ; i++) {
             int endy = (i == m_thread_count -1) ?
-                           dy :
-                           starty + lines_per_thread + is_odd;
-            threadpool.schedule(Tfunc_obj<incsp,outcsp,rgb_limit,aligned>
-                (srcY,
-                 srcCb,
-                 srcCr,
-                 dst,
-                 dx,
-                 dy,
-                 stride_Y,
-                 stride_CbCr,
-                 stride_dst,
-                 starty + (i ? is_odd : 0),
-                 endy,
-                 m_coeffs));
+                       dy :
+                       starty + lines_per_thread + is_odd;
+            threadpool.schedule(Tfunc_obj<incsp,outcsp,rgb_limit,aligned,dithering>
+                                (srcY,
+                                 srcCb,
+                                 srcCr,
+                                 dst,
+                                 dx,
+                                 dy,
+                                 stride_Y,
+                                 stride_CbCr,
+                                 stride_dst,
+                                 starty + (i ? is_odd : 0),
+                                 endy,
+                                 this));
             starty += lines_per_thread;
         }
         threadpool.wait();
     }
 }
 
-template <int incsp, int outcsp, int rgb_limit, int aligned> void TffdshowConverters::convert_main_loop(
-              const uint8_t* srcY,
-              const uint8_t* srcCb,
-              const uint8_t* srcCr,
-              uint8_t* dst,
-              int dx,
-              int dy,
-              stride_t stride_Y,
-              stride_t stride_CbCr,
-              stride_t stride_dst,
-              int starty,
-              int endy,
-              const Tcoeffs *coeffs)
+template <bool dithering> __forceinline const uint16_t* get_dither_ptr(uint16_t *dither, int dither_pos, int x,void *any)
+{
+    if (dithering) {
+        return &dither[dither_pos  + (x << 1)];
+    } else {
+        return (const uint16_t*)any;
+    }
+}
+
+template <uint64_t incsp, uint64_t outcsp, int rgb_limit, int aligned, bool dithering> void TffdshowConverters::convert_main_loop(
+    const uint8_t* srcY,
+    const uint8_t* srcCb,
+    const uint8_t* srcCr,
+    uint8_t* dst,
+    int dx,
+    int dy,
+    stride_t stride_Y,
+    stride_t stride_CbCr,
+    stride_t stride_dst,
+    int starty,
+    int endy)
 {
     int endx = dx - 4;
     const uint8_t *srcYln = srcY;
@@ -601,25 +659,30 @@ template <int incsp, int outcsp, int rgb_limit, int aligned> void TffdshowConver
     uint8_t *dstln = dst;
     int y = starty;
     int endy0 = endy;
+    int dither_pos = 0;
+    Tcoeffs *coeffs = m_coeffs;
 
     if (incsp == FF_CSP_420P || incsp == FF_CSP_NV12) {
         if (y == 0) { // if this is the first thread,
             // Top
-            convert_a_unit<incsp,outcsp,1,0,rgb_limit,aligned>(srcYln, srcCbln, srcCrln, dstln,
-                                    0, 0, 0,
-                                    coeffs);
+            convert_a_unit<incsp,outcsp,1,0,rgb_limit,aligned,dithering>(srcYln, srcCbln, srcCrln, dstln,
+                    0, 0, 0,
+                    coeffs, get_dither_ptr<dithering>(dither, dither_pos, 0, coeffs));
             for (int x = 4 ; x < endx ; x += 4) {
-                convert_a_unit<incsp,outcsp,0,0,rgb_limit,aligned>(srcYln, srcCbln, srcCrln, dstln,
-                                        0, 0, 0,
-                                        coeffs);
+                convert_a_unit<incsp,outcsp,0,0,rgb_limit,aligned,dithering>(srcYln, srcCbln, srcCrln, dstln,
+                        0, 0, 0,
+                        coeffs, get_dither_ptr<dithering>(dither, dither_pos, x, coeffs));
             }
-            convert_a_unit<incsp,outcsp,0,1,rgb_limit,aligned>(srcYln, srcCbln, srcCrln, dstln,
-                                    0, 0, 0,
-                                    coeffs);
+            convert_a_unit<incsp,outcsp,0,1,rgb_limit,aligned,dithering>(srcYln, srcCbln, srcCrln, dstln,
+                    0, 0, 0,
+                    coeffs, get_dither_ptr<dithering>(dither, dither_pos, (endx+7) & ~7, coeffs));
             y = 1;
         }
         if (endy == dy) {
             endy--;
+        }
+        if (dithering) {
+            dither_pos += dither_lineoffset;
         }
     }
 
@@ -634,17 +697,23 @@ template <int incsp, int outcsp, int rgb_limit, int aligned> void TffdshowConver
             srcCrln = srcCr + y * stride_CbCr;
         }
         dstln = dst + y * stride_dst;
-        convert_a_unit<incsp,outcsp,1,0,rgb_limit,aligned>(srcYln, srcCbln, srcCrln, dstln,
-                                stride_Y, stride_CbCr, stride_dst,
-                                coeffs);
+        convert_a_unit<incsp,outcsp,1,0,rgb_limit,aligned,dithering>(srcYln, srcCbln, srcCrln, dstln,
+                stride_Y, stride_CbCr, stride_dst,
+                coeffs, get_dither_ptr<dithering>(dither, dither_pos, 0, coeffs));
         for (int x = 4 ; x < endx ; x += 4) {
-            convert_a_unit<incsp,outcsp,0,0,rgb_limit,aligned>(srcYln, srcCbln, srcCrln, dstln,
-                                    stride_Y, stride_CbCr, stride_dst,
-                                    coeffs);
+            convert_a_unit<incsp,outcsp,0,0,rgb_limit,aligned,dithering>(srcYln, srcCbln, srcCrln, dstln,
+                    stride_Y, stride_CbCr, stride_dst,
+                    coeffs, get_dither_ptr<dithering>(dither, dither_pos, x, coeffs));
         }
-        convert_a_unit<incsp,outcsp,0,1,rgb_limit,aligned>(srcYln, srcCbln, srcCrln, dstln,
-                                stride_Y, stride_CbCr, stride_dst,
-                                coeffs);
+        convert_a_unit<incsp,outcsp,0,1,rgb_limit,aligned,dithering>(srcYln, srcCbln, srcCrln, dstln,
+                stride_Y, stride_CbCr, stride_dst,
+                coeffs, get_dither_ptr<dithering>(dither, dither_pos, (endx+7) & ~7, coeffs));
+        if (dithering) {
+            dither_pos += dither_lineoffset;
+            if (dither_pos >= dx*2) {
+                dither_pos = 0;
+            }
+        }
     }
 
     if (incsp == FF_CSP_420P || incsp == FF_CSP_NV12) {
@@ -654,31 +723,57 @@ template <int incsp, int outcsp, int rgb_limit, int aligned> void TffdshowConver
             srcCbln = srcCb + ((dy >> 1) - 1) * stride_CbCr;
             srcCrln = srcCr + ((dy >> 1) - 1) * stride_CbCr;
             dstln = dst + (dy - 1) * stride_dst;
-            convert_a_unit<incsp,outcsp,1,0,rgb_limit,aligned>(srcYln, srcCbln, srcCrln, dstln,
-                                    0, 0, 0,
-                                    coeffs);
+            convert_a_unit<incsp,outcsp,1,0,rgb_limit,aligned,dithering>(srcYln, srcCbln, srcCrln, dstln,
+                    0, 0, 0,
+                    coeffs, get_dither_ptr<dithering>(dither, dither_pos, 0, coeffs));
             for (int x = 4 ; x < endx ; x += 4) {
-                convert_a_unit<incsp,outcsp,0,0,rgb_limit,aligned>(srcYln, srcCbln, srcCrln, dstln,
-                                        0, 0, 0,
-                                        coeffs);
+                convert_a_unit<incsp,outcsp,0,0,rgb_limit,aligned,dithering>(srcYln, srcCbln, srcCrln, dstln,
+                        0, 0, 0,
+                        coeffs, get_dither_ptr<dithering>(dither, dither_pos, x, coeffs));
             }
-            convert_a_unit<incsp,outcsp,0,1,rgb_limit,aligned>(srcYln, srcCbln, srcCrln, dstln,
-                                    0, 0, 0,
-                                    coeffs);
+            convert_a_unit<incsp,outcsp,0,1,rgb_limit,aligned,dithering>(srcYln, srcCbln, srcCrln, dstln,
+                    0, 0, 0,
+                    coeffs, get_dither_ptr<dithering>(dither, dither_pos, (endx+7) & ~7, coeffs));
         }
     }
 }
 
-TffdshowConverters::TffdshowConverters(int thread_count) : m_thread_count((thread_count > 0 && thread_count <= MAX_THREADS) ? thread_count : 1),threadpool(m_thread_count)
+void TffdshowConverters::init_dither(int width)
+{
+    if (!m_dithering) {
+        return;
+    }
+    width = width * 4 + 64;
+    if (width < m_old_width) {
+        return;
+    }
+    m_old_width = width;
+    if (dither) {
+        _aligned_free(dither);
+    }
+    dither = (uint16_t *)_aligned_malloc(width * sizeof(uint16_t), 16);
+    for (int i = 0 ; i < width ; i++) {
+        dither[i] = rand() & 0xf;
+    }
+}
+
+TffdshowConverters::TffdshowConverters(int thread_count) :
+    m_thread_count((thread_count > 0 && thread_count <= MAX_THREADS) ? thread_count : 1),
+    threadpool(m_thread_count),
+    m_old_width(0),
+    dither(NULL)
 {
     m_coeffs = (Tcoeffs*)_aligned_malloc(sizeof(Tcoeffs),16);
 }
 
 TffdshowConverters::~TffdshowConverters()
 {
+    if (dither) {
+        _aligned_free(dither);
+    }
     _aligned_free(m_coeffs);
 }
 
 #if defined(_MSC_VER) || defined(__INTEL_COMPILER)
- #pragma warning (pop)
+    #pragma warning (pop)
 #endif

@@ -23,45 +23,43 @@
 
 TdeinterlacePanel* TdeinterlacePageTomsMoComp::create(Twindow *parent)
 {
- return new TdeinterlacePageTomsMoComp(parent);
+    return new TdeinterlacePageTomsMoComp(parent);
 }
 
 TdeinterlacePageTomsMoComp::TdeinterlacePageTomsMoComp(Twindow *parent):TdeinterlacePanel(IDD_DEINTERLACE_TOMSMOCOMP,parent)
 {
- static const TbindCheckbox<TdeinterlacePageTomsMoComp> chb[]=
-  {
-   IDC_CHB_TOMSMOCOMP_VF,IDFF_tomocompVF,NULL,
-   0
-  };
- bindCheckboxes(chb);
- static const TbindTrackbar<TdeinterlacePageTomsMoComp> htbr[]=
-  {
-   IDC_TBR_TOMSMOCOMP_SEARCH,IDFF_tomocompSE,&TdeinterlacePageTomsMoComp::cfg2dlg,
-   0
-  };
- bindHtracks(htbr);
+    static const TbindCheckbox<TdeinterlacePageTomsMoComp> chb[]= {
+        IDC_CHB_TOMSMOCOMP_VF,IDFF_tomocompVF,NULL,
+        0
+    };
+    bindCheckboxes(chb);
+    static const TbindTrackbar<TdeinterlacePageTomsMoComp> htbr[]= {
+        IDC_TBR_TOMSMOCOMP_SEARCH,IDFF_tomocompSE,&TdeinterlacePageTomsMoComp::cfg2dlg,
+        0
+    };
+    bindHtracks(htbr);
 
- createDialog(dialogId,parent->m_hwnd);
+    createDialog(dialogId,parent->m_hwnd);
 }
 TdeinterlacePageTomsMoComp::~TdeinterlacePageTomsMoComp()
 {
- DestroyWindow(m_hwnd);
+    DestroyWindow(m_hwnd);
 }
 
 void TdeinterlacePageTomsMoComp::init(void)
 {
- translate();
- tbrSetRange(IDC_TBR_TOMSMOCOMP_SEARCH,0,30,3);
+    translate();
+    tbrSetRange(IDC_TBR_TOMSMOCOMP_SEARCH,0,30,3);
 }
 
 void TdeinterlacePageTomsMoComp::cfg2dlg(void)
 {
- tbrSet(IDC_TBR_TOMSMOCOMP_SEARCH,cfgGet(IDFF_tomocompSE),IDC_LBL_TOMSMOCOMP_SEARCH);
- setCheck(IDC_CHB_TOMSMOCOMP_VF,cfgGet(IDFF_tomocompVF));
+    tbrSet(IDC_TBR_TOMSMOCOMP_SEARCH,cfgGet(IDFF_tomocompSE),IDC_LBL_TOMSMOCOMP_SEARCH);
+    setCheck(IDC_CHB_TOMSMOCOMP_VF,cfgGet(IDFF_tomocompVF));
 }
 
 void TdeinterlacePageTomsMoComp::reset(void)
 {
- deci->resetParam(IDFF_tomocompSE);
- deci->resetParam(IDFF_tomocompVF);
+    deci->resetParam(IDFF_tomocompSE);
+    deci->resetParam(IDFF_tomocompVF);
 }

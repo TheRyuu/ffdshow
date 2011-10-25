@@ -3,25 +3,25 @@
  * Copyright (c) 2003 Michael Niedermayer <michaelni@gmx.at>
  * Copyright (c) 2004 Alex Beregszaszi
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 /**
- * @file libavcodec/golomb.h
+ * @file
  * @brief
  *     exp golomb vlc stuff
  * @author Michael Niedermayer <michaelni@gmx.at> and Alex Beregszaszi
@@ -32,14 +32,12 @@
 
 #ifdef __cplusplus
 extern "C" {
-#endif
-
-#ifdef __GNUC__
-#include <stdint.h>
-#endif
-#include "bitstream.h"
-
 #define FFMIN(a,b) ((a) > (b) ? (b) : (a))
+#endif
+
+#include <stdint.h>
+#include "get_bits.h"
+#include "put_bits.h"
 
 #define INVALID_VLC           0x80000000
 
@@ -61,18 +59,31 @@ static inline int get_ue_golomb(GetBitContext *gb){
     unsigned int buf;
     int log;
 
-    OPEN_READER(re, gb);
     /* ffdshow custom code */
-    #if defined(__INTEL_COMPILER) || defined(DEBUG)
-    	#ifdef ALT_BITSTREAM_READER_LE
-    re_cache= AV_RL32( ((const uint8_t *)(gb)->buffer)+(re_index>>3) ) >> (re_index&0x07);
-    	#else
-    re_cache= AV_RB32( ((const uint8_t *)(gb)->buffer)+(re_index>>3) ) >> (re_index&0x07);
-    	#endif
-    #else
-    // ICL9.1-Release and MSVC8-DEBUG build can't process this macro properly.
+#if defined(_MSC_VER) && (_MSC_VER == 1500) && defined(WIN64)
+    unsigned int re_index = (gb)->index;
+    unsigned int re_cache = 0;
+    re_cache= av_bswap32( ((((const uint8_t*)( ((const uint8_t *)(gb)->buffer)+(re_index>>3) ))[3] << 24) | (((const uint8_t*)( ((const uint8_t *)(gb)->buffer)+(re_index>>3) ))[2] << 16) | (((const uint8_t*)( ((const uint8_t *)(gb)->buffer)+(re_index>>3) ))[1] <<  8) | ((const uint8_t*)( ((const uint8_t *)(gb)->buffer)+(re_index>>3) ))[0]) ) >> (re_index&0x07);
+    buf=(uint32_t)re_cache;
+
+    if(buf >= (1<<27)){
+        buf >>= 32 - 9;
+        re_index += ff_golomb_vlc_len[buf];
+        (gb)->index = re_index;
+
+        return ff_ue_golomb_vlc_code[buf];
+    }else{
+        log= 2*av_log2(buf) - 31;
+        buf>>= log;
+        buf--;
+        re_index += 32 - log;
+        (gb)->index = re_index;
+
+        return buf;
+    }
+#else
+    OPEN_READER(re, gb);
     UPDATE_CACHE(re, gb);
-    #endif
     buf=GET_CACHE(re, gb);
 
     if(buf >= (1<<27)){
@@ -90,6 +101,21 @@ static inline int get_ue_golomb(GetBitContext *gb){
 
         return buf;
     }
+#endif
+}
+
+/**
+ * Read an unsigned Exp-Golomb code in the range 0 to UINT32_MAX-1.
+ */
+static inline unsigned get_ue_golomb_long(GetBitContext *gb)
+{
+    unsigned buf, log;
+
+    buf = show_bits_long(gb, 32);
+    log = 31 - av_log2(buf);
+    skip_bits_long(gb, log);
+
+    return get_bits_long(gb, log + 1) - 1;
 }
 
  /**
@@ -100,17 +126,7 @@ static inline int get_ue_golomb_31(GetBitContext *gb){
     unsigned int buf;
 
     OPEN_READER(re, gb);
-    /* ffdshow custom code */
-    #if defined(__INTEL_COMPILER) || defined(DEBUG)
-    	#ifdef ALT_BITSTREAM_READER_LE
-    re_cache= AV_RL32( ((const uint8_t *)(gb)->buffer)+(re_index>>3) ) >> (re_index&0x07);
-    	#else
-    re_cache= AV_RB32( ((const uint8_t *)(gb)->buffer)+(re_index>>3) ) >> (re_index&0x07);
-    	#endif
-    #else
-    // ICL9.1-Release and MSVC8-DEBUG build can't process this macro properly.
     UPDATE_CACHE(re, gb);
-    #endif
     buf=GET_CACHE(re, gb);
 
     buf >>= 32 - 9;
@@ -262,8 +278,12 @@ static inline int get_ur_golomb(GetBitContext *gb, int k, int limit, int esc_len
 
         return buf;
     }else{
-        buf >>= 32 - limit - esc_len;
-        LAST_SKIP_BITS(re, gb, esc_len + limit);
+        LAST_SKIP_BITS(re, gb, limit);
+        UPDATE_CACHE(re, gb);
+
+        buf = SHOW_UBITS(re, gb, esc_len);
+
+        LAST_SKIP_BITS(re, gb, esc_len);
         CLOSE_READER(re, gb);
 
         return buf + limit - 1;
@@ -531,6 +551,7 @@ static inline void set_sr_golomb_flac(PutBitContext *pb, int i, int k, int limit
 
     set_ur_golomb_jpegls(pb, v, k, limit, esc_len);
 }
+
 #ifdef __cplusplus
 }
 #endif

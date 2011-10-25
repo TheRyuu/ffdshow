@@ -16,33 +16,36 @@
  * Many thanks to Dan Dennedy <dan@dennedy.org> for providing wealth
  * of DV technical info.
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 /**
- * @file libavcodec/dv.c
+ * @file
  * DV codec.
  */
 #define ALT_BITSTREAM_READER
+#include "libavutil/pixdesc.h"
 #include "avcodec.h"
 #include "dsputil.h"
-#include "bitstream.h"
+#include "get_bits.h"
+#include "put_bits.h"
 #include "simple_idct.h"
 #include "dvdata.h"
+#include "dv_tablegen.h"
 
 //#undef NDEBUG
 //#include <assert.h>
@@ -63,21 +66,8 @@ typedef struct DVVideoContext {
 
 #define TEX_VLC_BITS 9
 
-#if CONFIG_SMALL
-#define DV_VLC_MAP_RUN_SIZE 15
-#define DV_VLC_MAP_LEV_SIZE 23
-#else
-#define DV_VLC_MAP_RUN_SIZE  64
-#define DV_VLC_MAP_LEV_SIZE 512 //FIXME sign was removed so this should be /2 but needs check
-#endif
-
 /* XXX: also include quantization */
 static RL_VLC_ELEM dv_rl_vlc[1184];
-/* VLC encoding lookup table */
-static struct dv_vlc_pair {
-   uint32_t vlc;
-   uint8_t  size;
-} dv_vlc_map[DV_VLC_MAP_RUN_SIZE][DV_VLC_MAP_LEV_SIZE];
 
 static inline int dv_work_pool_size(const DVprofile *d)
 {
@@ -237,7 +227,7 @@ static int dv_init_dynamic_tables(const DVprofile *d)
         } else {
             iweight1 = &dv_iweight_1080_y[0];
             iweight2 = &dv_iweight_1080_c[0];
-            }
+        }
         if (DV_PROFILE_IS_HD(d)) {
             for (c = 0; c < 4; c++) {
                 for (s = 0; s < 16; s++) {
@@ -255,12 +245,12 @@ static int dv_init_dynamic_tables(const DVprofile *d)
                         for (; i < dv_quant_areas[c]; i++) {
                             *factor1   = iweight1[i] << (dv_quant_shifts[s][c] + 1);
                             *factor2++ = (*factor1++) << 1;
-        }
-    }
+                        }
+                    }
+                }
             }
         }
     }
-}
 
     return 0;
 }
@@ -324,47 +314,7 @@ static av_cold int dvvideo_init(AVCodecContext *avctx)
         }
         free_vlc(&dv_vlc);
 
-        for (i = 0; i < NB_DV_VLC - 1; i++) {
-           if (dv_vlc_run[i] >= DV_VLC_MAP_RUN_SIZE)
-               continue;
-#if CONFIG_SMALL
-           if (dv_vlc_level[i] >= DV_VLC_MAP_LEV_SIZE)
-               continue;
-#endif
-
-           if (dv_vlc_map[dv_vlc_run[i]][dv_vlc_level[i]].size != 0)
-               continue;
-
-           dv_vlc_map[dv_vlc_run[i]][dv_vlc_level[i]].vlc  =
-               dv_vlc_bits[i] << (!!dv_vlc_level[i]);
-           dv_vlc_map[dv_vlc_run[i]][dv_vlc_level[i]].size =
-               dv_vlc_len[i] + (!!dv_vlc_level[i]);
-        }
-        for (i = 0; i < DV_VLC_MAP_RUN_SIZE; i++) {
-#if CONFIG_SMALL
-           for (j = 1; j < DV_VLC_MAP_LEV_SIZE; j++) {
-              if (dv_vlc_map[i][j].size == 0) {
-                  dv_vlc_map[i][j].vlc = dv_vlc_map[0][j].vlc |
-                            (dv_vlc_map[i-1][0].vlc << (dv_vlc_map[0][j].size));
-                  dv_vlc_map[i][j].size = dv_vlc_map[i-1][0].size +
-                                          dv_vlc_map[0][j].size;
-              }
-           }
-#else
-           for (j = 1; j < DV_VLC_MAP_LEV_SIZE/2; j++) {
-              if (dv_vlc_map[i][j].size == 0) {
-                  dv_vlc_map[i][j].vlc = dv_vlc_map[0][j].vlc |
-                            (dv_vlc_map[i-1][0].vlc << (dv_vlc_map[0][j].size));
-                  dv_vlc_map[i][j].size = dv_vlc_map[i-1][0].size +
-                                          dv_vlc_map[0][j].size;
-              }
-              dv_vlc_map[i][((uint16_t)(-j))&0x1ff].vlc =
-                                            dv_vlc_map[i][j].vlc | 1;
-              dv_vlc_map[i][((uint16_t)(-j))&0x1ff].size =
-                                            dv_vlc_map[i][j].size;
-           }
-#endif
-        }
+        dv_vlc_map_tableinit();
     }
 
     /* Generic DSP setup */
@@ -392,12 +342,23 @@ static av_cold int dvvideo_init(AVCodecContext *avctx)
 
     avctx->coded_frame = &s->picture;
     s->avctx = avctx;
+    avctx->chroma_sample_location = AVCHROMA_LOC_TOPLEFT;
 
     return 0;
 }
 
-// #define VLC_DEBUG
-// #define printf(...) av_log(NULL, AV_LOG_ERROR, __VA_ARGS__)
+static av_cold int dvvideo_init_encoder(AVCodecContext *avctx)
+{
+    if (!dv_codec_profile(avctx)) {
+        /*
+        av_log(avctx, AV_LOG_ERROR, "Found no DV profile for %ix%i %s video\n",
+               avctx->width, avctx->height, av_get_pix_fmt_name(avctx->pix_fmt));
+        */
+        return -1;
+    }
+
+    return dvvideo_init(avctx);
+}
 
 typedef struct BlockInfo {
     const uint32_t *factor_table;
@@ -411,20 +372,14 @@ typedef struct BlockInfo {
 
 /* bit budget for AC only in 5 MBs */
 static const int vs_total_ac_bits = (100 * 4 + 68*2) * 5;
-/* see dv_88_areas and dv_248_areas for details */
 static const int mb_area_start[5] = { 1, 6, 21, 43, 64 };
-
-static inline int get_bits_left(GetBitContext *s)
-{
-    return s->size_in_bits - get_bits_count(s);
-}
 
 static inline int put_bits_left(PutBitContext* s)
 {
     return (s->buf_end - s->buf) * 8 - put_bits_count(s);
 }
 
-/* decode ac coefficients */
+/* decode AC coefficients */
 static void dv_decode_ac(GetBitContext *gb, BlockInfo *mb, DCTELEM *block)
 {
     int last_index = gb->size_in_bits;
@@ -437,7 +392,7 @@ static void dv_decode_ac(GetBitContext *gb, BlockInfo *mb, DCTELEM *block)
     OPEN_READER(re, gb);
     UPDATE_CACHE(re, gb);
 
-    /* if we must parse a partial vlc, we do it here */
+    /* if we must parse a partial VLC, we do it here */
     if (partial_bit_count > 0) {
         re_cache = ((unsigned)re_cache >> partial_bit_count) |
                    (mb->partial_bit_buffer << (sizeof(re_cache) * 8 - partial_bit_count));
@@ -447,9 +402,8 @@ static void dv_decode_ac(GetBitContext *gb, BlockInfo *mb, DCTELEM *block)
 
     /* get the AC coefficients until last_index is reached */
     for (;;) {
-#ifdef VLC_DEBUG
-        printf("%2d: bits=%04x index=%d\n", pos, SHOW_UBITS(re, gb, 16), re_index);
-#endif
+        av_dlog(NULL, "%2d: bits=%04x index=%d\n", pos, SHOW_UBITS(re, gb, 16),
+                re_index);
         /* our own optimized GET_RL_VLC */
         index   = NEG_USR32(re_cache, TEX_VLC_BITS);
         vlc_len = dv_rl_vlc[index].len;
@@ -470,9 +424,7 @@ static void dv_decode_ac(GetBitContext *gb, BlockInfo *mb, DCTELEM *block)
         }
         re_index += vlc_len;
 
-#ifdef VLC_DEBUG
-        printf("run=%d level=%d\n", run, level);
-#endif
+        av_dlog(NULL, "run=%d level=%d\n", run, level);
         pos += run;
         if (pos >= 64)
             break;
@@ -524,18 +476,18 @@ static int dv_decode_video_segment(AVCodecContext *avctx, void *arg)
     PutBitContext pb, vs_pb;
     GetBitContext gb;
     BlockInfo mb_data[5 * DV_MAX_BPM], *mb, *mb1;
-    DECLARE_ALIGNED_16(DCTELEM, sblock[5*DV_MAX_BPM][64]);
-    DECLARE_ALIGNED_8(uint8_t, mb_bit_buffer[80 + 4]); /* allow some slack */
-    DECLARE_ALIGNED_8(uint8_t, vs_bit_buffer[5 * 80 + 4]); /* allow some slack */
+    LOCAL_ALIGNED_16(DCTELEM, sblock, [5*DV_MAX_BPM], [64]);
+    LOCAL_ALIGNED_16(uint8_t, mb_bit_buffer, [  80 + FF_INPUT_BUFFER_PADDING_SIZE]); /* allow some slack */
+    LOCAL_ALIGNED_16(uint8_t, vs_bit_buffer, [5*80 + FF_INPUT_BUFFER_PADDING_SIZE]); /* allow some slack */
     const int log2_blocksize = 3-s->avctx->lowres;
     int is_field_mode[5];
 
     assert((((int)mb_bit_buffer) & 7) == 0);
     assert((((int)vs_bit_buffer) & 7) == 0);
 
-    memset(sblock, 0, sizeof(sblock));
+    memset(sblock, 0, 5*DV_MAX_BPM*sizeof(*sblock));
 
-    /* pass 1 : read DC and AC coefficients in blocks */
+    /* pass 1: read DC and AC coefficients in blocks */
     buf_ptr = &s->buf[work_chunk->buf_offset*80];
     block1  = &sblock[0][0];
     mb1     = mb_data;
@@ -552,7 +504,7 @@ static int dv_decode_video_segment(AVCodecContext *avctx, void *arg)
             last_index = s->sys->block_sizes[j];
             init_get_bits(&gb, buf_ptr, last_index);
 
-            /* get the dc */
+            /* get the DC */
             dc       = get_sbits(&gb, 9);
             dct_mode = get_bits1(&gb);
             class1   = get_bits(&gb, 2);
@@ -576,12 +528,10 @@ static int dv_decode_video_segment(AVCodecContext *avctx, void *arg)
             mb->pos               = 0;
             mb->partial_bit_count = 0;
 
-#ifdef VLC_DEBUG
-            printf("MB block: %d, %d ", mb_index, j);
-#endif
+            av_dlog(avctx, "MB block: %d, %d ", mb_index, j);
             dv_decode_ac(&gb, mb, block);
 
-            /* write the remaining bits  in a new buffer only if the
+            /* write the remaining bits in a new buffer only if the
                block is finished */
             if (mb->pos >= 64)
                 bit_copy(&pb, &gb);
@@ -590,13 +540,12 @@ static int dv_decode_video_segment(AVCodecContext *avctx, void *arg)
             mb++;
         }
 
-        /* pass 2 : we can do it just after */
-#ifdef VLC_DEBUG
-        printf("***pass 2 size=%d MB#=%d\n", put_bits_count(&pb), mb_index);
-#endif
+        /* pass 2: we can do it just after */
+        av_dlog(avctx, "***pass 2 size=%d MB#=%d\n", put_bits_count(&pb), mb_index);
         block = block1;
         mb    = mb1;
         init_get_bits(&gb, mb_bit_buffer, put_bits_count(&pb));
+        put_bits32(&pb, 0); // padding must be zeroed
         flush_put_bits(&pb);
         for (j = 0; j < s->sys->bpm; j++, block += 64, mb++) {
             if (mb->pos < 64 && get_bits_left(&gb) > 0) {
@@ -612,24 +561,21 @@ static int dv_decode_video_segment(AVCodecContext *avctx, void *arg)
             bit_copy(&vs_pb, &gb);
     }
 
-    /* we need a pass other the whole video segment */
-#ifdef VLC_DEBUG
-    printf("***pass 3 size=%d\n", put_bits_count(&vs_pb));
-#endif
+    /* we need a pass over the whole video segment */
+    av_dlog(avctx, "***pass 3 size=%d\n", put_bits_count(&vs_pb));
     block = &sblock[0][0];
     mb    = mb_data;
     init_get_bits(&gb, vs_bit_buffer, put_bits_count(&vs_pb));
+    put_bits32(&vs_pb, 0); // padding must be zeroed
     flush_put_bits(&vs_pb);
     for (mb_index = 0; mb_index < 5; mb_index++) {
         for (j = 0; j < s->sys->bpm; j++) {
             if (mb->pos < 64) {
-#ifdef VLC_DEBUG
-                printf("start %d:%d\n", mb_index, j);
-#endif
+                av_dlog(avctx, "start %d:%d\n", mb_index, j);
                 dv_decode_ac(&gb, mb, block);
             }
             if (mb->pos >= 64 && mb->pos < 127)
-                av_log(NULL, AV_LOG_ERROR, "AC EOB marker is absent pos=%d\n", mb->pos);
+                av_log(avctx, AV_LOG_ERROR, "AC EOB marker is absent pos=%d\n", mb->pos);
             block += 64;
             mb++;
         }
@@ -697,7 +643,7 @@ static int dv_decode_video_segment(AVCodecContext *avctx, void *arg)
 }
 
 #if CONFIG_SMALL
-/* Converts run and level (where level != 0) pair into vlc, returning bit size */
+/* Converts run and level (where level != 0) pair into VLC, returning bit size */
 static av_always_inline int dv_rl2vlc(int run, int level, int sign, uint32_t* vlc)
 {
     int size;
@@ -825,13 +771,13 @@ static av_always_inline int dv_init_enc_block(EncBlockInfo* bi, uint8_t *data, i
 {
     const int *weight;
     const uint8_t* zigzag_scan;
-    DECLARE_ALIGNED_16(DCTELEM, blk[64]);
+    LOCAL_ALIGNED_16(DCTELEM, blk, [64]);
     int i, area;
     /* We offer two different methods for class number assignment: the
        method suggested in SMPTE 314M Table 22, and an improved
        method. The SMPTE method is very conservative; it assigns class
        3 (i.e. severe quantization) to any block where the largest AC
-       component is greater than 36. FFmpeg's DV encoder tracks AC bit
+       component is greater than 36. Libav's DV encoder tracks AC bit
        consumption precisely, so there is no need to bias most blocks
        towards strongly lossy compression. Instead, we assign class 2
        to most blocks, and use class 3 only when strictly necessary
@@ -839,7 +785,7 @@ static av_always_inline int dv_init_enc_block(EncBlockInfo* bi, uint8_t *data, i
 
 #if 0 /* SMPTE spec method */
     static const int classes[] = {12, 24, 36, 0xffff};
-#else /* improved FFmpeg method */
+#else /* improved Libav method */
     static const int classes[] = {-1, -1, 255, 0xffff};
 #endif
     int max  = classes[0];
@@ -858,7 +804,7 @@ static av_always_inline int dv_init_enc_block(EncBlockInfo* bi, uint8_t *data, i
     } else {
         /* We rely on the fact that encoding all zeros leads to an immediate EOB,
            which is precisely what the spec calls for in the "dummy" blocks. */
-        memset(blk, 0, sizeof(blk));
+        memset(blk, 0, 64*sizeof(*blk));
         bi->dct_mode = 0;
     }
     bi->mb[0] = blk[0];
@@ -874,7 +820,7 @@ static av_always_inline int dv_init_enc_block(EncBlockInfo* bi, uint8_t *data, i
 
           if (level + 15 > 30U) {
               bi->sign[i] = (level >> 31) & 1;
-              /* weigh it and and shift down into range, adding for rounding */
+              /* weight it and and shift down into range, adding for rounding */
               /* the extra division by a factor of 2^4 reverses the 8x expansion of the DCT
                  AND the 2x doubling of the weights */
               level = (FFABS(level) * weight[i] + (1 << (dv_weight_bits+3))) >> (dv_weight_bits+4);
@@ -992,7 +938,7 @@ static int dv_encode_video_segment(AVCodecContext *avctx, void *arg)
     int mb_x, mb_y, c_offset, linesize, y_stride;
     uint8_t*  y_ptr;
     uint8_t*  dif;
-    uint8_t   scratch[64];
+    LOCAL_ALIGNED_8(uint8_t, scratch, [64]);
     EncBlockInfo  enc_blks[5*DV_MAX_BPM];
     PutBitContext pbs[5*DV_MAX_BPM];
     PutBitContext* pb;
@@ -1075,7 +1021,7 @@ static int dv_encode_video_segment(AVCodecContext *avctx, void *arg)
             int sz = s->sys->block_sizes[i]>>3;
 
             init_put_bits(&pbs[j], dif, sz);
-            put_bits(&pbs[j], 9, (uint16_t)(((enc_blks[j].mb[0] >> 3) - 1024 + 2) >> 2));
+            put_sbits(&pbs[j], 9, ((enc_blks[j].mb[0] >> 3) - 1024 + 2) >> 2);
             put_bits(&pbs[j], 1, enc_blks[j].dct_mode);
             put_bits(&pbs[j], 2, enc_blks[j].cno);
 
@@ -1097,11 +1043,20 @@ static int dv_encode_video_segment(AVCodecContext *avctx, void *arg)
        if (enc_blks[j].partial_bit_count)
            pb = dv_encode_ac(&enc_blks[j], pb, &pbs[s->sys->bpm*5]);
        if (enc_blks[j].partial_bit_count)
-            av_log(NULL, AV_LOG_ERROR, "ac bitstream overflow\n");
+            av_log(avctx, AV_LOG_ERROR, "ac bitstream overflow\n");
     }
 
-    for (j=0; j<5*s->sys->bpm; j++)
+    for (j=0; j<5*s->sys->bpm; j++) {
+       int pos;
+       int size = pbs[j].size_in_bits >> 3;
        flush_put_bits(&pbs[j]);
+       pos = put_bits_count(&pbs[j]) >> 3;
+       if (pos > size) {
+           av_log(avctx, AV_LOG_ERROR, "bitstream written beyond buffer size\n");
+           return -1;
+       }
+       memset(pbs[j].buf + pos, 0xff, size - pos);
+    }
 
     return 0;
 }
@@ -1111,20 +1066,26 @@ static int dv_encode_video_segment(AVCodecContext *avctx, void *arg)
    144000 bytes for PAL - or twice those for 50Mbps) */
 static int dvvideo_decode_frame(AVCodecContext *avctx,
                                  void *data, int *data_size,
-                                 const uint8_t *buf, int buf_size)
+                                 AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     DVVideoContext *s = avctx->priv_data;
+    const uint8_t* vsc_pack;
+    int apt, is16_9;
 
-    s->sys = dv_frame_profile(buf);
-    if (!s->sys || buf_size < s->sys->frame_size || dv_init_dynamic_tables(s->sys))
+    s->sys = dv_frame_profile(s->sys, buf, buf_size);
+    if (!s->sys || buf_size < s->sys->frame_size || dv_init_dynamic_tables(s->sys)) {
+        av_log(avctx, AV_LOG_ERROR, "could not find dv frame profile\n");
         return -1; /* NOTE: we only accept several full frames */
+    }
 
     if (s->picture.data[0])
         avctx->release_buffer(avctx, &s->picture);
 
     s->picture.reference = 0;
     s->picture.key_frame = 1;
-    s->picture.pict_type = FF_I_TYPE;
+    s->picture.pict_type = AV_PICTURE_TYPE_I;
     avctx->pix_fmt   = s->sys->pix_fmt;
     avctx->time_base = s->sys->time_base;
     avcodec_set_dimensions(avctx, s->sys->width, s->sys->height);
@@ -1144,6 +1105,14 @@ static int dvvideo_decode_frame(AVCodecContext *avctx,
     /* return image */
     *data_size = sizeof(AVFrame);
     *(AVFrame*)data = s->picture;
+
+    /* Determine the codec's sample_aspect ratio from the packet */
+    vsc_pack = buf + 80*5 + 48 + 5;
+    if ( *vsc_pack == dv_video_control ) {
+        apt = buf[4] & 0x07;
+        is16_9 = (vsc_pack && ((vsc_pack[2] & 0x07) == 0x02 || (!apt && (vsc_pack[2] & 0x07) == 0x07)));
+        avctx->sample_aspect_ratio = s->sys->sar[is16_9];
+    }
 
     return s->sys->frame_size;
 }
@@ -1285,7 +1254,7 @@ static int attribute_align_arg dvvideo_encode_frame(AVCodecContext *c, uint8_t *
     c->pix_fmt           = s->sys->pix_fmt;
     s->picture           = *((AVFrame *)data);
     s->picture.key_frame = 1;
-    s->picture.pict_type = FF_I_TYPE;
+    s->picture.pict_type = AV_PICTURE_TYPE_I;
 
     s->buf = buf;
     c->execute(c, dv_encode_video_segment, s->sys->work_chunks, NULL,
@@ -1311,43 +1280,30 @@ static int dvvideo_close(AVCodecContext *c)
 
 
 #if CONFIG_DVVIDEO_ENCODER
-AVCodec dvvideo_encoder = {
-    "dvvideo",
-    CODEC_TYPE_VIDEO,
-    CODEC_ID_DVVIDEO,
-    sizeof(DVVideoContext),
-    /*.init=*/dvvideo_init,
-    /*.encode=*/dvvideo_encode_frame,
-    /*.close=*/NULL,
-    /*.decode=*/NULL,
-    /*.capabilities=*/0,
-    /*.next=*/NULL,
-    /*.flush=*/NULL,
-    /*.supported_framerates=*/NULL,
-#if __STDC_VERSION__ >= 199901L
-    .pix_fmts = (enum PixelFormat[]) {PIX_FMT_YUV411P, PIX_FMT_YUV422P, PIX_FMT_YUV420P, PIX_FMT_NONE},
-#else
-    /*.pix_fmts = */NULL,
-#endif
-    /*.long_name = */NULL_IF_CONFIG_SMALL("DV (Digital Video)"),
+AVCodec ff_dvvideo_encoder = {
+    .name           = "dvvideo",
+    .type           = AVMEDIA_TYPE_VIDEO,
+    .id             = CODEC_ID_DVVIDEO,
+    .priv_data_size = sizeof(DVVideoContext),
+    .init           = dvvideo_init_encoder,
+    .encode         = dvvideo_encode_frame,
+    .capabilities = CODEC_CAP_SLICE_THREADS,
+    .pix_fmts  = (const enum PixelFormat[]) {PIX_FMT_YUV411P, PIX_FMT_YUV422P, PIX_FMT_YUV420P, PIX_FMT_NONE},
+    .long_name = NULL_IF_CONFIG_SMALL("DV (Digital Video)"),
 };
 #endif // CONFIG_DVVIDEO_ENCODER
 
 #if CONFIG_DVVIDEO_DECODER
-AVCodec dvvideo_decoder = {
-    "dvvideo",
-    CODEC_TYPE_VIDEO,
-    CODEC_ID_DVVIDEO,
-    sizeof(DVVideoContext),
-    /*.init=*/dvvideo_init,
-    /*.encode=*/NULL,
-    /*.close=*/dvvideo_close,
-    /*.decode=*/dvvideo_decode_frame,
-    /*.capabilities=*/CODEC_CAP_DR1,
-    /*.next=*/NULL,
-    /*.flush=*/NULL,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("DV (Digital Video)"),
+AVCodec ff_dvvideo_decoder = {
+    .name           = "dvvideo",
+    .type           = AVMEDIA_TYPE_VIDEO,
+    .id             = CODEC_ID_DVVIDEO,
+    .priv_data_size = sizeof(DVVideoContext),
+    .init           = dvvideo_init,
+    .close          = dvvideo_close,
+    .decode         = dvvideo_decode_frame,
+    .capabilities   = CODEC_CAP_DR1 | CODEC_CAP_SLICE_THREADS,
+    .max_lowres = 3,
+    .long_name = NULL_IF_CONFIG_SMALL("DV (Digital Video)"),
 };
 #endif

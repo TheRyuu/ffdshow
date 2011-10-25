@@ -24,59 +24,58 @@
 
 TdeinterlacePanel* TdeinterlacePageFramedoubler::create(Twindow *parent)
 {
- return new TdeinterlacePageFramedoubler(parent);
+    return new TdeinterlacePageFramedoubler(parent);
 }
 
 TdeinterlacePageFramedoubler::TdeinterlacePageFramedoubler(Twindow *parent):TdeinterlacePanel(IDD_DEINTERLACE_FRAMEDBL,parent)
 {
- static const TbindTrackbar<TdeinterlacePageFramedoubler> htbr[]=
-  {
-   IDC_TBR_FRAMEDOUBLE_THRESHOLD,IDFF_frameRateDoublerThreshold,&TdeinterlacePageFramedoubler::cfg2dlg,
-   0
-  };
- bindHtracks(htbr);
- static const TbindCombobox<TdeinterlacePageFramedoubler> cbx[]=
-  {
-   IDC_CBX_FRAMEDOUBLE_SE,IDFF_frameRateDoublerSE,BINDCBX_DATA,&TdeinterlacePageFramedoubler::cfg2dlg,
-   0
-  };
- bindComboboxes(cbx);
+    static const TbindTrackbar<TdeinterlacePageFramedoubler> htbr[]= {
+        IDC_TBR_FRAMEDOUBLE_THRESHOLD,IDFF_frameRateDoublerThreshold,&TdeinterlacePageFramedoubler::cfg2dlg,
+        0
+    };
+    bindHtracks(htbr);
+    static const TbindCombobox<TdeinterlacePageFramedoubler> cbx[]= {
+        IDC_CBX_FRAMEDOUBLE_SE,IDFF_frameRateDoublerSE,BINDCBX_DATA,&TdeinterlacePageFramedoubler::cfg2dlg,
+        0
+    };
+    bindComboboxes(cbx);
 
- createDialog(dialogId,parent->m_hwnd);
+    createDialog(dialogId,parent->m_hwnd);
 }
 TdeinterlacePageFramedoubler::~TdeinterlacePageFramedoubler()
 {
- DestroyWindow(m_hwnd);
+    DestroyWindow(m_hwnd);
 }
 
 void TdeinterlacePageFramedoubler::init(void)
 {
- translate();
- tbrSetRange(IDC_TBR_FRAMEDOUBLE_THRESHOLD,0,255,16);
+    translate();
+    tbrSetRange(IDC_TBR_FRAMEDOUBLE_THRESHOLD,0,255,16);
 }
 
 void TdeinterlacePageFramedoubler::cfg2dlg(void)
 {
- int se=cfgGet(IDFF_frameRateDoublerSE);
- cbxSetDataCurSel(IDC_CBX_FRAMEDOUBLE_SE,se);
- tbrSet(IDC_TBR_FRAMEDOUBLE_THRESHOLD,cfgGet(IDFF_frameRateDoublerThreshold),IDC_LBL_FRAMEDOUBLE_THRESHOLD);
- static const int idFramedoubleThr[]={IDC_LBL_FRAMEDOUBLE_THRESHOLD,IDC_TBR_FRAMEDOUBLE_THRESHOLD,0};
- enable(se!=0,idFramedoubleThr);
+    int se=cfgGet(IDFF_frameRateDoublerSE);
+    cbxSetDataCurSel(IDC_CBX_FRAMEDOUBLE_SE,se);
+    tbrSet(IDC_TBR_FRAMEDOUBLE_THRESHOLD,cfgGet(IDFF_frameRateDoublerThreshold),IDC_LBL_FRAMEDOUBLE_THRESHOLD);
+    static const int idFramedoubleThr[]= {IDC_LBL_FRAMEDOUBLE_THRESHOLD,IDC_TBR_FRAMEDOUBLE_THRESHOLD,0};
+    enable(se!=0,idFramedoubleThr);
 }
 
 void TdeinterlacePageFramedoubler::translate(void)
 {
- TdeinterlacePanel::translate();
+    TdeinterlacePanel::translate();
 
- int sel=cbxGetCurSel(IDC_CBX_FRAMEDOUBLE_SE);
- cbxClear(IDC_CBX_FRAMEDOUBLE_SE);
- for (int i=0;TdeinterlaceSettings::frameRateDoublerSEs[i].name;i++)
-  cbxAdd(IDC_CBX_FRAMEDOUBLE_SE,_(IDC_CBX_FRAMEDOUBLE_SE,TdeinterlaceSettings::frameRateDoublerSEs[i].name),TdeinterlaceSettings::frameRateDoublerSEs[i].id);
- cbxSetCurSel(IDC_CBX_FRAMEDOUBLE_SE,sel);
+    int sel=cbxGetCurSel(IDC_CBX_FRAMEDOUBLE_SE);
+    cbxClear(IDC_CBX_FRAMEDOUBLE_SE);
+    for (int i=0; TdeinterlaceSettings::frameRateDoublerSEs[i].name; i++) {
+        cbxAdd(IDC_CBX_FRAMEDOUBLE_SE,_(IDC_CBX_FRAMEDOUBLE_SE,TdeinterlaceSettings::frameRateDoublerSEs[i].name),TdeinterlaceSettings::frameRateDoublerSEs[i].id);
+    }
+    cbxSetCurSel(IDC_CBX_FRAMEDOUBLE_SE,sel);
 }
 
 void TdeinterlacePageFramedoubler::reset(void)
 {
- deci->resetParam(IDFF_frameRateDoublerThreshold);
- deci->resetParam(IDFF_frameRateDoublerSE);
+    deci->resetParam(IDFF_frameRateDoublerThreshold);
+    deci->resetParam(IDFF_frameRateDoublerSE);
 }

@@ -68,19 +68,10 @@
 #include <vmr9.h>
 #include "msacmdrv.h"
 
-#ifdef __GNUC__
- #undef VISTA_SPDIF
-#else
- #if defined(WINVER) && WINVER<0x0600
-  #undef VISTA_SPDIF
- #endif
-#endif
-
 // BOOST
 #pragma warning (push)
-#pragma warning(disable: 4244 4819)
+#pragma warning (disable: 4005 4244 4819)
 #include "boost/foreach.hpp"
-#include "boost/noncopyable.hpp"
 #include "boost/thread.hpp"
 #pragma warning (pop)
 
@@ -90,12 +81,17 @@
 #define reverse_foreach BOOST_REVERSE_FOREACH
 
 // ffdshow
-#include "inttypes.h"
+//#define OSDTIMETABALE // OSD debug item "Time table" to reserch multithread time table. if you don't need this item comment out.
+//#define OSD_H264POC
+
+#include "stdint.h" // ISO C9x  compliant stdint.h for Microsoft Visual Studio
+#include "inttypes.h" // ISO C9x  compliant inttypes.h for Microsoft Visual Studio
 #include "dwstring.h"
 #include "mem_align.h"
 #include "array_allocator.h"
 #include "ffglobals.h"
 #include "comptr.h"
+#include "ffdebug.h"
 
 #if defined(UNICODE) && defined(__GNUC__)
  #undef TEXT

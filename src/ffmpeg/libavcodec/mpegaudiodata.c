@@ -20,7 +20,7 @@
  */
 
 /**
- * @file mpegaudiodata.c
+ * @file
  * mpeg audio layer common tables.
  */
 

@@ -6,9 +6,9 @@
 class TcurveNormalPage :public TconfPageEnc
 {
 public:
- TcurveNormalPage(TffdshowPageEnc *Iparent);
- virtual void cfg2dlg(void);
- virtual bool enabled(void);
+    TcurveNormalPage(TffdshowPageEnc *Iparent);
+    virtual void cfg2dlg(void);
+    virtual bool enabled(void);
 };
 
 #endif

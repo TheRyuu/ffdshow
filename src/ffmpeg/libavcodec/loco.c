@@ -2,30 +2,30 @@
  * LOCO codec
  * Copyright (c) 2005 Konstantin Shishkov
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 /**
- * @file loco.c
+ * @file
  * LOCO codec.
  */
 
 #include "avcodec.h"
-#include "bitstream.h"
+#include "get_bits.h"
 #include "golomb.h"
 #include "mathops.h"
 
@@ -158,8 +158,10 @@ static int loco_decode_plane(LOCOContext *l, uint8_t *data, int width, int heigh
 
 static int decode_frame(AVCodecContext *avctx,
                         void *data, int *data_size,
-                        const uint8_t *buf, int buf_size)
+                        AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     LOCOContext * const l = avctx->priv_data;
     AVFrame * const p= (AVFrame*)&l->pic;
     int decoded;
@@ -246,7 +248,7 @@ static av_cold int decode_init(AVCodecContext *avctx){
         break;
     default:
         l->lossy = AV_RL32(avctx->extradata + 8);
-        av_log(avctx, AV_LOG_INFO, "This is LOCO codec version %i, please upload file for study\n", version);
+        av_log_ask_for_sample(avctx, "This is LOCO codec version %i.\n", version);
     }
 
     l->mode = AV_RL32(avctx->extradata + 4);
@@ -273,19 +275,24 @@ static av_cold int decode_init(AVCodecContext *avctx){
     return 0;
 }
 
-AVCodec loco_decoder = {
-    "loco",
-    CODEC_TYPE_VIDEO,
-    CODEC_ID_LOCO,
-    sizeof(LOCOContext),
-    decode_init,
-    NULL,
-    NULL,
-    decode_frame,
-    /*.capabilities = */CODEC_CAP_DR1,
-    /*.next = */NULL,
-    /*.flush = */NULL,
-    /*.supported_framerates = */NULL,
-    /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("LOCO"),
+static av_cold int decode_end(AVCodecContext *avctx){
+    LOCOContext * const l = avctx->priv_data;
+    AVFrame *pic = &l->pic;
+
+    if (pic->data[0])
+        avctx->release_buffer(avctx, pic);
+
+    return 0;
+}
+
+AVCodec ff_loco_decoder = {
+    .name           = "loco",
+    .type           = AVMEDIA_TYPE_VIDEO,
+    .id             = CODEC_ID_LOCO,
+    .priv_data_size = sizeof(LOCOContext),
+    .init           = decode_init,
+    .close          = decode_end,
+    .decode         = decode_frame,
+    .capabilities   = CODEC_CAP_DR1,
+    .long_name = NULL_IF_CONFIG_SMALL("LOCO"),
 };
