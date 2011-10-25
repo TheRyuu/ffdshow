@@ -40,18 +40,25 @@ size_t TsubtitleLine::strlen(void) const
 // This method duplicate the words with karaoke settings
 void TsubtitleLine::applyWords(const TsubtitleFormat::Twords &words, int subFormat)
 {
+    // We already have one word that contains full text of the line.
+    // It is going to be removed at the end of this function if the line have more than two words.
+
+    // If there are only one word, then just change the props and return.
+    if (words.size() == 1) {
+        this->front().props=words.front().props;
+        return;
+    }
+
     bool karaokeNewWord = false;
+    const wchar_t *lineString = this->front().getString();
     foreach (const TsubtitleFormat::Tword &w, words) {
         karaokeNewWord |= w.props.karaokeNewWord;
         this->props=w.props;
-        if (w.i1==w.i2 && !w.i1 && !karaokeNewWord) {
+        // avoid adding empty words
+        if (w.i1==w.i2) {
             continue;
         }
-        if (w.i1==0 && w.i2==this->front().size()) {
-            this->front().props=w.props;
-            return;
-        }
-        TsubtitleWord word(this->front()+w.i1,w.i2-w.i1);
+        TsubtitleWord word(lineString + w.i1, w.i2 - w.i1);
         word.props=w.props;
         word.props.karaokeNewWord = karaokeNewWord;
 
@@ -70,6 +77,7 @@ void TsubtitleLine::applyWords(const TsubtitleFormat::Twords &words, int subForm
         this->erase(this->begin());
     }
 }
+
 void TsubtitleLine::format(TsubtitleFormat &format,int sfmt, TsubtitleText &parent)
 {
     if (sfmt==Tsubreader::SUB_SSA || sfmt==Tsubreader::SUB_SUBVIEWER || sfmt==Tsubreader::SUB_SUBVIEWER2) {
@@ -78,6 +86,7 @@ void TsubtitleLine::format(TsubtitleFormat &format,int sfmt, TsubtitleText &pare
         applyWords(format.processHTML(*this),sfmt);
     }
 }
+
 void TsubtitleLine::fix(TtextFix &fix)
 {
     foreach (TsubtitleWord &word, *this)
@@ -157,10 +166,6 @@ void TsubtitleText::karaokeComputeStartTimeFromDuration()
 
         karaokeDuration = 0;
 
-        // waitForKaraokeBody to handle {\b0}{\k100}{\b1}aaa{\b1}{\k100} bbb {\i1}{\b1} ccc{\i0}{\b0} ddd
-        // words are splitted by {}. So the karaoke boundary does not match with the word boundary.
-        // Another sample tested: 0,0,msg,,0,0,0,Karaoke,{\fad(1000,1000)}{\1a&H40&\2a&Hff&}{\K500}{\c&H99ff99&}Matroska Video {\K500}{\c&Hffffcc&}Sample Clip
-        bool waitForKaraokeBody = false;
         foreach (TsubtitleWord &word, line) {
             if (karaokeStart == REFTIME_INVALID) {
                 karaokeStart = word.props.karaokeStart;
@@ -171,21 +176,10 @@ void TsubtitleText::karaokeComputeStartTimeFromDuration()
             if (word.props.karaokeNewWord) {
                 karaokeStart += karaokeDuration;
                 karaokeDuration = word.props.karaokeDuration;
-                if (strlen(word))
-                    waitForKaraokeBody = false;
-                else
-                    waitForKaraokeBody = true;
-            } else if (strlen(word)) {
-                if (waitForKaraokeBody) {
-                    word.props.karaokeDuration = karaokeDuration;
-                    waitForKaraokeBody = false;
-                } else {
-                    karaokeStart += karaokeDuration;
-                    karaokeDuration = 0;
-                    word.props.karaokeStart = karaokeStart;
-                    word.props.karaokeDuration = 0;
-                }
             } else {
+                karaokeStart += karaokeDuration;
+                karaokeDuration = 0;
+                word.props.karaokeStart = karaokeStart;
                 word.props.karaokeDuration = 0;
             }
             word.props.karaokeStart = karaokeStart;

@@ -31,13 +31,19 @@ public:
     void set(const ffstring &s) {
         getText()=s;
     }
+
+    // New code should use getString, as the cast makes readability poor.
     operator const wchar_t *(void) const {
+        return getString();
+    }
+    const wchar_t* getString() const {
         return getText().c_str();
     }
+
     void fix(TtextFix &fix) {
         useFixed=fix.process(text,fixed);
     }
-    size_t size(void) const {
+    size_t size() const {
         return getText().size();
     }
     void eraseLeft(size_t num) {
