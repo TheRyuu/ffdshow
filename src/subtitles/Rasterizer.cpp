@@ -699,7 +699,7 @@ void Rasterizer::DeleteOutlines()
     mOutline.clear();
 }
 
-bool Rasterizer::Rasterize(int xsub, int ysub, CRect &overhang)
+bool Rasterizer::Rasterize(int xsub, int ysub, CRect &overhang, bool hqBorder, bool fCheckRange, const CPoint &bodysLeftTop, int resDx, int resDy)
 {
     _TrashOverlay();
 
@@ -723,41 +723,111 @@ bool Rasterizer::Rasterize(int xsub, int ysub, CRect &overhang)
     overhang.right  += mGlyphBmpWidth - gw;
     mGlyphBmpHeight = ((height + 7) >> 3) + 1;
 
+    int leftcut, topcut, rightcut, bottomcut;
+    fCheckRange = fCheckRange && (mGlyphBmpWidth * mGlyphBmpHeight < resDx * resDy / 4);
+    if (fCheckRange) {
+        // added by h.yamagata
+        // After rotation, especially \fry, the bitmap may be too large to be located in memory (1GB or so).
+        // We have to clip it. But it may be intentional for scroll...
+        leftcut = 0; topcut = 0; rightcut = 0; bottomcut = 0;
+        int lx = bodysLeftTop.x + mPathOffsetX / 8;
+        int ty = bodysLeftTop.y + mPathOffsetY / 8;
+        if (lx < 0)
+            leftcut = -lx;
+        if (lx + mGlyphBmpWidth > resDx)
+            rightcut = lx + mGlyphBmpWidth - resDx;
+        if (ty < 0)
+            topcut = -ty;
+        if (ty + mGlyphBmpHeight > resDy)
+            bottomcut = ty + mGlyphBmpHeight - resDy;
+        leftcut &= ~7;
+        rightcut &= ~7;
+        rightcut = mGlyphBmpWidth - rightcut;
+        if (rightcut < 0)
+          rightcut = 0;
+        bottomcut = mGlyphBmpHeight - bottomcut;
+        if (bottomcut < 0)
+            bottomcut = 0;
+        mGlyphBmpWidth = rightcut - leftcut;
+        mGlyphBmpHeight = bottomcut - topcut;
+        mPathOffsetX += leftcut << 3;
+        mPathOffsetY += topcut << 3;
+        mOffsetX += leftcut << 3;
+        mOffsetY += topcut << 3;
+        xsub -= leftcut << 3;
+        ysub -= topcut << 3;
+        rightcut -= leftcut;
+        bottomcut -= topcut;
+    }
+
     bmp[0] = aligned_calloc3<uint8_t>(mGlyphBmpWidth, mGlyphBmpHeight,16);
+    msk[0] = aligned_calloc3<uint8_t>(mGlyphBmpWidth, mGlyphBmpHeight,16);
 
     xsub += overhang.left * 8;
     ysub += overhang.top * 8;
 
-    // Are we doing a border?
+    if (fCheckRange)
+        RasterizeCore<true>(xsub, ysub, hqBorder, rightcut, bottomcut);
+    else
+        RasterizeCore<false>(xsub, ysub, hqBorder);
 
-    tSpanBuffer::iterator it = mOutline.begin();
-    tSpanBuffer::iterator itEnd = mOutline.end();
+    return true;
+}
 
-    for(; it!=itEnd; ++it) {
-        int y = (int)(((*it).first >> 32) - 0x40000000 + ysub);
-        int x1 = (int)(((*it).first & 0xffffffff) - 0x40000000 + xsub);
-        int x2 = (int)(((*it).second & 0xffffffff) - 0x40000000 + xsub);
+template <bool fCheckRange>
+void Rasterizer::RasterizeCore(int xsub, int ysub, bool hqBorder, int rightcut, int bottomcut)
+{
+	tSpanBuffer* pOutline[2] = {&mOutline, &mWideOutline};
+    byte* pDst[2] = {bmp[0],msk[0]};
 
-        if(x2 > x1) {
-            int first = x1>>3;
-            int last = (x2-1)>>3;
-            byte* dst = bmp[0] + (mGlyphBmpWidth*(y>>3) + first);
+    ptrdiff_t count = countof(pOutline)-1;
+    if (!hqBorder)
+        count--;
 
-            if(first == last) {
-                *dst += x2-x1;
-            } else {
-                *dst += ((first+1)<<3) - x1;
-                dst ++;
+	for(ptrdiff_t i = count; i >= 0; i--) {
+		tSpanBuffer::iterator it = pOutline[i]->begin();
+		tSpanBuffer::iterator itEnd = pOutline[i]->end();
+        byte *dst0 = pDst[i];
 
-                while(++first < last) {
-                    *dst += 0x08;
-                    dst ++;
+        for(; it!=itEnd; ++it) {
+            int y = (int)(((*it).first >> 32) - 0x40000000) + ysub;
+            int x1 = (int)(((*it).first & 0xffffffff) - 0x40000000) + xsub;
+            int x2 = (int)(((*it).second & 0xffffffff) - 0x40000000) + xsub;
+
+            if(x2 > x1) {
+                int first = x1>>3;
+                int last = (x2-1)>>3;
+                int y3 = y>>3;
+
+                if (fCheckRange) {
+                    if (y3 < 0 || y3 >= bottomcut)
+                        continue;
+                    if (last < 0)
+                        continue;
+                    if (first < 0)
+                        first = 0;
+                    if (first > rightcut)
+                        continue;
+                    if (last > rightcut)
+                        last = rightcut;
                 }
 
-                *dst += x2 - (last<<3);
+                byte* dst = dst0 + (mGlyphBmpWidth*(y3) + first);
+
+                if(first == last) {
+                    *dst += x2-x1;
+                } else {
+                    *dst += ((first+1)<<3) - x1;
+                    dst ++;
+
+                    while(++first < last) {
+                        *dst += 0x08;
+                        dst ++;
+                    }
+
+                    *dst += x2 - (last<<3);
+                }
             }
         }
     }
-
-    return true;
 }

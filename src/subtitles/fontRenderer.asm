@@ -2,7 +2,7 @@
 ; *
 ; *  subtitle renderer
 ; *
-; * Copyright (c) 2007 h.yamagata
+; * Copyright (c) 2007-2011 h.yamagata
 ; *
 ; * This program is free software; you can redistribute it and/or modify
 ; * it under the terms of the GNU General Public License as published by
@@ -120,18 +120,26 @@ endstruc
 %define register_size 8
 
 ;
-; void* (__cdecl TtextSubtitlePrintY_mmx)(/* 0 rcx */ const unsigned char* bmp,
-;                                                  /* 1 rdx */ const unsigned char* outline,
-;                                                  /* 2 r8  */ const unsigned char* shadow,
-;                                                  /* 3 r9  */ const unsigned short* colortbl,
-;                                                  /* 4     */ const unsigned char* dst,
-;                                                  /* 5     */ const unsigned short* msk);
+; void __cdecl *fontRenderer_mmx(/* 0 rcx */ const unsigned char* bmp,
+;                                /* 1 rdx */ const unsigned char* outline,
+;                                /* 2 r8  */ const unsigned char* shadow,
+;                                /* 3 r9  */ const unsigned short* colortbl,
+;                                /* 4     */ const unsigned char* dst,
+;                                /* 5     */ const unsigned short* mask);
 ;
-; bitmaps (bmp, outline, shadow, msk): 0-64 are allowed (6bit plus 1).
-cglobal TtextSubtitlePrintY_mmx
-TtextSubtitlePrintY_mmx:
+; bitmaps (bmp, outline, shadow, mask): 0-64 are allowed (6bit plus 1).
+; Can be used for RGB32 and Planar YUV-Y.
+;
+; If BODY is FILL, (fontRendererFillBody)
+;   Uses mask instead of outline (outline is created by subtracting bmp from mask), and after that print bmp ignoring alpha settings.
+;   This produces better quality if alpha for bmp is 100%.
+;
+%define BODY NOT_FILL
 
-%macro printY 0
+cglobal fontRenderer_mmx
+fontRenderer_mmx:
+
+%macro fontRenderer 0
   push      reg_di
   push      reg_si
 
@@ -153,7 +161,7 @@ TtextSubtitlePrintY_mmx:
   pmullw    _mm1, _mm0
   psrlw     _mm1, 6
   pmullw    _mm2, _mm0
-  psrlw     _mm2, 6            ; _mm1:_mm2 = s = m_shadowYUV.A * shadow[0][srcPos] >> 6;
+  psrlw     _mm2, 6            ; _mm1:_mm2 = s = m_shadowYUV.A * shadow[srcPos] >> 6;
 
   _movdqa   _mm4, [mask256]
   _movdqa   _mm5, _mm4
@@ -163,11 +171,11 @@ TtextSubtitlePrintY_mmx:
   _movdqu   _mm6, [reg_di]
   _movdqa   _mm7, _mm6
   punpckhbw _mm6, _mm3
-  punpcklbw _mm7, _mm3         ; _mm6;_mm7 = dstLn[0][dstPos]
+  punpcklbw _mm7, _mm3         ; _mm6;_mm7 = dst[dstPos]
   pmullw    _mm4, _mm6
   psrlw     _mm4, 8
   pmullw    _mm5, _mm7
-  psrlw     _mm5, 8            ; _mm4:_mm5 = ((256-s) * dstLn[0][dstPos] >> 8)
+  psrlw     _mm5, 8            ; _mm4:_mm5 = ((256-s) * dst[dstPos] >> 8)
 
   _movdqa   _mm0, [reg_si + colortbl.shadow_Y]
   pmullw    _mm1, _mm0
@@ -176,9 +184,9 @@ TtextSubtitlePrintY_mmx:
   psrlw     _mm2, 8            ; _mm1:_mm2 = (s * m_shadowYUV.Y >> 8)
 
   paddusb   _mm1,_mm4
-  paddusb   _mm2,_mm5          ; _mm1:_mm2 = d =((256-s) * dstLn[0][dstPos] >> 8) + (s * m_shadowYUV.Y >> 8);
+  paddusb   _mm2,_mm5          ; _mm1:_mm2 = d =((256-s) * dst[dstPos] >> 8) + (s * m_shadowYUV.Y >> 8);
 
-  mov       reg_ax, [reg_sp+(3+5)*ptrsize]  ; ax = msk
+  mov       reg_ax, [reg_sp+(3+5)*ptrsize]  ; ax = mask
   _movdqu   _mm4, [reg_ax]
   _movdqa   _mm5, _mm4
   punpckhbw _mm4, _mm3
@@ -194,25 +202,46 @@ TtextSubtitlePrintY_mmx:
   psrlw     _mm7, 6            ; _mm6:_mm7 = ((64-m) * d >> 6)
 
   _movdqa   _mm0, [reg_si + colortbl.outline_A]
-  _movdqu   _mm4, [reg_dx]
+%ifidn BODY,FILL
+  _movdqu   _mm4, [reg_ax]     ; mm4 = mask[srcPos]
+%else
+  _movdqu   _mm4, [reg_dx]     ; mm4 = outline[srcPos]
+%endif
   _movdqa   _mm5, _mm4
   punpckhbw _mm4, _mm3
   punpcklbw _mm5, _mm3
+%ifidn BODY,FILL
+                               ; BODY == FILL _mm4:_mm5 = o= m;
+%else
   pmullw    _mm4, _mm0
   psrlw     _mm4, 6
   pmullw    _mm5, _mm0
-  psrlw     _mm5, 6            ; _mm4:_mm5 = o= m_outlineYUV.A * outline[0][srcPos] >> 6;
+  psrlw     _mm5, 6            ; BODY != FILL _mm4:_mm5 = o= m_outlineYUV.A * outline[srcPos] >> 6;
+%endif
 
   _movdqa   _mm0, [reg_si + colortbl.outline_Y]
   pmullw    _mm4, _mm0
-  psrlw     _mm4, 8
+
+%ifidn BODY,FILL
+  %define srlcount 6
+%else
+  %define srlcount 8
+%endif
+  psrlw     _mm4, srlcount
   pmullw    _mm5, _mm0
-  psrlw     _mm5, 8            ; _mm4:_mm5 = (o * m_outlineYUV.Y >> 8)
+  psrlw     _mm5, srlcount
+; BODY == FILL                   _mm4:_mm5 = (m * m_outlineYUV.Y >> 6);
+; BODY != FILL                   _mm4:_mm5 = (o * m_outlineYUV.Y >> 8);
+%undef srlcount
 
   paddusb   _mm4, _mm6
-  paddusb   _mm5, _mm7         ; _mm4:_mm5 = d = ((256-m) * d >> 8) + (o * m_outlineYUV.Y >> 8);
+  paddusb   _mm5, _mm7         ; _mm4:_mm5 = d = ((64-m) * d >> 6) + (o * m_outlineYUV.Y >> 8); ( or ... + (m * m_outlineYUV.Y >> 6) )
 
+%ifidn BODY,FILL
+%else
   _movdqa   _mm0, [reg_si + colortbl.body_A]
+%endif
+
 %ifidn __OUTPUT_FORMAT__,win64
   mov       reg_ax, reg_cx                  ; bmp
 %else
@@ -221,7 +250,26 @@ TtextSubtitlePrintY_mmx:
   _movdqu   _mm1, [reg_ax]
   _movdqa   _mm2, _mm1
   punpckhbw _mm1, _mm3
-  punpcklbw _mm2, _mm3
+  punpcklbw _mm2, _mm3         ; _mm1:_mm2 = b = bmp[srcPos];
+%ifidn BODY,FILL
+  _movdqa   _mm6, [mask64]
+  _movdqa   _mm7, _mm6
+  psubw     _mm6, _mm1
+  psubw     _mm7, _mm2         ; _mm6:_mm7 = (64-b)
+
+  pmullw    _mm6, _mm4
+  psrlw     _mm6, 6
+  pmullw    _mm7, _mm5
+  psrlw     _mm7, 6            ; _mm6:_mm7 = (64-b) * d >> 6
+  _movdqa   _mm0, [reg_si + colortbl.body_Y]
+  pmullw    _mm1, _mm0
+  psrlw     _mm1, 6
+  pmullw    _mm2, _mm0
+  psrlw     _mm2, 6            ; _mm1:_mm2 = (b * m_bodyYUV.Y >> 6)
+
+  paddusb   _mm1, _mm6
+  paddusb   _mm2, _mm7         ; _mm1:_mm2 = ((64-b) * d >> 6) + (o * m_bodyYUV.Y >> 6);
+%else
   pmullw    _mm1, _mm0
   psrlw     _mm1, 6
   pmullw    _mm2, _mm0
@@ -235,6 +283,7 @@ TtextSubtitlePrintY_mmx:
 
   paddusb   _mm1, _mm4
   paddusb   _mm2, _mm5         ; _mm1:_mm2 = d + (o * m_bodyYUV.Y >> 8);
+%endif
 
   packuswb  _mm2, _mm1
   _movdqu   [reg_di],_mm2
@@ -246,22 +295,22 @@ TtextSubtitlePrintY_mmx:
 
 %ifidn __OUTPUT_FORMAT__,win64
 %else
-  printY
+  fontRenderer
 %endif
 
 ;
-; void* (__cdecl TtextSubtitlePrintUV_mmx)( /* 0 rcx */ const unsigned char* bmp,
-;                                                    /* 1 rdx */ const unsigned char* outline,
-;                                                    /* 2 r8  */ const unsigned char* shadow,
-;                                                    /* 3 r9  */ const unsigned short* colortbl,
-;                                                    /* 4     */ const unsigned char* dstU,
-;                                                    /* 5     */ const unsigned char* dstV);
+; void __cdecl fontRendererUV_mmx( /* 0 rcx */ const unsigned char* bmp,
+;                                  /* 1 rdx */ const unsigned char* outline,
+;                                  /* 2 r8  */ const unsigned char* shadow,
+;                                  /* 3 r9  */ const unsigned short* colortbl,
+;                                  /* 4     */ const unsigned char* dstU,
+;                                  /* 5     */ const unsigned char* dstV);
 ;
 ; mmx version is not available for WIN64
 ;
-cglobal TtextSubtitlePrintUV_mmx
-TtextSubtitlePrintUV_mmx:
-%macro printUV 0
+cglobal fontRendererUV_mmx
+fontRendererUV_mmx:
+%macro fontRendererUV 0
   push      reg_di
   push      reg_si
   push      reg_bx
@@ -514,8 +563,28 @@ TtextSubtitlePrintUV_mmx:
 
 %ifidn __OUTPUT_FORMAT__,win64
 %else
-  printUV
+  fontRendererUV
 %endif
+
+;
+; void __cdecl fontRendererFillBody_mmx(/* 0 rcx */ const unsigned char* bmp,
+;                                       /* 1 rdx */ unused (outline),
+;                                       /* 2 r8  */ const unsigned char* shadow,
+;                                       /* 3 r9  */ const unsigned short* colortbl,
+;                                       /* 4     */ const unsigned char* dst,
+;                                       /* 5     */ const unsigned short* mask);
+;
+; bitmaps (bmp, outline, shadow, mask): 0-64 are allowed (6bit plus 1).
+; Can be used for RGB32 and Planar YUV-Y.
+;
+; If BODY is FILL, 
+;   Uses mask instead of outline (outline is created by subtracting bmp from mask), and after that print bmp ignoring alpha settings.
+;   This produces better quality if alpha for bmp is 100%.
+;
+%define BODY FILL
+cglobal fontRendererFillBody_mmx
+fontRendererFillBody_mmx:
+  fontRenderer
 
 %define _movdqa movdqa
 %define _movdqu movdqu
@@ -533,18 +602,27 @@ TtextSubtitlePrintUV_mmx:
 %endif
 
 ;
-; void* (__cdecl TtextSubtitlePrintY_sse2)(const unsigned char* bmp,const unsigned char* outline,const unsigned char* shadow,const unsigned short* colortbl,const unsigned char* dst);
+; void __cdecl fontRenderer_sse2(const unsigned char* bmp,const unsigned char* outline,const unsigned char* shadow,const unsigned short* colortbl,const unsigned char* dst);
 ;
-cglobal TtextSubtitlePrintY_sse2
-TtextSubtitlePrintY_sse2:
-  printY
+%define BODY NOT_FILL
+cglobal fontRenderer_sse2
+fontRenderer_sse2:
+  fontRenderer
 
 ;
-; void* (__cdecl TtextSubtitlePrintUV_sse2)(const unsigned char* bmp,const unsigned char* outline,const unsigned char* shadow,const unsigned short* colortbl,const unsigned char* dstU,const unsigned char* dstV);
+; void __cdecl fontRendererFillBody_sse2(const unsigned char* bmp,const unsigned char* outline,const unsigned char* shadow,const unsigned short* colortbl,const unsigned char* dst);
 ;
-cglobal TtextSubtitlePrintUV_sse2
-TtextSubtitlePrintUV_sse2:
-  printUV
+%define BODY FILL
+cglobal fontRendererFillBody_sse2
+fontRendererFillBody_sse2:
+  fontRenderer
+
+;
+; void __cdecl fontRendererUV_sse2(const unsigned char* bmp,const unsigned char* outline,const unsigned char* shadow,const unsigned short* colortbl,const unsigned char* dstU,const unsigned char* dstV);
+;
+cglobal fontRendererUV_sse2
+fontRendererUV_sse2:
+  fontRendererUV
 
 ;
 ; void YV12_lum2chr_min_mmx(const unsigned char* lum0,const unsigned char* lum1,unsigned char* chr);

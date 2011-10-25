@@ -1,5 +1,4 @@
-#ifndef _TSUBTITLESTEXTPIN_H_
-#define _TSUBTITLESTEXTPIN_H_
+#pragma once
 
 #include "Tsubtitles.h"
 #include "TsubtitleText.h"
@@ -21,4 +20,3 @@ public:
     }
 };
 
-#endif

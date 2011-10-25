@@ -1,5 +1,4 @@
-#ifndef _TSUBTITLES_H_
-#define _TSUBTITLES_H_
+#pragma once
 
 #include "interfaces.h"
 #include "Tsubreader.h"
@@ -49,5 +48,3 @@ public:
     }
     friend class TimgFilterSubtitles; // let TimgFilterSubtitles take care of back ground rendering
 };
-
-#endif

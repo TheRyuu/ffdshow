@@ -1,5 +1,4 @@
-#ifndef _TSUBREADERPGS_H_
-#define _TSUBREADERPGS_H_
+#pragma once
 
 #include "Tsubreader.h"
 #include "TsubtitleText.h"
@@ -30,4 +29,3 @@ public:
         return SUB_PGS | SUB_KEEP_FILE_OPENED;
     };
 };
-#endif

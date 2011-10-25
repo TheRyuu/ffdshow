@@ -1,5 +1,4 @@
-#ifndef _TSUBTITLESFILE_H_
-#define _TSUBTITLESFILE_H_
+#pragma once
 
 #include "Tsubtitles.h"
 
@@ -42,5 +41,3 @@ public:
     virtual void done(void);
     char_t subFlnm[MAX_PATH];
 };
-
-#endif

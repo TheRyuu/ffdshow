@@ -2413,7 +2413,7 @@ EXSTYLE WS_EX_CONTROLPARENT
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     CONTROL         "Split long subtitle lines",IDC_CHB_SUB_SPLIT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,6,12,113,11
-    LTEXT           "Left-right borders:",IDC_LBL_SUB_SPLIT_BORDER,17,32,103,8
+    LTEXT           "Left-right margins:",IDC_LBL_SUB_SPLIT_BORDER,17,32,103,8
     EDITTEXT        IDC_ED_SUB_SPLIT_BORDER,123,31,62,12,ES_AUTOHSCROLL
     LTEXT           "pixels",IDC_LBL_SUB_SPLIT_BORDER2,189,32,19,8
     LTEXT           "Line spacing:",IDC_LBL_SUB_LINESPACING,7,49,113,8
@@ -2423,24 +2423,28 @@ BEGIN
     LTEXT           "Duration:",IDC_LBL_SUB_MINDURATION,123,67,38,8
     EDITTEXT        IDC_ED_SUB_MINDURATION,162,65,57,12,ES_AUTOHSCROLL
     LTEXT           "ms",IDC_LBL_SUB_MINDURATION2,224,67,17,8
-    LTEXT           "Real-time corrections:",IDC_LBL_SUBFIX,7,84,161,8
+    LTEXT           "Real-time corrections:",IDC_LBL_SUBFIX,7,111,161,8
     CONTROL         "Replace double ' by a ""  AND """" by """,IDC_CHB_SUBFIX_AP,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,99,145,10
-    CONTROL         "Try to correct I and l",IDC_CHB_SUBFIX_IL,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,115,107,10
-    COMBOBOX        IDC_CBX_SUBFIX_IL,123,114,134,94,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,125,145,10
+    CONTROL         "Try to correct I and l",IDC_CHB_SUBFIX_IL,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,140,107,10
+    COMBOBOX        IDC_CBX_SUBFIX_IL,123,139,134,94,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
     CONTROL         "Try to correct punctuation (?. -> ? ; !. -> ! etc.)",IDC_CHB_SUBFIX_PUNCTUATION,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,131,200,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,155,200,10
     CONTROL         "Try to correct orthography",IDC_CHB_SUBFIX_ORTOGRAPHY,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,147,107,10
-    COMBOBOX        IDC_CBX_SUBFIX_ORTOGRAPHY,123,146,134,14,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,170,107,10
+    COMBOBOX        IDC_CBX_SUBFIX_ORTOGRAPHY,123,169,134,14,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
     CONTROL         "Try to correct capital letters",IDC_CHB_SUBFIX_CAPITAL,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,163,137,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,185,137,10
     CONTROL         "Remove unwanted space between numbers",IDC_CHB_SUBFIX_NUMBERS,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,179,190,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,200,190,10
     GROUPBOX        "Text subtitles",IDC_GRP_SUBTITLESTEXT,0,0,267,231
     CONTROL         "Remove subtitles for hearing impaired",IDC_CHB_SUBFIX_HEARING,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,195,162,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,215,162,10
     COMBOBOX        IDC_CBX_SUB_WORDWRAP,123,11,135,13,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Image buffer:",IDC_LBL_SUB_MEMORY,7,88,46,8
+    EDITTEXT        IDC_ED_SUB_MEMORY,63,86,40,14,ES_AUTOHSCROLL
+    LTEXT           "MB",IDC_LBL_SUB_MEMORY_MB,108,88,10,8
+    CONTROL         "High quality border",IDC_CHB_SUB_HQBORDER,"Button",BS_AUTOCHECKBOX | NOT WS_VISIBLE | WS_TABSTOP,148,88,77,10
 END
 
 IDD_BITMAP DIALOGEX 0, 0, 267, 230

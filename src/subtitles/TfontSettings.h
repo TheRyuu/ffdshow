@@ -1,10 +1,27 @@
-#ifndef _TFONTSETTINGS_H_
-#define _TFONTSETTINGS_H_
+#pragma once
 
 #include "Toptions.h"
 
 struct TfontSettings :Toptions {
 public:
+    typedef enum {
+        Softest = 0,
+        Softer = 1,
+        Soft = 2,
+        Normal = 3,
+        Strong = 4,
+        Stronger = 5, // ASS \be
+        Extreme = 6
+    } TblurStrength;
+
+    typedef enum {
+        ShadowOSD = -1,
+        GlowingShadow = 0,
+        GradientShadow = 1,
+        ClassicShadow = 2, // SSA/ASS always use this.
+        ShadowDisabled =3
+    } TshadowMode;
+
     TfontSettings(TintStrColl *Icoll=NULL);
     TfontSettings& operator =(const TfontSettings &src) {
         memcpy(((uint8_t*)this)+sizeof(Toptions),((uint8_t*)&src)+sizeof(Toptions),sizeof(*this)-sizeof(Toptions));
@@ -46,15 +63,18 @@ public:
     int underline;
     int color,outlineColor,shadowColor,colorOverride;
     int bodyAlpha,outlineAlpha,shadowAlpha;
-    int split;
-    int aspectAuto;
+    int split; // Check box of "Split long subtitle lines"
     int outlineWidth, outlineWidthOverride;
-    int shadowSize, shadowMode, shadowOverride; // Subtitles shadow
-    int blur, blurMode;
+    int shadowSize, shadowOverride; // Subtitles shadow
+    TshadowMode shadowMode;
+    int blur;
+    TblurStrength blurStrength;
     int scaleBorderAndShadowOverride;
+    int hqBorder;
+    int memory; // in mega bytes
     /**
-     * gdi_font_scale: 4: for OSD. rendering_window is 4x5.
-     *                 8-16: for subtitles. 16:very sharp (slow), 12:soft & sharp, (moderately slow) 8:blurry (fast)
+     * gdi_font_scale: 4: for OSD.
+     *                 64: for subtitles.
      */
     int gdi_font_scale;
     bool operator == (const TfontSettings &rt) const;
@@ -71,5 +91,3 @@ struct TfontSettingsSub :TfontSettings {
     TfontSettingsSub(TintStrColl *Icoll=NULL);
     virtual void reg_op(TregOp &t);
 };
-
-#endif

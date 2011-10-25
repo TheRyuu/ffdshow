@@ -1,5 +1,4 @@
-#ifndef _TSUBREADERUSF_H_
-#define _TSUBREADERUSF_H_
+#pragma once
 
 #include "Tsubreader.h"
 #include "interfaces.h"
@@ -45,5 +44,3 @@ public:
     void freeSub(void *bmp,int32_t **lines);
     bool wasChange(int ms);
 };
-
-#endif

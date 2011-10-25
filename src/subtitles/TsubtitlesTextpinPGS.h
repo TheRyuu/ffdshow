@@ -1,5 +1,4 @@
-#ifndef _TSUBTITLESTEXTPINPGS_H_
-#define _TSUBTITLESTEXTPINPGS_H_
+#pragma once
 
 #include "TsubtitlesTextpin.h"
 #include "TsubtitleDVD.h"
@@ -31,5 +30,3 @@ public:
     virtual void resetSubtitles(void);
     virtual Tsubtitle* getSubtitle(const TsubtitlesSettings *cfg,REFERENCE_TIME rtStart,REFERENCE_TIME rtStop,bool *forceChange=NULL);
 };
-
-#endif

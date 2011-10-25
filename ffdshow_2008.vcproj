@@ -1418,6 +1418,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\subtitles\CPolygon.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\subtitles\CPolygon.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\subtitles\distance.cpp"
 				>
 			</File>
@@ -1427,6 +1435,14 @@
 			</File>
 			<File
 				RelativePath=".\src\subtitles\fontRenderer.asm"
+				>
+			</File>
+			<File
+				RelativePath=".\src\subtitles\nmTextSubtitles.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\subtitles\nmTextSubtitles.h"
 				>
 			</File>
 			<File
@@ -1524,6 +1540,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\subtitles\TSSAstyles.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\subtitles\TSSAstyles.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\subtitles\Tstream.cpp"
 				>
 			</File>
@@ -1577,6 +1601,22 @@
 			</File>
 			<File
 				RelativePath=".\src\subtitles\TsubtitleDVD.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\subtitles\TsubtitleFormat.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\subtitles\TsubtitleFormat.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\subtitles\TsubtitleMixedProps.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\subtitles\TsubtitleMixedProps.h"
 				>
 			</File>
 			<File

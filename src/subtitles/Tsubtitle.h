@@ -1,5 +1,4 @@
-#ifndef _TSUBTITLE_H_
-#define _TSUBTITLE_H_
+#pragma once
 
 #include "Tfont.h"
 
@@ -35,5 +34,3 @@ struct Tsubtitle {
         return 0;
     }
 };
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef _TSUBREADER_H_
-#define _TSUBREADER_H_
+#pragma once
 
 #include "Tsubtitle.h"
 #include "TsubtitleText.h"
@@ -105,5 +104,3 @@ public:
     void dropRendered();
     size_t getMemorySize() const;
 };
-
-#endif

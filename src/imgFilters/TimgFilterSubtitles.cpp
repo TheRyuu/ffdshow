@@ -53,14 +53,14 @@ TimgFilterSubtitles::TsubPrintPrefs::TsubPrintPrefs(
     subimgscale=cfg->subimgscale;
     vobaamode=cfg->vobsubAA;
     vobaagauss=cfg->vobsubAAswgauss;
-    textBorderLR=2*cfg->splitBorder;
+    textMarginLR=2*cfg->textMargin;
     deci=Ideci;
     config=Iconfig;
     dvd=Idvd;
     // Copy subtitles shadow vars
     int i;
-    deci->getParam(IDFF_fontShadowMode, &shadowMode);
-    deci->getParam(IDFF_fontBlurMode, &blurMode);
+    deci->getParam(IDFF_fontShadowMode, (int*)&shadowMode);
+    deci->getParam(IDFF_fontBlurMode, (int*)&blurStrength);
     deci->getParam(IDFF_fontShadowSize, &i);
     shadowSize=i;
     deci->getParam(IDFF_fontShadowAlpha, &shadowAlpha);
@@ -412,10 +412,17 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
             printprefs.rtStart=frameStart;
             printprefs.fontSettings.gdi_font_scale = 64;
             const Trect *decodedPict = deciV->getDecodedPictdimensions();
-            if (decodedPict!=NULL) {
+
+            // Use 384x288 as default input dimensions like VSFilter,
+            // unless IDFF_subSSAUseMovieDimensions is checked.
+            if (!deci->getParam2(IDFF_subSSAUseMovieDimensions) || !decodedPict) {
+                printprefs.xinput=384;
+                printprefs.yinput=288;
+            } else {
                 printprefs.xinput = decodedPict->dx;
                 printprefs.yinput = decodedPict->dy;
             }
+
 
             if (!stereoScopic) {
                 printprefs.sizeDx=sizeDx;
@@ -499,7 +506,13 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
             printprefs.subformat = Tsubreader::SUB_SUBRIP;
 
             const Trect *decodedPict = deciV->getDecodedPictdimensions();
-            if (decodedPict!=NULL) {
+
+            // Use 384x288 as default input dimensions like VSFilter,
+            // unless IDFF_subSSAUseMovieDimensions is checked.
+            if (!deci->getParam2(IDFF_subSSAUseMovieDimensions) || !decodedPict) {
+                printprefs.xinput=384;
+                printprefs.yinput=288;
+            } else {
                 printprefs.xinput = decodedPict->dx;
                 printprefs.yinput = decodedPict->dy;
             }
@@ -628,19 +641,27 @@ TimgFilterSubtitles::TglyphThread::TglyphThread(TimgFilterSubtitles *Iparent, If
 {
     boost::unique_lock<boost::mutex> lock(mutex_prefs);
     shared_prefs.csp = -1;
+
+    // * 0.9MB because calculations of used memory underestimate about 10%.
+    max_memory_usage = deci->getParam2(IDFF_fontMemory) * 900000;
+
     thread = new boost::thread(glyphThreadFunc0,this);
 }
 
 void TimgFilterSubtitles::TglyphThread::glyphThreadFunc()
 {
     {
+        // First, we have to wait until TglyphThread constructor ends and
+        // the created object is stored in the main memory not in the CPU cache,
+        // because the launch of boost::thread seems to be async.
+        // Otherwise use of this pointer is not safe except for the mutex.
         boost::unique_lock<boost::mutex> lock(mutex_prefs);
         slow();
     }
     SetThreadPriorityBoost(get_platform_specific_thread(), true);
     TsubtitleText *next = NULL;
     do {
-        // DPRINTF(_l("glyphThreadFunc top level loop current_pos=%d used_memory=%d"),current_pos,used_memory);
+        //DPRINTF(L"glyphThreadFunc top level loop current_pos=%d used_memory=%Iu", current_pos, used_memory);
         {
             // do not hog mutex too long
             TthreadPriority pr(get_platform_specific_thread(),
@@ -663,7 +684,7 @@ void TimgFilterSubtitles::TglyphThread::glyphThreadFunc()
             // compare again as shared_prefs may have chaged during condv_prefs.wait
             if (shared_prefs != copied_prefs) {
                 // in this case, rendered subtitles are dropped by TimgFilterSubtitles::process. This is not beautiful, but better for performance.
-                // DPRINTF(_l("prefs changed"));
+                // DPRINTF(L"prefs changed");
                 current_pos = 0;
                 used_memory = 0;
             }
@@ -693,7 +714,7 @@ void TimgFilterSubtitles::TglyphThread::glyphThreadFunc()
             if (next && used_memory < max_memory_usage) {
                 // make sure next is locked here and unlock before leaving.
                 // csEmbedded is not locked here for performance.
-                // DPRINTF(_l("glyphThreadFunc next %I64i"),next->start);
+                // DPRINTF(L"glyphThreadFunc next %I64i",next->start);
                 used_memory += next->prepareGlyph(copied_prefs,font,false);
                 current_pos++;
             }

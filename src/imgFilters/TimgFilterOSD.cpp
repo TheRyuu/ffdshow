@@ -239,7 +239,8 @@ unsigned int TimgFilterOSD::TosdLine::print(
     const TfontSettings &fontSettings)
 {
     unsigned int result = 0; // osd line height
-    bool wasChange=firsttime,splitline=false;
+    bool wasChange=firsttime;
+    bool splitline=false;    // Does the OSD item wants to be splitted automatically if its width is too big.
     firsttime=false;
     ffstring text;
     for (TosdTokens::iterator t=tokens.begin(); t!=tokens.end(); t++) {
@@ -266,12 +267,11 @@ unsigned int TimgFilterOSD::TosdLine::print(
             printprefs.linespacing=linespace;
             printprefs.deci=deci;
             printprefs.config=config;
-            printprefs.shadowMode=-1;
+            printprefs.shadowMode = TfontSettings::ShadowOSD;
             printprefs.csp=pict.csp & FF_CSPS_MASK;
             printprefs.sar=pict.rectFull.sar;
             if (splitline) {
-                printprefs.fontchangesplit=1;
-                printprefs.fontsplit=1;
+                printprefs.OSDitemSplit=1;
             }
             sub.subformat = deci->getParam2(IDFF_OSD_userformat);
             text = stringreplace(text,_l("\\n"),_l("\n"),rfReplaceAll);

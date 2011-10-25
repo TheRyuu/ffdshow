@@ -1,9 +1,8 @@
-#ifndef _TFONT_H_
-#define _TFONT_H_
+#pragma once
 
 #include "interfaces.h"
 #include "ffImgfmt.h"
-#include "TsubtitleProps.h"
+#include "TSubtitleMixedProps.h"
 #include "rational.h"
 #include "TfontSettings.h"
 #include "CRect.h"
@@ -20,6 +19,11 @@ enum {
 class TrenderedSubtitleLine;
 class TfontManager;
 struct Tconfig;
+
+struct TrotateParam {
+    CPoint axis;
+    CPoint before;
+};
 
 struct TprintPrefs {
     TprintPrefs(IffdshowBase *Ideci,const TfontSettings *IfontSettings);
@@ -45,14 +49,15 @@ struct TprintPrefs {
     int stereoScopicParallax;
     bool vobchangeposition;
     int subimgscale,vobaamode,vobaagauss;
-    bool fontchangesplit,fontsplit;
-    int textBorderLR;
+    bool OSDitemSplit;
+    int textMarginLR;
     int tabsize;
     bool dvd;
-    int shadowMode, shadowAlpha; // Subtitles shadow
+    TfontSettings::TshadowMode shadowMode;
+    int shadowAlpha; // Subtitles shadow
     double shadowSize;
-    bool blur,outlineBlur;
-    int blurMode;
+    bool outlineBlur;
+    TfontSettings::TblurStrength blurStrength;
     uint64_t csp;
     double outlineWidth;
     Rational sar;
@@ -60,9 +65,16 @@ struct TprintPrefs {
     int italic;
     int underline;
     int subformat;
+
+    // xinput,yinput
+    // decoded resolution or 384,288 depending on the settings of
+    // "Use movie demensions instead of ASS script information".
+    // Note that this works for SRT too.
     unsigned int xinput,yinput;
+
     TfontSettings fontSettings;
-    YUVcolorA yuvcolor,outlineYUV,shadowYUV;
+    YUVcolorA yuvcolor;  // body
+    YUVcolorA outlineYUV,shadowYUV;
 
     // members that are not compared by operator == and !=
     REFERENCE_TIME rtStart;
@@ -111,8 +123,8 @@ private:
     {
     public:
         int alignment;
-        int marginTop,marginBottom;
-        int marginL,marginR;
+        double marginTop,marginBottom;
+        double marginL,marginR;
         int isPos;
         int isMove;
         CPoint pos;
@@ -130,16 +142,12 @@ private:
     class ParagraphValue
     {
     public:
-        double topOverhang;
-        double bottomOverhang;
         double width,height,y;
         double linegap;
         double xmin,xmax,y0,xoffset,yoffset;
         bool firstuse;
 
         ParagraphValue():
-            topOverhang(0),
-            bottomOverhang(0),
             width(0),
             height(0),
             y(0),
@@ -181,7 +189,7 @@ public:
     }
     virtual ~TrenderedSubtitleWordBase();
     unsigned int dx[3],dy[3];
-    unsigned int dxChar,dyChar;
+    double dxChar,dyChar;
     unsigned char *bmp[3],*msk[3];
     stride_t bmpmskstride[3];
     unsigned char *outline[3],*shadow[3];
@@ -202,16 +210,7 @@ public:
     virtual double get_linegap() const {
         return 0;
     }
-    virtual CRect getOverhang() const {
-        return CRect();
-    }
     virtual size_t getMemorySize() const {
-        return 0;
-    }
-    virtual int getPathOffsetX() const {
-        return 0;
-    }
-    virtual int getPathOffsetY() const {
         return 0;
     }
 };
@@ -230,30 +229,36 @@ class TrenderedTextSubtitleWord;
 class TrenderedSubtitleLine : public std::vector<TrenderedSubtitleWordBase*>
 {
     bool firstrun;
-    TSubtitleProps props;
     double emptyHeight; // This is used as charHeight if empty.
     bool hasPrintedRect;
     CRect printedRect;
 public:
+    TSubtitleMixedProps mprops;
 
     TrenderedSubtitleLine():firstrun(true),hasPrintedRect(false) {
-        props.reset();
+        mprops.reset();
     }
-    TrenderedSubtitleLine(TSubtitleProps p):firstrun(true),hasPrintedRect(false) {
-        props=p;
-    }
-    TrenderedSubtitleLine(TSubtitleProps p, double IemptyHeight):firstrun(true),emptyHeight(IemptyHeight),hasPrintedRect(false) {
-        props=p;
-    }
-    TrenderedSubtitleLine(TrenderedSubtitleWordBase *w):firstrun(true),hasPrintedRect(false) {
-        push_back(w);
-        props.reset();
+    TrenderedSubtitleLine(const TSubtitleProps &p, const TprintPrefs &prefs):
+        firstrun(true),
+        hasPrintedRect(false),
+        mprops(p,prefs)
+    {
     }
 
-    TSubtitleProps& getPropsOfThisObject() {
-        return props;
+    TrenderedSubtitleLine(const TSubtitleProps &p, const TprintPrefs &prefs, double IemptyHeight):
+        firstrun(true),
+        hasPrintedRect(false),
+        mprops(p,prefs),
+        emptyHeight(IemptyHeight)
+    {
     }
-    const TSubtitleProps& getProps() const;
+
+    TrenderedSubtitleLine(TrenderedSubtitleWordBase *w):firstrun(true),hasPrintedRect(false) {
+        push_back(w);
+        mprops.reset();
+    }
+
+    const TSubtitleMixedProps& getProps() const;
 
     const CRect& getPrintedRect() const {
         return printedRect;
@@ -263,23 +268,19 @@ public:
     }
     bool checkCollision(const CRect &query, CRect &ans);
 
-    unsigned int width() const;
+    double width() const;
     unsigned int height() const;
     double charHeight() const;
     double linegap(double prefsdy) const;
     double lineHeightWithGap(double prefsdy) const;
-    unsigned int baselineHeight() const;
-    int get_topOverhang() const;
-    int get_bottomOverhang() const;
-    int get_leftOverhang() const;
-    int get_rightOverhang() const;
+    double baselineHeight() const;
     void prepareKaraoke();
     using std::vector<value_type>::push_back;
     using std::vector<value_type>::empty;
     void clear();
     void print(
-        int startx,
-        int starty,
+        double startx,
+        double starty,
         const TprintPrefs &prefs,
         unsigned int prefsdx,
         unsigned int prefsdy,
@@ -288,7 +289,6 @@ public:
     size_t getMemorySize() const;
 };
 
-struct TsubtitleWord;
 struct TfontSettings;
 struct Tsubtitle;
 struct TfontSettings;
@@ -303,7 +303,6 @@ private:
     TrenderedSubtitleLines lines;
     unsigned int height;
     uint64_t oldCsp;
-    short matrix[5][5];
     void prepareC(TsubtitleText *sub,const TprintPrefs &prefs,bool forceChange);
 public:
     friend struct TsubtitleText;
@@ -334,21 +333,3 @@ public:
     }
     void done();
 };
-
-extern "C" {
-    void* (__cdecl TtextSubtitlePrintY_mmx)(const unsigned char* bmp,const unsigned char* outline,const unsigned char* shadow,const unsigned short* colortbl,const unsigned char* dst,const unsigned char* msk);
-    void* (__cdecl TtextSubtitlePrintUV_mmx)(const unsigned char* bmp,const unsigned char* outline,const unsigned char* shadow,const unsigned short* colortbl,const unsigned char* dstU,const unsigned char* dstV);
-    void* (__cdecl TtextSubtitlePrintY_sse2)(const unsigned char* bmp,const unsigned char* outline,const unsigned char* shadow,const unsigned short* colortbl,const unsigned char* dst,const unsigned char* msk);
-    void* (__cdecl TtextSubtitlePrintUV_sse2)(const unsigned char* bmp,const unsigned char* outline,const unsigned char* shadow,const unsigned short* colortbl,const unsigned char* dstU,const unsigned char* dstV);
-    void* (__cdecl YV12_lum2chr_min_mmx)(const unsigned char* lum0,const unsigned char* lum1,unsigned char* chr);
-    void* (__cdecl YV12_lum2chr_max_mmx)(const unsigned char* lum0,const unsigned char* lum1,unsigned char* chr);
-    void* (__cdecl YV12_lum2chr_min_mmx2)(const unsigned char* lum0,const unsigned char* lum1,unsigned char* chr);
-    void* (__cdecl YV12_lum2chr_max_mmx2)(const unsigned char* lum0,const unsigned char* lum1,unsigned char* chr);
-    void  __cdecl storeXmmRegs(unsigned char* buf);
-    void  __cdecl restoreXmmRegs(unsigned char* buf);
-    void __cdecl fontRGB32toBW_mmx(size_t count,unsigned char *ptr);
-    unsigned int __cdecl fontPrepareOutline_sse2(const unsigned char *src,size_t srcStrideGap,const short *matrix,size_t matrixSizeH,size_t matrixSizeV);
-    unsigned int __cdecl fontPrepareOutline_mmx (const unsigned char *src,size_t srcStrideGap,const short *matrix,size_t matrixSizeH,size_t matrixSizeV,size_t matrixGap);
-}
-
-#endif

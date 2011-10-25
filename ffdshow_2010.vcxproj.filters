@@ -1403,6 +1403,21 @@
     <ClCompile Include="src\baseclasses\wxutil.cpp">
       <Filter>baseclasses</Filter>
     </ClCompile>
+    <ClCompile Include="src\subtitles\nmTextSubtitles.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\subtitles\TSSAstyles.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\subtitles\TsubtitleMixedProps.cpp">
+      <Filter>subtitles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\subtitles\TsubtitleFormat.cpp">
+      <Filter>subtitles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\subtitles\CPolygon.cpp">
+      <Filter>subtitles</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <yasm Include="src\cpuid.asm">
@@ -2780,6 +2795,21 @@
     </ClInclude>
     <ClInclude Include="src\baseclasses\wxutil.h">
       <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="src\subtitles\nmTextSubtitles.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\subtitles\TSSAstyles.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\subtitles\TsubtitleMixedProps.h">
+      <Filter>subtitles</Filter>
+    </ClInclude>
+    <ClInclude Include="src\subtitles\TsubtitleFormat.h">
+      <Filter>subtitles</Filter>
+    </ClInclude>
+    <ClInclude Include="src\subtitles\CPolygon.h">
+      <Filter>subtitles</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

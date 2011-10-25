@@ -1487,7 +1487,6 @@
 #define IDC_ED_QUANT_TABLE_INTRA7       1835
 #define IDC_BT_EXPORT                   1835
 #define IDC_ED_QUANT_TABLE_INTRA8       1836
-//#define IDC_BT_DONATE                   1836
 #define IDC_LBL_SUB_SPLIT_BORDER        1836
 #define IDC_ED_QUANT_TABLE_INTRA9       1837
 #define IDC_CHB_SUB_SEARCHHEURISTIC     1837
@@ -1634,8 +1633,6 @@
 #define IDC_CHB_GRADFUN                 1940
 #define IDC_LBL_GRADFUN_THRESHOLD       1941
 #define IDC_TBR_GRADFUN_THRESHOLD       1942
-#define IDC_LBL_GRADFUN_RADIUS          40024
-#define IDC_TBR_GRADFUN_RADIUS          40023
 #define IDC_CHB_DROP_ON_DELAY           1943
 #define IDC_CHB_MULTITHREAD             1944
 #define IDC_CHB_DONT_QUEUE_IN_WMP       1945
@@ -1981,6 +1978,12 @@
 #define IDC_GRP_SUBFORMATS              40016
 #define IDC_GRP_SUBSOURCES              40021
 #define IDC_WINAMP2_32BIT               40022
+#define IDC_TBR_GRADFUN_RADIUS          40023
+#define IDC_LBL_GRADFUN_RADIUS          40024
+#define IDC_ED_SUB_MEMORY               40025
+#define IDC_CHB_SUB_HQBORDER            40026
+#define IDC_LBL_SUB_MEMORY              40027
+#define IDC_LBL_SUB_MEMORY_MB           40028
 #define IDC_STATIC                      -1
 #define IDC_GRP_WINAMP2                 65535
 
@@ -1991,7 +1994,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        304
 #define _APS_NEXT_COMMAND_VALUE         40015
-#define _APS_NEXT_CONTROL_VALUE         40023
+#define _APS_NEXT_CONTROL_VALUE         40029
 #define _APS_NEXT_SYMED_VALUE           107
 #endif
 #endif

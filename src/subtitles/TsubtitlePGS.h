@@ -1,5 +1,4 @@
-#ifndef _TSUBTITLEPGS_H_
-#define _TSUBTITLEPGS_H_
+#pragma once
 
 #include "Tsubtitle.h"
 #include "autoptr.h"
@@ -33,5 +32,3 @@ struct TsubtitlePGS :public TsubtitleDVD {
     TwindowDefinition *m_pWindow;
     int videoWidth, videoHeight;
 };
-
-#endif

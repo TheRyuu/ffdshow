@@ -19,20 +19,25 @@
 #pragma once
 
 #include "TfontManager.h"
+#include "TsubtitleMixedProps.h"
+
 class TtoGdiFont
 {
     HGDIOBJ old;
     HDC hdc;
     int gdi_font_scale;
+    TSubtitleMixedProps mprops;
 public:
-    TtoGdiFont(const TSubtitleProps &props, HDC Ihdc, LOGFONT &lf, const TprintPrefs &prefs, unsigned int dx, unsigned int dy, TfontManager *fontManager):
+    LOGFONT lf;
+    TtoGdiFont(const TSubtitleProps &props, HDC Ihdc, const TprintPrefs &prefs, unsigned int dx, unsigned int dy, TfontManager *fontManager):
         old(NULL),
         hdc(Ihdc),
+        mprops(props, prefs),
         gdi_font_scale(prefs.fontSettings.gdi_font_scale) {
         if (!hdc || !fontManager) {
             return;
         }
-        props.toLOGFONT(lf, prefs.fontSettings, dx, dy, prefs.clipdy, prefs.sar, gdi_font_scale);
+        mprops.toLOGFONT(lf);
         HFONT font=fontManager->getFont(lf);
         old=SelectObject(hdc, font);
     }

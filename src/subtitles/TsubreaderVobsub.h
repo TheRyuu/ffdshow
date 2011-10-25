@@ -1,5 +1,4 @@
-#ifndef _TSUBREADERVOBSUB_H_
-#define _TSUBREADERVOBSUB_H_
+#pragma once
 
 #include "Tsubreader.h"
 #include "interfaces.h"
@@ -19,4 +18,3 @@ public:
     virtual int findlang(int langname);
 };
 
-#endif

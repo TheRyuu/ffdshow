@@ -61,6 +61,19 @@ struct CPoint :POINT {
         x = rt.x;
         y = rt.y;
     }
+
+    void operator = (const POINT &rt) {
+        x = rt.x;
+        y = rt.y;
+    }
+};
+
+struct CPointDouble {
+    double x,y;
+    CPointDouble(double x, double y) {
+        this->x = x;
+        this->y = y;
+    }
 };
 
 struct CSize :SIZE {

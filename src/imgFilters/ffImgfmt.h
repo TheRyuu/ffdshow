@@ -66,6 +66,7 @@
 #define FF_CSPS_MASK_YUV_PACKED (FF_CSP_YUY2|FF_CSP_UYVY|FF_CSP_YVYU|FF_CSP_VYUY)
 #define FF_CSPS_MASK_RGB        (FF_CSP_RGBA|FF_CSP_RGB32|FF_CSP_RGB24|FF_CSP_RGB15|FF_CSP_RGB16)
 #define FF_CSPS_MASK_BGR        (FF_CSP_ABGR|FF_CSP_BGR32|FF_CSP_BGR24|FF_CSP_BGR15|FF_CSP_BGR16)
+#define FF_CSPS_MASK_FFRGB      (FF_CSP_RGB32|FF_CSP_RGB24|FF_CSP_BGR32|FF_CSP_BGR24) // ffdshow converters output color spaces. Require dst stride to be multiple of 4.
 
 #include <stddef.h>
 typedef ptrdiff_t stride_t;
