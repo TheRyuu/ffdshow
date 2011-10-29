@@ -305,16 +305,6 @@ void TrenderedSubtitleLine::print(
 
 const TSubtitleMixedProps& TrenderedSubtitleLine::getProps() const
 {
-    // Which props should represent this line?
-    // The first word that have dxChar should make sense.
-    // If there is none, return this->props.
-    foreach (TrenderedSubtitleWordBase *word0, *this) {
-        TrenderedTextSubtitleWord *word = dynamic_cast<TrenderedTextSubtitleWord *>(word0);
-        if (word && word->dxChar) 
-            return word->mprops;
-        else
-            continue;
-    }
     return mprops;
 }
 
@@ -341,8 +331,7 @@ bool TrenderedSubtitleLine::checkCollision(const CRect &query, CRect &ans)
     if (empty()) {
         return false;
     }
-    const TSubtitleProps &lineprops = getProps();
-    if (lineprops.isPos || lineprops.isMove || lineprops.isOrg) {
+    if (mprops.isPos || mprops.isMove || mprops.isOrg) {
         return false;
     }
     if (query.checkOverlap(printedRect)) {

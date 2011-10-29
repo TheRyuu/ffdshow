@@ -789,11 +789,10 @@ void TsubtitleFormat::processHTMLTags(Twords &words, const wchar_t* &l, const wc
     }
 }
 
-TsubtitleFormat::Twords TsubtitleFormat::processHTML(const TsubtitleLine &line)
+const TSubtitleProps& TsubtitleFormat::processHTML(Twords &words, const TsubtitleLine &line)
 {
-    Twords words;
     if (line.empty()) {
-        return words;
+        return lineProps;
     }
     const wchar_t *l=line[0];
     const wchar_t *l1=l,*l2=l;
@@ -802,7 +801,7 @@ TsubtitleFormat::Twords TsubtitleFormat::processHTML(const TsubtitleLine &line)
     }
 
     words.add(l,l1,l2,props,0);
-    return words;
+    return lineProps;
 }
 
 int TsubtitleFormat::Tssa::parse_parentheses(TparenthesesContents &contents, ffstring arg)
@@ -1370,11 +1369,10 @@ void TsubtitleFormat::Tssa::processTokens(const wchar_t *l,const wchar_t* &l1,co
     }
 }
 
-TsubtitleFormat::Twords TsubtitleFormat::processSSA(const TsubtitleLine &line, int sfmt, TsubtitleText &parent)
+const TSubtitleProps& TsubtitleFormat::processSSA(Twords &words, const TsubtitleLine &line, int sfmt, TsubtitleText &parent)
 {
-    Twords words;
     if (line.empty()) {
-        return words;
+        return lineProps;
     }
     const wchar_t *l=line[0];
     const wchar_t *l1=l,*l2=l;
@@ -1397,7 +1395,7 @@ TsubtitleFormat::Twords TsubtitleFormat::processSSA(const TsubtitleLine &line, i
     }
 
     words.add(l,l1,l2,props,0);
-    return words;
+    return lineProps;
 }
 
 void TsubtitleFormat::processMicroDVD(TsubtitleText &parent, std::vector< TsubtitleLine >::iterator it)

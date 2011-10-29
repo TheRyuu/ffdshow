@@ -53,7 +53,7 @@ void TsubtitleLine::applyWords(const TsubtitleFormat::Twords &words, int subForm
     const wchar_t *lineString = this->front().getString();
     foreach (const TsubtitleFormat::Tword &w, words) {
         karaokeNewWord |= w.props.karaokeNewWord;
-        this->props=w.props;
+
         // avoid adding empty words
         if (w.i1==w.i2) {
             continue;
@@ -80,10 +80,13 @@ void TsubtitleLine::applyWords(const TsubtitleFormat::Twords &words, int subForm
 
 void TsubtitleLine::format(TsubtitleFormat &format,int sfmt, TsubtitleText &parent)
 {
+    TsubtitleFormat::Twords words;
     if (sfmt==Tsubreader::SUB_SSA || sfmt==Tsubreader::SUB_SUBVIEWER || sfmt==Tsubreader::SUB_SUBVIEWER2) {
-        applyWords(format.processSSA(*this, sfmt, parent),sfmt);
+        props = format.processSSA(words, *this, sfmt, parent);
+        applyWords(words, sfmt);
     } else {
-        applyWords(format.processHTML(*this),sfmt);
+        props = format.processHTML(words, *this);
+        applyWords(words, sfmt);
     }
 }
 
@@ -327,7 +330,7 @@ size_t TsubtitleText::prepareGlyph(TprintPrefs prefs, Tfont &font, bool forceCha
                 TtoGdiFont gf(w.props, font.hdc, prefs, dx, dy, fontManager);
                 SetTextCharacterExtra(font.hdc,(w.props.spacing==INT_MIN || prefs.fontSettings.fontSettingsOverride) ? prefs.fontSettings.spacing : w.props.get_spacing(dy, prefs.clipdy, gdi_font_scale));
                 if (!line)
-                    line=new TrenderedSubtitleLine(w.props, prefs);
+                    line=new TrenderedSubtitleLine(l.props, prefs);
 
                 const wchar_t *p=w;
 
@@ -353,7 +356,7 @@ size_t TsubtitleText::prepareGlyph(TprintPrefs prefs, Tfont &font, bool forceCha
                             n=wordWrap.getRightOfTheLine(cy)-cx+1;
                             if (!line->empty()) {
                                 lines.push_back(line);
-                                line=new TrenderedSubtitleLine(w.props, prefs);
+                                line=new TrenderedSubtitleLine(l.props, prefs);
                             }
                             if (cy>=wordWrap.getLineCount()) {
                                 break;
@@ -369,7 +372,7 @@ size_t TsubtitleText::prepareGlyph(TprintPrefs prefs, Tfont &font, bool forceCha
                         }
                         if (!line->empty()) {
                             lines.push_back(line);
-                            line=new TrenderedSubtitleLine(w.props, prefs);
+                            line=new TrenderedSubtitleLine(l.props, prefs);
                         }
                         if (w.props.polygon)
                             break;

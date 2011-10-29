@@ -157,8 +157,8 @@ private:
 public:
     TsubtitleFormat(const ThtmlColors *Ihtmlcolors):htmlcolors(Ihtmlcolors) {}
     void processHTMLTags(Twords &words, const wchar_t* &l, const wchar_t* &l1, const wchar_t* &l2);
-    Twords processHTML(const TsubtitleLine &line);
-    Twords processSSA(const TsubtitleLine &line,int sfmt, TsubtitleText &parent);
+    const TSubtitleProps& processHTML(Twords &words, const TsubtitleLine &line);
+    const TSubtitleProps& processSSA(Twords &words, const TsubtitleLine &line, int sfmt, TsubtitleText &parent);
     void processMicroDVD(TsubtitleText &parent, std::vector< TsubtitleLine >::iterator it);
     void processMPL2(TsubtitleLine &line);
     void resetProps(void) {
