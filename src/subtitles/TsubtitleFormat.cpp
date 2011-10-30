@@ -1178,20 +1178,16 @@ bool TsubtitleFormat::Tssa::arg2int(const ffstring &arg, int min, int max, int &
 
 bool TsubtitleFormat::Tssa::color2int(ffstring arg, int &intval)
 {
-    int radix;
     if (!arg.empty()) {
-        if (arg.ConvertToLowerCase().compare(0,2,ffstring(_l("&h")))==0 || arg.ConvertToLowerCase().compare(0,1,ffstring(_l("&")))==0) {
-            radix=16;
-            if (arg.ConvertToLowerCase().compare(0,2,ffstring(_l("&h")))==0) {
-                arg.erase(0,2);
-            } else {
-                arg.erase(0,1);
-            }
-        } else {
-            radix=10;
-        }
+        if (arg.compare(0,2,ffstring(_l("&H")))==0)
+            arg.erase(0,2);
+        if (arg.compare(0,1,ffstring(_l("H")))==0)  // "H&" fix typo for a certain script. For compatibility with vsfilter.
+            arg.erase(0,1);
+        if (arg.compare(0,1,ffstring(_l("&")))==0)
+            arg.erase(0,1);
         wchar_t *endbuf;
-        intval=strtol(arg.c_str(),&endbuf,radix);
+        intval=strtol(arg.c_str(),&endbuf,16);
+        intval &= 0xff;
         return (*endbuf=='&' || *endbuf==NULL);
     } else {
         return false;
