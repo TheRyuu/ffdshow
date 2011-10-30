@@ -38,7 +38,6 @@ void TSubtitleProps::reset(void)
     italic=underline=strikeout=false;
     isColor=false;
     isClip=false;
-    isPos=false;
     isMove=false;
     isOrg=false;
     transform.isTransform=false;
@@ -102,7 +101,7 @@ double TSubtitleProps::get_maxWidth(unsigned int screenWidth, int textMarginLR, 
     // position is set (through position tags) so our results are equivalent.
     // If not, use video dimensions.
     else {
-        if ((isPos || isMove) && !deci->getParam2(IDFF_subSSAUseMovieDimensions)) {
+        if (isMove && !deci->getParam2(IDFF_subSSAUseMovieDimensions)) {
             resX = 384;
         } else {
             resX = screenWidth;
@@ -118,7 +117,7 @@ double TSubtitleProps::get_maxWidth(unsigned int screenWidth, int textMarginLR, 
        - The option "Maintain outside text inside picture" is set
        - Or if the subtitles are SRT
      */
-    if (isPos && (deci->getParam2(IDFF_subSSAMaintainInside)
+    if (isMove && (deci->getParam2(IDFF_subSSAMaintainInside)
                   || (subFormat & Tsubreader::SUB_FORMATMASK) == Tsubreader::SUB_SUBVIEWER)) {
         switch (alignment) {
             case 1: // left(SSA) : left alignment, left margin is ignored

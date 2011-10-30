@@ -208,7 +208,7 @@ CPoint TSubtitleMixedProps::get_rotationAxis() const
 {
     CPoint result;
 
-    if (isPos || isMove || isOrg) {
+    if (isMove || isOrg) {
         if (isOrg) {
             result = org;
         } else {
@@ -268,7 +268,7 @@ double TSubtitleMixedProps::get_marginR(double lineWidth) const
     // Revert the line size to the input dimension for calculation
     lineWidth=lineWidth * refResX / dx;
 
-    if (isPos || isMove) {
+    if (isMove) {
         switch (alignment) {
             case 1: // left(SSA)
             case 5:
@@ -312,7 +312,7 @@ double TSubtitleMixedProps::get_marginL(double lineWidth) const
     // Revert the line size to the input dimension for calculation
     lineWidth = lineWidth * refResX / dx;
 
-    if (isPos || isMove) {
+    if (isMove) {
         switch (alignment) {
             case 1: // left(SSA)
             case 5:
@@ -348,7 +348,7 @@ double TSubtitleMixedProps::get_marginTop() const
 {
     double result;
 
-    if (isPos || isMove) {
+    if (isMove) {
         switch (alignment) {
             case 5: // SSA top
             case 6:
@@ -385,7 +385,7 @@ double TSubtitleMixedProps::get_marginBottom() const
 {
     double result;
 
-    if (isPos || isMove) {
+    if (isMove) {
         switch (alignment) {
             case 5: // SSA top
             case 6:

@@ -52,7 +52,7 @@ struct TSubtitleProps {
     COLORREF color,SecondaryColour, TertiaryColour, OutlineColour, ShadowColour;
     int colorA,SecondaryColourA, TertiaryColourA, OutlineColourA, ShadowColourA;
     unsigned int refResX,refResY;
-    bool isPos,isMove,isOrg,isClip;
+    bool isMove,isOrg,isClip;
     Ttransform transform;
     unsigned int transformT1,transformT2;
     CRect clip;

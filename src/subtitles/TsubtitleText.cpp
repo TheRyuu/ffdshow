@@ -125,8 +125,9 @@ void TsubtitleText::fixFade(const TSubtitleProps &lineProps)
             word.props.fadeT2 = lineProps.fadeT2;
             word.props.fadeT3 = lineProps.fadeT3;
             word.props.fadeT4 = lineProps.fadeT4;
-            word.props.isPos  = lineProps.isPos;
+            word.props.isMove = lineProps.isMove;
             word.props.pos    = lineProps.pos;
+            word.props.pos2   = lineProps.pos2;
             word.props.alignment    = lineProps.alignment;
             word.props.isAlignment = lineProps.isAlignment;
             word.props.wrapStyle = lineProps.wrapStyle;

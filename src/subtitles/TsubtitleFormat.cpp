@@ -972,7 +972,7 @@ void TsubtitleFormat::Tssa::clip(ffstring &arg)
 
 void TsubtitleFormat::Tssa::pos(ffstring &arg)
 {
-    if (lineProps.isPos)
+    if (lineProps.isMove)
         return;
     // (x1,y1) is expected.
     TstoreParams store;
@@ -982,7 +982,8 @@ void TsubtitleFormat::Tssa::pos(ffstring &arg)
     TparenthesesContents contents;
     parse_parentheses(contents,arg);
     if (store.writeProps(contents, &lineProps) == 2) {
-        lineProps.isPos=true;
+		lineProps.pos2 = lineProps.pos;
+        lineProps.isMove=true;
     }
 }
 

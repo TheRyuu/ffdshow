@@ -125,7 +125,6 @@ private:
         int alignment;
         double marginTop,marginBottom;
         double marginL,marginR;
-        int isPos;
         int isMove;
         CPoint pos;
         int layer;

@@ -331,7 +331,7 @@ bool TrenderedSubtitleLine::checkCollision(const CRect &query, CRect &ans)
     if (empty()) {
         return false;
     }
-    if (mprops.isPos || mprops.isMove || mprops.isOrg) {
+    if (mprops.isMove || mprops.isOrg) {
         return false;
     }
     if (query.checkOverlap(printedRect)) {
@@ -485,12 +485,12 @@ void TrenderedSubtitleLines::printASS(
                             // IDFF_subSSAOverridePlacement is present and they don't have any
                             // position defined, then apply the vertical position slider setting.
                             if ((pkey.marginBottom == 0 || (prefs.deci->getParam2(IDFF_subSSAOverridePlacement)
-                                                            || (prefs.subformat & Tsubreader::SUB_FORMATMASK) != Tsubreader::SUB_SSA)) && !pkey.isPos && !pkey.isMove) {
+                                                            || (prefs.subformat & Tsubreader::SUB_FORMATMASK) != Tsubreader::SUB_SSA)) && !pkey.isMove) {
                                 pval.y=((double)prefs.ypos*prefsdy)/100.0-pval.height;
                             }
                             // With middle alignment and position/move tag we position the paragraph to the requested
                             // position basing on the anchor point set at the middle
-                            else if (pkey.isPos || pkey.isMove) {
+                            else if (pkey.isMove) {
                                 pval.y=pkey.marginTop-pval.height/2.0;
                             } else { // otherwise put the paragraph on the center of the screen (vertical margin is ignored)
                                 pval.y=(prefsdy - pval.height)/2.0;
@@ -503,7 +503,7 @@ void TrenderedSubtitleLines::printASS(
                             // IDFF_subSSAOverridePlacement is present and they don't have any
                             // position defined, then apply the vertical position slider setting
                             // but inversed.
-                            if (((prefs.subformat & Tsubreader::SUB_FORMATMASK) != Tsubreader::SUB_SSA) || (!pkey.isPos && !pkey.isMove && ((prefs.subformat & Tsubreader::SUB_FORMATMASK) == Tsubreader::SUB_SSA) && prefs.deci->getParam2(IDFF_subSSAOverridePlacement))) {
+                            if (((prefs.subformat & Tsubreader::SUB_FORMATMASK) != Tsubreader::SUB_SSA) || (!pkey.isMove && ((prefs.subformat & Tsubreader::SUB_FORMATMASK) == Tsubreader::SUB_SSA) && prefs.deci->getParam2(IDFF_subSSAOverridePlacement))) {
                                 pval.y=((double)(100-prefs.ypos)*prefsdy)/100.0;
                             } else {
                                 pval.y = pkey.marginTop;
@@ -517,7 +517,7 @@ void TrenderedSubtitleLines::printASS(
                             // IDFF_subSSAOverridePlacement is present and they don't have any
                             // position defined, then apply the vertical position slider setting.
                             if ((pkey.marginBottom == 0 || (prefs.deci->getParam2(IDFF_subSSAOverridePlacement)
-                                                            || (prefs.subformat & Tsubreader::SUB_FORMATMASK) != Tsubreader::SUB_SSA)) && !pkey.isPos && !pkey.isMove) {
+                                                            || (prefs.subformat & Tsubreader::SUB_FORMATMASK) != Tsubreader::SUB_SSA)) && !pkey.isMove) {
                                 pval.y=((double)prefs.ypos*prefsdy)/100.0-pval.height;
                             } else {
                                 pval.y=(double)prefsdy - 1 - pkey.marginBottom - pval.height;
@@ -557,7 +557,7 @@ void TrenderedSubtitleLines::printASS(
                     case 1: // left(SSA)
                     case 5:
                     case 9:
-                        if (!pkey.isPos && !pkey.isMove && prefs.deci->getParam2(IDFF_subSSAOverridePlacement)) {
+                        if (!pkey.isMove && prefs.deci->getParam2(IDFF_subSSAOverridePlacement)) {
                             x = (prefs.xpos * prefsdx)/100;
                             x = x - cdx / 2.0;
                             if (x < 0) {
@@ -573,7 +573,7 @@ void TrenderedSubtitleLines::printASS(
                     case 3: // right(SSA)
                     case 7:
                     case 11:
-                        if (!pkey.isPos && !pkey.isMove && prefs.deci->getParam2(IDFF_subSSAOverridePlacement)) {
+                        if (!pkey.isMove && prefs.deci->getParam2(IDFF_subSSAOverridePlacement)) {
                             x = (prefs.xpos * prefsdx)/100;
                             x = x - cdx / 2.0;
                             if (x < 0) {
@@ -592,7 +592,7 @@ void TrenderedSubtitleLines::printASS(
                         // If the text is supposed to be placed at the center of the screen,
                         // has no horizontal alignment defined or IDFF_subSSAOverridePlacement
                         // is present then apply the horizontal position setting
-                        if (!pkey.isPos && !pkey.isMove && prefs.deci->getParam2(IDFF_subSSAOverridePlacement)) {
+                        if (!pkey.isMove && prefs.deci->getParam2(IDFF_subSSAOverridePlacement)) {
                             x = (prefs.xpos * prefsdx)/100;
                             x = x - cdx / 2.0;
                             if (x < 0) {
@@ -601,14 +601,14 @@ void TrenderedSubtitleLines::printASS(
                             if (x + cdx >= prefsdx) {
                                 x = prefsdx - cdx;
                             }
-                        } else if (lineprops.isPos || lineprops.isMove) { // If position defined, then marginL is relative to left border of the screen
+                        } else if (lineprops.isMove) { // If position defined, then marginL is relative to left border of the screen
                             x = marginL;
                         } else { // else marginL is relative to the center of the screen
                             x = ((double)prefsdx - marginL - marginR - cdx)/2.0 + marginL;
                         }
                         break;
                     default: // non SSA/ASS
-                        if (!lineprops.isPos && !lineprops.isMove) {
+                        if (!lineprops.isMove) {
                             x=(prefs.xpos * prefsdx)/100;
                             switch (prefs.align) {
                                 case ALIGN_LEFT:
@@ -645,7 +645,7 @@ void TrenderedSubtitleLines::printASS(
                     }
                 }
 
-                if (!lineprops.isMove && !lineprops.isPos && !lineprops.isOrg && pval.firstuse) {
+                if (!lineprops.isMove && !lineprops.isOrg && pval.firstuse) {
                     handleCollision(line, x, pval, prefsdy, lineprops.alignment);
                 }
 
@@ -722,13 +722,12 @@ TrenderedSubtitleLines::ParagraphKey::ParagraphKey(TrenderedSubtitleLine *line, 
     marginTop = lineprops.get_marginTop();
     marginL = lineprops.get_marginL();
     marginR = lineprops.get_marginR();
-    isPos = lineprops.isPos;
     isMove = lineprops.isMove;
     hasPrintedRect = line->getHasPrintedRect();
     lineID = lineprops.lineID;
 
     layer = lineprops.layer;
-    if (isPos || isMove) {
+    if (isMove) {
         pos = lineprops.pos;
     }
     if (!isMove) {
@@ -785,11 +784,8 @@ bool TrenderedSubtitleLines::ParagraphKey::operator < (const ParagraphKey &rt) c
     if (marginR>rt.marginR) {
         return false;
     }
-    if (isPos<rt.isPos) {
+    if (isMove<rt.isMove) {
         return true;
-    }
-    if (isPos>rt.isPos) {
-        return false;
     }
     if (pos<rt.pos) {
         return true;
@@ -832,7 +828,7 @@ bool TrenderedSubtitleLines::ParagraphKey::operator != (const ParagraphKey &rt) 
             && marginBottom == rt.marginBottom
             && marginL == rt.marginL
             && marginR == rt.marginR
-            && isPos == rt.isPos
+            && isMove == rt.isMove
             && pos == rt.pos
             && layer == rt.layer
             && lineID == rt.lineID
