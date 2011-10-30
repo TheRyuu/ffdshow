@@ -77,9 +77,6 @@ TSubtitleMixedProps::TSubtitleMixedProps(const TSubtitleProps &props, const Tpri
                                Rational(1,1),      // To avoid calculation error, we don't mix aspect ratio and ScaleX here.
                                fontSettings.fontSettingsOverride);
 
-    if (fontSettings.scaleBorderAndShadowOverride && isSSA() && !fontSettings.fontSettingsOverride)
-        scaleBorderAndShadow = true;
-
     if (fontSettings.autosize && !isSSA())
         autoSize = true;
 
@@ -99,6 +96,14 @@ TSubtitleMixedProps::TSubtitleMixedProps(const TSubtitleProps &props, const Tpri
         refResX = 384;
     if (!refResY)
         refResY = 288;
+
+    if (fontSettings.scaleBorderAndShadowOverride && isSSA() && !fontSettings.fontSettingsOverride)
+        scaleBorderAndShadow = true;
+
+    if (scaleBorderAndShadow) {
+        shadowDepth *= (double)dy / refResY;
+        outlineWidth *= (double)dy / refResY;
+    }
 
     if (size > 0 && fontSettings.sizeOverride == 0) {
         size = size * (prefs.clipdy ? prefs.clipdy : dy) / refResY;

@@ -985,11 +985,6 @@ unsigned int TrenderedTextSubtitleWord::getShadowSize(LONG fontHeight)
         return 0;
     }
 
-    // Scale shadow
-    if (mprops.scaleBorderAndShadow) {
-        return mprops.shadowDepth * mprops.clipdy / mprops.refResY;
-    }
-
     if (!mprops.isSSA() && mprops.autoSize && mprops.shadowDepth > 0) { // non SSA/ASS/ASS2 and autosize enabled
         return mprops.shadowDepth*fontHeight/(mprops.gdi_font_scale * 250)+2.6;
     }
