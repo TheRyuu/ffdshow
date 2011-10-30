@@ -269,9 +269,8 @@ public:
 
     double width() const;
     unsigned int height() const;
-    double charHeight() const;
     double linegap(double prefsdy) const;
-    double lineHeightWithGap(double prefsdy) const;
+    double lineHeight() const;
     double baselineHeight() const;
     void prepareKaraoke();
     using std::vector<value_type>::push_back;

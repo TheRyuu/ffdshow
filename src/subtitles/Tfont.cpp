@@ -144,19 +144,6 @@ unsigned int TrenderedSubtitleLine::height() const
     return aboveBaseline+belowBaseline;
 }
 
-double TrenderedSubtitleLine::charHeight() const
-{
-    if (empty()) {
-        return emptyHeight;
-    }
-    double ascent = 0,descent = 0;
-    foreach (TrenderedSubtitleWordBase *word, *this) {
-        ascent=std::max<double>(ascent,word->get_ascent());
-        descent=std::max<double>(descent,word->get_descent());
-    }
-    return ascent + descent;
-}
-
 double TrenderedSubtitleLine::linegap(double prefsdy) const
 {
     double belowBaseline = 0,descent = 0;
@@ -167,7 +154,7 @@ double TrenderedSubtitleLine::linegap(double prefsdy) const
     return belowBaseline - descent;
 }
 
-double TrenderedSubtitleLine::lineHeightWithGap(double prefsdy) const
+double TrenderedSubtitleLine::lineHeight() const
 {
     if (empty()) {
         return emptyHeight;
@@ -243,7 +230,7 @@ void TrenderedSubtitleLine::print(
     const stride_t *stride)
 {
     int w = width();
-    double h = lineHeightWithGap(prefsdy);
+    double h = lineHeight();
     // If dst is NULL, we only prepare the bitmaps for the text and do not render on video planes.
     //                 Note that the detection of collision is impossible here, because not all lines
     //                 that should be displayed at the same time are not included in TrenderedSubtitleLines.
@@ -369,7 +356,7 @@ void TrenderedSubtitleLines::print(
     double h=0,h1=0;
     for (const_iterator i=begin(); i!=end(); i++) {
         double h2=h1+(*i)->height();
-        h1+=(double)prefs.linespacing*(*i)->lineHeightWithGap(prefsdy)/100;
+        h1+=(double)prefs.linespacing*(*i)->lineHeight()/100;
         if (h2>h) {
             h=h2;
         }
@@ -387,7 +374,7 @@ void TrenderedSubtitleLines::print(
         y=(double)prefsdy-h-1;
     }
 
-    for (const_iterator i=begin(); i!=end(); y+=(double)prefs.linespacing*(*i)->lineHeightWithGap(prefsdy)/100,i++) {
+    for (const_iterator i=begin(); i!=end(); y+=(double)prefs.linespacing*(*i)->lineHeight()/100,i++) {
         if (y<0) {
             continue;
         }
@@ -453,12 +440,12 @@ void TrenderedSubtitleLines::printASS(
         ParagraphKey pkey(line, prefsdx, prefsdy);
         std::map<ParagraphKey,ParagraphValue>::iterator pi=paragraphs.find(pkey);
         if (pi != paragraphs.end()) {
-            pi->second.height += pi->second.linegap + line->charHeight();
+            pi->second.height += pi->second.linegap + line->lineHeight();
             pi->second.width = std::max(pi->second.width, double(line->width()));
             pi->second.linegap = line->linegap(prefsdy);
         } else {
             ParagraphValue pval;
-            pval.height = line->charHeight();
+            pval.height = line->lineHeight();
             pval.linegap = line->linegap(prefsdy);
             pval.width = line->width();
             paragraphs.insert(std::pair<ParagraphKey,ParagraphValue>(pkey,pval));
@@ -652,9 +639,9 @@ void TrenderedSubtitleLines::printASS(
                 pval.firstuse = false;
                 y = pval.y;
                 if ((prefs.subformat & Tsubreader::SUB_FORMATMASK) == Tsubreader::SUB_SSA) {
-                    pval.y += line->lineHeightWithGap(prefsdy);
+                    pval.y += line->lineHeight();
                 } else {
-                    pval.y += double(prefs.linespacing) * line->lineHeightWithGap(prefsdy) / 100.0;
+                    pval.y += double(prefs.linespacing) * line->lineHeight() / 100.0;
                 }
             }
 
