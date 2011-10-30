@@ -43,9 +43,9 @@ void CPolygon::init()
     double drawingScale = 1.0 / pow(2.0, mprops.polygon-1);
     m_shadowSize = getShadowSize(0);
     overhang = computeOverhang();
-    drawingScaleX = mprops.scaleX * drawingScale;
-    drawingScaleY = mprops.scaleY * drawingScale;
-	ParseStr();
+    drawingScaleX = mprops.scaleX * drawingScale * mprops.dx / mprops.refResX;
+    drawingScaleY = mprops.scaleY * drawingScale * mprops.dy / mprops.refResY;
+    ParseStr();
 
     // Scaling is applied in ParseStr, so don't scale it again.
     mprops.scaleX = 1;
