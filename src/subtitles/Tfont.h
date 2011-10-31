@@ -142,7 +142,6 @@ private:
     {
     public:
         double width,height,y;
-        double linegap;
         double xmin,xmax,y0,xoffset,yoffset;
         double topOverhang,bottomOverhang;
         bool firstuse;
@@ -152,7 +151,6 @@ private:
             width(0),
             height(0),
             y(0),
-            linegap(0),
             xmin(-1),
             xmax(-1),
             y0(0),
@@ -206,12 +204,6 @@ public:
     }
     virtual double get_baseline() const {
         return dy[0];
-    }
-    virtual double get_below_baseline() const {
-        return 0;
-    }
-    virtual double get_linegap() const {
-        return 0;
     }
     virtual size_t getMemorySize() const {
         return 0;
@@ -283,7 +275,6 @@ public:
 
     double width() const;
     unsigned int height() const;
-    double linegap(double prefsdy) const;
     double lineHeight() const;
     double getTopOverhang() const;
     double getBottomOverhang() const;

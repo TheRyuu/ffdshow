@@ -91,7 +91,6 @@ TrenderedTextSubtitleWord::TrenderedTextSubtitleWord(
     m_baseline(0),
     m_ascent(0),
     m_descent(0),
-    m_linegap(0),
     m_bitmapReady(false),
     mprops(props,prefs)
 {
@@ -178,7 +177,6 @@ TrenderedTextSubtitleWord::TrenderedTextSubtitleWord(const TSubtitleMixedProps &
     m_baseline(0),
     m_ascent(0),
     m_descent(0),
-    m_linegap(0),
     m_bitmapReady(false),
     mprops(Improps),
     m_pOpaqueBox(NULL)
@@ -226,7 +224,6 @@ void TrenderedTextSubtitleWord::calcOutlineTextMetric(HDC hdc,
         overhang = computeOverhang();
         m_ascent  = otm.otmTextMetrics.tmAscent / gdi_font_scale;
         m_descent = otm.otmTextMetrics.tmDescent / gdi_font_scale;
-        m_linegap = (lf.lfHeight - otm.otmTextMetrics.tmAscent - otm.otmTextMetrics.tmDescent) / gdi_font_scale;
         if (otm.otmItalicAngle) {
             italic_fixed_sz.cx += ff_abs(LONG(italic_fixed_sz.cy*sin(otm.otmItalicAngle*M_PI/1800)));
         } else if (otm.otmTextMetrics.tmItalic) {
@@ -238,7 +235,6 @@ void TrenderedTextSubtitleWord::calcOutlineTextMetric(HDC hdc,
         overhang = computeOverhang();
         m_ascent   = italic_fixed_sz.cy * 0.8 / gdi_font_scale;
         m_descent  = italic_fixed_sz.cy * 0.2 / gdi_font_scale;
-        m_linegap  = italic_fixed_sz.cy * 0.03 / gdi_font_scale;
         if (lf.lfItalic) {
             italic_fixed_sz.cx+=italic_fixed_sz.cy*0.35;
         }
@@ -246,7 +242,6 @@ void TrenderedTextSubtitleWord::calcOutlineTextMetric(HDC hdc,
 
     m_ascent *= mprops.scaleY;
     m_descent *= mprops.scaleY;
-    m_linegap *= mprops.scaleY;
     m_baseline = m_ascent;
 
     gdi_dx = ((italic_fixed_sz.cx + gdi_font_scale) / gdi_font_scale + 1) * gdi_font_scale;
@@ -1005,16 +1000,6 @@ size_t TrenderedTextSubtitleWord::getMemorySize() const
 double TrenderedTextSubtitleWord::get_baseline() const
 {
     return m_baseline;
-}
-
-double TrenderedTextSubtitleWord::get_below_baseline() const
-{
-    return m_descent + m_linegap;
-}
-
-double TrenderedTextSubtitleWord::get_linegap() const
-{
-    return m_linegap;
 }
 
 double TrenderedTextSubtitleWord::get_ascent() const

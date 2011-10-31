@@ -28,7 +28,6 @@ class TrenderedTextSubtitleWord : public Rasterizer
 private:
     TrenderedTextSubtitleWord *secondaryColoredWord;
 
-    double m_linegap;
     int m_outlineWidth;
     TfontSettings::TshadowMode m_shadowMode;
     double outlineWidth_double;
@@ -147,8 +146,6 @@ public:
     void (__cdecl *YV12_lum2chr_max)(const unsigned char* lum0,const unsigned char* lum1,unsigned char* chr);
     virtual double get_ascent() const;
     virtual double get_descent() const;
-    virtual double get_below_baseline() const;
-    virtual double get_linegap() const;
     virtual double get_baseline() const;
 
     // for collisions 

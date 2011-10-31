@@ -144,16 +144,6 @@ unsigned int TrenderedSubtitleLine::height() const
     return aboveBaseline+belowBaseline;
 }
 
-double TrenderedSubtitleLine::linegap(double prefsdy) const
-{
-    double belowBaseline = 0,descent = 0;
-    foreach (TrenderedSubtitleWordBase *word, *this) {
-        descent = std::max<double>(belowBaseline,word->get_descent());
-        belowBaseline = std::max<double>(belowBaseline,word->get_below_baseline());
-    }
-    return belowBaseline - descent;
-}
-
 double TrenderedSubtitleLine::lineHeight() const
 {
     if (empty()) {
@@ -162,7 +152,7 @@ double TrenderedSubtitleLine::lineHeight() const
     double aboveBaseline = 0,belowBaseline = 0;
     foreach (TrenderedSubtitleWordBase *word, *this) {
         aboveBaseline=std::max<double>(aboveBaseline,word->get_ascent());
-        belowBaseline=std::max<double>(belowBaseline,word->get_below_baseline());
+        belowBaseline=std::max<double>(belowBaseline,word->get_descent());
     }
     return aboveBaseline + belowBaseline;
 }
@@ -478,15 +468,13 @@ void TrenderedSubtitleLines::printASS(
         ParagraphKey pkey(line, prefsdx, prefsdy);
         std::map<ParagraphKey,ParagraphValue>::iterator pi=paragraphs.find(pkey);
         if (pi != paragraphs.end()) {
-            pi->second.height += pi->second.linegap + line->lineHeight();
+            pi->second.height += line->lineHeight();
             pi->second.width = std::max(pi->second.width, double(line->width()));
-            pi->second.linegap = line->linegap(prefsdy);
             pi->second.bottomOverhang = line->getBottomOverhang();
         } else {
             // The first line
             ParagraphValue pval;
             pval.height = line->lineHeight();
-            pval.linegap = line->linegap(prefsdy);
             pval.width = line->width();
             pval.topOverhang = line->getTopOverhang();
             pval.bottomOverhang = line->getBottomOverhang();
