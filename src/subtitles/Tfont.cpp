@@ -178,6 +178,44 @@ double TrenderedSubtitleLine::baselineHeight() const
     return aboveBaseline;
 }
 
+double TrenderedSubtitleLine::getTopOverhang() const
+{
+    if (empty()) {
+        return 0;
+    }
+    double aboveBaseline = 0,aboveBaseLinePlusOutline = 0;
+    foreach (TrenderedSubtitleWordBase *w, *this) {
+        TrenderedTextSubtitleWord *word = dynamic_cast<TrenderedTextSubtitleWord *>(w);
+        if (word == NULL)
+            return 0;
+        aboveBaseline            = std::max<double>(aboveBaseline, word->get_ascent());
+        aboveBaseLinePlusOutline = std::max<double>(aboveBaseLinePlusOutline, word->aboveBaseLinePlusOutline());
+    }
+    return aboveBaseLinePlusOutline - aboveBaseline;
+}
+
+double TrenderedSubtitleLine::getBottomOverhang() const
+{
+    if (empty()) {
+        return 0;
+    }
+    double belowBaseline = 0,belowBaseLinePlusOutline = 0;
+    foreach (TrenderedSubtitleWordBase *w, *this) {
+        TrenderedTextSubtitleWord *word = dynamic_cast<TrenderedTextSubtitleWord *>(w);
+        if (word == NULL)
+            return 0;
+        belowBaseline            = std::max<double>(belowBaseline, word->get_descent());
+        belowBaseLinePlusOutline = std::max<double>(belowBaseLinePlusOutline, word->belowBaseLinePlusOutline());
+    }
+    return belowBaseLinePlusOutline - belowBaseline;
+}
+
+void TrenderedSubtitleLine::setParagraphRect(CRect &IparagraphRect)
+{
+    hasParagraphRect = true;
+    paragraphRect = IparagraphRect;
+}
+
 void TrenderedSubtitleLine::prepareKaraoke()
 {
     if (!firstrun) {
@@ -312,7 +350,7 @@ size_t TrenderedSubtitleLine::getMemorySize() const
 
 bool TrenderedSubtitleLine::checkCollision(const CRect &query, CRect &ans)
 {
-    if (!hasPrintedRect) {
+    if (!hasParagraphRect) {
         return false;
     }
     if (empty()) {
@@ -321,8 +359,8 @@ bool TrenderedSubtitleLine::checkCollision(const CRect &query, CRect &ans)
     if (mprops.isMove || mprops.isOrg) {
         return false;
     }
-    if (query.checkOverlap(printedRect)) {
-        ans = printedRect;
+    if (query.checkOverlap(paragraphRect)) {
+        ans = paragraphRect;
         return true;
     }
     return false;
@@ -443,11 +481,15 @@ void TrenderedSubtitleLines::printASS(
             pi->second.height += pi->second.linegap + line->lineHeight();
             pi->second.width = std::max(pi->second.width, double(line->width()));
             pi->second.linegap = line->linegap(prefsdy);
+            pi->second.bottomOverhang = line->getBottomOverhang();
         } else {
+            // The first line
             ParagraphValue pval;
             pval.height = line->lineHeight();
             pval.linegap = line->linegap(prefsdy);
             pval.width = line->width();
+            pval.topOverhang = line->getTopOverhang();
+            pval.bottomOverhang = line->getBottomOverhang();
             paragraphs.insert(std::pair<ParagraphKey,ParagraphValue>(pkey,pval));
         }
     }
@@ -643,6 +685,8 @@ void TrenderedSubtitleLines::printASS(
                 } else {
                     pval.y += double(prefs.linespacing) * line->lineHeight() / 100.0;
                 }
+                if (dst)
+                    line->setParagraphRect(pval.myrect);
             }
 
         } else {
@@ -674,7 +718,7 @@ void TrenderedSubtitleLines::handleCollision(TrenderedSubtitleLine *line, int x,
     }
 
     // rect of this paragraph
-    CRect myrect(x, pval.y, x + pval.width, pval.y + paragraphHeight);
+    pval.myrect = CRect(x, pval.y - pval.topOverhang, x + pval.width, pval.y + paragraphHeight + pval.bottomOverhang);
     CRect hisrect;
     bool again = false;
     for (const_iterator l = begin(); l != end() || again ; l++) {
@@ -684,16 +728,16 @@ void TrenderedSubtitleLines::handleCollision(TrenderedSubtitleLine *line, int x,
             again = false;
         }
         if ( line->mprops.layer == (*l)->mprops.layer
-                && (*l)->checkCollision(myrect, hisrect)) {
+                && (*l)->checkCollision(pval.myrect, hisrect)) {
             if (alignment <= 3) {
                 // bottom
-                pval.y = hisrect.top - paragraphHeight - 2;
-                myrect = CRect(x, pval.y, x + pval.width, pval.y + paragraphHeight);
+                pval.y = hisrect.top - paragraphHeight - pval.bottomOverhang - 1;
+                pval.myrect = CRect(x, pval.y - pval.topOverhang, x + pval.width, pval.y + paragraphHeight + pval.bottomOverhang);
                 again = true;
             } else {
                 // Top, middle
-                pval.y = hisrect.bottom + 1;
-                myrect = CRect(x, pval.y, x + pval.width, pval.y + paragraphHeight);
+                pval.y = hisrect.bottom + 1 + pval.topOverhang;
+                pval.myrect = CRect(x, pval.y - pval.topOverhang, x + pval.width, pval.y + paragraphHeight + pval.bottomOverhang);
                 again = true;
             }
         }

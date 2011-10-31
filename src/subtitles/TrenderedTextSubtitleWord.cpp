@@ -1027,6 +1027,15 @@ double TrenderedTextSubtitleWord::get_descent() const
     return m_descent;
 }
 
+double TrenderedTextSubtitleWord::aboveBaseLinePlusOutline() const
+{
+    return m_ascent + mprops.outlineWidth;
+}
+
+double TrenderedTextSubtitleWord::belowBaseLinePlusOutline() const
+{
+    return m_descent + mprops.outlineWidth;
+}
 
 // printText
 // Calculate destination address (dstLn), width (local_dx) and height (local_dy).

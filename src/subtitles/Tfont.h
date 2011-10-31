@@ -144,7 +144,9 @@ private:
         double width,height,y;
         double linegap;
         double xmin,xmax,y0,xoffset,yoffset;
+        double topOverhang,bottomOverhang;
         bool firstuse;
+        CRect myrect;
 
         ParagraphValue():
             width(0),
@@ -156,6 +158,8 @@ private:
             y0(0),
             xoffset(0),
             yoffset(0),
+            topOverhang(0),
+            bottomOverhang(0),
             firstuse(true)
         {};
     };
@@ -229,17 +233,22 @@ class TrenderedSubtitleLine : public std::vector<TrenderedSubtitleWordBase*>
 {
     bool firstrun;
     double emptyHeight; // This is used as charHeight if empty.
-    bool hasPrintedRect;
-    CRect printedRect;
+    bool hasPrintedRect, hasParagraphRect;
+    CRect printedRect, paragraphRect;
 public:
     TSubtitleMixedProps mprops;
 
-    TrenderedSubtitleLine():firstrun(true),hasPrintedRect(false) {
+    TrenderedSubtitleLine():
+        firstrun(true),
+        hasPrintedRect(false),
+        hasParagraphRect(false)
+    {
         mprops.reset();
     }
     TrenderedSubtitleLine(const TSubtitleProps &p, const TprintPrefs &prefs):
         firstrun(true),
         hasPrintedRect(false),
+        hasParagraphRect(false),
         mprops(p,prefs)
     {
     }
@@ -247,12 +256,17 @@ public:
     TrenderedSubtitleLine(const TSubtitleProps &p, const TprintPrefs &prefs, double IemptyHeight):
         firstrun(true),
         hasPrintedRect(false),
+        hasParagraphRect(false),
         mprops(p,prefs),
         emptyHeight(IemptyHeight)
     {
     }
 
-    TrenderedSubtitleLine(TrenderedSubtitleWordBase *w):firstrun(true),hasPrintedRect(false) {
+    TrenderedSubtitleLine(TrenderedSubtitleWordBase *w):
+        firstrun(true),
+        hasPrintedRect(false),
+        hasParagraphRect(false)
+    {
         push_back(w);
         mprops.reset();
     }
@@ -271,6 +285,8 @@ public:
     unsigned int height() const;
     double linegap(double prefsdy) const;
     double lineHeight() const;
+    double getTopOverhang() const;
+    double getBottomOverhang() const;
     double baselineHeight() const;
     void prepareKaraoke();
     using std::vector<value_type>::push_back;
@@ -284,6 +300,9 @@ public:
         unsigned int prefsdy,
         unsigned char **dst,
         const stride_t *stride);
+
+    void setParagraphRect(CRect &IparagraphRect);
+
     size_t getMemorySize() const;
 };
 

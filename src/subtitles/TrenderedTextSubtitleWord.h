@@ -150,6 +150,11 @@ public:
     virtual double get_below_baseline() const;
     virtual double get_linegap() const;
     virtual double get_baseline() const;
+
+    // for collisions 
+    double aboveBaseLinePlusOutline() const;
+    double belowBaseLinePlusOutline() const;
+
     virtual size_t getMemorySize() const;
     void TrenderedTextSubtitleWord::printText(
         double startx,
