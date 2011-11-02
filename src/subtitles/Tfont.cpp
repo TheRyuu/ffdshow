@@ -200,7 +200,27 @@ double TrenderedSubtitleLine::getBottomOverhang() const
     return belowBaseLinePlusOutline - belowBaseline;
 }
 
-void TrenderedSubtitleLine::setParagraphRect(CRect &IparagraphRect)
+double TrenderedSubtitleLine::getLeftOverhang() const
+{
+    if (empty())
+        return 0;
+    TrenderedTextSubtitleWord *front = dynamic_cast<TrenderedTextSubtitleWord *>(this->front());
+    if (!front)
+        return 0;
+    return front->mprops.outlineWidth;
+}
+
+double TrenderedSubtitleLine::getRightOverhang() const
+{
+    if (empty())
+        return 0;
+    TrenderedTextSubtitleWord *back = dynamic_cast<TrenderedTextSubtitleWord *>(this->back());
+    if (!back)
+        return 0;
+    return back->mprops.outlineWidth;
+}
+
+void TrenderedSubtitleLine::setParagraphRect(CRectDouble &IparagraphRect)
 {
     hasParagraphRect = true;
     paragraphRect = IparagraphRect;
@@ -265,7 +285,7 @@ void TrenderedSubtitleLine::print(
     //                 If we set hasPrintRect, the collision handling gets broken.
     // dst must not be NULL unless we are doing text subtitles.
     if (dst) {
-        printedRect = CRect(startx, starty, startx + w - (w > 0 ? 1 : 0), starty + h - (h > 0 ? 1 : 0));
+        printedRect = CRectDouble(startx, starty, startx + w - (w > 0 ? 1 : 0), starty + h - (h > 0 ? 1 : 0));
         if (!empty()) {
             hasPrintedRect = true;
         }
@@ -338,7 +358,7 @@ size_t TrenderedSubtitleLine::getMemorySize() const
     return memSize;
 }
 
-bool TrenderedSubtitleLine::checkCollision(const CRect &query, CRect &ans)
+bool TrenderedSubtitleLine::checkCollision(const CRectDouble &query, CRectDouble &ans)
 {
     if (!hasParagraphRect) {
         return false;
@@ -468,16 +488,12 @@ void TrenderedSubtitleLines::printASS(
         ParagraphKey pkey(line, prefsdx, prefsdy);
         std::map<ParagraphKey,ParagraphValue>::iterator pi=paragraphs.find(pkey);
         if (pi != paragraphs.end()) {
-            pi->second.height += line->lineHeight();
-            pi->second.width = std::max(pi->second.width, double(line->width()));
-            pi->second.bottomOverhang = line->getBottomOverhang();
+            pi->second.processLine(line, pkey.alignment);
         } else {
             // The first line
             ParagraphValue pval;
-            pval.height = line->lineHeight();
-            pval.width = line->width();
-            pval.topOverhang = line->getTopOverhang();
-            pval.bottomOverhang = line->getBottomOverhang();
+            pval.overhang.top = line->getTopOverhang();
+            pval.processLine(line, pkey.alignment);
             paragraphs.insert(std::pair<ParagraphKey,ParagraphValue>(pkey,pval));
         }
     }
@@ -698,16 +714,13 @@ void TrenderedSubtitleLines::printASS(
 
 void TrenderedSubtitleLines::handleCollision(TrenderedSubtitleLine *line, int x, ParagraphValue &pval, unsigned int prefsdy, int alignment)
 {
-    int paragraphHeight = (int)pval.height;
-    if (paragraphHeight > 0) {
-        paragraphHeight--;
-    } else {
+    if (pval.height <= 0) {
         return;
     }
 
     // rect of this paragraph
-    pval.myrect = CRect(x, pval.y - pval.topOverhang, x + pval.width, pval.y + paragraphHeight + pval.bottomOverhang);
-    CRect hisrect;
+    pval.myrect = CRectDouble(x, pval.y - pval.overhang.top, x + pval.width, pval.y + pval.height + pval.overhang.bottom);
+    CRectDouble hisrect;
     bool again = false;
     for (const_iterator l = begin(); l != end() || again ; l++) {
         if (again) {
@@ -719,13 +732,13 @@ void TrenderedSubtitleLines::handleCollision(TrenderedSubtitleLine *line, int x,
                 && (*l)->checkCollision(pval.myrect, hisrect)) {
             if (alignment <= 3) {
                 // bottom
-                pval.y = hisrect.top - paragraphHeight - pval.bottomOverhang - 1;
-                pval.myrect = CRect(x, pval.y - pval.topOverhang, x + pval.width, pval.y + paragraphHeight + pval.bottomOverhang);
+                pval.y = hisrect.top - pval.height - pval.overhang.bottom - 0.25;
+                pval.myrect = CRectDouble(x, pval.y - pval.overhang.top, x + pval.width, pval.y + pval.height + pval.overhang.bottom);
                 again = true;
             } else {
                 // Top, middle
-                pval.y = hisrect.bottom + 1 + pval.topOverhang;
-                pval.myrect = CRect(x, pval.y - pval.topOverhang, x + pval.width, pval.y + paragraphHeight + pval.bottomOverhang);
+                pval.y = hisrect.bottom + 0.25 + pval.overhang.top;
+                pval.myrect = CRectDouble(x, pval.y - pval.overhang.top, x + pval.width, pval.y + pval.height + pval.overhang.bottom);
                 again = true;
             }
         }
@@ -752,7 +765,44 @@ TrenderedSubtitleLines::ParagraphKey::ParagraphKey(TrenderedSubtitleLine *line, 
     if (!isMove) {
         printedRect = line->getPrintedRect();
     }
-};
+}
+
+void TrenderedSubtitleLines::ParagraphValue::processLine(TrenderedSubtitleLine *line, int alignment)
+{
+    double oldWidth = width;
+    double currentWidth = line->width();
+    double currentWidthDiv2 = currentWidth/2.0;
+    height += line->lineHeight();
+    width = std::max(width, currentWidth);
+    overhang.bottom = line->getBottomOverhang();
+
+    double left = line->getLeftOverhang();
+    double right = line->getRightOverhang();
+    switch (alignment) {
+        case 1: // left(SSA)
+        case 5:
+        case 9:
+            overhang.left = std::max(overhang.left, left);
+            maxr = std::max(maxr, currentWidth + right);
+            overhang.right = maxr - width;
+            break;
+        case 3: // right(SSA)
+        case 7:
+        case 11:
+            overhang.right = std::max(overhang.right, right);
+            maxl = std::max(maxl, currentWidth + left);
+            overhang.left = maxl - width;
+            break;
+        case 2: // center(SSA)
+        case 6:
+        case 10:
+            maxr = std::max(maxr, currentWidthDiv2 + right);
+            maxl = std::max(maxl, currentWidthDiv2 + left);
+            overhang.right = maxr - currentWidthDiv2;
+            overhang.left  = maxl - currentWidthDiv2;
+            break;
+    }
+}
 
 void TrenderedSubtitleLines::clear()
 {

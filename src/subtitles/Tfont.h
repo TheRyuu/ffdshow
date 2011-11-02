@@ -129,7 +129,7 @@ private:
         CPoint pos;
         int layer;
         bool hasPrintedRect;
-        CRect printedRect;
+        CRectDouble printedRect;
         int lineID;
 
         ParagraphKey(TrenderedSubtitleLine *line, unsigned int prefsdx, unsigned int prefsdy);
@@ -140,12 +140,13 @@ private:
 
     class ParagraphValue
     {
+        double maxr,maxl;
     public:
         double width,height,y;
         double xmin,xmax,y0,xoffset,yoffset;
-        double topOverhang,bottomOverhang;
+        CRectDouble overhang;
         bool firstuse;
-        CRect myrect;
+        CRectDouble myrect;
 
         ParagraphValue():
             width(0),
@@ -156,10 +157,11 @@ private:
             y0(0),
             xoffset(0),
             yoffset(0),
-            topOverhang(0),
-            bottomOverhang(0),
+            maxr(0),
+            maxl(0),
             firstuse(true)
         {};
+        void processLine(TrenderedSubtitleLine *line, int alignment);
     };
     class TlayerSort
     {
@@ -226,7 +228,7 @@ class TrenderedSubtitleLine : public std::vector<TrenderedSubtitleWordBase*>
     bool firstrun;
     double emptyHeight; // This is used as charHeight if empty.
     bool hasPrintedRect, hasParagraphRect;
-    CRect printedRect, paragraphRect;
+    CRectDouble printedRect, paragraphRect;
 public:
     TSubtitleMixedProps mprops;
 
@@ -265,19 +267,21 @@ public:
 
     const TSubtitleMixedProps& getProps() const;
 
-    const CRect& getPrintedRect() const {
+    const CRectDouble& getPrintedRect() const {
         return printedRect;
     }
     bool getHasPrintedRect() const {
         return hasPrintedRect;
     }
-    bool checkCollision(const CRect &query, CRect &ans);
+    bool checkCollision(const CRectDouble &query, CRectDouble &ans);
 
     double width() const;
     unsigned int height() const;
     double lineHeight() const;
     double getTopOverhang() const;
     double getBottomOverhang() const;
+    double getLeftOverhang() const;
+    double getRightOverhang() const;
     double baselineHeight() const;
     void prepareKaraoke();
     using std::vector<value_type>::push_back;
@@ -292,7 +296,7 @@ public:
         unsigned char **dst,
         const stride_t *stride);
 
-    void setParagraphRect(CRect &IparagraphRect);
+    void setParagraphRect(CRectDouble &IparagraphRect);
 
     size_t getMemorySize() const;
 };
