@@ -132,7 +132,7 @@ private:
         CRectDouble printedRect;
         int lineID;
 
-        ParagraphKey(TrenderedSubtitleLine *line, unsigned int prefsdx, unsigned int prefsdy);
+        ParagraphKey(TrenderedSubtitleLine *line);
         bool operator != (const ParagraphKey &rt) const;
         bool operator == (const ParagraphKey &rt) const;
         bool operator < (const ParagraphKey &rt) const;

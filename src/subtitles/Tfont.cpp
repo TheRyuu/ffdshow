@@ -485,7 +485,7 @@ void TrenderedSubtitleLines::printASS(
         if (prefs.subformat ==  Tsubreader::SUB_SSA) {
             line->prepareKaraoke();
         }
-        ParagraphKey pkey(line, prefsdx, prefsdy);
+        ParagraphKey pkey(line);
         std::map<ParagraphKey,ParagraphValue>::iterator pi=paragraphs.find(pkey);
         if (pi != paragraphs.end()) {
             pi->second.processLine(line, pkey.alignment);
@@ -504,7 +504,7 @@ void TrenderedSubtitleLines::printASS(
     foreach (TrenderedSubtitleLine *line, *this) {
         const TSubtitleMixedProps &lineprops = line->getProps();
         double x=0;
-        ParagraphKey pkey(line, prefsdx, prefsdy);
+        ParagraphKey pkey(line);
         if (!line->getHasPrintedRect() || lineprops.isMove) {
             std::map<ParagraphKey,ParagraphValue>::iterator pi=paragraphs.find(pkey);
             if (pi != paragraphs.end()) {
@@ -745,7 +745,7 @@ void TrenderedSubtitleLines::handleCollision(TrenderedSubtitleLine *line, int x,
     }
 }
 
-TrenderedSubtitleLines::ParagraphKey::ParagraphKey(TrenderedSubtitleLine *line, unsigned int prefsdx, unsigned int prefsdy)
+TrenderedSubtitleLines::ParagraphKey::ParagraphKey(TrenderedSubtitleLine *line)
 {
     pos = CPoint(LONG_MIN, LONG_MIN);
     const TSubtitleMixedProps &lineprops = line->getProps();
