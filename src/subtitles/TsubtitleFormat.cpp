@@ -1203,7 +1203,6 @@ bool TsubtitleFormat::Tssa::color2int(ffstring arg, int &intval)
             arg.erase(0,1);
         wchar_t *endbuf;
         intval=strtol(arg.c_str(),&endbuf,16);
-        intval &= 0xff;
         return (*endbuf=='&' || *endbuf==NULL);
     } else {
         return false;
@@ -1233,6 +1232,7 @@ template<int TSubtitleProps::*offset> void TsubtitleFormat::Tssa::alpha(ffstring
     } else {
         int a;
         if (color2int(arg,a)) {
+            a &= 0xff;
             props.*offset=256-a;
             props.isColor=true;
         } else {
@@ -1252,6 +1252,7 @@ void TsubtitleFormat::Tssa::alphaAll(ffstring &arg)
         props.transform.alphaT2= props.transformT2 ? props.tStart + (props.transformT2 * 10000) : props.tStop;
     } else {
         if (color2int(arg,a)) {
+            a &= 0xff;
             props.colorA=256-a;
             props.SecondaryColourA=256-a;
             props.TertiaryColourA=256-a;
