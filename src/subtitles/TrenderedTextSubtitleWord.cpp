@@ -1055,12 +1055,12 @@ void TrenderedTextSubtitleWord::printText(
         }
 
         // Translate \kf into two words with clip.
-        if (mprops.karaokeMode == TSubtitleProps::KARAOKE_kf) {
-            if (rtStart < mprops.karaokeStart && secondaryColoredWord) {
+        if (mprops.karaokeFillStart != mprops.karaokeFillEnd) {
+            if (rtStart < mprops.karaokeFillStart && secondaryColoredWord) {
                 return secondaryColoredWord->printText(startx, starty, lineBaseline, rtStart, prefsdx, prefsdy, dst, stride);
             }
-            if (rtStart < mprops.karaokeStart + mprops.karaokeDuration && mprops.karaokeDuration) {
-                int kx = startx + (double)(rtStart - mprops.karaokeStart) / mprops.karaokeDuration * dx[0];
+            if (mprops.karaokeFillStart < rtStart && rtStart < mprops.karaokeFillEnd) {
+                int kx = sx + (double)(rtStart - mprops.karaokeFillStart) /(double)(mprops.karaokeFillEnd - mprops.karaokeFillStart) * dx[0];
                 if (secondaryColoredWord) {
                     // We are doing highlighted left half.
                     if (kx < clip.right && clip.left <= kx)

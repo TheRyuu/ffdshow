@@ -44,6 +44,7 @@ void TSubtitleProps::reset(void)
     transform.isAlpha=false;
     transform.alpha=0;
     transform.alphaT1=transform.alphaT2=REFTIME_INVALID;
+    karaokeFillStart=karaokeFillEnd=REFTIME_INVALID;
     transform.accel=1.0;
     size=0;
     polygon = 0;

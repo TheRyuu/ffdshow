@@ -105,6 +105,7 @@ struct TSubtitleProps {
     REFERENCE_TIME tStart,tStop;
     REFERENCE_TIME fadeT1,fadeT2,fadeT3,fadeT4;
     REFERENCE_TIME karaokeDuration,karaokeStart;
+    REFERENCE_TIME karaokeFillStart,karaokeFillEnd;
     enum {
         KARAOKE_NONE,
         KARAOKE_k,

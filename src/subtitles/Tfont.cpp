@@ -226,49 +226,6 @@ void TrenderedSubtitleLine::setParagraphRect(CRectDouble &IparagraphRect)
     paragraphRect = IparagraphRect;
 }
 
-void TrenderedSubtitleLine::prepareKaraoke()
-{
-    if (!firstrun) {
-        return;
-    }
-    firstrun = false;
-    int sequenceWidth;
-    REFERENCE_TIME karaokeStart = REFTIME_INVALID;
-    for (iterator w = begin() ; w != end() ;) {
-        if (((TrenderedTextSubtitleWord *)(*w))->mprops.karaokeNewWord) {
-            sequenceWidth = (*w)->dxChar;
-            for (iterator s = w + 1 ; s != end() ; s++) {
-                if (((TrenderedTextSubtitleWord *)(*s))->mprops.karaokeNewWord) {
-                    break;
-                } else {
-                    sequenceWidth += (*s)->dxChar;
-                }
-            }
-            if (karaokeStart == REFTIME_INVALID) {
-                karaokeStart = ((TrenderedTextSubtitleWord *)(*w))->mprops.karaokeStart;
-            }
-            for (iterator s = w ; s != end() ; s++) {
-                if (((TrenderedTextSubtitleWord *)(*s))->mprops.karaokeNewWord && s != w) {
-                    break;
-                }
-                if (sequenceWidth) {
-                    ((TrenderedTextSubtitleWord *)(*s))->mprops.karaokeDuration *= (double)(*s)->dxChar / sequenceWidth;
-                }
-                ((TrenderedTextSubtitleWord *)(*s))->mprops.karaokeStart = karaokeStart;
-                karaokeStart += ((TrenderedTextSubtitleWord *)(*s))->mprops.karaokeDuration;
-            }
-        }
-        // Drop empty words here.
-        // Empty words had properties which might be necessary for karaoke timing calculation.
-        if ((*w)->dxChar == 0 && (*w)->dyChar == 0) {
-            delete *w;
-            w = erase(w);
-        } else {
-            w++;
-        }
-    }
-}
-
 void TrenderedSubtitleLine::print(
     double startx,double starty,
     const TprintPrefs &prefs,
@@ -482,9 +439,6 @@ void TrenderedSubtitleLines::printASS(
     // pass 1: prepare paragraphs : a paragraph is a set of lines that have the same properties
     // (same margins, alignment and position)
     foreach (TrenderedSubtitleLine *line, *this) {
-        if (prefs.subformat ==  Tsubreader::SUB_SSA) {
-            line->prepareKaraoke();
-        }
         ParagraphKey pkey(line);
         std::map<ParagraphKey,ParagraphValue>::iterator pi=paragraphs.find(pkey);
         if (pi != paragraphs.end()) {

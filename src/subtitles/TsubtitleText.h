@@ -180,8 +180,6 @@ public:
 
     void fixFade(const TSubtitleProps &lineProps);
 
-    void karaokeComputeStartTimeFromDuration();
-
     template<class Tval> void propagateProps(Tbase::iterator it,Tval TSubtitleProps::*offset,Tval val,Tbase::iterator itend) {
         for (; it!=itend; it++)
             foreach (TsubtitleWord &word, *it)

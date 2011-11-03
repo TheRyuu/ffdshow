@@ -283,7 +283,6 @@ public:
     double getLeftOverhang() const;
     double getRightOverhang() const;
     double baselineHeight() const;
-    void prepareKaraoke();
     using std::vector<value_type>::push_back;
     using std::vector<value_type>::empty;
     void clear();

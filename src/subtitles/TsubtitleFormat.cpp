@@ -1072,7 +1072,13 @@ void TsubtitleFormat::Tssa::karaoke_fixProperties()
 void TsubtitleFormat::Tssa::karaoke_kf(ffstring &arg)
 {
     intProp<&TSubtitleProps::tmpFadT1, 0, INT_MAX>(arg);
-    props.karaokeDuration = (REFERENCE_TIME)props.tmpFadT1 * 100000;
+    REFERENCE_TIME t = (REFERENCE_TIME)props.tmpFadT1 * 100000;
+    props.karaokeDuration = t;
+    props.karaokeStart = lineProps.karaokeStart;
+    lineProps.karaokeStart += t;
+    props.karaokeFillStart = props.karaokeStart;
+    props.karaokeFillEnd = props.karaokeStart + t;
+
     props.karaokeMode = TSubtitleProps::KARAOKE_kf;
     props.karaokeNewWord = true;
     karaoke_fixProperties();
@@ -1080,7 +1086,12 @@ void TsubtitleFormat::Tssa::karaoke_kf(ffstring &arg)
 void TsubtitleFormat::Tssa::karaoke_ko(ffstring &arg)
 {
     intProp<&TSubtitleProps::tmpFadT1, 0, INT_MAX>(arg);
-    props.karaokeDuration = (REFERENCE_TIME)props.tmpFadT1 * 100000;
+    REFERENCE_TIME t = (REFERENCE_TIME)props.tmpFadT1 * 100000;
+    props.karaokeDuration = t;
+    props.karaokeStart = lineProps.karaokeStart;
+    lineProps.karaokeStart += t;
+    props.karaokeFillStart = props.karaokeFillEnd = props.karaokeStart + t;
+
     props.karaokeMode = TSubtitleProps::KARAOKE_ko;
     props.karaokeNewWord = true;
     karaoke_fixProperties();
@@ -1088,7 +1099,12 @@ void TsubtitleFormat::Tssa::karaoke_ko(ffstring &arg)
 void TsubtitleFormat::Tssa::karaoke_k(ffstring &arg)
 {
     intProp<&TSubtitleProps::tmpFadT1, 0, INT_MAX>(arg);
-    props.karaokeDuration = (REFERENCE_TIME)props.tmpFadT1 * 100000;
+    REFERENCE_TIME t = (REFERENCE_TIME)props.tmpFadT1 * 100000;
+    props.karaokeDuration = t;
+    props.karaokeStart = lineProps.karaokeStart;
+    lineProps.karaokeStart += t;
+    props.karaokeFillStart = props.karaokeFillEnd = props.karaokeStart + t;
+
     props.karaokeMode = TSubtitleProps::KARAOKE_k;
     props.karaokeNewWord = true;
     karaoke_fixProperties();
@@ -1375,7 +1391,7 @@ const TSubtitleProps& TsubtitleFormat::processSSA(Twords &words, const Tsubtitle
     const wchar_t *l1=l,*l2=l;
     Tssa ssa(props, lineProps, parent.defProps, parent.getStyles(), words, sfmt);
     while (*l2) {
-        if (l2[0]=='{' /*&& l2[1]=='\\'*/) {
+        if (l2[0]=='{') {
             if (const wchar_t *end=strchr(l2+1,'}')) {
                 ssa.processTokens(l,l1 ,l2,end);
                 l2=end+1;

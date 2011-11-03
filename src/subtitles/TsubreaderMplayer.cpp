@@ -63,7 +63,6 @@ Tsubtitle* TsubtitleParser::store(TsubtitleText &sub)
     // multiple text chunks with different fade effects in each subtitle.
     sub.fixFade(textformat.get_lineProps());
 
-    sub.karaokeComputeStartTimeFromDuration();
     sub.fix(textfix);
     subreader->push_back(new TsubtitleText(sub));
     return subreader->back();

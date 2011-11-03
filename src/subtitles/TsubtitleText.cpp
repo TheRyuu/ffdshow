@@ -154,43 +154,6 @@ void TsubtitleText::format(TsubtitleFormat &format)
             format.processMPL2(line);
 }
 
-void TsubtitleText::karaokeComputeStartTimeFromDuration()
-{
-    int sfmt=subformat&Tsubreader::SUB_FORMATMASK;
-    if (sfmt != Tsubreader::SUB_SSA && sfmt != Tsubreader::SUB_SUBVIEWER && sfmt != Tsubreader::SUB_SUBVIEWER2) {
-        return;
-    }
-
-    REFERENCE_TIME karaokeStart = REFTIME_INVALID;
-    REFERENCE_TIME karaokeDuration = 0;
-    foreach (TsubtitleLine &line, *this) {
-        if (karaokeStart != REFTIME_INVALID) {
-            karaokeStart += karaokeDuration;
-        }
-
-        karaokeDuration = 0;
-
-        foreach (TsubtitleWord &word, line) {
-            if (karaokeStart == REFTIME_INVALID) {
-                karaokeStart = word.props.karaokeStart;
-            } else {
-                word.props.karaokeStart = karaokeStart;
-            }
-
-            if (word.props.karaokeNewWord) {
-                karaokeStart += karaokeDuration;
-                karaokeDuration = word.props.karaokeDuration;
-            } else {
-                karaokeStart += karaokeDuration;
-                karaokeDuration = 0;
-                word.props.karaokeStart = karaokeStart;
-                word.props.karaokeDuration = 0;
-            }
-            word.props.karaokeStart = karaokeStart;
-        }
-    }
-}
-
 void TsubtitleText::fix(TtextFix &fix)
 {
     foreach (TsubtitleLine &line, *this)
@@ -366,8 +329,7 @@ size_t TsubtitleText::prepareGlyph(TprintPrefs prefs, Tfont &font, bool forceCha
 
                         TrenderedTextSubtitleWord *rw = getRenderedWord(p, n, prefs, &w, gf.lf, font, line->empty(), true, renderedPolygons);
                         w.props.karaokeNewWord = false;
-                        w.props.karaokeStart += w.props.karaokeDuration;
-                        w.props.karaokeDuration = 0;
+                        w.props.karaokeStart = w.props.karaokeFillStart = w.props.karaokeFillEnd;
                         if (rw) {
                             line->push_back(rw);
                         }
