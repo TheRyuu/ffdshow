@@ -89,7 +89,7 @@ typedef ptrdiff_t stride_t;
 #define XVID4_CSP_NULL     (1<<14) /* decoder only: dont output anything */
 #define XVID4_CSP_VFLIP    (1<<31) /* vertical flip mask */
 
-static __inline uint64_t csp_xvid4_2ffdshow(uint64_t csp)
+static __inline uint64_t csp_xvid4_2ffdshow(int csp)
 {
     switch (csp) {
         case XVID4_CSP_BGR   :
