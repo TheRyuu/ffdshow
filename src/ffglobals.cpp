@@ -835,12 +835,7 @@ bool decodeH264SPS(const unsigned char *hdr,size_t len,TffPictBase &pict)
             pict.csp = FF_CSP_UNSUPPORTED;
             return false;
         }
-#if defined(WIN64)
-        if (sps->bit_depth_luma > 8) {
-            pict.csp = FF_CSP_UNSUPPORTED;
-            return false;
-        }
-#endif
+
         sps->transform_bypass = get_bits1(&gb);
         if(get_bits1(&gb)) { //seq_scaling_matrix_present_flag
             //decode_scaling_matrices(h, sps, NULL, 1, sps->scaling_matrix4, sps->scaling_matrix8);
