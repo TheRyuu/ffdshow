@@ -5,6 +5,6 @@ FOR %%A IN (ffmpeg imgFilters\KernelDeint
 ) DO (
   PUSHD "src\%%A"
   make clean
-  make -j4
+  make -j%NUMBER_OF_PROCESSORS%
   POPD
 )
