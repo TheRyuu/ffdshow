@@ -33,6 +33,34 @@ const char_t *FFDSHOW_VER=_l(__DATE__) _l(" ") _l(__TIME__) _l(" (") _l(COMPILER
 #undef COMPILER_SSE2
 #undef COMPILER_X64
 
+// override libavcodec code with slower but safer code.
+#define get_ue_golomb _get_ue_golomb
+#define get_se_golomb _get_se_golomb
+
+__forceinline unsigned _get_ue_golomb(GetBitContext* gb)
+{
+    int n = 0;
+    // count zeros (get log of number)
+    while (0 == get_bits1(gb)) ++n;
+
+    if (n == 0) {
+        return 0;
+    }
+
+    return (1 << n) - 1 + get_bits(gb, n);
+}
+
+__forceinline int _get_se_golomb(GetBitContext* gb)
+{
+    unsigned v = _get_ue_golomb(gb);
+
+    // odd - positive, even - negative
+    // 0, 1, -1, 2, -2, ...
+    return (v & 1)
+        ? (int)((v+1) >> 1)
+        : -(int)((v+1) >> 1);
+}
+
 char_t* strncatf(char_t *dst,size_t dstlen,const char_t *fmt,...)
 {
     char_t *pomS = (char_t *)_alloca(dstlen * sizeof(char_t));
@@ -677,10 +705,15 @@ bool decodeMPEGsequenceHeader(bool mpeg2,const unsigned char *hdr,size_t len,Tff
     return true;
 }
 
-static inline void decode_hrd_parameters(GetBitContext &gb)
+static inline bool decode_hrd_parameters(GetBitContext &gb)
 {
     int cpb_count, i;
     cpb_count = get_ue_golomb(&gb) + 1;
+    
+    // max allowed is 32
+    if (cpb_count > 32)
+        return false;
+
     get_bits(&gb, 4); /* bit_rate_scale */
     get_bits(&gb, 4); /* cpb_size_scale */
     for(i=0; i<cpb_count; i++) {
@@ -692,6 +725,8 @@ static inline void decode_hrd_parameters(GetBitContext &gb)
     get_bits(&gb, 5); /* cpb_removal_delay_length_minus1 */
     get_bits(&gb, 5); /* dpb_output_delay_length_minus1 */
     get_bits(&gb, 5); /* time_offset_length */
+
+    return true;
 }
 
 static void decode_scaling_list(GetBitContext &gb, uint8_t *factors, int size/*, const uint8_t *default_list*/)
@@ -739,7 +774,7 @@ static void decode_scaling_list(GetBitContext &gb, uint8_t *factors, int size/*,
 }
 
 // FIXME: the golomb code often gets miscompiled (specially x64 and debug builds). replace it with something better
-bool decodeH264SPS(const unsigned char *hdr,size_t len,TffPictBase &pict)
+bool decodeH264SPS(const unsigned char *hdr,size_t len,TffPictBase &pict, H264_SPS* sps)
 {
     int i, sps_id;
     int sync=sync_video_packet(hdr,len);
@@ -753,58 +788,10 @@ bool decodeH264SPS(const unsigned char *hdr,size_t len,TffPictBase &pict)
         return false;
     }
 
-    struct {
-        int profile_idc;
-        int level_idc;
-        int chroma_format_idc;
-        int transform_bypass;              ///< qpprime_y_zero_transform_bypass_flag
-        int log2_max_frame_num;            ///< log2_max_frame_num_minus4 + 4
-        int poc_type;                      ///< pic_order_cnt_type
-        int log2_max_poc_lsb;              ///< log2_max_pic_order_cnt_lsb_minus4
-        int delta_pic_order_always_zero_flag;
-        int offset_for_non_ref_pic;
-        int offset_for_top_to_bottom_field;
-        int poc_cycle_length;              ///< num_ref_frames_in_pic_order_cnt_cycle
-        int ref_frame_count;               ///< num_ref_frames
-        int gaps_in_frame_num_allowed_flag;
-        int mb_width;                      ///< pic_width_in_mbs_minus1 + 1
-        int mb_height;                     ///< pic_height_in_map_units_minus1 + 1
-        int frame_mbs_only_flag;
-        int mb_aff;                        ///<mb_adaptive_frame_field_flag
-        int direct_8x8_inference_flag;
-        int crop;                          ///< frame_cropping_flag
-        unsigned int crop_left;            ///< frame_cropping_rect_left_offset
-        unsigned int crop_right;           ///< frame_cropping_rect_right_offset
-        unsigned int crop_top;             ///< frame_cropping_rect_top_offset
-        unsigned int crop_bottom;          ///< frame_cropping_rect_bottom_offset
-        int vui_parameters_present_flag;
-        AVRational sar;
-        int video_signal_type_present_flag;
-        int full_range;
-        int colour_description_present_flag;
-        int timing_info_present_flag;
-        uint32_t num_units_in_tick;
-        uint32_t time_scale;
-        int fixed_frame_rate_flag;
-        short offset_for_ref_frame[256]; //FIXME dyn aloc?
-        int bitstream_restriction_flag;
-        int num_reorder_frames;
-        int scaling_matrix_present;
-        uint8_t scaling_matrix4[6][16];
-        uint8_t scaling_matrix8[6][64];
-        int nal_hrd_parameters_present_flag;
-        int vcl_hrd_parameters_present_flag;
-        int pic_struct_present_flag;
-        int time_offset_length;
-        int cpb_cnt;                       ///< See H.264 E.1.2
-        int initial_cpb_removal_delay_length; ///< initial_cpb_removal_delay_length_minus1 +1
-        int cpb_removal_delay_length;      ///< cpb_removal_delay_length_minus1 + 1
-        int dpb_output_delay_length;       ///< dpb_output_delay_length_minus1 + 1
-        int bit_depth_luma;                ///< bit_depth_luma_minus8 + 8
-        int bit_depth_chroma;              ///< bit_depth_chroma_minus8 + 8
-        int residual_color_transform_flag; ///< residual_colour_transform_flag
-        int constraint_set_flags;          ///< constraint_set[0-3]_flag
-    } _sps,*sps=&_sps;
+    H264_SPS _sps;
+    if (NULL == sps) {
+        sps = &_sps;
+    }
 
     GetBitContext gb;
     init_get_bits(&gb,hdr,(int)len*8);
@@ -959,13 +946,14 @@ bool decodeH264SPS(const unsigned char *hdr,size_t len,TffPictBase &pict)
                     {64, 33},
                     {160,99},
                 };
-                sps->sar=  pixel_aspect[aspect_ratio_idc];
+                sps->sar.den =  pixel_aspect[aspect_ratio_idc].den;
+                sps->sar.num =  pixel_aspect[aspect_ratio_idc].num;
             } else {
                 //DPRINTF("illegal aspect ratio\n");
                 return false;
             }
             if (sps->sar.num && sps->sar.den) {
-                pict.setSar(sps->sar);
+                pict.setSar(Rational(sps->sar.num, sps->sar.den));
             }
         } else {
             sps->sar.num= sps->sar.den= 0;
@@ -999,11 +987,13 @@ bool decodeH264SPS(const unsigned char *hdr,size_t len,TffPictBase &pict)
 
         nal_hrd_parameters_present_flag = get_bits1(&gb);
         if(nal_hrd_parameters_present_flag) {
-            decode_hrd_parameters(gb);
+            if (!decode_hrd_parameters(gb))
+                return false;
         }
         vcl_hrd_parameters_present_flag = get_bits1(&gb);
         if(vcl_hrd_parameters_present_flag) {
-            decode_hrd_parameters(gb);
+            if (!decode_hrd_parameters(gb))
+                return false;
         }
         if(nal_hrd_parameters_present_flag || vcl_hrd_parameters_present_flag) {
             get_bits1(&gb);    /* low_delay_hrd_flag */

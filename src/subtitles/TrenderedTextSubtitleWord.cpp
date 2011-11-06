@@ -1258,8 +1258,10 @@ void TrenderedTextSubtitleWord::paint(int startx, int starty, unsigned int sdx[3
         shadowYUVa = shadowYUVa * fader;
         updateMask(int(fader * (1 << 16)), 0);  // updateMask doesn't accept floating point because it uses MMX.
     }
-    if (mprops.transform.isTransform && mprops.transform.isAlpha) {
-        if (rtStart < mprops.transform.alphaT1) {
+
+#if 0
+    if (props.transform.isTransform && props.transform.isAlpha) {
+        if (rtStart < props.transform.alphaT1) {
             bodyYUVa = bodyYUVa;
             outlineYUVa = outlineYUVa;
             shadowYUVa = shadowYUVa;
@@ -1282,6 +1284,7 @@ void TrenderedTextSubtitleWord::paint(int startx, int starty, unsigned int sdx[3
         }
         updateMask(1 << 16, 1, true, bodyYUVa, outlineYUVa);
     }
+#endif
 
     void (__cdecl *fontRendererFunc) (const unsigned char* bmp,const unsigned char* outline,const unsigned char* shadow,const unsigned short *colortbl,const unsigned char* dst,const unsigned char* mask);
     void (__cdecl *fontRendererUV_Func) (const unsigned char* bmp,const unsigned char* outline,const unsigned char* shadow,const unsigned short *colortbl,const unsigned char* dstU,const unsigned char* dstV);
