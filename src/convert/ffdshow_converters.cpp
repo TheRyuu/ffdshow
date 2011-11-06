@@ -26,7 +26,7 @@
 #pragma warning (disable: 4799) // EMMS
 #endif
 
-void TffdshowConverters::init(uint64_t incsp,                 // FF_CSP_420P, FF_CSP_NV12, FF_CSP_YUY2, FF_CSP_420P or FF_CSP_420P10 (progressive only)
+void TffdshowConverters::init(uint64_t incsp,                 // FF_CSP_420P, FF_CSP_NV12, FF_CSP_YUY2 or FF_CSP_420P (progressive only)
                               uint64_t outcsp,                // FF_CSP_RGB32 or FF_CSP_RGB24
                               ffYCbCr_RGB_MatrixCoefficientsType cspOptionsIturBt,  // ffYCbCr_RGB_coeff_ITUR_BT601, ffYCbCr_RGB_coeff_ITUR_BT709 or ffYCbCr_RGB_coeff_SMPTE240M
                               int input_Y_white_level,        // input Y level (TV:235, PC:255)
@@ -36,7 +36,6 @@ void TffdshowConverters::init(uint64_t incsp,                 // FF_CSP_420P, FF
                               double output_RGB_black_level,  // output RGB level (TV:16, PC:0)
                               bool dithering)                 // dithering (On:1, Off:0)
 {
-    const int bitDepthMul = (incsp == FF_CSP_420P10 || incsp == FF_CSP_444P10) ? 4 : 1;  // 10bit color spaces should be listed here.
     m_incsp = incsp;
     m_outcsp = outcsp;
     if (output_RGB_white_level != 255 || output_RGB_black_level != 0) {
@@ -53,16 +52,14 @@ void TffdshowConverters::init(uint64_t incsp,                 // FF_CSP_420P, FF
     short cgv=short(-YCbCr2RGB_coeffs.vg_mul * 8192 - 0.5);
     short cbu=short(YCbCr2RGB_coeffs.ub_mul * 8192 + 0.5);
 
-    m_coeffs->Ysub = _mm_set1_epi16(short(YCbCr2RGB_coeffs.Ysub * bitDepthMul));
+    m_coeffs->Ysub = _mm_set1_epi16(short(YCbCr2RGB_coeffs.Ysub));
     m_coeffs->cy = _mm_set1_epi16(cy);
-    m_coeffs->CbCr_center = _mm_set1_epi16(128 * 16 * bitDepthMul);
+    m_coeffs->CbCr_center = _mm_set1_epi16(128*16);
 
     m_coeffs->cR_Cr = _mm_set1_epi32(crv << 16);               // R
     m_coeffs->cG_Cb_cG_Cr = _mm_set1_epi32((cgv << 16) + cgu); // G
     m_coeffs->cB_Cb = _mm_set1_epi32(cbu);                     // B
 
-
-    // The following stuffs (rgb_add, rgb_limit_high and rgb_limit_low) are not affected by the input bit depth.
     m_coeffs->rgb_add = _mm_set1_epi16((YCbCr2RGB_coeffs.RGB_add1 << 4) + (dithering ? 0 : 8));
 
     uint32_t rgb_white = uint32_t(output_RGB_white_level);
@@ -99,26 +96,6 @@ void TffdshowConverters::convert(const uint8_t* srcY,
 #endif
 }
 
-static inline void loadLeftEdge10(const __m128i* src, __m128i &xmm, __m128i &temp)
-{
-    xmm = _mm_move_epi64(*src);                                                // xmm1 = Cb03,Cb02,Cb01,Cb00
-    temp = xmm;
-    xmm = _mm_slli_si128(xmm, 2);                                              // xmm1 = Cb02,Cb01,Cb00,   0
-    temp = _mm_slli_si128(temp, 14);
-    temp = _mm_srli_si128(temp, 14);                                           // xmm2 =    0,   0,   0,Cb00
-    xmm = _mm_or_si128(xmm,temp);                                              // xmm1 = Cb02,Cb01,Cb00,Cb00
-}
-
-static inline void loadRightEdge10(const __m128i* src, __m128i &xmm, __m128i &temp)
-{
-    xmm = _mm_move_epi64(*src);                                                // xmm1 = Cb01,Cb00,Cb00-1,Cb0-2
-    temp = xmm;
-    xmm = _mm_srli_si128(xmm, 2);                                              // xmm1 =    0,Cb01,Cb00,Cb00-1
-    temp = _mm_srli_si128(temp, 6);
-    temp = _mm_slli_si128(temp, 6);                                            // xmm2 = Cb01,   0,   0,   0
-    xmm = _mm_or_si128(xmm, temp);                                             // xmm1 = Cb01,Cb01,Cb00,Cb00-1
-}
-
 template<uint64_t incsp, uint64_t outcsp, int left_edge, int right_edge, int rgb_limit, int aligned, bool dithering> __forceinline
 void TffdshowConverters::convert_a_unit(const unsigned char* &srcY,
                                         const unsigned char* &srcCb,
@@ -131,44 +108,10 @@ void TffdshowConverters::convert_a_unit(const unsigned char* &srcY,
                                         const uint16_t* dither_ptr)
 {
     // output 4x2 RGB pixels.
-    const int bitDepth = (incsp == FF_CSP_420P10) ? 10 : 8;
     __m128i xmm0,xmm1,xmm2,xmm3,xmm4,xmm5,xmm6,xmm7;
     xmm7 = _mm_setzero_si128 ();
 
-    if (incsp == FF_CSP_420P10) {
-        // 4:2:0 color spaces 10bit
-        if (left_edge) {
-            loadLeftEdge10((const __m128i*)(srcCb),               xmm1, xmm0);     // xmm1 = Cb02,Cb01,Cb00,Cb00
-            loadLeftEdge10((const __m128i*)(srcCb + stride_CbCr), xmm3, xmm2);     // xmm3 = Cb12,Cb11,Cb10,Cb10
-            loadLeftEdge10((const __m128i*)(srcCr),               xmm0, xmm4);     // xmm0 = Cr02,Cr01,Cr00,Cr00
-            loadLeftEdge10((const __m128i*)(srcCr + stride_CbCr), xmm2, xmm5);     // xmm2 = Cr12,Cr11,Cr10,Cr10
-            srcCb += 2;
-            srcCr += 2;
-        } else if (right_edge) {
-            loadRightEdge10((const __m128i*)(srcCb - 2),               xmm1, xmm0);// xmm1 = Cb01,Cb00,Cb0-1,Cb0-2
-            loadRightEdge10((const __m128i*)(srcCb + stride_CbCr - 2), xmm3, xmm2);// xmm3 = Cb11,Cb10,Cb1-1,Cb1-2
-            loadRightEdge10((const __m128i*)(srcCr - 2),               xmm0, xmm4);// xmm0 = Cr01,Cr00,Cr0-1,Cr0-2
-            loadRightEdge10((const __m128i*)(srcCr + stride_CbCr - 2), xmm2, xmm5);// xmm2 = Cr11,Cr10,Cr1-1,Cr1-2
-        } else {
-            xmm1 = _mm_move_epi64(*(const __m128i*)(srcCb));                       // xmm1 = Cb02,Cb01,Cb00,Cb0-1
-            xmm3 = _mm_move_epi64(*(const __m128i*)(srcCb + stride_CbCr));         // xmm3 = Cb12,Cb11,Cb10,Cb1-0
-            xmm0 = _mm_move_epi64(*(const __m128i*)(srcCr));                       // xmm0 = Cr02,Cr01,Cr00,Cr0-1
-            xmm2 = _mm_move_epi64(*(const __m128i*)(srcCr + stride_CbCr));         // xmm2 = Cr12,Cr11,Cr10,Cr1-1
-            srcCb += 4;
-            srcCr += 4;
-        }
-        xmm0 = _mm_unpacklo_epi16(xmm1,xmm0);                                      // xmm0 = Cr02,Cb02,Cr01,Cb01,Cr00,Cb00,Cr-01,Cb0-0
-        xmm2 = _mm_unpacklo_epi16(xmm3,xmm2);                                      // xmm2 = Cr12,Cb12,Cr11,Cb11,Cr00,Cb00,Cr-11,Cb1-1
-
-        xmm1 = xmm0;
-        xmm1 = _mm_add_epi16(xmm1,xmm0);
-        xmm1 = _mm_add_epi16(xmm1,xmm0);
-        xmm1 = _mm_add_epi16(xmm1,xmm2);                                           // xmm1 = 3Cr02+Cr12,3Cb02+Cb12,... = P02,P01,P00,P0-1 (1bit)
-        xmm3 = xmm2;
-        xmm3 = _mm_add_epi16(xmm3,xmm2);
-        xmm3 = _mm_add_epi16(xmm3,xmm2);
-        xmm3 = _mm_add_epi16(xmm3,xmm0);                                           // xmm3 = Cr02+3Cr12,Cb02+3Cb12,... = P12,P11,P10,P1-1 (12bit)
-    } else if (incsp == FF_CSP_420P || incsp == FF_CSP_NV12) {
+    if (incsp == FF_CSP_420P || incsp == FF_CSP_NV12) {
         // 4:2:0 color spaces
         if (incsp == FF_CSP_420P) {
             if (left_edge) {
@@ -382,15 +325,11 @@ void TffdshowConverters::convert_a_unit(const unsigned char* &srcY,
     xmm1 = _mm_unpacklo_epi32(xmm1,xmm0);                                          // 3*P01+P02, P00+3*P01, 3*P00+P01,P-01+3*P00
     xmm3 = _mm_unpacklo_epi32(xmm3,xmm6);                                          // 3*P11+P12, P10+3*P11, 3*P10+P01,P-11+3*P10
 
-    xmm1 = _mm_subs_epi16(xmm1, xmm2);                                             // xmm1 = P01+3*P02 -128*16, 3*P01+P02 -128*16, P00+3*P01 -128*16, 3*P00+P01 -128*16 (12bit/14bit)
-    xmm3 = _mm_subs_epi16(xmm3, xmm2);                                             // xmm3 = P11+3*P12 -128*16, 3*P11+P12 -128*16, P10+3*P11 -128*16, 3*P10+P01 -128*16 (12bit/14bit)
+    xmm1 = _mm_subs_epi16(xmm1, xmm2);                                             // xmm1 = P01+3*P02 -128*16, 3*P01+P02 -128*16, P00+3*P01 -128*16, 3*P00+P01 -128*16 (12bit)
+    xmm3 = _mm_subs_epi16(xmm3, xmm2);                                             // xmm3 = P11+3*P12 -128*16, 3*P11+P12 -128*16, P10+3*P11 -128*16, 3*P10+P01 -128*16 (12bit)
     // chroma upscaling finished.
 
-    if (incsp == FF_CSP_420P10) {
-        xmm5 = _mm_move_epi64(*(__m128i*)(srcY));                                   // Y03,Y02,Y01,Y00
-        xmm0 = _mm_move_epi64(*(__m128i*)(srcY + stride_Y));                        // Y13,Y12,Y11,Y10
-        srcY += 8;
-    } else if (incsp != FF_CSP_YUY2) {
+    if (incsp != FF_CSP_YUY2) {
         xmm5 = _mm_cvtsi32_si128(*(int*)(srcY));                                   // Y03,Y02,Y01,Y00
         xmm0 = _mm_cvtsi32_si128(*(int*)(srcY + stride_Y));                        // Y13,Y12,Y11,Y10
         srcY += 4;
@@ -409,15 +348,15 @@ void TffdshowConverters::convert_a_unit(const unsigned char* &srcY,
     xmm0 = _mm_unpacklo_epi64(xmm0,xmm5);                                          // 0,Y03,0,Y02,0,Y01,0,Y00,0,Y13,0,Y12,0,Y11,0,Y10
 
     xmm0 = _mm_subs_epu16(xmm0,coeffs->Ysub);                                      // Y-16, unsigned saturate
-    xmm0 = _mm_slli_epi16(xmm0,14 - bitDepth);
+    xmm0 = _mm_slli_epi16(xmm0,6);
     xmm0 = _mm_mulhi_epi16(xmm0,coeffs->cy);                                       // Y*cy (12bit)
     xmm0 = _mm_add_epi16(xmm0,coeffs->rgb_add);
     xmm6 = xmm1;
     xmm4 = xmm3;
     xmm6 = _mm_madd_epi16(xmm6,coeffs->cR_Cr);
     xmm4 = _mm_madd_epi16(xmm4,coeffs->cR_Cr);
-    xmm6 = _mm_srai_epi32(xmm6,bitDepth + 5);
-    xmm4 = _mm_srai_epi32(xmm4,bitDepth + 5);
+    xmm6 = _mm_srai_epi32(xmm6,13);
+    xmm4 = _mm_srai_epi32(xmm4,13);
     xmm6 = _mm_packs_epi32(xmm6,xmm7);
     xmm4 = _mm_packs_epi32(xmm4,xmm7);
     xmm6 = _mm_unpacklo_epi64(xmm4,xmm6);
@@ -426,16 +365,16 @@ void TffdshowConverters::convert_a_unit(const unsigned char* &srcY,
     xmm4 = xmm3;
     xmm5 = _mm_madd_epi16(xmm5,coeffs->cG_Cb_cG_Cr);
     xmm4 = _mm_madd_epi16(xmm4,coeffs->cG_Cb_cG_Cr);
-    xmm5 = _mm_srai_epi32(xmm5,bitDepth + 5);
-    xmm4 = _mm_srai_epi32(xmm4,bitDepth + 5);
+    xmm5 = _mm_srai_epi32(xmm5,13);
+    xmm4 = _mm_srai_epi32(xmm4,13);
     xmm5 = _mm_packs_epi32(xmm5,xmm7);
     xmm4 = _mm_packs_epi32(xmm4,xmm7);
     xmm5 = _mm_unpacklo_epi64(xmm4,xmm5);
     xmm5 = _mm_add_epi16(xmm5,xmm0);                                               // G (12bit)
     xmm1 = _mm_madd_epi16(xmm1,coeffs->cB_Cb);
     xmm3 = _mm_madd_epi16(xmm3,coeffs->cB_Cb);
-    xmm1 = _mm_srai_epi32(xmm1,bitDepth + 5);
-    xmm3 = _mm_srai_epi32(xmm3,bitDepth + 5);
+    xmm1 = _mm_srai_epi32(xmm1,13);
+    xmm3 = _mm_srai_epi32(xmm3,13);
     xmm1 = _mm_packs_epi32(xmm1,xmm7);
     xmm3 = _mm_packs_epi32(xmm3,xmm7);
     xmm1 = _mm_unpacklo_epi64(xmm3,xmm1);
@@ -576,9 +515,6 @@ template <int rgb_limit> void TffdshowConverters::convert_translate_incsp(
             return;
         case FF_CSP_422P:
             convert_translate_outcsp<FF_CSP_422P, rgb_limit>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
-            return;
-        case FF_CSP_420P10:
-            convert_translate_outcsp<FF_CSP_420P10, rgb_limit>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
             return;
     }
 }
@@ -726,7 +662,7 @@ template <uint64_t incsp, uint64_t outcsp, int rgb_limit, int aligned, bool dith
     int dither_pos = 0;
     Tcoeffs *coeffs = m_coeffs;
 
-    if (incsp == FF_CSP_420P || incsp == FF_CSP_NV12 || incsp == FF_CSP_420P10) {
+    if (incsp == FF_CSP_420P || incsp == FF_CSP_NV12) {
         if (y == 0) { // if this is the first thread,
             // Top
             convert_a_unit<incsp,outcsp,1,0,rgb_limit,aligned,dithering>(srcYln, srcCbln, srcCrln, dstln,
@@ -753,7 +689,7 @@ template <uint64_t incsp, uint64_t outcsp, int rgb_limit, int aligned, bool dith
     // Mid lines
     for (; y < endy ; y += 2) {
         srcYln = srcY + y * stride_Y;
-        if (incsp == FF_CSP_420P || incsp == FF_CSP_NV12 || incsp == FF_CSP_420P10) {
+        if (incsp == FF_CSP_420P || incsp == FF_CSP_NV12) {
             srcCbln = srcCb + (y>>1) * stride_CbCr;
             srcCrln = srcCr + (y>>1) * stride_CbCr;
         } else {
@@ -780,7 +716,7 @@ template <uint64_t incsp, uint64_t outcsp, int rgb_limit, int aligned, bool dith
         }
     }
 
-    if (incsp == FF_CSP_420P || incsp == FF_CSP_NV12 || incsp == FF_CSP_420P10) {
+    if (incsp == FF_CSP_420P || incsp == FF_CSP_NV12) {
         if (endy0 == dy) { // if this is the last thread,
             // Bottom
             srcYln = srcY + (dy - 1) * stride_Y;
