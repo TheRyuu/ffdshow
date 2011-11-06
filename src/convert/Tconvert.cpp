@@ -259,6 +259,10 @@ int Tconvert::convert(uint64_t incsp0,
                         break;
                 }
                 break;
+            case FF_CSP_420P10:
+                if (!((outcsp|incsp) & FF_CSP_FLAGS_INTERLACED) && outcsp_sup_ffdshow_converter(outcsp1))
+                    mode = MODE_ffdshow_converters;
+                break;
             case FF_CSP_YUY2:
                 if (outcsp_sup_ffdshow_converter(outcsp1)) {
                     mode = MODE_ffdshow_converters;
