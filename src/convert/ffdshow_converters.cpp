@@ -441,7 +441,7 @@ void TffdshowConverters::convert_a_unit(const unsigned char* &srcY,
     xmm1 = _mm_unpacklo_epi64(xmm3,xmm1);
     xmm1 = _mm_add_epi16(xmm1,xmm0);                                               // B (12bit)
 
-    if (dithering) {
+    if (dithering || bitDepth > 8) {
         xmm6 = _mm_add_epi16(xmm6,*(const __m128i *)(dither_ptr));
         xmm5 = _mm_add_epi16(xmm5,*(const __m128i *)(dither_ptr + 16));
         xmm1 = _mm_add_epi16(xmm1,*(const __m128i *)(dither_ptr + 32));
