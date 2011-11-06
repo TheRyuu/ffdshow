@@ -987,6 +987,8 @@ void TrenderedTextSubtitleWord::print(int startx, int starty, unsigned int sdx[3
         shadowYUVa = shadowYUVa * fader;
         updateMask(int(fader * (1 << 16)), false);  // updateMask doesn't accept floating point because it uses MMX.
     }
+
+#if 0
     if (props.transform.isTransform && props.transform.isAlpha) {
         if (rtStart < props.transform.alphaT1) {
             bodyYUVa = bodyYUVa;
@@ -1011,6 +1013,8 @@ void TrenderedTextSubtitleWord::print(int startx, int starty, unsigned int sdx[3
         }
         updateMask(1 << 16, 1, true, bodyYUVa, outlineYUVa, shadowYUVa);
     }
+#endif
+
 #ifdef WIN64
     if (Tconfig::cpu_flags&FF_CPU_SSE2) {
         unsigned char xmmregs[16*16];
