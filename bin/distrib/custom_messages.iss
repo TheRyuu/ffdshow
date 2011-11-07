@@ -1,4 +1,4 @@
-[Messages]
+﻿[Messages]
 WelcomeLabel1=[name/ver]
 
 ; English
