@@ -49,6 +49,8 @@
 ;#define PREF_ALBAIN
 ;#define PREF_ALBAIN_x64
 ;#define PREF_XHMIKOSR_ICL
+;#define PREF_EGUR
+;#define PREF_EGUR_x64
 
 #ifdef PREF_CLSID
   #define filename_suffix        = '_clsid'
@@ -96,6 +98,18 @@
 #ifdef PREF_XHMIKOSR_ICL
   #define sse2_required          = True
   #define filename_suffix        = '_xhmikosr_icl12'
+#endif
+
+#ifdef PREF_EGUR
+  #define sse2_required          = True
+  #define filename_suffix        = '_egur'
+#endif
+
+#ifdef PREF_EGUR_x64
+  #define is64bit                = True
+  #define sse2_required          = True
+  #define filename_suffix        = '_egur_x64'
+  #define include_plugin_dscaler = False
 #endif
 
 #if is64bit
@@ -283,6 +297,8 @@ Name: "ffdshow\plugins\dscaler";    Description: "DScaler"
 Name: "resetsettings";           Description: "{cm:tsk_resetSettings}";           Components: ffdshow;                                    Check: NOT IsUpdate; GroupDescription: "{cm:tsk_settings}"
 Name: "video";                   Description: "{cm:tsk_videoFormatsSelect}";      Components: ffdshow; Flags: unchecked;                  Check: NOT IsUpdate; GroupDescription: "{cm:tsk_videoFormats}"
 Name: "video\h264";              Description: "H.264 / AVC";                      Components: ffdshow
+Name: "video\h264\libavcodec";   Description: "libavacodec";                      Components: ffdshow; Flags: unchecked exclusive
+Name: "video\h264\quicksync";    Description: "Intel QuickSync";                  Components: ffdshow; Flags: unchecked exclusive
 Name: "video\divx";              Description: "DivX";                             Components: ffdshow
 Name: "video\xvid";              Description: "Xvid";                             Components: ffdshow
 Name: "video\mpeg4";             Description: "{cm:tsk_genericMpeg4}";            Components: ffdshow
@@ -295,14 +311,19 @@ Name: "video\mpeg1\libavcodec";  Description: "libavcodec";                     
 Name: "video\mpeg2";             Description: "MPEG-2";                           Components: ffdshow; Flags: unchecked
 Name: "video\mpeg2\libmpeg2";    Description: "libmpeg2";                         Components: ffdshow; Flags: unchecked exclusive
 Name: "video\mpeg2\libavcodec";  Description: "libavcodec";                       Components: ffdshow; Flags: unchecked exclusive
+Name: "video\mpeg2\quicksync";   Description: "Intel QuickSync";                  Components: ffdshow; Flags: unchecked exclusive
 Name: "video\huffyuv";           Description: "Huffyuv";                          Components: ffdshow
 Name: "video\qt";                Description: "SVQ1, SVQ3, RPZA, QT RLE";         Components: ffdshow
 Name: "video\vc1";               Description: "VC-1";                             Components: ffdshow; Flags: unchecked dontinheritcheck
 Name: "video\vc1\wmv9";          Description: "wmv9";                             Components: ffdshow; Flags: unchecked exclusive
 Name: "video\vc1\libavcodec";    Description: "libavcodec";                       Components: ffdshow; Flags: unchecked exclusive
+Name: "video\vc1\quicksync";     Description: "Intel QuickSync";                  Components: ffdshow; Flags: unchecked exclusive
 Name: "video\wmv1";              Description: "WMV1";                             Components: ffdshow; Flags: unchecked dontinheritcheck
 Name: "video\wmv2";              Description: "WMV2";                             Components: ffdshow; Flags: unchecked dontinheritcheck
 Name: "video\wmv3";              Description: "WMV3";                             Components: ffdshow; Flags: unchecked dontinheritcheck
+Name: "video\wmv3\wmv9";         Description: "wmv9";                             Components: ffdshow; Flags: unchecked exclusive
+Name: "video\wmv3\libavcodec";   Description: "libavcodec";                       Components: ffdshow; Flags: unchecked exclusive
+Name: "video\wmv3\quicksync";    Description: "Intel QuickSync";                  Components: ffdshow; Flags: unchecked exclusive
 Name: "video\wvp2";              Description: "WMVP, WVP2";                       Components: ffdshow; Flags: unchecked dontinheritcheck
 Name: "video\mss2";              Description: "MSS1, MSS2";                       Components: ffdshow; Flags: unchecked dontinheritcheck
 Name: "video\dvsd";              Description: "DV";                               Components: ffdshow; Flags: unchecked dontinheritcheck
@@ -401,6 +422,7 @@ Source: "{#= bindir}\ffdshow.ax";                 DestDir: "{app}";             
 Source: "..\manifest\ffdshow.ax.manifest";        DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion restartreplace uninsrestartdelete; OnlyBelowVersion: 0,6;
 
 Source: "{#= bindir}\ff_wmv9.dll";                DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
+Source: "{#= bindir}\IntelQuickSyncDecoder.dll";  DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
 
 Source: "{#= bindir}\ff_vfw.dll";                 DestDir: "{sys}";                         Components: ffdshow\vfw;                Flags: ignoreversion restartreplace uninsrestartdelete
 Source: "..\manifest\ff_vfw.dll.manifest";        DestDir: "{sys}";                         Components: ffdshow\vfw;                Flags: ignoreversion restartreplace uninsrestartdelete; OnlyBelowVersion: 0,6;

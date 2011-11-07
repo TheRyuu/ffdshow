@@ -1403,6 +1403,9 @@
     <ClCompile Include="src\baseclasses\wxutil.cpp">
       <Filter>baseclasses</Filter>
     </ClCompile>
+    <ClCompile Include="src\codecs\TvideoCodecQuickSync.cpp">
+      <Filter>codecs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <yasm Include="src\cpuid.asm">
@@ -2715,31 +2718,13 @@
     <ClInclude Include="src\baseclasses\combase.h">
       <Filter>baseclasses</Filter>
     </ClInclude>
-    <ClInclude Include="src\baseclasses\comlite.h">
-      <Filter>baseclasses</Filter>
-    </ClInclude>
-    <ClInclude Include="src\baseclasses\control.h">
-      <Filter>baseclasses</Filter>
-    </ClInclude>
     <ClInclude Include="src\baseclasses\dllsetup.h">
       <Filter>baseclasses</Filter>
     </ClInclude>
     <ClInclude Include="src\baseclasses\dvdmedia.h">
       <Filter>baseclasses</Filter>
     </ClInclude>
-    <ClInclude Include="src\baseclasses\errors.h">
-      <Filter>baseclasses</Filter>
-    </ClInclude>
-    <ClInclude Include="src\baseclasses\evcode.h">
-      <Filter>baseclasses</Filter>
-    </ClInclude>
     <ClInclude Include="src\baseclasses\fourcc.h">
-      <Filter>baseclasses</Filter>
-    </ClInclude>
-    <ClInclude Include="src\baseclasses\ksuuids.h">
-      <Filter>baseclasses</Filter>
-    </ClInclude>
-    <ClInclude Include="src\baseclasses\mpconfig.h">
       <Filter>baseclasses</Filter>
     </ClInclude>
     <ClInclude Include="src\baseclasses\mtype.h">
@@ -2749,9 +2734,6 @@
       <Filter>baseclasses</Filter>
     </ClInclude>
     <ClInclude Include="src\baseclasses\pstream.h">
-      <Filter>baseclasses</Filter>
-    </ClInclude>
-    <ClInclude Include="src\baseclasses\qnetwork.h">
       <Filter>baseclasses</Filter>
     </ClInclude>
     <ClInclude Include="src\baseclasses\reftime.h">
@@ -2766,12 +2748,6 @@
     <ClInclude Include="src\baseclasses\transfrm.h">
       <Filter>baseclasses</Filter>
     </ClInclude>
-    <ClInclude Include="src\baseclasses\uuids.h">
-      <Filter>baseclasses</Filter>
-    </ClInclude>
-    <ClInclude Include="src\baseclasses\vfwmsgs.h">
-      <Filter>baseclasses</Filter>
-    </ClInclude>
     <ClInclude Include="src\baseclasses\wxdebug.h">
       <Filter>baseclasses</Filter>
     </ClInclude>
@@ -2780,6 +2756,9 @@
     </ClInclude>
     <ClInclude Include="src\baseclasses\wxutil.h">
       <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="src\codecs\TvideoCodecQuickSync.h">
+      <Filter>codecs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

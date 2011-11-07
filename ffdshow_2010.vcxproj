@@ -287,6 +287,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\checkHardCodedBlackList.cpp" />
+    <ClCompile Include="src\codecs\TvideoCodecQuickSync.cpp" />
     <ClCompile Include="src\dsutil.cpp" />
     <ClCompile Include="src\dwstring.cpp" />
     <ClCompile Include="src\ffdebug.c">
@@ -743,6 +744,7 @@
     <ClInclude Include="src\autoptr.h" />
     <ClInclude Include="src\char_t.h" />
     <ClInclude Include="src\checkHardCodedBlackList.h" />
+    <ClInclude Include="src\codecs\TvideoCodecQuickSync.h" />
     <ClInclude Include="src\comptr.h" />
     <ClInclude Include="src\csimd.h" />
     <ClInclude Include="src\dsutil.h" />
@@ -1163,25 +1165,16 @@
     <ClInclude Include="src\baseclasses\amfilter.h" />
     <ClInclude Include="src\baseclasses\Amvideo.h" />
     <ClInclude Include="src\baseclasses\combase.h" />
-    <ClInclude Include="src\baseclasses\comlite.h" />
-    <ClInclude Include="src\baseclasses\control.h" />
     <ClInclude Include="src\baseclasses\dllsetup.h" />
     <ClInclude Include="src\baseclasses\dvdmedia.h" />
-    <ClInclude Include="src\baseclasses\errors.h" />
-    <ClInclude Include="src\baseclasses\evcode.h" />
     <ClInclude Include="src\baseclasses\fourcc.h" />
-    <ClInclude Include="src\baseclasses\ksuuids.h" />
-    <ClInclude Include="src\baseclasses\mpconfig.h" />
     <ClInclude Include="src\baseclasses\mtype.h" />
     <ClInclude Include="src\baseclasses\outputq.h" />
     <ClInclude Include="src\baseclasses\pstream.h" />
-    <ClInclude Include="src\baseclasses\qnetwork.h" />
     <ClInclude Include="src\baseclasses\reftime.h" />
     <ClInclude Include="src\baseclasses\streams.h" />
     <ClInclude Include="src\baseclasses\strmif.h" />
     <ClInclude Include="src\baseclasses\transfrm.h" />
-    <ClInclude Include="src\baseclasses\uuids.h" />
-    <ClInclude Include="src\baseclasses\vfwmsgs.h" />
     <ClInclude Include="src\baseclasses\wxdebug.h" />
     <ClInclude Include="src\baseclasses\wxlist.h" />
     <ClInclude Include="src\baseclasses\wxutil.h" />

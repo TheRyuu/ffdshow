@@ -25,6 +25,7 @@
 #include "TvideoCodecXviD4.h"
 #include "TvideoCodecLibmpeg2.h"
 #include "TvideoCodecWmv9.h"
+#include "TvideoCodecQuickSync.h"
 #include "TaudioCodecLibMAD.h"
 #include "TaudioCodecLibFAAD.h"
 #include "TaudioCodecLiba52.h"
@@ -159,6 +160,7 @@ const TversionsDlg::TversionInfo* TaboutPageDecVideo::fcsVersions(void)
         TvideoCodecLibmpeg2::dllname,getVersion<TvideoCodecLibmpeg2>,
         TimgFilterTomsMoComp::dllname,getVersion<TimgFilterTomsMoComp>,
         Tavisynth_c::dllname,Tavisynth_c::getVersion,
+        TvideoCodecQuickSync::dllname,getVersion<TvideoCodecQuickSync>,
         NULL
     };
     return fcsDecVideo;

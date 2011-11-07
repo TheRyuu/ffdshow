@@ -75,7 +75,7 @@ public:
     void translate(HWND hwnd,int dlgId);
     const char_t *translate(HWND hwnd,int dialogId,int item,const char_t *def) const;
     const char_t *translate(const char_t *s) const {
-        return strs.translate(s);
+        return (NULL == s) ? NULL : strs.translate(s);
     }
     const char_t *translate(int dlgId);
 

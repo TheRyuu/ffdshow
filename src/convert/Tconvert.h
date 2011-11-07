@@ -8,7 +8,7 @@
 #include "libavcodec/avcodec.h"
 #include "Tconfig.h"
 
-//#define AVISYNTH_BITBLT //use avisynth bitblt function to just copy frame when no colorspace conversion is needed
+//#define AVISYNTH_BITBLT //use avisynth bitblt (memcpy) function to just copy frame when no colorspace conversion is needed
 #define XVID_BITBLT //use xvid's YV12 -> YV12 copy function - seems to be fastest
 
 static __inline bool outcsp_sup_ffdshow_converter(uint64_t outcsp)
@@ -55,6 +55,7 @@ private:
         MODE_swscale,
         MODE_avisynth_bitblt,
         MODE_ffdshow_converters,
+        MODE_fast_copy,
         MODE_fallback
     } mode;
     static const char_t* getModeName(int mode);
@@ -70,9 +71,7 @@ private:
     unsigned char *tmp[3];
     stride_t tmpStride[3];
     Tconvert *tmpConvert1,*tmpConvert2;
-#ifdef AVISYNTH_BITBLT
     unsigned int rowsize;
-#endif
     void freeTmpConvert(void);
 public:
     bool m_wasChange;
@@ -91,6 +90,7 @@ public:
                 int YCbCr_RGB_matrix_coefficients = YCbCr_RGB_coeff_Unspecified,
                 bool vram_indirect=false);
     int convert(const TffPict &pict,uint64_t outcsp,uint8_t* dst[],stride_t dstStride[],bool vram_indirect=false);
+    static void copyPlane(BYTE *dstp,stride_t dst_pitch,const BYTE *srcp,stride_t src_pitch,int row_size,int height,bool flip=false);
 };
 
 class TffColorspaceConvert :public CUnknown,

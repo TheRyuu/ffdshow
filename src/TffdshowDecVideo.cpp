@@ -115,6 +115,7 @@ TffdshowDecVideo::TffdshowDecVideo(CLSID Iclsid,const char_t *className,const CL
     m_NeedToPauseRun(false),
     searchInterfaceInGraph(NULL),
     count_decoded_frames_for_framerate_calculation(0),
+    rollingAvg(0),
     decodedPict(),
     late(0)
 {
@@ -925,6 +926,7 @@ HRESULT TffdshowDecVideo::Receive(IMediaSample *pSample)
         //late=0;
         waitForKeyframe=1000;
         count_decoded_frames_for_framerate_calculation = 0;
+        rollingAvg = 0;
         return S_OK;
     }
 
@@ -1599,6 +1601,8 @@ HRESULT TffdshowDecVideo::NewSegment(REFERENCE_TIME tStart,REFERENCE_TIME tStop,
     vc1rtStart=0;
     m_rtStart = 0;
     count_decoded_frames_for_framerate_calculation = 0;
+    rollingAvg = 0;
+
     for (size_t i=0; i<textpins.size(); i++)
         if (textpins[i]->needSegment) {
             textpins[i]->NewSegment(tStart,tStop,dRate);

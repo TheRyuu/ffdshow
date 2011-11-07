@@ -692,6 +692,7 @@
 #define IDFF_MOVIE_LIBA52  15
 //#define IDFF_MOVIE_SPDIF   16
 #define IDFF_MOVIE_LIBDTS  17
+#define IDFF_MOVIE_QUICK_SYNC 19
 #define IDFF_MOVIE_FFMPEG_DXVA 22
 #define IDFF_MOVIE_MAX     22 // should equal highest value of codecs above (see TglobalSettings.cpp)
 #define IDFF_OSDtype_accurDeblock        30

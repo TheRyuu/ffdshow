@@ -204,12 +204,18 @@ int Tconvert::convert(uint64_t incsp0,
         incsp1=incsp&FF_CSPS_MASK;
         outcsp1=outcsp&FF_CSPS_MASK;
         mode=MODE_none;
+
+        if (incsp1==outcsp1) {
+            rowsize=dx*incspInfo->Bpp;
+            mode = MODE_fast_copy;
+        } else
+
 #ifdef AVISYNTH_BITBLT
         if (incsp1==outcsp1) {
             rowsize=dx*incspInfo->Bpp;
             mode=MODE_avisynth_bitblt;
         } else
-#else
+#endif
         switch (incsp1) {
             case FF_CSP_420P:
                 switch (outcsp1) {
@@ -257,7 +263,7 @@ int Tconvert::convert(uint64_t incsp0,
                             mode=MODE_xvidImage_output;
                         }
                         break;
-                }
+                } //switch (outcsp1)
                 break;
             case FF_CSP_420P10:
                 if (m_highQualityRGB && !((outcsp|incsp) & FF_CSP_FLAGS_INTERLACED) && outcsp_sup_ffdshow_converter(outcsp1))
@@ -293,7 +299,7 @@ int Tconvert::convert(uint64_t incsp0,
                     case FF_CSP_RGB32:
                         mode=MODE_mmx_ConvertYUY2toRGB32; // YUY2 -> RGB32
                         break;
-                }
+                } //switch (outcsp1)
                 break;
             case FF_CSP_UYVY:
                 switch (outcsp1) {
@@ -374,8 +380,8 @@ int Tconvert::convert(uint64_t incsp0,
                     mode=MODE_CLJR;
                 }
                 break;
-        }
-#endif
+        } // switch (incsp1)
+
             if (mode==MODE_none)
                 if (incsp1!=FF_CSP_420P && outcsp1==FF_CSP_420P && csp_supXvid(incsp1) && incsp1!=FF_CSP_RGB24 && incsp1!=FF_CSP_BGR24) { // x -> YV12
                     mode=MODE_xvidImage_input;
@@ -421,14 +427,19 @@ int Tconvert::convert(uint64_t incsp0,
     }
 
     switch (mode) {
-#ifdef AVISYNTH_BITBLT
+        case MODE_fast_copy: {
+            for (unsigned int i=0; i<incspInfo->numPlanes; i++) {
+                copyPlane(dst[i],dstStride[i],src[i],srcStride[i],rowsize>>incspInfo->shiftX[i],dy>>incspInfo->shiftY[i]);
+            }
+            return dy;
+        }
+
         case MODE_avisynth_bitblt: {
             for (unsigned int i=0; i<incspInfo->numPlanes; i++) {
                 TffPict::copy(dst[i],dstStride[i],src[i],srcStride[i],rowsize>>incspInfo->shiftX[i],dy>>incspInfo->shiftY[i]);
             }
             return dy;
         }
-#endif
         case MODE_ffdshow_converters: {
             if (!ffdshow_converters) {
                 ffdshow_converters = new TffdshowConverters(libavcodec->GetCPUCount()/* avoid multithreading on P4HT */);
@@ -563,6 +574,7 @@ int Tconvert::convert(uint64_t incsp0,
             return dy;
         }
         case MODE_swscale:
+            // egur: this crashes on NV12->NV12 copy!
             swscale->convert(src,srcStride,dst,dstStride);
             return dy;
         case MODE_fallback:
@@ -585,6 +597,67 @@ int Tconvert::convert(const TffPict &pict,uint64_t outcsp,uint8_t* dst[],stride_
                    pict.video_full_range_flag,
                    pict.YCbCr_RGB_matrix_coefficients,
                    vram_indirect);
+}
+
+void* sse_memcpy(void* d, const void* s, size_t _size)
+{
+    if (d == NULL || s == NULL) return NULL;
+
+    //if memory is not aligned, use memcpy
+    bool isAligned = (((size_t)(s) | (size_t)(d)) & 0xF) == 0;
+    if (!isAligned || _size < 64)
+    {
+        return memcpy(d, s, _size);
+    }
+
+    size_t reminder = _size & 63; // copy 64 bytes every loop
+
+    __m128i* pTrg = (__m128i*)d;
+    __m128i* pTrgEnd = pTrg + ((_size-reminder) >> 4);
+    __m128i* pSrc = (__m128i*)s;
+    while (pTrg < pTrgEnd)
+    {
+        _mm_stream_si128(&pTrg[0], pSrc[0]);
+        _mm_stream_si128(&pTrg[1], pSrc[1]);
+        _mm_stream_si128(&pTrg[2], pSrc[2]);
+        _mm_stream_si128(&pTrg[3], pSrc[3]);
+        pSrc += 4;
+        pTrg += 4;
+    }
+
+    if (reminder)
+    {
+        char* ps = (char*)s + _size - reminder;
+        char* pd = (char*)d + _size - reminder;
+        for (size_t i = 0; i < reminder; ++i)
+        {
+            pd[i] = ps[i];
+        }
+    }
+
+    return d;
+}
+
+void Tconvert::copyPlane(BYTE *dstp,stride_t dst_pitch,const BYTE *srcp,stride_t src_pitch,int row_size,int height,bool flip)
+{
+    if (dst_pitch == src_pitch && src_pitch == row_size && !flip) {
+        sse_memcpy(dstp, srcp, src_pitch * height);
+    } else {
+        if (!flip) {
+            for (int y=height; y>0; --y) {
+                sse_memcpy(dstp, srcp, row_size);
+                dstp += dst_pitch;
+                srcp += src_pitch;
+            }
+        } else {
+            dstp += dst_pitch * (height - 1);
+            for (int y=height; y>0; --y) {
+                sse_memcpy(dstp, srcp, row_size);
+                dstp -= dst_pitch;
+                srcp += src_pitch;
+            }
+        }
+    }
 }
 
 //================================= TffColorspaceConvert =================================

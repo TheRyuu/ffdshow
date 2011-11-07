@@ -557,6 +557,7 @@ STDMETHODIMP TffdshowBase::getLibavcodec(Tlibavcodec* *libavcodecPtr)
         *libavcodecPtr=libavcodec;
         return S_OK;
     } else {
+        MessageBox(NULL,_l("Failed to load ffmpeg.dll!"),_l("ffdshow error"),MB_ICONERROR|MB_OK);
         *libavcodecPtr=NULL;
         return E_FAIL;
     }

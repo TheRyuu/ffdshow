@@ -27,6 +27,7 @@
 #include "TaudioCodecLibFAAD.h"
 #include "TvideoCodecXviD4.h"
 #include "TvideoCodecWmv9.h"
+#include "TvideoCodecQuickSync.h"
 #include "TaudioCodecLiba52.h"
 #include "TaudioCodecLibDTS.h"
 #include "Tdll.h"
@@ -119,6 +120,7 @@ void Tconfig::init1(HINSTANCE hi)
     isDecoder[IDFF_MOVIE_WMV9]=check(TvideoCodecWmv9::dllname);
     isDecoder[IDFF_MOVIE_LIBA52]=check(TaudioCodecLiba52::dllname);
     isDecoder[IDFF_MOVIE_LIBDTS]=check(TaudioCodecLibDTS::dllname);
+    isDecoder[IDFF_MOVIE_QUICK_SYNC]=check(TvideoCodecQuickSync::dllname);
 
     is_WMEncEng = done_WMEncEng = false;
 }

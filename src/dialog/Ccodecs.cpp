@@ -414,8 +414,11 @@ void TcodecsPageVideo::fillCodecs(void)
 {
     if ((filterMode&IDFF_FILTERMODE_VIDEORAW)==0) {
         // Use preset setting instead
-        static const Tformat::Toption options_h264[]= {{0,_l("skip deblocking when safe"),IDFF_fastH264,1},{0,_l("skip deblocking always"),IDFF_fastH264,2},{0,NULL,0,0}};
-        formats.push_back(Tformat(_l("H.264/AVC")     ,IDFF_h264,IDFF_MOVIE_LAVC,_l("H264, AVC1, X264, VSSH (incomplete), DAVC, PAVC, CCV1."),options_h264));
+        static const int movies_h264[]= {IDFF_MOVIE_LAVC, IDFF_MOVIE_QUICK_SYNC, 0};
+        static const Tformat::Toption options_h264[]= {{0,_l("skip deblocking when safe"),IDFF_fastH264,1},
+                                                       {0,_l("skip deblocking always"),IDFF_fastH264,2},
+                                                       {0,NULL,0,0}};
+        formats.push_back(Tformat(_l("H.264/AVC")     ,IDFF_h264,movies_h264,_l("H264, AVC1, X264, VSSH (incomplete), DAVC, PAVC."),options_h264));
         static const int movies_mpeg4[]= {IDFF_MOVIE_LAVC,IDFF_MOVIE_XVID4,0};
         formats.push_back(Tformat(_l("Xvid")          ,IDFF_xvid,movies_mpeg4,_l("XVID, XVIX")));
         formats.push_back(Tformat(_l("DivX 4/5/6")    ,IDFF_dx50,movies_mpeg4,_l("DIVX, DX50")));
@@ -433,7 +436,7 @@ void TcodecsPageVideo::fillCodecs(void)
         formats.push_back(Tformat(_l("VP6")           ,IDFF_vp6 ,IDFF_MOVIE_LAVC,_l("VP6 Video (VP60, VP61, VP62)")));
         formats.push_back(Tformat(_l("VP6F")          ,IDFF_vp6f,IDFF_MOVIE_LAVC,_l("Flash Video (VP6F, FLV4, VP6A)")));
         formats.push_back(Tformat(_l("VP8")           ,IDFF_vp8 ,IDFF_MOVIE_LAVC,_l("VP8 Video (VP80)")));
-        static const int movies_mpeg12[]= {IDFF_MOVIE_LAVC,IDFF_MOVIE_LIBMPEG2,0};
+        static const int movies_mpeg12[]= {IDFF_MOVIE_LAVC,IDFF_MOVIE_LIBMPEG2, IDFF_MOVIE_QUICK_SYNC, 0};
         static const Tformat::Toption options_mpeg12[]= {{IDFF_MOVIE_LAVC,_l("use speedup tricks"),IDFF_fastMpeg2,1},{0,NULL,0}};
         if ((filterMode&IDFF_FILTERMODE_VFW)==0) {
             formats.push_back(Tformat(_l("MPEG1")       ,IDFF_mpg1,movies_mpeg12,_l("MPEG1 codec"),options_mpeg12,LAVC_UNSTABLE));
@@ -448,7 +451,7 @@ void TcodecsPageVideo::fillCodecs(void)
         formats.push_back(Tformat(_l("WMV2/8")        ,IDFF_wmv2,movies_wmv2,_l("Windows Media Video 8 (WMV2)"),NULL,LAVC_UNSTABLE));
         static const int movies_wmv3[]= {IDFF_MOVIE_LAVC,IDFF_MOVIE_WMV9,0};
         formats.push_back(Tformat(_l("WMV3/9")        ,IDFF_wmv3,movies_wmv3,_l("Windows Media Video 9 Simple & Main Profiles (WMV3)"),NULL,LAVC_UNSTABLE));
-        static const int movies_wvc1[]= {IDFF_MOVIE_LAVC,IDFF_MOVIE_WMV9,0};
+        static const int movies_wvc1[]= {IDFF_MOVIE_LAVC,IDFF_MOVIE_WMV9, IDFF_MOVIE_QUICK_SYNC, 0};
         formats.push_back(Tformat(_l("VC-1")          ,IDFF_wvc1,movies_wvc1,_l("Windows Media Video 9 Advanced Profile (WVC1, WMVA)"),NULL,LAVC_UNSTABLE));
         formats.push_back(Tformat(_l("WMVP")          ,IDFF_wvp2,IDFF_MOVIE_WMV9,_l("Windows Media Video 9 Image (WMVP, WVP2)")));
         formats.push_back(Tformat(_l("MSS1/2")        ,IDFF_mss2,IDFF_MOVIE_WMV9,_l("Windows Screen Codecs (MSS1, MSS2)")));
