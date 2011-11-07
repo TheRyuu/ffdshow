@@ -416,6 +416,9 @@ TrenderedTextSubtitleWord* TsubtitleText::newWord(
            s1.erase(s1.size()-1,1);
     }
 
+    if (s1.empty())
+        return NULL;
+
     TrenderedTextSubtitleWord *rw = NULL;
     if (w->props.polygon) {
         rw = new CPolygon(TSubtitleMixedProps(w->props, prefs), s);
