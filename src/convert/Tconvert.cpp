@@ -640,19 +640,23 @@ void* sse_memcpy(void* d, const void* s, size_t _size)
 
 void Tconvert::copyPlane(BYTE *dstp,stride_t dst_pitch,const BYTE *srcp,stride_t src_pitch,int row_size,int height,bool flip)
 {
+    // get a pointer to the relevant memcpy function
+    void* (*Memcpy)(void* d, const void* s, size_t) = (Tconfig::cpu_flags&FF_CPU_SSE2) ?
+        sse_memcpy : memcpy;
+
     if (dst_pitch == src_pitch && src_pitch == row_size && !flip) {
-        sse_memcpy(dstp, srcp, src_pitch * height);
+        Memcpy(dstp, srcp, src_pitch * height);
     } else {
         if (!flip) {
             for (int y=height; y>0; --y) {
-                sse_memcpy(dstp, srcp, row_size);
+                Memcpy(dstp, srcp, row_size);
                 dstp += dst_pitch;
                 srcp += src_pitch;
             }
         } else {
             dstp += dst_pitch * (height - 1);
             for (int y=height; y>0; --y) {
-                sse_memcpy(dstp, srcp, row_size);
+                Memcpy(dstp, srcp, row_size);
                 dstp -= dst_pitch;
                 srcp += src_pitch;
             }
