@@ -37,6 +37,7 @@ struct TSubtitleMixedProps: public TSubtitleProps {
     double get_movedistanceH() const;
     CRect get_clip() const;
     void toLOGFONT(LOGFONT &lf) const;
+    int calculated_spacing;
 
 private:
     int getBlurCountBody(const TprintPrefs &prefs) const;

@@ -225,7 +225,7 @@ size_t TsubtitleText::prepareGlyph(TprintPrefs prefs, Tfont &font, bool forceCha
             }
             foreach (const TsubtitleWord &w, l) {
                 TtoGdiFont gf(w.props, font.hdc, prefs, dx, dy, fontManager);
-                SetTextCharacterExtra(font.hdc,(w.props.spacing==INT_MIN || prefs.fontSettings.fontSettingsOverride) ? prefs.fontSettings.spacing : w.props.get_spacing(dy, prefs.clipdy, gdi_font_scale));
+                int spacing = w.props.get_spacing(prefs);
                 const wchar_t *p=w;
                 double xscale=w.props.get_xscale(
                                prefs.fontSettings.xscale/100.0,
@@ -247,7 +247,17 @@ size_t TsubtitleText::prepareGlyph(TprintPrefs prefs, Tfont &font, bool forceCha
                 TrenderedTextSubtitleWord *rw = NULL;
                 if (polygon == 0) {
                     ptempwidths = (int*)tempwidth.alloc((strlenp+1)*sizeof(int)*2); // *2 to work around Layer For Unicode on Windows 9x.
-                    GetTextExtentExPointW(font.hdc,p,(int)strlenp,INT_MAX,&nfit,ptempwidths,&sz);
+                    if (spacing == 0) {
+                        GetTextExtentExPointW(font.hdc,p,(int)strlenp,INT_MAX,&nfit,ptempwidths,&sz);
+                    } else {
+                        int sum = 0;
+                        for (int i = 0; i < strlenp; i++) {
+                            int char_width;
+                            GetTextExtentExPointW(font.hdc, p+i, 1, INT_MAX, &nfit, &char_width, &sz);
+                            sum += char_width;
+                            ptempwidths[i] = sum;
+                        }
+                    }
                 } else {
                     // polygon
                     // We need dxChar here, earlier than normal words.
@@ -292,7 +302,6 @@ size_t TsubtitleText::prepareGlyph(TprintPrefs prefs, Tfont &font, bool forceCha
             for (TsubtitleLine::const_iterator w0=l.begin(); w0!=l.end(); w0++) {
                 TsubtitleWord w(*w0);
                 TtoGdiFont gf(w.props, font.hdc, prefs, dx, dy, fontManager);
-                SetTextCharacterExtra(font.hdc,(w.props.spacing==INT_MIN || prefs.fontSettings.fontSettingsOverride) ? prefs.fontSettings.spacing : w.props.get_spacing(dy, prefs.clipdy, gdi_font_scale));
                 if (!line)
                     line=new TrenderedSubtitleLine(l.props, prefs);
 

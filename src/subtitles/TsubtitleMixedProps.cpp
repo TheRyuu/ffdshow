@@ -136,6 +136,8 @@ TSubtitleMixedProps::TSubtitleMixedProps(const TSubtitleProps &props, const Tpri
 
     if (!fontname[0] || fontSettings.fontSettingsOverride)
         ff_strncpy(fontname, fontSettings.name, LF_FACESIZE);
+
+    calculated_spacing = get_spacing(prefs);
 }
 
 TSubtitleMixedProps::TSubtitleMixedProps():

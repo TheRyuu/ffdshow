@@ -91,7 +91,7 @@ struct TSubtitleProps {
     int layer; // 0 = default
 
     bool isSSA() const; // is this SSA/ASS/ASS2?
-    int get_spacing(unsigned int dy, unsigned int clipdy, unsigned int gdi_font_scale) const;
+    int get_spacing(const TprintPrefs &prefs) const;
     double get_xscale(double Ixscale,const Rational& sar,int fontSettingsOverride) const;
     double get_yscale(double Iyscale,const Rational& sar,int fontSettingsOverride) const;
     double get_maxWidth(unsigned int screenWidth, int textMarginLR, int subFormat, IffdshowBase *deci) const;

@@ -80,12 +80,15 @@ void TSubtitleProps::reset(void)
     lineID=0;
 }
 
-int TSubtitleProps::get_spacing(unsigned int dy, unsigned int clipdy, unsigned int gdi_font_scale) const
+int TSubtitleProps::get_spacing(const TprintPrefs &prefs) const
 {
-    if (isSSA() && refResY) {
-        return int(spacing * gdi_font_scale * (clipdy ? clipdy : dy) / refResY);
+    if (spacing==INT_MIN || prefs.fontSettings.fontSettingsOverride)
+        return prefs.fontSettings.spacing;
+
+    if (isSSA() && refResX) {
+        return int(spacing * prefs.fontSettings.gdi_font_scale * prefs.dx / refResX);
     } else {
-        return int(spacing * gdi_font_scale);
+        return int(spacing * prefs.fontSettings.gdi_font_scale);
     }
 }
 

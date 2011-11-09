@@ -257,12 +257,25 @@ void TrenderedTextSubtitleWord::getPath(
     int x = 0;
     ints::const_iterator cx=cxs.begin();
     foreach (const ffstring &s, tab_parsed_string) {
-        PartialBeginPath(hdc, bFirstPath);
-        bFirstPath = false;
-        TextOutW(hdc,0,0,s.c_str(),(int)s.size());
-        PartialEndPath(hdc, x, 0);
-        x+=*cx;
-        cx++;
+        if (mprops.calculated_spacing == 0) {
+            PartialBeginPath(hdc, bFirstPath);
+            bFirstPath = false;
+            TextOutW(hdc,0,0,s.c_str(),(int)s.size());
+            PartialEndPath(hdc, x, 0);
+            x += *cx;
+            cx++;
+        } else {
+            for (int i = 0; i < s.size(); i++) {
+			    CSize extent;
+			    GetTextExtentPoint32W(hdc, s.c_str()+i, 1, &extent);
+
+                PartialBeginPath(hdc, bFirstPath);
+                bFirstPath = false;
+                TextOutW(hdc,0,0,s.c_str()+i,1);
+                PartialEndPath(hdc, x, 0);
+                x += extent.cx + mprops.calculated_spacing;
+            }
+        }
     }
 }
 
