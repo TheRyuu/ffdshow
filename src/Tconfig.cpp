@@ -121,10 +121,11 @@ void Tconfig::init1(HINSTANCE hi)
     isDecoder[IDFF_MOVIE_LIBA52]=check(TaudioCodecLiba52::dllname);
     isDecoder[IDFF_MOVIE_LIBDTS]=check(TaudioCodecLibDTS::dllname);
 
+    // Note:
     // Quicksync decoder implies using SSE4.1 for memory copying.
     // Intended usage is by SandyBridge (i3/i5/i7 2xxx) or newer.
-    isDecoder[IDFF_MOVIE_QUICK_SYNC]=(0!=(Tconfig::cpu_flags&FF_CPU_SSE41)) &&
-        check(TvideoCodecQuickSync::dllname);
+    // Users with older system should not enable this feature.
+    isDecoder[IDFF_MOVIE_QUICK_SYNC]=check(TvideoCodecQuickSync::dllname);
 
     is_WMEncEng = done_WMEncEng = false;
 }
