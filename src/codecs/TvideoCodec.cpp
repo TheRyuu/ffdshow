@@ -28,6 +28,7 @@
 #include "TvideoCodecLibmpeg2.h"
 #include "TvideoCodecWmv9.h"
 #include "TvideoCodecAvisynth.h"
+#include "TvideoCodecQuickSync.h"
 #include "dsutil.h"
 #include "ffmpeg/libavcodec/avcodec.h"
 
@@ -69,7 +70,10 @@ TvideoCodecDec* TvideoCodecDec::initDec(IffdshowBase *deci,IdecVideoSink *sink,C
     }
 
     TvideoCodecDec *movie=NULL;
-    if      (lavc_codec(codecId)) {
+
+    if (is_quicksync_codec(codecId)) {
+        movie=new TvideoCodecQuickSync(deci, sink, codecId);
+    } else if (lavc_codec(codecId)) {
         movie=new TvideoCodecLibavcodec(deci,sink);
     } else if (raw_codec(codecId)) {
         movie=new TvideoCodecUncompressed(deci,sink);
@@ -92,7 +96,21 @@ TvideoCodecDec* TvideoCodecDec::initDec(IffdshowBase *deci,IdecVideoSink *sink,C
     if (movie->ok && movie->testMediaType(fcc,mt)) {
         movie->codecId=codecId;
         return movie;
-    } else {
+    } else if (is_quicksync_codec(codecId)) {
+        // QuickSync decoder init failed, revert to internal decoder.
+        switch (codecId) {
+        case CODEC_ID_H264_QUICK_SYNC:  codecId = CODEC_ID_H264;       break;
+        case CODEC_ID_MPEG2_QUICK_SYNC: codecId = CODEC_ID_MPEG2VIDEO; break;
+        case CODEC_ID_VC1_QUICK_SYNC:
+            {
+                codecId = (fcc == mmioFOURCC('W','V','C','1')) ? CODEC_ID_VC1 : CODEC_ID_WMV3;
+            }
+            break;
+        }
+
+        // Call this function again with the new codecId.
+        return initDec(deci,sink,codecId,fcc,mt);
+    } else {        
         delete movie;
         return NULL;
     }

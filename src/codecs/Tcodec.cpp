@@ -56,6 +56,8 @@ const char_t* Tcodec::getMovieSourceName(int source)
             return _l("libdts");
         case IDFF_MOVIE_FFMPEG_DXVA:
             return _l("DXVA");
+        case IDFF_MOVIE_QUICK_SYNC:
+            return _l("Intel\xae QuickSync");
         default:
         case 0:
             return _l("disabled");

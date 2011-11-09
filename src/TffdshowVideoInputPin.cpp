@@ -404,6 +404,8 @@ bool TffdshowVideoInputPin::init(const CMediaType &mt)
     char_t pomS[60];
     DPRINTF(_l("TffdshowVideoInputPin::initVideo: %s, width:%i, height:%i, aspectX:%i, aspectY:%i"),fourcc2str(hdr2fourcc(&biIn.bmiHeader,&mt.subtype),pomS,60) ,pictIn.rectFull.dx,pictIn.rectFull.dy,pictIn.rectFull.dar().num,pictIn.rectFull.dar().den);
 again:
+    codecId=(CodecID)getVideoCodecId(&biIn.bmiHeader,&mt.subtype,&biIn.bmiHeader.biCompression);
+
     // FIXME Experimental //
     // VC1 (in EVO) stream may have attached media type during playback (say, once per 5 second).
     // When I try to use its codec private data, the video heavily stutters.
@@ -411,14 +413,13 @@ again:
     // I gave up using it and decided to ignore it during playback of VC1 stream.
     // It works fine for my sample.
     if (video) {
-        if (wasVC1 && biIn.bmiHeader.biCompression==0x31435657 /* "WVC1" */ ) {
+        if (is_quicksync_codec(video->codecId) || (wasVC1 && biIn.bmiHeader.biCompression==0x31435657 /* "WVC1" */ )) {
             return true;
         } else {
             delete video;
             codec=video=NULL;
         }
     }
-    codecId=(CodecID)getVideoCodecId(&biIn.bmiHeader,&mt.subtype,&biIn.bmiHeader.biCompression);
     DPRINTF(_l("TffdshowVideoInputPin::initVideo Codec detected : %s"), getCodecName(codecId));
     if (codecId==CODEC_ID_NONE) {
         if (pCompatibleFilter!=NULL) {
@@ -432,12 +433,24 @@ again:
         return false;
     }
 
-    if (codecId==CODEC_ID_H264 || codecId == CODEC_ID_H264_DXVA) {
+    if (h264_codec(codecId) || codecId == CODEC_ID_H264_DXVA) {
         Textradata extradata(mt,16);
         if (extradata.size) {
-            decodeH264SPS(extradata.data,extradata.size,pictIn);
+            H264_SPS sps;
+            decodeH264SPS(extradata.data,extradata.size,pictIn, &sps);
+            // Note: CODEC_ID_H264_QUICK_SYNC currently doesn't support all H264 profiles.
+            // Luckily, popular profiles are supported.
+            if (codecId == CODEC_ID_H264_QUICK_SYNC &&
+                sps.profile_idc != FF_PROFILE_H264_BASELINE &&
+                sps.profile_idc != FF_PROFILE_H264_CONSTRAINED_BASELINE &&
+                sps.profile_idc != FF_PROFILE_H264_MAIN &&
+                sps.profile_idc != FF_PROFILE_H264_HIGH) {
+                codecId = CODEC_ID_H264;
+                DPRINTF(_l("TffdshowVideoInputPin::quick sync decoder doesn't support this h264 profile!\nreverting to libavcodec."));
+            }
         }
     }
+
     if (mpeg4_codec(codecId)) {
         Textradata extradata(mt,16);
         if (extradata.size) {
@@ -464,11 +477,13 @@ again:
     } else {
         fv->initCodecSettings();
         codec=video=TvideoCodecDec::initDec(fv->deci,fv->sink,codecId,biIn.bmiHeader.biCompression,mt);
+
         if (!video) {
             return false;
         } else {
             static const GUID CLSID_NeroDigitalParser= {0xE206E4DE,0xA7EE,0x4A62,0xB3,0xE9,0x4F,0xBC,0x8F,0xE8,0x4C,0x73};
             static const GUID CLSID_HaaliMatroskaFile= {0x55DA30FC,0xF16B,0x49FC,0xBA,0xA5,0xAE,0x59,0xFC,0x65,0xF8,0x2D};
+            codecId = video->codecId;
             //dont_use_rtStop_from_upper_stream=biIn.bmiHeader.biCompression==FOURCC_AVC1 && (searchPreviousFilter(this,CLSID_NeroDigitalParser) || searchPreviousFilter(this,CLSID_HaaliMatroskaFile));
             video->connectedSplitter = connectedSplitter;
             video->isInterlacedRawVideo=isInterlacedRawVideo;
@@ -602,6 +617,12 @@ STDMETHODIMP TffdshowVideoInputPin::EndFlush()
     CAutoLock lock(&m_csCodecs_and_imgFilters);
     m_rateAndFlush.m_flushing = false;
     m_rateAndFlush.m_endflush = true;
+
+    if (fv && fv->deci) {
+        if (video) {
+            video->EndFlush();
+        }
+    }
 
     return CTransformInputPin::EndFlush();
 }

@@ -95,8 +95,8 @@ HRESULT TimgFilterOutput::process(const TffPict &pict,uint64_t dstcsp,unsigned c
         vramBenchmark.init();
         convert=new Tconvert(deci,pict.rectFull.dx,pict.rectFull.dy);
     }
-    stride_t cspstride[4];
-    unsigned char *cspdst[4];
+    stride_t cspstride[4] = {0,0,0,0};
+    unsigned char *cspdst[4] = {0,0,0,0};
     if (!dv) {
         const TcspInfo *outcspInfo=csp_getInfo(dstcsp);
         for (int i=0; i<4; i++) {

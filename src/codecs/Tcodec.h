@@ -35,6 +35,9 @@ public:
     virtual HRESULT BeginFlush() {
         return S_OK;
     }
+    virtual HRESULT EndFlush() {
+        return S_OK;
+    }
     virtual bool onSeek(REFERENCE_TIME segmentStart) {
         return false;
     }

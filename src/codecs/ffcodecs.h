@@ -199,7 +199,10 @@ enum CodecID {
  CODEC_ID_LIBDTS            = 1500,
  CODEC_ID_H264_DXVA         = 2100,
  CODEC_ID_VC1_DXVA          = 2101,
- CODEC_ID_HDMV_PGS_SUBTITLE = 2200
+ CODEC_ID_HDMV_PGS_SUBTITLE = 2200,
+ CODEC_ID_H264_QUICK_SYNC   = 2300,
+ CODEC_ID_VC1_QUICK_SYNC    = 2301,
+ CODEC_ID_MPEG2_QUICK_SYNC  = 2302
 };
 
 #ifdef __cplusplus
@@ -221,11 +224,11 @@ static __inline bool xvid_codec(int x)
 }
 static __inline bool wmv9_codec(int x)
 {
-    return x>=1000 && x<1100;
+    return x>=1000 && x<1100 || x==CODEC_ID_VC1_QUICK_SYNC;
 }
 static __inline bool mpeg12_codec(int x)
 {
-    return x==CODEC_ID_MPEG1VIDEO || x==CODEC_ID_MPEG2VIDEO || x==CODEC_ID_LIBMPEG2;
+    return x==CODEC_ID_MPEG1VIDEO || x==CODEC_ID_MPEG2VIDEO || x==CODEC_ID_LIBMPEG2 || x==CODEC_ID_MPEG2_QUICK_SYNC;
 }
 static __inline bool mpeg1_codec(int x)
 {
@@ -233,7 +236,7 @@ static __inline bool mpeg1_codec(int x)
 }
 static __inline bool mpeg2_codec(int x)
 {
-    return x==CODEC_ID_MPEG2VIDEO || x==CODEC_ID_LIBMPEG2;
+    return x==CODEC_ID_MPEG2VIDEO || x==CODEC_ID_LIBMPEG2 || x==CODEC_ID_MPEG2_QUICK_SYNC;
 }
 static __inline bool mpeg4_codec(int x)
 {
@@ -257,15 +260,20 @@ static __inline bool lossless_codec(int x)
 }
 static __inline bool h264_codec(int x)
 {
-    return x == CODEC_ID_H264;
+    return x == CODEC_ID_H264 || x == CODEC_ID_H264_QUICK_SYNC;
 }
 static __inline bool vc1_codec(int x)
 {
-    return x == CODEC_ID_VC1 || x == CODEC_ID_WMV9_LIB;
+    return x == CODEC_ID_VC1 || x == CODEC_ID_WMV9_LIB || x == CODEC_ID_VC1_QUICK_SYNC;
 }
 static __inline bool dxva_codec(int x)
 {
     return x == CODEC_ID_H264_DXVA || x == CODEC_ID_VC1_DXVA;
+}
+
+static __inline bool is_quicksync_codec(int x)
+{
+    return x == CODEC_ID_H264_QUICK_SYNC || x == CODEC_ID_VC1_QUICK_SYNC || x == CODEC_ID_MPEG2_QUICK_SYNC;
 }
 
 //I'm not sure of all these

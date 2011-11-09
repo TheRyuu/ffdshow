@@ -187,16 +187,37 @@ STDMETHODIMP TffdshowDecVideo::getAVIfps(unsigned int *fps1000)
 
     if (fps1000
             // After seeking, a few frames may have incorrect timestamps.
-            && count_decoded_frames_for_framerate_calculation > 9) {
+            && count_decoded_frames_for_framerate_calculation > 12) {
         int pos_current_even = (count_decoded_frames_for_framerate_calculation - 1) & ~1;
+
+        pos_current_even &= 3;
+        if (rollingAvg == 0) {
+            int pos_oldest = (pos_current_even + 1) & 3;
+            rollingAvg = (3.0 * 1e7) / (double)(decoded_rtStarts[pos_current_even] - decoded_rtStarts[pos_oldest]);
+        }
+        else {
+            static const double alpha = 0.92;
+            int pos_prev = (pos_current_even + 3) & 3;
+            double delta = 1e7 / (double)(decoded_rtStarts[pos_current_even] - decoded_rtStarts[pos_prev]);
+            rollingAvg = rollingAvg * alpha + delta * (1 - alpha);
+        }
+
+        if (rollingAvg > 0) {
+            unsigned int fps1000_tmp = (unsigned int)(rollingAvg * 1000);
+            if (ff_abs((int)fps1000_tmp - (int)*fps1000) > 300) { // Some splitters (matroska, flv) round the timestamps to milli-seconds. Thus there is some error in this calculation. Container's average duration may be more reliable in this case.
+                *fps1000 = fps1000_tmp;
+            }
+        }
+
+/*
         REFERENCE_TIME avg = (decoded_rtStarts[pos_current_even & 3] - eighth_decoded_rtStart) / (pos_current_even - 7);
         if (avg > 0) {
             unsigned int fps1000_tmp = (unsigned int)(REF_SECOND_MULT*1000/avg);
-            if (ff_abs((int)fps1000_tmp - (int)*fps1000) > 300) { // Some splitters (matroska, flv) round the timestamps to milli-seconds. Thus there is some error in this calculation. Container's averave duration may be more reliable in this case.
+            if (ff_abs((int)fps1000_tmp - (int)*fps1000) > 300) { // Some splitters (matroska, flv) round the timestamps to milli-seconds. Thus there is some error in this calculation. Container's average duration may be more reliable in this case.
                 *fps1000 = fps1000_tmp;
             }
-            return S_OK;
         }
+*/
     }
 
     return S_OK;

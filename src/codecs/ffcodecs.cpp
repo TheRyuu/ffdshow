@@ -44,6 +44,7 @@ const FOURCC* getCodecFOURCCs(CodecID codecId)
             static const FOURCC fccs[]= {FOURCC_MPEG,FOURCC_MPG1,0};
             return fccs;
         }
+        case CODEC_ID_MPEG2_QUICK_SYNC:
         case CODEC_ID_MPEG2VIDEO: {
             static const FOURCC fccs[]= {FOURCC_MPEG,FOURCC_MPG2,0};
             return fccs;
@@ -99,8 +100,13 @@ const FOURCC* getCodecFOURCCs(CodecID codecId)
             static const FOURCC fccs[]= {FOURCC_THEO,0};
             return fccs;
         }
+        case CODEC_ID_H264_QUICK_SYNC:
         case CODEC_ID_H264: {
             static const FOURCC fccs[]= {FOURCC_H264,FOURCC_AVC1,0};
+            return fccs;
+        }
+        case CODEC_ID_VC1_QUICK_SYNC: {
+            static const FOURCC fccs[]= {FOURCC_WVC1,0};
             return fccs;
         }
         case CODEC_ID_FLV1: {
@@ -339,6 +345,9 @@ const char_t *getCodecName(CodecID codecId)
      case  CODEC_ID_H264_DXVA         : return _l("h264 DXVA");
      case  CODEC_ID_VC1_DXVA          : return _l("vc1 DXVA");
      case  CODEC_ID_HDMV_PGS_SUBTITLE : return _l("PGS subtitles");
+     case  CODEC_ID_MPEG2_QUICK_SYNC  : return _l("mpeg2 QuickSync");
+     case  CODEC_ID_H264_QUICK_SYNC   : return _l("h264 QuickSync");
+     case  CODEC_ID_VC1_QUICK_SYNC    : return _l("vc1 QuickSync");
 
      default:
          return _l("unknown");
