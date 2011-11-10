@@ -96,6 +96,16 @@ void TsubtitleLine::fix(TtextFix &fix)
         word.fix(fix);
 }
 
+bool TsubtitleLine::checkTrailingSpaceRight(const_iterator w) const
+{
+    while (++w != end()) {
+        ffstring wstr(w->getString());
+        if (wstr.size() && wstr.find_first_not_of(L" ") != ffstring::npos)
+            return false;
+    }
+    return true;
+}
+
 //================================= TsubtitleText ==================================
 
 // Copy constructor. mutex cannot be copied.
@@ -314,7 +324,7 @@ size_t TsubtitleText::prepareGlyph(TprintPrefs prefs, Tfont &font, bool forceCha
                     int z2 = wordWrap.getRightOfTheLine(cy);
                     if (z1 <= z2) {
                         // OK, the word will be stored in the line.
-                        bool trimRight = w0+1==l.end() || z1 == z2;
+                        bool trimRight = (l.checkTrailingSpaceRight(w0)) || z1 == z2;
                         TrenderedTextSubtitleWord *rw = getRenderedWord(p, strlenp, prefs, &w, gf.lf, font, line->empty(), trimRight, renderedPolygons);
                         if (rw) {
                             line->push_back(rw);

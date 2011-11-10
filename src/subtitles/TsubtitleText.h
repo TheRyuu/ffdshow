@@ -92,6 +92,7 @@ public:
     size_t strlen(void) const;
     void format(TsubtitleFormat &format,int sfmt,TsubtitleText &parent);
     void fix(TtextFix &fix);
+    bool checkTrailingSpaceRight(const_iterator w) const;
 };
 
 struct TsubtitleText :public Tsubtitle,public std::vector< TsubtitleLine > {
