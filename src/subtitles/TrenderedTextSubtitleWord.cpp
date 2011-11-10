@@ -133,7 +133,7 @@ TrenderedTextSubtitleWord::TrenderedTextSubtitleWord(
     for (strings::iterator s=tab_parsed_string.begin(); s!=tab_parsed_string.end(); s++) {
         SIZE sz0;
         GetTextExtentPoint32W(hdc,s->c_str(),(int)s->size(),&sz0);
-        sz.cx+=sz0.cx;
+        sz.cx += sz0.cx + mprops.calculated_spacing * s->size();
         if (s+1!=tab_parsed_string.end()) {
             int tabsize=prefs.tabsize*sz0.cy;
             int newpos=(sz.cx/tabsize+1)*tabsize;
@@ -275,7 +275,6 @@ void TrenderedTextSubtitleWord::getPath(
                 PartialEndPath(hdc, x, 0);
                 x += extent.cx + mprops.calculated_spacing;
             }
-            dxChar += (double)mprops.calculated_spacing * s.size() / mprops.gdi_font_scale;
         }
     }
 }
@@ -348,9 +347,20 @@ void TrenderedTextSubtitleWord::drawGlyphOSD(
     const int gdi_font_scale = 4;
     ints::const_iterator cx=cxs.begin();
     foreach (const ffstring &s, tab_parsed_string) {
-        TextOutW(hdc, x, 2, s.c_str(), (int)s.size());
-        x+=*cx;
-        cx++;
+        if (mprops.calculated_spacing == 0) {
+            TextOutW(hdc, x, 2, s.c_str(), (int)s.size());
+            x += *cx;
+            cx++;
+        } else {
+            for (int i = 0; i < s.size(); i++) {
+			    CSize extent;
+			    GetTextExtentPoint32W(hdc, s.c_str()+i, 1, &extent);
+
+                TextOutW(hdc,x,2,s.c_str()+i,1);
+                PartialEndPath(hdc, x, 0);
+                x += extent.cx + mprops.calculated_spacing;
+            }
+        }
     }
 
     BITMAPINFO bmi;
