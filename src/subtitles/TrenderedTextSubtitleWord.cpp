@@ -278,7 +278,6 @@ void TrenderedTextSubtitleWord::getPath(
             dxChar += (double)mprops.calculated_spacing * s.size() / mprops.gdi_font_scale;
         }
     }
-    dxChar -= (double)mprops.calculated_spacing / mprops.gdi_font_scale;
 }
 
 void TrenderedTextSubtitleWord::Transform(CPoint org)
