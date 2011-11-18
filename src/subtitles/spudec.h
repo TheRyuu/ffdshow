@@ -1,5 +1,4 @@
-#ifndef _SPUDEC_H_
-#define _SPUDEC_H_
+#pragma once
 
 #include "libswscale/swscale.h"
 #include "Tfont.h"
@@ -125,5 +124,3 @@ public:
     void spudec_calc_bbox(unsigned int dxs, unsigned int dys, unsigned int* bbox);
     void spudec_set_forced_subs_only(const unsigned int flag);
 };
-
-#endif

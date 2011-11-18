@@ -1,5 +1,4 @@
-#ifndef DISTANCE_H
-#define DISTANCE_H
+#pragma once
 
 class EditDistance
 {
@@ -20,5 +19,3 @@ public:
     EditDistance(  );
     int CalEditDistance( const char_t *s, const char_t *t, int limit );
 };
-
-#endif

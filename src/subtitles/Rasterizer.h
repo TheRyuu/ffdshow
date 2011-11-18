@@ -35,7 +35,7 @@ class Rasterizer : public TrenderedSubtitleWordBase
 
 protected:
     BYTE* mpPathTypes;
-    CPoint* mpPathPoints;
+    POINT* mpPathPoints;
     int mPathPoints;
     int mWidth, mHeight;
 
@@ -57,9 +57,8 @@ private:
 
     unsigned int* mpScanBuffer;
 
-    typedef unsigned char byte;
-
 protected:
+    typedef unsigned char byte;
     int mGlyphBmpWidth, mGlyphBmpHeight;
     int mPathOffsetX, mPathOffsetY;
     int mOffsetX, mOffsetY;
@@ -72,6 +71,7 @@ private:
     void _EvaluateLine(int pt1idx, int pt2idx);
     void _EvaluateLine(int x0, int y0, int x1, int y1);
     static void _OverlapRegion(tSpanBuffer& dst, tSpanBuffer& src, int dx, int dy);
+    template <bool fCheckRange> inline void RasterizeCore(int xsub, int ysub, bool hqBorder, int rightcut=0, int bottomcut=0);
 
 public:
     Rasterizer();
@@ -84,6 +84,6 @@ public:
     bool ScanConvert();
     bool CreateWidenedRegion(int borderX, int borderY);
     void DeleteOutlines();
-    bool Rasterize(int xsub, int ysub, CRect &overhang);
+    bool Rasterize(int xsub, int ysub, CRect &overhang, bool hqBorder, bool fCheckRange, const CPoint &bodysLeftTop, int resDx, int resDy);
 };
 

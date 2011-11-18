@@ -61,9 +61,8 @@ Tsubtitle* TsubtitleParser::store(TsubtitleText &sub)
     // ignored and the first one is used. fixFade() corrects this, without
     // it \fad and \fade affect whatever is after them, and there can be
     // multiple text chunks with different fade effects in each subtitle.
-    sub.fixFade();
+    sub.fixFade(textformat.get_lineProps());
 
-    sub.prepareKaraoke();
     sub.fix(textfix);
     subreader->push_back(new TsubtitleText(sub));
     return subreader->back();
@@ -593,177 +592,7 @@ TsubtitleParserSSA::TsubtitleParserSSA(int Iformat,double Ifps,const TsubtitlesS
     defprops.encoding = 0;
     defprops.isColor = true;
     defprops.marginR = defprops.marginL = defprops.marginV = 0;
-    defprops.version = TsubtitleParserSSA::SSA;
-}
-
-void TsubtitleParserSSA::strToInt(const ffstring &str,int *i)
-{
-    if (!str.empty()) {
-        if (str.compare(0,4,L" yes",4)==0) {
-            *i = 1;
-            return;
-        } else if (str.compare(0,3,L" no",3)==0) {
-            *i = 0;
-            return;
-        }
-        wchar_t *end;
-        int val=strtol(str.c_str(),&end,10);
-        if (*end=='\0' && val>=0) {
-            *i=val;
-        }
-    }
-}
-
-void TsubtitleParserSSA::strToIntMargin(const ffstring &str,int *i)
-{
-    if (!str.empty() /*str.size()==4 && str.compare(_L("0000"))!=0*/) {
-        wchar_t *end;
-        int val=strtol(str.c_str(),&end,10);
-        if (*end=='\0' && val>0) {
-            *i=val;
-        }
-    }
-}
-
-void TsubtitleParserSSA::strToDouble(const ffstring &str,double *d)
-{
-    if (!str.empty()) {
-        wchar_t *end;
-        double val=strtod(str.c_str(),&end);
-        if (*end=='\0') {
-            *d=val;
-        }
-    }
-}
-
-bool TsubtitleParserSSA::Tstyle::toCOLORREF(const ffstring& colourStr,COLORREF &colour,int &alpha)
-{
-    if (colourStr.empty()) {
-        return false;
-    }
-    int radix;
-    ffstring s1,s2;
-    s1=colourStr;
-    s1.ConvertToUpperCase();
-    if (s1.compare(0,2,L"&H",2)==0) {
-        s1.erase(0,2);
-        radix=16;
-    } else {
-        if (s1.compare(0,1,L"-",1)==0) {
-            colour=0x000000;
-            alpha=256;
-            return true;
-        }
-        radix=10;
-    }
-    s2=s1;
-    if (s1.size()>6) {
-        s1.erase(s1.size()-6,6);
-        s2.erase(0,s2.size()-6);
-    } else {
-        s1.clear();
-    }
-
-    int msb=0;
-    if (!s1.empty()) {
-        const wchar_t *alphaS=s1.c_str();
-        wchar_t *endalpha;
-        long a=strtol(alphaS,&endalpha,radix);
-        if (*endalpha=='\0') {
-            msb=a;
-        }
-    }
-    if (s2.empty()) {
-        return false;
-    }
-    const wchar_t *colorS=s2.c_str();
-    wchar_t *endcolor;
-    COLORREF c=strtol(colorS,&endcolor,radix);
-    if (*endcolor=='\0') {
-        DWORD result=msb * (radix==16 ? 0x1000000 : 1000000) + c;
-        colour=result & 0xffffff;
-        alpha=256-(result>>24);
-        return true;
-    }
-    return false;
-}
-
-void TsubtitleParserSSA::Tstyle::toProps(void)
-{
-    if (fontname) {
-        text<char_t>(fontname.c_str(), -1, props.fontname, countof(props.fontname));
-    }
-    if (int size=atoi(fontsize.c_str())) {
-        props.size=size;
-    }
-    bool isColor=toCOLORREF(primaryColour,props.color,props.colorA);
-    isColor|=toCOLORREF(secondaryColour,props.SecondaryColour,props.SecondaryColourA);
-    isColor|=toCOLORREF(tertiaryColour,props.TertiaryColour,props.TertiaryColourA);
-    isColor|=toCOLORREF(outlineColour,props.OutlineColour,props.OutlineColourA);
-    if (version==TsubtitleParserSSA::SSA) {
-        isColor|=toCOLORREF(backgroundColour,props.OutlineColour,props.OutlineColourA);
-        props.ShadowColour=props.OutlineColour;
-        props.ShadowColourA=128;
-    } else {
-        isColor|=toCOLORREF(backgroundColour,props.ShadowColour,props.ShadowColourA);
-    }
-    props.isColor=isColor;
-    if (bold==L"-1") {
-        props.bold=1;
-    } else {
-        props.bold=0;
-    }
-    if (italic==L"-1") {
-        props.italic=true;
-    }
-    if (underline==L"-1") {
-        props.underline=true;
-    }
-    if (strikeout==L"-1") {
-        props.strikeout=true;
-    }
-    strToInt(encoding,&props.encoding);
-    strToDouble(spacing,&props.spacing);
-    strToInt(fontScaleX,&props.scaleX);
-    strToInt(fontScaleY,&props.scaleY);
-    strToInt(alignment,&props.alignment);
-    strToDouble(angleZ,&props.angleZ);
-    strToInt(marginLeft,&props.marginL);
-    strToInt(marginRight,&props.marginR);
-    strToInt(marginV,&props.marginV);
-    strToInt(marginTop,&props.marginTop);
-    strToInt(marginBottom,&props.marginBottom);
-    strToInt(borderStyle,&props.borderStyle);
-    strToDouble(outlineWidth,&props.outlineWidth);
-    strToDouble(shadowDepth,&props.shadowDepth);
-    if (alignment && this->version != SSA) {
-        props.alignment=TSubtitleProps::alignASS2SSA(props.alignment);
-    }
-}
-void TsubtitleParserSSA::Tstyles::add(Tstyle &s)
-{
-    s.toProps();
-    insert(std::make_pair(s.name,s));
-}
-const TSubtitleProps* TsubtitleParserSSA::Tstyles::getProps(const ffstring &style)
-{
-    std::map<ffstring,Tstyle,ffstring_iless>::const_iterator si=this->find(style);
-    if (si!=this->end()) {
-        return &si->second.props;
-    }
-
-    std::map<ffstring,Tstyle,ffstring_iless>::const_iterator iDefault=this->find(ffstring(L"Default"));
-    if (iDefault!=this->end()) {
-        return &iDefault->second.props;
-    }
-
-    iDefault=this->find(ffstring(L"*Default"));
-
-    if (iDefault!=this->end()) {
-        return &iDefault->second.props;
-    } else {
-        return NULL;
-    }
+    defprops.version = nmTextSubtitles::SSA;
 }
 
 Tsubtitle* TsubtitleParserSSA::parse(Tstream &fd, int flags, REFERENCE_TIME start, REFERENCE_TIME stop)
@@ -782,9 +611,7 @@ Tsubtitle* TsubtitleParserSSA::parse(Tstream &fd, int flags, REFERENCE_TIME star
     int playResXscript=0,playResYscript=0;
     while (fd.fgets(line, this->LINE_LEN)) {
 #if 0
-        text<char_t> lineD0(line);
-        const char_t* lineD1=(const char_t*)lineD0;
-        DPRINTF(_l("%s"),lineD1);
+        DPRINTF(L"%s",line);
 #endif
         lineID++;
         if (line[0]==';') {
@@ -803,9 +630,9 @@ Tsubtitle* TsubtitleParserSSA::parse(Tstream &fd, int flags, REFERENCE_TIME star
             inEvents=0;
             inInfo=1;
         } else if (inInfo && strnicmp(line,L"PlayResX:",8)==0) {
-            strToInt(line+9,&playResXscript);
+            nmTextSubtitles::strToInt(line+9,&playResXscript);
         } else if (inInfo && strnicmp(line,L"PlayResY:",8)==0) {
-            strToInt(line+9,&playResYscript);
+            nmTextSubtitles::strToInt(line+9,&playResYscript);
         } else if (inInfo && strnicmp(line,L"Timer:",6)==0) {
             wchar_t *end;
             double t=strtod(line+7,&end);
@@ -813,21 +640,21 @@ Tsubtitle* TsubtitleParserSSA::parse(Tstream &fd, int flags, REFERENCE_TIME star
                 timer=Rational(t/100.0,_I32_MAX);
             }
         } else if (inInfo && strnicmp(line,L"WrapStyle:",9)==0) {
-            strToInt(line+10,&wrapStyle);
+            nmTextSubtitles::strToInt(line+10,&wrapStyle);
         } else if (inInfo && strnicmp(line,L"ScaledBorderAndShadow:",21)==0) {
-            strToInt(line+22,&scaleBorderAndShadow);
+            nmTextSubtitles::strToInt(line+22,&scaleBorderAndShadow);
         } else if (strnicmp(line,L"[V4 Styles]",11)==0) {
-            version=SSA;
+            version = nmTextSubtitles::SSA;
             inV4styles=2;
             inEvents=0;
             inInfo=0;
         } else if (strnicmp(line,L"[V4+ Styles]",11)==0) {
-            version=ASS;
+            version = nmTextSubtitles::ASS;
             inV4styles=2;
             inEvents=0;
             inInfo=0;
         } else if (strnicmp(line,L"[V4++ Styles]",11)==0) {
-            version=ASS2;
+            version = nmTextSubtitles::ASS2;
             inV4styles=2;
             inEvents=0;
             inInfo=0;
@@ -845,55 +672,55 @@ Tsubtitle* TsubtitleParserSSA::parse(Tstream &fd, int flags, REFERENCE_TIME star
             styleFormat.clear();
             for (Tparts::const_iterator f=fields.begin(); f!=fields.end(); f++) {
                 if (strnicmp(f->first,L"name",4)==0) {
-                    styleFormat.push_back(&Tstyle::name);
+                    styleFormat.push_back(&TSSAstyle::name);
                 } else if (strnicmp(f->first,L"layer",5)==0) {
-                    styleFormat.push_back(&Tstyle::layer);
+                    styleFormat.push_back(&TSSAstyle::layer);
                 } else if (strnicmp(f->first,L"fontname",8)==0) {
-                    styleFormat.push_back(&Tstyle::fontname);
+                    styleFormat.push_back(&TSSAstyle::fontname);
                 } else if (strnicmp(f->first,L"fontsize",8)==0) {
-                    styleFormat.push_back(&Tstyle::fontsize);
+                    styleFormat.push_back(&TSSAstyle::fontsize);
                 } else if (strnicmp(f->first,L"primaryColour",13)==0) {
-                    styleFormat.push_back(&Tstyle::primaryColour);
+                    styleFormat.push_back(&TSSAstyle::primaryColour);
                 } else if (strnicmp(f->first,L"SecondaryColour",15)==0) {
-                    styleFormat.push_back(&Tstyle::secondaryColour);
+                    styleFormat.push_back(&TSSAstyle::secondaryColour);
                 } else if (strnicmp(f->first,L"TertiaryColour",14)==0) {
-                    styleFormat.push_back(&Tstyle::tertiaryColour);
+                    styleFormat.push_back(&TSSAstyle::tertiaryColour);
                 } else if (strnicmp(f->first,L"OutlineColour",13)==0) {
-                    styleFormat.push_back(&Tstyle::outlineColour);
+                    styleFormat.push_back(&TSSAstyle::outlineColour);
                 } else if (strnicmp(f->first,L"BackColour",10)==0) {
-                    styleFormat.push_back(&Tstyle::backgroundColour);
+                    styleFormat.push_back(&TSSAstyle::backgroundColour);
                 } else if (strnicmp(f->first,L"bold",4)==0) {
-                    styleFormat.push_back(&Tstyle::bold);
+                    styleFormat.push_back(&TSSAstyle::bold);
                 } else if (strnicmp(f->first,L"italic",6)==0) {
-                    styleFormat.push_back(&Tstyle::italic);
+                    styleFormat.push_back(&TSSAstyle::italic);
                 } else if (strnicmp(f->first,L"Underline",9)==0) {
-                    styleFormat.push_back(&Tstyle::underline);
+                    styleFormat.push_back(&TSSAstyle::underline);
                 } else if (strnicmp(f->first,L"Strikeout",9)==0) {
-                    styleFormat.push_back(&Tstyle::strikeout);
+                    styleFormat.push_back(&TSSAstyle::strikeout);
                 } else if (strnicmp(f->first,L"ScaleX",6)==0) {
-                    styleFormat.push_back(&Tstyle::fontScaleX);
+                    styleFormat.push_back(&TSSAstyle::fontScaleX);
                 } else if (strnicmp(f->first,L"ScaleY",6)==0) {
-                    styleFormat.push_back(&Tstyle::fontScaleY);
+                    styleFormat.push_back(&TSSAstyle::fontScaleY);
                 } else if (strnicmp(f->first,L"Spacing",7)==0) {
-                    styleFormat.push_back(&Tstyle::spacing);
+                    styleFormat.push_back(&TSSAstyle::spacing);
                 } else if (strnicmp(f->first,L"Angle",5)==0) {
-                    styleFormat.push_back(&Tstyle::angleZ);
+                    styleFormat.push_back(&TSSAstyle::angleZ);
                 } else if (strnicmp(f->first,L"outline",7)==0) {
-                    styleFormat.push_back(&Tstyle::outlineWidth);
+                    styleFormat.push_back(&TSSAstyle::outlineWidth);
                 } else if (strnicmp(f->first,L"shadow",6)==0) {
-                    styleFormat.push_back(&Tstyle::shadowDepth);
+                    styleFormat.push_back(&TSSAstyle::shadowDepth);
                 } else if (strnicmp(f->first,L"alignment",9)==0) {
-                    styleFormat.push_back(&Tstyle::alignment);
+                    styleFormat.push_back(&TSSAstyle::alignment);
                 } else if (strnicmp(f->first,L"encoding",8)==0) {
-                    styleFormat.push_back(&Tstyle::encoding);
+                    styleFormat.push_back(&TSSAstyle::encoding);
                 } else if (strnicmp(f->first,L"marginl",7)==0) {
-                    styleFormat.push_back(&Tstyle::marginLeft);
+                    styleFormat.push_back(&TSSAstyle::marginLeft);
                 } else if (strnicmp(f->first,L"marginr",7)==0) {
-                    styleFormat.push_back(&Tstyle::marginRight);
+                    styleFormat.push_back(&TSSAstyle::marginRight);
                 } else if (strnicmp(f->first,L"marginv",7)==0) {
-                    styleFormat.push_back(&Tstyle::marginV);
+                    styleFormat.push_back(&TSSAstyle::marginV);
                 } else if (strnicmp(f->first,L"borderstyle",11)==0) {
-                    styleFormat.push_back(&Tstyle::borderStyle);
+                    styleFormat.push_back(&TSSAstyle::borderStyle);
                 } else {
                     styleFormat.push_back(NULL);
                 }
@@ -902,49 +729,49 @@ Tsubtitle* TsubtitleParserSSA::parse(Tstream &fd, int flags, REFERENCE_TIME star
         } else if (inV4styles && strnicmp(line,L"Style:",6)==0) {
             if (inV4styles==2) {
                 styleFormat.clear();
-                if (version==ASS2) {
-                    styleFormat.push_back(&Tstyle::name);
-                    styleFormat.push_back(&Tstyle::fontname);
-                    styleFormat.push_back(&Tstyle::fontsize);
-                    styleFormat.push_back(&Tstyle::primaryColour);
-                    styleFormat.push_back(&Tstyle::secondaryColour);
-                    styleFormat.push_back(&Tstyle::tertiaryColour);
-                    styleFormat.push_back(&Tstyle::backgroundColour);
-                    styleFormat.push_back(&Tstyle::bold);
-                    styleFormat.push_back(&Tstyle::italic);
-                    if (version>=ASS) {
-                        styleFormat.push_back(&Tstyle::underline);
+                if (version == nmTextSubtitles::ASS2) {
+                    styleFormat.push_back(&TSSAstyle::name);
+                    styleFormat.push_back(&TSSAstyle::fontname);
+                    styleFormat.push_back(&TSSAstyle::fontsize);
+                    styleFormat.push_back(&TSSAstyle::primaryColour);
+                    styleFormat.push_back(&TSSAstyle::secondaryColour);
+                    styleFormat.push_back(&TSSAstyle::tertiaryColour);
+                    styleFormat.push_back(&TSSAstyle::backgroundColour);
+                    styleFormat.push_back(&TSSAstyle::bold);
+                    styleFormat.push_back(&TSSAstyle::italic);
+                    if (version >= nmTextSubtitles::ASS) {
+                        styleFormat.push_back(&TSSAstyle::underline);
                     }
-                    if (version>=ASS) {
-                        styleFormat.push_back(&Tstyle::strikeout);
+                    if (version >= nmTextSubtitles::ASS) {
+                        styleFormat.push_back(&TSSAstyle::strikeout);
                     }
-                    if (version>=ASS) {
-                        styleFormat.push_back(&Tstyle::fontScaleX);
+                    if (version >= nmTextSubtitles::ASS) {
+                        styleFormat.push_back(&TSSAstyle::fontScaleX);
                     }
-                    if (version>=ASS) {
-                        styleFormat.push_back(&Tstyle::fontScaleY);
+                    if (version >= nmTextSubtitles::ASS) {
+                        styleFormat.push_back(&TSSAstyle::fontScaleY);
                     }
-                    if (version>=ASS) {
-                        styleFormat.push_back(&Tstyle::spacing);
+                    if (version >= nmTextSubtitles::ASS) {
+                        styleFormat.push_back(&TSSAstyle::spacing);
                     }
-                    if (version>=ASS) {
-                        styleFormat.push_back(&Tstyle::angleZ);
+                    if (version >= nmTextSubtitles::ASS) {
+                        styleFormat.push_back(&TSSAstyle::angleZ);
                     }
-                    styleFormat.push_back(&Tstyle::borderStyle);
-                    styleFormat.push_back(&Tstyle::outlineWidth);
-                    styleFormat.push_back(&Tstyle::shadowDepth);
-                    styleFormat.push_back(&Tstyle::alignment);
-                    styleFormat.push_back(&Tstyle::marginLeft);
-                    styleFormat.push_back(&Tstyle::marginRight);
-                    styleFormat.push_back(&Tstyle::marginTop);
-                    if (version>=ASS2) {
-                        styleFormat.push_back(&Tstyle::marginBottom);
+                    styleFormat.push_back(&TSSAstyle::borderStyle);
+                    styleFormat.push_back(&TSSAstyle::outlineWidth);
+                    styleFormat.push_back(&TSSAstyle::shadowDepth);
+                    styleFormat.push_back(&TSSAstyle::alignment);
+                    styleFormat.push_back(&TSSAstyle::marginLeft);
+                    styleFormat.push_back(&TSSAstyle::marginRight);
+                    styleFormat.push_back(&TSSAstyle::marginTop);
+                    if (version >= nmTextSubtitles::ASS2) {
+                        styleFormat.push_back(&TSSAstyle::marginBottom);
                     }
-                    styleFormat.push_back(&Tstyle::encoding);
-                    if (version<=SSA) {
-                        styleFormat.push_back(&Tstyle::alpha);
+                    styleFormat.push_back(&TSSAstyle::encoding);
+                    if (version <= nmTextSubtitles::SSA) {
+                        styleFormat.push_back(&TSSAstyle::alpha);
                     }
-                    styleFormat.push_back(&Tstyle::relativeTo);
+                    styleFormat.push_back(&TSSAstyle::relativeTo);
                 }
                 inV4styles=1;
             }
@@ -972,7 +799,7 @@ Tsubtitle* TsubtitleParserSSA::parse(Tstream &fd, int flags, REFERENCE_TIME star
                     playResY = playResYscript;
                 }
             }
-            Tstyle style(playResX,playResY,version,wrapStyle,scaleBorderAndShadow);
+            TSSAstyle style(playResX,playResY,version,wrapStyle,scaleBorderAndShadow);
             for (size_t i=0; i<fields.size() && i<styleFormat.size(); i++)
                 if (styleFormat[i]) {
                     style.*(styleFormat[i])=fields[i];
@@ -1031,10 +858,10 @@ Tsubtitle* TsubtitleParserSSA::parse(Tstream &fd, int flags, REFERENCE_TIME star
         } else if ((flags&this->SSA_NODIALOGUE) || (inEvents==1 && strnicmp(line,L"Dialogue:",8)==0)) {
             if (eventFormat.empty()) {
                 if (!(flags&this->SSA_NODIALOGUE)) {
-                    if (version<=SSA) {
+                    if (version <= nmTextSubtitles::SSA) {
                         eventFormat.push_back(&Tevent::marked);
                     }
-                    if (version>=ASS) {
+                    if (version >= nmTextSubtitles::ASS) {
                         eventFormat.push_back(&Tevent::layer);
                     }
                     eventFormat.push_back(&Tevent::start);
@@ -1048,7 +875,7 @@ Tsubtitle* TsubtitleParserSSA::parse(Tstream &fd, int flags, REFERENCE_TIME star
                 eventFormat.push_back(&Tevent::marginL);
                 eventFormat.push_back(&Tevent::marginR);
                 eventFormat.push_back(&Tevent::marginT);
-                if (version>=ASS2) {
+                if (version>=nmTextSubtitles::ASS2) {
                     eventFormat.push_back(&Tevent::marginB);
                 }
                 eventFormat.push_back(&Tevent::effect);
@@ -1058,17 +885,14 @@ Tsubtitle* TsubtitleParserSSA::parse(Tstream &fd, int flags, REFERENCE_TIME star
             strtok(line+(flags&this->SSA_NODIALOGUE?0:9),L"," ,fields,true,eventFormat.size());
             Tevent event;
             event.dummy=""; // avoid being optimized.
-            for (size_t i=0; i<fields.size() && i<eventFormat.size(); i++/*,it++*/) {
-                const wchar_t *str=fields[i].data();
+            for (size_t i=0; i<fields.size() && i<eventFormat.size(); i++) {
                 if (eventFormat[i]) {
-                    event.*(eventFormat[i]/* *it*/)=fields[i];
+                    event.*(eventFormat[i])=fields[i];
                 }
             }
             if (event.text) {
 #if 0
-                text<char_t> lineD2(event.text.c_str());
-                const char_t* lineD3=(const char_t*)lineD2;
-                DPRINTF(_l("%s"),lineD3);
+                DPRINTF(L"%s",event.text.c_str());
 #endif
                 int hour1=0,min1=0,sec1=0,hunsec1=0;
                 int hour2=0,min2=0,sec2=0,hunsec2=0;
@@ -1076,12 +900,12 @@ Tsubtitle* TsubtitleParserSSA::parse(Tstream &fd, int flags, REFERENCE_TIME star
                         (swscanf(event.start.c_str(),L"%d:%d:%d.%d",&hour1, &min1, &sec1, &hunsec1)==4 &&
                          swscanf(event.end.c_str()  ,L"%d:%d:%d.%d",&hour2, &min2, &sec2, &hunsec2)==4)) {
                     const TSubtitleProps *props=styles.getProps(event.style);
-                    TsubtitleText current(this->format,props?*props:defprops);
+                    TsubtitleText current(this->format, props ? *props : defprops, styles);
                     current.defProps.lineID = lineID;
-                    strToIntMargin(event.marginL,&current.defProps.marginL);
-                    strToIntMargin(event.marginR,&current.defProps.marginR);
-                    strToIntMargin(event.marginV,&current.defProps.marginV);
-                    strToInt(event.layer,&current.defProps.layer);
+                    nmTextSubtitles::strToIntMargin(event.marginL,&current.defProps.marginL);
+                    nmTextSubtitles::strToIntMargin(event.marginR,&current.defProps.marginR);
+                    nmTextSubtitles::strToIntMargin(event.marginV,&current.defProps.marginV);
+                    nmTextSubtitles::strToInt(event.layer,&current.defProps.layer);
                     if (flags&this->PARSETIME) {
                         current.start=timer.den*this->hmsToTime(hour1,min1,sec1,hunsec1)/timer.num;
                         current.stop =timer.den*this->hmsToTime(hour2,min2,sec2,hunsec2)/timer.num;
@@ -1092,18 +916,8 @@ Tsubtitle* TsubtitleParserSSA::parse(Tstream &fd, int flags, REFERENCE_TIME star
                     current.defProps.tStart = current.defProps.karaokeStart = current.start;
                     current.defProps.tStop = current.stop;
 
-                    // Trail space removal
-                    while (event.text.size() && event.text.at(event.text.size()-1)==' ') {
-                        event.text.erase(event.text.size()-1,1);
-                    }
-
-                    // \h removal, replaced by spaces
-                    for (size_t i=0 ; i<event.text.size() ; i++) {
-                        if (event.text[i]=='\\' && event.text[i+1]=='h') {
-                            event.text[i]=0x20; // ' '
-                            event.text.erase(i+1,1);
-                        }
-                    }
+                    // replace \h with non-breaking space (U+00A0).
+                    event.text = stringreplace(event.text, L"\\h", L"\xa0", rfReplaceAll);
 
                     const wchar_t *line2=event.text.c_str();
                     do {
@@ -1127,6 +941,7 @@ Tsubtitle* TsubtitleParserSSA::parse(Tstream &fd, int flags, REFERENCE_TIME star
                         } while (1);
                         current.addSSA(line2, lineBreakReason);
                     } while (flags&this->SSA_NODIALOGUE && fd.fgets((wchar_t*)(line2=line), this->LINE_LEN));
+                    textformat.setProps(current.defProps);
                     return store(current);
                 }
             }

@@ -1,5 +1,4 @@
-#ifndef _TSUBTITLESTEXTPINUSF_H_
-#define _TSUBTITLESTEXTPINUSF_H_
+#pragma once
 
 #include "TsubtitlesTextpin.h"
 
@@ -12,4 +11,3 @@ public:
     virtual void resetSubtitles(void);
 };
 
-#endif

@@ -1,5 +1,4 @@
-#ifndef _TSTREAM_H_
-#define _TSTREAM_H_
+#pragma once
 
 struct Tstream {
 private:
@@ -182,5 +181,3 @@ public:
         }
     }
 };
-
-#endif

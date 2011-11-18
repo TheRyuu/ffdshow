@@ -22,7 +22,7 @@
 #include "TffdshowPageDec.h"
 #include "TsubtitlesSettings.h"
 
-void TsubtitlesTextPage::init(void)
+void TsubtitlesTextPage::init()
 {
     tbrSetRange(IDC_TBR_SUB_LINESPACING,0,200,10);
     strings dicts=TtextFixBase::getDicts(config);
@@ -33,14 +33,17 @@ void TsubtitlesTextPage::init(void)
     cbxSetDroppedWidth(IDC_CBX_SUB_WORDWRAP,250);
 }
 
-void TsubtitlesTextPage::cfg2dlg(void)
+void TsubtitlesTextPage::cfg2dlg()
 {
     split2dlg();
     linespacing2dlg();
     min2dlg();
     fix2dlg();
+    memory2dlg();
+    addHint(IDC_ED_SUB_MEMORY,L"ffdshow rasterize the font in the background and store the images in this buffer.\nIf the memory capacity is small, 10MB may help.");
 }
-void TsubtitlesTextPage::split2dlg(void)
+
+void TsubtitlesTextPage::split2dlg()
 {
     int is=cfgGet(IDFF_fontSplitting);
     setCheck(IDC_CHB_SUB_SPLIT,is);
@@ -50,13 +53,24 @@ void TsubtitlesTextPage::split2dlg(void)
     cbxSetCurSel(IDC_CBX_SUB_WORDWRAP,cfgGet(IDFF_subWordWrap));
     enable(is,IDC_CBX_SUB_WORDWRAP);
 }
-void TsubtitlesTextPage::linespacing2dlg(void)
+
+void TsubtitlesTextPage::linespacing2dlg()
 {
     int ls=cfgGet(IDFF_subLinespacing);
     tbrSet(IDC_TBR_SUB_LINESPACING,ls);
     setText(IDC_LBL_SUB_LINESPACING,_l("%s %i%%"),_(IDC_LBL_SUB_LINESPACING),ls);
 }
-void TsubtitlesTextPage::min2dlg(void)
+
+void TsubtitlesTextPage::memory2dlg()
+{
+    // Removed because the high quality border isn't too slow for most users.
+    // int ishq = cfgGet(IDFF_fontHqBorder);
+    // setCheck(IDC_CHB_SUB_HQBORDER,ishq);
+
+    SetDlgItemInt(m_hwnd,IDC_ED_SUB_MEMORY,cfgGet(IDFF_fontMemory),FALSE);
+}
+
+void TsubtitlesTextPage::min2dlg()
 {
     int ismin=cfgGet(IDFF_subIsMinDuration);
     setCheck(IDC_CHB_SUB_MINDURATION,ismin);
@@ -76,7 +90,8 @@ void TsubtitlesTextPage::min2dlg(void)
             break;
     }
 }
-void TsubtitlesTextPage::fix2dlg(void)
+
+void TsubtitlesTextPage::fix2dlg()
 {
     int fix=cfgGet(IDFF_subFix);
     setCheck(IDC_CHB_SUBFIX_AP,fix&TtextFixBase::fixAP);
@@ -175,7 +190,7 @@ INT_PTR TsubtitlesTextPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
     return TconfPageDecVideo::msgProc(uMsg,wParam,lParam);
 }
 
-void TsubtitlesTextPage::translate(void)
+void TsubtitlesTextPage::translate()
 {
     TconfPageBase::translate();
 
@@ -190,6 +205,7 @@ TsubtitlesTextPage::TsubtitlesTextPage(TffdshowPageDec *Iparent,const TfilterIDF
     static const TbindCheckbox<TsubtitlesTextPage> chb[]= {
         IDC_CHB_SUB_SPLIT,IDFF_fontSplitting,&TsubtitlesTextPage::split2dlg,
         IDC_CHB_SUB_MINDURATION,IDFF_subIsMinDuration,&TsubtitlesTextPage::min2dlg,
+        //IDC_CHB_SUB_HQBORDER,IDFF_fontHqBorder,&TsubtitlesTextPage::memory2dlg,
         0,NULL,NULL
     };
     bindCheckboxes(chb);
@@ -208,6 +224,7 @@ TsubtitlesTextPage::TsubtitlesTextPage(TffdshowPageDec *Iparent,const TfilterIDF
     bindComboboxes(cbx);
     static const TbindEditInt<TsubtitlesTextPage> edInt[]= {
         IDC_ED_SUB_SPLIT_BORDER,0,4096,IDFF_subSplitBorder,NULL,
+        IDC_ED_SUB_MEMORY,0,256,IDFF_fontMemory,
         0
     };
     bindEditInts(edInt);

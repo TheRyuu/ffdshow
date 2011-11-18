@@ -1,5 +1,4 @@
-#ifndef _VOBSUB_H_
-#define _VOBSUB_H_
+#pragma once
 
 #include "TsubtitleDVD.h"
 #include "interfaces.h"
@@ -80,8 +79,6 @@ public:
     unsigned int vobsub_get_forced_subs_flag(void);
     void vobsub_seek(int pts);
 };
-
-#endif
 
 
 

@@ -1,5 +1,4 @@
-#ifndef _TSUBTITLESTEXTPINDVD_H_
-#define _TSUBTITLESTEXTPINDVD_H_
+#pragma once
 
 #include "TsubtitlesTextpin.h"
 #include "TsubtitleDVD.h"
@@ -27,5 +26,3 @@ public:
     virtual bool ctlSubtitles(unsigned int id,const void *data,unsigned int datalen);
     virtual Tsubtitle* getSubtitle(const TsubtitlesSettings *cfg,REFERENCE_TIME rtStart,REFERENCE_TIME rtStop,bool *forceChange=NULL);
 };
-
-#endif

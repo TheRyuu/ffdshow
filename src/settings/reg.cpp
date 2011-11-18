@@ -439,7 +439,7 @@ bool regExport(Tstream &f,HKEY hive,const char_t *key,bool unicode)
                 size_t insCount = 76;
                 while (insCount < outstring.size()) {
                     insCount =  outstring.find(_l(","), insCount);
-                    if (insCount == DwString<char_t>::npos) {
+                    if (insCount == ffstring::npos) {
                         break;
                     }
                     insCount++;

@@ -49,7 +49,7 @@ public:
     static const char_t *fixIls[];
     static const char_t *wordWraps[];
     int opacity;
-    int splitBorder;
+    int textMargin;
     int cc;
     int filtermode;
     int extendedTags;

@@ -1,5 +1,4 @@
-#ifndef _TSUBTITLESTEXTPINTEXT_H_
-#define _TSUBTITLESTEXTPINTEXT_H_
+#pragma once
 
 #include "TsubtitlesTextpin.h"
 
@@ -23,5 +22,3 @@ public:
     virtual void addSubtitle(REFERENCE_TIME start,REFERENCE_TIME stop,const unsigned char *data,unsigned int datalen,const TsubtitlesSettings *cfg,bool utf8);
     virtual void resetSubtitles(void);
 };
-
-#endif

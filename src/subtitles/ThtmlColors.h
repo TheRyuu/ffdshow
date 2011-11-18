@@ -1,5 +1,4 @@
-#ifndef _THTMLCOLORS_H_
-#define _THTMLCOLORS_H_
+#pragma once
 
 class ThtmlColors : stdext::hash_map<ffstring,COLORREF>
 {
@@ -8,5 +7,3 @@ public:
     bool getColor(const ffstring &name,COLORREF *color) const;
     void getColor(const ffstring &name,COLORREF *color,COLORREF def) const;
 };
-
-#endif

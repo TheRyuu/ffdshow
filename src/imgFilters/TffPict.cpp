@@ -475,7 +475,11 @@ void TffPict::convertCSP(uint64_t Icsp,Tbuffer &buf,int edge)
     } else {
         size_t size=0;
         for (unsigned int i=0; i<cspInfo.numPlanes; i++) {
-            stride[i]=(rectFull.dx>>cspInfo.shiftX[i])*cspInfo.Bpp;
+            unsigned int dx = rectFull.dx;
+            if (csp & FF_CSPS_MASK_FFRGB) {
+                dx = (dx + 3) & ~3;
+            }
+            stride[i]=(dx>>cspInfo.shiftX[i])*cspInfo.Bpp;
             size+=stride[i]*(rectFull.dy>>cspInfo.shiftY[i]);
         }
         buf.alloc(size);

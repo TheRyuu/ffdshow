@@ -26,6 +26,7 @@
 #include "Tsubreader.h"
 #include <locale.h>
 #include "Tfont.h"
+#include "nmTextSubtitles.h"
 
 void TSubtitleProps::reset(void)
 {
@@ -36,32 +37,36 @@ void TSubtitleProps::reset(void)
     bold=-1;
     italic=underline=strikeout=false;
     isColor=false;
-    isPos=false;
+    isClip=false;
     isMove=false;
     isOrg=false;
     transform.isTransform=false;
     transform.isAlpha=false;
     transform.alpha=0;
     transform.alphaT1=transform.alphaT2=REFTIME_INVALID;
+    karaokeFillStart=karaokeFillEnd=REFTIME_INVALID;
     transform.accel=1.0;
     size=0;
+    polygon = 0;
     fontname[0]='\0';
     encoding=-1;
     spacing=INT_MIN;
     scaleX=scaleY=-1;
     alignment=-1;
+    isAlignment = false;
     marginR=marginL=marginV=marginTop=marginBottom=-1;
     angleX=0;
     angleY=0;
     angleZ=0;
-    borderStyle=-1;
+    borderStyle = Not_specified;
     layer=0;
     outlineWidth=shadowDepth=-1;
     color=SecondaryColour=TertiaryColour=0xffffff;
     OutlineColour=ShadowColour=0;
     colorA=SecondaryColourA=TertiaryColourA=OutlineColourA=256;
     ShadowColourA=128;
-    blur=0;
+    blur_be=0;
+    gauss=0;
     version=-1;
     tStart=tStop=fadeT1=fadeT2=fadeT3=fadeT4=REFTIME_INVALID;
     isFad=0;
@@ -75,226 +80,24 @@ void TSubtitleProps::reset(void)
     lineID=0;
 }
 
-void TSubtitleProps::toLOGFONT(LOGFONT &lf,const TfontSettings &fontSettings,unsigned int dx,unsigned int dy,unsigned int clipdy,const Rational& sar,unsigned int gdi_font_scale) const
+int TSubtitleProps::get_spacing(const TprintPrefs &prefs) const
 {
-    memset(&lf,0,sizeof(lf));
-    if (size && fontSettings.sizeOverride == 0) {
-        lf.lfHeight=(LONG) size * gdi_font_scale;
-        lf.lfHeight=(clipdy ? clipdy : dy)*lf.lfHeight/refResY;
+    if (spacing==INT_MIN || prefs.fontSettings.fontSettingsOverride)
+        return prefs.fontSettings.spacing;
+
+    if (isSSA() && refResX) {
+        return int(spacing * prefs.fontSettings.gdi_font_scale * prefs.dx / refResX);
     } else {
-        lf.lfHeight=(LONG)limit(fontSettings.getSize(dx,dy),3U,255U) * gdi_font_scale;
-    }
-    int yscale=get_yscale(fontSettings.yscale,sar,fontSettings.aspectAuto,fontSettings.fontSettingsOverride);
-    lf.lfHeight=lf.lfHeight*yscale/100;
-    lf.lfWidth=0;
-    if (bold==-1 || fontSettings.fontSettingsOverride) {
-        lf.lfWeight=fontSettings.weight;
-    } else if (bold==0) {
-        lf.lfWeight=0;
-    } else {
-        lf.lfWeight=700;
-    }
-    if ((italic && !fontSettings.fontSettingsOverride) || (fontSettings.italic && this->version >= 4 && fontSettings.fontSettingsOverride) || (fontSettings.italic && this->version < 4)) {
-        lf.lfItalic=1;
-    } else {
-        lf.lfItalic=0;
-    }
-    if ((underline && !fontSettings.fontSettingsOverride) || (fontSettings.underline && this->version >= 4 && fontSettings.fontSettingsOverride) || (fontSettings.underline && this->version < 4)) {
-        lf.lfUnderline=1;
-    } else {
-        lf.lfUnderline=0;
-    }
-    lf.lfStrikeOut=strikeout;
-    if (encoding != -1 && fontSettings.fontSettingsOverride == 0) {
-        lf.lfCharSet=BYTE(encoding);
-    } else {
-        lf.lfCharSet=BYTE(fontSettings.charset);
-    }
-    lf.lfOutPrecision=OUT_TT_PRECIS;
-    lf.lfClipPrecision=CLIP_DEFAULT_PRECIS;
-    lf.lfQuality=ANTIALIASED_QUALITY;
-    lf.lfPitchAndFamily=DEFAULT_PITCH|FF_DONTCARE;
-    if (fontname[0] && fontSettings.fontSettingsOverride == 0) {
-        ff_strncpy(lf.lfFaceName,fontname,LF_FACESIZE);
-    } else {
-        ff_strncpy(lf.lfFaceName,fontSettings.name,LF_FACESIZE);
+        return int(spacing * prefs.fontSettings.gdi_font_scale);
     }
 }
 
-int TSubtitleProps::get_spacing(unsigned int dy, unsigned int clipdy, unsigned int gdi_font_scale) const
+double TSubtitleProps::get_maxWidth(unsigned int screenWidth, int textMarginLR, int subFormat, IffdshowBase *deci) const
 {
-    if (refResY) {
-        return int(spacing * gdi_font_scale * (clipdy ? clipdy : dy) / refResY);
-    } else {
-        return int(spacing * gdi_font_scale);
-    }
-}
-
-int TSubtitleProps::get_marginR(unsigned int screenWidth,unsigned int lineWidth) const
-{
-    // called only for SSA/ASS/ASS2
-    int result;
-    int resX = (refResX>0) ? refResX:screenWidth;
-    // Revert the line size to the input dimension for calculation
-    lineWidth=lineWidth*resX/screenWidth;
-
-    if (isPos||isMove) {
-        switch (alignment) {
-            case 1: // left(SSA)
-            case 5:
-            case 9:
-                result=0;
-                break;
-            case 3: // right(SSA)
-            case 7:
-            case 11:
-                result=resX-pos.x; // Right alignment : pos.x anchors to the right of paragraph
-                break;
-            case 2: // center(SSA)
-            case 6:
-            case 10:
-            default:
-                // Center alignment : pos.x anchors to the center of paragraph
-                if (lineWidth == 0) {
-                    result=0;
-                } else {
-                    result=resX-pos.x-(lineWidth)/2;
-                }
-                break;
-        }
-    } else if (marginR>=0) {
-        result=marginR;
-    } else {
-        return 0;
-    }
-
-    if (result<0) {
-        result=0;
-    }
-    return result*screenWidth/resX;
-}
-int TSubtitleProps::get_marginL(unsigned int screenWidth, unsigned int lineWidth) const
-{
-    // called only for SSA/ASS/ASS2
-    int result;
-    int resX = (refResX>0) ? refResX:screenWidth;
-    // Revert the line size to the input dimension for calculation
-    lineWidth=lineWidth*resX/screenWidth;
-
-    if (isPos||isMove) {
-        switch (alignment) {
-            case 1: // left(SSA)
-            case 5:
-            case 9:
-                result=pos.x; // Left alignment : pos.x anchors to the left part of paragraph
-                break;
-            case 3: // right(SSA)
-            case 7:
-            case 11:
-                result=0;
-                break;
-            case 2: // center(SSA)
-            case 6:
-            case 10:
-            default:
-                // Center alignment : pos.x anchors to the center of the paragraph
-                result=pos.x-(lineWidth)/2;
-                break;
-        }
-    } else if (marginL>=0) {
-        result=marginL;
-    } else {
-        return 0;
-    }
-
-    if (result<0) {
-        result=0;
-    }
-    return result*screenWidth/resX;
-}
-
-int TSubtitleProps::get_marginTop(unsigned int screenHeight) const
-{
-    int result;
-
-    int resY = (refResY>0) ? refResY:screenHeight;
-
-    if (isPos||isMove) {
-        switch (alignment) {
-            case 5: // SSA top
-            case 6:
-            case 7:
-                result=pos.y;
-                break;
-            case 9: // SSA mid
-            case 10:
-            case 11:
-                result=pos.y;
-                break;
-            case 1: // SSA bottom
-            case 2:
-            case 3:
-            default:
-                result=0;
-                break;
-        }
-    } else if (marginTop>0) {
-        result=marginTop;    //ASS
-    } else if (marginV>0) {
-        result=marginV;    // SSA
-    } else {
-        return 0;
-    }
-
-    if (result<0) {
-        result=0;
-    }
-    return result*screenHeight/resY;
-}
-int TSubtitleProps::get_marginBottom(unsigned int screenHeight) const
-{
-    int result;
-    int resY = (refResY>0) ? refResY:screenHeight;
-
-    if (isPos||isMove) {
-        switch (alignment) {
-            case 5: // SSA top
-            case 6:
-            case 7:
-                result=0;
-                break;
-            case 9: // SSA mid
-            case 10:
-            case 11:
-                result=0;
-                break;
-            case 1: // SSA bottom
-            case 2:
-            case 3:
-            default:
-                result=resY-pos.y;
-                break;
-        }
-    } else if (marginBottom>0) {
-        result=marginBottom;    //ASS
-    } else if (marginV>0) {
-        result=marginV;    // SSA
-    } else {
-        return 0;
-    }
-
-    if (result<0) {
-        result=0;
-    }
-    return result*screenHeight/resY;
-}
-
-int TSubtitleProps::get_maxWidth(unsigned int screenWidth, int textBorderLR, int subFormat, IffdshowBase *deci) const
-{
-    int result = 0;
+    double result = 0;
     int resX;
-    // SSA/ASS subtitles. refResX is always >0.
-    if (refResX>0) {
+
+    if (isSSA()) {
         resX = refResX;
     }
     // SRT subtitles. VSFilter assumes 384x288 input dimensions, and does
@@ -302,14 +105,14 @@ int TSubtitleProps::get_maxWidth(unsigned int screenWidth, int textBorderLR, int
     // position is set (through position tags) so our results are equivalent.
     // If not, use video dimensions.
     else {
-        if (isPos && !deci->getParam2(IDFF_subSSAUseMovieDimensions)) {
+        if (isMove && !deci->getParam2(IDFF_subSSAUseMovieDimensions)) {
             resX = 384;
         } else {
             resX = screenWidth;
         }
     }
-    int mL = marginL == -1 ? textBorderLR/2 : marginL;
-    int mR = marginR == -1 ? textBorderLR/2 : marginR;
+    int mL = marginL == -1 ? textMarginLR/2 : marginL;
+    int mR = marginR == -1 ? textMarginLR/2 : marginR;
 
 
     /* Calculate the maximum width of line according to the position to be set
@@ -318,7 +121,7 @@ int TSubtitleProps::get_maxWidth(unsigned int screenWidth, int textBorderLR, int
        - The option "Maintain outside text inside picture" is set
        - Or if the subtitles are SRT
      */
-    if (isPos && (deci->getParam2(IDFF_subSSAMaintainInside)
+    if (isMove && (deci->getParam2(IDFF_subSSAMaintainInside)
                   || (subFormat & Tsubreader::SUB_FORMATMASK) == Tsubreader::SUB_SUBVIEWER)) {
         switch (alignment) {
             case 1: // left(SSA) : left alignment, left margin is ignored
@@ -381,22 +184,6 @@ int TSubtitleProps::get_maxWidth(unsigned int screenWidth, int textBorderLR, int
     }
 }
 
-int TSubtitleProps::get_movedistanceV(unsigned int screenHeight) const
-{
-    if (!isMove || !refResY) {
-        return 0;
-    }
-    return (int)(((float)(pos2.y-pos.y))*((float)screenHeight/refResY));
-}
-
-int TSubtitleProps::get_movedistanceH(unsigned int screenWidth) const
-{
-    if (!isMove || !refResX) {
-        return 0;
-    }
-    return (int)(((float)(pos2.x-pos.x))*((float)screenWidth/refResX));
-}
-
 REFERENCE_TIME TSubtitleProps::get_moveStart() const
 {
     return moveT1*10000+tStart;
@@ -429,30 +216,46 @@ int TSubtitleProps::alignASS2SSA(int align)
     return align;
 }
 
-int TSubtitleProps::get_xscale(int Ixscale,const Rational& sar,int aspectAuto,int fontSettingsOverride) const
+double TSubtitleProps::get_xscale(double Ixscale,const Rational& sar,int fontSettingsOverride) const
 {
-    int result;
-    if (scaleX==-1 || fontSettingsOverride) {
-        result=Ixscale;
+    double result;
+    if (isSSA() && !fontSettingsOverride && scaleX == -1) {
+        // SSA often comes here.
+        result = 1.0;
+    } else if (scaleX==-1 || fontSettingsOverride) {
+        result = Ixscale;
     } else {
-        result=scaleX;
+        result = scaleX;
     }
-    if ((aspectAuto) && sar.num>sar.den) {
-        result=result*sar.den/sar.num;
+
+    if (sar.num>sar.den) {
+        result = result*sar.den/sar.num;
     }
     return result;
 }
 
-int TSubtitleProps::get_yscale(int Iyscale,const Rational& sar,int aspectAuto,int fontSettingsOverride) const
+double TSubtitleProps::get_yscale(double Iyscale,const Rational& sar,int fontSettingsOverride) const
 {
-    int result;
-    if (scaleY==-1 || fontSettingsOverride) {
-        result=Iyscale;
+    double result;
+    if (isSSA() && !fontSettingsOverride && scaleY == -1) {
+        // SSA often comes here.
+        result = 1.0;
+    } else if (scaleY==-1 || fontSettingsOverride) {
+        result = Iyscale;
     } else {
-        result=scaleY;
+        result = scaleY;
     }
-    if ((aspectAuto) && sar.num<sar.den) {
-        result=result*sar.num/sar.den;
+    if (sar.num<sar.den) {
+        result = result*sar.num/sar.den;
     }
     return result;
+}
+
+bool TSubtitleProps::isSSA() const 
+{
+    if (version < nmTextSubtitles::SSA)
+        return false;
+    if (version > nmTextSubtitles::ASS2)
+        return false;
+    return true;
 }

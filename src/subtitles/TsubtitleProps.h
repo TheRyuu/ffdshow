@@ -1,5 +1,4 @@
-#ifndef _TSUBTITLEPROPS_H_
-#define _TSUBTITLEPROPS_H_
+#pragma once
 
 #include "interfaces.h"
 #include "Crect.h"
@@ -22,7 +21,13 @@ struct Ttransform {
 #define DEFAULT_SECONDARY_COLOR 0x50FFFF // Yellow color for default
 
 struct TSubtitleProps {
-    TSubtitleProps(void) {
+    typedef enum {
+        Not_specified = -1,
+        Outline = 1,
+        Opaquebox =3
+    } TBorderStyle;
+
+    TSubtitleProps() {
         reset();
     }
     TSubtitleProps(unsigned int IrefResX,unsigned int IrefResY, int IwrapStyle, int IscaleBorderAndShadow) {
@@ -38,22 +43,28 @@ struct TSubtitleProps {
         underline=Iunderline;
     }
     int bold;
-    bool italic,underline,strikeout,blur;
+    bool italic,underline,strikeout;
+
+    int blur_be;    // \be
+    double gauss; // \blur
+
     bool isColor;
     COLORREF color,SecondaryColour, TertiaryColour, OutlineColour, ShadowColour;
     int colorA,SecondaryColourA, TertiaryColourA, OutlineColourA, ShadowColourA;
     unsigned int refResX,refResY;
-    bool isPos,isMove,isOrg;
+    bool isMove,isOrg,isClip;
     Ttransform transform;
     unsigned int transformT1,transformT2;
+    CRect clip;
     CPoint pos,pos2; // move from pos to pos2
     CPoint org;
     unsigned int moveT1,moveT2;
     int wrapStyle; // -1 = default
     int scaleBorderAndShadow;
-    int size;
-    int scaleX,scaleY; //in percents, -1 = default
+    double size;
+    double scaleX,scaleY; //1.0 means no scaling, -1 = default
     char_t fontname[LF_FACESIZE];
+    int polygon;  // {\p0/1/2/...} 0 disable, scale 2^(polygon-1)
     int encoding; // -1 = default
     int version;  // -1 = default
     int extendedTags; // 1 = default
@@ -62,7 +73,6 @@ struct TSubtitleProps {
     double y; // Calculated y position
     int lineID;
     void reset(void);
-    void toLOGFONT(LOGFONT &lf, const TfontSettings &fontSettings, unsigned int dx, unsigned int dy, unsigned int clipdy, const Rational& sar, unsigned int gdi_font_scale) const;
 
     // Alignment. This sets how text is "justified" within the Left/Right onscreen margins,
     // and also the vertical placing. Values may be 1=Left, 2=Centered, 3=Right.
@@ -70,24 +80,21 @@ struct TSubtitleProps {
     // eg. 5 = left-justified toptitle]
     // -1 = default(center)
     int alignment;
+    bool isAlignment;
 
     int marginR,marginL,marginV,marginTop,marginBottom; // -1 = default
     double angleX; // 0 = default
     double angleY; // 0 = default
     double angleZ; // 0 = default
-    int borderStyle; // -1 = default
+    TBorderStyle borderStyle;
     double outlineWidth,shadowDepth; // -1 = default
     int layer; // 0 = default
-    int get_spacing(unsigned int dy, unsigned int clipdy, unsigned int gdi_font_scale) const;
-    int get_marginR(unsigned int screenWidth,unsigned int lineWidth=0) const;
-    int get_marginL(unsigned int screenWidth,unsigned int lineWidth=0) const;
-    int get_marginTop(unsigned int screenHeight) const;
-    int get_marginBottom(unsigned int screenHeight) const;
-    int get_xscale(int Ixscale,const Rational& sar,int aspectAuto,int fontSettingsOverride) const;
-    int get_yscale(int Iyscale,const Rational& sar,int aspectAuto,int fontSettingsOverride) const;
-    int get_movedistanceV(unsigned int screenHeight) const;
-    int get_movedistanceH(unsigned int screenWidth) const;
-    int get_maxWidth(unsigned int screenWidth, int textBorderLR, int subFormat, IffdshowBase *deci) const;
+
+    bool isSSA() const; // is this SSA/ASS/ASS2?
+    int get_spacing(const TprintPrefs &prefs) const;
+    double get_xscale(double Ixscale,const Rational& sar,int fontSettingsOverride) const;
+    double get_yscale(double Iyscale,const Rational& sar,int fontSettingsOverride) const;
+    double get_maxWidth(unsigned int screenWidth, int textMarginLR, int subFormat, IffdshowBase *deci) const;
     REFERENCE_TIME get_moveStart(void) const;
     REFERENCE_TIME get_moveStop(void) const;
     static int alignASS2SSA(int align);
@@ -98,12 +105,12 @@ struct TSubtitleProps {
     REFERENCE_TIME tStart,tStop;
     REFERENCE_TIME fadeT1,fadeT2,fadeT3,fadeT4;
     REFERENCE_TIME karaokeDuration,karaokeStart;
+    REFERENCE_TIME karaokeFillStart,karaokeFillEnd;
     enum {
         KARAOKE_NONE,
         KARAOKE_k,
         KARAOKE_kf,
-        KARAOKE_ko
+        KARAOKE_ko,
+        KARAOKE_ko_opaquebox  // Special mode for opaque box with ko.
     } karaokeMode;
 };
-
-#endif

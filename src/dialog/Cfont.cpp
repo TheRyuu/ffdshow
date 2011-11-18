@@ -263,6 +263,9 @@ void TfontPage::spacingxscale2dlg(void)
         int yscale=cfgGet(idff_fontyscale);
         tbrSet(IDC_TBR_FONT_YSCALE,cfgGet(idff_fontyscale));
         setText(IDC_LBL_FONT_YSCALE,_l("%s %i%%"),_(IDC_LBL_FONT_YSCALE),yscale);
+    } else {
+        show(0,IDC_TBR_FONT_YSCALE);
+        show(0,IDC_LBL_FONT_YSCALE);
     }
     tbrSet(IDC_TBR_FONT_SPACING,cfgGet(idff_fontspacing),IDC_LBL_FONT_SPACING);
 }
@@ -437,7 +440,8 @@ bool TfontPage::reset(bool testonly)
         deci->resetParam(idff_fontbodyalpha);
         deci->resetParam(idff_fontspacing);
         deci->resetParam(idff_fontxscale);
-        deci->resetParam(idff_fontyscale);
+        if (idff_fontyscale)
+            deci->resetParam(idff_fontyscale);
         deci->resetParam(idff_fontfast);
         deci->resetParam(idff_fontoutlinewidth);
         deci->resetParam(idff_fontoutlinecolor);
@@ -596,7 +600,7 @@ TfontPageOSD::TfontPageOSD(TffdshowPageDec *Iparent, const TfilterIDFF *idff):Tf
     idff_fontweight=IDFF_OSDfontWeight;
     idff_fontcolor=IDFF_OSDfontColor;
     idff_fontxscale=IDFF_OSDfontXscale;
-    idff_fontyscale=IDFF_OSDfontYscale;
+    idff_fontyscale=0;
     idff_fontaspectauto=IDFF_OSDfontAspectAuto;
     idff_fontoutlinecolor=IDFF_OSDfontOutlineColor;
     idff_fontshadowcolor=IDFF_OSDfontShadowColor;
@@ -623,7 +627,6 @@ TfontPageOSD::TfontPageOSD(TffdshowPageDec *Iparent, const TfilterIDFF *idff):Tf
         IDC_TBR_FONT_SPACING,idff_fontspacing,&TfontPageOSD::spacingxscale2dlg,
         IDC_TBR_FONT_OUTLINE_WIDTH,idff_fontoutlinewidth,&TfontPageOSD::shadow2dlg,
         IDC_TBR_FONT_XSCALE,idff_fontxscale,&TfontPageOSD::spacingxscale2dlg,
-        IDC_TBR_FONT_YSCALE,idff_fontyscale,&TfontPageOSD::spacingxscale2dlg,
         IDC_TBR_FONT_SUBSHADOW_SIZE,idff_fontshadowsize,&TfontPageOSD::font2dlg,
         IDC_TBR_FONT_BODY_ALPHA,idff_fontbodyalpha,&TfontPageOSD::shadowAlpha2dlg,
         IDC_TBR_FONT_OUTLINE_ALPHA,idff_fontoutlinealpha,&TfontPageOSD::shadowAlpha2dlg,

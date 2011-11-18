@@ -1,5 +1,4 @@
-#ifndef _CC_DECODER_H_
-#define _CC_DECODER_H_
+#pragma once
 
 #include "interfaces.h"
 
@@ -101,5 +100,3 @@ public:
     void decode(const uint8_t *buffer,size_t buf_len);
     void onSeek(void);
 };
-
-#endif

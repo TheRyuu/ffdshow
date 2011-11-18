@@ -1,7 +1,6 @@
 #ifndef _IPROPERTYPAGEFF_H_
 #define _IPROPERTYPAGEFF_H_
 
-struct CRect;
 DECLARE_INTERFACE_(IPropertyPageFF,IUnknown)
 {
     STDMETHOD (toTop)(void) PURE;

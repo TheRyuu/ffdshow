@@ -1,5 +1,4 @@
-#ifndef _TSUBTITLEVOBSUB_H_
-#define _TSUBTITLEVOBSUB_H_
+#pragma once
 
 #include "Tsubtitle.h"
 #include "Tfont.h"
@@ -43,5 +42,3 @@ public:
         return new TsubtitleVobsub(NULL,NULL);
     }
 };
-
-#endif

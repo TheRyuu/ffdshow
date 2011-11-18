@@ -557,6 +557,8 @@
 #define IDFF_OSDfontItalic            3556
 #define IDFF_fontUnderline            3557
 #define IDFF_OSDfontUnderline         3558
+#define IDFF_fontHqBorder             3564
+#define IDFF_fontMemory               3565
 
 #define IDFF_filterBlur              900
 #define IDFF_isBlur                  901
@@ -1556,6 +1558,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//next:3564
+//next:3566
 
 #endif

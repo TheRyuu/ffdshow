@@ -332,6 +332,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="src\subtitles\CPolygon.cpp" />
+    <ClCompile Include="src\subtitles\TsubtitleFormat.cpp" />
+    <ClCompile Include="src\subtitles\TsubtitleMixedProps.cpp" />
     <ClCompile Include="src\TaudioParser.cpp" />
     <ClCompile Include="src\Tbitdata.cpp" />
     <ClCompile Include="src\TcpuUsage.cpp" />
@@ -358,6 +361,7 @@
     <ClCompile Include="src\TtrayIcon.cpp" />
     <ClCompile Include="src\subtitles\cc_decoder.cpp" />
     <ClCompile Include="src\subtitles\distance.cpp" />
+    <ClCompile Include="src\subtitles\nmTextSubtitles.cpp" />
     <ClCompile Include="src\subtitles\Rasterizer.cpp" />
     <ClCompile Include="src\subtitles\spudec.cpp" />
     <ClCompile Include="src\subtitles\Tfont.cpp" />
@@ -365,6 +369,7 @@
     <ClCompile Include="src\subtitles\ThtmlColors.cpp" />
     <ClCompile Include="src\subtitles\TrenderedTextSubtitleWord.cpp" />
     <ClCompile Include="src\subtitles\TspuImage.cpp" />
+    <ClCompile Include="src\subtitles\TSSAstyles.cpp" />
     <ClCompile Include="src\subtitles\Tstream.cpp" />
     <ClCompile Include="src\subtitles\Tsubreader.cpp" />
     <ClCompile Include="src\subtitles\TsubreaderMplayer.cpp" />
@@ -777,6 +782,9 @@
     <ClInclude Include="src\simd_instructions.h" />
     <ClInclude Include="src\stdafx.h" />
     <ClInclude Include="src\stdint.h" />
+    <ClInclude Include="src\subtitles\CPolygon.h" />
+    <ClInclude Include="src\subtitles\TsubtitleFormat.h" />
+    <ClInclude Include="src\subtitles\TsubtitleMixedProps.h" />
     <ClInclude Include="src\TaudioParser.h" />
     <ClInclude Include="src\Tbitdata.h" />
     <ClInclude Include="src\TcpuUsage.h" />
@@ -807,6 +815,7 @@
     <ClInclude Include="src\resource.h" />
     <ClInclude Include="src\subtitles\cc_decoder.h" />
     <ClInclude Include="src\subtitles\distance.h" />
+    <ClInclude Include="src\subtitles\nmTextSubtitles.h" />
     <ClInclude Include="src\subtitles\Rasterizer.h" />
     <ClInclude Include="src\subtitles\spudec.h" />
     <ClInclude Include="src\subtitles\Tfont.h" />
@@ -815,6 +824,7 @@
     <ClInclude Include="src\subtitles\ThtmlColors.h" />
     <ClInclude Include="src\subtitles\TrenderedTextSubtitleWord.h" />
     <ClInclude Include="src\subtitles\TspuImage.h" />
+    <ClInclude Include="src\subtitles\TSSAstyles.h" />
     <ClInclude Include="src\subtitles\Tstream.h" />
     <ClInclude Include="src\subtitles\Tsubreader.h" />
     <ClInclude Include="src\subtitles\TsubreaderMplayer.h" />

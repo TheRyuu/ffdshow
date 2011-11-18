@@ -11,7 +11,6 @@
 class TsubtitlesTextpin;
 class TimgFilterSubtitleExpand;
 struct TfontSettingsSub;
-struct TsubtitleText;
 DECLARE_FILTER(TimgFilterSubtitles,public,TimgFilter)
 
 public:
@@ -70,9 +69,16 @@ bool wasCCchange;
 bool everRGB;
 AdhocMode adhocMode; // 0: normal, 1: adhoc! process only DVD sub/menu, 2: after adhoc, second call. process none DVD sub (cc decoder, etc).
 
+// Prepares glph in background.
 class TglyphThread
-{
-    static const int max_memory_usage = 400000; // 40MB
+{    
+    // Subtitles preparation requires a lot of memory to store prepared image.
+    // Please note that subitles filter uses a lot of memory not only for storing prepared images.
+    // If you set 20MB here, subitles filter would use 40MB or so.
+    // Please understand it's natural and not wasting memory.
+    size_t max_memory_usage;
+    size_t used_memory;
+
     TimgFilterSubtitles *parent;
     boost::thread *thread;
     TprintPrefs copied_prefs;
@@ -105,7 +111,6 @@ class TglyphThread
     TsubtitleText* getNext();
     Tfont font;
     bool firstrun;
-    int used_memory;
     bool terminated;
     boost::mutex mutex_terminate;
     boost::condition_variable condv_terminate;

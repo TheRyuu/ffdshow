@@ -1,5 +1,4 @@
-#ifndef _TSUBTITLEUSF_H_
-#define _TSUBTITLEUSF_H_
+#pragma once
 
 #include "Tsubtitle.h"
 
@@ -27,5 +26,3 @@ public:
         return new TsubtitleUSF2(subs,idx,start,stop);
     }
 };
-
-#endif

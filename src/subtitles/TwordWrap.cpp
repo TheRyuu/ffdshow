@@ -69,13 +69,13 @@ int TwordWrap::smart()
     for (int x=0; x<strlenp; x++) {
         if (skippingSpace || (pwidths[x]-left>splitdxMin && pwidths[x]-left<=splitdxMax)) { // ideal for line break.
             if (skippingSpace) {
-                if (!iswspace((unsigned short)str.at(x))) {
+                if (!iswspace(str.at(x))) {
                     skippingSpace=false;
                     left=x>0 ? pwidths[x-1] : 0;
                     xx=x;
                 }
             } else {
-                if (iswspace((unsigned short)str.at(x))) {
+                if (iswspace(str.at(x))) {
                     rightOfTheLines.push_back(x>0 ? x-1 : 0);
                     skippingSpace=true;
                 }
@@ -86,7 +86,7 @@ int TwordWrap::smart()
             skippingSpace=false;
             for (; x>xx; x--) {
                 if (pwidths[x]-left<=splitdxMax) {
-                    if (iswspace((unsigned short)str.at(x))) {
+                    if (iswspace(str.at(x))) {
                         rightOfTheLines.push_back(x>0 ? x-1 : 0);
                         left=pwidths[x];
                         xx=nextChar(x);
@@ -99,7 +99,7 @@ int TwordWrap::smart()
             if (!found) {
                 if (assCompatibleMode) {
                     for (; x<strlenp; x++) {
-                        if (iswspace((unsigned short)str.at(x))) {
+                        if (iswspace(str.at(x))) {
                             rightOfTheLines.push_back(x>0 ? x-1 : 0);
                             skippingSpace=true;
                             break;
@@ -113,7 +113,7 @@ int TwordWrap::smart()
                             }
                             left=pwidths[x];
                             xx=nextChar(x);
-                            rightOfTheLines.push_back(rightOfDBCS(x));
+                            rightOfTheLines.push_back(x);
                             break;
                         }
                     }
@@ -136,14 +136,14 @@ int TwordWrap::smartReverse()
     for (int x=strlenp-1; x>=0; x--) {
         if (skippingSpace || (right-pwidthsLeft(x)>splitdxMin && right-pwidthsLeft(x)<=splitdxMax)) { // ideal for line break.
             if (skippingSpace) {
-                if (!iswspace((unsigned short)str.at(x))) {
+                if (!iswspace(str.at(x))) {
                     skippingSpace=false;
                     right=pwidths[x];
                     xx=x;
                     rightOfTheLines.push_front(xx);
                 }
             } else {
-                if (iswspace((unsigned short)str.at(x))) {
+                if (iswspace(str.at(x))) {
                     skippingSpace=true;
                 }
             }
@@ -153,7 +153,7 @@ int TwordWrap::smartReverse()
             skippingSpace=false;
             for (; x<xx; x++) {
                 if (right-pwidths[x]<=splitdxMax) {
-                    if (iswspace((unsigned short)str.at(x))) {
+                    if (iswspace(str.at(x))) {
                         xx=x>0 ? x-1 : 0;
                         rightOfTheLines.push_front(xx);
                         right=pwidths[xx];
@@ -166,7 +166,7 @@ int TwordWrap::smartReverse()
             if (!found) {
                 if (assCompatibleMode) {
                     for (; x>=0; x--) {
-                        if (iswspace((unsigned short)str.at(x))) {
+                        if (iswspace(str.at(x))) {
                             skippingSpace=true;
                             break;
                         }
@@ -174,11 +174,10 @@ int TwordWrap::smartReverse()
                 } else {
                     for (; x>=0; x--) {
                         if (right-pwidths[x]>splitdxMin) {
-                            x=leftOfDBCS(x);
-                            if (x<leftOfDBCS(xx) && right-pwidthsLeft(x)>splitdxMax) {
+                            if (x<xx && right-pwidthsLeft(x)>splitdxMax) {
                                 x=nextChar(x);
                             }
-                            xx=rightOfDBCS(prevChar(x));
+                            xx=prevChar(x);
                             rightOfTheLines.push_front(xx);
                             right=pwidths[xx];
                             break;
@@ -209,19 +208,9 @@ int TwordWrap::prevChar(int x)
     }
 }
 
-int TwordWrap::leftOfDBCS(int x)
-{
-    return x;
-}
-
-int TwordWrap::rightOfDBCS(int x)
-{
-    return x;
-}
-
 int TwordWrap::pwidthsLeft(int x)
 {
-    if (leftOfDBCS(x)==0) {
+    if (x==0) {
         return 0;
     }
     return pwidths[prevChar(x)];
@@ -252,4 +241,12 @@ int TwordWrap::getRightOfTheLine(int n)
     } else {
         return (int)str.size();
     }
+}
+
+int TwordWrap::iswspace(wchar_t ch)
+{
+    if (ch == 0xa0)
+        return false;
+    // call CRT
+    return ::iswspace(wint_t(ch));
 }

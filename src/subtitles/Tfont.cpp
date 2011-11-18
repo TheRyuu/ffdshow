@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2002-2006 Milan Cutka
- *               2007-2009 h.yamagata
+ *               2007-2011 h.yamagata
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -57,15 +57,14 @@ TprintPrefs::TprintPrefs(IffdshowBase *Ideci,const TfontSettings *IfontSettings)
     stereoScopicParallax=0;
     vobchangeposition = false;
     subimgscale = vobaamode = vobaagauss = 0;
-    fontchangesplit=false;
-    fontsplit = 0;
-    textBorderLR=0;
+    OSDitemSplit = 0;
+    textMarginLR=0;
     tabsize=8;
     dvd=false;
-    shadowMode = shadowSize = csp = 0;
+    shadowMode = TfontSettings::ClassicShadow;
+    shadowSize = csp = 0;
     outlineWidth = 0;
-    blurMode = 0;
-    blur=false;
+    blurStrength = TfontSettings::Softest;
     outlineBlur=false;
     clipdy=0;
     sar=Rational(1,1);
@@ -91,13 +90,13 @@ bool TprintPrefs::operator != (const TprintPrefs &rt) const
             && linespacing == rt.linespacing
             && sizeDx == rt.sizeDx && sizeDy == rt.sizeDy
             && vobchangeposition == rt.vobchangeposition && subimgscale == rt.subimgscale && vobaamode == rt.vobaamode && vobaagauss == rt.vobaagauss
-            && fontchangesplit == rt.fontchangesplit && fontsplit == rt.fontsplit
-            && textBorderLR == rt.textBorderLR
+            && OSDitemSplit == rt.OSDitemSplit
+            && textMarginLR == rt.textMarginLR
             && tabsize == rt.tabsize
             && dvd == rt.dvd
             && shadowMode == rt.shadowMode && shadowAlpha == rt.shadowAlpha
             && shadowSize == rt.shadowSize
-            && blur == rt.blur && outlineBlur == rt.outlineBlur && blurMode == rt.blurMode
+            && outlineBlur == rt.outlineBlur && blurStrength == rt.blurStrength
             && csp == rt.csp
             && outlineWidth == rt.outlineWidth
             && sar == rt.sar
@@ -121,14 +120,14 @@ bool TprintPrefs::operator == (const TprintPrefs &rt) const
 }
 
 //============================== TrenderedSubtitleLine ===============================
-unsigned int TrenderedSubtitleLine::width() const
+double TrenderedSubtitleLine::width() const
 {
     if (empty()) {
         return 0;
     }
-    unsigned int dx=0;
+    double dx=0;
     foreach (TrenderedSubtitleWordBase *word, *this)
-    dx += word->dxChar;
+        dx += word->dxChar;
     return dx;
 }
 
@@ -145,261 +144,190 @@ unsigned int TrenderedSubtitleLine::height() const
     return aboveBaseline+belowBaseline;
 }
 
-double TrenderedSubtitleLine::charHeight() const
+double TrenderedSubtitleLine::lineHeight() const
 {
     if (empty()) {
         return emptyHeight;
     }
-    double ascent=0,descent=0;
-    foreach (TrenderedSubtitleWordBase *word, *this) {
-        ascent=std::max<double>(ascent,word->get_ascent());
-        descent=std::max<double>(descent,word->get_descent());
-    }
-    return ascent + descent;
-}
-
-double TrenderedSubtitleLine::linegap(double prefsdy) const
-{
-    double belowBaseline=0,descent=0;
-    foreach (TrenderedSubtitleWordBase *word, *this) {
-        descent = std::max<double>(belowBaseline,word->get_descent());
-        belowBaseline = std::max<double>(belowBaseline,word->get_below_baseline());
-    }
-    return belowBaseline - descent
-           // plus normalized 1 pixel
-           + props.refResY / prefsdy;
-}
-
-double TrenderedSubtitleLine::lineHeightWithGap(double prefsdy) const
-{
-    if (empty()) {
-        return emptyHeight;
-    }
-    double aboveBaseline=0,belowBaseline=0;
+    double aboveBaseline = 0,belowBaseline = 0;
     foreach (TrenderedSubtitleWordBase *word, *this) {
         aboveBaseline=std::max<double>(aboveBaseline,word->get_ascent());
-        belowBaseline=std::max<double>(belowBaseline,word->get_below_baseline());
+        belowBaseline=std::max<double>(belowBaseline,word->get_descent());
     }
-    return aboveBaseline + belowBaseline
-           // plus normalized 1 pixel
-           + props.refResY / prefsdy;
+    return aboveBaseline + belowBaseline;
 }
 
-unsigned int TrenderedSubtitleLine::baselineHeight() const
+double TrenderedSubtitleLine::baselineHeight() const
 {
     if (empty()) {
         return 0;
     }
-    unsigned int aboveBaseline=0;
+    double aboveBaseline = 0;
     foreach (TrenderedSubtitleWordBase *word, *this)
-    aboveBaseline=std::max<unsigned int>(aboveBaseline, word->get_baseline());
+        aboveBaseline = std::max<double>(aboveBaseline, word->get_baseline());
     return aboveBaseline;
 }
 
-int TrenderedSubtitleLine::get_topOverhang() const
+double TrenderedSubtitleLine::getTopOverhang() const
 {
     if (empty()) {
         return 0;
     }
-    int top = 0;
-    int ascent = 0;
-    foreach (TrenderedSubtitleWordBase *word, *this) {
-        ascent = std::max<int>(ascent, word->get_ascent());
-        top = std::max<int>(top, word->get_ascent() + word->getOverhang().top);
+    double aboveBaseline = 0,aboveBaseLinePlusOutline = 0;
+    foreach (TrenderedSubtitleWordBase *w, *this) {
+        TrenderedTextSubtitleWord *word = dynamic_cast<TrenderedTextSubtitleWord *>(w);
+        if (word == NULL)
+            return 0;
+        aboveBaseline            = std::max<double>(aboveBaseline, word->get_ascent());
+        aboveBaseLinePlusOutline = std::max<double>(aboveBaseLinePlusOutline, word->aboveBaseLinePlusOutline());
     }
-    return top - ascent;
+    return aboveBaseLinePlusOutline - aboveBaseline;
 }
 
-int TrenderedSubtitleLine::get_bottomOverhang() const
+double TrenderedSubtitleLine::getBottomOverhang() const
 {
     if (empty()) {
         return 0;
     }
-    int baseline=baselineHeight();
-    int descent = 0;
-    int bottom = 0;
-    foreach (TrenderedSubtitleWordBase *word, *this) {
-        descent = std::max<int>(descent, word->get_descent());
-        bottom = std::max<int>(bottom, word->get_descent() + word->getOverhang().bottom);
+    double belowBaseline = 0,belowBaseLinePlusOutline = 0;
+    foreach (TrenderedSubtitleWordBase *w, *this) {
+        TrenderedTextSubtitleWord *word = dynamic_cast<TrenderedTextSubtitleWord *>(w);
+        if (word == NULL)
+            return 0;
+        belowBaseline            = std::max<double>(belowBaseline, word->get_descent());
+        belowBaseLinePlusOutline = std::max<double>(belowBaseLinePlusOutline, word->belowBaseLinePlusOutline());
     }
-    return bottom - descent;
+    return belowBaseLinePlusOutline - belowBaseline;
 }
 
-int TrenderedSubtitleLine::get_leftOverhang() const
+double TrenderedSubtitleLine::getLeftOverhang() const
 {
-    if (empty()) {
+    if (empty())
         return 0;
-    }
-    int dx=0;
-    int leftOverhang=0;
-    foreach (TrenderedSubtitleWordBase *word, *this) {
-        leftOverhang=std::min(leftOverhang, int(dx - word->getOverhang().left));
-        dx+=word->dxChar;
-    }
-    return -leftOverhang;
-}
-
-int TrenderedSubtitleLine::get_rightOverhang() const
-{
-    if (empty()) {
+    TrenderedTextSubtitleWord *front = dynamic_cast<TrenderedTextSubtitleWord *>(this->front());
+    if (!front)
         return 0;
-    }
-    int dx=0;
-    int rightOverhang=0;
-    foreach (TrenderedSubtitleWordBase *word, *this) {
-        dx += word->dxChar;
-        rightOverhang = std::max(rightOverhang, int(dx + word->getOverhang().right));
-    }
-    return rightOverhang-dx;
+    return front->mprops.outlineWidth;
 }
 
-void TrenderedSubtitleLine::prepareKaraoke()
+double TrenderedSubtitleLine::getRightOverhang() const
 {
-    if (!firstrun) {
-        return;
-    }
-    firstrun = false;
-    int sequenceWidth;
-    REFERENCE_TIME karaokeStart = REFTIME_INVALID;
-    for (iterator w = begin() ; w != end() ;) {
-        if (((TrenderedTextSubtitleWord *)(*w))->props.karaokeNewWord) {
-            sequenceWidth = (*w)->dxChar;
-            for (iterator s = w + 1 ; s != end() ; s++) {
-                if (((TrenderedTextSubtitleWord *)(*s))->props.karaokeNewWord) {
-                    break;
-                } else {
-                    sequenceWidth += (*s)->dxChar;
-                }
-            }
-            if (karaokeStart == REFTIME_INVALID) {
-                karaokeStart = ((TrenderedTextSubtitleWord *)(*w))->props.karaokeStart;
-            }
-            for (iterator s = w ; s != end() ; s++) {
-                if (((TrenderedTextSubtitleWord *)(*s))->props.karaokeNewWord && s != w) {
-                    break;
-                }
-                if (sequenceWidth) {
-                    ((TrenderedTextSubtitleWord *)(*s))->props.karaokeDuration *= (double)(*s)->dxChar / sequenceWidth;
-                }
-                ((TrenderedTextSubtitleWord *)(*s))->props.karaokeStart = karaokeStart;
-                karaokeStart += ((TrenderedTextSubtitleWord *)(*s))->props.karaokeDuration;
-            }
-        }
-        // Drop empty words here.
-        // Empty words had properties which might be necessary for karaoke timing calculation.
-        if ((*w)->dxChar == 0 && (*w)->dyChar == 0) {
-            delete *w;
-            w = erase(w);
-        } else {
-            w++;
-        }
-    }
+    if (empty())
+        return 0;
+    TrenderedTextSubtitleWord *back = dynamic_cast<TrenderedTextSubtitleWord *>(this->back());
+    if (!back)
+        return 0;
+    return back->mprops.outlineWidth;
+}
+
+void TrenderedSubtitleLine::setParagraphRect(CRectDouble &IparagraphRect)
+{
+    hasParagraphRect = true;
+    paragraphRect = IparagraphRect;
 }
 
 void TrenderedSubtitleLine::print(
-    int startx,int starty,
+    double startx,double starty,
     const TprintPrefs &prefs,
     unsigned int prefsdx,
     unsigned int prefsdy,
-    unsigned char **dst,
+    unsigned char **dst,  // output image to draw on. NULL: just prepare bitmaps of the text, not real rendering.
     const stride_t *stride)
 {
     int w = width();
-    int h = lineHeightWithGap(prefsdy);
-    printedRect = CRect(startx, starty, startx + w - (w > 0 ? 1 : 0), starty + h - (h > 0 ? 1 : 0));
-    if (!empty()) {
-        hasPrintedRect = true;
+    double h = lineHeight();
+    // If dst is NULL, we only prepare the bitmaps for the text and do not render on video planes.
+    //                 Note that the detection of collision is impossible here, because not all lines
+    //                 that should be displayed at the same time are not included in TrenderedSubtitleLines.
+    //                 If we set hasPrintRect, the collision handling gets broken.
+    // dst must not be NULL unless we are doing text subtitles.
+    if (dst) {
+        printedRect = CRectDouble(startx, starty, startx + w - (w > 0 ? 1 : 0), starty + h - (h > 0 ? 1 : 0));
+        if (!empty()) {
+            hasPrintedRect = true;
+        }
     }
 
-    int baseline = baselineHeight();
+    double baseline = baselineHeight();
     const TcspInfo *cspInfo = csp_getInfo(prefs.csp);
-    for (const_iterator w = begin() ; w != end() && startx < (int)prefsdx ; startx += (*w)->dxChar, w++) {
-        TrenderedSubtitleWordBase *word = *w;
-        startx += word->getPathOffsetX();
-        const unsigned char *msk[3],*bmp[3];
-        unsigned char *dstLn[3];
-        int x[3];
-        unsigned int dx[3];
-        int dy[3];
-        int sy0 = int(starty + baseline - word->get_baseline() + word->getPathOffsetY());
-        for (int i=0; i<3; i++) {
-            x[i] = startx>>cspInfo->shiftX[i];
-            msk[i] = word->msk[i];
-            bmp[i] = word->bmp[i];
-            if (prefs.align!=ALIGN_FFDSHOW && x[i]<0) {
-                msk[i] += -x[i];
-                bmp[i] += -x[i];
-            }
-            int sy = sy0 >> cspInfo->shiftY[i];
-            dy[i] = std::min((int(prefsdy)>>cspInfo->shiftY[i])-sy,int(word->dy[i]));
-            dstLn[i] = dst[i] + int(sy * stride[i]);
-            if (x[i]>0) {
-                dstLn[i] += x[i] * cspInfo->Bpp;
+    for (const_iterator w = begin() ; w != end() ; startx += (*w)->dxChar, w++) {
+        TrenderedTextSubtitleWord *textw = dynamic_cast<TrenderedTextSubtitleWord *>(*w);
+        if (textw) {
+            textw->printText(startx,starty,baseline,prefs.rtStart,prefsdx,prefsdy,dst,stride);
+        } else {
+            if (startx >= int(prefsdx)) continue;
+            TrenderedSubtitleWordBase *word = *w;
+            const unsigned char *msk[3],*bmp[3];
+            unsigned char *dstLn[3];
+            int x[3];
+            unsigned int dx[3];
+            int dy[3];
+            int sy0 = int(starty + baseline - word->get_baseline());
+            for (int i=0; i<3; i++) {
+                x[i] = int(startx) >> cspInfo->shiftX[i];
+                msk[i] = word->msk[i];
+                bmp[i] = word->bmp[i];
+                if (prefs.align!=ALIGN_FFDSHOW && x[i]<0) {
+                    msk[i] += -x[i];
+                    bmp[i] += -x[i];
+                }
+                int sy = sy0 >> cspInfo->shiftY[i];
+                dy[i] = std::min((int(prefsdy)>>cspInfo->shiftY[i])-sy,int(word->dy[i]));
+                dstLn[i] = dst[i] + int(sy * stride[i]);
+                if (x[i]>0) {
+                    dstLn[i] += x[i] * cspInfo->Bpp;
+                }
+
+                if (x[i] + int(word->dx[i]) > (int(prefsdx) >> cspInfo->shiftX[i])) {
+                    dx[i] = (prefsdx >> cspInfo->shiftX[i]) - x[i];
+                } else if (x[i] < 0) {
+                    dx[i] = int(word->dx[i]) + x[i] > 0 ? word->dx[i] + x[i] : 0;
+                } else {
+                    dx[i] = word->dx[i];
+                }
+                dx[i] = std::min(dx[i],prefsdx>>cspInfo->shiftX[i]);
             }
 
-            if (x[i]+word->dx[i] > (prefsdx >> cspInfo->shiftX[i])) {
-                dx[i] = (prefsdx >> cspInfo->shiftX[i]) - x[i];
-            } else if (x[i] < 0) {
-                dx[i] = word->dx[i] + x[i];
-            } else {
-                dx[i] = word->dx[i];
+            if (dx[0] > 0 && dy[0] > 0 && dx[1] > 0 && dy[1] > 0) {
+                word->print(startx, sy0, dx, dy, dstLn, stride, bmp, msk, prefs.rtStart);
             }
-            dx[i] = std::min(dx[i],prefsdx>>cspInfo->shiftX[i]);
-        }
-
-        if (dx[0] > 0 && dy[0] > 0 && dx[1] > 0 && dy[1] > 0) {
-            word->print(startx, sy0, dx, dy, dstLn, stride, bmp, msk, prefs.rtStart);
         }
     }
 }
 
-const TSubtitleProps& TrenderedSubtitleLine::getProps() const
+const TSubtitleMixedProps& TrenderedSubtitleLine::getProps() const
 {
-    // Which props should represent this line?
-    // The first word that have dxChar should to make sense.
-    // If there is none, return this->props.
-    foreach (TrenderedSubtitleWordBase *word0, *this) {
-        try {
-            TrenderedTextSubtitleWord *word = dynamic_cast<TrenderedTextSubtitleWord *>(word0);
-            if (word && word->dxChar) {
-                return word->props;
-            }
-        } catch (const std::bad_cast&) {
-            continue;
-        }
-    }
-    return props;
+    return mprops;
 }
 
 void TrenderedSubtitleLine::clear()
 {
     foreach (TrenderedSubtitleWordBase *word, *this)
-    delete word;
+        delete word;
     std::vector<value_type>::clear();
 }
 
 size_t TrenderedSubtitleLine::getMemorySize() const
 {
-    size_t memSize = 0;
-    foreach (const TrenderedSubtitleWordBase *word, *this)
+    size_t memSize = sizeof(*this) + size() * sizeof(void*);
+        foreach (const TrenderedSubtitleWordBase *word, *this)
     memSize += word->getMemorySize();
     return memSize;
 }
 
-bool TrenderedSubtitleLine::checkCollision(const CRect &query, CRect &ans)
+bool TrenderedSubtitleLine::checkCollision(const CRectDouble &query, CRectDouble &ans)
 {
-    if (!hasPrintedRect) {
+    if (!hasParagraphRect) {
         return false;
     }
     if (empty()) {
         return false;
     }
-    const TSubtitleProps &lineprops = getProps();
-    if (lineprops.isPos || lineprops.isMove || lineprops.isOrg) {
+    if (mprops.isMove || mprops.isOrg) {
         return false;
     }
-    if (query.checkOverlap(printedRect)) {
-        ans = printedRect;
+    if (query.checkOverlap(paragraphRect)) {
+        ans = paragraphRect;
         return true;
     }
     return false;
@@ -433,7 +361,7 @@ void TrenderedSubtitleLines::print(
     double h=0,h1=0;
     for (const_iterator i=begin(); i!=end(); i++) {
         double h2=h1+(*i)->height();
-        h1+=(double)prefs.linespacing*(*i)->lineHeightWithGap(prefsdy)/100;
+        h1+=(double)prefs.linespacing*(*i)->lineHeight()/100;
         if (h2>h) {
             h=h2;
         }
@@ -451,7 +379,7 @@ void TrenderedSubtitleLines::print(
         y=(double)prefsdy-h-1;
     }
 
-    for (const_iterator i=begin(); i!=end(); y+=(double)prefs.linespacing*(*i)->lineHeightWithGap(prefsdy)/100,i++) {
+    for (const_iterator i=begin(); i!=end(); y+=(double)prefs.linespacing*(*i)->lineHeight()/100,i++) {
         if (y<0) {
             continue;
         }
@@ -490,7 +418,7 @@ void TrenderedSubtitleLines::print(
 
 void TrenderedSubtitleLines::printASS(
     const TprintPrefs &prefs,
-    unsigned char **dst,
+    unsigned char **dst,  // output image to draw on. NULL: not real rendering, just prepare bitmaps for the text.
     const stride_t *stride)
 {
     double y=0;
@@ -511,24 +439,15 @@ void TrenderedSubtitleLines::printASS(
     // pass 1: prepare paragraphs : a paragraph is a set of lines that have the same properties
     // (same margins, alignment and position)
     foreach (TrenderedSubtitleLine *line, *this) {
-        if (prefs.subformat ==  Tsubreader::SUB_SSA) {
-            line->prepareKaraoke();
-        }
-        ParagraphKey pkey(line, prefsdx, prefsdy);
+        ParagraphKey pkey(line);
         std::map<ParagraphKey,ParagraphValue>::iterator pi=paragraphs.find(pkey);
         if (pi != paragraphs.end()) {
-            pi->second.topOverhang = -std::min(-pi->second.topOverhang ,double(pi->second.height + pi->second.linegap - line->get_topOverhang()));
-            pi->second.bottomOverhang = std::max(pi->second.bottomOverhang ,double(line->get_bottomOverhang()));
-            pi->second.height += pi->second.linegap + line->charHeight();
-            pi->second.width = std::max(pi->second.width, double(line->width()));
-            pi->second.linegap = line->linegap(prefsdy);
+            pi->second.processLine(line, pkey.alignment);
         } else {
+            // The first line
             ParagraphValue pval;
-            pval.topOverhang = line->get_topOverhang();
-            pval.bottomOverhang = line->get_bottomOverhang();
-            pval.height = line->charHeight();
-            pval.linegap = line->linegap(prefsdy);
-            pval.width = line->width();
+            pval.overhang.top = line->getTopOverhang();
+            pval.processLine(line, pkey.alignment);
             paragraphs.insert(std::pair<ParagraphKey,ParagraphValue>(pkey,pval));
         }
     }
@@ -537,9 +456,9 @@ void TrenderedSubtitleLines::printASS(
 
     // pass 2: print
     foreach (TrenderedSubtitleLine *line, *this) {
-        const TSubtitleProps &lineprops = line->getProps();
-        int x=0;
-        ParagraphKey pkey(line, prefsdx, prefsdy);
+        const TSubtitleMixedProps &lineprops = line->getProps();
+        double x=0;
+        ParagraphKey pkey(line);
         if (!line->getHasPrintedRect() || lineprops.isMove) {
             std::map<ParagraphKey,ParagraphValue>::iterator pi=paragraphs.find(pkey);
             if (pi != paragraphs.end()) {
@@ -553,12 +472,12 @@ void TrenderedSubtitleLines::printASS(
                             // IDFF_subSSAOverridePlacement is present and they don't have any
                             // position defined, then apply the vertical position slider setting.
                             if ((pkey.marginBottom == 0 || (prefs.deci->getParam2(IDFF_subSSAOverridePlacement)
-                                                            || (prefs.subformat & Tsubreader::SUB_FORMATMASK) != Tsubreader::SUB_SSA)) && !pkey.isPos && !pkey.isMove) {
-                                pval.y=((double)prefs.ypos*prefsdy)/100.0-pval.height - pval.topOverhang;
+                                                            || (prefs.subformat & Tsubreader::SUB_FORMATMASK) != Tsubreader::SUB_SSA)) && !pkey.isMove) {
+                                pval.y=((double)prefs.ypos*prefsdy)/100.0-pval.height;
                             }
                             // With middle alignment and position/move tag we position the paragraph to the requested
                             // position basing on the anchor point set at the middle
-                            else if (pkey.isPos || pkey.isMove) {
+                            else if (pkey.isMove) {
                                 pval.y=pkey.marginTop-pval.height/2.0;
                             } else { // otherwise put the paragraph on the center of the screen (vertical margin is ignored)
                                 pval.y=(prefsdy - pval.height)/2.0;
@@ -571,10 +490,10 @@ void TrenderedSubtitleLines::printASS(
                             // IDFF_subSSAOverridePlacement is present and they don't have any
                             // position defined, then apply the vertical position slider setting
                             // but inversed.
-                            if (((prefs.subformat & Tsubreader::SUB_FORMATMASK) != Tsubreader::SUB_SSA) || (!pkey.isPos && !pkey.isMove && ((prefs.subformat & Tsubreader::SUB_FORMATMASK) == Tsubreader::SUB_SSA) && prefs.deci->getParam2(IDFF_subSSAOverridePlacement))) {
+                            if (((prefs.subformat & Tsubreader::SUB_FORMATMASK) != Tsubreader::SUB_SSA) || (!pkey.isMove && ((prefs.subformat & Tsubreader::SUB_FORMATMASK) == Tsubreader::SUB_SSA) && prefs.deci->getParam2(IDFF_subSSAOverridePlacement))) {
                                 pval.y=((double)(100-prefs.ypos)*prefsdy)/100.0;
                             } else {
-                                pval.y = pkey.marginTop - pval.topOverhang;
+                                pval.y = pkey.marginTop;
                             }
                             break;
                         case 1: // SSA bottom
@@ -585,10 +504,10 @@ void TrenderedSubtitleLines::printASS(
                             // IDFF_subSSAOverridePlacement is present and they don't have any
                             // position defined, then apply the vertical position slider setting.
                             if ((pkey.marginBottom == 0 || (prefs.deci->getParam2(IDFF_subSSAOverridePlacement)
-                                                            || (prefs.subformat & Tsubreader::SUB_FORMATMASK) != Tsubreader::SUB_SSA)) && !pkey.isPos && !pkey.isMove) {
-                                pval.y=((double)prefs.ypos*prefsdy)/100.0-pval.height - pval.topOverhang;
+                                                            || (prefs.subformat & Tsubreader::SUB_FORMATMASK) != Tsubreader::SUB_SSA)) && !pkey.isMove) {
+                                pval.y=((double)prefs.ypos*prefsdy)/100.0-pval.height;
                             } else {
-                                pval.y=(double)prefsdy - 1 - pkey.marginBottom - pval.height - pval.topOverhang;
+                                pval.y=(double)prefsdy - 1 - pkey.marginBottom - pval.height;
                             }
                             break;
                     }
@@ -609,50 +528,49 @@ void TrenderedSubtitleLines::printASS(
                     if (lineprops.isMove && prefs.rtStart >= lineprops.get_moveStart()) {
                         // Stop scrolling if beyond t2
                         if (prefs.rtStart >= lineprops.get_moveStop()) {
-                            pval.y += lineprops.get_movedistanceV(prefsdy);
+                            pval.y += lineprops.get_movedistanceV();
                         } else
-                            pval.y += lineprops.get_movedistanceV(prefsdy)*
+                            pval.y += lineprops.get_movedistanceV()*
                                       (prefs.rtStart-lineprops.get_moveStart())/(lineprops.get_moveStop()-lineprops.get_moveStart());
                     }
                 }
 
-                unsigned int cdx=line->width();
+                double cdx = line->width();
                 // Left and right margins need to be recalculated according to the length of the line
-                int marginL=lineprops.get_marginL(prefsdx, cdx);
-                int marginR=lineprops.get_marginR(prefsdx, cdx);
-                int leftOverhang=line->get_leftOverhang();
+                double marginL=lineprops.get_marginL(cdx);
+                double marginR=lineprops.get_marginR(cdx);
 
                 switch (lineprops.alignment) {
                     case 1: // left(SSA)
                     case 5:
                     case 9:
-                        if (!pkey.isPos && !pkey.isMove && prefs.deci->getParam2(IDFF_subSSAOverridePlacement)) {
+                        if (!pkey.isMove && prefs.deci->getParam2(IDFF_subSSAOverridePlacement)) {
                             x = (prefs.xpos * prefsdx)/100;
-                            x = x - cdx / 2;
+                            x = x - cdx / 2.0;
                             if (x < 0) {
                                 x = 0;
                             }
-                            if (x + cdx >= prefsdx) {
+                            if (x + cdx >= (double)prefsdx) {
                                 x = prefsdx - cdx;
                             }
                         } else {
-                            x=marginL - leftOverhang;
+                            x=marginL;
                         }
                         break;
                     case 3: // right(SSA)
                     case 7:
                     case 11:
-                        if (!pkey.isPos && !pkey.isMove && prefs.deci->getParam2(IDFF_subSSAOverridePlacement)) {
+                        if (!pkey.isMove && prefs.deci->getParam2(IDFF_subSSAOverridePlacement)) {
                             x = (prefs.xpos * prefsdx)/100;
-                            x = x - cdx / 2;
+                            x = x - cdx / 2.0;
                             if (x < 0) {
                                 x = 0;
                             }
-                            if (x + cdx >= prefsdx) {
+                            if (x + cdx >= (double)prefsdx) {
                                 x = prefsdx - cdx;
                             }
                         } else {
-                            x=prefsdx - cdx - marginR - leftOverhang;
+                            x = prefsdx - cdx - marginR;
                         }
                         break;
                     case 2: // center(SSA)
@@ -661,70 +579,72 @@ void TrenderedSubtitleLines::printASS(
                         // If the text is supposed to be placed at the center of the screen,
                         // has no horizontal alignment defined or IDFF_subSSAOverridePlacement
                         // is present then apply the horizontal position setting
-                        if (!pkey.isPos && !pkey.isMove && prefs.deci->getParam2(IDFF_subSSAOverridePlacement)) {
+                        if (!pkey.isMove && prefs.deci->getParam2(IDFF_subSSAOverridePlacement)) {
                             x = (prefs.xpos * prefsdx)/100;
-                            x = x - cdx / 2;
+                            x = x - cdx / 2.0;
                             if (x < 0) {
                                 x = 0;
                             }
                             if (x + cdx >= prefsdx) {
                                 x = prefsdx - cdx;
                             }
-                        } else if (lineprops.isPos || lineprops.isMove) { // If position defined, then marginL is relative to left border of the screen
-                            x = marginL-leftOverhang;
+                        } else if (lineprops.isMove) { // If position defined, then marginL is relative to left border of the screen
+                            x = marginL;
                         } else { // else marginL is relative to the center of the screen
-                            x = ((int)prefsdx - marginL - marginR - (int)cdx)/2 + marginL - leftOverhang;
+                            x = ((double)prefsdx - marginL - marginR - cdx)/2.0 + marginL;
                         }
                         break;
                     default: // non SSA/ASS
-                        if (!lineprops.isPos && !lineprops.isMove) {
+                        if (!lineprops.isMove) {
                             x=(prefs.xpos * prefsdx)/100;
                             switch (prefs.align) {
                                 case ALIGN_LEFT:
                                     break;
                                 case ALIGN_FFDSHOW:
-                                    x = x - cdx / 2;
+                                    x = x - cdx / 2.0;
                                     if (x < 0) {
                                         x = 0;
                                     }
-                                    if (x + cdx >= prefsdx) {
+                                    if (x + cdx >= (double)prefsdx) {
                                         x = prefsdx - cdx;
                                     }
                                     break;
                                 case ALIGN_CENTER:
-                                    x = x - cdx / 2;
+                                    x = x - cdx / 2.0;
                                     break;
                                 case ALIGN_RIGHT:
                                     x = x - cdx;
                                     break;
                             }
                         } else {
-                            x = marginL-leftOverhang;
+                            x = marginL;
                         }
                 }
 
                 // If option is checked, correct horizontal placement if text goes out of the screen
                 if ( prefs.deci->getParam2(IDFF_subSSAMaintainInside)
                         && !lineprops.isMove) {
-                    if (x+cdx > prefsdx) {
-                        x = prefsdx-cdx;
+                    if (x + cdx > (double)prefsdx) {
+                        x = prefsdx - cdx;
                     }
                     if (x < 0) {
                         x=0;
                     }
                 }
 
-                if (!lineprops.isMove && !lineprops.isPos && !lineprops.isOrg && pval.firstuse) {
+                if (!lineprops.isMove && !lineprops.isOrg && pval.firstuse) {
                     handleCollision(line, x, pval, prefsdy, lineprops.alignment);
                 }
 
                 pval.firstuse = false;
                 y = pval.y;
                 if ((prefs.subformat & Tsubreader::SUB_FORMATMASK) == Tsubreader::SUB_SSA) {
-                    pval.y += line->lineHeightWithGap(prefsdy);
+                    pval.y += line->lineHeight();
                 } else {
-                    pval.y += double(prefs.linespacing) * line->lineHeightWithGap(prefsdy) / 100.0;
+                    pval.y += double(prefs.linespacing) * line->lineHeight() / 100.0;
                 }
+                if (dst)
+                    line->setParagraphRect(pval.myrect);
             }
 
         } else {
@@ -736,9 +656,9 @@ void TrenderedSubtitleLines::printASS(
         if (lineprops.isMove && prefs.rtStart >= lineprops.get_moveStart()) {
             // Stop scrolling if beyond t2
             if (prefs.rtStart >= lineprops.get_moveStop()) {
-                x += lineprops.get_movedistanceH(prefsdx);
+                x += lineprops.get_movedistanceH();
             } else
-                x += lineprops.get_movedistanceH(prefsdx)*
+                x += lineprops.get_movedistanceH()*
                      (prefs.rtStart-lineprops.get_moveStart())/(lineprops.get_moveStop()-lineprops.get_moveStart());
         }
 
@@ -748,16 +668,13 @@ void TrenderedSubtitleLines::printASS(
 
 void TrenderedSubtitleLines::handleCollision(TrenderedSubtitleLine *line, int x, ParagraphValue &pval, unsigned int prefsdy, int alignment)
 {
-    int paragraphHeight = (int)pval.height;
-    if (paragraphHeight > 0) {
-        paragraphHeight--;
-    } else {
+    if (pval.height <= 0) {
         return;
     }
 
     // rect of this paragraph
-    CRect myrect(x, pval.y, x + pval.width, pval.y + paragraphHeight);
-    CRect hisrect;
+    pval.myrect = CRectDouble(x, pval.y - pval.overhang.top, x + pval.width, pval.y + pval.height + pval.overhang.bottom);
+    CRectDouble hisrect;
     bool again = false;
     for (const_iterator l = begin(); l != end() || again ; l++) {
         if (again) {
@@ -765,45 +682,81 @@ void TrenderedSubtitleLines::handleCollision(TrenderedSubtitleLine *line, int x,
             // We can skip check if (l == end()) break; safely as this is guaranteed to be not empty.
             again = false;
         }
-        if ( line->getPropsOfThisObject().layer == (*l)->getPropsOfThisObject().layer
-                && (*l)->checkCollision(myrect, hisrect)) {
+        if ( line->mprops.layer == (*l)->mprops.layer
+                && (*l)->checkCollision(pval.myrect, hisrect)) {
             if (alignment <= 3) {
                 // bottom
-                pval.y = hisrect.top - paragraphHeight - 2;
-                myrect = CRect(x, pval.y, x + pval.width, pval.y + paragraphHeight);
+                pval.y = hisrect.top - pval.height - pval.overhang.bottom - 0.25;
+                pval.myrect = CRectDouble(x, pval.y - pval.overhang.top, x + pval.width, pval.y + pval.height + pval.overhang.bottom);
                 again = true;
             } else {
                 // Top, middle
-                pval.y = hisrect.bottom + 1;
-                myrect = CRect(x, pval.y, x + pval.width, pval.y + paragraphHeight);
+                pval.y = hisrect.bottom + 0.25 + pval.overhang.top;
+                pval.myrect = CRectDouble(x, pval.y - pval.overhang.top, x + pval.width, pval.y + pval.height + pval.overhang.bottom);
                 again = true;
             }
         }
     }
 }
 
-TrenderedSubtitleLines::ParagraphKey::ParagraphKey(TrenderedSubtitleLine *line, unsigned int prefsdx, unsigned int prefsdy)
+TrenderedSubtitleLines::ParagraphKey::ParagraphKey(TrenderedSubtitleLine *line)
 {
     pos = CPoint(LONG_MIN, LONG_MIN);
-    const TSubtitleProps &lineprops = line->getProps();
+    const TSubtitleMixedProps &lineprops = line->getProps();
     alignment = lineprops.alignment;
-    marginBottom = lineprops.get_marginBottom(prefsdy);
-    marginTop = lineprops.get_marginTop(prefsdy);
-    marginL = lineprops.get_marginL(prefsdx);
-    marginR = lineprops.get_marginR(prefsdx);
-    isPos = lineprops.isPos;
+    marginBottom = lineprops.get_marginBottom();
+    marginTop = lineprops.get_marginTop();
+    marginL = lineprops.get_marginL();
+    marginR = lineprops.get_marginR();
     isMove = lineprops.isMove;
     hasPrintedRect = line->getHasPrintedRect();
     lineID = lineprops.lineID;
 
     layer = lineprops.layer;
-    if (isPos || isMove) {
+    if (isMove) {
         pos = lineprops.pos;
     }
     if (!isMove) {
         printedRect = line->getPrintedRect();
     }
-};
+}
+
+void TrenderedSubtitleLines::ParagraphValue::processLine(TrenderedSubtitleLine *line, int alignment)
+{
+    double oldWidth = width;
+    double currentWidth = line->width();
+    double currentWidthDiv2 = currentWidth/2.0;
+    height += line->lineHeight();
+    width = std::max(width, currentWidth);
+    overhang.bottom = line->getBottomOverhang();
+
+    double left = line->getLeftOverhang();
+    double right = line->getRightOverhang();
+    switch (alignment) {
+        case 1: // left(SSA)
+        case 5:
+        case 9:
+            overhang.left = std::max(overhang.left, left);
+            maxr = std::max(maxr, currentWidth + right);
+            overhang.right = maxr - width;
+            break;
+        case 3: // right(SSA)
+        case 7:
+        case 11:
+            overhang.right = std::max(overhang.right, right);
+            maxl = std::max(maxl, currentWidth + left);
+            overhang.left = maxl - width;
+            break;
+        case 2: // center(SSA)
+        case 6:
+        case 10:
+            maxr = std::max(maxr, currentWidthDiv2 + right);
+            maxl = std::max(maxl, currentWidthDiv2 + left);
+            overhang.right = maxr - currentWidthDiv2;
+            overhang.left  = maxl - currentWidthDiv2;
+            break;
+    }
+}
 
 void TrenderedSubtitleLines::clear()
 {
@@ -816,7 +769,7 @@ void TrenderedSubtitleLines::clear()
 
 size_t TrenderedSubtitleLines::getMemorySize() const
 {
-    size_t memSize = 0;
+    size_t memSize = sizeof(*this) + size() * sizeof(void*);
     foreach (const TrenderedSubtitleLine *line, *this)
     memSize += line->getMemorySize();
     return memSize;
@@ -854,11 +807,8 @@ bool TrenderedSubtitleLines::ParagraphKey::operator < (const ParagraphKey &rt) c
     if (marginR>rt.marginR) {
         return false;
     }
-    if (isPos<rt.isPos) {
+    if (isMove<rt.isMove) {
         return true;
-    }
-    if (isPos>rt.isPos) {
-        return false;
     }
     if (pos<rt.pos) {
         return true;
@@ -901,7 +851,7 @@ bool TrenderedSubtitleLines::ParagraphKey::operator != (const ParagraphKey &rt) 
             && marginBottom == rt.marginBottom
             && marginL == rt.marginL
             && marginR == rt.marginR
-            && isPos == rt.isPos
+            && isMove == rt.isMove
             && pos == rt.pos
             && layer == rt.layer
             && lineID == rt.lineID

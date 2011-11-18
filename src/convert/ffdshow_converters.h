@@ -58,6 +58,9 @@ typedef ptrdiff_t stride_t;
 //  Multithreaded and very fast on modern CPUs
 //  Portable (should work on UNIX)
 
+// Limitations
+// The stride of destination must be multiple of 4.
+
 class TffdshowConverters
 {
 public:

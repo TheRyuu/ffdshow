@@ -218,14 +218,13 @@ TfontSettings::TfontSettings(TintStrColl *Icoll):Toptions(Icoll)
     spacing = 0;
     xscale = 100;
     yscale = 100;
-    aspectAuto = 1;
     bodyAlpha = 256;
     outlineAlpha = 256;
     shadowAlpha = 128;
     shadowSize = 5;
-    shadowMode = 2;
+    shadowMode = ClassicShadow;
     blur = 0;
-    blurMode = 0;
+    blurStrength = Softest;
     autosize=0;
     sizeA=18;
     split=0;
@@ -247,10 +246,16 @@ bool TfontSettings::operator == (const TfontSettings &rt) const
             && color == rt.color && outlineColor == rt.outlineColor && shadowColor == rt.shadowColor
             && bodyAlpha == rt.bodyAlpha && outlineAlpha == rt.outlineAlpha && shadowAlpha == rt.shadowAlpha
             && split == rt.split
-            && aspectAuto == rt.aspectAuto
             && outlineWidth == rt.outlineWidth
             && shadowSize == rt.shadowSize &&  shadowMode == rt.shadowMode
-            && blur == rt.blur && blurMode == rt.blurMode
+            && blur == rt.blur && blurStrength == rt.blurStrength
+            && fontSettingsOverride == rt.fontSettingsOverride
+            && sizeOverride == rt.sizeOverride
+            && colorOverride == rt.colorOverride
+            && outlineWidthOverride == rt.outlineWidthOverride
+            && shadowOverride == rt.shadowOverride
+            && scaleBorderAndShadowOverride == rt.scaleBorderAndShadowOverride
+            && hqBorder == rt.hqBorder
             && gdi_font_scale == rt.gdi_font_scale) {
         return true;
     }
@@ -313,8 +318,6 @@ TfontSettingsOSD::TfontSettingsOSD(TintStrColl *Icoll):TfontSettings(Icoll)
         _l("OSDfontXscale"), 100,
         IDFF_OSDfontYscale        ,&TfontSettings::yscale         ,10,300,_l(""),1,
         _l("OSDfontYscale"), 100,
-        IDFF_OSDfontAspectAuto    ,&TfontSettings::aspectAuto     ,0,0,_l(""),1,
-        _l("OSDfontAspectAuto"), 1,
         IDFF_OSDfontBodyAlpha     ,&TfontSettings::bodyAlpha      ,0,256,_l(""),1,
         _l("OSDfontBodyAlpha"), 256,
         IDFF_OSDfontOutlineAlpha  ,&TfontSettings::outlineAlpha   ,0,256,_l(""),1,
@@ -323,9 +326,9 @@ TfontSettingsOSD::TfontSettingsOSD(TintStrColl *Icoll):TfontSettings(Icoll)
         _l("OSDfontShadowAlpha"), 128,
         IDFF_OSDfontShadowSize    ,&TfontSettings::shadowSize     ,0,50,_l(""),1,
         _l("OSDfontShadowSize"), 8,
-        IDFF_OSDfontShadowMode    ,&TfontSettings::shadowMode     ,0,3,_l(""),1,
+        IDFF_OSDfontShadowMode    ,(int TfontSettings::*)&TfontSettings::shadowMode,0,3,_l(""),1,
         _l("OSDfontShadowMode"), 3,
-        IDFF_OSDfontBlurMode      ,&TfontSettings::blurMode       ,0,6,_l(""),1,
+        IDFF_OSDfontBlurMode      ,(int TfontSettings::*)&TfontSettings::blurStrength,0,6,_l(""),1,
         _l("OSDfontBlurMode"), 3,
         IDFF_OSDfontBlur          ,&TfontSettings::blur           ,0,2,_l(""),1,
         _l("OSDfontBlur"), 0,
@@ -356,7 +359,7 @@ TfontSettingsSub::TfontSettingsSub(TintStrColl *Icoll):TfontSettings(Icoll)
         IDFF_fontSizeP              ,&TfontSettings::sizeP              ,2,255,_l(""),1,
         _l("fontSize"), 26,
         IDFF_fontSizeA              ,&TfontSettings::sizeA              ,1,100,_l(""),1,
-        _l("fontSizeA"), 31,
+        _l("fontSizeA"), 35,
         IDFF_fontWeight             ,&TfontSettings::weight             ,0,900,_l(""),1,
         _l("fontWeight"), FW_BOLD,
         IDFF_fontColor              ,&TfontSettings::color              ,1,1,_l(""),1,
@@ -381,8 +384,6 @@ TfontSettingsSub::TfontSettingsSub(TintStrColl *Icoll):TfontSettings(Icoll)
         _l("fontXscale"), 100,
         IDFF_fontYscale             ,&TfontSettings::yscale             ,10,300,_l(""),1,
         _l("fontYscale"), 100,
-        IDFF_fontAspectAuto         ,&TfontSettings::aspectAuto         ,0,0,_l(""),1,
-        _l("fontAspectAuto"), 1,
         IDFF_fontBodyAlpha          ,&TfontSettings::bodyAlpha          ,0,256,_l(""),1,
         _l("fontBodyAlpha"), 256,
         IDFF_fontOutlineAlpha       ,&TfontSettings::outlineAlpha       ,0,256,_l(""),1,
@@ -390,10 +391,10 @@ TfontSettingsSub::TfontSettingsSub(TintStrColl *Icoll):TfontSettings(Icoll)
         IDFF_fontShadowAlpha        ,&TfontSettings::shadowAlpha        ,0,256,_l(""),1,
         _l("fontShadowAlpha"), 128,
         IDFF_fontShadowSize         ,&TfontSettings::shadowSize         ,0,50,_l(""),1,
-        _l("fontShadowSize"), 5,
-        IDFF_fontShadowMode         ,&TfontSettings::shadowMode         ,0,3,_l(""),1,
+        _l("fontShadowSize"), 4,
+        IDFF_fontShadowMode         ,(int TfontSettings::*)&TfontSettings::shadowMode,0,3,_l(""),1,
         _l("fontShadowMode"), 2, // Default shadow mode to classic (like VSFilter)
-        IDFF_fontBlurMode           ,&TfontSettings::blurMode           ,0,6,_l(""),1,
+        IDFF_fontBlurMode           ,(int TfontSettings::*)&TfontSettings::blurStrength,0,6,_l(""),1,
         _l("fontBlurMode"), 3,
         IDFF_fontBlur               ,&TfontSettings::blur               ,0,2,_l(""),1,
         _l("fontBlur"), 0,
@@ -407,6 +408,10 @@ TfontSettingsSub::TfontSettingsSub(TintStrColl *Icoll):TfontSettings(Icoll)
         _l("fontSettingsOverride"), 0,
         IDFF_fontColorOverride      ,&TfontSettings::colorOverride      ,0,0,_l(""),1,
         _l("fontColorOverride"), 0,
+        IDFF_fontHqBorder           ,&TfontSettings::hqBorder           ,0,0,_l(""),1,
+        _l("fontHqBorder"), 1,
+        IDFF_fontMemory             ,&TfontSettings::memory             ,0,256,_l(""),1,
+        _l("fontMemory"), 20,
         IDFF_scaleBorderAndShadowOverride ,&TfontSettings::scaleBorderAndShadowOverride ,0,0,_l(""),1,
         _l("scaleBorderAndShadowOverride"), 1,
         0
