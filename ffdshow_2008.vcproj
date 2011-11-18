@@ -4824,6 +4824,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\codecs\TvideoCodecQuickSync.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\codecs\TvideoCodecQuickSync.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\codecs\TvideoCodecUncompressed.cpp"
 				>
 			</File>
