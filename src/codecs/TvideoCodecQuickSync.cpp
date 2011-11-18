@@ -24,7 +24,7 @@
 #include "IffdshowBase.h"
 #include "IffdshowDecVideo.h"
 #include "dsutil.h"
-#include "IntelQuickSyncDecoder/IQuickSyncDecoder.h"
+#include "IntelQuickSyncDecoder/src/IQuickSyncDecoder.h"
 
 const char_t* TvideoCodecQuickSync::dllname=_l(QS_DEC_DLL_NAME);
 
