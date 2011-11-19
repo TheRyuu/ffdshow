@@ -212,9 +212,11 @@ template<class _mm> void TimgFilterNoiseMplayer::Tprocess::lineNoiseAvg_simd(uin
         typename _mm::__m mm0,mm1,mm2,mm3;
         movdqu (mm1,shift2[0]+mmx_len+x);
         movq (mm0,src+mmx_len+x);
-        typename _mm::__m shift1_8=_mm::loadU(shift2[1]+mmx_len+x);
+        typename _mm::__m shift1_8;
+        movVqu(shift1_8, shift2[1]+mmx_len+x);
         paddb (mm1,shift1_8);
-        typename _mm::__m shift2_8=_mm::loadU(shift2[2]+mmx_len+x);
+        typename _mm::__m shift2_8;
+        movVqu(shift2_8, shift2[2]+mmx_len+x);
         paddb (mm1,shift2_8);
         movq (mm2,mm0);
         movq (mm3,mm1);
@@ -401,7 +403,7 @@ template<class _mm,bool chroma,bool avih,bool uniform> void TimgFilterNoise::add
                 noise=noisenext64=_mm::add_pi16(_mm::madd_pi16(noisenext64,Tnoise<_mm>::noiseConst()),Tnoise<_mm>::noiseConst());
                 noise=_mm::subs_pi16(_mm::and_si64(noise,m255),m128);
             } else {
-                noise=_mm::loadU(noiseMask+x);    //SSE3
+                movVqu(noise, noiseMask+x);    //SSE3
             }
             typename _mm::__m noiseMul,src8=_mm::unpacklo_pi8(_mm::load2(src+x),m0);
             if (uniform) {
@@ -415,7 +417,7 @@ template<class _mm,bool chroma,bool avih,bool uniform> void TimgFilterNoise::add
                 noiseMul=_mm::srai_pi16(_mm::mullo_pi16(noiseMul,noise),8);
             }
             if (!avih) {
-                _mm::storeU(noiseMask+x,noiseMul=_mm::srai_pi16(_mm::mullo_pi16(noiseMul,noiseStrength64),8));
+                movVqu(noiseMask+x,noiseMul=_mm::srai_pi16(_mm::mullo_pi16(noiseMul,noiseStrength64),8));
             }
             _mm::store2(dst+x,_mm::packs_pu16(_mm::add_pi16(noiseMul,src8),m0));
         }
