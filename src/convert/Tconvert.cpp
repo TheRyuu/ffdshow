@@ -266,6 +266,7 @@ int Tconvert::convert(uint64_t incsp0,
                 } //switch (outcsp1)
                 break;
             case FF_CSP_420P10:
+            case FF_CSP_444P10:
                 if (m_highQualityRGB && !((outcsp|incsp) & FF_CSP_FLAGS_INTERLACED) && outcsp_sup_ffdshow_converter(outcsp1))
                     mode = MODE_ffdshow_converters;
                 break;

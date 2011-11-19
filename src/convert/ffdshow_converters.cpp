@@ -26,7 +26,7 @@
 #pragma warning (disable: 4799) // EMMS
 #endif
 
-void TffdshowConverters::init(uint64_t incsp,                 // FF_CSP_420P, FF_CSP_NV12, FF_CSP_YUY2, FF_CSP_420P or FF_CSP_420P10 (progressive only)
+void TffdshowConverters::init(uint64_t incsp,                 // FF_CSP_420P, FF_CSP_NV12, FF_CSP_YUY2, FF_CSP_420P, FF_CSP_420P10 or FF_CSP_440P10 (progressive only)
                               uint64_t outcsp,                // FF_CSP_RGB32 or FF_CSP_RGB24
                               ffYCbCr_RGB_MatrixCoefficientsType cspOptionsIturBt,  // ffYCbCr_RGB_coeff_ITUR_BT601, ffYCbCr_RGB_coeff_ITUR_BT709 or ffYCbCr_RGB_coeff_SMPTE240M
                               int input_Y_white_level,        // input Y level (TV:235, PC:255)
@@ -131,262 +131,278 @@ void TffdshowConverters::convert_a_unit(const unsigned char* &srcY,
                                         const uint16_t* dither_ptr)
 {
     // output 4x2 RGB pixels.
-    const int bitDepth = (incsp == FF_CSP_420P10) ? 10 : 8;
+    const int bitDepth = (incsp == FF_CSP_420P10 || incsp == FF_CSP_444P10) ? 10 : 8;
     __m128i xmm0,xmm1,xmm2,xmm3,xmm4,xmm5,xmm6,xmm7;
     xmm7 = _mm_setzero_si128 ();
 
-    if (incsp == FF_CSP_420P10) {
-        // 4:2:0 color spaces 10bit
-        if (left_edge) {
-            loadLeftEdge10((const __m128i*)(srcCb),               xmm1, xmm0);     // xmm1 = Cb02,Cb01,Cb00,Cb00
-            loadLeftEdge10((const __m128i*)(srcCb + stride_CbCr), xmm3, xmm2);     // xmm3 = Cb12,Cb11,Cb10,Cb10
-            loadLeftEdge10((const __m128i*)(srcCr),               xmm0, xmm4);     // xmm0 = Cr02,Cr01,Cr00,Cr00
-            loadLeftEdge10((const __m128i*)(srcCr + stride_CbCr), xmm2, xmm5);     // xmm2 = Cr12,Cr11,Cr10,Cr10
-            srcCb += 2;
-            srcCr += 2;
-        } else if (right_edge) {
-            loadRightEdge10((const __m128i*)(srcCb - 2),               xmm1, xmm0);// xmm1 = Cb01,Cb00,Cb0-1,Cb0-2
-            loadRightEdge10((const __m128i*)(srcCb + stride_CbCr - 2), xmm3, xmm2);// xmm3 = Cb11,Cb10,Cb1-1,Cb1-2
-            loadRightEdge10((const __m128i*)(srcCr - 2),               xmm0, xmm4);// xmm0 = Cr01,Cr00,Cr0-1,Cr0-2
-            loadRightEdge10((const __m128i*)(srcCr + stride_CbCr - 2), xmm2, xmm5);// xmm2 = Cr11,Cr10,Cr1-1,Cr1-2
-        } else {
-            xmm1 = _mm_move_epi64(*(const __m128i*)(srcCb));                       // xmm1 = Cb02,Cb01,Cb00,Cb0-1
-            xmm3 = _mm_move_epi64(*(const __m128i*)(srcCb + stride_CbCr));         // xmm3 = Cb12,Cb11,Cb10,Cb1-0
-            xmm0 = _mm_move_epi64(*(const __m128i*)(srcCr));                       // xmm0 = Cr02,Cr01,Cr00,Cr0-1
-            xmm2 = _mm_move_epi64(*(const __m128i*)(srcCr + stride_CbCr));         // xmm2 = Cr12,Cr11,Cr10,Cr1-1
-            srcCb += 4;
-            srcCr += 4;
-        }
-        xmm0 = _mm_unpacklo_epi16(xmm1,xmm0);                                      // xmm0 = Cr02,Cb02,Cr01,Cb01,Cr00,Cb00,Cr-01,Cb0-0
-        xmm2 = _mm_unpacklo_epi16(xmm3,xmm2);                                      // xmm2 = Cr12,Cb12,Cr11,Cb11,Cr00,Cb00,Cr-11,Cb1-1
-
-        xmm1 = xmm0;
-        xmm1 = _mm_add_epi16(xmm1,xmm0);
-        xmm1 = _mm_add_epi16(xmm1,xmm0);
-        xmm1 = _mm_add_epi16(xmm1,xmm2);                                           // xmm1 = 3Cr02+Cr12,3Cb02+Cb12,... = P02,P01,P00,P0-1 (1bit)
-        xmm3 = xmm2;
-        xmm3 = _mm_add_epi16(xmm3,xmm2);
-        xmm3 = _mm_add_epi16(xmm3,xmm2);
-        xmm3 = _mm_add_epi16(xmm3,xmm0);                                           // xmm3 = Cr02+3Cr12,Cb02+3Cb12,... = P12,P11,P10,P1-1 (12bit)
-    } else if (incsp == FF_CSP_420P || incsp == FF_CSP_NV12) {
-        // 4:2:0 color spaces
-        if (incsp == FF_CSP_420P) {
-            if (left_edge) {
-                uint32_t eax;
-                eax = *(uint32_t *)(srcCb);                                        // eax  = Cb03,Cb02,Cb01,Cb00
-                xmm1 = _mm_cvtsi32_si128((eax << 8) + (eax & 0xff));               // xmm1 = Cb02,Cb01,Cb00,Cb00
-                eax = *(uint32_t *)(srcCb + stride_CbCr);                          // eax  = Cb13,Cb12,Cb11,Cb10
-                xmm3 = _mm_cvtsi32_si128((eax << 8) + (eax & 0xff));               // xmm3 = Cb12,Cb11,Cb10,Cb10
-                eax = *(uint32_t *)(srcCr);
-                xmm0 = _mm_cvtsi32_si128((eax << 8) + (eax & 0xff));
-                eax = *(uint32_t *)(srcCr + stride_CbCr);
-                xmm2 = _mm_cvtsi32_si128((eax << 8) + (eax & 0xff));
-                srcCb ++;
-                srcCr ++;
-            } else if (right_edge) {
-                uint16_t ax;
-                uint8_t dl;
-                ax = *(uint16_t *)(srcCb);                                         // Cb00,Cb0-1
-                dl = *(uint8_t *)(srcCb + 2);                                      // Cb01
-                xmm1 = _mm_cvtsi32_si128((uint32_t(dl) << 24) + (uint32_t(dl) << 16) + ax); // xmm1 = Cb01,Cb01,Cb00,Cb0-1
-                ax = *(uint16_t *)(srcCr);                                         // Cr00,Cr0-1
-                dl = *(uint8_t *)(srcCr + 2);                                      // Cr01
-                xmm0 = _mm_cvtsi32_si128((uint32_t(dl) << 24) + (uint32_t(dl) << 16) + ax); // xmm0 = Cr01,Cr01,Cr00,Cr0-1
-                ax = *(uint16_t *)(srcCb + stride_CbCr);                           // Cb10,Cb1-1
-                dl = *(uint8_t *)(srcCb + stride_CbCr + 2);                        // Cb11
-                xmm3 = _mm_cvtsi32_si128((uint32_t(dl) << 24) + (uint32_t(dl) << 16) + ax); // xmm3 = Cb11,Cb11,Cb10,Cb1-1
-                ax = *(uint16_t *)(srcCr + stride_CbCr);                           // Cr10,Cr1-1
-                dl = *(uint8_t *)(srcCr + stride_CbCr + 2);                        // Cr11
-                xmm2 = _mm_cvtsi32_si128((uint32_t(dl) << 24) + (uint32_t(dl) << 16) + ax); // xmm2 = Cr11,Cr11,Cr10,Cr1-1
-            } else {
-                xmm1 = _mm_cvtsi32_si128(*(const int*)(srcCb));                   // xmm1 = Cb02,Cb01,Cb00,Cb0-1
-                xmm3 = _mm_cvtsi32_si128(*(const int*)(srcCb + stride_CbCr));     // xmm3 = Cb12,Cb11,Cb10,Cb1-0
-                xmm0 = _mm_cvtsi32_si128(*(const int*)(srcCr));                   // xmm0 = Cr02,Cr01,Cr00,Cr0-1
-                xmm2 = _mm_cvtsi32_si128(*(const int*)(srcCr + stride_CbCr));     // xmm2 = Cr12,Cr11,Cr10,Cr1-1
-                srcCb += 2;
-                srcCr += 2;
-            }
-            xmm0 = _mm_unpacklo_epi8(xmm1,xmm0);                                   // xmm0 = Cr02,Cb02,Cr01,Cb01,Cr00,Cb00,Cr-01,Cb0-0
-            xmm2 = _mm_unpacklo_epi8(xmm3,xmm2);                                   // xmm2 = Cr12,Cb12,Cr11,Cb11,Cr00,Cb00,Cr-11,Cb1-1
-            xmm0 = _mm_unpacklo_epi8(xmm0,xmm7);                                   // xmm0 = 0,Cr02,0,Cb02,0,Cr01,0,Cb01,0,Cr00,0,Cb00,0,Cr-01,0,Cb0-1
-            xmm2 = _mm_unpacklo_epi8(xmm2,xmm7);                                   // xmm2 = 0,Cr12,0,Cb12,0,Cr11,0,Cb11,0,Cr10,0,Cb10,0,Cr-11,0,Cb1-1
-        } else { /*NV12*/
-            if (left_edge) {
-                xmm0 = _mm_loadl_epi64((const __m128i*)srcCb);                     // xmm0 = Cb03,Cr03,Cb02,Cr02,Cb01,Cr01,Cb00,Cr00
-                xmm2 = _mm_loadl_epi64((const __m128i*)(srcCb + stride_CbCr));     // xmm2 = Cb13,Cr13,Cb12,Cr12,Cb11,Cr11,Cb10,Cr10
-                xmm4 = xmm0;
-                xmm5 = xmm2;
-                xmm0 = _mm_slli_si128(xmm0,2);                                     // xmm0 = Cb02,Cr02,Cb01,Cr01,Cb00,Cr00,0,0
-                xmm2 = _mm_slli_si128(xmm2,2);                                     // xmm2 = Cb12,Cr12,Cb11,Cr11,Cb10,Cr10,0,0
-                xmm4 = _mm_slli_si128(xmm4,14);                                    // clear upper 14 bytes
-                xmm5 = _mm_slli_si128(xmm5,14);
-                xmm4 = _mm_srli_si128(xmm4,14);
-                xmm5 = _mm_srli_si128(xmm5,14);
-                xmm0 = _mm_or_si128(xmm0,xmm4);                                    // xmm0 = Cb02,Cr02,Cb01,Cr01,Cb00,Cr00,Cb00,Cr00
-                xmm2 = _mm_or_si128(xmm2,xmm5);                                    // xmm2 = Cb12,Cr12,Cb11,Cr11,Cb10,Cr10,Cb10,Cr10
-                srcCb += 2;
-            } else if (right_edge) {
-                xmm0 = _mm_loadl_epi64((const __m128i*)(srcCb - 2));               // xmm0 = Cb01,Cr01,Cb00,Cr00,Cb-01,Cr-01,Cb-02,Cb0-2
-                xmm2 = _mm_loadl_epi64((const __m128i*)(srcCb - 2 + stride_CbCr)); // xmm2 = Cb11,Cr11,Cb10,Cr10,Cb-11,Cr-11,Cb-12,Cb1-2
-                xmm4 = xmm0;
-                xmm5 = xmm2;
-                xmm0 = _mm_srli_si128(xmm0,2);                                     // xmm0 = --,--,Cb01,Cr01,Cb00,Cr00,Cb-01,Cr0-1
-                xmm2 = _mm_srli_si128(xmm2,2);                                     // xmm2 = --,--,Cb11,Cr11,Cb10,Cr10,Cb-11,Cr1-1
-
-                xmm4 = _mm_srli_si128(xmm4,6);                                     // clear lower 6 bytes
-                xmm5 = _mm_srli_si128(xmm5,6);
-                xmm4 = _mm_slli_si128(xmm4,6);
-                xmm5 = _mm_slli_si128(xmm5,6);
-                xmm0 = _mm_or_si128(xmm0,xmm4);                                    // xmm0 = Cb01,Cr01,Cb01,Cr01,Cb00,Cr00,Cb-01,Cr0-1
-                xmm2 = _mm_or_si128(xmm2,xmm5);                                    // xmm2 = Cb11,Cr11,Cb11,Cr11,Cb10,Cr10,Cb-11,Cr1-1
-            } else {
-                xmm0 = _mm_loadl_epi64((const __m128i*)(srcCb));                   // Cb02,Cr02,Cb01,Cr01,Cb00,Cr00,Cb-01,Cr0-1
-                xmm2 = _mm_loadl_epi64((const __m128i*)(srcCb + stride_CbCr));     // Cb12,Cr12,Cb11,Cr11,Cb10,Cr10,Cb-11,Cr1-1
-                srcCb += 4;
-            }
-            //xmm0 = _mm_shufflelo_epi16(xmm0,0xb1); xmm0 = _mm_shufflehi_epi16(xmm0,0xb1); xmm2 = ... // for NV21
-            xmm0 = _mm_unpacklo_epi8(xmm0,xmm7);
-            xmm2 = _mm_unpacklo_epi8(xmm2,xmm7);
-        }
-
-        xmm1 = xmm0;
-        xmm1 = _mm_add_epi16(xmm1,xmm0);
-        xmm1 = _mm_add_epi16(xmm1,xmm0);
-        xmm1 = _mm_add_epi16(xmm1,xmm2);                                           // xmm1 = 3Cr02+Cr12,3Cb02+Cb12,... = P02,P01,P00,P0-1 (10bit)
-        xmm3 = xmm2;
-        xmm3 = _mm_add_epi16(xmm3,xmm2);
-        xmm3 = _mm_add_epi16(xmm3,xmm2);
-        xmm3 = _mm_add_epi16(xmm3,xmm0);                                           // xmm3 = Cr02+3Cr12,Cb02+3Cb12,... = P12,P11,P10,P1-1 (10bit)
+    if (incsp == FF_CSP_444P10) {
+        // 4:4:4 YCbCr 10bit
+        xmm0 = _mm_move_epi64(*(const __m128i*)(srcCb));                       // xmm0 = Cb03,Cb02,Cb01,Cb00
+        xmm2 = _mm_move_epi64(*(const __m128i*)(srcCb + stride_CbCr));         // xmm2 = Cb13,Cb12,Cb11,Cb10
+        xmm1 = _mm_move_epi64(*(const __m128i*)(srcCr));                       // xmm1 = Cr03,Cr02,Cr01,Cr00
+        xmm3 = _mm_move_epi64(*(const __m128i*)(srcCr + stride_CbCr));         // xmm3 = Cr13,Cr12,Cr11,Cr10
+        xmm1 = _mm_unpacklo_epi16(xmm0,xmm1);                                  // xmm1 = Cr03,Cb03,Cr02,Cb02,Cr01,Cb01,Cr00,Cb00
+        xmm3 = _mm_unpacklo_epi16(xmm2,xmm3);                                  // xmm3 = Cr13,Cb13,Cr12,Cb12,Cr11,Cb11,Cr10,Cb10
+        xmm1 = _mm_slli_epi16(xmm1, 4);
+        xmm3 = _mm_slli_epi16(xmm3, 4);
+        srcCb += 8;
+        srcCr += 8;
+        // xmm1 = 16*P03 -1024*16, 16*P02 -1024*16, 16*P01 -1024*16, 16*P00 -1024*16 (14bit)
+        // xmm3 = 16*P13 -1024*16, 16*P12 -1024*16, 16*P11 -1024*16, 16*P10 -1024*16 (14bit)
     } else {
-        // 4:2:2 color spaces
-        if (incsp == FF_CSP_422P) {
-            // YV16
+        if (incsp == FF_CSP_420P10) {
+            // 4:2:0 YCbCr 10bit
             if (left_edge) {
-                uint32_t eax;
-                eax = *(uint32_t *)(srcCb);                                        // eax  = Cb03,Cb02,Cb01,Cb00
-                xmm0 = _mm_cvtsi32_si128((eax << 8) + (eax & 0xff));               // xmm0 = Cb02,Cb01,Cb00,Cb00
-                eax = *(uint32_t *)(srcCb + stride_CbCr);                          // eax  = Cb13,Cb12,Cb11,Cb10
-                xmm2 = _mm_cvtsi32_si128((eax << 8) + (eax & 0xff));               // xmm2 = Cb12,Cb11,Cb10,Cb10
-                eax = *(uint32_t *)(srcCr);
-                xmm1 = _mm_cvtsi32_si128((eax << 8) + (eax & 0xff));
-                eax = *(uint32_t *)(srcCr + stride_CbCr);
-                xmm3 = _mm_cvtsi32_si128((eax << 8) + (eax & 0xff));
-                srcCb ++;
-                srcCr ++;
-            } else if (right_edge) {
-                uint16_t ax;
-                uint8_t dl;
-                ax = *(uint16_t *)(srcCb);                                         // Cb00,Cb0-1
-                dl = *(uint8_t *)(srcCb + 2);                                      // Cb01
-                xmm0 = _mm_cvtsi32_si128((uint32_t(dl) << 24) + (uint32_t(dl) << 16) + ax); // xmm0 = Cb01,Cb01,Cb00,Cb0-1
-                ax = *(uint16_t *)(srcCb + stride_CbCr);                           // Cb10,Cb1-1
-                dl = *(uint8_t *)(srcCb + stride_CbCr + 2);                        // Cb11
-                xmm2 = _mm_cvtsi32_si128((uint32_t(dl) << 24) + (uint32_t(dl) << 16) + ax); // xmm1 = Cb11,Cb11,Cb10,Cb1-1
-                ax = *(uint16_t *)(srcCr);                                         // Cr00,Cr0-1
-                dl = *(uint8_t *)(srcCr + 2);                                      // Cr01
-                xmm1 = _mm_cvtsi32_si128((uint32_t(dl) << 24) + (uint32_t(dl) << 16) + ax); // xmm2 = Cr01,Cr01,Cr00,Cr0-1
-                ax = *(uint16_t *)(srcCr + stride_CbCr);                           // Cr10,Cr1-1
-                dl = *(uint8_t *)(srcCr + stride_CbCr + 2);                        // Cr11
-                xmm3 = _mm_cvtsi32_si128((uint32_t(dl) << 24) + (uint32_t(dl) << 16) + ax); // xmm3 = Cr11,Cr11,Cr10,Cr1-1
-            } else {
-                xmm0 = _mm_cvtsi32_si128(*(const int*)(srcCb));                   // xmm0 = Cb02,Cb01,Cb00,Cb0-1
-                xmm2 = _mm_cvtsi32_si128(*(const int*)(srcCb + stride_CbCr));     // xmm2 = Cb12,Cb11,Cb10,Cb1-0
-                xmm1 = _mm_cvtsi32_si128(*(const int*)(srcCr));                   // xmm1 = Cr02,Cr01,Cr00,Cr0-1
-                xmm3 = _mm_cvtsi32_si128(*(const int*)(srcCr + stride_CbCr));     // xmm3 = Cr12,Cr11,Cr10,Cr1-1
+                loadLeftEdge10((const __m128i*)(srcCb),               xmm1, xmm0);     // xmm1 = Cb02,Cb01,Cb00,Cb00
+                loadLeftEdge10((const __m128i*)(srcCb + stride_CbCr), xmm3, xmm2);     // xmm3 = Cb12,Cb11,Cb10,Cb10
+                loadLeftEdge10((const __m128i*)(srcCr),               xmm0, xmm4);     // xmm0 = Cr02,Cr01,Cr00,Cr00
+                loadLeftEdge10((const __m128i*)(srcCr + stride_CbCr), xmm2, xmm5);     // xmm2 = Cr12,Cr11,Cr10,Cr10
                 srcCb += 2;
                 srcCr += 2;
-            }
-            xmm1 = _mm_unpacklo_epi8(xmm0,xmm1);                                   // xmm1 = Cr02,Cb02,Cr01,Cb01,Cr00,Cb00,Cr0-1,Cb0-1
-            xmm3 = _mm_unpacklo_epi8(xmm2,xmm3);                                   // xmm2 = Cr12,Cb12,Cr11,Cb11,Cr00,Cb00,Cr1-1,Cb1-1
-            xmm1 = _mm_unpacklo_epi8(xmm1,xmm7);                                   // xmm1 = 0,Cr02,0,Cb02,0,Cr01,0,Cb01,0,Cr00,0,Cb00,0,Cr0-1,0,Cb0-1
-            xmm3 = _mm_unpacklo_epi8(xmm3,xmm7);                                   // xmm3 = 0,Cr12,0,Cb12,0,Cr11,0,Cb11,0,Cr10,0,Cb10,0,Cr1-1,0,Cb1-1
-        } else if (incsp == FF_CSP_YUY2) {
-            if (left_edge) {
-                xmm1 = _mm_loadu_si128((const __m128i*)(srcY));                    // xmm1 = y,Cr03,y,Cb03,y,Cr02,y,Cb02,y,Cr01,y,Cb01,y,Cr00,y,Cb00
-                xmm3 = _mm_loadu_si128((const __m128i*)(srcY + stride_Y));         // xmm3 = y,Cr13,y,Cb13,y,Cr12,y,Cb12,y,Cr11,y,Cb11,y,Cr10,y,Cb10
-                xmm2 = xmm1;
-                xmm6 = xmm3;
-                xmm1 = _mm_slli_si128(xmm1,4);                                     // xmm1 = y,Cr02,y,Cb02,y,Cr01,y,Cb01,y,Cr00,y,Cb00,0,0,0,0
-                xmm3 = _mm_slli_si128(xmm3,4);                                     // xmm3 = y,Cr12,y,Cb12,y,Cr11,y,Cb11,y,Cr10,y,Cb10,0,0,0,0
-                xmm5 = xmm1;                                                       // For Y value. Next block does not use xmm4,5
-                xmm4 = xmm3;
-                xmm2 = _mm_slli_si128(xmm2,12);                                    // clear upper 12bytes
-                xmm6 = _mm_slli_si128(xmm6,12);
-                xmm2 = _mm_srli_si128(xmm2,12);
-                xmm6 = _mm_srli_si128(xmm6,12);
-                xmm1 = _mm_or_si128(xmm1,xmm2);
-                xmm3 = _mm_or_si128(xmm3,xmm6);
-
-                xmm1 = _mm_srli_epi16(xmm1,8);                                     // xmm1 = 0,Cr02,0,Cb02,0,Cr01,0,Cb01,0,Cr00,0,Cb00,0,Cr00,0,Cb00
-                xmm3 = _mm_srli_epi16(xmm3,8);                                     // xmm3 = 0,Cr12,0,Cb12,0,Cr11,0,Cb11,0,Cr10,0,Cb10,0,Cr10,0,Cb10
-
-                srcY += 4;
             } else if (right_edge) {
-                xmm1 = _mm_loadu_si128((const __m128i*)(srcY - 4));                // xmm1 = y,Cr01,y,Cb01,y,Cr00,y,Cb00,y,Cr0-1,y,Cb0-1,y,Cr0-2,y,Cb0-2
-                xmm3 = _mm_loadu_si128((const __m128i*)(srcY - 4 + stride_Y));     // xmm3 = y,Cr11,y,Cb11,y,Cr10,y,Cb10,y,Cr1-1,y,Cb1-1,y,Cr1-2,y,Cb1-2
-                xmm2 = xmm1;
-                xmm6 = xmm3;
-                xmm1 = _mm_srli_si128(xmm1,4);                                     // xmm1 = 0,0,0,0,y,Cr01,y,Cb01,y,Cr00,y,Cb00,Cr0-1,y,Cb0-1
-                xmm3 = _mm_srli_si128(xmm3,4);                                     // xmm3 = 0,0,0,0,y,Cr11,y,Cb11,y,Cr10,y,Cb10,Cr1-1,y,Cb1-1
-                xmm5 = xmm1;                                                       // For Y value. Next block does not use xmm4,5
-                xmm4 = xmm3;
-                xmm2 = _mm_srli_si128(xmm2,12);                                    // clear lower 12bytes
-                xmm6 = _mm_srli_si128(xmm6,12);
-                xmm2 = _mm_slli_si128(xmm2,12);
-                xmm6 = _mm_slli_si128(xmm6,12);
-                xmm1 = _mm_or_si128(xmm1,xmm2);
-                xmm3 = _mm_or_si128(xmm3,xmm6);
-
-                xmm1 = _mm_srli_epi16(xmm1,8);                                     // xmm1 = 0,Cr01,0,Cb01,0,Cr01,0,Cb01,0,Cr00,0,Cb00,0,Cr00,0,Cb00
-                xmm3 = _mm_srli_epi16(xmm3,8);                                     // xmm3 = 0,Cr11,0,Cb11,0,Cr11,0,Cb11,0,Cr10,0,Cb10,0,Cr10,0,Cb10
+                loadRightEdge10((const __m128i*)(srcCb - 2),               xmm1, xmm0);// xmm1 = Cb01,Cb00,Cb0-1,Cb0-2
+                loadRightEdge10((const __m128i*)(srcCb + stride_CbCr - 2), xmm3, xmm2);// xmm3 = Cb11,Cb10,Cb1-1,Cb1-2
+                loadRightEdge10((const __m128i*)(srcCr - 2),               xmm0, xmm4);// xmm0 = Cr01,Cr00,Cr0-1,Cr0-2
+                loadRightEdge10((const __m128i*)(srcCr + stride_CbCr - 2), xmm2, xmm5);// xmm2 = Cr11,Cr10,Cr1-1,Cr1-2
             } else {
-                xmm1 = _mm_loadu_si128((const __m128i*)(srcY));
-                xmm3 = _mm_loadu_si128((const __m128i*)(srcY + stride_Y));
-                xmm5 = xmm1;                                                       // For Y value. Next block does not use xmm4,5
-                xmm4 = xmm3;
-                xmm1 = _mm_srli_epi16(xmm1,8);                                     // xmm1 = 0,Cr02,0,Cb02,0,Cr01,0,Cb01,0,Cr00,0,Cb00,0,Cr0-1,0,Cb0-1
-                xmm3 = _mm_srli_epi16(xmm3,8);                                     // xmm3 = 0,Cr12,0,Cb12,0,Cr11,0,Cb11,0,Cr10,0,Cb10,0,Cr1-1,0,Cb1-1
-                srcY += 8;
+                xmm1 = _mm_move_epi64(*(const __m128i*)(srcCb));                       // xmm1 = Cb02,Cb01,Cb00,Cb0-1
+                xmm3 = _mm_move_epi64(*(const __m128i*)(srcCb + stride_CbCr));         // xmm3 = Cb12,Cb11,Cb10,Cb1-1
+                xmm0 = _mm_move_epi64(*(const __m128i*)(srcCr));                       // xmm0 = Cr02,Cr01,Cr00,Cr0-1
+                xmm2 = _mm_move_epi64(*(const __m128i*)(srcCr + stride_CbCr));         // xmm2 = Cr12,Cr11,Cr10,Cr1-1
+                srcCb += 4;
+                srcCr += 4;
             }
+            xmm0 = _mm_unpacklo_epi16(xmm1,xmm0);                                      // xmm0 = Cr02,Cb02,Cr01,Cb01,Cr00,Cb00,Cr0-1,Cb0-1
+            xmm2 = _mm_unpacklo_epi16(xmm3,xmm2);                                      // xmm2 = Cr12,Cb12,Cr11,Cb11,Cr10,Cb10,Cr1-1,Cb1-1
+
+            xmm1 = xmm0;
+            xmm1 = _mm_add_epi16(xmm1,xmm0);
+            xmm1 = _mm_add_epi16(xmm1,xmm0);
+            xmm1 = _mm_add_epi16(xmm1,xmm2);                                           // xmm1 = 3Cr02+Cr12,3Cb02+Cb12,... = P02,P01,P00,P0-1 (12bit)
+            xmm3 = xmm2;
+            xmm3 = _mm_add_epi16(xmm3,xmm2);
+            xmm3 = _mm_add_epi16(xmm3,xmm2);
+            xmm3 = _mm_add_epi16(xmm3,xmm0);                                           // xmm3 = Cr02+3Cr12,Cb02+3Cb12,... = P12,P11,P10,P1-1 (12bit)
+        } else if (incsp == FF_CSP_420P || incsp == FF_CSP_NV12) {
+            // 4:2:0 color spaces
+            if (incsp == FF_CSP_420P) {
+                if (left_edge) {
+                    uint32_t eax;
+                    eax = *(uint32_t *)(srcCb);                                        // eax  = Cb03,Cb02,Cb01,Cb00
+                    xmm1 = _mm_cvtsi32_si128((eax << 8) + (eax & 0xff));               // xmm1 = Cb02,Cb01,Cb00,Cb00
+                    eax = *(uint32_t *)(srcCb + stride_CbCr);                          // eax  = Cb13,Cb12,Cb11,Cb10
+                    xmm3 = _mm_cvtsi32_si128((eax << 8) + (eax & 0xff));               // xmm3 = Cb12,Cb11,Cb10,Cb10
+                    eax = *(uint32_t *)(srcCr);
+                    xmm0 = _mm_cvtsi32_si128((eax << 8) + (eax & 0xff));
+                    eax = *(uint32_t *)(srcCr + stride_CbCr);
+                    xmm2 = _mm_cvtsi32_si128((eax << 8) + (eax & 0xff));
+                    srcCb ++;
+                    srcCr ++;
+                } else if (right_edge) {
+                    uint16_t ax;
+                    uint8_t dl;
+                    ax = *(uint16_t *)(srcCb);                                         // Cb00,Cb0-1
+                    dl = *(uint8_t *)(srcCb + 2);                                      // Cb01
+                    xmm1 = _mm_cvtsi32_si128((uint32_t(dl) << 24) + (uint32_t(dl) << 16) + ax); // xmm1 = Cb01,Cb01,Cb00,Cb0-1
+                    ax = *(uint16_t *)(srcCr);                                         // Cr00,Cr0-1
+                    dl = *(uint8_t *)(srcCr + 2);                                      // Cr01
+                    xmm0 = _mm_cvtsi32_si128((uint32_t(dl) << 24) + (uint32_t(dl) << 16) + ax); // xmm0 = Cr01,Cr01,Cr00,Cr0-1
+                    ax = *(uint16_t *)(srcCb + stride_CbCr);                           // Cb10,Cb1-1
+                    dl = *(uint8_t *)(srcCb + stride_CbCr + 2);                        // Cb11
+                    xmm3 = _mm_cvtsi32_si128((uint32_t(dl) << 24) + (uint32_t(dl) << 16) + ax); // xmm3 = Cb11,Cb11,Cb10,Cb1-1
+                    ax = *(uint16_t *)(srcCr + stride_CbCr);                           // Cr10,Cr1-1
+                    dl = *(uint8_t *)(srcCr + stride_CbCr + 2);                        // Cr11
+                    xmm2 = _mm_cvtsi32_si128((uint32_t(dl) << 24) + (uint32_t(dl) << 16) + ax); // xmm2 = Cr11,Cr11,Cr10,Cr1-1
+                } else {
+                    xmm1 = _mm_cvtsi32_si128(*(const int*)(srcCb));                   // xmm1 = Cb02,Cb01,Cb00,Cb0-1
+                    xmm3 = _mm_cvtsi32_si128(*(const int*)(srcCb + stride_CbCr));     // xmm3 = Cb12,Cb11,Cb10,Cb1-0
+                    xmm0 = _mm_cvtsi32_si128(*(const int*)(srcCr));                   // xmm0 = Cr02,Cr01,Cr00,Cr0-1
+                    xmm2 = _mm_cvtsi32_si128(*(const int*)(srcCr + stride_CbCr));     // xmm2 = Cr12,Cr11,Cr10,Cr1-1
+                    srcCb += 2;
+                    srcCr += 2;
+                }
+                xmm0 = _mm_unpacklo_epi8(xmm1,xmm0);                                   // xmm0 = Cr02,Cb02,Cr01,Cb01,Cr00,Cb00,Cr-01,Cb0-0
+                xmm2 = _mm_unpacklo_epi8(xmm3,xmm2);                                   // xmm2 = Cr12,Cb12,Cr11,Cb11,Cr00,Cb00,Cr-11,Cb1-1
+                xmm0 = _mm_unpacklo_epi8(xmm0,xmm7);                                   // xmm0 = 0,Cr02,0,Cb02,0,Cr01,0,Cb01,0,Cr00,0,Cb00,0,Cr-01,0,Cb0-1
+                xmm2 = _mm_unpacklo_epi8(xmm2,xmm7);                                   // xmm2 = 0,Cr12,0,Cb12,0,Cr11,0,Cb11,0,Cr10,0,Cb10,0,Cr-11,0,Cb1-1
+            } else { /*NV12*/
+                if (left_edge) {
+                    xmm0 = _mm_loadl_epi64((const __m128i*)srcCb);                     // xmm0 = Cb03,Cr03,Cb02,Cr02,Cb01,Cr01,Cb00,Cr00
+                    xmm2 = _mm_loadl_epi64((const __m128i*)(srcCb + stride_CbCr));     // xmm2 = Cb13,Cr13,Cb12,Cr12,Cb11,Cr11,Cb10,Cr10
+                    xmm4 = xmm0;
+                    xmm5 = xmm2;
+                    xmm0 = _mm_slli_si128(xmm0,2);                                     // xmm0 = Cb02,Cr02,Cb01,Cr01,Cb00,Cr00,0,0
+                    xmm2 = _mm_slli_si128(xmm2,2);                                     // xmm2 = Cb12,Cr12,Cb11,Cr11,Cb10,Cr10,0,0
+                    xmm4 = _mm_slli_si128(xmm4,14);                                    // clear upper 14 bytes
+                    xmm5 = _mm_slli_si128(xmm5,14);
+                    xmm4 = _mm_srli_si128(xmm4,14);
+                    xmm5 = _mm_srli_si128(xmm5,14);
+                    xmm0 = _mm_or_si128(xmm0,xmm4);                                    // xmm0 = Cb02,Cr02,Cb01,Cr01,Cb00,Cr00,Cb00,Cr00
+                    xmm2 = _mm_or_si128(xmm2,xmm5);                                    // xmm2 = Cb12,Cr12,Cb11,Cr11,Cb10,Cr10,Cb10,Cr10
+                    srcCb += 2;
+                } else if (right_edge) {
+                    xmm0 = _mm_loadl_epi64((const __m128i*)(srcCb - 2));               // xmm0 = Cb01,Cr01,Cb00,Cr00,Cb-01,Cr-01,Cb-02,Cb0-2
+                    xmm2 = _mm_loadl_epi64((const __m128i*)(srcCb - 2 + stride_CbCr)); // xmm2 = Cb11,Cr11,Cb10,Cr10,Cb-11,Cr-11,Cb-12,Cb1-2
+                    xmm4 = xmm0;
+                    xmm5 = xmm2;
+                    xmm0 = _mm_srli_si128(xmm0,2);                                     // xmm0 = --,--,Cb01,Cr01,Cb00,Cr00,Cb-01,Cr0-1
+                    xmm2 = _mm_srli_si128(xmm2,2);                                     // xmm2 = --,--,Cb11,Cr11,Cb10,Cr10,Cb-11,Cr1-1
+
+                    xmm4 = _mm_srli_si128(xmm4,6);                                     // clear lower 6 bytes
+                    xmm5 = _mm_srli_si128(xmm5,6);
+                    xmm4 = _mm_slli_si128(xmm4,6);
+                    xmm5 = _mm_slli_si128(xmm5,6);
+                    xmm0 = _mm_or_si128(xmm0,xmm4);                                    // xmm0 = Cb01,Cr01,Cb01,Cr01,Cb00,Cr00,Cb-01,Cr0-1
+                    xmm2 = _mm_or_si128(xmm2,xmm5);                                    // xmm2 = Cb11,Cr11,Cb11,Cr11,Cb10,Cr10,Cb-11,Cr1-1
+                } else {
+                    xmm0 = _mm_loadl_epi64((const __m128i*)(srcCb));                   // Cb02,Cr02,Cb01,Cr01,Cb00,Cr00,Cb-01,Cr0-1
+                    xmm2 = _mm_loadl_epi64((const __m128i*)(srcCb + stride_CbCr));     // Cb12,Cr12,Cb11,Cr11,Cb10,Cr10,Cb-11,Cr1-1
+                    srcCb += 4;
+                }
+                //xmm0 = _mm_shufflelo_epi16(xmm0,0xb1); xmm0 = _mm_shufflehi_epi16(xmm0,0xb1); xmm2 = ... // for NV21
+                xmm0 = _mm_unpacklo_epi8(xmm0,xmm7);
+                xmm2 = _mm_unpacklo_epi8(xmm2,xmm7);
+            }
+
+            xmm1 = xmm0;
+            xmm1 = _mm_add_epi16(xmm1,xmm0);
+            xmm1 = _mm_add_epi16(xmm1,xmm0);
+            xmm1 = _mm_add_epi16(xmm1,xmm2);                                           // xmm1 = 3Cr02+Cr12,3Cb02+Cb12,... = P02,P01,P00,P0-1 (10bit)
+            xmm3 = xmm2;
+            xmm3 = _mm_add_epi16(xmm3,xmm2);
+            xmm3 = _mm_add_epi16(xmm3,xmm2);
+            xmm3 = _mm_add_epi16(xmm3,xmm0);                                           // xmm3 = Cr02+3Cr12,Cb02+3Cb12,... = P12,P11,P10,P1-1 (10bit)
+        } else {
+            // 4:2:2 color spaces
+            if (incsp == FF_CSP_422P) {
+                // YV16
+                if (left_edge) {
+                    uint32_t eax;
+                    eax = *(uint32_t *)(srcCb);                                        // eax  = Cb03,Cb02,Cb01,Cb00
+                    xmm0 = _mm_cvtsi32_si128((eax << 8) + (eax & 0xff));               // xmm0 = Cb02,Cb01,Cb00,Cb00
+                    eax = *(uint32_t *)(srcCb + stride_CbCr);                          // eax  = Cb13,Cb12,Cb11,Cb10
+                    xmm2 = _mm_cvtsi32_si128((eax << 8) + (eax & 0xff));               // xmm2 = Cb12,Cb11,Cb10,Cb10
+                    eax = *(uint32_t *)(srcCr);
+                    xmm1 = _mm_cvtsi32_si128((eax << 8) + (eax & 0xff));
+                    eax = *(uint32_t *)(srcCr + stride_CbCr);
+                    xmm3 = _mm_cvtsi32_si128((eax << 8) + (eax & 0xff));
+                    srcCb ++;
+                    srcCr ++;
+                } else if (right_edge) {
+                    uint16_t ax;
+                    uint8_t dl;
+                    ax = *(uint16_t *)(srcCb);                                         // Cb00,Cb0-1
+                    dl = *(uint8_t *)(srcCb + 2);                                      // Cb01
+                    xmm0 = _mm_cvtsi32_si128((uint32_t(dl) << 24) + (uint32_t(dl) << 16) + ax); // xmm0 = Cb01,Cb01,Cb00,Cb0-1
+                    ax = *(uint16_t *)(srcCb + stride_CbCr);                           // Cb10,Cb1-1
+                    dl = *(uint8_t *)(srcCb + stride_CbCr + 2);                        // Cb11
+                    xmm2 = _mm_cvtsi32_si128((uint32_t(dl) << 24) + (uint32_t(dl) << 16) + ax); // xmm1 = Cb11,Cb11,Cb10,Cb1-1
+                    ax = *(uint16_t *)(srcCr);                                         // Cr00,Cr0-1
+                    dl = *(uint8_t *)(srcCr + 2);                                      // Cr01
+                    xmm1 = _mm_cvtsi32_si128((uint32_t(dl) << 24) + (uint32_t(dl) << 16) + ax); // xmm2 = Cr01,Cr01,Cr00,Cr0-1
+                    ax = *(uint16_t *)(srcCr + stride_CbCr);                           // Cr10,Cr1-1
+                    dl = *(uint8_t *)(srcCr + stride_CbCr + 2);                        // Cr11
+                    xmm3 = _mm_cvtsi32_si128((uint32_t(dl) << 24) + (uint32_t(dl) << 16) + ax); // xmm3 = Cr11,Cr11,Cr10,Cr1-1
+                } else {
+                    xmm0 = _mm_cvtsi32_si128(*(const int*)(srcCb));                   // xmm0 = Cb02,Cb01,Cb00,Cb0-1
+                    xmm2 = _mm_cvtsi32_si128(*(const int*)(srcCb + stride_CbCr));     // xmm2 = Cb12,Cb11,Cb10,Cb1-0
+                    xmm1 = _mm_cvtsi32_si128(*(const int*)(srcCr));                   // xmm1 = Cr02,Cr01,Cr00,Cr0-1
+                    xmm3 = _mm_cvtsi32_si128(*(const int*)(srcCr + stride_CbCr));     // xmm3 = Cr12,Cr11,Cr10,Cr1-1
+                    srcCb += 2;
+                    srcCr += 2;
+                }
+                xmm1 = _mm_unpacklo_epi8(xmm0,xmm1);                                   // xmm1 = Cr02,Cb02,Cr01,Cb01,Cr00,Cb00,Cr0-1,Cb0-1
+                xmm3 = _mm_unpacklo_epi8(xmm2,xmm3);                                   // xmm2 = Cr12,Cb12,Cr11,Cb11,Cr00,Cb00,Cr1-1,Cb1-1
+                xmm1 = _mm_unpacklo_epi8(xmm1,xmm7);                                   // xmm1 = 0,Cr02,0,Cb02,0,Cr01,0,Cb01,0,Cr00,0,Cb00,0,Cr0-1,0,Cb0-1
+                xmm3 = _mm_unpacklo_epi8(xmm3,xmm7);                                   // xmm3 = 0,Cr12,0,Cb12,0,Cr11,0,Cb11,0,Cr10,0,Cb10,0,Cr1-1,0,Cb1-1
+            } else if (incsp == FF_CSP_YUY2) {
+                if (left_edge) {
+                    xmm1 = _mm_loadu_si128((const __m128i*)(srcY));                    // xmm1 = y,Cr03,y,Cb03,y,Cr02,y,Cb02,y,Cr01,y,Cb01,y,Cr00,y,Cb00
+                    xmm3 = _mm_loadu_si128((const __m128i*)(srcY + stride_Y));         // xmm3 = y,Cr13,y,Cb13,y,Cr12,y,Cb12,y,Cr11,y,Cb11,y,Cr10,y,Cb10
+                    xmm2 = xmm1;
+                    xmm6 = xmm3;
+                    xmm1 = _mm_slli_si128(xmm1,4);                                     // xmm1 = y,Cr02,y,Cb02,y,Cr01,y,Cb01,y,Cr00,y,Cb00,0,0,0,0
+                    xmm3 = _mm_slli_si128(xmm3,4);                                     // xmm3 = y,Cr12,y,Cb12,y,Cr11,y,Cb11,y,Cr10,y,Cb10,0,0,0,0
+                    xmm5 = xmm1;                                                       // For Y value. Next block does not use xmm4,5
+                    xmm4 = xmm3;
+                    xmm2 = _mm_slli_si128(xmm2,12);                                    // clear upper 12bytes
+                    xmm6 = _mm_slli_si128(xmm6,12);
+                    xmm2 = _mm_srli_si128(xmm2,12);
+                    xmm6 = _mm_srli_si128(xmm6,12);
+                    xmm1 = _mm_or_si128(xmm1,xmm2);
+                    xmm3 = _mm_or_si128(xmm3,xmm6);
+
+                    xmm1 = _mm_srli_epi16(xmm1,8);                                     // xmm1 = 0,Cr02,0,Cb02,0,Cr01,0,Cb01,0,Cr00,0,Cb00,0,Cr00,0,Cb00
+                    xmm3 = _mm_srli_epi16(xmm3,8);                                     // xmm3 = 0,Cr12,0,Cb12,0,Cr11,0,Cb11,0,Cr10,0,Cb10,0,Cr10,0,Cb10
+
+                    srcY += 4;
+                } else if (right_edge) {
+                    xmm1 = _mm_loadu_si128((const __m128i*)(srcY - 4));                // xmm1 = y,Cr01,y,Cb01,y,Cr00,y,Cb00,y,Cr0-1,y,Cb0-1,y,Cr0-2,y,Cb0-2
+                    xmm3 = _mm_loadu_si128((const __m128i*)(srcY - 4 + stride_Y));     // xmm3 = y,Cr11,y,Cb11,y,Cr10,y,Cb10,y,Cr1-1,y,Cb1-1,y,Cr1-2,y,Cb1-2
+                    xmm2 = xmm1;
+                    xmm6 = xmm3;
+                    xmm1 = _mm_srli_si128(xmm1,4);                                     // xmm1 = 0,0,0,0,y,Cr01,y,Cb01,y,Cr00,y,Cb00,Cr0-1,y,Cb0-1
+                    xmm3 = _mm_srli_si128(xmm3,4);                                     // xmm3 = 0,0,0,0,y,Cr11,y,Cb11,y,Cr10,y,Cb10,Cr1-1,y,Cb1-1
+                    xmm5 = xmm1;                                                       // For Y value. Next block does not use xmm4,5
+                    xmm4 = xmm3;
+                    xmm2 = _mm_srli_si128(xmm2,12);                                    // clear lower 12bytes
+                    xmm6 = _mm_srli_si128(xmm6,12);
+                    xmm2 = _mm_slli_si128(xmm2,12);
+                    xmm6 = _mm_slli_si128(xmm6,12);
+                    xmm1 = _mm_or_si128(xmm1,xmm2);
+                    xmm3 = _mm_or_si128(xmm3,xmm6);
+
+                    xmm1 = _mm_srli_epi16(xmm1,8);                                     // xmm1 = 0,Cr01,0,Cb01,0,Cr01,0,Cb01,0,Cr00,0,Cb00,0,Cr00,0,Cb00
+                    xmm3 = _mm_srli_epi16(xmm3,8);                                     // xmm3 = 0,Cr11,0,Cb11,0,Cr11,0,Cb11,0,Cr10,0,Cb10,0,Cr10,0,Cb10
+                } else {
+                    xmm1 = _mm_loadu_si128((const __m128i*)(srcY));
+                    xmm3 = _mm_loadu_si128((const __m128i*)(srcY + stride_Y));
+                    xmm5 = xmm1;                                                       // For Y value. Next block does not use xmm4,5
+                    xmm4 = xmm3;
+                    xmm1 = _mm_srli_epi16(xmm1,8);                                     // xmm1 = 0,Cr02,0,Cb02,0,Cr01,0,Cb01,0,Cr00,0,Cb00,0,Cr0-1,0,Cb0-1
+                    xmm3 = _mm_srli_epi16(xmm3,8);                                     // xmm3 = 0,Cr12,0,Cb12,0,Cr11,0,Cb11,0,Cr10,0,Cb10,0,Cr1-1,0,Cb1-1
+                    srcY += 8;
+                }
+            }
+            xmm1 = _mm_slli_epi16(xmm1,2);
+            xmm3 = _mm_slli_epi16(xmm3,2);
         }
-        xmm1 = _mm_slli_epi16(xmm1,2);
-        xmm3 = _mm_slli_epi16(xmm3,2);
+        xmm2 = xmm1;
+        xmm2 = _mm_srli_si128(xmm2,4);                                                 // xmm2 = 0000,P02,P01,P00
+
+        xmm0 = xmm1;
+        xmm0 = _mm_add_epi16(xmm0,xmm1);
+        xmm0 = _mm_add_epi16(xmm0,xmm1);
+        xmm0 = _mm_add_epi16(xmm0,xmm2);                                               // xmm0 = ----,3*P01+P02,3*P00+P01,3*P-01+P00
+        xmm0 = _mm_srli_si128(xmm0,4);                                                 // xmm0 = ----,----,3*P01+P02,3*P00+P01
+
+        xmm1 = _mm_add_epi16(xmm1,xmm2);
+        xmm1 = _mm_add_epi16(xmm1,xmm2);
+        xmm1 = _mm_add_epi16(xmm1,xmm2);                                               // xmm1 = ----,----,P00+3*P01,P-01+3*P00
+
+        xmm2 = xmm3;                                                                   // xmm2 = P12,P11,P10,P-11
+        xmm6 = xmm3;
+        xmm2 = _mm_srli_si128(xmm2, 4);                                                // xmm2 = 0000,P12,P11,P10
+
+        xmm6 = _mm_add_epi16(xmm6,xmm3);
+        xmm6 = _mm_add_epi16(xmm6,xmm3);
+        xmm6 = _mm_add_epi16(xmm6,xmm2);                                               // xmm6 = ----,3*P11+P12,3*P10+P11,3*P-11+P10
+        xmm6 = _mm_srli_si128(xmm6,4);                                                 // xmm6 = ----,----,3*P11+P12,3*P10+P11
+
+        xmm3 = _mm_add_epi16(xmm3,xmm2);
+        xmm3 = _mm_add_epi16(xmm3,xmm2);
+        xmm3 = _mm_add_epi16(xmm3,xmm2);                                               // xmm3 = ----,----,P10+3*P11,P-11+3*P10
+
+        xmm1 = _mm_unpacklo_epi32(xmm1,xmm0);                                          // 3*P01+P02, P00+3*P01, 3*P00+P01,P-01+3*P00
+        xmm3 = _mm_unpacklo_epi32(xmm3,xmm6);                                          // 3*P11+P12, P10+3*P11, 3*P10+P01,P-11+3*P10
     }
-    xmm2 = xmm1;
-    xmm2 = _mm_srli_si128(xmm2,4);                                                 // xmm2 = 0000,P02,P01,P00
-
-    xmm0 = xmm1;
-    xmm0 = _mm_add_epi16(xmm0,xmm1);
-    xmm0 = _mm_add_epi16(xmm0,xmm1);
-    xmm0 = _mm_add_epi16(xmm0,xmm2);                                               // xmm0 = ----,3*P01+P02,3*P00+P01,3*P-01+P00
-    xmm0 = _mm_srli_si128(xmm0,4);                                                 // xmm0 = ----,----,3*P01+P02,3*P00+P01
-
-    xmm1 = _mm_add_epi16(xmm1,xmm2);
-    xmm1 = _mm_add_epi16(xmm1,xmm2);
-    xmm1 = _mm_add_epi16(xmm1,xmm2);                                               // xmm1 = ----,----,P00+3*P01,P-01+3*P00
-
-    xmm2 = xmm3;                                                                   // xmm2 = P12,P11,P10,P-11
-    xmm6 = xmm3;
-    xmm2 = _mm_srli_si128(xmm2, 4);                                                // xmm2 = 0000,P12,P11,P10
-
-    xmm6 = _mm_add_epi16(xmm6,xmm3);
-    xmm6 = _mm_add_epi16(xmm6,xmm3);
-    xmm6 = _mm_add_epi16(xmm6,xmm2);                                               // xmm6 = ----,3*P11+P12,3*P10+P11,3*P-11+P10
-    xmm6 = _mm_srli_si128(xmm6,4);                                                 // xmm6 = ----,----,3*P11+P12,3*P10+P11
-
-    xmm3 = _mm_add_epi16(xmm3,xmm2);
-    xmm3 = _mm_add_epi16(xmm3,xmm2);
-    xmm3 = _mm_add_epi16(xmm3,xmm2);                                               // xmm3 = ----,----,P10+3*P11,P-11+3*P10
 
     xmm2 = coeffs->CbCr_center;
-    xmm1 = _mm_unpacklo_epi32(xmm1,xmm0);                                          // 3*P01+P02, P00+3*P01, 3*P00+P01,P-01+3*P00
-    xmm3 = _mm_unpacklo_epi32(xmm3,xmm6);                                          // 3*P11+P12, P10+3*P11, 3*P10+P01,P-11+3*P10
-
     xmm1 = _mm_subs_epi16(xmm1, xmm2);                                             // xmm1 = P01+3*P02 -128*16, 3*P01+P02 -128*16, P00+3*P01 -128*16, 3*P00+P01 -128*16 (12bit/14bit)
     xmm3 = _mm_subs_epi16(xmm3, xmm2);                                             // xmm3 = P11+3*P12 -128*16, 3*P11+P12 -128*16, P10+3*P11 -128*16, 3*P10+P01 -128*16 (12bit/14bit)
     // chroma upscaling finished.
 
-    if (incsp == FF_CSP_420P10) {
+    if (incsp == FF_CSP_420P10 || incsp == FF_CSP_444P10) {
         xmm5 = _mm_move_epi64(*(__m128i*)(srcY));                                   // Y03,Y02,Y01,Y00
         xmm0 = _mm_move_epi64(*(__m128i*)(srcY + stride_Y));                        // Y13,Y12,Y11,Y10
         srcY += 8;
@@ -579,6 +595,9 @@ template <int rgb_limit> void TffdshowConverters::convert_translate_incsp(
             return;
         case FF_CSP_420P10:
             convert_translate_outcsp<FF_CSP_420P10, rgb_limit>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
+            return;
+        case FF_CSP_444P10:
+            convert_translate_outcsp<FF_CSP_444P10, rgb_limit>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
             return;
     }
 }
@@ -827,6 +846,7 @@ TffdshowConverters::TffdshowConverters(int thread_count) :
     m_old_width(0),
     dither(NULL)
 {
+    m_thread_count = 1;
     m_coeffs = (Tcoeffs*)_aligned_malloc(sizeof(Tcoeffs),16);
 }
 
