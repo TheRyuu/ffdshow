@@ -112,16 +112,17 @@ private:
         __m128i cB_Cb;
     } *m_coeffs;
 
-    template<uint64_t incsp, uint64_t outcsp, int left_edge, int right_edge, int rgb_limit, int aligned, bool dithering> static __forceinline
-    void convert_a_unit(const unsigned char* &srcY,
-                        const unsigned char* &srcCb,
-                        const unsigned char* &srcCr,
-                        unsigned char* &dst,
-                        const stride_t stride_Y,
-                        const stride_t stride_CbCr,
-                        const stride_t stride_dst,
-                        const Tcoeffs *coeffs,
-                        const uint16_t* dither_ptr);
+    template<uint64_t incsp, uint64_t outcsp, int left_edge, int right_edge, int rgb_limit, int aligned, bool dithering> static
+    void convert_two_lines(const unsigned char* &srcY,
+                           const unsigned char* &srcCb,
+                           const unsigned char* &srcCr,
+                           unsigned char* &dst,
+                           int xCount,
+                           const stride_t stride_Y,
+                           const stride_t stride_CbCr,
+                           const stride_t stride_dst,
+                           const Tcoeffs *coeffs,
+                           const uint16_t *dither_ptr);
 
     // translate stack arguments to template arguments.
     template <int rgb_limit> void convert_translate_incsp(

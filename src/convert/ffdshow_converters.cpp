@@ -36,7 +36,7 @@ void TffdshowConverters::init(uint64_t incsp,                 // FF_CSP_420P, FF
                               double output_RGB_black_level,  // output RGB level (TV:16, PC:0)
                               bool dithering)                 // dithering (On:1, Off:0)
 {
-    const int bitDepthMul = (incsp == FF_CSP_420P10 || incsp == FF_CSP_444P10) ? 4 : 1;  // 10bit color spaces should be listed here.
+    const int bitDepthMul = (incsp & FF_CSPS_MASK_HIGH_BIT) ? 4 : 1;  // 10bit color spaces should be listed here.
     m_incsp = incsp;
     m_outcsp = outcsp;
     if (output_RGB_white_level != 255 || output_RGB_black_level != 0) {
@@ -119,22 +119,24 @@ static inline void loadRightEdge10(const __m128i* src, __m128i &xmm, __m128i &te
     xmm = _mm_or_si128(xmm, temp);                                             // xmm1 = Cb01,Cb01,Cb00,Cb00-1
 }
 
-template<uint64_t incsp, uint64_t outcsp, int left_edge, int right_edge, int rgb_limit, int aligned, bool dithering> __forceinline
-void TffdshowConverters::convert_a_unit(const unsigned char* &srcY,
-                                        const unsigned char* &srcCb,
-                                        const unsigned char* &srcCr,
-                                        unsigned char* &dst,
-                                        const stride_t stride_Y,
-                                        const stride_t stride_CbCr,
-                                        const stride_t stride_dst,
-                                        const Tcoeffs *coeffs,
-                                        const uint16_t* dither_ptr)
+template<uint64_t incsp, uint64_t outcsp, int left_edge, int right_edge, int rgb_limit, int aligned, bool dithering>
+void TffdshowConverters::convert_two_lines(const unsigned char* &srcY,
+                                           const unsigned char* &srcCb,
+                                           const unsigned char* &srcCr,
+                                           unsigned char* &dst,
+                                           int xCount,
+                                           const stride_t stride_Y,
+                                           const stride_t stride_CbCr,
+                                           const stride_t stride_dst,
+                                           const Tcoeffs *coeffs,
+                                           const uint16_t *dither_ptr)
 {
-    // output 4x2 RGB pixels.
-    const int bitDepth = (incsp == FF_CSP_420P10 || incsp == FF_CSP_444P10) ? 10 : 8;
-    __m128i xmm0,xmm1,xmm2,xmm3,xmm4,xmm5,xmm6,xmm7;
-    xmm7 = _mm_setzero_si128 ();
+  const int bitDepth = (incsp & FF_CSPS_MASK_HIGH_BIT) ? 10 : 8;
+  __m128i xmm0,xmm1,xmm2,xmm3,xmm4,xmm5,xmm6,xmm7;
+  xmm7 = _mm_setzero_si128 ();
 
+  do {
+    // output 4x2 RGB pixels
     if (incsp == FF_CSP_444P10) {
         // 4:4:4 YCbCr 10bit
         xmm0 = _mm_move_epi64(*(const __m128i*)(srcCb));                       // xmm0 = Cb03,Cb02,Cb01,Cb00
@@ -402,7 +404,7 @@ void TffdshowConverters::convert_a_unit(const unsigned char* &srcY,
     xmm3 = _mm_subs_epi16(xmm3, xmm2);                                             // xmm3 = P11+3*P12 -128*16, 3*P11+P12 -128*16, P10+3*P11 -128*16, 3*P10+P01 -128*16 (12bit/14bit)
     // chroma upscaling finished.
 
-    if (incsp == FF_CSP_420P10 || incsp == FF_CSP_444P10) {
+    if (incsp & FF_CSPS_MASK_HIGH_BIT) {
         xmm5 = _mm_move_epi64(*(__m128i*)(srcY));                                   // Y03,Y02,Y01,Y00
         xmm0 = _mm_move_epi64(*(__m128i*)(srcY + stride_Y));                        // Y13,Y12,Y11,Y10
         srcY += 8;
@@ -461,6 +463,7 @@ void TffdshowConverters::convert_a_unit(const unsigned char* &srcY,
         xmm6 = _mm_add_epi16(xmm6,*(const __m128i *)(dither_ptr));
         xmm5 = _mm_add_epi16(xmm5,*(const __m128i *)(dither_ptr + 16));
         xmm1 = _mm_add_epi16(xmm1,*(const __m128i *)(dither_ptr + 32));
+        dither_ptr += 8;
     }
     xmm6 = _mm_srai_epi16(xmm6,4);
     xmm5 = _mm_srai_epi16(xmm5,4);
@@ -566,6 +569,7 @@ void TffdshowConverters::convert_a_unit(const unsigned char* &srcY,
 #endif
         dst += 12;
     }
+  } while (--xCount);
 }
 
 // translate stack arguments to template arguments.
@@ -658,7 +662,7 @@ template <uint64_t incsp, uint64_t outcsp, int rgb_limit, int aligned> void Tffd
     stride_t stride_CbCr,
     stride_t stride_dst)
 {
-    if (m_dithering) {
+    if (m_dithering || (incsp & FF_CSPS_MASK_HIGH_BIT)) {
         convert_main<incsp, outcsp, rgb_limit, aligned, 1>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
     } else {
         convert_main<incsp, outcsp, rgb_limit, aligned, 0>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
@@ -713,15 +717,6 @@ template <uint64_t incsp, uint64_t outcsp, int rgb_limit, int aligned, bool dith
     }
 }
 
-template <bool dithering> __forceinline const uint16_t* get_dither_ptr(uint16_t *dither, int dither_pos, int x,void *any)
-{
-    if (dithering) {
-        return &dither[dither_pos  + (x << 1)];
-    } else {
-        return (const uint16_t*)any;
-    }
-}
-
 template <uint64_t incsp, uint64_t outcsp, int rgb_limit, int aligned, bool dithering> void TffdshowConverters::convert_main_loop(
     const uint8_t* srcY,
     const uint8_t* srcCb,
@@ -735,7 +730,7 @@ template <uint64_t incsp, uint64_t outcsp, int rgb_limit, int aligned, bool dith
     int starty,
     int endy)
 {
-    int endx = dx - 4;
+    int endx = (incsp == FF_CSP_444P10) ? dx : dx - 4;
     const uint8_t *srcYln = srcY;
     const uint8_t *srcCbln = srcCb;
     const uint8_t *srcCrln = srcCr;
@@ -745,20 +740,29 @@ template <uint64_t incsp, uint64_t outcsp, int rgb_limit, int aligned, bool dith
     int dither_pos = 0;
     Tcoeffs *coeffs = m_coeffs;
 
+    int xCount; // loop counter
+    if (incsp == FF_CSP_444P10) {
+        xCount = dx / 4;
+    } else {
+        xCount = dx / 4 - 2;
+    }
+
     if (incsp == FF_CSP_420P || incsp == FF_CSP_NV12 || incsp == FF_CSP_420P10) {
         if (y == 0) { // if this is the first thread,
             // Top
-            convert_a_unit<incsp,outcsp,1,0,rgb_limit,aligned,dithering>(srcYln, srcCbln, srcCrln, dstln,
+
+            // left
+            convert_two_lines<incsp,outcsp,1,0,rgb_limit,aligned,dithering>(srcYln, srcCbln, srcCrln, dstln, 1,
                     0, 0, 0,
-                    coeffs, get_dither_ptr<dithering>(dither, dither_pos, 0, coeffs));
-            for (int x = 4 ; x < endx ; x += 4) {
-                convert_a_unit<incsp,outcsp,0,0,rgb_limit,aligned,dithering>(srcYln, srcCbln, srcCrln, dstln,
+                    coeffs, dither + dither_pos);
+            // inner
+                convert_two_lines<incsp,outcsp,0,0,rgb_limit,aligned,dithering>(srcYln, srcCbln, srcCrln, dstln, xCount,
                         0, 0, 0,
-                        coeffs, get_dither_ptr<dithering>(dither, dither_pos, x, coeffs));
-            }
-            convert_a_unit<incsp,outcsp,0,1,rgb_limit,aligned,dithering>(srcYln, srcCbln, srcCrln, dstln,
+                        coeffs, dither + dither_pos + 8);
+            // right
+            convert_two_lines<incsp,outcsp,0,1,rgb_limit,aligned,dithering>(srcYln, srcCbln, srcCrln, dstln, 1,
                     0, 0, 0,
-                    coeffs, get_dither_ptr<dithering>(dither, dither_pos, (endx+7) & ~7, coeffs));
+                    coeffs, dither + dither_pos);
             y = 1;
         }
         if (endy == dy) {
@@ -780,17 +784,24 @@ template <uint64_t incsp, uint64_t outcsp, int rgb_limit, int aligned, bool dith
             srcCrln = srcCr + y * stride_CbCr;
         }
         dstln = dst + y * stride_dst;
-        convert_a_unit<incsp,outcsp,1,0,rgb_limit,aligned,dithering>(srcYln, srcCbln, srcCrln, dstln,
-                stride_Y, stride_CbCr, stride_dst,
-                coeffs, get_dither_ptr<dithering>(dither, dither_pos, 0, coeffs));
-        for (int x = 4 ; x < endx ; x += 4) {
-            convert_a_unit<incsp,outcsp,0,0,rgb_limit,aligned,dithering>(srcYln, srcCbln, srcCrln, dstln,
+        int x = 0;
+        // left
+        if (incsp != FF_CSP_444P10) {
+            convert_two_lines<incsp,outcsp,1,0,rgb_limit,aligned,dithering>(srcYln, srcCbln, srcCrln, dstln, 1,
                     stride_Y, stride_CbCr, stride_dst,
-                    coeffs, get_dither_ptr<dithering>(dither, dither_pos, x, coeffs));
+                    coeffs, dither + dither_pos);
+            x = 4;
         }
-        convert_a_unit<incsp,outcsp,0,1,rgb_limit,aligned,dithering>(srcYln, srcCbln, srcCrln, dstln,
+        // inner
+        convert_two_lines<incsp,outcsp,0,0,rgb_limit,aligned,dithering>(srcYln, srcCbln, srcCrln, dstln, xCount,
                 stride_Y, stride_CbCr, stride_dst,
-                coeffs, get_dither_ptr<dithering>(dither, dither_pos, (endx+7) & ~7, coeffs));
+                coeffs, dither + dither_pos + 8);
+        // right
+        if (incsp != FF_CSP_444P10) {
+            convert_two_lines<incsp,outcsp,0,1,rgb_limit,aligned,dithering>(srcYln, srcCbln, srcCrln, dstln, 1,
+                    stride_Y, stride_CbCr, stride_dst,
+                    coeffs, dither + dither_pos);
+        }
         if (dithering) {
             dither_pos += dither_lineoffset;
             if (dither_pos >= dx*2) {
@@ -806,17 +817,18 @@ template <uint64_t incsp, uint64_t outcsp, int rgb_limit, int aligned, bool dith
             srcCbln = srcCb + ((dy >> 1) - 1) * stride_CbCr;
             srcCrln = srcCr + ((dy >> 1) - 1) * stride_CbCr;
             dstln = dst + (dy - 1) * stride_dst;
-            convert_a_unit<incsp,outcsp,1,0,rgb_limit,aligned,dithering>(srcYln, srcCbln, srcCrln, dstln,
+            // left
+            convert_two_lines<incsp,outcsp,1,0,rgb_limit,aligned,dithering>(srcYln, srcCbln, srcCrln, dstln, 1,
                     0, 0, 0,
-                    coeffs, get_dither_ptr<dithering>(dither, dither_pos, 0, coeffs));
-            for (int x = 4 ; x < endx ; x += 4) {
-                convert_a_unit<incsp,outcsp,0,0,rgb_limit,aligned,dithering>(srcYln, srcCbln, srcCrln, dstln,
-                        0, 0, 0,
-                        coeffs, get_dither_ptr<dithering>(dither, dither_pos, x, coeffs));
-            }
-            convert_a_unit<incsp,outcsp,0,1,rgb_limit,aligned,dithering>(srcYln, srcCbln, srcCrln, dstln,
+                    coeffs, dither + dither_pos);
+            // inner
+            convert_two_lines<incsp,outcsp,0,0,rgb_limit,aligned,dithering>(srcYln, srcCbln, srcCrln, dstln, xCount,
                     0, 0, 0,
-                    coeffs, get_dither_ptr<dithering>(dither, dither_pos, (endx+7) & ~7, coeffs));
+                    coeffs, dither + dither_pos + 8);
+            // right
+            convert_two_lines<incsp,outcsp,0,1,rgb_limit,aligned,dithering>(srcYln, srcCbln, srcCrln, dstln, 1,
+                    0, 0, 0,
+                    coeffs, dither + dither_pos);
         }
     }
 }
@@ -846,7 +858,6 @@ TffdshowConverters::TffdshowConverters(int thread_count) :
     m_old_width(0),
     dither(NULL)
 {
-    m_thread_count = 1;
     m_coeffs = (Tcoeffs*)_aligned_malloc(sizeof(Tcoeffs),16);
 }
 
