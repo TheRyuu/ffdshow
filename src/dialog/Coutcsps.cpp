@@ -22,8 +22,8 @@
 #include "ToutputVideoSettings.h"
 #include "Ttranslate.h"
 
-const int ToutcspsPage::idcs []= {IDC_CHB_OUT_YV12,IDC_CHB_OUT_YUY2,IDC_CHB_OUT_UYVY,IDC_CHB_OUT_NV12,IDC_CHB_OUT_RGB32,0};
-const int ToutcspsPage::idffs[]= {IDFF_outYV12    ,IDFF_outYUY2    ,IDFF_outUYVY    ,IDFF_outNV12    ,IDFF_outRGB32};
+const int ToutcspsPage::idcs []= {IDC_CHB_OUT_YV12,IDC_CHB_OUT_YUY2,IDC_CHB_OUT_UYVY,IDC_CHB_OUT_NV12,IDC_CHB_OUT_RGB32,IDC_CHB_OUT_RGB24,0};
+const int ToutcspsPage::idffs[]= {IDFF_outYV12    ,IDFF_outYUY2    ,IDFF_outUYVY    ,IDFF_outNV12    ,IDFF_outRGB32    ,IDFF_outRGB24};
 
 #define TOUTCSPSPAGE_RECONNECTABLE_FILTERS _l("  Overlay Mixer\n  VMR\n  VMR9\n  VobSub\n  Haali's Video Renderer\n  EVR\n  MadVR\n  ffdshow")
 
@@ -78,6 +78,8 @@ void ToutcspsPage::csp2dlg(void)
     enable(!isDVoutput,IDC_CHB_OUT_NV12);
     setCheck(IDC_CHB_OUT_RGB32,cfgGet(IDFF_outRGB32 ));
     enable(!isDVoutput,IDC_CHB_OUT_RGB32);
+    setCheck(IDC_CHB_OUT_RGB24,cfgGet(IDFF_outRGB24 ));
+    enable(!isDVoutput,IDC_CHB_OUT_RGB24);
 }
 void ToutcspsPage::overlay2dlg(void)
 {
@@ -129,6 +131,7 @@ INT_PTR ToutcspsPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
                 case IDC_CHB_OUT_YUY2:
                 case IDC_CHB_OUT_UYVY:
                 case IDC_CHB_OUT_NV12:
+                case IDC_CHB_OUT_RGB24:
                 case IDC_CHB_OUT_RGB32: {
                     int ch[countof(idcs)],dv=false;
                     int is=0;

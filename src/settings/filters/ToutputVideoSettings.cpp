@@ -87,6 +87,8 @@ ToutputVideoSettings::ToutputVideoSettings(TintStrColl *Icoll,TfilterIDFFs *filt
         _l("outNV12"),1,
         IDFF_outRGB32           ,&ToutputVideoSettings::rgb32              ,0,0,_l(""),0,
         _l("outRGB32"),1,
+        IDFF_outRGB24           ,&ToutputVideoSettings::rgb24              ,0,0,_l(""),0,
+        _l("outRGB24"),1,
         IDFF_outDV              ,&ToutputVideoSettings::dv                 ,0,0,_l(""),0,
         _l("outDV"),0,
         IDFF_outDVnorm          ,&ToutputVideoSettings::dvNorm             ,0,2,_l(""),0,
@@ -139,6 +141,7 @@ void ToutputVideoSettings::reg_op_outcsps(TregOp &t)
     t._REG_OP_N(IDFF_outUYVY  ,_l("outUYVY")  ,uyvy  ,1);
     t._REG_OP_N(IDFF_outNV12  ,_l("outNV12")  ,nv12  ,1);
     t._REG_OP_N(IDFF_outRGB32 ,_l("outRGB32") ,rgb32 ,1);
+    t._REG_OP_N(IDFF_outRGB24 ,_l("outRGB24") ,rgb24 ,1);
     t._REG_OP_N(IDFF_hwOverlayAspect,_l("hwOverlayAspect"),hwOverlayAspect,0);
 }
 
@@ -159,6 +162,9 @@ void ToutputVideoSettings::getOutputColorspaces(ints &ocsps)
     }
     if (rgb32) {
         ocsps.push_back(FF_CSP_RGB32);
+    }
+    if (rgb24 ) {
+        ocsps.push_back(FF_CSP_RGB24);
     }
     if (yuy2) {
         ocsps.push_back(FF_CSP_YUY2);

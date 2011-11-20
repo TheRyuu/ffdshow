@@ -935,6 +935,7 @@
 #define IDFF_outUYVY             1304
 #define IDFF_outNV12             1360
 #define IDFF_outRGB32            1305
+#define IDFF_outRGB24            1306
 #define IDFF_outDV               1358
 #define IDFF_outDVnorm           1359
 #define IDFF_setDeintInOutSample 1353
