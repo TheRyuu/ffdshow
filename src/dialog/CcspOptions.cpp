@@ -77,7 +77,6 @@ void TcspOptionsPage::cfg2dlg(void)
     cbxSetCurSel(IDC_CBX_RGB_INTERLACE_METHOD,cfgGet(IDFF_cspOptionsRgbInterlaceMode));
     int highQualityRGB = cfgGet(IDFF_highQualityRGB);
     setCheck(IDC_CHB_HIGH_QUALITY_RGB,highQualityRGB);
-    enable(Tconfig::cpu_flags & FF_CPU_SSE2, IDC_CHB_HIGH_QUALITY_RGB);
     setCheck(IDC_CHB_RGB_DITHER,cfgGet(IDFF_RGB_dithering));
     enable(highQualityRGB && (Tconfig::cpu_flags & FF_CPU_SSE2), IDC_CHB_RGB_DITHER);
 }
