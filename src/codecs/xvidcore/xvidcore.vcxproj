@@ -1,0 +1,869 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{340D7FC0-5EF2-4C3E-9F8B-01C0923F268F}</ProjectGuid>
+    <RootNamespace>xvidcore</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\..\common.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\..\common.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\..\common.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\..\common.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
+    <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</IgnoreImportLibrary>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</IgnoreImportLibrary>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
+    <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</IgnoreImportLibrary>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</IgnoreImportLibrary>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../..;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WIN32;_DEBUG;_WINDOWS;ARCH_IS_IA32;ARCH_IS_32BIT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>kernel32.lib;libcmtd.lib;oldnames.lib;ws2_32.lib</AdditionalDependencies>
+      <ModuleDefinitionFile>xvid.def</ModuleDefinitionFile>
+      <SubSystem>Windows</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../..;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN64;_WIN64;_DEBUG;_WINDOWS;ARCH_IS_X86_64;ARCH_IS_64BIT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>kernel32.lib;oldnames.lib;ws2_32.lib</AdditionalDependencies>
+      <ModuleDefinitionFile>xvid.def</ModuleDefinitionFile>
+      <SubSystem>Windows</SubSystem>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>../..;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WIN32;NDEBUG;_WINDOWS;ARCH_IS_IA32;ARCH_IS_32BIT;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <DisableSpecificWarnings>4002;4244;4005;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>kernel32.lib;oldnames.lib;ws2_32.lib</AdditionalDependencies>
+      <ModuleDefinitionFile>xvid.def</ModuleDefinitionFile>
+      <SubSystem>Windows</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>../..;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN64;_WIN64;NDEBUG;_WINDOWS;ARCH_IS_X86_64;ARCH_IS_64BIT;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <DisableSpecificWarnings>4002;4244;4005;4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>kernel32.lib;oldnames.lib;ws2_32.lib</AdditionalDependencies>
+      <ModuleDefinitionFile>xvid.def</ModuleDefinitionFile>
+      <SubSystem>Windows</SubSystem>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="bitstream\bitstream.c" />
+    <ClCompile Include="bitstream\cbp.c" />
+    <ClCompile Include="bitstream\mbcoding.c" />
+    <ClCompile Include="dct\fdct.c" />
+    <ClCompile Include="dct\idct.c" />
+    <ClCompile Include="dct\simple_idct.c" />
+    <ClCompile Include="image\colorspace.c" />
+    <ClCompile Include="image\font.c" />
+    <ClCompile Include="image\image.c" />
+    <ClCompile Include="image\interpolate8x8.c" />
+    <ClCompile Include="image\postprocessing.c" />
+    <ClCompile Include="image\qpel.c" />
+    <ClCompile Include="image\reduced.c" />
+    <ClCompile Include="motion\estimation_bvop.c" />
+    <ClCompile Include="motion\estimation_common.c" />
+    <ClCompile Include="motion\estimation_gmc.c" />
+    <ClCompile Include="motion\estimation_pvop.c" />
+    <ClCompile Include="motion\estimation_rd_based.c" />
+    <ClCompile Include="motion\estimation_rd_based_bvop.c" />
+    <ClCompile Include="motion\gmc.c" />
+    <ClCompile Include="motion\motion_comp.c" />
+    <ClCompile Include="motion\sad.c" />
+    <ClCompile Include="motion\vop_type_decision.c" />
+    <ClCompile Include="plugins\plugin_2pass1.c" />
+    <ClCompile Include="plugins\plugin_2pass2.c" />
+    <ClCompile Include="plugins\plugin_dump.c" />
+    <ClCompile Include="plugins\plugin_lumimasking.c" />
+    <ClCompile Include="plugins\plugin_psnr.c" />
+    <ClCompile Include="plugins\plugin_psnrhvsm.c" />
+    <ClCompile Include="plugins\plugin_single.c" />
+    <ClCompile Include="plugins\plugin_ssim.c" />
+    <ClCompile Include="prediction\mbprediction.c" />
+    <ClCompile Include="quant\quant_h263.c" />
+    <ClCompile Include="quant\quant_matrix.c" />
+    <ClCompile Include="quant\quant_mpeg.c" />
+    <ClCompile Include="utils\emms.c" />
+    <ClCompile Include="utils\mbtransquant.c" />
+    <ClCompile Include="utils\mem_align.c" />
+    <ClCompile Include="utils\mem_transfer.c" />
+    <ClCompile Include="utils\timer.c" />
+    <ClCompile Include="decoder.c" />
+    <ClCompile Include="encoder.c" />
+    <ClCompile Include="xvid.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="bitstream\bitstream.h" />
+    <ClInclude Include="bitstream\cbp.h" />
+    <ClInclude Include="bitstream\mbcoding.h" />
+    <ClInclude Include="bitstream\vlc_codes.h" />
+    <ClInclude Include="bitstream\zigzag.h" />
+    <ClInclude Include="dct\fdct.h" />
+    <ClInclude Include="dct\idct.h" />
+    <ClInclude Include="image\colorspace.h" />
+    <ClInclude Include="image\font.h" />
+    <ClInclude Include="image\image.h" />
+    <ClInclude Include="image\interpolate8x8.h" />
+    <ClInclude Include="image\postprocessing.h" />
+    <ClInclude Include="image\qpel.h" />
+    <ClInclude Include="image\reduced.h" />
+    <ClInclude Include="motion\estimation.h" />
+    <ClInclude Include="motion\gmc.h" />
+    <ClInclude Include="motion\motion.h" />
+    <ClInclude Include="motion\motion_inlines.h" />
+    <ClInclude Include="motion\motion_smp.h" />
+    <ClInclude Include="motion\sad.h" />
+    <ClInclude Include="plugins\plugin_ssim.h" />
+    <ClInclude Include="prediction\mbprediction.h" />
+    <ClInclude Include="quant\quant.h" />
+    <ClInclude Include="quant\quant_matrix.h" />
+    <ClInclude Include="utils\emms.h" />
+    <ClInclude Include="utils\mbfunctions.h" />
+    <ClInclude Include="utils\mem_align.h" />
+    <ClInclude Include="utils\mem_transfer.h" />
+    <ClInclude Include="utils\timer.h" />
+    <ClInclude Include="decoder.h" />
+    <ClInclude Include="encoder.h" />
+    <ClInclude Include="global.h" />
+    <CustomBuildStep Include="portab.h" />
+    <ClInclude Include="xvid.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="bitstream\x86_asm\cbp_mmx.asm">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="bitstream\x86_asm\cbp_sse2.asm">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="image\x86_asm\colorspace_mmx.inc">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="image\x86_asm\colorspace_rgb_mmx.asm">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="image\x86_asm\colorspace_yuv_mmx.asm">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="image\x86_asm\colorspace_yuyv_mmx.asm">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="utils\x86_asm\cpuid.asm">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="image\x86_asm\deintl_sse.asm">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="dct\x86_asm\fdct_mmx_ffmpeg.asm">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="dct\x86_asm\fdct_mmx_skal.asm">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="dct\x86_asm\fdct_sse2_skal.asm">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="image\x86_asm\gmc_mmx.asm">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="dct\x86_asm\idct_3dne.asm">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="dct\x86_asm\idct_mmx.asm">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="dct\x86_asm\idct_sse2_dmitry.asm">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="utils\x86_asm\interlacing_mmx.asm">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="image\x86_asm\interpolate8x8_3dn.asm">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="image\x86_asm\interpolate8x8_3dne.asm">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="image\x86_asm\interpolate8x8_mmx.asm">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="image\x86_asm\interpolate8x8_xmm.asm">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="utils\x86_asm\mem_transfer_3dne.asm">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="utils\x86_asm\mem_transfer_mmx.asm">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+    </CustomBuild>
+    <CustomBuildStep Include="nasm.inc">
+      <FileType>Document</FileType>
+    </CustomBuildStep>
+    <CustomBuild Include="plugins\x86_asm\plugin_ssim-a.asm">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="image\x86_asm\postprocessing_mmx.asm">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="image\x86_asm\postprocessing_sse2.asm">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="image\x86_asm\qpel_mmx.asm">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="quant\x86_asm\quantize_h263_3dne.asm">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="quant\x86_asm\quantize_h263_mmx.asm">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="quant\x86_asm\quantize_mpeg_mmx.asm">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="quant\x86_asm\quantize_mpeg_xmm.asm">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="image\x86_asm\reduced_mmx.asm">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="motion\x86_asm\sad_3dn.asm">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="motion\x86_asm\sad_3dne.asm">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="motion\x86_asm\sad_mmx.asm">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="motion\x86_asm\sad_sse2.asm">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="motion\x86_asm\sad_xmm.asm">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">yasm -f win32 -DPREFIX -DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT -DWINDOWS -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Assembling %(FullPath)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">yasm -f win64 -DWIN64 -DARCH_IS_X86_64 -DARCH_IS_64BIT -I "%(RootDir)%(Directory)." -o "$(IntDir)%(Filename).obj" "%(FullPath)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+    </CustomBuild>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

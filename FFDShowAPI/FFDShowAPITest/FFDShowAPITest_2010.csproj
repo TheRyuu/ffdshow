@@ -93,7 +93,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FFDShowAPI\FFDShowAPI.csproj">
+    <ProjectReference Include="..\FFDShowAPI\FFDShowAPI_2010.csproj">
       <Project>{69CF2FFC-CB08-42F8-8DE9-E5C32F3FE8BA}</Project>
       <Name>FFDShowAPI</Name>
     </ProjectReference>
