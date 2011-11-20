@@ -149,8 +149,8 @@ void TffdshowConverters::convert_two_lines(const unsigned char* &srcY,
         xmm3 = _mm_slli_epi16(xmm3, 4);
         srcCb += 8;
         srcCr += 8;
-        // xmm1 = 16*P03 -1024*16, 16*P02 -1024*16, 16*P01 -1024*16, 16*P00 -1024*16 (14bit)
-        // xmm3 = 16*P13 -1024*16, 16*P12 -1024*16, 16*P11 -1024*16, 16*P10 -1024*16 (14bit)
+        // xmm1 = 16*P03, 16*P02, 16*P01, 16*P00 (14bit)
+        // xmm3 = 16*P13, 16*P12, 16*P11, 16*P10 (14bit)
     } else {
         if (incsp == FF_CSP_420P10) {
             // 4:2:0 YCbCr 10bit
