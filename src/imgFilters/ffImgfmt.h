@@ -309,10 +309,6 @@ static __inline const TcspInfo* csp_getInfo(uint64_t csp)
             extern TcspInfo cspInfoIYUV;
             return &cspInfoIYUV;
         }
-        case FF_CSP_NV12|FF_CSP_FLAGS_YUV_ORDER: {
-            extern TcspInfo cspInfoNV21;
-            return &cspInfoNV21;
-        }
         default:
             csp&=FF_CSPS_MASK;
             if (csp==0) {

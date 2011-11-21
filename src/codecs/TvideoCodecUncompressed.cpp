@@ -114,9 +114,6 @@ bool TvideoCodecUncompressed::beginDecompress(TffPictBase &pict,FOURCC infcc,con
             csp=FF_CSP_Y800;
             break;
         case CODEC_ID_NV12:
-            csp=FF_CSP_NV12|FF_CSP_FLAGS_YUV_ADJ|FF_CSP_FLAGS_YUV_ORDER;
-            break;
-        case CODEC_ID_NV21:
             csp=FF_CSP_NV12|FF_CSP_FLAGS_YUV_ADJ;
             break;
         case CODEC_ID_YV16:

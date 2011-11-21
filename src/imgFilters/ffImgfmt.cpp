@@ -258,16 +258,6 @@ TcspInfo cspInfoIYUV= {
     FOURCC_IYUV, FOURCC_IYUV, &MEDIASUBTYPE_IYUV
 };
 
-TcspInfo cspInfoNV21= {
-    FF_CSP_NV12,_l("NV21"),
-    1,12, //Bpp
-    2, //numplanes
-    {0,0,0,0}, //shiftX
-    {0,1,1,0}, //shiftY
-    {0,128,128,0}, //black
-    FOURCC_NV21, FOURCC_NV21, &MEDIASUBTYPE_NV21
-};
-
 const TcspFcc cspFccs[]= {
     _l("YV12")     ,FOURCC_YV12,FF_CSP_420P|FF_CSP_FLAGS_YUV_ADJ,false,true,
     _l("I420/IYUV"),FOURCC_I420,FF_CSP_420P|FF_CSP_FLAGS_YUV_ADJ|FF_CSP_FLAGS_YUV_ORDER,false,true,
@@ -282,7 +272,6 @@ const TcspFcc cspFccs[]= {
     _l("CLJR")     ,FOURCC_CLJR,FF_CSP_CLJR,false,false,
     _l("Y800")     ,FOURCC_Y800,FF_CSP_Y800,false,true,
     _l("NV12")     ,FOURCC_NV12,FF_CSP_NV12,false,false,
-    _l("NV21")     ,FOURCC_NV21,FF_CSP_NV12|FF_CSP_FLAGS_YUV_ORDER,false,false,
     NULL,0
 };
 
