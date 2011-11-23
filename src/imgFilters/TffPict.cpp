@@ -466,11 +466,23 @@ void TffPict::convertCSP(uint64_t Icsp,Tbuffer &buf,int edge)
         bool overwriteData = buf.size() < size;
         buf.alloc(size);
         data[0] = buf;
-        data[1] = data[0] + stride[0] * (odd2even(rectFull.dy) + edge);
+        data[1] = data[0] + stride[0] * odd2even(rectFull.dy);
         if (overwriteData) {
             // Black in yuv is 0,128,128
             memset(data[0],0,  stride[0]*(odd2even(rectFull.dy)));
             memset(data[1],128,stride[1]*(odd2even(rectFull.dy)>>1));
+        }
+    } else if ((csp & FF_CSPS_MASK) == FF_CSP_P016) {
+        stride[0]=stride[1] = ((rectFull.dx + edge + 15) & ~0xf)*2;
+        size_t size = stride[0] * (odd2even(rectFull.dy) + (odd2even(rectFull.dy)>>1));
+        bool overwriteData = buf.size() < size;
+        buf.alloc(size);
+        data[0] = buf;
+        data[1] = data[0] + stride[0] * odd2even(rectFull.dy);
+        if (overwriteData) {
+            // Black in yuv is 0,32768,32768
+            memset(data[0],0,  stride[0]*(odd2even(rectFull.dy)));
+            memset(data[1],32768,stride[1]*(odd2even(rectFull.dy)>>1));
         }
     } else {
         size_t size=0;

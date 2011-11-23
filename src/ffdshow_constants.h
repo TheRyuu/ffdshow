@@ -936,6 +936,7 @@
 #define IDFF_outNV12             1360
 #define IDFF_outRGB32            1305
 #define IDFF_outRGB24            1306
+#define IDFF_outP016             3566
 #define IDFF_outDV               1358
 #define IDFF_outDVnorm           1359
 #define IDFF_setDeintInOutSample 1353
@@ -1559,6 +1560,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//next:3566
+//next:3567
 
 #endif

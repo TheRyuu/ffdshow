@@ -1985,6 +1985,9 @@
 #define IDC_CHB_SUB_HQBORDER            40026
 #define IDC_LBL_SUB_MEMORY              40027
 #define IDC_LBL_SUB_MEMORY_MB           40028
+#define IDC_LBL_OUT_8BIT                40029
+#define IDC_LBL_OUT_16BIT               40030
+#define IDC_CHB_OUT_P016                40031
 #define IDC_STATIC                      -1
 #define IDC_GRP_WINAMP2                 65535
 
@@ -1995,7 +1998,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        304
 #define _APS_NEXT_COMMAND_VALUE         40015
-#define _APS_NEXT_CONTROL_VALUE         40029
+#define _APS_NEXT_CONTROL_VALUE         40032
 #define _APS_NEXT_SYMED_VALUE           107
 #endif
 #endif

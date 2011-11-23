@@ -56,6 +56,7 @@ private:
         MODE_avisynth_bitblt,
         MODE_ffdshow_converters,
         MODE_fast_copy,
+        MODE_ffdshow_converters2,
         MODE_fallback
     } mode;
     static const char_t* getModeName(int mode);

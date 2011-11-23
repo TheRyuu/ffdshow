@@ -48,6 +48,7 @@
 
 #define FF_CSP_420P10 (1ULL << 22)
 #define FF_CSP_444P10 (1ULL << 23)
+#define FF_CSP_P016   (1ULL << 24)  // P016 in Media Fundation (MFVideoFormat_P016). 16bit version of NV12.
 
 // Flags
 #define FF_CSP_FLAGS_YUV_JPEG   (1ULL << 59)
@@ -56,7 +57,7 @@
 #define FF_CSP_FLAGS_INTERLACED (1ULL << 62)
 #define FF_CSP_FLAGS_VFLIP      (1ULL << 63) // flip mask
 
-#define FF_CSPS_NUM 24
+#define FF_CSPS_NUM 25
 
 #define FF_CSP_UNSUPPORTED      (1ULL<<FF_CSPS_NUM)
 
@@ -233,6 +234,7 @@ static __inline enum PixelFormat csp_ffdshow2lavc(uint64_t pix_fmt)
   FF_CSP_RGB16|     \
   FF_CSP_RGB15|     \
   FF_CSP_NV12|      \
+  FF_CSP_420P10|    \
   FF_CSP_Y800       \
  )
 #define SWS_OUT_CSPS \
@@ -255,6 +257,7 @@ static __inline enum PixelFormat csp_ffdshow2lavc(uint64_t pix_fmt)
   FF_CSP_BGR16|      \
   FF_CSP_BGR15|      \
   FF_CSP_NV12|       \
+  FF_CSP_420P10|     \
   FF_CSP_Y800        \
  )
 
@@ -341,7 +344,7 @@ static __inline uint64_t csp_isYUV(uint64_t x)
 }
 static __inline uint64_t csp_isYUV_NV(uint64_t x)
 {
-    return csp_isYUVpacked(x)|csp_isYUVplanar(x)|(x & FF_CSP_NV12);
+    return csp_isYUVpacked(x)|csp_isYUVplanar(x)|(x & (FF_CSP_NV12|FF_CSP_P016));
 }
 static __inline uint64_t csp_isRGB_RGB(uint64_t x)
 {
@@ -374,7 +377,7 @@ static __inline void csp_yuv_adj_to_plane(uint64_t &csp,const TcspInfo *cspInfo,
         stride[1]=stride[0]>>cspInfo->shiftX[1];
         data[1]=data[2]+stride[1]*(dy>>cspInfo->shiftY[1]);
         stride[2]=stride[0]>>cspInfo->shiftX[2];
-    } else if ((csp & FF_CSP_NV12) && (csp & FF_CSP_FLAGS_YUV_ADJ)) {
+    } else if ((csp & (FF_CSP_NV12|FF_CSP_P016)) && (csp & FF_CSP_FLAGS_YUV_ADJ)) {
         csp&=~FF_CSP_FLAGS_YUV_ADJ;
         data[1] = data[0] + stride[0] *dy;
         stride[1] = stride[0];

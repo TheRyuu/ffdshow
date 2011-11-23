@@ -288,6 +288,7 @@
   <ItemGroup>
     <ClCompile Include="src\checkHardCodedBlackList.cpp" />
     <ClCompile Include="src\codecs\TvideoCodecQuickSync.cpp" />
+    <ClCompile Include="src\convert\ffdshow_converters2.cpp" />
     <ClCompile Include="src\dsutil.cpp" />
     <ClCompile Include="src\dwstring.cpp" />
     <ClCompile Include="src\ffdebug.c">
@@ -751,6 +752,7 @@
     <ClInclude Include="src\checkHardCodedBlackList.h" />
     <ClInclude Include="src\codecs\TvideoCodecQuickSync.h" />
     <ClInclude Include="src\comptr.h" />
+    <ClInclude Include="src\convert\ffdshow_converters2.h" />
     <ClInclude Include="src\csimd.h" />
     <ClInclude Include="src\dsutil.h" />
     <ClInclude Include="src\dwstring.h" />
