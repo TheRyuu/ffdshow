@@ -515,12 +515,15 @@ HRESULT TvideoCodecLibavcodecDxva::configureDXVA2(IPin *pPin)
                 break;
             }
 
-            // Patch for the Sandy Bridge (prevent crash on Mode_E, fixme later)
-            if (nPCIVendor == PCIV_Intel && pDecoderGuids[iGuid] == DXVA2_ModeH264_E)
-                continue;
+            // Sandy Bridge crashes with Mode_E on current code, so ignore it
+            // known device IDs for SB integrated graphics are: 258, 274, 278, 290, 294
+            if (nPCIVendor == PCIV_Intel && nPCIDevice>=258 && nPCIDevice <=294 && pDecoderGuids[iGuid] == DXVA2_ModeH264_E) {
+                bFoundDXVA2Configuration = false;
+            }
 
             if (bFoundDXVA2Configuration) { // Found a good configuration. Save the GUID.
                 guidDecoder = pDecoderGuids[iGuid];
+                break;
             }
         }
 
