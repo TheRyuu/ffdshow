@@ -51,7 +51,7 @@ void TffdshowConverters2::convert(
 #endif
 }
 
-template <class _mm>static void TffdshowConverters2::convert_check_src_align(
+template <class _mm> void TffdshowConverters2::convert_check_src_align(
     const uint8_t* srcY,
     const uint8_t* srcCb,
     const uint8_t* srcCr,
