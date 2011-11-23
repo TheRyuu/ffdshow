@@ -486,8 +486,8 @@ template<class _mm> void TsubtitleDVD::drawPixelSimd(const CPoint &pt,const YUVc
         int cnt=length-_mm::size/4+1;
 
         for (; cnt>0; cnt-=_mm::size/4,length-=_mm::size/4,ptx+=_mm::size/4) {
-            _mm::storeU(plane[0].c+pty*plane[0].stride+ptx*4, colorRGB);
-            _mm::storeU(plane[0].r+pty*plane[0].stride+ptx*4, alpha);
+            movVqu(plane[0].c+pty*plane[0].stride+ptx*4, colorRGB);
+            movVqu(plane[0].r+pty*plane[0].stride+ptx*4, alpha);
         }
 
         for (; length>0; length--,ptx++) {

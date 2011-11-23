@@ -214,7 +214,7 @@ template<class _mm> void TimgFilterUnsharp::unsharp(const TsharpenSettings *cfg,
             typename _mm::__m mm0=_mm::unpacklo_pi8(_mm::load2(src+stride1[0]+x  ),m0);
             typename _mm::__m mm1=_mm::unpacklo_pi8(_mm::load2(src+stride1[0]+x+1),m0);
             typename _mm::__m mm2=_mm::unpacklo_pi8(_mm::load2(src+stride1[0]+x+2),m0);
-            _mm::storeU(sum+minStride+1+x,_mm::add_pi16(mm0,_mm::add_pi16(mm1,mm2)));
+            movVqu(sum+minStride+1+x,_mm::add_pi16(mm0,_mm::add_pi16(mm1,mm2)));
         }
         for (unsigned int x=0; x<dx1[0]-1; x+=_mm::size/2) {
             typename _mm::__m y_sum=_mm::mulhi_pi16(_mm::add_pi16(_mm::add_pi16(*(typename _mm::__m*)(sum+x),*(typename _mm::__m*)(sum+minStride+x)),*(typename _mm::__m*)(sum-minStride+x)),div9_64);

@@ -102,6 +102,24 @@ static __forceinline void psrad(__m64 &dst,int i)
     dst=_mm_srai_pi32(dst,i);
 }
 
+// load variable width data aligned
+static __forceinline void movVqa(__m64 &dst,const void *ptr)
+{
+    dst = *(__m64*)ptr;
+}
+
+// load variable width data un-aligned
+static __forceinline void movVqu(__m64 &dst,const void *ptr)
+{
+    dst = *(__m64*)ptr;
+}
+
+// store variable width data un-aligned
+static __forceinline void movVqu(void *ptr,const __m64 &m)
+{
+    *(__m64*)ptr=m;
+}
+
 static __forceinline void prefetcht0(const void *a)
 {
     _mm_prefetch((char*)a,_MM_HINT_T0);
@@ -307,6 +325,22 @@ static __forceinline void movhpd(void *dst,const __m128d &src)
     _mm_storeh_pd((double*)dst,src);
 }
 
+// load variable width data aligned
+static __forceinline void movVqa(__m128i &dst, const void *ptr) {
+    dst = _mm_load_si128((const __m128i*)ptr);
+}
+
+// load variable width data un-aligned
+static __forceinline void movVqu(__m128i &dst, const void *ptr) {
+    dst = _mm_loadu_si128((const __m128i*)ptr);
+}
+
+// store variable width data un-aligned
+static __forceinline void movVqu(void *ptr,const __m128i &m)
+{
+    _mm_storeu_si128((__m128i*)ptr,m);
+}
+
 #if defined(__INTEL_COMPILER) || (defined(__GNUC__) && __GNUC__>=4)
 static __forceinline void movlpd(__m128i &dst,const void *src)
 {
@@ -429,8 +463,6 @@ static __forceinline void movlhps(__m128i &dst,const __m128i &src)
  static __forceinline __m shuffle_pi16_0(__m64 mm3) {return _mm_shuffle_pi16_0(mm3);} \
  static __forceinline void store2(void *ptr,const __m &m) {*(int2*)ptr=_mm_cvtsi64_si32(m);} \
  static __forceinline __m load2(const void *ptr) {return _mm_cvtsi32_si64(*(int2*)ptr);} \
- static __forceinline void storeU(void *ptr,const __m &m) {*(__m*)ptr=m;} \
- static __forceinline __m loadU(const void *ptr) {return *(__m*)ptr;} \
  static __forceinline void empty(void) {_mm_empty();}
 
 struct Tmmx {
@@ -593,6 +625,12 @@ struct Tmmx {
         pmaxsw(mm0,mm2);
         return mm0;
     }
+    // store variable width data without polluting chache (if supported)
+    static __forceinline void movntVq(void *ptr,const __m64 &m)
+    {
+        *(__m64*)ptr=m;
+    }
+
     MMX_INSTRUCTIONS
 };
 
@@ -681,6 +719,11 @@ struct Tmmxext {
     }
     static __forceinline void pmaxsw(__m64 &dst,const __m64 &src) {
         dst=_mm_max_pi16(dst,src);
+    }
+    // store variable width data without poluting chache (if supported)
+    static __forceinline void movntVq(void *ptr,const __m64 &m)
+    {
+        _mm_stream_pi((__m64 *)ptr, m);
     }
 
     MMX_INSTRUCTIONS
@@ -818,12 +861,6 @@ struct Tsse2 {
     static __forceinline void store2(void *ptr,const __m &m) {
         _mm_storel_epi64((__m128i*)ptr,m);
     }
-    static __forceinline void storeU(void *ptr,const __m &m) {
-        _mm_storeu_si128((__m*)ptr,m);
-    }
-    static __forceinline __m loadU(const void *ptr) {
-        return _mm_loadu_si128((const __m*)ptr);
-    }
     static __forceinline void empty(void) {
         /*_mm_empty();*/
     }
@@ -854,6 +891,11 @@ struct Tsse2 {
     }
     static __forceinline void sfence(void) {
         _mm_sfence();
+    }
+    // store variable width data without polluting the cache
+    static __forceinline void movntVq(void *ptr,const __m128i &m)
+    {
+        _mm_stream_si128((__m128i*)ptr,m);
     }
 };
 #endif //__SSE2__

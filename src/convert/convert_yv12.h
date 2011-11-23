@@ -268,7 +268,7 @@ template<class _mm> struct TconvertYV12
      for (int edx=0;edx<src_rowsize;edx+=_mm::size,eax+=_mm::size,ebx+=_mm::size/2,ecx+=_mm::size/2,edi+=_mm::size*2)
       {
        typename _mm::__m mm0,mm1,mm3,mm2,mm4,mm5;
-       mm0 = _mm::loadU (eax);    //Y
+       movVqu (mm0, eax);    //Y
         movd (mm1,ebx);  //U
        movq (mm3,mm0);
         movd (mm2,ecx);  //V
@@ -290,8 +290,8 @@ template<class _mm> struct TconvertYV12
         por (mm3, mm4);
        por (mm0, mm2);
         por (mm3, mm5);
-       _mm::storeU (edi,mm0);
-        _mm::storeU (edi+_mm::size,mm3);
+       movVqu (edi,mm0);
+        movVqu (edi+_mm::size,mm3);
       }
     }
 
@@ -328,7 +328,7 @@ template<class _mm> struct TconvertYV12
        typename _mm::__m mm6=add_ones;
        //int edx= src_pitch_uv;
        typename _mm::__m mm0,mm7=_mm::setzero_si64(),mm2,mm3,mm4,mm1,mm5;
-       mm0 = _mm::loadU (eax);          // mm0 = Y current line
+       movVqu (mm0, eax);          // mm0 = Y current line
        movd (mm2,ebx+src_pitch_uv);            // mm2 = U top field
         movd (mm3, ecx+src_pitch_uv);          // mm3 = V top field
        movd (mm4,ebx);        // U prev top field
@@ -357,8 +357,8 @@ template<class _mm> struct TconvertYV12
         por (mm0,mm5);
        por (mm1,mm6);
        //mov edx, src_pitch_uv2
-        _mm::storeU (edi,mm0);
-       _mm::storeU (edi+_mm::size,mm1);
+        movVqu (edi,mm0);
+       movVqu (edi+_mm::size,mm1);
 
        //Next line
 
@@ -367,7 +367,7 @@ template<class _mm> struct TconvertYV12
         movd (mm5,ecx+src_pitch_uv2);       // V prev top field
        //mov edx, [src_pitch]
         pxor (mm7,mm7);
-       mm0 = _mm::loadU (eax+src_pitch);        // Next U-line
+       movVqu (mm0, eax+src_pitch);        // Next U-line
         _mm::pavgb (mm4,mm2);            // interpolate chroma U
        movq (mm1,mm0);             // mm1 = Y current line
        _mm::pavgb (mm5,mm3);             // interpolate chroma V
@@ -392,8 +392,8 @@ template<class _mm> struct TconvertYV12
        pslld (mm6,24);
         por (mm0,mm5);
        por (mm1,mm6);
-        _mm::storeU (edi+dst_pitch,mm0);
-       _mm::storeU (edi+dst_pitch+_mm::size,mm1);
+        movVqu (edi+dst_pitch,mm0);
+       movVqu (edi+dst_pitch+_mm::size,mm1);
       }
     }
    _mm::sfence();
@@ -470,7 +470,7 @@ template<class _mm> struct TconvertYV12
      for (int edx=0;edx<src_rowsize;edx+=_mm::size,eax+=_mm::size,ebx+=_mm::size/2,ecx+=_mm::size/2,edi+=_mm::size*2)
       {
        typename _mm::__m mm0,mm1,mm3,mm2,mm4,mm5;
-       mm0 = _mm::loadU (eax);    //Y
+       movVqu (mm0, eax);    //Y
         movd (mm1,ebx);  //U
        movq (mm3,mm0);
         movd (mm2,ecx);   //V
@@ -492,8 +492,8 @@ template<class _mm> struct TconvertYV12
         por (mm3, mm4);
        por (mm0, mm2);
         por (mm3, mm5);
-       _mm::storeU (edi,mm0);
-        _mm::storeU (edi+_mm::size,mm3);
+       movVqu (edi,mm0);
+        movVqu (edi+_mm::size,mm3);
       }
     }
 
@@ -530,7 +530,7 @@ template<class _mm> struct TconvertYV12
       {
        //mov edx, src_pitch_uv2
        typename _mm::__m mm6=add_ones,mm0,mm7,mm2,mm3,mm4,mm1,mm5;
-       mm0 = _mm::loadU (eax);          // mm0 = Y current line
+       movVqu (mm0, eax);          // mm0 = Y current line
         pxor (mm7,mm7);
        movd (mm2,ebx+src_pitch_uv2);            // mm2 = U top field
         movd (mm3, ecx+src_pitch_uv2);          // mm3 = V top field
@@ -560,15 +560,15 @@ template<class _mm> struct TconvertYV12
         por (mm0,mm5);
        por (mm1,mm6);
        //mov edx, src_pitch_uv4
-        _mm::storeU (edi,mm0);
-       _mm::storeU (edi+_mm::size,mm1);
+        movVqu (edi,mm0);
+       movVqu (edi+_mm::size,mm1);
 
        //Next line in same field
         movq (mm6, add_ones);
        movd (mm4,ebx+src_pitch_uv4);        // U next top field
         movd (mm5,ecx+src_pitch_uv4);       // V prev top field
        //mov edx, [src_pitch2]
-        mm0 = _mm::loadU( eax+src_pitch2);        // Next Y-line
+        movVqu (mm0, eax+src_pitch2);        // Next Y-line
        _mm::pavgb (mm4,mm2);            // interpolate chroma U
         _mm::pavgb (mm5,mm3);             // interpolate chroma V
        psubusb (mm4, mm6);         // Better rounding (thanks trbarry!)
@@ -594,8 +594,8 @@ template<class _mm> struct TconvertYV12
        pslld (mm6,24);
         por (mm0,mm5);
        por (mm1,mm6);
-        _mm::storeU (edi+dst_pitch2,mm0);
-       _mm::storeU (edi+dst_pitch2+_mm::size,mm1);
+        movVqu (edi+dst_pitch2,mm0);
+       movVqu (edi+dst_pitch2+_mm::size,mm1);
       }
      if (skipnext)
       {
