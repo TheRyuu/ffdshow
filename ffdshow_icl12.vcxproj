@@ -296,43 +296,23 @@
   <ItemGroup>
     <ClCompile Include="src\checkHardCodedBlackList.cpp" />
     <ClCompile Include="src\codecs\TvideoCodecQuickSync.cpp" />
+    <ClCompile Include="src\convert\ffdshow_converters2.cpp" />
     <ClCompile Include="src\dsutil.cpp" />
     <ClCompile Include="src\dwstring.cpp" />
     <ClCompile Include="src\ffdebug.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\ffdshowRemoteAPI.cpp" />
     <ClCompile Include="src\ffglobals.cpp" />
     <ClCompile Include="src\ffmpeg\libavcodec\golomb.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\inifiles.cpp" />
     <ClCompile Include="src\mem_align.cpp" />
     <ClCompile Include="src\mmintrin64.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -613,26 +593,8 @@
     <ClCompile Include="src\settings\filters\TvolumeSettings.cpp" />
     <ClCompile Include="src\settings\filters\Twinamp2settings.cpp" />
     <ClCompile Include="src\settings\lzo\minilzo.c">
-      <ExceptionHandling Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </ExceptionHandling>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
-      <ExceptionHandling Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </ExceptionHandling>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsC</CompileAs>
-      <ExceptionHandling Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </ExceptionHandling>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
-      <ExceptionHandling Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </ExceptionHandling>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsC</CompileAs>
+      <ExceptionHandling>false</ExceptionHandling>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\codecs\ffcodecs.cpp" />
     <ClCompile Include="src\codecs\mp3header.cpp" />
@@ -759,6 +721,7 @@
     <ClInclude Include="src\checkHardCodedBlackList.h" />
     <ClInclude Include="src\codecs\TvideoCodecQuickSync.h" />
     <ClInclude Include="src\comptr.h" />
+    <ClInclude Include="src\convert\ffdshow_converters2.h" />
     <ClInclude Include="src\csimd.h" />
     <ClInclude Include="src\dsutil.h" />
     <ClInclude Include="src\dwstring.h" />

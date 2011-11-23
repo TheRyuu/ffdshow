@@ -1421,6 +1421,9 @@
     <ClCompile Include="src\codecs\TvideoCodecQuickSync.cpp">
       <Filter>codecs</Filter>
     </ClCompile>
+    <ClCompile Include="src\convert\ffdshow_converters2.cpp">
+      <Filter>convert</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <yasm Include="src\cpuid.asm">
@@ -2789,6 +2792,9 @@
     </ClInclude>
     <ClInclude Include="src\codecs\TvideoCodecQuickSync.h">
       <Filter>codecs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\convert\ffdshow_converters2.h">
+      <Filter>convert</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
