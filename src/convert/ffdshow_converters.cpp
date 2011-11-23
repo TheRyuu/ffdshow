@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009 h.yamagata, based on the ideas of AviSynth's color converters
+ * Copyright (c) 2009-2011 h.yamagata, based on the ideas of AviSynth's color converters
  *  Avisynth v2.5.  Copyright 2002 Ben Rudiak-Gould et al.
  *
  * This program is free software: you can redistribute it and/or modify

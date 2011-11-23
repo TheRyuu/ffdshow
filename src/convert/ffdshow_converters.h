@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009 h.yamagata, based on the ideas of AviSynth's color converters
+ * Copyright (c) 2009-2011 h.yamagata, based on the ideas of AviSynth's color converters
  *  Avisynth v2.5.  Copyright 2002 Ben Rudiak-Gould et al.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -64,7 +64,7 @@ typedef ptrdiff_t stride_t;
 class TffdshowConverters
 {
 public:
-    void init(uint64_t incsp,                 // FF_CSP_420P, FF_CSP_NV12, FF_CSP_YUY2 or FF_CSP_420P (progressive only)
+    void init(uint64_t incsp,                 // FF_CSP_420P, FF_CSP_NV12, FF_CSP_YUY2 or FF_CSP_420P10 (progressive only)
               uint64_t outcsp,                // FF_CSP_RGB32, FF_CSP_RGB24, FF_CSP_BGR32 or FF_CSP_BGR24
               ffYCbCr_RGB_MatrixCoefficientsType cspOptionsIturBt,  // ffYCbCr_RGB_coeff_ITUR_BT601, ffYCbCr_RGB_coeff_ITUR_BT709 or ffYCbCr_RGB_coeff_SMPTE240M
               int input_Y_white_level,        // input Y level (TV:235, PC:255)
