@@ -91,6 +91,8 @@ ToutputVideoSettings::ToutputVideoSettings(TintStrColl *Icoll,TfilterIDFFs *filt
         _l("outRGB24"),1,
         IDFF_outP016            ,&ToutputVideoSettings::p016               ,0,0,_l(""),0,
         _l("outP016"),1,
+        IDFF_outP010            ,&ToutputVideoSettings::p010               ,0,0,_l(""),0,
+        _l("outP010"),1,
         IDFF_outDV              ,&ToutputVideoSettings::dv                 ,0,0,_l(""),0,
         _l("outDV"),0,
         IDFF_outDVnorm          ,&ToutputVideoSettings::dvNorm             ,0,2,_l(""),0,
@@ -145,12 +147,13 @@ void ToutputVideoSettings::reg_op_outcsps(TregOp &t)
     t._REG_OP_N(IDFF_outRGB32 ,_l("outRGB32") ,rgb32 ,1);
     t._REG_OP_N(IDFF_outRGB24 ,_l("outRGB24") ,rgb24 ,1);
     t._REG_OP_N(IDFF_outP016  ,_l("outP016")  ,p016  ,1);
+    t._REG_OP_N(IDFF_outP010  ,_l("outP010")  ,p010  ,1);
     t._REG_OP_N(IDFF_hwOverlayAspect,_l("hwOverlayAspect"),hwOverlayAspect,0);
 }
 
 const int* ToutputVideoSettings::getResets(unsigned int pageId)
 {
-    static const int idResets[]= {IDFF_flip,IDFF_outYV12,IDFF_outYUY2,IDFF_outUYVY,IDFF_outNV12,IDFF_outP016,
+    static const int idResets[]= {IDFF_flip,IDFF_outYV12,IDFF_outYUY2,IDFF_outUYVY,IDFF_outNV12,IDFF_outP016,IDFF_outP010,
         IDFF_outRGB32,IDFF_outRGB24,IDFF_outDV,IDFF_setDeintInOutSample,IDFF_hwDeintMethod,IDFF_hwDeintFieldOrder,0};
     return idResets;
 }
@@ -178,6 +181,9 @@ void ToutputVideoSettings::getOutputColorspaces(ints &ocsps)
     }
     if (p016) {
         ocsps.push_back(FF_CSP_P016);
+    }
+    if (p010) {
+        ocsps.push_back(FF_CSP_P010);
     }
 }
 

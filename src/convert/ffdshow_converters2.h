@@ -20,7 +20,7 @@
 
 typedef ptrdiff_t stride_t;
 
-// converts FF_CSP_420P10 to FF_CSP_P016 (MFVideoFormat_P016).
+// converts FF_CSP_420P10 to FF_CSP_P010/FF_CSP_P016 (MFVideoFormat_P010/16).
 // Because there is no data member, no initialization required.
 // just TffdshowConverters2::convert.
 class TffdshowConverters2

@@ -269,7 +269,7 @@ int Tconvert::convert(uint64_t incsp0,
                 } //switch (outcsp1)
                 break;
             case FF_CSP_420P10:
-                if (outcsp1 == FF_CSP_P016) {
+                if (outcsp1 == FF_CSP_P016 || outcsp1 == FF_CSP_P010) {
                     mode = MODE_ffdshow_converters2;
                     break;
                 }
@@ -401,7 +401,7 @@ int Tconvert::convert(uint64_t incsp0,
                 setJpeg(!!((incsp | outcsp) & FF_CSP_FLAGS_YUV_JPEG));
                 swscale->init(dx,dy,incsp,outcsp,toSwscaleTable());
                 mode=MODE_swscale;
-            } else if (outcsp1 == FF_CSP_P016) {
+            } else if (outcsp1 == FF_CSP_P016 || outcsp1 == FF_CSP_P010) {
                 mode=MODE_fallback;
                 tmpcsp = FF_CSP_420P10;
                 tmpStride[0] = ((dx + 7) & ~7)*2;
