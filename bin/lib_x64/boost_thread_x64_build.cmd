@@ -1,17 +1,20 @@
 @ECHO OFF
-rem command line used to build libboost_thread-vcTOOLSET-mt-VARIANT-1_46_1.lib
+rem command line used to build libboost_thread-vcTOOLSET-mt-VARIANT-1_48.lib
 rem You need to build bjam first running bootstrap.bat and the appropriate MSVC version
-rem toolset = msvc-9.0 | msvc-10.0
-rem variant = release | debug
+SET toolset=msvc-10.0
 
-rem ECHO bjam --toolset=msvc-9.0 address-model=64 --with-thread variant=debug link=static threading=multi runtime-link=static stage
-rem bjam --toolset=msvc-9.0 address-model=64 --with-thread variant=debug link=static threading=multi runtime-link=static stage
+FOR %%L IN (
+  "debug" "release"
+) DO (
+  CALL :SubBjam %%L 32
+  CALL :SubBjam %%L 64
+)
+EXIT /B
 
-rem ECHO bjam --toolset=msvc-9.0 address-model=64 --with-thread variant=release link=static threading=multi runtime-link=static stage
-rem bjam --toolset=msvc-9.0 address-model=64 --with-thread variant=release link=static threading=multi runtime-link=static stage
 
-ECHO bjam --toolset=msvc-10.0 address-model=64 --with-thread variant=debug link=static threading=multi runtime-link=static stage
-bjam --toolset=msvc-10.0 address-model=64 --with-thread variant=debug link=static threading=multi runtime-link=static stage
-
-ECHO bjam --toolset=msvc-10.0 address-model=64 --with-thread variant=release link=static threading=multi runtime-link=static stage
-bjam --toolset=msvc-10.0 address-model=64 --with-thread variant=release link=static threading=multi runtime-link=static stage
+:SubBjam
+ECHO.
+ECHO bjam --toolset=%toolset% address-model=%2 --with-thread variant=%1 link=static threading=multi runtime-link=static stage
+bjam --toolset=%toolset% address-model=%2 --with-thread variant=%1 link=static threading=multi runtime-link=static stage
+ECHO.
+EXIT /B
