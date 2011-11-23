@@ -151,7 +151,7 @@ void ToutputVideoSettings::reg_op_outcsps(TregOp &t)
 const int* ToutputVideoSettings::getResets(unsigned int pageId)
 {
     static const int idResets[]= {IDFF_flip,IDFF_outYV12,IDFF_outYUY2,IDFF_outUYVY,IDFF_outNV12,IDFF_outP016,
-        IDFF_outRGB32,IDFF_outDV,IDFF_setDeintInOutSample,IDFF_hwDeintMethod,IDFF_hwDeintFieldOrder,0};
+        IDFF_outRGB32,IDFF_outRGB24,IDFF_outDV,IDFF_setDeintInOutSample,IDFF_hwDeintMethod,IDFF_hwDeintFieldOrder,0};
     return idResets;
 }
 
