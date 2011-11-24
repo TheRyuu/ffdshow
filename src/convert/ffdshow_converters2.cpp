@@ -146,7 +146,7 @@ template <class _mm, int src_aligned, int dst_aligned, uint64_t incsp> void Tffd
                 psllw(_mm0, 6);
                 src += _mm::size;
             } else if (incsp == FF_CSP_420P) {
-                _mm1 = _mm::load2(src);
+                movHalf(_mm1, src);
                 _mm0 = zero;
                 punpcklbw(_mm0, _mm1);
                 src += _mm::size/2;
@@ -166,8 +166,8 @@ template <class _mm, int src_aligned, int dst_aligned, uint64_t incsp> void Tffd
         int x = xCount;
         do {
             if (incsp == FF_CSP_420P10) {
-                _mm0 = _mm::load2(Cb);
-                _mm1 = _mm::load2(Cr);
+                movHalf(_mm0, Cb);
+                movHalf(_mm1, Cr);
                 Cb += _mm::size/2;
                 Cr += _mm::size/2;
                 punpcklwd(_mm0, _mm1);
