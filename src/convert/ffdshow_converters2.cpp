@@ -109,7 +109,7 @@ template <class _mm, int src_aligned, int dst_aligned> void TffdshowConverters2:
     if (incsp == FF_CSP_420P10)
         convert_simd<_mm, src_aligned, dst_aligned, FF_CSP_420P10>(srcY, srcCb, srcCr, dstY, dstCbCr, dx, dy, stride_Y, stride_CbCr, stride_dstY, stride_dstCbCr);
     else if (incsp == FF_CSP_420P)
-        convert_simd<_mm, src_aligned, dst_aligned, FF_CSP_420P>(srcY, srcCb, srcCr, dstY, dstCbCr, dx, dy, stride_Y, stride_CbCr, stride_dstY, stride_dstCbCr);
+        convert_simd<_mm, 1          , dst_aligned, FF_CSP_420P>  (srcY, srcCb, srcCr, dstY, dstCbCr, dx, dy, stride_Y, stride_CbCr, stride_dstY, stride_dstCbCr);
     else
         return;
 }
