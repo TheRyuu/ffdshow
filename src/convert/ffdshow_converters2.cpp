@@ -110,6 +110,8 @@ template <class _mm, int src_aligned, int dst_aligned> void TffdshowConverters2:
         convert_simd<_mm, src_aligned, dst_aligned, FF_CSP_420P10>(srcY, srcCb, srcCr, dstY, dstCbCr, dx, dy, stride_Y, stride_CbCr, stride_dstY, stride_dstCbCr);
     else if (incsp == FF_CSP_420P)
         convert_simd<_mm, 1          , dst_aligned, FF_CSP_420P>  (srcY, srcCb, srcCr, dstY, dstCbCr, dx, dy, stride_Y, stride_CbCr, stride_dstY, stride_dstCbCr);
+    else if (incsp == FF_CSP_NV12)
+        convert_simd<_mm, 1          , dst_aligned, FF_CSP_NV12>  (srcY, srcCb, srcCr, dstY, dstCbCr, dx, dy, stride_Y, stride_CbCr, stride_dstY, stride_dstCbCr);
     else
         return;
 }
@@ -145,7 +147,7 @@ template <class _mm, int src_aligned, int dst_aligned, uint64_t incsp> void Tffd
                     movVqu(_mm0, src);
                 psllw(_mm0, 6);
                 src += _mm::size;
-            } else if (incsp == FF_CSP_420P) {
+            } else if (incsp == FF_CSP_420P || incsp == FF_CSP_NV12) {
                 movHalf(_mm1, src);
                 _mm0 = zero;
                 punpcklbw(_mm0, _mm1);
@@ -182,6 +184,11 @@ template <class _mm, int src_aligned, int dst_aligned, uint64_t incsp> void Tffd
                 punpcklbw(_mm0, _mm2);
                 punpcklbw(_mm1, _mm3);
                 punpcklwd(_mm0, _mm1);
+            } else if (incsp == FF_CSP_NV12) {
+                movHalf(_mm1, Cb);
+                Cb += _mm::size/2;
+                _mm0 = zero;
+                punpcklbw(_mm0, _mm1);
             }
 
             if (dst_aligned || typeid(_mm) == typeid(Tmmxext))

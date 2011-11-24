@@ -277,6 +277,7 @@ int Tconvert::convert(uint64_t incsp0,
                     mode = MODE_ffdshow_converters2;
                     break;
                 }
+                // go into next line. no break needed.
             case FF_CSP_444P10:
                 if (m_highQualityRGB && !((outcsp|incsp) & FF_CSP_FLAGS_INTERLACED) && outcsp_sup_ffdshow_converter(outcsp1))
                     mode = MODE_ffdshow_converters;
@@ -380,6 +381,11 @@ int Tconvert::convert(uint64_t incsp0,
             case FF_CSP_NV12:
                 if (!((outcsp|incsp) & FF_CSP_FLAGS_INTERLACED) && outcsp_sup_ffdshow_converter(outcsp1) && (incsp & FF_CSP_FLAGS_YUV_ORDER)) {
                     mode = MODE_ffdshow_converters;
+                    break;
+                }
+                if (outcsp1 == FF_CSP_P016 || outcsp1 == FF_CSP_P010) {
+                    mode = MODE_ffdshow_converters2;
+                    break;
                 }
                 break;
             case FF_CSP_422P:
