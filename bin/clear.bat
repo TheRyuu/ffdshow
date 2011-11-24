@@ -1,1 +1,1 @@
-rm *.exe *.dll *.ilk *.ax *.vdf *.acm
+@del /Q *.exe *.dll *.ilk *.ax *.vdf *.acm

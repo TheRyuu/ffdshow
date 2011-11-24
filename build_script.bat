@@ -1,68 +1,64 @@
 @ECHO OFF
 
-IF "%PROGRAMFILES(x86)%zzz"=="zzz" (
-  SET FF_PROGRAMFILES=%PROGRAMFILES%
-) ELSE (
-  SET FF_PROGRAMFILES=%PROGRAMFILES(x86)%
+if "%FF_TARGET%"=="x64" (
+  set FF_MAKE_PARAM=64BIT=yes
+  set ISCC_PARAM=/dis64bit
+) else (
+  set FF_MAKE_PARAM=
+  set ISCC_PARAM=
 )
-
-IF "%FF_TARGET%"=="x64" (
-  SET FF_MAKE_PARAM=64BIT=yes
-  SET ISCC_PARAM=/dis64bit=yes
-) ELSE (
-  SET FF_MAKE_PARAM=
-  SET ISCC_PARAM=
-)
-
-SET ISCC="%FF_PROGRAMFILES%\Inno Setup 5\ISCC.exe"
 
 
 echo [Removing files]
-cd bin
-del /Q *.dll *.exe
-cd ..\
-
+pushd bin
+call clear.bat
+popd
 
 echo [Compiling with MSVC]
 
 call "%VS100COMNTOOLS%vsvars32.bat"
+title %SOLUTIONFILE% %BUILDTYPE% %BUILDTARGET%
 devenv %SOLUTIONFILE% %BUILDTYPE% %BUILDTARGET%
-IF %ERRORLEVEL% NEQ 0 GOTO :GotError
+if %ERRORLEVEL% neq 0 goto GotError
 
 
 echo [Compiling with GCC]
 
-cd src\ffmpeg
-IF NOT "%BUILDTYPE%"=="/build" (
+pushd src\ffmpeg
+if not "%BUILDTYPE%"=="/build" (
   make clean
-  IF %ERRORLEVEL% NEQ 0 GOTO :GotError
+  if %ERRORLEVEL% neq 0 goto GotError
 )
-IF NOT "%BUILDTYPE%"=="/clean" (
-  make %FF_MAKE_PARAM%
-  IF %ERRORLEVEL% NEQ 0 GOTO :GotError
+if not "%BUILDTYPE%"=="/clean" (
+  make -j%NUMBER_OF_PROCESSORS% %FF_MAKE_PARAM%
+  if %ERRORLEVEL% neq 0 goto GotError
 )
-cd ..\..
+popd
 
-IF "%FF_TARGET%"=="x86" (
-  cd src\imgFilters\KernelDeint
-  IF NOT "%BUILDTYPE%"=="/build" (
+if "%FF_TARGET%"=="x86" (
+  pushd src\imgFilters\KernelDeint
+  if not "%BUILDTYPE%"=="/build" (
     make clean
-    IF %ERRORLEVEL% NEQ 0 GOTO :GotError
+    if %ERRORLEVEL% neq 0 goto GotError
   )
-  IF NOT "%BUILDTYPE%"=="/clean" (
-    make %FF_MAKE_PARAM%
-    IF %ERRORLEVEL% NEQ 0 GOTO :GotError
+  if not "%BUILDTYPE%"=="/clean" (
+    make -j%NUMBER_OF_PROCESSORS% %FF_MAKE_PARAM%
+    if %ERRORLEVEL% neq 0 goto GotError
   )
-  cd ..\..\..
+  popd
 )
 
 
+if "%BUILDTYPE%"=="/clean" exit /b
 echo [Building installer]
 
-IF EXIST %ISCC% (
+call :SubDetectInnoSetup
+set ISCC="%InnoSetupPath%\ISCC.exe"
+
+if exist %ISCC% (
   cd bin\distrib
-  %ISCC% ffdshow_installer.iss %FF_MAKE_PARAM%
-  IF %ERRORLEVEL% NEQ 0 GOTO :GotError
+  %ISCC% ffdshow_installer.iss %ISCC_PARAM%
+  if %ERRORLEVEL% neq 0 goto GotError
   cd ..\..
 ) else (
   echo InnoSetup not found
@@ -70,8 +66,23 @@ IF EXIST %ISCC% (
 )
 
 
-goto :EOF
+exit /b
 
+:SubDetectInnoSetup
+if defined PROGRAMFILES(x86) (
+  set "U_=HKLM\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall"
+) else (
+  set "U_=HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall"
+)
+
+for /F "delims=" %%a in (
+  'REG QUERY "%U_%\Inno Setup 5_is1" /v "Inno Setup: App Path"2^>Nul^|FIND "REG_"') do (
+  set "InnoSetupPath=%%a" & CALL :SubInnoSetup %%InnoSetupPath:*Z=%%)
+exit /b
+
+:SubInnoSetup
+set InnoSetupPath=%*
+exit /b
 
 :GotError
 echo There was an error!

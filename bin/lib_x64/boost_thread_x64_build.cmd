@@ -6,15 +6,15 @@ SET toolset=msvc-10.0
 FOR %%L IN (
   "debug" "release"
 ) DO (
-  CALL :SubBjam %%L 32
-  CALL :SubBjam %%L 64
+  CALL :SubBjam %%L 32 thread
+  CALL :SubBjam %%L 64 thread
 )
 EXIT /B
 
 
 :SubBjam
 ECHO.
-ECHO bjam --toolset=%toolset% address-model=%2 --with-thread variant=%1 link=static threading=multi runtime-link=static stage
-bjam --toolset=%toolset% address-model=%2 --with-thread variant=%1 link=static threading=multi runtime-link=static stage
+ECHO bjam --toolset=%toolset% address-model=%2 --with-%3 variant=%1 link=static threading=multi runtime-link=static stage
+bjam --toolset=%toolset% address-model=%2 --with-%3 variant=%1 link=static threading=multi runtime-link=static stage
 ECHO.
 EXIT /B
