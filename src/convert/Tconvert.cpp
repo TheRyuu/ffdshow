@@ -240,6 +240,10 @@ int Tconvert::convert(uint64_t incsp0,
                             avisynth_yv12_to_yuy2=TconvertYV12<Tmmx>::yv12_to_yuy2;
                         }
                         break;
+                    case FF_CSP_P016:
+                    case FF_CSP_P010:
+                        mode = MODE_ffdshow_converters2;
+                        break;
                     default:
                         if (m_highQualityRGB && !((outcsp|incsp) & FF_CSP_FLAGS_INTERLACED) && outcsp_sup_ffdshow_converter(outcsp1)) {
                             mode = MODE_ffdshow_converters;
@@ -473,7 +477,7 @@ int Tconvert::convert(uint64_t incsp0,
             return dy;
         }
         case MODE_ffdshow_converters2: {
-            TffdshowConverters2::convert(src[0],src[1],src[2],dst[0],dst[1],dx,dy,srcStride[0],srcStride[1],dstStride[0],dstStride[1]);
+            TffdshowConverters2::convert(incsp0&FF_CSPS_MASK, src[0],src[1],src[2],dst[0],dst[1],dx,dy,srcStride[0],srcStride[1],dstStride[0],dstStride[1]);
             return dy;
         }
         case MODE_avisynth_yv12_to_yuy2:

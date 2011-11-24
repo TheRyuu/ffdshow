@@ -27,6 +27,7 @@ class TffdshowConverters2
 {
 public:
     static void convert(
+        uint64_t incsp,
         const uint8_t* srcY,
         const uint8_t* srcCb,
         const uint8_t* srcCr,
@@ -41,6 +42,7 @@ public:
 
 private:
     template <class _mm> static void convert_check_src_align(
+        uint64_t incsp,
         const uint8_t* srcY,
         const uint8_t* srcCb,
         const uint8_t* srcCr,
@@ -53,7 +55,8 @@ private:
         stride_t stride_dstY,
         stride_t stride_dstCbCr);
 
-    template <int src_aligned, class _mm> static void convert_check_dst_align(
+    template <class _mm, int src_aligned> static void convert_check_dst_align(
+        uint64_t incsp,
         const uint8_t* srcY,
         const uint8_t* srcCb,
         const uint8_t* srcCr,
@@ -66,7 +69,21 @@ private:
         stride_t stride_dstY,
         stride_t stride_dstCbCr);
 
-    template <int src_aligned, int dst_aligned, class _mm> static void convert_simd(
+    template <class _mm, int src_aligned, int dst_aligned> static void convert_translate_incsp(
+        uint64_t incsp,
+        const uint8_t* srcY,
+        const uint8_t* srcCb,
+        const uint8_t* srcCr,
+        uint8_t* dstY,
+        uint8_t* dstCbCr,
+        int dx,
+        int dy,
+        stride_t stride_Y,
+        stride_t stride_CbCr,
+        stride_t stride_dstY,
+        stride_t stride_dstCbCr);
+
+    template <class _mm, int src_aligned, int dst_aligned, uint64_t incsp> static void convert_simd(
         const uint8_t* srcY,
         const uint8_t* srcCb,
         const uint8_t* srcCr,
