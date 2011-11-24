@@ -9,6 +9,9 @@
       <UniqueIdentifier>{42325b0b-5de5-42b0-a9e8-d4418e6129f2}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl</Extensions>
     </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{de0403da-757c-4420-88b3-aa6525d0f0f4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="driverproc.cpp">

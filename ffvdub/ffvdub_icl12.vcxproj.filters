@@ -90,7 +90,7 @@
       <Filter>Header Files\VirtualDub</Filter>
     </ClInclude>
     <ClInclude Include="src\resource.h">
-      <Filter>Resource Files</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
