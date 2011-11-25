@@ -1,6 +1,7 @@
-@SET FF_TARGET=x86
-@SET BUILDTYPE=/clean
-@SET SOLUTIONFILE=ffdshow_2010.sln
-@SET BUILDTARGET="Release|Win32"
+@echo off
+set FF_TARGET=x86
+set BUILDTYPE=clean
+set SOLUTIONFILE=ffdshow_2010.sln
+set BUILDTARGET="Release|Win32"
 
-@build_script.bat
+build_script.bat

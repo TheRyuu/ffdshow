@@ -1,6 +1,6 @@
-@ECHO OFF
+@echo off
 
-if "%FF_TARGET%"=="x64" (
+if /I "%FF_TARGET%"=="x64" (
   set FF_MAKE_PARAM=64BIT=yes
   set ISCC_PARAM=/dis64bit
 ) else (
@@ -10,38 +10,35 @@ if "%FF_TARGET%"=="x64" (
 
 
 echo [Removing files]
-pushd bin
-call clear.bat
-popd
-
+call bin\clear.bat
 echo [Compiling with MSVC]
 
 call "%VS100COMNTOOLS%vsvars32.bat"
-title %SOLUTIONFILE% %BUILDTYPE% %BUILDTARGET%
-devenv %SOLUTIONFILE% %BUILDTYPE% %BUILDTARGET%
+title %SOLUTIONFILE% /%BUILDTYPE% %BUILDTARGET%
+devenv %SOLUTIONFILE% /%BUILDTYPE% %BUILDTARGET%
 if %ERRORLEVEL% neq 0 goto GotError
 
 
 echo [Compiling with GCC]
 
 pushd src\ffmpeg
-if not "%BUILDTYPE%"=="/build" (
+if /I not "%BUILDTYPE%"=="build" (
   make clean
   if %ERRORLEVEL% neq 0 goto GotError
 )
-if not "%BUILDTYPE%"=="/clean" (
+if /I not "%BUILDTYPE%"=="clean" (
   make -j%NUMBER_OF_PROCESSORS% %FF_MAKE_PARAM%
   if %ERRORLEVEL% neq 0 goto GotError
 )
 popd
 
-if "%FF_TARGET%"=="x86" (
+if /I "%FF_TARGET%"=="x86" (
   pushd src\imgFilters\KernelDeint
-  if not "%BUILDTYPE%"=="/build" (
+  if /I not "%BUILDTYPE%"=="build" (
     make clean
     if %ERRORLEVEL% neq 0 goto GotError
   )
-  if not "%BUILDTYPE%"=="/clean" (
+  if /I not "%BUILDTYPE%"=="clean" (
     make -j%NUMBER_OF_PROCESSORS% %FF_MAKE_PARAM%
     if %ERRORLEVEL% neq 0 goto GotError
   )
@@ -49,24 +46,24 @@ if "%FF_TARGET%"=="x86" (
 )
 
 
-if "%BUILDTYPE%"=="/clean" exit /b
+if /I "%BUILDTYPE%"=="clean" exit /b
 echo [Building installer]
 
 call :SubDetectInnoSetup
 set ISCC="%InnoSetupPath%\ISCC.exe"
 
 if exist %ISCC% (
-  cd bin\distrib
+  pushd bin\distrib
   %ISCC% ffdshow_installer.iss %ISCC_PARAM%
   if %ERRORLEVEL% neq 0 goto GotError
-  cd ..\..
+  popd
 ) else (
   echo InnoSetup not found
   pause
 )
 
-
 exit /b
+
 
 :SubDetectInnoSetup
 if defined PROGRAMFILES(x86) (
