@@ -62,6 +62,10 @@ $(OBJ_DIR)%.o: %.asm
 	@echo $<
 	@yasm $(YASMFLAGS) -I$(<D)/ -o $@ $<
 
+$(OBJ_DIR)%.res.o: %.rc
+	@echo $<
+	@$(FFDSHOW_PREFIX)windres -o $@ $<
+
 $(TARGET_LIB): $(OBJS) $(DEF)
 	@echo $@
 	@$(FFDSHOW_PREFIX)dllwrap --target=$(TARGET_OS) \

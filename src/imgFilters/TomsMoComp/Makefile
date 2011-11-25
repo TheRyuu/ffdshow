@@ -1,6 +1,7 @@
 ### FILES and DIRECTORIES ###
 
 SRCS=TomsMoComp.cpp
+RESSRC=TomsMoComp_ff.rc
 
 ifeq ($(64BIT),yes)
     OBJ_DIR=../../../obj/MinGW64/TomsMoComp/

@@ -13,11 +13,12 @@ FILETYPE VFT_APP
     {
       VALUE "CompanyName", "Alexander Roshal\0"
       VALUE "ProductName", "RAR decompression library\0"
-      VALUE "FileDescription", "RAR decompression library\0"
+      //FileDescription: add ffdshow
+      VALUE "FileDescription", "RAR decompression library built for ffdshow\0"
       VALUE "FileVersion", "4.10.3\0"
       VALUE "ProductVersion", "4.10.3\0"
       VALUE "LegalCopyright", "Copyright © Alexander Roshal 1993-2011\0"
-    //OriginalFilename ff_unrar for ffdshow
+      //OriginalFilename ff_unrar for ffdshow
       VALUE "OriginalFilename", "ff_unrar.dll\0"
     }
   }

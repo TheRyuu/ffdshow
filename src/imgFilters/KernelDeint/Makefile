@@ -1,6 +1,7 @@
 ### FILES and DIRECTORIES ###
 
 SRCS=ff_kernelDeint.cpp
+RESSRC=ff_kernelDeint.rc
 
 ifeq ($(64BIT),yes)
     OBJ_DIR=../../../obj/MinGW64/kernelDeint/

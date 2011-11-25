@@ -14,6 +14,8 @@ SRCS_C=\
     libmpeg2/cpu_accel.c \
     version.c
 
+RESSRC=libmpeg2_ff.rc
+
 ifeq ($(64BIT),yes)
     OBJ_DIR=../../../obj/MinGW64/libmpeg2/
     TARGET_LIB_DIR=../../../bin/

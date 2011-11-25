@@ -73,7 +73,7 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <Culture>0x041b</Culture>
+      <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
       <TargetMachine>MachineX86</TargetMachine>
@@ -93,7 +93,7 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <Culture>0x041b</Culture>
+      <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
       <TargetMachine>MachineX64</TargetMachine>
@@ -113,7 +113,7 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <Culture>0x041b</Culture>
+      <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
       <TargetMachine>MachineX86</TargetMachine>
@@ -134,7 +134,7 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <Culture>0x041b</Culture>
+      <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
       <TargetMachine>MachineX64</TargetMachine>
@@ -154,6 +154,9 @@
     <ClInclude Include="..\src\IffdshowParamsEnum.h" />
     <ClInclude Include="..\src\imgFilters\IffProc.h" />
     <ClInclude Include="..\src\inttypes.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="FLT_ffdshow.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

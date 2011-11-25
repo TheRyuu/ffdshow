@@ -19,6 +19,9 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <WPOObjectFile>$(IntDir)WPO.obj</WPOObjectFile>
     </Link>
+    <ResourceCompile>
+       <SuppressStartupBanner>true</SuppressStartupBanner>
+    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug'">
     <ClCompile>

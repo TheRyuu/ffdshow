@@ -79,7 +79,7 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <Culture>0x041b</Culture>
+      <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
       <ModuleDefinitionFile>ff_liba52.def</ModuleDefinitionFile>
@@ -101,7 +101,7 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <Culture>0x041b</Culture>
+      <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
       <ModuleDefinitionFile>ff_liba52.def</ModuleDefinitionFile>
@@ -123,7 +123,7 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <Culture>0x041b</Culture>
+      <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
       <ModuleDefinitionFile>ff_liba52.def</ModuleDefinitionFile>
@@ -146,7 +146,7 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <Culture>0x041b</Culture>
+      <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
       <ModuleDefinitionFile>ff_liba52.def</ModuleDefinitionFile>
@@ -171,6 +171,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ff_liba52.def" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ff_liba52.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -73,7 +73,7 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <Culture>0x041b</Culture>
+      <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
       <ModuleDefinitionFile>ff_libdts.def</ModuleDefinitionFile>
@@ -95,7 +95,7 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <Culture>0x041b</Culture>
+      <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
       <ModuleDefinitionFile>ff_libdts.def</ModuleDefinitionFile>
@@ -117,7 +117,7 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <Culture>0x041b</Culture>
+      <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
       <ModuleDefinitionFile>ff_libdts.def</ModuleDefinitionFile>
@@ -140,7 +140,7 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <Culture>0x041b</Culture>
+      <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
       <ModuleDefinitionFile>ff_libdts.def</ModuleDefinitionFile>
@@ -168,6 +168,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ff_libdts.def" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ff_libdts.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

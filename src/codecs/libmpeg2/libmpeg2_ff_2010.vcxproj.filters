@@ -9,6 +9,9 @@
       <UniqueIdentifier>{039400a4-e987-48cd-b0e0-76cc1b950844}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl;inc</Extensions>
     </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{bdc1c261-ae3d-404d-9d73-4b3ace1d7d54}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="libmpeg2\alloc.c">
@@ -75,5 +78,10 @@
     <None Include="libmpeg2_ff.def">
       <Filter>Source Files</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="libmpeg2_ff.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

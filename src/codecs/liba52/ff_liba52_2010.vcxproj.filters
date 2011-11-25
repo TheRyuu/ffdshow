@@ -9,6 +9,9 @@
       <UniqueIdentifier>{6ce8254a-205d-4509-b744-19c6d755755e}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl</Extensions>
     </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{0b303034-0cfe-4700-836d-25f4b42e0f35}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="bit_allocate.c">
@@ -51,5 +54,10 @@
     <None Include="ff_liba52.def">
       <Filter>Source Files</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ff_liba52.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

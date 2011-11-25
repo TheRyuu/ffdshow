@@ -9,6 +9,9 @@
       <UniqueIdentifier>{03db8194-3bfc-410d-88b9-b0d81b989add}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl</Extensions>
     </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{cc7c1ae1-6b9c-4cbc-8091-df8400100051}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ffavisynth.cpp">
@@ -28,5 +31,10 @@
     <ClInclude Include="..\src\inttypes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ffavisynth.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

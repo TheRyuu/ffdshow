@@ -169,6 +169,9 @@
     <None Include="sf_table.dat" />
     <None Include="ff_libmad.def" />
   </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ff_libmad.rc" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

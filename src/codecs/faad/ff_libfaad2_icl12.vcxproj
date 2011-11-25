@@ -80,7 +80,7 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <Culture>0x0407</Culture>
+      <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
       <ModuleDefinitionFile>ff_libfaad2.def</ModuleDefinitionFile>
@@ -102,7 +102,7 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <Culture>0x0407</Culture>
+      <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
       <ModuleDefinitionFile>ff_libfaad2.def</ModuleDefinitionFile>
@@ -121,7 +121,7 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <Culture>0x0407</Culture>
+      <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
       <ModuleDefinitionFile>ff_libfaad2.def</ModuleDefinitionFile>
@@ -141,7 +141,7 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <Culture>0x0407</Culture>
+      <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
       <ModuleDefinitionFile>ff_libfaad2.def</ModuleDefinitionFile>
@@ -241,6 +241,9 @@
     <ClInclude Include="structs.h" />
     <ClInclude Include="syntax.h" />
     <ClInclude Include="tns.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ff_libfaad2.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

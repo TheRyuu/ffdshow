@@ -9,6 +9,9 @@
       <UniqueIdentifier>{58de1c2f-f46d-45b1-872e-ba27477df811}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl;inc</Extensions>
     </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{ddae2c14-27ab-4c05-9455-4687ee7c858f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="combase.cpp">
@@ -75,5 +78,10 @@
     <None Include="ff_wmv9.def">
       <Filter>Source Files</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ff_wmv9.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

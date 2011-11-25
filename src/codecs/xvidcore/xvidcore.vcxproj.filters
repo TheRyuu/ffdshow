@@ -28,6 +28,9 @@
     <Filter Include="asm_x86">
       <UniqueIdentifier>{20266c60-0b47-430b-ac6e-06ec54128b9b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{858766ac-261b-4d9d-9975-a699b1c4888b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="bitstream\bitstream.c">
@@ -362,5 +365,10 @@
     <CustomBuild Include="motion\x86_asm\sad_xmm.asm">
       <Filter>asm_x86</Filter>
     </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="xvidcore.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

@@ -9,6 +9,9 @@
       <UniqueIdentifier>{eb6e0f29-5136-4e6e-af22-7a15c6a30056}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl</Extensions>
     </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{3754c377-7a92-45db-8371-84ff8eefc13c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\mmintrin64.c">
@@ -27,5 +30,10 @@
     <None Include="TomsMoComp_ff.def">
       <Filter>Source Files</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="TomsMoComp_ff.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

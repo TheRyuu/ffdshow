@@ -9,6 +9,9 @@
       <UniqueIdentifier>{e42db6c7-2821-40a8-b300-f82b58163131}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl</Extensions>
     </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{2e2efa2a-082f-429c-a003-d73cb82562d5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="driverproc.cpp">
@@ -39,8 +42,11 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ff_vfw.def">
-      <Filter>Source Files</Filter>
-    </None>
+    <None Include="ff_vfw.def" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ff_vfw.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

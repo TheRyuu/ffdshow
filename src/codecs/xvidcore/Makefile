@@ -81,6 +81,8 @@ SRCS_YASM=bitstream/x86_asm/cbp_mmx.asm \
     utils/x86_asm/cpuid.asm \
     plugins/x86_asm/plugin_ssim-a.asm
 
+RESSRC=xvidcore.rc
+
 ifeq ($(64BIT),yes)
     OBJ_DIR=../../../obj/MinGW64/xvidcore/
     TARGET_LIB_DIR=../../../bin/

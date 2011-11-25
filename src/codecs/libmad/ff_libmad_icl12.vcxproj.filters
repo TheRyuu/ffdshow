@@ -13,6 +13,9 @@
       <UniqueIdentifier>{b09dd669-c8af-4aed-909c-9ea603b6c6a7}</UniqueIdentifier>
       <Extensions>dat</Extensions>
     </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{8202af86-1d76-4ddd-9898-5f5fcff98c9c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="bit.c">
@@ -110,5 +113,10 @@
       <Filter>Data Files</Filter>
     </None>
     <None Include="ff_libmad.def" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ff_libmad.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>
