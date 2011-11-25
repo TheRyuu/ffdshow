@@ -2796,6 +2796,9 @@
     <ClInclude Include="src\convert\ffdshow_converters2.h">
       <Filter>convert</Filter>
     </ClInclude>
+    <ClInclude Include="src\subtitles\SeparableFilter.h">
+      <Filter>subtitles</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="src\ffdshow.rc">

@@ -3,13 +3,9 @@
 
 #define dummy Exec("update_version.bat","","",1,SW_HIDE)
 
-#include "..\..\src\svn_version.h"
+#define ISPP_IS_BUGGY
+#include "..\..\src\version.h"
 
-; Build revision and date
-#define tryout_revision           = SVN_REVISION
-#define buildyear                 = BUILD_YEAR
-#define buildmonth                = BUILD_MONTH
-#define buildday                  = BUILD_DAY
 
 ; Build specific options
 #define localize                  = True
@@ -129,24 +125,24 @@ ArchitecturesAllowed            = x64
 ArchitecturesInstallIn64BitMode = x64
 AppId                           = ffdshow64
 DefaultGroupName                = ffdshow x64
-AppVerName                      = ffdshow x64 v1.1.{#= tryout_revision} [{#= buildyear}-{#= buildmonth}-{#= buildday}]
+AppVerName                      = ffdshow x64 v{#= VERSION_MAJOR}.{#= VERSION_MINOR}.{#= SVN_REVISION} [{#= BUILD_YEAR}-{#= BUILD_MONTH}-{#= BUILD_DAY}]
 #else
 AppId                           = ffdshow
 DefaultGroupName                = ffdshow
-AppVerName                      = ffdshow v1.1.{#= tryout_revision} [{#= buildyear}-{#= buildmonth}-{#= buildday}]
+AppVerName                      = ffdshow v{#= VERSION_MAJOR}.{#= VERSION_MINOR}.{#= SVN_REVISION} [{#= BUILD_YEAR}-{#= BUILD_MONTH}-{#= BUILD_DAY}]
 #endif
 AllowCancelDuringInstall        = no
 AllowNoIcons                    = yes
 AllowUNCPath                    = no
 AppName                         = ffdshow
-AppVersion                      = 1.1.{#= tryout_revision}.0
+AppVersion                      = {#= VERSION_MAJOR}.{#= VERSION_MINOR}.{#= SVN_REVISION}.0
 Compression                     = lzma/ultra
 InternalCompressLevel           = ultra
 SolidCompression                = True
 DefaultDirName                  = {code:GetDefaultInstallDir|}
 DirExistsWarning                = no
 MinVersion                      = 0,5.01SP2
-OutputBaseFilename              = ffdshow_rev{#= tryout_revision}_{#= buildyear}{#= buildmonth}{#= buildday}{#= filename_suffix}
+OutputBaseFilename              = ffdshow_rev{#= SVN_REVISION}_{#= BUILD_YEAR}{#= BUILD_MONTH}{#= BUILD_DAY}{#= filename_suffix}
 OutputDir                       = {#= outputdir}
 PrivilegesRequired              = admin
 #if include_setup_icon
@@ -163,7 +159,7 @@ UninstallDisplayIcon            = {app}\ffdshow.ax,9
 UsePreviousTasks                = yes
 VersionInfoCompany              = ffdshow
 VersionInfoCopyright            = GNU
-VersionInfoVersion              = 1.1.{#= tryout_revision}.0
+VersionInfoVersion              = {#= VERSION_MAJOR}.{#= VERSION_MINOR}.{#= SVN_REVISION}.0
 WizardImageFile                 = MicrosoftModern01.bmp
 WizardSmallImageFile            = SetupModernSmall26.bmp
 
@@ -503,25 +499,25 @@ Root: HKLM; Subkey: "{#= ff_reg_base}_audio";     Components: ffdshow;     Flags
 Root: HKLM; Subkey: "{#= ff_reg_base}_vfw";       Components: ffdshow\vfw; Flags: deletekey; Tasks: resetsettings
 
 ; Path
-Root: HKLM; Subkey: "{#= ff_reg_base}"; ValueType: string; ValueName: "pth";           ValueData: "{app}";                                      Components: ffdshow
-Root: HKLM; Subkey: "{#= ff_reg_base}";                    ValueName: "pthPriority";                                                            Components: ffdshow;                    Flags: deletevalue
+Root: HKLM; Subkey: "{#= ff_reg_base}"; ValueType: string; ValueName: "pth";           ValueData: "{app}";                                         Components: ffdshow
+Root: HKLM; Subkey: "{#= ff_reg_base}";                    ValueName: "pthPriority";                                                               Components: ffdshow;                    Flags: deletevalue
 #if include_plugin_avisynth
-Root: HKLM; SubKey: "{#= ff_reg_base}"; ValueType: string; ValueName: "pthAvisynth";   ValueData: "{code:GetAviSynthPluginDir}";                Components: ffdshow\plugins\avisynth;   Flags: uninsclearvalue
+Root: HKLM; SubKey: "{#= ff_reg_base}"; ValueType: string; ValueName: "pthAvisynth";   ValueData: "{code:GetAviSynthPluginDir}";                   Components: ffdshow\plugins\avisynth;   Flags: uninsclearvalue
 #endif
 #if include_plugin_virtualdub
-Root: HKLM; SubKey: "{#= ff_reg_base}"; ValueType: string; ValueName: "pthVirtualDub"; ValueData: "{code:GetVdubPluginDir}";                    Components: ffdshow\plugins\virtualdub; Flags: uninsclearvalue
+Root: HKLM; SubKey: "{#= ff_reg_base}"; ValueType: string; ValueName: "pthVirtualDub"; ValueData: "{code:GetVdubPluginDir}";                       Components: ffdshow\plugins\virtualdub; Flags: uninsclearvalue
 #endif
 #if include_plugin_dscaler
-Root: HKLM; SubKey: "{#= ff_reg_base}"; ValueType: string; ValueName: "dscalerPth";    ValueData: "{code:GetDScalerDir|}";                      Components: ffdshow\plugins\dscaler;    Flags: uninsclearvalue
+Root: HKLM; SubKey: "{#= ff_reg_base}"; ValueType: string; ValueName: "dscalerPth";    ValueData: "{code:GetDScalerDir|}";                         Components: ffdshow\plugins\dscaler;    Flags: uninsclearvalue
 #endif
 
 ; Version info
-Root: HKLM; Subkey: "{#= ff_reg_base}"; ValueType: dword;  ValueName: "revision";      ValueData: "{#= tryout_revision}";                       Components: ffdshow
-Root: HKLM; Subkey: "{#= ff_reg_base}"; ValueType: dword;  ValueName: "builddate";     ValueData: "{#= buildyear}{#= buildmonth}{#= buildday}"; Components: ffdshow
+Root: HKLM; Subkey: "{#= ff_reg_base}"; ValueType: dword;  ValueName: "revision";      ValueData: "{#= SVN_REVISION}";                             Components: ffdshow
+Root: HKLM; Subkey: "{#= ff_reg_base}"; ValueType: dword;  ValueName: "builddate";     ValueData: "{#= BUILD_YEAR}{#= BUILD_MONTH}{#= BUILD_DAY}"; Components: ffdshow
 
 ; Language
 #if localize
-Root: HKLM; Subkey: "{#= ff_reg_base}"; ValueType: string; ValueName: "lang";          ValueData: "{cm:langid}";                                Components: ffdshow
+Root: HKLM; Subkey: "{#= ff_reg_base}"; ValueType: string; ValueName: "lang";          ValueData: "{cm:langid}";                                   Components: ffdshow
 #endif
 
 ; Register VfW interface
