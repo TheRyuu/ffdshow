@@ -23,9 +23,6 @@
 
 #pragma once
 
-#ifdef _OPENMP
-#include <omp.h>
-#endif
 #include <math.h>
 
 
@@ -34,7 +31,6 @@
 template<ptrdiff_t PixelDist>
 void SeparableFilterX(unsigned char *src, unsigned char *dst, int width, int height, ptrdiff_t stride, int *kernel, int kernel_size, int divisor)
 {
-	#pragma omp parallel for
 	for (int y = 0; y < height; y++) {
 		unsigned char *in = src + y*stride;
 		unsigned char *out = dst + y*stride;
@@ -73,7 +69,6 @@ template<ptrdiff_t PixelDist>
 void SeparableFilterY(unsigned char *src, unsigned char *dst, int width, int height, ptrdiff_t stride, int *kernel, int kernel_size, int divisor)
 {
 	width *= PixelDist;
-	#pragma omp parallel for
 	for (int  x = 0; x < width; x+=PixelDist) {
 		unsigned char *in = src + x;
 		unsigned char *out = dst + x;
