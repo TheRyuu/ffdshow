@@ -746,6 +746,7 @@
     <ClInclude Include="src\stdafx.h" />
     <ClInclude Include="src\stdint.h" />
     <ClInclude Include="src\subtitles\CPolygon.h" />
+    <ClInclude Include="src\subtitles\SeparableFilter.h" />
     <ClInclude Include="src\subtitles\TsubtitleFormat.h" />
     <ClInclude Include="src\subtitles\TsubtitleMixedProps.h" />
     <ClInclude Include="src\TaudioParser.h" />
