@@ -92,21 +92,19 @@
     <ClInclude Include="src\resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\bzip2\bzlib_private.h">
+      <Filter>bzip2</Filter>
+    </ClInclude>
+    <ClInclude Include="src\bzip2\bzlib.h">
+      <Filter>bzip2</Filter>
+    </ClInclude>
+    <ClInclude Include="src\base64.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="src\ffvdub.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <CustomBuildStep Include="src\base64.h">
-      <Filter>Header Files</Filter>
-    </CustomBuildStep>
-    <CustomBuildStep Include="src\bzip2\bzlib.h">
-      <Filter>bzip2</Filter>
-    </CustomBuildStep>
-    <CustomBuildStep Include="src\bzip2\bzlib_private.h">
-      <Filter>bzip2</Filter>
-    </CustomBuildStep>
   </ItemGroup>
 </Project>

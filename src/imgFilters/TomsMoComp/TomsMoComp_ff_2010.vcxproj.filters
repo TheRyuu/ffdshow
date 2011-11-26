@@ -27,13 +27,11 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="TomsMoComp_ff.def">
-      <Filter>Source Files</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <ResourceCompile Include="TomsMoComp_ff.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TomsMoComp_ff.def" />
   </ItemGroup>
 </Project>

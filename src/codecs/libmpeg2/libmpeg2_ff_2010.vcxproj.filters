@@ -75,13 +75,11 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="libmpeg2_ff.def">
-      <Filter>Source Files</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <ResourceCompile Include="libmpeg2_ff.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="libmpeg2_ff.def" />
   </ItemGroup>
 </Project>

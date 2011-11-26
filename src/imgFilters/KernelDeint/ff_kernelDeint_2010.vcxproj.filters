@@ -27,13 +27,11 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ff_kernelDeint.def">
-      <Filter>Source Files</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <ResourceCompile Include="ff_kernelDeint.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ff_kernelDeint.def" />
   </ItemGroup>
 </Project>

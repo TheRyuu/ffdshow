@@ -51,13 +51,11 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ff_liba52.def">
-      <Filter>Source Files</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <ResourceCompile Include="ff_liba52.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ff_liba52.def" />
   </ItemGroup>
 </Project>
