@@ -42,19 +42,20 @@
  */
 
 #include "dsound.h"
+
 extern "C" int __stdcall getSpeakerConfig(void)
 {
     DWORD dwSpeakerConfig;
     IDirectSound8 *pDS8;
     HRESULT hr = DirectSoundCreate8(NULL, &pDS8, NULL);
-    if(hr!=DS_OK || !pDS8) {
+    if (hr != DS_OK || !pDS8) {
         return DSSPEAKER_STEREO;
     }
 
-    hr = pDS8->GetSpeakerConfig(&dwSpeakerConfig);
-    pDS8->Release();
-    pDS8=NULL;
-    if(hr!=DS_OK) {
+    hr = pDS8 -> GetSpeakerConfig(&dwSpeakerConfig);
+    pDS8 -> Release();
+    pDS8 = NULL;
+    if (hr != DS_OK) {
         return DSSPEAKER_STEREO;
     }
     return DSSPEAKER_CONFIG(dwSpeakerConfig);

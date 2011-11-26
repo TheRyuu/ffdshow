@@ -1,19 +1,27 @@
-@if not exist "%programfiles%\TortoiseSVN\bin\SubWCRev.exe" goto :x64
+@ECHO OFF
 
-@"%programfiles%\TortoiseSVN\bin\SubWCRev.exe" .\ src\SubWCRev.conf src\svn_version.h -f
-@if %ERRORLEVEL% neq 0 goto :NoSubWCRev
-@goto :eof
+IF DEFINED PROGRAMFILES(x86) (
+  SET "SUBWCREV=%ProgramW6432%\TortoiseSVN\bin\SubWCRev.exe"
+) ELSE (
+  SET "SUBWCREV=%ProgramFiles%\TortoiseSVN\bin\SubWCRev.exe"
+)
 
-:x64
-@if not exist "%ProgramW6432%\TortoiseSVN\bin\SubWCRev.exe" goto :NoSubWCRev
+PUSHD %~dp0%
+"%SUBWCREV%" . "src\SubWCRev.conf" "src\svn_version.h" -f
+IF %ERRORLEVEL% NEQ 0 GOTO NoSubWCRev
+POPD
+EXIT /B
 
-@"%ProgramW6432%\TortoiseSVN\bin\SubWCRev.exe" .\ src\SubWCRev.conf src\svn_version.h -f
-@if %ERRORLEVEL% neq 0 goto :NoSubWCRev
-@goto :eof
 
 :NoSubWCRev
-@echo NoSubWCRev
-@echo #define SVN_REVISION 0 > src\svn_version.h
-@echo #define BUILD_YEAR 2010 >> src\svn_version.h
-@echo #define BUILD_MONTH 1 >> src\svn_version.h
-@echo #define BUILD_DAY 1 >> src\svn_version.h
+ECHO. & ECHO SubWCRev, which is part of TortoiseSVN, wasn't found!
+ECHO You should (re)install TortoiseSVN.
+ECHO I'll use SVN_REVISION=0.
+
+ECHO #define SVN_REVISION 0 > "src\svn_version.h"
+ECHO #define BUILD_YEAR 2011 >> "src\svn_version.h"
+ECHO #define BUILD_MONTH 1 >> "src\svn_version.h"
+ECHO #define BUILD_DAY 1 >> "src\svn_version.h"
+
+POPD
+EXIT /B
