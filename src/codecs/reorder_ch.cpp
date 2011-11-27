@@ -41,7 +41,7 @@ static int reorder_copy_5ch(void *dest, const void *src,
                             unsigned int samples, unsigned int samplesize,
                             int s0, int s1, int s2, int s3, int s4)
 {
-    int i;
+    unsigned int i;
     switch (samplesize) {
         case 1: {
             int8_t *dest_8 = (int8_t *)dest;
@@ -111,7 +111,7 @@ static int reorder_copy_6ch(void *dest, const void *src,
                             unsigned int samples, uint8_t samplesize,
                             int s0, int s1, int s2, int s3, int s4, int s5)
 {
-    int i;
+    unsigned int i;
     switch (samplesize) {
         case 1: {
             int8_t *dest_8 = (int8_t *)dest;
@@ -184,7 +184,7 @@ static int reorder_copy_8ch(void *dest, const void *src,
                             unsigned int samples, uint8_t samplesize,
                             int s0, int s1, int s2, int s3, int s4, int s5, int s6, int s7)
 {
-    int i;
+    unsigned int i;
     switch (samplesize) {
         case 1: {
             int8_t *dest_8 = (int8_t *)dest;
@@ -376,7 +376,7 @@ static int reorder_self_2(void *src, unsigned int samples,
                           unsigned int samplesize, unsigned int chnum,
                           int s0, int s1)
 {
-    int i;
+    unsigned int i;
     switch (samplesize) {
         case 1: {
             int8_t *src_8 = (int8_t *)src;
@@ -458,7 +458,7 @@ static int reorder_self_3(void *src, unsigned int samples,
                           unsigned int samplesize, unsigned int chnum,
                           int s0, int s1, int s2)
 {
-    int i;
+    unsigned int i;
     switch (samplesize) {
         case 1: {
             int8_t *src_8 = (int8_t *)src;
@@ -540,7 +540,7 @@ static int reorder_self_4_step_1(void *src, unsigned int samples,
                                  unsigned int samplesize, unsigned int chnum,
                                  int s0, int s1, int s2, int s3)
 {
-    int i;
+    unsigned int i;
     switch (samplesize) {
         case 1: {
             int8_t *src_8 = (int8_t *)src;
@@ -624,7 +624,7 @@ static int reorder_self_4_step_2(void *src, unsigned int samples,
                                  unsigned int samplesize, unsigned int chnum,
                                  int s0, int s1, int s2, int s3)
 {
-    int i;
+    unsigned int i;
     switch (samplesize) {
         case 1: {
             int8_t *src_8 = (int8_t *)src;
@@ -695,7 +695,7 @@ static int reorder_self_5_step_1(void *src, unsigned int samples,
                                  unsigned int samplesize, unsigned int chnum,
                                  int s0, int s1, int s2, int s3, int s4)
 {
-    int i;
+    unsigned int i;
     switch (samplesize) {
         case 1: {
             int8_t *src_8 = (int8_t *)src;
@@ -785,7 +785,7 @@ static int reorder_self_2_3(void *src, unsigned int samples,
                             unsigned int samplesize,
                             int s0, int s1, int s2, int s3, int s4)
 {
-    int i;
+    unsigned int i;
     switch (samplesize) {
         case 1: {
             int8_t *src_8 = (int8_t *)src;
@@ -861,7 +861,7 @@ static int reorder_self_3_3(void *src, unsigned int samples,
                             unsigned int samplesize,
                             int s0, int s1, int s2, int s3, int s4, int s5)
 {
-    int i;
+    unsigned int i;
     switch (samplesize) {
         case 1: {
             int8_t *src_8 = (int8_t *)src;
@@ -940,7 +940,7 @@ static int reorder_self_2_4(void *src, unsigned int samples,
                             unsigned int samplesize,
                             int s0, int s1, int s2, int s3, int s4, int s5)
 {
-    int i;
+    unsigned int i;
     switch (samplesize) {
         case 1: {
             int8_t *src_8 = (int8_t *)src;

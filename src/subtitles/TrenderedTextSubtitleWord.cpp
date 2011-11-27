@@ -265,7 +265,7 @@ void TrenderedTextSubtitleWord::getPath(
             x += *cx;
             cx++;
         } else {
-            for (int i = 0; i < s.size(); i++) {
+            for (unsigned int i = 0; i < s.size(); i++) {
 			    CSize extent;
 			    GetTextExtentPoint32W(hdc, s.c_str()+i, 1, &extent);
 
@@ -352,7 +352,7 @@ void TrenderedTextSubtitleWord::drawGlyphOSD(
             x += *cx;
             cx++;
         } else {
-            for (int i = 0; i < s.size(); i++) {
+            for (unsigned int i = 0; i < s.size(); i++) {
 			    CSize extent;
 			    GetTextExtentPoint32W(hdc, s.c_str()+i, 1, &extent);
 

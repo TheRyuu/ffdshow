@@ -261,7 +261,7 @@ size_t TsubtitleText::prepareGlyph(TprintPrefs prefs, Tfont &font, bool forceCha
                         GetTextExtentExPointW(font.hdc,p,(int)strlenp,INT_MAX,&nfit,ptempwidths,&sz);
                     } else {
                         int sum = 0;
-                        for (int i = 0; i < strlenp; i++) {
+                        for (unsigned int i = 0; i < strlenp; i++) {
                             int char_width;
                             GetTextExtentExPointW(font.hdc, p+i, 1, INT_MAX, &nfit, &char_width, &sz);
                             sum += char_width;
