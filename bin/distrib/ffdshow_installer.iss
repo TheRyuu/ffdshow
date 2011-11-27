@@ -118,6 +118,13 @@
 #if is64bit & include_plugin_dscaler
 There is no 64-bit version of DScaler.
 #endif
+#if VER < 0x05040200
+  #error Update your Inno Setup version
+#endif
+
+#ifndef UNICODE
+  #error Use the Unicode Inno Setup
+#endif
 
 [Setup]
 #if is64bit
@@ -521,20 +528,20 @@ Root: HKLM; Subkey: "{#= ff_reg_base}"; ValueType: string; ValueName: "lang";   
 #endif
 
 ; Register VfW interface
-Root: HKLM; Subkey: "SOFTWARE\Microsoft\Windows NT\CurrentVersion\drivers.desc";      ValueType: string; ValueName: "ff_vfw.dll";   ValueData: "ffdshow video encoder"; Components: ffdshow\vfw;      MinVersion: 0,4; Flags: uninsdeletevalue
-Root: HKLM; Subkey: "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Drivers32";         ValueType: string; ValueName: "VIDC.FFDS";    ValueData: "ff_vfw.dll";            Components: ffdshow\vfw;      MinVersion: 0,4; Flags: uninsdeletevalue
-Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Control\MediaResources\icm\VIDC.FFDS";                                                                                    Components: ffdshow\vfw;      MinVersion: 0,4; Flags: uninsdeletekey
-Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Control\MediaResources\icm\VIDC.FFDS";  ValueType: string; ValueName: "Description";  ValueData: "ffdshow video encoder"; Components: ffdshow\vfw;      MinVersion: 0,4
-Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Control\MediaResources\icm\VIDC.FFDS";  ValueType: string; ValueName: "Driver";       ValueData: "ff_vfw.dll";            Components: ffdshow\vfw;      MinVersion: 0,4
-Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Control\MediaResources\icm\VIDC.FFDS";  ValueType: string; ValueName: "FriendlyName"; ValueData: "ffdshow video encoder"; Components: ffdshow\vfw;      MinVersion: 0,4
+Root: HKLM; Subkey: "SOFTWARE\Microsoft\Windows NT\CurrentVersion\drivers.desc";      ValueType: string; ValueName: "ff_vfw.dll";   ValueData: "ffdshow video encoder"; Components: ffdshow\vfw;      Flags: uninsdeletevalue
+Root: HKLM; Subkey: "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Drivers32";         ValueType: string; ValueName: "VIDC.FFDS";    ValueData: "ff_vfw.dll";            Components: ffdshow\vfw;      Flags: uninsdeletevalue
+Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Control\MediaResources\icm\VIDC.FFDS";                                                                                    Components: ffdshow\vfw;      Flags: uninsdeletekey
+Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Control\MediaResources\icm\VIDC.FFDS";  ValueType: string; ValueName: "Description";  ValueData: "ffdshow video encoder"; Components: ffdshow\vfw;
+Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Control\MediaResources\icm\VIDC.FFDS";  ValueType: string; ValueName: "Driver";       ValueData: "ff_vfw.dll";            Components: ffdshow\vfw;
+Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Control\MediaResources\icm\VIDC.FFDS";  ValueType: string; ValueName: "FriendlyName"; ValueData: "ffdshow video encoder"; Components: ffdshow\vfw;
 
 #if include_makeavis
-Root: HKLM; Subkey: "SOFTWARE\Microsoft\Windows NT\CurrentVersion\drivers.desc";      ValueType: string; ValueName: "ff_acm.acm";   ValueData: "ffdshow ACM codec";     Components: ffdshow\makeavis; MinVersion: 0,4; Flags: uninsdeletevalue
-Root: HKLM; Subkey: "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Drivers32";         ValueType: string; ValueName: "msacm.avis";   ValueData: "ff_acm.acm";            Components: ffdshow\makeavis; MinVersion: 0,4; Flags: uninsdeletevalue
-Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Control\MediaResources\acm\msacm.avis";                                                                                   Components: ffdshow\makeavis; MinVersion: 0,4; Flags: uninsdeletekey
-Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Control\MediaResources\acm\msacm.avis"; ValueType: string; ValueName: "Description";  ValueData: "ffdshow ACM codec";     Components: ffdshow\makeavis; MinVersion: 0,4
-Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Control\MediaResources\acm\msacm.avis"; ValueType: string; ValueName: "Driver";       ValueData: "ff_acm.acm";            Components: ffdshow\makeavis; MinVersion: 0,4
-Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Control\MediaResources\acm\msacm.avis"; ValueType: string; ValueName: "FriendlyName"; ValueData: "ffdshow ACM codec";     Components: ffdshow\makeavis; MinVersion: 0,4
+Root: HKLM; Subkey: "SOFTWARE\Microsoft\Windows NT\CurrentVersion\drivers.desc";      ValueType: string; ValueName: "ff_acm.acm";   ValueData: "ffdshow ACM codec";     Components: ffdshow\makeavis; Flags: uninsdeletevalue
+Root: HKLM; Subkey: "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Drivers32";         ValueType: string; ValueName: "msacm.avis";   ValueData: "ff_acm.acm";            Components: ffdshow\makeavis; Flags: uninsdeletevalue
+Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Control\MediaResources\acm\msacm.avis";                                                                                   Components: ffdshow\makeavis; Flags: uninsdeletekey
+Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Control\MediaResources\acm\msacm.avis"; ValueType: string; ValueName: "Description";  ValueData: "ffdshow ACM codec";     Components: ffdshow\makeavis;
+Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Control\MediaResources\acm\msacm.avis"; ValueType: string; ValueName: "Driver";       ValueData: "ff_acm.acm";            Components: ffdshow\makeavis;
+Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Control\MediaResources\acm\msacm.avis"; ValueType: string; ValueName: "FriendlyName"; ValueData: "ffdshow ACM codec";     Components: ffdshow\makeavis;
 #endif
 
 ; Recommended settings
@@ -624,7 +631,6 @@ Description: "{cm:run_vfwConfig}";       Filename: "{#= ff_sys}\rundll32.exe"; P
 [Code]
 // Global vars
 var
-  is_update: Boolean;
   reg_mixerOut: Cardinal;
   reg_ismixer: Cardinal;
   SpeakerPage: TInputOptionWizardPage;
@@ -916,8 +922,11 @@ begin
 end;
 
 function IsUpdate(): Boolean;
+var
+  sPrevPath: String;
 begin
-  Result := is_update;
+  sPrevPath := WizardForm.PrevAppDir;
+  Result := (sPrevPath <> '');
 end;
 
 #if !is64bit
@@ -969,13 +978,6 @@ begin
   end;
   #endif
 
-  if Result then begin
-    #if is64bit
-    is_update := RegKeyExists(HKLM, 'SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\ffdshow64_is1');
-    #else
-    is_update := RegKeyExists(HKLM, 'SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\ffdshow_is1');
-    #endif
-  end
 end;
 
 procedure CurStepChanged(CurStep: TSetupStep);
