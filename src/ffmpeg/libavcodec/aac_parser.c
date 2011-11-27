@@ -3,20 +3,20 @@
  * Copyright (c) 2003 Fabrice Bellard
  * Copyright (c) 2003 Michael Niedermayer
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -40,7 +40,7 @@ static int aac_sync(uint64_t state, AACAC3ParseContext *hdr_info,
     tmp.u64 = av_be2ne64(state);
     init_get_bits(&bits, tmp.u8+8-AAC_ADTS_HEADER_SIZE, AAC_ADTS_HEADER_SIZE * 8);
 
-    if ((size = ff_aac_parse_header(&bits, &hdr)) < 0)
+    if ((size = avpriv_aac_parse_header(&bits, &hdr)) < 0)
         return 0;
     *need_next_header = 0;
     *new_frame_start  = 1;
@@ -61,9 +61,9 @@ static av_cold int aac_parse_init(AVCodecParserContext *s1)
 
 
 AVCodecParser ff_aac_parser = {
-    { CODEC_ID_AAC },
-    sizeof(AACAC3ParseContext),
-    aac_parse_init,
-    ff_aac_ac3_parse,
-    ff_parse_close,
+    .codec_ids      = { CODEC_ID_AAC },
+    .priv_data_size = sizeof(AACAC3ParseContext),
+    .parser_init    = aac_parse_init,
+    .parser_parse   = ff_aac_ac3_parse,
+    .parser_close   = ff_parse_close,
 };

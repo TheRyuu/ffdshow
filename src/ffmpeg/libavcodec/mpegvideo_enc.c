@@ -2049,7 +2049,7 @@ static void write_slice_end(MpegEncContext *s){
         ff_mjpeg_encode_stuffing(&s->pb);
     }
 
-    align_put_bits(&s->pb);
+    avpriv_align_put_bits(&s->pb);
     flush_put_bits(&s->pb);
 
     if((s->flags&CODEC_FLAG_PASS1) && !s->partitioned_frame)
@@ -2485,18 +2485,18 @@ static int attribute_align_arg encode_thread(AVCodecContext *c, void *arg){
 
                 pb_bits_count= put_bits_count(&s->pb);
                 flush_put_bits(&s->pb);
-                ff_copy_bits(&backup_s.pb, bit_buf[next_block^1], pb_bits_count);
+                avpriv_copy_bits(&backup_s.pb, bit_buf[next_block^1], pb_bits_count);
                 s->pb= backup_s.pb;
 
                 if(s->data_partitioning){
                     pb2_bits_count= put_bits_count(&s->pb2);
                     flush_put_bits(&s->pb2);
-                    ff_copy_bits(&backup_s.pb2, bit_buf2[next_block^1], pb2_bits_count);
+                    avpriv_copy_bits(&backup_s.pb2, bit_buf2[next_block^1], pb2_bits_count);
                     s->pb2= backup_s.pb2;
 
                     tex_pb_bits_count= put_bits_count(&s->tex_pb);
                     flush_put_bits(&s->tex_pb);
-                    ff_copy_bits(&backup_s.tex_pb, bit_buf_tex[next_block^1], tex_pb_bits_count);
+                    avpriv_copy_bits(&backup_s.tex_pb, bit_buf_tex[next_block^1], tex_pb_bits_count);
                     s->tex_pb= backup_s.tex_pb;
                 }
                 s->last_bits= put_bits_count(&s->pb);
@@ -2719,7 +2719,7 @@ static void merge_context_after_encode(MpegEncContext *dst, MpegEncContext *src)
 
     assert(put_bits_count(&src->pb) % 8 ==0);
     assert(put_bits_count(&dst->pb) % 8 ==0);
-    ff_copy_bits(&dst->pb, src->pb.buf, put_bits_count(&src->pb));
+    avpriv_copy_bits(&dst->pb, src->pb.buf, put_bits_count(&src->pb));
     flush_put_bits(&dst->pb);
 }
 
@@ -3809,8 +3809,8 @@ int dct_quantize_c(MpegEncContext *s,
 #define OFFSET(x) offsetof(MpegEncContext, x)
 #define VE AV_OPT_FLAG_VIDEO_PARAM | AV_OPT_FLAG_ENCODING_PARAM
 static const AVOption h263_options[] = {
-    { "obmc",         "use overlapped block motion compensation.", OFFSET(obmc), FF_OPT_TYPE_INT, { 0 }, 0, 1, VE },
-    { "structured_slices","Write slice start position at every GOB header instead of just GOB number.", OFFSET(h263_slice_structured), FF_OPT_TYPE_INT, { 0 }, 0, 1, VE},
+    { "obmc",         "use overlapped block motion compensation.", OFFSET(obmc), AV_OPT_TYPE_INT, { 0 }, 0, 1, VE },
+    { "structured_slices","Write slice start position at every GOB header instead of just GOB number.", OFFSET(h263_slice_structured), AV_OPT_TYPE_INT, { 0 }, 0, 1, VE},
     { NULL },
 };
 
@@ -3835,10 +3835,10 @@ AVCodec ff_h263_encoder = {
 };
 
 static const AVOption h263p_options[] = {
-    { "umv",        "Use unlimited motion vectors.",    OFFSET(umvplus), FF_OPT_TYPE_INT, { 0 }, 0, 1, VE },
-    { "aiv",        "Use alternative inter VLC.",       OFFSET(alt_inter_vlc), FF_OPT_TYPE_INT, { 0 }, 0, 1, VE },
-    { "obmc",       "use overlapped block motion compensation.", OFFSET(obmc), FF_OPT_TYPE_INT, { 0 }, 0, 1, VE },
-    { "structured_slices", "Write slice start position at every GOB header instead of just GOB number.", OFFSET(h263_slice_structured), FF_OPT_TYPE_INT, { 0 }, 0, 1, VE},
+    { "umv",        "Use unlimited motion vectors.",    OFFSET(umvplus), AV_OPT_TYPE_INT, { 0 }, 0, 1, VE },
+    { "aiv",        "Use alternative inter VLC.",       OFFSET(alt_inter_vlc), AV_OPT_TYPE_INT, { 0 }, 0, 1, VE },
+    { "obmc",       "use overlapped block motion compensation.", OFFSET(obmc), AV_OPT_TYPE_INT, { 0 }, 0, 1, VE },
+    { "structured_slices", "Write slice start position at every GOB header instead of just GOB number.", OFFSET(h263_slice_structured), AV_OPT_TYPE_INT, { 0 }, 0, 1, VE},
     { NULL },
 };
 static const AVClass h263p_class = {

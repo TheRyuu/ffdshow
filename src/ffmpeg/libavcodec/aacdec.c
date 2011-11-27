@@ -7,20 +7,20 @@
  * Copyright (c) 2008-2010 Paul Kendall <paul@kcbbs.gen.nz>
  * Copyright (c) 2010      Janne Grunau <janne-ffmpeg@jannau.net>
  *
- * This file is part of Libav.
+ * This file is part of FFmpeg.
  *
- * Libav is free software; you can redistribute it and/or
+ * FFmpeg is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * Libav is distributed in the hope that it will be useful,
+ * FFmpeg is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with Libav; if not, write to the Free Software
+ * License along with FFmpeg; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -184,9 +184,11 @@ static av_cold int che_configure(AACContext *ac,
                                  int type, int id, int *channels)
 {
     if (che_pos[type][id]) {
-        if (!ac->che[type][id] && !(ac->che[type][id] = av_mallocz(sizeof(ChannelElement))))
-            return AVERROR(ENOMEM);
-        ff_aac_sbr_ctx_init(ac, &ac->che[type][id]->sbr);
+        if (!ac->che[type][id]) {
+            if (!(ac->che[type][id] = av_mallocz(sizeof(ChannelElement))))
+                return AVERROR(ENOMEM);
+            ff_aac_sbr_ctx_init(ac, &ac->che[type][id]->sbr);
+        }
         if (type != TYPE_CCE) {
             ac->output_data[(*channels)++] = ac->che[type][id]->ch[0].ret;
             if (type == TYPE_CPE ||
@@ -258,6 +260,23 @@ static av_cold int output_configure(AACContext *ac,
     ac->output_configured = oc_type;
 
     return 0;
+}
+
+static void flush(AVCodecContext *avctx)
+{
+    AACContext *ac= avctx->priv_data;
+    int type, i, j;
+
+    for (type = 3; type >= 0; type--) {
+        for (i = 0; i < MAX_ELEM_ID; i++) {
+            ChannelElement *che = ac->che[type][i];
+            if (che) {
+                for (j = 0; j <= 1; j++) {
+                    memset(che->ch[j].saved, 0, sizeof(che->ch[j].saved));
+                }
+            }
+        }
+    }
 }
 
 /**
@@ -472,7 +491,7 @@ static int decode_audio_specific_config(AACContext *ac,
 
     init_get_bits(&gb, data, data_size * 8);
 
-    if ((i = ff_mpeg4audio_get_config(m4ac, data, asclen/8)) < 0)
+    if ((i = avpriv_mpeg4audio_get_config(m4ac, data, asclen/8)) < 0)
         return -1;
     if (m4ac->sampling_index > 12) {
         av_log(avctx, AV_LOG_ERROR, "invalid sampling rate index %d\n", m4ac->sampling_index);
@@ -596,7 +615,7 @@ static av_cold int aac_decode_init(AVCodecContext *avctx)
             int ret = set_default_channel_config(avctx, new_che_pos, ac->m4ac.chan_config);
             if (!ret)
                 output_configure(ac, ac->che_pos, new_che_pos, ac->m4ac.chan_config, OC_GLOBAL_HDR);
-            else if (avctx->error_recognition >= FF_ER_EXPLODE)
+            else if (avctx->err_recognition & AV_EF_EXPLODE)
                 return AVERROR_INVALIDDATA;
         }
     }
@@ -2077,15 +2096,16 @@ static int parse_adts_frame_header(AACContext *ac, GetBitContext *gb)
     int size;
     AACADTSHeaderInfo hdr_info;
 
-    size = ff_aac_parse_header(gb, &hdr_info);
+    size = avpriv_aac_parse_header(gb, &hdr_info);
     if (size > 0) {
-        if (hdr_info.chan_config) {
+        if (hdr_info.chan_config && (hdr_info.chan_config!=ac->m4ac.chan_config || ac->m4ac.sample_rate!=hdr_info.sample_rate)) {
             enum ChannelPosition new_che_pos[4][MAX_ELEM_ID];
             memset(new_che_pos, 0, 4 * MAX_ELEM_ID * sizeof(new_che_pos[0][0]));
             ac->m4ac.chan_config = hdr_info.chan_config;
             if (set_default_channel_config(ac->avctx, new_che_pos, hdr_info.chan_config))
                 return -7;
-            if (output_configure(ac, ac->che_pos, new_che_pos, hdr_info.chan_config, OC_TRIAL_FRAME))
+            if (output_configure(ac, ac->che_pos, new_che_pos, hdr_info.chan_config,
+                                 FFMAX(ac->output_configured, OC_TRIAL_FRAME)))
                 return -7;
         } else if (ac->output_configured != OC_LOCKED) {
             ac->m4ac.chan_config = 0;
@@ -2153,6 +2173,15 @@ static int aac_decode_frame_int(AVCodecContext *avctx, void *data,
         elem_id = get_bits(gb, 4);
 
         if (elem_type < TYPE_DSE) {
+            if (!ac->tags_mapped && elem_type == TYPE_CPE && ac->m4ac.chan_config==1) {
+                enum ChannelPosition new_che_pos[4][MAX_ELEM_ID]= {0};
+                ac->m4ac.chan_config=2;
+
+                if (set_default_channel_config(ac->avctx, new_che_pos, 2)<0)
+                    return -1;
+                if (output_configure(ac, ac->che_pos, new_che_pos, 2, OC_TRIAL_FRAME)<0)
+                    return -1;
+            }
             if (!(che=get_che(ac, elem_type, elem_id))) {
                 av_log(ac->avctx, AV_LOG_ERROR, "channel element %d.%d is not allocated\n",
                        elem_type, elem_id);
@@ -2328,8 +2357,8 @@ static int latm_decode_audio_specific_config(struct LATMContext *latmctx,
                                              GetBitContext *gb, int asclen)
 {
     AVCodecContext *avctx = latmctx->aac_ctx.avctx;
-    MPEG4AudioConfig m4ac;
     AACContext *ac= &latmctx->aac_ctx;
+    MPEG4AudioConfig m4ac=ac->m4ac;
     int  config_start_bit = get_bits_count(gb);
     int     bits_consumed, esize;
 
@@ -2345,7 +2374,8 @@ static int latm_decode_audio_specific_config(struct LATMContext *latmctx,
 
         if (bits_consumed < 0)
             return AVERROR_INVALIDDATA;
-        ac->m4ac= m4ac;
+        if(ac->m4ac.sample_rate != m4ac.sample_rate || m4ac.chan_config != ac->m4ac.chan_config)
+            ac->m4ac= m4ac;
 
         esize = (bits_consumed+7) / 8;
 
@@ -2527,8 +2557,9 @@ static int latm_decode_frame(AVCodecContext *avctx, void *out, int *out_size,
             *out_size = 0;
             return avpkt->size;
         } else {
-            aac_decode_close(avctx);
-            if ((err = aac_decode_init(avctx)) < 0)
+            if ((err = decode_audio_specific_config(
+                    &latmctx->aac_ctx, avctx, &latmctx->aac_ctx.m4ac,
+                    avctx->extradata, avctx->extradata_size, 8*avctx->extradata_size)) < 0)
                 return err;
             latmctx->initialized = 1;
         }
@@ -2550,15 +2581,10 @@ static int latm_decode_frame(AVCodecContext *avctx, void *out, int *out_size,
 av_cold static int latm_decode_init(AVCodecContext *avctx)
 {
     struct LATMContext *latmctx = avctx->priv_data;
-    int ret;
+    int ret = aac_decode_init(avctx);
 
-    ret = aac_decode_init(avctx);
-
-    if (avctx->extradata_size > 0) {
+    if (avctx->extradata_size > 0)
         latmctx->initialized = !ret;
-    } else {
-        latmctx->initialized = 0;
-    }
 
     return ret;
 }
@@ -2599,4 +2625,5 @@ AVCodec ff_aac_latm_decoder = {
     },
     .capabilities = CODEC_CAP_CHANNEL_CONF,
     .channel_layouts = aac_channel_layout,
+    .flush = flush,
 };

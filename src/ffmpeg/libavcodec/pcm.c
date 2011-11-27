@@ -25,6 +25,7 @@
  */
 
 #include "avcodec.h"
+#include "bytestream.h"
 #include "pcm_tablegen.h"
 
 #define MAX_CHANNELS 64
@@ -37,6 +38,11 @@ static av_cold int pcm_decode_init(AVCodecContext * avctx)
 {
     PCMDecode *s = avctx->priv_data;
     int i;
+
+    if (avctx->channels <= 0 || avctx->channels > MAX_CHANNELS) {
+        av_log(avctx, AV_LOG_ERROR, "PCM channels out of bounds\n");
+        return AVERROR(EINVAL);
+    }
 
     switch(avctx->codec->id) {
     case CODEC_ID_PCM_ALAW:
@@ -59,29 +65,35 @@ static av_cold int pcm_decode_init(AVCodecContext * avctx)
     return 0;
 }
 
+/**
+ * Read PCM samples macro
+ * @param size Data size of native machine format
+ * @param endian bytestream_get_xxx() endian suffix
+ * @param src Source pointer (variable name)
+ * @param dst Destination pointer (variable name)
+ * @param n Total number of samples (variable name)
+ * @param shift Bitshift (bits)
+ * @param offset Sample value offset
+ */
+#define DECODE(size, endian, src, dst, n, shift, offset) \
+    for(;n>0;n--) { \
+        uint##size##_t v = bytestream_get_##endian(&src); \
+        AV_WN##size##A(dst, (v - offset) << shift); \
+        dst += size / 8; \
+    }
+
 static int pcm_decode_frame(AVCodecContext *avctx,
                             void *data, int *data_size,
                             AVPacket *avpkt)
 {
-    const uint8_t *buf = avpkt->data;
+    const uint8_t *src = avpkt->data;
     int buf_size = avpkt->size;
     PCMDecode *s = avctx->priv_data;
-    int sample_size, n;
-    short *samples;
-    const uint8_t *src;
+    int sample_size, c, n, out_size;
+    uint8_t *samples;
+    int32_t *dst_int32_t;
 
     samples = data;
-    src = buf;
-
-    if (avctx->sample_fmt!=avctx->codec->sample_fmts[0]) {
-        av_log(avctx, AV_LOG_ERROR, "invalid sample_fmt\n");
-        return -1;
-    }
-
-    if(avctx->channels <= 0 || avctx->channels > MAX_CHANNELS){
-        av_log(avctx, AV_LOG_ERROR, "PCM channels out of bounds\n");
-        return -1;
-    }
 
     sample_size = av_get_bits_per_sample(avctx->codec_id)/8;
 
@@ -100,23 +112,27 @@ static int pcm_decode_frame(AVCodecContext *avctx,
             buf_size -= buf_size % n;
     }
 
-    buf_size= FFMIN(buf_size, *data_size/2);
-    *data_size=0;
-
     n = buf_size/sample_size;
+
+    out_size = n * av_get_bytes_per_sample(avctx->sample_fmt);
+    if (*data_size < out_size) {
+        av_log(avctx, AV_LOG_ERROR, "output buffer too small\n");
+        return AVERROR(EINVAL);
+    }
 
     switch(avctx->codec->id) {
     case CODEC_ID_PCM_ALAW:
     case CODEC_ID_PCM_MULAW:
         for(;n>0;n--) {
-            *samples++ = s->table[*src++];
+            AV_WN16A(samples, s->table[*src++]);
+            samples += 2;
         }
         break;
     default:
         return -1;
     }
-    *data_size = (uint8_t *)samples - (uint8_t *)data;
-    return src - buf;
+    *data_size = out_size;
+    return buf_size;
 }
 
 #if CONFIG_DECODERS

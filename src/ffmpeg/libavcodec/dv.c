@@ -350,10 +350,8 @@ static av_cold int dvvideo_init(AVCodecContext *avctx)
 static av_cold int dvvideo_init_encoder(AVCodecContext *avctx)
 {
     if (!dv_codec_profile(avctx)) {
-        /*
         av_log(avctx, AV_LOG_ERROR, "Found no DV profile for %ix%i %s video\n",
                avctx->width, avctx->height, av_get_pix_fmt_name(avctx->pix_fmt));
-        */
         return -1;
     }
 

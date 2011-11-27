@@ -48,6 +48,7 @@
 //static int volatile entangled_thread_counter=0; /* ffdshow custom comment out */
 static int (*ff_lockmgr_cb)(void **mutex, enum AVLockOp op);
 static void *codec_mutex;
+static void *avformat_mutex;
 
 void *av_fast_realloc(void *ptr, unsigned int *size, size_t min_size)
 {
@@ -124,15 +125,6 @@ void avcodec_set_dimensions(AVCodecContext *s, int width, int height){
     s->height= -((-height)>>s->lowres);
 }
 
-typedef struct InternalBuffer{
-    int last_pic_num;
-    uint8_t *base[4];
-    uint8_t *data[4];
-    int linesize[4];
-    int width, height;
-    enum PixelFormat pix_fmt;
-}InternalBuffer;
-
 #define INTERNAL_BUFFER_SIZE (32+1)
 
 void avcodec_align_dimensions2(AVCodecContext *s, int *width, int *height, int linesize_align[4]){
@@ -146,6 +138,7 @@ void avcodec_align_dimensions2(AVCodecContext *s, int *width, int *height, int l
     case PIX_FMT_YUV422P:
     case PIX_FMT_YUV440P:
     case PIX_FMT_YUV444P:
+    case PIX_FMT_GBRP:
     case PIX_FMT_GRAY8:
     case PIX_FMT_GRAY16BE:
     case PIX_FMT_GRAY16LE:
@@ -158,12 +151,18 @@ void avcodec_align_dimensions2(AVCodecContext *s, int *width, int *height, int l
     case PIX_FMT_YUV420P9BE:
     case PIX_FMT_YUV420P10LE:
     case PIX_FMT_YUV420P10BE:
+    case PIX_FMT_YUV422P9LE:
+    case PIX_FMT_YUV422P9BE:
     case PIX_FMT_YUV422P10LE:
     case PIX_FMT_YUV422P10BE:
     case PIX_FMT_YUV444P9LE:
     case PIX_FMT_YUV444P9BE:
     case PIX_FMT_YUV444P10LE:
     case PIX_FMT_YUV444P10BE:
+    case PIX_FMT_GBRP9LE:
+    case PIX_FMT_GBRP9BE:
+    case PIX_FMT_GBRP10LE:
+    case PIX_FMT_GBRP10BE:
         w_align= 16; //FIXME check for non mpeg style codecs and use less alignment
         h_align= 16;
         if(s->codec_id == CODEC_ID_MPEG2VIDEO || s->codec_id == CODEC_ID_MJPEG || s->codec_id == CODEC_ID_AMV || s->codec_id == CODEC_ID_THP || s->codec_id == CODEC_ID_H264)
@@ -240,32 +239,27 @@ int avcodec_default_get_buffer(AVCodecContext *s, AVFrame *pic){
     int h= s->height;
     InternalBuffer *buf;
     int *picture_number;
+    AVCodecInternal *avci = s->internal;
 
     if(pic->data[0]!=NULL) {
         av_log(s, AV_LOG_ERROR, "pic->data[0]!=NULL in avcodec_default_get_buffer\n");
         return -1;
     }
-    if(s->internal_buffer_count >= INTERNAL_BUFFER_SIZE) {
-        av_log(s, AV_LOG_ERROR, "internal_buffer_count overflow (missing release_buffer?)\n");
+    if(avci->buffer_count >= INTERNAL_BUFFER_SIZE) {
+        av_log(s, AV_LOG_ERROR, "buffer_count overflow (missing release_buffer?)\n");
         return -1;
     }
 
     if(av_image_check_size(w, h, 0, s))
         return -1;
 
-    if(s->internal_buffer==NULL){
-        s->internal_buffer= av_mallocz((INTERNAL_BUFFER_SIZE+1)*sizeof(InternalBuffer));
+    if (!avci->buffer) {
+        avci->buffer = av_mallocz((INTERNAL_BUFFER_SIZE+1) *
+                                  sizeof(InternalBuffer));
     }
-#if 0
-    s->internal_buffer= av_fast_realloc(
-        s->internal_buffer,
-        &s->internal_buffer_size,
-        sizeof(InternalBuffer)*FFMAX(99,  s->internal_buffer_count+1)/*FIXME*/
-        );
-#endif
 
-    buf= &((InternalBuffer*)s->internal_buffer)[s->internal_buffer_count];
-    picture_number= &(((InternalBuffer*)s->internal_buffer)[INTERNAL_BUFFER_SIZE]).last_pic_num; //FIXME ugly hack
+    buf = &avci->buffer[avci->buffer_count];
+    picture_number = &(avci->buffer[INTERNAL_BUFFER_SIZE]).last_pic_num; //FIXME ugly hack
     (*picture_number)++;
 
     if(buf->base[0] && (buf->width != w || buf->height != h || buf->pix_fmt != s->pix_fmt)){
@@ -356,7 +350,7 @@ int avcodec_default_get_buffer(AVCodecContext *s, AVFrame *pic){
         pic->data[i]= buf->data[i];
         pic->linesize[i]= buf->linesize[i];
     }
-    s->internal_buffer_count++;
+    avci->buffer_count++;
 
     if(s->pkt) pic->pkt_pts= s->pkt->pts;
     else       pic->pkt_pts= AV_NOPTS_VALUE;
@@ -365,7 +359,8 @@ int avcodec_default_get_buffer(AVCodecContext *s, AVFrame *pic){
     pic->reordered_opaque3= s->reordered_opaque3; /* ffdshow custom code */
 
     if(s->debug&FF_DEBUG_BUFFERS)
-        av_log(s, AV_LOG_DEBUG, "default_get_buffer called on pic %p, %d buffers used\n", pic, s->internal_buffer_count);
+        av_log(s, AV_LOG_DEBUG, "default_get_buffer called on pic %p, %d "
+               "buffers used\n", pic, avci->buffer_count);
 
     return 0;
 }
@@ -373,22 +368,23 @@ int avcodec_default_get_buffer(AVCodecContext *s, AVFrame *pic){
 void avcodec_default_release_buffer(AVCodecContext *s, AVFrame *pic){
     int i;
     InternalBuffer *buf, *last;
+    AVCodecInternal *avci = s->internal;
 
     assert(pic->type==FF_BUFFER_TYPE_INTERNAL);
-    assert(s->internal_buffer_count);
+    assert(avci->buffer_count);
 
-    if(s->internal_buffer){
-    buf = NULL; /* avoids warning */
-    for(i=0; i<s->internal_buffer_count; i++){ //just 3-5 checks so is not worth to optimize
-        buf= &((InternalBuffer*)s->internal_buffer)[i];
-        if(buf->data[0] == pic->data[0])
-            break;
-    }
-    assert(i < s->internal_buffer_count);
-    s->internal_buffer_count--;
-    last = &((InternalBuffer*)s->internal_buffer)[s->internal_buffer_count];
+    if (avci->buffer) {
+        buf = NULL; /* avoids warning */
+        for (i = 0; i < avci->buffer_count; i++) { //just 3-5 checks so is not worth to optimize
+            buf = &avci->buffer[i];
+            if (buf->data[0] == pic->data[0])
+                break;
+        }
+        assert(i < avci->buffer_count);
+        avci->buffer_count--;
+        last = &avci->buffer[avci->buffer_count];
 
-    FFSWAP(InternalBuffer, *buf, *last);
+        FFSWAP(InternalBuffer, *buf, *last);
     }
 
     for(i=0; i<4; i++){
@@ -398,7 +394,8 @@ void avcodec_default_release_buffer(AVCodecContext *s, AVFrame *pic){
 //printf("R%X\n", pic->opaque);
 
     if(s->debug&FF_DEBUG_BUFFERS)
-        av_log(s, AV_LOG_DEBUG, "default_release_buffer called on pic %p, %d buffers used\n", pic, s->internal_buffer_count);
+        av_log(s, AV_LOG_DEBUG, "default_release_buffer called on pic %p, %d "
+               "buffers used\n", pic, avci->buffer_count);
 }
 
 int avcodec_default_reget_buffer(AVCodecContext *s, AVFrame *pic){
@@ -516,6 +513,12 @@ int attribute_align_arg avcodec_open2(AVCodecContext *avctx, AVCodec *codec, AVD
 
     if(avctx->codec || !codec) {
         ret = AVERROR(EINVAL);
+        goto end;
+    }
+
+    avctx->internal = av_mallocz(sizeof(AVCodecInternal));
+    if (!avctx->internal) {
+        ret = AVERROR(ENOMEM);
         goto end;
     }
 
@@ -666,6 +669,7 @@ end:
 free_and_end:
     av_dict_free(&tmp);
     av_freep(&avctx->priv_data);
+    av_freep(&avctx->internal);
     avctx->codec= NULL;
     goto end;
 }
@@ -749,7 +753,7 @@ int attribute_align_arg avcodec_decode_video2(AVCodecContext *avctx, AVFrame *pi
     avctx->pkt = avpkt;
 
     if((avctx->codec->capabilities & CODEC_CAP_DELAY) || avpkt->size || (avctx->active_thread_type&FF_THREAD_FRAME)){
-        if (HAVE_PTHREADS && avctx->active_thread_type&FF_THREAD_FRAME)
+        if (HAVE_THREADS && avctx->active_thread_type&FF_THREAD_FRAME)
              ret = ff_thread_decode_frame(avctx, picture, got_picture_ptr,
                                           avpkt);
         else {
@@ -829,6 +833,7 @@ av_cold int avcodec_close(AVCodecContext *avctx)
         avctx->codec->close(avctx);
     avcodec_default_free_buffers(avctx);
     avctx->coded_frame = NULL;
+    av_freep(&avctx->internal);
     if (avctx->codec && avctx->codec->priv_class)
         av_opt_free(avctx->priv_data);
     av_opt_free(avctx);
@@ -920,29 +925,32 @@ const char *avcodec_license(void)
 
 void avcodec_flush_buffers(AVCodecContext *avctx)
 {
-    if(HAVE_PTHREADS && avctx->active_thread_type&FF_THREAD_FRAME)
+    if(HAVE_THREADS && avctx->active_thread_type&FF_THREAD_FRAME)
         ff_thread_flush(avctx);
     else if(avctx->codec->flush)
         avctx->codec->flush(avctx);
 }
 
 void avcodec_default_free_buffers(AVCodecContext *s){
+    AVCodecInternal *avci = s->internal;
     int i, j;
 
-    if(s->internal_buffer==NULL) return;
+    if (!avci->buffer)
+        return;
 
-    if (s->internal_buffer_count)
-        av_log(s, AV_LOG_WARNING, "Found %i unreleased buffers!\n", s->internal_buffer_count);
+    if (avci->buffer_count)
+        av_log(s, AV_LOG_WARNING, "Found %i unreleased buffers!\n",
+               avci->buffer_count);
     for(i=0; i<INTERNAL_BUFFER_SIZE; i++){
-        InternalBuffer *buf= &((InternalBuffer*)s->internal_buffer)[i];
+        InternalBuffer *buf = &avci->buffer[i];
         for(j=0; j<4; j++){
             av_freep(&buf->base[j]);
             buf->data[j]= NULL;
         }
     }
-    av_freep(&s->internal_buffer);
+    av_freep(&avci->buffer);
 
-    s->internal_buffer_count=0;
+    avci->buffer_count=0;
 }
 
 #if FF_API_OLD_FF_PICT_TYPES
@@ -1035,6 +1043,8 @@ int av_lockmgr_register(int (*cb)(void **mutex, enum AVLockOp op))
     if (ff_lockmgr_cb) {
         if (ff_lockmgr_cb(&codec_mutex, AV_LOCK_DESTROY))
             return -1;
+        if (ff_lockmgr_cb(&avformat_mutex, AV_LOCK_DESTROY))
+            return -1;
     }
 
     ff_lockmgr_cb = cb;
@@ -1042,11 +1052,31 @@ int av_lockmgr_register(int (*cb)(void **mutex, enum AVLockOp op))
     if (ff_lockmgr_cb) {
         if (ff_lockmgr_cb(&codec_mutex, AV_LOCK_CREATE))
             return -1;
+        if (ff_lockmgr_cb(&avformat_mutex, AV_LOCK_CREATE))
+            return -1;
     }
     return 0;
 }
 
-unsigned int ff_toupper4(unsigned int x)
+int avpriv_lock_avformat(void)
+{
+    if (ff_lockmgr_cb) {
+        if ((*ff_lockmgr_cb)(&avformat_mutex, AV_LOCK_OBTAIN))
+            return -1;
+    }
+    return 0;
+}
+
+int avpriv_unlock_avformat(void)
+{
+    if (ff_lockmgr_cb) {
+        if ((*ff_lockmgr_cb)(&avformat_mutex, AV_LOCK_RELEASE))
+            return -1;
+    }
+    return 0;
+}
+
+unsigned int avpriv_toupper4(unsigned int x)
 {
     return     toupper( x     &0xFF)
             + (toupper((x>>8 )&0xFF)<<8 )
@@ -1054,7 +1084,7 @@ unsigned int ff_toupper4(unsigned int x)
             + (toupper((x>>24)&0xFF)<<24);
 }
 
-#if !HAVE_PTHREADS
+#if !HAVE_THREADS
 
 int ff_thread_get_buffer(AVCodecContext *avctx, AVFrame *f)
 {

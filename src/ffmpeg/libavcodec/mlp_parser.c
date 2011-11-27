@@ -43,28 +43,28 @@ static const uint8_t mlp_channels[32] = {
     5, 6, 5, 5, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 };
 
-const uint64_t ff_mlp_layout[32] = {
+const uint64_t mlp_layout[32] = {
     AV_CH_LAYOUT_MONO,
     AV_CH_LAYOUT_STEREO,
     AV_CH_LAYOUT_2_1,
-    AV_CH_LAYOUT_QUAD,
+    AV_CH_LAYOUT_2_2,
     AV_CH_LAYOUT_STEREO|AV_CH_LOW_FREQUENCY,
     AV_CH_LAYOUT_2_1|AV_CH_LOW_FREQUENCY,
-    AV_CH_LAYOUT_QUAD|AV_CH_LOW_FREQUENCY,
+    AV_CH_LAYOUT_2_2|AV_CH_LOW_FREQUENCY,
     AV_CH_LAYOUT_SURROUND,
     AV_CH_LAYOUT_4POINT0,
-    AV_CH_LAYOUT_5POINT0_BACK,
+    AV_CH_LAYOUT_5POINT0,
     AV_CH_LAYOUT_SURROUND|AV_CH_LOW_FREQUENCY,
     AV_CH_LAYOUT_4POINT0|AV_CH_LOW_FREQUENCY,
-    AV_CH_LAYOUT_5POINT1_BACK,
+    AV_CH_LAYOUT_5POINT1,
     AV_CH_LAYOUT_4POINT0,
-    AV_CH_LAYOUT_5POINT0_BACK,
+    AV_CH_LAYOUT_5POINT0,
     AV_CH_LAYOUT_SURROUND|AV_CH_LOW_FREQUENCY,
     AV_CH_LAYOUT_4POINT0|AV_CH_LOW_FREQUENCY,
-    AV_CH_LAYOUT_5POINT1_BACK,
-    AV_CH_LAYOUT_QUAD|AV_CH_LOW_FREQUENCY,
-    AV_CH_LAYOUT_5POINT0_BACK,
-    AV_CH_LAYOUT_5POINT1_BACK,
+    AV_CH_LAYOUT_5POINT1,
+    AV_CH_LAYOUT_2_2|AV_CH_LOW_FREQUENCY,
+    AV_CH_LAYOUT_5POINT0,
+    AV_CH_LAYOUT_5POINT1,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 };
 
@@ -107,7 +107,7 @@ static int truehd_channels(int chanmap)
     return channels;
 }
 
-int64_t ff_truehd_layout(int chanmap)
+uint64_t truehd_layout(int chanmap)
 {
     int layout = 0, i;
 
@@ -139,12 +139,12 @@ int ff_mlp_read_major_sync(void *log, MLPHeaderInfo *mh, GetBitContext *gb)
     /* FFDShow custom code: disable crc check because it doesn't work properly with interweaved AC3/TrueHD streams
     if (checksum != AV_RL16(gb->buffer+26)) {
         av_log(log, AV_LOG_ERROR, "major sync info header checksum error\n");
-        return -1;
+        return AVERROR_INVALIDDATA;
     }
     */
 
     if (get_bits_long(gb, 24) != 0xf8726f) /* Sync words */
-        return -1;
+        return AVERROR_INVALIDDATA;
 
     mh->stream_type = get_bits(gb, 8);
 
@@ -175,7 +175,7 @@ int ff_mlp_read_major_sync(void *log, MLPHeaderInfo *mh, GetBitContext *gb)
 
         mh->channels_thd_stream2 = get_bits(gb, 13);
     } else
-        return -1;
+        return AVERROR_INVALIDDATA;
 
     mh->access_unit_size = 40 << (ratebits & 7);
     mh->access_unit_size_pow2 = 64 << (ratebits & 7);
@@ -320,15 +320,15 @@ static int mlp_parse(AVCodecParserContext *s,
         if (mh.stream_type == 0xbb) {
             /* MLP stream */
             avctx->channels = mlp_channels[mh.channels_mlp];
-            avctx->channel_layout = ff_mlp_layout[mh.channels_mlp];
+            avctx->channel_layout = mlp_layout[mh.channels_mlp];
         } else { /* mh.stream_type == 0xba */
             /* TrueHD stream */
             if (mh.channels_thd_stream2) {
                 avctx->channels = truehd_channels(mh.channels_thd_stream2);
-                avctx->channel_layout = ff_truehd_layout(mh.channels_thd_stream2);
+                avctx->channel_layout = truehd_layout(mh.channels_thd_stream2);
             } else {
                 avctx->channels = truehd_channels(mh.channels_thd_stream1);
-                avctx->channel_layout = ff_truehd_layout(mh.channels_thd_stream1);
+                avctx->channel_layout = truehd_layout(mh.channels_thd_stream1);
             }
         }
 
@@ -349,9 +349,9 @@ lost_sync:
 }
 
 AVCodecParser ff_mlp_parser = {
-    { CODEC_ID_MLP, CODEC_ID_TRUEHD },
-    sizeof(MLPParseContext),
-    mlp_init,
-    mlp_parse,
-    ff_parse_close,
+    .codec_ids      = { CODEC_ID_MLP, CODEC_ID_TRUEHD },
+    .priv_data_size = sizeof(MLPParseContext),
+    .parser_init    = mlp_init,
+    .parser_parse   = mlp_parse,
+    .parser_close   = ff_parse_close,
 };

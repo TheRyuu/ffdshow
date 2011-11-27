@@ -29,10 +29,16 @@
  * @see doc/multithreading.txt
  */
 
-#include <pthread.h>
-
+#include "config.h"
 #include "avcodec.h"
+#include "internal.h"
 #include "thread.h"
+
+#if HAVE_PTHREADS
+#include <pthread.h>
+#elif HAVE_W32THREADS
+#include "w32pthreads.h"
+#endif
 
 typedef int (action_func)(AVCodecContext *c, void *arg);
 typedef int (action_func2)(AVCodecContext *c, void *arg, int jobnr, int threadnr);
@@ -332,6 +338,9 @@ static int update_context_from_thread(AVCodecContext *dst, AVCodecContext *src, 
         dst->height    = src->height;
         dst->pix_fmt   = src->pix_fmt;
 
+        dst->coded_width  = src->coded_width;
+        dst->coded_height = src->coded_height;
+
         dst->has_b_frames = src->has_b_frames;
         dst->idct_algo    = src->idct_algo;
         dst->slice_count  = src->slice_count;
@@ -354,8 +363,7 @@ static int update_context_from_thread(AVCodecContext *dst, AVCodecContext *src, 
     }
 
     if (for_user) {
-        dst->coded_frame   = src->coded_frame;
-        dst->has_b_frames += src->thread_count - 1;
+        dst->coded_frame = src->coded_frame;
     } else {
         if (dst->codec->update_thread_context)
             err = dst->codec->update_thread_context(dst, src);
@@ -519,7 +527,7 @@ int ff_thread_decode_frame(AVCodecContext *avctx,
         if (fctx->next_decoding >= (avctx->thread_count-1)) fctx->delaying = 0;
 
         *got_picture_ptr=0;
-        return 0;
+        return avpkt->size;
     }
 
     /*
@@ -560,7 +568,8 @@ int ff_thread_decode_frame(AVCodecContext *avctx,
 
     fctx->next_finished = finished;
 
-    return p->result;
+    /* return the size of the consumed packet if no error occurred */
+    return (p->result >= 0) ? avpkt->size : p->result;
 }
 
 void ff_thread_report_progress(AVFrame *f, int n, int field)
@@ -670,8 +679,10 @@ static void frame_thread_free(AVCodecContext *avctx, int thread_count)
         pthread_cond_destroy(&p->output_cond);
         av_freep(&p->avpkt.data);
 
-        if (i)
+        if (i) {
             av_freep(&p->avctx->priv_data);
+            av_freep(&p->avctx->internal);
+        }
 
         av_freep(&p->avctx);
     }
@@ -713,6 +724,11 @@ static int frame_thread_init(AVCodecContext *avctx)
         p->parent = fctx;
         p->avctx  = copy;
 
+        if (!copy) {
+            err = AVERROR(ENOMEM);
+            goto error;
+        }
+
         *copy = *src;
         copy->thread_opaque = p;
         copy->pkt = &p->avpkt;
@@ -725,9 +741,19 @@ static int frame_thread_init(AVCodecContext *avctx)
 
             update_context_from_thread(avctx, copy, 1);
         } else {
-            copy->is_copy   = 1;
             copy->priv_data = av_malloc(codec->priv_data_size);
+            if (!copy->priv_data) {
+                err = AVERROR(ENOMEM);
+                goto error;
+            }
             memcpy(copy->priv_data, src->priv_data, codec->priv_data_size);
+            copy->internal = av_malloc(sizeof(AVCodecInternal));
+            if (!copy->internal) {
+                err = AVERROR(ENOMEM);
+                goto error;
+            }
+            *(copy->internal) = *(src->internal);
+            copy->internal->is_copy = 1;
 
             if (codec->init_thread_copy)
                 err = codec->init_thread_copy(copy);
@@ -859,8 +885,7 @@ void ff_thread_release_buffer(AVCodecContext *avctx, AVFrame *f)
     }
 
     if(avctx->debug & FF_DEBUG_BUFFERS)
-        av_log(avctx, AV_LOG_DEBUG, "thread_release_buffer called on pic %p, %d buffers used\n",
-                                    f, f->owner->internal_buffer_count);
+        av_log(avctx, AV_LOG_DEBUG, "thread_release_buffer called on pic %p\n", f);
 
     fctx = p->parent;
     pthread_mutex_lock(&fctx->buffer_mutex);
@@ -900,6 +925,10 @@ int ff_thread_init(AVCodecContext *avctx)
         av_log(avctx, AV_LOG_ERROR, "avcodec_thread_init is ignored after avcodec_open\n");
         return -1;
     }
+
+#if HAVE_W32THREADS
+    w32thread_init();
+#endif
 
     if (avctx->codec) {
         validate_thread_parameters(avctx);

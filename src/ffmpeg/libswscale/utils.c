@@ -111,6 +111,8 @@ const static FormatEntry format_entries[PIX_FMT_NB] = {
     [PIX_FMT_YUVA420P]    = { 1 , 1 },
     [PIX_FMT_RGB48BE]     = { 1 , 1 },
     [PIX_FMT_RGB48LE]     = { 1 , 1 },
+    [PIX_FMT_RGBA64BE]    = { 0 , 0 },
+    [PIX_FMT_RGBA64LE]    = { 0 , 0 },
     [PIX_FMT_RGB565BE]    = { 1 , 1 },
     [PIX_FMT_RGB565LE]    = { 1 , 1 },
     [PIX_FMT_RGB555BE]    = { 1 , 1 },
@@ -132,16 +134,28 @@ const static FormatEntry format_entries[PIX_FMT_NB] = {
     [PIX_FMT_GRAY8A]      = { 1 , 0 },
     [PIX_FMT_BGR48BE]     = { 1 , 1 },
     [PIX_FMT_BGR48LE]     = { 1 , 1 },
+    [PIX_FMT_BGRA64BE]    = { 0 , 0 },
+    [PIX_FMT_BGRA64LE]    = { 0 , 0 },
     [PIX_FMT_YUV420P9BE]  = { 1 , 1 },
     [PIX_FMT_YUV420P9LE]  = { 1 , 1 },
     [PIX_FMT_YUV420P10BE] = { 1 , 1 },
     [PIX_FMT_YUV420P10LE] = { 1 , 1 },
+    [PIX_FMT_YUV422P9BE]  = { 1 , 1 },
+    [PIX_FMT_YUV422P9LE]  = { 1 , 1 },
     [PIX_FMT_YUV422P10BE] = { 1 , 1 },
     [PIX_FMT_YUV422P10LE] = { 1 , 1 },
-    [PIX_FMT_YUV444P9BE]  = { 1 , 0 },
-    [PIX_FMT_YUV444P9LE]  = { 1 , 0 },
-    [PIX_FMT_YUV444P10BE] = { 1 , 0 },
-    [PIX_FMT_YUV444P10LE] = { 1 , 0 },
+    [PIX_FMT_YUV444P9BE]  = { 1 , 1 },
+    [PIX_FMT_YUV444P9LE]  = { 1 , 1 },
+    [PIX_FMT_YUV444P10BE] = { 1 , 1 },
+    [PIX_FMT_YUV444P10LE] = { 1 , 1 },
+    [PIX_FMT_GBR24P]      = { 1 , 0 },
+    [PIX_FMT_GBRP]        = { 1 , 0 },
+    [PIX_FMT_GBRP9LE]     = { 1 , 0 },
+    [PIX_FMT_GBRP9BE]     = { 1 , 0 },
+    [PIX_FMT_GBRP10LE]    = { 1 , 0 },
+    [PIX_FMT_GBRP10BE]    = { 1 , 0 },
+    [PIX_FMT_GBRP16LE]    = { 1 , 0 },
+    [PIX_FMT_GBRP16BE]    = { 1 , 0 },
 };
 
 int sws_isSupportedInput(enum PixelFormat pix_fmt)
@@ -279,15 +293,18 @@ static int initFilter(int16_t **outFilter, int16_t **filterPos, int *outFilterSi
                 if (flags & SWS_BICUBIC) {
                     int64_t B= (param[0] != SWS_PARAM_DEFAULT ? param[0] :   0) * (1<<24);
                     int64_t C= (param[1] != SWS_PARAM_DEFAULT ? param[1] : 0.6) * (1<<24);
-                    int64_t dd = ( d*d)>>30;
-                    int64_t ddd= (dd*d)>>30;
 
-                    if      (d < 1LL<<30)
-                        coeff = (12*(1<<24)-9*B-6*C)*ddd + (-18*(1<<24)+12*B+6*C)*dd + (6*(1<<24)-2*B)*(1<<30);
-                    else if (d < 1LL<<31)
-                        coeff = (-B-6*C)*ddd + (6*B+30*C)*dd + (-12*B-48*C)*d + (8*B+24*C)*(1<<30);
-                    else
-                        coeff=0.0;
+                    if (d >= 1LL<<31) {
+                        coeff = 0.0;
+                    } else {
+                        int64_t dd  = (d  * d) >> 30;
+                        int64_t ddd = (dd * d) >> 30;
+
+                        if (d < 1LL<<30)
+                            coeff = (12*(1<<24)-9*B-6*C)*ddd + (-18*(1<<24)+12*B+6*C)*dd + (6*(1<<24)-2*B)*(1<<30);
+                        else
+                            coeff = (-B-6*C)*ddd + (6*B+30*C)*dd + (-12*B-48*C)*d + (8*B+24*C)*(1<<30);
+                    }
                     coeff *= fone>>(30+24);
                 }
 /*                else if (flags & SWS_X) {
@@ -766,6 +783,15 @@ int sws_init_context(SwsContext *c, SwsFilter *srcFilter, SwsFilter *dstFilter, 
 
     unscaled = (srcW == dstW && srcH == dstH);
 
+    handle_jpeg(&srcFormat);
+    handle_jpeg(&dstFormat);
+
+    if(srcFormat!=c->srcFormat || dstFormat!=c->dstFormat){
+        av_log(c, AV_LOG_WARNING, "deprecated pixel format used, make sure you did set range correctly\n");
+        c->srcFormat= srcFormat;
+        c->dstFormat= dstFormat;
+    }
+
     if (!sws_isSupportedInput(srcFormat)) {
         av_log(c, AV_LOG_ERROR, "%s is not supported as input pixel format\n", av_get_pix_fmt_name(srcFormat));
         return AVERROR(EINVAL);
@@ -963,8 +989,8 @@ int sws_init_context(SwsContext *c, SwsFilter *srcFilter, SwsFilter *dstFilter, 
             FF_ALLOCZ_OR_GOTO(c, c->hLumFilterPos, (dstW      /2/8+8)*sizeof(int32_t), fail);
             FF_ALLOCZ_OR_GOTO(c, c->hChrFilterPos, (c->chrDstW/2/4+8)*sizeof(int32_t), fail);
 
-            initMMX2HScaler(      dstW, c->lumXInc, c->lumMmx2FilterCode, c->hLumFilter, c->hLumFilterPos, 8);
-            initMMX2HScaler(c->chrDstW, c->chrXInc, c->chrMmx2FilterCode, c->hChrFilter, c->hChrFilterPos, 4);
+            initMMX2HScaler(      dstW, c->lumXInc, c->lumMmx2FilterCode, c->hLumFilter, (uint32_t*)c->hLumFilterPos, 8);
+            initMMX2HScaler(c->chrDstW, c->chrXInc, c->chrMmx2FilterCode, c->hChrFilter, (uint32_t*)c->hChrFilterPos, 4);
 
 #ifdef MAP_ANONYMOUS
             mprotect(c->lumMmx2FilterCode, c->lumMmx2FilterCodeSize, PROT_EXEC | PROT_READ);
@@ -994,7 +1020,7 @@ int sws_init_context(SwsContext *c, SwsFilter *srcFilter, SwsFilter *dstFilter, 
     /* precalculate vertical scaler filter coefficients */
     {
         const int filterAlign=
-            (HAVE_MMX     && cpu_flags & AV_CPU_FLAG_MMX) && (flags & SWS_ACCURATE_RND) ? 2 :
+            (HAVE_MMX     && cpu_flags & AV_CPU_FLAG_MMX) ? 2 :
             (HAVE_ALTIVEC && cpu_flags & AV_CPU_FLAG_ALTIVEC) ? 8 :
             1;
 

@@ -261,7 +261,7 @@ static int parse_frame_header(AC3DecodeContext *s)
     AC3HeaderInfo hdr;
     int err;
 
-    err = ff_ac3_parse_header(&s->gbc, &hdr);
+    err = avpriv_ac3_parse_header(&s->gbc, &hdr);
     if(err)
         return err;
 
@@ -1357,7 +1357,7 @@ static int ac3_decode_frame(AVCodecContext * avctx, void *data, int *data_size,
         if (s->frame_size > buf_size) {
             av_log(avctx, AV_LOG_ERROR, "incomplete frame\n");
             err = AAC_AC3_PARSE_ERROR_FRAME_SIZE;
-        } else if (avctx->error_recognition >= FF_ER_CAREFUL) {
+        } else if (avctx->err_recognition & AV_EF_CRCCHECK) {
             /* check for crc mismatch */
             if (av_crc(av_crc_get_table(AV_CRC_16_ANSI), 0, &buf[2], s->frame_size-2)) {
                 av_log(avctx, AV_LOG_ERROR, "frame CRC mismatch\n");
@@ -1439,7 +1439,7 @@ static av_cold int ac3_decode_end(AVCodecContext *avctx)
 #define OFFSET(x) offsetof(AC3DecodeContext, x)
 #define PAR (AV_OPT_FLAG_DECODING_PARAM | AV_OPT_FLAG_AUDIO_PARAM)
 static const AVOption options[] = {
-    { "drc_scale", "percentage of dynamic range compression to apply", OFFSET(drc_scale), FF_OPT_TYPE_FLOAT, {1.0}, 0.0, 1.0, PAR },
+    { "drc_scale", "percentage of dynamic range compression to apply", OFFSET(drc_scale), AV_OPT_TYPE_FLOAT, {1.0}, 0.0, 1.0, PAR },
     { NULL},
 };
 

@@ -118,11 +118,12 @@ const enum PixelFormat ff_pixfmt_list_420[] = {
 const enum PixelFormat ff_hwaccel_pixfmt_list_420[] = {
     PIX_FMT_DXVA2_VLD,
     PIX_FMT_VAAPI_VLD,
+    PIX_FMT_VDA_VLD,
     PIX_FMT_YUV420P,
     PIX_FMT_NONE
 };
 
-const uint8_t *ff_find_start_code(const uint8_t * restrict p, const uint8_t *end, uint32_t * restrict state){
+const uint8_t *avpriv_mpv_find_start_code(const uint8_t * restrict p, const uint8_t *end, uint32_t * restrict state){
     int i;
 
     assert(p<=end);
@@ -634,9 +635,9 @@ av_cold int MPV_common_init(MpegEncContext *s)
         yc_size = y_size + 2 * c_size;
 
         /* convert fourcc to upper case */
-        s->codec_tag = ff_toupper4(s->avctx->codec_tag);
+        s->codec_tag = avpriv_toupper4(s->avctx->codec_tag);
 
-        s->stream_codec_tag = ff_toupper4(s->avctx->stream_codec_tag);
+        s->stream_codec_tag = avpriv_toupper4(s->avctx->stream_codec_tag);
 
         s->avctx->coded_frame= (AVFrame*)&s->current_picture;
 
@@ -845,7 +846,7 @@ void MPV_common_end(MpegEncContext *s)
     av_freep(&s->reordered_input_picture);
     av_freep(&s->dct_offset);
 
-    if(s->picture && !s->avctx->is_copy){
+    if(s->picture && !s->avctx->internal->is_copy){
         for(i=0; i<s->picture_count; i++){
             free_picture(s, &s->picture[i]);
         }
@@ -1794,7 +1795,7 @@ void MPV_decode_mb_internal(MpegEncContext *s, DCTELEM block[12][64],
             /* decoding or more than one mb_type (MC was already done otherwise) */
             if(!s->encoding){
 
-                if(HAVE_PTHREADS && s->avctx->active_thread_type&FF_THREAD_FRAME) {
+                if(HAVE_THREADS && s->avctx->active_thread_type&FF_THREAD_FRAME) {
                     if (s->mv_dir & MV_DIR_FORWARD) {
                         ff_thread_await_progress((AVFrame*)s->last_picture_ptr, MPV_lowest_referenced_row(s, 0), 0);
                     }
@@ -2078,7 +2079,6 @@ void ff_mpeg_flush(AVCodecContext *avctx){
     s->current_picture_ptr = s->last_picture_ptr = s->next_picture_ptr = NULL;
 
     s->mb_x= s->mb_y= 0;
-    s->closed_gop= 0;
 
     s->parse_context.state= -1;
     s->parse_context.frame_start_found= 0;

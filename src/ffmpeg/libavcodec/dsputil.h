@@ -63,8 +63,10 @@ void ff_h264_idct_dc_add_ ## depth ## _c(uint8_t *dst, DCTELEM *block, int strid
 void ff_h264_idct_add16_ ## depth ## _c(uint8_t *dst, const int *blockoffset, DCTELEM *block, int stride, const uint8_t nnzc[6*8]);\
 void ff_h264_idct_add16intra_ ## depth ## _c(uint8_t *dst, const int *blockoffset, DCTELEM *block, int stride, const uint8_t nnzc[6*8]);\
 void ff_h264_idct8_add4_ ## depth ## _c(uint8_t *dst, const int *blockoffset, DCTELEM *block, int stride, const uint8_t nnzc[6*8]);\
+void ff_h264_idct_add8_422_ ## depth ## _c(uint8_t **dest, const int *blockoffset, DCTELEM *block, int stride, const uint8_t nnzc[6*8]);\
 void ff_h264_idct_add8_ ## depth ## _c(uint8_t **dest, const int *blockoffset, DCTELEM *block, int stride, const uint8_t nnzc[6*8]);\
 void ff_h264_luma_dc_dequant_idct_ ## depth ## _c(DCTELEM *output, DCTELEM *input, int qmul);\
+void ff_h264_chroma422_dc_dequant_idct_ ## depth ## _c(DCTELEM *block, int qmul);\
 void ff_h264_chroma_dc_dequant_idct_ ## depth ## _c(DCTELEM *block, int qmul);
 
 H264_IDCT( 8)
@@ -110,6 +112,9 @@ void ff_vp3_idct_dc_add_c(uint8_t *dest/*align 8*/, int line_size, const DCTELEM
 
 void ff_vp3_v_loop_filter_c(uint8_t *src, int stride, int *bounding_values);
 void ff_vp3_h_loop_filter_c(uint8_t *src, int stride, int *bounding_values);
+
+/* EA functions */
+void ff_ea_idct_put_c(uint8_t *dest, int linesize, DCTELEM *block);
 
 /* RV40 functions */
 void ff_put_rv40_qpel16_mc33_c(uint8_t *dst, uint8_t *src, int stride);
@@ -447,6 +452,23 @@ typedef struct DSPContext {
      * @param len length of vectors, multiple of 4
      */
     void (*butterflies_float)(float *restrict v1, float *restrict v2, int len);
+
+    /**
+     * Calculate the sum and difference of two vectors of floats and interleave
+     * results into a separate output vector of floats, with each sum
+     * positioned before the corresponding difference.
+     *
+     * @param dst  output vector
+     *             constraints: 16-byte aligned
+     * @param src0 first input vector
+     *             constraints: 32-byte aligned
+     * @param src1 second input vector
+     *             constraints: 32-byte aligned
+     * @param len  number of elements in the input
+     *             constraints: multiple of 8
+     */
+    void (*butterflies_float_interleave)(float *dst, const float *src0,
+                                         const float *src1, int len);
 
     /* (I)DCT */
     void (*fdct)(DCTELEM *block/* align 16*/);

@@ -35,6 +35,7 @@
 
 #include "libavutil/imgutils.h"
 #include "avcodec.h"
+#include "internal.h"
 #include "dsputil.h"
 #include "get_bits.h"
 
@@ -45,6 +46,7 @@
 #define FRAGMENT_PIXELS 8
 
 static av_cold int vp3_decode_end(AVCodecContext *avctx);
+static void vp3_decode_flush(AVCodecContext *avctx);
 
 //FIXME split things out into their own arrays
 typedef struct Vp3Fragment {
@@ -897,7 +899,7 @@ static int unpack_vlcs(Vp3DecodeContext *s, GetBitContext *gb,
             /* decode a VLC into a token */
             token = get_vlc2(gb, vlc_table, 11, 3);
             /* use the token to get a zero run, a coefficient, and an eob run */
-            if (token <= 6) {
+            if ((unsigned) token <= 6U) {
                 eob_run = eob_run_base[token];
                 if (eob_run_get_bits[token])
                     eob_run += get_bits(gb, eob_run_get_bits[token]);
@@ -915,7 +917,7 @@ static int unpack_vlcs(Vp3DecodeContext *s, GetBitContext *gb,
                     coeff_i        += eob_run;
                     eob_run = 0;
                 }
-            } else {
+            } else if (token >= 0) {
                 bits_to_get = coeff_get_bits[token];
                 if (bits_to_get)
                     bits_to_get = get_bits(gb, bits_to_get);
@@ -949,6 +951,10 @@ static int unpack_vlcs(Vp3DecodeContext *s, GetBitContext *gb,
                 for (i = coeff_index+1; i <= coeff_index+zero_run; i++)
                     s->num_coded_frags[plane][i]--;
                 coeff_i++;
+            } else {
+                av_log(s->avctx, AV_LOG_ERROR,
+                       "Invalid token %d\n", token);
+                return -1;
             }
     }
 
@@ -998,6 +1004,8 @@ static int unpack_dct_coeffs(Vp3DecodeContext *s, GetBitContext *gb)
     /* unpack the Y plane DC coefficients */
     residual_eob_run = unpack_vlcs(s, gb, &s->dc_vlc[dc_y_table], 0,
         0, residual_eob_run);
+    if (residual_eob_run < 0)
+        return residual_eob_run;
 
     /* reverse prediction of the Y-plane DC coefficients */
     reverse_dc_prediction(s, 0, s->fragment_width[0], s->fragment_height[0]);
@@ -1005,8 +1013,12 @@ static int unpack_dct_coeffs(Vp3DecodeContext *s, GetBitContext *gb)
     /* unpack the C plane DC coefficients */
     residual_eob_run = unpack_vlcs(s, gb, &s->dc_vlc[dc_c_table], 0,
         1, residual_eob_run);
+    if (residual_eob_run < 0)
+        return residual_eob_run;
     residual_eob_run = unpack_vlcs(s, gb, &s->dc_vlc[dc_c_table], 0,
         2, residual_eob_run);
+    if (residual_eob_run < 0)
+        return residual_eob_run;
 
     /* reverse prediction of the C-plane DC coefficients */
     if (!(s->avctx->flags & CODEC_FLAG_GRAY))
@@ -1043,11 +1055,17 @@ static int unpack_dct_coeffs(Vp3DecodeContext *s, GetBitContext *gb)
     for (i = 1; i <= 63; i++) {
             residual_eob_run = unpack_vlcs(s, gb, y_tables[i], i,
                 0, residual_eob_run);
+            if (residual_eob_run < 0)
+                return residual_eob_run;
 
             residual_eob_run = unpack_vlcs(s, gb, c_tables[i], i,
                 1, residual_eob_run);
+            if (residual_eob_run < 0)
+                return residual_eob_run;
             residual_eob_run = unpack_vlcs(s, gb, c_tables[i], i,
                 2, residual_eob_run);
+            if (residual_eob_run < 0)
+                return residual_eob_run;
     }
 
     return 0;
@@ -1323,7 +1341,7 @@ static void vp3_draw_horiz_band(Vp3DecodeContext *s, int y)
     int h, cy;
     int offset[4];
 
-    if (HAVE_PTHREADS && s->avctx->active_thread_type&FF_THREAD_FRAME) {
+    if (HAVE_THREADS && s->avctx->active_thread_type&FF_THREAD_FRAME) {
         int y_flipped = s->flipped_image ? s->avctx->height-y : y;
 
         // At the end of the frame, report INT_MAX instead of the height of the frame.
@@ -1407,7 +1425,7 @@ static void render_slice(Vp3DecodeContext *s, int slice)
         int fragment_width    = s->fragment_width[!!plane];
         int fragment_height   = s->fragment_height[!!plane];
         int fragment_start    = s->fragment_start[plane];
-        int do_await          = !plane && HAVE_PTHREADS && (s->avctx->active_thread_type&FF_THREAD_FRAME);
+        int do_await          = !plane && HAVE_THREADS && (s->avctx->active_thread_type&FF_THREAD_FRAME);
 
         if (!s->flipped_image) stride = -stride;
         if (CONFIG_GRAY && plane && (s->avctx->flags & CODEC_FLAG_GRAY))
@@ -1578,9 +1596,6 @@ static av_cold int allocate_tables(AVCodecContext *avctx)
     return 0;
 }
 
-/*
- * This is the ffmpeg/libavcodec API init function.
- */
 static av_cold int vp3_decode_init(AVCodecContext *avctx)
 {
     Vp3DecodeContext *s = avctx->priv_data;
@@ -1784,10 +1799,15 @@ static int vp3_update_thread_context(AVCodecContext *dst, const AVCodecContext *
     Vp3DecodeContext *s = dst->priv_data, *s1 = src->priv_data;
     int qps_changed = 0, i, err;
 
+#define copy_fields(to, from, start_field, end_field) memcpy(&to->start_field, &from->start_field, (char*)&to->end_field - (char*)&to->start_field)
+
     if (!s1->current_frame.data[0]
         ||s->width != s1->width
-        ||s->height!= s1->height)
+        ||s->height!= s1->height) {
+        if (s != s1)
+            copy_fields(s, s1, golden_frame, current_frame);
         return -1;
+    }
 
     if (s != s1) {
         // init tables if the first frame hasn't been decoded
@@ -1802,8 +1822,6 @@ static int vp3_update_thread_context(AVCodecContext *dst, const AVCodecContext *
             memcpy(s->motion_val[0], s1->motion_val[0], y_fragment_count * sizeof(*s->motion_val[0]));
             memcpy(s->motion_val[1], s1->motion_val[1], c_fragment_count * sizeof(*s->motion_val[1]));
         }
-
-#define copy_fields(to, from, start_field, end_field) memcpy(&to->start_field, &from->start_field, (char*)&to->end_field - (char*)&to->start_field)
 
         // copy previous frame data
         copy_fields(s, s1, golden_frame, dsp);
@@ -1842,9 +1860,6 @@ static int64_t theora_granule_frame(Vp3DecodeContext *s,int64_t granulepos)
 }
 /* ffdshow custom code (end) */
 
-/*
- * This is the ffmpeg/libavcodec API frame decode function.
- */
 static int vp3_decode_frame(AVCodecContext *avctx,
                             void *data, int *data_size,
                             AVPacket *avpkt)
@@ -2007,7 +2022,7 @@ static int vp3_decode_frame(AVCodecContext *avctx,
     *data_size=sizeof(AVFrame);
     *(AVFrame*)data= s->current_frame;
 
-    if (!HAVE_PTHREADS || !(s->avctx->active_thread_type&FF_THREAD_FRAME))
+    if (!HAVE_THREADS || !(s->avctx->active_thread_type&FF_THREAD_FRAME))
         update_frames(avctx);
 
     return buf_size;
@@ -2015,22 +2030,16 @@ static int vp3_decode_frame(AVCodecContext *avctx,
 error:
     ff_thread_report_progress(&s->current_frame, INT_MAX, 0);
 
-    if (!HAVE_PTHREADS || !(s->avctx->active_thread_type&FF_THREAD_FRAME))
+    if (!HAVE_THREADS || !(s->avctx->active_thread_type&FF_THREAD_FRAME))
         avctx->release_buffer(avctx, &s->current_frame);
 
     return -1;
 }
 
-/*
- * This is the ffmpeg/libavcodec API module cleanup function.
- */
 static av_cold int vp3_decode_end(AVCodecContext *avctx)
 {
     Vp3DecodeContext *s = avctx->priv_data;
     int i;
-
-    if (avctx->is_copy && !s->current_frame.data[0])
-        return 0;
 
     av_free(s->superblock_coding);
     av_free(s->all_fragments);
@@ -2042,7 +2051,8 @@ static av_cold int vp3_decode_end(AVCodecContext *avctx)
     av_free(s->motion_val[1]);
     av_free(s->edge_emu_buffer);
 
-    if (avctx->is_copy) return 0;
+    if (avctx->internal->is_copy)
+        return 0;
 
     for (i = 0; i < 16; i++) {
         free_vlc(&s->dc_vlc[i]);
@@ -2058,12 +2068,7 @@ static av_cold int vp3_decode_end(AVCodecContext *avctx)
     free_vlc(&s->motion_vector_vlc);
 
     /* release all frames */
-    if (s->golden_frame.data[0])
-        ff_thread_release_buffer(avctx, &s->golden_frame);
-    if (s->last_frame.data[0] && s->last_frame.type != FF_BUFFER_TYPE_COPY)
-        ff_thread_release_buffer(avctx, &s->last_frame);
-    /* no need to release the current_frame since it will always be pointing
-     * to the same frame as either the golden or last frame */
+    vp3_decode_flush(avctx);
 
     return 0;
 }
@@ -2318,7 +2323,7 @@ static av_cold int theora_decode_init(AVCodecContext *avctx)
         return -1;
     }
 
-    if (ff_split_xiph_headers(avctx->extradata, avctx->extradata_size,
+    if (avpriv_split_xiph_headers(avctx->extradata, avctx->extradata_size,
                               42, header_start, header_len) < 0) {
         av_log(avctx, AV_LOG_ERROR, "Corrupt extradata\n");
         return -1;
@@ -2385,6 +2390,23 @@ static void vp3_decode_flush(AVCodecContext *avctx)
         ff_thread_release_buffer(avctx, &s->current_frame);
 }
 
+static int vp3_init_thread_copy(AVCodecContext *avctx)
+{
+    Vp3DecodeContext *s = avctx->priv_data;
+
+    s->superblock_coding      = NULL;
+    s->all_fragments          = NULL;
+    s->coded_fragment_list[0] = NULL;
+    s->dct_tokens_base        = NULL;
+    s->superblock_fragments   = NULL;
+    s->macroblock_coding      = NULL;
+    s->motion_val[0]          = NULL;
+    s->motion_val[1]          = NULL;
+    s->edge_emu_buffer        = NULL;
+
+    return 0;
+}
+
 AVCodec ff_theora_decoder = {
     .name           = "theora",
     .type           = AVMEDIA_TYPE_VIDEO,
@@ -2396,6 +2418,7 @@ AVCodec ff_theora_decoder = {
     .capabilities   = CODEC_CAP_DR1 | CODEC_CAP_DRAW_HORIZ_BAND | CODEC_CAP_FRAME_THREADS,
     .flush = vp3_decode_flush,
     .long_name = NULL_IF_CONFIG_SMALL("Theora"),
+    .init_thread_copy      = ONLY_IF_THREADS_ENABLED(vp3_init_thread_copy),
     .update_thread_context = ONLY_IF_THREADS_ENABLED(vp3_update_thread_context)
 };
 #endif
@@ -2411,5 +2434,6 @@ AVCodec ff_vp3_decoder = {
     .capabilities   = CODEC_CAP_DR1 | CODEC_CAP_DRAW_HORIZ_BAND | CODEC_CAP_FRAME_THREADS,
     .flush = vp3_decode_flush,
     .long_name = NULL_IF_CONFIG_SMALL("On2 VP3"),
+    .init_thread_copy      = ONLY_IF_THREADS_ENABLED(vp3_init_thread_copy),
     .update_thread_context = ONLY_IF_THREADS_ENABLED(vp3_update_thread_context)
 };

@@ -3,20 +3,20 @@
  * Copyright (c) 2008 Baptiste Coudurier <baptiste.coudurier@free.fr>
  * Copyright (c) 2009 Alex Converse <alex.converse@gmail.com>
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -52,7 +52,7 @@ static int parse_config_ALS(GetBitContext *gb, MPEG4AudioConfig *c)
     return 0;
 }
 
-const int ff_mpeg4audio_sample_rates[16] = {
+const int avpriv_mpeg4audio_sample_rates[16] = {
     96000, 88200, 64000, 48000, 44100, 32000,
     24000, 22050, 16000, 12000, 11025, 8000, 7350
 };
@@ -73,10 +73,10 @@ static inline int get_sample_rate(GetBitContext *gb, int *index)
 {
     *index = get_bits(gb, 4);
     return *index == 0x0f ? get_bits(gb, 24) :
-        ff_mpeg4audio_sample_rates[*index];
+        avpriv_mpeg4audio_sample_rates[*index];
 }
 
-int ff_mpeg4audio_get_config(MPEG4AudioConfig *c, const uint8_t *buf, int buf_size)
+int avpriv_mpeg4audio_get_config(MPEG4AudioConfig *c, const uint8_t *buf, int buf_size)
 {
     GetBitContext gb;
     int specific_config_bitindex;
@@ -151,7 +151,7 @@ static av_always_inline unsigned int copy_bits(PutBitContext *pb,
     return el;
 }
 
-int ff_copy_pce_data(PutBitContext *pb, GetBitContext *gb)
+int avpriv_copy_pce_data(PutBitContext *pb, GetBitContext *gb)
 {
     int five_bit_ch, four_bit_ch, comment_size, bits;
     int offset = put_bits_count(pb);
@@ -173,7 +173,7 @@ int ff_copy_pce_data(PutBitContext *pb, GetBitContext *gb)
         copy_bits(pb, gb, 16);
     if (bits)
         copy_bits(pb, gb, bits);
-    align_put_bits(pb);
+    avpriv_align_put_bits(pb);
     align_get_bits(gb);
     comment_size = copy_bits(pb, gb, 8);
     for (; comment_size > 0; comment_size--)

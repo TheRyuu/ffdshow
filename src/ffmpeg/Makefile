@@ -167,6 +167,7 @@ SRCS_C=\
     libavcodec/rv30.c \
     libavcodec/rv30dsp.c \
     libavcodec/rv34.c \
+    libavcodec/rv34dsp.c \
     libavcodec/rv40.c \
     libavcodec/rv40dsp.c \
     libavcodec/simple_idct.c \

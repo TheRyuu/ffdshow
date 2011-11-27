@@ -129,7 +129,7 @@ av_cold void ff_aac_sbr_init(void)
 av_cold void ff_aac_sbr_ctx_init(AACContext *ac, SpectralBandReplication *sbr)
 {
     float mdct_scale;
-    if(sbr->mdct.mdct_bits)
+    if(sbr->mdct.mdct_bits) // ffmpeg patch
         return;
     sbr->kx[0] = sbr->kx[1] = 32; //Typo in spec, kx' inits to 32
     sbr->data[0].e_a[1] = sbr->data[1].e_a[1] = -1;

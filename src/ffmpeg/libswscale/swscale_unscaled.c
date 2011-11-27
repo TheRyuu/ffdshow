@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2003 Michael Niedermayer <michaelni@gmx.at>
+ * Copyright (C) 2001-2011 Michael Niedermayer <michaelni@gmx.at>
  *
  * This file is part of FFmpeg.
  *
@@ -250,6 +250,92 @@ static int palToRgbWrapper(SwsContext *c, const uint8_t* src[], stride_t srcStri
             srcPtr+= srcStride[0];
             dstPtr+= dstStride[0];
         }
+    }
+
+    return srcSliceH;
+}
+
+static void gbr24ptopacked24(const uint8_t* src[], int srcStride[], uint8_t* dst, int dstStride, int srcSliceH, int width)
+{
+    int x, h, i;
+    for (h = 0; h < srcSliceH; h++) {
+        uint8_t *dest = dst + dstStride * h;
+        for (x = 0; x < width; x++) {
+            *dest++ = src[0][x];
+            *dest++ = src[1][x];
+            *dest++ = src[2][x];
+        }
+
+        for (i = 0; i < 3; i++)
+            src[i] += srcStride[i];
+    }
+}
+
+static void gbr24ptopacked32(const uint8_t* src[], int srcStride[], uint8_t* dst, int dstStride, int srcSliceH, int alpha_first, int width)
+{
+    int x, h, i;
+    for (h = 0; h < srcSliceH; h++) {
+        uint8_t *dest = dst + dstStride * h;
+
+        if (alpha_first) {
+            for (x = 0; x < width; x++) {
+                *dest++ = 0xff;
+                *dest++ = src[0][x];
+                *dest++ = src[1][x];
+                *dest++ = src[2][x];
+            }
+        } else {
+            for (x = 0; x < width; x++) {
+                *dest++ = src[0][x];
+                *dest++ = src[1][x];
+                *dest++ = src[2][x];
+                *dest++ = 0xff;
+            }
+        }
+
+        for (i = 0; i < 3; i++)
+            src[i] += srcStride[i];
+    }
+}
+
+static int planarRgbToRgbWrapper(SwsContext *c, const uint8_t* src[], int srcStride[], int srcSliceY,
+        int srcSliceH, uint8_t* dst[], int dstStride[])
+{
+    int alpha_first = 0;
+    if (c->srcFormat != PIX_FMT_GBR24P) {
+        av_log(c, AV_LOG_ERROR, "unsupported planar RGB conversion %s -> %s\n",
+              av_get_pix_fmt_name(c->srcFormat), av_get_pix_fmt_name(c->dstFormat));
+        return srcSliceH;
+    }
+
+    switch (c->dstFormat) {
+        case PIX_FMT_BGR24:
+            gbr24ptopacked24((const uint8_t* []) {src[1], src[0], src[2]}, (int []) {srcStride[1], srcStride[0], srcStride[2]},
+                  dst[0] + srcSliceY * dstStride[0], dstStride[0], srcSliceH, c->srcW);
+            break;
+
+        case PIX_FMT_RGB24:
+            gbr24ptopacked24((const uint8_t* []) {src[2], src[0], src[1]}, (int []) {srcStride[2], srcStride[0], srcStride[1]},
+                  dst[0] + srcSliceY * dstStride[0], dstStride[0], srcSliceH, c->srcW);
+            break;
+
+        case PIX_FMT_ARGB:
+            alpha_first = 1;
+        case PIX_FMT_RGBA:
+            gbr24ptopacked32((const uint8_t* []) {src[2], src[0], src[1]}, (int []) {srcStride[2], srcStride[0], srcStride[1]},
+                  dst[0] + srcSliceY * dstStride[0], dstStride[0], srcSliceH, alpha_first, c->srcW);
+            break;
+
+        case PIX_FMT_ABGR:
+            alpha_first = 1;
+        case PIX_FMT_BGRA:
+            gbr24ptopacked32((const uint8_t* []) {src[1], src[0], src[2]}, (int []) {srcStride[1], srcStride[0], srcStride[2]},
+                  dst[0] + srcSliceY * dstStride[0], dstStride[0], srcSliceH, alpha_first, c->srcW);
+            break;
+
+        default:
+            av_log(c, AV_LOG_ERROR, "unsupported planar RGB conversion %s -> %s\n",
+                    av_get_pix_fmt_name(c->srcFormat), av_get_pix_fmt_name(c->dstFormat));
     }
 
     return srcSliceH;
@@ -608,13 +694,18 @@ void ff_get_unscaled_swscale(SwsContext *c)
         && (!needsDither || (c->flags&(SWS_FAST_BILINEAR|SWS_POINT))))
         c->swScale= rgbToRgbWrapper;
 
-    if ((usePal(srcFormat) && (
-        dstFormat == PIX_FMT_RGB32   ||
-        dstFormat == PIX_FMT_RGB32_1 ||
-        dstFormat == PIX_FMT_RGB24   ||
-        dstFormat == PIX_FMT_BGR32   ||
-        dstFormat == PIX_FMT_BGR32_1 ||
-        dstFormat == PIX_FMT_BGR24)))
+#define isByteRGB(f) (\
+        f == PIX_FMT_RGB32   ||\
+        f == PIX_FMT_RGB32_1 ||\
+        f == PIX_FMT_RGB24   ||\
+        f == PIX_FMT_BGR32   ||\
+        f == PIX_FMT_BGR32_1 ||\
+        f == PIX_FMT_BGR24)
+
+    if (isAnyRGB(srcFormat) && isPlanar(srcFormat) && isByteRGB(dstFormat))
+        c->swScale= planarRgbToRgbWrapper;
+
+    if (usePal(srcFormat) && isByteRGB(dstFormat))
         c->swScale= palToRgbWrapper;
 
     if (srcFormat == PIX_FMT_YUV422P) {
@@ -672,7 +763,7 @@ static void reset_ptr(const uint8_t* src[], int format)
 {
     if(!isALPHA(format))
         src[3]=NULL;
-    if(!isPlanarYUV(format)) {
+    if (!isPlanar(format)) {
         src[3]=src[2]=NULL;
 
         if (!usePal(format))
@@ -680,7 +771,7 @@ static void reset_ptr(const uint8_t* src[], int format)
     }
 }
 
-static int check_image_pointers(uint8_t *data[4], enum PixelFormat pix_fmt,
+static int check_image_pointers(const uint8_t const *data[4], enum PixelFormat pix_fmt,
                                 const stride_t linesizes[4])
 {
     const AVPixFmtDescriptor *desc = &av_pix_fmt_descriptors[pix_fmt];
@@ -699,7 +790,7 @@ static int check_image_pointers(uint8_t *data[4], enum PixelFormat pix_fmt,
  * swscale wrapper, so we don't need to export the SwsContext.
  * Assumes planar YUV to be in YUV order instead of YVU.
  */
-int sws_scale(struct SwsContext *c, const uint8_t* const srcSlice[],
+int attribute_align_arg sws_scale(struct SwsContext *c, const uint8_t* const srcSlice[],
               const stride_t srcStride[], int srcSliceY, int srcSliceH,
               uint8_t* const dst[], const stride_t dstStride[])
 {
@@ -720,7 +811,7 @@ int sws_scale(struct SwsContext *c, const uint8_t* const srcSlice[],
         av_log(c, AV_LOG_ERROR, "bad src image pointers\n");
         return 0;
     }
-    if (!check_image_pointers(dst, c->dstFormat, dstStride)) {
+    if (!check_image_pointers((const uint8_t* const*)dst, c->dstFormat, dstStride)) {
         av_log(c, AV_LOG_ERROR, "bad dst image pointers\n");
         return 0;
     }
@@ -804,7 +895,7 @@ int sws_scale(struct SwsContext *c, const uint8_t* const srcSlice[],
         stride_t dstStride2[4]= {dstStride[0], dstStride[1], dstStride[2], dstStride[3]};
 
         reset_ptr(src2, c->srcFormat);
-        reset_ptr((const uint8_t**)dst2, c->dstFormat);
+        reset_ptr((void*)dst2, c->dstFormat);
 
         /* reset slice direction at end of frame */
         if (srcSliceY + srcSliceH == c->srcH)
@@ -827,7 +918,7 @@ int sws_scale(struct SwsContext *c, const uint8_t* const srcSlice[],
         dst2[3] += ( c->dstH                      -1)*dstStride[3];
 
         reset_ptr(src2, c->srcFormat);
-        reset_ptr((const uint8_t**)dst2, c->dstFormat);
+        reset_ptr((void*)dst2, c->dstFormat);
 
         /* reset slice direction at end of frame */
         if (!srcSliceY)

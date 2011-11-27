@@ -28,9 +28,12 @@ AVCodec ff_mp1float_decoder = {
     .type           = AVMEDIA_TYPE_AUDIO,
     .id             = CODEC_ID_MP1,
     .priv_data_size = sizeof(MPADecodeContext),
+    .init_static_data = decode_init_static,
     .init           = decode_init,
     .decode         = decode_frame,
+#if FF_API_PARSE_FRAME
     .capabilities   = CODEC_CAP_PARSE_ONLY,
+#endif
     .flush          = flush,
     .long_name      = NULL_IF_CONFIG_SMALL("MP1 (MPEG audio layer 1)"),
 };
@@ -41,9 +44,12 @@ AVCodec ff_mp2float_decoder = {
     .type           = AVMEDIA_TYPE_AUDIO,
     .id             = CODEC_ID_MP2,
     .priv_data_size = sizeof(MPADecodeContext),
+    .init_static_data = decode_init_static,
     .init           = decode_init,
     .decode         = decode_frame,
+#if FF_API_PARSE_FRAME
     .capabilities   = CODEC_CAP_PARSE_ONLY,
+#endif
     .flush          = flush,
     .long_name      = NULL_IF_CONFIG_SMALL("MP2 (MPEG audio layer 2)"),
 };
@@ -54,9 +60,12 @@ AVCodec ff_mp3float_decoder = {
     .type           = AVMEDIA_TYPE_AUDIO,
     .id             = CODEC_ID_MP3,
     .priv_data_size = sizeof(MPADecodeContext),
+    .init_static_data = decode_init_static,
     .init           = decode_init,
     .decode         = decode_frame,
+#if FF_API_PARSE_FRAME
     .capabilities   = CODEC_CAP_PARSE_ONLY,
+#endif
     .flush          = flush,
     .long_name      = NULL_IF_CONFIG_SMALL("MP3 (MPEG audio layer 3)"),
 };
@@ -67,9 +76,12 @@ AVCodec ff_mp3adufloat_decoder = {
     .type           = AVMEDIA_TYPE_AUDIO,
     .id             = CODEC_ID_MP3ADU,
     .priv_data_size = sizeof(MPADecodeContext),
+    .init_static_data = decode_init_static,
     .init           = decode_init,
     .decode         = decode_frame_adu,
+#if FF_API_PARSE_FRAME
     .capabilities   = CODEC_CAP_PARSE_ONLY,
+#endif
     .flush          = flush,
     .long_name      = NULL_IF_CONFIG_SMALL("ADU (Application Data Unit) MP3 (MPEG audio layer 3)"),
 };
@@ -80,10 +92,11 @@ AVCodec ff_mp3on4float_decoder = {
     .type           = AVMEDIA_TYPE_AUDIO,
     .id             = CODEC_ID_MP3ON4,
     .priv_data_size = sizeof(MP3On4DecodeContext),
+    .init_static_data = decode_init_static,
     .init           = decode_init_mp3on4,
     .close          = decode_close_mp3on4,
     .decode         = decode_frame_mp3on4,
-    .flush          = flush,
+    .flush          = flush_mp3on4,
     .long_name      = NULL_IF_CONFIG_SMALL("MP3onMP4"),
 };
 #endif
