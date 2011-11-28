@@ -17,7 +17,7 @@ virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
 virtual void onSizeChange(void);
 virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
-    return FF_CSPS_MASK&~(FF_CSP_NV12|FF_CSP_CLJR|FF_CSPS_MASK_HIGH_BIT);
+    return FF_CSPS_MASK&~(FF_CSP_NV12|FF_CSP_CLJR);
 }
 void calcNewRect(const Trect &newrect,Trect &pictrectFull,Trect &pictrectClip);
 virtual void expand(TffPict &pict,const TfilterSettingsVideo *cfg,bool diffxy);
