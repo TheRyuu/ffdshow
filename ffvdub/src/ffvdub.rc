@@ -1,6 +1,7 @@
 // Microsoft Visual C++ generated resource script.
 //
 #include "resource.h"
+#include "..\src\version.h"
 
 #define APSTUDIO_READONLY_SYMBOLS
 /////////////////////////////////////////////////////////////////////////////
@@ -70,8 +71,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,1,0,0
- PRODUCTVERSION 1,1,0,0
+ FILEVERSION VERSION_NUMBER
+ PRODUCTVERSION VERSION_NUMBER
  FILEFLAGSMASK 0x17L
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -87,13 +88,13 @@ BEGIN
         BLOCK "040904b0"
         BEGIN
             VALUE "FileDescription", "ffvdub"
-            VALUE "FileVersion", "1.1.0.0"
+            VALUE "FileVersion", VERSION_STRING
             VALUE "InternalName", "ffvdub"
-            VALUE "LegalCopyright", "Copyright © 2002-2005 Milan Cutka"
-            VALUE "LegalTrademarks", "GNU GPL"
+            VALUE "LegalCopyright", VERSION_COPYRIGHT
+            VALUE "LegalTrademarks", VERSION_TRADEMARK
             VALUE "OriginalFilename", "ffvdub.vdf"
             VALUE "ProductName", "ffvdub"
-            VALUE "ProductVersion", "1.1.0.0"
+            VALUE "ProductVersion", VERSION_STRING
         END
     END
     BLOCK "VarFileInfo"
