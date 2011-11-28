@@ -235,7 +235,6 @@
 #define IDC_TBR_BLUR_DENOISE3D_LUMA     1034
 #define IDC_CHB_LEVELFIX_LUM            1035
 #define IDC_TBR_BLUR_DENOISE3D_CHROMA   1035
-#define IDC_CHB_OUT_DV                  1035
 #define IDC_TBR_BLUR_DENOISE3D_TIME     1036
 #define IDC_LBL_GAMMA                   1037
 #define IDC_CHB_OUT_NV12                1037
@@ -1594,7 +1593,6 @@
 #define IDC_CBX_QUANT_TABLE             1908
 #define IDC_CHB_LEVELS_INPUT_AUTO       1909
 #define IDC_LBL_OUT_DV_PROFILE          1910
-#define IDC_CBX_OUT_DV_PROFILE          1911
 #define IDC_LBL_OUT_PLANAR_YUV          40034
 #define IDC_LBL_OUT_PACKED_YUV          40035
 #define IDC_LBL_OUT_RGB                 1914

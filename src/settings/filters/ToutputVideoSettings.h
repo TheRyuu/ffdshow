@@ -14,8 +14,6 @@ public:
     ToutputVideoSettings(TintStrColl *Icoll=NULL,TfilterIDFFs *filters=NULL);
 
     int yv12,yuy2,uyvy,nv12,rgb32,rgb24,p010,p016;
-    int dv,dvNorm;
-    void getDVsize(unsigned int *dx,unsigned int *dy) const;
     int get_cspOptionsBlackCutoff(int video_full_range_flag) const;
     int get_cspOptionsWhiteCutoff(int video_full_range_flag) const;
     int get_cspOptionsChromaCutoff(int video_full_range_flag) const;

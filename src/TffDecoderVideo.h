@@ -1055,7 +1055,7 @@ protected:
 
     int dvdproc;
     bool allowOutChange;
-    bool outOverlayMixer,outOldRenderer,outdv;
+    bool outOverlayMixer,outOldRenderer;
     int hwDeinterlace;
     virtual STDMETHODIMP_(int) get_trayIconType(void);
     bool compatibleFilterConnected;

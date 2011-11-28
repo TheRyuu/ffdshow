@@ -257,16 +257,7 @@ void TimgFiltersPlayer::makeQueue(const Tpreset *cfg,TfilterQueue &queue)
 
 void TimgFiltersPlayer::onFirstProcess(const TpresetVideo *cfg)
 {
-    if (cfg->output->dv) {
-        resizeSettingsDV=new TresizeAspectSettings(new TintStrColl);
-        resizeSettingsDV->reset();
-        resizeSettingsDV->is=1;
-        resizeSettingsDV->show=1;
-        resizeSettingsDV->full=1;
-        deciV->getOutputDimensions(&resizeSettingsDV->dx,&resizeSettingsDV->dy);
-        cfg->output->getDVsize(&resizeSettingsDV->dx,&resizeSettingsDV->dy);
-        resizeDV=new TimgFilterResize(deci,this);
-    } else if (!allowOutChange && !isdvdproc) {
+    if (!allowOutChange && !isdvdproc) {
         expandSettings.full=true;
         deciV->getOutputDimensions(&expandSettings.newrect.dx,&expandSettings.newrect.dy);
         expand=getFilter<TimgFilterExpand>();
@@ -276,9 +267,6 @@ void TimgFiltersPlayer::onFirstProcess(const TpresetVideo *cfg)
 void TimgFiltersPlayer::getOutputFmt(TffPictBase &pict,const TpresetVideo *cfg)
 {
     TimgFilters::getOutputFmt(pict,cfg);
-    if (cfg->output->dv) {
-        cfg->output->getDVsize(&pict.rectFull.dx,&pict.rectFull.dy);
-    }
 }
 
 bool TimgFiltersPlayer::shortOSDmessage(const char_t *msg,unsigned int duration)

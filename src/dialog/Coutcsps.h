@@ -8,7 +8,7 @@ class ToutcspsPage :public TconfPageDecVideo
 private:
     static const int idcs[],idffs[];
 
-    void dv2dlg(void),overlay2dlg(void),csp2dlg(void);
+    void overlay2dlg(void),csp2dlg(void);
     virtual INT_PTR msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
     int *backupDV;
 public:

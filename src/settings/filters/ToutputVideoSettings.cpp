@@ -93,10 +93,6 @@ ToutputVideoSettings::ToutputVideoSettings(TintStrColl *Icoll,TfilterIDFFs *filt
         _l("outP016"),1,
         IDFF_outP010            ,&ToutputVideoSettings::p010               ,0,0,_l(""),0,
         _l("outP010"),1,
-        IDFF_outDV              ,&ToutputVideoSettings::dv                 ,0,0,_l(""),0,
-        _l("outDV"),0,
-        IDFF_outDVnorm          ,&ToutputVideoSettings::dvNorm             ,0,2,_l(""),0,
-        _l("outDVnorm"),2,
         IDFF_highQualityRGB     ,&ToutputVideoSettings::highQualityRGB     ,0,0,_l(""),1,
         _l("highQualityRGB"),1,
         IDFF_RGB_dithering      ,&ToutputVideoSettings::dithering          ,0,0,_l(""),1,
@@ -118,8 +114,6 @@ ToutputVideoSettings::ToutputVideoSettings(TintStrColl *Icoll,TfilterIDFFs *filt
         0
     };
     addOptions(iopts);
-    static const TcreateParamList1 listDVnorm(dvNorms);
-    setParamList(IDFF_outDVnorm,&listDVnorm);
     static const TcreateParamList1 listDeintMethods(deintMethods);
     setParamList(IDFF_hwDeintMethod,&listDeintMethods);
     static const TcreateParamList1 listDeintFieldOrder(deintFieldOrder);
@@ -154,7 +148,7 @@ void ToutputVideoSettings::reg_op_outcsps(TregOp &t)
 const int* ToutputVideoSettings::getResets(unsigned int pageId)
 {
     static const int idResets[]= {IDFF_flip,IDFF_outYV12,IDFF_outYUY2,IDFF_outUYVY,IDFF_outNV12,IDFF_outP016,IDFF_outP010,
-        IDFF_outRGB32,IDFF_outRGB24,IDFF_outDV,IDFF_setDeintInOutSample,IDFF_hwDeintMethod,IDFF_hwDeintFieldOrder,0};
+        IDFF_outRGB32,IDFF_outRGB24,IDFF_setDeintInOutSample,IDFF_hwDeintMethod,IDFF_hwDeintFieldOrder,0};
     return idResets;
 }
 
@@ -194,31 +188,6 @@ void ToutputVideoSettings::getOutputColorspaces(TcspInfos &ocsps)
     ocsps.clear();
     for (ints::const_iterator o=ocspsi.begin(); o!=ocspsi.end(); o++) {
         ocsps.push_back(csp_getInfo(*o));
-    }
-}
-
-void ToutputVideoSettings::getDVsize(unsigned int *dx,unsigned int *dy) const
-{
-    switch (dvNorm) {
-        case 0:
-pal:
-            *dx=720;
-            *dy=576;
-            break;
-        case 1:
-ntsc:
-            *dx=720;
-            *dy=480;
-            break;
-        case 2: {
-            int dif1=sqr(*dx-720)+sqr(*dy-576);
-            int dif2=sqr(*dx-720)+sqr(*dy-480);
-            if (dif2<dif1) {
-                goto ntsc;
-            } else {
-                goto pal;
-            }
-        }
     }
 }
 

@@ -169,9 +169,7 @@ STDMETHODIMP TffdshowDecVideo::getOutputFourcc(char_t *buf,size_t len)
     if (!buf) {
         return E_POINTER;
     }
-    if (outdv) {
-        strcpy(buf,_l("DV"));
-    } else if (m_frame.dstColorspace==0) {
+    if (m_frame.dstColorspace==0) {
         buf[0]='\0';
     } else {
         csp_getName(m_frame.dstColorspace,buf,len);
@@ -735,9 +733,6 @@ STDMETHODIMP TffdshowDecVideo::getLate(int64_t *latePtr)
 void TffdshowDecVideo::initCodecSettings(void)
 {
     initPreset();
-    if (presetSettings->output!=NULL) {
-        outdv=!!presetSettings->output->dv;
-    }
 }
 
 STDMETHODIMP TffdshowDecVideo::getEncoderInfo(char_t *buf,size_t buflen)

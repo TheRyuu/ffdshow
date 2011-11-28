@@ -292,7 +292,7 @@ HRESULT TffdshowDecVideo::GetMediaType(int iPosition, CMediaType *mtOut)
         }
     }
 
-    bool isVIH2=!outdv && (hwOverlay==1 || (hwOverlay==2 && (iPosition&1)==0));
+    bool isVIH2 = (hwOverlay==1 || (hwOverlay==2 && (iPosition&1)==0));
 
     if(hwOverlay==2) {
         iPosition/=2;
@@ -304,9 +304,7 @@ HRESULT TffdshowDecVideo::GetMediaType(int iPosition, CMediaType *mtOut)
 
     TcspInfos ocsps;
     size_t osize;
-    if (outdv) {
-        osize=1;
-    }
+
     presetSettings->output->getOutputColorspaces(ocsps);
     osize=ocsps.size();
 
@@ -333,7 +331,7 @@ HRESULT TffdshowDecVideo::GetMediaType(int iPosition, CMediaType *mtOut)
         pictOut.rectFull.dy = 160;
     }
 
-    if (!outdv && pictOut.csp != 0) {
+    if (pictOut.csp != 0) {
         ocsps.sort(pictOut.csp);
     }
 
@@ -348,7 +346,7 @@ HRESULT TffdshowDecVideo::GetMediaType(int iPosition, CMediaType *mtOut)
         {0,0,0,0},  //black,
         FOURCC_DVSD, FOURCC_YV12, &MEDIASUBTYPE_DVSD
     };
-    const TcspInfo *c=outdv?&dv:ocsps[iPosition];
+    const TcspInfo *c = ocsps[iPosition];
     BITMAPINFOHEADER bih;
     memset(&bih,0,sizeof(bih));
     bih.biSize  =sizeof(BITMAPINFOHEADER);
@@ -499,7 +497,7 @@ HRESULT TffdshowDecVideo::CheckTransform(const CMediaType *mtIn, const CMediaTyp
         VIDEOINFOHEADER* vih = (VIDEOINFOHEADER*)mtOut->pbFormat;
         bmi=&vih->bmiHeader;
     }
-    if (bmi && bmi->biCompression && !outdv) {
+    if (bmi && bmi->biCompression) {
         TcspInfos ocsps;
         size_t osize;
         presetSettings->output->getOutputColorspaces(ocsps);
@@ -1326,7 +1324,7 @@ STDMETHODIMP TffdshowDecVideo::deliverProcessedSample(TffPict &pict)
         if (presetSettings->output->hwOverlayAspect) {
             pict.setDar(Rational(presetSettings->output->hwOverlayAspect>>8,256));
         }
-        if (!outdv && allowOutChange) {
+        if (allowOutChange) {
             hr=reconnectOutput(pict);
             if (FAILED(hr)) {
                 return S_FALSE;    //hr;
@@ -1342,7 +1340,7 @@ STDMETHODIMP TffdshowDecVideo::deliverProcessedSample(TffPict &pict)
         }
     }
 
-    if (!outdv && hwDeinterlace) {
+    if (hwDeinterlace) {
         if (comptrQ<IMediaSample2> pOut2=pOut) {
             AM_SAMPLE2_PROPERTIES outProp2;
             if (SUCCEEDED(pOut2->GetProperties(FIELD_OFFSET(AM_SAMPLE2_PROPERTIES,tStart),(PBYTE)&outProp2))) {

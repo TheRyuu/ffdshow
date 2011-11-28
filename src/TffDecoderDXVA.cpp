@@ -82,7 +82,7 @@ HRESULT TffdshowDecVideoDXVA::GetMediaType(int iPosition, CMediaType *mtOut)
         }
     }
 
-    isVIH2=!outdv && (iPosition&1)==0;
+    isVIH2 = (iPosition&1)==0;
 
     iPosition/=2;
 
@@ -127,7 +127,7 @@ HRESULT TffdshowDecVideoDXVA::GetMediaType(int iPosition, CMediaType *mtOut)
     }
 
     // Not sure about DXVA
-    if (false && !outdv && pictOut.csp != 0) {
+    if (false && pictOut.csp != 0) {
         ocsps.sort(pictOut.csp);
     }
 

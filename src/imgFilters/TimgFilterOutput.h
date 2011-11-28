@@ -11,10 +11,8 @@ DECLARE_FILTER(TimgFilterOutput,public,TimgFilter)
 private:
 Tconvert *convert;
 Tlibavcodec *libavcodec;
-bool firsttime,dv;
 AVCodecContext *avctx;
 AVFrame *frame;
-uint64_t dvcsp;
 TffPict *dvpict;
 Tbuffer dvpictbuf;
 protected:
