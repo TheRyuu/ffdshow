@@ -20,36 +20,36 @@
  */
 #define FF_CSP_NULL  (0ULL)
 
-#define FF_CSP_420P  (1ULL << 0)
-#define FF_CSP_422P  (1ULL << 1)
-#define FF_CSP_444P  (1ULL << 2)
-#define FF_CSP_411P  (1ULL << 3)
-#define FF_CSP_410P  (1ULL << 4)
+#define FF_CSP_420P  (1ULL << 0)    // 0x0000001
+#define FF_CSP_422P  (1ULL << 1)    // 0x0000002
+#define FF_CSP_444P  (1ULL << 2)    // 0x0000004
+#define FF_CSP_411P  (1ULL << 3)    // 0x0000008
+#define FF_CSP_410P  (1ULL << 4)    // 0x0000010
 
-#define FF_CSP_YUY2  (1ULL << 5)
-#define FF_CSP_UYVY  (1ULL << 6)
-#define FF_CSP_YVYU  (1ULL << 7)
-#define FF_CSP_VYUY  (1ULL << 8)
+#define FF_CSP_YUY2  (1ULL << 5)    // 0x0000020
+#define FF_CSP_UYVY  (1ULL << 6)    // 0x0000040
+#define FF_CSP_YVYU  (1ULL << 7)    // 0x0000080
+#define FF_CSP_VYUY  (1ULL << 8)    // 0x0000100
 
-#define FF_CSP_ABGR  (1ULL << 9)  // [a|b|g|r]
-#define FF_CSP_RGBA  (1ULL << 10) // [r|g|b|a]
-#define FF_CSP_BGR32 (1ULL << 11)
-#define FF_CSP_BGR24 (1ULL << 12)
-#define FF_CSP_BGR15 (1ULL << 13)
-#define FF_CSP_BGR16 (1ULL << 14)
-#define FF_CSP_RGB32 (1ULL << 15)
-#define FF_CSP_RGB24 (1ULL << 16)
-#define FF_CSP_RGB15 (1ULL << 17)
-#define FF_CSP_RGB16 (1ULL << 18)
+#define FF_CSP_ABGR  (1ULL << 9)    // 0x0000200 [a|b|g|r]
+#define FF_CSP_RGBA  (1ULL << 10)   // 0x0000400 [r|g|b|a]
+#define FF_CSP_BGR32 (1ULL << 11)   // 0x0000800
+#define FF_CSP_BGR24 (1ULL << 12)   // 0x0001000
+#define FF_CSP_BGR15 (1ULL << 13)   // 0x0002000
+#define FF_CSP_BGR16 (1ULL << 14)   // 0x0004000
+#define FF_CSP_RGB32 (1ULL << 15)   // 0x0008000
+#define FF_CSP_RGB24 (1ULL << 16)   // 0x0010000
+#define FF_CSP_RGB15 (1ULL << 17)   // 0x0020000
+#define FF_CSP_RGB16 (1ULL << 18)   // 0x0040000
 
-#define FF_CSP_CLJR  (1ULL << 19)
-#define FF_CSP_Y800  (1ULL << 20)
-#define FF_CSP_NV12  (1ULL << 21)
+#define FF_CSP_CLJR  (1ULL << 19)   // 0x0080000
+#define FF_CSP_Y800  (1ULL << 20)   // 0x0100000
+#define FF_CSP_NV12  (1ULL << 21)   // 0x0200000
 
-#define FF_CSP_420P10 (1ULL << 22)
-#define FF_CSP_444P10 (1ULL << 23)
-#define FF_CSP_P016   (1ULL << 24)  // P016 in Media Fundation (MFVideoFormat_P016). 16bit version of NV12.
-#define FF_CSP_P010   (1ULL << 25)  // P010 in Media Fundation (MFVideoFormat_P010). same as FF_CSP_P016
+#define FF_CSP_420P10 (1ULL << 22)  // 0x0400000
+#define FF_CSP_444P10 (1ULL << 23)  // 0x0800000
+#define FF_CSP_P016   (1ULL << 24)  // 0x1000000 P016 in Media Fundation (MFVideoFormat_P016). 16bit version of NV12.
+#define FF_CSP_P010   (1ULL << 25)  // 0x2000000 P010 in Media Fundation (MFVideoFormat_P010). same as FF_CSP_P016
 
 // Flags
 #define FF_CSP_FLAGS_YUV_JPEG   (1ULL << 59)
