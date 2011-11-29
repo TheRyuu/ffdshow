@@ -44,21 +44,26 @@ Tconvert::Tconvert(IffdshowBase *deci,unsigned int Idx,unsigned int Idy) :
     deci->getLibavcodec(&libavcodec);
     bool highQualityRGB = !!deci->getParam2(IDFF_highQualityRGB);
     bool dithering = !!deci->getParam2(IDFF_RGB_dithering);
+    IffdshowDecVideo *deciV = comptrQ<IffdshowDecVideo>(deci);
+    bool isMPEG1 = false;
+    if (deciV)
+        isMPEG1 = deciV->getMovieFOURCC() == mmioFOURCC('M','P','G','1');
     int rgbInterlaceMode = deci->getParam2(IDFF_cspOptionsRgbInterlaceMode);
-    init(libavcodec, highQualityRGB, Idx, Idy, rgbInterlaceMode,dithering);
+    init(libavcodec, highQualityRGB, Idx, Idy, rgbInterlaceMode,dithering,isMPEG1);
 }
 
-Tconvert::Tconvert(Tlibavcodec *Ilibavcodec, bool highQualityRGB, unsigned int Idx, unsigned int Idy, const TrgbPrimaries &IrgbPrimaries, int rgbInterlaceMode, bool dithering):
+Tconvert::Tconvert(Tlibavcodec *Ilibavcodec, bool highQualityRGB, unsigned int Idx, unsigned int Idy, const TrgbPrimaries &IrgbPrimaries, int rgbInterlaceMode, bool dithering, bool isMPEG1):
     TrgbPrimaries(IrgbPrimaries),
     m_wasChange(false)
 {
     Ilibavcodec->AddRef();
-    init(Ilibavcodec,highQualityRGB,Idx,Idy,rgbInterlaceMode,dithering);
+    init(Ilibavcodec,highQualityRGB,Idx,Idy,rgbInterlaceMode,dithering,isMPEG1);
 }
 
-void Tconvert::init(Tlibavcodec *Ilibavcodec,bool highQualityRGB,unsigned int Idx,unsigned int Idy, int IrgbInterlaceMode, bool dithering)
+void Tconvert::init(Tlibavcodec *Ilibavcodec,bool highQualityRGB,unsigned int Idx,unsigned int Idy, int IrgbInterlaceMode, bool dithering, bool isMPEG1)
 {
     libavcodec=Ilibavcodec;
+    m_isMPEG1 = isMPEG1;
     dx=Idx;
     dy=Idy&~1;
     outdy=Idy;
@@ -254,8 +259,8 @@ int Tconvert::convert(uint64_t incsp0,
                             tmpcsp=FF_CSP_YUY2;
                             tmpStride[0]=2*(dx/16+2)*16;
                             tmp[0]=(unsigned char*)aligned_malloc(tmpStride[0]*dy);
-                            tmpConvert1=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering);
-                            tmpConvert2=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering);
+                            tmpConvert1=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering, m_isMPEG1);
+                            tmpConvert2=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering, m_isMPEG1);
                             if (incsp&FF_CSP_FLAGS_INTERLACED || outcsp&FF_CSP_FLAGS_INTERLACED) {
                                 tmpcsp|=FF_CSP_FLAGS_INTERLACED;
                             }
@@ -336,8 +341,8 @@ int Tconvert::convert(uint64_t incsp0,
                     tmp[0]=(unsigned char*)aligned_malloc(tmpStride[0]*dy  );
                     tmp[1]=(unsigned char*)aligned_malloc(tmpStride[1]*dy/2);
                     tmp[2]=(unsigned char*)aligned_malloc(tmpStride[2]*dy/2);
-                    tmpConvert1=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering);
-                    tmpConvert2=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering);
+                    tmpConvert1=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering, m_isMPEG1);
+                    tmpConvert2=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering, m_isMPEG1);
                     break;
                 }
                 if (outcsp1 == FF_CSP_UYVY || outcsp1 == FF_CSP_YVYU) { // RGB32 -> YUY2 -> UYVY/YVYU
@@ -345,8 +350,8 @@ int Tconvert::convert(uint64_t incsp0,
                     tmpcsp=FF_CSP_YUY2;
                     tmpStride[0]=2*(dx/16+2)*16;
                     tmp[0]=(unsigned char*)aligned_malloc(tmpStride[0]*dy);
-                    tmpConvert1=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering);
-                    tmpConvert2=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering);
+                    tmpConvert1=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering, m_isMPEG1);
+                    tmpConvert2=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering, m_isMPEG1);
                     break;
                 }
                 break;
@@ -364,8 +369,8 @@ int Tconvert::convert(uint64_t incsp0,
                     tmp[0]=(unsigned char*)aligned_malloc(tmpStride[0]*dy  );
                     tmp[1]=(unsigned char*)aligned_malloc(tmpStride[1]*dy/2);
                     tmp[2]=(unsigned char*)aligned_malloc(tmpStride[2]*dy/2);
-                    tmpConvert1=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering);
-                    tmpConvert2=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering);
+                    tmpConvert1=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering, m_isMPEG1);
+                    tmpConvert2=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering, m_isMPEG1);
                     break;
                 }
                 if (outcsp1 == FF_CSP_UYVY || outcsp1 == FF_CSP_YVYU) { // RGB24 -> YUY2 -> UYVY/YVYU
@@ -373,8 +378,8 @@ int Tconvert::convert(uint64_t incsp0,
                     tmpcsp=FF_CSP_YUY2;
                     tmpStride[0]=2*(dx/16+2)*16;
                     tmp[0]=(unsigned char*)aligned_malloc(tmpStride[0]*dy);
-                    tmpConvert1=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering);
-                    tmpConvert2=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering);
+                    tmpConvert1=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering, m_isMPEG1);
+                    tmpConvert2=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering, m_isMPEG1);
                     break;
                 }
                 break;
@@ -420,8 +425,8 @@ int Tconvert::convert(uint64_t incsp0,
                 tmp[0] = (unsigned char*)aligned_malloc(tmpStride[0]*dy);
                 tmp[1] = (unsigned char*)aligned_malloc(tmpStride[1]*dy/2);
                 tmp[2] = (unsigned char*)aligned_malloc(tmpStride[2]*dy/2);
-                tmpConvert1=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering);
-                tmpConvert2=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering);
+                tmpConvert1=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering, m_isMPEG1);
+                tmpConvert2=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering, m_isMPEG1);
                 if (incsp&FF_CSP_FLAGS_INTERLACED || outcsp&FF_CSP_FLAGS_INTERLACED) {
                     tmpcsp|=FF_CSP_FLAGS_INTERLACED;
                 }
@@ -436,8 +441,8 @@ int Tconvert::convert(uint64_t incsp0,
                     tmp[1]=(unsigned char*)aligned_malloc(tmpStride[1]*dy/2);
                     tmp[2]=(unsigned char*)aligned_malloc(tmpStride[2]*dy/2);
                 }
-                tmpConvert1=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering);
-                tmpConvert2=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering);
+                tmpConvert1=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering, m_isMPEG1);
+                tmpConvert2=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering, m_isMPEG1);
                 if (incsp&FF_CSP_FLAGS_INTERLACED || outcsp&FF_CSP_FLAGS_INTERLACED) {
                     tmpcsp|=FF_CSP_FLAGS_INTERLACED;
                 }
@@ -478,7 +483,7 @@ int Tconvert::convert(uint64_t incsp0,
             }
             UpdateSettings(video_full_range_flag, YCbCr_RGB_matrix_coefficients);
             setJpeg(!!((incsp | outcsp) & FF_CSP_FLAGS_YUV_JPEG));
-            ffdshow_converters->init(incsp1,outcsp1,(ffYCbCr_RGB_MatrixCoefficientsType)cspOptionsIturBt,cspOptionsWhiteCutoff,cspOptionsBlackCutoff,cspOptionsChromaCutoff,cspOptionsRGB_WhiteLevel,cspOptionsRGB_BlackLevel,m_dithering);
+            ffdshow_converters->init(incsp1,outcsp1,(ffYCbCr_RGB_MatrixCoefficientsType)cspOptionsIturBt,cspOptionsWhiteCutoff,cspOptionsBlackCutoff,cspOptionsChromaCutoff,cspOptionsRGB_WhiteLevel,cspOptionsRGB_BlackLevel,m_dithering,m_isMPEG1);
             ffdshow_converters->convert(src[0],src[1],src[2],dst[0],dx,dy,srcStride[0],srcStride[1],dstStride[0]);
             return dy;
         }
@@ -775,7 +780,7 @@ STDMETHODIMP TffColorspaceConvert::convertPalette(unsigned int dx,unsigned int d
         if (c) {
             delete c;
         }
-        c=new Tconvert(libavcodec,false,dx,dy,TrgbPrimaries(),0,0);
+        c=new Tconvert(libavcodec,false,dx,dy,TrgbPrimaries(),0,0, false);
     }
     Tpalette p(pal,numcolors);
     c->convert(incsp,src,srcStride,outcsp,dst,dstStride,&p);

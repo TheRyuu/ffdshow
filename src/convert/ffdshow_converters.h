@@ -72,7 +72,8 @@ public:
               int input_Cb_bluest_level,      // input chroma level (TV:16, PC:1)
               double output_RGB_white_level,  // output RGB level (TV:235, PC:255)
               double output_RGB_black_level,  // output RGB level (TV:16, PC:0)
-              bool dithering);                // dithering (On:1, Off:0)
+              bool dithering,                 // dithering (On:1, Off:0)
+              bool isMPEG1);                  // horizontal chroma position (left:0, center:1)
 
     // note YV12 and YV16 is YCrCb order. Make sure Cr and Cb is swapped.
     // NV12: srcCr not used.
@@ -95,6 +96,7 @@ private:
     int m_thread_count;
     bool m_rgb_limit;
     bool m_dithering;
+    bool m_isMPEG1;
     int m_old_width;
     static const int dither_lineoffset = 16;
     uint16_t *dither;
@@ -112,7 +114,7 @@ private:
         __m128i cB_Cb;
     } *m_coeffs;
 
-    template<uint64_t incsp, uint64_t outcsp, int left_edge, int right_edge, int rgb_limit, int aligned, bool dithering> static
+    template<uint64_t incsp, uint64_t outcsp, int left_edge, int right_edge, int rgb_limit, int aligned, bool dithering, bool isMPEG1> static
     void convert_two_lines(const unsigned char* &srcY,
                            const unsigned char* &srcCb,
                            const unsigned char* &srcCr,
@@ -169,7 +171,7 @@ private:
         stride_t stride_CbCr,
         stride_t stride_dst);
 
-    template <uint64_t incsp, uint64_t outcsp, int rgb_limit, int aligned, bool dithering> void convert_main(
+    template <uint64_t incsp, uint64_t outcsp, int rgb_limit, int aligned, bool dithering> void convert_translate_isMPEG1(
         const uint8_t* srcY,
         const uint8_t* srcCb,
         const uint8_t* srcCr,
@@ -180,7 +182,18 @@ private:
         stride_t stride_CbCr,
         stride_t stride_dst);
 
-    template <uint64_t incsp, uint64_t outcsp, int rgb_limit, int aligned, bool dithering> void convert_main_loop(
+    template <uint64_t incsp, uint64_t outcsp, int rgb_limit, int aligned, bool dithering, bool isMPEG1> void convert_main(
+        const uint8_t* srcY,
+        const uint8_t* srcCb,
+        const uint8_t* srcCr,
+        uint8_t* dst,
+        int dx,
+        int dy,
+        stride_t stride_Y,
+        stride_t stride_CbCr,
+        stride_t stride_dst);
+
+    template <uint64_t incsp, uint64_t outcsp, int rgb_limit, int aligned, bool dithering, bool isMPEG1> void convert_main_loop(
         const uint8_t* srcY,
         const uint8_t* srcCb,
         const uint8_t* srcCr,
@@ -193,7 +206,7 @@ private:
         int starty,
         int endy);
 
-    template<uint64_t incsp, uint64_t outcsp, int rgb_limit, int aligned, bool dithering> struct Tfunc_obj {
+    template<uint64_t incsp, uint64_t outcsp, int rgb_limit, int aligned, bool dithering, bool isMPEG1> struct Tfunc_obj {
     private:
         const uint8_t* srcY;
         const uint8_t* srcCb;
@@ -210,7 +223,7 @@ private:
         TffdshowConverters *self;
     public:
         void operator()(void) {
-            self->convert_main_loop<incsp,outcsp,rgb_limit,aligned,dithering>(srcY,srcCb,srcCr,dst,dx,dy,stride_Y,stride_CbCr,stride_dst,starty,endy);
+            self->convert_main_loop<incsp,outcsp,rgb_limit,aligned,dithering,isMPEG1>(srcY,srcCb,srcCr,dst,dx,dy,stride_Y,stride_CbCr,stride_dst,starty,endy);
         }
         Tfunc_obj(const uint8_t* IsrcY,
                   const uint8_t* IsrcCb,

@@ -34,11 +34,13 @@ void TffdshowConverters::init(uint64_t incsp,                 // FF_CSP_420P, FF
                               int input_Cb_bluest_level,      // input chroma level (TV:16, PC:1)
                               double output_RGB_white_level,  // output RGB level (TV:235, PC:255)
                               double output_RGB_black_level,  // output RGB level (TV:16, PC:0)
-                              bool dithering)                 // dithering (On:1, Off:0)
+                              bool dithering,                 // dithering (On:1, Off:0)
+                              bool isMPEG1)                   // horizontal chroma position: left:false center:true
 {
     const int bitDepthMul = (incsp & FF_CSPS_MASK_HIGH_BIT) ? 4 : 1;  // 10bit color spaces should be listed here.
     m_incsp = incsp;
     m_outcsp = outcsp;
+    m_isMPEG1 = isMPEG1;
     if (output_RGB_white_level != 255 || output_RGB_black_level != 0) {
         m_rgb_limit = true;
     } else {
@@ -119,7 +121,7 @@ static inline void loadRightEdge10(const __m128i* src, __m128i &xmm, __m128i &te
     xmm = _mm_or_si128(xmm, temp);                                             // xmm1 = Cb01,Cb01,Cb00,Cb00-1
 }
 
-template<uint64_t incsp, uint64_t outcsp, int left_edge, int right_edge, int rgb_limit, int aligned, bool dithering>
+template<uint64_t incsp, uint64_t outcsp, int left_edge, int right_edge, int rgb_limit, int aligned, bool dithering, bool isMPEG1>
 void TffdshowConverters::convert_two_lines(const unsigned char* &srcY,
                                            const unsigned char* &srcCb,
                                            const unsigned char* &srcCr,
@@ -370,38 +372,61 @@ void TffdshowConverters::convert_two_lines(const unsigned char* &srcY,
             xmm3 = _mm_slli_epi16(xmm3,2);
         }
         xmm2 = xmm1;
-        xmm2 = _mm_srli_si128(xmm2,4);                                                 // xmm2 = 0000,P02,P01,P00
+        if (isMPEG1) {
+            // MPEG1 chroma position
+            xmm2 = _mm_srli_si128(xmm2,4);                                                 // xmm2 = 0000,P02,P01,P00
 
-        xmm0 = xmm1;
-        xmm0 = _mm_add_epi16(xmm0,xmm1);
-        xmm0 = _mm_add_epi16(xmm0,xmm1);
-        xmm0 = _mm_add_epi16(xmm0,xmm2);                                               // xmm0 = ----,3*P01+P02,3*P00+P01,3*P-01+P00
-        xmm0 = _mm_srli_si128(xmm0,4);                                                 // xmm0 = ----,----,3*P01+P02,3*P00+P01
+            xmm0 = xmm1;
+            xmm0 = _mm_add_epi16(xmm0,xmm1);
+            xmm0 = _mm_add_epi16(xmm0,xmm1);
+            xmm0 = _mm_add_epi16(xmm0,xmm2);                                               // xmm0 = ----,3*P01+P02,3*P00+P01,3*P-01+P00
+            xmm0 = _mm_srli_si128(xmm0,4);                                                 // xmm0 = ----,----,3*P01+P02,3*P00+P01
 
-        xmm1 = _mm_add_epi16(xmm1,xmm2);
-        xmm1 = _mm_add_epi16(xmm1,xmm2);
-        xmm1 = _mm_add_epi16(xmm1,xmm2);                                               // xmm1 = ----,----,P00+3*P01,P-01+3*P00
+            xmm1 = _mm_add_epi16(xmm1,xmm2);
+            xmm1 = _mm_add_epi16(xmm1,xmm2);
+            xmm1 = _mm_add_epi16(xmm1,xmm2);                                               // xmm1 = ----,----,P00+3*P01,P-01+3*P00
 
-        xmm2 = xmm3;                                                                   // xmm2 = P12,P11,P10,P-11
-        xmm6 = xmm3;
-        xmm2 = _mm_srli_si128(xmm2, 4);                                                // xmm2 = 0000,P12,P11,P10
+            xmm2 = xmm3;                                                                   // xmm2 = P12,P11,P10,P-11
+            xmm6 = xmm3;
+            xmm2 = _mm_srli_si128(xmm2, 4);                                                // xmm2 = 0000,P12,P11,P10
 
-        xmm6 = _mm_add_epi16(xmm6,xmm3);
-        xmm6 = _mm_add_epi16(xmm6,xmm3);
-        xmm6 = _mm_add_epi16(xmm6,xmm2);                                               // xmm6 = ----,3*P11+P12,3*P10+P11,3*P-11+P10
-        xmm6 = _mm_srli_si128(xmm6,4);                                                 // xmm6 = ----,----,3*P11+P12,3*P10+P11
+            xmm6 = _mm_add_epi16(xmm6,xmm3);
+            xmm6 = _mm_add_epi16(xmm6,xmm3);
+            xmm6 = _mm_add_epi16(xmm6,xmm2);                                               // xmm6 = ----,3*P11+P12,3*P10+P11,3*P-11+P10
+            xmm6 = _mm_srli_si128(xmm6,4);                                                 // xmm6 = ----,----,3*P11+P12,3*P10+P11
 
-        xmm3 = _mm_add_epi16(xmm3,xmm2);
-        xmm3 = _mm_add_epi16(xmm3,xmm2);
-        xmm3 = _mm_add_epi16(xmm3,xmm2);                                               // xmm3 = ----,----,P10+3*P11,P-11+3*P10
+            xmm3 = _mm_add_epi16(xmm3,xmm2);
+            xmm3 = _mm_add_epi16(xmm3,xmm2);
+            xmm3 = _mm_add_epi16(xmm3,xmm2);                                               // xmm3 = ----,----,P10+3*P11,P-11+3*P10
 
-        xmm1 = _mm_unpacklo_epi32(xmm1,xmm0);                                          // 3*P01+P02, P00+3*P01, 3*P00+P01,P-01+3*P00
-        xmm3 = _mm_unpacklo_epi32(xmm3,xmm6);                                          // 3*P11+P12, P10+3*P11, 3*P10+P01,P-11+3*P10
+            xmm1 = _mm_unpacklo_epi32(xmm1,xmm0);                                          // 3*P01+P02, P00+3*P01, 3*P00+P01,P-01+3*P00
+            xmm3 = _mm_unpacklo_epi32(xmm3,xmm6);                                          // 3*P11+P12, P10+3*P11, 3*P10+P01,P-11+3*P10
+        } else {
+            // MPEG2/4/AVC chroma position
+            xmm1 = _mm_srli_si128(xmm1,4);                                                 // xmm1 = ----,----, P01, P00
+            xmm2 = _mm_srli_si128(xmm2,8);                                                 // xmm2 = ----,----, P02, P01
+
+            xmm0 = xmm1;                                                                   // xmm0 = ----,----, P01, P00
+            xmm1 = _mm_slli_epi16(xmm1,2);                                                 // xmm1 = ----,----,4*P01,4*P00
+            xmm0 = _mm_add_epi16(xmm0,xmm2);                                               // xmm0 = ----,----,P01+P02,P00+P01
+            xmm0 = _mm_slli_epi16(xmm0,1);                                                 // xmm0 = ----,----,2*(P01+P02),2*(P00+P01)
+            xmm1 = _mm_unpacklo_epi32(xmm1, xmm0);                                         // xmm1 = 2*(P01+P02),4*P01,2*(P00+P01),4*P00
+
+            xmm6 = xmm3;                                                                   // xmm6 = P12,P11,P10,P-11
+            xmm3 = _mm_srli_si128(xmm3, 4);                                                // xmm3 = ----,----,P11,P10
+            xmm6 = _mm_srli_si128(xmm6, 8);                                                // xmm6 = ----,----,P12,P11
+
+            xmm2 = xmm3;                                                                   // xmm2 = ----,----,P11,P10
+            xmm3 = _mm_slli_epi16(xmm3,2);                                                 // xmm3 = ----,----,4*P11,4*P10
+            xmm2 = _mm_add_epi16(xmm2,xmm6);                                               // xmm2 = ----,----,P11+P12,P10+P11
+            xmm2 = _mm_slli_epi16(xmm2,1);                                                 // xmm2 = ----,----,2*(P11+P12),2*(P10+P11)
+            xmm3 = _mm_unpacklo_epi32(xmm3, xmm2);                                         // xmm3 = 2*(P11+P12),4*P11,2*(P10+P11),4*P10
+        }
     }
 
     xmm2 = coeffs->CbCr_center;
-    xmm1 = _mm_subs_epi16(xmm1, xmm2);                                             // xmm1 = P01+3*P02 -128*16, 3*P01+P02 -128*16, P00+3*P01 -128*16, 3*P00+P01 -128*16 (12bit/14bit)
-    xmm3 = _mm_subs_epi16(xmm3, xmm2);                                             // xmm3 = P11+3*P12 -128*16, 3*P11+P12 -128*16, P10+3*P11 -128*16, 3*P10+P01 -128*16 (12bit/14bit)
+    xmm1 = _mm_subs_epi16(xmm1, xmm2);                                             // xmm1 = 2*(P01+P02) -128*16, 4*P01 -128*16, 2*(P00+P01) -128*16, 4*P00 -128*16 (12bit/14bit)
+    xmm3 = _mm_subs_epi16(xmm3, xmm2);                                             // xmm3 = 2*(P11+P12) -128*16, 4*P11 -128*16, 2*(P10+P11) -128*16, 4*P10 -128*16 (12bit/14bit)
     // chroma upscaling finished.
 
     if (incsp & FF_CSPS_MASK_HIGH_BIT) {
@@ -592,16 +617,17 @@ template <int rgb_limit> void TffdshowConverters::convert_translate_incsp(
             convert_translate_outcsp<FF_CSP_NV12, rgb_limit>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
             return;
         case FF_CSP_YUY2:
-            convert_translate_outcsp<FF_CSP_YUY2, rgb_limit>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
+            // omit optimization by rgb_limit to reduce compilation time and code size
+            convert_translate_outcsp<FF_CSP_YUY2, 1>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
             return;
         case FF_CSP_422P:
-            convert_translate_outcsp<FF_CSP_422P, rgb_limit>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
+            convert_translate_outcsp<FF_CSP_422P, 1>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
             return;
         case FF_CSP_420P10:
             convert_translate_outcsp<FF_CSP_420P10, rgb_limit>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
             return;
         case FF_CSP_444P10:
-            convert_translate_outcsp<FF_CSP_444P10, rgb_limit>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
+            convert_translate_outcsp<FF_CSP_444P10, 1>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
             return;
     }
 }
@@ -622,13 +648,14 @@ template <uint64_t incsp, int rgb_limit> void TffdshowConverters::convert_transl
             convert_translate_align<incsp, FF_CSP_RGB32, rgb_limit>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
             return;
         case FF_CSP_RGB24:
-            convert_translate_align<incsp, FF_CSP_RGB24, rgb_limit>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
+            // omit optimization by rgb_limit to reduce compilation time and code size
+            convert_translate_align<incsp, FF_CSP_RGB24, 1>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
             return;
         case FF_CSP_BGR32:
-            convert_translate_align<incsp, FF_CSP_BGR32, rgb_limit>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
+            convert_translate_align<incsp, FF_CSP_BGR32, 1>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
             return;
         case FF_CSP_BGR24:
-            convert_translate_align<incsp, FF_CSP_BGR24, rgb_limit>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
+            convert_translate_align<incsp, FF_CSP_BGR24, 1>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
             return;
     }
 }
@@ -663,13 +690,32 @@ template <uint64_t incsp, uint64_t outcsp, int rgb_limit, int aligned> void Tffd
     stride_t stride_dst)
 {
     if (m_dithering || (incsp & FF_CSPS_MASK_HIGH_BIT)) {
-        convert_main<incsp, outcsp, rgb_limit, aligned, 1>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
+        convert_translate_isMPEG1<incsp, outcsp, rgb_limit, aligned, 1>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
     } else {
-        convert_main<incsp, outcsp, rgb_limit, aligned, 0>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
+        convert_translate_isMPEG1<incsp, outcsp, rgb_limit, aligned, 0>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
     }
 }
 
-template <uint64_t incsp, uint64_t outcsp, int rgb_limit, int aligned, bool dithering> void TffdshowConverters::convert_main(
+template <uint64_t incsp, uint64_t outcsp, int rgb_limit, int aligned, bool dithering> void TffdshowConverters::convert_translate_isMPEG1(
+    const uint8_t* srcY,
+    const uint8_t* srcCb,
+    const uint8_t* srcCr,
+    uint8_t* dst,
+    int dx,
+    int dy,
+    stride_t stride_Y,
+    stride_t stride_CbCr,
+    stride_t stride_dst)
+{
+    if (m_isMPEG1 && (incsp == FF_CSP_420P || incsp == FF_CSP_NV12)) {
+        // omit optimization by rgb_limit and aligned to reduce compilation time and code size
+        convert_main<incsp, outcsp, 1, 0, dithering, 1>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
+    } else {
+        convert_main<incsp, outcsp, rgb_limit, aligned, dithering, 0>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
+    }
+}
+
+template <uint64_t incsp, uint64_t outcsp, int rgb_limit, int aligned, bool dithering, bool isMPEG1> void TffdshowConverters::convert_main(
     const uint8_t* srcY,
     const uint8_t* srcCb,
     const uint8_t* srcCr,
@@ -682,7 +728,7 @@ template <uint64_t incsp, uint64_t outcsp, int rgb_limit, int aligned, bool dith
 {
     init_dither(dx);
     if (m_thread_count == 1) {
-        convert_main_loop<incsp,outcsp,rgb_limit,aligned,dithering>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst, 0, dy);
+        convert_main_loop<incsp,outcsp,rgb_limit,aligned,dithering,isMPEG1>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst, 0, dy);
     } else {
         int is_odd;
         int starty = 0;
@@ -698,7 +744,7 @@ template <uint64_t incsp, uint64_t outcsp, int rgb_limit, int aligned, bool dith
             int endy = (i == m_thread_count -1) ?
                        dy :
                        starty + lines_per_thread + is_odd;
-            threadpool.schedule(Tfunc_obj<incsp,outcsp,rgb_limit,aligned,dithering>
+            threadpool.schedule(Tfunc_obj<incsp,outcsp,rgb_limit,aligned,dithering,isMPEG1>
                                 (srcY,
                                  srcCb,
                                  srcCr,
@@ -717,7 +763,7 @@ template <uint64_t incsp, uint64_t outcsp, int rgb_limit, int aligned, bool dith
     }
 }
 
-template <uint64_t incsp, uint64_t outcsp, int rgb_limit, int aligned, bool dithering> void TffdshowConverters::convert_main_loop(
+template <uint64_t incsp, uint64_t outcsp, int rgb_limit, int aligned, bool dithering, bool isMPEG1> void TffdshowConverters::convert_main_loop(
     const uint8_t* srcY,
     const uint8_t* srcCb,
     const uint8_t* srcCr,
@@ -752,15 +798,15 @@ template <uint64_t incsp, uint64_t outcsp, int rgb_limit, int aligned, bool dith
             // Top
 
             // left
-            convert_two_lines<incsp,outcsp,1,0,rgb_limit,aligned,dithering>(srcYln, srcCbln, srcCrln, dstln, 1,
+            convert_two_lines<incsp,outcsp,1,0,rgb_limit,aligned,dithering,isMPEG1>(srcYln, srcCbln, srcCrln, dstln, 1,
                     0, 0, 0,
                     coeffs, dither + dither_pos);
             // inner
-                convert_two_lines<incsp,outcsp,0,0,rgb_limit,aligned,dithering>(srcYln, srcCbln, srcCrln, dstln, xCount,
+                convert_two_lines<incsp,outcsp,0,0,rgb_limit,aligned,dithering,isMPEG1>(srcYln, srcCbln, srcCrln, dstln, xCount,
                         0, 0, 0,
                         coeffs, dither + dither_pos + 8);
             // right
-            convert_two_lines<incsp,outcsp,0,1,rgb_limit,aligned,dithering>(srcYln, srcCbln, srcCrln, dstln, 1,
+            convert_two_lines<incsp,outcsp,0,1,rgb_limit,aligned,dithering,isMPEG1>(srcYln, srcCbln, srcCrln, dstln, 1,
                     0, 0, 0,
                     coeffs, dither + dither_pos);
             y = 1;
@@ -787,18 +833,18 @@ template <uint64_t incsp, uint64_t outcsp, int rgb_limit, int aligned, bool dith
         int x = 0;
         // left
         if (incsp != FF_CSP_444P10) {
-            convert_two_lines<incsp,outcsp,1,0,rgb_limit,aligned,dithering>(srcYln, srcCbln, srcCrln, dstln, 1,
+            convert_two_lines<incsp,outcsp,1,0,rgb_limit,aligned,dithering,isMPEG1>(srcYln, srcCbln, srcCrln, dstln, 1,
                     stride_Y, stride_CbCr, stride_dst,
                     coeffs, dither + dither_pos);
             x = 4;
         }
         // inner
-        convert_two_lines<incsp,outcsp,0,0,rgb_limit,aligned,dithering>(srcYln, srcCbln, srcCrln, dstln, xCount,
+        convert_two_lines<incsp,outcsp,0,0,rgb_limit,aligned,dithering,isMPEG1>(srcYln, srcCbln, srcCrln, dstln, xCount,
                 stride_Y, stride_CbCr, stride_dst,
                 coeffs, dither + dither_pos + 8);
         // right
         if (incsp != FF_CSP_444P10) {
-            convert_two_lines<incsp,outcsp,0,1,rgb_limit,aligned,dithering>(srcYln, srcCbln, srcCrln, dstln, 1,
+            convert_two_lines<incsp,outcsp,0,1,rgb_limit,aligned,dithering,isMPEG1>(srcYln, srcCbln, srcCrln, dstln, 1,
                     stride_Y, stride_CbCr, stride_dst,
                     coeffs, dither + dither_pos);
         }
@@ -818,15 +864,15 @@ template <uint64_t incsp, uint64_t outcsp, int rgb_limit, int aligned, bool dith
             srcCrln = srcCr + ((dy >> 1) - 1) * stride_CbCr;
             dstln = dst + (dy - 1) * stride_dst;
             // left
-            convert_two_lines<incsp,outcsp,1,0,rgb_limit,aligned,dithering>(srcYln, srcCbln, srcCrln, dstln, 1,
+            convert_two_lines<incsp,outcsp,1,0,rgb_limit,aligned,dithering,isMPEG1>(srcYln, srcCbln, srcCrln, dstln, 1,
                     0, 0, 0,
                     coeffs, dither + dither_pos);
             // inner
-            convert_two_lines<incsp,outcsp,0,0,rgb_limit,aligned,dithering>(srcYln, srcCbln, srcCrln, dstln, xCount,
+            convert_two_lines<incsp,outcsp,0,0,rgb_limit,aligned,dithering,isMPEG1>(srcYln, srcCbln, srcCrln, dstln, xCount,
                     0, 0, 0,
                     coeffs, dither + dither_pos + 8);
             // right
-            convert_two_lines<incsp,outcsp,0,1,rgb_limit,aligned,dithering>(srcYln, srcCbln, srcCrln, dstln, 1,
+            convert_two_lines<incsp,outcsp,0,1,rgb_limit,aligned,dithering,isMPEG1>(srcYln, srcCbln, srcCrln, dstln, 1,
                     0, 0, 0,
                     coeffs, dither + dither_pos);
         }
