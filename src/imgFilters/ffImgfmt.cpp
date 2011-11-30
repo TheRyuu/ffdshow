@@ -34,7 +34,7 @@ const TcspInfo cspInfos[]= {
     },
     {
         FF_CSP_422P,_l("422P"),
-        1,18, //Bpp
+        1,16, //Bpp
         3, //numplanes
         {0,1,1,0}, //shiftX
         {0,0,0,0}, //shiftY
@@ -246,7 +246,7 @@ const TcspInfo cspInfos[]= {
         FOURCC_444R, FOURCC_444R, &MEDIASUBTYPE_444R
     },
     {
-        FF_CSP_P016,_l("420P16"),
+        FF_CSP_P016,_l("P016"),
         2,24, //Bpp
         2, //numplanes
         {0,0,0,0}, //shiftX
@@ -255,13 +255,22 @@ const TcspInfo cspInfos[]= {
         FOURCC_P016, FOURCC_P016, &MEDIASUBTYPE_P016
     },
     {
-        FF_CSP_P010,_l("420P10"),
+        FF_CSP_P010,_l("P010"),
         2,24, //Bpp
         2, //numplanes
         {0,0,0,0}, //shiftX
         {0,1,1,0}, //shiftY
         {0,32768,32768,0},  //black,
         FOURCC_P010, FOURCC_P010, &MEDIASUBTYPE_P010
+    },
+    {
+        FF_CSP_422P10,_l("422P10"),
+        2,20, //Bpp
+        3, //numplanes
+        {0,1,1,0}, //shiftX
+        {0,0,0,0}, //shiftY
+        {0,512,512,0},  //black
+        FOURCC_422R, FOURCC_422R, &MEDIASUBTYPE_422R
     },
     0
 };
@@ -979,6 +988,33 @@ uint64_t csp_bestMatch(uint64_t inCSP,uint64_t wantedCSPS,int *rank)
             bestcsps=best;
             break;
         }
+        case FF_CSP_422P10: {
+            static const uint64_t best[FF_CSPS_NUM]= {
+                FF_CSP_422P ,
+                FF_CSP_YUY2 ,
+                FF_CSP_UYVY ,
+                FF_CSP_YVYU ,
+                FF_CSP_VYUY ,
+                FF_CSP_444P ,
+                FF_CSP_420P ,
+                FF_CSP_NV12 ,
+                FF_CSP_411P ,
+                FF_CSP_410P ,
+                FF_CSP_ABGR ,
+                FF_CSP_RGBA ,
+                FF_CSP_BGR32,
+                FF_CSP_RGB32,
+                FF_CSP_BGR24,
+                FF_CSP_RGB24,
+                FF_CSP_BGR16,
+                FF_CSP_RGB16,
+                FF_CSP_BGR15,
+                FF_CSP_RGB15,
+                FF_CSP_NULL
+            };
+            bestcsps=best;
+            break;
+        }
         case FF_CSP_444P10: {
             static const uint64_t best[FF_CSPS_NUM]= {
                 FF_CSP_444P ,
@@ -1116,6 +1152,9 @@ uint64_t getBMPcolorspace(const BITMAPINFOHEADER *hdr,const TcspInfos &forcedCsp
             break;
         case FOURCC_420R:
             csp=FF_CSP_420P10;
+            break;
+        case FOURCC_422R:
+            csp=FF_CSP_422P10;
             break;
         case FOURCC_444R:
             csp=FF_CSP_444P10;

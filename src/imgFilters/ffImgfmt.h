@@ -50,6 +50,7 @@
 #define FF_CSP_444P10 (1ULL << 23)  // 0x0800000
 #define FF_CSP_P016   (1ULL << 24)  // 0x1000000 P016 in Media Fundation (MFVideoFormat_P016). 16bit version of NV12.
 #define FF_CSP_P010   (1ULL << 25)  // 0x2000000 P010 in Media Fundation (MFVideoFormat_P010). same as FF_CSP_P016
+#define FF_CSP_422P10 (1ULL << 26)  // 0x4000000
 
 // Flags
 #define FF_CSP_FLAGS_YUV_JPEG   (1ULL << 59)
@@ -58,12 +59,12 @@
 #define FF_CSP_FLAGS_INTERLACED (1ULL << 62)
 #define FF_CSP_FLAGS_VFLIP      (1ULL << 63) // flip mask
 
-#define FF_CSPS_NUM 26
+#define FF_CSPS_NUM 27
 
 #define FF_CSP_UNSUPPORTED      (1ULL<<FF_CSPS_NUM)
 
 #define FF_CSPS_MASK            (FF_CSP_UNSUPPORTED-1)
-#define FF_CSPS_MASK_HIGH_BIT   (FF_CSP_420P10|FF_CSP_444P10)
+#define FF_CSPS_MASK_HIGH_BIT   (FF_CSP_420P10|FF_CSP_422P10|FF_CSP_444P10)
 #define FF_CSPS_MASK_YUV_PLANAR (FF_CSP_420P|FF_CSP_422P|FF_CSP_444P|FF_CSP_411P|FF_CSP_410P)
 #define FF_CSPS_MASK_YUV_PACKED (FF_CSP_YUY2|FF_CSP_UYVY|FF_CSP_YVYU|FF_CSP_VYUY)
 #define FF_CSPS_MASK_RGB        (FF_CSP_RGBA|FF_CSP_RGB32|FF_CSP_RGB24|FF_CSP_RGB15|FF_CSP_RGB16)
@@ -150,6 +151,8 @@ static __inline uint64_t csp_lavc2ffdshow(enum PixelFormat pix_fmt)
             return FF_CSP_UYVY;
         case PIX_FMT_YUV420P10:
             return FF_CSP_420P10;
+        case PIX_FMT_YUV422P10:
+            return FF_CSP_422P10;
         case PIX_FMT_YUV444P10:
             return FF_CSP_444P10;
         case PIX_FMT_BGR24   :
@@ -190,6 +193,8 @@ static __inline enum PixelFormat csp_ffdshow2lavc(uint64_t pix_fmt)
             return PIX_FMT_UYVY422;
         case FF_CSP_420P10:
             return PIX_FMT_YUV420P10;
+        case FF_CSP_422P10:
+            return PIX_FMT_YUV422P10;
         case FF_CSP_444P10:
             return PIX_FMT_YUV444P10;
         case FF_CSP_RGB24:
