@@ -26,7 +26,7 @@
 #pragma warning (disable: 4799) // EMMS
 #endif
 
-void TffdshowConverters::init(uint64_t incsp,                 // FF_CSP_420P, FF_CSP_NV12, FF_CSP_YUY2, FF_CSP_420P, FF_CSP_420P10 or FF_CSP_440P10 (progressive only)
+void TffdshowConverters::init(uint64_t incsp,                 // FF_CSP_420P, FF_CSP_NV12, FF_CSP_YUY2, FF_CSP_420P, FF_CSP_420P10, FF_CSP_422P10 or FF_CSP_440P10 (progressive only)
                               uint64_t outcsp,                // FF_CSP_RGB32 or FF_CSP_RGB24
                               ffYCbCr_RGB_MatrixCoefficientsType cspOptionsIturBt,  // ffYCbCr_RGB_coeff_ITUR_BT601, ffYCbCr_RGB_coeff_ITUR_BT709 or ffYCbCr_RGB_coeff_SMPTE240M
                               int input_Y_white_level,        // input Y level (TV:235, PC:255)
@@ -101,7 +101,7 @@ void TffdshowConverters::convert(const uint8_t* srcY,
 #endif
 }
 
-static inline void loadLeftEdge10(const __m128i* src, __m128i &xmm, __m128i &temp)
+static __forceinline void loadLeftEdge10(const __m128i* src, __m128i &xmm, __m128i &temp)
 {
     xmm = _mm_move_epi64(*src);                                                // xmm1 = Cb03,Cb02,Cb01,Cb00
     temp = xmm;
@@ -111,7 +111,7 @@ static inline void loadLeftEdge10(const __m128i* src, __m128i &xmm, __m128i &tem
     xmm = _mm_or_si128(xmm,temp);                                              // xmm1 = Cb02,Cb01,Cb00,Cb00
 }
 
-static inline void loadRightEdge10(const __m128i* src, __m128i &xmm, __m128i &temp)
+static __forceinline void loadRightEdge10(const __m128i* src, __m128i &xmm, __m128i &temp)
 {
     xmm = _mm_move_epi64(*src);                                                // xmm1 = Cb01,Cb00,Cb00-1,Cb0-2
     temp = xmm;
@@ -119,6 +119,34 @@ static inline void loadRightEdge10(const __m128i* src, __m128i &xmm, __m128i &te
     temp = _mm_srli_si128(temp, 6);
     temp = _mm_slli_si128(temp, 6);                                            // xmm2 = Cb01,   0,   0,   0
     xmm = _mm_or_si128(xmm, temp);                                             // xmm1 = Cb01,Cb01,Cb00,Cb00-1
+}
+
+template<int left_edge, int right_edge>
+static __forceinline void load42CbCr(const unsigned char* &srcCb,
+                                     const unsigned char* &srcCr,
+                                     const stride_t stride_CbCr,
+                                     __m128i &xmm0, __m128i &xmm1, __m128i &xmm2, __m128i &xmm3, __m128i &xmm4, __m128i &xmm5)
+{
+    if (left_edge) {
+        loadLeftEdge10((const __m128i*)(srcCb),               xmm1, xmm0);     // xmm1 = Cb02,Cb01,Cb00,Cb00
+        loadLeftEdge10((const __m128i*)(srcCb + stride_CbCr), xmm3, xmm2);     // xmm3 = Cb12,Cb11,Cb10,Cb10
+        loadLeftEdge10((const __m128i*)(srcCr),               xmm0, xmm4);     // xmm0 = Cr02,Cr01,Cr00,Cr00
+        loadLeftEdge10((const __m128i*)(srcCr + stride_CbCr), xmm2, xmm5);     // xmm2 = Cr12,Cr11,Cr10,Cr10
+        srcCb += 2;
+        srcCr += 2;
+    } else if (right_edge) {
+        loadRightEdge10((const __m128i*)(srcCb - 2),               xmm1, xmm0);// xmm1 = Cb01,Cb00,Cb0-1,Cb0-2
+        loadRightEdge10((const __m128i*)(srcCb + stride_CbCr - 2), xmm3, xmm2);// xmm3 = Cb11,Cb10,Cb1-1,Cb1-2
+        loadRightEdge10((const __m128i*)(srcCr - 2),               xmm0, xmm4);// xmm0 = Cr01,Cr00,Cr0-1,Cr0-2
+        loadRightEdge10((const __m128i*)(srcCr + stride_CbCr - 2), xmm2, xmm5);// xmm2 = Cr11,Cr10,Cr1-1,Cr1-2
+    } else {
+        xmm1 = _mm_move_epi64(*(const __m128i*)(srcCb));                       // xmm1 = Cb02,Cb01,Cb00,Cb0-1
+        xmm3 = _mm_move_epi64(*(const __m128i*)(srcCb + stride_CbCr));         // xmm3 = Cb12,Cb11,Cb10,Cb1-1
+        xmm0 = _mm_move_epi64(*(const __m128i*)(srcCr));                       // xmm0 = Cr02,Cr01,Cr00,Cr0-1
+        xmm2 = _mm_move_epi64(*(const __m128i*)(srcCr + stride_CbCr));         // xmm2 = Cr12,Cr11,Cr10,Cr1-1
+        srcCb += 4;
+        srcCr += 4;
+    }
 }
 
 template<uint64_t incsp, uint64_t outcsp, int left_edge, int right_edge, int rgb_limit, int aligned, bool dithering, bool isMPEG1>
@@ -154,42 +182,15 @@ void TffdshowConverters::convert_two_lines(const unsigned char* &srcY,
         // xmm1 = 16*P03, 16*P02, 16*P01, 16*P00 (14bit)
         // xmm3 = 16*P13, 16*P12, 16*P11, 16*P10 (14bit)
     } else {
-        if (incsp == FF_CSP_420P10) {
-            // 4:2:0 YCbCr 10bit
-            if (left_edge) {
-                loadLeftEdge10((const __m128i*)(srcCb),               xmm1, xmm0);     // xmm1 = Cb02,Cb01,Cb00,Cb00
-                loadLeftEdge10((const __m128i*)(srcCb + stride_CbCr), xmm3, xmm2);     // xmm3 = Cb12,Cb11,Cb10,Cb10
-                loadLeftEdge10((const __m128i*)(srcCr),               xmm0, xmm4);     // xmm0 = Cr02,Cr01,Cr00,Cr00
-                loadLeftEdge10((const __m128i*)(srcCr + stride_CbCr), xmm2, xmm5);     // xmm2 = Cr12,Cr11,Cr10,Cr10
-                srcCb += 2;
-                srcCr += 2;
-            } else if (right_edge) {
-                loadRightEdge10((const __m128i*)(srcCb - 2),               xmm1, xmm0);// xmm1 = Cb01,Cb00,Cb0-1,Cb0-2
-                loadRightEdge10((const __m128i*)(srcCb + stride_CbCr - 2), xmm3, xmm2);// xmm3 = Cb11,Cb10,Cb1-1,Cb1-2
-                loadRightEdge10((const __m128i*)(srcCr - 2),               xmm0, xmm4);// xmm0 = Cr01,Cr00,Cr0-1,Cr0-2
-                loadRightEdge10((const __m128i*)(srcCr + stride_CbCr - 2), xmm2, xmm5);// xmm2 = Cr11,Cr10,Cr1-1,Cr1-2
-            } else {
-                xmm1 = _mm_move_epi64(*(const __m128i*)(srcCb));                       // xmm1 = Cb02,Cb01,Cb00,Cb0-1
-                xmm3 = _mm_move_epi64(*(const __m128i*)(srcCb + stride_CbCr));         // xmm3 = Cb12,Cb11,Cb10,Cb1-1
-                xmm0 = _mm_move_epi64(*(const __m128i*)(srcCr));                       // xmm0 = Cr02,Cr01,Cr00,Cr0-1
-                xmm2 = _mm_move_epi64(*(const __m128i*)(srcCr + stride_CbCr));         // xmm2 = Cr12,Cr11,Cr10,Cr1-1
-                srcCb += 4;
-                srcCr += 4;
-            }
-            xmm0 = _mm_unpacklo_epi16(xmm1,xmm0);                                      // xmm0 = Cr02,Cb02,Cr01,Cb01,Cr00,Cb00,Cr0-1,Cb0-1
-            xmm2 = _mm_unpacklo_epi16(xmm3,xmm2);                                      // xmm2 = Cr12,Cb12,Cr11,Cb11,Cr10,Cb10,Cr1-1,Cb1-1
-
-            xmm1 = xmm0;
-            xmm1 = _mm_add_epi16(xmm1,xmm0);
-            xmm1 = _mm_add_epi16(xmm1,xmm0);
-            xmm1 = _mm_add_epi16(xmm1,xmm2);                                           // xmm1 = 3Cr02+Cr12,3Cb02+Cb12,... = P02,P01,P00,P0-1 (12bit)
-            xmm3 = xmm2;
-            xmm3 = _mm_add_epi16(xmm3,xmm2);
-            xmm3 = _mm_add_epi16(xmm3,xmm2);
-            xmm3 = _mm_add_epi16(xmm3,xmm0);                                           // xmm3 = Cr02+3Cr12,Cb02+3Cb12,... = P12,P11,P10,P1-1 (12bit)
-        } else if (incsp == FF_CSP_420P || incsp == FF_CSP_NV12) {
+        if (incsp == FF_CSP_420P || incsp == FF_CSP_NV12 || incsp == FF_CSP_420P10) {
             // 4:2:0 color spaces
-            if (incsp == FF_CSP_420P) {
+            if (incsp == FF_CSP_420P10) {
+                // 4:2:0 YCbCr 10bit
+                load42CbCr<left_edge, right_edge>(srcCb, srcCr, stride_CbCr, xmm0, xmm1, xmm2, xmm3, xmm4, xmm5);
+                xmm0 = _mm_unpacklo_epi16(xmm1,xmm0);                                      // xmm0 = Cr02,Cb02,Cr01,Cb01,Cr00,Cb00,Cr0-1,Cb0-1
+                xmm2 = _mm_unpacklo_epi16(xmm3,xmm2);                                      // xmm2 = Cr12,Cb12,Cr11,Cb11,Cr10,Cb10,Cr1-1,Cb1-1
+            } else if (incsp == FF_CSP_420P) {
+                // YV12
                 if (left_edge) {
                     uint32_t eax;
                     eax = *(uint32_t *)(srcCb);                                        // eax  = Cb03,Cb02,Cb01,Cb00
@@ -229,7 +230,8 @@ void TffdshowConverters::convert_two_lines(const unsigned char* &srcY,
                 xmm2 = _mm_unpacklo_epi8(xmm3,xmm2);                                   // xmm2 = Cr12,Cb12,Cr11,Cb11,Cr00,Cb00,Cr-11,Cb1-1
                 xmm0 = _mm_unpacklo_epi8(xmm0,xmm7);                                   // xmm0 = 0,Cr02,0,Cb02,0,Cr01,0,Cb01,0,Cr00,0,Cb00,0,Cr-01,0,Cb0-1
                 xmm2 = _mm_unpacklo_epi8(xmm2,xmm7);                                   // xmm2 = 0,Cr12,0,Cb12,0,Cr11,0,Cb11,0,Cr10,0,Cb10,0,Cr-11,0,Cb1-1
-            } else { /*NV12*/
+            } else {
+                // NV12
                 if (left_edge) {
                     xmm0 = _mm_loadl_epi64((const __m128i*)srcCb);                     // xmm0 = Cb03,Cr03,Cb02,Cr02,Cb01,Cr01,Cb00,Cr00
                     xmm2 = _mm_loadl_epi64((const __m128i*)(srcCb + stride_CbCr));     // xmm2 = Cb13,Cr13,Cb12,Cr12,Cb11,Cr11,Cb10,Cr10
@@ -278,7 +280,11 @@ void TffdshowConverters::convert_two_lines(const unsigned char* &srcY,
             xmm3 = _mm_add_epi16(xmm3,xmm0);                                           // xmm3 = Cr02+3Cr12,Cb02+3Cb12,... = P12,P11,P10,P1-1 (10bit)
         } else {
             // 4:2:2 color spaces
-            if (incsp == FF_CSP_422P) {
+            if (incsp == FF_CSP_422P10) {
+                load42CbCr<left_edge, right_edge>(srcCb, srcCr, stride_CbCr, xmm0, xmm1, xmm2, xmm3, xmm4, xmm5);
+                xmm1 = _mm_unpacklo_epi16(xmm1,xmm0);                                      // xmm1 = Cr02,Cb02,Cr01,Cb01,Cr00,Cb00,Cr0-1,Cb0-1
+                xmm3 = _mm_unpacklo_epi16(xmm3,xmm2);                                      // xmm2 = Cr12,Cb12,Cr11,Cb11,Cr10,Cb10,Cr1-1,Cb1-1
+            } else if (incsp == FF_CSP_422P) {
                 // YV16
                 if (left_edge) {
                     uint32_t eax;
@@ -625,6 +631,9 @@ template <int rgb_limit> void TffdshowConverters::convert_translate_incsp(
             return;
         case FF_CSP_420P10:
             convert_translate_outcsp<FF_CSP_420P10, rgb_limit>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
+            return;
+        case FF_CSP_422P10:
+            convert_translate_outcsp<FF_CSP_422P10, 1>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
             return;
         case FF_CSP_444P10:
             convert_translate_outcsp<FF_CSP_444P10, 1>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
