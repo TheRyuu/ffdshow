@@ -282,7 +282,7 @@ const TcspInfo cspInfos[]= {
         FOURCC_P210, FOURCC_P210, &MEDIASUBTYPE_P210
     },
     {
-        FF_CSP_P210,_l("P216"),
+        FF_CSP_P216,_l("P216"),
         2,32, //Bpp
         2, //numplanes
         {0,0,0,0}, //shiftX
