@@ -112,6 +112,8 @@ template <class _mm, int src_aligned, int dst_aligned> void TffdshowConverters2:
         convert_simd<_mm, 1          , dst_aligned, FF_CSP_420P>  (srcY, srcCb, srcCr, dstY, dstCbCr, dx, dy, stride_Y, stride_CbCr, stride_dstY, stride_dstCbCr);
     else if (incsp == FF_CSP_NV12)
         convert_simd<_mm, 1          , dst_aligned, FF_CSP_NV12>  (srcY, srcCb, srcCr, dstY, dstCbCr, dx, dy, stride_Y, stride_CbCr, stride_dstY, stride_dstCbCr);
+    else if (incsp == FF_CSP_422P10)
+        convert_simd<_mm, src_aligned, dst_aligned, FF_CSP_422P10>(srcY, srcCb, srcCr, dstY, dstCbCr, dx, dy, stride_Y, stride_CbCr, stride_dstY, stride_dstCbCr);
     else
         return;
 }
@@ -140,7 +142,7 @@ template <class _mm, int src_aligned, int dst_aligned, uint64_t incsp> void Tffd
         uint8_t *dst = dstY + y * stride_dstY;
         int x = xCount;
         do {
-            if (incsp == FF_CSP_420P10) {
+            if (incsp == FF_CSP_420P10 || incsp == FF_CSP_422P10) {
                 if (src_aligned)
                     movVqa(_mm0, src);
                 else
@@ -160,14 +162,14 @@ template <class _mm, int src_aligned, int dst_aligned, uint64_t incsp> void Tffd
             dst += _mm::size;
         } while(--x);
     }
-    int dyCbCr = dy/2;
+    int dyCbCr = (incsp == FF_CSP_422P10) ? dy : dy/2;
     for (int y = 0 ; y < dyCbCr ; y++) {
         const uint8_t *Cb = srcCb + y * stride_CbCr;
         const uint8_t *Cr = srcCr + y * stride_CbCr;
         uint8_t *dst = dstCbCr + y * stride_dstCbCr;
         int x = xCount;
         do {
-            if (incsp == FF_CSP_420P10) {
+            if (incsp == FF_CSP_420P10 || incsp == FF_CSP_422P10) {
                 movHalf(_mm0, Cb);
                 movHalf(_mm1, Cr);
                 Cb += _mm::size/2;

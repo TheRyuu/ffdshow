@@ -938,6 +938,8 @@
 #define IDFF_outRGB24            1306
 #define IDFF_outP010             3567
 #define IDFF_outP016             3566
+#define IDFF_outP210             3568
+#define IDFF_outP216             3569
 #define IDFF_setDeintInOutSample 1353
 #define IDFF_hwDeintMethod       1361
 #define IDFF_hwDeintFieldOrder   3500
@@ -1559,6 +1561,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//next:3568
+//next:3570
 
 #endif

@@ -38,7 +38,8 @@
 //======================================= Tconvert =======================================
 Tconvert::Tconvert(IffdshowBase *deci,unsigned int Idx,unsigned int Idy) :
     TrgbPrimaries(deci),
-    m_wasChange(false)
+    m_wasChange(false),
+    tmpcsp(0)
 {
     Tlibavcodec *libavcodec;
     deci->getLibavcodec(&libavcodec);
@@ -54,7 +55,8 @@ Tconvert::Tconvert(IffdshowBase *deci,unsigned int Idx,unsigned int Idy) :
 
 Tconvert::Tconvert(Tlibavcodec *Ilibavcodec, bool highQualityRGB, unsigned int Idx, unsigned int Idy, const TrgbPrimaries &IrgbPrimaries, int rgbInterlaceMode, bool dithering, bool isMPEG1):
     TrgbPrimaries(IrgbPrimaries),
-    m_wasChange(false)
+    m_wasChange(false),
+    tmpcsp(0)
 {
     Ilibavcodec->AddRef();
     init(Ilibavcodec,highQualityRGB,Idx,Idy,rgbInterlaceMode,dithering,isMPEG1);
@@ -278,13 +280,20 @@ int Tconvert::convert(uint64_t incsp0,
                 } //switch (outcsp1)
                 break;
             case FF_CSP_420P10:
-                if (outcsp1 == FF_CSP_P016 || outcsp1 == FF_CSP_P010) {
+                if (outcsp1 == FF_CSP_P010 || outcsp1 == FF_CSP_P016) {
                     mode = MODE_ffdshow_converters2;
                     break;
                 }
                 // go into next line. no break needed.
-            case FF_CSP_422P10:
             case FF_CSP_444P10:
+                if (m_highQualityRGB && !((outcsp|incsp) & FF_CSP_FLAGS_INTERLACED) && outcsp_sup_ffdshow_converter(outcsp1))
+                    mode = MODE_ffdshow_converters;
+                break;
+            case FF_CSP_422P10:
+                if (outcsp1 == FF_CSP_P210 || outcsp1 == FF_CSP_P216) {
+                    mode = MODE_ffdshow_converters2;
+                    break;
+                }
                 if (m_highQualityRGB && !((outcsp|incsp) & FF_CSP_FLAGS_INTERLACED) && outcsp_sup_ffdshow_converter(outcsp1))
                     mode = MODE_ffdshow_converters;
                 break;
@@ -417,7 +426,7 @@ int Tconvert::convert(uint64_t incsp0,
                 setJpeg(!!((incsp | outcsp) & FF_CSP_FLAGS_YUV_JPEG));
                 swscale->init(dx,dy,incsp,outcsp,toSwscaleTable());
                 mode=MODE_swscale;
-            } else if (outcsp1 == FF_CSP_P016 || outcsp1 == FF_CSP_P010) {
+            } else if (outcsp1 == FF_CSP_P010 || outcsp1 == FF_CSP_P016) {
                 mode=MODE_fallback;
                 tmpcsp = FF_CSP_420P10;
                 tmpStride[0] = ((dx + 7) & ~7)*2;
@@ -431,12 +440,27 @@ int Tconvert::convert(uint64_t incsp0,
                 if (incsp&FF_CSP_FLAGS_INTERLACED || outcsp&FF_CSP_FLAGS_INTERLACED) {
                     tmpcsp|=FF_CSP_FLAGS_INTERLACED;
                 }
+            } else if (outcsp1 == FF_CSP_P210 || outcsp1 == FF_CSP_P216) {
+                mode=MODE_fallback;
+                tmpcsp = FF_CSP_422P10;
+                tmpStride[0] = ((dx + 7) & ~7)*2;
+                tmpStride[1] = ((dx/2 + 7) & ~7)*2;
+                tmpStride[2] = tmpStride[1];
+                tmp[0] = (unsigned char*)aligned_malloc(tmpStride[0]*dy);
+                tmp[1] = (unsigned char*)aligned_malloc(tmpStride[1]*dy);
+                tmp[2] = (unsigned char*)aligned_malloc(tmpStride[2]*dy);
+                tmpConvert1=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering, m_isMPEG1);
+                tmpConvert2=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering, m_isMPEG1);
+                if (incsp&FF_CSP_FLAGS_INTERLACED || outcsp&FF_CSP_FLAGS_INTERLACED) {
+                    tmpcsp|=FF_CSP_FLAGS_INTERLACED;
+                }
             } else {
                 mode=MODE_fallback;
                 if (tmpcsp==FF_CSP_RGB32) {
                     tmpStride[0]=4*(dx/16+2)*16;
                     tmp[0]=(unsigned char*)aligned_malloc(tmpStride[0]*dy);
                 } else {
+                    ASSERT(tmpcsp);
                     tmpStride[1]=tmpStride[2]=(tmpStride[0]=(dx/16+2)*16)/2;
                     tmp[0]=(unsigned char*)aligned_malloc(tmpStride[0]*dy  );
                     tmp[1]=(unsigned char*)aligned_malloc(tmpStride[1]*dy/2);

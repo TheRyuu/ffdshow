@@ -93,6 +93,10 @@ ToutputVideoSettings::ToutputVideoSettings(TintStrColl *Icoll,TfilterIDFFs *filt
         _l("outP016"),1,
         IDFF_outP010            ,&ToutputVideoSettings::p010               ,0,0,_l(""),0,
         _l("outP010"),1,
+        IDFF_outP210            ,&ToutputVideoSettings::p210               ,0,0,_l(""),0,
+        _l("outP210"),1,
+        IDFF_outP216            ,&ToutputVideoSettings::p216               ,0,0,_l(""),0,
+        _l("outP216"),1,
         IDFF_highQualityRGB     ,&ToutputVideoSettings::highQualityRGB     ,0,0,_l(""),1,
         _l("highQualityRGB"),1,
         IDFF_RGB_dithering      ,&ToutputVideoSettings::dithering          ,0,0,_l(""),1,
@@ -142,12 +146,14 @@ void ToutputVideoSettings::reg_op_outcsps(TregOp &t)
     t._REG_OP_N(IDFF_outRGB24 ,_l("outRGB24") ,rgb24 ,1);
     t._REG_OP_N(IDFF_outP016  ,_l("outP016")  ,p016  ,1);
     t._REG_OP_N(IDFF_outP010  ,_l("outP010")  ,p010  ,1);
+    t._REG_OP_N(IDFF_outP210  ,_l("outP210")  ,p210  ,1);
+    t._REG_OP_N(IDFF_outP216  ,_l("outP216")  ,p216  ,1);
     t._REG_OP_N(IDFF_hwOverlayAspect,_l("hwOverlayAspect"),hwOverlayAspect,0);
 }
 
 const int* ToutputVideoSettings::getResets(unsigned int pageId)
 {
-    static const int idResets[]= {IDFF_flip,IDFF_outYV12,IDFF_outYUY2,IDFF_outUYVY,IDFF_outNV12,IDFF_outP016,IDFF_outP010,
+    static const int idResets[]= {IDFF_flip,IDFF_outYV12,IDFF_outYUY2,IDFF_outUYVY,IDFF_outNV12,IDFF_outP016,IDFF_outP010,IDFF_outP210,IDFF_outP216,
         IDFF_outRGB32,IDFF_outRGB24,IDFF_setDeintInOutSample,IDFF_hwDeintMethod,IDFF_hwDeintFieldOrder,0};
     return idResets;
 }
@@ -178,6 +184,12 @@ void ToutputVideoSettings::getOutputColorspaces(ints &ocsps)
     }
     if (p010) {
         ocsps.push_back(FF_CSP_P010);
+    }
+    if (p210) {
+        ocsps.push_back(FF_CSP_P210);
+    }
+    if (p216) {
+        ocsps.push_back(FF_CSP_P216);
     }
 }
 

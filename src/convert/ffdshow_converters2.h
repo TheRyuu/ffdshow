@@ -20,7 +20,11 @@
 
 typedef ptrdiff_t stride_t;
 
-// converts FF_CSP_420P10 to FF_CSP_P010/FF_CSP_P016 (MFVideoFormat_P010/16).
+//    converts FF_CSP_420P10, FF_CSP_420P or FF_CSP_NV12 to FF_CSP_P010/FF_CSP_P016 (MFVideoFormat_P010/16).
+// or converts FF_CSP_422P10 to FF_CSP_P210/FF_CSP_P216 (MFVideoFormat_P210/MFVideoFormat_P216).
+// 4:2:0 <-> 4:2:2 conversion is not implemented.
+// If the input is 4:2:0, output must be 4:2:0.
+// If the input is 4:2:2, output must be 4:2:2.
 // Because there is no data member, no initialization required.
 // just TffdshowConverters2::convert.
 class TffdshowConverters2

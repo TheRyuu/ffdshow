@@ -1593,8 +1593,6 @@
 #define IDC_CBX_QUANT_TABLE             1908
 #define IDC_CHB_LEVELS_INPUT_AUTO       1909
 #define IDC_LBL_OUT_DV_PROFILE          1910
-#define IDC_LBL_OUT_PLANAR_YUV          40034
-#define IDC_LBL_OUT_PACKED_YUV          40035
 #define IDC_LBL_OUT_RGB                 1914
 #define IDC_BT_PRESETAUTOLOAD_SIZE_COMP 1915
 #define IDC_BT_QUANTMATRIX_EXPORT       1916
@@ -1988,6 +1986,10 @@
 #define IDC_CHB_OUT_P016                40031
 #define IDC_LBL_OUT_10BIT               40032
 #define IDC_CHB_OUT_P010                40033
+#define IDC_LBL_OUT_PLANAR_YUV          40034
+#define IDC_LBL_OUT_PACKED_YUV          40035
+#define IDC_CHB_OUT_P210                40036
+#define IDC_CHB_OUT_P216                40037
 #define IDC_STATIC                      -1
 #define IDC_GRP_WINAMP2                 65535
 
@@ -1998,7 +2000,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        304
 #define _APS_NEXT_COMMAND_VALUE         40015
-#define _APS_NEXT_CONTROL_VALUE         40036
+#define _APS_NEXT_CONTROL_VALUE         40038
 #define _APS_NEXT_SYMED_VALUE           107
 #endif
 #endif
