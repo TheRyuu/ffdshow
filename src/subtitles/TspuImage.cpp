@@ -623,7 +623,7 @@ TspuImage::TscalerSw::TscalerSw(const TprintPrefs &prefs,int srcdx,int srcdy,int
     approx(prefs,srcdx,srcdy,dstdx,dstdy)
 {
     prefs.deci->getLibavcodec(&libavcodec);
-    PixelFormat avcodeccsp=csp_ffdshow2lavc(csp);
+    PixelFormat avcodeccsp=csp_ffdshow2lavc(csp_isYUVplanar(csp) ? FF_CSP_Y800 : csp);
     filter.lumH=filter.lumV=filter.chrH=filter.chrV=libavcodec->sws_getGaussianVec(prefs.vobaagauss/1000.0, 3.0);
     libavcodec->sws_normalizeVec(filter.lumH,1.0);
     int swsflags = SWS_GAUSS;
