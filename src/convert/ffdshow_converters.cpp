@@ -743,7 +743,7 @@ template <uint64_t incsp, uint64_t outcsp, int rgb_limit, int aligned, bool dith
         int starty = 0;
         int lines_per_thread = (dy / m_thread_count)&~1;
 
-        if (incsp == FF_CSP_420P || incsp == FF_CSP_NV12) {
+        if (incsp == FF_CSP_420P || incsp == FF_CSP_NV12 || incsp == FF_CSP_420P10) {
             is_odd = 1;
         } else {
             is_odd = 0;
