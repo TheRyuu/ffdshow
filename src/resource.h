@@ -1990,6 +1990,9 @@
 #define IDC_LBL_OUT_PACKED_YUV          40035
 #define IDC_CHB_OUT_P210                40036
 #define IDC_CHB_OUT_P216                40037
+#define IDC_LBL_OUT_444YUV              40038
+#define IDC_CHB_OUT_AYUV                40039
+#define IDC_CHB_OUT_Y416                40040
 #define IDC_STATIC                      -1
 #define IDC_GRP_WINAMP2                 65535
 
@@ -2000,7 +2003,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        304
 #define _APS_NEXT_COMMAND_VALUE         40015
-#define _APS_NEXT_CONTROL_VALUE         40038
+#define _APS_NEXT_CONTROL_VALUE         40041
 #define _APS_NEXT_SYMED_VALUE           107
 #endif
 #endif

@@ -51,6 +51,7 @@ MMX_INSTRUCTION(pmaxsw,_mm_max_pi16)
 MMX_INSTRUCTION(pavgb,_mm_avg_pu8)
 
 MMX_INSTRUCTION(psadbw,_mm_sad_pu8)
+MMX_INSTRUCTION(punpcklHalfFull,_mm_unpacklo_pi32)
 
 #ifdef __SSE2__
 
@@ -65,6 +66,7 @@ SSE2I_INSTRUCTION(punpckhbw,_mm_unpackhi_epi8)
 SSE2I_INSTRUCTION(punpcklwd,_mm_unpacklo_epi16)
 SSE2I_INSTRUCTION(punpckhwd,_mm_unpackhi_epi16)
 SSE2I_INSTRUCTION(punpckldq,_mm_unpacklo_epi32)
+SSE2I_INSTRUCTION(punpckhdq,_mm_unpackhi_epi32)
 SSE2I_INSTRUCTION(pmullw,_mm_mullo_epi16)
 SSE2I_INSTRUCTION(pmulhw,_mm_mulhi_epi16)
 SSE2I_INSTRUCTION(paddsb,_mm_adds_epi8)
@@ -84,5 +86,6 @@ SSE2I_INSTRUCTION(pcmpeqw,_mm_cmpeq_epi16)
 SSE2I_INSTRUCTION(pcmpgtb,_mm_cmpgt_epi8)
 SSE2I_INSTRUCTION(pcmpgtw,_mm_cmpgt_epi16)
 SSE2I_INSTRUCTION(paddusb,_mm_adds_epu8)
+SSE2I_INSTRUCTION(punpcklHalfFull,_mm_unpacklo_epi64)
 
 #endif

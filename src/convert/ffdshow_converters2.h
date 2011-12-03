@@ -22,11 +22,15 @@ typedef ptrdiff_t stride_t;
 
 //    converts FF_CSP_420P10, FF_CSP_420P or FF_CSP_NV12 to FF_CSP_P010/FF_CSP_P016 (MFVideoFormat_P010/16).
 // or converts FF_CSP_422P10 to FF_CSP_P210/FF_CSP_P216 (MFVideoFormat_P210/MFVideoFormat_P216).
+// or converts FF_CSP_444P to FF_CSP_AYUV
+// or converts FF_CSP_444P10 to FF_CSP_Y416 or FF_CSP_Y410
 // 4:2:0 <-> 4:2:2 conversion is not implemented.
-// If the input is 4:2:0, output must be 4:2:0.
-// If the input is 4:2:2, output must be 4:2:2.
+// If the input is 4:2:0, the output is 4:2:0.
+// If the input is 4:2:2, the output is 4:2:2.
+// If the input is 4:4:4 8-bit, the output is 4:4:4 8-bit.
+// If the input is 4:4:4 10-bit, the output is 4:4:4 10-bit.
 // Because there is no data member, no initialization required.
-// just TffdshowConverters2::convert.
+// Just TffdshowConverters2::convert.
 class TffdshowConverters2
 {
 public:
@@ -99,4 +103,24 @@ private:
         stride_t stride_CbCr,
         stride_t stride_dstY,
         stride_t stride_dstCbCr);
+
+    template <class _mm, int src_aligned, int dst_aligned> static void convert_simd_AYUV(
+        const uint8_t* srcY,
+        const uint8_t* srcCb,
+        const uint8_t* srcCr,
+        uint8_t* dst,
+        int dx,
+        int dy,
+        stride_t stride_src,
+        stride_t stride_dst);
+
+     template <class _mm, int src_aligned, int dst_aligned> static void convert_simd_Y416(
+        const uint8_t* srcY,
+        const uint8_t* srcCb,
+        const uint8_t* srcCr,
+        uint8_t* dst,
+        int dx,
+        int dy,
+        stride_t stride_src,
+        stride_t stride_dst);
 };

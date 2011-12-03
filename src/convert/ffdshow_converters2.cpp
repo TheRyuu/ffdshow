@@ -40,6 +40,12 @@ void TffdshowConverters2::convert(
     stride_t stride_dstY,
     stride_t stride_dstCbCr)
 {
+    // clean up input args to helf alignment checking
+    if (incsp == FF_CSP_NV12)
+        srcCr = NULL;
+    if (incsp == FF_CSP_444P || incsp == FF_CSP_444P10)
+        dstCbCr = NULL;
+
 #ifndef WIN64
     if (Tconfig::cpu_flags&FF_CPU_SSE2)
 #endif
@@ -66,7 +72,7 @@ template <class _mm> void TffdshowConverters2::convert_check_src_align(
     stride_t stride_dstY,
     stride_t stride_dstCbCr)
 {
-    if ((stride_Y & 0xf) || (stride_CbCr & 0xf) || (stride_t(srcY) & 0xf))
+    if ((stride_Y & 0xf) || (stride_CbCr & 0xf) || (stride_t(srcY) & 0xf) || (stride_t(srcCb) & 0xf) || (stride_t(srcCr) & 0xf))
         convert_check_dst_align<_mm, 0>(incsp, srcY, srcCb, srcCr, dstY, dstCbCr, dx, dy, stride_Y, stride_CbCr, stride_dstY, stride_dstCbCr);
     else
         convert_check_dst_align<_mm, 1>(incsp, srcY, srcCb, srcCr, dstY, dstCbCr, dx, dy, stride_Y, stride_CbCr, stride_dstY, stride_dstCbCr);
@@ -114,6 +120,10 @@ template <class _mm, int src_aligned, int dst_aligned> void TffdshowConverters2:
         convert_simd<_mm, 1          , dst_aligned, FF_CSP_NV12>  (srcY, srcCb, srcCr, dstY, dstCbCr, dx, dy, stride_Y, stride_CbCr, stride_dstY, stride_dstCbCr);
     else if (incsp == FF_CSP_422P10)
         convert_simd<_mm, src_aligned, dst_aligned, FF_CSP_422P10>(srcY, srcCb, srcCr, dstY, dstCbCr, dx, dy, stride_Y, stride_CbCr, stride_dstY, stride_dstCbCr);
+    else if (incsp == FF_CSP_444P)
+        convert_simd_AYUV<_mm, src_aligned, dst_aligned>(srcY, srcCb, srcCr, dstY, dx, dy, stride_Y, stride_dstY);
+    else if (incsp == FF_CSP_444P10)
+        convert_simd_Y416<_mm, src_aligned, dst_aligned>(srcY, srcCb, srcCr, dstY, dx, dy, stride_Y, stride_dstY);
     else
         return;
 }
@@ -155,7 +165,7 @@ template <class _mm, int src_aligned, int dst_aligned, uint64_t incsp> void Tffd
                 punpcklbw(_mm0, _mm1);
                 src += _mm::size/2;
             }
-            if (dst_aligned || typeid(_mm) == typeid(Tmmxext))
+            if (dst_aligned)
                 _mm::movntVq(dst, _mm0);
             else
                 movVqu(dst, _mm0);
@@ -193,11 +203,148 @@ template <class _mm, int src_aligned, int dst_aligned, uint64_t incsp> void Tffd
                 punpcklbw(_mm0, _mm1);
             }
 
-            if (dst_aligned || typeid(_mm) == typeid(Tmmxext))
+            if (dst_aligned)
                 _mm::movntVq(dst, _mm0);
             else
                 movVqu(dst, _mm0);
             dst += _mm::size;
+        } while(--x);
+    }
+    _mm::empty();
+}
+
+template <class _mm, int src_aligned, int dst_aligned> static void TffdshowConverters2::convert_simd_AYUV(
+    const uint8_t* srcY,
+    const uint8_t* srcCb,
+    const uint8_t* srcCr,
+    uint8_t* dst,
+    int dx,
+    int dy,
+    stride_t stride_src,
+    stride_t stride_dst)
+{
+    int xCount = dx / _mm::size;
+    if (xCount <= 0)
+        return;
+    _mm::__m _mm0,_mm1,_mm2,_mm3,_mm4,_mm5;
+    _mm::__m zero;
+    pxor(zero,zero);
+    for (int y = 0 ; y < dy ; y++) {
+        if (y == dy-1)
+            int a=0;
+        const uint8_t *Y = srcY + y * stride_src;
+        uint8_t *dst1 = dst + y * stride_dst;
+        const uint8_t *Cb = srcCb + y * stride_src;
+        const uint8_t *Cr = srcCr + y * stride_src;
+        int x = xCount;
+        do {
+            if (src_aligned) {
+                movVqa(_mm1, Y);
+                movVqa(_mm4, Cb);
+                movVqa(_mm2, Cr);
+            } else {
+                movVqu(_mm1, Y);
+                movVqu(_mm4, Cb);
+                movVqu(_mm2, Cr);
+            }
+            Y  += _mm::size;
+            Cb += _mm::size;
+            Cr += _mm::size;
+            _mm3 = _mm2;
+            punpcklbw(_mm2, _mm4);
+            punpckhbw(_mm3, _mm4);
+            _mm5 = _mm1;
+            punpcklbw(_mm1, zero);
+            punpckhbw(_mm5, zero);
+            _mm4 = _mm2;
+            punpcklwd(_mm2, _mm1);
+            punpckhwd(_mm4, _mm1);
+            _mm0 = _mm3;
+            punpcklwd(_mm0, _mm5);
+            punpckhwd(_mm3, _mm5);
+            if (dst_aligned) {
+                _mm::movntVq(dst1,                 _mm2);
+                _mm::movntVq(dst1 + _mm::size,     _mm4);
+                _mm::movntVq(dst1 + _mm::size * 2, _mm0);
+                _mm::movntVq(dst1 + _mm::size * 3, _mm3);
+            } else {
+                movVqu(dst1,                 _mm2);
+                movVqu(dst1 + _mm::size,     _mm4);
+                movVqu(dst1 + _mm::size * 2, _mm0);
+                movVqu(dst1 + _mm::size * 3, _mm3);
+            }
+            dst1 += _mm::size * 4;
+        } while(--x);
+    }
+    _mm::empty();
+}
+
+template <class _mm, int src_aligned, int dst_aligned> static void TffdshowConverters2::convert_simd_Y416(
+    const uint8_t* srcY,
+    const uint8_t* srcCb,
+    const uint8_t* srcCr,
+    uint8_t* dst,
+    int dx,
+    int dy,
+    stride_t stride_src,
+    stride_t stride_dst)
+{
+    int xCount = dx * 2 / _mm::size;
+    if (xCount <= 0)
+        return;
+    _mm::__m _mm0,_mm1,_mm2,_mm3,_mm4,_mm5;
+    _mm::__m zero;
+    pxor(zero,zero);
+    for (int y = 0 ; y < dy ; y++) {
+        if (y == dy-1)
+            int a=0;
+        const uint8_t *Y = srcY + y * stride_src;
+        uint8_t *dst1 = dst + y * stride_dst;
+        const uint8_t *Cb = srcCb + y * stride_src;
+        const uint8_t *Cr = srcCr + y * stride_src;
+        int x = xCount;
+        do {
+            if (src_aligned) {
+                movVqa(_mm1, Y);
+                movVqa(_mm2, Cb);
+                movVqa(_mm4, Cr);
+            } else {
+                movVqu(_mm1, Y);
+                movVqu(_mm2, Cb);
+                movVqu(_mm4, Cr);
+            }
+            Y  += _mm::size;
+            Cb += _mm::size;
+            Cr += _mm::size;
+            _mm5 = _mm1;
+            punpcklwd(_mm1, _mm2);
+            punpckhwd(_mm5, _mm2);
+            _mm2 = zero;
+            _mm3 = zero;
+            punpcklwd(_mm2, _mm4);
+            punpckhwd(_mm3, _mm4);
+            _mm4 = _mm2;
+            punpckldq(_mm2, _mm1);
+            punpckhdq(_mm4, _mm1);
+            _mm0 = _mm3;
+            punpckldq(_mm0, _mm5);
+            punpckhdq(_mm3, _mm5);
+            psllw(_mm2, 6);
+            psllw(_mm4, 6);
+            psllw(_mm0, 6);
+            psllw(_mm3, 6);
+            if (dst_aligned) {
+                _mm::movntVq(dst1,                 _mm2);
+                _mm::movntVq(dst1 + _mm::size,     _mm4);
+                _mm::movntVq(dst1 + _mm::size * 2, _mm0);
+                _mm::movntVq(dst1 + _mm::size * 3, _mm3);
+            } else {
+                movVqu(dst1,                 _mm2);
+                movVqu(dst1 + _mm::size,     _mm4);
+                movVqu(dst1 + _mm::size * 2, _mm0);
+                movVqu(dst1 + _mm::size * 3, _mm3);
+            }
+            dst1 += _mm::size * 4;
         } while(--x);
     }
     _mm::empty();

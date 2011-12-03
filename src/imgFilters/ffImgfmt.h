@@ -54,6 +54,9 @@
 #define FF_CSP_P210   (1ULL << 27)  // 0x8000000
 #define FF_CSP_P216   (1ULL << 28)  // 0x10000000
 
+#define FF_CSP_AYUV   (1ULL << 29)  // 0x20000000
+#define FF_CSP_Y416   (1ULL << 30)  // 0x40000000
+
 // Flags
 #define FF_CSP_FLAGS_YUV_JPEG   (1ULL << 59)
 #define FF_CSP_FLAGS_YUV_ORDER  (1ULL << 60) // UV ordered chroma planes (not VU as default)
@@ -61,7 +64,7 @@
 #define FF_CSP_FLAGS_INTERLACED (1ULL << 62)
 #define FF_CSP_FLAGS_VFLIP      (1ULL << 63) // flip mask
 
-#define FF_CSPS_NUM 29
+#define FF_CSPS_NUM 31
 
 #define FF_CSP_UNSUPPORTED      (1ULL<<FF_CSPS_NUM)
 
@@ -244,6 +247,7 @@ static __inline enum PixelFormat csp_ffdshow2lavc(uint64_t pix_fmt)
   FF_CSP_NV12|      \
   FF_CSP_420P10|    \
   FF_CSP_422P10|    \
+  FF_CSP_444P10|    \
   FF_CSP_Y800       \
  )
 #define SWS_OUT_CSPS \
@@ -268,6 +272,7 @@ static __inline enum PixelFormat csp_ffdshow2lavc(uint64_t pix_fmt)
   FF_CSP_NV12|       \
   FF_CSP_420P10|     \
   FF_CSP_422P10|     \
+  FF_CSP_444P10|     \
   FF_CSP_Y800        \
  )
 

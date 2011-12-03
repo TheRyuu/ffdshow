@@ -284,8 +284,14 @@ int Tconvert::convert(uint64_t incsp0,
                     mode = MODE_ffdshow_converters2;
                     break;
                 }
-                // go into next line. no break needed.
+                if (m_highQualityRGB && !((outcsp|incsp) & FF_CSP_FLAGS_INTERLACED) && outcsp_sup_ffdshow_converter(outcsp1))
+                    mode = MODE_ffdshow_converters;
+                break;
             case FF_CSP_444P10:
+                if (outcsp1 == FF_CSP_Y416) {
+                    mode = MODE_ffdshow_converters2;
+                    break;
+                }
                 if (m_highQualityRGB && !((outcsp|incsp) & FF_CSP_FLAGS_INTERLACED) && outcsp_sup_ffdshow_converter(outcsp1))
                     mode = MODE_ffdshow_converters;
                 break;
@@ -296,6 +302,12 @@ int Tconvert::convert(uint64_t incsp0,
                 }
                 if (m_highQualityRGB && !((outcsp|incsp) & FF_CSP_FLAGS_INTERLACED) && outcsp_sup_ffdshow_converter(outcsp1))
                     mode = MODE_ffdshow_converters;
+                break;
+            case FF_CSP_444P:
+                if (outcsp1 == FF_CSP_AYUV) {
+                    mode = MODE_ffdshow_converters2;
+                    break;
+                }
                 break;
             case FF_CSP_YUY2:
                 if (outcsp_sup_ffdshow_converter(outcsp1)) {
@@ -446,6 +458,34 @@ int Tconvert::convert(uint64_t incsp0,
                 tmpStride[0] = ((dx + 7) & ~7)*2;
                 tmpStride[1] = ((dx/2 + 7) & ~7)*2;
                 tmpStride[2] = tmpStride[1];
+                tmp[0] = (unsigned char*)aligned_malloc(tmpStride[0]*dy);
+                tmp[1] = (unsigned char*)aligned_malloc(tmpStride[1]*dy);
+                tmp[2] = (unsigned char*)aligned_malloc(tmpStride[2]*dy);
+                tmpConvert1=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering, m_isMPEG1);
+                tmpConvert2=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering, m_isMPEG1);
+                if (incsp&FF_CSP_FLAGS_INTERLACED || outcsp&FF_CSP_FLAGS_INTERLACED) {
+                    tmpcsp|=FF_CSP_FLAGS_INTERLACED;
+                }
+            } else if (outcsp1 == FF_CSP_AYUV) {
+                mode=MODE_fallback;
+                tmpcsp = FF_CSP_444P;
+                tmpStride[0] = (dx + 15) & ~15;
+                tmpStride[1] = tmpStride[0];
+                tmpStride[2] = tmpStride[0];
+                tmp[0] = (unsigned char*)aligned_malloc(tmpStride[0]*dy);
+                tmp[1] = (unsigned char*)aligned_malloc(tmpStride[1]*dy);
+                tmp[2] = (unsigned char*)aligned_malloc(tmpStride[2]*dy);
+                tmpConvert1=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering, m_isMPEG1);
+                tmpConvert2=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering, m_isMPEG1);
+                if (incsp&FF_CSP_FLAGS_INTERLACED || outcsp&FF_CSP_FLAGS_INTERLACED) {
+                    tmpcsp|=FF_CSP_FLAGS_INTERLACED;
+                }
+            } else if (outcsp1 == FF_CSP_Y416) {
+                mode=MODE_fallback;
+                tmpcsp = FF_CSP_444P10;
+                tmpStride[0] = ((dx + 7) & ~7)*2;
+                tmpStride[1] = tmpStride[0];
+                tmpStride[2] = tmpStride[0];
                 tmp[0] = (unsigned char*)aligned_malloc(tmpStride[0]*dy);
                 tmp[1] = (unsigned char*)aligned_malloc(tmpStride[1]*dy);
                 tmp[2] = (unsigned char*)aligned_malloc(tmpStride[2]*dy);
