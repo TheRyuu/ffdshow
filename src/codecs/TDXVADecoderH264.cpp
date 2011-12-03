@@ -132,6 +132,11 @@ void TDXVADecoderH264::CopyBitstream(BYTE* pDXVABuffer, BYTE* pBuffer, UINT& nSi
             switch (Nalu.GetType()) {
                 case NALU_TYPE_SLICE:
                 case NALU_TYPE_IDR:
+                    // Skip the NALU if the data length is below 0
+                    if(Nalu.GetDataLength() < 0) {
+                        break;
+                    }
+
                     // For AVC1, put startcode 0x000001
                     pDXVABuffer[0]=pDXVABuffer[1]=0;
                     pDXVABuffer[2]=1;
@@ -187,9 +192,17 @@ HRESULT TDXVADecoderH264::DecodeFrame(BYTE* pDataIn, UINT nSize, REFERENCE_TIME 
     int                            nOutPOC = INT_MIN;
     REFERENCE_TIME                 rtOutStart;
 
-    Nalu.SetBuffer (pDataIn, nSize, m_nNALLength);
-    m_pCodec->libavcodec->FFH264DecodeBuffer(m_pCodec->avctx, pDataIn, nSize, &nFramePOC, &nOutPOC, &rtOutStart);
+    if (m_nWaitingPics >= m_nPicEntryNumber) {
+        Flush();
+        m_bFlushed = false;
+        return S_FALSE;		
+    }
 
+    if (m_pCodec->libavcodec->FFH264DecodeBuffer(m_pFilter->GetAVCtx(), pDataIn, nSize, &nFramePOC, &nOutPOC, &rtOutStart) == -1) {
+        return S_FALSE;
+    }
+
+    Nalu.SetBuffer (pDataIn, nSize, m_nNALLength);
     while (Nalu.ReadNext()) {
         switch (Nalu.GetType()) {
             case NALU_TYPE_SLICE:
@@ -316,9 +329,7 @@ void TDXVADecoderH264::SetExtraData (BYTE* pDataIn, UINT nSize)
 
 void TDXVADecoderH264::ClearRefFramesList()
 {
-    int i;
-
-    for (i=0; i<m_nPicEntryNumber; i++) {
+    for (int i=0; i<m_nPicEntryNumber; i++) {
         if (m_pPictureStore[i].bInUse) {
             m_pPictureStore[i].bDisplayed = true;
             RemoveRefFrame (i);
@@ -353,7 +364,7 @@ int TDXVADecoderH264::FindOldestFrame()
 
     for (int i=0; i<m_nPicEntryNumber; i++) {
         if (m_pPictureStore[i].bInUse && !m_pPictureStore[i].bDisplayed) {
-            if (m_pPictureStore[i].nCodecSpecific == m_nOutPOC && m_pPictureStore[i].rtStart < rtPos) {
+            if ((m_pPictureStore[i].nCodecSpecific == m_nOutPOC) && (m_pPictureStore[i].rtStart < rtPos) && (m_pPictureStore[i].rtStart >= m_rtOutStart)) {
                 nPos  = i;
                 rtPos = m_pPictureStore[i].rtStart;
             }
