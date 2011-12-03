@@ -48,6 +48,7 @@ static char THIS_FILE[] = __FILE__;
 #include "libavutil/cpu.h"
 #include "libavutil/avutil.h"
 #include "libavutil/bswap.h"
+#include "libavutil/mathematics.h"
 #include "libavutil/opt.h"
 #include "libavutil/pixdesc.h"
 #include "libavutil/avassert.h"
@@ -532,7 +533,7 @@ fail:
 }
 
 #if HAVE_MMX2
-static int initMMX2HScaler(int dstW, int xInc, uint8_t *filterCode, int16_t *filter, int16_t *filterPos, int numSplits)
+static int initMMX2HScaler(int dstW, int xInc, uint8_t *filterCode, int16_t *filter, int32_t *filterPos, int numSplits)
 {
     uint8_t *fragmentA;
     x86_reg imm8OfPShufW1A;
