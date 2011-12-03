@@ -213,7 +213,7 @@ template <class _mm, int src_aligned, int dst_aligned, uint64_t incsp> void Tffd
     _mm::empty();
 }
 
-template <class _mm, int src_aligned, int dst_aligned> static void TffdshowConverters2::convert_simd_AYUV(
+template <class _mm, int src_aligned, int dst_aligned> void TffdshowConverters2::convert_simd_AYUV(
     const uint8_t* srcY,
     const uint8_t* srcCb,
     const uint8_t* srcCr,
@@ -279,7 +279,7 @@ template <class _mm, int src_aligned, int dst_aligned> static void TffdshowConve
     _mm::empty();
 }
 
-template <class _mm, int src_aligned, int dst_aligned> static void TffdshowConverters2::convert_simd_Y416(
+template <class _mm, int src_aligned, int dst_aligned> void TffdshowConverters2::convert_simd_Y416(
     const uint8_t* srcY,
     const uint8_t* srcCb,
     const uint8_t* srcCr,
