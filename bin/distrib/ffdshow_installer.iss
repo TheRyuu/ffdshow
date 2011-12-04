@@ -1,5 +1,12 @@
 ; Requires Inno Setup Unicode: http://www.jrsoftware.org/isdl.php
 ; (Make sure you choose to install Inno Setup Preprocessor)
+#if VER < 0x05040200
+  #error Update your Inno Setup version
+#endif
+#ifndef UNICODE
+  #error Use the Unicode Inno Setup
+#endif
+
 
 #define dummy Exec("update_version.bat","","",1,SW_HIDE)
 
@@ -15,15 +22,11 @@
 #define include_plugin_avisynth   = True
 #define include_plugin_virtualdub = True
 #define include_plugin_dscaler    = True
+#define include_quicksync         = True
 
 #define include_info_before       = False
 #define include_gnu_license       = False
 #define include_setup_icon        = False
-
-; Compiler settings
-#ifndef is64bit
-#define is64bit                   = False
-#endif
 
 #define sse_required              = False
 #define sse2_required             = False
@@ -36,6 +39,7 @@
 #define bindir                    = '..\'
 
 ; Custom builder preferences (uncomment one to enable, or define it through a command line parameter)
+; example: ISCC.exe ffdshow_installer.iss /dPREF_XYZ
 ;#define PREF_CLSID
 ;#define PREF_CLSID_ICL
 ;#define PREF_CLSID_X64
@@ -61,7 +65,6 @@
 #endif
 #ifdef PREF_CLSID_X64
   #define is64bit                = True
-  #define include_plugin_dscaler = False
   #define filename_suffix        = '_clsid_x64'
   #define bindir                 = '..\x64'
   #define outputdir              = '..\..\..\'
@@ -77,7 +80,6 @@
 #endif
 #ifdef PREF_XXL_X64
   #define is64bit                = True
-  #define include_plugin_dscaler = False
   #define include_info_before    = True
 ;  #define include_setup_icon     = True
   #define filename_suffix        = '_xxl_x64'
@@ -88,43 +90,34 @@
 #endif
 #ifdef PREF_ALBAIN_X64
   #define is64bit                = True
-  #define include_plugin_dscaler = False
   #define filename_suffix        = '_dbt_x64'
 #endif
 #ifdef PREF_XHMIKOSR_ICL
   #define sse2_required          = True
   #define filename_suffix        = '_xhmikosr_icl12'
 #endif
-
 #ifdef PREF_EGUR
   #define sse2_required          = True
   #define filename_suffix        = '_egur'
 #endif
-
 #ifdef PREF_EGUR_x64
   #define is64bit                = True
   #define sse2_required          = True
   #define filename_suffix        = '_egur_x64'
-  #define include_plugin_dscaler = False
+#endif
+
+; Compiler settings
+#ifndef is64bit
+#define is64bit = False
 #endif
 
 #if is64bit
   #define ff_sys = '{sys}'
+  #define include_plugin_dscaler = False
 #else
   #define ff_sys = '{syswow64}'
 #endif
 
-; Fail if no proper settings were chosen
-#if is64bit & include_plugin_dscaler
-There is no 64-bit version of DScaler.
-#endif
-#if VER < 0x05040200
-  #error Update your Inno Setup version
-#endif
-
-#ifndef UNICODE
-  #error Use the Unicode Inno Setup
-#endif
 
 [Setup]
 #if is64bit
@@ -148,6 +141,8 @@ InternalCompressLevel           = ultra
 SolidCompression                = True
 DefaultDirName                  = {code:GetDefaultInstallDir|}
 DirExistsWarning                = no
+DisableDirPage                  = auto
+DisableProgramGroupPage         = auto
 MinVersion                      = 0,5.01SP2
 OutputBaseFilename              = ffdshow_rev{#= SVN_REVISION}_{#= BUILD_YEAR}{#= BUILD_MONTH}{#= BUILD_DAY}{#= filename_suffix}
 OutputDir                       = {#= outputdir}
@@ -300,8 +295,10 @@ Name: "ffdshow\plugins\dscaler";    Description: "DScaler"
 Name: "resetsettings";           Description: "{cm:tsk_resetSettings}";           Components: ffdshow;                                    Check: NOT IsUpdate; GroupDescription: "{cm:tsk_settings}"
 Name: "video";                   Description: "{cm:tsk_videoFormatsSelect}";      Components: ffdshow; Flags: unchecked;                  Check: NOT IsUpdate; GroupDescription: "{cm:tsk_videoFormats}"
 Name: "video\h264";              Description: "H.264 / AVC";                      Components: ffdshow
-Name: "video\h264\libavcodec";   Description: "libavacodec";                      Components: ffdshow; Flags: unchecked exclusive
+Name: "video\h264\libavcodec";   Description: "libavcodec";                       Components: ffdshow; Flags: unchecked exclusive
+#if include_quicksync
 Name: "video\h264\quicksync";    Description: "Intel QuickSync";                  Components: ffdshow; Flags: unchecked exclusive
+#endif
 Name: "video\divx";              Description: "DivX";                             Components: ffdshow
 Name: "video\xvid";              Description: "Xvid";                             Components: ffdshow
 Name: "video\mpeg4";             Description: "{cm:tsk_genericMpeg4}";            Components: ffdshow
@@ -314,19 +311,25 @@ Name: "video\mpeg1\libavcodec";  Description: "libavcodec";                     
 Name: "video\mpeg2";             Description: "MPEG-2";                           Components: ffdshow; Flags: unchecked
 Name: "video\mpeg2\libmpeg2";    Description: "libmpeg2";                         Components: ffdshow; Flags: unchecked exclusive
 Name: "video\mpeg2\libavcodec";  Description: "libavcodec";                       Components: ffdshow; Flags: unchecked exclusive
+#if include_quicksync
 Name: "video\mpeg2\quicksync";   Description: "Intel QuickSync";                  Components: ffdshow; Flags: unchecked exclusive
+#endif
 Name: "video\huffyuv";           Description: "Huffyuv";                          Components: ffdshow
 Name: "video\qt";                Description: "SVQ1, SVQ3, RPZA, QT RLE";         Components: ffdshow
 Name: "video\vc1";               Description: "VC-1";                             Components: ffdshow; Flags: unchecked dontinheritcheck
 Name: "video\vc1\wmv9";          Description: "wmv9";                             Components: ffdshow; Flags: unchecked exclusive
 Name: "video\vc1\libavcodec";    Description: "libavcodec";                       Components: ffdshow; Flags: unchecked exclusive
+#if include_quicksync
 Name: "video\vc1\quicksync";     Description: "Intel QuickSync";                  Components: ffdshow; Flags: unchecked exclusive
+#endif
 Name: "video\wmv1";              Description: "WMV1";                             Components: ffdshow; Flags: unchecked dontinheritcheck
 Name: "video\wmv2";              Description: "WMV2";                             Components: ffdshow; Flags: unchecked dontinheritcheck
 Name: "video\wmv3";              Description: "WMV3";                             Components: ffdshow; Flags: unchecked dontinheritcheck
 Name: "video\wmv3\wmv9";         Description: "wmv9";                             Components: ffdshow; Flags: unchecked exclusive
 Name: "video\wmv3\libavcodec";   Description: "libavcodec";                       Components: ffdshow; Flags: unchecked exclusive
+#if include_quicksync
 Name: "video\wmv3\quicksync";    Description: "Intel QuickSync";                  Components: ffdshow; Flags: unchecked exclusive
+#endif
 Name: "video\wvp2";              Description: "WMVP, WVP2";                       Components: ffdshow; Flags: unchecked dontinheritcheck
 Name: "video\mss2";              Description: "MSS1, MSS2";                       Components: ffdshow; Flags: unchecked dontinheritcheck
 Name: "video\dvsd";              Description: "DV";                               Components: ffdshow; Flags: unchecked dontinheritcheck
@@ -425,7 +428,9 @@ Source: "{#= bindir}\ffdshow.ax";                 DestDir: "{app}";             
 Source: "..\manifest\ffdshow.ax.manifest";        DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion restartreplace uninsrestartdelete; OnlyBelowVersion: 0,6;
 
 Source: "{#= bindir}\ff_wmv9.dll";                DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
+#if include_quicksync
 Source: "{#= bindir}\IntelQuickSyncDecoder.dll";  DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
+#endif
 
 Source: "{#= bindir}\ff_vfw.dll";                 DestDir: "{sys}";                         Components: ffdshow\vfw;                Flags: ignoreversion restartreplace uninsrestartdelete
 Source: "..\manifest\ff_vfw.dll.manifest";        DestDir: "{sys}";                         Components: ffdshow\vfw;                Flags: ignoreversion restartreplace uninsrestartdelete; OnlyBelowVersion: 0,6;
@@ -953,10 +958,7 @@ function InitializeSetup(): Boolean;
 begin
   Result := True;
 
-  // Acquire CPU information
-  CPUCheck;
-
-  if NOT HasSupportedCPU() then begin
+  if GetCPULevel < 6 then begin
     Result := False;
     MsgBox(CustomMessage('unsupported_cpu'), mbError, MB_OK);
   end;
@@ -977,7 +979,6 @@ begin
     RemoveBuildUsingNSIS;
   end;
   #endif
-
 end;
 
 procedure CurStepChanged(CurStep: TSetupStep);
@@ -1193,12 +1194,15 @@ begin
 #endif
 end;
 
-#if include_plugin_virtualdub
 function ShouldSkipPage(PageID: Integer): Boolean;
 var
   regval: String;
 begin
-  Result := False;
+  if PageID = wpLicense then begin
+    Result := IsUpdate;
+  end;
+
+  #if include_plugin_virtualdub
   if PageID = VdubDirPage.ID then begin
     if IsComponentSelected('ffdshow\plugins\virtualdub') then begin
       if VdubDirPage.Values[0] = '' then begin
@@ -1211,11 +1215,11 @@ begin
             VdubDirPage.Values[0] := ExpandConstant('{sd}\VirtualDub\plugins')
         else
           VdubDirPage.Values[0] := ExpandConstant('{app}');
-      end
+      end;
     end
     else begin
       Result := True;
-    end
-  end
+    end;
+  end;
+  #endif
 end;
-#endif
