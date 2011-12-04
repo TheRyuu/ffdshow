@@ -227,8 +227,9 @@ template <class _mm, int src_aligned, int dst_aligned> void TffdshowConverters2:
     if (xCount <= 0)
         return;
     _mm::__m _mm0,_mm1,_mm2,_mm3,_mm4,_mm5;
-    _mm::__m zero;
-    pxor(zero,zero);
+    _mm::__m ffff;
+    pxor(ffff,ffff);
+    pcmpeqb(ffff,ffff);
     for (int y = 0 ; y < dy ; y++) {
         if (y == dy-1)
             int a=0;
@@ -254,8 +255,8 @@ template <class _mm, int src_aligned, int dst_aligned> void TffdshowConverters2:
             punpcklbw(_mm2, _mm4);
             punpckhbw(_mm3, _mm4);
             _mm5 = _mm1;
-            punpcklbw(_mm1, zero);
-            punpckhbw(_mm5, zero);
+            punpcklbw(_mm1, ffff);
+            punpckhbw(_mm5, ffff);
             _mm4 = _mm2;
             punpcklwd(_mm2, _mm1);
             punpckhwd(_mm4, _mm1);
@@ -293,8 +294,9 @@ template <class _mm, int src_aligned, int dst_aligned> void TffdshowConverters2:
     if (xCount <= 0)
         return;
     _mm::__m _mm0,_mm1,_mm2,_mm3,_mm4,_mm5;
-    _mm::__m zero;
-    pxor(zero,zero);
+    _mm::__m ffff;
+    pxor(ffff,ffff);
+    pcmpeqb(ffff,ffff);
     for (int y = 0 ; y < dy ; y++) {
         if (y == dy-1)
             int a=0;
@@ -319,8 +321,8 @@ template <class _mm, int src_aligned, int dst_aligned> void TffdshowConverters2:
             _mm5 = _mm1;
             punpcklwd(_mm1, _mm2);
             punpckhwd(_mm5, _mm2);
-            _mm2 = zero;
-            _mm3 = zero;
+            _mm2 = ffff;
+            _mm3 = ffff;
             punpcklwd(_mm2, _mm4);
             punpckhwd(_mm3, _mm4);
             _mm4 = _mm2;
