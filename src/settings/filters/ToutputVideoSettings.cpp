@@ -98,7 +98,7 @@ ToutputVideoSettings::ToutputVideoSettings(TintStrColl *Icoll,TfilterIDFFs *filt
         IDFF_outP216            ,&ToutputVideoSettings::p216               ,0,0,_l(""),0,
         _l("outP216"),1,
         IDFF_outAYUV            ,&ToutputVideoSettings::ayuv               ,0,0,_l(""),0,
-        _l("outAYUV"),1,
+        _l("out_AYUV"),0,  // firstly outAYUV and enabled by default, and changed to out_AYUV with a new default setting.
         IDFF_outY416            ,&ToutputVideoSettings::y416               ,0,0,_l(""),0,
         _l("outY416"),1,
         IDFF_highQualityRGB     ,&ToutputVideoSettings::highQualityRGB     ,0,0,_l(""),1,
