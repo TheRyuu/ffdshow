@@ -91,9 +91,9 @@ void TffdshowConverters::convert(const uint8_t* srcY,
                                  stride_t stride_dst)
 {
     if (m_rgb_limit) {
-        convert_translate_incsp<1>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
+        convert_translate_align<1>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
     } else {
-        convert_translate_incsp<0>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
+        convert_translate_align<0>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
     }
 
 #ifndef WIN64
@@ -604,7 +604,7 @@ void TffdshowConverters::convert_two_lines(const unsigned char* &srcY,
 }
 
 // translate stack arguments to template arguments.
-template <int rgb_limit> void TffdshowConverters::convert_translate_incsp(
+template <bool rgb_limit> void TffdshowConverters::convert_translate_align(
     const uint8_t* srcY,
     const uint8_t* srcCb,
     const uint8_t* srcCr,
@@ -615,33 +615,51 @@ template <int rgb_limit> void TffdshowConverters::convert_translate_incsp(
     stride_t stride_CbCr,
     stride_t stride_dst)
 {
-    switch (m_incsp) {
-        case FF_CSP_420P:
-            convert_translate_outcsp<FF_CSP_420P, rgb_limit>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
-            return;
-        case FF_CSP_NV12:
-            convert_translate_outcsp<FF_CSP_NV12, rgb_limit>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
-            return;
-        case FF_CSP_YUY2:
-            // omit optimization by rgb_limit to reduce compilation time and code size
-            convert_translate_outcsp<FF_CSP_YUY2, 1>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
-            return;
-        case FF_CSP_422P:
-            convert_translate_outcsp<FF_CSP_422P, 1>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
-            return;
-        case FF_CSP_420P10:
-            convert_translate_outcsp<FF_CSP_420P10, rgb_limit>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
-            return;
-        case FF_CSP_422P10:
-            convert_translate_outcsp<FF_CSP_422P10, 1>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
-            return;
-        case FF_CSP_444P10:
-            convert_translate_outcsp<FF_CSP_444P10, 1>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
-            return;
+    if ((stride_dst & 0xf) || (stride_t(dst) & 0xf)) {
+        convert_translate_dithering<0, rgb_limit>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
+    } else {
+        convert_translate_dithering<1, rgb_limit>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
     }
 }
 
-template <uint64_t incsp, int rgb_limit> void TffdshowConverters::convert_translate_outcsp(
+template <bool aligned, bool rgb_limit> void TffdshowConverters::convert_translate_dithering(
+    const uint8_t* srcY,
+    const uint8_t* srcCb,
+    const uint8_t* srcCr,
+    uint8_t* dst,
+    int dx,
+    int dy,
+    stride_t stride_Y,
+    stride_t stride_CbCr,
+    stride_t stride_dst)
+{
+    if (m_dithering) {
+        convert_translate_isMPEG1<1, aligned, rgb_limit>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
+    } else {
+        convert_translate_isMPEG1<0, aligned, rgb_limit>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
+    }
+}
+
+template <bool dithering, bool aligned, bool rgb_limit> void TffdshowConverters::convert_translate_isMPEG1(
+    const uint8_t* srcY,
+    const uint8_t* srcCb,
+    const uint8_t* srcCr,
+    uint8_t* dst,
+    int dx,
+    int dy,
+    stride_t stride_Y,
+    stride_t stride_CbCr,
+    stride_t stride_dst)
+{
+    if (m_isMPEG1) {
+        // omit optimization by rgb_limit and aligned to reduce compilation time and code size
+        convert_translate_outcsp<1, dithering, 0, 1>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
+    } else {
+        convert_translate_outcsp<0, dithering, aligned, rgb_limit>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
+    }
+}
+
+template <bool isMPEG1, bool dithering, bool aligned, bool rgb_limit> void TffdshowConverters::convert_translate_outcsp(
     const uint8_t* srcY,
     const uint8_t* srcCb,
     const uint8_t* srcCr,
@@ -654,22 +672,22 @@ template <uint64_t incsp, int rgb_limit> void TffdshowConverters::convert_transl
 {
     switch (m_outcsp) {
         case FF_CSP_RGB32:
-            convert_translate_align<incsp, FF_CSP_RGB32, rgb_limit>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
+            convert_translate_incsp<FF_CSP_RGB32, isMPEG1, dithering, aligned, rgb_limit>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
             return;
         case FF_CSP_RGB24:
-            // omit optimization by rgb_limit to reduce compilation time and code size
-            convert_translate_align<incsp, FF_CSP_RGB24, 1>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
+            // omit optimization by aligned and rgb_limit to reduce compilation time and code size
+            convert_translate_incsp<FF_CSP_RGB24, isMPEG1, dithering, 0, 1>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
             return;
         case FF_CSP_BGR32:
-            convert_translate_align<incsp, FF_CSP_BGR32, 1>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
+            convert_translate_incsp<FF_CSP_BGR32, isMPEG1, dithering, 0, 1>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
             return;
         case FF_CSP_BGR24:
-            convert_translate_align<incsp, FF_CSP_BGR24, 1>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
+            convert_translate_incsp<FF_CSP_BGR24, isMPEG1, dithering, 0, 1>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
             return;
     }
 }
 
-template <uint64_t incsp, uint64_t outcsp, int rgb_limit> void TffdshowConverters::convert_translate_align(
+template <uint64_t outcsp, bool isMPEG1, bool dithering, bool aligned, bool rgb_limit> void TffdshowConverters::convert_translate_incsp(
     const uint8_t* srcY,
     const uint8_t* srcCb,
     const uint8_t* srcCr,
@@ -680,51 +698,33 @@ template <uint64_t incsp, uint64_t outcsp, int rgb_limit> void TffdshowConverter
     stride_t stride_CbCr,
     stride_t stride_dst)
 {
-    if ((stride_dst & 0xf) || (stride_t(dst) & 0xf)) {
-        convert_translate_dithering<incsp, outcsp, rgb_limit, 0>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
-    } else {
-        convert_translate_dithering<incsp, outcsp, rgb_limit, 1>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
+    switch (m_incsp) {
+        case FF_CSP_420P:
+            convert_main<FF_CSP_420P, outcsp, isMPEG1, dithering, aligned, rgb_limit>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
+            return;
+        case FF_CSP_NV12:
+            convert_main<FF_CSP_NV12, outcsp, isMPEG1, dithering, aligned, rgb_limit>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
+            return;
+        case FF_CSP_YUY2:
+            // omit optimization by rgb_limit to reduce compilation time and code size
+            convert_main<FF_CSP_YUY2, outcsp, 0, dithering, 0, 1>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
+            return;
+        case FF_CSP_422P:
+            convert_main<FF_CSP_422P, outcsp, 0, dithering, 0, 1>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
+            return;
+        case FF_CSP_420P10:
+            convert_main<FF_CSP_420P10, outcsp, 0, 1, aligned, rgb_limit>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
+            return;
+        case FF_CSP_422P10:
+            convert_main<FF_CSP_422P10, outcsp, 0, 1, 0, 1>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
+            return;
+        case FF_CSP_444P10:
+            convert_main<FF_CSP_444P10, outcsp, 0, 1, 0, 1>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
+            return;
     }
 }
 
-template <uint64_t incsp, uint64_t outcsp, int rgb_limit, int aligned> void TffdshowConverters::convert_translate_dithering(
-    const uint8_t* srcY,
-    const uint8_t* srcCb,
-    const uint8_t* srcCr,
-    uint8_t* dst,
-    int dx,
-    int dy,
-    stride_t stride_Y,
-    stride_t stride_CbCr,
-    stride_t stride_dst)
-{
-    if (m_dithering || (incsp & FF_CSPS_MASK_HIGH_BIT)) {
-        convert_translate_isMPEG1<incsp, outcsp, rgb_limit, aligned, 1>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
-    } else {
-        convert_translate_isMPEG1<incsp, outcsp, rgb_limit, aligned, 0>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
-    }
-}
-
-template <uint64_t incsp, uint64_t outcsp, int rgb_limit, int aligned, bool dithering> void TffdshowConverters::convert_translate_isMPEG1(
-    const uint8_t* srcY,
-    const uint8_t* srcCb,
-    const uint8_t* srcCr,
-    uint8_t* dst,
-    int dx,
-    int dy,
-    stride_t stride_Y,
-    stride_t stride_CbCr,
-    stride_t stride_dst)
-{
-    if (m_isMPEG1 && (incsp == FF_CSP_420P || incsp == FF_CSP_NV12)) {
-        // omit optimization by rgb_limit and aligned to reduce compilation time and code size
-        convert_main<incsp, outcsp, 1, 0, dithering, 1>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
-    } else {
-        convert_main<incsp, outcsp, rgb_limit, aligned, dithering, 0>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
-    }
-}
-
-template <uint64_t incsp, uint64_t outcsp, int rgb_limit, int aligned, bool dithering, bool isMPEG1> void TffdshowConverters::convert_main(
+template <uint64_t incsp, uint64_t outcsp, bool isMPEG1, bool dithering, bool aligned, bool rgb_limit> void TffdshowConverters::convert_main(
     const uint8_t* srcY,
     const uint8_t* srcCb,
     const uint8_t* srcCr,
@@ -753,7 +753,7 @@ template <uint64_t incsp, uint64_t outcsp, int rgb_limit, int aligned, bool dith
             int endy = (i == m_thread_count -1) ?
                        dy :
                        starty + lines_per_thread + is_odd;
-            threadpool.schedule(Tfunc_obj<incsp,outcsp,rgb_limit,aligned,dithering,isMPEG1>
+            threadpool.schedule(Tfunc_obj<incsp, outcsp, isMPEG1, dithering, aligned, rgb_limit>
                                 (srcY,
                                  srcCb,
                                  srcCr,
@@ -772,7 +772,7 @@ template <uint64_t incsp, uint64_t outcsp, int rgb_limit, int aligned, bool dith
     }
 }
 
-template <uint64_t incsp, uint64_t outcsp, int rgb_limit, int aligned, bool dithering, bool isMPEG1> void TffdshowConverters::convert_main_loop(
+template <uint64_t incsp, uint64_t outcsp, bool isMPEG1, bool dithering, bool aligned, bool rgb_limit> void TffdshowConverters::convert_main_loop(
     const uint8_t* srcY,
     const uint8_t* srcCb,
     const uint8_t* srcCr,

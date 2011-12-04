@@ -127,7 +127,7 @@ private:
                            const uint16_t *dither_ptr);
 
     // translate stack arguments to template arguments.
-    template <int rgb_limit> void convert_translate_incsp(
+    template <bool rgb_limit> void convert_translate_align(
         const uint8_t* srcY,
         const uint8_t* srcCb,
         const uint8_t* srcCr,
@@ -138,7 +138,7 @@ private:
         stride_t stride_CbCr,
         stride_t stride_dst);
 
-    template <uint64_t incsp, int rgb_limit> void convert_translate_outcsp(
+    template <bool aligned, bool rgb_limit> void convert_translate_dithering(
         const uint8_t* srcY,
         const uint8_t* srcCb,
         const uint8_t* srcCr,
@@ -149,7 +149,7 @@ private:
         stride_t stride_CbCr,
         stride_t stride_dst);
 
-    template <uint64_t incsp, uint64_t outcsp, int rgb_limit> void convert_translate_align(
+    template <bool dithering, bool aligned, bool rgb_limit> void convert_translate_isMPEG1(
         const uint8_t* srcY,
         const uint8_t* srcCb,
         const uint8_t* srcCr,
@@ -160,7 +160,7 @@ private:
         stride_t stride_CbCr,
         stride_t stride_dst);
 
-    template <uint64_t incsp, uint64_t outcsp, int rgb_limit, int aligned> void convert_translate_dithering(
+    template <bool isMPEG1, bool dithering, bool aligned, bool rgb_limit> void convert_translate_outcsp(
         const uint8_t* srcY,
         const uint8_t* srcCb,
         const uint8_t* srcCr,
@@ -171,7 +171,7 @@ private:
         stride_t stride_CbCr,
         stride_t stride_dst);
 
-    template <uint64_t incsp, uint64_t outcsp, int rgb_limit, int aligned, bool dithering> void convert_translate_isMPEG1(
+    template <uint64_t outcsp, bool isMPEG1, bool dithering, bool aligned, bool rgb_limit> void convert_translate_incsp(
         const uint8_t* srcY,
         const uint8_t* srcCb,
         const uint8_t* srcCr,
@@ -182,7 +182,7 @@ private:
         stride_t stride_CbCr,
         stride_t stride_dst);
 
-    template <uint64_t incsp, uint64_t outcsp, int rgb_limit, int aligned, bool dithering, bool isMPEG1> void convert_main(
+    template <uint64_t incsp, uint64_t outcsp, bool isMPEG1, bool dithering, bool aligned, bool rgb_limit> void convert_main(
         const uint8_t* srcY,
         const uint8_t* srcCb,
         const uint8_t* srcCr,
@@ -193,7 +193,7 @@ private:
         stride_t stride_CbCr,
         stride_t stride_dst);
 
-    template <uint64_t incsp, uint64_t outcsp, int rgb_limit, int aligned, bool dithering, bool isMPEG1> void convert_main_loop(
+    template <uint64_t incsp, uint64_t outcsp, bool isMPEG1, bool dithering, bool aligned, bool rgb_limit> void convert_main_loop(
         const uint8_t* srcY,
         const uint8_t* srcCb,
         const uint8_t* srcCr,
@@ -206,7 +206,7 @@ private:
         int starty,
         int endy);
 
-    template<uint64_t incsp, uint64_t outcsp, int rgb_limit, int aligned, bool dithering, bool isMPEG1> struct Tfunc_obj {
+    template<uint64_t incsp, uint64_t outcsp, bool isMPEG1, bool dithering, bool aligned, bool rgb_limit> struct Tfunc_obj {
     private:
         const uint8_t* srcY;
         const uint8_t* srcCb;
@@ -223,7 +223,7 @@ private:
         TffdshowConverters *self;
     public:
         void operator()(void) {
-            self->convert_main_loop<incsp,outcsp,rgb_limit,aligned,dithering,isMPEG1>(srcY,srcCb,srcCr,dst,dx,dy,stride_Y,stride_CbCr,stride_dst,starty,endy);
+            self->convert_main_loop<incsp, outcsp, isMPEG1, dithering, aligned, rgb_limit>(srcY,srcCb,srcCr,dst,dx,dy,stride_Y,stride_CbCr,stride_dst,starty,endy);
         }
         Tfunc_obj(const uint8_t* IsrcY,
                   const uint8_t* IsrcCb,
