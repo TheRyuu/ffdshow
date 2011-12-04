@@ -220,7 +220,7 @@ void ToutputVideoSettings::getOutputColorspaces(TlistFF_CSPS &ocsps)
         ocsps.push_back(FF_CSP_Y416);
     }
     if (outPrimaryCsp) {
-        ocsps.push_back(outPrimaryCsp);
+        ocsps.push_back(csp_reg2ffdshow(outPrimaryCsp));
     }
     ocsps.unique();
 }
