@@ -198,9 +198,7 @@ HRESULT TDXVADecoderH264::DecodeFrame(BYTE* pDataIn, UINT nSize, REFERENCE_TIME 
         return S_FALSE;		
     }
 
-    if (m_pCodec->libavcodec->FFH264DecodeBuffer(m_pFilter->GetAVCtx(), pDataIn, nSize, &nFramePOC, &nOutPOC, &rtOutStart) == -1) {
-        return S_FALSE;
-    }
+    m_pCodec->libavcodec->FFH264DecodeBuffer(m_pCodec->avctx, pDataIn, nSize, &nFramePOC, &nOutPOC, &rtOutStart);
 
     Nalu.SetBuffer (pDataIn, nSize, m_nNALLength);
     while (Nalu.ReadNext()) {
