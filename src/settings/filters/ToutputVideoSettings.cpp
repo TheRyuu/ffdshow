@@ -60,6 +60,18 @@ const char_t* ToutputVideoSettings::rgbInterlaceMethods[]= {
     NULL
 };
 
+const uint64_t ToutputVideoSettings::primaryColorSpaces[] = {
+    FF_CSP_420P,
+    FF_CSP_NV12,
+    FF_CSP_RGB32,
+    FF_CSP_YUY2,
+    FF_CSP_AYUV,
+    FF_CSP_P010,
+    FF_CSP_P210,
+    FF_CSP_Y416,
+    0
+};
+
 ToutputVideoSettings::ToutputVideoSettings(TintStrColl *Icoll,TfilterIDFFs *filters):TfilterSettingsVideo(sizeof(*this),Icoll,filters,&idffs,false)
 {
     half=0;
@@ -76,6 +88,9 @@ ToutputVideoSettings::ToutputVideoSettings(TintStrColl *Icoll,TfilterIDFFs *filt
         _l("hwDeintMethod"),0,
         IDFF_hwDeintFieldOrder  ,&ToutputVideoSettings::hwDeintFieldOrder  ,0,2,_l(""),1,
         _l("hwDeintFieldOrder"),0,
+
+        IDFF_outPrimaryCSP      ,&ToutputVideoSettings::outPrimaryCsp    ,0,58,_l(""),0,
+        _l("outPrimaryCsp"),0,  // 0:Auto
 
         IDFF_outYV12            ,&ToutputVideoSettings::yv12               ,0,0,_l(""),0,
         _l("outYV12"),1,
@@ -165,7 +180,7 @@ const int* ToutputVideoSettings::getResets(unsigned int pageId)
     return idResets;
 }
 
-void ToutputVideoSettings::getOutputColorspaces(ints &ocsps)
+void ToutputVideoSettings::getOutputColorspaces(TlistFF_CSPS &ocsps)
 {
     ocsps.clear();
     if (yv12) {
@@ -204,15 +219,19 @@ void ToutputVideoSettings::getOutputColorspaces(ints &ocsps)
     if (y416) {
         ocsps.push_back(FF_CSP_Y416);
     }
+    if (outPrimaryCsp) {
+        ocsps.push_back(outPrimaryCsp);
+    }
+    ocsps.unique();
 }
 
 void ToutputVideoSettings::getOutputColorspaces(TcspInfos &ocsps)
 {
-    ints ocspsi;
+    TlistFF_CSPS ocspsi;
     getOutputColorspaces(ocspsi);
     ocsps.clear();
-    for (ints::const_iterator o=ocspsi.begin(); o!=ocspsi.end(); o++) {
-        ocsps.push_back(csp_getInfo(*o));
+    foreach (uint64_t o, ocspsi) {
+        ocsps.push_back(csp_getInfo(o));
     }
 }
 

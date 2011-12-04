@@ -386,8 +386,13 @@ const TcspInfo* csp_getInfoFcc(FOURCC fcccsp)
     }
 }
 
-uint64_t csp_bestMatch(uint64_t inCSP,uint64_t wantedCSPS,int *rank)
+uint64_t csp_bestMatch(uint64_t inCSP, uint64_t wantedCSPS, int *rank, uint64_t outPrimaryCSP)
 {
+    if (outPrimaryCSP & wantedCSPS & FF_CSPS_MASK) {
+        if (rank)
+            *rank = 200;
+        return outPrimaryCSP|(inCSP&~FF_CSPS_MASK);
+    }
     uint64_t outCSP=inCSP&wantedCSPS&FF_CSPS_MASK;
     if (outCSP) {
         if (rank) {
@@ -1275,14 +1280,15 @@ bool csp_inFOURCCmask(uint64_t x,FOURCC fcc)
 bool TcspInfos::TsortFc::operator ()(const TcspInfo* &csp1,const TcspInfo* &csp2)
 {
     int rank1;
-    csp_bestMatch(csp,csp1->id,&rank1);
+    csp_bestMatch(csp,csp1->id, &rank1, outPrimaryCSP);
     int rank2;
-    csp_bestMatch(csp,csp2->id,&rank2);
+    csp_bestMatch(csp,csp2->id, &rank2, outPrimaryCSP);
     return rank1>rank2;
 }
-void TcspInfos::sort(uint64_t csp)
+
+void TcspInfos::sort(uint64_t csp, uint64_t outPrimaryCSP)
 {
-    std::sort(begin(),end(),TsortFc(csp&FF_CSPS_MASK));
+    std::sort(begin(),end(),TsortFc(csp&FF_CSPS_MASK, outPrimaryCSP));
 }
 
 uint64_t getBMPcolorspace(const BITMAPINFOHEADER *hdr,const TcspInfos &forcedCsps)

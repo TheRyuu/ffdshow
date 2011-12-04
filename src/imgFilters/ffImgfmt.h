@@ -18,6 +18,8 @@
 /* ffdshow colorspace ids, values should be unique including flag values, and must fit inside a uint64_t
  * (an enum should be used instead of defines, but GCC does not support an enum with type uint64_t ?)
  */
+
+// Do not reorder or renumber! Values are stored in user's registry.
 #define FF_CSP_NULL  (0ULL)
 
 #define FF_CSP_420P  (1ULL << 0)    // 0x0000001
@@ -80,6 +82,28 @@
 
 #include <stddef.h>
 typedef ptrdiff_t stride_t;
+
+//=============================== ffdshow registry ===============================
+// Because QWORD registry value is not supported as ffdshow settings
+// (Tint64OptionT is not implemented), we convert it to int here.
+// FF_CSP_420P = 1, FF_CSP_422P = 2, FF_CSP_444P = 3, ...
+static int csp_ffdshow2reg(uint64_t csp)
+{
+    int i = 0;
+    csp &= FF_CSPS_MASK;
+    while (csp) {
+        csp = csp >> 1;
+        i++;
+    };
+    return i;
+}
+
+static uint64_t csp_reg2ffdshow(int regcsp) {
+    if (regcsp)
+        return 1ULL << (regcsp -1);
+    else
+        return 0;
+}
 
 //==================================== xvid4 =====================================
 
@@ -317,13 +341,13 @@ struct TcspInfos :std::vector<const TcspInfo*,array_allocator<const TcspInfo*,FF
 private:
     struct TsortFc {
     private:
-        uint64_t csp;
+        uint64_t csp,outPrimaryCSP;
     public:
-        TsortFc(uint64_t Icsp):csp(Icsp) {}
+        TsortFc(uint64_t Icsp,uint64_t IoutPrimaryCSP):csp(Icsp),outPrimaryCSP(IoutPrimaryCSP) {}
         bool operator ()(const TcspInfo* &csp1,const TcspInfo* &csp2);
     };
 public:
-    void sort(uint64_t csp);
+    void sort(uint64_t csp, uint64_t outPrimaryCSP);
 };
 
 static __inline const TcspInfo* csp_getInfo(uint64_t csp)
@@ -388,7 +412,7 @@ bool csp_inFOURCCmask(uint64_t x,FOURCC fcc);
 
 extern char_t* csp_getName2(const TcspInfo *cspInfo,uint64_t csp,char_t *buf,size_t len);
 extern char_t* csp_getName(uint64_t csp,char_t *buf,size_t len);
-extern uint64_t csp_bestMatch(uint64_t inCSP,uint64_t wantedCSPS,int *rank=NULL);
+extern uint64_t csp_bestMatch(uint64_t inCSP,uint64_t wantedCSPS,int *rank=NULL, uint64_t outPrimaryCSP=0);
 
 static __inline void csp_yuv_adj_to_plane(uint64_t &csp,const TcspInfo *cspInfo,unsigned int dy,unsigned char *data[4],stride_t stride[4])
 {

@@ -320,6 +320,8 @@ HRESULT TffdshowDecVideo::GetMediaType(int iPosition, CMediaType *mtOut)
     }
 
     calcNewSize(pictOut);
+    if (!pictOut.csp)
+        return VFW_S_NO_MORE_ITEMS;
 
     // Support mediatype with unknown dimension. This is necessary to support MEDIASUBTYPE_H264.
     // http://msdn.microsoft.com/en-us/library/dd757808(VS.85).aspx
@@ -331,21 +333,10 @@ HRESULT TffdshowDecVideo::GetMediaType(int iPosition, CMediaType *mtOut)
         pictOut.rectFull.dy = 160;
     }
 
-    if (pictOut.csp != 0) {
-        ocsps.sort(pictOut.csp);
-    }
+    ocsps.sort(pictOut.csp, csp_reg2ffdshow(presetSettings->output->outPrimaryCsp));
 
     oldRect=pictOut.rectFull;
 
-    static const TcspInfo dv= {
-        0,_l("DVSD"),
-        3,24, //Bpp
-        1, //numplanes
-        {0,0,0,0}, //shiftX
-        {0,0,0,0}, //shiftY
-        {0,0,0,0},  //black,
-        FOURCC_DVSD, FOURCC_YV12, &MEDIASUBTYPE_DVSD
-    };
     const TcspInfo *c = ocsps[iPosition];
     BITMAPINFOHEADER bih;
     memset(&bih,0,sizeof(bih));

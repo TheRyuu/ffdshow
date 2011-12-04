@@ -10,9 +10,11 @@ private:
 protected:
     const int* getResets(unsigned int pageId);
     virtual int getDefault(int id);
+    typedef std::list<uint64_t> TlistFF_CSPS;
 public:
     ToutputVideoSettings(TintStrColl *Icoll=NULL,TfilterIDFFs *filters=NULL);
 
+    int outPrimaryCsp;
     int yv12,yuy2,uyvy,nv12,rgb32,rgb24,p010,p016,p210,p216,ayuv,y416;
     int get_cspOptionsBlackCutoff(int video_full_range_flag) const;
     int get_cspOptionsWhiteCutoff(int video_full_range_flag) const;
@@ -24,6 +26,7 @@ public:
     static const char_t *deintMethods[];
     static const char_t *deintFieldOrder[];
     static const char_t *rgbInterlaceMethods[];
+    static const uint64_t primaryColorSpaces[];
 
     struct ToutputColorspace {
         ToutputColorspace(DWORD IbiCompression,const GUID *Ig,WORD IbiBitCount,WORD IbiPlanes):biCompression(IbiCompression),g(Ig),biBitCount(IbiBitCount),biPlanes(IbiPlanes) {}
@@ -31,7 +34,7 @@ public:
         const GUID *g;
         WORD biBitCount,biPlanes;
     };
-    void getOutputColorspaces(ints &ocsps),getOutputColorspaces(TcspInfos &ocsps);
+    void getOutputColorspaces(TlistFF_CSPS &ocsps),getOutputColorspaces(TcspInfos &ocsps);
     int hwOverlayAspect;
     int hwDeinterlace,hwDeintMethod, hwDeintFieldOrder;
     int highQualityRGB,dithering;

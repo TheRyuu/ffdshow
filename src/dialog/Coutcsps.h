@@ -1,5 +1,4 @@
-#ifndef _COUTCSPSPAGE_H_
-#define _COUTCSPSPAGE_H_
+#pragma once
 
 #include "TconfPageDecVideo.h"
 
@@ -8,7 +7,8 @@ class ToutcspsPage :public TconfPageDecVideo
 private:
     static const int idcs[],idffs[];
 
-    void overlay2dlg(void),csp2dlg(void);
+    void overlay2dlg(),csp2dlg();
+    void dlg2primaryCsp();
     virtual INT_PTR msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
     int *backupDV;
 public:
@@ -18,11 +18,8 @@ public:
             free(backupDV);
         }
     }
-    virtual void init(void);
-    virtual void cfg2dlg(void);
+    virtual void init();
+    virtual void cfg2dlg();
     virtual void getTip(char_t *tipS,size_t len);
-    virtual void translate(void);
+    virtual void translate();
 };
-
-#endif
-

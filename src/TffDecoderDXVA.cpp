@@ -126,11 +126,6 @@ HRESULT TffdshowDecVideoDXVA::GetMediaType(int iPosition, CMediaType *mtOut)
         pictOut.rectFull.dy = 160;
     }
 
-    // Not sure about DXVA
-    if (false && pictOut.csp != 0) {
-        ocsps.sort(pictOut.csp);
-    }
-
     oldRect=pictOut.rectFull;
 
     const TcspInfo *c=ocsps[iPosition];

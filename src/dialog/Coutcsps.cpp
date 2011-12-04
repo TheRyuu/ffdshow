@@ -27,7 +27,7 @@ const int ToutcspsPage::idffs[]= {IDFF_outYV12    ,IDFF_outYUY2    ,IDFF_outUYVY
 
 #define TOUTCSPSPAGE_RECONNECTABLE_FILTERS _l("  Overlay Mixer\n  VMR\n  VMR9\n  VobSub\n  Haali's Video Renderer\n  EVR\n  MadVR\n  ffdshow")
 
-void ToutcspsPage::init(void)
+void ToutcspsPage::init()
 {
     addHint(IDC_CHB_HWDEINTERLACE,     _l("Send interlacing related information obtained from the input stream or ffdshow's internal decoders to the next filter. ")
             _l("Some filters (like video renderers) will use this information to deinterlace the video if neccessary. ")
@@ -37,15 +37,16 @@ void ToutcspsPage::init(void)
     addHint(IDC_CBX_OUT_HWDEINT_METHOD,_l("Auto: according to source flags, bob for interlaced frames, weave for progressive frames.\n")
             _l("Force weave: weave for all frames, regardless of source flags.\n")
             _l("Force bob: bob for all frames, regardless of source flags."));
+    addHint(IDC_CBX_OUT_PRIMARY_CSP, L"The selected color space is used whenever possible. Otherwise one of the enabled color spaces from below is used. Warning: forcing a preferred color space can cause extra conversions and performance loss.");
 }
-void ToutcspsPage::cfg2dlg(void)
+void ToutcspsPage::cfg2dlg()
 {
     csp2dlg();
     setCheck(IDC_CHB_FLIP,cfgGet(IDFF_flip));
     overlay2dlg();
 }
 
-void ToutcspsPage::csp2dlg(void)
+void ToutcspsPage::csp2dlg()
 {
     setCheck(IDC_CHB_OUT_YV12 ,cfgGet(IDFF_outYV12  ));
     setCheck(IDC_CHB_OUT_YUY2 ,cfgGet(IDFF_outYUY2  ));
@@ -53,14 +54,43 @@ void ToutcspsPage::csp2dlg(void)
     setCheck(IDC_CHB_OUT_NV12 ,cfgGet(IDFF_outNV12  ));
     setCheck(IDC_CHB_OUT_RGB32,cfgGet(IDFF_outRGB32 ));
     setCheck(IDC_CHB_OUT_RGB24,cfgGet(IDFF_outRGB24 ));
-    setCheck(IDC_CHB_OUT_P016,cfgGet(IDFF_outP016  ));
-    setCheck(IDC_CHB_OUT_P010,cfgGet(IDFF_outP010  ));
-    setCheck(IDC_CHB_OUT_P210,cfgGet(IDFF_outP210  ));
-    setCheck(IDC_CHB_OUT_P216,cfgGet(IDFF_outP216  ));
-    setCheck(IDC_CHB_OUT_AYUV,cfgGet(IDFF_outAYUV  ));
-    setCheck(IDC_CHB_OUT_Y416,cfgGet(IDFF_outY416  ));
+    setCheck(IDC_CHB_OUT_P016 ,cfgGet(IDFF_outP016  ));
+    setCheck(IDC_CHB_OUT_P010 ,cfgGet(IDFF_outP010  ));
+    setCheck(IDC_CHB_OUT_P210 ,cfgGet(IDFF_outP210  ));
+    setCheck(IDC_CHB_OUT_P216 ,cfgGet(IDFF_outP216  ));
+    setCheck(IDC_CHB_OUT_AYUV ,cfgGet(IDFF_outAYUV  ));
+    setCheck(IDC_CHB_OUT_Y416 ,cfgGet(IDFF_outY416  ));
+    int i = cfgGet(IDFF_outPrimaryCSP);
+    if (i > 0) {
+        uint64_t csp = csp_reg2ffdshow(i);
+        const TcspInfo *cspInfo = csp_getInfo(csp);
+        int j = 0;
+        while (ToutputVideoSettings::primaryColorSpaces[j]) {
+            if (ToutputVideoSettings::primaryColorSpaces[j] == cspInfo->id)
+                break;
+            j++;
+        };
+        if (ToutputVideoSettings::primaryColorSpaces[j])
+            i = j + 1;
+        else
+            i = 0;
+    } else {
+        i = 0; // Auto
+    }
+    cbxSetCurSel(IDC_CBX_OUT_PRIMARY_CSP,i);
 }
-void ToutcspsPage::overlay2dlg(void)
+
+void ToutcspsPage::dlg2primaryCsp()
+{
+    int i = cbxGetCurSel(IDC_CBX_OUT_PRIMARY_CSP);
+    if (i > 0) {
+        uint64_t csp = ToutputVideoSettings::primaryColorSpaces[--i];
+        i = csp_ffdshow2reg(csp);
+    }
+    cfgSet(IDFF_outPrimaryCSP, i);
+}
+
+void ToutcspsPage::overlay2dlg()
 {
     int enabledHW=(filterMode&IDFF_FILTERMODE_VFW)==0;
     int hwdeint=cfgGet(IDFF_setDeintInOutSample);
@@ -110,6 +140,9 @@ INT_PTR ToutcspsPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
                     overlay2dlg();
                     return TRUE;
                 }
+                case IDC_CBX_OUT_PRIMARY_CSP:
+                    dlg2primaryCsp();
+                    return TRUE;
             }
             break;
     }
@@ -125,12 +158,19 @@ void ToutcspsPage::getTip(char_t *tipS,size_t len)
     }
 }
 
-void ToutcspsPage::translate(void)
+void ToutcspsPage::translate()
 {
     TconfPageDecVideo::translate();
 
     cbxTranslate(IDC_CBX_OUT_HWDEINT_METHOD,ToutputVideoSettings::deintMethods);
     cbxTranslate(IDC_CBX_OUT_HWDEINT_FIELDORDER,ToutputVideoSettings::deintFieldOrder);
+    cbxAdd(IDC_CBX_OUT_PRIMARY_CSP, L"Auto");
+    int i = 0;
+    while (ToutputVideoSettings::primaryColorSpaces[i]) {
+        const TcspInfo *cspInfo = csp_getInfo(ToutputVideoSettings::primaryColorSpaces[i]);
+        cbxAdd(IDC_CBX_OUT_PRIMARY_CSP, _(IDC_CBX_OUT_PRIMARY_CSP, cspInfo->name));
+        i++;
+    };
 }
 
 ToutcspsPage::ToutcspsPage(TffdshowPageDec *Iparent):TconfPageDecVideo(Iparent)

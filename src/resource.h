@@ -1940,7 +1940,7 @@
 #define IDC_CHB_H264                    2265
 #define IDC_GRP_JITTER_CORRECTION       2266
 #define IDC_CHB_AUDIO_DECODER_JITTER_CORRECTION 2267
-#define IDC_COMBO1                      2268
+#define IDC_CBX_OUT_PRIMARY_CSP         2268
 #define IDC_CBX_COMPATIBILITY_MODE      2269
 #define IDC_LBL_COMPATIBILITY_MODE      2270
 #define IDC_LBL_DXVA_POST_PROCESSING_MODE 2271
@@ -1993,6 +1993,7 @@
 #define IDC_LBL_OUT_444YUV              40038
 #define IDC_CHB_OUT_AYUV                40039
 #define IDC_CHB_OUT_Y416                40040
+#define IDC_LBL_OUT_PRIMARY_CSP         40041
 #define IDC_STATIC                      -1
 #define IDC_GRP_WINAMP2                 65535
 
@@ -2003,7 +2004,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        304
 #define _APS_NEXT_COMMAND_VALUE         40015
-#define _APS_NEXT_CONTROL_VALUE         40041
+#define _APS_NEXT_CONTROL_VALUE         40042
 #define _APS_NEXT_SYMED_VALUE           107
 #endif
 #endif
