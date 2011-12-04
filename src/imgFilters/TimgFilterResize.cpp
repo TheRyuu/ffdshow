@@ -156,13 +156,6 @@ HRESULT TimgFilterResize::process(TfilterQueue::iterator it,TffPict &pict,const 
         char_t outputfourcc[20];
         deciV->getOutputFourcc(outputfourcc,20);
 
-        if (downstream==TffdshowDecVideo::DVOBSUB && strncmp(outputfourcc,_l("YV12"),4)==0) {
-            // VSFilter only works with mod2 for horizontal resolution and mod4 for vertical resolution with YV12.
-            // ffdshow output currently does not work properly for horizontal mod2, so use a hack to pad it mod4.
-            newpict.rectFull.dx = (newpict.rectFull.dx + 3) &~3;
-            newpict.rectFull.dy = (newpict.rectFull.dy + 3) &~3;
-        }
-
         if ((pict.rectClip!=newpict.rectClip || pict.rectFull!=newpict.rectFull)
                 &&!(   pict.cspInfo.id==FF_CSP_420P       // I want to avoid resizing here. YV12 odd number lines.
                        && pict.rectFull==newpict.rectFull
