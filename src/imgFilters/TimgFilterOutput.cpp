@@ -50,8 +50,9 @@ TimgFilterOutput::~TimgFilterOutput()
     }
 }
 
-HRESULT TimgFilterOutput::process(const TffPict &pict,uint64_t dstcsp,unsigned char *dst[4],int dstStride[4],LONG &dstSize,const ToutputVideoSettings *cfg)
+HRESULT TimgFilterOutput::process(TffPict &pict,uint64_t dstcsp,unsigned char *dst[4],int dstStride[4],LONG &dstSize,const ToutputVideoSettings *cfg)
 {
+    checkBorder(pict);
     if (   !convert
             || convert->dx!=pict.rectFull.dx
             || convert->dy!=pict.rectFull.dy

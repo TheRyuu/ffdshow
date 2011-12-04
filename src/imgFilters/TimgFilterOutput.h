@@ -28,7 +28,7 @@ virtual HRESULT process(TfilterQueue::iterator it,TffPict &pict,const TfilterSet
 {
     return E_NOTIMPL;
 }
-HRESULT process(const TffPict &pict,uint64_t dstcsp,unsigned char *dst[4],int dstStride[4],LONG &dstSize,const ToutputVideoSettings *cfg); //S_FALSE = dv
+HRESULT process(TffPict &pict,uint64_t dstcsp,unsigned char *dst[4],int dstStride[4],LONG &dstSize,const ToutputVideoSettings *cfg); //S_FALSE = dv
 
 protected:
 class TvramBenchmark

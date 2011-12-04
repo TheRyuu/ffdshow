@@ -174,7 +174,7 @@ bool TimgFilters::isAnyActiveDownstreamFilter(TfilterQueue::iterator it)
     return false;
 }
 
-HRESULT TimgFilters::convertOutputSample(const TffPict &pict,uint64_t dstcsp,unsigned char *dst[4],int dstStride[4],LONG &dstSize,const ToutputVideoSettings *cfg)
+HRESULT TimgFilters::convertOutputSample(TffPict &pict,uint64_t dstcsp,unsigned char *dst[4],int dstStride[4],LONG &dstSize,const ToutputVideoSettings *cfg)
 {
     return output->process(pict,dstcsp,dst,dstStride,dstSize,cfg);
 }
