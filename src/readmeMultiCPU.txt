@@ -25,9 +25,6 @@ http://sourceforge.net/projects/ffdshow-tryout/
 FFmpeg:
 http://ffmpeg.org/
 
-MPlayer:
-http://www.mplayerhq.hu/
-
 or at Doom9:
 http://forum.doom9.org/showthread.php?t=98600
 

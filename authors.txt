@@ -73,7 +73,7 @@ projects/libraries that the tryouts depend resp. build upon:
     * High quality audio resampling using libsamplerate by Erik de Castro Lopo
     * Headphone virtual spatialization channel mixer from VLC by Boris Dorcs
     * Floating point to interger dithered conversion derived from work by Frank Klemm
-    * Subtitles in RAR decompressed by modified unrar.dll library by Alexander L. Roshal
+    * Subtitles in RAR decompressed by unrar.dll library by Alexander L. Roshal
     * Closed caption decoder from:
           o Closed Caption Decoder by Mike Baker
           o xine project

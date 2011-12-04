@@ -1,8 +1,6 @@
 #ifndef _STDAFX_H_
 #define _STDAFX_H_
 
-#pragma warning (disable:4100 4786 4512 4097)
-
 #define _STLP_NEW_PLATFORM_SDK
 #define _STLP_NO_OWN_IOSTREAMS 1
 
@@ -69,11 +67,8 @@
 #include "msacmdrv.h"
 
 // BOOST
-#pragma warning (push)
-#pragma warning (disable: 4005 4244 4819)
 #include "boost/foreach.hpp"
 #include "boost/thread.hpp"
-#pragma warning (pop)
 
 // BOOST_FOREACH is documented in
 // http://www.boost.org/doc/libs/1_38_0/doc/html/foreach.html
