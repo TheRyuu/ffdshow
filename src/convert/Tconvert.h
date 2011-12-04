@@ -58,6 +58,7 @@ private:
         MODE_ffdshow_converters,
         MODE_fast_copy,
         MODE_ffdshow_converters2,
+        MODE_MODE_palette8torgb,
         MODE_fallback
     } mode;
     static const char_t* getModeName(int mode);

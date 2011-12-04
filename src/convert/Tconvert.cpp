@@ -425,6 +425,16 @@ int Tconvert::convert(uint64_t incsp0,
                     mode=MODE_CLJR;
                 }
                 break;
+            case FF_CSP_PAL8:
+                if (outcsp1 == FF_CSP_RGB32) {
+                    if (!swscale) {
+                        swscale=new Tswscale(libavcodec);
+                    }
+                    UpdateSettings(video_full_range_flag, YCbCr_RGB_matrix_coefficients);
+                    setJpeg(!!((incsp | outcsp) & FF_CSP_FLAGS_YUV_JPEG));
+                    swscale->init(dx,dy,incsp,outcsp,toSwscaleTable());
+                    mode=MODE_MODE_palette8torgb;
+                }
         } // switch (incsp1)
 
         if (mode==MODE_none)
@@ -496,6 +506,11 @@ int Tconvert::convert(uint64_t incsp0,
                 }
             } else {
                 mode=MODE_fallback;
+                if (incsp1==FF_CSP_PAL8) {
+                    tmpcsp = FF_CSP_RGB32;
+                } else {
+                    tmpcsp = FF_CSP_420P;
+                }
                 if (tmpcsp==FF_CSP_RGB32) {
                     tmpStride[0]=4*(dx/16+2)*16;
                     tmp[0]=(unsigned char*)aligned_malloc(tmpStride[0]*dy);
@@ -683,6 +698,11 @@ int Tconvert::convert(uint64_t incsp0,
             // egur: this crashes on NV12->NV12 copy!
             swscale->convert(src,srcStride,dst,dstStride);
             return dy;
+        case MODE_MODE_palette8torgb: {
+            const unsigned char *src1[2] = {src[0],srcpal->pal};
+            swscale->convert(src1,srcStride,dst,dstStride);
+            return dy;
+        }
         case MODE_fallback:
             tmpConvert1->convert(incsp,src,srcStride,tmpcsp,tmp,tmpStride,srcpal,video_full_range_flag,YCbCr_RGB_matrix_coefficients);
             tmpConvert2->convert(tmpcsp,(const uint8_t**)tmp,tmpStride,outcsp,dst,dstStride,NULL,video_full_range_flag,YCbCr_RGB_matrix_coefficients);
