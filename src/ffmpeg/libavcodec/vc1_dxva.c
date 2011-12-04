@@ -18,9 +18,15 @@
 
 int av_vc1_decode_frame(AVCodecContext *avctx, const uint8_t *buf, int buf_size)
 {
+    int n_slices = 0, i;
     VC1Context *v = avctx->priv_data;
     MpegEncContext *s = &v->s;
     uint8_t *buf2 = NULL;
+    struct {
+        uint8_t *buf;
+        GetBitContext gb;
+        int mby_start;
+    } *slices = NULL;
 
     v->allow_interlaced = 1;
     v->lumshift         = 0;
