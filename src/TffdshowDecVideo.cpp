@@ -434,7 +434,11 @@ HRESULT TffdshowDecVideo::setOutputMediaType(const CMediaType &mt)
             bih=&vih->bmiHeader;
         } else if (mt.formattype==FORMAT_VideoInfo2 && mt.pbFormat) {
             VIDEOINFOHEADER2 *vih2=(VIDEOINFOHEADER2*)mt.pbFormat;
-            m_frame.dstStride=calcBIstride(biWidth=vih2->bmiHeader.biWidth,cspInfo->Bpp*8);
+            biWidth=vih2->bmiHeader.biWidth;
+            if (downstreamID == DVOBSUB)
+                m_frame.dstStride = biWidth;
+            else
+                m_frame.dstStride=calcBIstride(biWidth, cspInfo->Bpp*8);
             outDy=vih2->bmiHeader.biHeight;
             bih=&vih2->bmiHeader;
         } else {
