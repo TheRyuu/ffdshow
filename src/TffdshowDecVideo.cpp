@@ -528,8 +528,17 @@ HRESULT TffdshowDecVideo::CompleteConnect(PIN_DIRECTION direction,IPin *pReceive
         DPRINTF(_l("TffdshowDecVideo::CompleteConnect input"));
     } else if (direction==PINDIR_OUTPUT) {
         DPRINTF(_l("TffdshowDecVideoDXVA::CompleteConnect output"));
-        const CLSID &out=GetCLSID(m_pOutput->GetConnected());
+        IPin *pConnectedPin = m_pOutput->GetConnected();
+        const CLSID &out=GetCLSID(pConnectedPin);
         outOverlayMixer=!!(out==CLSID_OverlayMixer);
+
+        TvideoCodecDec *pDecoder=NULL;
+        getMovieSource((const TvideoCodecDec**)&pDecoder);
+
+        if (NULL!=pDecoder)
+        {
+            pDecoder->setOutputPin(pConnectedPin);
+        }
     }
     return CTransformFilter::CompleteConnect(direction,pReceivePin);
 }
@@ -1780,7 +1789,8 @@ HRESULT TffdshowDecVideo::reconnectOutput(const TffPict &newpict)
             //DPRINTF(_l("AR in: %i:%i"),vih->dwPictAspectRatioX,vih->dwPictAspectRatioY);
 
             SetRect(&vih->rcSource,0,0,newpict.rectFull.dx,newdy);
-            SetRect(&vih->rcTarget,0,0,newpict.rectFull.dx,newdy);
+            //SetRect(&vih->rcTarget,0,0,newpict.rectFull.dx,newdy);
+            SetRect(&vih->rcTarget, newpict.rectClip.x, newpict.rectClip.y, newpict.rectClip.dx, newpict.rectClip.dy);
             bmi=&vih->bmiHeader;
 
             //DPRINTF(_l("AR pict: %i:%i"),newpict.rectFull.dar().num,newpict.rectFull.dar().den);

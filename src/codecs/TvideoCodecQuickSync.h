@@ -26,7 +26,7 @@ protected:
     virtual HRESULT onEndOfStream();
     virtual bool onDiscontinuity();
     virtual bool testMediaType(FOURCC fcc,const CMediaType &mt);
-
+    virtual void setOutputPin(IPin *pPin);
     virtual bool onSeek(REFERENCE_TIME segmentStart);
     HRESULT DeliverSurface(QsFrameData* frameData);
     static HRESULT DeliverSurfaceCallback(void* obj, QsFrameData* frameData);

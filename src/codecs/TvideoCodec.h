@@ -125,6 +125,8 @@ public:
     virtual int useDXVA(void) {
         return 0;
     };
+
+    virtual void setOutputPin(IPin * /*pPin*/) {}
 };
 
 typedef vectorEx<uint64_t,array_allocator<uint64_t,FF_CSPS_NUM> > Tcsps;

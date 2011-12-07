@@ -17,6 +17,10 @@
  */
 
 #include "stdafx.h"
+#include <Mfidl.h>
+#include <evr.h>
+#include <dxva2api.h>
+
 #include "TvideoCodecQuickSync.h"
 #include "Tdll.h"
 #include "ffcodecs.h"
@@ -85,9 +89,13 @@ bool TvideoCodecQuickSync::beginDecompress(TffPictBase &pict,FOURCC infcc,const 
     if (!ok) return false;
 
     CAutoLock lock(&m_csLock);
+    CQsConfig cfg;
+    m_QuickSync->GetConfig(&cfg);
+//    cfg.bMod16Width = true;
     HRESULT hr = m_QuickSync->InitDecoder(&mt, infcc);
+    m_QuickSync->SetConfig(&cfg);
+
     pict.csp = FF_CSP_NV12;
-    pict.rectFull.dx =  ((pict.rectFull.dx + 15) & (~15)); // 16 alignment
     return hr == S_OK;
 }
 
@@ -145,11 +153,13 @@ HRESULT TvideoCodecQuickSync::DeliverSurface(QsFrameData* frameData)
     else
     {
         fieldtype = (frameData->dwInterlaceFlags & AM_VIDEO_FLAG_FIELD1FIRST) ? 
-            FIELD_TYPE::INT_TFF : FIELD_TYPE::INT_BFF;
+            (FIELD_TYPE::INT_TFF) :
+            (FIELD_TYPE::INT_BFF);
     }
 
-    Trect r(0, 0, frameData->dwWidth, frameData->dwHeight);
-    TffPict pict(FF_CSP_NV12, dstBuffer, strides, r, false, frametype, fieldtype, 0, NULL); //TODO: src frame size
+    Trect r(frameData->rcClip);
+    TffPict pict(FF_CSP_NV12, dstBuffer, strides, r, frameData->bReadOnly, frametype, fieldtype, 0, NULL); //TODO: src frame size
+    pict.rectClip = frameData->rcClip;
 
     // set times stamps
     pict.rtStart = frameData->rtStart;
@@ -202,5 +212,30 @@ HRESULT TvideoCodecQuickSync::onEndOfStream()
 
 bool TvideoCodecQuickSync::testMediaType(FOURCC fcc,const CMediaType &mt)
 {
-    return true;
+    if (!ok) return false;
+    return S_OK == m_QuickSync->TestMediaType(&mt, fcc);
+}
+
+void TvideoCodecQuickSync::setOutputPin(IPin *pPin)
+{
+    if (!ok) return;
+
+    if (NULL == pPin)
+    {
+        m_QuickSync->SetD3DDeviceManager(NULL);
+    }
+
+    IDirect3DDeviceManager9 *pDeviceManager = NULL;
+    IMFGetService *pGetService = NULL;
+    HRESULT hr = pPin->QueryInterface(__uuidof(IMFGetService), (void**)&pGetService);        
+
+    if (SUCCEEDED(hr))
+    {
+        hr = pGetService->GetService(MR_VIDEO_ACCELERATION_SERVICE, IID_IDirect3DDeviceManager9, (void**)&pDeviceManager);        
+    }
+
+    m_QuickSync->SetD3DDeviceManager((SUCCEEDED(hr)) ? pDeviceManager : NULL);
+
+    if (pDeviceManager) pDeviceManager->Release();
+    if (pGetService) pGetService->Release();
 }

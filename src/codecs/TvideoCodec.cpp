@@ -99,8 +99,8 @@ TvideoCodecDec* TvideoCodecDec::initDec(IffdshowBase *deci,IdecVideoSink *sink,C
     } else if (is_quicksync_codec(codecId)) {
         // QuickSync decoder init failed, revert to internal decoder.
         switch (codecId) {
-        case CODEC_ID_H264_QUICK_SYNC:  codecId = CODEC_ID_H264;       break;
-        case CODEC_ID_MPEG2_QUICK_SYNC: codecId = CODEC_ID_MPEG2VIDEO; break;
+        case CODEC_ID_H264_QUICK_SYNC:  codecId = CODEC_ID_H264;     break;
+        case CODEC_ID_MPEG2_QUICK_SYNC: codecId = CODEC_ID_LIBMPEG2; break;
         case CODEC_ID_VC1_QUICK_SYNC:
             {
                 codecId = (fcc == mmioFOURCC('W','V','C','1')) ? CODEC_ID_VC1 : CODEC_ID_WMV3;
