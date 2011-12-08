@@ -20,7 +20,7 @@
  *  along with this program ; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
  *
- * $Id: xvid.c 1988 2011-05-18 09:10:05Z Isibaar $
+ * $Id: xvid.c 2054 2011-11-04 15:24:39Z Isibaar $
  *
  ****************************************************************************/
 
@@ -368,7 +368,7 @@ int xvid_gbl_init(xvid_gbl_init_t * init)
 
 		/* Quantization related functions */
 		quant_h263_intra   = quant_h263_intra_mmx;
-                quant_h263_inter   = quant_h263_inter_mmx;
+		quant_h263_inter   = quant_h263_inter_mmx;
 		dequant_h263_intra = dequant_h263_intra_mmx;
 		dequant_h263_inter = dequant_h263_inter_mmx;
 		quant_mpeg_intra   = quant_mpeg_intra_mmx;

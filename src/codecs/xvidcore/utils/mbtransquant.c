@@ -21,7 +21,7 @@
  *  along with this program ; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
  *
- * $Id: mbtransquant.c 1988 2011-05-18 09:10:05Z Isibaar $
+ * $Id: mbtransquant.c 2054 2011-11-04 15:24:39Z Isibaar $
  *
  ****************************************************************************/
 
@@ -782,7 +782,7 @@ static __inline uint32_t calc_mseh(int16_t dQ, uint16_t mask,
 
 	u = ((u + iCSF_Round[index]) * iCSF_Coeff[index]) >> 16;
 
-	return (((Lambda*u*u)>>4) + 4*Lambda*dQ*dQ) / 5;
+	return Lambda*((((u*u)>>4) + 4*(dQ*dQ))/5);
 }
 
 /* this routine has been strippen of all debug code */

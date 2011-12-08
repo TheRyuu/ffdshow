@@ -21,7 +21,7 @@
  *  along with this program ; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
  *
- * $Id: plugin_lumimasking.c 2047 2011-10-06 18:10:33Z Isibaar $
+ * $Id: plugin_lumimasking.c 2055 2011-11-09 14:11:48Z Isibaar $
  *
  ****************************************************************************/
 
@@ -272,7 +272,7 @@ lumi_plg_frame(lumi_data_t *handle, xvid_plg_data_t *data)
 											 data->dquant,
 											 data->mb_width*data->mb_height,
 											 data->quant,
-											 MAX(data->quant+2,data->quant + data->quant/2));
+											 MAX(2,data->quant + data->quant/2));
 
 	/* Plugin job finished */
 	return(0);
