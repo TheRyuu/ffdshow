@@ -699,7 +699,7 @@ int Tconvert::convert(uint64_t incsp0,
             swscale->convert(src,srcStride,dst,dstStride);
             return dy;
         case MODE_MODE_palette8torgb: {
-            const unsigned char *src1[2] = {src[0],srcpal->pal};
+            const unsigned char *src1[4] = {src[0],srcpal->pal,NULL,NULL};
             swscale->convert(src1,srcStride,dst,dstStride);
             return dy;
         }

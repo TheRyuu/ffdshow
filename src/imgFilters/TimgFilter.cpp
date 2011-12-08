@@ -130,13 +130,20 @@ bool TimgFilter::getCur(uint64_t csp,TffPict &pict,int full,const unsigned char 
     bool cspChanged=csp1!=pict.csp;
     csp1=pict.csp;
     const Trect &r=pictRect; //full?pict.rectFull:pict.rectClip;
-    for (unsigned int i=0; i<pict.cspInfo.numPlanes; i++) {
+    unsigned int i = 0;
+    for (; i<pict.cspInfo.numPlanes; i++) {
         if (src[i]) {
             *src[i]=pict.data[i]+(full?0:pict.diff[i])+(pictHalf?r.x*pict.cspInfo.Bpp>>pict.cspInfo.shiftX[i]:0);
         }
         stride1[i]=pict.stride[i];
         dx1[i]=r.dx>>pict.cspInfo.shiftX[i];
         dy1[i]=r.dy>>pict.cspInfo.shiftY[i];
+    }
+    for (; i<4; i++) {
+        src[i] = NULL;
+        stride1[i] = 0;
+        dx1[i] = 0;
+        dy1[i] = 0;
     }
     return cspChanged;
 }
@@ -171,7 +178,8 @@ bool TimgFilter::getNext(uint64_t csp,TffPict &pict,int full,unsigned char **dst
         pictN.convertCSP(pict.csp|(csp&FF_CSP_FLAGS_YUV_ADJ),own2);
     }
     bool copyBorder=!rect2 && !full && pict.rectClip!=pict.rectFull;
-    for (unsigned int i=0; i<pict.cspInfo.numPlanes; i++) {
+    unsigned int i = 0;
+    for (; i<pict.cspInfo.numPlanes; i++) {
         if (dst[i]) {
             if (copyBorder) {
                 pictN.copyBorder(pict,i);
@@ -192,6 +200,15 @@ bool TimgFilter::getNext(uint64_t csp,TffPict &pict,int full,unsigned char **dst
         dx2[i]=r.dx>>pict.cspInfo.shiftX[i];
         dy2[i]=r.dy>>pict.cspInfo.shiftY[i];
     }
+    for (; i<4; i++) {
+        pict.data[i] = NULL;
+        pict.stride[i] = 0;
+        dx2[i] = 0;
+        dy2[i] = 0;
+        if (dst[i])
+            *dst[i] = NULL;
+        stride2[i] = 0;
+    }
     bool cspChanged=csp2!=pict.csp;
     csp2=pictN.csp;
     return cspChanged;
@@ -202,10 +219,12 @@ bool TimgFilter::getNext(uint64_t csp,TffPict &pict,const Trect &clipRect,unsign
     bool cspChanged=getNext(csp,pict,true,dst,rect2);
     pict.rectClip=clipRect;
     pict.calcDiff();
-    for (unsigned int i=0; i<pict.cspInfo.numPlanes; i++)
+    unsigned int i = 0;
+    for (; i<pict.cspInfo.numPlanes; i++) {
         if (dst[i]) {
             *dst[i]+=pict.diff[i];
         }
+    }
     int brightness=deciV->getBordersBrightness();
     if (cspChanged || oldBrightness != brightness) {
         oldBrightness = brightness;
@@ -282,7 +301,8 @@ bool TimgFilter::getCurNext(uint64_t csp,TffPict &pict,int full,int copy,unsigne
         copy = COPYMODE_FULL;
     }
     bool copyBorder=!full && pict.rectClip!=pict.rectFull;
-    for (unsigned int i=0; i<pictN.cspInfo.numPlanes; i++)
+    unsigned int i = 0;
+    for (; i<pictN.cspInfo.numPlanes; i++) {
         if (dst[i]) {
             dx1[i]=dx2[i]=r.dx>>pict.cspInfo.shiftX[i];
             dy1[i]=dy2[i]=r.dy>>pict.cspInfo.shiftY[i];
@@ -310,6 +330,14 @@ bool TimgFilter::getCurNext(uint64_t csp,TffPict &pict,int full,int copy,unsigne
             stride2[i]=pict.stride[i];
             *dst[i]=pict.data[i]+(full?0:pict.diff[i])+(pictHalf?r.x*pict.cspInfo.Bpp>>pict.cspInfo.shiftX[i]:0);
         }
+    }
+    for (; i<4; i++) {
+        pict.data[i] = NULL;
+        pict.stride[i] = 0;
+        stride2[i] = 0;
+        if (dst[i])
+            *dst[i] = NULL;
+    }
     bool cspChanged=csp2!=pict.csp;
     pict.csp=csp2=pictN.csp;
     pict.rectClip.y = pictN.rectClip.y;
