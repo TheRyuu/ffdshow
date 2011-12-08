@@ -418,7 +418,7 @@ static av_cold int g726_decode_init(AVCodecContext *avctx)
         return AVERROR(EINVAL);
     }
 
-    c->code_size = avctx->bits_per_coded_sample;
+    c->code_size = avctx->bits_per_coded_sample = (avctx->bit_rate + avctx->sample_rate/2) / avctx->sample_rate; // workaround for lav splitter bug
     if (c->code_size < 2 || c->code_size > 5) {
         av_log(avctx, AV_LOG_ERROR, "Invalid number of bits %d\n", c->code_size);
         return AVERROR(EINVAL);
