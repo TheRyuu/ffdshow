@@ -430,18 +430,18 @@ void TffPict::convertCSP(uint64_t Icsp,Tbuffer &buf,Tconvert *convert,int edge)
 void TffPict::convertCSP(uint64_t Icsp,Tbuffer &buf,int edge)
 {
     cspInfo=*csp_getInfo(csp=Icsp);
-    if (csp_isYUVplanar(csp)) {
+    if (csp_isYUVplanar(csp) || csp_isYUVplanarHighBit(csp)) {
         if (csp&FF_CSP_FLAGS_YUV_ADJ) {
-            stride[0]=rectFull.dx>>cspInfo.shiftX[0];
+            stride[0]=cspInfo.Bpp * rectFull.dx>>cspInfo.shiftX[0];
             stride[1]=(stride[0]>>cspInfo.shiftX[1])+edge;//((rectFull.dx>>shiftX[1])/16+2)*16;
             stride[2]=(stride[0]>>cspInfo.shiftX[2])+edge;//((rectFull.dx>>shiftX[2])/16+2)*16;
             stride[3]=(stride[0]>>cspInfo.shiftX[3])+edge;//((rectFull.dx>>shiftX[3])/16+2)*16;
             stride[0]+=edge;
         } else {
-            stride[0]=(((rectFull.dx>>cspInfo.shiftX[0])+edge)/16+2)*16; // If you change these 4 lines, please update TimgFilterYadif::config. (Don't change.)
-            stride[1]=(((rectFull.dx>>cspInfo.shiftX[1])+edge)/16+2)*16;
-            stride[2]=(((rectFull.dx>>cspInfo.shiftX[2])+edge)/16+2)*16;
-            stride[3]=(((rectFull.dx>>cspInfo.shiftX[3])+edge)/16+2)*16;
+            stride[0]=get_stride_YUV_planar(cspInfo, rectFull.dx, 0, edge);
+            stride[1]=get_stride_YUV_planar(cspInfo, rectFull.dx, 1, edge);
+            stride[2]=get_stride_YUV_planar(cspInfo, rectFull.dx, 2, edge);
+            stride[3]=get_stride_YUV_planar(cspInfo, rectFull.dx, 3, edge);
         }
         size_t size=0;
         for (unsigned int i=0; i<cspInfo.numPlanes; i++) {

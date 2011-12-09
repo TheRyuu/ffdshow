@@ -379,6 +379,10 @@ static __inline uint64_t csp_isYUVplanar(uint64_t x)
 {
     return x&FF_CSPS_MASK&FF_CSPS_MASK_YUV_PLANAR;
 }
+static __inline uint64_t csp_isYUVplanarHighBit(uint64_t x)
+{
+    return x & FF_CSPS_MASK & FF_CSPS_MASK_HIGH_BIT;
+}
 static __inline uint64_t csp_isYUVpacked(uint64_t x)
 {
     return x&FF_CSPS_MASK&FF_CSPS_MASK_YUV_PACKED;

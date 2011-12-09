@@ -154,4 +154,9 @@ public:
     void md5sum(uint8_t sum[16]) const;
 };
 
+// called from TffPict::convertCSP(uint64_t Icsp,Tbuffer &buf,int edge) and image filters that have to be compatible with it.
+static inline stride_t get_stride_YUV_planar(const TcspInfo &cspInfo, unsigned int dx, int plane, int edge)
+{
+    return (((cspInfo.Bpp * dx>>cspInfo.shiftX[plane])+edge)/16+2)*16; 
+}
 #endif
