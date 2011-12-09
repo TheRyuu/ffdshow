@@ -226,6 +226,13 @@ int Tconvert::convert(uint64_t incsp0,
             mode=MODE_avisynth_bitblt;
         } else
 #endif
+        if (m_highQualityRGB
+            && (Tconfig::cpu_flags&FF_CPU_SSE2)
+            && !((outcsp|incsp) & FF_CSP_FLAGS_INTERLACED)
+            && incsp_sup_ffdshow_converter(incsp1)
+            && outcsp_sup_ffdshow_converter(outcsp1)) {
+                mode = MODE_ffdshow_converters;
+        } else
         switch (incsp1) {
             case FF_CSP_420P:
                 switch (outcsp1) {
@@ -252,11 +259,8 @@ int Tconvert::convert(uint64_t incsp0,
                         mode = MODE_ffdshow_converters2;
                         break;
                     default:
-                        if (m_highQualityRGB && !((outcsp|incsp) & FF_CSP_FLAGS_INTERLACED) && outcsp_sup_ffdshow_converter(outcsp1)) {
-                            mode = MODE_ffdshow_converters;
-                        }
                         // Xvid converter is slow for interlaced color spaces. Use AviSynth converter in this case.
-                        else if (((outcsp & FF_CSP_FLAGS_INTERLACED) || m_highQualityRGB) && (outcsp1==FF_CSP_RGB24 || outcsp1==FF_CSP_RGB32)) {
+                        if (((outcsp & FF_CSP_FLAGS_INTERLACED) || m_highQualityRGB) && (outcsp1==FF_CSP_RGB24 || outcsp1==FF_CSP_RGB32)) {
                             mode=MODE_fallback;
                             tmpcsp=FF_CSP_YUY2;
                             tmpStride[0]=2*(dx/16+2)*16;
@@ -284,24 +288,18 @@ int Tconvert::convert(uint64_t incsp0,
                     mode = MODE_ffdshow_converters2;
                     break;
                 }
-                if (m_highQualityRGB && !((outcsp|incsp) & FF_CSP_FLAGS_INTERLACED) && outcsp_sup_ffdshow_converter(outcsp1))
-                    mode = MODE_ffdshow_converters;
                 break;
             case FF_CSP_444P10:
                 if (outcsp1 == FF_CSP_Y416) {
                     mode = MODE_ffdshow_converters2;
                     break;
                 }
-                if (m_highQualityRGB && !((outcsp|incsp) & FF_CSP_FLAGS_INTERLACED) && outcsp_sup_ffdshow_converter(outcsp1))
-                    mode = MODE_ffdshow_converters;
                 break;
             case FF_CSP_422P10:
                 if (outcsp1 == FF_CSP_P210 || outcsp1 == FF_CSP_P216) {
                     mode = MODE_ffdshow_converters2;
                     break;
                 }
-                if (m_highQualityRGB && !((outcsp|incsp) & FF_CSP_FLAGS_INTERLACED) && outcsp_sup_ffdshow_converter(outcsp1))
-                    mode = MODE_ffdshow_converters;
                 break;
             case FF_CSP_444P:
                 if (outcsp1 == FF_CSP_AYUV) {
@@ -310,10 +308,6 @@ int Tconvert::convert(uint64_t incsp0,
                 }
                 break;
             case FF_CSP_YUY2:
-                if (outcsp_sup_ffdshow_converter(outcsp1)) {
-                    mode = MODE_ffdshow_converters;
-                    break;
-                }
                 switch (outcsp1) {
                     case FF_CSP_420P: // YUY2 -> YV12
                         mode=MODE_avisynth_yuy2_to_yv12;
@@ -406,19 +400,12 @@ int Tconvert::convert(uint64_t incsp0,
                 }
                 break;
             case FF_CSP_NV12:
-                if (!((outcsp|incsp) & FF_CSP_FLAGS_INTERLACED) && outcsp_sup_ffdshow_converter(outcsp1) && (incsp & FF_CSP_FLAGS_YUV_ORDER)) {
-                    mode = MODE_ffdshow_converters;
-                    break;
-                }
                 if (outcsp1 == FF_CSP_P016 || outcsp1 == FF_CSP_P010) {
                     mode = MODE_ffdshow_converters2;
                     break;
                 }
                 break;
             case FF_CSP_422P:
-                if (outcsp_sup_ffdshow_converter(outcsp1)) {
-                    mode = MODE_ffdshow_converters;
-                }
                 break;
             case FF_CSP_CLJR:
                 if (outcsp1==FF_CSP_420P) {

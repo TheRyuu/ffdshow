@@ -11,11 +11,6 @@
 //#define AVISYNTH_BITBLT //use avisynth bitblt (memcpy) function to just copy frame when no colorspace conversion is needed
 #define XVID_BITBLT //use xvid's YV12 -> YV12 copy function - seems to be fastest
 
-static __inline bool outcsp_sup_ffdshow_converter(uint64_t outcsp)
-{
-    return (Tconfig::cpu_flags&FF_CPU_SSE2) && ((outcsp & FF_CSPS_MASK) & (FF_CSP_RGB24|FF_CSP_RGB32|FF_CSP_BGR24|FF_CSP_BGR32));
-}
-
 struct Tswscale;
 struct Tconfig;
 struct Tlibavcodec;
