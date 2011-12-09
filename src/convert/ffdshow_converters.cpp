@@ -283,7 +283,6 @@ template <uint64_t incsp, uint64_t outcsp, bool isMPEG1, bool dithering, bool al
     int starty,
     int endy)
 {
-    int endx = (incsp == FF_CSP_444P10) ? dx : dx - 4;
     const uint8_t *srcYln = srcY;
     const uint8_t *srcCbln = srcCb;
     const uint8_t *srcCrln = srcCr;
@@ -305,13 +304,15 @@ template <uint64_t incsp, uint64_t outcsp, bool isMPEG1, bool dithering, bool al
             // Top
 
             // left
-            convert_two_lines<incsp,outcsp,1,0,rgb_limit,aligned,dithering,isMPEG1>(srcYln, srcCbln, srcCrln, dstln, 1,
+            if (dx > 4)
+                convert_two_lines<incsp,outcsp,1,0,rgb_limit,aligned,dithering,isMPEG1>(srcYln, srcCbln, srcCrln, dstln, 1,
                     0, 0, 0,
                     coeffs, dither + dither_pos);
             // inner
+            if (xCount > 0)
                 convert_two_lines<incsp,outcsp,0,0,rgb_limit,aligned,dithering,isMPEG1>(srcYln, srcCbln, srcCrln, dstln, xCount,
-                        0, 0, 0,
-                        coeffs, dither + dither_pos + 8);
+                    0, 0, 0,
+                    coeffs, dither + dither_pos + 8);
             // right
             convert_two_lines<incsp,outcsp,0,1,rgb_limit,aligned,dithering,isMPEG1>(srcYln, srcCbln, srcCrln, dstln, 1,
                     0, 0, 0,
@@ -337,16 +338,15 @@ template <uint64_t incsp, uint64_t outcsp, bool isMPEG1, bool dithering, bool al
             srcCrln = srcCr + y * stride_CbCr;
         }
         dstln = dst + y * stride_dst;
-        int x = 0;
         // left
-        if (incsp != FF_CSP_444P10) {
+        if (incsp != FF_CSP_444P10 && dx > 4) {
             convert_two_lines<incsp,outcsp,1,0,rgb_limit,aligned,dithering,isMPEG1>(srcYln, srcCbln, srcCrln, dstln, 1,
                     stride_Y, stride_CbCr, stride_dst,
                     coeffs, dither + dither_pos);
-            x = 4;
         }
         // inner
-        convert_two_lines<incsp,outcsp,0,0,rgb_limit,aligned,dithering,isMPEG1>(srcYln, srcCbln, srcCrln, dstln, xCount,
+        if (xCount > 0)
+            convert_two_lines<incsp,outcsp,0,0,rgb_limit,aligned,dithering,isMPEG1>(srcYln, srcCbln, srcCrln, dstln, xCount,
                 stride_Y, stride_CbCr, stride_dst,
                 coeffs, dither + dither_pos + 8);
         // right
@@ -371,11 +371,13 @@ template <uint64_t incsp, uint64_t outcsp, bool isMPEG1, bool dithering, bool al
             srcCrln = srcCr + ((dy >> 1) - 1) * stride_CbCr;
             dstln = dst + (dy - 1) * stride_dst;
             // left
-            convert_two_lines<incsp,outcsp,1,0,rgb_limit,aligned,dithering,isMPEG1>(srcYln, srcCbln, srcCrln, dstln, 1,
+            if (dx > 4)
+                convert_two_lines<incsp,outcsp,1,0,rgb_limit,aligned,dithering,isMPEG1>(srcYln, srcCbln, srcCrln, dstln, 1,
                     0, 0, 0,
                     coeffs, dither + dither_pos);
             // inner
-            convert_two_lines<incsp,outcsp,0,0,rgb_limit,aligned,dithering,isMPEG1>(srcYln, srcCbln, srcCrln, dstln, xCount,
+            if (xCount > 0)
+                convert_two_lines<incsp,outcsp,0,0,rgb_limit,aligned,dithering,isMPEG1>(srcYln, srcCbln, srcCrln, dstln, xCount,
                     0, 0, 0,
                     coeffs, dither + dither_pos + 8);
             // right
@@ -383,6 +385,52 @@ template <uint64_t incsp, uint64_t outcsp, bool isMPEG1, bool dithering, bool al
                     0, 0, 0,
                     coeffs, dither + dither_pos);
         }
+    }
+
+    if (dx & 3) {
+        int dxDone = dx - 4;
+        switch (incsp) {
+        case FF_CSP_420P:
+        case FF_CSP_422P:
+            srcY += dxDone;
+            srcCb += dxDone/2 - 1;
+            srcCr += dxDone/2 - 1;
+            break;
+        case FF_CSP_444P:  // TODO
+            srcY += dxDone;
+            srcCb += dxDone;
+            srcCr += dxDone;
+            break;
+        case FF_CSP_NV12: 
+            srcY += dxDone;
+            srcCb += dxDone - 2;
+            break;
+        case FF_CSP_YUY2:
+            srcY += dxDone*2 - 4;
+            break;
+        case FF_CSP_420P10:
+        case FF_CSP_422P10:
+            srcY += dxDone*2;
+            srcCb += dxDone - 2;
+            srcCr += dxDone - 2;
+            break;
+        case FF_CSP_444P10:
+            srcY += dxDone*2;
+            srcCb += dxDone*2;
+            srcCr += dxDone*2;
+            break;
+        };
+        switch (outcsp) {
+        case FF_CSP_RGB32:
+        case FF_CSP_BGR32:
+            dst += dxDone*4;
+            break;
+        case FF_CSP_RGB24:
+        case FF_CSP_BGR24:
+            dst += dxDone*3;
+            break;
+        }
+        convert_main_loop<incsp, outcsp, isMPEG1, dithering, 0, rgb_limit>(srcY, srcCb, srcCr, dst, 4, dy, stride_Y, stride_CbCr, stride_dst, starty, endy);
     }
 }
 
