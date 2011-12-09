@@ -150,10 +150,13 @@ template <class _mm, int src_aligned, int dst_aligned, uint64_t incsp> void Tffd
         stride_t required_stride_dst = (xCount + 1) * _mm::size;
         stride_t required_stride_src = (xCount + 1) * _mm::size/2;
         stride_t required_stride_srcCbCr = (xCount + 1) * _mm::size/4;
-        if (incsp == FF_CSP_420P10 || incsp == FF_CSP_422P10) {
+        if (incsp == FF_CSP_NV12) {
+            required_stride_srcCbCr *= 2;
+        } else if (incsp == FF_CSP_420P10 || incsp == FF_CSP_422P10) {
             required_stride_src *= 2;
             required_stride_srcCbCr *= 2;
         }
+
         if (   required_stride_dst <= stride_dstY
             && required_stride_dst <= stride_dstCbCr
             && required_stride_src <= stride_Y
