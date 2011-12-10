@@ -145,32 +145,6 @@ template <class _mm, int src_aligned, int dst_aligned, uint64_t incsp> void Tffd
     if (xCount <= 0)
         return;
 
-    if (xCount * (int)_mm::size < dx * 2) {
-        // handle non-mod 8 resolution.
-        stride_t required_stride_dst = (xCount + 1) * _mm::size;
-        stride_t required_stride_src = (xCount + 1) * _mm::size/2;
-        stride_t required_stride_srcCbCr = (xCount + 1) * _mm::size/4;
-        if (incsp == FF_CSP_NV12) {
-            required_stride_srcCbCr *= 2;
-        } else if (incsp == FF_CSP_420P10 || incsp == FF_CSP_422P10) {
-            required_stride_src *= 2;
-            required_stride_srcCbCr *= 2;
-        }
-
-        if (   required_stride_dst <= stride_dstY
-            && required_stride_dst <= stride_dstCbCr
-            && required_stride_src <= stride_Y
-            && required_stride_srcCbCr <= stride_CbCr) {
-            xCount++;
-        } else {
-            // The stride is not 16 byte aligned.
-            // Implement extra handling, if required? 
-            // I think it is very unlikely, but it depends on the downstream filter.
-            // The possibility is too low to motivate me to code for it.
-            // We may show garbage or green stuff, but it does not crash.
-        }
-    }
-
     _mm::__m _mm0,_mm1,_mm2,_mm3;
     _mm::__m zero;
     pxor(zero,zero);
@@ -237,6 +211,31 @@ template <class _mm, int src_aligned, int dst_aligned, uint64_t incsp> void Tffd
             dst += _mm::size;
         } while(--x);
     }
+
+    if (xCount * (int)_mm::size < dx * 2 && dx > _mm::size/2) {
+        int dxDone = dx - _mm::size / 2;
+        switch (incsp) {
+        case FF_CSP_420P:
+            srcY  += dxDone;
+            srcCb += dxDone/2;
+            srcCr += dxDone/2;
+            break;
+        case FF_CSP_NV12:
+            srcY  += dxDone;
+            srcCb += dxDone;
+            break;
+        case FF_CSP_420P10:
+        case FF_CSP_422P10:
+            srcY  += dxDone * 2;
+            srcCb += dxDone;
+            srcCr += dxDone;
+            break;
+        }
+        dstY    += dxDone * 2;
+        dstCbCr += dxDone * 2;
+        convert_simd<_mm, 0, 0, incsp>(srcY, srcCb, srcCr, dstY, dstCbCr, _mm::size/2, dy, stride_Y, stride_CbCr, stride_dstY, stride_dstCbCr);
+    }
+
     _mm::empty();
 }
 
@@ -253,18 +252,6 @@ template <class _mm, int src_aligned, int dst_aligned> void TffdshowConverters2:
     int xCount = dx / _mm::size;
     if (xCount <= 0)
         return;
-
-    if (xCount * (int)_mm::size < dx) {
-        // handle non-mod 8 resolution.
-        stride_t required_stride_dst = (xCount + 1) * _mm::size*4;
-        stride_t required_stride_src = (xCount + 1) * _mm::size;
-        if (   required_stride_dst <= stride_dst
-            && required_stride_src <= stride_src) {
-            xCount++;
-        } else {
-            // Implement extra handling, if required? 
-        }
-    }
 
     _mm::__m _mm0,_mm1,_mm2,_mm3,_mm4,_mm5;
     _mm::__m ffff;
@@ -317,6 +304,17 @@ template <class _mm, int src_aligned, int dst_aligned> void TffdshowConverters2:
             dst1 += _mm::size * 4;
         } while(--x);
     }
+
+    if (xCount * (int)_mm::size < dx && dx > _mm::size) {
+        // handle non-mod 8 resolution.
+        int dxDone = dx - _mm::size;
+        srcY  += dxDone;
+        srcCb += dxDone;
+        srcCr += dxDone;
+        dst   += dxDone * 4;
+        convert_simd_AYUV<_mm, 0, 0>(srcY, srcCb, srcCr, dst, _mm::size, dy, stride_src, stride_dst);
+    }
+
     _mm::empty();
 }
 
@@ -333,18 +331,6 @@ template <class _mm, int src_aligned, int dst_aligned> void TffdshowConverters2:
     int xCount = dx * 2 / _mm::size;
     if (xCount <= 0)
         return;
-
-    if (xCount * (int)_mm::size < dx * 2) {
-        // handle non-mod 8 resolution.
-        stride_t required_stride_dst = (xCount + 1) * _mm::size*4;
-        stride_t required_stride_src = (xCount + 1) * _mm::size;
-        if (   required_stride_dst <= stride_dst
-            && required_stride_src <= stride_src) {
-            xCount++;
-        } else {
-            // Implement extra handling, if required? 
-        }
-    }
 
     _mm::__m _mm0,_mm1,_mm2,_mm3,_mm4,_mm5;
     _mm::__m ffff;
@@ -402,6 +388,17 @@ template <class _mm, int src_aligned, int dst_aligned> void TffdshowConverters2:
             dst1 += _mm::size * 4;
         } while(--x);
     }
+
+    if (xCount * (int)_mm::size < dx * 2 && dx * 2 > _mm::size) {
+        // handle non-mod 8 resolution.
+        int dxDone = dx * 2 - _mm::size;
+        srcY  += dxDone;
+        srcCb += dxDone;
+        srcCr += dxDone;
+        dst   += dxDone * 4;
+        convert_simd_Y416<_mm, 0, 0>(srcY, srcCb, srcCr, dst, _mm::size/2, dy, stride_src, stride_dst);
+    }
+
     _mm::empty();
 }
 
