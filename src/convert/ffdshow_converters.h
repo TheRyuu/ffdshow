@@ -52,7 +52,7 @@ typedef ptrdiff_t stride_t;
 //  Support for color primary parameters, such as ITU-R BT.601/709, input and output levels
 //  calculations in 11bit or higher
 //  Supported color spaces
-//    input:  progressive YV12, progressive NV12, YV16, YUY2
+//    input:  progressive 4:2:0 8/10-bit YCbCr planar, 4:2:2 8/10-bit YCbCr planar, 4:4:4 8/10-bit YCbCr planar, NV12, YUY2 
 //    output: RGB32,RGB24,BGR32,BGR24
 //  SSE2 required
 //  Multithreaded and very fast on modern CPUs
@@ -62,7 +62,7 @@ typedef ptrdiff_t stride_t;
 // The stride of destination must be multiple of 4.
 static inline bool incsp_sup_ffdshow_converter(uint64_t incsp)
 {
-    return !!((incsp & FF_CSPS_MASK) & ( FF_CSP_420P | FF_CSP_NV12 | FF_CSP_YUY2 | FF_CSP_422P | FF_CSP_420P10 | FF_CSP_422P10 | FF_CSP_444P10));
+    return !!((incsp & FF_CSPS_MASK) & ( FF_CSP_420P | FF_CSP_NV12 | FF_CSP_YUY2 | FF_CSP_422P | FF_CSP_444P | FF_CSP_420P10 | FF_CSP_422P10 | FF_CSP_444P10));
 }
 
 static inline bool outcsp_sup_ffdshow_converter(uint64_t outcsp)
@@ -73,7 +73,7 @@ static inline bool outcsp_sup_ffdshow_converter(uint64_t outcsp)
 class TffdshowConverters
 {
 public:
-    void init(uint64_t incsp,                 // FF_CSP_420P, FF_CSP_NV12, FF_CSP_YUY2, FF_CSP_422P, FF_CSP_420P10, FF_CSP_422P10 or FF_CSP_444P10 (progressive only)
+    void init(uint64_t incsp,                 // FF_CSP_420P, FF_CSP_NV12, FF_CSP_YUY2, FF_CSP_422P, FF_CSP_444P, FF_CSP_420P10, FF_CSP_422P10 or FF_CSP_444P10 (progressive only)
               uint64_t outcsp,                // FF_CSP_RGB32, FF_CSP_RGB24, FF_CSP_BGR32 or FF_CSP_BGR24
               ffYCbCr_RGB_MatrixCoefficientsType cspOptionsIturBt,  // ffYCbCr_RGB_coeff_ITUR_BT601, ffYCbCr_RGB_coeff_ITUR_BT709 or ffYCbCr_RGB_coeff_SMPTE240M
               int input_Y_white_level,        // input Y level (TV:235, PC:255)

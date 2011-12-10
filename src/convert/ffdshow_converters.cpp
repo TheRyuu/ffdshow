@@ -210,6 +210,9 @@ template <uint64_t outcsp, bool isMPEG1, bool dithering, bool aligned, bool rgb_
         case FF_CSP_422P:
             convert_main<FF_CSP_422P, outcsp, 0, dithering, 0, 1>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
             return;
+        case FF_CSP_444P:
+            convert_main<FF_CSP_444P, outcsp, 0, dithering, 0, 1>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
+            return;
         case FF_CSP_420P10:
             convert_main<FF_CSP_420P10, outcsp, 0, 1, aligned, rgb_limit>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst);
             return;
@@ -293,7 +296,7 @@ template <uint64_t incsp, uint64_t outcsp, bool isMPEG1, bool dithering, bool al
     Tcoeffs *coeffs = m_coeffs;
 
     int xCount; // loop counter
-    if (incsp == FF_CSP_444P10) {
+    if (incsp == FF_CSP_444P10 || incsp == FF_CSP_444P) {
         xCount = dx / 4;
     } else {
         xCount = dx / 4 - 2;
@@ -339,7 +342,7 @@ template <uint64_t incsp, uint64_t outcsp, bool isMPEG1, bool dithering, bool al
         }
         dstln = dst + y * stride_dst;
         // left
-        if (incsp != FF_CSP_444P10 && dx > 4) {
+        if (incsp != FF_CSP_444P10 && incsp != FF_CSP_444P && dx > 4) {
             convert_two_lines<incsp,outcsp,1,0,rgb_limit,aligned,dithering,isMPEG1>(srcYln, srcCbln, srcCrln, dstln, 1,
                     stride_Y, stride_CbCr, stride_dst,
                     coeffs, dither + dither_pos);
@@ -350,7 +353,7 @@ template <uint64_t incsp, uint64_t outcsp, bool isMPEG1, bool dithering, bool al
                 stride_Y, stride_CbCr, stride_dst,
                 coeffs, dither + dither_pos + 8);
         // right
-        if (incsp != FF_CSP_444P10) {
+        if (incsp != FF_CSP_444P10 && incsp != FF_CSP_444P) {
             convert_two_lines<incsp,outcsp,0,1,rgb_limit,aligned,dithering,isMPEG1>(srcYln, srcCbln, srcCrln, dstln, 1,
                     stride_Y, stride_CbCr, stride_dst,
                     coeffs, dither + dither_pos);
@@ -396,7 +399,7 @@ template <uint64_t incsp, uint64_t outcsp, bool isMPEG1, bool dithering, bool al
             srcCb += dxDone/2 - 1;
             srcCr += dxDone/2 - 1;
             break;
-        case FF_CSP_444P:  // TODO
+        case FF_CSP_444P:
             srcY += dxDone;
             srcCb += dxDone;
             srcCr += dxDone;
@@ -500,21 +503,35 @@ void TffdshowConverters::convert_two_lines(const unsigned char* &srcY,
 
   do {
     // output 4x2 RGB pixels
-    if (incsp == FF_CSP_444P10) {
-        // 4:4:4 YCbCr 10bit
-        xmm0 = _mm_move_epi64(*(const __m128i*)(srcCb));                       // xmm0 = Cb03,Cb02,Cb01,Cb00
-        xmm2 = _mm_move_epi64(*(const __m128i*)(srcCb + stride_CbCr));         // xmm2 = Cb13,Cb12,Cb11,Cb10
-        xmm1 = _mm_move_epi64(*(const __m128i*)(srcCr));                       // xmm1 = Cr03,Cr02,Cr01,Cr00
-        xmm3 = _mm_move_epi64(*(const __m128i*)(srcCr + stride_CbCr));         // xmm3 = Cr13,Cr12,Cr11,Cr10
-        xmm1 = _mm_unpacklo_epi16(xmm0,xmm1);                                  // xmm1 = Cr03,Cb03,Cr02,Cb02,Cr01,Cb01,Cr00,Cb00
-        xmm3 = _mm_unpacklo_epi16(xmm2,xmm3);                                  // xmm3 = Cr13,Cb13,Cr12,Cb12,Cr11,Cb11,Cr10,Cb10
+    if (incsp == FF_CSP_444P || incsp == FF_CSP_444P10) {
+        if (incsp == FF_CSP_444P) {
+            // 4:4:4 YCbCr 8-bit
+            xmm1 = _mm_cvtsi32_si128(*(const int*)(srcCb));                        // xmm1 = Cb03,Cb02,Cb01,Cb00
+            xmm3 = _mm_cvtsi32_si128(*(const int*)(srcCb + stride_CbCr));          // xmm3 = Cb13,Cb12,Cb11,Cb10
+            xmm0 = _mm_cvtsi32_si128(*(const int*)(srcCr));                        // xmm0 = Cr03,Cr02,Cr01,Cr00
+            xmm2 = _mm_cvtsi32_si128(*(const int*)(srcCr + stride_CbCr));          // xmm2 = Cr13,Cr12,Cr11,Cr10
+            xmm1 = _mm_unpacklo_epi8(xmm1, xmm7);
+            xmm3 = _mm_unpacklo_epi8(xmm3, xmm7);
+            xmm0 = _mm_unpacklo_epi8(xmm0, xmm7);
+            xmm2 = _mm_unpacklo_epi8(xmm2, xmm7);
+            srcCb += 4;
+            srcCr += 4;
+        } else if (incsp == FF_CSP_444P10) {
+            // 4:4:4 YCbCr 10-bit
+            xmm1 = _mm_move_epi64(*(const __m128i*)(srcCb));                       // xmm1 = Cb03,Cb02,Cb01,Cb00
+            xmm3 = _mm_move_epi64(*(const __m128i*)(srcCb + stride_CbCr));         // xmm3 = Cb13,Cb12,Cb11,Cb10
+            xmm0 = _mm_move_epi64(*(const __m128i*)(srcCr));                       // xmm0 = Cr03,Cr02,Cr01,Cr00
+            xmm2 = _mm_move_epi64(*(const __m128i*)(srcCr + stride_CbCr));         // xmm2 = Cr13,Cr12,Cr11,Cr10
+            srcCb += 8;
+            srcCr += 8;
+            // xmm1 = 16*P03, 16*P02, 16*P01, 16*P00 (14bit)
+            // xmm3 = 16*P13, 16*P12, 16*P11, 16*P10 (14bit)
+        }
+        xmm1 = _mm_unpacklo_epi16(xmm1,xmm0);                                  // xmm1 = Cr03,Cb03,Cr02,Cb02,Cr01,Cb01,Cr00,Cb00
+        xmm3 = _mm_unpacklo_epi16(xmm3,xmm2);                                  // xmm3 = Cr13,Cb13,Cr12,Cb12,Cr11,Cb11,Cr10,Cb10
         xmm1 = _mm_slli_epi16(xmm1, 4);
         xmm3 = _mm_slli_epi16(xmm3, 4);
-        srcCb += 8;
-        srcCr += 8;
-        // xmm1 = 16*P03, 16*P02, 16*P01, 16*P00 (14bit)
-        // xmm3 = 16*P13, 16*P12, 16*P11, 16*P10 (14bit)
-    } else {
+    }else {
         if (incsp == FF_CSP_420P || incsp == FF_CSP_NV12 || incsp == FF_CSP_420P10) {
             // 4:2:0 color spaces
             if (incsp == FF_CSP_420P10) {
