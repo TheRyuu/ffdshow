@@ -400,6 +400,7 @@ TpresetVideo::TpresetVideo(const char_t *Ireg_child, const char_t *IpresetName, 
         resize=NULL;
         vis=NULL;
         grab=NULL;
+        deinterlace=new TdeinterlaceSettings(options,filters);
         subtitles=new TsubtitlesSettings(options,filters,filtermode);
         output=new ToutputVideoSettings(options,filters);
     } else {
