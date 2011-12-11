@@ -527,7 +527,7 @@ HRESULT TffdshowDecVideo::CompleteConnect(PIN_DIRECTION direction,IPin *pReceive
     if (direction==PINDIR_INPUT) {
         DPRINTF(_l("TffdshowDecVideo::CompleteConnect input"));
     } else if (direction==PINDIR_OUTPUT) {
-        DPRINTF(_l("TffdshowDecVideoDXVA::CompleteConnect output"));
+        DPRINTF(_l("TffdshowDecVideo::CompleteConnect output"));
         IPin *pConnectedPin = m_pOutput->GetConnected();
         const CLSID &out=GetCLSID(pConnectedPin);
         outOverlayMixer=!!(out==CLSID_OverlayMixer);
