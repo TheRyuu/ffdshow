@@ -139,14 +139,13 @@ bool TvideoCodecUncompressed::beginDecompress(TffPictBase &pict,FOURCC infcc,con
 }
 HRESULT TvideoCodecUncompressed::decompress(const unsigned char *src,size_t srcLen,IMediaSample *pIn)
 {
-    /*
-     if (cspInfo->Bpp==1)
-      stride[0]=dx;
-     else
-      stride[0]=srcLen/dy;
-    */
     unsigned char *data[4]= {(unsigned char*)src,NULL,NULL,NULL};
     uint64_t csp1=csp;
+    cspInfo=csp_getInfo(csp);
+    // get stride that our allocator has decided
+    int biWidth = deciV->get_allocators_biWidth();
+    if (biWidth)
+        stride[0] = biWidth * cspInfo->Bpp;
     csp_yuv_adj_to_plane(csp1,csp_getInfo(csp1),rd.dy,(unsigned char**)data,stride);
     TffPict pict(csp1,data,stride,rd,true,pIn,Tpalette(palette,palcolors),isInterlacedRawVideo);
     pict.frametype=FRAME_TYPE::I;

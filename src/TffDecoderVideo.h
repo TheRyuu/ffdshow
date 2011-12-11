@@ -629,6 +629,7 @@ public:
     STDMETHODIMP_(void*) get_csReceive_ptr(void);
     STDMETHODIMP_(void*) get_csCodecs_and_imgFilters_ptr(void);
     STDMETHODIMP reconnectOutput(const TffPict &newpict);
+    STDMETHODIMP_(int) get_allocators_biWidth();
 
 private:
 #ifdef OSDTIMETABALE
@@ -968,6 +969,9 @@ private:
         }
         STDMETHODIMP reconnectOutput(const TffPict &newpict) {
             return deciV->reconnectOutput(newpict);
+        }
+        STDMETHODIMP_(int) get_allocators_biWidth() {
+            return deciV->get_allocators_biWidth();
         }
     } decVideo_char;
     template<class Tinterface> Tinterface* getDecVideoInterface(void);

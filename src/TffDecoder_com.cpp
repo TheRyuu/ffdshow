@@ -865,3 +865,8 @@ STDMETHODIMP TffdshowDecVideo::get_CurrentTime(REFERENCE_TIME *time)
         return E_FAIL;
     }
 };
+
+STDMETHODIMP_(int) TffdshowDecVideo::get_allocators_biWidth()
+{
+    return inpin->allocator.get_biWidth();
+}

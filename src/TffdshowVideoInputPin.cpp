@@ -633,7 +633,15 @@ STDMETHODIMP TffdshowVideoInputPin::Receive(IMediaSample* pSample)
     if (SUCCEEDED(pSample->GetMediaType(&pmt)) && pmt) {
         CAutoLock lock2(&m_csCodecs_and_imgFilters);
         CMediaType mt(*pmt);
-        SetMediaType(&mt);
+        comptrQ<IffdshowMediaSample> iffmedia = pSample;
+        // avoid calling SetMediaType if the media type was attached by ffdshow's input pin (TffdshowDecVideoAllocator)
+        // just to signal the new stride to the upper stream.
+        // Otherwise video dimensions are changed and right (green) borders are attached.
+        // ffdshow itself doesn't want to change the demensions, instead TvideoCodecUncompressed has to deal with the new stride.
+        if (!iffmedia || iffmedia->get_MediaTypeSetExternallyFlag())
+            SetMediaType(&mt);
+        if (iffmedia)
+            iffmedia->clear_MediaTypeSetExternallyFlag();
         allocator.mtChanged=false;
         DeleteMediaType(pmt);
     }

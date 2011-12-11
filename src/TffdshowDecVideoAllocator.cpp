@@ -20,6 +20,7 @@
 #include "stdafx.h"
 #include "TffdshowDecVideoAllocator.h"
 #include "dsutil.h"
+#include "ffdshow_mediaguids.h"
 
 TffdshowDecVideoAllocator::TffdshowDecVideoAllocator(CBaseFilter* Ifilter,HRESULT* phr):
     CMemAllocator(NAME("TffdshowDecVideoAllocator"),NULL,phr),
@@ -35,14 +36,19 @@ STDMETHODIMP TffdshowDecVideoAllocator::GetBuffer(IMediaSample** ppBuffer,REFERE
     }
 
     if (mtChanged) {
-        BITMAPINFOHEADER bih;
-        ExtractBIH(mt,&bih);
-
         ALLOCATOR_PROPERTIES Properties, Actual;
         if (FAILED(GetProperties(&Properties))) {
             return E_FAIL;
         }
 
+        // force the upper stream filter to use 32 pixel alignment.
+        // For Cb/Cr to be aligned 16, alignment 32 is needed.
+        BITMAPINFOHEADER *bi = get_BITMAPINFOHEADER_ptr();
+        if (bi)
+            bi->biWidth = ffalign(bi->biWidth, needed_align);
+
+        BITMAPINFOHEADER bih;
+        ExtractBIH(mt,&bih);
         unsigned int biSizeImage=(bih.biWidth*abs(bih.biHeight)*bih.biBitCount)>>3;
 
         if (bih.biSizeImage<biSizeImage) {
@@ -71,8 +77,10 @@ STDMETHODIMP TffdshowDecVideoAllocator::GetBuffer(IMediaSample** ppBuffer,REFERE
     HRESULT hr=CMemAllocator::GetBuffer(ppBuffer,pStartTime,pEndTime,dwFlags);
 
     if (mtChanged && SUCCEEDED(hr)) {
-        (*ppBuffer)->SetMediaType(&mt);
         mtChanged=false;
+        comptrQ<IffdshowMediaSample> iffmedia = *ppBuffer;
+        if (iffmedia)
+            iffmedia->SetMediaTypeNoFlag(&mt);
     }
     return hr;
 }
@@ -81,4 +89,195 @@ void TffdshowDecVideoAllocator::NotifyMediaType(const CMediaType &Imt)
 {
     mt=Imt;
     mtChanged=true;
+}
+
+STDMETHODIMP TffdshowDecVideoAllocator::SetProperties(ALLOCATOR_PROPERTIES* pRequest, ALLOCATOR_PROPERTIES* pActual)
+{
+    BITMAPINFOHEADER *bi = get_BITMAPINFOHEADER_ptr();
+    if (bi) {
+        // to make sure extra memory is allocated for alignment
+        ALLOCATOR_PROPERTIES request = *pRequest;
+        long newSize = 0;
+        newSize = (ffalign(bi->biWidth, needed_align) * abs(bi->biHeight)*bi->biBitCount) >> 3;
+        request.cbBuffer = std::max(newSize, request.cbBuffer);
+        return CMemAllocator::SetProperties(&request, pActual);
+    }
+    return CMemAllocator::SetProperties(pRequest, pActual);
+}
+
+/* HRESULT TffdshowDecVideoAllocator::Alloc(void)                                              */
+/* copied from the baseclass (amfilter.cpp) and replaced CMediaSample with CffdshowMediaSample */
+
+// override this to allocate our resources when Commit is called.
+//
+// note that our resources may be already allocated when this is called,
+// since we don't free them on Decommit. We will only be called when in
+// decommit state with all buffers free.
+//
+// object locked by caller
+HRESULT
+TffdshowDecVideoAllocator::Alloc(void)
+{
+    CAutoLock lck(this);
+
+    /* Check he has called SetProperties */
+    HRESULT hr = CBaseAllocator::Alloc();
+    if (FAILED(hr)) {
+        return hr;
+    }
+
+    /* If the requirements haven't changed then don't reallocate */
+    if (hr == S_FALSE) {
+        ASSERT(m_pBuffer);
+        return NOERROR;
+    }
+    ASSERT(hr == S_OK); // we use this fact in the loop below
+
+    /* Free the old resources */
+    if (m_pBuffer) {
+        ReallyFree();
+    }
+
+    /* Make sure we've got reasonable values */
+    if ( m_lSize < 0 || m_lPrefix < 0 || m_lCount < 0 ) {
+        return E_OUTOFMEMORY;
+    }
+
+    /* Compute the aligned size */
+    LONG lAlignedSize = m_lSize + m_lPrefix;
+
+    /*  Check overflow */
+    if (lAlignedSize < m_lSize) {
+        return E_OUTOFMEMORY;
+    }
+
+    if (m_lAlignment > 1) {
+        LONG lRemainder = lAlignedSize % m_lAlignment;
+        if (lRemainder != 0) {
+            LONG lNewSize = lAlignedSize + m_lAlignment - lRemainder;
+            if (lNewSize < lAlignedSize) {
+                return E_OUTOFMEMORY;
+            }
+            lAlignedSize = lNewSize;
+        }
+    }
+
+    /* Create the contiguous memory block for the samples
+       making sure it's properly aligned (64K should be enough!)
+    */
+    ASSERT(lAlignedSize % m_lAlignment == 0);
+
+    LONGLONG lToAllocate = m_lCount * (LONGLONG)lAlignedSize;
+
+    /*  Check overflow */
+    if (lToAllocate > MAXLONG) {
+        return E_OUTOFMEMORY;
+    }
+
+    m_pBuffer = (PBYTE)VirtualAlloc(NULL,
+                    (LONG)lToAllocate,
+                    MEM_COMMIT,
+                    PAGE_READWRITE);
+
+    if (m_pBuffer == NULL) {
+        return E_OUTOFMEMORY;
+    }
+
+    LPBYTE pNext = m_pBuffer;
+    CMediaSample *pSample;
+
+    ASSERT(m_lAllocated == 0);
+
+    // Create the new samples - we have allocated m_lSize bytes for each sample
+    // plus m_lPrefix bytes per sample as a prefix. We set the pointer to
+    // the memory after the prefix - so that GetPointer() will return a pointer
+    // to m_lSize bytes.
+    for (; m_lAllocated < m_lCount; m_lAllocated++, pNext += lAlignedSize) {
+
+
+        pSample = new CffdshowMediaSample(
+                            NAME("ffdshow memory media sample"),
+                this,
+                            &hr,
+                            pNext + m_lPrefix,      // GetPointer() value
+                            m_lSize);               // not including prefix
+
+            ASSERT(SUCCEEDED(hr));
+        if (pSample == NULL) {
+            return E_OUTOFMEMORY;
+        }
+
+        // This CANNOT fail
+        m_lFree.Add(pSample);
+    }
+
+    m_bChanged = FALSE;
+    return NOERROR;
+}
+
+int TffdshowDecVideoAllocator::get_biWidth() const
+{
+    // If this allocator isn't used, biWidth is not changed for alignment.
+    // make sure to check the return value is not zero.
+    BITMAPINFOHEADER *bi = get_BITMAPINFOHEADER_ptr();
+    if (bi)
+        return bi->biWidth;
+    return 0;
+}
+
+BITMAPINFOHEADER* TffdshowDecVideoAllocator::get_BITMAPINFOHEADER_ptr() const
+{
+    // return non-NULL value for raw formats.
+    if (mt.IsValid() && mt.bFixedSizeSamples) {
+        BITMAPINFOHEADER *bi = NULL;
+        if (mt.formattype==FORMAT_VideoInfo) {
+            VIDEOINFOHEADER* vih = (VIDEOINFOHEADER*)mt.pbFormat;
+            bi = &vih->bmiHeader;
+        } else if(mt.formattype == FORMAT_VideoInfo2) {
+            VIDEOINFOHEADER2* vih = (VIDEOINFOHEADER2*)mt.pbFormat;
+            bi = &vih->bmiHeader;
+        }
+        return bi;
+    }
+    return NULL;
+}
+
+STDMETHODIMP CffdshowMediaSample::SetMediaType(AM_MEDIA_TYPE *pMediaType)
+{
+    m_MediaTypeSetExternallyFlag = true;
+    return CMediaSample::SetMediaType(pMediaType);
+}
+
+// SetMediaType without setting m_MediaTypeSetExternallyFlag.
+STDMETHODIMP CffdshowMediaSample::SetMediaTypeNoFlag(AM_MEDIA_TYPE *pMediaType)
+{
+    return CMediaSample::SetMediaType(pMediaType);
+}
+
+STDMETHODIMP CffdshowMediaSample::QueryInterface(REFIID riid, void **ppv)
+{
+    if (riid == IID_IffdshowMediaSample)
+        return GetInterface((IffdshowMediaSample *) this, ppv);
+    return CMediaSample::QueryInterface(riid, ppv);
+}
+
+STDMETHODIMP_(ULONG) CffdshowMediaSample::AddRef()
+{
+    return CMediaSample::AddRef();
+}
+
+STDMETHODIMP_(ULONG) CffdshowMediaSample::Release()
+{
+    return CMediaSample::Release();
+}
+
+STDMETHODIMP CffdshowMediaSample::clear_MediaTypeSetExternallyFlag()
+{
+    m_MediaTypeSetExternallyFlag = false;
+    return S_OK;
+}
+
+STDMETHODIMP_(bool) CffdshowMediaSample::get_MediaTypeSetExternallyFlag()
+{
+    return m_MediaTypeSetExternallyFlag;
 }

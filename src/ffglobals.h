@@ -392,6 +392,10 @@ static inline float db2value(float db,int mul)
 {
     return powf(10.0f,db/(mul*20.0f));
 }
+static inline int ffalign(int x, int align)
+{
+    return (x + align - 1) & ~(align - 1);
+}
 
 template<typename T> inline const T& bswap(T& var)
 {
