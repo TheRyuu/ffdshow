@@ -75,7 +75,7 @@ GradFunContext* TimgFilterGradfun::configure(float threshold, int radius, TffPic
         gradFunContext->chroma_r = 4;
     else if (gradFunContext->chroma_r > 32)
         gradFunContext->chroma_r = 32;
-    gradFunContext->buf = (uint16_t*)ffmpeg->av_mallocz(((((pict.rectFull.dx)+(16)-1)&~((16)-1)) * (gradFunContext->radius + 1) / 2 + 32) * sizeof(uint16_t));
+    gradFunContext->buf = (uint16_t*)ffmpeg->av_mallocz((ffalign(pict.rectFull.dx, 16) * (gradFunContext->radius + 1) / 2 + 32) * sizeof(uint16_t));
     if (gradFunContext->buf == NULL){
         ffmpeg->av_free(gradFunContext);
         gradFunContext = NULL;

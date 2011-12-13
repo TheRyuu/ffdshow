@@ -716,7 +716,7 @@ bool Rasterizer::Rasterize(int xsub, int ysub, CRect &overhang, bool hqBorder, b
     mOffsetX = mPathOffsetX - xsub;
     mOffsetY = mPathOffsetY - ysub;
 
-    mWideBorder = (mWideBorder+7)&~7;
+    mWideBorder = ffalign(mWideBorder, 8);
 
     int gw          = ((width + 7) >> 3)+1;
     mGlyphBmpWidth  = ((gw + 15) >> 4) << 4;

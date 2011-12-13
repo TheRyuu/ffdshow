@@ -214,7 +214,7 @@ int TimgFilterYadif::config(TffPict &pict)
         yadctx->shiftY[i] = pict.cspInfo.shiftY[i];
         stride_t ffdshow_w = get_stride_YUV_planar(pict.cspInfo, pict.rectFull.dx, i, 0);
         stride_t w = std::max(pict.stride[i], ffdshow_w);
-        int h = ((pict.rectFull.dy + (6 << yadctx->shiftY[i]) + 31) & (~31)) >> yadctx->shiftY[i];
+        int h = ffalign(pict.rectFull.dy + (6 << yadctx->shiftY[i]), 32) >> yadctx->shiftY[i];
 
         yadctx->stride[i]= w;
         for(j = 0 ; j < 3 ; j++) {

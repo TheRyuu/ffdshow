@@ -845,7 +845,7 @@ inline void TimgFilterPostprocSpp::get_pixels(DCTELEM *block, const uint8_t *pix
 void TimgFilterPostprocSpp::filter(uint8_t *dst, const uint8_t *src0, int dst_stride, int src_stride, unsigned int width, unsigned int height, const int8_t *qp_store, int qp_stride, bool is_luma)
 {
     const int count=1<<currentq;
-    const int stride=is_luma?temp_stride:((width+16+15)&(~15));
+    const int stride=is_luma?temp_stride:ffalign(width+16, 16);
     uint64_t block_align1[32*2],*block_align=(uint64_t*)(((intptr_t)block_align1+16)&(~15));
     DCTELEM *block =(DCTELEM *)block_align;
     DCTELEM *block2=(DCTELEM *)(block_align+16);
@@ -935,8 +935,8 @@ HRESULT TimgFilterPostprocSpp::process(TfilterQueue::iterator it,TffPict &pict,c
                     store_slice=store_slice_c;
                 }
 
-                unsigned int h=(dy1[0]+16+15)&(~15);
-                temp_stride=(dx1[0]+16+15)&(~15);
+                unsigned int h=ffalign(dy1[0]+16, 16);
+                temp_stride=ffalign(dx1[0]+16, 16);
                 temp=(int16_t*)aligned_malloc(temp_stride*h*sizeof(int16_t));
                 src=(uint8_t*)aligned_malloc(temp_stride*h*sizeof(uint8_t));
             }
@@ -1104,7 +1104,7 @@ void TimgFilterPostprocFspp::store_slice_s(uint8_t *dst, int16_t *src_, stride_t
     uint8_t *src=(uint8_t*)src_;
     const uint8_t *od=&TimgFilterPostprocSpp::TstoreSlice<Tmmx>::dither[0][0];
     const uint8_t *end=&TimgFilterPostprocSpp::TstoreSlice<Tmmx>::dither[height][0];
-    width = (width+7)&~7;
+    width = ffalign(width, 8);
     dst_stride-=width;
     //src_stride=(src_stride-width)*2;
     int REG_d_=log2_scale;
@@ -1171,7 +1171,7 @@ void TimgFilterPostprocFspp::store_slice2_s(uint8_t *dst, int16_t *src_, stride_
     uint8_t *src=(uint8_t*)src_;
     const uint8_t *od=&TimgFilterPostprocSpp::TstoreSlice<Tmmx>::dither[0][0];
     const uint8_t *end=&TimgFilterPostprocSpp::TstoreSlice<Tmmx>::dither[height][0];
-    width = (width+7)&~7;
+    width = ffalign(width, 8);
     dst_stride-=width;
     //src_stride=(src_stride-width)*2;
     int REG_d_= log2_scale;
@@ -2547,8 +2547,8 @@ HRESULT TimgFilterPostprocFspp::process(TfilterQueue::iterator it,TffPict &pict,
 
                 //if (vf->priv->qp) vf->priv->prev_q=vf->priv->qp, mul_thrmat_s(vf->priv, vf->priv->qp);
 
-                int h= (dy1[0]+16+15)&(~15);
-                temp_stride= (dx1[0]+16+15)&(~15);
+                int h= ffalign(dy1[0]+16, 16);
+                temp_stride= ffalign(dx1[0]+16, 16);
                 temp= (int16_t*)aligned_calloc(temp_stride,3*8*sizeof(int16_t));
                 src = (uint8_t*)aligned_malloc(temp_stride*h*sizeof(uint8_t));
             }

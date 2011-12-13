@@ -382,7 +382,7 @@ void Tspudec::spudec_process_control( unsigned int pts100)
                     start_col = a >> 12;
                     end_col = a & 0xfff;
                     width = (end_col < start_col) ? 0 : end_col - start_col + 1;
-                    stride = (width + 7) & ~7; /* Kludge: draw_alpha needs width multiple of 8 */
+                    stride = ffalign(width, 8); /* Kludge: draw_alpha needs width multiple of 8 */
                     start_row = b >> 12;
                     end_row = b & 0xfff;
                     height = (end_row < start_row) ? 0 : end_row - start_row /* + 1 */;
@@ -759,8 +759,8 @@ void Tspudec::spudec_draw_scaled(
                 scaled_width = width * scalex / 0x100;
                 scaled_height = height * scaley / 0x100;
                 /* Kludge: draw_alpha needs width multiple of 8 */
-                scaled_strideY = (scaled_width + 7) & ~7;
-                scaled_strideUV = ((scaled_width/2) + 7) & ~7;
+                scaled_strideY = ffalign(scaled_width, 8);
+                scaled_strideUV = ffalign(scaled_width/2, 8);
                 if (scaled_image_size < scaled_strideY * scaled_height) {
                     if (scaled_imageY) {
                         free(scaled_imageY);

@@ -438,8 +438,8 @@ int Tconvert::convert(uint64_t incsp0,
             } else if (outcsp1 == FF_CSP_P010 || outcsp1 == FF_CSP_P016) {
                 mode=MODE_fallback;
                 tmpcsp = FF_CSP_420P10;
-                tmpStride[0] = ((dx + 7) & ~7)*2;
-                tmpStride[1] = ((dx/2 + 7) & ~7)*2;
+                tmpStride[0] = ffalign(dx, 8) * 2;
+                tmpStride[1] = ffalign(dx/2, 8) * 2;
                 tmpStride[2] = tmpStride[1];
                 tmp[0] = (unsigned char*)aligned_malloc(tmpStride[0]*dy);
                 tmp[1] = (unsigned char*)aligned_malloc(tmpStride[1]*dy/2);
@@ -452,8 +452,8 @@ int Tconvert::convert(uint64_t incsp0,
             } else if (outcsp1 == FF_CSP_P210 || outcsp1 == FF_CSP_P216) {
                 mode=MODE_fallback;
                 tmpcsp = FF_CSP_422P10;
-                tmpStride[0] = ((dx + 7) & ~7)*2;
-                tmpStride[1] = ((dx/2 + 7) & ~7)*2;
+                tmpStride[0] = ffalign(dx, 8)*2;
+                tmpStride[1] = ffalign(dx/2, 8)*2;
                 tmpStride[2] = tmpStride[1];
                 tmp[0] = (unsigned char*)aligned_malloc(tmpStride[0]*dy);
                 tmp[1] = (unsigned char*)aligned_malloc(tmpStride[1]*dy);
@@ -466,7 +466,7 @@ int Tconvert::convert(uint64_t incsp0,
             } else if (outcsp1 == FF_CSP_AYUV) {
                 mode=MODE_fallback;
                 tmpcsp = FF_CSP_444P;
-                tmpStride[0] = (dx + 15) & ~15;
+                tmpStride[0] = ffalign(dx, 16);
                 tmpStride[1] = tmpStride[0];
                 tmpStride[2] = tmpStride[0];
                 tmp[0] = (unsigned char*)aligned_malloc(tmpStride[0]*dy);
@@ -480,7 +480,7 @@ int Tconvert::convert(uint64_t incsp0,
             } else if (outcsp1 == FF_CSP_Y416) {
                 mode=MODE_fallback;
                 tmpcsp = FF_CSP_444P10;
-                tmpStride[0] = ((dx + 7) & ~7)*2;
+                tmpStride[0] = ffalign(dx, 8)*2;
                 tmpStride[1] = tmpStride[0];
                 tmpStride[2] = tmpStride[0];
                 tmp[0] = (unsigned char*)aligned_malloc(tmpStride[0]*dy);

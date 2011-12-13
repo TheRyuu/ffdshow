@@ -473,7 +473,7 @@ void TffPict::convertCSP(uint64_t Icsp,Tbuffer &buf,int edge)
             memset(data[1],128,stride[1]*(odd2even(rectFull.dy)>>1));
         }
     } else if ((csp & FF_CSPS_MASK) == FF_CSP_P016 || (csp & FF_CSPS_MASK) == FF_CSP_P010) {
-        stride[0]=stride[1] = ((rectFull.dx + edge + 15) & ~0xf)*2;
+        stride[0]=stride[1] = ffalign(rectFull.dx + edge, 16) * 2;
         size_t size = stride[0] * (odd2even(rectFull.dy) + (odd2even(rectFull.dy)>>1));
         bool overwriteData = buf.size() < size;
         buf.alloc(size);
@@ -489,7 +489,7 @@ void TffPict::convertCSP(uint64_t Icsp,Tbuffer &buf,int edge)
         for (unsigned int i=0; i<cspInfo.numPlanes; i++) {
             unsigned int dx = rectFull.dx;
             if (csp & FF_CSPS_MASK_FFRGB) {
-                dx = (dx + 3) & ~3;
+                dx = ffalign(dx, 4);
             }
             stride[i]=(dx>>cspInfo.shiftX[i])*cspInfo.Bpp;
             size+=stride[i]*(rectFull.dy>>cspInfo.shiftY[i]);

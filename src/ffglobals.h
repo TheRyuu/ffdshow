@@ -396,6 +396,10 @@ static inline int ffalign(int x, int align)
 {
     return (x + align - 1) & ~(align - 1);
 }
+static inline int ffalign(unsigned int x, int align)
+{
+    return (x + align - 1) & ~(align - 1);
+}
 
 template<typename T> inline const T& bswap(T& var)
 {

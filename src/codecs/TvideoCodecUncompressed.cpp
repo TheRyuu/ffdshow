@@ -124,7 +124,7 @@ bool TvideoCodecUncompressed::beginDecompress(TffPictBase &pict,FOURCC infcc,con
     }
     cspInfo=csp_getInfo(pict.csp=csp);
     if (csp_isRGB(csp)) {
-        stride[0]=(((pict.rectFull.dx*cspInfo->Bpp<<3)+31)&~31)>>3;
+        stride[0]=ffalign(pict.rectFull.dx*cspInfo->Bpp<<3, 32)>>3;
         BITMAPINFOHEADER bih;
         ExtractBIH(mt,&bih);
         if (bih.biHeight < 0) {
