@@ -260,6 +260,8 @@ STDMETHODIMP TffdshowVideoInputPin::ReceiveConnection(IPin* pConnector, const AM
         connectedSplitter = PBDA_DTFilter;
     } else if (ref == CLSID_NeuviewSource) {
         connectedSplitter = NeuviewSource;
+    } else if (ref == CLSID_AviWavFileSource) {
+        connectedSplitter = AviWavFileSource;
     }
 
 #if 0
@@ -976,6 +978,15 @@ HRESULT TffdshowVideoInputPin::SupportPropSetRate(DWORD dwPropID, DWORD *pTypeSu
             break;
     }
     return S_OK;
+}
+
+// If we are getting raw format from AVI/WAV File Source, it is most likely avs file.
+// AVI/WAV File Source can somehow process avs file and output raw formats, but it cannot connect directly to a video renderer.
+// As an intermediate filter, ffdshow or color space converter filter help.
+// All filters that can connect to a video renderer can handle stride changes.
+// Unfortunately AVI/WAV File Source cannot handle stride changes.
+int TffdshowVideoInputPin::canUpperStreamHandleStrideChange() {
+    return connectedSplitter != AviWavFileSource;
 }
 
 //================================ TffdshowVideoEncInputPin ================================

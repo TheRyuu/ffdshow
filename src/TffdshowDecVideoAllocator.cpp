@@ -21,6 +21,8 @@
 #include "TffdshowDecVideoAllocator.h"
 #include "dsutil.h"
 #include "ffdshow_mediaguids.h"
+#include "TffDecoderVideo.h"
+#include "TffdshowVideoInputPin.h"
 
 TffdshowDecVideoAllocator::TffdshowDecVideoAllocator(CBaseFilter* Ifilter,HRESULT* phr):
     CMemAllocator(NAME("TffdshowDecVideoAllocator"),NULL,phr),
@@ -44,7 +46,8 @@ STDMETHODIMP TffdshowDecVideoAllocator::GetBuffer(IMediaSample** ppBuffer,REFERE
         // force the upper stream filter to use 32 pixel alignment.
         // For Cb/Cr to be aligned 16, alignment 32 is needed.
         BITMAPINFOHEADER *bi = get_BITMAPINFOHEADER_ptr();
-        if (bi)
+        TffdshowDecVideo *fv = dynamic_cast<TffdshowDecVideo*>(filter);
+        if (bi && fv && fv->canUpperStreamHandleStrideChange())
             bi->biWidth = ffalign(bi->biWidth, needed_align);
 
         BITMAPINFOHEADER bih;
@@ -94,7 +97,9 @@ void TffdshowDecVideoAllocator::NotifyMediaType(const CMediaType &Imt)
 STDMETHODIMP TffdshowDecVideoAllocator::SetProperties(ALLOCATOR_PROPERTIES* pRequest, ALLOCATOR_PROPERTIES* pActual)
 {
     BITMAPINFOHEADER *bi = get_BITMAPINFOHEADER_ptr();
-    if (bi) {
+    // I don't want to change encoder's behavior because sufficient testing is nearly impossible.
+    TffdshowDecVideo *fv = dynamic_cast<TffdshowDecVideo*>(filter);
+    if (bi && fv) {
         // to make sure extra memory is allocated for alignment
         ALLOCATOR_PROPERTIES request = *pRequest;
         long newSize = 0;
@@ -225,6 +230,7 @@ int TffdshowDecVideoAllocator::get_biWidth() const
     return 0;
 }
 
+// Extract pointer to BITMAPINFOHEADER from raw formats.
 BITMAPINFOHEADER* TffdshowDecVideoAllocator::get_BITMAPINFOHEADER_ptr() const
 {
     // return non-NULL value for raw formats.

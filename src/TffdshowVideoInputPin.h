@@ -113,8 +113,10 @@ public:
         DVBSourceFilter,
         PBDA_DTFilter,
         NeuviewSource,
+        AviWavFileSource,
         Unknown_Splitter
     };
+    int canUpperStreamHandleStrideChange();
 };
 
 class TffdshowVideoEncInputPin :public IMixerPinConfig,public TffdshowVideoInputPin

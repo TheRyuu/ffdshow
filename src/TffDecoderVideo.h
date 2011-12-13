@@ -584,6 +584,7 @@ public:
     virtual int getVideoCodecId(const BITMAPINFOHEADER *hdr,const GUID *subtype,FOURCC *AVIfourcc);
     virtual void initCodecSettings(void);
     virtual void lockReceive(void),unlockReceive(void);
+    int canUpperStreamHandleStrideChange() const;
 
     bool initSubtitles(int id,int type,const unsigned char *extradata,unsigned int extradatalen);
     void addSubtitle(int id,REFERENCE_TIME start,REFERENCE_TIME stop,const unsigned char *data,unsigned int datalen,bool utf8);
