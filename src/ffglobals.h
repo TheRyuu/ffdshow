@@ -21,6 +21,8 @@
 #define FFDSHOWDECVIDEODXVA _l("ffdshow_dxva")
 #endif
 
+const wchar_t* filterMode2regkey(int filtermode);
+
 #if defined(ARCH_IS_IA32) || defined(ARCH_IS_X86_64)
 #define ALT_BITSTREAM_READER
 #endif

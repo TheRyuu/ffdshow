@@ -26,12 +26,25 @@
 #include "Tstream.h"
 #include "compiler.h"
 #include "libavcodec/golomb.h"
+#include "ffdshow_constants.h"
 
 const char_t *FFDSHOW_VER=_l(__DATE__) _l(" ") _l(__TIME__) _l(" (") _l(COMPILER) _l(COMPILER_X64) _l(", ") _l(UNICODE_BUILD) _l(COMPILER_INFO) _l(")");
 #undef COMPILER
 #undef COMPILER_SSE
 #undef COMPILER_SSE2
 #undef COMPILER_X64
+
+const wchar_t* filterMode2regkey(int filtermode)
+{
+    if(filtermode & IDFF_FILTERMODE_VIDEODXVA)
+        return FFDSHOWDECVIDEODXVA;
+    else if (filtermode & IDFF_FILTERMODE_VFW)
+        return FFDSHOWDECVIDEOVFW;
+    else if (filtermode & IDFF_FILTERMODE_VIDEORAW)
+        return FFDSHOWDECVIDEORAW;
+    else
+        return FFDSHOWDECVIDEO;
+}
 
 // override libavcodec code with slower but safer code.
 #define get_ue_golomb _get_ue_golomb
