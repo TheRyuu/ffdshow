@@ -142,7 +142,9 @@ void TffdshowPageDec::onApplyChanges(void)
     if (localPresets) {
         deciD->setPresets(localPresets);
         deciD->savePresets();
-        ff_strncpy(oldActivePresetName, cbxGetCurText(IDC_CBX_PRESETS), countof(oldActivePresetName));
+        const wchar_t *src = cbxGetCurText(IDC_CBX_PRESETS);
+        if (src)
+            ff_strncpy(oldActivePresetName, src, countof(oldActivePresetName));
     }
 }
 
