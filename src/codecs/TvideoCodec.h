@@ -82,7 +82,7 @@ protected:
     public:
         TtelecineManager(TvideoCodecDec* Iparent);
         void get_timestamps(TffPict &pict);
-        void get_fieldtype(TffPict &pict);
+        void get_fieldtype(TffPict &pict, bool manage);
         void new_frame(int top_field_first, int repeat_pict, const REFERENCE_TIME &rtStart, const REFERENCE_TIME &rtStop);
         void onSeek(void);
     } telecineManager;

@@ -262,9 +262,9 @@ void TvideoCodecDec::TtelecineManager::new_frame(int top_field_first, int repeat
     cfg_softTelecine = parent->deci->getParam2(IDFF_softTelecine);
 }
 
-void TvideoCodecDec::TtelecineManager::get_fieldtype(TffPict &pict)
+void TvideoCodecDec::TtelecineManager::get_fieldtype(TffPict &pict, bool manage)
 {
-    if (!film) {
+    if (!film || !manage) {
         return;
     }
 
