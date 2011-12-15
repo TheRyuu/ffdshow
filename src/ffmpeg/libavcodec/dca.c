@@ -261,6 +261,7 @@ static av_always_inline int get_bitalloc(GetBitContext *gb, BitAlloc *ba, int id
 
 typedef struct {
     AVCodecContext *avctx;
+    AVFrame frame;
     /* Frame header */
     int frame_type;             ///< type of the current frame
     int samples_deficit;        ///< deficit sample count
@@ -520,7 +521,7 @@ static int dca_parse_frame_header(DCAContext * s)
     init_get_bits(&s->gb, s->dca_buffer, s->dca_buffer_size * 8);
 
     /* Sync code */
-    get_bits(&s->gb, 32);
+    skip_bits_long(&s->gb, 32);
 
     /* Frame header */
     s->frame_type        = get_bits(&s->gb, 1);
@@ -1258,7 +1259,7 @@ static int dca_subframe_footer(DCAContext * s, int base_channel)
     /* presumably optional information only appears in the core? */
     if (!base_channel) {
         if (s->timestamp)
-            get_bits(&s->gb, 32);
+            skip_bits_long(&s->gb, 32);
 
         if (s->aux_data)
             aux_data_count = get_bits(&s->gb, 6);
@@ -1635,9 +1636,8 @@ static void dca_exss_parse_header(DCAContext *s)
  * Main frame decoding function
  * FIXME add arguments
  */
-static int dca_decode_frame(AVCodecContext * avctx,
-                            void *data, int *data_size,
-                            AVPacket *avpkt)
+static int dca_decode_frame(AVCodecContext *avctx, void *data,
+                            int *got_frame_ptr, AVPacket *avpkt)
 {
     const uint8_t *buf = avpkt->data;
     int buf_size = avpkt->size;
@@ -1645,9 +1645,8 @@ static int dca_decode_frame(AVCodecContext * avctx,
     int lfe_samples;
     int num_core_channels = 0;
     int i, ret;
-    float   *samples_flt = data;
-    int16_t *samples_s16 = data;
-    int out_size;
+    float   *samples_flt;
+    int16_t *samples_s16;
     DCAContext *s = avctx->priv_data;
     int channels;
     int core_ss_end;
@@ -1839,11 +1838,14 @@ static int dca_decode_frame(AVCodecContext * avctx,
         return AVERROR_PATCHWELCOME;
     }
 
-    out_size = 256 / 8 * s->sample_blocks * channels *
-               av_get_bytes_per_sample(avctx->sample_fmt);
-    if (*data_size < out_size)
-        return AVERROR(EINVAL);
-    *data_size = out_size;
+    /* get output buffer */
+    s->frame.nb_samples = 256 * (s->sample_blocks / 8);
+    if ((ret = avctx->get_buffer(avctx, &s->frame)) < 0) {
+        av_log(avctx, AV_LOG_ERROR, "get_buffer() failed\n");
+        return ret;
+    }
+    samples_flt = (float   *)s->frame.data[0];
+    samples_s16 = (int16_t *)s->frame.data[0];
 
     /* filter to get final output */
     for (i = 0; i < (s->sample_blocks / 8); i++) {
@@ -1876,6 +1878,9 @@ static int dca_decode_frame(AVCodecContext * avctx,
     for (i = 0; i < 2 * s->lfe * 4; i++) {
         s->lfe_data[i] = s->lfe_data[i + lfe_samples];
     }
+
+    *got_frame_ptr   = 1;
+    *(AVFrame *)data = s->frame;
 
     return buf_size;
 }
@@ -1919,6 +1924,9 @@ static av_cold int dca_decode_init(AVCodecContext * avctx)
         avctx->channels = avctx->request_channels;
     }
 
+    avcodec_get_frame_defaults(&s->frame);
+    avctx->coded_frame = &s->frame;
+
     return 0;
 }
 
@@ -1947,7 +1955,7 @@ AVCodec ff_dca_decoder = {
     .decode = dca_decode_frame,
     .close = dca_decode_end,
     .long_name = NULL_IF_CONFIG_SMALL("DCA (DTS Coherent Acoustics)"),
-    .capabilities = CODEC_CAP_CHANNEL_CONF,
+    .capabilities = CODEC_CAP_CHANNEL_CONF | CODEC_CAP_DR1,
     .sample_fmts = (const enum AVSampleFormat[]) {
         AV_SAMPLE_FMT_FLT, AV_SAMPLE_FMT_S16, AV_SAMPLE_FMT_NONE
     },

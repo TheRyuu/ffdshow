@@ -47,7 +47,7 @@ static const int mb_type_b_map[4]= {
 };
 
 /**
- * predicts the ac.
+ * Predict the ac.
  * @param n block index (0-3 are luma, 4-5 are chroma)
  * @param dir the ac prediction direction
  */
@@ -349,7 +349,7 @@ static void mpeg4_decode_sprite_trajectory(MpegEncContext * s, GetBitContext *gb
 }
 
 /**
- * decodes the next video packet.
+ * Decode the next video packet.
  * @return <0 if something went wrong
  */
 int mpeg4_decode_video_packet_header(MpegEncContext *s)
@@ -435,7 +435,7 @@ int mpeg4_decode_video_packet_header(MpegEncContext *s)
 }
 
 /**
- * gets the average motion vector for a GMC MB.
+ * Get the average motion vector for a GMC MB.
  * @param n either 0 for the x component or 1 for y
  * @return the average MV for a GMC MB
  */
@@ -481,7 +481,7 @@ static inline int get_amv(MpegEncContext *s, int n){
 }
 
 /**
- * decodes the dc value.
+ * Decode the dc value.
  * @param n block index (0-3 are luma, 4-5 are chroma)
  * @param dir_ptr the prediction direction will be stored here
  * @return the quantized dc
@@ -516,7 +516,7 @@ static inline int mpeg4_decode_dc(MpegEncContext * s, int n, int *dir_ptr)
 
         if (code > 8){
             if(get_bits1(&s->gb)==0){ /* marker */
-                if(s->error_recognition>=2){
+                if(s->err_recognition&(AV_EF_BITSTREAM|AV_EF_COMPLIANT)){
                     av_log(s->avctx, AV_LOG_ERROR, "dc marker bit missing\n");
                     return -1;
                 }
@@ -528,7 +528,7 @@ static inline int mpeg4_decode_dc(MpegEncContext * s, int n, int *dir_ptr)
 }
 
 /**
- * decodes first partition.
+ * Decode first partition.
  * @return number of MBs decoded or <0 if an error occurred
  */
 static int mpeg4_decode_partition_a(MpegEncContext *s){
@@ -780,14 +780,14 @@ static int mpeg4_decode_partition_b(MpegEncContext *s, int mb_count){
 }
 
 /**
- * decodes the first & second partition
+ * Decode the first and second partition.
  * @return <0 if error (and sets error type in the error_status_table)
  */
 int ff_mpeg4_decode_partitions(MpegEncContext *s)
 {
     int mb_num;
-    const int part_a_error= s->pict_type==AV_PICTURE_TYPE_I ? (DC_ERROR|MV_ERROR) : MV_ERROR;
-    const int part_a_end  = s->pict_type==AV_PICTURE_TYPE_I ? (DC_END  |MV_END)   : MV_END;
+    const int part_a_error= s->pict_type==AV_PICTURE_TYPE_I ? (ER_DC_ERROR|ER_MV_ERROR) : ER_MV_ERROR;
+    const int part_a_end  = s->pict_type==AV_PICTURE_TYPE_I ? (ER_DC_END  |ER_MV_END)   : ER_MV_END;
 
     mb_num= mpeg4_decode_partition_a(s);
     if(mb_num<0){
@@ -822,18 +822,18 @@ int ff_mpeg4_decode_partitions(MpegEncContext *s)
 
     if( mpeg4_decode_partition_b(s, mb_num) < 0){
         if(s->pict_type==AV_PICTURE_TYPE_P)
-            ff_er_add_slice(s, s->resync_mb_x, s->resync_mb_y, s->mb_x, s->mb_y, DC_ERROR);
+            ff_er_add_slice(s, s->resync_mb_x, s->resync_mb_y, s->mb_x, s->mb_y, ER_DC_ERROR);
         return -1;
     }else{
         if(s->pict_type==AV_PICTURE_TYPE_P)
-            ff_er_add_slice(s, s->resync_mb_x, s->resync_mb_y, s->mb_x-1, s->mb_y, DC_END);
+            ff_er_add_slice(s, s->resync_mb_x, s->resync_mb_y, s->mb_x-1, s->mb_y, ER_DC_END);
     }
 
     return 0;
 }
 
 /**
- * decodes a block.
+ * Decode a block.
  * @return <0 if an error occurred
  */
 static inline int mpeg4_decode_block(MpegEncContext * s, DCTELEM * block,
@@ -990,7 +990,7 @@ static inline int mpeg4_decode_block(MpegEncContext * s, DCTELEM * block,
                     else         level= level * qmul - qadd;
 
                     if((unsigned)(level + 2048) > 4095){
-                        if(s->error_recognition > FF_ER_COMPLIANT){
+                        if(s->err_recognition & (AV_EF_BITSTREAM|AV_EF_AGGRESSIVE)){
                             if(level > 2560 || level<-2560){
                                 av_log(s->avctx, AV_LOG_ERROR, "|level| overflow in 3. esc, qp=%d\n", s->qscale);
                                 return -1;
@@ -1832,7 +1832,7 @@ no_cplx_est:
 }
 
 /**
- * decodes the user data stuff in the header.
+ * Decode the user data stuff in the header.
  * Also initializes divx/xvid/lavc_version/build.
  */
 static int decode_user_data(MpegEncContext *s, GetBitContext *gb){
@@ -2102,7 +2102,7 @@ static int decode_vop_header(MpegEncContext *s, GetBitContext *gb){
 }
 
 /**
- * decode mpeg4 headers
+ * Decode mpeg4 headers.
  * @return <0 if no VOP found (or a damaged one)
  *         FRAME_SKIPPED if a not coded VOP is found
  *         0 if a VOP is found
@@ -2124,7 +2124,7 @@ int ff_mpeg4_decode_picture_header(MpegEncContext * s, GetBitContext *gb)
     for(;;) {
         if(get_bits_count(gb) >= gb->size_in_bits){
             if(gb->size_in_bits==8 && (s->divx_version>=0 || s->xvid_build>=0) || s->codec_tag == AV_RL32("QMP4")){
-                av_log(s->avctx, AV_LOG_WARNING, "frame skip %d\n", gb->size_in_bits);
+                av_log(s->avctx, AV_LOG_VERBOSE, "frame skip %d\n", gb->size_in_bits);
                 return FRAME_SKIPPED; //divx bug
             }else
                 return -1; //end of stream

@@ -227,7 +227,7 @@ static void update_duplicate_context_after_me(MpegEncContext *dst, MpegEncContex
 }
 
 /**
- * sets the given MpegEncContext to defaults for encoding.
+ * Set the given MpegEncContext to defaults for encoding.
  * the changed fields will not depend upon the prior state of the MpegEncContext.
  */
 static void MPV_encode_defaults(MpegEncContext *s){
@@ -860,6 +860,8 @@ static int load_input_picture(MpegEncContext *s, AVFrame *pic_arg){
 
     if(direct){
         i= ff_find_unused_picture(s, 1);
+        if (i < 0)
+            return i;
 
         pic= (AVFrame*)&s->picture[i];
         pic->reference= 3;
@@ -873,6 +875,8 @@ static int load_input_picture(MpegEncContext *s, AVFrame *pic_arg){
         }
     }else{
         i= ff_find_unused_picture(s, 0);
+        if (i < 0)
+            return i;
 
         pic= (AVFrame*)&s->picture[i];
         pic->reference= 3;
@@ -1205,6 +1209,8 @@ no_output_pic:
             // input is a shared pix, so we can't modifiy it -> alloc a new one & ensure that the shared one is reuseable
 
             int i= ff_find_unused_picture(s, 0);
+            if (i < 0)
+                return i;
             Picture *pic= &s->picture[i];
 
             pic->f.reference = s->reordered_input_picture[0]->f.reference;
