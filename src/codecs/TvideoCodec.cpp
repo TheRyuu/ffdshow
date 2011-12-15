@@ -101,12 +101,12 @@ TvideoCodecDec* TvideoCodecDec::initDec(IffdshowBase *deci,IdecVideoSink *sink,C
         switch (codecId) {
         case CODEC_ID_H264_QUICK_SYNC:  codecId = CODEC_ID_H264;     break;
         case CODEC_ID_MPEG2_QUICK_SYNC: codecId = CODEC_ID_LIBMPEG2; break;
-        case CODEC_ID_VC1_QUICK_SYNC:
-            {
-                codecId = (fcc == mmioFOURCC('W','V','C','1')) ? CODEC_ID_VC1 : CODEC_ID_WMV3;
-            }
-            break;
+        case CODEC_ID_VC1_QUICK_SYNC:   codecId = CODEC_ID_WMV9_LIB; break;
+        default:
+            ASSERT(FALSE); // this shouldn't happen!
         }
+
+        delete movie;
 
         // Call this function again with the new codecId.
         return initDec(deci,sink,codecId,fcc,mt);

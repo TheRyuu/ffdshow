@@ -821,7 +821,7 @@ int TsubtitleFormat::Tssa::parse_parentheses(TparenthesesContents &contents, ffs
     strtok(arg.c_str(),L",",input_strings);
     foreach (ffstring &s, input_strings)
     contents.push_back(TparenthesesContent(s));
-    return second_paren + 1;
+    return (int)(second_paren + 1);
 }
 
 int TsubtitleFormat::Tssa::TstoreParams::writeProps(const TparenthesesContents &contents, TSubtitleProps *props)
@@ -877,7 +877,7 @@ void TsubtitleFormat::Tssa::fontName(ffstring &arg)
 {
     if (arg.size()) {
         memset(props.fontname,0,sizeof(props.fontname));
-        text<char_t>(arg.c_str(), arg.size(), (char_t*)props.fontname, countof(props.fontname));
+        text<char_t>(arg.c_str(), (int)arg.size(), (char_t*)props.fontname, countof(props.fontname));
     } else {
         ff_strncpy(props.fontname, defprops.fontname, countof(props.fontname));
     }

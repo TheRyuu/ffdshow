@@ -471,7 +471,7 @@ HRESULT TaudioParser::parseDTS(unsigned char *src, int size, TbyteBuffer *newsrc
         tmpBuffer.clear();
         tmpBuffer.append(&*backupbuf.begin(), backupbuf.size());
         tmpBuffer.append(src, size);
-        bitdata.bitsleft=tmpBuffer.size()*8;
+        bitdata.bitsleft=(long)tmpBuffer.size()*8;
         bitdata.wordpointer=&*tmpBuffer.begin();
         backupbuf.clear();
     }
@@ -551,7 +551,7 @@ HRESULT TaudioParser::parseDTS(unsigned char *src, int size, TbyteBuffer *newsrc
                     newsrcBuffer->append(bitdata.wordpointer, frame_size);
                     bitdata.bitsleft-=frame_size*8;
                     bitdata.wordpointer+=frame_size;
-                    audioParserData.frames.push_back(TframeData(backupbuf.size()+frame_size));
+                    audioParserData.frames.push_back(TframeData((uint32_t)backupbuf.size()+frame_size));
                     backupbuf.clear();
                 } else { // strip off HD blocks (DTS core only)
                     bitdata.bitindex=0;
@@ -701,7 +701,7 @@ HRESULT TaudioParser::parseAC3(unsigned char *src, int size, TbyteBuffer *newsrc
         tmpBuffer.clear();
         tmpBuffer.append(&*backupbuf.begin(), backupbuf.size());
         tmpBuffer.append(src, size);
-        bitdata.bitsleft=tmpBuffer.size()*8;
+        bitdata.bitsleft=(long)tmpBuffer.size()*8;
         bitdata.wordpointer=&*tmpBuffer.begin();
         backupbuf.clear();
     }
@@ -845,7 +845,7 @@ HRESULT TaudioParser::parseAC3(unsigned char *src, int size, TbyteBuffer *newsrc
                         newsrcBuffer->append(bitdata.wordpointer, frame_size);
                         bitdata.bitsleft-=frame_size*8;
                         bitdata.wordpointer+=frame_size;
-                        audioParserData.frames.push_back(TframeData(backupbuf.size()+frame_size));
+                        audioParserData.frames.push_back(TframeData((uint32_t)backupbuf.size()+frame_size));
                         backupbuf.clear();
                     } else { // This is an AC3 frame, back it up because they have to be sent with an EAC3 frame
                         backupbuf.clear();
@@ -857,7 +857,7 @@ HRESULT TaudioParser::parseAC3(unsigned char *src, int size, TbyteBuffer *newsrc
                     // Recover the first frame we backed up (to check if the stream was different from regular AC3
                     if (backupbuf.size()>0) {
                         newsrcBuffer->append(&*backupbuf.begin(),backupbuf.size());
-                        audioParserData.frames.push_back(TframeData(backupbuf.size()));
+                        audioParserData.frames.push_back(TframeData((uint32_t)backupbuf.size()));
                         backupbuf.clear();
                     }
 
@@ -1085,7 +1085,7 @@ HRESULT TaudioParser::parseAC3(unsigned char *src, int size, TbyteBuffer *newsrc
                             if (bitdata.showBits(16) == 0x0B77 || // AC3 stream
                                     bitdata.showBits(32,32) == 0xf8726fba || // True HD major sync frame
                                     bitdata.showBits(32,32) == 0xf8726fbb) { // MLP major sync frame
-                                bitdata.bitsleft-=(ptr-bitdata.wordpointer)*8;
+                                bitdata.bitsleft-=(long)(ptr-bitdata.wordpointer)*8;
                                 bitdata.wordpointer+=(ptr-bitdata.wordpointer);
                                 skip=true;
                                 break;

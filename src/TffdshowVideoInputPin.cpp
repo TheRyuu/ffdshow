@@ -415,8 +415,31 @@ again:
     // I gave up using it and decided to ignore it during playback of VC1 stream.
     // It works fine for my sample.
     if (video) {
-        if (is_quicksync_codec(video->codecId) || (wasVC1 && biIn.bmiHeader.biCompression==0x31435657 /* "WVC1" */ )) {
+        if (wasVC1 && biIn.bmiHeader.biCompression==0x31435657 /* "WVC1" */ ) {
             return true;
+        } else if (is_quicksync_codec(video->codecId)) {
+            // check if output pin is connected to a supported filter
+            IPin *pConnectedPin = NULL;
+            if (fv && fv->output) {
+                pConnectedPin = fv->output->GetConnected();
+                const CLSID &out=GetCLSID(pConnectedPin);
+                if (out == CLSID_SampleGrabber || out == CLSID_MediaDetFilter) {
+                    delete video;
+                    codec=video=NULL;
+                    switch (codecId) {
+                    case CODEC_ID_H264_QUICK_SYNC:  codecId = CODEC_ID_H264;     break;
+                    case CODEC_ID_MPEG2_QUICK_SYNC: codecId = CODEC_ID_LIBMPEG2; break;
+                    case CODEC_ID_VC1_QUICK_SYNC:   codecId = CODEC_ID_WMV9_LIB; break;
+                    default:
+                        ASSERT(FALSE); // this shouldn't happen!
+                    }
+                }
+            }
+
+            // no need to reset anything
+            if (video) {
+                return true;
+            }
         } else {
             delete video;
             codec=video=NULL;

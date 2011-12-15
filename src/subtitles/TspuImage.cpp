@@ -349,7 +349,7 @@ void TspuImage::TscalerFull::scale(const unsigned char *srci,const unsigned char
             */
             /* 1: top left part */
             base = srcStride * (unsigned int) unscaled_y;
-            stride_t pos=base + unscaled_x*cspInfo->Bpp;
+            stride_t pos=base + (long)(unscaled_x*cspInfo->Bpp);
             if (isRGB32) {
                 tmp = left * top * ((*(uint32_t*)(srca+ pos))&0xFF);
                 alpha += tmp;

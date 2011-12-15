@@ -136,7 +136,7 @@ HRESULT TvideoCodecLibmpeg2::decompress(const unsigned char *src,size_t srcLen,I
     if (rateInfo->m_flushing || rateInfo->m_endflush) {
         return hr;
     }
-    int len=mpeg2dec->buf_end - mpeg2dec->buf_start;
+    int len=(int)(mpeg2dec->buf_end - mpeg2dec->buf_start);
     if (len>0) {
         unsigned char *b=(unsigned char *)buffer->alloc(len);
         memcpy(b, mpeg2dec->buf_start, len);
@@ -335,7 +335,7 @@ HRESULT TvideoCodecLibmpeg2::decompressI(const unsigned char *src,size_t srcLen,
                     }
                     if (!wait4Iframe) {
                         TffPict pict(oldpict);
-                        telecineManager.get_fieldtype(pict, deci->getParam2(IDFF_softTelecine));
+                        telecineManager.get_fieldtype(pict, 0 != deci->getParam2(IDFF_softTelecine));
                         telecineManager.get_timestamps(pict);
                         HRESULT hr = sinkD->deliverDecodedSample(pict);
                         if (hr != S_OK) {

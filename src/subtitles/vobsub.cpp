@@ -380,7 +380,7 @@ Tvobsub::PARSE_RES Tvobsub::vobsub_add_id( const char *id, size_t idlen, const u
         }
         //memcpy(spu_streams[index].id, id, idlen)
         //spu_streams[index].id[idlen] = 0;
-        text<char_t>(id, idlen, spu_streams[index].id, idlen + 1);//ff_strncpy(spu_streams[index].id,id,idlen);// ;
+        text<char_t>(id, (int)idlen, spu_streams[index].id, (int)idlen + 1);//ff_strncpy(spu_streams[index].id,id,idlen);// ;
     }
     spu_streams_current = index;
     DPRINTF(_l("[vobsub] subtitle (vobsubid): %d language %s"),index, spu_streams[index].id);
@@ -400,7 +400,7 @@ Tvobsub::PARSE_RES Tvobsub::vobsub_add_altid( const char *id, size_t idlen)
     queue->altid=(char_t*)calloc(idlen+1,sizeof(char_t));
     //memcpy(queue->altid,id,idlen);
     //queue->altid[idlen]='\0';
-    text<char_t>(id, idlen, queue->altid, idlen + 1);
+    text<char_t>(id, (int)idlen, queue->altid, (int)idlen + 1);
     return PARSE_OK;
 }
 

@@ -97,7 +97,7 @@ void TimgFilterGradfun::filter(GradFunContext *gradFunContext, uint8_t *src[4], 
         }
 
         if (((w) > (h) ? (h) : (w)) > 2 * r)
-            ffmpeg->gradfunFilter(gradFunContext, pict.data[p], src[p], w, h, pict.stride[p], pict.stride[p], r);
+            ffmpeg->gradfunFilter(gradFunContext, pict.data[p], src[p], w, h, (int)pict.stride[p], (int)pict.stride[p], r);
     }
 }
 HRESULT TimgFilterGradfun::process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)

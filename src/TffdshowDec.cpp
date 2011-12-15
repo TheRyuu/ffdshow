@@ -908,7 +908,7 @@ STDMETHODIMP TffdshowDec::Count(DWORD* pcStreams)
                                               getParamStr2(IDFF_subSearchDir),
                                               subtitleFiles,
                                               (TsubtitlesFile::subtitleFilesSearchMode)getParam2(IDFF_streamsSubFilesMode));
-        *pcStreams += subtitleFiles.size();
+        *pcStreams += (DWORD)subtitleFiles.size();
     }
     if (pdummy) {
         CoTaskMemFree(pdummy);
@@ -916,18 +916,18 @@ STDMETHODIMP TffdshowDec::Count(DWORD* pcStreams)
 
     // Subtitle streams
     extractExternalStreams();
-    *pcStreams += externalSubtitleStreams.size();
-    *pcStreams += externalAudioStreams.size();
-    *pcStreams += externalEditionStreams.size();
+    *pcStreams += (DWORD)externalSubtitleStreams.size();
+    *pcStreams += (DWORD)externalAudioStreams.size();
+    *pcStreams += (DWORD)externalEditionStreams.size();
     m_isCounting = false;
     return S_OK;
 }
 STDMETHODIMP TffdshowDec::Info(long lIndex, AM_MEDIA_TYPE** ppmt, DWORD* pdwFlags, LCID* plcid, DWORD* pdwGroup, WCHAR** ppszName, IUnknown** ppObject, IUnknown** ppUnk)
 {
     // In order : audio streams, embedded subtitles, then FFDShow filters then in last external subtitles (which can vary)
-    long internalStreams = isStreamsMenu() ? streams.size() : 0;
-    long subFiles = getParam2(IDFF_subFiles) ? subtitleFiles.size() : 0;
-    long firstFilterIndex = externalSubtitleStreams.size() + externalAudioStreams.size() + externalEditionStreams.size();
+    long internalStreams = (long)(isStreamsMenu() ? streams.size() : 0);
+    long subFiles = (long)(getParam2(IDFF_subFiles) ? subtitleFiles.size() : 0);
+    long firstFilterIndex = (long)(externalSubtitleStreams.size() + externalAudioStreams.size() + externalEditionStreams.size());
     long firstSubFileIndex = firstFilterIndex + internalStreams;
     long count = firstSubFileIndex + subFiles;
     if (lIndex<0 || lIndex>= count || !presetSettings) {
@@ -1029,7 +1029,7 @@ STDMETHODIMP TffdshowDec::Info(long lIndex, AM_MEDIA_TYPE** ppmt, DWORD* pdwFlag
         if (ppmt) {
             (*ppmt)->majortype=MEDIATYPE_Text;
         }
-        lIndex -= externalAudioStreams.size();
+        lIndex -= (long)externalAudioStreams.size();
         if (pdwGroup) {
             *pdwGroup = 2;    // Subtitles stream
         }
@@ -1038,8 +1038,8 @@ STDMETHODIMP TffdshowDec::Info(long lIndex, AM_MEDIA_TYPE** ppmt, DWORD* pdwFlag
         if (ppmt) {
             (*ppmt)->majortype=MEDIATYPE_Video;
         }
-        lIndex -= externalAudioStreams.size();
-        lIndex -= externalSubtitleStreams.size();
+        lIndex -= (long)externalAudioStreams.size();
+        lIndex -= (long)externalSubtitleStreams.size();
         if (pdwGroup) {
             *pdwGroup = 18;    // Editions streams
         }
@@ -1075,10 +1075,10 @@ STDMETHODIMP TffdshowDec::Info(long lIndex, AM_MEDIA_TYPE** ppmt, DWORD* pdwFlag
 STDMETHODIMP TffdshowDec::Enable(long lIndex, DWORD dwFlags)
 {
     // In order : audio streams, embedded subtitles, then FFDShow filters then in last external subtitles (which can vary)
-    long internalStreams = (isStreamsMenu() ? streams.size() : 0);
-    long firstFilterIndex = externalSubtitleStreams.size() + externalAudioStreams.size() + externalEditionStreams.size();
+    long internalStreams = (long)(isStreamsMenu() ? streams.size() : 0);
+    long firstFilterIndex = (long)(externalSubtitleStreams.size() + externalAudioStreams.size() + externalEditionStreams.size());
     long firstSubFileIndex = firstFilterIndex + internalStreams;
-    long count = firstSubFileIndex + subtitleFiles.size();
+    long count = firstSubFileIndex + (long)subtitleFiles.size();
 
     if (lIndex<0 || lIndex >=count) {
         return E_INVALIDARG;

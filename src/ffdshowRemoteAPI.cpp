@@ -391,7 +391,7 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
             }
             cd.lpData = alloca(sizeof(char_t)*(strlen(paramStr)+1));
             text<char_t>(paramStr, (char_t*)cd.lpData);
-            cd.cbData = sizeof(char_t)*(strlen(paramStr)+1);
+            cd.cbData = (DWORD)(sizeof(char_t)*(strlen(paramStr)+1));
             DWORD_PTR ret = 0;
             SendMessageTimeout((HWND)wprm, WM_COPYDATA, lprm, (LPARAM)&cd,
                                SMTO_ABORTIFHUNG, 750, &ret);
@@ -409,7 +409,7 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
             }
             cd.lpData = alloca(sizeof(char_t)*(strlen(paramStr)+1));
             text<char_t>(paramStr, (char_t*)cd.lpData);
-            cd.cbData = sizeof(char_t)*(strlen(paramStr)+1);
+            cd.cbData = (DWORD)(sizeof(char_t)*(strlen(paramStr)+1));
             DWORD_PTR ret = 0;
             SendMessageTimeout((HWND)wprm, WM_COPYDATA, MSG_GET_CURRENT_SUBTITLES, (LPARAM)&cd,
                                SMTO_ABORTIFHUNG, 750, &ret);
@@ -420,7 +420,7 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
             cd.dwData = MSG_GET_PRESETLIST;
             Tpresets *presets;
             deciD->getPresetsPtr(&presets);
-            int presetsNum = presets->size();
+            int presetsNum = (int)presets->size();
             size_t string_size = 2048;
             char_t *presetList = (char_t*)alloca(sizeof(char_t)*string_size);
             strcpy(presetList, _l(""));
@@ -441,7 +441,7 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
             }
             cd.lpData = alloca(sizeof(char_t)*(strlen(presetList)+1));
             text<char_t>(presetList, (char_t*)cd.lpData);
-            cd.cbData = sizeof(char_t)*(strlen(presetList)+1);
+            cd.cbData = (DWORD)(sizeof(char_t)*(strlen(presetList)+1));
             DWORD_PTR ret = 0;
             SendMessageTimeout((HWND)wprm, WM_COPYDATA, MSG_GET_PRESETLIST, (LPARAM)&cd,
                                SMTO_ABORTIFHUNG, 750, &ret);
@@ -453,7 +453,7 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
             const char_t *fileName = deci->getSourceName();
             cd.lpData = alloca(sizeof(char_t)*(strlen(fileName)+1));
             text<char_t>(fileName, (char_t*)cd.lpData);
-            cd.cbData = sizeof(char_t)*(strlen(fileName)+1);
+            cd.cbData = (DWORD)(sizeof(char_t)*(strlen(fileName)+1));
             DWORD_PTR ret = 0;
             SendMessageTimeout((HWND)wprm, WM_COPYDATA, MSG_GET_SOURCEFILE, (LPARAM)&cd,
                                SMTO_ABORTIFHUNG, 750, &ret);
@@ -492,7 +492,7 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
                 }
                 cd.lpData = alloca(sizeof(char_t)*(strlen(filesList)+1));
                 text<char_t>(filesList, (char_t*)cd.lpData);
-                cd.cbData = sizeof(char_t)*(strlen(filesList)+1);
+                cd.cbData = (DWORD)(sizeof(char_t)*(strlen(filesList)+1));
                 DWORD_PTR ret = 0;
                 SendMessageTimeout((HWND)wprm, WM_COPYDATA, MSG_GET_SUBTITLEFILESLIST, (LPARAM)&cd,
                                    SMTO_ABORTIFHUNG, 750, &ret);
@@ -527,7 +527,7 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
             }
             cd.lpData = alloca(sizeof(char_t)*(strlen(stringList)+1));
             text<char_t>(stringList, (char_t*)cd.lpData);
-            cd.cbData = sizeof(char_t)*(strlen(stringList)+1);
+            cd.cbData = (DWORD)(sizeof(char_t)*(strlen(stringList)+1));
             DWORD_PTR ret = 0;
             SendMessageTimeout((HWND)wprm, WM_COPYDATA, MSG_GET_CHAPTERSLIST, (LPARAM)&cd,
                                SMTO_ABORTIFHUNG, 750, &ret);
@@ -566,7 +566,7 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
             }
             cd.lpData = alloca(sizeof(char_t)*(strlen(stringList)+1));
             text<char_t>(stringList, (char_t*)cd.lpData);
-            cd.cbData = sizeof(char_t)*(strlen(stringList)+1);
+            cd.cbData = (DWORD)(sizeof(char_t)*(strlen(stringList)+1));
             DWORD_PTR ret = 0;
             //DPRINTF(_l("Sending : %s"), stringList);
             SendMessageTimeout((HWND)wprm, WM_COPYDATA, MSG_GET_AUDIOSTREAMSLIST, (LPARAM)&cd,
@@ -606,7 +606,7 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
             }
             cd.lpData = alloca(sizeof(char_t)*(strlen(stringList)+1));
             text<char_t>(stringList, (char_t*)cd.lpData);
-            cd.cbData = sizeof(char_t)*(strlen(stringList)+1);
+            cd.cbData = (DWORD)(sizeof(char_t)*(strlen(stringList)+1));
             DWORD_PTR ret = 0;
             //DPRINTF(_l("Sending : %s"), stringList);
             SendMessageTimeout((HWND)wprm, WM_COPYDATA, MSG_GET_SUBTITLESTREAMSLIST, (LPARAM)&cd,

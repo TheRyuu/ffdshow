@@ -221,7 +221,7 @@ BYTE* TDXVADecoderVC1::FindNextStartCode(BYTE* pBuffer, UINT nSize, UINT& nPacke
             } else {
                 if (bCode == 0x0D) {
                     // Start code found!
-                    nPacketSize = i - (pStart - pBuffer) + (i >= (int)nSize-5 ? 5 : 1);
+                    nPacketSize = i - (int)(pStart - pBuffer) + (i >= (int)nSize-5 ? 5 : 1);
                     return pStart;
                 } else {
                     // Other stuff, ignore it

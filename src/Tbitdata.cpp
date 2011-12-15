@@ -36,7 +36,7 @@ Tbitdata::Tbitdata(unsigned char *buffer, size_t length)
     bitsremaining=0;
     bitindex=0;
     wordpointer=buffer;
-    bitsleft=8*length;
+    bitsleft=8*(long)length;
 }
 
 void Tbitdata::copy(const Tbitdata *bitdataToCopy)
@@ -98,7 +98,7 @@ void Tbitdata::align()
     bitsremaining=0;
     intptr_t align=(uintptr_t)wordpointer & 3;
     wordpointer=wordpointer-align;
-    getBits2(8*align);
+    getBits2(8*(int)align);
 }
 
 // Works only in word mode

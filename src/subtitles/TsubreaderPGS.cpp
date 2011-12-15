@@ -98,7 +98,7 @@ void TsubreaderPGS::parse(int flags, REFERENCE_TIME rtStart, REFERENCE_TIME rtSt
 
         // Already parsed subtitles, jump to next segment
         if (isSeeking && (rtPos >= segStop)) {
-            if (!pStream->seek(datalen, SEEK_CUR)) {
+            if (!pStream->seek((long)datalen, SEEK_CUR)) {
                 break;
             }
             continue;

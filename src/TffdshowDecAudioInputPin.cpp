@@ -290,7 +290,7 @@ STDMETHODIMP TffdshowDecAudioInputPin::Receive(IMediaSample* pIn)
             // Do not search for DTS in PCM in next frames (otherwise DTS syncword maybe wrongly detected)
             searchdts=false;
 
-            newCodecId=audioParser->parseStream(buf.size() ? &buf[0] : NULL, buf.size(), &newSrcBuffer);
+            newCodecId=audioParser->parseStream(buf.size() ? &buf[0] : NULL, (int)buf.size(), &newSrcBuffer);
             if (newCodecId==CODEC_ID_NONE) {
                 newSrcBuffer.clear();
                 break;

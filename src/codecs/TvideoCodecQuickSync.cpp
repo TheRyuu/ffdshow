@@ -53,11 +53,19 @@ TvideoCodecQuickSync::TvideoCodecQuickSync(IffdshowBase *Ideci,IdecVideoSink *Is
     m_Dll = new Tdll(dllname,config);
     m_Dll->loadFunction(createQuickSync, "createQuickSync");
     m_Dll->loadFunction(destroyQuickSync, "destroyQuickSync");
-    if (NULL != createQuickSync)
+    if (NULL != createQuickSync && NULL != destroyQuickSync)
     {
         m_QuickSync = createQuickSync();
         ok = (m_QuickSync) && m_QuickSync->getOK();
-        m_QuickSync->SetDeliverSurfaceCallback(this, DeliverSurfaceCallback);
+        if (ok)
+        {
+            m_QuickSync->SetDeliverSurfaceCallback(this, DeliverSurfaceCallback);
+        }
+        else
+        {
+            destroyQuickSync(m_QuickSync);
+            m_QuickSync = NULL;
+        }
     }
 }
 
@@ -91,7 +99,6 @@ bool TvideoCodecQuickSync::beginDecompress(TffPictBase &pict,FOURCC infcc,const 
     CAutoLock lock(&m_csLock);
     CQsConfig cfg;
     m_QuickSync->GetConfig(&cfg);
-//    cfg.bMod16Width = true;
     HRESULT hr = m_QuickSync->InitDecoder(&mt, infcc);
     m_QuickSync->SetConfig(&cfg);
 
@@ -227,11 +234,10 @@ void TvideoCodecQuickSync::setOutputPin(IPin *pPin)
 
     IDirect3DDeviceManager9 *pDeviceManager = NULL;
     IMFGetService *pGetService = NULL;
-    HRESULT hr = pPin->QueryInterface(__uuidof(IMFGetService), (void**)&pGetService);        
-
+    HRESULT hr = pPin->QueryInterface(__uuidof(IMFGetService), (void**)&pGetService);
     if (SUCCEEDED(hr))
     {
-        hr = pGetService->GetService(MR_VIDEO_ACCELERATION_SERVICE, IID_IDirect3DDeviceManager9, (void**)&pDeviceManager);        
+        hr = pGetService->GetService(MR_VIDEO_ACCELERATION_SERVICE, IID_IDirect3DDeviceManager9, (void**)&pDeviceManager);
     }
 
     m_QuickSync->SetD3DDeviceManager((SUCCEEDED(hr)) ? pDeviceManager : NULL);

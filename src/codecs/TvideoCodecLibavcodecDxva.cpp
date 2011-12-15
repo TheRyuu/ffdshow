@@ -861,7 +861,7 @@ HRESULT TvideoCodecLibavcodecDxva::decompress(const unsigned char *src,size_t sr
 
     b[inPosB].rtStart=rtStart;
     b[inPosB].rtStop=rtStop;
-    b[inPosB].srcSize=srcLen0;
+    b[inPosB].srcSize=(unsigned)srcLen0;
     inPosB++;
     if(inPosB >= countof(b)) {
         inPosB = 0;
@@ -905,7 +905,7 @@ HRESULT TvideoCodecLibavcodecDxva::decompress(const unsigned char *src,size_t sr
             }*/
 
             if (src) { //FIXME: this is a quick fix, when src == NULL we should deliver the frames that are still present in the simulated DPB
-                hr = pDXVADecoder->DecodeFrame ((BYTE*)src, srcLen0, rtStart, rtStop);
+                hr = pDXVADecoder->DecodeFrame((BYTE*)src, (UINT)srcLen0, rtStart, rtStop);
             } else {
                 hr = S_FALSE;
             }

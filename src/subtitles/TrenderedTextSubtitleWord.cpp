@@ -133,7 +133,7 @@ TrenderedTextSubtitleWord::TrenderedTextSubtitleWord(
     for (strings::iterator s=tab_parsed_string.begin(); s!=tab_parsed_string.end(); s++) {
         SIZE sz0;
         GetTextExtentPoint32W(hdc,s->c_str(),(int)s->size(),&sz0);
-        sz.cx += sz0.cx + mprops.calculated_spacing * s->size();
+        sz.cx += sz0.cx + mprops.calculated_spacing * (long)s->size();
         if (s+1!=tab_parsed_string.end()) {
             int tabsize=prefs.tabsize*sz0.cy;
             int newpos=(sz.cx/tabsize+1)*tabsize;

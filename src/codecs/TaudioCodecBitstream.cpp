@@ -141,9 +141,9 @@ void TaudioCodecBitstream::fillAdditionalEndBytes(void)
 int TaudioCodecBitstream::fillMATBuffer(BYTE *src, size_t length,bool checkLength)
 {
     if (bitstreamBuffer.size()>=buffer_limit) {
-        return length;
+        return (int)length;
     }
-    int remainedLength=length;
+    int remainedLength=(int)length;
 
     // Pos 30708 = middle of the MAT frame and we need to write the additinal middle bytes even if there
     // is a buffer overlapped. So if the buffer will overlap, we will cut it into 2 pieces
@@ -151,11 +151,11 @@ int TaudioCodecBitstream::fillMATBuffer(BYTE *src, size_t length,bool checkLengt
     if (bitstreamBuffer.size()<=30708 && bitstreamBuffer.size()+length>30708) {
         size_t writeBefore=30708-bitstreamBuffer.size();
         appendMATBuffer((char *)src, writeBefore);
-        remainedLength-=writeBefore;
+        remainedLength-=(int)writeBefore;
         fillAdditionalMiddleBytes();
         if (checkLength) { // We are writing zero bytes with fixed length (including the additional bytes)
             size_t addedSize=SIZEOF_ARRAY(additional_MAT_middle_bytesW)*2;
-            remainedLength-=addedSize;
+            remainedLength-=(int)addedSize;
         }
         if (remainedLength>0) {
             appendMATBuffer((char *)(src+writeBefore),remainedLength);
@@ -168,11 +168,11 @@ int TaudioCodecBitstream::fillMATBuffer(BYTE *src, size_t length,bool checkLengt
     if (bitstreamBuffer.size()+length>buffer_limit) {
         size_t writeBefore=buffer_limit-bitstreamBuffer.size();
         appendMATBuffer((char *)src, writeBefore);
-        remainedLength-=writeBefore;
+        remainedLength-=(int)writeBefore;
         fillAdditionalEndBytes();
         if (checkLength) { // We are writing zero bytes with fixed length (including the additional bytes)
             size_t addedSize=SIZEOF_ARRAY(additional_MAT_end_bytesW)*2;
-            remainedLength-=addedSize;
+            remainedLength-=(int)addedSize;
         }
         return remainedLength;
     }

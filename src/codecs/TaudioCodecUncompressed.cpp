@@ -120,7 +120,7 @@ HRESULT TaudioCodecUncompressed::decode(TbyteBuffer &src)
 
                 // Fix wrong channels order for 8 channels LPCM
                 reorder_channel_nch(dst0, AF_CHANNEL_LAYOUT_LPCM_DEFAULT,AF_CHANNEL_LAYOUT_FFDSHOW_DEFAULT,
-                                    fmt.nchannels,sizeof(int32_t)*(dst-dst0)*8/fmt.blockAlign(), fmt.bitsPerSample()/8);
+                                    fmt.nchannels,(int)(sizeof(int32_t)*(dst-dst0)*8/fmt.blockAlign()), fmt.bitsPerSample()/8);
 
                 samples=dst0;
                 numsamples=sizeof(int32_t)*(dst-dst0)/fmt.blockAlign();

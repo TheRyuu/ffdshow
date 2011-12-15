@@ -175,9 +175,10 @@ double Teval::function(void)
     else if (strcmp(f,_l("ln")    )==0) {
         return log(v);
     } else if (strcmp(f,_l("log")   )==0) {
-        return log(v)/log(2.0);
+        return log(v)/M_LN2;
     } else {
         unknown(f);
+        return 0;
     }
 }
 double Teval::term(void)

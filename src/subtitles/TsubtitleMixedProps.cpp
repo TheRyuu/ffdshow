@@ -230,7 +230,7 @@ CPoint TSubtitleMixedProps::get_rotationAxis() const
         case 5: // SSA top
         case 6:
         case 7:
-            result.y = get_marginTop();
+            result.y = (LONG)get_marginTop();
             break;
         case 9: // SSA mid
         case 10:
@@ -241,7 +241,7 @@ CPoint TSubtitleMixedProps::get_rotationAxis() const
         case 2:
         case 3:
         default:
-            result.y = dy - get_marginBottom();
+            result.y = dy - (LONG)get_marginBottom();
             break;
     }
 
@@ -249,19 +249,19 @@ CPoint TSubtitleMixedProps::get_rotationAxis() const
         case 1: // left(SSA)
         case 5:
         case 9:
-            result.x = get_marginL();
+            result.x = (LONG)get_marginL();
             break;
         case 3: // right(SSA)
         case 7:
         case 11:
-            result.x = dx - get_marginR();
+            result.x = dx - (LONG)get_marginR();
             break;
         case 2: // center(SSA)
         case 6:
         case 10:
         default:
             // Center alignment : pos.x anchors to the center of the paragraph
-            result.x = dx/2 + get_marginL()/2 - get_marginR()/2; // same as (dx - get_marginL() - get_marginR()) / 2 + get_marginL();
+            result.x = ((((LONG)((double)dx + get_marginL() - get_marginR()))) + 1) >> 1; // same as (dx - get_marginL() - get_marginR()) / 2 + get_marginL();
             break;
     }
     return result;

@@ -294,7 +294,7 @@ HRESULT TaudioCodecLibavcodec::decode(TbyteBuffer &src0)
                 srcBuffer = pBuf + len;
                 src_end = pBuf + len*2;
             }
-            srcBufferLength = src_end - srcBuffer;
+            srcBufferLength = (int)(src_end - srcBuffer);
             buflen = 0;
         } else {
             src0.clear();

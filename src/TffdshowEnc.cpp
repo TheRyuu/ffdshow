@@ -650,7 +650,7 @@ STDMETHODIMP_(LRESULT) TffdshowEnc::begin(const BITMAPINFOHEADER *inhdr)
 
 HRESULT TffdshowEnc::EndOfStream(void)
 {
-    HRESULT hr=compress(&inpin->biIn.bmiHeader,NULL,0,_I64_MIN,_I64_MIN);
+    HRESULT hr=(HRESULT)compress(&inpin->biIn.bmiHeader,NULL,0,_I64_MIN,_I64_MIN);
     return FAILED(hr)?hr:CTransformFilter::EndOfStream();
 }
 
@@ -1129,7 +1129,7 @@ int TffdshowEnc::get_trayIconType(void)
 //================================== DirectShow ====================================
 STDMETHODIMP_(LRESULT) TffdshowEncDshow::begin(const BITMAPINFOHEADER *inhdr)
 {
-    HRESULT hr=TffdshowEnc::begin(inhdr);
+    HRESULT hr=(HRESULT)TffdshowEnc::begin(inhdr);
     if (SUCCEEDED(hr)) {
         times.clear();
     }

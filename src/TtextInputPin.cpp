@@ -107,7 +107,7 @@ HRESULT TtextInputPin::SetMediaType(const CMediaType* mtIn)
         }
 
         if (isoname) {
-            text<char_t>(isoname, strlen(isoname), langName, countof(langName));
+            text<char_t>(isoname, (int)strlen(isoname), langName, countof(langName));
         }
 
         text<char_t>(psi->TrackName, (int)countof(psi->TrackName), trackName, countof(trackName));

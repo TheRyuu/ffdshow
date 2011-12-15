@@ -532,12 +532,20 @@ HRESULT TffdshowDecVideo::CompleteConnect(PIN_DIRECTION direction,IPin *pReceive
         const CLSID &out=GetCLSID(pConnectedPin);
         outOverlayMixer=!!(out==CLSID_OverlayMixer);
 
+        // egur - hopefully a temporary solution...
+        // WMC (and maybe other players) use the SampleGrabber or MediaDet to capture thumbnails.
+        // Unfortunately this filter doesn't have the HW device needed for full screen exclusive playback.
+        // So fallback to a SW decoder is needed.
         TvideoCodecDec *pDecoder=NULL;
         getMovieSource((const TvideoCodecDec**)&pDecoder);
 
-        if (NULL!=pDecoder)
-        {
-            pDecoder->setOutputPin(pConnectedPin);
+        if (NULL!=pDecoder) {
+            if (is_quicksync_codec(pDecoder->codecId) && (out == CLSID_SampleGrabber || out == CLSID_MediaDetFilter)) {
+                CMediaType &mt = m_pInput->CurrentMediaType();
+                m_pInput->SetMediaType(&mt);
+            } else {
+                pDecoder->setOutputPin(pConnectedPin);
+            }
         }
     }
     return CTransformFilter::CompleteConnect(direction,pReceivePin);

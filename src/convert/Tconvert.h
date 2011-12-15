@@ -65,7 +65,7 @@ private:
                                   BYTE* dstY, BYTE* dstU, BYTE* dstV, stride_t dst_pitch, stride_t dst_pitchUV,
                                   int height);
     void (*palette8torgb)(const uint8_t *src, uint8_t *dst, long num_pixels, const uint8_t *palette);
-    int tmpcsp;
+    uint64_t tmpcsp;
     unsigned char *tmp[3];
     stride_t tmpStride[3];
     Tconvert *tmpConvert1,*tmpConvert2;

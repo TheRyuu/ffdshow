@@ -253,7 +253,7 @@ void TimgFilterCrop::calcAutoCropVertical(TcropSettings *cfg, const unsigned cha
         unsigned int nbPixelsAnalyzed=0; // Number of pixels analyzed per line (column actually)
         float s2=0, s=0; // Sum of levels^2, sum of levels
         for (x=0; x<(unsigned int)dx1[0]; x+=step) {
-            unsigned int pos=x+stride1[0]*y;
+            unsigned int pos=x+(unsigned)stride1[0]*y;
             s2 += src[pos]*src[pos];
             s += src[pos];
             nbPixelsAnalyzed++;
@@ -263,8 +263,8 @@ void TimgFilterCrop::calcAutoCropVertical(TcropSettings *cfg, const unsigned cha
         float stdev = sqrt(s2/nbPixelsAnalyzed-avg*avg); // standard deviation of the line
 
         if (first) { // First line = reference line
-            avg0=avg;
-            stdev0=stdev;
+            avg0=(int32_t)avg;
+            stdev0=(int32_t)stdev;
             if (stdev > cfg->cropTolerance) { // Too much variation of luminance for first line
                 if ((float)(y-y0)*stepy > (float)dy1[0]*0.15) { // Look for a better reference line if we are below 15%
                     break;
@@ -283,7 +283,7 @@ void TimgFilterCrop::calcAutoCropVertical(TcropSettings *cfg, const unsigned cha
     }
     // If crop result is more than 40% of the screen, give up (means that it is a blank frame)
     if ((float)abs((float)y-y0)/(float)dy1[0] < 0.4) {
-        *autoCrop=abs((float)y-y0);
+        *autoCrop=(long)abs((float)y-y0);
     }
 }
 
@@ -298,7 +298,7 @@ void TimgFilterCrop::calcAutoCropHorizontal(TcropSettings *cfg, const unsigned c
         unsigned int nbPixelsAnalyzed=0; // Number of pixels analyzed per line (column actually)
         float s2=0, s=0; // Sum of levels^2, sum of levels
         for (y=0; y<dy1[0]; y+=step) {
-            unsigned int pos=x+stride1[0]*y;
+            size_t pos=x+stride1[0]*y;
             s2 += src[pos]*src[pos];
             s += src[pos];
             nbPixelsAnalyzed++;
@@ -307,8 +307,8 @@ void TimgFilterCrop::calcAutoCropHorizontal(TcropSettings *cfg, const unsigned c
         float stdev = sqrt(s2/nbPixelsAnalyzed-avg*avg); // standard deviation of the line
 
         if (first) { // First line = reference line
-            avg0=avg;
-            stdev0=stdev;
+            avg0=(int32_t)avg;
+            stdev0=(int32_t)stdev;
             first=false;
             if (stdev > cfg->cropTolerance) { // Too much variation of luminance for first line
                 if ((float)(x-x0)*stepx<(float)dx1[0]*0.15) { // Look for a better reference line if we are below 15%
@@ -327,7 +327,7 @@ void TimgFilterCrop::calcAutoCropHorizontal(TcropSettings *cfg, const unsigned c
     }
     // If crop result is more than 40% of the screen, give up (means that it is a blank frame)cd
     if ((float)abs((float)x-x0)/(float)dx1[0] < 0.4) {
-        *autoCrop=abs((float)x-x0);
+        *autoCrop=(long)abs((float)x-x0);
     }
 }
 

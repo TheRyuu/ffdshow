@@ -563,8 +563,8 @@ void TtrayIconDecVideo::makeStreamsSubMenus(HMENU *smn, HMENU *ssmn, HMENU *amn,
     if (pChaptersList->size() > 1) {
         int seconds = 0;
         deci->tell(&seconds);
-        unsigned int currentChapter = 0;
-        for (unsigned int i=pChaptersList->size()-1; i >= 0; i--) {
+        size_t currentChapter = 0;
+        for (size_t i=pChaptersList->size()-1; i >= 0; --i) {
             std::pair<long, ffstring> chapter = (*pChaptersList)[i];
             if (chapter.first <= (long)seconds) {
                 currentChapter = i;
@@ -575,7 +575,7 @@ void TtrayIconDecVideo::makeStreamsSubMenus(HMENU *smn, HMENU *ssmn, HMENU *amn,
 
         HMENU chm=CreatePopupMenu();
         *cmn=chm;
-        for (unsigned int i=0; i< pChaptersList->size(); i++) {
+        for (int i=0; i< pChaptersList->size(); i++) {
             std::pair<long, ffstring> chapter = (*pChaptersList)[i];
 
             ffstring menuItem = stringreplace(chapter.second,_l("&"),_l("&&"),rfReplaceAll);

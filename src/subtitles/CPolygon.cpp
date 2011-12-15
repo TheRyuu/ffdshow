@@ -135,7 +135,7 @@ bool CPolygon::ParseStr()
 		s.erase(0,trimCount);
 		switch(c) {
 			case 'm':
-				lastmoveto = m_pathTypesOrg.size();
+				lastmoveto = (int)m_pathTypesOrg.size();
 				if(firstmoveto == -1) {
 					firstmoveto = lastmoveto;
 				}
@@ -160,7 +160,7 @@ bool CPolygon::ParseStr()
 				}
 				break;
 			case 'b':
-				j = m_pathTypesOrg.size();
+				j = (int)m_pathTypesOrg.size();
 				if (j < 1) {
 					break;
 				}
@@ -169,7 +169,7 @@ bool CPolygon::ParseStr()
 					m_pathPointsOrg.push_back(p);
 					j++;
 				}
-				j = m_pathTypesOrg.size() - ((m_pathTypesOrg.size() - j) % 3);
+				j = (int)(m_pathTypesOrg.size() - ((m_pathTypesOrg.size() - j) % 3));
 				m_pathTypesOrg.reserve(j);
 				m_pathPointsOrg.reserve(j);
 				break;
@@ -177,7 +177,7 @@ bool CPolygon::ParseStr()
 				if (m_pathPointsOrg.size() < 1) {
 					break;
 				}
-				j = lastsplinestart = m_pathTypesOrg.size();
+				j = lastsplinestart = (int)m_pathTypesOrg.size();
 				i = 3;
 				while(i-- && GetPOINT(s, p)) {
 					m_pathTypesOrg.push_back(PT_BSPLINETO);
@@ -268,7 +268,7 @@ bool CPolygon::CreatePath()
 		if(!mpPathTypes || !mpPathPoints) {
 			return false;
 		}
-		mPathPoints = len;
+		mPathPoints = (int)len;
 	}
 
 	memcpy(mpPathTypes, &m_pathTypesOrg[0], len*sizeof(BYTE));

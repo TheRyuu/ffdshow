@@ -301,7 +301,7 @@ size_t TsubtitleText::prepareGlyph(TprintPrefs prefs, Tfont &font, bool forceCha
                     }
                 }
             }
-            TwordWrap wordWrap(wordWrapMode,allStr.c_str(),pwidths,splitdxMax,l.props.isSSA());
+            TwordWrap wordWrap(wordWrapMode,allStr.c_str(),pwidths,(int)splitdxMax,l.props.isSSA());
             //wordWrap.debugprint();
 
             TrenderedSubtitleLine *line=NULL;

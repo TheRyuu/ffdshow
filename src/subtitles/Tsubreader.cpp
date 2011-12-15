@@ -297,13 +297,13 @@ void Tsubreader::processOverlap(void)
     }
     processedSubtitleTexts.clear();
     static const int SUB_MAX_TEXT=INT_MAX/2;
-    int sub_orig = size();
-    int n_first = size();
+    int sub_orig = (int)size();
+    int n_first = (int)size();
     int sub_num =0;
     std::vector<Tsubtitle*> newsubs;
     for (int sub_first = 0; sub_first < n_first; ++sub_first) {
         REFERENCE_TIME global_start = at(sub_first)->start,global_end = at(sub_first)->stop, local_start, local_end;
-        int lines_to_add = at(sub_first)->numlines(), sub_to_add = 0;
+        int lines_to_add = (int)at(sub_first)->numlines(), sub_to_add = 0;
         int **placeholder = NULL, higher_line = 0, counter, start_block_sub = sub_num;
         char real_block = 1;
 
@@ -312,7 +312,7 @@ void Tsubreader::processOverlap(void)
         // subtitles
         while ((sub_first + sub_to_add + 1 < n_first) && (at(sub_first + sub_to_add + 1)->start < global_end)) {
             ++sub_to_add;
-            lines_to_add += at(sub_first + sub_to_add)->numlines();
+            lines_to_add += (int)at(sub_first + sub_to_add)->numlines();
             if (at(sub_first + sub_to_add)->start < global_start) {
                 global_start = at(sub_first + sub_to_add)->start;
             }
@@ -352,7 +352,7 @@ void Tsubreader::processOverlap(void)
             // they keep the same lines, otherwise they get unused lines
             for (int j = 0; j <= sub_to_add; ++j) {
                 if ((at(sub_first + j)->start <= local_end) && (at(sub_first + j)->stop > local_start)) {
-                    unsigned long sub_lines=at(sub_first + j)->numlines(), fragment_length = lines_to_add + 1,tmp=0;
+                    unsigned long sub_lines=(unsigned long)at(sub_first + j)->numlines(), fragment_length = lines_to_add + 1,tmp=0;
                     char boolean = 0;
                     int fragment_position = -1;
 
@@ -430,7 +430,7 @@ void Tsubreader::processOverlap(void)
             for (int i = 0, j = 0; j < lines_to_add ; ++j) {
                 if (placeholder[counter][j] != -1) {
                     texts.push_back((TsubtitleText *)at(placeholder[counter][j]));
-                    j += at(placeholder[counter][j])->numlines() - 1;
+                    j += (int)at(placeholder[counter][j])->numlines() - 1;
                 }
             }
             processedSubtitleTexts.push_back(texts);
