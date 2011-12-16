@@ -335,7 +335,7 @@ HRESULT TvideoCodecLibmpeg2::decompressI(const unsigned char *src,size_t srcLen,
                     }
                     if (!wait4Iframe) {
                         TffPict pict(oldpict);
-                        telecineManager.get_fieldtype(pict, 0 != deci->getParam2(IDFF_softTelecine));
+                        telecineManager.get_fieldtype(pict);
                         telecineManager.get_timestamps(pict);
                         HRESULT hr = sinkD->deliverDecodedSample(pict);
                         if (hr != S_OK) {

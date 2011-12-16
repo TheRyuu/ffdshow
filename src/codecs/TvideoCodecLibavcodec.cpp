@@ -795,7 +795,7 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
                 // flames are flagged as progressive, frame durations are averaged.
                 // pict.film is valid even if the setting is disabled.
                 telecineManager.new_frame(frame->top_field_first, frame->repeat_pict, pict.rtStart, pict.rtStop);
-                telecineManager.get_fieldtype(pict, deci->getParam2(IDFF_softTelecine));
+                telecineManager.get_fieldtype(pict);
                 telecineManager.get_timestamps(pict);
 
                 hr=sinkD->deliverDecodedSample(pict);
