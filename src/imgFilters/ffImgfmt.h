@@ -87,23 +87,9 @@ typedef ptrdiff_t stride_t;
 // Because QWORD registry value is not supported as ffdshow settings
 // (Tint64OptionT is not implemented), we convert it to int here.
 // FF_CSP_420P = 1, FF_CSP_422P = 2, FF_CSP_444P = 3, ...
-static int csp_ffdshow2reg(uint64_t csp)
-{
-    int i = 0;
-    csp &= FF_CSPS_MASK;
-    while (csp) {
-        csp = csp >> 1;
-        i++;
-    };
-    return i;
-}
+int csp_ffdshow2reg(uint64_t csp);
 
-static uint64_t csp_reg2ffdshow(int regcsp) {
-    if (regcsp)
-        return 1ULL << (regcsp -1);
-    else
-        return 0;
-}
+uint64_t csp_reg2ffdshow(int regcsp);
 
 //==================================== xvid4 =====================================
 

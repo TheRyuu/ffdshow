@@ -1416,3 +1416,21 @@ uint64_t getBMPcolorspace(const BITMAPINFOHEADER *hdr,const TcspInfos &forcedCsp
     }
     return ok?csp:FF_CSP_NULL;
 }
+
+int csp_ffdshow2reg(uint64_t csp)
+{
+    int i = 0;
+    csp &= FF_CSPS_MASK;
+    while (csp) {
+        csp = csp >> 1;
+        i++;
+    };
+    return i;
+}
+
+uint64_t csp_reg2ffdshow(int regcsp) {
+    if (regcsp)
+        return 1ULL << (regcsp -1);
+    else
+        return 0;
+}
