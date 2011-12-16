@@ -436,15 +436,16 @@ void TcodecsPageVideo::fillCodecs(void)
         formats.push_back(Tformat(_l("VP6")           ,IDFF_vp6 ,IDFF_MOVIE_LAVC,_l("VP6 Video (VP60, VP61, VP62)")));
         formats.push_back(Tformat(_l("VP6F")          ,IDFF_vp6f,IDFF_MOVIE_LAVC,_l("Flash Video (VP6F, FLV4, VP6A)")));
         formats.push_back(Tformat(_l("VP8")           ,IDFF_vp8 ,IDFF_MOVIE_LAVC,_l("VP8 Video (VP80)")));
-        static const int movies_mpeg12[]= {IDFF_MOVIE_LAVC,IDFF_MOVIE_LIBMPEG2, IDFF_MOVIE_QUICK_SYNC, 0};
+        static const int movies_mpeg1[]= {IDFF_MOVIE_LAVC,IDFF_MOVIE_LIBMPEG2, 0};
+        static const int movies_mpeg2[]= {IDFF_MOVIE_LAVC,IDFF_MOVIE_LIBMPEG2, IDFF_MOVIE_QUICK_SYNC, 0};
         static const Tformat::Toption options_mpeg12[]= {{IDFF_MOVIE_LAVC,_l("use speedup tricks"),IDFF_fastMpeg2,1},{0,NULL,0}};
         if ((filterMode&IDFF_FILTERMODE_VFW)==0) {
-            formats.push_back(Tformat(_l("MPEG1")       ,IDFF_mpg1,movies_mpeg12,_l("MPEG1 codec"),options_mpeg12,LAVC_UNSTABLE));
+            formats.push_back(Tformat(_l("MPEG1")       ,IDFF_mpg1,movies_mpeg1,_l("MPEG1 codec"),options_mpeg12,LAVC_UNSTABLE));
             static const Tformat::Toption options_mpeg2[]= {{IDFF_MOVIE_LAVC,_l("use speedup tricks"),IDFF_fastMpeg2,1},{0,_l("DVD decoding"),IDFF_supDVDdec,1},{0,NULL,0}};
-            formats.push_back(Tformat(_l("MPEG2")       ,IDFF_mpg2,movies_mpeg12,_l("MPEG2 codec"),options_mpeg2,LAVC_UNSTABLE));
+            formats.push_back(Tformat(_l("MPEG2")       ,IDFF_mpg2,movies_mpeg2,_l("MPEG2 codec"),options_mpeg2,LAVC_UNSTABLE));
         }
-        formats.push_back(Tformat(_l("MPEG in AVI")   ,IDFF_mpegAVI,movies_mpeg12,_l("MPEG, MPG1, MPG2, 1001, 1002"),options_mpeg12));
-        formats.push_back(Tformat(_l("Other MPEG2")   ,IDFF_em2v,movies_mpeg12,_l("EM2V, MMES"),options_mpeg12));
+        formats.push_back(Tformat(_l("MPEG in AVI")   ,IDFF_mpegAVI,movies_mpeg2,_l("MPEG, MPG1, MPG2, 1001, 1002"),options_mpeg12));
+        formats.push_back(Tformat(_l("Other MPEG2")   ,IDFF_em2v,movies_mpeg2,_l("EM2V, MMES"),options_mpeg12));
         static const int movies_wmv1[]= {IDFF_MOVIE_LAVC,IDFF_MOVIE_WMV9,0};
         formats.push_back(Tformat(_l("WMV1/7")        ,IDFF_wmv1,movies_wmv1,_l("Windows Media Video 7 (WMV1)"),NULL,LAVC_UNSTABLE));
         static const int movies_wmv2[]= {IDFF_MOVIE_LAVC,IDFF_MOVIE_WMV9,0};
