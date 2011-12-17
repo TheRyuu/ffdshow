@@ -3,7 +3,7 @@ var oArgs = WScript.Arguments;
 if (oArgs.Count() < 2 | oArgs.Count() > 3)
   showError();
 else
-  reportArgs(); 
+  reportArgs();
 
 //Shows error message
 function showError()
@@ -23,11 +23,11 @@ function showError()
 function reportArgs()
 {
   //Compose URL
-  if (oArgs.Count() == 2)    
+  if (oArgs.Count() == 2)
     var strURL = "http://ffdshow-tryout.sourceforge.net/compmgr.php?app=" + oArgs(0) + "&rev=" + oArgs(1);
-  if (oArgs.Count() == 3)    
+  if (oArgs.Count() == 3)
     var strURL = "http://ffdshow-tryout.sourceforge.net/compmgr.php?app=" + oArgs(0) + "&rev=" + oArgs(1) + "&type=" + oArgs(2);
-    
+
   //Create IE object
   var oIE = WScript.CreateObject("InternetExplorer.Application", "IE_");
 

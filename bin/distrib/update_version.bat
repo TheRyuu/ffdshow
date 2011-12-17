@@ -1,2 +1,1 @@
-cd ..\..\
-update_version.bat
+..\..\update_version.bat

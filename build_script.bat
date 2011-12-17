@@ -11,7 +11,7 @@ if /I "%FF_TARGET%"=="x64" (
 
 echo [Removing files]
 call bin\clear.bat
-echo [Compiling with MSVC]
+echo. & echo [Compiling with MSVC]
 
 call "%VS100COMNTOOLS%vsvars32.bat"
 title %SOLUTIONFILE% /%BUILDTYPE% %BUILDTARGET%
@@ -19,7 +19,7 @@ devenv %SOLUTIONFILE% /%BUILDTYPE% %BUILDTARGET%
 if %ERRORLEVEL% neq 0 goto GotError
 
 
-echo [Compiling with GCC]
+echo. & echo [Compiling with GCC]
 
 pushd src\ffmpeg
 if /I not "%BUILDTYPE%"=="build" (
@@ -47,7 +47,7 @@ if /I "%FF_TARGET%"=="x86" (
 
 
 if /I "%BUILDTYPE%"=="clean" exit /b
-echo [Building installer]
+echo. & echo [Building installer]
 
 call :SubDetectInnoSetup
 set ISCC="%InnoSetupPath%\ISCC.exe"
@@ -82,5 +82,6 @@ set InnoSetupPath=%*
 exit /b
 
 :GotError
-echo There was an error!
+echo. & echo There was an error!
 pause
+exit /b
