@@ -281,7 +281,7 @@ TglobalSettingsDec::TglobalSettingsDec(const Tconfig *Iconfig,int Imode,const ch
     addOptions(iopts);
     static const TstrOption sopts[]= {
         IDFF_defaultPreset,(TstrVal)&TglobalSettingsDec::defaultPreset,MAX_PATH,0,_l(""),0,
-        _l("activePreset"),FFPRESET_DEFAULT,
+        NULL,FFPRESET_DEFAULT,
         0
     };
     addOptions(sopts);
@@ -578,6 +578,10 @@ void TglobalSettingsDecVideo::fixNewCodecs(void)
 void TglobalSettingsDecVideo::load(void)
 {
     TglobalSettingsDec::load();
+
+    TregOpRegRead tregMode(HKEY_CURRENT_USER,(ffstring(FFDSHOW_REG_PARENT _l("\\")) + filterMode2regkey(filtermode)).c_str());
+    tregMode._REG_OP_S(IDFF_defaultPreset, L"activePreset", defaultPreset, countof(defaultPreset), FFPRESET_DEFAULT);
+
 #if 1
 	fixNewCodecs();
 #else
@@ -655,6 +659,14 @@ void TglobalSettingsDecVideo::load(void)
     fixMissing(aasc,IDFF_MOVIE_LAVC);
     fixMissing(fps1,IDFF_MOVIE_LAVC);
     fixMissing(avis,IDFF_MOVIE_AVIS);
+}
+
+void TglobalSettingsDecVideo::save(void)
+{
+    TglobalSettingsDec::save();
+
+    TregOpRegWrite tregMode(HKEY_CURRENT_USER,(ffstring(FFDSHOW_REG_PARENT _l("\\")) + filterMode2regkey(filtermode)).c_str());
+    tregMode._REG_OP_S(IDFF_defaultPreset, L"activePreset", defaultPreset, countof(defaultPreset), FFPRESET_DEFAULT);
 }
 
 #define FF_FOURCC1_CODEC(fourCC1,decoder,codec)  \
@@ -1182,6 +1194,9 @@ void TglobalSettingsDecAudio::load(void)
 {
     TglobalSettingsDec::load();
 
+    TregOpRegRead tregMode(HKEY_CURRENT_USER,(ffstring(FFDSHOW_REG_PARENT _l("\\")) + reg_child).c_str());
+    tregMode._REG_OP_S(IDFF_defaultPreset, L"activePreset", defaultPreset, countof(defaultPreset), FFPRESET_DEFAULT);
+
     fixMissing(wma1      ,IDFF_MOVIE_LAVC);
     fixMissing(wma2      ,IDFF_MOVIE_LAVC);
     fixMissing(amr       ,IDFF_MOVIE_LAVC);
@@ -1210,6 +1225,14 @@ void TglobalSettingsDecAudio::load(void)
     fixMissing(nellymoser,IDFF_MOVIE_LAVC);
     fixMissing(wavpack   ,IDFF_MOVIE_LAVC);
 	fixMissing(qtpcm     ,IDFF_MOVIE_RAW);
+}
+
+void TglobalSettingsDecAudio::save(void)
+{
+    TglobalSettingsDec::save();
+
+    TregOpRegWrite tregMode(HKEY_CURRENT_USER,(ffstring(FFDSHOW_REG_PARENT _l("\\")) + reg_child).c_str());
+    tregMode._REG_OP_S(IDFF_defaultPreset, L"activePreset", defaultPreset, countof(defaultPreset), FFPRESET_DEFAULT);
 }
 
 #define FF_WAVE_FORMAT1_CODEC(format,decoder,codec) \

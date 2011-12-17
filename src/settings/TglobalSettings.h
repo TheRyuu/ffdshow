@@ -123,6 +123,7 @@ public:
     int alternateUncompressed;
 
     virtual void load(void);
+    virtual void save(void);
 
     struct TsubtitlesSettings : Toptions {
     protected:
@@ -165,6 +166,7 @@ public:
     int allowOutStream;
     char_t winamp2dir[MAX_PATH];
     virtual void load(void);
+    virtual void save(void);
     virtual CodecID getCodecId(DWORD fourCC,FOURCC *AVIfourCC) const;
     virtual const char_t** getFOURCClist(void) const;
     virtual void getCodecsList(Tstrptrs &codecs) const;
