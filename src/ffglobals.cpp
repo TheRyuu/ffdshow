@@ -52,9 +52,21 @@ const wchar_t* filterMode2regkey(int filtermode)
 #define get_bits1 _get_bits1
 #define get_bits _get_bits
 
+void get_bits_print_error()
+{
+    static int g_already_printed = 0;
+    if (!g_already_printed) {
+        DPRINTF(L"ffdshow Error: Insufficient length of codec specific data. This can be a bug of the splitter or ffdshow.");
+        g_already_printed = 1;
+    }
+}
+
 __forceinline  unsigned int _get_bits(GetBitContext *s, int n){
-    if (s->index + n > s->size_in_bits)
+    if (s->index + n > s->size_in_bits) {
+        get_bits_print_error();
         return 0;
+    }
+
     register int tmp;
     OPEN_READER(re, s);
     UPDATE_CACHE(re, s);
@@ -66,8 +78,10 @@ __forceinline  unsigned int _get_bits(GetBitContext *s, int n){
 
 __forceinline unsigned int _get_bits1(GetBitContext *s, int default=0){
     unsigned int index = s->index;
-    if (index >= s->size_in_bits)
+    if (index >= s->size_in_bits) {
+        get_bits_print_error();
         return default;
+    }
 
     uint8_t result = s->buffer[index>>3];
     result <<= index & 7;
@@ -80,8 +94,10 @@ __forceinline unsigned int _get_bits1(GetBitContext *s, int default=0){
 
 __forceinline unsigned _get_ue_golomb(GetBitContext* gb)
 {
-    if (gb->index >= gb->size_in_bits)
+    if (gb->index >= gb->size_in_bits) {
+        get_bits_print_error();
         return 0;
+    }
 
     int n = 0;
     // count zeros (get log of number)
