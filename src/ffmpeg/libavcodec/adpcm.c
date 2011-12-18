@@ -93,8 +93,9 @@ static av_cold int adpcm_decode_init(AVCodecContext * avctx)
     ADPCMDecodeContext *c = avctx->priv_data;
     unsigned int max_channels = 2;
 
-    if(avctx->channels > max_channels){
-        return -1;
+    if (avctx->channels <= 0 || avctx->channels > max_channels) {
+        av_log(avctx, AV_LOG_ERROR, "Invalid number of channels\n");
+        return AVERROR(EINVAL);
     }
 
     switch(avctx->codec->id) {
