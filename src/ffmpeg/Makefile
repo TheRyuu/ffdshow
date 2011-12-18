@@ -20,9 +20,14 @@ SRCS_C=\
     libavcodec/ac3enc.c \
     libavcodec/ac3enc_fixed.c \
     libavcodec/ac3tab.c \
+    libavcodec/acelp_filters.c \
+    libavcodec/acelp_vectors.c \
+    libavcodec/acelp_pitch_delay.c \
     libavcodec/adpcm.c \
     libavcodec/adpcm_data.c \
     libavcodec/allcodecs.c \
+    libavcodec/amrnbdec.c \
+    libavcodec/amrwbdec.c \
     libavcodec/asv1.c \
     libavcodec/atrac.c \
     libavcodec/atrac3.c \
@@ -105,9 +110,9 @@ SRCS_C=\
     libavcodec/jrevdct.c \
     libavcodec/kbdwin.c \
     libavcodec/lcldec.c \
-    libavcodec/libamr.c \
     libavcodec/ljpegenc.c \
     libavcodec/loco.c \
+    libavcodec/lsp.c \
     libavcodec/mace.c \
     libavcodec/mdct_fixed.c \
     libavcodec/mdct_float.c \
@@ -212,8 +217,6 @@ SRCS_C=\
     libavcodec/xiph.c \
     libavcodec/xl.c \
     libavcodec/zmbv.c \
-    libavcodec/amr_float/interf_dec.c \
-    libavcodec/amr_float/sp_dec.c \
     \
     libavcodec/x86/ac3dsp_mmx.c \
     libavcodec/x86/cavsdsp_mmx.c \

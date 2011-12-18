@@ -123,6 +123,8 @@ void avcodec_register_all(void)
     REGISTER_DECODER (AAC, aac);
     REGISTER_DECODER (AAC_LATM, aac_latm);
     REGISTER_DECODER (AC3, ac3);
+    REGISTER_DECODER (AMR_NB, amrnb);
+    REGISTER_DECODER (AMR_WB, amrwb);
     REGISTER_DECODER (ATRAC3, atrac3);
     REGISTER_DECODER (COOK, cook);
     REGISTER_DECODER (DCA, dca);
@@ -178,9 +180,6 @@ void avcodec_register_all(void)
     REGISTER_DECODER (ADPCM_SWF, adpcm_swf);
     REGISTER_DECODER (ADPCM_XA, adpcm_xa);
     REGISTER_DECODER (ADPCM_YAMAHA, adpcm_yamaha);
-
-    /* external libraries */
-    REGISTER_DECODER (LIBAMR_NB, libamr_nb);
 
     /* parsers */
     REGISTER_PARSER  (AAC, aac);

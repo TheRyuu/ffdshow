@@ -3039,7 +3039,7 @@ av_cold void attribute_align_arg dsputil_init(DSPContext* c, AVCodecContext *avc
     c->vector_fmul_add = vector_fmul_add_c;
     c->vector_fmul_window = vector_fmul_window_c;
     c->vector_clipf = vector_clipf_c;
-//    c->scalarproduct_int16 = scalarproduct_int16_c;
+    c->scalarproduct_int16 = scalarproduct_int16_c;
 //    c->scalarproduct_and_madd_int16 = scalarproduct_and_madd_int16_c;
     c->apply_window_int16 = apply_window_int16_c;
     c->vector_clip_int32 = vector_clip_int32_c;

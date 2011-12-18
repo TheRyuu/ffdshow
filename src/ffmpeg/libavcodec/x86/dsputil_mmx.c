@@ -2859,6 +2859,7 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
         }
         if(mm_flags & AV_CPU_FLAG_MMX2){
 #if HAVE_YASM
+            c->scalarproduct_int16 = ff_scalarproduct_int16_mmx2;
             if (avctx->flags & CODEC_FLAG_BITEXACT) {
                 c->apply_window_int16 = ff_apply_window_int16_mmxext_ba;
             } else {
@@ -2889,6 +2890,7 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
             c->vector_fmul_add = vector_fmul_add_3dnow; // faster than sse
         if(mm_flags & AV_CPU_FLAG_SSE2){
 #if HAVE_YASM
+            c->scalarproduct_int16 = ff_scalarproduct_int16_sse2;
             if (mm_flags & AV_CPU_FLAG_ATOM) {
                 c->vector_clip_int32 = ff_vector_clip_int32_int_sse2;
             } else {
