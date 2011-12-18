@@ -52,7 +52,7 @@ const wchar_t* filterMode2regkey(int filtermode)
 #define get_bits1 _get_bits1
 #define get_bits _get_bits
 
-void get_bits_print_error()
+static void get_bits_print_error()
 {
     static int g_already_printed = 0;
     if (!g_already_printed) {
