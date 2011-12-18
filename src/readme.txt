@@ -35,6 +35,9 @@ http://www.xvid.org/
 Libav:
 http://www.libav.org/
 
+FFmpeg:
+http://www.ffmpeg.org/
+
 libmpeg2:
 http://libmpeg2.sourceforge.net/
 
