@@ -49,12 +49,43 @@ const wchar_t* filterMode2regkey(int filtermode)
 // override libavcodec code with slower but safer code.
 #define get_ue_golomb _get_ue_golomb
 #define get_se_golomb _get_se_golomb
+#define get_bits1 _get_bits1
+#define get_bits _get_bits
+
+__forceinline  unsigned int _get_bits(GetBitContext *s, int n){
+    if (s->index + n > s->size_in_bits)
+        return 0;
+    register int tmp;
+    OPEN_READER(re, s);
+    UPDATE_CACHE(re, s);
+    tmp = SHOW_UBITS(re, s, n);
+    LAST_SKIP_BITS(re, s, n);
+    CLOSE_READER(re, s);
+    return tmp;
+}
+
+__forceinline unsigned int _get_bits1(GetBitContext *s, int default=0){
+    unsigned int index = s->index;
+    if (index >= s->size_in_bits)
+        return default;
+
+    uint8_t result = s->buffer[index>>3];
+    result <<= index & 7;
+    result >>= 8 - 1;
+    index++;
+    s->index = index;
+
+    return result;
+}
 
 __forceinline unsigned _get_ue_golomb(GetBitContext* gb)
 {
+    if (gb->index >= gb->size_in_bits)
+        return 0;
+
     int n = 0;
     // count zeros (get log of number)
-    while (0 == get_bits1(gb)) ++n;
+    while (0 == get_bits1(gb,1)) ++n;
 
     if (n == 0) {
         return 0;
