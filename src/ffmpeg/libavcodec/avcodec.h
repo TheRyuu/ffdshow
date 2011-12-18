@@ -133,7 +133,7 @@
 
 #if FF_API_OLD_DECODE_AUDIO
 /* in bytes */
-#define AVCODEC_MAX_AUDIO_FRAME_SIZE 192000 // 1 second of 48khz 32bit audio
+#define AVCODEC_MAX_AUDIO_FRAME_SIZE 384000 // 1 second of 96khz 32bit audio
 #endif
 
 /**
