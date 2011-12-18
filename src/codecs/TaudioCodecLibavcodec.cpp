@@ -36,7 +36,7 @@ TaudioCodecLibavcodec::TaudioCodecLibavcodec(IffdshowBase *deci, IdecAudioSink *
     codecInited = false;
     contextInited = false;
     parser = NULL;
-    src_ch_layout = AF_CHANNEL_LAYOUT_MPLAYER_DEFAULT;
+    src_ch_layout = AF_CHANNEL_LAYOUT_FFDSHOW_DEFAULT;
 }
 
 bool TaudioCodecLibavcodec::init(const CMediaType &mt)
@@ -423,8 +423,6 @@ void TaudioCodecLibavcodec::updateChannelMapping()
         src_ch_layout = AF_CHANNEL_LAYOUT_VORBIS_DEFAULT;
     } else if (!stricmp(codec, _l("mlp")) || !stricmp(codec, _l("truehd"))) {
         src_ch_layout = AF_CHANNEL_LAYOUT_MLP_DEFAULT;
-    } else {
-        src_ch_layout = AF_CHANNEL_LAYOUT_FFDSHOW_DEFAULT;
     }
 }
 
