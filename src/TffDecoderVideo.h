@@ -960,7 +960,7 @@ private:
             return deciV->lock_csCodecs_and_imgFilters();
         }
         STDMETHODIMP unlock_csCodecs_and_imgFilters(void) {
-            return deciV->lock_csCodecs_and_imgFilters();
+            return deciV->unlock_csCodecs_and_imgFilters();
         }
         STDMETHODIMP_(void*) get_csReceive_ptr(void) {
             return deciV->get_csReceive_ptr();
