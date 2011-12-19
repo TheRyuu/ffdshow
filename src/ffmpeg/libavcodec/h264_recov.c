@@ -68,7 +68,7 @@ int avcodec_h264_search_recovery_point(AVCodecContext *avctx,
             buf_index+=3;
         }
 
-        ptr= ff_h264_decode_nal(h, buf + buf_index, &dst_length, &consumed, h->is_avc ? nalsize : buf_size - buf_index);
+        ptr= ff_h264_decode_nal(h, buf + buf_index, &dst_length, &consumed, h->is_avc ? nalsize : buf_size - buf_index, 0);
         if (ptr==NULL || dst_length < 0){
             found = -1;
             goto end;

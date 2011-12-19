@@ -2,20 +2,20 @@
  * TTA (The Lossless True Audio) decoder
  * Copyright (c) 2006 Alex Beregszaszi
  *
- * This file is part of Libav.
+ * This file is part of FFmpeg.
  *
- * Libav is free software; you can redistribute it and/or
+ * FFmpeg is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * Libav is distributed in the hope that it will be useful,
+ * FFmpeg is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with Libav; if not, write to the Free Software
+ * License along with FFmpeg; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -188,6 +188,16 @@ static int tta_get_unary(GetBitContext *gb)
     return ret;
 }
 
+static const int64_t tta_channel_layouts[7] = {
+    AV_CH_LAYOUT_STEREO,
+    AV_CH_LAYOUT_STEREO|AV_CH_LOW_FREQUENCY,
+    AV_CH_LAYOUT_QUAD,
+    0,
+    AV_CH_LAYOUT_5POINT1_BACK,
+    AV_CH_LAYOUT_5POINT1_BACK|AV_CH_BACK_CENTER,
+    AV_CH_LAYOUT_7POINT1_WIDE
+};
+
 static av_cold int tta_decode_init(AVCodecContext * avctx)
 {
     TTAContext *s = avctx->priv_data;
@@ -215,6 +225,8 @@ static av_cold int tta_decode_init(AVCodecContext * avctx)
             return AVERROR(EINVAL);
         }
         avctx->channels = s->channels = get_bits(&s->gb, 16);
+        if (s->channels > 1 && s->channels < 9)
+            avctx->channel_layout = tta_channel_layouts[s->channels-2];
         avctx->bits_per_coded_sample = get_bits(&s->gb, 16);
         s->bps = (avctx->bits_per_coded_sample + 7) / 8;
         avctx->sample_rate = get_bits_long(&s->gb, 32);
@@ -227,6 +239,7 @@ static av_cold int tta_decode_init(AVCodecContext * avctx)
         }
 
         switch(s->bps) {
+        case 1: avctx->sample_fmt = AV_SAMPLE_FMT_U8; break;
         case 2:
             avctx->sample_fmt = AV_SAMPLE_FMT_S16;
             avctx->bits_per_raw_sample = 16;
@@ -235,6 +248,7 @@ static av_cold int tta_decode_init(AVCodecContext * avctx)
             avctx->sample_fmt = AV_SAMPLE_FMT_S32;
             avctx->bits_per_raw_sample = 24;
             break;
+        //case 4: avctx->sample_fmt = AV_SAMPLE_FMT_S32; break;
         default:
             av_log(avctx, AV_LOG_ERROR, "Invalid/unsupported sample format.\n");
             return AVERROR_INVALIDDATA;
@@ -267,11 +281,9 @@ static av_cold int tta_decode_init(AVCodecContext * avctx)
             return -1;
         }
 
-        if (s->bps == 2) {
-            s->decode_buffer = av_mallocz(sizeof(int32_t)*s->frame_length*s->channels);
-            if (!s->decode_buffer)
-                return AVERROR(ENOMEM);
-        }
+        s->decode_buffer = av_mallocz(sizeof(int32_t)*s->frame_length*s->channels);
+        if (!s->decode_buffer)
+            return AVERROR(ENOMEM);
         s->ch_ctx = av_malloc(avctx->channels * sizeof(*s->ch_ctx));
         if (!s->ch_ctx) {
             av_freep(&s->decode_buffer);
@@ -403,19 +415,32 @@ static int tta_decode_frame(AVCodecContext *avctx, void *data,
         return -1;
     skip_bits(&s->gb, 32); // frame crc
 
-    // convert to output buffer
-    if (s->bps == 2) {
-        int16_t *samples = (int16_t *)s->frame.data[0];
-        for (p = s->decode_buffer; p < s->decode_buffer + (framelen * s->channels); p++)
-            *samples++ = *p;
-    } else {
-        // shift samples for 24-bit sample format
-        int32_t *samples = (int32_t *)s->frame.data[0];
-        for (i = 0; i < framelen * s->channels; i++)
-            *samples++ <<= 8;
-        // reset decode buffer
-        s->decode_buffer = NULL;
-    }
+        // convert to output buffer
+        switch(s->bps) {
+            case 1: {
+                uint8_t *samples = (uint8_t *)s->frame.data[0];
+                for (p = s->decode_buffer; p < s->decode_buffer + (framelen * s->channels); p++)
+                    *samples++ = *p + 0x80;
+                break;
+            }
+            case 2: {
+                uint16_t *samples = (int16_t *)s->frame.data[0];
+                for (p = s->decode_buffer; p < s->decode_buffer + (framelen * s->channels); p++)
+                    *samples++ = *p;
+                break;
+            }
+            case 3: {
+                // shift samples for 24-bit sample format
+                int32_t *samples = (int32_t *)s->frame.data[0];
+                for (p = s->decode_buffer; p < s->decode_buffer + (framelen * s->channels); p++)
+                    *samples++ <<= 8;
+                // reset decode buffer
+                s->decode_buffer = NULL;
+                break;
+            }
+            default:
+                av_log(s->avctx, AV_LOG_ERROR, "Error, only 16bit samples supported!\n");
+        }
 
     *got_frame_ptr   = 1;
     *(AVFrame *)data = s->frame;

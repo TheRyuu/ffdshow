@@ -659,13 +659,12 @@ typedef struct AVFrame {
      */
     int quality;
 
+#if FF_API_AVFRAME_AGE
     /**
-     * buffer age (1->was last buffer and dint change, 2->..., ...).
-     * Set to INT_MAX if the buffer has not been used yet.
-     * - encoding: unused
-     * - decoding: MUST be set by get_buffer() for video.
+     * @deprecated unused
      */
-    int age;
+    attribute_deprecated int age;
+#endif
 
     /**
      * is this picture used as reference
@@ -3733,7 +3732,7 @@ int av_picture_pad(AVPicture *dst, const AVPicture *src, int height, int width, 
 unsigned int av_xiphlacing(unsigned char *s, unsigned int v);
 
 /**
- * Logs a generic warning message about a missing feature. This function is
+ * Log a generic warning message about a missing feature. This function is
  * intended to be used internally by Libav (libavcodec, libavformat, etc.)
  * only, and would normally not be used by applications.
  * @param[in] avc a pointer to an arbitrary struct of which the first field is
