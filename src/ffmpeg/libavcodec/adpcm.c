@@ -1,20 +1,20 @@
 /*
  * Copyright (c) 2001-2003 The ffmpeg Project
  *
- * This file is part of Libav.
+ * This file is part of FFmpeg.
  *
- * Libav is free software; you can redistribute it and/or
+ * FFmpeg is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * Libav is distributed in the hope that it will be useful,
+ * FFmpeg is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with Libav; if not, write to the Free Software
+ * License along with FFmpeg; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 #include "avcodec.h"
@@ -332,6 +332,9 @@ static int get_nb_samples(AVCodecContext *avctx, const uint8_t *buf,
     int header_size;
 
     *coded_samples = 0;
+
+    if(ch <= 0)
+        return 0;
 
     switch (avctx->codec->id) {
     /* constant, only check buf_size */
@@ -714,6 +717,9 @@ static int adpcm_decode_frame(AVCodecContext *avctx, void *data,
 
         /* Each EA ADPCM frame has a 12-byte header followed by 30-byte pieces,
            each coding 28 stereo samples. */
+
+        if(avctx->channels != 2)
+            return AVERROR_INVALIDDATA;
 
         src += 4; // skip sample count (already read)
 

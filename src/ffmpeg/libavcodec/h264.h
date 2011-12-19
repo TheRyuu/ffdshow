@@ -46,6 +46,8 @@
 
 #define MAX_DELAYED_PIC_COUNT 16
 
+#define MAX_MBPAIR_SIZE (256*1024) // a tighter bound could be calculated if someone cares about a few bytes
+
 /* Compiling in interlaced support reduces the speed
  * of progressive decoding by about 2%. */
 #define ALLOW_INTERLACE
@@ -584,6 +586,8 @@ typedef struct H264Context{
 
     int cur_chroma_format_idc;
 
+    int16_t slice_row[MAX_SLICES]; ///< to detect when MAX_SLICES is too low
+
     /* ffdshow custom stuff */
     int has_to_drop_first_non_ref;    // Workaround Haali's media splitter (http://forum.doom9.org/showthread.php?p=1226434#post1226434)
 
@@ -629,12 +633,9 @@ int ff_h264_decode_picture_parameter_set(H264Context *h, int bit_length);
  * @param consumed is the number of bytes used as input
  * @param length is the length of the array
  * @param dst_length is the number of decoded bytes FIXME here or a decode rbsp tailing?
- * @param nalsize_known skip start code search if the size of the nalu is known
  * @return decoded bytes, might be src+1 if no escapes
  */
-const uint8_t *ff_h264_decode_nal(H264Context *h, const uint8_t *src,
-                                  int *dst_length, int *consumed, int length,
-                                  int nalsize_known);
+const uint8_t *ff_h264_decode_nal(H264Context *h, const uint8_t *src, int *dst_length, int *consumed, int length);
 
 /**
  * Free any data that may have been allocated in the H264 context like SPS, PPS etc.

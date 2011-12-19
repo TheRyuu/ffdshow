@@ -851,7 +851,7 @@ static int decode_nal_units_noexecute(H264Context *h, const uint8_t *buf, int bu
 
         hx = h->thread_context[context_count];
 
-        ptr= ff_h264_decode_nal(hx, buf + buf_index, &dst_length, &consumed, next_avc - buf_index, 0);
+        ptr= ff_h264_decode_nal(hx, buf + buf_index, &dst_length, &consumed, next_avc - buf_index);
         if (ptr==NULL || dst_length < 0){
             return -1;
         }
