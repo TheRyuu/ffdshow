@@ -36,7 +36,6 @@ TaudioCodecLibavcodec::TaudioCodecLibavcodec(IffdshowBase *deci, IdecAudioSink *
     codecInited = false;
     contextInited = false;
     parser = NULL;
-    src_ch_layout = AF_CHANNEL_LAYOUT_FFDSHOW_DEFAULT;
 }
 
 bool TaudioCodecLibavcodec::init(const CMediaType &mt)
@@ -172,8 +171,6 @@ bool TaudioCodecLibavcodec::init(const CMediaType &mt)
                 fmt.sf = TsampleFormat::SF_FLOAT64;
                 break;
         }
-
-        updateChannelMapping();
 
         ffmpeg->av_log_set_level(AV_LOG_QUIET);
 
@@ -365,10 +362,12 @@ HRESULT TaudioCodecLibavcodec::decode(TbyteBuffer &src0)
         bpssum += lastbps;
         numframes++;
 
-        // Correct the output media type from what has been decoded
         if (dstBufferLength > 0) {
-            fmt.setChannels(avctx->channels);
+            // Correct the output media type from what has been decoded
+            //DPRINTF(_l("libavcodec channels=%d channel layout=%x"), avctx->channels, avctx->channel_layout);
+            fmt.setChannels(avctx->channels, avctx->channel_layout);
             fmt.freq = avctx->sample_rate;
+
             switch (avctx->sample_fmt) {
                 case AV_SAMPLE_FMT_S16:
                     fmt.sf = TsampleFormat::SF_PCM16;
@@ -383,14 +382,7 @@ HRESULT TaudioCodecLibavcodec::decode(TbyteBuffer &src0)
                     fmt.sf = TsampleFormat::SF_FLOAT64;
                     break;
             }
-        }
 
-        // Correct channel mapping
-        if (dstBufferLength > 0 && fmt.nchannels >= 5) {
-            reorder_channel_nch(dstBuffer, src_ch_layout, AF_CHANNEL_LAYOUT_FFDSHOW_DEFAULT, fmt.nchannels, dstBufferLength * 8 / fmt.blockAlign(), fmt.bitsPerSample() / 8);
-        }
-
-        if (dstBufferLength > 0) {
             HRESULT hr = sinkA->deliverDecodedSample(dstBuffer, dstBufferLength / fmt.blockAlign(), fmt);
             if (hr != S_OK) {
                 return hr;
@@ -399,31 +391,6 @@ HRESULT TaudioCodecLibavcodec::decode(TbyteBuffer &src0)
     }
     src0.clear();
     return S_OK;
-}
-
-void TaudioCodecLibavcodec::updateChannelMapping()
-{
-    src_ch_layout = AF_CHANNEL_LAYOUT_FFDSHOW_DEFAULT;
-    if (!avctx->codec->name) {
-        return;
-    }
-    char_t codec[255];
-    ff_strncpy(codec, (const char_t *)text<char_t>(avctx->codec->name), countof(codec));
-    codec[254] = '\0';
-
-    if (!stricmp(codec, _l("ac3")) || !stricmp(codec, _l("eac3"))) {
-        src_ch_layout = AF_CHANNEL_LAYOUT_LAVC_AC3_DEFAULT;
-    } else if (!stricmp(codec, _l("dca"))) {
-        src_ch_layout = AF_CHANNEL_LAYOUT_LAVC_DCA_DEFAULT;
-    } else if (!stricmp(codec, _l("libfaad")) || !stricmp(codec, _l("mpeg4aac"))) {
-        src_ch_layout = AF_CHANNEL_LAYOUT_AAC_DEFAULT;
-    } else if (!stricmp(codec, _l("liba52"))) {
-        src_ch_layout = AF_CHANNEL_LAYOUT_LAVC_LIBA52_DEFAULT;
-    } else if (!stricmp(codec, _l("vorbis"))) {
-        src_ch_layout = AF_CHANNEL_LAYOUT_VORBIS_DEFAULT;
-    } else if (!stricmp(codec, _l("mlp")) || !stricmp(codec, _l("truehd"))) {
-        src_ch_layout = AF_CHANNEL_LAYOUT_MLP_DEFAULT;
-    }
 }
 
 bool TaudioCodecLibavcodec::onSeek(REFERENCE_TIME segmentStart)

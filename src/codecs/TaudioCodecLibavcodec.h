@@ -15,12 +15,10 @@ private:
     AVCodecParserContext *parser;
     bool codecInited;
     bool contextInited;
-    int src_ch_layout;
     TrealAudioInfo m_realAudioInfo;
 protected:
     virtual bool init(const CMediaType &mt);
     virtual void getInputDescr1(char_t *buf,size_t buflen) const;
-    virtual void updateChannelMapping(void);
 public:
     AVCodecContext *avctx;
     TaudioCodecLibavcodec(IffdshowBase *deci, IdecAudioSink *Isink);

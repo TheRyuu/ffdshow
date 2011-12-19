@@ -111,13 +111,13 @@ public:
     int sf;
     unsigned int freq;
     unsigned int nchannels;
-    unsigned int channelmask;
+    uint64_t channelmask;
     int alternateSF;
     int speakers[8];
     int dolby;
     bool pcm_be;
 
-    void setChannels(int Inchannels,int IchannelMask=0) {
+    void setChannels(int Inchannels,uint64_t IchannelMask=0) {
         nchannels=std::min(8,Inchannels);
         channelmask=IchannelMask;
         if (channelmask==0) {
@@ -128,7 +128,7 @@ public:
                 SPEAKER_FRONT_LEFT,SPEAKER_FRONT_RIGHT,SPEAKER_BACK_LEFT,SPEAKER_BACK_RIGHT,0,0,0,0,
                 SPEAKER_FRONT_LEFT,SPEAKER_FRONT_RIGHT,SPEAKER_FRONT_CENTER,SPEAKER_BACK_LEFT,SPEAKER_BACK_RIGHT,0,0,0,
                 SPEAKER_FRONT_LEFT,SPEAKER_FRONT_RIGHT,SPEAKER_FRONT_CENTER,SPEAKER_LOW_FREQUENCY,SPEAKER_BACK_LEFT,SPEAKER_BACK_RIGHT,0,0,
-                SPEAKER_FRONT_LEFT,SPEAKER_FRONT_RIGHT,SPEAKER_FRONT_CENTER,SPEAKER_BACK_LEFT,SPEAKER_BACK_RIGHT,SPEAKER_SIDE_LEFT,SPEAKER_SIDE_RIGHT,0,
+                SPEAKER_FRONT_LEFT,SPEAKER_FRONT_RIGHT,SPEAKER_FRONT_CENTER,SPEAKER_LOW_FREQUENCY,SPEAKER_BACK_CENTER,SPEAKER_SIDE_LEFT,SPEAKER_SIDE_RIGHT,0,
                 SPEAKER_FRONT_LEFT,SPEAKER_FRONT_RIGHT,SPEAKER_FRONT_CENTER,SPEAKER_LOW_FREQUENCY,SPEAKER_BACK_LEFT,SPEAKER_BACK_RIGHT,SPEAKER_SIDE_LEFT,SPEAKER_SIDE_RIGHT,
             };
             memcpy(speakers,speakersPresets[nchannels-1],sizeof(int)*8);
@@ -155,7 +155,7 @@ public:
         return mask;
     }
     static const int standardChannelMasks[];
-    int makeChannelMask2(void) const {
+    uint64_t makeChannelMask2(void) const {
         if (channelmask) {
             return channelmask;
         } else {

@@ -15,7 +15,8 @@ Mixer<float,int,1,1> mixerFloat;
 CCritSec csMatrix;
 const TmixerMatrix::mixer_matrix_t *matrixPtr;
 int inmask,outmask;
-unsigned int oldnchannels,oldchannelmask;
+unsigned int oldnchannels;
+uint64_t oldchannelmask;
 int oldsf;
 TmixerSettings oldcfg;
 

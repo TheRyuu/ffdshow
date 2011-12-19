@@ -19,8 +19,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef MPLAYER_REORDER_CH_H
-#define MPLAYER_REORDER_CH_H
+#ifndef REORDER_CH_H
+#define REORDER_CH_H
 
 // L   - Left
 // R   - Right
@@ -57,33 +57,10 @@
 #define AF_CHANNEL_LAYOUT_7_1_B ((119<<8)|8|AF_LFE)    // L R C LFE Ls  Rs Rls Rrs
 #define AF_CHANNEL_LAYOUT_7_1_C ((120<<8)|8|AF_LFE)    // L R C Ls  Rls Rrs Rs LFE
 
-
 #define AF_CHANNEL_LAYOUT_FFDSHOW_5CH_DEFAULT AF_CHANNEL_LAYOUT_5_0_A
 #define AF_CHANNEL_LAYOUT_FFDSHOW_6CH_DEFAULT AF_CHANNEL_LAYOUT_5_1_A
 #define AF_CHANNEL_LAYOUT_FFDSHOW_7CH_DEFAULT AF_CHANNEL_LAYOUT_6_1_A
 #define AF_CHANNEL_LAYOUT_FFDSHOW_8CH_DEFAULT AF_CHANNEL_LAYOUT_7_1_A
-#define AF_CHANNEL_LAYOUT_MPLAYER_5CH_DEFAULT AF_CHANNEL_LAYOUT_ALSA_5CH_DEFAULT
-#define AF_CHANNEL_LAYOUT_MPLAYER_6CH_DEFAULT AF_CHANNEL_LAYOUT_ALSA_6CH_DEFAULT
-#define AF_CHANNEL_LAYOUT_AAC_5CH_DEFAULT AF_CHANNEL_LAYOUT_5_0_D
-#define AF_CHANNEL_LAYOUT_AAC_6CH_DEFAULT AF_CHANNEL_LAYOUT_5_1_D
-#define AF_CHANNEL_LAYOUT_WAVEEX_5CH_DEFAULT AF_CHANNEL_LAYOUT_5_0_A
-#define AF_CHANNEL_LAYOUT_WAVEEX_6CH_DEFAULT AF_CHANNEL_LAYOUT_5_1_A
-#define AF_CHANNEL_LAYOUT_LAVC_AC3_5CH_DEFAULT AF_CHANNEL_LAYOUT_5_0_A
-#define AF_CHANNEL_LAYOUT_LAVC_AC3_6CH_DEFAULT AF_CHANNEL_LAYOUT_5_1_A
-#define AF_CHANNEL_LAYOUT_LAVC_EAC3_7CH_DEFAULT AF_CHANNEL_LAYOUT_6_1_A
-#define AF_CHANNEL_LAYOUT_LAVC_EAC3_8CH_DEFAULT AF_CHANNEL_LAYOUT_7_1_B
-#define AF_CHANNEL_LAYOUT_LAVC_LIBA52_5CH_DEFAULT AF_CHANNEL_LAYOUT_5_0_C
-#define AF_CHANNEL_LAYOUT_LAVC_LIBA52_6CH_DEFAULT AF_CHANNEL_LAYOUT_5_1_E
-#define AF_CHANNEL_LAYOUT_LAVC_DCA_5CH_DEFAULT AF_CHANNEL_LAYOUT_5_0_A
-#define AF_CHANNEL_LAYOUT_LAVC_DCA_6CH_DEFAULT AF_CHANNEL_LAYOUT_5_1_A
-#define AF_CHANNEL_LAYOUT_VORBIS_5CH_DEFAULT AF_CHANNEL_LAYOUT_5_0_A
-#define AF_CHANNEL_LAYOUT_VORBIS_6CH_DEFAULT AF_CHANNEL_LAYOUT_5_1_A
-#define AF_CHANNEL_LAYOUT_FLAC_5CH_DEFAULT AF_CHANNEL_LAYOUT_5_0_A
-#define AF_CHANNEL_LAYOUT_FLAC_6CH_DEFAULT AF_CHANNEL_LAYOUT_5_1_A
-#define AF_CHANNEL_LAYOUT_LAVC_MLP_5CH_DEFAULT AF_CHANNEL_LAYOUT_5_0_A
-#define AF_CHANNEL_LAYOUT_LAVC_MLP_6CH_DEFAULT AF_CHANNEL_LAYOUT_5_1_A
-#define AF_CHANNEL_LAYOUT_LAVC_MLP_7CH_DEFAULT AF_CHANNEL_LAYOUT_6_1_A
-#define AF_CHANNEL_LAYOUT_LAVC_MLP_8CH_DEFAULT AF_CHANNEL_LAYOUT_7_1_A
 #define AF_CHANNEL_LAYOUT_LPCM_8CH_DEFAULT AF_CHANNEL_LAYOUT_7_1_C
 
 #define AF_CHANNEL_MASK  0xFF
@@ -108,36 +85,4 @@ void reorder_channel(void *buf,
                      int samples,
                      int samplesize);
 
-// Channel layout definitions for different audio sources or targets
-// When specified channel number, they will be map to the specific layouts.
-#define AF_CHANNEL_LAYOUT_AAC_DEFAULT         0
-#define AF_CHANNEL_LAYOUT_WAVEEX_DEFAULT      1
-#define AF_CHANNEL_LAYOUT_LAVC_AC3_DEFAULT    2
-#define AF_CHANNEL_LAYOUT_LAVC_LIBA52_DEFAULT 3
-#define AF_CHANNEL_LAYOUT_LAVC_DCA_DEFAULT    4
-#define AF_CHANNEL_LAYOUT_VORBIS_DEFAULT      5
-#define AF_CHANNEL_LAYOUT_FLAC_DEFAULT        6
-#define AF_CHANNEL_LAYOUT_MLP_DEFAULT         7
-#define AF_CHANNEL_LAYOUT_LPCM_DEFAULT        8
-#define AF_CHANNEL_LAYOUT_FFDSHOW_DEFAULT     9
-#define AF_CHANNEL_LAYOUT_SOURCE_NUM          10
-
-
-/// Optimized channel reorder between different audio sources and targets.
-void reorder_channel_copy_nch(void *src,
-                              int src_layout,
-                              void *dest,
-                              int dest_layout,
-                              int chnum,
-                              int samples,
-                              int samplesize);
-
-/// Same with reorder_channel_copy_nch, but works on single buffer.
-void reorder_channel_nch(void *buf,
-                         int src_layout,
-                         int dest_layout,
-                         int chnum,
-                         int samples,
-                         int samplesize);
-
-#endif /* MPLAYER_REORDER_CH_H */
+#endif /* REORDER_CH_H */
