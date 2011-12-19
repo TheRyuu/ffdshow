@@ -114,7 +114,6 @@ int FFH264CheckCompatibility(int nWidth, int nHeight, struct AVCodecContext* pAV
 	int no_level51_support = 1;
 	int too_much_ref_frames = 0;
 	int profile_higher_than_high = 0;
-	int max_ref_frames = 0;
 	int max_ref_frames_dpb41 = min(11, 8388608/(nWidth * nHeight) );
 
 	if (pBuffer != NULL) {
@@ -125,6 +124,7 @@ int FFH264CheckCompatibility(int nWidth, int nHeight, struct AVCodecContext* pAV
 	cur_pps		= pContext->pps_buffers[0];
 
 	if (cur_sps != NULL) {
+		int max_ref_frames = 0;
 		video_is_level51 = cur_sps->level_idc >= 51 ? 1 : 0;
 		profile_higher_than_high = (cur_sps->profile_idc > 100);
 		max_ref_frames = max_ref_frames_dpb41; // default value is calculate
@@ -153,8 +153,8 @@ int FFH264CheckCompatibility(int nWidth, int nHeight, struct AVCodecContext* pAV
 		} else if (nPCIVendor == PCIV_S3_Graphics) {
 			no_level51_support = 0;
 		} else if (nPCIVendor == PCIV_ATI) {
-			// HD4xxx and HD5xxx ATI cards support level 5.1 since drivers v8.14.1.6105 (Catalyst 10.4)
-			if((nPCIDevice >> 8 == 0x68) || (nPCIDevice >> 8 == 0x94)) {
+			// HD4xxx, HD5xxx, and HD6xxx AMD/ATI cards support level 5.1 since drivers v8.14.1.6105 (Catalyst 10.4)
+			if(nPCIDevice > 0x6700) {
 				if (DriverVersionCheck(VideoDriverVersion, 8, 14, 1, 6105)) {
 					no_level51_support = 0;
 					max_ref_frames = 16;
