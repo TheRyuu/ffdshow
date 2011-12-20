@@ -136,10 +136,12 @@ struct H264_SPS{
         int num; ///< numerator
         int den; ///< denominator
     } sar;
-
     int video_signal_type_present_flag;
     int full_range;
     int colour_description_present_flag;
+    unsigned int color_primaries;
+    unsigned int color_trc;
+    unsigned int colorspace;
     int timing_info_present_flag;
     uint32_t num_units_in_tick;
     uint32_t time_scale;
