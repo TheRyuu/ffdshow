@@ -1410,7 +1410,7 @@ STDMETHODIMP TffdshowDecVideo::deliverProcessedSample(TffPict &pict)
                 }
                 pOut2->SetProperties(FIELD_OFFSET(AM_SAMPLE2_PROPERTIES,dwSampleFlags),(PBYTE)&outProp2);
             }
-#if 1
+#if 0
             AM_SAMPLE2_PROPERTIES outProp3;
             if (SUCCEEDED(pOut2->GetProperties(sizeof(AM_SAMPLE2_PROPERTIES), (PBYTE)&outProp3))) {
                 bool repeat_first_field = !!(outProp3.dwTypeSpecificFlags & AM_VIDEO_FLAG_REPEAT_FIELD);
