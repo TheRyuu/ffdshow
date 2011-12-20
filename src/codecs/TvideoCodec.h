@@ -75,7 +75,7 @@ protected:
             int fieldtype;
             int repeat_pict;
             REFERENCE_TIME rtStart;
-        } group[4]; // 4 frames make up a group of soft telecine.
+        } group[2]; // store information about 2 recent frames.
         REFERENCE_TIME average_duration,group_rtStart;
         bool film;
         int cfg_softTelecine;

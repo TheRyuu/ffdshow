@@ -216,7 +216,7 @@ void TvideoCodecDec::TtelecineManager::onSeek(void)
 void TvideoCodecDec::TtelecineManager::new_frame(int top_field_first, int repeat_pict, const REFERENCE_TIME &rtStart, const REFERENCE_TIME &rtStop)
 {
     segment_count++;
-    int pos = segment_count & 3;
+    int pos = segment_count & 1;
 
     if (repeat_pict == 1) {
         group[pos].fieldtype = FIELD_TYPE::PROGRESSIVE_FRAME;
@@ -227,23 +227,14 @@ void TvideoCodecDec::TtelecineManager::new_frame(int top_field_first, int repeat
     group[pos].repeat_pict = repeat_pict;
     film = false;
 
-    if (segment_count >= 4) {
-        int i = 0;
-        for (; i < 4 ; i++) {
-            if (group[i].fieldtype == FIELD_TYPE::INT_TFF) {
-                if (   group[(i + 1) & 3].fieldtype == FIELD_TYPE::PROGRESSIVE_FRAME
-                        && group[(i + 2) & 3].fieldtype == FIELD_TYPE::INT_BFF
-                        && group[(i + 3) & 3].fieldtype == FIELD_TYPE::PROGRESSIVE_FRAME
-                        && group[ i      & 3].repeat_pict == 0
-                        && group[(i + 1) & 3].repeat_pict == 1
-                        && group[(i + 2) & 3].repeat_pict == 0
-                        && group[(i + 3) & 3].repeat_pict == 1) {
-                    film = true;
-                    if (rtStart != REFTIME_INVALID && group[pos].rtStart != REFTIME_INVALID) {
-                        average_duration = (rtStart - group[pos].rtStart) >> 2;
-                    }
-                    break;
+    if (segment_count >= 2) {
+        for (int i = 0 ; i < 2 ; i++) {
+            if (group[i].repeat_pict) {
+                film = true;
+                if (rtStart != REFTIME_INVALID && group[pos].rtStart != REFTIME_INVALID) {
+                    average_duration = (rtStart - group[pos].rtStart) >> 1;
                 }
+                break;
             }
         }
     }
@@ -255,7 +246,7 @@ void TvideoCodecDec::TtelecineManager::new_frame(int top_field_first, int repeat
         pos_in_group = -1;
     }
 
-    if (film && (pos_in_group == 0 || pos_in_group >= 4) && rtStart != REFTIME_INVALID) {
+    if (film && (pos_in_group == 0 || pos_in_group >= 2) && rtStart != REFTIME_INVALID) {
         pos_in_group = 0;
         group_rtStart = rtStart;
     }
@@ -272,11 +263,11 @@ void TvideoCodecDec::TtelecineManager::get_fieldtype(TffPict &pict)
     if (cfg_softTelecine) {
         pict.fieldtype = FIELD_TYPE::PROGRESSIVE_FRAME;
     } else {
-        pict.repeat_first_field = group[segment_count & 3].repeat_pict != 0;
+        pict.repeat_first_field = group[segment_count & 1].repeat_pict != 0;
         if (pict.repeat_first_field) {
-            pict.fieldtype = group[(segment_count-1) & 3].fieldtype;
+            pict.fieldtype = group[(segment_count-1) & 1].fieldtype;
         } else {
-            pict.fieldtype = group[segment_count & 3].fieldtype;
+            pict.fieldtype = group[segment_count & 1].fieldtype;
         }
     }
 }
