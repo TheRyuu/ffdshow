@@ -42,7 +42,7 @@
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <DisableSpecificWarnings>963;964;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificDiagnostics>13200,13203</DisableSpecificDiagnostics>
       <InterproceduralOptimization>SingleFile</InterproceduralOptimization>
       <WholeProgramOptimization>true</WholeProgramOptimization>
     </ClCompile>
