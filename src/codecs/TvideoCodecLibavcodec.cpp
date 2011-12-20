@@ -432,6 +432,7 @@ HRESULT TvideoCodecLibavcodec::flushDec(void)
 HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen0,IMediaSample *pIn)
 {
     HRESULT hr = S_OK;
+    REFERENCE_TIME rtStart = REFTIME_INVALID,rtStop = REFTIME_INVALID;
     TffdshowVideoInputPin::TrateAndFlush *rateInfo = (TffdshowVideoInputPin::TrateAndFlush*)deciV->getRateInfo();
 
     bool isSyncPoint = pIn && pIn->IsSyncPoint() == S_OK;
@@ -480,7 +481,12 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
     int size=int(srcLen0-skip);
 
     if (pIn) {
-        pIn->GetTime(&rtStart,&rtStop);
+        HRESULT hr1 = pIn->GetTime(&rtStart,&rtStop);
+        if (hr1 == VFW_S_NO_STOP_TIME)
+            rtStop = REFTIME_INVALID;
+        if (hr1 == VFW_E_SAMPLE_TIME_NOT_SET) {
+            rtStart = rtStop = REFTIME_INVALID;
+        }
     }
 
     b[inPosB].rtStart=rtStart;
@@ -508,7 +514,7 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
     }
 
     if (src && h264_on_MPEG2_system) {
-        size = codedPictureBuffer.append(src, size);
+        size = codedPictureBuffer.append(src, size, rtStart, rtStop);
     }
 
     AVPacket avpkt;
@@ -718,6 +724,8 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
                     }
 
                     if ((rateInfo->isDiscontinuity || rateInfo->correctTS) && frametype == FRAME_TYPE::I) {
+                        if (pict.rtStart == REFTIME_INVALID)
+                            pict.rtStart = 0;
                         // if we're at a Discontinuity use the times we're being sent in
                         // DPRINTF((ffstring(L"rateInfo->isDiscontinuity found. pict.rtStart ") + Trt2str(pict.rtStart) + L" rateInfo->rate.StartTime " + Trt2str(rateInfo->rate.StartTime)).c_str());
                         pict.rtStart = rateInfo->rate.StartTime + (pict.rtStart - rateInfo->rate.StartTime) * abs(rateInfo->rate.Rate) / 10000;
@@ -1665,7 +1673,7 @@ void TvideoCodecLibavcodec::TcodedPictureBuffer::onSeek(void)
  * This function parses access unit (AU) from the stream and buffers it.
  * We have to memorize the timestamp of the AU.
  */
-int TvideoCodecLibavcodec::TcodedPictureBuffer::append(const uint8_t *buf, int buf_size)
+int TvideoCodecLibavcodec::TcodedPictureBuffer::append(const uint8_t *buf, int buf_size, REFERENCE_TIME rtStart, REFERENCE_TIME rtStop)
 {
     used_bytes = outSampleSize = 0;
     int startCodePos = 0;
@@ -1687,11 +1695,11 @@ int TvideoCodecLibavcodec::TcodedPictureBuffer::append(const uint8_t *buf, int b
                 out_rtStart = prior_rtStart;
                 out_rtStop  = prior_rtStop;
             } else {
-                out_rtStart = parent->rtStart;
-                out_rtStop  = parent->rtStop;
+                out_rtStart = rtStart;
+                out_rtStop  = rtStop;
             }
-            prior_rtStart = parent->rtStart;
-            prior_rtStop  = parent->rtStop;
+            prior_rtStart = rtStart;
+            prior_rtStop  = rtStop;
             return outSampleSize;
         }
     }
@@ -1700,8 +1708,8 @@ int TvideoCodecLibavcodec::TcodedPictureBuffer::append(const uint8_t *buf, int b
     uint8_t *dstPrior = (uint8_t *)priorBuf.resize2(buf_size + priorSize);
     memcpy(dstPrior + priorSize, buf, buf_size);
     priorSize += buf_size;
-    prior_rtStart = parent->rtStart;
-    prior_rtStop = parent->rtStop;
+    prior_rtStart = rtStart;
+    prior_rtStop = rtStop;
     return 0;
 }
 
