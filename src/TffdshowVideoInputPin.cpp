@@ -689,19 +689,14 @@ HRESULT TffdshowVideoInputPin::decompress(IMediaSample *pSample,long *srcLen)
 
 STDMETHODIMP TffdshowVideoInputPin::EndOfStream()
 {
-    comptrQ<IffdshowDecVideo> deciV=fv->deci;
-    if (deciV) {
-        CAutoLock lock1((CCritSec*)deciV->get_csReceive_ptr());
-        CAutoLock lock2(&m_csCodecs_and_imgFilters);
-        if (m_rateAndFlush.m_flushing) {
-            return S_OK;
-        }
-        m_rateAndFlush.m_endflush = false;
-        video->onEndOfStream();
-        return TinputPin::EndOfStream();
-    } else {
-        return E_UNEXPECTED;
+    CAutoLock lock1((CCritSec*)fv->deci->get_csReceive_ptr());
+    CAutoLock lock2(&m_csCodecs_and_imgFilters);
+    if (m_rateAndFlush.m_flushing) {
+        return S_OK;
     }
+    m_rateAndFlush.m_endflush = false;
+    video->onEndOfStream();
+    return TinputPin::EndOfStream();
 }
 
 HRESULT TffdshowVideoInputPin::getAVIfps(unsigned int *fps1000)

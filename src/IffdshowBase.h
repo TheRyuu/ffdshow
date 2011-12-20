@@ -106,6 +106,7 @@ template<class tchar> DECLARE_INTERFACE_(IffdshowBaseT,IUnknown)
     STDMETHOD (cpuSupportsSSE42)(void) PURE;
     STDMETHOD (cpuSupportsSSE4A)(void) PURE;
     STDMETHOD (cpuSupportsSSE5)(void) PURE;
+    STDMETHOD_(void*, get_csReceive_ptr)(void) PURE;
 };
 
 struct IffdshowBaseA :IffdshowBaseT<char> {};

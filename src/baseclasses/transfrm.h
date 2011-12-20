@@ -306,12 +306,15 @@ protected:
 class CmyTransformFilter : public CTransformFilter
 {
 protected:
- CmyTransformFilter(const TCHAR *name, LPUNKNOWN punk, REFCLSID clsid):CTransformFilter(name,punk,clsid) {}
+    CmyTransformFilter(const TCHAR *name, LPUNKNOWN punk, REFCLSID clsid):CTransformFilter(name,punk,clsid) {}
 public:
- STDMETHODIMP TransformJoinFilterGraph(IFilterGraph *pGraph,LPCWSTR pName)
-  {
-   return CTransformFilter::JoinFilterGraph(pGraph,pName);
-  }
+    STDMETHODIMP TransformJoinFilterGraph(IFilterGraph *pGraph,LPCWSTR pName) {
+        return CTransformFilter::JoinFilterGraph(pGraph,pName);
+    }
+    STDMETHODIMP_(void *) get_csReceive_ptr(void)
+    {
+        return (void *)&m_csReceive;
+    }
 };
 
 #endif /* __TRANSFRM__ */

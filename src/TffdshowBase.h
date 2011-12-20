@@ -117,6 +117,7 @@ public:
     STDMETHODIMP cpuSupportsSSE42(void);
     STDMETHODIMP cpuSupportsSSE4A(void);
     STDMETHODIMP cpuSupportsSSE5(void);
+    STDMETHODIMP_(void*) get_csReceive_ptr(void);
 
 
     //IffdshowParamsEnum
@@ -417,6 +418,9 @@ protected:
         }
         STDMETHODIMP cpuSupportsSSE5(void) {
             return deci->cpuSupportsSSE5();
+        }
+        STDMETHODIMP_(void*) get_csReceive_ptr(void) {
+            return deci->get_csReceive_ptr();
         }
     } base_char;
     template<class Tinterface> Tinterface* getBaseInterface(void);

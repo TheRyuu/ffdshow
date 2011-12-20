@@ -477,6 +477,10 @@ STDMETHODIMP TffdshowBase::cpuSupportsSSE5(void)
 {
     return (Tconfig::cpu_flags&FF_CPU_SSE5)?1:0;
 }
+STDMETHODIMP_(void *) TffdshowBase::get_csReceive_ptr(void)
+{
+    return mfilter->get_csReceive_ptr();
+}
 STDMETHODIMP TffdshowBase::dbgInit(void)
 {
     dbgDone();

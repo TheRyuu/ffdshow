@@ -1355,7 +1355,7 @@ STDMETHODIMP TffdshowDecVideo::deliverProcessedSample(TffPict &pict)
     if (hwDeinterlace) {
         if (comptrQ<IMediaSample2> pOut2=pOut) {
             AM_SAMPLE2_PROPERTIES outProp2;
-            if (SUCCEEDED(pOut2->GetProperties(FIELD_OFFSET(AM_SAMPLE2_PROPERTIES,tStart),(PBYTE)&outProp2))) {
+            if (SUCCEEDED(pOut2->GetProperties(FIELD_OFFSET(AM_SAMPLE2_PROPERTIES,dwSampleFlags),(PBYTE)&outProp2))) {
                 // Set interlace information (every sample)
                 outProp2.dwTypeSpecificFlags=AM_VIDEO_FLAG_INTERLEAVED_FRAME;
 
@@ -1408,8 +1408,18 @@ STDMETHODIMP TffdshowDecVideo::deliverProcessedSample(TffPict &pict)
                         }
                     }
                 }
-                pOut2->SetProperties(FIELD_OFFSET(AM_SAMPLE2_PROPERTIES,dwStreamId),(PBYTE)&outProp2);
+                pOut2->SetProperties(FIELD_OFFSET(AM_SAMPLE2_PROPERTIES,dwSampleFlags),(PBYTE)&outProp2);
             }
+#if 1
+            AM_SAMPLE2_PROPERTIES outProp3;
+            if (SUCCEEDED(pOut2->GetProperties(sizeof(AM_SAMPLE2_PROPERTIES), (PBYTE)&outProp3))) {
+                bool repeat_first_field = !!(outProp3.dwTypeSpecificFlags & AM_VIDEO_FLAG_REPEAT_FIELD);
+                bool top_field_first = !!(outProp3.dwTypeSpecificFlags & AM_VIDEO_FLAG_FIELD1FIRST);
+                bool progressive = !!(outProp3.dwTypeSpecificFlags & AM_VIDEO_FLAG_WEAVE);
+                DPRINTF(L"AM_VIDEO_FLAG_REPEAT_FIELD %d AM_VIDEO_FLAG_FIELD1FIRST %d AM_VIDEO_FLAG_WEAVE %d",
+                    repeat_first_field,top_field_first,progressive);
+            }
+#endif
         }
     }
 
