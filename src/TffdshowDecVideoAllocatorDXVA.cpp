@@ -57,13 +57,13 @@ STDMETHODIMP TDXVA2Sample::QueryInterface(REFIID riid, __deref_out void **ppv)
 
 STDMETHODIMP_(ULONG) TDXVA2Sample::AddRef()
 {
-    return __super::AddRef();
+    return CMediaSample::AddRef();
 }
 
 STDMETHODIMP_(ULONG) TDXVA2Sample::Release()
 {
     // Return a temporary variable for thread safety.
-    ULONG cRef = __super::Release();
+    ULONG cRef = CMediaSample::Release();
     return cRef;
 }
 
