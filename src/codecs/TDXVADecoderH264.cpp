@@ -198,7 +198,9 @@ HRESULT TDXVADecoderH264::DecodeFrame(BYTE* pDataIn, UINT nSize, REFERENCE_TIME 
         return S_FALSE;		
     }
 
-    m_pCodec->libavcodec->FFH264DecodeBuffer(m_pCodec->avctx, pDataIn, nSize, &nFramePOC, &nOutPOC, &rtOutStart);
+    if (m_pCodec->libavcodec->FFH264DecodeBuffer(m_pCodec->avctx, pDataIn, nSize, &nFramePOC, &nOutPOC, &rtOutStart) == -1) {
+      return S_FALSE;
+    }
 
     Nalu.SetBuffer (pDataIn, nSize, m_nNALLength);
     while (Nalu.ReadNext()) {
@@ -268,15 +270,15 @@ HRESULT TDXVADecoderH264::DecodeFrame(BYTE* pDataIn, UINT nSize, REFERENCE_TIME 
     // Decode bitstream
     CHECK_HR (Execute());
 
-    bool bAdded = AddToStore (nSurfaceIndex, pSampleToDeliver, m_DXVAPicParams.RefPicFlag, rtStart, rtStop,
-                              m_DXVAPicParams.field_pic_flag, (FF_FIELD_TYPE)nFieldType,
-                              (FF_SLICE_TYPE)nSliceType, nFramePOC);
-
     CHECK_HR (EndFrame(nSurfaceIndex));
 
 #ifdef _DEBUG
     // DisplayStatus();
 #endif
+
+    bool bAdded = AddToStore (nSurfaceIndex, pSampleToDeliver, m_DXVAPicParams.RefPicFlag, rtStart, rtStop,
+                              m_DXVAPicParams.field_pic_flag, (FF_FIELD_TYPE)nFieldType,
+                              (FF_SLICE_TYPE)nSliceType, nFramePOC);
 
     m_pCodec->libavcodec->FFH264UpdateRefFramesList (&m_DXVAPicParams, m_pCodec->avctx);
     ClearUnusedRefFrames();

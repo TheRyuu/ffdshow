@@ -125,6 +125,8 @@ public:
     virtual UINT getAdapter(IDirect3D9* pD3D, HWND hWnd);
     void flushDXVADecoder(void) {
         if (pDXVADecoder) {
+            // fixme: a crash occurs here when removing ffdshow from the filter graph in GraphStudio
+            // only happens when the graph was constructed automatically and EVR is used (due to manually set high merit)
             pDXVADecoder->Flush();
         }
     }

@@ -29,8 +29,7 @@ extern "C" {
 
 struct AVCodecContext;
 
-enum PCI_Vendors
-{
+enum PCI_Vendors {
 	PCIV_ATI				= 0x1002,
 	PCIV_nVidia				= 0x10DE,
 	PCIV_Intel				= 0x8086,
@@ -44,7 +43,7 @@ enum PCI_Vendors
 #define DXVA_PROFILE_HIGHER_THAN_HIGH	8
 
 // === H264 functions
-void			FFH264DecodeBuffer (struct AVCodecContext* pAVCtx, BYTE* pBuffer, UINT nSize, int* pFramePOC, int* pOutPOC, REFERENCE_TIME* pOutrtStart);
+int				FFH264DecodeBuffer (struct AVCodecContext* pAVCtx, BYTE* pBuffer, UINT nSize, int* pFramePOC, int* pOutPOC, REFERENCE_TIME* pOutrtStart);
 HRESULT			FFH264BuildPicParams (DXVA_PicParams_H264* pDXVAPicParams, DXVA_Qmatrix_H264* pDXVAScalingMatrix, int* nFieldType, int* nSliceType, struct AVCodecContext* pAVCtx, int nPCIVendor);
 int				FFH264CheckCompatibility(int nWidth, int nHeight, struct AVCodecContext* pAVCtx, BYTE* pBuffer, UINT nSize, int nPCIVendor, int nPCIDevice, LARGE_INTEGER VideoDriverVersion);
 void			FFH264SetCurrentPicture (int nIndex, DXVA_PicParams_H264* pDXVAPicParams, struct AVCodecContext* pAVCtx);

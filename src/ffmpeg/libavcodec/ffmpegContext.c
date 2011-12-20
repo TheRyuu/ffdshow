@@ -71,16 +71,18 @@ char* GetFFMpegPictureType(int nType)
 }
 
 
-void FFH264DecodeBuffer (struct AVCodecContext* pAVCtx, BYTE* pBuffer, UINT nSize, int* pFramePOC, int* pOutPOC, REFERENCE_TIME* pOutrtStart)
+int FFH264DecodeBuffer (struct AVCodecContext* pAVCtx, BYTE* pBuffer, UINT nSize, int* pFramePOC, int* pOutPOC, REFERENCE_TIME* pOutrtStart)
 {
+	int result = 0;
 	if (pBuffer != NULL) {
 		H264Context*	h	= (H264Context*) pAVCtx->priv_data;
-		av_h264_decode_frame (pAVCtx, pOutPOC, pOutrtStart, pBuffer, nSize);
+		result = av_h264_decode_frame (pAVCtx, pOutPOC, pOutrtStart, pBuffer, nSize);
 
-		if (h->s.current_picture_ptr != NULL  && pFramePOC) {
+		if (result != -1 && h->s.current_picture_ptr != NULL  && pFramePOC) {
 			*pFramePOC = h->s.current_picture_ptr->field_poc[0];
 		}
 	}
+	return result;
 }
 
 // returns TRUE if version is equal to or higher than A.B.C.D, returns FALSE otherwise
@@ -221,6 +223,7 @@ HRESULT FFH264BuildPicParams (DXVA_PicParams_H264* pDXVAPicParams, DXVA_Qmatrix_
 	MpegEncContext* const	s = &h->s;
 	int						field_pic_flag;
 	HRESULT					hr = E_FAIL;
+	const Picture *current_picture = s->current_picture_ptr;
 
 	field_pic_flag = (h->s.picture_structure != PICT_FRAME);
 
@@ -273,17 +276,15 @@ HRESULT FFH264BuildPicParams (DXVA_PicParams_H264* pDXVAPicParams, DXVA_Qmatrix_
 
 		pDXVAPicParams->bit_depth_luma_minus8					= cur_sps->bit_depth_luma   - 8;	// bit_depth_luma_minus8
 		pDXVAPicParams->bit_depth_chroma_minus8					= cur_sps->bit_depth_chroma - 8;	// bit_depth_chroma_minus8
+		
 		//	pDXVAPicParams->StatusReportFeedbackNumber				= SET IN DecodeFrame;
-
-
 		//	pDXVAPicParams->CurrFieldOrderCnt						= SET IN UpdateRefFramesList;
 		//	pDXVAPicParams->FieldOrderCntList						= SET IN UpdateRefFramesList;
 		//	pDXVAPicParams->FrameNumList							= SET IN UpdateRefFramesList;
 		//	pDXVAPicParams->UsedForReferenceFlags					= SET IN UpdateRefFramesList;
 		//	pDXVAPicParams->NonExistingFrameFlags
-		pDXVAPicParams->frame_num								= h->frame_num;
-		//	pDXVAPicParams->SliceGroupMap
 
+		pDXVAPicParams->frame_num								= h->frame_num;
 
 		pDXVAPicParams->log2_max_frame_num_minus4				= cur_sps->log2_max_frame_num - 4;					// log2_max_frame_num_minus4;
 		pDXVAPicParams->pic_order_cnt_type						= cur_sps->poc_type;								// pic_order_cnt_type;
@@ -298,7 +299,7 @@ HRESULT FFH264BuildPicParams (DXVA_PicParams_H264* pDXVAPicParams, DXVA_Qmatrix_
 		pDXVAPicParams->slice_group_map_type					= cur_pps->mb_slice_group_map_type;					// slice_group_map_type;
 		pDXVAPicParams->deblocking_filter_control_present_flag	= cur_pps->deblocking_filter_parameters_present;	// deblocking_filter_control_present_flag;
 		pDXVAPicParams->redundant_pic_cnt_present_flag			= cur_pps->redundant_pic_cnt_present;				// redundant_pic_cnt_present_flag;
-		pDXVAPicParams->slice_group_change_rate_minus1			= cur_pps->slice_group_change_rate_minus1;
+		//pDXVAPicParams->slice_group_change_rate_minus1			= cur_pps->slice_group_change_rate_minus1;
 
 		pDXVAPicParams->chroma_qp_index_offset					= cur_pps->chroma_qp_index_offset[0];
 		pDXVAPicParams->second_chroma_qp_index_offset			= cur_pps->chroma_qp_index_offset[1];
@@ -307,22 +308,14 @@ HRESULT FFH264BuildPicParams (DXVA_PicParams_H264* pDXVAPicParams, DXVA_Qmatrix_
 		pDXVAPicParams->pic_init_qp_minus26						= cur_pps->init_qp - 26;
 		pDXVAPicParams->pic_init_qs_minus26						= cur_pps->init_qs - 26;
 
-		if (field_pic_flag) {
-			pDXVAPicParams->CurrPic.AssociatedFlag  = (h->s.picture_structure == PICT_BOTTOM_FIELD);
-
-			if (pDXVAPicParams->CurrPic.AssociatedFlag) {
-				// Bottom field
-				pDXVAPicParams->CurrFieldOrderCnt[0] = 0;
-				pDXVAPicParams->CurrFieldOrderCnt[1] = h->poc_lsb + h->poc_msb;
-			} else {
-				// Top field
-				pDXVAPicParams->CurrFieldOrderCnt[0] = h->poc_lsb + h->poc_msb;
-				pDXVAPicParams->CurrFieldOrderCnt[1] = 0;
-			}
-		} else {
-			pDXVAPicParams->CurrPic.AssociatedFlag	= 0;
-			pDXVAPicParams->CurrFieldOrderCnt[0]	= h->poc_lsb + h->poc_msb;
-			pDXVAPicParams->CurrFieldOrderCnt[1]	= h->poc_lsb + h->poc_msb;
+		pDXVAPicParams->CurrPic.AssociatedFlag  = field_pic_flag && (h->s.picture_structure == PICT_BOTTOM_FIELD);
+		pDXVAPicParams->CurrFieldOrderCnt[0] = 0;
+		if ((h->s.picture_structure & PICT_TOP_FIELD) && current_picture->field_poc[0] != INT_MAX) {
+			pDXVAPicParams->CurrFieldOrderCnt[0] = current_picture->field_poc[0];
+		}
+		pDXVAPicParams->CurrFieldOrderCnt[1] = 0;
+		if ((h->s.picture_structure & PICT_BOTTOM_FIELD) && current_picture->field_poc[1] != INT_MAX) {
+			pDXVAPicParams->CurrFieldOrderCnt[1] = current_picture->field_poc[1];
 		}
 
 		CopyScalingMatrix (pDXVAScalingMatrix, (DXVA_Qmatrix_H264*)cur_pps->scaling_matrix4, nPCIVendor);
@@ -331,7 +324,6 @@ HRESULT FFH264BuildPicParams (DXVA_PicParams_H264* pDXVAPicParams, DXVA_Qmatrix_
 
 	return hr;
 }
-
 
 void FFH264SetCurrentPicture (int nIndex, DXVA_PicParams_H264* pDXVAPicParams, struct AVCodecContext* pAVCtx)
 {
@@ -343,7 +335,6 @@ void FFH264SetCurrentPicture (int nIndex, DXVA_PicParams_H264* pDXVAPicParams, s
 		h->s.current_picture_ptr->f.opaque = (void*)nIndex;
 	}
 }
-
 
 void FFH264UpdateRefFramesList (DXVA_PicParams_H264* pDXVAPicParams, struct AVCodecContext* pAVCtx)
 {
@@ -417,7 +408,6 @@ BOOL FFH264IsRefFrameInUse (int nFrameNum, struct AVCodecContext* pAVCtx)
 
 	return FALSE;
 }
-
 
 void FF264UpdateRefFrameSliceLong(DXVA_PicParams_H264* pDXVAPicParams, DXVA_Slice_H264_Long* pSlice, struct AVCodecContext* pAVCtx)
 {
