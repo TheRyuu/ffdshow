@@ -28,15 +28,14 @@
 //=================================================== TspuPlane ===================================================
 void TspuPlane::alloc(const CSize &sz, int div, uint64_t csp)
 {
-#define HIDE_PGS_BUG 4 /* crashing PGS bug hidden. 0 should work. http://forum.doom9.org/showpost.php?p=1534107&postcount=14062 */
     size_t needed;
     if ((csp & FF_CSPS_MASK) == FF_CSP_420P) {
         stride = (((sz.cx+1)/div)/16+2)*16;
-        needed = stride*(odd2even(sz.cy + 3 + HIDE_PGS_BUG) / div);
+        needed = stride*(odd2even(sz.cy + 3) / div);
     } else {
         // RGB32
         stride = (sz.cx + 1) * 4;
-        needed = stride * (sz.cy + 1 + HIDE_PGS_BUG);
+        needed = stride * (sz.cy + 1);
     }
     if (needed>allocated) {
         c = (unsigned char*)aligned_realloc(c,needed);
