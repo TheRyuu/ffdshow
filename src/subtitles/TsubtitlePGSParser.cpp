@@ -579,15 +579,21 @@ void TsubtitlePGSParser::getObjects(REFERENCE_TIME rtStart, REFERENCE_TIME rtSto
             continue;
         }
 
+        bool alive = false;
+        // Clean passed subs
         for (int i=0; i<(*c)->m_nWindows; i++) {
-            // Clean passed subs
-            if ((*c)->m_Windows[i].m_rtStop != INVALID_TIME && rtStart > (*c)->m_Windows[i].m_rtStop) {
-                delete (*c);
-                c=m_compositionObjects.erase(c);
-                incObj=false;
+            if ((*c)->m_Windows[i].m_rtStop == INVALID_TIME || rtStart <= (*c)->m_Windows[i].m_rtStop) {
+                alive = true;
                 break;
             }
+        }
+        if (!alive) {
+            delete (*c);
+            c=m_compositionObjects.erase(c);
+            continue;
+        }
 
+        for (int i=0; i<(*c)->m_nWindows; i++) {
             if ((*c)->m_Windows[i].m_rtStart != INVALID_TIME && (*c)->m_Windows[i].data[0].size() > 0
                     && ( ((*c)->m_Windows[i].m_rtStart <= rtStart && ((*c)->m_Windows[i].m_rtStop == INVALID_TIME || (*c)->m_Windows[i].m_rtStop > rtStart))
                          || ((*c)->m_Windows[i].m_rtStop != INVALID_TIME && (*c)->m_Windows[i].m_rtStop > rtStart && (*c)->m_Windows[i].m_rtStop <= rtStop))) {
