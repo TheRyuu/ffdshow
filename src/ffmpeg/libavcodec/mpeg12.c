@@ -3,20 +3,20 @@
  * Copyright (c) 2000, 2001 Fabrice Bellard
  * Copyright (c) 2002-2004 Michael Niedermayer <michaelni@gmx.at>
  *
- * This file is part of Libav.
+ * This file is part of FFmpeg.
  *
- * Libav is free software; you can redistribute it and/or
+ * FFmpeg is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * Libav is distributed in the hope that it will be useful,
+ * FFmpeg is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with Libav; if not, write to the Free Software
+ * License along with FFmpeg; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -928,10 +928,6 @@ static int mpeg_decode_mb(MpegEncContext *s, DCTELEM block[12][64])
                 }
                 break;
             case MT_FIELD:
-                if(s->progressive_sequence){
-                    av_log(s->avctx, AV_LOG_ERROR, "MT_FIELD in progressive_sequence\n");
-                    return -1;
-                }
                 s->mv_type = MV_TYPE_FIELD;
                 if (s->picture_structure == PICT_FRAME) {
                     mb_type |= MB_TYPE_16x8 | MB_TYPE_INTERLACED;
@@ -1174,12 +1170,12 @@ static enum PixelFormat mpeg_get_pixelformat(AVCodecContext *avctx)
     Mpeg1Context *s1 = avctx->priv_data;
     MpegEncContext *s = &s1->mpeg_enc_ctx;
 
-        if (s->chroma_format <  2)
-            return PIX_FMT_YUV420P;
-        else if (s->chroma_format == 2)
-            return PIX_FMT_YUV422P;
-        else
-            return PIX_FMT_YUV444P;
+    if (s->chroma_format <  2) {
+        return PIX_FMT_YUV420P;
+    } else if(s->chroma_format == 2)
+        return PIX_FMT_YUV422P;
+    else
+        return PIX_FMT_YUV444P;
 }
 
 /* Call this function when we know all parameters.
@@ -1318,7 +1314,7 @@ static int mpeg1_decode_picture(AVCodecContext *avctx,
     if (s->pict_type == AV_PICTURE_TYPE_P || s->pict_type == AV_PICTURE_TYPE_B) {
         s->full_pel[0] = get_bits1(&s->gb);
         f_code = get_bits(&s->gb, 3);
-        if (f_code == 0 && (avctx->err_recognition & AV_EF_BITSTREAM))
+        if (f_code == 0 && (avctx->err_recognition & (AV_EF_BITSTREAM|AV_EF_COMPLIANT)))
             return -1;
         s->mpeg_f_code[0][0] = f_code;
         s->mpeg_f_code[0][1] = f_code;
@@ -1326,7 +1322,7 @@ static int mpeg1_decode_picture(AVCodecContext *avctx,
     if (s->pict_type == AV_PICTURE_TYPE_B) {
         s->full_pel[1] = get_bits1(&s->gb);
         f_code = get_bits(&s->gb, 3);
-        if (f_code == 0 && (avctx->err_recognition & AV_EF_BITSTREAM))
+        if (f_code == 0 && (avctx->err_recognition & (AV_EF_BITSTREAM|AV_EF_COMPLIANT)))
             return -1;
         s->mpeg_f_code[1][0] = f_code;
         s->mpeg_f_code[1][1] = f_code;
@@ -1744,7 +1740,7 @@ static int mpeg_decode_slice(MpegEncContext *s, int mb_y,
                              && s->progressive_frame == 0 /* vbv_delay == 0xBBB || 0xE10*/;
 
                 if (left < 0 || (left && show_bits(&s->gb, FFMIN(left, 23)) && !is_d10)
-                    || ((avctx->err_recognition & AV_EF_BUFFER) && left > 8)) {
+                    || ((avctx->err_recognition & (AV_EF_BITSTREAM | AV_EF_AGGRESSIVE)) && left > 8)) {
                     av_log(avctx, AV_LOG_ERROR, "end mismatch left=%d %0X\n", left, show_bits(&s->gb, FFMIN(left, 23)));
                     return -1;
                 } else
@@ -1870,7 +1866,7 @@ static int slice_end(AVCodecContext *avctx, AVFrame *pict)
         return 0;
 
     /* end of slice reached */
-    if (/*s->mb_y << field_pic == s->mb_height &&*/ !s->first_field) {
+    if (/*s->mb_y << field_pic == s->mb_height &&*/ !s->first_field && !s->first_slice) {
         /* end of image */
 
         s->current_picture_ptr->f.qscale_type = FF_QSCALE_TYPE_MPEG2;
@@ -1916,7 +1912,7 @@ static int mpeg1_decode_sequence(AVCodecContext *avctx,
     s->aspect_ratio_info = get_bits(&s->gb, 4);
     if (s->aspect_ratio_info == 0) {
         av_log(avctx, AV_LOG_ERROR, "aspect ratio has forbidden 0 value\n");
-        if (avctx->err_recognition & AV_EF_BITSTREAM)
+        if (avctx->err_recognition & (AV_EF_BITSTREAM | AV_EF_COMPLIANT))
             return -1;
     }
     s->frame_rate_index = get_bits(&s->gb, 4);
@@ -1964,6 +1960,7 @@ static int mpeg1_decode_sequence(AVCodecContext *avctx,
     s->progressive_sequence = 1;
     s->progressive_frame    = 1;
     s->picture_structure    = PICT_FRAME;
+    s->first_field          = 0;
     s->frame_pred_frame_dct = 1;
     s->chroma_format        = 1;
     s->codec_id             = s->avctx->codec_id = CODEC_ID_MPEG1VIDEO;
@@ -2018,6 +2015,7 @@ static int vcr2_init_sequence(AVCodecContext *avctx)
     s->progressive_sequence  = 1;
     s->progressive_frame     = 1;
     s->picture_structure     = PICT_FRAME;
+    s->first_field           = 0;
     s->frame_pred_frame_dct  = 1;
     s->chroma_format         = 1;
     s->codec_id              = s->avctx->codec_id = CODEC_ID_MPEG2VIDEO;
@@ -2063,31 +2061,30 @@ static void mpeg_decode_gop(AVCodecContext *avctx,
 {
     Mpeg1Context *s1  = avctx->priv_data;
     MpegEncContext *s = &s1->mpeg_enc_ctx;
-
-    int time_code_hours, time_code_minutes;
-    int time_code_seconds, time_code_pictures;
     int broken_link;
+    int64_t tc;
 
     init_get_bits(&s->gb, buf, buf_size*8);
 
-    skip_bits1(&s->gb); /* drop_frame_flag */
+    tc = avctx->timecode_frame_start = get_bits(&s->gb, 25);
 
-    time_code_hours   = get_bits(&s->gb, 5);
-    time_code_minutes = get_bits(&s->gb, 6);
-    skip_bits1(&s->gb); // marker bit
-    time_code_seconds  = get_bits(&s->gb, 6);
-    time_code_pictures = get_bits(&s->gb, 6);
-
-    s1->closed_gop = get_bits1(&s->gb);
+    s->closed_gop = get_bits1(&s->gb);
     /*broken_link indicate that after editing the
       reference frames of the first B-Frames after GOP I-Frame
       are missing (open gop)*/
     broken_link = get_bits1(&s->gb);
 
-    if (s->avctx->debug & FF_DEBUG_PICT_INFO)
-        av_log(s->avctx, AV_LOG_DEBUG, "GOP (%2d:%02d:%02d.[%02d]) closed_gop=%d broken_link=%d\n",
+    if (s->avctx->debug & FF_DEBUG_PICT_INFO) {
+        int time_code_hours    = tc>>19 & 0x1f;
+        int time_code_minutes  = tc>>13 & 0x3f;
+        int time_code_seconds  = tc>>6  & 0x3f;
+        int drop_frame_flag    = tc     & 1<<24;
+        int time_code_pictures = tc     & 0x3f;
+        av_log(s->avctx, AV_LOG_DEBUG, "GOP (%02d:%02d:%02d%c%02d) closed_gop=%d broken_link=%d\n",
                time_code_hours, time_code_minutes, time_code_seconds,
-               time_code_pictures, s1->closed_gop, broken_link);
+               drop_frame_flag ? ';' : ':',
+               time_code_pictures, s->closed_gop, broken_link);
+    }
 }
 /**
  * Find the end of the current frame in the bitstream.
@@ -2255,7 +2252,8 @@ static int decode_chunks(AVCodecContext *avctx,
         case SEQ_START_CODE:
             if (last_code == 0) {
                 mpeg1_decode_sequence(avctx, buf_ptr, input_size);
-                s->sync=1;
+                if(buf != avctx->extradata)
+                    s->sync=1;
             } else {
                 av_log(avctx, AV_LOG_ERROR, "ignoring SEQ_START_CODE after %X\n", last_code);
                 if (avctx->err_recognition & AV_EF_EXPLODE)
@@ -2357,7 +2355,7 @@ static int decode_chunks(AVCodecContext *avctx,
                 if (s2->last_picture_ptr == NULL) {
                 /* Skip B-frames if we do not have reference frames and gop is not closed */
                     if (s2->pict_type == AV_PICTURE_TYPE_B) {
-                        if (!s->closed_gop)
+                        if (!s2->closed_gop)
                             break;
                     }
                 }
