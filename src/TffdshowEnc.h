@@ -16,7 +16,6 @@ struct TglobalSettingsEnc;
 struct TdialogSettingsEnc;
 class TffProcVideo;
 class Tmuxer;
-struct Txvid_2pass;
 class TffdshowEnc :public TffdshowBase,
     public CmyTransformFilter,
     public TffdshowVideo,
@@ -54,11 +53,9 @@ public:
     STDMETHODIMP_(int) getVersion2(void);
     STDMETHODIMP getEncStats(TencStats* *encStatsPtr);
     STDMETHODIMP getFFproc(TffProcVideo* *procPtr);
-    STDMETHODIMP isLAVCadaptiveQuant(void);
     STDMETHODIMP isQuantControlActive(void);
     STDMETHODIMP getCustomQuantMatrixes(unsigned char* *intra8,unsigned char* *inter8,unsigned char* *intra4Y,unsigned char* *inter4Y,unsigned char* *intra4C,unsigned char* *inter4C);
     STDMETHODIMP getEncoder(int codecId,const Tencoder* *encPtr);
-    STDMETHODIMP_(int) getQuantType2(int quant);
     STDMETHODIMP getCoSettingsPtr(const TcoSettings* *coSettingsPtr);
     STDMETHODIMP setCoSettingsPtr(TcoSettings *coSettingsPtr);
     STDMETHODIMP loadEncodingSettings(void);
@@ -131,7 +128,6 @@ protected:
     int getQuantQuant(void);
 
     int cfgcomode;
-    Txvid_2pass *pass;
     int getQuantFirst(void);
     int outputdebug,outputdebugfile;
     bool firstrun;

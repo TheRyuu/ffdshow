@@ -202,10 +202,6 @@ TdialogSettingsEnc::TdialogSettingsEnc(TintStrColl *Icoll):TdialogSettingsBase(F
         _l("bpsDlgFPS1000"),25000,
         IDFF_dlgBpsLen        ,&TdialogSettingsEnc::bpsLen     ,1,1,_l(""),0,
         _l("bpsDlgLen"),590000,
-        IDFF_dlgPerfectDlgX   ,&TdialogSettingsEnc::perfectDlgX,1,1,_l(""),0,
-        _l("perfectDlgX"),-1,
-        IDFF_dlgPerfectDlgY   ,&TdialogSettingsEnc::perfectDlgY,1,1,_l(""),0,
-        _l("perfectDlgY"),-1,
         IDFF_dlgEncCurrentPage,&TdialogSettingsEnc::currentPage,0,1,_l(""),0,
         _l("dlgEncCurrentPage"),0,
         0

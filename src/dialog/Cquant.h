@@ -7,7 +7,7 @@ class TquantPage :public TconfPageEnc
 {
 private:
     static const char_t *dct_algos[],*qnss[],*dcPrecisions[];
-    void type2dlg(void),bias2dlg(void),qns2dlg(void),precision2dlg(void);
+    void bias2dlg(void),qns2dlg(void);
 protected:
     virtual INT_PTR msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 public:

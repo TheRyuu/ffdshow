@@ -21,7 +21,6 @@
 #include "CDXVAOptions.h"
 #include "Tlibavcodec.h"
 #include "TvideoCodec.h"
-#include "CquantTables.h"
 #include "Ttranslate.h"
 #include "ffmpeg/libavcodec/avcodec.h"
 

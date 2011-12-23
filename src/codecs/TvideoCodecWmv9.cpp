@@ -31,29 +31,9 @@ const char_t* TvideoCodecWmv9::dllname=_l("ff_wmv9.dll");
 TvideoCodecWmv9::TvideoCodecWmv9(IffdshowBase *Ideci,IdecVideoSink *IsinkD):
     Tcodec(Ideci),TcodecDec(Ideci,IsinkD),
     TvideoCodec(Ideci),
-    TvideoCodecDec(Ideci,IsinkD),
-    TvideoCodecEnc(Ideci,NULL)
+    TvideoCodecDec(Ideci,IsinkD)
 {
     create();
-}
-TvideoCodecWmv9::TvideoCodecWmv9(IffdshowBase *Ideci,IencVideoSink *IsinkE):
-    Tcodec(Ideci),TcodecDec(Ideci,NULL),
-    TvideoCodec(Ideci),
-    TvideoCodecDec(Ideci,NULL),
-    TvideoCodecEnc(Ideci,IsinkE),
-    codecIndex(-1)
-{
-    create();
-    if (ok) {
-        size_t cnt=wmv9->getCodecCount();
-        infos=new Tff_wmv9codecInfo[cnt];
-        for (size_t i=0; i<cnt; i++) {
-            const Tff_wmv9codecInfo *info;
-            wmv9->getCodecInfo(i,&info);
-            infos[info->index]=*info;
-            encoders.push_back(new TencoderWmv9(info->name,CodecID(CODEC_ID_WMV9_LIB+info->index),Tfourccs(info->fcc,0),info->cmplxMax));
-        }
-    }
 }
 
 void TvideoCodecWmv9::create(void)
@@ -89,48 +69,6 @@ const char_t* TvideoCodecWmv9::getName(void) const
     return codecName;
 }
 
-void TvideoCodecWmv9::getCompressColorspaces(Tcsps &csps,unsigned int outDx,unsigned int outDy)
-{
-    if (coCfg->wmv9_aviout)
-        switch (infos[coCfg->codecId-CODEC_ID_WMV9_LIB].fcc) {
-            case mmioFOURCC('M','S','S','1'):
-            case mmioFOURCC('M','S','S','2'):
-                csps.addEnd(FF_CSP_NULL,FF_CSP_RGB24|FF_CSP_FLAGS_VFLIP,FF_CSP_RGB32|FF_CSP_FLAGS_VFLIP,FF_CSP_RGB15|FF_CSP_FLAGS_VFLIP,FF_CSP_RGB16|FF_CSP_FLAGS_VFLIP,FF_CSP_NULL);
-                return;
-        }
-    csps.add(FF_CSP_420P|FF_CSP_FLAGS_YUV_ADJ);
-}
-
-LRESULT TvideoCodecWmv9::beginCompress(int cfgcomode,uint64_t csp,const Trect &r)
-{
-    if (!wmv9) {
-        return ICERR_ERROR;
-    }
-    Tff_wmv9cfg cfg9;
-    memset(&cfg9,0,sizeof(cfg9));
-    cfg9.codecIndex=codecIndex=coCfg->codecId-CODEC_ID_WMV9_LIB;
-    cfg9.bitrate=coCfg->bitrate1000*1024;
-    cfg9.width=r.dx;
-    cfg9.height=r.dy;
-    cfg9.csp=csp;
-    cfg9.fps=double(deci->getParam2(IDFF_enc_fpsRate))/deci->getParam2(IDFF_enc_fpsScale);
-    cfg9.quality=coCfg->qual;
-    cfg9.crisp=coCfg->wmv9_crisp;
-    cfg9.seckf=coCfg->wmv9_kfsecs;
-    cfg9.bUseVBR=(cfgcomode==ENC_MODE::CBR)?FALSE:TRUE;
-    cfg9.vbr_mode=(cfgcomode==ENC_MODE::CBR)?VBR_OFF:VBR_QUALITYBASED;
-    cfg9.vbrquality=coCfg->qual;
-    cfg9.maxbitrate=1000000;
-    cfg9.ivtc=!!coCfg->wmv9_ivtc;
-    cfg9.deint=!!coCfg->wmv9_deint;
-    cfg9.cplx=std::min(coCfg->wmv9_cplx,infos[cfg9.codecIndex].cmplxMax);
-    cfg9.avioutput=!!coCfg->wmv9_aviout;
-    if (coCfg->storeExt) {
-        cfg9.flnm=coCfg->storeExtFlnm[0]?coCfg->storeExtFlnm:NULL;
-        deci->putParam(IDFF_enc_ownStoreExt,!cfg9.avioutput);
-    }
-    return wmv9->start(cfg9)?ICERR_OK:ICERR_ERROR;
-}
 bool TvideoCodecWmv9::getExtradata(const void* *ptr,size_t *len)
 {
     if (!len || !wmv9) {
@@ -138,31 +76,6 @@ bool TvideoCodecWmv9::getExtradata(const void* *ptr,size_t *len)
     }
     wmv9->getExtradata(ptr,len);
     return true;
-}
-HRESULT TvideoCodecWmv9::compress(const TffPict &pict,TencFrameParams &params)
-{
-    TmediaSample sample;
-    HRESULT hr;
-    if (FAILED(hr=sinkE->getDstBuffer(&sample,pict))) {
-        return hr;
-    }
-    int len=wmv9->write(params.framenum,pict.csp,pict.data,pict.stride,sample);
-    if (len<0) {
-        params.frametype=FRAME_TYPE::I;
-        params.keyframe=true;
-    } else {
-        params.frametype=FRAME_TYPE::P;
-    }
-    params.quant=1;
-    params.length=abs(len);
-    return sinkE->deliverEncodedSample(sample,params);
-}
-void TvideoCodecWmv9::end(void)
-{
-    if (wmv9) {
-        wmv9->end();
-    }
-    codecIndex=-1;
 }
 
 bool TvideoCodecWmv9::testMediaType(FOURCC fcc,const CMediaType &mt)

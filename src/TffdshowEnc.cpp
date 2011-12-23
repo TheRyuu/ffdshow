@@ -31,7 +31,6 @@
 #include "resource.h"
 #include "Tmuxer.h"
 #include "Tinfo.h"
-#include "2pass.h"
 #include "Tconvert.h"
 #include <mmintrin.h>
 #include "TfakeImediaSample.h"
@@ -152,7 +151,6 @@ TffdshowEnc::TffdshowEnc(LPUNKNOWN punk, HRESULT *phr,TintStrColl *Ioptions,cons
     memset(&ownpict,0,sizeof(ownpict));
     enc=NULL;
     mux=NULL;
-    pass=NULL;
     working=false;
     firstrun=false;
     h_graph=NULL;
@@ -397,11 +395,7 @@ STDMETHODIMP TffdshowEnc::Stop(void)
 bool TffdshowEnc::start(void)
 {
     started=true;
-    if (coSettings->isFPSoverride) {
-        inpin->avgTimePerFrame=REF_SECOND_MULT*coSettings->fpsOverrideDen/coSettings->fpsOverrideNum;
-        fpsRate=coSettings->fpsOverrideNum;
-        fpsScale=coSettings->fpsOverrideDen;
-    } else if (inpin->avgTimePerFrame>10000) { //if sane value is available
+    if (inpin->avgTimePerFrame>10000) { //if sane value is available
         lavc_reduce(&fpsRate,&fpsScale,REF_SECOND_MULT,inpin->avgTimePerFrame,32768);
     } else { // default
         fpsRate=25;
@@ -416,27 +410,12 @@ bool TffdshowEnc::start(void)
 
 int TffdshowEnc::getQuantFirst(void)
 {
-    if (coSettings->credits_mode==CREDITS_MODE::QUANT && coSettings->isInCredits(params.framenum)) {
-        return coSettings->credits_quant_p;
-    } else {
-        return 2;
-    }
+    return 2;
 }
 
 int TffdshowEnc::getQuantQuant(void)
 {
-    if (coSettings->isInCredits(params.framenum))
-        switch (coSettings->credits_mode) {
-            case CREDITS_MODE::PERCENT:
-                return coSettings->q_p_max-((coSettings->q_p_max-coSettings->quant)*coSettings->credits_percent/100);
-            case CREDITS_MODE::QUANT:
-                return coSettings->credits_quant_p;
-            default:
-                return 0;
-        }
-    else {
-        return coSettings->quant;
-    }
+    return coSettings->quant;
 }
 
 TvideoCodecEnc* TffdshowEnc::findEncLib(void)
@@ -600,9 +579,7 @@ STDMETHODIMP_(LRESULT) TffdshowEnc::begin(const BITMAPINFOHEADER *inhdr)
         case ENC_MODE::PASS2_1:
         case ENC_MODE::PASS2_2_EXT:
         case ENC_MODE::PASS2_2_INT:
-            if (!sup_XVID2PASS(coSettings->codecId)) {
-                cfgcomode=ENC_MODE::UNKNOWN;
-            }
+            cfgcomode=ENC_MODE::UNKNOWN;
             break;
     }
 
@@ -615,16 +592,6 @@ STDMETHODIMP_(LRESULT) TffdshowEnc::begin(const BITMAPINFOHEADER *inhdr)
     LRESULT res=enc->beginCompress(cfgcomode,enccsp,Trect(0,0,outDx,outDy));
     if (res!=ICERR_OK) {
         return res;
-    }
-    switch (cfgcomode) {
-        case ENC_MODE::PASS2_1:
-            pass=new T2passFirst(*coSettings);
-            break;
-        case ENC_MODE::PASS2_2_EXT:
-            pass=new T2passSecond(this);
-        case ENC_MODE::PASS2_2_INT:
-            pass=new T2passSecond(this);
-            break;
     }
 
     dx=inhdr->biWidth;
@@ -684,10 +651,6 @@ STDMETHODIMP_(LRESULT) TffdshowEnc::end(void)
     if (coSettings->isProc && ffproc) {
         ffproc->end();
     }
-    if (pass) {
-        delete pass;
-    }
-    pass=NULL;
     if (enc) {
         enc->end();
     }
@@ -736,18 +699,6 @@ STDMETHODIMP_(LRESULT) TffdshowEnc::compress(const BITMAPINFOHEADER *inhdr,const
         case ENC_MODE::VBR_QUANT:
             params.quant=getQuantQuant();
             break;
-        case ENC_MODE::PASS2_1:
-            params.quant=getQuantFirst();
-            break;
-        case ENC_MODE::PASS2_2_EXT:
-        case ENC_MODE::PASS2_2_INT:
-            if (!pass->getQuantSecond(params)) {
-                return ICERR_ERROR;
-            }
-            if (params.quant!=-1) {
-                params.quant&=Txvid_2pass::NNSTATS_QUANTMASK;
-            }
-            break;
         case ENC_MODE::UNKNOWN:
             break;
         default:
@@ -755,12 +706,7 @@ STDMETHODIMP_(LRESULT) TffdshowEnc::compress(const BITMAPINFOHEADER *inhdr,const
             return ICERR_ERROR;
     }
 
-    params.quanttype=coSettings->getQuantType(params.quant);
-    params.gray=coSettings->gray || (coSettings->graycredits && coSettings->isInCredits(params.framenum));
-
-    if (keyspacing<coSettings->min_key_interval && params.framenum) {
-        params.frametype=FRAME_TYPE::P;
-    }
+    params.gray=!!coSettings->gray;
 
     //if (!src || !srclen) return ICERR_ERROR;
 
@@ -838,17 +784,9 @@ STDMETHODIMP TffdshowEnc::deliverEncodedSample(const TmediaSample &sample,TencFr
 
     totalsize+=params.length;
 
-    if (outputdebug || outputdebugfile)
-        if (cfgcomode==ENC_MODE::PASS2_2_INT || cfgcomode==ENC_MODE::PASS2_2_EXT) {
-            pass->writeInfo(params);
-        } else {
-            dbgWrite(_l("1st-pass: size:%d total-kbytes:%d %s quant:%d %s kblocks:%d mblocks:%d\n"),params.length,int(totalsize/1024),FRAME_TYPE::name(params.frametype),params.quant,encQuantTypes[params.quanttype],params.kblks,params.mblks);
-        }
-
-    if (pass)
-        if (pass->update(params)==false) {
-            return ICERR_ERROR;
-        }
+    if (outputdebug || outputdebugfile) {
+        dbgWrite(_l("1st-pass: size:%d total-kbytes:%d %s quant:%d %s kblocks:%d mblocks:%d\n"),params.length,int(totalsize/1024),FRAME_TYPE::name(params.frametype),params.quant,encQuantTypes[params.quanttype],params.kblks,params.mblks);
+    }
 
     params.framenum++;
     keyspacing++;
@@ -874,11 +812,7 @@ HRESULT TffdshowEnc::onGraphRemove(void)
 
 void TffdshowEnc::sendOnChange(int paramID,int val)
 {
-    if (paramID!=IDFF_enc_fpsRate && paramID!=IDFF_enc_fpsScale &&
-            paramID!=IDFF_enc_fpsScale
-       ) {
-        TffdshowBase::sendOnChange(paramID,val);
-    }
+    TffdshowBase::sendOnChange(paramID,val);
 }
 
 STDMETHODIMP TffdshowEnc::setCoSettingsPtr(TcoSettings *coSettingsPtr)
@@ -968,42 +902,9 @@ STDMETHODIMP TffdshowEnc::getEncStats(TencStats* *encStatsPtr)
     return S_OK;
 }
 
-STDMETHODIMP TffdshowEnc::isLAVCadaptiveQuant(void)
-{
-    return coSettings->isLAVCadaptiveQuant();
-}
-
 STDMETHODIMP TffdshowEnc::isQuantControlActive(void)
 {
     return coSettings->isQuantControlActive();
-}
-
-STDMETHODIMP_(int) TffdshowEnc::getQuantType2(int quant)
-{
-    return coSettings->getQuantType(quant);
-}
-
-STDMETHODIMP TffdshowEnc::getCustomQuantMatrixes(unsigned char* *intra8,unsigned char* *inter8,unsigned char* *intra4Y,unsigned char* *inter4Y,unsigned char* *intra4C,unsigned char* *inter4C)
-{
-    if (intra8) {
-        *intra8=(unsigned char*)&coSettings->qmatrix_intra_custom0;
-    }
-    if (inter8) {
-        *inter8=(unsigned char*)&coSettings->qmatrix_inter_custom0;
-    }
-    if (intra4Y) {
-        *intra4Y=(unsigned char*)&coSettings->qmatrix_intra4x4Y_custom0;
-    }
-    if (inter4Y) {
-        *inter4Y=(unsigned char*)&coSettings->qmatrix_inter4x4Y_custom0;
-    }
-    if (intra4C) {
-        *intra4C=(unsigned char*)&coSettings->qmatrix_intra4x4C_custom0;
-    }
-    if (inter4C) {
-        *inter4C=(unsigned char*)&coSettings->qmatrix_inter4x4C_custom0;
-    }
-    return S_OK;
 }
 
 STDMETHODIMP TffdshowEnc::getEncoder(int codecId,const Tencoder* *encPtr)
@@ -1164,7 +1065,7 @@ STDMETHODIMP TffdshowEncDshow::getDstBuffer(IMediaSample* *pOut,const TffPict &p
         return hr;
     }
 
-    if (coSettings->isFPSoverride || pict.rtStart==REFTIME_INVALID || pict.rtStop==REFTIME_INVALID) {
+    if (pict.rtStart==REFTIME_INVALID || pict.rtStop==REFTIME_INVALID) {
         REFERENCE_TIME tStart=(params.framenum  )*inpin->avgTimePerFrame;
         REFERENCE_TIME tStop =(params.framenum+1)*inpin->avgTimePerFrame;
         setPropsTime(*pOut,tStart,tStop,m_pInput->SampleProps(),&m_bSampleSkipped);

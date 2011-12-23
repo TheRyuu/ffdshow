@@ -15,7 +15,6 @@ private:
     bool nostate;
 protected:
     virtual INT_PTR msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
-    virtual void b2dlg(void);
 public:
     TgenericPage(TffdshowPageEnc *Iparent);
     virtual void init(void);

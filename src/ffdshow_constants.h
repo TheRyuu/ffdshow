@@ -1299,7 +1299,6 @@
 #define IDFF_dec_DXVA_PostProcessingMode 3539
 
 //----------------------- encoding -------------------------
-#define IDFF_numthreads      3322
 #define IDFF_enc_mode        3000
 #define IDFF_enc_bitrate1000 3001
 #define IDFF_enc_desiredSize 3002
@@ -1309,26 +1308,9 @@
 #define IDFF_enc_codecId 3005
 #define IDFF_enc_fourcc  3006
 
-#define IDFF_enc_max_key_interval 3007
-#define IDFF_enc_min_key_interval 3008
-#define IDFF_enc_keySceneChange   3332
-#define IDFF_enc_globalHeader     3009
-#define IDFF_enc_part             3010
 #define IDFF_enc_interlacing      3011
 #define IDFF_enc_interlacing_tff  3358
 #define IDFF_enc_gray             3012
-#define IDFF_enc_isBframes        3013
-#define IDFF_enc_max_b_frames     3014
-#define IDFF_enc_b_dynamic        3015
-#define IDFF_enc_b_refine         3364
-#define IDFF_enc_packedBitstream  3016
-#define IDFF_enc_dx50bvop         3017
-#define IDFF_enc_aspectMode       3018
-#define IDFF_enc_sarX1000         3019
-#define IDFF_enc_sarY1000         3020
-#define IDFF_enc_darX1000         3327
-#define IDFF_enc_darY1000         3328
-#define IDFF_enc_H263Pflags       3311
 
 #define IDFF_enc_huffyuv_csp  3021
 #define IDFF_enc_huffyuv_pred 3022
@@ -1341,13 +1323,6 @@
 #define IDFF_enc_ffv1_csp     3025
 #define IDFF_enc_ffv1_key_interval 3373
 
-#define IDFF_enc_wmv9_kfsecs 3026
-#define IDFF_enc_wmv9_ivtc   3027
-#define IDFF_enc_wmv9_deint  3028
-#define IDFF_enc_wmv9_cplx   3029
-#define IDFF_enc_wmv9_crisp  3030
-#define IDFF_enc_wmv9_aviout 3031
-
 #define IDFF_enc_forceIncsp 3032
 #define IDFF_enc_incsp      3033
 #define IDFF_enc_isProc     3034
@@ -1359,113 +1334,17 @@
 #define IDFF_enc_storeExtFlnm    3038
 #define IDFF_enc_ownStoreExt     3216
 #define IDFF_enc_muxer           3039
-#define IDFF_enc_ff1_stats_mode  3040
-#define IDFF_enc_ff1_stats_flnm  3041
-#define IDFF_enc_isFPSoverride   3042
-#define IDFF_enc_fpsOverrideNum  3043
-#define IDFF_enc_fpsOverrideDen  3044
 
-#define IDFF_enc_me_hq                   3045
-#define IDFF_enc_me_4mv                  3046
-#define IDFF_enc_me_qpel                 3047
-#define IDFF_enc_me_gmc                  3048
-#define IDFF_enc_me_mv0                  3217
-#define IDFF_enc_me_cbp_rd               3218
-#define IDFF_enc_me_cmp                  3049
-#define IDFF_enc_me_cmp_chroma           3050
-#define IDFF_enc_me_subcmp               3051
-#define IDFF_enc_me_subcmp_chroma        3052
-#define IDFF_enc_mb_cmp                  3053
-#define IDFF_enc_mb_cmp_chroma           3054
-#define IDFF_enc_dia_size                3055
-#define IDFF_enc_me_last_predictor_count 3056
-#define IDFF_enc_me_prepass              3057
-#define IDFF_enc_me_precmp               3058
-#define IDFF_enc_me_precmp_chroma        3059
-#define IDFF_enc_dia_size_pre            3060
-#define IDFF_enc_me_subq                 3061
-#define IDFF_enc_me_nsse_weight          3321
-#define IDFF_enc_me_iterative            3366
-
-#define IDFF_enc_xvid_motion_search        3062
-#define IDFF_enc_is_xvid_me_custom         3063
-#define IDFF_enc_xvid_me_custom            3064
-#define IDFF_enc_xvid_me_inter4v           3065
-#define IDFF_enc_xvid_vhq                  3066
-#define IDFF_enc_xvid_vhq_modedecisionbits 3067
-#define IDFF_enc_is_xvid_vhq_custom        3068
-#define IDFF_enc_xvid_vhq_custom           3069
-
-
-#define IDFF_enc_quant_type                3070
-#define IDFF_enc_qmatrix_intra_custom0     3272
-#define IDFF_enc_qmatrix_intra_custom1     3273
-#define IDFF_enc_qmatrix_intra_custom2     3274
-#define IDFF_enc_qmatrix_intra_custom3     3275
-#define IDFF_enc_qmatrix_intra_custom4     3276
-#define IDFF_enc_qmatrix_intra_custom5     3277
-#define IDFF_enc_qmatrix_intra_custom6     3278
-#define IDFF_enc_qmatrix_intra_custom7     3279
-#define IDFF_enc_qmatrix_intra_custom8     3280
-#define IDFF_enc_qmatrix_intra_custom9     3281
-#define IDFF_enc_qmatrix_intra_custom10    3282
-#define IDFF_enc_qmatrix_intra_custom11    3283
-#define IDFF_enc_qmatrix_intra_custom12    3284
-#define IDFF_enc_qmatrix_intra_custom13    3285
-#define IDFF_enc_qmatrix_intra_custom14    3286
-#define IDFF_enc_qmatrix_intra_custom15    3287
-#define IDFF_enc_qmatrix_inter_custom0     3288
-#define IDFF_enc_qmatrix_inter_custom1     3289
-#define IDFF_enc_qmatrix_inter_custom2     3290
-#define IDFF_enc_qmatrix_inter_custom3     3291
-#define IDFF_enc_qmatrix_inter_custom4     3292
-#define IDFF_enc_qmatrix_inter_custom5     3293
-#define IDFF_enc_qmatrix_inter_custom6     3294
-#define IDFF_enc_qmatrix_inter_custom7     3295
-#define IDFF_enc_qmatrix_inter_custom8     3296
-#define IDFF_enc_qmatrix_inter_custom9     3297
-#define IDFF_enc_qmatrix_inter_custom10    3298
-#define IDFF_enc_qmatrix_inter_custom11    3299
-#define IDFF_enc_qmatrix_inter_custom12    3300
-#define IDFF_enc_qmatrix_inter_custom13    3301
-#define IDFF_enc_qmatrix_inter_custom14    3302
-#define IDFF_enc_qmatrix_inter_custom15    3303
-#define IDFF_enc_qmatrix_intra4x4Y_custom0 3342
-#define IDFF_enc_qmatrix_intra4x4Y_custom1 3343
-#define IDFF_enc_qmatrix_intra4x4Y_custom2 3344
-#define IDFF_enc_qmatrix_intra4x4Y_custom3 3345
-#define IDFF_enc_qmatrix_inter4x4Y_custom0 3346
-#define IDFF_enc_qmatrix_inter4x4Y_custom1 3347
-#define IDFF_enc_qmatrix_inter4x4Y_custom2 3348
-#define IDFF_enc_qmatrix_inter4x4Y_custom3 3349
-#define IDFF_enc_qmatrix_intra4x4C_custom0 3350
-#define IDFF_enc_qmatrix_intra4x4C_custom1 3351
-#define IDFF_enc_qmatrix_intra4x4C_custom2 3352
-#define IDFF_enc_qmatrix_intra4x4C_custom3 3353
-#define IDFF_enc_qmatrix_inter4x4C_custom0 3354
-#define IDFF_enc_qmatrix_inter4x4C_custom1 3355
-#define IDFF_enc_qmatrix_inter4x4C_custom2 3356
-#define IDFF_enc_qmatrix_inter4x4C_custom3 3357
 #define IDFF_enc_q_i_min                   3104
 #define IDFF_enc_q_i_max                   3105
 #define IDFF_enc_i_quant_factor            3106
 #define IDFF_enc_i_quant_offset            3107
-#define IDFF_enc_q_p_min                   3108
-#define IDFF_enc_q_p_max                   3109
-#define IDFF_enc_q_b_min                   3110
-#define IDFF_enc_q_b_max                   3111
-#define IDFF_enc_q_mb_min                  3112
-#define IDFF_enc_q_mb_max                  3113
-#define IDFF_enc_trellisquant              3114
 #define IDFF_enc_qns                       3304
-#define IDFF_enc_b_quant_factor            3115
-#define IDFF_enc_b_quant_offset            3116
 #define IDFF_enc_isInterQuantBias          3117
 #define IDFF_enc_interQuantBias            3118
 #define IDFF_enc_isIntraQuantBias          3119
 #define IDFF_enc_intraQuantBias            3120
 #define IDFF_enc_dct_algo                  3121
-#define IDFF_enc_mpeg2_dc_prec             3193
 
 #define IDFF_enc_ff1_vratetol        3122
 #define IDFF_enc_ff1_vqcomp          3123
@@ -1479,75 +1358,8 @@
 
 #define IDFF_enc_dv_profile   3367
 
-#define IDFF_enc_svcd_scan_offset   3315
-
-#define IDFF_enc_xvid_rc_reaction_delay_factor 3128
-#define IDFF_enc_xvid_rc_averaging_period      3129
-#define IDFF_enc_xvid_rc_buffer                3130
-
-#define IDFF_enc_isCreditsStart     3131
-#define IDFF_enc_isCreditsEnd       3132
-#define IDFF_enc_creditsStartBegin  3133
-#define IDFF_enc_creditsStartEnd    3134
-#define IDFF_enc_creditsEndBegin    3135
-#define IDFF_enc_creditsEndEnd      3136
-#define IDFF_enc_credits_mode       3137
-#define IDFF_enc_credits_percent    3138
-#define IDFF_enc_credits_quant_i    3139
-#define IDFF_enc_credits_quant_p    3140
-#define IDFF_enc_credits_size_start 3141
-#define IDFF_enc_credits_size_end   3142
-#define IDFF_enc_graycredits        3143
-
-#define IDFF_enc_stats1flnm                       3144
-#define IDFF_enc_stats2flnm                       3145
-#define IDFF_enc_xvid2pass_use_write              3146
-#define IDFF_enc_twopass_max_bitrate              3147
-#define IDFF_enc_twopass_max_overflow_improvement 3148
-#define IDFF_enc_twopass_max_overflow_degradation 3149
-#define IDFF_enc_keyframe_boost                   3150
-#define IDFF_enc_kftreshold                       3151
-#define IDFF_enc_kfreduction                      3152
-#define IDFF_enc_curve_compression_high           3153
-#define IDFF_enc_curve_compression_low            3154
-#define IDFF_enc_bitrate_payback_delay            3155
-#define IDFF_enc_bitrate_payback_method           3156
-#define IDFF_enc_use_alt_curve                    3157
-#define IDFF_enc_alt_curve_type                   3158
-#define IDFF_enc_alt_curve_high_dist              3159
-#define IDFF_enc_alt_curve_low_dist               3160
-#define IDFF_enc_alt_curve_use_auto               3161
-#define IDFF_enc_alt_curve_auto_str               3162
-#define IDFF_enc_alt_curve_min_rel_qual           3163
-#define IDFF_enc_alt_curve_use_auto_bonus_bias    3164
-#define IDFF_enc_alt_curve_bonus_bias             3165
-
-#define IDFF_enc_xvid_lum_masking             3166
-#define IDFF_enc_xvid_chromaopt               3167
-#define IDFF_enc_isElimLum                    3168
-#define IDFF_enc_elimLumThres                 3169
-#define IDFF_enc_isElimChrom                  3170
-#define IDFF_enc_elimChromThres               3171
 #define IDFF_enc_is_lavc_nr                   3221
 #define IDFF_enc_lavc_nr                      3222
-#define IDFF_enc_is_ff_lumi_masking           3172
-#define IDFF_enc_ff_lumi_masking1000          3173
-#define IDFF_enc_is_ff_temporal_cplx_masking  3174
-#define IDFF_enc_ff_temporal_cplx_masking1000 3175
-#define IDFF_enc_is_ff_spatial_cplx_masking   3176
-#define IDFF_enc_ff_spatial_cplx_masking1000  3177
-#define IDFF_enc_is_ff_p_masking              3178
-#define IDFF_enc_ff_p_masking1000             3179
-#define IDFF_enc_is_ff_dark_masking           3180
-#define IDFF_enc_ff_dark_masking1000          3181
-#define IDFF_enc_is_ff_border_masking         3334
-#define IDFF_enc_ff_border_masking1000        3335
-#define IDFF_enc_ff_naq                       3182
-
-#define IDFF_enc_theo_hq               3196
-#define IDFF_enc_theo_sharpness        3329
-#define IDFF_enc_theo_noisesensitivity 3330
-
 #define IDFF_enc_raw_fourcc  3197
 
 #define IDFF_enc_working               3198
@@ -1559,8 +1371,6 @@
 
 #define IDFF_dlgBpsFps1000  3208
 #define IDFF_dlgBpsLen      3209
-#define IDFF_dlgPerfectDlgX 3210
-#define IDFF_dlgPerfectDlgY 3211
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 

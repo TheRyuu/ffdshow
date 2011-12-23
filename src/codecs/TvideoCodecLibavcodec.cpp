@@ -57,23 +57,11 @@ TvideoCodecLibavcodec::TvideoCodecLibavcodec(IffdshowBase *Ideci,IencVideoSink *
 {
     create();
     if (ok) {
-        //encoders.push_back(new Tencoder(_l("MPEG-4"),CODEC_ID_MPEG4));
-        //encoders.push_back(new Tencoder(_l("DivX 3"),CODEC_ID_MSMPEG4V3));
-        //encoders.push_back(new Tencoder(_l("MS MPEG4 v2"),CODEC_ID_MSMPEG4V2));
-        //encoders.push_back(new Tencoder(_l("MPEG-1"),CODEC_ID_MPEG1VIDEO,Tfourccs(FOURCC_MPEG,FOURCC_MPG1,0)));
-        //encoders.push_back(new Tencoder(_l("MPEG-2"),CODEC_ID_MPEG2VIDEO,Tfourccs(FOURCC_MPEG,FOURCC_MPG2,0)));
-        //encoders.push_back(new Tencoder(_l("H.263"),CODEC_ID_H263));
-        //encoders.push_back(new Tencoder(_l("H.263+"),CODEC_ID_H263P));
-        //encoders.push_back(new Tencoder(_l("H.261"),CODEC_ID_H261));
-        //encoders.push_back(new Tencoder(_l("WMV 7"),CODEC_ID_WMV1));
-        //encoders.push_back(new Tencoder(_l("WMV 8"),CODEC_ID_WMV2));
         encoders.push_back(new Tencoder(_l("MJPEG"),CODEC_ID_MJPEG));
-        //encoders.push_back(new Tencoder(_l("Lossless JPEG"),CODEC_ID_LJPEG));
         encoders.push_back(new Tencoder(_l("HuffYUV"),CODEC_ID_HUFFYUV));
-		encoders.push_back(new Tencoder(_l("HuffYUV (FFmpeg variant)"),CODEC_ID_FFVHUFF));
+        encoders.push_back(new Tencoder(_l("HuffYUV (FFmpeg variant)"),CODEC_ID_FFVHUFF));
         encoders.push_back(new Tencoder(_l("FFV1"),CODEC_ID_FFV1));
         encoders.push_back(new Tencoder(_l("DV"),CODEC_ID_DVVIDEO));
-        //encoders.push_back(new Tencoder(_l("FLV1"),CODEC_ID_FLV1));
     }
 }
 void TvideoCodecLibavcodec::create(void)
@@ -1021,7 +1009,7 @@ void TvideoCodecLibavcodec::getCompressColorspaces(Tcsps &csps,unsigned int outD
 {
     switch (coCfg->codecId) {
         case CODEC_ID_HUFFYUV:
-		case CODEC_ID_FFVHUFF:
+        case CODEC_ID_FFVHUFF:
             if (coCfg->huffyuv_csp==0) {
                 csps.add(FF_CSP_422P);
             } else {
@@ -1060,20 +1048,6 @@ void TvideoCodecLibavcodec::getCompressColorspaces(Tcsps &csps,unsigned int outD
                 csps.add(FF_CSP_420P);
             }
             break;
-        case CODEC_ID_DVVIDEO: {
-            std::vector<const DVprofile*> profiles=coCfg->getDVprofile(outDx,outDy);
-            if (!profiles.empty()) {
-                for (std::vector<const DVprofile*>::const_iterator p=profiles.begin(); p!=profiles.end(); p++) {
-                    csps.add(csp_lavc2ffdshow((*p)->pix_fmt));
-                }
-            } else {
-                csps.add(FF_CSP_420P);    //won't be used anyway
-            }
-            break;
-        }
-        case CODEC_ID_SVQ1:
-            csps.add(FF_CSP_410P);
-            break;
         default:
             csps.add(FF_CSP_420P);
             break;
@@ -1082,7 +1056,7 @@ void TvideoCodecLibavcodec::getCompressColorspaces(Tcsps &csps,unsigned int outD
 
 bool TvideoCodecLibavcodec::supExtradata(void)
 {
-    return coCfg->codecId==CODEC_ID_HUFFYUV || coCfg->codecId==CODEC_ID_FFVHUFF || (sup_globalheader(coCfg->codecId) && coCfg->globalHeader);
+    return coCfg->codecId==CODEC_ID_HUFFYUV || coCfg->codecId==CODEC_ID_FFVHUFF;
 }
 bool TvideoCodecLibavcodec::getExtradata(const void* *ptr,size_t *len)
 {
@@ -1105,17 +1079,12 @@ LRESULT TvideoCodecLibavcodec::beginCompress(int cfgcomode,uint64_t csp,const Tr
         return ICERR_ERROR;
     }
 
-	avctx=libavcodec->avcodec_alloc_context(avcodec);
+    avctx=libavcodec->avcodec_alloc_context(avcodec);
     frame=libavcodec->avcodec_alloc_frame();
 
     this->cfgcomode=cfgcomode;
 
-    if (coCfg->numthreads>1 && sup_threads_enc(coCfg->codecId)) {
-    		threadcount=coCfg->numthreads;
-    } else {
-        threadcount=1;
-    }
-    avctx->thread_count=threadcount;
+    avctx->thread_count = 1;
 
     avctx->width=r.dx;
     avctx->height=r.dy;
@@ -1130,58 +1099,13 @@ LRESULT TvideoCodecLibavcodec::beginCompress(int cfgcomode,uint64_t csp,const Tr
     }
     if (coCfg->codecId==CODEC_ID_FFV1) {
         avctx->gop_size=coCfg->ffv1_key_interval;
-    } else {
-        avctx->gop_size=coCfg->max_key_interval;
     }
 
     avctx->codec_tag=coCfg->fourcc;
-    if (sup_interlace(coCfg->codecId) && coCfg->interlacing) {
-        avctx->flags|=CODEC_FLAG_INTERLACED_DCT|CODEC_FLAG_INTERLACED_ME;
-    }
-    if (sup_globalheader(coCfg->codecId) && coCfg->globalHeader) {
-        avctx->flags|=CODEC_FLAG_GLOBAL_HEADER;
-    }
-    if (sup_part(coCfg->codecId) &&coCfg->part) {
-        avctx->flags|=CODEC_FLAG_PART;
-    }
-    if (coCfg->codecId!=CODEC_ID_H261) {
-        avctx->mb_decision=coCfg->me_hq;
-    }
-    if (coCfg->me_4mv && sup_4mv(coCfg->codecId)) {
-        avctx->flags|=CODEC_FLAG_4MV;
-    }
-    if (sup_qpel(coCfg->codecId) && coCfg->me_qpel) {
-        avctx->flags|=CODEC_FLAG_QPEL;
-        avctx->me_subpel_quality=coCfg->me_subq;
-    }
     psnr=deci->getParam2(IDFF_enc_psnr);
     if (psnr) {
         avctx->flags|=CODEC_FLAG_PSNR;
     }
-    if (coCfg->me_mv0 && sup_me_mv0(coCfg->codecId) && coCfg->me_hq>0) {
-        avctx->flags|=CODEC_FLAG_MV0;
-    }
-    avctx->me_cmp=coCfg->me_cmp;
-    if (coCfg->me_cmp_chroma && !coCfg->gray) {
-        avctx->me_cmp|=FF_CMP_CHROMA;
-    }
-    avctx->me_sub_cmp=coCfg->me_subcmp;
-    if (coCfg->me_subcmp_chroma && !coCfg->gray) {
-        avctx->me_sub_cmp|=FF_CMP_CHROMA;
-    }
-    avctx->mb_cmp=coCfg->mb_cmp;
-    if (coCfg->mb_cmp_chroma && !coCfg->gray) {
-        avctx->mb_cmp|=FF_CMP_CHROMA;
-    }
-    avctx->dia_size=Tlibavcodec::dia_sizes[coCfg->dia_size].size;
-    avctx->last_predictor_count=coCfg->me_last_predictor_count;
-    avctx->pre_me=coCfg->me_prepass;
-    avctx->me_pre_cmp=coCfg->me_precmp;
-    if (coCfg->me_precmp_chroma && !coCfg->gray) {
-        avctx->me_pre_cmp|=FF_CMP_CHROMA;
-    }
-    avctx->pre_dia_size=Tlibavcodec::dia_sizes[coCfg->dia_size_pre].size;
-    avctx->nsse_weight=coCfg->me_nsse_weight;
     if (sup_gray(coCfg->codecId) && coCfg->gray) {
         avctx->flags|=CODEC_FLAG_GRAY;
     }
@@ -1206,25 +1130,6 @@ LRESULT TvideoCodecLibavcodec::beginCompress(int cfgcomode,uint64_t csp,const Tr
         avctx->i_quant_offset=0.0f;
     }
 
-    if (coCfg->trellisquant && sup_trellisQuant(coCfg->codecId)) {
-        avctx->trellis=1;
-        if (coCfg->me_cbp_rd && sup_cbp_rd(coCfg->codecId)) {
-            avctx->flags|=CODEC_FLAG_CBP_RD;
-        }
-    }
-    if (coCfg->quant_type==QUANT::MPEG && sup_MPEGquant(coCfg->codecId)) {
-        avctx->mpeg_quant=1;
-    } else if (coCfg->quant_type==QUANT::CUSTOM && sup_customQuantTables(coCfg->codecId)) {
-        avctx->mpeg_quant=1;
-        avctx->intra_matrix=(uint16_t*)malloc(sizeof(uint16_t)*64);
-        avctx->inter_matrix=(uint16_t*)malloc(sizeof(uint16_t)*64);
-        ownmatrices=true;
-        for (int i=0; i<64; i++) {
-            avctx->intra_matrix[i]=((uint8_t*)&coCfg->qmatrix_intra_custom0)[i];
-            avctx->inter_matrix[i]=((uint8_t*)&coCfg->qmatrix_inter_custom0)[i];
-        }
-    }
-
     if (sup_quantBias(coCfg->codecId)) {
         if (coCfg->isIntraQuantBias) {
             avctx->intra_quant_bias=coCfg->intraQuantBias;
@@ -1237,13 +1142,10 @@ LRESULT TvideoCodecLibavcodec::beginCompress(int cfgcomode,uint64_t csp,const Tr
     if (sup_qns(coCfg->codecId)) {
         avctx->quantizer_noise_shaping=coCfg->qns;
     }
-    if (mpeg2_codec(coCfg->codecId)) {
-        avctx->intra_dc_precision=coCfg->mpeg2_dc_prec;
-    }
 
     avctx->pix_fmt=PIX_FMT_YUV420P;
     switch (coCfg->codecId) {
-		case CODEC_ID_HUFFYUV:
+        case CODEC_ID_HUFFYUV:
         case CODEC_ID_FFVHUFF: {
             avctx->strict_std_compliance=FF_COMPLIANCE_EXPERIMENTAL;
             avctx->prediction_method=coCfg->huffyuv_pred;
@@ -1298,49 +1200,6 @@ LRESULT TvideoCodecLibavcodec::beginCompress(int cfgcomode,uint64_t csp,const Tr
             }
             break;
         }
-        case CODEC_ID_DVVIDEO: {
-            PixelFormat lavc_csp=csp_ffdshow2lavc(csp);
-            if (!coCfg->getDVprofile(avctx->width,avctx->height,lavc_csp)) {
-                deci->dbgError(_l("Can't find matching DV profile\r\nDV supports 720x480 and 720x576."));
-                return ICERR_ERROR;
-            } else {
-                avctx->pix_fmt=lavc_csp;
-            }
-            break;
-        }
-        case CODEC_ID_H261: {
-            if ((avctx->width==176 && avctx->height==144) || (avctx->width==352 && avctx->height==288)) {
-                break;
-            } else {
-                int errorbox;
-                deci->getParam(IDFF_errorbox,&errorbox);
-                if (errorbox) {
-                    MessageBox(NULL,_l("h.261 supports 176x144 and 352x288"),_l("ffdshow libavcodec encoder error"),MB_ICONERROR|MB_OK);
-                }
-                return ICERR_ERROR;
-            }
-        }
-        case CODEC_ID_SVQ1:
-            avctx->pix_fmt=PIX_FMT_YUV410P;
-            break;
-            break;
-        case CODEC_ID_H263P:
-            avctx->flags|=coCfg->H263Pflags;
-            break;
-        case CODEC_ID_H263:
-            avctx->flags|=coCfg->H263Pflags&CODEC_FLAG_OBMC;
-            break;
-        case CODEC_ID_MPEG4:
-            avctx->flags|=coCfg->H263Pflags&CODEC_FLAG_LOOP_FILTER;
-            break;
-        case CODEC_ID_MPEG2VIDEO:
-            if (coCfg->svcd_scan_offset) {
-                avctx->flags|=CODEC_FLAG_SVCD_SCAN_OFFSET;
-            }
-            break;
-    }
-    if (avctx->flags&CODEC_FLAG_OBMC && coCfg->me_hq!=FF_MB_DECISION_SIMPLE) {
-        avctx->flags&=~CODEC_FLAG_OBMC;
     }
 
     switch (cfgcomode) {
@@ -1348,7 +1207,6 @@ LRESULT TvideoCodecLibavcodec::beginCompress(int cfgcomode,uint64_t csp,const Tr
             avctx->bit_rate=coCfg->bitrate1000*1000;
             avctx->bit_rate_tolerance=coCfg->ff1_vratetol*8*1000;
             avctx->qcompress=coCfg->ff1_vqcomp/100.0f;
-            avctx->qblur=(coCfg->ff1_stats_mode&FFSTATS::WRITE?coCfg->ff1_vqblur2:coCfg->ff1_vqblur1)/100.0f;
             avctx->max_qdiff=coCfg->ff1_vqdiff;
             avctx->rc_qsquish=coCfg->ff1_rc_squish?1.0f:0.0f;
             avctx->rc_max_rate   =coCfg->ff1_rc_max_rate1000*1000;
@@ -1374,117 +1232,12 @@ LRESULT TvideoCodecLibavcodec::beginCompress(int cfgcomode,uint64_t csp,const Tr
             return ICERR_ERROR;
     }
 
-    if (sup_LAVC2PASS(coCfg->codecId)) {
-        if (coCfg->ff1_stats_mode&FFSTATS::READ && cfgcomode==ENC_MODE::CBR) {
-            statsfile=fopen(coCfg->ff1_stats_flnm,_l("rb"));
-            if (statsfile) {
-                avctx->flags|=CODEC_FLAG_PASS2;
-                int statslen=_filelength(fileno(statsfile));
-                avctx->stats_in=(char*)malloc(statslen+1);
-                avctx->stats_in[statslen]='\0';
-                fread(avctx->stats_in,1,statslen,statsfile);
-                fclose(statsfile);
-                statsfile=NULL;
-            }
-        }
-        if (coCfg->ff1_stats_mode&FFSTATS::WRITE) {
-            statsfile=fopen(coCfg->ff1_stats_flnm,_l("wt"));
-            if (statsfile) {
-                avctx->flags|=CODEC_FLAG_PASS1;
-            }
-        }
-    }
-
     if (sup_quantProps(coCfg->codecId) && coCfg->is_lavc_nr) {
         avctx->noise_reduction=coCfg->lavc_nr;
     }
 
-    avctx->sample_aspect_ratio=coCfg->sar(avctx->width,avctx->height).reduce(255);
-
-    if (sup_bframes(coCfg->codecId) && coCfg->isBframes) {
-        avctx->max_b_frames=coCfg->max_b_frames;
-        avctx->b_quant_factor=coCfg->b_quant_factor/100.0f;
-        avctx->b_quant_offset=coCfg->b_quant_offset/100.0f;
-        avctx->b_frame_strategy=coCfg->b_dynamic && !(avctx->flags&CODEC_FLAG_PASS2)?1:0;
-        avctx->bidir_refine=coCfg->b_refine;
-        if (coCfg->dx50bvop && sup_closedGop(coCfg->codecId)) {
-            avctx->flags|=CODEC_FLAG_CLOSED_GOP;
-            avctx->scenechange_threshold=1000000000;
-        }
-    }
-
-    if (sup_masking(coCfg->codecId)) {
-        if (coCfg->is_ff_lumi_masking) {
-            avctx->lumi_masking=coCfg->ff_lumi_masking1000/1000.0f;
-        }
-        if (coCfg->is_ff_temporal_cplx_masking) {
-            avctx->temporal_cplx_masking=coCfg->ff_temporal_cplx_masking1000/1000.0f;
-        }
-        if (coCfg->is_ff_spatial_cplx_masking) {
-            avctx->spatial_cplx_masking=coCfg->ff_spatial_cplx_masking1000/1000.0f;
-        }
-        if (coCfg->is_ff_p_masking) {
-            avctx->p_masking=coCfg->ff_p_masking1000/1000.0f;
-        }
-        if (coCfg->is_ff_dark_masking) {
-            avctx->dark_masking=coCfg->ff_dark_masking1000/1000.0f;
-        }
-        if (coCfg->is_ff_border_masking) {
-            avctx->border_masking=coCfg->ff_border_masking1000/1000.0f;
-        }
-        if (coCfg->ff_naq) {
-            avctx->flags|=CODEC_FLAG_NORMALIZE_AQP;
-        }
-        if (coCfg->isElimLum) {
-            avctx->luma_elim_threshold=coCfg->elimLumThres;
-        }
-        if (coCfg->isElimChrom && !coCfg->gray) {
-            avctx->chroma_elim_threshold=coCfg->elimChromThres;
-        }
-    }
-    isAdaptive=coCfg->isLAVCadaptiveQuant();
-    if (isAdaptive) {
-        avctx->lmin=coCfg->q_mb_min*FF_QP2LAMBDA;
-        avctx->lmax=coCfg->q_mb_max*FF_QP2LAMBDA;
-    } else {
-        avctx->lmin=coCfg->getMinMaxQuant().first *FF_QP2LAMBDA;
-        avctx->lmax=coCfg->getMinMaxQuant().second*FF_QP2LAMBDA;
-    }
-
     RcOverride rces[2];
     int rcescount=0;
-    if (coCfg->isCreditsStart && cfgcomode==ENC_MODE::CBR && coCfg->ff1_stats_mode&FFSTATS::READ) {
-        RcOverride &rce=rces[rcescount];
-        rce.start_frame=coCfg->creditsStartBegin;
-        rce.end_frame=coCfg->creditsStartEnd;
-        switch (coCfg->credits_mode) {
-            case CREDITS_MODE::QUANT:
-                rce.qscale=coCfg->limitq(coCfg->credits_quant_i);
-                rce.quality_factor=1;
-                break;
-            case CREDITS_MODE::PERCENT:
-                rce.qscale=0;
-                rce.quality_factor=coCfg->credits_percent/100.0f;
-                break;
-        }
-        rcescount++;
-    }
-    if (coCfg->isCreditsEnd && cfgcomode==ENC_MODE::CBR && coCfg->ff1_stats_mode&FFSTATS::READ) {
-        RcOverride &rce=rces[rcescount];
-        rce.start_frame=coCfg->creditsEndBegin;
-        rce.end_frame=coCfg->creditsEndEnd;
-        switch (coCfg->credits_mode) {
-            case CREDITS_MODE::QUANT:
-                rce.qscale=coCfg->limitq(coCfg->credits_quant_i);
-                rce.quality_factor=1;
-                break;
-            case CREDITS_MODE::PERCENT:
-                rce.qscale=0;
-                rce.quality_factor=coCfg->credits_percent/100.0f;
-                break;
-        }
-        rcescount++;
-    }
     if ((avctx->rc_override_count=rcescount)!=0) {
         avctx->rc_override=rces;
     }
@@ -1530,14 +1283,10 @@ HRESULT TvideoCodecLibavcodec::compress(const TffPict &pict,TencFrameParams &par
         avctx->qmin_b=avctx->qmax_b=0;
     }
 
-    if (isAdaptive)
-        if (!coCfg->isInCredits(params.framenum)) {
-            avctx->lmin=coCfg->q_mb_min*FF_QP2LAMBDA;
-            avctx->lmax=coCfg->q_mb_max*FF_QP2LAMBDA;
-        } else {
-            avctx->lmin=coCfg->getMinMaxQuant().first *FF_QP2LAMBDA;
-            avctx->lmax=coCfg->getMinMaxQuant().second*FF_QP2LAMBDA;
-        }
+    if (isAdaptive) {
+        avctx->lmin=coCfg->q_mb_min*FF_QP2LAMBDA;
+        avctx->lmax=coCfg->q_mb_max*FF_QP2LAMBDA;
+    }
 
     frame->top_field_first=(avctx->flags&CODEC_FLAG_INTERLACED_DCT && coCfg->interlacing_tff)?1:0;
 
@@ -1573,9 +1322,6 @@ HRESULT TvideoCodecLibavcodec::compress(const TffPict &pict,TencFrameParams &par
             return sinkE->deliverError();
         } else if (params.length==0 && flushing) {
             break;
-        }
-        if (coCfg->ff1_stats_mode&FFSTATS::WRITE && statsfile) {
-            fprintf(statsfile,"%s",avctx->stats_out);
         }
 
         if (/*!isAdaptive || */!avctx->coded_frame->qscale_table) {

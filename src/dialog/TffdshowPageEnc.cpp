@@ -22,24 +22,12 @@
 #include "Cgraph.h"
 #include "Cgeneric.h"
 #include "CgenericHuffyuv.h"
-#include "CgenericWmv9.h"
 #include "CgenericRAW.h"
 #include "CgenericFFV1.h"
 #include "CgenericLJPEG.h"
 #include "CgenericDV.h"
-#include "Cme.h"
-#include "CmeXvid.h"
 #include "Cquant.h"
-#include "CquantTables.h"
-#include "Cmasking.h"
-#include "CmaskingXVID.h"
 #include "Conepass.h"
-#include "ConepassXvid.h"
-#include "Ccredits.h"
-#include "CfirstPass.h"
-#include "CsecondPass.h"
-#include "CcurveNormal.h"
-#include "CcurveAlt.h"
 #include "Cin.h"
 #include "Cout.h"
 #include "Ctray.h"
@@ -53,9 +41,6 @@ const char_t* TffdshowPageEnc::encModeNames[]= {
     _l("1 pass - Average bitrate"),
     _l("1 pass - Quality"),
     _l("1 pass - Quantizer"),
-    _l("2 passes - 1st pass"),
-    _l("2 passes - 2nd pass ext"),
-    _l("2 passes - 2nd pass int")
 };
 
 CUnknown* WINAPI TffdshowPageEncVFW::CreateInstance(LPUNKNOWN punk,HRESULT *phr)
@@ -167,33 +152,13 @@ void TffdshowPageEnc::onActivate(void)
     } else {
         addTI(&tvis,TconfPages(new TgenericPage(this),
                                new TgenericHuffyuvPage(this),
-                               new TgenericWmv9page(this),
                                new TgenericRAWpage(this),
                                new TgenericFFV1page(this),
                                new TgenericLJPEGpage(this),
                                new TgenericDVpage(this),
                                NULL),&localCfg.codecId);
-        addTI(&tvis,TconfPages(new TmePage(this),
-                               new TmeXvidPage(this),
-                               NULL),&localCfg.codecId);
         HTREEITEM htiQuant=addTI(&tvis,new TquantPage(this))->hti;
         tvis.hParent=htiQuant;
-        addTI(&tvis,new TquantTablesPage(this));
-        tvis.hParent=NULL;
-        TreeView_Expand(htv,htiQuant,TVE_EXPAND);
-        addTI(&tvis,TconfPages(new TmaskingPage(this),
-                               new TmaskingPageXvid(this),
-                               NULL),&localCfg.codecId);
-        addTI(&tvis,TconfPages(new TonePassPage(this),
-                               new TonePassXvidPage(this),
-                               NULL),&localCfg.codecId);
-        addTI(&tvis,new TcreditsPage(this));
-        addTI(&tvis,new TfirstPassPage(this));
-        HTREEITEM htiSecond=addTI(&tvis,new TsecondPassPage(this))->hti;
-        tvis.hParent=htiSecond;
-        addTI(&tvis,new TcurveNormalPage(this));
-        addTI(&tvis,new TcurveAltPage(this));
-        TreeView_Expand(htv,htiSecond,TVE_EXPAND);
         tvis.hParent=NULL;
         addTI(&tvis,new TinPage(this));
         addTI(&tvis,new ToutPage(this));
@@ -351,15 +316,6 @@ void TffdshowPageEnc::codec2dlg(void)
                 }
                 if (sup_VBR_QUANT(codecId)) {
                     cbxAdd(IDC_CBX_MODES,_(IDC_CBX_MODES,encModeNames[ENC_MODE::VBR_QUANT]),ENC_MODE::VBR_QUANT);
-                }
-                if (sup_XVID2PASS(codecId) && sup_perFrameQuant(codecId) && codecId != CODEC_ID_MJPEG) {
-                    cbxAdd(IDC_CBX_MODES,_(IDC_CBX_MODES,encModeNames[ENC_MODE::PASS2_1]),ENC_MODE::PASS2_1);
-                }
-                if (sup_XVID2PASS(codecId) && sup_perFrameQuant(codecId) && codecId != CODEC_ID_MJPEG) {
-                    cbxAdd(IDC_CBX_MODES,_(IDC_CBX_MODES,encModeNames[ENC_MODE::PASS2_2_INT]),ENC_MODE::PASS2_2_INT);
-                }
-                if (sup_XVID2PASS(codecId) && sup_perFrameQuant(codecId) && codecId != CODEC_ID_MJPEG) {
-                    cbxAdd(IDC_CBX_MODES,_(IDC_CBX_MODES,encModeNames[ENC_MODE::PASS2_2_EXT]),ENC_MODE::PASS2_2_EXT);
                 }
                 static const int idModes[]= {IDC_LBL_MODES,IDC_CBX_MODES,0};
                 enable(cbxGetItemCount(IDC_CBX_MODES)!=0,idModes);

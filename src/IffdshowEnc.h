@@ -14,11 +14,8 @@ DECLARE_INTERFACE_(IffdshowEnc, IUnknown)
 {
     STDMETHOD (getEncStats)(TencStats* *encStatsPtr) PURE;
     STDMETHOD (getFFproc)(TffProcVideo* *procPtr) PURE;
-    STDMETHOD (isLAVCadaptiveQuant)(void) PURE;
     STDMETHOD (isQuantControlActive)(void) PURE;
-    STDMETHOD (getCustomQuantMatrixes)(unsigned char* *intra8,unsigned char* *inter8,unsigned char* *intra4Y,unsigned char* *inter4Y,unsigned char* *intra4C,unsigned char* *inter4C) PURE;
     STDMETHOD (getEncoder)(int codecId,const Tencoder* *encPtr) PURE;
-    STDMETHOD_(int,getQuantType2)(int quant) PURE;
     STDMETHOD (getCoSettingsPtr)(const TcoSettings* *coSettingsPtr) PURE;
     STDMETHOD (setCoSettingsPtr)(TcoSettings *coSettingsPtr) PURE;
     STDMETHOD (loadEncodingSettings)(void) PURE;

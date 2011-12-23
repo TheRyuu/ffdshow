@@ -288,36 +288,11 @@ static __inline bool sup_VBR_QUAL(int x)
 }
 static __inline bool sup_VBR_QUANT(int x)
 {
-    return (lavc_codec(x) || xvid_codec(x)) && !lossless_codec(x);
-}
-static __inline bool sup_XVID2PASS(int x)
-{
-    return sup_VBR_QUANT(x);
-}
-static __inline bool sup_LAVC2PASS(int x)
-{
-    return (lavc_codec(x) && !lossless_codec(x) && x!=CODEC_ID_MJPEG && !raw_codec(x));
-}
-
-static __inline bool sup_interlace(int x)
-{
-    return x==CODEC_ID_MPEG4 || x==CODEC_ID_MPEG2VIDEO || xvid_codec(x);
+    return lavc_codec(x) && !lossless_codec(x);
 }
 static __inline bool sup_gray(int x)
 {
     return x!=CODEC_ID_LJPEG && x!=CODEC_ID_FFV1 && !wmv9_codec(x) && !raw_codec(x) && x!=CODEC_ID_DVVIDEO;
-}
-static __inline bool sup_globalheader(int x)
-{
-    return x==CODEC_ID_MPEG4;
-}
-static __inline bool sup_part(int x)
-{
-    return x==CODEC_ID_MPEG4;
-}
-static __inline bool sup_packedBitstream(int x)
-{
-    return xvid_codec(x);
 }
 static __inline bool sup_minKeySet(int x)
 {
@@ -327,61 +302,29 @@ static __inline bool sup_maxKeySet(int x)
 {
     return x!=CODEC_ID_MJPEG && !lossless_codec(x) && !raw_codec(x);
 }
-static __inline bool sup_bframes(int x)
-{
-    return x==CODEC_ID_MPEG4 || x==CODEC_ID_MPEG1VIDEO || x==CODEC_ID_MPEG2VIDEO || xvid_codec(x);
-}
 static __inline bool sup_adaptiveBframes(int x)
 {
     return lavc_codec(x);
-}
-static __inline bool sup_closedGop(int x)
-{
-    return sup_bframes(x);
-}
-static __inline bool sup_lavcme(int x)
-{
-    return lavc_codec(x) && x!=CODEC_ID_MJPEG && !lossless_codec(x);
 }
 static __inline bool sup_quantProps(int x)
 {
     return !lossless_codec(x) && !wmv9_codec(x) && !raw_codec(x);
 }
-static __inline bool sup_trellisQuant(int x)
-{
-    return x==CODEC_ID_MPEG4 || x==CODEC_ID_MPEG1VIDEO || x==CODEC_ID_MPEG2VIDEO || x==CODEC_ID_XVID4 || x==CODEC_ID_H263 || x==CODEC_ID_H263P;
-}
-static __inline bool sup_masking(int x)
-{
-    return x==CODEC_ID_MPEG4 || x==CODEC_ID_H263 || x==CODEC_ID_H263P || x==CODEC_ID_MPEG1VIDEO || x==CODEC_ID_MPEG2VIDEO || xvid_codec(x);
-}
 static __inline bool sup_lavcOnePass(int x)
 {
-    return (lavc_codec(x) && !lossless_codec(x));
+    return lavc_codec(x) && !lossless_codec(x);
 }
 static __inline bool sup_perFrameQuant(int x)
 {
     return !lossless_codec(x) && !wmv9_codec(x) && !raw_codec(x);
 }
-static __inline bool sup_4mv(int x)
-{
-    return x==CODEC_ID_MPEG4 || x==CODEC_ID_H263 || x==CODEC_ID_H263P;
-}
-static __inline bool sup_aspect(int x)
-{
-    return x==CODEC_ID_MPEG4 || x==CODEC_ID_MPEG1VIDEO || x==CODEC_ID_MPEG2VIDEO;
-}
 static __inline bool sup_PSNR(int x)
 {
-    return (lavc_codec(x) && !lossless_codec(x)) || xvid_codec(x);
+    return lavc_codec(x) && !lossless_codec(x);
 }
 static __inline bool sup_quantBias(int x)
 {
     return lavc_codec(x) && !lossless_codec(x);
-}
-static __inline bool sup_MPEGquant(int x)
-{
-    return x==CODEC_ID_MPEG4 || x==CODEC_ID_MSMPEG4V3 || x==CODEC_ID_MPEG2VIDEO || xvid_codec(x);
 }
 static __inline bool sup_lavcQuant(int x)
 {
@@ -391,18 +334,6 @@ static __inline bool sup_customQuantTables(int x)
 {
     return x==CODEC_ID_MPEG4 || xvid_codec(x) || x==CODEC_ID_MPEG1VIDEO || x==CODEC_ID_MPEG2VIDEO;
 }
-static __inline bool sup_qpel(int x)
-{
-    return x==CODEC_ID_MPEG4 || xvid_codec(x);
-}
-static __inline bool sup_gmc(int x)
-{
-    return xvid_codec(x);
-}
-static __inline bool sup_me_mv0(int x)
-{
-    return sup_lavcme(x);
-}
 static __inline bool sup_cbp_rd(int x)
 {
     return x==CODEC_ID_MPEG4;
@@ -410,10 +341,6 @@ static __inline bool sup_cbp_rd(int x)
 static __inline bool sup_qns(int x)
 {
     return lavc_codec(x) && sup_quantProps(x) && x!=CODEC_ID_MSMPEG4V3 && x!=CODEC_ID_MSMPEG4V2 && x!=CODEC_ID_MSMPEG4V1 && x!=CODEC_ID_WMV1 && x!=CODEC_ID_WMV2 && x!=CODEC_ID_MJPEG;
-}
-static __inline bool sup_threads_enc(int x)
-{
-    return x==CODEC_ID_MPEG1VIDEO || x==CODEC_ID_MPEG2VIDEO || x==CODEC_ID_XVID4;
 }
 static __inline bool sup_threads_dec_slice(int x)
 {

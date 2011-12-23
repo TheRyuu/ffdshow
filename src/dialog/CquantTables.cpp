@@ -338,52 +338,6 @@ void TquantTablesPageBase::translate(void)
     cbxSetCurSel(IDC_CBX_QUANT_TABLE,sel==CB_ERR?0:sel);
 }
 
-//============================================ TquantTablesPage ============================================
-bool TquantTablesPage::enabled(void)
-{
-    return sup_customQuantTables(codecId) && cfgGet(IDFF_enc_quant_type)==QUANT::CUSTOM;
-}
-
-TquantTablesPage::TquantTablesPage(TffdshowPageEnc *Iparent):TconfPageEnc(Iparent),base(new TquantTables(Iparent->deci))
-{
-    dialogId=IDD_QUANT_TABLES;
-    static const int props[]= {IDFF_enc_qmatrix_intra_custom0,IDFF_enc_qmatrix_intra_custom1,IDFF_enc_qmatrix_intra_custom2,IDFF_enc_qmatrix_intra_custom3,IDFF_enc_qmatrix_intra_custom4,IDFF_enc_qmatrix_intra_custom5,IDFF_enc_qmatrix_intra_custom6,IDFF_enc_qmatrix_intra_custom7,IDFF_enc_qmatrix_intra_custom8,IDFF_enc_qmatrix_intra_custom9,IDFF_enc_qmatrix_intra_custom10,IDFF_enc_qmatrix_intra_custom11,IDFF_enc_qmatrix_intra_custom12,IDFF_enc_qmatrix_intra_custom13,IDFF_enc_qmatrix_intra_custom14,IDFF_enc_qmatrix_intra_custom15,IDFF_enc_qmatrix_inter_custom0,IDFF_enc_qmatrix_inter_custom1,IDFF_enc_qmatrix_inter_custom2,IDFF_enc_qmatrix_inter_custom3,IDFF_enc_qmatrix_inter_custom4,IDFF_enc_qmatrix_inter_custom5,IDFF_enc_qmatrix_inter_custom6,IDFF_enc_qmatrix_inter_custom7,IDFF_enc_qmatrix_inter_custom8,IDFF_enc_qmatrix_inter_custom9,IDFF_enc_qmatrix_inter_custom10,IDFF_enc_qmatrix_inter_custom11,IDFF_enc_qmatrix_inter_custom12,IDFF_enc_qmatrix_inter_custom13,IDFF_enc_qmatrix_inter_custom14,IDFF_enc_qmatrix_inter_custom15,IDFF_enc_qmatrix_intra4x4Y_custom0,IDFF_enc_qmatrix_intra4x4Y_custom1,IDFF_enc_qmatrix_intra4x4Y_custom2,IDFF_enc_qmatrix_intra4x4Y_custom3,IDFF_enc_qmatrix_inter4x4Y_custom0,IDFF_enc_qmatrix_inter4x4Y_custom1,IDFF_enc_qmatrix_inter4x4Y_custom2,IDFF_enc_qmatrix_inter4x4Y_custom3,IDFF_enc_qmatrix_intra4x4C_custom0,IDFF_enc_qmatrix_intra4x4C_custom1,IDFF_enc_qmatrix_intra4x4C_custom2,IDFF_enc_qmatrix_intra4x4C_custom3,IDFF_enc_qmatrix_inter4x4C_custom0,IDFF_enc_qmatrix_inter4x4C_custom1,IDFF_enc_qmatrix_inter4x4C_custom2,IDFF_enc_qmatrix_inter4x4C_custom3,0};
-    propsIDs=props;
-    base->deciE=deciE;
-    base->parent=parent;
-}
-TquantTablesPage::~TquantTablesPage()
-{
-    delete base;
-}
-
-void TquantTablesPage::init(void)
-{
-    base->create(m_hwnd);
-}
-void TquantTablesPage::cfg2dlg(void)
-{
-    base->cfg2dlg();
-}
-void TquantTablesPage::translate(void)
-{
-    TconfPageEnc::translate();
-    base->translate();
-}
-
-int TquantTablesPage::TquantTables::getCodecId(void)
-{
-    return cfgGet(IDFF_enc_codecId);
-}
-HRESULT TquantTablesPage::TquantTables::getCustomQuantMatrixes(uint8_t* *intra8,uint8_t* *inter8,uint8_t* *intra4Y,uint8_t* *inter4Y,uint8_t* *intra4C,uint8_t* *inter4C)
-{
-    return deciE->getCustomQuantMatrixes(intra8,inter8,intra4Y,inter4Y,intra4C,inter4C);
-}
-void TquantTablesPage::TquantTables::setChange(void)
-{
-    parent->setChange();
-}
-
 //============================================ TcurrentQuantDlg ============================================
 TcurrentQuantDlg::TcurrentQuantDlg(HWND IhParent,IffdshowBase *Ideci,uint8_t *Iinter,uint8_t *Iintra,TquantTables *Ibase):
     TdlgWindow(IDD_QUANT_CURRENT,Ideci),

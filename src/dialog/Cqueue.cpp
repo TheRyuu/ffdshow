@@ -19,7 +19,6 @@
 #include "stdafx.h"
 #include "Cqueue.h"
 #include "TvideoCodec.h"
-#include "CquantTables.h"
 
 void TqueuePage::init(void)
 {
