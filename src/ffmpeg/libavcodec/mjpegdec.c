@@ -84,6 +84,7 @@ av_cold int ff_mjpeg_decode_init(AVCodecContext *avctx)
 
     if (!s->picture_ptr)
         s->picture_ptr = &s->picture;
+    avcodec_get_frame_defaults(&s->picture);
 
     s->avctx = avctx;
     dsputil_init(&s->dsp, avctx);
@@ -660,15 +661,19 @@ static int ljpeg_decode_rgb_scan(MJpegDecodeContext *s, int predictor, int point
                 s->restart_count = s->restart_interval;
 
             for(i=0;i<3;i++) {
-                int pred;
+                int pred, dc;
 
                 topleft[i]= top[i];
                 top[i]= buffer[mb_x][i];
 
                 PREDICT(pred, topleft[i], top[i], left[i], modified_predictor);
 
+                dc = mjpeg_decode_dc(s, s->dc_index[i]);
+                if(dc == 0xFFFF)
+                    return -1;
+
                 left[i]=
-                buffer[mb_x][i]= mask & (pred + (mjpeg_decode_dc(s, s->dc_index[i]) << point_transform));
+                buffer[mb_x][i]= mask & (pred + (dc << point_transform));
             }
 
             if (s->restart_interval && !--s->restart_count) {
@@ -894,9 +899,9 @@ static int mjpeg_decode_scan(MJpegDecodeContext *s, int nb_components, int Ah, i
             if (s->restart_interval && show_bits(&s->gb, i)  == (1<<i)-1){ /* skip RSTn */
                 int pos= get_bits_count(&s->gb);
                 align_get_bits(&s->gb);
-                while(show_bits(&s->gb, 8) == 0xFF)
+                while(get_bits_count(&s->gb) < s->gb.size_in_bits && show_bits(&s->gb, 8) == 0xFF)
                     skip_bits(&s->gb, 8);
-                if((get_bits(&s->gb, 8)&0xF8) == 0xD0){
+                if(get_bits_count(&s->gb) < s->gb.size_in_bits && (get_bits(&s->gb, 8)&0xF8) == 0xD0){
                     for (i=0; i<nb_components; i++) /* reset dc */
                         s->last_dc[i] = 1024;
                 }else{
