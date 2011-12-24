@@ -605,7 +605,8 @@ HRESULT TffdshowDecVideo::DecideBufferSizeVMR(IMemAllocator *pAlloc, ALLOCATOR_P
     }
     TffPictBase pictOut=inpin->pictIn;
     calcNewSize(pictOut);
-    ppropInputRequest->cbBuffer=pictOut.rectFull.dx*pictOut.rectFull.dy*4;
+    const TcspInfo *cspInfo = csp_getInfo(m_frame.dstColorspace);
+    ppropInputRequest->cbBuffer = ffalign(pictOut.rectFull.dx, 32) * pictOut.rectFull.dy * cspInfo->bpp >> 3;
     // cbAlign 16 causes problems with the resize filter
     //ppropInputRequest->cbAlign =1;
     ppropInputRequest->cbPrefix=0;
@@ -674,7 +675,8 @@ HRESULT TffdshowDecVideo::DecideBufferSizeOld(IMemAllocator *pAlloc, ALLOCATOR_P
 
     TffPictBase pictOut=inpin->pictIn;
     calcNewSize(pictOut);
-    ppropInputRequest->cbBuffer=pictOut.rectFull.dx*pictOut.rectFull.dy*4;
+    const TcspInfo *cspInfo = csp_getInfo(m_frame.dstColorspace);
+    ppropInputRequest->cbBuffer = ffalign(pictOut.rectFull.dx, 32) * pictOut.rectFull.dy * cspInfo->bpp >> 3;
     // cbAlign 16 causes problems with the resize filter */
     //ppropInputRequest->cbAlign =1;
     ppropInputRequest->cbPrefix=0;
