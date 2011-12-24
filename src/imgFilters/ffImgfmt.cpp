@@ -229,7 +229,7 @@ const TcspInfo cspInfos[]= {
     },
     {
         FF_CSP_420P10,_l("420P10"),
-        2,15, //Bpp
+        2,24, //Bpp
         3, //numplanes
         {0,1,1,0}, //shiftX
         {0,1,1,0}, //shiftY
@@ -238,7 +238,7 @@ const TcspInfo cspInfos[]= {
     },
     {
         FF_CSP_444P10,_l("444P10"),
-        2,30, //Bpp
+        2,48, //Bpp
         3, //numplanes
         {0,0,0,0}, //shiftX
         {0,0,0,0}, //shiftY
@@ -265,7 +265,7 @@ const TcspInfo cspInfos[]= {
     },
     {
         FF_CSP_422P10,_l("422P10"),
-        2,20, //Bpp
+        2,32, //Bpp
         3, //numplanes
         {0,1,1,0}, //shiftX
         {0,0,0,0}, //shiftY
