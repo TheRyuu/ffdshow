@@ -337,8 +337,6 @@ template <class _mm, int src_aligned, int dst_aligned> void TffdshowConverters2:
     pxor(ffff,ffff);
     pcmpeqb(ffff,ffff);
     for (int y = 0 ; y < dy ; y++) {
-        if (y == dy-1)
-            int a=0;
         const uint8_t *Y = srcY + y * stride_src;
         uint8_t *dst1 = dst + y * stride_dst;
         const uint8_t *Cb = srcCb + y * stride_src;
