@@ -57,6 +57,7 @@ Tconvert::Tconvert(IffdshowBase *deci,unsigned int Idx,unsigned int Idy,LONG dst
 Tconvert::Tconvert(Tlibavcodec *Ilibavcodec, bool highQualityRGB, unsigned int Idx, unsigned int Idy, const TrgbPrimaries &IrgbPrimaries, int rgbInterlaceMode, bool dithering, bool isMPEG1):
     TrgbPrimaries(IrgbPrimaries),
     m_wasChange(false),
+    m_dstSize(0),
     tmpcsp(0)
 {
     Ilibavcodec->AddRef();
