@@ -36,9 +36,10 @@
 #include "ffdshow_converters2.h"
 
 //======================================= Tconvert =======================================
-Tconvert::Tconvert(IffdshowBase *deci,unsigned int Idx,unsigned int Idy) :
+Tconvert::Tconvert(IffdshowBase *deci,unsigned int Idx,unsigned int Idy,LONG dstSize) :
     TrgbPrimaries(deci),
     m_wasChange(false),
+    m_dstSize(dstSize),
     tmpcsp(0)
 {
     Tlibavcodec *libavcodec;
@@ -205,6 +206,21 @@ int Tconvert::convert(uint64_t incsp0,
     }
     csp_yuv_order(outcsp,(unsigned char**)dst,dstStride);
     csp_vflip(outcsp,outcspInfo,(unsigned char**)dst,dstStride,dy);
+
+    // check if the dstination buffer is big enough
+    if (m_dstSize) {
+        const TcspInfo *cspInfo = csp_getInfo(outcsp);
+        LONG size = 0;
+        for (unsigned int i = 0 ; i < cspInfo->numPlanes ; i++)
+            size += dstStride[i] * dy >> cspInfo->shiftY[i];
+        if (m_dstSize < size) {
+            DPRINTF(L"ffdshow error: the down-stream filter prepared insufficient buffer. This can be a bug of the down-stream filter or ffdshow.");
+            if (cspInfo->numPlanes > 1 || !dstStride[0])
+                return 0;
+            dy = m_dstSize / dstStride[0];
+        }
+        m_dstSize = 0;
+    }
 
     if (wasChange || oldincsp!=incsp || oldoutcsp!=outcsp) {
         m_wasChange = true;

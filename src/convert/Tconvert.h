@@ -73,7 +73,8 @@ private:
     void freeTmpConvert(void);
 public:
     bool m_wasChange;
-    Tconvert(IffdshowBase *deci,unsigned int Idx,unsigned int Idy);
+    LONG m_dstSize;
+    Tconvert(IffdshowBase *deci,unsigned int Idx,unsigned int Idy,LONG dstSize=0);
     Tconvert(Tlibavcodec *Ilibavcodec,bool highQualityRGB,unsigned int Idx,unsigned int Idy,const TrgbPrimaries &IrgbPrimaries, int rgbInterlaceMode, bool dithering, bool isMPEG1);
     ~Tconvert();
     unsigned int dx,dy,outdy;

@@ -53,21 +53,10 @@ TimgFilterOutput::~TimgFilterOutput()
 HRESULT TimgFilterOutput::process(TffPict &pict,uint64_t dstcsp,unsigned char *dst[4],int dstStride[4],LONG &dstSize,const ToutputVideoSettings *cfg)
 {
     checkBorder(pict);
-    const TcspInfo *cspInfo = csp_getInfo(dstcsp);
-
-    LONG size = 0;
-    for (unsigned int i = 0 ; i < cspInfo->numPlanes ; i++)
-        size += dstStride[i] * pict.rectFull.dy;
-    if (dstSize < size) {
-        DPRINTF(L"ffdshow error: the down-stream filter prepared insufficient buffer. This can be a bug of the down-stream filter or ffdshow.");
-        if (cspInfo->numPlanes > 1 || !dstStride[0])
-            return E_FAIL;
-        pict.rectFull.dy = dstSize / dstStride[0];
-    }
-
     if (   !convert
             || convert->dx!=pict.rectFull.dx
             || convert->dy!=pict.rectFull.dy
+            || convert->m_dstSize!=dstSize
             || old_cspOptionsRgbInterlaceMode != cfg->cspOptionsRgbInterlaceMode
             || old_highQualityRGB != cfg->highQualityRGB
             || old_dithering != cfg->dithering
@@ -84,7 +73,7 @@ HRESULT TimgFilterOutput::process(TffPict &pict,uint64_t dstcsp,unsigned char *d
             delete convert;
         }
         vramBenchmark.init();
-        convert=new Tconvert(deci,pict.rectFull.dx,pict.rectFull.dy);
+        convert=new Tconvert(deci,pict.rectFull.dx,pict.rectFull.dy,dstSize);
     }
     stride_t cspstride[4] = {0,0,0,0};
     unsigned char *cspdst[4] = {0,0,0,0};
