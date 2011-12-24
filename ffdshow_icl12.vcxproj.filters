@@ -680,9 +680,6 @@
     <ClCompile Include="src\dialog\Cconvolver.cpp">
       <Filter>dialog</Filter>
     </ClCompile>
-    <ClCompile Include="src\dialog\Ccredits.cpp">
-      <Filter>dialog</Filter>
-    </ClCompile>
     <ClCompile Include="src\dialog\Ccrop.cpp">
       <Filter>dialog</Filter>
     </ClCompile>
@@ -690,12 +687,6 @@
       <Filter>dialog</Filter>
     </ClCompile>
     <ClCompile Include="src\dialog\CcspOptions.cpp">
-      <Filter>dialog</Filter>
-    </ClCompile>
-    <ClCompile Include="src\dialog\CcurveAlt.cpp">
-      <Filter>dialog</Filter>
-    </ClCompile>
-    <ClCompile Include="src\dialog\CcurveNormal.cpp">
       <Filter>dialog</Filter>
     </ClCompile>
     <ClCompile Include="src\dialog\Cdct.cpp">
@@ -746,9 +737,6 @@
     <ClCompile Include="src\dialog\Cfir.cpp">
       <Filter>dialog</Filter>
     </ClCompile>
-    <ClCompile Include="src\dialog\CfirstPass.cpp">
-      <Filter>dialog</Filter>
-    </ClCompile>
     <ClCompile Include="src\dialog\Cfont.cpp">
       <Filter>dialog</Filter>
     </ClCompile>
@@ -771,9 +759,6 @@
       <Filter>dialog</Filter>
     </ClCompile>
     <ClCompile Include="src\dialog\CgenericRAW.cpp">
-      <Filter>dialog</Filter>
-    </ClCompile>
-    <ClCompile Include="src\dialog\CgenericWmv9.cpp">
       <Filter>dialog</Filter>
     </ClCompile>
     <ClCompile Include="src\dialog\Cgrab.cpp">
@@ -806,18 +791,6 @@
     <ClCompile Include="src\dialog\Clogoaway.cpp">
       <Filter>dialog</Filter>
     </ClCompile>
-    <ClCompile Include="src\dialog\Cmasking.cpp">
-      <Filter>dialog</Filter>
-    </ClCompile>
-    <ClCompile Include="src\dialog\CmaskingXVID.cpp">
-      <Filter>dialog</Filter>
-    </ClCompile>
-    <ClCompile Include="src\dialog\Cme.cpp">
-      <Filter>dialog</Filter>
-    </ClCompile>
-    <ClCompile Include="src\dialog\CmeXvid.cpp">
-      <Filter>dialog</Filter>
-    </ClCompile>
     <ClCompile Include="src\dialog\Cmixer.cpp">
       <Filter>dialog</Filter>
     </ClCompile>
@@ -828,9 +801,6 @@
       <Filter>dialog</Filter>
     </ClCompile>
     <ClCompile Include="src\dialog\Conepass.cpp">
-      <Filter>dialog</Filter>
-    </ClCompile>
-    <ClCompile Include="src\dialog\ConepassXvid.cpp">
       <Filter>dialog</Filter>
     </ClCompile>
     <ClCompile Include="src\dialog\COSD.cpp">
@@ -866,9 +836,6 @@
     <ClCompile Include="src\dialog\Cquant.cpp">
       <Filter>dialog</Filter>
     </ClCompile>
-    <ClCompile Include="src\dialog\CquantTables.cpp">
-      <Filter>dialog</Filter>
-    </ClCompile>
     <ClCompile Include="src\dialog\Cqueue.cpp">
       <Filter>dialog</Filter>
     </ClCompile>
@@ -882,9 +849,6 @@
       <Filter>dialog</Filter>
     </ClCompile>
     <ClCompile Include="src\dialog\CresizeSettings.cpp">
-      <Filter>dialog</Filter>
-    </ClCompile>
-    <ClCompile Include="src\dialog\CsecondPass.cpp">
       <Filter>dialog</Filter>
     </ClCompile>
     <ClCompile Include="src\dialog\Csharpen.cpp">
@@ -915,9 +879,6 @@
       <Filter>dialog</Filter>
     </ClCompile>
     <ClCompile Include="src\dialog\Cwinamp2.cpp">
-      <Filter>dialog</Filter>
-    </ClCompile>
-    <ClCompile Include="src\dialog\TbitrateDlg.cpp">
       <Filter>dialog</Filter>
     </ClCompile>
     <ClCompile Include="src\dialog\TcompatibilityList.cpp">
@@ -954,9 +915,6 @@
       <Filter>dialog</Filter>
     </ClCompile>
     <ClCompile Include="src\dialog\TpageSite.cpp">
-      <Filter>dialog</Filter>
-    </ClCompile>
-    <ClCompile Include="src\dialog\TperfectDlg.cpp">
       <Filter>dialog</Filter>
     </ClCompile>
     <ClCompile Include="src\dialog\TpresetAutoload.cpp">
@@ -1423,6 +1381,9 @@
     </ClCompile>
     <ClCompile Include="src\convert\ffdshow_converters2.cpp">
       <Filter>convert</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dialog\CquantTables.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1953,9 +1914,6 @@
     <ClInclude Include="src\dialog\Cconvolver.h">
       <Filter>dialog</Filter>
     </ClInclude>
-    <ClInclude Include="src\dialog\Ccredits.h">
-      <Filter>dialog</Filter>
-    </ClInclude>
     <ClInclude Include="src\dialog\Ccrop.h">
       <Filter>dialog</Filter>
     </ClInclude>
@@ -1963,12 +1921,6 @@
       <Filter>dialog</Filter>
     </ClInclude>
     <ClInclude Include="src\dialog\CcspOptions.h">
-      <Filter>dialog</Filter>
-    </ClInclude>
-    <ClInclude Include="src\dialog\CcurveAlt.h">
-      <Filter>dialog</Filter>
-    </ClInclude>
-    <ClInclude Include="src\dialog\CcurveNormal.h">
       <Filter>dialog</Filter>
     </ClInclude>
     <ClInclude Include="src\dialog\Cdct.h">
@@ -2022,9 +1974,6 @@
     <ClInclude Include="src\dialog\Cfir.h">
       <Filter>dialog</Filter>
     </ClInclude>
-    <ClInclude Include="src\dialog\CfirstPass.h">
-      <Filter>dialog</Filter>
-    </ClInclude>
     <ClInclude Include="src\dialog\Cfont.h">
       <Filter>dialog</Filter>
     </ClInclude>
@@ -2047,9 +1996,6 @@
       <Filter>dialog</Filter>
     </ClInclude>
     <ClInclude Include="src\dialog\CgenericRAW.h">
-      <Filter>dialog</Filter>
-    </ClInclude>
-    <ClInclude Include="src\dialog\CgenericWmv9.h">
       <Filter>dialog</Filter>
     </ClInclude>
     <ClInclude Include="src\dialog\Cgrab.h">
@@ -2082,18 +2028,6 @@
     <ClInclude Include="src\dialog\Clogoaway.h">
       <Filter>dialog</Filter>
     </ClInclude>
-    <ClInclude Include="src\dialog\Cmasking.h">
-      <Filter>dialog</Filter>
-    </ClInclude>
-    <ClInclude Include="src\dialog\CmaskingXVID.h">
-      <Filter>dialog</Filter>
-    </ClInclude>
-    <ClInclude Include="src\dialog\Cme.h">
-      <Filter>dialog</Filter>
-    </ClInclude>
-    <ClInclude Include="src\dialog\CmeXvid.h">
-      <Filter>dialog</Filter>
-    </ClInclude>
     <ClInclude Include="src\dialog\Cmixer.h">
       <Filter>dialog</Filter>
     </ClInclude>
@@ -2104,9 +2038,6 @@
       <Filter>dialog</Filter>
     </ClInclude>
     <ClInclude Include="src\dialog\Conepass.h">
-      <Filter>dialog</Filter>
-    </ClInclude>
-    <ClInclude Include="src\dialog\ConepassXvid.h">
       <Filter>dialog</Filter>
     </ClInclude>
     <ClInclude Include="src\dialog\COSD.h">
@@ -2142,9 +2073,6 @@
     <ClInclude Include="src\dialog\Cquant.h">
       <Filter>dialog</Filter>
     </ClInclude>
-    <ClInclude Include="src\dialog\CquantTables.h">
-      <Filter>dialog</Filter>
-    </ClInclude>
     <ClInclude Include="src\dialog\Cqueue.h">
       <Filter>dialog</Filter>
     </ClInclude>
@@ -2158,9 +2086,6 @@
       <Filter>dialog</Filter>
     </ClInclude>
     <ClInclude Include="src\dialog\CresizeSettings.h">
-      <Filter>dialog</Filter>
-    </ClInclude>
-    <ClInclude Include="src\dialog\CsecondPass.h">
       <Filter>dialog</Filter>
     </ClInclude>
     <ClInclude Include="src\dialog\Csharpen.h">
@@ -2197,9 +2122,6 @@
       <Filter>dialog</Filter>
     </ClInclude>
     <ClInclude Include="src\dialog\ISpecifyPropertyPagesVE.h">
-      <Filter>dialog</Filter>
-    </ClInclude>
-    <ClInclude Include="src\dialog\TbitrateDlg.h">
       <Filter>dialog</Filter>
     </ClInclude>
     <ClInclude Include="src\dialog\TcompatibilityList.h">
@@ -2245,9 +2167,6 @@
       <Filter>dialog</Filter>
     </ClInclude>
     <ClInclude Include="src\dialog\TpageSite.h">
-      <Filter>dialog</Filter>
-    </ClInclude>
-    <ClInclude Include="src\dialog\TperfectDlg.h">
       <Filter>dialog</Filter>
     </ClInclude>
     <ClInclude Include="src\dialog\TpresetAutoload.h">
@@ -2798,6 +2717,9 @@
     </ClInclude>
     <ClInclude Include="src\subtitles\SeparableFilter.h">
       <Filter>subtitles</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dialog\CquantTables.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

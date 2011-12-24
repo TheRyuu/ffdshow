@@ -444,12 +444,9 @@
     <ClCompile Include="src\dialog\CchannelSwap.cpp" />
     <ClCompile Include="src\dialog\Ccodecs.cpp" />
     <ClCompile Include="src\dialog\Cconvolver.cpp" />
-    <ClCompile Include="src\dialog\Ccredits.cpp" />
     <ClCompile Include="src\dialog\Ccrop.cpp" />
     <ClCompile Include="src\dialog\Ccrystality.cpp" />
     <ClCompile Include="src\dialog\CcspOptions.cpp" />
-    <ClCompile Include="src\dialog\CcurveAlt.cpp" />
-    <ClCompile Include="src\dialog\CcurveNormal.cpp" />
     <ClCompile Include="src\dialog\Cdct.cpp" />
     <ClCompile Include="src\dialog\CdecoderOptions.cpp" />
     <ClCompile Include="src\dialog\Cdeinterlace.cpp" />
@@ -466,7 +463,6 @@
     <ClCompile Include="src\dialog\CDXVAOptions.cpp" />
     <ClCompile Include="src\dialog\Ceq.cpp" />
     <ClCompile Include="src\dialog\Cfir.cpp" />
-    <ClCompile Include="src\dialog\CfirstPass.cpp" />
     <ClCompile Include="src\dialog\Cfont.cpp" />
     <ClCompile Include="src\dialog\Cfreeverb.cpp" />
     <ClCompile Include="src\dialog\Cgeneric.cpp" />
@@ -475,7 +471,6 @@
     <ClCompile Include="src\dialog\CgenericHuffyuv.cpp" />
     <ClCompile Include="src\dialog\CgenericLJPEG.cpp" />
     <ClCompile Include="src\dialog\CgenericRAW.cpp" />
-    <ClCompile Include="src\dialog\CgenericWmv9.cpp" />
     <ClCompile Include="src\dialog\Cgrab.cpp" />
     <ClCompile Include="src\dialog\CgradFun.cpp" />
     <ClCompile Include="src\dialog\Cgraph.cpp" />
@@ -486,15 +481,10 @@
     <ClCompile Include="src\dialog\Clevels.cpp" />
     <ClCompile Include="src\dialog\ClfeCrossover.cpp" />
     <ClCompile Include="src\dialog\Clogoaway.cpp" />
-    <ClCompile Include="src\dialog\Cmasking.cpp" />
-    <ClCompile Include="src\dialog\CmaskingXVID.cpp" />
-    <ClCompile Include="src\dialog\Cme.cpp" />
-    <ClCompile Include="src\dialog\CmeXvid.cpp" />
     <ClCompile Include="src\dialog\Cmixer.cpp" />
     <ClCompile Include="src\dialog\Cnoise.cpp" />
     <ClCompile Include="src\dialog\Coffset.cpp" />
     <ClCompile Include="src\dialog\Conepass.cpp" />
-    <ClCompile Include="src\dialog\ConepassXvid.cpp" />
     <ClCompile Include="src\dialog\COSD.cpp" />
     <ClCompile Include="src\dialog\Cout.cpp" />
     <ClCompile Include="src\dialog\Coutcsps.cpp" />
@@ -512,7 +502,6 @@
     <ClCompile Include="src\dialog\CresizeAspect.cpp" />
     <ClCompile Include="src\dialog\CresizeBorders.cpp" />
     <ClCompile Include="src\dialog\CresizeSettings.cpp" />
-    <ClCompile Include="src\dialog\CsecondPass.cpp" />
     <ClCompile Include="src\dialog\Csharpen.cpp" />
     <ClCompile Include="src\dialog\CshowMV.cpp" />
     <ClCompile Include="src\dialog\Csubtitles.cpp" />
@@ -523,7 +512,6 @@
     <ClCompile Include="src\dialog\Cvolume.cpp" />
     <ClCompile Include="src\dialog\Cwarpsharp.cpp" />
     <ClCompile Include="src\dialog\Cwinamp2.cpp" />
-    <ClCompile Include="src\dialog\TbitrateDlg.cpp" />
     <ClCompile Include="src\dialog\TcompatibilityList.cpp" />
     <ClCompile Include="src\dialog\TcompatibilityManager.cpp" />
     <ClCompile Include="src\dialog\TconfPageBase.cpp" />
@@ -536,7 +524,6 @@
     <ClCompile Include="src\dialog\TffdshowPageEnc.cpp" />
     <ClCompile Include="src\dialog\TflatButtons.cpp" />
     <ClCompile Include="src\dialog\TpageSite.cpp" />
-    <ClCompile Include="src\dialog\TperfectDlg.cpp" />
     <ClCompile Include="src\dialog\TpresetAutoload.cpp" />
     <ClCompile Include="src\dialog\TpresetsEncDlg.cpp" />
     <ClCompile Include="src\dialog\TSpecifyPropertyPagesVE.cpp" />
@@ -662,11 +649,9 @@
     <ClCompile Include="src\audioFilters\freeverb\revmodel.cpp" />
     <ClCompile Include="src\audioFilters\resample\resample2.cpp" />
     <ClCompile Include="src\audioFilters\TffProcAudio.cpp" />
-    <ClCompile Include="src\2pass.cpp" />
     <ClCompile Include="src\codecs\TencStats.cpp" />
     <ClCompile Include="src\TffdshowEnc.cpp" />
     <ClCompile Include="src\Tffvfw.cpp" />
-    <ClCompile Include="src\Tperfect.cpp" />
     <ClCompile Include="src\muxers\Tmuxer.cpp" />
     <ClCompile Include="src\muxers\TmuxerFile.cpp" />
     <ClCompile Include="src\acm\Tacm.cpp" />
@@ -890,12 +875,9 @@
     <ClInclude Include="src\dialog\CchannelSwap.h" />
     <ClInclude Include="src\dialog\Ccodecs.h" />
     <ClInclude Include="src\dialog\Cconvolver.h" />
-    <ClInclude Include="src\dialog\Ccredits.h" />
     <ClInclude Include="src\dialog\Ccrop.h" />
     <ClInclude Include="src\dialog\Ccrystality.h" />
     <ClInclude Include="src\dialog\CcspOptions.h" />
-    <ClInclude Include="src\dialog\CcurveAlt.h" />
-    <ClInclude Include="src\dialog\CcurveNormal.h" />
     <ClInclude Include="src\dialog\Cdct.h" />
     <ClInclude Include="src\dialog\CdecoderOptions.h" />
     <ClInclude Include="src\dialog\Cdeinterlace.h" />
@@ -913,7 +895,6 @@
     <ClInclude Include="src\dialog\CDXVAOptions.h" />
     <ClInclude Include="src\dialog\Ceq.h" />
     <ClInclude Include="src\dialog\Cfir.h" />
-    <ClInclude Include="src\dialog\CfirstPass.h" />
     <ClInclude Include="src\dialog\Cfont.h" />
     <ClInclude Include="src\dialog\Cfreeverb.h" />
     <ClInclude Include="src\dialog\Cgeneric.h" />
@@ -922,7 +903,6 @@
     <ClInclude Include="src\dialog\CgenericHuffyuv.h" />
     <ClInclude Include="src\dialog\CgenericLJPEG.h" />
     <ClInclude Include="src\dialog\CgenericRAW.h" />
-    <ClInclude Include="src\dialog\CgenericWmv9.h" />
     <ClInclude Include="src\dialog\Cgrab.h" />
     <ClInclude Include="src\dialog\CgradFun.h" />
     <ClInclude Include="src\dialog\Cgraph.h" />
@@ -933,15 +913,10 @@
     <ClInclude Include="src\dialog\Clevels.h" />
     <ClInclude Include="src\dialog\ClfeCrossover.h" />
     <ClInclude Include="src\dialog\Clogoaway.h" />
-    <ClInclude Include="src\dialog\Cmasking.h" />
-    <ClInclude Include="src\dialog\CmaskingXVID.h" />
-    <ClInclude Include="src\dialog\Cme.h" />
-    <ClInclude Include="src\dialog\CmeXvid.h" />
     <ClInclude Include="src\dialog\Cmixer.h" />
     <ClInclude Include="src\dialog\Cnoise.h" />
     <ClInclude Include="src\dialog\Coffset.h" />
     <ClInclude Include="src\dialog\Conepass.h" />
-    <ClInclude Include="src\dialog\ConepassXvid.h" />
     <ClInclude Include="src\dialog\COSD.h" />
     <ClInclude Include="src\dialog\Cout.h" />
     <ClInclude Include="src\dialog\Coutcsps.h" />
@@ -959,7 +934,6 @@
     <ClInclude Include="src\dialog\CresizeAspect.h" />
     <ClInclude Include="src\dialog\CresizeBorders.h" />
     <ClInclude Include="src\dialog\CresizeSettings.h" />
-    <ClInclude Include="src\dialog\CsecondPass.h" />
     <ClInclude Include="src\dialog\Csharpen.h" />
     <ClInclude Include="src\dialog\CshowMV.h" />
     <ClInclude Include="src\dialog\Csubtitles.h" />
@@ -972,7 +946,6 @@
     <ClInclude Include="src\dialog\Cwinamp2.h" />
     <ClInclude Include="src\dialog\IPropertyPageFF.h" />
     <ClInclude Include="src\dialog\ISpecifyPropertyPagesVE.h" />
-    <ClInclude Include="src\dialog\TbitrateDlg.h" />
     <ClInclude Include="src\dialog\TcompatibilityList.h" />
     <ClInclude Include="src\dialog\TcompatibilityManager.h" />
     <ClInclude Include="src\dialog\TconfPageBase.h" />
@@ -988,7 +961,6 @@
     <ClInclude Include="src\dialog\TffdshowPageEnc.h" />
     <ClInclude Include="src\dialog\TflatButtons.h" />
     <ClInclude Include="src\dialog\TpageSite.h" />
-    <ClInclude Include="src\dialog\TperfectDlg.h" />
     <ClInclude Include="src\dialog\TpresetAutoload.h" />
     <ClInclude Include="src\dialog\TpresetsEncDlg.h" />
     <ClInclude Include="src\dialog\TSpecifyPropertyPagesVE.h" />
@@ -1131,12 +1103,10 @@
     <ClInclude Include="src\audioFilters\resample\resample2.h" />
     <ClInclude Include="src\audioFilters\IffProcAudio.h" />
     <ClInclude Include="src\audioFilters\TffProcAudio.h" />
-    <ClInclude Include="src\2pass.h" />
     <ClInclude Include="src\IffdshowEnc.h" />
     <ClInclude Include="src\codecs\TencStats.h" />
     <ClInclude Include="src\TffdshowEnc.h" />
     <ClInclude Include="src\Tffvfw.h" />
-    <ClInclude Include="src\Tperfect.h" />
     <ClInclude Include="src\muxers\Tmuxer.h" />
     <ClInclude Include="src\muxers\TmuxerFile.h" />
     <ClInclude Include="src\acm\msacmdrv.h" />

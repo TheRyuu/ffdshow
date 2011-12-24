@@ -17,7 +17,8 @@
       <OutputFile>$(SolutionDir)bin\$(TargetName)$(TargetExt)</OutputFile>
       <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <WPOObjectFile>$(IntDir)WPO.obj</WPOObjectFile>
+      <WPOAsmListLocation>$(IntDir)</WPOAsmListLocation>
+      <WPOObjectFile>$(IntDir)</WPOObjectFile>
     </Link>
     <ResourceCompile>
        <SuppressStartupBanner>true</SuppressStartupBanner>
