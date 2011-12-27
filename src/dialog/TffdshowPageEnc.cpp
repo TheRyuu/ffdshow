@@ -242,16 +242,6 @@ void TffdshowPageEnc::quick2dlg(bool redraw)
                     valMin=qmin;
                     valMax=qmax;
                     break;
-                case ENC_MODE::PASS2_1:
-                case ENC_MODE::PASS2_2_EXT:
-                    text=_l("No settings");
-                    break;
-                case ENC_MODE::PASS2_2_INT:
-                    text=_l("Size (Kbytes)");
-                    valIdff=IDFF_enc_desiredSize;
-                    valMin=1;
-                    valMax=4*1024*1024;
-                    break;
             }
             setDlgItemText(m_hwnd,IDC_LBL_QUICK,_(IDC_LBL_QUICK,text));
             tbrSetRange(IDC_TBR_QUICK,valMin,valMax,(valMax-valMin)/10);

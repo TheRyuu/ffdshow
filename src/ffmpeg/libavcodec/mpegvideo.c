@@ -1420,7 +1420,6 @@ void ff_print_debug_info(MpegEncContext *s, AVFrame *pict)
         pict->mb_height=s->mb_height;
         pict->mb_width=s->mb_width;
         pict->mb_stride=s->mb_stride;
-        pict->b8_stride=s->b8_stride;
     }
     if (pict) {
         pict->play_flags=(s->quarter_sample?CODEC_FLAG_QPEL:0);

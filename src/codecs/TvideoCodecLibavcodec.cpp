@@ -1223,13 +1223,6 @@ LRESULT TvideoCodecLibavcodec::beginCompress(int cfgcomode,uint64_t csp,const Tr
         case ENC_MODE::VBR_QUANT:
             avctx->bit_rate=400000;
             break;
-        case ENC_MODE::PASS2_1:
-            avctx->flags|=CODEC_FLAG_QSCALE;
-            break;
-        case ENC_MODE::PASS2_2_EXT:
-        case ENC_MODE::PASS2_2_INT:
-            avctx->flags|=CODEC_FLAG_QSCALE;
-            break;
         case ENC_MODE::UNKNOWN:
             break;
         default:

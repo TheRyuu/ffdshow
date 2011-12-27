@@ -576,11 +576,6 @@ STDMETHODIMP_(LRESULT) TffdshowEnc::begin(const BITMAPINFOHEADER *inhdr)
                 cfgcomode=ENC_MODE::UNKNOWN;
             }
             break;
-        case ENC_MODE::PASS2_1:
-        case ENC_MODE::PASS2_2_EXT:
-        case ENC_MODE::PASS2_2_INT:
-            cfgcomode=ENC_MODE::UNKNOWN;
-            break;
     }
 
     if (coSettings->storeExt && !ownStoreExt && coSettings->storeExtFlnm[0]) {

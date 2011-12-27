@@ -809,9 +809,6 @@ struct ENC_MODE {
         CBR          = 0,
         VBR_QUAL     = 1,
         VBR_QUANT    = 2,
-        PASS2_1      = 3,
-        PASS2_2_EXT  = 4,
-        PASS2_2_INT  = 5
     };
 };
 

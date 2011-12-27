@@ -913,7 +913,7 @@ typedef struct AVFrame {
     int format;
 
     /* ffdshow custom code (begin) */
-    int mb_width,mb_height,mb_stride,b8_stride;
+    int mb_width,mb_height,mb_stride;
     int num_sprite_warping_points,real_sprite_warping_points;
     int play_flags;
 

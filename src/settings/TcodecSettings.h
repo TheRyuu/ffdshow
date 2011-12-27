@@ -42,7 +42,7 @@ public:
 
     int q_i_min,q_i_max,q_p_min,q_p_max,q_b_min,q_b_max,q_mb_min,q_mb_max;
     bool isQuantControlActive(void) const {
-        return mode!=ENC_MODE::VBR_QUANT && mode!=ENC_MODE::PASS2_1;
+        return mode!=ENC_MODE::VBR_QUANT;
     }
     int i_quant_factor,i_quant_offset;
     int quant,qual;
