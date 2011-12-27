@@ -309,6 +309,23 @@ STDMETHODIMP TffdshowVideoInputPin::ReceiveConnection(IPin* pConnector, const AM
     return hr;
 }
 
+void TffdshowVideoInputPin::init_VIH_and_VIH2_common_part(const RECT & rcSource,
+    const RECT rcTarget,
+    DWORD dwBitRate,
+    DWORD dwBitErrorRate,
+    REFERENCE_TIME AvgTimePerFrame,
+    const BITMAPINFOHEADER &bmiHeader)
+{
+    biIn.bmiHeader=bmiHeader;
+    LONG width = bmiHeader.biWidth;
+    // TODO: ffdshow should scale like a video renderer. Fix this drive-by implementation.
+    if (bmiHeader.biHeight == rcTarget.bottom)
+        width = rcSource.right;
+    pictIn.setSize(width, abs(bmiHeader.biHeight));
+    FOURCC 
+    fixMPEGinAVI(biIn.bmiHeader.biCompression);
+}
+
 bool TffdshowVideoInputPin::init(const CMediaType &mt)
 {
     DPRINTF(_l("TffdshowVideoInputPin::init"));
@@ -316,17 +333,13 @@ bool TffdshowVideoInputPin::init(const CMediaType &mt)
     isInterlacedRawVideo=false;
     if (mt.formattype==FORMAT_VideoInfo) {
         VIDEOINFOHEADER *vih=(VIDEOINFOHEADER*)mt.pbFormat;
-        biIn.bmiHeader=vih->bmiHeader;
-        pictIn.setSize(vih->bmiHeader.biWidth,abs(vih->bmiHeader.biHeight));
-        fixMPEGinAVI(biIn.bmiHeader.biCompression);
+        init_VIH_and_VIH2_common_part(vih->rcSource, vih->rcTarget, vih->dwBitRate, vih->dwBitErrorRate, vih->AvgTimePerFrame, vih->bmiHeader);
     } else if (mt.formattype==FORMAT_VideoInfo2) {
         VIDEOINFOHEADER2 *vih2=(VIDEOINFOHEADER2*)mt.pbFormat;
+        init_VIH_and_VIH2_common_part(vih2->rcSource, vih2->rcTarget, vih2->dwBitRate, vih2->dwBitErrorRate, vih2->AvgTimePerFrame, vih2->bmiHeader);
         isInterlacedRawVideo=vih2->dwInterlaceFlags & AMINTERLACE_IsInterlaced;
-        biIn.bmiHeader=vih2->bmiHeader;
-        pictIn.setSize(vih2->bmiHeader.biWidth,abs(vih2->bmiHeader.biHeight));
         pictIn.setDar(Rational(vih2->dwPictAspectRatioX,vih2->dwPictAspectRatioY));
         DPRINTF(_l("TffdshowVideoInputPin::initVideo: darX:%i, darY:%i"),vih2->dwPictAspectRatioX,vih2->dwPictAspectRatioY);
-        fixMPEGinAVI(biIn.bmiHeader.biCompression);
     } else if (mt.formattype==FORMAT_MPEGVideo) {
         MPEG1VIDEOINFO *mpeg1info=(MPEG1VIDEOINFO*)mt.pbFormat;
         biIn.bmiHeader=mpeg1info->hdr.bmiHeader;

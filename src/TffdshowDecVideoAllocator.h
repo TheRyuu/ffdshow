@@ -1,10 +1,13 @@
 #pragma once
 #include "ffdshow_mediaguids.h"
+#include "Crect.h"
 
 class TffdshowDecVideoAllocator :public CMemAllocator
 {
     static const int needed_align = 32;
     BITMAPINFOHEADER* get_BITMAPINFOHEADER_ptr() const;
+    CRect get_rcTarget() const;
+    void set_rcTarget(const CRect &rcTarget) const;
 protected:
     CBaseFilter *filter;
     CMediaType mt;

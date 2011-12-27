@@ -21,6 +21,7 @@ private:
     char_t oldSubSearchDir[MAX_PATH];
     int connectedSplitter;
     bool wasVC1;
+    void init_VIH_and_VIH2_common_part(const RECT & rcSource, const RECT rcTarget, DWORD dwBitRate, DWORD dwBitErrorRate, REFERENCE_TIME AvgTimePerFrame, const BITMAPINFOHEADER &bmiHeader);
 protected:
     virtual bool init(const CMediaType &mt);
     virtual void done();

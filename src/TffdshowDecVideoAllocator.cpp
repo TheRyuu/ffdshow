@@ -47,8 +47,14 @@ STDMETHODIMP TffdshowDecVideoAllocator::GetBuffer(IMediaSample** ppBuffer,REFERE
         // For Cb/Cr to be aligned 16, alignment 32 is needed.
         BITMAPINFOHEADER *bi = get_BITMAPINFOHEADER_ptr();
         TffdshowDecVideo *fv = dynamic_cast<TffdshowDecVideo*>(filter);
-        if (bi && fv && fv->canUpperStreamHandleStrideChange())
+        if (bi && fv && fv->canUpperStreamHandleStrideChange()) {
+            CRect zero;
+            if (zero == get_rcTarget()) {
+                CRect rcTarget(0,0,bi->biWidth, bi->biHeight);
+                set_rcTarget(rcTarget);
+            }
             bi->biWidth = ffalign(bi->biWidth, needed_align);
+        }
 
         BITMAPINFOHEADER bih;
         ExtractBIH(mt,&bih);
@@ -248,9 +254,38 @@ BITMAPINFOHEADER* TffdshowDecVideoAllocator::get_BITMAPINFOHEADER_ptr() const
     return NULL;
 }
 
+CRect TffdshowDecVideoAllocator::get_rcTarget() const
+{
+    CRect result;
+    if (mt.IsValid() && mt.bFixedSizeSamples) {
+        if (mt.formattype==FORMAT_VideoInfo) {
+            VIDEOINFOHEADER* vih = (VIDEOINFOHEADER*)mt.pbFormat;
+            result = vih->rcTarget;
+        } else if(mt.formattype == FORMAT_VideoInfo2) {
+            VIDEOINFOHEADER2* vih = (VIDEOINFOHEADER2*)mt.pbFormat;
+            result = vih->rcTarget;
+        }
+    }
+    return result;
+}
+
+void TffdshowDecVideoAllocator::set_rcTarget(const CRect &rcTarget) const
+{
+    if (mt.IsValid() && mt.bFixedSizeSamples) {
+        if (mt.formattype==FORMAT_VideoInfo) {
+            VIDEOINFOHEADER* vih = (VIDEOINFOHEADER*)mt.pbFormat;
+            vih->rcTarget = rcTarget;
+        } else if(mt.formattype == FORMAT_VideoInfo2) {
+            VIDEOINFOHEADER2* vih = (VIDEOINFOHEADER2*)mt.pbFormat;
+            vih->rcTarget = rcTarget;
+        }
+    }
+}
+
 STDMETHODIMP CffdshowMediaSample::SetMediaType(AM_MEDIA_TYPE *pMediaType)
 {
-    m_MediaTypeSetExternallyFlag = true;
+    if (pMediaType)
+        m_MediaTypeSetExternallyFlag = true;
     return CMediaSample::SetMediaType(pMediaType);
 }
 
