@@ -1912,7 +1912,7 @@ MEDIAN((%%REGd, %1), (%%REGd, %1, 2), (%0, %1, 8))
 
 #if HAVE_MMX
 /**
- * transposes and shift the given 8x8 Block into dst1 and dst2
+ * Transpose and shift the given 8x8 Block into dst1 and dst2.
  */
 static inline void RENAME(transpose1)(uint8_t *dst1, uint8_t *dst2, uint8_t *src, int srcStride)
 {
@@ -1997,7 +1997,7 @@ static inline void RENAME(transpose1)(uint8_t *dst1, uint8_t *dst2, uint8_t *src
 }
 
 /**
- * transposes the given 8x8 block
+ * Transpose the given 8x8 block.
  */
 static inline void RENAME(transpose2)(uint8_t *dst, int dstStride, uint8_t *src)
 {
@@ -3518,9 +3518,10 @@ static void RENAME(postProcess)(const uint8_t src[], stride_t srcStride, uint8_t
                 else if(mode & H_DEBLOCK){
 #if HAVE_ALTIVEC
                     DECLARE_ALIGNED(16, unsigned char, tempBlock)[272];
+                    int t;
                     transpose_16x8_char_toPackedAlign_altivec(tempBlock, dstBlock - (4 + 1), stride);
 
-                    const int t=vertClassify_altivec(tempBlock-48, 16, &c);
+                    t = vertClassify_altivec(tempBlock-48, 16, &c);
                     if(t==1) {
                         doVertLowPass_altivec(tempBlock-48, 16, &c);
                         transpose_8x16_char_fromPackedAlign_altivec(dstBlock - (4 + 1), tempBlock, stride);

@@ -40,6 +40,7 @@
 #include "thread.h"
 #include "audioconvert.h"
 #include "internal.h"
+#include "bytestream.h"
 #include <stdlib.h>
 #include <stdarg.h>
 #include <limits.h>
@@ -580,6 +581,8 @@ void avcodec_get_frame_defaults(AVFrame *pic){
 
     pic->pts= AV_NOPTS_VALUE;
     pic->key_frame= 1;
+    pic->sample_aspect_ratio = (AVRational){0, 1};
+    pic->format = -1;           /* unknown */
     /* ffdshow custom code */
     pic->YCbCr_RGB_matrix_coefficients = YCbCr_RGB_coeff_Unspecified;
     pic->video_full_range_flag = VIDEO_FULL_RANGE_INVALID;
@@ -843,6 +846,10 @@ int attribute_align_arg avcodec_decode_video2(AVCodecContext *avctx, AVFrame *pi
             ret = avctx->codec->decode(avctx, picture, got_picture_ptr,
                               avpkt);
             picture->pkt_dts= avpkt->dts;
+            picture->sample_aspect_ratio = avctx->sample_aspect_ratio;
+            picture->width  = avctx->width;
+            picture->height = avctx->height;
+            picture->format = avctx->pix_fmt;
         }
 
         emms_c(); //needed to avoid an emms_c() call before every return;
