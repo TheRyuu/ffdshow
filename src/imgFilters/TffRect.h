@@ -46,12 +46,8 @@ struct Trect {
             out.dx = a1 * in.dy / a2;
             out.dy = in.dy;
         }
-        if (out.dx&3) {
-            out.dx=(out.dx/4+1)*4;
-        }
-        if (out.dy&1) {
-            out.dy=(out.dy/2+1)*2;
-        }
+        out.dx = ffalign(out.dx, 2);
+        out.dy = ffalign(out.dy, 2);
     }
 };
 inline bool operator !=(const Trect &r1,const Trect &r2)
