@@ -21,7 +21,6 @@ public:
 
     HRESULT SetMediaType(const CMediaType* mt);
     STDMETHODIMP Disconnect(void);
-    STDMETHODIMP NewSegment(REFERENCE_TIME tStart, REFERENCE_TIME tStop, double dRate);
     STDMETHODIMP EndOfStream(void);
 
     int getInCodecId2(void) {

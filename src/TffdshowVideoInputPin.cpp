@@ -586,8 +586,13 @@ STDMETHODIMP TffdshowVideoInputPin::NewSegment(REFERENCE_TIME tStart, REFERENCE_
 {
     DPRINTF(_l("TffdshowVideoInputPin::NewSegment"));
     CAutoLock lock1((CCritSec*)fv->deci->get_csReceive_ptr());
-    CAutoLock lock2(&m_csCodecs_and_imgFilters);
     HRESULT hr=TinputPin::NewSegment(tStart,tStop,dRate);
+
+    CAutoLock lock2(&m_csCodecs_and_imgFilters);
+    if (hr==S_OK && codec) {
+        codec->onSeek(tStart);
+    }
+
     m_rateAndFlush.isDiscontinuity = true;
     m_rateAndFlush.rate.StartTime = m_rateAndFlush.ratechange.StartTime = 0;
     if (dRate != 0) {

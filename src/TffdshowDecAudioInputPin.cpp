@@ -168,7 +168,12 @@ STDMETHODIMP TffdshowDecAudioInputPin::NewSegment(REFERENCE_TIME tStart,REFERENC
     if (audioParser) {
         audioParser->NewSegment();
     }
-    return TinputPin::NewSegment(tStart,tStop,dRate);
+
+    HRESULT hr=TinputPin::NewSegment(tStart,tStop,dRate);
+    if (hr==S_OK && codec) {
+        codec->onSeek(tStart);
+    }
+    return hr;
 }
 
 STDMETHODIMP TffdshowDecAudioInputPin::Receive(IMediaSample* pIn)

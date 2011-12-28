@@ -47,15 +47,6 @@ HRESULT TinputPin::Disconnect(void)
     return hr;
 }
 
-STDMETHODIMP TinputPin::NewSegment(REFERENCE_TIME tStart, REFERENCE_TIME tStop, double dRate)
-{
-    HRESULT hr=CDeCSSInputPin::NewSegment(tStart,tStop,dRate);
-    if (hr==S_OK && codec) {
-        codec->onSeek(tStart);
-    }
-    return hr;
-}
-
 STDMETHODIMP TinputPin::EndOfStream(void)
 {
     if (codec) {
