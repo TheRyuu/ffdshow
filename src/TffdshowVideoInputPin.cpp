@@ -320,7 +320,7 @@ void TffdshowVideoInputPin::init_VIH_and_VIH2_common_part(const RECT & rcSource,
     LONG width = bmiHeader.biWidth;
     // TODO: ffdshow should scale like a video renderer. Fix this drive-by implementation.
     if (bmiHeader.biHeight == rcTarget.bottom)
-        width = rcSource.right;
+        width = rcTarget.right;
     pictIn.setSize(width, abs(bmiHeader.biHeight));
     FOURCC 
     fixMPEGinAVI(biIn.bmiHeader.biCompression);
