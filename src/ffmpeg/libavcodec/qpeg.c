@@ -31,7 +31,7 @@ typedef struct QpegContext{
     AVFrame pic, ref;
 } QpegContext;
 
-static void qpeg_decode_intra(const uint8_t *src, uint8_t *dst, int size,
+static int qpeg_decode_intra(const uint8_t *src, uint8_t *dst, int size,
                             int stride, int width, int height)
 {
     int i;
@@ -93,6 +93,8 @@ static void qpeg_decode_intra(const uint8_t *src, uint8_t *dst, int size,
             }
         } else {
             size -= copy;
+            if (size<0)
+                return AVERROR_INVALIDDATA;
             for(i = 0; i < copy; i++) {
                 dst[filled++] = *src++;
                 if (filled >= width) {
@@ -105,6 +107,7 @@ static void qpeg_decode_intra(const uint8_t *src, uint8_t *dst, int size,
             }
         }
     }
+    return 0;
 }
 
 static const int qpeg_table_h[16] =
@@ -258,7 +261,7 @@ static int decode_frame(AVCodecContext *avctx,
     AVFrame * p= (AVFrame*)&a->pic;
     AVFrame * ref= (AVFrame*)&a->ref;
     uint8_t* outdata;
-    int delta;
+    int delta, ret = 0;
 
     if(ref->data[0])
         avctx->release_buffer(avctx, ref);
@@ -271,11 +274,14 @@ static int decode_frame(AVCodecContext *avctx,
     }
     outdata = a->pic.data[0];
     if(buf[0x85] == 0x10) {
-        qpeg_decode_intra(buf+0x86, outdata, buf_size - 0x86, a->pic.linesize[0], avctx->width, avctx->height);
+        ret = qpeg_decode_intra(buf+0x86, outdata, buf_size - 0x86, a->pic.linesize[0], avctx->width, avctx->height);
     } else {
         delta = buf[0x85];
         qpeg_decode_inter(buf+0x86, outdata, buf_size - 0x86, a->pic.linesize[0], avctx->width, avctx->height, delta, buf + 4, a->ref.data[0]);
     }
+
+    if (ret<0)
+        return ret;
 
     /* make the palette available on the way out */
     memcpy(a->pic.data[1], a->avctx->palctrl->palette, AVPALETTE_SIZE);
@@ -297,6 +303,8 @@ static av_cold int decode_init(AVCodecContext *avctx){
         av_log(avctx, AV_LOG_FATAL, "Missing required palette via palctrl\n");
         return -1;
     }
+    avcodec_get_frame_defaults(&a->pic);
+    avcodec_get_frame_defaults(&a->ref);
     a->avctx = avctx;
     avctx->pix_fmt= PIX_FMT_PAL8;
 

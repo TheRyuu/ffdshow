@@ -356,7 +356,7 @@ static attribute_align_arg void *frame_worker_thread(void *arg)
 
         if (fctx->die) break;
 
-        if (!codec->update_thread_context && avctx->thread_safe_callbacks)
+        if (!codec->update_thread_context && (avctx->thread_safe_callbacks || avctx->get_buffer == avcodec_default_get_buffer))
             ff_thread_finish_setup(avctx);
 
         pthread_mutex_lock(&p->mutex);
@@ -457,6 +457,7 @@ static void update_context_from_user(AVCodecContext *dst, AVCodecContext *src)
 
     dst->frame_number     = src->frame_number;
     dst->reordered_opaque = src->reordered_opaque;
+    dst->thread_safe_callbacks = src->thread_safe_callbacks;
     /* ffdshow custom code (begin) */
     dst->reordered_opaque2 = src->reordered_opaque2;
     dst->reordered_opaque3 = src->reordered_opaque3;
@@ -674,6 +675,10 @@ void ff_thread_finish_setup(AVCodecContext *avctx) {
 
     if (!(avctx->active_thread_type&FF_THREAD_FRAME)) return;
 
+    if(p->state == STATE_SETUP_FINISHED){
+        av_log(avctx, AV_LOG_WARNING, "Multiple ff_thread_finish_setup() calls\n");
+    }
+
     pthread_mutex_lock(&p->progress_mutex);
     p->state = STATE_SETUP_FINISHED;
     pthread_cond_broadcast(&p->progress_cond);
@@ -890,7 +895,8 @@ int ff_thread_get_buffer(AVCodecContext *avctx, AVFrame *f)
     }
 
     if (p->state != STATE_SETTING_UP &&
-        (avctx->codec->update_thread_context || !avctx->thread_safe_callbacks)) {
+        (avctx->codec->update_thread_context || (!avctx->thread_safe_callbacks &&
+                avctx->get_buffer != avcodec_default_get_buffer))) {
         av_log(avctx, AV_LOG_ERROR, "get_buffer() cannot be called after ff_thread_finish_setup()\n");
         return -1;
     }
