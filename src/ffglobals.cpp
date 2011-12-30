@@ -833,7 +833,6 @@ static void decode_scaling_list(GetBitContext &gb, uint8_t *factors, int size/*,
         }
 }
 
-// FIXME: the golomb code often gets miscompiled (specially x64 and debug builds). replace it with something better
 bool decodeH264SPS(const unsigned char *hdr,size_t len,TffPictBase &pict, H264_SPS* sps)
 {
     int i, sps_id;
@@ -853,10 +852,26 @@ bool decodeH264SPS(const unsigned char *hdr,size_t len,TffPictBase &pict, H264_S
         sps = &_sps;
     }
 
-    GetBitContext gb;
-    init_get_bits(&gb,hdr,(int)len*8);
-    skip_bits(&gb,24);
+    // remove 0x00 0x00 0x03 sequence.
+    std::auto_ptr<uint8_t> buf;
+    const uint8_t *src = hdr + 3;
+    int sps_size = (hdr[0] << 8) + hdr[1];
+    sps_size = std::min(sps_size, int(len) - 3);
+    for (int i = 0 ; i+2 < sps_size ; i++) {
+        if (src[i] == 0 && src[i+1] == 0 && src[i+2] == 3) {
+            if (!buf.get()) {
+                buf.reset((uint8_t*)calloc(1, sps_size -1 + 16));
+                memcpy(buf.get(), src, i+2);
+            }
+            memcpy(buf.get()+i+2, src+i+3, sps_size-i-3);
+            sps_size--;
+        }
+    }
 
+    GetBitContext gb;
+    init_get_bits(&gb,buf.get() ? buf.get() : hdr + 3,(int)(len-3)*8);
+
+    // SPS
     sps->profile_idc= get_bits(&gb, 8);
     get_bits1(&gb);   //constraint_set0_flag
     get_bits1(&gb);   //constraint_set1_flag
