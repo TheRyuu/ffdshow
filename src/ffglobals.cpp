@@ -856,6 +856,7 @@ bool decodeH264SPS(const unsigned char *hdr,size_t len,TffPictBase &pict, H264_S
     std::auto_ptr<uint8_t> buf;
     const uint8_t *src = hdr + 3;
     int sps_size = (hdr[0] << 8) + hdr[1];
+    int count003 = 0;
     sps_size = std::min(sps_size, int(len) - 3);
     for (int i = 0 ; i+2 < sps_size ; i++) {
         if (src[i] == 0 && src[i+1] == 0 && src[i+2] == 3) {
@@ -863,13 +864,13 @@ bool decodeH264SPS(const unsigned char *hdr,size_t len,TffPictBase &pict, H264_S
                 buf.reset((uint8_t*)calloc(1, sps_size -1 + 16));
                 memcpy(buf.get(), src, i+2);
             }
-            memcpy(buf.get()+i+2, src+i+3, sps_size-i-3);
-            sps_size--;
+            memcpy(buf.get()+i+2-count003, src+i+3, sps_size-i-4);
+            count003++;
         }
     }
 
     GetBitContext gb;
-    init_get_bits(&gb,buf.get() ? buf.get() : hdr + 3,(int)(len-3)*8);
+    init_get_bits(&gb,buf.get() ? buf.get() : hdr + 3,(int)(sps_size - count003)*8);
 
     // SPS
     sps->profile_idc= get_bits(&gb, 8);
