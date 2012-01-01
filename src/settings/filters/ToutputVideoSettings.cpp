@@ -113,7 +113,7 @@ ToutputVideoSettings::ToutputVideoSettings(TintStrColl *Icoll,TfilterIDFFs *filt
         IDFF_outP216            ,&ToutputVideoSettings::p216               ,0,0,_l(""),0,
         _l("outP216"),1,
         IDFF_outAYUV            ,&ToutputVideoSettings::ayuv               ,0,0,_l(""),0,
-        _l("out_AYUV"),0,  // firstly outAYUV and enabled by default, and changed to out_AYUV with a new default setting.
+        _l("outAYUV"),0,
         IDFF_outY416            ,&ToutputVideoSettings::y416               ,0,0,_l(""),0,
         _l("outY416"),1,
         IDFF_highQualityRGB     ,&ToutputVideoSettings::highQualityRGB     ,0,0,_l(""),1,
@@ -167,7 +167,7 @@ void ToutputVideoSettings::reg_op_outcsps(TregOp &t)
     t._REG_OP_N(IDFF_outP010  ,_l("outP010")  ,p010  ,1);
     t._REG_OP_N(IDFF_outP210  ,_l("outP210")  ,p210  ,1);
     t._REG_OP_N(IDFF_outP216  ,_l("outP216")  ,p216  ,1);
-    t._REG_OP_N(IDFF_outAYUV  ,_l("outAYUV")  ,ayuv  ,1);
+    t._REG_OP_N(IDFF_outAYUV  ,_l("outAYUV")  ,ayuv  ,0);
     t._REG_OP_N(IDFF_outY416  ,_l("outY416")  ,y416  ,1);
     t._REG_OP_N(IDFF_hwOverlayAspect,_l("hwOverlayAspect"),hwOverlayAspect,0);
 }
