@@ -31,6 +31,15 @@
 #include "IntelQuickSyncDecoder/src/IQuickSyncDecoder.h"
 
 const char_t* TvideoCodecQuickSync::dllname=_l(QS_DEC_DLL_NAME);
+static bool CheckForSSE41()
+{
+   int CPUInfo[4];
+    __cpuid(CPUInfo, 1);
+
+    return 0 != (CPUInfo[2] & (1<<19)); //19th bit of 2nd reg means sse4.1 is enabled
+}
+
+static const bool s_SSE4_1_enabled = CheckForSSE41();
 
 HRESULT TvideoCodecQuickSync::DeliverSurfaceCallback(void* obj, QsFrameData* frameData)
 {
@@ -244,4 +253,31 @@ void TvideoCodecQuickSync::setOutputPin(IPin *pPin)
 
     if (pDeviceManager) pDeviceManager->Release();
     if (pGetService) pGetService->Release();
+}
+
+bool TvideoCodecQuickSync::check(Tconfig* config)
+{
+    // check for SSE4.1
+    if (!s_SSE4_1_enabled)
+        return false;
+
+    bool ok = false;
+    IQuickSyncDecoder* (__stdcall *createQuickSync)();
+    void (__stdcall *destroyQuickSync)(IQuickSyncDecoder*);
+
+    Tdll dll(dllname, config);
+    dll.loadFunction(createQuickSync, "createQuickSync");
+    dll.loadFunction(destroyQuickSync, "destroyQuickSync");
+    if (NULL != createQuickSync && NULL != destroyQuickSync)
+    {
+        IQuickSyncDecoder* q = createQuickSync();
+        if (q)
+        {
+            ok = q->getOK();
+            destroyQuickSync(q);
+            return ok;
+        }
+    }
+
+    return false;     
 }

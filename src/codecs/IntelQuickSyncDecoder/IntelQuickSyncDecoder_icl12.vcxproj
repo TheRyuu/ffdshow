@@ -170,6 +170,7 @@
     <ClInclude Include="src\QuickSync.h" />
     <ClInclude Include="src\QuickSyncUtils.h" />
     <ClInclude Include="src\QuickSync_defs.h" />
+    <ClInclude Include="src\resource.h" />
     <ClInclude Include="src\stdafx.h" />
     <ClInclude Include="src\sysmem_allocator.h" />
     <ClInclude Include="src\TimeManager.h" />
@@ -193,7 +194,7 @@
     <ClCompile Include="src\TimeManager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="IntelQuickSyncDecoder.rc" />
+    <ResourceCompile Include="src\IntelQuickSyncDecoder.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

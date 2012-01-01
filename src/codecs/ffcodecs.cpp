@@ -106,7 +106,7 @@ const FOURCC* getCodecFOURCCs(CodecID codecId)
             return fccs;
         }
         case CODEC_ID_VC1_QUICK_SYNC: {
-            static const FOURCC fccs[]= {FOURCC_WVC1,0};
+            static const FOURCC fccs[]= {FOURCC_WVC1,FOURCC_WMV3,0};
             return fccs;
         }
         case CODEC_ID_FLV1: {

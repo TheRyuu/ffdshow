@@ -604,7 +604,7 @@ void TglobalSettingsDecVideo::load(void)
     fixMissing(h264,IDFF_MOVIE_LAVC,IDFF_MOVIE_QUICK_SYNC);
     fixMissing(wmv1,IDFF_MOVIE_LAVC,IDFF_MOVIE_WMV9);
     fixMissing(wmv2,IDFF_MOVIE_LAVC,IDFF_MOVIE_WMV9);
-    fixMissing(wmv3,IDFF_MOVIE_LAVC,IDFF_MOVIE_WMV9);
+    fixMissing(wmv3,IDFF_MOVIE_LAVC,IDFF_MOVIE_WMV9, IDFF_MOVIE_QUICK_SYNC);
     fixMissing(wvc1,IDFF_MOVIE_LAVC,IDFF_MOVIE_WMV9, IDFF_MOVIE_QUICK_SYNC);
     fixMissing(mss2,IDFF_MOVIE_WMV9);
     fixMissing(wvp2,IDFF_MOVIE_WMV9);

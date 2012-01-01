@@ -428,7 +428,7 @@ again:
     // I gave up using it and decided to ignore it during playback of VC1 stream.
     // It works fine for my sample.
     if (video) {
-        if (wasVC1 && biIn.bmiHeader.biCompression==0x31435657 /* "WVC1" */ ) {
+        if (video->codecId == CODEC_ID_WMV9_LIB && wasVC1 && biIn.bmiHeader.biCompression==0x31435657 /* "WVC1" */ ) {
             return true;
         } else if (is_quicksync_codec(video->codecId)) {
             // check if output pin is connected to a supported filter

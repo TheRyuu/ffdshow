@@ -53,6 +53,9 @@
     <ClInclude Include="src\TimeManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\base_alllocator.cpp">
@@ -96,7 +99,7 @@
     <None Include="src\license.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="IntelQuickSyncDecoder.rc">
+    <ResourceCompile Include="src\IntelQuickSyncDecoder.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>

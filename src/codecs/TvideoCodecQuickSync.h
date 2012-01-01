@@ -16,6 +16,7 @@ public:
 
     virtual int getType() const { return IDFF_MOVIE_QUICK_SYNC; }
     virtual const char_t* getName() const;
+    static bool check(Tconfig* config);
     static const char_t *dllname;
 
 protected:
