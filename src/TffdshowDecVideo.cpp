@@ -116,6 +116,7 @@ TffdshowDecVideo::TffdshowDecVideo(CLSID Iclsid,const char_t *className,const CL
     searchInterfaceInGraph(NULL),
     count_decoded_frames_for_framerate_calculation(0),
     rollingAvg(0),
+    use_rollingAvg(true),
     decodedPict(),
     late(0)
 {

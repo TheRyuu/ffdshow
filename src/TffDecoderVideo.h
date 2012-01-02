@@ -1050,6 +1050,7 @@ protected:
     REFERENCE_TIME decoded_rtStarts[4];
     REFERENCE_TIME eighth_decoded_rtStart; // for frame rate calculation. After seeking, a few frames may have incorrect timestamps.
     double         rollingAvg;
+    bool           use_rollingAvg;
 
     IVideoWindow *videoWindow;
     bool wasVideoWindow;

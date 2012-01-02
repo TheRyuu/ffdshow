@@ -188,7 +188,8 @@ HRESULT TvideoCodecQuickSync::DeliverSurface(QsFrameData* frameData)
         pict.setDar(dar);
     }
 
-   // pict.film = 0 != (frameData->dwInterlaceFlags & AM_VIDEO_FLAG_REPEAT_FIELD);
+    pict.film = 0 != (frameData->dwInterlaceFlags & AM_VIDEO_FLAG_REPEAT_FIELD);
+    pict.repeat_first_field = pict.film;
 
     return sinkD->deliverDecodedSample(pict);
 }
