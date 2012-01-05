@@ -25,6 +25,8 @@
  * @author Michael Niedermayer <michaelni@gmx.at>
  */
 
+#define UNCHECKED_BITSTREAM_READER 1
+
 #include "libavutil/imgutils.h"
 #include "internal.h"
 #include "dsputil.h"
@@ -944,7 +946,7 @@ static void init_dequant_tables(H264Context *h){
 int ff_h264_alloc_tables(H264Context *h){
     MpegEncContext * const s = &h->s;
     const int big_mb_num= s->mb_stride * (s->mb_height+1);
-    const int row_mb_num= 2*s->mb_stride*s->avctx->thread_count;
+    const int row_mb_num= 2*s->mb_stride*FFMAX(s->avctx->thread_count, 1);
     int x,y;
 
     FF_ALLOCZ_OR_GOTO(h->s.avctx, h->intra4x4_pred_mode, row_mb_num * 8  * sizeof(uint8_t), fail)
@@ -2360,8 +2362,6 @@ static void flush_dpb(AVCodecContext *avctx){
             h->delayed_pic[i]->f.reference = 0;
         h->delayed_pic[i]= NULL;
     }
-    for (i = 0; i < MAX_DELAYED_PIC_COUNT; i++)
-        h->last_pocs[i] = INT_MIN;
     h->outputed_poc=h->next_outputed_poc= INT_MIN;
     h->prev_interlaced_frame = 1;
     idr(h);
