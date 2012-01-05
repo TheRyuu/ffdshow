@@ -112,6 +112,7 @@ template<class tchar> DECLARE_INTERFACE_(IffdshowDecVideoT,IUnknown)
     STDMETHOD_(void*, get_csCodecs_and_imgFilters_ptr)(void) PURE;
     STDMETHOD (reconnectOutput)(const TffPict &newpict) PURE;
     STDMETHOD_(int,get_allocators_biWidth)(void) PURE;
+    STDMETHOD_(int,get_allocators_biHeight)(void) PURE;
 };
 
 struct IffdshowDecVideoA :IffdshowDecVideoT<char> {};

@@ -2315,11 +2315,6 @@ STDMETHODIMP TffdshowDecVideo::setSubtitlesFile(const char_t *pSubtitleFile)
     return S_OK;
 }
 
-int TffdshowDecVideo::canUpperStreamHandleStrideChange() const
-{
-    return inpin->canUpperStreamHandleStrideChange();
-}
-
 #ifdef OSDTIMETABALE
 /* Usage
  *

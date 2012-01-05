@@ -74,7 +74,7 @@ REFERENCE_TIME getAvgTimePerFrame(const CMediaType &mt);
 
 static inline int calcBIstride(unsigned int width,int bitcount)
 {
-    return ffalign(width*bitcount, 32)>>3;
+    return width * bitcount >> 3;
 }
 
 struct Textradata {

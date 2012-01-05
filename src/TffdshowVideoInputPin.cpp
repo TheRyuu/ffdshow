@@ -260,8 +260,6 @@ STDMETHODIMP TffdshowVideoInputPin::ReceiveConnection(IPin* pConnector, const AM
         connectedSplitter = PBDA_DTFilter;
     } else if (ref == CLSID_NeuviewSource) {
         connectedSplitter = NeuviewSource;
-    } else if (ref == CLSID_AviWavFileSource) {
-        connectedSplitter = AviWavFileSource;
     }
 
 #if 0
@@ -318,10 +316,13 @@ void TffdshowVideoInputPin::init_VIH_and_VIH2_common_part(const RECT & rcSource,
 {
     biIn.bmiHeader=bmiHeader;
     LONG width = bmiHeader.biWidth;
+    LONG height = abs(bmiHeader.biHeight);
     // TODO: ffdshow should scale like a video renderer. Fix this drive-by implementation.
-    if (bmiHeader.biHeight == rcTarget.bottom)
+    if (CRect(rcTarget) != CRect()) {
         width = rcTarget.right;
-    pictIn.setSize(width, abs(bmiHeader.biHeight));
+        height = rcTarget.bottom;
+    }
+    pictIn.setSize(width, height);
     FOURCC 
     fixMPEGinAVI(biIn.bmiHeader.biCompression);
 }
@@ -676,15 +677,7 @@ STDMETHODIMP TffdshowVideoInputPin::Receive(IMediaSample* pSample)
     if (SUCCEEDED(pSample->GetMediaType(&pmt)) && pmt) {
         CAutoLock lock2(&m_csCodecs_and_imgFilters);
         CMediaType mt(*pmt);
-        comptrQ<IffdshowMediaSample> iffmedia = pSample;
-        // avoid calling SetMediaType if the media type was attached by ffdshow's input pin (TffdshowDecVideoAllocator)
-        // just to signal the new stride to the upper stream.
-        // Otherwise video dimensions are changed and right (green) borders are attached.
-        // ffdshow itself doesn't want to change the demensions, instead TvideoCodecUncompressed has to deal with the new stride.
-        if (!iffmedia || iffmedia->get_MediaTypeSetExternallyFlag())
-            SetMediaType(&mt);
-        if (iffmedia)
-            iffmedia->clear_MediaTypeSetExternallyFlag();
+        SetMediaType(&mt);
         allocator.mtChanged=false;
         DeleteMediaType(pmt);
     }
@@ -1014,15 +1007,6 @@ HRESULT TffdshowVideoInputPin::SupportPropSetRate(DWORD dwPropID, DWORD *pTypeSu
             break;
     }
     return S_OK;
-}
-
-// If we are getting raw format from AVI/WAV File Source, it is most likely avs file.
-// AVI/WAV File Source can somehow process avs file and output raw formats, but it cannot connect directly to a video renderer.
-// As an intermediate filter, ffdshow or color space converter filter help.
-// All filters that can connect to a video renderer can handle stride changes.
-// Unfortunately AVI/WAV File Source cannot handle stride changes.
-int TffdshowVideoInputPin::canUpperStreamHandleStrideChange() {
-    return connectedSplitter != AviWavFileSource;
 }
 
 //================================ TffdshowVideoEncInputPin ================================

@@ -584,7 +584,6 @@ public:
     virtual int getVideoCodecId(const BITMAPINFOHEADER *hdr,const GUID *subtype,FOURCC *AVIfourcc);
     virtual void initCodecSettings(void);
     virtual void lockReceive(void),unlockReceive(void);
-    int canUpperStreamHandleStrideChange() const;
 
     bool initSubtitles(int id,int type,const unsigned char *extradata,unsigned int extradatalen);
     void addSubtitle(int id,REFERENCE_TIME start,REFERENCE_TIME stop,const unsigned char *data,unsigned int datalen,bool utf8);
@@ -631,6 +630,7 @@ public:
     STDMETHODIMP_(void*) get_csCodecs_and_imgFilters_ptr(void);
     STDMETHODIMP reconnectOutput(const TffPict &newpict);
     STDMETHODIMP_(int) get_allocators_biWidth();
+    STDMETHODIMP_(int) get_allocators_biHeight();
 
 private:
 #ifdef OSDTIMETABALE
@@ -973,6 +973,9 @@ private:
         }
         STDMETHODIMP_(int) get_allocators_biWidth() {
             return deciV->get_allocators_biWidth();
+        }
+        STDMETHODIMP_(int) get_allocators_biHeight() {
+            return deciV->get_allocators_biHeight();
         }
     } decVideo_char;
     template<class Tinterface> Tinterface* getDecVideoInterface(void);

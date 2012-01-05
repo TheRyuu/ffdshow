@@ -882,3 +882,8 @@ STDMETHODIMP_(int) TffdshowDecVideo::get_allocators_biWidth()
 {
     return inpin->allocator.get_biWidth();
 }
+
+STDMETHODIMP_(int) TffdshowDecVideo::get_allocators_biHeight()
+{
+    return inpin->allocator.get_biHeight();
+}
