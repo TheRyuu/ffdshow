@@ -258,10 +258,13 @@ void TvideoCodecQuickSync::setOutputPin(IPin *pPin)
 
 bool TvideoCodecQuickSync::check(Tconfig* config)
 {
-    // check for SSE4.1
+    // Check for SSE4.1 so old CPUs will not be bothered
     if (!s_SSE4_1_enabled)
         return false;
+    static bool checkResult = Tdll::check(dllname, config); //no need to do this more than once
+    return checkResult;
 
+/* egur: This is too slowwwww - function called from both video and audio paths
     bool ok = false;
     IQuickSyncDecoder* (__stdcall *createQuickSync)();
     void (__stdcall *destroyQuickSync)(IQuickSyncDecoder*);
@@ -281,4 +284,5 @@ bool TvideoCodecQuickSync::check(Tconfig* config)
     }
 
     return false;     
+*/
 }
