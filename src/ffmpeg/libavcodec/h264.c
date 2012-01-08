@@ -1438,10 +1438,6 @@ static void decode_postinit(H264Context *h, int setup_finished){
         }
     }
 
-    /* ffdshow custom code */
-    cur->f.video_full_range_flag = h->sps.full_range;
-    cur->f.YCbCr_RGB_matrix_coefficients = h->sps.colorspace;
-
     //FIXME do something with unavailable reference frames
 
     /* Sort B-frames into display order */

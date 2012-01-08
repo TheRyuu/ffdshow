@@ -39,7 +39,7 @@ public:
      * UpdateSettings
      * @return a value that has to be added to RGB
      */
-    int UpdateSettings(int video_full_range_flag, int YCbCr_RGB_matrix_coefficients);
+    int UpdateSettings(int video_full_range_flag, enum AVColorPrimaries YCbCr_RGB_matrix_coefficients);
     void writeToXvidYCbCr2RgbMatrix(short *asmData);
     void writeToXvidRgb2YCbCrMatrix(short *asmData);
     const unsigned char* getAvisynthYCbCr2RgbMatrix(int &rgb_add);

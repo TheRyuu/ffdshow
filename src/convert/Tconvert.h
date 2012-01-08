@@ -86,7 +86,7 @@ public:
                 stride_t dstStride[],
                 const Tpalette *srcpal,
                 int video_full_range_flag = VIDEO_FULL_RANGE_INVALID,
-                int YCbCr_RGB_matrix_coefficients = YCbCr_RGB_coeff_Unspecified,
+                enum AVColorPrimaries YCbCr_RGB_matrix_coefficients = AVCOL_PRI_UNSPECIFIED,
                 bool vram_indirect=false);
     int convert(const TffPict &pict,uint64_t outcsp,uint8_t* dst[],stride_t dstStride[],bool vram_indirect=false);
     static void copyPlane(BYTE *dstp,stride_t dst_pitch,const BYTE *srcp,stride_t src_pitch,int row_size,int height,bool flip=false);

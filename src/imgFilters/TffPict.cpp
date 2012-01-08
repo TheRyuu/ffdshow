@@ -104,7 +104,7 @@ void TffPict::common_init(void)
     discontinuity = false;
     film = repeat_first_field = false;
     video_full_range_flag = VIDEO_FULL_RANGE_INVALID;
-    YCbCr_RGB_matrix_coefficients = YCbCr_RGB_coeff_Unspecified;
+    YCbCr_RGB_matrix_coefficients = AVCOL_PRI_UNSPECIFIED;
 }
 void TffPict::init(void)
 {
@@ -175,6 +175,16 @@ void TffPict::setDiscontinuity(IMediaSample *pIn)
         discontinuity = true;
     }
 }
+
+void TffPict::setFullRange(AVColorRange color_range)
+{
+    if (color_range == AVCOL_RANGE_JPEG) {
+        video_full_range_flag = VIDEO_FULL_RANGE_PC;
+    } else {
+        video_full_range_flag = VIDEO_FULL_RANGE_TV;
+    }
+}
+
 void TffPict::readLibavcodec(uint64_t Icsp,const char_t *flnm,const char_t *ext,Tbuffer &buf,IffdshowBase *deci)
 {
     Tlibavcodec *libavcodec;
@@ -207,6 +217,7 @@ void TffPict::readLibavcodec(uint64_t Icsp,const char_t *flnm,const char_t *ext,
             const stride_t linesize[4]= {frame->linesize[0],frame->linesize[1],frame->linesize[2],frame->linesize[3]};
             Tpalette pal(frame->data[1],256);
             init(csp_lavc2ffdshow(avctx->pix_fmt),frame->data,linesize,Trect(0,0,avctx->width,avctx->height),true,frametype,fieldtype,srclen,pal);
+            setFullRange(avctx->color_range);
             Tconvert *convert=new Tconvert(deci,avctx->width,avctx->height);
             // Currently output color space is always YCbCr.
             convertCSP(csp_bestMatch(csp,Icsp),buf,convert);

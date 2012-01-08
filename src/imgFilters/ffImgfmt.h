@@ -149,15 +149,15 @@ static __inline uint64_t csp_lavc2ffdshow(enum PixelFormat pix_fmt)
         case PIX_FMT_YUV420P :
             return FF_CSP_420P;
         case PIX_FMT_YUVJ420P:
-            return FF_CSP_420P|FF_CSP_FLAGS_YUV_JPEG;
+            return FF_CSP_420P;
         case PIX_FMT_YUV422P :
             return FF_CSP_422P;
         case PIX_FMT_YUVJ422P:
-            return FF_CSP_422P|FF_CSP_FLAGS_YUV_JPEG;
+            return FF_CSP_422P;
         case PIX_FMT_YUV444P :
             return FF_CSP_444P;
         case PIX_FMT_YUVJ444P:
-            return FF_CSP_444P|FF_CSP_FLAGS_YUV_JPEG;
+            return FF_CSP_444P;
         case PIX_FMT_YUV411P :
             return FF_CSP_411P;
         case PIX_FMT_YUV410P :

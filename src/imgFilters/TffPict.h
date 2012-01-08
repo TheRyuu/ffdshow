@@ -68,6 +68,7 @@ struct FIELD_TYPE {
 };
 
 struct AVPaletteControl;
+enum AVColorRange;
 struct Tpalette {
     Tpalette(void):pal(NULL),numcolors(0) {}
     Tpalette(const unsigned char *Ipal,unsigned int Inumcolors):pal(Ipal),numcolors(Inumcolors) {}
@@ -112,6 +113,7 @@ public:
     TffPict(uint64_t Icsp,const char_t *flnm,Tbuffer &buf,IffdshowBase *deci);
     void setTimestamps(IMediaSample *pIn);
     void setDiscontinuity(IMediaSample *pIn);
+    void setFullRange(AVColorRange color_range);
     ~TffPict() {}
 
     TcspInfo cspInfo;
@@ -119,7 +121,7 @@ public:
     bool film,repeat_first_field;
     bool discontinuity;
     int video_full_range_flag;
-    int YCbCr_RGB_matrix_coefficients;
+    enum AVColorPrimaries YCbCr_RGB_matrix_coefficients;
     REFERENCE_TIME rtStart,rtStop;
     LONGLONG mediatimeStart,mediatimeStop;
     int gmcWarpingPoints,gmcWarpingPointsReal;

@@ -38,20 +38,20 @@ TrgbPrimaries::TrgbPrimaries(IffdshowBase *deci):
 {
     deciV = comptrQ<IffdshowDecVideo>(deci);
     if (deciV) {
-        UpdateSettings(VIDEO_FULL_RANGE_INVALID, YCbCr_RGB_coeff_Unspecified);
+        UpdateSettings(VIDEO_FULL_RANGE_INVALID, AVCOL_PRI_UNSPECIFIED);
     } else {
         reset();
     }
 }
 
 // return a value that has to be added to RGB
-int TrgbPrimaries::UpdateSettings(int video_full_range_flag, int YCbCr_RGB_matrix_coefficients)
+int TrgbPrimaries::UpdateSettings(int video_full_range_flag, enum AVColorPrimaries YCbCr_RGB_matrix_coefficients)
 {
     if (deciV) {
         const ToutputVideoSettings *outcfg = deciV->getToutputVideoSettings(); // This pointer may change during playback.
         cspOptionsIturBt = (ffYCbCr_RGB_MatrixCoefficientsType)outcfg->cspOptionsIturBt;
         if (cspOptionsIturBt == ITUR_BT_AUTO) {
-            if (YCbCr_RGB_matrix_coefficients == YCbCr_RGB_coeff_Unspecified) {
+            if (YCbCr_RGB_matrix_coefficients == AVCOL_PRI_UNSPECIFIED) {
                 const Trect *decodedRect = deciV->getDecodedPictdimensions();
                 if (decodedRect) {
                     if (decodedRect->dx > 1024 || decodedRect->dy >= 600) {
@@ -62,9 +62,9 @@ int TrgbPrimaries::UpdateSettings(int video_full_range_flag, int YCbCr_RGB_matri
                 } else {
                     cspOptionsIturBt = ITUR_BT601;
                 }
-            } else if (YCbCr_RGB_matrix_coefficients == YCbCr_RGB_coeff_ITUR_BT_709) {
+            } else if (YCbCr_RGB_matrix_coefficients == AVCOL_PRI_BT709) {
                 cspOptionsIturBt = ITUR_BT709;
-            } else if (YCbCr_RGB_matrix_coefficients == YCbCr_RGB_coeff_SMPTE240M) {
+            } else if (YCbCr_RGB_matrix_coefficients == AVCOL_PRI_SMPTE240M) {
                 cspOptionsIturBt = SMPTE240M;
             } else {
                 cspOptionsIturBt = ITUR_BT601;

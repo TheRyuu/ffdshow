@@ -583,9 +583,6 @@ void avcodec_get_frame_defaults(AVFrame *pic){
     pic->key_frame= 1;
     pic->sample_aspect_ratio = (AVRational){0, 1};
     pic->format = -1;           /* unknown */
-    /* ffdshow custom code */
-    pic->YCbCr_RGB_matrix_coefficients = YCbCr_RGB_coeff_Unspecified;
-    pic->video_full_range_flag = VIDEO_FULL_RANGE_INVALID;
 }
 
 AVFrame *avcodec_alloc_frame(void){

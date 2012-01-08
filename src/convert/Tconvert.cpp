@@ -168,7 +168,7 @@ int Tconvert::convert(uint64_t incsp0,
                       stride_t dstStride0[],
                       const Tpalette *srcpal,
                       int video_full_range_flag,
-                      int YCbCr_RGB_matrix_coefficients,
+                      enum AVColorPrimaries YCbCr_RGB_matrix_coefficients,
                       bool vram_indirect)
 {
     bool wasChange;
