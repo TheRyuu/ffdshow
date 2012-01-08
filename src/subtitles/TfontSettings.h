@@ -28,7 +28,7 @@ public:
         return *this;
     }
     virtual void reg_op(TregOp &t);
-    unsigned int getSize(unsigned int dx,unsigned int dy) const {
+    unsigned int getSize(int dx, int dy) const {
         if (autosize && dx && dy) {
             return limit(sizeA*ff_sqrt(dx*dx+dy*dy)/1000,3U,255U);
         } else {

@@ -323,7 +323,7 @@ bool TrenderedSubtitleLine::checkCollision(const CRectDouble &query, CRectDouble
     if (empty()) {
         return false;
     }
-    if (mprops.isMove || mprops.isOrg) {
+    if (!mprops.isCollisionCheckRequired()) {
         return false;
     }
     if (query.checkOverlap(paragraphRect)) {
@@ -459,62 +459,45 @@ void TrenderedSubtitleLines::printASS(
         const TSubtitleMixedProps &lineprops = line->getProps();
         double x=0;
         ParagraphKey pkey(line);
-        if (!line->getHasPrintedRect() || lineprops.isMove) {
+        if (!line->getHasPrintedRect() || lineprops.isASSmove() || lineprops.isScroll()) {
             std::map<ParagraphKey,ParagraphValue>::iterator pi=paragraphs.find(pkey);
             if (pi != paragraphs.end()) {
                 ParagraphValue &pval=pi->second;
                 if (pval.firstuse) {
-                    switch (pkey.alignment) {
-                        case 9: // SSA mid
-                        case 10:
-                        case 11:
-                            // If the subs are SRT with SSA mid aligment tags or if they are SSA,
-                            // IDFF_subSSAOverridePlacement is present and they don't have any
-                            // position defined, then apply the vertical position slider setting.
-                            if ((pkey.marginBottom == 0 || (prefs.deci->getParam2(IDFF_subSSAOverridePlacement)
-                                                            || (prefs.subformat & Tsubreader::SUB_FORMATMASK) != Tsubreader::SUB_SSA)) && !pkey.isMove) {
-                                pval.y=((double)prefs.ypos*prefsdy)/100.0-pval.height;
-                            }
-                            // With middle alignment and position/move tag we position the paragraph to the requested
-                            // position basing on the anchor point set at the middle
-                            else if (pkey.isMove) {
-                                pval.y=pkey.marginTop-pval.height/2.0;
-                            } else { // otherwise put the paragraph on the center of the screen (vertical margin is ignored)
-                                pval.y=(prefsdy - pval.height)/2.0;
-                            }
-                            break;
-                        case 5: // SSA top
-                        case 6:
-                        case 7:
-                            // If the subs are SRT with SSA top aligment tags or if they are SSA,
-                            // IDFF_subSSAOverridePlacement is present and they don't have any
-                            // position defined, then apply the vertical position slider setting
-                            // but inversed.
-                            if (((prefs.subformat & Tsubreader::SUB_FORMATMASK) != Tsubreader::SUB_SSA) || (!pkey.isMove && ((prefs.subformat & Tsubreader::SUB_FORMATMASK) == Tsubreader::SUB_SSA) && prefs.deci->getParam2(IDFF_subSSAOverridePlacement))) {
-                                pval.y=((double)(100-prefs.ypos)*prefsdy)/100.0;
-                            } else {
+                    if (lineprops.scroll.directionV) {
+                        pval.y = lineprops.getScrollStart();
+                        if (lineprops.scroll.directionV == 1)
+                            pval.y -= pval.height;
+                    }  else {
+                        switch (pkey.alignment) {
+                            case 9: // SSA mid
+                            case 10:
+                            case 11:
+                                // With middle alignment and position/move tag we position the paragraph to the requested
+                                // position basing on the anchor point set at the middle
+                                if (pkey.isMove) {
+                                    pval.y=pkey.marginTop-pval.height/2.0;
+                                } else { // otherwise put the paragraph on the center of the screen (vertical margin is ignored)
+                                    pval.y=(prefsdy - pval.height)/2.0;
+                                }
+                                break;
+                            case 5: // SSA top
+                            case 6:
+                            case 7:
                                 pval.y = pkey.marginTop;
-                            }
-                            break;
-                        case 1: // SSA bottom
-                        case 2:
-                        case 3:
-                        default:
-                            // If the subs are SRT with SSA bottom aligment tags or if they are SSA,
-                            // IDFF_subSSAOverridePlacement is present and they don't have any
-                            // position defined, then apply the vertical position slider setting.
-                            if ((pkey.marginBottom == 0 || (prefs.deci->getParam2(IDFF_subSSAOverridePlacement)
-                                                            || (prefs.subformat & Tsubreader::SUB_FORMATMASK) != Tsubreader::SUB_SSA)) && !pkey.isMove) {
-                                pval.y=((double)prefs.ypos*prefsdy)/100.0-pval.height;
-                            } else {
+                                break;
+                            case 1: // SSA bottom
+                            case 2:
+                            case 3:
+                            default:
                                 pval.y=(double)prefsdy - 1 - pkey.marginBottom - pval.height;
-                            }
-                            break;
+                                break;
+                        }
                     }
 
                     // If option is checked (or if subs are SUBVIEWER), correct vertical placement if text goes out of the screen
                     if ((prefs.deci->getParam2(IDFF_subSSAMaintainInside)
-                            || (prefs.subformat & Tsubreader::SUB_FORMATMASK) != Tsubreader::SUB_SSA) && !lineprops.isMove) {
+                        || !lineprops.isSSA()) && !lineprops.isMove && !lineprops.isScroll()) {
                         if (pval.y+pval.height>prefsdy) {
                             pval.y=prefsdy-pval.height;
                         }
@@ -523,9 +506,11 @@ void TrenderedSubtitleLines::printASS(
                         }
                     }
 
-
-                    // Moving (scrolling text) : scroll from t1 to t2. Calculate vertical position
-                    if (lineprops.isMove && prefs.rtStart >= lineprops.get_moveStart()) {
+                    if (lineprops.scroll.directionV) {
+                        REFERENCE_TIME t = (prefs.rtStart - lineprops.tStart) / (REF_SECOND_MULT / 1000);
+                        pval.y += t * lineprops.getScrollSpeed();
+                    } else if (lineprops.isMove && prefs.rtStart >= lineprops.get_moveStart()) {
+                        // \move : move from t1 to t2. Calculate vertical position
                         // Stop scrolling if beyond t2
                         if (prefs.rtStart >= lineprops.get_moveStop()) {
                             pval.y += lineprops.get_movedistanceV();
@@ -540,85 +525,33 @@ void TrenderedSubtitleLines::printASS(
                 double marginL=lineprops.get_marginL(cdx);
                 double marginR=lineprops.get_marginR(cdx);
 
-                switch (lineprops.alignment) {
-                    case 1: // left(SSA)
-                    case 5:
-                    case 9:
-                        if (!pkey.isMove && prefs.deci->getParam2(IDFF_subSSAOverridePlacement)) {
-                            x = (prefs.xpos * prefsdx)/100;
-                            x = x - cdx / 2.0;
-                            if (x < 0) {
-                                x = 0;
-                            }
-                            if (x + cdx >= (double)prefsdx) {
-                                x = prefsdx - cdx;
-                            }
-                        } else {
+                if (lineprops.scroll.directionH == -1) {
+                    x = prefsdx;
+                } else if (lineprops.scroll.directionH == 1) {
+                    x = -pval.width;
+                }  else {
+                    switch (lineprops.alignment) {
+                        case 1: // left(SSA)
+                        case 5:
+                        case 9:
                             x=marginL;
-                        }
-                        break;
-                    case 3: // right(SSA)
-                    case 7:
-                    case 11:
-                        if (!pkey.isMove && prefs.deci->getParam2(IDFF_subSSAOverridePlacement)) {
-                            x = (prefs.xpos * prefsdx)/100;
-                            x = x - cdx / 2.0;
-                            if (x < 0) {
-                                x = 0;
-                            }
-                            if (x + cdx >= (double)prefsdx) {
-                                x = prefsdx - cdx;
-                            }
-                        } else {
+                            break;
+                        case 3: // right(SSA)
+                        case 7:
+                        case 11:
                             x = prefsdx - cdx - marginR;
-                        }
-                        break;
-                    case 2: // center(SSA)
-                    case 6:
-                    case 10:
-                        // If the text is supposed to be placed at the center of the screen,
-                        // has no horizontal alignment defined or IDFF_subSSAOverridePlacement
-                        // is present then apply the horizontal position setting
-                        if (!pkey.isMove && prefs.deci->getParam2(IDFF_subSSAOverridePlacement)) {
-                            x = (prefs.xpos * prefsdx)/100;
-                            x = x - cdx / 2.0;
-                            if (x < 0) {
-                                x = 0;
+                            break;
+                        case 2: // center(SSA)
+                        case 6:
+                        case 10:
+                        default: // non SSA/ASS
+                            if (lineprops.isMove) { // If position defined, then marginL is relative to left border of the screen
+                                x = marginL;
+                            } else { // else marginL is relative to the center of the screen
+                                x = ((double)prefsdx - marginL - marginR - cdx)/2.0 + marginL;
                             }
-                            if (x + cdx >= prefsdx) {
-                                x = prefsdx - cdx;
-                            }
-                        } else if (lineprops.isMove) { // If position defined, then marginL is relative to left border of the screen
-                            x = marginL;
-                        } else { // else marginL is relative to the center of the screen
-                            x = ((double)prefsdx - marginL - marginR - cdx)/2.0 + marginL;
-                        }
-                        break;
-                    default: // non SSA/ASS
-                        if (!lineprops.isMove) {
-                            x=(prefs.xpos * prefsdx)/100;
-                            switch (prefs.align) {
-                                case ALIGN_LEFT:
-                                    break;
-                                case ALIGN_FFDSHOW:
-                                    x = x - cdx / 2.0;
-                                    if (x < 0) {
-                                        x = 0;
-                                    }
-                                    if (x + cdx >= (double)prefsdx) {
-                                        x = prefsdx - cdx;
-                                    }
-                                    break;
-                                case ALIGN_CENTER:
-                                    x = x - cdx / 2.0;
-                                    break;
-                                case ALIGN_RIGHT:
-                                    x = x - cdx;
-                                    break;
-                            }
-                        } else {
-                            x = marginL;
-                        }
+                            break;
+                    }
                 }
 
                 // If option is checked, correct horizontal placement if text goes out of the screen
@@ -632,7 +565,7 @@ void TrenderedSubtitleLines::printASS(
                     }
                 }
 
-                if (!lineprops.isMove && !lineprops.isOrg && pval.firstuse) {
+                if (lineprops.isCollisionCheckRequired() && pval.firstuse) {
                     handleCollision(line, x, pval, prefsdy, lineprops.alignment);
                 }
 
@@ -652,8 +585,11 @@ void TrenderedSubtitleLines::printASS(
             y = line->getPrintedRect().top;
         }
 
-        // Moving (scrolling text) : scroll from t1 to t2. Calculate horizontal position
-        if (lineprops.isMove && prefs.rtStart >= lineprops.get_moveStart()) {
+        if (lineprops.scroll.directionH) {
+            REFERENCE_TIME t = (prefs.rtStart - lineprops.tStart) / (REF_SECOND_MULT / 1000);
+            x += t * lineprops.getScrollSpeed();
+        } else if (lineprops.isMove && prefs.rtStart >= lineprops.get_moveStart()) {
+            // \move : move from t1 to t2. Calculate horizontal position
             // Stop scrolling if beyond t2
             if (prefs.rtStart >= lineprops.get_moveStop()) {
                 x += lineprops.get_movedistanceH();
@@ -709,6 +645,7 @@ TrenderedSubtitleLines::ParagraphKey::ParagraphKey(TrenderedSubtitleLine *line)
     marginL = lineprops.get_marginL();
     marginR = lineprops.get_marginR();
     isMove = lineprops.isMove;
+    isScroll = lineprops.isScroll();
     hasPrintedRect = line->getHasPrintedRect();
     lineID = lineprops.lineID;
 
@@ -716,7 +653,7 @@ TrenderedSubtitleLines::ParagraphKey::ParagraphKey(TrenderedSubtitleLine *line)
     if (isMove) {
         pos = lineprops.pos;
     }
-    if (!isMove) {
+    if (!lineprops.isASSmove() && !lineprops.isScroll()) {
         printedRect = line->getPrintedRect();
     }
 }
@@ -810,6 +747,15 @@ bool TrenderedSubtitleLines::ParagraphKey::operator < (const ParagraphKey &rt) c
     if (isMove<rt.isMove) {
         return true;
     }
+    if (isMove>rt.isMove) {
+        return false;
+    }
+    if (isScroll<rt.isScroll) {
+        return true;
+    }
+    if (isScroll>rt.isScroll) {
+        return false;
+    }
     if (pos<rt.pos) {
         return true;
     }
@@ -852,6 +798,7 @@ bool TrenderedSubtitleLines::ParagraphKey::operator != (const ParagraphKey &rt) 
             && marginL == rt.marginL
             && marginR == rt.marginR
             && isMove == rt.isMove
+            && isScroll == rt.isScroll
             && pos == rt.pos
             && layer == rt.layer
             && lineID == rt.lineID

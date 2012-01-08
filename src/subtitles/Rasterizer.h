@@ -84,6 +84,6 @@ public:
     bool ScanConvert();
     bool CreateWidenedRegion(int borderX, int borderY);
     void DeleteOutlines();
-    bool Rasterize(int xsub, int ysub, CRect &overhang, bool hqBorder, bool fCheckRange, const CPoint &bodysLeftTop, int resDx, int resDy);
+    bool Rasterize(int xsub, int ysub, CRect &overhang, bool hqBorder, bool fCheckRange, const CPoint &bodysLeftTop, int resDx, int resDy, bool needAlignYV12);
 };
 

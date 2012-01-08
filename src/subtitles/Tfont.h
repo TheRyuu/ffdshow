@@ -125,7 +125,7 @@ private:
         int alignment;
         double marginTop,marginBottom;
         double marginL,marginR;
-        int isMove;
+        int isMove,isScroll;
         CPoint pos;
         int layer;
         bool hasPrintedRect;

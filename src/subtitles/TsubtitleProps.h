@@ -30,7 +30,7 @@ struct TSubtitleProps {
     TSubtitleProps() {
         reset();
     }
-    TSubtitleProps(unsigned int IrefResX,unsigned int IrefResY, int IwrapStyle, int IscaleBorderAndShadow) {
+    TSubtitleProps(int IrefResX, int IrefResY, int IwrapStyle, int IscaleBorderAndShadow) {
         reset();
         refResX=IrefResX;
         refResY=IrefResY;
@@ -51,7 +51,7 @@ struct TSubtitleProps {
     bool isColor;
     COLORREF color,SecondaryColour, TertiaryColour, OutlineColour, ShadowColour;
     int colorA,SecondaryColourA, TertiaryColourA, OutlineColourA, ShadowColourA;
-    unsigned int refResX,refResY;
+    int refResX,refResY;
     bool isMove,isOrg,isClip;
     Ttransform transform;
     unsigned int transformT1,transformT2;
@@ -106,6 +106,9 @@ struct TSubtitleProps {
     REFERENCE_TIME fadeT1,fadeT2,fadeT3,fadeT4;
     REFERENCE_TIME karaokeDuration,karaokeStart;
     REFERENCE_TIME karaokeFillStart,karaokeFillEnd;
+    bool isScroll() const {
+        return scroll.isScroll();
+    }
     enum {
         KARAOKE_NONE,
         KARAOKE_k,
@@ -113,4 +116,17 @@ struct TSubtitleProps {
         KARAOKE_ko,
         KARAOKE_ko_opaquebox  // Special mode for opaque box with ko.
     } karaokeMode;
+    struct Tscroll {
+        int x1,x2,y1,y2;
+        int delay;
+        int directionV; // Up -1, Down 1, Left,right 0
+        int directionH; // Banner right to left (default) -1, left to right 1, other 0
+        int fadeaway;
+        Tscroll() {
+            x1=x2=y1=y2=delay=directionV=directionH=fadeaway=0;
+        }
+        bool isScroll() const {
+            return directionV || directionH;
+        }
+    } scroll;
 };

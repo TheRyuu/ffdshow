@@ -699,7 +699,7 @@ void Rasterizer::DeleteOutlines()
     mOutline.clear();
 }
 
-bool Rasterizer::Rasterize(int xsub, int ysub, CRect &overhang, bool hqBorder, bool fCheckRange, const CPoint &bodysLeftTop, int resDx, int resDy)
+bool Rasterizer::Rasterize(int xsub, int ysub, CRect &overhang, bool hqBorder, bool fCheckRange, const CPoint &bodysLeftTop, int resDx, int resDy, bool needAlignYV12)
 {
     _TrashOverlay();
 
@@ -719,12 +719,10 @@ bool Rasterizer::Rasterize(int xsub, int ysub, CRect &overhang, bool hqBorder, b
     mWideBorder = ffalign(mWideBorder, 8);
 
     int gw          = ((width + 7) >> 3)+1;
-    mGlyphBmpWidth  = ((gw + 15) >> 4) << 4;
-    overhang.right  += mGlyphBmpWidth - gw;
     mGlyphBmpHeight = ((height + 7) >> 3) + 1;
 
     int leftcut, topcut, rightcut, bottomcut;
-    fCheckRange = fCheckRange && (mGlyphBmpWidth * mGlyphBmpHeight < resDx * resDy / 4);
+    fCheckRange = fCheckRange && (gw * mGlyphBmpHeight < resDx * resDy / 4);
     if (fCheckRange) {
         // added by h.yamagata
         // After rotation, especially \fry, the bitmap may be too large to be located in memory (1GB or so).
@@ -734,21 +732,21 @@ bool Rasterizer::Rasterize(int xsub, int ysub, CRect &overhang, bool hqBorder, b
         int ty = bodysLeftTop.y + mPathOffsetY / 8;
         if (lx < 0)
             leftcut = -lx;
-        if (lx + mGlyphBmpWidth > resDx)
-            rightcut = lx + mGlyphBmpWidth - resDx;
+        if (lx + gw > resDx)
+            rightcut = lx + gw - resDx;
         if (ty < 0)
             topcut = -ty;
         if (ty + mGlyphBmpHeight > resDy)
             bottomcut = ty + mGlyphBmpHeight - resDy;
         leftcut &= ~7;
         rightcut &= ~7;
-        rightcut = mGlyphBmpWidth - rightcut;
+        rightcut = gw - rightcut;
         if (rightcut < 0)
           rightcut = 0;
         bottomcut = mGlyphBmpHeight - bottomcut;
         if (bottomcut < 0)
             bottomcut = 0;
-        mGlyphBmpWidth = rightcut - leftcut;
+        gw = rightcut - leftcut;
         mGlyphBmpHeight = bottomcut - topcut;
         mPathOffsetX += leftcut << 3;
         mPathOffsetY += topcut << 3;
@@ -760,6 +758,19 @@ bool Rasterizer::Rasterize(int xsub, int ysub, CRect &overhang, bool hqBorder, b
         bottomcut -= topcut;
     }
 
+    if (needAlignYV12) {
+        if ((bodysLeftTop.x + (mPathOffsetX >> 3)) & 1) {
+            gw++;
+            overhang.left++;
+        }
+        if ((bodysLeftTop.y + (mPathOffsetY >> 3)) & 1) {
+            mGlyphBmpHeight++;
+            overhang.top++;
+        }
+    }
+
+    mGlyphBmpWidth = ffalign(gw, 16);
+    overhang.right  += mGlyphBmpWidth - gw;
     bmp[0] = aligned_calloc3<uint8_t>(mGlyphBmpWidth, mGlyphBmpHeight,16);
     msk[0] = aligned_calloc3<uint8_t>(mGlyphBmpWidth, mGlyphBmpHeight,16);
 

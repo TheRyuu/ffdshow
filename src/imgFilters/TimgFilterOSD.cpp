@@ -581,14 +581,16 @@ HRESULT TimgFilterOSD::process(TfilterQueue::iterator it,TffPict &pict,const Tfi
             getCurNext(FF_CSP_420P,pict,true,COPYMODE_FULL,dst);
         }
 
-        unsigned int x=dx1[0]*cfg->posX/100,y=dy1[0]*cfg->posY/100;
+        unsigned int x = dx1[0] * cfg->posX / 100 + cfg->font.outlineWidth + 1;
+        unsigned int y = dy1[0] * cfg->posY / 100 + cfg->font.outlineWidth + 1;
 
         for (TprovOSDs::iterator po=provOSDs.begin(); po!=provOSDs.end(); po++)
             if ((*po)->is) {
-                y += (*po)->print(deci,pict,dst,stride2,dx1[0],dy1[0],x,y,cfg->linespace,!!cfg->saveOnly,cfg->font);
+                // align to 2, to avoid YV12 chroma position problem. Improve renderer and remove this ugly workaround.
+                y += ffalign((*po)->print(deci,pict,dst,stride2,dx1[0],dy1[0],x,y,cfg->linespace,!!cfg->saveOnly,cfg->font),2);
             }
 
-        y += shortOsdRelative.print(deci,pict,dst,stride2,dx1[0],dy1[0],x,y,cfg->linespace,false,cfg->font);
+        y += ffalign(shortOsdRelative.print(deci,pict,dst,stride2,dx1[0],dy1[0],x,y,cfg->linespace,false,cfg->font),2);
 
         shortOsdAbsolute.print(deci,pict,dst,stride2,dx1[0],dy1[0],cfg->linespace,false,cfg->font);
         csClean.Unlock();

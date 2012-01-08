@@ -902,10 +902,16 @@ Tsubtitle* TsubtitleParserSSA::parse(Tstream &fd, int flags, REFERENCE_TIME star
                     const TSubtitleProps *props=styles.getProps(event.style);
                     TsubtitleText current(this->format, props ? *props : defprops, styles);
                     current.defProps.lineID = lineID;
+
+                    // margins
                     nmTextSubtitles::strToIntMargin(event.marginL,&current.defProps.marginL);
                     nmTextSubtitles::strToIntMargin(event.marginR,&current.defProps.marginR);
                     nmTextSubtitles::strToIntMargin(event.marginV,&current.defProps.marginV);
+
+                    // layer
                     nmTextSubtitles::strToInt(event.layer,&current.defProps.layer);
+
+                    // timestamps
                     if (flags&this->PARSETIME) {
                         current.start=timer.den*this->hmsToTime(hour1,min1,sec1,hunsec1)/timer.num;
                         current.stop =timer.den*this->hmsToTime(hour2,min2,sec2,hunsec2)/timer.num;
@@ -915,6 +921,37 @@ Tsubtitle* TsubtitleParserSSA::parse(Tstream &fd, int flags, REFERENCE_TIME star
                     }
                     current.defProps.tStart = current.defProps.karaokeStart = current.start;
                     current.defProps.tStop = current.stop;
+
+                    // scroll
+                    event.effect = event.effect.ConvertToLowerCase();
+                    if (event.effect.find(L"scroll up;") != ffstring::npos)
+                        current.defProps.scroll.directionV = -1;
+                    if (event.effect.find(L"scroll down;") != ffstring::npos)
+                        current.defProps.scroll.directionV = 1;
+                    if (current.defProps.scroll.directionV) {
+                        int y1, y2, delay, fadeawayheight = 0;
+                        if (swscanf(event.effect.c_str() + event.effect.find(L";"),
+                                    L";%d;%d;%d;%d", &y1, &y2, &delay, &fadeawayheight) >= 3) {
+                            if (y1 > y2)
+                                std::swap(y1,y2);
+                            current.defProps.scroll.y1 = y1;
+                            current.defProps.scroll.y2 = y2;
+                            current.defProps.scroll.delay = std::max(delay, 1);
+                            current.defProps.scroll.fadeaway = fadeawayheight;
+                        }
+                    }
+
+                    if (event.effect.find(L"banner;") != ffstring::npos) {
+                        current.defProps.scroll.directionV = 0;
+                        current.defProps.scroll.directionH = -1;
+                        int delay, lefttoright = 0, fadeawaywidth = 0;
+                        if (swscanf(event.effect.c_str() + event.effect.find(L";"),
+                                    L";%d;%d;%d", &delay, &lefttoright, &fadeawaywidth) >= 1) {
+                            current.defProps.scroll.delay = std::max(delay, 1);
+                            current.defProps.scroll.directionH = lefttoright ? 1 : -1;
+                            current.defProps.scroll.fadeaway = fadeawaywidth;
+                        }
+                    }
 
                     // replace \h with non-breaking space (U+00A0).
                     event.text = stringreplace(event.text, L"\\h", L"\xa0", rfReplaceAll);

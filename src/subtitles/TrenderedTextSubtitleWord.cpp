@@ -43,6 +43,7 @@ TrenderedTextSubtitleWord::TrenderedTextSubtitleWord(
     shadow[0]  = aligned_calloc3<uint8_t>(dx[0], dy[0], 16);
     shadow[1]  = aligned_calloc3<uint8_t>(dx[1], dy[1], 16);
     msk[0]     = aligned_calloc3<uint8_t>(dx[0], dy[0], 16);
+    memcpy(msk[0], parent.msk[0], dx[0] * dy[0]);
 
     if (mprops.karaokeMode == TSubtitleProps::KARAOKE_ko_opaquebox) {
         memcpy(shadow[0] , parent.shadow[0] , dx[0] * dy[0]);
@@ -66,11 +67,10 @@ TrenderedTextSubtitleWord::TrenderedTextSubtitleWord(
 
     if (parent.msk[1]) {
         msk[1] = aligned_calloc3<uint8_t>(dx[1], dy[1], 16);
+        memcpy(msk[1], parent.msk[1], dx[1] * dy[1]);
     }
 
     mprops.bodyYUV = YUVcolorA(mprops.SecondaryColour,mprops.SecondaryColourA);
-    oldFader = 0;
-    updateMask(1 << 16, 2);
     m_bitmapReady = true;
 }
 
@@ -120,11 +120,6 @@ TrenderedTextSubtitleWord::TrenderedTextSubtitleWord(
         m_outlineWidth = 0;
     }
 
-    // Improve YV12 rendering and remove these ugly workaround.
-    if (outlineWidth_double < 1.0 && outlineWidth_double > 0) {
-        outlineWidth_double = 0.5 + outlineWidth_double/2.0;
-    }
-
     strings tab_parsed_string;
     strtok(ffstring(s0,strlens).c_str(),L"\t",tab_parsed_string);
     SIZE sz;
@@ -133,7 +128,7 @@ TrenderedTextSubtitleWord::TrenderedTextSubtitleWord(
     for (strings::iterator s=tab_parsed_string.begin(); s!=tab_parsed_string.end(); s++) {
         SIZE sz0;
         GetTextExtentPoint32W(hdc,s->c_str(),(int)s->size(),&sz0);
-        sz.cx += sz0.cx + mprops.calculated_spacing * (long)s->size();
+        sz.cx += sz0.cx + mprops.calculated_spacing * int(s->size());
         if (s+1!=tab_parsed_string.end()) {
             int tabsize=prefs.tabsize*sz0.cy;
             int newpos=(sz.cx/tabsize+1)*tabsize;
@@ -500,7 +495,7 @@ void TrenderedTextSubtitleWord::rasterize(const CPointDouble &bodysLeftTop)
                        && !mprops.isMove;
     int xsub = bodysLeftTop.x * 8.0 - int(bodysLeftTop.x) * 8;
     int ysub = bodysLeftTop.y * 8.0 - int(bodysLeftTop.y) * 8;
-    Rasterizer::Rasterize(xsub, ysub, overhang, mprops.hqBorder, fCheckRange, CPoint(int(bodysLeftTop.x),int(bodysLeftTop.y)), mprops.dx, mprops.dy);
+    Rasterizer::Rasterize(xsub, ysub, overhang, mprops.hqBorder, fCheckRange, CPoint(int(bodysLeftTop.x),int(bodysLeftTop.y)), mprops.dx, mprops.dy, csp == FF_CSP_420P);
 
     dx[0] = mGlyphBmpWidth;
     dy[0] = mGlyphBmpHeight;
@@ -788,106 +783,76 @@ void TrenderedTextSubtitleWord::postRasterisation()
     }
 
     createShadow();
-    updateMask();
+    prepareForColorSpace();
 
     if (mprops.karaokeMode != TSubtitleProps::KARAOKE_NONE) {
         secondaryColoredWord = new TrenderedTextSubtitleWord(*this, secondaryColor_t());
     }
 }
 
-void TrenderedTextSubtitleWord::updateMask(int fader, int create, bool isAlpha, int bodyA, int outlineA) const
+void TrenderedTextSubtitleWord::Y2RGB(unsigned char *const bitmap[3], unsigned int size) const
 {
-    if (!create && oldFader == fader) {
-        return;
+    DWORD *bmpRGB=(DWORD *)bitmap[1];
+    const unsigned char *bmpY=bitmap[0];
+    for (unsigned int i=size ; i ; bmpRGB+=4,bmpY+=4,i--) {
+        *(bmpRGB)      =*bmpY<<16         | *bmpY<<8         | *bmpY;
+        *(bmpRGB+1)    =*(bmpY+1)<<16     | *(bmpY+1)<<8     | *(bmpY+1);
+        *(bmpRGB+2)    =*(bmpY+2)<<16     | *(bmpY+2)<<8     | *(bmpY+2);
+        *(bmpRGB+3)    =*(bmpY+3)<<16     | *(bmpY+3)<<8     | *(bmpY+3);
     }
+}
 
-    oldFader = fader;
+void TrenderedTextSubtitleWord::prepareForColorSpace() const
+{
     unsigned int _dx=dx[0];
     unsigned int _dy=dy[0];
 
-    unsigned int bodyYUVa;
-    unsigned int outlineYUVa;
-
-    if (isAlpha) {
-        bodyYUVa = bodyA;
-        outlineYUVa = outlineA;
-    } else {
-        bodyYUVa = mprops.bodyYUV.A * fader >> 16;
-        outlineYUVa = mprops.outlineYUV.A * fader >> 16;
-    }
-
-    if (bodyYUVa != 256 || outlineYUVa != 256 || create == 2 || bodyYUVa != oldBodyYUVa || outlineYUVa != oldOutlineYUVa) {
-        oldBodyYUVa = bodyYUVa;
-        oldOutlineYUVa = outlineYUVa;
-        int count=_dx*_dy;
-        for (int c=0; c<count; c++) {
-            msk[0][c]=(bmp[0][c] * bodyYUVa >> 8) + (outline[0][c] * outlineYUVa >> 8);
-            ASSERT(msk[0][c] <= 64);
-        }
-    }
-
     // Preparation for each color space
     if (csp == FF_CSP_420P) {
-        if (create == 1) {
-            int isColorOutline=(mprops.outlineYUV.U!=128 || mprops.outlineYUV.V!=128);
-            if (Tconfig::cpu_flags&FF_CPU_MMX || Tconfig::cpu_flags&FF_CPU_MMXEXT) {
-                unsigned int edxAlign=(_dx & ~0xf) >> 1;
-                unsigned int edx=_dx >> 1;
-                for (unsigned int y=0 ; y<dy[1] ; y++)
-                    for (unsigned int x=0 ; x<edx ; x+=8) {
-                        if (x>=edxAlign) {
-                            x=edx - 8;
-                        }
-                        unsigned int lum0=2*y*_dx+x*2;
-                        unsigned int lum1=(2*y+1)*_dx+x*2;
-                        unsigned int chr=y*dx[1]+x;
-                        YV12_lum2chr_max(&bmp[0][lum0],&bmp[0][lum1],&bmp[1][chr]);
-                        if (isColorOutline) {
-                            YV12_lum2chr_max(&outline[0][lum0],&outline[0][lum1],&outline[1][chr]);
-                        } else {
-                            YV12_lum2chr_min(&outline[0][lum0],&outline[0][lum1],&outline[1][chr]);
-                        }
-                        YV12_lum2chr_min(&shadow[0][lum0],&shadow [0][lum1],&shadow [1][chr]);
+        int isColorOutline=(mprops.outlineYUV.U!=128 || mprops.outlineYUV.V!=128);
+        if (0&&Tconfig::cpu_flags&FF_CPU_MMX || Tconfig::cpu_flags&FF_CPU_MMXEXT) {
+            unsigned int edxAlign=(_dx & ~0xf) >> 1;
+            unsigned int edx=_dx >> 1;
+            for (unsigned int y=0 ; y<dy[1] ; y++)
+                for (unsigned int x=0 ; x<edx ; x+=8) {
+                    if (x>=edxAlign) {
+                        x=edx - 8;
                     }
-            } else {
-                unsigned int _dx1=_dx/2;
-                for (unsigned int y=0; y<dy[1]; y++)
-                    for (unsigned int x=0; x<_dx1; x++) {
-                        unsigned int lum0=2*y*_dx+x*2;
-                        unsigned int lum1=(2*y+1)*_dx+x*2;
-                        unsigned int chr=y*dx[1]+x;
-                        bmp[1][chr]=std::max(std::max(std::max(bmp[0][lum0],bmp[0][lum0+1]),bmp[0][lum1]),bmp[0][lum1+1]);
-                        if (isColorOutline) {
-                            outline[1][chr]=std::max(std::max(std::max(outline[0][lum0],outline[0][lum0+1]),outline[0][lum1]),outline[0][lum1+1]);
-                        } else {
-                            outline[1][chr]=std::min(std::min(std::min(outline[0][lum0],outline[0][lum0+1]),outline[0][lum1]),outline[0][lum1+1]);
-                        }
-                        shadow[1][chr]=std::min(std::min(std::min(shadow[0][lum0],shadow[0][lum0+1]),shadow[0][lum1]),shadow[0][lum1+1]);
+                    unsigned int lum0=2*y*_dx+x*2;
+                    unsigned int lum1=(2*y+1)*_dx+x*2;
+                    unsigned int chr=y*dx[1]+x;
+                    YV12_lum2chr_max(&bmp[0][lum0],&bmp[0][lum1],&bmp[1][chr]);
+                    if (isColorOutline) {
+                        YV12_lum2chr_max(&outline[0][lum0],&outline[0][lum1],&outline[1][chr]);
+                    } else {
+                        YV12_lum2chr_min(&outline[0][lum0],&outline[0][lum1],&outline[1][chr]);
                     }
-            }
+                    YV12_lum2chr_min(&shadow[0][lum0],&shadow [0][lum1],&shadow [1][chr]);
+                }
+        } else {
+            unsigned int _dx1=_dx/2;
+            for (unsigned int y=0; y<dy[1]; y++)
+                for (unsigned int x=0; x<_dx1; x++) {
+                    unsigned int lum0=2*y*_dx+x*2;
+                    unsigned int lum1=(2*y+1)*_dx+x*2;
+                    unsigned int chr=y*dx[1]+x;
+                    bmp[1][chr]=std::max(std::max(std::max(bmp[0][lum0],bmp[0][lum0+1]),bmp[0][lum1]),bmp[0][lum1+1]);
+                    if (isColorOutline) {
+                        outline[1][chr]=std::max(std::max(std::max(outline[0][lum0],outline[0][lum0+1]),outline[0][lum1]),outline[0][lum1+1]);
+                    } else {
+                        outline[1][chr]=std::min(std::min(std::min(outline[0][lum0],outline[0][lum0+1]),outline[0][lum1]),outline[0][lum1+1]);
+                    }
+                    shadow[1][chr]=std::min(std::min(std::min(shadow[0][lum0],shadow[0][lum0+1]),shadow[0][lum1]),shadow[0][lum1+1]);
+                }
         }
     } else {
         //RGB32
         unsigned int xy=(_dx*_dy)>>2;
 
-#define Y2RGB(bmp)                                                                 \
-    DWORD *bmp##RGB=(DWORD *)bmp[1];                                               \
-    unsigned char *bmp##Y=bmp[0];                                                  \
-    for (unsigned int i=xy;i;bmp##RGB+=4,bmp ## Y+=4,i--)                          \
-     {                                                                             \
-      *(bmp##RGB)      =*bmp##Y<<16         | *bmp##Y<<8         | *bmp##Y;        \
-      *(bmp##RGB+1)    =*(bmp##Y+1)<<16     | *(bmp##Y+1)<<8     | *(bmp##Y+1);    \
-      *(bmp##RGB+2)    =*(bmp##Y+2)<<16     | *(bmp##Y+2)<<8     | *(bmp##Y+2);    \
-      *(bmp##RGB+3)    =*(bmp##Y+3)<<16     | *(bmp##Y+3)<<8     | *(bmp##Y+3);    \
-     }
-        if (create == 1) {
-            Y2RGB(bmp)
-            Y2RGB(outline)
-        }
-        if (create) {
-            Y2RGB(shadow)
-        }
-        Y2RGB(msk)
+        Y2RGB(bmp, xy);
+        Y2RGB(outline, xy);
+        Y2RGB(shadow, xy);
+        Y2RGB(msk, xy);
     }
     _mm_empty();
 }
@@ -1060,14 +1025,19 @@ void TrenderedTextSubtitleWord::printText(
     unsigned char **dst,
     const stride_t *stride)
 {
-    double sx = startx + mPathOffsetX / 8.0 - overhang.left;
+    double sx0 = startx + mPathOffsetX / 8.0 - overhang.left;
     double sy0 = starty + lineBaseline - m_baseline + mPathOffsetY / 8.0 - overhang.top;
+    if (mprops.gdi_font_scale == 4 && csp == FF_CSP_420P) {
+        // YV12 OSD workaround solution. Improve renderer and remove this ugly workaround.
+        sx0 = ffalign(int(sx0),  2);
+        sy0 = ffalign(int(sy0), 2);
+    }
 
     if (dst) {
         if (bmp[0] == NULL)
             return;
         unsigned char *dstLn[3];
-        unsigned int local_dx[3];
+        int local_dx[3];
         int local_dy[3];
         int x1[3],y1[3];
         ptrdiff_t srcOffset[]={0,0,0};
@@ -1084,7 +1054,7 @@ void TrenderedTextSubtitleWord::printText(
                 return secondaryColoredWord->printText(startx, starty, lineBaseline, rtStart, prefsdx, prefsdy, dst, stride);
             }
             if (mprops.karaokeFillStart < rtStart && rtStart < mprops.karaokeFillEnd) {
-                int kx = sx + (double)(rtStart - mprops.karaokeFillStart) /(double)(mprops.karaokeFillEnd - mprops.karaokeFillStart) * dx[0];
+                int kx = sx0 + (double)(rtStart - mprops.karaokeFillStart) /(double)(mprops.karaokeFillEnd - mprops.karaokeFillStart) * dx[0];
                 if (secondaryColoredWord) {
                     // We are doing highlighted left half.
                     if (kx < clip.right && clip.left <= kx)
@@ -1104,11 +1074,11 @@ void TrenderedTextSubtitleWord::printText(
             }
         }
 
-        if (sx > clip.right) return;
+        if (sx0 > clip.right) return;
         if (sy0 > clip.bottom) return;
         for (int i = 0; i < 3 ; i++) {
             int sy = int(sy0) >> cspInfo->shiftY[i];
-            x1[i] = int(sx) >> cspInfo->shiftX[i];
+            x1[i] = int(sx0) >> cspInfo->shiftX[i];
             int x2 = x1[i] + dx[i];
             y1[i] = sy;
             int y2 = y1[i] + dy[i];
@@ -1141,41 +1111,49 @@ void TrenderedTextSubtitleWord::printText(
             dstLn[i] += x1[i] * cspInfo->Bpp;
         }
         if (local_dx[0] > 0 && local_dy[0] > 0 && local_dx[1] > 0 && local_dy[1] > 0) {
-            paint(x1[0], y1[0], local_dx, local_dy, dstLn, stride,srcOffset, rtStart);
+#ifndef WIN64
+            if (Tconfig::cpu_flags&FF_CPU_SSE2) {
+#endif
+                paint<Tsse2>(x1[0], y1[0], local_dx, local_dy, dstLn, stride,srcOffset, rtStart);
+#ifndef WIN64
+            } else {
+                paint<Tmmx>(x1[0], y1[0], local_dx, local_dy, dstLn, stride,srcOffset, rtStart);
+            }
+#endif
         }
     } else {
-        rasterize(CPointDouble(sx, sy0));
+        rasterize(CPointDouble(sx0, sy0));
     }
 }
 
 inline void TrenderedTextSubtitleWord::YV12_YfontRenderer(int x, int y,
-    int bodyYUVa, int outlineYUVa, int shadowYUVa,
+    int bodyA, int outlineA, int shadowA,
     unsigned char *bmp, unsigned char *outline, unsigned char *shadow, unsigned char *msk,
     unsigned char *dst, stride_t dstStride) const
 {
     int srcPos=y * dx[0] + x;
     int dstPos=y * dstStride + x;
-    int s=shadowYUVa * shadow[srcPos] >> 6;
+    int s=shadowA * shadow[srcPos] >> 6;
     int d=((256-s) * dst[dstPos] >> 8) + (s * mprops.shadowYUV.Y >> 8);
-    int o=outlineYUVa * outline[srcPos] >> 6;
-    int b=bodyYUVa * bmp[srcPos] >> 6;
-    int m=msk[srcPos];
-        d=((64-m) * d >> 6) + (o * mprops.outlineYUV.Y >> 8);
+    int o=outlineA * outline[srcPos] >> 6;
+    int b=bodyA * bmp[srcPos] >> 6;
+    int m = b + o;
+        d=((256-m) * d >> 8) + (o * mprops.outlineYUV.Y >> 8);
         dst[dstPos]=std::min<int>(d + (b * mprops.bodyYUV.Y >> 8), 255);
 }
 
 inline void TrenderedTextSubtitleWord::YV12_UVfontRenderer(int x, int y,
-    int bodyYUVa, int outlineYUVa, int shadowYUVa,
+    int bodyA, int outlineA, int shadowA,
     unsigned char *bmp, unsigned char *outline, unsigned char *shadow, unsigned char *msk,
     unsigned char *dstU, unsigned char *dstV, stride_t dstStride) const
 {
     int srcPos=y * dx[1] + x;
     int dstPos=y * dstStride + x;
     /* U */
-    int s=shadowYUVa * shadow[srcPos] >> 6;
+    int s=shadowA * shadow[srcPos] >> 6;
     int d=((256-s) * dstU[dstPos] >> 8) + (s * mprops.shadowYUV.U >> 8);
-    int o=outlineYUVa * outline[srcPos] >> 6;
-    int b=bodyYUVa * bmp[srcPos] >> 6;
+    int o=outlineA * outline[srcPos] >> 6;
+    int b=bodyA * bmp[srcPos] >> 6;
         d=((256-o) * d >> 8) + (o * mprops.outlineYUV.U >> 8);
         dstU[dstPos]=std::min<int>(((256-b) * d >> 8) + (b * mprops.bodyYUV.U >> 8), 255);
     /* V */
@@ -1184,28 +1162,80 @@ inline void TrenderedTextSubtitleWord::YV12_UVfontRenderer(int x, int y,
         dstV[dstPos]=std::min<int>(((256-b) * d >> 8) + (b * mprops.bodyYUV.V >> 8), 255);
 }
 
+inline void TrenderedTextSubtitleWord::paintC_YV12(int startx, int startxUV, int endx, int endxUV,
+    int starty, int startyUV, int dy1, int dy1UV, int dstStartx,
+    int bodyA, int outlineA, int shadowA,
+    unsigned char *bmp, unsigned char *outline, unsigned char *shadow, unsigned char *msk,
+    unsigned char *bmpUV, unsigned char *outlineUV, unsigned char *shadowUV, unsigned char *mskUV,
+    unsigned char *dst, unsigned char *dstU, unsigned char *dstV,
+    stride_t dstStride, stride_t dstStrideUV) const
+{
+    for (int y=0 ; y < dy1 ; y++) {
+        if (y + starty >=0) {
+            int bodyA1 = bodyA, outlineA1 = outlineA, shadowA1= shadowA;
+            if (mprops.scroll.directionV && mprops.scroll.fadeaway) {
+                double fader = mprops.get_scrollFader(y + starty);
+                bodyA1 = bodyA * fader + 0.5;
+                outlineA1 = outlineA * fader + 0.5;
+                shadowA1 = shadowA * fader + 0.5;
+            }
+            for (int x=startx ; x < endx ; x++) {
+                if (mprops.scroll.directionH && mprops.scroll.fadeaway) {
+                    double fader = mprops.get_scrollFader(x + dstStartx);
+                    bodyA1 = bodyA * fader + 0.5;
+                    outlineA1 = outlineA * fader + 0.5;
+                    shadowA1 = shadowA * fader + 0.5;
+                }
+                //bool fBody = (bodyA1 == 256 && m_outlineWidth > 0);
+                YV12_YfontRenderer(x, y, bodyA1, outlineA1, shadowA1, bmp, outline, shadow, msk, dst, dstStride);
+            }
+        }
+    }
+    for (int y=0 ; y < dy1UV ; y++) {
+        if (y + startyUV >=0) {
+            int bodyA1 = bodyA, outlineA1 = outlineA, shadowA1= shadowA;
+            if (mprops.scroll.directionV && mprops.scroll.fadeaway) {
+                double fader = mprops.get_scrollFader(y*2 + starty);
+                bodyA1 = bodyA * fader + 0.5;
+                outlineA1 = outlineA * fader + 0.5;
+                shadowA1 = shadowA * fader + 0.5;
+            }
+            for (int x=startxUV ; x < endxUV ; x++) {
+                if (mprops.scroll.directionH && mprops.scroll.fadeaway) {
+                    double fader = mprops.get_scrollFader(x*2 + dstStartx);
+                    bodyA1 = bodyA * fader + 0.5;
+                    outlineA1 = outlineA * fader + 0.5;
+                    shadowA1 = shadowA * fader + 0.5;
+                }
+                //bool fBody = (bodyA1 == 256 && m_outlineWidth > 0);
+                YV12_UVfontRenderer(x, y, bodyA1, outlineA1, shadowA1, bmpUV, outlineUV, shadowUV, mskUV, dstU, dstV, dstStrideUV);
+            }
+        }
+    }
+}
+
 inline void TrenderedTextSubtitleWord::RGBfontRenderer(int x, int y,
-    int bodyYUVa, int outlineYUVa, int shadowYUVa,
+    int bodyA, int outlineA, int shadowA,
     unsigned char *bmp, unsigned char *outline, unsigned char *shadow, unsigned char *msk,
     unsigned char *dst, stride_t dstStride) const
 {
-   int srcPos=y * dx[1] + x;
-   int dstPos=y * dstStride + x;
+   int srcPos=y * dx[1] + x*4;
+   int dstPos=y * dstStride + x*4;
    /* B */
-   int s = shadowYUVa * shadow[srcPos] >> 6;
+   int s = shadowA * shadow[srcPos] >> 6;
    int d = ((256-s) * dst[dstPos] >> 8) + (s * mprops.shadowYUV.b >> 8);
-   int o = outlineYUVa * outline[srcPos] >> 6;
-   int b = bodyYUVa * bmp[srcPos] >> 6;
-   int m = msk[srcPos];
-       d = ((64-m) * d >> 6)+(o * mprops.outlineYUV.b >> 8);
+   int o = outlineA * outline[srcPos] >> 6;
+   int b = bodyA * bmp[srcPos] >> 6;
+   int m = b + o;
+       d = ((256-m) * d >> 8)+(o * mprops.outlineYUV.b >> 8);
        dst[dstPos] = std::min<int>(d + (b * mprops.bodyYUV.b >> 8), 255);
    /* G */
        d = ((256-s) * dst[dstPos+1] >> 8)+(s * mprops.shadowYUV.g >> 8);
-       d = ((64-m) * d >> 6)+(o * mprops.outlineYUV.g >> 8);
+       d = ((256-m) * d >> 8)+(o * mprops.outlineYUV.g >> 8);
        dst[dstPos + 1] = std::min<int>(d + (b * mprops.bodyYUV.g >> 8), 255);
    /* R */
        d = ((256-s) * dst[dstPos+2] >> 8)+(s * mprops.shadowYUV.r >> 8);
-       d = ((64-m) * d >> 6)+(o * mprops.outlineYUV.r >> 8);
+       d = ((256-m) * d >> 8)+(o * mprops.outlineYUV.r >> 8);
        dst[dstPos + 2] = std::min<int>(d + (b * mprops.bodyYUV.r >> 8), 255);
 }
 
@@ -1214,31 +1244,419 @@ inline void TrenderedTextSubtitleWord::RGBfontRenderer(int x, int y,
 // Uses mask instead of outline (outline is created by subtracting bmp from mask), and after that print bmp ignoring alpha settings.
 // This produces better quality if alpha for bmp is 100%.
 inline void TrenderedTextSubtitleWord::RGBfontRendererFillBody(int x, int y,
-    int bodyYUVa, int outlineYUVa, int shadowYUVa,
+    int bodyA, int outlineA, int shadowA,
     unsigned char *bmp, unsigned char *outline, unsigned char *shadow, unsigned char *msk,
     unsigned char *dst, stride_t dstStride) const
 {
-   int srcPos=y * dx[1] + x;
-   int dstPos=y * dstStride + x;
+   int srcPos=y * dx[1] + x*4;
+   int dstPos=y * dstStride + x*4;
    /* B */
-   int s = shadowYUVa * shadow[srcPos] >> 6;
+   int s = shadowA * shadow[srcPos] >> 6;
    int d = ((256-s) * dst[dstPos] >> 8) + (s * mprops.shadowYUV.b >> 8);
-   int m = msk[srcPos];
-   // int o = outlineYUVa * m >> 6;
    int b = bmp[srcPos];
-       d = ((64-m) * d >> 6)+(m * mprops.outlineYUV.b >> 6);
+   int m;
+
+   if (outlineA == 256)
+       m = msk[srcPos] << 2;
+   else
+       m = (b << 2) + (outlineA * outline[srcPos] >> 6);
+
+       d = ((256-m) * d >> 8)+(m * mprops.outlineYUV.b >> 8);
        dst[dstPos] = std::min<int>(((64-b) * d >> 6) + (b * mprops.bodyYUV.b >> 6), 255);
    /* G */
        d = ((256-s) * dst[dstPos+1] >> 8)+(s * mprops.shadowYUV.g >> 8);
-       d = ((64-m) * d >> 6)+(m * mprops.outlineYUV.g >> 6);
+       d = ((256-m) * d >> 8)+(m * mprops.outlineYUV.g >> 8);
        dst[dstPos + 1] = std::min<int>(((64-b) * d >> 6) + (b * mprops.bodyYUV.g >> 6), 255);
    /* R */
        d = ((256-s) * dst[dstPos+2] >> 8)+(s * mprops.shadowYUV.r >> 8);
-       d = ((64-m) * d >> 6)+(m * mprops.outlineYUV.r >> 6);
+       d = ((256-m) * d >> 8)+(m * mprops.outlineYUV.r >> 8);
        dst[dstPos + 2] = std::min<int>(((64-b) * d >> 6) + (b * mprops.bodyYUV.r >> 6), 255);
 }
 
-void TrenderedTextSubtitleWord::paint(int startx, int starty, unsigned int sdx[3], int sdy[3], unsigned char *dstLn[3], const stride_t stride[3],ptrdiff_t srcClipOffset[3],REFERENCE_TIME rtStart) const
+void TrenderedTextSubtitleWord::paintC_RGB(int startx, int endx, int starty, int dy1, int dstStartx,
+    int bodyA, int outlineA, int shadowA,
+    unsigned char *bmp, unsigned char *outline, unsigned char *shadow, unsigned char *msk,
+    unsigned char *dst, stride_t dstStride) const
+{
+    for (int y=0 ; y < dy1 ; y++) {
+        if (y + starty >=0) {
+            int bodyA1 = bodyA, outlineA1 = outlineA, shadowA1= shadowA;
+            if (mprops.scroll.directionV && mprops.scroll.fadeaway) {
+                double fader = mprops.get_scrollFader(y + starty);
+                bodyA1 = bodyA * fader + 0.5;
+                outlineA1 = outlineA * fader + 0.5;
+                shadowA1 = shadowA * fader + 0.5;
+            }
+            for (int x=startx ; x < endx ; x++) {
+                if (mprops.scroll.directionH && mprops.scroll.fadeaway) {
+                    double fader = mprops.get_scrollFader(x + dstStartx);
+                    bodyA1 = bodyA * fader + 0.5;
+                    outlineA1 = outlineA * fader + 0.5;
+                    shadowA1 = shadowA * fader + 0.5;
+                }
+                bool fBody = (bodyA1 == 256 && m_outlineWidth > 0);
+                if (fBody)
+                    RGBfontRendererFillBody(x,y,bodyA1,outlineA1,shadowA1,bmp, outline, shadow, msk, dst, dstStride);
+                else
+                    RGBfontRenderer(x,y,bodyA1,outlineA1,shadowA1,bmp, outline, shadow, msk, dst, dstStride);
+            }
+        }
+    }
+}
+
+template<class _mm, bool fillBody, bool fillOutline> __forceinline void TrenderedTextSubtitleWord::fontRenderer_simd(
+    const Tcctbl<_mm> &cctbl,
+    unsigned char *bmp, unsigned char *outline, unsigned char *shadow, unsigned char *msk,
+    unsigned char *dst) const
+{
+    const int srlcount = (fillBody && fillOutline) ? 6 : 8;
+    _mm::__m _mm0,_mm1,_mm2,_mm3,_mm4,_mm5,_mm6,_mm7,_mm8,_mm9,_mm10,_mm11,_mm12,_mm13;
+    _mm0 =    cctbl.shadow_A;
+    movVqu    (_mm1, shadow);
+    _mm2 =    _mm1;
+    pxor      (_mm3, _mm3);
+    punpckhbw (_mm1, _mm3);
+    punpcklbw (_mm2, _mm3);
+    pmullw    (_mm1, _mm0);
+    psrlw     (_mm1, 6);
+    pmullw    (_mm2, _mm0);
+    psrlw     (_mm2, 6);            // _mm1:_mm2 = s = m_shadowYUV.A * shadow[srcPos] >> 6;
+
+    _mm4 =    cctbl.mask256;
+    _mm5 =    _mm4;
+    psubw     (_mm4, _mm1);
+    psubw     (_mm5, _mm2);         // _mm4:_mm5 = (256-s)
+
+    movVqu    (_mm6, dst);
+    _mm7 =    _mm6;
+    punpckhbw (_mm6, _mm3);
+    punpcklbw (_mm7, _mm3);         // _mm6;_mm7 = dst[dstPos]
+    pmullw    (_mm4, _mm6);
+    psrlw     (_mm4, 8);
+    pmullw    (_mm5, _mm7);
+    psrlw     (_mm5, 8);            // _mm4:_mm5 = ((256-s) * dst[dstPos] >> 8)
+
+    _mm0 =    cctbl.shadow_Y;
+    pmullw    (_mm1, _mm0);
+    psrlw     (_mm1, 8);
+    pmullw    (_mm2, _mm0);
+    psrlw     (_mm2, 8);            // _mm1:_mm2 = (s * m_shadowYUV.Y >> 8)
+
+    paddusb   (_mm1,_mm4);
+    paddusb   (_mm2,_mm5);          // _mm1:_mm2 = d =((256-s) * dst[dstPos] >> 8) + (s * m_shadowYUV.Y >> 8);
+
+    if (fillBody && fillOutline) {
+        movVqu    (_mm4, msk);
+        _mm5 =    _mm4;
+        punpckhbw (_mm4, _mm3);
+        punpcklbw (_mm5, _mm3);
+        _mm6 =    cctbl.mask64;
+    } else {
+        _mm0 =    cctbl.outline_A;
+        movdqu    (_mm8, outline);  // mm4 = outline[srcPos]
+        _mm9 =    _mm8;
+        punpckhbw (_mm8, _mm3);
+        punpcklbw (_mm9, _mm3);
+        pmullw    (_mm8, _mm0);
+        psrlw     (_mm8, 6);
+        pmullw    (_mm9, _mm0);
+        psrlw     (_mm9, 6);        // _mm8:_mm9 = o= m_outlineYUV.A * outline[srcPos] >> 6;
+        _mm4 =    _mm8;
+        _mm5 =    _mm9;
+
+        _mm0 = cctbl.body_A;
+        movVqu    (_mm10, bmp);
+        _mm11      = _mm10;
+        punpckhbw (_mm10, _mm3);
+        punpcklbw (_mm11, _mm3);     // _mm10:_mm11 = b = bmp[srcPos];
+        pmullw    (_mm10, _mm0);
+        psrlw     (_mm10, 6);
+        pmullw    (_mm11, _mm0);
+        psrlw     (_mm11, 6);        // _mm10:_mm11 = b = m_bodyYUV.A * bmp[0][srcPos] >> 6;
+        paddusw   (_mm4, _mm10);
+        paddusw   (_mm5, _mm11);
+        if (fillBody) {
+            _mm12 = _mm4;
+            _mm13 = _mm5;
+        }
+        _mm6 =    cctbl.mask256;
+    }
+    _mm7 =    _mm6;
+    psubw     (_mm6, _mm4);
+    psubw     (_mm7, _mm5);         // _mm6:_mm7 = (64-m) or (256-m)
+
+    pmullw    (_mm6, _mm1);
+    psrlw     (_mm6, srlcount);
+    pmullw    (_mm7, _mm2);
+    psrlw     (_mm7, srlcount);     // _mm6:_mm7 = ((64-m) * d >> 6) or ((256-m) * d >> 8)
+
+    if (fillBody && fillOutline) {
+        movdqu(_mm4, msk);          // mm4 = mask[srcPos]
+        _mm5 =    _mm4;
+        punpckhbw (_mm4, _mm3);
+        punpcklbw (_mm5, _mm3);
+    } else if (fillBody) {
+        _mm4 =    _mm12;
+        _mm5 =    _mm13;
+    } else {
+        _mm4 =    _mm8;
+        _mm5 =    _mm9;
+    }
+
+    _mm0 =    cctbl.outline_Y;
+    pmullw    (_mm4, _mm0);
+
+    psrlw     (_mm4, srlcount);
+    pmullw    (_mm5, _mm0);
+    psrlw     (_mm5, srlcount);
+// BODY == FILL                   _mm4:_mm5 = (m * m_outlineYUV.Y >> 6);
+// BODY != FILL                   _mm4:_mm5 = (o * m_outlineYUV.Y >> 8);
+
+    paddusb   (_mm4, _mm6);
+    paddusb   (_mm5, _mm7);         // _mm4:_mm5 = d = ((64-m) * d >> 6) + (o * m_outlineYUV.Y >> 8); ( or ... + (m * m_outlineYUV.Y >> 6) )
+
+    if (fillBody) {
+        movVqu    (_mm1, bmp);
+        _mm2      = _mm1;
+        punpckhbw (_mm1, _mm3);
+        punpcklbw (_mm2, _mm3);     // _mm1:_mm2 = b = bmp[srcPos];
+        _mm6 =    cctbl.mask64;
+        _mm7 =    _mm6;
+        psubw     (_mm6, _mm1);
+        psubw     (_mm7, _mm2);     // _mm6:_mm7 = (64-b)
+
+        pmullw    (_mm6, _mm4);
+        psrlw     (_mm6, 6);
+        pmullw    (_mm7, _mm5);
+        psrlw     (_mm7, 6);        // _mm6:_mm7 = (64-b) * d >> 6
+        _mm0 =    cctbl.body_Y;
+        pmullw    (_mm1, _mm0);
+        psrlw     (_mm1, 6);
+        pmullw    (_mm2, _mm0);
+        psrlw     (_mm2, 6);        // _mm1:_mm2 = (b * m_bodyYUV.Y >> 6)
+
+        paddusb   (_mm1, _mm6);
+        paddusb   (_mm2, _mm7);     // _mm1:_mm2 = ((64-b) * d >> 6) + (o * m_bodyYUV.Y >> 6);
+    } else {
+        _mm0 = cctbl.body_A;
+        _mm1 =    _mm10;
+        _mm2 =    _mm11;            // _mm1:_mm2 = b = m_bodyYUV.A * bmp[0][srcPos] >> 6;
+
+        _mm0 =    cctbl.body_Y;
+        pmullw    (_mm1, _mm0);
+        psrlw     (_mm1, 8);
+        pmullw    (_mm2, _mm0);
+        psrlw     (_mm2, 8);        // _mm1:_mm2 = (b * m_bodyYUV.Y >> 8)
+
+        paddusb   (_mm1, _mm4);
+        paddusb   (_mm2, _mm5);     // _mm1:_mm2 = d + (o * m_bodyYUV.Y >> 8);
+    }
+
+    packuswb   (_mm2, _mm1);
+    movVqu     (dst, _mm2);
+}
+
+template<class _mm> __forceinline void TrenderedTextSubtitleWord::fontRendererUV_simd(
+    const Tcctbl<_mm> &cctbl,
+    unsigned char *bmp, unsigned char *outline, unsigned char *shadow,
+    unsigned char *dstU,unsigned char* dstV) const
+{
+    _mm::__m _mm0,_mm1,_mm2,_mm3,_mm4,_mm5,_mm6,_mm7;
+    _mm::__m b1,b2,o1,o2,s1,s2;
+
+// U
+  movVqu    (_mm1, shadow);
+  _mm0 =    cctbl.shadow_A;
+  _mm2 =    _mm1;
+  pxor      (_mm3, _mm3);
+  punpckhbw (_mm1, _mm3);
+  punpcklbw (_mm2, _mm3);
+  pmullw    (_mm1, _mm0);
+  psrlw     (_mm1, 6);
+  s1 =      _mm1;
+  pmullw    (_mm2, _mm0);
+  psrlw     (_mm2, 6);                      // _mm1:_mm2 = s =  = m_shadowYUV.A *shadow [1][srcPos1]>>6;
+  s2 =      _mm2;
+
+  _mm4 =    cctbl.mask256;
+  _mm5 =    _mm4;
+  psubw     (_mm4, _mm1);
+  psubw     (_mm5, _mm2);                   // _mm4:_mm5 = (256-s)
+
+  movVqu    (_mm6, dstU);
+  _mm7 =    _mm6;
+  punpckhbw (_mm6, _mm3);
+  punpcklbw (_mm7, _mm3);                   // _mm6;_mm7 = dstLn[1][dstPos]
+  pmullw    (_mm4, _mm6);
+  psrlw     (_mm4, 8);
+  pmullw    (_mm5, _mm7);
+  psrlw     (_mm5, 8);                      // _mm4:_mm5 = ((256-s)*dstLn[1][dstPos]>>8)
+
+  _mm0 =    cctbl.shadow_U;
+  pmullw    (_mm1, _mm0);
+  psrlw     (_mm1, 8);
+  pmullw    (_mm2, _mm0);
+  psrlw     (_mm2, 8);                      // _mm1:_mm2 = (s*m_shadowYUV.U>>8)
+
+  paddusb   (_mm1,_mm4);
+  paddusb   (_mm2,_mm5);                    // _mm1:_mm2 = d =((256-s)*dstLn[1][dstPos]>>8)+(s*m_shadowYUV.U>>8);
+
+  _mm0 =    cctbl.outline_A;
+  movVqu    (_mm4, outline);
+  _mm5 =    _mm4;
+  punpckhbw (_mm4, _mm3);
+  punpcklbw (_mm5, _mm3);
+  pmullw    (_mm4, _mm0);
+  psrlw     (_mm4, 6);
+  o1 =      _mm4;
+  pmullw    (_mm5, _mm0);
+  psrlw     (_mm5, 6);                      // _mm4:_mm5 = o = m_outlineYUV.A * mask1[srcPos]>>6;
+  o2 =      _mm5;
+
+  _mm6 =    cctbl.mask256;
+  _mm7 =    _mm6;
+  psubw     (_mm6, _mm4);
+  psubw     (_mm7, _mm5);                   // _mm6:_mm7 = (256-o)
+
+  pmullw    (_mm6, _mm1);
+  psrlw     (_mm6, 8);
+  pmullw    (_mm7, _mm2);
+  psrlw     (_mm7, 8);                      // _mm6:_mm7 = ((256-o)*d>>8)
+
+  _mm0 =    cctbl.outline_U;
+  pmullw    (_mm4, _mm0);
+  psrlw     (_mm4, 8);
+  pmullw    (_mm5, _mm0);
+  psrlw     (_mm5, 8);                      // _mm4:_mm5 = (o*m_outlineYUV.U>>8)
+
+  paddusb   (_mm4, _mm6);
+  paddusb   (_mm5, _mm7);                   // _mm4:_mm5 = d = ((256-o)*d>>8)+(o*m_outlineYUV.U>>8);
+
+  _mm0 =    cctbl.body_A;
+
+  movVqu    (_mm1, bmp);
+  _mm2 =    _mm1;
+  punpckhbw (_mm1, _mm3);
+  punpcklbw (_mm2, _mm3);
+  pmullw    (_mm1, _mm0);
+  psrlw     (_mm1, 6);
+  b1 =      _mm1;
+  pmullw    (_mm2, _mm0);
+  psrlw     (_mm2, 6);                      // _mm1:_mm2 = b = m_bodyYUV.A * body[1][srcPos]>>6;
+  b2 =      _mm2;
+
+  _mm6 =    cctbl.mask256;
+  _mm7 =    _mm6;
+  psubw     (_mm6, _mm1);
+  psubw     (_mm7, _mm2);                   // _mm6:_mm7 = (256-b)
+
+  pmullw    (_mm6, _mm4);
+  psrlw     (_mm6, 8);
+  pmullw    (_mm7, _mm5);
+  psrlw     (_mm7, 8);                      // _mm6:_mm7 = ((256-b)*d>>8)
+
+  _mm0 =    cctbl.body_U;
+  pmullw    (_mm1, _mm0);
+  psrlw     (_mm1, 8);
+  pmullw    (_mm2, _mm0);
+  psrlw     (_mm2, 8);                      // _mm1:_mm2 = (b*m_bodyYUV.U>>8)
+
+  paddusb   (_mm1, _mm6);
+  paddusb   (_mm2, _mm7);                   // _mm1:_mm2 = ((256-b)*d>>8)+(b*m_bodyYUV.U>>8);
+
+  packuswb  (_mm2, _mm1);
+  movVqu    (dstU,_mm2);
+
+// V
+
+  _mm1 =    s1;
+  _mm2 =    s2;                             // _mm1:_mm2 = s = m_shadowYUV.A *shadow [1][srcPos1]>>8;
+
+  _mm4 =    cctbl.mask256;
+  _mm5 =    _mm4;
+  psubw     (_mm4, _mm1);
+  psubw     (_mm5, _mm2);                   // _mm4:_mm5 = (256-s)
+
+  movVqu    (_mm6, dstV);
+  _mm7 =    _mm6;
+  punpckhbw (_mm6, _mm3);
+  punpcklbw (_mm7, _mm3);                   // _mm6;_mm7 = dstLn[2][dstPos]
+  pmullw    (_mm4, _mm6);
+  psrlw     (_mm4, 8);
+  pmullw    (_mm5, _mm7);
+  psrlw     (_mm5, 8);                      // _mm4:_mm5 = ((256-s)*dstLn[2][dstPos]>>8)
+
+  _mm0 =    cctbl.shadow_V;
+  pmullw    (_mm1, _mm0);
+  psrlw     (_mm1, 8);
+  pmullw    (_mm2, _mm0);
+  psrlw     (_mm2, 8);                      // _mm1:_mm2 = (s*m_shadowYUV.V>>8)
+
+  paddusb   (_mm1,_mm4);
+  paddusb   (_mm2,_mm5);                    // _mm1:_mm2 = d =((256-s)*dstLn[2][dstPos]>>8)+(s*m_shadowYUV.V>>8);
+
+  _mm4 =    o1;
+  _mm5 =    o2;                             // _mm4:_mm5 = o = m_outlineYUV.A * mask1[srcPos]>>8;
+
+  _mm6 =    cctbl.mask256;
+  _mm7 =    _mm6;
+  psubw     (_mm6, _mm4);
+  psubw     (_mm7, _mm5);                   // _mm6:_mm7 = (256-o)
+
+  pmullw    (_mm6, _mm1);
+  psrlw     (_mm6, 8);
+  pmullw    (_mm7, _mm2);
+  psrlw     (_mm7, 8);                      // _mm6:_mm7 = ((256-o)*d>>8)
+
+  _mm0 =    cctbl.outline_V;
+  pmullw    (_mm4, _mm0);
+  psrlw     (_mm4, 8);
+  pmullw    (_mm5, _mm0);
+  psrlw     (_mm5, 8);                      // _mm4:_mm5 = (o*m_outlineYUV.V>>8)
+
+  paddusb   (_mm4, _mm6);
+  paddusb   (_mm5, _mm7);                   // _mm4:_mm5 = d = ((256-o)*d>>8)+(o*m_outlineYUV.V>>8);
+
+  _mm1 =    b1;
+  _mm2 =    b2;                             // _mm1:_mm2 = b = m_bodyYUV.A * bmp[1][srcPos]>>8;
+
+  _mm6 =    cctbl.mask256;
+  _mm7 =    _mm6;
+  psubw     (_mm6, _mm1);
+  psubw     (_mm7, _mm2);                   // _mm6:_mm7 = (256-b)
+
+  pmullw    (_mm6, _mm4);
+  psrlw     (_mm6, 8);
+  pmullw    (_mm7, _mm5);
+  psrlw     (_mm7, 8);                      // _mm6:_mm7 = ((256-b)*d>>8)
+
+  _mm0 =    cctbl.body_V;
+  pmullw    (_mm1, _mm0);
+  psrlw     (_mm1, 8);
+  pmullw    (_mm2, _mm0);
+  psrlw     (_mm2, 8);                      // _mm1:_mm2 = (b*m_bodyYUV.V>>8)
+
+  paddusb   (_mm1, _mm6);
+  paddusb   (_mm2, _mm7);                   // _mm1:_mm2 = ((256-b)*d>>8)+(b*m_bodyYUV.V>>8);
+
+  packuswb  (_mm2, _mm1);
+  movVqu    (dstV,_mm2);
+}
+
+template<class _mm> __forceinline void TrenderedTextSubtitleWord::fontRenderer_simd_funcs(bool fBody, bool fOutline,
+    const Tcctbl<_mm> &cctbl,
+    unsigned char *bmp, unsigned char *outline, unsigned char *shadow, unsigned char *msk,
+    unsigned char *dst) const
+{
+    if (fBody && fOutline)
+        fontRenderer_simd<_mm, 1, 1>(cctbl, bmp, outline, shadow, msk, dst);
+    else if (fBody)
+        fontRenderer_simd<_mm, 1, 0>(cctbl, bmp, outline, shadow, msk, dst);
+    else
+        fontRenderer_simd<_mm, 0, 0>(cctbl, bmp, outline, shadow, msk, dst);
+}
+
+template<class _mm> void TrenderedTextSubtitleWord::paint(int startx, int starty, int sdx[3], int sdy[3], unsigned char *dstLn[3], const stride_t stride[3],ptrdiff_t srcClipOffset[3],REFERENCE_TIME rtStart) const
 {
     if (sdy[0] <= 0 || sdy[1] < 0 || dx[0] <= 0 || dy[0] <= 0) {
         return;
@@ -1247,7 +1665,7 @@ void TrenderedTextSubtitleWord::paint(int startx, int starty, unsigned int sdx[3
     // karaoke: use secondaryColoredWord if not highlighted.
     if ((mprops.karaokeMode == TSubtitleProps::KARAOKE_k || mprops.karaokeMode == TSubtitleProps::KARAOKE_ko || mprops.karaokeMode == TSubtitleProps::KARAOKE_ko_opaquebox)
        && rtStart < mprops.karaokeStart && secondaryColoredWord) {
-        return secondaryColoredWord->paint(startx, starty, sdx, sdy, dstLn, stride, srcClipOffset, rtStart);
+        return secondaryColoredWord->paint<_mm>(startx, starty, sdx, sdy, dstLn, stride, srcClipOffset, rtStart);
     }
 
     const TcspInfo *cspInfo = csp_getInfo(csp);
@@ -1261,213 +1679,107 @@ void TrenderedTextSubtitleWord::paint(int startx, int starty, unsigned int sdx[3
     }
 
     int startyUV = starty >> 1;
-    int bodyYUVa = mprops.bodyYUV.A;
-    int outlineYUVa = mprops.outlineYUV.A;
-    int shadowYUVa = mprops.shadowYUV.A;
+    int bodyA = mprops.bodyYUV.A;
+    int outlineA = mprops.outlineYUV.A;
+    int shadowA = mprops.shadowYUV.A;
     if (mprops.isFad) {
-        double fader = 1.0;
-        if      (rtStart < mprops.fadeT1) {
-            fader = mprops.fadeA1 / 255.0;
-        } else if (rtStart < mprops.fadeT2) {
-            fader = (double)(rtStart - mprops.fadeT1) / (mprops.fadeT2 - mprops.fadeT1) * (mprops.fadeA2 - mprops.fadeA1) / 255.0 + mprops.fadeA1 / 255.0;
-        } else if (rtStart < mprops.fadeT3) {
-            fader = mprops.fadeA2 / 255.0;
-        } else if (rtStart < mprops.fadeT4) {
-            fader = (double)(mprops.fadeT4 - rtStart) / (mprops.fadeT4 - mprops.fadeT3) * (mprops.fadeA2 - mprops.fadeA3) / 255.0 + mprops.fadeA3 / 255.0;
-        } else {
-            fader = mprops.fadeA3 / 255.0;
-        }
-        bodyYUVa = bodyYUVa * fader;
-        outlineYUVa = outlineYUVa * fader;
-        shadowYUVa = shadowYUVa * fader;
-        updateMask(int(fader * (1 << 16)), 0);  // updateMask doesn't accept floating point because it uses MMX.
+        double fader = mprops.get_fader(rtStart);
+        bodyA *= fader;
+        outlineA *= fader;
+        shadowA *= fader;
     }
 
-#if 0
-    if (props.transform.isTransform && props.transform.isAlpha) {
-        if (rtStart < props.transform.alphaT1) {
-            bodyYUVa = bodyYUVa;
-            outlineYUVa = outlineYUVa;
-            shadowYUVa = shadowYUVa;
-        } else if (rtStart < mprops.transform.alphaT2) {
-            // accelerator formula: y = x^accel, with x between [0;1] = (t-t1)/(t2-t1), t being the current time. Not implemented
-            float transformTime = mprops.transform.alphaT2 - mprops.transform.alphaT1;
-            float rangeBody = abs(bodyYUVa - (256-mprops.transform.alpha));
-            float rangeOutline = abs(outlineYUVa - (256-mprops.transform.alpha));
-            float rangeShadow = abs(shadowYUVa - (256-mprops.transform.alpha));
-            float stepBody = rangeBody/transformTime;
-            float stepOutline = rangeOutline/transformTime;
-            float stepShadow = rangeShadow/transformTime;
-            bodyYUVa = (bodyYUVa > (256-mprops.transform.alpha)) ? bodyYUVa-(stepBody * (rtStart - mprops.transform.alphaT1)) : bodyYUVa+(stepBody * (rtStart - mprops.transform.alphaT1));
-            outlineYUVa = (outlineYUVa > (256-mprops.transform.alpha)) ? outlineYUVa-(stepOutline * (rtStart - mprops.transform.alphaT1)) : outlineYUVa+(stepOutline * (rtStart - mprops.transform.alphaT1));
-            shadowYUVa = (shadowYUVa > (256-mprops.transform.alpha)) ? shadowYUVa-(stepShadow * (rtStart - mprops.transform.alphaT1)) : shadowYUVa+(stepShadow * (rtStart - mprops.transform.alphaT1));
-        } else {
-            bodyYUVa = 256-mprops.transform.alpha;
-            outlineYUVa = 256-mprops.transform.alpha;
-            shadowYUVa = 256-mprops.transform.alpha;
-        }
-        updateMask(1 << 16, 1, true, bodyYUVa, outlineYUVa);
-    }
-#endif
-
-    void (__cdecl *fontRendererFunc) (const unsigned char* bmp,const unsigned char* outline,const unsigned char* shadow,const unsigned short *colortbl,const unsigned char* dst,const unsigned char* mask);
-    void (__cdecl *fontRendererUV_Func) (const unsigned char* bmp,const unsigned char* outline,const unsigned char* shadow,const unsigned short *colortbl,const unsigned char* dstU,const unsigned char* dstV);
-
-    bool fBody = false;
-    if (bodyYUVa == 256 && m_outlineWidth > 0)
-        fBody = true;
-
-#ifndef WIN64
-    if (Tconfig::cpu_flags&FF_CPU_SSE2) {
-#endif
-        if (fBody)
-            fontRendererFunc = fontRendererFillBody_sse2;
-        else
-            fontRendererFunc = fontRenderer_sse2;
-
-        fontRendererUV_Func  =fontRendererUV_sse2;
-#ifndef WIN64
-    } else {
-        if (fBody)
-            fontRendererFunc = fontRendererFillBody_mmx;
-        else
-            fontRendererFunc = fontRenderer_mmx;
-
-        fontRendererUV_Func = fontRendererUV_mmx;
-    }
-#endif
+    bool fBody = (bodyA == 256 && m_outlineWidth > 0);
 
 #ifdef WIN64
     if (Tconfig::cpu_flags&FF_CPU_SSE2) {
-        unsigned char xmmregs[16*16];
-        storeXmmRegs(xmmregs);
 #else
     if (Tconfig::cpu_flags&(FF_CPU_SSE2|FF_CPU_MMX)) {
 #endif
+        Tcctbl<_mm> cctbl(csp, mprops,bodyA, outlineA, shadowA, m_outlineWidth);
+
         if (csp==FF_CSP_420P) {
-            //YV12
-            unsigned int halfAlingXsize=alignXsize>>1;
-            unsigned short* colortbl=(unsigned short *)aligned_malloc(192,16);
-            for (unsigned int i=0; i<halfAlingXsize; i++) {
-                colortbl[i]   =(short)mprops.bodyYUV.Y;
-                colortbl[i+8] =(short)mprops.bodyYUV.U;
-                colortbl[i+16]=(short)mprops.bodyYUV.V;
-                colortbl[i+24]=(short)bodyYUVa;
-                colortbl[i+32]=(short)mprops.outlineYUV.Y;
-                colortbl[i+40]=(short)mprops.outlineYUV.U;
-                colortbl[i+48]=(short)mprops.outlineYUV.V;
-                colortbl[i+56]=(short)outlineYUVa;
-                colortbl[i+64]=(short)mprops.shadowYUV.Y;
-                colortbl[i+72]=(short)mprops.shadowYUV.U;
-                colortbl[i+80]=(short)mprops.shadowYUV.V;
-                colortbl[i+88]=(short)shadowYUVa;
-            }
             // Y
             int endx=sdx[0] & ~(alignXsize-1);
-            for (int y=0 ; y < sdy[0] ; y++)
-                if (y + starty >=0)
-                    for (int x=0 ; x < endx ; x+=alignXsize) {
-                        int srcPos=y * dx[0] + x;
-                        int dstPos=y * stride[0] + x;
-                        fontRendererFunc(&cBmp[0][srcPos],&cOutline[0][srcPos],&cShadow[0][srcPos],colortbl,&dstLn[0][dstPos],&cMsk[0][srcPos]);
-                    }
-            if (endx < (int)sdx[0]) {
-                for (int y=0; y<sdy[0]; y++)
-                    if (y + starty >=0)
-                        for (unsigned int x=endx; x<sdx[0]; x++) {
-                            YV12_YfontRenderer(x,y,bodyYUVa,outlineYUVa,shadowYUVa,cBmp[0],cOutline[0],cShadow[0],cMsk[0],dstLn[0],stride[0]);
-                        }
-            }
-            // UV
-            endx=sdx[1] & ~(alignXsize-1);
-            for (int y=0; y<sdy[1]; y++)
-                if (y + startyUV >= 0)
-                    for (int x=0 ; x < endx ; x+=alignXsize) {
-                        int srcPos=y * dx[1] + x;
-                        int dstPos=y * stride[1] + x;
-                        fontRendererUV_Func(&cBmp[1][srcPos],&cOutline[1][srcPos],&cShadow[1][srcPos],colortbl,&dstLn[1][dstPos],&dstLn[2][dstPos]);
-                    }
-            if (endx < (int)sdx[1]) {
-                for (int y=0; y<sdy[1]; y++)
-                    if (y + startyUV >= 0)
-                        for (int x=0 ; x < (int)sdx[1] ; x++) {
-                            YV12_UVfontRenderer(x,y,bodyYUVa,outlineYUVa,shadowYUVa,cBmp[1],cOutline[1],cShadow[1],cMsk[1],dstLn[1],dstLn[2],stride[1]);
-                        }
-            }
-            aligned_free(colortbl);
-        } else {
-            //RGB32
-            unsigned int halfAlingXsize=alignXsize>>1;
-            unsigned short* colortbl=(unsigned short *)aligned_malloc(192,16);
-            colortbl[ 0]=colortbl[ 4]=(short)mprops.bodyYUV.b;
-            colortbl[ 1]=colortbl[ 5]=(short)mprops.bodyYUV.g;
-            colortbl[ 2]=colortbl[ 6]=(short)mprops.bodyYUV.r;
-            colortbl[ 3]=colortbl[ 7]=0;
-            colortbl[32]=colortbl[36]=(short)mprops.outlineYUV.b;
-            colortbl[33]=colortbl[37]=(short)mprops.outlineYUV.g;
-            colortbl[34]=colortbl[38]=(short)mprops.outlineYUV.r;
-            colortbl[35]=colortbl[39]=0;
-            colortbl[64]=colortbl[68]=(short)mprops.shadowYUV.b;
-            colortbl[65]=colortbl[69]=(short)mprops.shadowYUV.g;
-            colortbl[66]=colortbl[70]=(short)mprops.shadowYUV.r;
-            colortbl[67]=colortbl[71]=0;
-            for (unsigned int i=0; i<halfAlingXsize; i++) {
-                colortbl[i+24]=(short)bodyYUVa;
-                colortbl[i+56]=(short)outlineYUVa;
-                colortbl[i+88]=(short)shadowYUVa;
-            }
+            int endxUV=sdx[1] & ~(alignXsize-1);
 
-            int endx2=sdx[0]*4;
-            int endx=endx2 & ~(alignXsize-1);
-            for (int y=0; y<sdy[0]; y++)
-                if (y + starty >=0)
-                    for (int x=0 ; x < endx ; x+=alignXsize) {
-                        int srcPos=y * dx[1] + x;
-                        int dstPos=y * stride[0] + x;
-                        fontRendererFunc(&cBmp[1][srcPos],&cOutline[1][srcPos],&cShadow[1][srcPos],colortbl,&dstLn[0][dstPos],&cMsk[1][srcPos]);
-                    }
-            if (endx<endx2) {
-                for (int y=0 ; y < sdy[1] ; y++)
-                    if (y + starty >=0)
-                        for (int x=endx ; x < endx2 ; x+=4) {
-                            if (fBody)
-                                RGBfontRendererFillBody(x,y,bodyYUVa,outlineYUVa,shadowYUVa,cBmp[1], cOutline[1], cShadow[1], cMsk[1], dstLn[0], stride[0]);
-                            else
-                                RGBfontRenderer(x,y,bodyYUVa,outlineYUVa,shadowYUVa,cBmp[1], cOutline[1], cShadow[1], cMsk[1], dstLn[0], stride[0]);
+            if (mprops.scroll.directionH && mprops.scroll.fadeaway) {
+                // no SIMD here
+                endx = 0;
+                endxUV = 0;
+            } else {
+                for (int y=0 ; y < sdy[0] ; y++) {
+                    if (y + starty >=0) {
+                        if (mprops.scroll.directionV && mprops.scroll.fadeaway)
+                            fBody = set_scrollFader(cctbl, mprops.get_scrollFader(y + starty), bodyA, outlineA, shadowA);
+                        for (int x=0 ; x < endx ; x+=alignXsize) {
+                            int srcPos=y * dx[0] + x;
+                            int dstPos=y * stride[0] + x;
+                            fontRenderer_simd<_mm, 0, 0>(cctbl, &cBmp[0][srcPos],&cOutline[0][srcPos],&cShadow[0][srcPos],&cMsk[0][srcPos],&dstLn[0][dstPos]);
                         }
-            }
-            aligned_free(colortbl);
-        }
-#ifdef WIN64
-        restoreXmmRegs(xmmregs);
-#endif
-    } else {
-        if (csp==FF_CSP_420P) {
-            // YV12-Y
-
-            for (int y=0 ; y < sdy[0] ; y++)
-                if (y + starty >=0)
-                    for (int x=0 ; x < (int)sdx[0] ; x++) {
-                        YV12_YfontRenderer(x,y,bodyYUVa,outlineYUVa,shadowYUVa,cBmp[0],cOutline[0],cShadow[0],cMsk[0],dstLn[0],stride[0]);
                     }
-
-            for (int y=0 ; y < sdy[1] ; y++)
-                if (y + startyUV >=0)
-                    for (int x=0 ; x < (int)sdx[1] ; x++) {
-                        YV12_UVfontRenderer(x,y,bodyYUVa,outlineYUVa,shadowYUVa,cBmp[1],cOutline[1],cShadow[1],cMsk[1],dstLn[1],dstLn[2],stride[1]);
-                    }
-        } else {
-            //RGB32
-            for (int y=0 ; y < sdy[1] ; y++) {
-                if (y + starty >=0) {
-                    for (int x=0 ; x < (int)sdx[0]*4 ; x+=4) {
-                        if (fBody)
-                            RGBfontRendererFillBody(x,y,bodyYUVa,outlineYUVa,shadowYUVa,cBmp[1], cOutline[1], cShadow[1], cMsk[1], dstLn[0], stride[0]);
-                        else
-                            RGBfontRenderer(x,y,bodyYUVa,outlineYUVa,shadowYUVa,cBmp[1], cOutline[1], cShadow[1], cMsk[1], dstLn[0], stride[0]);
+                }
+                // UV
+                for (int y=0; y<sdy[1]; y++) {
+                    if (y + startyUV >= 0) {
+                        if (mprops.scroll.directionV && mprops.scroll.fadeaway)
+                            fBody = set_scrollFader(cctbl, mprops.get_scrollFader(y + starty), bodyA, outlineA, shadowA);
+                        for (int x=0 ; x < endxUV ; x+=alignXsize) {
+                            int srcPos=y * dx[1] + x;
+                            int dstPos=y * stride[1] + x;
+                            fontRendererUV_simd<_mm>(cctbl,&cBmp[1][srcPos],&cOutline[1][srcPos],&cShadow[1][srcPos],&dstLn[1][dstPos],&dstLn[2][dstPos]);
+                        }
                     }
                 }
             }
+
+            paintC_YV12(endx, endxUV, sdx[0], sdx[1], starty, startyUV, sdy[0], sdy[1], startx, bodyA, outlineA, shadowA,
+                cBmp[0],cOutline[0],cShadow[0],cMsk[0],cBmp[1],cOutline[1],cShadow[1],cMsk[1],dstLn[0],dstLn[1],dstLn[2],stride[0],stride[1]);
+        } else {
+            //RGB32
+            int simd_startx = 0;
+            int endx2=sdx[0]*4;
+            int simd_endx = endx2;
+            if (mprops.scroll.directionH && mprops.scroll.fadeaway) {
+                int fadeawayWidth = mprops.get_fadeawayWidth();
+                simd_startx = fadeawayWidth > startx ? (fadeawayWidth-startx)*4 : 0;
+                if (mprops.dx - fadeawayWidth < startx + sdx[0]) {
+                    simd_endx = (mprops.dx - fadeawayWidth - startx) * 4;
+                }
+            }
+            int simd_dx = simd_endx > simd_startx ? (simd_endx - simd_startx) & ~(alignXsize-1) : 0;
+            simd_endx = simd_startx + simd_dx;
+            if (simd_startx) {
+                paintC_RGB(0, std::min(simd_startx/4, sdx[0]), starty, sdy[1], startx, bodyA, outlineA, shadowA, cBmp[1], cOutline[1], cShadow[1], cMsk[1], dstLn[0], stride[0]);
+            }
+            if (simd_startx > endx2)
+                return;
+            bool fOutline = outlineA == 256;
+            for (int y=0; y<sdy[0]; y++) {
+                if (y + starty >=0) {
+                    if (mprops.scroll.directionV && mprops.scroll.fadeaway) {
+                        fBody = set_scrollFader(cctbl, mprops.get_scrollFader(y + starty), bodyA, outlineA, shadowA);
+                        fOutline = outlineA == 256;
+                    }
+                    for (int x=simd_startx ; x < simd_endx ; x+=alignXsize) {
+                        int srcPos=y * dx[1] + x;
+                        int dstPos=y * stride[0] + x;
+                        fontRenderer_simd_funcs<_mm>(fBody, fOutline, cctbl, &cBmp[1][srcPos],&cOutline[1][srcPos],&cShadow[1][srcPos],&cMsk[1][srcPos],&dstLn[0][dstPos]);
+                    }
+                }
+            }
+            if (simd_endx < endx2) {
+                paintC_RGB(std::max(simd_endx/4, 0), sdx[0], starty, sdy[1], startx, bodyA, outlineA, shadowA, cBmp[1], cOutline[1], cShadow[1], cMsk[1], dstLn[0], stride[0]);
+            }
+        }
+    } else {
+        if (csp==FF_CSP_420P) {
+            // YV12
+            paintC_YV12(0, 0, sdx[0], sdx[1], starty, startyUV, sdy[0], sdy[1], startx, bodyA, outlineA, shadowA,
+                cBmp[0],cOutline[0],cShadow[0],cMsk[0],cBmp[1],cOutline[1],cShadow[1],cMsk[1],dstLn[0],dstLn[1],dstLn[2],stride[0],stride[1]);
+        } else {
+            //RGB32
+            paintC_RGB(0, sdx[0], starty, sdy[1], startx, bodyA, outlineA, shadowA, cBmp[1], cOutline[1], cShadow[1], cMsk[1], dstLn[0], stride[0]);
         }
     }
     _mm_empty();

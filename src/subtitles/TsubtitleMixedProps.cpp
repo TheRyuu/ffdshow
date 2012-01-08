@@ -20,6 +20,8 @@
 #include "Tfont.h"
 #include "math.h"
 #include "nmTextSubtitles.h"
+#include "ffdshow_constants.h"
+#include "IffdshowBase.h"
 
 TSubtitleMixedProps::TSubtitleMixedProps(const TSubtitleProps &props, const TprintPrefs &prefs):
     TSubtitleProps(props),
@@ -138,6 +140,33 @@ TSubtitleMixedProps::TSubtitleMixedProps(const TSubtitleProps &props, const Tpri
         ff_strncpy(fontname, fontSettings.name, LF_FACESIZE);
 
     calculated_spacing = get_spacing(prefs);
+
+    // none SSA/ASS or over-ride
+    // Translate slider settings to \move, but don't cancel collision checks.
+    if (!isMove && (!isSSA() || prefs.deci->getParam2(IDFF_subSSAOverridePlacement))) {
+        pos = CPoint((double)prefs.xpos*refResX/100.0, (double)prefs.ypos*refResY/100.0);
+        pos2 = pos;
+        isMove = true;
+        forcedCollisionCheck = true;
+    } else {
+        forcedCollisionCheck = false;
+    }
+
+    if (scroll.directionV) {
+        CRect scrollClip(0, scroll.y1, refResX-1, scroll.y2);
+        if (!isClip) {
+            isClip = true;
+            clip = scrollClip;
+        } else {
+            CRect overlapped;
+            if (IntersectRect(&overlapped, &clip, &scrollClip)) {
+                clip = overlapped;
+            } else {
+                clip.top = -1;
+                clip.bottom = -1;
+            }
+        }
+    }
 }
 
 TSubtitleMixedProps::TSubtitleMixedProps():
@@ -147,7 +176,8 @@ TSubtitleMixedProps::TSubtitleMixedProps():
     shadowMode(TfontSettings::ClassicShadow),
     autoSize(false),
     blurStrength(TfontSettings::Stronger),
-    hqBorder(true)
+    hqBorder(true),
+    forcedCollisionCheck(false)
 {
 }
 
@@ -425,6 +455,22 @@ double TSubtitleMixedProps::get_marginBottom() const
     return result * dy / refResY;
 }
 
+double TSubtitleMixedProps::getScrollStart() const
+{
+    if (scroll.directionV == -1)
+        return (double)scroll.y2 * dy / refResY;
+    if (scroll.directionV == 1)
+        return (double)scroll.y1 * dy / refResY;
+    return 0;
+}
+
+double TSubtitleMixedProps::getScrollSpeed() const
+{
+    if (scroll.directionV)
+        return (double)scroll.directionV  * dy / (refResY * scroll.delay);
+    return (double)scroll.directionH  * dx / (refResX * scroll.delay);
+}
+
 double TSubtitleMixedProps::get_movedistanceV() const
 {
     if (!isMove) {
@@ -480,4 +526,64 @@ void TSubtitleMixedProps::toLOGFONT(LOGFONT &lf) const
     lf.lfQuality = ANTIALIASED_QUALITY;
     lf.lfPitchAndFamily = DEFAULT_PITCH|FF_DONTCARE;
     ff_strncpy(lf.lfFaceName,fontname,LF_FACESIZE);
+}
+
+double TSubtitleMixedProps::get_fader(REFERENCE_TIME rtStart) const
+{
+    double fader = 1.0;
+    if (rtStart < fadeT1) {
+        fader = fadeA1 / 255.0;
+    } else if (rtStart < fadeT2) {
+        fader = (double)(rtStart - fadeT1) / (fadeT2 - fadeT1) * (fadeA2 - fadeA1) / 255.0 + fadeA1 / 255.0;
+    } else if (rtStart < fadeT3) {
+        fader = fadeA2 / 255.0;
+    } else if (rtStart < fadeT4) {
+        fader = (double)(fadeT4 - rtStart) / (fadeT4 - fadeT3) * (fadeA2 - fadeA3) / 255.0 + fadeA3 / 255.0;
+    } else {
+        fader = fadeA3 / 255.0;
+    }
+    return fader;
+}
+
+double TSubtitleMixedProps::get_scrollFader(int pos) const
+{
+    _mm_empty();
+    if (scroll.fadeaway == 0)
+        return 1;
+    if (scroll.directionV) {
+        const int &y = pos;
+        double y1 = (double)scroll.y1 * dy / refResY;
+        double y2 = (double)scroll.y2 * dy / refResY;
+        double half = (y2 - y1) / 2;
+        double fadeaway = (double)scroll.fadeaway * dy / refResY;
+        if (y < y1 || y > y2)
+            return 0;
+        if (y >= y1 + fadeaway && y <= y2 - fadeaway)
+            return 1;
+        if (y < y1 + std::min(fadeaway, half))
+            return (y - y1) / fadeaway;
+        return (y2 - y) / fadeaway;
+    } else if (scroll.directionH) {
+        const int &x = pos;
+        double x2 = dx;
+        double half = x2 / 2;
+        double fadeaway = (double)scroll.fadeaway * dx / refResX;
+        if (x < 0 || x > x2)
+            return 0;
+        if (x >= fadeaway && x <= x2 - fadeaway)
+            return 1;
+        if (x < std::min(fadeaway, half))
+            return x / fadeaway;
+        return (x2 - x) / fadeaway;
+    }
+    return 1;
+}
+
+int TSubtitleMixedProps::get_fadeawayWidth() const
+{
+    if (!scroll.directionH || !scroll.fadeaway)
+        return 0;
+    if (scroll.fadeaway * 2 >= refResX)
+        return dx/2 + (dx & 1);
+    return scroll.fadeaway * dx / refResX;
 }
