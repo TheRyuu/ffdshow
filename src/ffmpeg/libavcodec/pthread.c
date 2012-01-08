@@ -35,7 +35,7 @@
 #define _GNU_SOURCE
 #include <sched.h>
 #endif
-#if HAVE_GETSYSTEMINFO
+#if HAVE_GETPROCESSAFFINITYMASK
 #include <windows.h>
 #endif
 #if HAVE_SYSCTL
@@ -169,10 +169,11 @@ static int get_logical_cpus(AVCodecContext *avctx)
     if (!ret) {
         nb_cpus = CPU_COUNT(&cpuset);
     }
-#elif HAVE_GETSYSTEMINFO
-    SYSTEM_INFO sysinfo;
-    GetSystemInfo(&sysinfo);
-    nb_cpus = sysinfo.dwNumberOfProcessors;
+#elif HAVE_GETPROCESSAFFINITYMASK
+    DWORD_PTR proc_aff, sys_aff;
+    ret = GetProcessAffinityMask(GetCurrentProcess(), &proc_aff, &sys_aff);
+    if (ret)
+        nb_cpus = av_popcount64(proc_aff);
 #elif HAVE_SYSCTL && defined(HW_NCPU)
     int mib[2] = { CTL_HW, HW_NCPU };
     size_t len = sizeof(nb_cpus);
@@ -190,7 +191,7 @@ static int get_logical_cpus(AVCodecContext *avctx)
     if  (avctx->height)
         nb_cpus = FFMIN(nb_cpus, (avctx->height+15)/16);
 
-    return FFMIN(nb_cpus, MAX_AUTO_THREADS);
+    return nb_cpus;
 }
 
 
@@ -300,9 +301,11 @@ static int thread_init(AVCodecContext *avctx)
 
     if (!thread_count) {
         int nb_cpus = get_logical_cpus(avctx);
-        // use number of cores + 1 as thread count if there is motre than one
+        // use number of cores + 1 as thread count if there is more than one
         if (nb_cpus > 1)
-            thread_count = avctx->thread_count = nb_cpus + 1;
+            thread_count = avctx->thread_count = FFMIN(nb_cpus + 1, MAX_AUTO_THREADS);
+        else
+            thread_count = avctx->thread_count = 1;
     }
 
     if (thread_count <= 1) {
@@ -781,9 +784,11 @@ static int frame_thread_init(AVCodecContext *avctx)
 
     if (!thread_count) {
         int nb_cpus = get_logical_cpus(avctx);
-        // use number of cores + 1 as thread count if there is motre than one
+        // use number of cores + 1 as thread count if there is more than one
         if (nb_cpus > 1)
-            thread_count = avctx->thread_count = nb_cpus + 1;
+            thread_count = avctx->thread_count = FFMIN(nb_cpus + 1, MAX_AUTO_THREADS);
+        else
+            thread_count = avctx->thread_count = 1;
     }
 
     if (thread_count <= 1) {
@@ -838,7 +843,7 @@ static int frame_thread_init(AVCodecContext *avctx)
                 err = AVERROR(ENOMEM);
                 goto error;
             }
-            *(copy->internal) = *(src->internal);
+            *copy->internal = *src->internal;
             copy->internal->is_copy = 1;
 
             if (codec->init_thread_copy)
@@ -997,6 +1002,9 @@ static void validate_thread_parameters(AVCodecContext *avctx)
     } else if (avctx->codec->capabilities & CODEC_CAP_SLICE_THREADS &&
                avctx->thread_type & FF_THREAD_SLICE) {
         avctx->active_thread_type = FF_THREAD_SLICE;
+    } else if (!(avctx->codec->capabilities & CODEC_CAP_AUTO_THREADS)) {
+        avctx->thread_count       = 1;
+        avctx->active_thread_type = 0;
     }
 }
 

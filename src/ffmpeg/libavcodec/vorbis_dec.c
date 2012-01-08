@@ -816,8 +816,7 @@ static void create_map(vorbis_context *vc, unsigned floor_number)
 
         for (idx = 0; idx < n; ++idx) {
             map[idx] = floor(BARK((vf->rate * idx) / (2.0f * n)) *
-                             ((vf->bark_map_size) /
-                              BARK(vf->rate / 2.0f)));
+                             (vf->bark_map_size / BARK(vf->rate / 2.0f)));
             if (vf->bark_map_size-1 < map[idx])
                 map[idx] = vf->bark_map_size - 1;
         }
@@ -975,9 +974,8 @@ static av_cold int vorbis_decode_init(AVCodecContext *avccontext)
     int headers_len    = avccontext->extradata_size;
     uint8_t *header_start[3];
     int header_len[3];
-    GetBitContext *gb = &(vc->gb);
+    GetBitContext *gb = &vc->gb;
     int hdr_type, ret;
-    int i,j;
 
     vc->avccontext = avccontext;
     dsputil_init(&vc->dsp, avccontext);
@@ -1003,6 +1001,7 @@ static av_cold int vorbis_decode_init(AVCodecContext *avccontext)
     }
     
     if (avccontext->vorbis_header_size[0]==0) {
+        int i,j;
         for(j=1,i=0;i<2;++i, ++j) {
             header_len[i]=0;
             while(j<headers_len && headers[j]==0xff) {
@@ -1642,7 +1641,7 @@ static int vorbis_decode_frame(AVCodecContext *avccontext, void *data,
     const uint8_t *buf = avpkt->data;
     int buf_size       = avpkt->size;
     vorbis_context *vc = avccontext->priv_data;
-    GetBitContext *gb = &(vc->gb);
+    GetBitContext *gb = &vc->gb;
     const float *channel_ptrs[255];
     int i, len, ret;
 
