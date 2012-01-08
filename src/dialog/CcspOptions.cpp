@@ -32,8 +32,8 @@ void TcspOptionsPage::init(void)
     addHint(IDC_RBT_BT601, _l("DVD, NTSC, PAL and SD-TV/videos use this."));
     addHint(IDC_RBT_BT709, _l("Blu-ray and HD-TV use this."));
     addHint(IDC_CBX_RGB_INTERLACE_METHOD, _l("This setting also applies to YV12 <-> YUY2 conversion."));
-    addHint(IDC_RBT_YCbCr_input_levels_auto, _l("Same as standard except H.264.\nH.264 has flag that indicates the range. Some people say the flag is sometimes wrong."));
-    addHint(IDC_RBT_YCbCr_input_levels_16_to_235, _l("Nearly all videos use this.\nFor JPEG, MJPEG and Fraps, ffdshow automatically uses full range."));
+    addHint(IDC_RBT_YCbCr_input_levels_auto, L"Use information from the stream if available. Otherwise same as standard.");
+    addHint(IDC_RBT_YCbCr_input_levels_16_to_235, L"Nearly all videos use this.");
     addHint(IDC_RBT_YCbCr_input_levels_0_to_255,_l("JPEG, MJPEG and Fraps sources usually use this"));
     addHint(IDC_RBT_CSP_OUTPUT_LEVELS_TV, _l("Most TV and Projectors use this.\nConsult the manual of your device."));
 }
