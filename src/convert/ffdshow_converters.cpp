@@ -74,7 +74,7 @@ void TffdshowConverters::init(uint64_t incsp,                 // FF_CSP_420P, FF
     uint32_t rgb_black = uint32_t(output_RGB_black_level);
     rgb_black = 0xff000000 + (rgb_black << 16) + (rgb_black << 8) + rgb_black;
     m_coeffs->rgb_limit_low = _mm_set1_epi32(rgb_black);
-    m_dithering = dithering;
+    m_dithering = dithering || (incsp & FF_CSPS_MASK_HIGH_BIT);
 }
 
 // note YV12 and YV16 is YCrCb order. Make sure Cr and Cb is swapped.
