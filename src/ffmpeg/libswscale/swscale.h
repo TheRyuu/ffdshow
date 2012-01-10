@@ -38,7 +38,7 @@ extern "C" {
 
 #define LIBSWSCALE_VERSION_MAJOR 2
 #define LIBSWSCALE_VERSION_MINOR 1
-#define LIBSWSCALE_VERSION_MICRO 0
+#define LIBSWSCALE_VERSION_MICRO 100
 
 #define LIBSWSCALE_VERSION_INT  AV_VERSION_INT(LIBSWSCALE_VERSION_MAJOR, \
                                                LIBSWSCALE_VERSION_MINOR, \
@@ -151,7 +151,6 @@ const char *swscale_license(void);
  * SWS_CS_DEFAULT is used.
  */
 const int *sws_getCoefficients(int colorspace);
-
 
 // when used for filters they must have an odd number of elements
 // coeffs cannot be shared between vectors
