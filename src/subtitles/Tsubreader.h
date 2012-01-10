@@ -40,9 +40,6 @@ public:
         SUB_SUBVIEWER2=11,
         SUB_SUBRIP09  =12,
 
-        // unknown
-        SUB_USF       =13,
-
         // bitmap
         SUB_VOBSUB    =14,
         SUB_DVD       =15,

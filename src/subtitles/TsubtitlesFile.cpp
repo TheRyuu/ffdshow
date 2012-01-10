@@ -21,7 +21,6 @@
 #include "TsubtitlesFile.h"
 #include "TsubreaderMplayer.h"
 #include "TsubreaderVobsub.h"
-#include "TsubreaderUSF.h"
 #include "TsubreaderPGS.h"
 #include "TsubtitlesSettings.h"
 #include "IffdshowBase.h"
@@ -320,8 +319,6 @@ bool TsubtitlesFile::init(const TsubtitlesSettings *cfg,const char_t *IsubFlnm,d
                 }
                 subs->setLang(deflang);
             }
-        } else if ((sub_format&Tsubreader::SUB_FORMATMASK)==Tsubreader::SUB_USF) {
-            subs=new TsubreaderUSF2(fs,deci,false);
         } else if ((sub_format&Tsubreader::SUB_FORMATMASK)==Tsubreader::SUB_PGS) {
             if (!cfg->pgs) {
                 DPRINTF(_l("TsubtitlesFile::init Blu-Ray subtitles detected but disabled by user"));

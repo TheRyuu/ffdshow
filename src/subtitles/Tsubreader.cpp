@@ -20,7 +20,6 @@
 #include "Tsubreader.h"
 #include "TsubtitlesSettings.h"
 #include "Tconfig.h"
-#include "TsubreaderUSF.h"
 
 Tsubreader::~Tsubreader()
 {
@@ -81,12 +80,6 @@ int Tsubreader::sub_autodetect(Tstream &fd,const Tconfig *config)
         }
         if (swscanf (line, L"%d:%d:%d:",     &i, &i, &i )==3) { //also true for "%d:%d:%d ". swscanf ignore last char.
             format=SUB_VPLAYER|SUB_USESTIME;
-            break;
-        }
-        if (stristr(line, L"<USFSubtitles ")!=NULL) {
-            if (config->check(TsubreaderUSF2::dllname)) {
-                format=SUB_USF|SUB_USESTIME;
-            }
             break;
         }
         //TODO: just checking if first line of sub starts with "<" is WAY

@@ -138,8 +138,6 @@ HRESULT TtextInputPin::SetMediaType(const CMediaType* mtIn)
             if (ismatroska) {
                 utf8=true;
             }
-        } else if (mtIn->subtype==MEDIASUBTYPE_USF) {
-            type=Tsubreader::SUB_USF;
         }
     } else if (mtIn->majortype==MEDIATYPE_Text) {
         type=Tsubreader::SUB_SUBVIEWER/*|Tsubreader::SUB_ENC_UTF8*/;    //TODO: enable for mp4 subtitles?

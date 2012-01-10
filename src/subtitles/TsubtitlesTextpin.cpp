@@ -47,8 +47,6 @@ TsubtitlesTextpin* TsubtitlesTextpin::create(int type,const unsigned char *extra
         case Tsubreader::SUB_CVD:
         case Tsubreader::SUB_SVCD:
             return new TsubtitlesTextpinDVD(type,Ideci);
-        case Tsubreader::SUB_USF:
-            return new TsubtitlesTextpinUSF(type,Ideci,extradata,extradatalen);
         default:
             return new TsubtitlesTextpinText(type,Ideci,extradata,extradatalen);
     }
