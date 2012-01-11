@@ -446,7 +446,7 @@ bool regExport(Tstream &f,HKEY hive,const char_t *key,bool unicode)
                     outstring.insert(insCount, _l("\\\n  "));
                     insCount += 78;
                 };
-                f.printf(_l("%s"),outstring.c_str());
+                f.fputs(outstring.c_str());
                 break;
             }
         }
