@@ -439,7 +439,7 @@ template <uint64_t incsp, uint64_t outcsp, bool isMPEG1, bool dithering, bool al
 
 static __forceinline void loadLeftEdge10(const __m128i* src, __m128i &xmm, __m128i &temp)
 {
-    xmm = _mm_move_epi64(*src);                                                // xmm1 = Cb03,Cb02,Cb01,Cb00
+    xmm = _mm_loadl_epi64(src);                                                // xmm1 = Cb03,Cb02,Cb01,Cb00
     temp = xmm;
     xmm = _mm_slli_si128(xmm, 2);                                              // xmm1 = Cb02,Cb01,Cb00,   0
     temp = _mm_slli_si128(temp, 14);
@@ -449,7 +449,7 @@ static __forceinline void loadLeftEdge10(const __m128i* src, __m128i &xmm, __m12
 
 static __forceinline void loadRightEdge10(const __m128i* src, __m128i &xmm, __m128i &temp)
 {
-    xmm = _mm_move_epi64(*src);                                                // xmm1 = Cb01,Cb00,Cb00-1,Cb0-2
+    xmm = _mm_loadl_epi64(src);                                                // xmm1 = Cb01,Cb00,Cb00-1,Cb0-2
     temp = xmm;
     xmm = _mm_srli_si128(xmm, 2);                                              // xmm1 =    0,Cb01,Cb00,Cb00-1
     temp = _mm_srli_si128(temp, 6);
@@ -476,10 +476,10 @@ static __forceinline void load42CbCr(const unsigned char* &srcCb,
         loadRightEdge10((const __m128i*)(srcCr - 2),               xmm0, xmm4);// xmm0 = Cr01,Cr00,Cr0-1,Cr0-2
         loadRightEdge10((const __m128i*)(srcCr + stride_CbCr - 2), xmm2, xmm5);// xmm2 = Cr11,Cr10,Cr1-1,Cr1-2
     } else {
-        xmm1 = _mm_move_epi64(*(const __m128i*)(srcCb));                       // xmm1 = Cb02,Cb01,Cb00,Cb0-1
-        xmm3 = _mm_move_epi64(*(const __m128i*)(srcCb + stride_CbCr));         // xmm3 = Cb12,Cb11,Cb10,Cb1-1
-        xmm0 = _mm_move_epi64(*(const __m128i*)(srcCr));                       // xmm0 = Cr02,Cr01,Cr00,Cr0-1
-        xmm2 = _mm_move_epi64(*(const __m128i*)(srcCr + stride_CbCr));         // xmm2 = Cr12,Cr11,Cr10,Cr1-1
+        xmm1 = _mm_loadl_epi64((const __m128i*)(srcCb));                       // xmm1 = Cb02,Cb01,Cb00,Cb0-1
+        xmm3 = _mm_loadl_epi64((const __m128i*)(srcCb + stride_CbCr));         // xmm3 = Cb12,Cb11,Cb10,Cb1-1
+        xmm0 = _mm_loadl_epi64((const __m128i*)(srcCr));                       // xmm0 = Cr02,Cr01,Cr00,Cr0-1
+        xmm2 = _mm_loadl_epi64((const __m128i*)(srcCr + stride_CbCr));         // xmm2 = Cr12,Cr11,Cr10,Cr1-1
         srcCb += 4;
         srcCr += 4;
     }
@@ -518,10 +518,10 @@ void TffdshowConverters::convert_two_lines(const unsigned char* &srcY,
             srcCr += 4;
         } else if (incsp == FF_CSP_444P10) {
             // 4:4:4 YCbCr 10-bit
-            xmm1 = _mm_move_epi64(*(const __m128i*)(srcCb));                       // xmm1 = Cb03,Cb02,Cb01,Cb00
-            xmm3 = _mm_move_epi64(*(const __m128i*)(srcCb + stride_CbCr));         // xmm3 = Cb13,Cb12,Cb11,Cb10
-            xmm0 = _mm_move_epi64(*(const __m128i*)(srcCr));                       // xmm0 = Cr03,Cr02,Cr01,Cr00
-            xmm2 = _mm_move_epi64(*(const __m128i*)(srcCr + stride_CbCr));         // xmm2 = Cr13,Cr12,Cr11,Cr10
+            xmm1 = _mm_loadl_epi64((const __m128i*)(srcCb));                       // xmm1 = Cb03,Cb02,Cb01,Cb00
+            xmm3 = _mm_loadl_epi64((const __m128i*)(srcCb + stride_CbCr));         // xmm3 = Cb13,Cb12,Cb11,Cb10
+            xmm0 = _mm_loadl_epi64((const __m128i*)(srcCr));                       // xmm0 = Cr03,Cr02,Cr01,Cr00
+            xmm2 = _mm_loadl_epi64((const __m128i*)(srcCr + stride_CbCr));         // xmm2 = Cr13,Cr12,Cr11,Cr10
             srcCb += 8;
             srcCr += 8;
             // xmm1 = 16*P03, 16*P02, 16*P01, 16*P00 (14bit)
@@ -786,8 +786,8 @@ void TffdshowConverters::convert_two_lines(const unsigned char* &srcY,
     // chroma upscaling finished.
 
     if (incsp & FF_CSPS_MASK_HIGH_BIT) {
-        xmm5 = _mm_move_epi64(*(__m128i*)(srcY));                                   // Y03,Y02,Y01,Y00
-        xmm0 = _mm_move_epi64(*(__m128i*)(srcY + stride_Y));                        // Y13,Y12,Y11,Y10
+        xmm5 = _mm_loadl_epi64((const __m128i*)(srcY));                                   // Y03,Y02,Y01,Y00
+        xmm0 = _mm_loadl_epi64((const __m128i*)(srcY + stride_Y));                        // Y13,Y12,Y11,Y10
         srcY += 8;
     } else if (incsp != FF_CSP_YUY2) {
         xmm5 = _mm_cvtsi32_si128(*(int*)(srcY));                                   // Y03,Y02,Y01,Y00
