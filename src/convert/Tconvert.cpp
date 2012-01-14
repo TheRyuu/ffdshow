@@ -444,7 +444,7 @@ int Tconvert::convert(uint64_t incsp0,
         if (mode==MODE_none)
             if (incsp1!=FF_CSP_420P && outcsp1==FF_CSP_420P && csp_supXvid(incsp1) && incsp1!=FF_CSP_RGB24 && incsp1!=FF_CSP_BGR24) { // x -> YV12
                 mode=MODE_xvidImage_input;
-            } else if (csp_supSWSin(incsp1) && csp_supSWSout(outcsp1)) {
+            } else if ((csp_supSWSin(incsp1) || csp_isRGBplanar(incsp1)) && csp_supSWSout(outcsp1)) {
                 if (!swscale) {
                     swscale=new Tswscale(libavcodec);
                 }

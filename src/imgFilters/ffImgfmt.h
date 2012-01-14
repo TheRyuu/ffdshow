@@ -281,9 +281,6 @@ static __inline enum PixelFormat csp_ffdshow2lavc(uint64_t pix_fmt)
   FF_CSP_420P10|    \
   FF_CSP_422P10|    \
   FF_CSP_444P10|    \
-  FF_CSP_GBRP|      \
-  FF_CSP_GBRP9|     \
-  FF_CSP_GBRP10|    \
   FF_CSP_Y800       \
  )
 #define SWS_OUT_CSPS \
@@ -309,9 +306,6 @@ static __inline enum PixelFormat csp_ffdshow2lavc(uint64_t pix_fmt)
   FF_CSP_420P10|     \
   FF_CSP_422P10|     \
   FF_CSP_444P10|     \
-  FF_CSP_GBRP|       \
-  FF_CSP_GBRP9|      \
-  FF_CSP_GBRP10|     \
   FF_CSP_Y800        \
  )
 
