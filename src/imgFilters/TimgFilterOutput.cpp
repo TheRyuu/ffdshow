@@ -56,7 +56,6 @@ HRESULT TimgFilterOutput::process(TffPict &pict,uint64_t dstcsp,unsigned char *d
     if (   !convert
             || convert->dx!=pict.rectFull.dx
             || convert->dy!=pict.rectFull.dy
-            || convert->m_dstSize!=dstSize
             || old_cspOptionsRgbInterlaceMode != cfg->cspOptionsRgbInterlaceMode
             || old_highQualityRGB != cfg->highQualityRGB
             || old_dithering != cfg->dithering
