@@ -28,7 +28,7 @@
 ; in blocks as conventient to the vector size.
 ; i.e. {4x real, 4x imaginary, 4x real, ...} (or 2x respectively)
 
-%include "libavutil/x86/x86inc.asm"
+%include "x86inc.asm"
 
 %ifdef ARCH_X86_64
 %define pointer resq
@@ -639,11 +639,14 @@ cglobal fft_dispatch%3%2, 2,5,8, z, nbits
 %endmacro ; DECL_FFT
 
 %ifdef HAVE_AVX
+INIT_YMM
 DECL_FFT 6, _avx
 DECL_FFT 6, _avx, _interleave
 %endif
+INIT_XMM
 DECL_FFT 5, _sse
 DECL_FFT 5, _sse, _interleave
+INIT_MMX
 DECL_FFT 4, _3dn
 DECL_FFT 4, _3dn, _interleave
 DECL_FFT 4, _3dn2

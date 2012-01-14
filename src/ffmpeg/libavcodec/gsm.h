@@ -1,6 +1,5 @@
 /*
- * gsm 06.10 decoder, Microsoft variant
- * Copyright (c) 2010 Reimar Döffinger <Reimar.Doeffinger@gmx.de>
+ * GSM common header
  *
  * This file is part of Libav.
  *
@@ -19,20 +18,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#define BITSTREAM_READER_LE
-#include "avcodec.h"
-#include "msgsmdec.h"
-#include "gsm.h"
-#include "gsmdec_template.c"
+#ifndef AVCODEC_GSM_H
+#define AVCODEC_GSM_H
 
-int ff_msgsm_decode_block(AVCodecContext *avctx, int16_t *samples,
-                          const uint8_t *buf)
-{
-    int res;
-    GetBitContext gb;
-    init_get_bits(&gb, buf, GSM_MS_BLOCK_SIZE * 8);
-    res = gsm_decode_block(avctx, samples, &gb);
-    if (res < 0)
-        return res;
-    return gsm_decode_block(avctx, samples + GSM_FRAME_SIZE, &gb);
-}
+/* bytes per block */
+#define GSM_BLOCK_SIZE    33
+#define GSM_MS_BLOCK_SIZE 65
+
+/* samples per block */
+#define GSM_FRAME_SIZE 160
+
+#endif /* AVCODEC_GSM_H */

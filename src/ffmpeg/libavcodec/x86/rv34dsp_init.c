@@ -1,6 +1,6 @@
 /*
- * gsm 06.10 decoder, Microsoft variant
- * Copyright (c) 2010 Reimar Döffinger <Reimar.Doeffinger@gmx.de>
+ * RV30/40 MMX/SSE2 optimizations
+ * Copyright (C) 2012 Christophe Gisquet <christophe.gisquet@gmail.com>
  *
  * This file is part of Libav.
  *
@@ -19,20 +19,22 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#define BITSTREAM_READER_LE
-#include "avcodec.h"
-#include "msgsmdec.h"
-#include "gsm.h"
-#include "gsmdec_template.c"
+#include "libavutil/cpu.h"
+#include "libavutil/x86_cpu.h"
+#include "libavcodec/dsputil.h"
+#include "libavcodec/rv34dsp.h"
 
-int ff_msgsm_decode_block(AVCodecContext *avctx, int16_t *samples,
-                          const uint8_t *buf)
+void ff_rv34_idct_dequant4x4_dc_mmx2(DCTELEM *block);
+void ff_rv34_idct_dequant4x4_dc_noround_mmx2(DCTELEM *block);
+
+av_cold void ff_rv34dsp_init_x86(RV34DSPContext* c, DSPContext *dsp)
 {
-    int res;
-    GetBitContext gb;
-    init_get_bits(&gb, buf, GSM_MS_BLOCK_SIZE * 8);
-    res = gsm_decode_block(avctx, samples, &gb);
-    if (res < 0)
-        return res;
-    return gsm_decode_block(avctx, samples + GSM_FRAME_SIZE, &gb);
+#if HAVE_YASM
+    int mm_flags = av_get_cpu_flags();
+
+    if (mm_flags & AV_CPU_FLAG_MMX2) {
+        c->rv34_inv_transform_dc_tab[0] = ff_rv34_idct_dequant4x4_dc_mmx2;
+        c->rv34_inv_transform_dc_tab[1] = ff_rv34_idct_dequant4x4_dc_noround_mmx2;
+    }
+#endif
 }
