@@ -1050,12 +1050,6 @@ bool decodeH264SPS(const unsigned char *hdr,size_t len,TffPictBase &pict, H264_S
                 get_bits(&gb, 8); /* colour_primaries */
                 get_bits(&gb, 8); /* transfer_characteristics */
                 sps->colorspace = get_bits(&gb, 8); /* matrix_coefficients */
-
-                #define AVCOL_SPC_RGB 0
-                if (sps->colorspace == AVCOL_SPC_RGB) {
-                    pict.csp = FF_CSP_UNSUPPORTED;
-                    return false;
-                }
             }
         }
 

@@ -61,6 +61,10 @@
 
 #define FF_CSP_PAL8   (1ULL << 31)  // 0x80000000
 
+#define FF_CSP_GBRP   (1ULL << 32)  // 0x100000000
+#define FF_CSP_GBRP9  (1ULL << 33)  // 0x200000000
+#define FF_CSP_GBRP10 (1ULL << 34)  // 0x400000000
+
 // Flags
 #define FF_CSP_FLAGS_YUV_JPEG   (1ULL << 59)
 #define FF_CSP_FLAGS_YUV_ORDER  (1ULL << 60) // UV ordered chroma planes (not VU as default)
@@ -68,13 +72,14 @@
 #define FF_CSP_FLAGS_INTERLACED (1ULL << 62)
 #define FF_CSP_FLAGS_VFLIP      (1ULL << 63) // flip mask
 
-#define FF_CSPS_NUM 32
+#define FF_CSPS_NUM 35
 
 #define FF_CSP_UNSUPPORTED      (1ULL<<FF_CSPS_NUM)
 
 #define FF_CSPS_MASK            (FF_CSP_UNSUPPORTED-1)
 #define FF_CSPS_MASK_HIGH_BIT   (FF_CSP_420P10|FF_CSP_422P10|FF_CSP_444P10)
 #define FF_CSPS_MASK_YUV_PLANAR (FF_CSP_420P|FF_CSP_422P|FF_CSP_444P|FF_CSP_411P|FF_CSP_410P)
+#define FF_CSPS_MASK_RGB_PLANAR (FF_CSP_GBRP|FF_CSP_GBRP9|FF_CSP_GBRP10)
 #define FF_CSPS_MASK_YUV_PACKED (FF_CSP_YUY2|FF_CSP_UYVY|FF_CSP_YVYU|FF_CSP_VYUY)
 #define FF_CSPS_MASK_RGB        (FF_CSP_RGBA|FF_CSP_RGB32|FF_CSP_RGB24|FF_CSP_RGB15|FF_CSP_RGB16)
 #define FF_CSPS_MASK_BGR        (FF_CSP_ABGR|FF_CSP_BGR32|FF_CSP_BGR24|FF_CSP_BGR15|FF_CSP_BGR16)
@@ -189,6 +194,12 @@ static __inline uint64_t csp_lavc2ffdshow(enum PixelFormat pix_fmt)
             return FF_CSP_PAL8;
         case PIX_FMT_NV12    :
             return FF_CSP_NV12;
+        case PIX_FMT_GBRP    :
+            return FF_CSP_GBRP;
+        case PIX_FMT_GBRP9   :
+            return FF_CSP_GBRP9;
+        case PIX_FMT_GBRP10  :
+            return FF_CSP_GBRP10;
         default              :
             return FF_CSP_NULL;
     }
@@ -236,6 +247,12 @@ static __inline enum PixelFormat csp_ffdshow2lavc(uint64_t pix_fmt)
             return PIX_FMT_ABGR;
         case FF_CSP_RGBA:
             return PIX_FMT_RGBA;
+        case FF_CSP_GBRP:
+            return PIX_FMT_GBRP;
+        case FF_CSP_GBRP9:
+            return PIX_FMT_GBRP9;
+        case FF_CSP_GBRP10:
+            return PIX_FMT_GBRP10;
         default         :
             return PIX_FMT_NB;
     }
@@ -264,6 +281,9 @@ static __inline enum PixelFormat csp_ffdshow2lavc(uint64_t pix_fmt)
   FF_CSP_420P10|    \
   FF_CSP_422P10|    \
   FF_CSP_444P10|    \
+  FF_CSP_GBRP|      \
+  FF_CSP_GBRP9|     \
+  FF_CSP_GBRP10|    \
   FF_CSP_Y800       \
  )
 #define SWS_OUT_CSPS \
@@ -289,6 +309,9 @@ static __inline enum PixelFormat csp_ffdshow2lavc(uint64_t pix_fmt)
   FF_CSP_420P10|     \
   FF_CSP_422P10|     \
   FF_CSP_444P10|     \
+  FF_CSP_GBRP|       \
+  FF_CSP_GBRP9|      \
+  FF_CSP_GBRP10|     \
   FF_CSP_Y800        \
  )
 
@@ -312,7 +335,7 @@ static __inline uint64_t csp_supSWSout(uint64_t x)
 #include "char_t.h"
 
 struct TcspInfo {
-    int id;
+    uint64_t id;
     const char_t *name;
     int Bpp,bpp;
     unsigned int numPlanes;
@@ -364,6 +387,10 @@ const TcspInfo* csp_getInfoFcc(FOURCC fcc);
 static __inline uint64_t csp_isYUVplanar(uint64_t x)
 {
     return x&FF_CSPS_MASK&FF_CSPS_MASK_YUV_PLANAR;
+}
+static __inline uint64_t csp_isRGBplanar(uint64_t x)
+{
+    return x&FF_CSPS_MASK&FF_CSPS_MASK_RGB_PLANAR;
 }
 static __inline uint64_t csp_isYUVplanarHighBit(uint64_t x)
 {
