@@ -564,7 +564,7 @@ void TtrayIconDecVideo::makeStreamsSubMenus(HMENU *smn, HMENU *ssmn, HMENU *amn,
         int seconds = 0;
         deci->tell(&seconds);
         size_t currentChapter = 0;
-        for (size_t i=pChaptersList->size()-1; i >= 0; --i) {
+        for (ptrdiff_t i=pChaptersList->size()-1; i >= 0; --i) {
             std::pair<long, ffstring> chapter = (*pChaptersList)[i];
             if (chapter.first <= (long)seconds) {
                 currentChapter = i;
