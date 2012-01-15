@@ -285,6 +285,35 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
                 avctx->extradata_size=(int)extradata->size;
             }
         }
+    } else if (codecId == CODEC_ID_VP6 || codecId == CODEC_ID_VP6A || codecId == CODEC_ID_VP6F) {
+        // Copyright (C) 2011 Hendrik Leppkes
+        // for FLV cropping
+        int cropWidth=0, cropHeight=0;
+        if (mt.formattype == FORMAT_VideoInfo || mt.formattype == FORMAT_MPEGVideo) {
+            VIDEOINFOHEADER *vih = (VIDEOINFOHEADER *)mt.Format();
+            if (vih->rcTarget.right != 0 && vih->rcTarget.bottom != 0) {
+                cropWidth  = vih->bmiHeader.biWidth - vih->rcTarget.right;
+                cropHeight = vih->bmiHeader.biHeight - vih->rcTarget.bottom;
+            }
+        } else if (mt.formattype == FORMAT_VideoInfo2 || mt.formattype == FORMAT_MPEG2Video) {
+            VIDEOINFOHEADER2 *vih2 = (VIDEOINFOHEADER2 *)mt.Format();
+            if (vih2->rcTarget.right != 0 && vih2->rcTarget.bottom != 0) {
+                cropWidth  = vih2->bmiHeader.biWidth - vih2->rcTarget.right;
+                cropHeight = vih2->bmiHeader.biHeight - vih2->rcTarget.bottom;
+            }
+        }
+        if (cropWidth < 0)
+            cropWidth = 0;
+        if (cropHeight < 0)
+            cropHeight = 0;
+        if (cropWidth > 0 || cropHeight > 0) {
+            delete extradata;
+            extradata = new Textradata(cropWidth, cropHeight, FF_INPUT_BUFFER_PADDING_SIZE);
+            avctx->extradata=extradata->data;
+            avctx->extradata_size=(int)extradata->size;
+        } else {
+            sendextradata=false;
+        }
     } else {
         sendextradata=false;
     }

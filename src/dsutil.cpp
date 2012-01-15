@@ -390,6 +390,11 @@ Textradata::Textradata(const MPEG2VIDEOINFO &mpeg2info,int padding)
 {
     set(parse(&mpeg2info),0);
 }
+Textradata::Textradata(int cropWidth, int cropHeight, int padding):data(NULL),size(1)
+{
+    uint8_t data = (cropWidth << 4) | cropHeight;
+    set(&data, 1, padding, true);
+}
 
 Textradata::TdataSize Textradata::parse(const WAVEFORMATEX *wfex)
 {

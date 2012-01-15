@@ -92,6 +92,7 @@ public:
     Textradata(const WAVEFORMATEX &wfex,int padding=0);
     Textradata(const MPEG1VIDEOINFO &mpeg1info,int padding=0);
     Textradata(const MPEG2VIDEOINFO &mpeg2info,int padding=0);
+    Textradata(int cropWidth, int cropHeight, int padding);
     ~Textradata(void);
     void clear(void);
     void set(const void *Idata,size_t Isize,unsigned int padding=0,bool Iown=false);
