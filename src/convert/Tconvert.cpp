@@ -132,6 +132,8 @@ const char_t* Tconvert::getModeName(int mode)
             return _l("avisynth_bitblt");
         case MODE_fallback:
             return _l("fallback");
+        case MODE_fast_copy:
+            return _l("fast copy");
         default:
             return _l("unknown");
     }
