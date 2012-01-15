@@ -339,21 +339,26 @@ HRESULT TffdshowDecVideo::GetMediaType(int iPosition, CMediaType *mtOut)
     oldRect=pictOut.rectFull;
 
     const TcspInfo *c = ocsps[iPosition];
+    if(c->id == FF_CSP_420P) {  // YV12 and odd number lines.
+        pictOut.rectFull.dy=odd2even(pictOut.rectFull.dy);
+    }
+    return pict2mediaType(isVIH2, mtOut, pictOut, c, use_workaround);
+}
+
+HRESULT TffdshowDecVideo::pict2mediaType(bool isVIH2, CMediaType *mtOut, TffPictBase &pictOut, const TcspInfo *cspInfo, bool use_workaround)
+{
     BITMAPINFOHEADER bih;
     memset(&bih,0,sizeof(bih));
     bih.biSize  =sizeof(BITMAPINFOHEADER);
     bih.biWidth =pictOut.rectFull.dx;
-    if(c->id == FF_CSP_420P) {  // YV12 and odd number lines.
-        pictOut.rectFull.dy=odd2even(pictOut.rectFull.dy);
-    }
     bih.biHeight=pictOut.rectFull.dy;
-    bih.biPlanes=WORD(c->numPlanes);
-    bih.biCompression=c->fcc;
-    bih.biBitCount=WORD(c->bpp);
+    bih.biPlanes=WORD(cspInfo->numPlanes);
+    bih.biCompression=cspInfo->fcc;
+    bih.biBitCount=WORD(cspInfo->bpp);
     bih.biSizeImage=DIBSIZE(bih);// bih.biWidth*bih.biHeight*bih.biBitCount>>3;
 
     mtOut->majortype=MEDIATYPE_Video;
-    mtOut->subtype=*c->subtype;
+    mtOut->subtype=*cspInfo->subtype;
     mtOut->formattype=isVIH2?FORMAT_VideoInfo2:FORMAT_VideoInfo;
     mtOut->SetTemporalCompression(FALSE);
     mtOut->SetSampleSize(bih.biSizeImage);
@@ -436,10 +441,7 @@ HRESULT TffdshowDecVideo::setOutputMediaType(const CMediaType &mt)
         } else if (mt.formattype==FORMAT_VideoInfo2 && mt.pbFormat) {
             VIDEOINFOHEADER2 *vih2=(VIDEOINFOHEADER2*)mt.pbFormat;
             biWidth=vih2->bmiHeader.biWidth;
-            if (downstreamID == DVOBSUB && cspInfo->Bpp==1)
-                m_frame.dstStride = biWidth;
-            else
-                m_frame.dstStride=calcBIstride(biWidth, cspInfo->Bpp*8);
+            m_frame.dstStride=calcBIstride(biWidth, cspInfo->Bpp*8);
             outDy=vih2->bmiHeader.biHeight;
             bih=&vih2->bmiHeader;
         } else {
@@ -1810,8 +1812,7 @@ HRESULT TffdshowDecVideo::reconnectOutput(const TffPict &newpict)
             //DPRINTF(_l("AR in: %i:%i"),vih->dwPictAspectRatioX,vih->dwPictAspectRatioY);
 
             SetRect(&vih->rcSource,0,0,newpict.rectFull.dx,newdy);
-            //SetRect(&vih->rcTarget,0,0,newpict.rectFull.dx,newdy);
-            SetRect(&vih->rcTarget, newpict.rectClip.x, newpict.rectClip.y, newpict.rectClip.dx, newpict.rectClip.dy);
+            SetRect(&vih->rcTarget,0,0,newpict.rectFull.dx,newdy);
             bmi=&vih->bmiHeader;
 
             //DPRINTF(_l("AR pict: %i:%i"),newpict.rectFull.dar().num,newpict.rectFull.dar().den);
