@@ -394,6 +394,6 @@ extern "C" void __stdcall getVersion(char *ver, const char* *license)
   } else {
     sprintf(ver,"%d.%d beta %d, %s%s%s (%s %s)",RARVER_MAJOR,RARVER_MINOR,RARVER_BETA,COMPILER,COMPILER_X64,COMPILER_INFO,__DATE__,__TIME__);
   }
-  *license="Alexander L. Roshal";
+  *license="Copyright (C) Alexander Roshal 1993-2012";
 }
 // FFDshow custom code end
