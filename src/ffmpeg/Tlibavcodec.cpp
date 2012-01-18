@@ -142,7 +142,6 @@ Tlibavcodec::Tlibavcodec(const Tconfig *config):refcount(0)
  dll->loadFunction(FFIsSkipped,"FFIsSkipped");
 
  dll->loadFunction(GetFFMpegPictureType,"GetFFMpegPictureType");
- dll->loadFunction(FFIsInterlaced,"FFIsInterlaced");
  dll->loadFunction(FFGetMBNumber,"FFGetMBNumber");
 
  //yadif methods

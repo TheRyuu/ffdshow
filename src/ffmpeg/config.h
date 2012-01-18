@@ -355,4 +355,6 @@ Note: when adding a new codec, you have to:
 #define CONFIG_MPEG4VIDEO_PARSER 1
 #define CONFIG_MLP_PARSER 1
 
+#define CONFIG_VC1_VDPAU_DECODER 0
+
 #endif /* FFMPEG_CONFIG_H */

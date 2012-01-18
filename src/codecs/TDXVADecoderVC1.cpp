@@ -27,7 +27,7 @@
 #include "PODtypes.h"
 #include "ffmpeg/libavcodec/avcodec.h"
 
-#define VC1_NO_REF 0xFFFF
+#define NO_REF_FRAME 0xFFFF
 
 inline void SwapRT(REFERENCE_TIME& rtFirst, REFERENCE_TIME& rtSecond)
 {
@@ -62,8 +62,8 @@ void TDXVADecoderVC1::Init()
     memset (&m_SliceInfo,     0, sizeof(m_SliceInfo));
 
     m_nMaxWaiting         = 5;
-    m_wRefPictureIndex[0] = VC1_NO_REF;
-    m_wRefPictureIndex[1] = VC1_NO_REF;
+    m_wRefPictureIndex[0] = NO_REF_FRAME;
+    m_wRefPictureIndex[1] = NO_REF_FRAME;
 
     switch (GetMode()) {
         case VC1_VLD :
@@ -80,10 +80,11 @@ HRESULT TDXVADecoderVC1::DecodeFrame(BYTE* pDataIn, UINT nSize, REFERENCE_TIME r
     HRESULT               hr;
     int                   nSurfaceIndex;
     CComPtr<IMediaSample> pSampleToDeliver;
-    int                   nFieldType;
-    int                   nSliceType;
+    int                   nFieldType, nSliceType;
+    UINT                  nFrameSize, nSize_Result;
 
-    m_pCodec->libavcodec->FFVC1UpdatePictureParam(&m_PictureParams, m_pCodec->avctx, &nFieldType, &nSliceType, pDataIn, nSize);
+    m_pCodec->libavcodec->FFVC1UpdatePictureParam(&m_PictureParams, m_pCodec->avctx, &nFieldType, &nSliceType, pDataIn, nSize, &nFrameSize, FALSE);
+
     if (m_pCodec->libavcodec->FFIsSkipped(m_pCodec->avctx)) {
         return S_OK;
     }
@@ -101,44 +102,59 @@ HRESULT TDXVADecoderVC1::DecodeFrame(BYTE* pDataIn, UINT nSize, REFERENCE_TIME r
 
     CHECK_HR (BeginFrame(nSurfaceIndex, pSampleToDeliver));
 
-    DPRINTF(_l("TDXVADecoderVC1::DecodeFrame => %s   %I64d  Surf=%d\n"), m_pCodec->libavcodec->GetFFMpegPictureType(nSliceType), rtStart, nSurfaceIndex);
+    DPRINTF(_l("TDXVADecoderVC1::DecodeFrame - PictureType = %s, rtStart = %I64d  Surf=%d\n"), m_pCodec->libavcodec->GetFFMpegPictureType(nSliceType), rtStart, nSurfaceIndex);
 
     m_PictureParams.wDecodedPictureIndex    = nSurfaceIndex;
     m_PictureParams.wDeblockedPictureIndex  = m_PictureParams.wDecodedPictureIndex;
 
     // Manage reference picture list
     if (!m_PictureParams.bPicBackwardPrediction) {
-        if (m_wRefPictureIndex[0] != VC1_NO_REF) {
+        if (m_wRefPictureIndex[0] != NO_REF_FRAME) {
             RemoveRefFrame (m_wRefPictureIndex[0]);
         }
         m_wRefPictureIndex[0] = m_wRefPictureIndex[1];
         m_wRefPictureIndex[1] = nSurfaceIndex;
     }
-    m_PictureParams.wForwardRefPictureIndex  = (m_PictureParams.bPicIntra == 0)                ? m_wRefPictureIndex[0] : VC1_NO_REF;
-    m_PictureParams.wBackwardRefPictureIndex = (m_PictureParams.bPicBackwardPrediction == 1) ? m_wRefPictureIndex[1] : VC1_NO_REF;
+    m_PictureParams.wForwardRefPictureIndex  = (m_PictureParams.bPicIntra == 0)                ? m_wRefPictureIndex[0] : NO_REF_FRAME;
+    m_PictureParams.wBackwardRefPictureIndex = (m_PictureParams.bPicBackwardPrediction == 1) ? m_wRefPictureIndex[1] : NO_REF_FRAME;
 
-    m_PictureParams.bPic4MVallowed       = (m_PictureParams.wBackwardRefPictureIndex == VC1_NO_REF && m_PictureParams.bPicStructure == 3) ? 1 : 0;
-    m_PictureParams.bPicDeblockConfined |= (m_PictureParams.wBackwardRefPictureIndex == VC1_NO_REF) ? 0x04 : 0;
+    m_PictureParams.bPic4MVallowed       = (m_PictureParams.wBackwardRefPictureIndex == NO_REF_FRAME && m_PictureParams.bPicStructure == 3) ? 1 : 0;
+    m_PictureParams.bPicDeblockConfined |= (m_PictureParams.wBackwardRefPictureIndex == NO_REF_FRAME) ? 0x04 : 0;
 
     m_PictureParams.bPicScanMethod++; // Use for status reporting sections 3.8.1 and 3.8.2
 
-    DPRINTF(_l("TDXVADecoderVC1::DecodeFrame %i\n"), m_PictureParams.bPicScanMethod);
+    DPRINTF(_l("TDXVADecoderVC1::DecodeFrame - Decode frame %i\n"), m_PictureParams.bPicScanMethod);
 
     // Send picture params to accelerator
-    m_PictureParams.wDecodedPictureIndex = nSurfaceIndex;
     CHECK_HR (AddExecuteBuffer (DXVA2_PictureParametersBufferType, sizeof(m_PictureParams), &m_PictureParams));
-    //    CHECK_HR (Execute());
-
 
     // Send bitstream to accelerator
-    CHECK_HR (AddExecuteBuffer (DXVA2_BitStreamDateBufferType, nSize, pDataIn, &nSize));
-
-    m_SliceInfo.wQuantizerScaleCode = 1;        // TODO : 1->31 ???
-    m_SliceInfo.dwSliceBitsInBuffer = nSize * 8;
+    CHECK_HR (AddExecuteBuffer (DXVA2_BitStreamDateBufferType, nFrameSize ? nFrameSize : nSize, pDataIn, &nSize_Result));
+  
+    m_SliceInfo.wQuantizerScaleCode = 1;    // TODO : 1->31 ???
+    m_SliceInfo.dwSliceBitsInBuffer = nSize_Result * 8;
     CHECK_HR (AddExecuteBuffer (DXVA2_SliceControlBufferType, sizeof (m_SliceInfo), &m_SliceInfo));
-
     // Decode frame
     CHECK_HR (Execute());
+    CHECK_HR (EndFrame(nSurfaceIndex));
+    // ***************
+    if(nFrameSize) { // Decoding Second Field
+        m_pCodec->libavcodec->FFVC1UpdatePictureParam (&m_PictureParams, m_pCodec->avctx, NULL, NULL, pDataIn, nSize, NULL, TRUE);
+        CHECK_HR (BeginFrame(nSurfaceIndex, pSampleToDeliver));
+        DPRINTF(_l("TDXVADecoderVC1::DecodeFrame - PictureType = %s\n"), m_pCodec->libavcodec->GetFFMpegPictureType(nSliceType));
+        CHECK_HR (AddExecuteBuffer (DXVA2_PictureParametersBufferType, sizeof(m_PictureParams), &m_PictureParams));
+        // Send bitstream to accelerator
+        CHECK_HR (AddExecuteBuffer (DXVA2_BitStreamDateBufferType, nSize - nFrameSize, pDataIn + nFrameSize, &nSize_Result));
+    
+        m_SliceInfo.wQuantizerScaleCode = 1;        // TODO : 1->31 ???
+        m_SliceInfo.dwSliceBitsInBuffer = nSize_Result * 8;
+        CHECK_HR (AddExecuteBuffer (DXVA2_SliceControlBufferType, sizeof (m_SliceInfo), &m_SliceInfo));
+    
+        // Decode frame
+        CHECK_HR (Execute());
+        CHECK_HR (EndFrame(nSurfaceIndex));
+    }
+    // ***************
 
 #ifdef _DEBUG
     DisplayStatus();
@@ -166,7 +182,6 @@ HRESULT TDXVADecoderVC1::DecodeFrame(BYTE* pDataIn, UINT nSize, REFERENCE_TIME r
     AddToStore (nSurfaceIndex, pSampleToDeliver, (m_PictureParams.bPicBackwardPrediction != 1), rtStart, rtStop,
                 false,(FF_FIELD_TYPE)nFieldType, (FF_SLICE_TYPE)nSliceType, 0);
 
-    CHECK_HR (EndFrame(nSurfaceIndex));
 
     m_bFlushed = false;
 
@@ -210,8 +225,8 @@ BYTE* TDXVADecoderVC1::FindNextStartCode(BYTE* pBuffer, UINT nSize, UINT& nPacke
 {
     BYTE* pStart = pBuffer;
     BYTE  bCode  = 0;
-    for (int i=0; i<(int)nSize-4; i++) {
-        if ( ((*((DWORD*)(pBuffer+i)) & 0x00FFFFFF) == 0x00010000) || (i >= (int)nSize-5) ) {
+    for (UINT i=0; i<nSize-4; i++) {
+        if ( ((*((DWORD*)(pBuffer+i)) & 0x00FFFFFF) == 0x00010000) || (i >= nSize-5) ) {
             if (bCode == 0) {
                 bCode = pBuffer[i+3];
                 if ((nSize == 5) && (bCode == 0x0D)) {
@@ -221,7 +236,7 @@ BYTE* TDXVADecoderVC1::FindNextStartCode(BYTE* pBuffer, UINT nSize, UINT& nPacke
             } else {
                 if (bCode == 0x0D) {
                     // Start code found!
-                    nPacketSize = i - (int)(pStart - pBuffer) + (i >= (int)nSize-5 ? 5 : 1);
+                    nPacketSize = i - (pStart - pBuffer) + (i >= nSize-5 ? 5 : 1);
                     return pStart;
                 } else {
                     // Other stuff, ignore it
@@ -240,27 +255,31 @@ void TDXVADecoderVC1::CopyBitstream(BYTE* pDXVABuffer, BYTE* pBuffer, UINT& nSiz
 {
     int nDummy;
 
-    if ( (*((DWORD*)pBuffer) & 0x00FFFFFF) != 0x00010000) {
-        // Some splitter have remove startcode (Haali)
-        pDXVABuffer[0]=pDXVABuffer[1]=0;
-        pDXVABuffer[2]=1;
-        pDXVABuffer[3]=0x0D;
-        pDXVABuffer +=4;
-        // Copy bitstream buffer, with zero padding (buffer is rounded to multiple of 128)
+    if(m_PictureParams.bSecondField) {
         memcpy (pDXVABuffer, (BYTE*)pBuffer, nSize);
-        nSize  +=4;
     } else {
-        BYTE*   pStart;
-        UINT    nPacketSize;
-
-        pStart = FindNextStartCode (pBuffer, nSize, nPacketSize);
-        if (pStart) {
-            // Startcode already present
-            memcpy (pDXVABuffer, (BYTE*)pStart, nPacketSize);
-            nSize = nPacketSize;
+        if ( (*((DWORD*)pBuffer) & 0x00FFFFFF) != 0x00010000) {
+            // Some splitter have remove startcode (Haali)
+            pDXVABuffer[0]=pDXVABuffer[1]=0;
+            pDXVABuffer[2]=1;
+            pDXVABuffer[3]=0x0D;
+            pDXVABuffer +=4;
+            memcpy (pDXVABuffer, (BYTE*)pBuffer, nSize);
+            nSize  +=4;
+        } else {
+            BYTE*   pStart;
+            UINT    nPacketSize;
+    
+            pStart = FindNextStartCode (pBuffer, nSize, nPacketSize);
+            if (pStart) {
+                // Startcode already present
+                memcpy (pDXVABuffer, (BYTE*)pStart, nPacketSize);
+                nSize = nPacketSize;
+            }
         }
     }
 
+  // Copy bitstream buffer, with zero padding (buffer is rounded to multiple of 128)
     nDummy  = 128 - (nSize %128);
 
     pDXVABuffer += nSize;
@@ -274,15 +293,15 @@ void TDXVADecoderVC1::Flush()
     m_rtStartDelayed           = _I64_MAX;
     m_rtStopDelayed            = _I64_MAX;
 
-    if (m_wRefPictureIndex[0] != VC1_NO_REF) {
+    if (m_wRefPictureIndex[0] != NO_REF_FRAME) {
         RemoveRefFrame (m_wRefPictureIndex[0]);
     }
-    if (m_wRefPictureIndex[1] != VC1_NO_REF) {
+    if (m_wRefPictureIndex[1] != NO_REF_FRAME) {
         RemoveRefFrame (m_wRefPictureIndex[1]);
     }
 
-    m_wRefPictureIndex[0] = VC1_NO_REF;
-    m_wRefPictureIndex[1] = VC1_NO_REF;
+    m_wRefPictureIndex[0] = NO_REF_FRAME;
+    m_wRefPictureIndex[1] = NO_REF_FRAME;
 
     __super::Flush();
 }

@@ -35,7 +35,8 @@
 #define VFW_E_INVALID_FILE_FORMAT        ((HRESULT)0x8004022FL)
 
 int av_h264_decode_frame(struct AVCodecContext* avctx, int* nOutPOC, int64_t* rtStartTime, uint8_t *buf, int buf_size);
-int av_vc1_decode_frame(AVCodecContext *avctx, uint8_t *buf, int buf_size);
+int av_vc1_decode_frame(AVCodecContext *avctx, uint8_t *buf, int buf_size, int *nFrameSize);
+void av_init_packet(AVPacket *pkt);
 
 const byte ZZ_SCAN[16]  = {
 	0,  1,  4,  8,  5,  2,  3,  6,  9, 12, 13, 10,  7, 11, 14, 15
@@ -70,6 +71,18 @@ char* GetFFMpegPictureType(int nType)
 	return s_FFMpegPictTypes[min(nType, nTypeCount)];
 }
 
+inline MpegEncContext* GetMpegEncContext(struct AVCodecContext* pAVCtx)
+{
+	MpegEncContext*		s = NULL;
+
+	switch (pAVCtx->codec_id) {
+		case CODEC_ID_VC1 :
+		case CODEC_ID_H264 :
+			s = (MpegEncContext*) pAVCtx->priv_data;
+			break;
+	}
+	return s;
+}
 
 int FFH264DecodeBuffer (struct AVCodecContext* pAVCtx, BYTE* pBuffer, UINT nSize, int* pFramePOC, int* pOutPOC, REFERENCE_TIME* pOutrtStart)
 {
@@ -106,7 +119,7 @@ BOOL DriverVersionCheck(LARGE_INTEGER VideoDriverVersion, int A, int B, int C, i
 	return FALSE;
 }
 
-int FFH264CheckCompatibility(int nWidth, int nHeight, struct AVCodecContext* pAVCtx, BYTE* pBuffer, UINT nSize, int nPCIVendor, int nPCIDevice, LARGE_INTEGER VideoDriverVersion)
+int FFH264CheckCompatibility(int nWidth, int nHeight, struct AVCodecContext* pAVCtx, BYTE* pBuffer, UINT nSize, DWORD nPCIVendor, DWORD nPCIDevice, LARGE_INTEGER VideoDriverVersion)
 {
 	H264Context*	pContext	= (H264Context*) pAVCtx->priv_data;
 	SPS*			cur_sps;
@@ -173,8 +186,7 @@ int FFH264CheckCompatibility(int nWidth, int nHeight, struct AVCodecContext* pAV
 	return (video_is_level51 * no_level51_support * DXVA_UNSUPPORTED_LEVEL) + (too_much_ref_frames * DXVA_TOO_MANY_REF_FRAMES) + (profile_higher_than_high * DXVA_PROFILE_HIGHER_THAN_HIGH);
 }
 
-
-void CopyScalingMatrix(DXVA_Qmatrix_H264* pDest, DXVA_Qmatrix_H264* pSource, int nPCIVendor)
+void CopyScalingMatrix(DXVA_Qmatrix_H264* pDest, DXVA_Qmatrix_H264* pSource, DWORD nPCIVendor)
 {
 	int		i,j;
 
@@ -215,7 +227,7 @@ USHORT FFH264FindRefFrameIndex(USHORT num_frame, DXVA_PicParams_H264* pDXVAPicPa
 	return 127;
 }
 
-HRESULT FFH264BuildPicParams (DXVA_PicParams_H264* pDXVAPicParams, DXVA_Qmatrix_H264* pDXVAScalingMatrix, int* nFieldType, int* nSliceType, struct AVCodecContext* pAVCtx, int nPCIVendor)
+HRESULT FFH264BuildPicParams (DXVA_PicParams_H264* pDXVAPicParams, DXVA_Qmatrix_H264* pDXVAScalingMatrix, int* nFieldType, int* nSliceType, struct AVCodecContext* pAVCtx, DWORD nPCIVendor)
 {
 	H264Context*			h			= (H264Context*) pAVCtx->priv_data;
 	SPS*					cur_sps;
@@ -443,7 +455,7 @@ void FF264UpdateRefFrameSliceLong(DXVA_PicParams_H264* pDXVAPicParams, DXVA_Slic
 		pSlice->num_ref_idx_l0_active_minus1 = 0;
 	}
 
-	if(h->slice_type == AV_PICTURE_TYPE_B || h->slice_type == FF_S_TYPE || h->slice_type == FF_BI_TYPE)	{
+	if(h->slice_type == AV_PICTURE_TYPE_B || h->slice_type == AV_PICTURE_TYPE_S || h->slice_type == AV_PICTURE_TYPE_BI) {
 		if(h->ref_count[1] > 0) {
 			for(i=0; i < h->ref_count[1]; i++) {
 				pSlice->RefPicList[1][i].Index7Bits = FFH264FindRefFrameIndex (h->ref_list[1][i].frame_num, pDXVAPicParams);
@@ -469,7 +481,7 @@ void FF264UpdateRefFrameSliceLong(DXVA_PicParams_H264* pDXVAPicParams, DXVA_Slic
 	}
 
 	if(h->slice_type == AV_PICTURE_TYPE_P || h->slice_type == AV_PICTURE_TYPE_I ||
-		h->slice_type ==AV_PICTURE_TYPE_SP  || h->slice_type == AV_PICTURE_TYPE_SI) {
+			h->slice_type ==AV_PICTURE_TYPE_SP  || h->slice_type == AV_PICTURE_TYPE_SI) {
 		for(i = 0; i < 16; i++) {
 			pSlice->RefPicList[1][i].bPicEntry = 0xff;
 		}
@@ -482,29 +494,47 @@ void FFH264SetDxvaSliceLong (struct AVCodecContext* pAVCtx, void* pSliceLong)
 	h->dxva_slice_long = pSliceLong;
 }
 
-HRESULT FFVC1UpdatePictureParam (DXVA_PictureParameters* pPicParams, struct AVCodecContext* pAVCtx, int* nFieldType, int* nSliceType, BYTE* pBuffer, UINT nSize)
+HRESULT FFVC1UpdatePictureParam (DXVA_PictureParameters* pPicParams, struct AVCodecContext* pAVCtx, int* nFieldType, int* nSliceType, BYTE* pBuffer, UINT nSize, UINT* nFrameSize, BOOL b_SecondField)
 {
 	VC1Context*		vc1 = (VC1Context*) pAVCtx->priv_data;
+	int out_nFrameSize = 0;
 
-	if (pBuffer) {
-		av_vc1_decode_frame (pAVCtx, pBuffer, nSize);
+	if (pBuffer && !b_SecondField) {
+		av_vc1_decode_frame (pAVCtx, pBuffer, nSize, &out_nFrameSize);
 	}
 
 	// WARNING : vc1->interlace is not reliable (always set for progressive video on HD-DVD material)
 	if (vc1->fcm == 0) {
-		*nFieldType = PICT_FRAME;
+		if(nFieldType) {
+			*nFieldType = PICT_FRAME;
+		}
 	} else {	// fcm : 2 or 3 frame or field interlaced
-		*nFieldType = (vc1->tff ? PICT_TOP_FIELD : PICT_BOTTOM_FIELD);
+		if(nFieldType) {
+			*nFieldType = (vc1->tff ? PICT_TOP_FIELD : PICT_BOTTOM_FIELD);
+		}
 	}
 
+	if(b_SecondField) {
+		vc1->second_field = 1;
+		vc1->s.picture_structure = PICT_TOP_FIELD + vc1->tff;
+		vc1->s.pict_type = (vc1->fptype & 1) ? AV_PICTURE_TYPE_P : AV_PICTURE_TYPE_I;
+		if (vc1->fptype & 4)
+			vc1->s.pict_type = (vc1->fptype & 1) ? AV_PICTURE_TYPE_BI : AV_PICTURE_TYPE_B;
+	}
+
+	if(nFrameSize) {
+		*nFrameSize = out_nFrameSize;
+	}
+
+	pPicParams->bSecondField			= (vc1->interlace && vc1->fcm == ILACE_FIELD && vc1->second_field);
 	pPicParams->bPicIntra				= (vc1->s.pict_type == AV_PICTURE_TYPE_I);
 	pPicParams->bPicBackwardPrediction	= (vc1->s.pict_type == AV_PICTURE_TYPE_B);
 
 	// Init    Init    Init    Todo
 	// iWMV9 - i9IRU - iOHIT - iINSO - iWMVA - 0 - 0 - 0		| Section 3.2.5
-	pPicParams->bBidirectionalAveragingMode	= (pPicParams->bBidirectionalAveragingMode & 0xE0) |	// init in SetExtraData
-			((vc1->lumshift!=0 || vc1->lumscale!=32) ? 0x10 : 0)| // iINSO
-			((vc1->profile == PROFILE_ADVANCED)	 <<3 );			// iWMVA
+	pPicParams->bBidirectionalAveragingMode	=	(pPicParams->bBidirectionalAveragingMode & 0xE0) |	// init in SetExtraData
+												((vc1->lumshift!=0 || vc1->lumscale!=32) ? 0x10 : 0)| // iINSO
+												((vc1->profile == PROFILE_ADVANCED)	 <<3 );			// iWMVA
 
 	// Section 3.2.20.3
 	pPicParams->bPicSpatialResid8	= (vc1->panscanflag   << 7) | (vc1->refdist_flag << 6) |
@@ -525,46 +555,44 @@ HRESULT FFVC1UpdatePictureParam (DXVA_PictureParameters* pPicParams, struct AVCo
 
 
 	//				TODO section 3.2.20.6
-	pPicParams->bPicStructure		= *nFieldType;
+	//pPicParams->bPicStructure		= *nFieldType;
+	pPicParams->bPicStructure      = vc1->s.picture_structure;
 
 	// Cf page 17 : 2 for interlaced, 0 for progressive
-	pPicParams->bPicExtrapolation = (*nFieldType == PICT_FRAME) ? 1 : 2;
+	pPicParams->bPicExtrapolation       = (!vc1->interlace || vc1->fcm == PROGRESSIVE) ? 1 : 2;
 
-	pPicParams->wBitstreamPCEelements	= vc1->lumshift;
-	pPicParams->wBitstreamFcodes		= vc1->lumscale;
+	if (vc1->s.picture_structure == PICT_FRAME) {
+		pPicParams->wBitstreamFcodes        = vc1->lumscale;
+		pPicParams->wBitstreamPCEelements   = vc1->lumshift;
+	} else {
+		/* Syntax: (top_field_param << 8) | bottom_field_param */
+		pPicParams->wBitstreamFcodes        = (vc1->lumscale << 8) | vc1->lumscale;
+		pPicParams->wBitstreamPCEelements   = (vc1->lumshift << 8) | vc1->lumshift;
+	}
 
 	// Section 3.2.16
-	*nSliceType = vc1->s.pict_type;
+	if(nSliceType) {
+		*nSliceType = vc1->s.pict_type;
+	}
 
 	// TODO : not finish...
 	pPicParams->bMVprecisionAndChromaRelation = ((vc1->mv_mode == MV_PMODE_1MV_HPEL_BILIN) << 3) |		// 0 for non-bilinear luma motion, 1 for bilinear
-			(1 << 2) |		// 0 for WMV8, 1 for WMV9 motion
-			(0 << 1) |		// 1 for WMV8 quarter sample luma motion
-			(0);			// 0 for quarter sample chroma motion, 1 for half sample chroma
+												(1 << 2) |		// 0 for WMV8, 1 for WMV9 motion
+												(0 << 1) |		// 1 for WMV8 quarter sample luma motion
+												(0);			// 0 for quarter sample chroma motion, 1 for half sample chroma
 
 	// Cf §7.1.1.25 in VC1 specification, §3.2.14.3 in DXVA spec
 	pPicParams->bRcontrol	= vc1->rnd;
 
-	/*
-	// TODO : find files with de-ringing  ...
-	pPicParams->bPicDeblocked	= ((vc1->postproc & 0x01) ? 0x02 : 0) |	// In loop de-blocking
-								  ((vc1->postproc & 0x02) ? 0x08 : 0);	// Out of loop de-ringing
-	*/
+    pPicParams->bPicDeblocked	=	((vc1->profile != PROFILE_ADVANCED && vc1->rangeredfrm) << 5) |
+									(vc1->s.loop_filter << 1);
 
 	return S_OK;
 }
 
 unsigned long FFGetMBNumber(struct AVCodecContext* pAVCtx)
 {
-  MpegEncContext*	s = NULL;
-
-	switch (pAVCtx->codec_id)
-	{
-	case CODEC_ID_VC1 :
-	case CODEC_ID_H264 :
-		s = (MpegEncContext*) pAVCtx->priv_data;
-		break;
-	}
+	MpegEncContext*		s = GetMpegEncContext(pAVCtx);
 
 	return (s != NULL) ? s->mb_num : 0;
 }
@@ -573,23 +601,4 @@ int FFIsSkipped(struct AVCodecContext* pAVCtx)
 {
 	VC1Context*		vc1 = (VC1Context*) pAVCtx->priv_data;
 	return vc1->p_frame_skipped;
-}
-
-int FFIsInterlaced(struct AVCodecContext* pAVCtx, int nHeight)
-{
-	if (pAVCtx->codec_id == CODEC_ID_H264) {
-		H264Context*	h		= (H264Context*) pAVCtx->priv_data;
-		SPS*			cur_sps = h->sps_buffers[0];
-
-		if (cur_sps && !cur_sps->frame_mbs_only_flag) {
-			return 1;
-		} else {
-			return 0;
-		}
-	} else if (pAVCtx->codec_id == CODEC_ID_VC1) {
-		VC1Context*		vc1 = (VC1Context*) pAVCtx->priv_data;
-		return vc1->interlace;
-	}
-
-	return 0;
 }

@@ -67,7 +67,6 @@ EXPORTS
   FFIsSkipped
 
   GetFFMpegPictureType
-  FFIsInterlaced
   FFGetMBNumber
 
   yadif_init
