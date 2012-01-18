@@ -26,6 +26,7 @@
 
 #include "avcodec.h"
 #include "bytestream.h"
+#include "internal.h"
 #include "pcm_tablegen.h"
 
 #define MAX_CHANNELS 64
@@ -160,5 +161,5 @@ AVCodec ff_ ## name_ ## _decoder = {            \
 #define PCM_DECODER(id,sample_fmt_,name,long_name_)
 #endif
 
-PCM_DECODER(CODEC_ID_PCM_ALAW,  AV_SAMPLE_FMT_S16, pcm_alaw,  "A-law PCM" );
-PCM_DECODER(CODEC_ID_PCM_MULAW, AV_SAMPLE_FMT_S16, pcm_mulaw, "mu-law PCM");
+PCM_DECODER(CODEC_ID_PCM_ALAW,  AV_SAMPLE_FMT_S16, pcm_alaw,  "PCM A-law");
+PCM_DECODER(CODEC_ID_PCM_MULAW, AV_SAMPLE_FMT_S16, pcm_mulaw, "PCM mu-law");
