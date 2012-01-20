@@ -1918,9 +1918,10 @@ HRESULT TffdshowDecVideo::reconnectOutput(const TffPict &newpict)
 
                 m_pOutput->SetMediaType(&omt);
                 DeleteMediaType(opmt);
-            } else { // stupid overlay mixer won't let us know the new pitch...
-                long size=pOut->GetSize();
-                m_frame.dstStride=bmi->biWidth=size/bmi->biHeight*8/bmi->biBitCount;
+            } else {
+                FOURCC fcc = hdr2fourcc(bmi, mt.Subtype());
+                const TcspInfo* cspInfo = csp_getInfoFcc(fcc);
+                m_frame.dstStride = bmi->biWidth * cspInfo->Bpp;
             }
         }
 
