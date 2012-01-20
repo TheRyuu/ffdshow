@@ -331,7 +331,8 @@ static __inline uint64_t csp_supSWSout(uint64_t x)
 struct TcspInfo {
     uint64_t id;
     const char_t *name;
-    int Bpp,bpp;
+    int Bpp; // Bytes per pixel for each plane.
+    int bpp; // bits per pixel for all plane. (Memory usage, not the effective bit depth)
     unsigned int numPlanes;
     unsigned int shiftX[4], shiftY[4];
     unsigned int black[4];
