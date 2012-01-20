@@ -476,6 +476,9 @@ protected:
         STDMETHODIMP setSubtitlesFile(const tchar *pSubtitleFile) {
             return E_NOTIMPL;
         }
+        STDMETHODIMP_(void*) get_csSetExternalStream_ptr(void) {
+            return deciD->get_csSetExternalStream_ptr();
+        }
 
     } dec_char;
     template<class Tinterface> Tinterface* getDecInterface(void);
@@ -568,6 +571,9 @@ public:
     }
     STDMETHODIMP setSubtitlesFile(const char_t *pSubtitleFile) {
         return E_NOTIMPL;
+    }
+    STDMETHODIMP_(void*) get_csSetExternalStream_ptr() {
+        return &m_csSetExternalStream;
     }
 protected:
     bool m_dirtyStop; // Work around DVBViewer compatibility issue. Old DVBViewer doesn't call NewSegment after Stop and before next play.

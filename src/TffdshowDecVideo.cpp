@@ -137,6 +137,7 @@ TffdshowDecVideo::TffdshowDecVideo(CLSID Iclsid,const char_t *className,const CL
         IDFF_currentq           ,&TffdshowDecVideo::currentq          ,0,6,_l(""),0,NULL,0,
 
         IDFF_subShowEmbedded    ,&TffdshowDecVideo::subShowEmbedded   ,0,40,_l(""),0,NULL,0,
+        IDFF_subForceEmbedded   ,&TffdshowDecVideo::subForceEmbedded   ,0,0,_l(""),0,NULL,0, // IAMStreamSelect
         //IDFF_subFoundEmbedded   ,&TffdshowDecVideo::foundEmbedded     ,0,0,_l(""),0,NULL,0,
         IDFF_subCurLang         ,&TffdshowDecVideo::subCurLang        ,-3,-3,_l(""),0,NULL,0,
         0
@@ -2310,9 +2311,11 @@ STDMETHODIMP TffdshowDecVideo::getCurrentSubtitlesFile(char_t **ppSubtitleFile)
 
 STDMETHODIMP TffdshowDecVideo::setSubtitlesFile(const char_t *pSubtitleFile)
 {
+    CAutoLock lock(&m_csSetExternalStream);
     putParamStr(IDFF_subTempFilename, pSubtitleFile);
     putParam(IDFF_isSubtitles, 1);
     putParam(IDFF_subShowEmbedded, 0);
+    putParam(IDFF_subForceEmbedded, 0);
     return S_OK;
 }
 

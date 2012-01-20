@@ -1627,6 +1627,7 @@ STDMETHODIMP TffdshowDec::setExternalStream(int group, long streamNb)
         DPRINTF(_l("TffdshowDec::setExternalStream set internal ffdshow stream %ld"), streamNb);
         int oldId=getParam2(IDFF_subShowEmbedded);
         putParam(IDFF_subShowEmbedded,streamNb);
+        putParam(IDFF_subForceEmbedded,1);
     } else {
         comptr<IEnumFilters> eff;
         IFilterGraph    *m_pGraph = NULL;
@@ -1660,6 +1661,7 @@ STDMETHODIMP TffdshowDec::setExternalStream(int group, long streamNb)
                 // Lastly, enable the FFDShow subtitle text PIN
                 if (pStream->internalStreamNb >= 0) {
                     putParam(IDFF_subShowEmbedded,pStream->internalStreamNb);
+                    putParam(IDFF_subForceEmbedded,1);
                 }
                 break;
             }

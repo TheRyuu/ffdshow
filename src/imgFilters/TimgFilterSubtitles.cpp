@@ -28,6 +28,7 @@
 #include "TsubtitleText.h"
 #include "Tsubreader.h"
 #include "TsubtitlesTextpin.h"
+#include "IffdshowDec.h"
 
 TimgFilterSubtitles::TsubPrintPrefs::TsubPrintPrefs(
     unsigned int Idx[4],
@@ -313,12 +314,19 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
         AVIfps=deciV->getAVIfps1000_2()/1000.0;
     }
     if (subFlnmChanged) {
-        const char_t *subflnm=cfg->autoFlnm?findAutoSubFlnm(cfg):cfg->flnm;
-        if (subFlnmChanged!=-1 || stricmp(subflnm,subs.subFlnm)!=0) {
-            if (subs.init(cfg,subflnm,AVIfps,!!deci->getParam2(IDFF_subWatch),false) == true && first == true && deci->getParam2(IDFF_subEmbeddedPriority) == 0) {
-                DPRINTF(_l("TimgFilterSubtitles::process subtitle file %s detected"), subflnm);
-                deci->putParam(IDFF_subShowEmbedded, 0);
-                first = false;
+        // Check if IAMStreamSelect was issued.
+        comptrQ<IffdshowDec> deciD = deciV;
+        if (deciD) {
+            CAutoLock lock((CCritSec*)deciD->get_csSetExternalStream_ptr());
+            if (deci->getParam2(IDFF_subForceEmbedded) == 0) {
+                const char_t *subflnm=cfg->autoFlnm?findAutoSubFlnm(cfg):cfg->flnm;
+                if (subFlnmChanged!=-1 || stricmp(subflnm,subs.subFlnm)!=0) {
+                    if (subs.init(cfg,subflnm,AVIfps,!!deci->getParam2(IDFF_subWatch),false) == true && first == true && deci->getParam2(IDFF_subEmbeddedPriority) == 0) {
+                        DPRINTF(_l("TimgFilterSubtitles::process subtitle file %s detected"), subflnm);
+                        deci->putParam(IDFF_subShowEmbedded, 0);
+                        first = false;
+                    }
+                }
             }
         }
         subFlnmChanged=0;

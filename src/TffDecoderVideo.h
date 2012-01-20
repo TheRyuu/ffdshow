@@ -1008,6 +1008,7 @@ protected:
     virtual void sendOnChange(int paramID,int val);
 
     int subShowEmbedded;//,foundEmbedded;
+    int subForceEmbedded;
     TfontManager *fontManager;
     bool wasSubtitleResetTime;
     TpinsVector<TtextInputPin> textpins;

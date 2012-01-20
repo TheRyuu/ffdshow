@@ -92,6 +92,7 @@ template<class tchar> DECLARE_INTERFACE_(IffdshowDecT,IUnknown)
     STDMETHOD (setExternalStream)(int group, long streamNb) PURE;
     STDMETHOD (getCurrentSubtitlesFile)(tchar **ppSubtitleFile) PURE;
     STDMETHOD (setSubtitlesFile)(const tchar *pSubtitleFile) PURE;
+    STDMETHOD_(void*, get_csSetExternalStream_ptr)(void) PURE;
 };
 
 struct IffdshowDecA :IffdshowDecT<char> {};

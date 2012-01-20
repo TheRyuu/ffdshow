@@ -509,6 +509,7 @@
 
 #define IDFF_subShowEmbedded         857 //id of displayed embedded subtitle, 0 if none
 //#define IDFF_subFoundEmbedded        859
+#define IDFF_subForceEmbedded        3573
 #define IDFF_subFix                  846
 #define IDFF_subFixLang              847
 #define IDFF_subFixDict              848
@@ -1374,6 +1375,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//next:3573
+//next:3574
 
 #endif

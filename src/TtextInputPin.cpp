@@ -307,6 +307,7 @@ HRESULT TtextInputPin::Transform(IMediaSample* pSample)
 STDMETHODIMP TtextInputPin::Disconnect(void)
 {
     filter->putParam(IDFF_subShowEmbedded,0);
+    filter->putParam(IDFF_subForceEmbedded,0);
     name[0]='\0';
     found=false;
     return CDeCSSInputPin::Disconnect();

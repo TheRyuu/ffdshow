@@ -641,6 +641,7 @@ void TtrayIconDecVideo::processCmd(HMENU hm,int cmd)
         deci->putParamStr(IDFF_subTempFilename,stringreplace(subflnm,_l("&&"),_l("&"),rfReplaceAll).c_str());
         deci->putParam(IDFF_isSubtitles,1);
         deci->putParam(IDFF_subShowEmbedded,0);
+        deci->putParam(IDFF_subForceEmbedded,0);
     } else if (cmd==IDFF_isAvisynth+IDC_FIRST_FILTER) {
         TtrayIconDec::processCmd(hm,cmd);
     } else {
