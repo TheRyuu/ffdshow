@@ -588,7 +588,7 @@ void TffPict::clear(int Bpp, unsigned int black, unsigned char *dst, stride_t st
             }
             return;
         }
-        case 2:
+        case 2: {
 #if 0
             // disabled because I have no case to test.
             if ((black & 0xff) <= 16) {
@@ -599,11 +599,17 @@ void TffPict::clear(int Bpp, unsigned int black, unsigned char *dst, stride_t st
             }
 #endif
             black|=black<<16;
-            for (unsigned int y=0; y<height; y++)
-                for (uint32_t *p=(uint32_t*)(dst+y*stride),*pEnd=(uint32_t*)((uint8_t*)p+(row_size&~3)); p!=pEnd; p++) {
-                    *p=black;
+            bool odd = !!(row_size & 3);
+            size_t bytes = row_size & ~3;
+            for (unsigned int y=0; y<height; y++) {
+                uint16_t *p = (uint16_t*)(dst+y*stride);
+                if (odd) {
+                    *p++ = black;
                 }
+                memsetd(p, black, bytes);
+            }
             return;
+        }
         case 3:
             for (unsigned int y=0; y<height; y++)
                 for (uint8_t *p=dst+y*stride,*pEnd=p+row_size; p!=pEnd; p+=3) {
