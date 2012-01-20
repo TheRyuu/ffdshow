@@ -474,8 +474,6 @@ void TresizeAspectSettings::calcNewRects(Trect *rectFull, Trect *rectClip, bool 
                     rectFull->dy=dy;
                     break;
             }
-            rectFull->dx&=~1;
-            rectFull->dy&=~1;
         }
 
     /*****************  aspect  *****************/
@@ -538,9 +536,9 @@ void TresizeAspectSettings::calcNewRects(Trect *rectFull, Trect *rectClip, bool 
         borderX=std::max(64,int(rectClip->dx+(bordersInside?-2:2)*bordersPixelsX));
         borderY=std::max(24,int(rectClip->dy+(bordersInside?-2:2)*(bordersLocked?rectClip->dy*bordersPixelsY/rectClip->dx:bordersPixelsY)));
     }
-    borderX&=~1;
-    borderY&=~1;
-    if (borderX || borderY) {
+
+    if ( !(mode == 4 /* Specify horizontal size : avoid accumulation of calculation errors by skipping un-necessary calculation of borders */
+        && ((bordersUnits==0 && bordersPercentX == 0 && bordersPercentY == 0) ||(bordersUnits==1 && bordersPixelsX == 0 && bordersPixelsY == 0)))) {
         if (bordersInside && methodsProps[methodLuma].library!=LIB_SAI) {
             if (isAspect>=1) {
                 unsigned int bdy=borderX*ay/ax;
