@@ -297,7 +297,7 @@ Name: "video";                   Description: "{cm:tsk_videoFormatsSelect}";    
 Name: "video\h264";              Description: "H.264 / AVC";                      Components: ffdshow
 Name: "video\h264\libavcodec";   Description: "libavcodec";                       Components: ffdshow; Flags: unchecked exclusive
 #if include_quicksync
-Name: "video\h264\quicksync";    Description: "Intel QuickSync";                  Components: ffdshow; Flags: unchecked exclusive
+Name: "video\h264\quicksync";    Description: "Intel QuickSync";                  Components: ffdshow; Flags: unchecked exclusive;        Check: IsQSCapableIntelCPU; MinVersion: 0,6;
 #endif
 Name: "video\divx";              Description: "DivX";                             Components: ffdshow
 Name: "video\xvid";              Description: "Xvid";                             Components: ffdshow
@@ -312,7 +312,7 @@ Name: "video\mpeg2";             Description: "MPEG-2";                         
 Name: "video\mpeg2\libmpeg2";    Description: "libmpeg2";                         Components: ffdshow; Flags: unchecked exclusive
 Name: "video\mpeg2\libavcodec";  Description: "libavcodec";                       Components: ffdshow; Flags: unchecked exclusive
 #if include_quicksync
-Name: "video\mpeg2\quicksync";   Description: "Intel QuickSync";                  Components: ffdshow; Flags: unchecked exclusive
+Name: "video\mpeg2\quicksync";   Description: "Intel QuickSync";                  Components: ffdshow; Flags: unchecked exclusive;        Check: IsQSCapableIntelCPU; MinVersion: 0,6;
 #endif
 Name: "video\huffyuv";           Description: "Huffyuv";                          Components: ffdshow
 Name: "video\qt";                Description: "SVQ1, SVQ3, RPZA, QT RLE";         Components: ffdshow
@@ -320,7 +320,7 @@ Name: "video\vc1";               Description: "VC-1";                           
 Name: "video\vc1\wmv9";          Description: "wmv9";                             Components: ffdshow; Flags: unchecked exclusive
 Name: "video\vc1\libavcodec";    Description: "libavcodec";                       Components: ffdshow; Flags: unchecked exclusive
 #if include_quicksync
-Name: "video\vc1\quicksync";     Description: "Intel QuickSync";                  Components: ffdshow; Flags: unchecked exclusive
+Name: "video\vc1\quicksync";     Description: "Intel QuickSync";                  Components: ffdshow; Flags: unchecked exclusive;        Check: IsQSCapableIntelCPU; MinVersion: 0,6;
 #endif
 Name: "video\wmv1";              Description: "WMV1";                             Components: ffdshow; Flags: unchecked dontinheritcheck
 Name: "video\wmv2";              Description: "WMV2";                             Components: ffdshow; Flags: unchecked dontinheritcheck
@@ -429,7 +429,7 @@ Source: "..\manifest\ffdshow.ax.manifest";        DestDir: "{app}";             
 
 Source: "{#= bindir}\ff_wmv9.dll";                DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
 #if include_quicksync
-Source: "{#= bindir}\IntelQuickSyncDecoder.dll";  DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
+Source: "{#= bindir}\IntelQuickSyncDecoder.dll";  DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion; Check: IsQSCapableIntelCPU; MinVersion: 0,6;
 #endif
 
 Source: "{#= bindir}\ff_vfw.dll";                 DestDir: "{sys}";                         Components: ffdshow\vfw;                Flags: ignoreversion restartreplace uninsrestartdelete
@@ -957,6 +957,9 @@ end;
 function InitializeSetup(): Boolean;
 begin
   Result := True;
+  
+  // CPU capabilities
+  DetectCPU;
 
   if GetCPULevel < 6 then begin
     Result := False;
