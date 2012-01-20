@@ -182,7 +182,6 @@ HRESULT TDXVADecoderVC1::DecodeFrame(BYTE* pDataIn, UINT nSize, REFERENCE_TIME r
     AddToStore (nSurfaceIndex, pSampleToDeliver, (m_PictureParams.bPicBackwardPrediction != 1), rtStart, rtStop,
                 false,(FF_FIELD_TYPE)nFieldType, (FF_SLICE_TYPE)nSliceType, 0);
 
-
     m_bFlushed = false;
 
     return DisplayNextFrame();
@@ -207,7 +206,6 @@ void TDXVADecoderVC1::SetExtraData (BYTE* pDataIn, UINT nSize)
     m_PictureParams.bRcontrol                        = 0;
     m_PictureParams.bPicExtrapolation                = 0;
 
-    m_PictureParams.bPicDeblocked                    = 2;    // TODO ???
     m_PictureParams.bPicOBMC                         = 0;
     m_PictureParams.bPicBinPB                        = 0;    // TODO
     m_PictureParams.bMV_RPS                          = 0;    // TODO
@@ -219,7 +217,6 @@ void TDXVADecoderVC1::SetExtraData (BYTE* pDataIn, UINT nSize)
             (GetConfigIntraResidUnsigned()    <<6) |    // i9IRU
             (GetConfigResidDiffAccelerator()  <<5);    // iOHIT
 }
-
 
 BYTE* TDXVADecoderVC1::FindNextStartCode(BYTE* pBuffer, UINT nSize, UINT& nPacketSize)
 {
