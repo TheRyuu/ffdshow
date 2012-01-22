@@ -924,6 +924,22 @@ STDMETHODIMP TffdshowDec::Count(DWORD* pcStreams)
 }
 STDMETHODIMP TffdshowDec::Info(long lIndex, AM_MEDIA_TYPE** ppmt, DWORD* pdwFlags, LCID* plcid, DWORD* pdwGroup, WCHAR** ppszName, IUnknown** ppObject, IUnknown** ppUnk)
 {
+    // Initialize
+    if (ppmt)
+        *ppmt = NULL;
+    if (pdwFlags)
+        *pdwFlags = 0;
+    if (plcid)
+        *plcid = 0;
+    if (pdwGroup)
+        *pdwGroup = 0;
+    if (ppszName)
+        *ppszName = NULL;
+    if (ppObject)
+        *ppObject = NULL;
+    if (ppUnk)
+        *ppUnk = NULL;
+
     // In order : audio streams, embedded subtitles, then FFDShow filters then in last external subtitles (which can vary)
     long internalStreams = (long)(isStreamsMenu() ? streams.size() : 0);
     long subFiles = (long)(getParam2(IDFF_subFiles) ? subtitleFiles.size() : 0);
@@ -941,24 +957,15 @@ STDMETHODIMP TffdshowDec::Info(long lIndex, AM_MEDIA_TYPE** ppmt, DWORD* pdwFlag
         if (pdwFlags) {
             *pdwFlags=streams[lIndex]->getFlags();
         }
-        if (plcid) {
-            *plcid=0;
-        }
         if (pdwGroup) {
             *pdwGroup=streams[lIndex]->group;
         }
         if (ppszName) {
             ffstring name=streams[lIndex]->getName();//stringreplace(ffstring(streams[lIndex]->getName()),"&","&&",rfReplaceAll);
-            size_t wlen=(name.size()+1)*sizeof(WCHAR);
-            *ppszName=(WCHAR*)CoTaskMemAlloc(wlen);
-            memset(*ppszName,0,wlen);
-            nCopyAnsiToWideChar(*ppszName,name.c_str());
-        }
-        if (ppObject) {
-            *ppObject=NULL;
-        }
-        if (ppUnk) {
-            *ppUnk=NULL;
+            size_t len=(name.size()+1);
+            *ppszName=(WCHAR*)CoTaskMemAlloc(len * sizeof(WCHAR));
+            memset(*ppszName,0,len * sizeof(WCHAR));
+            ff_strncpy(*ppszName, name.c_str(), len);
         }
         return S_OK;
     }
@@ -1018,7 +1025,7 @@ STDMETHODIMP TffdshowDec::Info(long lIndex, AM_MEDIA_TYPE** ppmt, DWORD* pdwFlag
 
     TexternalStream stream;
     if (lIndex < (long)externalAudioStreams.size()) {
-        if (ppmt) {
+        if (ppmt && *ppmt) {
             (*ppmt)->majortype=MEDIATYPE_Audio;
         }
         if (pdwGroup) {
@@ -1026,7 +1033,7 @@ STDMETHODIMP TffdshowDec::Info(long lIndex, AM_MEDIA_TYPE** ppmt, DWORD* pdwFlag
         }
         stream = externalAudioStreams[lIndex];
     } else if (lIndex < (long) (externalAudioStreams.size() + externalSubtitleStreams.size())) {
-        if (ppmt) {
+        if (ppmt && *ppmt) {
             (*ppmt)->majortype=MEDIATYPE_Text;
         }
         lIndex -= (long)externalAudioStreams.size();
@@ -1035,7 +1042,7 @@ STDMETHODIMP TffdshowDec::Info(long lIndex, AM_MEDIA_TYPE** ppmt, DWORD* pdwFlag
         }
         stream = externalSubtitleStreams[lIndex];
     } else { // Editions
-        if (ppmt) {
+        if (ppmt && *ppmt) {
             (*ppmt)->majortype=MEDIATYPE_Video;
         }
         lIndex -= (long)externalAudioStreams.size();
@@ -1045,7 +1052,7 @@ STDMETHODIMP TffdshowDec::Info(long lIndex, AM_MEDIA_TYPE** ppmt, DWORD* pdwFlag
         }
         stream = externalEditionStreams[lIndex];
     }
-    DPRINTF(_l("TffdshowDec::Info Stream #%d %s [%s] (%ld)"), lIndex, stream.streamName.c_str(), stream.streamLanguageName.c_str(), stream.langId);
+    // DPRINTF(_l("TffdshowDec::Info Stream #%d %s [%s] (%ld)"), lIndex, stream.streamName.c_str(), stream.streamLanguageName.c_str(), stream.langId);
 
     if (plcid) {
         *plcid=stream.langId;
@@ -1065,10 +1072,10 @@ STDMETHODIMP TffdshowDec::Info(long lIndex, AM_MEDIA_TYPE** ppmt, DWORD* pdwFlag
         } else if (stream.langId == 0 && stream.streamLanguageName.length() > 0) {
             streamName += _l(" [") + stream.streamLanguageName + _l("]");
         }
-        size_t wlen=(streamName.length()+1)*sizeof(WCHAR);
-        *ppszName=(WCHAR*)CoTaskMemAlloc(wlen);
-        memset(*ppszName,0,wlen);
-        nCopyAnsiToWideChar(*ppszName,streamName.c_str());
+        size_t len=(streamName.length()+1);
+        *ppszName=(WCHAR*)CoTaskMemAlloc(len * sizeof(WCHAR));
+        memset(*ppszName, 0, len * sizeof(WCHAR));
+        ff_strncpy(*ppszName, streamName.c_str(), len);
     }
     return S_OK;
 }
@@ -1422,7 +1429,7 @@ STDMETHODIMP TffdshowDec::extractExternalStreams(void)
             char_t name[MAX_PATH],filtername[MAX_PATH];
             getFilterName(bff,name,filtername,countof(filtername));
 
-            if (IS_FFDSHOW_VIDEO(filtername)) {
+            if (is_ffdshow_video_family(bff)) {
                 continue;
             }
 
@@ -1669,3 +1676,33 @@ STDMETHODIMP TffdshowDec::setExternalStream(int group, long streamNb)
     }
     return S_OK;
 }
+
+#ifdef DEBUG_IAMStreamSelect
+// IAMStreamSelect testing code
+void TffdshowDec::debug_print_IAMStreamSelect()
+{
+    DWORD cStreams=50;
+    Count(&cStreams);
+    DPRINTF(L"IAMStreamSelect Count %d",cStreams);
+    for (int i = 0 ; i < cStreams ; i++) {
+        AM_MEDIA_TYPE *pmt;
+        DWORD dwFlags;
+        LCID lcid;
+        DWORD dwGroup;
+        WCHAR *pszName;
+        IUnknown *pObject;
+        IUnknown *pUnk;
+        Info(i, &pmt, &dwFlags, &lcid, &dwGroup, &pszName, &pObject, &pUnk);
+        DPRINTF(L"IAMStreamSelect::Info Stream #%d Grounp %d %s", i, dwGroup, pszName);
+
+        if (pmt)
+            DeleteMediaType(pmt);
+        if (pszName)
+            CoTaskMemFree(pszName);
+        if (pObject)
+            pObject->Release();
+        if (pUnk)
+            pUnk->Release();
+    }
+}
+#endif

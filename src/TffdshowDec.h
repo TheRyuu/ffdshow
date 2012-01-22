@@ -488,6 +488,11 @@ private:
     Tstrptrs codecs;
     HWND onNewFiltersWnd;
     unsigned int onNewFiltersMsg;
+
+#ifdef DEBUG_IAMStreamSelect
+    void debug_print_IAMStreamSelect();
+#endif
+
 protected:
     Tpresets *presets;
     Tpreset* &presetSettings;

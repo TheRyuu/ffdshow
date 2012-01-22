@@ -23,6 +23,7 @@
 #include "theora.h"
 #include "codecs/ogg headers/vorbisformat.h"
 #include "ffdshow_mediaguids.h"
+#include "IffdshowDecVideo.h"
 
 // registry key info from RadLight Filter Manager v1.3 by RadScorpion
 static void getFilterReg(const CLSID &clsid,char_t *reg, size_t len)
@@ -119,6 +120,13 @@ bool ExtractBIH(const AM_MEDIA_TYPE &mt, BITMAPINFOHEADER* bih)
     } else {
         return false;
     }
+}
+
+bool is_ffdshow_video_family(IBaseFilter *filter)
+{
+    CLSID clsid;
+    filter->GetClassID(&clsid);
+    return clsid == CLSID_FFDSHOW || clsid == CLSID_FFDSHOWRAW || clsid == CLSID_FFDSHOWSUBTITLES || clsid == CLSID_FFDSHOWDXVA;
 }
 
 void getFilterName(IBaseFilter *filter,char_t *name,char_t *filtername,size_t bufsize)

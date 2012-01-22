@@ -15,6 +15,7 @@ CLSID GetCLSID(IBaseFilter* pBF);
 CLSID GetCLSID(IPin* pPin);
 
 void getFilterName(IBaseFilter *filter,char_t *name,char_t *filtername,size_t bufsize); // bufsize : count of characters, not byte size.
+bool is_ffdshow_video_family(IBaseFilter *filter);
 
 struct pins_vector : std::vector<IPin*> {
 public:
