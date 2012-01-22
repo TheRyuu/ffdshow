@@ -417,7 +417,6 @@ static int update_context_from_thread(AVCodecContext *dst, AVCodecContext *src, 
 
         dst->has_b_frames = src->has_b_frames;
         dst->idct_algo    = src->idct_algo;
-        dst->slice_count  = src->slice_count;
 
         dst->bits_per_coded_sample = src->bits_per_coded_sample;
         dst->sample_aspect_ratio   = src->sample_aspect_ratio;
@@ -451,8 +450,9 @@ static int update_context_from_thread(AVCodecContext *dst, AVCodecContext *src, 
  *
  * @param dst The destination context.
  * @param src The source context.
+ * @return 0 on success, negative error code on failure
  */
-static void update_context_from_user(AVCodecContext *dst, AVCodecContext *src)
+static int update_context_from_user(AVCodecContext *dst, AVCodecContext *src)
 {
 #define copy_fields(s, e) memcpy(&dst->s, &src->s, (char*)&dst->e - (char*)&dst->s);
     dst->flags          = src->flags;
@@ -479,6 +479,22 @@ static void update_context_from_user(AVCodecContext *dst, AVCodecContext *src)
     dst->reordered_opaque3 = src->reordered_opaque3;
     dst->h264_has_to_drop_first_non_ref = src->h264_has_to_drop_first_non_ref;
     /* ffdshow custom code (end) */
+
+    if (src->slice_count && src->slice_offset) {
+        if (dst->slice_count < src->slice_count) {
+            int *tmp = av_realloc(dst->slice_offset, src->slice_count *
+                                  sizeof(*dst->slice_offset));
+            if (!tmp) {
+                av_free(dst->slice_offset);
+                return AVERROR(ENOMEM);
+            }
+            dst->slice_offset = tmp;
+        }
+        memcpy(dst->slice_offset, src->slice_offset,
+               src->slice_count * sizeof(*dst->slice_offset));
+    }
+    dst->slice_count = src->slice_count;
+    return 0;
 #undef copy_fields
 }
 

@@ -191,21 +191,6 @@ int ff_rate_control_init(MpegEncContext *s)
             return -1;
 #endif
         }
-        for (i=0;i<s->avctx->rc_override_count;i++)
-        {
-            RcOverride *rco= &s->avctx->rc_override[i];
-            int rcoframe;
-            if (rco->start_frame<0) rco->start_frame=0; else if (rco->start_frame>=rcc->num_entries) rco->start_frame=rcc->num_entries-1;
-            if (rco->end_frame<0) rco->end_frame=0; else if (rco->end_frame>=rcc->num_entries) rco->end_frame=rcc->num_entries-1;
-            for (rcoframe=rco->start_frame;rcoframe<=rco->end_frame;rcoframe++)
-            {
-                rcc->entry[rcoframe].rcOverrideIndex1=i+1;
-                if (rco->qscale)
-                    rcc->entry[rcoframe].rcOverrideQscale=rco->qscale;
-            }
-        }
-
-        if(init_pass2(s) < 0) return -1;
     }
 
     if(!(s->flags&CODEC_FLAG_PASS2)){
@@ -421,44 +406,18 @@ static double get_diff_limited_q(MpegEncContext *s, RateControlEntry *rce, doubl
 /**
  * Get the qmin & qmax for pict_type.
  */
-static void get_qminmax(int *qmin_ret, int *qmax_ret, MpegEncContext *s, int pict_type, int frame_num){
+static void get_qminmax(int *qmin_ret, int *qmax_ret, MpegEncContext *s, int pict_type){
     int qmin= s->avctx->lmin;
     int qmax= s->avctx->lmax;
-
-    if (s->flags&CODEC_FLAG_PASS2 && frame_num>=0 && frame_num<s->rc_context.num_entries)
-    {
-        RateControlEntry *rce=&s->rc_context.entry[frame_num];
-        if (rce->rcOverrideIndex1)
-        {
-            if (rce->rcOverrideQscale)
-                *qmin_ret=*qmax_ret=FF_QP2LAMBDA*rce->rcOverrideQscale;
-            else
-            {
-                *qmin_ret=FF_QP2LAMBDA*2;
-                *qmax_ret=FF_QP2LAMBDA*31;
-            }
-            return;
-        }
-    }
 
     assert(qmin <= qmax);
 
     if(pict_type==AV_PICTURE_TYPE_B){
-        if (s->avctx->qmin_b){
-            qmin= FF_QP2LAMBDA*s->avctx->qmin_b;
-            qmax= FF_QP2LAMBDA*s->avctx->qmax_b;
-        }else{
-            qmin= (int)(qmin*FFABS(s->avctx->b_quant_factor)+s->avctx->b_quant_offset + 0.5);
-            qmax= (int)(qmax*FFABS(s->avctx->b_quant_factor)+s->avctx->b_quant_offset + 0.5);
-        }
+        qmin= (int)(qmin*FFABS(s->avctx->b_quant_factor)+s->avctx->b_quant_offset + 0.5);
+        qmax= (int)(qmax*FFABS(s->avctx->b_quant_factor)+s->avctx->b_quant_offset + 0.5);
     }else if(pict_type==AV_PICTURE_TYPE_I){
-        if (s->avctx->qmin_i){
-            qmin= FF_QP2LAMBDA*s->avctx->qmin_i;
-            qmax= FF_QP2LAMBDA*s->avctx->qmax_i;
-        }else{
-            qmin= (int)(qmin*FFABS(s->avctx->i_quant_factor)+s->avctx->i_quant_offset + 0.5);
-            qmax= (int)(qmax*FFABS(s->avctx->i_quant_factor)+s->avctx->i_quant_offset + 0.5);
-        }
+        qmin= (int)(qmin*FFABS(s->avctx->i_quant_factor)+s->avctx->i_quant_offset + 0.5);
+        qmax= (int)(qmax*FFABS(s->avctx->i_quant_factor)+s->avctx->i_quant_offset + 0.5);
     }
 
     qmin= av_clip(qmin, 1, FF_LAMBDA_MAX);
@@ -479,7 +438,7 @@ static double modify_qscale(MpegEncContext *s, RateControlEntry *rce, double q, 
     const double min_rate= s->avctx->rc_min_rate / fps;
     const double max_rate= s->avctx->rc_max_rate / fps;
 
-    get_qminmax(&qmin, &qmax, s, pict_type, frame_num);
+    get_qminmax(&qmin, &qmax, s, pict_type);
 
     /* modulation */
     if(s->avctx->rc_qmod_freq && frame_num%s->avctx->rc_qmod_freq==0 && pict_type==AV_PICTURE_TYPE_P)
@@ -568,7 +527,7 @@ static void update_predictor(Predictor *p, double q, double var, double size)
     p->coeff+= new_coeff;
 }
 
-float ff_adaptive_quantization(MpegEncContext *s, double q){
+static void adaptive_quantization(MpegEncContext *s, double q){
     int i;
     const float lumi_masking= s->avctx->lumi_masking / (128.0*128.0);
     const float dark_masking= s->avctx->dark_masking / (128.0*128.0);
@@ -585,7 +544,6 @@ float ff_adaptive_quantization(MpegEncContext *s, double q){
     Picture * const pic= &s->current_picture;
     const int mb_width = s->mb_width;
     const int mb_height = s->mb_height;
-    float avg= 0.0;
 
     for(i=0; i<s->mb_num; i++){
         const int mb_xy= s->mb_index2xy[i];
@@ -680,9 +638,7 @@ float ff_adaptive_quantization(MpegEncContext *s, double q){
 //if(i%s->mb_width==0) printf("\n");
 //printf("%2d%3d ", intq, ff_sqrt(s->mc_mb_var[i]));
         s->lambda_table[mb_xy]= intq;
-        avg+= intq;
     }
-    return avg/s->mb_num;
 }
 
 void ff_get_2pass_fcode(MpegEncContext *s){
@@ -722,7 +678,7 @@ float ff_rate_estimate_qscale(MpegEncContext *s, int dry_run)
         return ff_xvid_rate_estimate_qscale(s, dry_run);
 #endif
 
-    get_qminmax(&qmin, &qmax, s, pict_type, picture_number);
+    get_qminmax(&qmin, &qmax, s, pict_type);
 
     fps= 1/av_q2d(s->avctx->time_base);
 //printf("input_pic_num:%d pic_num:%d frame_rate:%d\n", s->input_picture_number, s->picture_number, s->frame_rate);
@@ -841,7 +797,7 @@ float ff_rate_estimate_qscale(MpegEncContext *s, int dry_run)
     else if(q>qmax) q=qmax;
 
     if(s->adaptive_quant)
-        ff_adaptive_quantization(s, q);
+        adaptive_quantization(s, q);
     else
         q= (int)(q + 0.5);
 
