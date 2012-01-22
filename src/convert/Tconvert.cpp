@@ -251,6 +251,8 @@ int Tconvert::convert(uint64_t incsp0,
             && incsp_sup_ffdshow_converter(incsp1)
             && outcsp_sup_ffdshow_converter(outcsp1)) {
                 mode = MODE_ffdshow_converters;
+        } else if (TffdshowConverters2::csp_sup_ffdshow_converter2(incsp1, outcsp1)) {
+            mode = MODE_ffdshow_converters2;
         } else {
             switch (incsp1) {
                 case FF_CSP_420P:
@@ -272,10 +274,6 @@ int Tconvert::convert(uint64_t incsp0,
                             } else {
                                 avisynth_yv12_to_yuy2=TconvertYV12<Tmmx>::yv12_to_yuy2;
                             }
-                            break;
-                        case FF_CSP_P016:
-                        case FF_CSP_P010:
-                            mode = MODE_ffdshow_converters2;
                             break;
                         default:
                             // Xvid converter is slow for interlaced color spaces. Use AviSynth converter in this case.
@@ -301,30 +299,6 @@ int Tconvert::convert(uint64_t incsp0,
                             }
                             break;
                     } //switch (outcsp1)
-                    break;
-                case FF_CSP_420P10:
-                    if (outcsp1 == FF_CSP_P010 || outcsp1 == FF_CSP_P016) {
-                        mode = MODE_ffdshow_converters2;
-                        break;
-                    }
-                    break;
-                case FF_CSP_444P10:
-                    if (outcsp1 == FF_CSP_Y416) {
-                        mode = MODE_ffdshow_converters2;
-                        break;
-                    }
-                    break;
-                case FF_CSP_422P10:
-                    if (outcsp1 == FF_CSP_P210 || outcsp1 == FF_CSP_P216) {
-                        mode = MODE_ffdshow_converters2;
-                        break;
-                    }
-                    break;
-                case FF_CSP_444P:
-                    if (outcsp1 == FF_CSP_AYUV) {
-                        mode = MODE_ffdshow_converters2;
-                        break;
-                    }
                     break;
                 case FF_CSP_YUY2:
                     switch (outcsp1) {
@@ -415,12 +389,6 @@ int Tconvert::convert(uint64_t incsp0,
                         tmp[0]=(unsigned char*)aligned_malloc(tmpStride[0]*dy);
                         tmpConvert1=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering, m_isMPEG1);
                         tmpConvert2=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering, m_isMPEG1);
-                        break;
-                    }
-                    break;
-                case FF_CSP_NV12:
-                    if (outcsp1 == FF_CSP_P016 || outcsp1 == FF_CSP_P010) {
-                        mode = MODE_ffdshow_converters2;
                         break;
                     }
                     break;

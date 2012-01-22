@@ -48,6 +48,7 @@ public:
         stride_t stride_dstY,
         stride_t stride_dstCbCr);
 
+    static bool csp_sup_ffdshow_converter2(uint64_t incsp, uint64_t outcsp);
 private:
     template <class _mm> static void convert_check_src_align(
         uint64_t incsp,
