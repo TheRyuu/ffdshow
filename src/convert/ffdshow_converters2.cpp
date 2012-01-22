@@ -92,6 +92,7 @@ bool TffdshowConverters2::csp_sup_ffdshow_converter2(uint64_t incsp, uint64_t ou
             else
                 return false;
     }
+    return false;
 }
 
 template <class _mm> void TffdshowConverters2::convert_check_src_align(
