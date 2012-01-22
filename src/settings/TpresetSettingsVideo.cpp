@@ -264,7 +264,7 @@ TpresetVideo::TpresetVideo(const char_t *Ireg_child, const char_t *IpresetName, 
         IDFF_errorRecognition    ,&TpresetVideo::errorRecognition  ,0,4,_l(""),1,
         _l("errorRecognition"),FF_ER_CAREFUL,
         IDFF_numLAVCdecThreads ,&TpresetVideo::lavcDecThreads      ,1,8,_l(""),1,
-        _l("threadsnum"),1,
+        _l("threadsnum"),TintOption::DEF_DYN,
         IDFF_grayscale          ,&TpresetVideo::grayscale          ,0,0,_l(""),1,
         _l("grayscale"),0,
         IDFF_multiThreadDec     ,&TpresetVideo::multiThread        ,0,0,_l(""),1,
@@ -426,6 +426,8 @@ int TpresetVideo::getDefault(int id)
 {
     if (id==IDFF_multiThreadDec) {
         return Tconfig::getCPUcount()>1?1:0;
+    } else if (id==IDFF_numLAVCdecThreads) {
+        return Tconfig::getCPUcount();
     } else {
         return Tpreset::getDefault(id);
     }
