@@ -251,197 +251,198 @@ int Tconvert::convert(uint64_t incsp0,
             && incsp_sup_ffdshow_converter(incsp1)
             && outcsp_sup_ffdshow_converter(outcsp1)) {
                 mode = MODE_ffdshow_converters;
-        } else
-        switch (incsp1) {
-            case FF_CSP_420P:
-                switch (outcsp1) {
-                    case FF_CSP_YUY2: //YV12 -> YUY2
-                        mode=MODE_avisynth_yv12_to_yuy2;
-                        if (incsp & FF_CSP_FLAGS_INTERLACED)
-                            if (Tconfig::cpu_flags&FF_CPU_SSE2) {
-                                avisynth_yv12_to_yuy2=TconvertYV12<Tsse2>::yv12_i_to_yuy2;
+        } else {
+            switch (incsp1) {
+                case FF_CSP_420P:
+                    switch (outcsp1) {
+                        case FF_CSP_YUY2: //YV12 -> YUY2
+                            mode=MODE_avisynth_yv12_to_yuy2;
+                            if (incsp & FF_CSP_FLAGS_INTERLACED)
+                                if (Tconfig::cpu_flags&FF_CPU_SSE2) {
+                                    avisynth_yv12_to_yuy2=TconvertYV12<Tsse2>::yv12_i_to_yuy2;
+                                } else if (Tconfig::cpu_flags&FF_CPU_MMXEXT) {
+                                    avisynth_yv12_to_yuy2=TconvertYV12<Tmmxext>::yv12_i_to_yuy2;
+                                } else {
+                                    avisynth_yv12_to_yuy2=TconvertYV12<Tmmx>::yv12_i_to_yuy2;
+                                }
+                            else if (Tconfig::cpu_flags&FF_CPU_SSE2) {
+                                avisynth_yv12_to_yuy2=TconvertYV12<Tsse2>::yv12_to_yuy2;
                             } else if (Tconfig::cpu_flags&FF_CPU_MMXEXT) {
-                                avisynth_yv12_to_yuy2=TconvertYV12<Tmmxext>::yv12_i_to_yuy2;
+                                avisynth_yv12_to_yuy2=TconvertYV12<Tmmxext>::yv12_to_yuy2;
                             } else {
-                                avisynth_yv12_to_yuy2=TconvertYV12<Tmmx>::yv12_i_to_yuy2;
+                                avisynth_yv12_to_yuy2=TconvertYV12<Tmmx>::yv12_to_yuy2;
                             }
-                        else if (Tconfig::cpu_flags&FF_CPU_SSE2) {
-                            avisynth_yv12_to_yuy2=TconvertYV12<Tsse2>::yv12_to_yuy2;
-                        } else if (Tconfig::cpu_flags&FF_CPU_MMXEXT) {
-                            avisynth_yv12_to_yuy2=TconvertYV12<Tmmxext>::yv12_to_yuy2;
-                        } else {
-                            avisynth_yv12_to_yuy2=TconvertYV12<Tmmx>::yv12_to_yuy2;
-                        }
-                        break;
-                    case FF_CSP_P016:
-                    case FF_CSP_P010:
+                            break;
+                        case FF_CSP_P016:
+                        case FF_CSP_P010:
+                            mode = MODE_ffdshow_converters2;
+                            break;
+                        default:
+                            // Xvid converter is slow for interlaced color spaces. Use AviSynth converter in this case.
+                            if (((outcsp & FF_CSP_FLAGS_INTERLACED) || m_highQualityRGB) && (outcsp1==FF_CSP_RGB24 || outcsp1==FF_CSP_RGB32)) {
+                                mode=MODE_fallback;
+                                tmpcsp=FF_CSP_YUY2;
+                                tmpStride[0]=2*(dx/16+2)*16;
+                                tmp[0]=(unsigned char*)aligned_malloc(tmpStride[0]*dy);
+                                tmpConvert1=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering, m_isMPEG1);
+                                tmpConvert2=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering, m_isMPEG1);
+                                if (incsp&FF_CSP_FLAGS_INTERLACED || outcsp&FF_CSP_FLAGS_INTERLACED) {
+                                    tmpcsp|=FF_CSP_FLAGS_INTERLACED;
+                                }
+                                if ((incsp | outcsp) & FF_CSP_FLAGS_YUV_JPEG) {
+                                    tmpcsp |= FF_CSP_FLAGS_YUV_JPEG;
+                                }
+                            } else if (csp_supXvid(outcsp1)
+#ifndef XVID_BITBLT
+                                       && outcsp1!=FF_CSP_420P
+#endif
+                                      ) {
+                                mode=MODE_xvidImage_output;
+                            }
+                            break;
+                    } //switch (outcsp1)
+                    break;
+                case FF_CSP_420P10:
+                    if (outcsp1 == FF_CSP_P010 || outcsp1 == FF_CSP_P016) {
                         mode = MODE_ffdshow_converters2;
                         break;
-                    default:
-                        // Xvid converter is slow for interlaced color spaces. Use AviSynth converter in this case.
-                        if (((outcsp & FF_CSP_FLAGS_INTERLACED) || m_highQualityRGB) && (outcsp1==FF_CSP_RGB24 || outcsp1==FF_CSP_RGB32)) {
-                            mode=MODE_fallback;
-                            tmpcsp=FF_CSP_YUY2;
-                            tmpStride[0]=2*(dx/16+2)*16;
-                            tmp[0]=(unsigned char*)aligned_malloc(tmpStride[0]*dy);
-                            tmpConvert1=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering, m_isMPEG1);
-                            tmpConvert2=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering, m_isMPEG1);
-                            if (incsp&FF_CSP_FLAGS_INTERLACED || outcsp&FF_CSP_FLAGS_INTERLACED) {
-                                tmpcsp|=FF_CSP_FLAGS_INTERLACED;
-                            }
-                            if ((incsp | outcsp) & FF_CSP_FLAGS_YUV_JPEG) {
-                                tmpcsp |= FF_CSP_FLAGS_YUV_JPEG;
-                            }
-                        } else if (csp_supXvid(outcsp1)
-#ifndef XVID_BITBLT
-                                   && outcsp1!=FF_CSP_420P
-#endif
-                                  ) {
-                            mode=MODE_xvidImage_output;
-                        }
-                        break;
-                } //switch (outcsp1)
-                break;
-            case FF_CSP_420P10:
-                if (outcsp1 == FF_CSP_P010 || outcsp1 == FF_CSP_P016) {
-                    mode = MODE_ffdshow_converters2;
-                    break;
-                }
-                break;
-            case FF_CSP_444P10:
-                if (outcsp1 == FF_CSP_Y416) {
-                    mode = MODE_ffdshow_converters2;
-                    break;
-                }
-                break;
-            case FF_CSP_422P10:
-                if (outcsp1 == FF_CSP_P210 || outcsp1 == FF_CSP_P216) {
-                    mode = MODE_ffdshow_converters2;
-                    break;
-                }
-                break;
-            case FF_CSP_444P:
-                if (outcsp1 == FF_CSP_AYUV) {
-                    mode = MODE_ffdshow_converters2;
-                    break;
-                }
-                break;
-            case FF_CSP_YUY2:
-                switch (outcsp1) {
-                    case FF_CSP_420P: // YUY2 -> YV12
-                        mode=MODE_avisynth_yuy2_to_yv12;
-                        if (incsp&FF_CSP_FLAGS_INTERLACED)
-                            if (Tconfig::cpu_flags&FF_CPU_SSE2) {
-                                avisynth_yuy2_to_yv12=TconvertYV12<Tsse2>::yuy2_i_to_yv12;
-                            } else if(Tconfig::cpu_flags&FF_CPU_MMXEXT) {
-                                avisynth_yuy2_to_yv12=TconvertYV12<Tmmxext>::yuy2_i_to_yv12;
-                            } else {
-                                avisynth_yuy2_to_yv12=TconvertYV12<Tmmx>::yuy2_i_to_yv12;
-                            }
-                        else if (Tconfig::cpu_flags&FF_CPU_SSE2) {
-                            avisynth_yuy2_to_yv12=TconvertYV12<Tsse2>::yuy2_to_yv12;
-                        } else if (Tconfig::cpu_flags&FF_CPU_MMXEXT) {
-                            avisynth_yuy2_to_yv12=TconvertYV12<Tmmxext>::yuy2_to_yv12;
-                        } else {
-                            avisynth_yuy2_to_yv12=TconvertYV12<Tmmx>::yuy2_to_yv12;
-                        }
-                        break;
-                    case FF_CSP_RGB24:
-                        mode=MODE_mmx_ConvertYUY2toRGB24; // YUY2 -> RGB24
-                        break;
-                    case FF_CSP_RGB32:
-                        mode=MODE_mmx_ConvertYUY2toRGB32; // YUY2 -> RGB32
-                        break;
-                } //switch (outcsp1)
-                break;
-            case FF_CSP_UYVY:
-                switch (outcsp1) {
-                    case FF_CSP_RGB24:
-                        mode=MODE_mmx_ConvertUYVYtoRGB24; // UYVY -> RGB24
-                        break;
-                    case FF_CSP_RGB32:
-                        mode=MODE_mmx_ConvertUYVYtoRGB32; // UYVY -> RGB32
-                        break;
-                }
-                break;
-            case FF_CSP_RGB32:
-                if (outcsp1==FF_CSP_YUY2) { // RGB32 -> YUY2
-                    mode=MODE_mmx_ConvertRGB32toYUY2;
-                    break;
-                }
-                if (outcsp1==FF_CSP_NV12) { // RGB32 -> YV12 -> NV12
-                    mode=MODE_fallback;
-                    tmpcsp=FF_CSP_420P;
-                    tmpStride[1]=tmpStride[2]=(tmpStride[0]=(dx/16+2)*16)/2;
-                    tmp[0]=(unsigned char*)aligned_malloc(tmpStride[0]*dy  );
-                    tmp[1]=(unsigned char*)aligned_malloc(tmpStride[1]*dy/2);
-                    tmp[2]=(unsigned char*)aligned_malloc(tmpStride[2]*dy/2);
-                    tmpConvert1=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering, m_isMPEG1);
-                    tmpConvert2=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering, m_isMPEG1);
-                    break;
-                }
-                if (outcsp1 == FF_CSP_UYVY || outcsp1 == FF_CSP_YVYU) { // RGB32 -> YUY2 -> UYVY/YVYU
-                    mode=MODE_fallback;
-                    tmpcsp=FF_CSP_YUY2;
-                    tmpStride[0]=2*(dx/16+2)*16;
-                    tmp[0]=(unsigned char*)aligned_malloc(tmpStride[0]*dy);
-                    tmpConvert1=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering, m_isMPEG1);
-                    tmpConvert2=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering, m_isMPEG1);
-                    break;
-                }
-                break;
-            case FF_CSP_BGR24:
-                if (outcsp1==FF_CSP_RGB24) {
-                    // workaround to get correct colors when grabbing to BMP
-                    incsp=incsp0=FF_CSP_RGB24;
-                }
-                break;
-            case FF_CSP_RGB24:
-                if (outcsp1==FF_CSP_NV12) { // RGB24 -> YV12 -> NV12
-                    mode=MODE_fallback;
-                    tmpcsp=FF_CSP_420P;
-                    tmpStride[1]=tmpStride[2]=(tmpStride[0]=(dx/16+2)*16)/2;
-                    tmp[0]=(unsigned char*)aligned_malloc(tmpStride[0]*dy  );
-                    tmp[1]=(unsigned char*)aligned_malloc(tmpStride[1]*dy/2);
-                    tmp[2]=(unsigned char*)aligned_malloc(tmpStride[2]*dy/2);
-                    tmpConvert1=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering, m_isMPEG1);
-                    tmpConvert2=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering, m_isMPEG1);
-                    break;
-                }
-                if (outcsp1 == FF_CSP_UYVY || outcsp1 == FF_CSP_YVYU) { // RGB24 -> YUY2 -> UYVY/YVYU
-                    mode=MODE_fallback;
-                    tmpcsp=FF_CSP_YUY2;
-                    tmpStride[0]=2*(dx/16+2)*16;
-                    tmp[0]=(unsigned char*)aligned_malloc(tmpStride[0]*dy);
-                    tmpConvert1=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering, m_isMPEG1);
-                    tmpConvert2=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering, m_isMPEG1);
-                    break;
-                }
-                break;
-            case FF_CSP_NV12:
-                if (outcsp1 == FF_CSP_P016 || outcsp1 == FF_CSP_P010) {
-                    mode = MODE_ffdshow_converters2;
-                    break;
-                }
-                break;
-            case FF_CSP_422P:
-                break;
-            case FF_CSP_CLJR:
-                if (outcsp1==FF_CSP_420P) {
-                    mode=MODE_CLJR;
-                }
-                break;
-            case FF_CSP_PAL8:
-                if (outcsp1 == FF_CSP_RGB32) {
-                    if (!swscale) {
-                        swscale=new Tswscale(libavcodec);
                     }
-                    UpdateSettings(video_full_range_flag, YCbCr_RGB_matrix_coefficients);
-                    setJpeg(!!((incsp | outcsp) & FF_CSP_FLAGS_YUV_JPEG));
-                    swscale->init(dx,dy,incsp,outcsp,toSwscaleTable());
-                    mode=MODE_MODE_palette8torgb;
-                }
-        } // switch (incsp1)
+                    break;
+                case FF_CSP_444P10:
+                    if (outcsp1 == FF_CSP_Y416) {
+                        mode = MODE_ffdshow_converters2;
+                        break;
+                    }
+                    break;
+                case FF_CSP_422P10:
+                    if (outcsp1 == FF_CSP_P210 || outcsp1 == FF_CSP_P216) {
+                        mode = MODE_ffdshow_converters2;
+                        break;
+                    }
+                    break;
+                case FF_CSP_444P:
+                    if (outcsp1 == FF_CSP_AYUV) {
+                        mode = MODE_ffdshow_converters2;
+                        break;
+                    }
+                    break;
+                case FF_CSP_YUY2:
+                    switch (outcsp1) {
+                        case FF_CSP_420P: // YUY2 -> YV12
+                            mode=MODE_avisynth_yuy2_to_yv12;
+                            if (incsp&FF_CSP_FLAGS_INTERLACED)
+                                if (Tconfig::cpu_flags&FF_CPU_SSE2) {
+                                    avisynth_yuy2_to_yv12=TconvertYV12<Tsse2>::yuy2_i_to_yv12;
+                                } else if(Tconfig::cpu_flags&FF_CPU_MMXEXT) {
+                                    avisynth_yuy2_to_yv12=TconvertYV12<Tmmxext>::yuy2_i_to_yv12;
+                                } else {
+                                    avisynth_yuy2_to_yv12=TconvertYV12<Tmmx>::yuy2_i_to_yv12;
+                                }
+                            else if (Tconfig::cpu_flags&FF_CPU_SSE2) {
+                                avisynth_yuy2_to_yv12=TconvertYV12<Tsse2>::yuy2_to_yv12;
+                            } else if (Tconfig::cpu_flags&FF_CPU_MMXEXT) {
+                                avisynth_yuy2_to_yv12=TconvertYV12<Tmmxext>::yuy2_to_yv12;
+                            } else {
+                                avisynth_yuy2_to_yv12=TconvertYV12<Tmmx>::yuy2_to_yv12;
+                            }
+                            break;
+                        case FF_CSP_RGB24:
+                            mode=MODE_mmx_ConvertYUY2toRGB24; // YUY2 -> RGB24
+                            break;
+                        case FF_CSP_RGB32:
+                            mode=MODE_mmx_ConvertYUY2toRGB32; // YUY2 -> RGB32
+                            break;
+                    } //switch (outcsp1)
+                    break;
+                case FF_CSP_UYVY:
+                    switch (outcsp1) {
+                        case FF_CSP_RGB24:
+                            mode=MODE_mmx_ConvertUYVYtoRGB24; // UYVY -> RGB24
+                            break;
+                        case FF_CSP_RGB32:
+                            mode=MODE_mmx_ConvertUYVYtoRGB32; // UYVY -> RGB32
+                            break;
+                    }
+                    break;
+                case FF_CSP_RGB32:
+                    if (outcsp1==FF_CSP_YUY2) { // RGB32 -> YUY2
+                        mode=MODE_mmx_ConvertRGB32toYUY2;
+                        break;
+                    }
+                    if (outcsp1==FF_CSP_NV12) { // RGB32 -> YV12 -> NV12
+                        mode=MODE_fallback;
+                        tmpcsp=FF_CSP_420P;
+                        tmpStride[1]=tmpStride[2]=(tmpStride[0]=(dx/16+2)*16)/2;
+                        tmp[0]=(unsigned char*)aligned_malloc(tmpStride[0]*dy  );
+                        tmp[1]=(unsigned char*)aligned_malloc(tmpStride[1]*dy/2);
+                        tmp[2]=(unsigned char*)aligned_malloc(tmpStride[2]*dy/2);
+                        tmpConvert1=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering, m_isMPEG1);
+                        tmpConvert2=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering, m_isMPEG1);
+                        break;
+                    }
+                    if (outcsp1 == FF_CSP_UYVY || outcsp1 == FF_CSP_YVYU) { // RGB32 -> YUY2 -> UYVY/YVYU
+                        mode=MODE_fallback;
+                        tmpcsp=FF_CSP_YUY2;
+                        tmpStride[0]=2*(dx/16+2)*16;
+                        tmp[0]=(unsigned char*)aligned_malloc(tmpStride[0]*dy);
+                        tmpConvert1=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering, m_isMPEG1);
+                        tmpConvert2=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering, m_isMPEG1);
+                        break;
+                    }
+                    break;
+                case FF_CSP_BGR24:
+                    if (outcsp1==FF_CSP_RGB24) {
+                        // workaround to get correct colors when grabbing to BMP
+                        incsp=incsp0=FF_CSP_RGB24;
+                    }
+                    break;
+                case FF_CSP_RGB24:
+                    if (outcsp1==FF_CSP_NV12) { // RGB24 -> YV12 -> NV12
+                        mode=MODE_fallback;
+                        tmpcsp=FF_CSP_420P;
+                        tmpStride[1]=tmpStride[2]=(tmpStride[0]=(dx/16+2)*16)/2;
+                        tmp[0]=(unsigned char*)aligned_malloc(tmpStride[0]*dy  );
+                        tmp[1]=(unsigned char*)aligned_malloc(tmpStride[1]*dy/2);
+                        tmp[2]=(unsigned char*)aligned_malloc(tmpStride[2]*dy/2);
+                        tmpConvert1=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering, m_isMPEG1);
+                        tmpConvert2=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering, m_isMPEG1);
+                        break;
+                    }
+                    if (outcsp1 == FF_CSP_UYVY || outcsp1 == FF_CSP_YVYU) { // RGB24 -> YUY2 -> UYVY/YVYU
+                        mode=MODE_fallback;
+                        tmpcsp=FF_CSP_YUY2;
+                        tmpStride[0]=2*(dx/16+2)*16;
+                        tmp[0]=(unsigned char*)aligned_malloc(tmpStride[0]*dy);
+                        tmpConvert1=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering, m_isMPEG1);
+                        tmpConvert2=new Tconvert(libavcodec, m_highQualityRGB, dx, dy, *this, rgbInterlaceMode, m_dithering, m_isMPEG1);
+                        break;
+                    }
+                    break;
+                case FF_CSP_NV12:
+                    if (outcsp1 == FF_CSP_P016 || outcsp1 == FF_CSP_P010) {
+                        mode = MODE_ffdshow_converters2;
+                        break;
+                    }
+                    break;
+                case FF_CSP_422P:
+                    break;
+                case FF_CSP_CLJR:
+                    if (outcsp1==FF_CSP_420P) {
+                        mode=MODE_CLJR;
+                    }
+                    break;
+                case FF_CSP_PAL8:
+                    if (outcsp1 == FF_CSP_RGB32) {
+                        if (!swscale) {
+                            swscale=new Tswscale(libavcodec);
+                        }
+                        UpdateSettings(video_full_range_flag, YCbCr_RGB_matrix_coefficients);
+                        setJpeg(!!((incsp | outcsp) & FF_CSP_FLAGS_YUV_JPEG));
+                        swscale->init(dx,dy,incsp,outcsp,toSwscaleTable());
+                        mode=MODE_MODE_palette8torgb;
+                    }
+            } // switch (incsp1)
+        }
 
         if (mode==MODE_none)
             if (incsp1!=FF_CSP_420P && outcsp1==FF_CSP_420P && csp_supXvid(incsp1) && incsp1!=FF_CSP_RGB24 && incsp1!=FF_CSP_BGR24) { // x -> YV12
