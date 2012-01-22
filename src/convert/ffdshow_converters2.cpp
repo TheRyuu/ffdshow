@@ -64,33 +64,29 @@ bool TffdshowConverters2::csp_sup_ffdshow_converter2(uint64_t incsp, uint64_t ou
         case FF_CSP_420P:
             if (outcsp == FF_CSP_P016 || outcsp == FF_CSP_P010)
                 return true;
-            else
-                return false;
+            break;
         case FF_CSP_420P10:
             if (outcsp == FF_CSP_P010 || outcsp == FF_CSP_P016)
                 return true;
-            else
-                return false;
+            break;
         case FF_CSP_444P10:
             if (outcsp == FF_CSP_Y416)
                 return true;
-            else
-                return false;
+            break;
         case FF_CSP_422P10:
             if (outcsp == FF_CSP_P210 || outcsp == FF_CSP_P216)
                 return true;
-            else
-                return false;
+            break;
         case FF_CSP_444P:
             if (outcsp == FF_CSP_AYUV)
                 return true;
-            else
-                return false;
+            break;
         case FF_CSP_NV12:
             if (outcsp == FF_CSP_P016 || outcsp == FF_CSP_P010)
                 return true;
-            else
-                return false;
+            break;
+        default:
+            return false;
     }
     return false;
 }
