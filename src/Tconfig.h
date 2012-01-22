@@ -40,7 +40,6 @@ public:
     char_t pth[MAX_PATH],epth[MAX_PATH];
     bool savePth;
     const char_t *getExeflnm(void) const;
-    static bool winNT;
     static int available_cpu_flags,cpu_flags,lavc_cpu_flags; //suppose that CPU capabilities won't change per instance
     static void initCPU(int allowedCpuFlags);
     static DWORD getCPUcount(void);

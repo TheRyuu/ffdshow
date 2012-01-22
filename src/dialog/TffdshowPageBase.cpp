@@ -98,11 +98,7 @@ void TffdshowPageBase::selectPage(TconfPageBase *Ipage)
     }
     bool pageChanged=page!=Ipage;
     if (page && pageChanged)
-        if (Tconfig::winNT) {
-            ShowWindow(page->m_hwnd,SW_HIDE);
-        } else {
-            page->destroyWindow();
-        }
+        ShowWindow(page->m_hwnd,SW_HIDE);
     page=Ipage;
     CRect rp=getChildRect(IDC_PLACE_PAGE);
     SetWindowPos(page->m_hwnd,htv,rp.left,rp.top,0,0,SWP_NOSIZE);

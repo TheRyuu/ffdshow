@@ -65,78 +65,32 @@ end;
 //------------------------------------------------------------------------------
 int TcpuUsage::GetCPUCount(void)
 {
-    if (Tconfig::winNT) {
-        if (_ProcessorsCount < 0) {
-            CollectCPUData();
-        }
-        return _ProcessorsCount;
-    } else {
-        return 1;
+    if (_ProcessorsCount < 0) {
+        CollectCPUData();
     }
-}
-
-//------------------------------------------------------------------------------
-void TcpuUsage::ReleaseCPUData(void)
-{
-    HKEY H;
-    DWORD    R;
-    DWORD    dwDataSize, dwType;
-    if (Tconfig::winNT) {
-        return;
-    }
-    if (!_W9xCollecting) {
-        return;
-    }
-    _W9xCollecting=false;
-    if (_W9xCpuKey) {
-        RegCloseKey(_W9xCpuKey);
-    }
-
-    R=RegOpenKeyEx(HKEY_DYN_DATA,_l("PerfStats\\StopStat"), 0, KEY_ALL_ACCESS, &H );
-
-    if (R!=ERROR_SUCCESS) {
-        return;
-    }
-
-    dwDataSize=sizeof(DWORD);
-    RegQueryValueEx( H, _l("KERNEL\\CPUUsage"), NULL, &dwType, (unsigned char*)&_W9xCpuUsage, &dwDataSize);
-
-    RegCloseKey(H);
-
+    return _ProcessorsCount;
 }
 
 //------------------------------------------------------------------------------
 int TcpuUsage::GetCPUUsage(int Index)
 {
-    int result;
-    if (Tconfig::winNT) {
-        if (_ProcessorsCount < 0) {
-            CollectCPUData();
-        }
-        if (Index >= _ProcessorsCount || Index < 0) {
-            return 0;    //raise Exception.Create('CPU index out of bounds');
-        }
-        if (_PrevSysTime == _SysTime) {
-            result=0;
-        } else {
-            result=int(100-(100*(_Counters[Index] - _PrevCounters[Index]))/(_SysTime-_PrevSysTime));
-        }
-    } else {
-        if (Index!=0) {
-            return 0;    //raise Exception.Create('CPU index out of bounds');
-        }
-        if (!_W9xCollecting) {
-            CollectCPUData();
-        }
-        result=_W9xCpuUsage ;
+    if (_ProcessorsCount < 0) {
+        CollectCPUData();
     }
-    return result;
+    if (Index >= _ProcessorsCount || Index < 0) {
+        return 0;    //raise Exception.Create('CPU index out of bounds');
+    }
+    if (_PrevSysTime == _SysTime) {
+        return 0;
+    } else {
+        return int(100-(100*(_Counters[Index] - _PrevCounters[Index]))/(_SysTime-_PrevSysTime));
+    }
 }
 
 //------------------------------------------------------------------------------
 int TcpuUsage::GetCPUUsageForPP(void)
 {
-    if (Tconfig::winNT && _ProcessorsCount>2) {
+    if (_ProcessorsCount>2) {
         int result=0;
         for(int i=0; i<_ProcessorsCount-1; i++) {
             int x=GetCPUUsage(i);
@@ -158,103 +112,73 @@ void TcpuUsage::CollectCPUData(void)
     PPERF_INSTANCE_DEFINITION    _PID_Instance;
     FILETIME ST;
 
-    HKEY H;
-    DWORD R;
-    DWORD dwDataSize, dwType;
-
-    if (Tconfig::winNT) {
+    BS=_BufferSize;
+    //const
+    static const char_t *Processor_IDX_Str=_l("238");
+    static const int Processor_IDX=238;
+    static const int CPUUsageIDX=6;
+    LONG ret;
+    while ((ret=RegQueryValueEx( HKEY_PERFORMANCE_DATA, Processor_IDX_Str,NULL,NULL,
+                                  (unsigned char*)_PerfData, &BS )) == ERROR_MORE_DATA) {
+        // Get a buffer that is big enough.
+        _BufferSize+=0x1000;
         BS=_BufferSize;
-        //const
-        static const char_t *Processor_IDX_Str=_l("238");
-        static const int Processor_IDX=238;
-        static const int CPUUsageIDX=6;
-        LONG ret;
-        while ((ret=RegQueryValueEx( HKEY_PERFORMANCE_DATA, Processor_IDX_Str,NULL,NULL,
-                                     (unsigned char*)_PerfData, &BS )) == ERROR_MORE_DATA) {
-            // Get a buffer that is big enough.
-            _BufferSize+=0x1000;
-            BS=_BufferSize;
-            _PerfData=(PERF_DATA_BLOCK*)realloc( _PerfData, _BufferSize );
-        }
-        if (ret!=ERROR_SUCCESS) {
-            _ProcessorsCount=0;
-            return;
-        }
-
-        // Locate the performance object
-        _POT = PPERF_OBJECT_TYPE(intptr_t(_PerfData) + _PerfData->HeaderLength);
-        for (DWORD i1=0; i1<_PerfData->NumObjectTypes; i1++) {
-            if (_POT->ObjectNameTitleIndex == Processor_IDX) {
-                break;
-            }
-            _POT = PPERF_OBJECT_TYPE(intptr_t(_POT) + _POT->TotalByteLength);
-        }
-
-        // Check for success
-        if (_POT->ObjectNameTitleIndex != Processor_IDX) {
-            return ;    //raise Exception.Create('Unable to locate the "Processor" performance object');
-        }
-
-        if (_ProcessorsCount < 0) {
-            _ProcessorsCount=_POT->NumInstances;
-            _Counters=(PAInt64F)calloc(_ProcessorsCount,sizeof(TInt64));
-            _PrevCounters=(PAInt64F)calloc(_ProcessorsCount,sizeof(TInt64));
-            _SysTime=0;
-        }
-
-        // Locate the "% CPU usage" counter definition
-        _PCD = PPERF_COUNTER_DEFINITION(intptr_t(_POT) + _POT->HeaderLength);
-        for (DWORD i2 = 0; i2< _POT->NumCounters; i2++) {
-            if (_PCD->CounterNameTitleIndex==CPUUsageIDX) {
-                break;
-            }
-            _PCD = PPERF_COUNTER_DEFINITION(intptr_t(_PCD) + _PCD->ByteLength);
-        }
-
-        // Check for success
-        if (_PCD->CounterNameTitleIndex != CPUUsageIDX) {
-            return ;    //raise Exception.Create('Unable to locate the "% of CPU usage" performance counter');
-        }
-
-        // Collecting coutners
-        _PID_Instance = PPERF_INSTANCE_DEFINITION(intptr_t(_POT) + _POT->DefinitionLength);
-        for (int i=0; i<_ProcessorsCount; i++) {
-            _PCB_Instance = PPERF_COUNTER_BLOCK(intptr_t(_PID_Instance) + _PID_Instance->ByteLength );
-
-            _PrevCounters[i]=_Counters[i];
-            _Counters[i]=FInt64(*PInt64(intptr_t(_PCB_Instance) + _PCD->CounterOffset));
-
-            _PID_Instance = PPERF_INSTANCE_DEFINITION(intptr_t(_PCB_Instance) + _PCB_Instance->ByteLength);
-        }
-
-        _PrevSysTime=_SysTime;
-        SystemTimeToFileTime(&_PerfData->SystemTime, &ST);
-        memcpy(&_SysTime,&ST,sizeof(ST));//_SysTime=FInt64(TInt64(ST));
-    } else {
-        if (!_W9xCollecting) {
-            R=RegOpenKeyEx( HKEY_DYN_DATA, _l("PerfStats\\StartStat"), 0, KEY_ALL_ACCESS, &H );
-            if (R != ERROR_SUCCESS) {
-                return;    //raise Exception.Create('Unable to start performance monitoring');
-            }
-
-            dwDataSize=sizeof(DWORD);
-
-            RegQueryValueEx( H, _l("KERNEL\\CPUUsage"),NULL, &dwType, (unsigned char *)&_W9xCpuUsage, &dwDataSize );
-
-            RegCloseKey(H);
-
-            R=RegOpenKeyEx( HKEY_DYN_DATA, _l("PerfStats\\StatData"), 0,KEY_READ, &_W9xCpuKey );
-
-            if (R != ERROR_SUCCESS) {
-                return;    //raise Exception.Create('Unable to read performance data');
-            }
-
-            _W9xCollecting=true;
-        }
-
-        dwDataSize=sizeof(DWORD);
-        RegQueryValueEx( _W9xCpuKey, _l("KERNEL\\CPUUsage"),NULL,&dwType, (unsigned char*)&_W9xCpuUsage, &dwDataSize );
+        _PerfData=(PERF_DATA_BLOCK*)realloc( _PerfData, _BufferSize );
     }
+    if (ret!=ERROR_SUCCESS) {
+        _ProcessorsCount=0;
+        return;
+    }
+
+    // Locate the performance object
+    _POT = PPERF_OBJECT_TYPE(intptr_t(_PerfData) + _PerfData->HeaderLength);
+    for (DWORD i1=0; i1<_PerfData->NumObjectTypes; i1++) {
+        if (_POT->ObjectNameTitleIndex == Processor_IDX) {
+            break;
+        }
+        _POT = PPERF_OBJECT_TYPE(intptr_t(_POT) + _POT->TotalByteLength);
+    }
+
+    // Check for success
+    if (_POT->ObjectNameTitleIndex != Processor_IDX) {
+        return ;    //raise Exception.Create('Unable to locate the "Processor" performance object');
+    }
+
+    if (_ProcessorsCount < 0) {
+        _ProcessorsCount=_POT->NumInstances;
+        _Counters=(PAInt64F)calloc(_ProcessorsCount,sizeof(TInt64));
+        _PrevCounters=(PAInt64F)calloc(_ProcessorsCount,sizeof(TInt64));
+        _SysTime=0;
+    }
+
+    // Locate the "% CPU usage" counter definition
+    _PCD = PPERF_COUNTER_DEFINITION(intptr_t(_POT) + _POT->HeaderLength);
+    for (DWORD i2 = 0; i2< _POT->NumCounters; i2++) {
+        if (_PCD->CounterNameTitleIndex==CPUUsageIDX) {
+            break;
+        }
+        _PCD = PPERF_COUNTER_DEFINITION(intptr_t(_PCD) + _PCD->ByteLength);
+    }
+
+    // Check for success
+    if (_PCD->CounterNameTitleIndex != CPUUsageIDX) {
+        return ;    //raise Exception.Create('Unable to locate the "% of CPU usage" performance counter');
+    }
+
+    // Collecting coutners
+    _PID_Instance = PPERF_INSTANCE_DEFINITION(intptr_t(_POT) + _POT->DefinitionLength);
+    for (int i=0; i<_ProcessorsCount; i++) {
+        _PCB_Instance = PPERF_COUNTER_BLOCK(intptr_t(_PID_Instance) + _PID_Instance->ByteLength );
+
+        _PrevCounters[i]=_Counters[i];
+        _Counters[i]=FInt64(*PInt64(intptr_t(_PCB_Instance) + _PCD->CounterOffset));
+
+        _PID_Instance = PPERF_INSTANCE_DEFINITION(intptr_t(_PCB_Instance) + _PCB_Instance->ByteLength);
+    }
+
+    _PrevSysTime=_SysTime;
+    SystemTimeToFileTime(&_PerfData->SystemTime, &ST);
+    memcpy(&_SysTime,&ST,sizeof(ST));//_SysTime=FInt64(TInt64(ST));
 }
 
 
@@ -266,7 +190,6 @@ void TcpuUsage::usage_initialization(void)
 }
 void TcpuUsage::usage_finalization(void)
 {
-    ReleaseCPUData();
     if (_PerfData) {
         free(_PerfData);
     }

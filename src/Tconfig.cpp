@@ -36,7 +36,6 @@
 #include "ThtmlColors.h"
 #include "TdialogSettings.h"
 
-bool Tconfig::winNT;
 int Tconfig::cpu_flags=0,Tconfig::available_cpu_flags=0,Tconfig::lavc_cpu_flags=0;
 int Tconfig::cache_line=32;
 
@@ -99,14 +98,6 @@ void Tconfig::init1(HINSTANCE hi)
     load();
 
     shellversion=(unsigned int)-1;
-
-    OSVERSIONINFO vi;
-    vi.dwOSVersionInfoSize=sizeof(vi);
-    if (GetVersionEx(&vi)) {
-        winNT=vi.dwPlatformId==VER_PLATFORM_WIN32_NT;
-    } else {
-        winNT=false;
-    }
 
     memset(isDecoder,0,sizeof(isDecoder));
     isDecoder[IDFF_MOVIE_LAVC]=Tlibavcodec::check(this);

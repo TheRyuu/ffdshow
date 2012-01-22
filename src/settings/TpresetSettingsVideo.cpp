@@ -427,7 +427,8 @@ int TpresetVideo::getDefault(int id)
     if (id==IDFF_multiThreadDec) {
         return Tconfig::getCPUcount()>1?1:0;
     } else if (id==IDFF_numLAVCdecThreads) {
-        return Tconfig::getCPUcount();
+        int cpucount = Tconfig::getCPUcount();
+        return cpucount > 8 ? 8 : cpucount;
     } else {
         return Tpreset::getDefault(id);
     }

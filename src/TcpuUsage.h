@@ -14,7 +14,6 @@ public:
     int GetCPUCount(void);      // Call it to obtain the number of CPU's in the system
     int GetCPUUsage(int Index); // Call it to obtain the % of usage for given CPU
     int GetCPUUsageForPP(void);
-    void ReleaseCPUData(void);  // For Win9x only: call it to stop CPU usage monitoring and free system resources
 private:
     void usage_initialization(void),usage_finalization(void);
     typedef int64_t TInt64;
