@@ -705,13 +705,14 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
                 quantsDy=(r.dy+15)>>4;
 
                 const stride_t linesize[4]= {frame->linesize[0],frame->linesize[1],frame->linesize[2],frame->linesize[3]};
-            if (csp_isRGBplanar(csp)) {
-                // workaround a bug of libswscale?
-                uint8_t *tmp = frame->data[0];
-                frame->data[0] = frame->data[2];
-                frame->data[2] = frame->data[1];
-                frame->data[1] = tmp;
-            }
+
+                if (csp_isRGBplanar(csp)) {
+                    // workaround a bug of libswscale?
+                    uint8_t *tmp = frame->data[0];
+                    frame->data[0] = frame->data[2];
+                    frame->data[2] = frame->data[1];
+                    frame->data[1] = tmp;
+                }
 
                 TffPict pict(csp,frame->data,linesize,r,true,frametype,fieldtype,srcLen0,pIn,avctx->palctrl); //TODO: src frame size
                 pict.gmcWarpingPoints=frame->num_sprite_warping_points;
