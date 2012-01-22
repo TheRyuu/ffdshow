@@ -29,7 +29,7 @@ public:
         bool inPreset;
         const char_t *regname; //if NULL, don't perform registry operations
         static const int DEF_DYN=13245364;
-        Tval def; //HACK: if DYN_DEF, call getDefault
+        Tval def; //HACK: if DEF_DYN, call getDefault
     };
     struct TintOption : TintOptionT<Toptions> {
         bool get(Toptions *self,Tval *valPtr) const;
