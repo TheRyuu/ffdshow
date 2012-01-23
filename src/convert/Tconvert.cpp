@@ -81,6 +81,8 @@ void Tconvert::init(Tlibavcodec *Ilibavcodec,bool highQualityRGB,unsigned int Id
     m_dithering = dithering;
     rgbInterlaceMode = IrgbInterlaceMode;
     ffdshow_converters = NULL;
+    timer = 0;
+    counter_for_timer = 0;
 }
 
 Tconvert::~Tconvert()
@@ -518,19 +520,24 @@ int Tconvert::convert(uint64_t incsp0,
         return 0;
     }
 
+#define CONVERT_TIMER 0
+#if CONVERT_TIMER
+    timer_start();
+#endif
+    int ret = dy;
     switch (mode) {
         case MODE_fast_copy: {
             for (unsigned int i=0; i<incspInfo->numPlanes; i++) {
                 copyPlane(dst[i],dstStride[i],src[i],srcStride[i],rowsize>>incspInfo->shiftX[i],dy>>incspInfo->shiftY[i]);
             }
-            return dy;
+            break;
         }
 
         case MODE_avisynth_bitblt: {
             for (unsigned int i=0; i<incspInfo->numPlanes; i++) {
                 TffPict::copy(dst[i],dstStride[i],src[i],srcStride[i],rowsize>>incspInfo->shiftX[i],dy>>incspInfo->shiftY[i]);
             }
-            return dy;
+            break;
         }
         case MODE_ffdshow_converters: {
             if (!ffdshow_converters) {
@@ -540,17 +547,23 @@ int Tconvert::convert(uint64_t incsp0,
             setJpeg(!!((incsp | outcsp) & FF_CSP_FLAGS_YUV_JPEG));
             ffdshow_converters->init(incsp1,outcsp1,(ffYCbCr_RGB_MatrixCoefficientsType)cspOptionsIturBt,cspOptionsWhiteCutoff,cspOptionsBlackCutoff,cspOptionsChromaCutoff,cspOptionsRGB_WhiteLevel,cspOptionsRGB_BlackLevel,m_dithering,m_isMPEG1);
             ffdshow_converters->convert(src[0],src[1],src[2],dst[0],dx,dy,srcStride[0],srcStride[1],dstStride[0]);
-            return dy;
+            break;
         }
         case MODE_ffdshow_converters2: {
-            TffdshowConverters2::convert(incsp0&FF_CSPS_MASK, src[0],src[1],src[2],dst[0],dst[1],dx,dy,srcStride[0],srcStride[1],dstStride[0],dstStride[1]);
-            return dy;
+            TffdshowConverters2::convert(
+                incsp0 & FF_CSPS_MASK, outcsp0 & FF_CSPS_MASK,
+                src[0], src[1], src[2],
+                dst[0], dst[1],
+                dx, dy,
+                srcStride[0], srcStride[1],
+                dstStride[0], dstStride[1]);
+            break;
         }
         case MODE_avisynth_yv12_to_yuy2:
             avisynth_yv12_to_yuy2(src[0],src[1],src[2],dx,srcStride[0],srcStride[1],
                                   dst[0],dstStride[0],
                                   dy);
-            return dy;
+            break;
         case MODE_xvidImage_output: {
             int rgb_add = UpdateSettings(video_full_range_flag, YCbCr_RGB_matrix_coefficients);
             setJpeg(!!((incsp | outcsp) & FF_CSP_FLAGS_YUV_JPEG), rgb_add);
@@ -570,26 +583,27 @@ int Tconvert::convert(uint64_t incsp0,
                          (incsp|outcsp) & FF_CSP_FLAGS_YUV_JPEG,
                          rgb_add,
                          vram_indirect);
-            return outdy;
+            ret = outdy;
+            break;
         }
         case MODE_avisynth_yuy2_to_yv12:
             avisynth_yuy2_to_yv12(src[0],dx*2,srcStride[0],
                                   dst[0],dst[1],dst[2],dstStride[0],dstStride[1],
                                   dy);
-            return dy;
+            break;
         case MODE_mmx_ConvertRGB32toYUY2: {
             UpdateSettings(video_full_range_flag, YCbCr_RGB_matrix_coefficients);
             setJpeg(!!((incsp | outcsp) & FF_CSP_FLAGS_YUV_JPEG));
             const Tmmx_ConvertRGBtoYUY2matrix *matrix=getAvisynthRgb2YuvMatrix();
             Tmmx_ConvertRGBtoYUY2<false,false>::mmx_ConvertRGBtoYUY2(src[0],dst[0],srcStride[0],dstStride[0],dx,dy,matrix);
-            return dy;
+            break;
         }
         case MODE_mmx_ConvertRGB24toYUY2: {
             UpdateSettings(video_full_range_flag, YCbCr_RGB_matrix_coefficients);
             setJpeg(!!((incsp | outcsp) & FF_CSP_FLAGS_YUV_JPEG));
             const Tmmx_ConvertRGBtoYUY2matrix *matrix=getAvisynthRgb2YuvMatrix();
             Tmmx_ConvertRGBtoYUY2<true ,false>::mmx_ConvertRGBtoYUY2(src[0],dst[0],srcStride[0],dstStride[0],dx,dy,matrix);
-            return dy;
+            break;
         }
         case MODE_mmx_ConvertYUY2toRGB24: {
             int rgb_add;
@@ -601,7 +615,7 @@ int Tconvert::convert(uint64_t incsp0,
             } else {
                 Tmmx_ConvertYUY2toRGB<0,0,PcRGB>::mmx_ConvertYUY2toRGB(src[0],dst[0],src[0]+dy*srcStride[0],srcStride[0],dstStride[0],dx*2,matrix);
             }
-            return dy;
+            break;
         }
         case MODE_mmx_ConvertYUY2toRGB32: {
             int rgb_add;
@@ -613,7 +627,7 @@ int Tconvert::convert(uint64_t incsp0,
             } else {
                 Tmmx_ConvertYUY2toRGB<0,1,PcRGB>::mmx_ConvertYUY2toRGB(src[0],dst[0],src[0]+dy*srcStride[0],srcStride[0],dstStride[0],dx*2,matrix);
             }
-            return dy;
+            break;
         }
         case MODE_mmx_ConvertUYVYtoRGB24: {
             int rgb_add;
@@ -625,7 +639,7 @@ int Tconvert::convert(uint64_t incsp0,
             } else {
                 Tmmx_ConvertYUY2toRGB<1,0,PcRGB>::mmx_ConvertYUY2toRGB(src[0],dst[0],src[0]+dy*srcStride[0],srcStride[0],dstStride[0],dx*2,matrix);
             }
-            return dy;
+            break;
         }
         case MODE_mmx_ConvertUYVYtoRGB32: {
             int rgb_add;
@@ -637,7 +651,7 @@ int Tconvert::convert(uint64_t incsp0,
             } else {
                 Tmmx_ConvertYUY2toRGB<1,1,PcRGB>::mmx_ConvertYUY2toRGB(src[0],dst[0],src[0]+dy*srcStride[0],srcStride[0],dstStride[0],dx*2,matrix);
             }
-            return dy;
+            break;
         }
         case MODE_CLJR: {
             // Copyright (c) 2003 Alex Beregszaszi
@@ -659,7 +673,7 @@ int Tconvert::convert(uint64_t incsp0,
                     cr+=2;
                 }
             }
-            return dy;
+            break;
         }
         case MODE_xvidImage_input: {
             int rgb_add = UpdateSettings(video_full_range_flag, YCbCr_RGB_matrix_coefficients);
@@ -667,24 +681,28 @@ int Tconvert::convert(uint64_t incsp0,
             writeToXvidRgb2YCbCrMatrix(&bgr_to_yv12_mmx_data);
             IMAGE dstPict= {dst[0],dst[1],dst[2]};
             image_input(&dstPict,dx,dy,dstStride[0],dstStride[1],src[0],srcStride[0],incsp,incsp&FF_CSP_FLAGS_INTERLACED,(incsp|outcsp)&FF_CSP_FLAGS_YUV_JPEG,PcRGB);
-            return dy;
+            break;
         }
         case MODE_swscale:
             // egur: this crashes on NV12->NV12 copy!
             swscale->convert(src,srcStride,dst,dstStride);
-            return dy;
+            break;
         case MODE_MODE_palette8torgb: {
             const unsigned char *src1[4] = {src[0],srcpal->pal,NULL,NULL};
             swscale->convert(src1,srcStride,dst,dstStride);
-            return dy;
+            break;
         }
         case MODE_fallback:
             tmpConvert1->convert(incsp,src,srcStride,tmpcsp,tmp,tmpStride,srcpal,video_full_range_flag,YCbCr_RGB_matrix_coefficients);
             tmpConvert2->convert(tmpcsp,(const uint8_t**)tmp,tmpStride,outcsp,dst,dstStride,NULL,video_full_range_flag,YCbCr_RGB_matrix_coefficients);
-            return dy;
+            break;
         default:
             return 0;
     }
+#if CONVERT_TIMER
+    timer_stop();
+#endif
+    return ret;
 }
 int Tconvert::convert(const TffPict &pict,uint64_t outcsp,uint8_t* dst[],stride_t dstStride[],bool vram_indirect)
 {
@@ -763,6 +781,21 @@ void Tconvert::copyPlane(BYTE *dstp,stride_t dst_pitch,const BYTE *srcp,stride_t
             }
         }
     }
+}
+
+void Tconvert::timer_start()
+{
+    QueryPerformanceCounter(&tmp_timer);
+}
+
+void Tconvert::timer_stop()
+{
+    int64_t t0 = tmp_timer.QuadPart;
+    QueryPerformanceCounter(&tmp_timer);
+    uint64_t t = tmp_timer.QuadPart - t0;
+    timer += t;
+    counter_for_timer++;
+    DPRINTF(L"color space conversion cost: %I64d average: %I64d", t, timer/counter_for_timer);
 }
 
 //================================= TffColorspaceConvert =================================

@@ -71,6 +71,12 @@ private:
     Tconvert *tmpConvert1,*tmpConvert2;
     unsigned int rowsize;
     void freeTmpConvert(void);
+
+    uint64_t timer;
+    LARGE_INTEGER tmp_timer;
+    int counter_for_timer;
+    void timer_start();
+    void timer_stop();
 public:
     bool m_wasChange;
     LONG m_dstSize;
