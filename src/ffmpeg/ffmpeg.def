@@ -9,7 +9,9 @@ EXPORTS
   avcodec_decode_video2
   avcodec_encode_video
   avcodec_decode_audio3
+  avcodec_decode_audio4
   avcodec_encode_audio
+  avcodec_encode_audio2
   avcodec_flush_buffers
   avcodec_close
   getVersion

@@ -363,6 +363,7 @@ static attribute_align_arg void *frame_worker_thread(void *arg)
     AVCodec *codec = avctx->codec;
 
     while (1) {
+        int i;
         if (p->state == STATE_INPUT_READY && !fctx->die) {
             pthread_mutex_lock(&p->mutex);
             while (p->state == STATE_INPUT_READY && !fctx->die)
@@ -385,6 +386,12 @@ static attribute_align_arg void *frame_worker_thread(void *arg)
         p->state = STATE_INPUT_READY;
 
         pthread_mutex_lock(&p->progress_mutex);
+        for (i = 0; i < MAX_BUFFERS; i++)
+            if (p->progress_used[i]) {
+                p->progress[i][0] = INT_MAX;
+                p->progress[i][1] = INT_MAX;
+            }
+        pthread_cond_broadcast(&p->progress_cond);
         pthread_cond_signal(&p->output_cond);
         pthread_mutex_unlock(&p->progress_mutex);
 
@@ -605,7 +612,8 @@ int ff_thread_decode_frame(AVCodecContext *avctx,
      */
 
     p = &fctx->threads[fctx->next_decoding];
-    update_context_from_user(p->avctx, avctx);
+    err = update_context_from_user(p->avctx, avctx);
+    if (err) return err;
     err = submit_packet(p, avpkt);
     if (err) return err;
 
@@ -731,6 +739,7 @@ static void park_frame_worker_threads(FrameThreadContext *fctx, int thread_count
                 pthread_cond_wait(&p->output_cond, &p->progress_mutex);
             pthread_mutex_unlock(&p->progress_mutex);
         }
+        p->got_frame = 0;
     }
 }
 
@@ -780,6 +789,7 @@ static void frame_thread_free(AVCodecContext *avctx, int thread_count)
         if (i) {
             av_freep(&p->avctx->priv_data);
             av_freep(&p->avctx->internal);
+            av_freep(&p->avctx->slice_offset);
         }
 
         av_freep(&p->avctx);
@@ -953,7 +963,7 @@ int ff_thread_get_buffer(AVCodecContext *avctx, AVFrame *f)
         p->requested_frame = f;
         p->state = STATE_GET_BUFFER;
         pthread_mutex_lock(&p->progress_mutex);
-        pthread_cond_signal(&p->progress_cond);
+        pthread_cond_broadcast(&p->progress_cond);
 
         while (p->state != STATE_SETTING_UP)
             pthread_cond_wait(&p->progress_cond, &p->progress_mutex);
