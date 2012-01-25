@@ -168,6 +168,7 @@ TffdshowDecVideo::TffdshowDecVideo(CLSID Iclsid,const char_t *className,const CL
     m_pOutput= m_pOutputDecVideo;
 
     subShowEmbedded=0;
+    subForceEmbedded=0;
     imgFilters=NULL;
     wasSubtitleResetTime=false;
     fontManager=NULL;
