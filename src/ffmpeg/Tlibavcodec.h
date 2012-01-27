@@ -58,7 +58,6 @@ public:
  bool ok;
  AVCodecContext* avcodec_alloc_context(AVCodec *codec, TlibavcodecExt *ext=NULL);
 
- void (*avcodec_init)(void);
  void (*avcodec_register_all)(void);
  AVCodecContext* (*avcodec_alloc_context0)(AVCodec *codec);
  void (*dsputil_init)(DSPContext* p, AVCodecContext *avctx);

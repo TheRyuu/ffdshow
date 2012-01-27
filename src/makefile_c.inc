@@ -12,13 +12,13 @@ ifeq ($(64BIT),yes)
   TARGET_OS=x86_64-w64-mingw32
   CFLAGS+=-DWIN64 -D_WIN64 -D__MINGW64__
   OPTFLAGS+=-O2 -m64
-  YASMFLAGS+=-f win64 -m amd64 -DWIN64 -DARCH_X86_64
+  YASMFLAGS+=-f win64 -m amd64 -DWIN64=1 -DARCH_X86_32=0 -DARCH_X86_64=1
   LDFLAGS+=--entry=DllMainCRTStartup@12
 else
   TARGET_OS=i686-w32-mingw32
   CFLAGS+=-DWIN32 -D_WIN32 -D__MINGW32__
   OPTFLAGS+=-O2 -march=i686 -mmmx
-  YASMFLAGS+=-f win32 -m x86 -DWIN32 -DARCH_X86_32 -DPREFIX
+  YASMFLAGS+=-f win32 -m x86 -DWIN32=1 -DARCH_X86_32=1 -DARCH_X86_64=0 -DPREFIX
 endif
 
 CFLAGS+=-mdll -mthreads -pipe

@@ -73,7 +73,6 @@ Tlibavcodec::Tlibavcodec(const Tconfig *config):refcount(0)
 {
  dll=new Tdll(_l("ffmpeg.dll"),config);
 
- dll->loadFunction(avcodec_init,"avcodec_init");
  dll->loadFunction(dsputil_init,"dsputil_init");
  dll->loadFunction(avcodec_register_all,"avcodec_register_all");
  dll->loadFunction(avcodec_find_decoder,"avcodec_find_decoder");
@@ -157,7 +156,6 @@ Tlibavcodec::Tlibavcodec(const Tconfig *config):refcount(0)
 
  if (ok)
   {
-   avcodec_init();
    avcodec_register_all();
    av_log_set_callback(avlog);
   }

@@ -19,8 +19,8 @@
 ;* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 ;******************************************************************************
 
-%include "libavutil/x86/x86inc.asm"
-%include "libavutil/x86/x86util.asm"
+%include "x86inc.asm"
+%include "x86util.asm"
 
 SECTION_RODATA
 
@@ -69,12 +69,12 @@ cglobal ac3_exponent_min_%1, 3,4,2, exp, reuse_blks, expn, offset
 %define LOOP_ALIGN
 INIT_MMX
 AC3_EXPONENT_MIN mmx
-%ifdef HAVE_MMX2
+%if HAVE_MMX2
 %define PMINUB PMINUB_MMXEXT
 %define LOOP_ALIGN ALIGN 16
 AC3_EXPONENT_MIN mmxext
 %endif
-%ifdef HAVE_SSE
+%if HAVE_SSE
 INIT_XMM
 AC3_EXPONENT_MIN sse2
 %endif
@@ -367,7 +367,7 @@ cglobal ac3_compute_mantissa_size_sse2, 1,2,4, mant_cnt, sum
     pabsd    %1, %1
 %endmacro
 
-%ifdef HAVE_AMD3DNOW
+%if HAVE_AMD3DNOW
 INIT_MMX
 cglobal ac3_extract_exponents_3dnow, 3,3,0, exp, coef, len
     add      expq, lenq
@@ -439,11 +439,11 @@ cglobal ac3_extract_exponents_%1, 3,3,5, exp, coef, len
     REP_RET
 %endmacro
 
-%ifdef HAVE_SSE
+%if HAVE_SSE
 INIT_XMM
 %define PABSD PABSD_MMX
 AC3_EXTRACT_EXPONENTS sse2
-%ifdef HAVE_SSSE3
+%if HAVE_SSSE3
 %define PABSD PABSD_SSSE3
 AC3_EXTRACT_EXPONENTS ssse3
 %endif

@@ -88,10 +88,7 @@ AVCodec *av_codec_next(AVCodec *c){
     else  return first_avcodec;
 }
 
-#if !FF_API_AVCODEC_INIT
-static
-#endif
-void avcodec_init(void)
+static void avcodec_init(void)
 {
     static int initialized = 0;
 
@@ -622,13 +619,6 @@ AVFrame *avcodec_alloc_frame(void){
     return pic;
 }
 
-#if FF_API_AVCODEC_OPEN
-int attribute_align_arg avcodec_open(AVCodecContext *avctx, AVCodec *codec)
-{
-    return avcodec_open2(avctx, codec, NULL);
-}
-#endif
-
 int attribute_align_arg avcodec_open2(AVCodecContext *avctx, AVCodec *codec, AVDictionary **options)
 {
     int ret = 0;
@@ -721,16 +711,12 @@ int attribute_align_arg avcodec_open2(AVCodecContext *avctx, AVCodec *codec, AVD
         goto free_and_end;
     }
     avctx->frame_number = 0;
-#if FF_API_ER
 
-    av_log(avctx, AV_LOG_DEBUG, "err{or,}_recognition separate: %d; %d\n",
-           avctx->error_recognition, avctx->err_recognition);
-    /* FF_ER_CAREFUL (==1) implies AV_EF_CRCCHECK (== 1<<1 - 1),
-       FF_ER_COMPLIANT (==2) implies AV_EF_{CRCCHECK,BITSTREAM} (== 1<<2 - 1), et cetera} */
-    avctx->err_recognition |= (1<<(avctx->error_recognition-(avctx->error_recognition>=FF_ER_VERY_AGGRESSIVE))) - 1;
-    av_log(avctx, AV_LOG_DEBUG, "err{or,}_recognition combined: %d; %d\n",
-           avctx->error_recognition, avctx->err_recognition);
-#endif
+    if (avctx->codec_type == AVMEDIA_TYPE_AUDIO &&
+        (!avctx->time_base.num || !avctx->time_base.den)) {
+        avctx->time_base.num = 1;
+        avctx->time_base.den = avctx->sample_rate;
+    }
 
     if (HAVE_THREADS && !avctx->thread_opaque) {
         ret = ff_thread_init(avctx);
@@ -1361,12 +1347,6 @@ void avcodec_default_free_buffers(AVCodecContext *avctx)
     }
 }
 
-#if FF_API_OLD_FF_PICT_TYPES
-char av_get_pict_type_char(int pict_type){
-    return av_get_picture_type_char(pict_type);
-}
-#endif
-
 int av_get_bits_per_sample(enum CodecID codec_id){
     switch(codec_id){
     case CODEC_ID_ADPCM_SBPRO_2:
@@ -1388,12 +1368,6 @@ int av_get_bits_per_sample(enum CodecID codec_id){
         return 0;
     }
 }
-
-#if FF_API_OLD_SAMPLE_FMT
-int av_get_bits_per_sample_format(enum AVSampleFormat sample_fmt) {
-    return av_get_bytes_per_sample(sample_fmt) << 3;
-}
-#endif
 
 #if !HAVE_THREADS
 int ff_thread_init(AVCodecContext *s){

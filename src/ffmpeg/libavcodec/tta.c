@@ -32,6 +32,7 @@
 #include <limits.h>
 #include "avcodec.h"
 #include "get_bits.h"
+#include "libavutil/audioconvert.h"
 
 #define FORMAT_SIMPLE    1
 #define FORMAT_ENCRYPTED 2

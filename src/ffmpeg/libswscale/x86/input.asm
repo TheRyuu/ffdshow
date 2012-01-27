@@ -64,7 +64,7 @@ SECTION .text
 ;      split the loop in an aligned and unaligned case
 %macro YUYV_TO_Y_FN 2-3
 cglobal %2ToY, 5, 5, %1, dst, unused0, unused1, src, w
-%ifdef ARCH_X86_64
+%if ARCH_X86_64
     movsxd         wq, wd
 %endif
     add          dstq, wq
@@ -134,7 +134,7 @@ cglobal %2ToY, 5, 5, %1, dst, unused0, unused1, src, w
 ;      split the loop in an aligned and unaligned case
 %macro YUYV_TO_UV_FN 2-3
 cglobal %2ToUV, 4, 5, %1, dstU, dstV, unused, src, w
-%ifdef ARCH_X86_64
+%if ARCH_X86_64
     movsxd         wq, dword r5m
 %else ; x86-32
     mov            wq, r5m
@@ -189,7 +189,7 @@ cglobal %2ToUV, 4, 5, %1, dstU, dstV, unused, src, w
 ; %2 = nv12 or nv21
 %macro NVXX_TO_UV_FN 2
 cglobal %2ToUV, 4, 5, %1, dstU, dstV, unused, src, w
-%ifdef ARCH_X86_64
+%if ARCH_X86_64
     movsxd         wq, dword r5m
 %else ; x86-32
     mov            wq, r5m
@@ -215,7 +215,7 @@ cglobal %2ToUV, 4, 5, %1, dstU, dstV, unused, src, w
 %endif ; mmsize == 8/16
 %endmacro
 
-%ifdef ARCH_X86_32
+%if ARCH_X86_32
 INIT_MMX mmx
 YUYV_TO_Y_FN  0, yuyv
 YUYV_TO_Y_FN  0, uyvy
@@ -233,7 +233,7 @@ YUYV_TO_UV_FN 3, uyvy
 NVXX_TO_UV_FN 5, nv12
 NVXX_TO_UV_FN 5, nv21
 
-%ifdef HAVE_AVX
+%if HAVE_AVX
 INIT_XMM avx
 ; in theory, we could write a yuy2-to-y using vpand (i.e. AVX), but
 ; that's not faster in practice

@@ -374,9 +374,9 @@ CFLAGS=-I. -Ilibavcodec -Ilibavutil -I../imgFilters -I../zlib -DHAVE_AV_CONFIG_H
        -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wno-pointer-sign -Wcast-qual -Wwrite-strings -Wtype-limits
 
 ifeq ($(64BIT),yes)
-    CFLAGS+=-DARCH_X86_64
+    CFLAGS+=-DARCH_X86_64=1
 else
-    CFLAGS+=-DARCH_X86_32
+    CFLAGS+=-DARCH_X86_32=1
 endif
 
 #CFLAGS+=-Wall -Wundef

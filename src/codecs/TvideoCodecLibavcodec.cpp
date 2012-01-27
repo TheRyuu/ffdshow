@@ -613,22 +613,22 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
                 frametype=FRAME_TYPE::I;
             } else {
                 switch (frame->pict_type) {
-                    case FF_P_TYPE:
+                    case AV_PICTURE_TYPE_P:
                         frametype = FRAME_TYPE::P;
                         break;
-                    case FF_B_TYPE:
+                    case AV_PICTURE_TYPE_B:
                         frametype = FRAME_TYPE::B;
                         break;
-                    case FF_I_TYPE:
+                    case AV_PICTURE_TYPE_I:
                         frametype = FRAME_TYPE::I;
                         break;
-                    case FF_S_TYPE:
+                    case AV_PICTURE_TYPE_S:
                         frametype = FRAME_TYPE::GMC;
                         break;
-                    case FF_SI_TYPE:
+                    case AV_PICTURE_TYPE_SI:
                         frametype = FRAME_TYPE::SI;
                         break;
-                    case FF_SP_TYPE:
+                    case AV_PICTURE_TYPE_SP:
                         frametype = FRAME_TYPE::SP;
                         break;
                     case 0:
@@ -1372,22 +1372,22 @@ HRESULT TvideoCodecLibavcodec::compress(const TffPict &pict,TencFrameParams &par
         params.ublks=avctx->skip_count;
 
         switch (avctx->coded_frame->pict_type) {
-            case FF_I_TYPE:
+            case AV_PICTURE_TYPE_I:
                 params.frametype=FRAME_TYPE::I;
                 break;
-            case FF_P_TYPE:
+            case AV_PICTURE_TYPE_P:
                 params.frametype=FRAME_TYPE::P;
                 break;
-            case FF_B_TYPE:
+            case AV_PICTURE_TYPE_B:
                 params.frametype=FRAME_TYPE::B;
                 break;
-            case FF_S_TYPE:
+            case AV_PICTURE_TYPE_S:
                 params.frametype=FRAME_TYPE::GMC;
                 break;
-            case FF_SI_TYPE:
+            case AV_PICTURE_TYPE_SI:
                 params.frametype=FRAME_TYPE::SI;
                 break;
-            case FF_SP_TYPE:
+            case AV_PICTURE_TYPE_SP:
                 params.frametype=FRAME_TYPE::SP;
                 break;
             case 0:
