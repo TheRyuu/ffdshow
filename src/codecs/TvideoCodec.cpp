@@ -251,6 +251,11 @@ void TvideoCodecDec::TtelecineManager::new_frame(int top_field_first, int repeat
         group_rtStart = rtStart;
     }
     cfg_softTelecine = parent->deci->getParam2(IDFF_softTelecine);
+    if (   parent->deci->getParam2(IDFF_isAvisynth)
+        && parent->deci->getParam2(IDFF_showAvisynth)
+        && parent->deci->getParam2(IDFF_avisynthApplyPulldown) == 1) {
+        cfg_softTelecine = false;
+    }
 }
 
 void TvideoCodecDec::TtelecineManager::get_fieldtype(TffPict &pict)
