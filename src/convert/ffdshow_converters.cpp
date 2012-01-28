@@ -238,7 +238,7 @@ template <uint64_t incsp, uint64_t outcsp, bool isMPEG1, bool dithering, bool al
 {
     init_dither(dx);
     if (m_thread_count == 1) {
-        convert_main_loop<incsp,outcsp,rgb_limit,aligned,dithering,isMPEG1>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst, 0, dy);
+        convert_main_loop<incsp,outcsp,isMPEG1,dithering,aligned,rgb_limit>(srcY, srcCb, srcCr, dst, dx, dy, stride_Y, stride_CbCr, stride_dst, 0, dy);
     } else {
         int is_odd;
         int starty = 0;
