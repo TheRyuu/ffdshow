@@ -104,7 +104,7 @@ void TffPict::common_init(void)
     discontinuity = false;
     film = repeat_first_field = false;
     video_full_range_flag = VIDEO_FULL_RANGE_INVALID;
-    YCbCr_RGB_matrix_coefficients = AVCOL_PRI_UNSPECIFIED;
+    YCbCr_RGB_matrix_coefficients = AVCOL_SPC_UNSPECIFIED;
 }
 void TffPict::init(void)
 {

@@ -121,7 +121,7 @@ public:
     bool film,repeat_first_field;
     bool discontinuity;
     int video_full_range_flag;
-    enum AVColorPrimaries YCbCr_RGB_matrix_coefficients;
+    enum AVColorSpace YCbCr_RGB_matrix_coefficients;
     REFERENCE_TIME rtStart,rtStop;
     LONGLONG mediatimeStart,mediatimeStop;
     int gmcWarpingPoints,gmcWarpingPointsReal;

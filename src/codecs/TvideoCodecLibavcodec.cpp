@@ -718,7 +718,7 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
                 pict.gmcWarpingPoints=frame->num_sprite_warping_points;
                 pict.gmcWarpingPointsReal=frame->real_sprite_warping_points;
                 pict.setFullRange(avctx->color_range);
-                pict.YCbCr_RGB_matrix_coefficients = avctx->color_primaries;
+                pict.YCbCr_RGB_matrix_coefficients = avctx->colorspace;
 
 #ifdef OSD_H264POC
                 if (codecId == CODEC_ID_H264) {

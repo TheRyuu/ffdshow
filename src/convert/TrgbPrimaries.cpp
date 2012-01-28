@@ -38,14 +38,14 @@ TrgbPrimaries::TrgbPrimaries(IffdshowBase *deci):
 {
     deciV = comptrQ<IffdshowDecVideo>(deci);
     if (deciV) {
-        UpdateSettings(VIDEO_FULL_RANGE_INVALID, AVCOL_PRI_UNSPECIFIED);
+        UpdateSettings(VIDEO_FULL_RANGE_INVALID, AVCOL_SPC_UNSPECIFIED);
     } else {
         reset();
     }
 }
 
 // return a value that has to be added to RGB
-int TrgbPrimaries::UpdateSettings(int video_full_range_flag, enum AVColorPrimaries YCbCr_RGB_matrix_coefficients)
+int TrgbPrimaries::UpdateSettings(int video_full_range_flag, enum AVColorSpace YCbCr_RGB_matrix_coefficients)
 {
     if (deciV) {
         const ToutputVideoSettings *outcfg = deciV->getToutputVideoSettings(); // This pointer may change during playback.
