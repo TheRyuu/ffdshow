@@ -94,6 +94,7 @@ Tlibavcodec::Tlibavcodec(const Tconfig *config):refcount(0)
  dll->loadFunction(avcodec_get_current_idct,"avcodec_get_current_idct");
  dll->loadFunction(avcodec_get_encoder_info,"avcodec_get_encoder_info");
  dll->loadFunction(av_init_packet,"av_init_packet"); 
+ dll->loadFunction(av_packet_new_side_data,"av_packet_new_side_data"); 
  dll->loadFunction(avcodec_h264_search_recovery_point,"avcodec_h264_search_recovery_point");
 
  dll->loadFunction(avcodec_decode_audio3,"avcodec_decode_audio3");

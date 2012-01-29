@@ -25,6 +25,7 @@
 #include "ffmpeg/libavcodec/avcodec.h"
 #include "ffmpeg/Tlibavcodec.h"
 #include "ffmpeg/libavcodec/dvdata.h"
+#include "ffmpeg/libavutil/intreadwrite.h"
 #include "IffdshowBase.h"
 #include "IffdshowDecVideo.h"
 #include "IffdshowEnc.h"
@@ -323,31 +324,28 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
         ExtractBIH(mt,&bih);
         avctx->bits_per_coded_sample=bih.biBitCount;
         if (avctx->bits_per_coded_sample<=8 || codecId==CODEC_ID_PNG) {
-            avctx->palctrl=&pal;
-            pal.palette_changed=1;
-            const void *palette;
-            int palettesize;
+            const void *pal;
             if (!extradata->data)
                 switch (avctx->bits_per_coded_sample) {
                     case 2:
-                        palette=qt_default_palette_4;
-                        palettesize=4*4;
+                        pal = qt_default_palette_4;
+                        palette_size=4*4;
                         break;
                     case 4:
-                        palette=qt_default_palette_16;
-                        palettesize=16*4;
+                        pal = qt_default_palette_16;
+                        palette_size=16*4;
                         break;
                     default:
                     case 8:
-                        palette=qt_default_palette_256;
-                        palettesize=256*4;
+                        pal = qt_default_palette_256;
+                        palette_size=256*4;
                         break;
                 }
             else {
-                palette=extradata->data;
-                palettesize=AVPALETTE_SIZE;
+                palette_size=std::min(AVPALETTE_SIZE,(int)extradata->size);
+                pal = extradata->data;
             }
-            memcpy(pal.palette,palette,std::min(palettesize,AVPALETTE_SIZE));
+            memcpy(palette,pal,palette_size);
         }
     } else if (extradata->data && (codecId==CODEC_ID_RV10 || codecId==CODEC_ID_RV20)) {
 #pragma pack(push, 1)
@@ -540,6 +538,12 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
 
     AVPacket avpkt;
     libavcodec->av_init_packet(&avpkt);
+    if (palette_size) {
+        uint32_t *pal = (uint32_t *)libavcodec->av_packet_new_side_data(&avpkt, AV_PKT_DATA_PALETTE, AVPALETTE_SIZE);
+        for (int i = 0; i < palette_size/4; i++) {
+            pal[i] = 0xFF<<24 | AV_RL32(palette+4*i);
+        }
+    }
 
     while (!src || size>0) {
         int used_bytes;
@@ -714,7 +718,7 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
                     frame->data[1] = tmp;
                 }
 
-                TffPict pict(csp,frame->data,linesize,r,true,frametype,fieldtype,srcLen0,pIn,avctx->palctrl); //TODO: src frame size
+                TffPict pict(csp,frame->data,linesize,r,true,frametype,fieldtype,srcLen0,pIn,palette_size?palette:NULL); //TODO: src frame size
                 pict.gmcWarpingPoints=frame->num_sprite_warping_points;
                 pict.gmcWarpingPointsReal=frame->real_sprite_warping_points;
                 pict.setFullRange(avctx->color_range);

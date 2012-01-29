@@ -39,6 +39,7 @@ EXPORTS
   av_parser_close
 
   av_init_packet
+  av_packet_new_side_data
 
   sws_getCachedContext
   sws_freeContext

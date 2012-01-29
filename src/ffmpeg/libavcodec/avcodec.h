@@ -27,7 +27,6 @@
  */
 
 #include "../codecs/ffcodecs.h"
-#include "AVPaletteControl.h"
 
 #include <errno.h>
 #include "libavutil/samplefmt.h"
@@ -2434,15 +2433,7 @@ typedef struct AVCodecContext {
      */
     enum AVFieldOrder field_order;
 
-/* ffdshow custom stuff (begin) */
-
-    /**
-     * palette control structure
-     * - encoding: ??? (no palette-enabled encoder yet)
-     * - decoding: Set by user.
-     */
-    struct AVPaletteControl *palctrl;
-    
+/* ffdshow custom stuff (begin) */  
     /**
      * Percentage of dynamic range compression to be applied by the decoder.
      * The default value is 1.0, corresponding to full compression.
@@ -2679,6 +2670,31 @@ typedef struct AVPicture {
     uint8_t *data[AV_NUM_DATA_POINTERS];
     int linesize[AV_NUM_DATA_POINTERS];     ///< number of bytes per line
 } AVPicture;
+
+#define AVPALETTE_SIZE 1024
+#define AVPALETTE_COUNT 256
+
+/**
+ * Allocate new information of a packet.
+ *
+ * @param pkt packet
+ * @param type side information type
+ * @param size side information size
+ * @return pointer to fresh allocated data or NULL otherwise
+ */
+uint8_t* av_packet_new_side_data(AVPacket *pkt, enum AVPacketSideDataType type,
+                                 int size);
+
+/**
+ * Get side information from packet.
+ *
+ * @param pkt packet
+ * @param type desired side information type
+ * @param size pointer for side information size to store (optional)
+ * @return pointer to data if present or NULL otherwise
+ */
+uint8_t* av_packet_get_side_data(AVPacket *pkt, enum AVPacketSideDataType type,
+                                 int *size);
 
 void avcodec_get_chroma_sub_sample(enum PixelFormat pix_fmt, int *h_shift, int *v_shift);
 

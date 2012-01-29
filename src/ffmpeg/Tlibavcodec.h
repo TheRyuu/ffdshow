@@ -13,7 +13,6 @@ struct AVCodec;
 struct AVFrame;
 struct AVPacket;
 struct AVCodecParserContext;
-struct AVPaletteControl;
 struct SwsContext;
 struct SwsFilter;
 struct SwsVector;
@@ -97,6 +96,7 @@ public:
  void (*av_parser_close)(AVCodecParserContext *s);
 
  void (*av_init_packet)(AVPacket *pkt);
+ uint8_t* (*av_packet_new_side_data)(AVPacket *pkt, enum AVPacketSideDataType type, int size);
 
  int (*avcodec_h264_search_recovery_point)(AVCodecContext *avctx,
                          const uint8_t *buf, int buf_size, int *recovery_frame_cnt);

@@ -2,8 +2,8 @@
 #define _TVIDEOCODECLIBAVCODEC_H_
 
 #include "TvideoCodec.h"
-#include "ffmpeg/libavcodec/AVPaletteControl.h"
 #include "ffmpeg/Tlibavcodec.h"
+#include "ffmpeg/libavcodec/avcodec.h"
 
 #define MAX_THREADS 8 // FIXME: This is defined in mpegvideo.h.
 
@@ -38,7 +38,8 @@ protected:
     AVCodec *avcodec;
     mutable char_t codecName[100];
     AVCodecContext *avctx;
-    AVPaletteControl pal;
+    uint32_t palette[AVPALETTE_COUNT];
+    int palette_size;
     AVFrame *frame;
     FOURCC fcc;
     FILE *statsfile;

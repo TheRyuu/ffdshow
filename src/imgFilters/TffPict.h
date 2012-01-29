@@ -67,13 +67,12 @@ struct FIELD_TYPE {
     };
 };
 
-struct AVPaletteControl;
 enum AVColorRange;
 struct Tpalette {
     Tpalette(void):pal(NULL),numcolors(0) {}
     Tpalette(const unsigned char *Ipal,unsigned int Inumcolors):pal(Ipal),numcolors(Inumcolors) {}
     Tpalette(const RGBQUAD *Ipal,unsigned int Inumcolors):pal((const unsigned char*)Ipal),numcolors(Inumcolors) {}
-    Tpalette(const AVPaletteControl *palctrl);
+    Tpalette(const uint32_t *palette);
     const unsigned char *pal;
     unsigned int numcolors;
 };

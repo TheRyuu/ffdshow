@@ -446,7 +446,6 @@ int avcodec_get_context_defaults3(AVCodecContext *s, AVCodec *codec){
     s->sample_fmt          = AV_SAMPLE_FMT_S16; // fixme, ac3 encoder crashes if set to none
     s->request_sample_fmt  = AV_SAMPLE_FMT_FLT; // todo: set this value in ffdshow
 
-    s->palctrl             = NULL;
     s->reget_buffer        = avcodec_default_reget_buffer;
     s->reordered_opaque    = AV_NOPTS_VALUE;
     if(codec && codec->priv_data_size){
@@ -499,7 +498,6 @@ int avcodec_copy_context(AVCodecContext *dest, const AVCodecContext *src)
     /* set values specific to opened codecs back to their default state */
     dest->priv_data       = NULL;
     dest->codec           = NULL;
-    dest->palctrl         = NULL;
     dest->slice_offset    = NULL;
     dest->hwaccel         = NULL;
     dest->thread_opaque   = NULL;

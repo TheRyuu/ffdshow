@@ -50,6 +50,8 @@ typedef struct EightBpsContext {
 
     unsigned char planes;
     unsigned char planemap[4];
+
+    uint32_t pal[256];
 } EightBpsContext;
 
 
@@ -132,13 +134,16 @@ static int decode_frame(AVCodecContext *avctx, void *data,
         }
     }
 
-    if (avctx->palctrl) {
-        memcpy (c->pic.data[1], avctx->palctrl->palette, AVPALETTE_SIZE);
-        if (avctx->palctrl->palette_changed) {
+    if (avctx->bits_per_coded_sample <= 8) {
+        const uint8_t *pal = av_packet_get_side_data(avpkt,
+                                                     AV_PKT_DATA_PALETTE,
+                                                     NULL);
+        if (pal) {
             c->pic.palette_has_changed = 1;
-            avctx->palctrl->palette_changed = 0;
-        } else
-            c->pic.palette_has_changed = 0;
+            memcpy(c->pal, pal, AVPALETTE_SIZE);
+        }
+
+        memcpy (c->pic.data[1], c->pal, AVPALETTE_SIZE);
     }
 
     *data_size = sizeof(AVFrame);

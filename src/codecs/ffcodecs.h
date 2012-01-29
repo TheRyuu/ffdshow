@@ -352,7 +352,7 @@ static __inline bool sup_threads_dec_frame(int x)
 }
 static __inline bool sup_palette(int x)
 {
-    return x==CODEC_ID_MSVIDEO1 || x==CODEC_ID_8BPS || x==CODEC_ID_QTRLE || x==CODEC_ID_TSCC || x==CODEC_ID_QPEG || x==CODEC_ID_PNG;
+    return x==CODEC_ID_MSVIDEO1 || x==CODEC_ID_8BPS || x==CODEC_ID_QTRLE || x==CODEC_ID_TSCC || x==CODEC_ID_QPEG || x==CODEC_ID_MSRLE || x==CODEC_ID_CINEPAK || x==CODEC_ID_PNG;
 }
 
 #endif

@@ -50,10 +50,10 @@ int FIELD_TYPE::fromSample(IMediaSample *pIn,bool isInterlacedRawVideo)
 }
 
 //===================================== Tpalette ====================================
-Tpalette::Tpalette(const AVPaletteControl *palctrl)
+Tpalette::Tpalette(const uint32_t *palette)
 {
-    pal=palctrl?(const unsigned char*)palctrl->palette:NULL;
-    numcolors=palctrl?256:0;
+    pal=palette?(const unsigned char*)palette:NULL;
+    numcolors=palette?256:0;
 }
 
 //=================================== TffPictBase ===================================
