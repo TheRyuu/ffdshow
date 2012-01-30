@@ -1,5 +1,6 @@
 /*
- * copyright (c) 2006 Michael Niedermayer <michaelni@gmx.at>
+ * PNG image format
+ * Copyright (c) 2008 Loren Merrit <lorenm@u.washington.edu>
  *
  * This file is part of Libav.
  *
@@ -18,26 +19,22 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_CRC_H
-#define AVUTIL_CRC_H
+#ifndef AVCODEC_PNGDSP_H
+#define AVCODEC_PNGDSP_H
 
 #include <stdint.h>
-#include <stddef.h>
-#include "attributes.h"
 
-typedef uint32_t AVCRC;
+typedef struct PNGDSPContext {
+    void (*add_bytes_l2)(uint8_t *dst  /* align 16 */,
+                         uint8_t *src1 /* align 16 */,
+                         uint8_t *src2 /* align 16 */, int w);
 
-typedef enum {
-    AV_CRC_8_ATM,
-    AV_CRC_16_ANSI,
-    AV_CRC_16_CCITT,
-    AV_CRC_32_IEEE,
-    AV_CRC_32_IEEE_LE,  /*< reversed bitorder version of AV_CRC_32_IEEE */
-    AV_CRC_MAX,         /*< Not part of public API! Do not use outside libavutil. */
-}AVCRCId;
+    /* this might write to dst[w] */
+    void (*add_paeth_prediction)(uint8_t *dst, uint8_t *src,
+                                 uint8_t *top, int w, int bpp);
+} PNGDSPContext;
 
-int av_crc_init(AVCRC *ctx, int le, int bits, uint32_t poly, int ctx_size);
-const AVCRC *av_crc_get_table(AVCRCId crc_id);
-uint32_t av_crc(const AVCRC *ctx, uint32_t start_crc, const uint8_t *buffer, size_t length) av_pure;
+void ff_pngdsp_init(PNGDSPContext *dsp);
+void ff_pngdsp_init_x86(PNGDSPContext *dsp);
 
-#endif /* AVUTIL_CRC_H */
+#endif /* AVCDODEC_PNGDSP_H */

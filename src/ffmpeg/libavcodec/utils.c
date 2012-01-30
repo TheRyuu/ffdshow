@@ -68,16 +68,34 @@ void *av_fast_realloc(void *ptr, unsigned int *size, size_t min_size)
     return ptr;
 }
 
-void av_fast_malloc(void *ptr, unsigned int *size, size_t min_size)
+static inline int ff_fast_malloc(void *ptr, unsigned int *size, size_t min_size, int zero_realloc)
 {
     void **p = ptr;
     if (min_size < *size)
-        return;
+        return 0;
     min_size= FFMAX(17*min_size/16 + 32, min_size);
     av_free(*p);
-    *p = av_malloc(min_size);
+    *p = zero_realloc ? av_mallocz(min_size) : av_malloc(min_size);
     if (!*p) min_size = 0;
     *size= min_size;
+    return 1;
+}
+
+void av_fast_malloc(void *ptr, unsigned int *size, size_t min_size)
+{
+    ff_fast_malloc(ptr, size, min_size, 0);
+}
+
+void av_fast_padded_malloc(void *ptr, unsigned int *size, size_t min_size)
+{
+    uint8_t **p = ptr;
+    if (min_size > SIZE_MAX - FF_INPUT_BUFFER_PADDING_SIZE) {
+        *p = NULL;
+        *size = 0;
+        return;
+    }
+    if (!ff_fast_malloc(p, size, min_size + FF_INPUT_BUFFER_PADDING_SIZE, 1))
+        memset(*p + min_size, 0, FF_INPUT_BUFFER_PADDING_SIZE);
 }
 
 /* encoder management */
@@ -212,7 +230,7 @@ void avcodec_align_dimensions2(AVCodecContext *s, int *width, int *height,
         *height+=2; // some of the optimized chroma MC reads one line too much
                     // which is also done in mpeg decoders with lowres > 0
 
-    for (i = 0; i < AV_NUM_DATA_POINTERS; i++)
+    for (i = 0; i < 4; i++)
         linesize_align[i] = STRIDE_ALIGN;
 //STRIDE_ALIGN is 8 for SSE* but this does not work for SVQ1 chroma planes
 //we could change STRIDE_ALIGN to 16 for x86/sse but it would increase the
@@ -222,7 +240,7 @@ void avcodec_align_dimensions2(AVCodecContext *s, int *width, int *height,
     if(s->codec_id == CODEC_ID_SVQ1 || s->codec_id == CODEC_ID_VP5 ||
        s->codec_id == CODEC_ID_VP6 || s->codec_id == CODEC_ID_VP6F ||
        s->codec_id == CODEC_ID_VP6A) {
-        for (i = 0; i < AV_NUM_DATA_POINTERS; i++)
+        for (i = 0; i < 4; i++)
             linesize_align[i] = 16;
     }
 #endif
