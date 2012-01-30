@@ -6,6 +6,7 @@
 
 struct TresizeAspectSettings :TfilterSettingsVideo {
 private:
+    typedef int TresizeAspectSettings::* TintVal;
     static const TfilterIDFF idffs;
     static const char_t* printSwsParams(char_t *algParam,int method,int bicubicParam,int gaussParam,int lanczosParam);
 protected:

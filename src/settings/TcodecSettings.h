@@ -12,6 +12,7 @@
 struct DVprofile;
 struct TcoSettings :public Toptions {
 private:
+    typedef int TcoSettings::* TintVal;
     void onIncspChange(int,int);
 public:
     TcoSettings(TintStrColl *Icoll=NULL);

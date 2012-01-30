@@ -11,7 +11,6 @@ struct Toptions {
 private:
     TintStrColl *coll;
 public:
-    typedef int Toptions::*TintVal;
     typedef fastdelegate::FastDelegate2<int,int> TsendOnChange;
     template<class T> struct TintOptionT {
         typedef int Tval;
@@ -40,7 +39,7 @@ public:
         void reset(Toptions *self) const;
         void reset(Toptions *self,const TsendOnChange &sendOnChange,const TonChangeBind &onChangeBind) const;
     };
-    typedef char_t Toptions::*TstrVal;
+    typedef char_t Toptions::* TstrVal;
     struct TstrOption {
         typedef const char_t* Tval;
         int id;
