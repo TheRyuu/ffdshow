@@ -145,6 +145,7 @@ void TvideoCodecLibavcodec::end(void)
 //----------------------------- decompression -----------------------------
 bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const CMediaType &mt,int sourceFlags)
 {
+    palette_size = 0;
     oldpict.rtStop = 0;
     h264_on_MPEG2_system = false;
 
