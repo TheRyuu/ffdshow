@@ -2,20 +2,20 @@
  * MPEG Audio decoder
  * Copyright (c) 2001, 2002 Fabrice Bellard
  *
- * This file is part of Libav.
+ * This file is part of FFmpeg.
  *
- * Libav is free software; you can redistribute it and/or
+ * FFmpeg is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * Libav is distributed in the hope that it will be useful,
+ * FFmpeg is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with Libav; if not, write to the Free Software
+ * License along with FFmpeg; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -23,6 +23,8 @@
  * @file
  * MPEG Audio decoder
  */
+
+#define UNCHECKED_BITSTREAM_READER 1
 
 #include "libavutil/audioconvert.h"
 #include "avcodec.h"
@@ -1376,19 +1378,19 @@ static int mp_decode_layer3(MPADecodeContext *s)
     }
 
     if (!s->adu_mode) {
+        int skip;
         const uint8_t *ptr = s->gb.buffer + (get_bits_count(&s->gb)>>3);
+        int extrasize = av_clip(get_bits_left(&s->gb) >> 3, 0, EXTRABYTES);
         assert((get_bits_count(&s->gb) & 7) == 0);
         /* now we get bits from the main_data_begin offset */
         av_dlog(s->avctx, "seekback: %d\n", main_data_begin);
     //av_log(NULL, AV_LOG_ERROR, "backstep:%d, lastbuf:%d\n", main_data_begin, s->last_buf_size);
 
-        if (s->gb.size_in_bits > get_bits_count(&s->gb))
-            memcpy(s->last_buf + s->last_buf_size, ptr,
-               FFMIN(EXTRABYTES, (s->gb.size_in_bits - get_bits_count(&s->gb))>>3));
+        memcpy(s->last_buf + s->last_buf_size, ptr, extrasize);
         s->in_gb = s->gb;
         init_get_bits(&s->gb, s->last_buf, s->last_buf_size*8);
 #if !UNCHECKED_BITSTREAM_READER
-        s->gb.size_in_bits_plus8 += EXTRABYTES * 8;
+        s->gb.size_in_bits_plus8 += extrasize * 8;
 #endif
         skip_bits_long(&s->gb, 8*(s->last_buf_size - main_data_begin));
     }

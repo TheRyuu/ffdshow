@@ -1414,7 +1414,7 @@ static int decode_slice(AVCodecContext *c, void *arg){
         decode_plane(fs, p->data[0] + ps*x + y*p->linesize[0], width, height, p->linesize[0], 0);
 
         decode_plane(fs, p->data[1] + ps*cx+cy*p->linesize[1], chroma_width, chroma_height, p->linesize[1], 1);
-        decode_plane(fs, p->data[2] + ps*cx+cy*p->linesize[1], chroma_width, chroma_height, p->linesize[2], 1);
+        decode_plane(fs, p->data[2] + ps*cx+cy*p->linesize[2], chroma_width, chroma_height, p->linesize[2], 1);
     }else{
         decode_rgb_frame(fs, (uint32_t*)p->data[0] + ps*x + y*(p->linesize[0]/4), width, height, p->linesize[0]/4);
     }

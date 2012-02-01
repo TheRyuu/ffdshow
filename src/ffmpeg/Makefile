@@ -241,7 +241,7 @@ SRCS_C=\
     libavcodec/x86/mpegvideo_mmx.c \
     libavcodec/x86/pngdsp-init.c \
     libavcodec/x86/rv34dsp_init.c \
-    libavcodec/x86/rv40dsp.c \
+    libavcodec/x86/rv40dsp_init.c \
     libavcodec/x86/simple_idct_mmx.c \
     libavcodec/x86/vc1dsp_mmx.c \
     libavcodec/x86/vp56dsp_init.c \
@@ -333,6 +333,7 @@ SRCS_YASM=\
     libavcodec/x86/imdct36_sse.asm \
     libavcodec/x86/pngdsp.asm \
     libavcodec/x86/rv34dsp.asm \
+    libavcodec/x86/rv40dsp.asm \
     libavcodec/x86/vc1dsp_yasm.asm \
     libavcodec/x86/vp3dsp.asm \
     libavcodec/x86/vp56dsp.asm \

@@ -1141,7 +1141,6 @@ typedef struct AVCodecContext {
 #define FF_BUG_DC_CLIP          4096
 #define FF_BUG_MS               8192 ///< Work around various bugs in Microsoft's broken decoders.
 #define FF_BUG_TRUNCATED       16384
-//#define FF_BUG_FAKE_SCALABILITY 16 //Autodetection should work 100%.
 
     /**
      * luma single coefficient elimination threshold
@@ -1713,14 +1712,6 @@ typedef struct AVCodecContext {
      * - decoding: unused
      */
     int context_model;
-#if 0
-    /**
-     *
-     * - encoding: unused
-     * - decoding: Set by user.
-     */
-    uint8_t * (*realloc)(struct AVCodecContext *s, uint8_t *buf, int buf_size);
-#endif
 
     /**
      * slice flags
@@ -2496,31 +2487,20 @@ typedef struct AVCodec {
      * This is the primary way to find a codec from the user perspective.
      */
     const char *name;
-    enum AVMediaType type;
-    enum CodecID id;
-    int priv_data_size;
-    int (*init)(AVCodecContext *);
-    int (*encode)(AVCodecContext *, uint8_t *buf, int buf_size, void *data);
-    int (*close)(AVCodecContext *);
-    int (*decode)(AVCodecContext *, void *outdata, int *outdata_size, AVPacket *avpkt);
-    /**
-     * Codec capabilities.
-     * see CODEC_CAP_*
-     */
-    int capabilities;
-    struct AVCodec *next;
-    /**
-     * Flush buffers.
-     * Will be called when seeking
-     */
-    void (*flush)(AVCodecContext *);
-    const AVRational *supported_framerates; ///< array of supported framerates, or NULL if any, array is terminated by {0,0}
-    const enum PixelFormat *pix_fmts;       ///< array of supported pixel formats, or NULL if unknown, array is terminated by -1
     /**
      * Descriptive name for the codec, meant to be more human readable than name.
      * You should use the NULL_IF_CONFIG_SMALL() macro to define it.
      */
     const char *long_name;
+    enum AVMediaType type;
+    enum CodecID id;
+    /**
+     * Codec capabilities.
+     * see CODEC_CAP_*
+     */
+    int capabilities;
+    const AVRational *supported_framerates; ///< array of supported framerates, or NULL if any, array is terminated by {0,0}
+    const enum PixelFormat *pix_fmts;       ///< array of supported pixel formats, or NULL if unknown, array is terminated by -1
     const int *supported_samplerates;       ///< array of supported audio samplerates, or NULL if unknown, array is terminated by 0
     const enum AVSampleFormat *sample_fmts; ///< array of supported sample formats, or NULL if unknown, array is terminated by -1
     const uint64_t *channel_layouts;         ///< array of support channel layouts, or NULL if unknown. array is terminated by 0
@@ -2528,6 +2508,15 @@ typedef struct AVCodec {
     const AVClass *priv_class;              ///< AVClass for the private context
     const AVProfile *profiles;              ///< array of recognized profiles, or NULL if unknown, array is terminated by {FF_PROFILE_UNKNOWN}
 
+    /*****************************************************************
+     * No fields below this line are part of the public API. They
+     * may not be used outside of libavcodec and can be changed and
+     * removed at will.
+     * New public fields should be added right above.
+     *****************************************************************
+     */
+    int priv_data_size;
+    struct AVCodec *next;
     /**
      * @name Frame-level threading support functions
      * @{
@@ -2558,6 +2547,8 @@ typedef struct AVCodec {
      */
     void (*init_static_data)(struct AVCodec *codec);
 
+    int (*init)(AVCodecContext *);
+    int (*encode)(AVCodecContext *, uint8_t *buf, int buf_size, void *data);
     /**
      * Encode data to an AVPacket.
      *
@@ -2570,6 +2561,13 @@ typedef struct AVCodec {
      */
     int (*encode2)(AVCodecContext *avctx, AVPacket *avpkt, const AVFrame *frame,
                    int *got_packet_ptr);
+    int (*decode)(AVCodecContext *, void *outdata, int *outdata_size, AVPacket *avpkt);
+    int (*close)(AVCodecContext *);
+    /**
+     * Flush buffers.
+     * Will be called when seeking
+     */
+    void (*flush)(AVCodecContext *);
 } AVCodec;
 
 /**
@@ -2847,7 +2845,8 @@ int avcodec_get_context_defaults3(AVCodecContext *s, AVCodec *codec);
 
 /**
  * Allocate an AVCodecContext and set its fields to default values.  The
- * resulting struct can be deallocated by simply calling av_free().
+ * resulting struct can be deallocated by calling avcodec_close() on it followed
+ * by av_free().
  *
  * @param codec if non-NULL, allocate private data and initialize defaults
  *              for the given codec. It is illegal to then call avcodec_open2()
@@ -2943,6 +2942,11 @@ void avcodec_get_encoder_info(AVCodecContext *avctx,int *xvid_build,int *divx_ve
  * @endcode
  *
  * @param avctx The context to initialize.
+ * @param codec The codec to open this context for. If a non-NULL codec has been
+ *              previously passed to avcodec_alloc_context3() or
+ *              avcodec_get_context_defaults3() for this context, then this
+ *              parameter MUST be either NULL or equal to the previously passed
+ *              codec.
  * @param options A dictionary filled with AVCodecContext and codec-private options.
  *                On return this object will be filled with options that were not found.
  *
@@ -3199,6 +3203,15 @@ int avcodec_fill_audio_frame(AVFrame *frame, int nb_channels,
 int avcodec_encode_video(AVCodecContext *avctx, uint8_t *buf, int buf_size,
                          const AVFrame *pict);
 
+/**
+ * Close a given AVCodecContext and free all the data associated with it
+ * (but not the AVCodecContext itself).
+ *
+ * Calling this function on an AVCodecContext that hasn't been opened will free
+ * the codec-specific data allocated in avcodec_alloc_context3() /
+ * avcodec_get_context_defaults3() with a non-NULL codec. Subsequent calls will
+ * do nothing.
+ */
 int avcodec_close(AVCodecContext *avctx);
 
 /**
@@ -3442,11 +3455,11 @@ void *av_fast_realloc(void *ptr, unsigned int *size, size_t min_size);
 void av_fast_malloc(void *ptr, unsigned int *size, size_t min_size);
 
 /**
- * Same behaviour av_fast_malloc but the buffer has additional
- * FF_INPUT_PADDING_SIZE at the end which will will always be 0.
+ * Allocate a buffer with padding, reusing the given one if large enough.
  *
- * In addition the whole buffer will initially and after resizes
- * be 0-initialized so that no uninitialized data will ever appear.
+ * Same behaviour av_fast_malloc but the buffer has additional
+ * FF_INPUT_PADDING_SIZE at the end which will always memset to 0.
+ *
  */
 void av_fast_padded_malloc(void *ptr, unsigned int *size, size_t min_size);
 
@@ -3538,6 +3551,12 @@ enum AVMediaType avcodec_get_type(enum CodecID codec_id);
  * @see av_opt_find().
  */
 const AVClass *avcodec_get_class(void);
+
+/**
+ * @return a positive value if s is open (i.e. avcodec_open2() was called on it
+ * with no corresponding avcodec_close()), 0 otherwise.
+ */
+int avcodec_is_open(AVCodecContext *s);
 
 /**
  * ffdshow custom stuff

@@ -433,6 +433,7 @@ int avcodec_get_context_defaults3(AVCodecContext *s, AVCodec *codec){
     s->av_class = &av_codec_context_class;
 
     s->codec_type = codec ? codec->type : AVMEDIA_TYPE_UNKNOWN;
+    s->codec      = codec;
     av_opt_set_defaults(s);
 
     s->time_base           = (AVRational){0,1};
@@ -487,7 +488,7 @@ AVCodecContext *avcodec_alloc_context3(AVCodec *codec){
 
 int avcodec_copy_context(AVCodecContext *dest, const AVCodecContext *src)
 {
-    if (dest->codec) { // check that the dest context is uninitialized
+    if (avcodec_is_open(dest)) { // check that the dest context is uninitialized
         av_log(dest, AV_LOG_ERROR,
                "Tried to copy AVCodecContext %p into already-initialized %p\n",
                src, dest);
