@@ -68,34 +68,29 @@ void *av_fast_realloc(void *ptr, unsigned int *size, size_t min_size)
     return ptr;
 }
 
-static inline int ff_fast_malloc(void *ptr, unsigned int *size, size_t min_size, int zero_realloc)
+void av_fast_malloc(void *ptr, unsigned int *size, size_t min_size)
 {
     void **p = ptr;
     if (min_size < *size)
-        return 0;
+        return;
     min_size= FFMAX(17*min_size/16 + 32, min_size);
     av_free(*p);
-    *p = zero_realloc ? av_mallocz(min_size) : av_malloc(min_size);
+    *p = av_malloc(min_size);
     if (!*p) min_size = 0;
     *size= min_size;
-    return 1;
-}
-
-void av_fast_malloc(void *ptr, unsigned int *size, size_t min_size)
-{
-    ff_fast_malloc(ptr, size, min_size, 0);
 }
 
 void av_fast_padded_malloc(void *ptr, unsigned int *size, size_t min_size)
 {
-    uint8_t **p = ptr;
+    void **p = ptr;
     if (min_size > SIZE_MAX - FF_INPUT_BUFFER_PADDING_SIZE) {
-        *p = NULL;
+        av_freep(p);
         *size = 0;
         return;
     }
-    if (!ff_fast_malloc(p, size, min_size + FF_INPUT_BUFFER_PADDING_SIZE, 1))
-        memset(*p + min_size, 0, FF_INPUT_BUFFER_PADDING_SIZE);
+    av_fast_malloc(p, size, min_size + FF_INPUT_BUFFER_PADDING_SIZE);
+    if (*size)
+        memset((uint8_t *)*p + min_size, 0, FF_INPUT_BUFFER_PADDING_SIZE);
 }
 
 /* encoder management */
@@ -842,16 +837,14 @@ int ff_alloc_packet(AVPacket *avpkt, int size)
 
     if (avpkt->data) {
         uint8_t *pkt_data;
-        int pkt_size;
 
         if (avpkt->size < size)
             return AVERROR(EINVAL);
 
         pkt_data = avpkt->data;
-        pkt_size = avpkt->size;
         av_init_packet(avpkt);
         avpkt->data = pkt_data;
-        avpkt->size = pkt_size;
+        avpkt->size = size;
         return 0;
     } else {
         return av_new_packet(avpkt, size);
