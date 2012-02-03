@@ -232,6 +232,7 @@ const char_t *getCodecName(CodecID codecId)
      case  CODEC_ID_INDEO5            : return _l("indeo5");
      case  CODEC_ID_WMV3IMAGE         : return _l("wmvp");
      case  CODEC_ID_VC1IMAGE          : return _l("wvp2");
+     case  CODEC_ID_INDEO4            : return _l("indeo4");
 
      /* Well-known audio codecs */
      case  CODEC_ID_MP2               : return _l("mp2");

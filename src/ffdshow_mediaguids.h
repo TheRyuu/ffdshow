@@ -115,6 +115,7 @@
 #define FOURCC_RT21 mmioFOURCC('R','T','2','1')
 #define FOURCC_IV32 mmioFOURCC('I','V','3','2')
 #define FOURCC_IV31 mmioFOURCC('I','V','3','1')
+#define FOURCC_IV41 mmioFOURCC('I','V','4','1')
 #define FOURCC_IV50 mmioFOURCC('I','V','5','0')
 #define FOURCC_CVID mmioFOURCC('C','V','I','D')
 #define FOURCC_MSZH mmioFOURCC('M','S','Z','H')

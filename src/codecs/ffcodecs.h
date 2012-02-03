@@ -86,6 +86,7 @@ enum CodecID {
  CODEC_ID_INDEO5            = 73,
  CODEC_ID_WMV3IMAGE         = 74,
  CODEC_ID_VC1IMAGE          = 75,
+ CODEC_ID_INDEO4            = 76,
 
  /* Well-known audio codecs */
  CODEC_ID_MP2               = 100,

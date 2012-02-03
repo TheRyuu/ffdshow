@@ -399,8 +399,9 @@ TglobalSettingsDecVideo::TglobalSettingsDecVideo(const Tconfig *Iconfig,int Imod
         IDFF_cram           ,&TglobalSettingsDecVideo::cram           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
         IDFF_rt21           ,&TglobalSettingsDecVideo::rt21           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
         IDFF_iv32           ,&TglobalSettingsDecVideo::iv32           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-		IDFF_iv50           ,&TglobalSettingsDecVideo::iv50           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-		IDFF_i263           ,&TglobalSettingsDecVideo::i263           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_iv41           ,&TglobalSettingsDecVideo::iv41           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_iv50           ,&TglobalSettingsDecVideo::iv50           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_i263           ,&TglobalSettingsDecVideo::i263           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
         IDFF_cvid           ,&TglobalSettingsDecVideo::cvid           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
         IDFF_rv10           ,&TglobalSettingsDecVideo::rv10           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
         IDFF_rv30           ,&TglobalSettingsDecVideo::rv30           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
@@ -505,8 +506,9 @@ void TglobalSettingsDecVideo::reg_op_codec(TregOp &t,TregOp *t2)
     _reg_op_codec(IDFF_cram,t,t2,_l("cram"),cram,0);
     _reg_op_codec(IDFF_rt21,t,t2,_l("rt21"),rt21,0);
     _reg_op_codec(IDFF_iv32,t,t2,_l("iv32"),iv32,0);
-	_reg_op_codec(IDFF_iv50,t,t2,_l("iv50"),iv50,0);
-	_reg_op_codec(IDFF_i263,t,t2,_l("i263"),i263,0);
+    _reg_op_codec(IDFF_iv41,t,t2,_l("iv41"),iv41,0);
+    _reg_op_codec(IDFF_iv50,t,t2,_l("iv50"),iv50,0);
+    _reg_op_codec(IDFF_i263,t,t2,_l("i263"),i263,0);
     _reg_op_codec(IDFF_cvid,t,t2,_l("cvid"),cvid,0);
     _reg_op_codec(IDFF_rv10,t,t2,_l("rv10"),rv10,0);
     _reg_op_codec(IDFF_rv30,t,t2,_l("rv30"),rv30,0);
@@ -549,28 +551,28 @@ void TglobalSettingsDecVideo::fixNewCodecs(void)
     if (mpegAVI==2) {
         mpegAVI=IDFF_MOVIE_LIBMPEG2;
     }
-	if (dx50==21) {
+    if (dx50==21) {
         dx50=IDFF_MOVIE_LAVC;
     }
-	if (fvfw==21) {
+    if (fvfw==21) {
         fvfw=IDFF_MOVIE_LAVC;
     }
-	if (mp4v==21) {
+    if (mp4v==21) {
         mp4v=IDFF_MOVIE_LAVC;
     }
-	if (xvid==21) {
+    if (xvid==21) {
         xvid=IDFF_MOVIE_LAVC;
     }
-	if (vp3==21) {
+    if (vp3==21) {
         vp3=IDFF_MOVIE_LAVC;
     }
-	if (theo==21) {
+    if (theo==21) {
         theo=IDFF_MOVIE_LAVC;
     }
-	if (hfyu==21) {
+    if (hfyu==21) {
         hfyu=IDFF_MOVIE_LAVC;
     }
-	if (h264==21) {
+    if (h264==21) {
         h264=IDFF_MOVIE_LAVC;
     }
 }
@@ -583,7 +585,7 @@ void TglobalSettingsDecVideo::load(void)
     tregMode._REG_OP_S(IDFF_defaultPreset, L"activePreset", defaultPreset, countof(defaultPreset), FFPRESET_DEFAULT);
 
 #if 1
-	fixNewCodecs();
+    fixNewCodecs();
 #else
     if (needCodecFix) {
         fixNewCodecs();
@@ -632,8 +634,9 @@ void TglobalSettingsDecVideo::load(void)
     fixMissing(cram,IDFF_MOVIE_LAVC);
     fixMissing(rt21,IDFF_MOVIE_LAVC);
     fixMissing(iv32,IDFF_MOVIE_LAVC);
-	fixMissing(iv50,IDFF_MOVIE_LAVC);
-	fixMissing(i263,IDFF_MOVIE_LAVC);
+    fixMissing(iv41,IDFF_MOVIE_LAVC);
+    fixMissing(iv50,IDFF_MOVIE_LAVC);
+    fixMissing(i263,IDFF_MOVIE_LAVC);
     fixMissing(cvid,IDFF_MOVIE_LAVC);
     fixMissing(rv10,IDFF_MOVIE_LAVC);
     fixMissing(rv30,IDFF_MOVIE_LAVC);
@@ -775,6 +778,7 @@ void TglobalSettingsDecVideo::save(void)
  FF_FOURCC1_OP(RT21,rt21 & rawmask & dxvamask,CODEC_ID_INDEO2) \
  FF_FOURCC1_OP(IV32,iv32 & rawmask & dxvamask,CODEC_ID_INDEO3) \
  FF_FOURCC1_OP(IV31,iv32 & rawmask & dxvamask,CODEC_ID_INDEO3) \
+ FF_FOURCC1_OP(IV41,iv41 & rawmask & dxvamask,CODEC_ID_INDEO4) \
  FF_FOURCC1_OP(IV50,iv50 & rawmask & dxvamask,CODEC_ID_INDEO5) \
  FF_FOURCC1_OP(CVID,cvid & rawmask & dxvamask,CODEC_ID_CINEPAK) \
  FF_FOURCC1_OP(RV10,rv10 & rawmask & dxvamask,CODEC_ID_RV10) \
@@ -1109,8 +1113,8 @@ TglobalSettingsDecAudio::TglobalSettingsDecAudio(const Tconfig *Iconfig,int Imod
         IDFF_avisA                  ,&TglobalSettingsDecAudio::avis                   ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
         IDFF_rawa                   ,&TglobalSettingsDecAudio::rawa                   ,0,0             ,_l(""),0,NULL,0,
         IDFF_cook                   ,&TglobalSettingsDecAudio::cook                   ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-		IDFF_qtpcm                  ,&TglobalSettingsDecAudio::qtpcm                  ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-		IDFF_showCurrentVolume      ,&TglobalSettingsDecAudio::showCurrentVolume      ,0,0             ,_l(""),0,
+        IDFF_qtpcm                  ,&TglobalSettingsDecAudio::qtpcm                  ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+        IDFF_showCurrentVolume      ,&TglobalSettingsDecAudio::showCurrentVolume      ,0,0             ,_l(""),0,
         _l("showCurrentVolume"),0,
         IDFF_showCurrentFFT         ,&TglobalSettingsDecAudio::showCurrentFFT         ,0,0             ,_l(""),0,
         _l("showCurrentFFT"),0,
@@ -1186,7 +1190,7 @@ void TglobalSettingsDecAudio::reg_op_codec(TregOp &t,TregOp *t2)
     _reg_op_codec(IDFF_cook      ,t,t2,_l("cook")      ,cook      ,0);
     _reg_op_codec(IDFF_nellymoser,t,t2,_l("nellymoser"),nellymoser,0);
     _reg_op_codec(IDFF_wavpack   ,t,t2,_l("wavpack")   ,wavpack   ,0);
-	_reg_op_codec(IDFF_qtpcm     ,t,t2,_l("qtpcm")     ,qtpcm     ,0);
+    _reg_op_codec(IDFF_qtpcm     ,t,t2,_l("qtpcm")     ,qtpcm     ,0);
     _reg_op_codec(IDFF_avisA     ,t,t2,_l("avis")      ,avis      ,IDFF_MOVIE_AVIS);
     _reg_op_codec(IDFF_rawa      ,t,t2,filtermode&IDFF_FILTERMODE_AUDIORAW?_l("raw_rawa"):_l("rawa"),rawa,filtermode&IDFF_FILTERMODE_AUDIORAW?IDFF_MOVIE_RAW:0);
 }
@@ -1224,7 +1228,7 @@ void TglobalSettingsDecAudio::load(void)
     fixMissing(cook      ,IDFF_MOVIE_LAVC);
     fixMissing(nellymoser,IDFF_MOVIE_LAVC);
     fixMissing(wavpack   ,IDFF_MOVIE_LAVC);
-	fixMissing(qtpcm     ,IDFF_MOVIE_RAW);
+    fixMissing(qtpcm     ,IDFF_MOVIE_RAW);
 }
 
 void TglobalSettingsDecAudio::save(void)

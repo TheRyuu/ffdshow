@@ -96,6 +96,7 @@ SRCS_C=\
     libavcodec/imgconvert.c \
     libavcodec/indeo2.c \
     libavcodec/indeo3.c \
+    libavcodec/indeo4.c \
     libavcodec/indeo5.c \
     libavcodec/intelh263dec.c \
     libavcodec/intrax8.c \
