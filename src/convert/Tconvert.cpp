@@ -40,7 +40,8 @@ Tconvert::Tconvert(IffdshowBase *deci,unsigned int Idx,unsigned int Idy,LONG dst
     TrgbPrimaries(deci),
     m_wasChange(false),
     m_dstSize(dstSize),
-    tmpcsp(0)
+    tmpcsp(0),
+    timer(L"color space conversion cost:")
 {
     Tlibavcodec *libavcodec;
     deci->getLibavcodec(&libavcodec);
@@ -58,7 +59,8 @@ Tconvert::Tconvert(Tlibavcodec *Ilibavcodec, bool highQualityRGB, unsigned int I
     TrgbPrimaries(IrgbPrimaries),
     m_wasChange(false),
     m_dstSize(0),
-    tmpcsp(0)
+    tmpcsp(0),
+    timer(L"color space conversion cost:")
 {
     Ilibavcodec->AddRef();
     init(Ilibavcodec,highQualityRGB,Idx,Idy,rgbInterlaceMode,dithering,isMPEG1);
@@ -81,8 +83,6 @@ void Tconvert::init(Tlibavcodec *Ilibavcodec,bool highQualityRGB,unsigned int Id
     m_dithering = dithering;
     rgbInterlaceMode = IrgbInterlaceMode;
     ffdshow_converters = NULL;
-    timer = 0;
-    counter_for_timer = 0;
 }
 
 Tconvert::~Tconvert()
@@ -520,10 +520,7 @@ int Tconvert::convert(uint64_t incsp0,
         return 0;
     }
 
-#define CONVERT_TIMER 0
-#if CONVERT_TIMER
-    timer_start();
-#endif
+    TautoPerformanceCounter autoTimer(&timer);
     int ret = dy;
     switch (mode) {
         case MODE_fast_copy: {
@@ -699,9 +696,6 @@ int Tconvert::convert(uint64_t incsp0,
         default:
             return 0;
     }
-#if CONVERT_TIMER
-    timer_stop();
-#endif
     return ret;
 }
 int Tconvert::convert(const TffPict &pict,uint64_t outcsp,uint8_t* dst[],stride_t dstStride[],bool vram_indirect)
@@ -781,21 +775,6 @@ void Tconvert::copyPlane(BYTE *dstp,stride_t dst_pitch,const BYTE *srcp,stride_t
             }
         }
     }
-}
-
-void Tconvert::timer_start()
-{
-    QueryPerformanceCounter(&tmp_timer);
-}
-
-void Tconvert::timer_stop()
-{
-    int64_t t0 = tmp_timer.QuadPart;
-    QueryPerformanceCounter(&tmp_timer);
-    uint64_t t = tmp_timer.QuadPart - t0;
-    timer += t;
-    counter_for_timer++;
-    DPRINTF(L"color space conversion cost: %I64d average: %I64d", t, timer/counter_for_timer);
 }
 
 //================================= TffColorspaceConvert =================================

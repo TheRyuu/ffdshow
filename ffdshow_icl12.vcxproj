@@ -348,6 +348,7 @@
     <ClCompile Include="src\Tinfo.cpp" />
     <ClCompile Include="src\TinputPin.cpp" />
     <ClCompile Include="src\TkeyboardDirect.cpp" />
+    <ClCompile Include="src\TPerformanceCounter.cpp" />
     <ClCompile Include="src\TtextInputPin.cpp" />
     <ClCompile Include="src\Ttranslate.cpp" />
     <ClCompile Include="src\TtrayIcon.cpp" />
@@ -766,6 +767,7 @@
     <ClInclude Include="src\TkeyboardDirect.h" />
     <ClInclude Include="src\subtitles\TsubtitleDVD.h" />
     <ClInclude Include="src\subtitles\TsubtitlePGSParser.h" />
+    <ClInclude Include="src\TPerformanceCounter.h" />
     <ClInclude Include="src\TtextInputPin.h" />
     <ClInclude Include="src\Ttimer.h" />
     <ClInclude Include="src\Ttranslate.h" />

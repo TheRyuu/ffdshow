@@ -2,10 +2,12 @@
 #define _TIMGFILTERDENOISE3D_H_
 
 #include "TimgFilter.h"
+#include "TPerformanceCounter.h"
 
 DECLARE_FILTER(TimgFilterDenoise3d,public,TimgFilter)
 private:
 int oldLuma,oldChroma,oldTime;
+TPerformanceCounter timer;
 protected:
 int FrameStride[3];
 TimgFilterDenoise3d(IffdshowBase *Ideci,Tfilters *Iparent);

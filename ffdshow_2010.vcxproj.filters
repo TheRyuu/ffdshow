@@ -1370,6 +1370,9 @@
     <ClCompile Include="src\dialog\CquantTables.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\TPerformanceCounter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <yasm Include="src\cpuid.asm">
@@ -2689,6 +2692,9 @@
       <Filter>subtitles</Filter>
     </ClInclude>
     <ClInclude Include="src\dialog\CquantTables.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TPerformanceCounter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

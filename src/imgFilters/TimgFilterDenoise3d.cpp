@@ -25,7 +25,9 @@
 #include "simd.h"
 
 //===================================== TimgFilterDenoise3d =====================================
-TimgFilterDenoise3d::TimgFilterDenoise3d(IffdshowBase *Ideci,Tfilters *Iparent):TimgFilter(Ideci,Iparent)
+TimgFilterDenoise3d::TimgFilterDenoise3d(IffdshowBase *Ideci,Tfilters *Iparent):
+    TimgFilter(Ideci,Iparent),
+    timer(L"denoise 3d cost:")
 {
     oldLuma=oldChroma=oldTime=-2;
 }
@@ -69,6 +71,7 @@ HRESULT TimgFilterDenoise3d::process(TfilterQueue::iterator it,TffPict &pict,con
             done();
         }
 
+        TautoPerformanceCounter autoTimer(&timer);
         deNoise(pict,dx1[0],dy1[0],src,stride1,dst,stride2);
     }
     return parent->processSample(++it,pict);

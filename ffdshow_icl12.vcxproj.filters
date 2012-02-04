@@ -1274,9 +1274,6 @@
     <ClCompile Include="src\audioFilters\TffProcAudio.cpp">
       <Filter>audioFilters\com</Filter>
     </ClCompile>
-    <ClCompile Include="src\2pass.cpp">
-      <Filter>ffvfw</Filter>
-    </ClCompile>
     <ClCompile Include="src\codecs\TencStats.cpp">
       <Filter>ffvfw</Filter>
     </ClCompile>
@@ -1284,9 +1281,6 @@
       <Filter>ffvfw</Filter>
     </ClCompile>
     <ClCompile Include="src\Tffvfw.cpp">
-      <Filter>ffvfw</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Tperfect.cpp">
       <Filter>ffvfw</Filter>
     </ClCompile>
     <ClCompile Include="src\muxers\Tmuxer.cpp">
@@ -1374,6 +1368,9 @@
       <Filter>convert</Filter>
     </ClCompile>
     <ClCompile Include="src\dialog\CquantTables.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TPerformanceCounter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -2577,9 +2574,6 @@
     <ClInclude Include="src\audioFilters\TffProcAudio.h">
       <Filter>audioFilters\com</Filter>
     </ClInclude>
-    <ClInclude Include="src\2pass.h">
-      <Filter>ffvfw</Filter>
-    </ClInclude>
     <ClInclude Include="src\IffdshowEnc.h">
       <Filter>ffvfw</Filter>
     </ClInclude>
@@ -2590,9 +2584,6 @@
       <Filter>ffvfw</Filter>
     </ClInclude>
     <ClInclude Include="src\Tffvfw.h">
-      <Filter>ffvfw</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Tperfect.h">
       <Filter>ffvfw</Filter>
     </ClInclude>
     <ClInclude Include="src\muxers\Tmuxer.h">
@@ -2701,6 +2692,9 @@
       <Filter>subtitles</Filter>
     </ClInclude>
     <ClInclude Include="src\dialog\CquantTables.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TPerformanceCounter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

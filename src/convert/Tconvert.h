@@ -7,6 +7,7 @@
 #include "TrgbPrimaries.h"
 #include "libavcodec/avcodec.h"
 #include "Tconfig.h"
+#include "TPerformanceCounter.h"
 
 //#define AVISYNTH_BITBLT //use avisynth bitblt (memcpy) function to just copy frame when no colorspace conversion is needed
 #define XVID_BITBLT //use xvid's YV12 -> YV12 copy function - seems to be fastest
@@ -71,12 +72,8 @@ private:
     Tconvert *tmpConvert1,*tmpConvert2;
     unsigned int rowsize;
     void freeTmpConvert(void);
+    TPerformanceCounter timer;
 
-    uint64_t timer;
-    LARGE_INTEGER tmp_timer;
-    int counter_for_timer;
-    void timer_start();
-    void timer_stop();
 public:
     bool m_wasChange;
     LONG m_dstSize;
