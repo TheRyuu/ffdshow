@@ -653,19 +653,21 @@ void TrenderedTextSubtitleWord::ffCreateWidenedRegion()
 
     // Prepare matrix for outline calculation
     short *matrix=NULL;
-    unsigned int matrixSizeH = ((m_outlineWidth*2+8)/8)*8; // 2 bytes for one.
+    int owx = std::max<int>(outlineWidth_double * mprops.scaleX, overhang.left);
+    unsigned int matrixSizeH = ffalign(owx*2, 8); // 2 bytes for one.
     unsigned int matrixSizeV = m_outlineWidth*2+1;
 
     double r_cutoff=1.5;
     if (outlineWidth_double<4.5) {
         r_cutoff=outlineWidth_double/3.0;
     }
+    double xc = 1 / mprops.scaleX / mprops.scaleX;
     double r_mul=512.0/r_cutoff;
     matrix=(short*)aligned_calloc(matrixSizeH*2,matrixSizeV,16);
     for (int y = -m_outlineWidth ; y <= m_outlineWidth ; y++)
-        for (int x = -m_outlineWidth ; x <= m_outlineWidth ; x++) {
-            int pos=(y + m_outlineWidth)*matrixSizeH+x+m_outlineWidth;
-            double r=0.5+outlineWidth_double-sqrt(double(x*x+y*y));
+        for (int x = -owx ; x <= owx ; x++) {
+            int pos=(y + m_outlineWidth) * matrixSizeH + x + owx;
+            double r = 0.5 + outlineWidth_double - sqrt(double(x*x*xc + y*y));
             if (r>r_cutoff) {
                 matrix[pos]=512;
             } else if (r>0) {
@@ -673,8 +675,10 @@ void TrenderedTextSubtitleWord::ffCreateWidenedRegion()
             }
         }
 
-    unsigned int max_outline_pos_x  = dx[0] - overhang.right + m_outlineWidth;
+    unsigned int max_outline_pos_x  = dx[0] - overhang.right + owx;
     unsigned int max_outline_pos_y  = dy[0] - overhang.bottom + m_outlineWidth;
+    unsigned int startx = overhang.left - owx;
+    unsigned int starty = overhang.top - m_outlineWidth;
 
     TexpandedGlyph expanded(*this);
     if (Tconfig::cpu_flags&FF_CPU_SSE2
@@ -684,8 +688,8 @@ void TrenderedTextSubtitleWord::ffCreateWidenedRegion()
        ) {
         size_t matrixSizeH_sse2 = matrixSizeH >> 3;
         size_t srcStrideGap = expanded.dx - matrixSizeH;
-        for (unsigned int y = overhang.top - m_outlineWidth ; y < max_outline_pos_y ; y++)
-            for (unsigned int x = overhang.left - m_outlineWidth ; x < max_outline_pos_x ; x++) {
+        for (unsigned int y = starty ; y < max_outline_pos_y ; y++)
+            for (unsigned int x = startx ; x < max_outline_pos_x ; x++) {
                 unsigned int sum=fontPrepareOutline_sse2((unsigned char*)expanded + expanded.dx * y + x , srcStrideGap, matrix, matrixSizeH_sse2, matrixSizeV) >> 9;
                 msk[0][dx[0]*y+x] = std::min<unsigned int>(sum, 64);
             }
@@ -695,8 +699,8 @@ void TrenderedTextSubtitleWord::ffCreateWidenedRegion()
         size_t matrixSizeH_mmx=(matrixSizeV+3)/4;
         size_t srcStrideGap = expanded.dx - matrixSizeH_mmx * 4;
         size_t matrixGap=matrixSizeH_mmx & 1 ? 8 : 0;
-        for (unsigned int y = overhang.top - m_outlineWidth ; y < max_outline_pos_y ; y++) {
-            for (unsigned int x = overhang.left - m_outlineWidth ; x < max_outline_pos_x ; x++) {
+        for (unsigned int y = starty ; y < max_outline_pos_y ; y++) {
+            for (unsigned int x = startx ; x < max_outline_pos_x ; x++) {
                 unsigned int sum=fontPrepareOutline_mmx((unsigned char*)expanded + expanded.dx * y + x, srcStrideGap, matrix, matrixSizeH_mmx, matrixSizeV, matrixGap) >> 9;
                 msk[0][dx[0]*y+x] = std::min<unsigned int>(sum, 64);
             }
@@ -704,8 +708,8 @@ void TrenderedTextSubtitleWord::ffCreateWidenedRegion()
     }
 #endif
     else {
-        for (unsigned int y = overhang.top - m_outlineWidth ; y < max_outline_pos_y ; y++)
-            for (unsigned int x = overhang.left - m_outlineWidth ; x < max_outline_pos_x ; x++) {
+        for (unsigned int y = starty ; y < max_outline_pos_y ; y++)
+            for (unsigned int x = startx ; x < max_outline_pos_x ; x++) {
                 unsigned char *srcPos=(unsigned char*)expanded + expanded.dx * y + x;
                 unsigned int sum=0;
                 for (unsigned int yy=0; yy<matrixSizeV; yy++,srcPos+=mGlyphBmpWidth-matrixSizeV)

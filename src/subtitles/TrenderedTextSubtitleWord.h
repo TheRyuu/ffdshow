@@ -164,11 +164,12 @@ private:
         int dx;
         int dy;
         TexpandedGlyph(const TrenderedTextSubtitleWord &word) {
-            dx = word.dx[0] + 2 * word.m_outlineWidth;
+            int owx = ceil(word.m_outlineWidth * word.mprops.scaleX);
+            dx = word.dx[0] + 2 * owx;
             dy = word.dy[0] + 2 * word.m_outlineWidth;
             expBmp = aligned_calloc3<uint8_t>(dx, dy, 16);
             for (unsigned int y = 0 ; y < word.dy[0] ; y++) {
-                memcpy(expBmp + dx * (y + word.m_outlineWidth)+ word.m_outlineWidth, word.bmp[0] + word.dx[0] * y, word.dx[0]);
+                memcpy(expBmp + dx * (y + word.m_outlineWidth)+ owx, word.bmp[0] + word.dx[0] * y, word.dx[0]);
             }
         }
 
