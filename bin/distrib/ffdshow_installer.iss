@@ -402,7 +402,7 @@ Name: {group}\{cm:shrt_uninstall}; Filename: {uninstallexe}
 Name: {group}\{cm:shrt_homepage}; Filename: http://ffdshow-tryout.sourceforge.net/; IconFilename: {app}\ffdshow.ax; IconIndex: 9; Components: ffdshow
 
 [Files]
-; For speaker config
+; For speaker config and QuickSync detection
 Source: "ffSpkCfg.dll"; Flags: dontcopy
 
 Source: "{#= bindir}\ffmpeg.dll";                 DestDir: "{app}";                         Components: ffdshow;                    Flags: ignoreversion
@@ -1201,6 +1201,7 @@ function ShouldSkipPage(PageID: Integer): Boolean;
 var
   regval: String;
 begin
+  Result := False;
   if PageID = wpLicense then begin
     Result := IsUpdate;
   end;
