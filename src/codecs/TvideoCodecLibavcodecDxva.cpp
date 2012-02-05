@@ -854,7 +854,6 @@ int TvideoCodecLibavcodecDxva::useDXVA(void)
 HRESULT TvideoCodecLibavcodecDxva::decompress(const unsigned char *src,size_t srcLen0,IMediaSample *pIn)
 {
     HRESULT hr = S_OK;
-    REFERENCE_TIME rtStart = REFTIME_INVALID,rtStop = REFTIME_INVALID;
     TffdshowVideoInputPin::TrateAndFlush *rateInfo = (TffdshowVideoInputPin::TrateAndFlush*)deciV->getRateInfo();
 
     if (pIn && pIn->IsDiscontinuity() == S_OK) {
@@ -862,12 +861,7 @@ HRESULT TvideoCodecLibavcodecDxva::decompress(const unsigned char *src,size_t sr
     }
 
     if (pIn) {
-        HRESULT hr1 = pIn->GetTime(&rtStart,&rtStop);
-        if (hr1 == VFW_S_NO_STOP_TIME)
-            rtStop = REFTIME_INVALID;
-        if (hr1 == VFW_E_SAMPLE_TIME_NOT_SET) {
-            rtStart = rtStop = REFTIME_INVALID;
-        }
+        pIn->GetTime(&rtStart,&rtStop);
     }
 
     b[inPosB].rtStart=rtStart;
