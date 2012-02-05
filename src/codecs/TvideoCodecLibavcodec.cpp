@@ -537,7 +537,7 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
     if (palette_size) {
         uint32_t *pal = (uint32_t *)libavcodec->av_packet_new_side_data(&avpkt, AV_PKT_DATA_PALETTE, AVPALETTE_SIZE);
         for (int i = 0; i < palette_size/4; i++) {
-            pal[i] = 0xFF<<24 | AV_RL32(palette+4*i);
+            pal[i] = 0xFF<<24 | AV_RL32(palette+i);
         }
     }
 
