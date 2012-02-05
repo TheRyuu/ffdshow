@@ -17,8 +17,8 @@ type
 procedure GetSystemInfo(var lpSystemInfo: TSystemInfo);
 external 'GetSystemInfo@kernel32.dll stdcall';
 
-function IsProcessorFeaturePresent(Feature: Integer): Boolean;
-external 'IsProcessorFeaturePresent@kernel32.dll stdcall';
+function IsProcessorFeaturePresent(Feature: Integer): Boolean;  external 'IsProcessorFeaturePresent@kernel32.dll stdcall';
+function QuickSyncCheck(): DWORD; external 'getQsCaps@files:ffSpkCfg.dll stdcall delayload';
 
 var
 	cpu_sse: Boolean;
@@ -30,6 +30,7 @@ var
 procedure DetectCPU();
 var
   SysInfo: TSystemInfo;
+  qs_check: DWORD;
 begin
 	cpu_sse := IsProcessorFeaturePresent(6);
 	cpu_sse2 := IsProcessorFeaturePresent(10);
@@ -37,7 +38,10 @@ begin
 	GetSystemInfo(SysInfo);
 	cpu_level := SysInfo.wProcessorLevel;
 	
-	cpu_intel_qs := (SysInfo.wProcessorArchitecture = 0) AND (SysInfo.wProcessorLevel >= 6) AND ((SysInfo.wProcessorRevision DIV 256) = 42);
+	cpu_intel_qs := False;
+	#if include_quicksync
+		cpu_intel_qs := (InstallOnThisVersion('0,6','0,0') = irInstall) AND (SysInfo.wProcessorArchitecture = 0) AND (cpu_level >= 6) AND (QuickSyncCheck > 0);
+	#endif
 	
 	cpu_cores := SysInfo.dwNumberOfProcessors;
 	if cpu_cores > 8 then begin

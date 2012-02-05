@@ -39,6 +39,10 @@
     <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;..\codecs\IntelQuickSyncDecoder\src\MSDK\include</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;..\codecs\IntelQuickSyncDecoder\src\MSDK\include</IncludePath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib;..\codecs\IntelQuickSyncDecoder\src\MSDK\lib\$(PlatformName)</LibraryPath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib;..\codecs\IntelQuickSyncDecoder\src\MSDK\lib\$(PlatformName)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -50,7 +54,7 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>kernel32.lib;Dsound.lib</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;Dsound.lib;libmfx.lib;Advapi32.lib</AdditionalDependencies>
       <OutputFile>..\..\bin\distrib\ffSpkCfg.dll</OutputFile>
       <ModuleDefinitionFile>ffSpkCfg.def</ModuleDefinitionFile>
       <TargetMachine>MachineX86</TargetMachine>
@@ -66,7 +70,7 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>kernel32.lib;Dsound.lib</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;Dsound.lib;libmfx.lib;Advapi32.lib</AdditionalDependencies>
       <OutputFile>..\..\bin\distrib\ffSpkCfg.dll</OutputFile>
       <ModuleDefinitionFile>ffSpkCfg.def</ModuleDefinitionFile>
       <TargetMachine>MachineX86</TargetMachine>

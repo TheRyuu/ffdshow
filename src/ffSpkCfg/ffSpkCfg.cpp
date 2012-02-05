@@ -42,6 +42,7 @@
  */
 
 #include "dsound.h"
+#include <mfxvideo++.h>
 
 extern "C" int __stdcall getSpeakerConfig(void)
 {
@@ -59,4 +60,43 @@ extern "C" int __stdcall getSpeakerConfig(void)
         return DSSPEAKER_STEREO;
     }
     return DSSPEAKER_CONFIG(dwSpeakerConfig);
+}
+
+enum QsCaps
+{
+    QS_CAP_UNSUPPORTED      = 0,
+    QS_CAP_HW_ACCELERATION  = 1,
+    QS_CAP_SW_EMULATION     = 2
+};
+
+DWORD __stdcall getQsCaps()
+{
+    mfxVersion apiVersion = {1, 1};
+    MFXVideoSession* pSession = new MFXVideoSession;
+    mfxIMPL impl = MFX_IMPL_AUTO_ANY;
+    mfxStatus sts = pSession->Init(impl, &apiVersion);
+    if (sts != MFX_ERR_NONE) return QS_CAP_UNSUPPORTED;
+
+    pSession->QueryIMPL(&impl);
+
+    DWORD caps;
+    if (impl == MFX_IMPL_SOFTWARE)
+    {
+        caps = QS_CAP_SW_EMULATION;
+    }
+    else
+    {
+        caps = QS_CAP_HW_ACCELERATION;
+
+        // test SW emulation
+        pSession->Close();
+        sts = pSession->Init(MFX_IMPL_SOFTWARE, &apiVersion);
+        if (MFX_ERR_NONE == sts)
+        {
+            caps |= QS_CAP_SW_EMULATION;
+        }
+    }
+
+    delete pSession;
+    return caps;
 }
