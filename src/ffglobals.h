@@ -405,6 +405,16 @@ static inline int ffalign(unsigned int x, int align)
     return (x + align - 1) & ~(align - 1);
 }
 
+class REFERENCE_TIME_to_hhmmssmmm {
+private:
+    wchar_t str[16];
+public:
+    REFERENCE_TIME_to_hhmmssmmm(REFERENCE_TIME reftime);
+    const wchar_t* get_str() {
+        return str;
+    }
+};
+
 template<typename T> inline const T& bswap(T& var)
 {
     BYTE* s = (BYTE*)&var;

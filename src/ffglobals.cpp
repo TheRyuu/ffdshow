@@ -34,6 +34,22 @@ const char_t *FFDSHOW_VER=_l(__DATE__) _l(" ") _l(__TIME__) _l(" (") _l(COMPILER
 #undef COMPILER_SSE2
 #undef COMPILER_X64
 
+REFERENCE_TIME_to_hhmmssmmm::REFERENCE_TIME_to_hhmmssmmm(REFERENCE_TIME reftime)
+{
+    if (reftime == REFTIME_INVALID) {
+        ff_strncpy(str, L"REFTIME_INVALID", countof(str));
+    } else {
+        reftime /= 10000;
+        int ms = reftime % 1000;
+        reftime /= 1000;
+        int sec = reftime % 60;
+        reftime /= 60;
+        int min = reftime % 60;
+        int hour = int(reftime / 60);
+        _snwprintf_s(str, countof(str), _TRUNCATE, L"%02d:%02d:%02d.%03d", hour, min, sec, ms);
+    }
+}
+
 const wchar_t* filterMode2regkey(int filtermode)
 {
     if(filtermode & IDFF_FILTERMODE_VIDEODXVA)
