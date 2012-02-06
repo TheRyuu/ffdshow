@@ -709,7 +709,9 @@
 #define IDFF_frameType                   31
 #define IDFF_frameSize                   41
 #define IDFF_OSDtype_frameMD5          1548
-#define IDFF_OSDtype_frameTimestamps   1553
+#define IDFF_OSDtype_frameTimestamps   1553 // deprecated. Use IDFF_OSDtype_rawFrameTimestamps instead.
+#define IDFF_OSDtype_rawFrameTimestamps 1553
+#define IDFF_OSDtype_frameTimestamps2  3574
 #define IDFF_OSDtype_frameDuration     1554
 #define IDFF_OSDtype_h264_poc          3523
 #define IDFF_OSDtype_exeflnm           1556
@@ -1376,6 +1378,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//next:3574
+//next:3575
 
 #endif

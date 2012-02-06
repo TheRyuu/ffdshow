@@ -90,10 +90,15 @@ const char_t* TimgFilterOSD::TosdLine::TosdValue::getVal(bool &wasChange,bool &s
             wasChange=true;
             break;
         }
-        case IDFF_OSDtype_frameTimestamps: {
+        case IDFF_OSDtype_frameTimestamps2: {
             REFERENCE_TIME_to_hhmmssmmm start(pict.rtStart);
             REFERENCE_TIME_to_hhmmssmmm stop(pict.rtStop);
             tsprintf(s,_l("%s - %s"), start.get_str(), stop.get_str());
+            wasChange=true;
+            break;
+        }
+        case IDFF_OSDtype_rawFrameTimestamps: {
+            tsprintf(s,_l("%I64i - %I64i"),pict.rtStart,pict.rtStop);
             wasChange=true;
             break;
         }

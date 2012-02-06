@@ -481,7 +481,8 @@ TinfoDecVideoPict::TinfoDecVideoPict(IffdshowBase *Ideci):TinfoDecVideo(Ideci)
         IDFF_frameSize,_l("Coded frame size"),_l("cfsz"),
         IDFF_OSDtype_gmcWarpPoints,_l("GMC warp points"),_l("gmc"),
         IDFF_OSDtype_frameMD5,_l("MD5 sum"),_l("md5"),
-        IDFF_OSDtype_frameTimestamps,_l("Frame timestamps"),_l("fpts"),
+        IDFF_OSDtype_rawFrameTimestamps,L"Raw frame timestamps",L"fpts",
+        IDFF_OSDtype_frameTimestamps2,L"Frame timestamps",L"fts",
         IDFF_OSDtype_frameDuration,_l("Frame duration"),_l("fdur"),
 #ifdef OSD_H264POC
         IDFF_OSDtype_h264_poc,_l("H.264 poc"),_l("poc"),
