@@ -707,7 +707,7 @@ void TglobalSettingsDecVideo::save(void)
  FF_FOURCC1_OP(VP62,vp6 & rawmask & dxvamask,CODEC_ID_VP6) \
  FF_FOURCC1_OP(VP6F,vp6f & rawmask & dxvamask,CODEC_ID_VP6F) \
  FF_FOURCC1_OP(FLV4,vp6f & rawmask & dxvamask,CODEC_ID_VP6F) \
- FF_FOURCC1_OP(VP6A,vp6f & rawmask & dxvamask,CODEC_ID_VP6F) \
+ /*FF_FOURCC1_OP(VP6A,vp6f & rawmask & dxvamask,CODEC_ID_VP6F)*/ \
  FF_FOURCC1_OP(VP80,vp8 & rawmask & dxvamask,CODEC_ID_VP8) \
  FF_FOURCC1_OP(CAVS,cavs & rawmask & dxvamask,CODEC_ID_CAVS) \
  FF_FOURCC_OP (MPG1,mpg1 & rawmask & dxvamask,c_mpeg1) \
