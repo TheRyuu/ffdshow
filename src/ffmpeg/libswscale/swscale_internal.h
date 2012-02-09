@@ -70,8 +70,8 @@ typedef struct SwsThreadParam {
 } SwsThreadParam;
 
 typedef int (*SwsFunc)(struct SwsContext *context, const uint8_t *src[],
-                       stride_t srcStride[], int srcSliceY, int srcSliceH,
-                       uint8_t *dst[], stride_t dstStride[]);
+                       int srcStride[], int srcSliceY, int srcSliceH,
+                       uint8_t *dst[], int dstStride[]);
 
 /**
  * Write one line of horizontally scaled data to planar output

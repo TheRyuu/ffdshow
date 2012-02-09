@@ -112,7 +112,7 @@ Tlibavcodec::Tlibavcodec(const Tconfig *config):refcount(0)
  dll->loadFunction(sws_freeContext, "sws_freeContext");
  dll->loadFunction(sws_getDefaultFilter, "sws_getDefaultFilter");
  dll->loadFunction(sws_freeFilter, "sws_freeFilter");
- dll->loadFunction(sws_scale, "sws_scale");
+ dll->loadFunction(libswscale_sws_scale, "sws_scale");
 
  dll->loadFunction(GetCPUCount, "GetCPUCount");
  dll->loadFunction(sws_getConstVec, "sws_getConstVec");
@@ -336,6 +336,14 @@ void Tlibavcodec::avlogMsgBox(AVCodecContext *avctx,int level,const char *fmt,va
      MessageBoxA(NULL,buf,"ffdshow libavcodec encoder error",MB_ICONERROR|MB_OK);
     }
   }
+}
+
+int Tlibavcodec::sws_scale(struct SwsContext *context, const uint8_t* const srcSlice[], const stride_t srcStride[],
+              int srcSliceY, int srcSliceH, uint8_t* const dst[], const stride_t dstStride[])
+{
+    int srcStride1[4]={int(srcStride[0]),int(srcStride[1]),int(srcStride[2]),int(srcStride[3])};
+    int dstStride1[4]={int(dstStride[0]),int(dstStride[1]),int(dstStride[2]),int(dstStride[3])};
+    return libswscale_sws_scale(context, srcSlice, srcStride1, srcSliceY, srcSliceH, dst, dstStride1);
 }
 
 //=================================== TlibavcodecExt ===================================

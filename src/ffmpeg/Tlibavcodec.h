@@ -26,6 +26,8 @@ struct TlibavcodecExt;
 struct Tlibavcodec
 {
 private:
+ int (*libswscale_sws_scale)(struct SwsContext *context, const uint8_t* const srcSlice[], const int srcStride[],
+              int srcSliceY, int srcSliceH, uint8_t* const dst[], const int dstStride[]);
  Tdll *dll;
  int refcount;
  static int get_buffer(AVCodecContext *c, AVFrame *pic);
@@ -119,7 +121,7 @@ public:
                                 float chromaHShift, float chromaVShift,
                                 int verbose);
  void (*sws_freeFilter)(SwsFilter *filter);
- int (*sws_scale)(struct SwsContext *context, const uint8_t* const srcSlice[], const stride_t srcStride[],
+ int sws_scale(struct SwsContext *context, const uint8_t* const srcSlice[], const stride_t srcStride[],
               int srcSliceY, int srcSliceH, uint8_t* const dst[], const stride_t dstStride[]);
  SwsVector *(*sws_getConstVec)(double c, int length);
  SwsVector *(*sws_getGaussianVec)(double variance, double quality);

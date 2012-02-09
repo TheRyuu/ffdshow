@@ -308,8 +308,8 @@ static av_always_inline void hcscale(SwsContext *c, int16_t *dst1, int16_t *dst2
 
 __attribute__((force_align_arg_pointer)) /* ffdshow custom attribute */
 static int swScaleMod(SwsContext *c, const uint8_t* src[],
-                   stride_t srcStride[], int srcSliceY,
-                   int srcSliceH, uint8_t* dst[], stride_t dstStride[], int dstYstart, int dstYend)
+                   int srcStride[], int srcSliceY,
+                   int srcSliceH, uint8_t* dst[], int dstStride[], int dstYstart, int dstYend)
 {
     /* load a few things into local vars to make the code more readable? and faster */
     const int srcW= c->srcW;
