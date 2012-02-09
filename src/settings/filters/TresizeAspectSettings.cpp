@@ -191,7 +191,7 @@ TresizeAspectSettings::TresizeAspectSettings(TintStrColl *Icoll,TfilterIDFFs *fi
         IDFF_resizeInterlaced      ,&TresizeAspectSettings::interlaced      ,0,2,_l(""),1,
         _l("resizeInterlaced"),0,
         IDFF_resizeAccurateRounding,&TresizeAspectSettings::accurateRounding,0,0,_l(""),1,
-        _l("resizeAccurateRounding2"),0,
+        _l("resizeAccurateRounding"),1,
         0
     };
     addOptions(iopts);
