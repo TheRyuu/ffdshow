@@ -1,20 +1,20 @@
 /*
- * Copyright (C) 2001-2011 Michael Niedermayer <michaelni@gmx.at>
+ * Copyright (C) 2001-2003 Michael Niedermayer <michaelni@gmx.at>
  *
- * This file is part of FFmpeg.
+ * This file is part of Libav.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * Libav is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * Libav is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with Libav; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -38,7 +38,7 @@ extern "C" {
 
 #define LIBSWSCALE_VERSION_MAJOR 2
 #define LIBSWSCALE_VERSION_MINOR 1
-#define LIBSWSCALE_VERSION_MICRO 100
+#define LIBSWSCALE_VERSION_MICRO 0
 
 #define LIBSWSCALE_VERSION_INT  AV_VERSION_INT(LIBSWSCALE_VERSION_MAJOR, \
                                                LIBSWSCALE_VERSION_MINOR, \
@@ -69,9 +69,6 @@ typedef struct SwsParams {
 #endif
 #ifndef FF_API_SWS_CPU_CAPS
 #define FF_API_SWS_CPU_CAPS    (LIBSWSCALE_VERSION_MAJOR < 3)
-#endif
-#ifndef FF_API_SWS_FORMAT_NAME
-#define FF_API_SWS_FORMAT_NAME  (LIBSWSCALE_VERSION_MAJOR < 3)
 #endif
 
 /**
@@ -154,13 +151,13 @@ const int *sws_getCoefficients(int colorspace);
 
 // when used for filters they must have an odd number of elements
 // coeffs cannot be shared between vectors
-typedef struct SwsVector{
+typedef struct {
     double *coeff;              ///< pointer to the list of coefficients
     int length;                 ///< number of coefficients in the vector
 } SwsVector;
 
 // vectors can be shared
-typedef struct SwsFilter{
+typedef struct {
     SwsVector *lumH;
     SwsVector *lumV;
     SwsVector *chrH;
@@ -251,9 +248,9 @@ struct SwsContext *sws_getContext(int srcW, int srcH, enum PixelFormat srcFormat
  *                  the destination image
  * @return          the height of the output slice
  */
-int sws_scale(struct SwsContext *c, const uint8_t* const srcSlice[],
+int sws_scale(struct SwsContext *c, const uint8_t *const srcSlice[],
               const stride_t srcStride[], int srcSliceY, int srcSliceH,
-              uint8_t* const dst[], const stride_t dstStride[]);
+              uint8_t *const dst[], const stride_t dstStride[]);
 
 /**
  * @param inv_table the yuv2rgb coefficients, normally ff_yuv2rgb_coeffs[x]
