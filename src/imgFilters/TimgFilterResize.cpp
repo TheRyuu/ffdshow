@@ -20,7 +20,6 @@
 #include "TimgFilterResize.h"
 #include "IffdshowBase.h"
 #include "IffdshowDecVideo.h"
-#include "libswscale/swscale.h"
 #include "Tlibavcodec.h"
 #include "Tconfig.h"
 #include "SimpleResize.h"

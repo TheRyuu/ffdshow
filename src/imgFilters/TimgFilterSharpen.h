@@ -4,6 +4,7 @@
 #include "TimgFilter.h"
 #include "asharp/asharp.h"
 #include "TsharpenSettings.h"
+#include "libswscale/swscale.h"
 
 DECLARE_FILTER(TimgFilterAsharp,public,TimgFilter)
 private:
@@ -27,8 +28,6 @@ virtual void done(void);
 virtual HRESULT process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0);
 };
 
-struct SwsContext;
-struct SwsFilter;
 struct Tlibavcodec;
 DECLARE_FILTER(TimgFilterLibavcodecSharp,public,TimgFilter)
 private:

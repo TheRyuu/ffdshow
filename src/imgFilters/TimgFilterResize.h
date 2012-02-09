@@ -3,10 +3,8 @@
 
 #include "TimgFilter.h"
 #include "TresizeAspectSettings.h"
+#include "libswscale/swscale.h"
 
-struct SwsContext;
-struct SwsFilter;
-struct SwsParams;
 class SimpleResize;
 struct Tlibavcodec;
 DECLARE_FILTER(TimgFilterResize,public,TimgFilter)

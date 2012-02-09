@@ -7,6 +7,7 @@
 #include "ffImgfmt.h"
 #include "libavfilter/vf_yadif.h"
 #include "libavfilter/gradfun.h"
+#include "libswscale/swscale.h"
 
 struct AVCodecContext;
 struct AVCodec;
@@ -14,8 +15,6 @@ struct AVFrame;
 struct AVPacket;
 struct AVCodecParserContext;
 struct SwsContext;
-struct SwsFilter;
-struct SwsVector;
 struct SwsParams;
 struct PPMode;
 struct AVDictionary;
