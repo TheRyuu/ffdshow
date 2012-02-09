@@ -472,24 +472,6 @@ again:
         return false;
     }
 
-    if (h264_codec(codecId) || codecId == CODEC_ID_H264_DXVA) {
-        Textradata extradata(mt,16);
-        if (extradata.size) {
-            H264_SPS sps;
-            decodeH264SPS(extradata.data,extradata.size,pictIn, &sps);
-            // Note: CODEC_ID_H264_QUICK_SYNC currently doesn't support all H264 profiles.
-            // Luckily, popular profiles are supported.
-            if (codecId == CODEC_ID_H264_QUICK_SYNC &&
-                sps.profile_idc != FF_PROFILE_H264_BASELINE &&
-                sps.profile_idc != FF_PROFILE_H264_CONSTRAINED_BASELINE &&
-                sps.profile_idc != FF_PROFILE_H264_MAIN &&
-                sps.profile_idc != FF_PROFILE_H264_HIGH) {
-                codecId = CODEC_ID_H264;
-                DPRINTF(_l("TffdshowVideoInputPin::quick sync decoder doesn't support this h264 profile!\nreverting to libavcodec."));
-            }
-        }
-    }
-
     if (mpeg4_codec(codecId)) {
         Textradata extradata(mt,16);
         if (extradata.size) {
