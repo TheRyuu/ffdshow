@@ -209,7 +209,7 @@ TvideoCodecDec::TtelecineManager::TtelecineManager(TvideoCodecDec* Iparent):
 void TvideoCodecDec::TtelecineManager::onSeek(void)
 {
     segment_count = pos_in_group = -1;
-    group_rtStart = average_duration = REFTIME_INVALID;
+    group_rtStart = REFTIME_INVALID;
     film = false;
 }
 
@@ -231,9 +231,6 @@ void TvideoCodecDec::TtelecineManager::new_frame(int top_field_first, int repeat
         for (int i = 0 ; i < 2 ; i++) {
             if (group[i].repeat_pict) {
                 film = true;
-                if (rtStart != REFTIME_INVALID && group[pos].rtStart != REFTIME_INVALID) {
-                    average_duration = (rtStart - group[pos].rtStart) >> 1;
-                }
                 break;
             }
         }
@@ -243,10 +240,11 @@ void TvideoCodecDec::TtelecineManager::new_frame(int top_field_first, int repeat
     if (film) {
         pos_in_group++;
     } else {
+        group_rtStart = REFTIME_INVALID;
         pos_in_group = -1;
     }
 
-    if (film && (pos_in_group == 0 || pos_in_group >= 2) && rtStart != REFTIME_INVALID) {
+    if (film && (pos_in_group == 0 || pos_in_group >= 2) && rtStart != REFTIME_INVALID && group_rtStart == REFTIME_INVALID) {
         pos_in_group = 0;
         group_rtStart = rtStart;
     }
@@ -279,12 +277,14 @@ void TvideoCodecDec::TtelecineManager::get_fieldtype(TffPict &pict)
 
 void TvideoCodecDec::TtelecineManager::get_timestamps(TffPict &pict)
 {
-    if (!film || !cfg_softTelecine || average_duration == REFTIME_INVALID || group_rtStart == REFTIME_INVALID) {
-        return;
+    static const double average_duration = 1e7 / (24.0 * 1000.0 / 1001.0); // duration of 23.976 frame
+
+    if (film && cfg_softTelecine && group_rtStart != REFTIME_INVALID) {
+        pict.rtStart = group_rtStart + (REFERENCE_TIME)(average_duration * pos_in_group);
+        pict.rtStop = pict.rtStart + 1;
     }
 
-    pict.rtStart = group_rtStart + average_duration * pos_in_group;
-    pict.rtStop = group_rtStart + average_duration * (pos_in_group + 1) - 1;
+    return;
 }
 
 //===================================== TvideoCodecEnc ======================================

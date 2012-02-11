@@ -136,6 +136,7 @@ bool TvideoCodecQuickSync::onSeek(REFERENCE_TIME segmentStart)
     if (!ok)  return false;
 
     CAutoLock lock(&m_csLock);
+    telecineManager.onSeek();
     return S_OK == m_QuickSync->OnSeek(segmentStart);
 }
 
@@ -188,8 +189,17 @@ HRESULT TvideoCodecQuickSync::DeliverSurface(QsFrameData* frameData)
         pict.setDar(dar);
     }
 
-    pict.film = 0 != (frameData->dwInterlaceFlags & AM_VIDEO_FLAG_REPEAT_FIELD);
-    pict.repeat_first_field = pict.film;
+    // soft telecine detection
+    // if "Detect soft telecine and average frame durations" is enabled,
+    // flames are flagged as progressive, frame durations are averaged.
+    // pict.film is valid even if the setting is disabled.
+    telecineManager.new_frame(
+        0 != (frameData->dwInterlaceFlags & AM_VIDEO_FLAG_FIELD1FIRST),
+        0 != (frameData->dwInterlaceFlags & AM_VIDEO_FLAG_REPEAT_FIELD),
+        pict.rtStart,
+        pict.rtStop);
+    telecineManager.get_fieldtype(pict);
+    telecineManager.get_timestamps(pict);
 
     return sinkD->deliverDecodedSample(pict);
 }
@@ -199,7 +209,9 @@ HRESULT TvideoCodecQuickSync::BeginFlush()
     if (!ok) return E_UNEXPECTED;
 
     // No lock!
-    return m_QuickSync->BeginFlush();
+    HRESULT hr =  m_QuickSync->BeginFlush();
+    telecineManager.onSeek();
+    return hr;
 }
 
 HRESULT TvideoCodecQuickSync::EndFlush()
@@ -213,7 +225,6 @@ HRESULT TvideoCodecQuickSync::EndFlush()
 bool TvideoCodecQuickSync::onDiscontinuity()
 {
     if (!ok) return false;
-
     return __super::onDiscontinuity();
 }
 
@@ -263,26 +274,4 @@ bool TvideoCodecQuickSync::check(Tconfig* config)
         return false;
     static bool checkResult = Tdll::check(dllname, config); //no need to do this more than once
     return checkResult;
-
-/* egur: This is too slowwwww - function called from both video and audio paths
-    bool ok = false;
-    IQuickSyncDecoder* (__stdcall *createQuickSync)();
-    void (__stdcall *destroyQuickSync)(IQuickSyncDecoder*);
-
-    Tdll dll(dllname, config);
-    dll.loadFunction(createQuickSync, "createQuickSync");
-    dll.loadFunction(destroyQuickSync, "destroyQuickSync");
-    if (NULL != createQuickSync && NULL != destroyQuickSync)
-    {
-        IQuickSyncDecoder* q = createQuickSync();
-        if (q)
-        {
-            ok = q->getOK();
-            destroyQuickSync(q);
-            return ok;
-        }
-    }
-
-    return false;     
-*/
 }

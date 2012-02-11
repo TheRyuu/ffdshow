@@ -488,6 +488,12 @@ again:
             }
         }
     }
+    else if (h264_codec(codecId)) {
+        Textradata extradata(mt,16);
+        if (extradata.size) {
+            decodeH264SPS(extradata.data, extradata.size, pictIn, NULL);
+        }
+    }
 
     if (!fv->sink) {
         rawDecode=true;

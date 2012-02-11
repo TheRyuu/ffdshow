@@ -76,7 +76,7 @@ protected:
             int repeat_pict;
             REFERENCE_TIME rtStart;
         } group[2]; // store information about 2 recent frames.
-        REFERENCE_TIME average_duration,group_rtStart;
+        REFERENCE_TIME group_rtStart;
         bool film;
         int cfg_softTelecine;
     public:
