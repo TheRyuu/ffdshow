@@ -31,7 +31,7 @@ Tswscale::~Tswscale()
 {
     done();
 }
-bool Tswscale::init(unsigned int Idx,unsigned int Idy,uint64_t incsp,uint64_t outcsp,const int yuv2rgbTable[6])
+bool Tswscale::init(unsigned int Idx,unsigned int Idy,uint64_t incsp,uint64_t outcsp)
 {
     done();
     PixelFormat sw_incsp=csp_ffdshow2lavc(incsp),sw_outcsp=csp_ffdshow2lavc(outcsp);
@@ -50,7 +50,9 @@ void Tswscale::done(void)
     }
     swsc=NULL;
 }
-bool Tswscale::convert(const uint8_t* src[], const stride_t srcStride[], uint8_t* dst[], stride_t dstStride[])
+bool Tswscale::convert(const uint8_t* src[], const stride_t srcStride[], uint8_t* dst[], stride_t dstStride[], const TrgbPrimaries &rgbPrimaries)
 {
+    const int *table = libavcodec->sws_getCoefficients(rgbPrimaries.get_sws_cs());
+    libavcodec->sws_setColorspaceDetails(swsc, table, rgbPrimaries.isYCbCrFullRange(), table, rgbPrimaries.isRGB_FullRange(),  0, 1<<16, 1<<16);
     return swsc && libavcodec->sws_scale(swsc,src,srcStride,0,dy,dst,dstStride)>0;
 }

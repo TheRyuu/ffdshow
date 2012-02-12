@@ -50,6 +50,10 @@ EXPORTS
   sws_getGaussianVec
   sws_normalizeVec
   sws_freeVec
+  sws_setColorspaceDetails
+  sws_getCoefficients
+
+
   GetCPUCount
 
   pp_postprocess

@@ -4,6 +4,7 @@
 #include "interfaces.h"
 #include "simd_common.h"
 #include "TYCbCr2RGB_coeffs.h"
+#include "libswscale\swscale.h"
 
 struct ToutputVideoSettings;
 typedef struct {
@@ -47,6 +48,23 @@ public:
     const void initXvid(int rgb_add);
     const int32_t* toSwscaleTable(void);
     void setJpeg(bool isjpeg, int rgb_add = 0);
+    int get_sws_cs() const {
+        switch (cspOptionsIturBt) {
+        case ITUR_BT709:
+            return SWS_CS_ITU709;
+        case SMPTE240M:
+            return SWS_CS_SMPTE240M;
+        case ITUR_BT601:
+        default:
+            return SWS_CS_ITU601;
+        }
+    }
+    bool isYCbCrFullRange() const {
+        return (cspOptionsBlackCutoff <= 1 && cspOptionsWhiteCutoff >= 254);
+    }
+    bool isRGB_FullRange() const {
+        return (cspOptionsRGB_BlackLevel <= 1 && cspOptionsRGB_WhiteLevel >= 254);
+    }
     enum {
         ITUR_BT601    = ffYCbCr_RGB_coeff_ITUR_BT601,
         ITUR_BT709    = ffYCbCr_RGB_coeff_ITUR_BT709,

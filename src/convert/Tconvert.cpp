@@ -406,9 +406,7 @@ int Tconvert::convert(uint64_t incsp0,
                         if (!swscale) {
                             swscale=new Tswscale(libavcodec);
                         }
-                        UpdateSettings(video_full_range_flag, YCbCr_RGB_matrix_coefficients);
-                        setJpeg(!!((incsp | outcsp) & FF_CSP_FLAGS_YUV_JPEG));
-                        swscale->init(dx,dy,incsp,outcsp,toSwscaleTable());
+                        swscale->init(dx,dy,incsp,outcsp);
                         mode=MODE_MODE_palette8torgb;
                     }
             } // switch (incsp1)
@@ -421,9 +419,7 @@ int Tconvert::convert(uint64_t incsp0,
                 if (!swscale) {
                     swscale=new Tswscale(libavcodec);
                 }
-                UpdateSettings(video_full_range_flag, YCbCr_RGB_matrix_coefficients);
-                setJpeg(!!((incsp | outcsp) & FF_CSP_FLAGS_YUV_JPEG));
-                swscale->init(dx,dy,incsp,outcsp,toSwscaleTable());
+                swscale->init(dx,dy,incsp,outcsp);
                 mode=MODE_swscale;
             } else if (outcsp1 == FF_CSP_P010 || outcsp1 == FF_CSP_P016) {
                 mode=MODE_fallback;
@@ -682,11 +678,15 @@ int Tconvert::convert(uint64_t incsp0,
         }
         case MODE_swscale:
             // egur: this crashes on NV12->NV12 copy!
-            swscale->convert(src,srcStride,dst,dstStride);
+            UpdateSettings(video_full_range_flag, YCbCr_RGB_matrix_coefficients);
+            setJpeg(!!((incsp | outcsp) & FF_CSP_FLAGS_YUV_JPEG));
+            swscale->convert(src,srcStride,dst,dstStride,*this);
             break;
         case MODE_MODE_palette8torgb: {
             const unsigned char *src1[4] = {src[0],srcpal->pal,NULL,NULL};
-            swscale->convert(src1,srcStride,dst,dstStride);
+            UpdateSettings(video_full_range_flag, YCbCr_RGB_matrix_coefficients);
+            setJpeg(!!((incsp | outcsp) & FF_CSP_FLAGS_YUV_JPEG));
+            swscale->convert(src1,srcStride,dst,dstStride,*this);
             break;
         }
         case MODE_fallback:

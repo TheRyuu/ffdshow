@@ -127,6 +127,11 @@ public:
  SwsVector *(*sws_getGaussianVec)(double variance, double quality);
  void (*sws_normalizeVec)(SwsVector *a, double height);
  void (*sws_freeVec)(SwsVector *a);
+ int (*sws_setColorspaceDetails)(struct SwsContext *c, const int inv_table[4],
+                             int srcRange, const int table[4], int dstRange,
+                             int brightness, int contrast, int saturation);
+ const int* (*sws_getCoefficients)(int colorspace);
+
  int (*GetCPUCount)(void);
 
  //libpostproc imports

@@ -119,6 +119,8 @@ Tlibavcodec::Tlibavcodec(const Tconfig *config):refcount(0)
  dll->loadFunction(sws_getGaussianVec, "sws_getGaussianVec");
  dll->loadFunction(sws_normalizeVec, "sws_normalizeVec");
  dll->loadFunction(sws_freeVec, "sws_freeVec");
+ dll->loadFunction(sws_setColorspaceDetails, "sws_setColorspaceDetails");
+ dll->loadFunction(sws_getCoefficients, "sws_getCoefficients");
 
  //libpostproc methods
  dll->loadFunction(pp_postprocess, "pp_postprocess");
