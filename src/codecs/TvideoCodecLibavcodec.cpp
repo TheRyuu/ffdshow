@@ -409,6 +409,16 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
     if (avctx->sample_aspect_ratio.num && avctx->sample_aspect_ratio.den) {
         pict.setSar(avctx->sample_aspect_ratio);
     }
+
+    // check color space of FRAPS (in AVI). Works only if the file has proper chunk.
+    if (codecId == CODEC_ID_FRAPS && avctx->pix_fmt == PIX_FMT_NONE) {
+        BITMAPINFOHEADER bih;
+        ExtractBIH(mt,&bih);
+        if (bih.biBitCount == 24) {
+            pict.csp = FF_CSP_RGB24;
+        }
+    }
+
     containerSar=pict.rectFull.sar;
     dont_use_rtStop_from_upper_stream = (sourceFlags&SOURCE_REORDER && sourceExt != L"avi" && avctx->codec_tag!=FOURCC_THEO) || avctx->codec_tag==FOURCC_MPG1 || avctx->codec_tag==FOURCC_MPG2;
     avgTimePerFrame=-1;
