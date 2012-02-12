@@ -200,7 +200,7 @@ const DVprofile* TcoSettings::getDVprofile(unsigned int dx,unsigned int dy,Pixel
         avctx.width=dx;
         avctx.height=dy;
         avctx.pix_fmt=lavc_pix_fmt;
-        return dv_codec_profile(&avctx);
+        return avpriv_dv_codec_profile(&avctx);
     } else {
         const DVprofile *profile=dv_profiles+dv_profile;
         return (profile->width==(int)dx && profile->height==(int)dy && profile->pix_fmt==lavc_pix_fmt)?profile:NULL;

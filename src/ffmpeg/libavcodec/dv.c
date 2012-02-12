@@ -45,6 +45,7 @@
 #include "put_bits.h"
 #include "simple_idct.h"
 #include "dvdata.h"
+#include "dvquant.h"
 #include "dv_tablegen.h"
 
 //#undef NDEBUG
@@ -349,7 +350,7 @@ static av_cold int dvvideo_init(AVCodecContext *avctx)
 
 static av_cold int dvvideo_init_encoder(AVCodecContext *avctx)
 {
-    if (!dv_codec_profile(avctx)) {
+    if (!avpriv_dv_codec_profile(avctx)) {
         av_log(avctx, AV_LOG_ERROR, "Found no DV profile for %ix%i %s video\n",
                avctx->width, avctx->height, av_get_pix_fmt_name(avctx->pix_fmt));
         return -1;
@@ -1071,7 +1072,7 @@ static int dvvideo_decode_frame(AVCodecContext *avctx,
     const uint8_t* vsc_pack;
     int apt, is16_9;
 
-    s->sys = dv_frame_profile(s->sys, buf, buf_size);
+    s->sys = avpriv_dv_frame_profile(s->sys, buf, buf_size);
     if (!s->sys || buf_size < s->sys->frame_size || dv_init_dynamic_tables(s->sys)) {
         av_log(avctx, AV_LOG_ERROR, "could not find dv frame profile\n");
         return -1; /* NOTE: we only accept several full frames */
@@ -1189,6 +1190,41 @@ static inline int dv_write_pack(enum dv_pack_type pack_id, DVVideoContext *c,
 }
 
 #if CONFIG_DVVIDEO_ENCODER
+static inline int dv_write_dif_id(enum dv_section_type t, uint8_t chan_num,
+                                  uint8_t seq_num, uint8_t dif_num,
+                                  uint8_t* buf)
+{
+    buf[0] = (uint8_t)t;       /* Section type */
+    buf[1] = (seq_num  << 4) | /* DIF seq number 0-9 for 525/60; 0-11 for 625/50 */
+             (chan_num << 3) | /* FSC: for 50Mb/s 0 - first channel; 1 - second */
+             7;                /* reserved -- always 1 */
+    buf[2] = dif_num;          /* DIF block number Video: 0-134, Audio: 0-8 */
+    return 3;
+}
+
+
+static inline int dv_write_ssyb_id(uint8_t syb_num, uint8_t fr, uint8_t* buf)
+{
+    if (syb_num == 0 || syb_num == 6) {
+        buf[0] = (fr << 7) | /* FR ID 1 - first half of each channel; 0 - second */
+                 (0  << 4) | /* AP3 (Subcode application ID) */
+                 0x0f;       /* reserved -- always 1 */
+    }
+    else if (syb_num == 11) {
+        buf[0] = (fr << 7) | /* FR ID 1 - first half of each channel; 0 - second */
+                 0x7f;       /* reserved -- always 1 */
+    }
+    else {
+        buf[0] = (fr << 7) | /* FR ID 1 - first half of each channel; 0 - second */
+                 (0  << 4) | /* APT (Track application ID) */
+                 0x0f;       /* reserved -- always 1 */
+    }
+    buf[1] = 0xf0 |            /* reserved -- always 1 */
+             (syb_num & 0x0f); /* SSYB number 0 - 11   */
+    buf[2] = 0xff;             /* reserved -- always 1 */
+    return 3;
+}
+
 static void dv_format_frame(DVVideoContext* c, uint8_t* buf)
 {
     int chan, i, j, k;
@@ -1244,7 +1280,7 @@ static int attribute_align_arg dvvideo_encode_frame(AVCodecContext *c, uint8_t *
 {
     DVVideoContext *s = c->priv_data;
 
-    s->sys = dv_codec_profile(c);
+    s->sys = avpriv_dv_codec_profile(c);
     if (!s->sys || buf_size < s->sys->frame_size || dv_init_dynamic_tables(s->sys))
         return -1;
 

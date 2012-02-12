@@ -202,7 +202,6 @@ static const int64_t tta_channel_layouts[7] = {
 static av_cold int tta_decode_init(AVCodecContext * avctx)
 {
     TTAContext *s = avctx->priv_data;
-    int i;
 
     s->avctx = avctx;
 
@@ -236,6 +235,9 @@ static av_cold int tta_decode_init(AVCodecContext * avctx)
 
         if (s->channels == 0) {
             av_log(s->avctx, AV_LOG_ERROR, "Invalid number of channels\n");
+            return AVERROR_INVALIDDATA;
+        } else if (avctx->sample_rate == 0) {
+            av_log(s->avctx, AV_LOG_ERROR, "Invalid samplerate\n");
             return AVERROR_INVALIDDATA;
         }
 
@@ -273,8 +275,7 @@ static av_cold int tta_decode_init(AVCodecContext * avctx)
             s->data_length, s->frame_length, s->last_frame_length, s->total_frames);
 
         // FIXME: seek table
-        for (i = 0; i < s->total_frames; i++)
-            skip_bits_long(&s->gb, 32);
+        skip_bits_long(&s->gb, 32 * s->total_frames);
         skip_bits_long(&s->gb, 32); // CRC32 of seektable
 
         if(s->frame_length >= UINT_MAX / (s->channels * sizeof(int32_t))){
@@ -282,9 +283,12 @@ static av_cold int tta_decode_init(AVCodecContext * avctx)
             return -1;
         }
 
-        s->decode_buffer = av_mallocz(sizeof(int32_t)*s->frame_length*s->channels);
-        if (!s->decode_buffer)
-            return AVERROR(ENOMEM);
+        if (s->bps < 3) {
+            s->decode_buffer = av_mallocz(sizeof(int32_t)*s->frame_length*s->channels);
+            if (!s->decode_buffer)
+                return AVERROR(ENOMEM);
+        } else
+            s->decode_buffer = NULL;
         s->ch_ctx = av_malloc(avctx->channels * sizeof(*s->ch_ctx));
         if (!s->ch_ctx) {
             av_freep(&s->decode_buffer);
@@ -354,12 +358,16 @@ static int tta_decode_frame(AVCodecContext *avctx, void *data,
             unary--;
         }
 
-        if (get_bits_left(&s->gb) < k)
-            return -1;
+        if (get_bits_left(&s->gb) < k) {
+            ret = AVERROR_INVALIDDATA;
+            goto error;
+        }
 
         if (k) {
-            if (k > MIN_CACHE_BITS)
-                return -1;
+            if (k > MIN_CACHE_BITS) {
+                ret = AVERROR_INVALIDDATA;
+                goto error;
+            }
             value = (unary << k) + get_bits(&s->gb, k);
         } else
             value = unary;
@@ -412,45 +420,54 @@ static int tta_decode_frame(AVCodecContext *avctx, void *data,
         }
     }
 
-    if (get_bits_left(&s->gb) < 32)
-        return -1;
+    if (get_bits_left(&s->gb) < 32) {
+        ret = AVERROR_INVALIDDATA;
+        goto error;
+    }
     skip_bits_long(&s->gb, 32); // frame crc
 
-        // convert to output buffer
-        switch(s->bps) {
-            case 1: {
-                uint8_t *samples = (uint8_t *)s->frame.data[0];
-                for (p = s->decode_buffer; p < s->decode_buffer + (framelen * s->channels); p++)
-                    *samples++ = *p + 0x80;
-                break;
-            }
-            case 2: {
-                uint16_t *samples = (int16_t *)s->frame.data[0];
-                for (p = s->decode_buffer; p < s->decode_buffer + (framelen * s->channels); p++)
-                    *samples++ = *p;
-                break;
-            }
-            case 3: {
-                // shift samples for 24-bit sample format
-                int32_t *samples = (int32_t *)s->frame.data[0];
-                for (p = s->decode_buffer; p < s->decode_buffer + (framelen * s->channels); p++)
-                    *samples++ <<= 8;
-                // reset decode buffer
-                s->decode_buffer = NULL;
-                break;
-            }
+    // convert to output buffer
+    switch (s->bps) {
+    case 1: {
+        uint8_t *samples = (uint8_t *)s->frame.data[0];
+        for (p = s->decode_buffer; p < s->decode_buffer + (framelen * s->channels); p++)
+            *samples++ = *p + 0x80;
+        break;
         }
+    case 2: {
+        uint16_t *samples = (int16_t *)s->frame.data[0];
+        for (p = s->decode_buffer; p < s->decode_buffer + (framelen * s->channels); p++)
+            *samples++ = *p;
+        break;
+        }
+    case 3: {
+        // shift samples for 24-bit sample format
+        int32_t *samples = (int32_t *)s->frame.data[0];
+        for (p = s->decode_buffer; p < s->decode_buffer + (framelen * s->channels); p++)
+            *samples++ <<= 8;
+        // reset decode buffer
+        s->decode_buffer = NULL;
+        break;
+        }
+    }
 
     *got_frame_ptr   = 1;
     *(AVFrame *)data = s->frame;
 
     return buf_size;
+error:
+    // reset decode buffer
+    if (s->bps == 3)
+        s->decode_buffer = NULL;
+    return ret;
 }
 
 static av_cold int tta_decode_close(AVCodecContext *avctx) {
     TTAContext *s = avctx->priv_data;
 
-    av_free(s->decode_buffer);
+    if (s->bps < 3)
+        av_free(s->decode_buffer);
+    s->decode_buffer = NULL;
     av_freep(&s->ch_ctx);
 
     return 0;
