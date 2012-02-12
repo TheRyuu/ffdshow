@@ -450,6 +450,18 @@ HRESULT TvideoCodecLibavcodec::flushDec(void)
     } while(got_picture && hr == S_OK);
     return hr;
 }
+
+REFERENCE_TIME TvideoCodecLibavcodec::getDuration()
+{
+    REFERENCE_TIME duration = REF_SECOND_MULT / 100;
+    if (avctx && avctx->time_base.num && avctx->time_base.den) {
+        duration = REF_SECOND_MULT * avctx->time_base.num / avctx->time_base.den;
+        if (codecId == CODEC_ID_H264)
+            duration *= 2;
+    }
+    return duration;
+}
+
 HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen0,IMediaSample *pIn)
 {
     HRESULT hr = S_OK;
@@ -762,7 +774,7 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
                         pict.rtStart = oldpict.rtStop;
                     }
 
-                    REFERENCE_TIME duration = REF_SECOND_MULT * avctx->time_base.num / avctx->time_base.den;
+                    REFERENCE_TIME duration = getDuration();
 
                     if (rateInfo->rate.Rate < (10000 / TffdshowVideoInputPin::MAX_SPEED)) {
                         pict.rtStop = pict.rtStart + duration;
@@ -789,7 +801,7 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
                     if (avgTimePerFrame) {
                         pict.rtStop=pict.rtStart+avgTimePerFrame+frame->repeat_pict*avgTimePerFrame/2;
                     } else if (avctx->time_base.num && avctx->time_base.den) {
-                        REFERENCE_TIME duration = REF_SECOND_MULT * avctx->time_base.num / avctx->time_base.den;
+                        REFERENCE_TIME duration = getDuration();
                         if (duration <= 0) duration = REF_SECOND_MULT / 10;
                         pict.rtStop = pict.rtStart + duration;
                         if (frame->repeat_pict) {

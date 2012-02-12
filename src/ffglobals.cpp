@@ -867,6 +867,7 @@ bool decodeH264SPS(const unsigned char *hdr,size_t len,TffPictBase &pict, H264_S
     if (NULL == sps) {
         sps = &_sps;
     }
+    memset(sps, 0, sizeof(H264_SPS));
 
     // remove 0x00 0x00 0x03 sequence.
     std::auto_ptr<uint8_t> buf;

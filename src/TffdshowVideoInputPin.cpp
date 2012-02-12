@@ -415,7 +415,7 @@ bool TffdshowVideoInputPin::init(const CMediaType &mt)
     }
 
     REFERENCE_TIME avgTimePerFrame0=getAvgTimePerFrame(mt);
-    avgTimePerFrame=avgTimePerFrame0?avgTimePerFrame0:400000;
+    avgTimePerFrame = avgTimePerFrame0 ? avgTimePerFrame0 : 400000;
 
     char_t pomS[60];
     DPRINTF(_l("TffdshowVideoInputPin::initVideo: %s, width:%i, height:%i, aspectX:%i, aspectY:%i"),fourcc2str(hdr2fourcc(&biIn.bmiHeader,&mt.subtype),pomS,60) ,pictIn.rectFull.dx,pictIn.rectFull.dy,pictIn.rectFull.dar().num,pictIn.rectFull.dar().den);
@@ -472,7 +472,18 @@ again:
         return false;
     }
 
-    if (mpeg4_codec(codecId)) {
+    if (h264_codec(codecId) || codecId == CODEC_ID_H264_DXVA) {
+        Textradata extradata(mt,16);
+        if (extradata.size) {
+            H264_SPS sps;
+            decodeH264SPS(extradata.data,extradata.size,pictIn, &sps);
+            // Set frame rate information from SPS::VUI.
+            if (!avgTimePerFrame0 // Use information from the upper stream filter if available.
+                && sps.timing_info_present_flag && sps.time_scale && sps.num_units_in_tick) {
+                avgTimePerFrame = 2 * REF_SECOND_MULT * sps.num_units_in_tick / sps.time_scale;
+            }
+        }
+    } else if (mpeg4_codec(codecId)) {
         Textradata extradata(mt,16);
         if (extradata.size) {
             decodeMPEG4pictureHeader(extradata.data,extradata.size,pictIn);
@@ -486,12 +497,6 @@ again:
                 truncated=true;
                 goto again;
             }
-        }
-    }
-    else if (h264_codec(codecId)) {
-        Textradata extradata(mt,16);
-        if (extradata.size) {
-            decodeH264SPS(extradata.data, extradata.size, pictIn, NULL);
         }
     }
 

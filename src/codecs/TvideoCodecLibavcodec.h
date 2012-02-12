@@ -77,6 +77,7 @@ protected:
     bool firstSeek; // firstSeek means start of palyback.
     bool mpeg2_new_sequence;
     bool bReorderBFrame;
+    REFERENCE_TIME getDuration();
 protected:
     virtual LRESULT beginCompress(int cfgcomode,uint64_t csp,const Trect &r);
     virtual bool beginDecompress(TffPictBase &pict,FOURCC infcc,const CMediaType &mt,int sourceFlags);
