@@ -167,7 +167,7 @@ protected:
 virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
 virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
-    return FF_CSP_420P;
+    return FF_CSP_420P|FF_CSP_RGB32;
 }
 public:
 TimgFilterOSD(IffdshowBase *Ideci,Tfilters *Iparent);
