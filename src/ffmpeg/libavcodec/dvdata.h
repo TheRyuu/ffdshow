@@ -75,6 +75,20 @@ typedef struct DVprofile {
     const char *name; /* ffdshow custom code */
 } DVprofile;
 
+static DVwork_chunk work_chunks_dv25pal   [1*12*27];
+static DVwork_chunk work_chunks_dv25pal411[1*12*27];
+static DVwork_chunk work_chunks_dv25ntsc  [1*10*27];
+static DVwork_chunk work_chunks_dv50pal   [2*12*27];
+static DVwork_chunk work_chunks_dv50ntsc  [2*10*27];
+static DVwork_chunk work_chunks_dv100palp [2*12*27];
+static DVwork_chunk work_chunks_dv100ntscp[2*10*27];
+static DVwork_chunk work_chunks_dv100pali [4*12*27];
+static DVwork_chunk work_chunks_dv100ntsci[4*10*27];
+
+static uint32_t dv_idct_factor_sd    [2*2*22*64];
+static uint32_t dv_idct_factor_hd1080[2*4*16*64];
+static uint32_t dv_idct_factor_hd720 [2*4*16*64];
+
 static const uint8_t dv_audio_shuffle525[10][9] = {
   {  0, 30, 60, 20, 50, 80, 10, 40, 70 }, /* 1st channel */
   {  6, 36, 66, 26, 56, 86, 16, 46, 76 },
@@ -109,20 +123,6 @@ static const uint8_t dv_audio_shuffle625[12][9] = {
 static const uint8_t block_sizes_dv2550[8] = {
     112, 112, 112, 112, 80, 80, 0, 0,
 };
-
-static DVwork_chunk work_chunks_dv25pal   [1*12*27];
-static DVwork_chunk work_chunks_dv25pal411[1*12*27];
-static DVwork_chunk work_chunks_dv25ntsc  [1*10*27];
-static DVwork_chunk work_chunks_dv50pal   [2*12*27];
-static DVwork_chunk work_chunks_dv50ntsc  [2*10*27];
-static DVwork_chunk work_chunks_dv100palp [2*12*27];
-static DVwork_chunk work_chunks_dv100ntscp[2*10*27];
-static DVwork_chunk work_chunks_dv100pali [4*12*27];
-static DVwork_chunk work_chunks_dv100ntsci[4*10*27];
-
-static uint32_t dv_idct_factor_sd    [2*2*22*64];
-static uint32_t dv_idct_factor_hd1080[2*4*16*64];
-static uint32_t dv_idct_factor_hd720 [2*4*16*64];
 
 static const DVprofile dv_profiles[] = {
     { /*.dsf = */0,
