@@ -193,6 +193,10 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
     avctx->thread_type = thread_type;
     avctx->thread_count = threadcount;
     avctx->h264_using_dxva = using_dxva;
+    if (codecId == CODEC_ID_H264) {
+        // If we do not set this, first B-frames before the IDR pictures are dropped.
+        avctx->has_b_frames = 1;
+    }
 
     frame=libavcodec->avcodec_alloc_frame();
     avctx->width =pict.rectFull.dx;
