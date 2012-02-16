@@ -857,6 +857,14 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
                 telecineManager.get_fieldtype(pict);
                 telecineManager.get_timestamps(pict);
 
+                if (pict.rtStop - pict.rtStart <= 1) {
+                    // In this case, frames are dropped just because its delivery is slightly delayed.
+                    // We need to fix it.
+                    // getDuration returns 10ms if there is no available information.
+                    // This meas all videos exceeding 100 fps must have valid frame duration.
+                    pict.rtStop = pict.rtStart + getDuration() - 1;
+                }
+
                 hr=sinkD->deliverDecodedSample(pict);
                 if (hr != S_OK
                         || (used_bytes && sinkD->acceptsManyFrames()!=S_OK)
