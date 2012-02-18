@@ -80,7 +80,8 @@ public:
     };
     enum {
         TvRGB = 0,
-        PcRGB = 1
+        PcRGB = 1,
+        Invalid_RGB_range = 2
     };
 };
 

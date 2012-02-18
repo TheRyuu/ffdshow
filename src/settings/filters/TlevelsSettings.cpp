@@ -23,6 +23,7 @@
 #include "TimgFilterLevels.h"
 #include "Clevels.h"
 #include "TffdshowPageDec.h"
+#include "TrgbPrimaries.h"
 
 const char_t* TlevelsSettings::modes[]= {
     _l("original"),
@@ -37,12 +38,25 @@ const char_t* TlevelsSettings::modes[]= {
 
 const TlevelsSettings::CRPoint TlevelsSettings::points[10]= {&TlevelsSettings::point0x,&TlevelsSettings::point0y,&TlevelsSettings::point1x,&TlevelsSettings::point1y,&TlevelsSettings::point2x,&TlevelsSettings::point2y,&TlevelsSettings::point3x,&TlevelsSettings::point3y,&TlevelsSettings::point4x,&TlevelsSettings::point4y,&TlevelsSettings::point5x,&TlevelsSettings::point5y,&TlevelsSettings::point6x,&TlevelsSettings::point6y,&TlevelsSettings::point7x,&TlevelsSettings::point7y,&TlevelsSettings::point8x,&TlevelsSettings::point8y,&TlevelsSettings::point9x,&TlevelsSettings::point9y};
 
-void TlevelsSettings::calcMap(unsigned int map[256],int *divisor)
+void TlevelsSettings::calcMap(unsigned int map[256])
 {
-    calcMap(map,divisor,inMin,inMax);
+    int mapc[256];
+    calcMap(map,mapc,inMin,inMax,TrgbPrimaries::Invalid_RGB_range);
 }
-void TlevelsSettings::calcMap(unsigned int map[256],int *divisor,int inMin,int inMax)
+void TlevelsSettings::calcMap(unsigned int map[256], int mapc[256], int inMin, int inMax, int outputLevelsMode)
 {
+    int fullRange = fullY;
+    switch (outputLevelsMode) {
+    case TrgbPrimaries::PcRGB:
+        fullRange = 1;
+        break;
+    case TrgbPrimaries::TvRGB:
+        fullRange = 0;
+        break;
+    case TrgbPrimaries::Invalid_RGB_range:
+    default:
+        break;
+    }
     double a=inMin,b=inMax,c=outMin,d=outMax;
     if (a==b) {
         b+=1;
@@ -51,23 +65,24 @@ void TlevelsSettings::calcMap(unsigned int map[256],int *divisor,int inMin,int i
         d+=1;
     }
     double gamma=this->gamma/100.0;
-    *divisor=inMax-inMin+(inMax==inMin);
-    int limitMin=fullY?0:16,limitMax=fullY?255:235;
+    int divisor=inMax-inMin+(inMax==inMin);
+    int limitMin=fullRange?0:16,limitMax=fullRange?255:235;
     switch (mode) {
         case 0:
         case 6: // Seb's BTB&WTW
             for (int x=0; x<256; x++) { // original
-                double i=fullY?x:(x-16)*(255.0/219.0);
-                double p=(i-inMin)/(*divisor);
+                double i=fullRange?x:(x-16)*(255.0/219.0);
+                double p=(i-inMin)/divisor;
                 p=pow(limit(p,0.0,1.0),1/gamma);
                 p=p*(outMax-outMin)+outMin;
                 map[x]=limit(int(p),limitMin,limitMax);
             }
+            break;
         case 1:
             for (int x=0; x<256; x++) { // Ylevels
-                double i=fullY?x:(x-16)*(255.0/219.0);
+                double i=fullRange?x:(x-16)*(255.0/219.0);
                 double p=pow((i-a)/(b-a),1/gamma)*(d-c)+c;
-                if (!fullY) {
+                if (!fullRange) {
                     p=p*(219.0/255.0)+16.5;
                 }
                 map[x]=limit(int(p),limitMin,limitMax);
@@ -84,9 +99,9 @@ void TlevelsSettings::calcMap(unsigned int map[256],int *divisor,int inMin,int i
                 //  Return( clp.mt_lut(Yexpr = wicked, U=2,V=2) )
                 // }
             {
-                double i=fullY?x:(x-16)*(255.0/219.0);
+                double i=fullRange?x:(x-16)*(255.0/219.0);
                 double p=((i-a)/(b-a)*(d-c)+c)*i/255+(pow((i-a)/(b-a),1/gamma)*(d-c)+c)*(1-i/255);
-                if (!fullY) {
+                if (!fullRange) {
                     p=p*(219.0/255.0)+16.5;
                 }
                 map[x]=limit(int(p),limitMin,limitMax);
@@ -102,9 +117,9 @@ void TlevelsSettings::calcMap(unsigned int map[256],int *divisor,int inMin,int i
                 //  Return( clp.mt_lut(Yexpr = wicked, U=2,V=2) )
                 // }
             {
-                double i=fullY?x:(x-16)*(255.0/219.0);
+                double i=fullRange?x:(x-16)*(255.0/219.0);
                 double p=((i-a)/(b-a)*(d-c)+c)*sin(i/162.338)+(pow((i-a)/(b-a),1/gamma)*(d-c)+c)*(1-sin(i/162.338));
-                if (!fullY) {
+                if (!fullRange) {
                     p=p*(219.0/255.0)+16.5;
                 }
                 map[x]=limit(int(p),limitMin,limitMax);
@@ -120,9 +135,9 @@ void TlevelsSettings::calcMap(unsigned int map[256],int *divisor,int inMin,int i
                 //  Return( clp.mt_lut(Yexpr = wicked, U=2,V=2) )
                 // }
             {
-                double i=fullY?x:(x-16)*(255.0/219.0);
+                double i=fullRange?x:(x-16)*(255.0/219.0);
                 double p=((i-a)/(b-a)*(d-c)+c)*(1-cos(i/162.338))+(pow((i-a)/(b-a),1/gamma)*(d-c)+c)*cos(i/162.338);
-                if (!fullY) {
+                if (!fullRange) {
                     p=p*(219.0/255.0)+16.5;
                 }
                 map[x]=limit(int(p),limitMin,limitMax);
@@ -135,8 +150,8 @@ void TlevelsSettings::calcMap(unsigned int map[256],int *divisor,int inMin,int i
                case 6: // Seb's BTB&WTW
                 for (int x=0;x<256;x++)
                  {
-                  //double i=fullY?x:(x-16)*(255.0/219.0);
-                  double p=(x-inMin)/(*divisor);
+                  //double i=fullRange?x:(x-16)*(255.0/219.0);
+                  double p=(x-inMin)/divisor;
                   p=pow(limit(p,0.0,1.0),1/gamma);
                   p=p*(outMax-outMin)+outMin;
                   map[x]=limit(int(p),limitMin,limitMax);
@@ -148,6 +163,10 @@ void TlevelsSettings::calcMap(unsigned int map[256],int *divisor,int inMin,int i
         for (unsigned int x=0; x<256; x++) {
             map[x]=limit(((map[x]+stepd/2)/stepd)*stepd,0U,255U);
         }
+    }
+    mapc[0] = map[0] ? 0x400000 : 0;
+    for (int x = 1 ; x < 256 ; x++) {
+        mapc[x] = 0x4000 * map[x] / x;
     }
 }
 
@@ -315,6 +334,8 @@ TlevelsSettings::TlevelsSettings(TintStrColl *Icoll,TfilterIDFFs *filters):Tfilt
         _l("halfLevels"),0,
         IDFF_levelsMode     ,&TlevelsSettings::mode    ,0,6,_l(""),1,
         _l("levelsMode"),0,
+        IDFF_levelsForceRGB ,&TlevelsSettings::forceRGB,0,0,_l(""),1,
+        _l("levelsForceRGB"),0,
         IDFF_levelsGamma    ,&TlevelsSettings::gamma   ,1,400,_l(""),1,
         _l("levelsGamma"),100,
         IDFF_levelsPosterize,&TlevelsSettings::posterize,2,255,_l(""),1,

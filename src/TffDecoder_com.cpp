@@ -703,8 +703,7 @@ STDMETHODIMP TffdshowDecVideo::getLevelsMap(unsigned int map[256])
     if (!presetSettings || !presetSettings->levels) {
         return E_FAIL;
     }
-    int divisor;
-    presetSettings->levels->calcMap(map,&divisor);
+    presetSettings->levels->calcMap(map);
     return S_OK;
 }
 

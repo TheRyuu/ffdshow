@@ -4,34 +4,38 @@
 #include "TimgFilter.h"
 #include "TlevelsSettings.h"
 #include "IimgFilterLevels.h"
+#include "TPerformanceCounter.h"
 
 class TimgFilterLevels : public TimgFilter, public IimgFilterLevels
     _DECLARE_FILTER(TimgFilterLevels,TimgFilter)
     private:
         TlevelsSettings oldSettings;
+TPerformanceCounter timer;
 int flag_resetHistory,oldMode;
 static const int HISTORY=32;
 int inMins[HISTORY],inMinSum,inMin,inMaxs[HISTORY],inMaxSum,inMax;
 unsigned int minMaxPos;
 void resetHistory(void);
-unsigned int map[256],mapchroma[256];
+unsigned int map[256];
+int mapc[256];
 unsigned int histogram[256];
 CCritSec csHistogram;
-template<int lumaoffset,int chromaoffset,int onlyLuma> void processPacked(const unsigned char *srcY,unsigned char *dstY)
-{
-    for (unsigned int y=0; y<dy1[0]; y++) {
-        const uint8_t *src;
-        uint16_t *dst,*dstEnd;
-        for (src=srcY+stride1[0]*y,dst=(uint16_t*)(dstY+stride2[0]*y),dstEnd=dst+dx1[0]; dst!=dstEnd; src+=2,dst++) {
-            *dst=uint16_t((map[src[lumaoffset]]<<(8*lumaoffset))|((onlyLuma?src[chromaoffset]:mapchroma[src[chromaoffset]])<<(8*chromaoffset)));
-        }
-    }
-}
+template <uint64_t incsp> void filter(const uint8_t *srcY, const uint8_t *srcU, const uint8_t *srcV,
+    uint8_t *dstY, uint8_t *dstU, uint8_t *dstV);
+void filterRGB32(const uint8_t *srcY, const uint8_t *srcU, const uint8_t *srcV,
+    uint8_t *dstY, uint8_t *dstU, uint8_t *dstV);
+inline uint8_t TimgFilterLevels::getuv(int u, int lumav);
+
 protected:
 virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
-static const int supportedcsps=FF_CSPS_MASK_YUV_PLANAR|FF_CSPS_MASK_YUV_PACKED;
+static const int supportedcsps = FF_CSP_RGB32 | FF_CSP_420P | FF_CSP_422P | FF_CSP_444P;
 virtual uint64_t getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const
 {
+    const TlevelsSettings *cfg1 = dynamic_cast<const TlevelsSettings*>(cfg);
+    if (cfg1) {
+        if (cfg1->forceRGB)
+            return FF_CSP_RGB32;
+    }
     return supportedcsps;
 }
 public:

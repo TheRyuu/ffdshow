@@ -16,6 +16,7 @@ protected:
 public:
     TlevelsSettings(TintStrColl *Icoll=NULL,TfilterIDFFs *filters=NULL);
     int mode;
+    int forceRGB;
     static const char_t *modes[];
     int inMin,gamma,inMax,outMin,outMax,posterize;
     int YmaxDelta,Ythreshold,Ytemporal;
@@ -24,8 +25,8 @@ public:
     int inAuto;
     int numPoints;
     int point0x,point0y,point1x,point1y,point2x,point2y,point3x,point3y,point4x,point4y,point5x,point5y,point6x,point6y,point7x,point7y,point8x,point8y,point9x,point9y;
-    void calcMap(unsigned int map[256],int *divisor);
-    void calcMap(unsigned int map[256],int *divisor,int inMin,int inMax);
+    void calcMap(unsigned int map[256]);
+    void calcMap(unsigned int map[256], int mapc[256], int inMin, int inMax, int outputLevelsMode);
     virtual void createFilters(size_t filtersorder,Tfilters *filters,TfilterQueue &queue) const;
     virtual void createPages(TffdshowPageDec *parent) const;
     virtual bool getTip(unsigned int pageId,char_t *buf,size_t buflen);

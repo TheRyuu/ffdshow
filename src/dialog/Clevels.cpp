@@ -272,6 +272,7 @@ void TlevelsPage::init(void)
     SendDlgItemMessage(m_hwnd,IDC_UD_Y_THRESHOLD ,UDM_SETRANGE,0,MAKELONG(150,1));
     SendDlgItemMessage(m_hwnd,IDC_UD_Y_TEMPORAL ,UDM_SETRANGE,0,MAKELONG(20,1));
     startup=true;
+    addHint(IDC_CHB_LEVELS_RGB, L"You need to force RGB conversion to get accurate color. If your computer is fast enough, we recommend you to check it. If the video is interlaced, please make sure to deinterlace before RGB conversion.\nFor the range setting, output levels in RGB conversion page is used even if the picture is RGB from the start.");
 }
 
 void TlevelsPage::cfg2dlg(void)
@@ -319,6 +320,10 @@ void TlevelsPage::mode2dlg(void)
         static const int idnCurves[]= {IDC_LBL_Y_MAX_DELTA,IDC_ED_Y_MAX_DELTA,IDC_UD_Y_MAX_DELTA, IDC_LBL_Y_THRESHOLD,IDC_ED_Y_THRESHOLD,IDC_UD_Y_THRESHOLD, IDC_LBL_Y_TEMPORAL,IDC_ED_Y_TEMPORAL,IDC_UD_Y_TEMPORAL,0};
         show(false,idnCurves);
     }
+    int rgb = cfgGet(IDFF_levelsForceRGB);
+    setCheck(IDC_CHB_LEVELS_RGB, rgb);
+    static const int yuvonly[] = {IDC_CHB_LEVELS_ONLYLUMA, IDC_CHB_LEVELS_SHOW_HISTOGRAM_FULL,0};
+    enable(!rgb, yuvonly, false);
     map2dlg();
 }
 void TlevelsPage::map2dlg(void)
@@ -559,6 +564,7 @@ TlevelsPage::TlevelsPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff):Tconf
         IDC_CHB_LEVELS_SHOW_HISTOGRAM,IDFF_buildHistogram,NULL,
         IDC_CHB_LEVELS_SHOW_HISTOGRAM_FULL,IDFF_levelsFullY,&TlevelsPage::map2dlg,
         IDC_CHB_LEVELS_INPUT_AUTO,IDFF_levelsInAuto,NULL,
+        IDC_CHB_LEVELS_RGB,IDFF_levelsForceRGB,&TlevelsPage::mode2dlg,
         0,NULL,NULL
     };
     bindCheckboxes(chb);

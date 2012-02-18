@@ -237,6 +237,7 @@
 #define IDFF_fullLevels         1603
 #define IDFF_halfLevels         1612
 #define IDFF_levelsMode         1613 // 0 - classic, 1 - Ylevels, 2 - YlevelsG, 3 - YlevelsS, 4 - YlevelsC
+#define IDFF_levelsForceRGB     3575
 #define IDFF_levelsInMin        1604
 #define IDFF_levelsGamma        1605
 #define IDFF_levelsInMax        1606
@@ -1378,6 +1379,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//next:3575
+//next:3576
 
 #endif

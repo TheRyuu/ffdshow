@@ -1994,6 +1994,7 @@
 #define IDC_CHB_OUT_AYUV                40039
 #define IDC_CHB_OUT_Y416                40040
 #define IDC_LBL_OUT_PRIMARY_CSP         40041
+#define IDC_CHB_LEVELS_RGB              40042
 #define IDC_STATIC                      -1
 #define IDC_GRP_WINAMP2                 65535
 
@@ -2004,7 +2005,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        304
 #define _APS_NEXT_COMMAND_VALUE         40015
-#define _APS_NEXT_CONTROL_VALUE         40042
+#define _APS_NEXT_CONTROL_VALUE         40043
 #define _APS_NEXT_SYMED_VALUE           107
 #endif
 #endif
