@@ -4,6 +4,7 @@
 
 class TPerformanceCounter {
 #if ENABLE_PERFORMANCE_COUNTER
+    double frequency;
     LONGLONG timer;
     LARGE_INTEGER tmp_timer;
     int counter_for_timer;

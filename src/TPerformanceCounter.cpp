@@ -26,6 +26,9 @@ TPerformanceCounter::TPerformanceCounter(const wchar_t *msg)
     counter_for_timer = 0;
     if (msg)
         this->msg = msg;
+    LARGE_INTEGER f;
+    QueryPerformanceFrequency(&f);
+    frequency = f.QuadPart/1000.0;
 #endif
 }
 
@@ -44,7 +47,7 @@ void TPerformanceCounter::stop()
     uint64_t t = tmp_timer.QuadPart - t0;
     timer += t;
     counter_for_timer++;
-    DPRINTF(L"%s %I64d average: %I64d",msg.c_str(), t, timer/counter_for_timer);
+    DPRINTF(L"%s %I64d average: %4.3fms",msg.c_str(), t, (double)timer/counter_for_timer/frequency);
 #endif
 }
 
