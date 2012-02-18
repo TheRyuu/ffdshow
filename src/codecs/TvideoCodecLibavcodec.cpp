@@ -146,6 +146,7 @@ void TvideoCodecLibavcodec::end(void)
 bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const CMediaType &mt,int sourceFlags)
 {
     palette_size = 0;
+    oldpict.rtStart = REFTIME_INVALID;
     oldpict.rtStop = 0;
     h264_on_MPEG2_system = false;
     rtStart = rtStop = REFTIME_INVALID;
@@ -527,7 +528,19 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
     int size=int(srcLen0-skip);
 
     if (pIn) {
-        pIn->GetTime(&rtStart,&rtStop);
+        HRESULT hr_GetTime = pIn->GetTime(&rtStart,&rtStop);
+#if 0
+        REFERENCE_TIME_to_hhmmssmmm start(rtStart);
+        REFERENCE_TIME_to_hhmmssmmm stop(rtStop);
+        ffstring error_msg = L"Unknown";
+        if (hr_GetTime == S_OK)
+            error_msg = L"S_OK";
+        else if (hr_GetTime == VFW_S_NO_STOP_TIME)
+            error_msg =L"VFW_S_NO_STOP_TIME";
+        else if (hr_GetTime == VFW_E_SAMPLE_TIME_NOT_SET)
+            error_msg =L"VFW_E_SAMPLE_TIME_NOT_SET";
+        DPRINTF(L"IMediaSample::GetTime hr=%s rtStart=%s rtStop=%s",error_msg.c_str(), start.get_str(), stop.get_str());
+#endif
     }
 
     b[inPosB].rtStart=rtStart;
@@ -801,7 +814,11 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
                         telecineManager.onSeek();
                     }
                 } else if (dont_use_rtStop_from_upper_stream) {
-                    pict.rtStart = frame->reordered_opaque;
+                    if (oldpict.rtStart >= frame->reordered_opaque && oldpict.rtStart != REFTIME_INVALID) {
+                        pict.rtStart = oldpict.rtStop;
+                    } else {
+                        pict.rtStart = frame->reordered_opaque;
+                    }
                     pict.srcSize = (size_t)frame->reordered_opaque3; // FIXME this is not correct for MPEG-1/2 that use SOURCE_TRUNCATED. (Just for OSD, not that important bug)
 
                     if (pict.rtStart==REFTIME_INVALID) {
@@ -857,7 +874,7 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
                 telecineManager.get_fieldtype(pict);
                 telecineManager.get_timestamps(pict);
 
-                if (pict.rtStop - pict.rtStart <= 1) {
+                if (pict.rtStop  <= pict.rtStart + 1) {
                     // In this case, frames are dropped just because its delivery is slightly delayed.
                     // We need to fix it.
                     // getDuration returns 10ms if there is no available information.
