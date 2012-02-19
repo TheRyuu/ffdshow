@@ -532,15 +532,15 @@ double TSubtitleMixedProps::get_fader(REFERENCE_TIME rtStart) const
 {
     double fader = 1.0;
     if (rtStart < fadeT1) {
-        fader = fadeA1 / 255.0;
+        fader = fadeA1 / 256.0;
     } else if (rtStart < fadeT2) {
         fader = (double)(rtStart - fadeT1) / (fadeT2 - fadeT1) * (fadeA2 - fadeA1) / 255.0 + fadeA1 / 255.0;
     } else if (rtStart < fadeT3) {
-        fader = fadeA2 / 255.0;
+        fader = fadeA2 / 256.0;
     } else if (rtStart < fadeT4) {
         fader = (double)(fadeT4 - rtStart) / (fadeT4 - fadeT3) * (fadeA2 - fadeA3) / 255.0 + fadeA3 / 255.0;
     } else {
-        fader = fadeA3 / 255.0;
+        fader = fadeA3 / 256.0;
     }
     return fader;
 }
