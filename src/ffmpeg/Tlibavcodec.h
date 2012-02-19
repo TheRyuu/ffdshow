@@ -60,8 +60,7 @@ public:
 
  void (*avcodec_register_all)(void);
  AVCodecContext* (*avcodec_alloc_context0)(AVCodec *codec);
- void (*dsputil_init)(DSPContext* p, AVCodecContext *avctx);
- AVCodec* (*avcodec_find_decoder)(CodecID codecId);
+  AVCodec* (*avcodec_find_decoder)(CodecID codecId);
  AVCodec* (*avcodec_find_encoder)(CodecID id);
  int  (*avcodec_open0)(AVCodecContext *avctx, AVCodec *codec, AVDictionary **options);
  int  avcodec_open(AVCodecContext *avctx, AVCodec *codec);

@@ -17,8 +17,6 @@ EXPORTS
   av_mallocz
   av_free
 
-  dsputil_init
-
   av_log_set_callback
   av_log_get_callback
   av_log_get_level
