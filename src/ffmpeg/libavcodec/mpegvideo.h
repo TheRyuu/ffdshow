@@ -703,7 +703,8 @@ int ff_MPV_frame_start(MpegEncContext *s, AVCodecContext *avctx);
 void ff_MPV_frame_end(MpegEncContext *s);
 int ff_MPV_encode_init(AVCodecContext *avctx);
 int ff_MPV_encode_end(AVCodecContext *avctx);
-int ff_MPV_encode_picture(AVCodecContext *avctx, unsigned char *buf, int buf_size, void *data);
+int ff_MPV_encode_picture(AVCodecContext *avctx, AVPacket *pkt,
+                          const AVFrame *frame, int *got_packet);
 void ff_MPV_common_init_mmx(MpegEncContext *s);
 void ff_MPV_common_init_axp(MpegEncContext *s);
 void ff_MPV_common_init_mmi(MpegEncContext *s);
