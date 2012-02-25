@@ -766,8 +766,12 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
 #endif
 
                 if (h264_on_MPEG2_system) {
-                    pict.rtStart = frame->reordered_opaque;
-                    pict.rtStop = frame->reordered_opaque2;
+                    if (oldpict.rtStart >= frame->reordered_opaque && oldpict.rtStart != REFTIME_INVALID) {
+                        pict.rtStart = pict.rtStop = oldpict.rtStop;
+                    } else {
+                        pict.rtStart = frame->reordered_opaque;
+                        pict.rtStop = frame->reordered_opaque2;
+                    }
                     pict.srcSize = (size_t)frame->reordered_opaque3;
                 } else if (mpeg12_codec(codecId)) {
                     if(frametype == FRAME_TYPE::I) {
@@ -809,7 +813,6 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
                     } else
                         pict.rtStop = pict.rtStart +
                                       (duration * (frame->repeat_pict ? 3 : 2) * abs(rateInfo->rate.Rate) / (2 * 10000));
-                    oldpict=pict;
                     if (rateInfo->isDiscontinuity) {
                         telecineManager.onSeek();
                     }
@@ -845,8 +848,6 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
                     if (avctx->codec_tag==FOURCC_MPG1 || avctx->codec_tag==FOURCC_MPG2) {
                         pict.mediatimeStart=pict.mediatimeStop=REFTIME_INVALID;
                     }
-
-                    oldpict=pict;
                 } else if (theorart) {
                     pict.rtStart = frame->reordered_opaque - segmentTimeStart;
                     pict.rtStop  = pict.rtStart + 1;
@@ -882,6 +883,7 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
                     pict.rtStop = pict.rtStart + getDuration() - 1;
                 }
 
+                oldpict=pict;
                 hr=sinkD->deliverDecodedSample(pict);
                 if (hr != S_OK
                         || (used_bytes && sinkD->acceptsManyFrames()!=S_OK)
