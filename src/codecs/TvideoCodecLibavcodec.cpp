@@ -724,9 +724,7 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
 
                 Trect r(0,0,avctx->width,avctx->height);
 
-                if (avctx->sample_aspect_ratio.num
-                        && !(connectedSplitter == TffdshowVideoInputPin::MPC_matroska_splitter && avctx->sample_aspect_ratio.num==1 && avctx->sample_aspect_ratio.den==1)
-                   ) { // With MPC's internal matroska splitter, AR is not reliable.
+                if (avctx->sample_aspect_ratio.num) {
                     r.sar=avctx->sample_aspect_ratio;
                 } else {
                     r.sar=containerSar;
