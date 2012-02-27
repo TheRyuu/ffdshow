@@ -1,4 +1,56 @@
-Changelog for Beta 7
+Changelog for version 1.1.????
+
+Bugfixes:
+* Lots of updates for libavcodec that bring bug fixes, performance enhancements, and security fixes.
+* Disable "Detect soft telecine and average frame durations" if 3:2 pulldown is being applied in AviSynth filter.
+* IAMStreamSelect: fix duplicated subtitle list in case of multiple ffdshow instances
+* If a matroska container had hidden leading chapter and Haali's splitter was used and tray icon was right-clicked, ffdshow crashed.
+* Various fixes regarding input mediatype handling, strides, and pin re-connection.
+* Various fixes regarding H.264 SPS parsing
+* Fixed decoding of 96khz 32bit audio with libavcodec
+* Fixed decoding of AAC audio with libavcodec when extradata is missing
+* Better handling of non-mod4 resolutions
+* Workaround for freeze in Powerpoint 2010
+* AC3 encoder was producing improper bitstream when connected to file writer filter
+* Various fixes for audio bitstreaming
+
+New and improved features:
+* Support for H.264 10-bit 4:2:0/4:2:2/4:4:4/RGB
+* Support for H.264 8-bit 4:2:2/4:4:4/RGB, 4:2:0 was already supported
+* Support for various 10-bit and 16-bit colorspaces
+* Optimized YV12 to NV12 conversion
+* Enabled high quality RGB32 conversion by default
+* Added option to select a preferred output colorspace
+* Added Intel QuickSync decoder. This provides hardware acceleration decoding of H.264, VC-1 and MPEG-2. Requires the integrated GPU of Intel Sandy Bridge processors.
+* Added DXVA video filter for hardware accelerated decoding. Supports H.264 and VC-1 video. Also includes subtitle support.
+* Various additions to the application blacklist and whitelist
+* Added support for Blu-ray PGS subtitles
+* Removed support for USF subtitles
+* Various improvements for the handling of ASS/SSA subtitles. More tags are supported now, but not yet all of them.
+* Various improvements for the rendering of text-based subtitles
+* By default now only subtitle files are shown that match the video filename. This behavior can be adjusted through an option on the "Try, dialog & Paths" page in ffdshow settings.
+* Created new format option in ffdshow audio decoder for the QT PCM variants (such as TWOS). They were previously part if the Uncompressed audio option.
+* ffmpeg-mt has been merged into libavcodec
+* Multi-threaded decoding is now used by default for H.264, MPEG-1/2, FFV1, and DV video.
+* Added decoding support for Indeo 4 and Indeo 5 video
+* Floating point output for libavcodec AAC, AC3, E-AC3, DTS, Vorbis, and Nellymoser decoders.
+* Added option to disable jitter correction for audio decoder
+* Improved performance of Deband filter
+* Removed some encoders for which the interface that ffdshow provided was outdated and unmaintained, such as Xvid and H.264. You should use the official codecs instead.
+* Removed some encoders that were considered obsolete or unstable.
+
+Updates:
+* Updated Boost library to v1.48
+* Updated zlib library to v1.2.6
+* Updated minilzo library to v2.06
+* Updated unrar library to v4.10
+* Updated libsamplerate to v0.1.8
+* Removed mp3lib
+* Removed xvidcore
+
+--------------------------------------------------------------------------------
+
+Changelog for Beta 7 (r3154)
 Bugfixes
  * Various H.264 and MPEG-2 seeking issues fixed
  * Several memory leak fixes
